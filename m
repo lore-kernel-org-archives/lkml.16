@@ -1,185 +1,133 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3085518FDC5;
-	Wed, 29 Jan 2025 18:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A559C1E2007;
+	Wed, 29 Jan 2025 18:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738176281; cv=none; b=i8AcRNXD6kk9EsTzBSwUlvDf/dMTrT7XytDxwLZqbENpJybComgeeGL6dnZbqpmk327mhOWU/0A5AXZaCzoDoNhnVXbiRFve/HomO2185PODrvWSxuNM5MPptdjOAgxjT2jpTLqgtLASoehxyL4k+rtxQsMJAlvmx3HWEnruzUo=
+	t=1738176302; cv=none; b=thcpK0I9nKtkNrcf+ytN0CybFdk5/A+qRx6fi/eN6iOOnsc0fLTgsPeU/pwN3joQLU6D1SjtFlXHsFDRFln0+29743LBq8VZEQ0i1A5qOKrGxRdrkudgW59YLSuS+v3FK+RR6qNX56fwIAvFBS9IxPIApZCanQ4CmpeAOcOjX20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738176281; c=relaxed/simple;
-	bh=Ut+u/BkghibRCg6WC/EafaFzkHC5LZJoyj6kdsD537M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nxfrw7yQkes7lObsfN7+TV6hWcCRf+zA9XlgNcoIohxCYcBXioVSrHWItIla3436d8WKnXieiNbo5Zx3/bGYLulZA8dWcmoXoZTJQJnrGPO7uqsqz6YJQPGVva2OxUMO2Z0Tsj0jGaOPKaT92vN8EmcgOOS7XM1EaP9X4Mgv0iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=nil8+TCi; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1738176302; c=relaxed/simple;
+	bh=XI5EV5L/ep/hcn58yFNkRkgtLi2iD6V1JUusRcU+1vs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TkW0EW4hKIzfnf0j6o/bfFa5KYZnO3V0pG9inrHfaLRUwptZOtsg/sy4EzDiOmOD/7DsiEKqdqHoPiPLfUeZSdkmUTvz302/wudlh9HsixFjSNsyup4im6XUIv7MLODUMJN3IFj4Lfe7LQjD2ZV6hYF5VluQypQJe69b8VzNXw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iuDDCjO7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="nil8+TCi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=OGdOG3Q9V4PrJNPGFlWOlSIJqfpT6i27AEwfO3lbbWQ=; b=nil8+TCiLuCxkyQ5sycHDYXRpW
-	XzrknXAppAxQgkC6YQuF6dVMraOHJwKBCeGf39QSn5ns1MWBz0pZDKze+zNcRK8+dsV24qJgA/TDk
-	nO7KLFpzPM7LgobaUyt4kcRy0tUvRKyUiLaFWBlU7P5+QPNWCwnMUtGuiM3JQsYZgdjRt0z1nHe4j
-	1XuVshYkoC5bPw8f6Xs9k/lo4UCHWwzGGDF9Y1X+QvmEPiBa5O4pC3MNOHUM/uOVuixph9nX08kXO
-	EVCZoJZyUSdVusv3r7w36Ki068nduW1WAvoCzpUf/FE94NhGFd+GHA2aylGaUh8x3yGJxoSiB9/U+
-	UBzyqj9g==;
-Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
-	by fanzine2.igalia.com with utf8esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tdD34-000ibk-UJ; Wed, 29 Jan 2025 19:44:32 +0100
-From: Luis Henriques <luis@igalia.com>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Luis Henriques <luis@igalia.com>,
-	Teng Qin <tqin@jumptrading.com>
-Subject: [RFC PATCH] fuse: fix race in fuse_notify_store()
-Date: Wed, 29 Jan 2025 18:44:20 +0000
-Message-ID: <20250129184420.28417-1-luis@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iuDDCjO7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAC0EC4CED1;
+	Wed, 29 Jan 2025 18:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738176302;
+	bh=XI5EV5L/ep/hcn58yFNkRkgtLi2iD6V1JUusRcU+1vs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iuDDCjO7+zBZVuKBv+v05G8LKwOe49ZY1aFcC+wYkQywOwL+I6rIwl/nEqqzindk4
+	 fK8Nhzo80xJYuob9VaOukXyFL9EbpDDr+7DD07E3atOYF14odALvrbhl5mdHWqdomM
+	 3kjhqfLyexv/1gfIMwCDcl5ehYBqoQv0uKhob22oH1ba+3vmGW7cDrX/pwQqMPRXHw
+	 6clKJnUknYk+5Ff0sTeUkPQrFx2wsLbgzrc5w7axL5EUBR6asvITMn1L2WC134NuMg
+	 YIHWLPyqqBTpFb+tUPWYtznnhutdjjkgiYSaIb7zB9HlLRxHywmhCBQMbfc+dPwlvy
+	 NyKYqyuYG8jNQ==
+Message-ID: <9c573fff-31e6-4319-b8d1-527a3487cc20@kernel.org>
+Date: Wed, 29 Jan 2025 19:44:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: qcom,wcnss-pil: Add support
+ for single power-domain platforms
+To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
+ phone-devel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Stephan Gerhold <stephan.gerhold@linaro.org>,
+ =?UTF-8?Q?Matti_Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250129-wcnss-singlepd-v1-0-b01a6ba0b1bd@lucaweiss.eu>
+ <20250129-wcnss-singlepd-v1-1-b01a6ba0b1bd@lucaweiss.eu>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250129-wcnss-singlepd-v1-1-b01a6ba0b1bd@lucaweiss.eu>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Userspace filesystems can push data for a specific inode without it being
-explicitly requested.  This can be accomplished by using NOTIFY_STORE.  However,
-this may race against another process performing different operations on the
-same inode.
+On 29/01/2025 18:51, Luca Weiss wrote:
+> From: Matti Lehtimäki <matti.lehtimaki@gmail.com>
+> 
+> Support platforms such as MSM8226 and MSM8974 with only one power rail
+> (CX) modelled as power domain while MX and PX are regulators.
+> 
+> Signed-off-by: Matti Lehtimäki <matti.lehtimaki@gmail.com>
+> [luca: reword commit message]
+> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+> ---
+>  Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.yaml
+> index 8e033b22d28cfa8203234f744b3b408e976e20c3..d3c71bcf0f02122eb0dae214f135d8d7f71a9600 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.yaml
+> @@ -69,9 +69,11 @@ properties:
+>        CX regulator to be held on behalf of the booting of the WCNSS core.
+>  
+>    power-domains:
+> +    minItems: 1
+>      maxItems: 2
+>  
+>    power-domain-names:
+> +    minItems: 1
 
-If, for example, there is a process reading from it, it may happen that it will
-block waiting for data to be available (locking the folio), while the FUSE
-server will also block trying to lock the same folio to update it with the inode
-data.
 
-The easiest solution, as suggested by Miklos, is to allow the userspace
-filesystem to skip locked folios.
+This should be further narrowed in allOf:if:then per each variant,
+because now you say that all devices here can have only one power
+domain... unless the compatibles do not allow that, but then explain in
+commit msg.
 
-Link: https://lore.kernel.org/CH2PR14MB41040692ABC50334F500789ED6C89@CH2PR14MB4104.namprd14.prod.outlook.com
-Reported-by: Teng Qin <tqin@jumptrading.com>
-Originally-by: Miklos Szeredi <miklos@szeredi.hu>
-Signed-off-by: Luis Henriques <luis@igalia.com>
----
-Hi!
-
-Instead of sending the usual 'ping' to the original thread, I've decided to
-resend the patch as an RFC.
-
-As I mentioned before, this is an attempt to forward port the original patch
-from Miklos to the folios world.  Also, the same question:
-
-if we fail to get a folio and need to skip it, 'this_num' needs to be
-updated; but I'm not 100% sure if it's OK to use PAGE_SIZE in that case.
-
-Obviously, libfuse will need to support this new NOWAIT flag (I can look at
-that, of course).  But I was wondering if the NOTIFY_STORE behaviour
-shouldn't *always* skip locked folios instead of doing it only when the flag
-is set.
-
-(By the way, I'm not sure if I'm using the 'Originally-by:' tag correctly;
-I just want to make sure the authorship is preserved.  Please let me know if
-that's not correct.)
-
-Cheers,
--- 
-Luis
-
- fs/fuse/dev.c             | 29 ++++++++++++++++++++++-------
- include/uapi/linux/fuse.h |  8 +++++++-
- 2 files changed, 29 insertions(+), 8 deletions(-)
-
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 27ccae63495d..9a0cd88a9bb9 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -1630,6 +1630,7 @@ static int fuse_notify_store(struct fuse_conn *fc, unsigned int size,
- 	unsigned int num;
- 	loff_t file_size;
- 	loff_t end;
-+	int fgp_flags = FGP_LOCK | FGP_ACCESSED | FGP_CREAT;
- 
- 	err = -EINVAL;
- 	if (size < sizeof(outarg))
-@@ -1645,6 +1646,9 @@ static int fuse_notify_store(struct fuse_conn *fc, unsigned int size,
- 
- 	nodeid = outarg.nodeid;
- 
-+	if (outarg.flags & FUSE_NOTIFY_STORE_NOWAIT)
-+		fgp_flags |= FGP_NOWAIT;
-+
- 	down_read(&fc->killsb);
- 
- 	err = -ENOENT;
-@@ -1668,14 +1672,25 @@ static int fuse_notify_store(struct fuse_conn *fc, unsigned int size,
- 		struct page *page;
- 		unsigned int this_num;
- 
--		folio = filemap_grab_folio(mapping, index);
--		err = PTR_ERR(folio);
--		if (IS_ERR(folio))
--			goto out_iput;
-+		folio = __filemap_get_folio(mapping, index, fgp_flags,
-+					    mapping_gfp_mask(mapping));
-+		err = PTR_ERR_OR_ZERO(folio);
-+		if (err) {
-+			if (!(outarg.flags & FUSE_NOTIFY_STORE_NOWAIT))
-+				goto out_iput;
-+			page = NULL;
-+			/* XXX */
-+			this_num = min_t(unsigned int, num, PAGE_SIZE - offset);
-+		} else {
-+			page = &folio->page;
-+			this_num = min_t(unsigned int, num,
-+					 folio_size(folio) - offset);
-+		}
- 
--		page = &folio->page;
--		this_num = min_t(unsigned, num, folio_size(folio) - offset);
- 		err = fuse_copy_page(cs, &page, offset, this_num, 0);
-+		if (!page)
-+			goto skip;
-+
- 		if (!folio_test_uptodate(folio) && !err && offset == 0 &&
- 		    (this_num == folio_size(folio) || file_size == end)) {
- 			folio_zero_segment(folio, this_num, folio_size(folio));
-@@ -1683,7 +1698,7 @@ static int fuse_notify_store(struct fuse_conn *fc, unsigned int size,
- 		}
- 		folio_unlock(folio);
- 		folio_put(folio);
--
-+skip:
- 		if (err)
- 			goto out_iput;
- 
-diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-index e9e78292d107..59725f89340e 100644
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -576,6 +576,12 @@ struct fuse_file_lock {
-  */
- #define FUSE_EXPIRE_ONLY		(1 << 0)
- 
-+/**
-+ * notify_store flags
-+ * FUSE_NOTIFY_STORE_NOWAIT: skip locked pages
-+ */
-+#define FUSE_NOTIFY_STORE_NOWAIT	(1 << 0)
-+
- /**
-  * extension type
-  * FUSE_MAX_NR_SECCTX: maximum value of &fuse_secctx_header.nr_secctx
-@@ -1075,7 +1081,7 @@ struct fuse_notify_store_out {
- 	uint64_t	nodeid;
- 	uint64_t	offset;
- 	uint32_t	size;
--	uint32_t	padding;
-+	uint32_t	flags;
- };
- 
- struct fuse_notify_retrieve_out {
+Best regards,
+Krzysztof
