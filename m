@@ -1,135 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D8E1E0DB0
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 18:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5034114F9FF;
+	Wed, 29 Jan 2025 18:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738176778; cv=none; b=P6STWzMVboM3WZcbRksp9A8k3XPIHD5J0g3lqrTRYM2JNxhtJ30gexCPbpZmeTLjlOnQEya0y2Drv96UZCJ8VqAzrcNuurf8tlPojVarHTinNGvqiyYtdbA/Yy4n75npgxiyWyaguuceJTSCxLCCjljwd3AOf0PYzgC9vl2evSA=
+	t=1738177007; cv=none; b=ESuqNipDYfN2mwxRwmatcJ+d9NIfCfgucSecmT0JfDTPhNhqCqpfJkXs3IYXG4MxeYi7NtLVB7JQ+u015kNUfG2q9BEZytfaLXImwdA2dJmHNYcC1/JMkOp8hdWZ01+iboEYnH0hrYi0fcoK73iXboFADsjxVJZfWimpGhFquvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738176778; c=relaxed/simple;
-	bh=kXUWf4bzCULNMipXU787lKMp83ROSa9zL6s2oSKQfIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PazzjqTotP3OTAP8rvHdnAucsuNAYy+Mp+VQpdNvpbCIqW3eHbN8eBXtElB4xKfjVg62Vt1LqosMUKAG/m54EnQ6v3sIq4AlsuKCtxEC/cz8xSyLF0Ke/P5vR8OHMG7bqfbD5r02pb/fHBxRDZnhADEh4zr4R1x0JhLR9wOIdj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=guS37h6U; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738177007; c=relaxed/simple;
+	bh=uFN7vk1+aLRICxhxtXD4DkYVEPVIJWRiyhA0EUkMPp4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=a0ZMWCrdpclcQqaZnfO4s9iFZeIcDRv+J79a31XbA1XfWlLRtjNQ8v//zS9HBfSWs5rXHSzcwBlKU/GbFCVKlNMjD4aeDZFPjCXkpAmSZz1gbJ0bd471iaXWVcbwjOOJiLq/NmJsbxnoprxTmx50mbP9DjyT1/p6MP4Zm3jiKmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cH68fTiz; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="guS37h6U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738176775;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vlOChQEKTp5JX+pbfAOT77vMe8ez+6+Y0ab8kJl+7mw=;
-	b=guS37h6U4jQb8pnyZDcAbqU+6hNfrBBsu6memDDwG8F4+ZweCiSYuX6rZ/LMVveb70UlMa
-	cMDU4BhhjyRfty7Xr7vPzqEMWujyjN4k0h6vI+sV/iXAImSVYSCMRFg0+eUwatbe1X3rq0
-	IPT0nGKZSPstsgmwswjwvOk09d/ZDOo=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-47--D-VqdZWMCuKFM53jcF7wQ-1; Wed,
- 29 Jan 2025 13:52:52 -0500
-X-MC-Unique: -D-VqdZWMCuKFM53jcF7wQ-1
-X-Mimecast-MFC-AGG-ID: -D-VqdZWMCuKFM53jcF7wQ
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 396CC19560BA;
-	Wed, 29 Jan 2025 18:52:48 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.29])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3326919560AA;
-	Wed, 29 Jan 2025 18:52:16 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 29 Jan 2025 19:52:21 +0100 (CET)
-Date: Wed, 29 Jan 2025 19:51:49 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Dmitry V. Levin" <ldv@strace.io>
-Cc: Alexey Gladkov <legion@kernel.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Eugene Syromyatnikov <evgsyr@gmail.com>,
-	Mike Frysinger <vapier@gentoo.org>,
-	Renzo Davoli <renzo@cs.unibo.it>,
-	Davide Berardi <berardi.dav@gmail.com>,
-	strace-devel@lists.strace.io, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
-	Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-	Shuah Khan <shuah@kernel.org>, linux-snps-arc@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] ptrace: introduce PTRACE_SET_SYSCALL_INFO API
-Message-ID: <20250129185149.GA25901@redhat.com>
-References: <20250128091445.GA8257@strace.io>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cH68fTiz"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4363ae65100so81172975e9.0;
+        Wed, 29 Jan 2025 10:56:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738177004; x=1738781804; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=eLrOqI5zbNi3idrMn9+//2tsg6H8m7LiRgXuJFOQwCM=;
+        b=cH68fTizkKCIBBc4k2/lDw0lps6cGjLNZ8pSooIZOYUDlCC5dOOGsaDlcs5Y6wYQ6m
+         fPGU17I4YU5txnOHGmJJVF181mDaFk6fLMPcaAVJiimLcGUPdegpRQpexpW54ySvTXqe
+         0Cn8thNX6d/8L5eNYM8JNiS3Fo21VIgpFBUibrz6prlX/Zi2+k36QP6f791J8rHmu3dM
+         ZM2OvAIu0vzWQ28ONqZ7/KJWZJqEy81kQz0Tbg9HlyzCohXJDgf7ZMg1pY+QwfJqXNiy
+         BJOs8Ut1/wFViSi5U7c14XiV0D/jEEkZ0vfk9vPeFOo/Fovz5R37J3/p3oGjUT7SnSua
+         2kQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738177004; x=1738781804;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eLrOqI5zbNi3idrMn9+//2tsg6H8m7LiRgXuJFOQwCM=;
+        b=wsrfsT5p7W46ZhHfKqi6CZ6aRNd5/PnR20miqCCruJG30m0/rl8EHNCJ+nK/Lel+Hf
+         gDwQVN5sUDVNUp93/Qt+QKWpCsdz0AFzJtHkjbV7zBeb9nZITbcEirnay3cVvLY0i3Jh
+         DvIYKkFzG3LKnVoLYyONceO/Av+ibV4cSk9+oee72tReUU+xrof3e6bjMuJ9IpOLNEQ2
+         N5RQ0mc3Y0v0PjOijeza1QhXqh/HXdHxIgeZCPj5i90/aH8rm9+FL/ZFQhXWKasdXUzh
+         rih4cjL92q9XREd1vAsWsq87ufIyK49pLR42ypxAwBdVDG+eZaroiKC1ijfIK8i4wkVT
+         psyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVABpLOEOiLjpr8wp/yAEPkV7swDBUmS615/ltufFYK0MVwe/+MBOpDWt+92/uhABX6qyuqbuZQbA==@vger.kernel.org, AJvYcCWnZ8/fOhpVou7VUL2lDock0hM5TEMwNBskxRpD683ckb4MXMwX8q/KhHJIzjToJ2IB7ZhTrIIM8BeNTx46@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+QrDxwQa9Y5cJPlKMXWX9N783FhUdgy669IYWQueRhBqCgbdQ
+	pPTsEVPJUQmxzrYDLw4wNZmD6cf2LeS/jk1SKbN8cahckqAyOmAhKj92iQ==
+X-Gm-Gg: ASbGnct2jbTfoHl10PBxHgO//LGUhubcpXUBtV9bdBU6SHX7X58CCkph6C/SIkpXPvC
+	wax8mMSTJYJmlnAsSbA8x9/zhEIhHGRTn4VTsybbK0EUoONaFu5YQlhpxJh505Hdq07p0tHGoQL
+	AD7Iuwe93mkO54fcoY+6k+TG/er6xty2przCiAAmmqnPcSNJsZw+apz7dwlprQgZa5Wf4oF5hZa
+	Uvcii2sQd7bm1ARf0iRWgVI5Z2DJ/NpM/e+6zjOC/YniYJGSOjtzcREilmxVJT3O8HDQb7RTDy/
+	12FyUVeSpjG7RiH5vXvstV7yTA==
+X-Google-Smtp-Source: AGHT+IH0GlNXnBxBo7vugQK05ndvY3w+vL40buD2W4pX+0v902qAGn/SyNq8za4vStuIJTmwaZ0Hmg==
+X-Received: by 2002:a05:600c:4e87:b0:434:fddf:5c0c with SMTP id 5b1f17b1804b1-438dc3ab5afmr43760925e9.4.1738177003363;
+        Wed, 29 Jan 2025 10:56:43 -0800 (PST)
+Received: from [192.168.8.100] ([148.252.147.217])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc27130sm31684885e9.16.2025.01.29.10.56.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2025 10:56:41 -0800 (PST)
+Message-ID: <856ed55d-b07b-499c-b340-2efa70c73f7a@gmail.com>
+Date: Wed, 29 Jan 2025 18:57:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250128091445.GA8257@strace.io>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/8] io_uring/io-wq: cache work->flags in variable
+To: Max Kellermann <max.kellermann@ionos.com>, axboe@kernel.dk,
+ io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250128133927.3989681-1-max.kellermann@ionos.com>
+ <20250128133927.3989681-5-max.kellermann@ionos.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250128133927.3989681-5-max.kellermann@ionos.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 01/28, Dmitry V. Levin wrote:
->
->     * ptrace: Add explicit padding to the end of struct ptrace_syscall_info,
->       simplify obtaining of user ptrace_syscall_info,
->       do not introduce PTRACE_SYSCALL_INFO_SIZE_VER0
->     * ptrace: Change the return type of ptrace_set_syscall_info_* functions
->       from "unsigned long" to "int"
->     * ptrace: Add -ERANGE check to ptrace_set_syscall_info_exit,
->       add comments to -ERANGE checks
->     * ptrace: Update comments about supported syscall stops
->     * selftests: Extend set_syscall_info test, fix for mips n32
+On 1/28/25 13:39, Max Kellermann wrote:
+> This eliminates several redundant atomic reads and therefore reduces
+> the duration the surrounding spinlocks are held.
 
-Again, I can't review 1-3, I know nothing about the non-x86 architectures.
+What architecture are you running? I don't get why the reads
+are expensive while it's relaxed and there shouldn't even be
+any contention. It doesn't even need to be atomics, we still
+should be able to convert int back to plain ints.
+  
+> In several io_uring benchmarks, this reduced the CPU time spent in
+> queued_spin_lock_slowpath() considerably:
+> 
+> io_uring benchmark with a flood of `IORING_OP_NOP` and `IOSQE_ASYNC`:
+> 
+>      38.86%     -1.49%  [kernel.kallsyms]  [k] queued_spin_lock_slowpath
+>       6.75%     +0.36%  [kernel.kallsyms]  [k] io_worker_handle_work
+>       2.60%     +0.19%  [kernel.kallsyms]  [k] io_nop
+>       3.92%     +0.18%  [kernel.kallsyms]  [k] io_req_task_complete
+>       6.34%     -0.18%  [kernel.kallsyms]  [k] io_wq_submit_work
+> 
+> HTTP server, static file:
+> 
+>      42.79%     -2.77%  [kernel.kallsyms]     [k] queued_spin_lock_slowpath
+>       2.08%     +0.23%  [kernel.kallsyms]     [k] io_wq_submit_work
+>       1.19%     +0.20%  [kernel.kallsyms]     [k] amd_iommu_iotlb_sync_map
+>       1.46%     +0.15%  [kernel.kallsyms]     [k] ep_poll_callback
+>       1.80%     +0.15%  [kernel.kallsyms]     [k] io_worker_handle_work
+> 
+> HTTP server, PHP:
+> 
+>      35.03%     -1.80%  [kernel.kallsyms]     [k] queued_spin_lock_slowpath
+>       0.84%     +0.21%  [kernel.kallsyms]     [k] amd_iommu_iotlb_sync_map
+>       1.39%     +0.12%  [kernel.kallsyms]     [k] _copy_to_iter
+>       0.21%     +0.10%  [kernel.kallsyms]     [k] update_sd_lb_stats
+> 
+> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 
-As for 4-6, feel free to add
-
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+-- 
+Pavel Begunkov
 
