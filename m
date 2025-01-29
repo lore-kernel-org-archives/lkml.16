@@ -1,54 +1,54 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721C61F76A5
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35521F78EC
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738190581; cv=none; b=u8yiOPhNGLvQ1fuOyq5G5/G5GuPlXp2s0SPPgbcnkNIycfxLBwVKyHK5LoIA3NdGnlQkY3LvOQ+S/9n6Zpwp0rENla1xvK12rwiQHPVMxfB1ph/ulesKx6DAM0iQ5DmO7d8IcgC7u17MeLn9nO8XjCJ925aJwBAT/3toyQ8xkRs=
+	t=1738190583; cv=none; b=PoazUlaH0e+nqy0DQyZA4L2O4NuXTDxT39PIPR7VMsjOnFIrconQ9z71ZmqcJdvx2j7aCCJzIu9eJi802pkkCpgG3aJiAf+qGVl75D1IN/mYww0/PptOMF8+hBGuNdf2sCBdQgZUsUYtJJwL2x0fyws18OWjaMley+PEps3wa+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738190581; c=relaxed/simple;
-	bh=fAeV/E1q5qgp9++nghxIuTERofsxLaqa501aimCgAt0=;
+	s=arc-20240116; t=1738190583; c=relaxed/simple;
+	bh=ahWO5/NteXAquK3IMZahG/IwBguVO84SNacjgPRLiwI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TxeTxV+9Xh6Ro2T4gwU1LqWSSY3Gm4/wriRWMVqHzoX64zqzX5r5cf0qsU+s6ZbuwU02wSibDJph00qqos1v3oKjzqy5XjVQtmz5EUz2hSNSqGEUrkHjw1sWfLPlUzgSGVSVkVvcdTaingaIMJtjK7EKRwyL0T0hDWjidXqNsd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YVdd5y2T; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=u9TpMXT7Ekk7HV82NIAlC9hwkU6xPAPuNopmBTsR+3Ub7NszvtMh1GTRPzyQApZ7jG6SOpgzkH8OwkRPLsfqObi5RvZ0Ou7Ff+fDWRmwsTgxhqjjmrSf9/AOyxYGDhRa7LTVP6qARJJ1PKITLu6Jw/zVHNTluCi2Kp7ug/5C4/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T9BIAbD5; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YVdd5y2T"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f83e54432dso300449a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:42:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T9BIAbD5"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2178115051dso3216495ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:43:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738190579; x=1738795379; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738190580; x=1738795380; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L0ZG8uhT3OL4gz53zsZU4uOQev18QCwSpJ1z8Lyz6lA=;
-        b=YVdd5y2TmtUS/rcA09wXsbtrlqVilt20LDNtT8kbdFXmuSXiK5Ixm0vp161ESJ77c1
-         hBuIaHgh4IU15dynbA3vIOuuFXJOadPF+0BzKXO0lcsaU3PwoaVF8KkhbSMK6GcM5tnp
-         FwUB2lUmQMPLZbMg5JhoILerW6wY/KHPelH82+cAtnx/bjTC3SX9e+VGv0nzf4v3OmJ2
-         jLS35ctRPB+8qpwaxr2yRfxGW4/0LBoyobRc3Xq4yicZ4KPFK2XRkA+jF9VqGtO6nwj0
-         Dqzk5d+PEQ1mUfF4VdFHyNeHgL1pfq+UIh4EP7aW17nnr7IvTaOlAsBY1GVc1S/uYyA8
-         CzMA==
+        bh=aH4nwlMvvSTbckejE0k1f4dtYPUtlX/28RtOz+k6ygU=;
+        b=T9BIAbD5FossZaL+mZWYA100nc886IIS3A3xpI6nuTvSsS2Bc2azspjCnaGe+5tGj/
+         k166uMApiPKGynGm4PjP0DE5pDK+ilaqQ3p7YdUc1e6jQol7mn9nnBEAaf+t4y33A7bN
+         kAcdTBovsot6WHLIi9YyQ93L3KQzU3j7OGxO0FDTvDuiLiQFYe0BeOROOXuhMUc3hC6Q
+         ev0MEz+vcfCZDUd/Uo31gzSo99pmAIz5vQ/K5hVTe1fK6S88K0qARJh3AapJ7letYO7A
+         jHQXVK/Q+qO9g6VahwRRH8LpTIryF9DsJRy8CPbN5gYCw6/tRAtDCOZYTq2oIEpYhVz4
+         4mpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738190579; x=1738795379;
+        d=1e100.net; s=20230601; t=1738190580; x=1738795380;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L0ZG8uhT3OL4gz53zsZU4uOQev18QCwSpJ1z8Lyz6lA=;
-        b=jc0KOn6baGBT6Lp+LNlaXpL4rmaJX1PZhGNvrZ725FAVDek9KGCaHgRSG2rlxOjtDy
-         MyODFRd2kCNJEQj+6tdyY+xLFS58D6sGsTC4QKkw1TX2AsOb4cS71vx3p//7pWYpOHqm
-         5uegACzUxX9oxT6MGhcrd6X+4vabmi+KS39tE26x5/57WrK8xBxYQlSrxIqSJPr2DPPM
-         yNLzHKK6xFEKfxw39zwQ5I3SGt7f+Gydqtk/2McJ9ebV4uP8s6lFM/3AyUKUCEeB1kgx
-         v7fIGzQR7A412v8exhxo51/DTFpCT7m/ky0ze3EnQJQoNwgoTgM7KEEFaCvWBIgqsntR
-         0p4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUI8sDDpEIQVCL5/mw0+NFn3DcyUkObz1XEeeftU3P4vFlZXlWz7QhOWWy+sJxTgJKqDV9hDTGqKa9N17U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXv/tVqnTLqDb79J0XTixhuVSvF484z/gVkdPudH3PC6RqqEwK
-	+pw9aMptFEEA/0hodQOe0jOl8V/lD0Nylih9lv/0brxyYWJbigKv3TV+mAmLnUIJ3ndMkg==
-X-Google-Smtp-Source: AGHT+IEuTmiv3H9rTX6kMAO3mmM4IDiqwCIIyWovC1QOoLLo+K5CwA7MUZZn4zxCiCikjDN8GtWu9oQz
-X-Received: from pfbcl4.prod.google.com ([2002:a05:6a00:32c4:b0:725:d033:af87])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3919:b0:725:df1a:282
- with SMTP id d2e1a72fcca58-72fd0be3556mr6904654b3a.10.1738190578851; Wed, 29
- Jan 2025 14:42:58 -0800 (PST)
-Date: Wed, 29 Jan 2025 22:41:56 +0000
+        bh=aH4nwlMvvSTbckejE0k1f4dtYPUtlX/28RtOz+k6ygU=;
+        b=IhRo/P7poeLCBTjTZhMy1rPfOJaWVzI8jQKtl+W1usw7a7DRYH3iteI01Bw2W1tFs1
+         X3yQuit1X9F306SMlF1fTAs9nfHU9F9SOXIFbs3D81lZ/PiVnGUEKtrYHFOYA/Ld1WGZ
+         kbmYBaZEVq9tdJ7K9UGK+7hhvQ61fgmqk/SxlNllCot6VIXGh11Q2avpGfrUrWvMlAz+
+         sUaAy4sSNO+egQchE2AnSfMOaV/eQwKbrMO7b3H9+n+6uO29uzZC9baX3RwR+eyzpEPi
+         C2WRM4RjCdkFhpAR+4nmsmQ+yyN7E5rtTYfBUjxXv+LI33D8Fn40KhCrodbmsoeNcoY6
+         2mKA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhabLy53GFBZJK2LpiMBwnBnZ7YzphnNfqJtGF8lbBSGW5xRZRQjOWHyP8j76UT87onE9IymYwQutLJ/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDdLm5ior3kidkcL5M9O0mSQel4jheNRqczWQxybwVCeo31yfy
+	Tv5HbQpErchh2EcPxLhuEcneBCARk763T2sXJUG/wmCvIOWIp3jIJiGJcQrRB5NUx9UJmg==
+X-Google-Smtp-Source: AGHT+IE+pj10b4z63haeyix4paPMsUGHOoSvFej7RbeeYAi9eA9qHLwGBxnt7Q4A+DDX+iTalohvAtl5
+X-Received: from plgm4.prod.google.com ([2002:a17:902:f644:b0:20c:5d5a:9d64])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:188:b0:215:7b06:90ca
+ with SMTP id d9443c01a7336-21dd7c57d68mr67625625ad.17.1738190580369; Wed, 29
+ Jan 2025 14:43:00 -0800 (PST)
+Date: Wed, 29 Jan 2025 22:41:57 +0000
 In-Reply-To: <20250129224157.2046079-1-fvdl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,340 +58,712 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250129224157.2046079-1-fvdl@google.com>
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Message-ID: <20250129224157.2046079-28-fvdl@google.com>
-Subject: [PATCH v2 27/28] mm/hugetlb: enable bootmem allocation from CMA areas
+Message-ID: <20250129224157.2046079-29-fvdl@google.com>
+Subject: [PATCH v2 28/28] mm/hugetlb: move hugetlb CMA code in to its own file
 From: Frank van der Linden <fvdl@google.com>
 To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
 Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com, 
-	roman.gushchin@linux.dev, Frank van der Linden <fvdl@google.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
+	roman.gushchin@linux.dev, Frank van der Linden <fvdl@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-If hugetlb_cma_only is enabled, we know that hugetlb pages
-can only be allocated from CMA. Now that there is an interface
-to do early reservations from a CMA area (returning memblock
-memory), it can be used to allocate hugetlb pages from CMA.
+hugetlb.c contained a number of CONFIG_CMA ifdefs, and
+the code inside them was large enough to merit being in
+its own file, so move it, cleaning up things a bit.
 
-This also allows for doing pre-HVO on these pages (if enabled).
+Hide some direct variable access behind functions to
+accomodate the move.
 
-Make sure to initialize the page structures and associated data
-correctly. Create a flag to signal that a hugetlb page has been
-allocated from CMA to make things a little easier.
+No functional change intended.
 
-Some configurations of powerpc have a special hugetlb bootmem
-allocator, so introduce a boolean arch_specific_huge_bootmem_alloc
-that returns true if such an allocator is present. In that case,
-CMA bootmem allocations can't be used, so check that function
-before trying.
-
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Frank van der Linden <fvdl@google.com>
 ---
- arch/powerpc/include/asm/book3s/64/hugetlb.h |   6 +
- include/linux/hugetlb.h                      |  17 +++
- mm/hugetlb.c                                 | 121 ++++++++++++++-----
- 3 files changed, 113 insertions(+), 31 deletions(-)
+ mm/Makefile      |   3 +
+ mm/hugetlb.c     | 252 +++------------------------------------------
+ mm/hugetlb_cma.c | 258 +++++++++++++++++++++++++++++++++++++++++++++++
+ mm/hugetlb_cma.h |  55 ++++++++++
+ 4 files changed, 332 insertions(+), 236 deletions(-)
+ create mode 100644 mm/hugetlb_cma.c
+ create mode 100644 mm/hugetlb_cma.h
 
-diff --git a/arch/powerpc/include/asm/book3s/64/hugetlb.h b/arch/powerpc/include/asm/book3s/64/hugetlb.h
-index f0bba9c5f9c3..bb786694dd26 100644
---- a/arch/powerpc/include/asm/book3s/64/hugetlb.h
-+++ b/arch/powerpc/include/asm/book3s/64/hugetlb.h
-@@ -94,4 +94,10 @@ static inline int check_and_get_huge_psize(int shift)
- 	return mmu_psize;
- }
- 
-+#define arch_has_huge_bootmem_alloc arch_has_huge_bootmem_alloc
-+
-+static inline bool arch_has_huge_bootmem_alloc(void)
-+{
-+	return (firmware_has_feature(FW_FEATURE_LPAR) && !radix_enabled());
-+}
- #endif
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 2512463bca49..6c6546b54934 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -591,6 +591,7 @@ enum hugetlb_page_flags {
- 	HPG_freed,
- 	HPG_vmemmap_optimized,
- 	HPG_raw_hwp_unreliable,
-+	HPG_cma,
- 	__NR_HPAGEFLAGS,
- };
- 
-@@ -650,6 +651,7 @@ HPAGEFLAG(Temporary, temporary)
- HPAGEFLAG(Freed, freed)
- HPAGEFLAG(VmemmapOptimized, vmemmap_optimized)
- HPAGEFLAG(RawHwpUnreliable, raw_hwp_unreliable)
-+HPAGEFLAG(Cma, cma)
- 
- #ifdef CONFIG_HUGETLB_PAGE
- 
-@@ -678,14 +680,18 @@ struct hstate {
- 	char name[HSTATE_NAME_LEN];
- };
- 
-+struct cma;
-+
- struct huge_bootmem_page {
- 	struct list_head list;
- 	struct hstate *hstate;
- 	unsigned long flags;
-+	struct cma *cma;
- };
- 
- #define HUGE_BOOTMEM_HVO		0x0001
- #define HUGE_BOOTMEM_ZONES_VALID	0x0002
-+#define HUGE_BOOTMEM_CMA		0x0004
- 
- bool hugetlb_bootmem_page_zones_valid(int nid, struct huge_bootmem_page *m);
- 
-@@ -823,6 +829,17 @@ static inline pte_t arch_make_huge_pte(pte_t entry, unsigned int shift,
- }
- #endif
- 
-+#ifndef arch_has_huge_bootmem_alloc
-+/*
-+ * Some architectures do their own bootmem allocation, so they can't use
-+ * early CMA allocation.
-+ */
-+static inline bool arch_has_huge_bootmem_alloc(void)
-+{
-+	return false;
-+}
-+#endif
-+
- static inline struct hstate *folio_hstate(struct folio *folio)
- {
- 	VM_BUG_ON_FOLIO(!folio_test_hugetlb(folio), folio);
+diff --git a/mm/Makefile b/mm/Makefile
+index 850386a67b3e..810ccd45d270 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -79,6 +79,9 @@ obj-$(CONFIG_SWAP)	+= page_io.o swap_state.o swapfile.o swap_slots.o
+ obj-$(CONFIG_ZSWAP)	+= zswap.o
+ obj-$(CONFIG_HAS_DMA)	+= dmapool.o
+ obj-$(CONFIG_HUGETLBFS)	+= hugetlb.o
++ifdef CONFIG_CMA
++obj-$(CONFIG_HUGETLBFS)	+= hugetlb_cma.o
++endif
+ obj-$(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP)	+= hugetlb_vmemmap.o
+ obj-$(CONFIG_NUMA) 	+= mempolicy.o
+ obj-$(CONFIG_SPARSEMEM)	+= sparse.o
 diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index c227d0b9cf1e..5a3e9f7deaba 100644
+index 5a3e9f7deaba..6e296f16116d 100644
 --- a/mm/hugetlb.c
 +++ b/mm/hugetlb.c
-@@ -132,8 +132,10 @@ static void hugetlb_free_folio(struct folio *folio)
- #ifdef CONFIG_CMA
- 	int nid = folio_nid(folio);
+@@ -50,19 +50,13 @@
+ #include <linux/page_owner.h>
+ #include "internal.h"
+ #include "hugetlb_vmemmap.h"
++#include "hugetlb_cma.h"
+ #include <linux/page-isolation.h>
  
--	if (cma_free_folio(hugetlb_cma[nid], folio))
-+	if (folio_test_hugetlb_cma(folio)) {
-+		WARN_ON_ONCE(!cma_free_folio(hugetlb_cma[nid], folio));
+ int hugetlb_max_hstate __read_mostly;
+ unsigned int default_hstate_idx;
+ struct hstate hstates[HUGE_MAX_HSTATE];
+ 
+-#ifdef CONFIG_CMA
+-static struct cma *hugetlb_cma[MAX_NUMNODES];
+-static unsigned long hugetlb_cma_size_in_node[MAX_NUMNODES] __initdata;
+-#endif
+-static bool hugetlb_cma_only;
+-static unsigned long hugetlb_cma_size __initdata;
+-
+ __initdata struct list_head huge_boot_pages[MAX_NUMNODES];
+ __initdata unsigned long hstate_boot_nrinvalid[HUGE_MAX_HSTATE];
+ 
+@@ -129,14 +123,11 @@ static struct resv_map *vma_resv_map(struct vm_area_struct *vma);
+ 
+ static void hugetlb_free_folio(struct folio *folio)
+ {
+-#ifdef CONFIG_CMA
+-	int nid = folio_nid(folio);
+-
+ 	if (folio_test_hugetlb_cma(folio)) {
+-		WARN_ON_ONCE(!cma_free_folio(hugetlb_cma[nid], folio));
++		hugetlb_cma_free_folio(folio);
  		return;
-+	}
- #endif
+ 	}
+-#endif
++
  	folio_put(folio);
  }
-@@ -1509,6 +1511,9 @@ static struct folio *alloc_gigantic_folio(struct hstate *h, gfp_t gfp_mask,
- 					break;
- 			}
- 		}
-+
-+		if (folio)
-+			folio_set_hugetlb_cma(folio);
- 	}
- #endif
+ 
+@@ -1493,31 +1484,9 @@ static struct folio *alloc_gigantic_folio(struct hstate *h, gfp_t gfp_mask,
+ 	if (nid == NUMA_NO_NODE)
+ 		nid = numa_mem_id();
+ retry:
+-	folio = NULL;
+-#ifdef CONFIG_CMA
+-	{
+-		int node;
+-
+-		if (hugetlb_cma[nid])
+-			folio = cma_alloc_folio(hugetlb_cma[nid], order, gfp_mask);
+-
+-		if (!folio && !(gfp_mask & __GFP_THISNODE)) {
+-			for_each_node_mask(node, *nodemask) {
+-				if (node == nid || !hugetlb_cma[node])
+-					continue;
+-
+-				folio = cma_alloc_folio(hugetlb_cma[node], order, gfp_mask);
+-				if (folio)
+-					break;
+-			}
+-		}
+-
+-		if (folio)
+-			folio_set_hugetlb_cma(folio);
+-	}
+-#endif
++	folio = hugetlb_cma_alloc_folio(h, gfp_mask, nid, nodemask);
  	if (!folio) {
-@@ -3175,6 +3180,53 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
+-		if (hugetlb_cma_only)
++		if (hugetlb_cma_exclusive_alloc())
+ 			return NULL;
+ 
+ 		folio = folio_alloc_gigantic(order, gfp_mask, nid, nodemask);
+@@ -3180,32 +3149,19 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
  	return ERR_PTR(-ENOSPC);
  }
  
-+static bool __init hugetlb_early_cma(struct hstate *h)
-+{
-+	if (arch_has_huge_bootmem_alloc())
-+		return false;
+-static bool __init hugetlb_early_cma(struct hstate *h)
+-{
+-	if (arch_has_huge_bootmem_alloc())
+-		return false;
+-
+-	return (hstate_is_gigantic(h) && hugetlb_cma_only);
+-}
+-
+ static __init void *alloc_bootmem(struct hstate *h, int nid)
+ {
+ 	struct huge_bootmem_page *m;
+-	unsigned long flags;
+-	struct cma *cma;
+ 
+-#ifdef CONFIG_CMA
+-	if (hugetlb_early_cma(h)) {
+-		flags = HUGE_BOOTMEM_CMA;
+-		cma = hugetlb_cma[nid];
+-		m = cma_reserve_early(cma, huge_page_size(h));
+-	} else
+-#endif
+-	{
+-		flags = 0;
+-		cma = NULL;
++	if (hugetlb_early_cma(h))
++		m = hugetlb_cma_alloc_bootmem(h, nid);
++	else {
+ 		m = memblock_alloc_try_nid_raw(huge_page_size(h),
+ 			huge_page_size(h), 0, MEMBLOCK_ALLOC_ACCESSIBLE, nid);
++		if (m) {
++			m->flags = 0;
++			m->cma = NULL;
++		}
+ 	}
+ 
+ 	if (m) {
+@@ -3220,8 +3176,6 @@ static __init void *alloc_bootmem(struct hstate *h, int nid)
+ 		INIT_LIST_HEAD(&m->list);
+ 		list_add(&m->list, &huge_boot_pages[nid]);
+ 		m->hstate = h;
+-		m->flags = flags;
+-		m->cma = cma;
+ 	}
+ 
+ 	return m;
+@@ -3666,7 +3620,8 @@ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
+ 	 * Skip gigantic hugepages allocation if early CMA
+ 	 * reservations are not available.
+ 	 */
+-	if (hstate_is_gigantic(h) && hugetlb_cma_size && !hugetlb_early_cma(h)) {
++	if (hstate_is_gigantic(h) && hugetlb_cma_total_size() &&
++	    !hugetlb_early_cma(h)) {
+ 		pr_warn_once("HugeTLB: hugetlb_cma is enabled, skip boot time allocation\n");
+ 		return;
+ 	}
+@@ -3703,7 +3658,7 @@ static void __init hugetlb_init_hstates(void)
+ 		 */
+ 		if (hstate_is_gigantic(h) && !gigantic_page_runtime_supported())
+ 			continue;
+-		if (hugetlb_cma_size && h->order <= HUGETLB_PAGE_ORDER)
++		if (hugetlb_cma_total_size() && h->order <= HUGETLB_PAGE_ORDER)
+ 			continue;
+ 		for_each_hstate(h2) {
+ 			if (h2 == h)
+@@ -4605,14 +4560,6 @@ static void hugetlb_register_all_nodes(void) { }
+ 
+ #endif
+ 
+-#ifdef CONFIG_CMA
+-static void __init hugetlb_cma_check(void);
+-#else
+-static inline __init void hugetlb_cma_check(void)
+-{
+-}
+-#endif
+-
+ static void __init hugetlb_sysfs_init(void)
+ {
+ 	struct hstate *h;
+@@ -4796,8 +4743,7 @@ static __init void hugetlb_parse_params(void)
+ 		hcp->setup(hcp->val);
+ 	}
+ 
+-	if (!hugetlb_cma_size)
+-		hugetlb_cma_only = false;
++	hugetlb_cma_validate_params();
+ }
+ 
+ /*
+@@ -7867,169 +7813,3 @@ void hugetlb_unshare_all_pmds(struct vm_area_struct *vma)
+ 	hugetlb_unshare_pmds(vma, ALIGN(vma->vm_start, PUD_SIZE),
+ 			ALIGN_DOWN(vma->vm_end, PUD_SIZE));
+ }
+-
+-#ifdef CONFIG_CMA
+-static bool cma_reserve_called __initdata;
+-
+-static int __init cmdline_parse_hugetlb_cma(char *p)
+-{
+-	int nid, count = 0;
+-	unsigned long tmp;
+-	char *s = p;
+-
+-	while (*s) {
+-		if (sscanf(s, "%lu%n", &tmp, &count) != 1)
+-			break;
+-
+-		if (s[count] == ':') {
+-			if (tmp >= MAX_NUMNODES)
+-				break;
+-			nid = array_index_nospec(tmp, MAX_NUMNODES);
+-
+-			s += count + 1;
+-			tmp = memparse(s, &s);
+-			hugetlb_cma_size_in_node[nid] = tmp;
+-			hugetlb_cma_size += tmp;
+-
+-			/*
+-			 * Skip the separator if have one, otherwise
+-			 * break the parsing.
+-			 */
+-			if (*s == ',')
+-				s++;
+-			else
+-				break;
+-		} else {
+-			hugetlb_cma_size = memparse(p, &p);
+-			break;
+-		}
+-	}
+-
+-	return 0;
+-}
+-
+-early_param("hugetlb_cma", cmdline_parse_hugetlb_cma);
+-
+-static int __init cmdline_parse_hugetlb_cma_only(char *p)
+-{
+-	return kstrtobool(p, &hugetlb_cma_only);
+-}
+-
+-early_param("hugetlb_cma_only", cmdline_parse_hugetlb_cma_only);
+-
+-void __init hugetlb_cma_reserve(int order)
+-{
+-	unsigned long size, reserved, per_node;
+-	bool node_specific_cma_alloc = false;
+-	int nid;
+-
+-	/*
+-	 * HugeTLB CMA reservation is required for gigantic
+-	 * huge pages which could not be allocated via the
+-	 * page allocator. Just warn if there is any change
+-	 * breaking this assumption.
+-	 */
+-	VM_WARN_ON(order <= MAX_PAGE_ORDER);
+-	cma_reserve_called = true;
+-
+-	if (!hugetlb_cma_size)
+-		return;
+-
+-	for (nid = 0; nid < MAX_NUMNODES; nid++) {
+-		if (hugetlb_cma_size_in_node[nid] == 0)
+-			continue;
+-
+-		if (!node_online(nid)) {
+-			pr_warn("hugetlb_cma: invalid node %d specified\n", nid);
+-			hugetlb_cma_size -= hugetlb_cma_size_in_node[nid];
+-			hugetlb_cma_size_in_node[nid] = 0;
+-			continue;
+-		}
+-
+-		if (hugetlb_cma_size_in_node[nid] < (PAGE_SIZE << order)) {
+-			pr_warn("hugetlb_cma: cma area of node %d should be at least %lu MiB\n",
+-				nid, (PAGE_SIZE << order) / SZ_1M);
+-			hugetlb_cma_size -= hugetlb_cma_size_in_node[nid];
+-			hugetlb_cma_size_in_node[nid] = 0;
+-		} else {
+-			node_specific_cma_alloc = true;
+-		}
+-	}
+-
+-	/* Validate the CMA size again in case some invalid nodes specified. */
+-	if (!hugetlb_cma_size)
+-		return;
+-
+-	if (hugetlb_cma_size < (PAGE_SIZE << order)) {
+-		pr_warn("hugetlb_cma: cma area should be at least %lu MiB\n",
+-			(PAGE_SIZE << order) / SZ_1M);
+-		hugetlb_cma_size = 0;
+-		return;
+-	}
+-
+-	if (!node_specific_cma_alloc) {
+-		/*
+-		 * If 3 GB area is requested on a machine with 4 numa nodes,
+-		 * let's allocate 1 GB on first three nodes and ignore the last one.
+-		 */
+-		per_node = DIV_ROUND_UP(hugetlb_cma_size, nr_online_nodes);
+-		pr_info("hugetlb_cma: reserve %lu MiB, up to %lu MiB per node\n",
+-			hugetlb_cma_size / SZ_1M, per_node / SZ_1M);
+-	}
+-
+-	reserved = 0;
+-	for_each_online_node(nid) {
+-		int res;
+-		char name[CMA_MAX_NAME];
+-
+-		if (node_specific_cma_alloc) {
+-			if (hugetlb_cma_size_in_node[nid] == 0)
+-				continue;
+-
+-			size = hugetlb_cma_size_in_node[nid];
+-		} else {
+-			size = min(per_node, hugetlb_cma_size - reserved);
+-		}
+-
+-		size = round_up(size, PAGE_SIZE << order);
+-
+-		snprintf(name, sizeof(name), "hugetlb%d", nid);
+-		/*
+-		 * Note that 'order per bit' is based on smallest size that
+-		 * may be returned to CMA allocator in the case of
+-		 * huge page demotion.
+-		 */
+-		res = cma_declare_contiguous_multi(size, PAGE_SIZE << order,
+-					HUGETLB_PAGE_ORDER, name,
+-					&hugetlb_cma[nid], nid);
+-		if (res) {
+-			pr_warn("hugetlb_cma: reservation failed: err %d, node %d",
+-				res, nid);
+-			continue;
+-		}
+-
+-		reserved += size;
+-		pr_info("hugetlb_cma: reserved %lu MiB on node %d\n",
+-			size / SZ_1M, nid);
+-
+-		if (reserved >= hugetlb_cma_size)
+-			break;
+-	}
+-
+-	if (!reserved)
+-		/*
+-		 * hugetlb_cma_size is used to determine if allocations from
+-		 * cma are possible.  Set to zero if no cma regions are set up.
+-		 */
+-		hugetlb_cma_size = 0;
+-}
+-
+-static void __init hugetlb_cma_check(void)
+-{
+-	if (!hugetlb_cma_size || cma_reserve_called)
+-		return;
+-
+-	pr_warn("hugetlb_cma: the option isn't supported by current arch\n");
+-}
+-
+-#endif /* CONFIG_CMA */
+diff --git a/mm/hugetlb_cma.c b/mm/hugetlb_cma.c
+new file mode 100644
+index 000000000000..3ea9cd0f6b9f
+--- /dev/null
++++ b/mm/hugetlb_cma.c
+@@ -0,0 +1,258 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +
-+	return (hstate_is_gigantic(h) && hugetlb_cma_only);
++#include <linux/mm.h>
++#include <linux/cma.h>
++#include <linux/compiler.h>
++#include <linux/mm_inline.h>
++
++#include <asm/page.h>
++#include <asm/setup.h>
++
++#include <linux/hugetlb.h>
++#include "internal.h"
++#include "hugetlb_cma.h"
++
++
++static struct cma *hugetlb_cma[MAX_NUMNODES];
++static unsigned long hugetlb_cma_size_in_node[MAX_NUMNODES] __initdata;
++static bool hugetlb_cma_only;
++static unsigned long hugetlb_cma_size __initdata;
++
++void hugetlb_cma_free_folio(struct folio *folio)
++{
++	int nid = folio_nid(folio);
++
++	WARN_ON_ONCE(!cma_free_folio(hugetlb_cma[nid], folio));
 +}
 +
-+static __init void *alloc_bootmem(struct hstate *h, int nid)
-+{
-+	struct huge_bootmem_page *m;
-+	unsigned long flags;
-+	struct cma *cma;
 +
-+#ifdef CONFIG_CMA
-+	if (hugetlb_early_cma(h)) {
-+		flags = HUGE_BOOTMEM_CMA;
-+		cma = hugetlb_cma[nid];
-+		m = cma_reserve_early(cma, huge_page_size(h));
-+	} else
-+#endif
-+	{
-+		flags = 0;
-+		cma = NULL;
-+		m = memblock_alloc_try_nid_raw(huge_page_size(h),
-+			huge_page_size(h), 0, MEMBLOCK_ALLOC_ACCESSIBLE, nid);
++struct folio *hugetlb_cma_alloc_folio(struct hstate *h, gfp_t gfp_mask,
++				      int nid, nodemask_t *nodemask)
++{
++	int node;
++	int order = huge_page_order(h);
++	struct folio *folio = NULL;
++
++	if (hugetlb_cma[nid])
++		folio = cma_alloc_folio(hugetlb_cma[nid], order, gfp_mask);
++
++	if (!folio && !(gfp_mask & __GFP_THISNODE)) {
++		for_each_node_mask(node, *nodemask) {
++			if (node == nid || !hugetlb_cma[node])
++				continue;
++
++			folio = cma_alloc_folio(hugetlb_cma[node], order, gfp_mask);
++			if (folio)
++				break;
++		}
 +	}
 +
++	if (folio)
++		folio_set_hugetlb_cma(folio);
++
++	return folio;
++}
++
++struct huge_bootmem_page * __init
++hugetlb_cma_alloc_bootmem(struct hstate *h, int nid)
++{
++	struct cma *cma;
++	struct huge_bootmem_page *m;
++
++	cma = hugetlb_cma[nid];
++	m = cma_reserve_early(cma, huge_page_size(h));
 +	if (m) {
-+		/*
-+		 * Use the beginning of the huge page to store the
-+		 * huge_bootmem_page struct (until gather_bootmem
-+		 * puts them into the mem_map).
-+		 *
-+		 * Put them into a private list first because mem_map
-+		 * is not up yet.
-+		 */
-+		INIT_LIST_HEAD(&m->list);
-+		list_add(&m->list, &huge_boot_pages[nid]);
-+		m->hstate = h;
-+		m->flags = flags;
++		m->flags = HUGE_BOOTMEM_CMA;
 +		m->cma = cma;
 +	}
 +
 +	return m;
 +}
 +
- int alloc_bootmem_huge_page(struct hstate *h, int nid)
- 	__attribute__ ((weak, alias("__alloc_bootmem_huge_page")));
- int __alloc_bootmem_huge_page(struct hstate *h, int nid)
-@@ -3184,17 +3236,14 @@ int __alloc_bootmem_huge_page(struct hstate *h, int nid)
- 
- 	/* do node specific alloc */
- 	if (nid != NUMA_NO_NODE) {
--		m = memblock_alloc_try_nid_raw(huge_page_size(h), huge_page_size(h),
--				0, MEMBLOCK_ALLOC_ACCESSIBLE, nid);
-+		m = alloc_bootmem(h, node);
- 		if (!m)
- 			return 0;
- 		goto found;
- 	}
- 	/* allocate from next node when distributing huge pages */
- 	for_each_node_mask_to_alloc(&h->next_nid_to_alloc, nr_nodes, node, &node_states[N_ONLINE]) {
--		m = memblock_alloc_try_nid_raw(
--				huge_page_size(h), huge_page_size(h),
--				0, MEMBLOCK_ALLOC_ACCESSIBLE, node);
-+		m = alloc_bootmem(h, node);
- 		if (m)
- 			break;
- 	}
-@@ -3203,7 +3252,6 @@ int __alloc_bootmem_huge_page(struct hstate *h, int nid)
- 		return 0;
- 
- found:
--
- 	/*
- 	 * Only initialize the head struct page in memmap_init_reserved_pages,
- 	 * rest of the struct pages will be initialized by the HugeTLB
-@@ -3213,18 +3261,6 @@ int __alloc_bootmem_huge_page(struct hstate *h, int nid)
- 	 */
- 	memblock_reserved_mark_noinit(virt_to_phys((void *)m + PAGE_SIZE),
- 		huge_page_size(h) - PAGE_SIZE);
--	/*
--	 * Use the beginning of the huge page to store the
--	 * huge_bootmem_page struct (until gather_bootmem
--	 * puts them into the mem_map).
--	 *
--	 * Put them into a private list first because mem_map
--	 * is not up yet.
--	 */
--	INIT_LIST_HEAD(&m->list);
--	list_add(&m->list, &huge_boot_pages[node]);
--	m->hstate = h;
--	m->flags = 0;
- 	return 1;
- }
- 
-@@ -3265,13 +3301,25 @@ static void __init hugetlb_folio_init_vmemmap(struct folio *folio,
- 	prep_compound_head((struct page *)folio, huge_page_order(h));
- }
- 
-+static bool __init hugetlb_bootmem_page_prehvo(struct huge_bootmem_page *m)
-+{
-+	return m->flags & HUGE_BOOTMEM_HVO;
-+}
 +
-+static bool __init hugetlb_bootmem_page_earlycma(struct huge_bootmem_page *m)
-+{
-+	return m->flags & HUGE_BOOTMEM_CMA;
-+}
++static bool cma_reserve_called __initdata;
 +
- /*
-  * memblock-allocated pageblocks might not have the migrate type set
-  * if marked with the 'noinit' flag. Set it to the default (MIGRATE_MOVABLE)
-- * here.
-+ * here, or MIGRATE_CMA if this was a page allocated through an early CMA
-+ * reservation.
-  *
-- * Note that this will not write the page struct, it is ok (and necessary)
-- * to do this on vmemmap optimized folios.
-+ * In case of vmemmap optimized folios, the tail vmemmap pages are mapped
-+ * read-only, but that's ok - for sparse vmemmap this does not write to
-+ * the page structure.
-  */
- static void __init hugetlb_bootmem_init_migratetype(struct folio *folio,
- 							  struct hstate *h)
-@@ -3280,9 +3328,13 @@ static void __init hugetlb_bootmem_init_migratetype(struct folio *folio,
- 
- 	WARN_ON_ONCE(!pageblock_aligned(folio_pfn(folio)));
- 
--	for (i = 0; i < nr_pages; i += pageblock_nr_pages)
--		set_pageblock_migratetype(folio_page(folio, i),
-+	for (i = 0; i < nr_pages; i += pageblock_nr_pages) {
-+		if (folio_test_hugetlb_cma(folio))
-+			init_cma_pageblock(folio_page(folio, i));
-+		else
-+			set_pageblock_migratetype(folio_page(folio, i),
- 					  MIGRATE_MOVABLE);
-+	}
- }
- 
- static void __init prep_and_add_bootmem_folios(struct hstate *h,
-@@ -3328,10 +3380,16 @@ bool __init hugetlb_bootmem_page_zones_valid(int nid,
- 		return true;
- 	}
- 
-+	if (hugetlb_bootmem_page_earlycma(m)) {
-+		valid = cma_validate_zones(m->cma);
-+		goto out;
++static int __init cmdline_parse_hugetlb_cma(char *p)
++{
++	int nid, count = 0;
++	unsigned long tmp;
++	char *s = p;
++
++	while (*s) {
++		if (sscanf(s, "%lu%n", &tmp, &count) != 1)
++			break;
++
++		if (s[count] == ':') {
++			if (tmp >= MAX_NUMNODES)
++				break;
++			nid = array_index_nospec(tmp, MAX_NUMNODES);
++
++			s += count + 1;
++			tmp = memparse(s, &s);
++			hugetlb_cma_size_in_node[nid] = tmp;
++			hugetlb_cma_size += tmp;
++
++			/*
++			 * Skip the separator if have one, otherwise
++			 * break the parsing.
++			 */
++			if (*s == ',')
++				s++;
++			else
++				break;
++		} else {
++			hugetlb_cma_size = memparse(p, &p);
++			break;
++		}
 +	}
 +
- 	start_pfn = virt_to_phys(m) >> PAGE_SHIFT;
- 
- 	valid = !pfn_range_intersects_zones(nid, start_pfn,
- 			pages_per_huge_page(m->hstate));
-+out:
- 	if (!valid)
- 		hstate_boot_nrinvalid[hstate_index(m->hstate)]++;
- 
-@@ -3360,11 +3418,6 @@ static void __init hugetlb_bootmem_free_invalid_page(int nid, struct page *page,
- 	}
- }
- 
--static bool __init hugetlb_bootmem_page_prehvo(struct huge_bootmem_page *m)
--{
--	return (m->flags & HUGE_BOOTMEM_HVO);
--}
--
- /*
-  * Put bootmem huge pages into the standard lists after mem_map is up.
-  * Note: This only applies to gigantic (order > MAX_PAGE_ORDER) pages.
-@@ -3414,6 +3467,9 @@ static void __init gather_bootmem_prealloc_node(unsigned long nid)
- 			 */
- 			folio_set_hugetlb_vmemmap_optimized(folio);
- 
-+		if (hugetlb_bootmem_page_earlycma(m))
-+			folio_set_hugetlb_cma(folio);
++	return 0;
++}
 +
- 		list_add(&folio->lru, &folio_list);
- 
- 		/*
-@@ -3606,8 +3662,11 @@ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
- {
- 	unsigned long allocated;
- 
--	/* skip gigantic hugepages allocation if hugetlb_cma enabled */
--	if (hstate_is_gigantic(h) && hugetlb_cma_size) {
++early_param("hugetlb_cma", cmdline_parse_hugetlb_cma);
++
++static int __init cmdline_parse_hugetlb_cma_only(char *p)
++{
++	return kstrtobool(p, &hugetlb_cma_only);
++}
++
++early_param("hugetlb_cma_only", cmdline_parse_hugetlb_cma_only);
++
++void __init hugetlb_cma_reserve(int order)
++{
++	unsigned long size, reserved, per_node;
++	bool node_specific_cma_alloc = false;
++	int nid;
++
 +	/*
-+	 * Skip gigantic hugepages allocation if early CMA
-+	 * reservations are not available.
++	 * HugeTLB CMA reservation is required for gigantic
++	 * huge pages which could not be allocated via the
++	 * page allocator. Just warn if there is any change
++	 * breaking this assumption.
 +	 */
-+	if (hstate_is_gigantic(h) && hugetlb_cma_size && !hugetlb_early_cma(h)) {
- 		pr_warn_once("HugeTLB: hugetlb_cma is enabled, skip boot time allocation\n");
- 		return;
- 	}
++	VM_WARN_ON(order <= MAX_PAGE_ORDER);
++	cma_reserve_called = true;
++
++	if (!hugetlb_cma_size)
++		return;
++
++	for (nid = 0; nid < MAX_NUMNODES; nid++) {
++		if (hugetlb_cma_size_in_node[nid] == 0)
++			continue;
++
++		if (!node_online(nid)) {
++			pr_warn("hugetlb_cma: invalid node %d specified\n", nid);
++			hugetlb_cma_size -= hugetlb_cma_size_in_node[nid];
++			hugetlb_cma_size_in_node[nid] = 0;
++			continue;
++		}
++
++		if (hugetlb_cma_size_in_node[nid] < (PAGE_SIZE << order)) {
++			pr_warn("hugetlb_cma: cma area of node %d should be at least %lu MiB\n",
++				nid, (PAGE_SIZE << order) / SZ_1M);
++			hugetlb_cma_size -= hugetlb_cma_size_in_node[nid];
++			hugetlb_cma_size_in_node[nid] = 0;
++		} else {
++			node_specific_cma_alloc = true;
++		}
++	}
++
++	/* Validate the CMA size again in case some invalid nodes specified. */
++	if (!hugetlb_cma_size)
++		return;
++
++	if (hugetlb_cma_size < (PAGE_SIZE << order)) {
++		pr_warn("hugetlb_cma: cma area should be at least %lu MiB\n",
++			(PAGE_SIZE << order) / SZ_1M);
++		hugetlb_cma_size = 0;
++		return;
++	}
++
++	if (!node_specific_cma_alloc) {
++		/*
++		 * If 3 GB area is requested on a machine with 4 numa nodes,
++		 * let's allocate 1 GB on first three nodes and ignore the last one.
++		 */
++		per_node = DIV_ROUND_UP(hugetlb_cma_size, nr_online_nodes);
++		pr_info("hugetlb_cma: reserve %lu MiB, up to %lu MiB per node\n",
++			hugetlb_cma_size / SZ_1M, per_node / SZ_1M);
++	}
++
++	reserved = 0;
++	for_each_online_node(nid) {
++		int res;
++		char name[CMA_MAX_NAME];
++
++		if (node_specific_cma_alloc) {
++			if (hugetlb_cma_size_in_node[nid] == 0)
++				continue;
++
++			size = hugetlb_cma_size_in_node[nid];
++		} else {
++			size = min(per_node, hugetlb_cma_size - reserved);
++		}
++
++		size = round_up(size, PAGE_SIZE << order);
++
++		snprintf(name, sizeof(name), "hugetlb%d", nid);
++		/*
++		 * Note that 'order per bit' is based on smallest size that
++		 * may be returned to CMA allocator in the case of
++		 * huge page demotion.
++		 */
++		res = cma_declare_contiguous_multi(size, PAGE_SIZE << order,
++					HUGETLB_PAGE_ORDER, name,
++					&hugetlb_cma[nid], nid);
++		if (res) {
++			pr_warn("hugetlb_cma: reservation failed: err %d, node %d",
++				res, nid);
++			continue;
++		}
++
++		reserved += size;
++		pr_info("hugetlb_cma: reserved %lu MiB on node %d\n",
++			size / SZ_1M, nid);
++
++		if (reserved >= hugetlb_cma_size)
++			break;
++	}
++
++	if (!reserved)
++		/*
++		 * hugetlb_cma_size is used to determine if allocations from
++		 * cma are possible.  Set to zero if no cma regions are set up.
++		 */
++		hugetlb_cma_size = 0;
++}
++
++void __init hugetlb_cma_check(void)
++{
++	if (!hugetlb_cma_size || cma_reserve_called)
++		return;
++
++	pr_warn("hugetlb_cma: the option isn't supported by current arch\n");
++}
++
++bool hugetlb_cma_exclusive_alloc(void)
++{
++	return hugetlb_cma_only;
++}
++
++unsigned long __init hugetlb_cma_total_size(void)
++{
++	return hugetlb_cma_size;
++}
++
++void __init hugetlb_cma_validate_params(void)
++{
++	if (!hugetlb_cma_size)
++		hugetlb_cma_only = false;
++}
++
++bool __init hugetlb_early_cma(struct hstate *h)
++{
++	if (arch_has_huge_bootmem_alloc())
++		return false;
++
++	return hstate_is_gigantic(h) && hugetlb_cma_only;
++}
+diff --git a/mm/hugetlb_cma.h b/mm/hugetlb_cma.h
+new file mode 100644
+index 000000000000..92eb7530fe9e
+--- /dev/null
++++ b/mm/hugetlb_cma.h
+@@ -0,0 +1,55 @@
++// SPDX-License-Identifier: GPL-2.0
++#ifndef _LINUX_HUGETLB_CMA_H
++#define _LINUX_HUGETLB_CMA_H
++
++#ifdef CONFIG_CMA
++void hugetlb_cma_free_folio(struct folio *folio);
++struct folio *hugetlb_cma_alloc_folio(struct hstate *h, gfp_t gfp_mask,
++				      int nid, nodemask_t *nodemask);
++struct huge_bootmem_page *hugetlb_cma_alloc_bootmem(struct hstate *h, int nid);
++void hugetlb_cma_check(void);
++bool hugetlb_cma_exclusive_alloc(void);
++unsigned long hugetlb_cma_total_size(void);
++void hugetlb_cma_validate_params(void);
++bool hugetlb_early_cma(struct hstate *h);
++#else
++static inline void hugetlb_cma_free_folio(struct folio *folio)
++{
++}
++
++static inline struct folio *hugetlb_cma_alloc_folio(struct hstate *h,
++	    gfp_t gfp_mask, int nid, nodemask_t *nodemask)
++{
++	return NULL;
++}
++
++static inline
++struct huge_bootmem_page *hugetlb_cma_alloc_bootmem(struct hstate *h, int nid)
++{
++	return NULL;
++}
++
++static inline void hugetlb_cma_check(void)
++{
++}
++
++static inline bool hugetlb_cma_exclusive_alloc(void)
++{
++	return false;
++}
++
++static inline unsigned long hugetlb_cma_total_size(void)
++{
++	return 0;
++}
++
++static inline void hugetlb_cma_validate_params(void)
++{
++}
++
++static inline bool hugetlb_early_cma(struct hstate *h)
++{
++	return false;
++}
++#endif
++#endif
 -- 
 2.48.1.262.g85cc9f2d1e-goog
 
