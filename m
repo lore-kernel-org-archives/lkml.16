@@ -1,131 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E601A2398;
-	Wed, 29 Jan 2025 23:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42AD1A2398;
+	Wed, 29 Jan 2025 23:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738194818; cv=none; b=TfQ0TIF3FUL2qcL5tINRuap4welKecY8nQuzRgfd8CGkqY9/tsK8uYBXtClraOdtsv1yHw69H/CXRhu48CMBhk/BaxjmQe2gA2/MENzIR1vlg44k+s6YRRQ4hFe6RIeaU96LZ7cvzQ/8s26lgtzvfGF5KZ+zSgFHkcvBp59x6cE=
+	t=1738195017; cv=none; b=IrGGJCE7GJpHHJ/8Xaea/QgF4IrO0hngAqkGxVEXzAVXAMFmhSwk3Rz3WMtLQ3sZLc4Hce+ADXiSIlZZOh0x5IMs0hgQd3NnfNuyO2ur1l/fXx9AtadnqXCSALqIa+XiS0v9mIrPwnoHsNn/NeWSk04x7yHnG+IFVIbSex8UXPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738194818; c=relaxed/simple;
-	bh=W3PelArJwq1fwjy5hDtUm5rIO2zw2EZOKtjB8JR0kpA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XNJR2OLW06P2SoSsAv04I/6LeTFc0UruiRYuQZNQpojuA72SnDkm6ZvTejNpWgHiIFIBhGD3JRggkTgKsYoNVYikiwS8bAD+n12im6koJrgYaYwwyr++pLmRY/gRzD0p+qAIvUt7xg3mKxJaa3YBx2JMVex+8esTX6Xz13K+fTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCjlRBbR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738195017; c=relaxed/simple;
+	bh=CUV6idxLMiMBeotyTkobqVkSejdUQmJ3omLElEEXwk8=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HGjH52rkBzFz4dj1+Z/T7b4Se181Pyh2R9TJ+FZrjkH4/ndflAvQ4Z9TONIzgS8Y2awtNjopwUoVSHStEn0N8Iu1gvVEELDZIn4w/T/Zx1XAsgrJKqBe1Qy7nJ+GCzJsXDaCZmqplBfs1hFGEmP3Rvsfly8B/dhY8WLv4+sHCVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fgkciRK0; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCjlRBbR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 617A2C4CEDF;
-	Wed, 29 Jan 2025 23:53:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738194817;
-	bh=W3PelArJwq1fwjy5hDtUm5rIO2zw2EZOKtjB8JR0kpA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eCjlRBbRNFq96gsvYzWoVlB8syzuqg8pt0aUWrsOaA54b4Xtzi2gCgfsfrAt3l4F9
-	 ma3ImZkPvGZ/O3n+PIpYzBIS5gVM8i3f1x0NFBBRuLhqzJdcqEriCHZ7i77Div2r58
-	 3d8n7NdQX6WsLUn/EfC/3A6984zAet0iIYMrivXz2eXkgmvDvPJ1W415z/E3TywZWO
-	 alSBgkBk3QryKS7LOULHbSFfzLQfxHvK0qQigAD22ez+wPW+aO6Zq3KW4/n74GENLj
-	 wVVkRxdyicsj/1cARcleZHiNQ3pCXE+dCdrnY+4/g0Eh2qBRaz5QnjCQhnooeyhqhK
-	 /l969YuCuOJuA==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5d3dce16a3dso298311a12.1;
-        Wed, 29 Jan 2025 15:53:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVK9SJNR80d43+qLTfswD8eVGJpsBagygM0SG9z8dtZveb01WD6E4U80H26tp0+AkH3Un4OOckM2zKhp+2w@vger.kernel.org, AJvYcCVrpWylV/rDMd3igSUxWL+OU7mXp7DLM1O24LMs0ByB9AZC7vuySQT7l1Y0gPLUYemOgcCQJ6vdKksmmuI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaIG5qWvau4GOjwfYnwRSTsnjTldcigE7DgHv3K2iKoMQBUark
-	9v8uxJ15UvH7Cr2AwFKlv+Ycwc3aoAYYAnYT86mb+FplJS3JD9t8M9V9TRhZz/GFfUnQhkXdIgx
-	2uLOOMUV8Bbi+GSTlLlj+6FoRQ5U=
-X-Google-Smtp-Source: AGHT+IF8sUXurQ+pZxlLY0wRuMVnLPTDljcE9nfm8HYJGANobLvH4QKtgwzK3u/2X4lCO2DT08QK+CXpDDLa0i8iTvE=
-X-Received: by 2002:a05:6402:34c2:b0:5d9:f0d8:22d5 with SMTP id
- 4fb4d7f45d1cf-5dc6f606260mr1046098a12.13.1738194816283; Wed, 29 Jan 2025
- 15:53:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgkciRK0"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21649a7bcdcso3281075ad.1;
+        Wed, 29 Jan 2025 15:56:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738195014; x=1738799814; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eHWUEFLBFWIm/AfPLL++N3GkQDYP6DoVXgxmhuGsEuM=;
+        b=fgkciRK0MxY/frtPwkOeSr9zX0osZPCS3RXbISKxPjPkTWnyN2hmBWEaVZH6OoMKAe
+         xJvAWebpRbZDGNKmjZEjNMJSMEwy2/5AsLJEYU5UOncD444vXWKTQCmARJvGZ/4HF5cF
+         cCr5YfrqXMUQKmFCIHotOSok3ajR9t4+Wxig/inFEtsIkZ59xtnLn0CNlRvh/O9HR0Gp
+         WYdx3MD220B8t+ZCwzl1TgKr7WzwOsyfFY3H59SOWgx0aiDsveZExI31nyRBbeHlZhTy
+         R04UzLpyUM6bINWYqsM/riWy8WwX5DGRZCDG13K9Z2bGbjGVs7+Mx6zojy87q8y+TZZ7
+         W7Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738195014; x=1738799814;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eHWUEFLBFWIm/AfPLL++N3GkQDYP6DoVXgxmhuGsEuM=;
+        b=sYWDn4DltSo2/npFneRoIR2qiakqSPvwpnHoddqFmcyMWNRvI+p1M1gSv5dQQuryRA
+         DQ0b/oCdecffs0ktC2h6X6a8g+qGdB++IKX2qepa5ZNGduFeBSppbyBkBoII8sXT6DWf
+         nA9eTHEBICZSaRPSFWPi1WEftnuHbeuhjA4tELGVeru/MdWdcl55tzRlM8XMsTbr9SgN
+         OWDGjugSSwGgWrgbzSqW5HwEdSlhyAQcsYTUu73beSKfB0QtSEO9i2Oqrq5SQ+wVM4f3
+         HivIqSVPiHl2OVMjyMElVZBYez2mHdE55BNcxtvSf4pl6YC+DnvPRQwotWk+WSd/DDSG
+         2TiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNOTOfRJ2wS9Hw+x4YBztDtYz3WFqJjyrE4aO3dxZknw6S1aLrtCdOAeMTXCdfFY24sSuT8l7l@vger.kernel.org, AJvYcCXb4B3NuYFjF1eOyF7LIzyHp6CRdFN9JKGhJo9zVE32fXk61PH/xlW4wYSGnbnAwCrh4LsmtwZVP3Lyvd8=@vger.kernel.org, AJvYcCXtxq6+ZkXkmc4QQOC5zXeD2+vV8iTa2MRGRmuJZsy464F3lsKjQGQ49cDPn5kU2UTPquAFc/kmP6cJAXxjnsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX4wV3d0xe5MWuahBls1eqIN6TEIwi94vhiqbnb/b72DLxOJuU
+	H6kuK/9B5DRLWkr2NZTRoBja/bpUKc9uNPoQtUNU/Byy/Pme+Qge
+X-Gm-Gg: ASbGncuMu3IQYgmuhdb9NNbdl6fiy41dmzH69IBTMbDpp1+Wn0jeJn2kTfgfOcDMfh/
+	K5a/DyVrn/QnOTqmYo90iYDOpRQQ+XyvQ5s774LMN2zT5jXXZdpSDn340jLZL6Cdo8PZ6Gr4fZU
+	qmzG3SKZaYfR0/ocJMCG4dVCfby9zQBfiJju8HlUiXY5TbqkColKFT80nxeAdh9iRyHcIGQSVLF
+	5tMJyqQCCh3nLI/58mKNeiPKOd9E2q5Pery/dbpc3UVP98VwBqRTpCjjvUp3mssSJDSld2M6Twr
+	0E25L98QwAmMiM/KXG0wqu5g0beBsUVWROkMA9vdlWbbNdqoAAyfkDWwqd4ZagueJ64Bu38Y
+X-Google-Smtp-Source: AGHT+IEqQHqIq3nQXCLQ1vzxdYZ9/MIsGlho7lL+QRLnpBBE205Ui9H7sSwJ72ErcpH3zk5dJUcvKQ==
+X-Received: by 2002:a05:6a00:4642:b0:724:f86e:e3d9 with SMTP id d2e1a72fcca58-72fd0c02ec9mr7271441b3a.14.1738195014049;
+        Wed, 29 Jan 2025 15:56:54 -0800 (PST)
+Received: from localhost (p3882177-ipxg22501hodogaya.kanagawa.ocn.ne.jp. [180.15.148.177])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6a1a958sm58138b3a.172.2025.01.29.15.56.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2025 15:56:53 -0800 (PST)
+Date: Thu, 30 Jan 2025 08:56:44 +0900 (JST)
+Message-Id: <20250130.085644.2298700991414831587.fujita.tomonori@gmail.com>
+To: peterz@infradead.org
+Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
+ boqun.feng@gmail.com, rust-for-linux@vger.kernel.org,
+ netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
+ tmgross@umich.edu, ojeda@kernel.org, alex.gaynor@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ a.hindborg@samsung.com, aliceryhl@google.com, anna-maria@linutronix.de,
+ frederic@kernel.org, tglx@linutronix.de, arnd@arndb.de,
+ jstultz@google.com, sboyd@kernel.org, mingo@redhat.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, tgunders@redhat.com
+Subject: Re: [PATCH v9 1/8] sched/core: Add __might_sleep_precision()
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <20250128113738.GC7145@noisy.programming.kicks-ass.net>
+References: <20250125101854.112261-1-fujita.tomonori@gmail.com>
+	<20250125101854.112261-2-fujita.tomonori@gmail.com>
+	<20250128113738.GC7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250127-buildfix-extmod-powerpc-v1-1-450012b16263@efficios.com> <d0eb6abf-c0f2-4726-92ea-7d007813936d@efficios.com>
-In-Reply-To: <d0eb6abf-c0f2-4726-92ea-7d007813936d@efficios.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Thu, 30 Jan 2025 08:52:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARrCVWSHobzF+FXKuD=fERBG7gmA7MfkRnnuDg55sTY2w@mail.gmail.com>
-X-Gm-Features: AWEUYZmSQjKW1lanlKGWxaJ9x16sU2tAtAIHzhvuOM0bwunSKJghx-Ry-EiJGx0
-Message-ID: <CAK7LNARrCVWSHobzF+FXKuD=fERBG7gmA7MfkRnnuDg55sTY2w@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Add missing $(objtree) prefix to powerpc
- crtsavres.o artifact
-To: Kienan Stewart <kstewart@efficios.com>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Nicolas Schier <nicolas@fjasle.org>, 
-	Nathan Chancellor <nathan@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 29, 2025 at 12:53=E2=80=AFAM Kienan Stewart <kstewart@efficios.=
-com> wrote:
->
-> Hi,
->
-> I missed a few CCs, looping them in now. Apologies for the extra noise.
->
-> thanks,
-> kienan
->
-> On 1/27/25 1:47 PM, Kienan Stewart wrote:
-> > In the upstream commit 214c0eea43b2ea66bcd6467ea57e47ce8874191b
-> > ("kbuild: add $(objtree)/ prefix to some in-kernel build artifacts")
-> > artifacts required for building out-of-tree kernel modules had
-> > $(objtree) prepended to them to prepare for building in other
-> > directories.
-> >
-> > When building external modules for powerpc,
-> > arch/powerpc/lib/crtsavres.o is required for certain
-> > configurations. This artifact is missing the prepended $(objtree).
-> >
-> > External modules may work around this omission for v6.13 by setting MO=
-=3D$KDIR.
-> >
-> > Signed-off-by: Kienan Stewart <kstewart@efficios.com>
+On Tue, 28 Jan 2025 12:37:38 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Good catch, this actually got broken by 13b25489b6f8.
+> On Sat, Jan 25, 2025 at 07:18:46PM +0900, FUJITA Tomonori wrote:
+>> Add __might_sleep_precision(), Rust friendly version of
+>> __might_sleep(), which takes a pointer to a string with the length
+>> instead of a null-terminated string.
+>> 
+>> Rust's core::panic::Location::file(), which gives the file name of a
+>> caller, doesn't provide a null-terminated
+>> string. __might_sleep_precision() uses a precision specifier in the
+>> printk format, which specifies the length of a string; a string
+>> doesn't need to be a null-terminated.
+>> 
+>> Modify __might_sleep() to call __might_sleep_precision() but the
+>> impact should be negligible. strlen() isn't called in a normal case;
+>> it's called only when printing the error (sleeping function called
+>> from invalid context).
+>> 
+>> Note that Location::file() providing a null-terminated string for
+>> better C interoperability is under discussion [1].
+> 
+> Urgh :/
 
+Yeah... so not acceptable?
 
-
-Fixes: 13b25489b6f8 ("kbuild: change working directory to external
-module directory with M=3D")
-Acked-by: Masahiro Yamada <masahiroy@kernel.org>
-
-
-
-
-
-> > ---
-> >   arch/powerpc/Makefile | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-> > index f3804103c56ccfdb16289468397ccaea71bf721e..9933b98df69d7f7b9aaf33d=
-36155cc61ab4460c7 100644
-> > --- a/arch/powerpc/Makefile
-> > +++ b/arch/powerpc/Makefile
-> > @@ -58,7 +58,7 @@ ifeq ($(CONFIG_PPC64)$(CONFIG_LD_IS_BFD),yy)
-> >   # There is a corresponding test in arch/powerpc/lib/Makefile
-> >   KBUILD_LDFLAGS_MODULE +=3D --save-restore-funcs
-> >   else
-> > -KBUILD_LDFLAGS_MODULE +=3D arch/powerpc/lib/crtsavres.o
-> > +KBUILD_LDFLAGS_MODULE +=3D $(objtree)/arch/powerpc/lib/crtsavres.o
-> >   endif
-> >
-> >   ifdef CONFIG_CPU_LITTLE_ENDIAN
-> >
-> > ---
-> > base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
-> > change-id: 20250127-buildfix-extmod-powerpc-a744e1331f83
-> >
-> > Best regards,
->
->
-
-
---=20
-Best Regards
-Masahiro Yamada
+Then I switch to the implementation with Rust macros, which gives a
+null terminated string.
