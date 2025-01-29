@@ -1,389 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A7E191489
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 21:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738187484; cv=fail; b=mDKKQ3Y+U4G1Uucz/LSFFvu3cIGzjyrwd2W2c1pgsrDgEuEraPsbQept0xy063BVrtkqNE9ye6+CVPK7EYTisFvd54MgIXabfVlb3QCBTyT6PbfbwzxVimsPk7M8SYBo5m5YbY9jWXCrBar0SvQ1FmFPQWQQacSMzxiXDPdX7pk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738187484; c=relaxed/simple;
-	bh=nk0dAo6/BA843TZOicwCx00mE4EnQjP4V0CbPgn8v7w=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=CeyHSnQne5kUFnvZDPIfiL3p0ZUGcF78P9cW4qhlGmx+niJR2gB8YbW5yAZ0Sysk8e2WWk8UAnbCtC+2AKu8dPoFjtyD1eUmQJX8Vu5Mgspng5uJ+KNO4/0qUvWdJS7OnyTHyCCKagzIRcHcu6bTBCzdxhROl6/jsr8unVBmTaY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jcbIzuWd; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767AC191489;
+	Wed, 29 Jan 2025 21:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738187717; cv=none; b=KiZO53dLbO+e+Mn2YFLpza24nwA/E7/7by7eqiopTn4uuAkN42/y2fT9CAkHRYik64OT/oUSKJ185PC3zv39tleVFNy4pyna/1OBCwqmM+EL1GcHWStRuIRU5bbtwI6JKd7NBjYD3+7Vosg3yk8/Fc9b2GYJblSkeH3FE73EscM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738187717; c=relaxed/simple;
+	bh=G/M3y3ZkIoso+I8kP+mH6KrqA0+FLZcjw02xJDLsIW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SHHBzB8YeoKTrNRfmvZ2PqPl19whPixU9BYkfiUAMwfxHRnBVZsd0dc1wNmzumfVK0me+0fi1VcMaEFIqWOC6wJ9XsntWVKZWI7v9JPkdh0iX+wK2H+fWC//P6J+IOzJ760SKEjZL7HyRoR/zr7eAZxfzSlP9QPrIVxljTLr6CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hp3K0Ktz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jcbIzuWd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738187483; x=1769723483;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=nk0dAo6/BA843TZOicwCx00mE4EnQjP4V0CbPgn8v7w=;
-  b=jcbIzuWdWTnJ9Y9CVYXjKrCdLMOuNovxXfpHakP+A+R3pp90ajiBuj4L
-   y7pTNhLYwiv6F4XJvAslbaQCWXHH6JBCB4blAiTM+dj9BqcXY3uP8z4xw
-   Kflxxvi6DZW1F6H2La5wT3mWFIwr23uvbdpKYqOsOwsV4g/7rMwH0DG8E
-   R1qcqdraMz4nvz1XHySntwTwBBLFSeTXgbfFm7gBaeIsYE9GudGkVHkgJ
-   PIlMFDuxSn2T2RYQ8gDDDQwgPI95eO9u1GEUyK+kya6k9xLNFByeIVSQm
-   09Ev60wudJhLv5buW+RlCfANav021hCuQk48U2aOABiEHUu7jiSRil3c1
-   g==;
-X-CSE-ConnectionGUID: disk5HUFSoi4Bs2t/53Eaw==
-X-CSE-MsgGUID: rPzmShxnSf2aEhWqTft16A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="38755427"
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="38755427"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 13:51:22 -0800
-X-CSE-ConnectionGUID: qQXgfwypTdO4GZV6WTgP0g==
-X-CSE-MsgGUID: skDHb7zPSAKO+ul9/TRTYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="109058977"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Jan 2025 13:51:21 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 29 Jan 2025 13:51:20 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 29 Jan 2025 13:51:20 -0800
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.49) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 29 Jan 2025 13:51:20 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wq45LdK4sD3TtlSqOm2qKC3axA+a5rD6zoe0Rp822/mVikQ7PTtC0k1qYkIgjKYUFVoSD/whjV0qkw4MLSFMA7uYyENApO4zwObvEiejK2SmYc3rMDCmHKkjcVum6xXB18E93k6hgRmZUV5eXMQiTmjhZ5hKm8eTlm7jtB1olzHis+pQpCgErwxlL8uTQuzL5jmdugVZ55JCCSoniYE3v2vrib5B0cxwDuXOgMKOYvUxI1u7TZOMnZgPlvEfFlIVSYVQlf9lLHEzO/XvhMGsHu9kp7CY3sKlp/6v5D+6PONq/RjOpLFe7oIaNTJDNTglZsd8Fkju3Uz2OlKPkeDNAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b8EwEelO/pVBHH+aZyTRBefhNIlj74i1bzPKaLY6ndo=;
- b=hgGEKBZcwErmkGTQRrSLiFddnFyCHUi9mmlX3LRt1ojVlK5NXv7xENqJitGW7wPrgEqT+1RG0WI92hmbyg0NWM6zI5MAzp4UfIn+YKW4kRqTBWR3CjcFvxIeXJvKTggfFjengOkXs7LeEkoTZj1bDA8YqSh0fjGrKW4upiFMahHIMJU9XHpEsMyvSynGTd0YwL8tYEdISHetXhyz93LKbcVFCPs9+fxl2quq7og+WOyw90o8mfpNUnf1Pd67AOi1gXbDcZIM2uLymI2xtWhGBURwjj+7r4S8lnEU5cQyFm1CEzWRW++hfuDKavkOrTtaqbIg1w65a91BfqAhVwb2FQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SN7PR11MB8282.namprd11.prod.outlook.com (2603:10b6:806:269::11)
- by PH7PR11MB6723.namprd11.prod.outlook.com (2603:10b6:510:1af::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.28; Wed, 29 Jan
- 2025 21:51:11 +0000
-Received: from SN7PR11MB8282.namprd11.prod.outlook.com
- ([fe80::f9d9:8daa:178b:3e72]) by SN7PR11MB8282.namprd11.prod.outlook.com
- ([fe80::f9d9:8daa:178b:3e72%5]) with mapi id 15.20.8377.021; Wed, 29 Jan 2025
- 21:51:11 +0000
-Date: Wed, 29 Jan 2025 16:51:05 -0500
-From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-To: Alexander Usyskin <alexander.usyskin@intel.com>
-CC: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
-	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Lucas De Marchi
-	<lucas.demarchi@intel.com>, Thomas =?iso-8859-1?Q?Hellstr=F6m?=
-	<thomas.hellstrom@linux.intel.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
-	<tursulin@ursulin.net>, Karthik Poosa <karthik.poosa@intel.com>, "Reuven
- Abliyev" <reuven.abliyev@intel.com>, Oren Weil <oren.jer.weil@intel.com>,
-	<linux-mtd@lists.infradead.org>, <dri-devel@lists.freedesktop.org>,
-	<intel-gfx@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 07/11] mtd: intel-dg: wake card on operations
-Message-ID: <Z5qiyRzkdgwQ9kTP@intel.com>
-References: <20250101153925.865703-1-alexander.usyskin@intel.com>
- <20250101153925.865703-8-alexander.usyskin@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250101153925.865703-8-alexander.usyskin@intel.com>
-X-ClientProxiedBy: MW4PR04CA0369.namprd04.prod.outlook.com
- (2603:10b6:303:81::14) To SN7PR11MB8282.namprd11.prod.outlook.com
- (2603:10b6:806:269::11)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hp3K0Ktz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 057FCC4CED1;
+	Wed, 29 Jan 2025 21:55:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738187715;
+	bh=G/M3y3ZkIoso+I8kP+mH6KrqA0+FLZcjw02xJDLsIW8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hp3K0KtzMvS4tjgJ0HuLjKxTCSslN1z6rE3nBLcD+JunsEkwr+Hp28PlmKi4EpsQl
+	 KAymwEE/4XC65dpwAgaaKqnPY83NMr3wY/rhZtwWCbhMpjd006ljz+L0SMEP1471gX
+	 dLZsWM0j33dCkGNLhObpWap0pB1kdfUoxs8KEZ7SqmyDmfJFD5pxI2JbRFF5vWNS1Q
+	 /rjmk2bigbcyIvl+LvPRk4u3gr79uWeMRn7Box/Zfv2hHsj+CVMXjSqqImwKGm9Dhn
+	 Hh+y5dbtvM7/BTX2nviAd7a+HjIJ6Dfz6LrWe6iSZ50RsvFiKgAf2av3wQ6zvkWJSY
+	 A3IxYENyktuVg==
+Date: Wed, 29 Jan 2025 13:55:13 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>,
+	Atish Patra <atishp@rivosinc.com>, Leo Yan <leo.yan@arm.com>,
+	Beeman Strong <beeman@rivosinc.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+Message-ID: <Z5qjwRG5jX9zAGtf@google.com>
+References: <20250109222109.567031-1-irogers@google.com>
+ <20250109222109.567031-5-irogers@google.com>
+ <Z4F3qxFaYnMTtPw7@google.com>
+ <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
+ <Z4WNT_UX9eMD_txf@google.com>
+ <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
+ <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
+ <Z4f3fDXemAMpBNMS@google.com>
+ <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR11MB8282:EE_|PH7PR11MB6723:EE_
-X-MS-Office365-Filtering-Correlation-Id: 86c68146-9bbc-410d-c3c8-08dd40af0b42
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?HGdaaUvGjvBpYZVnmabhfug9QE9XPzXSuZRC0h0pKNM6x1qSSKsJdyX4je7l?=
- =?us-ascii?Q?p5QPzW9t47XiJ2JEvzNWRiTiWC1Of51TtFraZB7woI5et/nbh9WIGtfnQ81f?=
- =?us-ascii?Q?S7cf4LHVT2+Tn30sLjDWjM3yH5xjX+po2Se+iemlCckaruOBm5n0V6/a+0H1?=
- =?us-ascii?Q?dKk6KSZse7n6YjJrHy4AeoXfzUjUdDTYo2qKObd9DVOxcRmau8TQGOThqU3B?=
- =?us-ascii?Q?TvXnR6Yb5LtsZftNUT508trwgH9F9ZNo6NiUpCTzIcAFlmO4fwBT4LwKd4OX?=
- =?us-ascii?Q?sMjetmnm45pjNpS5hvGQVYaeqpEYgm+jW+iOIb2VPog9yVtcmUZn5sSPmS9e?=
- =?us-ascii?Q?egINKanX19lpBkTBGxk+YWky4lMmEfWlDfi/YeAFbKQhwGkO/sZGq1jm1Sbo?=
- =?us-ascii?Q?lfnHoRVcsDWxapNGf1MQk2UwS3XIanlJY96EZY85hpgIU4BDGO9r5vuEvVX3?=
- =?us-ascii?Q?LGT/q/udivTtcXg+/s/SsDhvlDW9Kq0NwrVpd7pcM+NNRLpvne8yyluXrRtH?=
- =?us-ascii?Q?QXlYglJghNNh0Hb89S3YyjYX8O/9zHRK17khdZbgFxgZEnRLA1/sZGGQlsTw?=
- =?us-ascii?Q?Q4KKl0mB3yTAT0FYxdSoXvppelGMLteEe67loHg/PhdjF7uhOMDOCklFye8G?=
- =?us-ascii?Q?B4N6sV9TXf+9rc17kFeX14VTMEWonnhv7Fg7mgrA7uznFTlsMC/iIAWcMrZs?=
- =?us-ascii?Q?zAuFKUkqrJzqRIaEMBwF9j89ZkVlbCAxjRL7De5SsQlyR4x7JAjoUVpOo+se?=
- =?us-ascii?Q?HttKzLvmQkYsupm4kdCzqXdN9W1+jDM6WnZAuGuh/HBPDi5fHhmV7rzIqXCg?=
- =?us-ascii?Q?GQV3XS7IvebZu3jL82JOn/UPtJ6h3l1yellp4kgOqx+e2xUK2lA577lT4HhM?=
- =?us-ascii?Q?T4ieYFXN6wFselijbCDJNdQJFqrPLWBhs4NiOLstHYEOaXLj2m44JQvN7cpD?=
- =?us-ascii?Q?sHaR5kuPBTiXJSSk7Chm/SsgGTvAUGNlyhYT/DHWl4OW3Jj2N6t8ByvUxf0D?=
- =?us-ascii?Q?f4aXh9JFBk/VyKYq1/zqUisZj3tRajy7aT358SyNMzRGPrEOn2yrgrAmqYNx?=
- =?us-ascii?Q?Ylk4KUhs/+fdT96eJE3iNGDE2IwaBpyepVtf1JfymRO6wjL/G1vfY0phCY+1?=
- =?us-ascii?Q?kIOxsrFY5Rz+j7c89IH7aAM5Ta3loYmOGDki+QIh6SGkr19JTqKz1lbihg2q?=
- =?us-ascii?Q?1wSloqhhveN3VzniX+Pnf1Dpdjal9w5RCnc2/tR51lL6yw+vvLb2LIWs+N2b?=
- =?us-ascii?Q?uLxDPC3vV9oiNEIgiiFVwYnOmZnY1a5Vv2eRuB7zar+kZb5bcwt8MVyMWhS2?=
- =?us-ascii?Q?+ZefZzoL0nC8+64Y27O1GL6Ua1GOnUcTM62SD1TtphxEvKqnCrsCDMpRAuBm?=
- =?us-ascii?Q?tIAYZwtUtqO7ZTylIjBGdVoVEICk?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR11MB8282.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?TgLi8DoDwlyuQ9xXOt6cO/xFGeSqijyjyuM59w/4WWiLD/I99Pm3lYvrr2f7?=
- =?us-ascii?Q?J38vWY1eKLFe7yE1AMdsoQBVGRIUBuqmMBCGPlowBZQmd7GPH3WBbxhavtSG?=
- =?us-ascii?Q?G8CSwYf8PuAQcn4MpTxFWz6EMj7D+fjHKdwfyqYNSXe/kGhfycXGoumoKj7h?=
- =?us-ascii?Q?zY8yf7ynMSBLBo2vOpV2LFVVSpz4gALEfCjsQI5ph49WTEGtGiRGZGmJrNlu?=
- =?us-ascii?Q?p76y1d/thLEzqkCeN9gDQlLqc13+2ZLGh0J/vo/f+VBEIaSpDdCn8/UUWDVo?=
- =?us-ascii?Q?kkXPqgziFmOLkLVyks7DpEcp60ahrOYPcHXB/v0AVtyIJhT+3tCt+iOgO/6J?=
- =?us-ascii?Q?pXBSaM6fIQsAZciHipzuknPnfp4lQnmF18FBBrLnRU8hLATjF2NjepA7pIai?=
- =?us-ascii?Q?fwRDwiJbluAgZJmXeilW522FwdSp5yRolCufaXoqOUl7gayAp6C5jZVnGT6a?=
- =?us-ascii?Q?1+0+Nai13iAhEewXi2PMC+ChnFI1gs/IXjHwxiD6GTT3wPRBoWO64Vtz+Spv?=
- =?us-ascii?Q?U+KyITbB0cu8a1myK4vSSvS/qjyLEiPudNmnaviGn0/Cbzt5/Ma28/Zgs8jm?=
- =?us-ascii?Q?362Fnkt/Tl0xUgBXMbhMwrfxO+BwanhcquoOFMfEVytYMhvcO7qfeBfLei5X?=
- =?us-ascii?Q?C6f3hNevp5hpjTi++OIBXB2HxSe0KWKIEvPJUX0BH7mNrlUsjKq6Rb2r47q2?=
- =?us-ascii?Q?DgJ/I+i+hzYg9tLNHDSA6OyV4MzNQq9q5nQVGP2VaqVEV6SXQzaXNTvpP5c7?=
- =?us-ascii?Q?a1aKnBU8h2rzmkOcjzRGzG7C/IIUqfVGBL+LO49lQPBs3ub04L0IVhpVETFO?=
- =?us-ascii?Q?fHlNSFE6EDZQd0DmK3EwZ+vkJCpz8bhPlHfDaK/M1QPffuDjliumZ/gNYz/9?=
- =?us-ascii?Q?+4gJAnYa9LJb9ebvRFhGPptK1EuKnrbZQlV8i9B+ObouKhoUmbXZI2AP+U7S?=
- =?us-ascii?Q?Cr0CC5VI+H0Gme1qN0cPCTC7VB1bVaFdVJA7EttQVYVgOXnyaKGMse2/ig65?=
- =?us-ascii?Q?P9LDrdJwhwwE/V+qU0YdxC/IA4209wvvEadnh6Vt3vivZe0j5gMVPtxQxqrN?=
- =?us-ascii?Q?7sWYJ/0r0j1icOCl2DbPhknpzNF+l2nf5RgP/H7cgsf0PZqYQ/m3WFl+N9Fk?=
- =?us-ascii?Q?tehxq3qmiQlXqY9OZUqghujEwDT2TAJNGbfk8kpNO2+OTMFvibnGc432YDhu?=
- =?us-ascii?Q?IIL36Xjh+A3EsAvXIXV3+Amrzb+r7UIxLDdQu9YgdsAbExI+nfw0AHGsGRkv?=
- =?us-ascii?Q?rFzz07+h9IPftw/Gl5/p+9vL6PEhOM957QMkTdZsnw8GYQQUjBWM2Ixv9QK3?=
- =?us-ascii?Q?/mdw+UrXicXWBGylqP7rl0SBwoXLdPH/0dCHWHK26b4BynvcgHiqmr+MwzeZ?=
- =?us-ascii?Q?/xxA9va4erqARla56xo/1MqGWjz+kQCXmeXBwCD3VgpjoRTYy3P6Mh4YI8DV?=
- =?us-ascii?Q?Q7z6CborfDGYISamgfuWB9clsEMEmzDI8p9J0oP8mg/0t9LXFztxEHGjjX9o?=
- =?us-ascii?Q?jZCTygOzcwx9dRbIrbO2NRJL8BiIUh0vxU0BtpmKOzFf8CYZNTz/hrrVjznO?=
- =?us-ascii?Q?cR2u+Y1VCGstl/3zZBCDJi576YOLqEQWhyDVWo8kA2ClUPzAyVzGEPDP8DZj?=
- =?us-ascii?Q?qQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86c68146-9bbc-410d-c3c8-08dd40af0b42
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR11MB8282.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 21:51:11.1201
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DYA3eg6tLjsbybKEJxyyed17zKh/QJ4pZN8SDB03PToOvvm9QNvPBP1Gsl5O82DbKXfDXVPIhFm9ab8FbkDV+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6723
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
 
-On Wed, Jan 01, 2025 at 05:39:21PM +0200, Alexander Usyskin wrote:
-> Enable runtime PM in mtd driver to notify graphics driver that
-> whole card should be kept awake while nvm operations are
-> performed through this driver.
+On Wed, Jan 15, 2025 at 01:20:32PM -0800, Ian Rogers wrote:
+> On Wed, Jan 15, 2025 at 9:59 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > > On Mon, Jan 13, 2025 at 2:51 PM Ian Rogers <irogers@google.com> wrote:
+> > > > There was an explicit, and reviewed by Jiri and Arnaldo, intent with
+> > > > the hybrid work that using a legacy event with a hybrid PMU, even
+> > > > though the PMU doesn't advertise through json or sysfs the legacy
+> > > > event, the perf tool supports it.
+> >
+> > I thought legacy events on hybrid were converted to PMU events.
 > 
-> CC: Lucas De Marchi <lucas.demarchi@intel.com>
-> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-> ---
->  drivers/mtd/devices/mtd-intel-dg.c | 79 +++++++++++++++++++++++++-----
->  1 file changed, 67 insertions(+), 12 deletions(-)
+> No, when BIG.little was created nothing changed in perf events but
+> when Intel did hybrid they wanted to make the hybrid CPUs (atom and
+> performance) appear as if they were one type. The PMU event encodings
+> vary a lot for this on Intel, ARM has standards for the encoding.
+> Intel extended the legacy format to take a PMU type id:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/include/uapi/linux/perf_event.h?h=perf-tools-next#n41
+> "EEEEEEEE: PMU type ID"
+> that is in the top 32-bits of the config.
+
+Oh right, I forgot the extended type thing.  Then we can keep the legacy
+encoding with it on hybrid systems when users give well-known names (w/o
+PMU) for legacy event.
+
 > 
-> diff --git a/drivers/mtd/devices/mtd-intel-dg.c b/drivers/mtd/devices/mtd-intel-dg.c
-> index 230bf444b7fe..a84153812291 100644
-> --- a/drivers/mtd/devices/mtd-intel-dg.c
-> +++ b/drivers/mtd/devices/mtd-intel-dg.c
-> @@ -15,11 +15,14 @@
->  #include <linux/module.h>
->  #include <linux/mtd/mtd.h>
->  #include <linux/mtd/partitions.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/string.h>
->  #include <linux/slab.h>
->  #include <linux/sizes.h>
->  #include <linux/types.h>
->  
-> +#define INTEL_DG_NVM_RPM_TIMEOUT 500
-> +
->  struct intel_dg_nvm {
->  	struct kref refcnt;
->  	struct mtd_info mtd;
-> @@ -460,6 +463,7 @@ static int intel_dg_mtd_erase(struct mtd_info *mtd, struct erase_info *info)
->  	loff_t from;
->  	size_t len;
->  	size_t total_len;
-> +	int ret = 0;
->  
->  	if (WARN_ON(!nvm))
->  		return -EINVAL;
-> @@ -474,20 +478,28 @@ static int intel_dg_mtd_erase(struct mtd_info *mtd, struct erase_info *info)
->  	total_len = info->len;
->  	addr = info->addr;
->  
-> +	ret = pm_runtime_resume_and_get(&mtd->dev);
-
-I'm glad we are not accessing the parent directly here anymore,
-but to me it is still strange.
-I feel that we should be using &aux_dev->dev; instead of mtd->dev.
-
-What am I missing?
-
-> +	if (ret < 0) {
-> +		dev_err(&mtd->dev, "rpm: get failed %d\n", ret);
-> +		return ret;
-> +	}
-> +
->  	guard(mutex)(&nvm->lock);
->  
->  	while (total_len > 0) {
->  		if (!IS_ALIGNED(addr, SZ_4K) || !IS_ALIGNED(total_len, SZ_4K)) {
->  			dev_err(&mtd->dev, "unaligned erase %llx %zx\n", addr, total_len);
->  			info->fail_addr = addr;
-> -			return -ERANGE;
-> +			ret = -ERANGE;
-> +			goto out;
->  		}
->  
->  		idx = idg_nvm_get_region(nvm, addr);
->  		if (idx >= nvm->nregions) {
->  			dev_err(&mtd->dev, "out of range");
->  			info->fail_addr = MTD_FAIL_ADDR_UNKNOWN;
-> -			return -ERANGE;
-> +			ret = -ERANGE;
-> +			goto out;
->  		}
->  
->  		from = addr - nvm->regions[idx].offset;
-> @@ -503,14 +515,18 @@ static int intel_dg_mtd_erase(struct mtd_info *mtd, struct erase_info *info)
->  		if (bytes < 0) {
->  			dev_dbg(&mtd->dev, "erase failed with %zd\n", bytes);
->  			info->fail_addr += nvm->regions[idx].offset;
-> -			return bytes;
-> +			ret = bytes;
-> +			goto out;
->  		}
->  
->  		addr += len;
->  		total_len -= len;
->  	}
->  
-> -	return 0;
-> +out:
-> +	pm_runtime_mark_last_busy(&mtd->dev);
-> +	pm_runtime_put_autosuspend(&mtd->dev);
-> +	return ret;
->  }
->  
->  static int intel_dg_mtd_read(struct mtd_info *mtd, loff_t from, size_t len,
-> @@ -539,17 +555,25 @@ static int intel_dg_mtd_read(struct mtd_info *mtd, loff_t from, size_t len,
->  	if (len > nvm->regions[idx].size - from)
->  		len = nvm->regions[idx].size - from;
->  
-> +	ret = pm_runtime_resume_and_get(&mtd->dev);
-> +	if (ret < 0) {
-> +		dev_err(&mtd->dev, "rpm: get failed %zd\n", ret);
-> +		return ret;
-> +	}
-> +
->  	guard(mutex)(&nvm->lock);
->  
->  	ret = idg_read(nvm, region, from, len, buf);
->  	if (ret < 0) {
->  		dev_dbg(&mtd->dev, "read failed with %zd\n", ret);
-> -		return ret;
-> +	} else {
-> +		*retlen = ret;
-> +		ret = 0;
->  	}
->  
-> -	*retlen = ret;
-> -
-> -	return 0;
-> +	pm_runtime_mark_last_busy(&mtd->dev);
-> +	pm_runtime_put_autosuspend(&mtd->dev);
-> +	return ret;
->  }
->  
->  static int intel_dg_mtd_write(struct mtd_info *mtd, loff_t to, size_t len,
-> @@ -578,17 +602,25 @@ static int intel_dg_mtd_write(struct mtd_info *mtd, loff_t to, size_t len,
->  	if (len > nvm->regions[idx].size - to)
->  		len = nvm->regions[idx].size - to;
->  
-> +	ret = pm_runtime_resume_and_get(&mtd->dev);
-> +	if (ret < 0) {
-> +		dev_err(&mtd->dev, "rpm: get failed %zd\n", ret);
-> +		return ret;
-> +	}
-> +
->  	guard(mutex)(&nvm->lock);
->  
->  	ret = idg_write(nvm, region, to, len, buf);
->  	if (ret < 0) {
->  		dev_dbg(&mtd->dev, "write failed with %zd\n", ret);
-> -		return ret;
-> +	} else {
-> +		*retlen = ret;
-> +		ret = 0;
->  	}
->  
-> -	*retlen = ret;
-> -
-> -	return 0;
-> +	pm_runtime_mark_last_busy(&mtd->dev);
-> +	pm_runtime_put_autosuspend(&mtd->dev);
-> +	return ret;
->  }
->  
->  static void intel_dg_nvm_release(struct kref *kref)
-> @@ -670,6 +702,15 @@ static int intel_dg_nvm_init_mtd(struct intel_dg_nvm *nvm, struct device *device
->  
->  	kfree(parts);
->  
-> +	if (ret)
-> +		goto out;
-> +
-> +	devm_pm_runtime_enable(&nvm->mtd.dev);
-> +
-> +	pm_runtime_set_autosuspend_delay(&nvm->mtd.dev, INTEL_DG_NVM_RPM_TIMEOUT);
-> +	pm_runtime_use_autosuspend(&nvm->mtd.dev);
-> +
-> +out:
->  	return ret;
->  }
->  
-> @@ -720,6 +761,17 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
->  		n++;
->  	}
->  
-> +	devm_pm_runtime_enable(device);
-> +
-> +	pm_runtime_set_autosuspend_delay(device, INTEL_DG_NVM_RPM_TIMEOUT);
-> +	pm_runtime_use_autosuspend(device);
-> +
-> +	ret = pm_runtime_resume_and_get(device);
-> +	if (ret < 0) {
-> +		dev_err(device, "rpm: get failed %d\n", ret);
-> +		goto err_norpm;
-> +	}
-> +
->  	nvm->base = devm_ioremap_resource(device, &invm->bar);
->  	if (IS_ERR(nvm->base)) {
->  		dev_err(device, "mmio not mapped\n");
-> @@ -742,9 +794,12 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
->  
->  	dev_set_drvdata(&aux_dev->dev, nvm);
->  
-> +	pm_runtime_put(device);
->  	return 0;
->  
->  err:
-> +	pm_runtime_put(device);
-> +err_norpm:
->  	kref_put(&nvm->refcnt, intel_dg_nvm_release);
->  	return ret;
->  }
-> -- 
-> 2.43.0
+> > > >
+> > > > Making it so that events without PMUs are only legacy events just
+> > > > doesn't work. There are far too many existing uses of non-legacy
+> > > > events without PMU, the metrics contain 100s of examples.
+> >
+> > That's unfortunate.  It'd be nice if metrics were written with PMU
+> > names.
 > 
+> But then we'd end up with things like on Intel:
+> UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD
+> becoming:
+> uncore_cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
+> or just:
+> cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
+> As a user the first works for me and doesn't have any ambiguity over
+> PMUs as the event name already encodes the PMU. AMD similarly place
+> the part of a pipeline into event names. Were we to break everybody by
+> requiring the PMU we'd also need to explain which PMU to use. Sites
+> with event lists (like https://perfmon-events.intel.com/) don't
+> explain the PMU and it'd be messy as on Intel you have a CHA PMU for
+> server chips but a CBOX on client chips, etc.
+
+While I prefer having PMU names in the JSON events/metrics, it may not
+be pratical to change them all.  Probably we can allow them without PMU
+and hope that they have unique prefixes.
+
+> 
+> > I have a question.  What if an event name in a metric matches to
+> > multiple unrelated PMUs?
+> 
+> The metric may break or we'd aggregate the unrelated counts together.
+
+Ok, then they should use unique names.
+
+
+> Take a metric like IPC as "instructions/cycles", that metric should
+> work on a hybrid system as they have instructions and cycles. If you
+> used an event for instructions like inst_retired.any then maybe the
+> metric will fail on one kind of core that didn't have that event. Now
+
+The metrics is for specific CPU model then the vendor should be
+responsible to provide accurate metrics using approapriate PMU/events
+IMHO.
+
+
+> if we have accelerators advertising instructions and cycles events, we
+> should be able to compute the metric for the accelerator. What could
+> happen today is that the accelerator will have a cpumask of a single
+> CPU, we could aggregate the accelerator counter into the CPU event
+> with the same CPU as the cpumask, we'd end up with a weird quasi CPU
+> and accelerator IPC metric for that CPU. What should happen is that we
+> get an IPC for the accelerator and IPC for each hybrid core
+> independently, but the way we handle evsels, CPUs, PMUs is not really
+> set up for that. Hopefully getting a set of PMUs into the evsel will
+> clear that up. Assuming all of that is cleared up, is it wrong if the
+> IPC metric is computed for the accelerator if it was originally
+> written as a CPU metric? Not really. Could there be metrics where that
+> is the case?
+
+Yes, I think there should be separate metrics for the accelerators.
+
+
+> Probably, and specifying PMUs in the event names would be
+> a fix. There have also been proposals that we restrict the PMUs for
+> certain metrics. As event names are currently so distinct it isn't a
+> problem we've faced yet and it is not clear it is a problem other than
+> highlighting tech debt in areas of the tool like aggregation.
+> 
+> > > >
+> > > > Prior to switching json/sysfs to being the priority when a PMU is
+> > > > specified, it was the case that all encodings were the same, with or
+> > > > without a PMU.
+> > > >
+> > > > I don't think there is anything natural about assuming things about
+> > > > event names. Take cycles, cpu-cycles and cpu_cycles:
+> > > >  - cycles on x86 is only encoded via a legacy event;
+> > > >  - cpu-cycles on Intel exists as a sysfs event, but cpu-cycles is also
+> > > > a legacy event name;
+> > > >  - cpu_cycles exists as a sysfs event on ARM but doesn't have a
+> > > > corresponding legacy event name.
+> >
+> > I think the behavior should be:
+> >
+> >   cycles -> PERF_COUNT_HW_CPU_CYCLES
+> >   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
+> >   cpu_cycles -> no legacy -> sysfs or json
+> >   cpu/cycles/ -> sysfs or json
+> >   cpu/cpu-cycles/ -> sysfs or json
+> 
+> So I disagree as if you add a PMU to an event name the encoding
+> shouldn't change:
+> 1) This historically was perf's behavior.
+
+Well.. I'm not sure about the history.  I believe the logic I said above
+is the historic and (I think) right behavior.
+
+> 2) Different event encodings can have different behaviors (broken in
+> some notable cases).
+
+Yep, let's make it clear.
+
+> 3) Intuitively what wildcarding does is try to open "*/event/" where *
+> is every possible PMU name. Having different event encodings is
+> breaking that intuition it could also break situations where you try
+> to assert equivalence based on type/config.
+
+While I don't like the wildcard matching, I think it doesn't matter as
+long as we keep the above behavior.  If it can find a legacy name, then
+go with it, done.  If not, try all PMUs as if it's given with PMU name
+in the event.
+
+> 4) The legacy encodings were (are?) broken on ARM Apple M? CPUs,
+> that's why the priority was changed.
+
+I guess that why they use cpu_cycles.
+
+> 5) RISC-V would like the tool tackle the legacy to config mapping
+> challenge, rather than the PMU driver, given the potential diversity
+> of hardware implementations.
+
+I hope they can find a better solution. :)
+
+> 
+> To this end we hosted RISC-V's perf people at Google and they
+> expressed that their preference was what this series does, and they
+> expressed this directly to you.
+> 
+> I don't think there would be an issue in this area if it wasn't for
+> Neoverse and Linus - that's why the revert happened. This change in
+> behavior was proposed by Arnaldo:
+> https://lore.kernel.org/lkml/ZlY0F_lmB37g10OK@x1/
+> and has tags from Intel, ARM and Rivos (RISC-V). I intend to carry it
+> in Google's tree.
+
+Maybe it's because of Linus.  But anyway it reminds me of behaviors that
+need to be discussed.  And we can (and should) improve things always.
+
+Thanks,
+Namhyung
+
