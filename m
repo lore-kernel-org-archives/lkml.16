@@ -1,161 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2956EB4C;
-	Wed, 29 Jan 2025 22:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4939519D06B
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738188941; cv=none; b=QRiei4Z59X6LyEPeW1tJorg+8Ue8oUQeuOL0sRmYZiBA69tO/H//i6qZW2l4TXC5cNioNHjCU7zKW9KM2pG8E9vABlLOZWErYjwaNdTUeFjWFxoUEL6LtA1Vd0MQIzCPPhLVEvY4fmdm52WjJK5WZbrrQLLsjOxtG4vTF0stYhw=
+	t=1738188979; cv=none; b=S7OPQAP4Gw+KZMEKucnpCQcx9S2FRblwHAFkDsF5kf4DPB/hasPhU4N9DYtTOC0C/RWsGLeEz6lU+4VDMa9X3nIrzMnMycdnESJ9aF+IuGM8+aIPOUBuUSqLg23NZ85TkprjEIh4CQYKPTs/fizMfDO/oJ+A+wW8F2CLb0R+VIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738188941; c=relaxed/simple;
-	bh=RPavOd8t3Kyawfx8CcRUx3BDMzYq0crkVMTo5lpewjo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JXyPhcGuG+Q5/bW5ken6PbtxgZ0SirsX96w31Lfr/BK61lYMtOeOxn1ujltnFB33u19TA2yqx11Zzt9JmT2aguCDz5Q4c3JZL20hRAtvtBxEcs0Lck2R3/kcMQrAJLhaa/1elNu+iyfwRulQAPvhQWcyyCzFWNwrB09rjU43tak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ETeONXr6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738188979; c=relaxed/simple;
+	bh=CBjBxfBArHaP5+KFSMSovBvLkn91zi5YvQjUjm6Fkxg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VDb4fiQxM0EkVwcopx9+xeAZCKtA1uXj6yi9VrCVg9r24e+ffnV9K3s6BGPV64Y+XNHbKHsS68CKDAKGsTPqfRsHxW7HHPllCixTAcnz5nqHz5gsPFiYGeecg5+LP9U/KO4/w7N804rXQvV+MRfjN6ED740BYGneTvgINCJFyes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QjU0BiRU; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ETeONXr6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54759C4CEE4;
-	Wed, 29 Jan 2025 22:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738188940;
-	bh=RPavOd8t3Kyawfx8CcRUx3BDMzYq0crkVMTo5lpewjo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ETeONXr6vwGcP1j+G9hjGfq02SDCGYTGBcP2GW8EOm0Ov4cueku2SO1VMDxvDz1d8
-	 xj2nsffwIevv3xGKfzKhCVAIspQtxzWef37DGhMRz34x0Y1rwnmzOwh4eFZAJJRlQ5
-	 xiVOn2pyoTk7ZI0QLNkfJpsCCjPgIhxWNtNgUQzkISQzC82dlw9usYaSIlay4OI2Ti
-	 9PGxH43EKPxIIyxtQYP9X09db2OARghMiCuUj7ayILx0q/kCYy0tT9D6shCAJJrqOM
-	 sSa7Ed1oRt610IgtHY2bqVmDB6BpuVI05HjjjsmCwZBHJ+XQr1izmkCfK/opeW/Jrk
-	 es8q9mjZFZO4w==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-543e47e93a3so131773e87.2;
-        Wed, 29 Jan 2025 14:15:40 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUi6EtoXngeT2Q4dO2UwDGHYWHyVVfD/D2v6GikXWKB10exdd0W52wEmX0LGPbkGdGSn/CDo23k@vger.kernel.org, AJvYcCWKnK6RxY7sZi36vtXnHvaS9ULPwZVU3k9/RWuQLpY/x6Mcxo9ep5xZwGXl6fpihe5nF6ZVbQtvEwChMBA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzevh6SjeUJvrkT6+VD75ftKFjnrgblYPM6YIVR1OOzvWlVCJSq
-	DiKOtvfjDnMyuSYl/1jadqS+VOIOsOBO1PXo5WjI6/9ZEt68iY0CDOyUOOzquKW+ST5mmXxxgQf
-	vd4DAOSzSSKc6NFv6RSP4zkcO5s4=
-X-Google-Smtp-Source: AGHT+IGaCUKHbvJW3S9WSJWNmDOASM3Me66IQ2/gDDjXjOkZIPD/y+t8vRg5ptZi+7CrZUA+zeTMBveEdT+OYJk1Ze8=
-X-Received: by 2002:a05:6512:1089:b0:542:6d01:f54d with SMTP id
- 2adb3069b0e04-543e4be0064mr1902751e87.3.1738188938666; Wed, 29 Jan 2025
- 14:15:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjU0BiRU"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43625c4a50dso662455e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:16:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738188975; x=1738793775; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=daPgdxKytpeJo/vzJrQd3hQxPDtGozJJzmn9okR5/Yk=;
+        b=QjU0BiRUB0NS+kFbDdO3P21wSMYgxTbPHYfNF3e+Qrs5+EJdb479hWAq9rIFbRDsu+
+         I2RO8cJAZoHjIOGqVd5hNbyt+xqYEAfQNlSpqcM0skNqXtPfvcrmqGV0ihPrAiY7jf47
+         6/93sGVmQMmNF0P+r3QU3S3SIRXLcZwpBaiyx53XVh+wqDjXVjULNQFU1W3yHd/Fmf6e
+         M3i3f8QpIE6gox8+UBHG74Yj/ORD6o20DkZ+gQ11EHX0hr8V0aSm6O8lR7WfnuPX0kZo
+         tIh0E+CAuhAtyhg5mj04RrmLsdS3v9PNozgsWfdvCVwgsbFP5lc/h009BjqH2lU7sOz1
+         1TXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738188975; x=1738793775;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=daPgdxKytpeJo/vzJrQd3hQxPDtGozJJzmn9okR5/Yk=;
+        b=XI2JWAQ6/funOenduxxZ4ZpiQ5nn4XBt2IpD4LHTu/M73ek0cLHj7/IOLV7StlRBWX
+         FG45jJSgz1zupETPPnVkLThYY3Ru0mF6nwoUi9HOTqbkKafHCg5svVxfYWyF+B/0oQYt
+         F57wbhShS/LPutawWQZr24BeecZGnGvQTpbAPc4kqIHzvWvV16j9y3wKltlDPGoROs42
+         sfE/lNj/PnvmysrFc+2OSy98xnTBVJze912Ec/L7ioZPwOOHTg3b3vzQ29v0CxdRWwBv
+         YZPKcqqYzqSv4nxVJWrEtBU4Ub38/HGsfEeh3BU4eo3g/4WtswVfA0L32JYfASRti0h8
+         +arQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+80aYNFltoMCGHluv2PYuP6jjpulHT0x4Q7VzVCB758S0U0Y5TUNcFf9SZwLoLcd7Atkiw3kII0j/TDA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpImS2yzubVmkeovTVwTz5uC5WVrtnnPCftVMsqfVVX8FSImzH
+	29mzEcenG9gI8keUDhPsa2yUfBAd0xpYziKk45aUYpuyb00+ywHh
+X-Gm-Gg: ASbGncvd35tJenIs9FFTeye4JFKpbXJnvOQa7hu2yx6Qv4VT3WKWHoBmILcy/h9+Tgf
+	f3XahHVLjaIptY+pytowN8hFA+XuQBPyWeG9BzZEaejAT18cIygWtIBSvm9zTe3Qaq0/YAfPo6L
+	dDXyqtFHa+CokB4COf5E+UM/30WGdotXbJQfWYnJR9RFsGp5TYI29zCVSBKN1IUyMURhQfWNhnC
+	b8b993zsdtmlrRL7Cmcjr5nwHib9uxo1LtOFJ2z5BWQ2pKeN6ylo/csZC+YdYIxbHcQ6MsQIDOt
+	8wLhEyyxzmcNzUo8kJbx5QBKcpRcxKEYay8ojCNXv0YEPBiaaDJa0Q==
+X-Google-Smtp-Source: AGHT+IEi0h/P9Ax4zfeG0ZIoZCiltydXmJWGbhNxx79y1e5qOKwoDDFKlFRLIG3wS4UCeaXx6Lgc2A==
+X-Received: by 2002:a05:600c:474f:b0:434:a10f:c3 with SMTP id 5b1f17b1804b1-438dc3c346fmr36972515e9.9.1738188975404;
+        Wed, 29 Jan 2025 14:16:15 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ec7f1sm68166f8f.9.2025.01.29.14.16.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2025 14:16:15 -0800 (PST)
+Date: Wed, 29 Jan 2025 22:16:14 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann
+ <arnd@arndb.de>, kernel test robot <lkp@intel.com>, Maximilian Luz
+ <luzmaximilian@gmail.com>, llvm@lists.linux.dev,
+ oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, Hans de Goede
+ <hdegoede@redhat.com>
+Subject: Re: drivers/platform/surface/surface3_power.c:243:2: warning:
+ 'snprintf' will always be truncated; specified size is 10, but format
+ string expands to at least 12
+Message-ID: <20250129221614.6510f165@pumpkin>
+In-Reply-To: <20250129134648.GA3884012@ax162>
+References: <202501291646.VtwF98qd-lkp@intel.com>
+	<CAHp75VcOYyVx=wcopvi-0iA5XePsGOrNO1wUSzYcYB4q86=7gA@mail.gmail.com>
+	<20250129134648.GA3884012@ax162>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109165419.1623683-1-florian.fainelli@broadcom.com>
- <20250109165419.1623683-2-florian.fainelli@broadcom.com> <62786457-d4a1-4861-8bec-7e478626f4db@broadcom.com>
- <2025011247-enable-freezing-ffa2@gregkh> <27bbea11-61fa-4f41-8b39-8508f2d2e385@broadcom.com>
- <2025012002-tactics-murky-aaab@gregkh> <41550c7f-1313-41b4-aa2e-cb4809ad68c2@broadcom.com>
- <2025012938-abreast-explain-f5f7@gregkh> <1fc6d5c8-80ec-4d6b-bc14-c584d89c15b4@broadcom.com>
-In-Reply-To: <1fc6d5c8-80ec-4d6b-bc14-c584d89c15b4@broadcom.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 29 Jan 2025 23:15:27 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHheRQYHddgehLbZot6o-xAxkbeHBUq7nS8npyB9A0FvQ@mail.gmail.com>
-X-Gm-Features: AWEUYZmguNMBHYqDLTE-pge9VsEnOuLpnCbKTSU94q87N2KbUgEEwIpw0fehwsE
-Message-ID: <CAMj1kXHheRQYHddgehLbZot6o-xAxkbeHBUq7nS8npyB9A0FvQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: mm: account for hotplug memory when randomizing
- the linear region
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Will Deacon <will@kernel.org>, 
-	Steven Price <steven.price@arm.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Baruch Siach <baruch@tkos.co.il>, 
-	Petr Tesarik <ptesarik@suse.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Joey Gouly <joey.gouly@arm.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, 
-	Yang Shi <yang@os.amperecomputing.com>, 
-	"moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 29 Jan 2025 at 18:45, Florian Fainelli
-<florian.fainelli@broadcom.com> wrote:
->
-> On 1/29/25 01:17, Greg KH wrote:
-> > On Mon, Jan 20, 2025 at 08:33:12AM -0800, Florian Fainelli wrote:
-> >>
-> >>
-> >> On 1/20/2025 5:59 AM, Greg KH wrote:
-> >>> On Mon, Jan 13, 2025 at 07:44:50AM -0800, Florian Fainelli wrote:
-> >>>>
-> >>>>
-> >>>> On 1/12/2025 3:54 AM, Greg KH wrote:
-> >>>>> On Thu, Jan 09, 2025 at 09:01:13AM -0800, Florian Fainelli wrote:
-> >>>>>> On 1/9/25 08:54, Florian Fainelli wrote:
-> >>>>>>> From: Ard Biesheuvel <ardb@kernel.org>
-> >>>>>>>
-> >>>>>>> commit 97d6786e0669daa5c2f2d07a057f574e849dfd3e upstream
-> >>>>>>>
-> >>>>>>> As a hardening measure, we currently randomize the placement of
-> >>>>>>> physical memory inside the linear region when KASLR is in effect.
-> >>>>>>> Since the random offset at which to place the available physical
-> >>>>>>> memory inside the linear region is chosen early at boot, it is
-> >>>>>>> based on the memblock description of memory, which does not cover
-> >>>>>>> hotplug memory. The consequence of this is that the randomization
-> >>>>>>> offset may be chosen such that any hotplugged memory located above
-> >>>>>>> memblock_end_of_DRAM() that appears later is pushed off the end of
-> >>>>>>> the linear region, where it cannot be accessed.
-> >>>>>>>
-> >>>>>>> So let's limit this randomization of the linear region to ensure
-> >>>>>>> that this can no longer happen, by using the CPU's addressable PA
-> >>>>>>> range instead. As it is guaranteed that no hotpluggable memory will
-> >>>>>>> appear that falls outside of that range, we can safely put this PA
-> >>>>>>> range sized window anywhere in the linear region.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> >>>>>>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> >>>>>>> Cc: Will Deacon <will@kernel.org>
-> >>>>>>> Cc: Steven Price <steven.price@arm.com>
-> >>>>>>> Cc: Robin Murphy <robin.murphy@arm.com>
-> >>>>>>> Link: https://lore.kernel.org/r/20201014081857.3288-1-ardb@kernel.org
-> >>>>>>> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-> >>>>>>> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> >>>>>>
-> >>>>>> Forgot to update the patch subject, but this one is for 5.10.
-> >>>>>
-> >>>>> You also forgot to tell us _why_ this is needed :(
-> >>>>
-> >>>> This is explained in the second part of the first paragraph:
-> >>>>
-> >>>> The consequence of this is that the randomization offset may be chosen such
-> >>>> that any hotplugged memory located above memblock_end_of_DRAM() that appears
-> >>>> later is pushed off the end of the linear region, where it cannot be
-> >>>> accessed.
-> >>>>
-> >>>> We use both memory hotplug and KASLR on our systems and that's how we
-> >>>> eventually found out about the bug.
-> >>>
-> >>> And you still have 5.10.y ARM64 systems that need this?  Why not move to
-> >>> a newer kernel version already?
-> >>
-> >> We still have ARM64 systems running 5.4 that need this, and the same bug
-> >> applies to 5.10 that we used to support but dropped in favor of 5.15/6.1.
-> >> Those are the kernel versions used by Android, and Android TV in particular,
-> >> so it's kind of the way it goes for us.
-> >>
-> >>>
-> >>> Anyway, I need an ack from the ARM64 maintainers that this is ok to
-> >>> apply here before I can take it.
-> >>
-> >> Just out of curiosity, the change is pretty innocuous and simple to review,
-> >> why the extra scrutiny needed here?
-> >
-> > Why shouldn't the maintainers review a proposed backport patch for core
-> > kernel code that affects everyone who uses that arch?
->
-> They should, but they are not, we can keep sending messages like those
-> in the hope that someone does, but clearly that is not working at the
-> moment.
->
-> This patch cherry picked cleanly into 5.4 and 5.10 maybe they just trust
-> whoever submit stable bugfixes to have done their due diligence, too, I
-> don't know how to get that moving now but it fixes a real problem we
-> observed.
->
+On Wed, 29 Jan 2025 06:46:48 -0700
+Nathan Chancellor <nathan@kernel.org> wrote:
 
-FWIW, I understand why this might be useful when running under a
-non-KVM hypervisor that relies on memory hotplug to perform resource
-balancing between VMs. But the upshot of this change is that existing
-systems that do not rely on memory hotplug at all will suddenly lose
-any randomization of the linear map if its CPU happens to be able to
-address more than ~40 bits of physical memory. So I'm not convinced
-this is a change we should make for these older kernels.
+> On Wed, Jan 29, 2025 at 02:45:38PM +0200, Andy Shevchenko wrote:
+> > On Wed, Jan 29, 2025 at 10:09=E2=80=AFAM kernel test robot <lkp@intel.c=
+om> wrote: =20
+> > >
+> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
+x.git master
+> > > head:   05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
+> > > commit: 85f7582cd484dbf491b6d9bb2af6ef1467a024d2 platform/surface: Mo=
+ve Surface 3 Power OpRegion driver to platform/surface
+> > > date:   4 years, 3 months ago
+> > > config: x86_64-randconfig-071-20241231 (https://download.01.org/0day-=
+ci/archive/20250129/202501291646.VtwF98qd-lkp@intel.com/config)
+> > > compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project =
+ab51eccf88f5321e7c60591c5546b254b6afab99)
+> > > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/a=
+rchive/20250129/202501291646.VtwF98qd-lkp@intel.com/reproduce)
+> > >
+> > > If you fix the issue in a separate patch/commit (i.e. not just a new =
+version of
+> > > the same patch/commit), kindly add following tags
+> > > | Reported-by: kernel test robot <lkp@intel.com>
+> > > | Closes: https://lore.kernel.org/oe-kbuild-all/202501291646.VtwF98qd=
+-lkp@intel.com/
+> > >
+> > > All warnings (new ones prefixed by >>):
+> > > =20
+> > > >> drivers/platform/surface/surface3_power.c:243:2: warning: 'snprint=
+f' will always be truncated; specified size is 10, but format string expand=
+s to at least 12 [-Wformat-truncation-non-kprintf] =20
+> > >      243 |         snprintf(bix->serial, ARRAY_SIZE(bix->serial), "%3=
+pE%6pE", buf + 7, buf); =20
+> >=20
+> > 3 + 'E' + 6 + 'E' + NUL, that's how the compiler thinks about this
+> > formatting string...
+> >  =20
+> > >          |         ^
+> > >    1 warning generated. =20
+> >=20
+> > I do not know how to properly address this because it's false positive
+> > due to the compiler not being aware of pointer extensions used in
+> > Linux kernel. The w/a is to increase the buffer if we can, but is it
+> > practical? OTOH, this warning will be translated to a compilation
+> > error in case of default WERROR settings on `make W=3D1` builds which is
+> > also annoying to people what want have that clean. =20
+>=20
+> Hmmm, I missed that -Wformat-truncation-non-kprintf was only disabled in
+> the non-W=3D1 block in scripts/Makefile.extrawarn. We never want to see
+> these warnings at any level because they will almost always be a false
+> positive, that's why the "non-kprintf" flags even exist in the first
+> place:
+...
+
+There is a separate issue that it doesn't seem to be easy to mark a specific
+snprintf() as one that will not actually overflow or where truncation is fi=
+ne.
+
+Persuading the compiler that the buffer size isn't constant currently works,
+but I expect the compiler will start double checking against ARRAY_SIZE(buf=
+fer)
+'any time soon' which will require the same treatment applied to the buffer
+address.
+
+	David
