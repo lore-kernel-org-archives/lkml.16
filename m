@@ -1,119 +1,102 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6B11BC07B;
-	Wed, 29 Jan 2025 23:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B476342A92
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 23:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738192894; cv=none; b=nKA9Hdr7trNmiz9kxvr+qzxeClmXE0/4kNHdlRm1wV6CcrNZ4wK4uMmyGrmtGF+/svGoLJdsHKWWWC/FBQEMumVNNZ48xXu4JCVdFAHgZIk0HzBWhabKF5gwtT012q1I0GKkXZmqCd752b+9D/BIwnvR5eRhSRLnOjYePicXeCg=
+	t=1738192970; cv=none; b=g141Y7Ifsn/8Fmw9O9rsFC09E8UN4bpjbqZ2Rs66Iw++oi63d8BXb0c5U56TzSW+C4njXNEXHtZ1geyBPGKWqxbajfxRgCMRxaKxrA3313KkJdbzluZqlNqpmLtkCg+p0sfcSUQwJqQpY+W5xrGjuhWUG8Fkc7kXP16sAdEaX9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738192894; c=relaxed/simple;
-	bh=4FeOkGZBh/0yuCr003fig1VlcrHaZw3JD4/R63A9Isk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AHUPeQGOgy4/PvWXPQgp9niytxwBU4fdz1iSnskXDYj+7ZIvNHP1Gs//6qfmI82Db7KQKG8e0AxW0l5EW/BXdjXLUoNjQaQCB0psOEbeBS6vZUh3yBJqHe7f/ViUvRh7fflF/zz6y1khsqyDuHnhbaht7dpohujmgf+OychvYCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=K5KcHlLe; arc=none smtp.client-ip=192.19.144.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1738192970; c=relaxed/simple;
+	bh=9CnrW08raLpCx8ibPb5DEivnYHWQl9j7CYympTDXwVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oUnYUV8XH6jcwteOcrqDkbnTiOt2QjylCtHvEyMmIiXzNkP0TKYMMcu5NjbqS6tCXmlXXYwmlkJUzSqMHXoQSLyXzkPu3tvPlbeFc/udy+IkUpxqS8qNVQBHQR8tBZHjXjC0yAUJ/iu5/UsjZsfBRnUuDy3h3vLwU7t1ruPq4+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3vlSRRm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="K5KcHlLe"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 971CFC0005F5;
-	Wed, 29 Jan 2025 15:13:48 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 971CFC0005F5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1738192428;
-	bh=4FeOkGZBh/0yuCr003fig1VlcrHaZw3JD4/R63A9Isk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=K5KcHlLeZsIl4A2GQbl1pRpXZb7ceayKKN51nfXTdYyUkojMpj8XFcj2HNuTaxVSf
-	 iflVZWZ06wYRmT/Obc+8ba0eUOuFQf0y6gLMYAwe3hn/KWeU47LUOttrQpbOneVOuw
-	 lNYabOyZhC5CXuxw5N8t2zJe2Nfg1wheIGC+wud4=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 386F318041CAC6;
-	Wed, 29 Jan 2025 15:13:48 -0800 (PST)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: netdev@vger.kernel.org
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Doug Berger <opendmb@gmail.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net] net: bcmgenet: Correct overlaying of PHY and MAC Wake-on-LAN
-Date: Wed, 29 Jan 2025 15:13:42 -0800
-Message-ID: <20250129231342.35013-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3vlSRRm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82A1BC4CED1;
+	Wed, 29 Jan 2025 23:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738192970;
+	bh=9CnrW08raLpCx8ibPb5DEivnYHWQl9j7CYympTDXwVw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B3vlSRRmYb+jCgORf/eDIjZiiNLb6vxw1l4XQ0Iz8AtZypWxw/hDSr/YF3IS1yyTy
+	 OrjI4GBkBXxNkkgwD+6V9U3KQYw+2+UozNE5Gq9UGbbDYTsXK+Vlo85VXk8XxLGV0K
+	 +he6QVcVAljzPQOpqoc0KyiHMXZv3XrZpA74BT8lhXyp52t+3nSa41QbzuJgkqyekB
+	 r06cyLXxin07RPPmr/u4htxRMhBjDSkMi8cE+4BfV9AzQ+Nh/iusCYlY4ipc4s5M+Q
+	 lRSmcmP6acEQ3DnGKnBIn6yT/7ZG2KteDaF+4s2q0KBTEN8VPMzuBfV9NTBXUv568r
+	 N1AOPeSt+ff5A==
+Date: Wed, 29 Jan 2025 16:22:46 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Song Liu <song@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>
+Cc: Yonghong Song <yonghong.song@linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: clang thin-lto not working for aarch64 for v6.13
+Message-ID: <20250129232246.GA3387816@ax162>
+References: <5ec75c39-2878-4caa-8fbd-68cf0aee28de@linux.dev>
+ <CAPhsuW4dC-Wma8EGBxkbftgRtmZohojqhvsixHQ3C4MNrH1+9w@mail.gmail.com>
+ <CAPhsuW5urLfhiCt2dhorVcZoMxZRady362vbfK78A7Z+3id2ew@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW5urLfhiCt2dhorVcZoMxZRady362vbfK78A7Z+3id2ew@mail.gmail.com>
 
-Some Wake-on-LAN modes such as WAKE_FILTER may only be supported by the MAC,
-while others might be only supported by the PHY. Make sure that the .get_wol()
-returns the union of both rather than only that of the PHY if the PHY supports
-Wake-on-LAN.
+Hi Song,
 
-When disabling Wake-on-LAN, make sure that this is done at both the PHY
-and MAC level, rather than doing an early return from the PHY driver.
+On Wed, Jan 29, 2025 at 03:04:56PM -0800, Song Liu wrote:
+> On Mon, Jan 27, 2025 at 9:50 AM Song Liu <song@kernel.org> wrote:
+> >
+> > On Sun, Jan 26, 2025 at 7:48 PM Yonghong Song <yonghong.song@linux.dev> wrote:
+> > >
+> > > Hi, Masahiro,
+> > >
+> > > We are trying 6.13 kernel and found that for aarch64 thinlto not
+> > > working. For example, for kernel/bpf/syscall.o, the compilation flags
+> > > from .syscall.o.cmd are savedcmd_kernel/bpf/syscall.o := clang
+> > > -Wp,-MMD,kernel/bpf/.syscall.o.d ... -D__KBUILD_MODNAME=kmod_syscall -c
+> > > -o kernel/bpf/syscall.o kernel/bpf/syscall.c ; ld.lld -EL -maarch64elf
+> > > -z norelro -mllvm -import-instr-limit=5 -z noexecstack -r -o
+> > > kernel/bpf/.tmp_syscall.o kernel/bpf/syscall.o; mv
+> > > kernel/bpf/.tmp_syscall.o kernel/bpf/syscall.o I did some bisecting and
+> > > found the issue is due to ``` commit
+> > > bede169618c68379e1be7ace14e8ac85b964a9ec Author: Masahiro Yamada
+> > > <masahiroy@kernel.org> Date: Thu Nov 14 08:45:22 2024 +0900 kbuild:
+> > > enable objtool for *.mod.o and additional kernel objects ``` In the
+> > > above, for thinlto, we should not do ld.lld as compiler needs IR to do
+> > > cross-file inlining. Searching the internet, I found that the issue has
+> > > been reported e.g. in
+> > > https://patchwork.kernel.org/project/linux-kbuild/patch/20241113234526.402738-3-masahiroy@kernel.org/
+> >
+> > It appears the fix suggested by Nathan is already squashed with the
+> > commit before being merged upstream. However, this causes another
+> > issue. As Yonghong stated, after upstream commit
+> > bede169618c68379e1be7ace14e8ac85b964a9ec, the linker runs on
+> > individual .o file, which defeats the benefit of LTO.
+> 
+> It appears we still have this issue in the latest upstream kernel. Reverting
+> bede169618c68379e1be7ace14e8ac85b964a9ec fixes the issue. But I
+> am not sure whether we can do that without also reverting
+> 1b466b29a3bf02ed95f28682a975f41ae47bce7d.
+> 
+> Could you please share your suggestions on this?
 
-Fixes: 7e400ff35cbe ("net: bcmgenet: Add support for PHY-based Wake-on-LAN")
-Fixes: 9ee09edc05f2 ("net: bcmgenet: Properly overlay PHY and MAC Wake-on-LAN capabilities")
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- .../net/ethernet/broadcom/genet/bcmgenet_wol.c   | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+I apologize for the radio silence on my end. I agree with you on the
+root cause but I am not really sure what the solution here is either
+(other than an outright revert) since I did not write the change so I
+defer to Masahiro. Hopefully he can answer soon.
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-index 0715ea5bf13e..3b082114f2e5 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-@@ -41,9 +41,12 @@ void bcmgenet_get_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
- {
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	struct device *kdev = &priv->pdev->dev;
-+	u32 phy_wolopts = 0;
- 
--	if (dev->phydev)
-+	if (dev->phydev) {
- 		phy_ethtool_get_wol(dev->phydev, wol);
-+		phy_wolopts = wol->wolopts;
-+	}
- 
- 	/* MAC is not wake-up capable, return what the PHY does */
- 	if (!device_can_wakeup(kdev))
-@@ -51,9 +54,14 @@ void bcmgenet_get_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
- 
- 	/* Overlay MAC capabilities with that of the PHY queried before */
- 	wol->supported |= WAKE_MAGIC | WAKE_MAGICSECURE | WAKE_FILTER;
--	wol->wolopts = priv->wolopts;
--	memset(wol->sopass, 0, sizeof(wol->sopass));
-+	wol->wolopts |= priv->wolopts;
- 
-+	/* Return the PHY configured magic password */
-+	if (phy_wolopts & WAKE_MAGICSECURE)
-+		return;
-+
-+	/* Otherwise the MAC one */
-+	memset(wol->sopass, 0, sizeof(wol->sopass));
- 	if (wol->wolopts & WAKE_MAGICSECURE)
- 		memcpy(wol->sopass, priv->sopass, sizeof(priv->sopass));
- }
-@@ -70,7 +78,7 @@ int bcmgenet_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
- 	/* Try Wake-on-LAN from the PHY first */
- 	if (dev->phydev) {
- 		ret = phy_ethtool_set_wol(dev->phydev, wol);
--		if (ret != -EOPNOTSUPP)
-+		if (ret != -EOPNOTSUPP && wol->wolopts)
- 			return ret;
- 	}
- 
--- 
-2.43.0
+> > IIUC,  the proper behavior is to do "cmd_ld_single" only for "is-single-obj-m"
+> > case. However, after bede169618c68379e1be7ace14e8ac85b964a9ec,
+> > the "is-single-obj-m" check is removed. I am not quite sure what is the
+> > proper fix for this.
+> 
+> [...]
 
+Cheers,
+Nathan
