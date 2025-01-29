@@ -1,168 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0393E1E9B0C;
-	Wed, 29 Jan 2025 23:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6B11BC07B;
+	Wed, 29 Jan 2025 23:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738192860; cv=none; b=pJA5qUjcxQxqlsmvE6JeHQpB/TBH6mgS7JCj4ijgUZzfrSpvNwsCRlRk9hT6qGw6ay/o2hUTnI4zjV2zoot5Yh6bD+xdJogZt562yuHYrC0XIP7d7NsI3lbXGie4zQ9r7PU2WucGn+Y6lKYm3MFalu6sPcYR3VM9kknENDYVu8M=
+	t=1738192894; cv=none; b=nKA9Hdr7trNmiz9kxvr+qzxeClmXE0/4kNHdlRm1wV6CcrNZ4wK4uMmyGrmtGF+/svGoLJdsHKWWWC/FBQEMumVNNZ48xXu4JCVdFAHgZIk0HzBWhabKF5gwtT012q1I0GKkXZmqCd752b+9D/BIwnvR5eRhSRLnOjYePicXeCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738192860; c=relaxed/simple;
-	bh=SrBrOxdAiSSWt1qo1usHtLL4Asei1ZG+/Lci0b5nwTQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Jl49mvusyOmjJgWCCcpFKPXM5K6KATfKLT7u+1QQOFlsgUNtZc/GzbJjEuTpT1s3DqcfY/F8ZY0bXHV3TYYNhnIOEbE+QTNWFy19KUYrwk0vtUJnSR/PQEHe4Zb8A0WpJsh3jpoPPLS/zKFC+9m0eRXLREfNSDw4yjljAETUJB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SDz1mBkE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738192894; c=relaxed/simple;
+	bh=4FeOkGZBh/0yuCr003fig1VlcrHaZw3JD4/R63A9Isk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AHUPeQGOgy4/PvWXPQgp9niytxwBU4fdz1iSnskXDYj+7ZIvNHP1Gs//6qfmI82Db7KQKG8e0AxW0l5EW/BXdjXLUoNjQaQCB0psOEbeBS6vZUh3yBJqHe7f/ViUvRh7fflF/zz6y1khsqyDuHnhbaht7dpohujmgf+OychvYCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=K5KcHlLe; arc=none smtp.client-ip=192.19.144.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SDz1mBkE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24E95C4CEE0;
-	Wed, 29 Jan 2025 23:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738192859;
-	bh=SrBrOxdAiSSWt1qo1usHtLL4Asei1ZG+/Lci0b5nwTQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=SDz1mBkEdjN8LJnc518/r3Y4zbtqBJbQZuZv58YnDlG7985kNEpg2AG6DsxYGnScH
-	 YfMQyyKUraESCFdoUSjutGce9MS0m77v6l5tEQICPI9z9tm/9BlJXuomzYDgTp5j0u
-	 wxM1f1kwcxTyr4CRBhc60m98Q5q3ZgQoIuqu/7SVvvBSDYCzhpuiAEV3geBbPnQtz/
-	 nvb3/Y4kpYnYd6a5GH4D3+dpewSxwm0jmpqM5CY+lv80ovOguN1r76o/x3y/1XJDe3
-	 9/K9SpIMRxP+LR1xFmoBAp2RcU3DCeAkhf6sTqw76VLrRDAJmDbw7/DAp77llicIBv
-	 E6mQcIsilYUWQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 29 Jan 2025 18:20:46 -0500
-Subject: [PATCH v3 6/6] nfsd: lift NFSv4.0 handling out of
- nfsd4_cb_sequence_done()
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="K5KcHlLe"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 971CFC0005F5;
+	Wed, 29 Jan 2025 15:13:48 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 971CFC0005F5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1738192428;
+	bh=4FeOkGZBh/0yuCr003fig1VlcrHaZw3JD4/R63A9Isk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=K5KcHlLeZsIl4A2GQbl1pRpXZb7ceayKKN51nfXTdYyUkojMpj8XFcj2HNuTaxVSf
+	 iflVZWZ06wYRmT/Obc+8ba0eUOuFQf0y6gLMYAwe3hn/KWeU47LUOttrQpbOneVOuw
+	 lNYabOyZhC5CXuxw5N8t2zJe2Nfg1wheIGC+wud4=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 386F318041CAC6;
+	Wed, 29 Jan 2025 15:13:48 -0800 (PST)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: netdev@vger.kernel.org
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Doug Berger <opendmb@gmail.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net] net: bcmgenet: Correct overlaying of PHY and MAC Wake-on-LAN
+Date: Wed, 29 Jan 2025 15:13:42 -0800
+Message-ID: <20250129231342.35013-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250129-nfsd-6-14-v3-6-506e71e39e6b@kernel.org>
-References: <20250129-nfsd-6-14-v3-0-506e71e39e6b@kernel.org>
-In-Reply-To: <20250129-nfsd-6-14-v3-0-506e71e39e6b@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3342; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=SrBrOxdAiSSWt1qo1usHtLL4Asei1ZG+/Lci0b5nwTQ=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnmrfURknfUWccL+v4OnFGNFglYkLRu+jSZBu1p
- wPN5iqzYd2JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ5q31AAKCRAADmhBGVaC
- FZ8SD/oCD5oHtaaQQ2OuTW5FWaDSUgPtiHyfqzIC23g9Dq0BHrMTYepPuRrTwM2BBWnD0J+CV/W
- WJpAvO60ZyLh9hSeF9sV/UMqhaDGCB/VhjiZrd8HXGuRKrnXv0ROoaGMNEc5OiCnDu7jz3ua7hv
- h7JU1xzHGx+yjTcWEnMKt/Jhe/bfI2OTm+4VZDMmxOeIvLXIiSfreKjs4LcfA86tvagW5Q/vIV2
- Wnk7ldklqW2XF7DcBG33RhVOY9kkimVn5tm11u3dDqORPR44ikgTnPKBqI5eZhVGRVzAQ+2yT/c
- wBvpj/Kcp7qNiivGE+IsLVCHg3xQnS9g+zgAiHwwtP6h0eEWa4DnyVnF1ZbNPhpi2BGto6s0BCJ
- ZtD7URMVP1t4ZifYDsXu5yf24FbAlyfKDDL9EIksyU7y/anC/n4yYQfKRpARa7vbjYMxw2Bl2O1
- VCoHZZT/rez0rz+JSruM/Lc4i0jJzbIcLRgD8C38MeqiJMJEkRFoIeIyIeDPJgVQg9ZGbPrWTse
- 683oxsDzyQLigDgYkZAXF0/NT6YBEc43hOVoZAth1Kmkwa+9JwzZLRsrzZpB9nowKYY3E02sjsf
- VfvsAbPk2VAH3vcSR1VYJRjF41mdkUpyAkDjHuWJmOR6gYU95Scj5Koe5l4Bxc7le5iCxMcTFDI
- 7uKFsJqu7hZG2ZA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Transfer-Encoding: 8bit
 
-It's a bit strange to call nfsd4_cb_sequence_done() on a callback with no
-CB_SEQUENCE. Lift the handling of restarting a call into a new helper,
-and move the handling of NFSv4.0 into nfsd4_cb_done().
+Some Wake-on-LAN modes such as WAKE_FILTER may only be supported by the MAC,
+while others might be only supported by the PHY. Make sure that the .get_wol()
+returns the union of both rather than only that of the PHY if the PHY supports
+Wake-on-LAN.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+When disabling Wake-on-LAN, make sure that this is done at both the PHY
+and MAC level, rather than doing an early return from the PHY driver.
+
+Fixes: 7e400ff35cbe ("net: bcmgenet: Add support for PHY-based Wake-on-LAN")
+Fixes: 9ee09edc05f2 ("net: bcmgenet: Properly overlay PHY and MAC Wake-on-LAN capabilities")
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- fs/nfsd/nfs4callback.c | 53 ++++++++++++++++++++++++++------------------------
- 1 file changed, 28 insertions(+), 25 deletions(-)
+ .../net/ethernet/broadcom/genet/bcmgenet_wol.c   | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index c8834454bcc7b5044de42ec8622653a44dbb0812..bf7248f84913ebd9e8942195b24191e494027dbf 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1383,27 +1383,22 @@ static bool nfsd4_cb_session_changed(struct nfsd4_callback *cb)
- 	return cb->cb_ses != rcu_access_pointer(cb->cb_clp->cl_cb_session);
- }
- 
--static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback *cb)
-+static void requeue_callback(struct rpc_task *task, struct nfsd4_callback *cb)
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+index 0715ea5bf13e..3b082114f2e5 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+@@ -41,9 +41,12 @@ void bcmgenet_get_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
  {
- 	struct nfs4_client *clp = cb->cb_clp;
--	struct nfsd4_session *session = cb->cb_ses;
--	bool ret = false;
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	struct device *kdev = &priv->pdev->dev;
++	u32 phy_wolopts = 0;
  
--	if (!clp->cl_minorversion) {
--		/*
--		 * If the backchannel connection was shut down while this
--		 * task was queued, we need to resubmit it after setting up
--		 * a new backchannel connection.
--		 *
--		 * Note that if we lost our callback connection permanently
--		 * the submission code will error out, so we don't need to
--		 * handle that case here.
--		 */
--		if (RPC_SIGNALLED(task))
--			goto requeue;
--
--		return true;
-+	nfsd41_cb_release_slot(cb);
-+	if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
-+		trace_nfsd_cb_restart(clp, cb);
-+		task->tk_status = 0;
-+		cb->cb_need_restart = true;
- 	}
-+}
-+
-+static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback *cb)
-+{
-+	struct nfsd4_session *session = cb->cb_ses;
-+	bool ret = false;
- 
- 	if (cb->cb_held_slot < 0)
- 		goto requeue;
-@@ -1492,19 +1487,14 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
- retry_nowait:
- 	/*
- 	 * RPC_SIGNALLED() means that the rpc_client is being torn down and
--	 * (possibly) recreated. Restart the call completely in that case.
-+	 * (possibly) recreated. Restart the whole callback in that case.
- 	 */
- 	if (!RPC_SIGNALLED(task)) {
- 		rpc_restart_call_prepare(task);
- 		return false;
- 	}
- requeue:
--	nfsd41_cb_release_slot(cb);
--	if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
--		trace_nfsd_cb_restart(clp, cb);
--		task->tk_status = 0;
--		cb->cb_need_restart = true;
--	}
-+	requeue_callback(task, cb);
- 	return false;
- }
- 
-@@ -1515,8 +1505,21 @@ static void nfsd4_cb_done(struct rpc_task *task, void *calldata)
- 
- 	trace_nfsd_cb_rpc_done(clp);
- 
--	if (!nfsd4_cb_sequence_done(task, cb))
-+	if (!clp->cl_minorversion) {
-+		/*
-+		 * If the backchannel connection was shut down while this
-+		 * task was queued, we need to resubmit it after setting up
-+		 * a new backchannel connection.
-+		 *
-+		 * Note that if we lost our callback connection permanently
-+		 * the submission code will error out, so we don't need to
-+		 * handle that case here.
-+		 */
-+		if (RPC_SIGNALLED(task))
-+			requeue_callback(task, cb);
-+	} else if (!nfsd4_cb_sequence_done(task, cb)) {
- 		return;
+-	if (dev->phydev)
++	if (dev->phydev) {
+ 		phy_ethtool_get_wol(dev->phydev, wol);
++		phy_wolopts = wol->wolopts;
 +	}
  
- 	if (cb->cb_status) {
- 		WARN_ONCE(task->tk_status,
-
+ 	/* MAC is not wake-up capable, return what the PHY does */
+ 	if (!device_can_wakeup(kdev))
+@@ -51,9 +54,14 @@ void bcmgenet_get_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
+ 
+ 	/* Overlay MAC capabilities with that of the PHY queried before */
+ 	wol->supported |= WAKE_MAGIC | WAKE_MAGICSECURE | WAKE_FILTER;
+-	wol->wolopts = priv->wolopts;
+-	memset(wol->sopass, 0, sizeof(wol->sopass));
++	wol->wolopts |= priv->wolopts;
+ 
++	/* Return the PHY configured magic password */
++	if (phy_wolopts & WAKE_MAGICSECURE)
++		return;
++
++	/* Otherwise the MAC one */
++	memset(wol->sopass, 0, sizeof(wol->sopass));
+ 	if (wol->wolopts & WAKE_MAGICSECURE)
+ 		memcpy(wol->sopass, priv->sopass, sizeof(priv->sopass));
+ }
+@@ -70,7 +78,7 @@ int bcmgenet_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
+ 	/* Try Wake-on-LAN from the PHY first */
+ 	if (dev->phydev) {
+ 		ret = phy_ethtool_set_wol(dev->phydev, wol);
+-		if (ret != -EOPNOTSUPP)
++		if (ret != -EOPNOTSUPP && wol->wolopts)
+ 			return ret;
+ 	}
+ 
 -- 
-2.48.1
+2.43.0
 
