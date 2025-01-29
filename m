@@ -1,54 +1,54 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB451EF0A1
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2AB1EEA4B
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738190564; cv=none; b=RuNhXVbrWVF6yqOziLTcNeT7mSnfdJVBRzM5rlw9Kjam9JnEaWXGKPj3wWdsFbkqFwhCbJWmCpe/TCN1d5Mq8+vyd4CBShMTXbJoZJXfnXaCRwvJADRkBj/V6S54Eu5xj9fT2X0mWCZ/aaOqhDsNNlBKBIhkZXMmNZPwmaF5SiQ=
+	t=1738190563; cv=none; b=J3UhkfPttva0+0clfKQa9ipcxrp/njKyUsveaQP1VWKXQWe5jxzMvBoWMEqnRVa1oPL+tLUU5QqooyiV5bT0WB3mV7nhWKrXPUsiAOOs8iDLj0xglqds3g1bJt7B5PVOA5vQ0arqHZ3sib8o8xejyNGA85Bswla4inQ4AeGVXMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738190564; c=relaxed/simple;
-	bh=eHCG7WY67UGKYrY44Wy7HHVBJHdyer2l/4x7EPtb/Sc=;
+	s=arc-20240116; t=1738190563; c=relaxed/simple;
+	bh=afzoeEgScdzoLRJeIhQVvNfYS6XRmn7ijiQwW15m+Kw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Qai+a989OmV4uz4VSCj2OtE/Fxqcl9ywZSFLUdAcWbhDCj04H4ZX8FZ0MAYyPygz4AU1wBr2h9KdHfJ7t1ioWGZ5+So9sz1YHC0Zd4q9B/UhS0NQyQ784JB9oT7GbZIfP3u+y3l38zTZ0GmMSg0xUyczd6VcliczNV4Z+aq/5Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=usReCv4Q; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=UM1HdAINFG+DSaQZcM7QRLSXHwWLomhDYKaPsS0uy0hHjnUrKCvqETUgamvl83B/SGNICpmIVKKVnwkJ1iSMNHDiLcSl16DQK0lhGdquEzmYYCfbxj+WgqG3RwRese0ZInqVdSVV8N+5CBOtCd5WJxfkooCF822CZqnSNEd59ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p9QBqXLv; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="usReCv4Q"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef35de8901so218745a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:42:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p9QBqXLv"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2166855029eso3072785ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:42:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738190562; x=1738795362; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738190561; x=1738795361; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+CyhHbVHq5bo9c6pVj60jCqfagJdD0XsxqtGn3cmahY=;
-        b=usReCv4Q3jIUBX7wsnCiROnSOR29dJ6XOFH7wLoXQMh1Wy7qmcl1+qROYfrcIK535c
-         FOt+EElpX6N/vjMG5xGvrBqV4qy85XabgzhFzIBTBNAm8DF8duML9yMe4+tkZz3bgscH
-         6ySMn5acPCELQWQwD56EsFTXDkQxerBvbLPZ80lMuWmmev5r+jbfwJ/pY2I4a6+vgjXj
-         b5skCTvk9WZ443nPha/Zg1s6kjqEEtabRubffEy+a4kRWV56D/RkYMVnFjugrrdDQ2F5
-         UzIX6AWHy1duw9vuJcqP3vR5OQ/QCYMB6QMSN5ZP+N51h9oqk80XOfPgacJ1EPsoQqeC
-         qwzQ==
+        bh=csxUnMb8aBY+LA7oJhb6s5xyn3ur++3PPVPSPZ4uvnE=;
+        b=p9QBqXLv3aQRv7qy+Za+z2eaSzOnFno6cJJKZ8CctimxTXHXTXweM85GThlYN/nmmV
+         /kiflRtmxGrZ7f/ZZ7VZL6xbWoRfkdN/9aU7WFdNhqWLBgc8wQxg3UXRP2ZJJpzBFYMz
+         HR2QnUSg9UnhxFuKUAJLiOxTCMChTv40UBAIteVWeGc+mQ4wK+JQeNSyW/VrTUn1logQ
+         LUwZfXp7KRaLFqbySwH618Ic3CaUZ1Tp/RhscoZ+eiPNC4ta7lvFVGZX8nV1tqxDxCzC
+         V0NR6sT1fr+wWyDNaNmYbbaGpRFXP2EzVxBUsUSZi4EXfVabGHmj4uGUcN8QI/nYDBi3
+         kzuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738190562; x=1738795362;
+        d=1e100.net; s=20230601; t=1738190561; x=1738795361;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+CyhHbVHq5bo9c6pVj60jCqfagJdD0XsxqtGn3cmahY=;
-        b=pIezIQxaNSpJrlnXCds7lzRjrE3c1XavROBJUxeuCbB7J0t37PAHu3L+dUEpPa5/oT
-         fUSDNBeMMqgXQgnEB2aVzldGw4VqpL4yEe2AcyzVpqdlmp6K50ItrL7hfuY32RueDZQL
-         ZFsXHBiOlKcnG/9aOFyfTfNh5waz0ce14v8wF4isU9t8DL53APCNVuUOqdmJuDjUk4Uw
-         5F3I5oF+Nitnf3XTj9sIPyV3ptK9uEZx4J1IJ8CoaAQ4NwBJH0FuN0WTSAd+yMufqPMZ
-         b+KyFo+VcCuwhVtn0spYcgaUXFOhp8CGXYqEEStSuFYFnGw0B85VsfEggMIb5AR5N2ZJ
-         OHDw==
-X-Forwarded-Encrypted: i=1; AJvYcCU71TUBrc8jhW48OlxJGl2R/2HxQUQXRt3/EYobORv0pk/EYujbo85acKmFu0Z4N2aIr13PD8QbkDyi0XE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywxyy979mSVMykHBkf0o+fOPmqrzAd0PcBktazwd/UhJ/nSi8Or
-	3mLoX6N4b7932AUVKrl//Gu9xAtiJN9BLvgiqIPMT5QgSl963xGISqcqA9tGWhPN+ELgLg==
-X-Google-Smtp-Source: AGHT+IE89jnX+A7X0+O3NBJ62H6UTgZMQLLOdEOYxcL1kGIfjMQLQgaW2k8akmMH2SlD3zsDkP21quJB
-X-Received: from pjbpa2.prod.google.com ([2002:a17:90b:2642:b0:2f4:3ea1:9033])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f8c:b0:2ee:94d1:7a89
- with SMTP id 98e67ed59e1d1-2f83ab8c371mr6910663a91.1.1738190562213; Wed, 29
- Jan 2025 14:42:42 -0800 (PST)
-Date: Wed, 29 Jan 2025 22:41:45 +0000
+        bh=csxUnMb8aBY+LA7oJhb6s5xyn3ur++3PPVPSPZ4uvnE=;
+        b=ErZQEB9eGcdo0QsLhBM/VbwqJb1n85bYU2JdPR2By4R84BVwhvlZVQ8hMs0XTNGfvH
+         uuMr3oFRCGlqX9vtd90rzaVbnFZtzyu51NKwTpZCSL8GWPWgiyORYhQfmp2nSUsJIYMY
+         jcuCIT7Lc8nlsXWfRICNFFi+PvhpOudgYmCjGTJVGpgwJ0D5HKvg6Q4QqETNl/uAlQf8
+         PeY4NHJc/icT+6q+4lPG+8YSXaXbbsbbfw/TgbBO3v8b6OnfnUUs6+R+EuFSal/XLTo5
+         Z4Qkebeh7OhJ31qoiLK72DJ5OK4WFEddXZ00jE5/T6wP9YNDsFr77UG2R8SJi6RYwVRt
+         UTIg==
+X-Forwarded-Encrypted: i=1; AJvYcCX/holTjDRJJtp6g0DS4zdYkSOmCGzLj1DzUCdUYOrRhtBMrLbDxbQDhb80cqVxROhq8H/vQo/7BHpQlNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJuZoBHA6EeZc1akMMNOX7qvwzNX+cyDYdOXld2uQZZ+W2+kFW
+	ogbMLvWwKP7OOkJ4Wy8K6iHZ9OIA6RcGOkEFHwQUEZbZ6no3HyV6INMstbTNPxorIw/0iA==
+X-Google-Smtp-Source: AGHT+IE8Pv/vPlQg3Zsgd/miPk81S+cEO0cUOfh7UtusaUeUsumjXw+Yjo59fdOEUHr7Es0q7li1hf72
+X-Received: from pfbbe5.prod.google.com ([2002:a05:6a00:1f05:b0:728:e3af:6bb0])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3a0f:b0:71e:e4f:3e58
+ with SMTP id d2e1a72fcca58-72fd0c623ccmr6357836b3a.17.1738190560818; Wed, 29
+ Jan 2025 14:42:40 -0800 (PST)
+Date: Wed, 29 Jan 2025 22:41:44 +0000
 In-Reply-To: <20250129224157.2046079-1-fvdl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250129224157.2046079-1-fvdl@google.com>
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Message-ID: <20250129224157.2046079-17-fvdl@google.com>
-Subject: [PATCH v2 16/28] mm/hugetlb: deal with multiple calls to hugetlb_bootmem_alloc
+Message-ID: <20250129224157.2046079-16-fvdl@google.com>
+Subject: [PATCH v2 15/28] mm/sparse: add vmemmap_*_hvo functions
 From: Frank van der Linden <fvdl@google.com>
 To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
@@ -67,79 +67,305 @@ Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com,
 	roman.gushchin@linux.dev, Frank van der Linden <fvdl@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Architectures that want pre-HVO of hugetlb vmemmap pages
-will need to call hugetlb_bootmem_alloc from an earlier
-spot in boot (before sparse_init). To facilitate some
-architectures doing this, protect hugetlb_bootmem_alloc
-against multiple calls.
+Add a few functions to enable early HVO:
 
-Also provide a helper function to check if it's been called,
-so that the early HVO code, to be added later, can see if there
-is anything to do.
+vmemmap_populate_hvo
+vmemmap_undo_hvo
+vmemmap_wrprotect_hvo
+
+The populate and undo functions are expected to be used in early
+init, from the sparse_init_nid_early() function. The wrprotect
+function is to be used, potentially, later.
+
+To implement these functions, mostly re-use the existing
+compound pages vmemmap logic used by DAX. vmemmap_populate_address
+has its argument changed a bit in this commit: the page structure
+passed in to be reused in the mapping is replaced by a PFN and a
+flag. The flag indicates whether an extra ref should be taken on
+the vmemmap page containing the head page structure. Taking the
+ref is appropriate to for DAX / ZONE_DEVICE, but not for HugeTLB
+HVO.
+
+The HugeTLB vmemmap optimization maps tail page structure pages
+read-only. The vmemmap_wrprotect_hvo function that does this is
+implemented separately, because it cannot be guaranteed that reserved
+page structures will not be write accessed during memory initialization.
+Even with CONFIG_DEFERRED_STRUCT_PAGE_INIT, they might still be
+written to (if they are at the bottom of a zone). So,
+vmemmap_populate_hvo leaves the tail page structure pages RW initially,
+and then later during initialization, after memmap init is fully done,
+vmemmap_wrprotect_hvo must be called to finish the job.
+
+Subsequent commits will use these functions for early HugeTLB HVO.
 
 Signed-off-by: Frank van der Linden <fvdl@google.com>
 ---
- include/linux/hugetlb.h |  6 ++++++
- mm/hugetlb.c            | 12 ++++++++++++
- 2 files changed, 18 insertions(+)
+ include/linux/mm.h  |   9 ++-
+ mm/sparse-vmemmap.c | 141 +++++++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 135 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 9cd7c9dacb88..5061279e5f73 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -175,6 +175,7 @@ extern int sysctl_hugetlb_shm_group;
- extern struct list_head huge_boot_pages[MAX_NUMNODES];
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index df83653ed6e3..0463c062fd7a 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3837,7 +3837,8 @@ p4d_t *vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node);
+ pud_t *vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node);
+ pmd_t *vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node);
+ pte_t *vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
+-			    struct vmem_altmap *altmap, struct page *reuse);
++			    struct vmem_altmap *altmap, unsigned long ptpfn,
++			    unsigned long flags);
+ void *vmemmap_alloc_block(unsigned long size, int node);
+ struct vmem_altmap;
+ void *vmemmap_alloc_block_buf(unsigned long size, int node,
+@@ -3853,6 +3854,12 @@ int vmemmap_populate_hugepages(unsigned long start, unsigned long end,
+ 			       int node, struct vmem_altmap *altmap);
+ int vmemmap_populate(unsigned long start, unsigned long end, int node,
+ 		struct vmem_altmap *altmap);
++int vmemmap_populate_hvo(unsigned long start, unsigned long end, int node,
++			 unsigned long headsize);
++int vmemmap_undo_hvo(unsigned long start, unsigned long end, int node,
++		     unsigned long headsize);
++void vmemmap_wrprotect_hvo(unsigned long start, unsigned long end, int node,
++			  unsigned long headsize);
+ void vmemmap_populate_print_last(void);
+ #ifdef CONFIG_MEMORY_HOTPLUG
+ void vmemmap_free(unsigned long start, unsigned long end,
+diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+index 8751c46c35e4..bee22ca93654 100644
+--- a/mm/sparse-vmemmap.c
++++ b/mm/sparse-vmemmap.c
+@@ -30,6 +30,13 @@
  
- void hugetlb_bootmem_alloc(void);
-+bool hugetlb_bootmem_allocated(void);
+ #include <asm/dma.h>
+ #include <asm/pgalloc.h>
++#include <asm/tlbflush.h>
++
++/*
++ * Flags for vmemmap_populate_range and friends.
++ */
++/* Get a ref on the head page struct page, for ZONE_DEVICE compound pages */
++#define VMEMMAP_POPULATE_PAGEREF	0x0001
  
- /* arch callbacks */
+ #include "internal.h"
  
-@@ -1256,6 +1257,11 @@ static inline bool hugetlbfs_pagecache_present(
- static inline void hugetlb_bootmem_alloc(void)
+@@ -144,17 +151,18 @@ void __meminit vmemmap_verify(pte_t *pte, int node,
+ 
+ pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
+ 				       struct vmem_altmap *altmap,
+-				       struct page *reuse)
++				       unsigned long ptpfn, unsigned long flags)
  {
- }
-+
-+static inline bool hugetlb_bootmem_allocated(void)
-+{
-+	return false;
-+}
- #endif	/* CONFIG_HUGETLB_PAGE */
+ 	pte_t *pte = pte_offset_kernel(pmd, addr);
+ 	if (pte_none(ptep_get(pte))) {
+ 		pte_t entry;
+ 		void *p;
  
- static inline spinlock_t *huge_pte_lock(struct hstate *h,
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index a0a87d1a8569..0a27659d9290 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4911,16 +4911,28 @@ static int __init default_hugepagesz_setup(char *s)
- }
- hugetlb_early_param("default_hugepagesz", default_hugepagesz_setup);
- 
-+static bool __hugetlb_bootmem_allocated __initdata;
-+
-+bool __init hugetlb_bootmem_allocated(void)
-+{
-+	return __hugetlb_bootmem_allocated;
-+}
-+
- void __init hugetlb_bootmem_alloc(void)
- {
- 	struct hstate *h;
- 
-+	if (__hugetlb_bootmem_allocated)
-+		return;
-+
- 	hugetlb_parse_params();
- 
- 	for_each_hstate(h) {
- 		if (hstate_is_gigantic(h))
- 			hugetlb_hstate_alloc_pages(h);
+-		if (!reuse) {
++		if (!ptpfn) {
+ 			p = vmemmap_alloc_block_buf(PAGE_SIZE, node, altmap);
+ 			if (!p)
+ 				return NULL;
++			ptpfn = PHYS_PFN(__pa(p));
+ 		} else {
+ 			/*
+ 			 * When a PTE/PMD entry is freed from the init_mm
+@@ -165,10 +173,10 @@ pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
+ 			 * and through vmemmap_populate_compound_pages() when
+ 			 * slab is available.
+ 			 */
+-			get_page(reuse);
+-			p = page_to_virt(reuse);
++			if (flags & VMEMMAP_POPULATE_PAGEREF)
++				get_page(pfn_to_page(ptpfn));
+ 		}
+-		entry = pfn_pte(__pa(p) >> PAGE_SHIFT, PAGE_KERNEL);
++		entry = pfn_pte(ptpfn, PAGE_KERNEL);
+ 		set_pte_at(&init_mm, addr, pte, entry);
  	}
+ 	return pte;
+@@ -238,7 +246,8 @@ pgd_t * __meminit vmemmap_pgd_populate(unsigned long addr, int node)
+ 
+ static pte_t * __meminit vmemmap_populate_address(unsigned long addr, int node,
+ 					      struct vmem_altmap *altmap,
+-					      struct page *reuse)
++					      unsigned long ptpfn,
++					      unsigned long flags)
+ {
+ 	pgd_t *pgd;
+ 	p4d_t *p4d;
+@@ -258,7 +267,7 @@ static pte_t * __meminit vmemmap_populate_address(unsigned long addr, int node,
+ 	pmd = vmemmap_pmd_populate(pud, addr, node);
+ 	if (!pmd)
+ 		return NULL;
+-	pte = vmemmap_pte_populate(pmd, addr, node, altmap, reuse);
++	pte = vmemmap_pte_populate(pmd, addr, node, altmap, ptpfn, flags);
+ 	if (!pte)
+ 		return NULL;
+ 	vmemmap_verify(pte, node, addr, addr + PAGE_SIZE);
+@@ -269,13 +278,15 @@ static pte_t * __meminit vmemmap_populate_address(unsigned long addr, int node,
+ static int __meminit vmemmap_populate_range(unsigned long start,
+ 					    unsigned long end, int node,
+ 					    struct vmem_altmap *altmap,
+-					    struct page *reuse)
++					    unsigned long ptpfn,
++					    unsigned long flags)
+ {
+ 	unsigned long addr = start;
+ 	pte_t *pte;
+ 
+ 	for (; addr < end; addr += PAGE_SIZE) {
+-		pte = vmemmap_populate_address(addr, node, altmap, reuse);
++		pte = vmemmap_populate_address(addr, node, altmap,
++					       ptpfn, flags);
+ 		if (!pte)
+ 			return -ENOMEM;
+ 	}
+@@ -286,7 +297,107 @@ static int __meminit vmemmap_populate_range(unsigned long start,
+ int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
+ 					 int node, struct vmem_altmap *altmap)
+ {
+-	return vmemmap_populate_range(start, end, node, altmap, NULL);
++	return vmemmap_populate_range(start, end, node, altmap, 0, 0);
++}
 +
-+	__hugetlb_bootmem_allocated = true;
++/*
++ * Undo populate_hvo, and replace it with a normal base page mapping.
++ * Used in memory init in case a HVO mapping needs to be undone.
++ *
++ * This can happen when it is discovered that a memblock allocated
++ * hugetlb page spans multiple zones, which can only be verified
++ * after zones have been initialized.
++ *
++ * We know that:
++ * 1) The first @headsize / PAGE_SIZE vmemmap pages were individually
++ *    allocated through memblock, and mapped.
++ *
++ * 2) The rest of the vmemmap pages are mirrors of the last head page.
++ */
++int __meminit vmemmap_undo_hvo(unsigned long addr, unsigned long end,
++				      int node, unsigned long headsize)
++{
++	unsigned long maddr, pfn;
++	pte_t *pte;
++	int headpages;
++
++	/*
++	 * Should only be called early in boot, so nothing will
++	 * be accessing these page structures.
++	 */
++	WARN_ON(!early_boot_irqs_disabled);
++
++	headpages = headsize >> PAGE_SHIFT;
++
++	/*
++	 * Clear mirrored mappings for tail page structs.
++	 */
++	for (maddr = addr + headsize; maddr < end; maddr += PAGE_SIZE) {
++		pte = virt_to_kpte(maddr);
++		pte_clear(&init_mm, maddr, pte);
++	}
++
++	/*
++	 * Clear and free mappings for head page and first tail page
++	 * structs.
++	 */
++	for (maddr = addr; headpages-- > 0; maddr += PAGE_SIZE) {
++		pte = virt_to_kpte(maddr);
++		pfn = pte_pfn(ptep_get(pte));
++		pte_clear(&init_mm, maddr, pte);
++		memblock_phys_free(PFN_PHYS(pfn), PAGE_SIZE);
++	}
++
++	flush_tlb_kernel_range(addr, end);
++
++	return vmemmap_populate(addr, end, node, NULL);
++}
++
++/*
++ * Write protect the mirrored tail page structs for HVO. This will be
++ * called from the hugetlb code when gathering and initializing the
++ * memblock allocated gigantic pages. The write protect can't be
++ * done earlier, since it can't be guaranteed that the reserved
++ * page structures will not be written to during initialization,
++ * even if CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled.
++ *
++ * The PTEs are known to exist, and nothing else should be touching
++ * these pages. The caller is responsible for any TLB flushing.
++ */
++void vmemmap_wrprotect_hvo(unsigned long addr, unsigned long end,
++				    int node, unsigned long headsize)
++{
++	unsigned long maddr;
++	pte_t *pte;
++
++	for (maddr = addr + headsize; maddr < end; maddr += PAGE_SIZE) {
++		pte = virt_to_kpte(maddr);
++		ptep_set_wrprotect(&init_mm, maddr, pte);
++	}
++}
++
++/*
++ * Populate vmemmap pages HVO-style. The first page contains the head
++ * page and needed tail pages, the other ones are mirrors of the first
++ * page.
++ */
++int __meminit vmemmap_populate_hvo(unsigned long addr, unsigned long end,
++				       int node, unsigned long headsize)
++{
++	pte_t *pte;
++	unsigned long maddr;
++
++	for (maddr = addr; maddr < addr + headsize; maddr += PAGE_SIZE) {
++		pte = vmemmap_populate_address(maddr, node, NULL, 0, 0);
++		if (!pte)
++			return -ENOMEM;
++	}
++
++	/*
++	 * Reuse the last page struct page mapped above for the rest.
++	 */
++	return vmemmap_populate_range(maddr, end, node, NULL,
++					pte_pfn(ptep_get(pte)), 0);
  }
  
- static unsigned int allowed_mems_nr(struct hstate *h)
+ void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
+@@ -409,7 +520,8 @@ static int __meminit vmemmap_populate_compound_pages(unsigned long start_pfn,
+ 		 * with just tail struct pages.
+ 		 */
+ 		return vmemmap_populate_range(start, end, node, NULL,
+-					      pte_page(ptep_get(pte)));
++					      pte_pfn(ptep_get(pte)),
++					      VMEMMAP_POPULATE_PAGEREF);
+ 	}
+ 
+ 	size = min(end - start, pgmap_vmemmap_nr(pgmap) * sizeof(struct page));
+@@ -417,13 +529,13 @@ static int __meminit vmemmap_populate_compound_pages(unsigned long start_pfn,
+ 		unsigned long next, last = addr + size;
+ 
+ 		/* Populate the head page vmemmap page */
+-		pte = vmemmap_populate_address(addr, node, NULL, NULL);
++		pte = vmemmap_populate_address(addr, node, NULL, 0, 0);
+ 		if (!pte)
+ 			return -ENOMEM;
+ 
+ 		/* Populate the tail pages vmemmap page */
+ 		next = addr + PAGE_SIZE;
+-		pte = vmemmap_populate_address(next, node, NULL, NULL);
++		pte = vmemmap_populate_address(next, node, NULL, 0, 0);
+ 		if (!pte)
+ 			return -ENOMEM;
+ 
+@@ -433,7 +545,8 @@ static int __meminit vmemmap_populate_compound_pages(unsigned long start_pfn,
+ 		 */
+ 		next += PAGE_SIZE;
+ 		rc = vmemmap_populate_range(next, last, node, NULL,
+-					    pte_page(ptep_get(pte)));
++					    pte_pfn(ptep_get(pte)),
++					    VMEMMAP_POPULATE_PAGEREF);
+ 		if (rc)
+ 			return -ENOMEM;
+ 	}
 -- 
 2.48.1.262.g85cc9f2d1e-goog
 
