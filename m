@@ -1,116 +1,984 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFB2190462;
-	Wed, 29 Jan 2025 19:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D775C197552
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738179028; cv=none; b=ZkqpCQKpmQHggCywwxcA+ZI8w471l4E9sUNay+CEvyONcdl16DvjA7f0vkjcs98ysekaiQo2Gg/sZrIzxZQyxcVgD7Fpo8oz33Mi+yZMyWLKVdBSUEQ8WUj/y02+qT7DuMpvf9qVuBYu3tQCtVJFepPI93rLmvwgOfDEA5zw6Xo=
+	t=1738179046; cv=none; b=VoPLTo60IsJT93gBijpYuCz1cL2yLmph95C5+3HZpLnyo4VIddp+dvdpph9KQyyygGBy1+JMexfIKmmVWPxJhQyAQbOLdC4ZzXZ7uNVMPvhN8oxtRhy0vJNj8AHsgTSPgvptR/9q714JdPTt1y6nsXsZe5F6252jcvizIikKDZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738179028; c=relaxed/simple;
-	bh=rWQreQiAU48uL9T3JNDkwkNmknGBAbDTji6X7fbwfKA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V8K7BXq0Lq1hKeG073/r9fk2uNlXqRLfvwvMjXKuqvWmLHDD9rOqXfwlnw2cByuRaHENtzunpw3NjR+tZ4WWRxapElGUgOLd0z/cuoN1mR44Rft5Raz9KC6dg/E3O3frX3xEa426fJxtaq4v1PTnowrKbgZ6c6XyQJ0Nro/ROLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UhTihInd; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738179046; c=relaxed/simple;
+	bh=WTi+jbWLszqVOVl9orbvsSk1FVeUBGZMBboUp4TPQ9M=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=ty86x6BRDM8U/MEpWO0hISscGbanMk8ZytWqvWPSrak+Op25PsOc01n+b4DszldgBLcSFH8y+GAk8MTMXSrJ5d0iQ6SM9FXyaMsHtUCuUNjL4yNSzx9Aje5lv4aGwe+nuo2KwdOeoM0vHAjuP3Yx3yS3X3pQErF2bmJJvdyLqDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pe7UFvjW; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhTihInd"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43624b2d453so81243665e9.2;
-        Wed, 29 Jan 2025 11:30:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pe7UFvjW"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e53bf9e60e4so186366276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 11:30:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738179025; x=1738783825; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FmDVhjSuNtL0NR/wOvEkkLqWRufG3IvH9lliz9davJI=;
-        b=UhTihIndgdHqvVQXNuVCH24YFnYWho7AKEna7t/cXuFYrCLX0pbr5Sve2sOBjurfs3
-         zWY0O7PN+pbY9vX0NggluyVOBbOQrwnibsQLi5Kk3zjrUvGydqiRA9ZwkYFtLpHqr73T
-         XbJ9/83IN8fRb1RPn+PR6ttE/aBNCgMV2EJSPD3rqJD6w3EAT9IwTb6HQyQ1CrjJrgBH
-         uvkM9FxBaVARsYjfS7Y32yXQ/xHrMkHLJI5CC+jg6Vr9alwFjdJmOx6PpEBs58JHhwk+
-         6Aaz0FcPRoaeaNFbbXJvYk7HdkI8i0ulgAyG730TDL/cwMoxUYDnJV0kZXaiHZgR+ugq
-         YUJA==
+        d=google.com; s=20230601; t=1738179043; x=1738783843; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7litlc2CGuT9rl+8Yx23+8ot4P/QLhMj5aQ614Cv4m8=;
+        b=pe7UFvjWInQ7QIycyzA7LqZRfAFMqe5PeBsztM5U0RP7o2pAQUeuTJyJX961D9qeWy
+         eo1RMSqARnJJV/5NOwsTdvz1hf4SRswA3k435JfXZ5csAsgizhf6yVmARhbcNCdde/Ou
+         j2WHIqTFU9YO/TG5xo+Ixm28rG6xB5p1q7X5Y4BArpoNbN0A/K1/bwy5up1eycFPDSmY
+         pXo0zvGDXC2/v3HR/iE86pDy6oOWthazEabapj3A7OwRWidvHNKUVxfxhO5c9fYH2Ayn
+         n/Ht/lirxwL5sR28f4b1BPMuuewNd6VVA5nsKcSWjZoJSLTHLANDZ49mpN30ADLMIdso
+         qCFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738179025; x=1738783825;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FmDVhjSuNtL0NR/wOvEkkLqWRufG3IvH9lliz9davJI=;
-        b=FDFbSarX2WBy3CXNVCjLt2SgXO8154uItrr/oDFKuHq6xBwZCmylMwJCDiAbLjTcvc
-         lt6Dlv6XJ8PB9s0RDzEcUudEuZPQuf1LKXqmXq/fCnReq+sxuulvh/7Oe6sSKFWzFW+b
-         Q6GkiWmSDKAhg99guBaIEpAeu5z/n7jq37ar0uf2Qk32SXgOjHzfLsVA/d0xv4bUdtJH
-         kss+y0SAo5QBcDGISNUfdwlNGob/6KXJsT/9R6G2dj+8SdpSii9vzC+Nud3jKqtpdASe
-         BZxmhXzUVrR6fPxbQRX8FcyrP/HkpFtzwj74jp4dbBW5IsfVFPi3ts3Nyi5PVKgKPpmZ
-         y2Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxWZI+tCVAJoB25rKCVxg2bvqDzXEQNEPan+olO0dmgFRL8u9BgOp2rrE+FXhKS8IUEz0WYDSADjU3pNk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwebNCHxOgfCjZSe2VPl6RUfCy7hPetw9WEbgYE+LM6q41mR48j
-	5T+iroWjtaQVolKDMouL/5bJp1yIbbIRsm7fF6/uVNmbscg8EdxP
-X-Gm-Gg: ASbGnctDLsulDLvXTUF2JAPJzETHRZz39X3X5BVXCvCVU2jpugEVCeVoD7MFVNhccXB
-	GLFK2AGW500Daununi5HmG0w1LJeahLXbzQebaD6IzIhTguqvj56FsPGBpmH9pq8M5azCMj5Q8+
-	cgrC6OeUHNjR2QJA34rhy3KjKdBInv9iJHpY27R4/vqH5fY8kV5MPYge0aFPi2lOSQvKWWEsTtO
-	0oYOvkhkAhYT0dGH/RbqNnJ6/kIQmOwXA6OAZXarvYlWnCq2mN/sp239EO6QhUtRl34p27sF4WX
-	2IfsrRMXn+8FtJzoZx20rRDH1Q==
-X-Google-Smtp-Source: AGHT+IFO4M9+9EH1K7BeLhcwlrue3FMAM0Y/HMdT3eAAsdx74yDxpJEgJikBayBE6IUVp0idwQVq/g==
-X-Received: by 2002:a05:600c:4f55:b0:434:a1d3:a321 with SMTP id 5b1f17b1804b1-438dc3aada7mr42461765e9.3.1738179024523;
-        Wed, 29 Jan 2025 11:30:24 -0800 (PST)
-Received: from [192.168.8.100] ([148.252.147.217])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcbbc52dsm34178265e9.0.2025.01.29.11.30.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2025 11:30:23 -0800 (PST)
-Message-ID: <a5d8d039-f2d7-4adb-afd7-693b3be41e45@gmail.com>
-Date: Wed, 29 Jan 2025 19:30:43 +0000
+        d=1e100.net; s=20230601; t=1738179043; x=1738783843;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7litlc2CGuT9rl+8Yx23+8ot4P/QLhMj5aQ614Cv4m8=;
+        b=rtRk1B6CQgReUEhB5lnwMyDYChuC1LK3KIEwRyk1h843CnC/2GOMuUkanlbrf9091Q
+         PI2xLvfwJGz7ttjTjRCoivWKYlJU6/UIl3BLGj8EDFa2F6Hsr6dxDcQLWe57kQti+p9g
+         R6BeJ1b0rtxNay9de0+C7SR9dpP1S0NsVT3B+zRq8kF/a0Wn8uBiGso/qBU5DJ0h9tqI
+         M5pekvX7ztaWj0slVoVqzK5Nprn5yhvfFQ1UdE+DXVn+S4gf8PQkcZQn4SE2ZYXQMXSD
+         FI+mxo1mPi13Wcp/yfzZTmYlkxy7uGBm+gfV0GLrrOHngG2syZCsfvkza+ex0p0sHiuW
+         wJpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNMj4RzT667kh+puvqpXcolufPV54MDvHfeglC4v0m0AMlZvSODs8P6feNR//wnbfX1rGX7p3jtspdW/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOFsFPGgi8mS9RGX4tTRMdMGuyA5m/+oQyAllAo54RsQqutQa0
+	w8316La7Z0hznHGOfZypzKO1xAUIVX25p3jMltLGncKJ/rlI+UgYF+NDjvTTVsUlHJp5l/pXSBS
+	DL0oGuA==
+X-Google-Smtp-Source: AGHT+IGJBWdFIkaXKxSIRMZcHZDcCBh53NO9gP23DGMxnFBgTd7ZUI/2tvcb2thDTeLCid9u+mNY1sG3H6N+
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:1c26:84f0:f1e0:1d98])
+ (user=irogers job=sendgmr) by 2002:a0d:c2c2:0:b0:6ef:77f1:4e73 with SMTP id
+ 00721157ae682-6f7a83fcf41mr88357b3.4.1738179042655; Wed, 29 Jan 2025 11:30:42
+ -0800 (PST)
+Date: Wed, 29 Jan 2025 11:30:37 -0800
+Message-Id: <20250129193037.573431-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] Various io_uring micro-optimizations (reducing lock
- contention)
-To: Max Kellermann <max.kellermann@ionos.com>, Jens Axboe <axboe@kernel.dk>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250128133927.3989681-1-max.kellermann@ionos.com>
- <7f046e6e-bb9d-4e72-9683-2cdfeabf51bc@kernel.dk>
- <CAKPOu+90YT8KSbadN8jsag+3OnwPKWUDABv+RUFdBgj73yzgWQ@mail.gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <CAKPOu+90YT8KSbadN8jsag+3OnwPKWUDABv+RUFdBgj73yzgWQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
+Subject: [PATCH v1] perf symbol: Add rust v0 demangling support
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Daniel Xu <dxu@dxuuu.xyz>
+Content-Type: text/plain; charset="UTF-8"
 
-On 1/29/25 17:39, Max Kellermann wrote:
-> On Wed, Jan 29, 2025 at 6:19 PM Jens Axboe <axboe@kernel.dk> wrote:
->> The other patches look pretty straight forward to me. Only thing that
->> has me puzzled a bit is why you have so much io-wq activity with your
->> application, in general I'd expect 0 activity there. But Then I saw the
->> forced ASYNC flag, and it makes sense. In general, forcing that isn't a
->> great idea, but for a benchmark for io-wq it certainly makes sense.
-> 
-> I was experimenting with io_uring and wanted to see how much
-> performance I can squeeze out of my web server running
-> single-threaded. The overhead of io_uring_submit() grew very large,
-> because the "send" operation would do a lot of synchronous work in the
-> kernel. I tried SQPOLL but it was actually a big performance
-> regression; this just shifted my CPU usage to epoll_wait(). Forcing
-> ASYNC gave me large throughput improvements (moving the submission
-> overhead to iowq), but then the iowq lock contention was the next
-> limit, thus this patch series.
+Implement symbol demangling based on:
+https://doc.rust-lang.org/rustc/symbol-mangling/index.html
 
-It's great to see iowq getting some optimisations, but note that
-it wouldn't be fair comparing it to single threaded peers when
-you have a lot of iowq activity as it might be occupying multiple
-CPUs. A curious open question is whether it'd be more performant
-to have several user threads with their private rings.
+Ensure recommended demangling examples match the expectations in the
+documentation.
 
-> I'm still experimenting, and I will certainly revisit SQPOLL to learn
-> more about why it didn't help and how to fix it.
+This was requested by Daniel Xu <dxu@dxuuu.xyz> in:
+https://lore.kernel.org/lkml/jgxfnphfo3nzlfipnuuzdlfc4ehbr2tnh2evz3mdhynd6wvrsu@fcz6vrvepybb/
 
-It's wasteful unless you saturate it close to 100%, and then you
-usually have SQPOLL on a separate CPU than the user task submitting
-requests, and so it'd take some cache bouncing. It's not a silver
-bullet.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+This change is on top of the 18 patch v3 series:
+https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com/
+---
+ tools/perf/tests/Build                   |   1 +
+ tools/perf/tests/builtin-test.c          |   1 +
+ tools/perf/tests/demangle-rust-v0-test.c |  82 +++
+ tools/perf/tests/tests.h                 |   1 +
+ tools/perf/util/Build                    |   1 +
+ tools/perf/util/demangle-rust-v0.c       | 661 +++++++++++++++++++++++
+ tools/perf/util/demangle-rust-v0.h       |   7 +
+ tools/perf/util/symbol-elf.c             |  31 +-
+ 8 files changed, 771 insertions(+), 14 deletions(-)
+ create mode 100644 tools/perf/tests/demangle-rust-v0-test.c
+ create mode 100644 tools/perf/util/demangle-rust-v0.c
+ create mode 100644 tools/perf/util/demangle-rust-v0.h
 
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 165ba84dc93f..d59d88abf0da 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -56,6 +56,7 @@ perf-test-y += genelf.o
+ perf-test-y += api-io.o
+ perf-test-y += demangle-java-test.o
+ perf-test-y += demangle-ocaml-test.o
++perf-test-y += demangle-rust-v0-test.o
+ perf-test-y += pfm.o
+ perf-test-y += parse-metric.o
+ perf-test-y += expand-cgroup.o
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index e77bf446e821..16937e7e313a 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -126,6 +126,7 @@ static struct test_suite *generic_tests[] = {
+ 	&suite__maps__merge_in,
+ 	&suite__demangle_java,
+ 	&suite__demangle_ocaml,
++	&suite__demangle_rust,
+ 	&suite__parse_metric,
+ 	&suite__expand_cgroup_events,
+ 	&suite__perf_time_to_tsc,
+diff --git a/tools/perf/tests/demangle-rust-v0-test.c b/tools/perf/tests/demangle-rust-v0-test.c
+new file mode 100644
+index 000000000000..ab6613e02c94
+--- /dev/null
++++ b/tools/perf/tests/demangle-rust-v0-test.c
+@@ -0,0 +1,82 @@
++// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++#include "tests.h"
++#include "debug.h"
++#include "demangle-rust-v0.h"
++#include <linux/kernel.h>
++#include <stdlib.h>
++#include <string.h>
++
++static int test__demangle_rust(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
++{
++	int ret = TEST_OK;
++	char *buf = NULL;
++	size_t i;
++
++	struct {
++		const char *mangled, *demangled;
++	} test_cases[] = {
++		{ "_RNvMsr_NtCs3ssYzQotkvD_3std4pathNtB5_7PathBuf3newCs15kBYyAo9fc_7mycrate",
++		  "<std::path::PathBuf>::new" },
++		{ "_RNvCs15kBYyAo9fc_7mycrate7example",
++		  "mycrate::example" },
++		{ "_RNvMs_Cs4Cv8Wi1oAIB_7mycrateNtB4_7Example3foo",
++		  "<mycrate::Example>::foo" },
++		{ "_RNvXCs15kBYyAo9fc_7mycrateNtB2_7ExampleNtB2_5Trait3foo",
++		  "<mycrate::Example as mycrate::Trait>::foo" },
++		{ "_RNvMCs7qp2U7fqm6G_7mycrateNtB2_7Example3foo",
++		  "<mycrate::Example>::foo" },
++		{ "_RNvMs_Cs7qp2U7fqm6G_7mycrateNtB4_7Example3bar",
++		  "<mycrate::Example>::bar" },
++		{ "_RNvYNtCs15kBYyAo9fc_7mycrate7ExampleNtB4_5Trait7exampleB4_",
++		  "<mycrate::Example as mycrate::Trait>::example" },
++		{ "_RNCNvCsgStHSCytQ6I_7mycrate4main0B3_",
++		  "mycrate::main::{closure#0}" },
++		{ "_RNCNvCsgStHSCytQ6I_7mycrate4mains_0B3_",
++		  "mycrate::main::{closure#1}" },
++		{ "_RINvCsgStHSCytQ6I_7mycrate7examplelKj1_EB2_",
++		  "mycrate::example::<i32, 1>" },
++		{ "_RINvCs7qp2U7fqm6G_7mycrate7exampleFG0_RL1_hRL0_tEuEB2_",
++		  "mycrate::example::<(&'_2 u8, &'_1 u16) -> ()>",
++		  /*
++		   * TODO: the recommended demangling is:
++		   * mycrate::example::<for<'a, 'b> fn(&'a u8, &'b u16)>
++		   */
++		},
++		{ "_RINvCs7qp2U7fqm6G_7mycrate7exampleKy12345678_EB2_",
++		  "mycrate::example::<305419896>" },
++		{ "_RNvNvMCsd9PVOYlP1UU_7mycrateINtB4_7ExamplepKpE3foo14EXAMPLE_STATIC",
++		  "<mycrate::Example::<_, _>>::foo::EXAMPLE_STATIC"
++		  /*
++		   * TODO: the recommended demangling is (the :: is optional):
++		   * <mycrate::Example<_, _>>::foo::EXAMPLE_STATIC
++		   */
++		},
++		{ "_RINvCs7qp2U7fqm6G_7mycrate7exampleAtj8_EB2_",
++		  "mycrate::example::<[u16; 8]>" },
++		{ "_RINvCs7qp2U7fqm6G_7mycrate7exampleNtB2_7ExampleBw_EB2_",
++		  "mycrate::example::<mycrate::Example, mycrate::Example>" },
++		{ "_RINvMsY_NtCseXNvpPnDBDp_3std4pathNtB6_4Path3neweECs7qp2U7fqm6G_7mycrate",
++		  "<std::path::Path>::new::<str>" },
++		{ "_RNvNvNvCs7qp2U7fqm6G_7mycrate7EXAMPLE7___getit5___KEY",
++		  "mycrate::EXAMPLE::__getit::__KEY" },
++	};
++
++	for (i = 0; i < ARRAY_SIZE(test_cases); i++) {
++		buf = rust_v0_demangle_sym(test_cases[i].mangled);
++		if (!buf) {
++			pr_debug("FAILED to demangle: \"%s\"\n \"%s\"\n", test_cases[i].mangled,
++				 test_cases[i].demangled);
++			continue;
++		}
++		if (strcmp(buf, test_cases[i].demangled)) {
++			pr_debug("FAILED: %s: %s != %s\n", test_cases[i].mangled,
++				 buf, test_cases[i].demangled);
++			ret = TEST_FAIL;
++		}
++		free(buf);
++	}
++
++	return ret;
++}
++
++DEFINE_SUITE("Demangle Rust", demangle_rust);
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 751c8489059a..e1e846c9da4e 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -157,6 +157,7 @@ DECLARE_SUITE(jit_write_elf);
+ DECLARE_SUITE(api_io);
+ DECLARE_SUITE(demangle_java);
+ DECLARE_SUITE(demangle_ocaml);
++DECLARE_SUITE(demangle_rust);
+ DECLARE_SUITE(pfm);
+ DECLARE_SUITE(parse_metric);
+ DECLARE_SUITE(expand_cgroup_events);
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 43408d2de4a2..d1c82d9ab4d7 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -240,6 +240,7 @@ perf-util-$(CONFIG_CXX_DEMANGLE) += demangle-cxx.o
+ perf-util-y += demangle-ocaml.o
+ perf-util-y += demangle-java.o
+ perf-util-y += demangle-rust.o
++perf-util-y += demangle-rust-v0.o
+ 
+ ifdef CONFIG_JITDUMP
+ perf-util-$(CONFIG_LIBELF) += jitdump.o
+diff --git a/tools/perf/util/demangle-rust-v0.c b/tools/perf/util/demangle-rust-v0.c
+new file mode 100644
+index 000000000000..8839cf2e63a0
+--- /dev/null
++++ b/tools/perf/util/demangle-rust-v0.c
+@@ -0,0 +1,661 @@
++// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++#include "demangle-rust-v0.h"
++#include "debug.h"
++#include "strbuf.h"
++
++static bool show_crate_root_disambiguator = false;
++
++struct parse_state {
++	/*
++	 * The string itself after the initial "_R" from which all back
++	 * references are decoded from.
++	 */
++	const char *str;
++	/* Length of str. */
++	size_t len;
++	/* Offset within the string. */
++	size_t offset;	
++};
++
++static char parse_state__peek(const struct parse_state *state)
++{
++	pr_debug3("Peek '%c'\n", state->str[state->offset]);
++	if (state->offset >= state->len)
++		return '\0';
++	return state->str[state->offset];
++}
++
++static char parse_state__read(struct parse_state *state)
++{
++	pr_debug3("Read '%c'\n", state->str[state->offset]);
++	if (state->offset >= state->len)
++		return '\0';
++	return state->str[state->offset++];
++}
++
++static bool read_path(struct parse_state *state, struct strbuf* buf);
++static bool read_type(struct parse_state *state, struct strbuf* buf);
++
++static bool read_decimal(struct parse_state *state, size_t *res)
++{
++	size_t orig_offset = state->offset;
++
++	*res = 0;
++	while (true) {
++		char ch = parse_state__read(state);
++
++		if (ch >= '0' && ch <= '9') {
++			*res = (*res * 10) + ch - '0';
++			continue;
++		}
++		state->offset--;
++		break;
++	}
++
++	pr_debug3("Read decimal: %zu\n", *res);
++	/* Something was read if the offset changed. */
++	return orig_offset != state->offset;
++}
++
++static bool read_hexadecimal(struct parse_state *state, size_t *res)
++{
++	size_t orig_offset = state->offset;
++
++	*res = 0;
++	while (true) {
++		char ch = parse_state__read(state);
++
++		if (ch >= '0' && ch <= '9') {
++			*res = (*res * 16) + ch - '0';
++			continue;
++		}
++		if (ch >= 'a' && ch <= 'f') {
++			*res = (*res * 16) + ch - 'a';
++			continue;
++		}
++		if (ch >= 'A' && ch <= 'F') {
++			*res = (*res * 16) + ch - 'A';
++			continue;
++		}
++		state->offset--;
++		break;
++	}
++
++	pr_debug3("Read hexadecimal: %zu\n", *res);
++	/* Something was read if the offset changed. */
++	return orig_offset != state->offset;
++}
++
++static bool read_base62(struct parse_state *state, size_t *res)
++{
++	char ch;
++
++	*res = 0;
++	ch = parse_state__read(state);
++	if (ch == '_') {
++		pr_debug3("Read base62: %zu\n", *res);
++		return true;
++	}
++	do {
++		if (ch >= '0' && ch <= '9') {
++			*res = (*res * 62) + ch - '0';
++		} else if (ch >= 'a' && ch <= 'z') {
++			*res = (*res * 62) + ch - 'a' + 10;
++		} else 	if (ch >= 'A' && ch <= 'Z') {
++			*res = (*res * 62) + ch - 'A' + 36;
++		} else {
++			pr_debug3("Unexpected base62 character '%c'\n", ch);
++			return false;
++		}
++		ch = parse_state__read(state);
++	} while (ch != '_');
++
++	/* The empty string encodes 0, 0_ encodes 1, etc. so adjust up. */
++	(*res)++;
++
++	/* Something was read if the offset changed. */
++	pr_debug3("Read base62: %zu\n", *res);
++	return true;
++}
++
++static bool read_optional_base62(struct parse_state *state, char opt_char,
++				 size_t *res, bool *has_res)
++{
++	*has_res = parse_state__peek(state) == opt_char;
++	if (!*has_res)
++		return true;
++
++	state->offset++;
++	return read_base62(state, res);
++}
++
++struct identifier {
++	const char *bytes;
++	size_t len;
++	size_t disambiguator;
++	bool has_disambiguator;
++};
++
++static bool read_identifier(struct parse_state *state, struct identifier *identifier)
++{
++	size_t num;
++
++	pr_debug3("Reading identifier\n");
++	if (!read_optional_base62(state, 's', &identifier->disambiguator,
++				  &identifier->has_disambiguator))
++		return false;
++	
++	if (parse_state__peek(state) == 'u') {
++		pr_warning("Punycode encoding ignored\n");
++		state->offset++;
++	}
++	if (!read_decimal(state, &num)) {
++		pr_debug3("Bad undisambiguated-identifier decimal-number\n");
++		return false;
++	}
++	if (parse_state__peek(state) == '_') {
++		/* Optional separator. */
++		state->offset++;
++	}
++	identifier->bytes = &state->str[state->offset];
++	identifier->len = num;
++	if (state->offset + num > state->len) {
++		pr_debug3("Identifier beyond end of input\n");
++		return false;
++	}
++	state->offset += num;
++	pr_debug3("Read identifer '%.*s'\n", (int)identifier->len, identifier->bytes);
++	return true;
++}
++
++static bool read_crate_root(struct parse_state *state, struct strbuf* buf)
++{
++	struct identifier identifier;
++
++	pr_debug3("Reading crate-root\n");
++	if (!read_identifier(state, &identifier))
++		return false;
++
++	if (strbuf_addf(buf, "%.*s", (int)identifier.len, identifier.bytes))
++		return false;
++	if (show_crate_root_disambiguator && identifier.has_disambiguator) {
++		/* Ignore failure. */
++		strbuf_addf(buf, "[%zu]", identifier.disambiguator);
++	}
++	return true;
++}
++
++static bool read_impl_path(struct parse_state *state, struct strbuf* buf)
++{
++	size_t disambiguator;
++	bool has_disambiguator;
++
++	pr_debug3("Reading impl-path\n");
++
++	/* Ignore impl-path. */
++	if (!read_optional_base62(state, 's', &disambiguator, &has_disambiguator))
++		return false;
++	return read_path(state, buf);
++}
++
++static bool read_tuple(struct parse_state *state, struct strbuf* buf)
++{
++	bool first = true;
++
++	pr_debug3("Reading tuple\n");
++
++	if (strbuf_addch(buf, '('))
++		return false;
++	while (parse_state__peek(state) != 'E') {
++		if (!first && strbuf_addstr(buf, ", "))
++			return false;
++		first = false;
++		if (!read_type(state, buf))
++			return false;
++	}
++	state->offset++;
++	return strbuf_addch(buf, ')') == 0;
++}
++
++static bool read_backref(struct parse_state *state, size_t *new_offset)
++{
++	size_t backref_offset = state->offset - 1;
++
++	if (!read_base62(state, new_offset))
++		return false;
++
++	if (*new_offset >= backref_offset) {
++		pr_debug3("Backref offset (%zu) should be before current offset (%zu)\n",
++			  *new_offset, backref_offset);
++		return false;
++	}
++	pr_debug3("Read backref to %zu\n", *new_offset);
++	return true;
++}
++
++static bool read_const(struct parse_state *state, struct strbuf* buf)
++{
++	size_t const_data;
++	char ch = parse_state__read(state);
++	bool negative = false, bracket;
++
++	pr_debug3("Reading const\n");
++
++	if (ch == 'p')
++		return strbuf_addch(buf, '_') == 0;
++
++	if (ch == 'B') {
++		size_t backref_off, saved_off;
++
++		if (!read_backref(state, &backref_off))
++			return false;
++		saved_off = state->offset;
++		state->offset = backref_off;
++		if (!read_const(state, buf))
++			return false;
++		state->offset = saved_off;
++		return true;
++	}
++
++	bracket = !(ch >= 'a' && ch <= 'z');
++
++	if (bracket) {
++		state->offset--;
++		if (!read_type(state, buf))
++			return false;
++	}
++	if (parse_state__peek(state) == 'n') {
++		state->offset++;
++		negative = true;
++	}
++
++	if (!read_hexadecimal(state, &const_data))
++		return false;
++
++	if (parse_state__read(state) != '_') {
++		pr_debug3("Missing const-data terminator\n");
++		return false;
++	}
++	if (bracket && strbuf_addstr(buf, "::<"))
++		return false;
++	if (ch == 'b') {
++		if (strbuf_addstr(buf, const_data ? "true" : "false"))
++			return false;
++	} else if (ch == 'c') {
++		if (strbuf_addch(buf, const_data))
++			return false;
++	} else {
++		if (negative) {
++			if (strbuf_addch(buf, '-'))
++				return false;
++		}
++		if (strbuf_addf(buf, "%zu", const_data))
++			return false;
++	}
++	return !bracket || strbuf_addch(buf, '>') == 0;
++}
++
++
++static bool read_type(struct parse_state *state, struct strbuf* buf)
++{
++	char ch = parse_state__read(state);
++
++	pr_debug3("Reading type '%c'\n", ch);
++
++	switch (ch) {
++		/* Basic types. */
++	case 'a':
++		return strbuf_addstr(buf, "i8") == 0;
++	case 'b':
++		return strbuf_addstr(buf, "bool") == 0;
++	case 'c':
++		return strbuf_addstr(buf, "char") == 0;
++	case 'd':
++		return strbuf_addstr(buf, "f64") == 0;
++	case 'e':
++		return strbuf_addstr(buf, "str") == 0;
++	case 'f':
++		return strbuf_addstr(buf, "f32") == 0;
++	case 'h':
++		return strbuf_addstr(buf, "u8") == 0;
++	case 'i':
++		return strbuf_addstr(buf, "isize") == 0;
++	case 'j':
++		return strbuf_addstr(buf, "usize") == 0;
++	case 'l':
++		return strbuf_addstr(buf, "i32") == 0;
++	case 'm':
++		return strbuf_addstr(buf, "u32") == 0;
++	case 'n':
++		return strbuf_addstr(buf, "i128") == 0;
++	case 'o':
++		return strbuf_addstr(buf, "u128") == 0;
++	case 's':
++		return strbuf_addstr(buf, "i16") == 0;
++	case 't':
++		return strbuf_addstr(buf, "u16") == 0;
++	case 'u':
++		return strbuf_addstr(buf, "()") == 0;
++	case 'v':
++		return strbuf_addstr(buf, "...") == 0;
++	case 'x':
++		return strbuf_addstr(buf, "i64") == 0;
++	case 'y':
++		return strbuf_addstr(buf, "u64") == 0;
++	case 'z':
++		return strbuf_addstr(buf, "!") == 0;
++	case 'p':
++		return strbuf_addstr(buf, "_") == 0;
++		/* Array type. */
++	case 'A':
++		if (strbuf_addch(buf, '['))
++			return false;
++		if (!read_type(state, buf))
++			return false;
++		if (strbuf_addstr(buf, "; "))
++			return false;
++		if (!read_const(state, buf))
++			return false;
++		return strbuf_addch(buf, ']') == 0;
++		/*  Slice. */
++	case 'S':
++		if (strbuf_addch(buf, '['))
++			return false;
++		if (!read_type(state, buf))
++			return false;
++		return strbuf_addch(buf, ']') == 0;
++		/*  Tuple. */
++	case 'T':
++		return read_tuple(state, buf);
++		/* Mutable reference/reference. */
++	case 'Q':
++	case 'R': {
++		size_t lifetime;
++		bool has_lifetime;
++
++		if (strbuf_addstr(buf, ch == 'Q' ? "&mut " : "&"))
++			return false;
++		if (!read_optional_base62(state, 'L', &lifetime, &has_lifetime))
++			return false;
++		if (has_lifetime) {
++			/* TODO: proper lifetime naming. */
++			if (strbuf_addf(buf, "'_%zu ", lifetime))
++				return false;
++		}
++		return read_type(state, buf);
++	}
++		/* Constant raw pointer. */
++	case 'P':
++		if (strbuf_addstr(buf, "*const "))
++			return false;
++		return read_type(state, buf);
++		/* Mutable raw pointer. */
++	case 'O':
++		if (strbuf_addstr(buf, "*mut "))
++			return false;
++		return read_type(state, buf);
++		/* Function pointer. */
++	case 'F': {
++		size_t binder;
++		bool has_binder;
++
++		if (!read_optional_base62(state, 'G', &binder, &has_binder))
++			return false;
++		if (parse_state__peek(state) == 'U') {
++			/* Unsafe, ignored. */
++			state->offset++;
++		}
++		if (parse_state__peek(state) == 'K') {
++			/* ABI. */
++			state->offset++;
++			if (parse_state__peek(state) == 'C') {
++				state->offset++;
++			} else {
++				struct identifier abi; /* Ignored. */
++
++				if (!read_identifier(state, &abi))
++					return false;
++			}
++		}
++		if (!read_tuple(state, buf))
++			return false;
++		if (strbuf_addstr(buf, " -> "))
++			return false;
++		return read_type(state, buf);		
++	}
++		/* Trait object. */
++	case 'D':
++		pr_err("Todo: rust trait demangling\n");
++		return false;
++		/* Path. */
++	case 'C':
++	case 'M':
++	case 'X':
++	case 'Y':
++	case 'N':
++	case 'I':
++		state->offset--;
++		return read_path(state, buf);
++		/* Backref. */
++	case 'B': {
++		size_t backref_off, saved_off;
++
++		if (!read_backref(state, &backref_off))
++			return false;
++		saved_off = state->offset;
++		state->offset = backref_off;
++		if (!read_type(state, buf))
++			return false;
++		state->offset = saved_off;
++		return true;
++	}
++	default:
++		pr_err("Unexpected type character '%c'\n", ch);
++		return false;
++	}
++}
++
++static bool read_inherent_impl(struct parse_state *state, struct strbuf* buf)
++{
++	struct strbuf impl_path_buf = STRBUF_INIT; /* Ignored. */
++
++	pr_debug3("Reading inherent-impl\n");
++
++	if (!read_impl_path(state, &impl_path_buf))
++		goto err_out;
++	if (strbuf_addch(buf, '<'))
++		goto err_out;
++	if (!read_type(state, buf))
++		goto err_out;
++	return strbuf_addch(buf, '>') == 0;
++err_out:
++	strbuf_release(&impl_path_buf);
++	return false;
++}
++
++static bool read_trait_impl(struct parse_state *state __maybe_unused, struct strbuf* buf __maybe_unused)
++{
++	struct strbuf impl_path_buf = STRBUF_INIT; /* Ignored. */
++
++	pr_debug3("Reading trait-impl\n");
++
++	if (!read_impl_path(state, &impl_path_buf))
++		goto err_out;
++	if (strbuf_addch(buf, '<'))
++		goto err_out;
++	if (!read_type(state, buf))
++		goto err_out;
++	if (strbuf_addstr(buf, " as "))
++		goto err_out;
++	if (!read_path(state, buf))
++		goto err_out;
++	return strbuf_addch(buf, '>') == 0;
++err_out:
++	strbuf_release(&impl_path_buf);
++	return false;
++}
++
++static bool read_trait_def(struct parse_state *state __maybe_unused, struct strbuf* buf __maybe_unused)
++{
++	pr_debug3("Reading trait-def\n");
++
++	if (strbuf_addch(buf, '<'))
++		return false;
++	if (!read_type(state, buf))
++		return false;
++	if (strbuf_addstr(buf, " as "))
++		return false;
++	if (!read_path(state, buf))
++		return false;
++	return strbuf_addch(buf, '>') == 0;
++}
++
++static bool read_nested_path(struct parse_state *state __maybe_unused, struct strbuf* buf __maybe_unused)
++{
++	struct identifier identifier;
++	size_t orig_buf_len = buf->len;
++	char namespace = parse_state__read(state);
++
++	pr_debug3("Reading nested-path\n");
++
++	if (!read_path(state, buf))
++		return false;
++	if (strbuf_addstr(buf, "::"))
++		return false;
++	if (!read_identifier(state, &identifier))
++		return false;
++	if (strbuf_addf(buf, "%.*s", (int)identifier.len, identifier.bytes))
++		return false;
++	if (namespace == 'C' || namespace == 'S') {
++		if (strbuf_addstr(buf, namespace == 'C' ? "{closure#" : "{shim#"))
++			return false;
++		if (identifier.has_disambiguator) {
++			if (strbuf_addf(buf, "%zu}", identifier.disambiguator + 1))
++				return false;
++		} else {
++			if (strbuf_addstr(buf, "0}"))
++				return false;
++		}
++	} else if (namespace >= 'a' && namespace <= 'z') {
++		/* Internal namespace character, don't show. */
++	} else if (namespace >= 'A' && namespace <= 'Z') {
++		if (strbuf_addch(buf, namespace))
++			return false;
++	} else {
++		pr_debug3("Bad namespace '%c'\n", namespace);
++		return false;
++	}
++
++	pr_debug3("Read nested-path '%.*s'\n", (int)(buf->len - orig_buf_len), &buf->buf[orig_buf_len]);
++	return true;
++}
++
++static bool read_generic_args(struct parse_state *state __maybe_unused, struct strbuf* buf __maybe_unused)
++{
++	bool first = true;
++	char ch;
++
++	pr_debug3("Reading generic-args\n");
++
++	if (!read_path(state, buf))
++		return false;
++	if (strbuf_addstr(buf, "::<"))
++		return false;
++
++	ch = parse_state__read(state);
++	while (ch != 'E') {
++		if (!first && strbuf_addstr(buf, ", "))
++			return false;
++		first = false;
++		if (ch == 'L') {
++			size_t lifetime;
++
++			if (!read_base62(state, &lifetime))
++				return false;
++			/* TODO: proper lifetime naming. */
++			if (strbuf_addf(buf, "'_%zu ", lifetime))
++				return false;
++		} else if (ch == 'K') {
++			if (!read_const(state, buf))
++				return false;
++		} else {
++			state->offset--;
++			if (!read_type(state, buf))
++				return false;
++		}
++		ch = parse_state__read(state);
++	}
++	return strbuf_addch(buf, '>') == 0;
++}
++
++static bool read_path(struct parse_state *state, struct strbuf* buf)
++{
++	char ch = parse_state__read(state);
++
++	switch (ch) {
++	case 'C':
++		return read_crate_root(state, buf);
++	case 'M':
++		return read_inherent_impl(state, buf);
++	case 'X':
++		return read_trait_impl(state, buf);
++	case 'Y':
++		return read_trait_def(state, buf);
++	case 'N':
++		return read_nested_path(state, buf);
++	case 'I':
++		return read_generic_args(state, buf);
++	case 'B': {
++		size_t backref_off, saved_off;
++
++		if (!read_backref(state, &backref_off))
++			return false;
++		saved_off = state->offset;
++		state->offset = backref_off;
++		if (!read_path(state, buf))
++			return false;
++		state->offset = saved_off;
++		return true;
++	}
++	default:
++		pr_err("Unexpected path character '%c'\n", ch);
++		return false;
++	}
++}
++
++char *rust_v0_bdemangle_sym(const char *str)
++{
++	struct parse_state state = {
++		.str = str,
++		.len = strlen(str),
++		.offset = 0,
++	};
++	struct strbuf buf = STRBUF_INIT;
++	size_t encoding_version;
++
++	pr_debug3("Rust parsing of '%s'\n", str);
++
++	/* Check "_R" prefix is present. */
++	if (parse_state__read(&state) != '_' || parse_state__read(&state) != 'R')
++		goto err_out;
++
++	/* Strip initial "_R" to make backrefs easier to decode. */
++	state.str += 2;
++	state.len -= 2;
++	state.offset = 0;
++
++	/* Read optional encoding version. */
++	if (read_decimal(&state, &encoding_version))
++		pr_debug("Rust encoding version %zu\n", encoding_version);
++
++	if (!read_path(&state, &buf))
++		goto err_out;
++
++	/* Ignore optional instantiating create. */
++	/* Ignore optional vendor specific suffix. */
++
++	return strbuf_detach(&buf, NULL);
++err_out:
++	strbuf_release(&buf);
++	return NULL;
++}
+diff --git a/tools/perf/util/demangle-rust-v0.h b/tools/perf/util/demangle-rust-v0.h
+new file mode 100644
+index 000000000000..d342c5319748
+--- /dev/null
++++ b/tools/perf/util/demangle-rust-v0.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
++#ifndef __PERF_DEMANGLE_RUST_V0
++#define __PERF_DEMANGLE_RUST_V0 1
++
++char *rust_v0_demangle_sym(const char *str);
++
++#endif /* __PERF_DEMANGLE_RUST_V0 */
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 121db55b9709..41707425fc1a 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -16,6 +16,7 @@
+ #include "demangle-ocaml.h"
+ #include "demangle-java.h"
+ #include "demangle-rust.h"
++#include "demangle-rust-v0.h"
+ #include "machine.h"
+ #include "vdso.h"
+ #include "debug.h"
+@@ -285,7 +286,7 @@ char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unuse
+ 
+ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+ {
+-	char *demangled = NULL;
++	char *demangled;
+ 
+ 	/*
+ 	 * We need to figure out if the object was created from C++ sources
+@@ -293,23 +294,25 @@ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+ 	 * to it...
+ 	 */
+ 	if (!want_demangle(dso__kernel(dso) || kmodule))
+-		return demangled;
++		return NULL;
+ 
+ 	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
+-	if (demangled == NULL) {
+-		demangled = ocaml_demangle_sym(elf_name);
+-		if (demangled == NULL) {
+-			demangled = java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
+-		}
++	if (demangled) {
++		/* Legacy rust demangling input is already C++ demangled. */
++		if (rust_is_mangled(demangled))
++			rust_demangle_sym(demangled);
++		return demangled;
+ 	}
+-	else if (rust_is_mangled(demangled))
+-		/*
+-		    * Input to Rust demangling is the BFD-demangled
+-		    * name which it Rust-demangles in place.
+-		    */
+-		rust_demangle_sym(demangled);
+ 
+-	return demangled;
++	demangled = rust_v0_demangle_sym(elf_name);
++	if (demangled)
++		return demangled;
++
++	demangled = ocaml_demangle_sym(elf_name);
++	if (demangled)
++		return demangled;
++
++	return java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
+ }
+ 
+ struct rel_info {
 -- 
-Pavel Begunkov
+2.48.1.262.g85cc9f2d1e-goog
 
