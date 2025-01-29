@@ -1,137 +1,227 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E071DE8A9;
-	Wed, 29 Jan 2025 18:37:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11CF1E0DB0
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 18:38:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738175851; cv=none; b=mTY6YgK5Mj+KfpIvozVhXJ4mwiGY0fGCgGrvqLURCBtTNQoDR0jadXcVElKMBOpTSuepB5/Aku0oHD5NuFazHRJTyLGSyeFKtGt1UxSF4g1dY9YglMMeyYjCYMG0SHrSu/A3KXQlJcI7SqFVfViubgpY7NFVM9Ky7iyA7T5+N7A=
+	t=1738175882; cv=none; b=XsBx/5L6hXcZaPnuCviMcdu3+L4I+GmApYmELvEDHhu/QNeLUTlXZuodlmp0n37yjxIzmwYD0+IkNLCvu9dOQM6Rf87lOcEbw0l60SXt+4L/uOCAgMTaVzA5eQNSvqWslkdzKO0afxOxZsPSnyGUf7KheIKWSNMxZEI/FL6oIZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738175851; c=relaxed/simple;
-	bh=qGPL15CX/rOkQRuqw5v83IMJIkBOMkf0xQeoJl3DMYw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aUgA8DrJ3vdykMwzJTT+kBeRa1VrLZSN9YqnGf+L/EHdOPtYp0doHMXG9wBGbkMlJB5Npyku4dMGUq2593uJjtWNXm9AlUw0gXYJtvkEIVDJjfqHGEqEE60YwXJFu/FTyXten3BTOrfdH4zzknj/mBMphJW8OrWcO/B/JmDx1xI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aU05Sn+H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738175882; c=relaxed/simple;
+	bh=CgEi4KKMt/S6Fyrvx73NHZHFZoi64uI/37X+geb0Hbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DfoF0UabdOri6Q5/mC1KwqOEDdewCcJ/QxDpuu60Yh5ZUFOM9UlfESRGGo7xIbF1Z59ISuHlJ20zhzpkPf7222MeQlAe8EtoV/LFB3dnb/Oofptp1F9r8AygfcGKI5rKCXbbgDdWL6HyuqdOpfMwSpbaSjEZS9TzfIChhkcdke0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/hRk+o9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aU05Sn+H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE5FAC4CED1;
-	Wed, 29 Jan 2025 18:37:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/hRk+o9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91E00C4CED1;
+	Wed, 29 Jan 2025 18:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738175850;
-	bh=qGPL15CX/rOkQRuqw5v83IMJIkBOMkf0xQeoJl3DMYw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aU05Sn+HmhzZk1WNVJEvP3Lledt1b1J+0PS/0ZAfFCac6zrs6eBfj9PxwEcyzqqRZ
-	 baQxbHXWWlp2VqNxN3VWYqPQUdjXUXthx8TYcRj1k3Rxik5ZnaC7fB9rC35Dw7297M
-	 l4t2UugW2FwON8I9JgGN1NvP6rISTZemHMZ1OhjbdUOZ2GumFpfQWWoXNQJ8G2Ca9b
-	 JoYWzEzwS8Ea4K+Ul+cGlhstqNhCHXy4hkyS4NppBzD+sPKJklUnumSCwznOODHbQL
-	 nN0xxAXdFY3Unvizvpqip1tEGqM3FqcsjxPLCWOGfRPQlMptQnaSawz8j7i1W+g2P1
-	 7ESZb/I2c0x0g==
-Message-ID: <eace86ef-5c07-41b8-92fd-7f16fed3e28a@kernel.org>
-Date: Wed, 29 Jan 2025 19:37:25 +0100
+	s=k20201202; t=1738175882;
+	bh=CgEi4KKMt/S6Fyrvx73NHZHFZoi64uI/37X+geb0Hbc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=S/hRk+o9EsL3zcg7HQXu87Afdu041f5M8VfIkrwXpd3WWB7jjDD9CSxkx5hi7LeQe
+	 /GIOy7YOa/WZIRvbd7zaVaccxkm9EJKkmbxG84QPQQKlwE8uR0/GjKvOe+k1xEq0ht
+	 qtUhdDdIqxtrlJEe8xrloQuS153pqTED3RbTkZvEdehy0y08zqQLz+c3g/o11R1Rou
+	 Jwqs0ykSCKBY93/pikRnIDWg1fGUR3M/O882gA+zQmEYeHItrC8Cyyi7jMg4EB4cId
+	 5dQVNMy8qDSQ7gxuVylWLxcguwLTVGm/9xEm3/cESg4sOEfgmo5xyRLTaqiHGT5CV1
+	 rBs/bFdfsNlYg==
+Date: Thu, 30 Jan 2025 00:07:58 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: Generic phy updates for v6.14
+Message-ID: <Z5p1hicGLpzHpPJi@vaman>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/14] arm64: dts: renesas: Add initial support for
- renesas RZ/T2H eval board
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com>
- <20250129165122.2980-14-thierry.bultel.yh@bp.renesas.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250129165122.2980-14-thierry.bultel.yh@bp.renesas.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 29/01/2025 17:37, Thierry Bultel wrote:
-> diff --git a/arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts
-> new file mode 100644
-> index 000000000000..f2b448aaec82
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts
-> @@ -0,0 +1,37 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +/*
-> + * Device Tree Source for the RZ/T2H Development EVK board
-> + *
-> + * Copyright (C) 2025 Renesas Electronics Corp.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "r9a09g077m44.dtsi"
-> +
-> +/ {
-> +	model = "Renesas Development EVK based on r9a09g077m44";
-> +	compatible = "renesas,r9a9g077m44-rzt2h-evk", "renesas,r9a9g077";
-> +
-> +	aliases {
-> +		serial0 = &sci0;
-> +	};
-> +
-> +	chosen {
-> +		bootargs = "ignore_loglevel";
-
-Drop, that's development, not wide-mainline use.
-
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-
-Stray blank line.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZP54gzmjKNm3iYhN"
+Content-Disposition: inline
 
 
+--ZP54gzmjKNm3iYhN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+Hello Linus,
+
+Please pull to receive updates for Generic phy subsystem. Lots of
+Qualcomm and Rockchip device support.
+
+The following changes since commit 40384c840ea1944d7c5a392e8975ed088ecf0b37:
+
+  Linux 6.13-rc1 (2024-12-01 14:28:56 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git tags/phy-=
+for-6.14
+
+for you to fetch changes up to af1bc0ebe743d4c72f05a95efcc1c66043332be0:
+
+  dt-bindings: phy: qcom,qmp-pcie: document the SM8350 two lanes PCIe PHY (=
+2024-12-25 01:17:33 +0530)
+
+----------------------------------------------------------------
+phy-for-6.14
+
+- New Support
+  - Qualcomm SAR2130P qmp usb, SAR2130P qmp pcie, QCS615 qusb2 and PCIe,
+    IPQ5424 qmp pcie, IPQ5424 QUSB2 and USB3 PHY
+  - Rockchip rk3576 combo phy support
+
+- Updates
+  - Drop Shengyang for JH7110 maintainer
+  - Freescale hdmi register calculation optimization
+  - Rockchip pcie phy mutex and regmap updates
+
+----------------------------------------------------------------
+Adam Ford (3):
+      phy: freescale: fsl-samsung-hdmi: Expand Integer divider range
+      phy: freescale: fsl-samsung-hdmi: Stop searching when exact match is =
+found
+      phy: freescale: fsl-samsung-hdmi: Clean up fld_tg_code calculation
+
+Advait Dhamorikar (1):
+      phy: marvell: Fix spelling mistake "exlicitly" -> "explicitly"
+
+Anand Moon (6):
+      phy: rockchip-pcie: Simplify error handling with dev_err_probe()
+      phy: rockchip-pcie: Use devm_clk_get_enabled() helper
+      phy: rockchip-pcie: Use regmap_read_poll_timeout() for PCIe reference=
+ clk PLL status
+      phy: rockchip-pcie: Refactor mutex handling in rockchip_pcie_phy_powe=
+r_off()
+      phy: rockchip-pcie: Refactor mutex handling in rockchip_pcie_phy_powe=
+r_on()
+      phy: rockchip-pcie: Use guard notation when acquiring mutex
+
+Andy Shevchenko (2):
+      phy: HiSilicon: Don't use "proxy" headers
+      phy: sun4i-usb: Remove unused of_gpio.h
+
+Andy Yan (1):
+      phy: rockchip: phy-rockchip-typec: Fix Copyright description
+
+AngeloGioacchino Del Regno (1):
+      phy: mediatek: phy-mtk-hdmi: Register PHY provided regulator
+
+Dmitry Baryshkov (6):
+      dt-bindings: phy: qcom,sc8280xp-qmp-usb43dp: Add SAR2130P compatible
+      dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Add SAR2130P compatible
+      phy: qualcomm: qmp-combo: add support for SAR2130P
+      phy: qualcomm: qmp-pcie: split PCS_LANE1 region
+      phy: qualcomm: qmp-pcie: define several new registers
+      phy: qualcomm: qmp-pcie: add support for SAR2130P
+
+Frank Wang (1):
+      dt-bindings: phy: rockchip: add rk3576 compatible
+
+Kever Yang (1):
+      phy: rockchip-naneng-combo: add rk3576 support
+
+Krishna Kurapati (2):
+      dt-bindings: usb: qcom,dwc3: Add QCS615 to USB DWC3 bindings
+      phy: qcom-qusb2: Add support for QCS615
+
+Krishna chaitanya chundru (2):
+      dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the QCS615 QMP=
+ PCIe PHY Gen3 x1
+      phy: qcom: qmp: Add phy register and clk setting for QCS615 PCIe
+
+Lars-Peter Clausen (1):
+      phy: tegra194: p2u: Allow to enable driver on Tegra234
+
+Manikanta Mylavarapu (1):
+      dt-bindings: phy: qcom,ipq8074-qmp-pcie: Document the IPQ5424 QMP PCI=
+e PHYs
+
+Neil Armstrong (1):
+      dt-bindings: phy: qcom,qmp-pcie: document the SM8350 two lanes PCIe P=
+HY
+
+Peter Griffin (1):
+      phy: samsung-ufs: switch back to syscon_regmap_lookup_by_phandle()
+
+Varadarajan Narayanan (4):
+      dt-bindings: phy: qcom,qusb2: Document IPQ5424 compatible
+      phy: qcom-qusb2: add QUSB2 support for IPQ5424
+      dt-bindings: phy: qcom,qmp-usb: Add IPQ5424 USB3 PHY
+      phy: qcom: qmp: Enable IPQ5424 support
+
+Xu Yang (1):
+      dt-bindings: phy: imx8mq-usb: correct reference to usb-switch.yaml
+
+Zijun Hu (1):
+      phy: core: Simplify API of_phy_simple_xlate() implementation
+
+keith zhao (1):
+      MAINTAINERS: Remove Shengyang as JH7110 DPHY maintainer
+
+ .../bindings/phy/fsl,imx8mq-usb-phy.yaml           |   7 +-
+ .../bindings/phy/phy-rockchip-naneng-combphy.yaml  |   1 +
+ .../bindings/phy/qcom,ipq8074-qmp-pcie-phy.yaml    |  21 +-
+ .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    |   1 +
+ .../bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml   |   6 +
+ .../phy/qcom,sc8280xp-qmp-usb3-uni-phy.yaml        |   2 +
+ .../phy/qcom,sc8280xp-qmp-usb43dp-phy.yaml         |   2 +
+ .../devicetree/bindings/usb/qcom,dwc3.yaml         |   3 +
+ MAINTAINERS                                        |   1 -
+ drivers/phy/allwinner/phy-sun4i-usb.c              |   1 -
+ drivers/phy/freescale/phy-fsl-samsung-hdmi.c       |  47 ++--
+ drivers/phy/hisilicon/phy-hi3670-pcie.c            |  11 +-
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c       |   2 +-
+ drivers/phy/mediatek/phy-mtk-hdmi-mt8195.c         |  44 ++++
+ drivers/phy/mediatek/phy-mtk-hdmi-mt8195.h         |   3 +
+ drivers/phy/mediatek/phy-mtk-hdmi.c                |  28 +++
+ drivers/phy/mediatek/phy-mtk-hdmi.h                |   4 +
+ drivers/phy/phy-core.c                             |  23 +-
+ drivers/phy/qualcomm/phy-qcom-qmp-combo.c          | 100 ++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c           | 278 +++++++++++++++++=
+++-
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v4_20.h |   5 +-
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h |   5 +-
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6.h    |   3 +
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-v2.h         |   1 +
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6.h         |   2 +
+ .../phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6.h    |   1 +
+ drivers/phy/qualcomm/phy-qcom-qmp-usb.c            |   3 +
+ drivers/phy/qualcomm/phy-qcom-qusb2.c              |  55 ++++
+ drivers/phy/rockchip/phy-rockchip-naneng-combphy.c | 279 +++++++++++++++++=
+++++
+ drivers/phy/rockchip/phy-rockchip-pcie.c           | 146 ++++-------
+ drivers/phy/rockchip/phy-rockchip-typec.c          |   2 +-
+ drivers/phy/samsung/Kconfig                        |   1 +
+ drivers/phy/samsung/phy-samsung-ufs.c              |   6 +-
+ drivers/phy/tegra/Kconfig                          |   5 +-
+ 34 files changed, 925 insertions(+), 174 deletions(-)
+
+--=20
+~Vinod
+
+--ZP54gzmjKNm3iYhN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmeadYYACgkQfBQHDyUj
+g0evpw//fH477KE3rukhZZLzUxA6tzqiGOZIRoXzjSgL5nKLlpgN7v/Ze0T4dgCV
+Qh/HmHKWFnLTDCeywmVlRLuS5dC15zi1u11qBEierVQJAzT3x9HdEjzL81quJDJX
+iMFgVMxGSa+KI2qRMBe4Tq4qrrru51SskRRXcGB4UvWU5C8XEm2TO/G9RMAvFFUG
+yNIP1PHWuY1LcjTq96AbvLb3/fSRp5UXYwuGg6/jvAeg2Iql+rSHZ52gDO8fdEG2
+cySwHvGxzkow9ATfJ4eQFaPmR9ckclqhts0P/z4Hb1vc1VXIcX3Bs8z/Lth8y07P
+VBALd/qwAI0rovb3wycYdg7pbLvaGYuNFf8SB93M5i3MRctWg+r11dER8Ja+MP6D
+jak08njQCnyKQgQIp8SY2y6ZoZgkrUChSZ4ZHRdx2rNPh1mcg9OF98s16Qj6Lwjl
+ukcMf06hsvmvP7FNBoD/WJETb/G8GeAkfMd8dieUAKOrBio1NmyLiE3SnWeeUhrV
+S6uk9wJz/gL/JT8qxoYxUG0fRdZcXuxfIGuCBxFsoYfZkPBnOKQjpWf14RsMz94w
+QAP6gGPL543b6SdvSherXGM6w+vQrJzxviWhwO/wegMhI5YZHLBa9RT/Pmppkxbj
+ltNsR6nmKLp0RMW88naBNvWX7re0IwXkuQ6TwbQ5VnXI0HjwQ1c=
+=tN7V
+-----END PGP SIGNATURE-----
+
+--ZP54gzmjKNm3iYhN--
