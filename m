@@ -1,98 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD34E18FDCE;
-	Wed, 29 Jan 2025 23:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D1E18FDCE
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 23:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738191836; cv=none; b=WUKxFvk7vTtnYI4qT9wKOwmaj2c0E8VCBQvGUtowulpRqONKW0tSybtg7MSpa5/8o3lFLsGIWupmvgE6CDR+hyhGEqUMqEyFuiXnHRbogvLkaXxVTXLomxW8lFi8roPJ/WEuuHffGLfirnYrMa3x3ShFyOn3tKaIon1GkxdjecU=
+	t=1738191908; cv=none; b=Ibm3xdjZRh57tACh1vSBC40vtY15T5pttnn0ZmfGy0JYtu3WA0IDGIzw5KfOiNjFBmeCOt6rImQVmtQfi70E11xHGTJWkB8zirVJ5prkpYi26Uy2uqZz4M/NERZh/p8WF0iv+rv5WidDeSg/UQoG9UNEdcpa8MQgpiEMBU9HbpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738191836; c=relaxed/simple;
-	bh=0STYCAtnIMzJJnc9eqHSbmfmtTIfcWZihGjQi7tCkWI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=GEEQo00D6+E6N0s7BjI5N8NIHjCTQfLuhwbNeWZa6q6qSd/vpGAjgq0JppyJvvcf+n+jI88IjmW7D5u16HiSDvWaQxMn2WsC3x4HxQK/YUYotZCrwIngGUd14Rh5cJubSbPFfJ/lkNFcyGzBaFpHx5SI7r3vv+l2L0hLslX9GDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HS0WnlgQ; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738191908; c=relaxed/simple;
+	bh=lx5G7T0aIAEATA5D1Rsv6M6GREHLGVLBeieoUazKo8A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oQjpQ1Bi/5Bkuyud0i3gbY64p1tsmJSZkAtkyI+DlDl0dxQqplnycr/46gAI0ZxYZYoips7Djo2zyMB3RSNqczQ23Li8PNQyW+KTuidFmigEQe6mTHwgoLPt9VHSNA04/svzhSH8wOo1tTHeCoN8GFIABhh5ICgaRuQ9Kj+/iWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u5330Jne; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HS0WnlgQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738191835; x=1769727835;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=0STYCAtnIMzJJnc9eqHSbmfmtTIfcWZihGjQi7tCkWI=;
-  b=HS0WnlgQYd7o+c4uXRtkZfKfvitp/xKufytUqf2Qhe2fEqE5XRF78VtU
-   jnuWylO+LvT0jlLyDZt2sZLkAue8oIb000DstsTqMDTRW1ISeocRDPHp+
-   OVCi5ks91M5T13RXFsnyYc/+JRwOIRu7m4N5gAqLGl2RPsgBwPeRSRfBK
-   8jcXo7xD+eXGHAFvP7wP+geO1M2dlc2nc1Bk2wc0Sm4B/4e5gFedLw5aI
-   9/6uP7ssDdXnlHdKJyZREsH/city4OnNXIYwiXQWZjDhkbvt2MC3Xf/Xz
-   wXCpwcMMNix/1zSQS120HRYyiT5FWYjUD43MXDQBayQc/C5wleeeQjQqn
-   A==;
-X-CSE-ConnectionGUID: QOJ4DUdkQt2xNX/WYiJx9Q==
-X-CSE-MsgGUID: YKwTkI/+ROatqDFzLRzQTQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="37929787"
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="37929787"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 15:03:05 -0800
-X-CSE-ConnectionGUID: 8xWdFe6DTn+7aCdrSkyeig==
-X-CSE-MsgGUID: zBL/IjM8SVy3+uKvhZN1OQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="140049108"
-Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 15:03:04 -0800
-Date: Wed, 29 Jan 2025 15:03:04 -0800 (PST)
-From: matthew.gerlach@linux.intel.com
-To: Krzysztof Kozlowski <krzk@kernel.org>
-cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
-    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
-    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
-    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
-    peter.colberg@altera.com, 
-    "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>
-Subject: Re: [PATCH v5 5/5] PCI: altera: Add Agilex support
-In-Reply-To: <793b4cf1-bdf4-4010-aece-79c720ed05ad@kernel.org>
-Message-ID: <5bfc352a-c6e1-7593-ad4-9079f2e0852@linux.intel.com>
-References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com> <20250127173550.1222427-6-matthew.gerlach@linux.intel.com> <793b4cf1-bdf4-4010-aece-79c720ed05ad@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u5330Jne"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E802C4CED3
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 23:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738191908;
+	bh=lx5G7T0aIAEATA5D1Rsv6M6GREHLGVLBeieoUazKo8A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=u5330JnecyPr6KR+SALgsdzuvWE1MYhKWOHkqmI6Vom6cGvEm26p6GI2nc3c8S1QH
+	 ur1VcC4U9V2KFGvAyTU227S2viqXniZNkfCtXgxvVESJbUR/UnIRp5EHGyn0W/JPtt
+	 hIg3rL/p2+bmMLzkUw+gM7WV8E1q2UgjMMJFwNOu0jNEg27G5CYDaOXRf2ZcSlTOwZ
+	 piyPHKpYd6OneGp1bXXqg/PSJeFPOYsClniAs+qx3dyEtOSRx+Bm9Z8y1mJK2dmDlh
+	 IeFbzKpoWE7q+TS3ZeWdPpHZJHA4GqcJV+dMlgORqGvN8gkp8Da+h5Y5fj9QTWlsVU
+	 AgTgDqu2qeY0g==
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3cfe17f75dfso1850665ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 15:05:08 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXb1T1uIWea62UNDM/ULOayOgXoWF+5CcEiirQStpWygshSvnrL5C4r9SKwKtrNmrA1lRhWN416p+GN3B4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxce7t1ywlYO1tCSPixSR1v3iIXQ6ou/SqOLcUhrWSLMzLpdYCD
+	27Ye61dXbHYI3ejxBOOFOzeg9R2uae/S+jL9ipXcLPLpg24DzWdHCrRDMJIL8uRGAvw6yU3k6gG
+	ksqtdw0PZo8UEjrohL0To1dgUmjQ=
+X-Google-Smtp-Source: AGHT+IFzXAw9fovFRHtVnVT703ppaMiZKEGpYBYSnip8w/zExg8KXp51qNxWCrhB0dc1ZtcGhJrWrORLwTiagsclk6s=
+X-Received: by 2002:a05:6e02:b4c:b0:3cf:ce7c:b8b1 with SMTP id
+ e9e14a558f8ab-3cffe447945mr58933185ab.18.1738191907443; Wed, 29 Jan 2025
+ 15:05:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <5ec75c39-2878-4caa-8fbd-68cf0aee28de@linux.dev> <CAPhsuW4dC-Wma8EGBxkbftgRtmZohojqhvsixHQ3C4MNrH1+9w@mail.gmail.com>
+In-Reply-To: <CAPhsuW4dC-Wma8EGBxkbftgRtmZohojqhvsixHQ3C4MNrH1+9w@mail.gmail.com>
+From: Song Liu <song@kernel.org>
+Date: Wed, 29 Jan 2025 15:04:56 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5urLfhiCt2dhorVcZoMxZRady362vbfK78A7Z+3id2ew@mail.gmail.com>
+X-Gm-Features: AWEUYZmnjHlvxhPv8c5Us77b0dfxmv69AOl3aw9HttfSYlBLEqp9ARqDAabUTzw
+Message-ID: <CAPhsuW5urLfhiCt2dhorVcZoMxZRady362vbfK78A7Z+3id2ew@mail.gmail.com>
+Subject: Re: clang thin-lto not working for aarch64 for v6.13
+To: Yonghong Song <yonghong.song@linux.dev>, Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Masahiro and Nathan,
 
-
-On Wed, 29 Jan 2025, Krzysztof Kozlowski wrote:
-
-> On 27/01/2025 18:35, Matthew Gerlach wrote:
->> +
->>  static const struct of_device_id altera_pcie_of_match[] = {
->>  	{.compatible = "altr,pcie-root-port-1.0",
->>  	 .data = &altera_pcie_1_0_data },
->>  	{.compatible = "altr,pcie-root-port-2.0",
->>  	 .data = &altera_pcie_2_0_data },
->> +	{.compatible = "altr,pcie-root-port-3.0-f-tile",
->> +	 .data = &altera_pcie_3_0_f_tile_data },
->> +	{.compatible = "altr,pcie-root-port-3.0-p-tile",
->> +	 .data = &altera_pcie_3_0_p_tile_data },
->> +	{.compatible = "altr,pcie-root-port-3.0-r-tile",
->> +	 .data = &altera_pcie_3_0_r_tile_data },
+On Mon, Jan 27, 2025 at 9:50=E2=80=AFAM Song Liu <song@kernel.org> wrote:
 >
-> Please run scripts/checkpatch.pl and fix reported warnings. After that,
-> run also `scripts/checkpatch.pl --strict` and (probably) fix more
-> warnings. Some warnings can be ignored, especially from --strict run,
-> but the code here looks like it needs a fix. Feel free to get in touch
-> if the warning is not clear.
-I will fix the duplicate signature warning.
+> On Sun, Jan 26, 2025 at 7:48=E2=80=AFPM Yonghong Song <yonghong.song@linu=
+x.dev> wrote:
+> >
+> > Hi, Masahiro,
+> >
+> > We are trying 6.13 kernel and found that for aarch64 thinlto not
+> > working. For example, for kernel/bpf/syscall.o, the compilation flags
+> > from .syscall.o.cmd are savedcmd_kernel/bpf/syscall.o :=3D clang
+> > -Wp,-MMD,kernel/bpf/.syscall.o.d ... -D__KBUILD_MODNAME=3Dkmod_syscall =
+-c
+> > -o kernel/bpf/syscall.o kernel/bpf/syscall.c ; ld.lld -EL -maarch64elf
+> > -z norelro -mllvm -import-instr-limit=3D5 -z noexecstack -r -o
+> > kernel/bpf/.tmp_syscall.o kernel/bpf/syscall.o; mv
+> > kernel/bpf/.tmp_syscall.o kernel/bpf/syscall.o I did some bisecting and
+> > found the issue is due to ``` commit
+> > bede169618c68379e1be7ace14e8ac85b964a9ec Author: Masahiro Yamada
+> > <masahiroy@kernel.org> Date: Thu Nov 14 08:45:22 2024 +0900 kbuild:
+> > enable objtool for *.mod.o and additional kernel objects ``` In the
+> > above, for thinlto, we should not do ld.lld as compiler needs IR to do
+> > cross-file inlining. Searching the internet, I found that the issue has
+> > been reported e.g. in
+> > https://patchwork.kernel.org/project/linux-kbuild/patch/20241113234526.=
+402738-3-masahiroy@kernel.org/
+>
+> It appears the fix suggested by Nathan is already squashed with the
+> commit before being merged upstream. However, this causes another
+> issue. As Yonghong stated, after upstream commit
+> bede169618c68379e1be7ace14e8ac85b964a9ec, the linker runs on
+> individual .o file, which defeats the benefit of LTO.
+
+It appears we still have this issue in the latest upstream kernel. Revertin=
+g
+bede169618c68379e1be7ace14e8ac85b964a9ec fixes the issue. But I
+am not sure whether we can do that without also reverting
+1b466b29a3bf02ed95f28682a975f41ae47bce7d.
+
+Could you please share your suggestions on this?
 
 Thanks,
-Matthew Gerlach
->
-> Best regards,
-> Krzysztof
->
+Song
+
+> IIUC,  the proper behavior is to do "cmd_ld_single" only for "is-single-o=
+bj-m"
+> case. However, after bede169618c68379e1be7ace14e8ac85b964a9ec,
+> the "is-single-obj-m" check is removed. I am not quite sure what is the
+> proper fix for this.
+
+[...]
