@@ -1,148 +1,249 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24B11E0DFE
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 21:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738185415; cv=none; b=s5JGJhyxtzrSnnj1YNxP1nn7jsY2DY4iZlMi2gRY2G1zUrRC1oT3i1HYe9wotxHAiwZ4kLZuPCZWQ2KciSvBHPoTBPx8upRy2sObxF/CcNS3YmIbR/PxW2z3zDPocJrnQUn+hAqVH8bMr45Lh51w8f6jkKJJqYdhuLt+eEgJOQk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738185415; c=relaxed/simple;
-	bh=u8YUU6gYorxVS6+wIVap11n3aDRkyBp7z/tJ8xhznxI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iONpMcKQ++VUxp7ae+n7gRDHOWVacdn0yluBgouHSaVu4vtkXCJTphM15nBC4y2vArBSE9euyf0cfAhD4HjOUK1jLx8FarcNDODLKnf/hGAzWH6fgVd2jBwe2pQXgCkAYQARokaI4duxmrfPfSeGIqWcMwfyxgTetZ8ON6xk17I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=oaGVmBaM; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEB71E0DFE;
+	Wed, 29 Jan 2025 21:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738185423; cv=fail; b=fZFmWUvmSxLKkjMbrc910jUEs0FpHqexFYDN8c7lUP6s0NSygMhNCbMAVPSNiL4u3ja7YWd7fqZznUKxIvW1ObTTftAHzsbO5gHp3IPU8jAxPVhaoz9BwiHO6I2NIII2iKscHDJ9su+RjAP0xrvUmtEFl03TmBCGvmziBX/x9Kw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738185423; c=relaxed/simple;
+	bh=yfQhG+Ef1eX9jNy/B/TqhYQrJdMcxklgMCLbFvL7slg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=DG91qo7s7aeA7G/fxPJf203lmWPWlqbNrrnPfuSwOzuDSY+GUiba1Q6OoogqRPefqGJjAxu/qJI93NSgUoghsieGK6LP70bdBAxb2D2zBaXyfjH+gPQJhWxjhyTP0WvvMy2UyUKIS98f0Rdz1oLutiBMSMjNhBhUUPkZFgr9bKs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B7HJzAPW; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oaGVmBaM"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7b6e9317a2aso111665685a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 13:16:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1738185413; x=1738790213; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LzitVuYlzYfLgHtJYIFCxJuw+LRhxhoKqgqBfZrikAI=;
-        b=oaGVmBaMMo6oyK1ieqdaf2BaiHT/ASV0RPnHusH3tS3wBs3IchZVwoV5ysqdQWG1fF
-         Dk+dspsJs/y43xBVX277VXfvwObrKQZKDgznACZ8iH8kKH2xSxB703Ow0Iaxv9e7jF21
-         leJSIrTMHKvyUGkbFqo6sDKn5lwRW04yQ3C5HX4BPq2ROQQDiHsM0hLo8FOFUHHguH0b
-         QWuBu9TYax5CVC9BYnJosLcmSm0XEpsxNZW9coCq7mHJFYTCuIYkiGlqpKhP6hvTFvi5
-         GNGb4mMtQgDsGrZHa0i1HltEDbYiFgvff86cG4N5fPB6P8Jj1pmU0TNIBGCXeviXGgub
-         e+BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738185413; x=1738790213;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LzitVuYlzYfLgHtJYIFCxJuw+LRhxhoKqgqBfZrikAI=;
-        b=rt7/EbwQA05rJePjCfKWDSw2QXzZqXTcOKG2sPBqDe8UHJbWEemDibv0hrer5zO+/T
-         FP+gMLfANDVciwp8lxu1q2clXtJqBwh4wP/c4zH85Vf918+ISwsVLjAbTgAlfkyxRIUM
-         gH+ZRTmW9LSzA133NUYe3l+CwepzEZeKvfz1/HRA/L17t2J4YZO6jFkLBmG3B3gf1oH8
-         8hrns8uiZtCG8YACRC/xQButIITM38d8EQ7RUR/glK1aPbhHiSM59JoOsljxvbFDDsbr
-         EtaWNhLU3suhNfXNO41AncIn6FKzIOOpby1pn1a0Gok3PPmjamRVCKdu2M8DGn5dyjCb
-         q2qA==
-X-Forwarded-Encrypted: i=1; AJvYcCWiZeDzIDZbairk/m7fWuVMRAextYISZWLzMkRFVJsxMbm+SncgZ5qPUASjQvMnaYYq9Nprj9PpiVxxZBU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhNoE6tXl5Hip2bK58w0ZKFW4PmQfq5JdwswpazXLIBXJu9mhZ
-	wjig96lhOr2i0ZSXmqeXTsV5BN0JQSjbX7mMGl/ami0SrQeKIgHcsHWnbXAmJ0k=
-X-Gm-Gg: ASbGnctAhqUJyczC8HKErGJcI7f02mRdS3trvWOX97E0zyNS/unCc3qTYIgy7iUEmHG
-	52DFGa3FoiIwSlXMC2wXSAkx+N7sMIzHs6t9GsZ9chmtK5+mLCRNjPJfDT0PlwlxwdKIp5htnDR
-	kv+l9VypL2swQVJ3iLKnoM26yKjfUUqDkUicMYWmTSNQgD1z2QgnrGiWpQjWXVrl6W3vAQh+GX0
-	jwRPypeWx7emF1NUoYIXErNhps+tB97ojuXAs7TjNwkypcZ8gQ1kEVcd1CmCliIv9eP5gvQnVwH
-	xBioC6Sj1dAmooyb/JLnBGO/TBh4YqdAMbXBX+6hvRI+Wht4A9k/j1IQu5JTdDpl2PqBfCGN6Bk
-	=
-X-Google-Smtp-Source: AGHT+IFBXwAWBZSqAQNZNSNHSzoLAVr1CNJP2L4UHFdx7M4GAP/8l/IbE94sQ0Me34sY2tikWvpyzA==
-X-Received: by 2002:a05:620a:2995:b0:7b6:fdb9:197e with SMTP id af79cd13be357-7c0097a0121mr131686485a.8.1738185412839;
-        Wed, 29 Jan 2025 13:16:52 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a904781sm3916585a.78.2025.01.29.13.16.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 13:16:51 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tdFQZ-00000009UD2-0Qh0;
-	Wed, 29 Jan 2025 17:16:51 -0400
-Date: Wed, 29 Jan 2025 17:16:51 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Zhu Yanjun <yanjun.zhu@linux.dev>, linux-rdma@vger.kernel.org,
-	Mustafa Ismail <mustafa.ismail@intel.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Bernard Metzler <bmt@zurich.ibm.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/6] RDMA/rxe: handle ICRC correctly on big endian systems
-Message-ID: <20250129211651.GE2120662@ziepe.ca>
-References: <20250127223840.67280-1-ebiggers@kernel.org>
- <20250127223840.67280-2-ebiggers@kernel.org>
- <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
- <20250129183009.GC2120662@ziepe.ca>
- <20250129185115.GA2619178@google.com>
- <20250129194344.GD2120662@ziepe.ca>
- <20250129202537.GA66821@sol.localdomain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B7HJzAPW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738185421; x=1769721421;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=yfQhG+Ef1eX9jNy/B/TqhYQrJdMcxklgMCLbFvL7slg=;
+  b=B7HJzAPWtILSZioRy1pmKT3t7ib9csiK/D9YCeu5rQIcASjiEU6CzuBv
+   YoJkzgedTKGRbOQiofo2XWRaXJ5yqkJ22mTbxw6D9qQk98Xy25Tqyzupd
+   Q132G7vFf8zCeudFcui7Kfx5gSz0JP85kq+J7MHYU5VUFJyBUfKM2ukv4
+   PZW0W4AUE8PN43Bkar8zI7+uP3YefQa0FHe2SYd1gaFUVkMRiQ5v2+Kp9
+   WnM6MxOGUdkjg94R/dOWh2LLBWi0SQ+kIAYhX278E8HKbhambX6qiS2wj
+   dQPzjOOboZ46SP+7X6m77iFCGGC8Fy662owMJiL/+FW+LwPWHKKFIFZe8
+   Q==;
+X-CSE-ConnectionGUID: TBPyT7BiTlSloB5EhpWbrg==
+X-CSE-MsgGUID: bO/Jyll3QxGp3ssN7dQUgw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="64082210"
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="64082210"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 13:17:00 -0800
+X-CSE-ConnectionGUID: MU0gVGDwSh2WojufXRjBgQ==
+X-CSE-MsgGUID: RksQPCuKQCuUdhFXvKoRDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="109726627"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Jan 2025 13:16:59 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 29 Jan 2025 13:16:59 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Wed, 29 Jan 2025 13:16:59 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 29 Jan 2025 13:16:59 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Og6zul3ufHz9P2aHION3FoMcgc/YvJ4c2Bgo3IAAvXDc7XV1IYO4CjVs7Gugo94A4DC7KaZwivYG5SRZFoJ5PCIEfXM8PwMDrOZ+srym+r5pSsg0BjPWvcG6pwlfK1wyP8mwjXg9dfIXKSMB8SMTI6L7Hw7rVVifcjSUyW1Hel0FO6pE25UDjkvkGwVjJ1NzYX5IDVXNqJC/Fk61ARr+DxlWPPzGZMHfmHbA1mxnWWIdJHcy5R/CbVHXD28dkwQsTZJCt1huIBDq8EcuPMwaRDDB0yMOwGVx7NEGNQW1Yj9zb4sqmATqNWJEiwERiNcveI9JNFKoxa3lHuxXwh3/2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O3+FXq7zd4FVDlSyMlVLPU452uOJqTBfVzeGxaUzAVk=;
+ b=UFVuwzSNOYM57rpJWVbISE265mSZhXz7VZa6k8pMPVNLSiUBqGAZ9CSIoBMAE7ea6IPWLQY+QppJHe9kqLKxi7DT0179qCBFPa33nfURm8IBlaeexfaOLGKb4qbdKNaL9O2mma9XxNrBEBCy2Gvr7FFfzu0kkDi7Rb34c33kTwaJw/mOEbPEiMsz/xgv1o0mk17rhbDW2oja5XeJNCBui16gYB2ztNTegC/1x1gVU6eKgKWIoNMFHGU4t9wOVzWRyDgICC28MRCfg7UtUdrCyoXCexbXDQ1OqzKDHlWrmKnf5ps1gRbbf/e76sp9qMXIjgBc7SALe99sfrqYa+VzOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by CY8PR11MB7875.namprd11.prod.outlook.com (2603:10b6:930:6c::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.17; Wed, 29 Jan
+ 2025 21:16:52 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8377.021; Wed, 29 Jan 2025
+ 21:16:50 +0000
+Date: Wed, 29 Jan 2025 15:16:46 -0600
+From: Ira Weiny <ira.weiny@intel.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>, Ira Weiny
+	<ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "Jonathan
+ Cameron" <jonathan.cameron@huawei.com>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC 2/2] cxl/memdev: Remove temporary variables from
+ cxl_memdev_state
+Message-ID: <679a9abe292a4_210e3e294d@iweiny-mobl.notmuch>
+References: <20250128-rfc-rearch-mem-res-v1-0-26d1ca151376@intel.com>
+ <20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
+ <783abee1-e06d-45bf-2dc9-920c729978de@amd.com>
+ <679a582927d8b_1e2dd62943e@iweiny-mobl.notmuch>
+ <074f421c-1f2b-b92e-3e92-c3974f9f471f@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <074f421c-1f2b-b92e-3e92-c3974f9f471f@amd.com>
+X-ClientProxiedBy: MW4PR04CA0302.namprd04.prod.outlook.com
+ (2603:10b6:303:82::7) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250129202537.GA66821@sol.localdomain>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CY8PR11MB7875:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6a0e52bc-d39b-4cf3-0858-08dd40aa3f02
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?5R37yR/nEsznwCyu05FHvFD8b88l/xLkwq3+3zmc2IrOhZPaF/odba1wQp7m?=
+ =?us-ascii?Q?1QaAc3sbzHfN4EghPqzoZ3MwSF+xczStmJGTZl0/S6vGTIf97wQAHtjtWljq?=
+ =?us-ascii?Q?HHTVpvE5VA+Nudn0NXvgVLE/iRUqa6Y6h6JOrNmaGlg9oAYLVNaKjdm0c+ak?=
+ =?us-ascii?Q?BhEtmoAhWzgvS4QMXmdKt9arvaJvrDbQ4aBgMBDOCt7NwoJgXlGFMOR75c7y?=
+ =?us-ascii?Q?hMMuFZfGL+PBnxS22DnKEDEWW9/4qiHyCBffauvWjdhyyzj1Q7Sd9CDGIkae?=
+ =?us-ascii?Q?7RHpWrvpk8oD4WQRL3y8+eon70cyd5CXM1T9jG1DQkNrbPb0dKolfCe7AsD1?=
+ =?us-ascii?Q?cj5532UOSyAWcOnYSlD3jThrmU1wvfQG2pph0iRj1vJ3i5PNUz+8gNB33XB1?=
+ =?us-ascii?Q?BJ5nlqsb+FeCw1JPocl+kMiPvXXGOjfbplr1IrILZ/5IKax0WE+83M5SC8NQ?=
+ =?us-ascii?Q?C4/xEp6TL+uM7MIkMizdPIQll9Lps6Am66TdkMlv96dxO6FbyzC0SfieQNRQ?=
+ =?us-ascii?Q?ZgD5HxGH4W/7CmFcUyD+nOu8jIO26ZmANO437tQeFXkidzcDUPnO0YkKVhKe?=
+ =?us-ascii?Q?lyIC3vOiUSHyz7Vurzc9qH2ZFPlGi2quLbECAOwiQDxBoJ2d29uL6DTj1Pcq?=
+ =?us-ascii?Q?TwJJsCtatSsaIxgGsLxwYkaCEVVWarihEEjAnp44XCi/Q5aOe3mplVtpDXrd?=
+ =?us-ascii?Q?Bs0rHa3LJS5EFKpoRikL+c8S+YCqgZFV+gowDARKJAQp4eea1vfE5VYrTV3b?=
+ =?us-ascii?Q?52zbxeQfyGIMtrpjTMKdE7SPhFvfeI1VteVgZu0ib3N9sqj03F3YsSAIIDCZ?=
+ =?us-ascii?Q?mI6WomsLlGkxTlkyJCeaMbtjQNrz8Jn+1Dozfi0BBxB1b7fAkOXkEDD3NIjo?=
+ =?us-ascii?Q?XD28nUDHlrIqJ3cqQ5MXyX4lTqhuYLq3v1B/iqiTf9HDKbyNjP5QAJoNdjiF?=
+ =?us-ascii?Q?NK9gRCC5QtQ1XUa3bTp93pBNCWGVev8NED8lnFvXDBuAamMdK9bjrtvQh4fB?=
+ =?us-ascii?Q?kcH7m2k9FbCz4SyD7Sr8cT61qpL4dsLNt5169xjr07hs54rHxs+QYpNRVusU?=
+ =?us-ascii?Q?8dfiWzckD4rglfrJ55YDkKcgBgEvrxtYRCytL15J11yZrg+yK1psgkxmQMe9?=
+ =?us-ascii?Q?ztxb/0NhNOCE17TevCfF4V2jviIDr9OnWnfUnDdnk7B+u3bJKTu8UTUUjeHQ?=
+ =?us-ascii?Q?/3xDfke56Xpo5pYs4IMxHIKkJiJOU2qozPaNEmlrAaum4hEjhIyDSeXm0OzD?=
+ =?us-ascii?Q?LLnZLMB1IMVQmyaARYCkPyjRPtnjpbcwiXuUpIKnxSbuwmY5nP9ELiZ8od1T?=
+ =?us-ascii?Q?oWdVoUubsE6IP4xQi3iqJKRwc/2mV0TQoFrDNXNN09EYGjstZ6omEPHTDDuB?=
+ =?us-ascii?Q?TPYT9vqw8yAJF4c8yI1Aa+zZvnAr?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Y2brovHwHtWh+MTiZtSuMChNmSxTBEO7cHlxZkjFj6EoTLpzkt0IYbSiCVJq?=
+ =?us-ascii?Q?zSAxCwtewfTqM1R4ZSK5KxYLz31QwM4l6J8S/D+4Q7HqMI5Ne5pDiG4xrcv4?=
+ =?us-ascii?Q?Oqki2z23YdvnnRTuC4hIC8gHrLzkYyAa+RlKNIEi8Wk9LTqyk6XNJvGUxmVi?=
+ =?us-ascii?Q?82qeohf3U1TyvmQpM+sCSAeRmPjfjNlRuqlFhR7JukQc0h+OmWs9DPoPPJRs?=
+ =?us-ascii?Q?dJaBbpRvG0jkzrtgFse4dejojr0Zlq9E2WKSFESMP1zussHRGanMWbYSaZA6?=
+ =?us-ascii?Q?HWr1m/OTHdWxi8aINXm4q9YLTji7bKXICFHAyjwQdZEEHBpuWB4kCig/e8V4?=
+ =?us-ascii?Q?VRBupjb4l+y3ISfkvZZD6fIWchS+cdoDVBvDnAblxJ0lBoP6ozmdkX2uOBGr?=
+ =?us-ascii?Q?Lp/ITQAyIX71+rfxNFLfwflnk1Sce8e1aJsvxq1+TbXkQAgxZvjRsBqm5VOj?=
+ =?us-ascii?Q?g62IZ7i9VZj08GlP4WA/nILM72HQM5GyTd/YxOJeiBmOu349okD72yBqV5qi?=
+ =?us-ascii?Q?/Vj23dywfCMfSpkHDnRAvoAxOF2YrFOni4X7jLn1uAFpzEPwr0WiV5e8tACT?=
+ =?us-ascii?Q?ghlUUGaWQ3pqDwz6Af+mL38SdF+kMg/vvFw8m+EUm3Um+On1dVUOU/zoqo5D?=
+ =?us-ascii?Q?RTIAqGvdpy98YchIDbaWkjY7ThU7uYgMOOQ1uVb3sAEIU6OoP8va48oxy/9v?=
+ =?us-ascii?Q?8/JoxzuPW1fUf0q1RzAXA21Xd9fRRhHz3Ir5gMsEtboeN+SV1KgKJ8UMb4gt?=
+ =?us-ascii?Q?2X4bpBGVffvhnGNTo5TtX3ne84RDVyPpWnPwXqsdvDnbvy7Is2yfNPctXcU4?=
+ =?us-ascii?Q?CM2jP+z1Dn7C40yd3NTFNmYJsGPt4D8+MrgMmiYfYRVOz8s8M/tlhXwLh28T?=
+ =?us-ascii?Q?vhfEY4OrQhKZajwmv8dV+0vt+7aLC4lGO+yN/fiAEXRE454oQbVzGKWBkUXl?=
+ =?us-ascii?Q?Jgm0JtdtARxvhuabcLgCPVXd9r19ES69rKtqiYz9kX/prslq2INA1zsrAR1Y?=
+ =?us-ascii?Q?Lsc5PTYUhSY0WKJqMhfaIwx3mXxsA2NABOvqDZOFAaV4Qfmn3iejvZeq7V8/?=
+ =?us-ascii?Q?EjibRkaq5ejmoKFGqVPYwJ4blO+VBwDA4s5bqsjdckJW4UNYGreaGuwKMMNY?=
+ =?us-ascii?Q?ij6rISyI7AD2kTD774UzRFy6XPP1cEcCFsFWro5PufUs5TJ6fPHU+i4jmVlS?=
+ =?us-ascii?Q?MibQKPRvXDsvZLdaK9Xzlli2HVaC/rx1svNYKRJx9TOhIm574GewHfcVncuw?=
+ =?us-ascii?Q?EpVySaynfPr/N1561wyKZ0+dfagFZAnChR+D5/6VUwrIiaSTBfFBoqFtLsW8?=
+ =?us-ascii?Q?r+yhsgXSTt3TxbD2tDTIPbAw2bwc8d0InaNS8I3yiKoZcOoeP+vNRRc0bzNg?=
+ =?us-ascii?Q?SJol8/H9tqNMoOfbQaBLhTXH+f9ZOGgAObhY1zVZaT6Ki4Ox0G6T4VWPogjG?=
+ =?us-ascii?Q?cULtLh78/JflrCxABPg94baoKkSwPLvFeggoUf31Ln5W+vVyypXTCrRiivJi?=
+ =?us-ascii?Q?h4iVyi92FBAwGNxYflFghqdNAXA3IhuaYVSFof7/J2wbsmP8OMDH9YYmzZbh?=
+ =?us-ascii?Q?c4iVC8e6hZ5+jYfZ9JCFstLMcZyu/j6+KQpaDCY9?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a0e52bc-d39b-4cf3-0858-08dd40aa3f02
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 21:16:50.4663
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: b1FrTgCqY2I/UsYCiqCTATUMVUWv4X7VUbPztkkGSuPNbLokBfXtJoWnLBZPErsW7CppZA8GD4B7Vj7OZ1Ty3A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7875
+X-OriginatorOrg: intel.com
 
-On Wed, Jan 29, 2025 at 12:25:37PM -0800, Eric Biggers wrote:
->         static const u8 data[52] = {
->                 0xf0, 0x12, 0x37, 0x5c, 0x00, 0x0e, 0x17, 0xd2, 0x0a, 0x20, 0x24, 0x87, 0xff, 0x87, 0xb1,
->                 0xb3, 0x00, 0x0d, 0xec, 0x2a, 0x01, 0x71, 0x0a, 0x1c, 0x01, 0x5d, 0x40, 0x02, 0x38, 0xf2,
->                 0x7a, 0x05, 0x00, 0x00, 0x00, 0x0e, 0xbb, 0x88, 0x4d, 0x85, 0xfd, 0x5c, 0xfb, 0xa4, 0x72,
->                 0x8b, 0xc0, 0x69, 0x0e, 0xd4, 0x00, 0x00
->         };
->         pr_info("crcval=0x%x\n", ~crc32_le(~0,data,sizeof(data)));
+Alejandro Lucero Palau wrote:
 > 
-> crcval=0x5ab72596
+> <snip>
 > 
-> So yes, the InfiniBand spec gives swab(0x5ab72596) = 0x9625B75A.
+> >
+> >> FWIW, I had (as part of current in-progress v10) similar struct than
+> >> used here for Type2 initialization when there is no mailbox.
+> >>
+> >>
+> >> I had added a specific function for initialising that struct, but my
+> >> idea now with this change is to have cxl_mem_dev_info initialized by the
+> >> driver before calling cxl_dev_state_identify,
+> > Why is the accelerator calling cxl_dev_state_identify?  I did not see that
+> > in v9.  My idea was that was a mailbox only call which is only needed for
+> > memdevs.  And cxl_add_partition() can be called by accelerators as a
+> > convenience function to aid in creating cxl_dpa_info.  (This and cxl_test
+> > needed that function shared so it just got left in mbox.c)
 > 
-> It's a least-significant-bit first CRC32, so bits 0 through 31 of 0x5ab72596
-> represent the coefficients of x^31 through x^0 in that order.  The byte swap to
-> 0x9625B75A reorders the coefficients to x^7 through x^0, x^15 through x^8, x^23
-> through x^16, x^31 through x^24.  (This is no longer a sequential order, so this
-> order is not usually used.)  The spec then stores the swapped value in big
-> endian order to cancel out the extra swap, resulting in the polynomial
-> coefficients being in a sequential order again.
+> 
+> No in v9 ... that predates Dan's DPA patches.
+> 
+> 
+> Type2 without an mbox needs to give those values obtained from 
+> CXL_MBOX_OP_IDENTIFY. I'm using an struct for passing those values to 
+> cxl_dev_state_identify for having same function serving Type2 with and 
+> without mbox.
 
-> IMO, it's easier to think about this as storing the least-significant-bit first
-> CRC32 value using little endian byte order.
+But in the case of no mbox where does the type2 get those values from
+within cxl_dev_state_identify()?
 
-To be most clear this should be written as:
+The idea with this patch change is to only call cxl_dev_state_identify IFF
+the device has a mailbox.  Are you saying the same thing?
 
-  u32 ibta_crc = swab32(~crc32_le(..)) // Gives you the IBTA defined value
-  *packet = cpu_to_be32(ibta_crc); // Puts it in the packet
+> I could have another function instead and calling that one 
+> for Type2 with mbox. My idea is to keep similar initialization than 
+> Type3 pci driver.
 
-It follows the spec clearly and exactly.
+Agreed.  But without an mbox I'm hoping you don't need to call
+cxl_dev_state_identify at all if you don't need to query the device...  ie
+don't have a mailbox.
 
-Yes, you can get the same net effect using le:
+> 
+> 
+> >> and inside that function
+> > I'm not clear which 'that function' you are referring to here.
+> 
+> 
+> cxl_dev_state_identify
+> 
+> 
+> >> checking if total_bytes already != 0 for avoiding call the mbox command
+> >> for getting the info. This will support both cases for Type2, with and
+> >> without mailbox.
+> > I think I agree with you except the != 0 to avoid mailbox commands.
+> >
+> > Unless I am miss-understanding Dan we need to get to a place where mailbox
+> > commands stop filling in structures unless those work for both type 2 and
+> > 3 __and__ are optional.  Because putting in special checks for the type
+> > within a cxl/core/mailbox call is wrong IMO.
+> 
+> 
+> As I said, I can avoid that check with a wrapper for Type2, then only 
+> Type2 with mbox and supporting that command (is it mandatory if an 
+> mbox?) will end up calling cxl_dev_state_identify.
 
-  u32 not_ibta_crc = ~crc32_le(..)
-  *packet = cpu_to_le32(not_ibta_crc)
+Even if type 2 has a mailbox the partition information may or may not need
+to be in the identify command.
 
-It does work, but it is very hard to follow how that relates to the
-specification when the u32 is not in the spec's format anymore.
+Why force any type 2 to call that mailbox command?
 
-What matters here, in rxe, is how to use the Linux crc32 library to
-get exactly the value written down in the spec.
-
-IMHO the le approach is an optimization to avoid the dobule swap, and
-it should simply be described as such in a comment:
-
- The crc32 library gives a byte swapped result compared to the IBTA
- specification. swab32(~crc32_le(..)) will give values that match
- IBTA.
-
- To avoid double swapping we can instead write:
-    *icrc = cpu_to_le32(~crc32_le(..))
- The value will still be big endian on the network.
-
-No need to talk about coefficients.
-
-Jason
+Ira
