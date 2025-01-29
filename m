@@ -1,54 +1,54 @@
 Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712941E3DFD
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:42:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B857D1EE7AA
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:42:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738190560; cv=none; b=YVvAm3wpyOoLQz+1J5JWja/t6L6nqoe7aMT4jYhDMu8HFmTkh+lqQkTm8b3E4N3RVcauPC3mMPHFQC/2gg4vN2aE+yyMvkAIIA+lbfaQA2L7zIsLCIwtfkEHNT2jRLWv5GznDdHVmLodWkVUJeJBB4s3yxHKWomnooaIzg1WVgY=
+	t=1738190561; cv=none; b=kYfuVrQfv6so6Rup3MJ3sIwysK3KnTji6nBQLTXlZTQ8zYus8NYeQ+QZHSAMEgaWM5zb+vIoFrrwQmECnWB1jM5T0MMBM4dnIWATeprRgFrq093EepchVOJnR7eIxgB9R1kMZnClJE8fqdlGLXi1rh/aTAyn3oLJ5MT6iF1JHmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738190560; c=relaxed/simple;
-	bh=F1U1d0suBs4upbIvyU8zs6jNKjEaoO4dYrbC2u9MVqE=;
+	s=arc-20240116; t=1738190561; c=relaxed/simple;
+	bh=uliIavhn3jJdykzLNJFxBtoJrXgefAaukHFwz7YW/Ek=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nkCT4SVdbT1KYLmr8ze8qZu46UMkFFRpEdzOSLJ44xTTqsuVFh8n5ZcifzTg8vSazMht4tgCI72qtpF+bVL77Scd2rzSrEs777c7d0TMIbylDdAUZMMakB/llA3PKLviAQ6dv2DPVJpPpwxb/TP1WQ9yiR/yYZ3ZYAgzdBZ6lQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B0dnyZ8a; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=HRdl0RvrTprzh0xJIGDytyg7+GO0jzA3J4kSJLLIXlqCxFvwR1DWJ74q7smPNydgUbLxFizQRpPWrWFGsi2DcuI2uMeeUBuWq8b24dvgCp2j9ahSuq70HX2cjQouxR+dOqYZyS3TLyOgR5QmjpQVUHizYLLQ4vGmqL074uNT9xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QwkQcFHf; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B0dnyZ8a"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21655569152so3146515ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:42:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QwkQcFHf"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21650d4612eso3939735ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:42:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738190557; x=1738795357; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738190559; x=1738795359; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xLt9HBc0qt/kG8opRR3xwjjIGa13UKxYV2/Ut2PpccA=;
-        b=B0dnyZ8aheOvKe+LMtQwocv/BC9+bVQA3MO0KjQECzAvpm3qTCCmOnttn5TufMh6aD
-         MBMzCvDYZfH/Dp4wSuGJL7xIfasZZZdaIMBXepHdIj080fkWWFKT4uJg0C0/QMZ9gVad
-         yl+GcfyKSr7n3LFJKTaOah6UkroNG1sgvrDpDOq6aPCheGVS4j9dYb2pUixmWdplylAv
-         PXQCyKYl/nisE9wt5jmaJXIclN8tRkjwYOolPLsDp98JwfETV+YkRLmQDHVWba5LHJUo
-         ipK6DlAMC0SGqp6OEjdgrzcY1DBBsFRlLdT1Z3EUafYZg3R9sIygYz+BOP5kyWoF0+CH
-         vkyQ==
+        bh=Bphjz2B5H2n+p6toKCuCjUfnxwYaF6wPJ0biY9P/V2E=;
+        b=QwkQcFHfZ9PxWB0WiCnxscT3dxZOgsF8T3lv09GZW080ErDzANG2B+nTpuVgLzjjip
+         yV8nr1p8cIPuLrxrYBKRT77U674tf/Su/QXDZnMu5n6CiNt7CplrU2OxTMcoa0PeAxbp
+         78lewGxRP+bkXdRceQuuxshT+7hCrHdhFaLKbfRUP3nXuD66TstO8IGmuIAPbk+548g3
+         tl5sSL+nU8Pzu5auY8Zw/rqCTMLpsPiw85bvRaiQ0Fvx0B+dhzlkCiO2XfvJ/ocRrn0+
+         qDxR1or2kcYyKSm2DId5xoqm3MusFyv/3n4raWzdzOp6FZjz+A0dOt3ubAF8GZt7FbCW
+         HA4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738190557; x=1738795357;
+        d=1e100.net; s=20230601; t=1738190559; x=1738795359;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xLt9HBc0qt/kG8opRR3xwjjIGa13UKxYV2/Ut2PpccA=;
-        b=lVBuyBmwlltu3VOZpVbQhiKRLigxdeFtHnvG8MgV6l5BxULeTj9/HAwpr8nA7hE1ip
-         CF1hPqyF5i/Zy9kQY3ChQ9lsKSIPBV3xuvtEoZPnUwOyFbOBUSTvITWddXMU5tcGaFtG
-         FOMmOUTlVIpuNLtCGVSyB8WDl9h+7wxGGkF6yeKfkCjvCzlpVIfqW6c71U4KVgparn1l
-         Ubw3Vnx7CwPJ+WAxClUiB+4hD/K8jpXjcPndsRk8jy0AtH/+4c0xIHFJe56GiCu4KLP7
-         wE1xujpSGHdSkOMQmwFifbBqAnXoaBKReiRH4VvkU1UL/7Wc3uTpyWXRSZKrMYhEJ8zb
-         n5Qw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzognYu6sEs1OJ3e/dn8hl+5uEXWKaKUuM8WFYdk3IIZgZbTeMEijiLM0q8dTj6puSSgeE7OTNPT9UADQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygcK7w9Wgl0RUF4OvMa3B0xjdPlApKtZU3J+juGexzYJHQ1iYc
-	WN5SFtqm5uc7W7k3oyZN2JjViAYcVdLuFvG5nIdLznOpDUn2QVG7jcwRSrY4xt9qnpJ6Ig==
-X-Google-Smtp-Source: AGHT+IG77o+oLUYvd4dsteZDfBQBaEerJ11jO3U7DjFTw9ASxdHAtRSoV+qn91gtydr1b6v63zVD5abu
-X-Received: from plbmf13.prod.google.com ([2002:a17:902:fc8d:b0:215:5a53:ee06])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d551:b0:216:5556:8b46
- with SMTP id d9443c01a7336-21dd7e0728fmr78854645ad.49.1738190557688; Wed, 29
- Jan 2025 14:42:37 -0800 (PST)
-Date: Wed, 29 Jan 2025 22:41:42 +0000
+        bh=Bphjz2B5H2n+p6toKCuCjUfnxwYaF6wPJ0biY9P/V2E=;
+        b=eT6g7N8iNfuH1aje203aB9UGR2dWsMPF8QsBBLYdPkM525TM+90s2sOZgtuSPl2YMy
+         H2MEIW3qAsIIiSAIAC3zZMNnjymD43e02ypbD1UALPNugdwSchxGD29WWuNvU41BifKn
+         +ssleGbvtJ8NlwRwxi9gW8ZOR9tizbLZAV27ejw9RYH1HSpC8qUd9yHVam8AkrMD5XZv
+         tB+2NVkNjwd2EWVYwoBwFt6ShQCsT34snQA8Iy2UJY0AKi/FH6XyBLAW2ZqE/qc+pQbc
+         BgKuFe87m6qabXef8WHPLsA4NDdRXHZPL6pjCk6GI6Nvbhds5AxtiV8rjBoZZ++GVJGa
+         lgeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWCl6RT+ec8Jf5qMmZnJ1fbjmbUpFbfS/9wuNq7bmGkc5XsRel/MvMnKaUiFw0WxWbO+L0CKZ8cc9HfM7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxurCtvbPEN5g8uYGkIAO9m9mlSO0yBDEBuyTls6FUTP1ywHqsT
+	s+2XdA0i2g4L6KagLNVS3hc8nd/i4mu5M5Kg0hz7wIeUn5sCXWrWlVQp4BdFXMenxU+zBA==
+X-Google-Smtp-Source: AGHT+IEupuZBL681CzwqacE6l9j1whrVwEezyuvYbWICKt+dR8gVuQALet2uv2LXpK1TnJ3eAsBEWAai
+X-Received: from plxd18.prod.google.com ([2002:a17:902:ef12:b0:21d:dae1:77e8])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ea02:b0:21c:fb6:7c50
+ with SMTP id d9443c01a7336-21dd7d8aa02mr76684975ad.31.1738190559165; Wed, 29
+ Jan 2025 14:42:39 -0800 (PST)
+Date: Wed, 29 Jan 2025 22:41:43 +0000
 In-Reply-To: <20250129224157.2046079-1-fvdl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250129224157.2046079-1-fvdl@google.com>
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Message-ID: <20250129224157.2046079-14-fvdl@google.com>
-Subject: [PATCH v2 13/28] mm: define __init_reserved_page_zone function
+Message-ID: <20250129224157.2046079-15-fvdl@google.com>
+Subject: [PATCH v2 14/28] mm/hugetlb: check bootmem pages for zone intersections
 From: Frank van der Linden <fvdl@google.com>
 To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
@@ -67,90 +67,189 @@ Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com,
 	roman.gushchin@linux.dev, Frank van der Linden <fvdl@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Sometimes page structs must be unconditionally initialized
-as reserved, regardless of DEFERRED_STRUCT_PAGE_INIT.
+Bootmem hugetlb pages are allocated using memblock, which isn't
+(and mostly can't be) aware of zones.
 
-Define a function, __init_reserved_page_zone, containing
-code that already did all of the work in init_reserved_page,
-and make it available for use.
+So, they may end up crossing zone boundaries. This would create
+confusion, a hugetlb page that is part of multiple zones is bad.
+Worse, HVO might then end up stealthily re-assigning pages to a
+different zone when a hugetlb page is freed, since the tail page
+structures beyond the first vmemmap page would inherit the zone
+of the first page structures.
+
+While the chance of this happening is low, you can definitely
+create a configuration where this happens (especially using
+ZONE_MOVABLE).
+
+To avoid this issue, check if bootmem hugetlb pages intersect
+with multiple zones during the gather phase, and discard
+them, handing them to the page allocator, if they do. Record
+the number of invalid bootmem pages per node and subtract them
+from the number of available pages at the end, making it easier
+to do these checks in multiple places later on.
 
 Signed-off-by: Frank van der Linden <fvdl@google.com>
 ---
- mm/internal.h |  1 +
- mm/mm_init.c  | 38 +++++++++++++++++++++++---------------
- 2 files changed, 24 insertions(+), 15 deletions(-)
+ mm/hugetlb.c  | 61 +++++++++++++++++++++++++++++++++++++++++++++++++--
+ mm/internal.h |  2 ++
+ mm/mm_init.c  | 25 +++++++++++++++++++++
+ 3 files changed, 86 insertions(+), 2 deletions(-)
 
-diff --git a/mm/internal.h b/mm/internal.h
-index 109ef30fee11..57662141930e 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1448,6 +1448,7 @@ static inline bool pte_needs_soft_dirty_wp(struct vm_area_struct *vma, pte_t pte
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index e5ca5cf2c6fd..a0a87d1a8569 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -63,6 +63,7 @@ static unsigned long hugetlb_cma_size_in_node[MAX_NUMNODES] __initdata;
+ static unsigned long hugetlb_cma_size __initdata;
  
- void __meminit __init_single_page(struct page *page, unsigned long pfn,
- 				unsigned long zone, int nid);
-+void __meminit __init_reserved_page_zone(unsigned long pfn, int nid);
+ __initdata struct list_head huge_boot_pages[MAX_NUMNODES];
++__initdata unsigned long hstate_boot_nrinvalid[HUGE_MAX_HSTATE];
  
- /* shrinker related functions */
- unsigned long shrink_slab(gfp_t gfp_mask, int nid, struct mem_cgroup *memcg,
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 9f1e41c3dde6..925ed6564572 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -650,6 +650,28 @@ static inline void fixup_hashdist(void)
- static inline void fixup_hashdist(void) {}
- #endif /* CONFIG_NUMA */
+ /*
+  * Due to ordering constraints across the init code for various
+@@ -3309,6 +3310,44 @@ static void __init prep_and_add_bootmem_folios(struct hstate *h,
+ 	}
+ }
  
-+/*
-+ * Initialize a reserved page unconditionally, finding its zone first.
-+ */
-+void __meminit __init_reserved_page_zone(unsigned long pfn, int nid)
++static bool __init hugetlb_bootmem_page_zones_valid(int nid,
++						    struct huge_bootmem_page *m)
 +{
-+	pg_data_t *pgdat;
-+	int zid;
++	unsigned long start_pfn;
++	bool valid;
 +
-+	pgdat = NODE_DATA(nid);
++	start_pfn = virt_to_phys(m) >> PAGE_SHIFT;
 +
-+	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
-+		struct zone *zone = &pgdat->node_zones[zid];
++	valid = !pfn_range_intersects_zones(nid, start_pfn,
++			pages_per_huge_page(m->hstate));
++	if (!valid)
++		hstate_boot_nrinvalid[hstate_index(m->hstate)]++;
 +
-+		if (zone_spans_pfn(zone, pfn))
-+			break;
-+	}
-+	__init_single_page(pfn_to_page(pfn), pfn, zid, nid);
-+
-+	if (pageblock_aligned(pfn))
-+		set_pageblock_migratetype(pfn_to_page(pfn), MIGRATE_MOVABLE);
++	return valid;
 +}
 +
- #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
- static inline void pgdat_set_deferred_range(pg_data_t *pgdat)
++/*
++ * Free a bootmem page that was found to be invalid (intersecting with
++ * multiple zones).
++ *
++ * Since it intersects with multiple zones, we can't just do a free
++ * operation on all pages at once, but instead have to walk all
++ * pages, freeing them one by one.
++ */
++static void __init hugetlb_bootmem_free_invalid_page(int nid, struct page *page,
++					     struct hstate *h)
++{
++	unsigned long npages = pages_per_huge_page(h);
++	unsigned long pfn;
++
++	while (npages--) {
++		pfn = page_to_pfn(page);
++		__init_reserved_page_zone(pfn, nid);
++		free_reserved_page(page);
++		page++;
++	}
++}
++
+ /*
+  * Put bootmem huge pages into the standard lists after mem_map is up.
+  * Note: This only applies to gigantic (order > MAX_PAGE_ORDER) pages.
+@@ -3316,14 +3355,25 @@ static void __init prep_and_add_bootmem_folios(struct hstate *h,
+ static void __init gather_bootmem_prealloc_node(unsigned long nid)
  {
-@@ -708,24 +730,10 @@ defer_init(int nid, unsigned long pfn, unsigned long end_pfn)
+ 	LIST_HEAD(folio_list);
+-	struct huge_bootmem_page *m;
++	struct huge_bootmem_page *m, *tm;
+ 	struct hstate *h = NULL, *prev_h = NULL;
  
- static void __meminit init_reserved_page(unsigned long pfn, int nid)
+-	list_for_each_entry(m, &huge_boot_pages[nid], list) {
++	list_for_each_entry_safe(m, tm, &huge_boot_pages[nid], list) {
+ 		struct page *page = virt_to_page(m);
+ 		struct folio *folio = (void *)page;
+ 
+ 		h = m->hstate;
++		if (!hugetlb_bootmem_page_zones_valid(nid, m)) {
++			/*
++			 * Can't use this page. Initialize the
++			 * page structures if that hasn't already
++			 * been done, and give them to the page
++			 * allocator.
++			 */
++			hugetlb_bootmem_free_invalid_page(nid, page, h);
++			continue;
++		}
++
+ 		/*
+ 		 * It is possible to have multiple huge page sizes (hstates)
+ 		 * in this list.  If so, process each size separately.
+@@ -3595,13 +3645,20 @@ static void __init hugetlb_init_hstates(void)
+ static void __init report_hugepages(void)
  {
--	pg_data_t *pgdat;
--	int zid;
--
- 	if (early_page_initialised(pfn, nid))
- 		return;
+ 	struct hstate *h;
++	unsigned long nrinvalid;
  
--	pgdat = NODE_DATA(nid);
--
--	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
--		struct zone *zone = &pgdat->node_zones[zid];
--
--		if (zone_spans_pfn(zone, pfn))
--			break;
--	}
--	__init_single_page(pfn_to_page(pfn), pfn, zid, nid);
--
--	if (pageblock_aligned(pfn))
--		set_pageblock_migratetype(pfn_to_page(pfn), MIGRATE_MOVABLE);
-+	__init_reserved_page_zone(pfn, nid);
+ 	for_each_hstate(h) {
+ 		char buf[32];
+ 
++		nrinvalid = hstate_boot_nrinvalid[hstate_index(h)];
++		h->max_huge_pages -= nrinvalid;
++
+ 		string_get_size(huge_page_size(h), 1, STRING_UNITS_2, buf, 32);
+ 		pr_info("HugeTLB: registered %s page size, pre-allocated %ld pages\n",
+ 			buf, h->free_huge_pages);
++		if (nrinvalid)
++			pr_info("HugeTLB: %s page size: %lu invalid page%s discarded\n",
++					buf, nrinvalid, nrinvalid > 1 ? "s" : "");
+ 		pr_info("HugeTLB: %d KiB vmemmap can be freed for a %s page\n",
+ 			hugetlb_vmemmap_optimizable_size(h) / SZ_1K, buf);
+ 	}
+diff --git a/mm/internal.h b/mm/internal.h
+index 57662141930e..63fda9bb9426 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -658,6 +658,8 @@ static inline struct page *pageblock_pfn_to_page(unsigned long start_pfn,
  }
- #else
- static inline void pgdat_set_deferred_range(pg_data_t *pgdat) {}
+ 
+ void set_zone_contiguous(struct zone *zone);
++bool pfn_range_intersects_zones(int nid, unsigned long start_pfn,
++			   unsigned long nr_pages);
+ 
+ static inline void clear_zone_contiguous(struct zone *zone)
+ {
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 925ed6564572..f7d5b4fe1ae9 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -2287,6 +2287,31 @@ void set_zone_contiguous(struct zone *zone)
+ 	zone->contiguous = true;
+ }
+ 
++/*
++ * Check if a PFN range intersects multiple zones on one or more
++ * NUMA nodes. Specify the @nid argument if it is known that this
++ * PFN range is on one node, NUMA_NO_NODE otherwise.
++ */
++bool pfn_range_intersects_zones(int nid, unsigned long start_pfn,
++			   unsigned long nr_pages)
++{
++	struct zone *zone, *izone = NULL;
++
++	for_each_zone(zone) {
++		if (nid != NUMA_NO_NODE && zone_to_nid(zone) != nid)
++			continue;
++
++		if (zone_intersects(zone, start_pfn, nr_pages)) {
++			if (izone != NULL)
++				return true;
++			izone = zone;
++		}
++
++	}
++
++	return false;
++}
++
+ static void __init mem_init_print_info(void);
+ void __init page_alloc_init_late(void)
+ {
 -- 
 2.48.1.262.g85cc9f2d1e-goog
 
