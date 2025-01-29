@@ -1,116 +1,130 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A2619DF75
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213D31E25FA;
+	Wed, 29 Jan 2025 22:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738189307; cv=none; b=Eu+X/JvB2WkFNi5RTGdoOW+5ear49uGALLjx1Mk4h/5x2bmsy99FxHczv2ycpr44+FEq6bfBltKoADo2P8JKOCuY2ty0nDStFGYTkxujDEkpxk/bj7JSP3gpWJjmSTZ8Idrw2Fx3oXWV6bJfXZ9gyHtAfql9NjPH8Qh4i4qtJUs=
+	t=1738189310; cv=none; b=S3XAq3blG3fpmFw0sVy4fzR/jc2qXb0bW58zQsc/ZEGayHyv6UMNCTvI/Y4RFuUC0olwVh8jvnnlD5n36U3JzOjIo62UjIumCNmEhwZVqFo4Pb0VZLEUYPO1DGakR8a4dQP0JAk68CNgQXXl2qMOJLMJsHuGw/RoCtLhcNyDhbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738189307; c=relaxed/simple;
-	bh=farTO53coIPRLWdA/j5ulwMmgF1hIwZqDCDXvQL/1/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JyaJqQozcg2wMyDlODVSRscKekk8aD6DA3pcJQzbjzCY1nGaaP0oKh2hXdEZufuuAhr7Wy2XRyd9Gq7a6qtMscPNrImx6tRleI1/4pcH/b/S8JVHcqcgVNiYNKgCZdEvA4dnZ8k2lsakURYI8vW+diecnTA4mcpf4LJkAw56Amc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SPmL78Qi; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738189310; c=relaxed/simple;
+	bh=wMExSQshQTC/YkHmuY+dEp/nWZfX+pSy85NmmWgXJmk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A1vJT6bx2EHR7EONeSbGePy/LrwMpfdsfd4i3KXq1aUo+Znm4OBDLqj3+MlWiIqCPhHajfns65uJupTFdlTBiPqcFA/WhFQbrpXJnR0IUla/HC+PJjN7/I1JOIXW0zlRpGv510trFOed3IbmHeR9v3KugeCtVV0xUl0P9uPZH+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jjghEIxB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SPmL78Qi"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43635796b48so618615e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:21:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738189303; x=1738794103; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mOVDg+y8yqQJG2b6/A3VgQPrw3p5f6ahdRiK7F2y/XY=;
-        b=SPmL78QiHgjJtkK+6hHDJxv0DyfaySmGIHrxO2RjT+rkk3lcdTdzdAdP3QIjL3j8h0
-         OXsspkNPLzSI8yFSupXcZzIqGjdMH0EAF/suu6FV0izCApLsJhlwE9DWBX/yciTm6vM6
-         f9wJdmCpBGzDz3BiRXVABWvam48USlNn/M2Tqr9CixHPlPPds5xa5v/kw+8v/8v2D0tt
-         EsD/h3I0+wAZVsUBo60SNuKgSadwxYw+cLtw0A4XgR8WEhX96DpCllivM/onQ2KhT79t
-         aMxmI0S6N4ZZrHptWGSD246IIOunwVAsgt3+4MeWDuayD4cZXX9dKGl3MT5GR2PqjyUJ
-         WPhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738189303; x=1738794103;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mOVDg+y8yqQJG2b6/A3VgQPrw3p5f6ahdRiK7F2y/XY=;
-        b=CfKohMg/gL7BRiT7IgnoImdVbhMpgvSYaM1oVQ2zs8wzrwJY6xR3H0fvQYWYSTJx80
-         j9yjJ6JiXQ1W0c+9IqU63PN8y/g2zNwF6vwEkAeQ3jucIqQMTXrI/Xe0RjVnK0fKKTux
-         KHs6OPNl5P33OSSEWbFpdHAWPtAEdjqFulCDGrjbqP7i1NMObw/2rmHtunXcQQZaAlR0
-         9MxTwc2WzSHSD7tFSYAW+pN6JaKpSeKDF0KomB0aabe3s4B3llAP+morTwNfyc5Ner7K
-         h9Ot+r58kiXzHFJZQCvwJqtmw4DCW8J0ejCgYvxaWuEnIWcock6VUqJ7YrhcgL9OqFBe
-         7gVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKPHt3K50cIbYBs/4EealXKhZcj62f+LM4Piyco8gs1MU09SvJyrf9SVGqTyzTRYK0vYJOvjJFVQc22ns=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDJfgIUKOLJRP8/KxpQ9H3KZuxqeltyIwV/NKbRPYGKjqJ+g+2
-	mz77CKfnuoGCeqch610mU9X842f6r8Vy+ZX4431bvmLowNpmMYDh
-X-Gm-Gg: ASbGncsABlyFCus2YZZl1QEyxtK2jDp+W76gjtiH/xZyXQsRI2OzdAwn5nBBxCpGF14
-	4HW6cPlrO12IuhZ56I9j6mzjfqDAip70HccZExkxcr/9swTFCe+BY6Ry+b89/jz8k8DucwrF81+
-	bJ3TGoGHRXxVYkhs+fqyN5s5tGMG+ac7fKaeMB5gBX5IQOaRp9l9rJBXaWO6qJBtFORFpdZlJUq
-	OSEjLZbAXvN2EmFHIfxYoYVM1LBffaTyd6JsuFDzV1jXQWV75QUiPrvoPmguyf/OfCT/YF7gXpW
-	3QNoMKeX/mfrWzhHna2Fpk7gKg77L98Sn4aFZNYUx0VzOOgwfs8Xog==
-X-Google-Smtp-Source: AGHT+IFsn/yWIL1EWmQDx0L2XWxnpx2kTSuDh+vsZ4vDcf0vOrxidiZ+CLBoyvPtTo0M0t1fJefQ1A==
-X-Received: by 2002:a05:600c:3b8e:b0:436:1b86:f05 with SMTP id 5b1f17b1804b1-438e16fa988mr8268035e9.11.1738189303321;
-        Wed, 29 Jan 2025 14:21:43 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438d7b4c4c4sm33826055e9.1.2025.01.29.14.21.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 14:21:42 -0800 (PST)
-Date: Wed, 29 Jan 2025 22:21:41 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: kernel test robot <lkp@intel.com>
-Cc: Even Xu <even.xu@intel.com>, oe-kbuild-all@lists.linux.dev,
- linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>, Xinpeng Sun
- <xinpeng.sun@intel.com>, Srinivas Pandruvada
- <srinivas.pandruvada@linux.intel.com>, Mark Pearson
- <mpearson-lenovo@squebb.ca>
-Subject: Re: drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:38:
- sparse: sparse: dubious: !x | !y
-Message-ID: <20250129222141.478c03df@pumpkin>
-In-Reply-To: <202501292144.eFDq4ovr-lkp@intel.com>
-References: <202501292144.eFDq4ovr-lkp@intel.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jjghEIxB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60801C4CEE2;
+	Wed, 29 Jan 2025 22:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738189309;
+	bh=wMExSQshQTC/YkHmuY+dEp/nWZfX+pSy85NmmWgXJmk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jjghEIxBkt1EEdDhIkrMInNpiAnZPni1sESw+ZXXMqDs9GddcoZGsb5GFf3ac1QVO
+	 mBIr0jhBs7kxxhKDdRw2yAg2DXTwOdZAz3wlsLp1X5jLsGyED6JHpZK1tI2wgjpklY
+	 M0ePiBDrfp2U0uYixNrhsiD8HG3ZfykuXdxn4ORLo+ao5bMjt/XqYU6QD406JhSk+L
+	 40MEVKpgL+sNoiUTTfSildI1BePChn+Eu3BEWVqBmvLHe0AgHCBHPMSqnlLxF7MoBr
+	 5Y3bRI63R9mar0knW28bMQWwnMcQ66YrcCRJ+nmad8soXW+INfHEKorum+7bHUlhYv
+	 5Z2GGGUkYWtmw==
+Date: Wed, 29 Jan 2025 22:21:47 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Zhu Yanjun <yanjun.zhu@linux.dev>, linux-rdma@vger.kernel.org,
+	Mustafa Ismail <mustafa.ismail@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Bernard Metzler <bmt@zurich.ibm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/6] RDMA/rxe: handle ICRC correctly on big endian systems
+Message-ID: <20250129222147.GC2619178@google.com>
+References: <20250127223840.67280-1-ebiggers@kernel.org>
+ <20250127223840.67280-2-ebiggers@kernel.org>
+ <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
+ <20250129183009.GC2120662@ziepe.ca>
+ <20250129185115.GA2619178@google.com>
+ <20250129194344.GD2120662@ziepe.ca>
+ <20250129202537.GA66821@sol.localdomain>
+ <20250129211651.GE2120662@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129211651.GE2120662@ziepe.ca>
 
-On Wed, 29 Jan 2025 22:02:59 +0800
-kernel test robot <lkp@intel.com> wrote:
-
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
-> commit: a688404b2e20f00cce6d0a2b888ef4ca9154e144 HID: intel-thc-hid: intel-thc: Add THC DMA interfaces
-> date:   3 weeks ago
-> config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250129/202501292144.eFDq4ovr-lkp@intel.com/config)
-> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250129/202501292144.eFDq4ovr-lkp@intel.com/reproduce)
+On Wed, Jan 29, 2025 at 05:16:51PM -0400, Jason Gunthorpe wrote:
+> On Wed, Jan 29, 2025 at 12:25:37PM -0800, Eric Biggers wrote:
+> >         static const u8 data[52] = {
+> >                 0xf0, 0x12, 0x37, 0x5c, 0x00, 0x0e, 0x17, 0xd2, 0x0a, 0x20, 0x24, 0x87, 0xff, 0x87, 0xb1,
+> >                 0xb3, 0x00, 0x0d, 0xec, 0x2a, 0x01, 0x71, 0x0a, 0x1c, 0x01, 0x5d, 0x40, 0x02, 0x38, 0xf2,
+> >                 0x7a, 0x05, 0x00, 0x00, 0x00, 0x0e, 0xbb, 0x88, 0x4d, 0x85, 0xfd, 0x5c, 0xfb, 0xa4, 0x72,
+> >                 0x8b, 0xc0, 0x69, 0x0e, 0xd4, 0x00, 0x00
+> >         };
+> >         pr_info("crcval=0x%x\n", ~crc32_le(~0,data,sizeof(data)));
+> > 
+> > crcval=0x5ab72596
+> > 
+> > So yes, the InfiniBand spec gives swab(0x5ab72596) = 0x9625B75A.
+> > 
+> > It's a least-significant-bit first CRC32, so bits 0 through 31 of 0x5ab72596
+> > represent the coefficients of x^31 through x^0 in that order.  The byte swap to
+> > 0x9625B75A reorders the coefficients to x^7 through x^0, x^15 through x^8, x^23
+> > through x^16, x^31 through x^24.  (This is no longer a sequential order, so this
+> > order is not usually used.)  The spec then stores the swapped value in big
+> > endian order to cancel out the extra swap, resulting in the polynomial
+> > coefficients being in a sequential order again.
 > 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202501292144.eFDq4ovr-lkp@intel.com/
+> > IMO, it's easier to think about this as storing the least-significant-bit first
+> > CRC32 value using little endian byte order.
 > 
-> sparse warnings: (new ones prefixed by >>)
-> >> drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:38: sparse: sparse: dubious: !x | !y  
->    drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c: note: in included file (through include/linux/mmzone.h, include/linux/gfp.h, include/linux/mm.h, ...):
->    include/linux/page-flags.h:237:46: sparse: sparse: self-comparison always evaluates to false
->    include/linux/page-flags.h:237:46: sparse: sparse: self-comparison always evaluates to false
+> To be most clear this should be written as:
 > 
-> vim +298 drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c
-...	
->    297		for (i = 0; i < config->prd_tbl_num; i++) {
->  > 298			if (!config->sgls[i] | !config->sgls_nent[i])  
->    299				continue;
-...
+>   u32 ibta_crc = swab32(~crc32_le(..)) // Gives you the IBTA defined value
+>   *packet = cpu_to_be32(ibta_crc); // Puts it in the packet
+> 
+> It follows the spec clearly and exactly.
+> 
+> Yes, you can get the same net effect using le:
+> 
+>   u32 not_ibta_crc = ~crc32_le(..)
+>   *packet = cpu_to_le32(not_ibta_crc)
+> 
+> It does work, but it is very hard to follow how that relates to the
+> specification when the u32 is not in the spec's format anymore.
+> 
+> What matters here, in rxe, is how to use the Linux crc32 library to
+> get exactly the value written down in the spec.
+> 
+> IMHO the le approach is an optimization to avoid the dobule swap, and
+> it should simply be described as such in a comment:
+> 
+>  The crc32 library gives a byte swapped result compared to the IBTA
+>  specification. swab32(~crc32_le(..)) will give values that match
+>  IBTA.
+> 
+>  To avoid double swapping we can instead write:
+>     *icrc = cpu_to_le32(~crc32_le(..))
+>  The value will still be big endian on the network.
+> 
+> No need to talk about coefficients.
 
-If zeros are unlikely the bit-wise 'or' is pretty likely to generate better code
-than a logical 'or'.
+We are looking at the same spec, right?  The following is the specification for
+the ICRC field:
 
-	David
+    The resulting bits are sent in order from the bit representing the
+    coefficient of the highest term of the remainder polynomial. The least
+    significant bit, most significant byte first ordering of the packet does not
+    apply to the ICRC field.
 
+So it does talk about the polynomial coefficients.
+
+It sounds like you want to add two unnecessary byteswaps to match the example in
+Table 25, which misleadingly shows a byte-swapped ICRC value as a u32 without
+mentioning it is byte-swapped.  I don't agree that would be clearer, but we can
+do it if you prefer.
+
+- Eric
