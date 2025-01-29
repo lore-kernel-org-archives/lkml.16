@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6FD1DF75B
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 18:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39921DF268;
+	Wed, 29 Jan 2025 18:29:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738175275; cv=none; b=B26FC1JVfzhvmy9tPL9920kV1CWZ9I9qjr8Lej7tjbjeoUGpVdUElet4qoamrRmywAcIKqpC+5K6Zri3dCRpgU6VZl/lf8zg1dxmJfv7KSK7IUquvaQkJbS/bNmNwBkOBuQQj3FQgwUxAtNe7cfW6Sxvw1nZ0yx/irb1XzquuvM=
+	t=1738175344; cv=none; b=N3bamM/aVy23w9yVAV1JXpUwAr1N5nOF5n0KmZ8wwD+g/UYWUzovr4UEADV4eAQhODpJ/0Mc2eEBMIrSG8NOeIIxwP0QJ91gWI83/HpZwDp5FoI15h0BtRJruIhp83/Ghz67jI0wF/wkdwuM69IiItVI5pvfCXPFGoE6OzRYWII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738175275; c=relaxed/simple;
-	bh=2rGimpOU0b9o+W8A/02tsbtXgU4FVw+wdxLaw6QKohA=;
+	s=arc-20240116; t=1738175344; c=relaxed/simple;
+	bh=ouQVcLhBJPTHzBMkOea8eBIJuZ/tHFz03XhLNww49yA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k4w2ztKkzwC3vXFTMTBGsY8edNpMI5VdSOEW1XXsYi+BxCA1PIAi08NzBoU14INe5Xu26aJcBBldr4Gh9ItOXMFdnG2vJBboQrsdHhKrnJQv4e8Pi/tw75lY+gqO9iqtVTjMI1Eagi9Bs810HNN5QnbBOfZzuQ2fQ8zF33HyLN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bifGCNlr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=IRHv3D06hmgymM9SvJixj5Toaj0JkAfTBNMLYtsDWKyYQkwxVL6Ka2966m6S4s1pNH9KksiCoCSnE8qZGpTe6txVh0CH572Kj1etAT/bZ2qL3+lG9MzNEh1dASxtMrTyplTqRdOT3EEHJgjP0sGfBrdEpOaPTtY/9nNtWZeFtmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rhucSnmg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bifGCNlr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7272C4CED1;
-	Wed, 29 Jan 2025 18:27:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhucSnmg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E43EFC4CED1;
+	Wed, 29 Jan 2025 18:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738175274;
-	bh=2rGimpOU0b9o+W8A/02tsbtXgU4FVw+wdxLaw6QKohA=;
+	s=k20201202; t=1738175343;
+	bh=ouQVcLhBJPTHzBMkOea8eBIJuZ/tHFz03XhLNww49yA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bifGCNlrk4ajutF2A1AtbCQkiLT3vs9u/j69tRvfJLcwkfIZ2yE8lBfl357+z7aE0
-	 Tasx7rWnjkJOs6ra6rI9A/uVTjvVImsHZH4i0WGOKOT+DeMZwIv/qDsY8cz9jSzyoA
-	 RMFILJRdxg7tkC5yOX29Ts+TlWHMnQwBmsJGViyY7sPd/wEdgSVWT3T14juhCy7/WV
-	 IF5OOXMYDxRwnDud9AZRuTWz8J1S6BZkK/UVDe8nl6pt9Rm/Sbsh9WLBCmh98wrqv6
-	 L5XA8cQAqQg4dhwtf/WTT7CM2x44Fv239rsgvI8JODnjoadTgGo9yJvkc1z60GiCJg
-	 bb2UfJf4OlF5g==
-Message-ID: <654d6ef8-cbfe-4e6d-a4dd-f7a5cb616c4e@kernel.org>
-Date: Wed, 29 Jan 2025 19:27:48 +0100
+	b=rhucSnmguQ5vsCjH2HgHk+48GEd8rb3qHsTwII4blSkKZ6xmJPeU+mpJ1lDqd/T5k
+	 U+I92SSsNPMuN0j2IjeU+taXbp3o8JCLZR/BKvqWvCnYLotmyhluOqWdjS81ovW6IU
+	 MtH6Z+D9Dz0a8mAZtWtY9Mcod3ROpk/8PLoMMmsGZu8PJCsJI7UFzuoqPPo6mX3ISr
+	 TmXNRViRR/14u0wc+qR2Z/eI7+sq96tYQmOXvya7pi3AajJB48BPgx8xlS00iBm+DD
+	 TF9iZEmoeNbWWKO++Yx5IXAZaXnWGxAQD/07vFb5tpggetZGNfyxrGXZTVKFJ5TJF4
+	 PlNnXF3DEySGA==
+Message-ID: <a5a6196b-a6a8-402b-9073-ac01291f7e34@kernel.org>
+Date: Wed, 29 Jan 2025 19:28:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,15 +35,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: defconfig: Enable gb_beagleplay
-To: Ayush Singh <ayush@beagleboard.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- d-gole@ti.com, lorforlinux@beagleboard.org, jkridner@beagleboard.org,
- robertcnelson@beagleboard.org, Nishanth Menon <nm@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250129-defconfig-beagleplay-v2-1-5a890943d223@beagleboard.org>
-Content-Language: en-US
+Subject: Re: [PATCH 01/14] dt-bindings: soc: Document Renesas RZ/T2H
+ (R9A09G077) SoC
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com>
+ <20250129165122.2980-2-thierry.bultel.yh@bp.renesas.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -87,18 +90,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250129-defconfig-beagleplay-v2-1-5a890943d223@beagleboard.org>
+In-Reply-To: <20250129165122.2980-2-thierry.bultel.yh@bp.renesas.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 29/01/2025 14:14, Ayush Singh wrote:
-> Enable greybus driver used by TI K3/AM625 BeaglePlay.
+On 29/01/2025 17:37, Thierry Bultel wrote:
+> Add RZ/T2H (R9A09G077) and variants in documentation.
 > 
-> The driver communicates with Ti CC1352P7 co-processor which acts as
-> Greybus SVC. Additionally, it also provides firmware upload API support
-> for Ti CC1352P7 over UART.
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> ---
+>  .../devicetree/bindings/soc/renesas/renesas.yaml          | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
+> index b7acb65bdecd..33f9e37a3d3d 100644
+> --- a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
+> +++ b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
+> @@ -535,6 +535,14 @@ properties:
+>                - renesas,r9a09g057h44 # RZ/V2HP with Mali-G31 + Mali-C55 support
+>            - const: renesas,r9a09g057
+>  
+> +      - description: RZ/T2H (R9A09G077)
+> +        items:
+> +          - enum:
+> +            - renesas,r9a09g077 # RZ/T2H with Quad Cortex-A55 + Dual Cortex-R52
+> +            - renesas,r9a09g077m04 # RZ/T2H with Single Cortex-A55 + Dual Cortex-R52 - no security
+> +            - renesas,r9a09g077m24 # RZ/T2H with Dual Cortex-A55 + Dual Cortex-R52 - no security
+> +            - renesas,r9a09g077m44 # RZ/T2H with Quad Cortex-A55 + Dual Cortex-R52 - no security
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+1. Never tested (see writing schema).
+2. I don't quite get what this is supposed to express. There is no board
+here.
 
 Best regards,
 Krzysztof
