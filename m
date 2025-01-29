@@ -1,385 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C3142A92;
-	Wed, 29 Jan 2025 21:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738184457; cv=none; b=OozPCdb3G+4fuuau/zM3QGtwFZsatBAnRui81ikkffPzhsd7UIcWNy21rrZVGWVnLwleFMKCS5RE6zI2iRLdO79MZbxnE2kp5C8KR2AI+WA1X/EDjMSJ4lQ4GdB+M98OqHmOtB2LJlne+1tCNMOPX4d4dE+TW4/gDfw/83SbOdc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738184457; c=relaxed/simple;
-	bh=fuGYW/1zNIvvDw4pAzEC/dfR1GTOdiw8eWV8eiTYGLY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Eob7PVFXvhCrhZ6ytcjjjdHwnkT1KUKdkrfcSk3fyMHnzHp5OPQNEcxgsEzbKL2I2QjS8KKnJ0JsrL//A2IS5qsK6E4lQ1Z2yLEnNXyTGaxQZvKqN7iIrNbLIiO2rIPUu9h1nbDmP0WIUTSopd+34gT/MH6jRYi4/oKfyHbOnbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tRKfG7lh; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10838192B85
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 21:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738184578; cv=fail; b=pxtMbWLs9URikol6k9TyYrHHmwiOeRGPLCcExeuiNcILyNqdHC28DHdX61S84XbYEYkpLfE9DFuRC93LDjrfiFSX2jgPxwJpgmGS7WW+AfI9XjALzYMOqqsLMCACiv3Dy3bIfICBXjD6MmkKRDgxoh30dRC5DlIH9h66sICRA8o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738184578; c=relaxed/simple;
+	bh=8lkcLhx9HXh5mkyUNXbzcAowkNgvyG1wIxLW1JzoIQ4=;
+	h=Message-ID:Date:To:Cc:References:Subject:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=RzGyd4y7GdobAEa+viBgX2wrBuUmAOz9+eHW6Zw9khYGiQi1l/LI3+ifgA68/lfmJXyLh90MUURqVuW1D8jqGno8ZSXRh7XpUh1UMQZJz0dv3EblB3C11kgtASH9kOzt6SbwTO5z+9kCvvDk9EHewThimin+UJSODDFhTStAGe0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fXalxs9Y; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=wEcZL7z3; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tRKfG7lh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2241AC4CED3;
-	Wed, 29 Jan 2025 21:00:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738184457;
-	bh=fuGYW/1zNIvvDw4pAzEC/dfR1GTOdiw8eWV8eiTYGLY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tRKfG7lhcfDktvoJFu8lUh3H3v12FASpRFD0Gs/eKdy3VQfCDgWoTsUJ+yFWS58Ob
-	 VWjAxYd5pjqD64CZlll6NVbBIVdKwF6mPI7oiac3sSb1mdIb/uI8ezq9bgpyQwNKd5
-	 uGzIu+tDcZaNarkYJ9rf7oAFFaoSZA2umzTT8rx/rbck1/mjSwSziVNeAeGIIJY44c
-	 dtaaDMJhVxD9pXFW/opXROzWoFao/rIUVibJy0ZgixELrOIDnJesr9cRkHJEjdxU5i
-	 vvSsYJEIiYk0IYUMGfNT2AAgWHFaItpfbw+tPRxyGYAYpZJp5vt/vtNT1641TfNqlW
-	 Jrr6CySjRibWA==
-From: Song Liu <song@kernel.org>
-To: bpf@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Cc: kernel-team@meta.com,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	martin.lau@linux.dev,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	kpsingh@kernel.org,
-	mattbobrowski@google.com,
-	liamwisehart@meta.com,
-	shankaran@meta.com,
-	Song Liu <song@kernel.org>
-Subject: [PATCH v11 bpf-next 7/7] selftests/bpf: Test kfuncs that set and remove xattr from BPF programs
-Date: Wed, 29 Jan 2025 12:59:57 -0800
-Message-ID: <20250129205957.2457655-8-song@kernel.org>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250129205957.2457655-1-song@kernel.org>
-References: <20250129205957.2457655-1-song@kernel.org>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fXalxs9Y";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="wEcZL7z3"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50TKttLT011994;
+	Wed, 29 Jan 2025 21:02:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=Wwk1QjUXTIb1F3EFAtLCGDKlwOb7AjmhElP7ECs8Wro=; b=
+	fXalxs9YxEKXYd8iqgChkDEKSuR8+A5mLxgrrwEpAHMnqsWP1girijWxLqpztRZt
+	rsubzHH0hw2eH3ka4vO92Qlc0dP+8wk5+3xMUqUq7dXFosyJNPpbuarAf8XFhHH0
+	lc5Htltccz3QN7MlOesBrrBq8rmUNwmqrJAm1pEGoNzt0ylRJCaNDCh8T4xvQyox
+	9urJS+Rvj8bEcYskpqxwZiqWZRYKTKMgi5IZahI3ig1NGu21NEKu8FZWg+VdguCg
+	WO9HaDCWFxo1OEuzQ2x/GmzzKHT49KldbK7/3VkltvyNmpGvVPfzLM/ZnJEFg6xh
+	iT5GTRiTQ1JqY+DWVdjKtQ==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44fsfh8jq2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 Jan 2025 21:02:22 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50TKQhX4023978;
+	Wed, 29 Jan 2025 21:02:21 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2046.outbound.protection.outlook.com [104.47.66.46])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44cpdaaqrn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 Jan 2025 21:02:21 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=F+qeIepkbe5WX7E9DExp7Sn8y4crQDVf8O8uexxavXkD9Cq65IO9jJyJhPiDE1Fu9zYxDLghqsdrsefXtrHn7xMcZmrlnQVQAn64pg3Tg8A3NPNgtB5T44YT0irYb1HZP1qOzRk7LFXSUIUACBiQ6vwBY4fgKBjbyaecqQQ9uCl+52FDrv4YtNJB6TR2H2sE6/SifE+gpsfgYw7N6XYnrrcWreRJbxtM9VWljqQxnFNteJaWw4Ym0DjgwfdVzAQhvr7FCnt69BkYczVWIYKO7+DZ61Oiq+k1crNnk/bHvRmSZ6mTEEfsTDOKT9bgB/V0pFKlCBDOm602Iw4xRZ5xVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Wwk1QjUXTIb1F3EFAtLCGDKlwOb7AjmhElP7ECs8Wro=;
+ b=k90fRZnbs9cwT0+L7jxDgLyyOjn2GALr+vYRDyoy6+l4XBjAV2Kwd2f4Nm6xO6IdCxIT9LhUJLcUNdu9kEKgqYZiWaGU49+vbyquUD8hZMF5Yw6SQat0gRFklJQ2DHZ/QhIra8uHSPBYnUNE3XJf6Gq3ztaTYJzJnJlNlsDLmeDilzIhY6h2YgEijHAcfvn0Zfp8rKceg1AcBCKTSh19DEWALHWxWWXVYFYyYoxX+X4IsXMXY4jB/JdCJ1yGF2ICo+1KQGSyqoZl9Ck/8RXuVLwGSQArPbFRcLoH3S/amiD5uosViCE+N2VCJZMimRK2/gV2AFoZgNsJq5bTn9hMKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wwk1QjUXTIb1F3EFAtLCGDKlwOb7AjmhElP7ECs8Wro=;
+ b=wEcZL7z3KAfHmtXMpxCKtAitKuZljrUcTCy5qze/433MwXJTXLZTqGcHjQDrfMFqpvxRvFFMRtDQKy6AoxkllL2i2H/K5bcS+XJeMJmCUPTAjC6sLilYR3oitx5LPB4Sg+svogDYYlDtV5Q9KJtW7Kbha0YXiYfE6hweyCWX4O0=
+Received: from CH0PR10MB5113.namprd10.prod.outlook.com (2603:10b6:610:c9::8)
+ by MN6PR10MB8144.namprd10.prod.outlook.com (2603:10b6:208:4fa::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Wed, 29 Jan
+ 2025 21:02:18 +0000
+Received: from CH0PR10MB5113.namprd10.prod.outlook.com
+ ([fe80::eab6:6dcc:f05f:5cb2]) by CH0PR10MB5113.namprd10.prod.outlook.com
+ ([fe80::eab6:6dcc:f05f:5cb2%3]) with mapi id 15.20.8398.017; Wed, 29 Jan 2025
+ 21:02:18 +0000
+Message-ID: <07cf896e-adf8-414f-a629-a808fc26014a@oracle.com>
+Date: Wed, 29 Jan 2025 16:02:16 -0500
+User-Agent: Mozilla Thunderbird
+To: tamird@gmail.com
+Cc: akpm@linux-foundation.org, christophe.leroy@csgroup.eu,
+        geert@linux-m68k.org, justinstitt@google.com,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linuxppc-dev@lists.ozlabs.org, llvm@lists.linux.dev,
+        maddy@linux.ibm.com, morbo@google.com, mpe@ellerman.id.au,
+        nathan@kernel.org, naveen@kernel.org, ndesaulniers@google.com,
+        npiggin@gmail.com, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>
+References: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
+Subject: Re: [PATCH] xarray: port tests to kunit
+Content-Language: en-US
+From: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+In-Reply-To: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BN9PR03CA0319.namprd03.prod.outlook.com
+ (2603:10b6:408:112::24) To CH0PR10MB5113.namprd10.prod.outlook.com
+ (2603:10b6:610:c9::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR10MB5113:EE_|MN6PR10MB8144:EE_
+X-MS-Office365-Filtering-Correlation-Id: bbc1e7f3-bde0-4f68-8491-08dd40a8374c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|10070799003|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?N0Jud1RGSmhyeWhtblBRc0RLcDNza3I1RzhiWVNSeTZZWnkxRFBIbjZmbXdp?=
+ =?utf-8?B?MUc0VmIzRDlqa1kzTkM0ZWRFRk9CWGN1dTJxQkllQTlXMzV2Mmw5SHY1cWox?=
+ =?utf-8?B?NGlrL0J3T3pHRWowUHJKK1lFYm9PZWp2dFVRUjlNdUhwRXZHYVN3Ylk1M1Vu?=
+ =?utf-8?B?MXYxOCtvbmpPdlFTaVdYa3gxM05wQWV6Ny9GRVdXVksvZ1c3ajlremR4bzdJ?=
+ =?utf-8?B?U2NWZHN3TjNKY2FoakRRdmZOSjBMNEsyZVIzQ0tjb0hyNHBUMmU4UE9aRXQ3?=
+ =?utf-8?B?V2t0bEJHcG9Pc3NYaE5scm44d2VTbGlkUFFkREh6V3RTeGZRNHYyM2Z3cEQ1?=
+ =?utf-8?B?VjF1TVhiRU0xbmxrOVV0M0FKRzNkbGZlYUpKV21KcFZHdmJYOEZVcWI1bWZ0?=
+ =?utf-8?B?aTFJSGs3MzE1TGxwT1BRY2tYa1puU2lPVkdwY0ppN2dJR2QxaW10eU02Q3JE?=
+ =?utf-8?B?Wlg1MzRQQ0dGM1E5MEl2dDl1TWdLVmN0YW8yUnZRU2h3a0cxTXRIbDNPcjc1?=
+ =?utf-8?B?MUVVN0dzbzFZR1Q5UEJ2c2Z1bHY4S1ZmdXBwTVArZnNnU25hblNxakswUHMy?=
+ =?utf-8?B?T1ZlVjBsQkFxS2hmU3oyRDloaTlxM1pINnVObEdLcFJiMUIrMW5xVHNZWG1O?=
+ =?utf-8?B?NjFzMEJIMXRZcXRNRjdmWmUyVCt1K0w5RGNJbHpBYXNMTDZLd3VPSFVKdFky?=
+ =?utf-8?B?TTVDSkZCWjhpeXIrVlZ2eGVyUjNIM3ovdzRwT1JkK2F4eVgzZ3hQL1VHNGtp?=
+ =?utf-8?B?SllOaDhBYWRuY3VoMzlXaVhpdkZEaVMzS2J2OU1kZDloQ0drdzR5a1pMelVD?=
+ =?utf-8?B?V21qc2NDcC9HVlJEUUdOQXh3N2JxYVlBOWsvUnpFTzBqRFY5V0RnYTZxRFhu?=
+ =?utf-8?B?Q2NLNUNBWElpN25jOHVJK0NKR3UxcEdBUVc4c21PZURtUWFVclh3cXAvNTQy?=
+ =?utf-8?B?WFNnR1hhdVo5TVRCalFYU1N6aUI3Q2dCWmtYR3d4alloa1FUUS82ZkFXNGxx?=
+ =?utf-8?B?NEV0SXB6SGF6dm9BcXJacHFROGF1dGxxZnpHVmFDUTJnaGVheHF3Z3pmZVlH?=
+ =?utf-8?B?MU9yZGppOTRHeDlUejZDcUttRkdLUkdGcDh3VVdWM3hGZCtiN3k0SWpYSGkz?=
+ =?utf-8?B?V1F6NGtrZm1jajJjaVIwUmNuS0pxYkdORE1JcFVvaTVkMUdUeHhzK21qKzl1?=
+ =?utf-8?B?QXZBSEpsUzJ1VW9GeXZRYmhPcVpianFxZzRKUDRuKzhBOWpodmkwdFJzQ2Y3?=
+ =?utf-8?B?WjZ2dXA0SW1FN2YyYjNzSHd4QzVMZU9yeU5uYmw2Y0V5WlVsVU9ZVzRaZStN?=
+ =?utf-8?B?MEhDRmszaHpPOWswNEJKUEdXVVBhaDhkOHJuTmtENHNWZVd4Qy9WOEl4bnJK?=
+ =?utf-8?B?amRCeWIwV2pSUFJaRTNZRVRzQ2JkVDZudzlqYS9ZWkZwMmdwZ1dZc2tMZTB6?=
+ =?utf-8?B?a0pzMGQ4ZVVDeVY0Mm91Rkhvak10aFlFZ3dIUUg5TnJHbXFMUy9yUWZ6MWFL?=
+ =?utf-8?B?V24xWTczbzVWa0orWHArTEV1bmxZd2NqZUhoZXYvTkVqUDZRMnc5T21qUkxq?=
+ =?utf-8?B?U1VZenlWWkdLOWFDN3FoWTdyTHI5K0VnSE9SaGNkWUpzNDEzTHFhMjFFaUlh?=
+ =?utf-8?B?SFM4dmVMWlVuUlJxRWExWkZBWEgyZS9Cbk9paVJpektleUMwUHZsRVhyRWhF?=
+ =?utf-8?B?N0l3cmJlK3lQSWJKZlN3ODM5emRvY28yN2FPT04rSlVFemk1SDVCSTZxZGtN?=
+ =?utf-8?B?MlVuMFNNODloaVA5ak1kb0g2eHdqTVJOMk9FSFBMRWVPNXU2VitqaG4vRWMv?=
+ =?utf-8?Q?EvH9ZQrj2PKIOIql7AoQUchT/hlv2MUHnhINw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5113.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(10070799003)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?V0hGaURlS2NVSDJ2Z1ZIZ2pTcVN1WXA2Mk4xVDVGQW41bytpVXc5OFBXQmRp?=
+ =?utf-8?B?VGxiV3M4cXFRaHgweGR4b2xWVm8yU1dZTTdCRC9hVlp1TzhEWmRTalNPbVdU?=
+ =?utf-8?B?OEtJTDlHL3YwWXdwTE5MeWRsUWZQWklmcDc4Q1Ria2ZLeUhUZEowR0hBdWt1?=
+ =?utf-8?B?OVBFZzNvVHYrR2xIeUg3bVhWZDRGN2R0U1lvcEFuL2dBRlkzWHZqM2RCUFBU?=
+ =?utf-8?B?SjBiMGVzU2tvOTRQelBSaXl0WGN4eFhTVU12K0tIekFCQ3ROVWpCaXRkejcv?=
+ =?utf-8?B?c0R5NU5ObTQ3eEphV1YzdHpFYXphUlFZamRtWU5TejA2a0RvL2RXaUxvNEZh?=
+ =?utf-8?B?dmc2WDJGK1ZGWHRqTXFxM1V6a1NnRlluZkJ2THFycEMzdTd1S2NnM2RIZjRi?=
+ =?utf-8?B?eTZGUTVuY2hEaGkvNUdlVElGczNKditKeGNGRHNJOWI3OWRobnJ3TW51aS92?=
+ =?utf-8?B?SldOSHY0QUlLNnNOR0hTSHozUUtMWW5DcC9HUEFCM2ozNEVWQ0dnTW1oRktU?=
+ =?utf-8?B?VklvNXhKc2l6M2JTNDl4TzdsMTllMTU1U3VjU3FBK3FwS09aMkQzNjUyV21a?=
+ =?utf-8?B?OUtkMndJSlVDS1M0NFdNY1ZweHV0eGNNODRzNVp5cElYTFVEVmc2SGxtdFg4?=
+ =?utf-8?B?Z2RlMHcvS3UwamdXbTZSK3h0ejFmS0RrNURhRkh5K205bmxUWGxBcjZaejN5?=
+ =?utf-8?B?TGFuVFp2aVIvaDlLSlNnVDBYWndKV1ZTTmpaRWhLcmpHVkJBU25SZzBsOVFH?=
+ =?utf-8?B?T2NieVEvTFZnMno0UG9CdXpNMi9VYktidmFIcDNuUDhoOW1hdDFoZlJVZ1U0?=
+ =?utf-8?B?d2wxcDl5MWlUOGRmY2VOdDVDMllOcGx3SE1GUDE2Y2RlNmlmbW1UbWZaOXE0?=
+ =?utf-8?B?bC91YWFEbTdwUGFEU1k1RTk1VGZTeGYxTjJ6Vmc3K3VSVXQxVS8zaW9kNFp4?=
+ =?utf-8?B?N3RnR1N2VTlMYXZQYnVPSzd6aVVESmN6eUpzN012UDVpTFBOaHVmUFhGUFdJ?=
+ =?utf-8?B?eVdGcEVER0plNUlUcDlxcFlGZVE1NUdpQnVVQlRnc01nMVBtR3NidXhpblhn?=
+ =?utf-8?B?cGJPZDIyQUE5b2JBSUszMGlqVFdzY2NrMExkTmFyZVloaU1FOUFRMllKSHZm?=
+ =?utf-8?B?M3FadjFWS3dtdWI1UlV6REIzM2t5c2ExMlpveEVVaEl2M2xZdW1SMkZRRTZv?=
+ =?utf-8?B?K0Y5cFpjb0Foc21iMmRjbDBjZS93ekVGRGJiS3RBNG5XYXdYd09iMTVQRjEx?=
+ =?utf-8?B?Yy9ydWp1TUZOZGoraTYwSXRPYUYvUFhsVjZmZnYxdE9zU2FIU1JsTW16REVF?=
+ =?utf-8?B?UVRERVN0U2FSeVlGQ2c3ZXdpdHJmYmNZU09HWk1neVFQN3NSMktmT1dnckxo?=
+ =?utf-8?B?bnVxcm80cDlxeElEWEM2K3VxeU5IR3l2OXdZMUtQcUVKQ29QUHVHS1ZtMXJo?=
+ =?utf-8?B?NWxCU0hHZHVUT1BEWFpnUmhuWHROQytyV1BCYVJEUkZ5QVl2WHB1VllwQlhQ?=
+ =?utf-8?B?MVZsbGg2c3lCMll0NTdHTTJtWmNLNWtZT0xBYUpFWXh1eTEwWFhtY0JQUmNH?=
+ =?utf-8?B?Lzh3YmNXdDVrTmR3cVBnOEg1ZWkrWXJla2gwVXM5Um9kZ2daMjBTd25xeVhN?=
+ =?utf-8?B?cWpJY1pZazZxWURWanZXMkg1NVNTRnFBbkY5MTJWWkNjVTlQZ2t5RXlqRFNo?=
+ =?utf-8?B?UWlqMXlBUWh1OU85VnFQanFwTWJxaFNTb2pUZURkb1czT2xqcUhXdFFGV3g1?=
+ =?utf-8?B?STlaNWVURHl2RWx1SEEyTXNvNFRGek50ejJJR0hHSnZSWVBCdmFobjErSUgx?=
+ =?utf-8?B?TSs3YzdjR0xWRnFpLzNZOWJ6Q1pMeVR2T2pYaHVJYXZxNXAyazJWODRHSjFw?=
+ =?utf-8?B?cFYwN3p2RzVMWk1NZUNJc284LzZxZ092dWhwWkg1V3Bzckg1NndPUDhQMXN6?=
+ =?utf-8?B?WVVQUUUwNGZ4WkdOUkNnZk4wNTRXSkRwaUlCa0VDamJva0xoaUdQOXBuYUNq?=
+ =?utf-8?B?MFhrQjVLa3dkTytpM2g1ZmxubmJlU1ZDZmdORnZUQmVNbWRGYjFWUjVhMTl5?=
+ =?utf-8?B?aDVnNjlrdlhvK1M1YWN2YmxmVXZETlB4M21tZWVCeUJNRXN6OWt6KzZ5ZnRi?=
+ =?utf-8?B?SldwU2hHa1NpR2VJTEFNRGU5QW5EVWVBaTc0NmdEazRoOVU3UVRPT2R1NUJv?=
+ =?utf-8?Q?3EMvZaPAR8uo6cygeGh3KyQ=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	QqTNsoP2idFxRI+LFLU0eCxYaBC6QR8w7oQaukG4wSeyBhuQQNSp8XzLg9GWlVQO993XOI1aziaCLVuXwLrSYK2xUnvDoys6S/wDO899ZWWsoDwuJIoq/S2AMRgg1JUbKF6g8h1Lq9VEOG81cV1rDBg/TyFBQcpoOwVr2Tjb1X9OnPPUfiO+ra0NMmqQYAHOucKiJdffCNze2hOn4RHbAY9VLFvOI6PpTa/QDRpeY7IsnkZMd4bsyNzOJsXkkJFw8Rn308MKyM3lC90fMFAnrii0JR4M41RyO5Na+QdwI0mAi9uQ1jGPuy48vFGS7YqHA83EmE90qIPsZlzfEZ0jPHUP0wkqPtNTJCERMN30SJ8ta2i0IyMxiDHCvVtqGlF+gxb2SE4SQYZ1UkXRbFc2zLwAis2FvCqMneTarcGR46YDmk0Uob9qzxbYNVtsp3f1TU06dcn1kPsb6ZMitYU7aEMZF9nzQOu1hchhS8xhjT6+WjUt5OIHTdrYrt5l6WlTmzoiwzCoQwULcPyYXcdefy1QlEPyT3CIdXf6//vYitI6cIA7LZHevScsrQk1S0AhTFmDgM1+OJsFZaRV8XDmz2UKKPPBXBG0poO303zt1KI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bbc1e7f3-bde0-4f68-8491-08dd40a8374c
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5113.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 21:02:18.4504
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: A5zLCXgPjAM13XuUL+lETYFWBHG+0y4M2Mmu9IqvCQ4LIcisio1i+XfaMXrjKT+ndVq11GkXY9EDlJLe0m+Bnot2Sw5lcJgUsMQa2gAZNmU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR10MB8144
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-29_04,2025-01-29_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ mlxlogscore=942 bulkscore=0 phishscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2411120000 definitions=main-2501290160
+X-Proofpoint-ORIG-GUID: k-XGJ0CyNFA6_MNot6W7Q4wBu6yQ_ufp
+X-Proofpoint-GUID: k-XGJ0CyNFA6_MNot6W7Q4wBu6yQ_ufp
 
-Two sets of tests are added to exercise the not _locked and _locked
-version of the kfuncs. For both tests, user space accesses xattr
-security.bpf.foo on a testfile. The BPF program is triggered by user
-space access (on LSM hook inode_[set|get]_xattr) and sets or removes
-xattr security.bpf.bar. Then user space then validates that xattr
-security.bpf.bar is set or removed as expected.
++ Liam, Matthew
 
-Note that, in both tests, the BPF programs use the not _locked kfuncs.
-The verifier picks the proper kfuncs based on the calling context.
+Hello,
 
-Signed-off-by: Song Liu <song@kernel.org>
----
- tools/testing/selftests/bpf/bpf_kfuncs.h      |   5 +
- .../selftests/bpf/prog_tests/fs_kfuncs.c      | 125 ++++++++++++++++
- .../bpf/progs/test_set_remove_xattr.c         | 133 ++++++++++++++++++
- 3 files changed, 263 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/test_set_remove_xattr.c
+I believe this patch needs to be reverted for now as it breaks the 
+user-space build of /tools/testing/radix-tree with:
 
-diff --git a/tools/testing/selftests/bpf/bpf_kfuncs.h b/tools/testing/selftests/bpf/bpf_kfuncs.h
-index 2eb3483f2fb0..8215c9b3115e 100644
---- a/tools/testing/selftests/bpf/bpf_kfuncs.h
-+++ b/tools/testing/selftests/bpf/bpf_kfuncs.h
-@@ -87,4 +87,9 @@ struct dentry;
-  */
- extern int bpf_get_dentry_xattr(struct dentry *dentry, const char *name,
- 			      struct bpf_dynptr *value_ptr) __ksym __weak;
-+
-+extern int bpf_set_dentry_xattr(struct dentry *dentry, const char *name__str,
-+				const struct bpf_dynptr *value_p, int flags) __ksym __weak;
-+extern int bpf_remove_dentry_xattr(struct dentry *dentry, const char *name__str) __ksym __weak;
-+
- #endif
-diff --git a/tools/testing/selftests/bpf/prog_tests/fs_kfuncs.c b/tools/testing/selftests/bpf/prog_tests/fs_kfuncs.c
-index 419f45b56472..43a26ec69a8e 100644
---- a/tools/testing/selftests/bpf/prog_tests/fs_kfuncs.c
-+++ b/tools/testing/selftests/bpf/prog_tests/fs_kfuncs.c
-@@ -8,6 +8,7 @@
- #include <unistd.h>
- #include <test_progs.h>
- #include "test_get_xattr.skel.h"
-+#include "test_set_remove_xattr.skel.h"
- #include "test_fsverity.skel.h"
- 
- static const char testfile[] = "/tmp/test_progs_fs_kfuncs";
-@@ -72,6 +73,127 @@ static void test_get_xattr(const char *name, const char *value, bool allow_acces
- 	remove(testfile);
- }
- 
-+/* xattr value we will set to security.bpf.foo */
-+static const char value_foo[] = "hello";
-+
-+static void read_and_validate_foo(struct test_set_remove_xattr *skel)
-+{
-+	char value_out[32];
-+	int err;
-+
-+	err = getxattr(testfile, skel->rodata->xattr_foo, value_out, sizeof(value_out));
-+	ASSERT_EQ(err, sizeof(value_foo), "getxattr size foo");
-+	ASSERT_EQ(strncmp(value_out, value_foo, sizeof(value_foo)), 0, "strncmp value_foo");
-+}
-+
-+static void set_foo(struct test_set_remove_xattr *skel)
-+{
-+	ASSERT_OK(setxattr(testfile, skel->rodata->xattr_foo, value_foo, strlen(value_foo) + 1, 0),
-+		  "setxattr foo");
-+}
-+
-+static void validate_bar_match(struct test_set_remove_xattr *skel)
-+{
-+	char value_out[32];
-+	int err;
-+
-+	err = getxattr(testfile, skel->rodata->xattr_bar, value_out, sizeof(value_out));
-+	ASSERT_EQ(err, sizeof(skel->data->value_bar), "getxattr size bar");
-+	ASSERT_EQ(strncmp(value_out, skel->data->value_bar, sizeof(skel->data->value_bar)), 0,
-+		  "strncmp value_bar");
-+}
-+
-+static void validate_bar_removed(struct test_set_remove_xattr *skel)
-+{
-+	char value_out[32];
-+	int err;
-+
-+	err = getxattr(testfile, skel->rodata->xattr_bar, value_out, sizeof(value_out));
-+	ASSERT_LT(err, 0, "getxattr size bar should fail");
-+}
-+
-+static void test_set_remove_xattr(void)
-+{
-+	struct test_set_remove_xattr *skel = NULL;
-+	int fd = -1, err;
-+
-+	fd = open(testfile, O_CREAT | O_RDONLY, 0644);
-+	if (!ASSERT_GE(fd, 0, "create_file"))
-+		return;
-+
-+	close(fd);
-+	fd = -1;
-+
-+	skel = test_set_remove_xattr__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "test_set_remove_xattr__open_and_load"))
-+		return;
-+
-+	/* Set security.bpf.foo to "hello" */
-+	err = setxattr(testfile, skel->rodata->xattr_foo, value_foo, strlen(value_foo) + 1, 0);
-+	if (err && errno == EOPNOTSUPP) {
-+		printf("%s:SKIP:local fs doesn't support xattr (%d)\n"
-+		       "To run this test, make sure /tmp filesystem supports xattr.\n",
-+		       __func__, errno);
-+		test__skip();
-+		goto out;
-+	}
-+
-+	if (!ASSERT_OK(err, "setxattr"))
-+		goto out;
-+
-+	skel->bss->monitored_pid = getpid();
-+	err = test_set_remove_xattr__attach(skel);
-+	if (!ASSERT_OK(err, "test_set_remove_xattr__attach"))
-+		goto out;
-+
-+	/* First, test not _locked version of the kfuncs with getxattr. */
-+
-+	/* Read security.bpf.foo and trigger test_inode_getxattr. This
-+	 * bpf program will set security.bpf.bar to "world".
-+	 */
-+	read_and_validate_foo(skel);
-+	validate_bar_match(skel);
-+
-+	/* Read security.bpf.foo and trigger test_inode_getxattr again.
-+	 * This will remove xattr security.bpf.bar.
-+	 */
-+	read_and_validate_foo(skel);
-+	validate_bar_removed(skel);
-+
-+	ASSERT_TRUE(skel->bss->set_security_bpf_bar_success, "set_security_bpf_bar_success");
-+	ASSERT_TRUE(skel->bss->remove_security_bpf_bar_success, "remove_security_bpf_bar_success");
-+	ASSERT_TRUE(skel->bss->set_security_selinux_fail, "set_security_selinux_fail");
-+	ASSERT_TRUE(skel->bss->remove_security_selinux_fail, "remove_security_selinux_fail");
-+
-+	/* Second, test _locked version of the kfuncs, with setxattr */
-+
-+	/* Set security.bpf.foo and trigger test_inode_setxattr. This
-+	 * bpf program will set security.bpf.bar to "world".
-+	 */
-+	set_foo(skel);
-+	validate_bar_match(skel);
-+
-+	/* Set security.bpf.foo and trigger test_inode_setxattr again.
-+	 * This will remove xattr security.bpf.bar.
-+	 */
-+	set_foo(skel);
-+	validate_bar_removed(skel);
-+
-+	ASSERT_TRUE(skel->bss->locked_set_security_bpf_bar_success,
-+		    "locked_set_security_bpf_bar_success");
-+	ASSERT_TRUE(skel->bss->locked_remove_security_bpf_bar_success,
-+		    "locked_remove_security_bpf_bar_success");
-+	ASSERT_TRUE(skel->bss->locked_set_security_selinux_fail,
-+		    "locked_set_security_selinux_fail");
-+	ASSERT_TRUE(skel->bss->locked_remove_security_selinux_fail,
-+		    "locked_remove_security_selinux_fail");
-+
-+out:
-+	close(fd);
-+	test_set_remove_xattr__destroy(skel);
-+	remove(testfile);
-+}
-+
- #ifndef SHA256_DIGEST_SIZE
- #define SHA256_DIGEST_SIZE      32
- #endif
-@@ -161,6 +283,9 @@ void test_fs_kfuncs(void)
- 	if (test__start_subtest("security_selinux_xattr_error"))
- 		test_get_xattr("security.selinux", "hello", false);
- 
-+	if (test__start_subtest("set_remove_xattr"))
-+		test_set_remove_xattr();
-+
- 	if (test__start_subtest("fsverity"))
- 		test_fsverity();
- }
-diff --git a/tools/testing/selftests/bpf/progs/test_set_remove_xattr.c b/tools/testing/selftests/bpf/progs/test_set_remove_xattr.c
-new file mode 100644
-index 000000000000..6a612cf168d3
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/test_set_remove_xattr.c
-@@ -0,0 +1,133 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2024 Meta Platforms, Inc. and affiliates. */
-+
-+#include "vmlinux.h"
-+#include <errno.h>
-+#include <bpf/bpf_tracing.h>
-+#include "bpf_kfuncs.h"
-+#include "bpf_misc.h"
-+
-+char _license[] SEC("license") = "GPL";
-+
-+__u32 monitored_pid;
-+
-+const char xattr_foo[] = "security.bpf.foo";
-+const char xattr_bar[] = "security.bpf.bar";
-+static const char xattr_selinux[] = "security.selinux";
-+char value_bar[] = "world";
-+char read_value[32];
-+
-+bool set_security_bpf_bar_success;
-+bool remove_security_bpf_bar_success;
-+bool set_security_selinux_fail;
-+bool remove_security_selinux_fail;
-+
-+char name_buf[32];
-+
-+static inline bool name_match_foo(const char *name)
-+{
-+	bpf_probe_read_kernel(name_buf, sizeof(name_buf), name);
-+
-+	return !bpf_strncmp(name_buf, sizeof(xattr_foo), xattr_foo);
-+}
-+
-+/* Test bpf_set_dentry_xattr and bpf_remove_dentry_xattr */
-+SEC("lsm.s/inode_getxattr")
-+int BPF_PROG(test_inode_getxattr, struct dentry *dentry, char *name)
-+{
-+	struct bpf_dynptr value_ptr;
-+	__u32 pid;
-+	int ret;
-+
-+	pid = bpf_get_current_pid_tgid() >> 32;
-+	if (pid != monitored_pid)
-+		return 0;
-+
-+	/* Only do the following for security.bpf.foo */
-+	if (!name_match_foo(name))
-+		return 0;
-+
-+	bpf_dynptr_from_mem(read_value, sizeof(read_value), 0, &value_ptr);
-+
-+	/* read security.bpf.bar */
-+	ret = bpf_get_dentry_xattr(dentry, xattr_bar, &value_ptr);
-+
-+	if (ret < 0) {
-+		/* If security.bpf.bar doesn't exist, set it */
-+		bpf_dynptr_from_mem(value_bar, sizeof(value_bar), 0, &value_ptr);
-+
-+		ret = bpf_set_dentry_xattr(dentry, xattr_bar, &value_ptr, 0);
-+		if (!ret)
-+			set_security_bpf_bar_success = true;
-+		ret = bpf_set_dentry_xattr(dentry, xattr_selinux, &value_ptr, 0);
-+		if (ret)
-+			set_security_selinux_fail = true;
-+	} else {
-+		/* If security.bpf.bar exists, remove it */
-+		ret = bpf_remove_dentry_xattr(dentry, xattr_bar);
-+		if (!ret)
-+			remove_security_bpf_bar_success = true;
-+
-+		ret = bpf_remove_dentry_xattr(dentry, xattr_selinux);
-+		if (ret)
-+			remove_security_selinux_fail = true;
-+	}
-+
-+	return 0;
-+}
-+
-+bool locked_set_security_bpf_bar_success;
-+bool locked_remove_security_bpf_bar_success;
-+bool locked_set_security_selinux_fail;
-+bool locked_remove_security_selinux_fail;
-+
-+/* Test bpf_set_dentry_xattr_locked and bpf_remove_dentry_xattr_locked.
-+ * It not necessary to differentiate the _locked version and the
-+ * not-_locked version in the BPF program. The verifier will fix them up
-+ * properly.
-+ */
-+SEC("lsm.s/inode_setxattr")
-+int BPF_PROG(test_inode_setxattr, struct mnt_idmap *idmap,
-+	     struct dentry *dentry, const char *name,
-+	     const void *value, size_t size, int flags)
-+{
-+	struct bpf_dynptr value_ptr;
-+	__u32 pid;
-+	int ret;
-+
-+	pid = bpf_get_current_pid_tgid() >> 32;
-+	if (pid != monitored_pid)
-+		return 0;
-+
-+	/* Only do the following for security.bpf.foo */
-+	if (!name_match_foo(name))
-+		return 0;
-+
-+	bpf_dynptr_from_mem(read_value, sizeof(read_value), 0, &value_ptr);
-+
-+	/* read security.bpf.bar */
-+	ret = bpf_get_dentry_xattr(dentry, xattr_bar, &value_ptr);
-+
-+	if (ret < 0) {
-+		/* If security.bpf.bar doesn't exist, set it */
-+		bpf_dynptr_from_mem(value_bar, sizeof(value_bar), 0, &value_ptr);
-+
-+		ret = bpf_set_dentry_xattr(dentry, xattr_bar, &value_ptr, 0);
-+		if (!ret)
-+			locked_set_security_bpf_bar_success = true;
-+		ret = bpf_set_dentry_xattr(dentry, xattr_selinux, &value_ptr, 0);
-+		if (ret)
-+			locked_set_security_selinux_fail = true;
-+	} else {
-+		/* If security.bpf.bar exists, remove it */
-+		ret = bpf_remove_dentry_xattr(dentry, xattr_bar);
-+		if (!ret)
-+			locked_remove_security_bpf_bar_success = true;
-+
-+		ret = bpf_remove_dentry_xattr(dentry, xattr_selinux);
-+		if (ret)
-+			locked_remove_security_selinux_fail = true;
-+	}
-+
-+	return 0;
-+}
--- 
-2.43.5
+In file included from xarray.c:11:
+../../../lib/test_xarray.c:9:10: fatal error: kunit/test.h: No such file
+or directory
+      9 | #include <kunit/test.h>
+        |          ^~~~~~~~~~~~~~
+compilation terminated.
+make: *** [<builtin>: xarray.o] Error 1
+make: *** Waiting for unfinished jobs....
 
+this then prevents the maple tree test suite from building.
+
+Thanks,
+Sid
