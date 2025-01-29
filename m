@@ -1,132 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9390D14F9FF;
-	Wed, 29 Jan 2025 18:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D8E1E0DB0
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 18:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738176678; cv=none; b=Hc7xVmvmIteF18ZJUtyF0RXMuaHLt5HuxqgyWK6mH5kheRK2pvQbzINBTfc0G75BpuDQbkkrRzt309M9Pt4o9eWGYX20IHOoP3YOhRTELz0DkvUJMkx7sDNMZu0c1qSt06LyrpeeHtMm84t/WLA51sbrHfYlm7BLZ34zCJUYpIk=
+	t=1738176778; cv=none; b=P6STWzMVboM3WZcbRksp9A8k3XPIHD5J0g3lqrTRYM2JNxhtJ30gexCPbpZmeTLjlOnQEya0y2Drv96UZCJ8VqAzrcNuurf8tlPojVarHTinNGvqiyYtdbA/Yy4n75npgxiyWyaguuceJTSCxLCCjljwd3AOf0PYzgC9vl2evSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738176678; c=relaxed/simple;
-	bh=r8KtgGecYFd/yeF5r0KoW3jxaSk038livwh2km4LNvc=;
+	s=arc-20240116; t=1738176778; c=relaxed/simple;
+	bh=kXUWf4bzCULNMipXU787lKMp83ROSa9zL6s2oSKQfIo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EeC+aB5D4GQbjglu1o5a0ucWQT//xsX4QTNj2jrY5fOxFsTsWAvXAL5TsTKDHDmkk8yHmT6CmNEbq/iG16hxZ1+GGqLk7yGaRN3aYsPdWvbKfnezC2orNEOCw/zJs5HegDwbp+PvLgYTZUqf2usXxX0cII6nSmAc/x8MVXesBJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LnKNBAZx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=PazzjqTotP3OTAP8rvHdnAucsuNAYy+Mp+VQpdNvpbCIqW3eHbN8eBXtElB4xKfjVg62Vt1LqosMUKAG/m54EnQ6v3sIq4AlsuKCtxEC/cz8xSyLF0Ke/P5vR8OHMG7bqfbD5r02pb/fHBxRDZnhADEh4zr4R1x0JhLR9wOIdj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=guS37h6U; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LnKNBAZx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCF70C4CED1;
-	Wed, 29 Jan 2025 18:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738176677;
-	bh=r8KtgGecYFd/yeF5r0KoW3jxaSk038livwh2km4LNvc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LnKNBAZxukoJKUUF17vmpVhhHWe2wtfc9DuGuAcJdGlDE5ik+9iGx8Mqecr8IIwjr
-	 fIRaEZYT8fgKnNAKHx+miuQLHW30IvL1osqXv++CgojCLPOTn2ZygXAkLtL7xqH3gO
-	 K6EV3S52ym2DfBkiWQdBgoDp094daO1ncc/mz7j2QOvS2M3z7HuDPOeB5kItD0ccSt
-	 536b0pAouwj5ed1+LEpf4Wf8Xol9pk8ukJWv8u4MA6xXhD8RSz8AdxpWVeLIor6E0j
-	 4pXEw8NGmV5L7Ir98iPoMv1ah4KEzPlKHTZKzsbH0tQ/ZGR/k4dMR1D75lOhKtr95a
-	 z8uZodet3sA6w==
-Date: Wed, 29 Jan 2025 18:51:15 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Zhu Yanjun <yanjun.zhu@linux.dev>, linux-rdma@vger.kernel.org,
-	Mustafa Ismail <mustafa.ismail@intel.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Bernard Metzler <bmt@zurich.ibm.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/6] RDMA/rxe: handle ICRC correctly on big endian systems
-Message-ID: <20250129185115.GA2619178@google.com>
-References: <20250127223840.67280-1-ebiggers@kernel.org>
- <20250127223840.67280-2-ebiggers@kernel.org>
- <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
- <20250129183009.GC2120662@ziepe.ca>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="guS37h6U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738176775;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vlOChQEKTp5JX+pbfAOT77vMe8ez+6+Y0ab8kJl+7mw=;
+	b=guS37h6U4jQb8pnyZDcAbqU+6hNfrBBsu6memDDwG8F4+ZweCiSYuX6rZ/LMVveb70UlMa
+	cMDU4BhhjyRfty7Xr7vPzqEMWujyjN4k0h6vI+sV/iXAImSVYSCMRFg0+eUwatbe1X3rq0
+	IPT0nGKZSPstsgmwswjwvOk09d/ZDOo=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-47--D-VqdZWMCuKFM53jcF7wQ-1; Wed,
+ 29 Jan 2025 13:52:52 -0500
+X-MC-Unique: -D-VqdZWMCuKFM53jcF7wQ-1
+X-Mimecast-MFC-AGG-ID: -D-VqdZWMCuKFM53jcF7wQ
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 396CC19560BA;
+	Wed, 29 Jan 2025 18:52:48 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.29])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3326919560AA;
+	Wed, 29 Jan 2025 18:52:16 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 29 Jan 2025 19:52:21 +0100 (CET)
+Date: Wed, 29 Jan 2025 19:51:49 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Dmitry V. Levin" <ldv@strace.io>
+Cc: Alexey Gladkov <legion@kernel.org>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Eugene Syromyatnikov <evgsyr@gmail.com>,
+	Mike Frysinger <vapier@gentoo.org>,
+	Renzo Davoli <renzo@cs.unibo.it>,
+	Davide Berardi <berardi.dav@gmail.com>,
+	strace-devel@lists.strace.io, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
+	Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	Shuah Khan <shuah@kernel.org>, linux-snps-arc@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] ptrace: introduce PTRACE_SET_SYSCALL_INFO API
+Message-ID: <20250129185149.GA25901@redhat.com>
+References: <20250128091445.GA8257@strace.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250129183009.GC2120662@ziepe.ca>
+In-Reply-To: <20250128091445.GA8257@strace.io>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Hi Jason,
+On 01/28, Dmitry V. Levin wrote:
+>
+>     * ptrace: Add explicit padding to the end of struct ptrace_syscall_info,
+>       simplify obtaining of user ptrace_syscall_info,
+>       do not introduce PTRACE_SYSCALL_INFO_SIZE_VER0
+>     * ptrace: Change the return type of ptrace_set_syscall_info_* functions
+>       from "unsigned long" to "int"
+>     * ptrace: Add -ERANGE check to ptrace_set_syscall_info_exit,
+>       add comments to -ERANGE checks
+>     * ptrace: Update comments about supported syscall stops
+>     * selftests: Extend set_syscall_info test, fix for mips n32
 
-On Wed, Jan 29, 2025 at 02:30:09PM -0400, Jason Gunthorpe wrote:
-> On Wed, Jan 29, 2025 at 10:44:39AM +0100, Zhu Yanjun wrote:
-> > 在 2025/1/27 23:38, Eric Biggers 写道:
-> > > From: Eric Biggers <ebiggers@google.com>
-> > > 
-> > > The usual big endian convention of InfiniBand does not apply to the
-> > > ICRC field, whose transmission is specified in terms of the CRC32
-> > > polynomial coefficients.  
-> 
-> This patch is on to something but this is not a good explanation.
-> 
-> The CRC32 in IB is stored as big endian and computed in big endian,
-> the spec says so explicitly:
-> 
-> 2) The CRC calculation is done in big endian byte order with the least
->    significant bit of the most significant byte being the first
->    bits in the CRC calculation.
+Again, I can't review 1-3, I know nothing about the non-x86 architectures.
 
-(2) just specifies the order in which the bits are passed to the CRC.  It says
-nothing about how the CRC value is stored; that's in (4) instead.
+As for 4-6, feel free to add
 
-The mention of "big endian" seems to refer to the bytes being passed from first
-to last, which is the nearly universal convention.  (I would not have used the
-term "big endian" here, as it's confusing.)  The rest clarifies that it's a
-least-significant-bit (LSB)-first CRC, i.e. "little endian" or "le" in Linux
-terminology.  (The Linux terminology here is a mistake too -- it would be
-clearer to call it lsb rather than le, given that it's about bits.)
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
-> In this context saying it is not "big endian" doesn't seem to be quite
-> right..
-> 
-> The spec gives a sample data packet (in offset/value pairs):
-> 
-> 0  0xF0 15 0xB3 30 0x7A 45 0x8B
-> 1  0x12 16 0x00 31 0x05 46 0xC0
-> 2  0x37 17 0x0D 32 0x00 47 0x69
-> 3  0x5C 18 0xEC 33 0x00 48 0x0E
-> 4  0x00 19 0x2A 34 0x00 49 0xD4
-> 5  0x0E 20 0x01 35 0x0E 50 0x00
-> 6  0x17 21 0x71 36 0xBB 51 0x00
-> 7  0xD2 22 0x0A 37 0x88
-> 8  0x0A 23 0x1C 38 0x4D
-> 9  0x20 24 0x01 39 0x85
-> 10 0x24 25 0x5D 40 0xFD
-> 11 0x87 26 0x40 41 0x5C
-> 12 0xFF 27 0x02 42 0xFB
-> 13 0x87 28 0x38 43 0xA4
-> 14 0xB1 29 0xF2 44 0x72
-> 
-> If you feed that to the CRC32 you should get 0x9625B75A in a CPU
-> register u32.
-> 
-> cpu_to_be32() will put it in the right order for on the wire.
-
-I think cpu_to_be32() would put it in the wrong order.  Refer to the following:
-
-    4. The resulting bits are sent in order from the bit representing the
-    coefficient of the highest term of the remainder polynomial. The least
-    significant bit, most significant byte first ordering of the packet does not
-    apply to the ICRC field.
-
-As per (2) it's a least-significant-bit first CRC, i.e. bit 0 represents the
-coefficient of x^31 and bit 31 represents the coefficient of x^0.  So the least
-significant byte of the u32 has the highest 8 polynomial terms (the coefficients
-of x^24 through x^31) and must be sent first.  That's an __le32.  Yes, the fact
-that the mapping between bits and polynomial terms is backwards makes it
-confusing, but that's how LSB-first CRCs work.
-
-> I assume the Linux CRC32 always gives the same CPU value regardless of
-> LE or BE?
-
-Yes, they return a u32.  (Unless you use crypto_shash_final or
-crypto_shash_digest in which case you get a u8[4] a.k.a. __le32.)
-
-- Eric
