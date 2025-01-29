@@ -1,112 +1,76 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD841946A1;
-	Wed, 29 Jan 2025 22:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA051946A1
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738188255; cv=none; b=Wao+GD77rJbDB9uhZP1px5fcaqhPvishrbbO0Cj0GY6YYp6i4Cun4rPgyDRo+x/0iKmGybQLM+NtNqCG1ZJOT2PdN8cmJ4QILjH5yX1nFs0tQ359lsERcIAVfgcPHhkU9fvhg9fT86cBJEmYcmIfq2bfTHLV31t86fAKCmH0rNQ=
+	t=1738188290; cv=none; b=EC3Sy9K6QgHR/LJNUUKwG/7ecMkYm06BRezRGK3cpqpz4pEhD4rP1gza9MrOI8MxiGa7DYfh8y/No1i4ZEjb1t7YQcPBhKd8PSRiPnZgFwvOvXsAE/eCjCfcJHJCBE1Oo5BtgVbTi7XDLtXXwobVDwuwiM1WjcviK0K6BLz306M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738188255; c=relaxed/simple;
-	bh=CjyPkktg+9QZr/kJmhaLKTTzwvdHZ31Jx8T23Ohai2Q=;
+	s=arc-20240116; t=1738188290; c=relaxed/simple;
+	bh=EhCBJDVvWggtHinfyQsAUHPBCarmfZ7Ls3KrnsJO67o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V39yEFJmO4T5SYnQ9/DXdgpNADqwp5DT8BKzUI/aySAXSQNYnaVHjqEZv8u4WZVqKz0S9fYJv0FY9XdDvVkPCIXi3DkBAESO9LkECuAgYOVCBHkTszFAevLjMAqiBDHQgiF7uaY8GvczFeaz4ctxvPD4ISr9F6wBf1mVGpA/Xxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YsnATbKE; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oczox7sSC3MSYi3U2tRnuXQN4XSzQhHITX/EXVclOasNQbudE2wpIAZrpzPGyvEy/FWiN0eOLfLxY1Gc4qN2jJIET3OnfOvZWVWeZVK08FrZfL0+jwNHtnsZmAS+JVpZY++HSXwBcxIxvu+SV/yAsVejquvy/ueOPpgKLW0Pbfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OeG4iaGh; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YsnATbKE"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7b6f1be1daeso23107385a.0;
-        Wed, 29 Jan 2025 14:04:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OeG4iaGh"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54024aa9febso137805e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:04:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738188252; x=1738793052; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1738188286; x=1738793086; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1ldV1M6+Yu26kO2evXBO1Y0MEfQ9jNaRgIY5Fjf0wuk=;
-        b=YsnATbKE2eGy1lFr0O9eQOi+mMIjQvBuMiSN4kwtFu5RknzPcbd74mu9/VOoqvwLZr
-         JuyDGBdpYXwPBXQuJeVhnib8TQEqL17eqBck64wtknBGcEuM83dncKXw2QiEl6KSiYEr
-         e6+fz52uk/pqp6PYCidwOEBcw2YN4kGf9w4CRDSNw9ZP/Z3pzeyt/wrkQKZ4I6CarMHA
-         tcDGW1f9EgFRTHbj9sudyRCnHngubcKUhAfVSvfEar3//V1nnMXlwybhv4zCvD2/eudq
-         zlK0FY0IE3TiPjgJiaIiTluiy3pqdblJAcKwm7rprrdpgL/Hdugh2wsO4bW6jOqIs1T1
-         cL6w==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nn+NcTr872jiU0vyNt8zW0XrUbMYhZRRGDuD467dm5Q=;
+        b=OeG4iaGhYLApxnzGeI9l523N41bzJ1CLQWA7IcltnBtKW04RZusBTHQWglPaho+CRp
+         fTO1RLCuuIYq1Of4rSRS3xwXM6K9U4R4iW/8IGXJTYg47qfwMhhvMT49Uk2mKa2j6lu2
+         eaoQlb0aCkPLuRMbZs4KlsS3wxSCFBE94Y20cBShwMBjfI5EfiQWzi06i0Plrb/8IgI4
+         jBJg2SP6gfgrbqf4WyVCyydMH9iwniVxoGuXe0Q/sVS9xIfFLd5f/yxkcwdRSI0Ra4IB
+         bKsxT4U4EhAqXR2anTWeshNqj0jEeBWo5HTyZLtVgRPqeVAv8jI9Cs5ryPIXv1uPdjR7
+         xyXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738188252; x=1738793052;
+        d=1e100.net; s=20230601; t=1738188286; x=1738793086;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1ldV1M6+Yu26kO2evXBO1Y0MEfQ9jNaRgIY5Fjf0wuk=;
-        b=jJLovmQz1PWf+XL5BY8Xmq2MfYG+QFowBJ1IFQ0QXEp2tC4uWJ8EGId6yznhdwXTZR
-         Wi7WjIKU0B8N/ARDoZ9+mWigWzTnX9+gFozYXoWlLxT7HnuILkW1dJC3OchWn3GtoZG3
-         z09qsIA3IX7UPM0+uimrD6O4EZRa/fYttdfUU3JMGs0fMcz6E7q16y0eaQdIA8LKLc4e
-         qi2CkK0egJtybQFlJz9RpVqulTuo5bxCNkglehnmKFakVUHa/v1Vh05BPDzYLm+A1m+g
-         DubLoGJJFG8OmuSW0OQ4hr/oVUtkyFJem/NXBjCdRwFWf3NO7TExLsPhhua+010a8w/W
-         QljQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDQ69pMyGv7TCFZTZ1E4w30h3+AepAoT9XCoJc3YusqrBJSMeZZC6OMUaCD3BGMHovP3V3jBn0hRMDl1M=@vger.kernel.org, AJvYcCXWf9YB/1RkHBkHRpR4amtA2DbzZpjQw62uVcDQBqOcarGYXmj/+vNoerhUp107z/5c3Hk+q5aaq5nsGfD1jbI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNv3blRIE5mYL6uRePyo0vykE/PQnlHZuPZ5ap+MLegcVmm3sL
-	jFcVRcknpdRnMN90v2R+hXTJ05cpMqyHph0lNRbOPdonTTZM0Eol
-X-Gm-Gg: ASbGncsYW8wx8F5CXYo8+s7pC7DsfxOSKcCDjhWetxzwz3fLvh0w5zdvxdR0mlcTNii
-	bEPtAT4mxHUbadpD8vQY37K/CnxuAhg84YY51gRCnlwLtnseeDbvs3G1JIDZeWFyubclfC1CvvB
-	mk5QMFUNkt9M/QhJ9+Bv5aa14n9FUVR9wwd/VasEcppWuCOy5gv8d4k7gInSDHfNYP60T8wePKw
-	RKhmxGPaOb9B/Xjl+rNmUjM/FRtLuP6fSxGIeYH+Po1qL5p350xZuDXxZ1eHZnCJSyuSVBGlD50
-	y+WIySqbGce1e33XmtoxI+JDmRbeAaIXujaX2J5DtOsga/VVMJRJHVdW/14HKrMKbd+DKYc8fzQ
-	dd1N5rg==
-X-Google-Smtp-Source: AGHT+IG28gwSOqZJ/rczsIoYvUoEGqCNoTQSTEuFInyy5WoU0+Pkfi9W0Xw4/R/wK/2w3aJEOkj5ww==
-X-Received: by 2002:a05:620a:8082:b0:7b6:cb81:95d with SMTP id af79cd13be357-7bffcce5723mr812381985a.21.1738188252312;
-        Wed, 29 Jan 2025 14:04:12 -0800 (PST)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8d0713sm8456285a.42.2025.01.29.14.04.10
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nn+NcTr872jiU0vyNt8zW0XrUbMYhZRRGDuD467dm5Q=;
+        b=BIgPmR6iB6bUc6NcwL4RFGnPIGVL/rRQxugjUqvUIe8xqAcJdmWbTDfgBP6KuKvJVJ
+         OUJQokdEWUEJmbrLXBQAYjdh3jJJRORjlZ6Oj7Bsxc+n7BoD0LDyw8gPgDGGiYEnJ5PQ
+         epLicfcYrEatwwvIauIrI6VNAX3rFvqB08LzdbYVPacWDhX5eXw2A6cfY/cRI30iH2fR
+         ONpi/OWG0TklbsWc72hxBuJm1HniPmyO9xUV4bUF9p3qvK44uhRKXTpdBlTEpWoA3/Qj
+         RsLUCstFszR2cage5chIjzICy0GWJawMd2OOfSsav8uyQatYd+4uZ6QiI82acIA/4nHP
+         q+6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVLaJZVA0nDBL709LeQyxr7vCfB4Xy53rr07dy/8JLIsfhfzh0PZQfmPNkGcIMpXrT8LxPqYhozjAO48yo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwD333GZI65wvLHSG6bSchmB60Jk2LPWrPV1Ww31YdNflN4Idwq
+	9kw1mwBB3uD7RO6Iy7/3JdHOrlVMUkFDHURcCmrx7m2MD1LF1nWeZWDiCEGTFVI=
+X-Gm-Gg: ASbGncskn9Cevtw3jmP0o+oowiNnhjjubIw7FOSXXEJmHW424XdL9Te8uWEyh4PXNeU
+	d0PrHCIJMLzixfG8I8ipNq4zoi5G5hhkMNRBCz5wzVeRkVreRw0MVvPuZ7S+UXdCy9fN5POfe4E
+	UefkcRmUJ0gM+pOpTxlLLsoIMjBah6IGZzpcOeHfDcbCwIILaE+XoPtqcvzAVD4T8CBwut86nj4
+	YKY00Tp4F2b49HfL8ZJaFTDxj676sO3R2u2/Smxfr38vyXr33FKGTjrAvxn8trobhgBJa2Mt770
+	u3fueth8JlNmLm/BAqdfscUUqxrtrkxWQfB4Y2pPqCh6S2qVuk2sTMOHDet3OoQuyTPegrU=
+X-Google-Smtp-Source: AGHT+IFoJoGsIwEL5a5EWttz29YtAkET9nd9l+IhCExm5wdza8/LoWAZwMLvwl0k0ETaASogU8yDBg==
+X-Received: by 2002:a05:6512:38d1:b0:53e:2f9d:6a73 with SMTP id 2adb3069b0e04-543e4ba6b47mr1224562e87.0.1738188285781;
+        Wed, 29 Jan 2025 14:04:45 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543c8381846sm2067724e87.255.2025.01.29.14.04.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 14:04:11 -0800 (PST)
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 6479A120006A;
-	Wed, 29 Jan 2025 17:04:10 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Wed, 29 Jan 2025 17:04:10 -0500
-X-ME-Sender: <xms:2qWaZ52qh04LgMIa5gnXpnqPucEubFpgUTwKJSk5VlTKPPe7X-ziLA>
-    <xme:2qWaZwHPvgnD2PD2JvmsEKvWpCwvabD4G17XAewA4_uLledhn0GG2aOqUJDcAbiYg
-    HQkCoxIRT6sOGtLzw>
-X-ME-Received: <xmr:2qWaZ55hhT7uSSlV3XotdRzxdcYPz6lf1T3Pi-d63Ex7QbmWFkODIfLzGzRb>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvden
-    ucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrd
-    gtohhmqeenucggtffrrghtthgvrhhnpeevuefgjeeugfeuveeifeegjeetleffleegteek
-    ueethfdvgfekgeffuefghfejffenucffohhmrghinheprhhushhtqdhfohhrqdhlihhnuh
-    igrdgtohhmpdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgr
-    rhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonh
-    grlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghnghep
-    pehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudefpd
-    hmohguvgepshhmthhpohhuthdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpth
-    htohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghg
-    hhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtohepsggvnhhnohdrlhhoshhsih
-    hnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtghomhdprh
-    gtphhtthhopehtmhhgrhhoshhssehumhhitghhrdgvughupdhrtghpthhtohepuggrkhhr
-    sehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:2qWaZ23wCbtE3ygOFm1J9F9Fe-Pnv_xtDtDf8VOvB2dG7_NtORIVkg>
-    <xmx:2qWaZ8EQ_feer8-XvMsjXtml61WluqV6i6TqlJKig50S2MiBv4EOww>
-    <xmx:2qWaZ38koES_WMJC5df1XKm5ztOtQBw5EWTbwMhMZov_3fvwPXYMxA>
-    <xmx:2qWaZ5k1q1LptLfq4GVwlk8zHd_3vB7PHG25oFIhSvXoOIaJUCdA6w>
-    <xmx:2qWaZwEVyiRM7PDTiPqMs1uhdCyy7AorezVZDM-UAfZTIC39FsWkrJd_>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 29 Jan 2025 17:04:09 -0500 (EST)
-Date: Wed, 29 Jan 2025 14:04:08 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH] MAINTAINERS: add Danilo Krummrich as Rust reviewer
-Message-ID: <Z5ql2B4IGWW_FuSf@tardis.local>
-References: <20250129215948.135486-1-ojeda@kernel.org>
+        Wed, 29 Jan 2025 14:04:44 -0800 (PST)
+Date: Thu, 30 Jan 2025 00:04:41 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Jessica Zhang <quic_jesszhan@quicinc.com>
+Cc: Rob Clark <robdclark@gmail.com>, quic_abhinavk@quicinc.com, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Simona Vetter <simona@ffwll.ch>, Simona Vetter <simona.vetter@ffwll.ch>, 
+	quic_ebharadw@quicinc.com, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@chromium.org>, 
+	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Subject: Re: [PATCH v5 02/14] drm/msm/dpu: move resource allocation to CRTC
+Message-ID: <34zk3jbcjlbux7737t2ve3xcwbt2uxsalbqih6os4ykqeklyfa@phy4izanhn3d>
+References: <20250128-concurrent-wb-v5-0-6464ca5360df@quicinc.com>
+ <20250128-concurrent-wb-v5-2-6464ca5360df@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -115,50 +79,220 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250129215948.135486-1-ojeda@kernel.org>
+In-Reply-To: <20250128-concurrent-wb-v5-2-6464ca5360df@quicinc.com>
 
-On Wed, Jan 29, 2025 at 10:59:48PM +0100, Miguel Ojeda wrote:
-> Danilo has been involved with the Rust for Linux project for a year now.
-> He is primarily working on the Nova GPU driver [1][2].
+On Tue, Jan 28, 2025 at 07:20:34PM -0800, Jessica Zhang wrote:
+> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > 
-> In addition, he has been active in the mailing list and most recently
-> submitted the Device / Driver PCI / Platform series.
+> All resource allocation is centered around the LMs. Then other blocks
+> (except DSCs) are allocated basing on the LMs that was selected, and LM
+> powers up the CRTC rather than the encoder.
 > 
-> He is also already a maintainer of `RUST [ALLOC]` as well as several
-> other DRM-related entries.
+> Moreover if at some point the driver supports encoder cloning,
+> allocating resources from the encoder will be incorrect, as all clones
+> will have different encoder IDs, while LMs are to be shared by these
+> encoders.
 > 
-> His expertise developing Rust abstractions and APIs for one of the major
-> users of Rust in the kernel will be very useful to have around in the
-> future. Thus add him to the `RUST` entry as reviewer.
+> In addition, move mode_changed() to dpu_crtc as encoder no longer has
+> access to topology information
 > 
-> Cc: Danilo Krummrich <dakr@kernel.org>
-> Link: https://rust-for-linux.com/nova-gpu-driver [1]
-> Link: https://lore.kernel.org/dri-devel/Zfsj0_tb-0-tNrJy@cassiopeiae/ [2]
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-
-Acked-by: Boqun Feng <boqun.feng@gmail.com>
-
-Welcome!
-
-Regards,
-Boqun
-
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> [quic_abhinavk@quicinc.com: Refactored resource allocation for CDM]
+> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> [quic_jesszhan@quicinc.com: Changed to grabbing exising global state]
+> Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+> 
 > ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+> Changes in v5:
+> - Reordered to prevent breaking CI and upon partial applciation
+> - Moved mode_changed() from dpu_encoder to dpu_crtc
+> - Dropped dpu_encoder_needs_dsc_merge() refactor to clean up commit
+> - In dpu_encoder_update_topology(), grab DSC config using dpu_encoder
+>   helper as dpu_encoder->dsc hasn't been set yet
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    |  79 +++++++++++++
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h    |   2 +
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 174 +++++++++-------------------
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h |  11 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     |  19 +--
+>  5 files changed, 144 insertions(+), 141 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0fa7c5728f1e..64ee11eac61c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20466,6 +20466,7 @@ R:	Benno Lossin <benno.lossin@proton.me>
->  R:	Andreas Hindborg <a.hindborg@kernel.org>
->  R:	Alice Ryhl <aliceryhl@google.com>
->  R:	Trevor Gross <tmgross@umich.edu>
-> +R:	Danilo Krummrich <dakr@kernel.org>
->  L:	rust-for-linux@vger.kernel.org
->  S:	Supported
->  W:	https://rust-for-linux.com
+
+> -/**
+> - * dpu_encoder_virt_check_mode_changed: check if full modeset is required
+> - * @drm_enc:    Pointer to drm encoder structure
+> - * @crtc_state:	Corresponding CRTC state to be checked
+> - * @conn_state: Corresponding Connector's state to be checked
+> - *
+> - * Check if the changes in the object properties demand full mode set.
+> - */
+> -int dpu_encoder_virt_check_mode_changed(struct drm_encoder *drm_enc,
+> -					struct drm_crtc_state *crtc_state,
+> -					struct drm_connector_state *conn_state)
+> +bool dpu_encoder_needs_modeset(struct drm_encoder *drm_enc, struct drm_atomic_state *state)
+>  {
+> +	struct drm_connector *connector;
+> +	struct drm_connector_state *conn_state;
+> +	struct drm_framebuffer *fb;
+>  	struct dpu_encoder_virt *dpu_enc = to_dpu_encoder_virt(drm_enc);
+> -	struct msm_display_topology topology;
+> -
+> -	DPU_DEBUG_ENC(dpu_enc, "\n");
+> -
+> -	/* Using mode instead of adjusted_mode as it wasn't computed yet */
+> -	topology = dpu_encoder_get_topology(dpu_enc, &crtc_state->mode, crtc_state, conn_state);
+> -
+> -	if (topology.needs_cdm && !dpu_enc->cur_master->hw_cdm)
+> -		crtc_state->mode_changed = true;
+> -	else if (!topology.needs_cdm && dpu_enc->cur_master->hw_cdm)
+> -		crtc_state->mode_changed = true;
+> -
+> -	return 0;
+> -}
+> -
+> -static int dpu_encoder_virt_atomic_check(
+> -		struct drm_encoder *drm_enc,
+> -		struct drm_crtc_state *crtc_state,
+> -		struct drm_connector_state *conn_state)
+> -{
+> -	struct dpu_encoder_virt *dpu_enc;
+> -	struct msm_drm_private *priv;
+> -	struct dpu_kms *dpu_kms;
+> -	struct drm_display_mode *adj_mode;
+> -	struct msm_display_topology topology;
+> -	struct dpu_global_state *global_state;
+> -	int ret = 0;
+> -
+> -	if (!drm_enc || !crtc_state || !conn_state) {
+> -		DPU_ERROR("invalid arg(s), drm_enc %d, crtc/conn state %d/%d\n",
+> -				drm_enc != NULL, crtc_state != NULL, conn_state != NULL);
+> -		return -EINVAL;
+> -	}
+> -
+> -	dpu_enc = to_dpu_encoder_virt(drm_enc);
+> -	DPU_DEBUG_ENC(dpu_enc, "\n");
+> -
+> -	priv = drm_enc->dev->dev_private;
+> -	dpu_kms = to_dpu_kms(priv->kms);
+> -	adj_mode = &crtc_state->adjusted_mode;
+> -	global_state = dpu_kms_get_global_state(crtc_state->state);
+> -	if (IS_ERR(global_state))
+> -		return PTR_ERR(global_state);
+>  
+> -	trace_dpu_enc_atomic_check(DRMID(drm_enc));
+> +	if (!drm_enc || !state)
+> +		return false;
+>  
+> -	topology = dpu_encoder_get_topology(dpu_enc, adj_mode, crtc_state, conn_state);
+> +	connector = drm_atomic_get_new_connector_for_encoder(state, drm_enc);
+> +	if (!connector)
+> +		return false;
+>  
+> -	/*
+> -	 * Release and Allocate resources on every modeset
+> -	 */
+> -	if (drm_atomic_crtc_needs_modeset(crtc_state)) {
+> -		dpu_rm_release(global_state, drm_enc);
+> +	conn_state = drm_atomic_get_new_connector_state(state, connector);
+>  
+> -		if (crtc_state->enable)
+> -			ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
+> -					drm_enc, crtc_state, &topology);
+> +	if (dpu_enc->disp_info.intf_type == INTF_WB && conn_state->writeback_job) {
+> +		fb = conn_state->writeback_job->fb;
+> +		if (fb && MSM_FORMAT_IS_YUV(msm_framebuffer_format(fb))) {
+> +			if (!dpu_enc->cur_master->hw_cdm)
+> +				return true;
+> +		} else {
+> +			if (dpu_enc->cur_master->hw_cdm)
+> +				return true;
+> +		}
+
+Nit: this is duplicating a part of the dpu_encoder_update_topology(). It
+would be nice to have a comment here. If there is no need for a new
+versoion, I can probably write something when applying.
+
+>  	}
+>  
+> -	trace_dpu_enc_atomic_check_flags(DRMID(drm_enc), adj_mode->flags);
+> -
+> -	return ret;
+> +	return false;
+>  }
+>  
+>  static void _dpu_encoder_update_vsync_source(struct dpu_encoder_virt *dpu_enc,
+> @@ -2612,7 +2545,6 @@ static const struct drm_encoder_helper_funcs dpu_encoder_helper_funcs = {
+>  	.atomic_mode_set = dpu_encoder_virt_atomic_mode_set,
+>  	.atomic_disable = dpu_encoder_virt_atomic_disable,
+>  	.atomic_enable = dpu_encoder_virt_atomic_enable,
+> -	.atomic_check = dpu_encoder_virt_atomic_check,
+>  };
+>  
+>  static const struct drm_encoder_funcs dpu_encoder_funcs = {
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
+> index da133ee4701a329f566f6f9a7255f2f6d050f891..b0ac10ebd02c2b63e6f6f9010a22cdace931cf3b 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
+> @@ -80,6 +80,13 @@ int dpu_encoder_get_crc(const struct drm_encoder *drm_enc, u32 *crcs, int pos);
+>  
+>  bool dpu_encoder_use_dsc_merge(struct drm_encoder *drm_enc);
+>  
+> +void dpu_encoder_update_topology(struct drm_encoder *drm_enc,
+> +				 struct msm_display_topology *topology,
+> +				 struct drm_atomic_state *state,
+> +				 const struct drm_display_mode *adj_mode);
+> +
+> +bool dpu_encoder_needs_modeset(struct drm_encoder *drm_enc, struct drm_atomic_state *state);
+> +
+>  void dpu_encoder_prepare_wb_job(struct drm_encoder *drm_enc,
+>  		struct drm_writeback_job *job);
+>  
+> @@ -88,8 +95,4 @@ void dpu_encoder_cleanup_wb_job(struct drm_encoder *drm_enc,
+>  
+>  bool dpu_encoder_is_valid_for_commit(struct drm_encoder *drm_enc);
+>  
+> -int dpu_encoder_virt_check_mode_changed(struct drm_encoder *drm_enc,
+> -					struct drm_crtc_state *crtc_state,
+> -					struct drm_connector_state *conn_state);
+> -
+>  #endif /* __DPU_ENCODER_H__ */
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> index 5ce06e25990cb70284d3c3f04ac1e1e1bed6142a..c6b3b2e147b4c61ec93db4a9f01d5a288d2b9eb2 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> @@ -449,24 +449,11 @@ static void dpu_kms_disable_commit(struct msm_kms *kms)
+>  static int dpu_kms_check_mode_changed(struct msm_kms *kms, struct drm_atomic_state *state)
+>  {
+>  	struct drm_crtc_state *new_crtc_state;
+> -	struct drm_connector *connector;
+> -	struct drm_connector_state *new_conn_state;
+> +	struct drm_crtc *crtc;
+>  	int i;
+>  
+> -	for_each_new_connector_in_state(state, connector, new_conn_state, i) {
+> -		struct drm_encoder *encoder;
+> -
+> -		WARN_ON(!!new_conn_state->best_encoder != !!new_conn_state->crtc);
+> -
+> -		if (!new_conn_state->crtc || !new_conn_state->best_encoder)
+> -			continue;
+> -
+> -		new_crtc_state = drm_atomic_get_new_crtc_state(state, new_conn_state->crtc);
+> -
+> -		encoder = new_conn_state->best_encoder;
+> -
+> -		dpu_encoder_virt_check_mode_changed(encoder, new_crtc_state, new_conn_state);
+> -	}
+> +	for_each_new_crtc_in_state(state, crtc, new_crtc_state, i)
+> +		dpu_crtc_check_mode_changed(new_crtc_state);
+>  
+>  	return 0;
+>  }
+> 
 > -- 
-> 2.48.1
+> 2.34.1
 > 
+
+-- 
+With best wishes
+Dmitry
