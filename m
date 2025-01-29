@@ -1,95 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F03C1DE2AD;
-	Wed, 29 Jan 2025 19:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67BA184;
+	Wed, 29 Jan 2025 19:07:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738177337; cv=none; b=DBvpucEizM/3rhEDMtZaEeAwM9x4Dm5Mv+RmOH4YnrZNWbJ3typJJ9ZvucgMiTa+ygt6JPR9z5+v47h1RDrF1wye1nJCXnsNjcMpdD37b6arQRGUkChqKvrh4K5hdCQPMPBgPkUCBoEzBQrhjAfRNNLz+Z3loC4GF0/sAOLqi/o=
+	t=1738177623; cv=none; b=AtcGjJdY0fC32KjfW/QWWhmusJbnHBqWkTq4dluAz/zr3rrcrmP11OQRBX5JiL7PaM1nFgs+AVNVhFkuHZ2XO+u9JGld3hJMGJNBzFMb2ZW7wZOBVH7+D+MEP61J7+gIg/aXORR9+m25OUzKINZA6ZcUBiP9xexNp9RQm5fQL4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738177337; c=relaxed/simple;
-	bh=oAQdIZYEB/M1UM7YZv1r2cNCJCd2w9Lm7XA+6+u1ko4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pK1URhcxa9R3mkIWY9pUyjVIKvu+ZgQ7n20avjRwHd5EAn1rT2bzRRf6vNSif+gpoTaH39kgsPtoeM8DBZoglsmO2Tc9v34OLuTOfpXHTc+15kG7+ycGgRlvgRNK2yOHYX8IMivKvxztf2SyRhNHTasXgK3TlqrZ8e/sosik8rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fs4L1aca; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738177623; c=relaxed/simple;
+	bh=4Xgv8XTj20pMCc6eGNnYcSqAkrc58lNk8TOYUAdyfdA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U4h8rlNRWfbsEg3fDZitRu3QMqkEEKwM0ajzPNRpFvEC12O4xYv+6JThye0ggADMf/B6oE/X5+gaXXPe0frHkVY0yiUC2krZOEGHvqBvqPW6GtNXGwRasvjD49ITTgKvJQ62vuOCAipQtDcOb9d/HNK9Q76Cux8ETUzZ3mKO8Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYEMHpCi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fs4L1aca"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF65C4CED1;
-	Wed, 29 Jan 2025 19:02:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYEMHpCi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A934CC4CED1;
+	Wed, 29 Jan 2025 19:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738177336;
-	bh=oAQdIZYEB/M1UM7YZv1r2cNCJCd2w9Lm7XA+6+u1ko4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fs4L1acaZYshDCsmrzvUnoJYRuHAp9ksLyCJp1lWVbI2LSZRhXdsBRmh4rXI+y76Q
-	 ZmRF5creNJ8QJ6NBtDhJ1A5K2w/1F4BoSfU41pcojCDXYBqe30szIX0zwN4IN4BlAX
-	 eK4qmu6cOoT+GTTPrNhMB/ypZyqBOcYFmlFY3Fkpd3FhE2ajw0bHrjStEpRQ5D7Cz3
-	 8E1/zJ8HW2ndi/bQCiI9XaXKVIII6R6p6znx3sfSAxcfICgyDpqEJ+aSbanOx14CV7
-	 uigLZCHnIgagozoMv1c7Annj5bLT3LAeaoepY6964cwR+Q/U0+j6pyG3tFjm7Cpu7F
-	 laY25pBzIsllw==
-Date: Wed, 29 Jan 2025 19:02:15 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: linux-rdma@vger.kernel.org, Mustafa Ismail <mustafa.ismail@intel.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Bernard Metzler <bmt@zurich.ibm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] RDMA/rxe: handle ICRC correctly on big endian systems
-Message-ID: <20250129190215.GB2619178@google.com>
-References: <20250127223840.67280-1-ebiggers@kernel.org>
- <20250127223840.67280-2-ebiggers@kernel.org>
- <d0d05601-0eee-4684-9ed0-d6da8938603b@linux.dev>
+	s=k20201202; t=1738177623;
+	bh=4Xgv8XTj20pMCc6eGNnYcSqAkrc58lNk8TOYUAdyfdA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gYEMHpCiXY5QuxyywwTXKimwwAHEKYjf9w3dBo8orkHo5LUd7NrMpInaWgHEl0EMQ
+	 7WocpXpB6nWO6AC2x8Byn4Mx2vwSppSRZAhM7Yvou9vpCLDPrzEn+dHpsry6Y2iT9/
+	 w0J61Bp3jccqXro1/o33ZHWgNPZCA6g5QMay8bRdqA87Mr4Wam7bmah/lV1OYlb3P8
+	 aNe/FYBputMBTMLQZMRbaCZPPqlyZxUeTz7gF5daOOy8YFbe1O9OAgTDbsy3HElLyB
+	 GMxh5xkpHL9BBuQct8SKOC+vo0psU3rgK1Ci4wNY8i9MHTXN76koOmnxC5qUIt1/lh
+	 2bmUM56kcgjng==
+Message-ID: <55c5cef2-3cfb-408c-8c78-4bfd5ee19a29@kernel.org>
+Date: Wed, 29 Jan 2025 20:06:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d0d05601-0eee-4684-9ed0-d6da8938603b@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] clk: qcom: gcc-sdm660: Add missing SDCC block resets
+To: Alexey Minnekhanov <alexeymin@postmarketos.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
+ Craig Tatlor <ctatlor97@gmail.com>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
+References: <20250129171842.1588526-1-alexeymin@postmarketos.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250129171842.1588526-1-alexeymin@postmarketos.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 29, 2025 at 07:27:20PM +0100, Zhu Yanjun wrote:
-> 在 2025/1/27 23:38, Eric Biggers 写道:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > The usual big endian convention of InfiniBand does not apply to the
-> > ICRC field, whose transmission is specified in terms of the CRC32
-> > polynomial coefficients.  The coefficients are transmitted in
-> > descending order from the x^31 coefficient to the x^0 one.  When the
-> > result is interpreted as a 32-bit integer using the required reverse
-> > mapping between bits and polynomial coefficients, it's a __le32.
-> In InfiniBand Architecture Specification, the following
-> "
-> The resulting bits are sent in order from the bit representing the
-> coefficient of the highest term of the remainder polynomial. The least
-> significant bit, most significant byte first ordering of the packet does not
-> apply to the ICRC field.
-> "
-> and
-> "
-> The 32 Flip-Flops are initialized to 1 before every ICRC generation. The
-> packet is fed to the reference design of Figure 57 one bit at a time in the
-> order specified in Section 7.8.1 on page 222. The Remainder is the bitwise
-> NOT of the value stored at the 32 Flip-Flops after the last bit of the
-> packet was clocked into the ICRC Generator. ICRC Field is obtained from the
-> Remainder as shown in Figure 57. ICRC Field is transmitted using Big Endian
-> byte ordering like every field of an InfiniBand packet.
-> "
+On 29/01/2025 18:18, Alexey Minnekhanov wrote:
+> This will allow linux to properly reset eMMC/SD blocks.
 > 
-> It seems that big endian byte ordering is needed in ICRC field. I am not
-> sure if MLX NIC can connect to RXE after this patchset is applied.
+> Fixes: f2a76a2955c0 ("clk: qcom: Add Global Clock controller (GCC) driver for SDM660")
+> 
 
-As I mentioned in my response to Jason, it's a least-significant-bit first CRC,
-so the mapping between bits and polynomial coefficients is reversed from the
-natural order.  So that needs to be kept in mind.
+No line breaks between tags (see `git log`).
 
-In "Figure 56 ICRC Generator" (looking at
-https://www.afs.enea.it/asantoro/V1r1_2_1.Release_12062007.pdf) that shows the
-sample hardware, it looks like what's going on is that the bytes are already
-reversed in the hardware, i.e. what it calls bits 0 through 7 are the
-coefficients of x^0 through x^7, which in a software implementation are actually
-in bits 31 through 24.  Thus in software it would be a __le32.
+> Signed-off-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
+> ---
 
-- Eric
+>  include/dt-bindings/clock/qcom,gcc-sdm660.h | 2 ++
+
+That's a separate patch. Always.
+
+Best regards,
+Krzysztof
