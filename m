@@ -1,88 +1,161 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B870C18FDCE;
-	Wed, 29 Jan 2025 23:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF72218FDCE;
+	Wed, 29 Jan 2025 23:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738191777; cv=none; b=QYPL0dh4GY/XZku9z+RMDTtQkqZ1gr6giqAHwdry8NijkTRAh0GXfgXLjoZfHghIwPHjJ9X8DLt5Nd+UimjzK+4M8KXVkTeRFb829X0Y2wS+7GKVxCK9I2Tiygk8dGGM4LJmBFwbBbG4jEodCN4aSe5sgEhbPeO+HNHvmORdy6Q=
+	t=1738191821; cv=none; b=fhePq3ONMbW9bnQevFq9T1Ek/hkKd0C0CN+1fhsE6x89MlXjtKuLdFV0mCAQXOp3U5HWZvaciNAPE9fHDrS5g5dT4nZ/eFvqMlYHfOax5Dqzrd+hesZRwYHloYbXcuTAIn3R+zEFPFidgXyJizqbGpv3tjTvhDMAizUb4/lU5lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738191777; c=relaxed/simple;
-	bh=uUyVDczqk1R0mh5t5rj/thcPy+rTmbPHGUuCVgvW7Jw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lsbLLpn6rCqEsBEMPjihTw6J8vJ8hD8pC6cS5uVkPILi6QItE6RykQ2Ne5wW1p7+Ys1eiFyAw0sKGhS5MsUQ1W6IkCMeNIvqcod7On0R7pNjv7dkze1IlWvSporuaix6nEAv6CY00klGVMqxDzqc/vlOanmYSlcpLUVTufSv8hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=itWlX2OR; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738191821; c=relaxed/simple;
+	bh=DnBs/c57gTqdpWP75OItXgwuRYg/4fzsHcSFgQrEO5I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JRSnufGBta84UvBr79jMTxE+Bir1MdY1yacKW0JWcf//nkmSz0VYtH3D72ZeZPeeJ7NTbdv3CcxFnLjX773jRgxOmo8wE51SL3dxlS+xKO6yGBX0nkxSMEgFcM3PfsgZY+IsFZkwrNg4KL0UEewhMpJgPsdCVbggu82UW16VrvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tms7RdzM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="itWlX2OR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=KfRVwiVvoIL5yKlVMJTKUtLAc62tnU62cuq5lssPDUQ=; b=itWlX2ORYkxDIMR7KkPfVOS3of
-	mA85c29LcGu6a4faK14Mlody6Myv+SWb1GHg19xlyJhbt5kNYKL2B6FpdlCzEbLARSUcwIQ41cQp2
-	X3vUGRs2gB+fEnK2awaGyv8k71Lho6DGBejeORiCL09uQN8gi/TjYFeHTA8uo4HmrpRscM4j6aLIz
-	P3lIYaOUS7rd0pVqvJZizXk+7R5iOVbXpM+PqOLscrJzqevkL7Q7zxDqivU4iNaKk9v71jIu7WHqj
-	TR4S7YHpuau7rMlzD3CKsqBglLYiS4B7CSyb0omVXOzya/c7BmEEinKDhwyRgTc5VhdLT/3KJbYAk
-	J771SZTQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tdH51-0000000CYOC-1aDq;
-	Wed, 29 Jan 2025 23:02:43 +0000
-Date: Wed, 29 Jan 2025 23:02:43 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Sidhartha Kumar <sidhartha.kumar@oracle.com>,
-	akpm@linux-foundation.org, christophe.leroy@csgroup.eu,
-	geert@linux-m68k.org, justinstitt@google.com,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linuxppc-dev@lists.ozlabs.org, llvm@lists.linux.dev,
-	maddy@linux.ibm.com, morbo@google.com, mpe@ellerman.id.au,
-	nathan@kernel.org, naveen@kernel.org, ndesaulniers@google.com,
-	npiggin@gmail.com, linux-mm@kvack.org
-Subject: Re: [PATCH] xarray: port tests to kunit
-Message-ID: <Z5qzk_92KU0xoLcP@casper.infradead.org>
-References: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
- <07cf896e-adf8-414f-a629-a808fc26014a@oracle.com>
- <qdq4k6323orqifgzo7pbg5vakezr3gptfdehghxsyfrhc4kwvb@d4fxbwcl4gjm>
- <CAJ-ks9=U4PZv4NgyH8B7SbHkecGLy+M=G639hSTv-hnPySqk6w@mail.gmail.com>
- <xf3445vgszstqfwycf5wc5owhnifxb3mny5xjjaihghqgnozmd@3h7hnifir4vu>
- <CAJ-ks9=hNGRFbr3sTQBma3u84Yhog7i33Oc=16FqFjE_JYNERA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tms7RdzM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3738C4CED1;
+	Wed, 29 Jan 2025 23:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738191820;
+	bh=DnBs/c57gTqdpWP75OItXgwuRYg/4fzsHcSFgQrEO5I=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Tms7RdzMGIa5FtXsetmCkKbIvQelWoEBToY4gfpfE4JyIzZ0zzcGcZAuTOlf3bHp6
+	 ws4qBQNba817tu5KdusGU6FbGlH5ZuptAvDssJwqcjfLmr/sokodQUs0pjK7urp4ge
+	 VsGYr8ya+Lclxst3V4JGy0v9U2QRHDE8gX5TrwBbZ1nD6JioT3mBNr+fBO4hX/FTD9
+	 lnjicovsg3z60eIj+QnXUVO0W18rKJWxJNtKU/oYFcjIxAZOkaxIRfp0WecRL8LGJF
+	 VEdKcCebNL3J4PCuBIzrIFPdE8FgPfBprr3f1fkE1jYDc3T1oTdZHGCCfAquW37SvT
+	 eqvuRXieVU9bw==
+Message-ID: <930797ecabdfe52d698bed64c6ebed0a1235a18b.camel@kernel.org>
+Subject: Re: Multigrain timestamps do not work on RISC-V
+From: Jeff Layton <jlayton@kernel.org>
+To: Andreas Schwab <schwab@suse.de>, linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Date: Wed, 29 Jan 2025 18:03:38 -0500
+In-Reply-To: <mvmv7ty3pd8.fsf@suse.de>
+References: <mvmv7ty3pd8.fsf@suse.de>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJ-ks9=hNGRFbr3sTQBma3u84Yhog7i33Oc=16FqFjE_JYNERA@mail.gmail.com>
 
-On Wed, Jan 29, 2025 at 05:33:06PM -0500, Tamir Duberstein wrote:
-> >  $ ./scripts/get_maintainer.pl --git lib/xarray.c
-> > Matthew Wilcox <willy@infradead.org> (supporter:XARRAY,commit_signer:1/3=33%,authored:1/3=33%,added_lines:19/52=37%,removed_lines:4/23=17%)
-> > Andrew Morton <akpm@linux-foundation.org> (supporter:LIBRARY CODE,commit_signer:3/3=100%)
-> 
-> I'm not sure what you're asking. I used `b4 prep --auto-to-cc`. It
-> doesn't know that test_xarray.c and xarray.c have the same maintainer.
+On Wed, 2025-01-29 at 11:07 +0100, Andreas Schwab wrote:
+> The statx06 test in the LTP testsuite fails since the multigrain
+> timestamp feature was merged:
+>=20
+> https://openqa.opensuse.org/tests/4800409#step/statx06/7
+>=20
+> The issue is that the nsec part of ctime does not change from the time
+> the file is created:
+>=20
+> $ touch xx
+> $ stat -c $'mtime %y\nctime %z' xx
+> mtime 2025-01-29 09:43:44.677442605 +0100
+> ctime 2025-01-29 09:43:44.677442605 +0100
+> $ touch xx
+> $ stat -c $'mtime %y\nctime %z' xx
+> mtime 2025-01-29 09:43:51.641581658 +0100
+> ctime 2025-01-29 09:43:51.677442605 +0100
+>
+> My guess would be that something in inode_set_ctime_current is going
+> wrong.
+>=20
 
-You need to use your brain.  You can't just say "I used the tool".
-Tools are just tools.  Sometimes they're wrong.  My email address is
-listed as the Author: of test_xarray.c.  You should have noticed that.
+Thanks for the bug report, Andreas.
 
-> For what it's worth the kunit invocation, while obscure, is
-> self-documenting. There's usage information that's reasonably
-> understandable embedded in the tool itself. I looked for the userspace
-> testing initially but failed to find
-> tools/testing/radix-tree/xarray.c. Even now, I'm not sure how I'm
-> meant to compile this.
+I assume you're seeing this across different filesystems (i.e. tmpfs,
+ext4, etc.)? It almost looks like this try_cmpxchg() is returning true
+without actually doing the swap:
 
-kunit is useless.  The test_xarray.c module is useless.  If you break
-xarray, the kernel won't boot far enough to load any modules.  You
-haven't thought about this AT ALL.
+        if (try_cmpxchg(&inode->i_ctime_nsec, &cur, now.tv_nsec)) {
+                /* If swap occurred, then we're (mostly) done */
+                inode->i_ctime_sec =3D now.tv_sec;
+                trace_ctime_ns_xchg(inode, cns, now.tv_nsec, cur);
+                mgtime_counter_inc(mg_ctime_swaps);
+        } else {
 
-cd tools/testing/radix-tree
-make
+It might also be interesting to see the output of that tracepoint over
+this test, if you're able.
 
-Then you can run the tests, whichever ones make sense for you to run.
+Thanks,
+--=20
+Jeff Layton <jlayton@kernel.org>
