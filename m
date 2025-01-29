@@ -1,125 +1,265 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEFE18FDCE
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 23:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFE119F487
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 23:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738192142; cv=none; b=V/LNOF7piUblbFN/neTPLFmGbxRmykz0YP0jK8HxUYYH7s1ng9TToLKiHj75NnS5W88jF5QPkI6O24ZU1cRQKjNJAFf7K7rqV11cnP+4rgKaEk1uoNInkzSqJ6AuWhZ9fF5UiXFVpBDd5U4uF/0BkX4oKmTSQ6437xLG8FSdHuI=
+	t=1738192226; cv=none; b=EXArc03gJM+eOux7/GMhBIvFeARcWK4pXfGyZskeFSW67TsR/OZqwlf4oJfdwK0aI4SyiIXHPmuqzbpr2tPekei9KTWgWfE0iVbyvCvL00C4zZWEru7SFe7/g11QtlurlerRIUva8Z+vEe2ODhyM0Xxn4RCmKNMjYTYfkHIOu8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738192142; c=relaxed/simple;
-	bh=3aFeVwWbkAiwkd2VaAROVCziQzzUR7JbWU5jgWJLJ5o=;
+	s=arc-20240116; t=1738192226; c=relaxed/simple;
+	bh=SePUdbN/YTAAEEp3PJAxcxCJFkbFsQtAZL3FbbSh30k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RYA/YwORYrWeBu1V4icwT+/hYUvP9Mx5ujHCnd/XgLRLeCMtetRGBNaBlGzjTdahNy+Kmq5mtm35saIVIf0+OlEsAN0UvDh5ZFPOUBDljAIy92Ws6h4y7UI3WvwBLCCoI+Eydig6/tWDJrmtaBihtJmVWpfRQmExtvRyhp1ktXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NN9fdDEQ; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=KAuJ+w0/f+W+AhotcYiKr6eGxYynczRGJ3egXivbLytNBKK57qGynoY7cfCamI7Qr4lyMcyGnCkzgwjiGl1PqdmQAl0jO9u0DEsC465rC9FAqw2KX//f1GO1Iv8tpfFoAWY8SyauldrliG3y7nikZ8J84ASH6y+7ii3H3us6iQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=GOJ3L3d2; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NN9fdDEQ"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30613802a59so1496551fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 15:09:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="GOJ3L3d2"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-436345cc17bso967285e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 15:10:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738192139; x=1738796939; darn=vger.kernel.org;
+        d=joelfernandes.org; s=google; t=1738192222; x=1738797022; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=905aLOBpG5OnSnGM7H0fP4dZu8i9mQsgLm9R4DDucaw=;
-        b=NN9fdDEQnUJzh5C1zalI04tCboIE00ezPDc3Z7pwcZp62j8B0JcYJxdtAZGZKiKrsy
-         rfd37PPQ9fcfq6KSokaqCrOCSTatRYRGrbst+kZMaZfBaB71lu8bKP1wByX6Fc/droI1
-         LDMqiO7QPie+A8ZO/RE2bTz/wkZzeeEj5FOqvERYdcCF6ZWdgJ+ocytlMV9OUMY6/1Pz
-         3r5mq72B2zbFwQGMrYbCg/idUSbt+M5ql7eg5kbHdoLsUpa3JnZ+D3la/51iVzf8O3F+
-         Rk2EVwIo1o4HHfAfIM4NfcaAncOip5yt53pN/hqJLk+SzN3EvfGmnvZE0MhXrHKxCoIr
-         3tlQ==
+        bh=dt/34B+hMZb+wBIW0djF98uU+EiPyrFtGRjrOvMVlzI=;
+        b=GOJ3L3d2Oeq1+yBRQFo6F7cZU6skC6aaNNPe85FW8WLnG9sHmccj8MmCbFiZYCMTAm
+         3edzoyAex/DPsHLqW7//bj8GbyVo32rZ8lzEE7HIDcpunS2Lff9QdWKTE3zzT6j0xqYb
+         D5726IGC7xeAIwOUmAvhqoOJcUWy2yuhOAJv0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738192139; x=1738796939;
+        d=1e100.net; s=20230601; t=1738192222; x=1738797022;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=905aLOBpG5OnSnGM7H0fP4dZu8i9mQsgLm9R4DDucaw=;
-        b=P/vXFc2VQA65/IH/6WhcjzYPa/bXe3EGFqwJ2pe3Smc6mN0xlPpgRTSUNooF2d8lTj
-         XAkD1cWBie3jeNUOzeR8dce5VqRuPGKv45EqhvDkxBOOhN30ywLUt8JMYGJn4oa8K7jJ
-         p29+PSnycs3U07aLanjFeqWgq1r8jbW/Io4q6fUH1qITLn2AqPDxOVAf7p7A1VOWdzmk
-         nu4mfLy2NBev7pHbLOlfGaORBaDxkETmwJugD5SvzQetZcqEgM8EZw9rkxf7u8ADNDBL
-         G5eN7BH+Xnxv7yvakpxyjOkqm3gpY3SosVUobK5CzJqFlgKX/I6Oz7bCE/pZtWOCJ6o8
-         hwdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTan9ry2AaNhAbXYUak/n9x+AlpngdvcV+pe81HamO23+IQ0wPBpZF9AXSYl94vW3d5f1Krq3FfXFAlLc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEEDBAAo5nX2ADsTr6EUqf1+zX72get6OooKa6zs1lTG5xZN5r
-	0ynXo0L4XYK6gl2TDEKt/VwybhndJMykI+JApmzyfUlgPDeV3b3E3B/aRyfelr6vlsLjm4Ji/sr
-	OCNMyZKgWq90FYubRJixIeHBXKHc=
-X-Gm-Gg: ASbGnct4AHLgrS8v2L8zAiitnH/q5k9cuE9d7ESYsRBsfqgTiDRmTaWiRe7yk62GfVO
-	2zp06HzpHysS6h/PUuWqWUe6Sh8UQDzn4Pl7GO1+hMOktWmp3/EGHP5G+TQcgvn+5BVEA3n1/bl
-	Dug+nlfM3zn06t+yQZ/NBR/H0I0SuYRg==
-X-Google-Smtp-Source: AGHT+IGw4hDomqOPsGmP6ryOmQMcXXWdZqLA8giCzG80P3G1E1mNKcM08esBXc35n67oCdPU79/hBsdXpNJs+7goWuY=
-X-Received: by 2002:a05:651c:220e:b0:300:3a15:8f23 with SMTP id
- 38308e7fff4ca-3079680c757mr22614121fa.7.1738192138842; Wed, 29 Jan 2025
- 15:08:58 -0800 (PST)
+        bh=dt/34B+hMZb+wBIW0djF98uU+EiPyrFtGRjrOvMVlzI=;
+        b=KzU9fNlQ4V6BEbsPgzmzpThfIaSTeNGJ9htA0BaNrS+EpNGlwO1CNDgdxToUV6o5qT
+         IHFEcK/rg12P9dyQkHQrpgwYk2vUvHZDs4t/jUaPDs56N9wrf9J1uuSENrH+dpZcebXJ
+         r0jYcIUxYA0pTJRmyeScB0zH8oejPR/DauZVnUszHLRepQv/Dkp04Rq7H4OilvjSvp8Z
+         CgzuJX5abLSjUUToM9ynzvFc6CMoM27WS7Q4mRP7JzzMkzKpNaQbBsfFrQ5J6A2cprRW
+         aQbauwwAXruDq8s35/J2zCzz/epCs8efzGr2nY8xuUdUj0Oay6/jz3BurMgRZH+j7pRE
+         MskQ==
+X-Gm-Message-State: AOJu0Yxsi7P7vSo2UKE4ceGVKjsL5Wdzut73CuaXIEpbHT3J6S1s1k8+
+	++TmnUm55yJg0Jt9CY+1AyxhoclG8bFoZLKUAoLUfzVIC2ZLFFsTHwdLqN3V3k4uS2xyNeDBJ6D
+	KpmNeGXcp6vP+Mf3i2WTpk1HM5blx00bzUrwZlg==
+X-Gm-Gg: ASbGncsIXYv4gf15vO6wQ3Dx+O6/yVe4gWfnYXjX2CuADlcLDL+9gotxSE/i+trrpbW
+	ABHe4sWTs4OQ32hLq6I+x6h8IVap4VlK4EjP9veQayHKFo5JE8J+z7olePZNIneEW1S4Dfw6zcQ
+	==
+X-Google-Smtp-Source: AGHT+IHZha7mK2uyJYV73CJ5+VdotlW8+eF8eHk6+1qGQ+KAdmQHWPUOGeZdBcbTXlatCWopx0qB81ZEJHD5+gqHyqE=
+X-Received: by 2002:a05:600c:5119:b0:434:f917:2b11 with SMTP id
+ 5b1f17b1804b1-438dc40bd8dmr37467895e9.21.1738192221842; Wed, 29 Jan 2025
+ 15:10:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
- <07cf896e-adf8-414f-a629-a808fc26014a@oracle.com> <qdq4k6323orqifgzo7pbg5vakezr3gptfdehghxsyfrhc4kwvb@d4fxbwcl4gjm>
- <CAJ-ks9=U4PZv4NgyH8B7SbHkecGLy+M=G639hSTv-hnPySqk6w@mail.gmail.com>
- <xf3445vgszstqfwycf5wc5owhnifxb3mny5xjjaihghqgnozmd@3h7hnifir4vu>
- <CAJ-ks9=hNGRFbr3sTQBma3u84Yhog7i33Oc=16FqFjE_JYNERA@mail.gmail.com> <Z5qzk_92KU0xoLcP@casper.infradead.org>
-In-Reply-To: <Z5qzk_92KU0xoLcP@casper.infradead.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 29 Jan 2025 18:08:22 -0500
-X-Gm-Features: AWEUYZnWxaXWv5__MIDVh4wuy5lxhHQnPr0jMuSdSi61tZVSWMfJQozfaebSPPI
-Message-ID: <CAJ-ks9ksSh-r6SmKsm7iJA6nCqvrhXZ8jtjP-YoeMNB6tF5a=g@mail.gmail.com>
-Subject: Re: [PATCH] xarray: port tests to kunit
-To: Matthew Wilcox <willy@infradead.org>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Sidhartha Kumar <sidhartha.kumar@oracle.com>, 
-	akpm@linux-foundation.org, christophe.leroy@csgroup.eu, geert@linux-m68k.org, 
-	justinstitt@google.com, linux-kernel@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
-	llvm@lists.linux.dev, maddy@linux.ibm.com, morbo@google.com, 
-	mpe@ellerman.id.au, nathan@kernel.org, naveen@kernel.org, 
-	ndesaulniers@google.com, npiggin@gmail.com, linux-mm@kvack.org
+References: <ecce7241-4238-4d86-8e4c-5080937129ce@paulmck-laptop>
+ <15D1150A-9B7B-4EB7-91C6-2D881D6F48DA@joelfernandes.org> <861f1dc3-bfc0-4a81-9b78-c8e9995db4cd@paulmck-laptop>
+In-Reply-To: <861f1dc3-bfc0-4a81-9b78-c8e9995db4cd@paulmck-laptop>
+From: Joel Fernandes <joel@joelfernandes.org>
+Date: Wed, 29 Jan 2025 18:10:10 -0500
+X-Gm-Features: AWEUYZnFVNqqySqM8AfvcNsTZJv3Fpw3Ni9vlsRAyjRk2HH754MGWgglJFeg0z4
+Message-ID: <CAEXW_YQ4W=upWV_x1woSgq-DJPFXmBjH2pVmUnBVb_n_UKrw7A@mail.gmail.com>
+Subject: Re: [PATCH] rcu: Merge rcu_seq_done_exact() logic into rcu_seq_done()
+To: paulmck@kernel.org
+Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Josh Triplett <josh@joshtriplett.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 29, 2025 at 6:02=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
+On Wed, Jan 29, 2025 at 12:25=E2=80=AFPM Paul E. McKenney <paulmck@kernel.o=
+rg> wrote:
 >
-> On Wed, Jan 29, 2025 at 05:33:06PM -0500, Tamir Duberstein wrote:
-> > >  $ ./scripts/get_maintainer.pl --git lib/xarray.c
-> > > Matthew Wilcox <willy@infradead.org> (supporter:XARRAY,commit_signer:=
-1/3=3D33%,authored:1/3=3D33%,added_lines:19/52=3D37%,removed_lines:4/23=3D1=
-7%)
-> > > Andrew Morton <akpm@linux-foundation.org> (supporter:LIBRARY CODE,com=
-mit_signer:3/3=3D100%)
+> On Wed, Jan 29, 2025 at 06:34:53AM -0500, Joel Fernandes wrote:
 > >
-> > I'm not sure what you're asking. I used `b4 prep --auto-to-cc`. It
-> > doesn't know that test_xarray.c and xarray.c have the same maintainer.
+> >
+> > > On Jan 28, 2025, at 9:21=E2=80=AFPM, Paul E. McKenney <paulmck@kernel=
+.org> wrote:
+> > >
+> > > =EF=BB=BFOn Tue, Jan 28, 2025 at 09:13:45PM -0500, Joel Fernandes wro=
+te:
+> > >>> On Tue, Jan 28, 2025 at 8:47=E2=80=AFPM Paul E. McKenney <paulmck@k=
+ernel.org> wrote:
+> > >>>
+> > >>> On Tue, Jan 28, 2025 at 08:38:57PM -0500, Joel Fernandes wrote:
+> > >>>> On Tue, Jan 28, 2025 at 8:33=E2=80=AFPM Paul E. McKenney <paulmck@=
+kernel.org> wrote:
+> > >>>>>
+> > >>>>> On Tue, Jan 28, 2025 at 08:22:48PM -0500, Joel Fernandes wrote:
+> > >>>>>> On Mon, Jan 27, 2025 at 07:09:34PM -0500, Joel Fernandes wrote:
+> > >>>>>>> On Mon, Jan 27, 2025 at 7:07=E2=80=AFPM Joel Fernandes (Google)
+> > >>>>>>> <joel@joelfernandes.org> wrote:
+> > >>>>>>>>
+> > >>>>>>>> The rcu_seq_done() API has a large "false-negative" windows of=
+ size
+> > >>>>>>>> ULONG_MAX/2, where after wrap around, it is possible that it w=
+ill think
+> > >>>>>>>> that a GP has not completed if a wrap around happens and the d=
+elta is
+> > >>>>>>>> large.
+> > >>>>>>>>
+> > >>>>>>>> rcu_seq_done_exact() is more accurate avoiding this wrap aroun=
+d issue,
+> > >>>>>>>> by making the window of false-negativity by only 3 GPs. Use th=
+is logic
+> > >>>>>>>> for rcu_seq_done() which is a nice negative code delta and cou=
+ld
+> > >>>>>>>> potentially avoid issues in the future where rcu_seq_done() wa=
+s
+> > >>>>>>>> reporting false-negatives for too long.
+> > >>>>>>>>
+> > >>>>>>>> rcutorture runs of all scenarios for 15 minutes passed. Code i=
+nspection
+> > >>>>>>>> was done of all users to convince the change would work.
+> > >>>>>>>>
+> > >>>>>>>> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org=
 >
-> You need to use your brain.  You can't just say "I used the tool".
-> Tools are just tools.  Sometimes they're wrong.  My email address is
-> listed as the Author: of test_xarray.c.  You should have noticed that.
-
-The whole point of tools is to liberate stupid humans' brains like
-mine from mundane tasks like working out who to email. The tool wasn't
-wrong; it did exactly what you told it to do in your MAINTAINERS
-entry.
-
-> > For what it's worth the kunit invocation, while obscure, is
-> > self-documenting. There's usage information that's reasonably
-> > understandable embedded in the tool itself. I looked for the userspace
-> > testing initially but failed to find
-> > tools/testing/radix-tree/xarray.c. Even now, I'm not sure how I'm
-> > meant to compile this.
+> > >>>>>>>
+> > >>>>>>> I am leaving a 60 minute overnight run of all scenarios on my p=
+ersonal
+> > >>>>>>> server for further testing.
+> > >>>>>>
+> > >>>>>> The run passed, details below:
+> > >>>>>>
+> > >>>>>> --- Mon Jan 27 11:49:49 PM EST 2025 Test summary:
+> > >>>>>> Results directory:
+> > >>>>>> tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --durati=
+on 60
+> > >>>>>> RUDE01 ------- 14309 GPs (3.97472/s) [tasks-rude: g57884 f0x0 to=
+tal-gps=3D57880] n_max_cbs: 0
+> > >>>>>> SRCU-L ------- 34121 GPs (9.47806/s) [srcu: g316564 f0x0 total-g=
+ps=3D79242] n_max_cbs: 150000
+> > >>>>>> SRCU-N ------- 151316 GPs (42.0322/s) [srcu: g1840064 f0x0 total=
+-gps=3D460117] n_max_cbs: 150000
+> > >>>>>> SRCU-P ------- 35189 GPs (9.77472/s) [srcud: g320792 f0x0 total-=
+gps=3D80299] n_max_cbs: 150000
+> > >>>>>> SRCU-T ------- 389034 GPs (108.065/s) [srcu: g4142406 f0x0 total=
+-gps=3D1035602] n_max_cbs: 50000
+> > >>>>>> SRCU-U ------- 376267 GPs (104.519/s) [srcud: g3953834 f0x0 tota=
+l-gps=3D988459] n_max_cbs: 50000
+> > >>>>>> SRCU-V ------- 407633 GPs (113.231/s) [srcud: g4371704 f0x0 tota=
+l-gps=3D1092927] n_max_cbs: 1000
+> > >>>>>> TASKS01 ------- 11007 GPs (3.0575/s) [tasks: g57816 f0x0 total-g=
+ps=3D57808]
+> > >>>>>> TASKS02 ------- 10539 GPs (2.9275/s) [tasks: g57936 f0x0 total-g=
+ps=3D57936]
+> > >>>>>> TASKS03 ------- 10453 GPs (2.90361/s) [tasks: g57508 f0x0 total-=
+gps=3D57508]
+> > >>>>>> TINY01 ------- 511634 GPs (142.121/s) [rcu: g0 f0x0 total-gps=3D=
+0] n_max_cbs: 57078
+> > >>>>>> TINY02 ------- 541799 GPs (150.5/s) [rcu: g0 f0x0 total-gps=3D0]=
+ n_max_cbs: 2619
+> > >>>>>> TRACE01 ------- 7299 GPs (2.0275/s) [tasks-tracing: g45844 f0x0 =
+total-gps=3D45844] n_max_cbs: 50000
+> > >>>>>> TRACE02 ------- 101265 GPs (28.1292/s) [tasks-tracing: g305464 f=
+0x0 total-gps=3D305456] n_max_cbs: 100000
+> > >>>>>> TREE01 ------- 97989 GPs (27.2192/s) [rcu: g479473 f0x0 total-gp=
+s=3D120151]
+> > >>>>>> TREE02 ------- 202908 GPs (56.3633/s) [rcu: g1459509 f0x0 total-=
+gps=3D365162] n_max_cbs: 1139244
+> > >>>>>> TREE03 ------- 168901 GPs (46.9169/s) [rcu: g1764445 f0x0 total-=
+gps=3D441393] n_max_cbs: 1341765
+> > >>>>>> TREE04 ------- 148876 GPs (41.3544/s) [rcu: g951744 f0x0 total-g=
+ps=3D238225] n_max_cbs: 236765
+> > >>>>>> TREE05 ------- 220092 GPs (61.1367/s) [rcu: g1234385 f0x0 total-=
+gps=3D308880] n_max_cbs: 82801
+> > >>>>>> TREE07 ------- 34678 GPs (9.63278/s) [rcu: g207257 f0x0 total-gp=
+s=3D52094]
+> > >>>>>> TREE09 ------- 341706 GPs (94.9183/s) [rcu: g7693569 f0x0 total-=
+gps=3D1923688] n_max_cbs: 1845334
+> > >>>>>> --- Done at Mon Jan 27 11:49:55 PM EST 2025 (4:41:24) exitcode 0
+> > >>>>>
+> > >>>>> Very good!
+> > >>>>>
+> > >>>>> How would you go about analyzing whether this is really safe vs. =
+getting
+> > >>>>> just getting lucky and not having provoked an overflow?
+> > >>>>
+> > >>>> I would probably add a more specific test case stressing the API, =
+or
+> > >>>> even a unit test of just the API by passing a range of sequences..=
+ I
+> > >>>> should go ahead and do that but it sounds like you feel there is a=
+n
+> > >>>> issue with the patch? :)
+> > >>>
+> > >>> 2^31 (let alone 2^63) is a very large number of grace periods, and
+> > >>> so it is hard to test grace-period sequence-number wrap.
+> > >>>
+> > >>> Not impossible, though...
+> > >>
+> > >> We could test a decent number of candidate sequences to cover
+> > >> different cases. Not ideal like bruteforcing, but...   Another idea =
+is
+> > >> to hardcode/assume ULONG_MAX as 16-bit in a unit test.
+> > >
+> > > Or put the various sequence numbers into an unsigned short or even
+> > > an unsigned char.
+> > >
+> > > One set of use cases checks to see if a given CPU's ->gp_seq has fall=
+en
+> > > too far behind the current grace period, and sets a flag to alert
+> > > that CPU.  Others rely on a false negative being functionally OK.
+> > >
+> > > Or so I believe.  ;-)
+> >
+> > Thanks, I am itching to create a visualization of all eight bit combina=
+tions and the output of both API, which will be a fun exercise however I=E2=
+=80=99m missing something fundamental because as I mentioned in that 100 an=
+d 200 example, the API itself cannot distinguish between a wraparound and a=
+ legitimate delay in comparison between start and a delayed end. I need to =
+understand this better and go through the code more. ;-/
 >
-> kunit is useless.  The test_xarray.c module is useless.  If you break
-> xarray, the kernel won't boot far enough to load any modules.  You
-> haven't thought about this AT ALL.
+> The big questions are "under what conditions does it need to distinguish,
+> and what are the consequences of failing to get this right?"   Also, "wha=
+t
+> is the purpose of ->gpwrap?".
 
-I don't understand what you're saying here.
+My understanding is we take a snapshot of a sequence and then check at
+later time if it was reached. Ok I shall explore these questions.
+Meanwhile I created the following visualization using 5-bit numbers:
 
-> cd tools/testing/radix-tree
-> make
->
-> Then you can run the tests, whichever ones make sense for you to run.
+https://drive.google.com/file/d/1w2sgJga7B5dye4iH0oPZ79obaKO-e_Jn/view?usp=
+=3Dsharing
 
-Thanks.
+I find as we expect, that for rcu_seq_done(), as long as the distance
+between the "running sequence" and the "target" is ULONG_MAX/2, it
+returns correct results. OTHERWISE, it can return false results. So
+for target value of 28 (in 5-bit world), only initial running values
+from 12 would return FALSE. Before number 12, everything is TRUE. This
+can cause both false-positives and false-negatives depending on the
+input, however it is possible that are no users who use it causing
+false-positives! So I guess it really depends on user.
+
+False positives:
+If the initial value is ULONG_MAX/2 away from the target, then
+rcu_seq_done() can return TRUE when *no wraparound* happened.
+
+False negatives:
+The initial value of the snapshot was *within* the ULONG_MAX/2
+distance from target. A full *wrap around then happened*, and we ended
+where we were initially, so rcu_seq_done() should return TRUE but it
+returns FALSE because it doesn't know about the wrap.
+
+Now we move rcu_seq_done_exact. It has the exact same behavior except
+that instead of ULONG_MAX/2, the above situations are shrunk to about
+10 counts from the target. So if target is 28, then the initial
+sequence should have been at least 18 to avoid false-positive, but
+again it is possible and I certain see in the code that it cannot be
+used this way.. (at least so far).. So all we are left with is the
+false-negative band of ~2.5 GPs..
+
+About "what are the consequences of failing to get this right".  I
+believe false-positive is unacceptable unless it is maybe debug code -
+that can break functionality in code, too short GPs and all that.
+However false-negative is OK as long as the usecase can retry later
+and can afford to wait. Did I get that much correct?
+
+Thanks,
+
+- Joel
