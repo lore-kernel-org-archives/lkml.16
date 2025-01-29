@@ -1,90 +1,175 @@
-Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cosmicgizmosystems.com (cosmicgizmosystems.com [63.249.102.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABAA2C9D
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF0D2C9D;
+	Wed, 29 Jan 2025 19:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.249.102.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738178787; cv=none; b=GtmW69T/C38rtnmpZWMB+6QOC3hgC3v9ywwbW31xvajHkQiaKroFyTtBKLc/gHkGeRl+Ll67AedapP+likv6AsVtR/yFt7v6kRblU7NuQW2cNTnYEP/ldz9CzssRvk6u2ek8yhoRXs3Fj+zERfLFO7Dao8VWLhbdVTmTHQvwYKI=
+	t=1738178818; cv=none; b=ODKC7bZq+r8rxbsPqYSx1+1YItpgk5X4/nDKFDmYo69zobgmDcD/T0+mcic0GmqkdNZu8KCk6in8U8+kxy3oGJlP3gBXfbUymBMiAvUQZclRRq1L7e4o/1jW5+h1StL2jFV0KdNVxOBdBXEPNiIhQdgFIv2aJytB8y/nyh9SYn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738178787; c=relaxed/simple;
-	bh=JErhnK9vh1akt2Xp7ASXYg5rOnjWRbGoKUxybdHw44s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pZlmjCtiTqNFjHOydNYbJ38jQ9INqgvwpqoHTxaHH/ehmvyqlIYDA2l7ORe7NzBwuxu54ea/klZ8osec9npOw45gKVRw1S1wu7oavH1jF13drwvL7ah96En55ystjx9VrJRezHaJIg4xvVae2qIpVxL6Afo8Vt2gZC8HW22hH8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ue848SLQ; arc=none smtp.client-ip=91.218.175.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ue848SLQ"
-Date: Wed, 29 Jan 2025 11:26:11 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738178776;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ESHb3thQtuXbodFmYjILE5mf+awO3LfeN6uNWFEO8zw=;
-	b=Ue848SLQp7AXW2KAD9bD74z2dJ6Q8MWVgLoMSyHTXvSi90lOcXAd5dCubuCawhV6imZ/yE
-	TFustaZgK70Izn6A/U2+3/f0Jn17TBGv1l/xghddJRBf9HsudRqFudSr1AF8PRJn+xSLPt
-	Ur5jHoAISh1WHbzp6dTb+w5Sw7SziCQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Vitaly Wool <vitaly.wool@konsulko.com>, Seth Jennings <sjenning@redhat.com>, 
-	Dan Streetman <ddstreet@ieee.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-s390@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mm: zbud: remove zbud
-Message-ID: <63bf6cenq2sg55jorlvwtstyt6xrsi3yayidh3uvdtyib3flbh@ni2ezwfvpggl>
-References: <20250129180633.3501650-1-yosry.ahmed@linux.dev>
- <20250129180633.3501650-3-yosry.ahmed@linux.dev>
+	s=arc-20240116; t=1738178818; c=relaxed/simple;
+	bh=cTXIpFUJ72rQ6X+qiqfdqHAIWXIwKPIqlawAGwvmTSM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M7uWEkg4uUlYQNDCRB7kd52dUxPzlXgvAkOSvcXs0+eTBGoUL7mZlxN2kTHx97MKtO35wBZKcuuTRIKk7szVqHryCXpa487M7BvWFPxGtUVrgnyiTrRQ6sR59G+HxpxvJ4DQofUZv6zpWlOZ8K69ZM2L1AAqoZhiVGN07Y1WND8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com; spf=pass smtp.mailfrom=cosmicgizmosystems.com; arc=none smtp.client-ip=63.249.102.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cosmicgizmosystems.com
+Received: from [10.0.0.101] (c-73-190-111-195.hsd1.wa.comcast.net [73.190.111.195])
+	by host11.cruzio.com (Postfix) with ESMTPSA id E96F62463008;
+	Wed, 29 Jan 2025 11:21:25 -0800 (PST)
+Message-ID: <f7963a1d-e069-4ec9-82a1-e17fd324a44f@cosmicgizmosystems.com>
+Date: Wed, 29 Jan 2025 11:21:25 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250129180633.3501650-3-yosry.ahmed@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] HID: usbhid: fix recurrent out-of-bounds bug in
+ usbhid_parse()
+To: Kees Cook <kees@kernel.org>, Alan Stern <stern@rowland.harvard.edu>
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+ linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org,
+ syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com,
+ linux-hardening@vger.kernel.org
+References: <20240524120112.28076-1-n.zhandarovich@fintech.ru>
+ <nycvar.YFH.7.76.2406041015210.16865@cbobk.fhfr.pm>
+ <E62FA5CB-D7AE-4A11-9D2E-7D78D7C10ADA@kernel.org>
+ <nycvar.YFH.7.76.2406041614210.24940@cbobk.fhfr.pm>
+ <2a38e355-af5c-4b3d-81be-0cc97376c1f5@fintech.ru>
+ <202406041019.BCD0A93C@keescook>
+ <d1ad84e3-7da9-4dc8-a095-b9fbe191eb56@rowland.harvard.edu>
+ <807cfa6f-5863-4fe4-8294-76d5cdbc3aac@fintech.ru>
+ <649f5c1c-f3a7-420d-b727-f904d58f491f@rowland.harvard.edu>
+ <202501281747.9690B3B@keescook>
+Content-Language: en-US
+From: Terry Junge <linuxhid@cosmicgizmosystems.com>
+In-Reply-To: <202501281747.9690B3B@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 29, 2025 at 06:06:32PM +0000, Yosry Ahmed wrote:
-> The zbud compressed pages allocator is rarely used, most users use
-> zsmalloc. zbud consumes much more memory (only stores 1 or 2 compressed
-> pages per physical page). The only advantage of zbud is a marginal
-> performance improvement that by no means justify the memory overhead.
-> 
-> Historically, zsmalloc had significantly worse latency than zbud and
-> z3fold but offered better memory savings.  This is no longer the case as
-> shown by a simple recent analysis [1].  In a kernel build test on tmpfs
-> in a limited cgroup, zbud 2-3% less time than zsmalloc, but at the cost
-> of using ~32% more memory (1.5G vs 1.13G). The tradeoff does not make
-> sense for zbud in any practical scenario.
-> 
-> The only alleged advantage of zbud is not having the dependency on
-> CONFIG_MMU, but CONFIG_SWAP already depends on CONFIG_MMU anyway, and
-> zbud is only used by zswap.
-> 
-> Remove zbud after z3fold's removal, leaving zsmalloc as the one and only
-> zpool allocator. Leave the removal of the zpool API (and its associated
-> config options) to a followup cleanup after no more allocators show up.
-> 
-> Deprecating zbud for a few cycles before removing it was initially
-> proposed [2], like z3fold was marked as deprecated for 2 cycles [3].
-> However, Johannes rightfully pointed out that the 2 cycles is too short
-> for most downstream consumers, and z3fold was deprecated first only as a
-> courtesy anyway.
-> 
-> [1]https://lore.kernel.org/lkml/CAJD7tkbRF6od-2x_L8-A1QL3=2Ww13sCj4S3i4bNndqF+3+_Vg@mail.gmail.com/
-> [2]https://lore.kernel.org/lkml/Z5gdnSX5Lv-nfjQL@google.com/
-> [3]https://lore.kernel.org/lkml/20240904233343.933462-1-yosryahmed@google.com/
-> 
-> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+Sorry to join late and top post but I want to propose a direction change for this.
 
-Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+According to the HID 1.11 specification section 6.2.1, the first element of the desc array must be the type and size of the mandatory report descriptor. There is no need to scan through the array to look for it. So the for loop can be collapsed to:
+
+	if (hdesc->desc[0].bDescriptorType == HID_DT_REPORT)
+		rsize = le16_to_cpu(hdesc->desc[0].wDescriptorLength);
+
+and the out-of-bounds bug goes away.
+
+I would be happy to submit a patch if you like.
+
+Thanks,
+Terry
+
+On 1/28/25 5:53 PM, Kees Cook wrote:
+> On Tue, Jan 28, 2025 at 12:00:41PM -0500, Alan Stern wrote:
+>> On Tue, Jan 28, 2025 at 05:45:21AM -0800, Nikita Zhandarovich wrote:
+>>> Hello,
+>>>
+>>> On 6/4/24 10:45, Alan Stern wrote:
+>>>> On Tue, Jun 04, 2024 at 10:21:15AM -0700, Kees Cook wrote:
+>>>>> On Tue, Jun 04, 2024 at 10:09:43AM -0700, Nikita Zhandarovich wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 6/4/24 07:15, Jiri Kosina wrote:
+>>>>>>> On Tue, 4 Jun 2024, Kees Cook wrote:
+>>>>>>>
+>>>>>>>> This isn't the right solution. The problem is that hid_class_descriptor 
+>>>>>>>> is a flexible array but was sized as a single element fake flexible 
+>>>>>>>> array:
+>>>>>>>>
+>>>>>>>> struct hid_descriptor {
+>>>>>>>> 	   __u8  bLength;
+>>>>>>>> 	   __u8  bDescriptorType;
+>>>>>>>> 	   __le16 bcdHID;
+>>>>>>>> 	   __u8  bCountryCode;
+>>>>>>>> 	   __u8  bNumDescriptors;
+>>>>>>>>
+>>>>>>>> 	   struct hid_class_descriptor desc[1];
+>>>>>>>> } __attribute__ ((packed));
+>>>>>>>>
+>>>>>>>> This likely needs to be: 
+>>>>>>>>
+>>>>>>>> struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
+>>>>>>>>
+>>>>>>>> And then check for any sizeof() uses of the struct that might have changed.
+>>>
+>>> Alan, I finally got around to preparing a revised version of the
+>>> required patch and encountered a few issues. I could use some advice in
+>>> this matter...
+>>>
+>>> If we change 'struct hid_descriptor' as you suggested,
+>>
+>> I didn't make that suggestion.  Kees Cook did.
+>>
+>>>  which does make
+>>> sense, most occurrences of that type are easy enough to fix.
+>>>
+>>> 1) usbhid_parse() starts working properly if there are more than 1
+>>> descriptors, sizeof(struct hid_descriptor) may be turned into something
+>>> crude but straightforward like sizeof(struct hid_descriptor) +
+>>> sizeof(struct hid_class_descriptor).
+>>>
+>>> 2) 'hid_descriptor' in drivers/hid/hid-hyperv.c remains innocuous as
+>>> well as only 1 descriptor expected there. My impression is only some
+>>> small changes are needed there.
+>>>
+>>> However, the issue that stumps me is the following: static struct
+>>> hid_descriptor hidg_desc in drivers/usb/gadget/function/f_hid.c relies
+>>> on a static nature of that one descriptor. hidg_desc ends up being used
+>>> elsewhere, in other static structures. Basically, using __counted_by
+>>> requires a lot of changes, as I see it, out of scope of merely closing
+>>> an UBSAN error.
+>>
+>> The hidg_desc structure needs to contain room for a single 
+>> hid_descriptor containing a single hid_class_descriptor.  I think you 
+>> can define it that way by doing something like this:
+>>
+>> static struct hid_descriptor hidg_desc = {
+>> 	.bLength			= sizeof hidg_desc,
+>> 	.bDescriptorType		= HID_DT_HID,
+>> 	.bcdHID				= cpu_to_le16(0x0101),
+>> 	.bCountryCode			= 0x00,
+>> 	.bNumDescriptors		= 0x1,
+>> 	.desc				= {
+>> 		{
+>> 			.bDescriptorType	= 0, /* DYNAMIC */
+>> 			.wDescriptorLength	= 0, /* DYNAMIC */
+>> 		}
+>> 	}
+>> };
+>>
+>> Or maybe it needs to be:
+>>
+>> 	.desc				= { {0, 0} } /* DYNAMIC */
+>>
+>> I'm not sure what is the correct syntax; you'll have to figure that out.  
+> 
+> Either should work.
+> 
+>>
+>> You'll have to be more careful about the definition of hidg_desc_copy in 
+>> hidg_setup(), however.  You might want to define hidg_desc_copy as an 
+>> alias to the start of a byte array of the right size.
+> 
+> For an on-stack fixed-size flex array structure, you can use:
+> 
+> 	DEFINE_FLEX(struct hid_descriptor, hidg_desc_copy,
+> 		    desc, bNumDescriptors, 1);
+> 	*hidg_desc_copy = hidg_desc;
+> 
+> and then adjust the "hidg_desc_copy." instances to "hidg_desc_copy->"
+> 
+>>
+>>> Is this approach still worthy pursuing or should I look into some neater
+>>> solution?
+>>
+>> I think you should persist with this approach.
+>>
+>> Alan Stern
+> 
+
