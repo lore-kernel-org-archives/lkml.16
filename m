@@ -1,118 +1,117 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F9019D898
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 23:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3BC42A92;
+	Wed, 29 Jan 2025 23:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738192700; cv=none; b=EI6PdBI2W6xvHYQFLs3wjaSWJHOHUnc+VcTOMAJhfAMjQ1SlMdmD9OltCJLV3lWpjCiPE0JisYWRsrjNl2hSrB/yfRRjr7gDpHzRGPzJzTR31TMvjqVmwSVW6XPYtNA43IET+lOUdqbJrc0DcpCnE6ngc0iAXSAs6hU35UjX8MA=
+	t=1738192781; cv=none; b=WJsTqW+i5dgFfmUoPyilvnQycLx34/ln69oTWQT9cqgDXkBYrs71vqhfqjMyM9tkfX3D9Wx5JW2Bp/xgtVqZioqT2940UmxG8mFVJ+92vQHKDcaBRTA2jOUwv2YYxaFqF8GnIGWxJK2T3iIABRdC2FrJEr+Owx2OT6LnPcE8OXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738192700; c=relaxed/simple;
-	bh=FdEplspGb/XzeqvULRF38GqEzrZONYVPkHqs9CPH1cw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lpnFzxCVZ9ACfZQk9qLs+8n8ntsIy23Lbsd930/BZmN1HcsqJcwp07hWejZ+J482vco0NQA6CG9bPDah9u0nB7P+BxT5akhjsVpz8o9X//+hZ57ZFRWcNF2Yz6fq/iyN/GgJ9BeFUUP8rS0gjIwGCwfDN750z0Qb2VvBNi1BU1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gngCyIkL; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738192781; c=relaxed/simple;
+	bh=Zlz47JZTSZjs6GkXMUpoX5Ar7Yt8/Hbx6Ol2UOf5Ut4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=eUVuC4+2iZ9Dyv/H3vPXn7+ALFjtdlEKH3oJJAhKT1Uczf1M5Yz82PRwTlNfzluZ9qL8ESa+nZ3lfje2/sHqWVuXqyjGSkSonmJQeWrFMIwZuDu8M+8TMRH7emNlGz4yeQjngQTJxejYEH8Tf8b6FVNAfeeI1RZlZtpydst6yIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGm9/Paj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gngCyIkL"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30229d5b21cso936471fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 15:18:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738192697; x=1738797497; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QvpZ7PmBrG3gp5YeFE37+hnKtxRr8CPClHcCzrd1MIk=;
-        b=gngCyIkLsuqIu7ufJ3ZHCy52y2JyU78n3cNTG8/U8917/mcGKJSWHRKfl+qUVB3AvR
-         DWPx7SrufAJcbLHsVDB30qU28iiuGq1JB343YRMRAYj6CWEqZ1k3QQ9HXhLOdGdD3buK
-         NstKl0pxFtn8nr9IdZxjqy5QRN+kr95spEo9zTUOlhf6j072NH2idtQTpPrOuDrMBI2+
-         dvybMJds4PXcxG2a1zCnx8iV0p9L9g8mnm8j8hPDZdwlGrVsNzrNJi0pp5g7pcyKk1CX
-         FDv6OJa6zxwILnG/ffk5PbmaDLYc4XVVIh02fzLS3zru6uXYTxt3P8o++xPzZ4zu0GwE
-         MC3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738192697; x=1738797497;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QvpZ7PmBrG3gp5YeFE37+hnKtxRr8CPClHcCzrd1MIk=;
-        b=XftA2ZaXoLz5IP1odCh3lVpKxoHHUUyLtIJIHT1/8dtqakJKphh73w+U2uJTCHrM2h
-         pUjTIRJvEQlrZzNeHxfgKWOE6PZa4H3MmNz+zvCeOzdo6Y7NYkOuoNyZO4hrjMUPY+CS
-         qHCXadyseNsH25E3wzar+p9YketlujO8/U4BKZ21G8Jlj3DFrk9pexB5eCAKLuiQb1Rk
-         EBO1SZnXnzYTYLqWK3zcz3vz50qkvCcmhVX/Tly2Mp3Gkr1YlxFSeBV4IkMh9kW48g5w
-         m43Zq88FA0sB9Chl7Q+pxzRHrcEcGKv9ERxgM6rVGYkc0twhQzCQgmTS72b8Hex08TIK
-         /uaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWjpP9a37DDIO7+kXzH+lLcxq72b7mQjk8bWuVKnqTREk0FAj9096SArzLQwN8DIk9fRs5QUvHcCzufBpU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRO4ZVX69LOppvcI9Ll519djNMdgQl6nx7ibOOocPaOS/0Oq1Y
-	t923cxTkWQgjvHIMR3sUcnGEa/abn6Io6gJKBJXXCAf3PbRmtVQkkhaMJRbRaZQV3zt6ABtdUpw
-	b8EgOnqnp1kHhpyFRR5QODCIWAiw=
-X-Gm-Gg: ASbGncvxaDer32v96W7QUuWa2GbHvTPg/AvyfNHSAcL6pUfdLE/agozvCgkOoLu1jxf
-	l3OUX/bFXYce/ziM91tqzMfSl10MOcQb2BGEhZfAXhm3krTiDtanOex+hYwuO/229+sE6ufxb5w
-	aiBZ0myurGeAKBnjiJEGbGFgwUrvo2EA==
-X-Google-Smtp-Source: AGHT+IHaAKHEaFfIIrl4XoFSnnfGpYvAmUJGb3+mGNwMi0XiBaSkv8xOXbNKQLBjZ1eD0DTNqyAy4nr7gh28RazKqW8=
-X-Received: by 2002:a05:651c:50e:b0:305:d86a:4f01 with SMTP id
- 38308e7fff4ca-3079696b37fmr20071361fa.31.1738192696891; Wed, 29 Jan 2025
- 15:18:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGm9/Paj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 357B5C4CED1;
+	Wed, 29 Jan 2025 23:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738192779;
+	bh=Zlz47JZTSZjs6GkXMUpoX5Ar7Yt8/Hbx6Ol2UOf5Ut4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZGm9/PajtiH2zlIiysQmjQCT7xD11s1wJMreoSshovuRxFLol+F3KFa0BK2JBM+xJ
+	 xbYOoBhA7v6SsT362GM/xdQlTb8xggGVdrb7WlAoGCGsVOwnfKeaDIvZ9KkJbbo/f6
+	 /85E1yTqT1++PIOhDftZIkwJBlM0ucyGyrZSQvpDYChQ81fcdx8DiJQxurnDd56k+s
+	 FH8yRHzpjlPMMn88MsgnhzUL274aKyT9kuwCz2glvRwxpXyLSpCfgHbSZUiSf/5KuP
+	 EsRm3iJJWlIgw/eCzA/SvixQW7ZW6opr8ZYqIzOhlyshWBqOuZN0kSs/xGUtnnxe46
+	 e+ABxRyncP5XA==
+Date: Wed, 29 Jan 2025 17:19:37 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v9 1/7] PCI: dwc: Use resource start as iomap() input in
+ dw_pcie_pme_turn_off()
+Message-ID: <20250129231937.GA523281@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
- <07cf896e-adf8-414f-a629-a808fc26014a@oracle.com> <qdq4k6323orqifgzo7pbg5vakezr3gptfdehghxsyfrhc4kwvb@d4fxbwcl4gjm>
- <CAJ-ks9=U4PZv4NgyH8B7SbHkecGLy+M=G639hSTv-hnPySqk6w@mail.gmail.com>
- <xf3445vgszstqfwycf5wc5owhnifxb3mny5xjjaihghqgnozmd@3h7hnifir4vu>
- <CAJ-ks9=hNGRFbr3sTQBma3u84Yhog7i33Oc=16FqFjE_JYNERA@mail.gmail.com>
- <Z5qzk_92KU0xoLcP@casper.infradead.org> <CAJ-ks9ksSh-r6SmKsm7iJA6nCqvrhXZ8jtjP-YoeMNB6tF5a=g@mail.gmail.com>
- <Z5q1mkliUUM5Xlod@casper.infradead.org>
-In-Reply-To: <Z5q1mkliUUM5Xlod@casper.infradead.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 29 Jan 2025 18:17:40 -0500
-X-Gm-Features: AWEUYZm6-Axfuwo7gaO51xSLYv-t81bl89X3xorrqlt1HmTwF2QQ0EEOzVieTek
-Message-ID: <CAJ-ks9mPzb9DzteGuUSnUpasnTfYLTgxqvqZ7njWGgWqRtMe7g@mail.gmail.com>
-Subject: Re: [PATCH] xarray: port tests to kunit
-To: Matthew Wilcox <willy@infradead.org>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Sidhartha Kumar <sidhartha.kumar@oracle.com>, 
-	akpm@linux-foundation.org, christophe.leroy@csgroup.eu, geert@linux-m68k.org, 
-	justinstitt@google.com, linux-kernel@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
-	llvm@lists.linux.dev, maddy@linux.ibm.com, morbo@google.com, 
-	mpe@ellerman.id.au, nathan@kernel.org, naveen@kernel.org, 
-	ndesaulniers@google.com, npiggin@gmail.com, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250128-pci_fixup_addr-v9-1-3c4bb506f665@nxp.com>
 
-On Wed, Jan 29, 2025 at 6:11=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Wed, Jan 29, 2025 at 06:08:22PM -0500, Tamir Duberstein wrote:
-> > The whole point of tools is to liberate stupid humans' brains like
-> > mine from mundane tasks like working out who to email. The tool wasn't
-> > wrong; it did exactly what you told it to do in your MAINTAINERS
-> > entry.
->
-> Tools do get things wrong.  So do humans.  When you take your hands off
-> the steering wheel and the car crashes, it's still your fault.
+On Tue, Jan 28, 2025 at 05:07:34PM -0500, Frank Li wrote:
+> Pass resource start as the input argument to iomap() instead of
+> atu.cpu_address in dw_pcie_pme_turn_off(). While atu.cpu_address happens to
+> be the same here, it actually represents the parent bus address before ATU,
+> which may not always align with the CPU address. Using resource start
+> ensures correctness and clarity.
 
-Which one of us is driving in this analogy?
+1) "atu.cpu_address happens to be the same here" is currently true
+   but only because this function is buggy and assumes the ATU input
+   address is the same as a CPU physical address.
 
-> > > > For what it's worth the kunit invocation, while obscure, is
-> > > > self-documenting. There's usage information that's reasonably
-> > > > understandable embedded in the tool itself. I looked for the usersp=
-ace
-> > > > testing initially but failed to find
-> > > > tools/testing/radix-tree/xarray.c. Even now, I'm not sure how I'm
-> > > > meant to compile this.
-> > >
-> > > kunit is useless.  The test_xarray.c module is useless.  If you break
-> > > xarray, the kernel won't boot far enough to load any modules.  You
-> > > haven't thought about this AT ALL.
-> >
-> > I don't understand what you're saying here.
->
-> Then I don't want to see any more patches from you until you do.
+2) We're trying to make a correctness fix, not a clarity fix.  This
+   patch by itself isn't a functional change because of the cpu_addr
+   bug, but without this patch, fixing the cpu_addr bug would break
+   the iomap.
 
-Yes, I see now. But it's not quite true; the patch was itself
-motivated by the difficult output of the tests, so I did run this with
-kunit in a state that produced a failure. Your point is taken.
+3) "Pass resource start as the input to iomap()" just restates the
+   patch.  We should say *why* this is important.  Something like
+   this:
+
+     The msg_res region translates writes into PCIe Message TLPs.
+     Previously we mapped this region using atu.cpu_addr, the input
+     address programmed into the ATU.
+
+     "cpu_addr" is a misnomer because when a bus fabric translates
+     addresses between the CPU and the ATU, the ATU input address is
+     different from the CPU address.  A future patch will rename
+     "cpu_addr" and correct the value to be the ATU input address
+     instead of the CPU physical address.
+
+     Map the msg_res region before writing to it using the msg_res
+     resource start, a CPU physical address.
+
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> change from v9 to v10
+> - new patch
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index ffaded8f2df7b..ae3fd2a5dbf85 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -908,7 +908,7 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
+>  	if (ret)
+>  		return ret;
+>  
+> -	mem = ioremap(atu.cpu_addr, pci->region_align);
+> +	mem = ioremap(pci->pp.msg_res->start, pci->region_align);
+>  	if (!mem)
+>  		return -ENOMEM;
+>  
+> 
+> -- 
+> 2.34.1
+> 
