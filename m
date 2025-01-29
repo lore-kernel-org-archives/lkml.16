@@ -1,189 +1,169 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2805158A09
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E90A158A09;
+	Wed, 29 Jan 2025 19:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738179377; cv=none; b=PEGIws7mDI3MFRsiYTZqh3mpNVZMe39BEdALmOZiho2k16TL2Lpzz/mNpZXRF/bT+ZCkNy54Str+uPOY5qJ6HavFoo+j6d7T5tBqbjM57tczmSAmv2yhlbxQ1RHFUj5fylMcQW9rNONgSvAkvl1Xmh8gGdZzKfOkqWbAvSZuQ0Y=
+	t=1738179414; cv=none; b=aP71UyuerTcNX19pSkWYtojaRn4903seZajpuq2qi0nX0gkv2vu3cACDDCFGh/9gRqApRw0SHZpf9wu9BO46wfZKpLf4YlEjUe7pWPOhv6mU6o3BYxNL2Jle7JkrFFgK/pKIMtDCVkBquMLTZGQFXJ6GHKfDrSXfPp1sQ3VHvTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738179377; c=relaxed/simple;
-	bh=aog1npG7zbwvqSDpQbzTFt1LmdJAZBP9KpuHlfTmsXY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ARNIJlZ2bs5RrboGcKEBJgyhkHnGphu/SiKsGp47NRMv82n8tDrgb7EiQeEiRB6Mt1FmfJdL25/sCHHrsfNnFNE51pSzUUqdE//vSOkmlbnDdsHNjZrO8EIvDD4/+P0ajPf9p63KMxQFqi5/SnbOnVl11ROlfesYMGot1hpFZr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0HmYxwJ4; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738179414; c=relaxed/simple;
+	bh=85Nst3zgKLsMMsMpGDAbz3zfKoe5RWAK3Rr7KO13TPE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DpApoLsyCi9nK0teCC/k99SLi80mdW9ukSUGbyHumDK9MmWiFYPI/39jIsJj3gWE5FLBOUwnOyly3VvmX1C9XzTWAb7+hsqi7hDKNSX0JEThodPOChvZ9cHSbwnmSnKr7TyGZtCZqiM8VQjHLPuPNcw2w7L9NgNLwZuMoC/pUE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UhJ2zIh7; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0HmYxwJ4"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso13165ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 11:36:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhJ2zIh7"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2f83a8afcbbso1895561a91.1;
+        Wed, 29 Jan 2025 11:36:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738179374; x=1738784174; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VfFH/icuVW98ZGt4CSx3c++Z8r68yk+i5Ztzc10SRjo=;
-        b=0HmYxwJ4LOW9bFJKd2cFv7WQuYJsfOZJNlwOs6IdItWZpgvBlJqhHkzQr/g4hXWTRU
-         AuWi6m4fH8YkWsT+NFNhX7UcxCm7iC+/xtNreTpArKBeQ3CHVf1NYFSDCXPIXT5YPGdg
-         xp22RKdq0fgySY+XEMiKJtupSm0JpQ7/prUw1p005ET1z0+QBjeGWdJUKety7/Nv9c6d
-         YMh7zPCao7lyAYELpYxKjYRWgUdio+TiWcv3ISnubJnH+LEqkqFSqAd5eSn2hi26vVjj
-         O56/Hh2cw5paVlg5cQlHUo+pxq5n7049eSXecn9TucJ88+KHyvpWPObEsVB+JBsm7xTE
-         Ywow==
+        d=gmail.com; s=20230601; t=1738179412; x=1738784212; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=8hnOpxbdd8qH0rRNGi8wy4FwfbIRvYJsU1wzOEmVbq4=;
+        b=UhJ2zIh7YGNxrn9DAPNCdNAx1DdhR8h+7XKRtFO3EItPfVJflfyT/ksqVkERaGWuLS
+         EHr5Mj70HS4jfLKM4ImGne4pj/tFUcYu0MRwZLiO3HPDPxLBy+e28ExUog8RMu9m5stP
+         3RHNBDMZWGQJ8plvoKKWLch4SiO/ql1dHB/kKLK3u9ZciqLilSgEamWKh2KLRmq7RLWx
+         is5VL4HeEAEku5Mo43P+COlOHngN6KZlJGZPacBImn2nNgS919q3jMyVJ1GrEFG3riGY
+         zqjbaatlXShin5TqZ3Uu4Rw3n93EWVfxX35vPUOLtOtXuAa6rXSJATbGdOopCevT+dFZ
+         xiaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738179374; x=1738784174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VfFH/icuVW98ZGt4CSx3c++Z8r68yk+i5Ztzc10SRjo=;
-        b=EY0MuDQFMpk8DGqxKqCd6teu2nhWrkOkrrhBqReIVizQFJlnaVMNsWIdr4g6GI9U9K
-         ocNBg+pT9BRSj3LVpZMkvRJfKm0QGV/j9rtSPpqo/s4LsE6lMIbjf/lOYSgC7oSc9xap
-         AVvlny/wtJB43SBPTiW+3R+Huov2boB89sUFy+eLPhSE2MeAVkDiet0n5isQJ7PXSV4U
-         IwFsBTFu6Ry8rq3ILI3809BHCb2qGs3LjVmbdaNrQXSRYM5vOo7cEC8qXe0m8TYXPUpA
-         36CW3BUWbPfdRYBMnzFgu2SxFoq4uoMvuYEdxcMZDRf+X62pTuqSL3W1kGytMUG6cAjg
-         /LIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyBTeElknCdyPJILLXp4KgZkJWEC/a7YdJ+Dc2xi6iBiPOvRo5gsQCchS1OWgDTxmUuPFOe28sC6+J9GI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfgtyHG+fqb/BPbzpFwbV3FyPP3LTXlSM5PwgRymRxqRPB9F5n
-	pBFp8j/jjyfbxPK+Uk9GOSVdTtaDvtiRRVuGFrGtaAPnNj9Y5KQHN0ZRb8XzrHLHsy1ho/Se8jz
-	YQKzAqSaR4b4Z3geiDLEHmkES6fxfQepakGSH
-X-Gm-Gg: ASbGncsTyHzoc+bfQnB1pmUJoyQRQL93LT20cNK0cIe28dkARboDYOWUaQlrG6AWgjX
-	9jRI1Wmuw9jyZCNhGbo5mIb6yPFfWE+GZ8eD89bwAF9s90CXp6+RY7eY3eR7lTziHKa5gOvb72w
-	QSPXD6qXRCe9UfCsNfU6axzJRw
-X-Google-Smtp-Source: AGHT+IHyvEbAe7I0uASeZ+x+1BrZI4xyMO5ykKohX5lInnnPkEZRh2gj5blNBgj45TmtVMq4eUjQ2lW7CVyEyBVLIP8=
-X-Received: by 2002:a05:6e02:1987:b0:3ce:471b:1ae4 with SMTP id
- e9e14a558f8ab-3d009a2f410mr216695ab.5.1738179373545; Wed, 29 Jan 2025
- 11:36:13 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738179412; x=1738784212;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8hnOpxbdd8qH0rRNGi8wy4FwfbIRvYJsU1wzOEmVbq4=;
+        b=Q2tCs+cWcpi5sMv2k9vL7JsCxHzUYz+Qa7aovUSzLd2EB2cvpp0JQglPG9rWh2l5ma
+         7V6HWYRDpGc5mbyB9orftUX9QXvXbZuHlnRoHg2KPe2IWR2rGX6bET40PzaE5u+BePyz
+         Ze0rkn/H3pI/X+ECR29LH3J0BZ3SRrzffw/YaHn8yVlBMrpuF5Fy7rkOPjxaCxVpnQe5
+         lE1APihv2Vejkn9Lke0Zqvo8TGIokHg5Q0spjUSX39THUdh1LIsle5edg/bYt6oaKa7S
+         VHlvlNBpX7n1eMzNbl+O7QJkdcGZx9YtdXJXdtuIkS6GnG0dNPw5al6iquuBMi3NIG3o
+         OxEg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3ImMEQJb+B7YTLUd1vLUHHPg5CWwCc1iyMGNnPCbc9MtY2Zv6PDQnEekniIiSdu6JD8ZvZsCQKXCjqA==@vger.kernel.org, AJvYcCWQGjiAsXOCAYe+TjxNQQ6JGIhAK5vLddLv9E4zbAb4NuSixX0mJkmTWLstFv0VhKBl2ZqWF99sz7th0d0G@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2lHalNTQNmvAzmiKCWpEpI1TISfcJt6hfenr4+GsTlcXXsmP0
+	GFa9LotSQpbVz7PK3JaDU/sUZTHNyo4FowH6qJvC9g51HVFNtRjo5PBuhg==
+X-Gm-Gg: ASbGnctEFs68Oy7n9NlhMvYn5XllPyrefw1c+tGJLv+MoIwrWDZzJHPc6YUTUDqMmKi
+	sTU9i+2o5FTKsKmBexwhXKUxkXLN7pCR3u2GifZ+5WZKpqcAORha7/1jXooQKi60cfrDjNAE6e3
+	tSBbw2RI+h7JpUMGm4GwjLtytTqJ7JtuknybFOKcPMxesZbbYGn6W8aQ6n7SLpjQjX4RqVGNJoi
+	SqMH4LjYG3w14iTafv5urKeNr8qo1rrf/w7+zyzSZuaB2NaWLRqm5Mf+JkVgQNyEKA8ne+hY3Qi
+	vRC1l+P7dSkcJFk5AHf/L/eE0KyEb1IdXlETHdbrv2ela3I4JiWybQE4r+r4iiia
+X-Google-Smtp-Source: AGHT+IFNzbx5ab/ainulbmiqhQciP1bmsM2HPIMtbi6XSg68WxqAF02jDNYnw7/wsSg37mu90+v8qQ==
+X-Received: by 2002:a17:90a:e18c:b0:2ee:5106:f565 with SMTP id 98e67ed59e1d1-2f846483ca0mr724418a91.16.1738179411683;
+        Wed, 29 Jan 2025 11:36:51 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bfbe630sm2322434a91.41.2025.01.29.11.36.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2025 11:36:51 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <74114528-3c5c-47fd-bcbb-3e8b9bcb6669@roeck-us.net>
+Date: Wed, 29 Jan 2025 11:36:49 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122174308.350350-1-irogers@google.com> <20250122174308.350350-14-irogers@google.com>
- <gnwmibvjtwboisw7uv32bdo4ziw4qzgwzvndqg2czpa6vp4olv@44n36ndbwobc>
- <CAP-5=fW9nM9zoQ5SQOq2HQfkougRotm=EBw99cvGDOpD=giK2g@mail.gmail.com> <jgxfnphfo3nzlfipnuuzdlfc4ehbr2tnh2evz3mdhynd6wvrsu@fcz6vrvepybb>
-In-Reply-To: <jgxfnphfo3nzlfipnuuzdlfc4ehbr2tnh2evz3mdhynd6wvrsu@fcz6vrvepybb>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 29 Jan 2025 11:36:02 -0800
-X-Gm-Features: AWEUYZkc7cnANysO6DBXAQ06kDYu_R25G9BqfZ2LqG1BThHYjZpq_jsx4qaWxvk
-Message-ID: <CAP-5=fVcF+F7ST3Ya0_3hXq69ArhZv0gy30U4SPC7Cqih7HAWA@mail.gmail.com>
-Subject: Re: [PATCH v3 13/18] perf build: Remove libbfd support
-To: Daniel Xu <dxu@dxuuu.xyz>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] hwmom/applesmc: add imacpro
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Atharva Tiwari <evepolonium@gmail.com>,
+ Henrik Rydberg <rydberg@bitmath.org>, Jean Delvare <jdelvare@suse.com>,
+ "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Orlando Chamberlain <orlandoch.dev@gmail.com>
+References: <20250123121728.1383-1-evepolonium@gmail.com>
+ <2346bf1d-9292-40cf-84fe-fb173baeed08@roeck-us.net>
+ <7D2F2DB0-E94C-4372-9285-A91C4C856934@live.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <7D2F2DB0-E94C-4372-9285-A91C4C856934@live.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 29, 2025 at 8:47=E2=80=AFAM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> On Tue, Jan 28, 2025 at 05:40:44PM -0800, Ian Rogers wrote:
-> > On Tue, Jan 28, 2025 at 4:31=E2=80=AFPM Daniel Xu <dxu@dxuuu.xyz> wrote=
-:
-> > >
-> > > Hi Ian,
-> > >
-> > > On Wed, Jan 22, 2025 at 09:43:03AM -0800, Ian Rogers wrote:
-> > > > libbfd is license incompatible with perf and building requires the
-> > > > BUILD_NONDISTRO=3D1 build flag. Remove the code to simplify the cod=
-e
-> > > > base.
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/perf/Documentation/perf-check.txt |   1 -
-> > > >  tools/perf/Makefile.config              |  38 +---
-> > > >  tools/perf/builtin-check.c              |   1 -
-> > > >  tools/perf/tests/Build                  |   1 -
-> > > >  tools/perf/tests/builtin-test.c         |   1 -
-> > > >  tools/perf/tests/pe-file-parsing.c      | 101 ----------
-> > > >  tools/perf/tests/tests.h                |   1 -
-> > > >  tools/perf/util/demangle-cxx.cpp        |  13 +-
-> > > >  tools/perf/util/disasm_bpf.c            | 166 ----------------
-> > > >  tools/perf/util/srcline.c               | 243 +-------------------=
-----
-> > > >  tools/perf/util/symbol-elf.c            |  86 +--------
-> > > >  tools/perf/util/symbol.c                | 135 -------------
-> > > >  tools/perf/util/symbol.h                |   4 -
-> > > >  13 files changed, 7 insertions(+), 784 deletions(-)
-> > > >  delete mode 100644 tools/perf/tests/pe-file-parsing.c
-> > >
-> > > [..]
-> > >
-> > > I was briefly investigating why the centos build of perf was not
-> > > demangling rust v0 symbols [0]. From looking at the rust issue [1], i=
-t
-> > > appears the rust team somehow delivered support for v0 demangling
-> > > through libbfd. The code itself looked a bit odd (relying on cxx
-> > > demangle to run first?), but that's a separate thing.
-> >
-> > There is still C++ demangling support by way of cxxabi:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/demangle-cxx.cpp?h=3Dperf-tools-next#n44
-> > that was in libstdc++ (GNU) and libcxx (LLVM) when I looked.
-> >
-> > > The centos build does not build with libbfd for the license issues yo=
-u
-> > > mentioned. So your change probably won't regress any distro use cases=
-.
-> > > But it does remove support for motivated users who don't have
-> > > re-distribution requirements.
-> > >
-> > > But since this patchset came up first in my search, I thought it'd be
-> > > good to mention that someone probably needs to add v0 support to
-> > > tools/perf/util/demangle-rust.c.
-> >
-> > So I don't see any libbfd dependencies in demangle-rust.c:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/demangle-rust.c?h=3Dperf-tools-next#n8
-> > Unusually we don't have any tests on the Rust demangling, we do for
-> > Java and OCaml:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/demangle-java-test.c?h=3Dperf-tools-next
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/demangle-ocaml-test.c?h=3Dperf-tools-next
-> >
-> > Reading a bit more it seems that previous libiberty was coming to the
-> > rescue by way of C++ demangling. I'll see if I can write a demangler
-> > by way of lex and yacc.
->
-> Cool :)
+Hi Aditya,
 
-Not by way of lex and yacc, as it seemed overkill, but I sent out:
-https://lore.kernel.org/lkml/20250129193037.573431-1-irogers@google.com/
-I only tested with the examples from the doc. If you could take a look.
+On 1/29/25 10:22, Aditya Garg wrote:
+> Hi Guenter
+> 
+> Sorry to barge in like that but I have some issues with this here.
+> 
 
-> > If we have a v0 standard one is there any
-> > value in the existing demangler or legacy demangling? It seems this
-> > has been broken for the best part of 5 years.
->
-> I believe the "legacy" symbol format is still the rust default. So
-> probably can't remove that. Looks like there's some desire to change
-> that, probably probably not very soon [0].
->
-> That probably also explains why nobody reported the breakage - only very
-> cool kids are using v0 scheme currently.
+No worries. Thanks for stepping in.
 
-Ok. I wasn't sure on the status so I've tried to incorporate the
-previous legacy support and the v0 support in my patch.
+> 1. The iMacPro1,1 is a T2 Mac and the applesmc driver does not support T2 Macs upstream, thus making no point of adding this. We at t2linux have downstream patches to support T2 Macs, but we do not aim to upstream them since we wish to use a separate, and better driver for the SMC on T2 Macs.
+> 
+> 2. The person who submitted the patch took it from the t2linux project, of which I am a part of, but didn't care to even credit the original author of the patch. I’m not sure how legal it is to redistribute the code in his own name and removing the original author’s name without taking permission from the author as per the GPL2 license, but I think the author should be credited. In fact the original patch was Signed-off-by the original author.
+> 
+> For reference, the original patch, which we never intended to be sent upstream, is given over here:
+> 
+> https://github.com/t2linux/linux-t2-patches/blob/main/3007-applesmc-Add-iMacPro-to-applesmc_whitelist.patch
+> 
+
+FWIW, that patch looks much better than this patch.
+
+I am a bit confused, though: You are saying above that the patch is pointless.
+Is that because context patches adding support for T2 are missing ?
+
+Also, what about the patch at [1] ? It also adds t2 specific functionality,
+and it seems to match another patch from the t2linux project.
+Is that also missing some context ?
+
+> I leave the fate of this to you now.
+> 
+
+Thanks for letting me know. I dropped the patch. I'll also wait for your feedback
+about the patch at [1] before looking into it further.
 
 Thanks,
-Ian
+Guenter
 
-> Thanks,
-> Daniel
->
->
-> [0]: https://github.com/rust-lang/rust/pull/89917
+---
+[1] https://patchwork.kernel.org/project/linux-hwmon/patch/20250120183343.3494-1-evepolonium@gmail.com/
+
