@@ -1,54 +1,54 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD601EC01F
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557CA1E3793
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738190558; cv=none; b=YOg/s6khU/2ewvUmjXrtqOzObFrc0TBua+LZH7ERvCwPUBg5Z4oSw+tIXiK3tjdWdqQbPBOlP/55KdBPy+8G2h2Fn0kEIr2M9fzlZdfIPreF5hvXsCwqHR30gZzZn5lXTi+eslbwX6MSeRP/CKZb+/xqHOxbVHxJFyMe93EcF3c=
+	t=1738190557; cv=none; b=Xeb2oxkCJb6Y3suTinTnrdfhFFA0u4aIVKX6xeT5Kl/s5SFb+ppWf7MjMwusePouUSRjQYA81wSqh1p0FzTYcupRlYojOBK8FLftiDhl9ZDglA9Qqocxrt3KIUredAsZ7emuUxK/qEC1dE3biNuPokRTxPU5BK0AuI4SzbJ7bwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738190558; c=relaxed/simple;
-	bh=Gu1u2DXo15ac0AxVzDZnMFcfHwPhqJHHi/OiRcW6shA=;
+	s=arc-20240116; t=1738190557; c=relaxed/simple;
+	bh=zDJ27mnhaWsWaFzKyvseHOhCRyk9rV8kONpJ8ZDyEwA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ISQ/LUcYpmxRI87xsVBf7RJjq7naRcaRrnHsbE2Wx18NB9P++IlAXyMDYM5wZddjoBBRMfVghpCqqki5tcm8z4ay3mdhXHjcF1e5LAwN/jJzgZrOuZcNGjI1XiJol53tyCI+R9SMDNm+4zucyfl/UPqpVLv5/HcOMnM/iwOyqdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JjXgkvh/; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=D40iPmoR1QUm18VGYyqNA0Z1ZrFt8XapX+yaSC1qA4xRN14CqZdas/eN/Sph0KjzJZ+2DV+4apYfeE5jh1/Cu02Fu/nI4auTt2gPfHyY36VX3P5wLqqdC//ed5AzESkgkM0u0SkfthvacD6w/QhgGh7fWEKsQAIwyPIy9LDVvy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=auyMcOiS; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JjXgkvh/"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21661949f23so4144655ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:42:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="auyMcOiS"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2f5538a2356so221171a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:42:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738190556; x=1738795356; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738190554; x=1738795354; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tk6hF6rqBW9AusrfDePvQanEIhsmPpyv3aYoz52NJE8=;
-        b=JjXgkvh/k+gZ8iePhzpZ8zJ7fIe6NVU9x5T5Fm5vwcxc2dFVbReUhQzerQEkQ8MP5n
-         XeAzzhshbafqrU7NM49eJdpU0ZtCueJ7kXaYTIjEJFDERKxN9lHL7CpLHAYOQJ2r8PpU
-         3eQsh9pLZt+vyOviOPxmsBjFW/y16/2B5F+8LICwFKvg7spzPsOTAe1YJ/ECF1QohPKr
-         Ll6bAORgqGUXqOfleTp11hcExnGqcpGWpfalizrYln417mCywTVZWRny+b1NcLtvNE9Z
-         Ci+QxnCcgVJnX6k9TGvHcNQ6IYumV3hM2IJU/HI3H4XS/8vavqTSj+rHoMJjbJzPm2fr
-         kPZA==
+        bh=3UXEGVf17TVzbPjgEhSFIqZ1yVI6Ua/dfF01nsCmm7A=;
+        b=auyMcOiSYpRG/j1x+hJ5Ccx8h6eiGMY/3+FzocnDekgXhTySsEMjIH/cWDKwxanmFe
+         qF4LgJBJtIY9CxahuV6yUhQqdTTvY78foJg21U+oryUGvYDNPi1U6hr03NrbRRCmzgvu
+         fcIHOcGOiojax0pe6u6TRlODvNB/fDt/rm5yo96bFChVMoMzFS9PtrwowyDpmgMWYJn1
+         1tzSjyqyGOCCiYBrlYga9C0tsnNXzU3hw0hqst6aisbd2+4nWCCd7Ew5bWsM/9X5msGu
+         j1Wv4+fhCmukKGvbYK3BewdYF9iDtvnmm54gGQzvy6kIZVkg8ZJyUbkt/Gl32rmxC3Vk
+         ywqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738190556; x=1738795356;
+        d=1e100.net; s=20230601; t=1738190554; x=1738795354;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tk6hF6rqBW9AusrfDePvQanEIhsmPpyv3aYoz52NJE8=;
-        b=dmQR106NxRQInEATLbgT/tgB6YLCO4FbGuWHApw31HaGxmHUdEt2bOKSz7zGvHXhDV
-         lytfoJvi57VZrRg0mnjxt6Hyl6b+YtJZoexTpyRfEnJV0dtN4n3y5DHEmKZuROWHRcSr
-         00i4N8itDGfLSYXaBKc38t9cN9Dyb32qpaMCulV/dSq2sGNrbTJ65Mog4ZIp5eIpT3NJ
-         Pk9zTXt8CH8WKxRZRtAWlM8gGaXOu1+gg2685y1GlkolNWd/A4VlHnkaQzuhikw9QqC9
-         8L6Tl4KU2CZeHH8TorgVDc7nmTbLWF5Cr56RZd+KQ5q6vXMoh8EjGkZXj5hHH1iZ66v0
-         CMNw==
-X-Forwarded-Encrypted: i=1; AJvYcCU87ZVaK9dZe+wKrRRY8HtuyafYuuRNEgsQLGSQVfe4UVjVPRKHWspGrEulfSCqwXk9+J/POhhw0pUgWPE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxw+1gRQ+yG0ZvBBQqzpiewf0cNyy9LpUj84l0Qrt+8jS4jb3Zs
-	Y1ozo/qee6nNEMJPmfXgJxklEzHRHBqihNu2K1st+n9MMCx6gpIx2U+PmSB2YjWwDhPk2w==
-X-Google-Smtp-Source: AGHT+IEqjJb+x+dhP5rhHYNRAeOuV6o2kqh55KQZeq8wjY02yXG128DZoAUhFzB6wXoeeE68EWhcrrD9
-X-Received: from pfbay42.prod.google.com ([2002:a05:6a00:302a:b0:729:9f1:663e])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:c91b:b0:1eb:3623:59fd
- with SMTP id adf61e73a8af0-1ed7a48c425mr8653488637.4.1738190556311; Wed, 29
- Jan 2025 14:42:36 -0800 (PST)
-Date: Wed, 29 Jan 2025 22:41:41 +0000
+        bh=3UXEGVf17TVzbPjgEhSFIqZ1yVI6Ua/dfF01nsCmm7A=;
+        b=GERAY6O6lfjAnS9iO3/GFJD1bSPWTnKeOkekwkVVtTRuypeDVm4UsXHIQXvbGEG/2N
+         60LLAdAXdZT6O84oUblsruMI32JboH2XH1V2DJEBEPXP7DjoUBN3/FWjmhfI31rw2UY2
+         PFK46UzziAGqQjUSBivkQBhZa5OZnbPzNZ+eXvV3FKG3j6fGJPjECb0wIj/4psuuyTZ1
+         DtLpoc2OqmkFs7RcMicztvNjJaZcPF2oynowp22ThYgb2F85rjPT7hwu6gAvwxRL5dO5
+         8/FtBWgRknw628F0F9z2Yqarx1c+J5UrhBuftAuBx5YwQ9TkJuEg7EOitjBYmsLCr2yx
+         GcKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXKt67/2vu+Em3UDpLQDtt+53IibVsLM51gbLsrYj/x5JXeB5/EzetQlqXrD0BZE3cx2wJRa2so4aq7vF0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzANEKidsrVje8sRKnxXYA0n6qpKTR97Dp7S3OJS7creMdgWMUH
+	q1Lb2vG3vfC55bclQ2D7un5hSvneOKYpp2mRfuVCZ6HhsnHeh7Vn8ol2Uc/a4So8LBx8ZQ==
+X-Google-Smtp-Source: AGHT+IHj6bsBkN24xzMdTMA+I9+VEM1UbHXLrVTD4bOpHV3AO+9zEskdr0kUa6IbeUS8dcGGf/WyQAID
+X-Received: from pfbcd15.prod.google.com ([2002:a05:6a00:420f:b0:729:14f9:2f50])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:140f:b0:725:e015:9082
+ with SMTP id d2e1a72fcca58-72fd0bcd790mr6189047b3a.5.1738190554657; Wed, 29
+ Jan 2025 14:42:34 -0800 (PST)
+Date: Wed, 29 Jan 2025 22:41:40 +0000
 In-Reply-To: <20250129224157.2046079-1-fvdl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250129224157.2046079-1-fvdl@google.com>
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Message-ID: <20250129224157.2046079-13-fvdl@google.com>
-Subject: [PATCH v2 12/28] mm/hugetlb: set migratetype for bootmem folios
+Message-ID: <20250129224157.2046079-12-fvdl@google.com>
+Subject: [PATCH v2 11/28] mm/sparse: allow for alternate vmemmap section init
+ at boot
 From: Frank van der Linden <fvdl@google.com>
 To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
@@ -67,67 +68,355 @@ Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com,
 	roman.gushchin@linux.dev, Frank van der Linden <fvdl@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The pageblocks that back memblock allocated hugetlb folios might
-not have the migrate type set, in the CONFIG_DEFERRED_STRUCT_PAGE_INIT
-case.
+Add functions that are called just before the per-section memmap
+is initialized and just before the memmap page structures are
+initialized. They are called sparse_vmemmap_init_nid_early and
+sparse_vmemmap_init_nid_late, respectively.
 
-memblock allocated hugetlb folios might be given to the buddy allocator
-eventually (if nr_hugepages is lowered), so make sure that the migrate
-type for the pageblocks contained in them is set when initializing them.
-Set it to the default that memmap init also uses (MIGRATE_MOVABLE).
+This allows for mm subsystems to add calls to initialize memmap
+and page structures in a specific way, if using SPARSEMEM_VMEMMAP.
+Specifically, hugetlb can pre-HVO bootmem allocated pages that
+way, so that no time and resources are wasted on allocating vmemmap
+pages, only to free them later (and possibly unnecessarily running
+the system out of memory in the process).
+
+Refactor some code and export a few convenience functions for
+external use.
+
+In sparse_init_nid, skip any sections that are already initialized,
+e.g. they have been initialized by sparse_vmemmap_init_nid_early
+already.
+
+The hugetlb code to use these functions will be added in a later
+commit.
+
+Export section_map_size, as any alternate memmap init code
+will want to use it.
+
+THe config option to enable this is SPARSEMEM_VMEMMAP_PREINIT,
+which is dependent on and architecture-specific option,
+ARCH_WANT_SPARSEMEM_VMEMMAP_PREINIT. This is done because
+a section flag is used, and the number of flags available
+is architecture-dependent (see mmzone.h). Architecures can
+decide if there is room for the flag and enable the option.
+Fortunately, as of right now, all sparse vmemmap using
+architectures do have room.
 
 Signed-off-by: Frank van der Linden <fvdl@google.com>
 ---
- mm/hugetlb.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ include/linux/mm.h     |  1 +
+ include/linux/mmzone.h | 35 +++++++++++++++++
+ mm/Kconfig             |  8 ++++
+ mm/bootmem_info.c      |  4 +-
+ mm/mm_init.c           |  3 ++
+ mm/sparse-vmemmap.c    | 23 +++++++++++
+ mm/sparse.c            | 87 ++++++++++++++++++++++++++++++++----------
+ 7 files changed, 139 insertions(+), 22 deletions(-)
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index c16ed9790022..e5ca5cf2c6fd 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -36,6 +36,7 @@
- #include <linux/memory.h>
- #include <linux/mm_inline.h>
- #include <linux/padata.h>
-+#include <linux/page-isolation.h>
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 6dfc41b461af..df83653ed6e3 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3828,6 +3828,7 @@ static inline void print_vma_addr(char *prefix, unsigned long rip)
+ #endif
  
- #include <asm/page.h>
- #include <asm/pgalloc.h>
-@@ -3258,6 +3259,26 @@ static void __init hugetlb_folio_init_vmemmap(struct folio *folio,
- 	prep_compound_head((struct page *)folio, huge_page_order(h));
+ void *sparse_buffer_alloc(unsigned long size);
++unsigned long section_map_size(void);
+ struct page * __populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
+ 		struct dev_pagemap *pgmap);
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 9540b41894da..44ecb2f90db4 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -1933,6 +1933,9 @@ enum {
+ 	SECTION_IS_EARLY_BIT,
+ #ifdef CONFIG_ZONE_DEVICE
+ 	SECTION_TAINT_ZONE_DEVICE_BIT,
++#endif
++#ifdef CONFIG_SPARSEMEM_VMEMMAP_PREINIT
++	SECTION_IS_VMEMMAP_PREINIT_BIT,
+ #endif
+ 	SECTION_MAP_LAST_BIT,
+ };
+@@ -1944,6 +1947,9 @@ enum {
+ #ifdef CONFIG_ZONE_DEVICE
+ #define SECTION_TAINT_ZONE_DEVICE	BIT(SECTION_TAINT_ZONE_DEVICE_BIT)
+ #endif
++#ifdef CONFIG_SPARSEMEM_VMEMMAP_PREINIT
++#define SECTION_IS_VMEMMAP_PREINIT	BIT(SECTION_IS_VMEMMAP_PREINIT_BIT)
++#endif
+ #define SECTION_MAP_MASK		(~(BIT(SECTION_MAP_LAST_BIT) - 1))
+ #define SECTION_NID_SHIFT		SECTION_MAP_LAST_BIT
+ 
+@@ -1998,6 +2004,30 @@ static inline int online_device_section(struct mem_section *section)
  }
+ #endif
  
-+/*
-+ * memblock-allocated pageblocks might not have the migrate type set
-+ * if marked with the 'noinit' flag. Set it to the default (MIGRATE_MOVABLE)
-+ * here.
-+ *
-+ * Note that this will not write the page struct, it is ok (and necessary)
-+ * to do this on vmemmap optimized folios.
-+ */
-+static void __init hugetlb_bootmem_init_migratetype(struct folio *folio,
-+							  struct hstate *h)
++#ifdef CONFIG_SPARSEMEM_VMEMMAP_PREINIT
++static inline int preinited_vmemmap_section(struct mem_section *section)
 +{
-+	unsigned long nr_pages = pages_per_huge_page(h), i;
-+
-+	WARN_ON_ONCE(!pageblock_aligned(folio_pfn(folio)));
-+
-+	for (i = 0; i < nr_pages; i += pageblock_nr_pages)
-+		set_pageblock_migratetype(folio_page(folio, i),
-+					  MIGRATE_MOVABLE);
++	return (section &&
++		(section->section_mem_map & SECTION_IS_VMEMMAP_PREINIT));
 +}
 +
- static void __init prep_and_add_bootmem_folios(struct hstate *h,
- 					struct list_head *folio_list)
++void sparse_vmemmap_init_nid_early(int nid);
++void sparse_vmemmap_init_nid_late(int nid);
++
++#else
++static inline int preinited_vmemmap_section(struct mem_section *section)
++{
++	return 0;
++}
++static inline void sparse_vmemmap_init_nid_early(int nid)
++{
++}
++
++static inline void sparse_vmemmap_init_nid_late(int nid)
++{
++}
++#endif
++
+ static inline int online_section_nr(unsigned long nr)
  {
-@@ -3279,6 +3300,7 @@ static void __init prep_and_add_bootmem_folios(struct hstate *h,
- 					HUGETLB_VMEMMAP_RESERVE_PAGES,
- 					pages_per_huge_page(h));
+ 	return online_section(__nr_to_section(nr));
+@@ -2035,6 +2065,9 @@ static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
+ }
+ #endif
+ 
++void sparse_init_early_section(int nid, struct page *map, unsigned long pnum,
++			       unsigned long flags);
++
+ #ifndef CONFIG_HAVE_ARCH_PFN_VALID
+ /**
+  * pfn_valid - check if there is a valid memory map entry for a PFN
+@@ -2116,6 +2149,8 @@ void sparse_init(void);
+ #else
+ #define sparse_init()	do {} while (0)
+ #define sparse_index_init(_sec, _nid)  do {} while (0)
++#define sparse_vmemmap_init_nid_early(_nid, _use) do {} while (0)
++#define sparse_vmemmap_init_nid_late(_nid) do {} while (0)
+ #define pfn_in_present_section pfn_valid
+ #define subsection_map_init(_pfn, _nr_pages) do {} while (0)
+ #endif /* CONFIG_SPARSEMEM */
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 1b501db06417..f984dd928ce7 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -489,6 +489,14 @@ config SPARSEMEM_VMEMMAP
+ 	  SPARSEMEM_VMEMMAP uses a virtually mapped memmap to optimise
+ 	  pfn_to_page and page_to_pfn operations.  This is the most
+ 	  efficient option when sufficient kernel resources are available.
++
++config ARCH_WANT_SPARSEMEM_VMEMMAP_PREINIT
++	bool
++
++config SPARSEMEM_VMEMMAP_PREINIT
++	bool "Early init of sparse memory virtual memmap"
++	depends on SPARSEMEM_VMEMMAP && ARCH_WANT_SPARSEMEM_VMEMMAP_PREINIT
++	default y
+ #
+ # Select this config option from the architecture Kconfig, if it is preferred
+ # to enable the feature of HugeTLB/dev_dax vmemmap optimization.
+diff --git a/mm/bootmem_info.c b/mm/bootmem_info.c
+index 95f288169a38..b0e2a9fa641f 100644
+--- a/mm/bootmem_info.c
++++ b/mm/bootmem_info.c
+@@ -88,7 +88,9 @@ static void __init register_page_bootmem_info_section(unsigned long start_pfn)
+ 
+ 	memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
+ 
+-	register_page_bootmem_memmap(section_nr, memmap, PAGES_PER_SECTION);
++	if (!preinited_vmemmap_section(ms))
++		register_page_bootmem_memmap(section_nr, memmap,
++				PAGES_PER_SECTION);
+ 
+ 	usage = ms->usage;
+ 	page = virt_to_page(usage);
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index d2dee53e95dd..9f1e41c3dde6 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -1862,6 +1862,9 @@ void __init free_area_init(unsigned long *max_zone_pfn)
  		}
-+		hugetlb_bootmem_init_migratetype(folio, h);
- 		/* Subdivide locks to achieve better parallel performance */
- 		spin_lock_irqsave(&hugetlb_lock, flags);
- 		__prep_account_new_huge_page(h, folio_nid(folio));
+ 	}
+ 
++	for_each_node_state(nid, N_MEMORY)
++		sparse_vmemmap_init_nid_late(nid);
++
+ 	calc_nr_kernel_pages();
+ 	memmap_init();
+ 
+diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+index 3287ebadd167..8751c46c35e4 100644
+--- a/mm/sparse-vmemmap.c
++++ b/mm/sparse-vmemmap.c
+@@ -470,3 +470,26 @@ struct page * __meminit __populate_section_memmap(unsigned long pfn,
+ 
+ 	return pfn_to_page(pfn);
+ }
++
++#ifdef CONFIG_SPARSEMEM_VMEMMAP_PREINIT
++/*
++ * This is called just before initializing sections for a NUMA node.
++ * Any special initialization that needs to be done before the
++ * generic initialization can be done from here. Sections that
++ * are initialized in hooks called from here will be skipped by
++ * the generic initialization.
++ */
++void __init sparse_vmemmap_init_nid_early(int nid)
++{
++}
++
++/*
++ * This is called just before the initialization of page structures
++ * through memmap_init. Zones are now initialized, so any work that
++ * needs to be done that needs zone information can be done from
++ * here.
++ */
++void __init sparse_vmemmap_init_nid_late(int nid)
++{
++}
++#endif
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 133b033d0cba..ee0234a77c7f 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -408,13 +408,13 @@ static void __init check_usemap_section_nr(int nid,
+ #endif /* CONFIG_MEMORY_HOTREMOVE */
+ 
+ #ifdef CONFIG_SPARSEMEM_VMEMMAP
+-static unsigned long __init section_map_size(void)
++unsigned long __init section_map_size(void)
+ {
+ 	return ALIGN(sizeof(struct page) * PAGES_PER_SECTION, PMD_SIZE);
+ }
+ 
+ #else
+-static unsigned long __init section_map_size(void)
++unsigned long __init section_map_size(void)
+ {
+ 	return PAGE_ALIGN(sizeof(struct page) * PAGES_PER_SECTION);
+ }
+@@ -495,6 +495,44 @@ void __weak __meminit vmemmap_populate_print_last(void)
+ {
+ }
+ 
++static void *sparse_usagebuf __meminitdata;
++static void *sparse_usagebuf_end __meminitdata;
++
++/*
++ * Helper function that is used for generic section initialization, and
++ * can also be used by any hooks added above.
++ */
++void __init sparse_init_early_section(int nid, struct page *map,
++				      unsigned long pnum, unsigned long flags)
++{
++	BUG_ON(!sparse_usagebuf || sparse_usagebuf >= sparse_usagebuf_end);
++	check_usemap_section_nr(nid, sparse_usagebuf);
++	sparse_init_one_section(__nr_to_section(pnum), pnum, map,
++			sparse_usagebuf, SECTION_IS_EARLY | flags);
++	sparse_usagebuf = (void *)sparse_usagebuf + mem_section_usage_size();
++}
++
++static int __init sparse_usage_init(int nid, unsigned long map_count)
++{
++	unsigned long size;
++
++	size = mem_section_usage_size() * map_count;
++	sparse_usagebuf = sparse_early_usemaps_alloc_pgdat_section(
++				NODE_DATA(nid), size);
++	if (!sparse_usagebuf) {
++		sparse_usagebuf_end = NULL;
++		return -ENOMEM;
++	}
++
++	sparse_usagebuf_end = sparse_usagebuf + size;
++	return 0;
++}
++
++static void __init sparse_usage_fini(void)
++{
++	sparse_usagebuf = sparse_usagebuf_end = NULL;
++}
++
+ /*
+  * Initialize sparse on a specific node. The node spans [pnum_begin, pnum_end)
+  * And number of present sections in this node is map_count.
+@@ -503,47 +541,54 @@ static void __init sparse_init_nid(int nid, unsigned long pnum_begin,
+ 				   unsigned long pnum_end,
+ 				   unsigned long map_count)
+ {
+-	struct mem_section_usage *usage;
+ 	unsigned long pnum;
+ 	struct page *map;
++	struct mem_section *ms;
+ 
+-	usage = sparse_early_usemaps_alloc_pgdat_section(NODE_DATA(nid),
+-			mem_section_usage_size() * map_count);
+-	if (!usage) {
++	if (sparse_usage_init(nid, map_count)) {
+ 		pr_err("%s: node[%d] usemap allocation failed", __func__, nid);
+ 		goto failed;
+ 	}
++
+ 	sparse_buffer_init(map_count * section_map_size(), nid);
++
++	sparse_vmemmap_init_nid_early(nid);
++
+ 	for_each_present_section_nr(pnum_begin, pnum) {
+ 		unsigned long pfn = section_nr_to_pfn(pnum);
+ 
+ 		if (pnum >= pnum_end)
+ 			break;
+ 
+-		map = __populate_section_memmap(pfn, PAGES_PER_SECTION,
+-				nid, NULL, NULL);
+-		if (!map) {
+-			pr_err("%s: node[%d] memory map backing failed. Some memory will not be available.",
+-			       __func__, nid);
+-			pnum_begin = pnum;
+-			sparse_buffer_fini();
+-			goto failed;
++		ms = __nr_to_section(pnum);
++		if (!preinited_vmemmap_section(ms)) {
++			map = __populate_section_memmap(pfn, PAGES_PER_SECTION,
++					nid, NULL, NULL);
++			if (!map) {
++				pr_err("%s: node[%d] memory map backing failed. Some memory will not be available.",
++				       __func__, nid);
++				pnum_begin = pnum;
++				sparse_usage_fini();
++				sparse_buffer_fini();
++				goto failed;
++			}
++			sparse_init_early_section(nid, map, pnum, 0);
+ 		}
+-		check_usemap_section_nr(nid, usage);
+-		sparse_init_one_section(__nr_to_section(pnum), pnum, map, usage,
+-				SECTION_IS_EARLY);
+-		usage = (void *) usage + mem_section_usage_size();
+ 	}
++	sparse_usage_fini();
+ 	sparse_buffer_fini();
+ 	return;
+ failed:
+-	/* We failed to allocate, mark all the following pnums as not present */
++	/*
++	 * We failed to allocate, mark all the following pnums as not present,
++	 * except the ones already initialized earlier.
++	 */
+ 	for_each_present_section_nr(pnum_begin, pnum) {
+-		struct mem_section *ms;
+-
+ 		if (pnum >= pnum_end)
+ 			break;
+ 		ms = __nr_to_section(pnum);
++		if (!preinited_vmemmap_section(ms))
++			ms->section_mem_map = 0;
+ 		ms->section_mem_map = 0;
+ 	}
+ }
 -- 
 2.48.1.262.g85cc9f2d1e-goog
 
