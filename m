@@ -1,91 +1,192 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBED1E2606
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85593158A09;
+	Wed, 29 Jan 2025 19:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738179670; cv=none; b=XjrQM952ayzn7DW3KOYsLHnx0+kUMyUEFM/yNX9+UzXpEqBAiRT9p+/dzXwzSMTjuWm58VS7Zp9SZx8SShOzcglVW5TaKDujCO3pAWdZ5h+U6Xc89fVn1gBY6/hoP4EOvhr9oT3B07Snbursw8ETW6PHbJj6RH8b62ylO9swkBQ=
+	t=1738179763; cv=none; b=mC6om1BLO6OeHFSz49aSjV+q3uvlKMxbN8KaABKuyH4Yajpd/vLiIempvIEr6Hpauhy694FM0174NObTS1X+5keOKcQaNgGpSnHHot83kb7Ucj3JfANHZryS6d0eIxbYM5ycebmy9n5rcobobQG27mDOU5trro2118ORsiEGRv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738179670; c=relaxed/simple;
-	bh=WPHOU8yglDc5m1rcbglfNtUxfDHLfFAagkVskIC9XJ4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HLECCfamYjS6DF3r46Jb90EXR6DZhZRmpHaVIiw4p9srDvh1H6pIyLUi7H8UAeWSOK80buGgkCuI+pMAZBZ/bMoTrrTf7O9rSGx0aCg94WuFQQJ0OtI0JcdTznFnAYP7xOPXOmp+vwmdTy0WVg+La/7Y3x6bOKi0jXIj7/qtrH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=wyaQ/Y5T; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1738179763; c=relaxed/simple;
+	bh=GDxeWC0pz54R53GYZVvg2mQ4xWwjvwvXLwRqtgT3Fy0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=vCBjVvYcD+Z3TYSrLuksi0fInFwJm6q0t1tRN+J0o1q2D4oGVhULIbcxBDmemzwkUPGqD3WU8nXoPOsS76yCtQpeLcoSJK6Pm2YZKu1dDspE/Sox0KyA0/zVpafmFBQrf6ck5p/nna0yaw3niiGLfJJ8Bwt/Tz6VjaV+CT4FVVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IS8xWVKP; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="wyaQ/Y5T"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 527A82C00BE;
-	Thu, 30 Jan 2025 08:40:59 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1738179659;
-	bh=WPHOU8yglDc5m1rcbglfNtUxfDHLfFAagkVskIC9XJ4=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=wyaQ/Y5TN1tbDfWVUhFy6Uyb6RSRwlcPOeakGHBApF/sb6da6D4qL1LVSIMy+MKAB
-	 Kg27ATsOKZ8/YM7LO50DeaPHeqbIslUcQP5Rm9r5ck5QIHm3kHeMNsfYLrz1bdnZed
-	 bfgBvKQUySM6PGlV8zSmTaGkmUmROmptc2QSNIeLG65e5asxm8pipPIVlqhbbiODU0
-	 nLDd/VZXdiiKJhEhin7T5hdvDZTcOupWtpcCtjVlq7sF32+HTTarn5cqmBNnPfDmSm
-	 ByVZZ3LApH2clsBhU3Vb85cXQs3fY1/nMpS0PWaSMa+eb6LMA7R+r/BDQQfvk33LmE
-	 tQPqgWQgkbENg==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B679a844b0001>; Thu, 30 Jan 2025 08:40:59 +1300
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 30 Jan 2025 08:40:59 +1300
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1544.014; Thu, 30 Jan 2025 08:40:59 +1300
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v1 1/1] spi: realtek-rtl-snand: Drop unneeded assignment
- for cache_type
-Thread-Topic: [PATCH v1 1/1] spi: realtek-rtl-snand: Drop unneeded assignment
- for cache_type
-Thread-Index: AQHbcmKZy8mgBkUbsEGLIVd1i3gJ2rMtTLwA
-Date: Wed, 29 Jan 2025 19:40:58 +0000
-Message-ID: <7a69fb7c-6c33-4df9-b3c2-3e3db74760d2@alliedtelesis.co.nz>
-References: <20250129152925.1804071-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250129152925.1804071-1-andriy.shevchenko@linux.intel.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0C655A72DF3B574184FE3413A4B6C4A0@alliedtelesis.co.nz>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IS8xWVKP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738179762; x=1769715762;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=GDxeWC0pz54R53GYZVvg2mQ4xWwjvwvXLwRqtgT3Fy0=;
+  b=IS8xWVKPFLQQTQxeJLMiaQ7zmgN+CTRucSL74dcue8LHH5t7TYir/CjO
+   ESvQ96xuiwjioIAKI2T+pgKYIE9qwB9B9bkrFj2w8r2O5Z0GR//ksd/FA
+   HVFZFJPup/w7qb/rVjNi7d+XyLC1ZNlsLD0+ux8dqzlNAlOWctPIRuDQi
+   4QnfS75HXAawBQCUh8pWlpajbDmNLRxSXvLOJcTSYDfSZl7UW2SP8bVBc
+   TgXDBxm4QIny2IMElPtmTB/qujJ68wxJymXklF1d7izmDbxq6zb8YuQFE
+   kfh1P9UQ1DAv/MpqrODFXIGaiQ9WwiWecCiAvfud+7KMGRtX+dbarcy7S
+   g==;
+X-CSE-ConnectionGUID: dUI8Wie0S2yHYIUNfdSI4w==
+X-CSE-MsgGUID: a+TijuzPSSiDtbJoBtW9vQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="42373092"
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="42373092"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 11:42:41 -0800
+X-CSE-ConnectionGUID: Aqq/Ed9vR+eJE/p0Ihiiww==
+X-CSE-MsgGUID: WXWWZZguRxmLx2S2nrCsFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="114156340"
+Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 11:42:40 -0800
+Date: Wed, 29 Jan 2025 11:42:40 -0800 (PST)
+From: matthew.gerlach@linux.intel.com
+To: Krzysztof Kozlowski <krzk@kernel.org>
+cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
+    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
+    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
+    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
+    peter.colberg@altera.com
+Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
+In-Reply-To: <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org>
+Message-ID: <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
+References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com> <20250127173550.1222427-4-matthew.gerlach@linux.intel.com> <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=QNvLRRLL c=1 sm=1 tr=0 ts=679a844b a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=VdSt8ZQiCzkA:10 a=QyXUC8HyAAAA:8 a=905iD-1ZrK5Q2AgLhDsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-SGkgQW5keSwNCg0KT24gMzAvMDEvMjAyNSAwNDoyOSwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0K
-PiBSRUdDQUNIRV9OT05FIGlzIHRoZSBkZWZhdWx0IHR5cGUgb2YgdGhlIGNhY2hlIHdoZW4gbm90
-IHByb3ZpZGVkLg0KPiBEcm9wIHVubmVlZGVkIGV4cGxpY2l0IGFzc2lnbm1lbnQgdG8gaXQuDQo+
-DQo+IE5vdGUsIGl0J3MgZGVmaW5lZCB0byAwLCBhbmQgaWYgZXZlciBiZSByZWRlZmluZWQsIGl0
-IHdpbGwgYnJlYWsNCj4gbGl0ZXJhbGx5IGEgbG90IG9mIHRoZSBkcml2ZXJzLCBzbyBpdCB2ZXJ5
-IHVubGlrZWx5IHRvIGhhcHBlbi4NCj4NCj4gU2lnbmVkLW9mZi1ieTogQW5keSBTaGV2Y2hlbmtv
-IDxhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb20+DQoNClJldmlld2VkLWJ5OiBDaHJp
-cyBQYWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQoNCj4gLS0tDQo+
-ICAgZHJpdmVycy9zcGkvc3BpLXJlYWx0ZWstcnRsLXNuYW5kLmMgfCAxIC0NCj4gICAxIGZpbGUg
-Y2hhbmdlZCwgMSBkZWxldGlvbigtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zcGkvc3Bp
-LXJlYWx0ZWstcnRsLXNuYW5kLmMgYi9kcml2ZXJzL3NwaS9zcGktcmVhbHRlay1ydGwtc25hbmQu
-Yw0KPiBpbmRleCBjZDA0ODQwNDExNDcuLjc0MWNmMmFmM2U5MSAxMDA2NDQNCj4gLS0tIGEvZHJp
-dmVycy9zcGkvc3BpLXJlYWx0ZWstcnRsLXNuYW5kLmMNCj4gKysrIGIvZHJpdmVycy9zcGkvc3Bp
-LXJlYWx0ZWstcnRsLXNuYW5kLmMNCj4gQEAgLTM2NCw3ICszNjQsNiBAQCBzdGF0aWMgaW50IHJ0
-bF9zbmFuZF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgIAkJLnJlZ19i
-aXRzCT0gMzIsDQo+ICAgCQkudmFsX2JpdHMJPSAzMiwNCj4gICAJCS5yZWdfc3RyaWRlCT0gNCwN
-Cj4gLQkJLmNhY2hlX3R5cGUJPSBSRUdDQUNIRV9OT05FLA0KPiAgIAl9Ow0KPiAgIAlpbnQgaXJx
-LCByZXQ7DQo+ICAg
+
+
+On Wed, 29 Jan 2025, Krzysztof Kozlowski wrote:
+
+> On 27/01/2025 18:35, Matthew Gerlach wrote:
+>> Add the base device tree for support of the PCIe Root Port
+>> for the Agilex family of chips.
+>>
+>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>> ---
+>> v3:
+>>  - Remove accepted patches from patch set.
+>>
+>> v2:
+>>  - Rename node to fix schema check error.
+>> ---
+>>  .../intel/socfpga_agilex_pcie_root_port.dtsi  | 55 +++++++++++++++++++
+>>  1 file changed, 55 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+>> new file mode 100644
+>> index 000000000000..50f131f5791b
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+>> @@ -0,0 +1,55 @@
+>> +// SPDX-License-Identifier:     GPL-2.0
+>
+> Odd spaces in SPDX tag.
+
+Yes, there should only be one space.
+
+>
+>> +/*
+>> + * Copyright (C) 2024, Intel Corporation
+>> + */
+>> +&soc0 {
+>> +	aglx_hps_bridges: fpga-bus@80000000 {
+>> +		compatible = "simple-bus";
+>> +		reg = <0x80000000 0x20200000>,
+>> +		      <0xf9000000 0x00100000>;
+>> +		reg-names = "axi_h2f", "axi_h2f_lw";
+>
+> Where is this binding defined?
+
+The bindings for these reg-names are not currently defined anywhere, but 
+they are also referenced in the following:
+     Documentation/devicetree/bindings/soc/intel/intel,hps-copy-engine.yaml
+     arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
+I am not exactly sure where the right place is to define them, maybe
+Documentation/devicetree/bindings/arm/intel,socfpga.yaml. On the other 
+hand, no code references these names; so it might make sense to just 
+remove them.
+
+>
+>> +		#address-cells = <0x2>;
+>> +		#size-cells = <0x1>;
+>
+> These two are not hex.
+
+I will change all #address-cells and #size-cell to decimal.
+
+>
+>> +		ranges = <0x00000000 0x00000000 0x80000000 0x00040000>,
+>> +			 <0x00000000 0x10000000 0x90100000 0x0ff00000>,
+>> +			 <0x00000000 0x20000000 0xa0000000 0x00200000>,
+>> +			 <0x00000001 0x00010000 0xf9010000 0x00008000>,
+>> +			 <0x00000001 0x00018000 0xf9018000 0x00000080>,
+>> +			 <0x00000001 0x00018080 0xf9018080 0x00000010>;
+>> +
+>> +		pcie_0_pcie_aglx: pcie@200000000 {
+>> +			reg = <0x00000000 0x10000000 0x10000000>,
+>> +			      <0x00000001 0x00010000 0x00008000>,
+>> +			      <0x00000000 0x20000000 0x00200000>;
+>> +			reg-names = "Txs", "Cra", "Hip";
+>
+> Where is this binding defined?
+
+Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+
+>
+>
+>> +			interrupt-parent = <&intc>;
+>> +			interrupts = <GIC_SPI 0x14 IRQ_TYPE_LEVEL_HIGH>;
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <0x1>;
+>> +			device_type = "pci";
+>> +			bus-range = <0x0000000 0x000000ff>;
+>> +			ranges = <0x82000000 0x00000000 0x00100000 0x00000000 0x10000000 0x00000000 0x0ff00000>;
+>> +			msi-parent = <&pcie_0_msi_irq>;
+>> +			#address-cells = <0x3>;
+>> +			#size-cells = <0x2>;
+>
+> Same problem for all cells.
+>
+>> +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+>> +			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_0_pcie_aglx 0 0 0 0x1>,
+>> +					<0x0 0x0 0x0 0x2 &pcie_0_pcie_aglx 0 0 0 0x2>,
+>> +					<0x0 0x0 0x0 0x3 &pcie_0_pcie_aglx 0 0 0 0x3>,
+>> +					<0x0 0x0 0x0 0x4 &pcie_0_pcie_aglx 0 0 0 0x4>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		pcie_0_msi_irq: msi@10008080 {
+>> +			compatible = "altr,msi-1.0";
+>> +			reg = <0x00000001 0x00018080 0x00000010>,
+>> +			      <0x00000001 0x00018000 0x00000080>;
+>> +			reg-names = "csr", "vector_slave";
+>> +			interrupt-parent = <&intc>;
+>> +			interrupts = <GIC_SPI 0x13 IRQ_TYPE_LEVEL_HIGH>;
+>> +			msi-controller;
+>> +			num-vectors = <0x20>;
+>
+> That's decimal. Value is for humans and we count numbers in decimal.
+
+I will change num-vectors to decimal.
+
+Thanks for the review,
+Matthew Gerlach
+
+>
+>
+>
+> Best regards,
+> Krzysztof
+>
