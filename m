@@ -1,248 +1,152 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C2D1E0DDF;
-	Wed, 29 Jan 2025 18:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2392E1E25F8
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 18:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738175374; cv=none; b=UdM9s8Cyc12amfmfX7atBZPs+WUU3rvM6384CNaSeP0yQTGTbQs2HhWh3CLhUwbsqFGL825TW7zSCN4G0B/yPgqsTiMVcVVAldmNcRxJuMajonooY3V/l5fB5gtVZOtyScFbuE6gWEP+wjCpuixyzJ7siHeMyttmr+dq4XV94w4=
+	t=1738175413; cv=none; b=ms9QxrJNJ2O++MsOqWKfimWYDRZTxUKIIkUdpR0KhBN6nQIVouxnI9FVMzmbBDJDE/jyg+yu1LC76gq4hiRnRTftD8lM7/9S68oZMZD/nGco2yMB6iQmQwxyCIU9mpgDM2Qwkma9jB4+hghCkkMQUeUO49AatXchY35o/EJszxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738175374; c=relaxed/simple;
-	bh=Hw/qf1LaktOinY9CWMVY1JmifUigp2zF91VLkQNym88=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IlCkXbFP0bk1LRs7OzWbXeaH+9JZjlh/X8dEV0K5BRVhVhRxOGceHKImumyohP4Wbmpfg2rrOsA7SiLndPMZ/cZkg/tWmLI0O+vKfcFDyQw+QH2TVGyHbI74iguuvRBQE1ep3VBX3PA/n/J7kkzHykbUJjWcrxw7Lvn7USQinqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ChJ0xtB+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738175413; c=relaxed/simple;
+	bh=V3h04rIV92zeS1OapG9TdeCcYQBzM7Gky3PA5S8ttac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dW0tDdiqavdk7jjfbt+hj8kyv37YtD1UwO2TRLEbqnr7RbEIRqmXoFZ9cAqiXHk1vnIAN0gQUxZpSzQ2IwTNL2R3AifV5sAauzD28fgDejiiOCwG28pLxP+eQe72ESPj3col2LB1XPJydwbIm3Dt10dk8DYCEZfbBnGj3TZOTdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=gWMKOkZe; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ChJ0xtB+"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50T8VgGP020758;
-	Wed, 29 Jan 2025 18:29:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	QhO5jdWFxnHnOhAyAmmxGgJbaHEfMWtf0lSLHWs5Vkg=; b=ChJ0xtB+Udrev8o8
-	ZE7J3eHRZbPprY0Lzxu06ake1L8Ja66GZSU1vaMmHYLUyDA4/7P+EJ0+9pKtSGuI
-	ly2Ef5wT8/gtxTylJw9ksKF2gbNWhp81AoDoJPY8N1rPdcDqHcrG4wLM440JtS1l
-	tFiC4IrCtuBeNu8maWFOsZtmKo0FKmVAq43tBi/MI92hyDBEEdqOHc8/j/jMSZJO
-	wmBqnqMk90UmZSNOHyqQcQ5HoaCE4lEjuwPfc0SzzVJb+A9O9JVw/IyLxtuppOad
-	Foq/Wwh3knFojs35aiyeNOBpX+wdRxEftPthnp/0SsDeGx5SsNuoiHt7KCRYI09q
-	uLOxXw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44fgw8s6yn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 18:29:15 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50TITDE5001816
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 18:29:13 GMT
-Received: from [10.216.5.143] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 29 Jan
- 2025 10:29:09 -0800
-Message-ID: <329fd3ef-5385-47e9-9e5b-875488cf9766@quicinc.com>
-Date: Wed, 29 Jan 2025 23:58:55 +0530
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gWMKOkZe"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-46788c32a69so95314951cf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 10:30:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1738175411; x=1738780211; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XD0YMmssfsqTqz7P5jLcOM43e1brk96cTTh0E8gXUWI=;
+        b=gWMKOkZeoonN9reatGYy3NItD1BQNy3gZcIx0EUMgPU5ovj2ZHhjagXA0Ldxu6HhUR
+         g/cLRHRWp2KPQU8xrGAAPU62/qs1c1aowWB8ah52/4C8q/6gPusbsJF0ttjP/cSb+8tQ
+         LAOkWd7AMxZJC6vhc1wpJxzuy8L2e+02X7RwoO8YEqgEOmEtyqHiwjLIQKYLHpZdE9Xh
+         zaJpnVw1N+zbydM5nHBYa7GSX0yJyOfpz/4jLS/02j4IxiHclkvob0xsccYQ3Cl0xPoq
+         tZ4+SL2UQGnVog4YwGTk4vgsfg2kS2qemG6ZgFXjttCOMa/fPpcd4ousX91clx3UZuzN
+         KCyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738175411; x=1738780211;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XD0YMmssfsqTqz7P5jLcOM43e1brk96cTTh0E8gXUWI=;
+        b=DoEHw/6PgGrZhCCiN4h/2iVHRlg9nStqTg5SfmbaFVeakJc3gK6INu9Yk1McgAyUtk
+         tZ+rbwiL3gJ4y8cAq7rkXf3Tgpmwv0+8rV1UrELoJLWFtWv9I/043QXVoFAlJ4AXRbJD
+         yfC/NKXkNbrRF9BajPodMAa7Kdte5Y+IfcWxxD8oR43UU9yKL5khQlbq/k2qA+fKfyIh
+         5gIbOmKdTdMq2tY5JgksvDC14yEaT/BtftL6+nZT+pFh1LHHxZPVLvE4CFdbM//w/uI3
+         AnJwoD+Z42Kh5gOV0AOGne0mZzVwSR2503TwAOi5r2tcc63hscRtiwLjnaYsZz+Xgjuk
+         YBRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOvzSsSVRipqUQPuJCW/whFoxlSdv3y0brQXSnsWKJirLjSfaAhyVSzB608tocvdCavVWzlbSEI1C2emU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwE5AVrSvnJC5VIoN1ibIYwV5njgTaOfuwD88+4sEJ5Z3mIvaNI
+	aGoYJax1LPlOwT2qNreA4TMfyaDRt8T0QL3LyJnxvaLcn2SdnNx5xaSV4/AofmxzImnICz/y+T3
+	v
+X-Gm-Gg: ASbGncsHkKvPchSAhmWnvVbZw1649COQZJzKB2rn/vxLfXplEzTkBOBufKR0b5khRbp
+	1pFyXWO430r6kRR+nZiQvyz9KoHg/UEKbO9X9OIm3OJdNGqPO3jGm/7YUqy+A5yNPJyVAVCTuiP
+	tvVL3OrFRPLVBHijGdd+/VOUTKU87kE9ZmlYVAMA8I4MZgE4gkyg7FN+IWR3aoEuHQ1NEN7T5Xq
+	ZwF2zYaCtZAHZpEv3Lb0FmPdy5NUA/jwYhyelXXbTnPImgOxrCqT5igR+SmwrNcrL1mNdhAk3H4
+	/ngziaFJWP9dpadRc2V3ced27rKzoFGJeWowxdTfXeBKxUL1vkNlRSAmm2gsCqnl
+X-Google-Smtp-Source: AGHT+IFU2CSEw7nEQnS3hKi4MzP25PEd5L1/HqejOvMmapaGN2P5mirb8xGOSLzYxz2tblSZd8yYPg==
+X-Received: by 2002:a05:622a:47:b0:46e:23dc:97dd with SMTP id d75a77b69052e-46fd0bda6efmr75744211cf.52.1738175410947;
+        Wed, 29 Jan 2025 10:30:10 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46e66b89811sm64595011cf.77.2025.01.29.10.30.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2025 10:30:10 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tdCpF-00000009Qzj-3huR;
+	Wed, 29 Jan 2025 14:30:09 -0400
+Date: Wed, 29 Jan 2025 14:30:09 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Zhu Yanjun <yanjun.zhu@linux.dev>
+Cc: Eric Biggers <ebiggers@kernel.org>, linux-rdma@vger.kernel.org,
+	Mustafa Ismail <mustafa.ismail@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Bernard Metzler <bmt@zurich.ibm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/6] RDMA/rxe: handle ICRC correctly on big endian systems
+Message-ID: <20250129183009.GC2120662@ziepe.ca>
+References: <20250127223840.67280-1-ebiggers@kernel.org>
+ <20250127223840.67280-2-ebiggers@kernel.org>
+ <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 08/13] wifi: ath12k: add AHB driver support for IPQ5332
-To: Krzysztof Kozlowski <krzk@kernel.org>, <ath12k@lists.infradead.org>
-CC: <linux-wireless@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Jeff Johnson <jjohnson@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Balamurugan S
-	<quic_bselvara@quicinc.com>,
-        P Praneesh <quic_ppranees@quicinc.com>
-References: <20241210074159.2637933-1-quic_rajkbhag@quicinc.com>
- <20241210074159.2637933-9-quic_rajkbhag@quicinc.com>
- <42feceb8-512a-4be3-aefa-116bbde000c1@kernel.org>
-Content-Language: en-US
-From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-In-Reply-To: <42feceb8-512a-4be3-aefa-116bbde000c1@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: DTDWcfnxnMVy9zQyVxoM8TGd-qFNNysP
-X-Proofpoint-ORIG-GUID: DTDWcfnxnMVy9zQyVxoM8TGd-qFNNysP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-29_04,2025-01-29_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- impostorscore=0 lowpriorityscore=0 priorityscore=1501 clxscore=1015
- suspectscore=0 phishscore=0 spamscore=0 adultscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501290145
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
 
-On 12/10/2024 8:17 PM, Krzysztof Kozlowski wrote:
-> On 10/12/2024 08:41, Raj Kumar Bhagat wrote:
->> From: Balamurugan S <quic_bselvara@quicinc.com>
->>
->> Add Initial Ath12k AHB driver support for IPQ5332. IPQ5332 is AHB
->> based IEEE802.11be 2 GHz 2x2 WiFi device.
->>
->> Tested-on: IPQ5332 hw1.0 AHB WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1
->> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.1.1-00210-QCAHKSWPL_SILICONZ-1
->>
->> Signed-off-by: Balamurugan S <quic_bselvara@quicinc.com>
->> Co-developed-by: P Praneesh <quic_ppranees@quicinc.com>
->> Signed-off-by: P Praneesh <quic_ppranees@quicinc.com>
->> Co-developed-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
->> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
->> ---
->>  drivers/net/wireless/ath/ath12k/ahb.c  | 878 +++++++++++++++++++++++++
->>  drivers/net/wireless/ath/ath12k/ahb.h  |  37 ++
->>  drivers/net/wireless/ath/ath12k/core.h |   4 +
->>  drivers/net/wireless/ath/ath12k/hal.h  |   1 +
->>  drivers/net/wireless/ath/ath12k/hw.h   |   1 +
->>  5 files changed, 921 insertions(+)
->>  create mode 100644 drivers/net/wireless/ath/ath12k/ahb.c
->>  create mode 100644 drivers/net/wireless/ath/ath12k/ahb.h
->>
->> diff --git a/drivers/net/wireless/ath/ath12k/ahb.c b/drivers/net/wireless/ath/ath12k/ahb.c
->> new file mode 100644
->> index 000000000000..fcd949faea9f
->> --- /dev/null
->> +++ b/drivers/net/wireless/ath/ath12k/ahb.c
->> @@ -0,0 +1,878 @@
->> +// SPDX-License-Identifier: BSD-3-Clause-Clear
->> +/*
->> + * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
->> + * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
->> + */
->> +
->> +#include <linux/dma-mapping.h>
->> +#include <linux/iommu.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
-> 
-> You don't use this header.
-> 
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/remoteproc.h>
-> 
-> More headers here look unused.
-> 
+On Wed, Jan 29, 2025 at 10:44:39AM +0100, Zhu Yanjun wrote:
+> 在 2025/1/27 23:38, Eric Biggers 写道:
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > The usual big endian convention of InfiniBand does not apply to the
+> > ICRC field, whose transmission is specified in terms of the CRC32
+> > polynomial coefficients.  
 
-sure, will remove unused headers in next version.
+This patch is on to something but this is not a good explanation.
 
->> +#include <linux/soc/qcom/smem.h>
->> +#include <linux/soc/qcom/smem_state.h>
->> +#include "ahb.h"
->> +#include "debug.h"
->> +#include "hif.h"
->> +
->> +static const struct of_device_id ath12k_ahb_of_match[] = {
->> +	{ .compatible = "qcom,ipq5332-wifi",
->> +	  .data = (void *)ATH12K_HW_IPQ5332_HW10,
->> +	},
->> +	{ }
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, ath12k_ahb_of_match);
-> 
-> This goes to driver struct declaration. It is really unusual to see it
-> in some other places.
-> 
-> 
->> +
->> +#define ATH12K_IRQ_CE0_OFFSET 4
->> +
-> 
-> 
-> ...
-> 
->> +
->> +static int ath12k_ahb_probe(struct platform_device *pdev)
->> +{
->> +	struct ath12k_base *ab;
->> +	const struct ath12k_hif_ops *hif_ops;
->> +	struct device_node *mem_node;
->> +	enum ath12k_hw_rev hw_rev;
->> +	u32 addr;
->> +	int ret;
->> +
->> +	hw_rev = ath12k_ahb_get_hw_rev(pdev);
->> +	switch (hw_rev) {
->> +	case ATH12K_HW_IPQ5332_HW10:
->> +		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
->> +		break;
->> +	default:
->> +		dev_err(&pdev->dev, "Unsupported device type %d\n", hw_rev);
-> 
-> You already print once in ath12k_ahb_get_hw_rev() and none of these can
-> happen. No need to print impossible conditions at all. No need to print
-> impossible things twice.
-> 
+The CRC32 in IB is stored as big endian and computed in big endian,
+the spec says so explicitly:
 
-sure, will drop this print.
+2) The CRC calculation is done in big endian byte order with the least
+   31 significant bit of the most significant byte being the first
+   bits in the 32 CRC calculation.
 
->> +		return -EOPNOTSUPP;
->> +	}
->> +
-> 
->> +	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Failed to set 32-bit coherent dma\n");
->> +		return ret;
->> +	}
->> +
->> +	ab = ath12k_core_alloc(&pdev->dev, sizeof(struct ath12k_ahb),
->> +			       ATH12K_BUS_AHB);
->> +	if (!ab) {
->> +		dev_err(&pdev->dev, "failed to allocate ath12k base\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	ab->hif.ops = hif_ops;
->> +	ab->pdev = pdev;
->> +	ab->hw_rev = hw_rev;
->> +	platform_set_drvdata(pdev, ab);
->> +
->> +	/* Set fixed_mem_region to true for platforms that support fixed memory
->> +	 * reservation from DT. If memory is reserved from DT for FW, ath12k driver
->> +	 * need not to allocate memory.
->> +	 */
->> +	if (!of_property_read_u32(ab->dev->of_node, "memory-region", &addr)) {
->> +		set_bit(ATH12K_FLAG_FIXED_MEM_REGION, &ab->dev_flags);
->> +
->> +		/* If the platform supports fixed memory, then it should define/
->> +		 * reserve MLO global memory in DT to support Multi Link Operation
->> +		 * (IEEE 802.11be).
->> +		 * If MLO global memory is not reserved in fixed memory mode, then
->> +		 * MLO cannot be supported.
->> +		 */
->> +		mem_node = of_find_node_by_name(NULL, "mlo_global_mem_0");
-> 
-> NAK. Incorrect name, not conforming to coding style. Undocumented ABI.
-> 
-> Drop all calls to of_find_node_by_name() or any other stuff like this.
-> 
+In this context saying it is not "big endian" doesn't seem to be quite
+right..
 
-Sure, will remove all calls to - of_find_node_by_name()
+The spec gives a sample data packet (in offset/value pairs):
 
->> +		if (!mem_node)
->> +			ab->single_chip_mlo_supp = false;
->> +	}
->> +
->> +	ret = ath12k_core_pre_init(ab);
->> +	if (ret)
->> +		goto err_core_free;
-> 
-> Best regards,
-> Krzysztof
+0  0xF0 15 0xB3 30 0x7A 45 0x8B
+1  0x12 16 0x00 31 0x05 46 0xC0
+2  0x37 17 0x0D 32 0x00 47 0x69
+3  0x5C 18 0xEC 33 0x00 48 0x0E
+4  0x00 19 0x2A 34 0x00 49 0xD4
+5  0x0E 20 0x01 35 0x0E 50 0x00
+6  0x17 21 0x71 36 0xBB 51 0x00
+7  0xD2 22 0x0A 37 0x88
+8  0x0A 23 0x1C 38 0x4D
+9  0x20 24 0x01 39 0x85
+10 0x24 25 0x5D 40 0xFD
+11 0x87 26 0x40 41 0x5C
+12 0xFF 27 0x02 42 0xFB
+13 0x87 28 0x38 43 0xA4
+14 0xB1 29 0xF2 44 0x72
 
+If you feed that to the CRC32 you should get 0x9625B75A in a CPU
+register u32.
+
+cpu_to_be32() will put it in the right order for on the wire.
+
+Since rxe doesn't have any cpu_to_be32() on this path, I'm guessing
+the Linux CRC32 implementations gives a u32 with the
+value = 0x5AB72596 ie swapped.
+
+Probably the issue here is that the Linux CRC32 and the IBTA CRC32 are
+using a different mapping of LFSR bits. I love CRCs. So many different
+ways to implement the same thing.
+
+Thus, I guess, the code should really read:
+ linux_crc32 = swab32(be32_to_cpu(val));
+
+Which is a NOP on x86 and requires a swap on BE.
+
+Zhu, can you check it for Eric? (this is page 229 in the spec).
+
+I assume the Linux CRC32 always gives the same CPU value regardless of
+LE or BE?
+
+Jason
