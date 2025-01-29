@@ -1,152 +1,291 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2392E1E25F8
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 18:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545C318FDC5
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 18:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738175413; cv=none; b=ms9QxrJNJ2O++MsOqWKfimWYDRZTxUKIIkUdpR0KhBN6nQIVouxnI9FVMzmbBDJDE/jyg+yu1LC76gq4hiRnRTftD8lM7/9S68oZMZD/nGco2yMB6iQmQwxyCIU9mpgDM2Qwkma9jB4+hghCkkMQUeUO49AatXchY35o/EJszxs=
+	t=1738175438; cv=none; b=aQ2OlMSIlDqu8YJuJ08XvbjVNsa4CL00/6FwoG/sDaSPQZji2aZy2eL3M1DA2l/9L8B9FQkwdwunlvVLjGn8dhdIaUgDJSiBY7Pti08TDQ8N7oaW6X/Qn2hF5PanK0yK4+eC4d7SdIpQM9bf+lSg4aXHFz5HE5rlBrFbrf0s2wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738175413; c=relaxed/simple;
-	bh=V3h04rIV92zeS1OapG9TdeCcYQBzM7Gky3PA5S8ttac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dW0tDdiqavdk7jjfbt+hj8kyv37YtD1UwO2TRLEbqnr7RbEIRqmXoFZ9cAqiXHk1vnIAN0gQUxZpSzQ2IwTNL2R3AifV5sAauzD28fgDejiiOCwG28pLxP+eQe72ESPj3col2LB1XPJydwbIm3Dt10dk8DYCEZfbBnGj3TZOTdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=gWMKOkZe; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1738175438; c=relaxed/simple;
+	bh=aRmCXbRm9LVQiaJHv7N+IutALXTUthJIKfdF6B8xQ0k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UrKfyebx1MMTz7wgqUcSOtBYu5F1J6SI7WjBF5Sjg5HW1N6fkBStV+2TxQplMriA55u90YnX0kRHXbE8A53nUFYqmLwBQz5d02wPiIBdHBh3oowTnVjWAVH8x23mdH4LRhKPPCUQ2zk+kxjjdnkATNbuUwThCBVuC5+cAdBae2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dJ3wiC1j; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gWMKOkZe"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-46788c32a69so95314951cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 10:30:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1738175411; x=1738780211; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XD0YMmssfsqTqz7P5jLcOM43e1brk96cTTh0E8gXUWI=;
-        b=gWMKOkZeoonN9reatGYy3NItD1BQNy3gZcIx0EUMgPU5ovj2ZHhjagXA0Ldxu6HhUR
-         g/cLRHRWp2KPQU8xrGAAPU62/qs1c1aowWB8ah52/4C8q/6gPusbsJF0ttjP/cSb+8tQ
-         LAOkWd7AMxZJC6vhc1wpJxzuy8L2e+02X7RwoO8YEqgEOmEtyqHiwjLIQKYLHpZdE9Xh
-         zaJpnVw1N+zbydM5nHBYa7GSX0yJyOfpz/4jLS/02j4IxiHclkvob0xsccYQ3Cl0xPoq
-         tZ4+SL2UQGnVog4YwGTk4vgsfg2kS2qemG6ZgFXjttCOMa/fPpcd4ousX91clx3UZuzN
-         KCyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738175411; x=1738780211;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XD0YMmssfsqTqz7P5jLcOM43e1brk96cTTh0E8gXUWI=;
-        b=DoEHw/6PgGrZhCCiN4h/2iVHRlg9nStqTg5SfmbaFVeakJc3gK6INu9Yk1McgAyUtk
-         tZ+rbwiL3gJ4y8cAq7rkXf3Tgpmwv0+8rV1UrELoJLWFtWv9I/043QXVoFAlJ4AXRbJD
-         yfC/NKXkNbrRF9BajPodMAa7Kdte5Y+IfcWxxD8oR43UU9yKL5khQlbq/k2qA+fKfyIh
-         5gIbOmKdTdMq2tY5JgksvDC14yEaT/BtftL6+nZT+pFh1LHHxZPVLvE4CFdbM//w/uI3
-         AnJwoD+Z42Kh5gOV0AOGne0mZzVwSR2503TwAOi5r2tcc63hscRtiwLjnaYsZz+Xgjuk
-         YBRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOvzSsSVRipqUQPuJCW/whFoxlSdv3y0brQXSnsWKJirLjSfaAhyVSzB608tocvdCavVWzlbSEI1C2emU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwE5AVrSvnJC5VIoN1ibIYwV5njgTaOfuwD88+4sEJ5Z3mIvaNI
-	aGoYJax1LPlOwT2qNreA4TMfyaDRt8T0QL3LyJnxvaLcn2SdnNx5xaSV4/AofmxzImnICz/y+T3
-	v
-X-Gm-Gg: ASbGncsHkKvPchSAhmWnvVbZw1649COQZJzKB2rn/vxLfXplEzTkBOBufKR0b5khRbp
-	1pFyXWO430r6kRR+nZiQvyz9KoHg/UEKbO9X9OIm3OJdNGqPO3jGm/7YUqy+A5yNPJyVAVCTuiP
-	tvVL3OrFRPLVBHijGdd+/VOUTKU87kE9ZmlYVAMA8I4MZgE4gkyg7FN+IWR3aoEuHQ1NEN7T5Xq
-	ZwF2zYaCtZAHZpEv3Lb0FmPdy5NUA/jwYhyelXXbTnPImgOxrCqT5igR+SmwrNcrL1mNdhAk3H4
-	/ngziaFJWP9dpadRc2V3ced27rKzoFGJeWowxdTfXeBKxUL1vkNlRSAmm2gsCqnl
-X-Google-Smtp-Source: AGHT+IFU2CSEw7nEQnS3hKi4MzP25PEd5L1/HqejOvMmapaGN2P5mirb8xGOSLzYxz2tblSZd8yYPg==
-X-Received: by 2002:a05:622a:47:b0:46e:23dc:97dd with SMTP id d75a77b69052e-46fd0bda6efmr75744211cf.52.1738175410947;
-        Wed, 29 Jan 2025 10:30:10 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46e66b89811sm64595011cf.77.2025.01.29.10.30.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 10:30:10 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tdCpF-00000009Qzj-3huR;
-	Wed, 29 Jan 2025 14:30:09 -0400
-Date: Wed, 29 Jan 2025 14:30:09 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: Eric Biggers <ebiggers@kernel.org>, linux-rdma@vger.kernel.org,
-	Mustafa Ismail <mustafa.ismail@intel.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Bernard Metzler <bmt@zurich.ibm.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/6] RDMA/rxe: handle ICRC correctly on big endian systems
-Message-ID: <20250129183009.GC2120662@ziepe.ca>
-References: <20250127223840.67280-1-ebiggers@kernel.org>
- <20250127223840.67280-2-ebiggers@kernel.org>
- <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dJ3wiC1j"
+Message-ID: <62763929-9707-4633-9d22-a8d803e34129@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738175429;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DC5mSX1scPzLqQhPZMoFaLE7gVR7wl17e3VXhb1nCcs=;
+	b=dJ3wiC1jUCM+jIrMPPSVCVBXT8H2meKBINxgowN7rEf702rRQOehKgUgKVOjspIfKr8mIE
+	cMtA8CM5RP7EazpkNDSTNLf3jezuKp+SYWn1aSGjdczevFPr3j+mnsmO6ZZyaDlmSQb2jj
+	PhEgYqfp/WYBPXtC4Cbs73TZWaPNO2k=
+Date: Wed, 29 Jan 2025 19:30:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [PATCH 3/6] RDMA/rxe: switch to using the crc32 library
+To: Eric Biggers <ebiggers@kernel.org>, linux-rdma@vger.kernel.org,
+ Mustafa Ismail <mustafa.ismail@intel.com>,
+ Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Zhu Yanjun <zyjzyj2000@gmail.com>, Bernard Metzler <bmt@zurich.ibm.com>
+Cc: linux-kernel@vger.kernel.org
+References: <20250127223840.67280-1-ebiggers@kernel.org>
+ <20250127223840.67280-4-ebiggers@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20250127223840.67280-4-ebiggers@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jan 29, 2025 at 10:44:39AM +0100, Zhu Yanjun wrote:
-> 在 2025/1/27 23:38, Eric Biggers 写道:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > The usual big endian convention of InfiniBand does not apply to the
-> > ICRC field, whose transmission is specified in terms of the CRC32
-> > polynomial coefficients.  
+在 2025/1/27 23:38, Eric Biggers 写道:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Now that the crc32() library function takes advantage of
+> architecture-specific optimizations, it is unnecessary to go through the
+> crypto API.  Just use crc32().  This is much simpler, and it improves
+> performance due to eliminating the crypto API overhead.
+> 
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 
-This patch is on to something but this is not a good explanation.
+After the patchset is applied, if the RXE can connect to MLX RDMA NIC 
+successfully, I am fine with it.
 
-The CRC32 in IB is stored as big endian and computed in big endian,
-the spec says so explicitly:
+Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
 
-2) The CRC calculation is done in big endian byte order with the least
-   31 significant bit of the most significant byte being the first
-   bits in the 32 CRC calculation.
+Zhu Yanjun
 
-In this context saying it is not "big endian" doesn't seem to be quite
-right..
+> ---
+>   drivers/infiniband/sw/rxe/Kconfig     |  3 +-
+>   drivers/infiniband/sw/rxe/rxe.c       |  3 --
+>   drivers/infiniband/sw/rxe/rxe.h       |  1 -
+>   drivers/infiniband/sw/rxe/rxe_icrc.c  | 61 ++-------------------------
+>   drivers/infiniband/sw/rxe/rxe_loc.h   |  1 -
+>   drivers/infiniband/sw/rxe/rxe_req.c   |  1 -
+>   drivers/infiniband/sw/rxe/rxe_verbs.c |  4 --
+>   drivers/infiniband/sw/rxe/rxe_verbs.h |  1 -
+>   8 files changed, 5 insertions(+), 70 deletions(-)
+> 
+> diff --git a/drivers/infiniband/sw/rxe/Kconfig b/drivers/infiniband/sw/rxe/Kconfig
+> index 06b8dc5093f77..c180e7ebcfc5b 100644
+> --- a/drivers/infiniband/sw/rxe/Kconfig
+> +++ b/drivers/infiniband/sw/rxe/Kconfig
+> @@ -2,12 +2,11 @@
+>   config RDMA_RXE
+>   	tristate "Software RDMA over Ethernet (RoCE) driver"
+>   	depends on INET && PCI && INFINIBAND
+>   	depends on INFINIBAND_VIRT_DMA
+>   	select NET_UDP_TUNNEL
+> -	select CRYPTO
+> -	select CRYPTO_CRC32
+> +	select CRC32
+>   	help
+>   	This driver implements the InfiniBand RDMA transport over
+>   	the Linux network stack. It enables a system with a
+>   	standard Ethernet adapter to interoperate with a RoCE
+>   	adapter or with another system running the RXE driver.
+> diff --git a/drivers/infiniband/sw/rxe/rxe.c b/drivers/infiniband/sw/rxe/rxe.c
+> index 1ba4a0c8726ae..f8ac79ef70143 100644
+> --- a/drivers/infiniband/sw/rxe/rxe.c
+> +++ b/drivers/infiniband/sw/rxe/rxe.c
+> @@ -29,13 +29,10 @@ void rxe_dealloc(struct ib_device *ib_dev)
+>   	rxe_pool_cleanup(&rxe->mr_pool);
+>   	rxe_pool_cleanup(&rxe->mw_pool);
+>   
+>   	WARN_ON(!RB_EMPTY_ROOT(&rxe->mcg_tree));
+>   
+> -	if (rxe->tfm)
+> -		crypto_free_shash(rxe->tfm);
+> -
+>   	mutex_destroy(&rxe->usdev_lock);
+>   }
+>   
+>   /* initialize rxe device parameters */
+>   static void rxe_init_device_param(struct rxe_dev *rxe)
+> diff --git a/drivers/infiniband/sw/rxe/rxe.h b/drivers/infiniband/sw/rxe/rxe.h
+> index fe7f970667325..8db65731499d0 100644
+> --- a/drivers/infiniband/sw/rxe/rxe.h
+> +++ b/drivers/infiniband/sw/rxe/rxe.h
+> @@ -19,11 +19,10 @@
+>   #include <rdma/ib_pack.h>
+>   #include <rdma/ib_smi.h>
+>   #include <rdma/ib_umem.h>
+>   #include <rdma/ib_cache.h>
+>   #include <rdma/ib_addr.h>
+> -#include <crypto/hash.h>
+>   
+>   #include "rxe_net.h"
+>   #include "rxe_opcode.h"
+>   #include "rxe_hdr.h"
+>   #include "rxe_param.h"
+> diff --git a/drivers/infiniband/sw/rxe/rxe_icrc.c b/drivers/infiniband/sw/rxe/rxe_icrc.c
+> index c7b0b4673b959..63d03f0f71e38 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_icrc.c
+> +++ b/drivers/infiniband/sw/rxe/rxe_icrc.c
+> @@ -7,62 +7,10 @@
+>   #include <linux/crc32.h>
+>   
+>   #include "rxe.h"
+>   #include "rxe_loc.h"
+>   
+> -/**
+> - * rxe_icrc_init() - Initialize crypto function for computing crc32
+> - * @rxe: rdma_rxe device object
+> - *
+> - * Return: 0 on success else an error
+> - */
+> -int rxe_icrc_init(struct rxe_dev *rxe)
+> -{
+> -	struct crypto_shash *tfm;
+> -
+> -	tfm = crypto_alloc_shash("crc32", 0, 0);
+> -	if (IS_ERR(tfm)) {
+> -		rxe_dbg_dev(rxe, "failed to init crc32 algorithm err: %ld\n",
+> -			       PTR_ERR(tfm));
+> -		return PTR_ERR(tfm);
+> -	}
+> -
+> -	rxe->tfm = tfm;
+> -
+> -	return 0;
+> -}
+> -
+> -/**
+> - * rxe_crc32() - Compute cumulative crc32 for a contiguous segment
+> - * @rxe: rdma_rxe device object
+> - * @crc: starting crc32 value from previous segments
+> - * @next: starting address of current segment
+> - * @len: length of current segment
+> - *
+> - * Return: the cumulative crc32 checksum
+> - */
+> -static u32 rxe_crc32(struct rxe_dev *rxe, u32 crc, void *next, size_t len)
+> -{
+> -	u32 icrc;
+> -	int err;
+> -
+> -	SHASH_DESC_ON_STACK(shash, rxe->tfm);
+> -
+> -	shash->tfm = rxe->tfm;
+> -	*(u32 *)shash_desc_ctx(shash) = crc;
+> -	err = crypto_shash_update(shash, next, len);
+> -	if (unlikely(err)) {
+> -		rxe_dbg_dev(rxe, "failed crc calculation, err: %d\n", err);
+> -		return crc32_le(crc, next, len);
+> -	}
+> -
+> -	icrc = *(u32 *)shash_desc_ctx(shash);
+> -	barrier_data(shash_desc_ctx(shash));
+> -
+> -	return icrc;
+> -}
+> -
+>   /**
+>    * rxe_icrc() - Compute the ICRC of a packet
+>    * @skb: packet buffer
+>    * @pkt: packet information
+>    *
+> @@ -117,19 +65,18 @@ static u32 rxe_icrc(struct sk_buff *skb, struct rxe_pkt_info *pkt)
+>   
+>   	/* exclude bth.resv8a */
+>   	bth->qpn |= cpu_to_be32(~BTH_QPN_MASK);
+>   
+>   	/* Update the CRC with the first part of the headers. */
+> -	crc = rxe_crc32(pkt->rxe, crc, pshdr, hdr_size + RXE_BTH_BYTES);
+> +	crc = crc32(crc, pshdr, hdr_size + RXE_BTH_BYTES);
+>   
+>   	/* Update the CRC with the remainder of the headers. */
+> -	crc = rxe_crc32(pkt->rxe, crc, pkt->hdr + RXE_BTH_BYTES,
+> -			rxe_opcode[pkt->opcode].length - RXE_BTH_BYTES);
+> +	crc = crc32(crc, pkt->hdr + RXE_BTH_BYTES,
+> +		    rxe_opcode[pkt->opcode].length - RXE_BTH_BYTES);
+>   
+>   	/* Update the CRC with the payload. */
+> -	crc = rxe_crc32(pkt->rxe, crc, payload_addr(pkt),
+> -			payload_size(pkt) + bth_pad(pkt));
+> +	crc = crc32(crc, payload_addr(pkt), payload_size(pkt) + bth_pad(pkt));
+>   
+>   	/* Invert the CRC and return it. */
+>   	return ~crc;
+>   }
+>   
+> diff --git a/drivers/infiniband/sw/rxe/rxe_loc.h b/drivers/infiniband/sw/rxe/rxe_loc.h
+> index ded46119151bb..c57ab8975c5d1 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_loc.h
+> +++ b/drivers/infiniband/sw/rxe/rxe_loc.h
+> @@ -166,11 +166,10 @@ int rxe_completer(struct rxe_qp *qp);
+>   int rxe_requester(struct rxe_qp *qp);
+>   int rxe_sender(struct rxe_qp *qp);
+>   int rxe_receiver(struct rxe_qp *qp);
+>   
+>   /* rxe_icrc.c */
+> -int rxe_icrc_init(struct rxe_dev *rxe);
+>   int rxe_icrc_check(struct sk_buff *skb, struct rxe_pkt_info *pkt);
+>   void rxe_icrc_generate(struct sk_buff *skb, struct rxe_pkt_info *pkt);
+>   
+>   void rxe_resp_queue_pkt(struct rxe_qp *qp, struct sk_buff *skb);
+>   
+> diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
+> index 87a02f0deb000..9d0392df8a92f 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_req.c
+> +++ b/drivers/infiniband/sw/rxe/rxe_req.c
+> @@ -3,11 +3,10 @@
+>    * Copyright (c) 2016 Mellanox Technologies Ltd. All rights reserved.
+>    * Copyright (c) 2015 System Fabric Works, Inc. All rights reserved.
+>    */
+>   
+>   #include <linux/skbuff.h>
+> -#include <crypto/hash.h>
+>   
+>   #include "rxe.h"
+>   #include "rxe_loc.h"
+>   #include "rxe_queue.h"
+>   
+> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.c b/drivers/infiniband/sw/rxe/rxe_verbs.c
+> index 6152a0fdfc8ca..c05379f8b4f57 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_verbs.c
+> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.c
+> @@ -1531,14 +1531,10 @@ int rxe_register_device(struct rxe_dev *rxe, const char *ibdev_name,
+>   	ib_set_device_ops(dev, &rxe_dev_ops);
+>   	err = ib_device_set_netdev(&rxe->ib_dev, ndev, 1);
+>   	if (err)
+>   		return err;
+>   
+> -	err = rxe_icrc_init(rxe);
+> -	if (err)
+> -		return err;
+> -
+>   	err = ib_register_device(dev, ibdev_name, NULL);
+>   	if (err)
+>   		rxe_dbg_dev(rxe, "failed with error %d\n", err);
+>   
+>   	/*
+> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+> index 6573ceec0ef58..6e31134a5fa5b 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
+> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+> @@ -400,11 +400,10 @@ struct rxe_dev {
+>   	u64			mmap_offset;
+>   
+>   	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
+>   
+>   	struct rxe_port		port;
+> -	struct crypto_shash	*tfm;
+>   };
+>   
+>   static inline struct net_device *rxe_ib_device_get_netdev(struct ib_device *dev)
+>   {
+>   	return ib_device_get_netdev(dev, RXE_PORT);
 
-The spec gives a sample data packet (in offset/value pairs):
-
-0  0xF0 15 0xB3 30 0x7A 45 0x8B
-1  0x12 16 0x00 31 0x05 46 0xC0
-2  0x37 17 0x0D 32 0x00 47 0x69
-3  0x5C 18 0xEC 33 0x00 48 0x0E
-4  0x00 19 0x2A 34 0x00 49 0xD4
-5  0x0E 20 0x01 35 0x0E 50 0x00
-6  0x17 21 0x71 36 0xBB 51 0x00
-7  0xD2 22 0x0A 37 0x88
-8  0x0A 23 0x1C 38 0x4D
-9  0x20 24 0x01 39 0x85
-10 0x24 25 0x5D 40 0xFD
-11 0x87 26 0x40 41 0x5C
-12 0xFF 27 0x02 42 0xFB
-13 0x87 28 0x38 43 0xA4
-14 0xB1 29 0xF2 44 0x72
-
-If you feed that to the CRC32 you should get 0x9625B75A in a CPU
-register u32.
-
-cpu_to_be32() will put it in the right order for on the wire.
-
-Since rxe doesn't have any cpu_to_be32() on this path, I'm guessing
-the Linux CRC32 implementations gives a u32 with the
-value = 0x5AB72596 ie swapped.
-
-Probably the issue here is that the Linux CRC32 and the IBTA CRC32 are
-using a different mapping of LFSR bits. I love CRCs. So many different
-ways to implement the same thing.
-
-Thus, I guess, the code should really read:
- linux_crc32 = swab32(be32_to_cpu(val));
-
-Which is a NOP on x86 and requires a swap on BE.
-
-Zhu, can you check it for Eric? (this is page 229 in the spec).
-
-I assume the Linux CRC32 always gives the same CPU value regardless of
-LE or BE?
-
-Jason
