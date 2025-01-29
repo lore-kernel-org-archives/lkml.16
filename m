@@ -1,33 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39921DF268;
-	Wed, 29 Jan 2025 18:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C2D1E0DDF;
+	Wed, 29 Jan 2025 18:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738175344; cv=none; b=N3bamM/aVy23w9yVAV1JXpUwAr1N5nOF5n0KmZ8wwD+g/UYWUzovr4UEADV4eAQhODpJ/0Mc2eEBMIrSG8NOeIIxwP0QJ91gWI83/HpZwDp5FoI15h0BtRJruIhp83/Ghz67jI0wF/wkdwuM69IiItVI5pvfCXPFGoE6OzRYWII=
+	t=1738175374; cv=none; b=UdM9s8Cyc12amfmfX7atBZPs+WUU3rvM6384CNaSeP0yQTGTbQs2HhWh3CLhUwbsqFGL825TW7zSCN4G0B/yPgqsTiMVcVVAldmNcRxJuMajonooY3V/l5fB5gtVZOtyScFbuE6gWEP+wjCpuixyzJ7siHeMyttmr+dq4XV94w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738175344; c=relaxed/simple;
-	bh=ouQVcLhBJPTHzBMkOea8eBIJuZ/tHFz03XhLNww49yA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IRHv3D06hmgymM9SvJixj5Toaj0JkAfTBNMLYtsDWKyYQkwxVL6Ka2966m6S4s1pNH9KksiCoCSnE8qZGpTe6txVh0CH572Kj1etAT/bZ2qL3+lG9MzNEh1dASxtMrTyplTqRdOT3EEHJgjP0sGfBrdEpOaPTtY/9nNtWZeFtmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rhucSnmg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738175374; c=relaxed/simple;
+	bh=Hw/qf1LaktOinY9CWMVY1JmifUigp2zF91VLkQNym88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=IlCkXbFP0bk1LRs7OzWbXeaH+9JZjlh/X8dEV0K5BRVhVhRxOGceHKImumyohP4Wbmpfg2rrOsA7SiLndPMZ/cZkg/tWmLI0O+vKfcFDyQw+QH2TVGyHbI74iguuvRBQE1ep3VBX3PA/n/J7kkzHykbUJjWcrxw7Lvn7USQinqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ChJ0xtB+; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhucSnmg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E43EFC4CED1;
-	Wed, 29 Jan 2025 18:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738175343;
-	bh=ouQVcLhBJPTHzBMkOea8eBIJuZ/tHFz03XhLNww49yA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rhucSnmguQ5vsCjH2HgHk+48GEd8rb3qHsTwII4blSkKZ6xmJPeU+mpJ1lDqd/T5k
-	 U+I92SSsNPMuN0j2IjeU+taXbp3o8JCLZR/BKvqWvCnYLotmyhluOqWdjS81ovW6IU
-	 MtH6Z+D9Dz0a8mAZtWtY9Mcod3ROpk/8PLoMMmsGZu8PJCsJI7UFzuoqPPo6mX3ISr
-	 TmXNRViRR/14u0wc+qR2Z/eI7+sq96tYQmOXvya7pi3AajJB48BPgx8xlS00iBm+DD
-	 TF9iZEmoeNbWWKO++Yx5IXAZaXnWGxAQD/07vFb5tpggetZGNfyxrGXZTVKFJ5TJF4
-	 PlNnXF3DEySGA==
-Message-ID: <a5a6196b-a6a8-402b-9073-ac01291f7e34@kernel.org>
-Date: Wed, 29 Jan 2025 19:28:58 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ChJ0xtB+"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50T8VgGP020758;
+	Wed, 29 Jan 2025 18:29:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	QhO5jdWFxnHnOhAyAmmxGgJbaHEfMWtf0lSLHWs5Vkg=; b=ChJ0xtB+Udrev8o8
+	ZE7J3eHRZbPprY0Lzxu06ake1L8Ja66GZSU1vaMmHYLUyDA4/7P+EJ0+9pKtSGuI
+	ly2Ef5wT8/gtxTylJw9ksKF2gbNWhp81AoDoJPY8N1rPdcDqHcrG4wLM440JtS1l
+	tFiC4IrCtuBeNu8maWFOsZtmKo0FKmVAq43tBi/MI92hyDBEEdqOHc8/j/jMSZJO
+	wmBqnqMk90UmZSNOHyqQcQ5HoaCE4lEjuwPfc0SzzVJb+A9O9JVw/IyLxtuppOad
+	Foq/Wwh3knFojs35aiyeNOBpX+wdRxEftPthnp/0SsDeGx5SsNuoiHt7KCRYI09q
+	uLOxXw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44fgw8s6yn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Jan 2025 18:29:15 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50TITDE5001816
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Jan 2025 18:29:13 GMT
+Received: from [10.216.5.143] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 29 Jan
+ 2025 10:29:09 -0800
+Message-ID: <329fd3ef-5385-47e9-9e5b-875488cf9766@quicinc.com>
+Date: Wed, 29 Jan 2025 23:58:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,92 +50,199 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/14] dt-bindings: soc: Document Renesas RZ/T2H
- (R9A09G077) SoC
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com>
- <20250129165122.2980-2-thierry.bultel.yh@bp.renesas.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v4 08/13] wifi: ath12k: add AHB driver support for IPQ5332
+To: Krzysztof Kozlowski <krzk@kernel.org>, <ath12k@lists.infradead.org>
+CC: <linux-wireless@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>,
+        "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Jeff Johnson <jjohnson@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Balamurugan S
+	<quic_bselvara@quicinc.com>,
+        P Praneesh <quic_ppranees@quicinc.com>
+References: <20241210074159.2637933-1-quic_rajkbhag@quicinc.com>
+ <20241210074159.2637933-9-quic_rajkbhag@quicinc.com>
+ <42feceb8-512a-4be3-aefa-116bbde000c1@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250129165122.2980-2-thierry.bultel.yh@bp.renesas.com>
-Content-Type: text/plain; charset=UTF-8
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+In-Reply-To: <42feceb8-512a-4be3-aefa-116bbde000c1@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: DTDWcfnxnMVy9zQyVxoM8TGd-qFNNysP
+X-Proofpoint-ORIG-GUID: DTDWcfnxnMVy9zQyVxoM8TGd-qFNNysP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-29_04,2025-01-29_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 clxscore=1015
+ suspectscore=0 phishscore=0 spamscore=0 adultscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501290145
 
-On 29/01/2025 17:37, Thierry Bultel wrote:
-> Add RZ/T2H (R9A09G077) and variants in documentation.
+On 12/10/2024 8:17 PM, Krzysztof Kozlowski wrote:
+> On 10/12/2024 08:41, Raj Kumar Bhagat wrote:
+>> From: Balamurugan S <quic_bselvara@quicinc.com>
+>>
+>> Add Initial Ath12k AHB driver support for IPQ5332. IPQ5332 is AHB
+>> based IEEE802.11be 2 GHz 2x2 WiFi device.
+>>
+>> Tested-on: IPQ5332 hw1.0 AHB WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1
+>> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.1.1-00210-QCAHKSWPL_SILICONZ-1
+>>
+>> Signed-off-by: Balamurugan S <quic_bselvara@quicinc.com>
+>> Co-developed-by: P Praneesh <quic_ppranees@quicinc.com>
+>> Signed-off-by: P Praneesh <quic_ppranees@quicinc.com>
+>> Co-developed-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+>> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+>> ---
+>>  drivers/net/wireless/ath/ath12k/ahb.c  | 878 +++++++++++++++++++++++++
+>>  drivers/net/wireless/ath/ath12k/ahb.h  |  37 ++
+>>  drivers/net/wireless/ath/ath12k/core.h |   4 +
+>>  drivers/net/wireless/ath/ath12k/hal.h  |   1 +
+>>  drivers/net/wireless/ath/ath12k/hw.h   |   1 +
+>>  5 files changed, 921 insertions(+)
+>>  create mode 100644 drivers/net/wireless/ath/ath12k/ahb.c
+>>  create mode 100644 drivers/net/wireless/ath/ath12k/ahb.h
+>>
+>> diff --git a/drivers/net/wireless/ath/ath12k/ahb.c b/drivers/net/wireless/ath/ath12k/ahb.c
+>> new file mode 100644
+>> index 000000000000..fcd949faea9f
+>> --- /dev/null
+>> +++ b/drivers/net/wireless/ath/ath12k/ahb.c
+>> @@ -0,0 +1,878 @@
+>> +// SPDX-License-Identifier: BSD-3-Clause-Clear
+>> +/*
+>> + * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+>> + * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/iommu.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
 > 
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> ---
->  .../devicetree/bindings/soc/renesas/renesas.yaml          | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> You don't use this header.
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
-> index b7acb65bdecd..33f9e37a3d3d 100644
-> --- a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
-> +++ b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
-> @@ -535,6 +535,14 @@ properties:
->                - renesas,r9a09g057h44 # RZ/V2HP with Mali-G31 + Mali-C55 support
->            - const: renesas,r9a09g057
->  
-> +      - description: RZ/T2H (R9A09G077)
-> +        items:
-> +          - enum:
-> +            - renesas,r9a09g077 # RZ/T2H with Quad Cortex-A55 + Dual Cortex-R52
-> +            - renesas,r9a09g077m04 # RZ/T2H with Single Cortex-A55 + Dual Cortex-R52 - no security
-> +            - renesas,r9a09g077m24 # RZ/T2H with Dual Cortex-A55 + Dual Cortex-R52 - no security
-> +            - renesas,r9a09g077m44 # RZ/T2H with Quad Cortex-A55 + Dual Cortex-R52 - no security
+>> +#include <linux/of_device.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/remoteproc.h>
+> 
+> More headers here look unused.
+> 
 
-1. Never tested (see writing schema).
-2. I don't quite get what this is supposed to express. There is no board
-here.
+sure, will remove unused headers in next version.
 
-Best regards,
-Krzysztof
+>> +#include <linux/soc/qcom/smem.h>
+>> +#include <linux/soc/qcom/smem_state.h>
+>> +#include "ahb.h"
+>> +#include "debug.h"
+>> +#include "hif.h"
+>> +
+>> +static const struct of_device_id ath12k_ahb_of_match[] = {
+>> +	{ .compatible = "qcom,ipq5332-wifi",
+>> +	  .data = (void *)ATH12K_HW_IPQ5332_HW10,
+>> +	},
+>> +	{ }
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, ath12k_ahb_of_match);
+> 
+> This goes to driver struct declaration. It is really unusual to see it
+> in some other places.
+> 
+> 
+>> +
+>> +#define ATH12K_IRQ_CE0_OFFSET 4
+>> +
+> 
+> 
+> ...
+> 
+>> +
+>> +static int ath12k_ahb_probe(struct platform_device *pdev)
+>> +{
+>> +	struct ath12k_base *ab;
+>> +	const struct ath12k_hif_ops *hif_ops;
+>> +	struct device_node *mem_node;
+>> +	enum ath12k_hw_rev hw_rev;
+>> +	u32 addr;
+>> +	int ret;
+>> +
+>> +	hw_rev = ath12k_ahb_get_hw_rev(pdev);
+>> +	switch (hw_rev) {
+>> +	case ATH12K_HW_IPQ5332_HW10:
+>> +		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
+>> +		break;
+>> +	default:
+>> +		dev_err(&pdev->dev, "Unsupported device type %d\n", hw_rev);
+> 
+> You already print once in ath12k_ahb_get_hw_rev() and none of these can
+> happen. No need to print impossible conditions at all. No need to print
+> impossible things twice.
+> 
+
+sure, will drop this print.
+
+>> +		return -EOPNOTSUPP;
+>> +	}
+>> +
+> 
+>> +	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "Failed to set 32-bit coherent dma\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ab = ath12k_core_alloc(&pdev->dev, sizeof(struct ath12k_ahb),
+>> +			       ATH12K_BUS_AHB);
+>> +	if (!ab) {
+>> +		dev_err(&pdev->dev, "failed to allocate ath12k base\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	ab->hif.ops = hif_ops;
+>> +	ab->pdev = pdev;
+>> +	ab->hw_rev = hw_rev;
+>> +	platform_set_drvdata(pdev, ab);
+>> +
+>> +	/* Set fixed_mem_region to true for platforms that support fixed memory
+>> +	 * reservation from DT. If memory is reserved from DT for FW, ath12k driver
+>> +	 * need not to allocate memory.
+>> +	 */
+>> +	if (!of_property_read_u32(ab->dev->of_node, "memory-region", &addr)) {
+>> +		set_bit(ATH12K_FLAG_FIXED_MEM_REGION, &ab->dev_flags);
+>> +
+>> +		/* If the platform supports fixed memory, then it should define/
+>> +		 * reserve MLO global memory in DT to support Multi Link Operation
+>> +		 * (IEEE 802.11be).
+>> +		 * If MLO global memory is not reserved in fixed memory mode, then
+>> +		 * MLO cannot be supported.
+>> +		 */
+>> +		mem_node = of_find_node_by_name(NULL, "mlo_global_mem_0");
+> 
+> NAK. Incorrect name, not conforming to coding style. Undocumented ABI.
+> 
+> Drop all calls to of_find_node_by_name() or any other stuff like this.
+> 
+
+Sure, will remove all calls to - of_find_node_by_name()
+
+>> +		if (!mem_node)
+>> +			ab->single_chip_mlo_supp = false;
+>> +	}
+>> +
+>> +	ret = ath12k_core_pre_init(ab);
+>> +	if (ret)
+>> +		goto err_core_free;
+> 
+> Best regards,
+> Krzysztof
+
