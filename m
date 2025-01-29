@@ -1,202 +1,162 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599271AC42B
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 23:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DDF1B424D
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 23:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738193871; cv=none; b=GdD14X4W8v/MKqwA0ZYoq+pwUXw9VEGwA3u31vgwU6rS6ABCLIpfM81OGZQeO7n0uAvb5MMlZYJ5N3aJHJRsSQ3yy1g3xhFkS72lALfujDfMmTTgweMLJGREw20xoTn1Ze00KqO7O3Me1Nmmwe3sBWIPlbat34dMD33Tf9OD/BI=
+	t=1738193967; cv=none; b=s/qmxmhLPogNSrSNFnZDXsN6JeiZ0N4JX6nlGG1Q28oM+FSVvOqnFKxIXfIfZcPoaXVKdVkN23Cbr0QcrMmhe2zcUToHOmIY66HdEYJJlQAEnD7JG5kaDsiDzogAIkhnIC+kbpd3eTUCKvvNzr4dZHwZ5IBfCahLJTin6G3tGRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738193871; c=relaxed/simple;
-	bh=jMDBRsPaOHcFhnUw/Wv69LKyrOF6jC1i9MALjXLdOoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LJEaNLJ7fttdhEIUiCXbLc8HJtURJMMxcPpvdyAFLA47OtgZKPfsoEL1zXtk7ZauWDLSF3Nzh84uZYRUfabY2/LQtapxAdltgxSCMjess4fBVzevRYC+5H6olbWZJ2+5y4TfTxGZAz7ejXj1tGjqS26E5yZ424L077Zv4jmYiV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=y5uVgPnL; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1738193967; c=relaxed/simple;
+	bh=AkSOBqesdCgmlr//WvbqaUN/Vyb/Qmi9h7fRqvUqHwE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cE49P3BDDChCsSH1jPXpQU4YC++TRa8+tPg+B2juMua9Dyc15ENgBCPanOu/Y0Fk8ZHYv0ERKQ71mtZr5iH3N2OYD0Uz/ld+Zi+zgeB0Vq3MYJhjZmM1oAwZQDYabKniM2EOiio3k56mh79YFQoj0B1XEfKSuD9Hzouf4Vjvnmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o+S8btMz; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="y5uVgPnL"
-Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
-	by cmsmtp with ESMTPS
-	id d8c1tBR9qf1UXdHbRtyFfa; Wed, 29 Jan 2025 23:36:13 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id dHbPtWAQWHEACdHbPt7jh7; Wed, 29 Jan 2025 23:36:11 +0000
-X-Authority-Analysis: v=2.4 cv=HdLfTTE8 c=1 sm=1 tr=0 ts=679abb6b
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=3GLQtCDrk5mhnYkuwPoHkA==:17
- a=IkcTkHD0fZMA:10 a=VdSt8ZQiCzkA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=TBnyChJfKI2p-A7FU4wA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=cqLhnexwQeVTpKw6kDdMPge95PVCfboLdmw4Sd7tyBk=; b=y5uVgPnL5JZOF2lNG0FIwzQT+T
-	wO8/rTfUJcpIjRMoKUxPvIzfZ9FeKJcpLnxSy7MBADV4G6F4UkX5QAWrrTcUlXQF7qa0qeTk6OCnI
-	WZqVihVPlZ14gzu82uRKI7/statE0rUTjJ2ToNs/wCuY/MLZDdBTfA/x7btNfvVLkHQdwwUp2wNoh
-	bbUz1NZyosiBeOMRqZp2MUtVYkCrf87JwjzXAHk7l+lKz/uzM345nykQ9Ouw27xogIayyMetK5UwY
-	LTrHwU3bXDkh1/n5iyqnEY+vuz/OnKiaRwjKphtLcy46ztUwjGn3jrufLIyGN50kXRR0X9VOP3dtH
-	AeDrHw4Q==;
-Received: from [45.124.203.141] (port=55136 helo=[192.168.0.153])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tdHbO-003ScQ-2D;
-	Wed, 29 Jan 2025 17:36:10 -0600
-Message-ID: <7f165e66-a0ff-48e2-a3f3-d5405a66c867@embeddedor.com>
-Date: Thu, 30 Jan 2025 10:06:00 +1030
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o+S8btMz"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so51755ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 15:39:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738193965; x=1738798765; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gz0whKbBG5sXEswMf7L/dv0ztGv/l6uXtzaue0oLH3w=;
+        b=o+S8btMzgz41qwBIJuZ/0nNm0cbFmKnpoofd7gAnLLow2py2fWfSkm2Mtdjs+KG1a1
+         hSNn6lRNmkVVjRbbmZUQu7JcJrO6NV9VlxKlWc9YIUQ4MSfb7nTnHSpJe3uxlZvdDPgC
+         5nmsULXm0HAeYh2/wGD4UGVOai0JQt1lwgfnTwLElEi5PdK16CAZXj8cyrZHWV3XBBbC
+         EZl8Sv3lmJ7k1n8uPNTKlDDSlR2QuDNKTgprGL5VX2ZHzFQWeuywyU0ez6iOzUM1qM6p
+         acEc7GzKuJ36wDqvRPo0jCbJB4seF/oh145P6rkrCgQ7+pDUiebSk1C0lv/LvgvJHf2+
+         3PEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738193965; x=1738798765;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Gz0whKbBG5sXEswMf7L/dv0ztGv/l6uXtzaue0oLH3w=;
+        b=lCHr8fRcrNWd534ff9NkHi9GC/zl86tPzRya6xbShpNd7Ma96Wei6PAcN/8EL0IDfl
+         cNT8w5995UK+Lw7ygGY/q0rSRat9WskdQLpUCBIL9E7jy3cWJ73zWgL5IHb3KVp9WMfB
+         xCoT8E26ggTFOkrKxVecoWRZY4RxG1xa7KAeWV/8PLw+HqoZ1V+4krfjZIA5JXQzCGmk
+         TKHedrYRowViq+yJmDmcF+Th20ATSWs5UsfASGy1WSam4x0I9CjY6zZA1RngEqPVWffi
+         c1Hie1LlHwwLNpbuSe4LxZtX8bL54N/NXK5isrobrFyZn884wr+Xp18mIorFvhpMyISG
+         ZqTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTtGPR3G3o0rvTvkFq2H7Jh2YqIxsbSh6tzTAM69eunzqbw6FtUhNYa1vrst73ebIW51KbArcatuxc9N4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZNsTa9qwEFHAZPaCQ3ZT5ujl12BQRD56ifaVx6BCZ5D7qqi93
+	Z8xxEthuG4/t2EmXq3pZxH+ppa27FNjZgu4sklDlbySCCSoxd+uBnbA5AFoG+zcOmdHCQuj+Me+
+	FpDFaOPTrWaBnj1+X4AfSlpIhKjU43txQeecA
+X-Gm-Gg: ASbGnct8F9uW8pZ8qyfTP3FvtWu14WqHyA0ef85hdCDu6PO1RcK8qLdZzhdIajfjgih
+	06uTzflN7E+nlSZ6K+Oncn4Hoj1hw7Paj4RVkX4TnbYg1UoiPjif98yLvmEnN4Z3UBXEn9pritL
+	M9nO9u7UXMp2eCAOxg7mzaKgp0
+X-Google-Smtp-Source: AGHT+IEEi7CKsuJWJUwchtoyuIekBDyDvrAMUfyssJJJ1oReMkk/qGduMnGB9jCYH6g9kldOFkdoyzIivXaqFTZhu5Q=
+X-Received: by 2002:a05:6e02:1a02:b0:3ce:3873:48d4 with SMTP id
+ e9e14a558f8ab-3d009815b88mr1279785ab.4.1738193964491; Wed, 29 Jan 2025
+ 15:39:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] container_of: add container_first() macro
-To: Greg KH <gregkh@linuxfoundation.org>,
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z5m76U5zh34WbeQY@kspp>
- <2025012955-hypnotic-patronize-8931@gregkh>
- <f6e24dfa-450e-4de6-87a6-6fcf7d83888d@embeddedor.com>
- <2025012921-dense-unplanted-952b@gregkh>
- <06aa1194-a7aa-4a5a-adb8-f6cd447d35d9@stanley.mountain>
- <2025012951-plenty-clang-1e2b@gregkh>
- <3979f87d-b7d7-48bb-b6ab-cd8165dbc3cc@stanley.mountain>
- <2025012940-hardhat-usual-fbc6@gregkh>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <2025012940-hardhat-usual-fbc6@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 45.124.203.141
-X-Source-L: No
-X-Exim-ID: 1tdHbO-003ScQ-2D
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.153]) [45.124.203.141]:55136
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfAS08Vanqu0lWKyF2Jf4ari8VgCwqLGlb6x1lOR2E9jHtVxyshIEBtUFFUcoZ3+dseqZUqP9rIXtY7g2T2S9rTNlHT31mGEZkTGHNQMlJSgdL5uIVjbG
- /wEIFSnf6vOa8ODMjvNrDrw1sFvMuCco6JS4iQfWeJDf7ZJsAQaZXCPxsmC4YWtBEb6+jDDYpcZYLtWU0uRlVlWaZADO/qQ0hDW346rGSKf1t2LnTcc5NVTr
+References: <20250129154405.777533-1-james.clark@linaro.org>
+In-Reply-To: <20250129154405.777533-1-james.clark@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 29 Jan 2025 15:39:13 -0800
+X-Gm-Features: AWEUYZlpJHNjcwYBk2SlqO-JWrSR1iXNStr3ZwGWPzCWTLxaNxIIBB-53FZp-wc
+Message-ID: <CAP-5=fUS4P6dFXXQ23pvv8+yP6XDt4YmL+NqnGu-+i1EmjmOkA@mail.gmail.com>
+Subject: Re: [PATCH] perf: Always feature test reallocarray
+To: James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, Ali Utku Selen <ali.utku.selen@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jan 29, 2025 at 7:44=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+> This is also used in util/comm.c now, so instead of selectively doing
+> the feature test, always do it. If it's ever used anywhere else it's
+> less likely to cause another build failure.
+>
+> This doesn't remove the need to manually include libc_compat.h, and
+> missing that will still cause an error for glibc < 2.26. There isn't a
+> way to fix that without poisoning reallocarray like libbpf did, but that
+> has other downsides like making memory debugging tools less useful. So
+> for Perf keep it like this and we'll have to fix up any missed includes.
+>
+> Fixes the following build error:
+>
+>   util/comm.c:152:31: error: implicit declaration of function
+>                       'reallocarray' [-Wimplicit-function-declaration]
+>   152 |                         tmp =3D reallocarray(comm_strs->strs,
+>       |                               ^~~~~~~~~~~~
+>
+> Fixes: 13ca628716c6 ("perf comm: Add reference count checking to 'struct =
+comm_str'")
+> Reported-by: Ali Utku Selen <ali.utku.selen@arm.com>
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-On 30/01/25 02:38, Greg KH wrote:
-> On Wed, Jan 29, 2025 at 05:06:54PM +0300, Dan Carpenter wrote:
->> On Wed, Jan 29, 2025 at 02:14:14PM +0100, Greg KH wrote:
->>> On Wed, Jan 29, 2025 at 01:39:27PM +0300, Dan Carpenter wrote:
->>>> On Wed, Jan 29, 2025 at 09:34:07AM +0100, Greg KH wrote:
->>>>> On Wed, Jan 29, 2025 at 06:35:18PM +1030, Gustavo A. R. Silva wrote:
->>>>>>
->>>>>>
->>>>>> On 29/01/25 16:24, Greg KH wrote:
->>>>>>> On Wed, Jan 29, 2025 at 03:56:01PM +1030, Gustavo A. R. Silva wrote:
->>>>>>>> This is like container_of_const() but it contains an assert to
->>>>>>>> ensure that it's using the first member in the structure.
->>>>>>>
->>>>>>> But why?  If you "know" it's the first member, just do a normal cast.
->>>>>>> If you don't, then you probably shouldn't be caring about this anyway,
->>>>>>> right?
->>>>>>
->>>>>> This is more about the cases where the member _must_ be first in the
->>>>>> structure. See below for an example related to -Wflex-array-member-not-at-end
->>>>>
->>>>> That's fine, but that's a build-time issue, you should enforce that in
->>>>> the structure itself, why are you forcing people to remember to use this
->>>>> macro when you want to use the field?  There's nothing preventing anyone
->>>>> from using container_of() instead here, and nothing will catch that from
->>>>> what I can tell.
->>>>
->>>> The new definition has a static_assert() in it so it's enforced about
->>>> build time.
->>>
->>> Yes, but that forces you to "know" to do that in the .c file.  How do
->>> you know to use this, and if you remove it or change it to
->>> container_of(), it works just fine again.
->>>
->>
->> I guess my use case is different from Gustavo's.  For him, using
->> container_of() is fine.  We probably don't even need an assert because
->> once you see a struct_group_tagged() then you know the order is important.
-> 
-> Who knows this?  The developer?  What are they supposed to "know" here?
-> I sure don't :)
-> 
-> Having some sort of "__must_be_first" marking for a field is fine and
-> break the build if that doesn't happen.  Otherwise this is something
-> that is not going to be used properly over time.
+Thanks,
+Ian
 
-I'm currently dealing with this situation in the following way:
-
-  struct libipw_hdr_3addr {
--	__le16 frame_ctl;
--	__le16 duration_id;
--	u8 addr1[ETH_ALEN];
--	u8 addr2[ETH_ALEN];
--	u8 addr3[ETH_ALEN];
--	__le16 seq_ctl;
-+	/* New members MUST be added within the __struct_group() macro below. */
-+	__struct_group(libipw_hdr_3addr_hdr, hdr, __packed,
-+		__le16 frame_ctl;
-+		__le16 duration_id;
-+		u8 addr1[ETH_ALEN];
-+		u8 addr2[ETH_ALEN];
-+		u8 addr3[ETH_ALEN];
-+		__le16 seq_ctl;
-+	);
-  	u8 payload[];
-  } __packed;
-+static_assert(offsetof(struct libipw_hdr_3addr, payload) == sizeof(struct libipw_hdr_3addr_hdr),
-+	      "struct member likely outside of __struct_group()");
-
-"We also want to ensure that when new members need to be added to the
-flexible structure, they are always included within the newly created
-tagged struct. For this, we use `static_assert()`. This ensures that the
-memory layout for both the flexible structure and the new tagged struct
-is the same after any changes." [1]
-
-We could probably create struct_group_first() instead of container_first().
-
-Anyways, so far so good.  For some reason I was under the impression
-that you two guys wanted the container_first() macro.
-
-OK, that's it from my side.
-
-Have a good one!
--Gustavo
-
-[1] https://git.kernel.org/linus/089332e703b681c8
-
-> 
->> For me, it's code like I mentioned which does:
->>
->> 	p = container_of();
->> 	if (IS_ERR(p))
->> 		...
->>
->> And I did see you suggest that people re-write that kind of code, but no
->> one is going to do that.  :P  People know that container_of() is just a
->> cast in that case.  It works fine.  It's just a bit ugly.
-> 
-> It doesn't work if the field isn't first, so no, it shouldn't be working
-> fine, and that should be flagged and fixed and never allowed to come
-> back again.  Can't we do that with coccinelle?
-> 
-> thanks,
-> 
-> greg k-h
-> 
-
+> ---
+>  tools/perf/Makefile.config | 10 ++++------
+>  tools/perf/util/comm.c     |  2 ++
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index a148ca9efca9..ed3ba13f1018 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -497,13 +497,14 @@ ifeq ($(feature-setns), 1)
+>    $(call detected,CONFIG_SETNS)
+>  endif
+>
+> +ifeq ($(feature-reallocarray), 0)
+> +      CFLAGS +=3D -DCOMPAT_NEED_REALLOCARRAY
+> +endif
+> +
+>  ifdef CORESIGHT
+>    $(call feature_check,libopencsd)
+>    ifeq ($(feature-libopencsd), 1)
+>      CFLAGS +=3D -DHAVE_CSTRACE_SUPPORT $(LIBOPENCSD_CFLAGS)
+> -    ifeq ($(feature-reallocarray), 0)
+> -      CFLAGS +=3D -DCOMPAT_NEED_REALLOCARRAY
+> -    endif
+>      LDFLAGS +=3D $(LIBOPENCSD_LDFLAGS)
+>      EXTLIBS +=3D $(OPENCSDLIBS)
+>      $(call detected,CONFIG_LIBOPENCSD)
+> @@ -1103,9 +1104,6 @@ ifndef NO_AUXTRACE
+>    ifndef NO_AUXTRACE
+>      $(call detected,CONFIG_AUXTRACE)
+>      CFLAGS +=3D -DHAVE_AUXTRACE_SUPPORT
+> -    ifeq ($(feature-reallocarray), 0)
+> -      CFLAGS +=3D -DCOMPAT_NEED_REALLOCARRAY
+> -    endif
+>    endif
+>  endif
+>
+> diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+> index 49b79cf0c5cc..8aa456d7c2cd 100644
+> --- a/tools/perf/util/comm.c
+> +++ b/tools/perf/util/comm.c
+> @@ -5,6 +5,8 @@
+>  #include <internal/rc_check.h>
+>  #include <linux/refcount.h>
+>  #include <linux/zalloc.h>
+> +#include <tools/libc_compat.h> // reallocarray
+> +
+>  #include "rwsem.h"
+>
+>  DECLARE_RC_STRUCT(comm_str) {
+> --
+> 2.34.1
+>
