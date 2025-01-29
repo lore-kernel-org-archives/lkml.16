@@ -1,125 +1,179 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0DB1ACEB5;
-	Wed, 29 Jan 2025 22:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1221B199EBB;
+	Wed, 29 Jan 2025 22:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738191189; cv=none; b=DGotGyZ0QHX6EtYuMzcVPklJY7K9kXuTSgi157YHAmXm+GRVNdMq3PZllquuf0daVXndPUN5Gs/7oHPIl6P6iJE5YNTA6ZGYDltVRorFZIeoqIDskvZ5KDtjrYnwm3tBZfNWqPEg5589qO9Lk+RjlEt7UsCQZ7uxw8h1am3WVOY=
+	t=1738191262; cv=none; b=Hp/seXTI0CdEauFSRpInvL56CjLsYAypn29yM+MovmErdoCMbE5KlqSuR/sQmAIdniwDK91KgJngM4fYOnIB50rq0uTo9MpvngW9EnwfDGwrellzDN2RSoRFnxQQfZ1sg1ya0cYbBkFuRNtnEDXsuXo9DoZqHRDsMrc+7UZWPlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738191189; c=relaxed/simple;
-	bh=JQMPttJqfWA8jYJfQMhKKdaY7u1wRGX2h33H9KEYbbE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lB19j53lKjBUxt1VjKzikTrtoautBSjkTMxkSJrcNB1BJ2g3mBYaPM+xc9PnIXebWhkhSGJzOSRP+MHByeuft5kQj0+2tf31va+v1Hm6hx2PDP+2fzl1xs//7duzURCt9/xfteU69Cqbtm0/geo9mE1aSz6Sm1BGZT3uVQQttac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NwIHm0Nf; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738191262; c=relaxed/simple;
+	bh=0GiNQekHdUNA2y6dcTt32YRSoavfN1TedMBkibNu9/o=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iEFncvIDY7gyO9jJEGM8PZxMi1pkXVNcubDplCZlDaNePKN9kKA2qQQsrdEXZEjszqsi9Nx4wkNW/nZUFJDbNBba5bT6wCbo1VznmE5rSWYGymowmlOPJOiOT/vhZvQJYJQM4RfdnF+wTIsLKIn3t0bP2tRKNIyIw+fV4qBcDVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GqUmt5a1; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwIHm0Nf"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2164b662090so2914525ad.1;
-        Wed, 29 Jan 2025 14:53:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738191187; x=1738795987; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JQMPttJqfWA8jYJfQMhKKdaY7u1wRGX2h33H9KEYbbE=;
-        b=NwIHm0NfpNQVBigNHYsfAyr6h+zsKHIBvdLtHVe5wQIZv0+bKoXWwEj5XWcLI9lEey
-         X3etN/hfCejrXLkhvTOaoByZ2qsEC1LcDnc2BOj7GnYLy8fxzQ2DYoAqxYzASj6W3lB0
-         h5Va51aOvOE3Ai5J4ggtRpOfQc1xwSNWtl5adpN9GuPe9BgI36ajcrj0AZcHlofG78RY
-         VklVqvVHkzRT4pRwKAg3wfk0o3lUsHNY8MmL1Ldi/X6WPWm1uaTn6MmZ5gf+S7ln5eKO
-         XTxWFI9yZPLr8wzbsfB6L/zZNWBhKKGpVi6TEjHRxmtKLvI6Qenly+bYhZs2YcM7yrtm
-         yk0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738191187; x=1738795987;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JQMPttJqfWA8jYJfQMhKKdaY7u1wRGX2h33H9KEYbbE=;
-        b=GiNkGJ0EuikdKIoJOqtWS/KT2xwOnNqCLvhK/N3TJwp0MmcssN+nJRIWbvByAgjB56
-         IXuWun+t6+wch42lXW8uibseNTZNzJ+H1hUosvT5rpVUTPpfs1JB1WFKK4w6Ws3qzuod
-         MIeAXgw13Yyk5+o3iyQL3xfJEHOwucT1N62XMyBbGyUmkPipPy63dPvWMhoNWjUeis9Q
-         X5YiMtSz9WfPpoa7tYhn82v85AYcpJ5mhrG2V0ipgPzxSkG7CAUSp8YRQLvs9FN3zSPG
-         v1CLTuFWOw6sg4+1uxusEh4GGU/ex0G2hyoQORWlr7lijPrYec2Sb1ofnlq074b8xX2c
-         u0KA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1PP4Z75xoF/R/tNyZCs2nszFq7snbUVkGAOZxMhBCxrQimzoSsgEvcpt3tCGW0kh//0FnYFsI@vger.kernel.org, AJvYcCUMVIRwBj+DQDqMHnY00Yr57OjZ6paYbIAc8MpW7XR2ERO7cS1PbGP6ppAhEJtV4G9z4sH0Fjt/7Lgcsg3bLeRc8IJa@vger.kernel.org, AJvYcCUeePPRukB17rs2o9WHZd6I3SF/b+Xg8ThlmI6HuzgdQ8YkpELhPBJh5Gd8Wg4ly6NrnHInlX4ucEkI6S11@vger.kernel.org, AJvYcCVPlUzet1xohbAJErI5fbf0EHB5nv1oU0QfLuj5/zNlsfkzFvlMdA2LL6vFD3bTQGgz1yYUmhuXj8MN@vger.kernel.org, AJvYcCW8ehYtw0vRdPfVSpVVogpFlXuoHZ14NHa3fwQEhYYcBtMAIR2m7cucgwRwOLF2L5p284s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydPkRevYR7swJA1Fh3kuccKHpCEdOnvyRX1qftYic7+j8j64VV
-	mWjLaAB8K6B5ZNQFLRZm1sQG4qR/ahhRKJ1VuNL6zey9p/z+KaAlnO6mEc5aTwyjy2IVx49qhOL
-	a7Ouq5PSHmFVERargvYBn9lGOgzI=
-X-Gm-Gg: ASbGncs/QEhYty1NHD95g/TDlcbKRDm1Nd4PVSrz6mDm6nV8suvvX6qsNwm/JWqgwwb
-	iobUAAdcVOmOXZM+Jg//P0CSCgHjoTYtsrCM7i1qGEsN5cpm0BScGYcIqIcV/kFRMkZSZtIWVDR
-	QDjf2NjKSRZtyg
-X-Google-Smtp-Source: AGHT+IF9R0kh6Qz446uOMnRTkvyYjffEe3Mspfw6bk+dJOSpnnwLEULvROpWxgb2xSxeZZSiByL7CobNy8/T5o6Q6hA=
-X-Received: by 2002:a05:6a21:3284:b0:1e8:bd15:6845 with SMTP id
- adf61e73a8af0-1ed7a5a50eamr7493543637.1.1738191187437; Wed, 29 Jan 2025
- 14:53:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GqUmt5a1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738191261; x=1769727261;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=0GiNQekHdUNA2y6dcTt32YRSoavfN1TedMBkibNu9/o=;
+  b=GqUmt5a1d6BC0Xr71eSwgn8zjr6GPlz3lXIFiU9Z5M/VPWEuSTyZWsPn
+   E3Rhksx1ZBh8KDnGYQxBj5V+nA1eRroPWZBL3kZ1QxAmnHufDvjw9ut7L
+   vRbVBJ7vGtRidxL7QoVZME+NjHLlqYV/mTmmyQHhQ0XjaTaxSTwTPZUdc
+   NB5EqsIDs+vTAY857K6MknzVuJtHCBeFi7Qw8PhTpB6x0B/T7rYmSUlhE
+   TewSCcszdDR+o8UtD1hmfZFNNf0vslBQKRpFaDwmc9HgOuiXCTztq/LC9
+   3YRZqAQj5uZCDZJZx5RSuOZjtGZBH3jjAknjdxJS+bQAO9MkY57ERfkax
+   Q==;
+X-CSE-ConnectionGUID: +WgODY/JR36K44HS7mrX7A==
+X-CSE-MsgGUID: R2nbCBnLTnunkICznQE48g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="38866491"
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="38866491"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 14:54:21 -0800
+X-CSE-ConnectionGUID: T/I/jvI3QZSoMZBs0HqnOw==
+X-CSE-MsgGUID: /kwW0rF3RyCon6JaIzFPhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="108969351"
+Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 14:54:20 -0800
+Date: Wed, 29 Jan 2025 14:54:19 -0800 (PST)
+From: matthew.gerlach@linux.intel.com
+To: Krzysztof Kozlowski <krzk@kernel.org>
+cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
+    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
+    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
+    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
+    peter.colberg@altera.com
+Subject: Re: [PATCH v5 4/5] arm64: dts: agilex: add dts enabling PCIe Root
+ Port
+In-Reply-To: <58f7925c-dbed-4a5e-8e7d-095bef197931@kernel.org>
+Message-ID: <319e9f53-6910-a144-8752-4bcc47b7cba@linux.intel.com>
+References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com> <20250127173550.1222427-5-matthew.gerlach@linux.intel.com> <58f7925c-dbed-4a5e-8e7d-095bef197931@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250128145806.1849977-1-eyal.birger@gmail.com>
- <202501281634.7F398CEA87@keescook> <CAHsH6Gsv3DB0O5oiEDsf2+Go4O1+tnKm-Ab0QPyohKSaroSxxA@mail.gmail.com>
-In-Reply-To: <CAHsH6Gsv3DB0O5oiEDsf2+Go4O1+tnKm-Ab0QPyohKSaroSxxA@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 29 Jan 2025 14:52:55 -0800
-X-Gm-Features: AWEUYZms5OpDUt9oje1WedETk3FwRlRnwT8KINnzUtYSHN_teRJwe2rU5R01zCQ
-Message-ID: <CAEf4BzZxR0RDTQ2TmBko-AM9FQg6JjvRmqXeuqS4K99TdSO1uQ@mail.gmail.com>
-Subject: Re: [PATCH v2] seccomp: passthrough uretprobe systemcall without filtering
-To: Eyal Birger <eyal.birger@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, luto@amacapital.net, wad@chromium.org, oleg@redhat.com, 
-	mhiramat@kernel.org, andrii@kernel.org, jolsa@kernel.org, 
-	alexei.starovoitov@gmail.com, olsajiri@gmail.com, cyphar@cyphar.com, 
-	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com, 
-	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de, daniel@iogearbox.net, 
-	ast@kernel.org, rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com, 
-	bpf@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Wed, Jan 29, 2025 at 9:27=E2=80=AFAM Eyal Birger <eyal.birger@gmail.com>=
- wrote:
->
-> Hi,
->
-> Thanks for the review!
->
-> On Tue, Jan 28, 2025 at 5:41=E2=80=AFPM Kees Cook <kees@kernel.org> wrote=
-:
-> >
-> > On Tue, Jan 28, 2025 at 06:58:06AM -0800, Eyal Birger wrote:
-> > > Note: uretprobe isn't supported in i386 and __NR_ia32_rt_tgsigqueuein=
-fo
-> > > uses the same number as __NR_uretprobe so the syscall isn't forced in=
- the
-> > > compat bitmap.
-> >
-> > So a 64-bit tracer cannot use uretprobe on a 32-bit process? Also is
-> > uretprobe strictly an x86_64 feature?
-> >
->
-> My understanding is that they'd be able to do so, but use the int3 trap
-> instead of the uretprobe syscall.
->
 
-Syscall-based uretprobe implementation is strictly x86-64 and I don't
-think we have any plans to expand it beyond x86-64. But uretprobes in
-general do work across many bitnesses and architectures, they are just
-implemented through a trap approach (int3 on x86), so none of that
-should be relevant to seccomp. It's just that trapping on x86-64 is
-that much slower that we had to do syscall to speed it up but quite a
-lot.
 
-> > > [...]
-> > > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> > > index 385d48293a5f..23b594a68bc0 100644
-> > > --- a/kernel/seccomp.c
-> > > +++ b/kernel/seccomp.c
-> > > @@ -734,13 +734,13 @@ seccomp_prepare_user_filter(const char __user *=
-user_filter)
-> > >
+On Wed, 29 Jan 2025, Krzysztof Kozlowski wrote:
 
-[...]
+> On 27/01/2025 18:35, Matthew Gerlach wrote:
+>> Add a device tree enabling PCIe Root Port support on
+>> an Agilex F-series Development Kit which has the
+>> P-tile variant PCIe IP.
+>
+> Please wrap commit message according to Linux coding style / submission
+> process (neither too early nor over the limit):
+> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+>
+Thank you for the pointer. I will fix the commit message accordingly.
+
+>>
+>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>> ---
+>> v3:
+>>  - Remove accepted patches from patch set.
+>> ---
+>>  arch/arm64/boot/dts/intel/Makefile               |  1 +
+>>  .../socfpga_agilex7f_socdk_pcie_root_port.dts    | 16 ++++++++++++++++
+>>  2 files changed, 17 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
+>>
+>> diff --git a/arch/arm64/boot/dts/intel/Makefile b/arch/arm64/boot/dts/intel/Makefile
+>> index d39cfb723f5b..737e81c3c3f7 100644
+>> --- a/arch/arm64/boot/dts/intel/Makefile
+>> +++ b/arch/arm64/boot/dts/intel/Makefile
+>> @@ -2,6 +2,7 @@
+>>  dtb-$(CONFIG_ARCH_INTEL_SOCFPGA) += socfpga_agilex_n6000.dtb \
+>>  				socfpga_agilex_socdk.dtb \
+>>  				socfpga_agilex_socdk_nand.dtb \
+>> +				socfpga_agilex7f_socdk_pcie_root_port.dtb \
+>>  				socfpga_agilex5_socdk.dtb \
+>>  				socfpga_n5x_socdk.dtb
+>>  dtb-$(CONFIG_ARCH_KEEMBAY) += keembay-evm.dtb
+>> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts b/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
+>> new file mode 100644
+>> index 000000000000..76a989ba6a44
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
+>> @@ -0,0 +1,16 @@
+>> +// SPDX-License-Identifier:     GPL-2.0
+>> +/*
+>> + * Copyright (C) 2024, Intel Corporation
+>> + */
+>> +
+>> +#include "socfpga_agilex_socdk.dts"
+>> +#include "socfpga_agilex_pcie_root_port.dtsi"
+>> +
+>
+> Missing board compatible, missing bindings.
+
+The model and compatible bindings are inherited from socfpga_agilex_socdk.dts.
+
+>
+>> +&pcie_0_pcie_aglx {
+>> +	status = "okay";
+>> +	compatible = "altr,pcie-root-port-3.0-p-tile";
+>
+> Why do you define the compatible here, not in DTSI? This is highly
+> unusual and confusing. Also, compatible is never the last property, but
+> opposite.
+
+The current DTSI supports all three variants of the PCI hardware in the 
+Agilex family, referred to as P-Tile, F-Tile, and R-Tile. This particular 
+board has an Agilex chip with the P-Tile variant of the PCI hardware.
+
+I will move the compatible property to be the first property.
+
+>
+> Plus:
+>
+> Please run scripts/checkpatch.pl and fix reported warnings. After that,
+> run also `scripts/checkpatch.pl --strict` and (probably) fix more
+> warnings. Some warnings can be ignored, especially from --strict run,
+> but the code here looks like it needs a fix. Feel free to get in touch
+> if the warning is not clear.
+
+The only warning I see from scripts/checkpatch.pl --strict is "added, 
+moved or deleted file(s), does MAINTAINERS need updating?". The directory, 
+arch/arm64/boot/dts/intel/, is already mentioned in the MAINTAINERS file. 
+Do I need to do anything to resolve this?
+
+>
+> It does not look like you tested the DTS against bindings. Please run
+> `make dtbs_check W=1` (see
+> Documentation/devicetree/bindings/writing-schema.rst or
+> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+> for instructions).
+> Maybe you need to update your dtschema and yamllint. Don't rely on
+> distro packages for dtschema and be sure you are using the latest
+> released dtschema.
+
+The dtschema check failures are inherited from socfpga_agilex_socdk.dts.
+Rob Herring's bot indicates that "Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not." Is this 
+applicable here? Is the correct way to fix the existing dtschema check 
+warnings is with their own patches, rather than adding to this PCIe Root 
+Port patchset?
+
+Thanks for the review,
+Matthew Gerlach
+
+>
+>
+>
+> Best regards,
+> Krzysztof
+>
