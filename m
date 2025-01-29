@@ -1,105 +1,120 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78991E0DB0
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 18:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503021E376C;
+	Wed, 29 Jan 2025 18:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738176504; cv=none; b=t1CjIE7zCa811WJVARWXPyiAQI64MgtJEUywjQnx9rJJg2Q05829kwSRgM1GTLlx7+XFLVZR4z0B6xLN9BRIfC7uO/qzq+4ydxGVVyN3ECswUVcVVpUKEW+/0PXbFP6dpYo3awH16qLPZ3aYKthe2zISepqdr3AT0xZ+k18czNM=
+	t=1738176508; cv=none; b=Kd7hKhPHnPn4Ko2nmVSHMkRRQrX3sHGyipWBSnHMZu4EH4VcXQHFMzKQTiiBjLt2y/EYqYHTr8+iwNGbgwl8OsMikyK8fLl6JqBm+eG4ZcI34tXargUNL/a0HGD2tRmpPvk5X0U8CibXyPQXniUX3Yd4n/9tLxrPURQPe5t8uKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738176504; c=relaxed/simple;
-	bh=v7t/b1bseEGT07c3FY8utGzEJPHu0vgEf5zHyuSLnLk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S8gWUrmzVSYpeB1MSyxCewvMbVdiWNcyzIYAEUnZbVlvH/Fnb9JOhQoXdcW0KMbwu7HKKp+AV3bpWmkZKZp9O5MwTyqwP+qve2rhtSeqZwGaNwkFk26Q8YNsInGN79obMxapTEMkULSLNKBU7wJiYoDnXqY0e3dylV/qcRUNr24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FbzR/kMJ; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1738176508; c=relaxed/simple;
+	bh=5x5C3oXKgTMBkuDA8TFCAbx9AmZk4D3MjTvrIrifUXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JZskeGeEgCrJUlzBfA8gOoUp9+e6WbNBupNqe+LGTOY8hfvN00Q6BlretomnJWG74DyCj8n0We8CX0060WO8ywZCTLRoyACXe4TpGURvREpr8ZSFasvBui8rJLaW7viaGEdmtP/9KQFJd8cIVgyinVxNdJ02vea7cY3FmhVKmcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DvX932J5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FbzR/kMJ"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaec61d0f65so5960966b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 10:48:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1738176501; x=1738781301; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=h8bf4DZJPP2rSwdY+pwJS8gO4tmZtY2U6WvRvjgGimU=;
-        b=FbzR/kMJtT2oum+I1cpgDaUWqu/XhANJYMB0JNw+Q4hmwn/GZczHqCfvIQXIpnBApa
-         a1qt2ySDE0UaQgSI7ORxC6TNdBBiBSwXfVbBZyMecQ5bZX104TvLxXWOZ1dQeAAi482T
-         JELZKBBXYgZnxsbRMjaCV92tBSBBolRFG2n94=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738176501; x=1738781301;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h8bf4DZJPP2rSwdY+pwJS8gO4tmZtY2U6WvRvjgGimU=;
-        b=iw/jjdbbiHas0G69/tkbwDkNYn8zzYaduAHikoxmfXYLeDdnI2RoVkK3QcEoKbXVdf
-         vz3cujeW1CIS+5XTVfnwCEGWTHwDkznSD/8bTvuSqVdKw/oqTpxBMs6CCyQlPclwqeBs
-         nzLIpxZFd9MNClTojxp19uIFZ5+uvgcHncT/v2M6vl0tl+VCt2DOI4a+dt1mDkOI5Ra5
-         REgex7B24yAHc8B18mzPvjKxquqqWiDDAJ97UDpqJri6MA6V9g6Yu31BX9nLBXuIAPLr
-         gXQFOwL3T5MmzYArgDqZhMnIUu83nLn0xt4tff9PVJYZHo/KhGXW9Tpf3K6ndcoMsHSM
-         BZsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVLacUB+l7g3m5D436m2N2WV2hqRQMKhCLQiIl51z6FQ5vHV/YG3LcJ4qWIyafQRepIpeWR63/Ws98kuZs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOmcdojAGlrXkMHGoDfbSGq2QRx58Rmm+lgoPf2PYR1lf1+qE+
-	a5HCkBYuHxH/5qfDf5XedV+ER1l9eDlj1tTPyUoKakbpIDowMZ/x+LLzRMrECDJDo7gI2+lm4Bw
-	Ft/E=
-X-Gm-Gg: ASbGncvJ76Dnjc1+Y83zQTuzsXQWX3gS7uoFcrb+Ka2SwSSAIU2dOnvcbitpc2l5WrO
-	jDEbp9V5KDHs1TwtIRIA+Xnxrhj2f9lj4J+Ofbm7kccDHCrZQoxOeudP8LPHeWv5t4khcBdgdPn
-	llj7okyK2HnpGT+6QAdp2dum1797V28Rai/jiqR5NcZfj6sWPaeW/Qi3/48Pwr95GqWbwIB+xMj
-	A6/RXEVBffoBYSawOM8AVJ8dO09NjG6vXK62z7rCZnJ5FvCmMOwtQmjvC/cBXba/cCNnfsr1W5a
-	KhvUa4BogwcxSdGHzYekyENXBIP3NX00UQfCzErR9Jiuz3i7VwP9M6Tu9Qy1eJxtTw==
-X-Google-Smtp-Source: AGHT+IHEv0x305LPSGc5mo2g29hAtkV2n25M6AJQ6HLWBaAeVyaQh6+a0hEBwVD9XgN20A8NBIdxCA==
-X-Received: by 2002:a17:907:971f:b0:aa6:a844:8791 with SMTP id a640c23a62f3a-ab6cfe120e9mr393214866b.45.1738176500874;
-        Wed, 29 Jan 2025 10:48:20 -0800 (PST)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab675e11a1esm1018869666b.33.2025.01.29.10.48.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2025 10:48:19 -0800 (PST)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab2aea81cd8so3855266b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 10:48:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXnYBkeuH0ia7BkJcbwE78+nUuSl0xS0RDTf1D8dF2bFnZ6PJ+ePYqYUWPqofo62PjXV6cBkEbHNN4Wvc8=@vger.kernel.org
-X-Received: by 2002:a17:906:da85:b0:ab6:9d92:6d6 with SMTP id
- a640c23a62f3a-ab6cfd0d35dmr415053566b.26.1738176498692; Wed, 29 Jan 2025
- 10:48:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DvX932J5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1B5BC4CED1;
+	Wed, 29 Jan 2025 18:48:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738176507;
+	bh=5x5C3oXKgTMBkuDA8TFCAbx9AmZk4D3MjTvrIrifUXk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DvX932J5IFZQf2YexIlDBTZ5Df9aWNzivuNpCN5l7X4KAeZwbG0RZ0NyHVY8Hoi3x
+	 4HvDF7qV+6rNmC84cpQZE22mdmEfWpz1LtheIrgOA4lWfW7gGfCDe2afYg4yMGcGE+
+	 ecyPV2je07PaXbi8BzPgoPNTwFNg4V6myMKgUiCEwJ3Sogm9GtaJDhCNMYegeAvWqb
+	 /nxRHnPUyJJPdIi5+qliYETKlYoBWLt8HNvGgKrfobvjvOKX3KkYkRy8esy6Fse3vl
+	 k1TVeaVbk1Qk7dkdv7GAuLkFDJyLE1cjyi2D3+iO/S3SXLPFvKRfnaGvAVGaNtmmIt
+	 5oGFcJOGrkdLw==
+Date: Wed, 29 Jan 2025 12:48:25 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
+ reset in Xen PV dom0 (regression, Linux 6.12)
+Message-ID: <20250129184825.GA484760@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <kndlh7lx2gfmz5m3ilwzp7fcsmimsnjgh434hnaro2pmy7evl6@jfui76m22kig>
-In-Reply-To: <kndlh7lx2gfmz5m3ilwzp7fcsmimsnjgh434hnaro2pmy7evl6@jfui76m22kig>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 29 Jan 2025 10:48:02 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgNwJ57GtPM_ZUCGeVN5iJt0pxDf96dRwp0KhuVV4Hjpw@mail.gmail.com>
-X-Gm-Features: AWEUYZlqaMWdacM1L6lq7K7jLmz8nrxtrZnee6xpSEfGqjffsjadL1gFNvtIh-4
-Message-ID: <CAHk-=wgNwJ57GtPM_ZUCGeVN5iJt0pxDf96dRwp0KhuVV4Hjpw@mail.gmail.com>
-Subject: Re: [GIT PULL] sysctl constification changes for v6.14-rc1
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Anna Schumaker <anna.schumaker@oracle.com>, Ashutosh Dixit <ashutosh.dixit@intel.com>, 
-	Baoquan He <bhe@redhat.com>, "Bill O'Donnell" <bodonnel@redhat.com>, 
-	Corey Minyard <cminyard@mvista.com>, "Darrick J. Wong" <djwong@kernel.org>, 
-	Jani Nikula <jani.nikula@intel.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>, Kees Cook <kees@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z5mOKQUrgeF_r6te@mail-itl>
 
-On Wed, 29 Jan 2025 at 00:14, Joel Granados <joel.granados@kernel.org> wrote:
->
->   All ctl_table declared outside of functions and that remain unmodified after
->   initialization are const qualified.
+On Wed, Jan 29, 2025 at 03:10:49AM +0100, Marek Marczykowski-Górecki wrote:
+> On Tue, Jan 28, 2025 at 07:15:26PM -0600, Bjorn Helgaas wrote:
+> > On Fri, Jan 17, 2025 at 01:05:30PM +0100, Marek Marczykowski-Górecki wrote:
+> > > After updating PV dom0 to Linux 6.12, The Mediatek MT7922 device reports
+> > > all 0xff when accessing its config space. This happens only after device
+> > > reset (which is also triggered when binding the device to the
+> > > xen-pciback driver).
+> > 
+> > Thanks for the report and for all the debugging you've already done!
+> > 
+> > > Reproducer:
+> > > 
+> > >     # lspci -xs 01:00.0
+> > >     01:00.0 Network controller: MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
+> > >     00: c3 14 16 06 00 00 10 00 00 00 80 02 10 00 00 00
+> > >     ...
+> > >     # echo 1 > /sys/bus/pci/devices/0000:01:00.0/reset
+> > >     # lspci -xs 01:00.0
+> > >     01:00.0 Network controller: MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
+> > >     00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > >
+> > > The same operation done on Linux 6.12 running without Xen works fine.
+> > > 
+> > > git bisect points at:
+> > > 
+> > >     commit d591f6804e7e1310881c9224d72247a2b65039af
+> > >     Author: Bjorn Helgaas <bhelgaas@google.com>
+> > >     Date:   Tue Aug 27 18:48:46 2024 -0500
+> > > 
+> > >     PCI: Wait for device readiness with Configuration RRS
+> > > 
+> > > part of that commit:
+> > > @@ -1311,9 +1320,15 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+> > >                         return -ENOTTY;
+> > >                 }
+> > >  
+> > > -               pci_read_config_dword(dev, PCI_COMMAND, &id);
+> > > -               if (!PCI_POSSIBLE_ERROR(id))
+> > > -                       break;
+> > > +               if (root && root->config_crs_sv) {
+> > > +                       pci_read_config_dword(dev, PCI_VENDOR_ID, &id);
+> > > +                       if (!pci_bus_crs_vendor_id(id))
+> > > +                               break;
+> > > +               } else {
+> > > +                       pci_read_config_dword(dev, PCI_COMMAND, &id);
+> > > +                       if (!PCI_POSSIBLE_ERROR(id))
+> > > +                               break;
+> > > +               }
+> > >  
+> > >     
+> > > Adding some debugging, the PCI_VENDOR_ID read in pci_dev_wait() returns
+> > > initially 0xffffffff. If I extend the condition with
+> > > "&& !PCI_POSSIBLE_ERROR(id)", then the issue disappear. But reading the
+> > > patch description, it would break VF.
+> > > I'm not sure where the issue is, but given it breaks only when running
+> > > with Xen, I guess something is wrong with "Configuration RRS Software
+> > > Visibility" in that case.
+> > 
+> > I'm missing something.  If you get 0xffffffff, that is not the 0x0001
+> > Vendor ID, so pci_dev_wait() should exit immediately.  
+> 
+> I'm not sure what is going on there either, but my _guess_ is that the
+> loop exits too early due to the above. And it makes some further actions
+> to fail.
 
-Hmm. A quick grep shows
-
-    static struct ctl_table alignment_tbl[5] = {
-
-in arch/csky/abiv1/alignment.c that didn't get converted.
-
-And a couple of rdma drivers (iwcm_ctl_table and ucma_ctl_table), but
-maybe those weren't converted due to being in the "net" address space?
-
-Anyway, taken as-is, I'm just noting the lacking cases.
-
-            Linus
+Seems like a good guess worth investigating.  Maybe log all config
+accesses to this device after the FLR and see what we're doing?
