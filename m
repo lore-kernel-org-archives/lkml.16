@@ -1,105 +1,389 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19BB191489
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 21:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738187430; cv=none; b=nTruUOy97s1E4jLqL0OsbzZomzG2wFykCl51w0ZNn2C6J+c1PWOon9+f9ry5O4xZ2iSrOukGnPXaxNSqh1y4oNzXo6JqezwGWfRC6yoXedFRBHfMeQzOnZstly3DpIQ2GMl1zf9hOM22D6jaIWmPtbtD2m6gEZmxuSeGjiAGQ+g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738187430; c=relaxed/simple;
-	bh=GCv1BdGhLk979tjwdD7sHi0l76G9SsBFWUxU0e6u/iE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aNNGEqDFiZY0QfzliF8c54x4AM9joIeSx/k62PjNUszzKl1IznZwm/TnoyCpxg5BjCM2FseJPmSpQcxrcglOi8hxNkeHpf7AqDnmoTuD16cBS4AIrkSX78XhtBwj9lWup6zqEirDRH9TFdYw3M8M0OMNYItCFGnEvjPfqAUnNQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org; spf=pass smtp.mailfrom=linuxtx.org; dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b=c64uApf4; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxtx.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A7E191489
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 21:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738187484; cv=fail; b=mDKKQ3Y+U4G1Uucz/LSFFvu3cIGzjyrwd2W2c1pgsrDgEuEraPsbQept0xy063BVrtkqNE9ye6+CVPK7EYTisFvd54MgIXabfVlb3QCBTyT6PbfbwzxVimsPk7M8SYBo5m5YbY9jWXCrBar0SvQ1FmFPQWQQacSMzxiXDPdX7pk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738187484; c=relaxed/simple;
+	bh=nk0dAo6/BA843TZOicwCx00mE4EnQjP4V0CbPgn8v7w=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=CeyHSnQne5kUFnvZDPIfiL3p0ZUGcF78P9cW4qhlGmx+niJR2gB8YbW5yAZ0Sysk8e2WWk8UAnbCtC+2AKu8dPoFjtyD1eUmQJX8Vu5Mgspng5uJ+KNO4/0qUvWdJS7OnyTHyCCKagzIRcHcu6bTBCzdxhROl6/jsr8unVBmTaY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jcbIzuWd; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="c64uApf4"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-84cdb6fba9bso10719739f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 13:50:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxtx.org; s=google; t=1738187428; x=1738792228; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=6AAS+zM1KKQALs9Y9hGxYkwdnvHEn+06CSi/EhMJ+kU=;
-        b=c64uApf4rs+3yzS0HQsyJrvBVA09ku0RSMYa74LNLp/7xj6J+4T/5Rsr9vmBD7KNo7
-         PK9X5iPUz7PXBxqC71sUjB1RgNi0Y5+PtwNAPaISqDU05h5blRRLYtdHAKOKiEZpNCkc
-         hjHYoOM0aJ23Tzdw3f9kFEyEJnLUqGpmi4t30=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738187428; x=1738792228;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6AAS+zM1KKQALs9Y9hGxYkwdnvHEn+06CSi/EhMJ+kU=;
-        b=ncN/XQKMDjndFQCHioVwteq+Bbmp8JF9te1h0wXgo3izmHpWfCaJaQJ+pVL6hVGAOt
-         82cm5sMyqhXHWuzNl/vDsuc8C5mRbUXyylzRsTU3KEeO0HNvAk9fITZNiABSfbYc0/lP
-         cFuKVvlq1lBwT6PGtC/4Pmf70FhvF52IY8dCvRZEj9fQJuUteFphyCRmeG5vcrjo8avs
-         Gn8kMfXhJppWes/GTnFaHzD6p2BE4fVhRAcV8wufYvvvzedzVZvGmFfjGi0584/s6prT
-         hyWRdU81JBDXCx5qbNsvWbBd4JhK3dKVLwMLT4MTVQ3D9rMgUO0PDlkDX8+6msiHntIA
-         fC2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXVN38BheGsV1ukle4owK39nf+zrJ3ozazovlgQ5gS5OgURlwhDbndRh+V5HuzXZXUmsVqEascmcbfzLs0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMbfTiwvNaDOgoy77F4y/Vd3biT2uPM6xdUmkEABBRnun48414
-	S/mVV1jODc/9y1h+UKPZe9uwJ0DXnJGMHiXrG6GJWc102MLww9/t69p9zTPvMcqCJKC4t8KxxKt
-	EKw==
-X-Gm-Gg: ASbGncsG+vliIPORzpuz/9L1GGlu4UYAHIhgk4iHYttsIeMEF6dxxYI92mxLA0/dUs/
-	ps2lXZFBPXNNgR6YEaytM1LAoUaaRdDWzr4VN2L01Z0nE/AAFpJd6ROgXf9v9Gc4ERwbANt2onq
-	8xYLU+wDrVUt/oXFXtT5PuC/XcpuPobod8OUhYcOBo2CFZ87mqF7DzTCa79xnUsIzyyVBiFY8Y5
-	NPOIM0Xuh3ofYoeKL1l9LPanmHRtePEzDAaMR0molKL9P1fMoQiSa71AmgfMDioBkerefG3t/je
-	cxWuJFkPFXQbuMoV/KRI3fSFlVurqBlw
-X-Google-Smtp-Source: AGHT+IEvJSszsKXHpNKz9g/CRfSxmyXZyJBm+Dxm8K/rY4WK0s24ca0m/ItXgDsI7h5JOofLlACFcw==
-X-Received: by 2002:a05:6602:2b10:b0:84c:e8ce:b531 with SMTP id ca18e2360f4ac-85439fbb605mr538809039f.14.1738187427802;
-        Wed, 29 Jan 2025 13:50:27 -0800 (PST)
-Received: from fedora64.linuxtx.org ([72.42.103.70])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ec7458ed5csm40202173.29.2025.01.29.13.50.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 13:50:27 -0800 (PST)
-Sender: Justin Forbes <jmforbes@linuxtx.org>
-From: "Justin M. Forbes" <jforbes@fedoraproject.org>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: "Justin M. Forbes" <jforbes@fedoraproject.org>
-Subject: [PATCH] Add -fzero-init-padding-bits to bindgen_skip_cflags
-Date: Wed, 29 Jan 2025 14:50:02 -0700
-Message-ID: <20250129215003.1736127-1-jforbes@fedoraproject.org>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jcbIzuWd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738187483; x=1769723483;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=nk0dAo6/BA843TZOicwCx00mE4EnQjP4V0CbPgn8v7w=;
+  b=jcbIzuWdWTnJ9Y9CVYXjKrCdLMOuNovxXfpHakP+A+R3pp90ajiBuj4L
+   y7pTNhLYwiv6F4XJvAslbaQCWXHH6JBCB4blAiTM+dj9BqcXY3uP8z4xw
+   Kflxxvi6DZW1F6H2La5wT3mWFIwr23uvbdpKYqOsOwsV4g/7rMwH0DG8E
+   R1qcqdraMz4nvz1XHySntwTwBBLFSeTXgbfFm7gBaeIsYE9GudGkVHkgJ
+   PIlMFDuxSn2T2RYQ8gDDDQwgPI95eO9u1GEUyK+kya6k9xLNFByeIVSQm
+   09Ev60wudJhLv5buW+RlCfANav021hCuQk48U2aOABiEHUu7jiSRil3c1
+   g==;
+X-CSE-ConnectionGUID: disk5HUFSoi4Bs2t/53Eaw==
+X-CSE-MsgGUID: rPzmShxnSf2aEhWqTft16A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="38755427"
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="38755427"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 13:51:22 -0800
+X-CSE-ConnectionGUID: qQXgfwypTdO4GZV6WTgP0g==
+X-CSE-MsgGUID: skDHb7zPSAKO+ul9/TRTYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="109058977"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Jan 2025 13:51:21 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 29 Jan 2025 13:51:20 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Wed, 29 Jan 2025 13:51:20 -0800
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.49) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 29 Jan 2025 13:51:20 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wq45LdK4sD3TtlSqOm2qKC3axA+a5rD6zoe0Rp822/mVikQ7PTtC0k1qYkIgjKYUFVoSD/whjV0qkw4MLSFMA7uYyENApO4zwObvEiejK2SmYc3rMDCmHKkjcVum6xXB18E93k6hgRmZUV5eXMQiTmjhZ5hKm8eTlm7jtB1olzHis+pQpCgErwxlL8uTQuzL5jmdugVZ55JCCSoniYE3v2vrib5B0cxwDuXOgMKOYvUxI1u7TZOMnZgPlvEfFlIVSYVQlf9lLHEzO/XvhMGsHu9kp7CY3sKlp/6v5D+6PONq/RjOpLFe7oIaNTJDNTglZsd8Fkju3Uz2OlKPkeDNAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=b8EwEelO/pVBHH+aZyTRBefhNIlj74i1bzPKaLY6ndo=;
+ b=hgGEKBZcwErmkGTQRrSLiFddnFyCHUi9mmlX3LRt1ojVlK5NXv7xENqJitGW7wPrgEqT+1RG0WI92hmbyg0NWM6zI5MAzp4UfIn+YKW4kRqTBWR3CjcFvxIeXJvKTggfFjengOkXs7LeEkoTZj1bDA8YqSh0fjGrKW4upiFMahHIMJU9XHpEsMyvSynGTd0YwL8tYEdISHetXhyz93LKbcVFCPs9+fxl2quq7og+WOyw90o8mfpNUnf1Pd67AOi1gXbDcZIM2uLymI2xtWhGBURwjj+7r4S8lnEU5cQyFm1CEzWRW++hfuDKavkOrTtaqbIg1w65a91BfqAhVwb2FQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SN7PR11MB8282.namprd11.prod.outlook.com (2603:10b6:806:269::11)
+ by PH7PR11MB6723.namprd11.prod.outlook.com (2603:10b6:510:1af::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.28; Wed, 29 Jan
+ 2025 21:51:11 +0000
+Received: from SN7PR11MB8282.namprd11.prod.outlook.com
+ ([fe80::f9d9:8daa:178b:3e72]) by SN7PR11MB8282.namprd11.prod.outlook.com
+ ([fe80::f9d9:8daa:178b:3e72%5]) with mapi id 15.20.8377.021; Wed, 29 Jan 2025
+ 21:51:11 +0000
+Date: Wed, 29 Jan 2025 16:51:05 -0500
+From: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: Alexander Usyskin <alexander.usyskin@intel.com>
+CC: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
+	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Lucas De Marchi
+	<lucas.demarchi@intel.com>, Thomas =?iso-8859-1?Q?Hellstr=F6m?=
+	<thomas.hellstrom@linux.intel.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
+	<tursulin@ursulin.net>, Karthik Poosa <karthik.poosa@intel.com>, "Reuven
+ Abliyev" <reuven.abliyev@intel.com>, Oren Weil <oren.jer.weil@intel.com>,
+	<linux-mtd@lists.infradead.org>, <dri-devel@lists.freedesktop.org>,
+	<intel-gfx@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 07/11] mtd: intel-dg: wake card on operations
+Message-ID: <Z5qiyRzkdgwQ9kTP@intel.com>
+References: <20250101153925.865703-1-alexander.usyskin@intel.com>
+ <20250101153925.865703-8-alexander.usyskin@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250101153925.865703-8-alexander.usyskin@intel.com>
+X-ClientProxiedBy: MW4PR04CA0369.namprd04.prod.outlook.com
+ (2603:10b6:303:81::14) To SN7PR11MB8282.namprd11.prod.outlook.com
+ (2603:10b6:806:269::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR11MB8282:EE_|PH7PR11MB6723:EE_
+X-MS-Office365-Filtering-Correlation-Id: 86c68146-9bbc-410d-c3c8-08dd40af0b42
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?HGdaaUvGjvBpYZVnmabhfug9QE9XPzXSuZRC0h0pKNM6x1qSSKsJdyX4je7l?=
+ =?us-ascii?Q?p5QPzW9t47XiJ2JEvzNWRiTiWC1Of51TtFraZB7woI5et/nbh9WIGtfnQ81f?=
+ =?us-ascii?Q?S7cf4LHVT2+Tn30sLjDWjM3yH5xjX+po2Se+iemlCckaruOBm5n0V6/a+0H1?=
+ =?us-ascii?Q?dKk6KSZse7n6YjJrHy4AeoXfzUjUdDTYo2qKObd9DVOxcRmau8TQGOThqU3B?=
+ =?us-ascii?Q?TvXnR6Yb5LtsZftNUT508trwgH9F9ZNo6NiUpCTzIcAFlmO4fwBT4LwKd4OX?=
+ =?us-ascii?Q?sMjetmnm45pjNpS5hvGQVYaeqpEYgm+jW+iOIb2VPog9yVtcmUZn5sSPmS9e?=
+ =?us-ascii?Q?egINKanX19lpBkTBGxk+YWky4lMmEfWlDfi/YeAFbKQhwGkO/sZGq1jm1Sbo?=
+ =?us-ascii?Q?lfnHoRVcsDWxapNGf1MQk2UwS3XIanlJY96EZY85hpgIU4BDGO9r5vuEvVX3?=
+ =?us-ascii?Q?LGT/q/udivTtcXg+/s/SsDhvlDW9Kq0NwrVpd7pcM+NNRLpvne8yyluXrRtH?=
+ =?us-ascii?Q?QXlYglJghNNh0Hb89S3YyjYX8O/9zHRK17khdZbgFxgZEnRLA1/sZGGQlsTw?=
+ =?us-ascii?Q?Q4KKl0mB3yTAT0FYxdSoXvppelGMLteEe67loHg/PhdjF7uhOMDOCklFye8G?=
+ =?us-ascii?Q?B4N6sV9TXf+9rc17kFeX14VTMEWonnhv7Fg7mgrA7uznFTlsMC/iIAWcMrZs?=
+ =?us-ascii?Q?zAuFKUkqrJzqRIaEMBwF9j89ZkVlbCAxjRL7De5SsQlyR4x7JAjoUVpOo+se?=
+ =?us-ascii?Q?HttKzLvmQkYsupm4kdCzqXdN9W1+jDM6WnZAuGuh/HBPDi5fHhmV7rzIqXCg?=
+ =?us-ascii?Q?GQV3XS7IvebZu3jL82JOn/UPtJ6h3l1yellp4kgOqx+e2xUK2lA577lT4HhM?=
+ =?us-ascii?Q?T4ieYFXN6wFselijbCDJNdQJFqrPLWBhs4NiOLstHYEOaXLj2m44JQvN7cpD?=
+ =?us-ascii?Q?sHaR5kuPBTiXJSSk7Chm/SsgGTvAUGNlyhYT/DHWl4OW3Jj2N6t8ByvUxf0D?=
+ =?us-ascii?Q?f4aXh9JFBk/VyKYq1/zqUisZj3tRajy7aT358SyNMzRGPrEOn2yrgrAmqYNx?=
+ =?us-ascii?Q?Ylk4KUhs/+fdT96eJE3iNGDE2IwaBpyepVtf1JfymRO6wjL/G1vfY0phCY+1?=
+ =?us-ascii?Q?kIOxsrFY5Rz+j7c89IH7aAM5Ta3loYmOGDki+QIh6SGkr19JTqKz1lbihg2q?=
+ =?us-ascii?Q?1wSloqhhveN3VzniX+Pnf1Dpdjal9w5RCnc2/tR51lL6yw+vvLb2LIWs+N2b?=
+ =?us-ascii?Q?uLxDPC3vV9oiNEIgiiFVwYnOmZnY1a5Vv2eRuB7zar+kZb5bcwt8MVyMWhS2?=
+ =?us-ascii?Q?+ZefZzoL0nC8+64Y27O1GL6Ua1GOnUcTM62SD1TtphxEvKqnCrsCDMpRAuBm?=
+ =?us-ascii?Q?tIAYZwtUtqO7ZTylIjBGdVoVEICk?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR11MB8282.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?TgLi8DoDwlyuQ9xXOt6cO/xFGeSqijyjyuM59w/4WWiLD/I99Pm3lYvrr2f7?=
+ =?us-ascii?Q?J38vWY1eKLFe7yE1AMdsoQBVGRIUBuqmMBCGPlowBZQmd7GPH3WBbxhavtSG?=
+ =?us-ascii?Q?G8CSwYf8PuAQcn4MpTxFWz6EMj7D+fjHKdwfyqYNSXe/kGhfycXGoumoKj7h?=
+ =?us-ascii?Q?zY8yf7ynMSBLBo2vOpV2LFVVSpz4gALEfCjsQI5ph49WTEGtGiRGZGmJrNlu?=
+ =?us-ascii?Q?p76y1d/thLEzqkCeN9gDQlLqc13+2ZLGh0J/vo/f+VBEIaSpDdCn8/UUWDVo?=
+ =?us-ascii?Q?kkXPqgziFmOLkLVyks7DpEcp60ahrOYPcHXB/v0AVtyIJhT+3tCt+iOgO/6J?=
+ =?us-ascii?Q?pXBSaM6fIQsAZciHipzuknPnfp4lQnmF18FBBrLnRU8hLATjF2NjepA7pIai?=
+ =?us-ascii?Q?fwRDwiJbluAgZJmXeilW522FwdSp5yRolCufaXoqOUl7gayAp6C5jZVnGT6a?=
+ =?us-ascii?Q?1+0+Nai13iAhEewXi2PMC+ChnFI1gs/IXjHwxiD6GTT3wPRBoWO64Vtz+Spv?=
+ =?us-ascii?Q?U+KyITbB0cu8a1myK4vSSvS/qjyLEiPudNmnaviGn0/Cbzt5/Ma28/Zgs8jm?=
+ =?us-ascii?Q?362Fnkt/Tl0xUgBXMbhMwrfxO+BwanhcquoOFMfEVytYMhvcO7qfeBfLei5X?=
+ =?us-ascii?Q?C6f3hNevp5hpjTi++OIBXB2HxSe0KWKIEvPJUX0BH7mNrlUsjKq6Rb2r47q2?=
+ =?us-ascii?Q?DgJ/I+i+hzYg9tLNHDSA6OyV4MzNQq9q5nQVGP2VaqVEV6SXQzaXNTvpP5c7?=
+ =?us-ascii?Q?a1aKnBU8h2rzmkOcjzRGzG7C/IIUqfVGBL+LO49lQPBs3ub04L0IVhpVETFO?=
+ =?us-ascii?Q?fHlNSFE6EDZQd0DmK3EwZ+vkJCpz8bhPlHfDaK/M1QPffuDjliumZ/gNYz/9?=
+ =?us-ascii?Q?+4gJAnYa9LJb9ebvRFhGPptK1EuKnrbZQlV8i9B+ObouKhoUmbXZI2AP+U7S?=
+ =?us-ascii?Q?Cr0CC5VI+H0Gme1qN0cPCTC7VB1bVaFdVJA7EttQVYVgOXnyaKGMse2/ig65?=
+ =?us-ascii?Q?P9LDrdJwhwwE/V+qU0YdxC/IA4209wvvEadnh6Vt3vivZe0j5gMVPtxQxqrN?=
+ =?us-ascii?Q?7sWYJ/0r0j1icOCl2DbPhknpzNF+l2nf5RgP/H7cgsf0PZqYQ/m3WFl+N9Fk?=
+ =?us-ascii?Q?tehxq3qmiQlXqY9OZUqghujEwDT2TAJNGbfk8kpNO2+OTMFvibnGc432YDhu?=
+ =?us-ascii?Q?IIL36Xjh+A3EsAvXIXV3+Amrzb+r7UIxLDdQu9YgdsAbExI+nfw0AHGsGRkv?=
+ =?us-ascii?Q?rFzz07+h9IPftw/Gl5/p+9vL6PEhOM957QMkTdZsnw8GYQQUjBWM2Ixv9QK3?=
+ =?us-ascii?Q?/mdw+UrXicXWBGylqP7rl0SBwoXLdPH/0dCHWHK26b4BynvcgHiqmr+MwzeZ?=
+ =?us-ascii?Q?/xxA9va4erqARla56xo/1MqGWjz+kQCXmeXBwCD3VgpjoRTYy3P6Mh4YI8DV?=
+ =?us-ascii?Q?Q7z6CborfDGYISamgfuWB9clsEMEmzDI8p9J0oP8mg/0t9LXFztxEHGjjX9o?=
+ =?us-ascii?Q?jZCTygOzcwx9dRbIrbO2NRJL8BiIUh0vxU0BtpmKOzFf8CYZNTz/hrrVjznO?=
+ =?us-ascii?Q?cR2u+Y1VCGstl/3zZBCDJi576YOLqEQWhyDVWo8kA2ClUPzAyVzGEPDP8DZj?=
+ =?us-ascii?Q?qQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86c68146-9bbc-410d-c3c8-08dd40af0b42
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR11MB8282.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 21:51:11.1201
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DYA3eg6tLjsbybKEJxyyed17zKh/QJ4pZN8SDB03PToOvvm9QNvPBP1Gsl5O82DbKXfDXVPIhFm9ab8FbkDV+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6723
+X-OriginatorOrg: intel.com
 
-This seems to break the build when building with gcc15.
+On Wed, Jan 01, 2025 at 05:39:21PM +0200, Alexander Usyskin wrote:
+> Enable runtime PM in mtd driver to notify graphics driver that
+> whole card should be kept awake while nvm operations are
+> performed through this driver.
+> 
+> CC: Lucas De Marchi <lucas.demarchi@intel.com>
+> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+> ---
+>  drivers/mtd/devices/mtd-intel-dg.c | 79 +++++++++++++++++++++++++-----
+>  1 file changed, 67 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/mtd/devices/mtd-intel-dg.c b/drivers/mtd/devices/mtd-intel-dg.c
+> index 230bf444b7fe..a84153812291 100644
+> --- a/drivers/mtd/devices/mtd-intel-dg.c
+> +++ b/drivers/mtd/devices/mtd-intel-dg.c
+> @@ -15,11 +15,14 @@
+>  #include <linux/module.h>
+>  #include <linux/mtd/mtd.h>
+>  #include <linux/mtd/partitions.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/string.h>
+>  #include <linux/slab.h>
+>  #include <linux/sizes.h>
+>  #include <linux/types.h>
+>  
+> +#define INTEL_DG_NVM_RPM_TIMEOUT 500
+> +
+>  struct intel_dg_nvm {
+>  	struct kref refcnt;
+>  	struct mtd_info mtd;
+> @@ -460,6 +463,7 @@ static int intel_dg_mtd_erase(struct mtd_info *mtd, struct erase_info *info)
+>  	loff_t from;
+>  	size_t len;
+>  	size_t total_len;
+> +	int ret = 0;
+>  
+>  	if (WARN_ON(!nvm))
+>  		return -EINVAL;
+> @@ -474,20 +478,28 @@ static int intel_dg_mtd_erase(struct mtd_info *mtd, struct erase_info *info)
+>  	total_len = info->len;
+>  	addr = info->addr;
+>  
+> +	ret = pm_runtime_resume_and_get(&mtd->dev);
 
-Unable to generate bindings: ClangDiagnostic("error: unknown argument: '-fzero-init-padding-bits=all'\n")
+I'm glad we are not accessing the parent directly here anymore,
+but to me it is still strange.
+I feel that we should be using &aux_dev->dev; instead of mtd->dev.
 
-Signed-off-by: Justin M. Forbes <jforbes@fedoraproject.org>
----
- rust/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+What am I missing?
 
-diff --git a/rust/Makefile b/rust/Makefile
-index 71a05a3c895a..3c3da7faebb3 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -240,6 +240,7 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
- 	-fzero-call-used-regs=% -fno-stack-clash-protection \
- 	-fno-inline-functions-called-once -fsanitize=bounds-strict \
- 	-fstrict-flex-arrays=% -fmin-function-alignment=% \
-+	-fzero-init-padding-bits=% \
- 	--param=% --param asan-%
- 
- # Derived from `scripts/Makefile.clang`.
--- 
-2.47.1
-
+> +	if (ret < 0) {
+> +		dev_err(&mtd->dev, "rpm: get failed %d\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	guard(mutex)(&nvm->lock);
+>  
+>  	while (total_len > 0) {
+>  		if (!IS_ALIGNED(addr, SZ_4K) || !IS_ALIGNED(total_len, SZ_4K)) {
+>  			dev_err(&mtd->dev, "unaligned erase %llx %zx\n", addr, total_len);
+>  			info->fail_addr = addr;
+> -			return -ERANGE;
+> +			ret = -ERANGE;
+> +			goto out;
+>  		}
+>  
+>  		idx = idg_nvm_get_region(nvm, addr);
+>  		if (idx >= nvm->nregions) {
+>  			dev_err(&mtd->dev, "out of range");
+>  			info->fail_addr = MTD_FAIL_ADDR_UNKNOWN;
+> -			return -ERANGE;
+> +			ret = -ERANGE;
+> +			goto out;
+>  		}
+>  
+>  		from = addr - nvm->regions[idx].offset;
+> @@ -503,14 +515,18 @@ static int intel_dg_mtd_erase(struct mtd_info *mtd, struct erase_info *info)
+>  		if (bytes < 0) {
+>  			dev_dbg(&mtd->dev, "erase failed with %zd\n", bytes);
+>  			info->fail_addr += nvm->regions[idx].offset;
+> -			return bytes;
+> +			ret = bytes;
+> +			goto out;
+>  		}
+>  
+>  		addr += len;
+>  		total_len -= len;
+>  	}
+>  
+> -	return 0;
+> +out:
+> +	pm_runtime_mark_last_busy(&mtd->dev);
+> +	pm_runtime_put_autosuspend(&mtd->dev);
+> +	return ret;
+>  }
+>  
+>  static int intel_dg_mtd_read(struct mtd_info *mtd, loff_t from, size_t len,
+> @@ -539,17 +555,25 @@ static int intel_dg_mtd_read(struct mtd_info *mtd, loff_t from, size_t len,
+>  	if (len > nvm->regions[idx].size - from)
+>  		len = nvm->regions[idx].size - from;
+>  
+> +	ret = pm_runtime_resume_and_get(&mtd->dev);
+> +	if (ret < 0) {
+> +		dev_err(&mtd->dev, "rpm: get failed %zd\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	guard(mutex)(&nvm->lock);
+>  
+>  	ret = idg_read(nvm, region, from, len, buf);
+>  	if (ret < 0) {
+>  		dev_dbg(&mtd->dev, "read failed with %zd\n", ret);
+> -		return ret;
+> +	} else {
+> +		*retlen = ret;
+> +		ret = 0;
+>  	}
+>  
+> -	*retlen = ret;
+> -
+> -	return 0;
+> +	pm_runtime_mark_last_busy(&mtd->dev);
+> +	pm_runtime_put_autosuspend(&mtd->dev);
+> +	return ret;
+>  }
+>  
+>  static int intel_dg_mtd_write(struct mtd_info *mtd, loff_t to, size_t len,
+> @@ -578,17 +602,25 @@ static int intel_dg_mtd_write(struct mtd_info *mtd, loff_t to, size_t len,
+>  	if (len > nvm->regions[idx].size - to)
+>  		len = nvm->regions[idx].size - to;
+>  
+> +	ret = pm_runtime_resume_and_get(&mtd->dev);
+> +	if (ret < 0) {
+> +		dev_err(&mtd->dev, "rpm: get failed %zd\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	guard(mutex)(&nvm->lock);
+>  
+>  	ret = idg_write(nvm, region, to, len, buf);
+>  	if (ret < 0) {
+>  		dev_dbg(&mtd->dev, "write failed with %zd\n", ret);
+> -		return ret;
+> +	} else {
+> +		*retlen = ret;
+> +		ret = 0;
+>  	}
+>  
+> -	*retlen = ret;
+> -
+> -	return 0;
+> +	pm_runtime_mark_last_busy(&mtd->dev);
+> +	pm_runtime_put_autosuspend(&mtd->dev);
+> +	return ret;
+>  }
+>  
+>  static void intel_dg_nvm_release(struct kref *kref)
+> @@ -670,6 +702,15 @@ static int intel_dg_nvm_init_mtd(struct intel_dg_nvm *nvm, struct device *device
+>  
+>  	kfree(parts);
+>  
+> +	if (ret)
+> +		goto out;
+> +
+> +	devm_pm_runtime_enable(&nvm->mtd.dev);
+> +
+> +	pm_runtime_set_autosuspend_delay(&nvm->mtd.dev, INTEL_DG_NVM_RPM_TIMEOUT);
+> +	pm_runtime_use_autosuspend(&nvm->mtd.dev);
+> +
+> +out:
+>  	return ret;
+>  }
+>  
+> @@ -720,6 +761,17 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
+>  		n++;
+>  	}
+>  
+> +	devm_pm_runtime_enable(device);
+> +
+> +	pm_runtime_set_autosuspend_delay(device, INTEL_DG_NVM_RPM_TIMEOUT);
+> +	pm_runtime_use_autosuspend(device);
+> +
+> +	ret = pm_runtime_resume_and_get(device);
+> +	if (ret < 0) {
+> +		dev_err(device, "rpm: get failed %d\n", ret);
+> +		goto err_norpm;
+> +	}
+> +
+>  	nvm->base = devm_ioremap_resource(device, &invm->bar);
+>  	if (IS_ERR(nvm->base)) {
+>  		dev_err(device, "mmio not mapped\n");
+> @@ -742,9 +794,12 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
+>  
+>  	dev_set_drvdata(&aux_dev->dev, nvm);
+>  
+> +	pm_runtime_put(device);
+>  	return 0;
+>  
+>  err:
+> +	pm_runtime_put(device);
+> +err_norpm:
+>  	kref_put(&nvm->refcnt, intel_dg_nvm_release);
+>  	return ret;
+>  }
+> -- 
+> 2.43.0
+> 
