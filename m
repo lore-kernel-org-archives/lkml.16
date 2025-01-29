@@ -1,146 +1,135 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B7129A2;
-	Wed, 29 Jan 2025 20:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5185929A2
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 20:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738183124; cv=none; b=kiyS/+8w6QH//+MzHqdx5E5dn93pMycjRyJtblnsZdUd+pKG5aXzGKXEMg/ILJw8IMAGSUE+KGOWgmJ44MhqYg6U4EvlzxMVbHLxohs1XLBgNOtDy/USPP1myCV5TKVxHOlhzW87loChh+mX0GFSKcN2/VJLSuUg9NZoLS1g+So=
+	t=1738183168; cv=none; b=EjB28jnVrZUKf94XM389OpOl8HZH7InzrMRFPXmLM2upt9aGLy8zPfrQth5VIGr1EvaoevvL0AiBYPr/JRmOTjEFzouh/BGBNGmY9kRLjcql/Jpxwr9gDf0poP8y21W7WyCC49GwIwnptkW2HZjwj0fIrcQeDGT91Usw3ahPn+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738183124; c=relaxed/simple;
-	bh=u7bkkFbgFIRXyXjanPwlyDibiv2H8vlJ8rkMU2DVKcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oZv6iD/1fsubL8agu6OlLPDV0sorZ+j34VN8U3hKFNqbfcR3f6quWinQX0UwpPAXf49nTXOHGVlSI9mJW4/Rx5lbweER8CvvAU9i2eHPMCqoVBll/dp6XGrDcigKkbrNPJqea+OaCJEJ/DnreCDCNfTeBoA3+l6QLWm08vRfFE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eByBx+rM; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738183168; c=relaxed/simple;
+	bh=NZzgzO2QfeOwpkt2UjyCcp7AErZndfzK6OYJqPyqGw0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sRruAmWbmBI5B/O5QPficCwFoNy22PWHe8VVHGSe8YRhKCEok4MhZyhBjsWc23ZWZINF1EAUWCKyC7cfjlQl2olmKOCy6cnNfP/lsjhDFvZgIKjpOzm0R5Wm3Ex8a3pk0+xQGXtB8Wvr6F0OfUgLdVmQecQ2iGO79rf24/RTO5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YJNtUNwv; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eByBx+rM"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50TDdeOY004395;
-	Wed, 29 Jan 2025 20:38:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=1paovO
-	MNVQAoBPhr5hxiZ1wYuOUpazAMiY0kx/X16Qo=; b=eByBx+rMlUWkC4obFL5Ivy
-	WI6nfiJgzGeZNMYIxH9HOZ8biofCgor5zEB3txawrQ9hSKz+kmfuzgPSEYAF4CPO
-	R0bAM91iXMje9usONAac0kLZ2J4ct37GKQwLmXlVorMhQoP+GJT5mNTERWaepnn7
-	gdQi5iYL86VwMmptIYwa/GQLPRyIhBta0dVdF/noWE83x9ulbRdT+n0Ow/hlqDVY
-	nbbMbP9Wz1RdebgmJEBS8r26CDi4cwboXGKf+oLUcg12RqBiq76xRp8L55Rqfjky
-	7guFpJy6gfI8oVlKbz8CmFbmBlzTbJE+X6m8S/7u5Uvgu2/jFoslCfEUgU34cR9g
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fad9n39k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 20:38:34 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50THjpRf022175;
-	Wed, 29 Jan 2025 20:38:33 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44dcgjtcgp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 20:38:33 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50TKcTTS53215676
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Jan 2025 20:38:29 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5A991200A4;
-	Wed, 29 Jan 2025 20:38:29 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 81C50200A3;
-	Wed, 29 Jan 2025 20:38:28 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.179.12.122])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Wed, 29 Jan 2025 20:38:28 +0000 (GMT)
-Date: Wed, 29 Jan 2025 21:38:26 +0100
-From: Halil Pasic <pasic@linux.ibm.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Tony Krowiak <akrowiak@linux.ibm.com>,
-        Jason Herne
- <jjherne@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Holger Dengler <dengler@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Christian Borntraeger
- <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-hardening@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: [PATCH] s390/vfio-ap: Replace one-element array with flexible
- array member
-Message-ID: <20250129213826.291cfe12.pasic@linux.ibm.com>
-In-Reply-To: <20250116131859.105756-2-thorsten.blum@linux.dev>
-References: <20250116131859.105756-2-thorsten.blum@linux.dev>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJNtUNwv"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2efded08c79so58944a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 12:39:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738183166; x=1738787966; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S9xPFsm0CiACHEgTpvga5kyDZr2nERop/dzgTmhGmOM=;
+        b=YJNtUNwvAV/3oJzBJgK1jlMEyijq+iA76Gr1HwaDhuuzvz0eTfzMSZhz2s1pjzAsw2
+         T5+KRKSXNIjPkBnlSRvVudCXFBoJjWffDqU+XcdOHxgjg8o9LiyKXGQO8ZVUr8e6DmUM
+         xpNLKdVOjIDu7izmExFZ/gjXe16W4Xty3/Bz5vHoCM3ulOK7lSG4CWjQ33TdMpTmizTy
+         nXVJu/6/9FMVc6+eL409qgr35JuuRnGswHfEKATbyR0xdB095IBx9dyibqUhjotpKxR8
+         c4sJOhFycE8sJ+gDShBSXzXaUPpa5jUn/KVeVkOWGMYSm1xd1UwXhBzogHY+hrpf/ByB
+         8hJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738183166; x=1738787966;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S9xPFsm0CiACHEgTpvga5kyDZr2nERop/dzgTmhGmOM=;
+        b=C13Si5y6yheDts4DfML0AsTXHZa2tw4ixIyT0rZig4yZriAfrBkrDqMdQUL0iV8FSW
+         VKgEAbgodZc4GhjeJeg7fOJC9P0pf/jtTXD30LUEARkTtDUjzAMgHHet3zxyJguryKwx
+         GuS/CeT9rIwMweDwR/sx0RTSqwqyjwa0N5EEXMQ1ug54vKYo2PAXXY8Q0u9NmQfM343N
+         ewQzWESQi0vYMn7sAfdMGCH0A4h9LrEApCdNCN92xkoO70tlQhluL0s9jUmYOqllIDo1
+         LXXA9fTF9vJPcLEBVVEK9nzzqZ9Fj7G+AZj0AMzXJOvVXdWnESuzGZ/Q0a/rLALLw9eL
+         IcQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVbITby0cEwV/3Q9nXssOYTRfc+6N9x03R1bXfvLJlm1FqxOnOBQWLpBnL7+QTbnLxt6OfyPYHV2ykblk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeaZx8Vu3TQEKeXBSJIsbfrPOH0xn6IfiEcyZDntdngILeadhn
+	IY6baFmN9jlSh9PNAtYCn2uEkDxKpto05gv03bVqPpmOfKsZcOur
+X-Gm-Gg: ASbGnctAcdhwOmBgNuoDexmuzR7fe6Qi3oKmLZwiWexrAsF54gWuhUa7XzVXuHJ0Q09
+	AbUR9hHbH+K2s5Vww7OTQ2yionz5xXjozvaIUiExPkCl1kgggXcLCjEFIHUKOkDruepRskELKP6
+	rddF+LLJq3zv+w+H8HTS9JIo3WEeaXovpX3nHPKyzNYV+D9t4Gw8cRQOuZZYw88OvYFJclsVG8/
+	0HQ/ix68B72tub93AcvW0Vxxn4dJ3ZAv8mNbz4D8ADl5/jWjoyrTaJaEuIjiGesiWb3kz94n/3K
+	7h8XgtMF3oeVSQy2VB4Aa2KVpHfEKQ1VQKPZOQ==
+X-Google-Smtp-Source: AGHT+IH/P2WEy3n6NCJq5a9VrQTr/6ukzXoqXEvnPXyP5dqSLuvd5EP8ueh6qCxGdt4GzAViGJMuNQ==
+X-Received: by 2002:a17:90a:e7c6:b0:2ef:19d0:2261 with SMTP id 98e67ed59e1d1-2f83abff386mr7141423a91.16.1738183166470;
+        Wed, 29 Jan 2025 12:39:26 -0800 (PST)
+Received: from newslab242.. (pc51.csie.ntu.edu.tw. [140.112.31.242])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bf9498asm2252519a91.32.2025.01.29.12.39.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2025 12:39:26 -0800 (PST)
+From: Chin Yik Ming <yikming2222@gmail.com>
+To: conor@kernel.org
+Cc: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	charlie@rivosinc.com,
+	ajones@ventanamicro.com,
+	samuel.holland@sifive.com,
+	cleger@rivosinc.com,
+	andybnac@gmail.com,
+	alexghiti@rivosinc.com,
+	peterlin@andestech.com,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	yikming2222@gmail.com
+Subject: [PATCH] riscv: Simplify base extension checks and direct boolean return
+Date: Thu, 30 Jan 2025 04:38:43 +0800
+Message-Id: <20250129203843.1136838-1-yikming2222@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: fBgppfXwsLTHHsfj8173ivdA6KbuCFqH
-X-Proofpoint-ORIG-GUID: fBgppfXwsLTHHsfj8173ivdA6KbuCFqH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-29_04,2025-01-29_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 bulkscore=0 phishscore=0 mlxlogscore=875 spamscore=0
- priorityscore=1501 suspectscore=0 clxscore=1011 mlxscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501290157
 
-On Thu, 16 Jan 2025 14:18:59 +0100
-Thorsten Blum <thorsten.blum@linux.dev> wrote:
+Reduce three lines checking to single line using a ternary conditional
+expression for getting the base extension word. In addition, the
+test_bit macro function already return a boolean which matches the
+return type of the caller, so directly return the result of the test_bit
+macro function.
 
-> Replace the deprecated one-element array with a modern flexible array
-> member in the struct ap_matrix_dev.
-> 
+Signed-off-by: Chin Yik Ming <yikming2222@gmail.com>
+---
+ arch/riscv/kernel/cpufeature.c        | 6 ++----
+ arch/riscv/kernel/vendor_extensions.c | 2 +-
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-I'm not sure I understand the value of this. What we have here is not
-a flexible array but a one element array. Something that in the generic
-case could be many but particularly for vfio-ap is always one.
-
-Imagine if we had exactly 2 supported mdev types. I guess you would not
-come to the idea that the array of two needs to be changed to a modern
-flexible array. Or am I wrong about that?
-
-So I suppose the problem  here is that arrays of one are under general
-suspicion of not actually being arrays of one but a pre C99 way of
-doing flexible arrays. I kind of do understand that an array wih
-one element is funny. But I think the current declaration of
-struct ap_matrix_dev is more expressive the proposed one.
-
-Now I understand that it is easy to grep for [1], but it is much
-harder to tell.
-
-I've checked in Documentation/process/coding-style.rst did not see this
-documented. But then I checked in checkpatch.pl and it indeed seems to
-warn about it and refer to
-https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
-
-But as far as I can tell it is also talking about the case where one
-needs a trailing array of an at compile time unknown size, and not
-about the case where all we need is just one element and it happens
-to be convenient to have it in an array.
-
-If there is community consensus that one sized arrays are bad regardless
-of what they are used for, then the one sized array has to go.
-
-But please tell me what speaks against replacing it with a single
-pointer and then taking passing in that pointers address into
-mdev_register_parent()?
-
-
-> Use struct_size() to calculate the number of bytes to allocate for
-> matrix_dev with a single mdev_type.
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index c0916ed318c2..32525b69ab99 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -49,9 +49,7 @@ struct riscv_isainfo hart_isa[NR_CPUS];
+  */
+ unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap)
+ {
+-	if (!isa_bitmap)
+-		return riscv_isa[0];
+-	return isa_bitmap[0];
++	return !isa_bitmap ? riscv_isa[0] : isa_bitmap[0];
+ }
+ EXPORT_SYMBOL_GPL(riscv_isa_extension_base);
+ 
+@@ -72,7 +70,7 @@ bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, unsigned i
+ 	if (bit >= RISCV_ISA_EXT_MAX)
+ 		return false;
+ 
+-	return test_bit(bit, bmap) ? true : false;
++	return test_bit(bit, bmap);
+ }
+ EXPORT_SYMBOL_GPL(__riscv_isa_extension_available);
+ 
+diff --git a/arch/riscv/kernel/vendor_extensions.c b/arch/riscv/kernel/vendor_extensions.c
+index a8126d118341..62f55bc779e9 100644
+--- a/arch/riscv/kernel/vendor_extensions.c
++++ b/arch/riscv/kernel/vendor_extensions.c
+@@ -51,6 +51,6 @@ bool __riscv_isa_vendor_extension_available(int cpu, unsigned long vendor, unsig
+ 	if (bit >= RISCV_ISA_VENDOR_EXT_MAX)
+ 		return false;
+ 
+-	return test_bit(bit, bmap->isa) ? true : false;
++	return test_bit(bit, bmap->isa);
+ }
+ EXPORT_SYMBOL_GPL(__riscv_isa_vendor_extension_available);
+-- 
+2.34.1
 
