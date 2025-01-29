@@ -1,126 +1,191 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E2B191499
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD98242049
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738180392; cv=none; b=nAlxDN78+TbmLPuLCvFvhVMdtiqcJdqAlbv37MzpHveJSbScSpmjiUu3UMNHdem/olqCMtAOdgyihc7HKYW62pveSl4/KM5bklfK7reaBwqH7B30GHsTLZTdTLij4LvB9IxjHZhLeid9EpRv31oAmb+EUCx2sltnXY/HW/d3AC8=
+	t=1738180483; cv=none; b=fKrerV5A33my0cV0vvEz4Js9j5Ou1LRbImO8VcjRUi7+a4fzeq1fkO9AWUMZVzjycCgv2PHtrhSPKMvsQsJA407crssIa+8g0V9lh06U5YwOCmVKmU6dobb3DeKSGW3sdylgBP4IQG7EeEwZykP4cjSU34DrNi0YoF2iu1vees0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738180392; c=relaxed/simple;
-	bh=wNpLHO6Ho0iQWCKLMbBlQJLflykh3AtzSgS+lNMlW8o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=H2lDmXYOYEex1RCR9qLy5kHv3W8H9QJVWaigM51mwNx3oAAuU5gh6cpnlU0iKPggHN6XF30XWrKJ2Ir24IlYzxwIR7D4G8rQFtfi+VQ1KytY23r8af2dNQ+xg2psOBA+boZnzE7D9PIj/sU8r6bEuFemeIZbcLm3An3jOwcAFZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=euasFr3N; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738180483; c=relaxed/simple;
+	bh=dVUVt5focjpR/WKlt3Nm5P00P+l20p3bTEzSc51/qKk=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=M6OYek/lY65Xwlytk1QuBeJ3+sXf1DIi66ma5P+DadqXY5t8zCTsM/5Vq+bi7SScWg0SBvXahJTsy9gyMajDwvDbDtgiOn4sgRzKfgAvmAGbTJlFUBqdBaBK3vtBW7bIiOm+FSl4qSLNUELTFVy137rGVeym+a2yfbzmCJk9Alw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PHJocSy0; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="euasFr3N"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4361d5730caso9365e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 11:53:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738180389; x=1738785189; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=69bY3eJoWzqDBqayYS229iYz/tosSXS8kwQKC+R29ho=;
-        b=euasFr3NUqvQYNqAzZt90VC/gkXxRBRbSNCpWstrP39jsYtJukQcJiIxNtU/mn+v2A
-         8chE/PRA9K/yPn6Zh3X3yUuFu57HRar00uTjWJ9vq85znR6om9CM8rox/v5eoXwKs3SW
-         9PiwWIDihe2HH4y9YVkIvcM9M+uoLtDEngfo9BI3mu/s6nUcXPBMIm1SB6cFXKGl1zLD
-         vz3HNJG/wZ1e0m4T2bRA0IFDj8L8jyeFzEr9NoZsRVPLMNjZ2yx7/HX6ZfajrLfIvLZm
-         UtSWw/44l6eCcDw1aEt3PgW5QyO2iF7z5cE7+cRAovL+ZynVvKOB1qw0R2EyMkpUMrlu
-         n3YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738180389; x=1738785189;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=69bY3eJoWzqDBqayYS229iYz/tosSXS8kwQKC+R29ho=;
-        b=bZSYEDaXtt5hQDKz0d5gJpNGbB5mk5C7tbHRcRUCLjZ654vgX8q0xsppXN+ILy4Quz
-         veac/eQmXjDigrsm7O7hqxZ1/C2NOhaGEtw4uYU2V94z8NNjyU3ybnNUYvGe5JBtuTn+
-         lPJEs2nuSvkouCOB7Sms8LGP40YBZcIduzZwHHlPXUd2oeOLKtXO/Yl1QbtPCtgOoZi2
-         ssXkydE5wacUjB2fkZAMKDQLd23L7P3W+0Xs96bSAvvRlEmgXQc8TWbIZybnOyeD0rwp
-         nXzp8KmhxGWUyWxpXQ1FFOPppPfL58PuZzaxT5A8hzjY65vwQYy+cdsklTBZgxdIG14f
-         bSfw==
-X-Gm-Message-State: AOJu0YywURpcEaKqDSLPS1ez4eyybugJPaiAkbTsReRqlaeO5HzBCZK6
-	Sf+yyG1kWHnUqIli/co1jbjNyWsa1a4j36rC09Xgr9Y5PzelGqojJoEXkSKP+A==
-X-Gm-Gg: ASbGncugzWGTposrZAxIrQb5vbKJ58FKyQCz54V5ACKReIcno58pn+hXUHBpDQErw7s
-	S1kEUwHLswrVlmqRn2ascCqOdSMEVu/IwbwFGI+/9tbZqN4AfGN0zX2PRhmrFXQ5wnB2Cs59Arj
-	FA2nT5fyTcmLlusiw4IJcY0E8NJeltoLRHzuY6IGQVKCI5Ybzw62P+JOdBF2E7vyA1BTw95/Qg3
-	dhn2XFoa/VtDkIWdEKnYgvWtXjDPVvb9daWb0w4Gsy7SZgHNLskELG7v50JLmEYjTvxwil2O7Yi
-	vh4r
-X-Google-Smtp-Source: AGHT+IGP88Z0aixfukwbUkUN0PH6Zz1sF0YG4/z9z72ukmaA7BYBGjslWf1hzNeXSWRK0JN4vsvqTw==
-X-Received: by 2002:a05:600c:2295:b0:434:c967:e4b5 with SMTP id 5b1f17b1804b1-438e1bf536fmr158025e9.1.1738180389038;
-        Wed, 29 Jan 2025 11:53:09 -0800 (PST)
-Received: from localhost ([2a00:79e0:9d:4:524e:3286:ba64:f255])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c2a1885besm17686399f8f.49.2025.01.29.11.53.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 11:53:08 -0800 (PST)
-From: Jann Horn <jannh@google.com>
-Date: Wed, 29 Jan 2025 20:53:03 +0100
-Subject: [PATCH] sched: Clarify wake_up_q()'s write to task->wake_q.next
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PHJocSy0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738180482; x=1769716482;
+  h=date:from:to:cc:subject:message-id;
+  bh=dVUVt5focjpR/WKlt3Nm5P00P+l20p3bTEzSc51/qKk=;
+  b=PHJocSy0eB6CEUSpILLoyCguZoBYUQfkzL2VkapWvXCiVj0P6efspiyD
+   KntBCh/CIYJC5Cob2nEEd3ZufdYgOBPZC2p6LKhmasyGqLCfYYFQHjZfv
+   lBv3OsQRCC6gtbwbHEAltRVbq0Px2YQuetEfYqXUG3AxmWyuO8cs9GrIW
+   B0Wpit8VdJr0C7kV8YtQ6F1kru7zNHA5//6PEBdLLIIDEmSr5EbBaUC95
+   8U2K37poDiebloPH+1k0bawfr71ugqc+g83wNWwXpPSjo+uQ+JfawX9kg
+   yaTjLRvI0HV2WdmTOhR3Zxpnu9uiMjPMCugMKdy4bwlGyC6lzEU4BLAKE
+   w==;
+X-CSE-ConnectionGUID: KFyNepHnSoiBAM8mHgi+Sg==
+X-CSE-MsgGUID: oxR5wQRWRU2B+Pg186rYFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50133217"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="50133217"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 11:54:41 -0800
+X-CSE-ConnectionGUID: +r02q94dSWe0qxshWcv5bg==
+X-CSE-MsgGUID: pfGBGKzMQxGBmzyC+5N5hA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="109709289"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 29 Jan 2025 11:54:40 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tdE8z-000jIh-31;
+	Wed, 29 Jan 2025 19:54:37 +0000
+Date: Thu, 30 Jan 2025 03:54:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:tip/urgent] BUILD SUCCESS
+ 509f4ec1317be76d51466ea33c6beaebed915da6
+Message-ID: <202501300326.0uA7VYZH-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250129-sched-wakeup-prettier-v1-1-2f51f5f663fa@google.com>
-X-B4-Tracking: v=1; b=H4sIAB6HmmcC/x2MSwqAMBDFriKzdkAH/F5FXJT2qYOg0voD8e4Wl
- yEkDwV4RaA2ecjj1KDrEiFPE7KTWUawusgkmRRZLg0HO8HxZWYcG28e+67wbKWuSnG1A0CxjWL
- Q+/92/ft+Cr5QrmcAAAA=
-X-Change-ID: 20250129-sched-wakeup-prettier-c28762d8deee
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
- Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Dietmar Eggemann <dietmar.eggemann@arm.com>, 
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738180384; l=1295;
- i=jannh@google.com; s=20240730; h=from:subject:message-id;
- bh=wNpLHO6Ho0iQWCKLMbBlQJLflykh3AtzSgS+lNMlW8o=;
- b=cJ9E/3jov7vnCKDj9LQZUmS93eFMMeIM7tue5IpikIhTJlef4+6YIi7gZUNfWFjONzAgXtGtV
- TTtZLv5soRSCVXtfCT5uWab/cO3xQANsQtNZhiLnorN0clww88IO2fT
-X-Developer-Key: i=jannh@google.com; a=ed25519;
- pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
 
-Clarify that wake_up_q() does an atomic write to task->wake_q.next, after
-which a concurrent __wake_q_add() can immediately overwrite
-task->wake_q.next again.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
+branch HEAD: 509f4ec1317be76d51466ea33c6beaebed915da6  Merge branch into tip/master: 'timers/urgent'
 
-Signed-off-by: Jann Horn <jannh@google.com>
----
-a minor change; I figured we should at least be using WRITE_ONCE() here,
-and I might as well change the comments a little bit while I'm touching
-this
----
- kernel/sched/core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+elapsed time: 1090m
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 9142a0394d46605e96e10cef97cce02d741f6c93..ce64652858703826dca510479f563a28c2fb2405 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1063,9 +1063,10 @@ void wake_up_q(struct wake_q_head *head)
- 		struct task_struct *task;
- 
- 		task = container_of(node, struct task_struct, wake_q);
--		/* Task can safely be re-inserted now: */
- 		node = node->next;
--		task->wake_q.next = NULL;
-+		/* pairs with cmpxchg_relaxed() in __wake_q_add() */
-+		WRITE_ONCE(task->wake_q.next, NULL);
-+		/* Task can safely be re-inserted now. */
- 
- 		/*
- 		 * wake_up_process() executes a full barrier, which pairs with
+configs tested: 114
+configs skipped: 4
 
----
-base-commit: 05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
-change-id: 20250129-sched-wakeup-prettier-c28762d8deee
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--- 
-Jann Horn <jannh@google.com>
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                     nsimosci_hs_defconfig    gcc-13.2.0
+arc                   randconfig-001-20250129    gcc-13.2.0
+arc                   randconfig-002-20250129    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250129    gcc-14.2.0
+arm                   randconfig-002-20250129    clang-20
+arm                   randconfig-003-20250129    gcc-14.2.0
+arm                   randconfig-004-20250129    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250129    gcc-14.2.0
+arm64                 randconfig-002-20250129    gcc-14.2.0
+arm64                 randconfig-003-20250129    gcc-14.2.0
+arm64                 randconfig-004-20250129    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250129    gcc-14.2.0
+csky                  randconfig-002-20250129    gcc-14.2.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250129    clang-19
+hexagon               randconfig-002-20250129    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250129    clang-19
+i386        buildonly-randconfig-002-20250129    gcc-12
+i386        buildonly-randconfig-003-20250129    clang-19
+i386        buildonly-randconfig-004-20250129    clang-19
+i386        buildonly-randconfig-005-20250129    clang-19
+i386        buildonly-randconfig-006-20250129    gcc-12
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250129    gcc-14.2.0
+loongarch             randconfig-002-20250129    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                            q40_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                           ip30_defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250129    gcc-14.2.0
+nios2                 randconfig-002-20250129    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250129    gcc-14.2.0
+parisc                randconfig-002-20250129    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                      pcm030_defconfig    clang-17
+powerpc               randconfig-001-20250129    clang-20
+powerpc               randconfig-002-20250129    clang-20
+powerpc               randconfig-003-20250129    gcc-14.2.0
+powerpc64             randconfig-001-20250129    clang-16
+powerpc64             randconfig-002-20250129    clang-18
+powerpc64             randconfig-003-20250129    clang-20
+riscv                            alldefconfig    gcc-14.2.0
+riscv                            allmodconfig    clang-20
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-20
+riscv                               defconfig    clang-19
+riscv                 randconfig-001-20250129    gcc-14.2.0
+riscv                 randconfig-002-20250129    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250129    clang-20
+s390                  randconfig-002-20250129    clang-17
+sh                               allmodconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250129    gcc-14.2.0
+sh                    randconfig-002-20250129    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                 randconfig-001-20250129    gcc-14.2.0
+sparc                 randconfig-002-20250129    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250129    gcc-14.2.0
+sparc64               randconfig-002-20250129    gcc-14.2.0
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-20
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250129    gcc-12
+um                    randconfig-002-20250129    gcc-12
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250129    clang-19
+x86_64      buildonly-randconfig-002-20250129    gcc-12
+x86_64      buildonly-randconfig-003-20250129    gcc-12
+x86_64      buildonly-randconfig-004-20250129    gcc-12
+x86_64      buildonly-randconfig-005-20250129    gcc-12
+x86_64      buildonly-randconfig-006-20250129    clang-19
+x86_64                              defconfig    gcc-11
+xtensa                  cadence_csp_defconfig    gcc-14.2.0
+xtensa                       common_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20250129    gcc-14.2.0
+xtensa                randconfig-002-20250129    gcc-14.2.0
 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
