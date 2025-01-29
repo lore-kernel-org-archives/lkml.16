@@ -1,24 +1,64 @@
-Received: from cosmicgizmosystems.com (cosmicgizmosystems.com [63.249.102.155])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF0D2C9D;
-	Wed, 29 Jan 2025 19:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.249.102.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFB2190462;
+	Wed, 29 Jan 2025 19:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738178818; cv=none; b=ODKC7bZq+r8rxbsPqYSx1+1YItpgk5X4/nDKFDmYo69zobgmDcD/T0+mcic0GmqkdNZu8KCk6in8U8+kxy3oGJlP3gBXfbUymBMiAvUQZclRRq1L7e4o/1jW5+h1StL2jFV0KdNVxOBdBXEPNiIhQdgFIv2aJytB8y/nyh9SYn4=
+	t=1738179028; cv=none; b=ZkqpCQKpmQHggCywwxcA+ZI8w471l4E9sUNay+CEvyONcdl16DvjA7f0vkjcs98ysekaiQo2Gg/sZrIzxZQyxcVgD7Fpo8oz33Mi+yZMyWLKVdBSUEQ8WUj/y02+qT7DuMpvf9qVuBYu3tQCtVJFepPI93rLmvwgOfDEA5zw6Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738178818; c=relaxed/simple;
-	bh=cTXIpFUJ72rQ6X+qiqfdqHAIWXIwKPIqlawAGwvmTSM=;
+	s=arc-20240116; t=1738179028; c=relaxed/simple;
+	bh=rWQreQiAU48uL9T3JNDkwkNmknGBAbDTji6X7fbwfKA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M7uWEkg4uUlYQNDCRB7kd52dUxPzlXgvAkOSvcXs0+eTBGoUL7mZlxN2kTHx97MKtO35wBZKcuuTRIKk7szVqHryCXpa487M7BvWFPxGtUVrgnyiTrRQ6sR59G+HxpxvJ4DQofUZv6zpWlOZ8K69ZM2L1AAqoZhiVGN07Y1WND8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com; spf=pass smtp.mailfrom=cosmicgizmosystems.com; arc=none smtp.client-ip=63.249.102.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cosmicgizmosystems.com
-Received: from [10.0.0.101] (c-73-190-111-195.hsd1.wa.comcast.net [73.190.111.195])
-	by host11.cruzio.com (Postfix) with ESMTPSA id E96F62463008;
-	Wed, 29 Jan 2025 11:21:25 -0800 (PST)
-Message-ID: <f7963a1d-e069-4ec9-82a1-e17fd324a44f@cosmicgizmosystems.com>
-Date: Wed, 29 Jan 2025 11:21:25 -0800
+	 In-Reply-To:Content-Type; b=V8K7BXq0Lq1hKeG073/r9fk2uNlXqRLfvwvMjXKuqvWmLHDD9rOqXfwlnw2cByuRaHENtzunpw3NjR+tZ4WWRxapElGUgOLd0z/cuoN1mR44Rft5Raz9KC6dg/E3O3frX3xEa426fJxtaq4v1PTnowrKbgZ6c6XyQJ0Nro/ROLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UhTihInd; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhTihInd"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43624b2d453so81243665e9.2;
+        Wed, 29 Jan 2025 11:30:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738179025; x=1738783825; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FmDVhjSuNtL0NR/wOvEkkLqWRufG3IvH9lliz9davJI=;
+        b=UhTihIndgdHqvVQXNuVCH24YFnYWho7AKEna7t/cXuFYrCLX0pbr5Sve2sOBjurfs3
+         zWY0O7PN+pbY9vX0NggluyVOBbOQrwnibsQLi5Kk3zjrUvGydqiRA9ZwkYFtLpHqr73T
+         XbJ9/83IN8fRb1RPn+PR6ttE/aBNCgMV2EJSPD3rqJD6w3EAT9IwTb6HQyQ1CrjJrgBH
+         uvkM9FxBaVARsYjfS7Y32yXQ/xHrMkHLJI5CC+jg6Vr9alwFjdJmOx6PpEBs58JHhwk+
+         6Aaz0FcPRoaeaNFbbXJvYk7HdkI8i0ulgAyG730TDL/cwMoxUYDnJV0kZXaiHZgR+ugq
+         YUJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738179025; x=1738783825;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FmDVhjSuNtL0NR/wOvEkkLqWRufG3IvH9lliz9davJI=;
+        b=FDFbSarX2WBy3CXNVCjLt2SgXO8154uItrr/oDFKuHq6xBwZCmylMwJCDiAbLjTcvc
+         lt6Dlv6XJ8PB9s0RDzEcUudEuZPQuf1LKXqmXq/fCnReq+sxuulvh/7Oe6sSKFWzFW+b
+         Q6GkiWmSDKAhg99guBaIEpAeu5z/n7jq37ar0uf2Qk32SXgOjHzfLsVA/d0xv4bUdtJH
+         kss+y0SAo5QBcDGISNUfdwlNGob/6KXJsT/9R6G2dj+8SdpSii9vzC+Nud3jKqtpdASe
+         BZxmhXzUVrR6fPxbQRX8FcyrP/HkpFtzwj74jp4dbBW5IsfVFPi3ts3Nyi5PVKgKPpmZ
+         y2Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxWZI+tCVAJoB25rKCVxg2bvqDzXEQNEPan+olO0dmgFRL8u9BgOp2rrE+FXhKS8IUEz0WYDSADjU3pNk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwebNCHxOgfCjZSe2VPl6RUfCy7hPetw9WEbgYE+LM6q41mR48j
+	5T+iroWjtaQVolKDMouL/5bJp1yIbbIRsm7fF6/uVNmbscg8EdxP
+X-Gm-Gg: ASbGnctDLsulDLvXTUF2JAPJzETHRZz39X3X5BVXCvCVU2jpugEVCeVoD7MFVNhccXB
+	GLFK2AGW500Daununi5HmG0w1LJeahLXbzQebaD6IzIhTguqvj56FsPGBpmH9pq8M5azCMj5Q8+
+	cgrC6OeUHNjR2QJA34rhy3KjKdBInv9iJHpY27R4/vqH5fY8kV5MPYge0aFPi2lOSQvKWWEsTtO
+	0oYOvkhkAhYT0dGH/RbqNnJ6/kIQmOwXA6OAZXarvYlWnCq2mN/sp239EO6QhUtRl34p27sF4WX
+	2IfsrRMXn+8FtJzoZx20rRDH1Q==
+X-Google-Smtp-Source: AGHT+IFO4M9+9EH1K7BeLhcwlrue3FMAM0Y/HMdT3eAAsdx74yDxpJEgJikBayBE6IUVp0idwQVq/g==
+X-Received: by 2002:a05:600c:4f55:b0:434:a1d3:a321 with SMTP id 5b1f17b1804b1-438dc3aada7mr42461765e9.3.1738179024523;
+        Wed, 29 Jan 2025 11:30:24 -0800 (PST)
+Received: from [192.168.8.100] ([148.252.147.217])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcbbc52dsm34178265e9.0.2025.01.29.11.30.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2025 11:30:23 -0800 (PST)
+Message-ID: <a5d8d039-f2d7-4adb-afd7-693b3be41e45@gmail.com>
+Date: Wed, 29 Jan 2025 19:30:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -26,150 +66,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] HID: usbhid: fix recurrent out-of-bounds bug in
- usbhid_parse()
-To: Kees Cook <kees@kernel.org>, Alan Stern <stern@rowland.harvard.edu>
-Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
- linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
- syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org,
- syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com,
- linux-hardening@vger.kernel.org
-References: <20240524120112.28076-1-n.zhandarovich@fintech.ru>
- <nycvar.YFH.7.76.2406041015210.16865@cbobk.fhfr.pm>
- <E62FA5CB-D7AE-4A11-9D2E-7D78D7C10ADA@kernel.org>
- <nycvar.YFH.7.76.2406041614210.24940@cbobk.fhfr.pm>
- <2a38e355-af5c-4b3d-81be-0cc97376c1f5@fintech.ru>
- <202406041019.BCD0A93C@keescook>
- <d1ad84e3-7da9-4dc8-a095-b9fbe191eb56@rowland.harvard.edu>
- <807cfa6f-5863-4fe4-8294-76d5cdbc3aac@fintech.ru>
- <649f5c1c-f3a7-420d-b727-f904d58f491f@rowland.harvard.edu>
- <202501281747.9690B3B@keescook>
+Subject: Re: [PATCH 0/8] Various io_uring micro-optimizations (reducing lock
+ contention)
+To: Max Kellermann <max.kellermann@ionos.com>, Jens Axboe <axboe@kernel.dk>
+Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250128133927.3989681-1-max.kellermann@ionos.com>
+ <7f046e6e-bb9d-4e72-9683-2cdfeabf51bc@kernel.dk>
+ <CAKPOu+90YT8KSbadN8jsag+3OnwPKWUDABv+RUFdBgj73yzgWQ@mail.gmail.com>
 Content-Language: en-US
-From: Terry Junge <linuxhid@cosmicgizmosystems.com>
-In-Reply-To: <202501281747.9690B3B@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <CAKPOu+90YT8KSbadN8jsag+3OnwPKWUDABv+RUFdBgj73yzgWQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Sorry to join late and top post but I want to propose a direction change for this.
+On 1/29/25 17:39, Max Kellermann wrote:
+> On Wed, Jan 29, 2025 at 6:19 PM Jens Axboe <axboe@kernel.dk> wrote:
+>> The other patches look pretty straight forward to me. Only thing that
+>> has me puzzled a bit is why you have so much io-wq activity with your
+>> application, in general I'd expect 0 activity there. But Then I saw the
+>> forced ASYNC flag, and it makes sense. In general, forcing that isn't a
+>> great idea, but for a benchmark for io-wq it certainly makes sense.
+> 
+> I was experimenting with io_uring and wanted to see how much
+> performance I can squeeze out of my web server running
+> single-threaded. The overhead of io_uring_submit() grew very large,
+> because the "send" operation would do a lot of synchronous work in the
+> kernel. I tried SQPOLL but it was actually a big performance
+> regression; this just shifted my CPU usage to epoll_wait(). Forcing
+> ASYNC gave me large throughput improvements (moving the submission
+> overhead to iowq), but then the iowq lock contention was the next
+> limit, thus this patch series.
 
-According to the HID 1.11 specification section 6.2.1, the first element of the desc array must be the type and size of the mandatory report descriptor. There is no need to scan through the array to look for it. So the for loop can be collapsed to:
+It's great to see iowq getting some optimisations, but note that
+it wouldn't be fair comparing it to single threaded peers when
+you have a lot of iowq activity as it might be occupying multiple
+CPUs. A curious open question is whether it'd be more performant
+to have several user threads with their private rings.
 
-	if (hdesc->desc[0].bDescriptorType == HID_DT_REPORT)
-		rsize = le16_to_cpu(hdesc->desc[0].wDescriptorLength);
+> I'm still experimenting, and I will certainly revisit SQPOLL to learn
+> more about why it didn't help and how to fix it.
 
-and the out-of-bounds bug goes away.
+It's wasteful unless you saturate it close to 100%, and then you
+usually have SQPOLL on a separate CPU than the user task submitting
+requests, and so it'd take some cache bouncing. It's not a silver
+bullet.
 
-I would be happy to submit a patch if you like.
-
-Thanks,
-Terry
-
-On 1/28/25 5:53 PM, Kees Cook wrote:
-> On Tue, Jan 28, 2025 at 12:00:41PM -0500, Alan Stern wrote:
->> On Tue, Jan 28, 2025 at 05:45:21AM -0800, Nikita Zhandarovich wrote:
->>> Hello,
->>>
->>> On 6/4/24 10:45, Alan Stern wrote:
->>>> On Tue, Jun 04, 2024 at 10:21:15AM -0700, Kees Cook wrote:
->>>>> On Tue, Jun 04, 2024 at 10:09:43AM -0700, Nikita Zhandarovich wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On 6/4/24 07:15, Jiri Kosina wrote:
->>>>>>> On Tue, 4 Jun 2024, Kees Cook wrote:
->>>>>>>
->>>>>>>> This isn't the right solution. The problem is that hid_class_descriptor 
->>>>>>>> is a flexible array but was sized as a single element fake flexible 
->>>>>>>> array:
->>>>>>>>
->>>>>>>> struct hid_descriptor {
->>>>>>>> 	   __u8  bLength;
->>>>>>>> 	   __u8  bDescriptorType;
->>>>>>>> 	   __le16 bcdHID;
->>>>>>>> 	   __u8  bCountryCode;
->>>>>>>> 	   __u8  bNumDescriptors;
->>>>>>>>
->>>>>>>> 	   struct hid_class_descriptor desc[1];
->>>>>>>> } __attribute__ ((packed));
->>>>>>>>
->>>>>>>> This likely needs to be: 
->>>>>>>>
->>>>>>>> struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
->>>>>>>>
->>>>>>>> And then check for any sizeof() uses of the struct that might have changed.
->>>
->>> Alan, I finally got around to preparing a revised version of the
->>> required patch and encountered a few issues. I could use some advice in
->>> this matter...
->>>
->>> If we change 'struct hid_descriptor' as you suggested,
->>
->> I didn't make that suggestion.  Kees Cook did.
->>
->>>  which does make
->>> sense, most occurrences of that type are easy enough to fix.
->>>
->>> 1) usbhid_parse() starts working properly if there are more than 1
->>> descriptors, sizeof(struct hid_descriptor) may be turned into something
->>> crude but straightforward like sizeof(struct hid_descriptor) +
->>> sizeof(struct hid_class_descriptor).
->>>
->>> 2) 'hid_descriptor' in drivers/hid/hid-hyperv.c remains innocuous as
->>> well as only 1 descriptor expected there. My impression is only some
->>> small changes are needed there.
->>>
->>> However, the issue that stumps me is the following: static struct
->>> hid_descriptor hidg_desc in drivers/usb/gadget/function/f_hid.c relies
->>> on a static nature of that one descriptor. hidg_desc ends up being used
->>> elsewhere, in other static structures. Basically, using __counted_by
->>> requires a lot of changes, as I see it, out of scope of merely closing
->>> an UBSAN error.
->>
->> The hidg_desc structure needs to contain room for a single 
->> hid_descriptor containing a single hid_class_descriptor.  I think you 
->> can define it that way by doing something like this:
->>
->> static struct hid_descriptor hidg_desc = {
->> 	.bLength			= sizeof hidg_desc,
->> 	.bDescriptorType		= HID_DT_HID,
->> 	.bcdHID				= cpu_to_le16(0x0101),
->> 	.bCountryCode			= 0x00,
->> 	.bNumDescriptors		= 0x1,
->> 	.desc				= {
->> 		{
->> 			.bDescriptorType	= 0, /* DYNAMIC */
->> 			.wDescriptorLength	= 0, /* DYNAMIC */
->> 		}
->> 	}
->> };
->>
->> Or maybe it needs to be:
->>
->> 	.desc				= { {0, 0} } /* DYNAMIC */
->>
->> I'm not sure what is the correct syntax; you'll have to figure that out.  
-> 
-> Either should work.
-> 
->>
->> You'll have to be more careful about the definition of hidg_desc_copy in 
->> hidg_setup(), however.  You might want to define hidg_desc_copy as an 
->> alias to the start of a byte array of the right size.
-> 
-> For an on-stack fixed-size flex array structure, you can use:
-> 
-> 	DEFINE_FLEX(struct hid_descriptor, hidg_desc_copy,
-> 		    desc, bNumDescriptors, 1);
-> 	*hidg_desc_copy = hidg_desc;
-> 
-> and then adjust the "hidg_desc_copy." instances to "hidg_desc_copy->"
-> 
->>
->>> Is this approach still worthy pursuing or should I look into some neater
->>> solution?
->>
->> I think you should persist with this approach.
->>
->> Alan Stern
-> 
+-- 
+Pavel Begunkov
 
