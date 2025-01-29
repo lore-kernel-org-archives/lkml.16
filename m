@@ -1,370 +1,247 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2057.outbound.protection.outlook.com [40.107.241.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C452E1E3793;
-	Wed, 29 Jan 2025 20:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738183242; cv=none; b=GF2/NPlJhY6IdMYPW5qjvxUACfS0WEpvByXy7JYG/T5YGNu5Ilnf8hbSmcbRPHZM7eKbocBlDWyiUHqxirCt/b7e6K9M0/JLsptqkO6AnmYGrHTyN3P4GhW/SV7QDqv4DeJ8mdqE/mFo6LPUv+mP/HIUALdj2unNLUa1SaB2LS8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738183242; c=relaxed/simple;
-	bh=+iGuA4m5n7VaG2pbvt1ixM40vi20HtiXYCsYX92UMrI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=US61jG3Lxd+KR55SCHAUU8tab1jFq8EB+XgPYMPLiDB5SCWIakK27Xd8zzElFbCn3iWkBbiT7/mWgfrxrsS9NSE1hfpBLrvl+og+sawUYnnrgfoeXxKnl0VPSKrp++v+japM2JLNcPE6zbwE5toEnrJ4fvFvEzf0S3kQ/P7uZLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVXogvjD; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2076129A2;
+	Wed, 29 Jan 2025 20:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738183399; cv=fail; b=WpffyfZmSNaS8iuFlzpeWK1SuJw8KxZXVo5w/RLyv+zLE94GJ3D8cHCifQlzRsEXnCsko8r3RF0d/iitSKOJCIQkLGVvC+71s5d95VmyiEjZHKywARXXPb6Mrs3SrdXJGQcy0mVJHvkW2YlbRQPPnbw5QW1JJoFLgB94pViiPIc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738183399; c=relaxed/simple;
+	bh=kV0lIZTfl2kySBoybfWKkXO8aSLdZ7/F0Pg/1n3rCO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=l/+atlbn+vMbkeeFoYoCyIsu8XhkOJfKyRhyvoN1e7VeMKzBOaQ0BCb89sumaS1jSWqKDIduqc/2fQl+yjEGfgCX14XEt1elQKzY1vW557Hb8gW5wtmFZQ4YAgACa10uKq6EMYBws2BvwyAWq40tl1i1ZCVJM8O+wuhTUCYFSK8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=YgW6kVL8; arc=fail smtp.client-ip=40.107.241.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVXogvjD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC02C4CEE2;
-	Wed, 29 Jan 2025 20:40:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738183240;
-	bh=+iGuA4m5n7VaG2pbvt1ixM40vi20HtiXYCsYX92UMrI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kVXogvjDfJl3zZPRq+ZjuAaYmt5NUj0aJTXVyHZqGlfsxXEzd311ko6pdtMHilX9b
-	 J8hW6CL99xN+NTHLkDlJAY0Zi7gvOApfyg79ztM78J45yW3vh5sF72maBM5PD2u3u+
-	 sz2jVq3ganTkkd24gCUcQRMqwnyoVcX2gZuqeYTRorTLeMqhOoeKA81SXwCe055mP1
-	 LwDHUUz/B2UquvWtiDsJCqrnMKWHC9E11j9asDVAkUXsxHuftzxQJE224NlnDVkR3j
-	 6gIjnfMjmscbsd9h8MK4dJcV3FnC/xDK+GSyJ0GaetbY+3hrjWYhZ3ow/mkrh6v7Eu
-	 LtbejmuoRx2Ow==
-From: wufan@kernel.org
-To: corbet@lwn.net,
-	jmorris@namei.org,
-	paul@paul-moore.com,
-	serge@hallyn.com,
-	akpm@linux-foundation.org
-Cc: linux-doc@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Fan Wu <wufan@kernel.org>
-Subject: [RFC PATCH v2 2/2] ipe: add 'anonymous_memory' property for policy decisions
-Date: Wed, 29 Jan 2025 20:39:32 +0000
-Message-Id: <20250129203932.22165-3-wufan@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250129203932.22165-1-wufan@kernel.org>
-References: <20250129203932.22165-1-wufan@kernel.org>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="YgW6kVL8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nDVNvCbvFuoDSmvi2osKyEmBMEmRyXm43Jj7029qkIbhqsuWneU+BJDimgweKK1+l15/wyy0Ifg0MbbnTpuckn+FlIG+DRJeBLt0R6YwznwP7PGPB4Am5lB6nYAPbhrTpB+cyY94ow2aaLNhVtCf69ASmYCFqKMlbwQcnwxaeLpShe7zyFz5RKUzU9Vr+aKXLKRonr2hQV2WFSKyPYu9ThYsUrDFTzC1o92XJxiM1fXu3pCEpYj1WU8H9l8zHwoi6Xl/HORdo79xNOYZwCyr+oGuqS4UPh6mjTCtQo3jxIZR7XezJwbFngkBZT9Emm5dWTyMT16rgY4dJTPuYhisyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BP42Xi8gjMco36VAmiQoNklkbYGR/s0cu/3jUd2xCDE=;
+ b=QeqeQnrPCthLzViBTjg0lpCKuiZtWYq3+T6IRAq4hP7ed3PSDqWQth+I3I5AVsmj3Cg2qJlO9mgAPShcSQ+EDnrApstHWiD8KjUXpoOBrccDwnnAIsOxklIaHlSZVwZxXx3ilRVJAxwVTJhJyF7lzsyCnOuQG/rkC1OYl7ak/F3qmCnNMngYfZd6wiJFr4oqPtT57Xlrt5I+LDcllL34oYmdEL1VpH69rYwDk8AS4P0ax8pgXrgJTI/0dDxVDNL5ZIrUm+5/aFNOf3dxbCCshbicXWXofJhS2k/4YVeEKDlcrN3G6P9qUmEWs07Nj9BZxtEE0ubQHWvMf4mmg5cYPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BP42Xi8gjMco36VAmiQoNklkbYGR/s0cu/3jUd2xCDE=;
+ b=YgW6kVL8GyjrkEZPHBzGMFJjP+LPZCzkc8CzBiVSf4atRRNqt4dKqGlUqqNrul6jDVI7MIyJXi0RCb2y66OLWEHlUWMxqGgS3Wg0c7leVk9f0ylJlrLFi4N58mBXGp96FInWYTmGgTU5f5wQECnh787yKpbmsI74H8vkq3+j4KZd3GDTzL/2K1JWxF/cLjztapGVKv1FwyB2+7XfAeXnvAMxkPJDabSwYNBZ8tpRDG7qvgCR06Tt3HfBxw+6Q2zUEl4dsSKPSeaVnZDrw6VZsefWZ0E2WlDyGO4pf0s2Lb2exEGMh26MsldHeTZMTEsK4nblj5RuraFNAWsrQ4RhPA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by VI2PR04MB10954.eurprd04.prod.outlook.com (2603:10a6:800:278::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.22; Wed, 29 Jan
+ 2025 20:43:12 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8377.021; Wed, 29 Jan 2025
+ 20:43:06 +0000
+Date: Wed, 29 Jan 2025 15:43:00 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, matthew.gerlach@altera.com,
+	peter.colberg@altera.com
+Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
+Message-ID: <Z5qS1NKSRn8pSqg1@lizhi-Precision-Tower-5810>
+References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
+ <20250127173550.1222427-4-matthew.gerlach@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250127173550.1222427-4-matthew.gerlach@linux.intel.com>
+X-ClientProxiedBy: SA1PR03CA0007.namprd03.prod.outlook.com
+ (2603:10b6:806:2d3::16) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI2PR04MB10954:EE_
+X-MS-Office365-Filtering-Correlation-Id: f1a306ce-01ef-4585-d769-08dd40a588df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|7416014|376014|366016|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+AhdBsZiC9BRZY46xcFysWKsL/rzeQhw/Lw5sfepNAlejD52KAzqvdwjIEZl?=
+ =?us-ascii?Q?d8i88Wf/nRqgrEBrC+JpIUlYWLLtyi8tieCBHQvh6hz8XZYHac9bXOjIk0Mr?=
+ =?us-ascii?Q?ZdCUhiGjkwfC+oY1ZchJZOhr5X39ALPNCwODP94jU6i8o3h/b7AL9gHisG5M?=
+ =?us-ascii?Q?cU3GiFohp3RP6kVEolrCJdJNN1+yL4bQHTH2Z/RAbq7fVUoFq4H83ZhxjVxG?=
+ =?us-ascii?Q?TybD0HAycFNgBUyZm30J0FCKPYgej1N5WEWkHe0ksB4//fOLDH1QUicR+p5E?=
+ =?us-ascii?Q?0WszL4FZbnGkFjEJ3MkY7kevghjYNv8CBs27zfiLJchUROGGX4yqX2RxrIJ0?=
+ =?us-ascii?Q?+wh8+/oRwJhId/Ms/PbX+WM870ZUU3ITv3Zp44rL4+RJFe+0HQrOy39gyL4h?=
+ =?us-ascii?Q?aqpJvokiHTctcYqPPVSwgjbYj9nVXJbXtPgu3hy0avTvRSiXO9xKWnw+ESuR?=
+ =?us-ascii?Q?kMR0gUhCLKGiEDfF/QSY4USZ55L8w7Fp1YWpit6nqMvNDYRkTyP65SmQB1C+?=
+ =?us-ascii?Q?qwbBIXGUOBEovB8gBS/8LGhO/ZjmED3XkVR7Qu5WTa/VFBDDOB+XgK6Pm55e?=
+ =?us-ascii?Q?oPEmLwruw4HerzFdNutZvaVModuoRuc5FVL8w33TL6d108Wxn4uHmoDiJG61?=
+ =?us-ascii?Q?8wUTXymOGNbViQY4uAltE3Hf16r9JtHNDAKKZ/mFiwJRVcAR/638nqiAlHlg?=
+ =?us-ascii?Q?7db1mm/AGNbL/x8KjQO7JxlBcshnAXVNt4r24CSHtu1r2Wbq62SuAWB8v/aW?=
+ =?us-ascii?Q?2aGZUjh9e4fg9zaxgF3Q8nl6xW1+BFB0NG1KEempa8fq/760xBC9af0WDDm6?=
+ =?us-ascii?Q?lfjETkeoW4HBSXiQCdr8M9kBSR56VyrtpyzuKIEmjngO5Bd5TtWTPC+xYEEl?=
+ =?us-ascii?Q?GQVaaqAmA42uwW9/PgzF0zpOzKqPsJFcj7ayWUENf4p82BHpNRPprU0yw/JW?=
+ =?us-ascii?Q?ApwZNSZANHMm42KSwqB7AkoBXCnrzdchCczK7b6yTYeXYggFeAuEsGvHzHxH?=
+ =?us-ascii?Q?T8L2YKS12ZNjAA9Nkp0tLyg5fwJhLLFlwrL/ONg/najzVGB4401AWZMmylLf?=
+ =?us-ascii?Q?9MbuES91tYlmZkl1UWnNvQBFgxRUUOwfKXukWK73ZQ9jRvrfeWckZBuJNPJp?=
+ =?us-ascii?Q?xsg0bZ1C8TmLyvb2UXVCe2a9+NUb+PY8zh6NmtUx2mhK/0+KtYfxrUoZ5wfL?=
+ =?us-ascii?Q?ry5b+dYzHPIepl69jgOXC2ZkkYXAkbRF569nYFWmv/EvRF4RfN4ZubRX2WyO?=
+ =?us-ascii?Q?KiP8QsKQJ1184GCoxelEMI+llbemlLDlPBOX5kCkS74Fe0hd0gX+REjvvWey?=
+ =?us-ascii?Q?f2z2avS5P34UvOTnrw4qj2N3SmjFKlt4xIEf4Cl1PrSOtHrkX42mv6tcXkbF?=
+ =?us-ascii?Q?wocNcN6ocdGqo6abl59FUktOvCf4qC69rTQ1fXcGEIZiaOQ+rNJ6Fx06Oth6?=
+ =?us-ascii?Q?ockjdFbunvPkPe/fMVpa1RIBg7i8jKDL?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(7416014)(376014)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?lpc9fxoITW6gspZcfcPuOlp9vbyb5P8Q3aJ5F0ZK6NFMCEHJMgC6/Q07mI6u?=
+ =?us-ascii?Q?Lyy5VJXbmrnVzJ071HaUNNSseW2QXCmxAZ+EvVyIBq8c4DVHfP+pYVwpWzIJ?=
+ =?us-ascii?Q?ODEEvlnTTR7/ogMdoSEEPR+8FyvGM8Q/W7EkLQyTAmZqABiTm6gJS6ZzF7mr?=
+ =?us-ascii?Q?eUglq2BgQCXu6+KI2N3ByhiMdKpnaB5O9udHtXLUOkdCqdZ/PAii0znK+Oru?=
+ =?us-ascii?Q?OqV0KRDdBtMAoO/Uko7lCwPPGogt4olvD70wdDO1C3c6UC+jcgAXuHPdmpUQ?=
+ =?us-ascii?Q?dsTf/Trg0SwvK2cFmrVzJL4pIGW9tkpZcDL2ciSj6Gbr7/d5iGKPnpAgKGUf?=
+ =?us-ascii?Q?qH4xOlnmDnneTwaxODnrP8LYif5UL0LLpN/vlMu4EgIflHtD3UIGugLZu7ri?=
+ =?us-ascii?Q?o//An1YLHNMdPGizoCt6SLsZrZaH3J08l/Y4m7ip7F2eyL76ICzIWi4iVozo?=
+ =?us-ascii?Q?1Tj7ZWll2ohd2yFzzh/sKhA1+rpIGs1Z4r6YMClRSNS01MH5XOJK35wNvIbP?=
+ =?us-ascii?Q?ynM4d6XKh9f0bLc6M+Zu3mEccowUe7cfHtNn0F2VLahmPF4kM/Utg6yN8xbs?=
+ =?us-ascii?Q?KayBQbG/NZQvwml5rTvrN6n3yCMpAg0Q8+tk1F8mse5jSENG6HDOwA0SWDeW?=
+ =?us-ascii?Q?TC3oPKxyulLMnxPb/3iPjx+ABzrOZt88wZm8TQN+p5EX3jwMqyVVuLIFusiV?=
+ =?us-ascii?Q?LgIlAc3NGu5cr3LkizjuFGh05RRthvI9/fXeq0XtVHyue3k2xasKjnLxLRmp?=
+ =?us-ascii?Q?SNoYjJ21dOjJGmFdFbvmPDddG5Wqvh80RwV0D01/OhD1YavvK17Lead7ivCh?=
+ =?us-ascii?Q?kXA7oTtbSItt63cpWX9TyDR17UsdkDwtiimdVs+tnIJ0TCxEYhcu3LMacKXW?=
+ =?us-ascii?Q?wf6yBHS/VqVxMEJRPNjEj6XvgABXIKYfGNgZ16ty8h1xb2cuGwIg7IgmaAzu?=
+ =?us-ascii?Q?jtoYUWk5jwef82UO2zCnjm4JNDu7N+wh1uIgZOfYWTavGN7HyiOctRGRN/hJ?=
+ =?us-ascii?Q?pF/LI8rbUSAhnc6QXKyG+sEVNWkMqm7qNYdQSk5iy0wsPB7/4MHVLPGmd0pY?=
+ =?us-ascii?Q?9ZmsQti3ijIxjAsSVcZJiWmT5X0IR1UJEtw3V0tqwBeQ9EU+p9Q/QQnhlaJL?=
+ =?us-ascii?Q?0MKyn+H7EKb4spTflAajh1cwLAlfWMFog3ymayidFHLBiOHeYHCEv68cyIRj?=
+ =?us-ascii?Q?IR8OMobXbAlZ76ITnLq/UEEGrMVo3TCaYnf7/xrk66bl2zyhB4/5C9JgQVUT?=
+ =?us-ascii?Q?c1j2eCSlj27IBPnv/EZI58n43yT7wvYVCuWleP2nyYVhce2YTbsxui59eFQz?=
+ =?us-ascii?Q?PtitUsg0F00yhLRGJyEq5V04kFd9fAnomXHufOJnaJPfvzDRvr6mYrPFxIFz?=
+ =?us-ascii?Q?844sRl9HzrOJ+MgZ/a2Oy0GWDq6MS8nwNY62N8gteerubBXKPeG1iAlX3jiy?=
+ =?us-ascii?Q?qnKEjDvOMTIf1gfKHiZeiA79YhTUrjjOUadRdYSfvMZNMAkZ6H91VGH77iVv?=
+ =?us-ascii?Q?1bL9avfL/WMeEnX+lYChko4fKjMUa3QZlxbkaVakU02epUx2tWNii86m7bzP?=
+ =?us-ascii?Q?SLkntqR9tcs5YNx+XsRJlNYlkGeRA8N/rSECkJyD?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1a306ce-01ef-4585-d769-08dd40a588df
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 20:43:06.9285
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bhzF4PD/UFhOI5UJTAlBYm3+hCHB8L6I8w6Ja+DBrAcKaa6Mqs3TqX1FdO9RB3pTVOzlXx/9MVvACcg95vBgPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10954
 
-From: Fan Wu <wufan@kernel.org>
+On Mon, Jan 27, 2025 at 11:35:48AM -0600, Matthew Gerlach wrote:
+> Add the base device tree for support of the PCIe Root Port
+> for the Agilex family of chips.
+>
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> ---
+> v3:
+>  - Remove accepted patches from patch set.
+>
+> v2:
+>  - Rename node to fix schema check error.
+> ---
+>  .../intel/socfpga_agilex_pcie_root_port.dtsi  | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+> new file mode 100644
+> index 000000000000..50f131f5791b
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+> @@ -0,0 +1,55 @@
+> +// SPDX-License-Identifier:     GPL-2.0
+> +/*
+> + * Copyright (C) 2024, Intel Corporation
+> + */
+> +&soc0 {
+> +	aglx_hps_bridges: fpga-bus@80000000 {
+> +		compatible = "simple-bus";
+> +		reg = <0x80000000 0x20200000>,
+> +		      <0xf9000000 0x00100000>;
+> +		reg-names = "axi_h2f", "axi_h2f_lw";
+> +		#address-cells = <0x2>;
+> +		#size-cells = <0x1>;
+> +		ranges = <0x00000000 0x00000000 0x80000000 0x00040000>,
+> +			 <0x00000000 0x10000000 0x90100000 0x0ff00000>,
+> +			 <0x00000000 0x20000000 0xa0000000 0x00200000>,
+> +			 <0x00000001 0x00010000 0xf9010000 0x00008000>,
+> +			 <0x00000001 0x00018000 0xf9018000 0x00000080>,
+> +			 <0x00000001 0x00018080 0xf9018080 0x00000010>;
+> +
+> +		pcie_0_pcie_aglx: pcie@200000000 {
+> +			reg = <0x00000000 0x10000000 0x10000000>,
+> +			      <0x00000001 0x00010000 0x00008000>,
+> +			      <0x00000000 0x20000000 0x00200000>;
+> +			reg-names = "Txs", "Cra", "Hip";
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <GIC_SPI 0x14 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <0x1>;
+> +			device_type = "pci";
+> +			bus-range = <0x0000000 0x000000ff>;
+> +			ranges = <0x82000000 0x00000000 0x00100000 0x00000000 0x10000000 0x00000000 0x0ff00000>;
 
-Currently, all existing IPE properties evaluate to FALSE for
-operations triggered by anonymous memory regions or memfd. As a result,
-IPE falls back to the policy's default action for such operations.
+This convert to pci address 0x0010_0000..0x1000_0000 from parent bus address
+0x1000_0000..0x1ff0_0000
 
-In policies where the default action is DENY, this behavior blocks
-all anonymous memory related operations, rendering binaries that rely on
-anonymous memory, e.g. JIT engine, unusable.
+aglx_hps_bridges bridge convert 0x90100000..0xa000_0000 (cpu address) to
+0x1000_0000..0x1ff0_0000 according to ranges[1](second entry).
 
-This commit introduces a new IPE property, 'anonymous_memory',
-which evaluates to TRUE when an operation is triggered by an
-anonymous memory region or memfd. This allows administrators to
-explicitly allow or deny operations involving anonymous memory.
+Just want to confirm that "0x1000_0000..0x1ff0_0000" is actually reflect
+hardware behavior.
 
-Signed-off-by: Fan Wu <wufan@kernel.org>
----
- Documentation/admin-guide/LSM/ipe.rst | 12 ++++++++++
- Documentation/security/ipe.rst        |  9 +++----
- security/ipe/Kconfig                  | 10 ++++++++
- security/ipe/audit.c                  |  2 ++
- security/ipe/eval.c                   | 34 +++++++++++++++++++++++----
- security/ipe/eval.h                   | 13 ++++++----
- security/ipe/hooks.c                  | 12 ++++++++++
- security/ipe/hooks.h                  |  4 ++++
- security/ipe/ipe.c                    |  7 ++++--
- security/ipe/policy.h                 |  2 ++
- security/ipe/policy_parser.c          |  4 ++++
- 11 files changed, 95 insertions(+), 14 deletions(-)
+On going a thread
+https://lore.kernel.org/linux-pci/Z5pfiJyXB3NtGSfe@lizhi-Precision-Tower-5810/T/#t
 
-diff --git a/Documentation/admin-guide/LSM/ipe.rst b/Documentation/admin-guide/LSM/ipe.rst
-index f93a467db628..9de2e72f29d5 100644
---- a/Documentation/admin-guide/LSM/ipe.rst
-+++ b/Documentation/admin-guide/LSM/ipe.rst
-@@ -669,6 +669,18 @@ fsverity_signature
- 
-       fsverity_signature=(TRUE|FALSE)
- 
-+anonymous_memory
-+~~~~~~~~~~~~~~~~
-+
-+   This property can be used to allow or deny operations triggered by
-+   anonymous memory. It evaluates to TRUE when a memory region
-+   in the evaluation context is not backed by a physical file or it
-+   is from a memory file descriptor. It is controlled by
-+   the ``IPE_PROP_ANONYMOUS_MEMORY`` config option.
-+   The format of this property is::
-+
-+      anonymous_memory=(TRUE|FALSE)
-+
- Policy Examples
- ---------------
- 
-diff --git a/Documentation/security/ipe.rst b/Documentation/security/ipe.rst
-index 4a7d953abcdc..1606484241cb 100644
---- a/Documentation/security/ipe.rst
-+++ b/Documentation/security/ipe.rst
-@@ -385,15 +385,16 @@ Anonymous Memory
- Anonymous memory isn't treated any differently from any other access in IPE.
- When anonymous memory is mapped with ``+X``, it still comes into the ``file_mmap``
- or ``file_mprotect`` hook, but with a ``NULL`` file object. This is submitted to
--the evaluation, like any other file. However, all current trust properties will
--evaluate to false, as they are all file-based and the operation is not
--associated with a file.
-+the evaluation, like any other file. However, except the ``anonymous_memory`` property,
-+all current trust properties will evaluate to false, as they are all file-based and
-+the operation is not associated with a file.
- 
- .. WARNING::
- 
-   This also occurs with the ``kernel_load_data`` hook, when the kernel is
-   loading data from a userspace buffer that is not backed by a file. In this
--  scenario all current trust properties will also evaluate to false.
-+  scenario, all current trust properties except ``anonymous_memory`` will also evaluate
-+  to false.
- 
- Securityfs Interface
- ~~~~~~~~~~~~~~~~~~~~
-diff --git a/security/ipe/Kconfig b/security/ipe/Kconfig
-index 3c75bf267da4..77520714e9ab 100644
---- a/security/ipe/Kconfig
-+++ b/security/ipe/Kconfig
-@@ -94,6 +94,16 @@ config IPE_PROP_FS_VERITY_BUILTIN_SIG
- 
- 	  if unsure, answer Y.
- 
-+config IPE_PROP_ANONYMOUS_MEMORY
-+	bool "Enable support for anonymous memory"
-+	default y
-+	help
-+	  This option enables the 'anonymous_memory' property within IPE
-+	  policies. The property evaluates to TRUE when a memory region
-+	  in the evaluation context is not backed by a physical file
-+	  or it is from a memory file descriptor.
-+
-+	  if unsure, answer Y.
- endmenu
- 
- config SECURITY_IPE_KUNIT_TEST
-diff --git a/security/ipe/audit.c b/security/ipe/audit.c
-index f05f0caa4850..ab5217655910 100644
---- a/security/ipe/audit.c
-+++ b/security/ipe/audit.c
-@@ -59,6 +59,8 @@ static const char *const audit_prop_names[__IPE_PROP_MAX] = {
- 	"fsverity_digest=",
- 	"fsverity_signature=FALSE",
- 	"fsverity_signature=TRUE",
-+	"anonymous_memory=FALSE",
-+	"anonymous_memory=TRUE",
- };
- 
- /**
-diff --git a/security/ipe/eval.c b/security/ipe/eval.c
-index 21439c5be336..38c7214c9889 100644
---- a/security/ipe/eval.c
-+++ b/security/ipe/eval.c
-@@ -52,8 +52,8 @@ static void build_ipe_bdev_ctx(struct ipe_eval_ctx *ctx, const struct inode *con
- }
- #endif /* CONFIG_IPE_PROP_DM_VERITY */
- 
--#ifdef CONFIG_IPE_PROP_FS_VERITY
--#ifdef CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG
-+#if defined(CONFIG_IPE_PROP_FS_VERITY) || defined(CONFIG_IPE_PROP_ANONYMOUS_MEMORY)
-+#if defined(CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG) || defined(CONFIG_IPE_PROP_ANONYMOUS_MEMORY)
- static void build_ipe_inode_blob_ctx(struct ipe_eval_ctx *ctx,
- 				     const struct inode *const ino)
- {
-@@ -64,7 +64,7 @@ static inline void build_ipe_inode_blob_ctx(struct ipe_eval_ctx *ctx,
- 					    const struct inode *const ino)
- {
- }
--#endif /* CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG */
-+#endif
- 
- /**
-  * build_ipe_inode_ctx() - Build inode fields of an evaluation context.
-@@ -80,7 +80,7 @@ static void build_ipe_inode_ctx(struct ipe_eval_ctx *ctx, const struct inode *co
- static void build_ipe_inode_ctx(struct ipe_eval_ctx *ctx, const struct inode *const ino)
- {
- }
--#endif /* CONFIG_IPE_PROP_FS_VERITY */
-+#endif
- 
- /**
-  * ipe_build_eval_ctx() - Build an ipe evaluation context.
-@@ -265,6 +265,28 @@ static bool evaluate_fsv_sig_true(const struct ipe_eval_ctx *const ctx)
- }
- #endif /* CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG */
- 
-+#ifdef CONFIG_IPE_PROP_ANONYMOUS_MEMORY
-+static bool evaluate_anonymous_memory_false(const struct ipe_eval_ctx *const ctx)
-+{
-+	return ctx->file && !ctx->ipe_inode->memfd;
-+}
-+
-+static bool evaluate_anonymous_memory_true(const struct ipe_eval_ctx *const ctx)
-+{
-+	return !evaluate_anonymous_memory_false(ctx);
-+}
-+#else
-+static bool evaluate_anonymous_memory_false(const struct ipe_eval_ctx *const ctx)
-+{
-+	return false;
-+}
-+
-+static bool evaluate_anonymous_memory_true(const struct ipe_eval_ctx *const ctx)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_IPE_PROP_ANONYMOUS_MEMORY */
-+
- /**
-  * evaluate_property() - Analyze @ctx against a rule property.
-  * @ctx: Supplies a pointer to the context to be evaluated.
-@@ -297,6 +319,10 @@ static bool evaluate_property(const struct ipe_eval_ctx *const ctx,
- 		return evaluate_fsv_sig_false(ctx);
- 	case IPE_PROP_FSV_SIG_TRUE:
- 		return evaluate_fsv_sig_true(ctx);
-+	case IPE_PROP_ANON_MEM_FALSE:
-+		return evaluate_anonymous_memory_false(ctx);
-+	case IPE_PROP_ANON_MEM_TRUE:
-+		return evaluate_anonymous_memory_true(ctx);
- 	default:
- 		return false;
- 	}
-diff --git a/security/ipe/eval.h b/security/ipe/eval.h
-index fef65a36468c..83b57d12a778 100644
---- a/security/ipe/eval.h
-+++ b/security/ipe/eval.h
-@@ -31,11 +31,16 @@ struct ipe_bdev {
- };
- #endif /* CONFIG_IPE_PROP_DM_VERITY */
- 
--#ifdef CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG
-+#if defined(CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG) || defined(CONFIG_IPE_PROP_ANONYMOUS_MEMORY)
- struct ipe_inode {
-+#ifdef CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG
- 	bool fs_verity_signed;
--};
- #endif /* CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG */
-+#ifdef CONFIG_IPE_PROP_ANONYMOUS_MEMORY
-+	bool memfd;
-+#endif /* CONFIG_IPE_PROP_ANONYMOUS_MEMORY */
-+};
-+#endif
- 
- struct ipe_eval_ctx {
- 	enum ipe_op_type op;
-@@ -49,9 +54,9 @@ struct ipe_eval_ctx {
- #ifdef CONFIG_IPE_PROP_FS_VERITY
- 	const struct inode *ino;
- #endif /* CONFIG_IPE_PROP_FS_VERITY */
--#ifdef CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG
-+#if defined(CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG) || defined(CONFIG_IPE_PROP_ANONYMOUS_MEMORY)
- 	const struct ipe_inode *ipe_inode;
--#endif /* CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG */
-+#endif
- };
- 
- enum ipe_match {
-diff --git a/security/ipe/hooks.c b/security/ipe/hooks.c
-index d0323b81cd8f..ce68f08ce343 100644
---- a/security/ipe/hooks.c
-+++ b/security/ipe/hooks.c
-@@ -312,3 +312,15 @@ int ipe_inode_setintegrity(const struct inode *inode,
- 	return -EINVAL;
- }
- #endif /* CONFIG_CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG */
-+
-+#ifdef CONFIG_IPE_PROP_ANONYMOUS_MEMORY
-+/**
-+ * ipe_memfd_created() - Mark the current file as a memfd.
-+ * @file: Supplies a pointer to the file structure being created.
-+ */
-+void ipe_memfd_created(struct file *file)
-+{
-+	ipe_inode(file->f_inode)->memfd = true;
-+}
-+#endif /* CONFIG_IPE_PROP_ANONYMOUS_MEMORY */
-+
-diff --git a/security/ipe/hooks.h b/security/ipe/hooks.h
-index 38d4a387d039..fa90db65ca88 100644
---- a/security/ipe/hooks.h
-+++ b/security/ipe/hooks.h
-@@ -49,4 +49,8 @@ int ipe_inode_setintegrity(const struct inode *inode, enum lsm_integrity_type ty
- 			   const void *value, size_t size);
- #endif /* CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG */
- 
-+#ifdef CONFIG_IPE_PROP_ANONYMOUS_MEMORY
-+void ipe_memfd_created(struct file *file);
-+#endif /* CONFIG_IPE_PROP_ANONYMOUS_MEMORY */
-+
- #endif /* _IPE_HOOKS_H */
-diff --git a/security/ipe/ipe.c b/security/ipe/ipe.c
-index 4317134cb0da..330925b6a48e 100644
---- a/security/ipe/ipe.c
-+++ b/security/ipe/ipe.c
-@@ -16,9 +16,9 @@ static struct lsm_blob_sizes ipe_blobs __ro_after_init = {
- #ifdef CONFIG_IPE_PROP_DM_VERITY
- 	.lbs_bdev = sizeof(struct ipe_bdev),
- #endif /* CONFIG_IPE_PROP_DM_VERITY */
--#ifdef CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG
-+#if defined(CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG) || defined(CONFIG_IPE_PROP_ANONYMOUS_MEMORY)
- 	.lbs_inode = sizeof(struct ipe_inode),
--#endif /* CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG */
-+#endif
- };
- 
- static const struct lsm_id ipe_lsmid = {
-@@ -59,6 +59,9 @@ static struct security_hook_list ipe_hooks[] __ro_after_init = {
- #ifdef CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG
- 	LSM_HOOK_INIT(inode_setintegrity, ipe_inode_setintegrity),
- #endif /* CONFIG_IPE_PROP_FS_VERITY_BUILTIN_SIG */
-+#ifdef CONFIG_IPE_PROP_ANONYMOUS_MEMORY
-+	LSM_HOOK_INIT(memfd_created, ipe_memfd_created),
-+#endif /* CONFIG_IPE_PROP_ANONYMOUS_MEMORY */
- };
- 
- /**
-diff --git a/security/ipe/policy.h b/security/ipe/policy.h
-index 5bfbdbddeef8..0becc2d2bd33 100644
---- a/security/ipe/policy.h
-+++ b/security/ipe/policy.h
-@@ -39,6 +39,8 @@ enum ipe_prop_type {
- 	IPE_PROP_FSV_DIGEST,
- 	IPE_PROP_FSV_SIG_FALSE,
- 	IPE_PROP_FSV_SIG_TRUE,
-+	IPE_PROP_ANON_MEM_FALSE,
-+	IPE_PROP_ANON_MEM_TRUE,
- 	__IPE_PROP_MAX
- };
- 
-diff --git a/security/ipe/policy_parser.c b/security/ipe/policy_parser.c
-index 7f27e39931d6..5c83095e7c37 100644
---- a/security/ipe/policy_parser.c
-+++ b/security/ipe/policy_parser.c
-@@ -281,6 +281,8 @@ static const match_table_t property_tokens = {
- 	{IPE_PROP_FSV_DIGEST,		"fsverity_digest=%s"},
- 	{IPE_PROP_FSV_SIG_FALSE,	"fsverity_signature=FALSE"},
- 	{IPE_PROP_FSV_SIG_TRUE,		"fsverity_signature=TRUE"},
-+	{IPE_PROP_ANON_MEM_FALSE,	"anonymous_memory=FALSE"},
-+	{IPE_PROP_ANON_MEM_TRUE,	"anonymous_memory=TRUE"},
- 	{IPE_PROP_INVALID,		NULL}
- };
- 
-@@ -331,6 +333,8 @@ static int parse_property(char *t, struct ipe_rule *r)
- 	case IPE_PROP_DMV_SIG_TRUE:
- 	case IPE_PROP_FSV_SIG_FALSE:
- 	case IPE_PROP_FSV_SIG_TRUE:
-+	case IPE_PROP_ANON_MEM_FALSE:
-+	case IPE_PROP_ANON_MEM_TRUE:
- 		p->type = token;
- 		break;
- 	default:
--- 
-2.47.1
+Try to clean up all cpu_addr_fixup() or similar fixup() in pci root complex
+drivers, but which require dtsi reflect the real hardware behavior.
 
+In most current pci driver, even "0x1000_0000..0x1ff0_0000" is wrong, it
+still work by drivers' fixup. If dts correct descript hardware, these
+fixup can be removed.
+
+best regards
+Frank
+
+> +			msi-parent = <&pcie_0_msi_irq>;
+> +			#address-cells = <0x3>;
+> +			#size-cells = <0x2>;
+> +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_0_pcie_aglx 0 0 0 0x1>,
+> +					<0x0 0x0 0x0 0x2 &pcie_0_pcie_aglx 0 0 0 0x2>,
+> +					<0x0 0x0 0x0 0x3 &pcie_0_pcie_aglx 0 0 0 0x3>,
+> +					<0x0 0x0 0x0 0x4 &pcie_0_pcie_aglx 0 0 0 0x4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie_0_msi_irq: msi@10008080 {
+> +			compatible = "altr,msi-1.0";
+> +			reg = <0x00000001 0x00018080 0x00000010>,
+> +			      <0x00000001 0x00018000 0x00000080>;
+> +			reg-names = "csr", "vector_slave";
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <GIC_SPI 0x13 IRQ_TYPE_LEVEL_HIGH>;
+> +			msi-controller;
+> +			num-vectors = <0x20>;
+> +			status = "disabled";
+> +		};
+> +	};
+> +};
+> --
+> 2.34.1
+>
