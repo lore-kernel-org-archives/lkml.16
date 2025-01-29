@@ -1,117 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3BC42A92;
-	Wed, 29 Jan 2025 23:19:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5121B425D;
+	Wed, 29 Jan 2025 23:20:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738192781; cv=none; b=WJsTqW+i5dgFfmUoPyilvnQycLx34/ln69oTWQT9cqgDXkBYrs71vqhfqjMyM9tkfX3D9Wx5JW2Bp/xgtVqZioqT2940UmxG8mFVJ+92vQHKDcaBRTA2jOUwv2YYxaFqF8GnIGWxJK2T3iIABRdC2FrJEr+Owx2OT6LnPcE8OXI=
+	t=1738192855; cv=none; b=DnmAv6sNdYKqF4xhRGuBp3k5wo7vavM/n9wUfQHWt+ZuJvPPF0YbxqB24lAETp4eOTLru5M/U7FFD8bt0fFaDxAAZyBSxfWLQj5Q2DG54tEIxEASK0HHRPsPiYvT4KgHBawO9SM59lyerXMBmcp9dhb1YW3++YNPIOq0NenGsKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738192781; c=relaxed/simple;
-	bh=Zlz47JZTSZjs6GkXMUpoX5Ar7Yt8/Hbx6Ol2UOf5Ut4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=eUVuC4+2iZ9Dyv/H3vPXn7+ALFjtdlEKH3oJJAhKT1Uczf1M5Yz82PRwTlNfzluZ9qL8ESa+nZ3lfje2/sHqWVuXqyjGSkSonmJQeWrFMIwZuDu8M+8TMRH7emNlGz4yeQjngQTJxejYEH8Tf8b6FVNAfeeI1RZlZtpydst6yIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGm9/Paj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738192855; c=relaxed/simple;
+	bh=0WRw457uiiqAmupT0nL4dUWX82jE82sEr8yyHXSOa5Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=QiYKghXIhsmNsbhDyMOVo8ch6m0QovdZwRRRAHxdVrPV0dMtENjLRbIl5xkhTjTG9EM+XZZePuzDpNCP04/TScTLNn4zsc6Zkni3VCmFgxI8amVokZouh2f6GFL//gKHusWiCRDnL6NLclLY4a2jRWMZ2vJ7x1iIah9laICd9eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQK6gTEV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGm9/Paj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 357B5C4CED1;
-	Wed, 29 Jan 2025 23:19:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQK6gTEV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42719C4CEE2;
+	Wed, 29 Jan 2025 23:20:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738192779;
-	bh=Zlz47JZTSZjs6GkXMUpoX5Ar7Yt8/Hbx6Ol2UOf5Ut4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ZGm9/PajtiH2zlIiysQmjQCT7xD11s1wJMreoSshovuRxFLol+F3KFa0BK2JBM+xJ
-	 xbYOoBhA7v6SsT362GM/xdQlTb8xggGVdrb7WlAoGCGsVOwnfKeaDIvZ9KkJbbo/f6
-	 /85E1yTqT1++PIOhDftZIkwJBlM0ucyGyrZSQvpDYChQ81fcdx8DiJQxurnDd56k+s
-	 FH8yRHzpjlPMMn88MsgnhzUL274aKyT9kuwCz2glvRwxpXyLSpCfgHbSZUiSf/5KuP
-	 EsRm3iJJWlIgw/eCzA/SvixQW7ZW6opr8ZYqIzOhlyshWBqOuZN0kSs/xGUtnnxe46
-	 e+ABxRyncP5XA==
-Date: Wed, 29 Jan 2025 17:19:37 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v9 1/7] PCI: dwc: Use resource start as iomap() input in
- dw_pcie_pme_turn_off()
-Message-ID: <20250129231937.GA523281@bhelgaas>
+	s=k20201202; t=1738192855;
+	bh=0WRw457uiiqAmupT0nL4dUWX82jE82sEr8yyHXSOa5Y=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=FQK6gTEVU2MzeHqG11SvEw9fMcJ35Gm/a+2Tt5wJEa8zp5hUpcPv7yuXVWhVOuwex
+	 4jq1VjslaV8HS/JpsWZLqDtBtWWvOeGfJJu0qTlXP4xfSJRDAXYKtg4PHbNgpTJehV
+	 5zlxZl6gXCs+bGSOhuWl0kkRUILEetBw+8Xi/KJUeyzDJwoQbKOjr4ZwHdHmJcf6vA
+	 fp2JEAVWB+WqNisOmMsntCQpyvBtFT5XvxZac62arxHIPeSyRHPWEN5iVIlQGNdsgX
+	 1+4W1uJuhjA4lxJqQEWDTV8vLrT5L6/aEPuDco7bqqm2/E6L6hs4vANx9k9m/K0Mtq
+	 tB0fgg3vNkvYQ==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Wed, 29 Jan 2025 18:20:41 -0500
+Subject: [PATCH v3 1/6] nfsd: add routines to get/put session references
+ for callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250128-pci_fixup_addr-v9-1-3c4bb506f665@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250129-nfsd-6-14-v3-1-506e71e39e6b@kernel.org>
+References: <20250129-nfsd-6-14-v3-0-506e71e39e6b@kernel.org>
+In-Reply-To: <20250129-nfsd-6-14-v3-0-506e71e39e6b@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3008; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=0WRw457uiiqAmupT0nL4dUWX82jE82sEr8yyHXSOa5Y=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnmrfTHIiyNSUmAARPmUcM92GB9fipXDf1fGeYp
+ bf+O7FoKieJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ5q30wAKCRAADmhBGVaC
+ FZJkD/9rR03U9XMS47NGkYcrXwmn4W9VYNopM4F9zLq4rExrJ8SSeKjw+PJOQa6p8s5uSLCibgW
+ dy35k/JlTmuZnq1IcaCJ4nL1o4kOq9/n+8jzMFCNtu4sVrEiWCQ/K1TnE40NE3wpAoxUJGtwFUZ
+ O5A/E8PcgyzVp1Ep2IRK5usT9XJC+vxTj1EghOSQVMVdez0HNKW1E+RKFef+6U6S3guDj/rswNb
+ GW+1WdxaJVCVoxPBRQiPhw72BQRHmfGEJ3BZJecl3RlOGj1bEczUs8C0sYAiY4Q8gR+Frxb3172
+ UxezeN7idCAUhmWnzJfqu7lWIl7juYwOKgD2SsrugYl9AdGqc+IfXFWu9N6zk3a3F8pJKQhoucU
+ DHZP4QZopuOQ6W5d0+pHbyNGFe2duo78K9qmjXelGlE3hfujvnEZMOLfz4a3t8TwhT8KyCVr4TX
+ TZv/HITs8kMQE+g527ERoqZS7nXThQnr6zabMxptHATcYV907Z+FVWMz5zYMJfReRbQ/AtHfQzO
+ x8ImQ/aeFUSYCE2A8OGmoEaQ8BZhenNNfISl3bzHdVAFTnUxqFzKYuHRibBY7HDw/uTPox6CDBc
+ yOv6l7+Galf9AQP8wica8JtqOBEQKI+3kXxDsRzUtKjd+1z1hatX2noZlQXkeC2A53ibmsHvwd7
+ vdgaofYlQY77iPA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Tue, Jan 28, 2025 at 05:07:34PM -0500, Frank Li wrote:
-> Pass resource start as the input argument to iomap() instead of
-> atu.cpu_address in dw_pcie_pme_turn_off(). While atu.cpu_address happens to
-> be the same here, it actually represents the parent bus address before ATU,
-> which may not always align with the CPU address. Using resource start
-> ensures correctness and clarity.
+The existing session reference counting is too heavyweight for
+callbacks. There is an atomic refcount in nfsd4_session (se_ref), but
+the existing functions take a client reference alongside it, and require
+the nn->client_lock. This is unnecessary for callbacks as they are
+already owned by the client.
 
-1) "atu.cpu_address happens to be the same here" is currently true
-   but only because this function is buggy and assumes the ATU input
-   address is the same as a CPU physical address.
+Add new nfsd4_cb_get_session() and nfsd4_cb_put_session() calls that
+take and put a session reference on behalf of a callback.
 
-2) We're trying to make a correctness fix, not a clarity fix.  This
-   patch by itself isn't a functional change because of the cpu_addr
-   bug, but without this patch, fixing the cpu_addr bug would break
-   the iomap.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/nfsd/nfs4state.c | 34 ++++++++++++++++++++++++++++++++--
+ fs/nfsd/state.h     |  2 ++
+ 2 files changed, 34 insertions(+), 2 deletions(-)
 
-3) "Pass resource start as the input to iomap()" just restates the
-   patch.  We should say *why* this is important.  Something like
-   this:
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index cc819b8e8acdf5dcfe44c5bae45c6233f7b695e9..db68fd579ff0454153537817ee3cca71303654b4 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -234,6 +234,37 @@ static void put_client_renew(struct nfs4_client *clp)
+ 	spin_unlock(&nn->client_lock);
+ }
+ 
++/**
++ * nfsd4_cb_get_session - get a session reference for a callback
++ * @ses: session of which to get a reference
++ *
++ * Callbacks are different than client-driven RPCs. The caller doesn't
++ * need a reference to the nfs4_client, and doesn't want to renew the
++ * lease when putting the reference. Returns true if a session was
++ * acquired, or false otherwise (which indicates that the session is
++ * dead).
++ */
++bool nfsd4_cb_get_session(struct nfsd4_session *ses)
++{
++	if (is_session_dead(ses))
++		return false;
++	return atomic_inc_not_zero(&ses->se_ref);
++}
++
++/**
++ * nfsd4_cb_put_session - put a session reference for a callback
++ * @ses: session of which to put a reference
++ *
++ * Callbacks are different than client-driven RPCs. The caller doesn't
++ * need a reference to the nfs4_client, and doesn't want to renew the
++ * lease when putting the reference.
++ */
++void nfsd4_cb_put_session(struct nfsd4_session *ses)
++{
++	if (ses && atomic_dec_and_test(&ses->se_ref) && is_session_dead(ses))
++		free_session(ses);
++}
++
+ static __be32 nfsd4_get_session_locked(struct nfsd4_session *ses)
+ {
+ 	__be32 status;
+@@ -254,8 +285,7 @@ static void nfsd4_put_session_locked(struct nfsd4_session *ses)
+ 
+ 	lockdep_assert_held(&nn->client_lock);
+ 
+-	if (atomic_dec_and_test(&ses->se_ref) && is_session_dead(ses))
+-		free_session(ses);
++	nfsd4_cb_put_session(ses);
+ 	put_client_renew_locked(clp);
+ }
+ 
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 74d2d7b42676d907bec9159b927aeed223d668c3..79d985d2a656e1a5b22a6a9c88f309515725e847 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -753,6 +753,8 @@ struct nfsd4_compound_state;
+ struct nfsd_net;
+ struct nfsd4_copy;
+ 
++bool nfsd4_cb_get_session(struct nfsd4_session *ses);
++void nfsd4_cb_put_session(struct nfsd4_session *ses);
+ extern __be32 nfs4_preprocess_stateid_op(struct svc_rqst *rqstp,
+ 		struct nfsd4_compound_state *cstate, struct svc_fh *fhp,
+ 		stateid_t *stateid, int flags, struct nfsd_file **filp,
 
-     The msg_res region translates writes into PCIe Message TLPs.
-     Previously we mapped this region using atu.cpu_addr, the input
-     address programmed into the ATU.
+-- 
+2.48.1
 
-     "cpu_addr" is a misnomer because when a bus fabric translates
-     addresses between the CPU and the ATU, the ATU input address is
-     different from the CPU address.  A future patch will rename
-     "cpu_addr" and correct the value to be the ATU input address
-     instead of the CPU physical address.
-
-     Map the msg_res region before writing to it using the msg_res
-     resource start, a CPU physical address.
-
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> change from v9 to v10
-> - new patch
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index ffaded8f2df7b..ae3fd2a5dbf85 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -908,7 +908,7 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
->  	if (ret)
->  		return ret;
->  
-> -	mem = ioremap(atu.cpu_addr, pci->region_align);
-> +	mem = ioremap(pci->pp.msg_res->start, pci->region_align);
->  	if (!mem)
->  		return -ENOMEM;
->  
-> 
-> -- 
-> 2.34.1
-> 
