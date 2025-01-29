@@ -1,105 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7493C194089;
-	Wed, 29 Jan 2025 19:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724AB194089;
+	Wed, 29 Jan 2025 19:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738177828; cv=none; b=nxGTpMvevMdk8qD/ORANEi9aMgK+kVSxBNyx/XNPwWgcEWEkr2BOOhpk3z0iYy/S0da6jAz5LK0JQEU6/m7VprlGW62p3LFFfarrrEO5DKfgri/OK29qna1E6cWVw2rhPGpGY3Nd3PyiU9G2Lpm51TkXHVpNWpvx7tnvqImkN/c=
+	t=1738177869; cv=none; b=dh/EJ0Ij2Bi7tilPpcVpXdsoURu3QIM9ZzRWgtAgGMmtq3gUFHuZJNDlwgy38PAbbeH3prIyoyCcC+/KgwGNoGAYepNjXklJ2NNMCikm/8NRMhxpFJQ1H60EyjCXrqvFWfmr2O9fQ0NL5SJN+RcAn9hR2bDt14wlbSowKXjG9BI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738177828; c=relaxed/simple;
-	bh=pDJT/TKUWRAmXBXIuDw4BDddlfkMuvJPlo9R+NELlp8=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gYFhr1Ns6askdyeWNgZ2vOI0Mc/HcppvQx1NyJ9dAVXLad/qcnbv05n8Dp2LPAT8UlDRhh/jtQkxcDvU+mhtpLuL+/pYi+VHtTzi7ryX+HTo+4bigyGFPf0tXTGQBFHUzvT1gVkItkUFnq3EQr3VL1C1uRr16KIDyjPK6uADrX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AQvfKY6X; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738177869; c=relaxed/simple;
+	bh=Z3hEyDlfLsij0qd9ZTKWy2lWob92wfkk08MbVtVNmLo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NFvUtIotEEv1OngWuOmsmKJsft6VBLrXGhiwYzIR9hBE3i53nUo8aLnKd2V1jgPBntHDby8OH9Rpf5Xc8rPHVTkWuim3fj9a4mmaYybWbKmx3qmNw3wxQ/ZC2IuTuKEGuDxkwPbXxLnqyFqio92eIKeCp6o+hH+tDlWkCriYWhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CQ+AuUaY; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AQvfKY6X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738177827; x=1769713827;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=pDJT/TKUWRAmXBXIuDw4BDddlfkMuvJPlo9R+NELlp8=;
-  b=AQvfKY6XkNRDMXMCPPOBDDWtTCm3S73tbHMyD/msKvFRoBW8nqrqJNQv
-   i7qbJKzZPc7VQEdwYVb9suDoDqcba87i8robIh6s88Hu3UJkyNi5VMUYr
-   NonWb/OQxdNnAEWFrK8vmzr1LAiIUbvQa+UkDC2zAlmGd0/RCcA/QlJSB
-   hZ4OcRSeKgXNLOK3rNEjueiQlIQOC4rulYVzY6eDR5yzaSb331WcebVt9
-   jWPUnIZTm7JKJR7jDfO0V8PAPyumpUhnNzFE0siu4TgLnPkv/H03670Px
-   OcHgOoFW7VvuqWQybLexvkHy1AnIDs5YFlChCcFCqV4oxUxeoiCpP1Nyd
-   w==;
-X-CSE-ConnectionGUID: SjqnJKqkTWmgmpops9q4Gw==
-X-CSE-MsgGUID: KuItY+agTmC20DWNAgsRKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="37908327"
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="37908327"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 11:10:26 -0800
-X-CSE-ConnectionGUID: xdEwhwgaTL6S825S8aaRzQ==
-X-CSE-MsgGUID: cZP5KuC5SHSX+jUyWw9C1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="109700817"
-Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 11:10:25 -0800
-Date: Wed, 29 Jan 2025 11:10:25 -0800 (PST)
-From: matthew.gerlach@linux.intel.com
-To: Krzysztof Kozlowski <krzk@kernel.org>
-cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
-    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
-    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
-    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
-    peter.colberg@altera.com
-Subject: Re: [PATCH v5 2/5] arm64: dts: agilex: add soc0 label
-In-Reply-To: <c3bb46ce-d79c-4d57-93ba-90bdeb98658f@kernel.org>
-Message-ID: <622cfc1-28ea-8455-1372-4d4f76c7b613@linux.intel.com>
-References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com> <20250127173550.1222427-3-matthew.gerlach@linux.intel.com> <c3bb46ce-d79c-4d57-93ba-90bdeb98658f@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQ+AuUaY"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43625c4a50dso49129285e9.0;
+        Wed, 29 Jan 2025 11:11:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738177866; x=1738782666; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QgeY7iYAvB41Lp1Ji64FMn5cPOZfexlcQFJUwtwrKjg=;
+        b=CQ+AuUaYk8QHDi1oyZLuU2xXhsMmESw/XuZ9W5C5HNO7sTje/Vx+YWlK4vVXmfrcc6
+         jdAecKI4Mu9KZzlkKb69fhpg2FRtsFi/4SK5f4LBY8ZC53zPO1WfgUaGu0ViE3cCpGNs
+         Sfww4KaiQ79fKCH3kXKMHoU6XN7qPkkQ64dmSHmB8kDrAMiRIeJeeD1E/BC0DbBW8Vxp
+         G+mEiwQFudf4cmVhYN/x90jlhAp86E3BA0qmH8axyVjcxzuyaij+uWHQJJkM0+KVektU
+         SMAcORL2qKxaJQtMOu3af5OUlV8O2ejZ344EFS7tskW7CpSt5YByowfMz85BL6mcv8hS
+         /asw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738177866; x=1738782666;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QgeY7iYAvB41Lp1Ji64FMn5cPOZfexlcQFJUwtwrKjg=;
+        b=aa15EiCeeHcu1zBK8HrE6Rjl3O9yc1JiZrPveka2STKSHNlQY/TJdq3DbmVXejsr5A
+         GFENC8AiOWCm8Xi5g9pmSwctk5SE4rzS2hPujFP4tXuvOisB7Jpbh21lsyeKaJ4nvv7F
+         a2sg1kxdznw1JdKNX7YHhfJ8NsKOkbxgtvRWpzkDPt1qb55j6TSJTBOlxFPe9JceFSA9
+         wY2o/zI71prxLvvP/PFyvrZBlWoWffSE9jqqMux/22Qq/VOdf8r2jEMblSGll2zpggT0
+         xGsOKkkko/DUinpLXV+oqrzzQV7vALFHOrdP7ZmsqgGg0VvoDGzi0C6338PRK2TjfxUW
+         bRlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXncrHiVfzSa0oMn9OnFMaKPa6ELYzIqbsXadOTUQuZsalZd/cT/ZJ6bv2+ZcoQ+PFGHHexJqOhxMsaoER@vger.kernel.org, AJvYcCVNwOHSLWV2NU7D3JaOfNYd8Fa0PtDKI0MtJLHJJEXCjeOfHERvEzc/pGVnLcbeHV2spwHqz17Hcw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZC6Fw53Gm9wgU5DWypImMabfavU7NhNCPuK74yUHpbupP9v5y
+	2CuhKYQdMWH6ArUvMh5+ivW6tM8bgFdISgOb/02rkAlfpRaPDJ6ehSMOeA==
+X-Gm-Gg: ASbGncuCPTXzvhC+cX4OxGN9V0c7MptrnRnNhGMevKL/QlB2ZrDkSxCAyYeE8CRR7/f
+	/9aM77Acuv20oZ/NcER98CNQuuZPUdnwHfXoOqtfgbTRDK2eiwBC+aoUfpjB04Frh69dDVOtGWE
+	YKbm1RYxJXjMM6VkgCzPoIjhsCBMkcz65psqSNJ3pKm7kPah4fzXW0lePX1RBZnPN5VDPVKlLnm
+	JQlvuDeESQ76tXg0KeL6FWnCv90KHhcQ6DUUOmws8Ork5zIWzASZSts2YEbZmoM0UYwlHpnVcaA
+	3RDLhVbAW+uFsjl0XRvA2TGZ1Q==
+X-Google-Smtp-Source: AGHT+IEwAcbssK88/hcC6plD/ZBGatEP/2v+f8dosmhfagc3cV7z+G1s72FHIfFXsaFedr+LdrEIcQ==
+X-Received: by 2002:a05:6000:1faa:b0:38a:9f27:838c with SMTP id ffacd0b85a97d-38c520a0fd9mr3506850f8f.55.1738177865531;
+        Wed, 29 Jan 2025 11:11:05 -0800 (PST)
+Received: from [192.168.8.100] ([148.252.147.217])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2e239sm31894565e9.18.2025.01.29.11.11.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2025 11:11:04 -0800 (PST)
+Message-ID: <a7733b94-c7c0-4e95-975d-e45562d54f3f@gmail.com>
+Date: Wed, 29 Jan 2025 19:11:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/8] io_uring: cache io_kiocb->flags in variable
+To: Max Kellermann <max.kellermann@ionos.com>, axboe@kernel.dk,
+ io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250128133927.3989681-1-max.kellermann@ionos.com>
+ <20250128133927.3989681-8-max.kellermann@ionos.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250128133927.3989681-8-max.kellermann@ionos.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 1/28/25 13:39, Max Kellermann wrote:
+> This eliminates several redundant reads, some of which probably cannot
+> be optimized away by the compiler.
 
+Let's not, it hurts readability with no clear benefits. In most cases
+the compiler will be able to optimise it just where it matters, and
+in cold paths we're comparing the overhead of reading a cached variable
+with taking locks and doing indirect calls, and even then it'd likely
+need to be saved onto the stack and loaded back.
 
-On Wed, 29 Jan 2025, Krzysztof Kozlowski wrote:
+The only place where it might be worth it is io_issue_sqe(), and
+even then I'd doubt it.
 
-> On 27/01/2025 18:35, Matthew Gerlach wrote:
->> Add a label to the soc@0 device tree node.
->>
->> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->> ---
->> v3:
->>  - Remove accepted patches from patch set.
->> ---
->>  arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
->> index 1235ba5a9865..144fe74e929e 100644
->> --- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
->> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
->> @@ -152,7 +152,7 @@ usbphy0: usbphy {
->>  		compatible = "usb-nop-xceiv";
->>  	};
->>
->> -	soc@0 {
->> +	soc0: soc@0 {
-> This shouldn't be a separate commit, really. It serves no purpose to
-> just add the label. Just like you do not add just a define in a driver
-> without its user. Label like this itself is pointless. It's useful for
-> something, so this should be squashed.
+-- 
+Pavel Begunkov
 
-I will squash this label change with the user of the lable.
-
-Thanks for the review,
-Matthew Gerlach
-
->
-> Best regards,
-> Krzysztof
->
