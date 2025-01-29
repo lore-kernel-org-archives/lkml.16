@@ -1,151 +1,127 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4939519D06B
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6355F19D89B
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738188979; cv=none; b=S7OPQAP4Gw+KZMEKucnpCQcx9S2FRblwHAFkDsF5kf4DPB/hasPhU4N9DYtTOC0C/RWsGLeEz6lU+4VDMa9X3nIrzMnMycdnESJ9aF+IuGM8+aIPOUBuUSqLg23NZ85TkprjEIh4CQYKPTs/fizMfDO/oJ+A+wW8F2CLb0R+VIc=
+	t=1738189081; cv=none; b=fzeWp7hNNSMIMMUVwMUUI+sQtLV2lR0CFVvEP9FRNjLPLUWYMWbjtPttBRPYEVk4DSWwoyRygt+0RvxqlosgjPRSsVWP8TcBAiCPw/lmT7AbbWhSa84UXIGXQGHfDTwcP3lbvr+gJWlvt7jZAdbg1ke/C+ony1QXlg4uS8tOu68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738188979; c=relaxed/simple;
-	bh=CBjBxfBArHaP5+KFSMSovBvLkn91zi5YvQjUjm6Fkxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VDb4fiQxM0EkVwcopx9+xeAZCKtA1uXj6yi9VrCVg9r24e+ffnV9K3s6BGPV64Y+XNHbKHsS68CKDAKGsTPqfRsHxW7HHPllCixTAcnz5nqHz5gsPFiYGeecg5+LP9U/KO4/w7N804rXQvV+MRfjN6ED740BYGneTvgINCJFyes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QjU0BiRU; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738189081; c=relaxed/simple;
+	bh=n9z3XUSbFvE04HwxiWyFEdSgMydYBwmpQpT3oM9h5lI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ow37g72VDrVQXKwbEAFXbMRRl9/yoWmD/0ASsHCC2h+xygBukVmRvGqPyoz6thQLNCsksYF7BZhGMfgUIS/rGMo3v8FdmjSkUJGGutEWibHkC3ZEibUCVXAu0xgD0HeXwI70VXXTVsribMauvyIYT7t+aGqK5xs8g3JGhAkAUE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ffGRDnGe; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjU0BiRU"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43625c4a50dso662455e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:16:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ffGRDnGe"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-219f6ca9a81so14825ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 14:18:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738188975; x=1738793775; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=daPgdxKytpeJo/vzJrQd3hQxPDtGozJJzmn9okR5/Yk=;
-        b=QjU0BiRUB0NS+kFbDdO3P21wSMYgxTbPHYfNF3e+Qrs5+EJdb479hWAq9rIFbRDsu+
-         I2RO8cJAZoHjIOGqVd5hNbyt+xqYEAfQNlSpqcM0skNqXtPfvcrmqGV0ihPrAiY7jf47
-         6/93sGVmQMmNF0P+r3QU3S3SIRXLcZwpBaiyx53XVh+wqDjXVjULNQFU1W3yHd/Fmf6e
-         M3i3f8QpIE6gox8+UBHG74Yj/ORD6o20DkZ+gQ11EHX0hr8V0aSm6O8lR7WfnuPX0kZo
-         tIh0E+CAuhAtyhg5mj04RrmLsdS3v9PNozgsWfdvCVwgsbFP5lc/h009BjqH2lU7sOz1
-         1TXg==
+        d=google.com; s=20230601; t=1738189079; x=1738793879; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QIT6WcUwyEo9KeIbj3Ovq3CYT/DZpCtGV9L8fkEOb3I=;
+        b=ffGRDnGeGxmXHGHv5AE/1ym74yFogpILI2ozzKtPgXVlXxE/UJWj5xEi/32CeS1hbu
+         KwWbQkHbHwCMgleNicK4V6niegwbaQr7Zi7KSaiN9c8ojYkH1dH1IV5US9Z+dQ0+5tf0
+         VeebBFfGDBx3JFrXGZhXuQpahzdoEiVotb4koAH+ABynit17obQzYT/kBCaRX1Icfw7q
+         YVl4VQeZjl6vEbcNaSF8kJmpdj7hWR+MgPybk9yIFyjO0bo9wr/uVms8WX6vhzEBlRdi
+         7XGLr/lBtfECsWDxRwHdlVXI5z0mQO8W1h5iyV1DGPLBFFlEG4Qi5tHl2k9jPgwCgzht
+         5cTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738188975; x=1738793775;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=daPgdxKytpeJo/vzJrQd3hQxPDtGozJJzmn9okR5/Yk=;
-        b=XI2JWAQ6/funOenduxxZ4ZpiQ5nn4XBt2IpD4LHTu/M73ek0cLHj7/IOLV7StlRBWX
-         FG45jJSgz1zupETPPnVkLThYY3Ru0mF6nwoUi9HOTqbkKafHCg5svVxfYWyF+B/0oQYt
-         F57wbhShS/LPutawWQZr24BeecZGnGvQTpbAPc4kqIHzvWvV16j9y3wKltlDPGoROs42
-         sfE/lNj/PnvmysrFc+2OSy98xnTBVJze912Ec/L7ioZPwOOHTg3b3vzQ29v0CxdRWwBv
-         YZPKcqqYzqSv4nxVJWrEtBU4Ub38/HGsfEeh3BU4eo3g/4WtswVfA0L32JYfASRti0h8
-         +arQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+80aYNFltoMCGHluv2PYuP6jjpulHT0x4Q7VzVCB758S0U0Y5TUNcFf9SZwLoLcd7Atkiw3kII0j/TDA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpImS2yzubVmkeovTVwTz5uC5WVrtnnPCftVMsqfVVX8FSImzH
-	29mzEcenG9gI8keUDhPsa2yUfBAd0xpYziKk45aUYpuyb00+ywHh
-X-Gm-Gg: ASbGncvd35tJenIs9FFTeye4JFKpbXJnvOQa7hu2yx6Qv4VT3WKWHoBmILcy/h9+Tgf
-	f3XahHVLjaIptY+pytowN8hFA+XuQBPyWeG9BzZEaejAT18cIygWtIBSvm9zTe3Qaq0/YAfPo6L
-	dDXyqtFHa+CokB4COf5E+UM/30WGdotXbJQfWYnJR9RFsGp5TYI29zCVSBKN1IUyMURhQfWNhnC
-	b8b993zsdtmlrRL7Cmcjr5nwHib9uxo1LtOFJ2z5BWQ2pKeN6ylo/csZC+YdYIxbHcQ6MsQIDOt
-	8wLhEyyxzmcNzUo8kJbx5QBKcpRcxKEYay8ojCNXv0YEPBiaaDJa0Q==
-X-Google-Smtp-Source: AGHT+IEi0h/P9Ax4zfeG0ZIoZCiltydXmJWGbhNxx79y1e5qOKwoDDFKlFRLIG3wS4UCeaXx6Lgc2A==
-X-Received: by 2002:a05:600c:474f:b0:434:a10f:c3 with SMTP id 5b1f17b1804b1-438dc3c346fmr36972515e9.9.1738188975404;
-        Wed, 29 Jan 2025 14:16:15 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ec7f1sm68166f8f.9.2025.01.29.14.16.14
+        d=1e100.net; s=20230601; t=1738189079; x=1738793879;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QIT6WcUwyEo9KeIbj3Ovq3CYT/DZpCtGV9L8fkEOb3I=;
+        b=QLLMKsLZ2EQL41YQfoL63n7OKcTjnPEXD1hcQJWzboAKtg0ZuuzUnG8EDo+buUfWEt
+         r/w+nWWLO5dYfv0XkhLLnpplET+T+uUYGagoYycV/ZEsRim/129/YNcpoY/Xr/pUJyxZ
+         a0b246n0XrneIZnGgzb8hNvxdxckpQzRpx3YyFDrEAScVlr0qhJ4PVN7dDcqLi4+PLe3
+         EPgKy9rFO2BGkJVSyoMcjgDSJGepxXfjH81QfbeY72qxy+K8HuNio980ZxwYOoTQn7kB
+         ml9Hw9q9fnf46yRpjDlYRlNa9VfmLVAhMlJl0/jk/3XnCm2aINX5rE7iZaWnnTm0WeQ+
+         nmSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPqz4HQqCwdJ0Z+GQ9PLuYDji6YFBx+NTBw+hqPVk3k6LKoSHdWG9zBQ5LJ1rVtsxC1ixKIchnrHkYTFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf7mQfdWYRS9jADziqplO9KcT6cRW1GgogT0AZI4UaHFN/Sm7B
+	lwIu9zmMHVytz5qt3DefFrjMHR0dA6wUaRdwqzEiw5krXSQTLyWA+2heWDPSgg==
+X-Gm-Gg: ASbGnctlmbzt74GXesywEJ+Icg2YrHxh7B8NKHe+v4APpsFa+rJ9EVablAwdGNwuIpK
+	LqWJDO1Q54h81XH3YFshCXF1ioB9L6rYwH5708YrB72hGS5E6u6VwSTWd85OIkNjchbLlf8xUDz
+	L6YwmL9uLMo6qIKoV1D6lXCzmUxa/refV0cGYaNUWXfKgYMLqWf3PJ3RdYJ97ayM9guLobeUsxR
+	YEpmEPI9tgyZJq840OXgavPXRs2wMtKO6cQS0Uq+WuldhXw44NJp8oYbugbKRcYfHpziNqXALUJ
+	NKo0rsvEPoGdrF3vAgExaPZ2VFu/eQoU8cWpbp0TmP6eBMDIySI=
+X-Google-Smtp-Source: AGHT+IHvBIEyFxy7JJRMnJGTsrg+dQOmuNpHdUPyjnzFG47cwFd2UWayuxvRdqP7ClKKnvOhwvLWAw==
+X-Received: by 2002:a17:902:7c87:b0:215:b077:5c21 with SMTP id d9443c01a7336-21de2467d36mr776695ad.26.1738189079445;
+        Wed, 29 Jan 2025 14:17:59 -0800 (PST)
+Received: from google.com (55.131.16.34.bc.googleusercontent.com. [34.16.131.55])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bc97d25sm2363395a91.5.2025.01.29.14.17.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 14:16:15 -0800 (PST)
-Date: Wed, 29 Jan 2025 22:16:14 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann
- <arnd@arndb.de>, kernel test robot <lkp@intel.com>, Maximilian Luz
- <luzmaximilian@gmail.com>, llvm@lists.linux.dev,
- oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, Hans de Goede
- <hdegoede@redhat.com>
-Subject: Re: drivers/platform/surface/surface3_power.c:243:2: warning:
- 'snprintf' will always be truncated; specified size is 10, but format
- string expands to at least 12
-Message-ID: <20250129221614.6510f165@pumpkin>
-In-Reply-To: <20250129134648.GA3884012@ax162>
-References: <202501291646.VtwF98qd-lkp@intel.com>
-	<CAHp75VcOYyVx=wcopvi-0iA5XePsGOrNO1wUSzYcYB4q86=7gA@mail.gmail.com>
-	<20250129134648.GA3884012@ax162>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Wed, 29 Jan 2025 14:17:58 -0800 (PST)
+Date: Wed, 29 Jan 2025 22:17:54 +0000
+From: Peilin Ye <yepeilin@google.com>
+To: Eduard Zingerman <eddyz87@gmail.com>
+Cc: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bpf@ietf.org,
+	Xu Kuohai <xukuohai@huaweicloud.com>,
+	David Vernet <void@manifault.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Quentin Monnet <qmo@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
+	Neel Natu <neelnatu@google.com>,
+	Benjamin Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v1 3/8] bpf: Introduce load-acquire and
+ store-release instructions
+Message-ID: <Z5qpEkXq-X6ci9UU@google.com>
+References: <cover.1737763916.git.yepeilin@google.com>
+ <e52e4ab7bea5b29475d70e164c4b07992afd6033.1737763916.git.yepeilin@google.com>
+ <f5b72fa9460e4eda6e6b36756db855bfec67744a.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5b72fa9460e4eda6e6b36756db855bfec67744a.camel@gmail.com>
 
-On Wed, 29 Jan 2025 06:46:48 -0700
-Nathan Chancellor <nathan@kernel.org> wrote:
+On Tue, Jan 28, 2025 at 05:30:19PM -0800, Eduard Zingerman wrote:
+> On Sat, 2025-01-25 at 02:18 +0000, Peilin Ye wrote:
+> > +static int check_atomic_store(struct bpf_verifier_env *env, int insn_idx,
+> > +			      struct bpf_insn *insn)
+> > +{
+> > +	int err;
+> > +
+> > +	err = check_reg_arg(env, insn->src_reg, SRC_OP);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	err = check_reg_arg(env, insn->dst_reg, SRC_OP);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	if (is_pointer_value(env, insn->src_reg)) {
+> > +		verbose(env, "R%d leaks addr into mem\n", insn->src_reg);
+> > +		return -EACCES;
+> > +	}
+> 
+> Nit: this check is done by check_mem_access(), albeit only for
+>      PTR_TO_MEM, I think it's better to be consistent with
+>      what happens for regular stores and avoid this check here.
 
-> On Wed, Jan 29, 2025 at 02:45:38PM +0200, Andy Shevchenko wrote:
-> > On Wed, Jan 29, 2025 at 10:09=E2=80=AFAM kernel test robot <lkp@intel.c=
-om> wrote: =20
-> > >
-> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
-x.git master
-> > > head:   05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
-> > > commit: 85f7582cd484dbf491b6d9bb2af6ef1467a024d2 platform/surface: Mo=
-ve Surface 3 Power OpRegion driver to platform/surface
-> > > date:   4 years, 3 months ago
-> > > config: x86_64-randconfig-071-20241231 (https://download.01.org/0day-=
-ci/archive/20250129/202501291646.VtwF98qd-lkp@intel.com/config)
-> > > compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project =
-ab51eccf88f5321e7c60591c5546b254b6afab99)
-> > > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/a=
-rchive/20250129/202501291646.VtwF98qd-lkp@intel.com/reproduce)
-> > >
-> > > If you fix the issue in a separate patch/commit (i.e. not just a new =
-version of
-> > > the same patch/commit), kindly add following tags
-> > > | Reported-by: kernel test robot <lkp@intel.com>
-> > > | Closes: https://lore.kernel.org/oe-kbuild-all/202501291646.VtwF98qd=
--lkp@intel.com/
-> > >
-> > > All warnings (new ones prefixed by >>):
-> > > =20
-> > > >> drivers/platform/surface/surface3_power.c:243:2: warning: 'snprint=
-f' will always be truncated; specified size is 10, but format string expand=
-s to at least 12 [-Wformat-truncation-non-kprintf] =20
-> > >      243 |         snprintf(bix->serial, ARRAY_SIZE(bix->serial), "%3=
-pE%6pE", buf + 7, buf); =20
-> >=20
-> > 3 + 'E' + 6 + 'E' + NUL, that's how the compiler thinks about this
-> > formatting string...
-> >  =20
-> > >          |         ^
-> > >    1 warning generated. =20
-> >=20
-> > I do not know how to properly address this because it's false positive
-> > due to the compiler not being aware of pointer extensions used in
-> > Linux kernel. The w/a is to increase the buffer if we can, but is it
-> > practical? OTOH, this warning will be translated to a compilation
-> > error in case of default WERROR settings on `make W=3D1` builds which is
-> > also annoying to people what want have that clean. =20
->=20
-> Hmmm, I missed that -Wformat-truncation-non-kprintf was only disabled in
-> the non-W=3D1 block in scripts/Makefile.extrawarn. We never want to see
-> these warnings at any level because they will almost always be a false
-> positive, that's why the "non-kprintf" flags even exist in the first
-> place:
-...
+Got it.  Unprivileged programs will be able to store-release pointers to
+the stack, then.  I'll update selftests accordingly.
 
-There is a separate issue that it doesn't seem to be easy to mark a specific
-snprintf() as one that will not actually overflow or where truncation is fi=
-ne.
+Thanks,
+Peilin Ye
 
-Persuading the compiler that the buffer size isn't constant currently works,
-but I expect the compiler will start double checking against ARRAY_SIZE(buf=
-fer)
-'any time soon' which will require the same treatment applied to the buffer
-address.
-
-	David
