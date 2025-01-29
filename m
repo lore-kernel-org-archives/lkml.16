@@ -1,128 +1,107 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F1618FDC5;
-	Wed, 29 Jan 2025 18:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821C31E0E0D;
+	Wed, 29 Jan 2025 18:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738176214; cv=none; b=q6Y9aLqPBEGU8H6PVy6PObqauUZbJS+L1pRL6RleeK3EuxQ2aG1gSVHyj1fJbYXXiByz76EzgAEl8/vXQSYsHA3sddf/pPIldmwvlvGiuoznN5KGGJisNEZVDxq9lAUz2kOb0SHrQhCKv5nIlnM2i91GhYsbfp7NLnE/WWAeAGU=
+	t=1738176215; cv=none; b=ddxU0043nMkBMmh4mcxBp7kdeP1DPwa8UO7BKzN813khps3J+zkJjbHiGQlw0uNEFMTLjBcVSLGum+FJ3auBCIrxyUF6A1VuF8oZwDMvgaWFgdgGECZLx00yHK7Us8az7g83J+6jOiYOI5rOP961MHoBTD/3KtL8q11NuGPqIjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738176214; c=relaxed/simple;
-	bh=YOELrXPf8z4ANTH8fctGS3PLrp32Tu4IHcD/fjnkwAk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=r2ayL9/i2h/ZllvcMpKwDqlsy4cgJmbURK6dfUDYYWY4VLdVfL/0pIq8q5/asxbmsOHzezGeByNvKxnkRIT2283hL8xo5M3IT3tYf/eBhwNgikLsGPF4WtDgV5YjB2WMPUeyBNeRYpjV0KGZalqh5tBhAqVXHNiUIxHko9GNpwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=b2inzRpq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738176215; c=relaxed/simple;
+	bh=wpLtJQJSXibrZpozKG1QF6LlfcAJa9vamGSJco/f5II=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UzeQFvqEeFKZf83tfVqqGrntm0mxrFX7hxixGg4+UQDNkNswtrzhLjfIFDbhrRfJobwX7qizxOlGEwy+PNt6vTdH9Ed3+qp7908FjquPJMHAXYD5DOnHuMJhVLQpB74Fvm9qdiiubaT4BpeplRGevebe/oACxvkcSF20AeGKjHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hBSx7v9m; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="b2inzRpq"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50TEqhqf004511;
-	Wed, 29 Jan 2025 18:43:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Xm1Z+TeuIAmNDVrsterdveTQA0h+8LX64tVWfsTC4FE=; b=b2inzRpqzijBO8yk
-	51Zzoy9syLrQxhHISx2FiPowBQVzkTBHu391cq3Cyduxuzv4bskZcp7BUA8TguLG
-	FGQ4b+JWzyy7YdwOfbQOG7Qgfs6WYJMrIohHf9MEakaQSLlbTC/BG7bnS5WENbc2
-	mtXnIZzO5Li+6S3P53TWZWhR8TJZKUaiGwTh9G1G8L1gdOkZpf9wwQGL/Vp7FtdE
-	3QKmPDrae7OLHO+w98tM4UsCrDGIOmvptMrqY4r/BSYNKyQI7NSH+DIaTQN8asTM
-	BACl31FHnqUOwDVms4/5s/iQVxKKjYwq1BcHcl0H+I8TP+dfuRq9ucQgCWJ6+a2N
-	4fi2ig==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44fpfu8gx2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 18:43:29 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50TIhSFn017246
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 18:43:28 GMT
-Received: from [10.71.108.79] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 29 Jan
- 2025 10:43:28 -0800
-Message-ID: <4761c8ad-6f02-45bf-8fc1-87e40b7702fe@quicinc.com>
-Date: Wed, 29 Jan 2025 10:43:21 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBSx7v9m"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4361b6f9faeso7701785e9.1;
+        Wed, 29 Jan 2025 10:43:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738176212; x=1738781012; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wpLtJQJSXibrZpozKG1QF6LlfcAJa9vamGSJco/f5II=;
+        b=hBSx7v9mRy856HsDMXN9ZOFyljk8JXNwmIHeoa3286M9xjhJYyipr9BIiWmyAE4ZsO
+         YLujrPnPBh6JEPDOND/gCQrkT1F37rB7iGxmFAEYaM9u3aNz9o7XgdjYLOvUz5jz2JDJ
+         BrLHMiRGwiwcKSBTtIvzcpE/lguJmSiCc+EmMpGffg1mLFrJmYTsCF3JaYkEMCQ1uz+1
+         IkW6c2yK0vzC2eQve48BamgVs8pV10tzsFk4TKSh/qAJqUDlU7qf920dHOFQpJg9RkyO
+         Y52U+7IDU86huT3GYDv+Rk8p0LmbxH77Qncr657IEr2hs6jRHRh9UYPxh9dQWIyKTXbp
+         so7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738176212; x=1738781012;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wpLtJQJSXibrZpozKG1QF6LlfcAJa9vamGSJco/f5II=;
+        b=L84q7rpprDciapmJhg/L0QormV3Uei9RwSQwCr8ctnDehb+VtyEyLTWzTIz7+t5iQi
+         U4v4A+buOWci1IjzpuKdlJsHRiaku8XJttt5QphmXQ82mabWYQcMnOfLg+1hAFwqyzc6
+         KKL9nZiqholKafu0Pbb2J2aoo+HPxnc4/f4rUApG74Zkl9RizPrJVbrf74LLmCk9cCvR
+         Y8ieB0z89eMHQ/mJDaSwbjORsaAprkZ+wtC86zl3hgEpuKVQpSP2r5+/OuR3TrnCGkEe
+         eJgVO461pR+BDf/IFqGaskqJm8fS12gU/ZqEq8wbV9niJEdDAAERkr2RS7YKIGXl8b8K
+         bjkw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJSr0fKv2xETnfrkBdcKXxAjGM5l6skaNrwAN0ZoMYoZUVgLYBLbP1EZ9ioqZdiB4CNOyKYp0z9HbqxnM=@vger.kernel.org, AJvYcCVlyyy5eOTHAWNXKL3GH0C6awmVZ4JG44ohNbmOGwG0wR3h4ndDrXiNwGa5eZqv2n65hQ6DXSp9YrdSAiVKh8Wif4I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0f+f2VBr4roSTWZZl2gdP8zWM9rutqZPFBCy1Q0FvPL9hpXCT
+	SfWISmUneKXTSzawEYGcR1f9bgAPLFZCiInMtI3qxOyYa8gOn817
+X-Gm-Gg: ASbGncuwdXDzN6gVyxodcraifT9I+cRRF0MD/dSCWEG5iWB7XlQ3Rd7sAFM4Xyska6K
+	qRD50/H9qQXkHaOfHTtBq9TS8k8/OaYSPeMU1m1lxkdZmk8GlPo5AgcPid90exg/zl9ohNQzwsr
+	HYtGEuho31PdFsepgVTvHeYFmZ6APzBkq4KXvN8aqymLrGgTijVheYmZ1zP8bYiHvB5ZzXfhq5/
+	3BH/qi6o5fMEO39ErYThlhPbgZdrKrRJ1SZVMXZExxCf+DLZtugSJDbcLPn0ET0SVa9j50htquQ
+	9HEWoYGp3pL/Geze2bt7B6Kb6LgHGY/rJzEReBjEtx6Wj6mEDbJDY5nPLgoH973vm+I=
+X-Google-Smtp-Source: AGHT+IEPFrQXMJ4B9NwKJTHyw+XoKc8K85X25SwaFjwRXkdgX7SF83b7AlrXrbk9HgCflphZbgeZng==
+X-Received: by 2002:a05:600c:3d8c:b0:438:9280:61d5 with SMTP id 5b1f17b1804b1-438e15db9f6mr3330685e9.5.1738176211643;
+        Wed, 29 Jan 2025 10:43:31 -0800 (PST)
+Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc80e61sm32258705e9.34.2025.01.29.10.43.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2025 10:43:31 -0800 (PST)
+From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Patrice Chotard <patrice.chotard@foss.st.com>, Chen-Yu Tsai <wens@csie.org>,
+ Samuel Holland <samuel@sholland.org>, Viresh Kumar <vireshk@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Raphael Gallais-Pou <rgallaispou@gmail.com>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-renesas-soc@vger.kernel.org
+Subject:
+ Re: [PATCH RFC 10/14] ahci: sunxi: Switch from CONFIG_PM_SLEEP guards to
+ pm_sleep_ptr()
+Date: Wed, 29 Jan 2025 19:43:29 +0100
+Message-ID: <2765029.mvXUDI8C0e@jernej-laptop>
+In-Reply-To: <20250127-pm_ata-v1-10-f8f50c821a2a@gmail.com>
+References:
+ <20250127-pm_ata-v1-0-f8f50c821a2a@gmail.com>
+ <20250127-pm_ata-v1-10-f8f50c821a2a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: qcom: dispcc-sm8750: Drop incorrect
- CLK_SET_RATE_PARENT on byte intf parent
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen
- Boyd <sboyd@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250129154519.209791-1-krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20250129154519.209791-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: HoxU2DFGhxenA6KQ85beXwYbRfTUj1mj
-X-Proofpoint-ORIG-GUID: HoxU2DFGhxenA6KQ85beXwYbRfTUj1mj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-29_04,2025-01-29_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=896 impostorscore=0 suspectscore=0 clxscore=1011 mlxscore=0
- malwarescore=0 priorityscore=1501 phishscore=0 bulkscore=0 adultscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501290146
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+
+Dne ponedeljek, 27. januar 2025 ob 13:46:05 Srednjeevropski standardni =C4=
+=8Das je Raphael Gallais-Pou napisal(a):
+> Letting the compiler remove these functions when the kernel is built
+> without CONFIG_PM_SLEEP support is simpler and less error prone than the
+> use of #ifdef based kernel configuration guards.
+>=20
+> Signed-off-by: Raphael Gallais-Pou <rgallaispou@gmail.com>
+
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+
+Best regards,
+Jernej
 
 
-
-On 1/29/2025 7:45 AM, Krzysztof Kozlowski wrote:
-> The parent of disp_cc_mdss_byte0_intf_clk clock should not propagate up
-> the rates, because this messes up entire clock hierarchy when setting
-> clock rates in MSM DSI driver.
-> 
-> The dsi_link_clk_set_rate_6g() first sets entire clock hierarchy rates
-> via dev_pm_opp_set_rate() on byte clock and then sets individual clock
-> rates, like pixel and byte_intf clocks, to proper frequencies.  Having
-> CLK_SET_RATE_PARENT caused that entire tree was re-calced and the byte
-> clock received halved frequency.  Drop CLK_SET_RATE_PARENT to fix this
-> and align with SM8550 and SM8650.
-> 
-> Fixes: f1080d8dab0f ("clk: qcom: dispcc-sm8750: Add SM8750 Display clock controller")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Fix for v6.14-rcX.
-> ---
->   drivers/clk/qcom/dispcc-sm8750.c | 2 --
->   1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/clk/qcom/dispcc-sm8750.c b/drivers/clk/qcom/dispcc-sm8750.c
-> index 0358dff91da5..e9bca179998b 100644
-> --- a/drivers/clk/qcom/dispcc-sm8750.c
-> +++ b/drivers/clk/qcom/dispcc-sm8750.c
-> @@ -827,7 +827,6 @@ static struct clk_regmap_div disp_cc_mdss_byte0_div_clk_src = {
->   			&disp_cc_mdss_byte0_clk_src.clkr.hw,
->   		},
->   		.num_parents = 1,
-> -		.flags = CLK_SET_RATE_PARENT,
->   		.ops = &clk_regmap_div_ops,
->   	},
->   };
-> @@ -842,7 +841,6 @@ static struct clk_regmap_div disp_cc_mdss_byte1_div_clk_src = {
->   			&disp_cc_mdss_byte1_clk_src.clkr.hw,
->   		},
->   		.num_parents = 1,
-> -		.flags = CLK_SET_RATE_PARENT,
->   		.ops = &clk_regmap_div_ops,
->   	},
->   };
-
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
