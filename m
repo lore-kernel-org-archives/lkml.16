@@ -1,108 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7531EBA05;
-	Wed, 29 Jan 2025 18:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368191E0E16
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 18:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738174685; cv=none; b=lWRSvmIFXQMz8N1ggJbWoseAOonJu6rYSO3MEQ9O4EVpkXv0msX4UUXf1AHGdH4bfp56Fo74d4ZCcB9VFzkFBZDYTWbm18FG7zAs6od+34S2Yg3U7yZe0lymgajlgGLvLehLR/11Lj08b9O5TfcyOKO2lDxOJLO5vUnp9nbhX6U=
+	t=1738174886; cv=none; b=shJQAZtPVR512bBAGqW7dfuYKSQqT6xPi6XQZipQzM/rTkFi4gobKWKb5kQz55WkDhAxD4rsVR/M2YgqZ6TN6Y5Elr1EMeAkqUorbd32KEQFG48pNQzwLdG7fiZqP2j8Q1RyY5VQDIaJ06Cpf4pnOhDkuROWpEp3P5Ftu019mc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738174685; c=relaxed/simple;
-	bh=9HMpAKh/G4dXrhwsbs3yhGRxyGR4nQmn1BXXS8DWYsE=;
-	h=Subject:To:Cc:From:Date:References:In-Reply-To:Message-Id; b=MlSIpcmmcmwFAzAstpcDH0rnczEIC2bStu4J2jKKOHZSjlbrIPxkZbg2b4rANamZBzA2J0BS0YAQ6j5LGhkKE36OWtYrsWFcLizitnYtGlk5Iz9lIhme7NZ5niKKypIpuoZlECKXH52IQPTluAcqhjQEaSi3oyj0q/LT4d1HAjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TnMaWOHx; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738174886; c=relaxed/simple;
+	bh=jgivZaabkF7Qc7bmSxtKnn5YGJoU8NZIe3+mKLJzzF0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=c9u733ay0bN9CvFFEHL8VYkU/EWBqJAeEgiasP79fSKw37dl/Bkeh8zC2X8gVr0zFA0ZL7bwfR6tBral1Z6j4trAto1Ie0BN2P9Jlc2CbNSOJ44R4qHM/4TFgcoe45irXa2i4k9Ekc9d4FvjURBtRs/9Dk1fMl3DkW4KWTrcIbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=taJOoU1B; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TnMaWOHx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738174684; x=1769710684;
-  h=subject:to:cc:from:date:references:in-reply-to:
-   message-id;
-  bh=9HMpAKh/G4dXrhwsbs3yhGRxyGR4nQmn1BXXS8DWYsE=;
-  b=TnMaWOHxyAe4ENoSZvC+i6KPCsti1e1nS6DP5xZE9Oe0ymbqcBIubzFY
-   9x6TFS8Tvf6pe/2NJmpMkrGjeWPsjn0UsFvHyehdLU73MF5xdThHLX4D9
-   sybgieatb4S+JJ126pc6LGc/G/z6wMCL3vyhBhIKs0CZeJBk4rCrQUlty
-   gYMNkAncfxShlqYDIlAZj9HwGLrFv2f+EoZ+BX24iCwEbH3fHoLMoNsXB
-   dWayiqLmJRFs/vdAHlfCrTJjtYWEz1NhCxTbaW9+jkXNG9op4qKP+tluV
-   xVq3lNfXBnQznhif6OXGqGH79MvVbCNAxOGyCEI1h43rxXcwQesY7sWkw
-   Q==;
-X-CSE-ConnectionGUID: YIYHpa4gQPm94xF5loQhjg==
-X-CSE-MsgGUID: fw1m8w2nSAeiAaJ6CZ/WXQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="38963322"
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="38963322"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 10:18:03 -0800
-X-CSE-ConnectionGUID: hsjZ6/uvRziZN2sfKstoGg==
-X-CSE-MsgGUID: l/QrJ4vaTxCyPyjoeQ16lQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="109660718"
-Received: from davehans-spike.ostc.intel.com (HELO localhost.localdomain) ([10.165.164.11])
-  by fmviesa010.fm.intel.com with ESMTP; 29 Jan 2025 10:18:02 -0800
-Subject: [PATCH 7/7] netfs: Remove outdated comments about prefaulting
-To: linux-kernel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,Ted Ts'o <tytso@mit.edu>,Christian Brauner <brauner@kernel.org>,Darrick J. Wong <djwong@kernel.org>,Matthew Wilcox (Oracle) <willy@infradead.org>,Al Viro <viro@zeniv.linux.org.uk>,linux-fsdevel@vger.kernel.org,Dave Hansen <dave.hansen@linux.intel.com>,dhowells@redhat.com,jlayton@kernel.org,netfs@lists.linux.dev
-From: Dave Hansen <dave.hansen@linux.intel.com>
-Date: Wed, 29 Jan 2025 10:18:02 -0800
-References: <20250129181749.C229F6F3@davehans-spike.ostc.intel.com>
-In-Reply-To: <20250129181749.C229F6F3@davehans-spike.ostc.intel.com>
-Message-Id: <20250129181802.6E1E4149@davehans-spike.ostc.intel.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="taJOoU1B"
+Received: from isaac-ThinkPad-T16-Gen-2.localdomain (cpc90716-aztw32-2-0-cust408.18-1.cable.virginm.net [86.26.101.153])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 76586348;
+	Wed, 29 Jan 2025 19:20:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1738174814;
+	bh=jgivZaabkF7Qc7bmSxtKnn5YGJoU8NZIe3+mKLJzzF0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=taJOoU1BnujZILxtV0LncWYfuBuQlTdYLG/4h7lyhy/kCamW1PMyPAmzuKA/skzYz
+	 myUbVFNTDiuEbD5QRXblImeIkLD8V1s9xnaw3p8JcmNw2LwWfk3KruaMi653hd6H27
+	 /StalaOVE/TXhUmA3F/9Ie1u0t2aJQYjAp8nloEI=
+Message-ID: <dd50b01ea752ef0a6c028cd7eebf927c5b2f877b.camel@ideasonboard.com>
+Subject: Re: [PATCH v2 2/3] RFC: regulator: ad5398: Change selector division
+ calculation
+From: Isaac Scott <isaac.scott@ideasonboard.com>
+To: "Hennerich, Michael" <Michael.Hennerich@analog.com>
+Cc: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org"
+	 <broonie@kernel.org>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Date: Wed, 29 Jan 2025 18:21:18 +0000
+In-Reply-To: <PH0PR03MB65127833FDCEA37075CBB3F68EEE2@PH0PR03MB6512.namprd03.prod.outlook.com>
+References: <20250128173143.959600-1-isaac.scott@ideasonboard.com>
+	 <20250128173143.959600-3-isaac.scott@ideasonboard.com>
+	 <PH0PR03MB65127833FDCEA37075CBB3F68EEE2@PH0PR03MB6512.namprd03.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 
+Hi,
 
-From: Dave Hansen <dave.hansen@linux.intel.com>
+On Wed, 2025-01-29 at 08:34 +0000, Hennerich, Michael wrote:
+>=20
+>=20
+> > -----Original Message-----
+> > From: Isaac Scott <isaac.scott@ideasonboard.com>
+> > Sent: Tuesday, January 28, 2025 6:32 PM
+> > To: Hennerich, Michael <Michael.Hennerich@analog.com>
+> > Cc: lgirdwood@gmail.com; broonie@kernel.org;
+> > linux-kernel@vger.kernel.org;
+> > Isaac Scott <isaac.scott@ideasonboard.com>
+> > Subject: [PATCH v2 2/3] RFC: regulator: ad5398: Change selector
+> > division
+> > calculation
+> >=20
+> > [External]
+> >=20
+> > If the AD5398 is defined to have a current limit with no range,
+> > i.e.
+> > when max_Ua and min_Ua are equal, the DIV_ROUND_UP erroneously
+> > tries
+> > to set the current to a higher level than the max_Ua, which causes
+> > the driver to
+> > fail to set the current. Fix this so the driver slightly
+> > underestimates the current
+> > to set.
+> >=20
+> > Signed-off-by: Isaac Scott <isaac.scott@ideasonboard.com>
+> > ---
+> > =C2=A0drivers/regulator/ad5398.c | 3 +--
+> > =C2=A01 file changed, 1 insertion(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/regulator/ad5398.c
+> > b/drivers/regulator/ad5398.c index
+> > e6f45c6e750c..0c60ecd1f0f2 100644
+> > --- a/drivers/regulator/ad5398.c
+> > +++ b/drivers/regulator/ad5398.c
+> > @@ -98,8 +98,7 @@ static int ad5398_set_current_limit(struct
+> > regulator_dev
+> > *rdev, int min_uA, int
+> > =C2=A0	if (min_uA > chip->max_uA || max_uA < chip->min_uA)
+> > =C2=A0		return -EINVAL;
+> >=20
+> > -	selector =3D DIV_ROUND_UP((min_uA - chip->min_uA) * chip-
+> > > current_level,
+> > -				range_uA);
+> > +	selector =3D ((min_uA - chip->min_uA) * chip->current_level
+> > /
+> > range_uA);
+>=20
+> Not sure if this is a good idea. The rational was to set the limit
+> slightly higher.
+> This will do the opposite. The ranges are already checked.
+> Why not clamp() the calculated value?=20
 
-I originally set out to make netfs_perform_write() behavior more
-consistent with generic_perform_write(). However, netfs currently
-treats a failure to make forward progress as a hard error and does not
-retry where the generic code will loop around and retry.
+That sounds like a better idea. Thank you! Out of interest, why is it
+beneficial for the limit to be higher?=20
 
-Instead of a major code restructuring, just focus on improving the
-comments.
+>=20
+> > =C2=A0	if (ad5398_calc_current(chip, selector) > max_uA)
+> > =C2=A0		return -EINVAL;
+> >=20
+> > --
+> > 2.43.0
+>=20
 
-The comment refers to a possible deadlock and to userspace address
-checks. Neither of those things are a concern when using
-copy_folio_from_iter_atomic() for atomic usercopies. It prevents
-deadlocks by disabling page faults and it leverages user copy
-functions that have their own access_ok() checks.
+Best wishes,
 
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Jeff Layton <jlayton@kernel.org>
-Cc: netfs@lists.linux.dev
----
-
- b/fs/netfs/buffered_write.c |   13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
-
-diff -puN fs/netfs/buffered_write.c~netfs-postfault fs/netfs/buffered_write.c
---- a/fs/netfs/buffered_write.c~netfs-postfault	2025-01-29 09:03:38.167859749 -0800
-+++ b/fs/netfs/buffered_write.c	2025-01-29 09:03:38.171860082 -0800
-@@ -152,16 +152,9 @@ ssize_t netfs_perform_write(struct kiocb
- 		offset = pos & (max_chunk - 1);
- 		part = min(max_chunk - offset, iov_iter_count(iter));
- 
--		/* Bring in the user pages that we will copy from _first_ lest
--		 * we hit a nasty deadlock on copying from the same page as
--		 * we're writing to, without it being marked uptodate.
--		 *
--		 * Not only is this an optimisation, but it is also required to
--		 * check that the address is actually valid, when atomic
--		 * usercopies are used below.
--		 *
--		 * We rely on the page being held onto long enough by the LRU
--		 * that we can grab it below if this causes it to be read.
-+		/* Bring in the user folios that are copied from before taking
-+		 * locks on the mapping folios. This helps ensure forward
-+		 * progress if they are the same folios.
- 		 */
- 		ret = -EFAULT;
- 		if (unlikely(fault_in_iov_iter_readable(iter, part) == part))
-_
+Isaac
