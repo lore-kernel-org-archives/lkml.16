@@ -1,102 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B476342A92
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 23:22:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADD442A92;
+	Wed, 29 Jan 2025 23:23:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738192970; cv=none; b=g141Y7Ifsn/8Fmw9O9rsFC09E8UN4bpjbqZ2Rs66Iw++oi63d8BXb0c5U56TzSW+C4njXNEXHtZ1geyBPGKWqxbajfxRgCMRxaKxrA3313KkJdbzluZqlNqpmLtkCg+p0sfcSUQwJqQpY+W5xrGjuhWUG8Fkc7kXP16sAdEaX9g=
+	t=1738193032; cv=none; b=WrpWyFKEQ1rb3K4INTchzisrP48kgpc2pb2RI15ETa4eU8BeETBr91ZyINPxrD5TmfZ/2nKG4Wa9kld2pbN5gtYZsn6Kf1DBwnK2E6pKCZp7e9n1wI7VNtZ07wIq3A+AxWMtLIprYupKXTTOu3CN0DoNBDAeKwRnJRbn5NLpFsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738192970; c=relaxed/simple;
-	bh=9CnrW08raLpCx8ibPb5DEivnYHWQl9j7CYympTDXwVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oUnYUV8XH6jcwteOcrqDkbnTiOt2QjylCtHvEyMmIiXzNkP0TKYMMcu5NjbqS6tCXmlXXYwmlkJUzSqMHXoQSLyXzkPu3tvPlbeFc/udy+IkUpxqS8qNVQBHQR8tBZHjXjC0yAUJ/iu5/UsjZsfBRnUuDy3h3vLwU7t1ruPq4+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3vlSRRm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738193032; c=relaxed/simple;
+	bh=7V2/4xR4xd3iiCg+7a6U3WGS/XW+gb5GEdujfPwyMsE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=AWQ0Zsw+S6V0ENXToq0tGM19tQ0VthrQQnHPGy5BeKznKKIqNdRQQbE74zhBUHPIKYPpAI2nAKQW4BPqVQ+8sYNql3Jv41KfgxnH8yLU719/DtQtBFBTj+oz2GKGQVNlUjpqMFO887jksFevnUWGvtloJAH6D41BKyXzlzpMfn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHwWQvo0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3vlSRRm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82A1BC4CED1;
-	Wed, 29 Jan 2025 23:22:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHwWQvo0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5FAEC4CED1;
+	Wed, 29 Jan 2025 23:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738192970;
-	bh=9CnrW08raLpCx8ibPb5DEivnYHWQl9j7CYympTDXwVw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B3vlSRRmYb+jCgORf/eDIjZiiNLb6vxw1l4XQ0Iz8AtZypWxw/hDSr/YF3IS1yyTy
-	 OrjI4GBkBXxNkkgwD+6V9U3KQYw+2+UozNE5Gq9UGbbDYTsXK+Vlo85VXk8XxLGV0K
-	 +he6QVcVAljzPQOpqoc0KyiHMXZv3XrZpA74BT8lhXyp52t+3nSa41QbzuJgkqyekB
-	 r06cyLXxin07RPPmr/u4htxRMhBjDSkMi8cE+4BfV9AzQ+Nh/iusCYlY4ipc4s5M+Q
-	 lRSmcmP6acEQ3DnGKnBIn6yT/7ZG2KteDaF+4s2q0KBTEN8VPMzuBfV9NTBXUv568r
-	 N1AOPeSt+ff5A==
-Date: Wed, 29 Jan 2025 16:22:46 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Song Liu <song@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>
-Cc: Yonghong Song <yonghong.song@linux.dev>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: clang thin-lto not working for aarch64 for v6.13
-Message-ID: <20250129232246.GA3387816@ax162>
-References: <5ec75c39-2878-4caa-8fbd-68cf0aee28de@linux.dev>
- <CAPhsuW4dC-Wma8EGBxkbftgRtmZohojqhvsixHQ3C4MNrH1+9w@mail.gmail.com>
- <CAPhsuW5urLfhiCt2dhorVcZoMxZRady362vbfK78A7Z+3id2ew@mail.gmail.com>
+	s=k20201202; t=1738193032;
+	bh=7V2/4xR4xd3iiCg+7a6U3WGS/XW+gb5GEdujfPwyMsE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=OHwWQvo0L1AayY0hDP0TCxcnrhzQgoo4lUcakGOUtk7HSj8GcTReW/DXtmbtiyZ+x
+	 g/LimFopBaPAJukTFOzKJ+S2RpGZQcCvhKzrqQyzP59grcJ0z/+LbpNslG4/aobG7w
+	 nMSqbnZIlVb9Yv0VmiUKUYXhJZds3rXoku7vDqfmqNpHQYIko4IpdBdPKKd6ZSJH3i
+	 Pu5G32ejaTjVWIYrx9A7yAQNhYVCKoyOYf8ovcjFfdfPsNZq68+YXw7RX9L/4UW0+s
+	 eshqKZxfNutl6yIy+86UkbRw0GoHslBUoDhg8dOFs4EiOfawNvSZPs1zlo1WmPMEww
+	 FS1fRYPlwQ5Pw==
+Date: Wed, 29 Jan 2025 17:23:50 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v9 2/7] PCI: dwc: Rename cpu_addr to parent_bus_addr for
+ ATU configuration
+Message-ID: <20250129232350.GA527937@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW5urLfhiCt2dhorVcZoMxZRady362vbfK78A7Z+3id2ew@mail.gmail.com>
+In-Reply-To: <20250128-pci_fixup_addr-v9-2-3c4bb506f665@nxp.com>
 
-Hi Song,
+On Tue, Jan 28, 2025 at 05:07:35PM -0500, Frank Li wrote:
+> Rename `cpu_addr` to `parent_bus_addr` in the DesignWare ATU configuration.
+> The ATU translates parent bus addresses to PCI addresses, which are often
+> the same as CPU addresses but can differ in systems where the bus fabric
+> translates addresses before passing them to the PCIe controller. This
+> renaming clarifies the purpose and avoids confusion.
 
-On Wed, Jan 29, 2025 at 03:04:56PM -0800, Song Liu wrote:
-> On Mon, Jan 27, 2025 at 9:50 AM Song Liu <song@kernel.org> wrote:
-> >
-> > On Sun, Jan 26, 2025 at 7:48 PM Yonghong Song <yonghong.song@linux.dev> wrote:
-> > >
-> > > Hi, Masahiro,
-> > >
-> > > We are trying 6.13 kernel and found that for aarch64 thinlto not
-> > > working. For example, for kernel/bpf/syscall.o, the compilation flags
-> > > from .syscall.o.cmd are savedcmd_kernel/bpf/syscall.o := clang
-> > > -Wp,-MMD,kernel/bpf/.syscall.o.d ... -D__KBUILD_MODNAME=kmod_syscall -c
-> > > -o kernel/bpf/syscall.o kernel/bpf/syscall.c ; ld.lld -EL -maarch64elf
-> > > -z norelro -mllvm -import-instr-limit=5 -z noexecstack -r -o
-> > > kernel/bpf/.tmp_syscall.o kernel/bpf/syscall.o; mv
-> > > kernel/bpf/.tmp_syscall.o kernel/bpf/syscall.o I did some bisecting and
-> > > found the issue is due to ``` commit
-> > > bede169618c68379e1be7ace14e8ac85b964a9ec Author: Masahiro Yamada
-> > > <masahiroy@kernel.org> Date: Thu Nov 14 08:45:22 2024 +0900 kbuild:
-> > > enable objtool for *.mod.o and additional kernel objects ``` In the
-> > > above, for thinlto, we should not do ld.lld as compiler needs IR to do
-> > > cross-file inlining. Searching the internet, I found that the issue has
-> > > been reported e.g. in
-> > > https://patchwork.kernel.org/project/linux-kbuild/patch/20241113234526.402738-3-masahiroy@kernel.org/
-> >
-> > It appears the fix suggested by Nathan is already squashed with the
-> > commit before being merged upstream. However, this causes another
-> > issue. As Yonghong stated, after upstream commit
-> > bede169618c68379e1be7ace14e8ac85b964a9ec, the linker runs on
-> > individual .o file, which defeats the benefit of LTO.
-> 
-> It appears we still have this issue in the latest upstream kernel. Reverting
-> bede169618c68379e1be7ace14e8ac85b964a9ec fixes the issue. But I
-> am not sure whether we can do that without also reverting
-> 1b466b29a3bf02ed95f28682a975f41ae47bce7d.
-> 
-> Could you please share your suggestions on this?
+Based on dw_pcie_ep_inbound_atu() below, I guess the ATU can also
+translate PCI addresses from incoming DMA to parent bus addresses?
 
-I apologize for the radio silence on my end. I agree with you on the
-root cause but I am not really sure what the solution here is either
-(other than an outright revert) since I did not write the change so I
-defer to Masahiro. Hopefully he can answer soon.
+It's worth noting here that this patch only renames the member, and
+IIUC, parent_bus_addr still incorrectly contains CPU physical
+addresses.
 
-> > IIUC,  the proper behavior is to do "cmd_ld_single" only for "is-single-obj-m"
-> > case. However, after bede169618c68379e1be7ace14e8ac85b964a9ec,
-> > the "is-single-obj-m" check is removed. I am not quite sure what is the
-> > proper fix for this.
-> 
-> [...]
-
-Cheers,
-Nathan
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -128,7 +128,7 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  }
+>  
+>  static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+> -				  dma_addr_t cpu_addr, enum pci_barno bar,
+> +				  dma_addr_t parent_bus_addr, enum pci_barno bar,
+>  				  size_t size)
