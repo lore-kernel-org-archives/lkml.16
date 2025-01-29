@@ -1,115 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67BA184;
-	Wed, 29 Jan 2025 19:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD5B184
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738177623; cv=none; b=AtcGjJdY0fC32KjfW/QWWhmusJbnHBqWkTq4dluAz/zr3rrcrmP11OQRBX5JiL7PaM1nFgs+AVNVhFkuHZ2XO+u9JGld3hJMGJNBzFMb2ZW7wZOBVH7+D+MEP61J7+gIg/aXORR9+m25OUzKINZA6ZcUBiP9xexNp9RQm5fQL4A=
+	t=1738177735; cv=none; b=Q74nykBu2wWbm89nHATQGop4DXlxFeVvAm3deUxxoM9ixn30UMIhbLizfeKbzvBadGud2heJSUZHpz8kBeU+aTi0K38Qp7qBUlP1G52iISt5fwys5NOTF0TjKAh7nElPaw7vuUEUMrEYZ5cPkawQCksMKMV6u6++X4xSzCBMQlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738177623; c=relaxed/simple;
-	bh=4Xgv8XTj20pMCc6eGNnYcSqAkrc58lNk8TOYUAdyfdA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U4h8rlNRWfbsEg3fDZitRu3QMqkEEKwM0ajzPNRpFvEC12O4xYv+6JThye0ggADMf/B6oE/X5+gaXXPe0frHkVY0yiUC2krZOEGHvqBvqPW6GtNXGwRasvjD49ITTgKvJQ62vuOCAipQtDcOb9d/HNK9Q76Cux8ETUzZ3mKO8Z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYEMHpCi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738177735; c=relaxed/simple;
+	bh=ETSnYPpBol5TovSZCr6weJqWVGFKsnAPWAmjuCt0blM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hrUtLu/cKx04q7ikbAO5xBxMGmA3Ro/1Q+XT5Y+Hn2h2zXe3TDkQO8gqF8MpLpeOkUeDQSbpRCn9g8FS7pK7WzjGCQvtl+R2fHBaESjSPVOFKdD+V5rBCVpK74LnBBZb3ln99WGkKvz8JJq29soYfXYo4a9KeaYj47iiw8ktddU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fyT+/RMt; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYEMHpCi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A934CC4CED1;
-	Wed, 29 Jan 2025 19:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738177623;
-	bh=4Xgv8XTj20pMCc6eGNnYcSqAkrc58lNk8TOYUAdyfdA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gYEMHpCiXY5QuxyywwTXKimwwAHEKYjf9w3dBo8orkHo5LUd7NrMpInaWgHEl0EMQ
-	 7WocpXpB6nWO6AC2x8Byn4Mx2vwSppSRZAhM7Yvou9vpCLDPrzEn+dHpsry6Y2iT9/
-	 w0J61Bp3jccqXro1/o33ZHWgNPZCA6g5QMay8bRdqA87Mr4Wam7bmah/lV1OYlb3P8
-	 aNe/FYBputMBTMLQZMRbaCZPPqlyZxUeTz7gF5daOOy8YFbe1O9OAgTDbsy3HElLyB
-	 GMxh5xkpHL9BBuQct8SKOC+vo0psU3rgK1Ci4wNY8i9MHTXN76koOmnxC5qUIt1/lh
-	 2bmUM56kcgjng==
-Message-ID: <55c5cef2-3cfb-408c-8c78-4bfd5ee19a29@kernel.org>
-Date: Wed, 29 Jan 2025 20:06:56 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fyT+/RMt"
+Date: Wed, 29 Jan 2025 11:08:41 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738177729;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kjaFGfiXvf7orXD1rkuKW4CYeNoXdb0iJw2qsbgXT7Q=;
+	b=fyT+/RMtTe8HDsbhMvoHufeGLCM4qedOwc0j7Kz7ioiPAHVXyE2T6gKbCmTJwcu4MU7BuK
+	trFuJTbMzQo7umzN/UMosi87av9xMEKDCKytRbEB7dcL+5awUNNQUefq7jKBC322527m6M
+	fmJA3dzWgraaKAdfMUFH/3vq7+pRvfE=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Tejun Heo <tj@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org, 
+	cgroups@vger.kernel.org, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>
+Subject: Re: Maybe a race window in cgroup.kill?
+Message-ID: <lelekt53th2kq7dpz6r7gkifpnxwyk6hwhdko4elshj5qqik3e@cjlyam5ttaoe>
+References: <Z5QHE2Qn-QZ6M-KW@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] clk: qcom: gcc-sdm660: Add missing SDCC block resets
-To: Alexey Minnekhanov <alexeymin@postmarketos.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
- Craig Tatlor <ctatlor97@gmail.com>, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
-References: <20250129171842.1588526-1-alexeymin@postmarketos.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250129171842.1588526-1-alexeymin@postmarketos.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5QHE2Qn-QZ6M-KW@slm.duckdns.org>
+X-Migadu-Flow: FLOW_OUT
 
-On 29/01/2025 18:18, Alexey Minnekhanov wrote:
-> This will allow linux to properly reset eMMC/SD blocks.
+On Fri, Jan 24, 2025 at 11:33:07AM -1000, Tejun Heo wrote:
+> Hello, Christian.
 > 
-> Fixes: f2a76a2955c0 ("clk: qcom: Add Global Clock controller (GCC) driver for SDM660")
+> I was looking at cgroup.kill implementation and wondering whether there
+> could be a race window. So, __cgroup_kill() does the following:
 > 
+>  k1. Set CGRP_KILL.
+>  k2. Iterate tasks and deliver SIGKILL.
+>  k3. Clear CGRP_KILL.
+> 
+> The copy_process() does the following:
+> 
+>  c1. Copy a bunch of stuff.
+>  c2. Grab siglock.
+>  c3. Check fatal_signal_pending().
+>  c4. Commit to forking.
+>  c5. Release siglock.
+>  c6. Call cgroup_post_fork() which puts the task on the css_set and tests
+>      CGRP_KILL.
+> 
+> The intention seems to be that either a forking task gets SIGKILL and
+> terminates on c3 or it sees CGRP_KILL on c6 and kills the child. However, I
+> don't see what guarantees that k3 can't happen before c6. ie. After a
+> forking task passes c5, k2 can take place and then before the forking task
+> reaches c6, k3 can happen. Then, nobody would send SIGKILL to the child.
+> What am I missing?
+> 
+> Thanks.
 
-No line breaks between tags (see `git log`).
+I think this is indeed the race though small. One way to fix this is by
+taking cgroup_threadgroup_rwsem in write mode in __cgroup_kill() as the
+fork side takes it in read mode from cgroup_can_fork() to
+cgroup_post_fork(). Though I think we should avoid that as this adds
+one more potential stall scenario for cgroup.kill which is usually
+triggered under extreme situation (memory pressure). I have prototyped a
+sequence number based approach below. If that is acceptable then I can
+proposed the patch with detailed commit message.
 
-> Signed-off-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
-> ---
 
->  include/dt-bindings/clock/qcom,gcc-sdm660.h | 2 ++
+From e9362c5884ea67867ed4fe7e3bb7de7f750a97fc Mon Sep 17 00:00:00 2001
+From: Shakeel Butt <shakeel.butt@linux.dev>
+Date: Wed, 29 Jan 2025 10:53:21 -0800
+Subject: [PATCH] cgroup: fix race between fork and cgroup.kill
 
-That's a separate patch. Always.
+Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+---
+ include/linux/cgroup-defs.h |  6 +++---
+ include/linux/sched/task.h  |  1 +
+ kernel/cgroup/cgroup.c      | 17 +++++++++--------
+ 3 files changed, 13 insertions(+), 11 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index 1b20d2d8ef7c..0d8c12c0efdb 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -71,9 +71,6 @@ enum {
+ 
+ 	/* Cgroup is frozen. */
+ 	CGRP_FROZEN,
+-
+-	/* Control group has to be killed. */
+-	CGRP_KILL,
+ };
+ 
+ /* cgroup_root->flags */
+@@ -520,6 +517,9 @@ struct cgroup {
+ 	struct cgroup_rstat_cpu __percpu *rstat_cpu;
+ 	struct list_head rstat_css_list;
+ 
++	/* sequence number for cgroup.kill, serialized by css_set_lock. */
++	unsigned long kill_seq;
++
+ 	/*
+ 	 * Add padding to separate the read mostly rstat_cpu and
+ 	 * rstat_css_list into a different cacheline from the following
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 0f2aeb37bbb0..ce56ae0a9cbb 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -43,6 +43,7 @@ struct kernel_clone_args {
+ 	void *fn_arg;
+ 	struct cgroup *cgrp;
+ 	struct css_set *cset;
++	unsigned long kill_seq;
+ };
+ 
+ /*
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 805764cf14e2..5aec3b7bc084 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4013,7 +4013,7 @@ static void __cgroup_kill(struct cgroup *cgrp)
+ 	lockdep_assert_held(&cgroup_mutex);
+ 
+ 	spin_lock_irq(&css_set_lock);
+-	set_bit(CGRP_KILL, &cgrp->flags);
++	cgrp->kill_seq++;
+ 	spin_unlock_irq(&css_set_lock);
+ 
+ 	css_task_iter_start(&cgrp->self, CSS_TASK_ITER_PROCS | CSS_TASK_ITER_THREADED, &it);
+@@ -4029,10 +4029,6 @@ static void __cgroup_kill(struct cgroup *cgrp)
+ 		send_sig(SIGKILL, task, 0);
+ 	}
+ 	css_task_iter_end(&it);
+-
+-	spin_lock_irq(&css_set_lock);
+-	clear_bit(CGRP_KILL, &cgrp->flags);
+-	spin_unlock_irq(&css_set_lock);
+ }
+ 
+ static void cgroup_kill(struct cgroup *cgrp)
+@@ -6488,6 +6484,7 @@ static int cgroup_css_set_fork(struct kernel_clone_args *kargs)
+ 	spin_lock_irq(&css_set_lock);
+ 	cset = task_css_set(current);
+ 	get_css_set(cset);
++	kargs->kill_seq = kargs->cgrp->kill_seq;
+ 	spin_unlock_irq(&css_set_lock);
+ 
+ 	if (!(kargs->flags & CLONE_INTO_CGROUP)) {
+@@ -6670,6 +6667,7 @@ void cgroup_post_fork(struct task_struct *child,
+ {
+ 	unsigned long cgrp_flags = 0;
+ 	bool kill = false;
++	unsigned long cgrp_kill_seq = 0;
+ 	struct cgroup_subsys *ss;
+ 	struct css_set *cset;
+ 	int i;
+@@ -6681,10 +6679,13 @@ void cgroup_post_fork(struct task_struct *child,
+ 
+ 	/* init tasks are special, only link regular threads */
+ 	if (likely(child->pid)) {
+-		if (kargs->cgrp)
++		if (kargs->cgrp) {
+ 			cgrp_flags = kargs->cgrp->flags;
+-		else
++			cgrp_kill_seq = kargs->cgrp->kill_seq;
++		} else {
+ 			cgrp_flags = cset->dfl_cgrp->flags;
++			cgrp_kill_seq = cset->dfl_cgrp->kill_seq;
++		}
+ 
+ 		WARN_ON_ONCE(!list_empty(&child->cg_list));
+ 		cset->nr_tasks++;
+@@ -6719,7 +6720,7 @@ void cgroup_post_fork(struct task_struct *child,
+ 		 * child down right after we finished preparing it for
+ 		 * userspace.
+ 		 */
+-		kill = test_bit(CGRP_KILL, &cgrp_flags);
++		kill = kargs->kill_seq != cgrp_kill_seq;
+ 	}
+ 
+ 	spin_unlock_irq(&css_set_lock);
+-- 
+2.43.5
+
