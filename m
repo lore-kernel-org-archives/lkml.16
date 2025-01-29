@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AC41E3DF8
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 20:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7711E3DEF;
+	Wed, 29 Jan 2025 20:00:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738180814; cv=none; b=tvSPVEyWh9fxAMjkBmOnii0bCXBXc3WoJp7ZC/0U3TyhvrryG7VPr5sdxdRVnoxT/TDxXy4kfhtnWBdL0kARJkAlWQ2s3MaEN7O8kAM+0o329hgQlZCA+3W95MW9hcpEY44iI16QJ5YhXEqKjTVCfMXF0WcIFrr3I4VaElwPH0c=
+	t=1738180816; cv=none; b=Nrk+2pywcXJuWOp2ws0r/kXEvMD93peP7QwHRMMmQib+UcIUe+LEUoTAau0TRxQRG9FjKmZ7HhxKMaq+l/gxVGrS1wkO8j3VwD+jOEKhZNOEpfxgB75g2q4RwZ7N1vlKAHIjJk9Wp3Exyk+f1sFt/NoYw8JMh4SPm8e6nNXZswA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738180814; c=relaxed/simple;
-	bh=Y9xOHmepnHKaNLHl5vxoRMlwDYXAT1Be7xFmIInfsTE=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ZQ7r+UdTz8fxi9f8X1wte8TwtLBpFlkXttlE2bWpTd6ETNYl/CqOxDAXQWwLWQ6ldaGupoK8A9x70LynB3kf4rHCMZBkYJenF1P3GBtHhqtzWACegjaqWLUMDLIEj33uTGYQykfccpMaW1WdAwCxZS9Jacv6TLmd9CRdaxT1ZqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iyX/XsSx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738180816; c=relaxed/simple;
+	bh=xnZ4fKS0/0L2RsSPDfJ1vXCbXjO5hggsmL8UyjCS2qA=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=j7Ys2NZt4XliJi1HZ4fQmipJqea09bykiz18Erflh3rHoDKUo2NCuFVPMA8l2TdD/fXlS6WTW0GvyvfV1aC1WO2Bx/9LDQ/kkb0RRR3M3gsyPZFrgK8XyYUh9mmbKbTZ2H8G8DBHnkVa/d2U3G/BPYO3FIKCaZ2ViqWKfjVPAHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEFylvEv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iyX/XsSx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F530C4CEE7;
-	Wed, 29 Jan 2025 20:00:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEFylvEv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2873C4CEE2;
+	Wed, 29 Jan 2025 20:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738180814;
-	bh=Y9xOHmepnHKaNLHl5vxoRMlwDYXAT1Be7xFmIInfsTE=;
+	s=k20201202; t=1738180815;
+	bh=xnZ4fKS0/0L2RsSPDfJ1vXCbXjO5hggsmL8UyjCS2qA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=iyX/XsSxG4n12poWbo2tWmh/0DOca1wKhdZz4TbPScZRWs9w50WIUUeI19OZ01yHo
-	 Gx3B1A2V9QcqlPvL4MKcJNyShDGbhLRnGNYvlCRTy+JKbR5X8eKLRPjNUGLwjpgiTB
-	 7SYMWv/xL/4M4KyvCtWqYrI2Qdid2/ZoPlkr97MHWUB2sr/fVR67AaIi6BXkT/nIaD
-	 v4kRoNda1A6aRQ9vWwuRv+0fgbtNFtQjJbKLQGLnadx6OvF8WZPPSGcsqlzbpRzm7Y
-	 l5o7VODPMapQTGs6Pv0uoKi2bGKUzvOwPdnmYUPD/Ecox/21z46yGoUm00rstcOa3w
-	 3EQahftyLqLGw==
+	b=MEFylvEvUySgKzSRQ0kJTNeH6hUteM+Bxga6UPbC5vpzUorDi8RBa0IF86C+Htajv
+	 4r0uE3XJ0dFJ8LPi8EaPmVQGAsygwNZdL5wmY91ii8XjoGXQgPbZnMHXAOODFcagzv
+	 ELmnLQ5QswKMLg5Y6QeUC8VS5Ob/GK8r//vbvrS0Qvwuw/B9tugQD/6h8xu1V6F6rG
+	 zMGtT0N0dfMMCxxfN9J6JOqpFlVNq3r26c4ixsdX/u1tzHe6si7whyYSzFAja7mr0+
+	 95rgS5+vniNbKekc6OV11W9lwIFPGvPGKd/lJ+JoDeZWqX1q1gsKm5pVawHDBDj/lM
+	 G/tsWvFRnIRWA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 65A78380AA67;
-	Wed, 29 Jan 2025 20:00:41 +0000 (UTC)
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-6.14-2 tag
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 423FE380AA67;
+	Wed, 29 Jan 2025 20:00:43 +0000 (UTC)
+Subject: Re: [GIT PULL] fuse update for 6.14
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <776f5a39-c901-4565-aae6-448489d570bc@linux.ibm.com>
-References: <776f5a39-c901-4565-aae6-448489d570bc@linux.ibm.com>
+In-Reply-To: <CAJfpegvZoxFLWkFzHPw71FsVxoGMwg+P_iz9eeyU54+D4KG4ow@mail.gmail.com>
+References: <CAJfpegvZoxFLWkFzHPw71FsVxoGMwg+P_iz9eeyU54+D4KG4ow@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <776f5a39-c901-4565-aae6-448489d570bc@linux.ibm.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.14-2
-X-PR-Tracked-Commit-Id: 17391cb2613b82f8c405570fea605af3255ff8d2
+X-PR-Tracked-Message-Id: <CAJfpegvZoxFLWkFzHPw71FsVxoGMwg+P_iz9eeyU54+D4KG4ow@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git tags/fuse-update-6.14
+X-PR-Tracked-Commit-Id: 2d4fde59fd502a65c1698b61ad4d0f10a9ab665a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: aa5216a2b06594c558942d491cf71af76d34521e
-Message-Id: <173818084007.411204.16541597794305494255.pr-tracker-bot@kernel.org>
-Date: Wed, 29 Jan 2025 20:00:40 +0000
-To: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, nnmlinux@linux.ibm.com, sbhat@linux.ibm.com, Christophe Leroy <christophe.leroy@csgroup.eu>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>
+X-PR-Merge-Commit-Id: 92cc9acff7194b1b9db078901f2a83182bb73202
+Message-Id: <173818084211.411204.7985638993481223315.pr-tracker-bot@kernel.org>
+Date: Wed, 29 Jan 2025 20:00:42 +0000
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Bernd Schubert <bernd.schubert@fastmail.fm>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Wed, 29 Jan 2025 19:06:18 +0530:
+The pull request you sent on Wed, 29 Jan 2025 16:33:21 +0100:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.14-2
+> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git tags/fuse-update-6.14
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/aa5216a2b06594c558942d491cf71af76d34521e
+https://git.kernel.org/torvalds/c/92cc9acff7194b1b9db078901f2a83182bb73202
 
 Thank you!
 
