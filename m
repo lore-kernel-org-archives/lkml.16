@@ -1,138 +1,90 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0F0187325
-	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 20:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BA5187325
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 20:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738184279; cv=none; b=Doj74dCSBDQT7R6DnDr4GsQO0QQ9mCYI9VKgkkIY0QjBbc3iFc/PnO5c2vqaSRIykh1NU05tRjt/QaEJzqg3wYuiEZz2tujrvYGliD3MqURbR+ImqAqKBUo6Xk/CdC1hVBigb8NxhP2nJnIRseZyH3nUE/V8Nw7vQPK0h+RC/VQ=
+	t=1738184353; cv=none; b=ZOA3PGSBI3RoOhnzXI0MJKw3XAM6bxDdRR8oa0d1VgPSHdUZVKQvXgzJ2qRx+6ORptkteSLSr6HVMecbWSAkCLO7o/eGL1rg60+QzlUiUPEOmbpfFn7ZP2osZSJOy3aY2gVv53/x7znRFyiLNgvvUyXxt31yUYbpVeplwmsrFTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738184279; c=relaxed/simple;
-	bh=it0n6NcfBsB6pgC2uMPMnfru5aq5kH7QkLeRsDPQmuI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ytloi9VarXY2B3eTuZAfb/7xwETScaSXgjvlxPQ/XFf3FTUYW2kikRfYwE+K059HqSLnr3Jqk0z+hLpdWC6nypDkE7Hxw+PSoIVd2dSw79YfUyU5bhJSdfJpmr/UY8j8w7uhZJ6CNxuUHKRkaZelSNCR0Y/i7aK69AsFoHqFK0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IKrU+EwQ; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738184353; c=relaxed/simple;
+	bh=FNfIA3wa4FIwFZvQfK61DVFKd40O61ZMQ2IUoSkZ5hg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B9PUB2JDWZ+PCcXhposKwNnEBpcXzSOY7d/g2YUxarZwAf1dpgE5/19DrQYoZaqpjsEsTlLysJeaQPlX9z0hQVKXp1PogniemaW+HCJI8ooA2hV7bOiMEBXJMEbF0+yvWUgEOwrNnl8esOJKefqH6lCPDfjLsgZCWv42mDJADtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pNbGK+GP; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKrU+EwQ"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5d3f57582a2so2343264a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 12:57:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738184275; x=1738789075; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Llvi45PxPMuQBtDcviepIixC4mSLcIOApyubc6kRfOA=;
-        b=IKrU+EwQ/94CqZSu9vqIUpFSMEX2IYZhI8PV6eq8y8ALzodq6fa5ZzUlNKSAGHhkzK
-         5nY87k63aw/K1jK23T+eBNkrXXZIs2IC35pgPYXnKYB1RxQeYScikLyl93TgDXuIp9Pd
-         K3/g47uq7MVtE2okV+j9Xz4HIjT7OEcRuZs3rb0J9IGRn+ugbPteDcRxvtqa9FbX62vq
-         27TGvFv2URdiho7rjJfJ3SAi0DZdApPJ2EpzR22/RL98D0PyjrGd4bexy/HDzbQTq5U2
-         Rws830682xkDZmVfEoktrVBRqw/1kCCzPwwUETSl4gSekBQAG/JR680J6A3BJQVOnXIK
-         BU/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738184275; x=1738789075;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Llvi45PxPMuQBtDcviepIixC4mSLcIOApyubc6kRfOA=;
-        b=q2GuhgMWFpHY5lRHoeisQusFQRVw8BPmITONipq526N9G6bt5tlh5Ny9nx5+ehgzBp
-         HmjWuWGnC2PHuiQfMs7MGE6uJrgNHJY2UV7mUCOrnPedlF+YT/W3hPdHBNcxZ/CiPUd5
-         wE0JheBAKjmSaqUEkF3bOAZix7TKkc38fGXVsBvkznAIBCnIPmMoanNWFzSUNCmf9Lps
-         smWmv5Y/QX0odKPAtEoDBqtts2JzoV0AsCVTsLnrT8KxLJDbBmwhHHJpgjaP6H9Ee896
-         oGfMHOjSJn1Z5hlkPHuM1hlnJg7ZXmWndjDrq0Hg6WxobeZFV49Gm/0s4VkmmfdvrhF2
-         5wIA==
-X-Gm-Message-State: AOJu0YyHwuRmkGeklhT4THvPQ3xWoTD/VlY+bM/MtqQX692vLgL0umLb
-	j2aznmCis808fR62zDuDxLp50ylONsVcBIGxn0dMrFIpSFNPLecLcBxNFg==
-X-Gm-Gg: ASbGncvzvhyhsTpguTwE5ahP8N/RP5P1yAli1Ic3GACCLdxZbFwOewV38xWTsMARb8z
-	WIjT45hp828ajcQlbOMYFbKcSltKBC/1FdRF+4pm2r37aFT2coRVIPT/yqjPqXQHpwvEeCGNEje
-	CF/qK40YmDveEv4FpWIOql8847KbNVnik2XT+qFeWxKPKAPclpVGFxIhJlYAzPu/AgMx9UR5i13
-	Hm8zI/9T3CGnUJh2qx/YhVKF2RA6Gg4quSihUzxr+1QPqFTriNoBkyU5Kmpa581O3kpqBBgOrl3
-	g0FPQBvB9O2YiqaYDTs5lLqy
-X-Google-Smtp-Source: AGHT+IEQGap5WNKI4uF1PFywHvb6hLn5LTFVwpkMOSGBY486OY63vwnmLSu2k6cTAs0MaCIGykjuXg==
-X-Received: by 2002:a17:906:46d6:b0:ab6:d4ce:5674 with SMTP id a640c23a62f3a-ab6e0d8ef7amr69840366b.26.1738184274965;
-        Wed, 29 Jan 2025 12:57:54 -0800 (PST)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a81adsm234666b.36.2025.01.29.12.57.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 12:57:54 -0800 (PST)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] lib/bch.c: Use __builtin_parity() when available
-Date: Wed, 29 Jan 2025 21:57:31 +0100
-Message-ID: <20250129205746.10963-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pNbGK+GP"
+Message-ID: <0ed5524b-0338-45cf-9220-18a9d62cc263@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738184344;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bsCZgFBpLdhi6Ijj1lR6Glu3Hhh81/PJdxrfnauPggA=;
+	b=pNbGK+GPKJkf1LsIhYz12+6QPL2QKk5XBFu9fqB6oRj17YELEdNcoUlQJKxPMjFErvXY30
+	6uDR2lHJPfWX7QaRhrjRZc5HS+iwQgbaQMOFdwXIuA0c0VHLX/Zxr053FG8Lf618hBXUT1
+	3Ambt+TlSedf2E6pdNmn2FvK8tkUL9U=
+Date: Wed, 29 Jan 2025 12:58:56 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 0/2] ipv4, bpf: Introduced to support the ULP to get or
+ set sockets
+To: zhangmingyi <zhangmingyi5@huawei.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, song@kernel.org,
+ yhs@fb.com, john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
+ haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yanan@huawei.com, wuchangye@huawei.com,
+ xiesongyang@huawei.com, liuxin350@huawei.com, liwei883@huawei.com,
+ tianmuyang@huawei.com
+References: <20250127090724.3168791-1-zhangmingyi5@huawei.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <20250127090724.3168791-1-zhangmingyi5@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Compilers (GCC and clang) provide optimized __builtin_parity() function
-that returns the parity of X, i.e. the number of 1-bits in X modulo 2.
+On 1/27/25 1:07 AM, zhangmingyi wrote:
+> We want call bpf_setsockopt to replace the kernel module in the TCP_ULP
+> case. The purpose is to customize the behavior in connect and sendmsg.
+> We have an open source community project kmesh (kmesh.net). Based on
+> this, we refer to some processes of tcp fastopen to implement delayed
+> connet and perform HTTP DNAT when sendmsg.In this case, we need to parse
+> HTTP packets in the bpf program and set TCP_ULP for the specified socket.
 
-Use __builtin_parity() built-in function to optimize parity(). This
-improves generated code on x86_64 from:
+The ulp could be a kernel module. Which ulp is needed in your use case?
 
-	movl    %edi, %edx
-	shrl    %edx
-	xorl    %edi, %edx
-	movl    %edx, %eax
-	shrl    $2, %eax
-	xorl    %edx, %eax
-	andl    $286331153, %eax
-	imull   $286331153, %eax, %eax
-	shrl    $28, %eax
-	andl    $1, %eax
+> Note that tcp_getsockopt and tcp_setsockopt support TCP_ULP, while
+> bpf_getsockopt and bpf_setsockopt do not support TCP_ULP.
+> I'm not sure why there is such a difference, but I noticed that
 
-to an optimized:
+You are right that bpf_get/setsockopt should be able to support most of the 
+TCP_* optname.
 
-	movl    %edi, %ecx
-	shrl    $16, %ecx
-	xorl    %edi, %ecx
-	xorl    %eax, %eax
-	xorb    %ch, %cl
-	setnp   %al
+After looking at tcp_set_ulp, I believe TCP_ULP is one of the few exceptions. I 
+didn't drill down further and I stopped at __tcp_ulp_find_autoload which I 
+believe it might_sleep. The BPF programs that support bpf_setsockopt cannot 
+sleep. Take a look at how do_tcp_setsockopt(TCP_CONGESTION) is done.
 
-Please note SETNP instruction that exercises hardware parity
-calculation of x86 processors. When POPCNT instruction is
-available, the generated code gets optimized even further:
+pw-bot: cr
 
-	popcntl %edi, %eax
-	andl    $1, %eax
-
-Compile-tested only.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
- lib/bch.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/lib/bch.c b/lib/bch.c
-index 1c0cb07cdfeb..7a266c160839 100644
---- a/lib/bch.c
-+++ b/lib/bch.c
-@@ -313,6 +313,9 @@ static inline int deg(unsigned int poly)
- 
- static inline int parity(unsigned int x)
- {
-+#if __has_builtin(__builtin_parity)
-+	return __builtin_parity(x);
-+#else
- 	/*
- 	 * public domain code snippet, lifted from
- 	 * http://www-graphics.stanford.edu/~seander/bithacks.html
-@@ -321,6 +324,7 @@ static inline int parity(unsigned int x)
- 	x ^= x >> 2;
- 	x = (x & 0x11111111U) * 0x11111111U;
- 	return (x >> 28) & 1;
-+#endif
- }
- 
- /* Galois field basic operations: multiply, divide, inverse, etc. */
--- 
-2.42.0
+> tcp_setsockopt is called in bpf_setsockopt.I think we can add the
+> handling of this case.
+> 
+> zhangmingyi (2):
+>    ipv4, bpf: Introduced to support the ULP to get or set sockets
+>    add selftest for TCP_ULP in bpf_setsockopt
+> 
+>   net/core/filter.c                             |  1 +
+>   .../selftests/bpf/progs/setget_sockopt.c      | 21 ++++++++++++++++---
+>   2 files changed, 19 insertions(+), 3 deletions(-)
+> 
 
