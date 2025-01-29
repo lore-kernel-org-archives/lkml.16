@@ -1,192 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85593158A09;
-	Wed, 29 Jan 2025 19:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848411E2606
+	for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738179763; cv=none; b=mC6om1BLO6OeHFSz49aSjV+q3uvlKMxbN8KaABKuyH4Yajpd/vLiIempvIEr6Hpauhy694FM0174NObTS1X+5keOKcQaNgGpSnHHot83kb7Ucj3JfANHZryS6d0eIxbYM5ycebmy9n5rcobobQG27mDOU5trro2118ORsiEGRv0=
+	t=1738179828; cv=none; b=D05FeOol6vMLKFnBbZW232XBOzLeM0Pz1a8l0DEozTivHxSNSYOHmuyocOnVLy1zQ0lSome1KI4zoqxZIOqKwEWWurkdo6C8RjyurtWVuI0KJg7EqRqOo6GZHkORAfMxbg23kj3z3qvXM9C5t7VUpmAYVkkq5dQgOSh2j4HP6ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738179763; c=relaxed/simple;
-	bh=GDxeWC0pz54R53GYZVvg2mQ4xWwjvwvXLwRqtgT3Fy0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=vCBjVvYcD+Z3TYSrLuksi0fInFwJm6q0t1tRN+J0o1q2D4oGVhULIbcxBDmemzwkUPGqD3WU8nXoPOsS76yCtQpeLcoSJK6Pm2YZKu1dDspE/Sox0KyA0/zVpafmFBQrf6ck5p/nna0yaw3niiGLfJJ8Bwt/Tz6VjaV+CT4FVVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IS8xWVKP; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738179828; c=relaxed/simple;
+	bh=D2Kx2P+neXMFIw5ucuqV34P1DzELWI9lZRYaExHir/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GzXGOPij0dh3CLwLRaAa5igFInP9v1KP+P7kN4+1xY+gHK000YLdzHzbZrpz6b61jhK1bJKMqSXacQnpvGvAMr2BSS85DbYMJgRGHyItT65YduIQh761vLDvSagYeCDIb4Jhz35Gji1BlnRx9crcZJWVQE2y0xxXh6CjDa8wazs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Tj8GLVoi; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IS8xWVKP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738179762; x=1769715762;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=GDxeWC0pz54R53GYZVvg2mQ4xWwjvwvXLwRqtgT3Fy0=;
-  b=IS8xWVKPFLQQTQxeJLMiaQ7zmgN+CTRucSL74dcue8LHH5t7TYir/CjO
-   ESvQ96xuiwjioIAKI2T+pgKYIE9qwB9B9bkrFj2w8r2O5Z0GR//ksd/FA
-   HVFZFJPup/w7qb/rVjNi7d+XyLC1ZNlsLD0+ux8dqzlNAlOWctPIRuDQi
-   4QnfS75HXAawBQCUh8pWlpajbDmNLRxSXvLOJcTSYDfSZl7UW2SP8bVBc
-   TgXDBxm4QIny2IMElPtmTB/qujJ68wxJymXklF1d7izmDbxq6zb8YuQFE
-   kfh1P9UQ1DAv/MpqrODFXIGaiQ9WwiWecCiAvfud+7KMGRtX+dbarcy7S
-   g==;
-X-CSE-ConnectionGUID: dUI8Wie0S2yHYIUNfdSI4w==
-X-CSE-MsgGUID: a+TijuzPSSiDtbJoBtW9vQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="42373092"
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="42373092"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 11:42:41 -0800
-X-CSE-ConnectionGUID: Aqq/Ed9vR+eJE/p0Ihiiww==
-X-CSE-MsgGUID: WXWWZZguRxmLx2S2nrCsFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="114156340"
-Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 11:42:40 -0800
-Date: Wed, 29 Jan 2025 11:42:40 -0800 (PST)
-From: matthew.gerlach@linux.intel.com
-To: Krzysztof Kozlowski <krzk@kernel.org>
-cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
-    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
-    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
-    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
-    peter.colberg@altera.com
-Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
-In-Reply-To: <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org>
-Message-ID: <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
-References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com> <20250127173550.1222427-4-matthew.gerlach@linux.intel.com> <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Tj8GLVoi"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6dd43b08674so380326d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 11:43:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1738179825; x=1738784625; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nSbrJF+0ambUjTCtJ80jRG3qCyBlWZS208KWFiT6W8k=;
+        b=Tj8GLVoiZsOTrswFhHGP77GfLsoowQIELQYtveI4jjjohsTUVJr90rslbrec3rrSb+
+         uspIDXlcp/CLBlKEp8VHv215Bf3zikezcqhWxc6jjuCJVvSUUAx0e3J07vkz6cRBLdbe
+         TUON74UBOLhODuLk2s/6vS15geLiCgR7/hgtpmqcyA/QpP94e2e3WP2usQ2PstKJ5JIG
+         QOH0Pna5xJwPTMwUu984n8IO1qVKEnfVGY539FinmEavTHXrJ8/DteoToJdVZpBVGPn0
+         P5wcnB18dVT6xHvC45mFsvDF3DI94Ugwz/P6EWojTC3xdce4mi63N2F+SCH7RVLeC1E0
+         zkPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738179825; x=1738784625;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nSbrJF+0ambUjTCtJ80jRG3qCyBlWZS208KWFiT6W8k=;
+        b=YKpN6JLbMKrMdSG7Aqql85lgx5uEJk+AR/2+e8fvBpVB0/CV84Yf8IuI1hadeT547F
+         oK/aSPXfmzCSAa/WkXuFoJ+fdVkhqidqdy3gKSQXws9sDO1Ui/xy47yyBV2gSYNoJTZf
+         kg7DNAsiSj7m206v099osw2oiOb6UCNJ9Ii91UPCw3RTsquDVbP42elhluiCAR218bmI
+         HVM5JPlQTEaaegbvM9FpREz7lODXl9FA4Z6CzysXMieOcATCBMBv6uGi/b8U0eWdsMKd
+         Lwztw8DhpBluS7QJpnWR9STVYqCI+R5WafDw7YuS+YoYgAtPzSYLZ9xam06DQaMWtS6z
+         vUog==
+X-Forwarded-Encrypted: i=1; AJvYcCXeVNfTmF5TZVqSAmCIWZ15UgpKDfZTa9X2+qHPoHSLPNp8xTLxTMyozZ7DEs2QbDx+AeJoDSwYwWok+jI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhYuep7PIYYna3+WNiANaJIzOofnEzEEzhiXYQIDlrJ6G/9feq
+	HkYqns7nYuknZmcGw+C2SP5lCHnsp/UhbPlDDei3NBEP2nlIwIBoYgVVf9VIHEQ=
+X-Gm-Gg: ASbGncvx/pndItooKa9jwbPxYfKmItjpg5ppkkS4MCcWae7xKdKhUMbeQtXV2iiBdUf
+	Hh7pVvFRvTTu8rfmIbaEc1lI92P+tz5di+fOCimSKkYVk/F4xGGLN5uRBmMRlmVQ4dvXbDdam3J
+	DX3wApP+hWeFDqUzNNxJuldeo54WRB9GOLFKrq2T5SUsXDalhf0FGc1qfoPB5jbCW5MVOHQ2YsA
+	MLH5RIS9T20hNtGotDQeaSefR3k5ZY8gvISNhZHdsSqBtSq8e3k0IU/sGaIYwnMhDP0ViU8WwSe
+	t8q4DWWKEZ7qnVapStElKym6kxcsubb7jjltbKU6TnRKeh0N+Mp1tM89ODf0mugt
+X-Google-Smtp-Source: AGHT+IHKhwF9xVpyoe5TNTrRCljlNEHVBKNqffPwSJMO26qOJXy1Tszicm+AOtcvz51i8IzoHdTOuw==
+X-Received: by 2002:a0c:aa10:0:b0:6e2:4b52:ee21 with SMTP id 6a1803df08f44-6e24b52ef3amr24887696d6.9.1738179825298;
+        Wed, 29 Jan 2025 11:43:45 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e205137058sm59033796d6.22.2025.01.29.11.43.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2025 11:43:44 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tdDyS-00000009RKn-11CL;
+	Wed, 29 Jan 2025 15:43:44 -0400
+Date: Wed, 29 Jan 2025 15:43:44 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Zhu Yanjun <yanjun.zhu@linux.dev>, linux-rdma@vger.kernel.org,
+	Mustafa Ismail <mustafa.ismail@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Bernard Metzler <bmt@zurich.ibm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/6] RDMA/rxe: handle ICRC correctly on big endian systems
+Message-ID: <20250129194344.GD2120662@ziepe.ca>
+References: <20250127223840.67280-1-ebiggers@kernel.org>
+ <20250127223840.67280-2-ebiggers@kernel.org>
+ <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
+ <20250129183009.GC2120662@ziepe.ca>
+ <20250129185115.GA2619178@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250129185115.GA2619178@google.com>
 
+On Wed, Jan 29, 2025 at 06:51:15PM +0000, Eric Biggers wrote:
+> Hi Jason,
+> 
+> On Wed, Jan 29, 2025 at 02:30:09PM -0400, Jason Gunthorpe wrote:
+> > On Wed, Jan 29, 2025 at 10:44:39AM +0100, Zhu Yanjun wrote:
+> > > 在 2025/1/27 23:38, Eric Biggers 写道:
+> > > > From: Eric Biggers <ebiggers@google.com>
+> > > > 
+> > > > The usual big endian convention of InfiniBand does not apply to the
+> > > > ICRC field, whose transmission is specified in terms of the CRC32
+> > > > polynomial coefficients.  
+> > 
+> > This patch is on to something but this is not a good explanation.
+> > 
+> > The CRC32 in IB is stored as big endian and computed in big endian,
+> > the spec says so explicitly:
+> > 
+> > 2) The CRC calculation is done in big endian byte order with the least
+> >    significant bit of the most significant byte being the first
+> >    bits in the CRC calculation.
+> 
+> (2) just specifies the order in which the bits are passed to the CRC.  It says
+> nothing about how the CRC value is stored; that's in (4) instead.
 
+It could be. The other parts of the spec are more definitive.
+ 
+> The mention of "big endian" seems to refer to the bytes being passed
+> from first to last, which is the nearly universal convention.
 
-On Wed, 29 Jan 2025, Krzysztof Kozlowski wrote:
+The LFSR Figure 57 shows how the numerical representation the spec
+uses (ie the 0x9625B75A) maps to the LFSR, and it could be called big
+endian.
 
-> On 27/01/2025 18:35, Matthew Gerlach wrote:
->> Add the base device tree for support of the PCIe Root Port
->> for the Agilex family of chips.
->>
->> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->> ---
->> v3:
->>  - Remove accepted patches from patch set.
->>
->> v2:
->>  - Rename node to fix schema check error.
->> ---
->>  .../intel/socfpga_agilex_pcie_root_port.dtsi  | 55 +++++++++++++++++++
->>  1 file changed, 55 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
->> new file mode 100644
->> index 000000000000..50f131f5791b
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
->> @@ -0,0 +1,55 @@
->> +// SPDX-License-Identifier:     GPL-2.0
->
-> Odd spaces in SPDX tag.
+Regardless, table 29 makes this crystal clear, it shows how the
+numerical representation of 0x9625B75A is placed on the wire, it is
+big endian as all IBTA values are - byte 52 is 0x96, byte 55 is 0x5A.
 
-Yes, there should only be one space.
+> (I would not have used the term "big endian" here, as it's
+> confusing.) 
 
->
->> +/*
->> + * Copyright (C) 2024, Intel Corporation
->> + */
->> +&soc0 {
->> +	aglx_hps_bridges: fpga-bus@80000000 {
->> +		compatible = "simple-bus";
->> +		reg = <0x80000000 0x20200000>,
->> +		      <0xf9000000 0x00100000>;
->> +		reg-names = "axi_h2f", "axi_h2f_lw";
->
-> Where is this binding defined?
+It could be read as going byte-by-byte, or it could be referring to
+the layout of the numerical representation..
 
-The bindings for these reg-names are not currently defined anywhere, but 
-they are also referenced in the following:
-     Documentation/devicetree/bindings/soc/intel/intel,hps-copy-engine.yaml
-     arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
-I am not exactly sure where the right place is to define them, maybe
-Documentation/devicetree/bindings/arm/intel,socfpga.yaml. On the other 
-hand, no code references these names; so it might make sense to just 
-remove them.
+> > If you feed that to the CRC32 you should get 0x9625B75A in a CPU
+> > register u32.
+> > 
+> > cpu_to_be32() will put it in the right order for on the wire.
+> 
+> I think cpu_to_be32() would put it in the wrong order.  Refer to the following:
 
->
->> +		#address-cells = <0x2>;
->> +		#size-cells = <0x1>;
->
-> These two are not hex.
+It is fully explicit in table 29, 0x9625B75A is stored in big
+endian format starting at byte 52.
 
-I will change all #address-cells and #size-cell to decimal.
+It is easy to answer without guessing, Zhu should just run the sample
+packet through the new crc library code and determine what the u32
+value is. It is either 0x9625B75A or swab(0x9625B75A) and that will
+tell what the code should be.
 
->
->> +		ranges = <0x00000000 0x00000000 0x80000000 0x00040000>,
->> +			 <0x00000000 0x10000000 0x90100000 0x0ff00000>,
->> +			 <0x00000000 0x20000000 0xa0000000 0x00200000>,
->> +			 <0x00000001 0x00010000 0xf9010000 0x00008000>,
->> +			 <0x00000001 0x00018000 0xf9018000 0x00000080>,
->> +			 <0x00000001 0x00018080 0xf9018080 0x00000010>;
->> +
->> +		pcie_0_pcie_aglx: pcie@200000000 {
->> +			reg = <0x00000000 0x10000000 0x10000000>,
->> +			      <0x00000001 0x00010000 0x00008000>,
->> +			      <0x00000000 0x20000000 0x00200000>;
->> +			reg-names = "Txs", "Cra", "Hip";
->
-> Where is this binding defined?
-
-Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-
->
->
->> +			interrupt-parent = <&intc>;
->> +			interrupts = <GIC_SPI 0x14 IRQ_TYPE_LEVEL_HIGH>;
->> +			interrupt-controller;
->> +			#interrupt-cells = <0x1>;
->> +			device_type = "pci";
->> +			bus-range = <0x0000000 0x000000ff>;
->> +			ranges = <0x82000000 0x00000000 0x00100000 0x00000000 0x10000000 0x00000000 0x0ff00000>;
->> +			msi-parent = <&pcie_0_msi_irq>;
->> +			#address-cells = <0x3>;
->> +			#size-cells = <0x2>;
->
-> Same problem for all cells.
->
->> +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
->> +			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_0_pcie_aglx 0 0 0 0x1>,
->> +					<0x0 0x0 0x0 0x2 &pcie_0_pcie_aglx 0 0 0 0x2>,
->> +					<0x0 0x0 0x0 0x3 &pcie_0_pcie_aglx 0 0 0 0x3>,
->> +					<0x0 0x0 0x0 0x4 &pcie_0_pcie_aglx 0 0 0 0x4>;
->> +			status = "disabled";
->> +		};
->> +
->> +		pcie_0_msi_irq: msi@10008080 {
->> +			compatible = "altr,msi-1.0";
->> +			reg = <0x00000001 0x00018080 0x00000010>,
->> +			      <0x00000001 0x00018000 0x00000080>;
->> +			reg-names = "csr", "vector_slave";
->> +			interrupt-parent = <&intc>;
->> +			interrupts = <GIC_SPI 0x13 IRQ_TYPE_LEVEL_HIGH>;
->> +			msi-controller;
->> +			num-vectors = <0x20>;
->
-> That's decimal. Value is for humans and we count numbers in decimal.
-
-I will change num-vectors to decimal.
-
-Thanks for the review,
-Matthew Gerlach
-
->
->
->
-> Best regards,
-> Krzysztof
->
+Jason
