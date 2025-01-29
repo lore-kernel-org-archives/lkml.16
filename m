@@ -1,309 +1,425 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665C81DFE34;
-	Wed, 29 Jan 2025 18:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738176436; cv=fail; b=fhoRdrR0qVRbp/N3IR3Lh/SUomAIBl5kKBA/AmAOkSItMt3MPSRhU+myMRIlMsvlj7/sP8FWLfcf01buoxjJ7obJUvNrUyu61781DFGFuH1LeyBX6eYvVbou/XvAZP9rmLeJRNpn1VCRx6aZx8ej0ezUXbuCQ6oG6bjNngJGppU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738176436; c=relaxed/simple;
-	bh=fXihcpqS+x95zAr1jBDbDMai1Oe69FEkg4pc+6YQS9k=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=WgDXwLGGIBT+M2NvbClneqEpiUn9qca8JG+0PYo7fZPXVLlngRs0gdJUwCPo5MXf4n82cgtmAE568/rlArjRUzsLc6o0/n3gJQfb1vHtWDxwzUKo9UuHQsNQda+Ozz3xf/JOeFwsn+JDgZzLQzemsH9Wkjpg9JkQ/J7i8ZrPQIQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WcQ1osbD; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=OOBmonYV; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AF314F9FF;
+	Wed, 29 Jan 2025 18:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738176496; cv=none; b=SZ289eTqucgHYzwaRX6QpzoImaqUYH+M0zAt3GTojf7+ivQ8/9Q2Dt2Owyc2xyYGs53ldBUUaPphlE6KPCmgU6hHlkfJIcOT8QSUeFFJAefYuB77PnPQcapKRYexZyTBS9A/rdybd5A0tQKPkAtmiJ0klwaQMYZeiiDPyd8tQEw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738176496; c=relaxed/simple;
+	bh=CXP7BPR+I6h1lJOInWBbEeVVe76H2Yx2qxQM2byVMcw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JMBuJQDTvanDBMvfqCH8vqp9WryHm3ogoGNoWikJIpXQEDZE+i6dFJAw2ZaQUfWhQzAq03nGeZ87eq/4VOYEbTeglKPg1FMe/64xX9M8HgOcMQCiYSgPVCFC4587g7fmrVMaN7UJoLNsqrY7S3ekH8u80a73YCa5jwj5RxqGPDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o3dGGvMS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WcQ1osbD";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="OOBmonYV"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50TIBnvs020264;
-	Wed, 29 Jan 2025 18:47:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=fXihcpqS+x95zAr1jBDbDMai1Oe69FEkg4pc+6YQS9k=; b=
-	WcQ1osbDZmzV8M7xHnLirHxVdS741qNzT0CwH3wkiJlRaikKZuHbACvnKPW+7PbR
-	kKgGkN2SVUnWX/cwQf21PUrurUPaLeKkjJaIZ02A6ReGGjRzt8tt1pm9oaSrUr2L
-	gW+ODEcMYu65/MK3gANCrBF5/i9G9iq8FPucGGJ8nRC0yVV0o5VFj/W5+cy7y9VP
-	HG/9T4ggnn0Iv0xIReV/LQtwMrTjCk22MJkDWIciG4zGp+ee2INGcXq4aodXFPkO
-	1KnB4HG/DZunUZzO55bkObWfnfZUkAEubbnLq33DVC+FIhod9t5Y5TLfDC3u4V+O
-	mIndhecrbG2E2XGmCVtjOQ==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44fsd50294-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Jan 2025 18:47:05 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50TIW8s5035807;
-	Wed, 29 Jan 2025 18:47:05 GMT
-Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2048.outbound.protection.outlook.com [104.47.56.48])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44cpdg62jh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Jan 2025 18:47:05 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=R/CfoE8zxXowtKYgUUVbn9dbtE6eqrbkHBvxmfU5VfDzVWiCbk/qis71MP1Npe8Nba56Wg55YUaLqV4GGSFa3RZLboCqRzi5FPYbuCCB3EH0wdxo6M4YZ634V+6xPTIw8D5f5dwm/btju1/g2PSMBBl94Bh/r4celdgF6DF/tmVcwbnQ+eGkR1NP0XkYUWlf+uxKohGrY2bd1aH+pmQt6RljnSlzft1zI/wS+m+Bg4iTL6FM8wzA2/7MoTlAOJ0ORdckTtBVz7m+B5UHpZtCcvLqZ8gHIINDlyxon8xrywn7htSFHVN9TVfHLZ2p8NT3fhq3zn6CZe/LhzgPlqwdFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fXihcpqS+x95zAr1jBDbDMai1Oe69FEkg4pc+6YQS9k=;
- b=v+rGPbsK1aZABIpGjbyIKDgKEoJsTe2o2STiF3/sByl1st2ee3qjGRqqibWWijA5fMOINFajpacLVjlm9fwbendno+NbsIZX2faar4DpZtbQATaz6L6h+h4xZyPL86sZv21hUY9Iqqo0eCZCUvKBMT6Fhhp3eNAhyrgZc5sAhoFSTcBI9HvGjiiyLSLVNEN8ghF0FfUXRdrRF6cX/5fZHSwqQ+1TqQi0jQafTLfJDfdGrjmkm9LLmCuQEEoEnzbE1j0wf2lQs4tfucoWLfWbjUMscER2UVzwR+GGWOb8QPybhtlyhyWcPE0367PAxG57QG2kehB/xXEOWwZ2/pA9wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fXihcpqS+x95zAr1jBDbDMai1Oe69FEkg4pc+6YQS9k=;
- b=OOBmonYVpUPCn6HEJfDe+hKK/YUglpXkga35h68fi/MQmhqmuXzKGNNdPSRn2pWmDxt/9w7sw3qBo4Mxps5f9awc1USPmUHza/WkSqikb+6+OtVefrTCY8Fseg8toSjGs6AX2Re2mLCeKirvPV+evkMwR3PKLjR2AFOUeed2/70=
-Received: from PH7PR10MB6505.namprd10.prod.outlook.com (2603:10b6:510:200::11)
- by CY8PR10MB6441.namprd10.prod.outlook.com (2603:10b6:930:63::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.17; Wed, 29 Jan
- 2025 18:47:03 +0000
-Received: from PH7PR10MB6505.namprd10.prod.outlook.com
- ([fe80::83d9:1bf1:52cf:df54]) by PH7PR10MB6505.namprd10.prod.outlook.com
- ([fe80::83d9:1bf1:52cf:df54%6]) with mapi id 15.20.8377.021; Wed, 29 Jan 2025
- 18:47:03 +0000
-Message-ID: <686986a0-c981-4aa3-ae88-92a34368129e@oracle.com>
-Date: Thu, 30 Jan 2025 00:16:56 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: v5.4.289 failed to boot with error megasas_build_io_fusion 3219
- sge_count (-12) is out of range
-To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc: Konrad Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-        stable@vger.kernel.org
-References: <7dc143fa-4a48-440b-b624-ac57a361ac74@oracle.com>
- <9dd91f6e-1c66-4961-994e-dbda87d69dad@oracle.com>
- <2025012919-series-chaps-856e@gregkh>
- <8eb33b38-23e1-4e43-8952-3f2b05660236@oracle.com>
- <2025012936-finalize-ducktail-c524@gregkh>
- <1f017284-1a29-49d8-b0d9-92409561990e@oracle.com>
- <2025012956-jiffy-condone-3137@gregkh>
- <1f225b8d-d958-4304-829e-8798884d9b6b@oracle.com>
- <83bd90c7-8879-4462-9548-bb5b69cac39e@suse.com>
- <b4ab0246-3846-41d1-8e84-64bd7fefc089@oracle.com>
- <de6912ad-3dba-4d66-8ca2-71a0aa09172c@suse.com>
-Content-Language: en-US
-From: Harshvardhan Jha <harshvardhan.j.jha@oracle.com>
-In-Reply-To: <de6912ad-3dba-4d66-8ca2-71a0aa09172c@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2PR01CA0035.apcprd01.prod.exchangelabs.com
- (2603:1096:4:192::13) To PH7PR10MB6505.namprd10.prod.outlook.com
- (2603:10b6:510:200::11)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o3dGGvMS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A01AC4CED1;
+	Wed, 29 Jan 2025 18:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738176494;
+	bh=CXP7BPR+I6h1lJOInWBbEeVVe76H2Yx2qxQM2byVMcw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o3dGGvMSBN3rjir2qxzHa/0T9GrTLUNoK5jneY7yJ4Tw5DZ9HWPsWU0BEFJNo/I4x
+	 S79kHwnTssFcnlbDwomnqyiZklHoNn0ZaeWZiu16H91QXcfOPKHrSPrMzT6yRWapxD
+	 FJAfjsR79t8tUGi6FiCjd88G4AjmHJS5dWtUHsAVD4fwbWH+Ai6kSpKqyZt/nw1kl5
+	 8GifN3wqPbbvCSJT5Sy7gNr7W5P2UYve7zbp4uWWllZ3aMs7cq0goLQbT8OBGT+K7B
+	 Oi0WRBVFIV646sJgjkYqADmd8BTw+Q6MA0yUUvvQ2iQwH4nykxJ31AunZrqMXbSBCM
+	 Vq0juwdUb5VMQ==
+Date: Wed, 29 Jan 2025 10:48:11 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, nathan@kernel.org,
+	ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v3 2/5] perf lock: Retrieve owner callstack in bpf program
+Message-ID: <Z5p361_enAI8ZtX8@google.com>
+References: <20250129001905.619859-1-ctshao@google.com>
+ <20250129001905.619859-3-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR10MB6505:EE_|CY8PR10MB6441:EE_
-X-MS-Office365-Filtering-Correlation-Id: d9c6b9c9-7ff1-4705-046c-08dd40955218
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OFFzRExrT1k1SlF0RGcvZDhKcnFZQTJDcU1DQnV4Wmp6R3M3M2NsMitBTTZG?=
- =?utf-8?B?SXVhVTRWdmtPWE92ajNwWDNRelRuTW5Oc21xOXk3YXhBREhyOURueHNHaHJs?=
- =?utf-8?B?THdSeE8xdUFwdjZuS2VBQ2dZVFVSalQvYUN4bG52QW9Sb3pwSmgvQkltMWdT?=
- =?utf-8?B?N0lvWnRMSnJnN0V1ZXdYM080RzBxZFppZjVMWU95V3VxYmppVlpSY0YrcTZD?=
- =?utf-8?B?dWVYbmI5ZmpHN1FEaWprcC9tZTVaWTNlQXhMVEFmekQ5b3JjWmJNZGtOZ2lp?=
- =?utf-8?B?SGVMTk53K1RWZm1YMUQ0U05NK3FNVm9KaG9GaE1aMFFybXNFNnVnK05RRVpj?=
- =?utf-8?B?MXFUbFcwdXFZK09SSWQyWUIvRnJ6eVdrYVUwRzJISkxQOXZFaVVRc0VVUk9j?=
- =?utf-8?B?ZGU3MHQrYUdWeG9DaGlRV3UzWTNTYTlvWDZLdVRpMkpvS0R1dlpJakFCVTZD?=
- =?utf-8?B?eHdXbXphZVlzVEd5M0ZteHJEbTRadnd6bXdFVllmYzRnSjV5bUdzY05qYVlu?=
- =?utf-8?B?SFNuRzJNenpZNXNxcHJkUURSeEt1bHR4Vld1LzlRSWRlNU1Vd1pUNm5LL0l3?=
- =?utf-8?B?NWlkdk10WkhvUjdpVmVwNFV1aUJ1VjFZZFFEcFZ1ajZsNkd1RHA3TFRCcGg1?=
- =?utf-8?B?cGp5bEM1VWVlYTlsWWwwUjUzYWp1RjcyNHlhNzRlQXNHVUc3eitlS2xFL3ZE?=
- =?utf-8?B?MDl0L1pZZGRxTWdRM09LL0FsY21OOVZiSk9rQTdpd2UrcDJmL3ZTUnd6Umcz?=
- =?utf-8?B?Z09XR2R6RFNZaVhZTFdlcGZzM2JRMzZ0TVJBdC91UmhBWmorbzhuaVRtemR0?=
- =?utf-8?B?Y3NjQTVrZVhKcmpUMzBnV0VwYTlnNWZnblMySWcrN2QrUHdEUW91ZnRHSXg3?=
- =?utf-8?B?Qm96RDhIUDFNMy9aNFFzSzBLdVZNTzhsOUVlQld2Qkg5Y3ZnN3Aya3kvcGVr?=
- =?utf-8?B?T0ZrWHYva0xPU0RKSEQ5azBwNVBhMytnekJhQUdYeHVqWTM3M01Ja0szVnk1?=
- =?utf-8?B?OG5waERDQlpQZDNsVEVVdUxVTVZKdUkxcmhPdDN4cG15TzZVRVhwQmQ5cEhT?=
- =?utf-8?B?aVd2NTFMMHBWUmJOVWpoVGJqbzB4R1NCQnlQd2sxNVlXc214N09NZWNRcGli?=
- =?utf-8?B?REh2UHJPQ3MxZWpDYzRIc0VjT2ZIUlRqa0VTM1NCbDBvMTVLK3ZGeVJocC83?=
- =?utf-8?B?YS92cFkzbjVtUmJwU2IxcnVncmtVZUc3V1B2b3p0WHJBdGlxTU1oVHUrcmJt?=
- =?utf-8?B?SEloQ0JjM0kxcHNkdzlUS2dWYnJYL0tqMXp1RER0Q0JQNFFZbDR5QVdGd2JL?=
- =?utf-8?B?L1Mzc1ZqMVc4LzBmQ2t6NWRZcmQ1cnIvM3lPZWV0b3Z6c1c4SDdNRzRmam5t?=
- =?utf-8?B?RHdFMGVidzEvaWhqbWl4M1YxbE1JbmZuOTNGNlI3S05qazFlNnRIOGNManZS?=
- =?utf-8?B?VzhOYWN2eWJmeU02WE5TcTV2UmY3cExJRmgvOUVSR0JJK05pT2tGcmlDejMy?=
- =?utf-8?B?b1hjaXFSSGRHSXMvQnpGSjdMeUpvenZHNzgxUVRrWjVCalpqMVR1STBTMVJ6?=
- =?utf-8?B?UlJHUmlOUUdCT1RtUlJLQ2s1cytNdSthRXFNTVNUNXg4Tk5WWXBROGFZbm1w?=
- =?utf-8?B?TFhxcm9CSUY1L0J4L0NxeTluY0I3Ym9HMGFRdzNLTnI3Q2VUU2RJQXIxSDZz?=
- =?utf-8?B?K2ZqUmhFaXJ1STVWd1I3R2tTUE5aOGpDb0hESDdlRWFKa21ISHJCWU51OXE0?=
- =?utf-8?B?YzFtd0ROeUtUOWZGNkFoMnlYdG92TkpxdUIxV1FkN3R6YlBvNTg1Mjg0TEU0?=
- =?utf-8?B?bkdHR1EwL3JNQmFyVFJidHFPaWtUSThPK0VMRmJLVEtlQmk4NldnbEJvNENa?=
- =?utf-8?Q?JJz1QohbKhRXm?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR10MB6505.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QXRrRkNQSGM5VVBmU0pXQzNqQlZsdXYyRVFwZU1ETHVRdU5iekV1Y3R6MHVF?=
- =?utf-8?B?VU5MbklCR1dGZDRka3RkWC9LNXpvRHV0TlVEN2NaODl3ampidVp5YU5hdmRo?=
- =?utf-8?B?eE9QeUIyZFlabjFMUnREeFFVcVZ6WXNTbDNQakxJZmtkNnNLa1J4OWQzb1h4?=
- =?utf-8?B?L2g3SklnVlV1dkloVVBtTDhKZHdmRTlmMk9VOHpsS21RYjgvdk03V3BJNTl2?=
- =?utf-8?B?cmxNZmpQQXg5UWZVOUhHcmZROGFJRnQ2aGdaU3pSdmlibm1rY1F6QlBMM25R?=
- =?utf-8?B?Y2pwRDh2OGhSRzg0dS9remp6Q2ZEM0pnTWJlb2Vub2NCUDJYRjJ2VjhmZlF2?=
- =?utf-8?B?ZHV2dUlyNmxwek8zVnJIcGMyL1loWmpvL1ZpYU1kZHNsekxLSWFUNC9WZDk0?=
- =?utf-8?B?bHBMK2oxdEZzb1dHWi9oVncvcngzSGlMbkJmTVErZzdEN0oyUVc4TElBcnBC?=
- =?utf-8?B?emJRTHM3WUJzajJqNGQ0OHJzbjhOK3Z6TnNvaVkrMUM1U093WXFLMXNvQUsx?=
- =?utf-8?B?MTl6YjBqT3dsNGQwWXZ0eTdqU3FoQjhRdllGMFBsd3RRYWo4cGtxeWlJNDRP?=
- =?utf-8?B?ZVI1cjRGeStaejhzRnE2ejJtcFJ0d202TTN0UkFSS3ZnWjY4OExQS2FoMGxV?=
- =?utf-8?B?TDJ5MGRlVlg2U0tDVzFlZFAwdnBTZm16RUpURDlQblZ0ZjFRUVhmZ2ppZWdC?=
- =?utf-8?B?MXJzQnBMQUlhUGtpUzFnSko1Vjk2R3piSmNVZXQzQUEwcHFtNkNFOVUycFFY?=
- =?utf-8?B?cTMzdHpUcFZPMTFvM1Q0SU42bE40blpiTDc1T043V3BIaThNSit4Q05jNDMy?=
- =?utf-8?B?YzBpdzNMZHlIZHYwMDkxVkVBZHVOc3RmaHJKUGE0QlppU0dvTWZiQ3ZsM25J?=
- =?utf-8?B?RWZLdUp1VCtQVUdXUGtkNldxT1hocDhWbGNIOXhwb0RMc1ZNMjd1cGsrY0dY?=
- =?utf-8?B?M2tjeGRLanRSODdJenlXODJzd1VtUGZRS2Vxci9LR2dETkd4L1RXTUQ2d3d1?=
- =?utf-8?B?bEFzVjRhQ210Q1diYmpReTJzb0dnSmJrcXc2RE5iKzVrZUlpdmhHdWJWajFZ?=
- =?utf-8?B?VWcxL1hUc2k5WEs4ZW9LSzBXMVFva1A0QjZwWFpOVlBPOXlrRWVuQ1AwdlRV?=
- =?utf-8?B?SEErN0VIbHZmT0QvUG9oYWNSWEQxWFh6a2hBeW1SSFYvZnFDLzlJVkprLzc1?=
- =?utf-8?B?Mkp6bFQydTR1N2xvVDFoYWJnV21WNnhaeWFkTkg0QU9PTGRTdC9SQzhwS0ZY?=
- =?utf-8?B?MXRUZ3Brdk5mVnN1cEJPd3RPMllzUi95UGZOWFBMWkdlb1F1M1c1UUNJWXVF?=
- =?utf-8?B?Y054QURtOXIrUDJIaDRTTjU3aEo1Q1U3dDNjcHhXcGw0TmF6bTdGaThlZ0tu?=
- =?utf-8?B?dGhhTWNIL1pYMFFZR21tSjlQNkhyNGY2UnoyV1lWV1ZvbmRLTFBKUVhkVmE0?=
- =?utf-8?B?S0xUYlY5bURNdzhGeEdUMHdoL1FkcW1Zb0I2bnJHeE5SZlFjM3BKR3BwQ3BB?=
- =?utf-8?B?RXRQTTZQV0k1TndYUTk4VEVJMWxZd2pKVWxqK0RPV09GeVp1WmZSNUorejZu?=
- =?utf-8?B?bU1TTDZTSmtOVGtGMWN1R2RtZnNnMXFFcThWaVliNzZ1SFBqd3F5dmlaSG8v?=
- =?utf-8?B?b3RuWW8rM2dtRzVmUDZZUFFaZWthbTN3L0x2d3lzSVNCdmJtSzVaOFZNMFdZ?=
- =?utf-8?B?U2d0SGdzTGhHV2p0UXZWRjV2dWRtN1FFb3NYb3Awci9aUVhyNHBwZlhieEZa?=
- =?utf-8?B?YkNsSk92RmJ1RHJ4T3RjTk5PSDZNVGtEdzlBakdGU1dHUWFPcWR5bm92Q2tx?=
- =?utf-8?B?dWZ5U3hYVFRobmtYUzdSNUhHeTVTNFZTVlE5QnpCRnV1NmlGanR5R1BEUWxs?=
- =?utf-8?B?WGduUm1jaUEzcTJ2eXRVWmNaWDlOZm9WNXRML2V2QkwxMjJCNktsMjVqZURi?=
- =?utf-8?B?SExJV0NRcnpoOWk5amRldEFLUzQ0UHlOK3pZellvQnFvL3hIWHN6VHo0NGl4?=
- =?utf-8?B?NHdBZk5hN0RYb2s0cUpsenNubm5tWSsrUUJhaCt1QnlFQm1SWE5zbVo5ZWJW?=
- =?utf-8?B?M1hEYjVLazgxaXNlcDVySUNWV2d1NG5mVEZSdWJ5T3JOVndXR1NvUkpCRjFY?=
- =?utf-8?B?L1FyaklFNWZpeDlMQjRSNlF0bjIxN25Db0loQzJnVE04eGpmbUVjZllTdlpn?=
- =?utf-8?B?YlE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	hmejXcWhuZO3KUlqgsvk5LlcR6Fco5U4uu1fw1qI1n702AcimWmhShaQXepCaOtg68H+Ah8D4lgqxXniWxU1L5kjO55tr0Ang28GeKRxYFeRn/PjYLfYbMo49e/MQpjx43PM3AKbQfs8sRK+5pRryT/Z/Q5NGqxRTsvUV4f2mkYRpPHNTkd4RhbCqyFFOAYeOxYFwKvO+kvFjroaSPKxlrSD9xg0opWggcK/s54VO+etUPI870WtvzaaVALiuVYugPebx1Ro8dFMd+nFw3ni6UtA5aMpZ7BFSnjDU/ss2UoQMlQuQDWD0TimIIhNERWXSQstS7XRucRY3pYWzJJn6RmH0Lclmu5rnhI6E/AybmwAEK1swKra/P+FjQJ6uJMUW0OMFSxmE6EBVmrj0/kC6viYZYh2c9MLXq7rLsezrPCQ6ZgnEmPHLdRGceG7E0DRl7w+i4yqAFbeebGngKnd2/5ubEDtvIV2v8HJ2QIHSZmYqj3U6BnzThLL8TcO3+VzaiGkygqFEtY1Vbp9MUH7sibsfdBtZxbuY4EXaFyGA9ulR117fPoAojXShoUHmVNuzH7YSsu1iFMxbjywMTpOXBrVTeedYGmGM1k/hDe0ZLw=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9c6b9c9-7ff1-4705-046c-08dd40955218
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR10MB6505.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 18:47:03.1467
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KEdWw/XFC1C6dInRQPBRdmM+g4w/lPj8FVj0iVoYExkQ6hp0yvCbFd+nH2AY4T3rXX3RxmimB/CwNNPjwn86yoZ28X/aSqrmjtSb5cPzVmI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6441
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-29_04,2025-01-29_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- phishscore=0 suspectscore=0 adultscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
- definitions=main-2501290146
-X-Proofpoint-GUID: S9x-jyZuWRyTvBuzcp4L6aNDSp2xGnaa
-X-Proofpoint-ORIG-GUID: S9x-jyZuWRyTvBuzcp4L6aNDSp2xGnaa
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250129001905.619859-3-ctshao@google.com>
+
+On Tue, Jan 28, 2025 at 04:14:58PM -0800, Chun-Tse Shao wrote:
+> Tracing owner callstack in `contention_begin()` and `contention_end()`,
+> and storing in `owner_stat` bpf map.
+
+Can you please elaborate?  It'd be helpful to describe how the lock
+owner is tracked and deals with multiple waiters.  Note that owner will
+be changed when contention_end() is called (without an error).
+
+And please mention that it can fail to get an owner and its callstack.
+Actually that's very common and only mutex (and rwsem for writing?)
+would support owner tracking.
+
+> 
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> ---
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  | 237 +++++++++++++++++-
+>  1 file changed, 235 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> index b4961dd86222..1ad2a0793c37 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  // Copyright (c) 2022 Google
+> +#include "linux/bpf.h"
+
+Why did you add this?
 
 
-On 30/01/25 12:13 AM, Jürgen Groß wrote:
-> On 29.01.25 19:35, Harshvardhan Jha wrote:
->>
->> On 29/01/25 4:52 PM, Juergen Gross wrote:
->>> On 29.01.25 10:15, Harshvardhan Jha wrote:
->>>>
->>>> On 29/01/25 2:34 PM, Greg KH wrote:
->>>>> On Wed, Jan 29, 2025 at 02:29:48PM +0530, Harshvardhan Jha wrote:
->>>>>> Hi Greg,
->>>>>>
->>>>>> On 29/01/25 2:18 PM, Greg KH wrote:
->>>>>>> On Wed, Jan 29, 2025 at 02:13:34PM +0530, Harshvardhan Jha wrote:
->>>>>>>> Hi there,
->>>>>>>>
->>>>>>>> On 29/01/25 2:05 PM, Greg KH wrote:
->>>>>>>>> On Wed, Jan 29, 2025 at 02:03:51PM +0530, Harshvardhan Jha wrote:
->>>>>>>>>> Hi All,
->>>>>>>>>>
->>>>>>>>>> +stable
->>>>>>>>>>
->>>>>>>>>> There seems to be some formatting issues in my log output. I
->>>>>>>>>> have
->>>>>>>>>> attached it as a file.
->>>>>>>>> Confused, what are you wanting us to do here in the stable tree?
->>>>>>>>>
->>>>>>>>> thanks,
->>>>>>>>>
->>>>>>>>> greg k-h
->>>>>>>> Since, this is reproducible on 5.4.y I have added stable. The
->>>>>>>> culprit
->>>>>>>> commit which upon getting reverted fixes this issue is also
->>>>>>>> present in
->>>>>>>> 5.4.y stable.
->>>>>>> What culprit commit?  I see no information here :(
->>>>>>>
->>>>>>> Remember, top-posting is evil...
->>>>>> My apologies,
->>>>>>
->>>>>> The stable tag v5.4.289 seems to fail to boot with the following
->>>>>> prompt in an infinite loop:
->>>>>> [   24.427217] megaraid_sas 0000:65:00.0: megasas_build_io_fusion
->>>>>> 3273 sge_count (-12) is out of range. Range is:  0-256
->>>>>>
->>>>>> Reverting the following patch seems to fix the issue:
->>>>>>
->>>>>> stable-5.4      : v5.4.285             - 5df29a445f3a
->>>>>> xen/swiotlb: add
->>>>>> alignment check for dma buffers
->>>>>>
->>>>>> I tried changing swiotlb grub command line arguments but that didn't
->>>>>> seem to help much unfortunately and the error was seen again.
->>>>>>
->>>>> Ok, can you submit this revert with the information about why it
->>>>> should
->>>>> not be included in the 5.4.y tree and cc: everyone involved and
->>>>> then we
->>>>> will be glad to queue it up.
->>>>>
->>>>> thanks,
->>>>>
->>>>> greg k-h
->>>>
->>>> This might be reproducible on other stable trees and mainline as
->>>> well so
->>>> we will get it fixed there and I will submit the necessary fix to
->>>> stable
->>>> when everything is sorted out on mainline.
->>>
->>> Right. Just reverting my patch will trade one error with another one
->>> (the
->>> one which triggered me to write the patch).
->>>
->>> There are two possible ways to fix the issue:
->>>
->>> - allow larger DMA buffers in xen/swiotlb (today 2MB are the max.
->>> supported
->>>    size, the megaraid_sas driver seems to effectively request 4MB)
->>
->> This seems relatively simpler to implement but I'm not sure whether it's
->> the most optimal approach
->
-> Just making the static array larger used to hold the frame numbers for
-> the
-> buffer seems to be a waste of memory for most configurations.
-Yep definitely not required in most cases.
->
-> I'm thinking of an allocated array using the max needed size (replace a
-> former buffer with a larger one if needed).
+>  #include "vmlinux.h"
+>  #include <bpf/bpf_helpers.h>
+>  #include <bpf/bpf_tracing.h>
+> @@ -7,6 +8,7 @@
+>  #include <asm-generic/errno-base.h>
+>  
+>  #include "lock_data.h"
+> +#include <time.h>
 
-This seems like the right way to go.
+And this too.  I remember adding header sometimes caused a trouble in
+the build.  So I'm trying to be careful on this.  Roughly I don't think
+you need new structs or functions so I'm wondering why it's added.
 
-Harshvardhan
+>  
+>  /* for collect_lock_syms().  4096 was rejected by the verifier */
+>  #define MAX_CPUS  1024
+> @@ -31,7 +33,7 @@ struct {
+>  struct {
+>  	__uint(type, BPF_MAP_TYPE_HASH);
+>  	__uint(key_size, sizeof(__u64)); // owner stacktrace
+> -	__uint(value_size, sizeof(__u64)); // owner stack id
+> +	__uint(value_size, sizeof(__s32)); // owner stack id
+>  	__uint(max_entries, 1);
+>  } owner_stacks SEC(".maps");
+>  
+> @@ -197,6 +199,9 @@ int data_fail;
+>  int task_map_full;
+>  int data_map_full;
+>  
+> +struct task_struct *bpf_task_from_pid(s32 pid) __ksym;
+> +void bpf_task_release(struct task_struct *p) __ksym;
 
->
->
-> Juergen
->
-> Juergen
+These should have __weak and you need to check if it's NULL or not
+before use to support ancient kernels.  If it's NULL then it should
+reject owner callstack tracking.  Or you can check it in userspace
+using vmlinux BTF and set lock_owner to false if it's not available.
+
+Please take a look at check_slab_cache_iter() for example.
+
+> +
+>  static inline __u64 get_current_cgroup_id(void)
+>  {
+>  	struct task_struct *task;
+> @@ -420,6 +425,27 @@ static inline struct tstamp_data *get_tstamp_elem(__u32 flags)
+>  	return pelem;
+>  }
+>  
+> +static inline s32 get_owner_stack_id(u64 *stacktrace)
+> +{
+> +	s32 *id;
+> +	static s32 id_gen = 1;
+> +
+> +	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
+> +	if (id)
+> +		return *id;
+> +
+> +	// FIXME: currently `a = __sync_fetch_and_add(...)` cause "Invalid usage of the XADD return
+> +	// value" error in BPF program: https://github.com/llvm/llvm-project/issues/91888
+> +	bpf_map_update_elem(&owner_stacks, stacktrace, &id_gen, BPF_NOEXIST);
+> +	__sync_fetch_and_add(&id_gen, 1);
+
+I'm afraid it doesn't guarantee a unique stack id.
+
+I believe BPF has atomic instructions that can do ADD and FETCH.  I'm
+not sure if it's a kernel or compiler version issue.  Have you tried
+compare-and-exchange?
+
+> +
+> +	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
+> +	if (id)
+> +		return *id;
+> +
+> +	return -1;
+> +}
+> +
+>  SEC("tp_btf/contention_begin")
+>  int contention_begin(u64 *ctx)
+>  {
+> @@ -437,6 +463,91 @@ int contention_begin(u64 *ctx)
+>  	pelem->flags = (__u32)ctx[1];
+>  
+>  	if (needs_callstack) {
+> +		u32 i = 0;
+> +		u32 id = 0;
+> +		int owner_pid;
+> +		u64 *buf;
+> +		struct task_struct *task;
+> +		struct owner_tracing_data *otdata;
+> +
+> +		if (!lock_owner)
+> +			goto skip_owner_begin;
+> +
+> +		task = get_lock_owner(pelem->lock, pelem->flags);
+> +		if (!task)
+> +			goto skip_owner_begin;
+> +
+> +		owner_pid = BPF_CORE_READ(task, pid);
+> +
+> +		buf = bpf_map_lookup_elem(&stack_buf, &i);
+> +		if (!buf)
+> +			goto skip_owner_begin;
+> +		for (i = 0; i < max_stack; i++)
+> +			buf[i] = 0x0;
+> +
+> +		task = bpf_task_from_pid(owner_pid);
+> +		if (task) {
+> +			bpf_get_task_stack(task, buf, max_stack * sizeof(unsigned long), 0);
+> +			bpf_task_release(task);
+> +		}
+> +
+> +		otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
+> +		id = get_owner_stack_id(buf);
+> +
+> +		// Contention just happens, or corner case `lock` is owned by process not
+> +		// `owner_pid`. For the corner case we treat it as unexpected internal error and
+> +		// just ignore the precvious tracing record.
+
+Typo precvious
+
+It's unfortunate the comment style is mixed.  I'm not sure if we have a
+strict rule for BPF code but at least we need to be consistent in a file.
+Probably // is ok for a short comment at the end of line.  But please
+use C-style block comments for multi-line messages.
+
+
+> +		if (!otdata || otdata->pid != owner_pid) {
+> +			struct owner_tracing_data first = {
+> +				.pid = owner_pid,
+> +				.timestamp = pelem->timestamp,
+> +				.count = 1,
+> +				.stack_id = id,
+> +			};
+> +			bpf_map_update_elem(&owner_data, &pelem->lock, &first, BPF_ANY);
+> +		}
+> +		// Contention is ongoing and new waiter joins.
+> +		else {
+> +			__sync_fetch_and_add(&otdata->count, 1);
+> +
+> +			// The owner is the same, but stacktrace might be changed. In this case we
+> +			// store/update `owner_stat` based on current owner stack id.
+> +			if (id != otdata->stack_id) {
+> +				u64 duration = otdata->timestamp - pelem->timestamp;
+> +				struct contention_key ckey = {
+> +					.stack_id = id,
+> +					.pid = 0,
+> +					.lock_addr_or_cgroup = 0,
+> +				};
+> +				struct contention_data *cdata =
+> +					bpf_map_lookup_elem(&owner_stat, &ckey);
+> +
+> +				if (!cdata) {
+> +					struct contention_data first = {
+> +						.total_time = duration,
+> +						.max_time = duration,
+> +						.min_time = duration,
+> +						.count = 1,
+> +						.flags = pelem->flags,
+> +					};
+> +					bpf_map_update_elem(&owner_stat, &ckey, &first,
+> +							    BPF_NOEXIST);
+> +				} else {
+> +					__sync_fetch_and_add(&cdata->total_time, duration);
+> +					__sync_fetch_and_add(&cdata->count, 1);
+> +
+> +					/* FIXME: need atomic operations */
+> +					if (cdata->max_time < duration)
+> +						cdata->max_time = duration;
+> +					if (cdata->min_time > duration)
+> +						cdata->min_time = duration;
+> +				}
+
+This code block is repeating at least for 3 times.  Can you factor it
+out as a function?
+
+> +
+> +				otdata->timestamp = pelem->timestamp;
+> +				otdata->stack_id = id;
+> +			}
+> +		}
+> +skip_owner_begin:
+>  		pelem->stack_id = bpf_get_stackid(ctx, &stacks,
+>  						  BPF_F_FAST_STACK_CMP | stack_skip);
+>  		if (pelem->stack_id < 0)
+> @@ -473,6 +584,7 @@ int contention_end(u64 *ctx)
+>  	struct tstamp_data *pelem;
+>  	struct contention_key key = {};
+>  	struct contention_data *data;
+> +	__u64 timestamp;
+>  	__u64 duration;
+>  	bool need_delete = false;
+>  
+> @@ -499,12 +611,133 @@ int contention_end(u64 *ctx)
+>  			return 0;
+>  		need_delete = true;
+>  	}
+> -	duration = bpf_ktime_get_ns() - pelem->timestamp;
+> +	timestamp = bpf_ktime_get_ns();
+> +	duration = timestamp - pelem->timestamp;
+>  	if ((__s64)duration < 0) {
+>  		__sync_fetch_and_add(&time_fail, 1);
+>  		goto out;
+>  	}
+>  
+> +	if (needs_callstack && lock_owner) {
+> +		u64 owner_time;
+> +		struct contention_key ckey = {};
+> +		struct contention_data *cdata;
+> +		struct owner_tracing_data *otdata;
+> +
+> +		otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
+> +		if (!otdata)
+> +			goto skip_owner_end;
+> +
+> +		// Update `owner_stat`.
+> +		owner_time = timestamp - otdata->timestamp;
+> +		ckey.stack_id = otdata->stack_id;
+> +		cdata = bpf_map_lookup_elem(&owner_stat, &ckey);
+> +
+> +		if (!cdata) {
+> +			struct contention_data first = {
+> +				.total_time = owner_time,
+> +				.max_time = owner_time,
+> +				.min_time = owner_time,
+> +				.count = 1,
+> +				.flags = pelem->flags,
+> +			};
+> +			bpf_map_update_elem(&owner_stat, &ckey, &first, BPF_NOEXIST);
+> +		} else {
+> +			__sync_fetch_and_add(&cdata->total_time, owner_time);
+> +			__sync_fetch_and_add(&cdata->count, 1);
+> +
+> +			/* FIXME: need atomic operations */
+> +			if (cdata->max_time < owner_time)
+> +				cdata->max_time = owner_time;
+> +			if (cdata->min_time > owner_time)
+> +				cdata->min_time = owner_time;
+> +		}
+> +
+> +		// No contention is occurring, delete `lock` entry in `owner_data`.
+> +		if (otdata->count <= 1)
+> +			bpf_map_delete_elem(&owner_data, &pelem->lock);
+> +		// Contention is still ongoing, with a new owner (current task). `owner_data`
+> +		// should be updated accordingly.
+> +		else {
+> +			u32 i = 0;
+> +			u64 *buf;
+> +
+> +			// FIXME: __sync_fetch_and_sub(&otdata->count, 1) causes compile error.
+> +			otdata->count--;
+
+What about __sync_fetch_and_add(..., -1) ?  It doesn't seem BPF atomic
+operations have SUB.
+
+https://docs.kernel.org/bpf/standardization/instruction-set.html#atomic-operations
+
+> +
+> +			buf = bpf_map_lookup_elem(&stack_buf, &i);
+> +			if (!buf)
+> +				goto skip_owner_end;
+> +			for (i = 0; i < (u32)max_stack; i++)
+> +				buf[i] = 0x0;
+> +
+> +			// ctx[1] has the return code of the lock function.
+
+Why not adding 's32 ret = (s32)ctx[1]' ?
+
+Thanks,
+Namhyung
+
+
+> +			// If ctx[1] is not 0, the current task terminates lock waiting without
+> +			// acquiring it. Owner is not changed, but we still need to update the owner
+> +			// stack.
+> +			if (!ctx[1]) {
+> +				s32 id = 0;
+> +				struct task_struct *task = bpf_task_from_pid(otdata->pid);
+> +
+> +				if (task) {
+> +					bpf_get_task_stack(task, buf,
+> +							   max_stack * sizeof(unsigned long), 0);
+> +					bpf_task_release(task);
+> +				}
+> +
+> +				id = get_owner_stack_id(buf);
+> +
+> +				// If owner stack is changed, update `owner_data` and `owner_stat`
+> +				// accordingly.
+> +				if (id != otdata->stack_id) {
+> +					u64 duration = otdata->timestamp - pelem->timestamp;
+> +					struct contention_key ckey = {
+> +						.stack_id = id,
+> +						.pid = 0,
+> +						.lock_addr_or_cgroup = 0,
+> +					};
+> +					struct contention_data *cdata =
+> +						bpf_map_lookup_elem(&owner_stat, &ckey);
+> +
+> +					if (!cdata) {
+> +						struct contention_data first = {
+> +							.total_time = duration,
+> +							.max_time = duration,
+> +							.min_time = duration,
+> +							.count = 1,
+> +							.flags = pelem->flags,
+> +						};
+> +						bpf_map_update_elem(&owner_stat, &ckey, &first,
+> +								    BPF_NOEXIST);
+> +					} else {
+> +						__sync_fetch_and_add(&cdata->total_time, duration);
+> +						__sync_fetch_and_add(&cdata->count, 1);
+> +
+> +						/* FIXME: need atomic operations */
+> +						if (cdata->max_time < duration)
+> +							cdata->max_time = duration;
+> +						if (cdata->min_time > duration)
+> +							cdata->min_time = duration;
+> +					}
+> +
+> +					otdata->timestamp = pelem->timestamp;
+> +					otdata->stack_id = id;
+> +				}
+> +			}
+> +			// If ctx[1] is 0, then update tracinng data with the current task, which is
+> +			// the new owner.
+> +			else {
+> +				otdata->pid = pid;
+> +				otdata->timestamp = timestamp;
+> +
+> +				bpf_get_task_stack(bpf_get_current_task_btf(), buf,
+> +						   max_stack * sizeof(unsigned long), 0);
+> +				otdata->stack_id = get_owner_stack_id(buf);
+> +			}
+> +		}
+> +	}
+> +skip_owner_end:
+> +
+>  	switch (aggr_mode) {
+>  	case LOCK_AGGR_CALLER:
+>  		key.stack_id = pelem->stack_id;
+> -- 
+> 2.48.1.262.g85cc9f2d1e-goog
+> 
