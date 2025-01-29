@@ -1,49 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E8B199EBB;
-	Wed, 29 Jan 2025 20:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC4F199EBB;
+	Wed, 29 Jan 2025 20:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738182340; cv=none; b=r4ITPvwDXd0GBsA+Twr5lAtxI7CZAwCOO4bpGnqueSFCIVdfDVneJdyKEfA7N1GzyQyocyFtXA2ZMxpg8iYs3P4idIprxTgrW6dkIZT0poBWuWbU42roTeOBfJt+7TMzDyKhJII0qWxua50QaYPUB9bYexxOUVXm7RKeI6wsHTQ=
+	t=1738182380; cv=none; b=DH1ydflS84z5Ku8ynTerq4+93xJxF5nq/mRFtHMhcUVy3Fm3GuFjO3nkny7/hHp/cnGfq/GKs+TZO6moabN1RhOgwBwEm26cwCqnUiX8u4aaied+qxxviGW/9K83r/R+PUuR46+xLvx76fCrMuv0mLkbKKL3kB0yNX7qMgYng2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738182340; c=relaxed/simple;
-	bh=jWYBgTZ+e713q1truIMeBpIfqf1mHmj6NxMwHo8FFSU=;
+	s=arc-20240116; t=1738182380; c=relaxed/simple;
+	bh=ZzTBJ4S8NH2JBrApvRfRDdJa2iXxQQn2OgC4RtZpal0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a4EOJWVCoD+6XuT80cTUPZHpEHdTvg6IfpnK4imCCS3/kIat972bZiXytfzwOimu1RGPDUTq4vn7GI18qPjGN/p4LB5u4T/bdhNqXM9AKDLUIIeV2oHhHakOKZPzKpArSI1yqo6JufS0WIBVNqBJWirCot5Q9nAJ75Cg2CE08KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rUJoaTk6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dRcAcB532iiUTca9zukiasuqxUyMK7NLDNdBqk2H3HzmSDL7o9Tn+cQg5fCALGvFBX5bOF1mpyCbGAmWgBXnjmB16PQzNYfpEJv5QsxtnvOBVIjjYF37Dqt73eDmzLx7BKpduQhe8juc63hKy5GtpkIk2KDLTiQokrR+UOizyLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Emth7Wwa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NG3CJyhk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rUJoaTk6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66680C4CED1;
-	Wed, 29 Jan 2025 20:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738182339;
-	bh=jWYBgTZ+e713q1truIMeBpIfqf1mHmj6NxMwHo8FFSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rUJoaTk65DBXA+PoVCm5Au570I6BncU6nyGlNIcvXOHATYvmkZI2lxwin5JExqcum
-	 tkmRCMZWMEcIo3dOkKP4+bKIXGAYm+XnCRlodbgyQFBz9QOlR+Szxhkisy/9Mr7GUT
-	 YdVjbQKH6+aIAxKNADhYBZ41iKGS83ZZZWZuN2hHb1cu6sk1xIibHfFq2kPAmRBixP
-	 pe4QZvF+bloECBF/xE/2HX6OQfmpHSkqdDu9jPt0fJsnsEJ3zjqu+ZASWuv3hcTQSc
-	 mY/eFl2PyBdBxBn0fKPUz2+dFap790vl6GAwjfq2ZlpJbIRd5LAFOcvPDX8euiWHB5
-	 zQIfdcK8+hMlQ==
-Date: Wed, 29 Jan 2025 12:25:37 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Zhu Yanjun <yanjun.zhu@linux.dev>, linux-rdma@vger.kernel.org,
-	Mustafa Ismail <mustafa.ismail@intel.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Bernard Metzler <bmt@zurich.ibm.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/6] RDMA/rxe: handle ICRC correctly on big endian systems
-Message-ID: <20250129202537.GA66821@sol.localdomain>
-References: <20250127223840.67280-1-ebiggers@kernel.org>
- <20250127223840.67280-2-ebiggers@kernel.org>
- <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
- <20250129183009.GC2120662@ziepe.ca>
- <20250129185115.GA2619178@google.com>
- <20250129194344.GD2120662@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Emth7Wwa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NG3CJyhk"
+Date: Wed, 29 Jan 2025 21:26:14 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738182376;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BxrufylIHVmiLcxoFZ4rxmZd52PUmvBZMWXYwV1ajKw=;
+	b=Emth7Wwa6E5butQJe8mb+JhmtqAjB0uLD+bEfssGHSFJtVCtXM1VpKIuKA0RTEyq45PvIF
+	n7EHdzBXwK+gKRDITJhkvHNQTgPtua6Fvg0xGLTCZls4vVkrAsrA0QtJJLgHYMI1KsYW/N
+	vSFnVKa4cQtzutw+g04aBMgW0+dGcolI5loeb0+TXTfd4kphlwC7za/QhfMLywffublP7c
+	FFAyjG4B0CIgiaMRnCToDnDJ8O8+nNG2QYva9GcouEvC0y5PXTDArMo1bbBfdfCT7BVcjt
+	pr1Acx6oPdiGzNmUDMfiajyl+efPpqVVRKbKG/GzkFUTuvsS9yV0AvR3gwhPEw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738182376;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BxrufylIHVmiLcxoFZ4rxmZd52PUmvBZMWXYwV1ajKw=;
+	b=NG3CJyhk/0nxv0SvDEURUpxR8BvhNGcgJlM5P+BPKEcEGQvCQikX2u0hx7gJ1c2BtRheFD
+	FmklU+7GjWZyS4Aw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Tejun Heo <tj@kernel.org>
+Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Hillf Danton <hdanton@sina.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Marco Elver <elver@google.com>, tglx@linutronix.de
+Subject: Re: [PATCH v5 5/6] kernfs: Use RCU to access kernfs_node::parent.
+Message-ID: <20250129202614.eK7sf6Jt@linutronix.de>
+References: <20250128084226.1499291-1-bigeasy@linutronix.de>
+ <20250128084226.1499291-6-bigeasy@linutronix.de>
+ <Z5k-sxSKT7G2KF_Q@slm.duckdns.org>
+ <20250129132311.rQM6LtB2@linutronix.de>
+ <Z5pdSZ6akuLnfGMI@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,91 +64,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250129194344.GD2120662@ziepe.ca>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Z5pdSZ6akuLnfGMI@slm.duckdns.org>
 
-On Wed, Jan 29, 2025 at 03:43:44PM -0400, Jason Gunthorpe wrote:
-> On Wed, Jan 29, 2025 at 06:51:15PM +0000, Eric Biggers wrote:
-> > Hi Jason,
-> > 
-> > On Wed, Jan 29, 2025 at 02:30:09PM -0400, Jason Gunthorpe wrote:
-> > > On Wed, Jan 29, 2025 at 10:44:39AM +0100, Zhu Yanjun wrote:
-> > > > 在 2025/1/27 23:38, Eric Biggers 写道:
-> > > > > From: Eric Biggers <ebiggers@google.com>
-> > > > > 
-> > > > > The usual big endian convention of InfiniBand does not apply to the
-> > > > > ICRC field, whose transmission is specified in terms of the CRC32
-> > > > > polynomial coefficients.  
-> > > 
-> > > This patch is on to something but this is not a good explanation.
-> > > 
-> > > The CRC32 in IB is stored as big endian and computed in big endian,
-> > > the spec says so explicitly:
-> > > 
-> > > 2) The CRC calculation is done in big endian byte order with the least
-> > >    significant bit of the most significant byte being the first
-> > >    bits in the CRC calculation.
-> > 
-> > (2) just specifies the order in which the bits are passed to the CRC.  It says
-> > nothing about how the CRC value is stored; that's in (4) instead.
-> 
-> It could be. The other parts of the spec are more definitive.
->  
-> > The mention of "big endian" seems to refer to the bytes being passed
-> > from first to last, which is the nearly universal convention.
-> 
-> The LFSR Figure 57 shows how the numerical representation the spec
-> uses (ie the 0x9625B75A) maps to the LFSR, and it could be called big
-> endian.
-> 
-> Regardless, table 29 makes this crystal clear, it shows how the
-> numerical representation of 0x9625B75A is placed on the wire, it is
-> big endian as all IBTA values are - byte 52 is 0x96, byte 55 is 0x5A.
-> 
-> > (I would not have used the term "big endian" here, as it's
-> > confusing.) 
-> 
-> It could be read as going byte-by-byte, or it could be referring to
-> the layout of the numerical representation..
-> 
-> > > If you feed that to the CRC32 you should get 0x9625B75A in a CPU
-> > > register u32.
-> > > 
-> > > cpu_to_be32() will put it in the right order for on the wire.
-> > 
-> > I think cpu_to_be32() would put it in the wrong order.  Refer to the following:
-> 
-> It is fully explicit in table 29, 0x9625B75A is stored in big
-> endian format starting at byte 52.
-> 
-> It is easy to answer without guessing, Zhu should just run the sample
-> packet through the new crc library code and determine what the u32
-> value is. It is either 0x9625B75A or swab(0x9625B75A) and that will
-> tell what the code should be.
-> 
-> Jason
+On 2025-01-29 06:54:33 [-1000], Tejun Heo wrote:
+> Hello,
+>=20
+> On Wed, Jan 29, 2025 at 02:23:11PM +0100, Sebastian Andrzej Siewior wrote:
+> > > > @@ -64,9 +64,9 @@ static size_t kernfs_depth(struct kernfs_node *fr=
+om, struct kernfs_node *to)
+> > > >  {
+> > > >  	size_t depth =3D 0;
+> > > > =20
+> > > > -	while (to->parent && to !=3D from) {
+> > > > +	while (rcu_dereference(to->__parent) && to !=3D from) {
+> > >=20
+> > > Why not use kernfs_parent() here and other places?
+> >=20
+> > Because it is from within RCU section and the other checks are not
+> > required. If you prefer this instead, I sure can update it.
+>=20
+> Hmm... I would have gone with using the same accessor everywhere but am n=
+ot
+> sure how strongly I feel about it. I don't think it's useful to worry abo=
+ut
+> the overhead of the extra lockdep annotations in debug builds. Ignoring t=
+hat
+> and just considering code readability, what would you do?
 
-        static const u8 data[52] = {
-                0xf0, 0x12, 0x37, 0x5c, 0x00, 0x0e, 0x17, 0xd2, 0x0a, 0x20, 0x24, 0x87, 0xff, 0x87, 0xb1,
-                0xb3, 0x00, 0x0d, 0xec, 0x2a, 0x01, 0x71, 0x0a, 0x1c, 0x01, 0x5d, 0x40, 0x02, 0x38, 0xf2,
-                0x7a, 0x05, 0x00, 0x00, 0x00, 0x0e, 0xbb, 0x88, 0x4d, 0x85, 0xfd, 0x5c, 0xfb, 0xa4, 0x72,
-                0x8b, 0xc0, 0x69, 0x0e, 0xd4, 0x00, 0x00
-        };
-        pr_info("crcval=0x%x\n", ~crc32_le(~0,data,sizeof(data)));
+It is your call. I would prefer to open code that part that we do only
+rely on RCU here but sure understand that you don't care about the
+details and want to have only one accessor.
 
-crcval=0x5ab72596
+> > > > @@ -226,6 +227,7 @@ int kernfs_path_from_node(struct kernfs_node *t=
+o, struct kernfs_node *from,
+> > > >  	unsigned long flags;
+> > > >  	int ret;
+> > > > =20
+> > > > +	guard(rcu)();
+> > >=20
+> > > Doesn't irqsave imply rcu?
+=E2=80=A6
+> > Also, rcu_dereference() will complain about missing RCU annotation. On
+> > PREEMPT_RT rcu_dereference_sched() will complain because irqsave (in
+> > this case) will not disable interrupts.
+>=20
+> You know this a lot better than I do. If it's necessary for RT builds, it=
+'s
+> not redundant.
 
-So yes, the InfiniBand spec gives swab(0x5ab72596) = 0x9625B75A.
+Good.
 
-It's a least-significant-bit first CRC32, so bits 0 through 31 of 0x5ab72596
-represent the coefficients of x^31 through x^0 in that order.  The byte swap to
-0x9625B75A reorders the coefficients to x^7 through x^0, x^15 through x^8, x^23
-through x^16, x^31 through x^24.  (This is no longer a sequential order, so this
-order is not usually used.)  The spec then stores the swapped value in big
-endian order to cancel out the extra swap, resulting in the polynomial
-coefficients being in a sequential order again.
+> Thanks.
 
-IMO, it's easier to think about this as storing the least-significant-bit first
-CRC32 value using little endian byte order.
-
-- Eric
+Sebastian
