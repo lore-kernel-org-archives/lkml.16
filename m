@@ -1,282 +1,78 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEBD190058
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B51191489
 	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738217548; cv=none; b=sxFut7WcUn+0Q5E++hOxKNrvJkikLh7xX/bFLAu3gEf75XUaTnCdg1TRePZKa1ScrOI2Syy8led1PKOj0K5ATRY0cNyXPeQwuIJcKk35fuDgl7e3EeWGZYQKeaT4UJJTV7HZYZsaGthv5RUtjQkBxq6mIDYLakykTukHG1XHEJs=
+	t=1738217549; cv=none; b=dVkAR4MVv2W/5imyrXUKcgtfWi9J7+9UwS6LU9gZfXKveX/JU/Gb80fykBB36qtbj2Wi5AlPFqd6R1ycFCdhcV7wp4I1t+4XMs0CpLKTpgN7uCXwajA4myF9MLV8kFOM9xXQ8/BCiutH/cJV0w1mSg1CXrVSqq6sEaWXkkGHFh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738217548; c=relaxed/simple;
-	bh=S/NTeMlyAbCUacMsVp7UZqbtzI+r/cIlVY3VvfYXXU8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PT8jidmGFZ6ps8UHShI6bJkfxhajQpVqDZhKFhz+NbQ2G0T0/+L5AfjFeToZtrl9bKSZXjgHq5vvDiRbCjGAjigPpg97Xj3vA/y1n3NrxNFSrIDvSpPRmeQ8rhEW3nFJQN8K4WkY+3fs4Owyx2/DsvusYE2SvbVrz498xKZWDy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=L7RP5mcq; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738217549; c=relaxed/simple;
+	bh=7hogliHIaZyboz334GF4PXbYbt9e6tqrRBfBhNzz+vE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=itDeuNVfM7R3GzWpryLFM1UKYEe7T1nXFK3Bm792rycp+i7CE4J7Da2kvJAkGULr6lZOQqxCPrSxzUVnTuoZFtRraQVdxOqSD3aAusdNT4CjIXM9z8j28GyDK86qI/xy9hPbixh6A/7Wttl4IljAeW5Ks2AqtGe2qhKn1KZA0O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ikhsCXu/; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="L7RP5mcq"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ef760a1001so661298a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:12:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738217545; x=1738822345; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ck4YiQJSe/CiIleYZC+p8vhI5mOkS1kJp721Y7KAM/I=;
-        b=L7RP5mcqJZ4CuzqJNxpIbl8jFceB3JMUwOC0Pl14z65nQJMP4oMTOXc4JK2ItfV5+t
-         /7YxIWMXfAkcLYJEbR06ZjCOF4TVC7OUnvGK4p0MEH5S9QhN4lJ+Tpljh9v2mKQQIKbq
-         I4DToqC2q6T0Qhe+uYsSh69CyVDHQIcc3SftSQ8IxInlaILeTy9F/v62981ZQY/M4wWj
-         UlOUVxGhoXuSy8VatoFjuRMm9Xo5CWM87KI5TabWdRvXEFKk9soKXsEKJI8G6g1og1d/
-         T2axpXbxmuFw61hk5EFeOmD27XlB1OMP9JfG9rn7knAsUjsNvZLuxfMMYMS5uo1yfLVX
-         VIzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738217545; x=1738822345;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ck4YiQJSe/CiIleYZC+p8vhI5mOkS1kJp721Y7KAM/I=;
-        b=xDNtjJJnz/sUvh9Py08fKihKyoDIpSlmxCffLH5PZcewpzfRMsBGY8MtiNfWaRPTsT
-         sr4X68iw2Y/vy3kq62GxYq991+xz0zIkxVrSLbVJvBABPiqbGTOQKiktSC4LHCLjcOg4
-         JTWklRYaYN8RDWb/6akYk9NxVekwh8dVk9cQwtYItE/NIclVtL9n3BB1dWGs3o2CjqAJ
-         JG74g5Kho4LQcTM/nEZrFK7Tgx2pw2mu3f/L9ZujjPTDNunLTndOLxABK6AeMwcLF6vt
-         F6MBf5W7OuhVo3bjWJp0/+MuRwY82lmguhwaUFfkKgb/lB6vnS/WbMGxsFu8jn+SmfjV
-         tMPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRmJmPKaaeAzuvHD/1ZaCRxPodZ5LYbJjrpu/mxUcSdzL6lrACq1hsHhCojwHtLnnZCyF7UYejZXv36u8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRyZ0gG6ZH+tTea4ygTCoLK2HiaaYn3fcMryWRzoEGg/oyc0ga
-	m/dmtkZO/1BqDk4fJiSjc3tHFv10cR5a+ikewi4TaCMg1+h2pYZTnO35PbtSobokXbPT1kTd0NQ
-	aHrLwkgAty+u+EHrOARu5MnKppuhsiMxhclMT2g==
-X-Gm-Gg: ASbGncsC7d46vgUuSj/B08fHDhoTuvOC/9yEjHV8hRG207DZYxmFE7TNSUDyqFaZZ53
-	vjmdYK8Rr7kdyZcwG+W4hqORGWV8XP63p/Itzh6GlcTvzuv2YKOfeB/eD1jBknk/frI5FwmuetZ
-	ZJrxrs4WxxOCCSIpTkokMEW3wgTVRxiQ==
-X-Google-Smtp-Source: AGHT+IEWh8JLbIO2bvwIUp5R+rreTpLm9XLHfdDrsKThuDLqmksDsfExOMAt6jPcPBSDPCsLfeMfjzZWh8ZFH2As8w0=
-X-Received: by 2002:a05:6a00:2406:b0:72d:9cbc:730d with SMTP id
- d2e1a72fcca58-72fd0c2246cmr8329616b3a.11.1738217545514; Wed, 29 Jan 2025
- 22:12:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ikhsCXu/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ZoPX129TWGdSX0XxGVJPzDaAhkhtua/lGPD2fp1O8Os=; b=ikhsCXu/jx2gAWrfGHLNoMP/Ki
+	pY0jiK31tjgzDqBz45yqHANDEUSc3sum7twMiN/mYTHYjyQ+I8T/IXQG7/wxBgdc8Cr9De9VZd78p
+	171MHsVaSt3MgNUL5oGSnhpVaegtqeU3yBeIgYpKkfI1SFNt4EVbCE+GBGDmBk337pbnCfrEWH3vt
+	D0QSyjisMFt+HB1GIiLB38qOssK9D4xZhwt3oYoDigHuTXiDxunN/xn3tk9yXJXglEUJJjgtPEh4r
+	u7d/y8y81UHg/IGpZh3OnOghyXGToJA7s+TnL9RzGU0FbeLAotwATQt6MZ6Q9ND7eMs20i/SqeTZn
+	rdENQd7g==;
+Received: from [58.29.143.236] (helo=[192.168.1.6])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1tdNmd-000uhc-Ky; Thu, 30 Jan 2025 07:12:18 +0100
+Message-ID: <0f9a7c78-9ecb-47c5-a8b0-91a35f3b248e@igalia.com>
+Date: Thu, 30 Jan 2025 15:12:08 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109222109.567031-1-irogers@google.com> <20250109222109.567031-5-irogers@google.com>
- <Z4F3qxFaYnMTtPw7@google.com> <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
- <Z4WNT_UX9eMD_txf@google.com> <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
- <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
- <Z4f3fDXemAMpBNMS@google.com> <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
- <Z5qjwRG5jX9zAGtf@google.com>
-In-Reply-To: <Z5qjwRG5jX9zAGtf@google.com>
-From: Atish Kumar Patra <atishp@rivosinc.com>
-Date: Wed, 29 Jan 2025 22:12:14 -0800
-X-Gm-Features: AWEUYZnK6efdcPp8zZmUSR82f5uqYNABSDrUdweCv75p4kdK2gHG_RNIRiXiTIg
-Message-ID: <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
- hardware events over legacy"
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
-	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/11] sched_ext: Implement event counter
+ infrastructure
+To: Tejun Heo <tj@kernel.org>
+Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org
+References: <20250126101614.232388-1-changwoo@igalia.com>
+ <20250126101614.232388-2-changwoo@igalia.com>
+ <Z5foALskUB5OVMH6@slm.duckdns.org>
+From: Changwoo Min <changwoo@igalia.com>
+Content-Language: en-US, ko-KR, en-US-large, ko
+In-Reply-To: <Z5foALskUB5OVMH6@slm.duckdns.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 29, 2025 at 1:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, Jan 15, 2025 at 01:20:32PM -0800, Ian Rogers wrote:
-> > On Wed, Jan 15, 2025 at 9:59=E2=80=AFAM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > > On Mon, Jan 13, 2025 at 2:51=E2=80=AFPM Ian Rogers <irogers@google.=
-com> wrote:
-> > > > > There was an explicit, and reviewed by Jiri and Arnaldo, intent w=
-ith
-> > > > > the hybrid work that using a legacy event with a hybrid PMU, even
-> > > > > though the PMU doesn't advertise through json or sysfs the legacy
-> > > > > event, the perf tool supports it.
-> > >
-> > > I thought legacy events on hybrid were converted to PMU events.
-> >
-> > No, when BIG.little was created nothing changed in perf events but
-> > when Intel did hybrid they wanted to make the hybrid CPUs (atom and
-> > performance) appear as if they were one type. The PMU event encodings
-> > vary a lot for this on Intel, ARM has standards for the encoding.
-> > Intel extended the legacy format to take a PMU type id:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/include/uapi/linux/perf_event.h?h=3Dperf-tools-next#n41
-> > "EEEEEEEE: PMU type ID"
-> > that is in the top 32-bits of the config.
->
-> Oh right, I forgot the extended type thing.  Then we can keep the legacy
-> encoding with it on hybrid systems when users give well-known names (w/o
-> PMU) for legacy event.
->
-> >
-> > > > >
-> > > > > Making it so that events without PMUs are only legacy events just
-> > > > > doesn't work. There are far too many existing uses of non-legacy
-> > > > > events without PMU, the metrics contain 100s of examples.
-> > >
-> > > That's unfortunate.  It'd be nice if metrics were written with PMU
-> > > names.
-> >
-> > But then we'd end up with things like on Intel:
-> > UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD
-> > becoming:
-> > uncore_cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
-> > or just:
-> > cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
-> > As a user the first works for me and doesn't have any ambiguity over
-> > PMUs as the event name already encodes the PMU. AMD similarly place
-> > the part of a pipeline into event names. Were we to break everybody by
-> > requiring the PMU we'd also need to explain which PMU to use. Sites
-> > with event lists (like https://perfmon-events.intel.com/) don't
-> > explain the PMU and it'd be messy as on Intel you have a CHA PMU for
-> > server chips but a CBOX on client chips, etc.
->
-> While I prefer having PMU names in the JSON events/metrics, it may not
-> be pratical to change them all.  Probably we can allow them without PMU
-> and hope that they have unique prefixes.
->
-> >
-> > > I have a question.  What if an event name in a metric matches to
-> > > multiple unrelated PMUs?
-> >
-> > The metric may break or we'd aggregate the unrelated counts together.
->
-> Ok, then they should use unique names.
->
->
-> > Take a metric like IPC as "instructions/cycles", that metric should
-> > work on a hybrid system as they have instructions and cycles. If you
-> > used an event for instructions like inst_retired.any then maybe the
-> > metric will fail on one kind of core that didn't have that event. Now
->
-> The metrics is for specific CPU model then the vendor should be
-> responsible to provide accurate metrics using approapriate PMU/events
-> IMHO.
->
->
-> > if we have accelerators advertising instructions and cycles events, we
-> > should be able to compute the metric for the accelerator. What could
-> > happen today is that the accelerator will have a cpumask of a single
-> > CPU, we could aggregate the accelerator counter into the CPU event
-> > with the same CPU as the cpumask, we'd end up with a weird quasi CPU
-> > and accelerator IPC metric for that CPU. What should happen is that we
-> > get an IPC for the accelerator and IPC for each hybrid core
-> > independently, but the way we handle evsels, CPUs, PMUs is not really
-> > set up for that. Hopefully getting a set of PMUs into the evsel will
-> > clear that up. Assuming all of that is cleared up, is it wrong if the
-> > IPC metric is computed for the accelerator if it was originally
-> > written as a CPU metric? Not really. Could there be metrics where that
-> > is the case?
->
-> Yes, I think there should be separate metrics for the accelerators.
->
->
-> > Probably, and specifying PMUs in the event names would be
-> > a fix. There have also been proposals that we restrict the PMUs for
-> > certain metrics. As event names are currently so distinct it isn't a
-> > problem we've faced yet and it is not clear it is a problem other than
-> > highlighting tech debt in areas of the tool like aggregation.
-> >
-> > > > >
-> > > > > Prior to switching json/sysfs to being the priority when a PMU is
-> > > > > specified, it was the case that all encodings were the same, with=
- or
-> > > > > without a PMU.
-> > > > >
-> > > > > I don't think there is anything natural about assuming things abo=
-ut
-> > > > > event names. Take cycles, cpu-cycles and cpu_cycles:
-> > > > >  - cycles on x86 is only encoded via a legacy event;
-> > > > >  - cpu-cycles on Intel exists as a sysfs event, but cpu-cycles is=
- also
-> > > > > a legacy event name;
-> > > > >  - cpu_cycles exists as a sysfs event on ARM but doesn't have a
-> > > > > corresponding legacy event name.
-> > >
-> > > I think the behavior should be:
-> > >
-> > >   cycles -> PERF_COUNT_HW_CPU_CYCLES
-> > >   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
-> > >   cpu_cycles -> no legacy -> sysfs or json
-> > >   cpu/cycles/ -> sysfs or json
-> > >   cpu/cpu-cycles/ -> sysfs or json
-> >
-> > So I disagree as if you add a PMU to an event name the encoding
-> > shouldn't change:
-> > 1) This historically was perf's behavior.
->
-> Well.. I'm not sure about the history.  I believe the logic I said above
-> is the historic and (I think) right behavior.
->
-> > 2) Different event encodings can have different behaviors (broken in
-> > some notable cases).
->
-> Yep, let's make it clear.
->
-> > 3) Intuitively what wildcarding does is try to open "*/event/" where *
-> > is every possible PMU name. Having different event encodings is
-> > breaking that intuition it could also break situations where you try
-> > to assert equivalence based on type/config.
->
-> While I don't like the wildcard matching, I think it doesn't matter as
-> long as we keep the above behavior.  If it can find a legacy name, then
-> go with it, done.  If not, try all PMUs as if it's given with PMU name
-> in the event.
->
-> > 4) The legacy encodings were (are?) broken on ARM Apple M? CPUs,
-> > that's why the priority was changed.
->
-> I guess that why they use cpu_cycles.
->
-> > 5) RISC-V would like the tool tackle the legacy to config mapping
-> > challenge, rather than the PMU driver, given the potential diversity
-> > of hardware implementations.
->
-> I hope they can find a better solution. :)
->
+Hello,
 
-Sorry for reposing. Gmail converted it to html for some reason.
+On 25. 1. 28. 05:09, Tejun Heo wrote:
+> Hello,
+> 
+> On Sun, Jan 26, 2025 at 07:16:04PM +0900, Changwoo Min wrote:
+> ...
+>> +/*
+>> + * scx_bpf_event_stats - Get a system-wide event counter to
+>> + * @events: output buffer from a BPF program
+>> + * @events__sz: @events len, must end in '__sz'' for the verifier
+>> + */
+>> +__bpf_kfunc void scx_bpf_event_stats(struct scx_event_stats *events,
+>> +				     size_t events__sz)
+> 
+> scx_bpf_events()?
 
-I have posted the latest support here.
-https://lore.kernel.org/kvm/20250127-counter_delegation-v3-12-64894d7e16d5@=
-rivosinc.com/T/
+That sounds simpler. I will change it in the next version.
 
-As of now, we have adopted a hybrid approach where a vendor can decide
-whether to encode the legacy events
-in the json or in the driver (if this series is merged). In absence of
-that, every vendor has to define it in the driver.
-We will deal with the fall out of the exploding driver when the
-situation arrives.
-
-If a vendor chooses to define in both places, driver encoding will
-take precedence.
-I have tried to describe the scheme in the cover letter. Please let me
-know if I should clarify more.
-
-> >
-> > To this end we hosted RISC-V's perf people at Google and they
-> > expressed that their preference was what this series does, and they
-> > expressed this directly to you.
-> >
-> > I don't think there would be an issue in this area if it wasn't for
-> > Neoverse and Linus - that's why the revert happened. This change in
-> > behavior was proposed by Arnaldo:
-> > https://lore.kernel.org/lkml/ZlY0F_lmB37g10OK@x1/
-> > and has tags from Intel, ARM and Rivos (RISC-V). I intend to carry it
-> > in Google's tree.
->
-> Maybe it's because of Linus.  But anyway it reminds me of behaviors that
-> need to be discussed.  And we can (and should) improve things always.
->
-> Thanks,
-> Namhyung
->
+Regards,
+Changwoo Min
