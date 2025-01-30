@@ -1,71 +1,142 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7780E13FEE
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F01F13FEE;
+	Thu, 30 Jan 2025 15:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738250585; cv=none; b=uNlk1XkSZnSkxZ1tB1OB53+1ANa3U8nHwpJS9le9BqgFPfBfzqoppkdkn6oLn7Frn0tBsObjnXwQ7u5/h2K3oMfuDKAUlzSLHAPpYEyBHvsWOr9u8DTBGg6kxQA8xk70GSFLxNfWwDV8ZhY6wyzw3RwRNAyrWwYVKuf41BzbNW4=
+	t=1738250740; cv=none; b=lXmKn/UcE5W/IbkHk9PtONIV/PGf4t1BXt77bGZRffP01vyjJ64azbb9LodGNkkqDS9oqZnM4Ml9Mnco/z1cuXyWU7aJqKKC6x+nAdM8zC8hxyW3G4o9G4Fs/3o55WsQZC2OZEvHLxg103R+2GW1ycNSYbW68vfczW+irMLNW1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738250585; c=relaxed/simple;
-	bh=uww7W12zRIdXHNpWXGHheoZMHdMXMeB1fBakeVZJAmk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uIlh7Q9w/QORNAQZ/KyCeX04HHrsq2I4yNALH8iG+U2EKNiHt4VgLgjSpXFZ5Q7KPaeKcs5l+Pr/xmComKpjrYbMSIgymMH8G/GU20wWn7GGGc7WR5FHgkHldG1TvbjHEMtOAkpCGRgtAiToe12Ry5QrKC8QuGrJO2mk5Y8Igc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4AF97442BB;
-	Thu, 30 Jan 2025 15:23:01 +0000 (UTC)
-Message-ID: <ac53a62e-4f89-49c9-a755-fdfa7a582337@ghiti.fr>
-Date: Thu, 30 Jan 2025 16:23:00 +0100
+	s=arc-20240116; t=1738250740; c=relaxed/simple;
+	bh=5jPWKLNesjifMXdgjs+g2wuSE6mSbvzJyPlTCh9k4bs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fnEdHnmcstH+F4xqitff8xyWU3IiEl7RV8l7VrNBgmeRVMi15BhNb46xM+Pu+7JRYt2JvrzHPEogu4JXn0bP7VkTRG6/64cKjFNb8ScYGmrwYkwJhEztKV/1ncPwJ3tx/YL+oLSAhkC1zWbSb9ldTgqetfeD3B5CzCL8JeEF/mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G/S331RP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BeuH8oCI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G/S331RP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BeuH8oCI; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G/S331RP";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BeuH8oCI";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G/S331RP";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BeuH8oCI"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 479892117F;
+	Thu, 30 Jan 2025 15:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738250736; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QXqnGoRaI66tmMlBOUK4wmzdfIDwO2FaFNK6NEuhUPU=;
+	b=G/S331RPzqeN8RLclPgCZBvBthOz9gB0ZitX2Gu7+lqZBITnB+iVcui5MiN0z6054kMZBJ
+	Y0w3l7l4GvrqnG9F10YFNzG1AomoaKlytP4D/FkYjh/G8Xo7s07rmyaUPealClXSDO+Apy
+	mcblW5qFWlKL7U7Ik2gyZpv3NQK+3qg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738250736;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QXqnGoRaI66tmMlBOUK4wmzdfIDwO2FaFNK6NEuhUPU=;
+	b=BeuH8oCIrs5fkeTJQo5zyGo2q6mVspG5ylgU7tjnLP6tQ9TxyUfBBvZkA1p2+pIaWKDzrW
+	Me9Q9u8TRgnZbbAg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="G/S331RP";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=BeuH8oCI
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738250736; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QXqnGoRaI66tmMlBOUK4wmzdfIDwO2FaFNK6NEuhUPU=;
+	b=G/S331RPzqeN8RLclPgCZBvBthOz9gB0ZitX2Gu7+lqZBITnB+iVcui5MiN0z6054kMZBJ
+	Y0w3l7l4GvrqnG9F10YFNzG1AomoaKlytP4D/FkYjh/G8Xo7s07rmyaUPealClXSDO+Apy
+	mcblW5qFWlKL7U7Ik2gyZpv3NQK+3qg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738250736;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QXqnGoRaI66tmMlBOUK4wmzdfIDwO2FaFNK6NEuhUPU=;
+	b=BeuH8oCIrs5fkeTJQo5zyGo2q6mVspG5ylgU7tjnLP6tQ9TxyUfBBvZkA1p2+pIaWKDzrW
+	Me9Q9u8TRgnZbbAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3477B1366F;
+	Thu, 30 Jan 2025 15:25:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /PP1C/CZm2cXBQAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Thu, 30 Jan 2025 15:25:36 +0000
+Date: Thu, 30 Jan 2025 16:25:35 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Daniel Wagner <wagi@kernel.org>, Keith Busch <kbusch@kernel.org>, 
+	Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>, Ming Lei <ming.lei@redhat.com>, 
+	James Smart <james.smart@broadcom.com>, Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: [PATCH 1/3] nvme-tcp: rate limit error message in send path
+Message-ID: <216ab5ef-1c8b-4f3e-8a1a-f11e28994620@flourine.local>
+References: <20250128-nvme-misc-fixes-v1-0-40c586581171@kernel.org>
+ <20250128-nvme-misc-fixes-v1-1-40c586581171@kernel.org>
+ <20250129060534.GA29266@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv/atomic: Do proper sign extension also for unsigned
- in arch_cmpxchg
-Content-Language: en-US
-To: Andreas Schwab <schwab@suse.de>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <mvmed0k4prh.fsf@suse.de>
- <c9cbc2be-d1fd-44ef-aa14-fd25a5ff8490@ghiti.fr> <mvm5xlw4anb.fsf@suse.de>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <mvm5xlw4anb.fsf@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeiudeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeeuieegveegudffiedvveejhfejiefhgefhkeejtdeufedufeehhfeufeduleehieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepudelfedrfeefrdehjedrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleefrdeffedrheejrdduleelpdhhvghloheplgduledvrdduieekrddvuddrvdehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeefpdhrtghpthhtohepshgthhifrggssehsuhhsvgdruggvpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129060534.GA29266@lst.de>
+X-Rspamd-Queue-Id: 479892117F
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	MISSING_XM_UA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On 30/01/2025 15:52, Andreas Schwab wrote:
-> On Jan 30 2025, Alexandre Ghiti wrote:
->
->> That's a nice catch indeed. IIUC, we have the same issue here
->> https://elixir.bootlin.com/linux/v6.13/source/arch/riscv/include/asm/futex.h#L89
->> right?
-> Indeed, though it doesn't result in wrong code currently.  This is
-> because the compare value is passed unmodified as u32 to the asm and the
-> compiler keeps the value sign extended in registers.  That would break
-> if you would add a cast to long like in commit 6c58f25e6938 as that
-> would erroneously zero extend it.
->
+On Wed, Jan 29, 2025 at 07:05:34AM +0100, Christoph Hellwig wrote:
+> On Tue, Jan 28, 2025 at 05:34:46PM +0100, Daniel Wagner wrote:
+> > If a lot of request are in the queue, this message is spamming the logs,
+> > thus rate limit it.
+> 
+> Are in the queue when what happens?  Not that I'm against this,
+> but if we have a known condition where this error is printed a lot
+> we should probably skip it entirely for that?
 
-This is the disassembly I get:
+The condition is that all the elements in the queue->send_list could fail as a
+batch. I had a bug in my patches which re-queued all the failed command
+immediately and semd them out again, thus spamming the log.
 
-ffffffff800fc540 <futex_atomic_cmpxchg_inatomic>:
-
-...
-
-ffffffff800fc566:       1605a8af                lr.w.aqrl a7,(a1)
-ffffffff800fc56a:       00c89563                bne 
-a7,a2,ffffffff800fc574 <futex_atomic_cmpxchg_inatomic+0x3
-4>
-ffffffff800fc56e:       1ed5a52f                sc.w.aqrl a0,a3,(a1)
-
-a2 is used as it is passed by the calling function, so we can't be sure 
-a2 is sign extended to me, what am I missing?
-
+This behavior doesn't exist in upstream. I just thought it might make
+sense to rate limit as precaution. I don't know if it is worth the code
+churn.
