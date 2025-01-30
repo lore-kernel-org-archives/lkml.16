@@ -1,65 +1,64 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177CC1E5732
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C901E8823
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738248892; cv=none; b=uJO8ccC3T2AV1YzD8SAouXm2qNVQ7P4QO+FYMM8ATN5zVBXYF/k2JBOmtXA81rw6UsP47K90SQil1e6O5c7xb2vjrZglglMJuYSEeYnKfHDxz9sdBwOLRUF+g4i4bxTxwXeRlvybFtWOeD38v9c2WB66VKmZa8vKM0+qA3qlu9o=
+	t=1738249055; cv=none; b=WkpzM9N1Ay43iUyvnInWzf6hSVvVeOckVmywioAAg3hikAFIZOIA+eYeB8iecu0cYWOWzSwRYZJcJKLSPXeA0UH8abfJswT2pfGqZGa2XvH1e2jcYyJelPEiKFAYyC2QO5hTY3gFievSoIuQ0W3BRpjsWOUfHOqqR4annmpOCz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738248892; c=relaxed/simple;
-	bh=TMQl5rfvRVr5SnoZcEJDLgdQ5XZJ/i3ctaiDEkjr4jI=;
+	s=arc-20240116; t=1738249055; c=relaxed/simple;
+	bh=YCZHckUY30EpY3myEuNhOgHeD4k60WPQ9NvbFsdg0Tw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dghIfGh0fd/mj1BAPhzecXYE4Fk99YDsocUVJ3OGDCh19nBBYhir2y84NrOY2EIcwYpNR+ZHWmVmiVj+FhzWhn+5k0oMvfMMx3DD1lCbODwgJLEAwWn7EW4AlS4dkaZohO8OwHkmfEr3dx6x3VzMPXS+MGv0zQcVii3accMl6K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=lLmMFzRr; arc=none smtp.client-ip=209.85.222.41
+	 In-Reply-To:Content-Type; b=dKk3pstj8xhG57L9RrwAko1QSny+4G/Y9IPtGEghHoMbWjEcrvsoCHx8VIav4cSUqafmpY3FT65BXdLTm3x8/cUZmEWLcgf2a9n6e482VQrf+XCqfiX88oSQ9DomlPFPB6ZE26HhNscsKioAl9X+3HY3HtLl3fow6rbsbDfU+Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=sDX57FVR; arc=none smtp.client-ip=209.85.166.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="lLmMFzRr"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-85bad9e0214so398704241.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:54:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="sDX57FVR"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-844d555491eso25073839f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:57:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1738248889; x=1738853689; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1738249053; x=1738853853; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=F1UHNnF/D0xuHW2VMmWfJ1WGt6Iflmdx5dnF7fMQdOg=;
-        b=lLmMFzRr0zOLbCZJ2fcylLeJQDn2zxGnUyiJr2znfUM9cAjjc/pLZRnYAIfSFy0TjF
-         enk+ZzFHqAyyQY8+XIZyU976tQPSuBETa6fgivbMAGsKG5Go5LMPr4MFujCA+OmMnIfN
-         03wjvo7Eb721lMzaxZjs+LECyO+t6wHfluQJIwoTifaPDB2LhRJy71uAnOD/sHa2FW8W
-         ZSnvnfD0JwNIC3SEIiDZ4eCNzo3bjXyEl1f9E46dW5XSgefkuykx8hQbSX6JCdlwmWE8
-         GfZxZwh//NXBTt9US+RCnVICxUHFydV6iUg8kTyDBA/Ly21IoBNPKo+q9uZjsyPYjgXu
-         Ti9A==
+        bh=IkEv1U9/G112flH4HXsgLJlIh40LmsNnwp8XpHC5mu8=;
+        b=sDX57FVR1naKqVDzgOy9EWFO6gS9X99Hvqq5kEN44SduxPdTYtZA+ha9H7SHEWbCwa
+         80dNn6qfR+yQNWxGG9dpQhzju4pd9cDDYO8e1qmQDMTTHsEI8Km5QPX3o59pUe1RB5WR
+         xeqVbXeopD3FYczSlfnlk2zopjSYmK7ZpATc2NpzruRdGKRfnXmA5R7KawvoLfy73iPT
+         IbgQX7XuKLlDTMgKvCF155vwfn5S+wdtss5xTxpFzZ8eHGGxRk0+AOZiPt0iDJPhQBxP
+         f41YPCYfWAhLcjSN+LvEsy7+WaJzHBHeHAeaEXxeyVaqnCQ/vBnz7Tx6WTxs54yPNmSZ
+         L5eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738248889; x=1738853689;
+        d=1e100.net; s=20230601; t=1738249053; x=1738853853;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F1UHNnF/D0xuHW2VMmWfJ1WGt6Iflmdx5dnF7fMQdOg=;
-        b=WAFDC/K8Vz2TclqHNL32eM2A+olJit1J0pP7tt6II772IFciia5JEPl5XY/8Gksz7a
-         Dgo6Xd0ZaFz+BnDVdz5rnuIR4xO2gXPeL6Oxb9e4ftSdg3Yps7xZ8uicOud9/QJkcraX
-         82WroyTAb7R1/4tfAlCIgaN3hzXsWWC13MoZPkq+W6w+sM2C2VBuio36BKRwdZWRJ4MI
-         EFr4u+ANk6ATsJcdCdEcwZId7izmQeE4ZSj6ZHAP1Pjz+y2+wT3gJWOytErWxe7SZFHM
-         wcOYQrwmXFUod/pfSbD0uxIeNSgaUxodcTot+7pcHU+aNyt3pGvQwUIbfjBAnuvnN7iC
-         Vebg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhM2YmAWXGIZOtT73r67KMTYzdFUCGUbY1vXMmvw1bBn3CHS0EsfQ7+S+Mh285o8zvt/AgHQy/AiiDHPM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwT/lqDhFyWF72h9Jjbd4133hl3x04wXk+JXhCC9hKUZf3FsTJm
-	DAjJqEU9HvrCJIy5HoPrIHPQoWIhanWoFJDUKA6IZo7/2vKnV8YzlrAdNVU1JazANR5SuYyFPRg
-	3
-X-Gm-Gg: ASbGncs1UO4/vJXu8NmWNanFShE6N1vK6G7n2xSkKhqrU/hNXx4vHAh9WpQKLl5UHKk
-	8F3IWxZ3JDgF6DC6Tr2oDbnbtkM59UNrYrRGFGSmgPPPSv9pIEzePT9fg71Q4AuM7/6q8WXpJSi
-	2Uysz9lFTkcNfoDPXcFJO4WMrU1g+vkgtJa4ET6DgHcHnyFrI9AVGnFFqy40Nu1cvs/sniI7JaP
-	Pcs4Zg0+3lbdjOxhkmLano+FrBfQCQ4DbwjD5ZZWV4DC0xDJfmx6ZSkLF1xlzuIKVDaV75OzR00
-	FSxwk2rOof8=
-X-Google-Smtp-Source: AGHT+IGkqgU29cscaX28kSOW5d/8/UHkajIQjAhHSd6Ez0oybhdmKVoz4YyFx87CK+uM3LcMnII5KA==
-X-Received: by 2002:a05:6602:2b10:b0:84c:e8ce:b531 with SMTP id ca18e2360f4ac-85439fbb605mr820918539f.14.1738248877649;
-        Thu, 30 Jan 2025 06:54:37 -0800 (PST)
+        bh=IkEv1U9/G112flH4HXsgLJlIh40LmsNnwp8XpHC5mu8=;
+        b=rh8u0WjC2Q24SEMR8XH0EZIOi2xix88/XeWBQju2NZZKv/zkLJuhmjxwmREOeOt16X
+         h8FFvY+M8jCjRVKn2wwbDEGh/+3EUvSLnJeb1BcTEVoIGWwSBKO8iDeLCvX1VGgz0QSB
+         Eb8axZT23j/Fe+tCuVf7QMhdPkaKEcTKokqTZgOcLbmU3oz+nodYG9P95T7sp+PPI7HX
+         LirNPSoo4XvRUKM13aVJcKyUQ7gZ4fku2dR809zD6xrs3eV/3A6Vaje6qYLag2SX5bWE
+         b+yuohPqUYGX3I0jpdPOsWszO65DmVYEk+D5lfagmaTqAmDxWzgW7p6vrkM62+zRg+rU
+         GPPw==
+X-Forwarded-Encrypted: i=1; AJvYcCXRSh9IiI1sUSjQ2QblvCxUztjJ+9eT8PbmNq168LRxj/hwD14jgJKtQYFYvFSd8AgqTdiKykq7u5QhhSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVSrJmh9O1NfCt8Ubu1rwqR7RstdrKKv0C2HRsEcyIiKe9AMyW
+	U/0OSHh6s/yVBQYNg9GklHvyBdOM7uVx8DtghawPj/CnW75xO8D0qjbXD5kKhO0=
+X-Gm-Gg: ASbGncuAUhTCCQW62Cr7iykFuL30ytDUeeg6/lAT6QLKYgMhhWihL7yw4xfxkMGdwYV
+	wc9GsZ/jxNImYawW498UNz0O1SPt088k8IJd94c9GcpN82960y4w82AitA07YGbeBKTeLuqY1Gi
+	vdtxQtcTFhnneSrq8FyyLCWUxTo2kN4XRIaZwt1oKj18plL0ayWTRBnKpI3rwruOitv0UPFc+/x
+	gQUdp7wEiS+E8YKqxvZy23N6H4NmXnz02ocUzxwISFa1o1E1u0nneB/7/rzFVYqxtzVHh2QNyvt
+	H2UiL+lHmZY=
+X-Google-Smtp-Source: AGHT+IHsPgBqrAaLXMoHQyxcCNZgX3JmNrsqrf7wZXRph4wB0B0s6UXG4pSGyekff6oPIKUzdwWk+A==
+X-Received: by 2002:a05:6602:148d:b0:835:4278:f130 with SMTP id ca18e2360f4ac-85439fb2695mr748203339f.13.1738249052768;
+        Thu, 30 Jan 2025 06:57:32 -0800 (PST)
 Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ec746c0ed8sm365185173.108.2025.01.30.06.54.36
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-854a17185a0sm39411239f.33.2025.01.30.06.57.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 06:54:36 -0800 (PST)
-Message-ID: <178c6f1b-cfda-46cb-8c15-a25a5319f6e4@kernel.dk>
-Date: Thu, 30 Jan 2025 07:54:36 -0700
+        Thu, 30 Jan 2025 06:57:32 -0800 (PST)
+Message-ID: <6fa97ace-362c-425e-a721-5e2a9921fe5c@kernel.dk>
+Date: Thu, 30 Jan 2025 07:57:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,50 +67,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 4/8] io_uring/io-wq: cache work->flags in variable
-To: Pavel Begunkov <asml.silence@gmail.com>,
- Max Kellermann <max.kellermann@ionos.com>
+To: Max Kellermann <max.kellermann@ionos.com>,
+ Pavel Begunkov <asml.silence@gmail.com>
 Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250128133927.3989681-1-max.kellermann@ionos.com>
  <20250128133927.3989681-5-max.kellermann@ionos.com>
  <856ed55d-b07b-499c-b340-2efa70c73f7a@gmail.com>
  <CAKPOu+-Mfx9q79nin7tGi1Rr4qGGY=y-2OhuP80U=7EtRpfBdg@mail.gmail.com>
  <19750632-1f9d-4075-ac5c-f44fab3690a6@gmail.com>
+ <CAKPOu+8_Tivtyh0oj7UEuWPmdw-P96k3qRLvte1F1C9XivjS7A@mail.gmail.com>
 Content-Language: en-US
 From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <19750632-1f9d-4075-ac5c-f44fab3690a6@gmail.com>
+In-Reply-To: <CAKPOu+8_Tivtyh0oj7UEuWPmdw-P96k3qRLvte1F1C9XivjS7A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 1/29/25 4:41 PM, Pavel Begunkov wrote:
-> On 1/29/25 19:11, Max Kellermann wrote:
->> On Wed, Jan 29, 2025 at 7:56?PM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>> What architecture are you running? I don't get why the reads
->>> are expensive while it's relaxed and there shouldn't even be
->>> any contention. It doesn't even need to be atomics, we still
->>> should be able to convert int back to plain ints.
->>
->> I measured on an AMD Epyc 9654P.
->> As you see in my numbers, around 40% of the CPU time was wasted on
->> spinlock contention. Dozens of io-wq threads are trampling on each
->> other's feet all the time.
->> I don't think this is about memory accesses being exceptionally
->> expensive; it's just about wringing every cycle from the code section
->> that's under the heavy-contention spinlock.
+On 1/29/25 10:36 PM, Max Kellermann wrote:
+> On Thu, Jan 30, 2025 at 12:41?AM Pavel Begunkov <asml.silence@gmail.com> wrote:
+>> Ok, then it's an architectural problem and needs more serious
+>> reengineering, e.g. of how work items are stored and grabbed
 > 
-> Ok, then it's an architectural problem and needs more serious
-> reengineering, e.g. of how work items are stored and grabbed, and it
-> might even get some more use cases for io_uring. FWIW, I'm not saying
-> smaller optimisations shouldn't have place especially when they're
-> clean.
+> Rough unpolished idea: I was thinking about having multiple work
+> lists, each with its own spinlock (separate cache line), and each
+> io-wq thread only uses one of them, while the submitter round-robins
+> through the lists.
 
-Totally agree - io-wq would need some improvements on the where to queue
-and pull work to make it scale better, which may indeed be a good idea
-to do and would open it up to more use cases that currently don't make
-much sense.
+Pending work would certainly need better spreading than just the two
+classes we have now.
 
-That said, also agree that the minor optimizations still have a place,
-it's not like they will stand in the way of general improvements as
-well.
+One thing to keep in mind is that the design of io-wq is such that it's
+quite possible to have N work items pending and just a single thread
+serving all of them. If the io-wq thread doesn't go to sleep, it will
+keep processing work units. This is done for efficiency reasons, and to
+avoid a proliferation of io-wq threads when it's not going to be
+beneficial. This means than when you queue a work item, it's not easy to
+pick an appropriate io-wq thread upfront, and generally the io-wq thread
+itself will pick its next work item at the perfect time - when it
+doesn't have anything else to do, or finished the existing work.
+
+This should be kept in mind for making io-wq scale better.
 
 -- 
 Jens Axboe
