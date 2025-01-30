@@ -1,243 +1,145 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABB214D2B7
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 22:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFDE1465AB;
+	Thu, 30 Jan 2025 22:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738276427; cv=none; b=cziZCYQOzf7U1rRfWjZu3MjwmV4PIV37TRcri6b9Byj/ke93PjCqPQKCFxUC/t2ejCY0qD4AEYGz/pM6CgNdy1rRhZQP8fN4HABu7GjoRwZ7zaC/vDQ43HJfX50TcBQeUrZSIAy59+QtXJ1WyNOl5Kz0gHi2BWvTJaN37kNaIuw=
+	t=1738276451; cv=none; b=sz0U6XdhNvBuBivtqd44k87pgLCAEh9yC0/UFsT/v8IAUWlAJ4QdtSjuJsjGjgAuZniD0xIHNXRDtBnow4fmaXHOtNh/wpOSGC5Voslw4X5CaS2czxNzeVttApP6mN7+qBrkLH4f8VPN0JxsEFQ5/e6zKbRRrwbbSX5VSXLbTbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738276427; c=relaxed/simple;
-	bh=lTjFhNlU6GBCHRFRJM2vnQiERraPdQsSqotzJR2dc/A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RzDj7m5LeDpquuVS7n0FyOxRHE60G95Qn/WSNxjLYAHXFX69tUUv19ldXN/fDvbcrO/aBLVTFAO5HppbgPwViMPozXgD2lM0EAn79RXfUbJbrifAsB6OA9WgjhUDypKEmVM3EM3nWxRatohzSKaD9m/1orJ5Ahlh3e6ArjZC6AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bV9dX0bV; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738276451; c=relaxed/simple;
+	bh=SBI0Gy9KUpzrrtm5Bgw3GKLY1+5MIQEuxMKqii/TIcc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tqnwubWVMoPPmTe0onB4Xp46RTabhzIrPce/V4/1tAwBEPVd1ibaLgiio9JkkBzagGmVInI4xxdJqDsiJN8FiVX1sLruBdQvErXQaI81B2iRhFGZ0f3XVaKPpHC6A5oxyK27LgAZLgGqCzYSae1Cmh/iG2zN2PWVIIyhmEbutJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=4u2cZ8hj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=w0qeQ0xh; arc=none smtp.client-ip=202.12.124.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bV9dX0bV"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4362bae4d7dso9833935e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:33:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738276424; x=1738881224; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=q4PhLkA2yH+xwVRJ4eRUYfsP78J3oAK3Sf/7oUAOMWE=;
-        b=bV9dX0bV0r2UCDJ68EsBkPqO+064jFXKk4rVaity1QT3prOajBT0tTh0Edu0Dkeb73
-         2uX2YeszYK/ZV35Pi769RDYvPcYqCr8cA3oHluZs0HCf9ibHXxsUJs18E18aVp2zkQgh
-         3DiZ2RG1yxZrCRqn5bUcBl6hj2YeNJJJUT7L2NtqI3t0EA1mjwSJAc2GjstdHr89zSrD
-         3vYStisWMnMVFsCWH2RNoqdN9K9xx4Zj/C0uxnzsJY0p0SRmlxUQHdrgdW91umf+HfFA
-         JWKwbsOA7jnGTiD2b0/rplGkddHz3pK3xcs5Pey12R+v4YI4GCpZxfu/Z9GurMRsqXYT
-         TYFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738276424; x=1738881224;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q4PhLkA2yH+xwVRJ4eRUYfsP78J3oAK3Sf/7oUAOMWE=;
-        b=wEjHbkJGourABLVh5JyNIMNsBWZpcVEIF6k9SJjY6jFPBvWfV9oSSFTz1cUwDekOwk
-         d+tcEJS21/yR1oL++sAQvwC1tZPfRgZSPIhqmtYwP89tFl/JMa7z+C5hyVGUg1kP2MlR
-         XS4OhKeyDlIY4P+6sA1yZtIYkPh0iPK7gQddfi3qVwN6U6woN9HZyyBABIQ7/TPPdP0Y
-         TgyJscbN3jnDYmFbnGdxqvByBSlG1zyz7VbVnLYAbRrVUwJIRLY7X7sMaPiKQaBNz5dO
-         nuanXY9urJZD0GGMX0rTNwcMQFJj+EN0OxiXC1jVH6u1dNWoG3m3DIagJb3NBM5Nk7ph
-         ddqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0u8VEKgghug0Yef3gaooWjiDgJzSSVi9fGhhDku2c1C8gjOjeo/fMBHnqKdvWi689J6PIFfiCaQEz7hw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR8kk0pbnlfgAXopyIS1//4qy+rM7oKHlroq22NagPMuIPWBH2
-	ryTkunfY6Ig2YicVV1kDgefKg8okRdwVLBgOvMbc5KZmeDAejoAcrPif37fubwc=
-X-Gm-Gg: ASbGncsUqABqQLWR/gLlQnVbEQXCNIqgjLQL98ptRG9zadM60k9iI1iBm6+zEIe6Nxe
-	7k8RfnVSqlpyVdlfrQbOjpIIzcwMVzqVDnjEauPwgPNmz0g8QDe2ZoaE/nLLj8mx8NdMEvyrTWs
-	pZsfht1NCjzvMDUElLXf3qDovyGW9qLj0j4qXkUjpyfGHkzp/TYk69J0rqmyV7VG7Xv+ucS7/uj
-	9z3179GPozU0DKkQMnE0QFkP0ahZItvA00XKSWeJQvZCiMeZHeYQS5bR83vojr+iFRunR40jvy/
-	X/H0Vp3865YVxZOvH/13p7S62xTFEVGu68Atbn6Qs3IUg9nWJil/D0Q=
-X-Google-Smtp-Source: AGHT+IEp+NL8KjaCqdJLkSqTmmab+u4WxdsC5LvvC6odn5b/wppdPeWMvLnufUZb2VnSyWDCxGmQVA==
-X-Received: by 2002:a05:600c:3c98:b0:434:fb65:ebbb with SMTP id 5b1f17b1804b1-438dc3c38dcmr84375125e9.17.1738276423846;
-        Thu, 30 Jan 2025 14:33:43 -0800 (PST)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-438dcc8a59dsm73532705e9.40.2025.01.30.14.33.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 14:33:42 -0800 (PST)
-Message-ID: <7d1bf72b-183a-429d-9a0c-10e1936a9abe@linaro.org>
-Date: Thu, 30 Jan 2025 23:33:41 +0100
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="4u2cZ8hj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="w0qeQ0xh"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailflow.stl.internal (Postfix) with ESMTP id 2238F1D40D4D;
+	Thu, 30 Jan 2025 17:34:07 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Thu, 30 Jan 2025 17:34:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1738276446; x=1738283646; bh=pYA5QQ2gujW7NKTZMydkI
+	F3TfLqgo5o+zoRfFMxUleo=; b=4u2cZ8hjS0JGuwpIDpefzkUA+sq9dWUSJfY3B
+	tkR7nGgog15o18cS3pO7A1AV5ePNoj0UN2RjHYucnx2lWZnwFUAHVwrVk/68ZKcH
+	yrtLGStZlcOfw8VUM9LWzs1ZUpCIwHppZjj9yTkrTT5myEf92e/tOW/oEwmBBsgj
+	59ZdRwNjdb8ciCYRI2gGfxyhaDMpAzIkyN8uBLlc6GcIdakdbmjyWCErd7fp9dpV
+	VmSOXFBWxMUrgdLSGPjAnSMJKjNMsEVouta5hLe5or7BOYLuIYZsRbxq22ezX2mu
+	qPAyrf9MGxULk4AffQShCdwc6Aojklv7xO7xc0wV1UeLOix+g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1738276446; x=1738283646; bh=pYA5QQ2gujW7NKTZMydkIF3TfLqgo5o+zoR
+	fFMxUleo=; b=w0qeQ0xhO7gK8Gk7umXljf1tPU2Qoq9VrZDo2B0TulUXub0XOCz
+	go4Kr+mkC8/oSPFcySFSwka8oUucp/LO0gEonRTM5lAWmOQ6KRdic0TBM+nMlwt/
+	0kg/rL85KM++S//Y5AkCJYnGOVfAaWWJMi4khKAplp9h5Emsnp/QdP71YqJ8mcRy
+	A7MuXGBxHibUWIYBzBCPmci+RhyyRdLMwx5/oJvtfHA8pdljwy4+Tg3zkt1l99vl
+	yRHwPqJevPaPzI+qiLRLR8Tc5DakjPiSKJEdyvIbrO5Ge1VyjVfJ9tQM+1BiJsFJ
+	c37M/j7kKjdFiCrEMtIQPJQinvWij201wfA==
+X-ME-Sender: <xms:Xv6bZ0p9k0Gj5MNxpb2Y_5wOp-e5GdhxEP-Pk0gsQRDROrMBTzMFpw>
+    <xme:Xv6bZ6rwimJfJ_hrE30_abgkMw4BTaujkQ-2kbKz9RHJD48i-l2fQ0MzisK8ip2gM
+    MvWRI4GxEWbsbS93A>
+X-ME-Received: <xmr:Xv6bZ5OMeQnpb2VpefvnX6-j8DNGTwMVpyOMOrTxlOELJe5g7qYfFL9cbCsf_E9s1HFv985gsG8Jpt5VTW3Vcy-GwNTq4yHs1PAp44VNArQgP1YjCLhF>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejtdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdlje
+    dtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeffrghn
+    ihgvlhcuighuuceougiguhesugiguhhuuhdrgiihiieqnecuggftrfgrthhtvghrnhepvd
+    eggfetgfelhefhueefkeduvdfguedvhfegleejudduffffgfetueduieeikeejnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugiguh
+    huuhdrgiihiidpnhgspghrtghpthhtohepvddvpdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopehshhhurghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhhiih
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtgho
+    mhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnrghthh
+    grnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlsehiohhgvggrrhgs
+    ohigrdhnvghtpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpd
+    hrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeihohhnghhh
+    ohhnghdrshhonhhgsehlihhnuhigrdguvghv
+X-ME-Proxy: <xmx:Xv6bZ75YdJMsDtWl2x4mtYZrzhoo8sDlVNvgLzUw8esaJfEc1_xyrw>
+    <xmx:Xv6bZz5BsB9hFnvDXetb0uoN5jRlPto2Rm3_UmhAlt-OQqiaCsCqrQ>
+    <xmx:Xv6bZ7gXuEIefgA9NZJZGZS9_EN_eiFm3oIa9Gc1h3vtXIiydB9RvA>
+    <xmx:Xv6bZ9767q2HgJpX4o3JCuNmZsaiZV3ECAaRhMKPCHs3reMT3QPnWg>
+    <xmx:Xv6bZ9vwx9199PgLQiqGuO7gd6Dh9AUHuyDb3vRPc2c_ZbSJtJNFvsNs>
+Feedback-ID: i6a694271:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 30 Jan 2025 17:34:00 -0500 (EST)
+From: Daniel Xu <dxu@dxuuu.xyz>
+To: shuah@kernel.org,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	ast@kernel.org,
+	nathan@kernel.org,
+	daniel@iogearbox.net
+Cc: martin.lau@linux.dev,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mykolal@fb.com,
+	ndesaulniers@google.com,
+	morbo@google.com,
+	justinstitt@google.com,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] selftests: bpf: Support dynamic linking LLVM if static not available
+Date: Thu, 30 Jan 2025 15:33:45 -0700
+Message-ID: <872b64e93de9a6cd6a7a10e6a5c5e7893704f743.1738276344.git.dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] thermal: of: Export non-devres helper to
- register/unregister thermal zone
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: rafael@kernel.org, rui.zhang@intel.com, lukasz.luba@arm.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- geert+renesas@glider.be, magnus.damm@gmail.com, mturquette@baylibre.com,
- sboyd@kernel.org, p.zabel@pengutronix.de, ulf.hansson@linaro.org,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250103163805.1775705-1-claudiu.beznea.uj@bp.renesas.com>
- <20250103163805.1775705-3-claudiu.beznea.uj@bp.renesas.com>
- <Z5pkUNNvsWPjRQvy@mai.linaro.org>
- <65a16c3f-456e-40ec-91b0-afb57269ed46@tuxon.dev>
- <Z5tPR_tv7vWDkUI7@mai.linaro.org>
- <6ed7d545-82d7-4bca-95ec-95447586bb58@tuxon.dev>
- <b496d933-3c57-4b02-ab65-0582a30939af@linaro.org>
- <98ddf1b6-1804-4116-b4e2-f54a62c27966@tuxon.dev>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <98ddf1b6-1804-4116-b4e2-f54a62c27966@tuxon.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 30/01/2025 21:53, Claudiu Beznea wrote:
-> Hi, Daniel,
-> 
-> On 30.01.2025 19:24, Daniel Lezcano wrote:
->> On 30/01/2025 11:30, Claudiu Beznea wrote:
->>>
->>>
->>> On 30.01.2025 12:07, Daniel Lezcano wrote:
->>>> On Thu, Jan 30, 2025 at 11:08:03AM +0200, Claudiu Beznea wrote:
->>>>> Hi, Daniel,
->>
->> [ ... ]
->>
->>>>>> Would the IP need some cycles to capture the temperature accurately
->>>>>> after the
->>>>>> clock is enabled ?
->>>>>
->>>>> There is nothing about this mentioned about this in the HW manual of the
->>>>> RZ/G3S SoC. The only points mentioned are as described in the driver code:
->>>>> - wait at least 3us after each IIO channel read
->>>>> - wait at least 30us after enabling the sensor
->>>>> - wait at least 50us after setting OE bit in TSU_SM
->>>>>
->>>>> For this I chose to have it implemented as proposed.
->>>>
->>>> IMO, disabling/enabling the clock between two reads through the pm
->>>> runtime may
->>>> not be a good thing, especially if the system enters a thermal situation
->>>> where
->>>> it has to mitigate.
->>>>
->>>> Without any testing capturing the temperatures and compare between the
->>>> always-on
->>>> and on/off, it is hard to say if it is true or not. Up to you to test
->>>> that or
->>>> not. If you think it is fine, then let's go with it.
->>>
->>> I tested it with and w/o the runtime PM and on/off support (so, everything
->>> ON from the probe) and the reported temperature values were similar.
->>
->>
->> Did you remove the roundup to 0.5°C ?
-> 
-> I did the testing as suggested and, this time, collected results and
-> compared side by side. I read the temperature for 10 minutes, 60 seconds
-> after the Linux prompt showed up. There is, indeed, a slight difference b/w
-> the 2 cases.
-> 
-> When the runtime PM doesn't touch the clocks on read the reported
-> temperature varies b/w 53-54 degrees while when the runtime PM
-> enables/disables the clocks a single read reported 55 degrees, the rest
-> reported 54 degrees.
-> 
-> I plotted the results side by side here:
-> https://i2.paste.pics/f07eaeddc2ccc3c6695fe5056b52f4a2.png?trs=0a0eaab99bb59ebcb10051eb298f437c7cd50c16437a87392aebc16cd9013e18&rand=vWXm2VTrbt
-> 
-> Please let me know how do you consider it.
+Since 67ab80a01886 ("selftests/bpf: Prefer static linking for LLVM
+libraries"), only statically linking test_progs is supported. However,
+some distros only provide a dynamically linkable LLVM.
 
-Thanks for taking the time to provide a figure
+This commit adds a fallback for dynamically linking LLVM if static
+linking is not available. If both options are available, static linking
+is chosen.
 
-Testing thermal can be painful because it should be done under certain 
-conditions.
+Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+---
+ tools/testing/selftests/bpf/Makefile | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-I guess there was no particular work load on the system when running the 
-tests.
-
-At the first glance, it seems, without the pm runtime, the measurement 
-is more precise as it catches more thermal changes. But the test does 
-not give information about the thermal behavior under stress. And one 
-second sampling is too long to really figure it out.
-
-In the kernel source tree, there is a tool to read the temperature in an 
-optimized manner, you may want to use it to read the temperature at a 
-higher rate. It is located in tools/thermal/thermometer
-
-Compiling is a bit fuzzy ATM, so until it is fixed, here are the steps:
-
-(you should install libconfig-dev and libnl-3-dev packages).
-
-cd $LINUX_DIR/tools/thermal/lib
-make
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LINUX_DIR/tools/thermal/lib
-
-cd $LINUX_DIR/tools
-make thermometer
-
-
-
-Then change directory:
-
-cd $LINUX_DIR/tools/thermal/thermometer
-
-
-Run the tool:
-
-./thermometer -o out -c t.conf -l DEBUG -- <my_command>
-
-
-The content of the configuration file t.conf is:
-
-thermal-zones = (
-	      {	name = "cpu[0_9].*-thermal";
-		polling = 100; }
-       )
-
-All the captured data will be in the 'out' directory
-
-For 'my_command', I suggest to use a script containing:
-
-sleep 10; dhrystone -t 1 -r 120; sleep 10
-
-If you need the dhrystone binary, let me know.
-
-The thermal zone device tree configuration should be changed to use a 
-65°C passive trip point instead of 100°C (and the kernel setup with the 
-step wise governor as default).
-
-The resulting figure from the temperature should show a flat temperature 
-figure during 10 seconds, then the temperature increasing until reaching 
-the temperature threshold of 65°C, the temperature stabilizing around 
-it, then followed by a temperature decreasing when the test finishes.
-
-If the temperature does not reach the limit, decrease the trip point 
-temperature or increase the dhrystone duration (the -r 120 option)
-
-At this point, you should the test with and without pm runtime but in 
-order to have consistent results, you should wait ~20 minutes between 
-two tests.
-
-The shape of the figures will give the immediate information about how 
-the mitigation vs thermal sensor vs cooling device behave.
-
-Additionally, you can enable the thermal DEBUGFS option and add the 
-collected information statistics from /sys/kernel/debug/thermal/*** in 
-the results.
-
-
-Hope that helps
-
-
-
-
-
-
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 6722080b2107..da514030a153 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -184,9 +184,14 @@ ifeq ($(feature-llvm),1)
+   LLVM_CONFIG_LIB_COMPONENTS := mcdisassembler all-targets
+   # both llvm-config and lib.mk add -D_GNU_SOURCE, which ends up as conflict
+   LLVM_CFLAGS  += $(filter-out -D_GNU_SOURCE,$(shell $(LLVM_CONFIG) --cflags))
+-  LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-static --libs $(LLVM_CONFIG_LIB_COMPONENTS))
+-  LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-static --system-libs $(LLVM_CONFIG_LIB_COMPONENTS))
+-  LLVM_LDLIBS  += -lstdc++
++  # Prefer linking statically if it's available, otherwise fallback to shared
++  ifeq ($(shell $(LLVM_CONFIG) --link-static --libs &> /dev/null && echo static),static)
++    LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-static --libs $(LLVM_CONFIG_LIB_COMPONENTS))
++    LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-static --system-libs $(LLVM_CONFIG_LIB_COMPONENTS))
++    LLVM_LDLIBS  += -lstdc++
++  else
++    LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-shared --libs $(LLVM_CONFIG_LIB_COMPONENTS))
++  endif
+   LLVM_LDFLAGS += $(shell $(LLVM_CONFIG) --ldflags)
+ endif
+ 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.47.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
