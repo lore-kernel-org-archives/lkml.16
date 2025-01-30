@@ -1,56 +1,76 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A12145B27;
-	Thu, 30 Jan 2025 08:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7969E148832;
+	Thu, 30 Jan 2025 08:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738225712; cv=none; b=LKSy+JU8y0HjAT5PLg1vMXv9It8wRc2A9c6V0Z0Fs8/kC4I5TKJFAPmgl35pzEIKDv5gqtd8Ig0MrRiuohifhAM5Zwst5GZorrrStwq+KJPJ2/A++xr6rHW3rPKTE6l3eJnf/p4864gi7j0qIGYiYBQeAqE3av2gzXEE/o+U8XE=
+	t=1738225850; cv=none; b=eim1Wdf4rkcwAbFYq6CoZhDF40csSVYgBIufu4GkyAlDOQ1pw0Cb5oUJmOoTNwZGJTC3mCmb6zHReBN/2g0X5yRkDFWqydA2HmlqBrh0/ZCbJeR+K0qID9TYRSQW4Octdmgum4p4Rokm8ryA9ybpq5E/py2FETHJDSvzb0wE8mI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738225712; c=relaxed/simple;
-	bh=bbBgEkFsletXi8yE0h2piyiQJMcoIugxE8tLFE+KzbI=;
+	s=arc-20240116; t=1738225850; c=relaxed/simple;
+	bh=iBoVNDPKj/Gbf0c/W+t3asbzNss/FHHKnMcQ8SQIC7o=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=C+YD6LkyAVQHp2GKEHp1+k9VIP7gBpsllV2zBalq1y5XD9Sz4s6e1u6RcUOl6PCMrHK5QKPRjhIETh1V/2H4IpB3O3OvUksdqwB171z0ifU5jzOSWloQa4gttVJjBqOUV6NerP5OVWRHrm6mRnud5GEXpgkXA9qdXuA0yBJfXd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=VA1ZCumS; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	 Content-Type:MIME-Version; b=T5kfWiSDvBg8tlOmW6CR5Xy02AtRS7GvpYovLUXdWfoqcMsZhrhYRSb6JkKMuclk9eAflIh4B5iqFY4D7CZXlgjJz8S5oXfstlzGMRFjfIKDznVpzSqM1jRdg4DjDXojLzBDhl2eN53K0lNpGao2iW6kgj3zQn9aSBRFriDUHY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZCoJs7AQ; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="VA1ZCumS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WtOOCJkEduRa01QsR9Cft5tnAPFPRfNF932iIKtL0G4=; t=1738225709; x=1738830509; 
-	b=VA1ZCumSHSMacdq8BsD2EACMh7y+hIYl20OK21tyZl2i/VshwqrCrvVxzxuri/9I5bYTygKI9j0
-	ZVgZSow3leNdezvMnQhUBU3KUGa7DUm34abkvzzv1JsXBtMwkYd7rxW9cVC8OATpl0MSak4EwhGN7
-	nNLF27S4FOoPqAg/KFRpAAr5VjyWNL/CK5jf4LBH6pZCuGXscdj1yMsi924pZDkDvB/7H3X33N9sk
-	ZxSpdQV9tZ9obMNyF1L5S/ILG9/IxGy9EnQqmq4ZQENTscsHkFUqIBF0Pf4etrGXuyS2xfnC/r1QI
-	jL7UYDh7GRw9TxVYpkjUUbkW0klygqz6hESg==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1tdPuU-00000000ARd-2sqZ; Thu, 30 Jan 2025 09:28:26 +0100
-Received: from p5dc55198.dip0.t-ipconnect.de ([93.197.81.152] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1tdPuU-00000001j8H-1sco; Thu, 30 Jan 2025 09:28:26 +0100
-Message-ID: <8754dbeecb9ee16f84a82548f5e4121ec422ae3a.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v2] sh/irq: use seq_put_decimal_ull_width() for decimal
- values
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: David Wang <00107082@163.com>
-Cc: dalias@libc.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
-Date: Thu, 30 Jan 2025 09:28:25 +0100
-In-Reply-To: <20241130134909.171183-1-00107082@163.com>
-References: 
-	<a9fe22747f20cae9fcc9b9d20109e7afbf8e6b93.camel@physik.fu-berlin.de>
-	 <20241130134909.171183-1-00107082@163.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCoJs7AQ"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso2998645e9.3;
+        Thu, 30 Jan 2025 00:30:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738225847; x=1738830647; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iBoVNDPKj/Gbf0c/W+t3asbzNss/FHHKnMcQ8SQIC7o=;
+        b=ZCoJs7AQZk/ef6DYAeKI4N6JAXlJxZlnn/9eysW7MNv5tRJlri2tg5in0btEAmslX9
+         o1YxpwYJV/vdpUqBdRUCABoAkFqfN3YrjKbaaMebVeXHLTayYtVPlfgMnBCVn5gfU5dL
+         sqz9bcX6SBEjU6ZynIVmYkEAYBcWrgsRPRNJ+7LSIOR/dp1zsfIRZVQaZFOmCEmXQP2p
+         s94NHbupX0+4yR9/nHFVx+zec6uvFqJj1x2aV37GLCwpV3ww3lV+s6dN+WSrLfiu1sud
+         29yhycpYZRQF6r99q7Lgx7KvwUP2IVWXCcQzZbOBM9lRE22R/DgpGzQlgXtspvl8ZKWE
+         f0Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738225847; x=1738830647;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iBoVNDPKj/Gbf0c/W+t3asbzNss/FHHKnMcQ8SQIC7o=;
+        b=F+5raxYWyyHbxsyQJVAm5LaE6oxIkfihiPk6eDAonEk9ZLZr4m5WHa2oCATkqam+Q3
+         JpcLJsvxaguxnrxvCovgYaZ3WzWScQgHeD/blFv8kKoqW1rNfwqAVQ+wUQ8Wd80eqW7D
+         /EbMmP/bHiiOhfUCFVy07CnguIGYrqA85++RqqNDjNSXoSwkU38t3Uo11pcAbaFx7yKG
+         hPZWXTZIScf3iy8gSJHaw8FZVUT2rAhAmhii5NnOLA3xOJiCOk4uQOVNwInlZSeJRxWp
+         Xc8IpRqgVYqobWN5bS/Wea6SHBRK0giXMrBE/JeQn8CadP7uJ0Dx1HCNhbh9NwBiwQZ0
+         YmSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYXIlRtSV7EE4OzwzvB2OmUL6J2s0UlFvTq+zVzS4irVXfRRFYvgMqWe4+4zeDK+/s++UkCgdyqDL7z919@vger.kernel.org, AJvYcCWnQGaQuMpcTCqEDKKIgl9xrcyLMzmen65U+IyqG2X7Woyz/VOcFNX1tIyEkJV2iUjvox9070WP70o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmIJ08ISAQKVJlYDwnsmqam0uuMGRzhJRRRNylFpZJIdOZyX3A
+	RpUPuo+bWgFdrwxWuQBz5uFub5LvFrVA5rEJAeduX91lFVju24HL
+X-Gm-Gg: ASbGncscJkglpVnCBmagnTjHttMz6SL8yMgHrjVTF6sMdKMfmxwJHnV7mBshvRdUX+T
+	12gJvvRY+XoeEcq1IRSOSO0kI0yhg4oXqzQXWF7UERN8wrvH0n8BdCHV+5TX4J9VZCTpd2vuVVp
+	dzx7cBLIaPAHQb1fugYFnyynjVUVCXK0lfevCpRqTPxnuZ2yv25FIygUjS7e3XBdkU67ew0SrRn
+	YiOUYoFpWeh6WDm7wod6Z7QOqH/RUlq0n8vJmmlFw6Jrko2xNxZh6FVTDurqfDo7ALiyBadQ6IG
+	OFBhhTjFHUBDsXXUvfuN3cbOgQxK1mInFRwsTZWfzegBd14KNQ6OLUHF+oBEt0k=
+X-Google-Smtp-Source: AGHT+IG5LQnrAkV7laFoY5uti4KcngXW3+Wd1vnOWp2ue0jCML1uupplCcuvj7bn12N3LoFdpRnPZA==
+X-Received: by 2002:a05:600c:4f55:b0:436:51bb:7a43 with SMTP id 5b1f17b1804b1-438dc3ab675mr59301785e9.5.1738225846463;
+        Thu, 30 Jan 2025 00:30:46 -0800 (PST)
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc26d05sm50249665e9.12.2025.01.30.00.30.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 00:30:46 -0800 (PST)
+Message-ID: <a63a6a52102fc918ef60ed5ced0505729387a4fc.camel@gmail.com>
+Subject: Re: [PATCH v1 0/3] iio: drop useless assignment of cache_type
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jonathan Cameron	
+ <Jonathan.Cameron@huawei.com>, Icenowy Zheng <icenowy@aosc.io>, "Peter
+ Zijlstra (Intel)" <peterz@infradead.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+	 <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+ =?UTF-8?Q?Ond=C5=99ej?= Jirman
+	 <megi@xff.cz>
+Date: Thu, 30 Jan 2025 08:30:47 +0000
+In-Reply-To: <20250129152546.1798306-1-andriy.shevchenko@linux.intel.com>
+References: <20250129152546.1798306-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.54.3 
@@ -60,48 +80,24 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
 
-Hi David,
-
-On Sat, 2024-11-30 at 21:49 +0800, David Wang wrote:
-> On a system with n CPUs and m interrupts, there will be n*m decimal
-> values yielded via seq_printf(.."%10u "..) which has significant costs
-> parsing format string and is less efficient than
-> seq_put_decimal_ull_width(). Stress reading /proc/interrupts
-> indicates ~30% performance improvement with this patch.
+On Wed, 2025-01-29 at 17:24 +0200, Andy Shevchenko wrote:
+> Default value is REGCACHE_NONE, no need to assign it explicitly.
+> Fix all IIO drivers that do that.
 >=20
-> Signed-off-by: David Wang <00107082@163.com>
-> ---
->  arch/sh/kernel/irq.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Andy Shevchenko (3):
+> =C2=A0 iio: light: adux1020: Drop unneeded assignment for cache_type
+> =C2=A0 iio: magnetometer: af8133j: Drop unneeded assignment for cache_typ=
+e
+> =C2=A0 iio: pressure: zpa2326: Drop unneeded assignment for cache_type
 >=20
-> diff --git a/arch/sh/kernel/irq.c b/arch/sh/kernel/irq.c
-> index 4e6835de54cf..9022d8af9d68 100644
-> --- a/arch/sh/kernel/irq.c
-> +++ b/arch/sh/kernel/irq.c
-> @@ -43,9 +43,9 @@ int arch_show_interrupts(struct seq_file *p, int prec)
->  {
->  	int j;
-> =20
-> -	seq_printf(p, "%*s: ", prec, "NMI");
-> +	seq_printf(p, "%*s:", prec, "NMI");
->  	for_each_online_cpu(j)
-> -		seq_printf(p, "%10u ", per_cpu(irq_stat.__nmi_count, j));
-> +		seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat.__nmi_count, j), 10=
-);
->  	seq_printf(p, "  Non-maskable interrupts\n");
-> =20
->  	seq_printf(p, "%*s: %10u\n", prec, "ERR", atomic_read(&irq_err_count));
+> =C2=A0drivers/iio/light/adux1020.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | =
+1 -
+> =C2=A0drivers/iio/magnetometer/af8133j.c | 1 -
+> =C2=A0drivers/iio/pressure/zpa2326_i2c.c | 1 -
+> =C2=A0drivers/iio/pressure/zpa2326_spi.c | 1 -
+> =C2=A04 files changed, 4 deletions(-)
+>=20
 
-Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-Thanks,
-Adrian
-
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
