@@ -1,110 +1,53 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558991547C9;
-	Thu, 30 Jan 2025 08:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B4B51A4AAA
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738225452; cv=none; b=fR2st5ufJiRln7G6bEHGKqcp/yPNYwqMtbqVSfMRP9o0qoajTW5UXOZSwsVIkiHZow3FDwwL3rcl9G/zwwxQbAf5H9Ss/YV77YwONoKehOqGRWC2bLBYtQEyj6snRSDErEfqugw4FZJnRIvgWqCZql6EyY1LKBWgWfz05//RVvg=
+	t=1738225486; cv=none; b=Aca9u3/KqLUSPum1YoxY2DH720X2jln2wm/eT/hzocC7iiWRjVwKP7IPARBtivdZqclictieXCdPU/6CuwLYQVZF1sYvmHUYXcJg4qPZHos+QkpQiase0q/FOM7e/ZRCrMdiGWg+Y0TMgr7lgD7DTUEwENpe9V133yv+czB5vNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738225452; c=relaxed/simple;
-	bh=XMsYQxx1st3PcRVZZG8wVoCL5T3+oTFhfHlIgyGlPfo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=W2uRCFhSBN+iX90tQEvXGhlkox26bo9nxvAy5Erpg0wIK6PsGYyQ6u7UmL4Ee8k1BBgCVBenLVQb1WEE0ym+AgP2DNXkuQ8p2Da84ljjjj/i7UGrIGIi1xfNisAj49yh8zd6qhJtgHp+KIbfVZCLFWu3jmZlm9HXMppQIyYI0Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=OMDyH/KF; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="OMDyH/KF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=3h6yZcqdv4m2JbAUENLW8cE3fvB7R3CJBmiZ8dYaFXs=; t=1738225449; x=1738830249; 
-	b=OMDyH/KFaWonAcjQ5OoLgqwm5m70dHPwgIgU932agob/goeiTZpWOpATp/i6sMdKTm8sH1mf2r4
-	sdGdm0u+BWIdYKHceg09cFfZ7IuRXHxeOtGRBR0tGSZyTIqp+arRDIMapT5dMMCOwZ8FIE+WMCvpg
-	JH0krWZjTF6lKChyaLltKTzJIN+qb0xdhCgK9ljInLwjQWCw6QiXgk+xRGX6EY0YdHSU8i9UHQcLp
-	iH7gcHQ6KNT1sd36Le7tN+xWOsZvXXNN0+hDAxeiCFE7qo/vhgE92EfUV6frcyjimi4ION02Aol+V
-	/Me0XB8Ip1+KHglIBBOowdlvqnfy+deutphA==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1tdPqF-0000000097i-48q7; Thu, 30 Jan 2025 09:24:04 +0100
-Received: from p5dc55198.dip0.t-ipconnect.de ([93.197.81.152] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1tdPqF-00000001iSk-3Ef2; Thu, 30 Jan 2025 09:24:03 +0100
-Message-ID: <4c37eb9306b9eef2a93720947817d5838ee48dbc.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH] sh: pci: Fix the wrong format specifier
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Geert Uytterhoeven <geert@linux-m68k.org>, liujing
-	 <liujing@cmss.chinamobile.com>
-Cc: ysato@users.sourceforge.jp, dalias@libc.org, linux-sh@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Thu, 30 Jan 2025 09:24:03 +0100
-In-Reply-To: <CAMuHMdXu04CFhkc3E=cA9wi_eigc1q88azb8k5N4UeyMAgKOkw@mail.gmail.com>
-References: <20241204110706.6776-1-liujing@cmss.chinamobile.com>
-	 <CAMuHMdXu04CFhkc3E=cA9wi_eigc1q88azb8k5N4UeyMAgKOkw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	s=arc-20240116; t=1738225486; c=relaxed/simple;
+	bh=WbDcjXKwFYfhd3CkFtwLyzcWnLW1mV8Sj4w/7O3RDg4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pJ8WJUp/JQhlADotk/HYD/n4Nzdn9v65Gxzs2sXcq9cDo8KjKBGKG0I89/KggFrqca1OkGliExjemmHetQQvgq9/NaxueExTe6Dm+DlNT68hpvGPpBFARaa3b9a1x1IBMQMXXaLVaNYnKQXhoWmivlxoG2mKQchlfLgdSYTU8Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 50U8OYJm032492;
+	Thu, 30 Jan 2025 09:24:34 +0100
+Date: Thu, 30 Jan 2025 09:24:34 +0100
+From: Willy Tarreau <w@1wt.eu>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tools/nolibc: make signature of ioctl() more flexible
+Message-ID: <20250130082434.GB32424@1wt.eu>
+References: <20250128-nolibc-ioctl-v2-1-4a07e91fd648@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250128-nolibc-ioctl-v2-1-4a07e91fd648@weissschuh.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi Liujing,
+On Tue, Jan 28, 2025 at 10:22:46PM +0100, Thomas Weiﬂschuh wrote:
+> POSIX defines the signature of ioctl() as follows,
+> to allow passing a pointer or integer without casting:
+> 	int ioctl(int fildes, int request, ... /* arg */);
+> 
+> Nolibc ioctl() expects a pointer, forcing the user to manually cast.
+> Using va_arg to make the signature more flexible would work but seems to
+> prevent inlining of the function. Instead use a macro. "fd" and "req"
+> will still be typechecked through sys_ioctl().
+> 
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
 
-On Wed, 2024-12-04 at 13:35 +0100, Geert Uytterhoeven wrote:
-> Hi Liujing,
->=20
-> On Wed, Dec 4, 2024 at 12:10=E2=80=AFPM liujing <liujing@cmss.chinamobile=
-.com> wrote:
-> > Make a minor change to eliminate a static checker warning. The type
-> > of port->index is unsigned int, so the correct format specifier should =
-be
-> > %u instead of %d.
-> >=20
-> > Signed-off-by: liujing <liujing@cmss.chinamobile.com>
->=20
-> Thanks for your patch!
->=20
-> > --- a/arch/sh/drivers/pci/pcie-sh7786.c
-> > +++ b/arch/sh/drivers/pci/pcie-sh7786.c
-> > @@ -219,7 +219,7 @@ static int __init pcie_clk_init(struct sh7786_pcie_=
-port *port)
-> >          * on. clock lookups don't help us much at this point, since no
-> >          * dev_id is available this early. Lame.
-> >          */
-> > -       snprintf(fclk_name, sizeof(fclk_name), "pcie%d_fck", port->inde=
-x);
-> > +       snprintf(fclk_name, sizeof(fclk_name), "pcie%u_fck", port->inde=
-x);
-> >=20
-> >         port->fclk =3D clk_get(NULL, fclk_name);
-> >         if (IS_ERR(port->fclk)) {
->=20
-> LGTM, but there are several more cases to fix in this file.
-> Please fix all of them in a single patch.
+Nice and clean approach indeed!
 
-Could you send a V2 of your patch and make the changes recommended by Geert=
-?
+Acked-by: Willy Tarreau <w@1wt.eu>
 
-Thanks,
-Adrian
-
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Willy
