@@ -1,78 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F07433B1;
-	Thu, 30 Jan 2025 02:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F828F58
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 02:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738203328; cv=none; b=sIlca1UlbnaQoIjPXavmgkcqoeSQrlHzm9EeHOsRHysBHCAQ5nCCUUxsHKQLh32oy8AkCkNcPTfvhM3HRjlQ9a5i15xOXGqohY9ifUddbwxYIZ/xv62t0/MzbQjoqEpVn7Uo7Sv/cce7THxJnjT44/MMguK08zWIVJ8kswRnYTk=
+	t=1738203447; cv=none; b=QmhDO2eJ/ER/yggziJnRpz5C6a0LRO3PLqNO0zrjHR6IGVQES7Yyqpfs2p2zPv+Y3ft0+7AJfkoRJrnNUMEJzXu9x+MNeyg9274+ATFyF8NqvWWTA6rDApN2435ALIoPxYGimcmS+TARzniopPoXyHA5f60SafSF7sUTHcnCPec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738203328; c=relaxed/simple;
-	bh=CRTsNUbgUpcoO1cuJagb2/cJuSugxV4ZBgSDa/DD+TU=;
+	s=arc-20240116; t=1738203447; c=relaxed/simple;
+	bh=k2ahaWMNxAJi1RUyuz7HG+Pjbs9YD0No7Dbet9o5ZXA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QdCYlCGp/nPTdbXOP457ydCmLJCKAUaHg9/MtrG0F5doqXnN5Ei7WLOAWX0njEuUdNoOGb2rrIEJqBp9oaN0CZBa/ZUeQdg/Fbtxb03+TmoTuxJCnzjdk1KGOSV3nX1u2gs0qMq9gKW96xW0LJ8btMIX7UPQ541Y1CdHDC/CQVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyTvKsJv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rDe1TVTy762hUI14nuL/ONSjmI+83i6+Q4gOggpoPEMohlufCy4RdnHwVQFf+PbxEzmc9yPKOvJohF4Z8OLI6slXJCSPnnNNFSU7WZJN7BGEglRDKJdh5epkQOv8cfg4xg0suorDnb0aVTMQT3TqRRi1ZnAPTbwIF/Ujml29mWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wMZKFrvm; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyTvKsJv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9600DC4CED1;
-	Thu, 30 Jan 2025 02:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738203327;
-	bh=CRTsNUbgUpcoO1cuJagb2/cJuSugxV4ZBgSDa/DD+TU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fyTvKsJvamQuj4/90uBqDMT5cNUJSn2WDgiQe8diCKjtHeLIV+hm13n4nF9+WYHmv
-	 w7RkmRCGmX4v3RUoJIUMxBMJ7Vp8bpmlYsH5YyskMDY5N9hHg996xV/tjmVto0xICm
-	 lLXjfzABYwfJ0AK0bg3uVjRIswF50qk6rNos27Mu21vp8tiHmEJqLtXJCUfSQHMuew
-	 r7QeNFcLia1EVdzglI86G0Sm/QMsxW9Bkcg9M4MYOr4EleUdjKApfdHpgZqJ86aBt9
-	 spTdL6kRI47E+5xa4MiprEO+BY0gEQUmrvcN2e9JwU7bgzp99q7UuFPCFR3kRQGTDf
-	 pQXsY+1ECC8WA==
-Date: Wed, 29 Jan 2025 18:15:26 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: linux-rdma@vger.kernel.org, Mustafa Ismail <mustafa.ismail@intel.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Bernard Metzler <bmt@zurich.ibm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] RDMA/rxe: consolidate code for calculating ICRC of
- packets
-Message-ID: <20250130021526.GD66821@sol.localdomain>
-References: <20250127223840.67280-1-ebiggers@kernel.org>
- <20250127223840.67280-3-ebiggers@kernel.org>
- <048daa22-fdc6-4f5f-9fa3-e023dc421aab@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wMZKFrvm"
+Date: Thu, 30 Jan 2025 02:17:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738203427;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MBlX82d4STzokLElvffOzFUNWqH0dO46wN3C2YfIhZM=;
+	b=wMZKFrvmjNWbdkHkKBOb8mvK6r9f1d6/5nRLHfeEj81JksHeLTC/Ksb68EK5qDG1o+huh5
+	CvRMoq2IIbYXrSZxmfygG0LQA9Nw3T/iBkl1h/JuyAp7GFukOdl3C+kCH1V1lEjyhruPFc
+	ge5ano2M6wnAtSgseRg3SUcFsfuzKos=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: nSVM: Enter guest mode before initializing nested
+ NPT MMU
+Message-ID: <Z5rhH342Jghl2tgL@google.com>
+References: <20250130010825.220346-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <048daa22-fdc6-4f5f-9fa3-e023dc421aab@linux.dev>
+In-Reply-To: <20250130010825.220346-1-seanjc@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jan 29, 2025 at 07:11:35PM +0100, Zhu Yanjun wrote:
-> 在 2025/1/27 23:38, Eric Biggers 写道:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > Since rxe_icrc_hdr() is always immediately followed by updating the CRC
-> > with the packet's payload, just rename it to rxe_icrc() and make it
-> > include the payload in the CRC, so it now handles the entire packet.
-> > 
-> > This is a refactor with no change in behavior.
+On Wed, Jan 29, 2025 at 05:08:25PM -0800, Sean Christopherson wrote:
+> When preparing vmcb02 for nested VMRUN (or state restore), "enter" guest
+> mode prior to initializing the MMU for nested NPT so that guest_mode is
+> set in the MMU's role.  KVM's model is that all L2 MMUs are tagged with
+> guest_mode, as the behavior of hypervisor MMUs tends to be significantly
+> different than kernel MMUs.
 > 
-> In this commit, currently the entire packet are checked while the header is
-> checked in the original source code.
-> 
-> Now it can work between RXE <----> RXE.
-> I am not sure whether RXE <---> MLX can work or not.
-> 
-> If it can work well, I am fine with this patch.
-> 
-> Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
-> 
+> Practically speaking, the bug is relatively benign, as KVM only directly
+> queries role.guest_mode in kvm_mmu_free_guest_mode_roots(), which SVM
+> doesn't use, and in paths that are optimizations (mmu_page_zap_pte() and
+> shadow_mmu_try_split_huge_pages()).
 
-Both the header and payload are checksummed both before and after this patch.
-Can you elaborate on why you think this patch changed any behavior?
+Just curious, what about kvm_mmu_page_ad_need_write_protect()? Is it
+also bengin?
 
-- Eric
+> 
+> And while the role is incorprated into shadow page usage, because nested
+> NPT requires KVM to be using NPT for L1, reusing shadow pages across L1
+> and L2 is impossible as L1 MMUs will always have direct=1, while L2 MMUs
+> will have direct=0.
+> 
+> Hoist the TLB processing and setting of HF_GUEST_MASK to the beginning
+> of the flow instead of forcing guest_mode in the MMU, as nothing in
+> nested_vmcb02_prepare_control() between the old and new locations touches
+> TLB flush requests or HF_GUEST_MASK, i.e. there's no reason to present
+> inconsistent vCPU state to the MMU.
+> 
+> Fixes: 69cb877487de ("KVM: nSVM: move MMU setup to nested_prepare_vmcb_control")
+> Cc: stable@vger.kernel.org
+> Reported-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+
+FWIW:
+
+Reviewed-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+
+> ---
+>  arch/x86/kvm/mmu/mmu.c    |  2 +-
+>  arch/x86/kvm/svm/nested.c | 10 +++++-----
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 74fa38ebddbf..3ff55a18347d 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -5524,7 +5524,7 @@ void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, unsigned long cr0,
+>  	union kvm_mmu_page_role root_role;
+>  
+>  	/* NPT requires CR0.PG=1. */
+> -	WARN_ON_ONCE(cpu_role.base.direct);
+> +	WARN_ON_ONCE(cpu_role.base.direct || !cpu_role.base.guest_mode);
+>  
+>  	root_role = cpu_role.base;
+>  	root_role.level = kvm_mmu_get_tdp_level(vcpu);
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index d77b094d9a4d..04c375bf1ac2 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -646,6 +646,11 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
+>  	u32 pause_count12;
+>  	u32 pause_thresh12;
+>  
+> +	nested_svm_transition_tlb_flush(vcpu);
+> +
+> +	/* Enter Guest-Mode */
+> +	enter_guest_mode(vcpu);
+> +
+>  	/*
+>  	 * Filled at exit: exit_code, exit_code_hi, exit_info_1, exit_info_2,
+>  	 * exit_int_info, exit_int_info_err, next_rip, insn_len, insn_bytes.
+> @@ -762,11 +767,6 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
+>  		}
+>  	}
+>  
+> -	nested_svm_transition_tlb_flush(vcpu);
+> -
+> -	/* Enter Guest-Mode */
+> -	enter_guest_mode(vcpu);
+> -
+>  	/*
+>  	 * Merge guest and host intercepts - must be called with vcpu in
+>  	 * guest-mode to take effect.
+> 
+> base-commit: eb723766b1030a23c38adf2348b7c3d1409d11f0
+> -- 
+> 2.48.1.262.g85cc9f2d1e-goog
+> 
