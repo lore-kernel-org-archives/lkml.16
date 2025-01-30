@@ -1,116 +1,122 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA871B4F0B;
-	Thu, 30 Jan 2025 13:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738244158; cv=pass; b=rcljp3toUUJwNh9Az+ORTJFA6EVA/xGWN1JKPckaujBqo5q/lIZR2Eje0h+tpCO8uJPZ8nONkabbnh6NEGvBRrhHwmDxVfzfpQNDVOVbhfWjg0abymUC6NXYXoewzvMrpH/0X+9BY4ctNCNU60wC574LSEVr95Kgz8a5gTf3Ivo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738244158; c=relaxed/simple;
-	bh=OsmosenQJyN8MZbYan5U9QG6GgMO5s6XsOCWYmEad2Q=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ffBk3spLqDdQS8AnbGmsR8/bFa7dRKJlMXm03jIpni8mhBrnAYV+oI62ewbc9hTSlNytu7779FnO6D2Vx6WLTEi9x/w/6EYlhGJ8+F/htlH3KrhXG4df0pKv8XiPEv18LkBAFu8Cp1oklKU9V473/eLbmKDtrnllwcgcjfHpI70=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=IGprdlhZ; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2748462
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738244288; cv=none; b=KqrVSAVpsP5lH1jh8KlyB/v7TeZLvG4XGP3pTu12Re6VEQX8Mb/8P55fwh9PPrGI0nlZmYzhzSYmxdc+pbvcZuFeKfL8i0GssBN+hiCCsw5i7za+/BYwfFXFqqGNrfmBEK+XtlKJ6BM2GFdfQWH/Shj3ygzoLR5FbRH7j52npC0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738244288; c=relaxed/simple;
+	bh=bHYkToOxCaW9lVxedzz18fvvWvyPAtrma08TTY7Ex28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oLQ1BvWLQnxulrk7ZjSs8UouYcmUacqAflWQGHXP2CKTIuvT7kBzm5BWaIhVA9XTnPyRywdLXPSPbFtgXfuIlu3gHmkx8farptJ1E9Rl4GVEEBvHxxWPHHPmW/l5hPzZ8mXIq9aKQg9EiT+0VuJHTdi5524iMXLjGV5mZgDs0Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UsyFkTLk; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="IGprdlhZ"
-ARC-Seal: i=1; a=rsa-sha256; t=1738244123; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=n6Al7lc3JS4dSTXEs7TEpzJqgfVLEaxx6xIQC3IxB8KnZjRarFgyOZrLBbdp53DSUOUlyynJBHpTfkgHGU2FoPRKwyO8WQTLUaFw4V5Gzn4a5FcK4dfUW6AYfkbkcp4cC5FJ7zZ5YDUoy3T7dBMHbtRqBit9UOmpu/xTEJfIsKk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738244123; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=OsmosenQJyN8MZbYan5U9QG6GgMO5s6XsOCWYmEad2Q=; 
-	b=J9gN/OjkuqfYNl9AoZWmAqSUfgmswwzPUnvwbxuwI1m6imLqVaoG+gu1u28ofKyVe0dC1W5yHgFTKcoMB4x/CIwE3+Ft8oEdllPiun+6zGVCjTm8mk7G40B31VraqDBYkiUkA+PsbXWBAfaFvHT4ikJI5QueyhCDCHaPNgHCxm0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738244123;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=OsmosenQJyN8MZbYan5U9QG6GgMO5s6XsOCWYmEad2Q=;
-	b=IGprdlhZ4CFlvokdRZcllXZ6YdGYzssx4Wy8sQ91lrFGWZ6Q4FBtpG5lMezHXGGh
-	ipbOu9dEaQabUh4OVmW5Ar+f/OatXnKjlwVEOHKmPCPAVcJ9MacUrJvAIOhcpp9+IjD
-	ufqsnP5dXISGqvvhHvKAZTKopkSLXOOXT0YEAIrM=
-Received: by mx.zohomail.com with SMTPS id 1738244116974973.7744363257904;
-	Thu, 30 Jan 2025 05:35:16 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UsyFkTLk"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3ebc678b5c9so432175b6e.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:38:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738244286; x=1738849086; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IaOqkqi4ZsckMMcVlfVzFatudJFOKDndawaygsJAlnk=;
+        b=UsyFkTLkTOfwoRjvG7JxL6g7F6PWUYLN0l7tCin7Jafn/L+V9234vtJNSUVdszw6yg
+         p4zg5xExATWa05c88c4eHauPTC1Ft0ZWELV005LX/FlNJuuuwpA3trHMtjySuE3qVMaF
+         M4zsFVJzEnjYUDRDG5mqMAc2VgKsdVJF5Ysr1mi8u5HbYZmhRvmfuHf1Bx2ScVhKf45M
+         yO9qxNBVf/T3RYA2A5MjsC/atTsoJsK+ZDRm+QkGK1vWsPzGU2SlxGsPspZSu2mCDNPm
+         YtsT8l2yClhfiPCogXlj9JEVEnS2BFSShMPwlYb17nJ1vhlIaM1JZ6fHpjBpcfPGFw0+
+         N56w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738244286; x=1738849086;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IaOqkqi4ZsckMMcVlfVzFatudJFOKDndawaygsJAlnk=;
+        b=RXVBMSrmP+xLQr4PeJ7rrvfg73dD5AC7nWr3YnNnInLMju6X/u0npLs42QZS0UZy4v
+         ZAgS4Q8CycGY3YwQIoJXNXssnoFhj+qcD/6pduxW7vG9AlTWWRPJxl1Cy1rOe4PNVtsp
+         kGtbKOjdJhtKOvHxbWBz4lQYICmHy/7OHT6xq5Aj1Bvw+KsxpAfO+t/71tqR3msDgnDS
+         lAoKeH62LZ/aDPatSGbfy0Vg/VXDgwCtRF+vL9okzQpPqRgqOr1Zsx6/FUzEX/TLnqud
+         HW01WCyQwlYuwYsV9Ts0hgbygb7COWrKV3ttLBQ+4XbFzRzIYB+L5eXuWhkijWJmFS5x
+         CirQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWwfF1p9j9khdL2x+TYwDTHaHMwi7Mgcq6PoETAr8TKVWX2tux0aymT3q8OIvtwyMr65BWd/lRHpo88eI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydQQJ0mI8/NGmX6T+Dt/Z147j5nWxD4cWLwjD14e+qS/emDlj4
+	YbRA3W0jsX9bbknyhja6MXpmZZExYhh0MHT8Tplkag4lcg3yuko98D9CL+FMk58=
+X-Gm-Gg: ASbGncuhrk6Udv2jO4q6xTush58EZCzL8UiTzvYB2xlUYqHGlAzcs3wRBXwpXOQ+u/m
+	ZSNZoaGXue9PHkXmThwFnqZsBtuBGLXHLR+vQEf+bX2qcmOv2xwnX5N4SWVLMQzpjCR6aZU1JOn
+	zLq5QrGp7sqSA1nWY06xrcBYbUSuH/5gmUQBTu+d02qlH5ZmQDPUkFn1JKHd55KNIU+jEwPIm9L
+	HO2cI9s8NO52isSajrCR54189fSo6p3cIJaLkDPfTqPs/JqtWF2P46UMAR9Kvw3FRn4UrcxISyu
+	N3bl
+X-Google-Smtp-Source: AGHT+IGFWTM916CiHup+GvXXTaGukMyyxcRzxGKJc5oj7MHmJp2ub5HMhM/2b9dpAzf0/kTivKI5/A==
+X-Received: by 2002:a05:6808:3a19:b0:3e7:b644:e4ec with SMTP id 5614622812f47-3f323b674acmr4766306b6e.26.1738244285909;
+        Thu, 30 Jan 2025 05:38:05 -0800 (PST)
+Received: from halaneyt14s.local ([2600:1700:1ff0:d0e0::e])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726618cb8aasm310109a34.64.2025.01.30.05.38.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 05:38:04 -0800 (PST)
+Date: Thu, 30 Jan 2025 07:38:00 -0600
+From: Andrew Halaney <ajhalaney@gmail.com>
+To: Nishanth Menon <nm@ti.com>
+Cc: Daniel Schultz <D.Schultz@phytec.de>, 
+	Andrew Halaney <ahalaney@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Siddharth Vadapalli <s-vadapalli@ti.com>, 
+	"vigneshr@ti.com" <vigneshr@ti.com>, "srk@ti.com" <srk@ti.com>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: defconfig: Enable PCI_J721E
+Message-ID: <wqravmnyudex3wcwhkbcbanxsqrmplpq5fmyueyaniya2dkqec@axu7nmb2xbbp>
+References: <20240807-pci-j721e-defconfig-v1-1-b97e5f4564f6@redhat.com>
+ <8b700897-1653-49f2-8fba-e5fce13a5447@phytec.de>
+ <20250122145822.4ewsmkk6ztbeejzf@slashing>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
-Date: Thu, 30 Jan 2025 10:35:00 -0300
-Cc: Christoph Hellwig <hch@lst.de>,
- Danilo Krummrich <dakr@kernel.org>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Abdiel Janulgue <abdiel.janulgue@gmail.com>,
- aliceryhl@google.com,
- robin.murphy@arm.com,
- rust-for-linux@vger.kernel.org,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>,
- Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- airlied@redhat.com,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- Greg KH <gregkh@linuxfoundation.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F2D88DDC-DE2E-4422-9A37-951C28F23A7B@collabora.com>
-References: <20250108122825.136021-3-abdiel.janulgue@gmail.com>
- <20250108135951.GA18074@lst.de>
- <CANiq72=R2N+QiCiHZQu-6YJ9aYpn_bik3BW3U=nAW3jL7unzLw@mail.gmail.com>
- <20250108151858.GB24499@lst.de> <Z36X_ZnCmBQBMoZ6@pollux>
- <20250109080812.GA20431@lst.de> <Z3-NqwAG_96yq8VD@pollux>
- <20250110083955.GA5395@lst.de> <Z4D5a5NYrAbNxUL6@pollux>
- <Z4kG5AcVeQKegLnb@pollux> <20250128092334.GA28548@lst.de>
- <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
-To: phasta@kernel.org
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250122145822.4ewsmkk6ztbeejzf@slashing>
 
+On Wed, Jan 22, 2025 at 08:58:22AM -0600, Nishanth Menon wrote:
+> On 14:53-20250122, Daniel Schultz wrote:
+> > can someone please apply this patch? It's actually required by all TI 
+> > AM6 devices with PCIe, e.g. AM64x.
+> > 
+> > - Daniel
+> > 
+> > On 07.08.24 22:15, Andrew Halaney wrote:
+> > > Enable PCI_J721E for usage in both host and endpoint modes.
+> > > This is used by boards such as Texas Instrument's SK-AM69 and
+> > > J784S4XEVM.
+> > >
+> > > Signed-off-by: Andrew Halaney <ahalaney@redhat.com>
+> > Tested-By: Daniel Schultz <d.schultz@phytec.de>
+> > > ---
+> > >   arch/arm64/configs/defconfig | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > > index 01dd286ba7ef0..e5222dbedd387 100644
+> > > --- a/arch/arm64/configs/defconfig
+> > > +++ b/arch/arm64/configs/defconfig
+> > > @@ -225,6 +225,8 @@ CONFIG_PCIE_RCAR_HOST=y
+> > >   CONFIG_PCIE_RCAR_EP=y
+> > >   CONFIG_PCIE_ROCKCHIP_HOST=m
+> > >   CONFIG_PCI_XGENE=y
+> > > +CONFIG_PCI_J721E_HOST=y
+> > > +CONFIG_PCI_J721E_EP=y
+> > >   CONFIG_PCI_IMX6_HOST=y
+> > >   CONFIG_PCI_LAYERSCAPE=y
+> > >   CONFIG_PCI_HISI=y
+> 
+> please make them as modules. no point in growing the default Image file.
+> 
 
->=20
-> Hallo,
->=20
-> would some sort of official statement by the "entire community"
-> reassure you that the burden of keeping Rust abstractions working with
-> any changes on the C side rests entirely on the Rust side's shoulders?
-> (because that's what the statements made by the latter seem to mean to
-> me)
->=20
+The PCI_J721E_HOST config only supports builtin, which I think has
+something to do with [0] (but I only re-skimmed that this morning
+briefly). I don't have the hardware any more, so I can't test what goes
+on if you make it a module etc unfortunately.
 
-
-This has been offered over and over in this thread, i.e.:
-
-
-```
-If you don't feel comfortable maintaining the Rust abstraction (or just =
-don't
-want to), that's fine. I don't think anyone expects you to do that, we =
-can take
-care of that instead.
-```
-
-https://lore.kernel.org/rust-for-linux/Z3-NqwAG_96yq8VD@pollux/
-
-Communication is not the issue here.
-
-Also, this person waited until v8 to give a single line NAK. This is not =
-very nice.
-
-=E2=80=94 Daniel=
+[0] https://lore.kernel.org/all/86o73j3vea.wl-maz@kernel.org/
