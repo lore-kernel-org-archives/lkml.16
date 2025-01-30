@@ -1,116 +1,145 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31E21B0F29
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E4E1B0F29
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738229174; cv=none; b=nYN9E+SuCP5nP/oEqdsbXWR2f9ORG1stz+JkRCWotLPHNVq9xV1QXhLr6OlPnY5b3GnjO2M+3l6FKTWDClcpk3UE/zynNlayrNiaBhbEw3sbjJfaRP2HHAD/j/2FJYGDfO1P0ODSyKh8lk9dRRWvmL/CThjz/Ern5rT9N2OSLq4=
+	t=1738229181; cv=none; b=IAj28uE1lX61FS80pJ63vdMrq1pkXKpWmcoIbgFfCRPxw3/BHyWAdGMwXTEmXQ7QgzKH00hMJt8MjdC/So2qNWG89BeLVRIeIYOO9fI6yhxV1VpqzP2JZgo/JhA0yR8KpDSJlfpC9xhXSK/V8UnnHm7M7ihAd8V1mwUvpvCF0t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738229174; c=relaxed/simple;
-	bh=Ss6TAehgDwdSBX0Jn2SHJGPzwEuTlGrwn+sRf6KBoNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZmupvvXBlKI5ITKZpski0GtRs2hq44T243eNeSykCNw0dmSn8wLcRkau7v3/yXzuy4/lAmaP5K+tkph1f2PAmIi4fHrkSja6LKOIppRvAfz5f8I/c/vCTSNDQOeNx/tlTZauO9b3Kb2JVB6G0eLCqxxpJD5t5+i8Ln8IJLxRqjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JMPeESts; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738229181; c=relaxed/simple;
+	bh=6494x1NsziKlFATjP5K/hvSwS6QGIDEkExL6srt021Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jdGwX5cydJ9KyA3ijGjJWfMewbBRR+QMIoHQ5uvIG4gfG3tJKsaPN/PE1/xK7B8p6L2xfdjj1wl0j6YNKk9QDLcXBfWsgMs4tImmpxBQXjwdIXAFEiWCJRY4AHLnBtvgws6QBx1Baka+CVXkGfVyLGoC2lFI//LDptTkEnz1I1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lWL6G0zm; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JMPeESts"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43618283d48so3746605e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 01:26:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738229171; x=1738833971; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ss6TAehgDwdSBX0Jn2SHJGPzwEuTlGrwn+sRf6KBoNw=;
-        b=JMPeEStsaYzSVxdqKQh3WH2lGXj00DMgvaxwH6rqyOgBpbfw6JAEjaANjkKd+fYiuh
-         IyvK8yEu8mBvLVR0XMRUs0Rc2Qh5dF5lYlNepHxd9cpH5pqbRhnqWfkj1f5vlnjcQXFd
-         czFpYhH0WUQe0PS2fPC2xcNezt5zPa5X+fSUejogtNN/K6+LBZIcptsV46oHtTTxcVq2
-         d10+CbT2Upd+z4bvej9eydizNJeeaUYcmCG/WXJlGTKpNmn+wejm6cOXOPioB9Z474JH
-         4FDvDPcOnSVxa5mLDNyxqJPyZksfMCs4/6ZuDLFBIkhETpI0ogR49fQJsES9DYxI/rQa
-         XJDg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lWL6G0zm"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50U9J89Z028252
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:26:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	eePmyQ6AyToHFq5ZzRudtzKbdM2PRLlCrpc5DW2Ub5I=; b=lWL6G0zmDNerUlaW
+	G/LIYKhkLnZ62yp0XY3nKsGLGHSdlLmALA3PoTpdT8tfHIEmKPsF+6E8agbqc8nn
+	gEtu8qd/LSnCp8aufeBP3daYAQP23LV3ChqU09j76d/iNJyJyjOKtPcQ670cSWC5
+	bXoUUZEScDIre1Yk6YACkVNscpFq9sXEE+TCBCo0yST0kg5MhbZs5qApwsmntcC8
+	y8L8xD7zMBsSzYPIBkQrpcJ08Lk/JA6nLYwcCOBMV1RvgMhCFBvtr62tAteHv7zt
+	J8LvrghgMlFbrIG5j6kcw3iLbXInAfpXRLUn5g10efHA7JcL5I1NaMm49dNIeQ5A
+	K64p5g==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44g6pa00gf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:26:18 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4679becb47eso15303721cf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 01:26:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738229171; x=1738833971;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ss6TAehgDwdSBX0Jn2SHJGPzwEuTlGrwn+sRf6KBoNw=;
-        b=l/K26DHVvWALtyqzCQGKnI+TqGPXw6DXCPaOzhOT/66KNqzd69l8ciHQMovY+Hk7t+
-         lkkDcHkprmhz83D/5zR8J1pRWjkHlMIRnw11ik5BrynNaZ0ZCX0FbrX2vwLUhRft/eF/
-         AmI6spJaqTpAZUsK7+/MBiJALbdmjRG3c0X+zs+qXbCYxNUbB3B+PmkP82lCg6A6UenH
-         +0bfQvX/M41Jy6Fo6HtrCHuqbaEvjdmodMW8WLOeAkWMEh6uYkQye5i3avXnJsrmGk7P
-         ochA6mqI+t1fhGRLremDoZIFD3T2rE5UCgatXXyyPcI6N4pBj5EAxvYWLBPQP7K5RxkS
-         TYpw==
-X-Forwarded-Encrypted: i=1; AJvYcCX4UX2qy2k1/NsD8U2IfAo9BdZe4ZSzq8dtIMyDH/F0GN9KhBdeur6aDHvW6vGWgb8AG6QyQzJOi6ERDCk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDq/mD5ii+jTKO1DaBpmlfDlXi0MQKQRSj0N7pRQfJh5cqEXPe
-	DwVMe8+rXaBkknZyHTeGL5Q2bQOjYF1+UOy7IxhqWMti/pBWoN6WpD9Ja5XrwTs=
-X-Gm-Gg: ASbGnctnbnYNIBSWXO2lzL+qDcIxUZeYTZkXua8X0PuOSANlppsfmXMMdbETVC6PWPm
-	zkk0nXA6J2qSn4QezM7CLxaprYdfHIEsq+hIvZGpEzQf+PHKJNQshTeiKvYQYBmADCsGOD/kQlA
-	pQ3VkCRxbXH47aYyhdfF1xrYgO2NDkuA4LHC2CQoovUCCKBiBY4hVj8fYYmgly4WjFJdbwj2ZZQ
-	1ZQMBEWTDoJAc50ip5Bs/MD8PNfM/zVgbOpOy41gRuqXf8c8Nd0JRepoIT3IFXZReSK+p5q3smi
-	AgJNjgceAaYkNBF2xg==
-X-Google-Smtp-Source: AGHT+IHkDqyCG+kARtwYDnl8ujpUjmLNSstCP8Zea/ZsGKNuiwMSzYTLb4UWS5GXeWVnDZ5EjKjEjw==
-X-Received: by 2002:a05:600c:34c9:b0:434:f0df:9f6 with SMTP id 5b1f17b1804b1-438dc3aa58amr53861425e9.3.1738229171114;
-        Thu, 30 Jan 2025 01:26:11 -0800 (PST)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc81d74sm52205955e9.37.2025.01.30.01.26.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 01:26:10 -0800 (PST)
-Date: Thu, 30 Jan 2025 10:26:08 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Christian Brauner <brauner@kernel.org>, 
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, Joshua Hahn <joshua.hahnjy@gmail.com>
-Subject: Re: Maybe a race window in cgroup.kill?
-Message-ID: <wj3tqes2kd3tjsxpj62kqb6u56lht2pko3qnkjzulyqqoel2nj@apym47ae33gl>
-References: <Z5QHE2Qn-QZ6M-KW@slm.duckdns.org>
- <lelekt53th2kq7dpz6r7gkifpnxwyk6hwhdko4elshj5qqik3e@cjlyam5ttaoe>
+        d=1e100.net; s=20230601; t=1738229172; x=1738833972;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eePmyQ6AyToHFq5ZzRudtzKbdM2PRLlCrpc5DW2Ub5I=;
+        b=TXf+EX2QHH1X4cnPBbYn2cROPtTzfT2V3DNKg1pJoIf7VnxiUNwnZRR2KAX/XRKflQ
+         hhp8O4UXEmWAIO3K/n4am3C5jEzI5U5BVCf+mGC5+J8urL4ICwIVI9bC7uJgpYAXie5A
+         A9xvKJD+srLT6eCvsQTcTWbcagmHzxVDQA8K/69/wqC5oebx63xsM/GXkCrhgZx1uYd0
+         Iibf0bF2ffg813v4gp3N4lSp9++i4Qwfb7OfHxwvzCrobEFcPl+IfqmGl7BsMgBJx9vA
+         HO4TtHHjcjci/Se7f7hBASJeD1RhIZfwP+P4mwF8Y1eZ4OIpTWu+lrCIdp3l0zU2tXsx
+         8usg==
+X-Forwarded-Encrypted: i=1; AJvYcCXwwedce7Tn82ZseCEc7hwpTdj/lHVSE5NOgkSZ+NKZKaSxcALbrS61/tgxHrPdDLXD+w/bvCdYL4fEZ4w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3n9aNOcZdkkhx8unwLh2XGV1lF9/8WPAXhMKJ4tIk6Xosv9sC
+	rWA1n7yV8G7oVIDq40VD/x2U6eriB42LU0tN0iCTcTNE3Bzx5VOPfVABqGIfu7SVFyWYRVXfNAh
+	TVV05c7vlUS7LdTgCCckzz984UTAsXCG8Jy7dt0iIdkDspJvDRFsIk5cuDngh7mM=
+X-Gm-Gg: ASbGncuLWSNGZmgwXSUCkSp2AiGGHywS5Fh3TYY64e9LudS/prcJzYp3a0rOq+BKOS4
+	71nivaD3D80oK/V/SJdcBF1lJqDdQnsjwwfL12ZD/1bfnE/axhIc3a9APGVdmYgW0ZO0lY60/2u
+	5vpkdAH+uAjS3Vh99VsGdAj4Nmq3d+xga9rFbsXcmHEn3V+Euq0tOrKoRX2Ll2KX7kvVNUJaa8y
+	rN4XiKmYcGYbYQpqvO2fuqTnTY6I+u3H5M5Jq7rKfmBu9d841XDkRTmLCJ5hEHYI2QUT7JDY9CC
+	2vGrBgEsa+roVUhjgUXIpdh1gXg51pinkF0nHzY=
+X-Received: by 2002:a17:902:f60f:b0:215:a3fd:61f5 with SMTP id d9443c01a7336-21dd7c44516mr103038875ad.5.1738228703440;
+        Thu, 30 Jan 2025 01:18:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGRttBzfpMMi7+IvNp9nzNnKCJLwBTy4+pzP5Bx50uGqeX9D+oTbLTRBPYM8mM5/vF6FVybGw==
+X-Received: by 2002:a17:902:f60f:b0:215:a3fd:61f5 with SMTP id d9443c01a7336-21dd7c44516mr103038655ad.5.1738228703061;
+        Thu, 30 Jan 2025 01:18:23 -0800 (PST)
+Received: from [10.152.202.18] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f8004sm9620975ad.74.2025.01.30.01.18.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 01:18:22 -0800 (PST)
+Message-ID: <94db4020-b1c7-4aee-b22c-6fe6d357e593@oss.qualcomm.com>
+Date: Thu, 30 Jan 2025 14:48:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="766tojqhh27mn5bf"
-Content-Disposition: inline
-In-Reply-To: <lelekt53th2kq7dpz6r7gkifpnxwyk6hwhdko4elshj5qqik3e@cjlyam5ttaoe>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] wifi: ath12k: remove return for empty tx bitrate in
+ mac_op_sta_statistics
+To: Remi Pommarel <repk@triplefau.lt>
+Cc: ath12k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kalle Valo <kvalo@kernel.org>,
+        Jeff Johnson <jjohnson@kernel.org>
+References: <38c2a7c4f7eaf57b9306bb95a9e6c42b7d987e05.1738169458.git.repk@triplefau.lt>
+ <9c12e9b9-35a4-47f1-bd17-6b4641de92a4@oss.qualcomm.com>
+ <Z5s9CO_mmazq2Kg1@pilgrim>
+From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <Z5s9CO_mmazq2Kg1@pilgrim>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: XWmuSsLRMj7-747N_uM9zlb92yWD8kZ6
+X-Proofpoint-ORIG-GUID: XWmuSsLRMj7-747N_uM9zlb92yWD8kZ6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-30_05,2025-01-29_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ spamscore=0 mlxlogscore=735 lowpriorityscore=0 bulkscore=0 adultscore=0
+ mlxscore=0 impostorscore=0 malwarescore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501300073
 
+On 1/30/25 14:19, Remi Pommarel wrote:
+> On Thu, Jan 30, 2025 at 12:21:54PM +0530, Aditya Kumar Singh wrote:
+>> On 1/29/25 22:25, Remi Pommarel wrote:
+>>> Currently in ath12k_mac_op_sta_statistics() there is the following
+>>> logic:
+>>>
+>>>       if (!arsta->txrate.legacy && !arsta->txrate.nss)
+>>>           return;
+>>>
+>>> Because ath12k_sta_statistics is used to report many info to iw wlan0 link,
+>>> if it return for empty legacy and nss of arsta->txrate, then the other
+>>> stats after it will not be set.
+>>>
+>>> To address this issue remove the return and instead invert the logic to set
+>>> the txrate logic if (arsta->txrate.legacy || arsta->txrate.nss).
+>>>
+>>> The same was done also in both ath10k with commit 1cd6ba8ae33e ("ath10k:
+>>> remove return for NL80211_STA_INFO_TX_BITRATE") and ath11k as well with
+>>> commit 1d795645e1ee ("ath11k: remove return for empty tx bitrate in
+>>> mac_op_sta_statistics").
+>>>
+>>> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
+>>
+>> MISSING_BLANK_LINE
+>> 'Tested-on:' tag missing blank line after it.
+>>
+>> You missed v1 comment? :)
+> 
+> Yes sorry I think your mail never reached me, did you CC me ? Do you
+> need a respin ?
+> 
 
---766tojqhh27mn5bf
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: Maybe a race window in cgroup.kill?
-MIME-Version: 1.0
+No problem. No need of respin just because of this. I think Jeff can fix 
+in pending?
 
-On Wed, Jan 29, 2025 at 11:08:41AM -0800, Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> I think this is indeed the race though small. One way to fix this is by
-> taking cgroup_threadgroup_rwsem in write mode in __cgroup_kill() as the
-> fork side takes it in read mode from cgroup_can_fork() to
-> cgroup_post_fork().
+It's strange that the v1 reply appears to be delivered from my mail box 
+and it is sent to the list. I see even Jeff replying to that. But none 
+of those are captured in patchwork. Not sure.
 
-I don't see that cgroup_mutex and css_set_lock alone ensure the ordering
-neither. cgroup_threadgroup_rwsem would be certain but heavy as you
-write.
+Anyways, v1 comment was regarding this blank line and one suggestion 
+that in future submissions, please use base commit tag.
 
-As I'm looking at it now, freezing is similar but shouldn't allow such a
-child escape if k3' came before c6 since the CGRP_FREEZE (or
-~CGRP_FREEZE) is permanent (until next operation).
-That is IIUC basis for Shakeel's sequence approach too.
-(CLONE_INTO_CGROUP should be fine thanks to cgroup_mutex.)
-
-Thanks,
-Michal
-
---766tojqhh27mn5bf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ5tFrQAKCRAt3Wney77B
-STYxAP4pSOBEcIT/PLNVDzaXwXF7D4T6JswOno6zSWfRL+zvGQD/cBVXyFiU7JQf
-ry7jys6TH7VPhm7YQdzya9pF3XM5kQo=
-=fM0O
------END PGP SIGNATURE-----
-
---766tojqhh27mn5bf--
+-- 
+Aditya
