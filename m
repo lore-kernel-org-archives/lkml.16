@@ -1,174 +1,175 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CBA1B0415;
-	Thu, 30 Jan 2025 08:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD03D1AFB36
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738226396; cv=none; b=Y3pU0QwqpxL5gBawZhVlW9dk2G9capf/Kg/t6UTPu+Fz012R9yGS8bLW8lL4m3jk/bo6uyO7GHRd3ZTO8LVKiK4LF9suSXrQn+vdwx6OXBgtsfimClOOPLroW2wrOjz2NdMwgGRd+KB/v4NL+rPwSR3GgupDBGbOMTucEhM7wk4=
+	t=1738226426; cv=none; b=Kbx6BhUjpyiWVTzLTCuZOtdIHEeFJRtiYW87v3Bh/gnZRe/IFw0mjm+Nxs63T7vigZozkKVWZp1n77u2x+u2Qm91P6xyZOl+5rrt7T6kc53M/fUAV67uPlKMPPWGwe28/gXxbmbSY8zGFmYD6CwTPC22G/3620qFA0pYr8boHu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738226396; c=relaxed/simple;
-	bh=xru6o8b5Uqfw2olO4dSfWMmnEM5D0REdzLt7kl7S5FU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZTO6aI00tcl5jQhh2kphz4T6M/AKesSxxTPXrCoPwp7MpV14dguSgoSUAPGKoVyLJQwv2nMUd6tIPuamsYb8HI6MA7w0ZSrKBixS1lKR4zpG95EwxLJeMen3pECOgPV13rnZzrEk0OYdYRwRVc/tsY86E5A76ZgnBVPI3Fl2dFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=nSjo+f0Z; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1738226426; c=relaxed/simple;
+	bh=JiJ59dIbSg8BMwGYdii+KCyk3SoO/RD5iZOJ276Rbso=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RDYTgWjce3XJ+TDHjfxFHP+QRT4UUHfg8MZbuuXf5b30Ekr+Orl6B5c1LKSIbjlSF+D1b7FJFxTXzOWNiTe0ZNuyGcdKSRWDfa18zZpBBKSveqvIxGCzFOKNHziACQl2fle2ppfyWtCTR4Fmo18NrCzpw6IBnmU+SrH/Mc/zlAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qz7nHiyc; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="nSjo+f0Z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=v9opNwDwn255UtavLuQBZ+mOTvHfGlJaF7SL6xxekMY=; t=1738226394; x=1738831194; 
-	b=nSjo+f0ZqkjmsnQ2kTBHhaTAgkIIRNvap5ObGbZ+MwURQr0Up96xFd+zhqhQDxGttT0rQUKaRTs
-	DSlxY4jsHGi+g6XfosHdP2U9phxAVbEWUoRrc0288c19PKVXa40hZBh64PGRaONNobPTdEM1XEX2J
-	517WU2/Rm1jTXSVqOfkNLb0KfxM2TKsTqSiAjqp/ru0LOCzCAQzjpW2oWiKr+8lGUgyVuFhc8FOOW
-	ELpIY41IZHqflgrgrV+kIXLm5U7NcP3dnTklxIXyf7hg04b/6Uyr7iE8dKXNBX89k6TyrDxz8iYkA
-	5yG1Y4zjwHYFXjJuNFtnfos93JcqvLiOpMGQ==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1tdQ5W-00000000EmF-3Q5N; Thu, 30 Jan 2025 09:39:50 +0100
-Received: from p5dc55198.dip0.t-ipconnect.de ([93.197.81.152] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1tdQ5W-00000001l3r-2KTZ; Thu, 30 Jan 2025 09:39:50 +0100
-Message-ID: <f447d1a9256033253d9bd9193ad639479e7c8575.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH] sh: migrate to the generic rule for built-in DTB
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Masahiro Yamada <masahiroy@kernel.org>, Yoshinori Sato
-	 <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-	linux-sh@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- devicetree@vger.kernel.org
-Date: Thu, 30 Jan 2025 09:39:49 +0100
-In-Reply-To: <20241222003315.2582655-1-masahiroy@kernel.org>
-References: <20241222003315.2582655-1-masahiroy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qz7nHiyc"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38be3bfb045so1160298f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 00:40:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738226423; x=1738831223; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s5zjMjP/LPUXmnqwR0OYUyowGGr5DSPAz2cDaxob+RE=;
+        b=qz7nHiycr5yZKuQORokxr5vg/48cfCkzetBVAIWNAZAjGyjJ5f6L1cjPKzFQl5yky+
+         BS3UQokYEOSbSqZR1O5waIQzPMZVLSJ88nLjmF7DlsOxu+zOgDQBrHokB5z4Qj1zcQrs
+         ix9F0Ii/YnTBpBU1IUZCTgVNUmPrLxENiqRA6P8CL38vKCaO+CBjcSKafTQlxwiFV8Cr
+         a0KHtRPyBkKwQfveex06+Kg87cHa/Nr34IBfgRfvYt2kqKbbzQcSoaUXc+tOd8UHFjbe
+         PA9ov943Hf/ESWBtp0B5eKasE+uNel4TCipriU2eCNhRLwMXWkPSS9qPc4tbbSbCdGYs
+         RL8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738226423; x=1738831223;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s5zjMjP/LPUXmnqwR0OYUyowGGr5DSPAz2cDaxob+RE=;
+        b=rtUM+JEMxPnxUNxr49iSkD+I/KBdddq8rMzT7IzZiuex82Z///W7vZQ5HZF+2AKsvw
+         Ki7wdHVTwHFjoeD+xuQlGqim5KjR4f3N1ly3+peMwDryjhRX/eIdqHDJBhAD1fnmCZ//
+         gPgJokw7nKwU/xRaMTShYaNAk+XsqRhEpplCFg+zfiw9GV5sn8X166ViR8jjxnBdMGY1
+         dFRQDLiuIzLC1xt1W4HxiJfzjcRYhs7oFPvi82A2oV6oRm6/xowfiFjARE63OI9Bg3E2
+         0QsAaxYWYh1rMFlb8jVz2HCQu8/B+cLfTMgWYVKVfSVbb8D5Cj+ubk30FLIanf8v/YuU
+         6fyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvtQIrNXvaybuH/4EVGDm28Il5RZHXQd9YWWxj30UZsZPXjCCMyCJ+UHMYbrH/T+gHmRuoi4Jw6qxcNdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrWT1ORZ9EUTis01JMCoq1j0NKE3Gn44XqQxcq2hypHpOOiDbe
+	p9BxNICuAAJfAv6XMrsmxqMsGkST+iWkM9Tuh8FTdBRns4dFRqZVK68iRIP8gKKB9G8108Wru4A
+	mnfhIqN7Klh91kdIdWF0FaY0KrOsHpAUS8AMM
+X-Gm-Gg: ASbGnctEGozEgDVErAllxDDJ3pSgYu9PA4Z3fC7rMB8dW6uhRGUS2jYfoRFF6iaf7ee
+	Vw5xPEe3+kx4su1vYMieNkK/HP8KwyD+APM53HcjJaf12Mip7KRHlMRDqU1eH8xJARV5rEavRQw
+	KQdiS1tTtyCmW9nXzok6658jfBG1Y=
+X-Google-Smtp-Source: AGHT+IEoJ+rSlDzuke2JvbADbiW0vKr4Xk55Wi/Q/eIxGvI4r7agApPnyTloSncexZBowwtAPXxVickXMsySVDOksIw=
+X-Received: by 2002:a5d:64e4:0:b0:386:3bde:9849 with SMTP id
+ ffacd0b85a97d-38c5a9846cdmr1875667f8f.12.1738226422987; Thu, 30 Jan 2025
+ 00:40:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+References: <20250129193037.573431-1-irogers@google.com>
+In-Reply-To: <20250129193037.573431-1-irogers@google.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 30 Jan 2025 09:40:10 +0100
+X-Gm-Features: AWEUYZmMsKHcGcmyGkj9Vm741ytqm96LYwiVaZJAR832Tgm_7ICzhS8b04qWrzs
+Message-ID: <CAH5fLggW1i+eO1hhuHrX-LX7B4=M5a0-dZw4En990fD2biJU1A@mail.gmail.com>
+Subject: Re: [PATCH v1] perf symbol: Add rust v0 demangling support
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Daniel Xu <dxu@dxuuu.xyz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Masahiro,
-
-On Sun, 2024-12-22 at 09:32 +0900, Masahiro Yamada wrote:
-> Commit 654102df2ac2 ("kbuild: add generic support for built-in boot
-> DTBs") introduced generic support for built-in DTBs.
->=20
-> Select GENERIC_BUILTIN_DTB when built-in DTB support is enabled.
->=20
-> To keep consistency across architectures, this commit also renames
-> CONFIG_USE_BUILTIN_DTB to CONFIG_BUILTIN_DTB, and
-> CONFIG_BUILTIN_DTB_SOURCE to CONFIG_BUILTIN_DTB_NAME.
->=20
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+On Wed, Jan 29, 2025 at 8:30=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Implement symbol demangling based on:
+> https://doc.rust-lang.org/rustc/symbol-mangling/index.html
+>
+> Ensure recommended demangling examples match the expectations in the
+> documentation.
+>
+> This was requested by Daniel Xu <dxu@dxuuu.xyz> in:
+> https://lore.kernel.org/lkml/jgxfnphfo3nzlfipnuuzdlfc4ehbr2tnh2evz3mdhynd=
+6wvrsu@fcz6vrvepybb/
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->=20
->  arch/sh/Kbuild            | 1 -
->  arch/sh/Kconfig           | 7 ++++---
->  arch/sh/boot/dts/Makefile | 2 +-
->  arch/sh/kernel/setup.c    | 4 ++--
->  4 files changed, 7 insertions(+), 7 deletions(-)
->=20
-> diff --git a/arch/sh/Kbuild b/arch/sh/Kbuild
-> index 056efec72c2a..0da6c6d6821a 100644
-> --- a/arch/sh/Kbuild
-> +++ b/arch/sh/Kbuild
-> @@ -1,7 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-y				+=3D kernel/ mm/ boards/
->  obj-$(CONFIG_SH_FPU_EMU)	+=3D math-emu/
-> -obj-$(CONFIG_USE_BUILTIN_DTB)	+=3D boot/dts/
-> =20
->  obj-$(CONFIG_HD6446X_SERIES)	+=3D cchips/hd6446x/
-> =20
-> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-> index 04ff5fb9242e..89185af7bcc9 100644
-> --- a/arch/sh/Kconfig
-> +++ b/arch/sh/Kconfig
-> @@ -648,10 +648,11 @@ endmenu
-> =20
->  menu "Boot options"
-> =20
-> -config USE_BUILTIN_DTB
-> +config BUILTIN_DTB
->  	bool "Use builtin DTB"
->  	default n
->  	depends on SH_DEVICE_TREE
-> +	select GENERIC_BUILTIN_DTB
->  	help
->  	  Link a device tree blob for particular hardware into the kernel,
->  	  suppressing use of the DTB pointer provided by the bootloader.
-> @@ -659,10 +660,10 @@ config USE_BUILTIN_DTB
->  	  not capable of providing a DTB to the kernel, or for experimental
->  	  hardware without stable device tree bindings.
-> =20
-> -config BUILTIN_DTB_SOURCE
-> +config BUILTIN_DTB_NAME
->  	string "Source file for builtin DTB"
->  	default ""
-> -	depends on USE_BUILTIN_DTB
-> +	depends on BUILTIN_DTB
->  	help
->  	  Base name (without suffix, relative to arch/sh/boot/dts) for the
->  	  a DTS file that will be used to produce the DTB linked into the
-> diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
-> index 4a6dec9714a9..d109978a5eb9 100644
-> --- a/arch/sh/boot/dts/Makefile
-> +++ b/arch/sh/boot/dts/Makefile
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -obj-$(CONFIG_USE_BUILTIN_DTB) +=3D $(addsuffix .dtb.o, $(CONFIG_BUILTIN_=
-DTB_SOURCE))
-> +obj-$(CONFIG_BUILTIN_DTB) +=3D $(addsuffix .dtb.o, $(CONFIG_BUILTIN_DTB_=
-NAME))
-> diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
-> index f2b6f16a46b8..039a51291002 100644
-> --- a/arch/sh/kernel/setup.c
-> +++ b/arch/sh/kernel/setup.c
-> @@ -249,7 +249,7 @@ void __ref sh_fdt_init(phys_addr_t dt_phys)
->  	/* Avoid calling an __init function on secondary cpus. */
->  	if (done) return;
-> =20
-> -#ifdef CONFIG_USE_BUILTIN_DTB
-> +#ifdef CONFIG_BUILTIN_DTB
->  	dt_virt =3D __dtb_start;
->  #else
->  	dt_virt =3D phys_to_virt(dt_phys);
-> @@ -323,7 +323,7 @@ void __init setup_arch(char **cmdline_p)
->  	sh_early_platform_driver_probe("earlyprintk", 1, 1);
-> =20
->  #ifdef CONFIG_OF_EARLY_FLATTREE
-> -#ifdef CONFIG_USE_BUILTIN_DTB
-> +#ifdef CONFIG_BUILTIN_DTB
->  	unflatten_and_copy_device_tree();
->  #else
->  	unflatten_device_tree();
+> This change is on top of the 18 patch v3 series:
+> https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com/
+> ---
+>  tools/perf/tests/Build                   |   1 +
+>  tools/perf/tests/builtin-test.c          |   1 +
+>  tools/perf/tests/demangle-rust-v0-test.c |  82 +++
+>  tools/perf/tests/tests.h                 |   1 +
+>  tools/perf/util/Build                    |   1 +
+>  tools/perf/util/demangle-rust-v0.c       | 661 +++++++++++++++++++++++
+>  tools/perf/util/demangle-rust-v0.h       |   7 +
+>  tools/perf/util/symbol-elf.c             |  31 +-
+>  8 files changed, 771 insertions(+), 14 deletions(-)
+>  create mode 100644 tools/perf/tests/demangle-rust-v0-test.c
+>  create mode 100644 tools/perf/util/demangle-rust-v0.c
+>  create mode 100644 tools/perf/util/demangle-rust-v0.h
+>
+> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> index 165ba84dc93f..d59d88abf0da 100644
+> --- a/tools/perf/tests/Build
+> +++ b/tools/perf/tests/Build
+> @@ -56,6 +56,7 @@ perf-test-y +=3D genelf.o
+>  perf-test-y +=3D api-io.o
+>  perf-test-y +=3D demangle-java-test.o
+>  perf-test-y +=3D demangle-ocaml-test.o
+> +perf-test-y +=3D demangle-rust-v0-test.o
+>  perf-test-y +=3D pfm.o
+>  perf-test-y +=3D parse-metric.o
+>  perf-test-y +=3D expand-cgroup.o
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index e77bf446e821..16937e7e313a 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -126,6 +126,7 @@ static struct test_suite *generic_tests[] =3D {
+>         &suite__maps__merge_in,
+>         &suite__demangle_java,
+>         &suite__demangle_ocaml,
+> +       &suite__demangle_rust,
+>         &suite__parse_metric,
+>         &suite__expand_cgroup_events,
+>         &suite__perf_time_to_tsc,
+> diff --git a/tools/perf/tests/demangle-rust-v0-test.c b/tools/perf/tests/=
+demangle-rust-v0-test.c
+> new file mode 100644
+> index 000000000000..ab6613e02c94
+> --- /dev/null
+> +++ b/tools/perf/tests/demangle-rust-v0-test.c
+> @@ -0,0 +1,82 @@
+> +// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> +#include "tests.h"
+> +#include "debug.h"
+> +#include "demangle-rust-v0.h"
+> +#include <linux/kernel.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +
+> +static int test__demangle_rust(struct test_suite *test __maybe_unused, i=
+nt subtest __maybe_unused)
+> +{
+> +       int ret =3D TEST_OK;
+> +       char *buf =3D NULL;
+> +       size_t i;
+> +
+> +       struct {
+> +               const char *mangled, *demangled;
+> +       } test_cases[] =3D {
+> +               { "_RNvMsr_NtCs3ssYzQotkvD_3std4pathNtB5_7PathBuf3newCs15=
+kBYyAo9fc_7mycrate",
+> +                 "<std::path::PathBuf>::new" },
 
-Looks like a good idea to address possible race conditions during build.
+I think you would normally not have the < and > here? I usually only
+see that when you do <type as trait>.
 
-Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-
-Thanks,
-Adrian
-
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Alice
