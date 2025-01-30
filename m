@@ -1,117 +1,118 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1ED7483
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 07:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED197483;
+	Thu, 30 Jan 2025 07:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738223114; cv=none; b=Ea15UETZvLj1E/xKMi91Li4db+hO3fKqYSYbPMaCNJhedJeEJfou6G/SUrKuvmrf0sCN6xtAN31XDYQhsLp8ooSmtTsxK+B18dXVJ4Im10/ZLal9Hb5BCYdvdaHJVacwJQYafkopEn5ge5utPK5qQXn+//jaCRZ9wx7myi6Fkus=
+	t=1738223196; cv=none; b=P22ZHjWi1YhWb1TllE7Nqj+ED/KcZwYIf8lGKrrTRrgQrIzBm64KRv50tbxu8XfnzFiA4Ws4rmhA81Dz0KPW8Yrw1/ZQhc4xMV1pp+v328LnHyizXjzAhAsa0zGXTJGhftlCGNGfFLHVdIuRq+VZ+q/Ip9whjNTMZSB7Aqe6kMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738223114; c=relaxed/simple;
-	bh=yahcI1cZVIr+wGBToeHh4rY1m06wSOEw3dKeRGcA5pU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sDzXG8ZqNf3htX9CqRLegCL4Iflh09vHEXTLixo5fz4b8x8mCbKQTYiw6TbomSNbpUKiCz9iblBJ8yIeyOCNWFWjlWryUnCJlAbTsc1z4mb7P3q8k6dJYI5Up/yT02tcll6DvIf8qzqIhnOd8Lg7vRF7ov19cj4t1GRiVpEd9fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RhdTSUhO; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738223196; c=relaxed/simple;
+	bh=lDB5v7qxjmq1lmrz/ct+yxeDPcvs+Ly1IOev7D37CP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Plgi7LWNYpIweGjOc9wVXcgfrGXzZrNFqR6WT7dtEaAmsIsIWCx4x65HLlWnlvuEBDZrfYVFkWQYdd2GU3R9qOPaPRaITOoM1s3cWiwN+8Z3E7Eskn9GsIwxsN5e7pcPkmU7JPwpXkgnzNb5x6m2Pgh1FJSpndUCP9bH1ZN3o/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWIzVYL7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RhdTSUhO"
-Date: Thu, 30 Jan 2025 02:44:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738223095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SaKLHwNhsjUdETKJlclOrek2pAJdP8Hih2tCTW/XzEk=;
-	b=RhdTSUhOLvHJXyw+PMqkd/DaeKqxxgq2u9Z/G8ompw25Xv4+af5iD28rGVXzkYKVTkQpUa
-	6+CRCG4V1ho6r2RT2n5XSaf7c+M66V9cZTbwftQKqQw7vb/3E42lQA6aUo14NDt3i3ZVmv
-	T4xVB44o5NElEfXPI0gn0sjwOttUddQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Ted Ts'o <tytso@mit.edu>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, 
-	almaz.alexandrovich@paragon-software.com, ntfs3@lists.linux.dev, miklos@szeredi.hu, 
-	linux-bcachefs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	linux-btrfs@vger.kernel.org, dhowells@redhat.com, jlayton@kernel.org, netfs@lists.linux.dev
-Subject: Re: [PATCH 0/7] Move prefaulting into write slow paths
-Message-ID: <qpeao3ezywdn5ojpcvchaza7gd6qeb57kvvgbxt2j4qsk4qoey@vrf4oy2icixd>
-References: <20250129181749.C229F6F3@davehans-spike.ostc.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWIzVYL7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3B71C4CED2;
+	Thu, 30 Jan 2025 07:46:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738223196;
+	bh=lDB5v7qxjmq1lmrz/ct+yxeDPcvs+Ly1IOev7D37CP8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bWIzVYL7lAHyqcF5pj6Kw7gFz3YcZxJ5DkL5WoOOsexPnyTyNDizewwzflwok6APh
+	 3namoEReIbsO4jhCQUZ6znbTOkk7jKBPCchFoa3tJ/vydKO9BcM15SbiVfFGrEMYxe
+	 8+j5fGso33GI9xRCBXiw0j61i2HS8AaCWxfwt7Yp67kXT+9Qx0z/Zz+hoyDk5SF82p
+	 //k+P7PiEqCfreBVbRgUalMQoZ54yKet+AEeoo9R2uigMWkaS9uKAjtNoEt/ZWZXbq
+	 LQ8YWtSxYTDs9f0kew5mcuQCs50Kk7R3omqtT+/kYF9mvqbyxIKfdcTXSppweoPxkt
+	 ogt0jH1m7ZPiA==
+Message-ID: <4c9b512f-59d2-4d96-a899-5af4de2c823e@kernel.org>
+Date: Thu, 30 Jan 2025 08:46:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250129181749.C229F6F3@davehans-spike.ostc.intel.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 07/13] wifi: ath12k: add support for fixed QMI firmware
+ memory
+To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>, ath12k@lists.infradead.org
+Cc: linux-wireless@vger.kernel.org, Kalle Valo <kvalo@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
+ <20250130043508.1885026-8-quic_rajkbhag@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250130043508.1885026-8-quic_rajkbhag@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 29, 2025 at 10:17:49AM -0800, Dave Hansen wrote:
-> tl;dr: The VFS and several filesystems have some suspect prefaulting
-> code. It is unnecessarily slow for the common case where a write's
-> source buffer is resident and does not need to be faulted in.
-> 
-> Move these "prefaulting" operations to slow paths where they ensure
-> forward progress but they do not slow down the fast paths. This
-> optimizes the fast path to touch userspace once instead of twice.
-> 
-> Also update somewhat dubious comments about the need for prefaulting.
-> 
-> This has been very lightly tested. I have not tested any of the fs/
-> code explicitly.
+On 30/01/2025 05:35, Raj Kumar Bhagat wrote:
+> @@ -2646,6 +2663,136 @@ static int ath12k_qmi_alloc_target_mem_chunk(struct ath12k_base *ab)
+>  	return ret;
+>  }
+>  
+> +static int ath12k_qmi_assign_target_mem_chunk(struct ath12k_base *ab)
+> +{
+> +	struct device_node *mem_node;
+> +	struct resource res, m3_res;
+> +	u32 bdf_start_addr;
+> +	int i, idx, ret;
+> +
+> +	for (i = 0, idx = 0; i < ab->qmi.mem_seg_count; i++) {
+> +		switch (ab->qmi.target_mem[i].type) {
+> +		case HOST_DDR_REGION_TYPE:
+> +			mem_node = ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
 
-Q: what is preventing us from posting code to the list that's been
-properly tested?
 
-I just got another bcachefs patch series that blew up immediately when I
-threw it at my CI.
+Why cannot you use existing API for reserved memory -
+of_reserved_mem_lookup()?
 
-This is getting _utterly ridiculous_.
-
-I built multiuser test infrastructure with a nice dashboard that anyone
-can use, and the only response I've gotten from the old guard is Ted
-jumping in every time I talk about it to say "no, we just don't want to
-rewrite our stuff on _your_ stuff!". Real helpful, that.
-
->  1. Deadlock avoidance if the source and target are the same
->     folios.
->  2. To check the user address that copy_folio_from_iter_atomic()
->     will touch because atomic user copies do not check the address.
->  3. "Optimization"
-> 
-> I'm not sure any of these are actually valid reasons.
-> 
-> The "atomic" user copy functions disable page fault handling because
-> page faults are not very atomic. This makes them naturally resistant
-> to deadlocking in page fault handling. They take the page fault
-> itself but short-circuit any handling.
-
-#1 is emphatically valid: the deadlock avoidance is in _both_ using
-_atomic when we have locks held, and doing the actual faulting with
-locks dropped... either alone would be a buggy incomplete solution.
-
-This needs to be reflected and fully described in the comments, since
-it's subtle and a lot of people don't fully grok what's going on.
-
-I'm fairly certain we have ioctl code where this is mishandled and thus
-buggy, because it takes some fairly particular testing for lockdep to
-spot it.
-
-> copy_folio_from_iter_atomic() also *does* have user address checking.
-> I get a little lost in the iov_iter code, but it does know when it's
-> dealing with userspace versus kernel addresses and does seem to know
-> when to do things like copy_from_user_iter() (which does access_ok())
-> versus memcpy_from_iter().[1]
-> 
-> The "optimization" is for the case where 'source' is not faulted in.
-> It can avoid the cost of a "failed" page fault (it will fail to be
-> handled because of the atomic copy) and then needing to drop locks and
-> repeat the fault.
-
-I do agree on moving it to the slowpath - I think we can expect the case
-where the process's immediate workingset is faulted out while it's
-running to be vanishingly small.
+Best regards,
+Krzysztof
