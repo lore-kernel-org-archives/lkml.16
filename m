@@ -1,123 +1,127 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A72E139B
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C78F2CAB
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738207337; cv=none; b=oHzCiYyyJy9Tw+j/RJHcEg1j4i72ds7Ew+0PDx8MXqKeQRBGIohNXhlqUt9UyNo4LIyOpG5Hw+uT19jDyarg1p/9yvIi7QCAYHOluVr2POBkwDAuDafFfMQdRB1Jp9ewTo3zrppXND9VU9BlpRsIfErrVlBPIjTkEZCLb2ygNls=
+	t=1738208208; cv=none; b=dEMFqRDx1ithMViSNAxEDiBXBN11N6eW0cPmCjtXKtCprXsRQVtXHkeCWCY61RNw838tmK66efCKzsZR0aX4h+L0nE1zsCtY/YZJnoJHPh67Kun4O0B/fxdmfW/GrHL/aVgUiD0Lxafbs40j8yhY6DDRcjQvOl/0AkMPkzqScsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738207337; c=relaxed/simple;
-	bh=YrV5s1afiLTZ8aJzAPbd9iA5+2JzwX2PIQjlwXCgHU4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sxsd5+m+I92GnWcBp6CnBFuVJWw56HaZF9JIM1fj5ZL2dW4TMsun+8OqoU6yBREbl5n03glAz/eulJzPjfW+nIkpjLDSSf9C9koNLX3Jdad1IUIMAJxZRtw+6lnixTQepcrP1nr6z6jXuESMmqsm4xdJosY62dVzPPz4SzzzxGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=X7RnxK4w; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1738208208; c=relaxed/simple;
+	bh=Dl7GI2cBmAppunQKRZj6T0qX4dIfPFP+x6zFbBEK4vo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hCQCXlDDPI83Afi0BD0k6hmtLANQlcxk6WwY5ofnPkqjO5faQyFdWytBbmh2BDUX2OV6F303WyOxbpwnnYnstxrwRR4yW/fxTr4VWL0MMLbFAxDbGD+OstbDr+EhIQl2pQ5ry1OqQTnu0IBDyRhWufYuUMxqVaVVYFJK9WFnUWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=D2Jz90ex; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X7RnxK4w"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2f833af7a09so361043a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:22:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738207334; x=1738812134; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fNv/qF5L9DYQG4GRInYjrKbioOHCY/rhDAdj8Plp3Ls=;
-        b=X7RnxK4wfhDqtdYhkY9HYItmL+rdAuzqTABxVOS35DWEV1WTwFG1dtf6+wbFRTLFcK
-         cTNBUMwvr/u9E7q74Z7rxYKv5EgMma5nOXCgK+HGBI1l894V4IaaZ2vF41ZiidMu0Cx9
-         hYsf1JHZr2DFcYU18cghEMRkcsDaKt2h+NMHo=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="D2Jz90ex"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50TIlYC4000787
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:36:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	xug+E7ij4WF0LuLuZ/OHsojEglbBOq/RVcXRzH7G0So=; b=D2Jz90exge5tU5Iq
+	5mMbXyAAMEUkZXPRBiv5/GupHCS2HM05SR7LunIRQIa09LTj/LJicq9weMaPmzXP
+	vspB3Gx6oI89A4iKRktHlwNJvD8ymswx8pQBaZu2MePLKKrv2UwO7mURn+HKxoca
+	4ZSqQLhWayOt1T6NdOCbxrd/5Hlu/bpKxMIMoVoh5t8BGbtWIe6fE5qQUdMJ1hxm
+	PAd4UxE+INIXiuu+FlNJWt0BnbEYnkRGsfjzoS0gUkwddOc/RdtH6Q7sorA8YvEd
+	zMX+zdjguDIyrs7fqCrk7QByTvYLsdNFF3Df2Q6O+jdSHabJ5iliNSjeLYkhkm2J
+	1UPOsA==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44fswyrxhg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:36:46 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-21638389f63so5942305ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:36:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738207334; x=1738812134;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fNv/qF5L9DYQG4GRInYjrKbioOHCY/rhDAdj8Plp3Ls=;
-        b=gTR1aTcO0IEgp+qlu0O9oRZOeljg7Sa8A0mOpLnTLa0EqUGbujHDFUS2dldD5BzivG
-         WZTuZGiLLzRmtQoABoirLiH1F0UIn/s/KPwAeu71llgZ/Rr3IxpLEVhjvYNHMuY+CRcr
-         HfnVj5V7P1Dl2u4y7lVj5gNrQ+melniiGPibHK+hsaba3wo86V6cz3ANDCnR6ReC7pT8
-         HDl15kq8feeH2KCWEgJM9qVtrw8DJ7QXxrbXb4GN0v7Nc8OXE4iHNX3bioz1lpFJoUve
-         r8axgtXA1I6eyQP/6sj/1SzSjHJMqo3LQfry4wghDCqogMUL7vw8cwpoZbMRu6Jdf8gW
-         h7eQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWAEE+buAJnhs/SgslF6n5z2LV1p5EJda7Dj54YcqjB5Uik+6lNwkjs4Doie/BVaFl4UzXGECumNGkJSoo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHtZngFou/ozNme73ZO2NRVI1eMXKtBDYKMQdULnZMLYrT3Ov/
-	d7c5TUD96oSwf4zUxoiaWLUxE8FTZ7g3AbrRVDsgZwdK5dCU1+QMm2WtGXvKmA==
-X-Gm-Gg: ASbGncvP7miPC//sKpOWVGbeNqflJJ4exBkA/M+I+sObZoXhH7I3uM68GaYNiaBs6NB
-	LBnWVUojS3eCS29AZAsU0n5lt/xwVFiPtqCXJTlDz7nsIGHHaxMIUh8zowMrojtr4lfZ5p9KTkD
-	sSufyvbRa1bjDZLjXMgngg3P0cx2HUyCfBGQ/yzO+wcjXinW7T9wolj3yd7Zn2XlecYdt70ZVBp
-	RYYLiGWFTemI5sZKLidCuYkEfuEAwLQAYO6H1lIV7cjdd6AMnAg64COY98WCSN6iMgyoVyXQHoz
-	De31d7mNCSyTjsipQDk=
-X-Google-Smtp-Source: AGHT+IEHDzUZi3lg9xMhHt59OkIpdTDr2gsnd0+almGl7slYViWjk4HBx7jwg26XFrThilzoksJunQ==
-X-Received: by 2002:a17:90b:548c:b0:2ee:a6f0:f54 with SMTP id 98e67ed59e1d1-2f83abda260mr8524977a91.13.1738207334658;
-        Wed, 29 Jan 2025 19:22:14 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:d794:9e7a:5186:857e])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bd0ce4dsm2639680a91.27.2025.01.29.19.22.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 19:22:14 -0800 (PST)
-Date: Thu, 30 Jan 2025 12:22:08 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv1 3/6] zsmalloc: make zspage lock preemptible
-Message-ID: <3oxqvpghezesl6nj474v3xchpseeavc6p3u752yaxswpfmcqxd@ohdx62ahgle5>
-References: <20250129064853.2210753-1-senozhatsky@chromium.org>
- <20250129064853.2210753-4-senozhatsky@chromium.org>
- <3f787832-fbb7-8590-c090-1f511b16449a@gmail.com>
+        d=1e100.net; s=20230601; t=1738208205; x=1738813005;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xug+E7ij4WF0LuLuZ/OHsojEglbBOq/RVcXRzH7G0So=;
+        b=DIV5IhmiqC9iNt7aN61Anoa3B0A6B2RuWGxc6otA/oR3FeZ3EbQQHgUa8lEUF5jnzp
+         EY3sxftFbpD+vR6mWvJsFqwj0prQSQDfl53t5k3u/s5et+WBRPhFz2gVz2LwYys4GUI7
+         RBB+J1sH8rvQOUmJQ66zb1XKTxG/3pvrvA/zG8ZabD6CqAmqts5MgrzbQw97JVr97AU3
+         Ib1lC+8OWofxJfCHeYTywp9Ohu/4SsG+fRA2P0xqTT9/5a0phS3uB538UOJhkEwyKH5+
+         0EqB14w4QxpgfxT8V/3m+KkupxbLksVbT6NBdsitbXln99totSAw5rHzpRChjWl0eD6/
+         ADig==
+X-Forwarded-Encrypted: i=1; AJvYcCWL7pMSK/gvuqZ0ql4U+YeexAnDx/BUBEJ7fD0lsFdAuxzJeQGI1GwcfvzBAjItwzV9g2A3GgHlwyCr/zk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ++HjzYtv0ajNUAe9cyujs47EgBcfWC0dtUy+OH8/A5BQGfRz
+	Aa2OtHVRFkJ5v7oF/ygnvahaaat3+g8O8m9s6pWU8IISc+MLqIgmaIKp2OZncdsA7TAnkbdiThS
+	edTMDEpMRJi4fAMYvTxKKTYXOK7tZcekcQgoWyuxqhdsTgA2YJbuLlLQ9CoIRwxY=
+X-Gm-Gg: ASbGncty0CriLYKZcOhN2FnjO8QRnxuwWgzAGeIWrq1KaowAw9pPNMatsUg4vWvdlwZ
+	CeaVQVcX4DwxLLnK/u4iqlBe6M0BVMjIydbxnkliocDoQt9vex+b1ICk1Uw0dX9J1rMRWmM7AFt
+	CBc/YUJ5RiO/dj0PziXFJgkqTEgxbGsvMwKIddzv6qER7WWr46E8waXR20/g5owt7VR4qrGYLsC
+	HR/A3qtCzz4sB6fpXrncjLpiCjdmhV3rbLOcsUgr4iDOQsG7j8pvvmpXFrF964YKuDcHsEPknBE
+	a8GDZkNMREqhv+F1/nrPpGqs0y5Xljd9LVGnMLE=
+X-Received: by 2002:a17:902:db02:b0:216:69ca:7714 with SMTP id d9443c01a7336-21dd7c46297mr84253335ad.11.1738208205323;
+        Wed, 29 Jan 2025 19:36:45 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHIEes1x7Hp+Gh7oCa5B+RDPrqST2NNoI4k3f4nlFhDmTxUxUeMJxGThJr0IDzpglY+9vqCFw==
+X-Received: by 2002:a17:902:db02:b0:216:69ca:7714 with SMTP id d9443c01a7336-21dd7c46297mr84253165ad.11.1738208204909;
+        Wed, 29 Jan 2025 19:36:44 -0800 (PST)
+Received: from [10.152.202.18] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de331fa58sm3673225ad.233.2025.01.29.19.36.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2025 19:36:44 -0800 (PST)
+Message-ID: <0cc92ac1-9566-46cc-b130-7546168f43eb@oss.qualcomm.com>
+Date: Thu, 30 Jan 2025 09:06:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3f787832-fbb7-8590-c090-1f511b16449a@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] wifi: ath12k: fix handling of CSA offsets in
+ beacon template command
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        Aditya Kumar Singh <quic_adisi@quicinc.com>,
+        Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20250124-ath12k_mlo_csa-v2-0-420c42fcfecf@quicinc.com>
+ <20250124-ath12k_mlo_csa-v2-2-420c42fcfecf@quicinc.com>
+ <6f52dcd2-3b0b-4c19-b8bd-cd17dc4543b5@oss.qualcomm.com>
+ <2b5bdfc8-95f2-4919-830f-c35d152055d1@oss.qualcomm.com>
+From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <2b5bdfc8-95f2-4919-830f-c35d152055d1@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: NRU4R5bdL3oKmrox-CDFV-2eWSsfQvQZ
+X-Proofpoint-GUID: NRU4R5bdL3oKmrox-CDFV-2eWSsfQvQZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-30_02,2025-01-29_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ suspectscore=0 mlxlogscore=898 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 malwarescore=0 spamscore=0 priorityscore=1501 clxscore=1015
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501300024
 
-On (25/01/29 16:22), Uros Bizjak wrote:
-> > +static void zspage_read_lock(struct zspage *zspage)
-> > +{
-> > +	atomic_t *lock = &zspage->lock;
-> > +	int old;
-> > +
-> > +	while (1) {
-> > +		old = atomic_read(lock);
-> > +		if (old == ZS_PAGE_WRLOCKED) {
-> > +			cpu_relax();
-> > +			continue;
-> > +		}
-> > +
-> > +		if (atomic_try_cmpxchg(lock, &old, old + 1))
-> > +			return;
-> > +
-> > +		cpu_relax();
-> > +	}
-> > +}
-
-[..]
-
-> Based on the above, cpu_relax() should be removed from the loop, which
-> becomes:
+On 1/30/25 06:48, Jeff Johnson wrote:
+> On 1/29/2025 4:40 PM, Jeff Johnson wrote:
+>> On 1/23/2025 10:16 PM, Aditya Kumar Singh wrote:
+>>> @@ -108,5 +108,6 @@ int ath12k_mac_vdev_stop(struct ath12k_link_vif *arvif);
+>>>   void ath12k_mac_get_any_chanctx_conf_iter(struct ieee80211_hw *hw,
+>>>   					  struct ieee80211_chanctx_conf *conf,
+>>>   					  void *data);
+>>> +struct ieee80211_bss_conf *ath12k_mac_get_link_bss_conf(struct ath12k_link_vif *arvif);
+>>
+>> This patch now conflicts with:
+>> wifi: ath12k: report station mode transmit rate
+>>
+>> but i'll clean that up in 'pending'
 > 
-> {
->         atomic_t *lock = &zspage->lock;
->         int old = atomic_read(lock);
 > 
->         do {
->                 if (old == ZS_PAGE_WRLOCKED) {
->                         cpu_relax();
->                         old = atomic_read(lock);
->                         continue;
->                 }
-> 
->         } while (!atomic_try_cmpxchg(lock, &old, old + 1));
->  }
+> please check
+> https://git.kernel.org/pub/scm/linux/kernel/git/ath/ath.git/commit/?h=pending&id=47bc4c5c6598ef2ff3a362eb13dfe4573ab5d910
 
-Ack.
 
-> > +static int zspage_try_write_lock(struct zspage *zspage)
-> 
-> This function can be declared as bool, returning true/false.
+Looks fine, thanks.
 
-Ack.  Thank you.
+
+-- 
+Aditya
