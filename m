@@ -1,165 +1,206 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAAB1EF0B6
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B949D17597;
+	Thu, 30 Jan 2025 17:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738258941; cv=none; b=X0dx8f6xoDArdCuRIB0s26vdifq5JXGWWmjyN/Xpana/uYDjvZDXVF5JYXYP64mgHcnCejSPV7sSf7MgHGPHQBhWvD42cA6NyMJK9VGjfDKw5Wsfol5BrmCF6f+xW5DUcThyy/Xmz34PQNvFeNAXvasgC+sOQBTdNPvU6jtk5+I=
+	t=1738258973; cv=none; b=BeNXGev4Lx832K2lju/hPWwDLHBvKQNsVIO/8pDpODCB06WmtWUCwKLZfw8/KL02d04kS9+37La6uW7XH9WXi7kr454JMTwrvRKH6PRVCw26xsfv6mpBgQsPQr2o1ZxRYcy3F2rhrvySSU9rWAPmOOraSLuRZkL3zx8DXOgijRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738258941; c=relaxed/simple;
-	bh=XtQCDwDTly37QPz8i9jNWoc4Mmbx4e+kSb49dC5tsSc=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SHg8nrbQSbkpPPxAk9tc17gEX/GOedqWyjkV0SbzeON+bbm8wRM+EWRW+cinrRKFi59QVKdwxpj51anvGMqTjBDg4mlcLM90ZDuzAEZjfMkldnpEXGDHBwicaxnWqPkBvQXEMMfB5Ew5lQ79di6JgpxrVAWonF16CrxfOkDXv5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=LfsE6GDQ; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1738258973; c=relaxed/simple;
+	bh=owHGhlOxqkTJZf1QKp2zLFkv9bpKwBGaiiWtVHtyhuI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DVZ7wCGIxlIRSx7FduoOv9iOzyoy6vlSTwMT2ZRlmAWVFEukv4S+KDKvmXLEyhK3FhSkd3xiOu8mN5m92ZxsjjYDEvSFOUIn5OWsxFBYRy3wkOEGvTbyS3P9ljI20UMGa/2Tjp1IEAKhAdmh8cKzyPaTluelvwCaKB+am3mxALQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=pAOGNf1x; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LfsE6GDQ"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-467a37a2a53so12114791cf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:42:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1738258938; x=1738863738; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CVNKXypQwOopSf1xgwOwZSkCQwewZeK8ItDq6p8m+EY=;
-        b=LfsE6GDQbmYz3qyZKrOOziUjzv179Xd1geXzDq1D1pJ1I3nL4P/i9faJFv9Mafzuf/
-         XRNY3NccZdtAfzb19CipjL0ZlTTuj41b8kkLmh59wxXq7OwNlsA7NfYC2BfcpG6umeYg
-         30bih2wE91r8OTRvykqMRowpx4/Dzg4LgxeUuS9T/bMT/LUJcRBzJ3PgFfsL8ORdulNT
-         M5awNuStAudAyLBH9Mgkjc7PXFTkNUS+xMtRI2wtWmXPucEQThOrrlqKvbnQ4QvEyUMH
-         Qm8PlG/V7lW3XKxvJsTp9nco93OtVB8q7Uoa9c2xF1AQFDBp/hnCQe2wNcTaI+cWIv8P
-         caxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738258938; x=1738863738;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CVNKXypQwOopSf1xgwOwZSkCQwewZeK8ItDq6p8m+EY=;
-        b=f9nO7+mofgMTzrarsqB7Gi+dtB87c0vvb3ewDHGZt8g9aZrHimx0I1lZPem2MJOt5w
-         3sBpfuXBQVDh7Rv3NyfQRBFpvQbKTfS2b6cDtukQZ3jIGzKZSV9IE1/ZgqnKxnUilP0H
-         k3Z9DAjn8hTrmZg87WEe9WEOVtSyK7UKpqEEimgWkYxpch2+bmmEdw70rqP+PkJQeNjk
-         u84csyop3idAFXnAh+bs0E7fkRSOepjgsXWABW+KNy9irl8JOdb2lCLTLoYk8Ffx/WtC
-         gVRgua0KHm+SPnkvNHjJzdfduXYxGq626csg60l8FaKh9BRQ1L65z0MUyLFpU8zp5wfN
-         bxUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWByrAkagtGNKGcg0urHdBmMPD3LNknwnoI8CTHJgjoj1MhyJGxY8zt0W5Hv5Pr6lfPWp4dMb2kqX3aDfM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzr06PVf8AR8QRFeJaUsB06F6sU5iPX3A0cU1R0gKGRv0iIolF9
-	+jSDwBC8QD/yXVTUkFBTAb8alvxBvKq4cywt44FgAUxsAcZOvzCYY66eeQYNLf8=
-X-Gm-Gg: ASbGncsR7uIET7g4vWg84CV9+y5UvN04JNHIe+g/AK67VpY7de4nDYOboQlYlWyqrVJ
-	4BLZD3lpklBnBpiiYN2m70LJQkeYWWZ2wA98fGOBLvke+4YwDM14DC6/jcIP9aIYfa9yovt4Tkc
-	Jh9DmQmJP95dMUxCfHVydK5IuMRirFC/SNaRyumAKOLeI5y5V3MNfY1H/UStTryGGri0p16irML
-	QKfdHsc4ekGxdhqwIWrb6g8cCuR8zO4DhYz9f9P19GGQ98f0QwbaAVb1FSuCXQKsMgCMLX5cYX2
-	qQDdws/du78WHrAZV65zKY2dbCXZD+5WTZjCciYeR9eAFIj6m+9d8amoe5ySf/XE
-X-Google-Smtp-Source: AGHT+IFnQ+3H7xNChFVcqgc9dwjk4L8UEnbD/nNL/ykdDG0Q22FK3UpLRKkWb0FWjYtvwvzMuLT+BQ==
-X-Received: by 2002:a05:622a:4296:b0:467:451b:eba3 with SMTP id d75a77b69052e-46fd0a7fe1dmr108793531cf.8.1738258938311;
-        Thu, 30 Jan 2025 09:42:18 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0ceacesm8793061cf.31.2025.01.30.09.42.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 09:42:17 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tdYYT-00000009ew4-0Jjs;
-	Thu, 30 Jan 2025 13:42:17 -0400
-Date: Thu, 30 Jan 2025 13:42:17 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com,
-	lyude@redhat.com, dakr@redhat.com, airlied@gmail.com,
-	simona@ffwll.ch, leon@kernel.org, jglisse@redhat.com,
-	akpm@linux-foundation.org, GalShalom@nvidia.com,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-mm@kvack.org, linux-tegra@vger.kernel.org
-Subject: Re: [RFC 1/5] mm/hmm: HMM API to enable P2P DMA for device private
- pages
-Message-ID: <20250130174217.GA2296753@ziepe.ca>
-References: <20250128132034.GA1524382@ziepe.ca>
- <de293a7e9b4c44eab8792b31a4605cc9e93b2bf5.camel@linux.intel.com>
- <20250128151610.GC1524382@ziepe.ca>
- <b78d32e13811ef1fa57b0535749c811f2afb4dcd.camel@linux.intel.com>
- <20250128172123.GD1524382@ziepe.ca>
- <Z5ovcnX2zVoqdomA@phenom.ffwll.local>
- <20250129134757.GA2120662@ziepe.ca>
- <Z5tZc0OQukfZEr3H@phenom.ffwll.local>
- <20250130132317.GG2120662@ziepe.ca>
- <Z5ukSNjvmQcXsZTm@phenom.ffwll.local>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pAOGNf1x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=xasRZEja/joABEkMp98bjtx1gSYQAG+ohRktNZoL2vw=; b=pAOGNf1xfxkTbyoApyyRbDfzwb
+	bM7Cxb4AHGNfMqMoMr3h2AGCgs8xtWfDH5dRjvQP8u1YVRhfqHblcg6ciXkf1trQwKNC/xPk3zcjh
+	E6vkLZoLEn2aySQuEEvHcleEMEOgoI94h3wH3ITNDI6ly34tAqlNslSAx+mq3jANZzkMOPwCApztY
+	2rcrq6gMPN3fjKSX0+9fldOThtJXOMJ0aM0i0TrK186i2+mHTOj9C+jnaGFgL3GqGopXiH7yu/9+B
+	Vcu8oAYh4yfiX2S3xCo4Y4NSkxE+hc4vCkiueJCVT2KPmRRjsBrbcP2Ww8zGyo0EO+wYcAQ6IdZtn
+	fyqYpsaw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46808)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tdYYn-0004nx-15;
+	Thu, 30 Jan 2025 17:42:37 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tdYYj-0004wV-2A;
+	Thu, 30 Jan 2025 17:42:33 +0000
+Date: Thu, 30 Jan 2025 17:42:33 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: Tristram.Ha@microchip.com, Woojung.Huh@microchip.com, andrew@lunn.ch,
+	hkallweit1@gmail.com, maxime.chevallier@bootlin.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, UNGLinuxDriver@microchip.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC net-next 1/2] net: pcs: xpcs: Add special code to
+ operate in Microchip KSZ9477 switch
+Message-ID: <Z5u6CajmOV6T1Tkv@shell.armlinux.org.uk>
+References: <Z5iiXWkhm2OvbjOx@shell.armlinux.org.uk>
+ <20250128102128.z3pwym6kdgz4yjw4@skbuf>
+ <Z5jOhzmQAGkv9Jlw@shell.armlinux.org.uk>
+ <20250128152324.3p2ccnxoz5xta7ct@skbuf>
+ <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <20250129211226.cfrhv4nn3jomooxc@skbuf>
+ <Z5qmIEc6xEaeY6ys@shell.armlinux.org.uk>
+ <20250129230549.kwkcxdn62mghdlx3@skbuf>
+ <Z5t0RvoUOhxqeh25@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="dB35/U62McMbXIoP"
+Content-Disposition: inline
+In-Reply-To: <Z5t0RvoUOhxqeh25@shell.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+
+
+--dB35/U62McMbXIoP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z5ukSNjvmQcXsZTm@phenom.ffwll.local>
 
-On Thu, Jan 30, 2025 at 05:09:44PM +0100, Simona Vetter wrote:
+On Thu, Jan 30, 2025 at 12:44:54PM +0000, Russell King (Oracle) wrote:
+> @@ -1123,7 +1126,9 @@ static void xpcs_link_up_sgmii_1000basex(struct dw_xpcs *xpcs,
+>  {
+>  	int ret;
+>  
+> -	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED)
+> +	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED &&
+> +	    !(interface == PHY_INTERFACE_MODE_SGMII &&
+> +	      xpcs->sgmii_mode == )
+                                  ^ DW_XPCS_SGMII_MODE_MAC_MANUAL
 
-> > You could also use an integer instead of a pointer to indicate the
-> > cluster of interconnect, I think there are many options..
-> 
-> Hm yeah I guess an integer allocater of the atomic_inc kind plus "surely
-> 32bit is enough" could work. But I don't think it's needed, if we can
-> reliable just unregister the entire dev_pagemap and then just set up a new
-> one. Plus that avoids thinking about which barriers we might need where
-> exactly all over mm code that looks at the owner field.
+Not sure where that went. :(
 
-IMHO that is the best answer if it works for the driver.
-> > ? It is supposed to work, it blocks until all the pages are freed, but
-> > AFAIK ther is no fundamental life time issue. The driver is
-> > responsible to free all its usage.
-> 
-> Hm I looked at it again, and I guess with the fixes to make migration to
-> system memory work reliable in Matt Brost's latest series it should indeed
-> work reliable. The devm_ version still freaks me out because of how easily
-> people misuse these for things that are memory allocations.
+>  		return;
+>  
+>  	if (interface == PHY_INTERFACE_MODE_1000BASEX) {
 
-I also don't like the devm stuff, especially in costly places like
-this. Oh well.
+Note that with this change, we also need to change the xpcs_write() to
+BMCR at the end of this function to xpcs_modify() so we don't clear the
+AN-enable bit. It's also a good idea in general to only modify the bits
+we need to modify.
 
-> > > An optional callback is a lot less scary to me here (or redoing
-> > > hmm_range_fault or whacking the migration helpers a few times) looks a lot
-> > > less scary than making pgmap->owner mutable in some fashion.
-> > 
-> > It extra for every single 4k page on every user :\
-> > 
-> > And what are you going to do better inside this callback?
-> 
-> Having more comfy illusions :-P
+New patch attached.
 
-Exactly!
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
 
-> Slightly more seriously, I can grab some locks and make life easier,
+--dB35/U62McMbXIoP
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-net-xpcs-add-support-for-manual-update-for-SGMII.patch"
 
-Yes, but then see my concern about performance again. Now you are
-locking/unlocking every 4k? And then it still races since it can
-change after hmm_range_fault returns. That's not small, and not really
-better.
+From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH net-next] net: xpcs: add support for manual update for SGMII
 
-> whereas sprinkling locking or even barriers over pgmap->owner in core mm
-> is not going to fly. Plus more flexibility, e.g. when the interconnect
-> doesn't work for atomics or some other funny reason it only works for some
-> of the traffic, where you need to more dynamically decide where memory is
-> ok to sit.
+Older revisions of the XPCS IP do not support the MAC_AUTO_SW flag and
+need the BMCR register updated with the speed information from the PHY.
+Split the DW_XPCS_SGMII_MODE_MAC mode into _AUTO and _MANUAL variants,
+where _AUTO mode means the update happens in hardware autonomously,
+whereas the _MANUAL mode means that we need to update the BMCR register
+when the link comes up.
 
-Sure, an asymmetric mess could be problematic, and we might need more
-later, but lets get to that first..
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+---
+ drivers/net/pcs/pcs-xpcs.c | 16 +++++++++++-----
+ drivers/net/pcs/pcs-xpcs.h | 11 ++++++++---
+ 2 files changed, 19 insertions(+), 8 deletions(-)
 
-> Or checking p2pdma connectivity and all that stuff.
+diff --git a/drivers/net/pcs/pcs-xpcs.c b/drivers/net/pcs/pcs-xpcs.c
+index e7aad3c402a4..29269d5c5f3a 100644
+--- a/drivers/net/pcs/pcs-xpcs.c
++++ b/drivers/net/pcs/pcs-xpcs.c
+@@ -691,11 +691,14 @@ static int xpcs_config_aneg_c37_sgmii(struct dw_xpcs *xpcs,
+ 	mask = DW_VR_MII_DIG_CTRL1_2G5_EN | DW_VR_MII_DIG_CTRL1_MAC_AUTO_SW;
+ 
+ 	switch (xpcs->sgmii_mode) {
+-	case DW_XPCS_SGMII_MODE_MAC:
++	case DW_XPCS_SGMII_MODE_MAC_AUTO:
+ 		if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED)
+ 			val = DW_VR_MII_DIG_CTRL1_MAC_AUTO_SW;
+ 		break;
+ 
++	case DW_XPCS_SGMII_MODE_MAC_MANUAL:
++		break;
++
+ 	case DW_XPCS_SGMII_MODE_PHY_HW:
+ 		val |= DW_VR_MII_DIG_CTRL1_PHY_MODE_CTRL;
+ 		fallthrough;
+@@ -1123,7 +1126,9 @@ static void xpcs_link_up_sgmii_1000basex(struct dw_xpcs *xpcs,
+ {
+ 	int ret;
+ 
+-	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED)
++	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED &&
++	    !(interface == PHY_INTERFACE_MODE_SGMII &&
++	      xpcs->sgmii_mode == DW_XPCS_SGMII_MODE_MAC_MANUAL)
+ 		return;
+ 
+ 	if (interface == PHY_INTERFACE_MODE_1000BASEX) {
+@@ -1140,10 +1145,11 @@ static void xpcs_link_up_sgmii_1000basex(struct dw_xpcs *xpcs,
+ 				__func__);
+ 	}
+ 
+-	ret = xpcs_write(xpcs, MDIO_MMD_VEND2, MII_BMCR,
+-			 mii_bmcr_encode_fixed(speed, duplex));
++	ret = xpcs_modify(xpcs, MDIO_MMD_VEND2, MII_BMCR,
++			  BMCR_SPEED1000 | BMCR_FULLDPLX | BMCR_SPEED100,
++			  mii_bmcr_encode_fixed(speed, duplex));
+ 	if (ret)
+-		dev_err(&xpcs->mdiodev->dev, "%s: xpcs_write returned %pe\n",
++		dev_err(&xpcs->mdiodev->dev, "%s: xpcs_modify returned %pe\n",
+ 			__func__, ERR_PTR(ret));
+ }
+ 
+diff --git a/drivers/net/pcs/pcs-xpcs.h b/drivers/net/pcs/pcs-xpcs.h
+index 4bd6a82f1a18..be8fab40b012 100644
+--- a/drivers/net/pcs/pcs-xpcs.h
++++ b/drivers/net/pcs/pcs-xpcs.h
+@@ -112,8 +112,12 @@ enum dw_xpcs_sgmii_10_100 {
+ };
+ 
+ /* The SGMII mode:
+- * DW_XPCS_SGMII_MODE_MAC: the XPCS acts as a MAC, reading and acknowledging
+- * the config word.
++ * DW_XPCS_SGMII_MODE_MAC_AUTO: the XPCS acts as a MAC, accepting the
++ * parameters from the PHY end of the SGMII link and acknowledging the
++ * config word. The XPCS autonomously switches speed.
++ *
++ * DW_XPCS_SGMII_MODE_MAC_MANUAL: the XPCS acts as a MAC as above, but
++ * does not autonomously switch speed.
+  *
+  * DW_XPCS_SGMII_MODE_PHY_HW: the XPCS acts as a PHY, deriving the tx_config
+  * bits 15 (link), 12 (duplex) and 11:10 (speed) from hardware inputs to the
+@@ -125,7 +129,8 @@ enum dw_xpcs_sgmii_10_100 {
+  * integration documentation states that MII_ADVERTISE must be written last.
+  */
+ enum dw_xpcs_sgmii_mode {
+-	DW_XPCS_SGMII_MODE_MAC,		/* XPCS is MAC on SGMII */
++	DW_XPCS_SGMII_MODE_MAC_AUTO,	/* XPCS is MAC, auto update */
++	DW_XPCS_SGMII_MODE_MAC_MANUAL,	/* XPCS is MAC, manual update */
+ 	DW_XPCS_SGMII_MODE_PHY_HW,	/* XPCS is PHY, tx_config from hw */
+ 	DW_XPCS_SGMII_MODE_PHY_REG,	/* XPCS is PHY, tx_config from regs */
+ };
+-- 
+2.30.2
 
-Should be done in the core code, don't want drivers open coding this
-stuff.
 
-> Also note that fundamentally you can't protect against the hotunplug or
-> driver unload case for hardware access. So some access will go to nowhere
-> when that happens, until we've torn down all the mappings and migrated
-> memory out.
-
-I think a literal (safe!) hot unplug must always use the page map
-revoke, and that should be safely locked between hmm_range_fault and
-the notifier.
-
-If the underlying fabric is loosing operations during an unplanned hot
-unplug I expect things will need resets to recover..
-
-Jason
+--dB35/U62McMbXIoP--
