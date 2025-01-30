@@ -1,65 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-8fab.mail.infomaniak.ch (smtp-8fab.mail.infomaniak.ch [83.166.143.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1041E9B28;
-	Thu, 30 Jan 2025 15:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08CB19DFAB
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738249790; cv=none; b=TUe2bjnDDkrGMaT0nt1k5R7dAA0DW3O1AkTBnvYQG5SM2XOpy+cS5f9BkT7XnVuQgu5fZ3anJxwPKnu9MZlCI8uE7WOupvhy42vZw1MI6k5oVGbN4cBqx/ErbGNxFRdf0CFKY0qsteQByKkbZCIibin+d09c5VJZPOqjv7gVRpk=
+	t=1738250085; cv=none; b=FDguURVmHzVkVXDXtrHGlQ2vLDjJ6FBQhrpE2w7Z3h8UVawmkSyudOfDpSDhCGv/Fc+8nrWsWfkPndo4y69Vz0mZBJ12bah9aeCDfibY1aRi6ld+iDQfiStzJ5VW4xr+tDvdBOcKB3Yxid7wjSzmaat9qY8Mihk/0GvVKXz8eKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738249790; c=relaxed/simple;
-	bh=BmvrqUeskOzmL87ygitO7gL+DDkfBFwSTEs/5Pv1ceI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O7BCAFU1uYjbohagFJTTpKYfUSwHGmYGFutgX8URkenuxStuWCy3tHou6G9znk0rqRqLs0kHbb5UeD4S1sz+KoUw4BUmNhzEIY0rH6KCke6gn/hnvvvxwpUhPyX8MnHrGAx+LhIYR22q/+8FhnYt2QZ6i9Qd/Og5XYVXgz4PC60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e8WP4n5i; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e8WP4n5i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD762C4CED2;
-	Thu, 30 Jan 2025 15:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738249789;
-	bh=BmvrqUeskOzmL87ygitO7gL+DDkfBFwSTEs/5Pv1ceI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e8WP4n5iI+VUnz5D4D7bq7gCNn9cqx6ps9bG28REVuNCs2UlEC/zF54qeIgqCqgZ8
-	 Jz8M8KF0+fByiqPY5QLl41xxHnfyDvfOg1+TaxOPuiHoNxngq4Qho/0KsVk6MqOvBk
-	 xxCoXcIkYNK7mgPziaJN4xBFic7FXuPO/fsdwzZ+rJfd8SLE4OlPuPro3SlHEAz3SD
-	 +LbHANctn8I+QMBB+FkGhmUusrN0rcdkbHZT6iIswNiG0vMpypxuWxF6chsmGJ5HIk
-	 f6ra5W43FWBrc6oTku5YeUu5/PV1l6HQ+GWLcF1Eb/jV+RCPYePNwvyBd3X2BZgjYy
-	 TC2No3Kef5Wtg==
-Date: Thu, 30 Jan 2025 08:09:46 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	x86@kernel.org, linux-block@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v2 00/11] CRC64 library rework and x86 CRC optimization
-Message-ID: <Z5uWOnj8T7OO4LH8@kbusch-mbp>
-References: <20250130035130.180676-1-ebiggers@kernel.org>
+	s=arc-20240116; t=1738250085; c=relaxed/simple;
+	bh=IfUbrFELIDUrYT3MvWpVsIhY0wkuJJxlPAxVzB9Vw7o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lrY6ofHJiU9Lu56jTsJamAUzIcfc0G8AWE6SuYEq3FCv2GASjYB1i7xe7Ow/y9vIjZOHvY2fd4U9DltbdFPApI5Uaa3ptTCMGKb0jcFGzXhVEJpi6mc+Ho7Lj6XMyzxkGKfrdlBzCEnOSn/Fv6KFU5M5n/dETSdeYq49XONQ7Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=83.166.143.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YkMy33hq4zgqy;
+	Thu, 30 Jan 2025 16:14:35 +0100 (CET)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4YkMy25swpzvPg;
+	Thu, 30 Jan 2025 16:14:34 +0100 (CET)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Date: Thu, 30 Jan 2025 16:14:25 +0100
+Subject: [PATCH] arm64: dts: rockchip: add support for sound output over
+ HDMI on RK3399 Puma Haikou
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130035130.180676-1-ebiggers@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250130-rk3399-hdmi-audio-v1-1-406244333111@cherry.de>
+X-B4-Tracking: v=1; b=H4sIAFCXm2cC/x2MWwqAIBAAryL73YIPguoq0UfqVkukoRSBdPekz
+ xmYKZApMWUYRIFEN2eOoYJqBLhtDish+8qgpW6lMhLTbkzf4+YPxvnyHNFW7bT1resU1O5MtPD
+ zP8fpfT9W/cVVYwAAAA==
+X-Change-ID: 20250130-rk3399-hdmi-audio-b130c2bd5c81
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Quentin Schulz <quentin.schulz@cherry.de>
+X-Mailer: b4 0.14.2
+X-Infomaniak-Routing: alpha
 
-On Wed, Jan 29, 2025 at 07:51:19PM -0800, Eric Biggers wrote:
-> Patch 11 wires up the same optimization to crc64_be() and crc64_nvme()
-> (a.k.a. the old "crc64_rocksoft") which previously were unoptimized,
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
-Yes, I mistakenly thought the name of the table in the spec was the
-name of the CRC, but that was just referring to format of how the
-parameters were displayed. It really should have been crc64_nvme, so
-thank you for clearing up the naming confusion.
+The Haikou carrierboard exposes an HDMI connector and audio can also
+be output, therefore let's enable it on RK3399 Puma.
 
-> improving the performance of those CRC functions by as much as 100x.
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Awesome!
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts b/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts
+index 947bbd62a6b09ce55320d0889ee8cf50ca59dfd4..a60779bbbaaa54ebc5060907ab876a4d679f7da3 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts
+@@ -154,6 +154,10 @@ &hdmi {
+ 	status = "okay";
+ };
+ 
++&hdmi_sound {
++	status = "okay";
++};
++
+ &i2c1 {
+ 	status = "okay";
+ 	clock-frequency = <400000>;
+@@ -191,6 +195,10 @@ &i2c6 {
+ 	clock-frequency = <400000>;
+ };
+ 
++&i2s2 {
++	status = "okay";
++};
++
+ &pcie_phy {
+ 	status = "okay";
+ };
 
-Looks good:
+---
+base-commit: 72deda0abee6e705ae71a93f69f55e33be5bca5c
+change-id: 20250130-rk3399-hdmi-audio-b130c2bd5c81
 
-Acked-by: Keith Busch <kbusch@kernel.org>
+Best regards,
+-- 
+Quentin Schulz <quentin.schulz@cherry.de>
+
