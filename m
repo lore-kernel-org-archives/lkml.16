@@ -1,126 +1,325 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4E852F88
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 04:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BD4179BC;
+	Thu, 30 Jan 2025 04:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738213101; cv=none; b=W7yO9iMdycWPSJUQLhEcJrAXhQmaKpKJA4PYpQJYZ+2E9NQKB+9pjFiaMV2nmPHmyh1DDkaKeeD+x9AfFyi1C/T6BgC76I8F+o6d53jYg3FBa182XAxyIQd5TFHXDM9KjhAjXQnhY1bpEVs8lzN6KMyXlKS/I+CI1eey+lSyD5k=
+	t=1738213172; cv=none; b=ac4j3QhwxGw7xeug0YZ8x8LNIT+BenkpdShD61qZvLphnKIEHW6TmKSCHoXqSOiltA1+jA+eqZQlKMA+JSISYwDSMyBBqIFfmtb6U7vWZoJqJykixTonH3qWU175BkHHz6Z1HjgXRBXJLhjRSKHi2EadKPfdWpYU9P9XrUdNm5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738213101; c=relaxed/simple;
-	bh=MKUSs+HYsIDDz0bOcM/JRSk4kuQYkVAn0CJXFl2q5xw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=laMYdFLoVul98hczpCH93cYtS3R1mC8HlUrBLBd/FHXhmsOS1Rvv4jN0f9/eZOwVDhICujltIT6eqXWP3R2BAficsOoYbx+mtq/tNEoAdsIh8jHw9RV4g79iwJl9Je/Sa9GSYYD52WfH16PYF0c0VLcICFvqLKzIRN8HL3/K5tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VZ3ptfxc; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738213172; c=relaxed/simple;
+	bh=GaZ1XjTNSx2/hu8Iza7BxFNn2rVO6yWgg9DEWAAnCbs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o399SWwgNuRHxrnx/xmf2L4HN4lcznjlllmgXIFDWRsuIM03UPAmDkgtXI0puU0cs05R1eXyrYt0U43X7Eeg94Y+u99aWqjbS9XbPr8Ac3LRIpTcOPdzx11umYDXjzSDhVPcINcW4TXVMJYqhUmBSDP/7lBEiynoGXucyYp249o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Sa4UGcy9; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VZ3ptfxc"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-216401de828so5680445ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 20:58:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738213098; x=1738817898; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XeFAClo/GRnpnoHmOXhQ8WOtII3WuA8AKf+fEiZpfXQ=;
-        b=VZ3ptfxcjw/XLwZKVIw4Fvrf+4kv0NvyZeT/jc3W798tSPXya71/DluFWmZBiYvom+
-         OQH7+i8SIy6v5pMm+/0E8vC0MDTsb52Y/9t5E5LwSb+4BXCtyaiJLtdiS7r1Bh/d4aPT
-         UQ4syvs1pI8R0Z8H7QBopEq5UU6BsjATA+/eXe8jFcHGSntUj7/smrNWi6gvq2wdbpfU
-         aqgFLm2NnBA0hUknOZm3OqOvMb+TLHmNhMi8u2hlR6WfZZpXPl/eN+HMktCcyIiSTsBr
-         MSGRJfHwiHw5wiAi+gqe8ywTKIgsa0pXj/i+YgammTYrqCeavjKDSA4la9oWq3UwPmix
-         oIow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738213098; x=1738817898;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XeFAClo/GRnpnoHmOXhQ8WOtII3WuA8AKf+fEiZpfXQ=;
-        b=enlyGxzzyBB0xyDNTzYX1T37fmijuDHcBV6BtyY+fvMTCJ8SBykAx0t/N2SqMzrcBH
-         8Q19BgqTnNb1opzzyoEOsg9IiT4RrCwa4WuM+Ec4fRCVRaXEKqbjxVOeYjP+Bx18G74w
-         q4snkGSKk+uBX8Q90r+ZlacM9fsVy43l9bYXmYE3nacJMVCkpzJ1YKVT2HftwfaTU8GR
-         3j+rH41Wp12+bAIgAPTjz+ZarBKT6qZ8+yXdVSv8Pa5qSFGl8bkbUYoY35zOWqFSec8x
-         axbUKL3djmpYnF+ks2x0mFu6y0V3wDgufwsvgCQtWoxjVz1XftByYbrPsKMfWHjk+J8y
-         nd6w==
-X-Forwarded-Encrypted: i=1; AJvYcCX+exltNOC2VeIdbVEUfcyXqkH9NdTe/ppo3iiRNgDWFLgE6JwI83J7r7nzBfGxUbrwSTIZiXV3vJKglPc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyon5o5YjvdzvHakp2ftmxmmLgXmsqeWX9h8erN0Xplno+G6mS2
-	ucAojydE4unp30d3MggtxH1D6IDU+RqTkClkEI6yG8maAvkdyN04sOoYuAelHRo=
-X-Gm-Gg: ASbGncu/IM8AKqSZ4mtf+5d/GNFzl9j6rBBEylUCrt3mz/hyjo1NDs3BYUx4MEn4yE2
-	9LPnU9JJLZERF311NegRuj3V0kWpEhCTPu+lR+pXgfT1NUm01PDkDI02Glta8ofpJLYUvrQWyZ9
-	23/fBJeBdPvbHEV4OqSVFu7f7hQ4VNVW0TwMctzUm5rBXUAlIKMQ+0SAGIOoDSOwORjlD4mB1vO
-	VMAMD+CFs2ctmth3iQzEZfxXzm3DejJVft9nRbqOWSzKcVAADriXyWF04jynWbVKI82OEo4M30w
-	32o+HmgU6R4PQrvRHA==
-X-Google-Smtp-Source: AGHT+IFc+mkM3u7DrCjTmTvkjYFQF/552EVImTVoRgjOM4B63d3mf/fH/ik7UoquQ9a318LnCDssxQ==
-X-Received: by 2002:a05:6300:44:b0:1ed:7540:45e1 with SMTP id adf61e73a8af0-1ed7a5d54c1mr9431995637.33.1738213097717;
-        Wed, 29 Jan 2025 20:58:17 -0800 (PST)
-Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acec04794bcsm414717a12.51.2025.01.29.20.58.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 20:58:17 -0800 (PST)
-Date: Thu, 30 Jan 2025 10:28:14 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Anisse Astier <anisse@astier.eu>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2] rust: macros: enable use of hyphens in module names
-Message-ID: <20250130045814.ve2jsdi3wmzdlhbw@vireshk-i7>
-References: <20250122131812.466080-1-anisse@astier.eu>
- <20250122133952.501055-1-anisse@astier.eu>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Sa4UGcy9"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50U1coJc023049;
+	Thu, 30 Jan 2025 04:59:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=IH5/sW6f+JNVX0G8psnpK1
+	RkUkDiWwRi4YJcMaueWYg=; b=Sa4UGcy9lYMxYzVfuR+dLOnLH8Re74b9+YiAwn
+	irzemFL1otSfBGuHNFi42/t9GDskLVv3M4VAL7DxCZ69yiUWhGEuI98ZEaHaPNJh
+	MCW3MFv8MJaJFAF1mCbsY3ITJl7WpR621eu/CAxHl/YDAGebqxHujgh7fVghtdgV
+	zNfmo7tBe5xek5RcrBDanSQ4h/EK724UKBh9M3BEXL0DLVtLukmW2KEOf3UrwGmT
+	x8umfMbHPjFn+D8O+6bzyb2MajyZaYYSCFrf0vaQ0LmVVDvyrjYoMCbQFfUEUKh1
+	zUliH+j8c7O9gFzb5T+HAE37QnoN93r+PIsl8iuMCows2rUQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44fyxnr8x3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 04:59:26 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50U4xPU8002868
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 04:59:25 GMT
+Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 29 Jan 2025 20:59:22 -0800
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <ath12k@lists.infradead.org>,
+        <linux-wireless@vger.kernel.org>,
+        Raj Kumar Bhagat
+	<quic_rajkbhag@quicinc.com>
+Subject: [PATCH v2] arm64: dts: qcom: add wifi node for IPQ5332 based RDP441
+Date: Thu, 30 Jan 2025 10:29:00 +0530
+Message-ID: <20250130045900.1903927-1-quic_rajkbhag@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250122133952.501055-1-anisse@astier.eu>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: NDRM274H4kaDuWyWqCksfiV5DisLkWCD
+X-Proofpoint-GUID: NDRM274H4kaDuWyWqCksfiV5DisLkWCD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-30_02,2025-01-29_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
+ adultscore=0 malwarescore=0 priorityscore=1501 bulkscore=0 clxscore=1015
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501300036
 
-On 22-01-25, 14:39, Anisse Astier wrote:
-> +    /* Rust does not allow hyphens in identifiers, use underscore instead */
-> +    let name_identifier = info.name.replace("-", "_");
+RDP441 is based on IPQ5332. It has inbuilt AHB bus based IPQ5332 WiFi
+device.
 
-With CLIPPY=1 W=1, this gives:
+Describe and add WiFi node for RDP441. Also, reserve the memory
+required by IPQ5332 firmware.
 
-warning: single-character string constant used as pattern
-   --> /mnt/ssd/all/work/repos/kernel/linux/rust/macros/module.rs:186:45
-    |
-186 |     let name_identifier = info.name.replace("-", "_");
-    |                                             ^^^ help: consider using a `char`: `'-'`
-    |
-    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#single_char_pattern
-    = note: `-W clippy::single-char-pattern` implied by `-W clippy::all`
-    = help: to override `-W clippy::all` add `#[allow(clippy::single_char_pattern)]`
+Depends-On: [PATCH V2 0/2] mailbox: tmel-qmp: Introduce QCOM TMEL QMP mailbox driver
+Depends-On: [PATCH V3 0/8] Add new driver for WCSS secure PIL loading
+Link: https://lore.kernel.org/lkml/20241231054900.2144961-1-quic_srichara@quicinc.com/
+Link: https://lore.kernel.org/lkml/20250107101647.2087358-1-quic_gokulsri@quicinc.com/
 
-warning: 1 warning emitted
+Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+---
+NOTE:
+The DT binding changes for this patch has been posted along with the
+driver ath12k AHB series.
+Link: https://lore.kernel.org/all/20250130043508.1885026-1-quic_rajkbhag@quicinc.com/
 
-This fixes it:
+v2:
+- Dropped 'dt-bindings: net: wireless: describe the ath12k AHB module'.
+  This DT binding is posted along with the ath12k AHB driver changes.
+- Reserved four memory regions required by IPQ5332 ath12k firmware in DTS.
+  These memory regions are also referenced in the WiFi node.
+- Moved 'qcom,smem-states' and 'qcom,smem-states' to the ipq5332.dtsi file.
+- Used lowercase hex values for the reg property.
 
-diff --git a/rust/macros/module.rs b/rust/macros/module.rs
-index 1eff30d2ca6a..2e740bbdb598 100644
---- a/rust/macros/module.rs
-+++ b/rust/macros/module.rs
-@@ -183,7 +183,7 @@ pub(crate) fn module(ts: TokenStream) -> TokenStream {
-     let info = ModuleInfo::parse(&mut it);
+v1: https://lore.kernel.org/all/20250128091012.2574478-1-quic_rajkbhag@quicinc.com/
+---
+ arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts |  64 ++++++++++-
+ arch/arm64/boot/dts/qcom/ipq5332.dtsi       | 113 ++++++++++++++++++++
+ 2 files changed, 176 insertions(+), 1 deletion(-)
 
-     /* Rust does not allow hyphens in identifiers, use underscore instead */
--    let name_identifier = info.name.replace("-", "_");
-+    let name_identifier = info.name.replace('-', "_");
-     let mut modinfo = ModInfoBuilder::new(name_identifier.as_ref());
-     if let Some(author) = info.author {
-         modinfo.emit("author", &author);
-
-
-Will include it in my V8 now, unless you have any objections to it.
-Thanks.
-
+diff --git a/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts b/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts
+index 846413817e9a..4b7a75e450ca 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts
++++ b/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts
+@@ -2,7 +2,7 @@
+ /*
+  * IPQ5332 AP-MI01.2 board device tree source
+  *
+- * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
+  */
+ 
+ /dts-v1/;
+@@ -12,6 +12,61 @@
+ / {
+ 	model = "Qualcomm Technologies, Inc. IPQ5332 MI01.2";
+ 	compatible = "qcom,ipq5332-ap-mi01.2", "qcom,ipq5332";
++
++	/*                 Default Profile
++	 * +============+==============+=====================+
++	 * |            |              |                     |
++	 * | Region     | Start Offset |       Size          |
++	 * |            |              |                     |
++	 * +------------+--------------+---------------------+
++	 * |            |              |                     |
++	 * |            |              |                     |
++	 * |            |              |                     |
++	 * | WLAN Q6    |  0x4A900000  |       43MB          |
++	 * |            |              |                     |
++	 * |            |              |                     |
++	 * +------------+--------------+---------------------+
++	 * | M3 Dump    |  0x4D400000  |       1MB           |
++	 * +------------+--------------+---------------------+
++	 * | Q6 caldb   |  0x4D500000  |       5MB           |
++	 * +------------+--------------+---------------------+
++	 * | MLO        |  0x4DB00000  |       18MB          |
++	 * +============+==============+=====================+
++	 * |                                                 |
++	 * |                                                 |
++	 * |                                                 |
++	 * |            Rest of memory for Linux             |
++	 * |                                                 |
++	 * |                                                 |
++	 * |                                                 |
++	 * +=================================================+
++	 */
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		q6_region: wcss@4a900000 {
++			reg = <0x0 0x4a900000 0x0 0x02b00000>;
++			no-map;
++		};
++
++		m3_dump: m3-dump@4d400000 {
++			reg = <0x0 0x4d400000 0x0 0x100000>;
++			no-map;
++		};
++
++		q6_caldb: q6-caldb@4d500000 {
++			reg = <0x0 0x4d500000 0x0 0x500000>;
++			no-map;
++		};
++
++		mlo_mem: mlo-global-mem@4db00000 {
++			reg = <0x0 0x4db00000 0x0 0x01200000>;
++			no-map;
++		};
++	};
+ };
+ 
+ &blsp1_i2c1 {
+@@ -63,3 +118,10 @@ data-pins {
+ 		};
+ 	};
+ };
++
++&wifi0 {
++	memory-region = <&q6_region>, <&m3_dump>, <&q6_caldb>, <&mlo_mem>;
++	memory-region-names = "q6-region", "m3-dump", "q6-caldb", "mlo-global-mem";
++	qcom,rproc = <&q6v5_wcss>;
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/qcom/ipq5332.dtsi b/arch/arm64/boot/dts/qcom/ipq5332.dtsi
+index 85e10b20342a..1653da89d413 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5332.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq5332.dtsi
+@@ -485,6 +485,119 @@ frame@b128000 {
+ 			};
+ 		};
+ 
++		wifi0: wifi@c000000 {
++			compatible = "qcom,ipq5332-wifi";
++			reg = <0x0c000000 0x1000000>;
++			clocks = <&gcc GCC_XO_CLK>;
++			clock-names = "xo";
++			interrupts-extended = <&wcss_smp2p_in 8 IRQ_TYPE_NONE>,
++					      <&wcss_smp2p_in 9 IRQ_TYPE_NONE>,
++					      <&wcss_smp2p_in 12 IRQ_TYPE_NONE>,
++					      <&wcss_smp2p_in 11 IRQ_TYPE_NONE>,
++					      <&intc GIC_SPI 559 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 560 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 561 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 422 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 423 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 424 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 425 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 426 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 427 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 428 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 429 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 430 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 431 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 491 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 495 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 493 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 544 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 457 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 466 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 497 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 454 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 453 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 452 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 451 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 488 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 488 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 484 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 554 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 554 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 549 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 507 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 500 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 499 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 498 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 450 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 449 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 448 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 447 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 543 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 486 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 486 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 482 IRQ_TYPE_EDGE_RISING>,
++					      <&intc GIC_SPI 419 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "fatal",
++					  "ready",
++					  "spawn",
++					  "stop-ack",
++					  "misc-pulse1",
++					  "misc-latch",
++					  "sw-exception",
++					  "ce0",
++					  "ce1",
++					  "ce2",
++					  "ce3",
++					  "ce4",
++					  "ce5",
++					  "ce6",
++					  "ce7",
++					  "ce8",
++					  "ce9",
++					  "ce10",
++					  "ce11",
++					  "host2wbm-desc-feed",
++					  "host2reo-re-injection",
++					  "host2reo-command",
++					  "host2rxdma-monitor-ring1",
++					  "reo2ost-exception",
++					  "wbm2host-rx-release",
++					  "reo2host-status",
++					  "reo2host-destination-ring4",
++					  "reo2host-destination-ring3",
++					  "reo2host-destination-ring2",
++					  "reo2host-destination-ring1",
++					  "rxdma2host-monitor-destination-mac3",
++					  "rxdma2host-monitor-destination-mac2",
++					  "rxdma2host-monitor-destination-mac1",
++					  "host2rxdma-host-buf-ring-mac3",
++					  "host2rxdma-host-buf-ring-mac2",
++					  "host2rxdma-host-buf-ring-mac1",
++					  "host2tcl-input-ring4",
++					  "host2tcl-input-ring3",
++					  "host2tcl-input-ring2",
++					  "host2tcl-input-ring1",
++					  "wbm2host-tx-completions-ring4",
++					  "wbm2host-tx-completions-ring3",
++					  "wbm2host-tx-completions-ring2",
++					  "wbm2host-tx-completions-ring1",
++					  "host2tx-monitor-ring1",
++					  "txmon2host-monitor-destination-mac3",
++					  "txmon2host-monitor-destination-mac2",
++					  "txmon2host-monitor-destination-mac1",
++					  "umac-reset";
++
++			qcom,smem-states = <&wcss_smp2p_out 8>,
++					   <&wcss_smp2p_out 9>,
++					   <&wcss_smp2p_out 10>;
++			qcom,smem-state-names = "shutdown",
++						"stop",
++						"spawn";
++			status = "disabled";
++		};
++
+ 		q6v5_wcss: remoteproc@d100000 {
+ 			compatible = "qcom,ipq5332-wcss-sec-pil";
+ 			reg = <0xd100000 0x4040>;
 -- 
-viresh
+2.34.1
+
