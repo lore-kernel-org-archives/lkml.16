@@ -1,163 +1,134 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29121E7C08;
-	Thu, 30 Jan 2025 14:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B779F1DFDA5;
+	Thu, 30 Jan 2025 14:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738245701; cv=none; b=essETly2E3/AVSpyMjBDLlhPBLefXOcb/UVqDCDBNVjy5eplkg2Dqp85o8ohPqzrMcegaH3MXgnJvopRZOd3XEy8pbyOgu51zgRcDlJFd3yYaKXPOP6yGPYiTuFgitYaE8BFCTdG2xm6njpd4x8udsd/UR7cRar6ePAxOdGgjKU=
+	t=1738245744; cv=none; b=OErCLgQLhw4T4M9Orr3Zc2DXAkWL7Bd9TO6xhxSVEfTVfmTqrDL/IQ8wXML0Q9htTuIwx7HvfJ1rL13c71QBW7EhblqQt5qOtlhiIT0pBzeok1IwVrj5mquNDW314o4ZkENu1sSjbSkhNc32q/zX24i16IGkfy9uAD1NxJNcYKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738245701; c=relaxed/simple;
-	bh=ch3lPgpH9FqpWF5yhIl3KdS/BSZwVZLBNQlPIEZ73z4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d6DxQnXUIJuuSutQ9m47KMCYpzuN2zstPnfje1zf7J6duG9gJMs0A8fFybpYsIHXw/SyhEMieFd2h7U0ndV3HWS2DhcVGRKM/5/j5rILITXhRD9fHP8w6N8l3EaEvWhcYNyQN1AHFpP5byZOtOE3iRnzTHSMn43KD5ql7Ht2BJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z0axnlpw; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738245744; c=relaxed/simple;
+	bh=ICizWYnKOf70CJwsMSTG5IZjRoKat5k06w4d7UQid34=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sR6kdmQERydhiuqulhX+1GaEexLAXsGEZI/VB51mBwlB0JbUKnKsrjCrbODUabSTRlZtB0qTxiNP1AUXAkzhosv4lGY5NXJZU4d5hu9Fq5kOk5KLMb6wCF+Y3mxKY74+J2ThndoVjapeygi8cm2CkK7b5Y/t/v9WJwz5ZC2OFUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3PqUVJQP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Nscr013i; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z0axnlpw"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21669fd5c7cso13685955ad.3;
-        Thu, 30 Jan 2025 06:01:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738245699; x=1738850499; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BnUJdLyMGBvO/hIllptp513IAD0oBTKPE00WpFD+Cy8=;
-        b=Z0axnlpw9IHmmkrrUU6R8FLxPEbI4Nktv2a/tv1rwZbSA6woBYDSQcZknh+23o2FeL
-         z3G6Ugirq/WJIv8wfn64BJYL/xPpMmSSBPstIy8Hr7ROPnkB+Wgwg1l+8DzoP7Oiph7I
-         7IsZgqZ+b7CBvU9JNjyqDYwqtrRFhKBAUp7otkPF88bbKIRo78rLX6iPnvEFTmhqcPXl
-         vuGHe1t5oGbhEnsCP121nOQ1OiIxX7o1grQPhwTy6i2CMiNEjGzrhuQkw24cQWDtaT2P
-         YepKVExDffQsq4hePKorApWNw7qI7VwnFbZdypWDG2Kgs9q4RR/9aTXWHVjyi5UTR8m8
-         fS6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738245699; x=1738850499;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BnUJdLyMGBvO/hIllptp513IAD0oBTKPE00WpFD+Cy8=;
-        b=VH4/1G+JfrEq8Hxk0JmSF4RHI9CrHJW7OTqlkvGu1ZKTBF1sFH5l7irEHGoSx/CGrA
-         1G0XOakA/4mcAu4M3ewLoroHC8okg3YJQrQ4Ubxc5tjNHMzujwBllKIHVbDTHQxhSOgt
-         AnCp7I54KCWdcZsJvQ/rUQEPeOmMSDT6PYnpMFTvG8ThVEDzo7XeRqUhI99EhT07I7Bn
-         X8+sXCs3cTYLvxkSDP4hXOPXgt9YGFMZQHxDNjV8KBoGK4k1m5xU3i6EoyQPeCOLM8KD
-         ZLVRLxH4mVvvGcvGduDu8EKUv+POQnxdKd4Cm4nhKXV606S75uql+gpd6vSKSFRTJOPp
-         CemA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1u3juS/Wm+C/mCX2loUVb8BPgf8XzyWJjc1OBQOpcQkmnX2oSHa7j6b2b8bNtKGpG+wuTof7lZK8uhZA=@vger.kernel.org, AJvYcCWRRmQzmTQMCNoT6/gntNuRSf9LqRRR/2xx82b813PH/csCJJrJjyXaUMlM9wSRUooMyRYOD0Mjzism@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPdDXegECE6j1e5BUFnon7eVhYhfjXix2MRklc432jxSlxkkQa
-	mR6PuhwSJMHigaJJkLSLn4tVH7pRLT6PS7HUCRGpIp3SIKStMWJO
-X-Gm-Gg: ASbGncuhWI/3Fqm97DxHHdILjaqw9VYGtmpake7Hb4hAEEN+JIj5Jc+8MD824TQBuIS
-	FJKIVzBMLTZat2Y5kPC+98VLm4aznC6zBv5Zuy6VWfr5TGrGyExwXt3pveEZ23B2LLuJd1LOSDs
-	Cewfo5c9bNUnEpj8u51K2MWU4bao0JiziIvcyO6RrfR7ExlaRuMZemWDoUJxFwoLqale4Li2VfE
-	znTQsGoGH/XpGu4WnjFQbK7VmpwtCV3/s3rjTpIGwVJOE1CAHS/B/3oSq4P9+a2Vlvl61uJuOXk
-	yDOy6wmqW/8vq5osqSd41EhS
-X-Google-Smtp-Source: AGHT+IHv9lGQn/s3vid5X1TDdjdBDQ1OqgW5b6PvrqI4oNlN3OUgEh429QSJ8PIvXZrIzok1AEsKXA==
-X-Received: by 2002:a17:902:da8c:b0:215:b468:1a33 with SMTP id d9443c01a7336-21dd7c356fcmr113793145ad.4.1738245698703;
-        Thu, 30 Jan 2025 06:01:38 -0800 (PST)
-Received: from linuxsimoes.. ([187.120.154.251])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3300880sm14139635ad.168.2025.01.30.06.01.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 06:01:38 -0800 (PST)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: scott@spiteful.org,
-	bhelgaas@google.com
-Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
-	linux-pci@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3PqUVJQP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Nscr013i"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738245740;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=e766NTTlXOYY7byqYaIU3y9E4e/xQ5xE67JQr0m79ok=;
+	b=3PqUVJQPmfERGPUpJ+gENDNURdGOEu2rTVuK1AxeOQLZwZ6ikEj2gkGcY3Lxdkc9SeqJIe
+	V+x4HwYgFuDNrAsGqiHPTatOs7tWs89AdbzW3NwgUWW0m18qIDOgeswhiT/doxI4n0PoID
+	PFw9eQmedLp6pw3m1tP5GVAKARD452Gb1FVySBZoWPerVM/LnL9j7SetXiPM0mxm4loKPA
+	mWulX3nQX9R12Gim72hQt6EndUY4ETuMfhXhAvsHFWdPxLWAV1Hd+YEvEN1ycUT/ZcrDYg
+	o0FFnZeCzt/e2mMxz4aScohhSlLbXC6Gr7mri3ADkB2USMKzwEiAFQSYmKE0aQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738245740;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=e766NTTlXOYY7byqYaIU3y9E4e/xQ5xE67JQr0m79ok=;
+	b=Nscr013i7NtXokKVO/YfvZF4K8mV1M1dHrUaqKzWXq0Im5KjBl+IP7xcUVkO+K1QnSscaA
+	C8yZ/zkhiCSnhbBA==
+To: cgroups@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] PCI: cpci: remove unused fields
-Date: Thu, 30 Jan 2025 11:01:29 -0300
-Message-Id: <20250130140129.19756-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.34.1
+Cc: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Hillf Danton <hdanton@sina.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Marco Elver <elver@google.com>,
+	Tejun Heo <tj@kernel.org>,
+	tglx@linutronix.de,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v6 0/6] kernfs: Use RCU to access kernfs_node::{parent|name}.
+Date: Thu, 30 Jan 2025 15:02:01 +0100
+Message-ID: <20250130140207.1914339-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The `get_power()` and `set_power()` function pointers in the
-`cpci_hp_controller ops` struct were declared but never implemented by
-any driver. To improve code readability and reduce resource usage,
-remove this pointers and replace with a `flags` field.
+Hi,
 
-Use the new `flags` field in `enable_slot()`, `disable_slot()`, and
-`cpci_get_power_s atus()` to track the slot's power state using the
-`SLOT_ENABLED` macro.
+This started as a bug report by Hillf Danton and aims to access
+kernfs_node::{name|parent} with RCU to avoid the lock during
+kernfs_path_from_node().
 
-Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
----
- drivers/pci/hotplug/cpci_hotplug.h      |  3 +--
- drivers/pci/hotplug/cpci_hotplug_core.c | 21 +++++++--------------
- 2 files changed, 8 insertions(+), 16 deletions(-)
+I've split the individual fixes in separate patches (#1 to #4). I've
+also split the ::parent and ::name RCU conversation into a single patch
+(#5 and #6).
 
-diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
-index 03fa39ab0c88..c5cb12cad2b4 100644
---- a/drivers/pci/hotplug/cpci_hotplug.h
-+++ b/drivers/pci/hotplug/cpci_hotplug.h
-@@ -44,8 +44,7 @@ struct cpci_hp_controller_ops {
- 	int (*enable_irq)(void);
- 	int (*disable_irq)(void);
- 	int (*check_irq)(void *dev_id);
--	u8  (*get_power)(struct slot *slot);
--	int (*set_power)(struct slot *slot, int value);
-+	int flags;
- };
- 
- struct cpci_hp_controller {
-diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
-index d0559d2faf50..87a743c2a5f1 100644
---- a/drivers/pci/hotplug/cpci_hotplug_core.c
-+++ b/drivers/pci/hotplug/cpci_hotplug_core.c
-@@ -27,6 +27,8 @@
- #define DRIVER_AUTHOR	"Scott Murray <scottm@somanetworks.com>"
- #define DRIVER_DESC	"CompactPCI Hot Plug Core"
- 
-+#define SLOT_ENABLED 0x00000001
-+
- #define MY_NAME	"cpci_hotplug"
- 
- #define dbg(format, arg...)					\
-@@ -71,13 +73,12 @@ static int
- enable_slot(struct hotplug_slot *hotplug_slot)
- {
- 	struct slot *slot = to_slot(hotplug_slot);
--	int retval = 0;
- 
- 	dbg("%s - physical_slot = %s", __func__, slot_name(slot));
- 
--	if (controller->ops->set_power)
--		retval = controller->ops->set_power(slot, 1);
--	return retval;
-+	controller->ops->flags |= SLOT_ENABLED;
-+
-+	return 0;
- }
- 
- static int
-@@ -109,11 +110,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
- 	}
- 	cpci_led_on(slot);
- 
--	if (controller->ops->set_power) {
--		retval = controller->ops->set_power(slot, 0);
--		if (retval)
--			goto disable_error;
--	}
-+	controller->ops->flags &= ~SLOT_ENABLED;
- 
- 	slot->adapter_status = 0;
- 
-@@ -129,11 +126,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
- static u8
- cpci_get_power_status(struct slot *slot)
- {
--	u8 power = 1;
--
--	if (controller->ops->get_power)
--		power = controller->ops->get_power(slot);
--	return power;
-+	return controller->ops->flags & SLOT_ENABLED;
- }
- 
- static int
--- 
-2.34.1
+v5=E2=80=A6v6 https://lore.kernel.org/all/20250128084226.1499291-1-bigeasy@=
+linutronix.de/
+  - s/rdt_kn_get_name/rdt_kn_name/
+  - s/rdt_get_kn_parent_priv/rdt_kn_parent_priv/
+  - s/kn_get_priv/kn_priv/
+  - The comment, that has been removed in kernfs_put(), is back.
+  - Using rcu_access_pointer() in kernfs_activate_one() and kernfs_dir_pos()
+    instead of kernfs_parent() where the pointer is not dereferenced but
+    just compared.
+
+v4=E2=80=A6v5 https://lore.kernel.org/all/20250124174614.866884-1-bigeasy@l=
+inutronix.de/
+  - rdtgroup:
+    - Add a comment to rdt_get_kn_parent_priv() regarding lifetime of
+      parent.
+    - Move individual rcu_dereference_check() invocations into
+      rdt_kn_parent() with a comment on lifetime.
+    - Use rcu_access_pointer() in kernfs_to_rdtgroup() instead
+      rcu_dereference_check(, true)
+  - s/kernfs_rcu_get_name/kernfs_rcu_name/
+  - Move all rcu_dereference_check() within kernfs into kernfs_parent()
+    and extend its checks to have all cases in one spot. Document why
+    each case makes sense.
+  - kernfs_notify_workfn(): Do unlocks in the reverse order of locks.
+  - Add kernfs_root_flags() and use it in cgroup's kn_get_priv() to
+    check the right KERNFS_ROOT_INVARIANT_PARENT flag.
+
+v3: https://lore.kernel.org/all/20241121175250.EJbI7VMb@linutronix.de/
+v2: https://lore.kernel.org/all/20241112155713.269214-1-bigeasy@linutronix.=
+de/
+v1: https://lore.kernel.org/all/20241108222406.n5azgO98@linutronix.de/
+
+Sebastian
+
+Sebastian Andrzej Siewior (6):
+  kernfs: Acquire kernfs_rwsem in kernfs_notify_workfn().
+  kernfs: Acquire kernfs_rwsem in kernfs_get_parent_dentry().
+  kernfs: Acquire kernfs_rwsem in kernfs_node_dentry().
+  kernfs: Don't re-lock kernfs_root::kernfs_rwsem in
+    kernfs_fop_readdir().
+  kernfs: Use RCU to access kernfs_node::parent.
+  kernfs: Use RCU to access kernfs_node::name.
+
+ arch/x86/kernel/cpu/resctrl/internal.h    |   5 +
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c |  14 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    |  73 +++++---
+ fs/kernfs/dir.c                           | 211 +++++++++++++---------
+ fs/kernfs/file.c                          |   6 +-
+ fs/kernfs/kernfs-internal.h               |  37 +++-
+ fs/kernfs/mount.c                         |  21 ++-
+ fs/kernfs/symlink.c                       |  30 +--
+ fs/sysfs/dir.c                            |   2 +-
+ fs/sysfs/file.c                           |  24 ++-
+ include/linux/kernfs.h                    |  14 +-
+ kernel/cgroup/cgroup-v1.c                 |   2 +-
+ kernel/cgroup/cgroup.c                    |  24 ++-
+ security/selinux/hooks.c                  |   7 +-
+ 14 files changed, 307 insertions(+), 163 deletions(-)
+
+--=20
+2.47.2
 
