@@ -1,294 +1,168 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EFA1E522
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 19:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2869192D87
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 19:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738265913; cv=none; b=jlV8OG19H88Gsff/jo7vvSzB8RUn2w9dBwzy088A6N8ym2E69tDufCtxjhMcK1rW8RzJcTScoxaoYxkEDWKruezOq9KoeuPF+8Qsk8epbA+GvHzux0Gz+o81nQdGpD/2CroIhhiHftjJT7XmV49zByvNzART1siQXvPOT2jdVU4=
+	t=1738265990; cv=none; b=EG5H79HVCVH+MPGwJbsz4rbMUI5OSXptPpsVXPLUF/LOCDYTm9KgU4sA+Qmdbq0PeZjv32rQOfndrO3uLoX3MOadymTH/PnD/HtrHaFXyzZ5UYs8983vCIbxohsu23FxPZ2yNDH4PUhT6ULhTLKTvK/TF0Bxokn2OMl5z/Cvg3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738265913; c=relaxed/simple;
-	bh=+7fGP9GShMAdoK7fXjSbRea/KXhtyWSqOV6O1WKdfBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=cvnQ1VqGKjmSA48WP6wUDIfcpjKYOul+EOD304Cpsb1lyzlE9w4VuuDfY6Ha7icOxviq8tNColK1NpOcz6SazE601HQ6vhKA1a3AzCrYhJstimw00uaxjnY6ldTChhu8xSdFWctria9ZLqkLajb45Ng/IW4OQEe2I2SSGcnK9qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2PWcLiA1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WcIn2wPh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2PWcLiA1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WcIn2wPh; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1738265990; c=relaxed/simple;
+	bh=DzlC+X0WZW0niB4gvbmLbEseL93wg5RUoZ89xtMXXj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Kf38aFb8cbxnHZyYwARKgUjylM6bVL5Lpv8tRNUJNKIpC4GAj45L/9PnUUFC8Zt8pJUu4LoS+Bugt/i7r3lalwtBS2rkKmaxDNJsRZlVj6WzNdxZB9HSfaJC8R1+8BlTKenW+mBrGcLEi0o2jLlQni64VCm94D77ygylJTRfJes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ms0zfubG; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2PWcLiA1";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WcIn2wPh";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2PWcLiA1";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WcIn2wPh"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A8A5B2116E;
-	Thu, 30 Jan 2025 19:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738265908; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=YuwcywBHK+9NBumtOsA7uMb8hiISXXwIDTQuXCfkjKE=;
-	b=2PWcLiA1byfTAhCMeqtZGKFJxR+bncShRqp2lwumUk2CQqajsQgZ03Eq7RiX9FBvhSXOmj
-	GxYzDyw49MtP+8ZamL8J4khL3ZTCh3oT7Q4J+AYCnWuCf0yN+zrsCb3foPHAHt6Wuh7KWz
-	X3P8RIcqAnACF4cCFsy84kJ8ngPHkCE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738265908;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=YuwcywBHK+9NBumtOsA7uMb8hiISXXwIDTQuXCfkjKE=;
-	b=WcIn2wPh9ABO8DEHf9o8P/D8QsfsvpSTcOoR5HUkT2fYu1Cj/f4u6IaiIN/83bmMikhyBI
-	G5ztRWFUATwSgzAQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=2PWcLiA1;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=WcIn2wPh
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738265908; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=YuwcywBHK+9NBumtOsA7uMb8hiISXXwIDTQuXCfkjKE=;
-	b=2PWcLiA1byfTAhCMeqtZGKFJxR+bncShRqp2lwumUk2CQqajsQgZ03Eq7RiX9FBvhSXOmj
-	GxYzDyw49MtP+8ZamL8J4khL3ZTCh3oT7Q4J+AYCnWuCf0yN+zrsCb3foPHAHt6Wuh7KWz
-	X3P8RIcqAnACF4cCFsy84kJ8ngPHkCE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738265908;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=YuwcywBHK+9NBumtOsA7uMb8hiISXXwIDTQuXCfkjKE=;
-	b=WcIn2wPh9ABO8DEHf9o8P/D8QsfsvpSTcOoR5HUkT2fYu1Cj/f4u6IaiIN/83bmMikhyBI
-	G5ztRWFUATwSgzAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9591C1366F;
-	Thu, 30 Jan 2025 19:38:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qH0yJDTVm2cHSgAAD6G6ig
-	(envelope-from <chrubis@suse.cz>); Thu, 30 Jan 2025 19:38:28 +0000
-Date: Thu, 30 Jan 2025 20:38:26 +0100
-From: Cyril Hrubis <chrubis@suse.cz>
-To: ltp@lists.linux.it, linux-kernel@vger.kernel.org,
-	libc-alpha@sourceware.org
-Cc: lwn@lwn.net, akpm@linux-foundation.org, torvalds@linux-foundation.org
-Subject: [ANNOUNCE] The Linux Test Project has been released for JANUARY 2025
-Message-ID: <Z5vVMpub3x__Bj64@yuki.lan>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ms0zfubG"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4368a293339so13995245e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 11:39:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738265987; x=1738870787; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fbrBbtetW+eFSRSujFwF+D0y+0c8n01YuDApoGFtoHM=;
+        b=ms0zfubGYPRZ8gvE+yA7fT2uiWiLW7YeoJgpQXtoyh26vD0Y+YcsaAUW8mvFhC706t
+         /r9mUr3pnPW+yQjewZj5OtHrD72av7076sO5O+0764aZFQH5YDG347qL4dbbnKXOTJ2e
+         tOY9aodzxck4klu5XaJRGWMLyecK8CVbaE+GGGtIn8AW3o44obXhWM9Yt/YWVFzWBraR
+         KL0T1tebyk4RUQgyZD8N2ygpQZWio0v8gdZMUHdbqx7pPWh/U1GpGzunfqkwF3luE+W7
+         rejXvmtZEmR0dgZcd8ttdKGqyDzoSwG/YWmwsW1qm/zGdKEEd9EHbOC0/g2QMumTjPc+
+         ZGNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738265987; x=1738870787;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fbrBbtetW+eFSRSujFwF+D0y+0c8n01YuDApoGFtoHM=;
+        b=K8AotJAbcMyDFvPjkSPqSmSh+JnRNsOvvQEtxHotG6JUBzPUHf+1gC5EIgsTWDVWZm
+         nJ6XZfzkhAhv6OPowV3aCaEiNqd2ocRLfv6gsK5FddwMh77ByHs0nB+oxv+MAJqSut0+
+         0nyhjiHHH415sFYsaM7ysELK6bWW6e0VCDvh8DYFPkCgOJ/HFB1oQ1pRSRFP+sxOuMXQ
+         xrlORJ2YuBV0Fdosttef3r0zk9pKVBGevYYTPJwc9ExsV19nK7lxjY4Hga3IIu6an6SW
+         SnBGynWQvntyjUBvxVlnx0ce/Gw2AWfo19pVmQ6VMdCKm33lHI9XxbKoC/VTdxZh9Ctt
+         b1iA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJdPNSidP0qBXa75mVYaDxNjTr72vC7Dv27mHQqf0z8dVep8U/rFFdjEYm3iucOwkFKpznt5Fnz8kOGF8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0LM5z/LU+iV3MTbMnnbh8U4bnKDuPqWdm+bTrk2b5TijF6fJx
+	JLBz3eM9ZX0+H4JceZvIdupsSINIAzBpMDQ5avvCgpk7Ci8AEKdB
+X-Gm-Gg: ASbGncvDFHuUbes7At0Z8vBlFtgH1Bn4GDqBQvPhbuo2hPx6002zuXTQk4YuIwqCSG4
+	CuJI7xtmM4zZkLNAnWL9m3phQIRkUV/02UilsoLT5kMzDs2jrUUtXoOT9FwrThFU+sYDRVYbKdu
+	oKoE6E/3ZCHEkRtdL+VdTQH3F2ViRpxvLChAp8UWDGaYgksHbzI5Fg4aVtF7IvFLGy+kuMPd9X4
+	k/XFOj1Y31g9w9bFSv7fYmyAU/IJcVSLmY/rJEfbIfABQaC7HybXX4mbNW5cUTffVFRPpNyzK78
+	BLZxXIyVd5Q6eNW4J+/hxYiRWOgHdo+kaNizHlewYo1EZjhK4MxlfA==
+X-Google-Smtp-Source: AGHT+IH+dsWzoPqJ1FZkEn31AznVDwohTc/WMVbBodZ7oPmqAAzLBa26jUpO3bFpM05kGf7eu9Dy3w==
+X-Received: by 2002:a05:600c:3501:b0:434:a7e3:db5c with SMTP id 5b1f17b1804b1-438e2446708mr43887285e9.11.1738265986805;
+        Thu, 30 Jan 2025 11:39:46 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2ede0sm68629125e9.21.2025.01.30.11.39.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 11:39:46 -0800 (PST)
+Date: Thu, 30 Jan 2025 19:39:44 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: lkft-triage@lists.linaro.org, open list <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>, Linux ARM
+ <linux-arm-kernel@lists.infradead.org>, David Laight
+ <david.laight@aculab.com>, Arnd Bergmann <arnd@arndb.de>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, Ankit
+ Nautiyal <ankit.k.nautiyal@intel.com>, Suraj Kandpal
+ <suraj.kandpal@intel.com>
+Subject: Re: linux: master: x86_64: gcc-8: error: call to
+ '__compiletime_assert_909' declared with attribute error: clamp() low limit
+ dsc_min_bpc * 3 greater than high limit dsc_max_bpc * 3
+Message-ID: <20250130193944.478cae8f@pumpkin>
+In-Reply-To: <CA+G9fYtNfM399_=_ff81zeRJv=0+z7oFJfPGmJgTp6yrJmU+1w@mail.gmail.com>
+References: <CA+G9fYtNfM399_=_ff81zeRJv=0+z7oFJfPGmJgTp6yrJmU+1w@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Rspamd-Queue-Id: A8A5B2116E
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_NONE(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Good news everyone,
+On Thu, 30 Jan 2025 15:01:21 +0530
+Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
 
-the Linux Test Project test suite stable release for *January 2025* has been
-released.
+> The x86_64 and i386 build failed with defconfig with gcc-8 toolchain due to
+> following build warnings / errors on the Torvalds Linux master branch.
+> But gcc-13 builds pass.
+> 
+> First seen on v6.13-9485-g72deda0abee6 on Jan. 27, 2025
+> Good:  v6.13-7644-gc2da8b3f914f on Jan. 27, 2025
+> Bad:  v6.13-8265-g9c5968db9e62 on Jan. 27, 2025
+> 
+> i386:
+>   build:
+>     * gcc-8-i386_defconfig
+> 
+> x86_64:
+>   build:
+>     * gcc-8-x86_64_defconfig
+> 
+> Reported-by: Linux Kernel Functional Testing
+> 
+> Build log:
+> ---
+> make --silent --keep-going --jobs=8
+> O=/home/tuxbuild/.cache/tuxmake/builds/1/build ARCH=x86_64 SRCARCH=x86
+> CROSS_COMPILE=x86_64-linux-gnu- 'CC=sccache x86_64-linux-gnu-gcc'
+> 'HOSTCC=sccache gcc'
+> In file included from <command-line>:
+> In function 'intel_dp_dsc_compute_pipe_bpp_limits.isra.80',
+>     inlined from 'intel_dp_compute_config_limits' at
+> drivers/gpu/drm/i915/display/intel_dp.c:2547:3:
+> include/linux/compiler_types.h:542:38: error: call to
+> '__compiletime_assert_909' declared with attribute error: clamp() low
+> limit dsc_min_bpc * 3 greater than high limit dsc_max_bpc * 3
+...
+> drivers/gpu/drm/i915/display/intel_dp.c:2506:25: note: in expansion of
+> macro 'clamp'
+>   limits->pipe.max_bpp = clamp(limits->pipe.max_bpp, dsc_min_bpc * 3, dsc_max_bpc * 3);
 
-Since the last release 236 patches by 25 authors were merged.
+The code is:
 
-Patch review is what most of the projects struggle with and LTP is no
-different. If you can spare some effort helping with the patch review it
-is more than welcomed.
+static void
+intel_dp_dsc_compute_pipe_bpp_limits(struct intel_dp *intel_dp,
+                                     struct link_config_limits *limits)
+{
+        struct intel_display *display = to_intel_display(intel_dp);
+        int dsc_min_bpc = intel_dp_dsc_min_src_input_bpc();
+        int dsc_max_bpc = intel_dp_dsc_max_src_input_bpc(display);
+ 
+        limits->pipe.max_bpp = clamp(limits->pipe.max_bpp, dsc_min_bpc * 3, dsc_max_bpc * 3);
+        limits->pipe.min_bpp = clamp(limits->pipe.min_bpp, dsc_min_bpc * 3, dsc_max_bpc * 3);
+}
 
-NOTABLE CHANGES
-===============
+with:
 
-* New tests
+int intel_dp_dsc_min_src_input_bpc(void)
+{
+        /* Min DSC Input BPC for ICL+ is 8 */
+        return 8;
+}
+     
+int intel_dp_dsc_max_src_input_bpc(struct intel_display *display)
+{
+        /* Max DSC Input BPC for ICL is 10 and for TGL+ is 12 */
+        if (DISPLAY_VER(display) >= 12)
+                return 12;
+        if (DISPLAY_VER(display) == 11)
+                return 10;
 
-  - madvise12 Tests that MADV_GUARD_INSTALL is causing SIGSEGV on access.
-  - fsplough A test that checks data integrity between reads and writes for a file.
-  - landlock08 Test for landlock bind()/connect().
-  - hugemmap34 Tests that kernel handles properly when stack grows into a
-               hugepage segment.
-  - rt_sigqueueinfo02 Tests for rt_sigqueueinfo() errors.
+        return 0;
+}
 
-  - listmount04 Tests for listmout() errors.
-  - listmount03 Test for EPERM on inaccesible mount point.
-  - listmount02 Test for group mount IDs.
-  - listmount01 Test for LSMT_ROOT.
+Although the little functions aren't static the compiler can assume that the local
+versions will be called and inline them.
 
-  - statmount08 Test for EPERM on inaccesible mount point.
-  - statmount07 Tests for statmount() errors.
-  - statmount06 Test for STATMOUNT_FS_TYPE.
-  - statmount05 Test for STATMOUNT_VFS_ROOT and STATMOUNT_MNT_POINT.
-  - statmount04 Test for STATMOUNT_PROPAGATE_FROM.
-  - statmount03 Test for STATMOUNT_MNT_BASIC.
-  - statmount02 Test for STATMOUNT_MNT_BASIC.
-  - statmount01 Test for statmount() without any flags.
+It can then move the clamp() code into the conditionals in
+intel_dp_dsc_max_src_input_bpc()
+It then sees clamp(limit->pipe.max_bpp, 24, 0) and quite rightly complains.
 
-  - ioctl_ficlone01 Basic test for FICLONE ioctl().
-  - ioctl_ficlone02 Test for EOPNOTSUPP for usupported FS.
-  - ioctl_ficlone03 Tests for FICLONE errors.
+Broken by 160672b86b0dd
 
-  - ioctl_ficlonerange01 Basic test for FICLONERANGE ioctl().
-  - ioctl_ficlonerange02 Tests for FICLONERANGE errors.
+	David
 
-* Increased coverage
-
-  - getrandom05 Tests the getrandom() syscall along with the VDSO implementation.
-  - landlock02 Adds landlock network coverage.
-
-* The failure hits (possible missing kernel patches) are now disabled until the
-  test library finishes intialization. This is because if we fail to set up the
-  test environment we haven't had a chance to reproduce the bug.
-
-* The test library now supports per filesystem mkfs options, mount flags and
-  min_kver. This is immediatelly used by FICLONE and FICLONERANGE tests since
-  the support for different filesystems was added into different kernel versions.
-
-* Rewritten tests
-
-  - both pty01 and ptem01 test were cleaned up and split into several tests
-  - vma05.sh is a first test rewritten to the new shell test library
-  - process_madvise01 now runs in memory cgroup, where we can properly control
-                      memory pressure.
-  - fanotify10 Now drops cache three times to make sure inode is evicted, if
-               the test stil fails in certain setups, please let us know.
-
-
-* Removed tests
-
-  - logrotate_tests.sh Since logrotate has it's own testsuite it's pointless to
-                       keep the broken LTP test.
-
-* Changes in test runtime and timeout handling
-  - the runtime and timeout values are now tracked separately
-  - runtime is now the time limit for a loop in the main test function
-  - timeout is now an safety upper limit for the test execution
-  - both values are per test iteration (e.g. for a single filesystem)
-  - the LTP_TIMEOUT_MUL now multiplies the safety limit
-  - the LTP_RUNTIME_MUL now multiplies for how long certain test will run
-  - selected (debug) kernel CONFIG_ options, if enabled now, multiply the
-    test timeouts
-  - many testcases that run >= 1s on a slow reference hardware (RPi zero) were
-    annotated with a proper timeout
-  - generally the timeout handling should just work fine (tm) without any
-    user adjustenments
-
-* Couple of fixes were applied to the test metadata extractor
-  so the data in ltp.json file are now more useful
-
-* The syscall number fallback definitions are now automatically generated from
-  kernel sources.
-
-* 20 testcases were converted to the new test library
-
-+ The usual amount of fixes and cleanups
-
-
-NOTABLE CHANGES IN NETWORK TESTS
-================================
-brought to you by Petr Vorel
-
-* New nfs10.sh test data integrity over NFS (uses fsplough)
-* Removed old ftp01.sh
-
-
-DOWNLOAD AND LINKS
-==================
-
-The latest version of the test-suite contains 3000+ tests for the Linux
-and can be downloaded at:
-
-https://github.com/linux-test-project/ltp/releases/tag/20250130
-
-The project pages as well as GIT repository are hosted on GitHub:
-
-https://github.com/linux-test-project/ltp
-
-If you ever wondered how to write a LTP testcase, don't miss our developer
-documentation at:
-
-https://linux-test-project.readthedocs.io/en/latest/developers/test_case_tutorial.html
-
-And our library API documentation at:
-
-https://linux-test-project.readthedocs.io/en/latest/developers/api_c_tests.html
-
-Patches, new tests, bugs, comments or questions should go to to our mailing
-list at ltp@lists.linux.it.
-
-CREDITS
-=======
-
-Many thanks to the people contributing to this release:
-
-git shortlog -s -e -n 20240930..
-
-    61  Petr Vorel <pvorel@suse.cz>
-    59  Andrea Cervesato <andrea.cervesato@suse.com>
-    29  Cyril Hrubis <chrubis@suse.cz>
-    18  Xinjian Ma (Fujitsu) <maxj.fnst@fujitsu.com>
-    12  Li Wang <liwang@redhat.com>
-    11  Martin Doucha <mdoucha@suse.cz>
-     8  Jan Stancek <jstancek@redhat.com>
-     6  Ricardo B. Marliere <rbm@suse.com>
-     5  Wei Gao <wegao@suse.com>
-     3  Attila Fazekas <afazekas@redhat.com>
-     3  David Hildenbrand <david@redhat.com>
-     3  lufei <lufei@uniontech.com>
-     2  Avinesh Kumar <akumar@suse.de>
-     2  Edward Liaw <edliaw@google.com>
-     2  Li Zhijian <lizhijian@fujitsu.com>
-     2  Ma Xinjian via ltp <ltp@lists.linux.it>
-     2  Po-Hsu Lin <po-hsu.lin@canonical.com>
-     1  Alessandro Carminati <acarmina@redhat.com>
-     1  Ian Whitfield <ian.whitfield@canonical.com>
-     1  Khem Raj <raj.khem@gmail.com>
-     1  Nathaniel Manista <nathaniel@google.com>
-     1  Samir Mulani <samir@linux.vnet.ibm.com>
-     1  Sven Schnelle <svens@linux.ibm.com>
-     1  Xiubo Li <xiubli@redhat.com>
-     1  Zizhi Wo <wozizhi@huawei.com>
-
-
-And also thanks to patch reviewers:
-
-git log 20240930.. | grep -Ei '(reviewed|acked)-by:' | sed 's/.*by: //' | sort | uniq -c | sort -n -r
-
-    107 Petr Vorel <pvorel@suse.cz>
-     86 Cyril Hrubis <chrubis@suse.cz>
-     31 Li Wang <liwang@redhat.com>
-     12 Andrea Cervesato <andrea.cervesato@suse.com>
-     11 Wei Gao <wegao@suse.com>
-      9 Jan Stancek <jstancek@redhat.com>
-      7 Avinesh Kumar <akumar@suse.de>
-      3 Po-Hsu Lin <po-hsu.lin@canonical.com>
-      2 Martin Doucha <mdoucha@suse.cz>
-      2 Jan Kara <jack@suse.cz>
-      1 Mimi Zohar <zohar@linux.ibm.com>
-      1 Chuck Lever <chuck.lever@oracle.com>
--- 
-Cyril Hrubis
-chrubis@suse.cz
