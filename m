@@ -1,50 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9924418FDCE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991E31898F2;
 	Thu, 30 Jan 2025 18:53:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738263202; cv=none; b=ECJDeXlAp7HC/VwBImH2h4FAfIetkdB0rMA1nqEVBZcSrbDyZErSCKqrKXAS3mNfLs/pwCGMFILeaUU9WdOYopYf0F/BdTw3Irm2Mx3RUT01kdbPlZrvQYx9m7f6lySjvIPmuIEPE6WN2p8ZLesz6OnNxMJsTrE5H1C54S4O0FM=
+	t=1738263202; cv=none; b=R8sTJwUnOSt1AS5IV8hRIW1CzZD6FflS57sioSywpm1Av9iSelU1L1Sg9v68Jb6Y9hvQCUaZaGQY+e1EcZ31ZTmtWohBugR6TRnb5lN8PibynhKYtVhMSYa6HQ+NCkVbCLzfnih37WLibgx2J0kTbC0oiuaYmAXXzgFd7RlHkQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738263202; c=relaxed/simple;
-	bh=peoN9kLzqcBxQ2OZOuChr8EQMhP9nDpohkdn1gnad1c=;
+	bh=CqdIBDcqmCGr7hPiub0NBtmuCwzg+LOkL1Xy6BZg1xo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eJ1KZcFfOUE8ghGIiV8XrqPtlyIrL0XhnqZagAyMGbMWX2XjaOlTSgSl/DhS9HcTRlM7Ud30MVw84GWap+ualjiUzx7Be9pehVgDfFZElc9JmnOcj+vMj1tRC+3/wRFyDx6RGCYOU1/P0IAgFYXAsd71kV6EYcScFvrQMDQxDDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wr/E81FL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TlWdrA2K192wnKXvW1hUbyHA88IiXduGvhuRX7R1WhsosPy4sFAEZkDyBwX+GZc771+5pgO9pivj7ne4eARNJ1/HVStg17DMaJbZDuqQKUanVGSIwcaN0fRHXXus6KUSDm6aTXChhEnU6boCTJMrv1JA6M/YBdxmuAPXZFzoPgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pk4JTbpv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wr/E81FL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DE3EC4CEE1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pk4JTbpv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47D22C4CEE5;
 	Thu, 30 Jan 2025 18:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1738263202;
-	bh=peoN9kLzqcBxQ2OZOuChr8EQMhP9nDpohkdn1gnad1c=;
+	bh=CqdIBDcqmCGr7hPiub0NBtmuCwzg+LOkL1Xy6BZg1xo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Wr/E81FLnqJJByTjE6eon8ET6IFH0/5xR9fxwdrmy8GIT7FMe3gEOjgbZx/KDNOL6
-	 AVtYGt2rG9TR6Y1MVwLviSoCQoJzv2YEqiqWwTr6Dtwq7F4iJdJ5AXzRpwxFS8saps
-	 gkyoM071D1ljkRjU5Qz0F4rqT9WIusunsZ8KrgR4/9zMu/Te4+M0B6dzJ2N7M/l9Jh
-	 vpgNRkXx4eXvm3Z8SrM2YbSLgnwb6cxHpiVIZuFbhTAySBxs/EBp2p40GAdNx4oCQS
-	 5e7tIzEKFCO3VIj1+iorJmEhaesDOgUxRNX8cbHvlW7WiGy4DYoAAz5rrO7XTT+dCJ
-	 OqRZIrjehn2Tg==
+	b=pk4JTbpvfW8kqwYFZ+rY/16yHmtjxy69r6SSQjOHOevs5oNKWSSygOnm11aI0enug
+	 bCBb2+CvumH1JFS/i6zlWuYkHbwePUZMbzjHoVp2ijVpSHukX4pbbprteNjaJvwL6X
+	 JuNt+psYmaYXg/9bfKtjzmPmP3oTHT0xos53U59YEo/rH1IiQr3swgfO80JQDieBFE
+	 XkmXoYPk82v2Hw6m9rH/kUVG571KoLOmqFXdrZZGdCioK6YXQKGJYp9fgcNWNipViq
+	 stnhn6x2pC7Pyri7f37LXnpqs8EbS46STcrBfrvCAs4YHOjJWkGugKsalyzTMGD6WW
+	 +X8wamCLNWDWg==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id D577CCE37DD; Thu, 30 Jan 2025 10:53:21 -0800 (PST)
+	id D807DCE37DF; Thu, 30 Jan 2025 10:53:21 -0800 (PST)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: rcu@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	kernel-team@meta.com,
 	rostedt@goodmis.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to core_initcall()
-Date: Thu, 30 Jan 2025 10:53:19 -0800
-Message-Id: <20250130185320.1651910-4-paulmck@kernel.org>
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH rcu v2] 5/5] rcu/nocb: Print segment lengths in show_rcu_nocb_gp_state()
+Date: Thu, 30 Jan 2025 10:53:20 -0800
+Message-Id: <20250130185320.1651910-5-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
 References: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
@@ -56,88 +48,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The timer and hrtimer softirq processing has moved to dedicated threads
-for kernels built with CONFIG_IRQ_FORCED_THREADING=y.  This results in
-timers not expiring until later in early boot, which in turn causes the
-RCU Tasks self-tests to hang in kernels built with CONFIG_PROVE_RCU=y,
-which further causes the entire kernel to hang.  One fix would be to
-make timers work during this time, but there are no known users of RCU
-Tasks grace periods during that time, so no justification for the added
-complexity.  Not yet, anyway.
+Analysis of an rcutorture callback-based forward-progress test failure was
+hampered by the lack of ->cblist segment lengths.  This commit therefore
+adds this information, so that what would have been ".W85620.N." (there
+are some callbacks waiting for grace period sequence number 85620 and
+some number more that have not yet been assigned to a grace period)
+now prints as ".W2(85620).N6." (there are 2 callbacks waiting for grace
+period 85620 and 6 not yet assigned to a grace period).  Note that
+"D" (done), "N" (next and not yet assigned to a grace period, and "B"
+(bypass, also not yet assigned to a grace period) have just the number
+of callbacks without the parenthesized grace-period sequence number.
 
-This commit therefore moves the call to rcu_init_tasks_generic() from
-kernel_init_freeable() to a core_initcall().  This works because the
-timer and hrtimer kthreads are created at early_initcall() time.
+In contrast, "W" (waiting for the current grace period) and "R" (ready
+to wait for the next grace period to start) both have parenthesized
+grace-period sequence numbers.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: <linux-trace-kernel@vger.kernel.org>
 ---
- include/linux/rcupdate.h | 6 ------
- init/main.c              | 1 -
- kernel/rcu/tasks.h       | 5 ++++-
- 3 files changed, 4 insertions(+), 8 deletions(-)
+ kernel/rcu/tree_nocb.h | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 3bb554723074..c6c4aee47df2 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -121,12 +121,6 @@ void rcu_init(void);
- extern int rcu_scheduler_active;
- void rcu_sched_clock_irq(int user);
- 
--#ifdef CONFIG_TASKS_RCU_GENERIC
--void rcu_init_tasks_generic(void);
--#else
--static inline void rcu_init_tasks_generic(void) { }
--#endif
--
- #ifdef CONFIG_RCU_STALL_COMMON
- void rcu_sysrq_start(void);
- void rcu_sysrq_end(void);
-diff --git a/init/main.c b/init/main.c
-index 00fac1170294..fb880b6fb524 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1562,7 +1562,6 @@ static noinline void __init kernel_init_freeable(void)
- 
- 	init_mm_internals();
- 
--	rcu_init_tasks_generic();
- 	do_pre_smp_initcalls();
- 	lockup_detector_init();
- 
-diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index 59314da5eb60..466668eb4fad 100644
---- a/kernel/rcu/tasks.h
-+++ b/kernel/rcu/tasks.h
-@@ -2256,7 +2256,7 @@ void __init tasks_cblist_init_generic(void)
- #endif
- }
- 
--void __init rcu_init_tasks_generic(void)
-+static int __init rcu_init_tasks_generic(void)
+diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
+index 2605dd234a13..5ff3bc56ff51 100644
+--- a/kernel/rcu/tree_nocb.h
++++ b/kernel/rcu/tree_nocb.h
+@@ -1557,8 +1557,11 @@ static void show_rcu_nocb_gp_state(struct rcu_data *rdp)
+ /* Dump out nocb kthread state for the specified rcu_data structure. */
+ static void show_rcu_nocb_state(struct rcu_data *rdp)
  {
- #ifdef CONFIG_TASKS_RCU
- 	rcu_spawn_tasks_kthread();
-@@ -2272,7 +2272,10 @@ void __init rcu_init_tasks_generic(void)
+-	char bufw[20];
+-	char bufr[20];
++	char bufd[22];
++	char bufw[45];
++	char bufr[45];
++	char bufn[22];
++	char bufb[22];
+ 	struct rcu_data *nocb_next_rdp;
+ 	struct rcu_segcblist *rsclp = &rdp->cblist;
+ 	bool waslocked;
+@@ -1572,9 +1575,13 @@ static void show_rcu_nocb_state(struct rcu_data *rdp)
+ 					      typeof(*rdp),
+ 					      nocb_entry_rdp);
  
- 	// Run the self-tests.
- 	rcu_tasks_initiate_self_tests();
-+
-+	return 0;
- }
-+core_initcall(rcu_init_tasks_generic);
- 
- #else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
- static inline void rcu_tasks_bootup_oddness(void) {}
+-	sprintf(bufw, "%ld", rsclp->gp_seq[RCU_WAIT_TAIL]);
+-	sprintf(bufr, "%ld", rsclp->gp_seq[RCU_NEXT_READY_TAIL]);
+-	pr_info("   CB %d^%d->%d %c%c%c%c%c F%ld L%ld C%d %c%c%s%c%s%c%c q%ld %c CPU %d%s\n",
++	sprintf(bufd, "%ld", rsclp->seglen[RCU_DONE_TAIL]);
++	sprintf(bufw, "%ld(%ld)", rsclp->seglen[RCU_WAIT_TAIL], rsclp->gp_seq[RCU_WAIT_TAIL]);
++	sprintf(bufr, "%ld(%ld)", rsclp->seglen[RCU_NEXT_READY_TAIL],
++		      rsclp->gp_seq[RCU_NEXT_READY_TAIL]);
++	sprintf(bufn, "%ld", rsclp->seglen[RCU_NEXT_TAIL]);
++	sprintf(bufb, "%ld", rcu_cblist_n_cbs(&rdp->nocb_bypass));
++	pr_info("   CB %d^%d->%d %c%c%c%c%c F%ld L%ld C%d %c%s%c%s%c%s%c%s%c%s q%ld %c CPU %d%s\n",
+ 		rdp->cpu, rdp->nocb_gp_rdp->cpu,
+ 		nocb_next_rdp ? nocb_next_rdp->cpu : -1,
+ 		"kK"[!!rdp->nocb_cb_kthread],
+@@ -1586,12 +1593,15 @@ static void show_rcu_nocb_state(struct rcu_data *rdp)
+ 		jiffies - rdp->nocb_nobypass_last,
+ 		rdp->nocb_nobypass_count,
+ 		".D"[rcu_segcblist_ready_cbs(rsclp)],
++		rcu_segcblist_segempty(rsclp, RCU_DONE_TAIL) ? "" : bufd,
+ 		".W"[!rcu_segcblist_segempty(rsclp, RCU_WAIT_TAIL)],
+ 		rcu_segcblist_segempty(rsclp, RCU_WAIT_TAIL) ? "" : bufw,
+ 		".R"[!rcu_segcblist_segempty(rsclp, RCU_NEXT_READY_TAIL)],
+ 		rcu_segcblist_segempty(rsclp, RCU_NEXT_READY_TAIL) ? "" : bufr,
+ 		".N"[!rcu_segcblist_segempty(rsclp, RCU_NEXT_TAIL)],
++		rcu_segcblist_segempty(rsclp, RCU_NEXT_TAIL) ? "" : bufn,
+ 		".B"[!!rcu_cblist_n_cbs(&rdp->nocb_bypass)],
++		!rcu_cblist_n_cbs(&rdp->nocb_bypass) ? "" : bufb,
+ 		rcu_segcblist_n_cbs(&rdp->cblist),
+ 		rdp->nocb_cb_kthread ? task_state_to_char(rdp->nocb_cb_kthread) : '.',
+ 		rdp->nocb_cb_kthread ? (int)task_cpu(rdp->nocb_cb_kthread) : -1,
 -- 
 2.40.1
 
