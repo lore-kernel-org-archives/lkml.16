@@ -1,65 +1,62 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07ED82F30;
-	Thu, 30 Jan 2025 22:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320312F30
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 22:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738274782; cv=none; b=X+0BuKP7CdK6GaCIqBu8AHlCEjdt/3JRmUIZVoZnFlrcssNHRM1h+nmhREWZHMZY8TcyHMVegRoESfTllDRVU7qH99czjbJGX7myDn5IWdvMjNbOUZGHnEgp210Y40eofsF5ekrHqXQxxFKpJicXMOBtOiTCTgyLAHNi+EY+oeI=
+	t=1738274838; cv=none; b=I1P0nznhK1lSIe7ekm9BCtnm0c3EdEV6V8kyuX4YbFjuSKZsJSXAVamhf/RtvWQsWgKdEZyhgWiR7Nfrcw+lbTuPc/NW31lHtIg1tv0bey2ogEIhks5LGywUXzpjwL8fmiCWhcsPKATLPywPMX3XLVPLezzLWNhs6oByIy/pP1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738274782; c=relaxed/simple;
-	bh=5lEC08sQ45BWRKvBeSxhzF5Asn+GGYKoB7BnCyLSFIE=;
+	s=arc-20240116; t=1738274838; c=relaxed/simple;
+	bh=avmLgW8CPE51ZDwazO1xFMxHhJYKjjX6F/hB51cmtMw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R/NCtvDkBEzBcPYKggXImMrlSztNZPj0DmwKti5VQIlvF0YlzRPaCygQpLY6S1uWNLd1pSSNxESszeukDTQcsXfvjyeEaOSG4KRtEPPwfdyPlfhoZ9hUubxrTgFFYTBSOr579Nr+goM+VLwzOC9Mffv2JtYGLJ900bc+j+U4s7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W592Nsvp; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=u/OZQ4IBUNwlqHI2KFSjQBV46oOA4Kx3JEpbhv2H3H8ifWzoR/mB8HMP+jmyBzW4uEMlR7Gy7DcXx6yhGUntSVlnVrL/L0NRwN/daxnsOaF40DGo+ljfaA4H88yYLZ/cs1V8ZTudxXPKdm3w4GlvjQSfzRLBEVuaF0scaQt5SNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=cLfe2irU; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W592Nsvp"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2f43d17b0e3so2312095a91.0;
-        Thu, 30 Jan 2025 14:06:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cLfe2irU"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-71e2bb84fe3so691391a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:07:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738274780; x=1738879580; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1738274835; x=1738879635; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=h+KGY4xkvjExborrXb6BKz+ldoEdbJd47bX8fucEoLw=;
-        b=W592NsvpWbLaPAFlQTRgPJZXG4z0xkhqxDhjJtwP0wPjuVm6u6tQoZFQ4SXm9HbekQ
-         QPK1XhlJtRS5tk9HqMHaBZnsm2gXStOf9DxHbw7Im0Fl0zHPgh4aaFfDg4X+G7zX8fI2
-         qYodmTVQiU0rXC9qU/7HM/Kqv717AwiwnHf6IWqc2eOBshlUeZjqCHIlp52fLDXnMR3J
-         bl7ayfs/EYcpiI7CbsvRYYpCDmg02J9inKUfx9lDm2I9vRHNUygT7UEnidtIejgtp4bm
-         LgB2J0DrNTocQ1EXW+3VqeuUmC9J2QwrrbbpExfLX/gxsFHeJdZbYnl9o/DDQKzkepex
-         8Dbg==
+        bh=x9PWxbMV+pc41ZeRuYe5n6UZdKx3ea5g4GHydSXEvtY=;
+        b=cLfe2irUD0e0gv/zu4XyQPj2tRuucocCGnSxoqLLxB+e83+Z/oToOPFvTLhm9ng2yn
+         nj1ElHU5T3cLQ1IaM7va+cR+QS0jV42RluafraIbm4xoPjdXV576+n4nZd1lTRgYUfvS
+         WbV4/SGIgsDmLRR/YN3JRhajipRTqo4FL2RPg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738274780; x=1738879580;
+        d=1e100.net; s=20230601; t=1738274835; x=1738879635;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h+KGY4xkvjExborrXb6BKz+ldoEdbJd47bX8fucEoLw=;
-        b=mEh9y5gI04ZvcSFAZEqhL9QZDKba4arwkxQtRZdRNnuJyaNf/dsmTelI9tYqZ5LMJO
-         4UO5NmFvaJQFTgkJ/LxgjeYOD87LgpqUIj0hTtrTflppBjqeNvU6G8GP4RS3rT5sQ7qT
-         B0m/Poem/aVZIrLTLMP6RtLk+CF3KWnDzmCgFbA16/klEu+RmiFn1lqmyPKLV6UUiQ3I
-         wuwm49aDC8QiYnSb0oi7tBPk+i0yHDB9ZBq+E516/xpbVJyljubG1n7H2pvu55N00LIJ
-         Yiqb3fhKDX7A7IYcgm+Mw87yfiaoroG27hjN6TUOcNC7kfFPSc/JtnvFlACXd3ppg33c
-         4mbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7sUWGc/mLvEOgsoBYOAJo83GjkXJ8VwyiqeIkQ4pGqYr/VI2qUeXMwm+QxSbqJD3FeEOk5lX2@vger.kernel.org, AJvYcCWk/GcNe0dLZLbgbf5M4VvOJER49JKogGYUDhULT9EGcLhJG6Q6jtfuhPRM91/R8oveLnb2kh6tj4MyRPk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI4Zz2h5I9MeXsbGrt/y4rwaMhOWFK6IfOAoZhGyJ6BR9XlDoj
-	SjPwbcsW2J86xQHf8sAldXZ7qM3TWA6YXzJlzDIOMQA92UNqWB7z
-X-Gm-Gg: ASbGncuGNg0RFQTAG1L1Cu0SCXEl1opQkciYv6lU6L8/Mu/dikHnFoJRCZqSzMAkvAh
-	/Ondj7B7jB9BEhs6ZPiBYJjCavNGCH+wGngKF/bhnfZSKaodCBBwsAcp/nwTHRaWjKFMLTgGc4Y
-	oTweAuj9e+49asbYlPRrIq4t2f0+FDHvqxrjIpPPql+C5nP8/+oDJ3gDClfUipu5TdEDeVwxbTN
-	Qo6t3c8sY2UYcB18pfGtmjTSXnTqFwCDDWLYvs/SrOosMDz3QBMFqFH+H5p/nK+V3v0k0C5H/Bn
-	NtHHX7x9qPibjKoQI2XxwUUgqyIShrsnT/YaHEIVnps=
-X-Google-Smtp-Source: AGHT+IHfBEjg++wRUJoKnQ1aYa+pX53QXbQxObY6l+yadiqvDfPrRgMU+ak1UJ3HUfHlhF+Y5c129A==
-X-Received: by 2002:a17:90b:37c3:b0:2ee:8ea0:6b9c with SMTP id 98e67ed59e1d1-2f83abda22dmr14722035a91.12.1738274779720;
-        Thu, 30 Jan 2025 14:06:19 -0800 (PST)
+        bh=x9PWxbMV+pc41ZeRuYe5n6UZdKx3ea5g4GHydSXEvtY=;
+        b=axZbYm97oHRZSLYd4055kDrGA6q4Kbj+afkPPE87DfYxKGpFFnqExLsYhlDZN6+R+f
+         4RMTHbca/FyDOyHEQo6Ph+IUiVWkh51V1LIjBdvKu0PRMkR/cdFDUZzZ0wY0bhhK3e9f
+         o3GXflpZNPqgAbGSJoSdiDA7pOvaECtVlFmu5kDAg6ax3W1uyTcSG9DsWOfgwklbqM3u
+         kRgKTPByQBPZqiFs8rHYOSQIeuTkwOHqWxgVeKtclVg7KzIKFVvnSpIsL9K2SP4ANYdN
+         Q+evKAtP6kbTUsKaSowV31KGYdvTFESxYYHoJ504s/KPcmvSpr+FJ4Nx+UXdcvanPnFE
+         Trqg==
+X-Forwarded-Encrypted: i=1; AJvYcCUm4UvfFOIHYI2NGFsGI7CBF60NNl/X5wdIRKZ+RATx4NneXtJy1+IP8yeQOXbRWljmcgohCKXn4sQFQDk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpHuVTTChPxoBqFqyiN7NWAHL1LNLLk3xnQ50+A9Y94WitkBP8
+	yQlCidINEYe3nEwV0FCDi1CG+6XDHaFk46bt4jjp+4GS0YUB1t6QY7DgGSH8Qw==
+X-Gm-Gg: ASbGnctl79J+TXiLA3DsuzxTIGKQ1DD264IzwXxe65i+Y/pSDZQ3gLL5kSwdHLqLynY
+	ZCXDvJ5ZSpV4+o+jxBIilt/mz7b59udlEbhErYq+cxlmmprh7/RXO7/ovTyffgsqK+SMmMg8KKb
+	8fo+Y+CVcnBFJsY4d3EuHLeP/7T0FHHEI5oKrI9Oxjv5Jn46YiGbGJomRy8v9yJFA1iYRKvFGkh
+	wfc/EWzBG3LHALNnjnJxjStMljUiZzTcFuTZdze+W2RFuIyy3LvHDHPrZxguhbsEr2PFD+h2hoe
+	QG9ExkwtLUULhDBhuBJHT7ESoRHpftZTcDs7A0TC+i9iXmUxnDGRnx8=
+X-Google-Smtp-Source: AGHT+IHDaNlt4S67Jjd7nYnaKKLenYdWvvL+1raluenpuKxu6pzj9agQZyPjQ99ELLdpEVnU5sZ+6A==
+X-Received: by 2002:a05:6830:3696:b0:71d:4488:19ed with SMTP id 46e09a7af769-7265673213cmr6436451a34.5.1738274835142;
+        Thu, 30 Jan 2025 14:07:15 -0800 (PST)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f8489d3db2sm2239038a91.26.2025.01.30.14.06.17
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726618c8aefsm526589a34.67.2025.01.30.14.07.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 14:06:19 -0800 (PST)
-Message-ID: <0fe1555d-855d-4fab-970f-69bd7119946d@gmail.com>
-Date: Thu, 30 Jan 2025 14:06:17 -0800
+        Thu, 30 Jan 2025 14:07:14 -0800 (PST)
+Message-ID: <2018dc60-1cec-4575-9005-cb543c7c1856@broadcom.com>
+Date: Thu, 30 Jan 2025 14:07:12 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,81 +64,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.13 00/25] 6.13.1-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250130133456.914329400@linuxfoundation.org>
+Subject: Re: [PATCH 2/3] gpio: bcm-kona: Make sure GPIO bits are unlocked when
+ requesting IRQ
+To: Artur Weber <aweber.kernel@gmail.com>, Ray Jui <rjui@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Scott Branden <sbranden@broadcom.com>,
+ Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>,
+ Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>,
+ Christian Daudt <csd@broadcom.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht
+References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
+ <20250130-kona-gpio-fixes-v1-2-dd61e0c0a9e7@gmail.com>
+ <9965d0b3-f169-45c4-9345-8588865a2ca4@broadcom.com>
+ <4af2c24d-1c79-4119-a112-eeac1112d49c@gmail.com>
 Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
-In-Reply-To: <20250130133456.914329400@linuxfoundation.org>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <4af2c24d-1c79-4119-a112-eeac1112d49c@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/30/25 05:58, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.1 release.
-> There are 25 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 1/30/25 13:46, Artur Weber wrote:
+> On 30.01.2025 22:35, Florian Fainelli wrote:
+>> On 1/30/25 09:10, Artur Weber wrote:
+>>> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
+>>> index 
+>>> 77bd4ec93a231472d7bc40db9d5db12d20bb1611..eeaa921df6f072129dbdf1c73d6da2bd7c1fe716 100644
+>>> --- a/drivers/gpio/gpio-bcm-kona.c
+>>> +++ b/drivers/gpio/gpio-bcm-kona.c
+>>> ...
+>>> @@ -87,14 +103,25 @@ static void bcm_kona_gpio_lock_gpio(struct 
+>>> bcm_kona_gpio *kona_gpio,
+>>>       unsigned long flags;
+>>>       int bank_id = GPIO_BANK(gpio);
+>>>       int bit = GPIO_BIT(gpio);
+>>> +    struct bcm_kona_gpio_bank *bank = &kona_gpio->banks[bank_id];
+>>> -    raw_spin_lock_irqsave(&kona_gpio->lock, flags);
+>>> +    if (bank->gpio_unlock_count[bit] == 0) {
+>>> +        dev_err(kona_gpio->gpio_chip.parent,
+>>> +            "Unbalanced locks for GPIO %u\n", gpio);
+>>> +        return;
+>>
+>> Don't you want to release &kona_gpio->lock here?
+>>
 > 
-> Responses should be made by Sat, 01 Feb 2025 13:34:42 +0000.
-> Anything received after that time might be too late.
+> If you're talking about the "raw_spin_lock_irqsave" call above the if
+> condition - note that it has been removed and was actually moved below:
+
+Oh my bad, my eye corrected that - to a + somehow.
+
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.1-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
+>>> +    if (bank->gpio_unlock_count[bit] == 0) {
+>>> +        raw_spin_lock_irqsave(&kona_gpio->lock, flags);
+>>> +
+>>> +        val = readl(kona_gpio->reg_base + GPIO_PWD_STATUS(bank_id));
+>>> +        val |= BIT(bit);
+>>> +        bcm_kona_gpio_write_lock_regs(kona_gpio->reg_base, bank_id, 
+>>> val);
+>>> +
+>>> +        raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
+>>> +    }
 > 
-> thanks,
-> 
-> greg k-h
+> In general, the diff for this patch did not generate very well, sorry
+> about that. I'll see if there's anything I can do to improve that in the
+> future.
 
-cpupower does not build on 6.13 because this fix made it too late:
-
-3075476a7af666de3ec10b4f35d8e62db8fd5b6d ("pm: cpupower: Makefile: Fix 
-cross compilation")
-
-Do you mind picking it up so 6.13.1 builds without any special 
-configuration required on my side?
-
-Thanks!
+Nah that's fine, thanks!
 -- 
 Florian
