@@ -1,63 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7491F0E5D;
-	Thu, 30 Jan 2025 19:04:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534191F131F;
+	Thu, 30 Jan 2025 19:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738263877; cv=none; b=pbL8ODHROur3sEi3H49Xr7IPsiH+vzch2HeuT+9J+i/8gKSd8a1am9TC7VfCLHWJ9bEa7bSEyKfjG5Mh9z06aicuodHPsz1ZybqnKySxBWBZnB2JhTt6+iXVdAEKngxUfIlfKOl+q414pROAxZnQ2VywDiqP7EgIu77o3H0sQX0=
+	t=1738263879; cv=none; b=PD+BlzqFX8EWMrmqkrsIeMYqHv9k6+imDpj1JlNPpcAfPoLMMKnaJcW9fPRD9i8hzP3xZInS3Gsu3NIYHF+ruwtDIw37quD+SIWrCd4YNvvvMNfqhqQlKLQZDwbzkGiuGXW4w0EJ7Xk+8P589VemZMGockRJiIJFnoS6lGy7rqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738263877; c=relaxed/simple;
-	bh=ss9rEmW1/rO0xDw6Gw0M97gwflHKtZnrZxak+j/6V5s=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Zp9lWAEiF5YrVW1PlMWGt1eouLV5pDNcMDUWkwSRYqviSh7aPFYJFkDLnkaJO7th7mwfNTva9Vg+Jcinwvp7rysVe8xxy2FEIrNEJxHE1zv4BybR0ADU6rdDOBSmbJnj3N1zmX/waSOdl2BrkBst/qXJQIG6F8Y6WzV8YthjWZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZyZ9t7L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738263879; c=relaxed/simple;
+	bh=UvstwIrHh4yg71jLnUEWEWjgTy/RtVTNKH20NnE9Z/I=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cVWB6HMTEL1AoJytUjNW+ilYjNfAr2NAnhG5bxIdRylZjEJyREVkOLRlY+qD05nfvsxKKMq+EDVc4YsVaBp9P1LVEI1TDFmk+agZoEsQzrcONbjMGRDUx6UJIqz8U1TCgUoTuxyEe5hf+aBLJLY9ib1rNdAeiG+nSExYMkdabmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lMO2cpVh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZyZ9t7L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2F29C4CED2;
-	Thu, 30 Jan 2025 19:04:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lMO2cpVh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C37EC4CED2;
+	Thu, 30 Jan 2025 19:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738263876;
-	bh=ss9rEmW1/rO0xDw6Gw0M97gwflHKtZnrZxak+j/6V5s=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=WZyZ9t7Li2k4/lAB27R8DVfReTWfEOmwa7hTQEFdHGnuErr08Bs8Wv/d9PJaqNzyG
-	 /uJaN3s4AKSEgIT1F1diLqu7OWQouvf7ZH1nA5BWY055T4umwgQyhV1vGTgGxYT4E3
-	 q8h0DCJKdYFPsvS/75N3HUpFLnpzR05KSA8nj7qVJRyrwrjcvenQav2btrqTrHMBIL
-	 4CxmoGZSpTU+7mooVICedxN3KM7SgT5CRBEHqANhgV2tKXYwI8S1Ceo5Fn90Mr399q
-	 xDflJved9tOIPunVxlEnugdKuKvhyzSzDm0ZpA5RKcwDuS9vqdNtZ7Xi80UNAKjbGN
-	 2dwiRzZtSrKKg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3669E380AA66;
-	Thu, 30 Jan 2025 19:05:04 +0000 (UTC)
-Subject: Re: [GIT PULL] Two documentation fixes for 6.14-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <878qqs1bqh.fsf@trenco.lwn.net>
-References: <878qqs1bqh.fsf@trenco.lwn.net>
-X-PR-Tracked-List-Id: <linux-doc.vger.kernel.org>
-X-PR-Tracked-Message-Id: <878qqs1bqh.fsf@trenco.lwn.net>
-X-PR-Tracked-Remote: git://git.lwn.net/linux.git tags/docs-6.14-2
-X-PR-Tracked-Commit-Id: 96720ce8b1fa72659ab03544516ceaad6bd1ebc0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b4b0881156fb8209bf5ef6cb63211bb0ad6e1a6b
-Message-Id: <173826390286.1055680.2426131308421240136.pr-tracker-bot@kernel.org>
-Date: Thu, 30 Jan 2025 19:05:02 +0000
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Linus Torvalds <torvalds@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+	s=k20201202; t=1738263879;
+	bh=UvstwIrHh4yg71jLnUEWEWjgTy/RtVTNKH20NnE9Z/I=;
+	h=Date:From:To:Subject:Reply-To:References:In-Reply-To:From;
+	b=lMO2cpVh8a5wd8bRsrPLXQYbnLCBrHmGMggiIbocLoJ+6h84kurcZSqbHPhAH0Xsu
+	 MR0CuI2JZS7em7spANd6rsG1UvZOeoRz9cw4VyZYxTmkiEt1f164lmDzpQ0e2TrN2N
+	 FFDKK9zdImTaiGFFGvNq2nVoE53NA25zp9SvTP6pW6eaXc7/R/EELkxZq94qnuvgKS
+	 41fDtakeu/nrnP4XkiEngljx2TdqOv3GLhDhbmM0AwGrH9mLUyijSnkfTyMuYFdCG2
+	 Dn4Jj0VvTfDEky6RItxZAP2aZDiFJSJdwULCwQH54IQXbbhBGjq9fwq1p4mCkME2Br
+	 3ojXWEaRl4dCg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id D992ACE37D9; Thu, 30 Jan 2025 11:04:38 -0800 (PST)
+Date: Thu, 30 Jan 2025 11:04:38 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org
+Subject: Re: [PATCH rcu 0/11] Torture-test updates
+Message-ID: <bd22a7da-a4e0-45dc-b43c-1532af4dcfc7@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <c4864e07-93b8-4bc9-80fd-62b00a64e329@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c4864e07-93b8-4bc9-80fd-62b00a64e329@paulmck-laptop>
 
-The pull request you sent on Thu, 30 Jan 2025 09:56:54 -0700:
+Hello!
 
-> git://git.lwn.net/linux.git tags/docs-6.14-2
+This series contains torture-test updates:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b4b0881156fb8209bf5ef6cb63211bb0ad6e1a6b
+1.	Add get_torture_init_jiffies() for test-start time.
 
-Thank you!
+2.	Add a test_boost_holdoff module parameter.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+3.	Include grace-period sequence numbers in failure/close-call.
+
+4.	Expand failure/close-call grace-period output.
+
+5.	Trace expedited grace-period numbers in hexadecimal.
+
+6.	Add ftrace-compatible timestamp to GP# failure/close-call output.
+
+7.	Make cur_ops->format_gp_seqs take buffer length.
+
+8.	Move RCU_TORTURE_TEST_{CHK_RDR_STATE,LOG_CPU} to bool.
+
+9.	Complain when invalid SRCU reader_flavor is specified.
+
+10.	Add FORCE_NEED_SRCU_NMI_SAFE Kconfig for testing.
+
+11.	Make SRCU lockdep testing use srcu_read_lock_nmisafe().
+
+Changes since v1:
+
+o	Fix "segement" typo in commit log.
+
+						Thanx, Paul
+
+------------------------------------------------------------------------
+
+ b/Documentation/admin-guide/kernel-parameters.txt        |    5 +
+ b/include/linux/torture.h                                |    1 
+ b/include/trace/events/rcu.h                             |    2 
+ b/kernel/rcu/Kconfig                                     |   11 ++
+ b/kernel/rcu/Kconfig.debug                               |   14 +++
+ b/kernel/rcu/rcu.h                                       |    2 
+ b/kernel/rcu/rcutorture.c                                |   19 +++-
+ b/kernel/rcu/tiny.c                                      |   14 +++
+ b/kernel/rcu/tree.c                                      |   20 ++++
+ b/kernel/torture.c                                       |   12 ++
+ b/tools/testing/selftests/rcutorture/bin/srcu_lockdep.sh |    2 
+ kernel/rcu/Kconfig.debug                                 |    4 
+ kernel/rcu/rcu.h                                         |    6 -
+ kernel/rcu/rcutorture.c                                  |   64 ++++++++++++---
+ kernel/rcu/tiny.c                                        |   12 +-
+ kernel/rcu/tree.c                                        |   22 ++---
+ 16 files changed, 173 insertions(+), 37 deletions(-)
