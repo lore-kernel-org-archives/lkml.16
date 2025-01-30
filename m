@@ -1,120 +1,158 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C241AF0C0
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 11:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C7301A7046;
+	Thu, 30 Jan 2025 11:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738236127; cv=none; b=kACXJFhhw/XtiVUgeSkOAzI16J4K4bu2JMlb6KKWJnooc5R6eSaCHoYm+bLbHh5lI88vxxbPp4HP/ihBUU6OXzkcdlwgrAL9W/HTZ9ULxePCWY5E6umeNhWMTyjcR2ru+Gget/k7tZaQJHXKjqjhkufL7FXDG1uNnXPDqXsQ4dQ=
+	t=1738236138; cv=none; b=f8A/GY7YpDB9uvdOgPQyj9O6X3C85aHtx9/LJ/tPbkvuWkE07FJVZ4jbjV9KomO4gSNGeW6XCX1bdxMjmJU4Hffa5eY+dt2tOfhS0zCTr8mWjunm1sUGh75TLyYHq/NgMW99Ip3V3Wln52TlmR5MA58Amcnu9qcii9vtr8KGPC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738236127; c=relaxed/simple;
-	bh=epUow/8fiF8aQw32z3h6jYnc2pjrKb3zCez9kDj6Oqk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Z5W7wYf8KGMiRQ4RPkpc40zIJipPJ9VZ0e7pWfgSUSczFn9s2Ey2+6tecTg5MgT7zt2bfUUQ9h+vCnRRkINUaeK5Q6AQuYSs5fCZbeCBoHpqmWbaLWL8+BNCcgX3Sj9zZJgyWMvfD2h2NtHEoEtk/P2oRWV9ljrl6g3+4gzmii4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=znWIWFuA; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="znWIWFuA"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4361fc2b2d6so3106065e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:22:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738236124; x=1738840924; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oGOvFtwymdsmR57ATsFyVOgokrgCsziDzPAGb6ER9lw=;
-        b=znWIWFuAWqrUdEY7QJ3p+CxBhsIH+Gjjl2uCM1W9DCtZZmRvnJnn0BRGlVoAWN793D
-         nSO+I3PcBwqJOc0DAUZLDoVczN5J3Jv6la8C81tV5QRh7rYxn/OwcA7j3j4jtsJeH9bw
-         Mtapy3DHs77EwE+GOBwNex0/z5qVMUBdL2YOBMY5JeQjWlgcQt7mXZ/00lFiaYIb7zD6
-         eVWUqKwgX/60o4DglJBvRURgsSoTwOY8MkkYY/jQD+7jj3z6uVhd3dckv60MfXmatFFy
-         og/Nw8GuPMnqgEVFMrHovFZmQ6EwajEzt4SC5GG6nwpj9V1OUeLdWM24k0WO9z52qfx9
-         PKSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738236124; x=1738840924;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oGOvFtwymdsmR57ATsFyVOgokrgCsziDzPAGb6ER9lw=;
-        b=DMPhG/7hna4i0+dffe1ODN0LW+We+loaebJ5QEiBmQSlyveKfkpGCgE8gyezwYHVp4
-         UZcReV/pUjUWbcorEoajuK+tJrsYNnau6IJkaVZXwX7fBBAlUPmfKh0rUTEt9LnjzxVN
-         bQHQtFL4WMBDGj5+z1kNuD5B98wxO4bWLRi0tir940+Uc050JLNb9OanojE0yiWhFbwe
-         F8Gpt03GFGye9hpIOFIMrbzx6WNCxzmhonDSgVNTbbXEpwl7qB/VsLfNxukzDAuaCmy7
-         GFk2m92Ly4IkSa6lione8jMuEDrldFy+Da7sAWFL1VUoYUg9N0QA5OdXPuth3WYGQPoa
-         qBSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZVaMwiRRW2jKd8f//htloBqc5RmUiaa6D2hIm7/LcUMHCyNmSEPMbyZtYEZxGXVXSHLnHKdrFUfc09nA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVQICyWOMKo6FceRfMzxuDiH7Mt0jpzM9vXX3SOLP7UU7UXjOD
-	sV+Cq429PKl4G/a9Nzz2DWr83PvgFT5r/0QrgtHcmvCFRnY++s+MYnhPOUfcrxPfJi/JSYklEYv
-	EjtBl7hbqNkUyqA==
-X-Google-Smtp-Source: AGHT+IFUthAf8+npb3AG8+vvgocshmycFlnj9gA8C5XQPmZ3HHl4BiIWHpo/V5jjjn1JmoswwDfNEibCAEKolD8=
-X-Received: from wmbeb18.prod.google.com ([2002:a05:600c:6792:b0:436:164a:763e])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:35d3:b0:438:d9f1:f5cc with SMTP id 5b1f17b1804b1-438dc3c3983mr61615825e9.8.1738236124203;
- Thu, 30 Jan 2025 03:22:04 -0800 (PST)
-Date: Thu, 30 Jan 2025 11:21:38 +0000
+	s=arc-20240116; t=1738236138; c=relaxed/simple;
+	bh=MghFTWMvhJ+aN7aFXsfim1mSQbCrS8tySxPnq4M2kjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RH296WwIxTpxaq2ZXqI58hPWdhLFwSIXuhVTSqpnlXuO+n97xZKm/kN4PJWmnG6MMLA6agUxGzuuX4SReAzNyFDJsOgu8rvAnPfZlVVnPovc7dG0rdGbUV4jZ9ulEu0jE/e/vHNeBAe7uIerZ+WEHDqAN2nYfLjILMq55QeD1JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 2997B72C97E;
+	Thu, 30 Jan 2025 14:22:08 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id F28277CCB3A; Thu, 30 Jan 2025 13:22:07 +0200 (IST)
+Date: Thu, 30 Jan 2025 13:22:07 +0200
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Sven Schnelle <svens@linux.ibm.com>
+Cc: linux-snps-arc@lists.infradead.org, Rich Felker <dalias@libc.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andreas Larsson <andreas@gaisler.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	linux-kernel@vger.kernel.org,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, sparclinux@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
+	Will Deacon <will@kernel.org>,
+	Eugene Syromyatnikov <evgsyr@gmail.com>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Jonas Bonn <jonas@southpole.se>, linux-s390@vger.kernel.org,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>, Vineet Gupta <vgupta@kernel.org>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	strace-devel@lists.strace.io, linux-arch@vger.kernel.org,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Mike Frysinger <vapier@gentoo.org>,
+	Davide Berardi <berardi.dav@gmail.com>,
+	Renzo Davoli <renzo@cs.unibo.it>, linux-um@lists.infradead.org,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Borislav Petkov <bp@alien8.de>, loongarch@lists.linux.dev,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Stafford Horne <shorne@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Brian Cain <bcain@quicinc.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-parisc@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Oleg Nesterov <oleg@redhat.com>, Dinh Nguyen <dinguyen@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Richard Weinberger <richard@nod.at>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Alexey Gladkov <legion@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 2/6] syscall.h: add syscall_set_arguments() and
+ syscall_set_return_value()
+Message-ID: <20250130112207.GA6617@strace.io>
+References: <20250128091626.GB8601@strace.io>
+ <yt9dwmecya4g.fsf@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAMFgm2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDQ2MD3ZLE4mzdgswU3YLSJF0TCxMTU4vE1GRDyyQloJaCotS0zAqwcdG xtbUAC+mXKl4AAAA=
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1058; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=epUow/8fiF8aQw32z3h6jYnc2pjrKb3zCez9kDj6Oqk=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnm2DKLcFuH+5SHyGUg1iA3pVvcUGVgAAEGWNBk
- YVN4FL1+eiJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ5tgygAKCRAEWL7uWMY5
- Rvf/EACdDy+Ofw26/VT3qBaPpqO0vQQz9Elxo9UTzZO+hEtGHqr9Ph/51piZA5KF7BOWydEHjam
- 3rC1vFOLiO9AifVRblm219s+yZxLmxQuAOhcKZ2+4p+wqkpyHzGTxvl9Wlz0o6RLu01okf9bXOZ
- KCGVtY8qqUgkxjiXFyyqPF9AIH995db2xPVg+p3H6OOlRslpv2sV1nSRhXmHxIiRUKWuNAUeUgb
- qgXrrBYDYHtldsQ3gL2uSsPZTWaGublbzdV/U/alMbYBt5CQrEvo1QAmeG0mHMUgyMBUs3/F2QA
- M1pOPiMV68PW4xTJibEgJeCq/nmTOX2KvWD0rTwEuA7JzKeb4iZWKs2mjPNuAYCPq3LuUjLHWsV
- Mzc+aYp1f6aPsaP9Fs7ddpO2sbWIdRAyCKPMqJv3dkJEhMFzCKUC/30jH9D5te/MvxwhIsUgjwS
- 8GdZSeQm/tiZyfu/QoLfdKBgdGDqyBW+5XTtNK0qIM3UWI6Po8poDokiTsR1fkzN9tjocvZ7JH6
- VWrUl+mX21nVvcLr3mkEAfa8xz/5AaVVbldRocr+ctWevs33lAwnGfEYEhVhXvzJTLHnrcwUBg0
- A+6eeUeQdywJmSEPr5tN7xwqlPzDsus77WKRKmgbOPmSG+GGKPHAQYqzMRG7f6rE7elKIVoHYMT zQEZEfDb4707bcw==
-X-Mailer: b4 0.13.0
-Message-ID: <20250130-task-pid-pub-v1-1-508808bcfcdc@google.com>
-Subject: [PATCH] rust: task: make Pid type alias public
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yt9dwmecya4g.fsf@linux.ibm.com>
 
-The Pid type alias represents the integer type used for pids in the
-kernel. It's the Rust equivalent to pid_t, and there are various methods
-on Task that use Pid as the return type.
+On Thu, Jan 30, 2025 at 09:33:03AM +0100, Sven Schnelle wrote:
+> "Dmitry V. Levin" <ldv@strace.io> writes:
+> 
+> > These functions are going to be needed on all HAVE_ARCH_TRACEHOOK
+> > architectures to implement PTRACE_SET_SYSCALL_INFO API.
+> >
+> > This partially reverts commit 7962c2eddbfe ("arch: remove unused
+> > function syscall_set_arguments()") by reusing some of old
+> > syscall_set_arguments() implementations.
+> >
+> > Signed-off-by: Dmitry V. Levin <ldv@strace.io>
+> > Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+> > Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >  arch/arc/include/asm/syscall.h        | 14 +++++++++++
+> >  arch/arm/include/asm/syscall.h        | 13 ++++++++++
+> >  arch/arm64/include/asm/syscall.h      | 13 ++++++++++
+> >  arch/csky/include/asm/syscall.h       | 13 ++++++++++
+> >  arch/hexagon/include/asm/syscall.h    | 14 +++++++++++
+> >  arch/loongarch/include/asm/syscall.h  |  8 ++++++
+> >  arch/mips/include/asm/syscall.h       | 32 ++++++++++++++++++++++++
+> >  arch/nios2/include/asm/syscall.h      | 11 ++++++++
+> >  arch/openrisc/include/asm/syscall.h   |  7 ++++++
+> >  arch/parisc/include/asm/syscall.h     | 12 +++++++++
+> >  arch/powerpc/include/asm/syscall.h    | 10 ++++++++
+> >  arch/riscv/include/asm/syscall.h      |  9 +++++++
+> >  arch/s390/include/asm/syscall.h       | 12 +++++++++
+> >  arch/sh/include/asm/syscall_32.h      | 12 +++++++++
+> >  arch/sparc/include/asm/syscall.h      | 10 ++++++++
+> >  arch/um/include/asm/syscall-generic.h | 14 +++++++++++
+> >  arch/x86/include/asm/syscall.h        | 36 +++++++++++++++++++++++++++
+> >  arch/xtensa/include/asm/syscall.h     | 11 ++++++++
+> >  include/asm-generic/syscall.h         | 16 ++++++++++++
+> >  19 files changed, 267 insertions(+)
+> >
+> > diff --git a/arch/s390/include/asm/syscall.h b/arch/s390/include/asm/syscall.h
+> > index 27e3d804b311..b3dd883699e7 100644
+> > --- a/arch/s390/include/asm/syscall.h
+> > +++ b/arch/s390/include/asm/syscall.h
+> > @@ -78,6 +78,18 @@ static inline void syscall_get_arguments(struct task_struct *task,
+> >  	args[0] = regs->orig_gpr2 & mask;
+> >  }
+> >  
+> > +static inline void syscall_set_arguments(struct task_struct *task,
+> > +					 struct pt_regs *regs,
+> > +					 const unsigned long *args)
+> > +{
+> > +	unsigned int n = 6;
+> > +
+> > +	while (n-- > 0)
+> > +		if (n > 0)
+> > +			regs->gprs[2 + n] = args[n];
+> > +	regs->orig_gpr2 = args[0];
+> > +}
+> 
+> Could that be changed to something like:
+> 
+> for (int n = 1; n < 6; n++)
+>         regs->gprs[2 + n] = args[n];
+> regs->orig_gpr2 = args[0];
+> 
+> I think this is way easier to parse.
 
-Binder needs to use Pid as the type for function arguments and struct
-fields in many places. Thus, make the type public so that Binder can
-access it.
+I don't mind changing syscall_set_arguments() this way, but it just
+mirrors syscall_get_arguments(), so I think it would be better if these
+two functions were written in the same style.  Would you like to change
+syscall_get_arguments() as well?
 
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- rust/kernel/task.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
-index 07bc22a7645c..49012e711942 100644
---- a/rust/kernel/task.rs
-+++ b/rust/kernel/task.rs
-@@ -106,7 +106,7 @@ unsafe impl Send for Task {}
- unsafe impl Sync for Task {}
- 
- /// The type of process identifiers (PIDs).
--type Pid = bindings::pid_t;
-+pub type Pid = bindings::pid_t;
- 
- /// The type of user identifiers (UIDs).
- #[derive(Copy, Clone)]
-
----
-base-commit: ceff0757f5dafb5be5205988171809c877b1d3e3
-change-id: 20250130-task-pid-pub-484458aec19b
-
-Best regards,
 -- 
-Alice Ryhl <aliceryhl@google.com>
-
+ldv
