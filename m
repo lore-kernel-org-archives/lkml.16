@@ -1,117 +1,83 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A27284D34;
-	Thu, 30 Jan 2025 18:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A3A84D34;
+	Thu, 30 Jan 2025 18:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738263129; cv=none; b=lvgxUjfneBu1ZKRvGLsx31xqmF3mmxSg2W/p19+Bpogh2eMj7rhS46uVevLQr2lPNBfldzMqaa6ZKwadXyl98U6oMO3OUGehDnsBaos9v/lAm25yy7xnSui0pkXhJlCtd5xQLh7WfKqYvVgzQlh1jhl37/I3gslaUzFrx1veCmM=
+	t=1738263192; cv=none; b=YQTl/uHoGGaj0TDYbAJOXFGmYaW5SDTwpoPfEVzS5roxzZ1J/oQLdN/fTcZNXZ/BqTSfK9C+lku6mnjMC0KcBc7jjLqwsn99WEXaNpX2MCFodGRdfqWMmKrM+az0waFga4JqL/GO4Oh+awcXuf+5D/6BUsZfwybzbuFmBSuX5s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738263129; c=relaxed/simple;
-	bh=niSBM8uN492sYfrh8aruBEe2wGD7WsVhbrC96mz4Nw8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=NpvXYCHt4x3HbGQoH8Cl6HkDaz+mcbUt1AKwM7JZnT2IdlftnOY5n466qvmkrja/ekuyTlm32rV0SArgwBFh+JNJfz2huC+LTczPcqQbtcK4jOvCHOE9TazUfjpZLPIXi85svR6QUNRPzXeXFpYj5V6cf3f8UjA+mkN7xrvGawI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aGVvHyZY; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738263192; c=relaxed/simple;
+	bh=N+DRiklgJDiEFjoPBj4apU9cKXMAWotvOm4Vt9yltJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jU1e+Hw+/Z3rbsQpV4aAGYAu9GJx2+sDwDVk1OC79/yovCuLSSfCSFp20N5cVJYUBpBAXNjKa5oqlCnOHi0ILSK7w9u0BDadzGSQmKLRBlsvdW6BhL4M0YLvNfWJmYvFHlRXguSFoWWUHY4lew9YRZcjGAXmriGL5dAiOepmbCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mjc7lnhD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGVvHyZY"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2167141dfa1so20612085ad.1;
-        Thu, 30 Jan 2025 10:52:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738263127; x=1738867927; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9bwKh460Cy5gn1CkY7H0LmuRVxYlu6SjHTcnPiPPdgw=;
-        b=aGVvHyZYyaFHHAXehvCjFBIPtCpIsPOO4wYO+QKJJtbKHH+9OujkpCP2X3E4xjR4zR
-         IKm6MqVQs3tS2w9tsZ4w+AdoCKldDP8mT22WaeQOinlcNJgQK7bj3u/du0cZTAwJk9yR
-         cQUSwRRH2rG8UEAWleRZMtt9CBrskQZpAQJZ+9uT0YtFuXjRYz5jKIagOx3QGmfVf8Lg
-         B3h0R2QW5ZsWcALXZ4JPPxddGr9+fmqn5zql+NARoJeUzr2avHkva5SFGRFCvOxX0l+A
-         Z03wR+iSMqU92NOnmZ7IFtlrhS2/YFuOxY3Le7aGmNxqQf7W0zOgHLNoPd0cfiGLNPSl
-         ystA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738263127; x=1738867927;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9bwKh460Cy5gn1CkY7H0LmuRVxYlu6SjHTcnPiPPdgw=;
-        b=Nb8Cq1yxtWZWNVwDqXV/XICmsm+KyOchAKhslNXKHqCBcumyTV2TI5LMXgxAnJjqIh
-         7yj6UTyFeGRNLKfQM6f0sZp4XXL/4H7lsrdYuCxSP9QG+pqiHuNEm5aoB4J6BsIShiof
-         mwjGkNaQJN2WrO/HjdxOnpGTLt+aTtwbFPu6o7U+FKTWalywIsgR1EnZosEHr3lTKQoX
-         McqGYm9bUs90sqfdfhRmDtCsIAKQasYxXhI+0wVjAbYTmpKH5rZHqNCHvmLMdR6L7Hz7
-         hp/rkZODMp/I0wIaUsSn0PggfKeSkhJA81yTNH4P4GGnAz62QRHYYUXLl38KsILkSVFE
-         XJ+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUAiwyJBl+QTMD7xLfRbV7oKYCRkafUjCR/xs5hBDbwPKpJIOY2m/6fjoXq1yI8jbYUfInD3sJJqhpneFXj6nE=@vger.kernel.org, AJvYcCVATTaoPNSc557HFG+Kdu1CC83ojQvlfGnB92l77y3zrbeShr3FGSXC8uXNhN/HA01mtV56dha+NxiUMt4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJcGzRlU/5NIlw52CSZsxObqezdM+8bKbiYoBK4WTBCTbbTuWZ
-	9DMw1nCmDrvuhHI0FQtzfMBMCjo5uzlAF84swF+Lgqn2MZ5CuIFe
-X-Gm-Gg: ASbGncs5IZSdNoQv1VQd2Bzb8mrX8AEPjq+ecw15scPww/jWo1tPD10bfrSDWS1dh8T
-	ZMw4nfXhyhky90dQ7ypx0m84uiZ2pnsRbnhlME+TQv927Ofy/56Hy4y/g7Z5YaBcEdaMNmhjcVT
-	mi16IQnFwOwWDgdnTfojVysTnMqH7EhGHeJxQYUwxv/Uc0+HkekYWoiEszZYcAWy+ALJxLoPYw9
-	XPlvg4cB3ZPMseZ8yx+fXqTHAX6xtm788ILEPZN7bSof6A6fX1X0xQHMlWztYOW3wTJWVXiUvPH
-	FJz/kHApYUOmDoPRMW6tMPbs
-X-Google-Smtp-Source: AGHT+IFcXhuIYZqkqqFKvhDePkcRoAzQDn3xqtb2hBtn+2eXM8a7dejhy3qcMXvlEtNxIK4Rm0QVWg==
-X-Received: by 2002:a17:903:440f:b0:215:58be:3349 with SMTP id d9443c01a7336-21de1969daemr73235925ad.14.1738263127138;
-        Thu, 30 Jan 2025 10:52:07 -0800 (PST)
-Received: from linuxsimoes.. ([187.120.154.251])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de4a9cfcdsm15396945ad.20.2025.01.30.10.52.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 10:52:06 -0800 (PST)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	will@kernel.org,
-	boqun.feng@gmail.com,
-	longman@redhat.com,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu
-Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH] rust: sync: create the `get_mut()` function
-Date: Thu, 30 Jan 2025 15:51:38 -0300
-Message-Id: <20250130185138.200993-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mjc7lnhD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC9EC4CED2;
+	Thu, 30 Jan 2025 18:53:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738263191;
+	bh=N+DRiklgJDiEFjoPBj4apU9cKXMAWotvOm4Vt9yltJk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=mjc7lnhDy0x2nDl8h618lGNmR+XdnFqLYKWYN3JxkEB0fGlD7Y6BEes+FxEn9JXqM
+	 o0+/7U5utIpBbNBXuPBkXamRsbqGSGlkeL9Jdza/VmHrVJTZMdQWbjaowp8bTlntAZ
+	 2SYKtIAS4A+Dsi1XDqaQ+fphTp7bvhhbsjO84L2IFScLppxPk9MGGuE0YAm9T+eMGE
+	 RoAJMhHnpy0AAI6dtxL+lib88JL756XrO53fYmXD3qi8QGmJs7g+FCJmt1w4D1FSHK
+	 O96RUibEl2tMKJ94cPaNnU/Qd5mIQ8CEfag+d5Y9+YZPRvJLMeBNRZyHglNGlvtuh5
+	 U7RBjbEX3igYA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 1A092CE37D9; Thu, 30 Jan 2025 10:53:11 -0800 (PST)
+Date: Thu, 30 Jan 2025 10:53:11 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: rcu@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org
+Subject: [PATCH rcu 0/5] Miscellaneous fixes
+Message-ID: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <7b24a850-7d56-4386-8544-be5e643b6b9f@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7b24a850-7d56-4386-8544-be5e643b6b9f@paulmck-laptop>
 
-Create a `get_mut()` function that receive a mutable instance of Lock,
-and return a mutable reference to data because if the instance is
-mutable, the rust compiler guarantee the access control.
+Hello!
 
-Suggested-by: Björn Roy Baron <bjorn3_gh@protonmail.com>
-Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
----
- rust/kernel/sync/lock.rs | 6 ++++++
- 1 file changed, 6 insertions(+)
+This series contains miscellaneous fixes:
 
-diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
-index eb80048e0110..3f9d78bcb37c 100644
---- a/rust/kernel/sync/lock.rs
-+++ b/rust/kernel/sync/lock.rs
-@@ -140,6 +140,12 @@ pub fn new(t: T, name: &'static CStr, key: &'static LockClassKey) -> impl PinIni
-             }),
-         })
-     }
-+
-+    /// Get a mutable reference to data
-+    pub fn get_mut(&mut self) -> &mut T {
-+        // SAFETY: the caller must guarantee that the instance is only used in one place
-+        unsafe { &mut *self.data.get() }
-+    }
- }
- 
- impl<B: Backend> Lock<(), B> {
--- 
-2.34.1
+1.	Split rcu_report_exp_cpu_mult() mask parameter and use for
+	tracing.
 
+2.	Remove READ_ONCE() for rdp->gpwrap access in __note_gp_changes(),
+	courtesy of Zilin Guan.
+
+3.	Fix get_state_synchronize_rcu_full() GP-start detection.
+
+4.	Move RCU Tasks self-tests to core_initcall().
+
+5.	Print segment lengths in show_rcu_nocb_gp_state().
+
+Changes since v1:
+
+o	Fix "the the" in commit log.
+
+o	Add Reviewed-by and Tested-by tags.
+
+						Thanx, Paul
+
+------------------------------------------------------------------------
+
+ b/include/linux/rcupdate.h |    6 ------
+ b/init/main.c              |    1 -
+ b/kernel/rcu/rcu.h         |    2 +-
+ b/kernel/rcu/tasks.h       |    5 ++++-
+ b/kernel/rcu/tree.c        |    6 +++---
+ b/kernel/rcu/tree_exp.h    |    6 ++++--
+ b/kernel/rcu/tree_nocb.h   |   20 +++++++++++++++-----
+ kernel/rcu/tree.c          |    9 ++++++---
+ 8 files changed, 33 insertions(+), 22 deletions(-)
