@@ -1,278 +1,607 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C0D154BFE;
-	Thu, 30 Jan 2025 05:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF642CAB
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738214398; cv=none; b=L2GgzeMVUpCC8R2Yd6dhhyNRCeEUJHWcIHje3G5W0lwlhyvhcnaPV+ztOxqVdr33WQr85Rlg2n5Xl8E52KanKNlarF2AKqed3k1Ce52aHFqYjU/FZiYZu3NAOL+QpO4WrFpWeJSAgf37NI/DXYFpmfDlg4Oaixxc+fTk1KX/mIQ=
+	t=1738214577; cv=none; b=FFhv6K+2JDGSEd+FUVz7uEbu93RQwxSIIFnQtlu0X/sZw4Ev/fket6DL4Pxl8qYv4wpvb7v1+ybA7av5fFp9EqKASCBjKoZBckilYWhHB5HwfBXj8zm7se5WcMsbVwVjt0cFGgX3pyW2jI7PbLi9DJ16uV2zZ+2OgJE5FoRdIb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738214398; c=relaxed/simple;
-	bh=iASeqjJsAnlFb+Z/MW7NADrnwsZt3hjo1ZbxDDj1Rg8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ssnbZBJ1eLwFkHgie9OqF6/Tkt7LgthGu1urZ0QtK0osAsmTG6Pj8MZzVCI1wa3sDyKaXPaXCRIKIhYpY62LDdrVTkDQwZ+mnCfNG4HlImrFjVO45C9oIDgsybxm5TAyUCf3VfiOuQL2rIcx94YkLSiExsTH+Oh+duHb9btbDX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UxMfTjzb; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738214577; c=relaxed/simple;
+	bh=TTXcFdX0jbW31HN6B1hgIiJDiMx4fZkSCZHY7NeCxkQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QfazK6Ygjgj25AvriQTj4iPhsstZX/27pRQovBm0+A8pA6oXcfReDb4jBQDgfUb8wHJhfEcEl+3iidBqbuRnhYiVvaGSeI9JqJXSWsfKeGXjvLc05YY47YbKwF/+OHHMy2IcAdpt1KMPDNMcxCBGJTSPcMmQU/OmyAJGOSFJ4jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WOidmkKI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UxMfTjzb"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50TLlfpA030164;
-	Thu, 30 Jan 2025 05:19:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hQW/uwSsCdNcJYbKXhDgIauPl8mwC5rmI2zt4OYJh+w=; b=UxMfTjzbrkK916Bp
-	Ejy93jSBxdNgKg/EUbaiZKPs7dOqRpfbU/41B0Lljd+wCLatnCty7QaaanWgGd4R
-	gfWgISVlC0qBU3IVCjx7jdB7ua1ed5ScAVnsP7zvlT5bk9nplqihikIfGjMiypky
-	i0mWUUp9YhPnlCQ3ON2Ed732uM8u6DOvzbAVRMx3udJWCTT7EmUVk0wY8xtHbi9L
-	ot+PMTThl4Q3yLUVya+A0j8tzJbwVVl9A2Z0ssbrHlV4WgP8bl+KqQbPAngLCZ0C
-	1MugmOPSL9Q8MP64+XVlZmpMAdzopfNGPfdnzFZU3pHQEu5dZSDA0/MLpfIIeLrn
-	DtjDwg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44fvjcgnn0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 05:19:51 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50U5JoO1001618
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 05:19:50 GMT
-Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 29 Jan 2025 21:19:46 -0800
-From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-To: <ath12k@lists.infradead.org>
-CC: <linux-wireless@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Jeff Johnson <jjohnson@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Sowmiya Sree
- Elavalagan" <quic_ssreeela@quicinc.com>,
-        Saravanakumar Duraisamy
-	<quic_saradura@quicinc.com>,
-        Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-Subject: [RFC PATCH 5/5] wifi: ath12k: Enable IPQ5424 WiFi device support
-Date: Thu, 30 Jan 2025 10:48:38 +0530
-Message-ID: <20250130051838.1924079-6-quic_rajkbhag@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250130051838.1924079-1-quic_rajkbhag@quicinc.com>
-References: <20250130051838.1924079-1-quic_rajkbhag@quicinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WOidmkKI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738214574;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UJqmoyQhicf/RcQVlsyiFXFzEydJ+9aYbDRPjrVrplI=;
+	b=WOidmkKIInI5YDtgbqi4VVvBQf0UxTY9Ni5IzL9st6BNFsNl5FW03VMBsoDKksqsvojMpa
+	+6IOBKQCuteYEB3lfyuQsEgGO8g7a+TMDL5hwO7Bss4c1SDWQF/Ti3JT8wyaHqJryX5KBA
+	1HmFMryLL8SedTYnuVNLUu5y5wHeWEY=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-673--9enkkWJO3qzCKqDckDxAw-1; Thu, 30 Jan 2025 00:22:52 -0500
+X-MC-Unique: -9enkkWJO3qzCKqDckDxAw-1
+X-Mimecast-MFC-AGG-ID: -9enkkWJO3qzCKqDckDxAw
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-216430a88b0so10047045ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 21:22:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738214571; x=1738819371;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UJqmoyQhicf/RcQVlsyiFXFzEydJ+9aYbDRPjrVrplI=;
+        b=Yh+NG6Ht7JAcrE+CKqwYvYLsQ0ufGyaSFySFmkGIImeF3f71OaI7ePuCptdHGpIjce
+         E8GUFl6il8yFCtJW9kGPbbtBRsfDbNcsUsPij2IBAj3CqzeFALXezgBN5m5OAq7P6Md3
+         Gslb+cT9wFXyBw4AaLQWLNnmH7UeSzWx+JNBbZdtSVjDVP5NkCIgRQIaR2kzQ9of+hlX
+         szOIx+PpoiFL9B0mYsNMAw+dBohlERSxMFqc7RqJxYhT3BAlIdgfzDsmyxjaygcqpZkP
+         cU7zGPerIYie5m0l0wCu1saW+hg5//ysld6JzgJfg/I0W/KyvptvukxrCaeIORSQY4mU
+         qJUA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfaQpehCTjF3FR+uBU6gsz+a9EPwBfknF1osXVZUfLBjPrRKzxJ4hZIGEgM20Mbg0S9DYIgbRD/z2RNf8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkZqmBYHc/Y30jrQc404215iG0drDsgJbd6+TFldBhS17pKy0u
+	z7yGUMLkH+JaHjJZcPLdHgpG4Y8PPaqegoxVMVn4hEVZf8GrkJJL93BaStZda3fH3DoCJM6YkPx
+	K2eovWoAPE8A4uHctYtBBoSTS5uIidnLWWvp4fu8PziLwRF3BcjIlaV37HKi04Q==
+X-Gm-Gg: ASbGncshIQIahgyoUfLl4pUtRUuUwQJzP+zng9gla1H/A2vCgNo8dQiFzcGllYxMQbx
+	ENYkI5U64bjxiNZ2fvs/fmRHBq0sSpYJLyKnn8rvgEvJ7e379tDZUnLBDbdWC6sm4g7ZMYbcS4q
+	5y678tcO+eZC6Avhj4wrfxDUhk/DX1lQ3nzhUcYEkLvkzwCFK1lByJbBkyVKkwo+hMTKQgg8d92
+	Dnq/MpMY/Gv+i5KIhiAxw3dNtdVo98pXa/qS6CNi4VWte6uKF/r648E0PLDXZ/7th5bW4c3Gp0M
+	ol7hLA==
+X-Received: by 2002:a17:902:d2c8:b0:21d:3bd7:afe8 with SMTP id d9443c01a7336-21dd7e00b71mr90545025ad.49.1738214571249;
+        Wed, 29 Jan 2025 21:22:51 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGu86/0ROuwvcJ0Pv2IWNCsQtCkxRL8TUgfOSraQ/KGbeeK3aNXf2w8gCD17pv9MGfJvQiBJQ==
+X-Received: by 2002:a17:902:d2c8:b0:21d:3bd7:afe8 with SMTP id d9443c01a7336-21dd7e00b71mr90544755ad.49.1738214570798;
+        Wed, 29 Jan 2025 21:22:50 -0800 (PST)
+Received: from [192.168.68.55] ([180.233.125.64])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f6b37sm5212225ad.65.2025.01.29.21.22.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2025 21:22:50 -0800 (PST)
+Message-ID: <3f0caace-ee05-4ddf-ae75-2157e77aa57c@redhat.com>
+Date: Thu, 30 Jan 2025 15:22:41 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ei1D-p9qtg0vRv9F5iXpZaVbq_t-k_9E
-X-Proofpoint-GUID: ei1D-p9qtg0vRv9F5iXpZaVbq_t-k_9E
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_02,2025-01-29_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- impostorscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501300039
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 20/43] arm64: RME: Runtime faulting of memory
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20241212155610.76522-1-steven.price@arm.com>
+ <20241212155610.76522-21-steven.price@arm.com>
+Content-Language: en-US
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20241212155610.76522-21-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>
+On 12/13/24 1:55 AM, Steven Price wrote:
+> At runtime if the realm guest accesses memory which hasn't yet been
+> mapped then KVM needs to either populate the region or fault the guest.
+> 
+> For memory in the lower (protected) region of IPA a fresh page is
+> provided to the RMM which will zero the contents. For memory in the
+> upper (shared) region of IPA, the memory from the memslot is mapped
+> into the realm VM non secure.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+> Changes since v5:
+>   * Reduce use of struct page in preparation for supporting the RMM
+>     having a different page size to the host.
+>   * Handle a race when delegating a page where another CPU has faulted on
+>     a the same page (and already delegated the physical page) but not yet
+>     mapped it. In this case simply return to the guest to either use the
+>     mapping from the other CPU (or refault if the race is lost).
+>   * The changes to populate_par_region() are moved into the previous
+>     patch where they belong.
+> Changes since v4:
+>   * Code cleanup following review feedback.
+>   * Drop the PTE_SHARED bit when creating unprotected page table entries.
+>     This is now set by the RMM and the host has no control of it and the
+>     spec requires the bit to be set to zero.
+> Changes since v2:
+>   * Avoid leaking memory if failing to map it in the realm.
+>   * Correctly mask RTT based on LPA2 flag (see rtt_get_phys()).
+>   * Adapt to changes in previous patches.
+> ---
+>   arch/arm64/include/asm/kvm_emulate.h |  10 ++
+>   arch/arm64/include/asm/kvm_rme.h     |  10 ++
+>   arch/arm64/kvm/mmu.c                 | 124 +++++++++++++++++++--
+>   arch/arm64/kvm/rme.c                 | 156 +++++++++++++++++++++++++++
+>   4 files changed, 293 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
+> index ec2b6d9c9c07..b13e367b6972 100644
+> --- a/arch/arm64/include/asm/kvm_emulate.h
+> +++ b/arch/arm64/include/asm/kvm_emulate.h
+> @@ -720,6 +720,16 @@ static inline bool kvm_realm_is_created(struct kvm *kvm)
+>   	return kvm_is_realm(kvm) && kvm_realm_state(kvm) != REALM_STATE_NONE;
+>   }
+>   
+> +static inline gpa_t kvm_gpa_from_fault(struct kvm *kvm, phys_addr_t fault_ipa)
+> +{
+> +	if (kvm_is_realm(kvm)) {
+> +		struct realm *realm = &kvm->arch.realm;
+> +
+> +		return fault_ipa & ~BIT(realm->ia_bits - 1);
+> +	}
+> +	return fault_ipa;
+> +}
+> +
 
-Currently, ath12k AHB (in IPQ5332) uses SCM calls to authenticate the
-firmware image to bring up userpd. From IPQ5424 onwards, Q6 firmware can
-directly communicate with the Trusted Management Engine - Lite (TME-L),
-eliminating the need for SCM calls for userpd bring-up.
+'fault' has been included in 'kvm_gpa_from_fault' and 'fault_ipa'. To avoid the
+duplication, 'fault_ipa' can be renamed to 'ipa'.
 
-Hence, to enable IPQ5424 device support, use qcom_mdt_load_no_init() and
-skip the SCM call as Q6 will directly authenticate the userpd firmware.
+>   static inline bool vcpu_is_rec(struct kvm_vcpu *vcpu)
+>   {
+>   	if (static_branch_unlikely(&kvm_rme_is_available))
+> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
+> index 0410650cd545..158f77e24a26 100644
+> --- a/arch/arm64/include/asm/kvm_rme.h
+> +++ b/arch/arm64/include/asm/kvm_rme.h
+> @@ -99,6 +99,16 @@ void kvm_realm_unmap_range(struct kvm *kvm,
+>   			   unsigned long ipa,
+>   			   u64 size,
+>   			   bool unmap_private);
+> +int realm_map_protected(struct realm *realm,
+> +			unsigned long base_ipa,
+> +			kvm_pfn_t pfn,
+> +			unsigned long size,
+> +			struct kvm_mmu_memory_cache *memcache);
+> +int realm_map_non_secure(struct realm *realm,
+> +			 unsigned long ipa,
+> +			 kvm_pfn_t pfn,
+> +			 unsigned long size,
+> +			 struct kvm_mmu_memory_cache *memcache);
+>   int realm_set_ipa_state(struct kvm_vcpu *vcpu,
+>   			unsigned long addr, unsigned long end,
+>   			unsigned long ripas,
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index b100d4b3aa29..e88714903ce5 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -325,8 +325,13 @@ static void __unmap_stage2_range(struct kvm_s2_mmu *mmu, phys_addr_t start, u64
+>   
+>   	lockdep_assert_held_write(&kvm->mmu_lock);
+>   	WARN_ON(size & ~PAGE_MASK);
+> -	WARN_ON(stage2_apply_range(mmu, start, end, kvm_pgtable_stage2_unmap,
+> -				   may_block));
+> +
+> +	if (kvm_is_realm(kvm))
+> +		kvm_realm_unmap_range(kvm, start, size, !only_shared);
+> +	else
+> +		WARN_ON(stage2_apply_range(mmu, start, end,
+> +					   kvm_pgtable_stage2_unmap,
+> +					   may_block));
+>   }
+>   
+>   void kvm_stage2_unmap_range(struct kvm_s2_mmu *mmu, phys_addr_t start,
+> @@ -346,7 +351,10 @@ static void stage2_flush_memslot(struct kvm *kvm,
+>   	phys_addr_t addr = memslot->base_gfn << PAGE_SHIFT;
+>   	phys_addr_t end = addr + PAGE_SIZE * memslot->npages;
+>   
+> -	kvm_stage2_flush_range(&kvm->arch.mmu, addr, end);
+> +	if (kvm_is_realm(kvm))
+> +		kvm_realm_unmap_range(kvm, addr, end - addr, false);
+> +	else
+> +		kvm_stage2_flush_range(&kvm->arch.mmu, addr, end);
+>   }
+>   
+>   /**
+> @@ -1037,6 +1045,10 @@ void stage2_unmap_vm(struct kvm *kvm)
+>   	struct kvm_memory_slot *memslot;
+>   	int idx, bkt;
+>   
+> +	/* For realms this is handled by the RMM so nothing to do here */
+> +	if (kvm_is_realm(kvm))
+> +		return;
+> +
+>   	idx = srcu_read_lock(&kvm->srcu);
+>   	mmap_read_lock(current->mm);
+>   	write_lock(&kvm->mmu_lock);
+> @@ -1062,6 +1074,7 @@ void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
+>   	if (kvm_is_realm(kvm) &&
+>   	    (kvm_realm_state(kvm) != REALM_STATE_DEAD &&
+>   	     kvm_realm_state(kvm) != REALM_STATE_NONE)) {
+> +		kvm_stage2_unmap_range(mmu, 0, (~0ULL) & PAGE_MASK, false);
+>   		write_unlock(&kvm->mmu_lock);
+>   		kvm_realm_destroy_rtts(kvm, pgt->ia_bits);
+>   
+> @@ -1446,6 +1459,76 @@ static bool kvm_vma_mte_allowed(struct vm_area_struct *vma)
+>   	return vma->vm_flags & VM_MTE_ALLOWED;
+>   }
+>   
+> +static int realm_map_ipa(struct kvm *kvm, phys_addr_t ipa,
+> +			 kvm_pfn_t pfn, unsigned long map_size,
+> +			 enum kvm_pgtable_prot prot,
+> +			 struct kvm_mmu_memory_cache *memcache)
+> +{
+> +	struct realm *realm = &kvm->arch.realm;
+> +
+> +	if (WARN_ON(!(prot & KVM_PGTABLE_PROT_W)))
+> +		return -EFAULT;
+> +
+> +	if (!realm_is_addr_protected(realm, ipa))
+> +		return realm_map_non_secure(realm, ipa, pfn, map_size,
+> +					    memcache);
+> +
+> +	return realm_map_protected(realm, ipa, pfn, map_size, memcache);
+> +}
+> +
+> +static int private_memslot_fault(struct kvm_vcpu *vcpu,
+> +				 phys_addr_t fault_ipa,
+> +				 struct kvm_memory_slot *memslot)
+> +{
+> +	struct kvm *kvm = vcpu->kvm;
+> +	gpa_t gpa = kvm_gpa_from_fault(kvm, fault_ipa);
+> +	gfn_t gfn = gpa >> PAGE_SHIFT;
+> +	bool priv_exists = kvm_mem_is_private(kvm, gfn);
+> +	struct kvm_mmu_memory_cache *memcache = &vcpu->arch.mmu_page_cache;
+> +	struct page *page;
+> +	kvm_pfn_t pfn;
+> +	int ret;
+> +	/*
+> +	 * For Realms, the shared address is an alias of the private GPA with
+> +	 * the top bit set. Thus is the fault address matches the GPA then it
+> +	 * is the private alias.
+> +	 */
+> +	bool is_priv_gfn = (gpa == fault_ipa);
+> +
 
-Tested-on: IPQ5424 hw1.0 AHB WLAN.WBE.1.5-01053-QCAHKSWPL_SILICONZ-1
-Tested-on: IPQ5332 hw1.0 AHB WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1
+We may rename 'priv_exists' to 'was_priv_gfn', which is consistent to 'is_priv_gfn'.
+Alternatively, we may use 'was_private' and 'is_private'.
 
-Signed-off-by: Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>
-Co-developed-by: Saravanakumar Duraisamy <quic_saradura@quicinc.com>
-Signed-off-by: Saravanakumar Duraisamy <quic_saradura@quicinc.com>
-Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
----
- drivers/net/wireless/ath/ath12k/ahb.c | 80 +++++++++++++++++----------
- drivers/net/wireless/ath/ath12k/ahb.h |  9 +++
- 2 files changed, 61 insertions(+), 28 deletions(-)
+> +	if (priv_exists != is_priv_gfn) {
+> +		kvm_prepare_memory_fault_exit(vcpu,
+> +					      gpa,
+> +					      PAGE_SIZE,
+> +					      kvm_is_write_fault(vcpu),
+> +					      false, is_priv_gfn);
+> +
+> +		return -EFAULT;
+> +	}
+> +
+> +	if (!is_priv_gfn) {
+> +		/* Not a private mapping, handling normally */
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = kvm_mmu_topup_memory_cache(memcache,
+> +					 kvm_mmu_cache_min_pages(vcpu->arch.hw_mmu));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = kvm_gmem_get_pfn(kvm, memslot, gfn, &pfn, &page, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* FIXME: Should be able to use bigger than PAGE_SIZE mappings */
+> +	ret = realm_map_ipa(kvm, fault_ipa, pfn, PAGE_SIZE, KVM_PGTABLE_PROT_W,
+> +			    memcache);
+> +	if (!ret)
+> +		return 1; /* Handled */
+> +
+> +	put_page(page);
+> +	return ret;
+> +}
+> +
+>   static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>   			  struct kvm_s2_trans *nested,
+>   			  struct kvm_memory_slot *memslot, unsigned long hva,
+> @@ -1472,6 +1555,14 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>   	if (fault_is_perm)
+>   		fault_granule = kvm_vcpu_trap_get_perm_fault_granule(vcpu);
+>   	write_fault = kvm_is_write_fault(vcpu);
+> +
+> +	/*
+> +	 * Realms cannot map protected pages read-only
+> +	 * FIXME: It should be possible to map unprotected pages read-only
+> +	 */
+> +	if (vcpu_is_rec(vcpu))
+> +		write_fault = true;
+> +
+>   	exec_fault = kvm_vcpu_trap_is_exec_fault(vcpu);
+>   	VM_BUG_ON(write_fault && exec_fault);
+>   
+> @@ -1579,7 +1670,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>   		ipa &= ~(vma_pagesize - 1);
+>   	}
+>   
+> -	gfn = ipa >> PAGE_SHIFT;
+> +	gfn = kvm_gpa_from_fault(kvm, ipa) >> PAGE_SHIFT;
+>   	mte_allowed = kvm_vma_mte_allowed(vma);
+>   
+>   	vfio_allow_any_uc = vma->vm_flags & VM_ALLOW_ANY_UNCACHED;
+> @@ -1660,7 +1751,8 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>   	 * If we are not forced to use page mapping, check if we are
+>   	 * backed by a THP and thus use block mapping if possible.
+>   	 */
+> -	if (vma_pagesize == PAGE_SIZE && !(force_pte || device)) {
+> +	/* FIXME: We shouldn't need to disable this for realms */
+> +	if (vma_pagesize == PAGE_SIZE && !(force_pte || device || kvm_is_realm(kvm))) {
+>   		if (fault_is_perm && fault_granule > PAGE_SIZE)
+>   			vma_pagesize = fault_granule;
+>   		else
+> @@ -1712,6 +1804,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>   		 */
+>   		prot &= ~KVM_NV_GUEST_MAP_SZ;
+>   		ret = kvm_pgtable_stage2_relax_perms(pgt, fault_ipa, prot);
+> +	} else if (kvm_is_realm(kvm)) {
+> +		ret = realm_map_ipa(kvm, fault_ipa, pfn, vma_pagesize,
+> +				    prot, memcache);
+>   	} else {
+>   		ret = kvm_pgtable_stage2_map(pgt, fault_ipa, vma_pagesize,
+>   					     __pfn_to_phys(pfn), prot,
+> @@ -1854,8 +1949,15 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
+>   		nested = &nested_trans;
+>   	}
+>   
+> -	gfn = ipa >> PAGE_SHIFT;
+> +	gfn = kvm_gpa_from_fault(vcpu->kvm, ipa) >> PAGE_SHIFT;
+>   	memslot = gfn_to_memslot(vcpu->kvm, gfn);
+> +
+> +	if (kvm_slot_can_be_private(memslot)) {
+> +		ret = private_memslot_fault(vcpu, ipa, memslot);
+> +		if (ret != -EINVAL)
+> +			goto out;
+> +	}
+> +
+>   	hva = gfn_to_hva_memslot_prot(memslot, gfn, &writable);
+>   	write_fault = kvm_is_write_fault(vcpu);
+>   	if (kvm_is_error_hva(hva) || (write_fault && !writable)) {
+> @@ -1899,7 +2001,7 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
+>   		 * of the page size.
+>   		 */
+>   		ipa |= kvm_vcpu_get_hfar(vcpu) & GENMASK(11, 0);
+> -		ret = io_mem_abort(vcpu, ipa);
+> +		ret = io_mem_abort(vcpu, kvm_gpa_from_fault(vcpu->kvm, ipa));
+>   		goto out_unlock;
+>   	}
+>   
+> @@ -1947,6 +2049,10 @@ bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+>   	if (!kvm->arch.mmu.pgt)
+>   		return false;
+>   
+> +	/* We don't support aging for Realms */
+> +	if (kvm_is_realm(kvm))
+> +		return true;
+> +
+>   	return kvm_pgtable_stage2_test_clear_young(kvm->arch.mmu.pgt,
+>   						   range->start << PAGE_SHIFT,
+>   						   size, true);
+> @@ -1963,6 +2069,10 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+>   	if (!kvm->arch.mmu.pgt)
+>   		return false;
+>   
+> +	/* We don't support aging for Realms */
+> +	if (kvm_is_realm(kvm))
+> +		return true;
+> +
+>   	return kvm_pgtable_stage2_test_clear_young(kvm->arch.mmu.pgt,
+>   						   range->start << PAGE_SHIFT,
+>   						   size, false);
+> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+> index d4561e368cd5..146ef598a581 100644
+> --- a/arch/arm64/kvm/rme.c
+> +++ b/arch/arm64/kvm/rme.c
+> @@ -602,6 +602,162 @@ static int fold_rtt(struct realm *realm, unsigned long addr, int level)
+>   	return 0;
+>   }
+>   
+> +int realm_map_protected(struct realm *realm,
+> +			unsigned long ipa,
+> +			kvm_pfn_t pfn,
+> +			unsigned long map_size,
+> +			struct kvm_mmu_memory_cache *memcache)
+> +{
+> +	phys_addr_t phys = __pfn_to_phys(pfn);
+> +	phys_addr_t rd = virt_to_phys(realm->rd);
+> +	unsigned long base_ipa = ipa;
+> +	unsigned long size;
+> +	int map_level;
+> +	int ret = 0;
+> +
+> +	if (WARN_ON(!IS_ALIGNED(ipa, map_size)))
+> +		return -EINVAL;
+> +
+> +	switch (map_size) {
+> +	case PAGE_SIZE:
+> +		map_level = 3;
+> +		break;
+> +	case RMM_L2_BLOCK_SIZE:
+> +		map_level = 2;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
 
-diff --git a/drivers/net/wireless/ath/ath12k/ahb.c b/drivers/net/wireless/ath/ath12k/ahb.c
-index d502b59a78d8..75767915dec3 100644
---- a/drivers/net/wireless/ath/ath12k/ahb.c
-+++ b/drivers/net/wireless/ath/ath12k/ahb.c
-@@ -21,6 +21,9 @@ static const struct of_device_id ath12k_ahb_of_match[] = {
- 	{ .compatible = "qcom,ipq5332-wifi",
- 	  .data = (void *)ATH12K_HW_IPQ5332_HW10,
- 	},
-+	{ .compatible = "qcom,ipq5424-wifi",
-+	  .data = (void *)ATH12K_HW_IPQ5424_HW10,
-+	},
- 	{ }
- };
- 
-@@ -398,8 +401,8 @@ static int ath12k_ahb_power_up(struct ath12k_base *ab)
- 		ATH12K_AHB_UPD_SWID;
- 
- 	/* Load FW image to a reserved memory location */
--	ret = qcom_mdt_load(dev, fw, fw_name, pasid, mem_region, mem_phys, mem_size,
--			    &mem_phys);
-+	ret = ab_ahb->ahb_ops->mdt_load(dev, fw, fw_name, pasid, mem_region, mem_phys,
-+					mem_size, &mem_phys);
- 	if (ret) {
- 		ath12k_err(ab, "Failed to load MDT segments: %d\n", ret);
- 		goto err_fw;
-@@ -430,11 +433,13 @@ static int ath12k_ahb_power_up(struct ath12k_base *ab)
- 		goto err_fw2;
- 	}
- 
--	/* Authenticate FW image using peripheral ID */
--	ret = qcom_scm_pas_auth_and_reset(pasid);
--	if (ret) {
--		ath12k_err(ab, "failed to boot the remote processor %d\n", ret);
--		goto err_fw2;
-+	if (ab_ahb->scm_auth_enabled) {
-+		/* Authenticate FW image using peripheral ID */
-+		ret = qcom_scm_pas_auth_and_reset(pasid);
-+		if (ret) {
-+			ath12k_err(ab, "failed to boot the remote processor %d\n", ret);
-+			goto err_fw2;
-+		}
- 	}
- 
- 	/* Instruct Q6 to spawn userPD thread */
-@@ -491,13 +496,15 @@ static void ath12k_ahb_power_down(struct ath12k_base *ab, bool is_suspend)
- 
- 	qcom_smem_state_update_bits(ab_ahb->stop_state, BIT(ab_ahb->stop_bit), 0);
- 
--	pasid = (u32_encode_bits(ab_ahb->userpd_id, ATH12K_USERPD_ID_MASK)) |
--		ATH12K_AHB_UPD_SWID;
--	/* Release the firmware */
--	ret = qcom_scm_pas_shutdown(pasid);
--	if (ret)
--		ath12k_err(ab, "scm pas shutdown failed for userPD%d: %d\n",
--			   ab_ahb->userpd_id, ret);
-+	if (ab_ahb->scm_auth_enabled) {
-+		pasid = (u32_encode_bits(ab_ahb->userpd_id, ATH12K_USERPD_ID_MASK)) |
-+			 ATH12K_AHB_UPD_SWID;
-+		/* Release the firmware */
-+		ret = qcom_scm_pas_shutdown(pasid);
-+		if (ret)
-+			ath12k_err(ab, "scm pas shutdown failed for userPD%d\n",
-+				   ab_ahb->userpd_id);
-+	}
- }
- 
- static void ath12k_ahb_init_qmi_ce_config(struct ath12k_base *ab)
-@@ -707,6 +714,14 @@ static int ath12k_ahb_map_service_to_pipe(struct ath12k_base *ab, u16 service_id
- 	return 0;
- }
- 
-+static const struct ath12k_ahb_ops ahb_ops_ipq5332 = {
-+	.mdt_load = qcom_mdt_load,
-+};
-+
-+static const struct ath12k_ahb_ops ahb_ops_ipq5424 = {
-+	.mdt_load = qcom_mdt_load_no_init,
-+};
-+
- static const struct ath12k_hif_ops ath12k_ahb_hif_ops_ipq5332 = {
- 	.start = ath12k_ahb_start,
- 	.stop = ath12k_ahb_stop,
-@@ -1041,19 +1056,9 @@ static int ath12k_ahb_probe(struct platform_device *pdev)
- 	struct device_node *mem_node;
- 	struct ath12k_ahb *ab_ahb;
- 	enum ath12k_hw_rev hw_rev;
--	u32 addr, userpd_id;
-+	u32 addr;
- 	int ret;
- 
--	hw_rev = ath12k_ahb_get_hw_rev(pdev);
--	switch (hw_rev) {
--	case ATH12K_HW_IPQ5332_HW10:
--		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
--		userpd_id = ATH12K_IPQ5332_USERPD_ID;
--		break;
--	default:
--		return -EOPNOTSUPP;
--	}
--
- 	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to set 32-bit coherent dma\n");
-@@ -1067,13 +1072,32 @@ static int ath12k_ahb_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
-+	ab_ahb = ath12k_ab_to_ahb(ab);
-+	ab_ahb->ab = ab;
-+
-+	hw_rev = ath12k_ahb_get_hw_rev(pdev);
-+	switch (hw_rev) {
-+	case ATH12K_HW_IPQ5332_HW10:
-+		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
-+		ab_ahb->userpd_id = ATH12K_IPQ5332_USERPD_ID;
-+		ab_ahb->scm_auth_enabled = true;
-+		ab_ahb->ahb_ops = &ahb_ops_ipq5332;
-+		break;
-+	case ATH12K_HW_IPQ5424_HW10:
-+		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
-+		ab_ahb->userpd_id = ATH12K_IPQ5332_USERPD_ID;
-+		ab_ahb->scm_auth_enabled = false;
-+		ab_ahb->ahb_ops = &ahb_ops_ipq5424;
-+		break;
-+	default:
-+		ret = -EOPNOTSUPP;
-+		goto err_core_free;
-+	}
-+
- 	ab->hif.ops = hif_ops;
- 	ab->pdev = pdev;
- 	ab->hw_rev = hw_rev;
- 	platform_set_drvdata(pdev, ab);
--	ab_ahb = ath12k_ab_to_ahb(ab);
--	ab_ahb->ab = ab;
--	ab_ahb->userpd_id = userpd_id;
- 
- 	/* Set fixed_mem_region to true for platforms that support fixed memory
- 	 * reservation from DT. If memory is reserved from DT for FW, ath12k driver
-diff --git a/drivers/net/wireless/ath/ath12k/ahb.h b/drivers/net/wireless/ath/ath12k/ahb.h
-index d56244b20a6a..270d6db2a4a4 100644
---- a/drivers/net/wireless/ath/ath12k/ahb.h
-+++ b/drivers/net/wireless/ath/ath12k/ahb.h
-@@ -43,6 +43,13 @@ enum ath12k_ahb_userpd_irq {
- 
- struct ath12k_base;
- 
-+struct ath12k_ahb_ops {
-+	int (*mdt_load)(struct device *dev, const struct firmware *fw,
-+			const char *firmware, int pas_id, void *mem_region,
-+			phys_addr_t mem_phys, size_t mem_size,
-+			phys_addr_t *reloc_base);
-+};
-+
- struct ath12k_ahb {
- 	struct ath12k_base *ab;
- 	struct rproc *tgt_rproc;
-@@ -59,6 +66,8 @@ struct ath12k_ahb {
- 	u32 spawn_bit;
- 	u32 stop_bit;
- 	int userpd_irq_num[ATH12K_USERPD_MAX_IRQ];
-+	bool scm_auth_enabled;
-+	const struct ath12k_ahb_ops *ahb_ops;
- };
- 
- static inline struct ath12k_ahb *ath12k_ab_to_ahb(struct ath12k_base *ab)
--- 
-2.34.1
+The same block of code, to return the RTT level according to the map size, has been
+used for multiple times. It would be nice to introduce a helper for this.
+
+> +	if (map_level < RMM_RTT_MAX_LEVEL) {
+> +		/*
+> +		 * A temporary RTT is needed during the map, precreate it,
+> +		 * however if there is an error (e.g. missing parent tables)
+> +		 * this will be handled below.
+> +		 */
+> +		realm_create_rtt_levels(realm, ipa, map_level,
+> +					RMM_RTT_MAX_LEVEL, memcache);
+> +	}
+> +
+
+This block of code could be dropped. If the RTTs have been existing, realm_create_rtt_levels()
+doesn't nothing, but several RMI calls are issued. RMI calls aren't cheap and it can cause
+performance lost.
+
+> +	for (size = 0; size < map_size; size += PAGE_SIZE) {
+> +		if (rmi_granule_delegate(phys)) {
+> +			/*
+> +			 * It's likely we raced with another VCPU on the same
+> +			 * fault. Assume the other VCPU has handled the fault
+> +			 * and return to the guest.
+> +			 */
+> +			return 0;
+> +		}
+
+We probably can't bail immediately when error is returned from rmi_granule_delegate()
+because we intend to map a region whose size is 'map_size'. So a 'continue' instead
+of 'return 0' seems correct to me.
+
+> +
+> +		ret = rmi_data_create_unknown(rd, phys, ipa);
+> +
+> +		if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
+> +			/* Create missing RTTs and retry */
+> +			int level = RMI_RETURN_INDEX(ret);
+> +
+> +			ret = realm_create_rtt_levels(realm, ipa, level,
+> +						      RMM_RTT_MAX_LEVEL,
+> +						      memcache);
+> +			WARN_ON(ret);
+> +			if (ret)
+> +				goto err_undelegate;
+
+			if (WARN_ON(ret))
+> +
+> +			ret = rmi_data_create_unknown(rd, phys, ipa);
+> +		}
+> +		WARN_ON(ret);
+> +
+> +		if (ret)
+> +			goto err_undelegate;
+
+		if (WARN_ON(ret))
+
+> +
+> +		phys += PAGE_SIZE;
+> +		ipa += PAGE_SIZE;
+> +	}
+> +
+> +	if (map_size == RMM_L2_BLOCK_SIZE)
+> +		ret = fold_rtt(realm, base_ipa, map_level);
+> +	if (WARN_ON(ret))
+> +		goto err;
+> +
+
+The nested if statements are needed here because the WARN_ON() only
+take effect on the return value from fold_rtt().
+
+	if (map_size == RMM_L2_BLOCK_SIZE) {
+		ret = fold_rtt(realm, base_ipa, map_level);
+		if (WARN_ON(ret))
+			goto err;
+	}
+
+> +	return 0;
+> +
+> +err_undelegate:
+> +	if (WARN_ON(rmi_granule_undelegate(phys))) {
+> +		/* Page can't be returned to NS world so is lost */
+> +		get_page(phys_to_page(phys));
+> +	}
+> +err:
+> +	while (size > 0) {
+> +		unsigned long data, top;
+> +
+> +		phys -= PAGE_SIZE;
+> +		size -= PAGE_SIZE;
+> +		ipa -= PAGE_SIZE;
+> +
+> +		WARN_ON(rmi_data_destroy(rd, ipa, &data, &top));
+> +
+> +		if (WARN_ON(rmi_granule_undelegate(phys))) {
+> +			/* Page can't be returned to NS world so is lost */
+> +			get_page(phys_to_page(phys));
+> +		}
+> +	}
+> +	return -ENXIO;
+> +}
+> +
+> +int realm_map_non_secure(struct realm *realm,
+> +			 unsigned long ipa,
+> +			 kvm_pfn_t pfn,
+> +			 unsigned long map_size,
+> +			 struct kvm_mmu_memory_cache *memcache)
+> +{
+> +	phys_addr_t rd = virt_to_phys(realm->rd);
+> +	int map_level;
+> +	int ret = 0;
+> +	unsigned long desc = __pfn_to_phys(pfn) |
+> +			     PTE_S2_MEMATTR(MT_S2_FWB_NORMAL) |
+> +			     /* FIXME: Read+Write permissions for now */
+> +			     (3 << 6);
+> +
+> +	if (WARN_ON(!IS_ALIGNED(ipa, map_size)))
+> +		return -EINVAL;
+> +
+> +	switch (map_size) {
+> +	case PAGE_SIZE:
+> +		map_level = 3;
+> +		break;
+> +	case RMM_L2_BLOCK_SIZE:
+> +		map_level = 2;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+
+As above.
+
+> +	ret = rmi_rtt_map_unprotected(rd, ipa, map_level, desc);
+> +
+> +	if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
+> +		/* Create missing RTTs and retry */
+> +		int level = RMI_RETURN_INDEX(ret);
+> +
+> +		ret = realm_create_rtt_levels(realm, ipa, level, map_level,
+> +					      memcache);
+> +		if (WARN_ON(ret))
+> +			return -ENXIO;
+> +
+> +		ret = rmi_rtt_map_unprotected(rd, ipa, map_level, desc);
+> +	}
+> +	/*
+> +	 * RMI_ERROR_RTT can be reported for two reasons: either the RTT tables
+> +	 * are not there, or there is an RTTE already present for the address.
+> +	 * The call to realm_create_rtt_levels() above handles the first case,
+> +	 * and in the second case this indicates that another thread has
+> +	 * already populated the RTTE for us, so we can ignore the error and
+> +	 * continue.
+> +	 */
+> +	if (WARN_ON(ret && RMI_RETURN_STATUS(ret) != RMI_ERROR_RTT))
+> +		return -ENXIO;
+> +
+> +	return 0;
+> +}
+> +
+>   static int populate_par_region(struct kvm *kvm,
+>   			       phys_addr_t ipa_base,
+>   			       phys_addr_t ipa_end,
+
+Thanks,
+Gavin
 
