@@ -1,126 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8613E499;
-	Thu, 30 Jan 2025 15:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B041E0B74;
+	Thu, 30 Jan 2025 15:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738251138; cv=none; b=QU90aqAAjpOhGtqOC/eKLbJrECO3wrnjLB/qyIDhTe7WWYLboGZpag0wfbetf7NLWGzKMod9re/j9mg3aFK8B65Omf/x5u+/T1t3lVkfjh9DKMPn1YSHMZa1rTPgn8845g0x/sTEGDcyeYYTdjQaxKYHm3ahv9uTnvJF7gh5lp8=
+	t=1738251189; cv=none; b=eE7l0VvvXjr7mjHslpPgkHTpOqDSwDqsYLCM2PuQuN2z4PFskgndCu5LhGdDSflEPVGklXsr1apltWiFnXhGZY2hXJ17FMnIhb72mxcTO11cctQyLjh3MlkNjYMBt9jp5BaVNmBZRMO76eByvw8zKmDZoUljNU+caXJgfnLd/k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738251138; c=relaxed/simple;
-	bh=zEl4qnOpi+U24VlyUxMcMK6bSBm/AbufVlVyWaK6Fx0=;
+	s=arc-20240116; t=1738251189; c=relaxed/simple;
+	bh=TIelep2JLarJVxWnkD5TqSIFRGCQK3XQgJAjfyWQrjM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MwIFB8mcJpoFW8/5N4MaBPipR56IhlrG1J1Mohn8Ft048MO0F6OeddU0CKoFSQC4NebzfwRCeaRTDZlO6S8QHaS/EboXGprGu9l4vId84xZCGADKM7ddWmyN5Mm8NsdTR23Vh8QthYdDCQOleYfAooKR36QL6buReyflszprmZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=toOCjX0p; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=etqjDRk48oXuYmAhxwoAsSxh2WKsl262Giib7aDzszKJlS38jzmLg+Ihe/MaDob17gyHWF9S7j3nMI3Ut03Kq2pZyPGWUBhJhrnwlz+EojRi1aT0ZapOxWDkDQm9W1DT7YJX2znlYaQhfppiQAsrcMKHsEfQsnXki2pGFYdJkdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1uCww8b; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="toOCjX0p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A25A4C4CED2;
-	Thu, 30 Jan 2025 15:32:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738251137;
-	bh=zEl4qnOpi+U24VlyUxMcMK6bSBm/AbufVlVyWaK6Fx0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=toOCjX0pdb0EGhs4UOV9QWhikIu7/gXt8HGMRNsjr8duUGRMKVkkdl+eiv0jxJyJQ
-	 cMnq4lrD3/Ymd071DI0verf9xK5Nib3uAhP3yM2fxlkf9YExbI+kHzWTFisPUsgcMz
-	 s1H/3qdRuYZRqnG4zZNnaZ0GFessbr3qeL3lIZHe/q7/ePENEI8WOYV4sLPeK7ip4J
-	 x2VOKNtaIgwmp13DZHRBoGtv4M3Ic936I9SnCDh7h5bncn5e02nTotq8vcMzk/xVxD
-	 1sTmcCyt+S3HBVyTKVdaAoB136gCfALanXzER+4BD13gKZd8LgJuE0GsmhCoYCUvD1
-	 UOEGatBDdFc6g==
-Date: Thu, 30 Jan 2025 16:32:11 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Juntong Deng <juntong.deng@outlook.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com, 
-	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, 
-	jolsa@kernel.org, memxor@gmail.com, snorcht@gmail.com, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v9 4/5] bpf: Make fs kfuncs available for
- SYSCALL program type
-Message-ID: <20250130-dauer-stich-21e0f1f09568@brauner>
-References: <AM6PR03MB50801990BD93BFA2297A123599EC2@AM6PR03MB5080.eurprd03.prod.outlook.com>
- <AM6PR03MB50809BB6156BF239C4AC28C799EC2@AM6PR03MB5080.eurprd03.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1uCww8b"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4679ea3b13bso6632181cf.1;
+        Thu, 30 Jan 2025 07:33:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738251186; x=1738855986; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G7VwIpRCZKScIque5lToOQ+mMjhVOHN2OynFs/wbBFQ=;
+        b=A1uCww8bh/U1GIiViiCmTZHF4QEIqoZNGtfFrnU+VfBcJAa+ULeb25IJ4/0UrKuXpm
+         3bySgzIygTkMmJHifHdYUSpz+6Gi5D5L8lzaspkRe1h3QLKLInPYVr9njv5kgwCAnGkw
+         8Upl2krv1hEY+l7tN1E49QJ/kHePcWBxLYKcZ6WGj7QYnb30fUDba1JnoaE3hb5P28t8
+         +TqyzxVTJfOy17q0wumtxMmd8PBjSMstNUFoeUrCjs+hhTBeEm3uLUCMEdGRSCktSOZI
+         a/mghwsL4X6wPs8wlXpD4eSo1Q9JduHchs7/4at9HWhBqExqtmgnemcJwpuXMwrNrRnB
+         uleg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738251186; x=1738855986;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G7VwIpRCZKScIque5lToOQ+mMjhVOHN2OynFs/wbBFQ=;
+        b=r4kg36X8ZYFQR9GbBpE2VhnmqNNEQPtnYIts9LV2rT11VDD2ixisiKc5tTcy7uxmlC
+         DY7jALl0XFvL+XY5NUhIQ0D/G+1DCaNxYmZoyxzNpoE7uWO9MW2CcBJ75sEwiP38oWBM
+         IhtMMmnWeaSEfKQ9Y6WENATUz05CwcQY43/dGBnO0FACTta4lQPpD9yAWBborCoqsNhY
+         EYPkvE8yHYu2FUU58WiytJPyCR7Ck99VALJH3n2e1o3vrW/w0P8D6vdnc3mvQWVFys93
+         s/x1+0Y2pJzpnhU6A4HLML5sJlZ6U/7rDoq6kEIyaSwtmg7whCBxczD2Pzc0wGH5LNcB
+         Ixpw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9fdW/dKcTdgi1J7MfVSxxbbChPTXRxVaj4lTIcqweJYR8cdHKNgi41Jfn/fz1qEVzBC1tcPEyWSXLPZc=@vger.kernel.org, AJvYcCXCpQRSbPIZA/+ygMrp8tQ5G77249vQoFyKaT6sHVFMEFmmSJE282C+SJcrKQbMTnQ/IaP0kJiEn07lKI5CaUs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzane7RZwBkr1N14gGC45vAV/z2BTnZA4EZ/tfcJd7YKlG99WQb
+	Dxhl84vYdhqIjCCcpQHg5n7c3ZG/orPa5C3Wz+3Exe5ocwJStLU9
+X-Gm-Gg: ASbGncv1pNpMHU+YNJBRWlgNDZMj70WfDGTRdRTT9ZM1PsFEO1HYUAI2huoj3uG+UwP
+	LWVD6qbEDGM+5FX2647U7r7kSwx2yI/ku/GSEsOlXXVU7Wl7CE+VAnX+//rqSzpGMs+HTfEtQ7b
+	+t3k4zQ+L0BiPRWJ13cv3h7Jq1wWxRUfpBtRibvZV49hA5KlVworbc//62smwZrCdkhd7YKCzGi
+	zCeIBOE0mVAEA3OYt6/JXfX1KKbJclPsJkhN3k/bhyvk8ZjAuTmrebj/1+Co6dF4dddwVSHmpFY
+	zR/GbfoVJEYcCj0sSW9Um1kS3K7PMhZmJeRAbRnqIcPJUSzNE7CFzaWYeja43cZn1QCKTK37G9l
+	9vOnPdg==
+X-Google-Smtp-Source: AGHT+IGUBtxbrIgoDPFffciXpQPGLrk1UXuyZ8Uyz4nO9baFs6ejUl6X/jPak7GVMQEK4iCztVoURQ==
+X-Received: by 2002:ac8:5e0b:0:b0:467:6e88:4548 with SMTP id d75a77b69052e-46fd0ae333fmr125661411cf.39.1738251184915;
+        Thu, 30 Jan 2025 07:33:04 -0800 (PST)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf1895besm7819001cf.69.2025.01.30.07.33.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 07:33:04 -0800 (PST)
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfauth.phl.internal (Postfix) with ESMTP id BD1A21200043;
+	Thu, 30 Jan 2025 10:33:03 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Thu, 30 Jan 2025 10:33:03 -0500
+X-ME-Sender: <xms:r5ubZ6ml46ylExwkzVNUF8ksBbGV02g6gfKGSi88sxf2Ke6REF2MCg>
+    <xme:r5ubZx17hbEB2J1OWvC7ngkix3y6ZleJLU89v93L2cCAafXXEP-d3MbwAMeQWG8d5
+    f8YtnmVSbJxY0CaJg>
+X-ME-Received: <xmr:r5ubZ4rRjR5a-Xj_qiQrtq_MVnqOVlBYtmOndrHtNmV16OtcPfhnFNfYbg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeiudekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvden
+    ucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrd
+    gtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleei
+    vedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhi
+    thihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmh
+    grihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudegpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtg
+    homhdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehg
+    rghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprh
+    hothhonhhmrghilhdrtghomhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhr
+    ohhtohhnrdhmvgdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtohepthhmghhrohhsshesuhhmihgthhdrvgguuhdprhgtphhtthhopehp
+    vghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehmihhnghhosehrvg
+    guhhgrthdrtghomh
+X-ME-Proxy: <xmx:r5ubZ-mfv4gQ8fVd4k9Tj-oiT21JZ7x2uMb3PzV1edxNBiVNCsnOOw>
+    <xmx:r5ubZ40wUhiuWNCXOrpwZUKGhSiPjOZj2ZEP71sUswvP5u-PLdewhg>
+    <xmx:r5ubZ1v2f7tMGLGDwfzozcwYCvYBOh8TAzViGf5BgGtCAqPjHAIrBg>
+    <xmx:r5ubZ0U4U0VBh9C1TApQ20hcgkDajujQ5kH-BDZA6tE9BuXUmdSs3A>
+    <xmx:r5ubZz3ASQdzcTGjqd1slTxjAtIkdUJMV-QWAVuiaS57-NfHLZ3q8hpa>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 30 Jan 2025 10:33:03 -0500 (EST)
+Date: Thu, 30 Jan 2025 07:33:01 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: sync: add accessor for the lock behind a given
+ guard
+Message-ID: <Z5ubrUcSuaTtj_wW@tardis.local>
+References: <20250130-guard-get-lock-v1-1-8ed87899920a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM6PR03MB50809BB6156BF239C4AC28C799EC2@AM6PR03MB5080.eurprd03.prod.outlook.com>
+In-Reply-To: <20250130-guard-get-lock-v1-1-8ed87899920a@google.com>
 
-On Mon, Jan 27, 2025 at 11:46:53PM +0000, Juntong Deng wrote:
-> Currently fs kfuncs are only available for LSM program type, but fs
-> kfuncs are general and useful for scenarios other than LSM.
+Hi Alice,
+
+The patch looks reasonable to me, however...
+
+On Thu, Jan 30, 2025 at 11:39:32AM +0000, Alice Ryhl wrote:
+> Binder has some methods where the caller provides a lock guard, and
+> Binder needs to be able to assert that the guard is associated with the
+> right lock. To enable this, add an accessor to obtain a reference to the
+> underlying lock that you can pass to `ptr::eq`.
 > 
-> This patch makes fs kfuncs available for SYSCALL program type.
-> 
-> Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
+
+... could you provide more details on this usage, for example, why do
+you need the assertion, is it for debug purposes? Does the current C
+code have the same or similar logic? Besides...
+
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 > ---
-
-I still have a hard time understanding what syscall program types do and
-why we should want to allow the usage of all current fs functions that
-were added for LSMs specifically to such program types. I can't say
-anything about this until I have a rough understanding what a syscall
-bpf program allows you to do and what it's used for. Preferably some
-example.
-
->  fs/bpf_fs_kfuncs.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
+>  rust/kernel/sync/lock.rs | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> diff --git a/fs/bpf_fs_kfuncs.c b/fs/bpf_fs_kfuncs.c
-> index 4a810046dcf3..8a7e9ed371de 100644
-> --- a/fs/bpf_fs_kfuncs.c
-> +++ b/fs/bpf_fs_kfuncs.c
-> @@ -26,8 +26,6 @@ __bpf_kfunc_start_defs();
->   * acquired by this BPF kfunc will result in the BPF program being rejected by
->   * the BPF verifier.
->   *
-> - * This BPF kfunc may only be called from BPF LSM programs.
-> - *
->   * Internally, this BPF kfunc leans on get_task_exe_file(), such that calling
->   * bpf_get_task_exe_file() would be analogous to calling get_task_exe_file()
->   * directly in kernel context.
-> @@ -49,8 +47,6 @@ __bpf_kfunc struct file *bpf_get_task_exe_file(struct task_struct *task)
->   * passed to this BPF kfunc. Attempting to pass an unreferenced file pointer, or
->   * any other arbitrary pointer for that matter, will result in the BPF program
->   * being rejected by the BPF verifier.
-> - *
-> - * This BPF kfunc may only be called from BPF LSM programs.
->   */
->  __bpf_kfunc void bpf_put_file(struct file *file)
->  {
-> @@ -70,8 +66,6 @@ __bpf_kfunc void bpf_put_file(struct file *file)
->   * reference, or else the BPF program will be outright rejected by the BPF
->   * verifier.
->   *
-> - * This BPF kfunc may only be called from BPF LSM programs.
-> - *
->   * Return: A positive integer corresponding to the length of the resolved
->   * pathname in *buf*, including the NUL termination character. On error, a
->   * negative integer is returned.
-> @@ -184,7 +178,8 @@ BTF_KFUNCS_END(bpf_fs_kfunc_set_ids)
->  static int bpf_fs_kfuncs_filter(const struct bpf_prog *prog, u32 kfunc_id)
->  {
->  	if (!btf_id_set8_contains(&bpf_fs_kfunc_set_ids, kfunc_id) ||
-> -	    prog->type == BPF_PROG_TYPE_LSM)
-> +	    prog->type == BPF_PROG_TYPE_LSM ||
-> +	    prog->type == BPF_PROG_TYPE_SYSCALL)
->  		return 0;
->  	return -EACCES;
->  }
-> @@ -197,7 +192,10 @@ static const struct btf_kfunc_id_set bpf_fs_kfunc_set = {
+> diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
+> index 41dcddac69e2..681d67275b49 100644
+> --- a/rust/kernel/sync/lock.rs
+> +++ b/rust/kernel/sync/lock.rs
+> @@ -169,7 +169,12 @@ pub struct Guard<'a, T: ?Sized, B: Backend> {
+>  // SAFETY: `Guard` is sync when the data protected by the lock is also sync.
+>  unsafe impl<T: Sync + ?Sized, B: Backend> Sync for Guard<'_, T, B> {}
 >  
->  static int __init bpf_fs_kfuncs_init(void)
->  {
-> -	return register_btf_kfunc_id_set(BPF_PROG_TYPE_LSM, &bpf_fs_kfunc_set);
-> +	int ret;
+> -impl<T: ?Sized, B: Backend> Guard<'_, T, B> {
+> +impl<'a, T: ?Sized, B: Backend> Guard<'a, T, B> {
+> +    /// Returns the lock that this guard originates from.
+> +    pub fn lock(&self) -> &'a Lock<T, B> {
+
+How about we name this as `lock_ref()` or something else, because
+`lock()` itself is already used by `Lock` for the lock *operation*, and
+this is just an accessor, I would like we don't confuse code readers
+when they see code like "let b = a.lock()". Moreover, if the only usage
+of this is for asserting the right lock, maybe we can instead add an:
+
+    pub fn assert_lock_associated(&self, lock_ptr: *const Lock<T, B>)
+
+Regards,
+Boqun
+
+> +        self.lock
+> +    }
 > +
-> +	ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_LSM, &bpf_fs_kfunc_set);
-> +	return ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SYSCALL, &bpf_fs_kfunc_set);
->  }
->  
->  late_initcall(bpf_fs_kfuncs_init);
+>      pub(crate) fn do_unlocked<U>(&mut self, cb: impl FnOnce() -> U) -> U {
+>          // SAFETY: The caller owns the lock, so it is safe to unlock it.
+>          unsafe { B::unlock(self.lock.state.get(), &self.state) };
+> 
+> ---
+> base-commit: ceff0757f5dafb5be5205988171809c877b1d3e3
+> change-id: 20250130-guard-get-lock-dd5452793d9a
+> 
+> Best regards,
 > -- 
-> 2.39.5
+> Alice Ryhl <aliceryhl@google.com>
 > 
