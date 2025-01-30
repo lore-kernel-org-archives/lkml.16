@@ -1,58 +1,52 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5055C15098A
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F041509BF;
+	Thu, 30 Jan 2025 05:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738216302; cv=none; b=fR89e3PuULEBO092WmdBu7AU0TWAIVZm0VIVtKOvxzGdC4meaJRBLt23dtR5kVzJZxuPJ15cJr/A7yAFhZTISc3GnSh0Yo4R+D6nPhNeZiwpWDk9ba8onz4TWOz+qI/ECV0ZASwoJ/MTYqqN4hnMlLmCT0+91fzQSYHFbXfHB70=
+	t=1738216617; cv=none; b=pTwfvcwqsZKvpfXMBO3blHzupZjk80ThbfdHs3IYFGCd/kTqhOjpfX6FHoD2WFU8Cet9yXebYK5IXG2lU/N0L8NTi/7cWgdZ92r8sdrrEeR+w3dwdVFdjNVAPm+tfrQLjgGIT1ZGnHE+HjOcuEQIu9taTu6HLCtEDJsbWT5og4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738216302; c=relaxed/simple;
-	bh=gx2gNCXXob56NNw05t32Ay1x2X0k8FVr1JMuJ4YZ+s4=;
-	h=Date:From:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oWUpUiDtfUkRUSKuBCIJ2ydP9i1FoyBc+SX44oXVts7kGkpwuwBZEEnXf25aTM/rKHzqGd59an+xjMV6ccEJuFtgXwgr57E9dFOXB7oyl3xZ3beW58SehAFAd1dPFYEw1cU3iY9uZ4r9BKhiISixJfWgYzI0axuVEYh7UbxEv0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dPD1O15s; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738216617; c=relaxed/simple;
+	bh=dVZBBc00F6OWmYwY7UnC1NqmtyPfLJtE2OcEJciVIRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YC0RIzskTapd1ZfccFw6GRWlSgn6hTgasM5im//DOz33byS4XB/+FpA5M91yaUrJr9RRRLNsDQFUWkWzfQAcd/WWvxaUNgrfnKhZZL0xrRFyNMPrzLdfoFeFp70SkfJ31O2XJPOqn2JkW2VyM2X7IwwHIREuVJErMDolPoXeHD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ns6wvPnq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dPD1O15s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738216300; x=1769752300;
-  h=date:from:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gx2gNCXXob56NNw05t32Ay1x2X0k8FVr1JMuJ4YZ+s4=;
-  b=dPD1O15sJn21MMZ6Oz+CqOewlPHofGL7/CWrWnELsjafdwvXs366TOO3
-   uRoX00GV2MISvJBitIlL1a+KPGaaOK29eL4a3DJD/IyN95QhaqIoPzz5h
-   L2SyNksBHTASqZN6EeilcnnWg76Ovc5Ru0lk9qEklQCkiwhVibs/JpUWN
-   9xmx7+7doweKxb5CSBppPgTQf1jpB01Xsa8NmvsFwPbvt336Lbi+jRgmF
-   ZHCvrVdKNtxsjaRbctmCDxS48OUqOWLbG3Z9DvbEPskgaGxtRBZ0+nNs1
-   c5z0BZCt3y3f4Wee03Qs0lpVozLy515arAa//+ef9ygWlCdl5MvfGyBNT
-   w==;
-X-CSE-ConnectionGUID: m3nNUbhZTcGZeYE/J0VTKA==
-X-CSE-MsgGUID: 6oI2jX4MQLS4/205Bghs9A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50169670"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="50169670"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 21:51:40 -0800
-X-CSE-ConnectionGUID: ZL2bYIhsQmqDkUmTI6hTUw==
-X-CSE-MsgGUID: 3FsUHnGNQTCGU/4Y1HCwpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="132502977"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 29 Jan 2025 21:51:39 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tdNSi-000jir-1X;
-	Thu, 30 Jan 2025 05:51:36 +0000
-Date: Thu, 30 Jan 2025 13:50:56 +0800
-From: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: drivers/mtd/mtdpart.c:985:34: warning: '%s' directive argument is
- null
-Message-ID: <202501301350.XWliXFDW-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ns6wvPnq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1013C4CED2;
+	Thu, 30 Jan 2025 05:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738216617;
+	bh=dVZBBc00F6OWmYwY7UnC1NqmtyPfLJtE2OcEJciVIRk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Ns6wvPnqK5NFpp9/GPXnvE5lqs2XW8G0hxXp+e2sWZWyx7M8usxA1ItetTLbFRK3R
+	 O6L5ScOYk7ZJr/1Ty6KT5BlM7o4wGcGHIkGcpWGA06ghW0/R+wRVUTINg9Wogr32hm
+	 nUc7+jiRgNFDTewaIpvGiuyZRLPO/xCOr50npjgFkf/jcsQmGT2nq5axZfPz1aV84x
+	 8bsEFIxPu1vq0zGTSsxt7GE1BVaSOOwixApGL6IP8/8z4pYOCdy/9aykHk2DGOvRCe
+	 Oz8Q8F02Vn61v/eZsMFE6eu/iQeWs/RhjhmtPJ6ufLLUuUNb0or+nl3NuuVIpevefF
+	 Jp3BcxEUnd2Lg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 8A02FCE37FA; Wed, 29 Jan 2025 21:56:56 -0800 (PST)
+Date: Wed, 29 Jan 2025 21:56:56 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joel@joelfernandes.org>
+Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org
+Subject: Re: [PATCH] rcu: Merge rcu_seq_done_exact() logic into rcu_seq_done()
+Message-ID: <ec293223-2a33-4d2f-b3ca-c011c3d987f3@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <ecce7241-4238-4d86-8e4c-5080937129ce@paulmck-laptop>
+ <15D1150A-9B7B-4EB7-91C6-2D881D6F48DA@joelfernandes.org>
+ <861f1dc3-bfc0-4a81-9b78-c8e9995db4cd@paulmck-laptop>
+ <CAEXW_YQ4W=upWV_x1woSgq-DJPFXmBjH2pVmUnBVb_n_UKrw7A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,129 +56,173 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEXW_YQ4W=upWV_x1woSgq-DJPFXmBjH2pVmUnBVb_n_UKrw7A@mail.gmail.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   72deda0abee6e705ae71a93f69f55e33be5bca5c
-commit: 239a5791ffd5559f51815df442c4dbbe7fc21ade dynamic_debug: allow to work if debugfs is disabled
-date:   5 years ago
-config: um-randconfig-r113-20240905 (https://download.01.org/0day-ci/archive/20250130/202501301350.XWliXFDW-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250130/202501301350.XWliXFDW-lkp@intel.com/reproduce)
+On Wed, Jan 29, 2025 at 06:10:10PM -0500, Joel Fernandes wrote:
+> On Wed, Jan 29, 2025 at 12:25 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Wed, Jan 29, 2025 at 06:34:53AM -0500, Joel Fernandes wrote:
+> > >
+> > >
+> > > > On Jan 28, 2025, at 9:21 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > >
+> > > > ﻿On Tue, Jan 28, 2025 at 09:13:45PM -0500, Joel Fernandes wrote:
+> > > >>> On Tue, Jan 28, 2025 at 8:47 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > >>>
+> > > >>> On Tue, Jan 28, 2025 at 08:38:57PM -0500, Joel Fernandes wrote:
+> > > >>>> On Tue, Jan 28, 2025 at 8:33 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > >>>>>
+> > > >>>>> On Tue, Jan 28, 2025 at 08:22:48PM -0500, Joel Fernandes wrote:
+> > > >>>>>> On Mon, Jan 27, 2025 at 07:09:34PM -0500, Joel Fernandes wrote:
+> > > >>>>>>> On Mon, Jan 27, 2025 at 7:07 PM Joel Fernandes (Google)
+> > > >>>>>>> <joel@joelfernandes.org> wrote:
+> > > >>>>>>>>
+> > > >>>>>>>> The rcu_seq_done() API has a large "false-negative" windows of size
+> > > >>>>>>>> ULONG_MAX/2, where after wrap around, it is possible that it will think
+> > > >>>>>>>> that a GP has not completed if a wrap around happens and the delta is
+> > > >>>>>>>> large.
+> > > >>>>>>>>
+> > > >>>>>>>> rcu_seq_done_exact() is more accurate avoiding this wrap around issue,
+> > > >>>>>>>> by making the window of false-negativity by only 3 GPs. Use this logic
+> > > >>>>>>>> for rcu_seq_done() which is a nice negative code delta and could
+> > > >>>>>>>> potentially avoid issues in the future where rcu_seq_done() was
+> > > >>>>>>>> reporting false-negatives for too long.
+> > > >>>>>>>>
+> > > >>>>>>>> rcutorture runs of all scenarios for 15 minutes passed. Code inspection
+> > > >>>>>>>> was done of all users to convince the change would work.
+> > > >>>>>>>>
+> > > >>>>>>>> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > >>>>>>>
+> > > >>>>>>> I am leaving a 60 minute overnight run of all scenarios on my personal
+> > > >>>>>>> server for further testing.
+> > > >>>>>>
+> > > >>>>>> The run passed, details below:
+> > > >>>>>>
+> > > >>>>>> --- Mon Jan 27 11:49:49 PM EST 2025 Test summary:
+> > > >>>>>> Results directory:
+> > > >>>>>> tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 60
+> > > >>>>>> RUDE01 ------- 14309 GPs (3.97472/s) [tasks-rude: g57884 f0x0 total-gps=57880] n_max_cbs: 0
+> > > >>>>>> SRCU-L ------- 34121 GPs (9.47806/s) [srcu: g316564 f0x0 total-gps=79242] n_max_cbs: 150000
+> > > >>>>>> SRCU-N ------- 151316 GPs (42.0322/s) [srcu: g1840064 f0x0 total-gps=460117] n_max_cbs: 150000
+> > > >>>>>> SRCU-P ------- 35189 GPs (9.77472/s) [srcud: g320792 f0x0 total-gps=80299] n_max_cbs: 150000
+> > > >>>>>> SRCU-T ------- 389034 GPs (108.065/s) [srcu: g4142406 f0x0 total-gps=1035602] n_max_cbs: 50000
+> > > >>>>>> SRCU-U ------- 376267 GPs (104.519/s) [srcud: g3953834 f0x0 total-gps=988459] n_max_cbs: 50000
+> > > >>>>>> SRCU-V ------- 407633 GPs (113.231/s) [srcud: g4371704 f0x0 total-gps=1092927] n_max_cbs: 1000
+> > > >>>>>> TASKS01 ------- 11007 GPs (3.0575/s) [tasks: g57816 f0x0 total-gps=57808]
+> > > >>>>>> TASKS02 ------- 10539 GPs (2.9275/s) [tasks: g57936 f0x0 total-gps=57936]
+> > > >>>>>> TASKS03 ------- 10453 GPs (2.90361/s) [tasks: g57508 f0x0 total-gps=57508]
+> > > >>>>>> TINY01 ------- 511634 GPs (142.121/s) [rcu: g0 f0x0 total-gps=0] n_max_cbs: 57078
+> > > >>>>>> TINY02 ------- 541799 GPs (150.5/s) [rcu: g0 f0x0 total-gps=0] n_max_cbs: 2619
+> > > >>>>>> TRACE01 ------- 7299 GPs (2.0275/s) [tasks-tracing: g45844 f0x0 total-gps=45844] n_max_cbs: 50000
+> > > >>>>>> TRACE02 ------- 101265 GPs (28.1292/s) [tasks-tracing: g305464 f0x0 total-gps=305456] n_max_cbs: 100000
+> > > >>>>>> TREE01 ------- 97989 GPs (27.2192/s) [rcu: g479473 f0x0 total-gps=120151]
+> > > >>>>>> TREE02 ------- 202908 GPs (56.3633/s) [rcu: g1459509 f0x0 total-gps=365162] n_max_cbs: 1139244
+> > > >>>>>> TREE03 ------- 168901 GPs (46.9169/s) [rcu: g1764445 f0x0 total-gps=441393] n_max_cbs: 1341765
+> > > >>>>>> TREE04 ------- 148876 GPs (41.3544/s) [rcu: g951744 f0x0 total-gps=238225] n_max_cbs: 236765
+> > > >>>>>> TREE05 ------- 220092 GPs (61.1367/s) [rcu: g1234385 f0x0 total-gps=308880] n_max_cbs: 82801
+> > > >>>>>> TREE07 ------- 34678 GPs (9.63278/s) [rcu: g207257 f0x0 total-gps=52094]
+> > > >>>>>> TREE09 ------- 341706 GPs (94.9183/s) [rcu: g7693569 f0x0 total-gps=1923688] n_max_cbs: 1845334
+> > > >>>>>> --- Done at Mon Jan 27 11:49:55 PM EST 2025 (4:41:24) exitcode 0
+> > > >>>>>
+> > > >>>>> Very good!
+> > > >>>>>
+> > > >>>>> How would you go about analyzing whether this is really safe vs. getting
+> > > >>>>> just getting lucky and not having provoked an overflow?
+> > > >>>>
+> > > >>>> I would probably add a more specific test case stressing the API, or
+> > > >>>> even a unit test of just the API by passing a range of sequences.. I
+> > > >>>> should go ahead and do that but it sounds like you feel there is an
+> > > >>>> issue with the patch? :)
+> > > >>>
+> > > >>> 2^31 (let alone 2^63) is a very large number of grace periods, and
+> > > >>> so it is hard to test grace-period sequence-number wrap.
+> > > >>>
+> > > >>> Not impossible, though...
+> > > >>
+> > > >> We could test a decent number of candidate sequences to cover
+> > > >> different cases. Not ideal like bruteforcing, but...   Another idea is
+> > > >> to hardcode/assume ULONG_MAX as 16-bit in a unit test.
+> > > >
+> > > > Or put the various sequence numbers into an unsigned short or even
+> > > > an unsigned char.
+> > > >
+> > > > One set of use cases checks to see if a given CPU's ->gp_seq has fallen
+> > > > too far behind the current grace period, and sets a flag to alert
+> > > > that CPU.  Others rely on a false negative being functionally OK.
+> > > >
+> > > > Or so I believe.  ;-)
+> > >
+> > > Thanks, I am itching to create a visualization of all eight bit combinations and the output of both API, which will be a fun exercise however I’m missing something fundamental because as I mentioned in that 100 and 200 example, the API itself cannot distinguish between a wraparound and a legitimate delay in comparison between start and a delayed end. I need to understand this better and go through the code more. ;-/
+> >
+> > The big questions are "under what conditions does it need to distinguish,
+> > and what are the consequences of failing to get this right?"   Also, "what
+> > is the purpose of ->gpwrap?".
+> 
+> My understanding is we take a snapshot of a sequence and then check at
+> later time if it was reached. Ok I shall explore these questions.
+> Meanwhile I created the following visualization using 5-bit numbers:
+> 
+> https://drive.google.com/file/d/1w2sgJga7B5dye4iH0oPZ79obaKO-e_Jn/view?usp=sharing
+> 
+> I find as we expect, that for rcu_seq_done(), as long as the distance
+> between the "running sequence" and the "target" is ULONG_MAX/2, it
+> returns correct results. OTHERWISE, it can return false results. So
+> for target value of 28 (in 5-bit world), only initial running values
+> from 12 would return FALSE. Before number 12, everything is TRUE. This
+> can cause both false-positives and false-negatives depending on the
+> input, however it is possible that are no users who use it causing
+> false-positives! So I guess it really depends on user.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501301350.XWliXFDW-lkp@intel.com/
+Your last sentence is extremely important.  You need to evaluate
+the consequences of false positives and false negatives on a
+use-case-by-use-case basis.  Which first requires enumerating
+the use cases.
 
-All warnings (new ones prefixed by >>):
+> False positives:
+> If the initial value is ULONG_MAX/2 away from the target, then
+> rcu_seq_done() can return TRUE when *no wraparound* happened.
 
-   cc1: warning: arch/um/include/uapi: No such file or directory [-Wmissing-include-dirs]
-   In file included from include/linux/kernel.h:15,
-                    from include/linux/list.h:9,
-                    from include/linux/module.h:12,
-                    from drivers/mtd/mtdpart.c:10:
-   drivers/mtd/mtdpart.c: In function 'parse_mtd_partitions':
->> drivers/mtd/mtdpart.c:985:34: warning: '%s' directive argument is null [-Wformat-overflow=]
-     985 |                         pr_debug("%s: got parser %s\n", master->name,
-         |                                  ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/printk.h:288:21: note: in definition of macro 'pr_fmt'
-     288 | #define pr_fmt(fmt) fmt
-         |                     ^~~
-   include/linux/dynamic_debug.h:143:9: note: in expansion of macro '__dynamic_func_call'
-     143 |         __dynamic_func_call(__UNIQUE_ID(ddebug), fmt, func, ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/dynamic_debug.h:153:9: note: in expansion of macro '_dynamic_func_call'
-     153 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/linux/printk.h:335:9: note: in expansion of macro 'dynamic_pr_debug'
-     335 |         dynamic_pr_debug(fmt, ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~~
-   drivers/mtd/mtdpart.c:985:25: note: in expansion of macro 'pr_debug'
-     985 |                         pr_debug("%s: got parser %s\n", master->name,
-         |                         ^~~~~~~~
-   drivers/mtd/mtdpart.c:985:50: note: format string is defined here
-     985 |                         pr_debug("%s: got parser %s\n", master->name,
-         |                                                  ^~
+What exactly is the initial value and the target?
 
+My guess is that the initial value is what was returned from
+rcu_seq_snap(), but that is just a guess.  My guess is that the
+target value is the value of the underlying sequence number at the
+time that rcu_seq_done() is invoked, but again, that is just a guess.
+Similar question for "away from the target", and similar guess.
 
-vim +985 drivers/mtd/mtdpart.c
+This might sound picky, but if you think that *I* am picky, just
+try the actual RCU code.  ;-)
 
-5b644aa012f67f Rafał Miłecki           2018-03-14   941  
-ad274cecdbce18 Artem Bityutskiy        2011-06-08   942  /**
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   943   * parse_mtd_partitions - parse and register MTD partitions
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   944   *
-ad274cecdbce18 Artem Bityutskiy        2011-06-08   945   * @master: the master partition (describes whole MTD device)
-ad274cecdbce18 Artem Bityutskiy        2011-06-08   946   * @types: names of partition parsers to try or %NULL
-c7975330154af1 Dmitry Eremin-Solenikov 2011-06-10   947   * @data: MTD partition parser-specific data
-ad274cecdbce18 Artem Bityutskiy        2011-06-08   948   *
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   949   * This function tries to find & register partitions on MTD device @master. It
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   950   * uses MTD partition parsers, specified in @types. However, if @types is %NULL,
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   951   * then the default list of parsers is used. The default list contains only the
-d26c87d64eff27 Dmitry Eremin-Solenikov 2011-05-29   952   * "cmdlinepart" and "ofpart" parsers ATM.
-c51803ddba10d8 Huang Shijie            2012-08-18   953   * Note: If there are more then one parser in @types, the kernel only takes the
-c51803ddba10d8 Huang Shijie            2012-08-18   954   * partitions parsed out by the first parser.
-ad274cecdbce18 Artem Bityutskiy        2011-06-08   955   *
-ad274cecdbce18 Artem Bityutskiy        2011-06-08   956   * This function may return:
-ad274cecdbce18 Artem Bityutskiy        2011-06-08   957   * o a negative error code in case of failure
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   958   * o number of found partitions otherwise
-ad274cecdbce18 Artem Bityutskiy        2011-06-08   959   */
-26a4734623e4f0 Artem Bityutskiy        2013-03-11   960  int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
-c7975330154af1 Dmitry Eremin-Solenikov 2011-06-10   961  			 struct mtd_part_parser_data *data)
-^1da177e4c3f41 Linus Torvalds          2005-04-16   962  {
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   963  	struct mtd_partitions pparts = { };
-^1da177e4c3f41 Linus Torvalds          2005-04-16   964  	struct mtd_part_parser *parser;
-5a2415b0769233 Brian Norris            2015-10-11   965  	int ret, err = 0;
-^1da177e4c3f41 Linus Torvalds          2005-04-16   966  
-5c4eefbd5bb82a Dmitry Eremin-Solenikov 2011-06-02   967  	if (!types)
-76a832254ab055 Rafał Miłecki           2018-07-13   968  		types = mtd_is_partition(master) ? default_subpartition_types :
-76a832254ab055 Rafał Miłecki           2018-07-13   969  			default_mtd_part_types;
-5c4eefbd5bb82a Dmitry Eremin-Solenikov 2011-06-02   970  
-5a2415b0769233 Brian Norris            2015-10-11   971  	for ( ; *types; types++) {
-5b644aa012f67f Rafał Miłecki           2018-03-14   972  		/*
-5b644aa012f67f Rafał Miłecki           2018-03-14   973  		 * ofpart is a special type that means OF partitioning info
-5b644aa012f67f Rafał Miłecki           2018-03-14   974  		 * should be used. It requires a bit different logic so it is
-5b644aa012f67f Rafał Miłecki           2018-03-14   975  		 * handled in a separated function.
-5b644aa012f67f Rafał Miłecki           2018-03-14   976  		 */
-5b644aa012f67f Rafał Miłecki           2018-03-14   977  		if (!strcmp(*types, "ofpart")) {
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   978  			ret = mtd_part_of_parse(master, &pparts);
-5b644aa012f67f Rafał Miłecki           2018-03-14   979  		} else {
-5b644aa012f67f Rafał Miłecki           2018-03-14   980  			pr_debug("%s: parsing partitions %s\n", master->name,
-5b644aa012f67f Rafał Miłecki           2018-03-14   981  				 *types);
-5531ae4818fb04 Brian Norris            2015-12-04   982  			parser = mtd_part_parser_get(*types);
-^1da177e4c3f41 Linus Torvalds          2005-04-16   983  			if (!parser && !request_module("%s", *types))
-5531ae4818fb04 Brian Norris            2015-12-04   984  				parser = mtd_part_parser_get(*types);
-8e2c992b59fcb5 Michal Suchanek         2015-08-18  @985  			pr_debug("%s: got parser %s\n", master->name,
-8e2c992b59fcb5 Michal Suchanek         2015-08-18   986  				parser ? parser->name : NULL);
-7c802fbd541448 Artem Bityutskiy        2011-05-17   987  			if (!parser)
-^1da177e4c3f41 Linus Torvalds          2005-04-16   988  				continue;
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   989  			ret = mtd_part_do_parse(parser, master, &pparts, data);
-5b644aa012f67f Rafał Miłecki           2018-03-14   990  			if (ret <= 0)
-5b644aa012f67f Rafał Miłecki           2018-03-14   991  				mtd_part_parser_put(parser);
-5b644aa012f67f Rafał Miłecki           2018-03-14   992  		}
-01f9c7240a900d Brian Norris            2017-05-23   993  		/* Found partitions! */
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   994  		if (ret > 0) {
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   995  			err = add_mtd_partitions(master, pparts.parts,
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   996  						 pparts.nr_parts);
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   997  			mtd_part_parser_cleanup(&pparts);
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   998  			return err ? err : pparts.nr_parts;
-5ac67ce36cfe38 Rafał Miłecki           2018-03-27   999  		}
-5a2415b0769233 Brian Norris            2015-10-11  1000  		/*
-5a2415b0769233 Brian Norris            2015-10-11  1001  		 * Stash the first error we see; only report it if no parser
-5a2415b0769233 Brian Norris            2015-10-11  1002  		 * succeeds
-5a2415b0769233 Brian Norris            2015-10-11  1003  		 */
-5a2415b0769233 Brian Norris            2015-10-11  1004  		if (ret < 0 && !err)
-5a2415b0769233 Brian Norris            2015-10-11  1005  			err = ret;
-^1da177e4c3f41 Linus Torvalds          2005-04-16  1006  	}
-5a2415b0769233 Brian Norris            2015-10-11  1007  	return err;
-^1da177e4c3f41 Linus Torvalds          2005-04-16  1008  }
-5daa7b21496aeb Roman Tereshonkov       2010-09-17  1009  
+> False negatives:
+> The initial value of the snapshot was *within* the ULONG_MAX/2
+> distance from target. A full *wrap around then happened*, and we ended
+> where we were initially, so rcu_seq_done() should return TRUE but it
+> returns FALSE because it doesn't know about the wrap.
 
-:::::: The code at line 985 was first introduced by commit
-:::::: 8e2c992b59fcb5e56e3667f5c30c7d26fbbf14a2 mtd: mtdpart: add debug prints to partition parser.
+By "where we were initially", one might reasonably guess that you meant
+that the initial value and the target are one and the same.  But I suspect
+that you are thinking of a third value, the value of the underlying
+grace-period sequence number at the time of the call to rcu_seq_snap().
+But you might be thinking of something else entirely.
 
-:::::: TO: Michal Suchanek <hramrach@gmail.com>
-:::::: CC: Brian Norris <computersforpeace@gmail.com>
+> Now we move rcu_seq_done_exact. It has the exact same behavior except
+> that instead of ULONG_MAX/2, the above situations are shrunk to about
+> 10 counts from the target. So if target is 28, then the initial
+> sequence should have been at least 18 to avoid false-positive, but
+> again it is possible and I certain see in the code that it cannot be
+> used this way.. (at least so far).. So all we are left with is the
+> false-negative band of ~2.5 GPs..
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Here, I have the same questions.  As you no doubt guessed.
+
+> About "what are the consequences of failing to get this right".  I
+> believe false-positive is unacceptable unless it is maybe debug code -
+> that can break functionality in code, too short GPs and all that.
+> However false-negative is OK as long as the usecase can retry later
+> and can afford to wait. Did I get that much correct?
+
+Maybe?
+
+Please look at this on a per-use-case basis.
+
+							Thanx, Paul
