@@ -1,120 +1,218 @@
-Received: from weasel.tulip.relay.mailchannels.net (weasel.tulip.relay.mailchannels.net [23.83.218.247])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2081.outbound.protection.outlook.com [40.107.236.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A65779D2;
-	Thu, 30 Jan 2025 00:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.247
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89898F58;
+	Thu, 30 Jan 2025 00:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738196769; cv=pass; b=O/Vph63mEE2JLDGb3S+1FqwS3wNaMmDGx96wpbGXTZkyrBmDhDqCJ0v7ey1fLTDdBOEvBc7ALtuFUG28FFMgvwydx6OzUjZRdCh+keDeOajlzkSa2ND2nTkDDjkpZEMU1Yo2CogDmIq0AecppRlpo5ZCsmqUNTqfbYJOuMGGGyw=
+	t=1738196868; cv=fail; b=YxMpkV+isFag2723P36D8fF4SlcTjL0JoXOt7jlfS95/vR1qIf8k9lCQn6pX9/X0DOub6VG9evIt2i1uM5gnMTgjMerAX1485NNuH13BpXeFI+0oV0Ag/iCCdiYSEO+5DLOgfoFpDiThT9OWCXDYiGJziKd5IEtffIuLYuTxSfU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738196769; c=relaxed/simple;
-	bh=zyL1FXZ3ilKcMxDzvA88yimgZ4vmF7NZRW1Luv4cv50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LxT1vCXO0fkz1sN9EwBVC94mqI4jL3AqTHRJweRKpVd0MyKt4jD9bAlEby1v7Iy3ACqFZl8x9uyA0yRRaclieCFZ0AG3AwJM3DEwURi1RyFVVzFGpmYbvc0tnUZeUqE20y8T5kfZaKCwJnsPosqgFVn5aUCWdpUqf28X8pkqQwE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=P+BSPGx7; arc=pass smtp.client-ip=23.83.218.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1738196868; c=relaxed/simple;
+	bh=kJCNOz7OKJVTXsLn0WlJsDH/zzb0Pf7uFEyTKnOZJW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=iYelyvyMbFf/PFhfkewRfAOFGKgiYyhW+9zLQf749EuwVrX22kfx5b/rSD0vmyi1Sazes3JYymZmt3a9L3Y+Ob858I3ABn5u89f2ZOLnk/lDMcHwuNcgwUC9tjLAQTlDU2W30//SWQPgGZYGBP4BOAwfGMkEf4+2g5Z4AAieW/Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=VvnHQWQc; arc=fail smtp.client-ip=40.107.236.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="P+BSPGx7"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 742AB24299;
-	Thu, 30 Jan 2025 00:15:54 +0000 (UTC)
-Received: from pdx1-sub0-mail-a281.dreamhost.com (100-116-64-196.trex-nlb.outbound.svc.cluster.local [100.116.64.196])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 5A1F6241DD;
-	Thu, 30 Jan 2025 00:15:53 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738196153; a=rsa-sha256;
-	cv=none;
-	b=Rezd8LutXudnLtUe9UG/b+XNzfJeZ7aGVwosT8IfQCzaTkQTMhCVgtZfphILR8/7AeEGUN
-	zof4gUf14aClR0JBq3YEQYioQp12UbIxbruGldZ1TR2V8xIWskHze5/LVTdxX0jkbx706s
-	D51ISgf4mVxgAPCkO+1KT0jrZBYasp/pWOggrwTWl7Pif782MarfDCzeoAi1daRhWbeXQf
-	tEnrDL3qlroEcpZcKjWI7W4MmVhXMPJFJRi4qvPEH5MrlxZV8GGvsQmX7L3PPWaS/ZKF50
-	Yj+kmUywmBgfNVUNNd9Mco4HoM6dVZQSNFJnPiqkPYiYeDQU8EmunTcW+a/sFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1738196153;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=tjE/2zHsO+ejHCnERSc8q97eewLtwPYiDgRw3pVgUTI=;
-	b=s5G7q8nGhgQM78KvJQDiQehz6/gNJ0qbWa1tlcUU79Emv8br2dGEk4sM0R3EKFuJh++jj3
-	/Ff2b7jIrgsJviElfx3MX5R63ZNqfEQTssQ1dXbc+k7ORtbyebAJVyDasdrhPz7UKfkvG+
-	Ap6kr0+JVzjZH4XCLOjXt9ShSKYb9/5UbpKleai09ZC+SpQtrXTXEsCOLGzUmc5sXZiDLQ
-	Hz8/ne3Ypwnn7DNOv1xP4NTMaExP4lA6PDCCx2xNUw4G4DvU/rm74Tnfg1B0dA1FPGiL6H
-	FyT8LFvj9gxQF6sSKFM96Tm/QMIGt0/bGNFCW0284qT81teTzQb/hWK9VwVQ3Q==
-ARC-Authentication-Results: i=1;
-	rspamd-8586946c78-gbxbr;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Trail-Abortive: 1db234a2242799b2_1738196153649_911084047
-X-MC-Loop-Signature: 1738196153649:1408816590
-X-MC-Ingress-Time: 1738196153649
-Received: from pdx1-sub0-mail-a281.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.116.64.196 (trex/7.0.2);
-	Thu, 30 Jan 2025 00:15:53 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a281.dreamhost.com (Postfix) with ESMTPSA id 4Yk0144j9hz2G;
-	Wed, 29 Jan 2025 16:15:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1738196153;
-	bh=tjE/2zHsO+ejHCnERSc8q97eewLtwPYiDgRw3pVgUTI=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=P+BSPGx72xgPia4aR7934FrNQ8eHxvsyUh0os+ohy2jFz5EXUcelNphHVRlIZT6qo
-	 epfD4EmprdGX5xQePhUXuX/xLXwEsH3+cangS0FnfK57w0DlvPAkxy0IbD5Dlt763k
-	 oBvRsT4D7FpbCbvpafLcYkKrztp7Qt0ldjfa6i8mUvoEjJ6Bea7uFeretFJOTsIrcK
-	 +281NIegqaTFfyerHxpHWO4DLCteYagqEnDTCi/86ZNn5Gss3/q8j3fkh2TAg7FOVm
-	 oSdGAJb0OADBkUBRt15vPZRW5iS9LgHsMxNVnwwJG8K/VOjd+Tw2yCVJjKp25XJrv1
-	 hmY/wMs4gq6Dw==
-Date: Wed, 29 Jan 2025 16:15:49 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 2/2] cxl/memdev: Remove temporary variables from
- cxl_memdev_state
-Message-ID: <20250130001549.xtvbvgzma43sn6dj@offworld>
-References: <20250128-rfc-rearch-mem-res-v1-0-26d1ca151376@intel.com>
- <20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="VvnHQWQc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VZPAlUxCZ0VJvl2hl6f1HZv/SvYKLwW5hrtSsrrRbW2pKhcwHNAFD+BIrmHPh+Ysf5ZgqFfNVj8RNYEdKMYGOb6aLZ8D1RMrFrENIXYdRfkjMpXh8BREa+F54V0n9AASzMvbr0XCatQz0/3iutyYx0HGIuMZesgTVi/+uEpby1RS+kIpNaT324xt4Qm6VJbrWx/nWHd94nn6ie5dTpILvq3uv2pxrPlOG02/TXLy5XhqXint4EQbLI/9fRlAT14ZlsACqxNBzv1WMiBZAXjqteQeQzUcullIxvL1ebUSzeWFwbiUwfDznoBtXlH2ZvPQiwU/3+BWdZeLB6wLV0L/eA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eUdYHVup223LwPG4t1221TE0aH77iwGDq4JZaHKQ1Xs=;
+ b=v75dQzmjGzb/781B0hBYij+0l4CmJ6EKxaydAGvO98v22OvQWNm9VZ4fssU8gLNm4F95tiTnWANq0W5GS8jeSY34y15fUNkvYerhTG3SppO9Zi133cRfoRysF4V/qtsJKeYg79fRScbyy1ly+HVjgwHTMNfcje0ZAmNaiWQfRVk3GUdiT3kyqqCnvi488Ebqdl5oVFi2HwgOd2HI6VaPLh2CZ8dzEtmPiL8VwQyMd3aEiBQ1sy7I8PXbCDN2/ukW/fB9zzG7tcDLk6LKamJIhqqTMJKjAxNrWBNvSKtUtA/Z64u/XEoGSqSG87qogKK8bUaWiRix0Bnm+bPLP+OV4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eUdYHVup223LwPG4t1221TE0aH77iwGDq4JZaHKQ1Xs=;
+ b=VvnHQWQcF9ZbIWbfB/dgGtv/3iNNJBIKS3qT2zIt+0nA+B8Ftn77ml4hyyiwDiOArMZKUyTgh1OFDzd5G3vBr70F6hBemWI3ol8fi8dl6CAE2K7/7P2lpMs6EI6oqwERtFygqHEX7wd2PpkQVgtFPlVALUM02l0KFqccPTtlQj6TOsGi7qh8Gnu+aCAoJmMEIvSO2kfu5movK1HALLBWW1W0uDR0IxAyUvkW12/4SCgPyFWTwt1PqZ1jVdR23xyKW3R4FsTs2iUK6IysAAzwPXxdw2vOhQS0n47FbE2Nhf5Rqdpq6Hoezhr3DUCbV6viPWis2nJttizp+vFGaMjK9g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY8PR12MB7705.namprd12.prod.outlook.com (2603:10b6:930:84::9)
+ by SA1PR12MB8844.namprd12.prod.outlook.com (2603:10b6:806:378::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Thu, 30 Jan
+ 2025 00:27:42 +0000
+Received: from CY8PR12MB7705.namprd12.prod.outlook.com
+ ([fe80::4b06:5351:3db4:95f6]) by CY8PR12MB7705.namprd12.prod.outlook.com
+ ([fe80::4b06:5351:3db4:95f6%6]) with mapi id 15.20.8398.017; Thu, 30 Jan 2025
+ 00:27:42 +0000
+Date: Thu, 30 Jan 2025 11:27:37 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-mm@kvack.org, nouveau@lists.freedesktop.org, 
+	Andrew Morton <akpm@linux-foundation.org>, =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
+	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v1 4/4] mm/memory: document restore_exclusive_pte()
+Message-ID: <7vejbjs7btkof4iguvn3nqvozxqpnzbymxbumd7pant4zi4ac4@3ozuzfzsm5tp>
+References: <20250129115803.2084769-1-david@redhat.com>
+ <20250129115803.2084769-5-david@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129115803.2084769-5-david@redhat.com>
+X-ClientProxiedBy: SY5P282CA0025.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:202::10) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
-User-Agent: NeoMutt/20220429
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY8PR12MB7705:EE_|SA1PR12MB8844:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6ad70f6b-1627-40b2-734d-08dd40c4e8b2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?oqx6zFvBozuXs4+q/BKT8+PYxVxoE7geH/zKtX+4UQ9IZ3HrD/nqr2vP+KGv?=
+ =?us-ascii?Q?XDJFomq3JS55jLRqKDUk23EBWVcfDjE2fbItzmAIT3/OuIIk5PDi4AD4YSmO?=
+ =?us-ascii?Q?NCGu43xk7FcGS/A4giMoQAN7y0Aw8RcVsuPgftbErch2ts5CIALZHYsg2DPn?=
+ =?us-ascii?Q?DvcyTAIcPmM2a33bx8BXsC7K71pJ7hF9qPD+M1ZLYcc3FML63YrS76VJpLNy?=
+ =?us-ascii?Q?DKPT9MksENzXmHPV+7/8TuSQI8B+TsqqAdwLuaq2KhD//w59J38T2rXlpLig?=
+ =?us-ascii?Q?EJV2gbFfmMHDHGPufQaeHt7fM0ppp5Gxhp4dwdxhtOz0ygPo2TLU8JhuG/DR?=
+ =?us-ascii?Q?jbtlcHBnPZDjk4nElNQuAwu5tebb3nfiqwSCwZpPyQGogLtVzlz1F9LM0tvk?=
+ =?us-ascii?Q?ifLvwzd90unGVZIph9VF7vOvjoX1+YcqjX2ZwNMFk84ZIwFhb3H3r4iYg0hl?=
+ =?us-ascii?Q?rcYO3upP50YYiqMoNgpeEDX/CLVgg2qNVx/br/gn5i/rDu/fn/h6vkPWG/mZ?=
+ =?us-ascii?Q?W/rk8BVx6mZDe4IJBKdXzY4xoImqRFWLSnt/ARt/4Aa3H9Kdp1ZpPkOr7HYC?=
+ =?us-ascii?Q?n0zpewWM4ZF6dXuDWOR3UogFGRpFTXiAWPqY/v3qe09q0oEmjSDFh/1U9VQ3?=
+ =?us-ascii?Q?9OxDP3EZPqALOkpsxfO6sHkJ6IL4cujRWdh4B99xGe26bM1j3DIwVE+TjLfB?=
+ =?us-ascii?Q?n0zI8+ZJEHtujPr06zy9s7uALt04VPPrxy2KfcxogK+tAseabHYgLR4kKUXb?=
+ =?us-ascii?Q?Y1vYlx9I5KfvMUSbLK3WzQsF4rte6QukYJHNnHpLWpHrIyaKBiIIBTyBi37d?=
+ =?us-ascii?Q?Oq5O97VCo6FWLBO/lQRAy6hLbd15VtIDp8/MOU8gEnXumrRzaODdPfzR3BvW?=
+ =?us-ascii?Q?lMvsfm/QgUpN9Sf0+J7HOEdcTdP0VDmtyLTg+UjMhUgFrl/4GnCwM/JLG/lS?=
+ =?us-ascii?Q?Kkily71CM2tA8R8vZqnPQzj0Lrkf4CWMJrMU5ZhG0WL8LiZmh5eZ1kaSyOS9?=
+ =?us-ascii?Q?TBcYm5wZELkeO2t4qUYdhWk3wy7zuadmy3fURAZOHv9nKMOrWVBlbZyCfnEk?=
+ =?us-ascii?Q?F6VmLfUfIXeNluOdkW5nTmYaq+0xZ1EszMChU+uUevwZXoANy3ejryvWQIYB?=
+ =?us-ascii?Q?pSkGJKgkj0lK+paKdKZPsHxP6Fmeaby4ph50ZsUHIpcpOID8OY9cMF6PVnXe?=
+ =?us-ascii?Q?/khwR2BcgTRAu5ovbb1GEvx8xQOUQaTvMdFSyzqUyNRg9bXUa9rTJR30YB4B?=
+ =?us-ascii?Q?2dQ2TKajjrYLlumrSdm/L4WiDnV/+1dhg4wSh2QCr4g1Yzl99Z3Dv1FtH3f9?=
+ =?us-ascii?Q?K5qj/NX4vY0SQV0Nr2zrB0AoL+fIEosVr5uA1KkJH5Ee4nzpwtu67jeUebLy?=
+ =?us-ascii?Q?8Ze7upXAYbJ94eDdHEFRwsAWNdgs?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR12MB7705.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?BUbg/FPrBdCuvp+X9Ywg6+ZsrGALFYI0K8ncVNAyZWB2ctBitgrtlKG0gr+M?=
+ =?us-ascii?Q?d6bBCpXEB8QhEO+3LTS7cSpZHIRlh60vHMj+QbTjxNq2AFINtcM/rPBH78qZ?=
+ =?us-ascii?Q?KAFn01WLshQPYEPAa/uPOFdjP24eJMz4wZbS9osb1w0eKC4JWFqR2UZamxpt?=
+ =?us-ascii?Q?uA2yV+U3cNHhPj6MnuwxcTJNRJZ+gqRi8IJzcGX5SLvH9D7Ne2qfINfiL17o?=
+ =?us-ascii?Q?q5DAkWHGFsozTl51uxgF1MkNTlQHTBG3pZsGDuNkA8UGdGxfOvJb4Boe7XdL?=
+ =?us-ascii?Q?L207U8IJUt8mkr5yLdZeKwOtD+gob71KxPl0e9EDZsFK732OkSO8/b/ngekM?=
+ =?us-ascii?Q?1uANVjL5u8slD8irrYpC4RODog+CPmYIS8vf6MeURT7k7T9lxe2pSDh/TITW?=
+ =?us-ascii?Q?eVUAfMTDT6grYK1K1M4V4/1SNuCWNrwpZe+OL3X3JZK6EDBQ4IKr3MbgoeEs?=
+ =?us-ascii?Q?DBHxqSW/bdNcjWe6Dr+O1TRMqzo1YPs9XYqrjzEVCb++vjyljcswFULTIB/5?=
+ =?us-ascii?Q?k6E0f50lt883LYvUUGwJEMoyVT6DbxiDcOi7eL1ijcJ3Wbf0bndkSSxgbPAI?=
+ =?us-ascii?Q?h4eewKZFxzejg4il3FA/qrIKeLs2JUpmiC7X1aSMAovbBSEEEKdBIV7VSqgb?=
+ =?us-ascii?Q?iIYWmSurWzFYviwXNd5PGyiZuusvzO+PGKBZc+laRMGF45yXttVD/lsmoZ5c?=
+ =?us-ascii?Q?RcE0ydocQdOOW0fGi3dvGHDO49OxIvdXb5nlryH4Lb/7C0Gc/Y0j7SYWB8vm?=
+ =?us-ascii?Q?oLO0Wa782hqzcEM06lyy3iLfe1tXzvqxsnOgFJZ0oAPcLQnBEpNSb2fV6cgH?=
+ =?us-ascii?Q?REpN+mOfC7VsnwlOhr3dfOoxr2kcbOKemAcG31zCuZTpSSdyfaCYqSX84cH/?=
+ =?us-ascii?Q?jRq9o44B8e4VjkS0slV/Kfen1+JMq88VwlZteu9xvy/dkSvN8H1iOGw0ahoP?=
+ =?us-ascii?Q?kruLwNwFwORQUWx7TWMMLx5uTHQjOpEbf/wlkOQk2928qM+K4swq6uHkPnIR?=
+ =?us-ascii?Q?IZUPWO3TKGdH4c4HkCK9CC7rhQUtAta+sGZd/dqozNFR04qBnPzVpYDYF7jp?=
+ =?us-ascii?Q?YcjlB/lulelSA9RodmSb8UTqh/YVQmy1zp2axd/5Lo9Vrmvrx4RCDCWGSxks?=
+ =?us-ascii?Q?suPNdJN/Joaz3WvuOJsvRKd9vpaiK9Z2oE67Qjjr+iYqGXDmMfpGo7TkG4lC?=
+ =?us-ascii?Q?w4ulLsf4PDfXvhRdB9WtUhTG3bgeCCeia4a71ETSfFDWP/ZyNIrIeVUAAxCL?=
+ =?us-ascii?Q?mokUqGCLbRAkEImYkN1W63YLx+1NsX0UQ9n8F4Ne2C6K4s+K/U0sBXEqwjJF?=
+ =?us-ascii?Q?oe/M5kg54yXNqPE+uPcypBG6jHJGOVLeGKmrr1d4KzJTtaNnU1k6LHrA+7mg?=
+ =?us-ascii?Q?jeat5btSqS1mMpBhhFGa76G9a8BN0+s7LFuM5R02FLqGgzttGTqgO2jEUk4z?=
+ =?us-ascii?Q?DsArgHlcqnKWJmoagzoXPB0t/XWBjw6009yTO6I4hoZ4GcIGHBByX5fgHgep?=
+ =?us-ascii?Q?wOc/dEuoy9x+prfE7SOyjVeXXB5XkwrK5aafGO/rxyZlACpdw5R5qBoMUWyC?=
+ =?us-ascii?Q?OvLDTpiZ+s7d7cj20ECWJVLp9eminRdOzbNfxjw3?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ad70f6b-1627-40b2-734d-08dd40c4e8b2
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 00:27:42.5678
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +5Zh4RaA2OhZ6VjrGxzRplZEPcrBh1F8bV7lGDu+0kVDk4HEANrc6XJOo7l1nvUeQIBqRpdbaaBuVFUo+hEmjQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8844
 
-On Tue, 28 Jan 2025, Ira Weiny wrote:
+On Wed, Jan 29, 2025 at 12:58:02PM +0100, David Hildenbrand wrote:
+> Let's document how this function is to be used, and why the requirement
+> for the folio lock might maybe be dropped in the future.
 
->As was mentioned by Dan[1] cxl_memdev_state stores values which are only
->used during device probe.  This clutters the data structure and is a
->hindrance on code maintenance.  Those values are best handled with
->temporary variables.
->
->Adjust the query of memory devices to read byte sizes in one call which
->takes partition information into account.  Use the values to create
->partitions for device state initialization.  Take care to separate the
->mailbox queries from the initialization of device state to steer the
->mbox code toward taking mailbox objects rather than memdev states.
->Update spec references while changing these calls.
->
->Link: https://lore.kernel.org/all/67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch/ [1]
->Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Sorry, only just catching up on your other thread. The folio lock was to ensure
+the GPU got a chance to make forward progress by mapping the page. Without it
+the CPU could immediately invalidate the entry before the GPU had a chance to
+retry the fault.
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Obviously performance wise having such thrashing is terrible, so should
+really be avoided by userspace, but the lock at least allowed such programs
+to complete.
+
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/memory.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 46956994aaff..caaae8df11a9 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -718,6 +718,31 @@ struct folio *vm_normal_folio_pmd(struct vm_area_struct *vma,
+>  }
+>  #endif
+>  
+> +/**
+> + * restore_exclusive_pte - Restore a device-exclusive entry
+> + * @vma: VMA covering @address
+> + * @folio: the mapped folio
+> + * @page: the mapped folio page
+> + * @address: the virtual address
+> + * @ptep: PTE pointer into the locked page table mapping the folio page
+> + * @orig_pte: PTE value at @ptep
+> + *
+> + * Restore a device-exclusive non-swap entry to an ordinary present PTE.
+> + *
+> + * The folio and the page table must be locked, and MMU notifiers must have
+> + * been called to invalidate any (exclusive) device mappings. In case of
+> + * fork(), MMU_NOTIFY_PROTECTION_PAGE is triggered, and in case of a page
+> + * fault MMU_NOTIFY_EXCLUSIVE is triggered.
+> + *
+> + * Locking the folio makes sure that anybody who just converted the PTE to
+> + * a device-private entry can map it into the device, before unlocking it; so
+> + * the folio lock prevents concurrent conversion to device-exclusive.
+
+I don't quite follow this - a concurrent conversion would already fail
+because the GUP in make_device_exclusive_range() would most likely cause
+an unexpected reference during the migration. And if a migration entry
+has already been installed for the device private PTE conversion then
+make_device_exclusive_range() will skip it as a non-present entry anyway.
+
+However s/device-private/device-exclusive/ makes sense - the intent was to allow
+the device to map it before a call to restore_exclusive_pte() (ie. a CPU fault)
+could convert it back to a normal PTE.
+
+> + * TODO: the folio lock does not protect against all cases of concurrent
+> + * page table modifications (e.g., MADV_DONTNEED, mprotect), so device drivers
+> + * must already use MMU notifiers to sync against any concurrent changes
+
+Right. It's expected drivers are using MMU notifiers to keep page tables in
+sync, same as for hmm_range_fault().
+
+> + * Maybe the requirement for the folio lock can be dropped in the future.
+> + */
+>  static void restore_exclusive_pte(struct vm_area_struct *vma,
+>  		struct folio *folio, struct page *page, unsigned long address,
+>  		pte_t *ptep, pte_t orig_pte)
+> -- 
+> 2.48.1
+> 
