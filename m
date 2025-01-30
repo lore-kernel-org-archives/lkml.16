@@ -1,325 +1,178 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BD4179BC;
-	Thu, 30 Jan 2025 04:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538B884A2B;
+	Thu, 30 Jan 2025 05:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738213172; cv=none; b=ac4j3QhwxGw7xeug0YZ8x8LNIT+BenkpdShD61qZvLphnKIEHW6TmKSCHoXqSOiltA1+jA+eqZQlKMA+JSISYwDSMyBBqIFfmtb6U7vWZoJqJykixTonH3qWU175BkHHz6Z1HjgXRBXJLhjRSKHi2EadKPfdWpYU9P9XrUdNm5g=
+	t=1738213661; cv=none; b=IXym18mdlxQQuj0625hDCNGyv/8TGU5KNP2OERTNVZJsYmPGo9U+GqJ6vq8gb2HGUMCNrB3vHVk6zRoaRY+DFCAsxxhrfHPOpVKxyzvREz6vN+gw0kW+6Pd5C4yUH7gjDutabi85oXRpmOLP7YS7gddDWrCkN1J8DLO/C5OXRrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738213172; c=relaxed/simple;
-	bh=GaZ1XjTNSx2/hu8Iza7BxFNn2rVO6yWgg9DEWAAnCbs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o399SWwgNuRHxrnx/xmf2L4HN4lcznjlllmgXIFDWRsuIM03UPAmDkgtXI0puU0cs05R1eXyrYt0U43X7Eeg94Y+u99aWqjbS9XbPr8Ac3LRIpTcOPdzx11umYDXjzSDhVPcINcW4TXVMJYqhUmBSDP/7lBEiynoGXucyYp249o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Sa4UGcy9; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738213661; c=relaxed/simple;
+	bh=/3vzIf519sEoRT39v7pzfqjnIlEQTGs5OGXO9Y1tXoQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EIlrMJrSqtRjjiPoEj9W1+cf5VPG979JYzeJ2APgglhIcEzR2VEO6SAS89SL2s9B5W1FMXjOvVq3vifVyYoJueY70F9jc6evHF14zIb4BiwXXr2XLkFXqd+C/H5V2vtH0ugVWH4bN4qLXbTGs8ancuW/vwKzUu4sMv1HVk0Sfxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=abWfmyq7; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Sa4UGcy9"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50U1coJc023049;
-	Thu, 30 Jan 2025 04:59:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=IH5/sW6f+JNVX0G8psnpK1
-	RkUkDiWwRi4YJcMaueWYg=; b=Sa4UGcy9lYMxYzVfuR+dLOnLH8Re74b9+YiAwn
-	irzemFL1otSfBGuHNFi42/t9GDskLVv3M4VAL7DxCZ69yiUWhGEuI98ZEaHaPNJh
-	MCW3MFv8MJaJFAF1mCbsY3ITJl7WpR621eu/CAxHl/YDAGebqxHujgh7fVghtdgV
-	zNfmo7tBe5xek5RcrBDanSQ4h/EK724UKBh9M3BEXL0DLVtLukmW2KEOf3UrwGmT
-	x8umfMbHPjFn+D8O+6bzyb2MajyZaYYSCFrf0vaQ0LmVVDvyrjYoMCbQFfUEUKh1
-	zUliH+j8c7O9gFzb5T+HAE37QnoN93r+PIsl8iuMCows2rUQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44fyxnr8x3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 04:59:26 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50U4xPU8002868
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 04:59:25 GMT
-Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 29 Jan 2025 20:59:22 -0800
-From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <ath12k@lists.infradead.org>,
-        <linux-wireless@vger.kernel.org>,
-        Raj Kumar Bhagat
-	<quic_rajkbhag@quicinc.com>
-Subject: [PATCH v2] arm64: dts: qcom: add wifi node for IPQ5332 based RDP441
-Date: Thu, 30 Jan 2025 10:29:00 +0530
-Message-ID: <20250130045900.1903927-1-quic_rajkbhag@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="abWfmyq7"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2167141dfa1so5258755ad.1;
+        Wed, 29 Jan 2025 21:07:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738213658; x=1738818458; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Y4+j1ebiE+NFGWL47CEk+gXSE+D9dAG1jpkq0eYDVQ=;
+        b=abWfmyq79OA06yilu5ebPPKU3jqOFWuEZXgHHyZWu/BwjvfOn1bmlzzIQz0cVVuWQ5
+         UxWnsqQGb+SFvE82PPBFrR8fozaRLjBo6sb6ngOHuM3OPzpDgH4UmPfjDne3YJkckHTk
+         RxcwJgBvAPiFJGAwYksz4KvaEbkWRwzQp9cDBGssgbEJ9bR/w7sOpN2od1ttNyDGNjfv
+         ZzuQ51E149MQWM867OXK8DnlgLyLMJWtkOwnPcYLYxunrF6u3i+/EHUp40fN6qroe0NN
+         EQd2nbZFJp8fqXZNVaQ0Wbu4EpaNSqQDsNPcVhNU0t3q18nCq5ZKmQWPFe8gTAPQA+Kk
+         PeQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738213658; x=1738818458;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9Y4+j1ebiE+NFGWL47CEk+gXSE+D9dAG1jpkq0eYDVQ=;
+        b=c4LIQmu7xwite9ty9KZuTKiihkKMce7SOe5yt27BmZLHZnSAIPV5xBcbTyXyciFbJC
+         Q95gGSFBmkQp2yD+QKX0nKHGSnT4Ml3TM66BuG1t26hCPoO2kXj4rz/RiXT3gdxVENO+
+         tCLyC9YzbDBf0KL/FUJvTpSveOWqKYVvh4rN4O7KnAiY9cG6ZAzmPsVSoBw6E8/0t7KD
+         O4oOhY8Tetzvhxz/0bsitawbVzxZO7dKzny7znr9CajRAOpyziGbOMI9c0wZPKIoXkM6
+         z4c/CkNydaYofHVqqGwivgZSPK84+S8UwOHZ1JKrQDGjfTaIXu5Aqwr5fYlAfJenTrGI
+         +e7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUCoEWnHOzZDLDwd59UFajnrGfdp7dVJ0aT65oieb4NuBjsa6EexMkVZqreOem6WhtZHwD2JWvUrWiBgxm9@vger.kernel.org, AJvYcCVZprChRPDXKRdrTFx3F401qPcpY+dzKNF2VdzXY8C7CRh6AVD4SRd/Tg/o1GYF8KwLSNLrWGWUAaSt+w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvmC/M3WFVU76amevjwQZzJxmEfUQlWonbhDxbBu3D6auqeiZk
+	m6RqMHbs8Ait5FvcIK8hRBBS3imOIJKIN785styBppUbW0TqYYC9
+X-Gm-Gg: ASbGncsSYfvngScMjaLgIjygV/iSGjw1rCgL6dBc+TfhyRFvYMF1dG5xqZv8C/GLvoU
+	2Cd0rLJagXisZS85+/4oGEd39/zjlDhVbF9XOUVxg57YUOFvoHOGkWRhCfnT5UTqI36TZqD3ISW
+	ksv2Xdrpy//Q4lZOP8IFXzs5tQS98rDhHZT4r4M5nlMHLwTiuleS7N3HmWDHg9Pi9jNebS98zRW
+	R8h23smPe2IbDFGIZ2tLerjvVcKKOm4UhB44eq5SSSi0fz47X0SzVl3qMrdEsS0FvqQ98NIljJX
+	duKWuSH3k0VZWIi12iWbgb44hIgOwGfYC0O3X1DkV5HCmCzv2iOGfZJNRWBXgVxX
+X-Google-Smtp-Source: AGHT+IG+e0+M8OABpCZAblUGX2Aqgcs9/w7x0x57etLZZNytykmPuE1hULri8XvDZ1E7nBn3q1wk/w==
+X-Received: by 2002:a17:902:ec92:b0:216:33f0:58d5 with SMTP id d9443c01a7336-21de195d01fmr30045775ad.17.1738213658382;
+        Wed, 29 Jan 2025 21:07:38 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f7037sm5067755ad.55.2025.01.29.21.07.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2025 21:07:37 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <657230af-2675-4746-b2a0-060aad7026da@roeck-us.net>
+Date: Wed, 29 Jan 2025 21:07:36 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] hwmom/applesmc: add imacpro
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Atharva Tiwari <evepolonium@gmail.com>,
+ Henrik Rydberg <rydberg@bitmath.org>, Jean Delvare <jdelvare@suse.com>,
+ "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Orlando Chamberlain <orlandoch.dev@gmail.com>
+References: <20250123121728.1383-1-evepolonium@gmail.com>
+ <2346bf1d-9292-40cf-84fe-fb173baeed08@roeck-us.net>
+ <7D2F2DB0-E94C-4372-9285-A91C4C856934@live.com>
+ <74114528-3c5c-47fd-bcbb-3e8b9bcb6669@roeck-us.net>
+ <MAZPR01MB828051F6B356FC4BDA029D1AB8E92@MAZPR01MB8280.INDPRD01.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <MAZPR01MB828051F6B356FC4BDA029D1AB8E92@MAZPR01MB8280.INDPRD01.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: NDRM274H4kaDuWyWqCksfiV5DisLkWCD
-X-Proofpoint-GUID: NDRM274H4kaDuWyWqCksfiV5DisLkWCD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_02,2025-01-29_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
- adultscore=0 malwarescore=0 priorityscore=1501 bulkscore=0 clxscore=1015
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501300036
 
-RDP441 is based on IPQ5332. It has inbuilt AHB bus based IPQ5332 WiFi
-device.
+On 1/29/25 19:54, Aditya Garg wrote:
+> Hi
+> 
+>> On 30 Jan 2025, at 1:06 AM, Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> ﻿Hi Aditya,
+>>
+>>> On 1/29/25 10:22, Aditya Garg wrote:
+>>> Hi Guenter
+>>> Sorry to barge in like that but I have some issues with this here.
+>>
+>> No worries. Thanks for stepping in.
+>>
+>>> 1. The iMacPro1,1 is a T2 Mac and the applesmc driver does not support T2 Macs upstream, thus making no point of adding this. We at t2linux have downstream patches to support T2 Macs, but we do not aim to upstream them since we wish to use a separate, and better driver for the SMC on T2 Macs.
+>>> 2. The person who submitted the patch took it from the t2linux project, of which I am a part of, but didn't care to even credit the original author of the patch. I’m not sure how legal it is to redistribute the code in his own name and removing the original author’s name without taking permission from the author as per the GPL2 license, but I think the author should be credited. In fact the original patch was Signed-off-by the original author.
+>>> For reference, the original patch, which we never intended to be sent upstream, is given over here:
+>>> https://github.com/t2linux/linux-t2-patches/blob/main/3007-applesmc-Add-iMacPro-to-applesmc_whitelist.patch
+>>
+>> FWIW, that patch looks much better than this patch.
+>>
+>> I am a bit confused, though: You are saying above that the patch is pointless.
+>> Is that because context patches adding support for T2 are missing ?
+>>
+>> Also, what about the patch at [1] ? It also adds t2 specific functionality,
+>> and it seems to match another patch from the t2linux project.
+>> Is that also missing some context ?
+>>
+> 
+> As far as patch in [1] in considered:
+> 
+> 1. The patch alone cannot make fan work on T2 Macs. As you saw the other T2 patches, the 300x patch series in total is needed for T2 support, the reason is mentioned in the patch description of individual patch, which you may read if interested.
+> 
+> 2. The patch becomes pointless again, since the driver still doesn't support T2 Macs. Ideally the whole patch series should be submitted.
+> 
+> 3. We do not plan to send the whole patch series to add T2 support in applesmc, since Asahi Linux has a better SMC driver and we aim to use that. Just in case we change our decision to use applesmc, the whole series with proper credits shall be sent upstream, and not random patches without crediting the original people who wrote the code.
+> 
+> 4. This patch was originally authored by Paul Pawlowski, and not the submitter, which you might have noticed when you saw the t2linux patch repo (it's the same repo which I sent in the previous email). The author had not yet signed-off the patch, thus requiring permission from the author as well.
+> 
+> I've also noticed the Aun-Ali Zaidi, the who the submitter has added in the signed-off-by was not Cced, which is kinda strange.
+> 
+> Again, like previous patch, the final call stays with you being a maintainer.
+> 
 
-Describe and add WiFi node for RDP441. Also, reserve the memory
-required by IPQ5332 firmware.
+That is a simple call: I'll reject that patch. Thanks for letting me know.
 
-Depends-On: [PATCH V2 0/2] mailbox: tmel-qmp: Introduce QCOM TMEL QMP mailbox driver
-Depends-On: [PATCH V3 0/8] Add new driver for WCSS secure PIL loading
-Link: https://lore.kernel.org/lkml/20241231054900.2144961-1-quic_srichara@quicinc.com/
-Link: https://lore.kernel.org/lkml/20250107101647.2087358-1-quic_gokulsri@quicinc.com/
-
-Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
----
-NOTE:
-The DT binding changes for this patch has been posted along with the
-driver ath12k AHB series.
-Link: https://lore.kernel.org/all/20250130043508.1885026-1-quic_rajkbhag@quicinc.com/
-
-v2:
-- Dropped 'dt-bindings: net: wireless: describe the ath12k AHB module'.
-  This DT binding is posted along with the ath12k AHB driver changes.
-- Reserved four memory regions required by IPQ5332 ath12k firmware in DTS.
-  These memory regions are also referenced in the WiFi node.
-- Moved 'qcom,smem-states' and 'qcom,smem-states' to the ipq5332.dtsi file.
-- Used lowercase hex values for the reg property.
-
-v1: https://lore.kernel.org/all/20250128091012.2574478-1-quic_rajkbhag@quicinc.com/
----
- arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts |  64 ++++++++++-
- arch/arm64/boot/dts/qcom/ipq5332.dtsi       | 113 ++++++++++++++++++++
- 2 files changed, 176 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts b/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts
-index 846413817e9a..4b7a75e450ca 100644
---- a/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts
-@@ -2,7 +2,7 @@
- /*
-  * IPQ5332 AP-MI01.2 board device tree source
-  *
-- * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ * Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- 
- /dts-v1/;
-@@ -12,6 +12,61 @@
- / {
- 	model = "Qualcomm Technologies, Inc. IPQ5332 MI01.2";
- 	compatible = "qcom,ipq5332-ap-mi01.2", "qcom,ipq5332";
-+
-+	/*                 Default Profile
-+	 * +============+==============+=====================+
-+	 * |            |              |                     |
-+	 * | Region     | Start Offset |       Size          |
-+	 * |            |              |                     |
-+	 * +------------+--------------+---------------------+
-+	 * |            |              |                     |
-+	 * |            |              |                     |
-+	 * |            |              |                     |
-+	 * | WLAN Q6    |  0x4A900000  |       43MB          |
-+	 * |            |              |                     |
-+	 * |            |              |                     |
-+	 * +------------+--------------+---------------------+
-+	 * | M3 Dump    |  0x4D400000  |       1MB           |
-+	 * +------------+--------------+---------------------+
-+	 * | Q6 caldb   |  0x4D500000  |       5MB           |
-+	 * +------------+--------------+---------------------+
-+	 * | MLO        |  0x4DB00000  |       18MB          |
-+	 * +============+==============+=====================+
-+	 * |                                                 |
-+	 * |                                                 |
-+	 * |                                                 |
-+	 * |            Rest of memory for Linux             |
-+	 * |                                                 |
-+	 * |                                                 |
-+	 * |                                                 |
-+	 * +=================================================+
-+	 */
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		q6_region: wcss@4a900000 {
-+			reg = <0x0 0x4a900000 0x0 0x02b00000>;
-+			no-map;
-+		};
-+
-+		m3_dump: m3-dump@4d400000 {
-+			reg = <0x0 0x4d400000 0x0 0x100000>;
-+			no-map;
-+		};
-+
-+		q6_caldb: q6-caldb@4d500000 {
-+			reg = <0x0 0x4d500000 0x0 0x500000>;
-+			no-map;
-+		};
-+
-+		mlo_mem: mlo-global-mem@4db00000 {
-+			reg = <0x0 0x4db00000 0x0 0x01200000>;
-+			no-map;
-+		};
-+	};
- };
- 
- &blsp1_i2c1 {
-@@ -63,3 +118,10 @@ data-pins {
- 		};
- 	};
- };
-+
-+&wifi0 {
-+	memory-region = <&q6_region>, <&m3_dump>, <&q6_caldb>, <&mlo_mem>;
-+	memory-region-names = "q6-region", "m3-dump", "q6-caldb", "mlo-global-mem";
-+	qcom,rproc = <&q6v5_wcss>;
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/qcom/ipq5332.dtsi b/arch/arm64/boot/dts/qcom/ipq5332.dtsi
-index 85e10b20342a..1653da89d413 100644
---- a/arch/arm64/boot/dts/qcom/ipq5332.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq5332.dtsi
-@@ -485,6 +485,119 @@ frame@b128000 {
- 			};
- 		};
- 
-+		wifi0: wifi@c000000 {
-+			compatible = "qcom,ipq5332-wifi";
-+			reg = <0x0c000000 0x1000000>;
-+			clocks = <&gcc GCC_XO_CLK>;
-+			clock-names = "xo";
-+			interrupts-extended = <&wcss_smp2p_in 8 IRQ_TYPE_NONE>,
-+					      <&wcss_smp2p_in 9 IRQ_TYPE_NONE>,
-+					      <&wcss_smp2p_in 12 IRQ_TYPE_NONE>,
-+					      <&wcss_smp2p_in 11 IRQ_TYPE_NONE>,
-+					      <&intc GIC_SPI 559 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 560 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 561 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 422 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 423 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 424 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 425 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 426 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 427 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 428 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 429 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 430 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 431 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 491 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 495 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 493 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 544 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 457 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 466 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 497 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 454 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 453 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 452 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 451 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 488 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 488 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 484 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 554 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 554 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 549 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 507 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 500 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 499 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 498 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 450 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 449 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 448 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 447 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 543 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 486 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 486 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 482 IRQ_TYPE_EDGE_RISING>,
-+					      <&intc GIC_SPI 419 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "fatal",
-+					  "ready",
-+					  "spawn",
-+					  "stop-ack",
-+					  "misc-pulse1",
-+					  "misc-latch",
-+					  "sw-exception",
-+					  "ce0",
-+					  "ce1",
-+					  "ce2",
-+					  "ce3",
-+					  "ce4",
-+					  "ce5",
-+					  "ce6",
-+					  "ce7",
-+					  "ce8",
-+					  "ce9",
-+					  "ce10",
-+					  "ce11",
-+					  "host2wbm-desc-feed",
-+					  "host2reo-re-injection",
-+					  "host2reo-command",
-+					  "host2rxdma-monitor-ring1",
-+					  "reo2ost-exception",
-+					  "wbm2host-rx-release",
-+					  "reo2host-status",
-+					  "reo2host-destination-ring4",
-+					  "reo2host-destination-ring3",
-+					  "reo2host-destination-ring2",
-+					  "reo2host-destination-ring1",
-+					  "rxdma2host-monitor-destination-mac3",
-+					  "rxdma2host-monitor-destination-mac2",
-+					  "rxdma2host-monitor-destination-mac1",
-+					  "host2rxdma-host-buf-ring-mac3",
-+					  "host2rxdma-host-buf-ring-mac2",
-+					  "host2rxdma-host-buf-ring-mac1",
-+					  "host2tcl-input-ring4",
-+					  "host2tcl-input-ring3",
-+					  "host2tcl-input-ring2",
-+					  "host2tcl-input-ring1",
-+					  "wbm2host-tx-completions-ring4",
-+					  "wbm2host-tx-completions-ring3",
-+					  "wbm2host-tx-completions-ring2",
-+					  "wbm2host-tx-completions-ring1",
-+					  "host2tx-monitor-ring1",
-+					  "txmon2host-monitor-destination-mac3",
-+					  "txmon2host-monitor-destination-mac2",
-+					  "txmon2host-monitor-destination-mac1",
-+					  "umac-reset";
-+
-+			qcom,smem-states = <&wcss_smp2p_out 8>,
-+					   <&wcss_smp2p_out 9>,
-+					   <&wcss_smp2p_out 10>;
-+			qcom,smem-state-names = "shutdown",
-+						"stop",
-+						"spawn";
-+			status = "disabled";
-+		};
-+
- 		q6v5_wcss: remoteproc@d100000 {
- 			compatible = "qcom,ipq5332-wcss-sec-pil";
- 			reg = <0xd100000 0x4040>;
--- 
-2.34.1
+Guenter
 
