@@ -1,87 +1,220 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD34F139B;
-	Thu, 30 Jan 2025 09:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4184518F2DD;
+	Thu, 30 Jan 2025 09:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738229247; cv=none; b=JleOswK9/vpYPArgD2gfTC48ApTBqzB1Fi0F38fU6kxnZVwoeMrN3sqczXJWBCk44hZ9L5V5N8nkTd+iJo5p/YRoQbMIxlkOh8D/R+dy5LjP72mk1T/4N4ImZQCCyy2AMFRgBj3R+YkgvOy32scmIT/4rJvvzcjfZWrbYtzTdlk=
+	t=1738229263; cv=none; b=TijTey/3tCMVkuAePfQs1bDkIU15vnydKOsVJohXkC3MbaICmiDZJnPfixiECU+poYX2fAI8Xo2CuwHjnE7FYSO4xwytt+/NztsdnFx0aKTbYpVtHElAFq/uz1w+u8CgKraq9Q6HcwvM7jH82luNva6ZVHooJ2JPwz7lzA7Ok4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738229247; c=relaxed/simple;
-	bh=ceg2xbuImqEiBLzoIokxmg31a3QbfMzmVUm70up/mvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tRoy8orhViZFrquuNIV5uB9a6hnB/RszMPPtGuueMVHFHsB+wqa4LrTTAakcuIVpsLjPm4VI0RqMoYM7JAsYXeUlj7woNBkx5dPPqIRtWhf+R+NBb7H78fF7ixumhpcfEJL9BEmoDh9+h8GhI56JQ5TNR8mcf4cCIEH4b8PRFrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Mw8u/BN4; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1738229263; c=relaxed/simple;
+	bh=gKOaLLBI8U3R5sv9YWNTY+T70jxJcyjJHQyFlHGWRlE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Um4Xt4MikYcykLrzJdzPsqTVUCTeY5MPWfNlXeSKMEGk33PC4UZKXPYPBSwC40iqdvKeCzQbt4ZNQNuqHf/JVo42r80Ztt+Yp+KIGm8S4fYjzV8ZPEpariISUSQgaVwLqKxkyZx0fWP2v0b3wTEEvfXfhEgnJ1P6PgoN27zHW4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GwOLwzTm; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Mw8u/BN4"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B1A1043288;
-	Thu, 30 Jan 2025 09:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738229238;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ceg2xbuImqEiBLzoIokxmg31a3QbfMzmVUm70up/mvg=;
-	b=Mw8u/BN4CUbD3nFoGzA6w6ye4hm2VJbzUArFo344xceJKki2zt0mVIF/PWGoi/LMrX9XHk
-	uN3lzy/SeDWJyTmNhT0OI+U85SFhWbgq0ZLm9ACrixWGkQ4EJpVh+LRw25ZRWkx0R/iQgJ
-	biM4QeAoNKzvIhScmwon1q2NlDSvgeOV7YEsSDndLk17gvKuaJTR8T92lBgIPIPOnk/Vf8
-	D4wHgnJ94aiHEKgksIV3DCjIaKGj9uMzU1ChpjlWSokpEH9NtFpE+TKX+9mgbRSn4kEi9b
-	VVTg2ZzUtznS142xMsDYdaldt2F7SYnLeXtIWf54CgdawU1pXIeFzizLfT01TA==
-Date: Thu, 30 Jan 2025 10:27:16 +0100
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Donald Hunter
- <donald.hunter@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net 3/3] net: ethtool: tsconfig: Fix netlink type of
- hwtstamp flags
-Message-ID: <20250130102716.3e15adb6@kmaincent-XPS-13-7390>
-In-Reply-To: <20250129164907.6dd0b750@kernel.org>
-References: <20250128-fix_tsconfig-v1-0-87adcdc4e394@bootlin.com>
-	<20250128-fix_tsconfig-v1-3-87adcdc4e394@bootlin.com>
-	<20250129164907.6dd0b750@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GwOLwzTm"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50U5OAmX012556;
+	Thu, 30 Jan 2025 09:25:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=ENEt8TNFIIQna4oUkl6ZCfI1AZ3n0X
+	WJoliPvJndSUA=; b=GwOLwzTmFKIJ+S/G/NDcueBX18kFIQDozO4Emp5FNyAE83
+	LlV8nb0N5Bm6GmF5rJqj+NqKVtw41Fu0SdvorBdgMNdaaBYADm/bLytgCkSMwXuA
+	iwBm6dlH41JVpb/ySdvAi7UUJVaC/ZdRGzHWxxHx7TTRfvejugAD9ULeVB2y7y6P
+	SAsUNb0P96I/u5Laf36dVl5YhZS2/9Dx+cCv0EEOC1hCePh9PimW1Fq0lCgz8Npv
+	BG1V0Ms7SqQOkVthuXoWasQs9yCyIkH3v4NRg30eAfifJVDwlW+u1J8spbIuh7M/
+	fmg4P7PW5a4zD9z6VHTFRUR0ynPP4BvYS/C0wQmQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44g38810r5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 09:25:35 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50U9P48j030487;
+	Thu, 30 Jan 2025 09:25:34 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44g38810r1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 09:25:34 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50U5FMJt018905;
+	Thu, 30 Jan 2025 09:25:33 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44dd01n2ct-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 09:25:33 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50U9PSJL47907140
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jan 2025 09:25:28 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7F98F200D7;
+	Thu, 30 Jan 2025 08:33:04 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B9EC7200D6;
+	Thu, 30 Jan 2025 08:33:03 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 30 Jan 2025 08:33:03 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: "Dmitry V. Levin" <ldv@strace.io>
+Cc: Oleg Nesterov <oleg@redhat.com>, Alexey Gladkov <legion@kernel.org>,
+        Charlie Jenkins <charlie@rivosinc.com>,
+        Eugene Syromyatnikov
+ <evgsyr@gmail.com>,
+        Mike Frysinger <vapier@gentoo.org>, Renzo Davoli
+ <renzo@cs.unibo.it>,
+        Davide Berardi <berardi.dav@gmail.com>, strace-devel@lists.strace.io,
+        Vineet Gupta <vgupta@kernel.org>,
+        Russell
+ King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
+        Guo Ren
+ <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>,
+        Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dinh Nguyen
+ <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+        Stefan
+ Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne
+ <shorne@gmail.com>,
+        "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman
+ <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe
+ Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt
+ <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Heiko Carstens
+ <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander
+ Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger
+ <borntraeger@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz
+ <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        Richard Weinberger
+ <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov
+ <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel
+ <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann
+ <arnd@arndb.de>,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] syscall.h: add syscall_set_arguments() and
+ syscall_set_return_value()
+In-Reply-To: <20250128091626.GB8601@strace.io> (Dmitry V. Levin's message of
+	"Tue, 28 Jan 2025 11:16:26 +0200")
+References: <20250128091626.GB8601@strace.io>
+Date: Thu, 30 Jan 2025 09:33:03 +0100
+Message-ID: <yt9dwmecya4g.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehgeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllhgvmhguvggsrhhuihhjnhdrkhgvrhhnvghlsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrt
- ghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: _PT8AYkS--OiAY9k3Cx2fgjUXkzP0l7n
+X-Proofpoint-GUID: HYavPV8yQaPduF9AV11zSUaS5ZQTGJu6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-30_05,2025-01-29_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=851 phishscore=0 clxscore=1011 adultscore=0 priorityscore=1501
+ spamscore=0 impostorscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501300069
 
-On Wed, 29 Jan 2025 16:49:07 -0800
-Jakub Kicinski <kuba@kernel.org> wrote:
+"Dmitry V. Levin" <ldv@strace.io> writes:
 
-> On Tue, 28 Jan 2025 16:35:48 +0100 Kory Maincent wrote:
-> > Fix the netlink type for hardware timestamp flags, which are represented
-> > as a bitset of flags. Although only one flag is supported currently, the
-> > correct netlink bitset type should be used instead of u32. Address this
-> > by adding a new named string set description for the hwtstamp flag
-> > structure. =20
->=20
-> Makes sense, please mention explicitly in the commit message that the
-> code has been introduced in the current release so the uAPI change is
-> still okay.
+> These functions are going to be needed on all HAVE_ARCH_TRACEHOOK
+> architectures to implement PTRACE_SET_SYSCALL_INFO API.
+>
+> This partially reverts commit 7962c2eddbfe ("arch: remove unused
+> function syscall_set_arguments()") by reusing some of old
+> syscall_set_arguments() implementations.
+>
+> Signed-off-by: Dmitry V. Levin <ldv@strace.io>
+> Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+> Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+> ---
+>  arch/arc/include/asm/syscall.h        | 14 +++++++++++
+>  arch/arm/include/asm/syscall.h        | 13 ++++++++++
+>  arch/arm64/include/asm/syscall.h      | 13 ++++++++++
+>  arch/csky/include/asm/syscall.h       | 13 ++++++++++
+>  arch/hexagon/include/asm/syscall.h    | 14 +++++++++++
+>  arch/loongarch/include/asm/syscall.h  |  8 ++++++
+>  arch/mips/include/asm/syscall.h       | 32 ++++++++++++++++++++++++
+>  arch/nios2/include/asm/syscall.h      | 11 ++++++++
+>  arch/openrisc/include/asm/syscall.h   |  7 ++++++
+>  arch/parisc/include/asm/syscall.h     | 12 +++++++++
+>  arch/powerpc/include/asm/syscall.h    | 10 ++++++++
+>  arch/riscv/include/asm/syscall.h      |  9 +++++++
+>  arch/s390/include/asm/syscall.h       | 12 +++++++++
+>  arch/sh/include/asm/syscall_32.h      | 12 +++++++++
+>  arch/sparc/include/asm/syscall.h      | 10 ++++++++
+>  arch/um/include/asm/syscall-generic.h | 14 +++++++++++
+>  arch/x86/include/asm/syscall.h        | 36 +++++++++++++++++++++++++++
+>  arch/xtensa/include/asm/syscall.h     | 11 ++++++++
+>  include/asm-generic/syscall.h         | 16 ++++++++++++
+>  19 files changed, 267 insertions(+)
+>
+> diff --git a/arch/s390/include/asm/syscall.h b/arch/s390/include/asm/syscall.h
+> index 27e3d804b311..b3dd883699e7 100644
+> --- a/arch/s390/include/asm/syscall.h
+> +++ b/arch/s390/include/asm/syscall.h
+> @@ -78,6 +78,18 @@ static inline void syscall_get_arguments(struct task_struct *task,
+>  	args[0] = regs->orig_gpr2 & mask;
+>  }
+>  
+> +static inline void syscall_set_arguments(struct task_struct *task,
+> +					 struct pt_regs *regs,
+> +					 const unsigned long *args)
+> +{
+> +	unsigned int n = 6;
+> +
+> +	while (n-- > 0)
+> +		if (n > 0)
+> +			regs->gprs[2 + n] = args[n];
+> +	regs->orig_gpr2 = args[0];
+> +}
 
-Ack.
+Could that be changed to something like:
 
-> In general IMHO YNL makes the bitset functionality less important.
+for (int n = 1; n < 6; n++)
+        regs->gprs[2 + n] = args[n];
+regs->orig_gpr2 = args[0];
 
-Do you mean you prefer u32 for bitfield instead of the bitset type? Why?
-
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+I think this is way easier to parse.
