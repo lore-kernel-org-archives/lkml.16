@@ -1,158 +1,330 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C34EB660;
-	Thu, 30 Jan 2025 12:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738239373; cv=pass; b=rcp9sz6JjV0VMX1yd4AXkkQEPYTN1wdb2EE8E6Id/KamyUEvwkUFs+Nntdt1yUJ62lM4Ni7FpoRprUh+RuVtrf4PwQPVXYbVqF4bwrTO+F2Vp3fmhuXDViIlHOJCXu9BI1AZmdA1GJBngSjWxq52utUyt6O1/W1eusI2NTp7DlE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738239373; c=relaxed/simple;
-	bh=NhjWn71blrawadwTQcygIseL1rRYAGUDgnjHvN3IQ9A=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=NOCgTHyAYrhuU5Ok9UxRMpkvX/uWSxEK9RDUZU/H0LR2vBVZlkrLubmfa92pEUCawUIqsQ08mnOa42WHrpeRUumnQicstBJl87yBs40IyIR7I1oD6lOgXNunXxLVxPd7oncqK/f/fPY7PXCeXe1aL+30L5nKdKGNmFrxpLndHpU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b=Xy6QLsBv; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE08B660;
+	Thu, 30 Jan 2025 12:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738239483; cv=none; b=icjfhvtRd5LKV3yE2qrGA+fAfKetNEfyHPtcKbAMFhaevvsgeBgCF4ayTXUBmIX52ZwmHA/b/gbyjYf+VvPULLhFVUqcF4Xg/gqTchHVVzVGTmfLysd3bF3hF2WvZGc9JeS/ZkR8seRfSNRiCTFXwB95DXh1YYGpwsnOILvaBlw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738239483; c=relaxed/simple;
+	bh=eBCumglt0TetpjNL+UrfdO72Yn3p3DcyzzclBolwRGM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oNbHDZQVH1j5B/Kcfkg0E0XhH5Lv56Md5gSY7BvtE6jU6gqaZhrQXHTQGNHVTXzL8heAba2fa4Oo85qTSXQH6q65U3cRQDWl7a2ukOQhOlxFilhjyF8tn9vJpV2DFk0QD9HexEuf/31ccP5cXh80UEWA9MqXUTUUkcTU5+gQa90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bVLr0rz9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sz8gwfPi; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bVLr0rz9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sz8gwfPi; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b="Xy6QLsBv"
-ARC-Seal: i=1; a=rsa-sha256; t=1738239343; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=kUKLD131ujnf9MGxdR4qc0pAWhSJI16fuG3rsd7YkP9WoGJOl3ngEVtMmhHhRaDgMOl+qDKC1FktFleXTsoNQnexiVnZI6rgnMTjpTiR41qM8906YQSNDpOVIaiR0/h7YMSqzyr/srfN9nZSBj/IUYjYEnNrT6SEOX5cK6cfhc0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738239343; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=vtqvkjW++P13EILfu6kPduF5HHVIDhPG3bCc05q2yIw=; 
-	b=RN52rTs/CG5wK9wqAIr1XIzrinACSwAq/TPtbhYbeFWdW02NSPaSKMJ22qRzI7AYNGXdVMaVHxrgx9J0OZ4JVwpM+a0RUgmi1hvWVD/uUZDLBds05yon9a/2VmgBiD3zSWquGaP6ZY4SEn9rqgDkwWKYkdXWMt2mNakHmzJ7WxU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=louisalexis.eyraud@collabora.com;
-	dmarc=pass header.from=<louisalexis.eyraud@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738239343;
-	s=zohomail; d=collabora.com; i=louisalexis.eyraud@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=vtqvkjW++P13EILfu6kPduF5HHVIDhPG3bCc05q2yIw=;
-	b=Xy6QLsBv399RQrHj3yLnO4xSaVy1gQtccoGnHwsh1kT7Z3gRzhZp81Oul7fJFv2F
-	oLiyxt2zC0WDndQG+BnhKMXGik3kSVOB/qb3v0vAF6Ye/Q/ImQkn7g8MWPVPN+jSNcy
-	UGtwIHj4VbItttr+CjWKeQPcD3f6ArGfn5ryfpd8=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1738239340867764.380040312308; Thu, 30 Jan 2025 04:15:40 -0800 (PST)
-Date: Thu, 30 Jan 2025 13:15:40 +0100
-From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>
-Cc: "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
-	"Maxime Ripard" <mripard@kernel.org>,
-	"Thomas Zimmermann" <tzimmermann@suse.de>,
-	"David Airlie" <airlied@gmail.com>,
-	"Simona Vetter" <simona@ffwll.ch>, "Rob Herring" <robh@kernel.org>,
-	"Krzysztof Kozlowski" <krzk+dt@kernel.org>,
-	"Conor Dooley" <conor+dt@kernel.org>,
-	"Matthias Brugger" <matthias.bgg@gmail.com>,
-	"AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
-	"Boris Brezillon" <boris.brezillon@collabora.com>,
-	"Steven Price" <steven.price@arm.com>,
-	"kernel" <kernel@collabora.com>,
-	"dri-devel" <dri-devel@lists.freedesktop.org>,
-	"devicetree" <devicetree@vger.kernel.org>,
-	"linux-kernel" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
-	"linux-mediatek" <linux-mediatek@lists.infradead.org>
-Message-ID: <194b7237128.10f9923a41656565.5574753983898665940@collabora.com>
-In-Reply-To: <20250118-meticulous-black-caracal-ec7f0d@krzk-bin>
-References: <20250116-mt8370-enable-gpu-v1-0-0a6b78e925c8@collabora.com>
- <20250116-mt8370-enable-gpu-v1-2-0a6b78e925c8@collabora.com> <20250118-meticulous-black-caracal-ec7f0d@krzk-bin>
-Subject: Re: [PATCH 2/3] drm/panfrost: Add support for Mali on the MT8370
- SoC
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bVLr0rz9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sz8gwfPi";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bVLr0rz9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sz8gwfPi"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7F18D1F38D;
+	Thu, 30 Jan 2025 12:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738239479; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sejUYlrrTXsI0gc02PpSYznxXIlwOmNfaWPSCJziZWw=;
+	b=bVLr0rz9p+67XUXjRU/hLAYzXwBbcc+tMP/rP+UuwQJq+BZSonv5w7TBODpH/vJLuNpKC/
+	pyGRJTJ9omy7C29h1d8bXZaV7bSJscDn4tKYdzhJIZBfIq4IkVHg8LXPUavB9d5bghA3RP
+	ULIE9LwAZ8WXK9r8q6uUxgBc4fybmQ8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738239479;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sejUYlrrTXsI0gc02PpSYznxXIlwOmNfaWPSCJziZWw=;
+	b=sz8gwfPitXjG2z6+a8vcWZe2+aiKsVU/ETikaJXIO2rFTHVxLMX1LOJmZXHwN+U61/CT2/
+	BYWOiUwv0uNRKJCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=bVLr0rz9;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=sz8gwfPi
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738239479; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sejUYlrrTXsI0gc02PpSYznxXIlwOmNfaWPSCJziZWw=;
+	b=bVLr0rz9p+67XUXjRU/hLAYzXwBbcc+tMP/rP+UuwQJq+BZSonv5w7TBODpH/vJLuNpKC/
+	pyGRJTJ9omy7C29h1d8bXZaV7bSJscDn4tKYdzhJIZBfIq4IkVHg8LXPUavB9d5bghA3RP
+	ULIE9LwAZ8WXK9r8q6uUxgBc4fybmQ8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738239479;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sejUYlrrTXsI0gc02PpSYznxXIlwOmNfaWPSCJziZWw=;
+	b=sz8gwfPitXjG2z6+a8vcWZe2+aiKsVU/ETikaJXIO2rFTHVxLMX1LOJmZXHwN+U61/CT2/
+	BYWOiUwv0uNRKJCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5991F1396E;
+	Thu, 30 Jan 2025 12:17:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id tPFWFfdtm2c+SQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 30 Jan 2025 12:17:59 +0000
+Date: Thu, 30 Jan 2025 13:17:59 +0100
+Message-ID: <87o6zo5wco.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: John Keeping <jkeeping@inmusicbrands.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	linux-usb@vger.kernel.org,
+	stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kees Cook <kees@kernel.org>,
+	Abdul Rahim <abdul.rahim@myyahoo.com>,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Felipe Balbi <balbi@ti.com>,
+	Daniel Mack <zonque@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: gadget: f_midi: fix MIDI Streaming descriptor lengths
+In-Reply-To: <Z5tbealYSvl7S72l-jkeeping@inmusicbrands.com>
+References: <20250129160520.2485991-1-jkeeping@inmusicbrands.com>
+	<871pwl7evv.wl-tiwai@suse.de>
+	<Z5pl96d1OCF0RaCe-jkeeping@inmusicbrands.com>
+	<87sep060f4.wl-tiwai@suse.de>
+	<Z5tbealYSvl7S72l-jkeeping@inmusicbrands.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 7F18D1F38D
+X-Spam-Score: -3.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.de,vger.kernel.org,linuxfoundation.org,kernel.org,myyahoo.com,pengutronix.de,quicinc.com,ti.com,gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hello,
+On Thu, 30 Jan 2025 11:59:05 +0100,
+John Keeping wrote:
+> 
+> On Thu, Jan 30, 2025 at 11:50:07AM +0100, Takashi Iwai wrote:
+> > On Wed, 29 Jan 2025 18:31:35 +0100,
+> > John Keeping wrote:
+> > > 
+> > > On Wed, Jan 29, 2025 at 05:40:04PM +0100, Takashi Iwai wrote:
+> > > > On Wed, 29 Jan 2025 17:05:19 +0100,
+> > > > John Keeping wrote:
+> > > > > 
+> > > > > In the two loops before setting the MIDIStreaming descriptors,
+> > > > > ms_in_desc.baAssocJackID[] has entries written for "in_ports" values and
+> > > > > ms_out_desc.baAssocJackID[] has entries written for "out_ports" values.
+> > > > > But the counts and lengths are set the other way round in the
+> > > > > descriptors.
+> > > > > 
+> > > > > Fix the descriptors so that the bNumEmbMIDIJack values and the
+> > > > > descriptor lengths match the number of entries populated in the trailing
+> > > > > arrays.
+> > > > 
+> > > > Are you sure that it's a correct change?
+> > > > 
+> > > > IIUC, the in_ports and out_ports parameters are for external IN and
+> > > > OUT jacks, where an external OUT jack is connected to an embedded IN
+> > > > jack, and an external IN jack is connected to an embedded OUT jack.
+> > > 
+> > > I think it depends how the in_ports and out_ports values in configfs are
+> > > interpreted.  However, the case where in_ports != out_ports has been
+> > > broken since these files were added!
+> > > 
+> > > Without this change, setting in_ports=4 out_ports=2 we end up with:
+> > > 
+> > >       Endpoint Descriptor:
+> > >         [...]
+> > >         bEndpointAddress     0x01  EP 1 OUT
+> > >         [...]
+> > >         MIDIStreaming Endpoint Descriptor:
+> > >           bLength                 8
+> > >           bDescriptorType        37
+> > >           bDescriptorSubtype      1 (Invalid)
+> > >           bNumEmbMIDIJack         4
+> > >           baAssocJackID( 0)       9
+> > >           baAssocJackID( 1)      11
+> > >           baAssocJackID( 2)       9
+> > >           baAssocJackID( 3)       0
+> > >       Endpoint Descriptor:
+> > >         [...]
+> > >         bEndpointAddress     0x81  EP 1 IN
+> > >         [...]
+> > >         MIDIStreaming Endpoint Descriptor:
+> > >           bLength                 6
+> > >           bDescriptorType        37
+> > >           bDescriptorSubtype      1 (Invalid)
+> > >           bNumEmbMIDIJack         2
+> > >           baAssocJackID( 0)       2
+> > >           baAssocJackID( 1)       4
+> > > 
+> > > Note that baAssocJackID values 2 and 3 on the OUT endpoint are wrong.
+> > > 
+> > > From the same config, the jack definitions are:
+> > > 
+> > > 	1:  IN  External
+> > > 	2:  OUT Embedded, source 1
+> > > 	3:  IN  External
+> > > 	4:  OUT Embedded, source 3
+> > > 	5:  IN  External
+> > > 	6:  OUT Embedded, source 5
+> > > 	7:  IN  External
+> > > 	8:  OUT Embedded, source 7
+> > > 
+> > > 	9:  IN  Embedded
+> > > 	10: OUT External, source 9
+> > > 	11: IN  Embedded
+> > > 	12: OUT External, source 11
+> > > 
+> > > So it seems that the first 2 entries in each endpoint list are correct.
+> > > For the OUT endpoint, jacks 9 and 11 are embedded IN jacks and for the
+> > > IN endpoint, jacks 2 and 4 are embedded OUT jacks.
+> > > 
+> > > The problem is that the OUT endpoint lists two extra invalid jack IDs
+> > > and the IN endpoint should list jacks 6 and 8 but does not.
+> > > 
+> > > After applying this patch, the endpoint descriptors for the same config
+> > > are:
+> > > 
+> > >       Endpoint Descriptor:
+> > >         [...]
+> > >         bEndpointAddress     0x01  EP 1 OUT
+> > >         [...]
+> > >         MIDIStreaming Endpoint Descriptor:
+> > >           bLength                 6
+> > >           bDescriptorType        37
+> > >           bDescriptorSubtype      1 (Invalid)
+> > >           bNumEmbMIDIJack         2
+> > >           baAssocJackID( 0)       9
+> > >           baAssocJackID( 1)      11
+> > >       Endpoint Descriptor:
+> > >         [...]
+> > >         bEndpointAddress     0x81  EP 1 IN
+> > >         [...]
+> > >         MIDIStreaming Endpoint Descriptor:
+> > >           bLength                 8
+> > >           bDescriptorType        37
+> > >           bDescriptorSubtype      1 (Invalid)
+> > >           bNumEmbMIDIJack         4
+> > >           baAssocJackID( 0)       2
+> > >           baAssocJackID( 1)       4
+> > >           baAssocJackID( 2)       6
+> > >           baAssocJackID( 3)       8
+> > > 
+> > > Which lists all the jack IDs where they should be.
+> > 
+> > Hmm, I don't get your point.  The embedded IN is paired with the
+> > external OUT.  That's the intended behavior, no?
+> 
+> Yes, all the endpoint assignments are correct - when they appear in the
+> lists!
+> 
+> The issue is setting bNumEmbMIDIJack and bLength in the MIDIStreaming
+> Endpoint Descriptors.  Without this patch these are set the wrong way
+> round so either some ports do not appear or there are bogus entries
+> containing uninitialized stack memory.
 
-sorry for the delay,
+OK, now point taken.  The main problem here is the definition of
+in_port and out_ports aren't really clear.  If in_ports really
+corresponds to external IN jacks, then we may correct rather like:
 
- ---- On Sat, 18 Jan 2025 17:08:10 +0100  Krzysztof Kozlowski  wrote ---=20
- > On Thu, Jan 16, 2025 at 03:25:58PM +0100, Louis-Alexis Eyraud wrote:
- > > This commit adds a compatible for the MediaTek MT8370 SoC, with an
- > > integrated ARM Mali G57 MC2 GPU (Valhall-JM, dual core), and adds
- > > platform data using the same supplies and the same power domain lists
- > > as MT8186 (one regulator, two power domains).
- > >=20
- > > Signed-off-by: Louis-Alexis Eyraud louisalexis.eyraud@collabora.com>
- > > ---
- > >  drivers/gpu/drm/panfrost/panfrost_drv.c | 10 ++++++++++
- > >  1 file changed, 10 insertions(+)
- > >=20
- > > diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm=
-/panfrost/panfrost_drv.c
- > > index 0f3935556ac761adcd80197d87e8e478df436fd5..1d51b64ed0f0660cc95263=
-a289d5dad204540cfd 100644
- > > --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
- > > +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
- > > @@ -837,6 +837,15 @@ static const struct panfrost_compatible mediatek_=
-mt8192_data =3D {
- > >  =C2=A0=C2=A0=C2=A0=C2=A0.pm_features =3D BIT(GPU_PM_CLK_DIS) | BIT(GP=
-U_PM_VREG_OFF),
- > >  };
- > > =20
- > > +/* MT8370 uses the same power domains and power supplies as MT8186 */
- > > +static const struct panfrost_compatible mediatek_mt8370_data =3D {
- > > +=C2=A0=C2=A0=C2=A0=C2=A0.num_supplies =3D ARRAY_SIZE(mediatek_mt8183_=
-b_supplies) - 1,
- > > +=C2=A0=C2=A0=C2=A0=C2=A0.supply_names =3D mediatek_mt8183_b_supplies,
- > > +=C2=A0=C2=A0=C2=A0=C2=A0.num_pm_domains =3D ARRAY_SIZE(mediatek_mt818=
-6_pm_domains),
- > > +=C2=A0=C2=A0=C2=A0=C2=A0.pm_domain_names =3D mediatek_mt8186_pm_domai=
-ns,
- > > +=C2=A0=C2=A0=C2=A0=C2=A0.pm_features =3D BIT(GPU_PM_CLK_DIS) | BIT(GP=
-U_PM_VREG_OFF),
- > > +};
- >=20
- > No, people, stop this nonsense. This is exactly the same as previous.
- > Don't duplicate entries just because you want a commit.
- >=20
-I added this new compatible in bindings and panfrost driver because there w=
-ere no other matching compatible=20
-Using another mali-vallhal-jm compatible would make the driver probe fail b=
-ecause of power domains number difference.=20
-Using mt8186-mali compatible would work without modifications but as it is =
-not the same architecture (mali-bifrost), it would be incorrect.
+--- a/drivers/usb/gadget/function/f_midi.c
++++ b/drivers/usb/gadget/function/f_midi.c
+@@ -968,7 +968,7 @@ static int f_midi_bind(struct usb_configuration *c, struct usb_function *f)
+ 		midi_function[i++] = (struct usb_descriptor_header *) out_emb;
+ 
+ 		/* link it to the endpoint */
+-		ms_in_desc.baAssocJackID[n] = out_emb->bJackID;
++		ms_out_desc.baAssocJackID[n] = out_emb->bJackID;
+ 	}
+ 
+ 	/* configure the external OUT jacks, each linked to an embedded IN jack */
+@@ -996,7 +996,7 @@ static int f_midi_bind(struct usb_configuration *c, struct usb_function *f)
+ 		midi_function[i++] = (struct usb_descriptor_header *) out_ext;
+ 
+ 		/* link it to the endpoint */
+-		ms_out_desc.baAssocJackID[n] = in_emb->bJackID;
++		ms_in_desc.baAssocJackID[n] = in_emb->bJackID;
+ 	}
+ 
+ 	/* configure the endpoint descriptors ... */
 
-I've also misguessed on the dt_match array modifications, sorry.
-I'll amend this patch in order to reuse the mt8186 platform data instead.
+OTOH, the current code will make the actual appearance other way
+round, likely more confusing.  So I believe your fix makes sense.
 
- > > +
- > >  static const struct of_device_id dt_match[] =3D {
- > >  =C2=A0=C2=A0=C2=A0=C2=A0/* Set first to probe before the generic comp=
-atibles */
- > >  =C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "amlogic,meson-gxm-mali",
- > > @@ -859,6 +868,7 @@ static const struct of_device_id dt_match[] =3D {
- > >  =C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "mediatek,mt8186-mali", .da=
-ta =3D &mediatek_mt8186_data },
- > >  =C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "mediatek,mt8188-mali", .da=
-ta =3D &mediatek_mt8188_data },
- > >  =C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "mediatek,mt8192-mali", .da=
-ta =3D &mediatek_mt8192_data },
- > > +=C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "mediatek,mt8370-mali", .da=
-ta =3D &mediatek_mt8370_data },
- >=20
- > No, express properly compatibility or say in bindings commit msg why
- > devices are not compatible.
- >=20
-I'll reword in V2 the commit messages to make the compatible need more expl=
-icit.
+But it'd be helpful to extend the description a bit more to clarify
+this confusion.  I guess this confusion came from the association
+between the embedded and external jacks, and the patch corrects it.
 
- > Best regards,
- > Krzysztof
- >=20
- >=20
 
-Regards,
-Louis-Alexis Eyraud
+thanks,
+
+Takashi
+
+> 
+> 
+> 
+> Regards,
+> John
+> 
+> > > > > Cc: stable@vger.kernel.org
+> > > > > Fixes: c8933c3f79568 ("USB: gadget: f_midi: allow a dynamic number of input and output ports")
+> > > > > Signed-off-by: John Keeping <jkeeping@inmusicbrands.com>
+> > > > > ---
+> > > > >  drivers/usb/gadget/function/f_midi.c | 8 ++++----
+> > > > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/usb/gadget/function/f_midi.c b/drivers/usb/gadget/function/f_midi.c
+> > > > > index 837fcdfa3840f..6cc3d86cb4774 100644
+> > > > > --- a/drivers/usb/gadget/function/f_midi.c
+> > > > > +++ b/drivers/usb/gadget/function/f_midi.c
+> > > > > @@ -1000,11 +1000,11 @@ static int f_midi_bind(struct usb_configuration *c, struct usb_function *f)
+> > > > >  	}
+> > > > >  
+> > > > >  	/* configure the endpoint descriptors ... */
+> > > > > -	ms_out_desc.bLength = USB_DT_MS_ENDPOINT_SIZE(midi->in_ports);
+> > > > > -	ms_out_desc.bNumEmbMIDIJack = midi->in_ports;
+> > > > > +	ms_out_desc.bLength = USB_DT_MS_ENDPOINT_SIZE(midi->out_ports);
+> > > > > +	ms_out_desc.bNumEmbMIDIJack = midi->out_ports;
+> > > > >  
+> > > > > -	ms_in_desc.bLength = USB_DT_MS_ENDPOINT_SIZE(midi->out_ports);
+> > > > > -	ms_in_desc.bNumEmbMIDIJack = midi->out_ports;
+> > > > > +	ms_in_desc.bLength = USB_DT_MS_ENDPOINT_SIZE(midi->in_ports);
+> > > > > +	ms_in_desc.bNumEmbMIDIJack = midi->in_ports;
+> > > > >  
+> > > > >  	/* ... and add them to the list */
+> > > > >  	endpoint_descriptor_index = i;
+> > > > > -- 
+> > > > > 2.48.1
+> > > > > 
+> > > > > 
