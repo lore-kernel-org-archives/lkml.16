@@ -1,69 +1,74 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F841E22EF;
-	Thu, 30 Jan 2025 11:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84191E47A8;
+	Thu, 30 Jan 2025 11:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738238301; cv=none; b=lKXrSPFfDICnFWf1h98bDFkFD94d+7x2wqPYLDiJbbuttFdjsCLJePNP4dVkFuKHhC0siKh3EgLGhoJAzcb32f2m7rJ1oGV/H4izZ8o4TxJ/AukqJgBJLadVKTtNcUgzjF8K0vZ5pn7EX8yC6LJ4OuLSbq7yGEBOV7bfXSeOYjw=
+	t=1738238305; cv=none; b=WuySB1t62aXDHT8WVGNURhaO6tCQT4YLrxxLVr+kFGgWml6u/uEmXIBSqtXE3FQMuHqXKI4yEN6Tln9FVU02Ywr8FI13Pwo8KuTwch6srXZ6Hts/jmfRc1lFX7Txu5/TNV9OXmcfag23hTs70v7dVc1CumPHzU3gG1lLzLFSKDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738238301; c=relaxed/simple;
-	bh=Or/6fCKCqKtt5SN3Lut/GMF9jqBGeoACs4wpamdqgHQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r6SchQZGsDuDHMdDjbERbxme9E9Kf080W4Gfc1aoLdh7Oiy74xtUkcQ17Qf1WTj2vBEhXBkxmM783wGCxTs6dpEZV8L4Hxt24j+WxFv6sagNw/kFNVBOhOz9NTMBbMCEvwpDJZro7t3xMPV1KWhM3RLPIBRZ0gPWKw+s9i4wEm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lPuOQhjU; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738238305; c=relaxed/simple;
+	bh=dw9mWJfz5RHeEOoXoFMS7WosrEiyRRUdoFondemh4Q4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a1u+75n93DKY3InA5vtxUOFGCjr1WplhDXhOMlB4clvlliUY7okZoxivwfbeH6O40Nnaoz7aMa9DLORXoqIoyyDRTJ5S0LYs5eadx/XNIKxaKbMvGpdp4C8Ui9GXWsydbX6RTy9qWRA2mGirYa0hZoJVp5XILmYek86c7LXFXSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A4CuLfp8; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lPuOQhjU"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50U20iRO019638;
-	Thu, 30 Jan 2025 11:58:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=ASPXOmE7lC753IK6r
-	fatZzvyYIr+iTWBz16mvoVF55I=; b=lPuOQhjUj5mauWxkFWGBH8oSRiWDt96AH
-	R2OOn2Br2U7nUJIQM65rp5SWhV+JSJoFu+WDI4MlnJfjpxb6yCSS9xgpOhurXDJI
-	/+SNKZVPGi7V4IiPDYWK24Tdr1mjgmBPQtbdp8NuiXLq061tUXL2pg7kcTYRwZZ0
-	Edyz97ou0EpeaJ6bG3PtuS3qAgZSA9yJ9SVblK7T0SmeFsw5zR9VHFqSzhRLl+Ht
-	Kw1X/UFGg+iRKchLVY/Q1OgFUcHwtMSifOnt/5ZhhptUfI2w61j+XnAIbsavbOZr
-	5t4z3R6R1NOEXMmZ/rLb8s7928je+TAjbMlEUU27aX3wN28KkLn7g==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44g08yt5vw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 11:58:15 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50U93q3L022172;
-	Thu, 30 Jan 2025 11:58:14 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44dcgjwnd1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 11:58:14 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UBwBxH52953568
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 11:58:11 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6B4E22007B;
-	Thu, 30 Jan 2025 11:58:11 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4419520079;
-	Thu, 30 Jan 2025 11:58:11 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 30 Jan 2025 11:58:11 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, namhyung@kernel.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>,
-        James Clark <james.clark@linaro.org>
-Subject: [PATCH 2/2] perf test: Change event in perf test 114 perf record test subtest test_leader_sampling
-Date: Thu, 30 Jan 2025 12:57:56 +0100
-Message-ID: <20250130115756.3961722-2-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250130115756.3961722-1-tmricht@linux.ibm.com>
-References: <20250130115756.3961722-1-tmricht@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A4CuLfp8"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2161eb95317so10792535ad.1;
+        Thu, 30 Jan 2025 03:58:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738238303; x=1738843103; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2w6OTPsFPGpSaOGgiAS9qj/h8GAvjDmGxLB+WH8IBk0=;
+        b=A4CuLfp8QFlmQEFLWJKmLKfIFawxOWapNsHHmsvCMAnK9fVhJ8WU31mEcdSYxb4fAq
+         l+vam0UDQpiYlGvdG2JMy8w+S48ONJ7wZMSoRLWE756Df0jhrI45Av1W2MMs/JGj0Uo/
+         x7xPwzXEu4VWQHDtQUAmDHrcqiJq8b3JnGoBeF+uaAFvuwDcogCef+OgERGt71JmJa80
+         C9pRJEAjbMe8u2O0gvkkdrfyQLYlxl/I78+i11Y4mxrOES5w9JaoMGXd5FdYCS+FrUNA
+         jbz8mSOaa93MD0SlGYnDbh8bTNP1Xu/4YB6Y9d76h5K2kFE5wVjcXERVErSORCxy0Wta
+         c2lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738238303; x=1738843103;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2w6OTPsFPGpSaOGgiAS9qj/h8GAvjDmGxLB+WH8IBk0=;
+        b=WijUBe59LzcnDhTsYsl2efvgWb37h6AM2OPypyv/MFDLM0g/qGZ0nhNDkfTugcAnmb
+         WlgJqBycPMAiBjAaJemKbRQIuoA67qKqPCVUTAnPp3MDKybqCnJorks8f2WRTbD8emwn
+         l7IdVulMj81S0DwsX9F6V+PJ2JGy/mSF0hexkcA6sVoGeg+wHG386rWpkblaLONhIkwk
+         4B/H6VGHjRBCl5Fm3CViOn/UWtvf6YfzRFnBH39m18FwJD1bK75meylOG/5vOzr6ujCz
+         Sv/9wKktEdRNPNwJAK5o0VqzRHxekPGre459Ck2DqnOTnu1+vxBWbIT9eHRhWSjUTcBi
+         JWaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQIGbBk1tmYduD2DyHtIadFbdolAuH2SlPlhcN02YL2rxbF1y7B1dYw/qzGUyd7AY4RP/y8TY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGCiQtp7pXuXZwQ5Bs6vKbJ8+1Ca+WYbTs6TC+KXftgYu/khuT
+	wA0MiPACLTC99r4zT8mfdHKyo6ioA9CJC0N3WpOgrFD8f4AMAeSH
+X-Gm-Gg: ASbGncs3z7HnR9kMazlPVEsoyTdx/KXnQIpDfC5vJ+Bt+mUdItYnpxg/A7SepvQLyB2
+	PF6oI6/+HlMlNeutdwfurSSn3jqaCV/OFnneu1meQctJGoLGXfn+w9azFTH01wbC9ZPM6rfA/pq
+	FNRG9FDhgod/UMqrcQh3IwcM4S9VOlwvVxe8XCya8haabSHZYodAWiuedSxRMDSdctYTX9PPaad
+	FTOXOqfswP4zJvdfCM7S+U2F6jvPDURHL4D/idVEQZHHhtduiHhA230h9UsobMU5XxmYx0YgxYe
+	IiIYgzSwL53V9JNM8cM=
+X-Google-Smtp-Source: AGHT+IF/eEi0987fyq8jRUhEMVYkTWZcUeQXxaO8i1qm+iIcm7RjohCGlHu/ogj9EaOLfGFULEkvqg==
+X-Received: by 2002:a17:902:f606:b0:215:97a3:5ec5 with SMTP id d9443c01a7336-21dd7d81020mr122579535ad.22.1738238302455;
+        Thu, 30 Jan 2025 03:58:22 -0800 (PST)
+Received: from ubuntuxuelab.. ([58.246.183.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3302a50sm12078905ad.188.2025.01.30.03.58.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 03:58:22 -0800 (PST)
+From: Haoyu Li <lihaoyu499@gmail.com>
+To: Fei Li <fei1.li@intel.com>,
+	Shuo Liu <shuo.a.liu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Zhi Wang <zhi.a.wang@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	chenyuan0y@gmail.com,
+	Haoyu Li <lihaoyu499@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] drivers: virt: acrn: hsm: Use kzalloc to avoid info leak in pmcmd_ioctl
+Date: Thu, 30 Jan 2025 19:58:11 +0800
+Message-Id: <20250130115811.92424-1-lihaoyu499@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,56 +76,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: lb5VgRA2DhIz1bYfRhPs52RVHh_XNEDO
-X-Proofpoint-ORIG-GUID: lb5VgRA2DhIz1bYfRhPs52RVHh_XNEDO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_06,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- malwarescore=0 bulkscore=0 mlxlogscore=884 lowpriorityscore=0 mlxscore=0
- impostorscore=0 phishscore=0 adultscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501300089
 
-On s390 the event instructions can not be used for recording.
-This event is only supported by perf stat.
+In the "pmcmd_ioctl" function, three memory objects allocated by
+kmalloc are initialized by "hcall_get_cpu_state", which are then
+copied to user space. The initializer is indeed implemented in
+"acrn_hypercall2" (arch/x86/include/asm/acrn.h). There is a risk of
+information leakage due to uninitialized bytes.
 
-Change the event from instructions to cycles in
-subtest test_leader_sampling.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Suggested-by: James Clark <james.clark@linaro.org>
+Fixes: 3d679d5aec64 ("virt: acrn: Introduce interfaces to query C-states and P-states allowed by hypervisor")
+Signed-off-by: Haoyu Li <lihaoyu499@gmail.com>
+Cc: stable@vger.kernel.org
 ---
- tools/perf/tests/shell/record.sh | 6 +++---
+ drivers/virt/acrn/hsm.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index b905acde8358..a17018181afa 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -231,7 +231,7 @@ test_cgroup() {
+diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
+index c24036c4e51e..e4e196abdaac 100644
+--- a/drivers/virt/acrn/hsm.c
++++ b/drivers/virt/acrn/hsm.c
+@@ -49,7 +49,7 @@ static int pmcmd_ioctl(u64 cmd, void __user *uptr)
+ 	switch (cmd & PMCMD_TYPE_MASK) {
+ 	case ACRN_PMCMD_GET_PX_CNT:
+ 	case ACRN_PMCMD_GET_CX_CNT:
+-		pm_info = kmalloc(sizeof(u64), GFP_KERNEL);
++		pm_info = kzalloc(sizeof(u64), GFP_KERNEL);
+ 		if (!pm_info)
+ 			return -ENOMEM;
  
- test_leader_sampling() {
-   echo "Basic leader sampling test"
--  if ! perf record -o "${perfdata}" -e "{instructions,instructions}:Su" -- \
-+  if ! perf record -o "${perfdata}" -e "{cycles,cycles}:Su" -- \
-     perf test -w brstack 2> /dev/null
-   then
-     echo "Leader sampling [Failed record]"
-@@ -243,10 +243,10 @@ test_leader_sampling() {
-   while IFS= read -r line
-   do
-     # Check if the two instruction counts are equal in each record
--    instructions=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="instructions:") print $(i-1)}')
-+    instructions=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
-     if [ $(($index%2)) -ne 0 ] && [ ${instructions}x != ${prev_instructions}x ]
-     then
--      echo "Leader sampling [Failed inconsistent instructions count]"
-+      echo "Leader sampling [Failed inconsistent cycles count]"
-       err=1
-       return
-     fi
+@@ -64,7 +64,7 @@ static int pmcmd_ioctl(u64 cmd, void __user *uptr)
+ 		kfree(pm_info);
+ 		break;
+ 	case ACRN_PMCMD_GET_PX_DATA:
+-		px_data = kmalloc(sizeof(*px_data), GFP_KERNEL);
++		px_data = kzalloc(sizeof(*px_data), GFP_KERNEL);
+ 		if (!px_data)
+ 			return -ENOMEM;
+ 
+@@ -79,7 +79,7 @@ static int pmcmd_ioctl(u64 cmd, void __user *uptr)
+ 		kfree(px_data);
+ 		break;
+ 	case ACRN_PMCMD_GET_CX_DATA:
+-		cx_data = kmalloc(sizeof(*cx_data), GFP_KERNEL);
++		cx_data = kzalloc(sizeof(*cx_data), GFP_KERNEL);
+ 		if (!cx_data)
+ 			return -ENOMEM;
+ 
 -- 
-2.48.1
+2.34.1
 
