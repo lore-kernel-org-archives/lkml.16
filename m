@@ -1,132 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF894431;
-	Thu, 30 Jan 2025 01:22:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B294431;
+	Thu, 30 Jan 2025 01:25:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738200171; cv=none; b=hQTCoRRlTxw/EJAnK0TjDe+KW5qBOdHHN0DI9xzsFO1QmlkXxDM52jR0H7PvQ+tuKQGz5rr3oPjdZ8cfE26X2hrjvptZkBczl/pFMrKBPyMFkZZumObPyxHbdFfBe+HZomJ+IDMu8t4CwAU5qTavxMa4xVUhaFAWeNlpPqcXqz4=
+	t=1738200335; cv=none; b=Y02NByAaIF8Df+JKGw2Le+5e1eaGjSVAUFGW3huB2EVU1yza9yngO7V6fm0jfcnYBavPMBJeWhyuw1Tr/JwCtNrLLZH3ghZWwB7lk67w5hq1RAcfC3cfHQf6BG09CR+PGXMq6ooAXhwx7ms3TxUTWLgXJ069MZs2K20D2wCizh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738200171; c=relaxed/simple;
-	bh=10/hjU2THJhx8Rd3H7aW/3rEfLPJdkpXhx5W+FdJZ4E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Lnw1SS+Lv1SBDvoZm7lXkeE1KFv/BnYJyE3qLszEasKIBJ/2EOuaCJgymmDMS8/xVRQK+h0C/6z1lhgGp7XwUsgrNePpa55bMleBhHudgMqno3qmCPrX2eduiJehX2aRJRQCQMyGbKsQDDvR+y2RhVxonZsKkyv3fmhvzZWmHs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bYqCkaP7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738200335; c=relaxed/simple;
+	bh=a9EQGLaLQ63V8C1g4jacKCgE1IBr1sG4RVQZ6PHSF4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kQs6nKPdsOyzSI2iltRswMwnFUBCxOeHwZ9XpHoupEfc7dGyZ9MemWn42Ee5ISfGutddFWpJoAad+OLfBzuaFkTu3LxXBfHNIi01vnTtapREpSc1w5NnHvTg8NH4K4QdIAuCVvbzum6/8n/9uX70+FAOd63tR8SN8D9xH0raBk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AzZqnHIy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYqCkaP7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 089AEC4CED1;
-	Thu, 30 Jan 2025 01:22:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AzZqnHIy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87AECC4CED1;
+	Thu, 30 Jan 2025 01:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738200170;
-	bh=10/hjU2THJhx8Rd3H7aW/3rEfLPJdkpXhx5W+FdJZ4E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bYqCkaP7wCw+S13kpofptAUG5hpAwQK+K9cqbujGa6Jp6gRAoJQMgfXj019BQKSWQ
-	 nN5ZGSXS/9pKXf3s9u2Q/BhrwACy0nlXAmObcy1CgLJtr1VtBsTpGfmawDjLUVIEhO
-	 T6bO9dCzRUykfUcaba6e1DvDB5VLGH5wz9rsD7pHEV4KYKP5GW4FKKCeIhHTOa5MxZ
-	 64sXbcrzOX6ryod9wEfaSJD/9EwpXEajTHBIZ1Nwa6qfsUIUwp/kf1B8ejdArgJazC
-	 QD1KO0dYmC81AS5KB4iKvhqltBcF/4hBxJCK8uTsbkNnPArg8VFgumrQR4GtnPLvjf
-	 l/uqWXS8bJuGQ==
-From: carlos.bilbao@kernel.org
-To: corbet@lwn.net,
-	willy@infradead.org
-Cc: akpm@linux-foundation.org,
-	bilbao@vt.edu,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Carlos Bilbao <carlos.bilbao@kernel.org>
-Subject: [PATCH] mailmap, MAINTAINERS, docs: Update my email address
-Date: Wed, 29 Jan 2025 19:22:44 -0600
-Message-ID: <20250130012248.1196208-1-carlos.bilbao@kernel.org>
-X-Mailer: git-send-email 2.43.5
+	s=k20201202; t=1738200335;
+	bh=a9EQGLaLQ63V8C1g4jacKCgE1IBr1sG4RVQZ6PHSF4g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AzZqnHIyUkdd9j4YPjb7ti9EY012tiiYl4bzdy8COzBwzCvPYAQHccVgM+YI27XQX
+	 Fwi8b5P8qgCVZ3LmzBOzCbxcM8MecOF1WaHP9p814TKLgL8zoLZNaNxbhcJV+JenAD
+	 Dj0XFfhbQ/Pa0cpRju1wxolpv1PypDJuEiN8DiuVcNwUE5+4GXK/iwFHriIqd0uYYe
+	 bJYnzrQBdH3OV0kqaGD2wLUFgQGL0k4EWKwGTJ/yA6T/DHzmCOS1Jk4f2Zis2OhcGU
+	 Nxj0eKP1T6mMZ9ISe8feNeFEIltjv4YJQ+ARXdBe5jp2iV+VC+NkPHULttSTEQ5Bw/
+	 OLuLMJDeMh7Ow==
+Date: Wed, 29 Jan 2025 17:25:32 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>,
+	Avri Altman <avri.altman@wdc.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Mike Snitzer <snitzer@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Satya Tangirala <satyat@google.com>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v4] scsi: ufs: fix use-after free in init error and
+ remove paths
+Message-ID: <20250130012532.GB66821@sol.localdomain>
+References: <20250124-ufshcd-fix-v4-1-c5d0144aae59@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250124-ufshcd-fix-v4-1-c5d0144aae59@linaro.org>
 
-From: Carlos Bilbao <carlos.bilbao@kernel.org>
+On Fri, Jan 24, 2025 at 03:09:00PM +0000, AndrÈ Draszik wrote:
+> devm_blk_crypto_profile_init() registers a cleanup handler to run when
+> the associated (platform-) device is being released. For UFS, the
+> crypto private data and pointers are stored as part of the ufs_hba's
+> data structure 'struct ufs_hba::crypto_profile'. This structure is
+> allocated as part of the underlying ufshcd and therefore Scsi_host
+> allocation.
+> 
+> During driver release or during error handling in ufshcd_pltfrm_init(),
+> this structure is released as part of ufshcd_dealloc_host() before the
+> (platform-) device associated with the crypto call above is released.
+> Once this device is released, the crypto cleanup code will run, using
+> the just-released 'struct ufs_hba::crypto_profile'. This causes a
+> use-after-free situation:
+> 
+>   Call trace:
+>    kfree+0x60/0x2d8 (P)
+>    kvfree+0x44/0x60
+>    blk_crypto_profile_destroy_callback+0x28/0x70
+>    devm_action_release+0x1c/0x30
+>    release_nodes+0x6c/0x108
+>    devres_release_all+0x98/0x100
+>    device_unbind_cleanup+0x20/0x70
+>    really_probe+0x218/0x2d0
+> 
+> In other words, the initialisation code flow is:
+> 
+>   platform-device probe
+>     ufshcd_pltfrm_init()
+>       ufshcd_alloc_host()
+>         scsi_host_alloc()
+>           allocation of struct ufs_hba
+>           creation of scsi-host devices
+>     devm_blk_crypto_profile_init()
+>       devm registration of cleanup handler using platform-device
+> 
+> and during error handling of ufshcd_pltfrm_init() or during driver
+> removal:
+> 
+>   ufshcd_dealloc_host()
+>     scsi_host_put()
+>       put_device(scsi-host)
+>         release of struct ufs_hba
+>   put_device(platform-device)
+>     crypto cleanup handler
+> 
+> To fix this use-after free, change ufshcd_alloc_host() to register a
+> devres action to automatically cleanup the underlying SCSI device on
+> ufshcd destruction, without requiring explicit calls to
+> ufshcd_dealloc_host(). This way:
+> 
+>     * the crypto profile and all other ufs_hba-owned resources are
+>       destroyed before SCSI (as they've been registered after)
+>     * a memleak is plugged in tc-dwc-g210-pci.c remove() as a
+>       side-effect
+>     * EXPORT_SYMBOL_GPL(ufshcd_dealloc_host) can be removed fully as
+>       it's not needed anymore
+>     * no future drivers using ufshcd_alloc_host() could ever forget
+>       adding the cleanup
+> 
+> Fixes: cb77cb5abe1f ("blk-crypto: rename blk_keyslot_manager to blk_crypto_profile")
+> Fixes: d76d9d7d1009 ("scsi: ufs: use devm_blk_ksm_init()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: AndrÈ Draszik <andre.draszik@linaro.org>
 
-Update .mailmap to reflect my new (and final) primary email address,
-carlos.bilbao@kernel.org. Also update contact information in files
-Documentation/translations/sp_SP/index.rst and MAINTAINERS.
+Acked-by: Eric Biggers <ebiggers@kernel.org>
 
-Signed-off-by: Carlos Bilbao <carlos.bilbao@kernel.org>
----
- .mailmap                                   | 4 +++-
- Documentation/translations/sp_SP/index.rst | 2 +-
- MAINTAINERS                                | 8 ++++----
- 3 files changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/.mailmap b/.mailmap
-index 5ff0e5d681e7..ca7946736bc0 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -139,7 +139,9 @@ Bryan Tan <bryan-bt.tan@broadcom.com> <bryantan@vmware.com>
- Cai Huoqing <cai.huoqing@linux.dev> <caihuoqing@baidu.com>
- Can Guo <quic_cang@quicinc.com> <cang@codeaurora.org>
- Carl Huang <quic_cjhuang@quicinc.com> <cjhuang@codeaurora.org>
--Carlos Bilbao <carlos.bilbao.osdev@gmail.com> <carlos.bilbao@amd.com>
-+Carlos Bilbao <carlos.bilbao@kernel.org> <carlos.bilbao@amd.com>
-+Carlos Bilbao <carlos.bilbao@kernel.org> <carlos.bilbao.osdev@gmail.com>
-+Carlos Bilbao <carlos.bilbao@kernel.org> <bilbao@vt.edu>
- Changbin Du <changbin.du@intel.com> <changbin.du@gmail.com>
- Changbin Du <changbin.du@intel.com> <changbin.du@intel.com>
- Chao Yu <chao@kernel.org> <chao2.yu@samsung.com>
-diff --git a/Documentation/translations/sp_SP/index.rst b/Documentation/translations/sp_SP/index.rst
-index aae7018b0d1a..2b50283e1608 100644
---- a/Documentation/translations/sp_SP/index.rst
-+++ b/Documentation/translations/sp_SP/index.rst
-@@ -7,7 +7,7 @@ Traducci√≥n al espa√±ol
- 
- 	\kerneldocCJKoff
- 
--:maintainer: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
-+:maintainer: Carlos Bilbao <carlos.bilbao@kernel.org>
- 
- .. _sp_disclaimer:
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4006434e0155..0b3af06d9b56 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1077,7 +1077,7 @@ F:	drivers/video/fbdev/geode/
- 
- AMD HSMP DRIVER
- M:	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
--R:	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
-+R:	Carlos Bilbao <carlos.bilbao@kernel.org>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	Documentation/arch/x86/amd_hsmp.rst
-@@ -5793,7 +5793,7 @@ F:	drivers/usb/atm/cxacru.c
- 
- CONFIDENTIAL COMPUTING THREAT MODEL FOR X86 VIRTUALIZATION (SNP/TDX)
- M:	Elena Reshetova <elena.reshetova@intel.com>
--M:	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
-+M:	Carlos Bilbao <carlos.bilbao@kernel.org>
- S:	Maintained
- F:	Documentation/security/snp-tdx-threat-model.rst
- 
-@@ -11228,7 +11228,7 @@ S:	Orphan
- F:	drivers/video/fbdev/imsttfb.c
- 
- INDEX OF FURTHER KERNEL DOCUMENTATION
--M:	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
-+M:	Carlos Bilbao <carlos.bilbao@kernel.org>
- S:	Maintained
- F:	Documentation/process/kernel-docs.rst
- 
-@@ -22018,7 +22018,7 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
- F:	drivers/media/dvb-frontends/sp2*
- 
- SPANISH DOCUMENTATION
--M:	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
-+M:	Carlos Bilbao <carlos.bilbao@kernel.org>
- R:	Avadhut Naik <avadhut.naik@amd.com>
- S:	Maintained
- F:	Documentation/translations/sp_SP/
--- 
-2.43.5
-
+- Eric
