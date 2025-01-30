@@ -1,161 +1,96 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFE91BC065
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321451E8837
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 16:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738252801; cv=none; b=Ue8O4x46WjY9QL/t4a8h2reymYpNZ39Q5Z5eqdpGP6aO/ZeP46nb4AEEFVEdGoaLp0qEWU51b9a1tvq+1pK/PTkfVqdpT5svmw5YC70WSGcF6upFcSWXgR9L0bx2qdR6YVrrFZFs0vu9Y+tKZsYW5G+2jP+bgF8RGITfsM3uUnE=
+	t=1738252941; cv=none; b=u+6gbSWgPIsRG2yhvSP9iUGrtrm161rxGmLmzWacjHYxxLdP5NWrkeNasJ3Tk7+bLMWnvJHC9GYstcZjG7tUGeSiDmVOowyAVxaG1swm6wKwrZRBAQ7hhWMytsi7hPzzp+zyTezB/4z6dUkMtwWCtJMJkTy6meHgHuzSh3ZCAXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738252801; c=relaxed/simple;
-	bh=ngWQPRETD9N17bAwKGrksUnr574UVGVFHxMohMEaErM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=H9GkqIc6f9uuvW048J075OFs89xNo7cNJSeDkmxIbulkB2t1rniK+OM7D5Za/IoSJqAi9jd0MGF1grxVn9swWODd7EYEdgsYONHp85yDWBuHNNXWVNj1Bb1RwTaoZ7nBoMExSbL7dQhjB3oBMovzIL+ATWLhphVJrzHzsXvkqx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=jlmdsHqM; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1738252941; c=relaxed/simple;
+	bh=7MBdSk1BwpNy2hET1MIgRuFKrd5FE+flA5d+9r0ciIc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B19rJxFpDt/1vK23XRoMynpJX+gf7i21YUI/6htHXU0SbfZbAnyReF5FXQTfACB1SILTa0OktbyXY+HCBqGj5yeJMgFi/qkYiBeicCp5D4zAh1woYiRP0msjqUaD56ehA8zVU69XQVyM/CJhq3OA/jpGPEnsxXstBIfiM94yDCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=IRqJGuea; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="jlmdsHqM"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7b702c3c021so93052785a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 07:59:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="IRqJGuea"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3cf880d90bdso3491505ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:02:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1738252798; x=1738857598; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Vrukcyab91NQAAPHSNd07R2nM2xtss7X+LvbFgz2NCI=;
-        b=jlmdsHqMk2JPh+LrItXa+q0NpMCbv/Ld3CngfnQH6EnRZD9ma6FNG+WnkfrGq2+fGU
-         kjlAKK+M8J5Pz9/wDMeqBB1htfO8S8WuiAinYOApE4mLCXEfdZmttzhtOfbBecwX0Tq8
-         Z+AjNjZyCCSWCooCM3/PYL/4uh7Qk1sFG8HCwnS0zrcbwEoUqDJSEJShQ2SHXBUuE/0u
-         jzBQj53gAHhSv8zTCMBgLhaiaoMrQEkeYX0oUonNZ7yjaKQ1m44F2EbSJQQlq3hNQWrB
-         258j1cyrVr1RGdsgJZHKmMkweclF5IBClM2iVo0kCYr1PT+QGkW08jO3Eqz8yeeVOfxB
-         eSoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738252798; x=1738857598;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1738252938; x=1738857738; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Vrukcyab91NQAAPHSNd07R2nM2xtss7X+LvbFgz2NCI=;
-        b=Llihxa0ShUIW50ZjEzUgz3/9QkEuvKpdaD7EsUsOwm6tp702OZzHaZUsB+VQazM/Wl
-         j3NUGDaf9jSGzgEXuVSt/lz+CmuU6dW7VZrK5yiKxM6S2XeBrfa9TCXL7R9xTG/+tYDW
-         b2Esir9al9eWibRhw6nIEBVtzipjlzekb7Pr7CtmEyMdcaA3WiyGOgLvMw9smIcBbQYH
-         Rri5hUxkxLSJYMYMzuZA5Rb1jjNxpR+SLd/nqkBwMKD2m/haxUxOwCt+IJGr+QJWyujS
-         jssUTei1mWIacnLawbAhjFLF2UXaxCSPlx3a88zix/Jv1QTB0lAhp+tNf+9UxvSzxDQH
-         3Oqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJV2878LU1tFsodozghdzxqoCOvIY/RSaLs6lu3Ew0nNTb7NCROdvnnmV+rcp5bGNQRHR5t76jqySIsoU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzQRBcDnH34Z2T0C3r8AxNaanmn2wArU9rLn9LgsetoHgH5nEk
-	P1qFnTzIETLLMfKCoVkyJgAnvOcxOaBmktZ8PvxDsY7gcIpbcs4hOKHA8IuhvUw=
-X-Gm-Gg: ASbGnctqfWJTcayqHd9z823XktQwWEG4gQMIV5X0FOrtmJil1oXnrze3pJPfMUUoiet
-	aoDJ55dAvOyFXcNWA/L1iHS2QF6ZiZH1iX8BBId3BAXRIfeLSsQoxWwZ0kKQTRia//+GxXE95HH
-	C0rJHZ5Q/GuHWFgyJBscZSvjSOxDG8zpP64MifUIXdBbf/amCduGnmQ2CMtDsVKuhGKQFbvOogy
-	0npZ7z8DwfLVNGyO7Du0kB4sbIHSK0UJF51iJ2QjmlDOYgXfVaYA2aqauAStkXUP97IVVjvVtq6
-	tk5SWuJEXR5wiOhf
-X-Google-Smtp-Source: AGHT+IHjdyr1ZGxcyMCqDyCVkI8EVFcDwH70UC+E+hsL30A1qjTpY04odV1a3HSLhMUSwyh/u08bDw==
-X-Received: by 2002:a05:620a:44ca:b0:7b7:342:a0a5 with SMTP id af79cd13be357-7bffcda883bmr1361614185a.55.1738252798246;
-        Thu, 30 Jan 2025 07:59:58 -0800 (PST)
-Received: from nicolas-tpx395.localdomain ([2606:6d00:11:e976::7a9])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a90d14asm85504285a.104.2025.01.30.07.59.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 07:59:57 -0800 (PST)
-Message-ID: <1a73c3acee34a86010ecd25d76958bca4f16d164.camel@ndufresne.ca>
-Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali
- CSF GPUs
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Maxime Ripard <mripard@kernel.org>, Florent Tomasin
-	 <florent.tomasin@arm.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Boris
- Brezillon	 <boris.brezillon@collabora.com>, Steven Price
- <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>,  Sumit Semwal <sumit.semwal@linaro.org>, Benjamin
- Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey	
- <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T . J .
- Mercier"	 <tjmercier@google.com>, Christian =?ISO-8859-1?Q?K=F6nig?=	
- <christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong
- Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
-	linaro-mm-sig@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, nd@arm.com, Akash Goel
- <akash.goel@arm.com>
-Date: Thu, 30 Jan 2025 10:59:56 -0500
-In-Reply-To: <3ykaewmjjwkp3y2f3gf5jvqketicd4p2xqyajqtfnsxci36qlm@twidtyj2kgbw>
-References: <cover.1738228114.git.florent.tomasin@arm.com>
-	 <3ykaewmjjwkp3y2f3gf5jvqketicd4p2xqyajqtfnsxci36qlm@twidtyj2kgbw>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+        bh=ltspuTTT7wImpABc2X8tmjQrqpC9O8a4ARLx4Ty4zio=;
+        b=IRqJGueao5qD+6ixAouFt+o9SWa52+dH87GtKc7qCVMzTaC8sK1B8yhhAL0po7iHlp
+         usceISkwJLFDEReA2UcCPLmBP9Dn98TJSmof8AlkgGDyWE4msYarFU7B2l85WqjoLOhT
+         zu99jC2HV9gjRGjLcVsc9kKiO43KuTtvFyRLI7bZigRyy2iesnlorg0z9T22Q4+lAYSA
+         +jH82qE4gUH/xJPPIdQOLSyHC4CsyttFgP3KYob/5mOCvKbFmLfnmDUw6agdBb3pXgrB
+         gEwCgnykkJdxFQXAsc+cAT0J01PvDdXA9lOnd90MeAA8KdOJ6UwLziMuAesH38t7dXZC
+         3jBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738252938; x=1738857738;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ltspuTTT7wImpABc2X8tmjQrqpC9O8a4ARLx4Ty4zio=;
+        b=fYpXRpNZ+cmQS/k2CLO4hdNhSgw181ud79XeiUPCCTRHEY1o+f4LuPE9ayeOkWzNhh
+         GeGVWUaLiXWO8c8KYdOrR48mDbIV5TRQ+DYPO/eMbcmOEiRxx10dqbqWGDQpUE1v/yto
+         2I9nQnzQ0ow+keVPVdIaxKbUwfXLXpLysdBpiuXLrwBuPLti7Z7DEx5kSYjLuoX5qSSr
+         INuTnQRXs9q2XasCrkExEgV1NUxmg3BlB7k27xpiV1p6KwYDuZ+Z6bYcIzvnzCB+6Yuk
+         NxrG/mFuEtzBAhVSWqSvHfopZiIyLEsc9Js/uwBrqhAPMAq2bHH+1pmUln4/X2gmutgS
+         8gcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUak4PSIn15bIEwdH8cxj3KRKD2HqkkfmaxfYauF+Zcrz+NEsvSIGNv2pZgXH4IfMPUX0AHFBhwi54E2Mw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyI4GlysWehd2J+oFC5vz3XmIl0Z/gspnyTKIHxIqzvUfqipXRJ
+	qlo9mZ0EFKMh/fRWaFz6Nc8Upq8zDeAKRznmoutL9NAjbedk01YApHWz6MTL0o8=
+X-Gm-Gg: ASbGncv6rOUZJAV9Sc6ni5mTdQkbjPjzN+EfSvNA1zzemVQQqJDtIFHcbE7/n4V5mft
+	uECOogwOVfoAS/HAPaiydHpockCd9QuJ+L/HEi2rcpgWuzUvDtAj/elDNO+nPyHH4th00N0x1W2
+	RAi5cmN2jV3nyVysfqNrYNsi/M9fXP6M0aXE5UIYGBntVtw0jGo6H26+8E9W6MaYexrscrbj92v
+	ObNIPE7LXaLublBljxbG9GnBsDdbdiYhTpvr+3TXjAOLD37fdDqUSMlHOcqpzQFjWgssaiZSs/g
+	EniBt8woarA=
+X-Google-Smtp-Source: AGHT+IEyfjBLFtwVqhDL1I53GZ/4BxHmuOhR1GSFC1bm0nbAYhWgUJncLJfkZcCqVW2Vcnd1wsa9Jw==
+X-Received: by 2002:a05:6e02:17c7:b0:3cf:ba21:8a20 with SMTP id e9e14a558f8ab-3cffe470222mr76274605ab.18.1738252938099;
+        Thu, 30 Jan 2025 08:02:18 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ec7469f02esm396436173.90.2025.01.30.08.02.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 08:02:17 -0800 (PST)
+Message-ID: <04ca477d-36f8-4b5a-b4b8-a33afc75d144@kernel.dk>
+Date: Thu, 30 Jan 2025 09:02:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] kasan, mempool: don't store free stacktrace in
+ io_alloc_cache objects.
+To: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: kasan-dev@googlegroups.com, io-uring@vger.kernel.org, linux-mm@kvack.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ juntong.deng@outlook.com, lizetao1@huawei.com, stable@vger.kernel.org,
+ Alexander Potapenko <glider@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Pavel Begunkov <asml.silence@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>
+References: <20250122160645.28926-1-ryabinin.a.a@gmail.com>
+ <20250127150357.13565-1-ryabinin.a.a@gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250127150357.13565-1-ryabinin.a.a@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Le jeudi 30 janvier 2025 =C3=A0 14:46 +0100, Maxime Ripard a =C3=A9crit=C2=
-=A0:
-> Hi,
->=20
-> I started to review it, but it's probably best to discuss it here.
->=20
-> On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin wrote:
-> > Hi,
-> >=20
-> > This is a patch series covering the support for protected mode executio=
-n in
-> > Mali Panthor CSF kernel driver.
-> >=20
-> > The Mali CSF GPUs come with the support for protected mode execution at=
- the
-> > HW level. This feature requires two main changes in the kernel driver:
-> >=20
-> > 1) Configure the GPU with a protected buffer. The system must provide a=
- DMA
-> >    heap from which the driver can allocate a protected buffer.
-> >    It can be a carved-out memory or dynamically allocated protected mem=
-ory region.
-> >    Some system includes a trusted FW which is in charge of the protecte=
-d memory.
-> >    Since this problem is integration specific, the Mali Panthor CSF ker=
-nel
-> >    driver must import the protected memory from a device specific expor=
-ter.
->=20
-> Why do you need a heap for it in the first place? My understanding of
-> your series is that you have a carved out memory region somewhere, and
-> you want to allocate from that carved out memory region your buffers.
->=20
-> How is that any different from using a reserved-memory region, adding
-> the reserved-memory property to the GPU device and doing all your
-> allocation through the usual dma_alloc_* API?
+I don't think we need this with the recent cleanup of the io_uring
+struct caching. That should go into 6.14-rc1, it's queued up. So I think
+let's defer on this one for now? It'll conflict with those changes too.
 
-How do you then multiplex this region so it can be shared between
-GPU/Camera/Display/Codec drivers and also userspace ? Also, how the secure
-memory is allocted / obtained is a process that can vary a lot between SoC,=
- so
-implementation details assumption should not be coded in the driver.
-
-Nicolas
-
->=20
-> Or do you expect to have another dma-buf heap that would call into the
-> firmware to perform the allocations?
->=20
-> The semantics of the CMA heap allocations is a concern too.
->=20
-> Another question is how would you expect something like a secure
-> video-playback pipeline to operate with that kind of interface. Assuming
-> you have a secure codec, you would likely get that protected buffer from
-> the codec, right? So the most likely scenario would be to then import
-> that dma-buf into the GPU driver, but not allocate the buffer from it.
->=20
-> Overall, I think a better abstraction would be to have a heap indeed to
-> allocate your protected buffers from, and then import them in the
-> devices that need them. The responsibility would be on the userspace to
-> do so, but it already kind of does with your design anyway.
->=20
-> Maxime
-
+-- 
+Jens Axboe
