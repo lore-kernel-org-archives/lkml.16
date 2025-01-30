@@ -1,160 +1,421 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B704D52F88;
-	Thu, 30 Jan 2025 04:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF9A153BE8
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 04:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738211834; cv=none; b=RGiCNlBnzLoXaoHI2uVGjy1UndyF0AUZOEA9FVpVtrOwnLcg/XPlnqxkLfcJMVqbaMfaGWKDjC7V54eDP5N9pA1FPzysNL9kxQDkLa/8nkhDT84zIrOGB246st/Ogq1p37f0UJdzbXecHIziOFhyT0WvlHa+MPbYjaI94gxX45k=
+	t=1738211918; cv=none; b=X0vLKe4+JkEYBE1UoPOZtadLzfDhzdlAMos3BWcO2c5NyFk7Bog7sRTFdX1TcJ3nKLjvMPNZwcNTvJRzwSGL+Fy8aEcpnWEDSIU1VeGWpxvSdK7k7xV0LuqwJvW+3AxgVTlMadGL+yXO/pGt8QZeKZyatQxpdfjtQkxgrsLfJTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738211834; c=relaxed/simple;
-	bh=fOYB9cwracAF9d9oO3jOOBKrIscIPgA3lyn5FdZChZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=plntIBIYAA4Fw+LRh8PP9nFXyzFy2KVXElau9tmOgksHocfSbCm8+zHbuh7diIiJ99fP6DpEPbKlD0R8QltLFFMp2HeIi1vJvGwVo2at3xvN74EQFfT3UN64w7Iljrjln1NnS+G59MOCQH8ugYzISkdxSs3SUdsUL9nnX62ZaQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=kDUiWKAc; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1738211918; c=relaxed/simple;
+	bh=4FKEvSUMzC2p53+6xAj3vhxfuVD67aqgvQeQrfYid4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E2UWYULgE0LbJYTVniJ55jCVt8wpVmxAfgK3MJlHbyVyPzKcLzdiUavhM/68UAT7vRRaHB3AzICjccPcqNcWobZBxa8ZTAjcQjdi3vXctoJucrqC6SjdXVoLTHlNzn7CKL1tCWbwg98vF6SqIKTKpnWqz94gVpRBJCbO4QfEpgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I0qIGcuY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="kDUiWKAc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=btqWBd+W4Aie/QFtGi+Ld4IVWHpJBAF5I5E+W0qtXak=; b=kDUiWKAciDXVeGs8Z0Yemu6bz9
-	kWrYyI3qvmdIKgXDJj8ynwDtl3pPO90nWDlLE7oyK3V0j4ulLJn3udClEfh16EXKiqCY5huC4bNPd
-	5WQoEo9XQ89HOf8eMoKtg2/+dgpcXTTSs1GjTqFh5b7ws386/icsUTfV7sGGvgG8GqQLEHHGiqsa/
-	OTk4kw7PhmYOlX/VvlMosecDeO3Uu/ZfCUFPOuxwQB1IGfoNuVqUPXcobwcNWCxVubfk/QuwlbBHj
-	SvmojnEBnbq6krAfMX5ByuuHpnLL9xzziCVQGCr4bpWu4nrndd9j3+HI+pYUSnyTMMnJIIkCPGQo0
-	Ymrakyiw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tdMId-0000000FrF3-3ess;
-	Thu, 30 Jan 2025 04:37:07 +0000
-Date: Thu, 30 Jan 2025 04:37:07 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [git pull] d_revalidate pile (v2)
-Message-ID: <20250130043707.GT1977892@ZenIV>
-References: <20250127044721.GD1977892@ZenIV>
- <Z5fAOpnFoXMgpCWb@lappy>
- <20250127173634.GF1977892@ZenIV>
- <Z5fyAPnvtNPPF5L3@lappy>
- <20250127213456.GH1977892@ZenIV>
- <20250127224059.GI1977892@ZenIV>
- <Z5gWQnUDMyE5sniC@lappy>
- <20250128002659.GJ1977892@ZenIV>
- <20250128003155.GK1977892@ZenIV>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I0qIGcuY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738211915;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dahlzWRlI1LALktUzZgSkyoAKZL8GDjGaQgiyJ8JjL0=;
+	b=I0qIGcuYqFUpyd6HYfI5HhvLMAqZyCe6Oc1dvslSFmBrGCimazayc0khG27L33sRSkbGD+
+	eYVWrMT4nERH9eLLzkF5TLMnyURAho7BnXSWkWa7rTsFIiDJNUVaNeDwPrxR9d4b9sB9Zl
+	SSMR1FCTZJsxFhpMr51poehdOJX08WI=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-518-lt-FHZXHPBSY43VM5vWaqA-1; Wed, 29 Jan 2025 23:38:33 -0500
+X-MC-Unique: lt-FHZXHPBSY43VM5vWaqA-1
+X-Mimecast-MFC-AGG-ID: lt-FHZXHPBSY43VM5vWaqA
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2166a1a5cc4so8369325ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 20:38:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738211912; x=1738816712;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dahlzWRlI1LALktUzZgSkyoAKZL8GDjGaQgiyJ8JjL0=;
+        b=rWoOrjQY2vsrulg6hd4q7oGOrEbor4HGvi/f/gDzas89SoZudKd0TalzQ8eo1NKtp/
+         GSG/R911/RRWEBp7RCBKlDBPFwMzwf0aAjGYHjlRPC+GMTESBvPq97/vI7JeA66IZ77C
+         TpqtY4rMIDZnBCRvRXR1/whegTSt+ENhlId84MvNt5Do6tDVbI+D+raIhwY9jZ1qMaDV
+         EpBkk6SHVqqQKwb242erZZt0FPRo2GRbmBlJcGBVhPXkcYjggfMTvkARfuqapmNIeln1
+         x+ZuKtYvih1rJl4OCoW4t4g5SfP0+2PqajcEqkWKWte80xB0WGJoEefwWHzThzStEcgN
+         V3/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXsVptO/o059B4dR9qJUpFO88MNLYJs4YyLZ56TXi2HAOZyFyFva75jjTiQAIb9c3OaINND6tkFTAa2UwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWgj2kMSmcaDEUvhEUQP7lv9DJzuGoYNWX4in7GqMPPKaGprKC
+	Lv72Q9CijX5lfDYmhH7zNvx0V3DS+GETlnlC1HCEH7xJJybO5XkUVj8IO3ab07BksBCxVf1pivd
+	M1YHhaGNJyJ2UoGWpMJJ3PsH5ypdxW92Ta1r7kcMinqaaDkMQPmikp6fIzDl++A==
+X-Gm-Gg: ASbGncu9Md9/Na2CEhxBhK51vBQUbve3VkYrRL9JehgQZJkiBuyLBVTkOEbbosYdjx2
+	hLxN2PdR+sqeS7Wu35chtocf841YJTMzHUNsEQVYGmDaiLc4ktAME0+m1/gCW55ZizeFPHyawCS
+	f8tQ0gkVZCb86blslsthhTdpwTxn5Wo431FnSMrgguIQr0FdQEfBMdSkSnqf/7fepcHSzDCVGTh
+	rATlFEBRG6YobcfNKE78dWb59GR8QymrRwqJWdnWGzYo20NmGirqN2KjHKB8ZyJWWPkoJRcRKcA
+	WXRNeg==
+X-Received: by 2002:a17:903:188:b0:215:7b06:90ca with SMTP id d9443c01a7336-21dd7c57d68mr81484425ad.17.1738211912345;
+        Wed, 29 Jan 2025 20:38:32 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFiahIoPowSM27YGSPI2cloGv/kse1h98lrjSMBvVFsnZSHDm3HToPBIRU42xVvRKjySslt3w==
+X-Received: by 2002:a17:903:188:b0:215:7b06:90ca with SMTP id d9443c01a7336-21dd7c57d68mr81484165ad.17.1738211911962;
+        Wed, 29 Jan 2025 20:38:31 -0800 (PST)
+Received: from [192.168.68.55] ([180.233.125.64])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3320edfsm4454775ad.229.2025.01.29.20.38.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2025 20:38:31 -0800 (PST)
+Message-ID: <68e545c8-57a3-4567-9e96-b46066cf6cee@redhat.com>
+Date: Thu, 30 Jan 2025 14:38:22 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250128003155.GK1977892@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 19/43] arm64: RME: Allow populating initial contents
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20241212155610.76522-1-steven.price@arm.com>
+ <20241212155610.76522-20-steven.price@arm.com>
+Content-Language: en-US
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20241212155610.76522-20-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-->d_revalidate() series, along with ->d_iname preliminary work.
-One trivial conflict in fs/afs/dir.c - afs_do_lookup_one() has lost
-one argument in mainline and switched another from dentry to qstr
-in this series.
+On 12/13/24 1:55 AM, Steven Price wrote:
+> The VMM needs to populate the realm with some data before starting (e.g.
+> a kernel and initrd). This is measured by the RMM and used as part of
+> the attestation later on.
+> 
+> For now only 4k mappings are supported, future work may add support for
+> larger mappings.
+> 
+> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+> Changes since v5:
+>   * Refactor to use PFNs rather than tracking struct page in
+>     realm_create_protected_data_page().
+>   * Pull changes from a later patch (in the v5 series) for accessing
+>     pages from a guest memfd.
+>   * Do the populate in chunks to avoid holding locks for too long and
+>     triggering RCU stall warnings.
+> ---
+>   arch/arm64/kvm/rme.c | 243 +++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 243 insertions(+)
+> 
+> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+> index 22f0c74455af..d4561e368cd5 100644
+> --- a/arch/arm64/kvm/rme.c
+> +++ b/arch/arm64/kvm/rme.c
+> @@ -4,6 +4,7 @@
+>    */
+>   
+>   #include <linux/kvm_host.h>
+> +#include <linux/hugetlb.h>
+>   
 
-Change since the previous variant: made external_name.name word-aligned
-and explicitly documented the layout constraints for struct external_name.
+This wouldn't be needed since the huge pages, especially hugetlb part, isn't
+supported yet.
 
-The following changes since commit 40384c840ea1944d7c5a392e8975ed088ecf0b37:
+>   #include <asm/kvm_emulate.h>
+>   #include <asm/kvm_mmu.h>
+> @@ -545,6 +546,236 @@ void kvm_realm_unmap_range(struct kvm *kvm, unsigned long start, u64 size,
+>   		realm_unmap_private_range(kvm, start, end);
+>   }
+>   
+> +static int realm_create_protected_data_page(struct realm *realm,
+> +					    unsigned long ipa,
+> +					    kvm_pfn_t dst_pfn,
+> +					    kvm_pfn_t src_pfn,
+> +					    unsigned long flags)
+> +{
+> +	phys_addr_t dst_phys, src_phys;
+> +	int ret;
+> +
+> +	dst_phys = __pfn_to_phys(dst_pfn);
+> +	src_phys = __pfn_to_phys(src_pfn);
+> +
+> +	if (rmi_granule_delegate(dst_phys))
+> +		return -ENXIO;
+> +
+> +	ret = rmi_data_create(virt_to_phys(realm->rd), dst_phys, ipa, src_phys,
+> +			      flags);
+> +
+> +	if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
+> +		/* Create missing RTTs and retry */
+> +		int level = RMI_RETURN_INDEX(ret);
+> +
+> +		ret = realm_create_rtt_levels(realm, ipa, level,
+> +					      RMM_RTT_MAX_LEVEL, NULL);
+> +		if (ret)
+> +			goto err;
+> +
+> +		ret = rmi_data_create(virt_to_phys(realm->rd), dst_phys, ipa,
+> +				      src_phys, flags);
+> +	}
+> +
+> +	if (!ret)
+> +		return 0;
+> +
+> +err:
+> +	if (WARN_ON(rmi_granule_undelegate(dst_phys))) {
+> +		/* Page can't be returned to NS world so is lost */
+> +		get_page(pfn_to_page(dst_pfn));
+> +	}
+> +	return -ENXIO;
+> +}
+> +
+> +static int fold_rtt(struct realm *realm, unsigned long addr, int level)
+> +{
+> +	phys_addr_t rtt_addr;
+> +	int ret;
+> +
+> +	ret = realm_rtt_fold(realm, addr, level + 1, &rtt_addr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	free_delegated_granule(rtt_addr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int populate_par_region(struct kvm *kvm,
+> +			       phys_addr_t ipa_base,
+> +			       phys_addr_t ipa_end,
+> +			       u32 flags)
+> +{
 
-  Linux 6.13-rc1 (2024-12-01 14:28:56 -0800)
+At the first glance, I was wandering what's meant by 'par' in the function name.
+It turns to be a 2MB region and I guess it represents 'part'. I think this may
+be renamed to populate_sub_region() or populate_region() directly.
 
-are available in the Git repository at:
+> +	struct realm *realm = &kvm->arch.realm;
+> +	struct kvm_memory_slot *memslot;
+> +	gfn_t base_gfn, end_gfn;
+> +	int idx;
+> +	phys_addr_t ipa;
+> +	int ret = 0;
+> +	unsigned long data_flags = 0;
+> +
+> +	base_gfn = gpa_to_gfn(ipa_base);
+> +	end_gfn = gpa_to_gfn(ipa_end);
+> +
+> +	if (flags & KVM_ARM_RME_POPULATE_FLAGS_MEASURE)
+> +		data_flags = RMI_MEASURE_CONTENT;
+> +
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git tags/pull-revalidate
+The 'data_flags' can be sorted out by its caller kvm_populate_realm(), and passed
+to populate_par_region(). In that way, we needn't to figure out 'data_flags' in
+every call to populate_par_region().
 
-for you to fetch changes up to 30d61efe118cad1a73ad2ad66a3298e4abdf9f41:
+> +	idx = srcu_read_lock(&kvm->srcu);
+> +	memslot = gfn_to_memslot(kvm, base_gfn);
+> +	if (!memslot) {
+> +		ret = -EFAULT;
+> +		goto out;
+> +	}
+> +
+> +	/* We require the region to be contained within a single memslot */
+> +	if (memslot->base_gfn + memslot->npages < end_gfn) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	if (!kvm_slot_can_be_private(memslot)) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	write_lock(&kvm->mmu_lock);
+> +
+> +	ipa = ipa_base;
+> +	while (ipa < ipa_end) {
+> +		struct vm_area_struct *vma;
+> +		unsigned long map_size;
+> +		unsigned int vma_shift;
+> +		unsigned long offset;
+> +		unsigned long hva;
+> +		struct page *page;
+> +		bool writeable;
+> +		kvm_pfn_t pfn;
+> +		int level, i;
+> +
+> +		hva = gfn_to_hva_memslot(memslot, gpa_to_gfn(ipa));
+> +		vma = vma_lookup(current->mm, hva);
+> +		if (!vma) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		/* FIXME: Currently we only support 4k sized mappings */
+> +		vma_shift = PAGE_SHIFT;
+> +
+> +		map_size = 1 << vma_shift;
+> +
+> +		ipa = ALIGN_DOWN(ipa, map_size);
+> +
 
-  9p: fix ->rename_sem exclusion (2025-01-27 19:25:24 -0500)
+The blank lines in above 5 lines can be dropped :)
 
-----------------------------------------------------------------
-Provide stable parent and name to ->d_revalidate() instances
+> +		switch (map_size) {
+> +		case RMM_L2_BLOCK_SIZE:
+> +			level = 2;
+> +			break;
+> +		case PAGE_SIZE:
+> +			level = 3;
+> +			break;
+> +		default:
+> +			WARN_ONCE(1, "Unsupported vma_shift %d", vma_shift);
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		pfn = __kvm_faultin_pfn(memslot, gpa_to_gfn(ipa), FOLL_WRITE,
+> +					&writeable, &page);
+> +
+> +		if (is_error_pfn(pfn)) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		if (level < RMM_RTT_MAX_LEVEL) {
+> +			/*
+> +			 * A temporary RTT is needed during the map, precreate
+> +			 * it, however if there is an error (e.g. missing
+> +			 * parent tables) this will be handled in the
+> +			 * realm_create_protected_data_page() call.
+> +			 */
+> +			realm_create_rtt_levels(realm, ipa, level,
+> +						RMM_RTT_MAX_LEVEL, NULL);
+> +		}
+> +
 
-Most of the filesystem methods where we care about dentry name
-and parent have their stability guaranteed by the callers;
-->d_revalidate() is the major exception.
+This block of code to create the temporary RTT can be removed. With it removed,
+we're going to rely on realm_create_protected_data_page() to create the needed
+RTT in its failing path. If the temporary RTT has been existing, the function
+call to realm_create_rtt_levels() doesn't nothing except multiple RMI calls are
+issued. RMI calls aren't cheap and it causes performance lost if you agree.
 
-It's easy enough for callers to supply stable values for
-expected name and expected parent of the dentry being
-validated.  That kills quite a bit of boilerplate in
-->d_revalidate() instances, along with a bunch of races
-where they used to access ->d_name without sufficient
-precautions.
+> +		for (offset = 0, i = 0; offset < map_size && !ret;
+> +		     offset += PAGE_SIZE, i++) {
+> +			phys_addr_t page_ipa = ipa + offset;
+> +			kvm_pfn_t priv_pfn;
+> +			struct page *gmem_page;
+> +			int order;
+> +
+> +			ret = kvm_gmem_get_pfn(kvm, memslot,
+> +					       page_ipa >> PAGE_SHIFT,
+> +					       &priv_pfn, &gmem_page, &order);
+> +			if (ret)
+> +				break;
+> +
+> +			ret = realm_create_protected_data_page(realm, page_ipa,
+> +							       priv_pfn,
+> +							       pfn + i,
+> +							       data_flags);
+> +		}
+> +
+> +		kvm_release_faultin_page(kvm, page, false, false);
+> +
+> +		if (ret)
+> +			break;
+> +
+> +		if (level == 2)
+> +			fold_rtt(realm, ipa, level);
+> +
+> +		ipa += map_size;
+> +	}
+> +
+> +	write_unlock(&kvm->mmu_lock);
+> +
+> +out:
+> +	srcu_read_unlock(&kvm->srcu, idx);
+> +	return ret;
+> +}
+> +
+> +static int kvm_populate_realm(struct kvm *kvm,
+> +			      struct kvm_cap_arm_rme_populate_realm_args *args)
+> +{
+> +	phys_addr_t ipa_base, ipa_end;
+> +
+> +	if (kvm_realm_state(kvm) != REALM_STATE_NEW)
+> +		return -EINVAL;
+> +
+> +	if (!IS_ALIGNED(args->populate_ipa_base, PAGE_SIZE) ||
+> +	    !IS_ALIGNED(args->populate_ipa_size, PAGE_SIZE))
+> +		return -EINVAL;
+> +
+> +	if (args->flags & ~RMI_MEASURE_CONTENT)
+> +		return -EINVAL;
+> +
+> +	ipa_base = args->populate_ipa_base;
+> +	ipa_end = ipa_base + args->populate_ipa_size;
+> +
+> +	if (ipa_end < ipa_base)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Perform the populate in parts to ensure locks are not held for too
+> +	 * long
+> +	 */
+> +	while (ipa_base < ipa_end) {
+> +		phys_addr_t end = min(ipa_end, ipa_base + SZ_2M);
+> +
+> +		int ret = populate_par_region(kvm, ipa_base, end,
+> +					      args->flags);
+> +
+> +		if (ret)
+> +			return ret;
+> +
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+cond_resched() seems nice to have here so that those pending tasks can
+be run immediately.
 
-----------------------------------------------------------------
-Al Viro (20):
-      make sure that DNAME_INLINE_LEN is a multiple of word size
-      dcache: back inline names with a struct-wrapped array of unsigned long
-      make take_dentry_name_snapshot() lockless
-      dissolve external_name.u into separate members
-      ext4 fast_commit: make use of name_snapshot primitives
-      generic_ci_d_compare(): use shortname_storage
-      Pass parent directory inode and expected name to ->d_revalidate()
-      afs_d_revalidate(): use stable name and parent inode passed by caller
-      ceph_d_revalidate(): use stable parent inode passed by caller
-      ceph_d_revalidate(): propagate stable name down into request encoding
-      fscrypt_d_revalidate(): use stable parent inode passed by caller
-      exfat_d_revalidate(): use stable parent inode passed by caller
-      vfat_revalidate{,_ci}(): use stable parent inode passed by caller
-      fuse_dentry_revalidate(): use stable parent inode and name passed by caller
-      gfs2_drevalidate(): use stable parent inode and name passed by caller
-      nfs{,4}_lookup_validate(): use stable parent inode passed by caller
-      nfs: fix ->d_revalidate() UAF on ->d_name accesses
-      ocfs2_dentry_revalidate(): use stable parent inode and name passed by caller
-      orangefs_d_revalidate(): use stable parent inode and name passed by caller
-      9p: fix ->rename_sem exclusion
+> +		ipa_base = end;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   int realm_set_ipa_state(struct kvm_vcpu *vcpu,
+>   			unsigned long start,
+>   			unsigned long end,
+> @@ -794,6 +1025,18 @@ int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
+>   		r = kvm_init_ipa_range_realm(kvm, &args);
+>   		break;
+>   	}
+> +	case KVM_CAP_ARM_RME_POPULATE_REALM: {
+> +		struct kvm_cap_arm_rme_populate_realm_args args;
+> +		void __user *argp = u64_to_user_ptr(cap->args[1]);
+> +
+> +		if (copy_from_user(&args, argp, sizeof(args))) {
+> +			r = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		r = kvm_populate_realm(kvm, &args);
+> +		break;
+> +	}
+>   	default:
+>   		r = -EINVAL;
+>   		break;
 
- Documentation/filesystems/locking.rst        |   7 +-
- Documentation/filesystems/porting.rst        |  16 +++++
- Documentation/filesystems/vfs.rst            |  24 ++++++-
- fs/9p/v9fs.h                                 |   2 +-
- fs/9p/vfs_dentry.c                           |  26 ++++++-
- fs/afs/dir.c                                 |  40 ++++-------
- fs/ceph/dir.c                                |  25 ++-----
- fs/ceph/mds_client.c                         |   9 ++-
- fs/ceph/mds_client.h                         |   2 +
- fs/coda/dir.c                                |   3 +-
- fs/crypto/fname.c                            |  22 ++----
- fs/dcache.c                                  | 103 ++++++++++++++++-----------
- fs/ecryptfs/dentry.c                         |  18 +++--
- fs/exfat/namei.c                             |  11 +--
- fs/ext4/fast_commit.c                        |  29 ++------
- fs/ext4/fast_commit.h                        |   3 +-
- fs/fat/namei_vfat.c                          |  19 +++--
- fs/fuse/dir.c                                |  20 +++---
- fs/gfs2/dentry.c                             |  31 ++++----
- fs/hfs/sysdep.c                              |   3 +-
- fs/jfs/namei.c                               |   3 +-
- fs/kernfs/dir.c                              |   3 +-
- fs/libfs.c                                   |  15 ++--
- fs/namei.c                                   |  18 ++---
- fs/nfs/dir.c                                 |  62 +++++++---------
- fs/nfs/namespace.c                           |   2 +-
- fs/nfs/nfs3proc.c                            |   5 +-
- fs/nfs/nfs4proc.c                            |  20 +++---
- fs/nfs/proc.c                                |   6 +-
- fs/ocfs2/dcache.c                            |  14 ++--
- fs/orangefs/dcache.c                         |  22 +++---
- fs/overlayfs/super.c                         |  22 +++++-
- fs/proc/base.c                               |   6 +-
- fs/proc/fd.c                                 |   3 +-
- fs/proc/generic.c                            |   6 +-
- fs/proc/proc_sysctl.c                        |   3 +-
- fs/smb/client/dir.c                          |   3 +-
- fs/tracefs/inode.c                           |   3 +-
- fs/vboxsf/dir.c                              |   3 +-
- include/linux/dcache.h                       |  23 ++++--
- include/linux/fscrypt.h                      |   7 +-
- include/linux/nfs_xdr.h                      |   2 +-
- tools/testing/selftests/bpf/progs/find_vma.c |   2 +-
- 43 files changed, 359 insertions(+), 307 deletions(-)
+Thanks,
+Gavin
+
