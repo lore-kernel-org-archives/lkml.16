@@ -1,133 +1,170 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B6F1EEA59
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE0B1A7046
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738257896; cv=none; b=EOsAP4B9cBxkbpmVBepDe995RufkAEKEOuW7jewwz30oHTRuHM+53Zu6mnhr3nDZxHYR9cnZp668HGPUYxmilQDiwBI9y+dElVbG4NOR9pMnfdTsuTzBjJXJpsJTOIwBLS3dtlJQshAE6fp2UL5MXQY1xAyZxaBmXpsyaaiLTfQ=
+	t=1738257962; cv=none; b=qYKaLo9OubB7N3Mfks/+u6QNRtepiQWLmiJE3QAb1k8iWxV1Ms9p5xEs+Pg2bcRUwekyCqjLfX6GtQUxRs/lB5Q6oITOyraSHqE8Mt7lqYCbHvdNJ8pO3IdcOQFJfvINGrxFfF8CE+pX0aNf4H6gHuluGoSbWmmlKz3i3baqNZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738257896; c=relaxed/simple;
-	bh=6Qv+A4MOLBB/p2x+2LfQiWLMn2cpLrsE9gu4CYycDTs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GZ0MeeqKX52jKVseBtxXY9zWu9YyzbiB9fKAfuLOiH+cmuOMR15mojgs0CZn0HoHr7ORka7oue9roL6MgHpt2piQqu2yVv6rq6TuXVXQZGwzxFwM7BJO3WG1i1RfXrAL2ie3OztP5gpnmjIkmwFG8dqNUXNHzlJdOofwTckH/Gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MtG2vsIX; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1738257962; c=relaxed/simple;
+	bh=FQtTGttXCfsOZDEItu05WX5hOv+6wntTMfgSC2UxIVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=putZteOQuUeBzH8SDjVcb5FSvdQMGSG7djCu6jklcHcYbz2hrqVIsT+aUtFfJBIwoVCsmIlC3oU9w9s9gQuFuNxnK+7QU/Gsgie+j3mKcgf20XwWj7cmVVTNHGIf6DmiZxMhtagiERG48Xf+wv9ApmYosbo8jeewktBYf311g+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=X1ulZn9L; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MtG2vsIX"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5da135d3162so1630256a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:24:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1738257892; x=1738862692; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=umZKRxEZDIyFeupwQbUpP1kTluqmkTf2dFfPuk8gQnc=;
-        b=MtG2vsIX3sw8qqco0qnSqGewfzt2E+/oKI0NHiT/tdZCeUAZTxB/7yN4/lvQyCefe+
-         SAbqtHkjO4hi4jv0esJo3Wypzo7RWR/Ip07UH/kz/dbUcuAZpi/LYBOLSq0b+vr1/ac4
-         nmpitxW8UOy6GNZD/eDdjWjhHG5L07dl1Tzl8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738257892; x=1738862692;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=umZKRxEZDIyFeupwQbUpP1kTluqmkTf2dFfPuk8gQnc=;
-        b=cV2MXItGXry01Nh+ZOFqxyVC0Z0pfnFMuba1aD5oiVsWqA+PJix6g1yTtOVf6ZOCF8
-         9Fz++8UGhziM2ouw1KdCjIcq+afPv1qFCQ9jaGVF2suz7a5sCfV3FOhoEXKsAHX4QCw4
-         cIy95xp4JTfhsenG2nsnveaj4jHDN3FOenFKemqZpqT1LMIe3S22j04pFeuydJmelV/v
-         Cl/OBNgjqP8/Ho47dc8Vex3qlYB4NiMgisXpTy5CKbIfnX72Gu3xWiFo9jPjDLJXaxJs
-         heM9rqK14cRq2fE6BL+PH1I9nXo6TlkTvw7BRt9WjKvp9bAS7oCABtmMxX1O8sU0zxuh
-         JuRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUguAeBlArIWEKKqL6xtWPSCkh5uh2pCSJiDhtVvFmxnkC9/iv6Ks9O3DvB6mMBxaneGTJYLEBBYIyjMQk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxsB7l8gYKVBng9tWswtSkQ4Gk3Gm2sqc19DlBTAc3Z9a0rZQJ
-	PUf0MuYriETpSG93YXMKOwuD4QmgQjiC+i1ZcxLrvviQC5uqJkijRThhL0DbhMhDtoJC9+2tDwH
-	Ggbw=
-X-Gm-Gg: ASbGncsROB87TrmGPO/5iOcGGCQ7qJNGcQkJoDWdv3fVeyX0PcaKvwcp19pKv0qcQTG
-	lCdloBSKiKdGsDQMnRbx/idiPrtvQIbmHxBGaBuxs6gQzkb3Zlzkegt+MNa/nmOATmGAW7XOFrT
-	R9s3YRSzT9yzP1SWBVo3Y2B5l+Ljhwhu11xjX1gpyh3/4MWKELb20V5M77cIOCbxRhYPU85N0jq
-	6VteXpG+rXLenQQ9tu+sa3ZlARqKm1ARSyDGdS71rTN/loJ5V4GUZNkZ1lQ5AjyV9t42Lqy5CnI
-	yg4YXNxipSPTUEsKxsRnvp4r3eIaXEDR7NyW063l8xOwffxpFMv8C9bDbVk2nlkMNQ==
-X-Google-Smtp-Source: AGHT+IEFeZaKkETTYplPPvn3tGiGayqxyKG3YyfUL8hOTYgMtweeV+Tm0jN15v+AmFUUbLmZsbCtRg==
-X-Received: by 2002:a05:6402:518f:b0:5dc:32eb:f289 with SMTP id 4fb4d7f45d1cf-5dc5f01e810mr6653543a12.22.1738257892132;
-        Thu, 30 Jan 2025 09:24:52 -0800 (PST)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc724ca086sm1359970a12.72.2025.01.30.09.24.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 09:24:51 -0800 (PST)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab2c9b8aecaso182612166b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:24:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV6Izew6MJ+3dYqaFtgJKfHD/WT22M+FDR55EnUQgiNGiyDClhsFktBEfYnXPYauR7Cwi4ZgPUFCMoT1a0=@vger.kernel.org
-X-Received: by 2002:a17:906:da85:b0:aab:d8de:217e with SMTP id
- a640c23a62f3a-ab6cfd0db3emr759038866b.26.1738257890447; Thu, 30 Jan 2025
- 09:24:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="X1ulZn9L"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UH2G3W030278;
+	Thu, 30 Jan 2025 17:25:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=1g2lbC
+	bfeU0yGMbox0cDgfCA9exUWOvdyJXbAJj4wqQ=; b=X1ulZn9LzzqcpzSYrMSeUE
+	TrpYvgxE2UGyPLjmukMkD8hcyVh61ySXB9pBdlB8qdWWuLX2H5rRxIa8ffMG7ugv
+	kdj2Zgm3vUaDo8zCZewuxaAXEUctJoDtss3MsXCTnCp15d5gK49Hlj+ytIhGPQer
+	B+ymRmYgJNXe+nC2ZtB140eO8y5+/srLOknpp9BRDiTRauB6EpSeewpW2Nat3l5w
+	y32O6KPdvnpHrFb8TSnxSM2zVIUEO52S6Se+VsNGpU8BDHg9nc13Fz488HuH8N0i
+	PsyztZRLFFk2Q8+bQWWZ+ss1+b7dobgSzfLuRLVkTts/AMDZSXxq5gA/2rXSie1A
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44g54ntqn9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 17:25:32 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UHPWtb028540;
+	Thu, 30 Jan 2025 17:25:32 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44g54ntqn5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 17:25:32 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50UDpfbv022538;
+	Thu, 30 Jan 2025 17:25:31 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44dcgjxwq3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 17:25:31 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UHPTVG43123132
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jan 2025 17:25:29 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 837392006A;
+	Thu, 30 Jan 2025 16:57:11 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 17E4320063;
+	Thu, 30 Jan 2025 16:57:09 +0000 (GMT)
+Received: from [9.124.215.164] (unknown [9.124.215.164])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 30 Jan 2025 16:57:08 +0000 (GMT)
+Message-ID: <b73b5143-1a7f-4032-ac06-43db3bf4abea@linux.ibm.com>
+Date: Thu, 30 Jan 2025 22:27:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127044721.GD1977892@ZenIV> <Z5fAOpnFoXMgpCWb@lappy>
- <20250127173634.GF1977892@ZenIV> <Z5fyAPnvtNPPF5L3@lappy> <20250127213456.GH1977892@ZenIV>
- <20250127224059.GI1977892@ZenIV> <Z5gWQnUDMyE5sniC@lappy> <20250128002659.GJ1977892@ZenIV>
- <20250128003155.GK1977892@ZenIV> <20250130043707.GT1977892@ZenIV>
-In-Reply-To: <20250130043707.GT1977892@ZenIV>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 30 Jan 2025 09:24:34 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjKkZBM6w+Kc+nufJVdnBzzXwPiNdzWieN3c7dEq9bMaQ@mail.gmail.com>
-X-Gm-Features: AWEUYZmTt2mTlIxYn9aBQ5TkH5IgcjClwxwxOG9VfCpa_i04bqh6yE87LV0ZQs4
-Message-ID: <CAHk-=wjKkZBM6w+Kc+nufJVdnBzzXwPiNdzWieN3c7dEq9bMaQ@mail.gmail.com>
-Subject: Re: [git pull] d_revalidate pile (v2)
-To: Al Viro <viro@zeniv.linux.org.uk>, Miklos Szeredi <mszeredi@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] powerpc: Enable dynamic preemption
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: mpe@ellerman.id.au, maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        linux-kernel@vger.kernel.org
+References: <20250106051919.55020-1-sshegde@linux.ibm.com>
+ <20250106051919.55020-2-sshegde@linux.ibm.com>
+ <20250130145409.D_so_mR1@linutronix.de>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20250130145409.D_so_mR1@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: _qriNWSwMSuCta2ZlCxLOYz4N7mExA2e
+X-Proofpoint-ORIG-GUID: GUz7QDRcA0WjZJGm_VcJzT05drjya8aF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-30_07,2025-01-30_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 phishscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 spamscore=0 clxscore=1015 suspectscore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2411120000 definitions=main-2501300125
 
-On Wed, 29 Jan 2025 at 20:37, Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> ->d_revalidate() series, along with ->d_iname preliminary work.
-> One trivial conflict in fs/afs/dir.c - afs_do_lookup_one() has lost
-> one argument in mainline and switched another from dentry to qstr
-> in this series.
 
-Actually, I had a conflict in fs/fuse/dir.c, and it was less trivial.
 
-The d_revalidate() change means that the stable name passed in might
-come from the path lookup, which means that it isn't NUL-terminated.
+On 1/30/25 20:24, Sebastian Andrzej Siewior wrote:
+> On 2025-01-06 10:49:19 [+0530], Shrikanth Hegde wrote:
+>> --- a/arch/powerpc/kernel/interrupt.c
 
-So the code that did
+> 
 
-        args->in_numargs = 1;
-        args->in_args[0].size = name->len + 1;
-        args->in_args[0].value = name->name;
+Thanks for taking a look.
 
-in fuse_lookup_init() is no longer valid for revalidate, and  instead
-you made it do the NUL termination as the next arg:
+>> +
+>>   #ifdef CONFIG_PPC_BOOK3S_64
+>>   DEFINE_STATIC_KEY_FALSE(interrupt_exit_not_reentrant);
+>>   static inline bool exit_must_hard_disable(void)
+>> @@ -396,7 +400,7 @@ notrace unsigned long interrupt_exit_kernel_prepare(struct pt_regs *regs)
+>>   		/* Returning to a kernel context with local irqs enabled. */
+>>   		WARN_ON_ONCE(!(regs->msr & MSR_EE));
+>>   again:
+>> -		if (IS_ENABLED(CONFIG_PREEMPTION)) {
+>> +		if (preempt_model_preemptible()) {
+> 
+> CONFIG_HAVE_PREEMPT_DYNAMIC_KEY is the only option, right? Wouldn't
+> 
+> | #DEFINE need_irq_preemption() \
+> |          (static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
+> |
+> | 	if (need_irq_preemption()) {
+> 
+> be a bit smaller/ quicker? This could be a fast path ;)
 
-        args->in_numargs = 2;
-        args->in_args[0].size = name->len;
-        args->in_args[0].value = name->name;
-        args->in_args[1].size = 1;
-        args->in_args[1].value = "";
+I am okay with either way. I did try both[1], there wasn't any significant difference,
+hence chose a simpler one. May be system size, workload pattern might matter.
 
-Fine, no problem. Except it clashes with commit 7ccd86ba3a48 ("fuse:
-make args->in_args[0] to be always the header"), which made in_args[0]
-be that empty case, and moved in_args[0] up to be arg[1].
+Let me do some more testing to see which one wins.
+Is there any specific benchmark which might help here?
 
-So my resolution continues on that, and ends up with three in_args, like this:
+[1]: https://lore.kernel.org/all/b98b7795-070a-4d9c-9599-445c2ff55fd7@linux.ibm.com/
 
-        args->in_numargs = 3;
-        fuse_set_zero_arg0(args);
-        args->in_args[1].size = name->len;
-        args->in_args[1].value = name->name;
-        args->in_args[2].size = 1;
-        args->in_args[2].value = "";
+> 
+>>   			/* Return to preemptible kernel context */
+>>   			if (unlikely(read_thread_flags() & _TIF_NEED_RESCHED)) {
+>>   				if (preempt_count() == 0)
+>> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+>> index edf5cabe5dfd..2556fa8ec019 100644
+>> --- a/arch/powerpc/kernel/traps.c
+>> +++ b/arch/powerpc/kernel/traps.c
+>> @@ -266,7 +266,11 @@ static int __die(const char *str, struct pt_regs *regs, long err)
+>>   	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
+>>   	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
+>>   	       PAGE_SIZE / 1024, get_mmu_str(),
+>> -	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
+>> +	       preempt_model_none()      ? "none" :
+>> +	       preempt_model_voluntary() ? "voluntary" :
+>> +	       preempt_model_full()      ? "full" :
+>> +	       preempt_model_lazy()      ? "lazy" :
+>> +	       "",
+> 
+> So intend to rework this part. I have patches stashed at
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/bigeasy/staging.git/log/?h=preemption_string
+> 
+> which I didn't sent yet due to the merge window. Just a heads up ;)
 
-which looks straightforward enough, but I have not tested this AT ALL.
+Makes sense. I had seen at-least two places where this code was there, ftrace/powerpc.
+There were way more places..
 
-Miklos, can you please check and confirm that my resolution is ok? It
-*looks* trivial, but there may be some reason why it causes issues. I
-don't know the fuse code enough to really be able to tell what
-implications this has (if there are people adding other args
-afterwards, maybe we now have too many? Things like that)
+You want me to remove this part?
 
-               Linus
+> 
+>>   	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
+>>   	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
+>>   	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
+> 
+> Sebastian
+
