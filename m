@@ -1,142 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A311E4B2;
-	Thu, 30 Jan 2025 09:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8B9F1B4C35;
+	Thu, 30 Jan 2025 09:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738230202; cv=none; b=qv9FAgBBKprcccFOKJD1+uWoAy5gCp+eZDHIrE8aNqObT2cpJZr24GuaJFpGO3mpmH2kN28yoTVJbXU1ipPhiksTW/JzbX2bu24UiUvEN5+NKCH7ts300IUzGn2XGdTU0c031HzfmhOxKXuJtlgK9Rmgt0KboXnK240fXjLvzDU=
+	t=1738230308; cv=none; b=K4oR0+5g3fXujiwxXwywojiKCv1kSSBBNsSzMrXSVpfOEdSDqTWmnmfaUCoh5NqiuZz/SyMVFzy4c6Fp7OumwyA4W9CgnZgmWltgykp3BdDcCLR6/IltJDRIAdFenF7mj/S2yJ2An4CBHCXvfnz4TRutBghAEB9+7fCstdmV/IE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738230202; c=relaxed/simple;
-	bh=Jh8+YAuvJJIu4OyYNfZQnGuYQxDeclrUlbe6d+1dbYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=la1AgbP4lMLxJDW+SGASZabnSAD0FFCUNr5Yex6mk4nCEcldFzHzFE4g79vd8r3dZxTtndiEpT2vdu6uwsdyt9PNLPRgbMu5ZOjr0GLG+tREgKyyj+SU8TZjzc5WN2JF+QpgCmUDTzrg2oMKf6ZEL8JlDVKXIfjhHcJ40Xy7nMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jim7rWKA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738230308; c=relaxed/simple;
+	bh=bNUQPhEn4wGDCDGlcPX0Dtsaf+qnmhjqp6HCYuyV7ps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UIel817UqYfdnWe264OGL3lnilTkLysBSYsMa7lzDnsX6PVQiCIZN8Lr2tAx9UwW26p5x1pM08xn+wVQjmp6BiNjt/0ynOQeuKP1sSg2Qgwc1yjE9IoMviDx4x9ZiT5AKGD9DGl7FwRKurxRRv+P93TJ8opDzBTxaJmyzPZM5xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IsSf5FRF; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jim7rWKA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CDA9C4CED2;
-	Thu, 30 Jan 2025 09:43:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738230201;
-	bh=Jh8+YAuvJJIu4OyYNfZQnGuYQxDeclrUlbe6d+1dbYA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jim7rWKAMKiD8yu6TpNhepMrk99tflrnrH4XeRZ4tiL2aZwGR4ZOkHF5w803eT8M+
-	 K+f96FTkPo1KV2Fh+ZTZbs3di9lPEAQUMqEWkWy4Mt8n0mXtdWKzKb+42/IP5yR+iE
-	 02hE+mzL5SfEUJNqYp4OIP6XM7bctdghIH0spYS57iwx7BTug8nSn/fZh+VPtSbWqW
-	 SdUgMJlrK66DrKxVbMALTcVUG8NerN+LIOr67KHmo17X3zJ5ywkIEHYDJj1bIYf22b
-	 62LsU5Cxysv1Y/EoSuI9QwdjderfQgR3Tfr3n0lKfm29a/qzRXFAYGx4jWOrXwoL07
-	 sLZVhh0VA7EnA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tdR54-000000000mz-29dA;
-	Thu, 30 Jan 2025 10:43:27 +0100
-Date: Thu, 30 Jan 2025 10:43:26 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Caleb Connolly <caleb.connolly@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH RFC v2] soc: qcom: pmic_glink: Fix device access from
- worker during suspend
-Message-ID: <Z5tJvgrYS5UoAHRD@hovoldconsulting.com>
-References: <20250129-soc-qcom-pmic-glink-fix-device-access-on-worker-while-suspended-v2-1-de2a3eca514e@linaro.org>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IsSf5FRF"
+Received: from [10.156.205.88] (unknown [167.220.238.88])
+	by linux.microsoft.com (Postfix) with ESMTPSA id EE9E72109CD7;
+	Thu, 30 Jan 2025 01:45:02 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EE9E72109CD7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738230306;
+	bh=NRGiBYGv+vKqDqDaesyuawX4ZPxUYYpwD/wnO7/ks+Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IsSf5FRFEtFqA4+wMmOLBhT+u99GjlRyAoqK3hukAvyDf6BXvo1bzRR8Hxn03jmpN
+	 Lhz5KNPyeMWkhA3VAUsMLmnM3tbO6yKa8Mu1VW2YaE19FRA0sWqnZE1lAWq+I8921f
+	 m79XGe6iux/lhe6N2Ds11PSJQQp121cf/U9or2uc=
+Message-ID: <d7f69c61-8daf-4996-8c62-108589442604@linux.microsoft.com>
+Date: Thu, 30 Jan 2025 15:15:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250129-soc-qcom-pmic-glink-fix-device-access-on-worker-while-suspended-v2-1-de2a3eca514e@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] unwind: build kernel with sframe info
+To: Weinan Liu <wnliu@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Indu Bhagat <indu.bhagat@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev,
+ Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-toolchains@vger.kernel.org, linux-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org, joe.lawrence@redhat.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250127213310.2496133-1-wnliu@google.com>
+ <20250127213310.2496133-2-wnliu@google.com>
+Content-Language: en-US
+From: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
+In-Reply-To: <20250127213310.2496133-2-wnliu@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 29, 2025 at 01:46:15PM +0200, Abel Vesa wrote:
-> For historical reasons, the GLINK smem interrupt is registered with
 
-Please spell out these reasons so that we can determine if they are
-still valid or not.
+On 28-01-2025 03:03, Weinan Liu wrote:
+> Use the -Wa,--gsframe flags to build the code, so GAS will generate
+> a new .sframe section for the stack trace information.
+> Currently, the sframe format only supports arm64 and x86_64
+> architectures. Add this configuration on arm64 to enable sframe
+> unwinder in the future.
+>
+> Signed-off-by: Weinan Liu <wnliu@google.com>
+> ---
+>   Makefile                          |  6 ++++++
+>   arch/Kconfig                      |  8 ++++++++
+>   arch/arm64/Kconfig.debug          | 10 ++++++++++
+>   include/asm-generic/vmlinux.lds.h | 12 ++++++++++++
+>   4 files changed, 36 insertions(+)
+>
+> diff --git a/Makefile b/Makefile
+> index b9464c88ac72..35200c39b98d 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1064,6 +1064,12 @@ ifdef CONFIG_CC_IS_GCC
+>   KBUILD_CFLAGS   += -fconserve-stack
+>   endif
+>   
+> +# build with sframe table
+> +ifdef CONFIG_SFRAME_UNWIND_TABLE
+> +KBUILD_CFLAGS	+= -Wa,--gsframe
+> +KBUILD_AFLAGS	+= -Wa,--gsframe
+> +endif
+> +
+>   # change __FILE__ to the relative path to the source directory
+>   ifdef building_out_of_srctree
+>   KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 6682b2a53e34..ae70f7dbe326 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -1736,4 +1736,12 @@ config ARCH_WANTS_PRE_LINK_VMLINUX
+>   	  An architecture can select this if it provides arch/<arch>/tools/Makefile
+>   	  with .arch.vmlinux.o target to be linked into vmlinux.
+>   
+> +config AS_HAS_SFRAME_SUPPORT
+> +	# Detect availability of the AS option -Wa,--gsframe for generating
+> +	# sframe unwind table.
+> +	def_bool $(cc-option,-Wa$(comma)--gsframe)
+> +
+> +config SFRAME_UNWIND_TABLE
+> +	bool
+> +
+>   endmenu
+> diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
+> index 265c4461031f..ed619fcb18b3 100644
+> --- a/arch/arm64/Kconfig.debug
+> +++ b/arch/arm64/Kconfig.debug
+> @@ -20,4 +20,14 @@ config ARM64_RELOC_TEST
+>   	depends on m
+>   	tristate "Relocation testing module"
+>   
+> +config SFRAME_UNWINDER
+> +	bool "Sframe unwinder"
+> +	depends on AS_HAS_SFRAME_SUPPORT
+> +	depends on 64BIT
+> +	select SFRAME_UNWIND_TABLE
+> +	help
+> +	  This option enables the sframe (Simple Frame) unwinder for unwinding
+> +	  kernel stack traces. It uses unwind table that is direclty generated
+> +	  by toolchain based on DWARF CFI information
+> +
+>   source "drivers/hwtracing/coresight/Kconfig"
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index 54504013c749..6a437bd084c7 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -469,6 +469,8 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
+>   		*(.rodata1)						\
+>   	}								\
+>   									\
+> +	SFRAME								\
+> +									\
+>   	/* PCI quirks */						\
+>   	.pci_fixup        : AT(ADDR(.pci_fixup) - LOAD_OFFSET) {	\
+>   		BOUNDED_SECTION_PRE_LABEL(.pci_fixup_early,  _pci_fixups_early,  __start, __end) \
+> @@ -886,6 +888,16 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
+>   #define TRACEDATA
+>   #endif
+>   
+> +#ifdef CONFIG_SFRAME_UNWIND_TABLE
+> +#define SFRAME							\
+> +	/* sframe */						\
+> +	.sframe        : AT(ADDR(.sframe) - LOAD_OFFSET) {	\
+> +		BOUNDED_SECTION_BY(.sframe, _sframe_header)	\
+> +	}
+> +#else
+> +#define SFRAME
+> +#endif
+> +
+>   #ifdef CONFIG_PRINTK_INDEX
+>   #define PRINTK_INDEX							\
+>   	.printk_index : AT(ADDR(.printk_index) - LOAD_OFFSET) {		\
 
-> IRRQF_NO_SUSPEND flag set, which is the underlying problem here, since the
-> incoming messages can be delivered during late suspend and early
-> resume.
-> 
-> In this specific case, the pmic_glink_altmode_worker() currently gets
-> scheduled on the system_wq which can be scheduled to run while devices
-> are still suspended. This proves to be a problem when a Type-C retimer,
-> switch or mux that is controlled over a bus like I2C, because the I2C
-> controller is suspended.
+Looks good to me.
 
-This is not just an issue with an i2c retimer, this is a plain generic
-bug in that the glink code which is calling drivers while their devices
-are suspended.
+Reviewed-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>.
 
-> This has been proven to be the case on the X Elite boards where such
-> retimers (ParadeTech PS8830) are used in order to handle Type-C
-> orientation and altmode configuration. The following warning is thrown:
-
-> The proper solution here should be to not deliver these kind of messages
-> during system suspend at all, or at least make it configurable per glink
-> client. But simply dropping the IRQF_NO_SUSPEND flag entirely will break
-> other clients.
-
-Which clients? Do we care enough about them to be papering over this
-very real bug which can potentially crash the system (e.g. due to
-unclocked register accesses)?
-
-> The final shape of the rework of the pmic glink driver in
-> order to fulfill both the filtering of the messages that need to be able
-> to wake-up the system and the queueing of these messages until the system
-> has properly resumed is still being discussed and it is planned as a
-> future effort.
-> 
-> Meanwhile, the stop-gap fix here is to schedule the pmic glink altmode
-> worker on the system_freezable_wq instead of the system_wq. This will
-> result in the altmode worker not being scheduled to run until the
-> devices are resumed first, which will give the controllers like I2C a
-> chance to resume before the transfer is requested.
-
-This is incomplete at best, even as a stop gap. I just threw a
-dump_stack() in qmp_combo_typec_switch_set() and see that it is being
-called four times (don't ask me why) from two different workers on
-hotplug.
-
-Even if you use the freezable workqueue for altmode notifications, you
-can still end up here via the ucsi notifications, and that now also
-seems to generate a warning in the PM code during resume.
-
-[   25.684039] Call trace:
-[   25.686633]  show_stack+0x18/0x24 (C)
-[   25.690492]  dump_stack_lvl+0xc0/0xd0
-[   25.694350]  dump_stack+0x18/0x24
-[   25.697851]  qmp_combo_typec_switch_set+0x28/0x210 [phy_qcom_qmp_combo]
-[   25.704764]  typec_switch_set+0x58/0x90 [typec]
-[   25.709525]  ps883x_sw_set+0x2c/0x98 [ps883x]
-[   25.714092]  typec_switch_set+0x58/0x90 [typec]
-[   25.718861]  typec_set_orientation+0x24/0x6c [typec]
-[   25.724068]  pmic_glink_ucsi_connector_status+0x5c/0x88 [ucsi_glink]
-[   25.730726]  ucsi_handle_connector_change+0xc4/0x448 [typec_ucsi]
-[   25.737099]  process_one_work+0x20c/0x610
-[   25.741322]  worker_thread+0x23c/0x378
-[   25.745274]  kthread+0x124/0x128
-[   25.748680]  ret_from_fork+0x10/0x20
-[   25.753631] typec port4-partner: PM: parent port4 should not be sleeping
-
-When you first brought up the possible workaround of using a freezable
-workqueue, I mistakenly thought this would apply to all glink messages
-(I realise that would defeat the purpose of allowing some early
-notifications).
-
-You've also found that the glink interrupts are waking up the system
-unconditionally on battery notifications, which would be yet another
-reason for disabling the interrupts (or implementing some kind of
-masking).
-
-I'm leaning towards just disabling the glink interrupts during suspend,
-but that depends a bit on what (historical?) functionality actually need
-them.
-
-Johan
