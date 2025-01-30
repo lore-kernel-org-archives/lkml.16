@@ -1,273 +1,246 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BD21E7668;
-	Thu, 30 Jan 2025 15:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305121E0B74
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738251309; cv=none; b=oc6grvYLDf1ZDZhas3XQQa5SWNrvw9AXO4mXBM5cOnEVYPVBrH0kp8cUUYTwnLR548gpgxhNT2cROXyVxCXph/GuBGY4hwhoNuMviENrbLSJePk2oL8/1pZEtp5QS3f5GgMpkzzPb5scZj+3ij3Z3dMfqaJ2zDPwHJzGH6PsN08=
+	t=1738251798; cv=none; b=Vu5wpYU/4hFvmmABvoaO0xj8gk5rBHzMIdjolaDbyiLXJYYDu6AskvlS0esc3cLKkUiNCxcB/n1Sq7C3OObsMtf9d4uz6rAKZLxIYARdTFFWYJTw9toQ12QvS2ZFYAMry+9WON/YL2qfMbBy1JeiXl2TEow1a5hAcZ3DFDk9eSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738251309; c=relaxed/simple;
-	bh=F0L0UFJMFu1dNFDx+bZr4INjxQJbiHCHvJicfSQSXmI=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=h0HfsvNGCzVTr0xMRQcpcuI3qLN4FdBXBCxgiczGIqL9fXFlxM8Gloj5oqNRfdloBRG9g9WbkJTeN4vij5FnNmSZxEFu6I9N5r5Z8jIZFDP1uAlHCvhriMA55drGHdNf1nYI2euF761BJH/tHzQApy+0L9+WUvChWwVl/31wTRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rn7IU0Xl; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738251798; c=relaxed/simple;
+	bh=22A1Y4gI6DxYYwteH4vtrnvqyKs64d/Rt5SgtQwCGf4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=PG4Noxdc+ZU0Lw2HzdjrEtLI/yxUn1VBKk1aXCAwHj4rGt9TUzJYpcuR40x+S19SW6uEXwCDRdu0wZevmh82HmkkgAI20bH0s6u6uZKeVN244asx2CmmI/O3RiNeu5XFpEBkgFiKeoTNGd9JQLOpsqV/MHo+favmkw1WtyXRS3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XKqH5qiR; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rn7IU0Xl"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7be8f28172dso44928785a.3;
-        Thu, 30 Jan 2025 07:35:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738251306; x=1738856106; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2Y7vjNKJSsbv0kKdvCQ/SyM2oijPldetOL5qOy4DLoo=;
-        b=Rn7IU0XlldET1plmoz/H23owQqbVjvkTtMkN6LWhQopnHgJBiTDlx7PZ0ras3J/8kj
-         G/KbDqd09MlnNo3wK+1MhMp/uAruKMVzTLonV+bINI1oydfoUwL6qlH50HCDpnOGyCIa
-         tYq9yzkjQa23xk+MaAorN2z1ZhP+5eVSlLNdfwCFCayTgoac1vsPVtc9laegOkQGZApw
-         MenxVewtjAGb0QWkht6Od245uzDCuww2gU7vZoMyKiZ5jaDJaHesFc3S0AK9JK3gg7aT
-         R480C50P95/uqwUKluU+nCgrp6ajojyiKWeUryK5oFO9d8ICf0bGuBsr5eHjq2iskkvl
-         tufg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XKqH5qiR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738251796;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=E8VqjgOdCdCLYF29XdRz8twWYIg6gPk2sCF7nSD+9Lc=;
+	b=XKqH5qiR3C0Q5NsMslZJzYh2k/f1wczPWbRr3xgIDQttFp8OxCAaEkxSwTUzwrpvpXjw4o
+	rrOHXf9R4iPdFPOOGx1qjXwwfcgiohYGC0hDNbbpi0mEugfAAScttx/oEFdbcJ1+lMmDbZ
+	aa91FiDiZP5PUbYDnLNMV6/btiJx+e0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-119-u2ocutDTPIq6URhoqFkCaw-1; Thu, 30 Jan 2025 10:43:12 -0500
+X-MC-Unique: u2ocutDTPIq6URhoqFkCaw-1
+X-Mimecast-MFC-AGG-ID: u2ocutDTPIq6URhoqFkCaw
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38bf4913669so473185f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 07:43:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738251306; x=1738856106;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2Y7vjNKJSsbv0kKdvCQ/SyM2oijPldetOL5qOy4DLoo=;
-        b=G+M0gQhdBid9srGwvTVBupep5AqHp/X8feMSJ8fKXRfSaw7JuFina2Yb94iqGPbHb0
-         Q0g+Cpctnuhqn5ONlLEyCoYQcssClXFoNvH0CJYPll/5xeG3zjas6tSxGnhBJi8Zn69N
-         JQjElSUCp3OuufGivdJHLsrB2SW2oHe0xHF+x5BPdK1dYGPcIk6mJjLXsFjdcDZqCFsR
-         2jTkni1rdckoB8Ran5vBak2gK11saJsDXcAYpfcpZd+OhQ6temFBzSfiapfTK2oXDTz7
-         q4G7W078L6qAwrTk+7Mei0hYXuKDQRFjZug1GcCvfQUsVwUBhFN3NkuYB8dwrS6Yix/N
-         9Iug==
-X-Forwarded-Encrypted: i=1; AJvYcCVFzyVyOUWfVTJobDB9e4jaEttgY5ny0hB05AUipB3eOqYhDw2XTWq1VOPf0ytFbyh2fZ4nm0ye@vger.kernel.org, AJvYcCX1oDju0H9/nSG1eXI6Yqg0vXgUsFkOUjwCNnzlsrijVlvOVelXApQNScW/8L8tDFCBBZFhR14SIImaM8UIuqH9@vger.kernel.org, AJvYcCXF613tS+96AAg7caOh20aZSnoudS/cKTjn9xK0aHfTIdr/Y8yOvgAKxmW82+LnwfJT7NLtzA9/Dw9GW9w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxedXDl6/ck4UeDpuwMo4JJWelC2HwT9wVYyZgf6duuhqfd3g54
-	B4QMRcEGPF1w4Y/NP0ICrQyjKahsk7prcINuVftidxqbSPpWhIcC
-X-Gm-Gg: ASbGnctEbMZdWALfvwCANRYZm5KPs9r5pfzPQLw94ehzWgpmcOXCqb5S9RN9kZ7oCCD
-	DUmrvvbwPJQL52jlbh5U56bBI1u6VwPosdxH5ieIAbV9d9TEa/KrAFh9125EeEXsJlmeBPvbJ1v
-	VLs7SExno6Vzttk0742eMXYeXuATMZWpbKshHigxX55KXT7W4Lva7GTj20OFpT8n0dvIwFfaeoG
-	ImSMP/jLtOny4xXVgb0CdZFGzgsv2W+SvA+9ffYQbEdpo0sDaXk+ugUmSth3LL6rXwVCQ59QVns
-	F0uB9YizqE1sQcVM9snh5eSK4h1ZLnzNJrzXw+d11veAKkeloJZh1eK47HURSXk=
-X-Google-Smtp-Source: AGHT+IHSjgwd2Y2TrZu6CGi6QE0CtItO07MK1UrUGiqrJJpEqUAJ+4VQla2VPs79AMFsMXLQTlNKdQ==
-X-Received: by 2002:a05:620a:2a10:b0:7b6:deab:d485 with SMTP id af79cd13be357-7bffcce52c5mr911716685a.16.1738251306156;
-        Thu, 30 Jan 2025 07:35:06 -0800 (PST)
-Received: from localhost (15.60.86.34.bc.googleusercontent.com. [34.86.60.15])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e25495e831sm7274446d6.123.2025.01.30.07.35.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 07:35:05 -0800 (PST)
-Date: Thu, 30 Jan 2025 10:35:05 -0500
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Yan Zhai <yan@cloudflare.com>, 
- netdev@vger.kernel.org
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- David Ahern <dsahern@kernel.org>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, 
- Shuah Khan <shuah@kernel.org>, 
- Josh Hunt <johunt@akamai.com>, 
- Alexander Duyck <alexander.h.duyck@linux.intel.com>, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- kernel-team@cloudflare.com
-Message-ID: <679b9c293471b_1ca8082949b@willemb.c.googlers.com.notmuch>
-In-Reply-To: <Z5swit7ykNRbJFMS@debian.debian>
-References: <Z5swit7ykNRbJFMS@debian.debian>
-Subject: Re: [PATCH v2 net] udp: gso: do not drop small packets when PMTU
- reduces
+        d=1e100.net; s=20230601; t=1738251791; x=1738856591;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E8VqjgOdCdCLYF29XdRz8twWYIg6gPk2sCF7nSD+9Lc=;
+        b=oFCpIbLAiqJChqPNWzdeDafAIuiDbmlMxN2n53K0LQAq+ahpkL9MgPfxgt9w6eQXj2
+         iej43yKTk+pJ72uiiPDrv2sOtzp2ssIt2img4xJXU3+rQbcjD5paNR/2UjLp450EIbdJ
+         rYQJhFKLxZlVNdtIiWRZsMhDtxR21CxfNZaBJYxZN9q7adXknnHusk0uGFbQ06Qq7gXG
+         AqvmCMfXrngxUSnUxG5s1I5LhDrHzip6Paf/SJY5iLaU522tIaAzJDIWcuT6rChRskb5
+         RlxbYe77sjKuMboqJZpNDmE6DeKrges3WrSIIJRbEtVE6lsnIkh5ieYMlScr7kBoFNcv
+         kYXg==
+X-Gm-Message-State: AOJu0Ywap44ibQnjHv1APyDSb8ZAH4IOZ/SNUDfGnzH6BDX95nu/Xtij
+	nRL+0H52Ny0EdzSyU+xfMPuM607x1ImncZWF72zqJDO0SB9Nw5Ufa4PML/RvsNYoEGVzRzatUC8
+	h2M/cLy6tD7SnTSnuyPseVoNotCGMpPxekBEVI6NO7L/sWnHoo8NHyyTQjobduG5lPAqkOfLEZD
+	pVTpq3bLOFTQGLaA+QFnZXeB5RDV/+O2uLDcYqe/JEE3Tq
+X-Gm-Gg: ASbGncttqUEyzfJ4owg4gOI76QmcXRuGB9O/YJITnMC5iGGaB5QYvPf4QPiDDIpoGgq
+	R4nDq0tj/7THBb1uDufnAQDzNcUwNjcmQkQaLetDS9VSlyyDpWQ2LkaoycRV9jiAmvcYpCaxifr
+	bofnJEjpxRVAYeEmPAXj1K+FmvxgDOlgYsCOvyEwrmewodzoRjqAaYF3bEX6reKUnIRtJtOIFqi
+	hQ7MMgUa9Xk81K3dpbVLkjhdJDyXy3RzvCU5Lpeu25Fp30cOPp1i97ZG4O0oby3CddZPtkOn6Wf
+	DBEkmvL3jvtuWEoEY+SEHmEodTBzEroqu0m5uOwip/xUo0sfXeFl9XzLerDq9BmqEiA4+ZNNCyV
+	9af8py/Z2hjn8M0m3f3NhnQg7bWDEwzpI
+X-Received: by 2002:a5d:64e4:0:b0:38a:8d4c:aad3 with SMTP id ffacd0b85a97d-38c5194b957mr6843512f8f.18.1738251791572;
+        Thu, 30 Jan 2025 07:43:11 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFLO59HpypkIWrcJ/WRB/dj0EyzKgw1ZdKghuaXSMYdKrXN8wI/cUA3y+0uHXVGa3XTW9zA9g==
+X-Received: by 2002:a5d:64e4:0:b0:38a:8d4c:aad3 with SMTP id ffacd0b85a97d-38c5194b957mr6843463f8f.18.1738251790992;
+        Thu, 30 Jan 2025 07:43:10 -0800 (PST)
+Received: from ?IPV6:2003:cb:c713:3b00:16ce:8f1c:dd50:90fb? (p200300cbc7133b0016ce8f1cdd5090fb.dip0.t-ipconnect.de. [2003:cb:c713:3b00:16ce:8f1c:dd50:90fb])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cf560sm2281427f8f.89.2025.01.30.07.43.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 07:43:10 -0800 (PST)
+Message-ID: <d70db67d-8989-4ce4-bc21-52a89449db4b@redhat.com>
+Date: Thu, 30 Jan 2025 16:43:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 12/12] mm/rmap: keep mapcount untouched for
+ device-exclusive entries
+To: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+ nouveau@lists.freedesktop.org, Andrew Morton <akpm@linux-foundation.org>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+ Yanteng Si <si.yanteng@linux.dev>, Karol Herbst <kherbst@redhat.com>,
+ Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
+ Alistair Popple <apopple@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>
+References: <20250129115411.2077152-1-david@redhat.com>
+ <20250129115411.2077152-13-david@redhat.com>
+ <Z5tWYpwpUfgEmeKj@phenom.ffwll.local>
+ <887df26d-b8bb-48df-af2f-21b220ef22e6@redhat.com>
+ <Z5t8dkujVv7xZiuV@phenom.ffwll.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Z5t8dkujVv7xZiuV@phenom.ffwll.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Yan Zhai wrote:
-> Commit 4094871db1d6 ("udp: only do GSO if # of segs > 1") avoided GSO
-> for small packets. But the kernel currently dismisses GSO requests only
-> after checking MTU/PMTU on gso_size. This means any packets, regardless
-> of their payload sizes, could be dropped when PMTU becomes smaller than
-> requested gso_size. We encountered this issue in production and it
-> caused a reliability problem that new QUIC connection cannot be
-> established before PMTU cache expired, while non GSO sockets still
-> worked fine at the same time.
+>> Assume you have a THP (or any mTHP today). You can easily trigger the
+>> scenario that folio_mapcount() != 0 with active device-exclusive entries,
+>> and you start doing rmap walks and stumble over these device-exclusive
+>> entries and *not* handle them properly. Note that more and more systems are
+>> configured to just give you THP unless you explicitly opted-out using
+>> MADV_NOHUGEPAGE early.
+>>
+>> Note that b756a3b5e7ea added that hunk that still walks these
+>> device-exclusive entries in rmap code, but didn't actually update the rmap
+>> walkers:
+>>
+>> @@ -102,7 +104,8 @@ static bool check_pte(struct page_vma_mapped_walk *pvmw)
+>>
+>>                  /* Handle un-addressable ZONE_DEVICE memory */
+>>                  entry = pte_to_swp_entry(*pvmw->pte);
+>> -               if (!is_device_private_entry(entry))
+>> +               if (!is_device_private_entry(entry) &&
+>> +                   !is_device_exclusive_entry(entry))
+>>                          return false;
+>>
+>>                  pfn = swp_offset(entry);
+>>
+>> That was the right thing to do, because they resemble PROT_NONE entries and
+>> not migration entries or anything else that doesn't hold a folio reference).
 > 
-> Ideally, do not check any GSO related constraints when payload size is
-> smaller than requested gso_size, and return EMSGSIZE instead of EINVAL
-> on MTU/PMTU check failure to be more specific on the error cause.
+> Yeah I got that part. What I meant is that doubling down on this needs a
+> full audit and cannot rely on "we already have device private entries
+> going through these paths for much longer", which was the impression I
+> got. I guess it worked, thanks for doing that below :-)
+
+I know I know, I shouldn't have touched it ... :)
+
+So yeah, I'll spend some extra work on sorting out the other cases.
+
 > 
-> Fixes: 4094871db1d6 ("udp: only do GSO if # of segs > 1")
-> Signed-off-by: Yan Zhai <yan@cloudflare.com>
-> --
-> v1->v2: add a missing MTU check when fall back to no GSO mode suggested
-> by Willem de Bruijn <willemdebruijn.kernel@gmail.com>; Fixed up commit
-> message to be more precise.
+> And at least from my very rough understanding of mm, at least around all
+> this gpu stuff, tracking device exclusive mappings like real cpu mappings
+> makes sense, they do indeed act like PROT_NONE with some magic to restore
+> access on fault.
 > 
-> v1: https://lore.kernel.org/all/Z5cgWh%2F6bRQm9vVU@debian.debian/
-> ---
->  net/ipv4/udp.c                       | 28 +++++++++++++++++++---------
->  net/ipv6/udp.c                       | 28 +++++++++++++++++++---------
->  tools/testing/selftests/net/udpgso.c | 14 ++++++++++++++
->  3 files changed, 52 insertions(+), 18 deletions(-)
+> I do wonder a bit though what else is all not properly tracked because
+> they should be like prot_none except arent. I guess we'll find those as we
+> hit them :-/
+
+Likely a lot of stuff. But more in a "entry gets ignored -- 
+functionality not implemented, move along" way, because all page table 
+walkers have to care about !pte_present() already; it's just RMAP code 
+that so far never required it.
+
+[...]
+
 > 
-> diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-> index c472c9a57cf6..0b5010238d05 100644
-> --- a/net/ipv4/udp.c
-> +++ b/net/ipv4/udp.c
-> @@ -1141,9 +1141,20 @@ static int udp_send_skb(struct sk_buff *skb, struct flowi4 *fl4,
->  		const int hlen = skb_network_header_len(skb) +
->  				 sizeof(struct udphdr);
->  
-> +		if (datalen <= cork->gso_size) {
-> +			/*
-> +			 * check MTU again: it's skipped previously when
-> +			 * gso_size != 0
-> +			 */
-> +			if (hlen + datalen > cork->fragsize) {
-> +				kfree_skb(skb);
-> +				return -EMSGSIZE;
-> +			}
-> +			goto no_gso;
-
-This is almost the same as the test below.
-
-How about just
-
-    if (hlen + min(cork->gso_size, datalen) > cork->fragsize)
-
-And don't bypass the subsequent checks with a goto, or modify the
-rest of the code.
-
-> +		}
->  		if (hlen + cork->gso_size > cork->fragsize) {
->  			kfree_skb(skb);
-> -			return -EINVAL;
-> +			return -EMSGSIZE;
->  		}
->  		if (datalen > cork->gso_size * UDP_MAX_SEGMENTS) {
->  			kfree_skb(skb);
-> @@ -1158,17 +1169,16 @@ static int udp_send_skb(struct sk_buff *skb, struct flowi4 *fl4,
->  			return -EIO;
->  		}
->  
-> -		if (datalen > cork->gso_size) {
-> -			skb_shinfo(skb)->gso_size = cork->gso_size;
-> -			skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
-> -			skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(datalen,
-> -								 cork->gso_size);
-> +		skb_shinfo(skb)->gso_size = cork->gso_size;
-> +		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
-> +		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(datalen,
-> +							 cork->gso_size);
->  
-> -			/* Don't checksum the payload, skb will get segmented */
-> -			goto csum_partial;
-> -		}
-> +		/* Don't checksum the payload, skb will get segmented */
-> +		goto csum_partial;
->  	}
->  
-> +no_gso:
->  	if (is_udplite)  				 /*     UDP-Lite      */
->  		csum = udplite_csum(skb);
->  
-> diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-> index 6671daa67f4f..d97befa7f80d 100644
-> --- a/net/ipv6/udp.c
-> +++ b/net/ipv6/udp.c
-> @@ -1389,9 +1389,20 @@ static int udp_v6_send_skb(struct sk_buff *skb, struct flowi6 *fl6,
->  		const int hlen = skb_network_header_len(skb) +
->  				 sizeof(struct udphdr);
->  
-> +		if (datalen <= cork->gso_size) {
-> +			/*
-> +			 * check MTU again: it's skipped previously when
-> +			 * gso_size != 0
-> +			 */
-> +			if (hlen + datalen > cork->fragsize) {
-> +				kfree_skb(skb);
-> +				return -EMSGSIZE;
-> +			}
-> +			goto no_gso;
-> +		}
->  		if (hlen + cork->gso_size > cork->fragsize) {
->  			kfree_skb(skb);
-> -			return -EINVAL;
-> +			return -EMSGSIZE;
->  		}
->  		if (datalen > cork->gso_size * UDP_MAX_SEGMENTS) {
->  			kfree_skb(skb);
-> @@ -1406,17 +1417,16 @@ static int udp_v6_send_skb(struct sk_buff *skb, struct flowi6 *fl6,
->  			return -EIO;
->  		}
->  
-> -		if (datalen > cork->gso_size) {
-> -			skb_shinfo(skb)->gso_size = cork->gso_size;
-> -			skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
-> -			skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(datalen,
-> -								 cork->gso_size);
-> +		skb_shinfo(skb)->gso_size = cork->gso_size;
-> +		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
-> +		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(datalen,
-> +							 cork->gso_size);
->  
-> -			/* Don't checksum the payload, skb will get segmented */
-> -			goto csum_partial;
-> -		}
-> +		/* Don't checksum the payload, skb will get segmented */
-> +		goto csum_partial;
->  	}
->  
-> +no_gso:
->  	if (is_udplite)
->  		csum = udplite_csum(skb);
->  	else if (udp_get_no_check6_tx(sk)) {   /* UDP csum disabled */
-> diff --git a/tools/testing/selftests/net/udpgso.c b/tools/testing/selftests/net/udpgso.c
-> index 3f2fca02fec5..fb73f1c331fb 100644
-> --- a/tools/testing/selftests/net/udpgso.c
-> +++ b/tools/testing/selftests/net/udpgso.c
-> @@ -102,6 +102,13 @@ struct testcase testcases_v4[] = {
->  		.gso_len = CONST_MSS_V4,
->  		.r_num_mss = 1,
->  	},
-> +	{
-> +		/* datalen <= MSS < gso_len: will fall back to no GSO */
-> +		.tlen = CONST_MSS_V4,
-> +		.gso_len = CONST_MSS_V4 + 1,
-> +		.r_num_mss = 0,
-> +		.r_len_last = CONST_MSS_V4,
-> +	},
-
-Please also add a test where datalen > MSS < gso_len (with .tfail = true).
-
->  	{
->  		/* send a single MSS + 1B */
->  		.tlen = CONST_MSS_V4 + 1,
-> @@ -205,6 +212,13 @@ struct testcase testcases_v6[] = {
->  		.gso_len = CONST_MSS_V6,
->  		.r_num_mss = 1,
->  	},
-> +	{
-> +		/* datalen <= MSS < gso_len: will fall back to no GSO */
-> +		.tlen = CONST_MSS_V6,
-> +		.gso_len = CONST_MSS_V6 + 1,
-> +		.r_num_mss = 0,
-> +		.r_len_last = CONST_MSS_V6,
-> +	},
->  	{
->  		/* send a single MSS + 1B */
->  		.tlen = CONST_MSS_V6 + 1,
-> -- 
-> 2.30.2
+>> If thp constantly reassembles a pmd entry because hey all the
+>>> memory is contig and userspace allocated a chunk of memory to place
+>>> atomics that alternate between cpu and gpu nicely separated by 4k pages,
+>>> then we'll thrash around invalidating ptes to no end. So might be more
+>>> fallout here.
+>>
+>> khugepaged will back off once it sees an exclusive entry, so collapsing
+>> could only happen once everything is non-exclusive. See
+>> __collapse_huge_page_isolate() as an example.
 > 
-> 
+> Ah ok. I think might be good to add that to the commit message, so that
+> people who don't understand mm deeply (like me) aren't worried when they
+> stumble over this change in the future again when digging around.
 
+Will do, thanks for raising that concern!
+
+> 
+>> It's really only page_vma_mapped_walk() callers that are affected by this
+>> change, not any other page table walkers.
+> 
+> I guess my mm understanding is just not up to that, but I couldn't figure
+> out why just looking at page_vma_mapped_walk() only is good enough?
+
+See above: these never had to handle !page_present() before -- in 
+contrast to the other page table walkers.
+
+So nothing bad happens when these page table walkers traverse these 
+PTEs, it's just that the functionality will usually be implemented.
+
+Take MADV_PAGEOUT as an example: madvise_cold_or_pageout_pte_range() 
+will simply skip "!pte_present()", because it wouldn't know what to do 
+in that case.
+
+Of course, there could be page table walkers that check all cases and 
+bail out if they find something unexpected: do_swap_page() cannot make 
+forward progress and will inject a VM_FAULT_SIGBUS if it doesn't 
+recognize the entry. But these are rather rare.
+
+We could enlighten selected page table walkers to handle 
+device-exclusive where it really makes sense later.
+
+-- 
+Cheers,
+
+David / dhildenb
 
