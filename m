@@ -1,177 +1,161 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72ED1BB6BC
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12441E5020
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738247918; cv=none; b=ffJda+W+pr2zo0hqWg1n5kd5i3TsljUkIfq9Qv6U2812hJgniLFIspDH6BXbph2+QfSOdB+WTX+JTNpHUM/9AfDLPt6m7RR2zZ37fQI1Bv1jFBptWYo8O1PvvXVN5cwjxQbAX606CtSEX0s68rtOanKljKbvVUV0lbwzWiRXbq0=
+	t=1738247933; cv=none; b=LUQBQjqRGiabZGpoGM/KuZkahFBVR95aws0QnD2ao6Xgu+uA1taqK74vAkuTXULwX1686Md1N6gCbutGbaNy5cFovdOD8w0ONtV5eghiT/gQ7B8WgeQ7abWHQTyJctNP0vV/0KOC/Yd1rFXFVRBoSYjBrf4+4F86T4hCkCx7Zjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738247918; c=relaxed/simple;
-	bh=iI0ePVIHGXyR7zGEY8vXECh4QVEz6Six9XPuHmBSdAM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ADeVxwv+alJoew9LXI5r9TLC+ql7Idguk3WeKdI+iOWERr1m/IOSuLaW9OMgBe4oNG+/t3fwkyWvVbQRfCKk/UJPR/aSaFxOv8ru6fu5oeHk7RcWkB7C9xA1AherZJVxlV66hrEB8Pl7HBnd9IL2dGyb07FcYBY2d4PdFekJ4Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KpUYCp61; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KpUYCp61"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738247915;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JgiE4FoOzUtDiv/Mw5xRoxpuCcm6arbkAbYB7wDmIE4=;
-	b=KpUYCp613mPeIX+hbp+IypRsfob+5XobrckxJJd5eJ7uVqmh8lgxF4+VQh3mv15VFipHHg
-	a8MAJ4LPfA2EAmOBP+DNzaf98wu2cvsGPFlGAZ5/LUyCafyg97MDrYABzmy4huvPrz83un
-	SmOVuPR7gkm0RFL54NzlI1teqZdPE14=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-220-Kbl8lYn7PlSjQk9_F7lBdA-1; Thu, 30 Jan 2025 09:38:34 -0500
-X-MC-Unique: Kbl8lYn7PlSjQk9_F7lBdA-1
-X-Mimecast-MFC-AGG-ID: Kbl8lYn7PlSjQk9_F7lBdA
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38a684a096eso374007f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:38:34 -0800 (PST)
+	s=arc-20240116; t=1738247933; c=relaxed/simple;
+	bh=ndA1DqYJeLDgwxI0sFTIswtI2TRbJRaDwStsY7tYaU0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sSw4Mt5W9mGnIdsuVDYafcrJ5AT73Diz1uO+PNyNLW2G7mRB181mzUAEO5NPlzc7CXD3fxwhevxCn3XsrPmpPqTEC4fSksIBmQp+jp0JuNvLLcNr2XWVglUWmmsMCC/Lts/HY+SEv2/HH4ojX4oVMpSCla5EG48xIsxkgJSJSz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4afe2f6cecdso1206753137.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:38:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738247913; x=1738852713;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JgiE4FoOzUtDiv/Mw5xRoxpuCcm6arbkAbYB7wDmIE4=;
-        b=Y6S2MMt+M36HxrmdEcL1bzDzFVzd8iVt7spm0bvLg15BwMpQ7d7OOXig/fONFjALBk
-         h5g3Ylr8yTGpQrv6S8p8vHKwylDi7bNQ489VzVIv89p7Qn9UkLAq/yPW9xfx4KadyQcy
-         9yyiQ6EtGY9jH8ExuYRuZUJDopKJxZKUSA5OooFPTUthfrvz4E4W2acgz7ddZEd1m6DA
-         ago8x5ZlpPx+wL+6OdfzbSp/6E8RRsBzSSAFO9/02SKQPibR3+ZyfHAUqTJiVhF7Zr50
-         hbGpKch7fUistJH9odxaH/SnhNLjSBCWqOnQF4SbfaevDOIecGEwDPSa3qPH7gtPTb/t
-         79jg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZltSRsruI0XStGEdq6N5lOdcqB60xIVNmeGOyAhTvnfpkO8nBwR1kpP+bkgQh7wtvrF5Qf2r8lhtc5QA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNvSQHlbj+IYFu4Olf280r3jPRDZsXNlRW1okdRHgL0+e9g1US
-	ZYoWrx1ckcu6IBLB0/GTN/uI/rtj0n7k/T4x23Q0WYLRZGmfRBcAJcwUtqnDHLMJCtg3R0LlH+m
-	manXeg8+DKtvjSfV+wncyWjpVxDtTwMvFh0j3OlLszGXH2wwMi9JegnTsleGsUQ==
-X-Gm-Gg: ASbGncsDzcCTlbDpcVs1QaofXesuU/ZhgvvJSEymdJjXfYjI+2f44IzkiUxyU06yeqN
-	80a098m3/yWaLojisAkjVoBwrUgRR1uUji83M23ZTfin6Sg+d7T0L1QBQdzkmJnVbuW4E5XHDHh
-	+xpIpHYRqaHqnO5AIJVY1QfOsGFMXkMO4H7rXBw/47G2M489n4Ckn9y/Uksdps5IKzmxhCnDwuv
-	vCPC1lo/g+7b6pcLV8H431LgHKYu2sU/v9Pcik11+QhBJurev9kQdvFGqFk834WImrudBZOxchm
-	m0B2ADRqwyWr5ejrp7wIIISIJVcuQMH+ImIcQrGXUINW7gaB80LO
-X-Received: by 2002:a05:6000:1882:b0:38b:f03c:5bbc with SMTP id ffacd0b85a97d-38c5195e5fcmr5088130f8f.19.1738247913085;
-        Thu, 30 Jan 2025 06:38:33 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHbV/sWshrdZhajcEm6ev76AV43Yg6Ta4vaWNe4sJ9G1m559H1nibuG1D9Z7w1qHPW2kocQNA==
-X-Received: by 2002:a05:6000:1882:b0:38b:f03c:5bbc with SMTP id ffacd0b85a97d-38c5195e5fcmr5088104f8f.19.1738247912662;
-        Thu, 30 Jan 2025 06:38:32 -0800 (PST)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2f17dsm60641185e9.23.2025.01.30.06.38.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 06:38:31 -0800 (PST)
-Date: Thu, 30 Jan 2025 15:38:30 +0100
-From: Igor Mammedov <imammedo@redhat.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
- qemu-arm@nongnu.org, qemu-devel@nongnu.org, Ani Sinha
- <anisinha@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/13] tests/acpi: virt: allow acpi table changes for
- a new table: HEST
-Message-ID: <20250130153830.2e4e081d@imammedo.users.ipa.redhat.com>
-In-Reply-To: <20250130140324.06cdd4bf@foz.lan>
-References: <cover.1738137123.git.mchehab+huawei@kernel.org>
-	<1390b46682f2bac3587239d03a0ba22d18a9a044.1738137123.git.mchehab+huawei@kernel.org>
-	<20250129160328.2f66584c@imammedo.users.ipa.redhat.com>
-	<20250130140324.06cdd4bf@foz.lan>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+        d=1e100.net; s=20230601; t=1738247930; x=1738852730;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3koQwFtsYEj+sBiSRxwOt8Kdl4P9BIA497a/eImNeSg=;
+        b=WJUiLaZvcfYJkFH6tASNYt3beoTvOwUg00Oxb/H93a1I+KWyS935eCwCuf8raFFYrV
+         MynnxqQxiwQNLQj4ONK4PR3mpMAecKi54KcPvj0wwuSIAMKFWmzy45cL9cuEg2jZYOsk
+         yMs5+UWiEar9feC5O8FfnBBoGWICVgghm8j1iuminT5ZqfJxc+mC8kcOppYeFjmBE1UT
+         hBt9pYRAWTlEbvagBawWV/F24VP1sWLVkfxmaWABU/mKER1vQFAq6BNAgr9VVG0pY0Ao
+         EnYDs2V3B50a6nJpgfY7Zl99+h6HUvCT+A6g12Xoe+FbxJ067hU5WdB7ocoJUxwUyeOz
+         LxzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDP/pADnCsVL0tudqEvzxlNgsat6+62ayaWyJhAGVO3cnBlJI7o3LnxZCHwjtqvpU+w6bTZfjyohwNGA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7cjMNsrK34bR9r/+rh1D5ogx3y2IR8J95GOO1Y8mFpJjszh8A
+	eI/e9tQwzPV02JJ+lX43Dq2Y12Evnw4m/Zhm4Fk1gLT8cMan26Y7tB2CgomaOCw=
+X-Gm-Gg: ASbGncu8XVAEmlbiUqnai+3aWLM6Kiw4aszKq8/o1gNivgPpJzUeYFBa10dQuUMTapu
+	RpLj8aVZ3Yx7MLfcKCU4OydAWwGX+QOA+sx4wLmia8AbNPigRqGa/fJpaKmmsnsOC2Qx9EzO+gb
+	ulwOnVXSQMqJ9T76v2jNX6jdXLzc04NTC1Nl9zGarWFblQhA55A8s0TW4EWlXr0taY4K8fQkS1j
+	8AH8o5FdUuO5kiYS7NlnkPpLAU4pq4axD8+K9F+34dB1RGAsvyGKZp+Cx/Ljcbl8jFiCuHOOpbQ
+	t6Bd1Al7rmDgR5OfCKThne6/PZ15EtkM3sVHNrNiaMUD4QFWGPPjnQ==
+X-Google-Smtp-Source: AGHT+IG+WuGCV/lErhNwqXVhg9cjRGjFyFEoErX+CzIT6PdJsH0DYWBL7PAH/hpDEmDTEK4cgdLcUQ==
+X-Received: by 2002:a05:6102:1609:b0:4b2:9e5d:baf with SMTP id ada2fe7eead31-4b9b7225816mr2603044137.11.1738247929811;
+        Thu, 30 Jan 2025 06:38:49 -0800 (PST)
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b9baccd5cbsm250364137.19.2025.01.30.06.38.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 06:38:49 -0800 (PST)
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4b9486a15a0so974667137.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:38:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXS5O6SkAr2a/qwB1dAUkB+NT7Sc9y30/Z/vq0wS3q0UrU5JHmc/lSl9x8trlq+ERWvimoaD7vggRjGyQI=@vger.kernel.org
+X-Received: by 2002:a67:f318:0:b0:4af:d48d:5142 with SMTP id
+ ada2fe7eead31-4b9b70f3a0bmr2755704137.3.1738247929070; Thu, 30 Jan 2025
+ 06:38:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
+ <07cf896e-adf8-414f-a629-a808fc26014a@oracle.com> <qdq4k6323orqifgzo7pbg5vakezr3gptfdehghxsyfrhc4kwvb@d4fxbwcl4gjm>
+ <CAJ-ks9=U4PZv4NgyH8B7SbHkecGLy+M=G639hSTv-hnPySqk6w@mail.gmail.com>
+ <xf3445vgszstqfwycf5wc5owhnifxb3mny5xjjaihghqgnozmd@3h7hnifir4vu>
+ <CAMuHMdVcuhzO57Qn-kcUJDM=HmkSwuheyNJPF1tx+gxRKnKZXA@mail.gmail.com>
+ <mp6lnt3stfnfd74rwaza5xffh2ya5gylqnxotgrnqaqo3eh2zl@5g257jeiugfn>
+ <CAMuHMdWDRLi8AE0PgfAnXundbS0hyTyovUH7yScrY7GtmYYPOQ@mail.gmail.com> <9636ed9d-3bfb-4dda-98dc-f945c9d53698@lucifer.local>
+In-Reply-To: <9636ed9d-3bfb-4dda-98dc-f945c9d53698@lucifer.local>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 30 Jan 2025 15:38:36 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUFbhzi8J3rmyvVn7HmrxbeyoOwu97w8cnuKJxksa8iaw@mail.gmail.com>
+X-Gm-Features: AWEUYZmOwEzWB0gEceqhOwmudbYpt2s9uwC-1Re-pPG58BUZxS-FmbWZ_JWw55Q
+Message-ID: <CAMuHMdUFbhzi8J3rmyvVn7HmrxbeyoOwu97w8cnuKJxksa8iaw@mail.gmail.com>
+Subject: Re: [PATCH] xarray: port tests to kunit
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Sidhartha Kumar <sidhartha.kumar@oracle.com>, 
+	akpm@linux-foundation.org, christophe.leroy@csgroup.eu, 
+	justinstitt@google.com, linux-kernel@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
+	llvm@lists.linux.dev, maddy@linux.ibm.com, morbo@google.com, 
+	mpe@ellerman.id.au, nathan@kernel.org, naveen@kernel.org, 
+	ndesaulniers@google.com, npiggin@gmail.com, 
+	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 30 Jan 2025 14:03:24 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+Hi Lorenzo,
 
-> Em Wed, 29 Jan 2025 16:03:28 +0100
-> Igor Mammedov <imammedo@redhat.com> escreveu:
-> 
-> > On Wed, 29 Jan 2025 09:04:08 +0100
-> > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> >   
-> > > The DSDT table will also be affected by such change.
-> > > 
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>    
-> > 
-> > move it right before the patch that would actually make changes to tables (10/13)  
-> 
-> Table changes happens on two patches:
-> 
-> - patch 03/13: acpi/ghes: add a firmware file with HEST address
+On Thu, 30 Jan 2025 at 15:09, Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+> Having written a ton of test code, I've unfortunately encountered a lot of
+> this sort of push-back and it's HUGELY off-putting. Writing test code
+> should be ENCOURAGED not litigated against.
 
-this one shouldn't affect bios tables test as it only checks ACPI and SMBIOS tables,
-and hest addr file is not either.
+I am not discouraging nor pushing back on any testing code (on the
+contrary, I test every single new kunit test that appears upstream).
+My apologies if I gave the impression.
 
-Do you really see test failing on this patch?
+> The truth is far too little kernel code is tested to any degree, and this
+> is part of why.
+>
+> On kunit collaboration, I attended an in-person talk at LPC on kunit
+> userland testing where it was broadly agreed that at this point in time,
+> the xarray/radix tree tests weren't really suited to the framework.
+>
+> Therefore I think the healthy means of pushing forward with integration is
+> in sensible discussion and if patches, RFC patches in collaboration with
+> authors.
 
+Good.
 
-> 	HEST table was added here
-> 
-> - patch 10/13: arm/virt: Wire up a GED error device for ACPI / GHES 
-> 
-> 	DSDT changes happen here.
-> 
-> If the idea is to avoid make check to fail between those two patches,
-> we need either to split them on 4 patches (one before/one after each
-> change) or do like I did on this series: whitelist before patch 3,
-> update after patch 10.
+> The unhealthy approach is to needle one of the biggest contributors to core
+> test code in the kernel on a thread because you don't seem to want to cd to
+> a directory and run make.
 
-It would be better to group patches that should change ACPI tables
-close together so that a pair of whitelist/update could cover it.
-However it depends on how many changes are there, i.e. acpi diff
-should be digestible for a reader. So there is no hard border here,
-just use common sense.
+My initial issue was that I could not find out where that is documented.
 
-However when the whitelist is covers all series where only few patches
-actually result in tables change, that miss-leads the reader since
-whitelist patch basically tells 'watch out for changes since this moment'
-and 'update' patch declares no more changes should happen.
-The same applies to bisection, where closer the gap between
-whitelist/update the better if the test case is the trigger.
-No need to be fanatical and do it around each patch,
-just make it observable (i.e. some small range of commits). 
+    $ make help
+    ...
+    Userspace tools targets:
+      use "make tools/help"
+      or  "cd tools; make help"
 
-  
-> 
-> Regards,
-> Mauro
-> 
-> > 
-> >   
-> > > ---
-> > >  tests/data/acpi/aarch64/virt/HEST           | 0
-> > >  tests/qtest/bios-tables-test-allowed-diff.h | 2 ++
-> > >  2 files changed, 2 insertions(+)
-> > >  create mode 100644 tests/data/acpi/aarch64/virt/HEST
-> > > 
-> > > diff --git a/tests/data/acpi/aarch64/virt/HEST b/tests/data/acpi/aarch64/virt/HEST
-> > > new file mode 100644
-> > > index 000000000000..e69de29bb2d1
-> > > diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
-> > > index dfb8523c8bf4..46298e38e7b8 100644
-> > > --- a/tests/qtest/bios-tables-test-allowed-diff.h
-> > > +++ b/tests/qtest/bios-tables-test-allowed-diff.h
-> > > @@ -1 +1,3 @@
-> > >  /* List of comma-separated changed AML files to ignore */
-> > > +"tests/data/acpi/aarch64/virt/HEST",
-> > > +"tests/data/acpi/aarch64/virt/DSDT",    
-> > 
-> > the list in not complete so 'make check-qtest' still fails
-> > [12/13] has complete list of changed files
-> >   
-> 
-> 
-> 
-> Thanks,
-> Mauro
-> 
+    $ make tools/help
+    Possible targets:
+    ...
+    You can do:
+      ...
+      $ make tools/all
 
+      builds all tools.
+
+But that command does not build tools/testing/radix-tree, so I was
+completely lost.
+
+> Why is this relevant to me? I am the author of the VMA test suite, on which
+> I spent countless hours + relied heavily on Liam's work to do so, and
+> equally there you have to cd to a directory and run make.
+
+Thanks for your work!  One suggestion for improvement: tools/testing/vma
+does not seem to be built by "make tools/all" either.
+
+> But at the same time in both cases, testability of key internal components
+> is ENORMOUSLY improved and allows for REALLY exciting possibilities in test
+> coverage, really isolating functions for unit testing, enormously fast
+> iteration speed, etc. etc.
+>
+> I ask you to weigh up the desire to enumerate your misgivings about the
+> testing approach used here vs. all of the above.
+
+I repeat: I am not against these tests.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
