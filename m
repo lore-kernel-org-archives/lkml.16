@@ -1,114 +1,110 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B531A8F74
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 11:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD3A1A7046;
+	Thu, 30 Jan 2025 11:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738234884; cv=none; b=pLAQbRyjpriXVIvFkOFzlUAwlP6WOJi6pnnYRUZX8LtNZKeAfQglcgYuc62v6x+lJ8OL8NJTPdCcYgwn26Z9jTwXI4hjdrHxW0+Yi13yzNzDkR1ZnCi60zWCkPhESPJ4bN6enI+q9ozQALIvnkJAnfyMMdn3CTjyLZSShqogfYE=
+	t=1738234940; cv=none; b=Ak4+J2LWdTLT8IemIEgPdrd5NxCLTNcWy75ElvkkHsryTiBfDJvFETgNGjaLJNsdw2R8EQ4F1Gm8kcsJfGAlOna60R7CZXQd+OJrQl6P3txBOxLCEKOKHcAoXtD9OOHDg8erLDP/YxjAeCGDbtQahIEv4jBClX5yBzzc5t6Kwws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738234884; c=relaxed/simple;
-	bh=uTEtjxFBWxhrssyPGXwDQuCulRsA9KSYjyUq1oLYWqI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mNrXJOfREyVzOSeVlFqFPiv9eYT/6z+TFUX4/JSiQetNr2sLJr88H+QcI3emAX3mbZYe1rwfrxmO6k6/Kwii1IO3NyLHvR+JKkAfEaTKxJWnhalZ6AmvDg9/fO6WRkJgbNIEa5lh7X+JPEe8OTg3/47Bj5YnTODGchARHWsG9zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g++2xj58; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738234940; c=relaxed/simple;
+	bh=ZJ4Au8Mg9sPlCFvEnFwYT2LF41h6Pc6kSA6z0zcWBs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kbt7GGN1XXpPOSEw0wE9bt8/U5zM3PDWIr+0MX6zc8znNKgMBKQ/s0ulnfDdo10pGJl6/AiabS/sqmU9VMNU5eVd3k9dPE6uDY6NQZefLCcQHb+1+UjFOda9JlEc0xapVSNavhibC88uH0HXy0kQiH/5F+L1CrFLhrbsmPTnd1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=JpCgtFab; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g++2xj58"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5db6890b64eso1218458a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:01:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738234881; x=1738839681; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uTEtjxFBWxhrssyPGXwDQuCulRsA9KSYjyUq1oLYWqI=;
-        b=g++2xj580X7E977uBzzmKJFgrAp4NRAa1x7RpOIneIWro/MiGeXbXIIH/C7S1ni/9h
-         T68JccGBspnVqUaTVhf5xeCd+9h9xo1/nxd0o4p2s/+bEE2vxjPxB5mDol7Ikk/202Ol
-         cRVmHIVll+OIuAZiRyS+4IyKFuVoUiE8BylidnUKEpuVb+3EZGdXCy9aCSGE4vGPuJYb
-         MkZnfIt28Qv6byodnsb0RiVPNFCLXKRvaIMTdEZgX4UHYIL6SEY6B3zOvW5iavR1mri0
-         k/yZRWDTQRaP8GupJhZ0JESGNoYnH5VjmSiSnwW5d2G8JQbTmaA1uWRhMM9MZKeNp+YY
-         5qLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738234881; x=1738839681;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uTEtjxFBWxhrssyPGXwDQuCulRsA9KSYjyUq1oLYWqI=;
-        b=IMMvsY76GryH776Y0q4G6qp8691I+G2s+eKYzicE9UQv3czUIwj31Fsk5p4LE4bIkh
-         5gu+am4/Aj7F25W3t+VC36RvCd2Z1bcBRU0AG1xKlqDfj4ADMvtgF3ulQ/qzLWAzsSQZ
-         D0xcvlX9ufCXCMdv127TpURL8JYkJUlh3vXK1GGf5YM5YBrMD6lGRIvkVIYynShukeFN
-         WoYEXw+oyvS0OFxt6/tHxZxNIdb/ORaR9ZicPEdL1LvpPDz0QY1HnWEEMQ4KYuRxUkH2
-         FZ33cZ5aXeY2zikEMua/XbCasD8V3yB+2dnne1vw7s3p0ulvpub0ySG3SugvcG9Z+kG4
-         mKsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlquTS8NLf5zgK0KEOK8mROEXbAstTc1IruWAQtK8L1TBoHadxQeT5fge6+1NklqwzZJLoAcoMdPxYi8c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyzbMj9asWVijSwQeVlmpyJlNNi6el2PKuDv6WZoWL5obw0xWO
-	dOZia/AvxMizVEAeREggYrNzeyZe3HuQkgMV9qsSLSIzg+p58C5PvwcnuuFjJCinDNjoB5b8wFP
-	CL7StkaG8fdkvMLUMu2LGu5v6iTg=
-X-Gm-Gg: ASbGncsW2Mb2ArNWTrnw/l+55JbHvtFKKfz02V7ta503Nwkl/TQ6ArURufOh2kv04rJ
-	fmCWO8/IAWq8hlQCcJ8Vxv/gW9M2MwsgFzTIX6jWRR5ICXIDLP4/cTx2T67xRO6s05kdrRher
-X-Google-Smtp-Source: AGHT+IHFTFYr4SZCDOGixDObyUCjGQinOKCsn1ZA2LR6h/mKi3JaxxP5Q5nsDvSNUwcjkFGuTJMuuxVl7p/pk50MS7Q=
-X-Received: by 2002:a05:6402:1ec1:b0:5dc:100c:1567 with SMTP id
- 4fb4d7f45d1cf-5dc5efc5e47mr6075154a12.15.1738234879131; Thu, 30 Jan 2025
- 03:01:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JpCgtFab"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=r9T7SsDgb25eRiBbyZrxPqt2XzRSnj1KTaKT0+NeJB0=; b=JpCgtFabWJwZyXwJqR5xJVgTay
+	4p1ryuXp+TtjVWOJ0NY6NBry21ufA+1WGDIoaQYlK7FawWBmLwXVqFZSMnur9HwQ+XomyfhTErmjN
+	VG7/HZNxnyLMWQ/mlEwOB9Fi8hf8MoX97brcL73vtR7vwz82BU3KDl/v52PtpehEqJIncF1uKnPvs
+	LZ7jdNT5ifKFpdfqIzD1mGl/bjjXWKkdWKJxw2Mh6FvaKBat7STLeD3m7MpEZWbMgkZEpzIKfvtnO
+	Kw/KeCpq4DxQjvmoa5Fxfn1iZw4N7f/BtDmFcOyPyNW3mWVLZI6+uTDByzF2JRBdnUqR8Lv/1l9ne
+	V084bXGg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36634)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tdSJA-0003wU-1U;
+	Thu, 30 Jan 2025 11:02:04 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tdSJ6-0004h9-31;
+	Thu, 30 Jan 2025 11:02:00 +0000
+Date: Thu, 30 Jan 2025 11:02:00 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Vladimir Oltean <olteanv@gmail.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: Tristram.Ha@microchip.com, Woojung.Huh@microchip.com, andrew@lunn.ch,
+	hkallweit1@gmail.com, maxime.chevallier@bootlin.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, UNGLinuxDriver@microchip.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [WARNING: ATTACHMENT UNSCANNED]Re: [PATCH RFC net-next 1/2] net:
+ pcs: xpcs: Add special code to operate in Microchip KSZ9477 switch
+Message-ID: <Z5tcKFLRPcBkaw58@shell.armlinux.org.uk>
+References: <Z5iiXWkhm2OvbjOx@shell.armlinux.org.uk>
+ <20250128102128.z3pwym6kdgz4yjw4@skbuf>
+ <Z5jOhzmQAGkv9Jlw@shell.armlinux.org.uk>
+ <20250128152324.3p2ccnxoz5xta7ct@skbuf>
+ <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <20250129211226.cfrhv4nn3jomooxc@skbuf>
+ <Z5qmIEc6xEaeY6ys@shell.armlinux.org.uk>
+ <DM3PR11MB873652D36F1FC20999F45772ECE92@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <20250130100227.isffoveezoqk5jpw@skbuf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250128160743.3142544-1-mjguzik@gmail.com> <20250128182932.GC24845@redhat.com>
- <CAGudoHGqKgD+1VT2ELd-KZfAZn11K3=rGnhP8FwJJc56+-1G6A@mail.gmail.com> <20250128192224.GD24845@redhat.com>
-In-Reply-To: <20250128192224.GD24845@redhat.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 30 Jan 2025 12:01:05 +0100
-X-Gm-Features: AWEUYZllMDk_nuIEYPxhctRYXSKBiTMr_ALLK2SDC0mqnQ9op3s_ECgKNubF9rY
-Message-ID: <CAGudoHEFoM0BaA+CVfuVgR5MGE9mmsWhu-gMaE3-iRcwBvvcDQ@mail.gmail.com>
-Subject: Re: [PATCH v2] exit: perform randomness and pid work without tasklist_lock
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: brauner@kernel.org, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250130100227.isffoveezoqk5jpw@skbuf>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Tue, Jan 28, 2025 at 8:22=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 01/28, Mateusz Guzik wrote:
-> >
-> > On Tue, Jan 28, 2025 at 7:30=E2=80=AFPM Oleg Nesterov <oleg@redhat.com>=
- wrote:
-> > >
-> > no problem, will send a v3 provided there are no issues reported
-> > concerning the pid stuff
->
-> Great, thanks.
->
-> BTW, I didn't look at the pid stuff yet, I _feel_ that this can be simpli=
-fied
-> too, but I am already sleeping, most probably I am wrong.
->
+On Thu, Jan 30, 2025 at 12:02:27PM +0200, Vladimir Oltean wrote:
+> On Thu, Jan 30, 2025 at 04:50:18AM +0000, Tristram.Ha@microchip.com wrote:
+> > This behavior only occurs in KSZ9477 with old IP and so may not reflect
+> > in current specs.  If neg_mode can be set in certain way that disables
+> > auto-negotiation in 1000BASEX mode but enables auto-negotiation in SGMII
+> > mode then this setting is not required.
+> 
+> I see that the KSZ9477 documentation specifies that these bits "must be
+> set to 1 when operating in SerDes mode", but gives no explanation whatsoever,
+> and gives the description of the bits that matches what I see in the
+> XPCS data book (which suggests they would not be needed for 1000Base-X,
+> just for SGMII PHY role).
 
-I looked at pid code apart from the issue at hand.
+Hi Jose,
 
-It the lock protecting it uses irq disablement to guard against
-tasklist_lock users coming from an interrupt.
+Can you help resolve this please?
 
-AFAICS this can be legally arranged so that the pidmap_lock is *never*
-taken while tasklist_lock is held.
+Essentially, the KSZ9477 integration of the XPCS hardware used an old
+version of XPCS (we don't know how old). The KSZ9477 documentation
+states that in the AN control register (0x1f8001), buts 4 and 3 must
+be set when operating in "SerDes" mode (aka 1000base-X).
 
-so far the problematic ordering only stems from free_pid calls (not
-only on exit), which can all be moved out.
+See page 223 of
+https://ww1.microchip.com/downloads/aemDocuments/documents/OTH/ProductDocuments/DataSheets/KSZ9477S-Data-Sheet-DS00002392C.pdf
 
-this will reduce total tasklist_lock hold time *and* whack the irq
-trip, speeding this up single-threaded
+Is this something which the older XPCS hardware version requires?
 
-I'll hack it up when I get around to it, maybe this week.
+Would it be safe to set these two bits with newer XPCS hardware when
+programming it for 1000base-X mode, even though documentation e.g.
+for SJA1105 suggests that these bits do not apply when operating in
+1000base-X mode?
 
-btw, with the current patch when rolling with highly parallel thread
-creation/destruction it is pidmap_lock which is the main bottleneck
-instead of tasklist_lock
+Many thanks.
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
