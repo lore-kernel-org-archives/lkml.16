@@ -1,97 +1,150 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B6E1F12E8
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43681EF0B7;
+	Thu, 30 Jan 2025 17:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738258608; cv=none; b=aMM44qQ9B3USsja5pqEfaIinoQXJGNLaQeCFcOrl2W1qfvOuiQZp7Z8ni9f71TnSRYFbA8OVNKXQYgHsl4LuC0omjX7CXKrq8aK9NkRLNSTtVs2gRf4r70c50AFE+sbl72S1myDcIHPvcWevHzAm3KwkWLLunhYrqHql4f36GTc=
+	t=1738258626; cv=none; b=S9t6B0UOWvdnBn5pP8E2nkgY4RMsf46JFVqLBgJRhtOfVKSu42epgG+4/uWTUXSc2TpEQ3MirTpgKPGhJq+rfQSQUC0JpLB3+fGVL7c5m+UB/qo1tkFVL3wmIns5iYeebBgXr08FlXw+hOmKDBZKbBHP2aiWP0sU5LLGB/ZXb20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738258608; c=relaxed/simple;
-	bh=fEvX637Z7c33Zk5WCEhwiVVgzZ0aKNk8OcHlF0sVoOk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Pf6dUsg0DX08lNz8V2r1aidXfTbsb2jlt8WWF86u1v+9a89uC8OmhFbDGDpgBLNonlbw/vhDn93vBzP4lW/YWL6VOuz4owOHqY2iIircMx3kxRaRB0D5oAP2U+2QJnf7rcDHvnwyBgIxLN4Mp2VfAsSKBrBVJSOSivGjRww+yUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=baylibre.com; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21654fdd5daso19153505ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:36:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738258605; x=1738863405;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wba71lrlJHRpHNYwCSUOMwjfSnFCdMmwKcitB9A/Re8=;
-        b=jdlIKG/lXFCm225FGj3fBgwmu7pkeQsYWwGkPIe8A6xIgracco5AUC7+HbKZ1s+nfy
-         H4EuLFmCQ4zKdGHMpzAb8cmGiZRBnXlNcbPu54Mso1S3vesjsQVoWZHOBHpR8Yv1cj8X
-         viBU5CF5waHYnG8YH1BvhDuFdC6gMIyXcPNdGAccuZ08qYy+TSIzvfPvmnKBkRn5dsqI
-         FP3jFsmS7T0gy5irrMkePB8f6gECyOQ51l+W5ZUW0F6ZQ/gpwK3ymGAQY3edKNzsEF5C
-         8eN81c25w9caWc1bF5DAwAQmPqvUElQ1rRg9P4oR4sXCC8mRJzU0R6MiEbDIPThuWnd/
-         J+hw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/JoHDM9an5128vORA8mKAPfM2sONXGow4i2WwB08LhkAKZpdgKF220rsp7Sjx5fXBNjSCp2ZY+VfA/QU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz98RIgzXWz7VhfXs/+WE8laajWuPpTyo3+Pp/w1unymXhKsMRU
-	AS4CQcUoS8UjDR1eFYuqGnbg/Lc4LCWuYGVYVGLizOYfFaZFqUl0Svil1z9lO2E=
-X-Gm-Gg: ASbGncvIeR4BEGmRFkiprHfU97SK8tJ/Uqdywow+JW3sT43Q0v2qCbltCSZNe9wyXH+
-	upD8vPUMO/e5VhR9BxJPccPFaLYXV7e6bsUQ4qabItujIt3EZERUU99EtiaNTdSAhDZtTG38o+w
-	VT4IBVqC+6q2P1dejix2N6usfbUJpwmjYmj4sGmVFS1IniqaeGD/R7tzyXXqhBEcrdkC0gFc2GI
-	5x4VSWEDUJEFKIvHtuvcRXPOognfgDd7KbJ4wqcoP18oBrRwLGFBrUjmKVs1vc2wunmCRPEco8U
-	WGV9R3skEmy5mw==
-X-Google-Smtp-Source: AGHT+IHPgtyksfxV717Ovby5/EZ85xi1T/C77gVscvPLkijnPA2Hto/kR8guWoggO+GeixLtqrCFiA==
-X-Received: by 2002:a05:6a20:7345:b0:1e1:c03c:b420 with SMTP id adf61e73a8af0-1ed7a6b820dmr14182766637.31.1738258605613;
-        Thu, 30 Jan 2025 09:36:45 -0800 (PST)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acebe384272sm1423838a12.18.2025.01.30.09.36.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 09:36:45 -0800 (PST)
-From: Kevin Hilman <khilman@kernel.org>
-To: Keita Morisaki <keyz@google.com>, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- lpieralisi@kernel.org, sudeep.holla@arm.com, rafael@kernel.org,
- daniel.lezcano@linaro.org, linux-pm@vger.kernel.org
-Cc: aarontian@google.com, yimingtseng@google.com, Keita Morisaki
- <keyz@google.com>
-Subject: Re: [PATCH v3] cpuidle: psci: Add trace for PSCI domain idle
-In-Reply-To: <20250125013145.1664062-1-keyz@google.com>
-References: <20250125012734.1661860-1-keyz@google.com>
- <20250125013145.1664062-1-keyz@google.com>
-Date: Thu, 30 Jan 2025 09:36:44 -0800
-Message-ID: <7hy0ysi4pf.fsf@baylibre.com>
+	s=arc-20240116; t=1738258626; c=relaxed/simple;
+	bh=uSM1MPbvBqUgJ0jp5x1Q+m8RSmC36vz1+mKZC8DAuew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I9bjemDxR/o7qBQ8liVPXVPJ97zSorL0v/WFJaiY0d1CL06D9+Yc5fZNwOPNX5dmfgyAwHy7UJYMxcbD0Cg4/tpj1/xuIWEXrIdL7lFcmxGrMPsUFksZcisTPCCtMv8ELg+hiPnT9SKrXNb/XNLs2R9Z3fxYvuHnXC0vTKtGcoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3aXBrT1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3aXBrT1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 766E9C4CED2;
+	Thu, 30 Jan 2025 17:37:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738258626;
+	bh=uSM1MPbvBqUgJ0jp5x1Q+m8RSmC36vz1+mKZC8DAuew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M3aXBrT1xWurjBUpscuGw4PcYy9pbYV8+odimCcMebVNDWpTgDv1Cb/DfvS7o9RrW
+	 7vwbI46DvKvtqWyNRqdmNUnTR1xQjxfiNGLF/QtG8BCPczGZkGvw1vfYYGG9r6JzoV
+	 uMMy889mgmFWrw4CpPWuXbXjSygGQLqwAU5z1SCwefC02EfCb6VIX4D/5Lu5F3wy2F
+	 RqKYGc+4Zr9tLA4nh8/jAVgtwGwNfM8Zwy7ikxu/Rdp8iSd/XP6PDr8IJm9n/nqQMa
+	 tyOtbIpUAzVQp6wIoh8PR011LfVWQqyrXwOl9b28ZMutQQ7dxPI+gDtupBfewd+kwG
+	 xCfLjLTn0aQ4w==
+Date: Thu, 30 Jan 2025 18:37:00 +0100
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Zheng Zengkai <zhengzengkai@huawei.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] ACPI: GTDT: Relax sanity checking on Platform Timers
+ array count
+Message-ID: <Z5u4vCwVCIhiE72I@lpieralisi>
+References: <20250128001749.3132656-1-oliver.upton@linux.dev>
+ <Z5i2j9gFB2iyN9g4@lpieralisi>
+ <Z5lBMBY7XoFJmpGM@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5lBMBY7XoFJmpGM@linux.dev>
 
-Keita Morisaki <keyz@google.com> writes:
+On Tue, Jan 28, 2025 at 12:42:24PM -0800, Oliver Upton wrote:
+> Hi Lorenzo,
+> 
+> On Tue, Jan 28, 2025 at 11:50:55AM +0100, Lorenzo Pieralisi wrote:
+> > > @@ -188,13 +188,17 @@ int __init acpi_gtdt_init(struct acpi_table_header *table,
+> > >  		cnt++;
+> > >  
+> > >  	if (cnt != gtdt->platform_timer_count) {
+> > > +		cnt = min(cnt, gtdt->platform_timer_count);
+> > 
+> > Thank you for reporting this.
+> > 
+> > There is something I need to understand.
+> > 
+> > What's wrong cnt (because platform_timer_valid() fails for some
+> > reason on some entries whereas before the commit we
+> > are fixing was applied we *were* parsing those entries) or
+> > gtdt->platform_timer_count ?
+> > 
+> > I *guess* the issue is the following:
+> > 
+> > gtdt->platform_timer_count reports the number of GT blocks in the
+> > GTDT not including Arm generic watchdogs, whereas cnt counts both
+> > structure types (and that's what gtdt->platform_timer_count should
+> > report too if it was correct).
+> 
+> I've seen two different issues so far:
+> 
+>  - In one case, the offset of the platform timer array is entirely
+>    beyond the GTDT
 
-> The trace event cpu_idle provides insufficient information for debugging
-> PSCI requests due to lacking access to determined PSCI domain idle
-> states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
-> idle states the power domain has.
->
-> Add new trace events namely psci_domain_idle_enter and
-> psci_domain_idle_exit to trace enter and exit events with a determined
-> idle state.
->
-> These new trace events will help developers debug CPUidle issues on ARM
-> systems using PSCI by providing more detailed information about the
-> requested idle states.
->
-> Signed-off-by: Keita Morisaki <keyz@google.com>
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+And we were parsing it before the commit you are fixing was applied
+because we weren't validating the first entry ?
 
-Tested-by: Kevin Hilman <khilman@baylibre.com>
+That's how the loop was working before:
 
-I've been using some local trace_printk() to do exactly this, so I fully
-support having some official tracepoints here. 
+#define for_each_platform_timer(_g)
+	for (_g = acpi_gtdt_desc.platform_timer; _g;
+		_g = next_platform_timer(_g))
 
-For my local hacks, I was trackin the state index as well as the state
-value since for quick debug, I find the index to more human readable
-than the state value, which I have to compare with the
-arm,psci-suspend-pararm from the DT.
+We were parsing the first entry and now we don't anymore (rightly so),
+even with this fix applied, correct ?
 
-Anyways, thanks for submitting this!
+>  - In another, the GTDT has a timer array of length 2, but only the
+>    first structure falls within the length of the overall GTDT
 
-Kevin
+Right.
+
+> Since cnt is the result of doing a bounds-checked walk of the platform
+> timer array, both of these issues cause the sanity check to fail.
+
+Yep.
+
+> > >  	if (platform_timer_count)
+> > > -		*platform_timer_count = gtdt->platform_timer_count;
+> > > +		*platform_timer_count = cnt;
+> > 
+> > I think this should be fine as things stand (but see above).
+> > 
+> > It is used in:
+> > 
+> > gtdt_sbsa_gwdt_init() - just to check if there are platform timers entries
+> > 
+> > arch_timer_mem_acpi_init() - to create a temporary array to init arch mem timer
+> > 			     entries (the array is oversized because it
+> > 			     includes watchdog entries in the count)
+> > 
+> > In both cases taking the
+> > 
+> > min(cnt, gtdt->platform_timer_count);
+> > 
+> > should work AFAICS
+> 
+> It was probably worth noting in the changelog that I did this to
+> gracefully handle the reverse of this issue where we could dereference
+> platform timer entries that are within the bounds of the GTDT but exceed
+> gtdt->platform_timer_count.
+
+Yes, that's strike three, where platform_timer_count is borked,
+I understand you have not hit this one though but it seems
+right to fix it the way you did.
+
+I am just trying to understand given that we are sending the fix to
+stable whether this fix can affect other broken GTDTs (or better, whether
+other borked FW can affect this change) but I hope not, it should not.
+
+> > (hard to grok though, we - as in ACPI maintainers -
+> > need to clean this up).
+> 
+> Heh, thought this smelled a little ripe ;-) Went for the minimal fix
+> first.
+
+I am sorry you have to deal with this, the kernel is not there to
+validate the firmware but on the other hand when it doesn't that's the
+outcome. Apologies.
+
+Lorenzo
