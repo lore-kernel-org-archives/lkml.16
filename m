@@ -1,135 +1,148 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F828F58
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 02:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318111854;
+	Thu, 30 Jan 2025 02:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738203447; cv=none; b=QmhDO2eJ/ER/yggziJnRpz5C6a0LRO3PLqNO0zrjHR6IGVQES7Yyqpfs2p2zPv+Y3ft0+7AJfkoRJrnNUMEJzXu9x+MNeyg9274+ATFyF8NqvWWTA6rDApN2435ALIoPxYGimcmS+TARzniopPoXyHA5f60SafSF7sUTHcnCPec=
+	t=1738204248; cv=none; b=FaLvZth9sRCmzj1hqzrYzhYIOWgZnnKBLkHcdSe/9IToXuIQ2H4NtEE94d8OAq/6OnF5tvT5ryVYamOHN9Ny7kMV2vM1Ni85JyxCGxb31EE1SLSndXgIYgX+TO0JTPCVPX3WyyaJpr9VZHRG2LwDRl+4/fwWXrpzOTYVK5yK2d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738203447; c=relaxed/simple;
-	bh=k2ahaWMNxAJi1RUyuz7HG+Pjbs9YD0No7Dbet9o5ZXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rDe1TVTy762hUI14nuL/ONSjmI+83i6+Q4gOggpoPEMohlufCy4RdnHwVQFf+PbxEzmc9yPKOvJohF4Z8OLI6slXJCSPnnNNFSU7WZJN7BGEglRDKJdh5epkQOv8cfg4xg0suorDnb0aVTMQT3TqRRi1ZnAPTbwIF/Ujml29mWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wMZKFrvm; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738204248; c=relaxed/simple;
+	bh=e4jbTg/JY2I7eJPj0aXC/9HSq2Ljb5HCCsZGm12Jwr0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OHMkmg6wp4hyiZLWA7Nstryu/ODyUC7W84Zw5EHZUEQvqzRL9Pkosod4i2b/dALtJLFW8QM/bF5Fqz5qPJCClI/JqnLwmt39cvcXFds61P8Z6kMg7OtM7CoVlcIihpITE8mY0OOplubIC+pu5oMmmGiJsf2/d26be+REL5nAkxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2nGbi0T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wMZKFrvm"
-Date: Thu, 30 Jan 2025 02:17:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738203427;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MBlX82d4STzokLElvffOzFUNWqH0dO46wN3C2YfIhZM=;
-	b=wMZKFrvmjNWbdkHkKBOb8mvK6r9f1d6/5nRLHfeEj81JksHeLTC/Ksb68EK5qDG1o+huh5
-	CvRMoq2IIbYXrSZxmfygG0LQA9Nw3T/iBkl1h/JuyAp7GFukOdl3C+kCH1V1lEjyhruPFc
-	ge5ano2M6wnAtSgseRg3SUcFsfuzKos=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: nSVM: Enter guest mode before initializing nested
- NPT MMU
-Message-ID: <Z5rhH342Jghl2tgL@google.com>
-References: <20250130010825.220346-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2nGbi0T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B50C2C4CED1;
+	Thu, 30 Jan 2025 02:30:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738204247;
+	bh=e4jbTg/JY2I7eJPj0aXC/9HSq2Ljb5HCCsZGm12Jwr0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y2nGbi0T6W0Oi8KOuLylVn2xAg2yXpQ2n5IISfJfVxbHKfSqWlxGXS5zVm7Do/Gio
+	 7bp8aPT5RgM3Wo4MacJLJlpnGqbmB6ttpLNLme1jLj2+I20HUBQECEvrVz6Pd36Yu3
+	 L9yEuGCVz/cJPl3Fr/tvqGhi2vq9UIH7kgzlEodzDg06ftpHLiVS3qbBkS2D6mZI1/
+	 OUAdyzBIDYiI6eKfFnpbmuI2UKzoPdbzDqDmvvdqOa6Sfub4EVNYBdlVElNLKqtVgw
+	 cYRSYqP15TSYZsp6oSQQvYJgRCOMV9ByiCElgbFd4927X3VAag+HRpkxQ+4Mz2i0D9
+	 esvKqqdHF/IlA==
+Message-ID: <5d8d4fa6-66ef-48c1-b13a-607a70e476f4@kernel.org>
+Date: Thu, 30 Jan 2025 11:30:43 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130010825.220346-1-seanjc@google.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 14/14] ahci: sata_rcar: Switch from CONFIG_PM_SLEEP
+ guards to pm_sleep_ptr()
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Raphael Gallais-Pou <rgallaispou@gmail.com>
+Cc: Niklas Cassel <cassel@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Patrice Chotard <patrice.chotard@foss.st.com>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Viresh Kumar <vireshk@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-ide@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-renesas-soc@vger.kernel.org
+References: <20250127-pm_ata-v1-0-f8f50c821a2a@gmail.com>
+ <20250127-pm_ata-v1-14-f8f50c821a2a@gmail.com>
+ <CAMuHMdWdXNB=ijpWHWY5HgwJw8yw4jk9Bnmez-8MLzGRCQrXdg@mail.gmail.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <CAMuHMdWdXNB=ijpWHWY5HgwJw8yw4jk9Bnmez-8MLzGRCQrXdg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 29, 2025 at 05:08:25PM -0800, Sean Christopherson wrote:
-> When preparing vmcb02 for nested VMRUN (or state restore), "enter" guest
-> mode prior to initializing the MMU for nested NPT so that guest_mode is
-> set in the MMU's role.  KVM's model is that all L2 MMUs are tagged with
-> guest_mode, as the behavior of hypervisor MMUs tends to be significantly
-> different than kernel MMUs.
+On 1/27/25 22:45, Geert Uytterhoeven wrote:
+> Hi Raphael,
 > 
-> Practically speaking, the bug is relatively benign, as KVM only directly
-> queries role.guest_mode in kvm_mmu_free_guest_mode_roots(), which SVM
-> doesn't use, and in paths that are optimizations (mmu_page_zap_pte() and
-> shadow_mmu_try_split_huge_pages()).
+> On Mon, 27 Jan 2025 at 13:46, Raphael Gallais-Pou <rgallaispou@gmail.com> wrote:
+>> Letting the compiler remove these functions when the kernel is built
+>> without CONFIG_PM_SLEEP support is simpler and less error prone than the
+>> use of #ifdef based kernel configuration guards.
+>>
+>> Signed-off-by: Raphael Gallais-Pou <rgallaispou@gmail.com>
+> 
+> Thanks for your patch!
+> 
+> The subsystem prefix is "ata", not "ahci" (not all ATA-drivers are
+> AHCI-drivers).
 
-Just curious, what about kvm_mmu_page_ad_need_write_protect()? Is it
-also bengin?
+Yep. The convention is:
+
+ata: driver_name: xxx
+
+So it would be:
+
+ata: sata_rcar: Switch from CONFIG_PM_SLEEP guards to pm_sleep_ptr()
+
+for this patch. And the same comment applies to all your other patches in the
+series.
 
 > 
-> And while the role is incorprated into shadow page usage, because nested
-> NPT requires KVM to be using NPT for L1, reusing shadow pages across L1
-> and L2 is impossible as L1 MMUs will always have direct=1, while L2 MMUs
-> will have direct=0.
+>> --- a/drivers/ata/sata_rcar.c
+>> +++ b/drivers/ata/sata_rcar.c
+>> @@ -927,7 +927,6 @@ static void sata_rcar_remove(struct platform_device *pdev)
+>>         pm_runtime_disable(&pdev->dev);
+>>  }
+>>
+>> -#ifdef CONFIG_PM_SLEEP
+>>  static int sata_rcar_suspend(struct device *dev)
+>>  {
+>>         struct ata_host *host = dev_get_drvdata(dev);
+>> @@ -1005,7 +1004,6 @@ static const struct dev_pm_ops sata_rcar_pm_ops = {
+>>         .poweroff       = sata_rcar_suspend,
+>>         .restore        = sata_rcar_restore,
+>>  };
+>> -#endif
 > 
-> Hoist the TLB processing and setting of HF_GUEST_MASK to the beginning
-> of the flow instead of forcing guest_mode in the MMU, as nothing in
-> nested_vmcb02_prepare_control() between the old and new locations touches
-> TLB flush requests or HF_GUEST_MASK, i.e. there's no reason to present
-> inconsistent vCPU state to the MMU.
+> If CONFIG_PM_SLEEP is disabled (e.g. m68k allyesconfig):
 > 
-> Fixes: 69cb877487de ("KVM: nSVM: move MMU setup to nested_prepare_vmcb_control")
-> Cc: stable@vger.kernel.org
-> Reported-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+>     drivers/ata/sata_rcar.c: In function ‘sata_rcar_suspend’:
+>     drivers/ata/sata_rcar.c:936:9: error: implicit declaration of
+> function ‘ata_host_suspend’; did you mean ‘sata_rcar_suspend’?
+> [-Werror=implicit-function-declaration]
+>       936 |         ata_host_suspend(host, PMSG_SUSPEND);
+>           |         ^~~~~~~~~~~~~~~~
+>           |         sata_rcar_suspend
+>     drivers/ata/sata_rcar.c: In function ‘sata_rcar_resume’:
+>     drivers/ata/sata_rcar.c:973:9: error: implicit declaration of
+> function ‘ata_host_resume’; did you mean ‘sata_rcar_resume’?
+> [-Werror=implicit-function-declaration]
+>       973 |         ata_host_resume(host);
+>           |         ^~~~~~~~~~~~~~~
+>           |         sata_rcar_resume
+> 
+>>
+>>  static struct platform_driver sata_rcar_driver = {
+>>         .probe          = sata_rcar_probe,
+>> @@ -1013,9 +1011,7 @@ static struct platform_driver sata_rcar_driver = {
+>>         .driver = {
+>>                 .name           = DRV_NAME,
+>>                 .of_match_table = sata_rcar_match,
+>> -#ifdef CONFIG_PM_SLEEP
+>> -               .pm             = &sata_rcar_pm_ops,
+>> -#endif
+>> +               .pm             = pm_sleep_ptr(&sata_rcar_pm_ops),
+>>         },
+>>  };
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
 
-FWIW:
 
-Reviewed-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-
-> ---
->  arch/x86/kvm/mmu/mmu.c    |  2 +-
->  arch/x86/kvm/svm/nested.c | 10 +++++-----
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 74fa38ebddbf..3ff55a18347d 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -5524,7 +5524,7 @@ void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, unsigned long cr0,
->  	union kvm_mmu_page_role root_role;
->  
->  	/* NPT requires CR0.PG=1. */
-> -	WARN_ON_ONCE(cpu_role.base.direct);
-> +	WARN_ON_ONCE(cpu_role.base.direct || !cpu_role.base.guest_mode);
->  
->  	root_role = cpu_role.base;
->  	root_role.level = kvm_mmu_get_tdp_level(vcpu);
-> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index d77b094d9a4d..04c375bf1ac2 100644
-> --- a/arch/x86/kvm/svm/nested.c
-> +++ b/arch/x86/kvm/svm/nested.c
-> @@ -646,6 +646,11 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
->  	u32 pause_count12;
->  	u32 pause_thresh12;
->  
-> +	nested_svm_transition_tlb_flush(vcpu);
-> +
-> +	/* Enter Guest-Mode */
-> +	enter_guest_mode(vcpu);
-> +
->  	/*
->  	 * Filled at exit: exit_code, exit_code_hi, exit_info_1, exit_info_2,
->  	 * exit_int_info, exit_int_info_err, next_rip, insn_len, insn_bytes.
-> @@ -762,11 +767,6 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
->  		}
->  	}
->  
-> -	nested_svm_transition_tlb_flush(vcpu);
-> -
-> -	/* Enter Guest-Mode */
-> -	enter_guest_mode(vcpu);
-> -
->  	/*
->  	 * Merge guest and host intercepts - must be called with vcpu in
->  	 * guest-mode to take effect.
-> 
-> base-commit: eb723766b1030a23c38adf2348b7c3d1409d11f0
-> -- 
-> 2.48.1.262.g85cc9f2d1e-goog
-> 
+-- 
+Damien Le Moal
+Western Digital Research
