@@ -1,88 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45AD1474DA;
-	Thu, 30 Jan 2025 10:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E99E91BCA19;
+	Thu, 30 Jan 2025 10:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738233413; cv=none; b=iALbWMIVafhuHhLQTHbLIlEeFEel9skhnSmoNU8oD1/+HhCnQK+7iTkFvhN3+/KapHo5EPisj5gC4pG3K335GEImTL3YBl7fyjQ4i+TFx6xplga8R7Mp6jYLtV4CHQVjRfvUJMaO+ZjZCnh+SfhhfLbLwORsbwtrMid8resLZN4=
+	t=1738233423; cv=none; b=L4o4m9c8LCXZjP9jcPNstwItaLFAlSDIMcvQ7bvBVfAJhALYLKVeTsLkdpfSndgDhk1rBITxz/b0NsSW/6ZCGdylMLpCaozwL3DkFxv1/cCVFFnd3MaFS8M2O2l6krcobsT2hY1yv6dSbFIT+XBsMjs8rb/RVjuCWcVyLOaVL6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738233413; c=relaxed/simple;
-	bh=Q1g2XdY02x7VvZoUchhfn9NKrgAJum1W+VcUXx36XGQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gBRXZIj1955ma0V8nN823dZSSTsS2Kz/IM2/PIJ05Lxk2wo2q6dGPbvg8exM0QGHV7EIKuYb7L0ROQ+bAVKPVG+3AbC3toaynDlso5hnZJywplrFgHfvjOfd2fU039IIQnli5rSbcyXqI0A//rsycR8ehNHcMExauX7o2z1lynE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWP7xQrY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738233423; c=relaxed/simple;
+	bh=IakoazHnI69jhWVkfuysRy7NUYvtYEtGyHjmLWa1zYg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gRzefUSbZW+vSGvwFyCPKLnXjQ3I3lhbj1ofSrnocNu1vMOzk1BgV3BYgE8Cvt/j5UWcY5Jm/K100wdGqT5eNjWnsMdUjHVH/mIuI6fvpGeQRpRqggSd34YPb86UlYloSttn2SEnY8AMIJmP2APH6128CuWbsJQ0EnbfkPpiPp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EF7mc93R; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWP7xQrY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9265EC4CED2;
-	Thu, 30 Jan 2025 10:36:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738233413;
-	bh=Q1g2XdY02x7VvZoUchhfn9NKrgAJum1W+VcUXx36XGQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jWP7xQrYy2jKICNEZ0uTZUmWvFOCS2AIBno9AucyFuDVXpyIPKBqHVdzdvli10BI/
-	 AZMASTcyBplXWnvU6Bbyv5WNfT9fWMXgFdsXZfEmF4fnkMIHkqOO5VcZ6kCWpFtN4l
-	 GCAbwjx5BU2TmWxXKuvXmaFuTxHU5eRfZFlIct2ar3zE5nwJTJuOcsOGwe9nG1Nelf
-	 zX8eUHPUm3k6BXO5Kh379FLdMsmt91ckWiINDqSrdsJ2ePlEj4IC3SJSW2qaw0XLLX
-	 myQ43tjiVScqnBgaeCfBLkCn6bFnQpdfsNKg9BQbY/bp+N1t8FMmmhcjINdf52bw7f
-	 LLM92/G5drZ3g==
-Date: Thu, 30 Jan 2025 10:36:48 +0000
-From: Simon Horman <horms@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	rdunlap@infradead.org, kernel-team@meta.com
-Subject: Re: [PATCH RFC net-next v3 2/8] netconsole: Rename userdata to
- extradata
-Message-ID: <20250130103648.GF113107@kernel.org>
-References: <20250124-netcon_cpu-v3-0-12a0d286ba1d@debian.org>
- <20250124-netcon_cpu-v3-2-12a0d286ba1d@debian.org>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EF7mc93R"
+Received: from [10.156.205.88] (unknown [167.220.238.88])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6431B2109CD7;
+	Thu, 30 Jan 2025 02:36:58 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6431B2109CD7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738233421;
+	bh=mHU7Mfj+jdlBvEEUG3Mk560s4FlcL4gxyi/SpShMVNE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EF7mc93R7ozr4HWtaTUzkbz0uslmOMqrlEanm/rjn3O836YTZTP1Hlo9HoABT4Ka0
+	 WrruTcK51vLoChcNhmJfPPFN5+n4+uuGn2iqDhEIejPmFjl7dKjqLJWunpI9prVWCw
+	 8h7zd/F7OYeBQyF5LWUqi2B9q0W5fPxX2Datin+w=
+Message-ID: <f2cbccc0-1bab-48a3-b837-ce875df21efe@linux.microsoft.com>
+Date: Thu, 30 Jan 2025 16:06:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250124-netcon_cpu-v3-2-12a0d286ba1d@debian.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/8] unwind: arm64: add reliable stacktrace support for
+ arm64
+To: Weinan Liu <wnliu@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Indu Bhagat <indu.bhagat@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev,
+ Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-toolchains@vger.kernel.org, linux-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org, joe.lawrence@redhat.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250127213310.2496133-1-wnliu@google.com>
+ <20250127213310.2496133-7-wnliu@google.com>
+Content-Language: en-US
+From: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
+In-Reply-To: <20250127213310.2496133-7-wnliu@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 24, 2025 at 07:16:41AM -0800, Breno Leitao wrote:
-> Rename "userdata" to "extradata" since this structure will hold both
-> user and system data in future patches. Keep "userdata" term only for
-> data that comes from userspace (configfs), while "extradata" encompasses
-> both userdata and future kerneldata.
-> 
-> These are the rules of the design
-> 
-> 1. extradata_complete will hold userdata and sysdata (coming)
-> 2. sysdata will come after userdata_length
-> 3. extradata_complete[userdata_length] string will be replaced at every
->    message
-> 5. userdata is replaced when configfs changes (update_userdata())
-> 6. sysdata is replaced at every message
-> 
-> Example:
->   extradata_complete = "userkey=uservalue cpu=42"
->   userdata_length = 17
->   sysdata_length = 7 (space (" ") is part of sysdata)
-> 
-> Since sysdata is still not available, you will see the following in the
-> send functions:
-> 
-> 	extradata_len = nt->userdata_length;
-> 
-> The upcoming patches will, which will add support for sysdata, will
-> change it to:
-> 
-> 	extradata_len = nt->userdata_length + sysdata_len;
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+On 28-01-2025 03:03, Weinan Liu wrote:
+> To support livepatch, we need to add arch_stack_walk_reliable to
+> support reliable stacktrace according to
+> https://docs.kernel.org/livepatch/reliable-stacktrace.html#requirements
+>
+> report stacktrace is not reliable if we are not able to unwind the stack
+> by sframe unwinder and fallback to FP based unwinder
+>
+> Signed-off-by: Weinan Liu <wnliu@google.com>
+> ---
+>   arch/arm64/include/asm/stacktrace/common.h |  2 +
+>   arch/arm64/kernel/stacktrace.c             | 47 +++++++++++++++++++++-
+>   2 files changed, 47 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/include/asm/stacktrace/common.h b/arch/arm64/include/asm/stacktrace/common.h
+> index 19edae8a5b1a..26449cd402db 100644
+> --- a/arch/arm64/include/asm/stacktrace/common.h
+> +++ b/arch/arm64/include/asm/stacktrace/common.h
+> @@ -26,6 +26,7 @@ struct stack_info {
+>    * @stacks:      An array of stacks which can be unwound.
+>    * @nr_stacks:   The number of stacks in @stacks.
+>    * @cfa:         The sp value at the call site of the current function.
+> + * @unreliable:  Stacktrace is unreliable.
+>    */
+>   struct unwind_state {
+>   	unsigned long fp;
+> @@ -36,6 +37,7 @@ struct unwind_state {
+>   	int nr_stacks;
+>   #ifdef CONFIG_SFRAME_UNWINDER
+>   	unsigned long cfa;
+> +	bool unreliable;
+>   #endif
+>   };
+>   
+> diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
+> index c035adb8fe8a..eab16dc05bb5 100644
+> --- a/arch/arm64/kernel/stacktrace.c
+> +++ b/arch/arm64/kernel/stacktrace.c
+> @@ -310,11 +310,16 @@ kunwind_next(struct kunwind_state *state)
+>   	case KUNWIND_SOURCE_TASK:
+>   	case KUNWIND_SOURCE_REGS_PC:
+>   #ifdef CONFIG_SFRAME_UNWINDER
+> -	err = unwind_next_frame_sframe(&state->common);
+> +	if (!state->common.unreliable)
+> +		err = unwind_next_frame_sframe(&state->common);
+>   
+>   	/* Fallback to FP based unwinder */
+> -	if (err)
+> +	if (err || state->common.unreliable) {
+>   		err = kunwind_next_frame_record(state);
+> +		/* Mark its stacktrace result as unreliable if it is unwindable via FP */
+> +		if (!err)
+> +			state->common.unreliable = true;
+> +	}
+>   #else
+>   	err = kunwind_next_frame_record(state);
+>   #endif
+> @@ -446,6 +451,44 @@ noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry,
+>   	kunwind_stack_walk(arch_kunwind_consume_entry, &data, task, regs);
+>   }
+>   
+> +#ifdef CONFIG_SFRAME_UNWINDER
+> +struct kunwind_reliable_consume_entry_data {
+> +	stack_trace_consume_fn consume_entry;
+> +	void *cookie;
+> +	bool unreliable;
+> +};
+> +
+> +static __always_inline bool
+> +arch_kunwind_reliable_consume_entry(const struct kunwind_state *state, void *cookie)
+> +{
+> +	struct kunwind_reliable_consume_entry_data *data = cookie;
+> +
+> +	if (state->common.unreliable) {
+> +		data->unreliable = true;
+> +		return false;
+> +	}
+> +	return data->consume_entry(data->cookie, state->common.pc);
+> +}
+> +
+> +noinline notrace int arch_stack_walk_reliable(
+> +				stack_trace_consume_fn consume_entry,
+> +				void *cookie, struct task_struct *task)
+> +{
+> +	struct kunwind_reliable_consume_entry_data data = {
+> +		.consume_entry = consume_entry,
+> +		.cookie = cookie,
+> +		.unreliable = false,
+> +	};
+> +
+> +	kunwind_stack_walk(arch_kunwind_reliable_consume_entry, &data, task, NULL);
+> +
+> +	if (data.unreliable)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>   struct bpf_unwind_consume_entry_data {
+>   	bool (*consume_entry)(void *cookie, u64 ip, u64 sp, u64 fp);
+>   	void *cookie;
 
+Why not fold the previous patch and this into one?
+
+But the code looks good to me.
+
+Reviewed-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>.
