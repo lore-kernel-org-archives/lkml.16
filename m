@@ -1,141 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.crpt.ru (mail.crpt.ru [91.236.205.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482E81953A1;
-	Thu, 30 Jan 2025 07:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0DE819;
+	Thu, 30 Jan 2025 08:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.236.205.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738223922; cv=none; b=JKc0oqqKinuUNIXUgVSdilah5sics3+XBVu5L32tK+dCCUrAXtqYTdTaKbMGEewvBQJfgmQrKP0JbXqzYAa4hhxVMf9fbbrD4CspaxT1PFyf/zcXBsMJSTKkPBqv02C/4krZhUAJWKF9RjvqKBihgrdJ/Rs6f2lZfyQF7brJ/yk=
+	t=1738224287; cv=none; b=Bhxg4GpYWLRg/MP8dHtYy2adA9Jn2wfZ1kblwYWb8UQVmfVX8MNld36vFeOMNwMIoJ//8siAqIoOjivOfyGXvPvYjfSxAcGZAuNn6ZKlVzly1SF1obY8hViY74nBJLeiVxVtuKTcvOcJZPAQM1DpmczKHZSNgJD/IK9StKC+uOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738223922; c=relaxed/simple;
-	bh=dIHA+O9/hLU1zERatlqoW+YkMNO/2o8SvSAKVqsR5GY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lv7twqZn3QzcKxuyXzCXfiXFEyV6b832YaW4qwGQ9ivmYxZO/5iCOqXJO+iic03AWF+QTruVZhuAMgeLQ8/BQ7eBplo1WF9OgdIjC+Wd9RRUiyXWZUVAvDzaT/H2MGx+Nh1ouqPKQvZrTTX9HbYYHNg8MOy9PdcGEN6ifI3KWuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LywKyidR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738224287; c=relaxed/simple;
+	bh=FPyuAYQUhs13KSVfHwzqY6NrV2NyGs/Eq/hi0BLT2+o=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=QANVimOwVEmOGOavBIKykUhfjQ96ADkKycH9Lm4vWgQMCBNmchZwMcTju9sMv1g8rkBqCbTZ10r14oB7NtGB50zkXTIdmtWYclfrrl4Eg0D31E22aBTUx0XDdizx5YQtcCE+t6vJFq5iyeDc05TEncA8gHKKWj9IYnBtXlSwKMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru; spf=pass smtp.mailfrom=crpt.ru; dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b=js3viEcB; arc=none smtp.client-ip=91.236.205.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crpt.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LywKyidR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 427C7C4CED2;
-	Thu, 30 Jan 2025 07:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738223921;
-	bh=dIHA+O9/hLU1zERatlqoW+YkMNO/2o8SvSAKVqsR5GY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LywKyidRovLcgNk4ofoQpj1Ji8uoFNukgzzSPFPbZYXWuAlX9ZH045Qyj4OPnrRge
-	 gjz6GqkJwjvAqUD9rjWklbfkIH45hk/iJRt8gbDMjV9PqNASLbBRaibJ65erfb1cjp
-	 L2HjQe5gUgXKbaGbC8Ei2HFgaSJiRbESbGis+HORyLkhSgi/sjK/VdfItwjlGhNrG6
-	 smQ/kUH4x/gMr8OkQ1Eh0XjUI2Q29pHVzW2iNi+V8iXcmbaYvWXZJTDeltBpjFAops
-	 K34zEg//OVhiGQF+HWm0+/rw4X4Ei8LFVYXiUndRKjYQiLwyf8nndimtLOnC115zR2
-	 eNZ2v8x4QQiGQ==
-Message-ID: <02d3f555-c2e9-40ed-8695-8ae7f260e259@kernel.org>
-Date: Thu, 30 Jan 2025 08:58:35 +0100
+	dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b="js3viEcB"
+Received: from mail.crpt.ru ([192.168.60.4])
+	by mail.crpt.ru  with ESMTP id 50U84PBC001057-50U84PBE001057
+	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
+	Thu, 30 Jan 2025 11:04:25 +0300
+Received: from EX2.crpt.local (192.168.60.4) by ex2.crpt.local (192.168.60.4)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Thu, 30 Jan
+ 2025 11:04:25 +0300
+Received: from EX2.crpt.local ([192.168.60.4]) by EX2.crpt.local
+ ([192.168.60.4]) with mapi id 15.01.2507.044; Thu, 30 Jan 2025 11:04:25 +0300
+From: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>
+To: Cheng Xu <chengyou@linux.alibaba.com>
+CC: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>, Kai Shen
+	<kaishen@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky
+	<leon@kernel.org>, "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
+Subject: [PATCH] RDMA/erdma: Drop redundant NULL check on error path
+Thread-Topic: [PATCH] RDMA/erdma: Drop redundant NULL check on error path
+Thread-Index: AQHbcu2Tinz3gFtKbkO9g5PbXuMOAA==
+Date: Thu, 30 Jan 2025 08:04:24 +0000
+Message-ID: <20250130080418.37915-1-a.vatoropin@crpt.ru>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-kse-serverinfo: EX2.crpt.local, 9
+x-kse-antivirus-interceptor-info: scan successful
+x-kse-antivirus-info: Clean, bases: 1/29/2025 10:00:00 PM
+x-kse-attachment-filter-triggered-rules: Clean
+x-kse-attachment-filter-triggered-filters: Clean
+x-kse-bulkmessagesfiltering-scan-result: protection disabled
+Content-Type: text/plain; charset="koi8-r"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 09/13] wifi: ath12k: Power up root PD
-To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>, ath12k@lists.infradead.org
-Cc: linux-wireless@vger.kernel.org, Kalle Valo <kvalo@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>
-References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
- <20250130043508.1885026-10-quic_rajkbhag@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250130043508.1885026-10-quic_rajkbhag@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-FEAS-Client-IP: 192.168.60.4
+X-FE-Policy-ID: 2:4:0:SYSTEM
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=crpt.ru; s=crpt.ru; c=relaxed/relaxed;
+ h=from:to:cc:subject:date:message-id:content-type:mime-version;
+ bh=19idjH+TZoSSFpKdhgl4ec5+ZtE0tIU0bGAgd1gN7eI=;
+ b=js3viEcBN3VYCOxtGOPASh6isS5yNZH48K3NKf0XPLuivlT5jMKc2klv4j3VeQJNcjHVk/LNYOBL
+	DB/nrI5vE5WkHLrDN6kdKdul5Esq8GjOg9fbsmEvEqU7mgnMrTmylk4UFxYP38XIPG+KevFQsG6d
+	Zu+BFTLdUy/pSx0VwZv86/zNNsJt9WksEymobzMfGRX03sMSgLopNoiZqCubjILuxC4k3JYzyHlF
+	hKcU6/sIP1zY8wXhwxwx6S/p9n8K+PtwZQUGvJnhkqR1HuFQ/8WyrWRYPr8izY3T9MUDQyU+hQLX
+	hb6LGnNJmxxRVrhf3Nhc8gford+6fD3fHPk0OQ==
 
-On 30/01/2025 05:35, Raj Kumar Bhagat wrote:
-> +
-> +static void ath12k_ahb_unregister_rproc_notifier(struct ath12k_base *ab)
-> +{
-> +	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
-> +
-> +	if (!ab_ahb->root_pd_notifier) {
-> +		ath12k_err(ab, "Rproc notifier not registered\n");
-> +		return;
-> +	}
-> +
-> +	qcom_unregister_ssr_notifier(ab_ahb->root_pd_notifier,
-> +				     &ab_ahb->root_pd_nb);
-> +	ab_ahb->root_pd_notifier = NULL;
-> +}
-> +
-> +static int ath12k_ahb_get_rproc(struct ath12k_base *ab)
-> +{
-> +	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
-> +	struct device *dev = ab->dev;
-> +	struct device_node *np;
-> +	struct rproc *prproc;
-> +
-> +	np = of_parse_phandle(dev->of_node, "qcom,rproc", 0);
-> +	if (!np) {
-> +		ath12k_err(ab, "failed to get q6_rproc handle\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	prproc = rproc_get_by_phandle(np->phandle);
-> +	if (!prproc)
+From: Andrey Vatoropin <a.vatoropin@crpt.ru>
 
-Nothing improved here - you still leak the reference.
+Static analysis shows that on the error handling path in the
+erdma_connect() function, the socket pointer cannot be NULL, since it is
+pre-initialized in sock_create().  A potential failure in sock_create()
+is processed.
 
-> +		return dev_err_probe(&ab->pdev->dev, -EPROBE_DEFER,
-> +				     "failed to get rproc\n");
-> +
-> +	ab_ahb->tgt_rproc = prproc;
+Remove the extra NULL check. It is meaningless and harms the readability
+of the code, since before that the socket pointer is unconditionally
+dereferenced.
 
-And here.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+      =20
+Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
+---
+ drivers/infiniband/hw/erdma/erdma_cm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> +
-> +	return 0;
-> +}
-Best regards,
-Krzysztof
+diff --git a/drivers/infiniband/hw/erdma/erdma_cm.c b/drivers/infiniband/hw=
+/erdma/erdma_cm.c
+index 771059a8eb7d..2934081dfbd4 100644
+--- a/drivers/infiniband/hw/erdma/erdma_cm.c
++++ b/drivers/infiniband/hw/erdma/erdma_cm.c
+@@ -1116,8 +1116,7 @@ int erdma_connect(struct iw_cm_id *id, struct iw_cm_c=
+onn_param *params)
+ 	erdma_cep_put(cep);
+=20
+ error_release_sock:
+-	if (s)
+-		sock_release(s);
++	sock_release(s);
+ error_put_qp:
+ 	erdma_qp_put(qp);
+=20
+--=20
+2.43.0
