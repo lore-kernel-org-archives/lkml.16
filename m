@@ -1,171 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308091EBFE2
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0681A1EBFE2;
+	Thu, 30 Jan 2025 17:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738259739; cv=none; b=rdAuLZBy9q2Iuc1PrvRn8rYUBaqP+0AQTyEmHNQ7KSlSp496BmwU190vXCfUQyi6LyIGL3p0dGif1EJ0B7fFbd0p+tDPy/QcwZIFuXrX/8W2UBfk+/08Izo6AWIj0woIM/iWq1bRERDxe8A+oxEycwkwxf5glKKAIkXPp/Z68Fk=
+	t=1738259815; cv=none; b=BwhtSUOekS20kVDUoy6b80tUOuq+oG9dDvFab/eKod6xtofH2yJOs6YsJK7OiyTI1SMHQFtYD+Yc3bqMUGYaAcjwFmuasS4f1eYLGi/DEDtbnP+frj/g7kOzJAcZCodsRphoVgmzBTyO1x2F8+3muS0CBET8PFLX3qsuvUtAuyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738259739; c=relaxed/simple;
-	bh=HN4oaVw6L4NZ7pdZIl7QwpK6oiJkLd7pgPdgW/nJ+wQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fMJtAeIMeJAGQeDT0Sk2a8EOVLYaacVBgdfFVxmx8yAHu34dN17+vzR+HSS0tm7efZwuXJ1PSh4EYtP8rp+MrtZnhdMoXB7zZblvP9sr0ufQzVfWp0Cy3DIv3X94K5qvaEM5SFAV1Nrp9xyyX2pYlhe/IIehl57duQ5IyzQvKwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ew4Jm8QA; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738259815; c=relaxed/simple;
+	bh=Dk3oD+0b6J+PCkTG4WPoTGs90LkDDKIjHV0xGebl3DU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UFQs4q9fldiL8tfbIfCDcZNHsPF5afvfzL+r0hRpGQYgbgMCLC5YD5TXtzEbMh1/GwELHMECce0Va7mwIIkfwHwOjjUQgJrsSkw3trHx7GapF65yidK4qeeZlm+nWQ2GlicGVBjEdwYt6+utVhLV2QRaqiTTt4qMOMtqYDtfkcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxLd9odX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ew4Jm8QA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738259737; x=1769795737;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=HN4oaVw6L4NZ7pdZIl7QwpK6oiJkLd7pgPdgW/nJ+wQ=;
-  b=Ew4Jm8QASxlPqRI4ENIbRds6JprDS5E7mNv3msYWh40n2dVNulZHmM0Z
-   QnTLhcsdmbCx2GElUXjlQoqyMaLQO+dMTHPMkxt8OP/fCVgs96efG53MI
-   PI43Axl5BIO9MCzL1hAKeyZDm/YPbH/JdAlxDISRxMl4DiKg0PCubBYAm
-   5nATjAviNIRMo2XY+6/r4EktZUTUiT0HTw5HwEngisxsRjT3pzfc7+TuF
-   L9piUYVsbjpTgH1XgYrgVJU/yXFhYgVjcyH2NdoSFMQfmPVeUK+Axb3Aw
-   kqcRQFs5BQBBUaglHsz2GvecvDoly0t0XEyLkaX62Z4bRQieS4KlYefSI
-   Q==;
-X-CSE-ConnectionGUID: 8bKk/Ll+RL+vv6as2rH8gQ==
-X-CSE-MsgGUID: 6JZoym91Tmy7ZO/0QIhtvw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="49477208"
-X-IronPort-AV: E=Sophos;i="6.13,246,1732608000"; 
-   d="scan'208";a="49477208"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 09:55:35 -0800
-X-CSE-ConnectionGUID: jWsZPQwBROyZGkQvzxsUrg==
-X-CSE-MsgGUID: Aufc8seVSM2gN8kE4nLRKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="110295082"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 30 Jan 2025 09:55:33 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tdYlH-000kn1-16;
-	Thu, 30 Jan 2025 17:55:31 +0000
-Date: Fri, 31 Jan 2025 01:55:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	mptcp@lists.linux.dev, matthieu.baerts@tessares.net,
-	Jakub Kicinski <kuba@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>
-Subject: net/ipv4/ip_gre.c:141:22: warning: variable 'data_len' set but not
- used
-Message-ID: <202501310132.oGDmspPN-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxLd9odX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D65F6C4CEE0;
+	Thu, 30 Jan 2025 17:56:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738259813;
+	bh=Dk3oD+0b6J+PCkTG4WPoTGs90LkDDKIjHV0xGebl3DU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OxLd9odX+Ervm+9tVe60csJIFIU6EJpZm7lO9nWhOLGOpqxS+Ye/l6fIudO8brL1a
+	 xuufxBEv3vhhpcVqTb7+QoWU2TRAeDxtkLXewHlySI9JbduCepjA/2u+Fpjo5awfrK
+	 s1WuzAooddq9kVm3LMdlnOZvjvAgmmTrQsq9fSozEIAtEMnF24Kj0gBZJXbvh2cc9a
+	 kGkFpjNEqWoJA7BC5W6v2Ouu8xXex/Q/myN5r7Dn+sQPmYaIawA047UXbgY/Y+skLO
+	 HaNttBipq88A0cyN3F5E9pfo6FoKBNEJMjf0nVjMzj9Dg8wDcyHTtM2X4ZYPCNzmPv
+	 z9o2Bd0RLdN7g==
+Date: Thu, 30 Jan 2025 17:56:46 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.6 00/43] 6.6.75-rc1 review
+Message-ID: <3d9a42f7-4082-4c72-a09a-b9335dbf2e0c@sirena.org.uk>
+References: <20250130133458.903274626@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oDwOdvXmL/dJe8sR"
+Content-Disposition: inline
+In-Reply-To: <20250130133458.903274626@linuxfoundation.org>
+X-Cookie: Password:
+
+
+--oDwOdvXmL/dJe8sR
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi Geert,
+On Thu, Jan 30, 2025 at 02:59:07PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.75 release.
+> There are 43 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-FYI, the error/warning still remains.
+Tested-by: Mark Brown <broonie@kernel.org>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   72deda0abee6e705ae71a93f69f55e33be5bca5c
-commit: 010b430d5df556d5d232e3751ac691ba9e88c041 mptcp: MPTCP_IPV6 should depend on IPV6 instead of selecting it
-date:   4 years, 3 months ago
-config: csky-randconfig-p001-20220406 (https://download.01.org/0day-ci/archive/20250131/202501310132.oGDmspPN-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250131/202501310132.oGDmspPN-lkp@intel.com/reproduce)
+--oDwOdvXmL/dJe8sR
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501310132.oGDmspPN-lkp@intel.com/
+-----BEGIN PGP SIGNATURE-----
 
-All warnings (new ones prefixed by >>):
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmebvV4ACgkQJNaLcl1U
+h9DRjwf/UjIeBm14O1O4gtnykhl4V90QgwrUAgzSb/4kLH+fGd/nl99yXvdWXMe/
+mMdSEIlw1dyNnBidvhQCkma0Qn8GNumOhFEr20Grvk2REXV70Ua8+LE2YzUfHdbs
+7f6QGGooAscar6+13TCFcxU2W2a3Rb9+d5gnruJ6vMmT4mJ5dsFQyzmsiYlT/i2k
+IWHNrPllmEkfdfWvclIjCD06hqeVf9XLg4wF+L6gADTdnl/aw5psIkYjNFyO6hQ0
+vpCQLqDGqqNwG+E7Sec3l8KfFrA+KGClu3ho9hGdMwxsNNQApUZlF2mKmWK8ILaa
+jBG092nCzbzJnz59gw/dBmjFnFW4UA==
+=r3Zr
+-----END PGP SIGNATURE-----
 
-   net/ipv4/ip_gre.c: In function 'ipgre_err':
->> net/ipv4/ip_gre.c:141:22: warning: variable 'data_len' set but not used [-Wunused-but-set-variable]
-     141 |         unsigned int data_len = 0;
-         |                      ^~~~~~~~
-
-
-vim +/data_len +141 net/ipv4/ip_gre.c
-
-^1da177e4c3f41 Linus Torvalds           2005-04-16  122  
-071f92d05967a0 Rami Rosen               2008-05-21  123  	/* All the routers (except for Linux) return only
-^1da177e4c3f41 Linus Torvalds           2005-04-16  124  	   8 bytes of packet payload. It means, that precise relaying of
-^1da177e4c3f41 Linus Torvalds           2005-04-16  125  	   ICMP in the real Internet is absolutely infeasible.
-^1da177e4c3f41 Linus Torvalds           2005-04-16  126  
-^1da177e4c3f41 Linus Torvalds           2005-04-16  127  	   Moreover, Cisco "wise men" put GRE key to the third word
-c5441932145563 Pravin B Shelar          2013-03-25  128  	   in GRE header. It makes impossible maintaining even soft
-c5441932145563 Pravin B Shelar          2013-03-25  129  	   state for keyed GRE tunnels with enabled checksum. Tell
-c5441932145563 Pravin B Shelar          2013-03-25  130  	   them "thank you".
-^1da177e4c3f41 Linus Torvalds           2005-04-16  131  
-^1da177e4c3f41 Linus Torvalds           2005-04-16  132  	   Well, I wonder, rfc1812 was written by Cisco employee,
-bff528578fc3c4 stephen hemminger        2012-02-24  133  	   what the hell these idiots break standards established
-bff528578fc3c4 stephen hemminger        2012-02-24  134  	   by themselves???
-^1da177e4c3f41 Linus Torvalds           2005-04-16  135  	   */
-c5441932145563 Pravin B Shelar          2013-03-25  136  	struct net *net = dev_net(skb->dev);
-c5441932145563 Pravin B Shelar          2013-03-25  137  	struct ip_tunnel_net *itn;
-96f5a846bdd609 Eric Dumazet             2013-05-18  138  	const struct iphdr *iph;
-88c7664f13bd1a Arnaldo Carvalho de Melo 2007-03-13  139  	const int type = icmp_hdr(skb)->type;
-88c7664f13bd1a Arnaldo Carvalho de Melo 2007-03-13  140  	const int code = icmp_hdr(skb)->code;
-20e1954fe238db Eric Dumazet             2016-06-18 @141  	unsigned int data_len = 0;
-^1da177e4c3f41 Linus Torvalds           2005-04-16  142  	struct ip_tunnel *t;
-^1da177e4c3f41 Linus Torvalds           2005-04-16  143  
-32bbd8793f24b0 Stefano Brivio           2018-11-08  144  	if (tpi->proto == htons(ETH_P_TEB))
-32bbd8793f24b0 Stefano Brivio           2018-11-08  145  		itn = net_generic(net, gre_tap_net_id);
-32bbd8793f24b0 Stefano Brivio           2018-11-08  146  	else if (tpi->proto == htons(ETH_P_ERSPAN) ||
-32bbd8793f24b0 Stefano Brivio           2018-11-08  147  		 tpi->proto == htons(ETH_P_ERSPAN2))
-32bbd8793f24b0 Stefano Brivio           2018-11-08  148  		itn = net_generic(net, erspan_net_id);
-32bbd8793f24b0 Stefano Brivio           2018-11-08  149  	else
-32bbd8793f24b0 Stefano Brivio           2018-11-08  150  		itn = net_generic(net, ipgre_net_id);
-32bbd8793f24b0 Stefano Brivio           2018-11-08  151  
-32bbd8793f24b0 Stefano Brivio           2018-11-08  152  	iph = (const struct iphdr *)(icmp_hdr(skb) + 1);
-32bbd8793f24b0 Stefano Brivio           2018-11-08  153  	t = ip_tunnel_lookup(itn, skb->dev->ifindex, tpi->flags,
-32bbd8793f24b0 Stefano Brivio           2018-11-08  154  			     iph->daddr, iph->saddr, tpi->key);
-32bbd8793f24b0 Stefano Brivio           2018-11-08  155  
-32bbd8793f24b0 Stefano Brivio           2018-11-08  156  	if (!t)
-32bbd8793f24b0 Stefano Brivio           2018-11-08  157  		return -ENOENT;
-32bbd8793f24b0 Stefano Brivio           2018-11-08  158  
-^1da177e4c3f41 Linus Torvalds           2005-04-16  159  	switch (type) {
-^1da177e4c3f41 Linus Torvalds           2005-04-16  160  	default:
-^1da177e4c3f41 Linus Torvalds           2005-04-16  161  	case ICMP_PARAMETERPROB:
-32bbd8793f24b0 Stefano Brivio           2018-11-08  162  		return 0;
-^1da177e4c3f41 Linus Torvalds           2005-04-16  163  
-^1da177e4c3f41 Linus Torvalds           2005-04-16  164  	case ICMP_DEST_UNREACH:
-^1da177e4c3f41 Linus Torvalds           2005-04-16  165  		switch (code) {
-^1da177e4c3f41 Linus Torvalds           2005-04-16  166  		case ICMP_SR_FAILED:
-^1da177e4c3f41 Linus Torvalds           2005-04-16  167  		case ICMP_PORT_UNREACH:
-^1da177e4c3f41 Linus Torvalds           2005-04-16  168  			/* Impossible event. */
-32bbd8793f24b0 Stefano Brivio           2018-11-08  169  			return 0;
-^1da177e4c3f41 Linus Torvalds           2005-04-16  170  		default:
-^1da177e4c3f41 Linus Torvalds           2005-04-16  171  			/* All others are translated to HOST_UNREACH.
-^1da177e4c3f41 Linus Torvalds           2005-04-16  172  			   rfc2003 contains "deep thoughts" about NET_UNREACH,
-^1da177e4c3f41 Linus Torvalds           2005-04-16  173  			   I believe they are just ether pollution. --ANK
-^1da177e4c3f41 Linus Torvalds           2005-04-16  174  			 */
-^1da177e4c3f41 Linus Torvalds           2005-04-16  175  			break;
-^1da177e4c3f41 Linus Torvalds           2005-04-16  176  		}
-^1da177e4c3f41 Linus Torvalds           2005-04-16  177  		break;
-9f57c67c379d88 Pravin B Shelar          2015-08-07  178  
-^1da177e4c3f41 Linus Torvalds           2005-04-16  179  	case ICMP_TIME_EXCEEDED:
-^1da177e4c3f41 Linus Torvalds           2005-04-16  180  		if (code != ICMP_EXC_TTL)
-32bbd8793f24b0 Stefano Brivio           2018-11-08  181  			return 0;
-20e1954fe238db Eric Dumazet             2016-06-18  182  		data_len = icmp_hdr(skb)->un.reserved[1] * 4; /* RFC 4884 4.1 */
-^1da177e4c3f41 Linus Torvalds           2005-04-16  183  		break;
-55be7a9c6074f7 David S. Miller          2012-07-11  184  
-55be7a9c6074f7 David S. Miller          2012-07-11  185  	case ICMP_REDIRECT:
-55be7a9c6074f7 David S. Miller          2012-07-11  186  		break;
-^1da177e4c3f41 Linus Torvalds           2005-04-16  187  	}
-^1da177e4c3f41 Linus Torvalds           2005-04-16  188  
-
-:::::: The code at line 141 was first introduced by commit
-:::::: 20e1954fe238dbe5f8d3a979e593fe352bd703cf ipv6: RFC 4884 partial support for SIT/GRE tunnels
-
-:::::: TO: Eric Dumazet <edumazet@google.com>
-:::::: CC: David S. Miller <davem@davemloft.net>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--oDwOdvXmL/dJe8sR--
