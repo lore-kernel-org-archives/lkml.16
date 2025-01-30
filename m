@@ -1,171 +1,286 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596A81C1F1D
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 11:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75F01DFDA5
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 11:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738235499; cv=none; b=tkBCNM0atkJyaOXPC+rzp/Ps04YYWsDPf8F4jkT9dpoZK0FQx9T/WGaP9aymhyB3otsg28m1NsvJ3sAf0NuwEJDLxlos+fMAq//ohb6fyek2vwd3j9EqRtYit1a84VM01x7tkHtYFRutLuIRggLO7KZqqa7mSt33M1/Or4asUS0=
+	t=1738235501; cv=none; b=gAwP8ycRR1iSaUTWBhlwOCptv914dYv8+3TIHP9XssmShpNbJMvJt9i1ZIEsiTszck37PgOGL6DpE4wciJT6S1Svhffl+YzFMfXfe/yB5OtxVqgpIhMIjg3n1OspMwzNMwmZMx0soxO0zy+EPA30MvTuaK5kLVKL+FsW2wIXHR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738235499; c=relaxed/simple;
-	bh=NrPXlIDNWrXWtLZ0f9UduK7J6HixgLH7eyRTETmv8ik=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r57ZvQqY7fZUXGCAS4msYVpTv3MMkzt/GQpA5KkJyHMZ4/9IzN7WKnDptbZ2OISWL9zeD/6UeYXUeTvW3pyYQ1azZvTwKjWAQLUgIlaq/ozZ0th+IkTzxrDD68G1v4J6QpRHbqVdh21fQ65XvBZHCyGIVqTPl4AQoi2gDWnu3KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dWcR1wOw; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1738235501; c=relaxed/simple;
+	bh=7qUKjfeFd8uRS6iUUPrNvt6wUuj1wjimYl//jxDhZic=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tNEXbZHjgvplmRBhjRgBfOHXbOq+vKMq+GlbsCve99vWFPMiWTkfexQMQZ+mlklNpyyAi0+3ufJyROfTFGyloHHeE0IEopYukjUFENo+qKQG+QOgXtNLGyOK+AUmBkJGnQu7aFEEhj4ZhAjTw9eEyFrfVGm8ioE2iPPSTd6CibQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QnZsL+56; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dWcR1wOw"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2167141dfa1so9626135ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:11:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QnZsL+56"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e5372a2fbddso1261324276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:11:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738235497; x=1738840297; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1738235498; x=1738840298; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ujanKWetHL+pQynH0HIAEO2xKM/XaqicaLx2SNCooQM=;
-        b=dWcR1wOwcJ6yFGW6/N9GgqbyoN067b4Rh5gdC/oygDviHzcFGsJ3l+81SGWOTxO8QB
-         vk1IObGFq3roZgQvR2am5GI3YVGvhVc62Qweun2o36NnCWvKGouQMydfnPEna0KExmnA
-         yEjECJGYKIJ3QyjQvDdDu10jSXyWF0oO/WPHw=
+        bh=SDik+uRtYN6dq+boI1IijggzPXqfrovRb/cQ821uQok=;
+        b=QnZsL+56/SOjQpSrCSDD+hTr6mmjhlU2T6+I2KYPiGWcxdhOhJpugtXao4MXG5h+9+
+         UNJqC1MdvsQQKb1IQZXf9J2RqI1cJxafLia0I0yMPtcmUCspwVKI8sNnM59ZU5wbQSmv
+         YzmjjhkpUVqSouY7l1RHMSm8Dc/eTnUTeDErddyFBCZN77neaW6fB2dfRoIAIoWCVnIS
+         tmZykuqQVeLoq8ywH8j85Db54Uzu6TZHq8l0fRCxzypGq9IKRLRJ6YD6nhw7NnehhWTG
+         Fgsoluoc8JKr0yK1+oWa+Wd+Su9LqCgD2bCOGDG+3Mj56tWJMLBECTmmDShaicBuJRJ6
+         UqqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738235497; x=1738840297;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1738235498; x=1738840298;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ujanKWetHL+pQynH0HIAEO2xKM/XaqicaLx2SNCooQM=;
-        b=mcIB1AAcZA8ldM5c8J35Rk5NHqbz5/lnp2/ARYBjYcV9GhHI/+aNtZ86fszBEvpu9L
-         WkBlT8kKFcZdAOC8t3kMCRsphAY1HW/8naPFYIOyy25ONPzfG8oDUF/QqLNC7b2GskEB
-         KDO8Y9jl1cS3GrZHSNg29yQM4FrM+sQRjNMrsFOQvRDrXnz14z1y5mm4qDJ9Ta82BGmW
-         IXhB7lQZWtNKiD4cyoDHu3l4fxKutMf210NB4fUpx1jRBR6yDBj/nlXQ2hljF0DrKMO7
-         LhMwSgyEEd9l2Jk4GnYbOe+zqSIpeNSbF/ubwu4pFyMBM6vOkNam2TbGk8FkF5b4dUyx
-         cXqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVf+S4GiS332WvPrQJYy6/6RWbd3stepIqkM7qMODycWG6bBNR+ouvy8jXKxZIaw4ENqfCpDdvTHCYw29I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywbeioe6VIWiKBAE02tkRRksvcyJ3dVq9dWDp5nxQpsvkITz3Vw
-	7LsFJCaZQWP8hRH00/oFsEa2Rtiaoc9SIeawtxO91phi77UOm8H5+ZIuh3pyUqCr+pC4nzKxHKA
-	=
-X-Gm-Gg: ASbGncvYhKDa1TX0MEXYRCz9bXFd0DQNIXvoS0VdFs654ub1xBxcdcose7Ou4siUFaK
-	8pHD8Bf5umECBDg+UzSGXKtCD6e2Oclqp3vPhdeyTuWUxZB+UWe/4lAfSlqiR7PysrTt0+EnUix
-	8i67fUygytixwwWUlYwWzjT5UiQUNrKqoJoovKWxXgnW2W3lIpTzeUf998FKV845lH605y+8Sxb
-	aFAIlyr+mCJC/ZBxrbKRWbku3v5e4mj+b4VO//OzV78Z6IoKzvAVzowmgcw64It11jjhI/5Ld3H
-	w+vyalyosW2QD9eQ
-X-Google-Smtp-Source: AGHT+IGoJPBvbRFKgcHes3aZpqhjq0bpB3vf3UMoxOpT1s+vDvy+5JFl5BGgTN400Fd1/JslRst1fw==
-X-Received: by 2002:a17:902:c946:b0:216:14fb:d277 with SMTP id d9443c01a7336-21de196fb0amr42131665ad.22.1738235497536;
-        Thu, 30 Jan 2025 03:11:37 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:d4ce:e744:f46b:4fb])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-21de31f836csm11410515ad.93.2025.01.30.03.11.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 03:11:37 -0800 (PST)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Minchan Kim <minchan@kernel.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv3 05/11] zram: remove two-staged handle allocation
-Date: Thu, 30 Jan 2025 20:10:50 +0900
-Message-ID: <20250130111105.2861324-6-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-In-Reply-To: <20250130111105.2861324-1-senozhatsky@chromium.org>
-References: <20250130111105.2861324-1-senozhatsky@chromium.org>
+        bh=SDik+uRtYN6dq+boI1IijggzPXqfrovRb/cQ821uQok=;
+        b=XjfV9/0unT6LdwkrM3XYLwuWF+ink3/9uWyPp9p0T9h1EuR82kUYM3VYhTXtWj+kK8
+         Xw96n4ELJ2tqU+pU3+h0vgk2evSrEr81xAdWoVU0pCfOC7tlc84G/dTG5dMji2/7b5Q3
+         sg5OGcMQrMAGJ503706j7wbA7WRcu18WNvTVyXL0lE657Fs65Ayp4BKL7iovgq/QxFEp
+         vHKjtxn2Kff9A5cHDSc4jc2ksqDuPnF78/k2PjQ01zi0EvG3Uq12fL5JsX410tH2FsVr
+         jl0vA5RbsUPDzE6bc9dztBFXvVZBxBA9Tmfut1LGtSDisfPiFldjjLf/r3bekUVMGg+Q
+         fJdw==
+X-Forwarded-Encrypted: i=1; AJvYcCUqnZfLR2xWYO/CKpp2di5SNJDgRsDp+BE7LQ2FVZEwMBYvvt+QQ6momeXQE9KY6ecBkK4IupFPF0fJoPA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMRGVxQ7LuooNGIqvOGo6k0Sh/shmiSthZ+FNkpuUl55aYQNBO
+	cvaBePY+prR04hUANBP9RRVQqmAGQj4vBoEPeJ9uQqyKUziPkD8vKkOX1WnkSfEsbDMXSRpMqu+
+	bv/82tKshyGcm7G9vtd37TOZfKQG8KlgR9Tfo6w==
+X-Gm-Gg: ASbGncuvrQEgsnUsFaCFzQVTAJwefqlTp6a1QZan6/1U3HWUp/IyU569Zp3xPzhiEkp
+	OwAQbUcenD7Brt+MPKp8DwXJgovRBY4bwSUsdND3SSmUV6dJK5M/Smzc1J6dLIkl9PZ0vT9ywFw
+	==
+X-Google-Smtp-Source: AGHT+IG4u/QuqlN/apS55dCHTg/t8PleUpagHcT2EFk3tBM+YjVckiLLA2ZR7kBpuv+Ft6oZKPTO5b35l1NizpuSEy8=
+X-Received: by 2002:a05:6902:2483:b0:e58:514:cc9a with SMTP id
+ 3f1490d57ef6-e58a4b12709mr5147408276.29.1738235498568; Thu, 30 Jan 2025
+ 03:11:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <12619233.O9o76ZdvQC@rjwysocki.net> <CAPDyKFpc5p3sXZ6LfdVgt8jR5ZbsQExTgeyMNA-PzcWs5A9U0A@mail.gmail.com>
+ <CAJZ5v0gvQjp_P-5Ww7iN1cGiiMJ6tvLLnPpkTQNk++KhoRe=GA@mail.gmail.com>
+ <CAPDyKFrBO+r8qYRrhoFZN21__8RuR61ofbsGQZbA=pyQbti5CA@mail.gmail.com> <CAJZ5v0jTutgKeXtg3YLR1Onw9gOmvHudHamVVgMxEsieNDXViw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jTutgKeXtg3YLR1Onw9gOmvHudHamVVgMxEsieNDXViw@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 30 Jan 2025 12:11:02 +0100
+X-Gm-Features: AWEUYZlrH6ze7xs6-nI2ghaTzurC1qj8MdXzoQItOKZMS_3rvaL1L_OdE15S0yQ
+Message-ID: <CAPDyKFpmNPhyV3YoBFu7KnW04550DQgqzGHAbGLLqp7=TggVtw@mail.gmail.com>
+Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
+ parents and children
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
+	Bjorn Helgaas <helgaas@kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
+	Johan Hovold <johan@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Kevin Xie <kevin.xie@starfivetech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Previously zram write() was atomic which required us to pass
-__GFP_KSWAPD_RECLAIM to zsmalloc handle allocation on a fast
-path and attempt a slow path allocation (with recompression)
-when the fast path failed.
+On Wed, 29 Jan 2025 at 17:58, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Wed, Jan 29, 2025 at 5:42=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.o=
+rg> wrote:
+> >
+> > On Wed, 29 Jan 2025 at 16:55, Rafael J. Wysocki <rafael@kernel.org> wro=
+te:
+> > >
+> > > On Wed, Jan 29, 2025 at 12:53=E2=80=AFPM Ulf Hansson <ulf.hansson@lin=
+aro.org> wrote:
+> > > >
+> > > > On Tue, 28 Jan 2025 at 20:24, Rafael J. Wysocki <rjw@rjwysocki.net>=
+ wrote:
+> > > > >
+> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > >
+> > > > > Commit 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in t=
+he
+> > > > > resume phase") overlooked the case in which the parent of a devic=
+e with
+> > > > > DPM_FLAG_SMART_SUSPEND set did not use that flag and could be run=
+time-
+> > > > > suspended before a transition into a system-wide sleep state.  In=
+ that
+> > > > > case, if the child is resumed during the subsequent transition fr=
+om
+> > > > > that state into the working state, its runtime PM status will be =
+set to
+> > > > > RPM_ACTIVE, but the runtime PM status of the parent will not be u=
+pdated
+> > > > > accordingly, even though the parent will be resumed too, because =
+of the
+> > > > > dev_pm_skip_suspend() check in device_resume_noirq().
+> > > > >
+> > > > > Address this problem by tracking the need to set the runtime PM s=
+tatus
+> > > > > to RPM_ACTIVE during system-wide resume transitions for devices w=
+ith
+> > > > > DPM_FLAG_SMART_SUSPEND set and all of the devices depended on by =
+them.
+> > > > >
+> > > > > Fixes: 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in t=
+he resume phase")
+> > > > > Closes: https://lore.kernel.org/linux-pm/Z30p2Etwf3F2AUvD@hovoldc=
+onsulting.com/
+> > > > > Reported-by: Johan Hovold <johan@kernel.org>
+> > > > > Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.or=
+g>
+> > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > ---
+> > > > >  drivers/base/power/main.c |   29 ++++++++++++++++++++---------
+> > > > >  include/linux/pm.h        |    1 +
+> > > > >  2 files changed, 21 insertions(+), 9 deletions(-)
+> > > > >
+> > > > > --- a/drivers/base/power/main.c
+> > > > > +++ b/drivers/base/power/main.c
+> > > > > @@ -656,13 +656,15 @@
+> > > > >          * so change its status accordingly.
+> > > > >          *
+> > > > >          * Otherwise, the device is going to be resumed, so set i=
+ts PM-runtime
+> > > > > -        * status to "active", but do that only if DPM_FLAG_SMART=
+_SUSPEND is set
+> > > > > -        * to avoid confusing drivers that don't use it.
+> > > > > +        * status to "active" unless its power.set_active flag is=
+ clear, in
+> > > > > +        * which case it is not necessary to update its PM-runtim=
+e status.
+> > > > >          */
+> > > > > -       if (skip_resume)
+> > > > > +       if (skip_resume) {
+> > > > >                 pm_runtime_set_suspended(dev);
+> > > > > -       else if (dev_pm_skip_suspend(dev))
+> > > > > +       } else if (dev->power.set_active) {
+> > > > >                 pm_runtime_set_active(dev);
+> > > > > +               dev->power.set_active =3D false;
+> > > > > +       }
+> > > > >
+> > > > >         if (dev->pm_domain) {
+> > > > >                 info =3D "noirq power domain ";
+> > > > > @@ -1189,18 +1191,24 @@
+> > > > >         return PMSG_ON;
+> > > > >  }
+> > > > >
+> > > > > -static void dpm_superior_set_must_resume(struct device *dev)
+> > > > > +static void dpm_superior_set_must_resume(struct device *dev, boo=
+l set_active)
+> > > > >  {
+> > > > >         struct device_link *link;
+> > > > >         int idx;
+> > > > >
+> > > > > -       if (dev->parent)
+> > > > > +       if (dev->parent) {
+> > > > >                 dev->parent->power.must_resume =3D true;
+> > > > > +               if (set_active)
+> > > > > +                       dev->parent->power.set_active =3D true;
+> > > > > +       }
+> > > > >
+> > > > >         idx =3D device_links_read_lock();
+> > > > >
+> > > > > -       list_for_each_entry_rcu_locked(link, &dev->links.supplier=
+s, c_node)
+> > > > > +       list_for_each_entry_rcu_locked(link, &dev->links.supplier=
+s, c_node) {
+> > > > >                 link->supplier->power.must_resume =3D true;
+> > > > > +               if (set_active)
+> > > > > +                       link->supplier->power.set_active =3D true=
+;
+> > > >
+> > > > If I understand correctly, the suppliers are already handled when t=
+he
+> > > > pm_runtime_set_active() is called for consumers, so the above shoul=
+d
+> > > > not be needed.
+> > >
+> > > It is needed because pm_runtime_set_active() doesn't cause the settin=
+g
+> > > to propagate to the parent's/suppliers of the suppliers AFAICS.
+> >
+> > Hmm, even if that sounds reasonable, I don't think it's a good idea as
+> > it may introduce interesting propagation problems between drivers.
+> >
+> > For example, consider that Saravana is trying to enable runtime PM for
+> > fw_devlinks. It would mean synchronization issues for the runtime PM
+> > status, all over the place.
+>
+> What synchronization issues?
 
-Since it's not atomic anymore we can permit direct reclaim
-during allocation, and remove fast allocation path and, also,
-drop the recompression path (which should reduce CPU/battery
-usage).
+Changing the runtime PM status for a parent/supplier that doesn't have
+DPM_FLAG_SMART_SUSPEND, is likely to confuse their drivers.
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- drivers/block/zram/zram_drv.c | 41 +++++------------------------------
- 1 file changed, 6 insertions(+), 35 deletions(-)
+You also removed that part of the comment a few lines above, in
+device_resume_noirq(). I am not sure I understand why?
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 0c9b68fa8783..28e5b02dc3a1 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -1718,11 +1718,11 @@ static int write_incompressible_page(struct zram *zram, struct page *page,
- static int zram_write_page(struct zram *zram, struct page *page, u32 index)
- {
- 	int ret = 0;
--	unsigned long handle = -ENOMEM;
--	unsigned int comp_len = 0;
-+	unsigned long handle;
-+	unsigned int comp_len;
- 	void *dst, *mem;
- 	struct zcomp_strm *zstrm;
--	unsigned long element = 0;
-+	unsigned long element;
- 	bool same_filled;
- 
- 	/* First, free memory allocated to this slot (if any) */
-@@ -1736,7 +1736,6 @@ static int zram_write_page(struct zram *zram, struct page *page, u32 index)
- 	if (same_filled)
- 		return write_same_filled_page(zram, element, index);
- 
--compress_again:
- 	zstrm = zcomp_stream_get(zram->comps[ZRAM_PRIMARY_COMP]);
- 	mem = kmap_local_page(page);
- 	ret = zcomp_compress(zram->comps[ZRAM_PRIMARY_COMP], zstrm,
-@@ -1745,8 +1744,6 @@ static int zram_write_page(struct zram *zram, struct page *page, u32 index)
- 
- 	if (unlikely(ret)) {
- 		zcomp_stream_put(zram->comps[ZRAM_PRIMARY_COMP], zstrm);
--		pr_err("Compression failed! err=%d\n", ret);
--		zs_free(zram->mem_pool, handle);
- 		return ret;
- 	}
- 
-@@ -1755,36 +1752,10 @@ static int zram_write_page(struct zram *zram, struct page *page, u32 index)
- 		return write_incompressible_page(zram, page, index);
- 	}
- 
--	/*
--	 * handle allocation has 2 paths:
--	 * a) fast path is executed with preemption disabled (for
--	 *  per-cpu streams) and has __GFP_DIRECT_RECLAIM bit clear,
--	 *  since we can't sleep;
--	 * b) slow path enables preemption and attempts to allocate
--	 *  the page with __GFP_DIRECT_RECLAIM bit set. we have to
--	 *  put per-cpu compression stream and, thus, to re-do
--	 *  the compression once handle is allocated.
--	 *
--	 * if we have a 'non-null' handle here then we are coming
--	 * from the slow path and handle has already been allocated.
--	 */
-+	handle = zs_malloc(zram->mem_pool, comp_len,
-+			   GFP_NOIO | __GFP_HIGHMEM | __GFP_MOVABLE);
- 	if (IS_ERR_VALUE(handle))
--		handle = zs_malloc(zram->mem_pool, comp_len,
--				   __GFP_KSWAPD_RECLAIM |
--				   __GFP_NOWARN |
--				   __GFP_HIGHMEM |
--				   __GFP_MOVABLE);
--	if (IS_ERR_VALUE(handle)) {
--		zcomp_stream_put(zram->comps[ZRAM_PRIMARY_COMP], zstrm);
--		atomic64_inc(&zram->stats.writestall);
--		handle = zs_malloc(zram->mem_pool, comp_len,
--				   GFP_NOIO | __GFP_HIGHMEM |
--				   __GFP_MOVABLE);
--		if (IS_ERR_VALUE(handle))
--			return PTR_ERR((void *)handle);
--
--		goto compress_again;
--	}
-+		return PTR_ERR((void *)handle);
- 
- 	if (!zram_can_store_page(zram)) {
- 		zcomp_stream_put(zram->comps[ZRAM_PRIMARY_COMP], zstrm);
--- 
-2.48.1.262.g85cc9f2d1e-goog
+>
+> > That said, is even consumer/suppliers part of the problem we are
+> > trying to solve?
+>
+> They are in general.
+>
+> It's just that stuff that was runtime-suspended prior to a system-wide
+> suspend may need to be resumed and marked as RPM_ACTIVE during
+> system-wide resume because one of the devices wants/needs to be
+> resumed then.
+>
+> If this turns out to be problematic, the problem will need to be
+> addressed, but for now I'm not seeing why there would be a problem.
+>
+> > >
+> > > > That said, maybe we instead allow parent/child to work in the simil=
+ar
+> > > > way as for consumer/suppliers, when pm_runtime_set_active() is call=
+ed
+> > > > for the child. In other words, when pm_runtime_set_active() is call=
+ed
+> > > > for a child and the parent is runtime PM enabled, let's runtime res=
+ume
+> > > > it too, as we do for suppliers. Would that work, you think?
+> > >
+> > > The parent is not runtime-PM enabled when this happens.
+> >
+> > That sounds really weird to me.
+> >
+> > Does that mean that the parent has not been system resumed either?
+>
+> Yes.
+>
+> It hasn't been resumed yet, but it is known that it will be resumed.
+>
+> > If so, isn't that really the root cause for this problem,
+>
+> No, it is not.
+>
+> > or what am I missing?
+>
+> Essentially, what I said above.
+>
+> If a device that was suspended prior to a system-wide suspend
+> wants/needs to be resumed during the subsequent system-wide resume,
+> and it was runtime-PM-enabled before the suspend transition, it needs
+> to (a) be runtime-PM-enabled during the subsequent system-wide resume
+> transition and (b) it also needs to be marked as RPM_ACTIVE because in
+> fact it is not suspended any more.  The existing code before the patch
+> takes care of this for the device itself, but not for the devices it
+> depends on which also need to be resumed (which happens) and marked as
+> RPM_ACTIVE (which doesn't happen) and the patch just makes sure that
+> the latter will happen.
 
+Thanks for clarifying!
+
+>
+> Actually, what happens now is that the actual state of the parent
+> during the system-wide resume, right before re-enabling runtime PM for
+> it, does not match its runtime PM status which is still RPM_SUSPENDED.
+> That's what is fixed here and it applies to the parent as well as to
+> all of the other devices depended on by the child and the parent.
+
+Well, unfortunately I don't think it will work to call
+pm_runtime_set_active() for parents/suppliers like this.
+
+I think we need the drivers for the parents/suppliers to be in
+agreement with the behaviour of DPM_FLAG_SMART_SUSPEND to allow the
+propagation. Not sure how to best achieve this though.
+
+Kind regards
+Uffe
