@@ -1,176 +1,99 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from lichtman.org (lichtman.org [149.28.33.109])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CEC7E0E4;
-	Thu, 30 Jan 2025 10:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3605F179BC;
+	Thu, 30 Jan 2025 10:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.33.109
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738232178; cv=none; b=ht+YtskqX3nKW7NMUnRjU7OQn1vDw5edQ53Jn7T/UNXv0TvabqhYdRBF8u2TnfU9RGfcfWOZkwH9pvEVkN3Ec2m/LbFia1Psvphf01zZVdoIVaiQ0WL10Lw5CyNT7cWXBi7cKcuUTLAN5+EBfLfQDZUmRpLPyiVfcHwFsrKJz7k=
+	t=1738232280; cv=none; b=pFvjCTmfvwhV6DTwZkaZNdK+Rp0XiEacKdodXStmXokISlhRa66JbKnkflX4ig0Xi1xdVTSqjsMUQm/knzJv43a+Gj7Fear/CYhgpa8xyCkhjLydMkoBdrJ4V0knH+p3UbxNN9xi7MtARXqH9SpU7J2xFGYK75XXYbBUzPIgKKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738232178; c=relaxed/simple;
-	bh=6t2zXN4YxljRx/vXZDspOyS30N6FKKbtJQadqdSknGM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iHJbaoAbcM9NJVH9Hkqa3WtviOYOhvMYXBjHRM3ld470radwPcnE1x1O48l99tM3uUKCMl9ITz8gj8POwe991T7GdwrFCTFegyhyh20lY3h5sDEjb3p9qCtJQM6Ilv+23+5yiHTxmFIWqcWd6UPj464bJS6QW2ifbaGxxbOseTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=bxE0Uk4l; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1738232280; c=relaxed/simple;
+	bh=zpLu6ngvomeQ4NtB3yWF6S/v33nlpNaN7nn12lKJ1EU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=AFWQbUWCXYNtm9WfjMLdO9Wqgz3k01R6AT/XvsMbddASJf5hbW+G4iXJmpIY/a5RGMaE0B9Rf5DcMqpF4LxC7tGjvza4DJoFoLEmt3vRAi+29jujbT9GyDX0FCwsinbVST/E9lM4eZmCsX06eMi4N3mG1wESRMGYbGSZcpDBze4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org; spf=pass smtp.mailfrom=lichtman.org; dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b=va5N3lHP; arc=none smtp.client-ip=149.28.33.109
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtman.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="bxE0Uk4l"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=mIRocafbsQchaH/RmQcoc6kKoJAc9tx9mXlvXIR/IDg=; b=bxE0Uk4lunItn6M/5UfFHM28gX
-	JZUa3okJOiktqEywZoiX9R8KJLAweGBd1LM6iOkpJrjAzXqYm3VlWTBEOrSmDatCF7k1H0Uw+QkP2
-	NzjOhy+jH5vS5lh52QmRCBd/mkvC2bgtQF3kVORU6hGXzD+HGvqZeC4rHsXELCSsNzB4d5XyPNJNM
-	ovfIZBL4TP0MTKEdXJkw/yLXljCA6vSUNQNuvVQW+eAXpBQGYK0DVX9K9W80Ubq9t2zwHsg+49Bv8
-	Tnu3SQzwYgYHRFxGfbI4aw+ZTJ2nzVPQslA7D5Q07Bhi/B3dFnby5uXrnW3mzb0ptv5Alf4S6dU5c
-	J4moXt5g==;
-Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
-	by fanzine2.igalia.com with utf8esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tdRae-000z5R-Hy; Thu, 30 Jan 2025 11:16:10 +0100
-From: Luis Henriques <luis@igalia.com>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bernd Schubert <bernd@bsbernd.com>,
-	Luis Henriques <luis@igalia.com>,
-	Teng Qin <tqin@jumptrading.com>
-Subject: [RFC PATCH v2] fuse: fix race in fuse_notify_store()
-Date: Thu, 30 Jan 2025 10:16:07 +0000
-Message-ID: <20250130101607.21756-1-luis@igalia.com>
+	dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b="va5N3lHP"
+Received: by lichtman.org (Postfix, from userid 1000)
+	id 32E0C1771FA; Thu, 30 Jan 2025 10:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=lichtman.org; s=mail;
+	t=1738232278; bh=zpLu6ngvomeQ4NtB3yWF6S/v33nlpNaN7nn12lKJ1EU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=va5N3lHPB7Oyk2pqSu7IFxS5uab3cz6Z1L8gqjIfZqk3Sub5UhmfQwEvZfkMzex+/
+	 neKg5aC11sLgOuIRwzHNPENpcqIqfZFuKxP21uUR0ye7eQTYq8IBTgP7TSe29EdZCn
+	 Qjwrlt5LUMsBG4SJSy0ZiFIuLtwAUoG7O8DJ/TcXm31n05cRYnFnCjrFywfWHGsowd
+	 HppILw2bHInLWzLHzCzsdDlzocyWj3ouKxYaaRg7+IBZZSXkA0IM6NTxw+ZaKNnRGD
+	 2+hXOJ/AUrT182XriJ+typnyO5Uy3d9HW/OcxVSSB6q/MVgRcu4psdYqgdCfMoOKxT
+	 AXeKceNtHrZyg==
+Date: Thu, 30 Jan 2025 10:17:58 +0000
+From: Nir Lichtman <nir@lichtman.org>
+To: gregkh@linuxfoundation.org, corbet@lwn.net, paulmck@kernel.org,
+	akpm@linux-foundation.org, rostedt@goodmis.org,
+	Neeraj.Upadhyay@amd.com, mcanal@igalia.com, thuth@redhat.com,
+	ardb@kernel.org, bp@alien8.de, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: rob@landley.net
+Subject: [PATCH v2] docs: clarify rdinit precedence and correct ramdisk to
+ initramfs
+Message-ID: <20250130101758.GA1162582@lichtman.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Userspace filesystems can push data for a specific inode without it being
-explicitly requested.  This can be accomplished by using NOTIFY_STORE.
-However, this may race against another process performing different
-operations on the same inode.
+Problem: Documentation regarding init and rdinit params is confusing,
+The description of rdinit claims it is related to ramdisks, even though
+in practice it only controls the init executable of the initramfs
+(the deprecated ramdisk mechanism is initialized only after attempting to
+load rdinit or its default "/init")
+Rob Landley's document from 2005 "Ramfs, rootfs and initramfs"
+clarifies the distinction between initramfs and ramdisk.
+Another confusing point is that the init param is ignored
+in case rdinit or "/init" exist and are executable in the initramfs;
+the source code gives priority to rdinit.
 
-If, for example, there is a process reading from it, it may happen that it
-will block waiting for data to be available (locking the folio), while the
-FUSE server will also block trying to lock the same folio to update it with
-the inode data.
+Solution:
+- Add more clarification to the init= kernel param documentation
+- Fix from ramdisk to initramfs in the rdinit= doc.
 
-The easiest solution, as suggested by Miklos, is to allow the userspace
-filesystem to skip locked folios.
-
-Link: https://lore.kernel.org/CH2PR14MB41040692ABC50334F500789ED6C89@CH2PR14MB4104.namprd14.prod.outlook.com
-Reported-by: Teng Qin <tqin@jumptrading.com>
-Originally-by: Miklos Szeredi <miklos@szeredi.hu>
-Signed-off-by: Luis Henriques <luis@igalia.com>
+Signed-off-by: Nir Lichtman <nir@lichtman.org>
 ---
-Hi!
 
-Here's v2.  Other than fixing the bug pointed out by Bernd (thanks!), I've
-also added an explanation to the 'XXX' comment.  As a matter of fact, I've
-took another look at that code, and I felt compelled to remove that comment,
-as using PAGE_SIZE seems to be the right thing.
+v2: Fixed faulty line wrapping in patch
 
-Anyway, I'm still thinking that probably NOTIFY_STORE should *always* have
-this behaviour, without the need for userspace to explicitly setting a flag.
+ Documentation/admin-guide/kernel-parameters.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Changes since v1:
-- Only skip if __filemap_get_folio() returns -EAGAIN (Bernd)
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index fb8752b42ec8..246cb73f71a8 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2182,6 +2182,8 @@
+ 			Format: <full_path>
+ 			Run specified binary instead of /sbin/init as init
+ 			process.
++			Note that rdinit= or /init if rdinit= is not set will take
++			precedence in case they are found in the initramfs.
+ 
+ 	initcall_debug	[KNL] Trace initcalls as they are executed.  Useful
+ 			for working out where the kernel is dying during
+@@ -5933,8 +5935,8 @@
+ 
+ 	rdinit=		[KNL]
+ 			Format: <full_path>
+-			Run specified binary instead of /init from the ramdisk,
+-			used for early userspace startup. See initrd.
++			Run specified binary instead of /init from the initramfs,
++			used for early userspace startup.
+ 
+ 	rdrand=		[X86,EARLY]
+ 			force - Override the decision by the kernel to hide the
+-- 
+2.39.5
 
- fs/fuse/dev.c             | 30 +++++++++++++++++++++++-------
- include/uapi/linux/fuse.h |  8 +++++++-
- 2 files changed, 30 insertions(+), 8 deletions(-)
-
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 27ccae63495d..309651f82ca4 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -1630,6 +1630,7 @@ static int fuse_notify_store(struct fuse_conn *fc, unsigned int size,
- 	unsigned int num;
- 	loff_t file_size;
- 	loff_t end;
-+	int fgp_flags = FGP_LOCK | FGP_ACCESSED | FGP_CREAT;
- 
- 	err = -EINVAL;
- 	if (size < sizeof(outarg))
-@@ -1645,6 +1646,9 @@ static int fuse_notify_store(struct fuse_conn *fc, unsigned int size,
- 
- 	nodeid = outarg.nodeid;
- 
-+	if (outarg.flags & FUSE_NOTIFY_STORE_NOWAIT)
-+		fgp_flags |= FGP_NOWAIT;
-+
- 	down_read(&fc->killsb);
- 
- 	err = -ENOENT;
-@@ -1668,14 +1672,26 @@ static int fuse_notify_store(struct fuse_conn *fc, unsigned int size,
- 		struct page *page;
- 		unsigned int this_num;
- 
--		folio = filemap_grab_folio(mapping, index);
--		err = PTR_ERR(folio);
--		if (IS_ERR(folio))
--			goto out_iput;
-+		folio = __filemap_get_folio(mapping, index, fgp_flags,
-+					    mapping_gfp_mask(mapping));
-+		err = PTR_ERR_OR_ZERO(folio);
-+		if (err) {
-+			if (!(outarg.flags & FUSE_NOTIFY_STORE_NOWAIT) ||
-+			    (err != -EAGAIN))
-+				goto out_iput;
-+			page = NULL;
-+			/* XXX is it OK to use PAGE_SIZE here? */
-+			this_num = min_t(unsigned int, num, PAGE_SIZE - offset);
-+		} else {
-+			page = &folio->page;
-+			this_num = min_t(unsigned int, num,
-+					 folio_size(folio) - offset);
-+		}
- 
--		page = &folio->page;
--		this_num = min_t(unsigned, num, folio_size(folio) - offset);
- 		err = fuse_copy_page(cs, &page, offset, this_num, 0);
-+		if (!page)
-+			goto skip;
-+
- 		if (!folio_test_uptodate(folio) && !err && offset == 0 &&
- 		    (this_num == folio_size(folio) || file_size == end)) {
- 			folio_zero_segment(folio, this_num, folio_size(folio));
-@@ -1683,7 +1699,7 @@ static int fuse_notify_store(struct fuse_conn *fc, unsigned int size,
- 		}
- 		folio_unlock(folio);
- 		folio_put(folio);
--
-+skip:
- 		if (err)
- 			goto out_iput;
- 
-diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-index e9e78292d107..59725f89340e 100644
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -576,6 +576,12 @@ struct fuse_file_lock {
-  */
- #define FUSE_EXPIRE_ONLY		(1 << 0)
- 
-+/**
-+ * notify_store flags
-+ * FUSE_NOTIFY_STORE_NOWAIT: skip locked pages
-+ */
-+#define FUSE_NOTIFY_STORE_NOWAIT	(1 << 0)
-+
- /**
-  * extension type
-  * FUSE_MAX_NR_SECCTX: maximum value of &fuse_secctx_header.nr_secctx
-@@ -1075,7 +1081,7 @@ struct fuse_notify_store_out {
- 	uint64_t	nodeid;
- 	uint64_t	offset;
- 	uint32_t	size;
--	uint32_t	padding;
-+	uint32_t	flags;
- };
- 
- struct fuse_notify_retrieve_out {
