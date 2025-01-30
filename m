@@ -1,110 +1,178 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD3A1A7046;
-	Thu, 30 Jan 2025 11:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CD41BBBEB;
+	Thu, 30 Jan 2025 11:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738234940; cv=none; b=Ak4+J2LWdTLT8IemIEgPdrd5NxCLTNcWy75ElvkkHsryTiBfDJvFETgNGjaLJNsdw2R8EQ4F1Gm8kcsJfGAlOna60R7CZXQd+OJrQl6P3txBOxLCEKOKHcAoXtD9OOHDg8erLDP/YxjAeCGDbtQahIEv4jBClX5yBzzc5t6Kwws=
+	t=1738234974; cv=none; b=ZeUiHC77fuy5nYFZgD2XnveM+mKQy/yCKL+HBduwG1kBfny3xbFV6rk9cKOdfbqIKQ+56o7EZc+bc42DgnU3+WJrNI8UtYKPLGWJwYnjyh5bE0WX92Ya6bYNOoQ7VRjpMGJCviPce7j3t13o1/jJjgVQNsXf6VGl96XX5xaZuGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738234940; c=relaxed/simple;
-	bh=ZJ4Au8Mg9sPlCFvEnFwYT2LF41h6Pc6kSA6z0zcWBs4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kbt7GGN1XXpPOSEw0wE9bt8/U5zM3PDWIr+0MX6zc8znNKgMBKQ/s0ulnfDdo10pGJl6/AiabS/sqmU9VMNU5eVd3k9dPE6uDY6NQZefLCcQHb+1+UjFOda9JlEc0xapVSNavhibC88uH0HXy0kQiH/5F+L1CrFLhrbsmPTnd1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=JpCgtFab; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1738234974; c=relaxed/simple;
+	bh=+t4JrvrPiLsj7bfb840h38pFA44a5hm5mtWmRSYdCpU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=bR9un1CPdwQMvRHOQ9+Dffxe0SW8y6ttVU0BOlVjrd4n0l7DJOC+s+7voBwTmqlgsQ+opwzVkRiVDWwFa7LtDUCOg6PDuHAxaQKMu1lbsb6EuSpKadqbRNBYac9dK7gh+ky9RR7L/8e8Ynv9x0CdpqrZQucUxlk7AmxV2vU9ols=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=EbrlbQSA; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JpCgtFab"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=r9T7SsDgb25eRiBbyZrxPqt2XzRSnj1KTaKT0+NeJB0=; b=JpCgtFabWJwZyXwJqR5xJVgTay
-	4p1ryuXp+TtjVWOJ0NY6NBry21ufA+1WGDIoaQYlK7FawWBmLwXVqFZSMnur9HwQ+XomyfhTErmjN
-	VG7/HZNxnyLMWQ/mlEwOB9Fi8hf8MoX97brcL73vtR7vwz82BU3KDl/v52PtpehEqJIncF1uKnPvs
-	LZ7jdNT5ifKFpdfqIzD1mGl/bjjXWKkdWKJxw2Mh6FvaKBat7STLeD3m7MpEZWbMgkZEpzIKfvtnO
-	Kw/KeCpq4DxQjvmoa5Fxfn1iZw4N7f/BtDmFcOyPyNW3mWVLZI6+uTDByzF2JRBdnUqR8Lv/1l9ne
-	V084bXGg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36634)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tdSJA-0003wU-1U;
-	Thu, 30 Jan 2025 11:02:04 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tdSJ6-0004h9-31;
-	Thu, 30 Jan 2025 11:02:00 +0000
-Date: Thu, 30 Jan 2025 11:02:00 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Vladimir Oltean <olteanv@gmail.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: Tristram.Ha@microchip.com, Woojung.Huh@microchip.com, andrew@lunn.ch,
-	hkallweit1@gmail.com, maxime.chevallier@bootlin.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, UNGLinuxDriver@microchip.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [WARNING: ATTACHMENT UNSCANNED]Re: [PATCH RFC net-next 1/2] net:
- pcs: xpcs: Add special code to operate in Microchip KSZ9477 switch
-Message-ID: <Z5tcKFLRPcBkaw58@shell.armlinux.org.uk>
-References: <Z5iiXWkhm2OvbjOx@shell.armlinux.org.uk>
- <20250128102128.z3pwym6kdgz4yjw4@skbuf>
- <Z5jOhzmQAGkv9Jlw@shell.armlinux.org.uk>
- <20250128152324.3p2ccnxoz5xta7ct@skbuf>
- <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
- <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
- <20250129211226.cfrhv4nn3jomooxc@skbuf>
- <Z5qmIEc6xEaeY6ys@shell.armlinux.org.uk>
- <DM3PR11MB873652D36F1FC20999F45772ECE92@DM3PR11MB8736.namprd11.prod.outlook.com>
- <20250130100227.isffoveezoqk5jpw@skbuf>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="EbrlbQSA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1738234870; x=1738839670; i=markus.elfring@web.de;
+	bh=+t4JrvrPiLsj7bfb840h38pFA44a5hm5mtWmRSYdCpU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=EbrlbQSAj+f38PA8703tTZaMiR4ayuD9Qrvyd9QGYqJH7YthbOq//pBZda9lk8L/
+	 8Z/bzqm9AcXAMhwbS7RdUkARLZ8bEvd0EdUhD+FRE9AbkWXJxoHLcoT2yUZDnoAru
+	 AEpVtrhhTX6gwbMUeKZ3owYdgRazmCSF+8S1sKEY3QoZ9646CKqHg5lS86sDrdRD4
+	 GAbkiHBdMvF1FSVgBio0MksJCA2Iu2Q6DHWn+Yg3/3vqeK/pNqvYcFMKTRC3o8uWh
+	 KgSWCXjJhP+JBxslKqGd0a2lz6i0DAbUIk83mJ6VEQvNIYUmrFpRTTuGrXGp53KWW
+	 cqA7/eN/08snJD7Q9w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.40]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MIya8-1tsDzY10Di-00Lbns; Thu, 30
+ Jan 2025 12:01:10 +0100
+Message-ID: <e06cb7f5-7aa3-464c-a8a1-2c7b9b6a29eb@web.de>
+Date: Thu, 30 Jan 2025 12:01:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130100227.isffoveezoqk5jpw@skbuf>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+To: cocci@inria.fr, kernel-janitors@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, linux-ide@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-xfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ ibm-acpi-devel@lists.sourceforge.net, imx@lists.linux.dev,
+ kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+ Andrew Morton <akpm@linux-foundation.org>, Carlos Maiolino <cem@kernel.org>,
+ Chris Mason <clm@fb.com>, Christoph Hellwig <hch@lst.de>,
+ Damien Le Moal <dlemoal@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
+ David Sterba <dsterba@suse.com>, Dick Kennedy <dick.kennedy@broadcom.com>,
+ Dongsheng Yang <dongsheng.yang@easystack.cn>,
+ Easwar Hariharan <eahariha@linux.microsoft.com>,
+ Fabio Estevam <festevam@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ James Bottomley <James.Bottomley@HansenPartnership.com>,
+ James Smart <james.smart@broadcom.com>, Jaroslav Kysela <perex@perex.cz>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+ Josef Bacik <josef@toxicpanda.com>, Julia Lawall <Julia.Lawall@inria.fr>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Ilya Dryomov <idryomov@gmail.com>,
+ Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>,
+ Keith Busch <kbusch@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+ Mark Brown <broonie@kernel.org>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Nicolas Palix <nicolas.palix@imag.fr>, Niklas Cassel <cassel@kernel.org>,
+ Oded Gabbay <ogabbay@kernel.org>, Ricardo Ribalda <ribalda@google.com>,
+ Sagi Grimberg <sagi@grimberg.me>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Sebastian Reichel <sre@kernel.org>,
+ Selvin Xavier <selvin.xavier@broadcom.com>, Shawn Guo <shawnguo@kernel.org>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Takashi Iwai <tiwai@suse.com>,
+ Victor Gambier <victor.gambier@inria.fr>, Xiubo Li <xiubli@redhat.com>,
+ Yaron Avizrat <yaron.avizrat@intel.com>
+References: <20250128-converge-secs-to-jiffies-part-two-v1-1-9a6ecf0b2308@linux.microsoft.com>
+Subject: Re: [PATCH 01/16] coccinelle: misc: secs_to_jiffies: Patch
+ expressions too
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250128-converge-secs-to-jiffies-part-two-v1-1-9a6ecf0b2308@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:MEBO0GsSQ1SMY/zsPX1U6svBkJN6BjoZlGAGaEjdoAIc7rC0MTJ
+ jMCDSnzW+JUiBx0jWaw4axa0ASi7RKu+znCfMa+5DA/GZz89brkDkAWXkPNY1Ii+WKoCg2M
+ 6p6JIXEbQugmQdBp3V5wVA0hm/aJde6kKUDnCeJpidqtVh0kGmNtl+sNaqnuL+ZhzFG6g5Z
+ yt9wjcSDL8KRKPEOFFBUw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:PCsLlrQ8lfw=;SoOTgoPi1u3ddphFfFnJ4K80Ey1
+ LhQV5NN3S1upZ+kQWRf5X13xSqfZszqJAWQG1OpVuCmo6tpVtGTWgh7ad8U9WwKa6cxbghVrt
+ NekQpjR/Dsev5s67AnEX8ThdDcbbfKvRw5T8fgaGslTYv3XceDxH2g+ZINh1g5Zl1a5Kb7tUy
+ iHsXRJsmGMh72moAwMl2T0JX0Ldu9mm36L7zjNeIOX0Xh1EcbDwPTnBvWT5Jmf/TZjjTD915z
+ wkMwvyKEhqv+ILIT2NmQNRENiOP1N2A5cNBwL7S6RvzS4B2b6TETCM6HSXEgzk4eBq/cjFYJ7
+ Ta/beBAeX/x1vlhieJ7zCgVJ/DjpXSnLIakxsKLFsTqznw+ifPF4fJli2HnMVo9sGRnRMWTrl
+ qkRACaZwBVl2ReKWA6Ylw6VqlTKMT2hF2oCiSA6SNHSwnqWCdtkKT3MwrASEpsgRd1t3m2qrg
+ dzBxkwY3Iqvyla51ZhZ4KeRRsMYftkVOD06V/LWAUsGh3adVyfNfo1rFkiXbs8oaQXw9Ja6tZ
+ RzPDki+nrGeKxCzQaenUyiA48SLrGJ61YEiLCyUiil3FCYQCPBx6oGNf2hTXlPwkPSrMnvfyk
+ yvQjlFy7DS+9l6YMcPoT4oJhRV5HGFbKwznZ3oL4+T60BN/ekmSzbtefb+GOhIG+4+ywk54uP
+ mTXT8J21gH5qaPIaPiannqZ/nmjWeakTcPkk/rVwdP3tmwDxSgnRKkzPj2UadACH+VKlM8JrQ
+ lfxiv25g7Br2uvZqXG/3Mkq5j8BPnzef0ZEvV00FZ4lN2l35qROKiS4KNw+Oa2MExwmkZF8N0
+ Me4UosI1FbMOonU2tpnvT5R9FbJv2h1tIMF/XYUdA7G6V3mY01f2O3g0W60Gd1Z/onfWiWTsC
+ vsuTuJ7TZfE6AwrUs1WQ/Wi8E1So2MZdkmeUagRZY0DoLytG1bmL84SvJIdb8h4sdAVK3EONn
+ 3chVYtWWI+cM+cz3Whj1giWzBTzyQOpKjx+HZcaRA80KQWJ5iUExiJkz11n/ptAWXabZtwVr1
+ IIfHoUKeT2WT8pACVlj4x3gvqIClbPKbcGWhs4epE3uD2mR9gqFM8fCUfkHNngYTCZq6z5Did
+ d50IILddgQEvH7rjWs9K2n3wFTct4+ajCi45dnopg2wTz/Oma2Lt3tO8Qenl6l70EogpyLyCN
+ iMoxPpi5Wclpw/Kc+5YCXrWUIzzUatEenh+mkeiB0/g==
 
-On Thu, Jan 30, 2025 at 12:02:27PM +0200, Vladimir Oltean wrote:
-> On Thu, Jan 30, 2025 at 04:50:18AM +0000, Tristram.Ha@microchip.com wrote:
-> > This behavior only occurs in KSZ9477 with old IP and so may not reflect
-> > in current specs.  If neg_mode can be set in certain way that disables
-> > auto-negotiation in 1000BASEX mode but enables auto-negotiation in SGMII
-> > mode then this setting is not required.
-> 
-> I see that the KSZ9477 documentation specifies that these bits "must be
-> set to 1 when operating in SerDes mode", but gives no explanation whatsoever,
-> and gives the description of the bits that matches what I see in the
-> XPCS data book (which suggests they would not be needed for 1000Base-X,
-> just for SGMII PHY role).
+> Teach the script to suggest conversions for timeout patterns where the
+> arguments to msecs_to_jiffies() are expressions as well.
 
-Hi Jose,
+Does anything hinder to benefit any more from a source code analysis approach
+(like the following by the extended means of the semantic patch language)?
 
-Can you help resolve this please?
 
-Essentially, the KSZ9477 integration of the XPCS hardware used an old
-version of XPCS (we don't know how old). The KSZ9477 documentation
-states that in the AN control register (0x1f8001), buts 4 and 3 must
-be set when operating in "SerDes" mode (aka 1000base-X).
+// SPDX-License-Identifier: GPL-2.0
+/// Simplify statements by using a known wrapper macro.
+/// Replace selected msecs_to_jiffies() calls by secs_to_jiffies().
+//
+// Keywords: wrapper macro conversion secs seconds jiffies
+// Confidence: High
+// Options: --no-includes --include-headers
 
-See page 223 of
-https://ww1.microchip.com/downloads/aemDocuments/documents/OTH/ProductDocuments/DataSheets/KSZ9477S-Data-Sheet-DS00002392C.pdf
+virtual context, patch, report, org
 
-Is this something which the older XPCS hardware version requires?
+@depends on context@
+expression e;
+@@
+*msecs_to_jiffies
+ (
+(e * 1000
+|e * MSEC_PER_SEC
+)
+ )
 
-Would it be safe to set these two bits with newer XPCS hardware when
-programming it for 1000base-X mode, even though documentation e.g.
-for SJA1105 suggests that these bits do not apply when operating in
-1000base-X mode?
+@depends on patch@
+expression e;
+@@
+-msecs_to_jiffies
++secs_to_jiffies
+ (
+(
+-e * 1000
+|
+-e * MSEC_PER_SEC
+)
++e
+ )
 
-Many thanks.
+@x depends on org || report@
+expression e;
+position p;
+@@
+ msecs_to_jiffies@p
+ (
+(e * 1000
+|e * MSEC_PER_SEC
+)
+ )
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+@script:python depends on org@
+p << x.p;
+@@
+coccilib.org.print_todo(p[0], "WARNING: opportunity for secs_to_jiffies()")
+
+@script:python depends on report@
+p << x.p;
+@@
+coccilib.report.print_report(p[0], "WARNING: opportunity for secs_to_jiffies()")
+
+
+Regards,
+Markus
