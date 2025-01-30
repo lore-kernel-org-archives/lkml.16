@@ -1,41 +1,41 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163E61EEA38;
-	Thu, 30 Jan 2025 17:29:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C871EF0AB;
+	Thu, 30 Jan 2025 17:30:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738258195; cv=pass; b=SFSRlIfJWFxK6sdpjykF2+8nWOUJFfvceV1ek7IeOUz+QFvIji4butaCUevUYHWLvrSzFMuU+rPfwL8JkXEe+zcch9EMzmNMBGF5/F1OX5fL/pupInL19W6c4AGC5rcuEFj3E2YXTfdQX2WFifAtqmenIc3t5JKo6UqSgrdfsYY=
+	t=1738258216; cv=pass; b=Z2N4CaPKP1A1/MWG7+0YeGhCU4J7N8JZFvV0jELgVameE+DXrFW9eaB324YPQNzyAOaUIR79d6rkQ0g4Mh3jyBXkgEk9CyyCjU6wNpf8T5Vt4JRwUVyDmEA7AuzBOJgluS5zaPxpHL3PlYkEMRQ3I8/aZCuYjT67IdUbKBItDOc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738258195; c=relaxed/simple;
-	bh=+ytlbxanqKXQoq654hT86yilOdoDjjJKwJIt1kbMwPI=;
+	s=arc-20240116; t=1738258216; c=relaxed/simple;
+	bh=1fgguBGZqx6t+pTxfQu9adrSJCSSJkTXqTPvFN/QrYk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dsq24LCgylytyAuvDzZ4+b8PIRaQv/nuISjKeEj3utbD9cCcRHqvjj0TB/PzAVETZy1u2QOlZWbTuZSQxH1df43IE10UTO1ys/sqixSOXzBAmdaoMOTa2ssra+GaPhYXHLdm881B/yAnDJSqcyaF94NDuePfoU1HP9oNccRD2uM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=G/W94IiB; arc=pass smtp.client-ip=136.143.188.112
+	 MIME-Version:Content-Type; b=OGOw11Hu9+f55h/lPNtG9Q4lWMFGegM/ikWPaV+k+eSc7pkSmxAibf3YKJ1FU6a++3cQUMwzRHZFQfvoWTKs/5b4Z8/IsT7mxGklFuuzYfUoM9FWIGuE72gIYRCgCiWcOCpvWsWFGuzlQwWXecMSh70zykSKWrj3wPcyJhRNi28=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=kgsFQRXk; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="G/W94IiB"
-ARC-Seal: i=1; a=rsa-sha256; t=1738258169; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="kgsFQRXk"
+ARC-Seal: i=1; a=rsa-sha256; t=1738258188; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=ks8nP71+ZTi8sM9LOrDE9oieuHGkflR2EAeETY6WQpGO926djVJ1XTTYGqRXZkYWP21CHWywAVTdrr8KZoiu+YNokhTiqNjCBmamAnvbJwfFhQZM05aEoYv3HcYsE9ReZo3JQlhY2tGacz21O7lLZ+GuKfGMYMkYY9jTnh6Pfr8=
+	b=VQAKzV9mcUTO6J8jy5cc+UMQyftB3RHW95WiG7yLlMh06/WLVOAr+LIRuGC6/Fh45zxpHkEJA5dZotRn1YRRkI0SuKWFV2gpUujEPlUnVzDSgKMsbX5ARPmpDAY+JNaurEHatw0ovCXg+7LTRPgYTc1QIPIKlF/a60VjUC4Fu40=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738258169; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=0WA6J/EhS4KkqUnGdo0KmY73cb+vgz8J3JE8d3pK9ns=; 
-	b=fKyh/LH3OkFLNLO6QWulY7cMQaUvYPP3lps3zRk/nCLUrYH0GFyS2zAwR+xFlHVqezdf6yuEYYZmvhrHTMsx7iUoQWSfwRTKBanuC9mcv8sZPUbEwaXzCaFnFQx0M1su1r2PPyvobseyK+3yWvtPW2rxWdf/+omOStck7aWKzxc=
+	t=1738258188; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=oe9yz0LUgW/HyWP7QYNCqzc/hVt9PtaAICLV4Q8wDfo=; 
+	b=i9C7pnx4rUKNzocCoYHPAHenweKpOK2qYTYpp4u7ugE0rt0Yk5Rm6R9iQwpECXZzOcXojJiVnWtHvgzPaHt7nhuM3UJ9JPeU0jraJusKZPfEnZE8Y+8RNbxodYZnqNWJyOre9WPTDBuAXdMaZuZON51EwKLUr8/1RpsAqaE7IK4=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
 	dmarc=pass header.from=<adrian.larumbe@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738258169;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738258188;
 	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=0WA6J/EhS4KkqUnGdo0KmY73cb+vgz8J3JE8d3pK9ns=;
-	b=G/W94IiBWevvl+55HsBpJt7bA+XiIHot4po/T336doNsAwyQ0W0ABKVKr8kkK5IB
-	OO2I7Hsp6kE6HcK6HDgGYOwINM4oAe4LKWl5p0pmj39JcdmU5Dw4gWO8Y+gEnfuODmw
-	JqISOzUcPdnABU4TxFF0Z4ZIbfEMlwV+s3OoDBrA=
-Received: by mx.zohomail.com with SMTPS id 1738258166225175.1611096687751;
-	Thu, 30 Jan 2025 09:29:26 -0800 (PST)
+	bh=oe9yz0LUgW/HyWP7QYNCqzc/hVt9PtaAICLV4Q8wDfo=;
+	b=kgsFQRXk1Pl9A90mfMshBGa9FRinEQx17r3QHzoZYjLCtLmD0libdXyjGuTkebzq
+	J2UeyUGrQXry5OE7+TXCc6tCh5doFm9p+WjELyGSdsAHriBGD4+UrfARDVmvAXU9pgs
+	D3BHQeGpRlyP1IGJ1RV+BYOmM0FGCQP1ajM7SkmQ=
+Received: by mx.zohomail.com with SMTPS id 1738258170262965.1122189634012;
+	Thu, 30 Jan 2025 09:29:30 -0800 (PST)
 From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
 To: David Airlie <airlied@gmail.com>,
 	Simona Vetter <simona@ffwll.ch>,
@@ -52,11 +52,10 @@ Cc: kernel@collabora.com,
 	dri-devel@lists.freedesktop.org,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
-	Mihail Atanassov <mihail.atanassov@arm.com>
-Subject: [PATCH v10 4/5] Documentation/gpu: Add fdinfo meanings of panthor-*-memory tags
-Date: Thu, 30 Jan 2025 17:28:12 +0000
-Message-ID: <20250130172851.941597-5-adrian.larumbe@collabora.com>
+	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+Subject: [PATCH v10 5/5] drm/panthor: Fix race condition when gathering fdinfo group samples
+Date: Thu, 30 Jan 2025 17:28:13 +0000
+Message-ID: <20250130172851.941597-6-adrian.larumbe@collabora.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250130172851.941597-1-adrian.larumbe@collabora.com>
 References: <20250130172851.941597-1-adrian.larumbe@collabora.com>
@@ -69,45 +68,38 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-A previous commit enabled display of driver-internal kernel BO sizes
-through the device file's fdinfo interface.
+Commit e16635d88fa0 ("drm/panthor: add DRM fdinfo support") failed to
+protect access to groups with an xarray lock, which could lead to
+use-after-free errors.
 
-Expand the description of the relevant driver-specific key:value pairs
-with the definitions of the new panthor-*-memory ones.
-
-Reviewed-by: Mihail Atanassov <mihail.atanassov@arm.com>
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+Fixes: e16635d88fa0 ("drm/panthor: add DRM fdinfo support")
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 Reviewed-by: Steven Price <steven.price@arm.com>
 Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
 ---
- Documentation/gpu/panthor.rst | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpu/drm/panthor/panthor_sched.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/gpu/panthor.rst b/Documentation/gpu/panthor.rst
-index 3f8979fa2b86..7a841741278f 100644
---- a/Documentation/gpu/panthor.rst
-+++ b/Documentation/gpu/panthor.rst
-@@ -26,6 +26,8 @@ the currently possible format options:
-      drm-cycles-panthor:     94439687187
-      drm-maxfreq-panthor:    1000000000 Hz
-      drm-curfreq-panthor:    1000000000 Hz
-+     panthor-resident-memory:        10396 KiB
-+     panthor-active-memory:  10396 KiB
-      drm-total-memory:       16480 KiB
-      drm-shared-memory:      0
-      drm-active-memory:      16200 KiB
-@@ -44,3 +46,11 @@ driver by writing into the appropriate sysfs node::
+diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+index f3c6ca4dc11c..6d49b4f40f58 100644
+--- a/drivers/gpu/drm/panthor/panthor_sched.c
++++ b/drivers/gpu/drm/panthor/panthor_sched.c
+@@ -2865,6 +2865,7 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
+ 	if (IS_ERR_OR_NULL(gpool))
+ 		return;
  
- Where `N` is a bit mask where cycle and timestamp sampling are respectively
- enabled by the first and second bits.
-+
-+Possible `panthor-*-memory` keys are: `active` and `resident`.
-+These values convey the sizes of the internal driver-owned shmem BO's that
-+aren't exposed to user-space through a DRM handle, like queue ring buffers,
-+sync object arrays and heap chunks. Because they are all allocated and pinned
-+at creation time, only `panthor-resident-memory` is necessary to tell us their
-+size. `panthor-active-memory` shows the size of kernel BO's associated with
-+VM's and groups currently being scheduled for execution by the GPU.
++	xa_lock(&gpool->xa);
+ 	xa_for_each(&gpool->xa, i, group) {
+ 		mutex_lock(&group->fdinfo.lock);
+ 		pfile->stats.cycles += group->fdinfo.data.cycles;
+@@ -2873,6 +2874,7 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
+ 		group->fdinfo.data.time = 0;
+ 		mutex_unlock(&group->fdinfo.lock);
+ 	}
++	xa_unlock(&gpool->xa);
+ }
+ 
+ static void group_sync_upd_work(struct work_struct *work)
 -- 
 2.47.1
 
