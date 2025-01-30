@@ -1,127 +1,286 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazolkn19013064.outbound.protection.outlook.com [52.103.20.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9EB199939;
-	Thu, 30 Jan 2025 20:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738268062; cv=none; b=gLCpXBROqdq9d3yWbJphSECYRVTzAowqRBDoI9HJ8hmBtTNE8ip90ZaIR56MFvad/cVfQGmj4/0F61sxTFuFxPElZZ7HcQT4CrNRuogOYZIRgD3JFkE96hn/MZ49STY7vu7UpjZGtXaOUpE/Jng+oeatjol2OBmnvztpKBLCiYE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738268062; c=relaxed/simple;
-	bh=moOYb6q877U5I7NnA82Nsf1lQuxDbCUGya80mzW9XzA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CBrQeU7a3ZIvI+xL3YbHO3HVj7j5vpsPQS2iY5tWZ/SfD2VmA1NnYtHGIWPyGiUnZeMd7+GW33xhw9zDZBMYuQOAKPgwtZB2yYsVKNBvag1vJereWStd6xKeUUyHrsjoqC6zXIZWp/+KaJBUHVUWDIUyBLWWq4e0RbUXqHWxcm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLlQb+c2; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C44619D06E;
+	Thu, 30 Jan 2025 20:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738268379; cv=fail; b=Gp/rodIHAqej7PxhA9AVQLIdBoKkuclKp/qzj9iJr4AfjJkY6+wGg4ogzuEDobQWe44zXWFO0DbCkN3CDaI8nYiLV/bFVdtcEL9NF7MaegVYeLq6lbEzZ/dCzTBjmOppHY4l1IE19pz9EimbZ1/qokbuBzAUDu2dOA86V+aVZSw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738268379; c=relaxed/simple;
+	bh=KSfozVTwunTWiezo+RNtewMe6F5EmplGQ9BMdv9SZX8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Uxo7ixwAjvL6RvvCkz4XHYBOIS0r+78Bk54suree8xg/h6Y40ujdLu++ZLus4VZQ3AycucCVxP1+/lrt6Eq8f44lisdOAlJFqEbB2wFWm3bKQz4/vluzIZRxRTsMQ89DxjIYMzJBg6lZP4k1dSXZPeAujtKYqV3OsJY6pXP1Sxw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=CciR1lv/; arc=fail smtp.client-ip=52.103.20.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLlQb+c2"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38633b5dbcfso1282488f8f.2;
-        Thu, 30 Jan 2025 12:14:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738268059; x=1738872859; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BXg8UxAY9MsETmzcn/5hHuR64+FACNvOgpPBjgXkbss=;
-        b=dLlQb+c2ozMp10mbKbdFz1MhQYFdHqo1ipm9mqzPPb6dftdXnF/xjmYVPXt6EvK9cV
-         igjTH7Yz/ner/F05MuVllZ2qE8KKmME58kb6gnskIr802xbmoDX9e5qzpP0CVofMSluB
-         7KzaqxSB9qcD5S01oe52pUntk2Mu2QufQXYQhg3RGDZkUnJk9Gg/IyzxBpzYI30RznNN
-         H2yvf5y70xveOPioAHfVSnrym/qZLGpva+b/Bn/iI1u3PQEHyNkgVWbnh8VMsNetIYeY
-         d7t1iA8AEq0xIVmt3kozh4jOn3Jw/dMW2LouO/2WXwt2FyyRmkVh3geI+71evC2+uOKt
-         0Opg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738268059; x=1738872859;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BXg8UxAY9MsETmzcn/5hHuR64+FACNvOgpPBjgXkbss=;
-        b=SjLV0C8HMoDwfiReIwTpKZwHAIvH11A9q8xYa4KjPii6nF/F87Qdj7vYHya76jeQzN
-         4nToWWFAd1a0n/R3SL+gRKj8wkrq8DRxucp3cq44EKOt91uxDOZzwzQBndE36MgcEcPb
-         NxERTMy01PeYEfBQyt3VevedyTFoKW6YQj1tZNfS/DpWMUr24HYJh8mYMcSOZ3V93YXv
-         I+Er0yCS2tT1YedrFTmgZxLc0PFEOJ8rIquwBpCypJd7gAlvemUOCSgdhhqa2HeCv0Au
-         cfzzbmqEfV8kXNjotz2ZgjNc8VbxcC3gzMotUKUn1I8iSfYQsUxtx+7ygGhjFYZY6EYK
-         BXqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7e+xhRqIZ8BxUIJbtTOJ2c6vbDTG72ytJhapXFYY8VBf1jI5edqcjWwXu4N9YM24RwlO/pAxu@vger.kernel.org, AJvYcCW5+1WrmFgLwJu98dAoAo9zyIg9Acd5IydwHaICkrV8rH6zlPCNp9iG/GkUPaBLzsEhtOL4k5Hs6EVuTZs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFFIqY7rnD0p+qnWuffCemm+RAldm0soKPUpIWHnwRhcZitHim
-	qa1Yc/RlUD6/9jHIgQnrhwLOvIV5G8ltTuR2W6LPeyrcIZtsSOnH
-X-Gm-Gg: ASbGnct6HV4lbguAN+VYDeQ1l0cEICRiAFIDISgg2tCpfsqCVMEiPvnVJpjl8m4r5MX
-	wcbEwZhhanoIKmRsxBdgxFDsI3P0DTGnmsH8umbG2LYrn+yrHvM4NQYGb/UDestw4mSHE1bpGcC
-	YJTdWmTydHTBzvtdtMHhcp7y1YQ1kneFYWW18EmHHyhuHrfis6NvJlTvBK1gNTL4b7rkNBLl6RN
-	NtIX3v1kdBPXThNkCJsqApxi1krBBnUwvYqnZyG3dEcjKtpiKTqoIxF295J19SYGsO3+U1tLBz4
-	vQbGbY2l12RrK6stHVFngj0HyUkkAb5bC7onx60Za8oL4QxQiFOFxA==
-X-Google-Smtp-Source: AGHT+IF3rnXIybqyjHJwiSBQ1tP8SIXoluuYcvQsGkvFUsXMJoY6MvH237Ft6mYQ/0KzORimBw3oRQ==
-X-Received: by 2002:a5d:6c65:0:b0:38c:5cd0:ecf3 with SMTP id ffacd0b85a97d-38c5cd0efe3mr2808478f8f.11.1738268058626;
-        Thu, 30 Jan 2025 12:14:18 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcbc1510sm69784965e9.0.2025.01.30.12.14.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 12:14:18 -0800 (PST)
-Date: Thu, 30 Jan 2025 20:14:17 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Luiz
- Augusto von Dentz <luiz.von.dentz@intel.com>, Miguel Ojeda
- <ojeda@kernel.org>, linux-kernel@vger.kernel.org (open list),
- stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, kernel
- test robot <lkp@intel.com>
-Subject: Re: [PATCH] jiffies: Cast to unsigned long for secs_to_jiffies()
- conversion
-Message-ID: <20250130201417.32b0a86f@pumpkin>
-In-Reply-To: <20250130184320.69553-1-eahariha@linux.microsoft.com>
-References: <20250130184320.69553-1-eahariha@linux.microsoft.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="CciR1lv/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jxi09+l8Yh4dMj5+F/wJL4YoKuKcoYlW20baAkQSzA63Kwyr0U//kt6rOm8P73y5dy45Ui5CCBP1stt1Uf1cY66IsXhWM+K+VNRTEHmCOptt+4kBXM8RiJsQxqCzJ3SfW2XpJW+Xl9vONUL+rZ6LfFqwqGNballKPKuUqSFbo9H3fHn/2JfNBf4RppBMsr+t0JAXVh2LV0P6FzHgyMJNHspcIINIPZnOzR51Lknxdoc0jqJSTJv9Z0h31YPcUcSdeRM8jvwvHm2aDbuLRXn6lYDU4zjlFj04hY6G+jyV8Rq0Ri3vW/nVU9AiVOa+El2oDfIWiyTk+yEdYAYjHynd/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5nWABQVq75ldhVvaRk2v5005B81ReWF9UfBznTIDICY=;
+ b=UsehuusF2kQ+gXn7I31qVgVT7j+cgkbfxKARw/3QrLwG+KNp562+A+QWwgIt53J8QAhJC+rRqWKuzynrRyO7XwfGpPM2eL9olaqfg5mQ0EINzgfjZKi4lRhHxKazzbxWaLgSzm/0YajjDvTJG0hCp7g6lGCA49Ce2ABGU5V24jC4g7A3KnluEuyItFVGHkwFOhtP6f8+rHdc8k7VmE5kSkQlYbgwwMgGrwDlZbhl+mYdXdRcpEpt6kEg1NZ+c+vLgl6vzD8jJBZP5CYaqC9piuiC7dmO0xtiE0VbGHd/zmDJ67DMQG6w44iMj+aj6bQyV3bvVm7X4zuTv8Fw16sIbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5nWABQVq75ldhVvaRk2v5005B81ReWF9UfBznTIDICY=;
+ b=CciR1lv/FNyKaXqFQP+DuEV3yQaAhbmjTcQ8efEkyihNXOsDTQ66uCzk9PRzILSMT4OiLc2x88VBAvHB7EL2BFoF2yneZ+l++J8SoLMXc1Tdg+YLNtKYoiwc5Q+YJOIq0bA11uPtmgKCeeCw52HPx8S+NRLdm48bOo6V7WPdpC7fZXiPWj0pVhQ57gnopXMfuuygIGa2f2XnGE7JYOuR3OkUVP996LsukBp3fGjTN26scLr2HKUdly7pdC4N1oSspj3OAIJ7URjkqoiTtqXDwmDrT9J0WmSfYq9atOEIlnqKiXj2vEugjriXpe6zhSDRaBMPVg1NUU+Pf02bw16xRQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by BL3PR02MB8282.namprd02.prod.outlook.com (2603:10b6:208:345::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.20; Thu, 30 Jan
+ 2025 20:19:34 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8398.017; Thu, 30 Jan 2025
+ 20:19:34 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Thomas Tai <thomas.tai@oracle.com>, "mhkelley58@gmail.com"
+	<mhkelley58@gmail.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
+	"javierm@redhat.com" <javierm@redhat.com>, Helge Deller <deller@gmx.de>,
+	"daniel@ffwll.ch" <daniel@ffwll.ch>, "airlied@gmail.com" <airlied@gmail.com>,
+	"tzimmermann@suse.de" <tzimmermann@suse.de>
+CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: RE: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or
+ executing kexec
+Thread-Topic: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or
+ executing kexec
+Thread-Index: AdtzQ0vu6eNj8snBS+OSvfShEIJEjQABFnwAAALyBRA=
+Date: Thu, 30 Jan 2025 20:19:34 +0000
+Message-ID:
+ <SN6PR02MB415732CABA59155898531226D4E92@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <BLAPR10MB521793485093FDB448F7B2E5FDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
+ <BLAPR10MB521780F7C93DC013E2E031BDFDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
+In-Reply-To:
+ <BLAPR10MB521780F7C93DC013E2E031BDFDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BL3PR02MB8282:EE_
+x-ms-office365-filtering-correlation-id: 70e99210-b660-42eb-a0a5-08dd416b697f
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199028|15080799006|8062599003|19110799003|8060799006|102099032|440099028|3412199025;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?zkWTbE95NfhaWFYW8yg/XRgMAHDEbY7dPJXN/0su1P+AiBBw9lhTbAI9mNbl?=
+ =?us-ascii?Q?AJzjOdx7a9ztapdCz3yadxf9XcdSfB50XUAl2UO7/YYqeIgCH3xasXspPy5W?=
+ =?us-ascii?Q?SgPz+kHnlmIBxyskwGNZ3vodcJs8dTrqBpvPkIZ0ipgo5hKXGudSr2ZpRtxw?=
+ =?us-ascii?Q?dHUvarkWOPV0aig6NNGLpfXcsw7GFz07DrZKKPQgP1V17+NmIhHhQS5q0+ZC?=
+ =?us-ascii?Q?P0qBBBF+FrH+BC28AbTZzbINMpByZYo608O5mmx2VFjKFqz0xW1aybBW1S3Q?=
+ =?us-ascii?Q?VI64Xf75IQ/TOtllSmxXpLvbnrob101YVVb9+w1DfpJHqMReIPhBNpJtxq32?=
+ =?us-ascii?Q?MGI1U5GgS99dQtrZixzUqcNfP8NLoaJ981ueJ8FlaiBg9PRYzRZk9Uyy48sU?=
+ =?us-ascii?Q?21uegJVKOKhf51GlUwl+r/TnnTKthry6KOJJ4JrjP42/7h1m3HY3/5arFj1/?=
+ =?us-ascii?Q?xb1G7H0DfvfkTsSoFxyl7NS/eWpPbiyUr0b5nojlNxrcl1FyH+OViYfDMrNf?=
+ =?us-ascii?Q?n/GKFn/bVQsgr3PnGVuY878vIx2YX3OTn5fKAphsmaYIv7bfkBFxJwT2lpkw?=
+ =?us-ascii?Q?K4OJBBTKxi5qUJtNiIgePkkG2szfZ2mXORPT7tnBllfkUQ+cI/0yWA38P++x?=
+ =?us-ascii?Q?8havj4OqGRHAEvG1crHT9a3yUFC8f/2Ueq5z5mPORUn/a5rqL1php+4Jcz/u?=
+ =?us-ascii?Q?fFCD/giye1Q8JHEAGu/PFOcVj1AnIqK6Xn4uXR0+4xa+rr8Ttcqgfk77v4r5?=
+ =?us-ascii?Q?mWPirkts9ToaPfiLBJAa7fsDHMHnI7jx0HaA/wtWbM63cawnIulSRXnTFxWq?=
+ =?us-ascii?Q?6Ddc7VQ5bdHsvHt29JjdgvCwnUqfOEH0vvX6MvtN1063eY1sbjqDRrviK2G7?=
+ =?us-ascii?Q?FvCf6+vuaUMRT3KOPPdDyEkUmobZH1a7PBY+/fsEvAd6rddRGGB01Pm32Y2i?=
+ =?us-ascii?Q?A5ouXtFBpLkbKeL5+nFoI/X5MHtmPJf1t8sxUlp5Cnsg8GKL3WpX5/9wkl8i?=
+ =?us-ascii?Q?+ejrDgcC6o5PhHwZ+WljsCVRYVsBWZBpj1AEW1AuMD8J1eE=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?5S2tF4RvrnHPrLQAwSvZT2+NPd/xmjtExDEdewzI0CP4dgQYjyBKlsgfgkFQ?=
+ =?us-ascii?Q?amtLEZwRC2O97Xwsql1bK/r8QpPBNMSuuuX1U16BA9oE+XSXzISjsrl5/I45?=
+ =?us-ascii?Q?l4p7LrN9nRN5JxTyKNGRiaWvkYbGUX7oWyYoVcmnIUqbgZ02lrfc/+Xzlj6u?=
+ =?us-ascii?Q?6Bic3Utz46MagWBGbtQ3A7wJ8Q7iQI1T+oej7qz8WW0gzNUh4mLHIeFXsV0l?=
+ =?us-ascii?Q?ePOm4dy+qHUodsVbSU0LT6pyLmr4aqHiZYK6Vo1HLLjGgCLYGSPRMAWzmRgS?=
+ =?us-ascii?Q?3RTl8vUOh+HHVLiikE0tXKr6ErRxqnD7BGyI9zYR7Oz1CRHTuFjvdyKcXo5l?=
+ =?us-ascii?Q?e+XK6/2dFHtX94OZn0xLnwReBg3uuVrwrfji19pU7EyVVr1nj3scQT/pRpsS?=
+ =?us-ascii?Q?HKVG/Tl6u1QlGXQzXn4nPklHdUWi7vM+VHYuqskFwrkN0hfHwGw6+RZfQdP7?=
+ =?us-ascii?Q?k1q5vSZqOfh9e1P6q6xp3XDSiT7Opus33JBjhPiD9gyqtDqvfME1KrIeJmT+?=
+ =?us-ascii?Q?oOlZNZreDxCNF6YbehrzNoTAPG58TiLHAtZRe+XG1gmhaZynOWGyLmxl8qRV?=
+ =?us-ascii?Q?IU7cDylLstdTuQ3MdzJf7xpAPp5uly7c4Yd1fT/k2HWYEscD/EQsxCU0j+K9?=
+ =?us-ascii?Q?R4gVGm/eHsXF+tymd5avZJM9/mk6nDab8VOYX9ub2i1bnYElOkDuN/V2UiAS?=
+ =?us-ascii?Q?KFrFYblk9PbhpyKI6ns82z0c19T6010HjK3qAMcmMsiSktpPgfhUEmqRxz9h?=
+ =?us-ascii?Q?6E+C9Y5B7upvqyow0uNryq7ebT2/9uxAicDpi1/nA2TuJRLfquRYMNgHBtCo?=
+ =?us-ascii?Q?de6ISxTUQZJL1Vh67gxYdxLTN0ZIOcfOEDtZv7Olh/f579CX82JNLe6Zcc5K?=
+ =?us-ascii?Q?cJfnPLO8LLTaOgcJQD+Lzt5wGd30Ik/aMn575Y3P9uPGs7nlJa4GxkgVmScl?=
+ =?us-ascii?Q?v1SQ+OnZscO9OfZ0cMRWTgNPjGL/EvMIYQFoP2rzd3ih7Mj8RH8VnA11CuTW?=
+ =?us-ascii?Q?hLJkXeR+sOgtv+mSt8k0lZhAxIXQAHfijQX9m0aecd5v+pV89ZSRCDbTkGfy?=
+ =?us-ascii?Q?2m9mc1NHD8yqzK01Z9qPzEIJ3p2mrxz6likIjE7VzN56B469osty9ehSxVBT?=
+ =?us-ascii?Q?fE4/5E9OxfSTevXSJ4jagkx2VaMqaLh9XXZAkzAFGj7bJbqASng4ja1YfBtG?=
+ =?us-ascii?Q?h9r29cz2S+7+SD7C52al/o9GqNcRw+rTY36gVgFEMj9g+8/fwp87FdPkvUY?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70e99210-b660-42eb-a0a5-08dd416b697f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2025 20:19:34.3527
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR02MB8282
 
-On Thu, 30 Jan 2025 18:43:17 +0000
-Easwar Hariharan <eahariha@linux.microsoft.com> wrote:
+From: Thomas Tai <thomas.tai@oracle.com> Sent: Thursday, January 30, 2025 1=
+0:50 AM
+>=20
+> Sorry for the typo in the subject title. It should have been 'hyperv_fb s=
+oft lockup on
+> Azure Gen2 VM when taking kdump or executing kexec'
+>=20
+> Thomas
+>=20
+> >
+> > Hi Michael,
+> >
+> > We see an issue with the mainline kernel on the Azure Gen 2 VM when
+> > trying to induce a kernel panic with sysrq commands. The VM would hang
+> > with soft lockup. A similar issue happens when executing kexec on the V=
+M.
+> > This issue is seen only with Gen2 VMs(with UEFI boot). Gen1 VMs with bi=
+os
+> > boot are fine.
+> >
+> > git bisect identifies the issue is cased by the commit 20ee2ae8c5899
+> > ("fbdev/hyperv_fb: Fix logic error for Gen2 VMs in hvfb_getmem()" ).
+> > However, reverting the commit would cause the frame buffer not to work
+> > on the Gen2 VM.
+> >
+> > Do you have any hints on what caused this issue?
+> >
+> > To reproduce the issue with kdump:
+> > - Install mainline kernel on an Azure Gen 2 VM and trigger a kdump
+> > - echo 1 > /proc/sys/kernel/sysrq
+> > - echo c > /proc/sysrq-trigger
+> >
+> > To reproduce the issue with executing kexec:
+> > - Install mainline kernel on Azure Gen 2 VM and use kexec
+> > - sudo kexec -l /boot/vmlinuz --initrd=3D/boot/initramfs.img --command-
+> > line=3D"$( cat /proc/cmdline )"
+> > - sudo kexec -e
+> >
+> > Thank you,
+> > Thomas
 
-> While converting users of msecs_to_jiffies(), lkp reported that some
-> range checks would always be true because of the mismatch between the
-> implied int value of secs_to_jiffies() vs the unsigned long
-> return value of the msecs_to_jiffies() calls it was replacing. Fix this
-> by casting secs_to_jiffies() values as unsigned long.
+I will take a look, but it might be early next week before I can do so.
 
-Surely 'unsigned long' can't be the right type ?
-It changes between 32bit and 64bit systems.
-Either it is allowed to wrap - so should be 32bit on both,
-or wrapping is unexpected and it needs to be 64bit on both.
+It looks like your soft lockup log below is from the kdump kernel (or the n=
+ewly
+kexec'ed kernel). Can you confirm? Also, this looks like a subset of the fu=
+ll log.
+Do you have the full serial console log that you could email to me?  Seeing
+everything might be helpful. Of course, I'll try to repro the problem mysel=
+f as
+well.
 
-As we all know (to our cost in many cases) a ms counter wraps 32bit in
-about 48 days.
+Thanks,
 
-	David
+Michael
 
-> 
-> Fixes: b35108a51cf7ba ("jiffies: Define secs_to_jiffies()")
-> CC: stable@vger.kernel.org # 6.12+
-> CC: Andrew Morton <akpm@linux-foundation.org>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202501301334.NB6NszQR-lkp@intel.com/
-> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-> ---
->  include/linux/jiffies.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
-> index ed945f42e064..0ea8c9887429 100644
-> --- a/include/linux/jiffies.h
-> +++ b/include/linux/jiffies.h
-> @@ -537,7 +537,7 @@ static __always_inline unsigned long msecs_to_jiffies(const unsigned int m)
->   *
->   * Return: jiffies value
->   */
-> -#define secs_to_jiffies(_secs) ((_secs) * HZ)
-> +#define secs_to_jiffies(_secs) (unsigned long)((_secs) * HZ)
->  
->  extern unsigned long __usecs_to_jiffies(const unsigned int u);
->  #if !(USEC_PER_SEC % HZ)
+> >
+> > --- soft lockup log---
+> > [    1.690032] efifb: probing for efifb
+> > [    1.693989] efifb: framebuffer at 0x40000000, using 3072k, total 307=
+2k
+> > [    1.700996] efifb: mode is 1024x768x32, linelength=3D4096, pages=3D1
+> > [    1.706999] efifb: scrolling: redraw
+> > [    1.710981] efifb: Truecolor: size=3D8:8:8:8, shift=3D24:16:8:0
+> > [    1.716806] Console: switching to colour frame buffer device 128x48
+> > [   29.176649] watchdog: BUG: soft lockup - CPU#0 stuck for 26s!
+> > [swapper/0:1]
+> > [   29.176655] Modules linked in:
+> > [   29.176658] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.13.0+=
+ #1
+> > [   29.176661] Hardware name: Microsoft Corporation Virtual
+> > Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 03/08/2024
+> > [   29.176663] RIP: 0010:fast_imageblit.isra.0+0x2de/0x460
+> > [   29.176669] Code: 07 49 21 f1 41 83 e1 01 46 8b 4c 8c 40 44 89 09 41=
+ 89 d1
+> > 4c 8d 79 08 41 c0 e9 06 49 21 f1 41 83 e1 03 46 8b 4c 8c 40 45 89 0e <4=
+1> 89
+> > d1 4c 8d 71 0c 41 c0 e9 05 49 21 f1 41 83 e1 07 46 8b 4c 8c
+> > [   29.176671] RSP: 0018:ffffc900000437a8 EFLAGS: 00010246
+> > [   29.176673] RAX: 0000000000000400 RBX: 0000000000000005 RCX:
+> > ffffc900006bb140
+> > [   29.176674] RDX: 0000000000000000 RSI: 0000000000000001 RDI:
+> > ffff888012146600
+> > [   29.176675] RBP: 0000000000000080 R08: ffffc900006bb000 R09:
+> > 0000000000000000
+> > [   29.176676] R10: 0000000000000001 R11: ffff888012146580 R12:
+> > 0000000000001000
+> > [   29.176677] R13: ffff88801214658a R14: ffffc900006bb144 R15:
+> > ffffc900006bb148
+> > [   29.176678] FS:  0000000000000000(0000) GS:ffff888026a00000(0000)
+> > knlGS:0000000000000000
+> > [   29.176680] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [   29.176681] CR2: 00007f8bc160c238 CR3: 000000002ac38002 CR4:
+> > 00000000003706b0
+> > [   29.176683] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> > 0000000000000000
+> > [   29.176684] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> > 0000000000000400
+> > [   29.176685] Call Trace:
+> > [   29.176687]  <IRQ>
+> > [   29.176690]  ? watchdog_timer_fn+0x220/0x2a0
+> > [   29.176695]  ? __pfx_watchdog_timer_fn+0x10/0x10
+> > [   29.176697]  ? __hrtimer_run_queues+0x112/0x2b0
+> > [   29.176702]  ? hrtimer_interrupt+0x108/0x270
+> > [   29.176704]  ? sched_clock_cpu+0x60/0x1a0
+> > [   29.176708]  ? __sysvec_hyperv_stimer0+0x32/0x60
+> > [   29.176712]  ? sysvec_hyperv_stimer0+0x70/0x90
+> > [   29.176715]  </IRQ>
+> > [   29.176716]  <TASK>
+> > [   29.176716]  ? asm_sysvec_hyperv_stimer0+0x1a/0x20
+> > [   29.176722]  ? fast_imageblit.isra.0+0x2de/0x460
+> > [   29.176724]  cfb_imageblit+0x433/0x470
+> > [   29.176726]  bit_putcs+0x291/0x570
+> > [   29.176731]  ? __pfx_bit_putcs+0x10/0x10
+> > [   29.176733]  fbcon_putcs+0x139/0x1a0
+> > [   29.176735]  do_update_region+0xf1/0x110
+> > [   29.176740]  redraw_screen+0x22f/0x290
+> > [   29.176743]  do_bind_con_driver.isra.0+0x2ab/0x3d0
+> > [   29.176745]  do_take_over_console+0x3a/0x50
+> > [   29.176747]  do_fbcon_takeover+0x5c/0xe0
+> > [   29.176749]  fbcon_fb_registered+0x4f/0x70
+> > [   29.176751]  do_register_framebuffer+0x1bc/0x2a0
+> > [   29.176755]  devm_register_framebuffer+0x28/0x90
+> > [   29.176757]  efifb_probe+0x544/0x720
+> > [   29.176760]  platform_probe+0x43/0xb0
+> > [   29.176763]  really_probe+0xd9/0x390
+> > [   29.176767]  ? __pfx___device_attach_driver+0x10/0x10
+> > [   29.176769]  __driver_probe_device+0x78/0x160
+> > [   29.176771]  driver_probe_device+0x1e/0xa0
+> > [   29.176773]  __device_attach_driver+0x99/0x130
+> > [   29.176775]  bus_for_each_drv+0x98/0xf0
+> > [   29.176777]  __device_attach+0xbc/0x1f0
+> > [   29.176779]  bus_probe_device+0x8d/0xb0
+> > [   29.176781]  device_add+0x4f1/0x6e0
+> > [   29.176785]  platform_device_add+0xfa/0x260
+> > [   29.176787]  sysfb_init+0x109/0x120
+> > [   29.176791]  ? __pfx_sysfb_init+0x10/0x10
+> > [   29.176793]  do_one_initcall+0x5b/0x330
+> > [   29.176796]  do_initcalls+0xac/0x130
+> > [   29.176800]  kernel_init_freeable+0x134/0x1e0
+> > [   29.176802]  ? __pfx_kernel_init+0x10/0x10
+> > [   29.176806]  kernel_init+0x1a/0x1d0
+> > [   29.176808]  ret_from_fork+0x34/0x50
+> > [   29.176813]  ? __pfx_kernel_init+0x10/0x10
+> > [   29.176815]  ret_from_fork_asm+0x1a/0x30
+> > [   29.176819]  </TASK>
+> > [  432.306986] fb0: EFI VGA frame buffer device
 
