@@ -1,39 +1,49 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC99B660
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABC6B660
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738218502; cv=none; b=R8nHRGDbV9N7fXqpuOf3phe5FnG2VoPS5g/+7msg9c/v/zdVEWZXRk/Rn7EVDvj7Lm4fFcvmpPpF7WRo/9HLb/B/dgRRQbGn4b9EZQELHZTYGXNW57Oe2O3gGgd4QV8hiqN6RufWb3D/39I1hszdz4yNroVLKaVhW2fwNDz71Iw=
+	t=1738218540; cv=none; b=UzjlfP/7IYE2PSxT5SMGO8XfnK7crH91z2AsGcBg1lvxlZzfnNEZiswl5MMFcTSVsySUjty4avsMPycFeSu69UDM9NKzOZlv+ZwOxlFTFlqO9dawxGTA1HDu2uJNFO3Z6tOOwTdaPbYOcAeuwOQBTln9Q6Z6bh781Ibz2k8itOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738218502; c=relaxed/simple;
-	bh=u70glR2UEmzItmyN6REyOgqKg3pb7US0C9mLJNx/q18=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eRlWk/9qzUcrnRqHQZahdoPsATAwKjWvst7KJveKLHAxWUAAUAACgTw2QP08gTEw/sCccc9duXlhLGkvjbPD81hteHvcAHtRjyuJa2j7hpJRxVDYylxDzaRLzgo5bLA9sHZVeUoU8tePo0OI/58Kh4sw8d06xpN96RkLZA1IXs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=TEWonGKt; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1738218540; c=relaxed/simple;
+	bh=XcLGtJuQLjmu19ceVrWTBUJgIKLh/knfwyJV2pa6tT4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XAkN6yXWx2f6Rcy6GLlP0Jwq1XiB91BHb55j7RVrbEengxU2yIgmIzwE4x7IOh8QGy4/05dbRaBrAXP/lKHekxpSY4Y3vVaoIAuvM1Bi+WsF+WP6DJC3t+VrDRrjmVYgcO4yQx8EGvosVsacj7mt4N7i2CjwQgDmtCWHhColTIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wt4qMB2D; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="TEWonGKt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Gtx3o8dcGeO/6AUCFD231MpneLoHeRc9yP5W8S80c2Y=; b=TEWonGKtr7iU0YzBjiCbPAyHdz
-	/z4JDys4dJBXdN6Bu22gIQNcDPmTmZ7KdRqCyZeQTz/ig9u4EeFNxz/o0E3FBs8a06yc2EBu2OE+3
-	S8aca/RfDsLjstCMmiDr/W5aCJTeeYxF/satyuGXXcoYiZvyiEHF6o1lZzqLj3b677IyAbgrI2k3k
-	yMMhRYGf0C+dNWixP6y4t7GAqVxyzQqVL0NwSCnJMtToAcZnUXJLOe3sG6yR4gwP7SWtkrCAFP4Mo
-	2R6p/jWZeI1dbCOl8zKvxHzYCmYK7I9lKSHAa01tgyu7UMOHw588n/BfVtyvqpb0D1IORl6kfyI7f
-	WF/aM6LA==;
-Received: from [58.29.143.236] (helo=[192.168.1.6])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1tdO23-000uyg-BX; Thu, 30 Jan 2025 07:28:13 +0100
-Message-ID: <4c132168-8622-406f-9a4e-97a094771739@igalia.com>
-Date: Thu, 30 Jan 2025 15:28:09 +0900
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wt4qMB2D"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 50U6SalO2255798
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jan 2025 00:28:37 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738218517;
+	bh=stDkNPxvaXA5kM3k4ZKVJiRRENNzrABmzrqDFpS97qo=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=wt4qMB2DK3lk/uYgquHoNk0STrFtJ935abs1QEcLx5+BC0VmaGxqCg1te0I/PRM2V
+	 jVrF+7YuqiDzl1ac9HwsZ0pHwjevGy4gS532nCShgP7ba6rJF7WgW7WH4RrC7vEo6s
+	 8H6X/di+5HkuOIlIO3FBLyMF7lXLGKVqMcQRb15w=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 50U6SaqN029475
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 30 Jan 2025 00:28:36 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 30
+ Jan 2025 00:28:36 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 30 Jan 2025 00:28:36 -0600
+Received: from [172.24.227.245] (uda0132425.dhcp.ti.com [172.24.227.245])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 50U6SXpD062557;
+	Thu, 30 Jan 2025 00:28:34 -0600
+Message-ID: <178aecf4-b640-4dbd-841b-a8c43e74ece0@ti.com>
+Date: Thu, 30 Jan 2025 11:58:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,31 +51,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 11/11] sched_ext: Print core event count in scx_central
- scheduler
-To: Tejun Heo <tj@kernel.org>
-Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org
-References: <20250126101614.232388-1-changwoo@igalia.com>
- <20250126101614.232388-12-changwoo@igalia.com>
- <Z5fnpo7-jAna0ZhW@slm.duckdns.org>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <Z5fnpo7-jAna0ZhW@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] arm64: defconfig: Enable SPI NAND flashes
+To: Santhosh Kumar K <s-k6@ti.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <krzk@kernel.org>, <p-mantena@ti.com>
+References: <20250116035145.370734-1-s-k6@ti.com>
+ <c00ae17b-b006-4b28-86e8-e82d1067e7d3@ti.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Content-Language: en-US
+In-Reply-To: <c00ae17b-b006-4b28-86e8-e82d1067e7d3@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hello,
 
-On 25. 1. 28. 05:08, Tejun Heo wrote:
-> On Sun, Jan 26, 2025 at 07:16:14PM +0900, Changwoo Min wrote:
->> Modify the scx_central scheduler to print the core event counter
->> every second.
+
+On 30/01/25 11:53, Santhosh Kumar K wrote:
+> Hi, all,
 > 
-> Can you add it to scx_qmap too? That's used as the dumping ground for all
-> the niche features, so it'd be nice to have an example there too.
+> On 16/01/25 09:21, Santhosh Kumar K wrote:
+>> Add support for SPI NAND flashes on ARM64 boards/EVMs such as:
+>>
+>> 1. W35N01JW on AM62x LP SK, AM62A7 SK, J721S2 EVM, J784S4 EVM,
+>>     J722S EVM, J742S2 EVM
+>> 2. W25N01JW on AM62Lx EVM
+>>
+>> by enabling the MTD_SPI_NAND config as a module.
+>>
+>> Signed-off-by: Santhosh Kumar K <s-k6@ti.com>
+>> ---
+> 
+> Gentle ping.
+> 
 
-Sure, I will add the event dump feature to monitor_timerfn() in scx_qmap.
+This would need to wait till 6.14-rc1 comes out.
 
-Regards,
-Changwoo Min
+-- 
+Regards
+Vignesh
+https://ti.com/opensource
+
