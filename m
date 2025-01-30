@@ -1,128 +1,198 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA14187346
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 18:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11D31487E1;
+	Thu, 30 Jan 2025 18:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738262498; cv=none; b=mgwQ8+hMT1HtgmNXTYT5OBAg4jxaxFvM0q42jER1LsIqxX5etNCTi49PeZd8Tdp+h8jfgk217MPWJ4xuoLAJXTVgDwhiwLtyUO+gNCtOBv9J3rK4owusIShVOF9Evsia3gNdEiudCJusHuo2BmoHz/AYztOtnLNBX3KyDtRGyEk=
+	t=1738262536; cv=none; b=uk7teB42kurDzd4gbE9fUcLjL6Yx3d9n7pZ7nzlHXQzATJbvbJk1eQXltm5cJ3SLMaPYZIr8eH0J0g0wFahWrWjOPXu9xV2rPsnf+lTZsqnu6M+fc81+peqXI+L1BfExBpn1s/bqY1AHLtRbLJ0kFvToUA1wTteCifm9OL4HYsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738262498; c=relaxed/simple;
-	bh=hDrbzZ/o8zXac0UrLKZHSJsKzybmBO43plcozHXvA7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d3H9P3MCOGhl3XyazUFGZhn+mP1WfRFgRSIZm3hT3trxxjnzRhun2L5y48veMfZhgBiSd4/hE7ttoVVQ25NqEmIV13dM3gAK/GuDzSJn0+auHJrsIEZA00Jz3kk7tIN52XuwTxJD6pFZlcQeL3nNUtpHD4iimgonPKYBY4IdhpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Fa7VNVlV; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1738262536; c=relaxed/simple;
+	bh=7SyZ5zCEJ4aNJvlmHMl8pZTMFw6jNB5EeCSDItXKy7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P4yJOfiHjZMHC/mZpv/trmq/CY398rr3yNdcaFY/3tpuJn9c1l80+hAEvFqETTDkA0yFT9OFLO+EzBqL9Qj2az9HCgd+4FptXQ13HVz+yfYd0ouxK0mFAH7sdMGBEnCY3tYB0RbQzdJUMqtVLEcx/btiQs/dokii0jsPsb7GX1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MP/S47nA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Fa7VNVlV"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3eb790888c6so301462b6e.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 10:41:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1738262496; x=1738867296; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=qOd3iWC7zZDqWb1/6kUeblWIuvBy4/wvZo2kXA/gdXo=;
-        b=Fa7VNVlViW7KodrV/7ISdD2xsLP5mUIK0KvV4h6ImQLdm/iTmzVWQDj2OzMINXhKEP
-         vA9VHPRjQ7+QIriCxVixC+HRLoNfHPKf4oWDUUfhwcaXnJF3c0fq31icj/rHcfYx8E9P
-         qP9CfzU8BU+bkJKdfVVW6dIVHIlJhB0l8U+b4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738262496; x=1738867296;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qOd3iWC7zZDqWb1/6kUeblWIuvBy4/wvZo2kXA/gdXo=;
-        b=nwe1+VwI50AHuLTFgNZA6kckDmApE0jYLkYiZNmgU87JH6pgNmiJCg/pFQeXEJVfsj
-         jBiW/LBW0R0qRx0mmNyagfBo37xmtzUN2iSwOT3jsZTmXT5B9tvqObvkHTJJGwNhmlC/
-         0aDS2fr+Xa+PDDsNfx6tj5x82fVw1QjuNrI4fkQtg4wEh/yMHC7fMxP2oZk9PaPDA2WZ
-         5F5tY+Hni49iAvZpRIp8+mCUCIeeOFqEp62Sf674xxn4KBtgP9ruQJoeJCzUbwn/5zmS
-         f0q6aSyoq0mULMRhev7sALbttG2VzR1o0lrhIexIWyxX5qECRwiUrC9ZOIJ4CLRozTfn
-         dlPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWc1uv0Lx8qvsP5RNtblUctWtxec0ES6hnqb6yQkC2r8UoKo6Dpdzq8lanMC5jvbOoM2sgIfe7DQAbfzsQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3xrLeAKfilC7HpboTNEel6S0c3VbaJ4iM2eQ7nVpzOMAi2inL
-	4MSeeflHN2qh8xFnZFT36VO+tufnvpoQU7hcmXun6M/LcVPsCW6UfFAaV3pKEw==
-X-Gm-Gg: ASbGncuxDiQBrz5cj52oaMhx27shV90BWQgIieip0qcEZM2ZFnzGbzDD5ysPkYDvErK
-	02ipevD7sGQDbGSOE2QKP8ukZBS0TFG6Ov1UIWUe4d1dHYnc1J7GR5N1H5IlzsnSqpLjlqYQpSg
-	zC/pO0P915jpRkw3nRWW+0SIdyOM2KNCX3AKC47xdHLoCKtDBh3frjr57kPvLtZaeYHXC7eUHpf
-	8k8l2vuzpjDBK9+zSGmOGfTt38+73GmS6MXjWejVHopjo8FnWUHKmTIulx5A2yuC7SbF14/tZL4
-	2kdrdRLupRQx/uENDm4tkjf8c09T+tybGI1f7qkKaI/yhtluOLaGshE=
-X-Google-Smtp-Source: AGHT+IF9hPMapcrHVYgiwr6mfFGr1150ASwMIWTB4CXyFsQRq91Q5GFZfWBy/o7V8rqkPEXMa3zRpA==
-X-Received: by 2002:a05:6808:1b87:b0:3e4:d4ca:2774 with SMTP id 5614622812f47-3f323a8d14emr5680855b6e.20.1738262496255;
-        Thu, 30 Jan 2025 10:41:36 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f33365be46sm369818b6e.36.2025.01.30.10.41.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 10:41:35 -0800 (PST)
-Message-ID: <5fe49a62-b40d-480f-aee1-224e17db9f02@broadcom.com>
-Date: Thu, 30 Jan 2025 10:41:31 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MP/S47nA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C3C8C4CED2;
+	Thu, 30 Jan 2025 18:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738262535;
+	bh=7SyZ5zCEJ4aNJvlmHMl8pZTMFw6jNB5EeCSDItXKy7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MP/S47nA8FE9AkuHWURw/yUclraFw1sFDgbUmalMDZV0/vbCb5U0HkRgrIxFDVQbR
+	 jmTquZPkUs7UbzmAwoMc4DmXmNprefYqz2iiZfqflLMIIWSCHcE2hRIARNd4lneK7m
+	 PawsARXf+YXzjgMryCAxyE6UcQQaUJPyr3VIxDkf6Exjpgxl2P8B8nW/c2fmUc4rE6
+	 /hY1qrBH7jbokFST3GNofAdKQ4JRX3Wbzzv8OCwS0oL2+b7aIeFq7xLEcugnTFGnfk
+	 tdXvdFKA/8jTj+TM0Pv/TsAQlqkSBJOKjpuiHhN/iZAiLO+epc56JaVm1vKuGGMtJ+
+	 yFV9Ay6+9RgQg==
+Date: Thu, 30 Jan 2025 18:42:09 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Aurelien Jarno <aurelien@aurel32.net>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCH 2/7] dt-bindings: rng: add binding for Rockchip RK3588 RNG
+Message-ID: <20250130-anything-scholar-01f4c9145893@spud>
+References: <20250130-rk3588-trng-submission-v1-0-97ff76568e49@collabora.com>
+ <20250130-rk3588-trng-submission-v1-2-97ff76568e49@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] gpio: bcm-kona: Add missing newline to dev_err format
- string
-To: Artur Weber <aweber.kernel@gmail.com>, Ray Jui <rjui@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Scott Branden <sbranden@broadcom.com>,
- Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>,
- Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>,
- Christian Daudt <csd@broadcom.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht
-References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
- <20250130-kona-gpio-fixes-v1-3-dd61e0c0a9e7@gmail.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250130-kona-gpio-fixes-v1-3-dd61e0c0a9e7@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hYobnhEFDnkdMhyO"
+Content-Disposition: inline
+In-Reply-To: <20250130-rk3588-trng-submission-v1-2-97ff76568e49@collabora.com>
 
-On 1/30/25 09:10, Artur Weber wrote:
-> Add a missing newline to the format string of the "Couldn't get IRQ
-> for bank..." error message.
-> 
-> Fixes: 757651e3d60e ("gpio: bcm281xx: Add GPIO driver")
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+--hYobnhEFDnkdMhyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jan 30, 2025 at 05:31:16PM +0100, Nicolas Frattaroli wrote:
+> The Rockchip RK3588 SoC has two hardware RNGs accessible to the
+> non-secure world: an RNG in the Crypto IP, and a standalone RNG that is
+> new to this SoC.
+>=20
+> Add a binding for this new standalone RNG.
+>=20
+> The RNG is capable of firing an interrupt when entropy is ready, but
+> all known driver implementations choose to poll instead for performance
+> reasons. Hence, make the interrupt optional, as it may disappear in
+> future hardware revisions entirely and certainly isn't needed for the
+> hardware to function.
+>=20
+> The reset is optional as well, as the RNG functions without an explicit
+> reset. Rockchip's downstream driver does not use the reset at all,
+> indicating that their engineers have deemed it unnecessary.
+>=20
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+>  .../bindings/rng/rockchip,rk3588-rng.yaml          | 61 ++++++++++++++++=
+++++++
+>  MAINTAINERS                                        |  2 +
+>  2 files changed, 63 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.ya=
+ml b/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..dff843fa4bf9d5704bbcd1063=
+98328588d80b02d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/rng/rockchip,rk3588-rng.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Rockchip RK3588 TRNG
+> +
+> +description: True Random Number Generator on Rockchip RK3588 SoC
+> +
+> +maintainers:
+> +  - Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - rockchip,rk3588-rng
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: TRNG AHB clock
+> +
+> +  # Optional, not used by some driver implementations
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  # Optional, hardware works without explicit reset
+
+These sorts of comments are not needed, "required" conveys this
+information.
+
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
+> +    bus {
+> +      #address-cells =3D <2>;
+> +      #size-cells =3D <2>;
+> +
+> +      rng@fe378000 {
+> +        compatible =3D "rockchip,rk3588-rng";
+> +        reg =3D <0x0 0xfe378000 0x0 0x200>;
+> +        interrupts =3D <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH 0>;
+> +        clocks =3D <&scmi_clk SCMI_HCLK_SECURE_NS>;
+> +        resets =3D <&scmi_reset SCMI_SRST_H_TRNG_NS>;
+> +        status =3D "disabled";
+> +      };
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index bc8ce7af3303f747e0ef028e5a7b29b0bbba99f4..7daf9bfeb0cb4e9e594b80901=
+2c7aa243b0558ae 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -20420,8 +20420,10 @@ F:	include/uapi/linux/rkisp1-config.h
+>  ROCKCHIP RK3568 RANDOM NUMBER GENERATOR SUPPORT
+>  M:	Daniel Golle <daniel@makrotopia.org>
+>  M:	Aurelien Jarno <aurelien@aurel32.net>
+
+> +M:	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+^^
+tbh, not really sure this part of the change should be in this patch
+
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/rng/rockchip,rk3568-rng.yaml
+> +F:	Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
+>  F:	drivers/char/hw_random/rockchip-rng.c
+> =20
+>  ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+>=20
+> --=20
+> 2.48.1
+>=20
+
+--hYobnhEFDnkdMhyO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ5vIAQAKCRB4tDGHoIJi
+0qgrAQCzakFSQyHjHTH6QESUz0gqsobwUVK1Lds0RZkRNrR/OAD/dXxihZAQuiUY
+9ILx114VGQkUr92cCeWnQD49v7U/hwQ=
+=wfH8
+-----END PGP SIGNATURE-----
+
+--hYobnhEFDnkdMhyO--
