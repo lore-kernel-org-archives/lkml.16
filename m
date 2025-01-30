@@ -1,421 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF9A153BE8
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 04:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70111494C9
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 04:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738211918; cv=none; b=X0vLKe4+JkEYBE1UoPOZtadLzfDhzdlAMos3BWcO2c5NyFk7Bog7sRTFdX1TcJ3nKLjvMPNZwcNTvJRzwSGL+Fy8aEcpnWEDSIU1VeGWpxvSdK7k7xV0LuqwJvW+3AxgVTlMadGL+yXO/pGt8QZeKZyatQxpdfjtQkxgrsLfJTQ=
+	t=1738212304; cv=none; b=d0uUOH3TDoXiDMhM5YwhQaGR1eE/bPP7Wwle/X6baepu9CMEZNt20QzwELEiyM0EDgcMhFrwzDo+L5BrgI39JtJVGCqV3brMUZZvmSsPA6R7rlotJ7/JBxVlCMpjN/P1n6u+Pe4VNkj41v69rEd0BR5yAXujcDm3X3/idk26GfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738211918; c=relaxed/simple;
-	bh=4FKEvSUMzC2p53+6xAj3vhxfuVD67aqgvQeQrfYid4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E2UWYULgE0LbJYTVniJ55jCVt8wpVmxAfgK3MJlHbyVyPzKcLzdiUavhM/68UAT7vRRaHB3AzICjccPcqNcWobZBxa8ZTAjcQjdi3vXctoJucrqC6SjdXVoLTHlNzn7CKL1tCWbwg98vF6SqIKTKpnWqz94gVpRBJCbO4QfEpgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I0qIGcuY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738212304; c=relaxed/simple;
+	bh=UCW6WgvipXPkDMGPfam+h+FXh/InNG/mCDvCSUK8ghs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=arbGJU9mUaV5VdzWSua5GKX/XIkfh8cLAsya9p5rxVopQvxBfDsifdgFSA84lJuV71+N3gVooaqbJ0DBl2DNzs4XIzAbHnthq++2o2Xi4HUcORqLpcRWuQG2ARN2jQGjJ0yuY40Hf7drmeWuWvP+qlbOAOlFin5OnTEVYNSKz1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ICHk3NGs; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I0qIGcuY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738211915;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dahlzWRlI1LALktUzZgSkyoAKZL8GDjGaQgiyJ8JjL0=;
-	b=I0qIGcuYqFUpyd6HYfI5HhvLMAqZyCe6Oc1dvslSFmBrGCimazayc0khG27L33sRSkbGD+
-	eYVWrMT4nERH9eLLzkF5TLMnyURAho7BnXSWkWa7rTsFIiDJNUVaNeDwPrxR9d4b9sB9Zl
-	SSMR1FCTZJsxFhpMr51poehdOJX08WI=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-lt-FHZXHPBSY43VM5vWaqA-1; Wed, 29 Jan 2025 23:38:33 -0500
-X-MC-Unique: lt-FHZXHPBSY43VM5vWaqA-1
-X-Mimecast-MFC-AGG-ID: lt-FHZXHPBSY43VM5vWaqA
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2166a1a5cc4so8369325ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 20:38:33 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ICHk3NGs"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21670dce0a7so7478925ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 20:45:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738212302; x=1738817102; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wp/wqKAz8lT7ubXbwwLLqI8OYR2q1r36R1/w+GLSRuc=;
+        b=ICHk3NGsLnScs1YWujWBGxTOGsFuFajX36GlUBTaol5SFgN+Oa1Tp5ARwW9maMm0Bg
+         Ambr7IUide7EiEQQ/VZ8gbUJVhq7fQiG9MWL5Vjo8rlPHDBzzAYJmvaOmmS4NtuhNn21
+         iKkNawVcAPqiDzz1KEoNHkjTxt0XhCOxzwIxU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738211912; x=1738816712;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dahlzWRlI1LALktUzZgSkyoAKZL8GDjGaQgiyJ8JjL0=;
-        b=rWoOrjQY2vsrulg6hd4q7oGOrEbor4HGvi/f/gDzas89SoZudKd0TalzQ8eo1NKtp/
-         GSG/R911/RRWEBp7RCBKlDBPFwMzwf0aAjGYHjlRPC+GMTESBvPq97/vI7JeA66IZ77C
-         TpqtY4rMIDZnBCRvRXR1/whegTSt+ENhlId84MvNt5Do6tDVbI+D+raIhwY9jZ1qMaDV
-         EpBkk6SHVqqQKwb242erZZt0FPRo2GRbmBlJcGBVhPXkcYjggfMTvkARfuqapmNIeln1
-         x+ZuKtYvih1rJl4OCoW4t4g5SfP0+2PqajcEqkWKWte80xB0WGJoEefwWHzThzStEcgN
-         V3/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXsVptO/o059B4dR9qJUpFO88MNLYJs4YyLZ56TXi2HAOZyFyFva75jjTiQAIb9c3OaINND6tkFTAa2UwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWgj2kMSmcaDEUvhEUQP7lv9DJzuGoYNWX4in7GqMPPKaGprKC
-	Lv72Q9CijX5lfDYmhH7zNvx0V3DS+GETlnlC1HCEH7xJJybO5XkUVj8IO3ab07BksBCxVf1pivd
-	M1YHhaGNJyJ2UoGWpMJJ3PsH5ypdxW92Ta1r7kcMinqaaDkMQPmikp6fIzDl++A==
-X-Gm-Gg: ASbGncu9Md9/Na2CEhxBhK51vBQUbve3VkYrRL9JehgQZJkiBuyLBVTkOEbbosYdjx2
-	hLxN2PdR+sqeS7Wu35chtocf841YJTMzHUNsEQVYGmDaiLc4ktAME0+m1/gCW55ZizeFPHyawCS
-	f8tQ0gkVZCb86blslsthhTdpwTxn5Wo431FnSMrgguIQr0FdQEfBMdSkSnqf/7fepcHSzDCVGTh
-	rATlFEBRG6YobcfNKE78dWb59GR8QymrRwqJWdnWGzYo20NmGirqN2KjHKB8ZyJWWPkoJRcRKcA
-	WXRNeg==
-X-Received: by 2002:a17:903:188:b0:215:7b06:90ca with SMTP id d9443c01a7336-21dd7c57d68mr81484425ad.17.1738211912345;
-        Wed, 29 Jan 2025 20:38:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFiahIoPowSM27YGSPI2cloGv/kse1h98lrjSMBvVFsnZSHDm3HToPBIRU42xVvRKjySslt3w==
-X-Received: by 2002:a17:903:188:b0:215:7b06:90ca with SMTP id d9443c01a7336-21dd7c57d68mr81484165ad.17.1738211911962;
-        Wed, 29 Jan 2025 20:38:31 -0800 (PST)
-Received: from [192.168.68.55] ([180.233.125.64])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3320edfsm4454775ad.229.2025.01.29.20.38.24
+        d=1e100.net; s=20230601; t=1738212302; x=1738817102;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wp/wqKAz8lT7ubXbwwLLqI8OYR2q1r36R1/w+GLSRuc=;
+        b=HyNsVnUGjtw4dLD9fI1O/b+TkZSRdVX+GeavguYONFvDq+GwMeQL0acm5TkPAcs1BK
+         A0mm4xnj9siKvYDhmzJc/mvyXZlPE4mQg00mvbqBwHGyoceTP2TX8lRdS2OthzrDBghO
+         Dv2zY9Ibo8wTf7spTIWl595llltpFJEIP2fklUlYkTtOG+VXOreXDC14EjePwjy+c+7A
+         OYt2U45SY09bAm/0/8cQ/rdpzm8S1TPWKMuFDHZ432j1czn//Iih6w+t79IB59/z4s/c
+         s4yYomZBQIUkKPtuEzdUHeWQFRTlXP5F5yaQbkZW8bKaxqO7e3NkSiESRq6oYqsuBw9g
+         pYOg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDFm+0JO7uk2Ped2IMZWGJ2otvjK5Sie+opxzXyqhDn08q3dDssQXzPVdS/ItkQivI0ZN9mz1nQlf2PMo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2SfUTEhGeZzqZPl78MSl944GmKnh5QzUeyOpZ4a8lKO/m9KNh
+	JI1Fvf2K1nn2pumCy401Ay+jjCTXYvRW8afHUkeZHk8YlkDtvbqWD3WL7hZKaw==
+X-Gm-Gg: ASbGncs6m+rRrvYSz4ipLtAnFtB6fYhkzXlsqTWy+yypC6La0jaCJzXhzlRB9LdH8cH
+	Ua9ZfPqUTCRBMYwlmDhULgeXPsGq6s2wa/ZN5EaNjJ+CJi2cSwsql2lgYky3AfiWbCsc30o1GYA
+	BZh4wKP8r1EfpoQ9PGht6gM57ogHxvdehZY4LoP9nK5XHvMzUEGUUBv1sD9wOI3nlhmIUIkeWGO
+	F/095WmoFnlpN2Idmaoz30OCzqYgm9TKk9VBAtgdxNlRFXD/rHR3yEGwBWajnfSYNfo11qs40ju
+	R+JfEFXMnpR2LZ0qIg==
+X-Google-Smtp-Source: AGHT+IE+jTurSVbP5RHK0HJJXvm6F49R9W3yu8ODTcVpDcGP+GZ+KVPXpYzFtBPDke2AQKxhs0qqow==
+X-Received: by 2002:a05:6a21:33a4:b0:1e1:a9dd:5a58 with SMTP id adf61e73a8af0-1ed7a6c87f9mr9888284637.30.1738212301909;
+        Wed, 29 Jan 2025 20:45:01 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:d794:9e7a:5186:857e])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-72fe631bd9dsm427630b3a.14.2025.01.29.20.44.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2025 20:38:31 -0800 (PST)
-Message-ID: <68e545c8-57a3-4567-9e96-b46066cf6cee@redhat.com>
-Date: Thu, 30 Jan 2025 14:38:22 +1000
+        Wed, 29 Jan 2025 20:45:01 -0800 (PST)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Minchan Kim <minchan@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCHv2 0/7] zsmalloc: preemptible object mapping
+Date: Thu, 30 Jan 2025 13:42:43 +0900
+Message-ID: <20250130044455.2642465-1-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 19/43] arm64: RME: Allow populating initial contents
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20241212155610.76522-1-steven.price@arm.com>
- <20241212155610.76522-20-steven.price@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20241212155610.76522-20-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12/13/24 1:55 AM, Steven Price wrote:
-> The VMM needs to populate the realm with some data before starting (e.g.
-> a kernel and initrd). This is measured by the RMM and used as part of
-> the attestation later on.
-> 
-> For now only 4k mappings are supported, future work may add support for
-> larger mappings.
-> 
-> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> Changes since v5:
->   * Refactor to use PFNs rather than tracking struct page in
->     realm_create_protected_data_page().
->   * Pull changes from a later patch (in the v5 series) for accessing
->     pages from a guest memfd.
->   * Do the populate in chunks to avoid holding locks for too long and
->     triggering RCU stall warnings.
-> ---
->   arch/arm64/kvm/rme.c | 243 +++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 243 insertions(+)
-> 
-> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-> index 22f0c74455af..d4561e368cd5 100644
-> --- a/arch/arm64/kvm/rme.c
-> +++ b/arch/arm64/kvm/rme.c
-> @@ -4,6 +4,7 @@
->    */
->   
->   #include <linux/kvm_host.h>
-> +#include <linux/hugetlb.h>
->   
+This is Part II of the series [1] that makes zram read() and write()
+preemptible.  This part focuses only zsmalloc because zsmalloc imposes
+atomicity restrictions on its users.  One notable example is object
+mapping API, which returns with:
+a) local CPU lock held
+b) zspage rwlock held
 
-This wouldn't be needed since the huge pages, especially hugetlb part, isn't
-supported yet.
+First, zsmalloc is converted to use sleepable RW-"lock" (it's atomic_t
+in fact) for zspage migration protection.  Second, a new handle mapping
+is introduced which doesn't use per-CPU buffers (and hence no local CPU
+lock), does fewer memcpy() calls, but requires users to provide a
+pointer to temp buffer for object copy-in (when needed).  Third, zram is
+converted to the new zsmalloc mapping API and thus zram read() becomes
+preemptible.
 
->   #include <asm/kvm_emulate.h>
->   #include <asm/kvm_mmu.h>
-> @@ -545,6 +546,236 @@ void kvm_realm_unmap_range(struct kvm *kvm, unsigned long start, u64 size,
->   		realm_unmap_private_range(kvm, start, end);
->   }
->   
-> +static int realm_create_protected_data_page(struct realm *realm,
-> +					    unsigned long ipa,
-> +					    kvm_pfn_t dst_pfn,
-> +					    kvm_pfn_t src_pfn,
-> +					    unsigned long flags)
-> +{
-> +	phys_addr_t dst_phys, src_phys;
-> +	int ret;
-> +
-> +	dst_phys = __pfn_to_phys(dst_pfn);
-> +	src_phys = __pfn_to_phys(src_pfn);
-> +
-> +	if (rmi_granule_delegate(dst_phys))
-> +		return -ENXIO;
-> +
-> +	ret = rmi_data_create(virt_to_phys(realm->rd), dst_phys, ipa, src_phys,
-> +			      flags);
-> +
-> +	if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
-> +		/* Create missing RTTs and retry */
-> +		int level = RMI_RETURN_INDEX(ret);
-> +
-> +		ret = realm_create_rtt_levels(realm, ipa, level,
-> +					      RMM_RTT_MAX_LEVEL, NULL);
-> +		if (ret)
-> +			goto err;
-> +
-> +		ret = rmi_data_create(virt_to_phys(realm->rd), dst_phys, ipa,
-> +				      src_phys, flags);
-> +	}
-> +
-> +	if (!ret)
-> +		return 0;
-> +
-> +err:
-> +	if (WARN_ON(rmi_granule_undelegate(dst_phys))) {
-> +		/* Page can't be returned to NS world so is lost */
-> +		get_page(pfn_to_page(dst_pfn));
-> +	}
-> +	return -ENXIO;
-> +}
-> +
-> +static int fold_rtt(struct realm *realm, unsigned long addr, int level)
-> +{
-> +	phys_addr_t rtt_addr;
-> +	int ret;
-> +
-> +	ret = realm_rtt_fold(realm, addr, level + 1, &rtt_addr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	free_delegated_granule(rtt_addr);
-> +
-> +	return 0;
-> +}
-> +
-> +static int populate_par_region(struct kvm *kvm,
-> +			       phys_addr_t ipa_base,
-> +			       phys_addr_t ipa_end,
-> +			       u32 flags)
-> +{
+[1] https://lore.kernel.org/linux-mm/20250127072932.1289973-1-senozhatsky@chromium.org
 
-At the first glance, I was wandering what's meant by 'par' in the function name.
-It turns to be a 2MB region and I guess it represents 'part'. I think this may
-be renamed to populate_sub_region() or populate_region() directly.
+v1 -> v2:
+- Tweak cmpxchg loop (Uros)
+- Addressed feedback provided by Yosry
 
-> +	struct realm *realm = &kvm->arch.realm;
-> +	struct kvm_memory_slot *memslot;
-> +	gfn_t base_gfn, end_gfn;
-> +	int idx;
-> +	phys_addr_t ipa;
-> +	int ret = 0;
-> +	unsigned long data_flags = 0;
-> +
-> +	base_gfn = gpa_to_gfn(ipa_base);
-> +	end_gfn = gpa_to_gfn(ipa_end);
-> +
-> +	if (flags & KVM_ARM_RME_POPULATE_FLAGS_MEASURE)
-> +		data_flags = RMI_MEASURE_CONTENT;
-> +
+Sergey Senozhatsky (7):
+  zsmalloc: factor out pool locking helpers
+  zsmalloc: re-shuffle zs_pool members
+  zsmalloc: factor out size-class locking helpers
+  zsmalloc: make zspage lock preemptible
+  zsmalloc: introduce new object mapping API
+  zram: switch to new zsmalloc object mapping API
+  zram: add might_sleep to zcomp API
 
-The 'data_flags' can be sorted out by its caller kvm_populate_realm(), and passed
-to populate_par_region(). In that way, we needn't to figure out 'data_flags' in
-every call to populate_par_region().
+ drivers/block/zram/zcomp.c    |   6 +-
+ drivers/block/zram/zcomp.h    |   2 +
+ drivers/block/zram/zram_drv.c |  28 +--
+ include/linux/zsmalloc.h      |   8 +
+ mm/zsmalloc.c                 | 379 ++++++++++++++++++++++++++--------
+ 5 files changed, 313 insertions(+), 110 deletions(-)
 
-> +	idx = srcu_read_lock(&kvm->srcu);
-> +	memslot = gfn_to_memslot(kvm, base_gfn);
-> +	if (!memslot) {
-> +		ret = -EFAULT;
-> +		goto out;
-> +	}
-> +
-> +	/* We require the region to be contained within a single memslot */
-> +	if (memslot->base_gfn + memslot->npages < end_gfn) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	if (!kvm_slot_can_be_private(memslot)) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	write_lock(&kvm->mmu_lock);
-> +
-> +	ipa = ipa_base;
-> +	while (ipa < ipa_end) {
-> +		struct vm_area_struct *vma;
-> +		unsigned long map_size;
-> +		unsigned int vma_shift;
-> +		unsigned long offset;
-> +		unsigned long hva;
-> +		struct page *page;
-> +		bool writeable;
-> +		kvm_pfn_t pfn;
-> +		int level, i;
-> +
-> +		hva = gfn_to_hva_memslot(memslot, gpa_to_gfn(ipa));
-> +		vma = vma_lookup(current->mm, hva);
-> +		if (!vma) {
-> +			ret = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		/* FIXME: Currently we only support 4k sized mappings */
-> +		vma_shift = PAGE_SHIFT;
-> +
-> +		map_size = 1 << vma_shift;
-> +
-> +		ipa = ALIGN_DOWN(ipa, map_size);
-> +
-
-The blank lines in above 5 lines can be dropped :)
-
-> +		switch (map_size) {
-> +		case RMM_L2_BLOCK_SIZE:
-> +			level = 2;
-> +			break;
-> +		case PAGE_SIZE:
-> +			level = 3;
-> +			break;
-> +		default:
-> +			WARN_ONCE(1, "Unsupported vma_shift %d", vma_shift);
-> +			ret = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		pfn = __kvm_faultin_pfn(memslot, gpa_to_gfn(ipa), FOLL_WRITE,
-> +					&writeable, &page);
-> +
-> +		if (is_error_pfn(pfn)) {
-> +			ret = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		if (level < RMM_RTT_MAX_LEVEL) {
-> +			/*
-> +			 * A temporary RTT is needed during the map, precreate
-> +			 * it, however if there is an error (e.g. missing
-> +			 * parent tables) this will be handled in the
-> +			 * realm_create_protected_data_page() call.
-> +			 */
-> +			realm_create_rtt_levels(realm, ipa, level,
-> +						RMM_RTT_MAX_LEVEL, NULL);
-> +		}
-> +
-
-This block of code to create the temporary RTT can be removed. With it removed,
-we're going to rely on realm_create_protected_data_page() to create the needed
-RTT in its failing path. If the temporary RTT has been existing, the function
-call to realm_create_rtt_levels() doesn't nothing except multiple RMI calls are
-issued. RMI calls aren't cheap and it causes performance lost if you agree.
-
-> +		for (offset = 0, i = 0; offset < map_size && !ret;
-> +		     offset += PAGE_SIZE, i++) {
-> +			phys_addr_t page_ipa = ipa + offset;
-> +			kvm_pfn_t priv_pfn;
-> +			struct page *gmem_page;
-> +			int order;
-> +
-> +			ret = kvm_gmem_get_pfn(kvm, memslot,
-> +					       page_ipa >> PAGE_SHIFT,
-> +					       &priv_pfn, &gmem_page, &order);
-> +			if (ret)
-> +				break;
-> +
-> +			ret = realm_create_protected_data_page(realm, page_ipa,
-> +							       priv_pfn,
-> +							       pfn + i,
-> +							       data_flags);
-> +		}
-> +
-> +		kvm_release_faultin_page(kvm, page, false, false);
-> +
-> +		if (ret)
-> +			break;
-> +
-> +		if (level == 2)
-> +			fold_rtt(realm, ipa, level);
-> +
-> +		ipa += map_size;
-> +	}
-> +
-> +	write_unlock(&kvm->mmu_lock);
-> +
-> +out:
-> +	srcu_read_unlock(&kvm->srcu, idx);
-> +	return ret;
-> +}
-> +
-> +static int kvm_populate_realm(struct kvm *kvm,
-> +			      struct kvm_cap_arm_rme_populate_realm_args *args)
-> +{
-> +	phys_addr_t ipa_base, ipa_end;
-> +
-> +	if (kvm_realm_state(kvm) != REALM_STATE_NEW)
-> +		return -EINVAL;
-> +
-> +	if (!IS_ALIGNED(args->populate_ipa_base, PAGE_SIZE) ||
-> +	    !IS_ALIGNED(args->populate_ipa_size, PAGE_SIZE))
-> +		return -EINVAL;
-> +
-> +	if (args->flags & ~RMI_MEASURE_CONTENT)
-> +		return -EINVAL;
-> +
-> +	ipa_base = args->populate_ipa_base;
-> +	ipa_end = ipa_base + args->populate_ipa_size;
-> +
-> +	if (ipa_end < ipa_base)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Perform the populate in parts to ensure locks are not held for too
-> +	 * long
-> +	 */
-> +	while (ipa_base < ipa_end) {
-> +		phys_addr_t end = min(ipa_end, ipa_base + SZ_2M);
-> +
-> +		int ret = populate_par_region(kvm, ipa_base, end,
-> +					      args->flags);
-> +
-> +		if (ret)
-> +			return ret;
-> +
-
-cond_resched() seems nice to have here so that those pending tasks can
-be run immediately.
-
-> +		ipa_base = end;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   int realm_set_ipa_state(struct kvm_vcpu *vcpu,
->   			unsigned long start,
->   			unsigned long end,
-> @@ -794,6 +1025,18 @@ int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
->   		r = kvm_init_ipa_range_realm(kvm, &args);
->   		break;
->   	}
-> +	case KVM_CAP_ARM_RME_POPULATE_REALM: {
-> +		struct kvm_cap_arm_rme_populate_realm_args args;
-> +		void __user *argp = u64_to_user_ptr(cap->args[1]);
-> +
-> +		if (copy_from_user(&args, argp, sizeof(args))) {
-> +			r = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		r = kvm_populate_realm(kvm, &args);
-> +		break;
-> +	}
->   	default:
->   		r = -EINVAL;
->   		break;
-
-Thanks,
-Gavin
+--
+2.48.1.262.g85cc9f2d1e-goog
 
