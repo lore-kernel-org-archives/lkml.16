@@ -1,69 +1,68 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A0C1E0DDC
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 11:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D394C1E3772
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 11:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738235504; cv=none; b=QSNERTs2+rHVquSLD2D8786H1BMBDaRahgYdRZYqC+jdCupKKDM/CvauIeBAOVu8zIRqDRbGUBW17ZcJv2nByxH7NWqWT1ZDGZMiixIMIWc0bglCUUAlqJzFSwIvs0Gfb41bpb+eeRmqb1lPbu/6AgULvIO17w4heYaq5FSE1JA=
+	t=1738235509; cv=none; b=h4vEEIw5ZUe+w8UfZfDl1FrZbF5gtHEYycDQceHpAAmNC9oY9ayz5B3/dNwQAbJg9SkEVg8bHxnO4gIhLmVBNwk9G/3xt7772Nys0s0XNqS192a5TzzDK5G8gneMWnd4vkJxt2odEswGi14qJmYzfEmYMhOtStUJ3tJNnyWH6wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738235504; c=relaxed/simple;
-	bh=Ej/13Gy59hq4pSeuXyYtdu8JOFvxFaLu/EaPO8MCcTs=;
+	s=arc-20240116; t=1738235509; c=relaxed/simple;
+	bh=P9VdcunwmUSUgdStR+4cpgVmYLBALxuBPRS0y11jyMI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D7dda+0v8PjdjQj+bMsli9L/niBMTWf4vFXecyQ6EVGOHIXKp6OEKMmQh+D0yTX5Cnr06tFTRMXHThuECIxV6Jvv5V8MwcNwHBhPujjIwtApG/YzbTQ8EL/kbp7JZDOwwSYR1OqT0RMnq+9tBxCHnmvoYhr1r8TU7nmzQMNWruA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=b3dvqlFu; arc=none smtp.client-ip=209.85.216.54
+	 MIME-Version; b=OJTWbwRWpsEdO4zp4An3HhwUB6bAqYB+8RE9HK+S7olz/EN/d/pBsfXjl/HgS7fAq3FWv3SZ/QiAYsjsVpir2azM6iPluV+vz/wLzxfdKCxzv3UKUTuRzeSKCM+VL4HphWogOZzkRCYIyJMjdLRNTscpGAJTAjkQ5vNNEeit+uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TSSIe89c; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b3dvqlFu"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2efd81c7ca4so744391a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:11:42 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TSSIe89c"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2163dc5155fso10162345ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:11:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738235502; x=1738840302; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1738235507; x=1738840307; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5g614UtqxTvOkBYeQdwAP9Uo/j0Alc44lQaUMvbAkkk=;
-        b=b3dvqlFunxfbNMT/FwIBwAptXBp9qLgF4DjTYeDLl2ckmrgxFgIHO9BMWTDF9G4DAU
-         Emj4dc/QwanfssbgT/64F7RqGsU1BNjhLJQlGoQ8k68in8D6PUvIwGS3Mmjh0C5uYSU7
-         JsHjkxzeqYT8h29PSVmjd1opBEAsPfA+UaN0o=
+        bh=wsNyTVEtqJeOeaUMXY3SZH4okPEwKCuL4AyQgcINZOs=;
+        b=TSSIe89c4QwixqpaTSH/2pEPJlycRQ9Ock260B+HGj83kmY377MyW7BIYXrvnCun/T
+         Ip5Yzbo0ImzFWl/r1CFWVD+BKOSOPNrQu1viGELE9bjxHkI/Xrw/tVYA0p+zvMd5pFFY
+         1/YMM/9lTTpEIgiitoz3tiJavoaODnh4vFD9E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738235502; x=1738840302;
+        d=1e100.net; s=20230601; t=1738235507; x=1738840307;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5g614UtqxTvOkBYeQdwAP9Uo/j0Alc44lQaUMvbAkkk=;
-        b=gpGBy79LQB06FSR5sysuLXXCv8nFzZsl2s1XmKxORoRAI04gqw+C/iGowzi2cZSJY3
-         lswOQ2qlkW+FRp05w1zVhEb9G/a+eMCNvdUUVn/3QEcweTB4Kn6czuiF7UZRleDgnVdy
-         a62sJHHY25eG4RW+p+8HRpPNUwFAfFRAjIhpf/jhRArNfxqxkEgri6rjPcIzbD6mLstz
-         VBUxo8i+BWjm7EaMgYkMjwYUIHbfjW6smL+3MY6oHcX30qnIbker4XufyGwT/pBL/cgW
-         TmIOBDCEVzVhxggrPaBvIVy2FGKQnue5xafe8yzG8Ag/vV9fOtR7BJ0yuA2WDWx5RAwl
-         8bDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfqljqMUccADmVrEIL5Elgq2euVVfJnJopEEQT5zSBlWU4Sb3MxEHyKEwZasADqixCACa3QCPBNCSqlho=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEAqcbM5C5tzhhGDF2l4vrbKw0NO2tcyHn5bbNbg3yY0D8HyU7
-	LXsUksUGZ2hBmcbLMvs39KqCZAtbGbUp8PnE50oW9Bz+1SBAhqihw9U/ykO8Lshpw8nGmh1puwk
-	=
-X-Gm-Gg: ASbGncvqxvcunEZpczf8Qv1yC3A7+r4knZ47wMshIbGHnNDlylOy8V3PN1myKLdP8ud
-	s1s3ZFbXF3O/+rQQ46LjQeZIyXn38g38txxzmUVkwY9oB3Kw9Gc6AQomhGhDq8al15Gj9ClcGm7
-	c8aLGz4nCS11kxqzkxuDJCLpJgtV66UM7rv59awsdlPymmSQU6EeGJBcXjD+ULCr6gPloel0MXT
-	0Qn8H+OfD8iwvmmS4qVxvx6pDRGX8v4l/MIhiRCTctS90AnwJt0hvJ4AZpdO4QHi9HS5dZRg2yw
-	wDk0MlgIEyG1ShMH
-X-Google-Smtp-Source: AGHT+IHg3heFJ21F+Ok092BsmeTSf/u5V4ef9+jPuKs0cnRlT5yUCtdKYPEIddDVnItYsVqEn0xRFg==
-X-Received: by 2002:a17:90b:4d06:b0:2f4:49d8:e6f6 with SMTP id 98e67ed59e1d1-2f83aba9d34mr9404404a91.3.1738235502347;
-        Thu, 30 Jan 2025 03:11:42 -0800 (PST)
+        bh=wsNyTVEtqJeOeaUMXY3SZH4okPEwKCuL4AyQgcINZOs=;
+        b=oNvMp2Tv9SKxr0NiBpMVQnDG0pCe7+nkPaL2lF0IET0/Jb8B7eXK3JGMaem52xJeqT
+         f51j6fTqbXkzlz6NVxXIcKl4gu9x8eUuRRNKKvhcgxtjOtA+rxYwjeGackC17YMQ3A3c
+         LGufln5y0ogYEyDh0ObYgB0GtyBekp2X+o0yV7saYmlM4O5dmHIe7CIAEJR4N3rY8UZU
+         i1DmvQv+VZy6GULf1EtBleS2jc+d3fUk5VYXQGCUQGS5GZ+y0J9GIDRsuIfTz8eya7lB
+         agaNVDUqVTGITgF5Okez3te6xfemHQT+bCBsy9lrbL+C4jwK1Cn0fG2TymoaBHoCy4Y8
+         1oOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUkl+raZ5NMBtG/A+B1C6r9tIbJzePy2y3nTgysVw2Wpwa1Adb2DfesVljyshBhGpqj/kFL265qJxr6mg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBFIS4exm1lWJdRh3fg4PLS3XMNzfX7oyYcBiyV3jRfzr/isbz
+	oYfhADDxr8p/EFOESWfGfEkow4F0H3V23yelwVDlt3C/4a+rqL5BGfqLHv8eVg==
+X-Gm-Gg: ASbGncv64oOjD6jYjd2GguwVO5hZk9TqjebfrS2uGBGIXcgoFb3DQZj4ZOhdBifdAtW
+	Aw6CRQ6fe7pmtMe+XsT7YmxEmSsSLKMBdXLBFkk0OJZViEAcbvpzCfVLEoORbO07cIt7yu0JZA6
+	p3yS4Oczs+tCRHquKJWkDn4+4fAML1Ld/zOFaMCoyhtHhrdyJzUDyAhtHJ/mSXhmCLI9r+mwD57
+	EyQkEH6JX+pipfuClABsl8zX783Mi9p3QkUc9N1pnxG7icH+njfrH82nyMSz0Zgkj9xxLGnoTkI
+	nFQ1OH0xr5ZF0RC9
+X-Google-Smtp-Source: AGHT+IGkwzFoDqvhfsm5VPosd4bbEzVRTQxGnDnsn5b9Avd6d9LNbqhCO+f9O1miDGFRqxuRGkD6PA==
+X-Received: by 2002:a05:6a00:2448:b0:729:a31:892d with SMTP id d2e1a72fcca58-72fd0be5470mr11033309b3a.8.1738235507138;
+        Thu, 30 Jan 2025 03:11:47 -0800 (PST)
 Received: from localhost ([2401:fa00:8f:203:d4ce:e744:f46b:4fb])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2f848acbda4sm1333892a91.45.2025.01.30.03.11.40
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-72fe653fe6fsm1164789b3a.80.2025.01.30.03.11.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 03:11:42 -0800 (PST)
+        Thu, 30 Jan 2025 03:11:46 -0800 (PST)
 From: Sergey Senozhatsky <senozhatsky@chromium.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Minchan Kim <minchan@kernel.org>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv3 06/11] zram: permit reclaim in zstd custom allocator
-Date: Thu, 30 Jan 2025 20:10:51 +0900
-Message-ID: <20250130111105.2861324-7-senozhatsky@chromium.org>
+Subject: [PATCHv3 07/11] zram: permit reclaim in recompression handle allocation
+Date: Thu, 30 Jan 2025 20:10:52 +0900
+Message-ID: <20250130111105.2861324-8-senozhatsky@chromium.org>
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
 In-Reply-To: <20250130111105.2861324-1-senozhatsky@chromium.org>
 References: <20250130111105.2861324-1-senozhatsky@chromium.org>
@@ -75,57 +74,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When configured with pre-trained compression/decompression
-dictionary support, zstd requires custom memory allocator,
-which it calls internally from compression()/decompression()
-routines.  This was a tad problematic, because that would
-mean allocation from atomic context (either under entry
-spin-lock, or per-CPU local-lock or both).  Now, with
-non-atomic zram write(), those limitations are relaxed and
-we can allow direct and indirect reclaim during allocations.
-
-The tricky part is zram read() path, which is still atomic in
-one particular case (read_compressed_page()), due to zsmalloc
-handling of object mapping.  However, in zram in order to read()
-something one has to write() it first, and write() is when zstd
-allocates required internal state memory, and write() path is
-non-atomic.  Because of this write() allocation, in theory, zstd
-should not call its allocator from the atomic read() path.  Keep
-the non-preemptible branch, just in case if zstd allocates memory
-from read(), but WARN_ON_ONCE() if it happens.
+Recompression path can now permit direct reclaim during
+new zs_handle allocation, because it's not atomic anymore.
 
 Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- drivers/block/zram/backend_zstd.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/block/zram/zram_drv.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/block/zram/backend_zstd.c b/drivers/block/zram/backend_zstd.c
-index 1184c0036f44..53431251ea62 100644
---- a/drivers/block/zram/backend_zstd.c
-+++ b/drivers/block/zram/backend_zstd.c
-@@ -24,19 +24,14 @@ struct zstd_params {
- /*
-  * For C/D dictionaries we need to provide zstd with zstd_custom_mem,
-  * which zstd uses internally to allocate/free memory when needed.
-- *
-- * This means that allocator.customAlloc() can be called from zcomp_compress()
-- * under local-lock (per-CPU compression stream), in which case we must use
-- * GFP_ATOMIC.
-- *
-- * Another complication here is that we can be configured as a swap device.
-  */
- static void *zstd_custom_alloc(void *opaque, size_t size)
- {
--	if (!preemptible())
-+	/* Technically this should not happen */
-+	if (WARN_ON_ONCE(!preemptible()))
- 		return kvzalloc(size, GFP_ATOMIC);
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 28e5b02dc3a1..ac8b4f47a496 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1981,17 +1981,11 @@ static int recompress_slot(struct zram *zram, u32 index, struct page *page,
+ 		return 0;
  
--	return kvzalloc(size, __GFP_KSWAPD_RECLAIM | __GFP_NOWARN);
-+	return kvzalloc(size, GFP_NOIO | __GFP_NOWARN);
- }
- 
- static void zstd_custom_free(void *opaque, void *address)
+ 	/*
+-	 * No direct reclaim (slow path) for handle allocation and no
+-	 * re-compression attempt (unlike in zram_write_bvec()) since
+-	 * we already have stored that object in zsmalloc. If we cannot
+-	 * alloc memory for recompressed object then we bail out and
+-	 * simply keep the old (existing) object in zsmalloc.
++	 * If we cannot alloc memory for recompressed object then we bail out
++	 * and simply keep the old (existing) object in zsmalloc.
+ 	 */
+ 	handle_new = zs_malloc(zram->mem_pool, comp_len_new,
+-			       __GFP_KSWAPD_RECLAIM |
+-			       __GFP_NOWARN |
+-			       __GFP_HIGHMEM |
+-			       __GFP_MOVABLE);
++			       GFP_NOIO | __GFP_HIGHMEM | __GFP_MOVABLE);
+ 	if (IS_ERR_VALUE(handle_new)) {
+ 		zcomp_stream_put(zram->comps[prio], zstrm);
+ 		return PTR_ERR((void *)handle_new);
 -- 
 2.48.1.262.g85cc9f2d1e-goog
 
