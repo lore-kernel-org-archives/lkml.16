@@ -1,146 +1,177 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B1D1BB6BC;
-	Thu, 30 Jan 2025 14:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72ED1BB6BC
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738247910; cv=none; b=ISZHORS1Ko5CL4hCJSaQQNvW/eWirMnWRtLoz1DjKMJG56mrMoGudh9FPJHi33vWFyd4D2Er4c8sgm8LgsXJQNaNTTOTkMRx/vwXgaan2r3CFI4NlU88G13vBFn14OORiePzIM2Vl3eN/0EnmSfs4SzYrNih4KQhEJ0iAbO1kZQ=
+	t=1738247918; cv=none; b=ffJda+W+pr2zo0hqWg1n5kd5i3TsljUkIfq9Qv6U2812hJgniLFIspDH6BXbph2+QfSOdB+WTX+JTNpHUM/9AfDLPt6m7RR2zZ37fQI1Bv1jFBptWYo8O1PvvXVN5cwjxQbAX606CtSEX0s68rtOanKljKbvVUV0lbwzWiRXbq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738247910; c=relaxed/simple;
-	bh=JV7b0o3v1+xzAtErM1HhLNkNgRvCoFydIlxgoByPDWY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JDbc+evO8/IYvfRgTFhtIzzlfkEIek9Jr+2fwD2Zlj3n7y4P6wY/GvNFUPzQKxkOgnvX2oFDYslQdMjuvxAKhviYP6/L9A8sdNNvu3wfT/oDdS5098md1E/j9m3ytB50iREoPoWWjgiz8Jwou0HDIorLIwtqphb/GI2ck0leUvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=U0wkuDXZ; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1738247918; c=relaxed/simple;
+	bh=iI0ePVIHGXyR7zGEY8vXECh4QVEz6Six9XPuHmBSdAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ADeVxwv+alJoew9LXI5r9TLC+ql7Idguk3WeKdI+iOWERr1m/IOSuLaW9OMgBe4oNG+/t3fwkyWvVbQRfCKk/UJPR/aSaFxOv8ru6fu5oeHk7RcWkB7C9xA1AherZJVxlV66hrEB8Pl7HBnd9IL2dGyb07FcYBY2d4PdFekJ4Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KpUYCp61; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="U0wkuDXZ"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 66B9DA0A58;
-	Thu, 30 Jan 2025 15:38:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=4shPxN5Zjg8CWO7oqCIY3l3k+e0q+fmoz+kF6bIkmVM=; b=
-	U0wkuDXZ+YCja8dGH6AgFVUuhRRiTGpVsVSgrioEsLNMSaRslidLO77DUIz95Fvg
-	LJqArNXFUbe+iqINh8q6JwEVMFrbOKWxKw44i2iTbQs9JUeeYOsrqCco1iG+EOpm
-	0CuZ8fY1Pecu6VbX9mz5AOWSavH3W+T6aISUqYv78/JLihcKJ/bTGdz05ICqv6Fb
-	HCp1EtU3wq3IUQftnD+Nc2A/2Md0pa/FWr5Q/+cSIgPlFs/3bhasMhH6bPK8O88Z
-	Q52FtabKvw4/JcHIQrM9D+vDBRBzHePWb3p4nP3U5JKOh/mV+HFVRZPcGCJwRpMt
-	MfwkhHmjgNyDz3PPj9UX1rr7n49koEDj1oIJ2Gf3d0vdC9gKWG/Ke+gKFCqyW8a6
-	rKxqZfc5udt8/BGNEYdAMDOxyGD3toCnHmDq3HOsAn3kYuEg+EdqFbiAvor0WSPl
-	XhpoaUb34qBhfc6Lgvg8Xc/B+Ayz6y9G2xZwxx7IKJph43piKHeJVIU7W4tsyHD+
-	5GE4BgXNDusoNpGH410FCvwDk+BSqd6q2yXmpOrSTSLdDD97KtRKNBa2HH6fK8NY
-	a325R2RuPYzDpYeuGeBbzOFVnZS3FLLq5vZTDx3HwFDvfF2QQaBReBfkSfSpP63L
-	8jdxXRNOIIcMxyc97HbxaUnhlTCZ/45i8IaN7ES2yxM=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Kamel
- Bouhara" <kamel.bouhara@bootlin.com>, William Breathitt Gray <wbg@kernel.org>
-Subject: [PATCH] counter: microchip-tcb-capture: Add capture extensions for registers RA-RC
-Date: Thu, 30 Jan 2025 15:38:16 +0100
-Message-ID: <20250130143817.41625-1-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KpUYCp61"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738247915;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JgiE4FoOzUtDiv/Mw5xRoxpuCcm6arbkAbYB7wDmIE4=;
+	b=KpUYCp613mPeIX+hbp+IypRsfob+5XobrckxJJd5eJ7uVqmh8lgxF4+VQh3mv15VFipHHg
+	a8MAJ4LPfA2EAmOBP+DNzaf98wu2cvsGPFlGAZ5/LUyCafyg97MDrYABzmy4huvPrz83un
+	SmOVuPR7gkm0RFL54NzlI1teqZdPE14=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-220-Kbl8lYn7PlSjQk9_F7lBdA-1; Thu, 30 Jan 2025 09:38:34 -0500
+X-MC-Unique: Kbl8lYn7PlSjQk9_F7lBdA-1
+X-Mimecast-MFC-AGG-ID: Kbl8lYn7PlSjQk9_F7lBdA
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38a684a096eso374007f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:38:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738247913; x=1738852713;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JgiE4FoOzUtDiv/Mw5xRoxpuCcm6arbkAbYB7wDmIE4=;
+        b=Y6S2MMt+M36HxrmdEcL1bzDzFVzd8iVt7spm0bvLg15BwMpQ7d7OOXig/fONFjALBk
+         h5g3Ylr8yTGpQrv6S8p8vHKwylDi7bNQ489VzVIv89p7Qn9UkLAq/yPW9xfx4KadyQcy
+         9yyiQ6EtGY9jH8ExuYRuZUJDopKJxZKUSA5OooFPTUthfrvz4E4W2acgz7ddZEd1m6DA
+         ago8x5ZlpPx+wL+6OdfzbSp/6E8RRsBzSSAFO9/02SKQPibR3+ZyfHAUqTJiVhF7Zr50
+         hbGpKch7fUistJH9odxaH/SnhNLjSBCWqOnQF4SbfaevDOIecGEwDPSa3qPH7gtPTb/t
+         79jg==
+X-Forwarded-Encrypted: i=1; AJvYcCWZltSRsruI0XStGEdq6N5lOdcqB60xIVNmeGOyAhTvnfpkO8nBwR1kpP+bkgQh7wtvrF5Qf2r8lhtc5QA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNvSQHlbj+IYFu4Olf280r3jPRDZsXNlRW1okdRHgL0+e9g1US
+	ZYoWrx1ckcu6IBLB0/GTN/uI/rtj0n7k/T4x23Q0WYLRZGmfRBcAJcwUtqnDHLMJCtg3R0LlH+m
+	manXeg8+DKtvjSfV+wncyWjpVxDtTwMvFh0j3OlLszGXH2wwMi9JegnTsleGsUQ==
+X-Gm-Gg: ASbGncsDzcCTlbDpcVs1QaofXesuU/ZhgvvJSEymdJjXfYjI+2f44IzkiUxyU06yeqN
+	80a098m3/yWaLojisAkjVoBwrUgRR1uUji83M23ZTfin6Sg+d7T0L1QBQdzkmJnVbuW4E5XHDHh
+	+xpIpHYRqaHqnO5AIJVY1QfOsGFMXkMO4H7rXBw/47G2M489n4Ckn9y/Uksdps5IKzmxhCnDwuv
+	vCPC1lo/g+7b6pcLV8H431LgHKYu2sU/v9Pcik11+QhBJurev9kQdvFGqFk834WImrudBZOxchm
+	m0B2ADRqwyWr5ejrp7wIIISIJVcuQMH+ImIcQrGXUINW7gaB80LO
+X-Received: by 2002:a05:6000:1882:b0:38b:f03c:5bbc with SMTP id ffacd0b85a97d-38c5195e5fcmr5088130f8f.19.1738247913085;
+        Thu, 30 Jan 2025 06:38:33 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHbV/sWshrdZhajcEm6ev76AV43Yg6Ta4vaWNe4sJ9G1m559H1nibuG1D9Z7w1qHPW2kocQNA==
+X-Received: by 2002:a05:6000:1882:b0:38b:f03c:5bbc with SMTP id ffacd0b85a97d-38c5195e5fcmr5088104f8f.19.1738247912662;
+        Thu, 30 Jan 2025 06:38:32 -0800 (PST)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2f17dsm60641185e9.23.2025.01.30.06.38.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 06:38:31 -0800 (PST)
+Date: Thu, 30 Jan 2025 15:38:30 +0100
+From: Igor Mammedov <imammedo@redhat.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+ qemu-arm@nongnu.org, qemu-devel@nongnu.org, Ani Sinha
+ <anisinha@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/13] tests/acpi: virt: allow acpi table changes for
+ a new table: HEST
+Message-ID: <20250130153830.2e4e081d@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20250130140324.06cdd4bf@foz.lan>
+References: <cover.1738137123.git.mchehab+huawei@kernel.org>
+	<1390b46682f2bac3587239d03a0ba22d18a9a044.1738137123.git.mchehab+huawei@kernel.org>
+	<20250129160328.2f66584c@imammedo.users.ipa.redhat.com>
+	<20250130140324.06cdd4bf@foz.lan>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1738247904;VERSION=7984;MC=3846925481;ID=123382;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94852667464
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-TCB hardware is capable of capturing the timer value to registers RA and
-RB. On top, it is capable of triggering on compare against a third
-register, RC. Add these registers as extensions.
+On Thu, 30 Jan 2025 14:03:24 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
----
- drivers/counter/microchip-tcb-capture.c | 58 +++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+> Em Wed, 29 Jan 2025 16:03:28 +0100
+> Igor Mammedov <imammedo@redhat.com> escreveu:
+> 
+> > On Wed, 29 Jan 2025 09:04:08 +0100
+> > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> >   
+> > > The DSDT table will also be affected by such change.
+> > > 
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>    
+> > 
+> > move it right before the patch that would actually make changes to tables (10/13)  
+> 
+> Table changes happens on two patches:
+> 
+> - patch 03/13: acpi/ghes: add a firmware file with HEST address
 
-diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
-index 2f096a5b973d..524b9edfaa5f 100644
---- a/drivers/counter/microchip-tcb-capture.c
-+++ b/drivers/counter/microchip-tcb-capture.c
-@@ -247,6 +247,62 @@ static int mchp_tc_count_read(struct counter_device *counter,
- 	return 0;
- }
- 
-+static int mchp_tc_count_cap_read(struct counter_device *counter,
-+				  struct counter_count *count, size_t idx, u64 *val)
-+{
-+	struct mchp_tc_data *const priv = counter_priv(counter);
-+	u32 cnt;
-+
-+	switch (idx) {
-+	case 0:
-+		regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RA), &cnt);
-+		break;
-+	case 1:
-+		regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RB), &cnt);
-+		break;
-+	case 2:
-+		regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RC), &cnt);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	*val = cnt;
-+
-+	return 0;
-+}
-+
-+static int mchp_tc_count_cap_write(struct counter_device *counter,
-+				   struct counter_count *count, size_t idx, u64 val)
-+{
-+	struct mchp_tc_data *const priv = counter_priv(counter);
-+
-+	if (val > U32_MAX)
-+		return -ERANGE;
-+
-+	switch (idx) {
-+	case 0:
-+		regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RA), val);
-+		break;
-+	case 1:
-+		regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RB), val);
-+		break;
-+	case 2:
-+		regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RC), val);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static DEFINE_COUNTER_ARRAY_CAPTURE(mchp_tc_cnt_cap_array, 3);
-+
-+static struct counter_comp mchp_tc_count_ext[] = {
-+	COUNTER_COMP_ARRAY_CAPTURE(mchp_tc_count_cap_read, mchp_tc_count_cap_write,
-+				   mchp_tc_cnt_cap_array),
-+};
-+
- static struct counter_count mchp_tc_counts[] = {
- 	{
- 		.id = 0,
-@@ -255,6 +311,8 @@ static struct counter_count mchp_tc_counts[] = {
- 		.num_functions = ARRAY_SIZE(mchp_tc_count_functions),
- 		.synapses = mchp_tc_count_synapses,
- 		.num_synapses = ARRAY_SIZE(mchp_tc_count_synapses),
-+		.ext = mchp_tc_count_ext,
-+		.num_ext = ARRAY_SIZE(mchp_tc_count_ext),
- 	},
- };
- 
--- 
-2.48.1
+this one shouldn't affect bios tables test as it only checks ACPI and SMBIOS tables,
+and hest addr file is not either.
 
+Do you really see test failing on this patch?
+
+
+> 	HEST table was added here
+> 
+> - patch 10/13: arm/virt: Wire up a GED error device for ACPI / GHES 
+> 
+> 	DSDT changes happen here.
+> 
+> If the idea is to avoid make check to fail between those two patches,
+> we need either to split them on 4 patches (one before/one after each
+> change) or do like I did on this series: whitelist before patch 3,
+> update after patch 10.
+
+It would be better to group patches that should change ACPI tables
+close together so that a pair of whitelist/update could cover it.
+However it depends on how many changes are there, i.e. acpi diff
+should be digestible for a reader. So there is no hard border here,
+just use common sense.
+
+However when the whitelist is covers all series where only few patches
+actually result in tables change, that miss-leads the reader since
+whitelist patch basically tells 'watch out for changes since this moment'
+and 'update' patch declares no more changes should happen.
+The same applies to bisection, where closer the gap between
+whitelist/update the better if the test case is the trigger.
+No need to be fanatical and do it around each patch,
+just make it observable (i.e. some small range of commits). 
+
+  
+> 
+> Regards,
+> Mauro
+> 
+> > 
+> >   
+> > > ---
+> > >  tests/data/acpi/aarch64/virt/HEST           | 0
+> > >  tests/qtest/bios-tables-test-allowed-diff.h | 2 ++
+> > >  2 files changed, 2 insertions(+)
+> > >  create mode 100644 tests/data/acpi/aarch64/virt/HEST
+> > > 
+> > > diff --git a/tests/data/acpi/aarch64/virt/HEST b/tests/data/acpi/aarch64/virt/HEST
+> > > new file mode 100644
+> > > index 000000000000..e69de29bb2d1
+> > > diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+> > > index dfb8523c8bf4..46298e38e7b8 100644
+> > > --- a/tests/qtest/bios-tables-test-allowed-diff.h
+> > > +++ b/tests/qtest/bios-tables-test-allowed-diff.h
+> > > @@ -1 +1,3 @@
+> > >  /* List of comma-separated changed AML files to ignore */
+> > > +"tests/data/acpi/aarch64/virt/HEST",
+> > > +"tests/data/acpi/aarch64/virt/DSDT",    
+> > 
+> > the list in not complete so 'make check-qtest' still fails
+> > [12/13] has complete list of changed files
+> >   
+> 
+> 
+> 
+> Thanks,
+> Mauro
+> 
 
