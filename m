@@ -1,122 +1,295 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADD71BD03C;
-	Thu, 30 Jan 2025 09:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55CB61B85CA;
+	Thu, 30 Jan 2025 09:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738230787; cv=none; b=kpCyUT+TkSks3Q+YMx60DOAeZcYv9Y/oc3RaNL/1jYfNbhy+gs6ojk4CNTw/uahniY4+UmNUk9NjKi4jKIPmGAajisb35VQnltZIyEOZEWCvhnd6ZdtqkaH9Y2E67gQ9DI0KVXmg1+jTY9bGHaexKEZ2Z4Dhp+HxCXmcQv4OZNc=
+	t=1738230806; cv=none; b=LEJxZeD6cXnzfm5IZybN7OXKSj09qe0U+o6FIUU6QmTRcY4d7Ml+xx6J1LZ95NW1v2CQgglsjIPLYIhLGpyaYhN9uFNTyHfMNz1c4y53LaozieM68IQuTNE0nhogLFOnz/89oYnp3FXRYJ7maCu88ZSu9nPWazkE5SjJ8AoJ/J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738230787; c=relaxed/simple;
-	bh=tsUCWCWybLuaKDtlDfYpWlQo0fDUB8i0WRg3k7cmmZo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=V09ZH/nVj2vxa4m+xOe687eFCO7zzNiMQZI3nIq4BixPYwjfZ7p4P+1erlN2uNe6eyGxo0mOCKM9YPqmG7dAGqBXeAF3T+8wftZ7cpoNDJQ/Aeq+BGO4GyI0h5d6fHUP1r+m2MAtksUnflM2f/oGIW3VCIMJjGKse+V8t9REAd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=ZjsSy/DL; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1738230806; c=relaxed/simple;
+	bh=vyvvFWCJPiszGlA9jXb+sS9KrOxg+WCmzPAQr9OxoRc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u7XpmF7uz/rrF2sLOMCy+r6YpkyD4VVQCsilbDpZlt4QtRilvr0VdBvTNlZNRKa+MHqpGzhQ6nzSuxh8nVR51ez8QXPfVpwZVyRQ+sw/13q1klAckNAI/F20qarZXPwWLijXDP43ZXayZ0z1tbx4wW/4DzqcYTCNWVEIbW6TpRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gtzsMnkr; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="ZjsSy/DL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=LQITD/1GiU3EgPyhE8zr2Aiq6UTSY+uAdE7is4oeS94=; t=1738230785; x=1738835585; 
-	b=ZjsSy/DLQfR5SYWPjM71IraU8czScpwW7ifn+ts/FA6+GTb9S6m+0xOHRqZmhy7MW77SDGdfHVr
-	68wgN2KvGZajGTr7IrtnGlLeo6P9hoO4+fp092Tu1LzovO86xnFQUWkvNGhMl3Xpafshkzkb2442w
-	KNvEVALPtY7c76ajy27xN7/5eag0uYcqlGwXsI1Y0oUIPUnNvkbcc9tmE6zmLEiF8Vl428+fq695a
-	ACRQgFsFriOH9ymtl9IQxpvxY6mfzNq30zi/XmiPzWZwDRjbHwTj9bzuRJqEQQHQtTPtwehl8omUV
-	FcS6LSvn+3UpTn/5vcyF26WvMJtfRALoYvFQ==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1tdREK-00000000liS-2dcq; Thu, 30 Jan 2025 10:53:00 +0100
-Received: from p5dc55198.dip0.t-ipconnect.de ([93.197.81.152] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1tdREK-00000001xSf-1jAy; Thu, 30 Jan 2025 10:53:00 +0100
-Message-ID: <c715bcf9716ebefa8272146ce48f674c56a04c52.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v2] sh: Remove IO memcpy and memset from sh code
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Julian Vetter <julian@outer-limits.org>, Arnd Bergmann <arnd@arndb.de>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- linux-sh@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Thu, 30 Jan 2025 10:52:59 +0100
-In-Reply-To: <CAMuHMdXfiqM2Weoeq-PRw-p9wqMrBwMBcSWjFF8f_uvmVrRS7A@mail.gmail.com>
-References: <20250128101306.1475491-1-julian@outer-limits.org>
-	 <8c4279dd244eed4b1a6ef7e2ea6dafac0b5fc79e.camel@physik.fu-berlin.de>
-	 <CAMuHMdXOx2MFDnRm2dxVTE9tFfAud595huEVagnTd8RKp3yQsg@mail.gmail.com>
-	 <57243d0602f768e6d87842008f0d2c76a1e7dc8d.camel@physik.fu-berlin.de>
-	 <CAMuHMdXfiqM2Weoeq-PRw-p9wqMrBwMBcSWjFF8f_uvmVrRS7A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gtzsMnkr"
+Received: from [10.156.205.88] (unknown [167.220.238.88])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6FE8C2109CD7;
+	Thu, 30 Jan 2025 01:53:20 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6FE8C2109CD7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738230803;
+	bh=x973D1YtTSuerbgIqP0nPMvsl0lyHBrerW2rQqaj1Jw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gtzsMnkrbY7Gw7uExDQbFAF48tutey2piJQfp8+YNhPN6rruZi0S1Y9EM6LLv4nFr
+	 gjfGLklVuqKn+ZzEe/uxv9vbIuohp8YpYQWKg0Wt7kpws3mcMIY9CFbg7lr5WYr1LO
+	 WCuYnHSDidOGwNhKVJgKmd8HBAb9uscz2bXQRPLU=
+Message-ID: <3be32c6e-0041-4087-953b-06356b7a3d65@linux.microsoft.com>
+Date: Thu, 30 Jan 2025 15:23:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] unwind: add sframe v2 header
+To: Weinan Liu <wnliu@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Indu Bhagat <indu.bhagat@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev,
+ Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-toolchains@vger.kernel.org, linux-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org, joe.lawrence@redhat.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250127213310.2496133-1-wnliu@google.com>
+ <20250127213310.2496133-4-wnliu@google.com>
+Content-Language: en-US
+From: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
+In-Reply-To: <20250127213310.2496133-4-wnliu@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Geert,
 
-On Thu, 2025-01-30 at 10:35 +0100, Geert Uytterhoeven wrote:
-> Hi Adrian,
->=20
-> On Thu, 30 Jan 2025 at 10:31, John Paul Adrian Glaubitz
-> <glaubitz@physik.fu-berlin.de> wrote:
-> > On Thu, 2025-01-30 at 10:13 +0100, Geert Uytterhoeven wrote:
-> > > On Thu, 30 Jan 2025 at 09:44, John Paul Adrian Glaubitz
-> > > <glaubitz@physik.fu-berlin.de> wrote:
-> > > > On Tue, 2025-01-28 at 11:13 +0100, Julian Vetter wrote:
-> > > > > Remove IO memcpy and memset from sh specific code and fall back t=
-o the
-> > > > > new implementations from lib/iomem_copy.c. They use word accesses=
- if the
-> > > > > buffers are aligned and only fall back to byte accesses for poten=
-tially
-> > > > > unaligned parts of a buffer.
-> > > > >=20
-> > > > > Signed-off-by: Julian Vetter <julian@outer-limits.org>
-> > > > > ---
-> > > > > Changes for V2:
-> > > > > - Removed also SH4 specific memcpy_fromio code
-> > >=20
-> > > > I'm not sure that I understand the motivation to remove hand-optimi=
-zed sh4 assembler
-> > > > code for memset and drop it in favor of potentially slower generic =
-C code. What is
-> > > > the reasoning behind this?
-> > >=20
-> > > See Arnd's feedback on v1
-> > > https://lore.kernel.org/all/ffe019a1-11b4-4ad7-bbe2-8ef3e01ffeb0@app.=
-fastmail.com
-> >=20
-> > I read Arnd's feedback but I don't really know whether GCC produces bet=
-ter code than
-> > this hand-written assembly. Is there any compelling argument?
-> >=20
-> > I'm just worried we would slow down something as fundamental as memset(=
-).
->=20
-> it's not memset(), but memset_io(), i.e. clearing (slow) mapped I/O memor=
-y.
+On 28-01-2025 03:03, Weinan Liu wrote:
+> Add sframe header so that we know how to access the sframe section
+> generated by compilers.
+>
+> This is the sframe header file borrowed from the patchset [1]
+> Josh Poimboeuf according to sframe v2 spec [2].
+>
+> [1]: https://lore.kernel.org/lkml/42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org/
+> [2]: https://sourceware.org/binutils/docs/sframe-spec.html
+>
+> Signed-off-by: Weinan Liu <wnliu@google.com>
+> ---
+>   kernel/sframe.h | 215 ++++++++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 215 insertions(+)
+>   create mode 100644 kernel/sframe.h
+>
+> diff --git a/kernel/sframe.h b/kernel/sframe.h
+> new file mode 100644
+> index 000000000000..11b9be7ad82e
+> --- /dev/null
+> +++ b/kernel/sframe.h
+> @@ -0,0 +1,215 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * Copyright (C) 2023, Oracle and/or its affiliates.
+> + *
+> + * This file contains definitions for the SFrame stack tracing format, which is
+> + * documented at https://sourceware.org/binutils/docs
+> + */
+> +#ifndef _SFRAME_H
+> +#define _SFRAME_H
+> +
+> +#include <linux/types.h>
+> +
+> +#define SFRAME_VERSION_1	1
+> +#define SFRAME_VERSION_2	2
+> +#define SFRAME_MAGIC		0xdee2
+> +
+> +/* Function Descriptor Entries are sorted on PC. */
+> +#define SFRAME_F_FDE_SORTED	0x1
+> +/* Frame-pointer based stack tracing. Defined, but not set. */
+> +#define SFRAME_F_FRAME_POINTER	0x2
+> +
+> +#define SFRAME_CFA_FIXED_FP_INVALID 0
+> +#define SFRAME_CFA_FIXED_RA_INVALID 0
+> +
+> +/* Supported ABIs/Arch. */
+> +#define SFRAME_ABI_AARCH64_ENDIAN_BIG	    1 /* AARCH64 big endian. */
+> +#define SFRAME_ABI_AARCH64_ENDIAN_LITTLE    2 /* AARCH64 little endian. */
+> +#define SFRAME_ABI_AMD64_ENDIAN_LITTLE	    3 /* AMD64 little endian. */
+> +
+> +/* SFrame FRE types. */
+> +#define SFRAME_FRE_TYPE_ADDR1	0
+> +#define SFRAME_FRE_TYPE_ADDR2	1
+> +#define SFRAME_FRE_TYPE_ADDR4	2
+> +
+> +/*
+> + * SFrame Function Descriptor Entry types.
+> + *
+> + * The SFrame format has two possible representations for functions. The
+> + * choice of which type to use is made according to the instruction patterns
+> + * in the relevant program stub.
+> + */
+> +
+> +/* Unwinders perform a (PC >= FRE_START_ADDR) to look up a matching FRE. */
+> +#define SFRAME_FDE_TYPE_PCINC	0
+> +/*
+> + * Unwinders perform a (PC & FRE_START_ADDR_AS_MASK >= FRE_START_ADDR_AS_MASK)
+> + * to look up a matching FRE. Typical usecases are pltN entries, trampolines
+> + * etc.
+> + */
+> +#define SFRAME_FDE_TYPE_PCMASK	1
+> +
+> +/**
+> + * struct sframe_preamble - SFrame Preamble.
+> + * @magic: Magic number (SFRAME_MAGIC).
+> + * @version: Format version number (SFRAME_VERSION).
+> + * @flags: Various flags.
+> + */
+> +struct sframe_preamble {
+> +	u16 magic;
+> +	u8  version;
+> +	u8  flags;
+> +} __packed;
+> +
+> +/**
+> + * struct sframe_header - SFrame Header.
+> + * @preamble: SFrame preamble.
+> + * @abi_arch: Identify the arch (including endianness) and ABI.
+> + * @cfa_fixed_fp_offset: Offset for the Frame Pointer (FP) from CFA may be
+> + *	  fixed for some ABIs ((e.g, in AMD64 when -fno-omit-frame-pointer is
+> + *	  used). When fixed, this field specifies the fixed stack frame offset
+> + *	  and the individual FREs do not need to track it. When not fixed, it
+> + *	  is set to SFRAME_CFA_FIXED_FP_INVALID, and the individual FREs may
+> + *	  provide the applicable stack frame offset, if any.
+> + * @cfa_fixed_ra_offset: Offset for the Return Address from CFA is fixed for
+> + *	  some ABIs. When fixed, this field specifies the fixed stack frame
+> + *	  offset and the individual FREs do not need to track it. When not
+> + *	  fixed, it is set to SFRAME_CFA_FIXED_FP_INVALID.
+> + * @auxhdr_len: Number of bytes making up the auxiliary header, if any.
+> + *	  Some ABI/arch, in the future, may use this space for extending the
+> + *	  information in SFrame header. Auxiliary header is contained in bytes
+> + *	  sequentially following the sframe_header.
+> + * @num_fdes: Number of SFrame FDEs in this SFrame section.
+> + * @num_fres: Number of SFrame Frame Row Entries.
+> + * @fre_len:  Number of bytes in the SFrame Frame Row Entry section.
+> + * @fdes_off: Offset of SFrame Function Descriptor Entry section.
+> + * @fres_off: Offset of SFrame Frame Row Entry section.
+> + */
+> +struct sframe_header {
+> +	struct sframe_preamble preamble;
+> +	u8  abi_arch;
+> +	s8  cfa_fixed_fp_offset;
+> +	s8  cfa_fixed_ra_offset;
+> +	u8  auxhdr_len;
+> +	u32 num_fdes;
+> +	u32 num_fres;
+> +	u32 fre_len;
+> +	u32 fdes_off;
+> +	u32 fres_off;
+> +} __packed;
+> +
+> +#define SFRAME_HDR_SIZE(sframe_hdr)	\
+> +	((sizeof(struct sframe_header) + (sframe_hdr).auxhdr_len))
+> +
+> +/* Two possible keys for executable (instruction) pointers signing. */
+> +#define SFRAME_AARCH64_PAUTH_KEY_A    0 /* Key A. */
+> +#define SFRAME_AARCH64_PAUTH_KEY_B    1 /* Key B. */
+> +
+> +/**
+> + * struct sframe_fde - SFrame Function Descriptor Entry.
+> + * @start_addr: Function start address. Encoded as a signed offset,
+> + *	  relative to the current FDE.
+> + * @size: Size of the function in bytes.
+> + * @fres_off: Offset of the first SFrame Frame Row Entry of the function,
+> + *	  relative to the beginning of the SFrame Frame Row Entry sub-section.
+> + * @fres_num: Number of frame row entries for the function.
+> + * @info: Additional information for deciphering the stack trace
+> + *	  information for the function. Contains information about SFrame FRE
+> + *	  type, SFrame FDE type, PAC authorization A/B key, etc.
+> + * @rep_size: Block size for SFRAME_FDE_TYPE_PCMASK
+> + * @padding: Unused
+> + */
+> +struct sframe_fde {
+> +	s32 start_addr;
+> +	u32 size;
+> +	u32 fres_off;
+> +	u32 fres_num;
+> +	u8  info;
+> +	u8  rep_size;
+> +	u16 padding;
+> +} __packed;
+> +
+> +/*
+> + * 'func_info' in SFrame FDE contains additional information for deciphering
+> + * the stack trace information for the function. In V1, the information is
+> + * organized as follows:
+> + *   - 4-bits: Identify the FRE type used for the function.
+> + *   - 1-bit: Identify the FDE type of the function - mask or inc.
+> + *   - 1-bit: PAC authorization A/B key (aarch64).
+> + *   - 2-bits: Unused.
+> + * ---------------------------------------------------------------------
+> + * |  Unused  |  PAC auth A/B key (aarch64) |  FDE type |   FRE type   |
+> + * |          |        Unused (amd64)       |           |              |
+> + * ---------------------------------------------------------------------
+> + * 8          6                             5           4              0
+> + */
+> +
+> +/* Note: Set PAC auth key to SFRAME_AARCH64_PAUTH_KEY_A by default.  */
+> +#define SFRAME_FUNC_INFO(fde_type, fre_enc_type) \
+> +	(((SFRAME_AARCH64_PAUTH_KEY_A & 0x1) << 5) | \
+> +	 (((fde_type) & 0x1) << 4) | ((fre_enc_type) & 0xf))
+> +
+> +#define SFRAME_FUNC_FRE_TYPE(data)	  ((data) & 0xf)
+> +#define SFRAME_FUNC_FDE_TYPE(data)	  (((data) >> 4) & 0x1)
+> +#define SFRAME_FUNC_PAUTH_KEY(data)	  (((data) >> 5) & 0x1)
+> +
+> +/*
+> + * Size of stack frame offsets in an SFrame Frame Row Entry. A single
+> + * SFrame FRE has all offsets of the same size. Offset size may vary
+> + * across frame row entries.
+> + */
+> +#define SFRAME_FRE_OFFSET_1B	  0
+> +#define SFRAME_FRE_OFFSET_2B	  1
+> +#define SFRAME_FRE_OFFSET_4B	  2
+> +
+> +/* An SFrame Frame Row Entry can be SP or FP based.  */
+> +#define SFRAME_BASE_REG_FP	0
+> +#define SFRAME_BASE_REG_SP	1
+> +
+> +/*
+> + * The index at which a specific offset is presented in the variable length
+> + * bytes of an FRE.
+> + */
+> +#define SFRAME_FRE_CFA_OFFSET_IDX   0
+> +/*
+> + * The RA stack offset, if present, will always be at index 1 in the variable
+> + * length bytes of the FRE.
+> + */
+> +#define SFRAME_FRE_RA_OFFSET_IDX    1
+> +/*
+> + * The FP stack offset may appear at offset 1 or 2, depending on the ABI as RA
+> + * may or may not be tracked.
+> + */
+> +#define SFRAME_FRE_FP_OFFSET_IDX    2
+> +
+> +/*
+> + * 'fre_info' in SFrame FRE contains information about:
+> + *   - 1 bit: base reg for CFA
+> + *   - 4 bits: Number of offsets (N). A value of up to 3 is allowed to track
+> + *   all three of CFA, FP and RA (fixed implicit order).
+> + *   - 2 bits: information about size of the offsets (S) in bytes.
+> + *     Valid values are SFRAME_FRE_OFFSET_1B, SFRAME_FRE_OFFSET_2B,
+> + *     SFRAME_FRE_OFFSET_4B
+> + *   - 1 bit: Mangled RA state bit (aarch64 only).
+> + * ---------------------------------------------------------------
+> + * | Mangled-RA (aarch64) |  Size of   |   Number of  | base_reg |
+> + * |  Unused (amd64)      |  offsets   |    offsets   |          |
+> + * ---------------------------------------------------------------
+> + * 8                      7             5             1          0
+> + */
+> +
+> +/* Note: Set mangled_ra_p to zero by default. */
+> +#define SFRAME_FRE_INFO(base_reg_id, offset_num, offset_size) \
+> +	(((0 & 0x1) << 7) | (((offset_size) & 0x3) << 5) | \
+> +	 (((offset_num) & 0xf) << 1) | ((base_reg_id) & 0x1))
+> +
+> +/* Set the mangled_ra_p bit as indicated. */
+> +#define SFRAME_FRE_INFO_UPDATE_MANGLED_RA_P(mangled_ra_p, fre_info) \
+> +	((((mangled_ra_p) & 0x1) << 7) | ((fre_info) & 0x7f))
+> +
+> +#define SFRAME_FRE_CFA_BASE_REG_ID(data)	  ((data) & 0x1)
+> +#define SFRAME_FRE_OFFSET_COUNT(data)		  (((data) >> 1) & 0xf)
+> +#define SFRAME_FRE_OFFSET_SIZE(data)		  (((data) >> 5) & 0x3)
+> +#define SFRAME_FRE_MANGLED_RA_P(data)		  (((data) >> 7) & 0x1)
+> +
+> +#endif /* _SFRAME_H */
 
-Could you review the patch as well, so I have some peace of mind? ;-)
+Looks good to me.
 
-Thanks,
-Adrian
-
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Reviewed-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>.
