@@ -1,161 +1,111 @@
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12441E5020
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879E51BB6BC
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738247933; cv=none; b=LUQBQjqRGiabZGpoGM/KuZkahFBVR95aws0QnD2ao6Xgu+uA1taqK74vAkuTXULwX1686Md1N6gCbutGbaNy5cFovdOD8w0ONtV5eghiT/gQ7B8WgeQ7abWHQTyJctNP0vV/0KOC/Yd1rFXFVRBoSYjBrf4+4F86T4hCkCx7Zjw=
+	t=1738248030; cv=none; b=pGWI/yjiLlYCBV3LlnaNm0i49wfqO7oOhKn+6Ol3iIhywOhJpBVFESlI3JRobcCFqprzqgf5adoSnCQi9YmCo0v+MvFxiagMJ8hgRX9BYpg4/hvBczB4zgZNotCdHPhvCz7FjsTC4Os4xYV3h1yMtZ+cu8bSjjQbPq/gqRy392o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738247933; c=relaxed/simple;
-	bh=ndA1DqYJeLDgwxI0sFTIswtI2TRbJRaDwStsY7tYaU0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sSw4Mt5W9mGnIdsuVDYafcrJ5AT73Diz1uO+PNyNLW2G7mRB181mzUAEO5NPlzc7CXD3fxwhevxCn3XsrPmpPqTEC4fSksIBmQp+jp0JuNvLLcNr2XWVglUWmmsMCC/Lts/HY+SEv2/HH4ojX4oVMpSCla5EG48xIsxkgJSJSz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4afe2f6cecdso1206753137.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:38:51 -0800 (PST)
+	s=arc-20240116; t=1738248030; c=relaxed/simple;
+	bh=atZ/x/APC8cnkpoYOoikaT0M2WZdbQIDnN6vZPmwfdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UcIV6MbNov8O681EKK1A3HQxl/bvzuXoanlI1Goe1DNXRBpX+fOKg4C9kyuVXmdSP6JvH/MkP8kSWSDmyFi7LKaGwOyZsD0o0SM5D9dZ1XziCo3Zb848V/rI3nrxI1m8nwnsG/7VrVwRyNovlrYddiYrT5aY0TlgH18uVOK9Wqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=aJqz6TmT; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="aJqz6TmT"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-436a03197b2so6344515e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:40:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1738248027; x=1738852827; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pPBTtW6Kt1BXFlVK5dAgEJRX/SS7fw33DzTFtzfc1pU=;
+        b=aJqz6TmTLOBT6JtAZhELiB4how1nc4vl0c9ZSMnUZEEqamgr0YMFUHrZYOjK+xxr0q
+         oWY7HOlNWEslgQtX4Np49APLHwTKjqz0lOaTNUCHSM2ibES8C2VyhkvXviZrdczhR9nz
+         l89X0rHfwDM1ZkufzRAqWgwC4P6q5bFaxVfwZqtXrUG6xzGMP82p404PnUkwOMKJp9Vw
+         hYx7xUmcqwO/u9dR1SbrVg0De1FA1S/0PW+vd9ahC/E2JMseZvcNBksd8tplZYmykzHK
+         xsjUDMEkQjaPcAoqVk69uejniF4pUP5JQgH0YO20WaV2Q+UEBSizo4QR6bTqVPv+yL/j
+         qGdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738247930; x=1738852730;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3koQwFtsYEj+sBiSRxwOt8Kdl4P9BIA497a/eImNeSg=;
-        b=WJUiLaZvcfYJkFH6tASNYt3beoTvOwUg00Oxb/H93a1I+KWyS935eCwCuf8raFFYrV
-         MynnxqQxiwQNLQj4ONK4PR3mpMAecKi54KcPvj0wwuSIAMKFWmzy45cL9cuEg2jZYOsk
-         yMs5+UWiEar9feC5O8FfnBBoGWICVgghm8j1iuminT5ZqfJxc+mC8kcOppYeFjmBE1UT
-         hBt9pYRAWTlEbvagBawWV/F24VP1sWLVkfxmaWABU/mKER1vQFAq6BNAgr9VVG0pY0Ao
-         EnYDs2V3B50a6nJpgfY7Zl99+h6HUvCT+A6g12Xoe+FbxJ067hU5WdB7ocoJUxwUyeOz
-         LxzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDP/pADnCsVL0tudqEvzxlNgsat6+62ayaWyJhAGVO3cnBlJI7o3LnxZCHwjtqvpU+w6bTZfjyohwNGA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7cjMNsrK34bR9r/+rh1D5ogx3y2IR8J95GOO1Y8mFpJjszh8A
-	eI/e9tQwzPV02JJ+lX43Dq2Y12Evnw4m/Zhm4Fk1gLT8cMan26Y7tB2CgomaOCw=
-X-Gm-Gg: ASbGncu8XVAEmlbiUqnai+3aWLM6Kiw4aszKq8/o1gNivgPpJzUeYFBa10dQuUMTapu
-	RpLj8aVZ3Yx7MLfcKCU4OydAWwGX+QOA+sx4wLmia8AbNPigRqGa/fJpaKmmsnsOC2Qx9EzO+gb
-	ulwOnVXSQMqJ9T76v2jNX6jdXLzc04NTC1Nl9zGarWFblQhA55A8s0TW4EWlXr0taY4K8fQkS1j
-	8AH8o5FdUuO5kiYS7NlnkPpLAU4pq4axD8+K9F+34dB1RGAsvyGKZp+Cx/Ljcbl8jFiCuHOOpbQ
-	t6Bd1Al7rmDgR5OfCKThne6/PZ15EtkM3sVHNrNiaMUD4QFWGPPjnQ==
-X-Google-Smtp-Source: AGHT+IG+WuGCV/lErhNwqXVhg9cjRGjFyFEoErX+CzIT6PdJsH0DYWBL7PAH/hpDEmDTEK4cgdLcUQ==
-X-Received: by 2002:a05:6102:1609:b0:4b2:9e5d:baf with SMTP id ada2fe7eead31-4b9b7225816mr2603044137.11.1738247929811;
-        Thu, 30 Jan 2025 06:38:49 -0800 (PST)
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b9baccd5cbsm250364137.19.2025.01.30.06.38.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 06:38:49 -0800 (PST)
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4b9486a15a0so974667137.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:38:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXS5O6SkAr2a/qwB1dAUkB+NT7Sc9y30/Z/vq0wS3q0UrU5JHmc/lSl9x8trlq+ERWvimoaD7vggRjGyQI=@vger.kernel.org
-X-Received: by 2002:a67:f318:0:b0:4af:d48d:5142 with SMTP id
- ada2fe7eead31-4b9b70f3a0bmr2755704137.3.1738247929070; Thu, 30 Jan 2025
- 06:38:49 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738248027; x=1738852827;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pPBTtW6Kt1BXFlVK5dAgEJRX/SS7fw33DzTFtzfc1pU=;
+        b=Z9VpyANeFMGMyhNmVt3uoMlue1mMMPARu1qb+NbsDFQGyqQZErw79Rt+BZS+CG/0WW
+         kBD8I9AS0U29mZ2wuum6dxmx4lef+e+4QvzJg/3oH9Jheugz6+3ixWvJJ4nu6h6xYEb+
+         59Zj1iichjxqOnYFVtnebT6f9AffmSLLj041KmlMxuhLQ8qxjHDOilK9aDa93OFskqfw
+         4/LkoXU35t/GiFnqGksnXTj0IUCP9x9cs+K6PSgU1xZXLIZV7c0EovPgRJT87y64lzhd
+         jnfCUu/Dxcg93oTlvL7HweI2KrKUaD2VdsgAugvzsOne9R31+GilUgRIzcdkw6dWecQw
+         hgCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzuoR8ub58oBq0L845R2lRlSDPijfV/Z/cnHiLg725Q2w4VA/Pk6rsxwiq+LKIzNtb3KKSoKiMr9bzmFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMbPCHb6V375ExOphJhCrD2JPZuF/weFKRBlCy+5dCI0Tol0AG
+	Fs/cQR5VvgQf/Qunk+oZyyUkhvdyPfQ4JQbH2qm0/p9zQon0llHMypcDtfXVr3k=
+X-Gm-Gg: ASbGncv4PWc/yLYN4cPTu7mnwJ72T6XsOmZLAJFnd9wPfsjEgves2G2Kdzmf+AOFpjI
+	VIj9dysBRgWR3y0V7kqfHjGi/wftQqE3R7j/osn4FYc5IB82elLgpUyv9fhR+mAuBlKCranaeha
+	pZSuwWV3nSufzpziGz9+MrqlIm5titESX0CneIdiZbFgy4l4S52+niYEVJgSt4oPJDtlhJCCksM
+	Xq0Im3Ey9TZTHfKQQCa3xcUcFs9DVsVXfULHE2Pjy5kJJ/9zn4bcoPY2nKXPlJbCw1RZEGrA/jI
+	34s=
+X-Google-Smtp-Source: AGHT+IE9c1sUJxYYOz0IV0uwPeN3BgTxowpPJeI70581kypJPFyN9A9c1n7gfvfSwFoNCtR1uaegeA==
+X-Received: by 2002:a05:600c:1e0d:b0:436:f960:3427 with SMTP id 5b1f17b1804b1-438dc40ffbbmr62574215e9.22.1738248025991;
+        Thu, 30 Jan 2025 06:40:25 -0800 (PST)
+Received: from localhost ([2a02:8308:a00c:e200::76fd])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc1317fsm62032805e9.8.2025.01.30.06.40.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 06:40:25 -0800 (PST)
+Date: Thu, 30 Jan 2025 15:40:24 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Andreas Schwab <schwab@suse.de>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv/atomic: Do proper sign extension also for unsigned
+ in arch_cmpxchg
+Message-ID: <20250130-603e0305dde8009a25bfb257@orel>
+References: <mvmed0k4prh.fsf@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
- <07cf896e-adf8-414f-a629-a808fc26014a@oracle.com> <qdq4k6323orqifgzo7pbg5vakezr3gptfdehghxsyfrhc4kwvb@d4fxbwcl4gjm>
- <CAJ-ks9=U4PZv4NgyH8B7SbHkecGLy+M=G639hSTv-hnPySqk6w@mail.gmail.com>
- <xf3445vgszstqfwycf5wc5owhnifxb3mny5xjjaihghqgnozmd@3h7hnifir4vu>
- <CAMuHMdVcuhzO57Qn-kcUJDM=HmkSwuheyNJPF1tx+gxRKnKZXA@mail.gmail.com>
- <mp6lnt3stfnfd74rwaza5xffh2ya5gylqnxotgrnqaqo3eh2zl@5g257jeiugfn>
- <CAMuHMdWDRLi8AE0PgfAnXundbS0hyTyovUH7yScrY7GtmYYPOQ@mail.gmail.com> <9636ed9d-3bfb-4dda-98dc-f945c9d53698@lucifer.local>
-In-Reply-To: <9636ed9d-3bfb-4dda-98dc-f945c9d53698@lucifer.local>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 Jan 2025 15:38:36 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUFbhzi8J3rmyvVn7HmrxbeyoOwu97w8cnuKJxksa8iaw@mail.gmail.com>
-X-Gm-Features: AWEUYZmOwEzWB0gEceqhOwmudbYpt2s9uwC-1Re-pPG58BUZxS-FmbWZ_JWw55Q
-Message-ID: <CAMuHMdUFbhzi8J3rmyvVn7HmrxbeyoOwu97w8cnuKJxksa8iaw@mail.gmail.com>
-Subject: Re: [PATCH] xarray: port tests to kunit
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Sidhartha Kumar <sidhartha.kumar@oracle.com>, 
-	akpm@linux-foundation.org, christophe.leroy@csgroup.eu, 
-	justinstitt@google.com, linux-kernel@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
-	llvm@lists.linux.dev, maddy@linux.ibm.com, morbo@google.com, 
-	mpe@ellerman.id.au, nathan@kernel.org, naveen@kernel.org, 
-	ndesaulniers@google.com, npiggin@gmail.com, 
-	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mvmed0k4prh.fsf@suse.de>
 
-Hi Lorenzo,
-
-On Thu, 30 Jan 2025 at 15:09, Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
-> Having written a ton of test code, I've unfortunately encountered a lot of
-> this sort of push-back and it's HUGELY off-putting. Writing test code
-> should be ENCOURAGED not litigated against.
-
-I am not discouraging nor pushing back on any testing code (on the
-contrary, I test every single new kunit test that appears upstream).
-My apologies if I gave the impression.
-
-> The truth is far too little kernel code is tested to any degree, and this
-> is part of why.
+On Thu, Jan 30, 2025 at 10:25:38AM +0100, Andreas Schwab wrote:
+> Sign extend also an unsigned compare value to match what lr.w is doing.
+> Otherwise try_cmpxchg may spuriously return true when used on a u32 value
+> that has the sign bit set, as it happens often in inode_set_ctime_current.
+> 
+> Do this in three conversion steps.  The first conversion to long is needed
+> to avoid a -Wpointer-to-int-cast warning when arch_cmpxchg is used with a
+> pointer type.  Then convert to int and back to long to always sign extend
+> the 32-bit value to 64-bit.
+> 
+> Fixes: 6c58f25e6938 ("riscv/atomic: Fix sign extension for RV64I")
+> Signed-off-by: Andreas Schwab <schwab@suse.de>
+> ---
+>  arch/riscv/include/asm/cmpxchg.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+> index 4cadc56220fe..427c41dde643 100644
+> --- a/arch/riscv/include/asm/cmpxchg.h
+> +++ b/arch/riscv/include/asm/cmpxchg.h
+> @@ -231,7 +231,7 @@
+>  		__arch_cmpxchg(".w", ".w" sc_sfx, ".w" cas_sfx,		\
+>  			       sc_prepend, sc_append,			\
+>  			       cas_prepend, cas_append,			\
+> -			       __ret, __ptr, (long), __old, __new);	\
+> +			       __ret, __ptr, (long)(int)(long), __old, __new);	\
+>  		break;							\
+>  	case 8:								\
+>  		__arch_cmpxchg(".d", ".d" sc_sfx, ".d" cas_sfx,		\
+> -- 
+> 2.48.1
+> 
 >
-> On kunit collaboration, I attended an in-person talk at LPC on kunit
-> userland testing where it was broadly agreed that at this point in time,
-> the xarray/radix tree tests weren't really suited to the framework.
->
-> Therefore I think the healthy means of pushing forward with integration is
-> in sensible discussion and if patches, RFC patches in collaboration with
-> authors.
 
-Good.
-
-> The unhealthy approach is to needle one of the biggest contributors to core
-> test code in the kernel on a thread because you don't seem to want to cd to
-> a directory and run make.
-
-My initial issue was that I could not find out where that is documented.
-
-    $ make help
-    ...
-    Userspace tools targets:
-      use "make tools/help"
-      or  "cd tools; make help"
-
-    $ make tools/help
-    Possible targets:
-    ...
-    You can do:
-      ...
-      $ make tools/all
-
-      builds all tools.
-
-But that command does not build tools/testing/radix-tree, so I was
-completely lost.
-
-> Why is this relevant to me? I am the author of the VMA test suite, on which
-> I spent countless hours + relied heavily on Liam's work to do so, and
-> equally there you have to cd to a directory and run make.
-
-Thanks for your work!  One suggestion for improvement: tools/testing/vma
-does not seem to be built by "make tools/all" either.
-
-> But at the same time in both cases, testability of key internal components
-> is ENORMOUSLY improved and allows for REALLY exciting possibilities in test
-> coverage, really isolating functions for unit testing, enormously fast
-> iteration speed, etc. etc.
->
-> I ask you to weigh up the desire to enumerate your misgivings about the
-> testing approach used here vs. all of the above.
-
-I repeat: I am not against these tests.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
