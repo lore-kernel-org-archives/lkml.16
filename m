@@ -1,81 +1,104 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04A91E47B4;
-	Thu, 30 Jan 2025 13:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B995A1E5708
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738245149; cv=none; b=bbR36Nmb/7EjYQ740SW6J/Wyt23py1zCcZgN73tQU2KdN9p7Bj/vt0fob3sfB0x+NK1UJN9ZEopTOL2iJ7S39PVaFF2Ed8IfDDokhQTOczIsj8ey3h96kugWAG9xxhgYIWu8h3cgXkJtQ3ID8cqlUXCAGakcPDGBrBj321qBH7Y=
+	t=1738245399; cv=none; b=O6ZG81quVqVxzRK2o650hw2rUXylhup8h/RLmRpqZR8fnbp/zx2dgHTX9LU8n7djIAB4dMFL4nfLf7PZG7XBem/+dRnQT3pcCMFufpVjM5tY9LWi3fyqoxosJNMyshlePuZv1FNJ3nMWTKG8FQi6ZALXF5NSSdm+m08j6hM97t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738245149; c=relaxed/simple;
-	bh=Hjvqi2y2L2JDEIZ53bqSE/CbrFVhGJvyvNXDAnto0z8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DYYRnMEmQxOIQI5/pVnFlOzg2DgjWfhFg4boQd/Ji1ICDGXvFWbpp5/Hy4jyvDrIFKI+9oFFUPNKjVo+8Q29yXKjuXZJGTKfBuGJsT/KSMkioB5IckkSmSCv8+szKA+4DZvTrILErj2oiue6ePeam2yjY2ZqK/PLwDF5lBKSDQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YkL4n00bvz6M4Yk;
-	Thu, 30 Jan 2025 21:50:17 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id EB22B140517;
-	Thu, 30 Jan 2025 21:52:23 +0800 (CST)
-Received: from localhost (10.47.30.69) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 Jan
- 2025 14:52:23 +0100
-Date: Thu, 30 Jan 2025 13:52:20 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Ira Weiny <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC 2/2] cxl/memdev: Remove temporary variables from
- cxl_memdev_state
-Message-ID: <20250130135220.00003637@huawei.com>
-In-Reply-To: <20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
-References: <20250128-rfc-rearch-mem-res-v1-0-26d1ca151376@intel.com>
-	<20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738245399; c=relaxed/simple;
+	bh=Wdhw6HF5Bf3A4ULzn7f0dRfkzsIPYePU+Jv+Smh2hPc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lsRI/D04Z1VpO8L2I5csmmTWx1vrA0/rkmXlF8WphE8Z81glymK0J0sOE6KsXO7Bb5N8jmCm1S1paBBLo87xOsJAFZoPkvOpmVPodbL7lhKjdRfQw2ffqy99jRQrhos8cE80gcx/ySWZqagp8XEEXsMoSUt5mJcSmCw4IvppEno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hl2Of48+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hl2Of48+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738245396;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zaWpCIPtJKfHymuKA+2Adh2EfAKZBxo7H0gIJyy6Tns=;
+	b=hl2Of48+0JiFTludtPquqgxdtTf8frVT9VI5yOhu/oUmoeGcvcS2nOmRwNuJ5TRatKsbtA
+	WWFjDXIYUjymZKZ30PWOMSIwKQ7uWfPdopjTMGrq6ZFMiWKckz2Oyo4rjn4w3euJnDdkrO
+	g+l8lSkidwTeERQdX76YbO3PDUhcvqY=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-479-ko39CwQlOPC4tcd7Ov7L6g-1; Thu,
+ 30 Jan 2025 08:56:32 -0500
+X-MC-Unique: ko39CwQlOPC4tcd7Ov7L6g-1
+X-Mimecast-MFC-AGG-ID: ko39CwQlOPC4tcd7Ov7L6g
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 036031955F2D;
+	Thu, 30 Jan 2025 13:56:31 +0000 (UTC)
+Received: from pasta.fast.eng.rdu2.dc.redhat.com (unknown [10.45.224.234])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8C4FB1800268;
+	Thu, 30 Jan 2025 13:56:28 +0000 (UTC)
+From: Andreas Gruenbacher <agruenba@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andreas Gruenbacher <agruenba@redhat.com>,
+	Christoph Hellwig <hch@lst.de>,
+	gfs2@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] gfs2: use lockref_init for gl_lockref
+Date: Thu, 30 Jan 2025 14:56:21 +0100
+Message-ID: <20250130135624.1899988-2-agruenba@redhat.com>
+In-Reply-To: <20250130135624.1899988-1-agruenba@redhat.com>
+References: <20250130135624.1899988-1-agruenba@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Tue, 28 Jan 2025 12:51:08 -0600
-Ira Weiny <ira.weiny@intel.com> wrote:
+Move the initialization of gl_lockref from gfs2_init_glock_once() to
+gfs2_glock_get().  This allows to use lockref_init() there.
 
-> As was mentioned by Dan[1] cxl_memdev_state stores values which are only
-> used during device probe.  This clutters the data structure and is a
-> hindrance on code maintenance.  Those values are best handled with
-> temporary variables.
-> 
-> Adjust the query of memory devices to read byte sizes in one call which
-> takes partition information into account.  Use the values to create
-> partitions for device state initialization.  Take care to separate the
-> mailbox queries from the initialization of device state to steer the
-> mbox code toward taking mailbox objects rather than memdev states.
-> Update spec references while changing these calls.
-Why not jump to 3.2? 
-> 
-> Link: https://lore.kernel.org/all/67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch/ [1]
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+---
+ fs/gfs2/glock.c | 2 +-
+ fs/gfs2/main.c  | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index 8c4c1f871a88..b29eb71e3e29 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -1201,8 +1201,8 @@ int gfs2_glock_get(struct gfs2_sbd *sdp, u64 number,
+ 	if (glops->go_instantiate)
+ 		gl->gl_flags |= BIT(GLF_INSTANTIATE_NEEDED);
+ 	gl->gl_name = name;
++	lockref_init(&gl->gl_lockref, 1);
+ 	lockdep_set_subclass(&gl->gl_lockref.lock, glops->go_subclass);
+-	gl->gl_lockref.count = 1;
+ 	gl->gl_state = LM_ST_UNLOCKED;
+ 	gl->gl_target = LM_ST_UNLOCKED;
+ 	gl->gl_demote_state = LM_ST_EXCLUSIVE;
+diff --git a/fs/gfs2/main.c b/fs/gfs2/main.c
+index 04cadc02e5a6..0727f60ad028 100644
+--- a/fs/gfs2/main.c
++++ b/fs/gfs2/main.c
+@@ -51,7 +51,6 @@ static void gfs2_init_glock_once(void *foo)
+ {
+ 	struct gfs2_glock *gl = foo;
+ 
+-	spin_lock_init(&gl->gl_lockref.lock);
+ 	INIT_LIST_HEAD(&gl->gl_holders);
+ 	INIT_LIST_HEAD(&gl->gl_lru);
+ 	INIT_LIST_HEAD(&gl->gl_ail_list);
+-- 
+2.48.1
 
-Not sure why you had this as an RFC!
-Was it just that we are waiting for v3 from Dan?
-
-If so maybe Dan, just stick these on the back of your series if you are
-happen with these and make Dave's job a tiny bit easier (and so
-rebases happen without needing to sync the two sets).
-
-Jonathan
