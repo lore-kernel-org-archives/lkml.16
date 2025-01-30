@@ -1,115 +1,107 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C2317597;
-	Thu, 30 Jan 2025 02:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B1D8BEC;
+	Thu, 30 Jan 2025 03:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738204845; cv=none; b=tDtZhHuhx9y6ucA8euGLjbaji23DMgBMEaeTkDtq/YYJQSk4GLMBq71avFsvN6VtzR70syq5svgm3nKbxX6+VSgPzxIDpXrlXuUf4o22hPNbE3eLjaYMv5U+6vw1l6tHwB1tGdRNwiKekV7IkL/PJSvxepKrYvbL4ynKeAjzWiY=
+	t=1738206327; cv=none; b=AO/k+yus2P2YzMIE4N/zXd1jDvXwuMiDAoXjyyNPYFYJQxKrBY4xCSWduHLwD+e2Jg7BpGAGcuzJWu56szkR8h+VhYfne3LP4wG8GUjP1vD+UmFNn+SYEAGz3eR6wWEVZTXUZjuSI25wujYJpdjpA4kUv/2furkAmvHQf67Q0CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738204845; c=relaxed/simple;
-	bh=9s45aQ98QyDN6mwCUCbC3+YVKYhM6hxCks1tXsZkl/8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=euE8DXQn++XK/uwwt+v38yGFtlaave60MClr3rWyi6PFN1g4VPPN5VMWumu6BGUsNtdhbqWwtD1ltobuQwBhWpflYTNKJuAFoHVSrSf94RmjzAD6rLDQUNqA0TYfX4IzDpcXls6UD/wqySYdAR0KXHtDkLGStIE5qIFiX6q5geQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UH9k/OmU; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738206327; c=relaxed/simple;
+	bh=ncr38Mw95epPDAj1M2Fo7DYw4ha8nWMWZikJd2uPCig=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KecCJOc95w8vg0k6E5u3uPRPH/uLaN4Eng9pWVuzih/B+SYV91kHE+Tilp2zMQ8vpY9sBtMXrZ2y97h4Goi03YECWtI4KFKh8Apy8oqplrPnTe9Qcj6opV3vG9zqGnih3FaNktkoSWhkhMMKOFG67Dvr6RUFJRLZvsluLScys4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5cYTlDn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UH9k/OmU"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38632b8ae71so257748f8f.0;
-        Wed, 29 Jan 2025 18:40:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738204841; x=1738809641; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9s45aQ98QyDN6mwCUCbC3+YVKYhM6hxCks1tXsZkl/8=;
-        b=UH9k/OmUwBvVOdvc9P/NriKCKd3q87EZQ+QbBSfGxFcQsYM450xfSn5QepWFE3ZJi+
-         KnRUcCl37Jqy+8q96RY1t4NEzZfZw/ad6+Qf2etHHTgS/SqxmXbkrTlEUDnh8Xs/q585
-         Nl7UV4EFWFBZbA33c/79P8bofqIna7fZz+tdnMp//VZ/pCW23SeGDgJdKGiWIs6vieBk
-         nsRtZJ6PRPxRj/xJJRxc0iFBrasU9QzbFYn4AoSl7XiloS9v97MVNaK1iE/Q7xAl1zGU
-         CWJcRFDUVsrI/Hal84jYArMVfLzDGiONtepwanRuOe5vw7O7Ws1gLOLQstsxgocqrrg+
-         Hjjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738204841; x=1738809641;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9s45aQ98QyDN6mwCUCbC3+YVKYhM6hxCks1tXsZkl/8=;
-        b=cSQ5b1q5PBUwYnFmkV/0SQG2k8eKMBI0jszMzvXDNx4W32ZKiF4qe3i+bidES5dEYt
-         6mj6tdqIbLTdHx5e1kPc5BDJbkBQV238zTgZMddXu5/agUtHIuJb+hDQqxAlTSxBBriq
-         bT+2VDIQjgZTxVLQojOZbE9TIVWfxKcXdNfjFlEdVa1QJoy9yk6elMwB4ed8u/7ePz3q
-         n2yrtilx9UbgBo6OnT0tQVsxEYcx4Z0VGN0042tTy1nwkeji4XLdxk4Lzv+ej03DLh4P
-         0trQQDkvP29910o9wWQMwMxFl4utOl6pQqhgdl4RCKlmQQLbWY75+ekr7wtfwLmhLt0A
-         IBRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJcQVe6wtBe7yDnyy3bsBxttX+dnHjyUIIQfEDg5G/FR5ATIfKxdiIqmR9HuuLdQ0/JaU=@vger.kernel.org, AJvYcCVAN1skgCVCZwbbVBbytTxImg9XTSt7CMDwjBGf4HCqFQgRl2jJrDJ2Z3hM5iPRzdHgBLUggOkyAZHGT72R@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYIQysdSEuqXaxWJ8p6UbeDaSa81tI7hZiTw1AZJzpCkX0JRWn
-	iFHuzt7ajmCR5r/coATqMU8BOcREdRQ9HR7tB8vZBqLbMJu82sUXpthK9sLtglMp3z/UtJV1Wwc
-	rJlA2khBqskakJu7PnWnYmOqt3Ak=
-X-Gm-Gg: ASbGncsrOX2jcjvSh80kdoUc4NVrH7IRtyvxtlkQ9mq7rVvkxpmfx5+5DLCz8xXwTLs
-	Gu/yN5ovcLvc7iE2y+IE2nqrl6nxOfAP2WNKkj1tpGdFHaXBnJMz4oaAcUBSaiamETVFS15q1w1
-	xKoyk2e4hq5tWnw3eFyz2IK5IC4ecp
-X-Google-Smtp-Source: AGHT+IGhTeSxR0kSauix+v06lDtacvjfitnDVG6QA0wkIUHi19qt8t05Jpx40XXLSq6sRd86ZONEBV/W/p21i9EWXK8=
-X-Received: by 2002:a5d:6d06:0:b0:38a:a11e:7af6 with SMTP id
- ffacd0b85a97d-38c5194f38bmr4430493f8f.6.1738204840474; Wed, 29 Jan 2025
- 18:40:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5cYTlDn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1B79C4CED1;
+	Thu, 30 Jan 2025 03:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738206326;
+	bh=ncr38Mw95epPDAj1M2Fo7DYw4ha8nWMWZikJd2uPCig=;
+	h=From:To:Cc:Subject:Date:From;
+	b=A5cYTlDnryUSFaO2Xo2oE6ehhP6n6zEcu9bzkhi+mGR079huwXqnvqwx+ahSYt1Mr
+	 zK/WkjSE6gHNS55mOvYtX1ltPeaova6YkuqReGy/8vihKqe9AIKSZqSApI2GLjzUfS
+	 B+mLJ3ugRX0anTaxLi/ZVUEOXU2z8cZcFJalOKEolbjONCBrOl278DU/jGEEykH2DY
+	 CQydbQWoQZIvRRli+Il9HIvuL5nAKkEiax0hi546ToUcQymNZnVEebPgAGDSGlRMDG
+	 3IqQJaeduXFnPlXR6DBnczXGbGr+WUp3eQnkNiwZvpUIJTq83IPEpDyBQ4Gy+F/nkg
+	 vmjJdfRJL3Miw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v2 0/4] perf trace: Add --summary-mode option
+Date: Wed, 29 Jan 2025 19:05:21 -0800
+Message-ID: <20250130030525.1482498-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241221061018.37717-1-wuyun.abel@bytedance.com>
- <02c69185-1477-485c-af4f-a46f7aadadab@linux.dev> <7139ed64-55be-4b70-a03f-8b2414fc93d3@bytedance.com>
- <CAADnVQ+ws4c=G02HjR7Oww_cSuoVFfkWMjP0BbnUrrDgo6tywQ@mail.gmail.com>
- <3c153542-079a-4566-9f32-8335bbb0456a@linux.dev> <ee5da323-0ad8-4b74-971a-ffbd3eb2b61b@bytedance.com>
-In-Reply-To: <ee5da323-0ad8-4b74-971a-ffbd3eb2b61b@bytedance.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 29 Jan 2025 18:40:29 -0800
-X-Gm-Features: AWEUYZltolNK9faWc_Yb4ONxPAMFkM6z3XpJ2Nnb5SFVS9Q8aqAWaj_-56509_I
-Message-ID: <CAADnVQLTTQNTAafm51o2fHSqdz+6uepEa=1VUiyQBN2sWQFm8Q@mail.gmail.com>
-Subject: Re: Re: [PATCH bpf v2] bpf: Fix deadlock when freeing cgroup storage
-To: Abel Wu <wuyun.abel@bytedance.com>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, David Vernet <void@manifault.com>, 
-	"open list:BPF [STORAGE & CGROUPS]" <bpf@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 28, 2025 at 10:23=E2=80=AFPM Abel Wu <wuyun.abel@bytedance.com>=
- wrote:
->
-> On 1/28/25 7:05 AM, Martin KaFai Lau Wrote:
-> > On 1/27/25 2:15 PM, Alexei Starovoitov wrote:
-> >> On Sun, Jan 26, 2025 at 1:31=E2=80=AFAM Abel Wu <wuyun.abel@bytedance.=
-com> wrote:
-> >>>
-> >>> On 1/25/25 4:20 AM, Martin KaFai Lau Wrote:
-> >>>>
-> >>>> imo, that should be a better option instead of having more unnecessa=
-ry failures in all other normal use cases which will not be interested in t=
-racing cgroup_storage_ptr().
-> >>
-> >> Martin,
-> >>
-> >> task_storage_map_free() is doing this busy inc/dec already,
-> >> in that sense doing the same in cgroup_storage_map_free() fits.
-> >
-> > sgtm. Agree to be consistent with the task_storage_map_free.
-> >
-> > would be nice if the busy inc/dec usage can be revisited after the rqsp=
-inlock work.
->
-> Agree, and 1ms interval of deadlock dection seems acceptable
-> for most workloads.
->
-> >
-> > Acked-by: Martin KaFai Lau <martin.lau@kernel.org>
->
-> Thanks Alexei, Martin.
+Hello,
 
-Applied.
+I've realized that perf trace shows system call summary at the end for
+each thread.  But sometimes users want to see the global whole system
+summary or statistics instead.
+
+So I've added --summary-mode option like below:
+
+    $ sudo ./perf trace -as --summary-mode=total sleep 1
+
+     Summary of events:
+
+     total, 21580 events
+
+       syscall            calls  errors  total       min       avg       max       stddev
+                                         (msec)    (msec)    (msec)    (msec)        (%)
+       --------------- --------  ------ -------- --------- --------- ---------     ------
+       epoll_wait          1305      0 14716.712     0.000    11.277   551.529      8.87%
+       futex               1256     89 13331.197     0.000    10.614   733.722     15.49%
+       poll                 669      0  6806.618     0.000    10.174   459.316     11.77%
+       ppoll                220      0  3968.797     0.000    18.040   516.775     25.35%
+       clock_nanosleep        1      0  1000.027  1000.027  1000.027  1000.027      0.00%
+       epoll_pwait           21      0   592.783     0.000    28.228   522.293     88.29%
+       nanosleep             16      0    60.515     0.000     3.782    10.123     33.33%
+       ioctl                510      0     4.284     0.001     0.008     0.182      8.84%
+       recvmsg             1434    775     3.497     0.001     0.002     0.174      6.37%
+       write               1393      0     2.854     0.001     0.002     0.017      1.79%
+       read                1063    100     2.236     0.000     0.002     0.083      5.11%
+       ...
+
+Also it changes internal data structure to hash table to track
+statistics of syscalls.  And removes the rb_resort code.
+
+v2 changes)
+* Rebase to current perf-tools-next
+* Fix some style issues  (Howard)
+* Rename to --summary-mode  (Howard)
+
+Thanks,
+Namhyung
+
+
+Namhyung Kim (4):
+  perf trace: Allocate syscall stats only if summary is on
+  perf trace: Convert syscall_stats to hashmap
+  perf tools: Get rid of now-unused rb_resort.h
+  perf trace: Add --summary-mode option
+
+ tools/perf/Documentation/perf-trace.txt |   4 +
+ tools/perf/builtin-trace.c              | 252 +++++++++++++++++++-----
+ tools/perf/util/rb_resort.h             | 146 --------------
+ 3 files changed, 208 insertions(+), 194 deletions(-)
+ delete mode 100644 tools/perf/util/rb_resort.h
+
+-- 
+2.48.1.262.g85cc9f2d1e-goog
+
