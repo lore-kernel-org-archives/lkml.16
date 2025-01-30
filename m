@@ -1,300 +1,175 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C7A2260C
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 01:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10F44A35
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 01:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738200423; cv=none; b=N8azDRoa4s+SMSCejvb2o9Z0WQpuj8aExLAk+2XML7DVOYlbVB5xZdFRlBLEli8TZieIKuuN/lKzo2LJg0OOK2wb0OHQUif4veBvcfNVQKOkvBbCaTnjv4Dfh0TCn0jUj8KktcwVH1NxZq9GFSwbxrRM1VTeu/0Ek+NyAUa510g=
+	t=1738200596; cv=none; b=e43NoFfq8Bd2wGdtesX48gwKxQL5v/vB+gd8GIwuFXu4+e5vQgsIWIJ2oDhn1uIWc1CfD5TwilhZbhp5mmUfzmWpYuZwYISu5y0wA2/mrGRsyN+a5LE1bdlJsVajOU3lPFDHhZ+f2mttfJOlvw+g210QzITskH7oV/6NTKHPOcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738200423; c=relaxed/simple;
-	bh=90fgKKvuC44VvwbFu5RhMZfLd41S9q3L87wt1HK0Go4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rsd+oQC7aWUDdGl/lv4LcS2UwnR6fdYbGvrcKyfXMVZ6ynhAY7ikb1xTzciEo3rZ9hGlluTGHUkeHecaJd+mW8dZSSiphQd/jPNjLxxnRPDVUvS12PkOedZRuXna4A7AoSTxwJYfDqw3+9tDycDZD9xCWZhm2ZM2diGtDyaGp8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=DfrKXpp7; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1738200596; c=relaxed/simple;
+	bh=8qAgW8LtPIIHIhnZiyASftNwjabnu0tEnOkYhhfsY94=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tAtTRP/LiwOQ9l7qFNj29JziQXvHlVCaXxeThwnpp83ekDfX1F2ONOGhtn12icsfiWVVQJ5TR9Fi85w488J26HEQ5D+p+5Ls0De64BoStWHMjQDASR9Ja/o22x7QZar9/7Z+LIvrvhudczfPSHD4DHhQ+XG1uX0ub89aXk/AmyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=onbCK20d; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="DfrKXpp7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=6lwXsviHOVSi0K8darppFr793wf9q6unxMP8s2epLPI=; b=DfrKXpp7wArDMjS2
-	GXCtT1fRLNLh2SYKvmn5f3eaBZxCTeNmB13p3A+BaYPWUrf3iWUO/Q27AwmJAJdwnaNbYW5ayefSQ
-	ObZqNownL/asRIlpVaw5DL9TtdcvT6OJG58xyeD7pqZwBjRrwtv2eyOIogFxUlag6Mh5GAsYX+a08
-	8IyvfSlJm1pCgiHO6NHt6pisyU8R0U6P4wEZZBcrGTWmMLBJS1fYNDA3Bekj7fFAeYY7EZ0pFL7nN
-	37oDe4oXylXNo6Z2yr9/C9cxRZRLzp9io7774YilXQq7Ke+pvIHtC1CpZK+dAA/dRX+clQLdvw/kL
-	fPyrzQydEbMTEHrxiw==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1tdJKY-00Cjk1-22;
-	Thu, 30 Jan 2025 01:26:54 +0000
-From: linux@treblig.org
-To: alexander.usyskin@intel.com,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] mei: Remove unused functions
-Date: Thu, 30 Jan 2025 01:26:54 +0000
-Message-ID: <20250130012654.255119-1-linux@treblig.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="onbCK20d"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-467a6ecaa54so2548481cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 17:29:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1738200593; x=1738805393; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dPxkurx/OULW83mf3JAHR7aMN9zx3nKC9vlS36caCvg=;
+        b=onbCK20d3e7iN9DLA4SvslTtZInr1XyybOGAIyfgnq1ngebZa316kiEIlmFw2XoP4A
+         CWQn3blP49VqwJXWw3UyghvCuQ0P5zzmpI1EdIzh0RFTnRd0nmg40950owmONSxw+YLb
+         deuIgjtfwPaJetMqHcnP+OV0zOzuMcMxgzk2a2eE4hV6JhWsztHESa+LnXVweqV4K2kS
+         tKdrwVC0VcS+2BqyaSRh+MgWiOxCbeyOO5EQMNTur1C0p0W5PAQ+E6yXJAiT0YwvUrXe
+         KRGHCiPqfzpRz6MgcWYsAqQIVTGIdBoHnrCwgkeb/wxb9ODMBW57tYuMnDHbvxBPkjFa
+         q+gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738200593; x=1738805393;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dPxkurx/OULW83mf3JAHR7aMN9zx3nKC9vlS36caCvg=;
+        b=K3Lhij0r3wBvk5VgQ6HilP8kXU7KeBrpWSsPYNEsaOPciD8Bz4aRHOUx8d0SpE70QV
+         zMLAs8z6nUWAw+wqOy5H4obB/xe3L8wIb8RtZyU2al438bK3UthSkLp1RP3/dZ/AzMkc
+         QkfL19rpmCshQGo7VssnoBGJRLSgDELYXrLhc1nUiohrf1TDYj6QPsjphgeJ4vQ2RQ61
+         JUz4VS0ymR7nz6hbl5QpUMGVrOoGxKHaCpGwGg/LcRuvYyZp72DwywgNIXOeb7TAw6bE
+         pjVmIvOF5lE9yIYeeOUI71zzPs2mJNmV+rSH4fK4u/fceEAxaqIapfiMCKDN9yehF4Dh
+         5CrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLGN+sZ3ZmgK6YmC9TqwRiFh964Pc8WObBXpUjoHPrcYL3Sa48iaPsXTBu/PIqno92KIYwh+ggYLPOKeg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvzk75QipFiO8EoWzeRgXZfleH9FgyVtarUb1riasoIqSFyGvv
+	Dw70essY/GMFSGIDXQi1Bt0QCnSLzlpfIcswKXnlF80269SCOOoTr+J89WJsc98=
+X-Gm-Gg: ASbGncvI+VfCML5RiWh3eEbvyojLhfxi0/r/TM1mYW5zaNIpWGoTfN+7PGrVrU6x3cN
+	EMEpbmthtZXIrLuHmWRmQULn63+XattUOO+8t4RzRpW+sgt0y0+flnRVaPk+hqINj8pA0WNOrBK
+	mdCMUYkutSMMz15lELqcwG7J3gz2RXDDCHRfMkAkJIzlhtcYc+Y4umX4pc/xrmbKhUOlZmDYf+c
+	RHLilH9jIbwEXzL873OTbNrvZ2n88Pavc72oFGL9R3FofunkU/iLLGmaYVXFxijiV6BFuSwh4Z2
+	pp+ic/+o0iVwFk7zLyPxvZkyNxBsPVDWQ0HGWQk5a7evDVc3o6PKDd+DZYsM8KO9
+X-Google-Smtp-Source: AGHT+IFEnIv1nsim5lPdlQj78zl9RmwGB1M+QifWu4dAueGxHGT/j0Tb0xnCGj+Mj/Jowg+4W9/aMw==
+X-Received: by 2002:ac8:59ce:0:b0:467:6dd9:c961 with SMTP id d75a77b69052e-46fd0b317f2mr77198481cf.48.1738200593421;
+        Wed, 29 Jan 2025 17:29:53 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0a7547sm2194951cf.4.2025.01.29.17.29.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2025 17:29:52 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tdJNP-00000009VHN-2onL;
+	Wed, 29 Jan 2025 21:29:51 -0400
+Date: Wed, 29 Jan 2025 21:29:51 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Zhu Yanjun <yanjun.zhu@linux.dev>, linux-rdma@vger.kernel.org,
+	Mustafa Ismail <mustafa.ismail@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Bernard Metzler <bmt@zurich.ibm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/6] RDMA/rxe: handle ICRC correctly on big endian systems
+Message-ID: <20250130012951.GF2120662@ziepe.ca>
+References: <20250127223840.67280-1-ebiggers@kernel.org>
+ <20250127223840.67280-2-ebiggers@kernel.org>
+ <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
+ <20250129183009.GC2120662@ziepe.ca>
+ <20250129185115.GA2619178@google.com>
+ <20250129194344.GD2120662@ziepe.ca>
+ <20250129202537.GA66821@sol.localdomain>
+ <20250129211651.GE2120662@ziepe.ca>
+ <20250129222147.GC2619178@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129222147.GC2619178@google.com>
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Wed, Jan 29, 2025 at 10:21:47PM +0000, Eric Biggers wrote:
 
-The following functions have been in the mei code for
-a long time but have never been used.
+> > To be most clear this should be written as:
+> > 
+> >   u32 ibta_crc = swab32(~crc32_le(..)) // Gives you the IBTA defined value
+> >   *packet = cpu_to_be32(ibta_crc); // Puts it in the packet
+> > 
+> > It follows the spec clearly and exactly.
+> > 
+> > Yes, you can get the same net effect using le:
+> > 
+> >   u32 not_ibta_crc = ~crc32_le(..)
+> >   *packet = cpu_to_le32(not_ibta_crc)
+> > 
+> > It does work, but it is very hard to follow how that relates to the
+> > specification when the u32 is not in the spec's format anymore.
+> > 
+> > What matters here, in rxe, is how to use the Linux crc32 library to
+> > get exactly the value written down in the spec.
+> > 
+> > IMHO the le approach is an optimization to avoid the dobule swap, and
+> > it should simply be described as such in a comment:
+> > 
+> >  The crc32 library gives a byte swapped result compared to the IBTA
+> >  specification. swab32(~crc32_le(..)) will give values that match
+> >  IBTA.
+> > 
+> >  To avoid double swapping we can instead write:
+> >     *icrc = cpu_to_le32(~crc32_le(..))
+> >  The value will still be big endian on the network.
+> > 
+> > No need to talk about coefficients.
+> 
+> We are looking at the same spec, right?  The following is the specification for
+> the ICRC field:
+> 
+>     The resulting bits are sent in order from the bit representing the
+>     coefficient of the highest term of the remainder polynomial. The least
+>     significant bit, most significant byte first ordering of the packet does not
+>     apply to the ICRC field.
+> 
+> So it does talk about the polynomial coefficients.
 
-mei_txe_setup_satt2() was added in 2014 by
-commit 32e2b59fca2c ("mei: txe: add hw-txe.c")
+Of course it does, it is defining a CRC.
 
-mei_me_cl_rm_by_uuid_id() was added in 2015 by
-commit 79563db9ddd3 ("mei: add reference counting for me clients")
+The above text is reflected in Figure 57 which shows the Remainder
+being swapped all around to produce the ICRC.
 
-mei_cldev_uuid() was added in 2015 by
-commit baeacd037697 ("mei: bus: export uuid and protocol version to mei_cl
-bus drivers")
+The spec goes on to say:
 
-mei_cldev_recv_nonblock() was added in 2016 by
-commit 076802d00615 ("mei: bus: enable non-blocking RX")
-it is the only user of mei_cldev_recv_nonblock_vtag().
+ CRC Field is obtained from the Remainder as shown in Figure 57. ICRC
+ Field is transmitted using Big Endian byte ordering like every field
+ of an InfiniBand packet.
 
-Remove them.
+From a spec perspective is *total nonsense* to describe something the
+spec explicitly says is big endian as little endian.
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/misc/mei/bus.c     | 52 --------------------------------------
- drivers/misc/mei/client.c  | 22 ----------------
- drivers/misc/mei/client.h  |  2 --
- drivers/misc/mei/hw-txe.c  | 45 ---------------------------------
- drivers/misc/mei/hw-txe.h  |  2 --
- include/linux/mei_cl_bus.h |  5 ----
- 6 files changed, 128 deletions(-)
+Yes from a maths perspective coefficients are reversed and whatever,
+but that doesn't matter to someone reading the code. Clearly state
+how to calculate the u32 "ICRC Field" as called out in the spec using
+Linux. That is swab32(~crc32_le(..)) - that detail clarifies everything.
 
-diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
-index 718ec5d81d94..67176caf5416 100644
---- a/drivers/misc/mei/bus.c
-+++ b/drivers/misc/mei/bus.c
-@@ -323,28 +323,6 @@ ssize_t mei_cldev_recv_vtag(struct mei_cl_device *cldev, u8 *buf, size_t length,
- }
- EXPORT_SYMBOL_GPL(mei_cldev_recv_vtag);
- 
--/**
-- * mei_cldev_recv_nonblock_vtag - non block client receive with vtag (read)
-- *
-- * @cldev: me client device
-- * @buf: buffer to receive
-- * @length: buffer length
-- * @vtag: virtual tag
-- *
-- * Return:
-- * * read size in bytes
-- * * -EAGAIN if function will block.
-- * * < 0 on other error
-- */
--ssize_t mei_cldev_recv_nonblock_vtag(struct mei_cl_device *cldev, u8 *buf,
--				     size_t length, u8 *vtag)
--{
--	struct mei_cl *cl = cldev->cl;
--
--	return __mei_cl_recv(cl, buf, length, vtag, MEI_CL_IO_RX_NONBLOCK, 0);
--}
--EXPORT_SYMBOL_GPL(mei_cldev_recv_nonblock_vtag);
--
- /**
-  * mei_cldev_recv_timeout - client receive with timeout (read)
-  *
-@@ -438,23 +416,6 @@ ssize_t mei_cldev_recv(struct mei_cl_device *cldev, u8 *buf, size_t length)
- }
- EXPORT_SYMBOL_GPL(mei_cldev_recv);
- 
--/**
-- * mei_cldev_recv_nonblock - non block client receive (read)
-- *
-- * @cldev: me client device
-- * @buf: buffer to receive
-- * @length: buffer length
-- *
-- * Return: read size in bytes of < 0 on error
-- *         -EAGAIN if function will block.
-- */
--ssize_t mei_cldev_recv_nonblock(struct mei_cl_device *cldev, u8 *buf,
--				size_t length)
--{
--	return mei_cldev_recv_nonblock_vtag(cldev, buf, length, NULL);
--}
--EXPORT_SYMBOL_GPL(mei_cldev_recv_nonblock);
--
- /**
-  * mei_cl_bus_rx_work - dispatch rx event for a bus device
-  *
-@@ -640,19 +601,6 @@ void mei_cldev_set_drvdata(struct mei_cl_device *cldev, void *data)
- }
- EXPORT_SYMBOL_GPL(mei_cldev_set_drvdata);
- 
--/**
-- * mei_cldev_uuid - return uuid of the underlying me client
-- *
-- * @cldev: mei client device
-- *
-- * Return: me client uuid
-- */
--const uuid_le *mei_cldev_uuid(const struct mei_cl_device *cldev)
--{
--	return mei_me_cl_uuid(cldev->me_cl);
--}
--EXPORT_SYMBOL_GPL(mei_cldev_uuid);
--
- /**
-  * mei_cldev_ver - return protocol version of the underlying me client
-  *
-diff --git a/drivers/misc/mei/client.c b/drivers/misc/mei/client.c
-index be011cef12e5..3db07d2a881f 100644
---- a/drivers/misc/mei/client.c
-+++ b/drivers/misc/mei/client.c
-@@ -271,28 +271,6 @@ void mei_me_cl_rm_by_uuid(struct mei_device *dev, const uuid_le *uuid)
- 	up_write(&dev->me_clients_rwsem);
- }
- 
--/**
-- * mei_me_cl_rm_by_uuid_id - remove all me clients matching client id
-- *
-- * @dev: the device structure
-- * @uuid: me client uuid
-- * @id: me client id
-- *
-- * Locking: called under "dev->device_lock" lock
-- */
--void mei_me_cl_rm_by_uuid_id(struct mei_device *dev, const uuid_le *uuid, u8 id)
--{
--	struct mei_me_client *me_cl;
--
--	dev_dbg(dev->dev, "remove %pUl %d\n", uuid, id);
--
--	down_write(&dev->me_clients_rwsem);
--	me_cl = __mei_me_cl_by_uuid_id(dev, uuid, id);
--	__mei_me_cl_del(dev, me_cl);
--	mei_me_cl_put(me_cl);
--	up_write(&dev->me_clients_rwsem);
--}
--
- /**
-  * mei_me_cl_rm_all - remove all me clients
-  *
-diff --git a/drivers/misc/mei/client.h b/drivers/misc/mei/client.h
-index 9052860bcfe0..01ed26a148c4 100644
---- a/drivers/misc/mei/client.h
-+++ b/drivers/misc/mei/client.h
-@@ -29,8 +29,6 @@ struct mei_me_client *mei_me_cl_by_id(struct mei_device *dev, u8 client_id);
- struct mei_me_client *mei_me_cl_by_uuid_id(struct mei_device *dev,
- 					   const uuid_le *uuid, u8 client_id);
- void mei_me_cl_rm_by_uuid(struct mei_device *dev, const uuid_le *uuid);
--void mei_me_cl_rm_by_uuid_id(struct mei_device *dev,
--			     const uuid_le *uuid, u8 id);
- void mei_me_cl_rm_all(struct mei_device *dev);
- 
- /**
-diff --git a/drivers/misc/mei/hw-txe.c b/drivers/misc/mei/hw-txe.c
-index 5d0f68b95c29..e9476f9ae25d 100644
---- a/drivers/misc/mei/hw-txe.c
-+++ b/drivers/misc/mei/hw-txe.c
-@@ -1209,48 +1209,3 @@ struct mei_device *mei_txe_dev_init(struct pci_dev *pdev)
- 
- 	return dev;
- }
--
--/**
-- * mei_txe_setup_satt2 - SATT2 configuration for DMA support.
-- *
-- * @dev:   the device structure
-- * @addr:  physical address start of the range
-- * @range: physical range size
-- *
-- * Return: 0 on success an error code otherwise
-- */
--int mei_txe_setup_satt2(struct mei_device *dev, phys_addr_t addr, u32 range)
--{
--	struct mei_txe_hw *hw = to_txe_hw(dev);
--
--	u32 lo32 = lower_32_bits(addr);
--	u32 hi32 = upper_32_bits(addr);
--	u32 ctrl;
--
--	/* SATT is limited to 36 Bits */
--	if (hi32 & ~0xF)
--		return -EINVAL;
--
--	/* SATT has to be 16Byte aligned */
--	if (lo32 & 0xF)
--		return -EINVAL;
--
--	/* SATT range has to be 4Bytes aligned */
--	if (range & 0x4)
--		return -EINVAL;
--
--	/* SATT is limited to 32 MB range*/
--	if (range > SATT_RANGE_MAX)
--		return -EINVAL;
--
--	ctrl = SATT2_CTRL_VALID_MSK;
--	ctrl |= hi32  << SATT2_CTRL_BR_BASE_ADDR_REG_SHIFT;
--
--	mei_txe_br_reg_write(hw, SATT2_SAP_SIZE_REG, range);
--	mei_txe_br_reg_write(hw, SATT2_BRG_BA_LSB_REG, lo32);
--	mei_txe_br_reg_write(hw, SATT2_CTRL_REG, ctrl);
--	dev_dbg(dev->dev, "SATT2: SAP_SIZE_OFFSET=0x%08X, BRG_BA_LSB_OFFSET=0x%08X, CTRL_OFFSET=0x%08X\n",
--		range, lo32, ctrl);
--
--	return 0;
--}
-diff --git a/drivers/misc/mei/hw-txe.h b/drivers/misc/mei/hw-txe.h
-index 96511b04bf88..6790e646895d 100644
---- a/drivers/misc/mei/hw-txe.h
-+++ b/drivers/misc/mei/hw-txe.h
-@@ -59,7 +59,5 @@ irqreturn_t mei_txe_irq_thread_handler(int irq, void *dev_id);
- 
- int mei_txe_aliveness_set_sync(struct mei_device *dev, u32 req);
- 
--int mei_txe_setup_satt2(struct mei_device *dev, phys_addr_t addr, u32 range);
--
- 
- #endif /* _MEI_HW_TXE_H_ */
-diff --git a/include/linux/mei_cl_bus.h b/include/linux/mei_cl_bus.h
-index b38a56a13f39..725fd7727422 100644
---- a/include/linux/mei_cl_bus.h
-+++ b/include/linux/mei_cl_bus.h
-@@ -97,8 +97,6 @@ ssize_t mei_cldev_send(struct mei_cl_device *cldev, const u8 *buf,
- ssize_t mei_cldev_send_timeout(struct mei_cl_device *cldev, const u8 *buf,
- 			       size_t length, unsigned long timeout);
- ssize_t mei_cldev_recv(struct mei_cl_device *cldev, u8 *buf, size_t length);
--ssize_t mei_cldev_recv_nonblock(struct mei_cl_device *cldev, u8 *buf,
--				size_t length);
- ssize_t mei_cldev_recv_timeout(struct mei_cl_device *cldev, u8 *buf, size_t length,
- 			       unsigned long timeout);
- ssize_t mei_cldev_send_vtag(struct mei_cl_device *cldev, const u8 *buf,
-@@ -107,8 +105,6 @@ ssize_t mei_cldev_send_vtag_timeout(struct mei_cl_device *cldev, const u8 *buf,
- 				    size_t length, u8 vtag, unsigned long timeout);
- ssize_t mei_cldev_recv_vtag(struct mei_cl_device *cldev, u8 *buf, size_t length,
- 			    u8 *vtag);
--ssize_t mei_cldev_recv_nonblock_vtag(struct mei_cl_device *cldev, u8 *buf,
--				     size_t length, u8 *vtag);
- ssize_t mei_cldev_recv_vtag_timeout(struct mei_cl_device *cldev, u8 *buf, size_t length,
- 			    u8 *vtag, unsigned long timeout);
- 
-@@ -116,7 +112,6 @@ int mei_cldev_register_rx_cb(struct mei_cl_device *cldev, mei_cldev_cb_t rx_cb);
- int mei_cldev_register_notif_cb(struct mei_cl_device *cldev,
- 				mei_cldev_cb_t notif_cb);
- 
--const uuid_le *mei_cldev_uuid(const struct mei_cl_device *cldev);
- u8 mei_cldev_ver(const struct mei_cl_device *cldev);
- 
- void *mei_cldev_get_drvdata(const struct mei_cl_device *cldev);
--- 
-2.48.1
+> It sounds like you want to add two unnecessary byteswaps to match
+> the example in Table 25, which misleadingly shows a byte-swapped
+> ICRC value as a u32 without mentioning it is byte-swapped.
 
+There are an obnoxious number of ways to make, label and describe
+these LFSRs. IBTA choose their representation, Linux choose a
+different one.
+
+It isn't misleadingly byte-swapped, it is self consistent with the
+rest of the spec, and different from Linux.
+
+> I don't agree that would be clearer, but we can do it if you prefer.
+
+If you want to keep the le32 optimization, then keep it, but have a
+comment to explain that it is an optimization based on the logical
+be32 double swap that matches the plain text of the spec.
+
+I gave an example comment above.
+
+Jason
