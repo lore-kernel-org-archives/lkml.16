@@ -1,120 +1,139 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350301DDD1
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8053C1E5732;
+	Thu, 30 Jan 2025 14:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738248853; cv=none; b=Rl7N7/tFbTWRqKtJlVPsejU5zyZNX+2egx85E1l+GhffMfb3jmFCEaVcckjzs519lT4qCAkjh0Iyb966e8+2ACDjJ4EYzp7LGQcTiW5m035jlVaL05XT7JvNIp/E/iBOthU9a7EuwGdG/oPyduZ1kGkWsWdA6RGIzJiRj0+hQ7A=
+	t=1738248868; cv=none; b=gYSou1u83+TpIG6EUDAwMZVwhRdLPNYVvsDOb6Z4CRDzdKWobPfrClt8WthE81kdHKSoVG1Q6r9WkrACA0P4oMLJkQ8zp5vS3jrvDQUU/qPceXiNaad6bJuhG3v4lp69Omy1HJxsiQpNqXCuXuo79vgMiwYmpOEsJ42BGcqMehY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738248853; c=relaxed/simple;
-	bh=NevGpmdmE5bakoAlAAq6wIM1jNqOsQrJugzNRuqpePw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FQ1f4kzWK0Kvu31IZgyyw5uwiNQWc/n939f2R9mGCIvBf2INm0h6E4ADc2IzLNmT7CTYmzZL3hpj70YfCOFdhZQQ4Wc+8tTnod5H/LvZlgem6JEWN1EhWC9iWbkx0SUAh4rJc3QqB5wbMFICKXOq3R7COr2hbRl2ichmBqCjdik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CCHH87qT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r/Dszy6a; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738248868; c=relaxed/simple;
+	bh=ePC6fMP+mBRkjMGGu/8MplwouXSIvjGXh2QC88juEJc=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=YSKtlNZxCpjzkdFByMgmgv4WcY38cvq2P0PD6LGF1UBpOP/xP5FGtJjwp7SyrAhQl8GuX5WBvwUlHWsZiNbC9XpJJv95sNStiHt69fGynKNoH/h56ThJHqfgIV/gKRJFhvE6TeIZT1F7AVmLowFZxL8mm1oj0YZjnWaYrdPwvb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FbthnF1L; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CCHH87qT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r/Dszy6a"
-Date: Thu, 30 Jan 2025 15:54:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738248850;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QWMw4aDNMt361EsCHVNvPU7UiHMTHVWLVcti5oKqreE=;
-	b=CCHH87qT5uCIW/N0OxMeFKBSmGr8veG9wkdBtfe21MGlFEiUA2HWAQlDDBWgUEPl8urxNE
-	xIQVO+cwUDhUIBrUDjYCiphdDwjKTEKezbSftd94ot2UXGTefU4+UlNO43FuvBQArVo7W3
-	GbjLvhnccAwcMnoFP+yRtfEqW/XjzE9ORstzTjVppYaaz8xQXz8+vWMyHEKWAagy0krijo
-	GMf9UH3HbkyTGf+HjBBncec9xngiXlkxIjSPhXksjfXFUfeazn1MeFAMKp6vl++H0R0VKl
-	tkFy3X8gK8UHppNiyUzQnKDi8UnzC586B6XL9wsPOovn54c7JzCrnFCvbQmf6g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738248850;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QWMw4aDNMt361EsCHVNvPU7UiHMTHVWLVcti5oKqreE=;
-	b=r/Dszy6agS6EyceeKfZ9vueiKkyHGnMG5SYufs7wflS1KMOqNHMttXFFWzpNwdE3qiYW+v
-	A+tLzwyFgbbSmPBg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: mpe@ellerman.id.au, maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-	npiggin@gmail.com, christophe.leroy@csgroup.eu,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] powerpc: Enable dynamic preemption
-Message-ID: <20250130145409.D_so_mR1@linutronix.de>
-References: <20250106051919.55020-1-sshegde@linux.ibm.com>
- <20250106051919.55020-2-sshegde@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FbthnF1L"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab2e308a99bso160138166b.1;
+        Thu, 30 Jan 2025 06:54:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738248865; x=1738853665; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qbp4EtOkuC+0iVMNyfHjqvPw/lKMjNnZSdESNc6UztA=;
+        b=FbthnF1LsUW411h9WxtobR5s/W72HYF9CZOx3koegv48amw23E6H8vWMu7FAqR6/e2
+         RTfft1d/34MW4JB1MwYaJWIrm0O3DjhUCWMh9ST+vTMf4NqWT5g4NNA0zAtRqrsiuYcu
+         tlXkdH2pSOCm+JbRO/LE3kFPyFVYy0kU49wOHduQ9ZdNYjtWoAG5ccEa0XeHf8aCu/J8
+         CPLdlutxDG2b6TLUYjeKDn5ceR+o84he0JApwM+Dxmn3AnryEvpU8qSUSGizdue9WJzv
+         Ygwxg1ujbjCoZH2xIrMMRhsrsVuN1CecPvCYmv0iimmZdRoaXutzZBVnfwv7vDa7ot67
+         zpCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738248865; x=1738853665;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qbp4EtOkuC+0iVMNyfHjqvPw/lKMjNnZSdESNc6UztA=;
+        b=abMr/kwLlERf0/Qq+RPggU4b3HRL/tMQtvIkvmKTM3fJx8foB3IB2aovUAv+T01jkI
+         ZvxLTDrh5yS/onxWDUYZCWMnu5SVVFqYUIR9xy7PODKFNhaSak2k6xfUur6GB0P9TTxM
+         lX8ca3YB4ecN3aE5gGNo3QIp/uOpadJI7hPpq3V0Pse0226UNp4IXlCBTDdq8/sUnV/I
+         ObylAHd/cwUeHohtapYMp8f6rxgWOiFXOnXB/L5hURltFp72P1N+DvvrVWTe06nwiIXf
+         Mu8a35XV3Yx2dU6JBfsdarU7vn2kcVEJBL8k/jC4f6wH59pSAoT+sq9PqL1oFR92Q/Cr
+         HEdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVfgfAfARg2qq+oHOU4X/XYoW3DSyoXCpQUmHNO1yaJQHWM7HBcvPQ4ubS066iUCp4NdV9vDYIpjjAo@vger.kernel.org, AJvYcCVqlfc3rAM7aIkmr0Xsq9J9z2mkZztFNyE7/boG/o/3Hdr8f9qCqOisJ4ShbyaziJmYFfr5IvaRwFqNAv8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdjWkOmwwHf11yAFzNyYR7YjtJARLbm8rZiQVFsAytjQkPu18e
+	3owrZSY9z+vsQAvh9lU0qzcMAE49swwExBzO0ImrSHkAKrXk9p1thbDaXg==
+X-Gm-Gg: ASbGnctvZ+/mjASrpJUq5nlGefngWGRgKa+rXr9bdTDicnilAvNGBDP/WWBXoeVU99M
+	dI+ApqnekOL9KN10u+0PgzhMOrN/fa6b5g3WIhSZjxI/ar0mqgwyI9axy0ChGhH10DiwngjvjcF
+	t/Vm+NX4H5xHOzsOICHLkcba6SyyBTANH109Ryp119bhfO9hLKvZWAaT3gAhgIPCuCv7JfdFW6Y
+	9aX97MTq0c34udaWc6pUCq9oWQ513NWs4m/Atzx5mTs3Y6GYUpTt3I1SGYKWgSPoRVG+SR9euR/
+	rqYonkhG3RU13LvmF8E6hqhUap32jbn6o0sbSdyJj7w4yErKPS9tbcMmx3c8vR8eRdGqkval
+X-Google-Smtp-Source: AGHT+IEscLo+ZglJ4iQ8yhcikhYDyTBbGC16YkQrOwamLjmGj9mpYIbrbWr8u+H0RMfLebwCb6ojRw==
+X-Received: by 2002:a17:907:1c13:b0:ab6:8bb8:af2e with SMTP id a640c23a62f3a-ab6e0cc500cmr358429766b.26.1738248864471;
+        Thu, 30 Jan 2025 06:54:24 -0800 (PST)
+Received: from smtpclient.apple (89-66-237-154.dynamic.chello.pl. [89.66.237.154])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a2fe78sm129297166b.125.2025.01.30.06.54.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 Jan 2025 06:54:24 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250106051919.55020-2-sshegde@linux.ibm.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
+Subject: Re: [PATCH 1/3] media: rockchip: Introduce the rkvdec2 driver
+From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+In-Reply-To: <278CF0E0-7277-40F3-942C-6FA61AA759A0@gmail.com>
+Date: Thu, 30 Jan 2025 15:54:10 +0100
+Cc: linux-kernel@vger.kernel.org,
+ Diederik de Haas <didi.debian@cknow.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Dragan Simic <dsimic@manjaro.org>,
+ Alexey Charkov <alchark@gmail.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Andy Yan <andy.yan@rock-chips.com>,
+ linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org,
+ linux-staging@lists.linux.dev
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B8B4C7CF-B2C4-48CE-84AD-52DF6002D17B@gmail.com>
+References: <20240615015734.1612108-1-detlev.casanova@collabora.com>
+ <5969581.LvFx2qVVIh@arisu> <CE4343FE-94AA-4F84-8C43-8366013AED84@gmail.com>
+ <8541055.T7Z3S40VBb@trenzalore>
+ <278CF0E0-7277-40F3-942C-6FA61AA759A0@gmail.com>
+To: Detlev Casanova <detlev.casanova@collabora.com>
+X-Mailer: Apple Mail (2.3826.300.87.4.3)
 
-On 2025-01-06 10:49:19 [+0530], Shrikanth Hegde wrote:
-> --- a/arch/powerpc/kernel/interrupt.c
-> +++ b/arch/powerpc/kernel/interrupt.c
-> @@ -25,6 +25,10 @@
->  unsigned long global_dbcr0[NR_CPUS];
->  #endif
->  
-> +#if defined(CONFIG_PREEMPT_DYNAMIC) && defined(CONFIG_HAVE_PREEMPT_DYNAMIC_KEY)
-> +DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
-> +#endif
+Update to my last email:=20
 
-I am uncertain here: Do you need to DEFINE it? It is set by the sched
-core which also defines it. It should be same thing after all, right?
+> Wiadomo=C5=9B=C4=87 napisana przez Piotr Oniszczuk =
+<piotr.oniszczuk@gmail.com> w dniu 30 sty 2025, o godz. 11:46:
+>=20
+>=20
+> I=E2=80=99m using:
+> =
+https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux/-/com=
+mit/bc47c445bfd9586115e9bcf5f231c5a5c5f0f828
+> =
+https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux/-/com=
+mit/9a9fd791513bc0d02c2242c88f23b41bd47de30a
+>=20
+> I see there is: =
+https://gitlab.collabora.com/detlev/linux/-/commits/add-rkvdec2-driver-iom=
+mu
+> Let me update iommu code to above branch and report back here how it =
+goes in 3588 and 356x
 
-> +
->  #ifdef CONFIG_PPC_BOOK3S_64
->  DEFINE_STATIC_KEY_FALSE(interrupt_exit_not_reentrant);
->  static inline bool exit_must_hard_disable(void)
-> @@ -396,7 +400,7 @@ notrace unsigned long interrupt_exit_kernel_prepare(struct pt_regs *regs)
->  		/* Returning to a kernel context with local irqs enabled. */
->  		WARN_ON_ONCE(!(regs->msr & MSR_EE));
->  again:
-> -		if (IS_ENABLED(CONFIG_PREEMPTION)) {
-> +		if (preempt_model_preemptible()) {
+I updated to =
+https://gitlab.collabora.com/detlev/linux/-/commits/add-rkvdec2-driver-iom=
+mu and basically i see no change (the same iommu errors on 356x; 3588 =
+all clean)  =20
 
-CONFIG_HAVE_PREEMPT_DYNAMIC_KEY is the only option, right? Wouldn't
+>=20
+>=20
+>>=20
+>> You can also checkout YUView (https://github.com/IENT/YUView) to get=20=
 
-| #DEFINE need_irq_preemption() \
-|          (static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
-| 
-| 	if (need_irq_preemption()) {
+>> information on media files structure, but I have had issues with HEVC =
+support=20
+>> lately.
+>=20
+> oh great. will do and report!
+>=20
 
-be a bit smaller/ quicker? This could be a fast path ;)
-
->  			/* Return to preemptible kernel context */
->  			if (unlikely(read_thread_flags() & _TIF_NEED_RESCHED)) {
->  				if (preempt_count() == 0)
-> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-> index edf5cabe5dfd..2556fa8ec019 100644
-> --- a/arch/powerpc/kernel/traps.c
-> +++ b/arch/powerpc/kernel/traps.c
-> @@ -266,7 +266,11 @@ static int __die(const char *str, struct pt_regs *regs, long err)
->  	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
->  	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
->  	       PAGE_SIZE / 1024, get_mmu_str(),
-> -	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
-> +	       preempt_model_none()      ? "none" :
-> +	       preempt_model_voluntary() ? "voluntary" :
-> +	       preempt_model_full()      ? "full" :
-> +	       preempt_model_lazy()      ? "lazy" :
-> +	       "",
-
-So intend to rework this part. I have patches stashed at
-	https://git.kernel.org/pub/scm/linux/kernel/git/bigeasy/staging.git/log/?h=preemption_string
-
-which I didn't sent yet due to the merge window. Just a heads up ;)
-
->  	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
->  	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
->  	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
-
-Sebastian
+Huh - here in need to switch to Linux as on maxOS i have issue with =
+ffmpeg ver. mismatch in YUView
+Will report next days=E2=80=A6.
+=20
