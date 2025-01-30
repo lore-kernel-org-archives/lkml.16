@@ -1,297 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09EF419DF60
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 21:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1DA1F12E9
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 21:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738272483; cv=none; b=e+kaKnOLKe586EUdvlptCteGlvCbgPNPr8C5sZDl0BnZz/D3daB9qgaInWfFWui6cnHbKs1S4d5ifR0LzafDffG6cOul0IzHjisDy17Hzrcg1PFuHG21TwIv/HdDEiD+i+LQzwkA2uEowfqmz3Bd9bVkLJCc/SVIN84aCSpb+6o=
+	t=1738272541; cv=none; b=JxGnWu1e5oFMtXzmI3Vs1MOG98dV8BTAIQtW2v7Evf07Ytw+BxAel25y+SrCGCsz9w8QtI/T0wjpa5acbBsmesnJQSbkUq2MFTis0d2Urv3bmUm6j8t14tOWvOiVGJYnDfhHTiViKVYvjJYgA/VjIfl1zNjWv0YoN6yJbNK66nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738272483; c=relaxed/simple;
-	bh=u1w+D3HeTRqnUjCeysW1jFUE6PKm5w/K2kLGQNVzFLg=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ahHZqMDm0oT7dEAuvRX50fGsxmUGTvXgzbEyeUsndFKeoJ+pnrfWb/m3Gc2WiJPF9KKAJWev8WKGx4RTeX/0p13MieqnUUWIu6N/OqaF7wM/ryS/HZm5UIKceQSj9rVOrNq6+FagTVywoQfp6U88QJvgBAvnlB0twPetzhZndAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ju8kVZUT; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738272541; c=relaxed/simple;
+	bh=NqKvdpC7/h9M8fbWhxTLYpD/CXyBpPui9nmBSWL2bfQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uAZ16M1mzfBrr45UZSIkybbXfwFqrV6fCZscFruqKXy4juhkBct9qkSgah7LcYOlZG+601RnacVwKiC1uCmX5IPkHEIkSdRO/gFrvjWf0DHp0Uk5EoXN/zyqHb12mc1iHsC7o8q9h5vMVfpb5koNcZRJy329eUomAb7nCjKUmzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wl16yuCv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ju8kVZUT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738272482; x=1769808482;
-  h=date:from:to:cc:subject:message-id;
-  bh=u1w+D3HeTRqnUjCeysW1jFUE6PKm5w/K2kLGQNVzFLg=;
-  b=ju8kVZUTyVACyOHRLA6sGXd24Q8YRBciMq9AUM4cH9eninUneH4iv3tk
-   uC5K5ZifXN91eKZqTPfR9MJJIOVpdIQJaokWzXjOONs05jVY3/gSQqKzp
-   q2P8ksK+Ux1dH4B01nlbTdCiMagOPQOJPVFmGZCVjmfOfjRTfaNtFfpTI
-   I4+KVN4Ki/Dr7vv5uxxPoE/UhaL1F7VW222LKok1dXzPxy22uC9ZFEAal
-   EJ+2XNhGC97e2m5KwS/KeUcABfXOxCoIdcX0U2R0C45Mr9/piPdUBjTYe
-   IOPmFumFMtvT6ti6ycxNOUKM84GFpWVa4sW3AmmMW3FPK4Rx9tPzyL8I6
-   w==;
-X-CSE-ConnectionGUID: oXqCPx9oSza00HU75dqf0g==
-X-CSE-MsgGUID: 7eN8pQFBRZ2sPpu9DN2KoQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="56270667"
-X-IronPort-AV: E=Sophos;i="6.13,246,1732608000"; 
-   d="scan'208";a="56270667"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 13:28:01 -0800
-X-CSE-ConnectionGUID: BBbeg+PxRomnFGi63qghUg==
-X-CSE-MsgGUID: oik8CMb0S8SJ4caVE1nFRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,246,1732608000"; 
-   d="scan'208";a="110021388"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 30 Jan 2025 13:27:57 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tdc4o-000kzZ-12;
-	Thu, 30 Jan 2025 21:27:54 +0000
-Date: Fri, 31 Jan 2025 05:27:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:tip/urgent] BUILD SUCCESS
- 8b44debe7c5bea05dae6d694f8bc4e9b2b023be4
-Message-ID: <202501310528.Y14gy2SZ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wl16yuCv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738272539;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WfPXlt1BaHC9qNggpXArv/npGs2QEcWgUpdglWgCezw=;
+	b=Wl16yuCvQFiwfNAYHbsptoPElkKhpjmG+Y2WjlDLUZz2c2A1P4eAmvblx8wEqteisA8pcT
+	fwQK+iC+nBimUMzr00RZqIQCZadF+lOXWSDlb3S7ETOT22FCPW21XI+4FrbCqrkQntx7hP
+	Hj70zqNBxkFeVov1cd2nFz7dl2eMg4Q=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-321-ncJL25ZOPqCR3Evyj_JIqA-1; Thu,
+ 30 Jan 2025 16:28:52 -0500
+X-MC-Unique: ncJL25ZOPqCR3Evyj_JIqA-1
+X-Mimecast-MFC-AGG-ID: ncJL25ZOPqCR3Evyj_JIqA
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F40021801F13;
+	Thu, 30 Jan 2025 21:28:48 +0000 (UTC)
+Received: from chopper.redhat.com (unknown [10.22.81.115])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4B94419560A3;
+	Thu, 30 Jan 2025 21:28:45 +0000 (UTC)
+From: Lyude Paul <lyude@redhat.com>
+To: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: =?UTF-8?q?Ma=C3=ADra=20Canal?= <mairacanal@riseup.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] WIP: drivers/base: Add virtual_device_create()
+Date: Thu, 30 Jan 2025 16:28:26 -0500
+Message-ID: <20250130212843.659437-1-lyude@redhat.com>
+In-Reply-To: <Z5Nw8kaieLueWyUu@pollux>
+References: <Z5Nw8kaieLueWyUu@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
-branch HEAD: 8b44debe7c5bea05dae6d694f8bc4e9b2b023be4  Merge branch into tip/master: 'timers/urgent'
+As Greg KH pointed out, we have a nice /sys/devices/virtual directory free
+for the taking - but the vast majority of device drivers concerned with
+virtual devices do not use this and instead misuse the platform device API.
 
-elapsed time: 1444m
+To fix this, let's start by adding a simple function that can be used for
+creating virtual devices - virtual_device_create().
 
-configs tested: 220
-configs skipped: 7
+Signed-off-by: Lyude Paul <lyude@redhat.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+---
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    clang-21
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    clang-18
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    clang-18
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                 nsimosci_hs_smp_defconfig    clang-20
-arc                   randconfig-001-20250130    gcc-13.2.0
-arc                   randconfig-002-20250130    gcc-13.2.0
-arm                              allmodconfig    clang-18
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    clang-18
-arm                              allyesconfig    gcc-14.2.0
-arm                          collie_defconfig    gcc-14.2.0
-arm                                 defconfig    gcc-14.2.0
-arm                        multi_v7_defconfig    clang-20
-arm                        mvebu_v5_defconfig    gcc-14.2.0
-arm                       netwinder_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250130    gcc-14.2.0
-arm                   randconfig-002-20250130    clang-20
-arm                   randconfig-003-20250130    gcc-14.2.0
-arm                   randconfig-004-20250130    clang-20
-arm                           stm32_defconfig    clang-20
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250130    clang-20
-arm64                 randconfig-002-20250130    gcc-14.2.0
-arm64                 randconfig-003-20250130    clang-20
-arm64                 randconfig-004-20250130    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250130    clang-21
-csky                  randconfig-001-20250130    gcc-14.2.0
-csky                  randconfig-002-20250130    clang-21
-csky                  randconfig-002-20250130    gcc-14.2.0
-hexagon                          allmodconfig    clang-20
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-20
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-18
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250130    clang-20
-hexagon               randconfig-001-20250130    clang-21
-hexagon               randconfig-002-20250130    clang-20
-hexagon               randconfig-002-20250130    clang-21
-i386                             allmodconfig    clang-19
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-19
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-19
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250130    clang-19
-i386        buildonly-randconfig-002-20250130    clang-19
-i386        buildonly-randconfig-003-20250130    gcc-11
-i386        buildonly-randconfig-004-20250130    gcc-12
-i386        buildonly-randconfig-005-20250130    gcc-12
-i386        buildonly-randconfig-006-20250130    gcc-12
-i386                                defconfig    clang-19
-i386                  randconfig-001-20250130    gcc-12
-i386                  randconfig-002-20250130    gcc-12
-i386                  randconfig-003-20250130    gcc-12
-i386                  randconfig-004-20250130    gcc-12
-i386                  randconfig-005-20250130    gcc-12
-i386                  randconfig-006-20250130    gcc-12
-i386                  randconfig-007-20250130    gcc-12
-i386                  randconfig-011-20250130    clang-19
-i386                  randconfig-012-20250130    clang-19
-i386                  randconfig-013-20250130    clang-19
-i386                  randconfig-014-20250130    clang-19
-i386                  randconfig-015-20250130    clang-19
-i386                  randconfig-016-20250130    clang-19
-i386                  randconfig-017-20250130    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250130    clang-21
-loongarch             randconfig-001-20250130    gcc-14.2.0
-loongarch             randconfig-002-20250130    clang-21
-loongarch             randconfig-002-20250130    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                     loongson1b_defconfig    clang-20
-mips                        omega2p_defconfig    clang-20
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250130    clang-21
-nios2                 randconfig-001-20250130    gcc-14.2.0
-nios2                 randconfig-002-20250130    clang-21
-nios2                 randconfig-002-20250130    gcc-14.2.0
-openrisc                          allnoconfig    clang-20
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-20
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20250130    clang-21
-parisc                randconfig-001-20250130    gcc-14.2.0
-parisc                randconfig-002-20250130    clang-21
-parisc                randconfig-002-20250130    gcc-14.2.0
-parisc64                            defconfig    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-20
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                          allyesconfig    gcc-14.2.0
-powerpc                 linkstation_defconfig    clang-20
-powerpc               randconfig-001-20250130    clang-21
-powerpc               randconfig-001-20250130    gcc-14.2.0
-powerpc               randconfig-002-20250130    clang-16
-powerpc               randconfig-002-20250130    clang-21
-powerpc               randconfig-003-20250130    clang-21
-powerpc               randconfig-003-20250130    gcc-14.2.0
-powerpc64             randconfig-001-20250130    clang-21
-powerpc64             randconfig-001-20250130    gcc-14.2.0
-powerpc64             randconfig-002-20250130    clang-20
-powerpc64             randconfig-002-20250130    clang-21
-powerpc64             randconfig-003-20250130    clang-20
-powerpc64             randconfig-003-20250130    clang-21
-riscv                            allmodconfig    gcc-14.2.0
-riscv                             allnoconfig    clang-20
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-20
-riscv                            allyesconfig    gcc-14.2.0
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250130    clang-20
-riscv                 randconfig-001-20250130    gcc-14.2.0
-riscv                 randconfig-002-20250130    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250130    gcc-14.2.0
-s390                  randconfig-002-20250130    clang-20
-s390                  randconfig-002-20250130    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-12
-sh                          r7785rp_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250130    gcc-14.2.0
-sh                    randconfig-002-20250130    gcc-14.2.0
-sh                           se7722_defconfig    clang-20
-sh                           se7722_defconfig    gcc-14.2.0
-sh                   secureedge5410_defconfig    gcc-14.2.0
-sh                        sh7763rdp_defconfig    gcc-14.2.0
-sh                  sh7785lcr_32bit_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250130    gcc-14.2.0
-sparc                 randconfig-002-20250130    gcc-14.2.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250130    gcc-14.2.0
-sparc64               randconfig-002-20250130    gcc-14.2.0
-um                               allmodconfig    clang-20
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250130    gcc-12
-um                    randconfig-001-20250130    gcc-14.2.0
-um                    randconfig-002-20250130    gcc-12
-um                    randconfig-002-20250130    gcc-14.2.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250130    clang-19
-x86_64      buildonly-randconfig-002-20250130    gcc-12
-x86_64      buildonly-randconfig-003-20250130    gcc-12
-x86_64      buildonly-randconfig-004-20250130    clang-19
-x86_64      buildonly-randconfig-005-20250130    gcc-12
-x86_64      buildonly-randconfig-006-20250130    gcc-12
-x86_64                              defconfig    clang-19
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-19
-x86_64                randconfig-001-20250130    gcc-12
-x86_64                randconfig-002-20250130    gcc-12
-x86_64                randconfig-003-20250130    gcc-12
-x86_64                randconfig-004-20250130    gcc-12
-x86_64                randconfig-005-20250130    gcc-12
-x86_64                randconfig-006-20250130    gcc-12
-x86_64                randconfig-007-20250130    gcc-12
-x86_64                randconfig-008-20250130    gcc-12
-x86_64                randconfig-071-20250130    clang-19
-x86_64                randconfig-072-20250130    clang-19
-x86_64                randconfig-073-20250130    clang-19
-x86_64                randconfig-074-20250130    clang-19
-x86_64                randconfig-075-20250130    clang-19
-x86_64                randconfig-076-20250130    clang-19
-x86_64                randconfig-077-20250130    clang-19
-x86_64                randconfig-078-20250130    clang-19
-x86_64                               rhel-9.4    clang-19
-x86_64                           rhel-9.4-bpf    clang-19
-x86_64                         rhel-9.4-kunit    clang-19
-x86_64                           rhel-9.4-ltp    clang-19
-x86_64                          rhel-9.4-rust    clang-19
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250130    gcc-14.2.0
-xtensa                randconfig-002-20250130    gcc-14.2.0
+So, WIP obviously because I wrote this up in a few minutes - but this goes
+off the idea that Danilo suggested to me off-list of coming up with a
+simple API for handling virtual devices that's a little more obvious to
+use. I wanted to get people's feedback and if we're happy with this idea,
+I'm willing to go through and add some pointers to this function in various
+platform API docs - along with porting over the C version of VKMS over to
+this API.
+---
+ drivers/base/core.c    | 28 ++++++++++++++++++++++++++++
+ include/linux/device.h |  2 ++
+ 2 files changed, 30 insertions(+)
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 5a1f051981149..050e644ba11d5 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -4390,6 +4390,34 @@ struct device *device_create(const struct class *class, struct device *parent,
+ }
+ EXPORT_SYMBOL_GPL(device_create);
+ 
++/**
++ * virtual_device_create - creates a virtual device and registers it with sysfs
++ * @class: optional pointer to a struct class this device should be registered to
++ * @drvdata: the data to be added to the device for the callbacks
++ * @fmt: string for the device's name
++ *
++ * This function can be used to create standalone virtual devices, optionally
++ * registered to a specific class. Drivers which create virtual devices can use
++ * this. The device will live in /sys/devices/virtual.
++ *
++ * A pointer to the struct device will be returned from the call. Any further
++ * sysfs files that might be required can be created using this pointer.
++ *
++ * Returns &struct device pointer on success or ERR_PTR() on error.
++ */
++struct device *virtual_device_create(void *drvdata, const char *fmt, ...)
++{
++	va_list vargs;
++	struct device *dev;
++
++	va_start(vargs, fmt);
++	dev = device_create_groups_vargs(NULL, NULL, 0, drvdata, NULL,
++					 fmt, vargs);
++	va_end(vargs);
++	return dev;
++}
++EXPORT_SYMBOL_GPL(virtual_device_create);
++
+ /**
+  * device_create_with_groups - creates a device and registers it with sysfs
+  * @class: pointer to the struct class that this device should be registered to
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 80a5b32689866..74e07ec942f4e 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -1244,6 +1244,8 @@ bool device_is_bound(struct device *dev);
+ __printf(5, 6) struct device *
+ device_create(const struct class *cls, struct device *parent, dev_t devt,
+ 	      void *drvdata, const char *fmt, ...);
++__printf(2, 3) struct device *
++virtual_device_create(void *drvdata, const char *fmt, ...);
+ __printf(6, 7) struct device *
+ device_create_with_groups(const struct class *cls, struct device *parent, dev_t devt,
+ 			  void *drvdata, const struct attribute_group **groups,
+
+base-commit: b323d8e7bc03d27dec646bfdccb7d1a92411f189
+-- 
+2.47.1
+
