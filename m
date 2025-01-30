@@ -1,44 +1,45 @@
 Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EA31EE003;
-	Thu, 30 Jan 2025 16:32:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C63F1EE7A3;
+	Thu, 30 Jan 2025 16:32:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738254748; cv=pass; b=W4pQrjfTXLIv4ISHcEMc1SWoTk8iStJs/Eko7h2VXlXowwVvjqB3iT2aFe/npIjs4OyVqAeDHA62Kk0fjVCVJW26OJNfSMUAfz9r+XIuPhBtYak2hTQ2AskVAIr5NfP9CWhtY544+pRuDkBEwP1Q6aDglMKTbpNnYJylUVhEncI=
+	t=1738254748; cv=pass; b=QBmHy/cHTy8CIVNzezRJiZq1royu8NYy/8W2jvNHtjn25ol2+JvKrjTKiJLj5w12t73p7cQnAD1iubPBi9QfJpwVpb1OYkJM2IvVz3ToTcdLONUSC4nP3ohmcLv8SRoMLDcIxfv5jW2c6tdo578k9Qjg9SOpo81QXOQMaXfGS3s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738254748; c=relaxed/simple;
-	bh=MQPYLtlif+b2Bn0fUa/Vuhlyzr1PbbBwBPkMoiEg+vU=;
+	bh=+aoTSAqZWyBztrtWeswEXHKLUWxHkKbIOzBq8UNVOh8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jH8vgyDnIwzV01idpQiDmEG0Lt5b74iDR4Jq9kuIBu85m2WzPFCOfjLmXBB/dmpVDlB7Ph+tSCj/T4eOdK6nJd6SInPxsuLKEu+2SX5VPnSK70JWio00KTSXy5s5ClwvWTHhe3Y/YBUt5AQT39c/q+QPCzhVF08JpJBk/j5GVTY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=i8uv7jiA; arc=pass smtp.client-ip=136.143.188.15
+	 In-Reply-To:To:Cc; b=D+vOFUv5UiVTJr077SG4EIITdT493vw1NxRJCbKoVOwF8nTGB8D20/jZf2RwqJ7r6fIBdkAYgI6FgXsg7rGv7+ORlB0sg7SthLwrYSBj+AdVJNaMNhOuB4d5tQ/W+EhsPYrwAHUd7IsDqyircGENbOoFGV37l5xuZ+xl7S7V5uk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=jrbgPFnh; arc=pass smtp.client-ip=136.143.188.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="i8uv7jiA"
-ARC-Seal: i=1; a=rsa-sha256; t=1738254712; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="jrbgPFnh"
+ARC-Seal: i=1; a=rsa-sha256; t=1738254722; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=PsLx8JB7ro5AiQA8iikug49vSEv64GeDMH6lR44pIXMIYzzdtHUpMfOWtxi4E0bb31nUJ+szLSi96eYce08+OvcdRGkHMZaiksgyiCe1DmhnaqGE4hNaox6D5PEJI3H4Ee4mwu/svXvcVzIJxKMOwpEkBMSnNtuBehs3KqTMy4M=
+	b=dgRw0i3M6lBsoph2Ys9X6dgTTttInW9M6YmkfP84fZQJepzRx8JjYi9L0TqMdc2syWEQcjAK9DXAP4X7pd1JZDxeVpUW2VHLhfs9gLzjdGGGsGXbm1RZfI7Cuu5xw73ChDZ0BwcTMX7nOc4WJq7xU3iYx4tM0tdjehCY98wueZE=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738254712; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=UaY0n35Nb7SCkmus3ECKUdBCfM4ZyE4EZNsg5zowUTg=; 
-	b=TUdV8PWu9TKB16r9OATlI82aKnfzsyKluvXbAhEUwzlBXbEIJ61BJNvbyu1McHVT5fGFGFUR0PEEy8oV0JI8xcL9QhBmOPWD5cM5KsX3k/RWN0Y2g+CYEwTPpTBO6JtIoHY8WzdO99lQUrennatAC7+IdS4bNLe9bJU6MiCNuwI=
+	t=1738254722; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ee+aIEbx0Uoz73M7xvQb4aORnr+guJuf8bM3GRunjkY=; 
+	b=kMx/8vKRVf0g0fZCbt3zJzi3LLKHLTfTFOvzKWvsgzMUmEZL4ws0z/A5ZIqMeA31g3n3rvU3sGaGXNBv+n5Ydzhx2DV4edfs5VkpNhVqgmZk83qvn49SYpIJaHq6h5tnFxTclJq228qggCxhpwF281MP67pydcA3roiaUFPp6ag=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738254712;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738254722;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=UaY0n35Nb7SCkmus3ECKUdBCfM4ZyE4EZNsg5zowUTg=;
-	b=i8uv7jiA7HB5Va3CcuDs5oxhp17irJe++zPosZfkglmj77Yv+bZlzJrPpNljDP6R
-	xBiyqWOcgS6vPUzuPr6n399QFWk4k5MlUU8vOWv9Y0TGqg1f4T5V/zrCqO+8mO2T5X+
-	yHa2WzcQMZTaverjEwI4mHcvCVq/Xc+iXlr22GgE=
-Received: by mx.zohomail.com with SMTPS id 173825470884090.2146661595857;
-	Thu, 30 Jan 2025 08:31:48 -0800 (PST)
+	bh=ee+aIEbx0Uoz73M7xvQb4aORnr+guJuf8bM3GRunjkY=;
+	b=jrbgPFnhGYYxKjDhpN+1Qj7ZhWH2bSuVFnZNrgdzYRp5c0n3eCT49zi42BU4e0g7
+	mT9BZOfeZ3pr7/rSAPIHWiAyuvLCi7qK0PbrJWbnweo1T458De+kIL5xqHgYqCuMIaZ
+	9fxaSVEhTgS02Q5j/s2Uf1CrMEA4kDeDEcVRWhhU=
+Received: by mx.zohomail.com with SMTPS id 1738254717518381.9011915428704;
+	Thu, 30 Jan 2025 08:31:57 -0800 (PST)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Thu, 30 Jan 2025 17:31:16 +0100
-Subject: [PATCH 2/7] dt-bindings: rng: add binding for Rockchip RK3588 RNG
+Date: Thu, 30 Jan 2025 17:31:18 +0100
+Subject: [PATCH 4/7] hwrng: rockchip: eliminate some unnecessary
+ dereferences
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,7 +48,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250130-rk3588-trng-submission-v1-2-97ff76568e49@collabora.com>
+Message-Id: <20250130-rk3588-trng-submission-v1-4-97ff76568e49@collabora.com>
 References: <20250130-rk3588-trng-submission-v1-0-97ff76568e49@collabora.com>
 In-Reply-To: <20250130-rk3588-trng-submission-v1-0-97ff76568e49@collabora.com>
 To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
@@ -63,110 +64,44 @@ Cc: Sebastian Reichel <sebastian.reichel@collabora.com>,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
-The Rockchip RK3588 SoC has two hardware RNGs accessible to the
-non-secure world: an RNG in the Crypto IP, and a standalone RNG that is
-new to this SoC.
+Despite assigning a temporary variable the value of &pdev->dev early on
+in the probe function, the probe function then continues to use this
+construct when it could just use the local dev variable instead.
 
-Add a binding for this new standalone RNG.
-
-The RNG is capable of firing an interrupt when entropy is ready, but
-all known driver implementations choose to poll instead for performance
-reasons. Hence, make the interrupt optional, as it may disappear in
-future hardware revisions entirely and certainly isn't needed for the
-hardware to function.
-
-The reset is optional as well, as the RNG functions without an explicit
-reset. Rockchip's downstream driver does not use the reset at all,
-indicating that their engineers have deemed it unnecessary.
+Simplify this by using the local dev variable directly.
 
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- .../bindings/rng/rockchip,rk3588-rng.yaml          | 61 ++++++++++++++++++++++
- MAINTAINERS                                        |  2 +
- 2 files changed, 63 insertions(+)
+ drivers/char/hw_random/rockchip-rng.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml b/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..dff843fa4bf9d5704bbcd106398328588d80b02d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rng/rockchip,rk3588-rng.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip RK3588 TRNG
-+
-+description: True Random Number Generator on Rockchip RK3588 SoC
-+
-+maintainers:
-+  - Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,rk3588-rng
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: TRNG AHB clock
-+
-+  # Optional, not used by some driver implementations
-+  interrupts:
-+    maxItems: 1
-+
-+  # Optional, hardware works without explicit reset
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
-+    bus {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      rng@fe378000 {
-+        compatible = "rockchip,rk3588-rng";
-+        reg = <0x0 0xfe378000 0x0 0x200>;
-+        interrupts = <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH 0>;
-+        clocks = <&scmi_clk SCMI_HCLK_SECURE_NS>;
-+        resets = <&scmi_reset SCMI_SRST_H_TRNG_NS>;
-+        status = "disabled";
-+      };
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bc8ce7af3303f747e0ef028e5a7b29b0bbba99f4..7daf9bfeb0cb4e9e594b809012c7aa243b0558ae 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20420,8 +20420,10 @@ F:	include/uapi/linux/rkisp1-config.h
- ROCKCHIP RK3568 RANDOM NUMBER GENERATOR SUPPORT
- M:	Daniel Golle <daniel@makrotopia.org>
- M:	Aurelien Jarno <aurelien@aurel32.net>
-+M:	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/rng/rockchip,rk3568-rng.yaml
-+F:	Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
- F:	drivers/char/hw_random/rockchip-rng.c
+diff --git a/drivers/char/hw_random/rockchip-rng.c b/drivers/char/hw_random/rockchip-rng.c
+index b1b510087e5862b3b2ed97cefbf10620bcf9b020..082daea27e937e147195070454f9511a71c8c67e 100644
+--- a/drivers/char/hw_random/rockchip-rng.c
++++ b/drivers/char/hw_random/rockchip-rng.c
+@@ -148,7 +148,7 @@ static int rk_rng_probe(struct platform_device *pdev)
+ 		return dev_err_probe(dev, rk_rng->clk_num,
+ 				     "Failed to get clks property\n");
  
- ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+-	rst = devm_reset_control_array_get_exclusive(&pdev->dev);
++	rst = devm_reset_control_array_get_exclusive(dev);
+ 	if (IS_ERR(rst))
+ 		return dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset property\n");
+ 
+@@ -171,11 +171,11 @@ static int rk_rng_probe(struct platform_device *pdev)
+ 	pm_runtime_use_autosuspend(dev);
+ 	ret = devm_pm_runtime_enable(dev);
+ 	if (ret)
+-		return dev_err_probe(&pdev->dev, ret, "Runtime pm activation failed.\n");
++		return dev_err_probe(dev, ret, "Runtime pm activation failed.\n");
+ 
+ 	ret = devm_hwrng_register(dev, &rk_rng->rng);
+ 	if (ret)
+-		return dev_err_probe(&pdev->dev, ret, "Failed to register Rockchip hwrng\n");
++		return dev_err_probe(dev, ret, "Failed to register Rockchip hwrng\n");
+ 
+ 	return 0;
+ }
 
 -- 
 2.48.1
