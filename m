@@ -1,188 +1,170 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564511EB9F6
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 16:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C087B1DA5F;
+	Thu, 30 Jan 2025 16:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738255153; cv=none; b=Z485vc6bfoJG1DieUW9JOVRZ/agvlBnp5mcd1s3T9/rb2xwl/sdcbLFNSu5Zqx/Tzn4lE96X3Nf78BoLBR4ZMomzh2IzGRPgXnSBw4MiEl5bx9+mKek6uclmFwI0FMjyMmsXTw3QfKaKgVZ+iDniFTjCrB1yZYFt8dZnvBuhjI0=
+	t=1738255160; cv=none; b=ckcFqLv16c7TVZnv0Ljz8I1kXmyqOWtlN9dYanzKh0mkt1IWOJQ24shUZx4fkOBDhua8q0/MEK9FQKwq+RMQ8SJ9T6JD938WH3/bbdpPjlfKeHSFdHVOvwNE2cuKpazPtZK4rfIrW+1GYbDkoCAYi0XwwkbGInM8QS398iKC9Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738255153; c=relaxed/simple;
-	bh=a0SY6nA/mLvfu28CYEQk6nh2OCaBQfg8ugVjQnj+5+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NqCsz55ZgwtDNkfnxLsoh/lhKnoxXsmAv9a2ep0NZmcjhXY/qvYn1mdY/aN/xjQ9ZEjSpJVVcCEhYBp/oY8U6kO2muNy3ZO4rRpXYhLiVRZsRDtZCOBng734hotid+EyQwP1ATl7MR7NXWmolqFlYN/iSLwM8Rb73kCI4ZlCai8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=ThGiZdiB; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1738255160; c=relaxed/simple;
+	bh=0Isufwi/Vgl2B6yLxZbTuWN6WZZj84rWZAtmvqaHWIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g2EZ5VO3rPCFI3OYOCYWMWMq3DUSJT//QX2Vadlwxvoj6o8V9hj2txD+XFh+rbPJMK/+PHTEv6C4zXTFMbRDowj8jnPc1J7KG3h+CWgkypJk2LsT+Csobqg5V6p9mErIL66J7hpCy8B6JMs0wE4xWNNSot+5KZuYNH9VbcvdFM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IBUG4ShM; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="ThGiZdiB"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4679eacf25cso6463221cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:39:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1738255149; x=1738859949; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7gR+gcJSWzW3+W+SZ93l8bt249cUBhXPQQlRF6rreno=;
-        b=ThGiZdiBXZWnn8L1f4Q41d14chOnRM9nKQG+NdM0VSMmEvuQqaxEoJXgKUGQ6mTmZW
-         4Zn0sIWGXDmAx5QeognLBjbRL6AMBLkvPxrDj1SZO2Y0Z/UbwY0ZcySFVBsgsNwfY8vk
-         68TrTXHRxDXWGccVcfvIty8EmMCbbNjTDt/60s6Ptc3Q/jU/6rQh/2YCAslnftyVk708
-         pdNqQf4Xh3nIj5Yv0kBwbJyUWBkOX9RtRY56nwsZNYW2PFNGwcz9RSpnRF02ELtO/BIk
-         9Sn1x/AyoUgrS3XuJUfx6RZrZlBKRSf7HVkS8Gy5KIpYJ+9ju+mIY4NSLu+2zYJeGfCq
-         dE+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738255149; x=1738859949;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7gR+gcJSWzW3+W+SZ93l8bt249cUBhXPQQlRF6rreno=;
-        b=O8wujHFhjMCjeFggM9Wr2W3tVW3djDxLzUVHSJ0yA8YpOk3MYHH107FYsGIG5TuV0+
-         RZn/a6i1Ih7pr5HrrsedVVHvSZTcekXqQLKiNdI93w0QpgHXGlje0JMzNjJQpZtasOmO
-         myzNJD1FTijN7mw4OrNBEGmcsOV0rvVkQMSgEgI8MObyIdMdoizphFDtaP9ioa2vrs0+
-         vyrrklsLVeGBBgorl+IyZ0E56OABXEbk2ZmaBAtpmvlA2Gb2nNTcDunAv1Z7bx96gJz9
-         H3dflA15Crhm5nJ3o0PQ/UhgGVlK0lZtshEjI9A831JrgYyJKHdIVQu0T3GRqh1i3MYB
-         Bs+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXK7+wuv20bMAcQdd1m3rQlRHa24nFh5FxxOybVzuQsSj6uyQ7KDKN5IFJFa3EkWOxvH/KuskWb/lHF5vc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0e5kBpFS417XiPujPrnBfnmSRlWXv9faQvVD5Mpr2vIyV61tX
-	EmBZzAZft8q8dCQzLpVsaqKhZv95/f81OuRedhTLnqk/VsMLhEjmHP6NCxyF2KI=
-X-Gm-Gg: ASbGncsGLW9e8ygExBAQpei09trfjF5iwNW78H2CFX9Yu09a/ymLAfRqcIax9kJV7Fy
-	1POMlAn71wWUi8TnCCP3QdG/S89jRxDGhNGxR7XY26exPy0tyvZJELISgpcDzr+oJJqrjJPhhYS
-	tJUrVZdrofWQE9Ktaz/MAc77wFH61oxZOGo4LJ0jnd2JGrdy7WpBYrGE8Qhb1Lv7rQvkkUIpaiA
-	6jngWvxsXMvww4V3xxFHcbas4/DKQHDrFLnMukTpBf/xA8nwO5aYJ+tLD9yKE63DYVorF8/Rj09
-	DSZsjsPraB/KZg==
-X-Google-Smtp-Source: AGHT+IE9KPA5TooWOZcBOZ0Xae3DccM5mp1lvWQdBW03p7wzyAMbVCFPD0/VLHlLtVUiEH09HiZAWA==
-X-Received: by 2002:ac8:59d0:0:b0:467:76cc:622d with SMTP id d75a77b69052e-46fd0a13014mr119399411cf.11.1738255149014;
-        Thu, 30 Jan 2025 08:39:09 -0800 (PST)
-Received: from localhost ([2603:7000:c01:2716:cbb0:8ad0:a429:60f5])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-46fdf0a753csm8456831cf.11.2025.01.30.08.39.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 08:39:08 -0800 (PST)
-Date: Thu, 30 Jan 2025 11:39:04 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Waiman Long <llong@redhat.com>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, Tejun Heo <tj@kernel.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>, Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	Peter Hunt <pehunt@redhat.com>
-Subject: Re: [RFC PATCH] mm, memcg: introduce memory.high.throttle
-Message-ID: <20250130163904.GB1283@cmpxchg.org>
-References: <20250129191204.368199-1-longman@redhat.com>
- <Z5qLQ1o6cXbcvc0o@google.com>
- <366fd30f-033d-48d6-92b4-ac67c44d0d9b@redhat.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IBUG4ShM"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UFdQAe010027;
+	Thu, 30 Jan 2025 16:38:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=FqYKzo
+	UiU8AE96roYOs5tofbhVt4DgoDku8NwKj7qTg=; b=IBUG4ShMLT4KYKAw5ij2x+
+	jlQp6/oH/OVpUP4u9eR5l2vI4hj1bTW6cAPLBfavxcnM9JCq8CqhloZo0es8rIOn
+	Z47yVWc16hB60rGNn748QAm81u2Sg+UJEbq2VsTqgBYPzsbfVhmDRlCRh+9q7O19
+	VluYw0SX4f6QItLEm1TotSePoEkeKAWgA/O6EJ+Nfr6fLhV9Qot5Ms9qnDJXWJh3
+	YfbtuxJARcz02NG16GqKft+LHebCwO1j4eAhJ15t6Rc7QJ1vd2OH/7/OhHJGDmaY
+	KkiGu3Q6ih8StWgVVGp+5s1HQ+f7xMuuQIzwRopAId1pzieTg00kMZM/v9JyPf+Q
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gc8tr8g9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 16:38:30 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UGbbKF005418;
+	Thu, 30 Jan 2025 16:38:30 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gc8tr8g3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 16:38:30 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50UFAKH3012444;
+	Thu, 30 Jan 2025 16:38:29 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44danyf4e8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 16:38:29 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UGcP1s46006628
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jan 2025 16:38:25 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5012A20089;
+	Thu, 30 Jan 2025 16:38:25 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C265520088;
+	Thu, 30 Jan 2025 16:38:24 +0000 (GMT)
+Received: from [9.152.222.93] (unknown [9.152.222.93])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 30 Jan 2025 16:38:24 +0000 (GMT)
+Message-ID: <b0193d69-d328-432d-86af-54fac7cef711@linux.ibm.com>
+Date: Thu, 30 Jan 2025 17:38:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <366fd30f-033d-48d6-92b4-ac67c44d0d9b@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 26/39] unwind_user/sframe: Enable debugging in uaccess
+ regions
+To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <990b28ae7855b67c5e6d6385b9de78ffa336dd73.1737511963.git.jpoimboe@kernel.org>
+From: Jens Remus <jremus@linux.ibm.com>
+Content-Language: en-US
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <990b28ae7855b67c5e6d6385b9de78ffa336dd73.1737511963.git.jpoimboe@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: K_c2hM8ukamBh75YQApb_Rgur0BqSUJI
+X-Proofpoint-GUID: WtxoNUNAKifqK37qQW2DZUi8svSipZdq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-30_07,2025-01-30_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
+ mlxlogscore=959 clxscore=1015 priorityscore=1501 malwarescore=0
+ spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501300125
 
-On Thu, Jan 30, 2025 at 09:52:29AM -0500, Waiman Long wrote:
-> On 1/29/25 3:10 PM, Yosry Ahmed wrote:
-> > On Wed, Jan 29, 2025 at 02:12:04PM -0500, Waiman Long wrote:
-> >> Since commit 0e4b01df8659 ("mm, memcg: throttle allocators when failing
-> >> reclaim over memory.high"), the amount of allocator throttling had
-> >> increased substantially. As a result, it could be difficult for a
-> >> misbehaving application that consumes increasing amount of memory from
-> >> being OOM-killed if memory.high is set. Instead, the application may
-> >> just be crawling along holding close to the allowed memory.high memory
-> >> for the current memory cgroup for a very long time especially those
-> >> that do a lot of memcg charging and uncharging operations.
-> >>
-> >> This behavior makes the upstream Kubernetes community hesitate to
-> >> use memory.high. Instead, they use only memory.max for memory control
-> >> similar to what is being done for cgroup v1 [1].
-> >>
-> >> To allow better control of the amount of throttling and hence the
-> >> speed that a misbehving task can be OOM killed, a new single-value
-> >> memory.high.throttle control file is now added. The allowable range
-> >> is 0-32.  By default, it has a value of 0 which means maximum throttling
-> >> like before. Any non-zero positive value represents the corresponding
-> >> power of 2 reduction of throttling and makes OOM kills easier to happen.
-> >>
-> >> System administrators can now use this parameter to determine how easy
-> >> they want OOM kills to happen for applications that tend to consume
-> >> a lot of memory without the need to run a special userspace memory
-> >> management tool to monitor memory consumption when memory.high is set.
-> >>
-> >> Below are the test results of a simple program showing how different
-> >> values of memory.high.throttle can affect its run time (in secs) until
-> >> it gets OOM killed. This test program allocates pages from kernel
-> >> continuously. There are some run-to-run variations and the results
-> >> are just one possible set of samples.
-> >>
-> >>    # systemd-run -p MemoryHigh=10M -p MemoryMax=20M -p MemorySwapMax=10M \
-> >> 	--wait -t timeout 300 /tmp/mmap-oom
-> >>
-> >>    memory.high.throttle	service runtime
-> >>    --------------------	---------------
-> >>              0		    120.521
-> >>              1		    103.376
-> >>              2		     85.881
-> >>              3		     69.698
-> >>              4		     42.668
-> >>              5		     45.782
-> >>              6		     22.179
-> >>              7		      9.909
-> >>              8		      5.347
-> >>              9		      3.100
-> >>             10		      1.757
-> >>             11		      1.084
-> >>             12		      0.919
-> >>             13		      0.650
-> >>             14		      0.650
-> >>             15		      0.655
-> >>
-> >> [1] https://docs.google.com/document/d/1mY0MTT34P-Eyv5G1t_Pqs4OWyIH-cg9caRKWmqYlSbI/edit?tab=t.0
-> >>
-> >> Signed-off-by: Waiman Long <longman@redhat.com>
-> >> ---
-> >>   Documentation/admin-guide/cgroup-v2.rst | 16 ++++++++--
-> >>   include/linux/memcontrol.h              |  2 ++
-> >>   mm/memcontrol.c                         | 41 +++++++++++++++++++++++++
-> >>   3 files changed, 57 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-> >> index cb1b4e759b7e..df9410ad8b3b 100644
-> >> --- a/Documentation/admin-guide/cgroup-v2.rst
-> >> +++ b/Documentation/admin-guide/cgroup-v2.rst
-> >> @@ -1291,8 +1291,20 @@ PAGE_SIZE multiple when read back.
-> >>   	Going over the high limit never invokes the OOM killer and
-> >>   	under extreme conditions the limit may be breached. The high
-> >>   	limit should be used in scenarios where an external process
-> >> -	monitors the limited cgroup to alleviate heavy reclaim
-> >> -	pressure.
-> >> +	monitors the limited cgroup to alleviate heavy reclaim pressure
-> >> +	unless a high enough value is set in "memory.high.throttle".
-> >> +
-> >> +  memory.high.throttle
-> >> +	A read-write single value file which exists on non-root
-> >> +	cgroups.  The default is 0.
-> >> +
-> >> +	Memory usage throttle control.	This value controls the amount
-> >> +	of throttling that will be applied when memory consumption
-> >> +	exceeds the "memory.high" limit.  The larger the value is,
-> >> +	the smaller the amount of throttling will be and the easier an
-> >> +	offending application may get OOM killed.
-> > memory.high is supposed to never invoke the OOM killer (see above). It's
-> > unclear to me if you are referring to OOM kills from the kernel or
-> > userspace in the commit message. If the latter, I think it shouldn't be
-> > in kernel docs.
+On 22.01.2025 03:31, Josh Poimboeuf wrote:
+> Objtool warns about calling pr_debug() from uaccess-enabled regions, and
+> rightfully so.  Add a dbg_sec_uaccess() macro which temporarily disables
+> uaccess before doing the dynamic printk, and use that to add debug
+> messages throughout the uaccess-enabled regions.
 > 
-> I am sorry for not being clear. What I meant is that if an application 
-> is consuming more memory than what can be recovered by memory reclaim, 
-> it will reach memory.max faster, if set, and get OOM killed. Will 
-> clarify that in the next version.
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 
-You're not really supposed to use max and high in conjunction. One is
-for kernel OOM killing, the other for userspace OOM killing. That's
-what the documentation that you edited is trying to explain.
+> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
 
-What's the usecase you have in mind?
+> @@ -53,12 +53,15 @@ static __always_inline int __read_fde(struct sframe_section *sec,
+>   			      sizeof(struct sframe_fde), Efault);
+>   
+>   	ip = sec->sframe_start + fde->start_addr;
+> -	if (ip < sec->text_start || ip > sec->text_end)
+> +	if (ip < sec->text_start || ip > sec->text_end) {
+> +		dbg_sec_uaccess("bad fde num %d\n", fde_num);
+>   		return -EINVAL;
+> +	}
+>   
+>   	return 0;
+>   
+>   Efault:
+> +	dbg_sec_uaccess("fde %d usercopy failed\n", fde_num);
+>   	return -EFAULT;
+>   }
+
+Add a similar debug message for SFRame FDE user copy failures?
+
+diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+
+@@ -125,6 +125,7 @@ static __always_inline int __find_fde(struct sframe_section *sec,
+         return 0;
+
+  Efault:
++       dbg_sec_uaccess("fde usercopy failed\n");
+         return -EFAULT;
+  }
+
+
+Printing the IP is probably not an option due to security concerns?
+Printing the the CFA, FP, and RA offsets is too much traffic?  To debug
+issues on s390 I had to add tons of additional debug messages to make
+sense of what was actually going on.
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
