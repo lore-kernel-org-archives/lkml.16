@@ -1,164 +1,171 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5DE819
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8157819;
+	Thu, 30 Jan 2025 13:26:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738243575; cv=none; b=YOfIJyNtM0mZfVaJBHctDh8WClrOlz30dMhDnsxWFG8Dz/QT8K8kpmqhEjpSo1zKFxjZ9WkuoZDHStf96eMTYLDOV2K8OnW+AjtV+Y4dOcNDiWQSOGEhuPC/TzB8fFEsPascdqobeyEiTSet01Nw5EEqkT/c3XOMfxPWq+gY3B8=
+	t=1738243605; cv=none; b=ecl5nf5r3ppcWF7c0iDoWgSZJo/KSuMR3xQIdoidOx/kQMlWTC9HrXVhgbEMPQBh109uNh6uvi6i+uIpUaFzUrFQnJBI7h1gxfsdp7/aJYiswkDEiQf0juMMob0RTg8YA0y51vaPbUUHA6XlfZ8yD4VeTgr1uv88TYU3BGui+Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738243575; c=relaxed/simple;
-	bh=EluioHgTrDfBtlMLrqNjhpzUXx5fQlBJiL9K5UDjawM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L5BNOWyjrqGDJbfaCg+c+HlxZ8pJjAT2ruQo6xvi8v/rWcmdWvRo1/LBf1m9JgxVQ8FkXRXMh3JiRwetOciDJhKCu7I/ttwZ/iDlQZbeFKM3RvE980v/aU07h4STw7M9Hilp1TcZcj6rk6rk9Hqc7T9O6IeTo9M/xrxav1GhP08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5188c6f260cso252827e0c.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:26:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738243570; x=1738848370;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RcnCdea0Cg2xhZ905GiM0LEi2fn/A0TJy6vLZwAFU5g=;
-        b=wdaedNmSf0Rt9wvt2mDCDhnV55AFIj5ceDmDCG/ILHWAmRaO77WxUu/L+4gjmda2iM
-         /Zbsl8V3V4yRKeHcGqr3STpgZ9K+p3mSLg4UEvlDsLBNz9HvBCgUxByqoaizVf5UTKIG
-         A3sIYRsCRuV4PoGpPaxQ6rT7PYDfIrzuC445vkuDPzHVOnE7NCLG5lrCfV+VY2knxg7W
-         banvqync4LjruFmURBufLAFbYTY8gUq7yA3w9FyVHXgCoqhDfW63oNOvhxzIR0BpWnqy
-         Fw5zOddRlclHEVRwEwZ3shpU4uWiR5koAa3G2NfSOSb7XmdpbUzrDeOn8L0JwZ9a/N8H
-         64uw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9OR+zPCd2BDbn+uWtaLTOOx5wqYRtn5YLnColitgHyfCdH1c5eTzSopZ8/MEJ1DA/Y61y0wPHqTf11TQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIT33LsEAl6Z2yxOIYBpCbJYuACfmcRbgOGoeyN1dVSXMYMuEd
-	I+itxbo2sCoGvEO2PBK4/9Nmg3AqvOZ87roKrg0OgvLIn0eLeXrJvJyxmUMa
-X-Gm-Gg: ASbGncsZHwJbZm50GJF8EhD/dy/82fZQA+PT9ONCLKVAYwKqwv/EWnqHRoFhyueL0Op
-	WiCHPnfgH1behNM1Dj+0vvETc104KxJ8Gtvhr2DdvHWikdGQAwcB11hwHcQBzGYimodKgNXtQyL
-	Ak2AtbBVSYDFiNXMKwwOpIM9NgcGc0BxpZsgY3tKl/s+lzhQGZox6oJ15NYo+v+RCftKCq4WsNI
-	jqyQRMqwn6Ixjg69sYjcn/Fe9SQEoOkrlcOBdKjeBFzVDQju9EuN2Ahv51+e/Z6sZ/E8W5LdeNd
-	TVbk7+mmzzr6Eqt/+ALbgtLBF28nn7dmtZzmZ06DqnGeJxvQPZQmxg==
-X-Google-Smtp-Source: AGHT+IFJhGUl+mH+UbQuEUrHdBs2UYBaFFG1kvKDTgBjNtLbd+R1FCdr6SSr4mb87tz1meo8TZ0AKQ==
-X-Received: by 2002:a05:6122:32cb:b0:516:2833:1b8d with SMTP id 71dfb90a1353d-51e9e55db69mr6851377e0c.11.1738243570375;
-        Thu, 30 Jan 2025 05:26:10 -0800 (PST)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1d917c1sm183095e0c.43.2025.01.30.05.26.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 05:26:09 -0800 (PST)
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4affd0fb6adso291507137.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:26:09 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX+u1uKwFcxrYvfVpXi3n5HMaIZOij/GHy6zVhvZWRBaXnJtabmorfwPm40l0et5hdGVDnLIc6B42A4kG4=@vger.kernel.org
-X-Received: by 2002:a05:6102:2ad3:b0:4af:bb06:62d with SMTP id
- ada2fe7eead31-4b9a4f499c9mr6186530137.11.1738243569336; Thu, 30 Jan 2025
- 05:26:09 -0800 (PST)
+	s=arc-20240116; t=1738243605; c=relaxed/simple;
+	bh=o0W7CwYXiaMksx/uxQbxwSUNptgOd3iIBjTqvNBmsg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YPxQ2Gl6MEOXzIncwzC/EJitjuutehbn9q6TX2moxs9VpFbUmGLC0aLt5BWaRf8FDqx/GvAxtcF7X9A9UOhrUZUF+2zWWKHApN53yMJPEs8e25TpdECSrQMrXPEeEl5C5+jYXCehURsHk3nVU2pr4+ctoxQ/p6jDNbKuJgAHX0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BS0Gug+u; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GFKGpyDV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pomLn+gj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NuwFBNSP; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BS0Gug+u";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GFKGpyDV";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pomLn+gj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NuwFBNSP"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D0CFD1F38D;
+	Thu, 30 Jan 2025 13:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738243602; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0K2NSCqe89RUEievoFS2ztJqRbJIfGFt9yWV3cXB/As=;
+	b=BS0Gug+uEwSEU9IqZBdZ9XJYDBQ70oV8BsBRMMYDaXRQ/0RFGnzDWtD2LuIwqqSmcU5LA+
+	oC3pIvSr38LAf80zLm6YBC49gMUOgvLpsAnD0TP0rCwK/X577t0ZcK/9CKZnT/LaLBmn8q
+	qjeIcZw7PNZSzaY8b2pSz1MN4HgqF9U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738243602;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0K2NSCqe89RUEievoFS2ztJqRbJIfGFt9yWV3cXB/As=;
+	b=GFKGpyDVOFS+12QZu8hFUplofOuXdxFMGXIRa1Doh7TXZEYuSt0jfzmbZ53UgBjUUistQ6
+	UFfF5eyGq4FNwcCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=pomLn+gj;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=NuwFBNSP
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738243601; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0K2NSCqe89RUEievoFS2ztJqRbJIfGFt9yWV3cXB/As=;
+	b=pomLn+gjgAW2HRZtVo6RWMDxca0ZsuBe6fWb+B2HH4FZOp3YO8nSmFM14U8BWA0lPEBTiT
+	YHJGrZgqMNAWi4+DPDzbgQtCOAGeMSpnMlCjoHbMlSmBHu6mhmjCK7+po+gxnpWrgjBPk7
+	pTuH07ayXELM1ri9D5CXEJb+yqAXKH8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738243601;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0K2NSCqe89RUEievoFS2ztJqRbJIfGFt9yWV3cXB/As=;
+	b=NuwFBNSPjljpOPCsvUO6Rc1CLSQpz19vDqqSjj5T27VOR+vXpM52YRkkOOOIb9nR8tVWS0
+	Sc1uKbSof1an2TDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A1AEF1396E;
+	Thu, 30 Jan 2025 13:26:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id QCscJhF+m2dIXQAAD6G6ig
+	(envelope-from <tbogendoerfer@suse.de>); Thu, 30 Jan 2025 13:26:41 +0000
+Date: Thu, 30 Jan 2025 14:26:31 +0100
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Simon Horman
+ <horms@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net] gro_cells: Avoid packet re-ordering for cloned
+ skbs
+Message-ID: <20250130142631.55651270@samweis>
+In-Reply-To: <CANn89iKSrG40FKLpE3-qbftdXs9Goo61JfkmfXX_1=R5XV-=eQ@mail.gmail.com>
+References: <20250121115010.110053-1-tbogendoerfer@suse.de>
+	<3fe1299c-9aea-4d6a-b65b-6ac050769d6e@redhat.com>
+	<CANn89iLwOWvzZqN2VpUQ74a5BXRgvZH4_D2iesQBdnGWmZodcg@mail.gmail.com>
+	<de2d5f6e-9913-44c1-9f4e-3e274b215ebf@redhat.com>
+	<CANn89iJODT0+qe678jOfs4ssy10cNXg5ZsYbvgHKDYyZ6q_rgg@mail.gmail.com>
+	<20250129123129.0c102586@samweis>
+	<20250129125700.2337ecdb@samweis>
+	<CANn89iKSrG40FKLpE3-qbftdXs9Goo61JfkmfXX_1=R5XV-=eQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
- <07cf896e-adf8-414f-a629-a808fc26014a@oracle.com> <qdq4k6323orqifgzo7pbg5vakezr3gptfdehghxsyfrhc4kwvb@d4fxbwcl4gjm>
- <CAJ-ks9=U4PZv4NgyH8B7SbHkecGLy+M=G639hSTv-hnPySqk6w@mail.gmail.com>
- <xf3445vgszstqfwycf5wc5owhnifxb3mny5xjjaihghqgnozmd@3h7hnifir4vu>
- <CAMuHMdVcuhzO57Qn-kcUJDM=HmkSwuheyNJPF1tx+gxRKnKZXA@mail.gmail.com> <mp6lnt3stfnfd74rwaza5xffh2ya5gylqnxotgrnqaqo3eh2zl@5g257jeiugfn>
-In-Reply-To: <mp6lnt3stfnfd74rwaza5xffh2ya5gylqnxotgrnqaqo3eh2zl@5g257jeiugfn>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 Jan 2025 14:25:57 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWDRLi8AE0PgfAnXundbS0hyTyovUH7yScrY7GtmYYPOQ@mail.gmail.com>
-X-Gm-Features: AWEUYZn0su9wB3Rua7xZlN_jsLurJgHhePP-DQxZFLycHjingwrtS3E5xZdT-fo
-Message-ID: <CAMuHMdWDRLi8AE0PgfAnXundbS0hyTyovUH7yScrY7GtmYYPOQ@mail.gmail.com>
-Subject: Re: [PATCH] xarray: port tests to kunit
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: Sidhartha Kumar <sidhartha.kumar@oracle.com>, akpm@linux-foundation.org, 
-	christophe.leroy@csgroup.eu, justinstitt@google.com, 
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
-	linuxppc-dev@lists.ozlabs.org, llvm@lists.linux.dev, maddy@linux.ibm.com, 
-	morbo@google.com, mpe@ellerman.id.au, nathan@kernel.org, naveen@kernel.org, 
-	ndesaulniers@google.com, npiggin@gmail.com, 
-	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: D0CFD1F38D
+X-Spam-Score: -4.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	URIBL_BLOCKED(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hi Liam,
+On Wed, 29 Jan 2025 13:06:49 +0100
+Eric Dumazet <edumazet@google.com> wrote:
 
-On Thu, 30 Jan 2025 at 13:52, Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
-> * Geert Uytterhoeven <geert@linux-m68k.org> [250130 03:21]:
-> > On Wed, 29 Jan 2025 at 23:26, Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
-> > > I've never used the kunit testing of xarray and have used the userspace
-> > > testing instead, so I can't speak to the obscure invocation as both
-> > > commands seem insanely long and obscure to me.
-> >
-> > The long and obscure command line is a red herring: a simple
-> > "modprobe test_xarray" is all it takes...
->
-> That command worked before too...
+> "TCP Sender in namespace A -> ip6_tunnel -> ipvlan -> ipvlan ->
+> ip6_tunnel -> TCP receiver"
+> or
+> " TCP Sender -> ip6_tunnel -> ipvlan -> ipvlan -> ip6_tunnel -> TCP Recei=
+ver"
+>=20
+> In this case, GRO in ip6_tunnel is not needed at all, since proper TSO
+> packets should already be cooked by TCP sender and be carried
+> to the receiver as plain GRO packets.
+>=20
+> gro_cells was added at a time GRO layer was only  supporting native
+> encapsulations : IPv4 + TCP or IPv6 + TCP.
+>=20
+> Nowadays, GRO supports encapsulated traffic just fine, same for TSO
+> packets encapsulated in ip6_tunnel
+>=20
+> Maybe it is time to remove gro_cells from net/ipv6/ip6_tunnel.c
+>=20
+> diff --git a/net/ipv6/ip6_tunnel.c b/net/ipv6/ip6_tunnel.c
+> index 48fd53b9897265338086136e96ea8e8c6ec3cac..b91c253dc4f1998f8df74251a9=
+3e29d00c03db5
+> 100644
+> --- a/net/ipv6/ip6_tunnel.c
+> +++ b/net/ipv6/ip6_tunnel.c
+> [...]
 
-Exactly, great!
+this patch works for my test case. So the same thing should be probably
+done for net/ipv4/ip_tunnel.c and net/ipv6/ip6_gre.c, too ?
 
-> > > You should look at the userspace testing (that this broke) as it has
-> > > been really useful in certain scenarios.
-> >
-> > BTW, how do I even build tools/testing/radix-tree?
-> > "make tools/help" doesn't show the radix-tree test.
-> > "make tools/all" doesn't seem to try to build it.
-> > Same for "make kselftest-all".
->
-> make
+Thomas.
 
-Where?
-
-> Or look at the make file and stop guessing.  Considering how difficult
-
-There is no Makefile referencing tools/testing/radix-tree or the
-radix-tree subdir. That's why I asked...
-
-Oh, I am supposed to run make in tools/testing/radix-tree/?
-What a surprise!
-
-Which is a pain when building in a separate output directory, as you
-cannot just do "make -C tools/testing/radix-tree" there, but have to
-type the full "make -C tools/testing/radix-tree O=..." (and optionally
-ARCH=... and CROSS_COMPILE=...; oh wait, these are ignored :-( in the
-source directory instead...
-
-If these tests are not integrated into the normal build system (see
-also [1]), I am not so surprised the auto-builders don't build them,
-and breakages are introduced...
-
-> it is to get m68k to build, you should probably know how to read a
-> makefile.
-
-Like all other kernel cross-compilation? Usually you don't even have
-to know where your cross-compiler is living:
-
-    make ARCH=m68k
-
-> > When trying the above, and ignoring failures due to missing packages
-> > on my host:
-> >   - there are several weird build errors,
-> >   - this doesn't play well with O=,
-> >   - lots of scary warnings when building for 32-bit,
-> >   - ...
-> >
-> > At least the kunit tests build (and run[1] ;-) most of the time...
->
-> Do they?  How about you break something in xarray and then try to boot
-> the kunit, or try to boot to load that module.
-
-If you break the kernel beyond the point of booting, you can indeed
-not run any test modules...
-
-Which does _not_ mean the userspace tests are not useful, and that I
-approve breaking the userspace tests...
-
-[1] https://lore.kernel.org/all/CAK7LNASdA+5_pdTjr1dY-cKGSDq804Huc_CX_8-Gg+ypFCmajQ@mail.gmail.com/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+SUSE Software Solutions Germany GmbH
+HRB 36809 (AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Ivo Totev, Andrew McDonald, Werner Knoblich
