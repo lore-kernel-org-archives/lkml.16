@@ -1,98 +1,176 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888321482E1;
-	Thu, 30 Jan 2025 21:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7CD1482E1;
+	Thu, 30 Jan 2025 21:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738271603; cv=none; b=bJS158E5Uq3Zkfud984c0V5GWIzI8iDWXAvINHM94m+aq3ilzqI04xddp9I0WXgYhNKICiscEO7nZE+D+iifvdF8nS2R40Ss3iIzxTjF+o214NG3WppmxiEJLq/UF2/CiWuQBQSevKtCcoX6Hn0bHHczAB3dZ6Cd3fTfv/cMTag=
+	t=1738271674; cv=none; b=RvzEbwH+39bf01qWjvB6UVIHGAk0i3cdTRaiY+5zF93eDcUEwOepdJfG9EbGc1amRRf7l6t39fYt2bsRJHBSXHU4Gxq1KoXV2NrG2hPOUaNPNZ5VRQV05rlDOT+3zEsJgznZtyEtnn2Azo/K+UcgLDJBjaC0joRce7qA2GnpgPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738271603; c=relaxed/simple;
-	bh=GX4xYuXDevv2ccW6nS1G33S+5+WkoXuAQbeugMn5myE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IE91PSLBwln+L1ARQCQc8EmDQPH0DnfoLoHMar4c5VVSjlhffAKg2OXruyZtuKOlTwPCFi3/bhiTVA1/RqsO0iAgHazW1/bz3ZUF2MBUNkoBT2wOuucNRilefUPizfZO+F0+tSGLxjaXez3g25ecP3bpBJHBpDT6EHbSise8Z3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=Te2avAFI; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1738271674; c=relaxed/simple;
+	bh=+2T0hd3zXQIgerMh8oTTU/0M6aj16vS3vzSpNL9Lt0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EgapdOspdjJ2/hT3/IkkAyZAlKz0k+mYzbro38G0N5shiSBS1soKQipg5kBhTHq4PXC8/LBQu8wURDezrBtW9QOLTwjd54ax4EkCSJfxgriww4FJbjU4GD486N20alqXZB8EJpoxS3O43wKpbpAY5ZsTX3o5DqM0u+vSomZ11Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ROdzVAGb; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Te2avAFI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=GX4xYuXDevv2ccW6nS1G33S+5+WkoXuAQbeugMn5myE=;
-	t=1738271601; x=1739481201; b=Te2avAFIgSoX8OnHsQucu9+phAds/sxTDmVLcfK5x42E2+F
-	mYlQQdiH90SdYWBPO7oN8Y/CQLXXyLPM5WRI0IEaGJPwon/AxGfpDtdQ74TBD+vXSk0/fjRsgS4Kw
-	PciRrtR0DM0IG2NCylscrgRt97b426Zm318kcXEGIXRuALaikkSDiHweE1DXQvYakToplh9LLnNef
-	f7LaOEHvGnOzbT/NUdoRnRMzw/DkmynWMaT7q+XSCxxsynxEloEStZD5go2PBkfFhC+90W2Dx2Pw+
-	Tmmlm52caJlAS83YvT8/+bNMehEarLt+CHLAVx1X9TjLyGwb59URF1ZY/N27CNfA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tdbqd-0000000FKUL-2hHg;
-	Thu, 30 Jan 2025 22:13:15 +0100
-Message-ID: <49fe46c6a158873cdc6593b0d5630b62a59ed059.camel@sipsolutions.net>
-Subject: Re: [lvc-project] [PATCH] wifi: nl80211: override all other flags
- if MONITOR_FLAG_COOK_FRAMES is set
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Fedor Pchelkin <pchelkin@ispras.ru>
-Cc: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>, 
-	lvc-project@linuxtesting.org, Michael Wu <flamingice@sourmilk.net>, 
-	linux-wireless@vger.kernel.org, "John W. Linville"
- <linville@tuxdriver.com>, 	linux-kernel@vger.kernel.org, 
-	syzbot+2e5c1e55b9e5c28a3da7@syzkaller.appspotmail.com
-Date: Thu, 30 Jan 2025 22:13:14 +0100
-In-Reply-To: <fhgill32gd3ugmd23oxnyvvqqfd3feu4zv3ecrkubeyqhwnb2h@pkflwiezmsp2>
-References: <20250130123432.4534-1-v.shevtsov@mt-integration.ru>
-	 <14c5edc71a74049c49d51960249b0aefc77208be.camel@sipsolutions.net>
-	 <fhgill32gd3ugmd23oxnyvvqqfd3feu4zv3ecrkubeyqhwnb2h@pkflwiezmsp2>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROdzVAGb"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7b6f8524f23so161989985a.2;
+        Thu, 30 Jan 2025 13:14:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738271671; x=1738876471; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=3WWG1ge772v80hApUsKf1Atr8Hoo4w8n5tFfU+25uuw=;
+        b=ROdzVAGbkz4TqzCoEQj4tRpWMnGEVb/K7HPM45LaEF74NS5M8ffbwcI+62muDtHGWJ
+         a+8HmzuG2f0b1KAkZ6gzHbGu55w2zvaCYyUHyWQMEPm4l6Vq+4zSkpWnh04LkAIuq2aZ
+         Q6Bk+SfE62Q5NGKMPTKPIb3VA4vnxZSDHktZjcG5J45YYI3YOA55YuNfYe7U5cbUnh36
+         epiEUSjxF11buqkty326BHhHp0XVERWxwQcOboCbqLReBRvOEe8qJktOPZuFsva956ub
+         LS3I0SyTx4fLYYyASIt9W6L7T97nXu11D69SCInJJYm2Q2cE3IbU4o6h8hqkftWlSNaH
+         1CRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738271671; x=1738876471;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3WWG1ge772v80hApUsKf1Atr8Hoo4w8n5tFfU+25uuw=;
+        b=n+WbXpgq450QWQXoeLzFKsNOBJAlcazoltAtsxq/xiylzJHUnz2i8KLFqKHo4VfuQ0
+         GDt5hLzdnmbbZUiJcDKUt+GYkTercJAVBhQh5ONKfvaDl2l2i6DuTMnsLKMX1+ttBeei
+         UJFyp96bm8bFvyQK8oK9iuhTtbNqxL9sZij47MZle7e7GPRKVmYcYiZ0KbjarcdFQRr7
+         EKomj0jGEU7StEAeqvcog5aS3nMQxR0ur1GNsC/vQ+6VZiwQM4n0C9u1/SLumTNIXs/9
+         rJ7DYletv8ASIfe0Jzc6V3nSyqDFzmLMrLdr9bk1Fs9iT0udXiM6D6khHbpNhZzOzgvi
+         jjKg==
+X-Forwarded-Encrypted: i=1; AJvYcCXYVyBuBvmosyAxcmAHBYT2+lo2oystgEtWejIlWUjjUvxLlw8qVG9AByJBHmN3zYPGzoUo3qzk7KXGDRM=@vger.kernel.org, AJvYcCXw06sYuM687ZVOpVgeWDjZIenXZQT6SSLcXSHb7wJYsCAM3jWYu9mkKduMt/+QBlzzPhFRzziZpGL4slDhsCo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKuCa7IrSA8WngT2QSPJkA5WIE2yacoKzlaO8swIt2G35YzywT
+	Hl9K+QTrWBBDieRSNJrGn8qXN4AvQJ7xEOfx8xUcCGlD5BljHEW9
+X-Gm-Gg: ASbGncvWjAxS4MCncDrpZjoFz6IMN1MyNigAPnvSOh97zGrYHCk+M64DFTUBMRaDius
+	Q959chHjRwvLvdgMYp0cLIYjpZJZQFjx/RXv75KS15JftG4AzeV1tbZvD9hZvi9R1pyJrdl4ulg
+	6B+1Z9wUVtM96oqlLCHPa8dQD9wTdMy89kHvLXl94rmC8R/jHx85xCx5ZfyNNmwDHLujNfL6szu
+	OrqrP6vTnYF5f9NTOaUtJnDMbEsx6l0rZrDVUCWkGLl579gmjVyYAIc42FtwrYn3GF6cI8kO/Ff
+	mb8GZoUS0hcbrdyN3ByWUTIQiTSjar7sa+bAdgvWfyVCun0DAhdWQDwd0Y7QpLGHXdDJqzeYlwi
+	ztpH5UA==
+X-Google-Smtp-Source: AGHT+IFruJj7llGRMLC43V8G8nvyRf9Wo/GtrJAKSUVdJVIdbOELhLI6ZGSnYhEGEaeILNThpImaHg==
+X-Received: by 2002:a05:620a:1725:b0:7b6:d23a:be39 with SMTP id af79cd13be357-7bffcd9b690mr1302934285a.44.1738271670957;
+        Thu, 30 Jan 2025 13:14:30 -0800 (PST)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a90d433sm111711185a.109.2025.01.30.13.14.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 13:14:30 -0800 (PST)
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D2B441200066;
+	Thu, 30 Jan 2025 16:14:29 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Thu, 30 Jan 2025 16:14:29 -0500
+X-ME-Sender: <xms:teubZ-Bq44c_p_Kn7SjYW-SkF08kZgWy1VKcHm_jFlDBwQe7f92yPg>
+    <xme:teubZ4jdTzyYoyNx9MIBvlylrA2DWAtcbzSyZK9hg3Uk3dv3XFnCmykMyujFE9Uu7
+    uDRze5NJx4ASfSYiQ>
+X-ME-Received: <xmr:teubZxnbyY-zRB11NcDlYbfzzZB7F648esRnADGaqm9Xqc1j5o54Xs5BIB0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeikeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvve
+    fukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepuehoqhhunhcuhfgvnhhguceo
+    sghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpedtge
+    ehleevffdujeffgedvlefghffhleekieeifeegveetjedvgeevueffieehhfenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvg
+    hsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheeh
+    hedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+    dpnhgspghrtghpthhtohepudeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeht
+    rhhinhhtrggvohhithhoghgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepphgvthgvrh
+    iisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepmhhinhhgohesrhgvughhrght
+    rdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hlohhnghhmrghnsehrvgguhhgrthdrtghomhdprhgtphhtthhopehojhgvuggrsehkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtoh
+    hmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghj
+    ohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:teubZ8wruoEb55PGaCI_EaJEZfwtx65tC8Cj8mjxAgr3TszXtDkX2w>
+    <xmx:teubZzSy8QOXwKfkHZDBG0Giv2-2LolhKx-x2U0Q_QLBj9rIotJb1w>
+    <xmx:teubZ3Y02rQoOFrPdArZG9zoNpJZidHQ3iCFrtlkiEqDqCVtuJ0-Zg>
+    <xmx:teubZ8Trby-4JOUHJvh-dnEJ19irs0kbW7-kWb_p_V7N1DrsmEuJ_A>
+    <xmx:teubZ1BH2hn9GBxIP_Pgc01iqHSfJVyus9JOYtqcLxYtUYLrYCwnbI1P>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 30 Jan 2025 16:14:29 -0500 (EST)
+Date: Thu, 30 Jan 2025 13:13:42 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+	longman@redhat.com, ojeda@kernel.org, alex.gaynor@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] rust: sync: create the `get_mut()` function
+Message-ID: <Z5vrhpp9Idc3tiUy@boqun-archlinux>
+References: <20250130185138.200993-1-trintaeoitogc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250130185138.200993-1-trintaeoitogc@gmail.com>
 
-On Thu, 2025-01-30 at 22:23 +0300, Fedor Pchelkin wrote:
->=20
-> Do you suggest rejecting to set MONITOR_FLAG_COOK_FRAMES overall?
+Hi Guilherme,
 
-No and yes :)
+Thanks for the patch. First I would prefer the title being:
 
-No for the context of this patch. Yes in general.
+	rust: sync: lock: Add Lock::get_mut()
 
-> Wouldn't it break existing userspace, especially in context of systems
-> running old stable kernels where the patch is also needed?
->=20
-> There is still some usage of this flag in hostap [1].
+"create" is not a good word to use here, and the parentheses after
+"get_mut" already says it's a function.
 
-Theoretically, but I just commented on that here:
+On Thu, Jan 30, 2025 at 03:51:38PM -0300, Guilherme Giacomo Simoes wrote:
+> Create a `get_mut()` function that receive a mutable instance of Lock,
+> and return a mutable reference to data because if the instance is
+> mutable, the rust compiler guarantee the access control.
+> 
 
-https://lore.kernel.org/r/a49e58998553c45953a30243ad1957c06ce6db8c.camel@si=
-psolutions.net
+This commit log doesn't include "why we need this", so please add the
+reason or the usage of this function, maybe you or someone need it
+because of some initialization/setup code after creating a lock
+protected object? Moreover...
 
-tl;dr: only ancient hostapd versions will actually _use_ it, and they
-have to fall into a relatively narrow range (April 2009 - Dec 2011.)
+> Suggested-by: Björn Roy Baron <bjorn3_gh@protonmail.com>
+> Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+> ---
+>  rust/kernel/sync/lock.rs | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
+> index eb80048e0110..3f9d78bcb37c 100644
+> --- a/rust/kernel/sync/lock.rs
+> +++ b/rust/kernel/sync/lock.rs
+> @@ -140,6 +140,12 @@ pub fn new(t: T, name: &'static CStr, key: &'static LockClassKey) -> impl PinIni
+>              }),
+>          })
+>      }
+> +
+> +    /// Get a mutable reference to data
 
-> Or your suggestion is to explicitly reject setting MONITOR_FLAG_COOK_FRAM=
-ES
-> only when it is passed combined with some other flags which it is
-> incompatible with?
+... please provide an example of the usage in the doc.
 
-Yes.
+> +    pub fn get_mut(&mut self) -> &mut T {
+> +        // SAFETY: the caller must guarantee that the instance is only used in one place
 
-> Btw, the fragment [2] says the cooked flag overrides the other ones.
-> But it was written a long time ago so many things have changed I guess.
+SAFETY comments should explain why it's safe, here it's phrased like a
+requirement, maybe something like:
 
-Indeed, that doesn't really make sense (certainly not any longer.)
+    // SAFETY: `&mut self` guarantees the exclusive access to the
+    // underlying data, therefore it's safe to reborrow the inner data.
 
-> [1]: https://w1.fi/cgit/hostap/tree/src/drivers/driver_nl80211.c#n6209
+Regards,
+Boqun
 
-And that was almost certainly the only user that ever existed, and can
-only set the flag by itself.
-
-johannes
+> +        unsafe { &mut *self.data.get() }
+> +    }
+>  }
+>  
+>  impl<B: Backend> Lock<(), B> {
+> -- 
+> 2.34.1
+> 
