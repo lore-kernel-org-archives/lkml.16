@@ -1,100 +1,132 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E893181ACA;
-	Thu, 30 Jan 2025 05:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF35681ACA;
+	Thu, 30 Jan 2025 05:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738214150; cv=none; b=W8dXszMAWqjTeCho1iLVf0hgfJfmRMZiDt5q56ZZjTI33JIx+HA+0qI94tdjKFbG4UAMawutXl54HENADpNhPHV0ll4iH3bSNPGugc6mjlxTC05Hjv4b9pJ1rVi2bLsf5K+C7z6a2SoMRsvOGY62dzlczSWYsOvv2hRoiIsrAok=
+	t=1738214181; cv=none; b=sAGGWc8yKKd1JES/5Y4gooIlUOjp9zDdWGR2YW/4vx80u9oymg7966B2QAvrXbVXoaVwx4EIm0MsGkUIOrP+BLegWPeZK/OU5a2YcJdVKlfxc1AIPzI7y2Sj7eTezjmvWyxOorCirS1Ct9g/Rgy6L86h2Lk67YotAYZFh+iHhnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738214150; c=relaxed/simple;
-	bh=SE/KwL0j+ef0TUqsyHNsBolEqe0zfL5aNoFxWAY2zt4=;
+	s=arc-20240116; t=1738214181; c=relaxed/simple;
+	bh=cLUpj3kV03tlAWcGGhPSQJcKBlfouIcZLliSR9dhHmY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fzTPonZCmWkqVEmbDchQqOe5FINj0fUpg/W7oOkojHh9gm7dpI26sQFKe4wfc7j3qUtvdsnAg/0HWjWZrm788Lc9XfAP17mnpK7BBzlkwd8iM3kjndVMJctwcYIq79xttAuk6OMUv17JdUUcwhPPmRzhgKJHz4i8WAYoQnI5JmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KjQ55SdQ; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XWgS6Rt/gz1DxOENAodwsuXFEdjwF3EdxW8dhNQsSrOguFeXbMmR/M07vu66ru4/JjQBAGR9sm41JQXOPhUmk+8/uVLGqL/mW36V+syw5oPDXP3WNlBpAIGgBmtzqB/UYhvxwbOUW7hoEJWiqioeViT5QG5gosMpkuzvrAHsJqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOoQIMqj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KjQ55SdQ"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-216634dd574so3991845ad.2;
-        Wed, 29 Jan 2025 21:15:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738214148; x=1738818948; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EyZOrDgca8ymdV1Sbyt/NSpuKO9GaZuP+6NDaC04/a0=;
-        b=KjQ55SdQb2MnBPlB/F8MaYWJGNDMPq8tU7e8bAerIv5vexQhn8Jm0bzxsy89k5It36
-         RgNpFO1OkDOtNm3rl284QccLcyk6WQi4kotkypeXLPOFC8g4Rrg+VPwkLHCr3fvDJ+m/
-         UFZ3lNcIdMbXbL0kK1eM/Y53vPyLUJRKFOoLbSDZclUU9LqNv9oQ1Lb5f9OcoSnyAcd4
-         eilOsfmN69DbOQrbnzwc2T9mMY97YuMIcLCrejErfaN8BEZBbuQrewXCJF5BBSMASTAb
-         XdEISg+0xx3KtYw5xdzVv9c7f2BT6bnrOAU/wiubq25FNeAqr5qMmVNhRJiBMLaJHX/Q
-         zyHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738214148; x=1738818948;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EyZOrDgca8ymdV1Sbyt/NSpuKO9GaZuP+6NDaC04/a0=;
-        b=ITmOLnAwXmOeYtG5YqzP/9JLc08vvaTpeJok4R+5sgrcmt0rlpIw1EidZyu17LP03Q
-         c0UT7QDV1wMZP49ffL8AWSMeramY7jyxpDpcq7EDU2bdVoO2LzKjTfGiga+ntLHjji7D
-         2ZAg26r/ZOggqtDo7gSXYiG7RZpkyNPV5HzS5RZ3iKKCG885I8TGkUS+hdmwuax1tsTp
-         wRJ5b71b2Kxw9j8/cZ4w/6WNdsQuc1xLTftjRrSgQB9T1Sa1E/nREajqSE0jls1pHLGR
-         CiEX11glF8NZlUOnTENTp+rKsTgjdHxDR/5Zim6woGGNJTVgzU5zUKsMjEd+vBAKJkUe
-         DL1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUeUlwoWSWvCy7Dq3sFCK8IAhGBkUuZnBkoC6pw/kROy88OnqxNfEQd7o6wYG043SKokCIcj1xxHDiCsA==@vger.kernel.org, AJvYcCXQUZxjaayWshRmRZA4c5SMCl+qVBnTh+6Tr56/N7TJPi5b6tyX58dsaMZHS6fU5VHQncwBh+VUf23ZTSmo@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqRV5eCOO9TpPUya/Vl7B2QXRwJRUYcNKf+x1p+CcuXsFDVM/R
-	BJgU8Z++ati9/1ykFQc65d8SI9qG/6CSqVJrypEwR5YjhL0wgYnx
-X-Gm-Gg: ASbGncvGxznphxC+66soOGQzpu2O0ciFer6PYEiIkuWik7yeeb56SshfNU0mfXUTiZJ
-	afLLGl/Fcd6l4v/dUvIX60MqW7J2Ka3kQ49JO79U3q9YeswuAGxU0uUhDhN1/h347tsYzLnAzvt
-	j+oBUz39KfYVGD5zFHI8I/g1pekueBQzYAA9uoRMGUyyUfZ+IDp7r682XK5E9OXl6ivOFbrhtzl
-	0wtrbCYs13hpVr5UD3rTfuiLViRCqZkYLOiomAMqsKd7qyl8V5xMimwM6xtsuZTh9zI2SaMIo3c
-	c9OI4J/OQ7Ozw8dRaH3Fv8rXLtZ3
-X-Google-Smtp-Source: AGHT+IEL0ls6gcLy3zfOoWxfpZPRmkyOpzMU3WCR1lUIdfs6a6adc5+9EGnCchG+sBcdUU/kfAN0og==
-X-Received: by 2002:a05:6a21:7894:b0:1e1:a716:316a with SMTP id adf61e73a8af0-1ed7a4c0ad4mr7781617637.10.1738214148088;
-        Wed, 29 Jan 2025 21:15:48 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69ce6dfsm446293b3a.154.2025.01.29.21.15.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 21:15:47 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Wed, 29 Jan 2025 21:15:46 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Atharva Tiwari <evepolonium@gmail.com>
-Cc: Aun-Ali Zaidi <admin@kodeit.net>, Henrik Rydberg <rydberg@bitmath.org>,
-	Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v5] hwmon: Add T2 Mac fan control support in applesmc
- driver
-Message-ID: <a77c0e83-8be0-4ad6-9900-a5e9d63c1323@roeck-us.net>
-References: <20250120183343.3494-1-evepolonium@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOoQIMqj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F49DC4CED2;
+	Thu, 30 Jan 2025 05:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738214180;
+	bh=cLUpj3kV03tlAWcGGhPSQJcKBlfouIcZLliSR9dhHmY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UOoQIMqj4iYcRGiPSJxynhAC2g158QewZHPFf5mpBRA8HI5G7KruT6K1WbTrd75qp
+	 aHaFdOki9RCYDRu0Xte5MLrIVEqtkv7ihV0uqG9KRQllqS9nCTv2W1ublhL4kS7REZ
+	 uaM//aLfOe/cC5lmpM7Z0+mvyjEki4NPJK00lyqGKL2UrzhuhzbyiSEEmVm4SsWNCF
+	 Um1BmKo97xI0NhTE1Ey5L1yUZSdxPR5YgRAOhUnoMW8C9tYbzg4wPyd7DzfThVG8BH
+	 SjzRf8AusjZOnen0V35YLpXsJyAvzAEaCi48L1HgCJBDyVRi59GOt0xnR/gObCmdn4
+	 cpqakdna72iNQ==
+Date: Wed, 29 Jan 2025 21:16:18 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>,
+	Atish Patra <atishp@rivosinc.com>, Leo Yan <leo.yan@arm.com>,
+	Beeman Strong <beeman@rivosinc.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+Message-ID: <Z5sLIiU7D6GwpWY1@google.com>
+References: <20250109222109.567031-5-irogers@google.com>
+ <Z4F3qxFaYnMTtPw7@google.com>
+ <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
+ <Z4WNT_UX9eMD_txf@google.com>
+ <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
+ <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
+ <Z4f3fDXemAMpBNMS@google.com>
+ <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
+ <Z5qjwRG5jX9zAGtf@google.com>
+ <CAP-5=fV4Q-J+Coybk5Uw=Xpx9sm5MG=2b-fvRLX14K+ZJcmz5Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250120183343.3494-1-evepolonium@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fV4Q-J+Coybk5Uw=Xpx9sm5MG=2b-fvRLX14K+ZJcmz5Q@mail.gmail.com>
 
-On Tue, Jan 21, 2025 at 12:03:37AM +0530, Atharva Tiwari wrote:
-> This patch adds support for fan control on T2 Macs in the applesmc driver.
-> It introduces functions to handle floating-point fan speed values
-> (which are required by t2 chips).
-> The fan speed reading and writing are updated to
-> support both integer and floating-point values.
-> The fan manual control is also updated to handle T2 Mac-specific keys.
+On Wed, Jan 29, 2025 at 05:16:58PM -0800, Ian Rogers wrote:
+> On Wed, Jan 29, 2025 at 1:55 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > On Wed, Jan 15, 2025 at 01:20:32PM -0800, Ian Rogers wrote:
+> > > On Wed, Jan 15, 2025 at 9:59 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > I think the behavior should be:
+> > > >
+> > > >   cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > >   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > >   cpu_cycles -> no legacy -> sysfs or json
+> > > >   cpu/cycles/ -> sysfs or json
+> > > >   cpu/cpu-cycles/ -> sysfs or json
+> > >
+> > > So I disagree as if you add a PMU to an event name the encoding
+> > > shouldn't change:
+> > > 1) This historically was perf's behavior.
+> >
+> > Well.. I'm not sure about the history.  I believe the logic I said above
+> > is the historic and (I think) right behavior.
 > 
-> Guenter Roeck asked "Does this limit still apply?"
-> so yes the limit still applies.
+> You're wrong as you are describing the behavior post:
+> https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
+> commit a24d9d9dc096fc0d0bd85302c9a4fe4fe3b1107b from Nov 2022, but
+> somehow without legacy event fall backs which Intel added with a PMU
+> for hybrid.
 > 
+> The behavior in this patch series is best for RISC-V, presumably ARM
+> (particularly for Apple M? CPUs), carries ARM and Intel's tags,
+> implements the behavior Arnaldo asked for, and solves the
+> inconsistency that I think is fundamentally wrong in the tool that PMU
+> names shouldn't matter on an event name (an inconsistency my past
+> fixes introduced). It is also part of solving other problems:
+> https://lore.kernel.org/linux-perf-users/20250127-counter_delegation-v3-0-64894d7e16d5@rivosinc.com/
 
-I just learned that this series originates from [1], that it should
-not be submitted on its own, and, worse, that it does not add T2 support
-without other patches which have not been submitted.
+So you think the below behavior is preferred, right?
 
-As such, NACK for this patch. Please discuss with the t2 project if and
-when the series should be submitted into the upstream kernel.
+  cycles -> cpu/cycles/ (or whatever PMU name) -> sysfs or json
 
-Guenter
+And there's no way to use legacy event encodings anymore?
+
+> 
+> You've not pointed at anything wrong in the scheme that these patches
+> introduce, and are supported by vendors, except that it is a behavior
+> change. I can, and have, pointed at many issues with your proposal
+> above and the current behavior. The behavior change came about to work
+> around PMU bugs over 2 years ago but only partially did so. It makes
+> sense to remedy this and for the clean, consistent behavior this
+> series achieves. It is unfortunate that it is a behavior change, but
+> the first step for that was made 2 years ago. I think it also makes
+> sense that something self described as legacy is a lower priority and
+> of the past (wrt event naming moving forward).
+
+I want to clarify the event parsing behavior and to find the right way
+to deal with various cases.  I haven't followed the activities in this
+area closely so I missed some changes in the past.  Maybe the problem
+is that the behavior is complex and not clarified.  Hopefully we can
+write it down in a doc.
+
+Thanks,
+Namhyung
+
