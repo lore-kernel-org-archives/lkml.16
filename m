@@ -1,168 +1,174 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320312F30
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 22:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29DA1AC884
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 22:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738274838; cv=none; b=I1P0nznhK1lSIe7ekm9BCtnm0c3EdEV6V8kyuX4YbFjuSKZsJSXAVamhf/RtvWQsWgKdEZyhgWiR7Nfrcw+lbTuPc/NW31lHtIg1tv0bey2ogEIhks5LGywUXzpjwL8fmiCWhcsPKATLPywPMX3XLVPLezzLWNhs6oByIy/pP1U=
+	t=1738274912; cv=none; b=VuU/m3J+TP4WnAFINodAB4L0yOFERVuRqqjICr7xIKTFwRwp6p2P4be/2t2yvQyL6Gzhvx77OplsDg3udSzhFOJWVFjHzB3fFjDlktizNIxi81Hc2/Ny3Jb4q/UHTFRjE+Bbs3jcMO3LHZnY8IByJhKazF3Y+sa3r4H5l8SepzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738274838; c=relaxed/simple;
-	bh=avmLgW8CPE51ZDwazO1xFMxHhJYKjjX6F/hB51cmtMw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u/OZQ4IBUNwlqHI2KFSjQBV46oOA4Kx3JEpbhv2H3H8ifWzoR/mB8HMP+jmyBzW4uEMlR7Gy7DcXx6yhGUntSVlnVrL/L0NRwN/daxnsOaF40DGo+ljfaA4H88yYLZ/cs1V8ZTudxXPKdm3w4GlvjQSfzRLBEVuaF0scaQt5SNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=cLfe2irU; arc=none smtp.client-ip=209.85.210.45
+	s=arc-20240116; t=1738274912; c=relaxed/simple;
+	bh=qMivFzsZbVkoKmSgRBnwcj8ZoYlhvu0cmK9Q7qy3cUA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LERY5W+NsxhTWop8y14oTpVoQOuFFzC8TbjIa3xHxr+IVkJVQp797HS2DgcpMcCcs97cqsTNQ7NN64qtn1lxISK9LWPwSRMp/WLU/0lmHgjRUZ+NvbRgTy9GTqVMtUveoJ43LCjc6pjBlwerc7uQdRNjeCkw44dMXYKU3YTHYb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=eNuh1xpM; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cLfe2irU"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-71e2bb84fe3so691391a34.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:07:15 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eNuh1xpM"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5d0ac27b412so1536384a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:08:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1738274835; x=1738879635; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=x9PWxbMV+pc41ZeRuYe5n6UZdKx3ea5g4GHydSXEvtY=;
-        b=cLfe2irUD0e0gv/zu4XyQPj2tRuucocCGnSxoqLLxB+e83+Z/oToOPFvTLhm9ng2yn
-         nj1ElHU5T3cLQ1IaM7va+cR+QS0jV42RluafraIbm4xoPjdXV576+n4nZd1lTRgYUfvS
-         WbV4/SGIgsDmLRR/YN3JRhajipRTqo4FL2RPg=
+        d=broadcom.com; s=google; t=1738274909; x=1738879709; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qMivFzsZbVkoKmSgRBnwcj8ZoYlhvu0cmK9Q7qy3cUA=;
+        b=eNuh1xpMvqAtdNrCeBkE6YH1BjfJ9JNfp1AFs4rbQTOPGPWQwRtHwtb4Jpzg/wnlcW
+         W/AHfYb6bBGmQEOFD0pBuAPMVVPF7RhUpW6FRLNgu5E9o3F+UXa6FfoDQ0Wc+dOS2765
+         Qc6HM3U6jAG85L8AIfH8Gmu7gepQpvBmY/kHY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738274835; x=1738879635;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x9PWxbMV+pc41ZeRuYe5n6UZdKx3ea5g4GHydSXEvtY=;
-        b=axZbYm97oHRZSLYd4055kDrGA6q4Kbj+afkPPE87DfYxKGpFFnqExLsYhlDZN6+R+f
-         4RMTHbca/FyDOyHEQo6Ph+IUiVWkh51V1LIjBdvKu0PRMkR/cdFDUZzZ0wY0bhhK3e9f
-         o3GXflpZNPqgAbGSJoSdiDA7pOvaECtVlFmu5kDAg6ax3W1uyTcSG9DsWOfgwklbqM3u
-         kRgKTPByQBPZqiFs8rHYOSQIeuTkwOHqWxgVeKtclVg7KzIKFVvnSpIsL9K2SP4ANYdN
-         Q+evKAtP6kbTUsKaSowV31KGYdvTFESxYYHoJ504s/KPcmvSpr+FJ4Nx+UXdcvanPnFE
-         Trqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUm4UvfFOIHYI2NGFsGI7CBF60NNl/X5wdIRKZ+RATx4NneXtJy1+IP8yeQOXbRWljmcgohCKXn4sQFQDk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpHuVTTChPxoBqFqyiN7NWAHL1LNLLk3xnQ50+A9Y94WitkBP8
-	yQlCidINEYe3nEwV0FCDi1CG+6XDHaFk46bt4jjp+4GS0YUB1t6QY7DgGSH8Qw==
-X-Gm-Gg: ASbGnctl79J+TXiLA3DsuzxTIGKQ1DD264IzwXxe65i+Y/pSDZQ3gLL5kSwdHLqLynY
-	ZCXDvJ5ZSpV4+o+jxBIilt/mz7b59udlEbhErYq+cxlmmprh7/RXO7/ovTyffgsqK+SMmMg8KKb
-	8fo+Y+CVcnBFJsY4d3EuHLeP/7T0FHHEI5oKrI9Oxjv5Jn46YiGbGJomRy8v9yJFA1iYRKvFGkh
-	wfc/EWzBG3LHALNnjnJxjStMljUiZzTcFuTZdze+W2RFuIyy3LvHDHPrZxguhbsEr2PFD+h2hoe
-	QG9ExkwtLUULhDBhuBJHT7ESoRHpftZTcDs7A0TC+i9iXmUxnDGRnx8=
-X-Google-Smtp-Source: AGHT+IHDaNlt4S67Jjd7nYnaKKLenYdWvvL+1raluenpuKxu6pzj9agQZyPjQ99ELLdpEVnU5sZ+6A==
-X-Received: by 2002:a05:6830:3696:b0:71d:4488:19ed with SMTP id 46e09a7af769-7265673213cmr6436451a34.5.1738274835142;
-        Thu, 30 Jan 2025 14:07:15 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726618c8aefsm526589a34.67.2025.01.30.14.07.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 14:07:14 -0800 (PST)
-Message-ID: <2018dc60-1cec-4575-9005-cb543c7c1856@broadcom.com>
-Date: Thu, 30 Jan 2025 14:07:12 -0800
+        d=1e100.net; s=20230601; t=1738274909; x=1738879709;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qMivFzsZbVkoKmSgRBnwcj8ZoYlhvu0cmK9Q7qy3cUA=;
+        b=ADOAjPsxPbndzfDnDMgdog6KBmluacwsrvSlnEod5HvLluhMUdMcOx/NspNKVSu9PR
+         JIfbIOqXT1jxFzzCB1UMvqbpO7D7HzlEMlf7twx0kXPkAGXW53O9joJfrkNOOWRPLxqi
+         xQnQkOjHdJ5tgUtB+zdsPvH8R+HgBqoYzPRXNRE4FXGFe9JE2F9Fp6IHccYRyYUV8t65
+         uwmfIHAsTQhRIrenBNc9AQbdIgBQWgg48ZDbJ7FssqkpMLit5pIRAna1YMMXjW5qi2gG
+         /ZZ7l4rBI4gv7AeUkHdF82UvaB9vXXs8ccBmPsMdyKgygcl64QKbcJ1NeFN1fNokBc7J
+         8+Tw==
+X-Forwarded-Encrypted: i=1; AJvYcCVa+GB15bw3bXFSLV51k0fn3OLugMZDpg11PjVBF8vC0VTzhOZmeypdWSgUUiBgdvzZS+GrkOhwf0GDN9g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ+99mXqot4Qc9rTwQzFQjz27eYwTDQfav8blRLlHuxJEocEyg
+	mQUXoSqxjL/uGjolY84SbH8oGUVUCTtjc8KifIlllhU/gqOVK5AgNoakbC3wxEftDImJPtXhepX
+	8HDGUxWMvJSdCySVPKq/ZQMnW0jV9vSTZbpIk
+X-Gm-Gg: ASbGncvoSa1Lo+cHhdjUAt5LHZA0QhSNGJiX6K3RzIGAhs9X8c3ncp8m4FhWayhJEUU
+	joYBppOOyNbn3e8+88m3F+cz3h9AbLgFQyLlBifPWAZLQgNRegGUTLHVPspo7t+zeD1LThdKceg
+	==
+X-Google-Smtp-Source: AGHT+IGrldTrNZ/8c9oljwo8V8v/OfXDxUYZgCi9ZOQfkkQ0USnqsaihfnBuyvdb31AwbQWf8XI6HE6g81DRomBomuY=
+X-Received: by 2002:a17:907:94cd:b0:ab6:3633:13e with SMTP id
+ a640c23a62f3a-ab6cfdbd071mr1038802366b.41.1738274909232; Thu, 30 Jan 2025
+ 14:08:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] gpio: bcm-kona: Make sure GPIO bits are unlocked when
- requesting IRQ
-To: Artur Weber <aweber.kernel@gmail.com>, Ray Jui <rjui@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Scott Branden <sbranden@broadcom.com>,
- Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>,
- Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>,
- Christian Daudt <csd@broadcom.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht
 References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
- <20250130-kona-gpio-fixes-v1-2-dd61e0c0a9e7@gmail.com>
- <9965d0b3-f169-45c4-9345-8588865a2ca4@broadcom.com>
- <4af2c24d-1c79-4119-a112-eeac1112d49c@gmail.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <4af2c24d-1c79-4119-a112-eeac1112d49c@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <20250130-kona-gpio-fixes-v1-3-dd61e0c0a9e7@gmail.com> <5fe49a62-b40d-480f-aee1-224e17db9f02@broadcom.com>
+In-Reply-To: <5fe49a62-b40d-480f-aee1-224e17db9f02@broadcom.com>
+From: Markus Mayer <markus.mayer@broadcom.com>
+Date: Thu, 30 Jan 2025 14:08:16 -0800
+X-Gm-Features: AWEUYZkbCoPpeT38Ui9RvO4h30F7SEA-SB0kYSU2MnOybjnditaCJPOPj-LMgKM
+Message-ID: <CAGt4E5syrqpPs7=euvU5xJAsjb58Cp4+oOc_erfhpuuLcLy_gw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: bcm-kona: Add missing newline to dev_err format string
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Artur Weber <aweber.kernel@gmail.com>, Ray Jui <rjui@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Scott Branden <sbranden@broadcom.com>, Markus Mayer <markus.mayer@linaro.org>, 
+	Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>, 
+	Christian Daudt <csd@broadcom.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	~postmarketos/upstreaming@lists.sr.ht
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="00000000000081dfa1062cf3aa1a"
 
-On 1/30/25 13:46, Artur Weber wrote:
-> On 30.01.2025 22:35, Florian Fainelli wrote:
->> On 1/30/25 09:10, Artur Weber wrote:
->>> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
->>> index 
->>> 77bd4ec93a231472d7bc40db9d5db12d20bb1611..eeaa921df6f072129dbdf1c73d6da2bd7c1fe716 100644
->>> --- a/drivers/gpio/gpio-bcm-kona.c
->>> +++ b/drivers/gpio/gpio-bcm-kona.c
->>> ...
->>> @@ -87,14 +103,25 @@ static void bcm_kona_gpio_lock_gpio(struct 
->>> bcm_kona_gpio *kona_gpio,
->>>       unsigned long flags;
->>>       int bank_id = GPIO_BANK(gpio);
->>>       int bit = GPIO_BIT(gpio);
->>> +    struct bcm_kona_gpio_bank *bank = &kona_gpio->banks[bank_id];
->>> -    raw_spin_lock_irqsave(&kona_gpio->lock, flags);
->>> +    if (bank->gpio_unlock_count[bit] == 0) {
->>> +        dev_err(kona_gpio->gpio_chip.parent,
->>> +            "Unbalanced locks for GPIO %u\n", gpio);
->>> +        return;
->>
->> Don't you want to release &kona_gpio->lock here?
->>
-> 
-> If you're talking about the "raw_spin_lock_irqsave" call above the if
-> condition - note that it has been removed and was actually moved below:
+--00000000000081dfa1062cf3aa1a
+Content-Type: text/plain; charset="UTF-8"
 
-Oh my bad, my eye corrected that - to a + somehow.
+On Thu, 30 Jan 2025 at 10:41, Florian Fainelli
+<florian.fainelli@broadcom.com> wrote:
+>
+> On 1/30/25 09:10, Artur Weber wrote:
+> > Add a missing newline to the format string of the "Couldn't get IRQ
+> > for bank..." error message.
+> >
+> > Fixes: 757651e3d60e ("gpio: bcm281xx: Add GPIO driver")
+> > Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 
-> 
->>> +    if (bank->gpio_unlock_count[bit] == 0) {
->>> +        raw_spin_lock_irqsave(&kona_gpio->lock, flags);
->>> +
->>> +        val = readl(kona_gpio->reg_base + GPIO_PWD_STATUS(bank_id));
->>> +        val |= BIT(bit);
->>> +        bcm_kona_gpio_write_lock_regs(kona_gpio->reg_base, bank_id, 
->>> val);
->>> +
->>> +        raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
->>> +    }
-> 
-> In general, the diff for this patch did not generate very well, sorry
-> about that. I'll see if there's anything I can do to improve that in the
-> future.
+Reviewed-by: Markus Mayer <mmayer@broadcom.com>
 
-Nah that's fine, thanks!
--- 
-Florian
+--00000000000081dfa1062cf3aa1a
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+Ec/cP+EhLb6iWo+xOyG5tQ5x6rHF/myv8D6KjCGPNA244wCq//YJpACZxW/EmFhKpSMtJiOK3y6K
+J6mUZis5jzWGejheX/GcA6ZPj1cg5HiVZ7jtolAr16MCAwEAAaOCAdowggHWMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJAYDVR0R
+BB0wG4EZbWFya3VzLm1heWVyQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNV
+HSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUpTl9ZDXeYdmvmTJ/9G5fdl5b
+VawwDQYJKoZIhvcNAQELBQADggEBAEU2+9J4vQL2/+vHKw3JI1Euy99lcSBuEH6mm1PKer5G4WUm
+bYYQ4A8XEDIPRdaWE8E4wpvrQU3GUFtHA+YT99qbcqf8ttU2zZCQ17djBSxfPwf5LVy9dBmtBS+s
+6EXfI524CvSPzUT0wlJIvMEWJW2T/lBW52QpDBdsLFVisRbMRBfSemhxXYPDPBNIru4ojg5BP1xo
+f5USQusyoaAQGD/iGFhbsfaGChOJ7+MrfFFZqvHK9GWNFg5citmQzQvN6p2/IdgaR8mJRMIpvq1z
+iJSmEbdepvACxpoFNicZvebbKDcUwP4gmmiqDqnk9jy8cYDL/MgucszvSNowyevsrKcxggJtMIIC
+aQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQD
+EyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwPPzUoCioaoirhBIcw
+DQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIGRZETsGa3Ox2Jbto8k99n06Z5l5ddtj
+cpuZnogISELPMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDEz
+MDIyMDgyOVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQC
+ATANBgkqhkiG9w0BAQEFAASCAQDE6SvTRd+ylmyqrYGtVLdi6hDuUdgisC9laCCaS1U0pYuSS9Xs
+yGUB415NIy8VmDQhbP7kw4JkfRKYe2/C7fQ5TPcwEFjeW9flFmhU+xmlZoO8jqXGxKMQG0YN1w6H
+d17b3J12LZj6sExGgPwQp56m2+4owOoDNCStUbN9G912kM0T0wZ7JZX+bLEnCUiBKnYtQVngFy6u
+Nqz2K3CDmmnnKLRMNTyINZzse4rhUStwAB6DEMT2vpw34b3tEsJpCI6hs2AH7NyZpmeS2Dx1ah2m
+MqiJ0kRXYkEXACvjHFJ7JqXThr+7a/7MbQNPhbPpCos5kG/OZ339LIxuGCNGm0bj
+--00000000000081dfa1062cf3aa1a--
