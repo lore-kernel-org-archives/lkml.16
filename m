@@ -1,108 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74A61EEA4B;
-	Thu, 30 Jan 2025 16:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738254704; cv=none; b=W7hiPIaMrEp3yZiTmPE1F84hT88ZuoR4NV4W6getiU69CaFfFX5V6biIfOY0yoaE7Bh7fPtGbaolLtgRvAQnoKxIQWLWLGsD5SsneBRLYUHpxVmHm2gY60pM2pQziUua7C4QFtFgnb4DX032aj7+OvUNxonOzdR1buC/oVeTeIY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738254704; c=relaxed/simple;
-	bh=33qiW3dWmI8bHxHCG3SW5kkf5Qn+guEvPG4As5/sGno=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NTosDhM6ptwLMMnSEDakAAzVRf0Ls35TipuDQ6u3vRAsUKCF9gQfGgOS+x++Ufb2jiPmso83Ae+YrtjeMU4Nb3qiofURvprGN/X978Ezs2eGldrYppPjdyfEPxWc7DxG7wtiKmgNnc1RAjSC1+gvbsfm9vW3tmws+SM2taWiHiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c2sQi5qV; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372601DA5F;
+	Thu, 30 Jan 2025 16:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738254746; cv=pass; b=bHD4AXTLJNJiJjyla05htedUxqdP63d/NY+0As6QQ2uEYONrMvFntWifD5DIFFhH4kFIgVo4aT2fT7KGUkoXKWOBemor3RrBGtwLjxWa2Ybdos5mwyn/oWUMTjS9lSVHULPFYgcNHOMB6jBJiBDZEPS0HWL3gnhtMG+A+25z088=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738254746; c=relaxed/simple;
+	bh=IofK4l5y5xA/k5+MG3Q2H7arU7k46yFxh0juUaEQ76k=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=AUwWePNyF+3m63IjHIDrfnVCmbIXc8fH93z2DFNz1WrrX947VJZzYUkSPLTOFjtGZnLeFHURtxms4Ct0ES8bbeVRYX4qKcO+uH30AovQjsytazW2GrjSpPKvcBJQEorQmJasf4zPlkzq0yzMxuO+moDrKXFZcX32gTqephjhyK0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=Br3QZibM; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c2sQi5qV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738254703; x=1769790703;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=33qiW3dWmI8bHxHCG3SW5kkf5Qn+guEvPG4As5/sGno=;
-  b=c2sQi5qVQ88r5+dgy7cQG9G4oQdgdg8mdQMB6m4KGX6IymhCj38OlUY/
-   eJNZbDu3Z7aH0xC47JAoCaCu6eEbATQ8lRejTKl1XdR+pNvAqTWnWjoUT
-   muR6xZ3i6YwYUDP3u8P10cOuiF0rNRXqvZ3TUUMZoxOSfEU57xCOldxKR
-   b01zRGQL3l2PaYNXYIMuAkmnh5TlruTNGP7Z9JQZsWoTinUC6eNBzksk9
-   sbLhc2VO8P8f1nv/0N5xArYFp1kf/w36co0no4a0L8E/MOtYcIqOds5FQ
-   uf5F1x4q5Nc/w7KV6Y8vzh0ND2Rwlt8lC4/2Dy8+BPXZQ3Ewt9b6HZjnt
-   Q==;
-X-CSE-ConnectionGUID: T3TV64EETxC5NPr8hGap0Q==
-X-CSE-MsgGUID: 3ZbUukYERwaEMKv6xMuT/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="38514479"
-X-IronPort-AV: E=Sophos;i="6.13,245,1732608000"; 
-   d="scan'208";a="38514479"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 08:31:42 -0800
-X-CSE-ConnectionGUID: Aq4BY09mR/+UcK4yGKgjJg==
-X-CSE-MsgGUID: qSUJ8LpvTMCHNOdKh5Y06w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,245,1732608000"; 
-   d="scan'208";a="109944324"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 08:31:38 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tdXS3-00000006ixE-0s7S;
-	Thu, 30 Jan 2025 18:31:35 +0200
-Date: Thu, 30 Jan 2025 18:31:34 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Daniel Thompson <danielt@kernel.org>,
-	"Dr . David Alan Gilbert" <linux@treblig.org>,
-	kgdb-bugreport@lists.sourceforge.net,
-	Anton Vorontsov <anton.vorontsov@linaro.org>,
-	Sumit Garg <sumit.garg@linaro.org>, linux-serial@vger.kernel.org,
-	Arnd Bergmann <arnd@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Robert Marko <robert.marko@sartura.hr>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] Revert "tty/serial: Add kgdb_nmi driver"
-Message-ID: <Z5upZhPz_LIbwrzx@smile.fi.intel.com>
-References: <20250129162700.848018-1-dianders@chromium.org>
- <20250129082535.1.Ia095eac1ae357f87d23e7af2206741f5d40788f1@changeid>
- <Z5s38S7sJ2mka3-1@smile.fi.intel.com>
- <Z5s5IThpnMNdY62v@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="Br3QZibM"
+ARC-Seal: i=1; a=rsa-sha256; t=1738254702; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=lravY/6Wl6bFOP4EmaFB4pFXffqm3rogMJLqrBS5x/JGS95L2CmAN2jlNjV0gEXketvyyIBQGH2KucsT01Y6GQBjrkUPgZ5qnQrxP30NRwUgl/d+RK8qdZxwjphqX/FmcXMILZ/TtCJ7+8mjf1LwDLQWBVP1cguj66xFAKUwUGk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738254702; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=LVPLI6+c3jau3bRD8yp1Q2Hkp9hVE39g34stjXufaqs=; 
+	b=kY/vHYB63eY4CZqbBCJG6EwmrYBJ6KjPZZQuZMs1o0kzEEpM/qhlFjg5Ir4rYAcE3ebEXOd0wjprW5DlWjxHiKXFp8j2pNoxvXpHKEOzwRxkRbVKBGUF9St/LMyWiWkS90yEpN8y74lJCZ3LEmPbTkyGJ1Fu6Qns0QF27Hmkbr8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738254702;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=LVPLI6+c3jau3bRD8yp1Q2Hkp9hVE39g34stjXufaqs=;
+	b=Br3QZibMOVoXRRji3+2/pdH3aVwjEE7w2baX8S5TdLTzFedExDU9KXTGXWKKQl7i
+	u/Q+Q/D/K3D4fmeCZ2A+g+7O3C0ysGnTJ8UrgWyOJO0i/UItnFvN0ThofxakxuSHbJM
+	/7Acx630s1y1zvBqNrVbYKuJWbj/H0keXU8nTEHs=
+Received: by mx.zohomail.com with SMTPS id 1738254696264631.910358401036;
+	Thu, 30 Jan 2025 08:31:36 -0800 (PST)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject: [PATCH 0/7] RK3588 Hardware Random Number Generator Driver
+Date: Thu, 30 Jan 2025 17:31:14 +0100
+Message-Id: <20250130-rk3588-trng-submission-v1-0-97ff76568e49@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z5s5IThpnMNdY62v@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFKpm2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDQ2MD3aJsY1MLC92Sorx03eLSpNzMYpAWXQNTUyNT02RLMzMLSyWg5oK
+ i1LTMCrDB0bG1tQCIRZyfaAAAAA==
+X-Change-ID: 20250130-rk3588-trng-submission-055255c96689
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Olivia Mackall <olivia@selenic.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Daniel Golle <daniel@makrotopia.org>, Aurelien Jarno <aurelien@aurel32.net>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ XiaoDong Huang <derrick.huang@rock-chips.com>, 
+ Lin Jinhan <troy.lin@rock-chips.com>
+X-Mailer: b4 0.14.2
 
-On Thu, Jan 30, 2025 at 10:32:33AM +0200, Andy Shevchenko wrote:
-> On Thu, Jan 30, 2025 at 10:27:29AM +0200, Andy Shevchenko wrote:
-> > On Wed, Jan 29, 2025 at 08:25:50AM -0800, Douglas Anderson wrote:
+This series adds support for the Rockchip RK3588's standalone hardware
+random number generator to the existing mainline rockchip-rng driver.
 
-...
+The RK3588 has several hardware random number generators, one in each
+the secure-world and non-secure-world crypto accelerator, and one
+standalone one in each the secure-world and non-secure-world, so 4
+hwrngs in total. This series adds support for the standalone hwrng,
+which is an entirely new IP on this SoC and distinct from the one in the
+Crypto IP.
 
-> > > [1] https://lore.kernel.org/lkml/1348522080-32629-9-git-send-email-anton.vorontsov@linaro.org/
-> > 
-> > It might be possible to use Link tag here in a form
-> > 
-> > Link: URL [1]
-> 
-> Hmm... I'm not sure what this Link is supposed to mean. You might be forgotten
-> to update an URL to point out to the cover letter? (This is the link to patch 9
-> in the series and looks a bit unrelated).
+The decision to integrate this into the existing rockchip-rng driver was
+made based on a few factors:
 
-I reread and I think now understand what you meant. The are several patches
-starting from this one that are not landed in the upstream.
+1. The driver is fairly small.
+2. While not much code is shared, some code is, specifically relating to
+   power management, the hwrng interface and the probe function.
+3. I don't want users to figure out why "CONFIG_HW_RANDOM_ROCKCHIP"
+   doesn't enable the RK3588 one, and I really don't see a reason to
+   build without both of them considering the other RK3588 TRNG (for
+   which there is not yet a driver iirc) *does* share code with the
+   existing rockchip-rng driver.
 
+Here are the rngtest5 results from this new driver on my board:
+
+  user@debian-rockchip-rock5b-rk3588:~$ cat /sys/class/misc/hw_random/rng_current 
+  rockchip-rng
+  user@debian-rockchip-rock5b-rk3588:~$ sudo cat /dev/hwrng | rngtest -c 10000 
+  [...]
+  rngtest: bits received from input: 200000032
+  rngtest: FIPS 140-2 successes: 9990
+  rngtest: FIPS 140-2 failures: 10
+  rngtest: FIPS 140-2(2001-10-10) Monobit: 1
+  rngtest: FIPS 140-2(2001-10-10) Poker: 0
+  rngtest: FIPS 140-2(2001-10-10) Runs: 5
+  rngtest: FIPS 140-2(2001-10-10) Long run: 4
+  rngtest: FIPS 140-2(2001-10-10) Continuous run: 0
+  rngtest: input channel speed: (min=212.255; avg=29089.272; max=19531250.000)Kibits/s
+  rngtest: FIPS tests speed: (min=64.005; avg=102.494; max=153.818)Mibits/s
+  rngtest: Program run time: 11292340 microseconds
+
+As you can see, the quality of the entropy is quite good, and the
+throughput is an acceptable 29 Mibit/s.
+
+The series starts out with two patches for the bindings. The bindings
+are separate from the rockchip,rk3568-rng bindings, as the required
+properties differ. The SCMI reset ID numbers are needed because mainline
+uses a different reset numbering scheme, but TF-A uses the downstream
+numbering scheme as far as I know. The TRNG must be reset through SCMI.
+
+Next up are two cleanup patches for the existing driver. Even if a
+decision is made to split the drivers for whatever reason, these two
+patches should be used in the rk3568-rng driver as they get rid of small
+peculiarities in the code without meaningfully changing how the driver
+works.
+
+Next up is the main driver patch that adds support for the new TRNG. As
+the driver was developed by reading the downstream vendor code for this
+particular device and reworking it, I've included the downstream vendor
+developer who wrote the driver as a Co-developed-by tag with their
+existing downstream sign-off.
+
+The penultimate patch adds the node to the rk3588-base.dtsi, and enables
+it in the one device I've been testing it on (RADXA Rock 5B). Other
+devices may wish to enable it as well after verifying that the TRNG
+produces randomness of the expected quality on their particular flavour
+of the RK3588.* family.
+
+Last but not least, I'm adding myself to the mailmap, because I now work
+for Collabora.
+
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+Nicolas Frattaroli (7):
+      dt-bindings: reset: Add SCMI reset IDs for RK3588
+      dt-bindings: rng: add binding for Rockchip RK3588 RNG
+      hwrng: rockchip: store dev pointer in driver struct
+      hwrng: rockchip: eliminate some unnecessary dereferences
+      hwrng: rockchip: add support for rk3588's standalone TRNG
+      arm64: dts: rockchip: Add rng node to RK3588
+      mailmap: add entry for Nicolas Frattaroli
+
+ .mailmap                                           |   1 +
+ .../bindings/rng/rockchip,rk3588-rng.yaml          |  61 +++++
+ MAINTAINERS                                        |   2 +
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi      |   9 +
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts    |   4 +
+ drivers/char/hw_random/Kconfig                     |   3 +-
+ drivers/char/hw_random/rockchip-rng.c              | 264 ++++++++++++++++++---
+ include/dt-bindings/reset/rockchip,rk3588-cru.h    |  41 +++-
+ 8 files changed, 349 insertions(+), 36 deletions(-)
+---
+base-commit: 72deda0abee6e705ae71a93f69f55e33be5bca5c
+change-id: 20250130-rk3588-trng-submission-055255c96689
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
