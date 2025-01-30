@@ -1,60 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8942770C
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB71D1DDD1;
+	Thu, 30 Jan 2025 17:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738257024; cv=none; b=ZmK3gZLihroH7QRcMH4Xpmimf+7fbNj9Z7b7/Q7lDD472zIDXKxw1O1jit6H/2zqX2gKWdQEni30//yiF8/zRrgjTYLMsA3wZrMC3DouMU51lnCoHr9etHaFg9PbA/bP9vNtjL2ixNs+FSw8IlJRqRdEc4BHC3BuMk9SO+qo6iQ=
+	t=1738257049; cv=none; b=Ikp6XabhXIEB1aZm/M3efPG0ifJh0Slqtdi6rfO34JQlPsCfokEH4Vz6n6h4N4mB9P09ESbbxSabz2AJhj9QuWV62XhOuvCXDYsNxb0bSb0Ojcx1cGGXvw1Ea4sk5WNqHHYfZ1lkvvT+BVt1SsBJHXHpOc9lru0FrNbP/Azidvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738257024; c=relaxed/simple;
-	bh=nxw/sNxTBMGTmdI4rJfjXQ4wF7yDBPL6zbd7NM4Lcqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jFHrkDcFCF6vPU4XeLgBaB/3TpJ3z9lj1DsEcJXV/2FBDRrRY8Oe4DPju6baPJJ4tJxnapp4/a2Ym3HYXlSizQCvn5s+HnGYSouOa8AsZ0VEk4zVE9MfetpWKT+GfBpz+jPYPZxbvIUVxA2INBI7kvE+8daiPrW/k4zvIxfZXdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s30FAZP7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738257049; c=relaxed/simple;
+	bh=PxtybYSxgsuwZVcwghTaYuaHXmTHWbwCzDuTXGP4NhE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZOc3F6GjFZZLFqw5UQtBURhszq1Hg/aISyp4s7KRrOp2vE+JngX/tYCSByrQTe0byS2kEYRSSNNCwVLbiUG7JR2+MgxweryVaazj0U/gCfqmSZ+445RP2W/amYpIVqlj6//r1L+4Wo42tVsjWrf0yfOPiaD/yCcWwqa8dtX9fWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lajg19n7; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s30FAZP7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368B1C4CED2;
-	Thu, 30 Jan 2025 17:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738257024;
-	bh=nxw/sNxTBMGTmdI4rJfjXQ4wF7yDBPL6zbd7NM4Lcqk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s30FAZP7HOlf/3Ish22Pj8sdCNuiZxF1mykW103nSdpcePz6DCvEoLxf4TWA9CMEZ
-	 uaQoK6Sa4lpzcSJXzFbgjyYKB8J3Fb5RJtY1zhaicClnUD/OUD99xbqGjSQqlDu4G+
-	 g/O4t3Jm94Q7ccgXnCQVZbs+RpQJlywj40e4/Qy/DhZnoXQmknH+FNPUtbOlXY8llR
-	 mXlS/i7B6hvLlyjwlasq814o/j7hmqRzoWS0J2S9r3N8sBvjclhr8bWNR/WunaDiCN
-	 4OrKm+UBbyvzDp5IeuLvV0hhKKbyqg141+dc2WgulRt+BeCAQxiTJUAtg2jafZy9uO
-	 z3SSd1LKm157w==
-Date: Thu, 30 Jan 2025 18:10:19 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Yu-Chun Lin <eleanor15x@gmail.com>
-Cc: akpm@linux-foundation.org, vbabka@suse.cz, jserv@ccns.ncku.edu.tw,
-	visitorckw@gmail.com, linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] kthread: Fix return value on kzalloc() failure in
- kthread_affine_preferred()
-Message-ID: <Z5uye0c5JQ9tZ1f4@localhost.localdomain>
-References: <20250130144849.1249084-1-eleanor15x@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lajg19n7"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5d932eac638so1852326a12.1;
+        Thu, 30 Jan 2025 09:10:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738257046; x=1738861846; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qyi3Ntf2szBW5h6F6hgF0KHfVDRaAzVDcHs5RUl4h3Q=;
+        b=Lajg19n7iabDuVVRdhWT/fT12Kv8Cu7ppMcqilAMmIHyeIqIMR1D28Ci1RMudeULUh
+         mk/O7BsQquriKEYocPj1lPXGy3rLq51B4mjWpKxw5ASgj+0xThVD6nedVUGwtzxoy1YB
+         zrseQWs1wJpQvRGGrwr2Q9kLraVA4BjMLpv4ZVsdNbPIZKzejHqZieVxKCYrDIUoiL7A
+         isGtfcAOuyj6pcva0D92+mJeE9w3/AUBR3WvV3pJCrCElieMkviec6/Qw0g2beU20lhl
+         YlyHuY/yx8rPFWh1no9pMnwaroayVfqySkWI0sEE9VyAlZsEhSsIV/GKGPzyL3HY10rc
+         cdOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738257046; x=1738861846;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qyi3Ntf2szBW5h6F6hgF0KHfVDRaAzVDcHs5RUl4h3Q=;
+        b=HkHLWJm1zfC1g9PMrcgBgYeySy1bDyHTON1dtimfKrzCnEh0W5HVpbkn/+xqiwwVyv
+         0kfuPyM1O6Er/naE1wwEr2LdVuVNrZklnIKYOBUUU07Njz+bYX6cg49eTh84w8/+ND3p
+         7ew2ZQCoFYROO5TulD36QmudszNfJXjIlxNSQ+PCT6ttQU0pQWD5g47jlXxTKPZjUzJ4
+         L618zNjkBVxMT4opD7Yk7qp6D4HLJiI4/r/N1JU5FMO0oVTacgzoRUzgEVDl3MnXQh31
+         h8W1lIuinbjNeyPGNQ5qSnsyJP4YDTPPGlJfQpmhYZrtBr+kJt23Zw6tLD9aSFfK7F3/
+         KRLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVb7LAm/fzggYzwSprNSsyVV1VZdZECon/BbFPpwInW44ObK5i0/elpXIrB2XV9Z/Q2/Y389pCLrZDfqAU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkxXX+E12iPdQCNXsx60njiFMZeEGS2BrponcL+FukiZaDKpga
+	YCv+CWqgBS4zi8yUJ0UmX35ADqlnj4WuccrcNKZeTXeTXVLOBSS2
+X-Gm-Gg: ASbGncuKiHrOO0CwMZrA+/BMD13CGuufPgS40dMbJ/5gh+DkfEXfvnudOM7uxY/4YRV
+	9GIC9BEAI2tftqdes887ECVnUBMPH0Br3/i875R6PV1YXqDtl987U3FOc1mliDBwo85EPT9LY36
+	iA+APKaydZe7liEgPfq0cbZHmFiZKQSpXZJkZcDJaFq24HjVgo6quGZXrM1/HHR5ynCyY1qvEWO
+	Q190CyGBbaSwUZ3bA8g8cbvakw9Wa3B9+B448g8xHOGV5nUorI7tAVQVWu1oEh2r/Ckv8owAC+w
+	VuxamgjDQk8KT7kMu/poq0vF8M9qxunPx7qUXOFLlthBkZV38q+O5FcD397yGQ==
+X-Google-Smtp-Source: AGHT+IHuH7tNl9Bb9Su6vnpYDZHYYanacyBZ/Eejqsa8vLrRR/2fxK8KHZyEMp9Wes5Q0gARcP5/hw==
+X-Received: by 2002:a05:6402:3511:b0:5dc:6c5:69d9 with SMTP id 4fb4d7f45d1cf-5dc5efb82aamr7345749a12.4.1738257045952;
+        Thu, 30 Jan 2025 09:10:45 -0800 (PST)
+Received: from hex.my.domain (83.11.225.21.ipv4.supernova.orange.pl. [83.11.225.21])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc724c9da7sm1349021a12.79.2025.01.30.09.10.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 09:10:45 -0800 (PST)
+From: Artur Weber <aweber.kernel@gmail.com>
+Subject: [PATCH 0/3] gpio: bcm-kona: Various GPIO fixups
+Date: Thu, 30 Jan 2025 18:10:36 +0100
+Message-Id: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250130144849.1249084-1-eleanor15x@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIyym2cC/x3LQQqAIBBA0avErBtQS8OuEi2iRhsCDYUIxLsnL
+ R+fXyBTYsowdwUSPZw5hgbZd7CfW/CEfDSDEkoLOQi8YtjQ3xzR8UsZDU2jtpqMdQradSf6Q5u
+ WtdYP2p0DO2EAAAA=
+X-Change-ID: 20250130-kona-gpio-fixes-6e74595e69f2
+To: Ray Jui <rjui@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Scott Branden <sbranden@broadcom.com>, 
+ Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>, 
+ Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>, 
+ Christian Daudt <csd@broadcom.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ Artur Weber <aweber.kernel@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738257044; l=1120;
+ i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
+ bh=PxtybYSxgsuwZVcwghTaYuaHXmTHWbwCzDuTXGP4NhE=;
+ b=yIN8LeDh1lxlrHbTAtHCgCr1A6ElSJZix9sgmrXY74M5oBWn2YVhUoBoKk5nW19NbV+C/ITZ5
+ 8xLp7itDpO3DSfG9YrxRRYX14WBu2JbegOFsg5GD7ifD4/ALKoWF9hK
+X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
+ pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-Le Thu, Jan 30, 2025 at 10:48:49PM +0800, Yu-Chun Lin a écrit :
-> kthread_affine_preferred() incorrectly returns 0 instead of -ENOMEM
-> when kzalloc() fails. Return 'ret' to ensure the correct error code is
-> propagated.
-> 
-> Fixes: 4d13f4304fa4 ("kthread: Implement preferred affinity")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202501301528.t0cZVbnq-lkp@intel.com/
-> Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+Fixes two issues that were preventing GPIO from working correctly:
 
-Queued. Thanks!
+- Lock/unlock functions tried to write the wrong bit to the unlock
+  registers for GPIOs with numbers larger than 32
+
+- GPIOs only initialized as IRQs did not unlock the configuration
+  registers, causing IRQ-related configuration (e.g. setting the IRQ
+  type) to fail.
+
+Also includes a minor fix to add a missing newline to an error message.
+
+Tested on a Samsung Galaxy Grand Neo (baffinlite rev02) with a BCM23550
+(DTS not yet in mainline).
+
+Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+---
+Artur Weber (3):
+      gpio: bcm-kona: Fix GPIO lock/unlock for banks above bank 0
+      gpio: bcm-kona: Make sure GPIO bits are unlocked when requesting IRQ
+      gpio: bcm-kona: Add missing newline to dev_err format string
+
+ drivers/gpio/gpio-bcm-kona.c | 73 ++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 60 insertions(+), 13 deletions(-)
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20250130-kona-gpio-fixes-6e74595e69f2
+
+Best regards,
+-- 
+Artur Weber <aweber.kernel@gmail.com>
+
