@@ -1,239 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2045.outbound.protection.outlook.com [40.107.95.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FC44431;
-	Thu, 30 Jan 2025 05:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738215213; cv=none; b=D+snZYZygE0TInsZ8itSWnRzL4eTSDR19AJlkcctArAydzC+8UgUlyA5qK3rX/RF4QChAKtgdokigydy7TXlGZawiMN/rWXlSVKl0kdJCTIq2ZLix0VEhbrczTYbrE0z+NtBVif4RT5VN5Ydy3fzFhaOd6HVnkgGFNZP2ydrzio=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738215213; c=relaxed/simple;
-	bh=aLbmUOWgdsJp7mJHOAYeXhRp9ZyIODmLh0re3gPsRYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gABD+7M0qJWsUDyKVV7TGxA63goxZhNtvRYLpY+FZjMl4M4dm/qm31YlN9yZd0EOD0iZ4XS8JCe30u3kJ1Fd5eC33ap+3aYq8K8yBevPG4ZJHlLzKew3QlCfdGc8Jt5HoUkGzxvAbjMXkE8TzU1DwPRZLt1MyvYUt66V6mb9haE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LlEUSZkM; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861404431;
+	Thu, 30 Jan 2025 05:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738215284; cv=fail; b=Xod3vV5k02gW/+iW5+d6/UOUxuAogDGtW/cbmpmG4fLyyS19ZMT9HMOKinzBkVba38bquwd5Hz/33GiENPPWDXNXv0dr12SsSWHAQySEPlXaMXIivyrVJN/KiT/yJIbX5TvIv/C2vkcjCqtRSZTC/EF7z2cL7DDx8EjEftuty5k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738215284; c=relaxed/simple;
+	bh=vzkQVm1+5LgFyj4uW0WCu8qDzK+/geS5A0fEAxluAhg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=mEtAHDXYdRvRIeinMWR1znYGjwt5q8ejQKxe0KEoFffwnVmH+5483s2RfkoaPwU/A3WC3/FVSKFoKc7mRd8NWcVVR6OLhsLgdlAeb8UqCbQyVN4IGtpLWVUD1y27hy1q2yECsCqn/PKW6uSrtzSYUxgnedwfwu3Z92Sw0n2HnAQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Dg6ngUpm; arc=fail smtp.client-ip=40.107.95.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LlEUSZkM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CC85C4CED2;
-	Thu, 30 Jan 2025 05:33:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738215212;
-	bh=aLbmUOWgdsJp7mJHOAYeXhRp9ZyIODmLh0re3gPsRYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LlEUSZkM/CMeOK3mA9N5OwUv9ImhdqmB8aAxUCZkB2h5lWIqqj51vZ8RXe8Go0qQt
-	 LFk3NclON4hWNm3umt6ZPirPIZQwNS20RoeXqzYlbF2bNooUeIbS43Zxk03FfPNYg3
-	 8S+tkFNCyAFF2KeVd9O7T+CWml8ckyeWW6J7gj/0iefsBYhrcxKMEiLK1PFeDugnsE
-	 obr/IUZ2E3/u4uI+BzekBPfJIO8n3YEc5oRXVeXD01uCG6IV2PAQBJlTJ5IHXjVfrS
-	 JemfoeieBSciOAvY5GRLSl46ApnGFGHl7Cp3YupmIpGoL3lMCVzkcsZa3BOcX+Gfja
-	 MlnyymLJUddZA==
-Date: Wed, 29 Jan 2025 21:33:31 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v3 5/7] perf report: Add latency output field
-Message-ID: <Z5sPK-doMUvHS9v4@google.com>
-References: <cover.1737971364.git.dvyukov@google.com>
- <e78918ee05f9aaa623f0cb402e3c53e7b8a6185b.1737971364.git.dvyukov@google.com>
- <Z5m1DqB2SK_Cj3iC@google.com>
- <CACT4Y+ZZhPZMtDdkShhJ5qZqG4BR9DBpCuWNz_H1wc1eQ0tFRg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Dg6ngUpm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XximfT1qh/JzV65LcKSBhXFrr40DByBXw6SJ2Pdf5C2t3p1BmOM/btrDHp9cSD0r/BRCdmmZfrkPfsgAlK3a+wz9aZVo/Thz8M4lTIObqAEcUtVqwQPvT7BEeHVwmYGKwqXwq2ipm7Fu2yzehNnUoAwoiVv040QRIT3EmHB/PS1sKGsfYJyKtUeeDAVhFolShLUozDA/e9cDkKuqRyZ5xQ1EPOzWfwN26CgExmVxi2rVaJB0IdPWiZcU9UiVqj/+Wjat5vsfyu6dxjPQSOnwFUDK74kQAZlgNjyO4JK3avALT145gS/Rh29pHgHA2+gWHvcLiHeftflTLWIKCf2pBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5xwbbTRnw01EQia5O9RC+bIjzAa+VrXUMzKToWKJxBM=;
+ b=pgis1xqBt8xx34l5HKQ3WjUfgD1S5HfA8xECOarX7twUiE4j0tYgtxb6t/TG7LU1wwbWDNbsxCfiBkWIxmlZj8/ZaccMV2CIBHGZLyPuDmfPFpCENBQhBCzPpMulTB9skOoLWxFJj4HPvErbWca74t80jtuNOAI5qo4xV9rreYIdW886KkcIgEn2QKpiQOYHd1AC1JfKbbQw6wKIPPqoKW1XDxfnou/EIGWtB8jX8IlViq4ccfrKCxMBN9ibVajFwpYSxGyoKdp9yI6nW0dZTLaahjOWqHxVcDifKVMINVEZ/Hvn0vB9fmTDaVrX2fIZv5by52PhyPnLm6vlBy3wng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5xwbbTRnw01EQia5O9RC+bIjzAa+VrXUMzKToWKJxBM=;
+ b=Dg6ngUpmavcwxKastpgAPVV9BdVFU67RjgB1P+d0vunJNpvfnfjxu9g8ZGT05y/PNIjT5ZP3eS1XOj0mAzYHzG0f3WHDT4Izf49qz0vT4Ke+LHtxn9w70ioFfSIjiLLi/+3SMNTpUaDzE3Hv3/H/bhZwCK8iI2gNyXtgB3xU5i/QeBDWEDAHV7Z6rTnw8fft41DJllQ+q8ILnHznuuBL0UssWxJPCDh1/F9saT3dg0xW9DIv2kcGvUAs8lzjBib3gqZZnZzxd3/5iaUSyXraC6pkz6YWYfd2sSboMaaqw3VKQO8NKpg4aS5VZWXA76rbPpsr4x5wdSkcgT+1iZdEIw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ MW6PR12MB7071.namprd12.prod.outlook.com (2603:10b6:303:238::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8398.18; Thu, 30 Jan 2025 05:34:37 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8398.017; Thu, 30 Jan 2025
+ 05:34:37 +0000
+Date: Thu, 30 Jan 2025 16:34:32 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-mm@kvack.org, nouveau@lists.freedesktop.org, 
+	Andrew Morton <akpm@linux-foundation.org>, =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
+	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v1 2/4] mm/mmu_notifier: drop owner from
+ MMU_NOTIFY_EXCLUSIVE
+Message-ID: <h4dnoixvp2kjeao6mzcpze4zx6t34ebpltqadkjl5zxcjhddkf@lbzo2yhzu5sz>
+References: <20250129115803.2084769-1-david@redhat.com>
+ <20250129115803.2084769-3-david@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129115803.2084769-3-david@redhat.com>
+X-ClientProxiedBy: SY5P282CA0182.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:249::13) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZZhPZMtDdkShhJ5qZqG4BR9DBpCuWNz_H1wc1eQ0tFRg@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|MW6PR12MB7071:EE_
+X-MS-Office365-Filtering-Correlation-Id: 15d50167-ef75-4c2b-58d0-08dd40efc8ea
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?NZo0dI6r/l2D63NRQFDlejTFTj8r1kndlMF2ebgZUdqZWWAazw8K0/iUyWpi?=
+ =?us-ascii?Q?X978sLHxDr3wH12yM2RLwvXcuAjDSTGBU7re4tYk6erzXGXY7VMS/52ngGyR?=
+ =?us-ascii?Q?jDrBNx/OB4MCI20cQyQrrJfMurJ/cCNmAoPcrvxhprdwzCWV8kyIsD0UQHil?=
+ =?us-ascii?Q?Hf94pRGUdiYKjvOjtlPZGhnyY/Oyx9ULOYJywBshoVoSqJ1ua7owv7zdQXID?=
+ =?us-ascii?Q?eyDlIhp/VTQz53wNG7j6BBB+HoxIUCYWE73lhUdh2LLLzocnhTLsN1ai21Xn?=
+ =?us-ascii?Q?cxnk9r5NbOo2pRl4CA4XU4Zg0rD/1xOjwZpPCxGqBXe2NqS36oZrjXrMNOeY?=
+ =?us-ascii?Q?JswQ8VRT3NZKTFjmsXxKXsm7VnGaCJhRQaDgRb5825B8RCAs28xzw12I4DSv?=
+ =?us-ascii?Q?SylVItsjDQFzjH7bRDGVwHfgBXN4HGeaz9i2gURg2gdLU/dHfDFCTt2QhJjC?=
+ =?us-ascii?Q?XbcFwyFLIkkTWTpqNiogHqG1g7DMZZj7pwG7rXWct+x3Zw8pUeRNA1/kl7ku?=
+ =?us-ascii?Q?xyDlFli1tkn0XaVljXP+QnSousy+LSF+hpKaq3Wn4XRJqs+uuj1qspd4TvmP?=
+ =?us-ascii?Q?y/4dsIWBbj9XqGxYAoZ4wpW2HmFPg2XfWuSA0eGgYwfrQx4oZWxfodH6dSnf?=
+ =?us-ascii?Q?+E0Y7QfXFlmyavEKlfegBFR4YdvivN5vnwXvmEYZ0pdeUPssSSWGkVhTonM8?=
+ =?us-ascii?Q?1HHcVgfEg6molJpNBHbTW0JfsK/G3DHeZ0mqyb56wEHU+mnuOyxMFFeXBKx3?=
+ =?us-ascii?Q?bISw1yeIo/d0bQRZceul2Ku0OR8HA9RHe9OrwtVyEWxMIHJwKupN1wRUth/B?=
+ =?us-ascii?Q?M02+D+B89OqKxapDdBy7jp5EkdfXDPD60ut9uwtsal88wPyRswn4LNbkcW5u?=
+ =?us-ascii?Q?gSZqlfubEHMu++sovaKXnMQtIVpWnYv99WOKCtjwkTF/qmqVG+gW60JK+vPL?=
+ =?us-ascii?Q?uvSVD1ken2BrAMYnmQhpphk8cW1tbrKZdREktk7CkKuCe3weapzG0n6mPdd8?=
+ =?us-ascii?Q?CLLYaUhMfuXTb1fks6a0LCizgdP9iupHr6/25l3+bZ+TedAWPDUzGcQc+/4B?=
+ =?us-ascii?Q?P8hpUaZEQYw0ty+jqf2l8UKlyfFRu7MSFQXktSM9eSjK1l1dL9GvYlxtXPZ6?=
+ =?us-ascii?Q?rwl/uttMCINuF5U1sHCHgwDvpjQbgr1RD6Qal72npPB5fmJ9Fsn+9SvEeisz?=
+ =?us-ascii?Q?aUBg7LVfw0X2/RMn5KPnHFgqeiMXL6TmnysdEYTEEhhoGSaiImeSzO0ThEHJ?=
+ =?us-ascii?Q?cngSvtAXrwvhIvs9ghMnyOOb9/wEEZ/ewZSwXQ/bqyNUtSofpvbcTeXoJX5T?=
+ =?us-ascii?Q?KFxyUXjLSro/se17pyUIDOIN16gUcspL3F0DUJwBLjZSGFqKv2UAVxyymWNz?=
+ =?us-ascii?Q?AwGjnXPaDv/UbfiV3HUYYMdeLV5K?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Dwg0nPU6gThfqtK1FD5MeX56s+iE4fgnJoR+F+VQCefq3p+QCApfycw4jVOe?=
+ =?us-ascii?Q?EcZsFGvCMbKjdPypxDEV2BNxZyRR1jSj7/SZbICOXt7FgFFGEsicUMhSEhhc?=
+ =?us-ascii?Q?ggy3jq5UQ0RYWiMZEIVIT6iAk+zrbtDK013lKvYFU45sh90wqZhqfkUOqWZT?=
+ =?us-ascii?Q?xityvWbixGfC04xBOwG9qgJge13XrJvVv5rU0beWp3R9EnuFgGkObLUOYWWW?=
+ =?us-ascii?Q?Gk+NqGRg0oo88QrimuoZaE+2t5m1mOc3148eGsqnCIEhVdY6+rR17mkT0Mcv?=
+ =?us-ascii?Q?oYZvWLdIHhQzchLrFocg5A2VXEofK8e1GO4ZZbDNkiTtYMhDDoS7Gz7pfQd7?=
+ =?us-ascii?Q?Yq6R8xOGFPtl6yVHZqPCBx2U8k2MteMOz/novS25nU6ujowxJ1WbzJeS+grl?=
+ =?us-ascii?Q?0ejCnvVtAXufFUV3hMac5wLYKKwuN8RNpfKxP6squ4fib7TIpIF+SeDg7344?=
+ =?us-ascii?Q?SazUCsn6AgTnYH0/nuprxXA7xMMTBHHvMCOGy9F5551tB9cKZh9amKDHHdhz?=
+ =?us-ascii?Q?dOMfp+FXPIvXBM+XpdTTKZ5OvkUFNkeAKult9qXbmFZYMmeqlZSlhKwtldu2?=
+ =?us-ascii?Q?v2gmznF8zHBppfkuxFZ/zI1WFNo56c0t4Qbg+0vWM0ypGQ/3Qk+e/cdmymeC?=
+ =?us-ascii?Q?ER283ErLzw84I0iQxtXEXglXS6p5Phir9tfZajuiy0e2DxBjOvpD9NjKfhcN?=
+ =?us-ascii?Q?X2WkC5c+wXhPk87sZGVfvmwR/1n2AtGRySgyU++D28CAhbBB7kGpHpAcFexZ?=
+ =?us-ascii?Q?fic3IkMLFKKKZED1p48Qmv5fZKda5c5ReYvQaC1ekKWw4qy2F7kulTpIqIcQ?=
+ =?us-ascii?Q?xybqlWh1rrJFPwrkxgE2i/iOg6IrSN6iScfh90QWbV41LMVbwMFG8JcUDwwb?=
+ =?us-ascii?Q?B9ves7ISfFzIFdBxIppWQFPF10PrH2isTfjRyIaFg67k3THn30yZvS93cjMN?=
+ =?us-ascii?Q?N32Kg3Gfk6jGXesgnaRR12ifRnSzaKbFRdufO3xuBaqwoZZUsVgr/Hy/Jkyo?=
+ =?us-ascii?Q?WaLvv73MlNDXV7VIT7P4YU4a4+I98Bj80f+S6bkknpmxqqBYFCAwQit8Eim2?=
+ =?us-ascii?Q?VnL7u/VSJlpip8yQ3fAQxi/JnAHGAH8bwUggav38haIOby+lqAjsG027qwFx?=
+ =?us-ascii?Q?BPdsdmO21x2bAhAsG/gCmUEBZzyzTZibhzPdPRaLjWYrGVcBBY63RKeJpGRY?=
+ =?us-ascii?Q?CWoXsjhYPmatqs6e7d1IT+weMZ3sazKXfa6Dsk9/oYHwcRmkoYDxdrJ2nWmM?=
+ =?us-ascii?Q?hIhcUBjP5CNmQkudZFxa9sY5ZzkyB16PyuqxkMpjI/3Z4XiM2aQSpLllpj/V?=
+ =?us-ascii?Q?3rCBaxAKScSvSkNw3Ul+hStGGR/0AjsVNrq52eXcXgmppdoMm5K/GdP8UZrm?=
+ =?us-ascii?Q?PgQJvjhs37IRqmhC84YpoqPzkYOWzDEBD4qCMwlTHpGu8WFuDypvugKec1M7?=
+ =?us-ascii?Q?M8mW+q5+7HuTdSpZdey6nm+vAZViFyho7FmduwJSgxMPgcwz3A5CaBk6nBpr?=
+ =?us-ascii?Q?gkSvwMTiDna9Je3p13NJRqGk0wCrnHUEgHIkyjLXAVJ8FBQxIEhn772zYIru?=
+ =?us-ascii?Q?feHOwGm/psJ2XXz+kfAhLeQRIXJNpc3MgQwBH6Ch?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15d50167-ef75-4c2b-58d0-08dd40efc8ea
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 05:34:37.1850
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: S2Umme52R3RcFsYALty1TlmXGJmClKrA1mAyPzc9LgUQeQmCgJfLqo7NnhkyugL5U8/Xbk3pLOxKGk7rCRDRtg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB7071
 
-On Wed, Jan 29, 2025 at 07:55:55AM +0100, Dmitry Vyukov wrote:
-> On Wed, 29 Jan 2025 at 05:56, Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Mon, Jan 27, 2025 at 10:58:52AM +0100, Dmitry Vyukov wrote:
-> > > Latency output field is similar to overhead, but represents overhead for
-> > > latency rather than CPU consumption. It's re-scaled from overhead by dividing
-> > > weight by the current parallelism level at the time of the sample.
-> > > It effectively models profiling with 1 sample taken per unit of wall-clock
-> > > time rather than unit of CPU time.
-> > >
-> > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > Cc: Ian Rogers <irogers@google.com>
-> > > Cc: linux-perf-users@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > ---
-> > >  tools/perf/ui/browsers/hists.c  | 27 ++++++++++------
-> > >  tools/perf/ui/hist.c            | 29 ++++++++++-------
-> > >  tools/perf/util/addr_location.h |  2 ++
-> > >  tools/perf/util/event.c         |  6 ++++
-> > >  tools/perf/util/events_stats.h  |  2 ++
-> > >  tools/perf/util/hist.c          | 55 ++++++++++++++++++++++++---------
-> > >  tools/perf/util/hist.h          | 12 +++++++
-> > >  tools/perf/util/sort.c          |  2 ++
-> > >  8 files changed, 100 insertions(+), 35 deletions(-)
-> > >
-> > > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> > > index 49ba82bf33918..35c10509b797f 100644
-> > > --- a/tools/perf/ui/browsers/hists.c
-> > > +++ b/tools/perf/ui/browsers/hists.c
-> > > @@ -1226,7 +1226,7 @@ int __hpp__slsmg_color_printf(struct perf_hpp *hpp, const char *fmt, ...)
-> > >       return ret;
-> > >  }
-> > >
-> > > -#define __HPP_COLOR_PERCENT_FN(_type, _field)                                \
-> > > +#define __HPP_COLOR_PERCENT_FN(_type, _field, _fmttype)                      \
-> > >  static u64 __hpp_get_##_field(struct hist_entry *he)                 \
-> > >  {                                                                    \
-> > >       return he->stat._field;                                         \
-> > > @@ -1238,10 +1238,10 @@ hist_browser__hpp_color_##_type(struct perf_hpp_fmt *fmt,             \
-> > >                               struct hist_entry *he)                  \
-> > >  {                                                                    \
-> > >       return hpp__fmt(fmt, hpp, he, __hpp_get_##_field, " %*.2f%%",   \
-> > > -                     __hpp__slsmg_color_printf, true);               \
-> > > +                     __hpp__slsmg_color_printf, _fmttype);           \
-> > >  }
-> > >
-> > > -#define __HPP_COLOR_ACC_PERCENT_FN(_type, _field)                    \
-> > > +#define __HPP_COLOR_ACC_PERCENT_FN(_type, _field, _fmttype)          \
-> > >  static u64 __hpp_get_acc_##_field(struct hist_entry *he)             \
-> > >  {                                                                    \
-> > >       return he->stat_acc->_field;                                    \
-> > > @@ -1262,15 +1262,18 @@ hist_browser__hpp_color_##_type(struct perf_hpp_fmt *fmt,             \
-> > >               return ret;                                             \
-> > >       }                                                               \
-> > >       return hpp__fmt(fmt, hpp, he, __hpp_get_acc_##_field,           \
-> > > -                     " %*.2f%%", __hpp__slsmg_color_printf, true);   \
-> > > +                     " %*.2f%%", __hpp__slsmg_color_printf,          \
-> > > +                     _fmttype);                                      \
-> > >  }
-> > >
-> > > -__HPP_COLOR_PERCENT_FN(overhead, period)
-> > > -__HPP_COLOR_PERCENT_FN(overhead_sys, period_sys)
-> > > -__HPP_COLOR_PERCENT_FN(overhead_us, period_us)
-> > > -__HPP_COLOR_PERCENT_FN(overhead_guest_sys, period_guest_sys)
-> > > -__HPP_COLOR_PERCENT_FN(overhead_guest_us, period_guest_us)
-> > > -__HPP_COLOR_ACC_PERCENT_FN(overhead_acc, period)
-> > > +__HPP_COLOR_PERCENT_FN(overhead, period, PERF_HPP_FMT_TYPE__PERCENT)
-> > > +__HPP_COLOR_PERCENT_FN(latency, latency, PERF_HPP_FMT_TYPE__LATENCY)
-> > > +__HPP_COLOR_PERCENT_FN(overhead_sys, period_sys, PERF_HPP_FMT_TYPE__PERCENT)
-> > > +__HPP_COLOR_PERCENT_FN(overhead_us, period_us, PERF_HPP_FMT_TYPE__PERCENT)
-> > > +__HPP_COLOR_PERCENT_FN(overhead_guest_sys, period_guest_sys, PERF_HPP_FMT_TYPE__PERCENT)
-> > > +__HPP_COLOR_PERCENT_FN(overhead_guest_us, period_guest_us, PERF_HPP_FMT_TYPE__PERCENT)
-> > > +__HPP_COLOR_ACC_PERCENT_FN(overhead_acc, period, PERF_HPP_FMT_TYPE__PERCENT)
-> > > +__HPP_COLOR_ACC_PERCENT_FN(latency_acc, latency, PERF_HPP_FMT_TYPE__LATENCY)
-> > >
-> > >  #undef __HPP_COLOR_PERCENT_FN
-> > >  #undef __HPP_COLOR_ACC_PERCENT_FN
-> > > @@ -1279,6 +1282,8 @@ void hist_browser__init_hpp(void)
-> > >  {
-> > >       perf_hpp__format[PERF_HPP__OVERHEAD].color =
-> > >                               hist_browser__hpp_color_overhead;
-> > > +     perf_hpp__format[PERF_HPP__LATENCY].color =
-> > > +                             hist_browser__hpp_color_latency;
-> > >       perf_hpp__format[PERF_HPP__OVERHEAD_SYS].color =
-> > >                               hist_browser__hpp_color_overhead_sys;
-> > >       perf_hpp__format[PERF_HPP__OVERHEAD_US].color =
-> > > @@ -1289,6 +1294,8 @@ void hist_browser__init_hpp(void)
-> > >                               hist_browser__hpp_color_overhead_guest_us;
-> > >       perf_hpp__format[PERF_HPP__OVERHEAD_ACC].color =
-> > >                               hist_browser__hpp_color_overhead_acc;
-> > > +     perf_hpp__format[PERF_HPP__LATENCY_ACC].color =
-> > > +                             hist_browser__hpp_color_latency_acc;
-> > >
-> > >       res_sample_init();
-> > >  }
-> > > diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-> > > index 34fda1d5eccb4..22e31d835301e 100644
-> > > --- a/tools/perf/ui/hist.c
-> > > +++ b/tools/perf/ui/hist.c
-> > > @@ -27,9 +27,10 @@ static int __hpp__fmt_print(struct perf_hpp *hpp, struct hists *hists, u64 val,
-> > >                           int nr_samples, const char *fmt, int len,
-> > >                           hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
-> > >  {
-> > > -     if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
-> > > +     if (fmtype == PERF_HPP_FMT_TYPE__PERCENT || fmtype == PERF_HPP_FMT_TYPE__LATENCY) {
-> > >               double percent = 0.0;
-> > > -             u64 total = hists__total_period(hists);
-> > > +             u64 total = fmtype == PERF_HPP_FMT_TYPE__PERCENT ? hists__total_period(hists) :
-> > > +                     hists__total_latency(hists);
-> > >
-> > >               if (total)
-> > >                       percent = 100.0 * val / total;
-> > > @@ -128,7 +129,7 @@ int hpp__fmt(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> > >                                 print_fn, fmtype);
-> > >       }
-> > >
-> > > -     if (fmtype == PERF_HPP_FMT_TYPE__PERCENT)
-> > > +     if (fmtype == PERF_HPP_FMT_TYPE__PERCENT || fmtype == PERF_HPP_FMT_TYPE__LATENCY)
-> > >               len -= 2; /* 2 for a space and a % sign */
-> > >       else
-> > >               len -= 1;
-> > > @@ -472,11 +473,13 @@ __HPP_ENTRY_AVERAGE_FN(_type, _field)                                   \
-> > >  __HPP_SORT_AVERAGE_FN(_type, _field)
-> > >
-> > >  HPP_PERCENT_FNS(overhead, period)
-> > > +HPP_PERCENT_FNS(latency, latency)
-> > >  HPP_PERCENT_FNS(overhead_sys, period_sys)
-> > >  HPP_PERCENT_FNS(overhead_us, period_us)
-> > >  HPP_PERCENT_FNS(overhead_guest_sys, period_guest_sys)
-> > >  HPP_PERCENT_FNS(overhead_guest_us, period_guest_us)
-> > >  HPP_PERCENT_ACC_FNS(overhead_acc, period)
-> > > +HPP_PERCENT_ACC_FNS(latency_acc, latency)
-> > >
-> > >  HPP_RAW_FNS(samples, nr_events)
-> > >  HPP_RAW_FNS(period, period)
-> > > @@ -548,11 +551,13 @@ static bool hpp__equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
-> > >
-> > >  struct perf_hpp_fmt perf_hpp__format[] = {
-> > >       HPP__COLOR_PRINT_FNS("Overhead", overhead, OVERHEAD),
-> > > +     HPP__COLOR_PRINT_FNS("Latency", latency, LATENCY),
-> > >       HPP__COLOR_PRINT_FNS("sys", overhead_sys, OVERHEAD_SYS),
-> > >       HPP__COLOR_PRINT_FNS("usr", overhead_us, OVERHEAD_US),
-> > >       HPP__COLOR_PRINT_FNS("guest sys", overhead_guest_sys, OVERHEAD_GUEST_SYS),
-> > >       HPP__COLOR_PRINT_FNS("guest usr", overhead_guest_us, OVERHEAD_GUEST_US),
-> > >       HPP__COLOR_ACC_PRINT_FNS("Children", overhead_acc, OVERHEAD_ACC),
-> > > +     HPP__COLOR_ACC_PRINT_FNS("Latency", latency_acc, LATENCY_ACC),
-> >
-> > Hmm.. two latency fields have the same name.  Maybe better to
-> > distinguish them but "Children Latency" or "Total Latency" would be
-> > too long.. :(
-> >
-> > I think it's mostly ok since users will see them together with overhead
-> > columns and it'll give the context ("Children" or "Self").  But it can
-> > e called with -F or -s option to manually select those columns only.
-> 
-> Yes, the motivation for calling them the same was the column name length.
-> 
-> And, with the default flags it looks reasonable:
-> 
->   Children  Latency      Self   Latency  Command
-> 
-> The fields seem to be selected based on the names in sort.c rather
-> than these names, e.g. I can do:
-> 
-> perf report -F latency_children,overhead_children,latency,overhead,symbol
-> 
-> and get:
-> 
-> Samples: 45K of event 'cycles:Pu', Event count (approx.): 10457486861
->   Latency  Children   Latency  Overhead  Symbol
-> +  19.35%    18.69%     0.00%     0.00%  [k] 0000000000000000
-> +   4.86%     4.21%     4.86%     4.21%  [.] htab_find_slot_with_hash
-> +   4.15%     4.48%     0.00%     0.00%  [.] 0xffffffff9ce012a6
-> 
-> So it seems to be possible to select these columns as needed.
+On Wed, Jan 29, 2025 at 12:58:00PM +0100, David Hildenbrand wrote:
+> We no longer get a MMU_NOTIFY_EXCLUSIVE on conversion with the owner set
+> that one has to filter out: if there already *is* a device-exclusive
+> entry (e.g., other device, we don't have that information), GUP will
+> convert it back to an ordinary PTE and notify via
+> remove_device_exclusive_entry().
 
-Right, it's possible to use -F latency,latency_children,symbol and get:
+What tree is this against? I tried applying to v6.13 and Linus current master
+but neither applied cleanly.
+ 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/gpu/drm/nouveau/nouveau_svm.c | 6 +-----
+>  include/linux/mmu_notifier.h          | 4 +---
+>  include/linux/rmap.h                  | 2 +-
+>  lib/test_hmm.c                        | 2 +-
+>  mm/rmap.c                             | 3 +--
+>  5 files changed, 5 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> index 39e3740980bb..4758fee182b4 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_svm.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> @@ -510,10 +510,6 @@ static bool nouveau_svm_range_invalidate(struct mmu_interval_notifier *mni,
+>  	struct svm_notifier *sn =
+>  		container_of(mni, struct svm_notifier, notifier);
+>  
+> -	if (range->event == MMU_NOTIFY_EXCLUSIVE &&
+> -	    range->owner == sn->svmm->vmm->cli->drm->dev)
+> -		return true;
 
-  Samples: 45K of event 'cycles:Pu', Event count (approx.): 10457486861
-    Latency  Latency  Symbol
-  +   0.00%   19.35%  [k] 0000000000000000
-  +   4.86%    4.86%  [.] htab_find_slot_with_hash
-  +   0.00%    4.15%  [.] 0xffffffff9ce012a6
+I think this will cause a live-lock because make_device_exclusive_range()
+will call the notifier which without the filtering will increment the sequence
+count and cause endless retries of the loop in nouveau_atomic_range_fault().
+The notifier needs to be able to figure out if it was called in response to
+something this thread did (ie. make_device_exclusive_range) and can therefore
+ignore the invalidation, or from some other thread.
 
-Thanks,
-Namhyung
+Looking at hmm_test I see that doesn't use the sequence counter to ensure
+the PTE remains valid whilst it is mapped. I think that is probably wrong, so
+apologies if that lead you astray.
 
+>  	/*
+>  	 * serializes the update to mni->invalidate_seq done by caller and
+>  	 * prevents invalidation of the PTE from progressing while HW is being
+> @@ -609,7 +605,7 @@ static int nouveau_atomic_range_fault(struct nouveau_svmm *svmm,
+>  
+>  		notifier_seq = mmu_interval_read_begin(&notifier->notifier);
+>  		mmap_read_lock(mm);
+> -		page = make_device_exclusive(mm, start, drm->dev, &folio);
+> +		page = make_device_exclusive(mm, start, &folio);
+>  		mmap_read_unlock(mm);
+>  		if (IS_ERR(page)) {
+>  			ret = -EINVAL;
+> diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
+> index d4e714661826..bac2385099dd 100644
+> --- a/include/linux/mmu_notifier.h
+> +++ b/include/linux/mmu_notifier.h
+> @@ -44,9 +44,7 @@ struct mmu_interval_notifier;
+>   * owner field matches the driver's device private pgmap owner.
+>   *
+>   * @MMU_NOTIFY_EXCLUSIVE: to signal a device driver that the device will no
+> - * longer have exclusive access to the page. When sent during creation of an
+> - * exclusive range the owner will be initialised to the value provided by the
+> - * caller of make_device_exclusive(), otherwise the owner will be NULL.
+> + * longer have exclusive access to the page.
+>   */
+>  enum mmu_notifier_event {
+>  	MMU_NOTIFY_UNMAP = 0,
+> diff --git a/include/linux/rmap.h b/include/linux/rmap.h
+> index 86425d42c1a9..3b216b91d2e5 100644
+> --- a/include/linux/rmap.h
+> +++ b/include/linux/rmap.h
+> @@ -664,7 +664,7 @@ void try_to_migrate(struct folio *folio, enum ttu_flags flags);
+>  void try_to_unmap(struct folio *, enum ttu_flags flags);
+>  
+>  struct page *make_device_exclusive(struct mm_struct *mm, unsigned long addr,
+> -		void *owner, struct folio **foliop);
+> +		struct folio **foliop);
+>  
+>  /* Avoid racy checks */
+>  #define PVMW_SYNC		(1 << 0)
+> diff --git a/lib/test_hmm.c b/lib/test_hmm.c
+> index 1c0a58279db9..8520c1d1b21b 100644
+> --- a/lib/test_hmm.c
+> +++ b/lib/test_hmm.c
+> @@ -786,7 +786,7 @@ static int dmirror_exclusive(struct dmirror *dmirror,
+>  		struct folio *folio;
+>  		struct page *page;
+>  
+> -		page = make_device_exclusive(mm, addr, &folio, NULL);
+> +		page = make_device_exclusive(mm, addr, &folio);
+>  		if (IS_ERR(page)) {
+>  			ret = PTR_ERR(page);
+>  			break;
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index 4acc9f6d743a..d99dbf59adc6 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -2397,7 +2397,6 @@ void try_to_migrate(struct folio *folio, enum ttu_flags flags)
+>   * make_device_exclusive() - Mark an address for exclusive use by a device
+>   * @mm: mm_struct of associated target process
+>   * @addr: the virtual address to mark for exclusive device access
+> - * @owner: passed to MMU_NOTIFY_EXCLUSIVE range notifier to allow filtering
+>   * @foliop: folio pointer will be stored here on success.
+>   *
+>   * This function looks up the page mapped at the given address, grabs a
+> @@ -2421,7 +2420,7 @@ void try_to_migrate(struct folio *folio, enum ttu_flags flags)
+>   * Returns: pointer to mapped page on success, otherwise a negative error.
+>   */
+>  struct page *make_device_exclusive(struct mm_struct *mm, unsigned long addr,
+> -		void *owner, struct folio **foliop)
+> +		struct folio **foliop)
+>  {
+>  	struct folio *folio, *fw_folio;
+>  	struct vm_area_struct *vma;
+> -- 
+> 2.48.1
+> 
