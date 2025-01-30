@@ -1,251 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA58C13D;
-	Thu, 30 Jan 2025 14:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29121E7C08;
+	Thu, 30 Jan 2025 14:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738245697; cv=none; b=O20s+mVvlXFiPG8OBzrFy2mmdZZmawJ3ixthIRRaFpHrXNrbLSuGiE/jOc5UsG58kRM1ALuywoUgDZntClXOo+KG3JnaDGVhJHyLMzNxtTaM14J7BIoA+My8ussm/mbLqjPwI0H56qxFY8ZT+482o49H987RXO+/hUTkolpeG9Q=
+	t=1738245701; cv=none; b=essETly2E3/AVSpyMjBDLlhPBLefXOcb/UVqDCDBNVjy5eplkg2Dqp85o8ohPqzrMcegaH3MXgnJvopRZOd3XEy8pbyOgu51zgRcDlJFd3yYaKXPOP6yGPYiTuFgitYaE8BFCTdG2xm6njpd4x8udsd/UR7cRar6ePAxOdGgjKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738245697; c=relaxed/simple;
-	bh=gCRHDCCPfiXFVhqNmt72zRp/hZixAsQbrhL8GG0x9Zw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TPcaXuNvIrIqpXwsUDyADzQuEXzGWTkrNZYbtzLdSju3aOiB0LJla/ggFXdi9341DIqTUD4zqiAaq88LfIJjgh4gXJ9NDANzAbJR0o5RQq3dVduSwNoemiWKu+XswNcnfhb0KrwBxUqATXSJlRvTu5cLiSf7ni0dZ0S1TVuEnpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=si7t5HVS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738245701; c=relaxed/simple;
+	bh=ch3lPgpH9FqpWF5yhIl3KdS/BSZwVZLBNQlPIEZ73z4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d6DxQnXUIJuuSutQ9m47KMCYpzuN2zstPnfje1zf7J6duG9gJMs0A8fFybpYsIHXw/SyhEMieFd2h7U0ndV3HWS2DhcVGRKM/5/j5rILITXhRD9fHP8w6N8l3EaEvWhcYNyQN1AHFpP5byZOtOE3iRnzTHSMn43KD5ql7Ht2BJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z0axnlpw; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="si7t5HVS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54DCEC4CED2;
-	Thu, 30 Jan 2025 14:01:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738245696;
-	bh=gCRHDCCPfiXFVhqNmt72zRp/hZixAsQbrhL8GG0x9Zw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=si7t5HVSCL/5SDF1YRVhpB8+WrMyObBKB0Z84GtoZGQePcEPKL7PBMtwcuyUeXrtJ
-	 XTEf+3EER67ePaN4M2KaoXpE4R3h5wtiuV5UwyDvDGoatsZIFF/QOM08g0hhuPg+9v
-	 coqHRgEnB7bB/Sc77OvybqYn4beb7VvSaKlOXOxY=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	hargar@microsoft.com,
-	broonie@kernel.org
-Subject: [PATCH 6.12 00/40] 6.12.12-rc1 review
-Date: Thu, 30 Jan 2025 14:59:00 +0100
-Message-ID: <20250130133459.700273275@linuxfoundation.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z0axnlpw"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21669fd5c7cso13685955ad.3;
+        Thu, 30 Jan 2025 06:01:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738245699; x=1738850499; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BnUJdLyMGBvO/hIllptp513IAD0oBTKPE00WpFD+Cy8=;
+        b=Z0axnlpw9IHmmkrrUU6R8FLxPEbI4Nktv2a/tv1rwZbSA6woBYDSQcZknh+23o2FeL
+         z3G6Ugirq/WJIv8wfn64BJYL/xPpMmSSBPstIy8Hr7ROPnkB+Wgwg1l+8DzoP7Oiph7I
+         7IsZgqZ+b7CBvU9JNjyqDYwqtrRFhKBAUp7otkPF88bbKIRo78rLX6iPnvEFTmhqcPXl
+         vuGHe1t5oGbhEnsCP121nOQ1OiIxX7o1grQPhwTy6i2CMiNEjGzrhuQkw24cQWDtaT2P
+         YepKVExDffQsq4hePKorApWNw7qI7VwnFbZdypWDG2Kgs9q4RR/9aTXWHVjyi5UTR8m8
+         fS6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738245699; x=1738850499;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BnUJdLyMGBvO/hIllptp513IAD0oBTKPE00WpFD+Cy8=;
+        b=VH4/1G+JfrEq8Hxk0JmSF4RHI9CrHJW7OTqlkvGu1ZKTBF1sFH5l7irEHGoSx/CGrA
+         1G0XOakA/4mcAu4M3ewLoroHC8okg3YJQrQ4Ubxc5tjNHMzujwBllKIHVbDTHQxhSOgt
+         AnCp7I54KCWdcZsJvQ/rUQEPeOmMSDT6PYnpMFTvG8ThVEDzo7XeRqUhI99EhT07I7Bn
+         X8+sXCs3cTYLvxkSDP4hXOPXgt9YGFMZQHxDNjV8KBoGK4k1m5xU3i6EoyQPeCOLM8KD
+         ZLVRLxH4mVvvGcvGduDu8EKUv+POQnxdKd4Cm4nhKXV606S75uql+gpd6vSKSFRTJOPp
+         CemA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1u3juS/Wm+C/mCX2loUVb8BPgf8XzyWJjc1OBQOpcQkmnX2oSHa7j6b2b8bNtKGpG+wuTof7lZK8uhZA=@vger.kernel.org, AJvYcCWRRmQzmTQMCNoT6/gntNuRSf9LqRRR/2xx82b813PH/csCJJrJjyXaUMlM9wSRUooMyRYOD0Mjzism@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPdDXegECE6j1e5BUFnon7eVhYhfjXix2MRklc432jxSlxkkQa
+	mR6PuhwSJMHigaJJkLSLn4tVH7pRLT6PS7HUCRGpIp3SIKStMWJO
+X-Gm-Gg: ASbGncuhWI/3Fqm97DxHHdILjaqw9VYGtmpake7Hb4hAEEN+JIj5Jc+8MD824TQBuIS
+	FJKIVzBMLTZat2Y5kPC+98VLm4aznC6zBv5Zuy6VWfr5TGrGyExwXt3pveEZ23B2LLuJd1LOSDs
+	Cewfo5c9bNUnEpj8u51K2MWU4bao0JiziIvcyO6RrfR7ExlaRuMZemWDoUJxFwoLqale4Li2VfE
+	znTQsGoGH/XpGu4WnjFQbK7VmpwtCV3/s3rjTpIGwVJOE1CAHS/B/3oSq4P9+a2Vlvl61uJuOXk
+	yDOy6wmqW/8vq5osqSd41EhS
+X-Google-Smtp-Source: AGHT+IHv9lGQn/s3vid5X1TDdjdBDQ1OqgW5b6PvrqI4oNlN3OUgEh429QSJ8PIvXZrIzok1AEsKXA==
+X-Received: by 2002:a17:902:da8c:b0:215:b468:1a33 with SMTP id d9443c01a7336-21dd7c356fcmr113793145ad.4.1738245698703;
+        Thu, 30 Jan 2025 06:01:38 -0800 (PST)
+Received: from linuxsimoes.. ([187.120.154.251])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3300880sm14139635ad.168.2025.01.30.06.01.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 06:01:38 -0800 (PST)
+From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+To: scott@spiteful.org,
+	bhelgaas@google.com
+Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] PCI: cpci: remove unused fields
+Date: Thu, 30 Jan 2025 11:01:29 -0300
+Message-Id: <20250130140129.19756-1-trintaeoitogc@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.12-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.12.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.12.12-rc1
-X-KernelTest-Deadline: 2025-02-01T13:35+00:00
 Content-Transfer-Encoding: 8bit
 
-This is the start of the stable review cycle for the 6.12.12 release.
-There are 40 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+The `get_power()` and `set_power()` function pointers in the
+`cpci_hp_controller ops` struct were declared but never implemented by
+any driver. To improve code readability and reduce resource usage,
+remove this pointers and replace with a `flags` field.
 
-Responses should be made by Sat, 01 Feb 2025 13:34:42 +0000.
-Anything received after that time might be too late.
+Use the new `flags` field in `enable_slot()`, `disable_slot()`, and
+`cpci_get_power_s atus()` to track the slot's power state using the
+`SLOT_ENABLED` macro.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.12-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-and the diffstat can be found below.
+Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+---
+ drivers/pci/hotplug/cpci_hotplug.h      |  3 +--
+ drivers/pci/hotplug/cpci_hotplug_core.c | 21 +++++++--------------
+ 2 files changed, 8 insertions(+), 16 deletions(-)
 
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.12.12-rc1
-
-Jack Greiner <jack@emoss.org>
-    Input: xpad - add support for wooting two he (arm)
-
-Matheos Mattsson <matheos.mattsson@gmail.com>
-    Input: xpad - add support for Nacon Evol-X Xbox One Controller
-
-Leonardo Brondani Schenkel <leonardo@schenkel.net>
-    Input: xpad - improve name of 8BitDo controller 2dc8:3106
-
-Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-    Input: xpad - add QH Electronics VID/PID
-
-Nilton Perim Neto <niltonperimneto@gmail.com>
-    Input: xpad - add unofficial Xbox 360 wireless receiver clone
-
-Mark Pearson <mpearson-lenovo@squebb.ca>
-    Input: atkbd - map F23 key to support default copilot shortcut
-
-Nicolas Nobelis <nicolas@nobelis.eu>
-    Input: xpad - add support for Nacon Pro Compact
-
-Jason Gerecke <jason.gerecke@wacom.com>
-    HID: wacom: Initialize brightness of LED trigger
-
-Hans de Goede <hdegoede@redhat.com>
-    wifi: rtl8xxxu: add more missing rtl8192cu USB IDs
-
-Lianqin Hu <hulianqin@vivo.com>
-    ALSA: usb-audio: Add delay quirk for USB Audio Device
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "usb: gadget: u_serial: Disable ep before setting port to null to fix the crash caused by port being null"
-
-Qasim Ijaz <qasdev00@gmail.com>
-    USB: serial: quatech2: fix null-ptr-deref in qt2_process_read_urb()
-
-Easwar Hariharan <eahariha@linux.microsoft.com>
-    scsi: storvsc: Ratelimit warning logs to prevent VM denial of service
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio/platform: check the bounds of read/write syscalls
-
-Linus Torvalds <torvalds@linux-foundation.org>
-    cachestat: fix page cache statistics permission checking
-
-Jiri Kosina <jikos@kernel.org>
-    Revert "HID: multitouch: Add support for lenovo Y9000P Touchpad"
-
-Jamal Hadi Salim <jhs@mojatatu.com>
-    net: sched: fix ets qdisc OOB Indexing
-
-Paulo Alcantara <pc@manguebit.com>
-    smb: client: handle lack of EA support in smb2_query_path_info()
-
-Chuck Lever <chuck.lever@oracle.com>
-    libfs: Use d_children list to iterate simple_offset directories
-
-Chuck Lever <chuck.lever@oracle.com>
-    libfs: Replace simple_offset end-of-directory detection
-
-Chuck Lever <chuck.lever@oracle.com>
-    Revert "libfs: fix infinite directory reads for offset dir"
-
-Chuck Lever <chuck.lever@oracle.com>
-    Revert "libfs: Add simple_offset_empty()"
-
-Chuck Lever <chuck.lever@oracle.com>
-    libfs: Return ENOSPC when the directory offset range is exhausted
-
-Andreas Gruenbacher <agruenba@redhat.com>
-    gfs2: Truncate address space when flipping GFS2_DIF_JDATA flag
-
-Yosry Ahmed <yosryahmed@google.com>
-    mm: zswap: move allocations during CPU init outside the lock
-
-Yosry Ahmed <yosryahmed@google.com>
-    mm: zswap: properly synchronize freeing resources during CPU hotunplug
-
-Charles Keepax <ckeepax@opensource.cirrus.com>
-    ASoC: samsung: Add missing depends on I2C
-
-Russell Harmon <russ@har.mn>
-    hwmon: (drivetemp) Set scsi command timeout to 10s
-
-Philippe Simons <simons.philippe@gmail.com>
-    irqchip/sunxi-nmi: Add missing SKIP_WAKE flag
-
-Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-    drm/connector: hdmi: Validate supported_formats matches ycbcr_420_allowed
-
-Yage Geng <icoderdev@gmail.com>
-    ALSA: hda/realtek: Fix volume adjustment issue on Lenovo ThinkBook 16P Gen5
-
-Rob Herring (Arm) <robh@kernel.org>
-    of/unittest: Add test that of_address_to_resource() fails on non-translatable address
-
-Alex Hung <alex.hung@amd.com>
-    drm/amd/display: Initialize denominator defaults to 1
-
-Tom Chung <chiahsuan.chung@amd.com>
-    drm/amd/display: Use HW lock mgr for PSR1
-
-Xiang Zhang <hawkxiang.cpp@gmail.com>
-    scsi: iscsi: Fix redundant response for ISCSI_UEVENT_GET_HOST_STATS request
-
-Maciej Strozek <mstrozek@opensource.cirrus.com>
-    ASoC: cs42l43: Add codec force suspend/resume ops
-
-Linus Walleij <linus.walleij@linaro.org>
-    seccomp: Stub for !CONFIG_SECCOMP
-
-Charles Keepax <ckeepax@opensource.cirrus.com>
-    ASoC: samsung: Add missing selects for MFD_WM8994
-
-Marian Postevca <posteuca@mutex.one>
-    ASoC: codecs: es8316: Fix HW rate calculation for 48Mhz MCLK
-
-Charles Keepax <ckeepax@opensource.cirrus.com>
-    ASoC: wm8994: Add depends on MFD core
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- .../gpu/drm/amd/display/dc/dce/dmub_hw_lock_mgr.c  |   3 +-
- .../dml21/src/dml2_core/dml2_core_dcn4_calcs.c     |   4 +-
- drivers/gpu/drm/drm_connector.c                    |   3 +
- drivers/hid/hid-ids.h                              |   1 -
- drivers/hid/hid-multitouch.c                       |   8 +-
- drivers/hid/wacom_sys.c                            |  24 +--
- drivers/hwmon/drivetemp.c                          |   2 +-
- drivers/input/joystick/xpad.c                      |   9 +-
- drivers/input/keyboard/atkbd.c                     |   2 +-
- drivers/irqchip/irq-sunxi-nmi.c                    |   3 +-
- drivers/net/wireless/realtek/rtl8xxxu/core.c       |  20 +++
- drivers/of/unittest-data/tests-platform.dtsi       |  13 ++
- drivers/of/unittest.c                              |  14 ++
- drivers/scsi/scsi_transport_iscsi.c                |   4 +-
- drivers/scsi/storvsc_drv.c                         |   8 +-
- drivers/usb/gadget/function/u_serial.c             |   8 +-
- drivers/usb/serial/quatech2.c                      |   2 +-
- drivers/vfio/platform/vfio_platform_common.c       |  10 ++
- fs/gfs2/file.c                                     |   1 +
- fs/libfs.c                                         | 162 ++++++++++-----------
- fs/smb/client/smb2inode.c                          | 104 +++++++++----
- include/linux/fs.h                                 |   1 -
- include/linux/seccomp.h                            |   2 +-
- mm/filemap.c                                       |  19 +++
- mm/shmem.c                                         |   4 +-
- mm/zswap.c                                         |  90 ++++++++----
- net/sched/sch_ets.c                                |   2 +
- sound/pci/hda/patch_realtek.c                      |   4 +-
- sound/soc/codecs/Kconfig                           |   1 +
- sound/soc/codecs/cs42l43.c                         |   1 +
- sound/soc/codecs/es8316.c                          |  10 +-
- sound/soc/samsung/Kconfig                          |   6 +-
- sound/usb/quirks.c                                 |   2 +
- 34 files changed, 367 insertions(+), 184 deletions(-)
-
+diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
+index 03fa39ab0c88..c5cb12cad2b4 100644
+--- a/drivers/pci/hotplug/cpci_hotplug.h
++++ b/drivers/pci/hotplug/cpci_hotplug.h
+@@ -44,8 +44,7 @@ struct cpci_hp_controller_ops {
+ 	int (*enable_irq)(void);
+ 	int (*disable_irq)(void);
+ 	int (*check_irq)(void *dev_id);
+-	u8  (*get_power)(struct slot *slot);
+-	int (*set_power)(struct slot *slot, int value);
++	int flags;
+ };
+ 
+ struct cpci_hp_controller {
+diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
+index d0559d2faf50..87a743c2a5f1 100644
+--- a/drivers/pci/hotplug/cpci_hotplug_core.c
++++ b/drivers/pci/hotplug/cpci_hotplug_core.c
+@@ -27,6 +27,8 @@
+ #define DRIVER_AUTHOR	"Scott Murray <scottm@somanetworks.com>"
+ #define DRIVER_DESC	"CompactPCI Hot Plug Core"
+ 
++#define SLOT_ENABLED 0x00000001
++
+ #define MY_NAME	"cpci_hotplug"
+ 
+ #define dbg(format, arg...)					\
+@@ -71,13 +73,12 @@ static int
+ enable_slot(struct hotplug_slot *hotplug_slot)
+ {
+ 	struct slot *slot = to_slot(hotplug_slot);
+-	int retval = 0;
+ 
+ 	dbg("%s - physical_slot = %s", __func__, slot_name(slot));
+ 
+-	if (controller->ops->set_power)
+-		retval = controller->ops->set_power(slot, 1);
+-	return retval;
++	controller->ops->flags |= SLOT_ENABLED;
++
++	return 0;
+ }
+ 
+ static int
+@@ -109,11 +110,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
+ 	}
+ 	cpci_led_on(slot);
+ 
+-	if (controller->ops->set_power) {
+-		retval = controller->ops->set_power(slot, 0);
+-		if (retval)
+-			goto disable_error;
+-	}
++	controller->ops->flags &= ~SLOT_ENABLED;
+ 
+ 	slot->adapter_status = 0;
+ 
+@@ -129,11 +126,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
+ static u8
+ cpci_get_power_status(struct slot *slot)
+ {
+-	u8 power = 1;
+-
+-	if (controller->ops->get_power)
+-		power = controller->ops->get_power(slot);
+-	return power;
++	return controller->ops->flags & SLOT_ENABLED;
+ }
+ 
+ static int
+-- 
+2.34.1
 
