@@ -1,142 +1,98 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 512101B21A9;
-	Thu, 30 Jan 2025 15:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8DFC1B21A9
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738250399; cv=none; b=Tntnx2HlR/5LNkXarVSPY3mSEKv5rDOqL6q0SFAZp4TznOMM28ozKqnp1NcdITwzqW9AtueH2ZSqHyrf1VHmwO3auCqxDU9C2hl15uXMLWzPg4avS2YzkpyKcZjIOJmqaMBj1SU3gisUx0Vzze4RmKXjmZFsrV97/B15nvlIPh8=
+	t=1738250411; cv=none; b=jSMywK5xV7G1MZDL3Mm/JrIyL4GizzcAtXqSlxL2WOSiAYbFwx6RlpfCD9gvUw0A6/Yi6llTL9QfDgWoMfWlkWVT99thP2sJUP5bJpHj8ifAop+9PR3BowkRKGnCtfS+lGNaQfQmK49QyZ/iCLtLiGUqfDgAom/uJBY/UWm+Wds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738250399; c=relaxed/simple;
-	bh=++5F+U/NM5cGq1DEAB3TXntJxWEnJwv2eL4zaC6Opxw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qQRMeVnhcKJnZTgJ/UgRsOvo6R/ODqfEhYqvlx+2LsboU/wPTcvy5AN2I1S7OnaIEac1paqdY5xz2wrcHnWzCsD3Hh6CauuHIR0goZLH7gHbz192BnoKVohJx9nB9CKjoX/qdXW40r589BTSi9yvCt7m9Zsjytk8GTBqPTrJOek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hlX/R9OC; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hlX/R9OC"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 535D544280;
-	Thu, 30 Jan 2025 15:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738250395;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mthSOymJzZU3NBmJRQSU6dHuOu/XGt2aFg8/OQCwRBI=;
-	b=hlX/R9OCvuRRz9TzdoX5x2NhDsPTeQ5LsAlA0ZE7l7BchG9XBhMUjmgWYMOP8J0Ifhwxh7
-	8Th0Hg2aH6+/RaAmzvGY6hY/vWhXV2lPSwbf5kEdzEO4gK4zbdywX+RwxhILhoRKy7jQM6
-	fNkqlkYEMNYV78vY1/vJ5p2iThdAi4sITHhKRjz/Zw7kZSDEIU9auSE+P43fmxl/pWTpKl
-	YknKucUQo5Yp/fGaN+jGImu45E4ZDlVgntE7qw32BP5fl2xwWKUHIq+laW92GXd0Y5W6O+
-	9f8VfIxoCb+/pqjoO1HMw5wdyVChvXnyMre7kDdvxOVtELsPxPJ9/deli5pDSw==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: "Rabara, Niravkumar L" <niravkumar.l.rabara@intel.com>
-Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
- <vigneshr@ti.com>,  "linux@treblig.org" <linux@treblig.org>,  Shen Lichuan
- <shenlichuan@vivo.com>,  Jinjie Ruan <ruanjinjie@huawei.com>,
-  "u.kleine-koenig@baylibre.com" <u.kleine-koenig@baylibre.com>,
-  "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-  "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] mtd: rawnand: cadence: support deferred prob
- when DMA is not ready
-In-Reply-To: <BL3PR11MB65321B556C59C995DC05C70AA2E92@BL3PR11MB6532.namprd11.prod.outlook.com>
-	(Niravkumar L. Rabara's message of "Thu, 30 Jan 2025 03:51:08 +0000")
-References: <20250116032154.3976447-1-niravkumar.l.rabara@intel.com>
-	<20250116032154.3976447-2-niravkumar.l.rabara@intel.com>
-	<87plkgpk8k.fsf@bootlin.com>
-	<BL3PR11MB653276DFD3339ADAADC70CCFA2EE2@BL3PR11MB6532.namprd11.prod.outlook.com>
-	<874j1i0wfq.fsf@bootlin.com>
-	<BL3PR11MB65321B556C59C995DC05C70AA2E92@BL3PR11MB6532.namprd11.prod.outlook.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Thu, 30 Jan 2025 16:19:53 +0100
-Message-ID: <87msf8z5uu.fsf@bootlin.com>
+	s=arc-20240116; t=1738250411; c=relaxed/simple;
+	bh=geV7bZQ9kn2RnS6n8JJtmB9/FyC+NjZVuvwdpgQHfLo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YZP1PHxpft1VW5h0R4YPt5rioNfxt3pLOUtxYvA4wE7DVFuJUhErF+zuVQAZFn8sA617+jP5m7T4OlcbE2j/1UlFdaLQ0kLz1SVjHjszN4DBZJgXdx4Tw4mZTdgYktBit1FMf9tW6L0I31wYZIiL3kigR6PXGxP00hG8xbAhMNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4YkMhs5qpGz9sS8;
+	Thu, 30 Jan 2025 16:03:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 97DfCRLs5zAY; Thu, 30 Jan 2025 16:03:09 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4YkMhs534sz9sS7;
+	Thu, 30 Jan 2025 16:03:09 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 9AC968B774;
+	Thu, 30 Jan 2025 16:03:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 9tEHCDtSNdJp; Thu, 30 Jan 2025 16:03:09 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 4199A8B763;
+	Thu, 30 Jan 2025 16:03:09 +0100 (CET)
+Message-ID: <05f6f732-e155-4b60-8c4e-984e42e51ee4@csgroup.eu>
+Date: Thu, 30 Jan 2025 16:03:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeiudeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehnihhrrghvkhhumhgrrhdrlhdrrhgrsggrrhgrsehinhhtvghlrdgtohhmpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehlihhnuhigsehtrhgvsghlihhgrdhorhhgpdhrtghpthhtohepshhhvghnlhhitghhuhgrnhesvhhivhhordgtohhmpdhrtghpthhtoheprhhurghnjhhinhhji
- hgvsehhuhgrfigvihdrtghomhdprhgtphhtthhopehurdhklhgvihhnvgdqkhhovghnihhgsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhg
-X-GND-Sasl: miquel.raynal@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] powerpc: Enable dynamic preemption
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: mpe@ellerman.id.au, maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+ npiggin@gmail.com, linux-kernel@vger.kernel.org
+References: <20250106051919.55020-1-sshegde@linux.ibm.com>
+ <20250106051919.55020-2-sshegde@linux.ibm.com>
+ <20250130145409.D_so_mR1@linutronix.de>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250130145409.D_so_mR1@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello,
 
->> > Driver works without external DMA interface i.e. has_dma=3D0.
->> > However current driver does not have a mechanism to configure it from
->> > device tree.
->>=20
->> What? Why are you requesting a DMA channel from a dmaengine in this case?
->>=20
->> Please make the distinction between the OS implementation (the driver) a=
-nd
->> the DT binding which describe the HW and only the HW.
->>=20
->
-> Let me clarify from bindings(hw) and driver prospective.=20
->
-> Bindings :-
-> Cadence NAND controller HW has MMIO registers, so called slave DMA interf=
-ace
-> for page programming or page read.=20
->         reg =3D <0x10b80000 0x10000>,
->               <0x10840000 0x10000>;
->         reg-names =3D "reg", "sdma"; // sdma =3D  Slave DMA data port reg=
-ister set
->
-> It appears that dt bindings has captured sdma interface correctly.
 
-Slave DMA is very confusing because in Linux we make the distinction
-between:
-1- external DMA (generic DMA controller) driven
-   through the dmaengine API, through which we interact using the so
-   called slave API
-2- peripheral DMA (DMA controller embedded in the NAND IP) when there is
-   no "external/generic" engine. In this case we control DMA transfers
-   using the registers of the NAND controller (or a nearby range, in
-   this case), the same driver handles both the NAND and the DMA part.
+Le 30/01/2025 à 15:54, Sebastian Andrzej Siewior a écrit :
+> On 2025-01-06 10:49:19 [+0530], Shrikanth Hegde wrote:
+>> --- a/arch/powerpc/kernel/interrupt.c
+>> +++ b/arch/powerpc/kernel/interrupt.c
+>> @@ -25,6 +25,10 @@
+>>   unsigned long global_dbcr0[NR_CPUS];
+>>   #endif
+>>   
+>> +#if defined(CONFIG_PREEMPT_DYNAMIC) && defined(CONFIG_HAVE_PREEMPT_DYNAMIC_KEY)
+>> +DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+>> +#endif
+> 
+> I am uncertain here: Do you need to DEFINE it? It is set by the sched
+> core which also defines it. It should be same thing after all, right?
 
-You used the wording Slave DMA (#1), but it feels like you are talking
-about the other (#2). Can you please confirm in which case we are?
+As far as I can see it is not handled by sched core.
 
-> Linux Driver:-
-> Driver can read these sdma registers directly or it can use the DMA.
-> Existing driver code has hardcoded has_dma with an assumption that
-> an external DMA is always used and relies on DMA API for data
-> transfer.
+$ git grep sk_dynamic_irqentry_exit_cond_resched
+arch/arm64/include/asm/preempt.h:DECLARE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+arch/arm64/kernel/entry-common.c:DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+arch/arm64/kernel/entry-common.c: 
+(static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
+include/linux/entry-common.h:DECLARE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+kernel/entry/common.c:DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+kernel/entry/common.c:  if 
+(!static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
 
-I am sorry but DMA API does not mean much. There are 3 APIs:
-- dma-mapping, for the buffers and the coherency
-- dmaengine, used in case #1 only, to drive the external DMA controllers
-- dma-buf to share buffers between areas in the kernel (out of scope)
+It is in common entry but arm64 and powerpc don't use common entry.
 
-> Thant is why it requires to use DMA channel from dmaengine.
+$ git grep GENERIC_ENTRY arch
+arch/Kconfig:config GENERIC_ENTRY
+arch/loongarch/Kconfig: select GENERIC_ENTRY
+arch/riscv/Kconfig:     select GENERIC_ENTRY
+arch/s390/Kconfig:      select GENERIC_ENTRY
+arch/x86/Kconfig:       select GENERIC_ENTRY
 
-If I understand it right, no :-)
 
-Either you have an external DMA controller (#2) or an internal one (#1)
-but in this second case there is no DMA channel request nor any
-engine-related API. Of course you need to use the dma-mapping API for
-the buffers.
+Christophe
 
-> In my previous reply, I tried to describe this driver scenario but maybe =
-I mixed up.=20
-> has_dma=3D0, i.e. accessing sdma register without using dmaengine is
-> also working.
-
-But do you have an external DMA engine in the end? Or is it specific to
-the NAND controller?
-
-> However, currently there is no option in driver to choose between using d=
-maengine and
-> direct register access.
->
-
-Thanks,
-Miqu=C3=A8l
