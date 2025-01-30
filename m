@@ -1,170 +1,99 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE0B1A7046
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738257962; cv=none; b=qYKaLo9OubB7N3Mfks/+u6QNRtepiQWLmiJE3QAb1k8iWxV1Ms9p5xEs+Pg2bcRUwekyCqjLfX6GtQUxRs/lB5Q6oITOyraSHqE8Mt7lqYCbHvdNJ8pO3IdcOQFJfvINGrxFfF8CE+pX0aNf4H6gHuluGoSbWmmlKz3i3baqNZ8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738257962; c=relaxed/simple;
-	bh=FQtTGttXCfsOZDEItu05WX5hOv+6wntTMfgSC2UxIVg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=putZteOQuUeBzH8SDjVcb5FSvdQMGSG7djCu6jklcHcYbz2hrqVIsT+aUtFfJBIwoVCsmIlC3oU9w9s9gQuFuNxnK+7QU/Gsgie+j3mKcgf20XwWj7cmVVTNHGIf6DmiZxMhtagiERG48Xf+wv9ApmYosbo8jeewktBYf311g+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=X1ulZn9L; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC491E284B;
+	Thu, 30 Jan 2025 17:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738258187; cv=pass; b=Ndvu06Trs1X3gdn5qTZW+iMSbFHOn2l605+6QMd+HDwWZBI/vpiWX+JEv3IUYF2n23vL2QVZaqC3OOKBMimfDeHT7unG/yPGUTOcVMlJZPmD3MFx5hrIXdziJ9kW3AypbtzZrahJlCVFJHrABZ7YHqEyDnM2CFPCWkIwPddE6Xo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738258187; c=relaxed/simple;
+	bh=++sDyCZc/yi0yL9Y3edgcU98BfXwKTCf2/oKnn7rR3A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TDkVMjj3MdCIMJQQnuzLumBgsMUPMMcqXdOGB2mmOfGaGS0URovcmglfEd5XGXfz7NampjUbdus1m/R9671/kQQvPtVGbxxk9oiM3n11M3BAT1XDdMGtuXO1k4r/DVeUtB554m/26LpayaWLnRpfYWn9r/c70gjBa+AI5v7BNds=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=N1b8U1vt; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="X1ulZn9L"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UH2G3W030278;
-	Thu, 30 Jan 2025 17:25:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=1g2lbC
-	bfeU0yGMbox0cDgfCA9exUWOvdyJXbAJj4wqQ=; b=X1ulZn9LzzqcpzSYrMSeUE
-	TrpYvgxE2UGyPLjmukMkD8hcyVh61ySXB9pBdlB8qdWWuLX2H5rRxIa8ffMG7ugv
-	kdj2Zgm3vUaDo8zCZewuxaAXEUctJoDtss3MsXCTnCp15d5gK49Hlj+ytIhGPQer
-	B+ymRmYgJNXe+nC2ZtB140eO8y5+/srLOknpp9BRDiTRauB6EpSeewpW2Nat3l5w
-	y32O6KPdvnpHrFb8TSnxSM2zVIUEO52S6Se+VsNGpU8BDHg9nc13Fz488HuH8N0i
-	PsyztZRLFFk2Q8+bQWWZ+ss1+b7dobgSzfLuRLVkTts/AMDZSXxq5gA/2rXSie1A
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44g54ntqn9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 17:25:32 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UHPWtb028540;
-	Thu, 30 Jan 2025 17:25:32 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44g54ntqn5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 17:25:32 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50UDpfbv022538;
-	Thu, 30 Jan 2025 17:25:31 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44dcgjxwq3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 17:25:31 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UHPTVG43123132
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 17:25:29 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 837392006A;
-	Thu, 30 Jan 2025 16:57:11 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 17E4320063;
-	Thu, 30 Jan 2025 16:57:09 +0000 (GMT)
-Received: from [9.124.215.164] (unknown [9.124.215.164])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 30 Jan 2025 16:57:08 +0000 (GMT)
-Message-ID: <b73b5143-1a7f-4032-ac06-43db3bf4abea@linux.ibm.com>
-Date: Thu, 30 Jan 2025 22:27:07 +0530
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="N1b8U1vt"
+ARC-Seal: i=1; a=rsa-sha256; t=1738258157; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=K0mcm3ZZVkIa2qRv/vGsJQ793dJM9sTSGClvlhjgb7nlQiljTSYKPq2+dFb+66Lx0Fl9H+p4bM1qqz6xm4qWpBUHGXtXvmHe5y2m32zu7xY0Lod9gxyz/BNb0BtLmT8RFAWa55K00B+HePHoaeD2QgOt52nbnPrJyC4o8KRT7J0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738258157; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=5MJd8R69SbdNulHkmKCs63pHS989RsRUWoZsRccqpIk=; 
+	b=R3FgPIwWME8kzcb/kMWiplOu/72pttiwcSh91NcL6siTDq545SXDOm/woqp7ZZH1UKXXXF47gweklearZjyOhd83ytB0p3iD++ZI/J+v64VXJY0tymlkFbynRWnh18QZtHCDcrIO9m+dlR3Aip7HtIgRy4tnJyV/3ALZIX/TFng=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
+	dmarc=pass header.from=<adrian.larumbe@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738258157;
+	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=5MJd8R69SbdNulHkmKCs63pHS989RsRUWoZsRccqpIk=;
+	b=N1b8U1vts3zaRJ7wBx9g/6YhEWhcAUo6SlGINMK4ryqPiRflSKQHpmPhIZLMdpNI
+	id4aoG8htyZDl/T5pIanEpqbGYDgGxBAjLZHj3dckZZcFyRv+Iwg3Kyeq5sgNu+pklo
+	pynxEqnruF+SAo42pS7mt9++i6bQ+rn9J0gT+TYM=
+Received: by mx.zohomail.com with SMTPS id 1738258154340806.4685254117666;
+	Thu, 30 Jan 2025 09:29:14 -0800 (PST)
+From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+To: David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>
+Cc: kernel@collabora.com,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+Subject: [PATCH v10 1/5] Documentation/gpu: Clarify format of driver-specific fidnfo keys
+Date: Thu, 30 Jan 2025 17:28:09 +0000
+Message-ID: <20250130172851.941597-2-adrian.larumbe@collabora.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250130172851.941597-1-adrian.larumbe@collabora.com>
+References: <20250130172851.941597-1-adrian.larumbe@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] powerpc: Enable dynamic preemption
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: mpe@ellerman.id.au, maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        linux-kernel@vger.kernel.org
-References: <20250106051919.55020-1-sshegde@linux.ibm.com>
- <20250106051919.55020-2-sshegde@linux.ibm.com>
- <20250130145409.D_so_mR1@linutronix.de>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250130145409.D_so_mR1@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: _qriNWSwMSuCta2ZlCxLOYz4N7mExA2e
-X-Proofpoint-ORIG-GUID: GUz7QDRcA0WjZJGm_VcJzT05drjya8aF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_07,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 phishscore=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 spamscore=0 clxscore=1015 suspectscore=0
- mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2411120000 definitions=main-2501300125
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+This change reflects de facto usage by amdgpu, as exemplified by commit
+d6530c33a978 ("drm/amdgpu: expose more memory stats in fdinfo").
 
+Cc: Tvrtko Ursulin <tursulin@ursulin.net>
+Acked-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+---
+ Documentation/gpu/drm-usage-stats.rst | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-On 1/30/25 20:24, Sebastian Andrzej Siewior wrote:
-> On 2025-01-06 10:49:19 [+0530], Shrikanth Hegde wrote:
->> --- a/arch/powerpc/kernel/interrupt.c
-
-> 
-
-Thanks for taking a look.
-
->> +
->>   #ifdef CONFIG_PPC_BOOK3S_64
->>   DEFINE_STATIC_KEY_FALSE(interrupt_exit_not_reentrant);
->>   static inline bool exit_must_hard_disable(void)
->> @@ -396,7 +400,7 @@ notrace unsigned long interrupt_exit_kernel_prepare(struct pt_regs *regs)
->>   		/* Returning to a kernel context with local irqs enabled. */
->>   		WARN_ON_ONCE(!(regs->msr & MSR_EE));
->>   again:
->> -		if (IS_ENABLED(CONFIG_PREEMPTION)) {
->> +		if (preempt_model_preemptible()) {
-> 
-> CONFIG_HAVE_PREEMPT_DYNAMIC_KEY is the only option, right? Wouldn't
-> 
-> | #DEFINE need_irq_preemption() \
-> |          (static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
-> |
-> | 	if (need_irq_preemption()) {
-> 
-> be a bit smaller/ quicker? This could be a fast path ;)
-
-I am okay with either way. I did try both[1], there wasn't any significant difference,
-hence chose a simpler one. May be system size, workload pattern might matter.
-
-Let me do some more testing to see which one wins.
-Is there any specific benchmark which might help here?
-
-[1]: https://lore.kernel.org/all/b98b7795-070a-4d9c-9599-445c2ff55fd7@linux.ibm.com/
-
-> 
->>   			/* Return to preemptible kernel context */
->>   			if (unlikely(read_thread_flags() & _TIF_NEED_RESCHED)) {
->>   				if (preempt_count() == 0)
->> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
->> index edf5cabe5dfd..2556fa8ec019 100644
->> --- a/arch/powerpc/kernel/traps.c
->> +++ b/arch/powerpc/kernel/traps.c
->> @@ -266,7 +266,11 @@ static int __die(const char *str, struct pt_regs *regs, long err)
->>   	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
->>   	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
->>   	       PAGE_SIZE / 1024, get_mmu_str(),
->> -	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
->> +	       preempt_model_none()      ? "none" :
->> +	       preempt_model_voluntary() ? "voluntary" :
->> +	       preempt_model_full()      ? "full" :
->> +	       preempt_model_lazy()      ? "lazy" :
->> +	       "",
-> 
-> So intend to rework this part. I have patches stashed at
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/bigeasy/staging.git/log/?h=preemption_string
-> 
-> which I didn't sent yet due to the merge window. Just a heads up ;)
-
-Makes sense. I had seen at-least two places where this code was there, ftrace/powerpc.
-There were way more places..
-
-You want me to remove this part?
-
-> 
->>   	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
->>   	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
->>   	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
-> 
-> Sebastian
+diff --git a/Documentation/gpu/drm-usage-stats.rst b/Documentation/gpu/drm-usage-stats.rst
+index 2717cb2a597e..2b5393ed7692 100644
+--- a/Documentation/gpu/drm-usage-stats.rst
++++ b/Documentation/gpu/drm-usage-stats.rst
+@@ -21,7 +21,10 @@ File format specification
+ 
+ - File shall contain one key value pair per one line of text.
+ - Colon character (`:`) must be used to delimit keys and values.
+-- All keys shall be prefixed with `drm-`.
++- All standardised keys shall be prefixed with `drm-`.
++- Driver-specific keys shall be prefixed with `driver_name-`, where
++  driver_name should ideally be the same as the `name` field in
++  `struct drm_driver`, although this is not mandatory.
+ - Whitespace between the delimiter and first non-whitespace character shall be
+   ignored when parsing.
+ - Keys are not allowed to contain whitespace characters.
+-- 
+2.47.1
 
