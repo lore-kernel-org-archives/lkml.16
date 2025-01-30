@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D10B1494CC;
-	Thu, 30 Jan 2025 13:16:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF47819;
+	Thu, 30 Jan 2025 13:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738242989; cv=none; b=ABXajV/pKz7DeA4hnfIv3+yzRlsENIvQtLhDYmiQ06HNZ+FQRzqYrJ3ybWm689e5BQVTXNe2lPYRoHZ2G2Rio+q/w6iPMmr7GM+/2YlScl0NmufGCRX6S2HrexakbODJVuu9qMQvu04XZBa9ge/HFVt/DSnig3fQBILE8zQX/W0=
+	t=1738243033; cv=none; b=GExU4wytCr53cx7kiuYBFNzg4tj8E3IDW3lZB5i+uONFW9dPWXF+L+8AMCKXxhzEj9IT9HzkkRM8YysxoVpLxW2AHw82YyJRE+H4Krz8mzS1rEDz3Et62QhZr5m6KwGLsuX4ni9zeTR2OwdbtpWfS6NQKBOci1LVecf8BWRTv2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738242989; c=relaxed/simple;
-	bh=nuAXux8LlG70kzoPLga/JauwL57jQBIg2zHB/i8r2hg=;
+	s=arc-20240116; t=1738243033; c=relaxed/simple;
+	bh=d35FUQkRnX6u6XtUEnsoIUHr8KEsQwWHRMzj9kdigCY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cbcVz7v+fFNqekAGnDSRyUx6B+q5H5ME8Fd5iQFX7fSG2+/hXzUAAxEoRGcgSFMcqHR9EI0qb3kvoDf5mkZvg08NUaZkCln3qJbCYOi9lCzqm6oj1/AtP46+5JrkXwbWQx0jzwHsCrHPWKZfSD6mXJObhKwABE93lpeEMr05w2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jV31mDTi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qr78x/IYxH2EM/LopCqY0HmXJjC92ucI6F+0jKkYsMiFfjM2ieNEuR2d1UyEADQ321cvfM0mOYNRAQUQvSFoWR3Bmg+GFLPqm67JNTB9SQBKvy6yABhuMpXdQzuwsKXzGc4DDa9VKlsKN2mNiaNrpOTz4FkIX7pVATc+Jy1XBog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kf4xH2dw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jV31mDTi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A171C4CED2;
-	Thu, 30 Jan 2025 13:16:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kf4xH2dw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A05C4CED2;
+	Thu, 30 Jan 2025 13:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738242989;
-	bh=nuAXux8LlG70kzoPLga/JauwL57jQBIg2zHB/i8r2hg=;
+	s=k20201202; t=1738243033;
+	bh=d35FUQkRnX6u6XtUEnsoIUHr8KEsQwWHRMzj9kdigCY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jV31mDTieR0FLBzs7KPDFmUjOJUGk9SHHdVF7cVTiD/9ImaHBXZSE4JJw15NTCz4A
-	 UkxvUU33y15VkMGKmShqYjjZpXHTNV+Sphx//2YMjucJFDN3FbUwfp/a/AxpEtRctD
-	 Q+UrUY4XbWI/UGFPfhoSNQelhJnlgCNtlWd2xHOM6rxRxItdwL1DOaAMxR5LUWY9IB
-	 GeGD9PtCABkFHx+sCIhst1DbOgHRk+SFUBB4gZzF1oL2LT4qdSrGdwne56qoJHUgqt
-	 y+EnOXCfs7FI47VJDnuUlcbv4Ntvsbbges66bh5CFqjAopVSyLBdkyD6EOEJ2dCfly
-	 u/0x/HGUysSpg==
-Message-ID: <8e905adf-118f-4cd7-9233-61397d72409b@kernel.org>
-Date: Thu, 30 Jan 2025 14:16:19 +0100
+	b=Kf4xH2dw4/15igEUXdM049neQ2AuHqQrsd26zswkiafbOLZC98JGNQ5xo38QvM0KX
+	 VEtpTENB++vb3q7j5AhebbgZrdPuDODdIAiUaTyHdwUcek2cytpqWTouypoOT2XThH
+	 mS97Ij28FiciBT4b8PNM8gTG+GnSytXXbAJchmUmsk5KM4Uis3GlVohnYJ9ajSSk0v
+	 l2qPFOi4CQ17eay03EmOLzUlqDJ2xVKHkAkZ4gRcRm/jXFyjbDJlNsjkjm5F6EJKZE
+	 XgEwtKaCqJ++zxhN5lUvFnNZsZjTqJOe8Co21rCxrom2Ci77BpIVSWh101V6GIS9pP
+	 qBvI/tfLdSE+Q==
+Message-ID: <2d1780d3-ae78-4adf-a20a-8b6b3891b9b0@kernel.org>
+Date: Thu, 30 Jan 2025 14:17:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: gpu: mali-bifrost: Add compatible for
- MT8370 SoC
+Subject: Re: [PATCH v2 2/3] drm/panfrost: Add support for Mali on the MT8370
+ SoC
 To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>,
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
@@ -51,7 +51,7 @@ Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 References: <20250130-mt8370-enable-gpu-v2-0-c154d0815db5@collabora.com>
- <20250130-mt8370-enable-gpu-v2-1-c154d0815db5@collabora.com>
+ <20250130-mt8370-enable-gpu-v2-2-c154d0815db5@collabora.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -97,19 +97,33 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250130-mt8370-enable-gpu-v2-1-c154d0815db5@collabora.com>
+In-Reply-To: <20250130-mt8370-enable-gpu-v2-2-c154d0815db5@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30/01/2025 13:30, Louis-Alexis Eyraud wrote:
-> Adds a compatible for the MediaTek MT8370 SoC, with an
-> integrated ARM Mali G57 MC2 GPU (Valhall-JM, dual core).
-> This new compatible is needed for this SoC support, as the other
-> existing compatibles for the same architecture (MT8188, MT8192) do not
-> match the required power domain number.
+On 30/01/2025 13:31, Louis-Alexis Eyraud wrote:
+> Add a compatible for the MediaTek MT8370 SoC, with an
+> integrated ARM Mali G57 MC2 GPU (Valhall-JM, dual core),
+> with the same platform data as MT8186 (one regulator, two power
+> domains).
+> 
+> Reviewed-by: Steven Price <steven.price@arm.com>
+> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_drv.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> index 0f3935556ac761adcd80197d87e8e478df436fd5..7b7e9f6f620659a7fdcb5d907ebc4f01eca876e0 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> @@ -859,6 +859,7 @@ static const struct of_device_id dt_match[] = {
+>  	{ .compatible = "mediatek,mt8186-mali", .data = &mediatek_mt8186_data },
+>  	{ .compatible = "mediatek,mt8188-mali", .data = &mediatek_mt8188_data },
+>  	{ .compatible = "mediatek,mt8192-mali", .data = &mediatek_mt8192_data },
+> +	{ .compatible = "mediatek,mt8370-mali", .data = &mediatek_mt8186_data },
 
-
-That's the only different? So device is compatible with older ones.
+Nothing improved here. All my previous comments still stand.
 
 Best regards,
 Krzysztof
