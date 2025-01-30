@@ -1,102 +1,34 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E35C1D88DB
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A0637483;
+	Thu, 30 Jan 2025 13:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738242380; cv=none; b=RgYjB1rn94dVaW+nAq3b7fyv9J0cwMl/hDViYWjioLlQ8VnS8EAavbTvhrDCBWK8rt4LykaQ6hlQTCu7OwJCDoe7baZvLsYy5iqPiscJcIPmkzADNzUqNtPIaneAyDtV1ecvbLc4yVxlLoqLqszIsiQdTc2t/3xSRAGb3yxRx9M=
+	t=1738242469; cv=none; b=IY33v0Il69IuUp55P61p8dtL2EyQx6SG540248Rhriyo3fLrCBe8YoPvXhZVF2Up5bTRVxx8LfxubrZ7wyGpCF1RPEew2Al9tJf74aoj08hMGacDXOqcxtkLzfQXFH09bm10h90kuZDTN8LauBl/qkU4INUDpJvtdG/tzmxwPWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738242380; c=relaxed/simple;
-	bh=Kj+RR/b0EkCekDDyYB/w6N9qVcR2qGeppMtsTs0nfR8=;
+	s=arc-20240116; t=1738242469; c=relaxed/simple;
+	bh=Xl56z502L2AwFcIudvqF0uPEmOqfZYAQcbPBE6EBMFk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YGfYNdqlzqyXcdYnpA46cynFUlYzCibuwFt8ujurTlGX0Yb/bHA5AvNNLHqjVi+Ell/wKw8JSv2w4K5vA7f8gTksHUwL6PPO4G98f2dLubQbejxZ3MIQ1W+vbCT1YpRF8mRhcke9Nn4WZinRuf+ql3Y3No7/pDxwView0+fYmmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=aS8Az4lZ; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aS8Az4lZ"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43690d4605dso5302465e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:06:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1738242377; x=1738847177; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BMLrHVPMGtCZMZmW7MbuXycbMRtIlRW9hXfQuZWmFaE=;
-        b=aS8Az4lZ45a4FaeOo17uzAqae1YSGaG9UPwbaN+5YIsNMcH4P5kQpBNAk5lYRBscNZ
-         nv0gqLwlE8V4G4CL7bUTUepYpZIxAmoU7iHtlQ7CKr0vUB275DQ3kBsJCOIXm+cXgEhe
-         irLn99rk/SxIpkr0187fbDemzMMCa2vX2Tsyc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738242377; x=1738847177;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BMLrHVPMGtCZMZmW7MbuXycbMRtIlRW9hXfQuZWmFaE=;
-        b=UxvQZkPvYd6JThXISRKGRIY+ZPZEQDxy0whiUHHDN/yFJpDZX2ESK5qPlpNxgP2/Q/
-         xo1XN3/ehL9K7MBRuFMuD6X2zQ2bNl4K7ZRDANddn8cpa4Eq7ZGSXOEmR+tFrYwr+cNC
-         mqh84w3mGqjVkWm+/W/5MeXHukyc4090P+BMOdUwKn/U13h7WrlaciWntdo0/NExCEf+
-         yc2LqCsBWwWocEz6wlQkW5Yq0miOTFO2hmGVjn4g0UZQ1gBxEgIM3HUzdLQ3QYcil02m
-         /5Kl72hreGBRn5edgyg2Bwk5i3ABYD1PwCuGAzJ8LAIYUGp+KcBY8MeHflH/sEOt+X3u
-         E3aw==
-X-Gm-Message-State: AOJu0Yy39BeVLwkG+QlOQjhwQV8KthxenwHjPVeIfZhS23dDVDN6HoPH
-	32j3/EUrO462zZzrB4Esoo+siftss1QWZvMD+exjskYzwXmlqwrakzqUJzYfMHb/Wnlkf8MMf9P
-	I
-X-Gm-Gg: ASbGncuiUzcv/D8nZ41Fb3pH+jBTHRV2xYr4YmMk5h94bB04jloFyMPOPg6TQ3c7a4z
-	WzNowcNoNKCLLPBVIyp22nUJEub/zZMFeMEQeaQgggJbbWwgC+YeaEQjqN5f41kxlzN+27Dz7rg
-	SFLIbUb5SzzlWE33/Q3ayIboSJRLHblNAZv5P0Wj3oVNbBO1ywo4wAfhKJ/pPnZxUfVEnYcRyBQ
-	oKUMHE0tikii1OvutADzIKe5EJcd5oWPAZrdusNQt6j8lc5MPQqCZ4GJVrsRJ/xQhZNHLcwLgQC
-	gWRHHXTrCa39fI0FdGvZ6Unje28=
-X-Google-Smtp-Source: AGHT+IGdMrUCvgalAZZCC4jhBxGguMB5GBKImgNsdpvgeFH4FSRc46sdOKhU5wXZRU0tkFgExsNzeQ==
-X-Received: by 2002:a05:600c:4fd6:b0:434:f1d5:1453 with SMTP id 5b1f17b1804b1-438dc34cc47mr71572785e9.0.1738242375772;
-        Thu, 30 Jan 2025 05:06:15 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c125f77sm1959273f8f.56.2025.01.30.05.06.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 05:06:15 -0800 (PST)
-Date: Thu, 30 Jan 2025 14:06:12 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-	nouveau@lists.freedesktop.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Peter Xu <peterx@redhat.com>, Alistair Popple <apopple@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v1 08/12] mm/rmap: handle device-exclusive entries
- correctly in try_to_unmap_one()
-Message-ID: <Z5t5RKFwl34vpqU4@phenom.ffwll.local>
-Mail-Followup-To: David Hildenbrand <david@redhat.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-	nouveau@lists.freedesktop.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Peter Xu <peterx@redhat.com>, Alistair Popple <apopple@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-References: <20250129115411.2077152-1-david@redhat.com>
- <20250129115411.2077152-9-david@redhat.com>
- <Z5tQL60SNNGCkfQR@phenom.ffwll.local>
- <59feb709-dadc-4d19-857e-49320cca3d98@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=hcF6JKMTRc50PaY0J7DIdcRfjS6U/WMtELQr5ZD0hcgHNjMoZys8AvSS+4bnuZPkJezEDgRfXPVZgjS2a9Jri9+KsB3L9UMINnrxMlianhRT2le05aSqkZCSFpkzKC2fNE63q+JaeDcgovr2rORNpJMiyQYZ0FPjkaiLrEI9giI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDA58497;
+	Thu, 30 Jan 2025 05:08:09 -0800 (PST)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A885A3F63F;
+	Thu, 30 Jan 2025 05:07:42 -0800 (PST)
+Date: Thu, 30 Jan 2025 13:07:35 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: sudeep.holla@arm.com, cristian.marussi@arm.com,
+	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH V1] firmware: arm_scmi: Optimize the iteration of
+ scmi_requested_devices
+Message-ID: <Z5t5l9MXsAzg5VIp@pluto>
+References: <20250107052004.762817-1-peng.fan@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -105,43 +37,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <59feb709-dadc-4d19-857e-49320cca3d98@redhat.com>
-X-Operating-System: Linux phenom 6.12.11-amd64 
+In-Reply-To: <20250107052004.762817-1-peng.fan@oss.nxp.com>
 
-On Thu, Jan 30, 2025 at 12:08:42PM +0100, David Hildenbrand wrote:
-> On 30.01.25 11:10, Simona Vetter wrote:
-> > On Wed, Jan 29, 2025 at 12:54:06PM +0100, David Hildenbrand wrote:
-> > > Ever since commit b756a3b5e7ea ("mm: device exclusive memory access")
-> > > we can return with a device-exclusive entry from page_vma_mapped_walk().
-> > > 
-> > > try_to_unmap_one() is not prepared for that, so teach it about these
-> > > non-present nonswap PTEs.
-> > > 
-> > > Before that, could we also have triggered this case with device-private
-> > > entries? Unlikely.
-> > 
-> > Just quick comment on this, I'm still pondering all the other aspects.
-> > 
-> > device-private memory is entirely owned by the driver, the core mm isn't
-> > supposed to touch these beyond migrating it back to system memory in
-> > do_swap_page. Plus using rmap when the driver asks for invalidating
-> > mappings as needed.
-> > 
-> > So no lru, thp, migration or anything initiated by core mm should ever
-> > happen on these device private pages. If it does, it'd be a bug.
+On Tue, Jan 07, 2025 at 01:20:04PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> I was not 100% sure about HWPoison handling, that's why I added that
-> comment. In other regards I agree: reclaim etc. does not apply.
+> scmi_requested_devices is organized in IDR based link lists, so only
+> need to search the link lists when there is a match protocol_id.
 
-So maybe I'm just entirely lost, but unless you have a coherent
-interconnect I don't think hwpoisin should get involved with device
-private memory? And for a coherent interconnect it's just device memory,
-which isn't treated very special.
+Hi,
 
-Also to clarify, I meant this as a general comment for all subsequent
-patches that have the same paragraph.
--Sima
--- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+while the original implementation of this loop was awful (my bad), I think
+this optiomization indeed NOW changes the logic of the checks....
+
+...you can have number of proto_id/name pairs describing requested devices
+and the idea of the logic in this loop was to catch ANY duplicate name across
+ANY of the protocol list as stated in the function Dox:
+
+---
+ * This helper let an SCMI driver request specific devices identified by the     
+ * @id_table to be created for each active SCMI instance.                        
+ *                                                                               
+ * The requested device name MUST NOT be already existent for any protocol;      
+ * at first the freshly requested @id_table is annotated in the IDR table        
+ * @scmi_requested_devices and then the requested device is advertised to any    
+ * registered party via the @scmi_requested_devices_nh notification chain.       
+---
+
+The 'awfulness' of the original loop was that it was trying to do 2
+things at once:
+
+- loop all the lists in the IDR for ALL protocols looking for a
+  duplicate name anywhere, and FAIL if ANY found
+
+  ... WHILE at the same time:
+
+- save the head of the protocol list_head matching the requested
+  id_table->protocol, if any already existing, so as not to have to scan
+
+So, indeed the original loop was meant to be an optimization, even
+though probably unreadable....
+
+... having said that, I cannot really recall WHY I decided to avoid ANY
+kind of duplicate naming given that teh match happen by proto_id/name...
+
+....maybe just for clarity ? not sure...even what the effects could be
+of having such duplicated names across protocols...
+
+Thanks,
+Cristian
