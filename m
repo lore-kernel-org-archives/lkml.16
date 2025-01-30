@@ -1,158 +1,198 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2045.outbound.protection.outlook.com [40.107.93.45])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680F5135A53;
-	Thu, 30 Jan 2025 12:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738238566; cv=fail; b=qYlCRvytLY5kLZQ8bXJ3VOAqQXmAW9Zd6mPUygsU5T/dHRivsBKfDCp2viJx7nl2PCu7kzU9rPfbXAV/qTC6VCZUqPdxBuMeZcnxBPJ77DgJ8yhEJquRkC/7DRw/0ecwKv//AS0lu5zBPj3HTuN1IyOMJIgSV4TUPAW7lmC0Rjs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738238566; c=relaxed/simple;
-	bh=xphN6sRTVEyQd9yJWUuMepdiAeRVZ6D7ZMwHxckUftI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e9gh5bcP+zM6+V4QxKD2ZJ5L8pVn5HcCrHmcuPKDyn/10XY+AOr1mx1b3sP/29EI0MyIarkWJCyl1GC41mr/5Exipz777ItSs5p/rTWIf4IooScsMYb+xiyq8I8uyX/WJU6Ocy1+zAg5KfVm9sQ+t2UaJfRAZe+32xsBdR6rgos=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lh31g1V+; arc=fail smtp.client-ip=40.107.93.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A411AF0DC;
+	Thu, 30 Jan 2025 12:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738238771; cv=none; b=HE7kcZlnobmQ24xPN1pyNbCgXU4peoLW8kduo8c/Sys2H4vlMyo3m+qak93hxphLtQzsaxxl3HquADp1/Z1MSJwTxrpqNRyLQnJjJ1VAWidNkzh7diR/HNf98EjUukyVXujPWGfzzZjp41qbf8GXmpT0qc9l9FxRHH8hQR8hqpI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738238771; c=relaxed/simple;
+	bh=xopmZEADxLu17v8s1oec48v9swghvqcukEWRE5i/ArQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rg89ZkYP4ZL6PDEwKg+5i1XdCvDfpA7fRzP22ETPFI93fGKu/ebaaCHbwu8WqIs59oSj9N9n3StZqmifvtg1OdMT1PPu1b3XYK2JDWssBWUdyoi0vULxoqI4Gyeuo23Cjs8Sdxxs5MIITL1sj7cABUvtPe4brdxw68d1CTvWy6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAR3DGWc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lh31g1V+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WCZOrzYKNCkxZkIPxaVJdSAofbw0qZ9qDTHei6KrhizBSEDdvAE2MwaGUN8q4jb+SfXDWGVhfvPej40O3SrW9qg4IjV3nT4zTxu4jYbg2B1oz6ZNRooUm3Hjja8b4EzumFg3+YOSa4fPeZYtU+dL3IVSKPl8Plv9WLSvZGwQ/c6t3lwYUX04IPJXfWBFTKzHzNw5pwRBS+lt58EispFZm9P5//qLBvZdqrfjd5vS7DTToaO9qKuMlqaCvBv4b7AP+P3L1C+cGOVFfzDLTV3NS4Fl3EpagUkv956EGzDG3a1FSODqTQfyRydGnaq1ae9RuWR7MP+5bXgB9oOEOOfl4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PU1b6MjFWqZ084kRv1SddWL+/M+mQ2ntUHVhm95qMck=;
- b=vIxM5OJ6mrD7RvqjLNG2Gh/1QuNewSojN5lFoMI01cYH5d7E2wZUA//kzNwQKk3WAeBVxjykSYwIFe6tkWfUXHT0fqD73ri79b7VvTmVzJo8WEJn+R/mTDILhfTjrFA+YqOPEHPI/170/Iprf44yyh4IZ+hmXtT3kofufW52Wn7/04auhwavgHA6L9NHYFrf9LXW++12w4l9ms7a6X62m73Hm9wYrmUWHQIK8bqiQ74fZCKZTc1ocZu53U1p9qBHQXnfYi4Lfz4U0GTzRgrRRw5gGLQw3sQePpW5YwCp1nW3oEq6F5T30VccHx4eNLtCzeakNhWSoax7njXFJ4ozfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=roeck-us.net smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PU1b6MjFWqZ084kRv1SddWL+/M+mQ2ntUHVhm95qMck=;
- b=lh31g1V+cuV4lXV2Qf8DME0iKWRklDskYUy9OC3EOQHqJhb3sEnEG07BF/dXtOuctcJyIhbGFs0iQq26AqV0WJsoRzCZ/rKcjbniy00HGwWItGUmF0rbuI8smyoBMEAMxJt7/Q+9HuPqdwOCrmhYZLmwGoZq+PgEtYXSPrS52JI=
-Received: from DM6PR02CA0160.namprd02.prod.outlook.com (2603:10b6:5:332::27)
- by CH3PR12MB8710.namprd12.prod.outlook.com (2603:10b6:610:173::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Thu, 30 Jan
- 2025 12:02:40 +0000
-Received: from DS1PEPF00017094.namprd03.prod.outlook.com
- (2603:10b6:5:332:cafe::a3) by DM6PR02CA0160.outlook.office365.com
- (2603:10b6:5:332::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.18 via Frontend Transport; Thu,
- 30 Jan 2025 12:02:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF00017094.mail.protection.outlook.com (10.167.17.137) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Thu, 30 Jan 2025 12:02:40 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 30 Jan
- 2025 06:02:38 -0600
-Received: from xhdvenkatan40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Thu, 30 Jan 2025 06:02:35 -0600
-From: Harini T <harini.t@amd.com>
-To: <linux@roeck-us.net>, <michal.simek@amd.com>, <srinivas.neeli@amd.com>,
-	<shubhrajyoti.datta@amd.com>
-CC: <srinivas.goud@amd.com>, <wim@linux-watchdog.org>,
-	<linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<devicetree@vger.kernel.org>, <git@amd.com>, Harini T <harini.t@amd.com>
-Subject: [PATCH V2] dt-bindings: watchdog: xlnx,versal-wwdt: Add optional power-domains property
-Date: Thu, 30 Jan 2025 17:32:33 +0530
-Message-ID: <20250130120233.742879-1-harini.t@amd.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAR3DGWc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D33C4C4CED2;
+	Thu, 30 Jan 2025 12:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738238770;
+	bh=xopmZEADxLu17v8s1oec48v9swghvqcukEWRE5i/ArQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mAR3DGWcYda1w4z0OEHonKPUaUDc0dWMf/3YYEXtK61VMN/NDdh1hVPVJF54ImIb1
+	 fBhqehjqpuNIDlQOBHjtXaWdqlW0quBcdIUcAEdRGZCN+wqL/b+bJOJQWbIyRJhirr
+	 GyWrVb0JimepHfBcJTgTUuKieX/YqXI/8fP8hY8jsthxtlOqQZr8hp/xDISGE0owm0
+	 gYGE+ahAYxDoTtKItvF6X3BQEmd4knWu/UJl/DUXleKBH/xvYVzkkLdZlTIYkyik6Z
+	 aMwzkD6yE42iXUkpvOEHiEA2T8cB/kSyu05k5dHLcL/Mwp2WUiez14Oo3o2OIxLFtT
+	 b3mdKDD/0Nz0Q==
+Message-ID: <3b5af48e-4155-4b98-b67b-b75d9fb6285e@kernel.org>
+Date: Thu, 30 Jan 2025 13:05:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH bpf-next/net v2 4/7] bpf: Add mptcp_subflow bpf_iter
+Content-Language: en-GB
+To: Martin KaFai Lau <martin.lau@linux.dev>, Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Martin KaFai Lau <martin.lau@kernel.org>
+References: <20241219-bpf-next-net-mptcp-bpf_iter-subflows-v2-0-ae244d3cdbbc@kernel.org>
+ <20241219-bpf-next-net-mptcp-bpf_iter-subflows-v2-4-ae244d3cdbbc@kernel.org>
+ <fdf0ddbe-e007-4a5f-bbdf-9a144e8fbe35@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <fdf0ddbe-e007-4a5f-bbdf-9a144e8fbe35@linux.dev>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: harini.t@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017094:EE_|CH3PR12MB8710:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6ec32cb8-acc5-45c7-2be9-08dd4125ff21
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?A5o+gXvqm37vqNTQP6QRtGkRPcTKD7b28yG5WjVo2PaTJkYnsDLsqX1Z6zv4?=
- =?us-ascii?Q?CmOSs3eK5nhi+AE+VJWpzf7F7lGcmU6JBgCyJNibBi4F9ETmEea3L8ll3Bbs?=
- =?us-ascii?Q?GWk3+PHqNnjI2ivGOhPyEJATefX2jXwD2pL5dWlR2Bx9ACAwP2l5AcNmRybM?=
- =?us-ascii?Q?wZDfejutm4e/yNp5KwxdsyME9EN7VWTYnv0w3gyYC4CKNmG+/YOLefpKGhiu?=
- =?us-ascii?Q?ZQeH8AscPUmzYSgbH3r8IbdKLCtLM0iQgp0IfxzJnRFWYGzCkVf7eb2as099?=
- =?us-ascii?Q?8ywO+0RcJLMqep/7tn2V+9gY+kbXUeL7mCgupQtIKTg5DZX1GAApI88ONd8i?=
- =?us-ascii?Q?5wbrDa/8ZufM+h+bEv+3R/ir4coW2bRdYOlyVmSgK7TnqlzFxwpaGPIwKWB/?=
- =?us-ascii?Q?t4oRhzCrMBAH/LdVZCBuZ+qlE3jiTNebjvRIkMQrjGZkXINepqjpgi2ClCjZ?=
- =?us-ascii?Q?OfTdHpaAY2ROi9lZ6BvftoZE253V7gSAkyUHOYuNQYXuMlwF3W5tgyoLuhz+?=
- =?us-ascii?Q?D0paN8dp/tJBBTYZww1qxpIhtB1xLMQPQCrOUhtYZzb+sI0JniZ3IGlJKJE4?=
- =?us-ascii?Q?Yaz3sp/Tw/jGK9XvFZsL9KnkSJSa9TRM53ZlNA6AyqksHkZNNJm9iTf8ZhHC?=
- =?us-ascii?Q?OWOZPu0KcEWXBVN8iKgQPD9zFpGLHYHkF6yiyi3oafeDhUO03qDRVnZ8kxou?=
- =?us-ascii?Q?U1OmclQWdkU/O+fPu8CP65wLB/Z2scwEIfbRdLnuROBYs7SszsGbjqpM9QgM?=
- =?us-ascii?Q?7qtpj8pfdcXBZcrDtpJyNMVcg0HKSsbdBdp0rOdvaIdIZIjGzrJvSxF7U23Q?=
- =?us-ascii?Q?P+Cjx/iOk6diqWG35uasO0T3NPpVCxjdFMVzaj32BrPVFPUI+yQvouiRZNUD?=
- =?us-ascii?Q?bCJLBux3y955OfVDqSiWFEToItFzxgcab4E/DqMMgvKxg/bIh/4uSnRl83UW?=
- =?us-ascii?Q?AIQZ4VEKWmJFyb8nkOGcBwryEVIiXH1mN+Jn88dgw1r+MDGpPnIgFaf8hksf?=
- =?us-ascii?Q?RwqY5WzjKfX2+7gUMhqxQLEpJJukFSzU41in74/yKFFeuwBbqdeTY9IZC7gf?=
- =?us-ascii?Q?kzOMk329195+YTgHa8oLqjHtpf7nQ9wfm132ZJvG0qIqvdGBZ+X7uXNwDed+?=
- =?us-ascii?Q?B54FTD6DCwR7zE85EVWLsxTRsh7Pd5hBLse34uVHrH+dgkwfJXwCJWEHJeEY?=
- =?us-ascii?Q?fjOLTboWYRncwSDtT3hNPiOjPOHJSCqDKT3EZtMaAYL57KUBiKaBdCuHfrof?=
- =?us-ascii?Q?3AGWQlk447PmR6iX5B5VB+HiN1RUXH1O0T+b/LraV2nAEZjLAYzAi21gJRJs?=
- =?us-ascii?Q?fSFaOauhPKUPLrhFiNrrNlSQMjd0RkhywP93RPcZ77z0z/ArPtE8Ou6LUomU?=
- =?us-ascii?Q?avBeiNrmw3QVJkA9a9MOu5MtzeSLL1U2tHnYyyII/zRbHAv8bXrwkOp9tCJk?=
- =?us-ascii?Q?zhDA4lsR9W8LMlQD1H9MNjfJiemOnidi?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 12:02:40.5344
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ec32cb8-acc5-45c7-2be9-08dd4125ff21
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017094.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8710
 
-AMD/Xilinx Versal Window Watchdog Timer has its own power domain, so add
-an optional property to describe it.
+Hi Martin,
 
-Signed-off-by: Harini T <harini.t@amd.com>
----
-Changes in V2:
-Update the commit message to specify xlnx,versal-wwdt.
+Thank you for your review!
 
-V1 Link: https://lore.kernel.org/all/20250129161014.3882952-1-harini.t@amd.com/
----
- .../devicetree/bindings/watchdog/xlnx,versal-wwdt.yaml         | 3 +++
- 1 file changed, 3 insertions(+)
+Sorry for the delay here, Geliang started to work on a new version, but
+it might take a bit of time as he is currently off for a few days.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/xlnx,versal-wwdt.yaml b/Documentation/devicetree/bindings/watchdog/xlnx,versal-wwdt.yaml
-index 14b069599740..fccfc785a077 100644
---- a/Documentation/devicetree/bindings/watchdog/xlnx,versal-wwdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/xlnx,versal-wwdt.yaml
-@@ -32,6 +32,9 @@ properties:
-   clocks:
-     maxItems: 1
- 
-+  power-domains:
-+    maxItems: 1
-+
- required:
-   - compatible
-   - reg
+On 24/01/2025 01:47, Martin KaFai Lau wrote:
+> On 12/19/24 7:46 AM, Matthieu Baerts (NGI0) wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> It's necessary to traverse all subflows on the conn_list of an MPTCP
+>> socket and then call kfunc to modify the fields of each subflow. In
+>> kernel space, mptcp_for_each_subflow() helper is used for this:
+>>
+>>     mptcp_for_each_subflow(msk, subflow)
+>>         kfunc(subflow);
+>>
+>> But in the MPTCP BPF program, this has not yet been implemented. As
+>> Martin suggested recently, this conn_list walking + modify-by-kfunc
+>> usage fits the bpf_iter use case.
+>>
+>> So this patch adds a new bpf_iter type named "mptcp_subflow" to do
+>> this and implements its helpers bpf_iter_mptcp_subflow_new()/_next()/
+>> _destroy(). And register these bpf_iter mptcp_subflow into mptcp
+>> common kfunc set. Then bpf_for_each() for mptcp_subflow can be used
+>> in BPF program like this:
+>>
+>>     bpf_for_each(mptcp_subflow, subflow, msk)
+>>         kfunc(subflow);
+
+(...)
+
+>> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+>> index
+>> c5bfd84c16c43230d9d8e1fd8ff781a767e647b5..e39f0e4fb683c1aa31ee075281daee218dac5878 100644
+>> --- a/net/mptcp/bpf.c
+>> +++ b/net/mptcp/bpf.c
+
+(...)
+
+>> @@ -47,10 +56,54 @@ bpf_mptcp_subflow_ctx(const struct sock *sk)
+>>       return NULL;
+>>   }
+>>   +__bpf_kfunc static int
+>> +bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
+>> +               struct mptcp_sock *msk)
+>> +{
+>> +    struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
+>> +    struct sock *sk = (struct sock *)msk;
+>> +
+>> +    BUILD_BUG_ON(sizeof(struct bpf_iter_mptcp_subflow_kern) >
+>> +             sizeof(struct bpf_iter_mptcp_subflow));
+>> +    BUILD_BUG_ON(__alignof__(struct bpf_iter_mptcp_subflow_kern) !=
+>> +             __alignof__(struct bpf_iter_mptcp_subflow));
+>> +
+>> +    kit->msk = msk;
+>> +    if (!msk)
+> 
+> NULL check is not needed. verifier should have rejected it for
+> KF_TRUSTED_ARGS.
+> 
+>> +        return -EINVAL;
+>> +
+>> +    if (!sock_owned_by_user_nocheck(sk) &&
+>> +        !spin_is_locked(&sk->sk_lock.slock))
+> 
+> I could have missed something. If it is to catch bug, should it be
+> sock_owned_by_me() that has the lockdep splat? For the cg get/setsockopt
+> hook here, the lock should have already been held earlier in the kernel.
+
+Good point. Because in this series, the kfunc is currently restricted to
+CG [gs]etsockopt hooks, we should use msk_owned_by_me(msk) here.
+
+> This set is only showing the cg sockopt bpf prog but missing the major
+> struct_ops piece. It is hard to comment. I assumed the lock situation is
+> the same for the struct_ops where the lock will be held before calling
+> the struct_ops prog?
+
+I understand it is hard to comment on that point. In the 'struct_ops' we
+are designing, the lock will indeed be held before calling the stuct_ops
+program. So we will just need to make sure this assumption is correct
+for all callbacks of our struct_ops.
+Also, if I understood correctly, it is possible to restrict a kfunc to
+some specific struct_ops, e.g. not to call this kfunc for the TCP CA
+struct_ops. So these checks should indeed not be needed, but I will
+double-check that with Geliang.
+
+Cheers,
+Matt
 -- 
-2.25.1
+Sponsored by the NGI0 Core fund.
 
