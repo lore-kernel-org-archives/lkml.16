@@ -1,128 +1,80 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79BB1E7668
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C832A1E1C22
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738252441; cv=none; b=PNbdmoszXEtg9CDBsmO0ODPWfm6hfBwNK7vEOn/36QE8AOgFyf+N81t3BMViUTlObnyShgUey3YLTcUT/UmJA3wjAqIYiY/Uco5ftjWccxkdgUavcLSLEA6eLPT4JkRzAOys4Y3Xo2nlQzZeBe5S5ExWcBarkQoZB7GRfCdF1VQ=
+	t=1738252553; cv=none; b=hGqMt5EHRLKxiqKkhr6681v8nAXaYf5jNjHC7heibKFsczBsmFeGyUOb2AJljbx4o1gzBPTyxklYfdZeD3psT/4zaf3WDo4LMzisYA6hz84uPzTN5Nyyz3z2R07z9CNYZ8c6skodrdi2a+6f614EaJZBAQ2q7g8FL0pDGhu94k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738252441; c=relaxed/simple;
-	bh=H+e3OlFpBmNWVWfMET5OLGzSL7cxBAmIfQN5NjbRm28=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=auDOLRckUrXGWefeT8kvEaWsQb5U9CginF8gtk1gFkC81Q4kAUH9sH6gBzSbm6txqOWurlhw/7+PXw5hjLRPiIbDiMMsjhKnkSS7OW2+tU9DVMrtNnHXnWbNk/RTX05q1mKTwEcZEour8bklLn23HR69MUewFD/V+RNtAJl7ckI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=khs6mK5s; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uK2e1rJe; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hIueoExz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DaIYu31c; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1738252553; c=relaxed/simple;
+	bh=pU1zgu3VyGVnXmoXtL1hak/fvrA33iGdz5knc0cTcm4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XtA9x4wIhdjzisgmcMH/QCBj2bFxDyMpsT68DdCPmK5EV49i7DYoQ5icBqaAQwGoXI8ep71DGFvzkCXFOS90zVarc2Lh+VEFK2+4yzojv9sYYm0EYDuFvQf0Z3sOcYF7OuW9bxer4zu6t7an3OQD8XOm28HbTjAdWGSTv/NUibY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g/Jk3dOZ; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="khs6mK5s";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uK2e1rJe";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hIueoExz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DaIYu31c"
-Received: from hawking.nue2.suse.org (unknown [IPv6:2a07:de40:a101:3:92b1:1cff:fe69:ddc])
-	by smtp-out1.suse.de (Postfix) with ESMTP id ECB2821119;
-	Thu, 30 Jan 2025 15:53:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738252438; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RPAJkN6OC+am6GO8NqpZY0HniVqg2hpiAus7C+OxupE=;
-	b=khs6mK5swyyHFpf4usPkQ0pCcp8Xcaozpqs0SYZ9N9MjHKvW/ztn035f5iX5aimAM8Rie+
-	u7SyQJfXE/9gb7L+BUUasK6OynWbtohOzB/GW5575p4aFwBMOzUN0AGZ+rXjz1vvxy8AtF
-	emk8KRMU3hxzvpOZv/eVAR2VGBLD6pM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738252438;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RPAJkN6OC+am6GO8NqpZY0HniVqg2hpiAus7C+OxupE=;
-	b=uK2e1rJeDgXquAqIvNL4xfZwq4Wjic1lROQupuAs0l1l4V1Bt+Pb8dm7Fb5togQswNL0k6
-	MkflyO78/1fF7mDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=hIueoExz;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=DaIYu31c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738252437; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RPAJkN6OC+am6GO8NqpZY0HniVqg2hpiAus7C+OxupE=;
-	b=hIueoExz8w2EA9+RQGCp0zkyTsKG1tf36eI78UeOhey//shZ1a29leFllK9S9kDvlQnhXH
-	Ry6zEk2IYfnii+XRRExjfpbgZal2pLvlIHGa+aaPaOSrTJaZpSaIjtttj7XQmPu6vKh7n8
-	xLvM09rjdgpfD9oM11gZVQD4DTsCnII=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738252437;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RPAJkN6OC+am6GO8NqpZY0HniVqg2hpiAus7C+OxupE=;
-	b=DaIYu31cjQcUKGB6NlFSCJezQxKLBj0UT3AET+YFIa7mm3waN1jTbei+1eCsFU4+lD4t48
-	UgXjJ9Efv8cmXADw==
-Received: by hawking.nue2.suse.org (Postfix, from userid 17005)
-	id D84AE4A03B1; Thu, 30 Jan 2025 16:53:57 +0100 (CET)
-From: Andreas Schwab <schwab@suse.de>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv/atomic: Do proper sign extension also for
- unsigned in arch_cmpxchg
-In-Reply-To: <ac53a62e-4f89-49c9-a755-fdfa7a582337@ghiti.fr> (Alexandre
-	Ghiti's message of "Thu, 30 Jan 2025 16:23:00 +0100")
-References: <mvmed0k4prh.fsf@suse.de>
-	<c9cbc2be-d1fd-44ef-aa14-fd25a5ff8490@ghiti.fr>
-	<mvm5xlw4anb.fsf@suse.de>
-	<ac53a62e-4f89-49c9-a755-fdfa7a582337@ghiti.fr>
-Date: Thu, 30 Jan 2025 16:53:57 +0100
-Message-ID: <mvmwmec2t7u.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g/Jk3dOZ"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4678c9310afso234941cf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 07:55:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738252550; x=1738857350; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=gPuxTWL11JQJhUA2jK4STSm/0jEICakOx9XSDtMUZj4=;
+        b=g/Jk3dOZIVrR5eDGPiwIs7yFs8FHISJ91t+dA2X4yl88tOj8Mk66u5rXFmvKd9jb2e
+         cwiSZnpRpXbxhIpfOkN8myd5A9Y4B4pw6MMOl1/XP3AzInxZMTCeCF1/Mkv/rzlE5RUv
+         zZxdkHtwQMKWTxuu9PCAEsBB3wiecrC/sB8y5+VhMgBFDndU+0+m/aoK9Qrb9M8V6MRR
+         4hTcs3n0TvSRzYhd1nkmg454ks0JJOxprKhA2hrwhItecqzUauPcNe0FrakgbwGqPSye
+         bBHoZvkVPw29aW9o0fuX/qhxejio9aD/1t9NWiv0qYqueh48g6VA841aMTSgd8EYl5wJ
+         4gLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738252550; x=1738857350;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gPuxTWL11JQJhUA2jK4STSm/0jEICakOx9XSDtMUZj4=;
+        b=fl5AVE2OXDWomR0KoGuFqJCZqNvbz6/atJyX5/pS+fZocEa0csmwuwXW5ou2qkYjZt
+         5g3++Yr1p0W0q8Tk3lF1k3CLoBsU1UJuIzGuhlHBUkfVtkjzOGRuW3ggJdRDsb5boaAl
+         BdVaE7+XlO+dGUp9uEaTe/la/lQksI7jyfKoW0ORyMdU9OEvRGr8WGikwX/qyTq/sIlM
+         DcG6YyFFrOvqFR1lTz8yFGg3bOcT6EWt8kgaQ0p8zPx6JjZHzM9yQ7T5s5w/pjksagwE
+         s0nMKEFtf5mPHRfxcQ+iAAFg9yzmCdhAQEzz2/zEdi/wdfYzj/FKQ+jcl0eDikviOnYt
+         pZsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeX8L+8HfV/YXxdqeHzuXR7oUqGPqEYENw2SckYASeuhTD/oH6/LOVzeCmXgw1XuWN/AJQcBrzNJQggU0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBSPp7RsmIwMHBC4qAqZYQ59WV2GP4ZjCxQYSZ60hz+kc2NXfF
+	MttxrFOM55PsVn5wQZKkFmlYlr8vOFfPiG/XDqNNFayGZxgcsTYkskprnXAYzPJ8Oe0T3cPW3XB
+	IhWta33KwQUsgKMoXV++zu2J8O7kALxRvJu8Eqr0HLfL0wniGA2O1
+X-Gm-Gg: ASbGncupB3Lz9QS2vggTzZMJXVcujKEjb/jgFmruXaQQ+ldliHh0LIs85ipwlp5Prxp
+	BkTYJk9ZKw7sqW0C1Q0/Y/P0BvbWr5TupFGBBUIAwOK0EqYLDXDiMz3c3jnJlNLJuBDNLKbWGF0
+	MVALhqbGFIu0eBQw2MtzIQ4y2OeYU=
+X-Google-Smtp-Source: AGHT+IFHB7rKsZb4QjUNCVKPKyTgN8xH7+wfdczpYVAu5y18Gnq/h8yl/V7tXr8gPVhXTYeTkntGJAzy95Kno8A3oEM=
+X-Received: by 2002:a05:622a:1ba6:b0:46c:791f:bf2f with SMTP id
+ d75a77b69052e-46fdf5bc2a8mr3375561cf.1.1738252550566; Thu, 30 Jan 2025
+ 07:55:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Level: **
-X-Spamd-Result: default: False [2.59 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	HFILTER_HOSTNAME_UNKNOWN(2.50)[];
-	RDNS_NONE(2.00)[];
-	ONCE_RECEIVED(1.20)[];
-	HFILTER_HELO_IP_A(1.00)[hawking.nue2.suse.org];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HFILTER_HELO_NORES_A_OR_MX(0.30)[hawking.nue2.suse.org];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_NO_TLS_LAST(0.10)[];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DIRECT_TO_MX(0.00)[Gnus/5.13 (Gnus v5.13)];
-	DKIM_TRACE(0.00)[suse.de:+];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	RCVD_COUNT_ONE(0.00)[1];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid]
-X-Spam-Score: 2.59
-X-Spamd-Bar: ++
-X-Rspamd-Queue-Id: ECB2821119
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spam-Flag: NO
+References: <20250113-objtool-strict-v3-0-8b51f94957fb@google.com> <20250114001440.cagqlvjfvw6ghsj7@jpoimboe>
+In-Reply-To: <20250114001440.cagqlvjfvw6ghsj7@jpoimboe>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Thu, 30 Jan 2025 16:55:39 +0100
+X-Gm-Features: AWEUYZl0GF5Oi1uY8Kg0VqJNObRxnZZ82Cfhh_LmP9Ajz9yvxxXObZAjbFFBRo0
+Message-ID: <CA+i-1C0MFQCLOah56wWQhPhtk4p0ynhxh48eTmQ0-0x+pB6fvw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] objtool: Add option to fail build on vmlinux warnings
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Jan 30 2025, Alexandre Ghiti wrote:
+On Tue, 14 Jan 2025 at 01:14, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> Thanks!  I'm putting it through bot testing now.
 
-> a2 is used as it is passed by the calling function, so we can't be sure a2
-> is sign extended to me, what am I missing?
+Hey Josh, how has it been going - could we merge the feature?
 
-32-bit scalar arguments are guaranteed to be sign extended on entry.
-
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+(Or, has it already been merged in some tree that doesn't go into linux-next?)
