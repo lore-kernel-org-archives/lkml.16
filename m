@@ -1,29 +1,28 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013006.outbound.protection.outlook.com [40.107.159.6])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012013.outbound.protection.outlook.com [52.101.66.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C9D1DED4B;
-	Thu, 30 Jan 2025 13:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01AF1E5018;
+	Thu, 30 Jan 2025 13:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.13
 ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738242579; cv=fail; b=ON1uH82bbBVQ/qqniK9bm5iDdoc+9srQAlEsNdVUrbmDUEYf13+uzHWadAGqLgXXLGY6ausAsXvPOzInr3TH87jVKyBG2myo+wSvJswUOpDgR0ChKSVBA6I8WQUmg6idmSGlzF4HLD129wCvpkDVZLVrZgnI9isST7qJ3EAQj5Y=
+	t=1738242581; cv=fail; b=ftgLbQnprw0C3bFKL60mHrkbHF8Ik1V1bfo0TpSaKv+kL2ZPPXLA+RCZqqUdQM7ftR4qilzNo4dpgFlOLFZ8nPFFtKlXaLfU4s4keGIBG++XPeiJ0GeF6Pex5j02BLexGdkD55dKeJb901TjS6aErZRkRhc9wD66mnL3Lo//CjA=
 ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738242579; c=relaxed/simple;
-	bh=SF1E9KEcPF7orubwQW5xFnHo59cNg4J4xfs+vTktEKI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UyWEhK3m1neGnYtoa00yYT4/4H+QkKCcpvuFmRb6an2NglpGlEmjUOb6k/3IJo8fbjZ2ys88RgrjtGR+Dhi03yakXmOkQF8q0INTSTJlz70WQpUb6j1upAuqlaYp8QRtSIXFBmpvX03Qzv3sNxGVJ8vK3WYpZFHr3FHfmBU/MO4=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fkNDtMjt; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fkNDtMjt; arc=fail smtp.client-ip=40.107.159.6
+	s=arc-20240116; t=1738242581; c=relaxed/simple;
+	bh=cPIKAv220aCivslzvlmuBd78cjQpwXaZpzqzGkUGq8Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eNtYPLx8UECgcTPagK+N2YL1hZ/Bpigrpj05E0SCDP8YrCYTx4aFuJdiq7iPHZD/c+DBeBSzkS/XbUT7HI3ZO8QAz3ogQGcZd/S+HRf/8mezowCUm3FX3CZu2kuZi44MjaEdDRXKtDhCN1ftyDgUwo6rhrQoE3XHCaMMCQBYCLA=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=MQdsK9pH; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=MQdsK9pH; arc=fail smtp.client-ip=52.101.66.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fkNDtMjt";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fkNDtMjt"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="MQdsK9pH";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="MQdsK9pH"
 ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=C7jL/De6OPrOoBlkxHVQkTjZlA4vS0GR4QQwqzgytG97P3lyCZQmN4FUX3nCdboX7I+pBtsG4/+aGLx1E9Gqcb/VCKjbSpNMiBFdgvBDSK+s1AkScN1+XnX1Imemiy87oawxWOfjI6zxExbgNTpnbFeBF1U5yagF84X6NaPTgO7adlDrSh00/4QYBu9lpPcK/Jp9CsMXbfqSh3E4b1/4wGFcArnnOyeKXnIzuuP0uodIHZCyoI8pR8h4ifEo+g7/+g0bWjFLzH0QRLmDTOmWWuCIp/vsS5M9U1oMcBc7gPJTtrZ/5UoKWqaU9cMdY2KOkBJgGTVYYZPHwAuBYUFfPg==
+ b=oOJA+ffvyW2VMPYq2U00fwD686+3MZu8DNpUO/WvE/E/VKg5uLxqO5guhvG+wsNbn7gQ5AG2VgEmEFbsqA712laHBOmrPV/7wGhWGp6OWTgqJbzqkR/LnLjP5s7T4ptaLPI99FSS+7bTFf/1i3eY68BbOX2kjVSZmRXtbsdaWqxdup8ZUVWRwWmlJZlErrgPYkJbcbp948jfDxWss0hA0gMrQDoFV9b1w2Hc/wYqk7IO5hcAjw9P4IpyaDJD81vbcogFMrgPAWt8OUldseks1B/V46P05g+ROFmm0tHs1GBRauMgsw56LuvgAHXDzcXO/DeaXR4+6O0I1rID9ODKvg==
 ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HhS/tbVVv2nG9EXWShqCV2+SDZU9FYl2KF5Aw4J3220=;
- b=JkpT9R64Lp6Kq82AaE6RDK5jHX6gvD7oOaaxTKLbZIQN9xZN5SEk3XlAa+0yLnIRsZiu4a86h9dFsBUj3pgAJ+Xe62vYwEAgUyeaRZXgnVhwjf91dg0qY5spTUlqFdXxB0vdF03UsvinpqIRcEuKWSl+kcHvnBXS14ifmiLB/VZNzUMeAeXpi34B+BMxgtrwm5e+m9v8AwCmvEcPNPyHvjHuJgUdgcvRR0YcIHPyszp6LS5BTGRZano3DgP4HqmJYV15uq5No4ey47p2es5tmKORwdznI/zbWEsp1PywWZiYH8xLlJcPPGz1kOUAXtzm3p/CSKNtnRZcct1gfmqQtA==
+ bh=YItMqBB3AFZY9z+AAWQmS9LrlWXXDu8EElut2eZSjfM=;
+ b=VBRuTCEO9qkCAZEBtUy+QVeu2YPxhxA7U65spsCVfGOELLlUb0Jawa8EDmn50/iKAr6ht4Oad23sS/gbJzbGShifpt1LafP6oErS6mDA19SSVarbCIR0M15r3TNsrnREK+6vtL/l88nqjnU5haktFDc7+sqZ++OjIoSOccefsMmMm9MlHwVqk3W1eBXVwzbU6fhNfl+14xENwMuZdScwLpAuqGi8X+KZaSIxg6SBmZnzBGsGGf0bnIhQj13NkCbY1umu5+jxoj03cRL978K4vfdivJbaxv1/opHai1NxU4Ozvqc5Sgn/1rf3woPlHiAetHdyBawpQbAun+Z0TV/5tw==
 ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
  63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
@@ -31,18 +30,18 @@ ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
  ltdi=1)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HhS/tbVVv2nG9EXWShqCV2+SDZU9FYl2KF5Aw4J3220=;
- b=fkNDtMjtfoUjOZMmWF9u6+jJZ3w+VY6r06JMyjGzEOLG7UXt68gukz6GuP3og/XGnwv81E/kfQOZ5CLbxdDGbFqj+rUF/ydxsIBxrMPlM/hMjJf8XqN++vXLrCm3wG5tP1t583T9E1uQw4yu7JE8Im6yLr0/VC58HwwaSq9eqYU=
-Received: from AS9P251CA0004.EURP251.PROD.OUTLOOK.COM (2603:10a6:20b:50f::8)
- by AS8PR08MB9977.eurprd08.prod.outlook.com (2603:10a6:20b:636::8) with
+ bh=YItMqBB3AFZY9z+AAWQmS9LrlWXXDu8EElut2eZSjfM=;
+ b=MQdsK9pH9F24jJwyVELdeH1JPCo5xohATn6LEhLoRMkS+/01lVOWYnRT4fjlfq+Lbp3+F8YK6QNnYm2gZoQAXoDDYACFtsWQVtmck993hAtZo/5d6yqm1Lp3pSiqN3Gn3Np0rRbjsT2UYx30qWRXSx4D61BA350gMM1eBIDRuTg=
+Received: from PR1P264CA0094.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:345::19)
+ by DU5PR08MB10440.eurprd08.prod.outlook.com (2603:10a6:10:517::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Thu, 30 Jan
- 2025 13:09:27 +0000
-Received: from AMS0EPF000001A7.eurprd05.prod.outlook.com
- (2603:10a6:20b:50f:cafe::8f) by AS9P251CA0004.outlook.office365.com
- (2603:10a6:20b:50f::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.18 via Frontend Transport; Thu,
- 30 Jan 2025 13:09:27 +0000
+ 2025 13:09:29 +0000
+Received: from AM4PEPF00027A6B.eurprd04.prod.outlook.com
+ (2603:10a6:102:345:cafe::4f) by PR1P264CA0094.outlook.office365.com
+ (2603:10a6:102:345::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.20 via Frontend Transport; Thu,
+ 30 Jan 2025 13:09:29 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; dkim=pass (signature was verified)
  header.d=arm.com;dmarc=pass action=none header.from=arm.com;
@@ -51,46 +50,46 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
  pr=C
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AMS0EPF000001A7.mail.protection.outlook.com (10.167.16.234) with Microsoft
+ AM4PEPF00027A6B.mail.protection.outlook.com (10.167.16.89) with Microsoft
  SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.14
- via Frontend Transport; Thu, 30 Jan 2025 13:09:27 +0000
-Received: ("Tessian outbound 5438980c8758:v560"); Thu, 30 Jan 2025 13:09:26 +0000
+ via Frontend Transport; Thu, 30 Jan 2025 13:09:29 +0000
+Received: ("Tessian outbound d1e0abd198b0:v560"); Thu, 30 Jan 2025 13:09:27 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 72d6f04d9d32a842
-X-TessianGatewayMetadata: VZ1gol2vpkpx7GI7TujVKeQ7nnUISba/c/lJrVYKRpzmsxF6dWy4YHLLxwnmaN2AOXI1uO/Zl3nWOS0J+Z6Q6xPoMSCDH72CZVsXZ0q7W+z6BRmQ6LKRsQ1qwBZg/kABY/22966ghpokeTYy6FKcdrG9WBURHQRFt0m4ilL18hx+JDjVpiGSc8eC799Oyc+PKoymsQ8wRFYcwWj3Ak896w==
+X-CR-MTA-CID: ca60226393ebda3c
+X-TessianGatewayMetadata: 41C5iM3Q8zvqrV/s0MlO/0wnrlMX+Jatsbrho/D/C2GhtTE3Y+4Chb5pNS5mtMBvvXr+fM0Ibb/jz0djhK8I9YYwm8NBP9opIwyKPGt5YFOpWNp6jSJ1Hr5BckpjU75lsG71j6pmwTzQ9x/XzGrpFqmnnZDPtgdNa5DN/u++sRQ=
 X-CR-MTA-TID: 64aa7808
-Received: from L5f77923fb7d2.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 8905E2D2-A953-457F-93FE-AF38EA3A1E77.1;
+Received: from L5f962119725b.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 731C6107-BEA4-4A6F-B553-063DD10D8C51.1;
 	Thu, 30 Jan 2025 13:09:19 +0000
-Received: from DUZPR83CU001.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id L5f77923fb7d2.1
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id L5f962119725b.1
     (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-    Thu, 30 Jan 2025 13:09:19 +0000
+    Thu, 30 Jan 2025 13:09:18 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aVzDpi/QUa2cZuVapLj71QIsIr+z9ZMtsE7xLbXFQu8iAnQ6u1m5cv1GngrbSAvWO2qxhEtUDNT+qd8eDV8HD22Y/ZZBxX1YweKEN8ZU/tFbHZlHdzBHi8zXibMJfaq7a1kN7M8wXVND3XI1KWUBxkQqhGMYY6i2Nx1Z2NbS0vATwzXxVjYX9/mXp51x5hgvdLxX+9M7Tgx+Y35ZRpg3uuNyDCXoe2m4LgG1dduiV14wK/TIJPvwz5r8HX2Z5R2VMMxUS6epTRFORxZVududeXT+WI419C8zVebUl46Esn3hDJruWk6zPizHfzG5ehGudS7YHj74bC36BVTV40UupQ==
+ b=A2F/MXQOBnGUwhfmeXLXObpK9a5AwalCQ5i9Gy+ZhDtwoOcx/PEWwaOg+E1SsHV48iJ1RU5NsB2g6oqE3MUV4js9hDfKkOtOQiO2ecerwRyfE/j8xG5FqOYTh/fVU7ETmce2Hs8GNRAz2URfK1znwckSH5XFpnn6SqlyXL14QJtyjnnDg35BJHs3zT5PbY/2qh2OwoR92zzdKefzyLEFKL5K3JHXUinhuW8RLFrPqo1yFhL1xsHHmVSobGU5rCd4m0NmFO1KENYcl0rstlcbY+8dwb9x3kCYncyatcu9YO97zYCYD68EMk6NJRogJUrnr4KC5u2jPcGztVNtdNinyA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HhS/tbVVv2nG9EXWShqCV2+SDZU9FYl2KF5Aw4J3220=;
- b=iLZ9l4DLYBL2Y8anKVVYheoVs0h8TUFEiVGrURfJCDiWPiAwkyk5OCIVtEbgZPyq1fNsL79C8LNSxcSjFHtvIr+QuuBWk/GBCy7ZpH5NxfwoL77cCtT5/0pqqngbRXjUEXfsNcmFIpxblHGRUFyZVSfUl6YCHMqsDwmTNoBjpMEsSw/5qqwtcaIJr6rCRcRXDOhGx1orX0ncaBrQ1qnHDarUg1o0saeFIHkDPjpIyonAysDH+e36r+dmCob5RbRLCGxqqXcozQxv4wTqGzujF/WHpxHe+oIABbpAZm4rci5CFlgtcgaz7pDAzXzOhV5rm1Qr5wa3dJfYdTlnjJlxpw==
+ bh=YItMqBB3AFZY9z+AAWQmS9LrlWXXDu8EElut2eZSjfM=;
+ b=LOQhso0IBUCf8C4lBimp6ffAl50lvlcsPsNS/XKn0WgMNgdveXJeSjmsGiQZ8TUzBxxhLHeFDrhttf2WpPgxEVaC3gHvmVOXWH/5LE0vCCvEZK6LLAe2FUZc/r3mqiVBjpfT94cTVidEpIzqxWNZHGTLI+7bO2zrKlUo/Dwx/EEmkcuSuVWsjAvmo4J6ucKHre17Cl+lnYeS5M4I8xkRY3+aUBkVnjbxFTlDldARk+WllOPtFxRHQuCvS8eZDdsIZveBlXvjquiyJoNpMTyM9+KI93tMEWPShv9ZNS/1Uzm2uvSfz/ZUrZfR+Lth+9ybvtei9B0rGuU+DmjpmcbMYg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
  172.205.89.229) smtp.rcpttodomain=kernel.org smtp.mailfrom=arm.com;
  dmarc=fail (p=none sp=none pct=100) action=none header.from=arm.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HhS/tbVVv2nG9EXWShqCV2+SDZU9FYl2KF5Aw4J3220=;
- b=fkNDtMjtfoUjOZMmWF9u6+jJZ3w+VY6r06JMyjGzEOLG7UXt68gukz6GuP3og/XGnwv81E/kfQOZ5CLbxdDGbFqj+rUF/ydxsIBxrMPlM/hMjJf8XqN++vXLrCm3wG5tP1t583T9E1uQw4yu7JE8Im6yLr0/VC58HwwaSq9eqYU=
-Received: from DB3PR06CA0003.eurprd06.prod.outlook.com (2603:10a6:8:1::16) by
- AS8PR08MB6053.eurprd08.prod.outlook.com (2603:10a6:20b:292::14) with
+ bh=YItMqBB3AFZY9z+AAWQmS9LrlWXXDu8EElut2eZSjfM=;
+ b=MQdsK9pH9F24jJwyVELdeH1JPCo5xohATn6LEhLoRMkS+/01lVOWYnRT4fjlfq+Lbp3+F8YK6QNnYm2gZoQAXoDDYACFtsWQVtmck993hAtZo/5d6yqm1Lp3pSiqN3Gn3Np0rRbjsT2UYx30qWRXSx4D61BA350gMM1eBIDRuTg=
+Received: from DB7PR05CA0044.eurprd05.prod.outlook.com (2603:10a6:10:2e::21)
+ by PA6PR08MB10593.eurprd08.prod.outlook.com (2603:10a6:102:3c8::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.20; Thu, 30 Jan
- 2025 13:09:17 +0000
-Received: from DB5PEPF00014B88.eurprd02.prod.outlook.com
- (2603:10a6:8:1:cafe::f6) by DB3PR06CA0003.outlook.office365.com
- (2603:10a6:8:1::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8356.21 via Frontend Transport; Thu,
- 30 Jan 2025 13:09:17 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.22; Thu, 30 Jan
+ 2025 13:09:13 +0000
+Received: from DB5PEPF00014B89.eurprd02.prod.outlook.com
+ (2603:10a6:10:2e:cafe::ea) by DB7PR05CA0044.outlook.office365.com
+ (2603:10a6:10:2e::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.18 via Frontend Transport; Thu,
+ 30 Jan 2025 13:09:13 +0000
 X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 172.205.89.229)
  smtp.mailfrom=arm.com; dkim=none (message not signed)
  header.d=none;dmarc=fail action=none header.from=arm.com;
@@ -99,20 +98,20 @@ Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
  receiver=protection.outlook.com; client-ip=172.205.89.229;
  helo=nebula.arm.com;
 Received: from nebula.arm.com (172.205.89.229) by
- DB5PEPF00014B88.mail.protection.outlook.com (10.167.8.196) with Microsoft
+ DB5PEPF00014B89.mail.protection.outlook.com (10.167.8.197) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Thu, 30 Jan 2025 13:09:16 +0000
-Received: from AZ-NEU-EXJ01.Arm.com (10.240.25.132) by AZ-NEU-EX05.Arm.com
+ 15.20.8398.14 via Frontend Transport; Thu, 30 Jan 2025 13:09:13 +0000
+Received: from AZ-NEU-EX03.Arm.com (10.251.24.31) by AZ-NEU-EX05.Arm.com
  (10.240.25.133) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 30 Jan
- 2025 13:09:10 +0000
-Received: from AZ-NEU-EX06.Arm.com (10.240.25.134) by AZ-NEU-EXJ01.Arm.com
- (10.240.25.132) with Microsoft SMTP Server (version=TLS1_2,
+ 2025 13:09:05 +0000
+Received: from AZ-NEU-EX06.Arm.com (10.240.25.134) by AZ-NEU-EX03.Arm.com
+ (10.251.24.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 30 Jan
- 2025 13:09:10 +0000
+ 2025 13:09:04 +0000
 Received: from e121164.cambridge.arm.com (10.2.10.32) by mail.arm.com
  (10.240.25.134) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Thu, 30 Jan 2025 13:09:09 +0000
+ Transport; Thu, 30 Jan 2025 13:09:03 +0000
 From: Florent Tomasin <florent.tomasin@arm.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, "Krzysztof
  Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, "Boris
@@ -133,12 +132,10 @@ CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
 	<nd@arm.com>, Akash Goel <akash.goel@arm.com>, Florent Tomasin
 	<florent.tomasin@arm.com>
-Subject: [RFC PATCH 4/5] drm/panthor: Add support for protected memory allocation in panthor
-Date: Thu, 30 Jan 2025 13:09:00 +0000
-Message-ID: <821252c96ab2ab3e2d8ef211a09f8b171719baaa.1738228114.git.florent.tomasin@arm.com>
+Subject: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali CSF GPUs
+Date: Thu, 30 Jan 2025 13:08:56 +0000
+Message-ID: <cover.1738228114.git.florent.tomasin@arm.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1738228114.git.florent.tomasin@arm.com>
-References: <cover.1738228114.git.florent.tomasin@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -149,552 +146,324 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 1
 X-MS-TrafficTypeDiagnostic:
-	DB5PEPF00014B88:EE_|AS8PR08MB6053:EE_|AMS0EPF000001A7:EE_|AS8PR08MB9977:EE_
-X-MS-Office365-Filtering-Correlation-Id: e9d5d84d-5bd0-4af1-48a5-08dd412f53a5
+	DB5PEPF00014B89:EE_|PA6PR08MB10593:EE_|AM4PEPF00027A6B:EE_|DU5PR08MB10440:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66e07149-5553-4863-4e56-08dd412f54cc
 X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr
 x-checkrecipientrouted: true
 NoDisclaimer: true
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|82310400026|36860700013|7416014|376014|921020;
+ BCL:0;ARA:13230040|1800799024|7416014|36860700013|376014|82310400026|921020|13003099007;
 X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?C63ia1BLCksXgv6LrgFDBzOG8TTo0jWWrnsy+E+iug61frIHZ7NPCG4drwMX?=
- =?us-ascii?Q?T5awfStu5UPOzUIGgDoKPioufYA9q+AHXbfYXEwFdfLQKu3KV69+L13saY7e?=
- =?us-ascii?Q?+jrXzAsryGKGTUgCupNfVOHbioQIT6M2XJG/laKZsgi8CSxgE9oec3mAqFag?=
- =?us-ascii?Q?bAB2iSajGp7gDnWqwtKETbW87auJWr/L3nBRpJRKrIOUMlWe6ZxphoDYqTvu?=
- =?us-ascii?Q?smSVP7A2AGiX/68EpaX0+F+rgASklDDZRX86qCn6gjLb6ThhtThBKChPdZpB?=
- =?us-ascii?Q?V8ZgD7Cdz5nRoKImKKNcAO1CYEXpJMzyDtgy7Ua7fX5dA6XIY28NFmv8mgp9?=
- =?us-ascii?Q?JhIhIY/RyyLV7oDHDjmwPi3h3ZrwN7f94vaWUpjUoFuooKA/nuU43OqUZ1vQ?=
- =?us-ascii?Q?WdBQ9tGQQTzHP/F/ZFUCCY4vqT1XUUvw42LNALJkugzBNQbSlOb4uAD1pqDf?=
- =?us-ascii?Q?bazKOBm/1Uous3ix6H+uVKMZId2GKgOzSuCtNIgi0wBSc+5BW07PoWo/Kwvy?=
- =?us-ascii?Q?aPUgr6CbvP9pS34TC+PjAQxY1KX+1nVzpTfjVqizKeOHMQOHXtE+pQLyLgkV?=
- =?us-ascii?Q?y8NUr/RHQFr/GKmFC/v9ZUbasvIaIMTtrrCQuYSpYraM3bPbYH2jd9am+Tmw?=
- =?us-ascii?Q?ATSkE1HESUK6vwSQ5MfUzUVQ3GID3koioVg+pN8ceguz6dtz/8BjE4XkHsCj?=
- =?us-ascii?Q?PdFiwiLrA+Ekn5/80jWWp54RCuCRXl3ZPSfV4iLP/RINvONk3+yj8JfoS87/?=
- =?us-ascii?Q?m3UMtyany/F+tthoUerW8l2FyxhA2kiK4NYQaBgxRp/UDtRKIVFA+hwqSWej?=
- =?us-ascii?Q?UoddBZeqLkGepdyWofkHvi6NZzYUGdIITP7i9oiHaEDVcAD9f/73dbctfHEy?=
- =?us-ascii?Q?cIdFc0LaTk4l1FYeuOEkVkCqQwHrTJfG/DCZCL738ym5WNqp/5wt/XXab3c/?=
- =?us-ascii?Q?xsbsjekLOXPd2kB72pm2ynaxlXMWU5n5LBgEv3IqYT8Hu1ZarrysXVXZik2j?=
- =?us-ascii?Q?NNa1U46DSdD2DLGFcUX4b4IwV0UzHG0pnxArXdPDhL9idGYnl9pPVrt6oo+F?=
- =?us-ascii?Q?/Pbc/mtSxrbDEV7Pdb/XfLjd2/TcPfMVQB+d9X9QRSw/iuhnR8tk8BLc9+sI?=
- =?us-ascii?Q?sQ++VjFN+zl25RrjWAGX4+Nl2a73y0rBPwvAlj4Kz2MqLckxEgUTWiNENj9b?=
- =?us-ascii?Q?ipuEbBa5Q/ueEPPo//seICWDROhZpUB13MY3w6Bgbt2piTMsqgZCV6elovDz?=
- =?us-ascii?Q?w6Te8/PvJma3rsmgDaaSRz+0CuHe3xRUXzFCxcQVGFyJyxic/pxlsw28CCOK?=
- =?us-ascii?Q?C6Zw6lA26aZWgS2liATmiqBGPsYVtZOgQD3OsgKZk/WhpnY3LTDpGsJhZZa7?=
- =?us-ascii?Q?/OoWUm2Ly67kpyXjQVO+a9bLXlVFQODP0H7voiMi22l1KM8Jj+U4czh1Iy1V?=
- =?us-ascii?Q?YMU7WMGcD8fuvYpupdu6+13jC8nsxJeT8SR6QRNe65sU1/Y02Z/wo/WXnDUx?=
- =?us-ascii?Q?3xsGwzb7GDnI413F9e8LaLyoQJcQWpReCX1d?=
+ =?us-ascii?Q?xgibOeOPOwdEr8QJXRHf78g1HmeBgI0EsC/AzHf3IWY8T+DX1eOgLpyJLet6?=
+ =?us-ascii?Q?7PTLSkG7i0QgfGfbtVONuJzG6huoExizKuVt23a7zT0GCwxqP8mg7T5pITVS?=
+ =?us-ascii?Q?SJm8vcqNWP1+6bP+j4AQ9ntU9Sh8o55l4H/y/2aQLN/gDwAKu6B3Dk9WXs91?=
+ =?us-ascii?Q?2OV8BaCo2Ehpm7Eu9LvSNnRZygJG/BGSRKnjoGdXKQYTDbBoZz9dEDylv+TM?=
+ =?us-ascii?Q?7PwVYhC58QdPSWohJROc4/u7flfP1g0jc/jmpAh824VU4m301YYcWD1LG3HA?=
+ =?us-ascii?Q?DfsU7GoG3riWMdUFvEh4S0yGB+T4eGS0CVFk31Jn6TQC1mdRmfCmk3onB/Du?=
+ =?us-ascii?Q?j9S/OvNcA43DYlE8eG2Qk9pBez8/bOgNv/jaZuHsHv2LZEuxoWHuZamGYm/t?=
+ =?us-ascii?Q?W6YxMC/Ib9wdcf9kpINFlvCBqTcW+TlIZ8LeLk9tBCSYfohH1dHsheKkHYPO?=
+ =?us-ascii?Q?31ghd7QmpS33dNt7TThSm7SPbdkEWA/0p0MJMWX7ZJkpzm8H4Xk8cDAksgtc?=
+ =?us-ascii?Q?MqrEvauaGSCsOi/5UHNzpYfmaNxwPOaG8q2cxZ1txdp1jAnjItGbtHX+PYEF?=
+ =?us-ascii?Q?FgYDaODURyiWI+w2+QuVMHi/H2utL4dd5cqG13lXIm7qgCedXv4rQnhQ7pYM?=
+ =?us-ascii?Q?bmL0l221QfqT9uKG3yfXRbn/TxA+5V5tuE4gaOgUiFNORd+SQ2YMLXIlEz6q?=
+ =?us-ascii?Q?P5z9nU6DjjoZnZMBUyvBYogPxWwAq4j7KMZARikG0+h+Zyn0D+VlzGcgutv6?=
+ =?us-ascii?Q?GTq/Pcu7hdxzqZEHXWRSMFLOhi5XOwXj4CRNJXB7qCBUTr3MAAF8dI2tELaz?=
+ =?us-ascii?Q?WdJWGoG9DivoqRHqd8278afdVy1LefZnmMHyLPYgVfFcVUfjiILt93D4SxTK?=
+ =?us-ascii?Q?TpFtdXlnWC0vV2NqOsow57T8xjWlP4gaTKSnD91oDVF6G9i1ihuOSwdZVtsj?=
+ =?us-ascii?Q?LbbyjLjleCCwYx1LM4pYkXeBvxdDDZNIdwf2tSzrcf9qjBSp4iF1/6XuPuKh?=
+ =?us-ascii?Q?YV0QNCS8gru75HODY6rFwSWto/vhLLllUVXYZumc0Oo0yArmYTctcCrTEI6B?=
+ =?us-ascii?Q?fBsJIhygB7bQkDk+JLHxNpXj8CZWpa/XdWaWSWoTZvC4fvUl57mD1W2W8u5N?=
+ =?us-ascii?Q?Rr7JTmU7AE8zC3XfnBLBLku8FL8x/AajuJpANEyTIfD0IOJFYKcrRF4VFq8i?=
+ =?us-ascii?Q?HP2op5rUP9D/NoJTL69US7R3zxdVcaPKutW1G+T90SBQXLWJGxvUH+RIPRCj?=
+ =?us-ascii?Q?sYCnxQNn9QOVpDfItcZkFQdhp4PXwJPvZVBdN7H5wd+1Ndx9vQUQb9+J+MUa?=
+ =?us-ascii?Q?nlawo8QH2vECS23sgfaLGcsk77H/IOnTg0FPGkmsU9AkdEVwE/Gy3OX42zug?=
+ =?us-ascii?Q?zfhq4z7tBqt2Et13nNXySYRbrpaYuSTBk66rW2ucwW+NFWPooW/982DWXgGW?=
+ =?us-ascii?Q?yO4s9UZwsFFtAfl8wb78MCGfV2PHZvufx2sSbIfVUkwdn0efk8bR6w=3D=3D?=
 X-Forefront-Antispam-Report-Untrusted:
- CIP:172.205.89.229;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:nebula.arm.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6053
+ CIP:172.205.89.229;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:nebula.arm.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(36860700013)(376014)(82310400026)(921020)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA6PR08MB10593
 X-MS-Exchange-SkipListedInternetSender:
- ip=[2603:10a6:8:1::16];domain=DB3PR06CA0003.eurprd06.prod.outlook.com
+ ip=[2603:10a6:10:2e::21];domain=DB7PR05CA0044.eurprd05.prod.outlook.com
 X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AMS0EPF000001A7.eurprd05.prod.outlook.com
+ AM4PEPF00027A6B.eurprd04.prod.outlook.com
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	640d1777-448e-4775-ac76-08dd412f4d35
+	90491689-a6d6-4550-a5f4-08dd412f4aca
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|35042699022|36860700013|14060799003|921020;
+	BCL:0;ARA:13230040|1800799024|35042699022|14060799003|36860700013|376014|82310400026|921020|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?1PYgEdSSDsINqfAJTx5W2JVZl3vqENHIJYcgMzewfDi5FG7dPTE/D+dbSyBB?=
- =?us-ascii?Q?pGGKInichYKnUi8ywZEjUQUALOVKKcH4+xyWGcYbubdev3JCfwwEQQA6oDt3?=
- =?us-ascii?Q?0XMc2y8y2iuBGSSU1g9jXFq8G3hx1moOHsb+FLyZeSKKirYpEyeYci/bIHLZ?=
- =?us-ascii?Q?M0nzHEoZnvUblRfMAmCUAg+5Y5xY7eXSoGq+e1wWeSrfMu1PElEei26pasKf?=
- =?us-ascii?Q?+GNLcUIRpUdSxRv2SirCtkWA+BPxZf48XTaubvqzon/QxVYyHSaulpnyThLX?=
- =?us-ascii?Q?VoSEULemMQ3UPqtv9+LRBnpvlk46a5BV5SFgvLpmDFSvbriZk9xmw/qDXPJP?=
- =?us-ascii?Q?7wsPGlQGfdVT9g2cg5Nlt2VQGu4uvIgPCuhGiN6On4R6Oa9pdEK/iMDxbH4n?=
- =?us-ascii?Q?p5FCdo05tOq+vFk3Cp6mwXIF5Gu8DlX/4o+wRn9iVDxLuMtIvQOwshV8q04q?=
- =?us-ascii?Q?O4KV/X0bmf14Mpdethoao3iAmgQzeBhupnLdjcg78Iqkn3us9chx3eDbgwtB?=
- =?us-ascii?Q?2QjRbWt+1bcuRpNxpSalIGicf9gmhBAPw2VBOV6AXl4GsDt1I6h5c3Duk3Es?=
- =?us-ascii?Q?1B10iazi/TVZa2Hv3lUIM2eQDrs6F05Y1ENs/E0TJhog5kSiekySC/oxpUcY?=
- =?us-ascii?Q?t3cnojRUobjccvN5Z95axCv/P0h6XMwhsisAUSiQfjMZqrBtwMCwaD1dcZwN?=
- =?us-ascii?Q?7znVoJr0hEbSWchM5H+Li1xZrtBB2Lj5K0xaz2y8tn2FKM3tkgHO3cDjltzG?=
- =?us-ascii?Q?z5Ymvi4A2fPa/YDNzkpnZb4mxxfRfU46esYcguPqB2eaT51s68k5WTYcx27F?=
- =?us-ascii?Q?SSZ3UvMq9Jsl+AeXRSoh0p4q6mpZB2B1PRcUjhcxixeRU8Dhzfnan11FR4R8?=
- =?us-ascii?Q?hbt9YzADozlIdRBFSmrtFTl1TCW95Oh/HPK+qgdIJJz7dhn6yCybv+iXY86U?=
- =?us-ascii?Q?++GuiGAc6Mn3YDDtIsn550J+LCy/8hBvvc/5w8MxIceKufkDeJ84NF8uM0Uq?=
- =?us-ascii?Q?5pRx6mxY/AUZPtSHDJRuM/Hhuw+go0+E7iaflS6AeNbqz+99pXijfr28l+GQ?=
- =?us-ascii?Q?UfJ/VGb6blDp4SeSWYtZK+r6xUqNcgF296musRuVk/oEKXk1FYT+JaZCRV26?=
- =?us-ascii?Q?lV7yW+StPD5kuoneC08ySqI1/HEWjnXTfu235czwnzMVmYsHPFZCHtOXyb21?=
- =?us-ascii?Q?6T7slPt1nrH2VPSmjTDlbx/ynYhif6wr3QFgfDYjGEoUI6i/18tntSdC8V63?=
- =?us-ascii?Q?m7wONSoO/nmutR5hTlxhNTNM41F/XtmhriAPgqwxmo7rdYVde9KnFZ/aITSM?=
- =?us-ascii?Q?ZnkssQOIScFFDstutzDn6ufBIF8FoxQ8G/VbcDhQKsPE6lkyPhxdCFxFYr7E?=
- =?us-ascii?Q?JjwP4/SAGtiFIcbBDP7JeS9k139ivqsqr59L7ixVqHRywg9HTVHWgI0zSMYV?=
- =?us-ascii?Q?hXc5W/lJKc3HESu20bqfB75Me6FPT5O69F5rvV/IGke2mpQBU8xcI5wTgiy5?=
- =?us-ascii?Q?Q/xgW6AujhtKa3MeP1gezqeL8ZR2FCp6iija?=
+	=?us-ascii?Q?Lbtn3zs8g/FaR52oDES6dhWlulZtw1CzK4ehH9u0ZWtv3V5A8IjDHBJV9DWn?=
+ =?us-ascii?Q?2DvXHdgDWgQ0yCzCo+HkOjKmF4rhNS3EyTpSJgpmJCQVvLn5L5nOXW2InEVp?=
+ =?us-ascii?Q?RwGfDhlE2hIYmTm+f6RKXvUQMqi+BbMAJAaSYkdLW3/76Oxwq700x+xcApez?=
+ =?us-ascii?Q?opSHItS3ro2hhIAGXioqCnUQqzB4CAOB6Gtx4Ay06Me2T04HgqU+obu7M6eJ?=
+ =?us-ascii?Q?w4LXbYNb42ls/3LgoBqBb3rDZjhqNTc8qMQRjwyNulIQm1xYmAnPepJvpZcF?=
+ =?us-ascii?Q?aMd07H1Ta7tezgy7UeUnFzIP/t7n99P752mMQ+ug7/cbZwb3/oJaBBrkz3du?=
+ =?us-ascii?Q?vLWbY2eCEIHo2/fhLX0ECfxsWZRimGUp3XHTBnAd32ZlmOWrTUGH39BdNHLx?=
+ =?us-ascii?Q?W9vx88isRnJj2Ab6A0LVHLKkNDPPlkWjVK0N4MuhQEKfpcK/IN2g5A0n/hzW?=
+ =?us-ascii?Q?18iS9MXSy+j+FhXp/Ycu+XDu03pvpA+HmfNGlY8oWK7S4eGM/NGtLOwVAfse?=
+ =?us-ascii?Q?XPLfjxUKoUeLnyRLNkB/cVQLibZcJOuE2Dz0XiR9J/7+lX+BGMVrqV/2gv9D?=
+ =?us-ascii?Q?m5cRBQrYsOsCzsIe4gTeEZETHs3aZ0Zwr5CQQCL0DTDnh8c1B+qtUDQWutFy?=
+ =?us-ascii?Q?nsF0N0sFYrpeliV52BrzeMF6joqOsZXQDSQbNKxbhpx9u6rK5QUk2yLG67GU?=
+ =?us-ascii?Q?Bgt1uQzt98kqjF0iNmTy218e0DDw8TX5QCv3Iie/psGQi2xngvnK8otaxU2x?=
+ =?us-ascii?Q?gkUAUhA/p6MAhCvFJeeID/cGhGF0knvQER5K4LQbuyWchs1PvdIE80KDl344?=
+ =?us-ascii?Q?+zNZHSCTha75jZTJdkNfKFH6ud43CiNdu7Q4TMfQOYIw8qi3V3qisELcfJAR?=
+ =?us-ascii?Q?6gV1p3ItNbj27lZZJMqN+4WC1NQwGtPaODb2xLjOY/CdNyR96BGjv50BsDrT?=
+ =?us-ascii?Q?N/HctddbaqjqeKSAdqeWWA9wG8SmrA3LD0SMZgXP3EjoGbuKC0DZohMTvLT7?=
+ =?us-ascii?Q?OwO6j0Fl/uI55Qgr1VrjiatLb1fBQeoxFT3nUyo34MD4FGet8oWIvHf+g6jx?=
+ =?us-ascii?Q?LPcmAsNpOupwBonUyxDClOBk5zcP0sST916aTHaHz0O5rgf8MXCun2KPgGW7?=
+ =?us-ascii?Q?rLmEophjXA/jSpnCQmSIFqDKKc4R2gmPGuUTHtqvj7FEvZQqR3AWCzOqYLJH?=
+ =?us-ascii?Q?sSyy0gkwtGwxU+Y53ttz9TR6UOQnn9aVH+43tpLA3C5s+Dm9ei4qc741i+bx?=
+ =?us-ascii?Q?mRUArpw6kEU8r43NuR1Hgh99sM+bvvIYGMf/59Tkq/kixCDbw1o5+lyd7XAW?=
+ =?us-ascii?Q?/lgJa2qmKevs1NRSgOPOyPpvAcREpZetaaJYPoi83UrO6O2QcsMQ0iyVFmAa?=
+ =?us-ascii?Q?y3E6qSzgaoyWIn/liZZTLYWCrIAFdXKjNQ8cCE7PZEvFhenG8hkeO5JCeui0?=
+ =?us-ascii?Q?1uzhiHRL8DQupIvP04fqpQJsDC/3D3gmBaJBgmi/JxsjIPlKBkUOoQ=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:64aa7808-outbound-1.mta.getcheckrecipient.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(35042699022)(36860700013)(14060799003)(921020);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:64aa7808-outbound-1.mta.getcheckrecipient.com;CAT:NONE;SFS:(13230040)(1800799024)(35042699022)(14060799003)(36860700013)(376014)(82310400026)(921020)(13003099007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 13:09:27.6900
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 13:09:29.2172
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9d5d84d-5bd0-4af1-48a5-08dd412f53a5
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66e07149-5553-4863-4e56-08dd412f54cc
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF000001A7.eurprd05.prod.outlook.com
+	AM4PEPF00027A6B.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB9977
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU5PR08MB10440
 
-This patch allows Panthor to allocate buffer objects from a
-protected heap. The Panthor driver should be seen as a consumer
-of the heap and not an exporter.
+Hi,
 
-To help with the review of this patch, here are important information
-about the Mali GPU protected mode support:
-- On CSF FW load, the Panthor driver must allocate a protected
-  buffer object to hold data to use by the FW when in protected
-  mode. This protected buffer object is owned by the device
-  and does not belong to a process.
-- On CSG creation, the Panthor driver must allocate a protected
-  suspend buffer object for the FW to store data when suspending
-  the CSG while in protected mode. The kernel owns this allocation
-  and does not allow user space mapping. The format of the data
-  in this buffer is only known by the FW and does not need to be
-  shared with other entities.
+This is a patch series covering the support for protected mode execution in
+Mali Panthor CSF kernel driver.
 
-To summarize, Mali GPUs require allocations of protected buffer
-objects at the kernel level.
+The Mali CSF GPUs come with the support for protected mode execution at the
+HW level. This feature requires two main changes in the kernel driver:
 
-* How is the protected heap accessed by the Panthor driver?
-The driver will retrieve the protected heap using the name of the
-heap provided to the driver via the DTB as attribute.
-If the heap is not yet available, the panthor driver will defer
-the probe until created. It is an integration error to provide
-a heap name that does not exist or is never created in the
-DTB node.
+1) Configure the GPU with a protected buffer. The system must provide a DMA
+   heap from which the driver can allocate a protected buffer.
+   It can be a carved-out memory or dynamically allocated protected memory region.
+   Some system includes a trusted FW which is in charge of the protected memory.
+   Since this problem is integration specific, the Mali Panthor CSF kernel
+   driver must import the protected memory from a device specific exporter.
 
-* How is the Panthor driver allocating from the heap?
-Panthor is calling the DMA heap allocation function
-and obtains a DMA buffer from it. This buffer is then
-registered to GEM via PRIME by importing the DMA buffer.
+2) Handle enter and exit of the GPU HW from normal to protected mode of execution.
+   FW sends a request for protected mode entry to the kernel driver.
+   The acknowledgment of that request is a scheduling decision. Effectively,
+   protected mode execution should not overrule normal mode of execution.
+   A fair distribution of execution time will guaranty the overall performance
+   of the device, including the UI (usually executing in normal mode),
+   will not regress when a protected mode job is submitted by an application.
 
-Signed-off-by: Florent Tomasin <florent.tomasin@arm.com>
----
- drivers/gpu/drm/panthor/Kconfig          |  1 +
- drivers/gpu/drm/panthor/panthor_device.c | 22 ++++++++++-
- drivers/gpu/drm/panthor/panthor_device.h |  7 ++++
- drivers/gpu/drm/panthor/panthor_fw.c     | 36 +++++++++++++++--
- drivers/gpu/drm/panthor/panthor_fw.h     |  2 +
- drivers/gpu/drm/panthor/panthor_gem.c    | 49 ++++++++++++++++++++++--
- drivers/gpu/drm/panthor/panthor_gem.h    | 16 +++++++-
- drivers/gpu/drm/panthor/panthor_heap.c   |  2 +
- drivers/gpu/drm/panthor/panthor_sched.c  |  5 ++-
- 9 files changed, 130 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/panthor/Kconfig b/drivers/gpu/drm/panthor/Kconfig
-index 55b40ad07f3b..c0208b886d9f 100644
---- a/drivers/gpu/drm/panthor/Kconfig
-+++ b/drivers/gpu/drm/panthor/Kconfig
-@@ -7,6 +7,7 @@ config DRM_PANTHOR
- 	depends on !GENERIC_ATOMIC64  # for IOMMU_IO_PGTABLE_LPAE
- 	depends on MMU
- 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
-+	select DMABUF_HEAPS
- 	select DRM_EXEC
- 	select DRM_GEM_SHMEM_HELPER
- 	select DRM_GPUVM
-diff --git a/drivers/gpu/drm/panthor/panthor_device.c b/drivers/gpu/drm/panthor/panthor_device.c
-index 00f7b8ce935a..1018e5c90a0e 100644
---- a/drivers/gpu/drm/panthor/panthor_device.c
-+++ b/drivers/gpu/drm/panthor/panthor_device.c
-@@ -4,7 +4,9 @@
- /* Copyright 2023 Collabora ltd. */
- 
- #include <linux/clk.h>
-+#include <linux/dma-heap.h>
- #include <linux/mm.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pm_domain.h>
- #include <linux/pm_runtime.h>
-@@ -102,6 +104,9 @@ void panthor_device_unplug(struct panthor_device *ptdev)
- 	panthor_mmu_unplug(ptdev);
- 	panthor_gpu_unplug(ptdev);
- 
-+	if (ptdev->protm.heap)
-+		dma_heap_put(ptdev->protm.heap);
+Background
+----------
+
+Current Mali Panthor CSF driver does not allow a user space application to
+execute protected jobs on the GPU. This use case is quite common on end-user-device.
+A user may want to watch a video or render content that is under a "Digital Right
+Management" protection, or launch an application with user private data.
+
+1) User-space:
+
+   In order for an application to execute protected jobs on a Mali CSF GPU the
+   user space application must submit jobs to the GPU within a "protected regions"
+   (range of commands to execute in protected mode).
+
+   Find here an example of a command buffer that contains protected commands:
+
+```
+          <--- Normal mode ---><--- Protected mode ---><--- Normal mode --->
+   +-------------------------------------------------------------------------+
+   | ... | CMD_0 | ... | CMD_N | PROT_REGION | CMD_N+1 | ... | CMD_N+M | ... |
+   +-------------------------------------------------------------------------+
+```
+
+   The PROT_REGION command acts as a barrier to notify the HW of upcoming
+   protected jobs. It also defines the number of commands to execute in protected
+   mode.
+
+   The Mesa definition of the opcode can be found here:
+
+     https://gitlab.freedesktop.org/mesa/mesa/-/blob/main/src/panfrost/lib/genxml/v10.xml?ref_type=heads#L763
+
+2) Kernel-space:
+
+   When loading the FW image, the Kernel driver must also load the data section of
+   CSF FW that comes from the protected memory, in order to allow FW to execute in
+   protected mode.
+
+   Important: this memory is not owned by any process. It is a GPU device level
+              protected memory.
+
+   In addition, when a CSG (group) is created, it must have a protected suspend buffer.
+   This memory is allocated within the kernel but bound to a specific CSG that belongs
+   to a process. The kernel owns this allocation and does not allow user space mapping.
+   The format of the data in this buffer is only known by the FW and does not need to
+   be shared with other entities. The purpose of this buffer is the same as the normal
+   suspend buffer but for protected mode. FW will use it to suspend the execution of
+   PROT_REGION before returning to normal mode of execution.
+
+
+Design decisions
+----------------
+
+The Mali Panthor CSF kernel driver will allocate protected DMA buffers
+using a global protected DMA heap. The name of the heap can vary on
+the system and is integration specific. Therefore, the kernel driver
+will retrieve it using the DTB entry: "protected-heap-name".
+
+The Mali Panthor CSF kernel driver will handle enter/exit of protected
+mode with a fair consideration of the job scheduling.
+
+If the system integrator does not provide a protected DMA heap, the driver
+will not allow any protected mode execution.
+
+
+Patch series
+------------
+
+The series is based on:
+
+  https://lore.kernel.org/lkml/20230911023038.30649-1-yong.wu@mediatek.com/#t
+
+[PATCHES 1-2]:
+  These patches were used for the development of the feature and are not
+  initially thought to land in the Linux kernel. They are mostly relevant
+  if someone wants to reproduce the environment of testing.
+
+  Note: Please, raise interest if you think those patches have value in
+        the Linux kernel.
+
+  * dt-bindings: dma: Add CMA Heap bindings
+  * cma-heap: Allow registration of custom cma heaps
+
+[PATCHES 3-4]:
+  These patches introduce the Mali Panthor CSF driver DTB binding to pass
+  the protected DMA Heap name and the handling of the protected DMA memory
+  allocations in the driver.
+
+  Note: The registration of the protected DMA buffers is done via GEM prime.
+  The direct call to the registration function, may seems controversial and
+  I would appreciate feedback on that matter.
+
+  * dt-bindings: gpu: Add protected heap name to Mali Valhall CSF binding
+  * drm/panthor: Add support for protected memory allocation in panthor
+
+[PATCH 5]:
+  This patch implements the logic to handle enter/exit of the GPU protected
+  mode in Panthor CSF driver.
+
+  Note: to prevent scheduler priority inversion, only a single CSG is allowed
+        to execute while in protected mode. It must be the top priority one.
+
+  * drm/panthor: Add support for entering and exiting protected mode
+
+Testing
+-------
+
+1) Platform and development environment
+
+   Any platform containing a Mali CSF type of GPU and a protected memory allocator
+   that is based on DMA Heap can be used. For example, it can be a physical platform
+   or a simulator such as Arm Total Compute FVPs platforms. Reference to the latter:
+
+     https://developer.arm.com/Tools%20and%20Software/Fixed%20Virtual%20Platforms/Total%20Compute%20FVPs
+
+   To ease the development of the feature, a carved-out protected memory heap was
+   defined and managed using a modified version of the CMA heap driver.
+
+2) Protected job submission:
+
+   A protected mode job can be created in Mesa following this approach:
+
+```
+diff --git a/src/gallium/drivers/panfrost/pan_csf.c b/src/gallium/drivers/panfrost/pan_csf.c
+index da6ce875f86..13d54abf5a1 100644
+--- a/src/gallium/drivers/panfrost/pan_csf.c
++++ b/src/gallium/drivers/panfrost/pan_csf.c
+@@ -803,8 +803,25 @@ GENX(csf_emit_fragment_job)(struct panfrost_batch *batch,
+       }
+    }
+
++   if (protected_cmd) {
++      /* Number of commands to execute in protected mode in bytes.
++       * The run fragment and wait commands. */
++      unsigned const size = 2 * sizeof(u64);
 +
- 	pm_runtime_dont_use_autosuspend(ptdev->base.dev);
- 	pm_runtime_put_sync_suspend(ptdev->base.dev);
- 
-@@ -172,6 +177,7 @@ int panthor_device_init(struct panthor_device *ptdev)
- 	u32 *dummy_page_virt;
- 	struct resource *res;
- 	struct page *p;
-+	const char *protm_heap_name;
- 	int ret;
- 
- 	ret = panthor_gpu_coherency_init(ptdev);
-@@ -246,9 +252,19 @@ int panthor_device_init(struct panthor_device *ptdev)
- 			return ret;
- 	}
- 
-+	/* If a protected heap is specified but not found, defer the probe until created */
-+	if (!of_property_read_string(ptdev->base.dev->of_node, "protected-heap-name",
-+				     &protm_heap_name)) {
-+		ptdev->protm.heap = dma_heap_find(protm_heap_name);
-+		if (!ptdev->protm.heap) {
-+			ret = -EPROBE_DEFER;
-+			goto err_rpm_put;
-+		}
-+	}
++      /* Wait for all previous commands to complete before evaluating
++       * the protected commands. */
++      cs_wait_slots(b, SB_ALL_MASK, false);
++      cs_prot_region(b, size);
++   }
 +
- 	ret = panthor_gpu_init(ptdev);
- 	if (ret)
--		goto err_rpm_put;
-+		goto err_dma_heap_put;
- 
- 	ret = panthor_mmu_init(ptdev);
- 	if (ret)
-@@ -286,6 +302,10 @@ int panthor_device_init(struct panthor_device *ptdev)
- err_unplug_gpu:
- 	panthor_gpu_unplug(ptdev);
- 
-+err_dma_heap_put:
-+	if (ptdev->protm.heap)
-+		dma_heap_put(ptdev->protm.heap);
+    /* Run the fragment job and wait */
+    cs_run_fragment(b, false, MALI_TILE_RENDER_ORDER_Z_ORDER, false);
 +
- err_rpm_put:
- 	pm_runtime_put_sync_suspend(ptdev->base.dev);
- 	return ret;
-diff --git a/drivers/gpu/drm/panthor/panthor_device.h b/drivers/gpu/drm/panthor/panthor_device.h
-index 0e68f5a70d20..406de9e888e2 100644
---- a/drivers/gpu/drm/panthor/panthor_device.h
-+++ b/drivers/gpu/drm/panthor/panthor_device.h
-@@ -7,6 +7,7 @@
- #define __PANTHOR_DEVICE_H__
- 
- #include <linux/atomic.h>
-+#include <linux/dma-heap.h>
- #include <linux/io-pgtable.h>
- #include <linux/regulator/consumer.h>
- #include <linux/sched.h>
-@@ -190,6 +191,12 @@ struct panthor_device {
- 
- 	/** @fast_rate: Maximum device clock frequency. Set by DVFS */
- 	unsigned long fast_rate;
++   /* Wait for all protected commands to complete before evaluating
++    * the normal mode commands. */
++   if (protected_cmd)
++      cs_wait_slots(b, SB_ALL_MASK, false);
 +
-+	/** @protm: Protected mode related data. */
-+	struct {
-+		/** @heap: Pointer to the protected heap */
-+		struct dma_heap *heap;
-+	} protm;
- };
- 
- struct panthor_gpu_usage {
-diff --git a/drivers/gpu/drm/panthor/panthor_fw.c b/drivers/gpu/drm/panthor/panthor_fw.c
-index 4a2e36504fea..7822af1533b4 100644
---- a/drivers/gpu/drm/panthor/panthor_fw.c
-+++ b/drivers/gpu/drm/panthor/panthor_fw.c
-@@ -458,6 +458,7 @@ panthor_fw_alloc_queue_iface_mem(struct panthor_device *ptdev,
- 
- 	mem = panthor_kernel_bo_create(ptdev, ptdev->fw->vm, SZ_8K,
- 				       DRM_PANTHOR_BO_NO_MMAP,
-+				       0,
- 				       DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
- 				       DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
- 				       PANTHOR_VM_KERNEL_AUTO_VA);
-@@ -491,6 +492,28 @@ panthor_fw_alloc_suspend_buf_mem(struct panthor_device *ptdev, size_t size)
- {
- 	return panthor_kernel_bo_create(ptdev, panthor_fw_vm(ptdev), size,
- 					DRM_PANTHOR_BO_NO_MMAP,
-+					0,
-+					DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
-+					PANTHOR_VM_KERNEL_AUTO_VA);
-+}
-+
-+/**
-+ * panthor_fw_alloc_protm_suspend_buf_mem() - Allocate a protm suspend buffer
-+ * for a command stream group.
-+ * @ptdev: Device.
-+ * @size: Size of the protm suspend buffer.
-+ *
-+ * Return: A valid pointer in case of success, NULL if no protected heap, an ERR_PTR() otherwise.
-+ */
-+struct panthor_kernel_bo *
-+panthor_fw_alloc_protm_suspend_buf_mem(struct panthor_device *ptdev, size_t size)
-+{
-+	if (!ptdev->protm.heap)
-+		return NULL;
-+
-+	return panthor_kernel_bo_create(ptdev, panthor_fw_vm(ptdev), size,
-+					DRM_PANTHOR_BO_NO_MMAP,
-+					DRM_PANTHOR_KBO_PROTECTED_HEAP,
- 					DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
- 					PANTHOR_VM_KERNEL_AUTO_VA);
- }
-@@ -503,6 +526,7 @@ static int panthor_fw_load_section_entry(struct panthor_device *ptdev,
- 	ssize_t vm_pgsz = panthor_vm_page_size(ptdev->fw->vm);
- 	struct panthor_fw_binary_section_entry_hdr hdr;
- 	struct panthor_fw_section *section;
-+	bool is_protm_section = false;
- 	u32 section_size;
- 	u32 name_len;
- 	int ret;
-@@ -541,10 +565,13 @@ static int panthor_fw_load_section_entry(struct panthor_device *ptdev,
- 		return -EINVAL;
- 	}
- 
--	if (hdr.flags & CSF_FW_BINARY_IFACE_ENTRY_PROT) {
-+	if ((hdr.flags & CSF_FW_BINARY_IFACE_ENTRY_PROT) && !ptdev->protm.heap) {
- 		drm_warn(&ptdev->base,
- 			 "Firmware protected mode entry not be supported, ignoring");
- 		return 0;
-+	} else if ((hdr.flags & CSF_FW_BINARY_IFACE_ENTRY_PROT) && ptdev->protm.heap) {
-+		drm_info(&ptdev->base, "Firmware protected mode entry supported");
-+		is_protm_section = true;
- 	}
- 
- 	if (hdr.va.start == CSF_MCU_SHARED_REGION_START &&
-@@ -610,9 +637,10 @@ static int panthor_fw_load_section_entry(struct panthor_device *ptdev,
- 			vm_map_flags |= DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED;
- 
- 		section->mem = panthor_kernel_bo_create(ptdev, panthor_fw_vm(ptdev),
--							section_size,
--							DRM_PANTHOR_BO_NO_MMAP,
--							vm_map_flags, va);
-+					section_size,
-+					DRM_PANTHOR_BO_NO_MMAP,
-+					(is_protm_section ? DRM_PANTHOR_KBO_PROTECTED_HEAP : 0),
-+					vm_map_flags, va);
- 		if (IS_ERR(section->mem))
- 			return PTR_ERR(section->mem);
- 
-diff --git a/drivers/gpu/drm/panthor/panthor_fw.h b/drivers/gpu/drm/panthor/panthor_fw.h
-index 22448abde992..29042d0dc60c 100644
---- a/drivers/gpu/drm/panthor/panthor_fw.h
-+++ b/drivers/gpu/drm/panthor/panthor_fw.h
-@@ -481,6 +481,8 @@ panthor_fw_alloc_queue_iface_mem(struct panthor_device *ptdev,
- 				 u32 *input_fw_va, u32 *output_fw_va);
- struct panthor_kernel_bo *
- panthor_fw_alloc_suspend_buf_mem(struct panthor_device *ptdev, size_t size);
-+struct panthor_kernel_bo *
-+panthor_fw_alloc_protm_suspend_buf_mem(struct panthor_device *ptdev, size_t size);
- 
- struct panthor_vm *panthor_fw_vm(struct panthor_device *ptdev);
- 
-diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
-index 8244a4e6c2a2..88caf928acd0 100644
---- a/drivers/gpu/drm/panthor/panthor_gem.c
-+++ b/drivers/gpu/drm/panthor/panthor_gem.c
-@@ -9,10 +9,14 @@
- 
- #include <drm/panthor_drm.h>
- 
-+#include <uapi/linux/dma-heap.h>
-+
- #include "panthor_device.h"
- #include "panthor_gem.h"
- #include "panthor_mmu.h"
- 
-+MODULE_IMPORT_NS(DMA_BUF);
-+
- static void panthor_gem_free_object(struct drm_gem_object *obj)
- {
- 	struct panthor_gem_object *bo = to_panthor_bo(obj);
-@@ -31,6 +35,7 @@ static void panthor_gem_free_object(struct drm_gem_object *obj)
-  */
- void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo)
- {
-+	struct dma_buf *dma_bo = NULL;
- 	struct panthor_vm *vm;
- 	int ret;
- 
-@@ -38,6 +43,10 @@ void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo)
- 		return;
- 
- 	vm = bo->vm;
-+
-+	if (bo->flags & DRM_PANTHOR_KBO_PROTECTED_HEAP)
-+		dma_bo = bo->obj->import_attach->dmabuf;
-+
- 	panthor_kernel_bo_vunmap(bo);
- 
- 	if (drm_WARN_ON(bo->obj->dev,
-@@ -51,6 +60,9 @@ void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo)
- 	panthor_vm_free_va(vm, &bo->va_node);
- 	drm_gem_object_put(bo->obj);
- 
-+	if (dma_bo)
-+		dma_buf_put(dma_bo);
-+
- out_free_bo:
- 	panthor_vm_put(vm);
- 	kfree(bo);
-@@ -62,6 +74,7 @@ void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo)
-  * @vm: VM to map the GEM to. If NULL, the kernel object is not GPU mapped.
-  * @size: Size of the buffer object.
-  * @bo_flags: Combination of drm_panthor_bo_flags flags.
-+ * @kbo_flags: Combination of drm_panthor_kbo_flags flags.
-  * @vm_map_flags: Combination of drm_panthor_vm_bind_op_flags (only those
-  * that are related to map operations).
-  * @gpu_va: GPU address assigned when mapping to the VM.
-@@ -72,9 +85,11 @@ void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo)
-  */
- struct panthor_kernel_bo *
- panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
--			 size_t size, u32 bo_flags, u32 vm_map_flags,
-+			 size_t size, u32 bo_flags, u32 kbo_flags, u32 vm_map_flags,
- 			 u64 gpu_va)
- {
-+	struct dma_buf *dma_bo = NULL;
-+	struct drm_gem_object *gem_obj = NULL;
- 	struct drm_gem_shmem_object *obj;
- 	struct panthor_kernel_bo *kbo;
- 	struct panthor_gem_object *bo;
-@@ -87,14 +102,38 @@ panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
- 	if (!kbo)
- 		return ERR_PTR(-ENOMEM);
- 
--	obj = drm_gem_shmem_create(&ptdev->base, size);
-+	if (kbo_flags & DRM_PANTHOR_KBO_PROTECTED_HEAP) {
-+		if (!ptdev->protm.heap) {
-+			ret = -EINVAL;
-+			goto err_free_bo;
-+		}
-+
-+		dma_bo = dma_heap_buffer_alloc(ptdev->protm.heap, size,
-+					       DMA_HEAP_VALID_FD_FLAGS, DMA_HEAP_VALID_HEAP_FLAGS);
-+		if (!dma_bo) {
-+			ret = -ENOMEM;
-+			goto err_free_bo;
-+		}
-+
-+		gem_obj = drm_gem_prime_import(&ptdev->base, dma_bo);
-+		if (IS_ERR(gem_obj)) {
-+			ret = PTR_ERR(gem_obj);
-+			goto err_free_dma_bo;
-+		}
-+
-+		obj = to_drm_gem_shmem_obj(gem_obj);
-+	} else {
-+		obj = drm_gem_shmem_create(&ptdev->base, size);
-+	}
-+
- 	if (IS_ERR(obj)) {
- 		ret = PTR_ERR(obj);
--		goto err_free_bo;
-+		goto err_free_dma_bo;
- 	}
- 
- 	bo = to_panthor_bo(&obj->base);
- 	kbo->obj = &obj->base;
-+	kbo->flags = kbo_flags;
- 	bo->flags = bo_flags;
- 
- 	/* The system and GPU MMU page size might differ, which becomes a
-@@ -124,6 +163,10 @@ panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
- err_put_obj:
- 	drm_gem_object_put(&obj->base);
- 
-+err_free_dma_bo:
-+	if (dma_bo)
-+		dma_buf_put(dma_bo);
-+
- err_free_bo:
- 	kfree(kbo);
- 	return ERR_PTR(ret);
-diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
-index e43021cf6d45..d4fe8ae9f0a8 100644
---- a/drivers/gpu/drm/panthor/panthor_gem.h
-+++ b/drivers/gpu/drm/panthor/panthor_gem.h
-@@ -13,6 +13,17 @@
- 
- struct panthor_vm;
- 
-+/**
-+ * enum drm_panthor_kbo_flags -  Kernel buffer object flags, passed at creation time
-+ */
-+enum drm_panthor_kbo_flags {
-+	/**
-+	 * @DRM_PANTHOR_KBO_PROTECTED_HEAP: The buffer object will be allocated
-+	 * from a DMA-Buf protected heap.
-+	 */
-+	DRM_PANTHOR_KBO_PROTECTED_HEAP = (1 << 0),
-+};
-+
- /**
-  * struct panthor_gem_object - Driver specific GEM object.
-  */
-@@ -75,6 +86,9 @@ struct panthor_kernel_bo {
- 	 * @kmap: Kernel CPU mapping of @gem.
- 	 */
- 	void *kmap;
-+
-+	/** @flags: Combination of drm_panthor_kbo_flags flags. */
-+	u32 flags;
- };
- 
- static inline
-@@ -138,7 +152,7 @@ panthor_kernel_bo_vunmap(struct panthor_kernel_bo *bo)
- 
- struct panthor_kernel_bo *
- panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
--			 size_t size, u32 bo_flags, u32 vm_map_flags,
-+			 size_t size, u32 bo_flags, u32 kbo_flags, u32 vm_map_flags,
- 			 u64 gpu_va);
- 
- void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
-diff --git a/drivers/gpu/drm/panthor/panthor_heap.c b/drivers/gpu/drm/panthor/panthor_heap.c
-index 3796a9eb22af..5395f0d90360 100644
---- a/drivers/gpu/drm/panthor/panthor_heap.c
-+++ b/drivers/gpu/drm/panthor/panthor_heap.c
-@@ -146,6 +146,7 @@ static int panthor_alloc_heap_chunk(struct panthor_device *ptdev,
- 
- 	chunk->bo = panthor_kernel_bo_create(ptdev, vm, heap->chunk_size,
- 					     DRM_PANTHOR_BO_NO_MMAP,
-+					     0,
- 					     DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
- 					     PANTHOR_VM_KERNEL_AUTO_VA);
- 	if (IS_ERR(chunk->bo)) {
-@@ -549,6 +550,7 @@ panthor_heap_pool_create(struct panthor_device *ptdev, struct panthor_vm *vm)
- 
- 	pool->gpu_contexts = panthor_kernel_bo_create(ptdev, vm, bosize,
- 						      DRM_PANTHOR_BO_NO_MMAP,
-+						      0,
- 						      DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
- 						      PANTHOR_VM_KERNEL_AUTO_VA);
- 	if (IS_ERR(pool->gpu_contexts)) {
-diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-index ef4bec7ff9c7..e260ed8aef5b 100644
---- a/drivers/gpu/drm/panthor/panthor_sched.c
-+++ b/drivers/gpu/drm/panthor/panthor_sched.c
-@@ -3298,6 +3298,7 @@ group_create_queue(struct panthor_group *group,
- 	queue->ringbuf = panthor_kernel_bo_create(group->ptdev, group->vm,
- 						  args->ringbuf_size,
- 						  DRM_PANTHOR_BO_NO_MMAP,
-+						  0,
- 						  DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
- 						  DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
- 						  PANTHOR_VM_KERNEL_AUTO_VA);
-@@ -3328,6 +3329,7 @@ group_create_queue(struct panthor_group *group,
- 					 queue->profiling.slot_count *
- 					 sizeof(struct panthor_job_profiling_data),
- 					 DRM_PANTHOR_BO_NO_MMAP,
-+					 0,
- 					 DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
- 					 DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
- 					 PANTHOR_VM_KERNEL_AUTO_VA);
-@@ -3435,7 +3437,7 @@ int panthor_group_create(struct panthor_file *pfile,
- 	}
- 
- 	suspend_size = csg_iface->control->protm_suspend_size;
--	group->protm_suspend_buf = panthor_fw_alloc_suspend_buf_mem(ptdev, suspend_size);
-+	group->protm_suspend_buf = panthor_fw_alloc_protm_suspend_buf_mem(ptdev, suspend_size);
- 	if (IS_ERR(group->protm_suspend_buf)) {
- 		ret = PTR_ERR(group->protm_suspend_buf);
- 		group->protm_suspend_buf = NULL;
-@@ -3446,6 +3448,7 @@ int panthor_group_create(struct panthor_file *pfile,
- 						   group_args->queues.count *
- 						   sizeof(struct panthor_syncobj_64b),
- 						   DRM_PANTHOR_BO_NO_MMAP,
-+						   0,
- 						   DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
- 						   DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
- 						   PANTHOR_VM_KERNEL_AUTO_VA);
--- 
+    cs_wait_slot(b, 2, false);
+
+    /* Gather freed heap chunks and add them to the heap context free list
+```
+
+
+Constraints
+-----------
+
+At the time of developing the feature, Linux kernel does not have a generic
+way of implementing protected DMA heaps. The patch series relies on previous
+work to expose the DMA heap API to the kernel drivers.
+
+The Mali CSF GPU requires device level allocated protected memory, which do
+not belong to a process. The current Linux implementation of DMA heap only
+allows a user space program to allocate from such heap. Having the ability
+to allocate this memory at the kernel level via the DMA heap API would allow
+support for protected mode on Mali CSF GPUs.
+
+
+Conclusion
+----------
+
+This patch series aims to initiate the discussion around handling of protected
+mode in Mali CSG GPU and highlights constraints found during the development
+of the feature.
+
+Some Mesa changes are required to construct a protected mode job in user space,
+which can be submitted to the GPU.
+
+Some of the changes may seems controversial and we would appreciate getting
+opinion from the community.
+
+
+Regards,
+
+Florent Tomasin (5):
+  dt-bindings: dma: Add CMA Heap bindings
+  cma-heap: Allow registration of custom cma heaps
+  dt-bindings: gpu: Add protected heap name to Mali Valhall CSF binding
+  drm/panthor: Add support for protected memory allocation in panthor
+  drm/panthor: Add support for entering and exiting protected mode
+
+ .../devicetree/bindings/dma/linux,cma.yml     |  43 ++++++
+ .../bindings/gpu/arm,mali-valhall-csf.yaml    |   6 +
+ drivers/dma-buf/heaps/cma_heap.c              | 120 +++++++++++------
+ drivers/gpu/drm/panthor/Kconfig               |   1 +
+ drivers/gpu/drm/panthor/panthor_device.c      |  22 +++-
+ drivers/gpu/drm/panthor/panthor_device.h      |  10 ++
+ drivers/gpu/drm/panthor/panthor_fw.c          |  46 ++++++-
+ drivers/gpu/drm/panthor/panthor_fw.h          |   2 +
+ drivers/gpu/drm/panthor/panthor_gem.c         |  49 ++++++-
+ drivers/gpu/drm/panthor/panthor_gem.h         |  16 ++-
+ drivers/gpu/drm/panthor/panthor_heap.c        |   2 +
+ drivers/gpu/drm/panthor/panthor_sched.c       | 124 ++++++++++++++++--
+ 12 files changed, 382 insertions(+), 59 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/linux,cma.yml
+
+--
 2.34.1
 
