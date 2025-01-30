@@ -1,206 +1,264 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF371B0F18;
-	Thu, 30 Jan 2025 08:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DD61B0415;
+	Thu, 30 Jan 2025 08:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738226366; cv=none; b=ifTnrjbNm5C7CKTvRIBteSal7M6Vnf8HHUmuV+Z4PFUb/XQ+Pls30zCUcxJgeEv98CPDI+gGfP49dUuu+KQaosU8CVK2oTJ0rwSvoNt8tmlI6Q5PbSUtQtb9uyzp0eK/jIgBYFZj5XiaN9H6j+omGSJVUGxTph17HRjyVLunOt8=
+	t=1738226388; cv=none; b=Lmd9BrC0GOsXTPPKcm4PSUsRpTGrqraiJmrNAj+zJr8yoctCoMBiEexhH9oYDj1oS0IMzgoGdyMcS1sjtSNh/FZWzF776PWMrWEfmnZT/XtJNTHmdn1xc3xpASX0Q6YCuyN8twiy0mIW5oAgkCv1qoek4gDLhLo8iUxsTUSaCAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738226366; c=relaxed/simple;
-	bh=fd3xpF4ktv4ORw9vYuTZ4/WAbOSh+WpvwrJQi9du1UQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ODjleucsSWeShVluSWanAORgR0Zqt8SAtPk/Rpfhx5GNzG6xhRqnR3+QEcAfYTSpZNGKNwbVnabB0OWaEAH0fRbG0BrX4Kxfzzifta6+0qJw8GX9gmvOBxeMwvY8VUsruv6Xi2pNFhXRBXxg+U71ww0k7RdJUmEHFOIhpnwVYlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=otwIu41G; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="otwIu41G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEC2FC4CED3;
-	Thu, 30 Jan 2025 08:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738226365;
-	bh=fd3xpF4ktv4ORw9vYuTZ4/WAbOSh+WpvwrJQi9du1UQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=otwIu41GwAywhOKGwqk7MwV2/izu1h8d3S/HnyVQ/eL01ulpBWP57L3QiHHn9oqKG
-	 gCz2XfFVc6Y/1rF5GXRmMU6ic67OccQd0bN/XKHBxW3Fwb/Aq2s4aE8tOQc2cIiUa6
-	 4NKmBnP2dn9roup25qTQV1IrkepmW3pwC3bTLPJkh0ncJTcjFgAUpLxJqzwCu1C1mr
-	 Lc3AgGMWKzsRmPe0/pQbe1/zR6RbnFcoUPdaX1zhwgdRwFCklmpR7/v6zJU6CjnTHh
-	 woU1CrnaO2ab5KHBdMZubE0ze8WhaLYthUM4Du1rQA1vEBg9pwfCm5BpYeZdDUDNBM
-	 A3lpr5DgN/+2A==
-Date: Thu, 30 Jan 2025 09:39:22 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-Cc: ath12k@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	Kalle Valo <kvalo@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jeff Johnson <jjohnson@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>, Saravanakumar Duraisamy <quic_saradura@quicinc.com>
-Subject: Re: [RFC PATCH 5/5] wifi: ath12k: Enable IPQ5424 WiFi device support
-Message-ID: <20250130-offbeat-sparkling-nyala-042b72@krzk-bin>
-References: <20250130051838.1924079-1-quic_rajkbhag@quicinc.com>
- <20250130051838.1924079-6-quic_rajkbhag@quicinc.com>
+	s=arc-20240116; t=1738226388; c=relaxed/simple;
+	bh=hEU3o0VHdE4gvNTVBSXXNoknR0x/IOoLOJaNOWiJVG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cFi4gerkKupk9aJM3JpJNhYV7RZgCNZbR6VMk2OUQL+8hdFa8S4GlE4bMHlqd+wmSoLtQMp3c6nXsF29f/+XNdUZTG9py6VaUmg8R1ZjissKEy0KG3+7Ao3683yNvqPeeT2/1LyBXIWsy1QHdXP0wrK9doNjYEdC764XfETXqDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-51878cf85a7so168436e0c.0;
+        Thu, 30 Jan 2025 00:39:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738226384; x=1738831184;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SbxArew7idoCnWrfmn0lEUjbJUOklyP0/MoH1REd+Rk=;
+        b=olakqq//VPv6hypAE0UxXz0f4RGOACls0NZfJ1v8jQPiI4X3p14IqNeFs//jFPONRK
+         IE0M9m9JTPsdLrmSe/UhVnXrLYvmpz0jvLaq0GROO7sk1wcegLd0momkpULl1NVVK9q/
+         AiIgSYupBGleQK3FIfFkypzzPl7bgCKU1mX8mHyrA5jNZNMs36VIaD298UvnbDGyxbuq
+         JeQN0MjICkAl6Ir895hSw0L0fe/48xrNO4fUwKXLiBiLZZTprpnR5JAfc0Wu+9PyLMxi
+         /O2xs7xm9Ld9atL132+x5n31l+KDZy9QqduSCPYjHMg+8F+I6+N5VPfQQ4AymagNGNFS
+         bDjw==
+X-Forwarded-Encrypted: i=1; AJvYcCW2tdOGX8R7ZYtdRJDLhUPT3R6bqSCDlPWUc4toEKwNrql8YNZPLHzt7opWgdJqIUZfOImNhjROUnpkIUA=@vger.kernel.org, AJvYcCX6ayFRhaK6wWJi8oaV7THhYpo/TBWbgs6kOBqntacFVxAV7NddatMJiI1XAPAjFfn36zxZWxzy0eLgkGrf@vger.kernel.org, AJvYcCXPc1Auwme5Cg3/QO78cbk6NYKRdqFCHGJe6e98GoBwoATVMvpeOazLEROaBBmcZM3GLWdQS9oDA2vBHiV6pmNrrH8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx63EMR2kYHzqfFWrdSXEEbmgBebJ+L5cbKiJ7okWTHtlN2G9N+
+	HigmXgrD4S5+K4kCPwGjr4fao2EMjVhZEEf1l3gHDcUfY97vYfTol6tvrT1o
+X-Gm-Gg: ASbGncvA4QvA9CyBiFMHqdKyjhuklY2TBQkg54tDiCxHlod+WdG90LIlVex4RiLdOcK
+	SLBrgOO+de6mQZpG6EuliPIGHiC/UdD7rj00nY4J6cbuzACRZ1XclAMkkaCSLTj4pDmHaXy7B2W
+	7/WxtUkYix2TvhcuesmNbPlbZcLkJAG978114lNvehfbKNwxzD5oMTPKENA/kcmh1sJ59MbfxWH
+	IVARxnSTUZXdeobEJQcJpe/rqNC2swMjl2SaJCuLn3eCMw/Qr0eosbodsaE5MElH5TgYh80MYDf
+	hlFJWvhTq9KLQsjp3KLfuRyHiwEpZn6yDDNwb0hBNttUlVHridP/6g==
+X-Google-Smtp-Source: AGHT+IGc0f4OaZnrvelbXW0SlzpQrKsIwxl2NOnb/we+cxxCAd5n2uPhgZ9LG0duZZ2UUNRf28gKDQ==
+X-Received: by 2002:a05:6122:240c:b0:518:859e:87c3 with SMTP id 71dfb90a1353d-51e9e3edb13mr6880767e0c.7.1738226384042;
+        Thu, 30 Jan 2025 00:39:44 -0800 (PST)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1c3d224sm143308e0c.26.2025.01.30.00.39.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 00:39:43 -0800 (PST)
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-85b83479f45so130782241.0;
+        Thu, 30 Jan 2025 00:39:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUM9k8foFpzGANxSZsFjMhtobMTK1ZYUybeRlXSnNEPYn0RXHnZUgwpaHMzHMGcBf5XhF822k55If5gbqPA@vger.kernel.org, AJvYcCUTeWYnE8256aS0eq3H1QTrRzYmeo2KAYKm8NinBgfdrrhPyHcZXS9AxtcnozZ8FiwXta5Fv9FYJ1CaRQDF13BEUJA=@vger.kernel.org, AJvYcCXKFnUq86RtAXjHS/cf7KkI/pcIWCbxZg3G3Cys2d5wz6FI0utMbHqhDabCuMDkWMa3k5xIr5gyvmNVqdo=@vger.kernel.org
+X-Received: by 2002:a05:6102:d94:b0:4b6:18b3:a4db with SMTP id
+ ada2fe7eead31-4b9a4f10949mr5799048137.8.1738226383366; Thu, 30 Jan 2025
+ 00:39:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250130051838.1924079-6-quic_rajkbhag@quicinc.com>
+References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com> <20250129165122.2980-11-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250129165122.2980-11-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 30 Jan 2025 09:39:31 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVa2Msd=h15vQyJ_OmT18w_qpYacVQjNwRBbLYtc+j41g@mail.gmail.com>
+X-Gm-Features: AWEUYZnhP0Uy0tLjT6-o6e8xKWfli_TtvP2yCgnPu03_XShJ62odRQ9EYMMgy1E
+Message-ID: <CAMuHMdVa2Msd=h15vQyJ_OmT18w_qpYacVQjNwRBbLYtc+j41g@mail.gmail.com>
+Subject: Re: [PATCH 10/14] serial: sh-sci: Introduced sci_of_data
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jan 30, 2025 at 10:48:38AM +0530, Raj Kumar Bhagat wrote:
-> From: Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>
-> 
-> Currently, ath12k AHB (in IPQ5332) uses SCM calls to authenticate the
-> firmware image to bring up userpd. From IPQ5424 onwards, Q6 firmware can
-> directly communicate with the Trusted Management Engine - Lite (TME-L),
-> eliminating the need for SCM calls for userpd bring-up.
-> 
-> Hence, to enable IPQ5424 device support, use qcom_mdt_load_no_init() and
-> skip the SCM call as Q6 will directly authenticate the userpd firmware.
-> 
-> Tested-on: IPQ5424 hw1.0 AHB WLAN.WBE.1.5-01053-QCAHKSWPL_SILICONZ-1
-> Tested-on: IPQ5332 hw1.0 AHB WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1
-> 
-> Signed-off-by: Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>
-> Co-developed-by: Saravanakumar Duraisamy <quic_saradura@quicinc.com>
-> Signed-off-by: Saravanakumar Duraisamy <quic_saradura@quicinc.com>
-> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+CC linux-renesas-soc
+
+On Wed, 29 Jan 2025 at 17:56, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> The aim here is to provide an easier support to more different SCI
+> controllers, like the RZ/T2H one.
+>
+> The existing .data field of_sci_match is changed to a structure containing
+> all what that can be statically initialized, and avoid a call to
+> 'sci_probe_regmap', in both 'sci_init_single', and 'early_console_setup'.
+>
+> 'sci_probe_regmap' is now assumed to be called in the only case where the
+> device description is from a board file instead of a dts.
+>
+> In this way, there is no need to patch 'sci_probe_regmap' for adding new
+> SCI type, and also, the specific sci_port_params for a new SCI type can be
+> provided by an external file.
+>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 > ---
->  drivers/net/wireless/ath/ath12k/ahb.c | 80 +++++++++++++++++----------
->  drivers/net/wireless/ath/ath12k/ahb.h |  9 +++
->  2 files changed, 61 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath12k/ahb.c b/drivers/net/wireless/ath/ath12k/ahb.c
-> index d502b59a78d8..75767915dec3 100644
-> --- a/drivers/net/wireless/ath/ath12k/ahb.c
-> +++ b/drivers/net/wireless/ath/ath12k/ahb.c
-> @@ -21,6 +21,9 @@ static const struct of_device_id ath12k_ahb_of_match[] = {
->  	{ .compatible = "qcom,ipq5332-wifi",
->  	  .data = (void *)ATH12K_HW_IPQ5332_HW10,
->  	},
-> +	{ .compatible = "qcom,ipq5424-wifi",
-> +	  .data = (void *)ATH12K_HW_IPQ5424_HW10,
-> +	},
->  	{ }
->  };
->  
-> @@ -398,8 +401,8 @@ static int ath12k_ahb_power_up(struct ath12k_base *ab)
->  		ATH12K_AHB_UPD_SWID;
->  
->  	/* Load FW image to a reserved memory location */
-> -	ret = qcom_mdt_load(dev, fw, fw_name, pasid, mem_region, mem_phys, mem_size,
-> -			    &mem_phys);
-> +	ret = ab_ahb->ahb_ops->mdt_load(dev, fw, fw_name, pasid, mem_region, mem_phys,
-> +					mem_size, &mem_phys);
->  	if (ret) {
->  		ath12k_err(ab, "Failed to load MDT segments: %d\n", ret);
->  		goto err_fw;
-> @@ -430,11 +433,13 @@ static int ath12k_ahb_power_up(struct ath12k_base *ab)
->  		goto err_fw2;
->  	}
->  
-> -	/* Authenticate FW image using peripheral ID */
-> -	ret = qcom_scm_pas_auth_and_reset(pasid);
-> -	if (ret) {
-> -		ath12k_err(ab, "failed to boot the remote processor %d\n", ret);
-> -		goto err_fw2;
-> +	if (ab_ahb->scm_auth_enabled) {
-> +		/* Authenticate FW image using peripheral ID */
-> +		ret = qcom_scm_pas_auth_and_reset(pasid);
-> +		if (ret) {
-> +			ath12k_err(ab, "failed to boot the remote processor %d\n", ret);
-> +			goto err_fw2;
-> +		}
->  	}
->  
->  	/* Instruct Q6 to spawn userPD thread */
-> @@ -491,13 +496,15 @@ static void ath12k_ahb_power_down(struct ath12k_base *ab, bool is_suspend)
->  
->  	qcom_smem_state_update_bits(ab_ahb->stop_state, BIT(ab_ahb->stop_bit), 0);
->  
-> -	pasid = (u32_encode_bits(ab_ahb->userpd_id, ATH12K_USERPD_ID_MASK)) |
-> -		ATH12K_AHB_UPD_SWID;
-> -	/* Release the firmware */
-> -	ret = qcom_scm_pas_shutdown(pasid);
-> -	if (ret)
-> -		ath12k_err(ab, "scm pas shutdown failed for userPD%d: %d\n",
-> -			   ab_ahb->userpd_id, ret);
-> +	if (ab_ahb->scm_auth_enabled) {
-> +		pasid = (u32_encode_bits(ab_ahb->userpd_id, ATH12K_USERPD_ID_MASK)) |
-> +			 ATH12K_AHB_UPD_SWID;
-> +		/* Release the firmware */
-> +		ret = qcom_scm_pas_shutdown(pasid);
-> +		if (ret)
-> +			ath12k_err(ab, "scm pas shutdown failed for userPD%d\n",
-> +				   ab_ahb->userpd_id);
-> +	}
+>  drivers/tty/serial/sh-sci.c        | 64 +++++++++++++++++++-----------
+>  drivers/tty/serial/sh-sci_common.h |  3 +-
+>  2 files changed, 43 insertions(+), 24 deletions(-)
+>
+> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+> index 1b83a246c7ed..c58c0793c521 100644
+> --- a/drivers/tty/serial/sh-sci.c
+> +++ b/drivers/tty/serial/sh-sci.c
+> @@ -2968,9 +2968,7 @@ static int sci_init_single(struct platform_device *dev,
+>         int ret;
+>
+>         sci_port->cfg   = p;
+> -       sci_port->ops   = &sci_port_ops;
+>
+> -       port->ops       = &sci_uart_ops;
+>         port->iotype    = UPIO_MEM;
+>         port->line      = index;
+>         port->has_sysrq = IS_ENABLED(CONFIG_SERIAL_SH_SCI_CONSOLE);
+> @@ -3010,7 +3008,16 @@ static int sci_init_single(struct platform_device *dev,
+>                 for (i = 1; i < ARRAY_SIZE(sci_port->irqs); i++)
+>                         sci_port->irqs[i] = sci_port->irqs[0];
+>
+> -       sci_port->params = sci_probe_regmap(p);
+> +       /*
+> +        * sci_port->params params can be NULL when using a board file instead
+> +        * of a dts.
+> +        */
+> +       if (sci_port->params == NULL) {
+> +               sci_port->params = sci_probe_regmap(p);
+> +               if (unlikely(sci_port->params == NULL))
+> +                       return -EINVAL;
+> +       }
+> +
+>         if (unlikely(sci_port->params == NULL))
+>                 return -EINVAL;
+>
+> @@ -3266,9 +3273,14 @@ static void sci_remove(struct platform_device *dev)
+>                 device_remove_file(&dev->dev, &dev_attr_rx_fifo_timeout);
 >  }
->  
->  static void ath12k_ahb_init_qmi_ce_config(struct ath12k_base *ab)
-> @@ -707,6 +714,14 @@ static int ath12k_ahb_map_service_to_pipe(struct ath12k_base *ab, u16 service_id
->  	return 0;
+>
+> -#define SCI_OF_DATA(type, regtype)     (void *)((type) << 16 | (regtype))
+> -#define SCI_OF_TYPE(data)              ((unsigned long)(data) >> 16)
+> -#define SCI_OF_REGTYPE(data)           ((unsigned long)(data) & 0xffff)
+> +#define SCI_OF_DATA(_type, _regtype) (\
+> +&(struct sci_of_data) {\
+> +       .type = (_type), \
+> +       .regtype = (_regtype),\
+> +       .ops = &sci_port_ops,\
+> +       .uart_ops = &sci_uart_ops,\
+> +       .params = &sci_port_params[_regtype],\
+> +})
+>
+>  static const struct of_device_id of_sci_match[] __maybe_unused = {
+>         /* SoC-specific types */
+> @@ -3336,7 +3348,7 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
+>         struct reset_control *rstc;
+>         struct plat_sci_port *p;
+>         struct sci_port *sp;
+> -       const void *data;
+> +       const struct sci_of_data *data;
+>         int id, ret;
+>
+>         if (!IS_ENABLED(CONFIG_OF) || !np)
+> @@ -3382,8 +3394,12 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
+>         sp = &sci_ports[id];
+>         *dev_id = id;
+>
+> -       p->type = SCI_OF_TYPE(data);
+> -       p->regtype = SCI_OF_REGTYPE(data);
+> +       p->type = data->type;
+> +       p->regtype = data->regtype;
+> +
+> +       sp->ops = data->ops;
+> +       sp->port.ops = data->uart_ops;
+> +       sp->params = data->params;
+>
+>         sp->has_rtscts = of_property_read_bool(np, "uart-has-rtscts");
+>
+> @@ -3562,19 +3578,23 @@ sh_early_platform_init_buffer("earlyprintk", &sci_driver,
+>  static struct plat_sci_port port_cfg __initdata;
+>
+>  int __init early_console_setup(struct earlycon_device *device,
+> -                                     int type)
+> +                              const struct sci_of_data *data)
+>  {
+>         const struct sci_common_regs *regs;
+>
+>         if (!device->port.membase)
+>                 return -ENODEV;
+>
+> -       device->port.type = type;
+> +       device->port.type = data->type;
+>         memcpy(&sci_ports[0].port, &device->port, sizeof(struct uart_port));
+> -       port_cfg.type = type;
+> +
+> +       port_cfg.type = data->type;
+> +       port_cfg.regtype = data->regtype;
+> +
+>         sci_ports[0].cfg = &port_cfg;
+> -       sci_ports[0].ops = &sci_port_ops;
+> -       sci_ports[0].params = sci_probe_regmap(&port_cfg);
+> +       sci_ports[0].params = data->params;
+> +       sci_ports[0].ops = data->ops;
+> +       sci_ports[0].port.ops = data->uart_ops;
+>         regs = sci_ports[0].params->common_regs;
+>
+>         port_cfg.scscr = sci_ports[0].ops->read_reg(&sci_ports[0].port, regs->control);
+> @@ -3588,41 +3608,39 @@ int __init early_console_setup(struct earlycon_device *device,
+>  static int __init sci_early_console_setup(struct earlycon_device *device,
+>                                           const char *opt)
+>  {
+> -       return early_console_setup(device, PORT_SCI);
+> +       return early_console_setup(device, SCI_OF_DATA(PORT_SCI, SCIx_SCI_REGTYPE));
 >  }
->  
-> +static const struct ath12k_ahb_ops ahb_ops_ipq5332 = {
-> +	.mdt_load = qcom_mdt_load,
-> +};
-> +
-> +static const struct ath12k_ahb_ops ahb_ops_ipq5424 = {
-> +	.mdt_load = qcom_mdt_load_no_init,
-> +};
-> +
->  static const struct ath12k_hif_ops ath12k_ahb_hif_ops_ipq5332 = {
->  	.start = ath12k_ahb_start,
->  	.stop = ath12k_ahb_stop,
-> @@ -1041,19 +1056,9 @@ static int ath12k_ahb_probe(struct platform_device *pdev)
->  	struct device_node *mem_node;
->  	struct ath12k_ahb *ab_ahb;
->  	enum ath12k_hw_rev hw_rev;
-> -	u32 addr, userpd_id;
-> +	u32 addr;
->  	int ret;
->  
-> -	hw_rev = ath12k_ahb_get_hw_rev(pdev);
-> -	switch (hw_rev) {
-> -	case ATH12K_HW_IPQ5332_HW10:
-> -		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
-> -		userpd_id = ATH12K_IPQ5332_USERPD_ID;
-> -		break;
-> -	default:
-> -		return -EOPNOTSUPP;
-> -	}
-
-You just added this code in previous patchset, why are you moving it?
-
-> -
->  	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to set 32-bit coherent dma\n");
-> @@ -1067,13 +1072,32 @@ static int ath12k_ahb_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  	}
->  
-> +	ab_ahb = ath12k_ab_to_ahb(ab);
-> +	ab_ahb->ab = ab;
-> +
-> +	hw_rev = ath12k_ahb_get_hw_rev(pdev);
-> +	switch (hw_rev) {
-> +	case ATH12K_HW_IPQ5332_HW10:
-> +		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
-> +		ab_ahb->userpd_id = ATH12K_IPQ5332_USERPD_ID;
-> +		ab_ahb->scm_auth_enabled = true;
-> +		ab_ahb->ahb_ops = &ahb_ops_ipq5332;
-> +		break;
-> +	case ATH12K_HW_IPQ5424_HW10:
-> +		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
-> +		ab_ahb->userpd_id = ATH12K_IPQ5332_USERPD_ID;
-> +		ab_ahb->scm_auth_enabled = false;
-> +		ab_ahb->ahb_ops = &ahb_ops_ipq5424;
-
-Why you cannot store just proper driver data structure in match data?
-This entire switch is redundant.
-
-Best regards,
-Krzysztof
-
+>  static int __init scif_early_console_setup(struct earlycon_device *device,
+>                                           const char *opt)
+>  {
+> -       return early_console_setup(device, PORT_SCIF);
+> +       return early_console_setup(device, SCI_OF_DATA(PORT_SCIF, SCIx_SH4_SCIF_REGTYPE));
+>  }
+>  static int __init rzscifa_early_console_setup(struct earlycon_device *device,
+>                                           const char *opt)
+>  {
+> -       port_cfg.regtype = SCIx_RZ_SCIFA_REGTYPE;
+> -       return early_console_setup(device, PORT_SCIF);
+> +       return early_console_setup(device, SCI_OF_DATA(PORT_SCIF, SCIx_RZ_SCIFA_REGTYPE));
+>  }
+>
+>  static int __init rzv2hscif_early_console_setup(struct earlycon_device *device,
+>                                                 const char *opt)
+>  {
+> -       port_cfg.regtype = SCIx_RZV2H_SCIF_REGTYPE;
+> -       return early_console_setup(device, PORT_SCIF);
+> +       return early_console_setup(device, SCI_OF_DATA(PORT_SCIF, SCIx_RZV2H_SCIF_REGTYPE));
+>  }
+>
+>  static int __init scifa_early_console_setup(struct earlycon_device *device,
+>                                           const char *opt)
+>  {
+> -       return early_console_setup(device, PORT_SCIFA);
+> +       return early_console_setup(device, SCI_OF_DATA(PORT_SCIFA, SCIx_SCIFA_REGTYPE));
+>  }
+>  static int __init scifb_early_console_setup(struct earlycon_device *device,
+>                                           const char *opt)
+>  {
+> -       return early_console_setup(device, PORT_SCIFB);
+> +       return early_console_setup(device, SCI_OF_DATA(PORT_SCIFB, SCIx_SCIFB_REGTYPE));
+>  }
+>  static int __init hscif_early_console_setup(struct earlycon_device *device,
+>                                           const char *opt)
+>  {
+> -       return early_console_setup(device, PORT_HSCIF);
+> +       return early_console_setup(device, SCI_OF_DATA(PORT_HSCIF, SCIx_HSCIF_REGTYPE));
+>  }
+>
+>  OF_EARLYCON_DECLARE(sci, "renesas,sci", sci_early_console_setup);
+> diff --git a/drivers/tty/serial/sh-sci_common.h b/drivers/tty/serial/sh-sci_common.h
+> index cbfacdc1a836..f75c185079dd 100644
+> --- a/drivers/tty/serial/sh-sci_common.h
+> +++ b/drivers/tty/serial/sh-sci_common.h
+> @@ -172,7 +172,8 @@ extern void sci_flush_buffer(struct uart_port *port);
+>  #define max_sr(_port)          fls((_port)->sampling_rate_mask)
+>
+>  #ifdef CONFIG_SERIAL_SH_SCI_EARLYCON
+> -extern int __init early_console_setup(struct earlycon_device *device, int);
+> +extern int __init early_console_setup(struct earlycon_device *device,
+> +                                     const struct sci_of_data *data);
+>  #endif
+>
+>  #endif /* __SH_SCI_COMMON_H__ */
+> --
+> 2.43.0
+\
