@@ -1,372 +1,231 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92814286A1
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 16:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182ED322B;
+	Thu, 30 Jan 2025 16:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738253732; cv=none; b=ds7GvKhwwf7DoQ/E+9nk69siMMNpg9ddLGtIEC4WbOC89XAWWd+CeuY6wT093wjsuyBT8+jofNljZUZeDFQCDLgtjy+7oI+EZ+sXUGMFhecsExiqQPRgsb/IR6YwhKcYVxstysrzYtxFGVQxswQtmifSp/ln+gVHiYw+MeYvy4o=
+	t=1738253773; cv=none; b=WgeExucPvMASYjF4jwUcTtFtqbogfZ/02sbY0/l3tThFoJ47XtdsWUXasW2EHPbLNwFCFMRVdy14fZtLFaZ5Jrt5lVdyMmLr2xDJowcPL0ToLyy3PFw38pAJFtfdH1b2j+PjfO2U+nrvtekJoXLRyqE7DZCcJQT6nUvv5eE4LQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738253732; c=relaxed/simple;
-	bh=LjC9nGzAa/sZ5dNduS+zcVelMAVnhMI3/KmvffdlNPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NdMtPuwqnUnvEyY84crR3isuefa8QIzVJRXC5GqE1iSx6/BAx+uyLHB4qQQ89pizXbJFdXi77ifq4EhNqh0AuWqIHvVj/PIuCG5aDc2u1f6m1T878uQlWFrm82AuXF17t08AX8pRO2fVFH06kR7DXR0catIRSva9+FDLaZuUISY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=FWt9Gu/N; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FWt9Gu/N"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-385dece873cso538514f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:15:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1738253729; x=1738858529; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=egOGJAXdzlspJHrqV9BICD/kSifyMaJ0VQH1AZZmLmM=;
-        b=FWt9Gu/NWDPCJhcwr1+skgn6XCwEt2Vp8MiBBWdROIx+gs9H+X0FreJ05P4jElgdZr
-         FWrppqk2N2X0FsYD1XhK6cmRmSkis80iRxbPG6q+rX4gzTC4uxXI24rjKl+iPqc1eXwC
-         35mBTN/dsqyU2124Eid0My6XaJtwNoNJLBv4k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738253729; x=1738858529;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=egOGJAXdzlspJHrqV9BICD/kSifyMaJ0VQH1AZZmLmM=;
-        b=qPwFpzKtAypXTqO58GecYvJdVJ3szgSpkIGsfDNgkAgFO+ByMa6zhuRPC83lStRlNc
-         K5Q/Ywpl+ZcBQJihdWvOT7C0/3QOJ47r5TWwm6xxdc49hDL+fH6Dh91aD/uytISKX+nV
-         ch6Q/gOetNoP5JA8uZJnAdVftKGjm+R5is9Uql4C5s0ZlIGZk++w1aiVRCS96SvVB8WH
-         lkTZthJcbmrJZivkeVzmIBm6wVZcomxOQDAc5U7gsouivLuek1NLhuDo/w2O0KIi/fR3
-         KNa24h2/z+lq6DBPovLrY79sFUIcX1lqrSA23oXFsjLLGuXXDFnVzW4+ChVkqx9XU3WK
-         d71w==
-X-Forwarded-Encrypted: i=1; AJvYcCVZBJPWEPCVTy/aO7svNDOIB+K06hDhpGfOISmGAsALMR6CjPcSfRnc+hcuv/i87Muu7/SmbTEmLB8Gle8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzl/31wg35srWsHWv1fENrGm8yKYfjSWtV2bSw1WkUFsVQprGNw
-	LtxQMRSNY9cbqbB7Rp1UbhWKhsUE4kr5rSa+ieUDFmuWqTpZk2ciMTk0WyQ1Ru0=
-X-Gm-Gg: ASbGncs3G6Giy/wlGTkiJ1eINN659RnUxnlJevXCVNz9sw6xc3g2e70IcPQ0UOnmaaZ
-	Ztz4SiRk2jIv7b9rSFck565Brfu2Q7JjVx7zJwEmE+D3r57FNGn4PjB2mEK74M2EGn5IBta9r4b
-	9mtXVSGyxib4rzj5rxz9xOoHjvGkB6o2gvJyrBExqKUSLJiNAX7Z2oyHBWRULKYoQByxb0Ku+3x
-	GYPAc5lFQpJFlI4htZitIk3HTGK6jemTcxqiLJIUmK6en4mRdUb/2J7frjWRcV8UNJgoJm8W/zm
-	FG3VrnTzWhvCY3HHicxCcMa8ViU=
-X-Google-Smtp-Source: AGHT+IFrK9TYn7kQQFdMHsFiVHo3J2E8mwQ+Y3KTlIT27Ql0a3K5so/x8gXOhuMpz8Mjv2POiya4DQ==
-X-Received: by 2002:a05:6000:1a86:b0:385:e3b8:f331 with SMTP id ffacd0b85a97d-38c5194a53dmr7160268f8f.14.1738253727206;
-        Thu, 30 Jan 2025 08:15:27 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b57b6sm2393207f8f.72.2025.01.30.08.15.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 08:15:26 -0800 (PST)
-Date: Thu, 30 Jan 2025 17:15:24 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: Florent Tomasin <florent.tomasin@arm.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Yong Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, nd@arm.com,
-	Akash Goel <akash.goel@arm.com>
-Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali CSF
- GPUs
-Message-ID: <Z5ulnIuzapOVBQgb@phenom.ffwll.local>
-Mail-Followup-To: Florent Tomasin <florent.tomasin@arm.com>,
-	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Yong Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, nd@arm.com,
-	Akash Goel <akash.goel@arm.com>
-References: <cover.1738228114.git.florent.tomasin@arm.com>
+	s=arc-20240116; t=1738253773; c=relaxed/simple;
+	bh=Tbs3hb+PLJ8gGkI6hjrRBbzVJ2ayt0TZX5Dv/HBbtxo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TY7JWZ+cq0dbojhbwQh9+awzdkSC81FDKRSGyvOBJOJLHpvTB7DPUVw3h6RZ6VHd9EaKRVAbTPEWLk3VYeEkAGI15B5t0flM9eor93W0pVk7edVP+g3cRFW6iR/dnj/KPhnHrhpRoa5F71hHhWFqkBwLKNDzZdlqE0lgG38woIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YkPJK31vmz6K5pk;
+	Fri, 31 Jan 2025 00:15:29 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 91AD2140D1D;
+	Fri, 31 Jan 2025 00:16:08 +0800 (CST)
+Received: from localhost (10.195.245.124) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 Jan
+ 2025 17:16:07 +0100
+Date: Thu, 30 Jan 2025 16:16:06 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: David Lechner <dlechner@baylibre.com>
+CC: <0044dd4b-01ce-4ca0-9855-8c239b9bfb6f@baylibre.com>, Jonathan Santos
+	<Jonathan.Santos@analog.com>, <linux-iio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+	<marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <marcelo.schmitt1@gmail.com>
+Subject: Re: [PATCH v2 02/16] dt-bindings: iio: adc: ad7768-1: add
+ trigger-sources property
+Message-ID: <20250130161606.0000514c@huawei.com>
+In-Reply-To: <a6e57474-6eff-4f7b-8204-8137f95a33e7@baylibre.com>
+References: <cover.1737985435.git.Jonathan.Santos@analog.com>
+	<f3972e6aa4ff3869ded1f0dbeb58c43b824b3932.1737985435.git.Jonathan.Santos@analog.com>
+	<0044dd4b-01ce-4ca0-9855-8c239b9bfb6f@baylibre.com>
+	<Z5jx9mJdi3Zh7Mx6@JSANTO12-L01.ad.analog.com>
+	<a6e57474-6eff-4f7b-8204-8137f95a33e7@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1738228114.git.florent.tomasin@arm.com>
-X-Operating-System: Linux phenom 6.12.11-amd64 
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin wrote:
-> Hi,
-> 
-> This is a patch series covering the support for protected mode execution in
-> Mali Panthor CSF kernel driver.
-> 
-> The Mali CSF GPUs come with the support for protected mode execution at the
-> HW level. This feature requires two main changes in the kernel driver:
-> 
-> 1) Configure the GPU with a protected buffer. The system must provide a DMA
->    heap from which the driver can allocate a protected buffer.
->    It can be a carved-out memory or dynamically allocated protected memory region.
->    Some system includes a trusted FW which is in charge of the protected memory.
->    Since this problem is integration specific, the Mali Panthor CSF kernel
->    driver must import the protected memory from a device specific exporter.
-> 
-> 2) Handle enter and exit of the GPU HW from normal to protected mode of execution.
->    FW sends a request for protected mode entry to the kernel driver.
->    The acknowledgment of that request is a scheduling decision. Effectively,
->    protected mode execution should not overrule normal mode of execution.
->    A fair distribution of execution time will guaranty the overall performance
->    of the device, including the UI (usually executing in normal mode),
->    will not regress when a protected mode job is submitted by an application.
-> 
-> 
-> Background
-> ----------
-> 
-> Current Mali Panthor CSF driver does not allow a user space application to
-> execute protected jobs on the GPU. This use case is quite common on end-user-device.
-> A user may want to watch a video or render content that is under a "Digital Right
-> Management" protection, or launch an application with user private data.
-> 
-> 1) User-space:
-> 
->    In order for an application to execute protected jobs on a Mali CSF GPU the
->    user space application must submit jobs to the GPU within a "protected regions"
->    (range of commands to execute in protected mode).
-> 
->    Find here an example of a command buffer that contains protected commands:
-> 
-> ```
->           <--- Normal mode ---><--- Protected mode ---><--- Normal mode --->
->    +-------------------------------------------------------------------------+
->    | ... | CMD_0 | ... | CMD_N | PROT_REGION | CMD_N+1 | ... | CMD_N+M | ... |
->    +-------------------------------------------------------------------------+
-> ```
-> 
->    The PROT_REGION command acts as a barrier to notify the HW of upcoming
->    protected jobs. It also defines the number of commands to execute in protected
->    mode.
-> 
->    The Mesa definition of the opcode can be found here:
-> 
->      https://gitlab.freedesktop.org/mesa/mesa/-/blob/main/src/panfrost/lib/genxml/v10.xml?ref_type=heads#L763
+On Tue, 28 Jan 2025 09:56:37 -0600
+David Lechner <dlechner@baylibre.com> wrote:
 
-Is there also something around that implements egl_ext_protected_context
-or similar in mesa? I think that's the minimal bar all the protected gpu
-workload kernel support patches cleared thus far, since usually getting
-the actual video code stuff published seems to be impossible.
--Sima
+> On 1/28/25 9:04 AM, Jonathan Santos wrote:
+> > On 01/27, David Lechner wrote:  
+> >> On 1/27/25 9:11 AM, Jonathan Santos wrote:  
+> >>> Add a new trigger-sources property to enable synchronization across
+> >>> multiple devices. This property references the main device (or
+> >>> trigger provider) responsible for generating the pulse to drive the
+> >>> SYNC_IN of all devices in the setup.
+> >>>
+> >>> In addition to GPIO synchronization, The AD7768-1 also supports
+> >>> synchronization over SPI, which use is recommended when the GPIO
+> >>> cannot provide a pulse synchronous with the base MCLK signal. It
+> >>> consists of looping back the SYNC_OUT to the SYNC_IN pin and send
+> >>> a command via SPI to trigger the synchronization.
+> >>>
+> >>> SPI-based synchronization is enabled in the absence of adi,sync-in-gpios
+> >>> property. Since adi,sync-in-gpios is not long the only method, remove it
+> >>> from required properties.
+> >>>
+> >>> While at it, add description to the interrupt property.
+> >>>
+> >>> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> >>> ---
+> >>> v2 Changes:
+> >>> * Patch added as replacement for adi,sync-in-spi patch.
+> >>> * addressed the request for a description to interrupts property.
+> >>> ---
+> >>>  .../bindings/iio/adc/adi,ad7768-1.yaml        | 22 +++++++++++++++++--
+> >>>  1 file changed, 20 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> >>> index 3ce59d4d065f..3e119cf1754b 100644
+> >>> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> >>> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> >>> @@ -26,7 +26,17 @@ properties:
+> >>>    clock-names:
+> >>>      const: mclk
+> >>>  
+> >>> +  trigger-sources:
+> >>> +    description:
+> >>> +      References the main device responsible for synchronization. In a single
+> >>> +      device setup, reference the own node.
+> >>> +    maxItems: 1  
+> >>
+> >> We probably actually need 2 here. One for /SYNC_IN and one for a GPIO3 pin
+> >> acting as the /START signal.
+> >>  
+> >>> +
+> >>>    interrupts:
+> >>> +    description:
+> >>> +      Specifies the interrupt line associated with the ADC. This refers
+> >>> +      to the DRDY (Data Ready) pin, which signals when conversion results are
+> >>> +      available.
+> >>>      maxItems: 1
+> >>>  
+> >>>    '#address-cells':
+> >>> @@ -46,6 +56,8 @@ properties:
+> >>>        sampling. A pulse is always required if the configuration is changed
+> >>>        in any way, for example if the filter decimation rate changes.
+> >>>        As the line is active low, it should be marked GPIO_ACTIVE_LOW.
+> >>> +      In the absence of this property, Synchronization over SPI will be
+> >>> +      enabled.  
+> >>
+> >> Isn't /SYNC_OUT connected to /SYNC_IN required for synchronization over SPI?
+> >>
+> >> If yes, instead of adding this text, I would make the binding have:
+> >>  
+> > 
+> > Yes, but the synchronization over SPI is enabled in the absence of the GPIO.
+> > The trigger-sources property would indicate if the sync provider is the
+> > own device or not. As i said below, maybe i misunderstood.
+> >   
+> >> oneOf:
+> >>   - required:
+> >>       - trigger-sources
+> >>   - required:
+> >>        - adi,sync-in-gpios
+> >>  
+> > 
+> > Wouldn't be simpler to consider the absence of sync-in-gpio? this way we
+> > have less changes in the ABI.  
+> 
+> Maybe it is me that missed something, but if I'm reading the datasheet
+> correctly, then sync over SPI only works if /SYNC_IN is wired to /SYNC_OUT.
+> And the chip isn't going to work correctly without some sort of sync. So we
+> need something wired to /SYNC_IN no matter what.
+> 
+> In any case, the DT bindings should just say how the chip is wired up and not
+> dictate how the driver should behave. So what I was going for with this is to
+> have the bindings say that something has to be wired to /SYNC_IN and we can
+> leave it up to the driver to decide what to do with this information.
+
+I was seeing this more like an optional clock / supply etc.
+If we don't provide it we assume the driver knows what to do.
+
+So in this case lack of sync in routing off to another device means
+to me it is connected to sync out.
+
+I don't mind the self trigger thing if it fits nicely in the binding
+though as we are using a trigger that is provided for other chips anyway.
+
+So wired to sync in of this chip and potentially sync in of another
+N chips.
+
 
 > 
-> 2) Kernel-space:
+> >   
+> >>>  
+> >>>    reset-gpios:
+> >>>      maxItems: 1
+> >>> @@ -57,6 +69,9 @@ properties:
+> >>>    "#io-channel-cells":
+> >>>      const: 1
+> >>>  
+> >>> +  "#trigger-source-cells":
+> >>> +    const: 0
+> >>> +
+> >>>  required:
+> >>>    - compatible
+> >>>    - reg
+> >>> @@ -65,7 +80,8 @@ required:
+> >>>    - vref-supply
+> >>>    - spi-cpol
+> >>>    - spi-cpha
+> >>> -  - adi,sync-in-gpios
+> >>> +  - trigger-sources
+> >>> +  - #trigger-source-cells
+> >>>  
+> >>>  patternProperties:
+> >>>    "^channel@([0-9]|1[0-5])$":
+> >>> @@ -99,7 +115,7 @@ examples:
+> >>>          #address-cells = <1>;
+> >>>          #size-cells = <0>;
+> >>>  
+> >>> -        adc@0 {
+> >>> +        adc0: adc@0 {
+> >>>              compatible = "adi,ad7768-1";
+> >>>              reg = <0>;
+> >>>              spi-max-frequency = <2000000>;
+> >>> @@ -109,6 +125,8 @@ examples:
+> >>>              interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+> >>>              interrupt-parent = <&gpio>;
+> >>>              adi,sync-in-gpios = <&gpio 22 GPIO_ACTIVE_LOW>;  
+> >>
+> >> Don't we need to drop adi,sync-in-gpios here? I don't think we would have two
+> >> things connected to /SYNC_IN at the same time.
+> >>  
+> > 
+> > I guess i misunderstood the use of trigger-sources. I thought it would
+> > indicate the trigger provider or main device. Like if it points to other
+> > device we should use it to drive the SYNC_IN of all devices.
+> > 
+> > Then what happens if the trigger-sources points to other node? we would't be
+> > able to driver the SYNC_IN in case of any configuration change?  
 > 
->    When loading the FW image, the Kernel driver must also load the data section of
->    CSF FW that comes from the protected memory, in order to allow FW to execute in
->    protected mode.
+> I think you understand the trigger-source bindings correctly. 
 > 
->    Important: this memory is not owned by any process. It is a GPU device level
->               protected memory.
+> The driver doesn't have to support everything that the DT bindings allow. This
+> series is big enough already, so we can defer figuring out how to implement
+> triggers other than the loopback case later. :-) We just want to make the DT
+> bindings as complete as we can now.
 > 
->    In addition, when a CSG (group) is created, it must have a protected suspend buffer.
->    This memory is allocated within the kernel but bound to a specific CSG that belongs
->    to a process. The kernel owns this allocation and does not allow user space mapping.
->    The format of the data in this buffer is only known by the FW and does not need to
->    be shared with other entities. The purpose of this buffer is the same as the normal
->    suspend buffer but for protected mode. FW will use it to suspend the execution of
->    PROT_REGION before returning to normal mode of execution.
-> 
-> 
-> Design decisions
-> ----------------
-> 
-> The Mali Panthor CSF kernel driver will allocate protected DMA buffers
-> using a global protected DMA heap. The name of the heap can vary on
-> the system and is integration specific. Therefore, the kernel driver
-> will retrieve it using the DTB entry: "protected-heap-name".
-> 
-> The Mali Panthor CSF kernel driver will handle enter/exit of protected
-> mode with a fair consideration of the job scheduling.
-> 
-> If the system integrator does not provide a protected DMA heap, the driver
-> will not allow any protected mode execution.
-> 
-> 
-> Patch series
-> ------------
-> 
-> The series is based on:
-> 
->   https://lore.kernel.org/lkml/20230911023038.30649-1-yong.wu@mediatek.com/#t
-> 
-> [PATCHES 1-2]:
->   These patches were used for the development of the feature and are not
->   initially thought to land in the Linux kernel. They are mostly relevant
->   if someone wants to reproduce the environment of testing.
-> 
->   Note: Please, raise interest if you think those patches have value in
->         the Linux kernel.
-> 
->   * dt-bindings: dma: Add CMA Heap bindings
->   * cma-heap: Allow registration of custom cma heaps
-> 
-> [PATCHES 3-4]:
->   These patches introduce the Mali Panthor CSF driver DTB binding to pass
->   the protected DMA Heap name and the handling of the protected DMA memory
->   allocations in the driver.
-> 
->   Note: The registration of the protected DMA buffers is done via GEM prime.
->   The direct call to the registration function, may seems controversial and
->   I would appreciate feedback on that matter.
-> 
->   * dt-bindings: gpu: Add protected heap name to Mali Valhall CSF binding
->   * drm/panthor: Add support for protected memory allocation in panthor
-> 
-> [PATCH 5]:
->   This patch implements the logic to handle enter/exit of the GPU protected
->   mode in Panthor CSF driver.
-> 
->   Note: to prevent scheduler priority inversion, only a single CSG is allowed
->         to execute while in protected mode. It must be the top priority one.
-> 
->   * drm/panthor: Add support for entering and exiting protected mode
-> 
-> Testing
-> -------
-> 
-> 1) Platform and development environment
-> 
->    Any platform containing a Mali CSF type of GPU and a protected memory allocator
->    that is based on DMA Heap can be used. For example, it can be a physical platform
->    or a simulator such as Arm Total Compute FVPs platforms. Reference to the latter:
-> 
->      https://developer.arm.com/Tools%20and%20Software/Fixed%20Virtual%20Platforms/Total%20Compute%20FVPs
-> 
->    To ease the development of the feature, a carved-out protected memory heap was
->    defined and managed using a modified version of the CMA heap driver.
-> 
-> 2) Protected job submission:
-> 
->    A protected mode job can be created in Mesa following this approach:
-> 
-> ```
-> diff --git a/src/gallium/drivers/panfrost/pan_csf.c b/src/gallium/drivers/panfrost/pan_csf.c
-> index da6ce875f86..13d54abf5a1 100644
-> --- a/src/gallium/drivers/panfrost/pan_csf.c
-> +++ b/src/gallium/drivers/panfrost/pan_csf.c
-> @@ -803,8 +803,25 @@ GENX(csf_emit_fragment_job)(struct panfrost_batch *batch,
->        }
->     }
-> 
-> +   if (protected_cmd) {
-> +      /* Number of commands to execute in protected mode in bytes.
-> +       * The run fragment and wait commands. */
-> +      unsigned const size = 2 * sizeof(u64);
-> +
-> +      /* Wait for all previous commands to complete before evaluating
-> +       * the protected commands. */
-> +      cs_wait_slots(b, SB_ALL_MASK, false);
-> +      cs_prot_region(b, size);
-> +   }
-> +
->     /* Run the fragment job and wait */
->     cs_run_fragment(b, false, MALI_TILE_RENDER_ORDER_Z_ORDER, false);
-> +
-> +   /* Wait for all protected commands to complete before evaluating
-> +    * the normal mode commands. */
-> +   if (protected_cmd)
-> +      cs_wait_slots(b, SB_ALL_MASK, false);
-> +
->     cs_wait_slot(b, 2, false);
-> 
->     /* Gather freed heap chunks and add them to the heap context free list
-> ```
+> >   
+> >>> +            trigger-sources = <&adc0>;
+> >>> +            #trigger-source-cells = <0>;
+> >>>              reset-gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
+> >>>              clocks = <&ad7768_mclk>;
+> >>>              clock-names = "mclk";  
+> >>  
 > 
 > 
-> Constraints
-> -----------
-> 
-> At the time of developing the feature, Linux kernel does not have a generic
-> way of implementing protected DMA heaps. The patch series relies on previous
-> work to expose the DMA heap API to the kernel drivers.
-> 
-> The Mali CSF GPU requires device level allocated protected memory, which do
-> not belong to a process. The current Linux implementation of DMA heap only
-> allows a user space program to allocate from such heap. Having the ability
-> to allocate this memory at the kernel level via the DMA heap API would allow
-> support for protected mode on Mali CSF GPUs.
-> 
-> 
-> Conclusion
-> ----------
-> 
-> This patch series aims to initiate the discussion around handling of protected
-> mode in Mali CSG GPU and highlights constraints found during the development
-> of the feature.
-> 
-> Some Mesa changes are required to construct a protected mode job in user space,
-> which can be submitted to the GPU.
-> 
-> Some of the changes may seems controversial and we would appreciate getting
-> opinion from the community.
-> 
-> 
-> Regards,
-> 
-> Florent Tomasin (5):
->   dt-bindings: dma: Add CMA Heap bindings
->   cma-heap: Allow registration of custom cma heaps
->   dt-bindings: gpu: Add protected heap name to Mali Valhall CSF binding
->   drm/panthor: Add support for protected memory allocation in panthor
->   drm/panthor: Add support for entering and exiting protected mode
-> 
->  .../devicetree/bindings/dma/linux,cma.yml     |  43 ++++++
->  .../bindings/gpu/arm,mali-valhall-csf.yaml    |   6 +
->  drivers/dma-buf/heaps/cma_heap.c              | 120 +++++++++++------
->  drivers/gpu/drm/panthor/Kconfig               |   1 +
->  drivers/gpu/drm/panthor/panthor_device.c      |  22 +++-
->  drivers/gpu/drm/panthor/panthor_device.h      |  10 ++
->  drivers/gpu/drm/panthor/panthor_fw.c          |  46 ++++++-
->  drivers/gpu/drm/panthor/panthor_fw.h          |   2 +
->  drivers/gpu/drm/panthor/panthor_gem.c         |  49 ++++++-
->  drivers/gpu/drm/panthor/panthor_gem.h         |  16 ++-
->  drivers/gpu/drm/panthor/panthor_heap.c        |   2 +
->  drivers/gpu/drm/panthor/panthor_sched.c       | 124 ++++++++++++++++--
->  12 files changed, 382 insertions(+), 59 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/linux,cma.yml
-> 
-> --
-> 2.34.1
 > 
 
--- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
