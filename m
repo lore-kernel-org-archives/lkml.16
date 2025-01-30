@@ -1,114 +1,124 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49928462
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845E71E47C8;
+	Thu, 30 Jan 2025 13:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738244525; cv=none; b=jgz7kiOCR/8hupSqWQRsIHuTgySUA89sAN0BvuXefSJrmgHLNv22YsIHwPTR3Po3eFuXV+MMvUF79Yw6riE+63bB8KTRCNXvAqfWmX3oTsR8sv12cQgX/lOqU/WrzWQAUv2HMJseckBpnutrvJ/BVV02fC3wzMDL4C9ksJrhOzk=
+	t=1738244618; cv=none; b=eDeQPaGicGOF1WNg0RtL1erHAE0vuN6btr2OuS160JcICTgIzW0Xv/2dloUHrSOAeYY/+WiHqzR/wiFXmbCZ+mCqo3B+lCnjHYTE6GRahJ5ajDVBh+U79SMtqNn6ATNGUPRMFJy/aCBKPBwIXmU3gW885uRSbwwgOTIsIpaiTjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738244525; c=relaxed/simple;
-	bh=LB8W9Gi19wlaCxvxnidBW2ODnnvKAxAT7vIEvr1oLaY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bAFN+fjcoPx/y6mZD+wPmUpWkvkegsZx2DCe6gX74PDvNdm9w4KH9Ky8hv+i7eqRb1Rrmzd8WPHUg1Pt6iokJOsfAwwon4/79QBppf9lNikAQI+5UijpChVXh7IQFtQLcnJ+8zizvsKFC7srrGNcKMe+ohpk6TrKt20ccTMkWx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=G0Q5o4gP; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738244618; c=relaxed/simple;
+	bh=lfMC4b1zgzO5tcD9HIygOzojNEhZCfTv8yVzHUqMo9Q=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=av0u+3fd1vHZbPSjGXlT/qySTSVzis9ZbRGtxQbSjTX6oDkSd2u3TocNIiJLFiSqnNjxfIjhR/3OtgZvfQmYkocG42rBo2BotHxpdYXLngNftu7El5OLRv3GbnyQ3ohrmQvWysLp3iX8BtfwyPX42cs9YX070Bg3ja43a3vxk0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Ars+vOAF; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="G0Q5o4gP"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-436281c8a38so5744475e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:42:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738244522; x=1738849322; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qtz/HUy2LAw4vxPIZP5Akzwx47L54jE5hNrKXAL7zd8=;
-        b=G0Q5o4gPsikxOmQyd3RFMoha28SjFG9j0zthmKD13bW74cEftApoxE3/zTZs/yptiG
-         ESCH8hnVW8x+Cxk+VFaF7h0GWe5/FBz3uulIROqt1i5fnoD976dnukx4UaQya3X11WVG
-         0lIcycXYv/yAcrCKeEp24opytEa2FQJip/mnLqhKwQ64Ur+SxRqPDrtpJkisHYoSyOEU
-         fATaFgN6uzpVqRDykIxdv1F4KKN5dk9drQkvK/FVcmHdErktkcHLLwxvBFLzzHBFkDjf
-         oxDphpl6ru7M8O80xm3OW9+0SQ/Gvh+MbtfQhKNNCYkzDJgUI4NsVsr16eJfMtVBZlns
-         HanA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738244522; x=1738849322;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qtz/HUy2LAw4vxPIZP5Akzwx47L54jE5hNrKXAL7zd8=;
-        b=uJ0Jm6GPysfWt3H446mz2YySZguVh2LX8x6qwLwSRIZXB0ZN4+nWXG5viyYfxRM2Ik
-         mLyMN92tiU9NFXg08j2Oqzkk+nJmL0CeLpUWWy9Q+S1aQ8VcZ1iPQQI0eLjV8LbN94Tq
-         zyF9ipOvGel7lkJliF3ZunPYrbFzBjfgyantTHn0ycs6w9c5iAwG16zLr2uForzgmUSC
-         4LbzO9xePdkEnAgYEKzzG1EpU4oOdLxgjeRtQG4Uhe2Do+QKr8xm+spt6n+nzpHrYuVN
-         hwMrZ6eoPsPvCgKk9bQ8gV9snqb9KluniZLZxm28ywhN41Ir0Zp0KKwQvc9bNHzX5ukg
-         f0hw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrS3c62g1BWnXHE27Tn5nFJnsfHr72aHgWROFkEPI2eQ96IRN2xbJR6OdRShGQ/LMNsCFGsPBzKKU9R4U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwR8KgLoSNflYJAGu4IGQqeRpya+9e4DSLpXmHPzugTrco+HHrv
-	u7tnbnzfyQtcKCcikQ/gYH2Dx82rk8HfkrBvT2JH12uXHhB4O7JdmatKA4Gb/24=
-X-Gm-Gg: ASbGnct8bDhnE7JkRC9sPrYUnZ6LDODAe1dAhzXq7yxAkdIRacUgJLvG1kk4vYyWwyY
-	fGBIpuFx7Ph5LjabAndGbfEvWM1F2/1a2eTN6Mrs5qMw3rYP+7A3Tmbkz/tvEyEXqCyL19x5wRl
-	GayGC02NtkwOqZza0bxajX+LqOcMx2LLU1LcMxazXTu4NnqQ4HhzZLNVjenaW0MoBZFkbujhjMs
-	lIhYbKQ7swBRigieShvGwj9zaddFwgX9QzXsid4kF+wZjKw2XzZaiHBewAOldWONkQuW5wDWl20
-	iwmsFekAxemSQAHv1y8=
-X-Google-Smtp-Source: AGHT+IFWWrhh6Xee6IasIFKO1VaJfCz458xY21Q5cw2wx1s6OqWeasQBQMT1Ow2gQZrVtjhkwde4AQ==
-X-Received: by 2002:adf:f504:0:b0:38b:e109:1e0d with SMTP id ffacd0b85a97d-38c520b6629mr5594302f8f.49.1738244521844;
-        Thu, 30 Jan 2025 05:42:01 -0800 (PST)
-Received: from [10.100.51.161] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c122465sm2031008f8f.47.2025.01.30.05.42.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 05:42:01 -0800 (PST)
-Message-ID: <cd32d32b-8777-4ccd-94f0-ac9d35ca7058@suse.com>
-Date: Thu, 30 Jan 2025 14:42:00 +0100
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Ars+vOAF"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4YkKwv2l8Tz9t9R;
+	Thu, 30 Jan 2025 14:43:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1738244607; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lfMC4b1zgzO5tcD9HIygOzojNEhZCfTv8yVzHUqMo9Q=;
+	b=Ars+vOAFXv78op6rFVAYTnrdyPJUs+p0T1MbdRNK/9e/1KSmK6Fzc/vEUWCYDcASpalrqq
+	O6zzxxMJLKIqrurIDQEU/EHaqLLhya0XJUuMvYN6fmfXUn9d1u6kQ5aNHp72XjZJFyd/d1
+	5s1i2glxhB4z24JY5k6BCPpfxc71HQgDcRNrvTMzsqE7T2XMXqrBsIh/AcT7vS8v/Ia3iw
+	QEfc7hMQtSvxUlKVDrpYlJG+svag0Ii179ydEjs+V6jcAd/4UTnh9KFIRIEZrDr13ubLyc
+	5u1zsxfWMTuI2KCH9f1ZtTEPi2sPk0m7mhjVHmubbninnJ4i7ipjDRTUulc4IQ==
+Message-ID: <2c9a78be6b72b68b47ba869dea247e935468fa4c.camel@mailbox.org>
+Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Daniel Almeida <daniel.almeida@collabora.com>, phasta@kernel.org
+Cc: Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>, 
+ Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Abdiel Janulgue
+ <abdiel.janulgue@gmail.com>,  aliceryhl@google.com, robin.murphy@arm.com,
+ rust-for-linux@vger.kernel.org,  Miguel Ojeda <ojeda@kernel.org>, Alex
+ Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,  Gary
+ Guo <gary@garyguo.net>, =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  Benno Lossin <benno.lossin@proton.me>, Andreas
+ Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
+ Valentin Obst <kernel@valentinobst.de>, open list
+ <linux-kernel@vger.kernel.org>, Marek Szyprowski
+ <m.szyprowski@samsung.com>,  airlied@redhat.com, "open list:DMA MAPPING
+ HELPERS" <iommu@lists.linux.dev>,  Greg KH <gregkh@linuxfoundation.org>
+Date: Thu, 30 Jan 2025 14:43:21 +0100
+In-Reply-To: <F2D88DDC-DE2E-4422-9A37-951C28F23A7B@collabora.com>
+References: <20250108122825.136021-3-abdiel.janulgue@gmail.com>
+	 <20250108135951.GA18074@lst.de>
+	 <CANiq72=R2N+QiCiHZQu-6YJ9aYpn_bik3BW3U=nAW3jL7unzLw@mail.gmail.com>
+	 <20250108151858.GB24499@lst.de> <Z36X_ZnCmBQBMoZ6@pollux>
+	 <20250109080812.GA20431@lst.de> <Z3-NqwAG_96yq8VD@pollux>
+	 <20250110083955.GA5395@lst.de> <Z4D5a5NYrAbNxUL6@pollux>
+	 <Z4kG5AcVeQKegLnb@pollux> <20250128092334.GA28548@lst.de>
+	 <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
+	 <F2D88DDC-DE2E-4422-9A37-951C28F23A7B@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/28] module: Use RCU instead of RCU-sched.
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
- Daniel Gomez <da.gomez@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>,
- "Paul E . McKenney" <paulmck@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Sami Tolvanen <samitolvanen@google.com>, Thomas Gleixner <tglx@linutronix.de>
-References: <20250108090457.512198-1-bigeasy@linutronix.de>
- <f4e953a4-4458-4034-b91b-7a433f20114b@suse.com>
- <20250124174949.mqhpjdpu@linutronix.de>
- <1907b409-f2e6-4b9a-ad5a-9879100bcf76@suse.com>
- <20250129085220.U6pWGr5m@linutronix.de>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20250129085220.U6pWGr5m@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MBO-RS-ID: aa47e728840a1fb9d74
+X-MBO-RS-META: hgbogqkcsjia3k3hm37ezizixkogbti3
 
-On 1/29/25 09:52, Sebastian Andrzej Siewior wrote:
-> On 2025-01-27 13:22:17 [+0100], Petr Pavlu wrote:
->> On 1/24/25 18:49, Sebastian Andrzej Siewior wrote:
->>> On 2025-01-13 12:09:27 [+0100], Petr Pavlu wrote:
->>>> Thanks for this cleanup. I've queued the fix in patch #1 on
->>>> modules-fixes. For the rest, I plan to give folks more time to look at
->>>> the changes as this affects a number of subsystems. If there are no
->>>> other concerns, I'd then add the series on modules-next.
->>>
->>> #26 (kprobes) clashes with the changes that have been merged upstream.
->>> Do you want me to resend the whole series or just #26? The other patches
->>> apply cleanly so far.
->>
->> I think sending only the updated patch #26 should be sufficient in this
->> case, it's only a small adjustment. Please preferably post it as a reply
->> to the email with that specific patch.
-> 
-> I just sent two updates:
-> 
->  [PATCH v3.5 25/28] bpf: Use RCU in all users of __module_text_address().
->  [PATCH v3.5 26/28] kprobes: Use RCU in all users of __module_text_address().
+On Thu, 2025-01-30 at 10:35 -0300, Daniel Almeida wrote:
+>=20
+> >=20
+> > Hallo,
+> >=20
+> > would some sort of official statement by the "entire community"
+> > reassure you that the burden of keeping Rust abstractions working
+> > with
+> > any changes on the C side rests entirely on the Rust side's
+> > shoulders?
+> > (because that's what the statements made by the latter seem to mean
+> > to
+> > me)
+> >=20
+>=20
+>=20
+> This has been offered over and over in this thread, i.e.:
+>=20
+>=20
+> ```
+> If you don't feel comfortable maintaining the Rust abstraction (or
+> just don't
+> want to), that's fine. I don't think anyone expects you to do that,
+> we can take
+> care of that instead.
+> ```
+>=20
+> https://lore.kernel.org/rust-for-linux/Z3-NqwAG_96yq8VD@pollux/
 
-I've now queued the series and its two updated patches #25 and #26 on
-modules-next (for 6.15-rc1).
 
--- 
-Thanks,
-Petr
+Yup, I've read the whole thread. I was referring to the statements in
+those mails in my response.
+
+My thinking is that such a file is the most official, most binding
+statement / offer the project has.
+
+
+P.
+
+
+
+>=20
+> Communication is not the issue here.
+>=20
+> Also, this person waited until v8 to give a single line NAK. This is
+> not very nice.
+>=20
+> =E2=80=94 Daniel
+
