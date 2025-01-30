@@ -1,111 +1,186 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9CD1AF0BA;
-	Thu, 30 Jan 2025 09:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49C11B4220
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738228411; cv=none; b=LMm95mJB2GcAEC2ZBBFy77u1wSt9N/Xh0xgGQ/OnjzPvyVDRmBnfM0NC2sTpFYXICIPQsusfkSORr5hmoi6eQWBJ8yynsnNnNXoMBG5o+sIeTdDO4BMIbt2Wkhi4L8w42sMW+CDHZXPV1zrlDJlToYXWzuMoNjYCE68sjg+jwaw=
+	t=1738228431; cv=none; b=gAzhZ0bK+NFqkATAWn4WV1r2GKaZ3VT0l3DKTmcQHVutJuO2bpO/CJdEp22/hlyr3GLzK236e0pvtUzy9td/LcPgxVRBDAUK/mU2DAiUS/M/RQFfsTQKrbsMQVEH9w5Fsop6OH/TBhvDjZXVHOW71l2q38Am4+806rXCIw1sS/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738228411; c=relaxed/simple;
-	bh=BBARpdzmAXyEeRvtw3C32ceJAqofdF05qBhZZsi06XM=;
+	s=arc-20240116; t=1738228431; c=relaxed/simple;
+	bh=ctulR3cRWtcJlO4spCKfZY6Dgeg/I15rDLRkaQwAcu4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o2psRkvvlw9hGTQZ2R25BtkN+f39UY03b3UFx8NLzff2pqF5FwTlbcS0SJ4FLDtLPVT1PTCtmvsjb9I4Hu0X+nq3EAa4EeZGG3GX7PLh+l6M6R5o7Zu0hE38dt6jnJurv/PPEhkANs8FZhCwrYNT2N7I4fGkCzviseIe1rWhOV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-85bad7be09dso359193241.0;
-        Thu, 30 Jan 2025 01:13:29 -0800 (PST)
+	 To:Cc:Content-Type; b=G59owVLJ12a/iwXEia9ofV8tFVjYY20FIGPFvuuxy++jas6d3LAFCu77lNdK1rRHf8Mv8bDsNO2uCO6l32C6m2yhT3I3xSQ88EXNCDZAE8eFVISTG6WYQrXsnFTgbEuaCnoBVlZovfRwcWrNCeaYaeWM0E4k2jVx24jQHGf7Opg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Lpx4tRMy; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Lpx4tRMy"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ab633d9582aso119242866b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 01:13:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1738228427; x=1738833227; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8p8aAb0X1bp6hHlymQNq9HzSfsnECJPQUElhLE6JPO0=;
+        b=Lpx4tRMyM9Sw7tFZwuNXlZFIZpIclesbAMfNgxXKMad5f2+Z3SueqNsq2zQmOjhMEA
+         0M4TDoVdtOM0upYlOwGF6PWsL7scxSDbax3JrgEz7iQ5/fKUyhNrSXEsZYL5i3OxNXUP
+         5oqUXxi026Z/R62i0EvOJzXpGkVKHf4O4/Aiv154U9sb99NZdQlThdMyCyj1/ccKbfAp
+         jCzaQcXfQjo8Sea6eunt3dXvJPOFLamKcfoxg0Uw5WBVKXJQkBj78cKlyEAXs/1+aLUH
+         QzTlefZyKa0BBJjvdvbIVlhTIEnEysJVIxN12mO6zH78d2yw8Pq0HZZg5GoEQvd7rn7z
+         /w2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738228407; x=1738833207;
+        d=1e100.net; s=20230601; t=1738228427; x=1738833227;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ivcQsIRpSjOUdBVXE1lKwsSXj69LtT3pmJiNgTzYFCo=;
-        b=PRkEtWOqfDTJl6RtKDndaPU9E1DqWgkZ8n0C3j34DE2/ZCRSS3OTO+qbDgNIz9mO4p
-         Apyog2ctupAe29grHnRG2rjvO4AZwWlm4bHUPOR2Vf0nt7B2wfKoKyCwRJIxXZ0cecP2
-         gkujqy4eDRH0BfJHAuMSSlRy3F2ftLYOHHSKIymXcgq/z+8hq/qEGskq8lxt0byZjkyy
-         78om24ZvaliEziZf/yF8lQlmYrvesfzMY5ri8Z0BnuSQFlx2hHlbfsS+G6LbsPlgIqlg
-         OKZlTbxzMD5tudvm1rihyXP9dq7JrSflSKuKWxuj/nVU/IC6kSFBTHIfSy8RaLW9CAeg
-         4+9A==
-X-Forwarded-Encrypted: i=1; AJvYcCU8PQk/U2S3wdXbfGg+7r/S8N9AKVkOP7Jj0Oel/qQrk3nZ8Q/SquGv4na4qyQaQwi4811/slCx4H/pacI=@vger.kernel.org, AJvYcCXLTamHaY//DCN4yc75/Uysv3QW+EXcbIPZo7OTCbtKMP8W4vqw4DeWldGk/qHmFOw/ZSNAY78Tf6g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+ARsf4hxz7pMx1D3W4pxN/LtCKeAgjkCrsW4FvlB70QNpTCCq
-	AU+UVo+5beCOZaN1hG7AFTal3rRkXoG2XdgdA8nLfzIfC3DqWKgRNMCYBBWW
-X-Gm-Gg: ASbGncsDebVGUSbGEBLbOSRdWvpK5QOKy9w8dW07y46ClO39qZhY3UShoW8drN+9R9n
-	+lYOeVohkOTf2kNQrI7ga0wzOFPe6IottbYcVgw6VAEHv+VHkIWQONxI/mOfREqh1FhlQ2F6dO1
-	S6N/NKj3rKXkcaMiNA5oOWy5wfFRqEIL6Zt9C8PKOvz2gxlm/jRI2+OTWiedlo/y7DTXzPEyWmj
-	ToH8Ast0izFdtUhj88YhxXxtA9kyPztzz6EktkRVc8rbXXU2PvGbhRZLZSULu2AMq8cpGnyAIBw
-	s5/yytdIvk+M8oUraAQF38pn+hfUESpzUMwQHK/xeJIMc/OaUsvl+A==
-X-Google-Smtp-Source: AGHT+IHWYrtb9MzgRvC+3DyFrbEtDSxIv64nVppuBy5DqwDjMF7LHsqK3RTqJNHBxeZngwrtCCO1iQ==
-X-Received: by 2002:a05:6122:3288:b0:518:8e53:818b with SMTP id 71dfb90a1353d-51e9e27f945mr5236408e0c.0.1738228407353;
-        Thu, 30 Jan 2025 01:13:27 -0800 (PST)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1c12174sm143770e0c.16.2025.01.30.01.13.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 01:13:26 -0800 (PST)
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4affbc4dc74so417627137.0;
-        Thu, 30 Jan 2025 01:13:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVG0oktqishK4WJnPJrt56lJQYIBqNbWSwkQMhM0PQ7UafretiNwKfRu/2HJRhzXQb7Oxngw9GEO5QJS80=@vger.kernel.org, AJvYcCWXuW4B2WIh62R5bePdKVKKHxx03lUcv+IxWXgbFU4pZRGulU5VA+D8fsJ1Q+lhJaGYsLBvtGMqj7g=@vger.kernel.org
-X-Received: by 2002:a05:6102:fa4:b0:4af:c5c8:bb4c with SMTP id
- ada2fe7eead31-4b9a5272b50mr5724304137.16.1738228406667; Thu, 30 Jan 2025
- 01:13:26 -0800 (PST)
+        bh=8p8aAb0X1bp6hHlymQNq9HzSfsnECJPQUElhLE6JPO0=;
+        b=ev3GO4zbcr0deELBd8owLt/s87uBBPb55eqcY1ync3LYCGOfIV9wIg92i5ba3+dm7g
+         tq6c/7/ReSbsOvko6NZx3qQl7YYBMQs9qhUoNVehhGH35IR7IzwEI0lNBRzgUCKj2cdX
+         p0YiILPpLSty4AhE+CWFuTfJeJ5OBymqIj9y2cj4muzP5MMkBl2vnkSOePl1juwOO+4e
+         QGKAU/ybm9ZQeHeB6pCjnVvErs7tfwAKh1r5aUjfFX7HEiiKTl4ehvJBYgjaneYNafJk
+         rXjnm+B9hiTsXV4yNuNyo8hQQ8rthoEd/PODy38i7w26RuA2JvGmAeDK804y46lmzNPS
+         INag==
+X-Forwarded-Encrypted: i=1; AJvYcCXK/2PCeI3ZxqdP+Hi/aqrfzEQwHxj3JrtC01B/TBS8vDekWmY/p7qpdgfSZhiEXC/0UpYW0TwbixRy2oM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoH+FNUZoZEURGdYSlTEmDQz5OpiE9PU/bTglt7YS+MZZgeT0V
+	eGWxThnOsaqzvCWlmyn3YYtGzP6nlhsMEY6R4jK5hOPpc5/qqc7K0bCEPNowlCmUy4zfaITw4Ap
+	mJf9CSk6frZ6M5TlkC5yfeseUYHI21Kerd+um/g==
+X-Gm-Gg: ASbGnctUZr3ZSjuC8dTWVaP+lcLAvJ/JbgVXSd+meCQ3kAvMsG5sh0YeBbEDx0L4xFz
+	Ky0DapB9/3ztr30JrLGduClScX+vBdxWmx0ykWH/kHw3oMUk2jo/8jsk5oeHNQX03qJidKlY=
+X-Google-Smtp-Source: AGHT+IF/2X4mlWad9vHOgVn9WF5VBG09lohncqS+VBI3G2OOsXV4DtAXNxX6+CrCHPNcEVR9WF0nlwvMYCHczIlI02A=
+X-Received: by 2002:a17:907:1c08:b0:ab2:c0b9:68d with SMTP id
+ a640c23a62f3a-ab6cfc859b1mr644296866b.1.1738228427035; Thu, 30 Jan 2025
+ 01:13:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250128101306.1475491-1-julian@outer-limits.org> <8c4279dd244eed4b1a6ef7e2ea6dafac0b5fc79e.camel@physik.fu-berlin.de>
-In-Reply-To: <8c4279dd244eed4b1a6ef7e2ea6dafac0b5fc79e.camel@physik.fu-berlin.de>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 Jan 2025 10:13:14 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXOx2MFDnRm2dxVTE9tFfAud595huEVagnTd8RKp3yQsg@mail.gmail.com>
-X-Gm-Features: AWEUYZnquC_eEE8Uvw_FVq9F-XTt0WQ0D-O7i7uM2a8VNjHKtsWlCp0_OM-GXLY
-Message-ID: <CAMuHMdXOx2MFDnRm2dxVTE9tFfAud595huEVagnTd8RKp3yQsg@mail.gmail.com>
-Subject: Re: [PATCH v2] sh: Remove IO memcpy and memset from sh code
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Julian Vetter <julian@outer-limits.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250124075558.530088-1-neelx@suse.com> <20250127180250.GQ5777@twin.jikos.cz>
+ <CAPjX3FdaxfzULnRjN7TqyS9uK_ZJSk2PRzLgQCLVGBrR0yKLGw@mail.gmail.com> <20250129224253.GF5777@twin.jikos.cz>
+In-Reply-To: <20250129224253.GF5777@twin.jikos.cz>
+From: Daniel Vacek <neelx@suse.com>
+Date: Thu, 30 Jan 2025 10:13:36 +0100
+X-Gm-Features: AWEUYZnie91Dh1atsgKxQgjtcE2FM4rg-rsuiaBZqXyHQkMZTEOeDoYysmlCatA
+Message-ID: <CAPjX3FdJynRY91N-1aJ0wOrMJY+cKvSuhLDPGAuCybEvSzS0KA@mail.gmail.com>
+Subject: Re: [PATCH] btrfs/zstd: enable negative compression levels mount option
+To: dsterba@suse.cz
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	Nick Terrell <terrelln@fb.com>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Adrian,
-
-On Thu, 30 Jan 2025 at 09:44, John Paul Adrian Glaubitz
-<glaubitz@physik.fu-berlin.de> wrote:
-> On Tue, 2025-01-28 at 11:13 +0100, Julian Vetter wrote:
-> > Remove IO memcpy and memset from sh specific code and fall back to the
-> > new implementations from lib/iomem_copy.c. They use word accesses if the
-> > buffers are aligned and only fall back to byte accesses for potentially
-> > unaligned parts of a buffer.
+On Wed, 29 Jan 2025 at 23:42, David Sterba <dsterba@suse.cz> wrote:
+>
+> On Tue, Jan 28, 2025 at 09:46:02AM +0100, Daniel Vacek wrote:
+> > > > ==============================================================+===============================================
+> > > > level -15     0m0,261s        0m0,329s        141M    100%  | 0m2,511s        0m2,794s        598M    40%  |
+> > > > level -14     0m0,145s        0m0,291s        141M    100%  | 0m1,829s        0m2,443s        581M    39%  |
+> > > > level -13     0m0,141s        0m0,289s        141M    100%  | 0m1,832s        0m2,347s        566M    38%  |
+> > > > level -12     0m0,140s        0m0,291s        141M    100%  | 0m1,879s        0m2,246s        548M    37%  |
+> > > > level -11     0m0,133s        0m0,271s        141M    100%  | 0m1,789s        0m2,257s        530M    35%  |
+> > >
+> > > I found an old mail asking ZSTD people which realtime levels are
+> > > meaningful, the -10 was mentioned as a good cut-off. The numbers above
+> > > confirm that although this is on a small sample.
 > >
-> > Signed-off-by: Julian Vetter <julian@outer-limits.org>
-> > ---
-> > Changes for V2:
-> > - Removed also SH4 specific memcpy_fromio code
-
-> I'm not sure that I understand the motivation to remove hand-optimized sh4 assembler
-> code for memset and drop it in favor of potentially slower generic C code. What is
-> the reasoning behind this?
-
-See Arnd's feedback on v1
-https://lore.kernel.org/all/ffe019a1-11b4-4ad7-bbe2-8ef3e01ffeb0@app.fastmail.com
-
-> Also, it seems that this patch would make your other patch
+> > The limit is really arbitrary. We may as well not even set one and
+> > leave it to the user. It's not like we allocate additional memory or
+> > any other resources.
 >
->         "sh: Remove memset_io from sh specific code"
+> Yes, it is arbitrary, the criteria is what are the practical benefits of
+> keeping the levels, what is the trade off compression/speed. It does not
+> matter much if the realtime level is ultra fast when it is not able to
+> reduce the size, given the constraints.
 >
-> obsolete.
+> I agree that we should leave it up to user but I'd say it may be unclear
+> which level select. The level number is translated to some internal
+> compression logic so even very high numbers are allowed.
+>
+> The testing file I've used is output of 'find -ls', so mostly textual
+> data, high level of redundancy.
+>
+> Generated by a series of "zstd -b$i --fast=$i zstd-test"
+>
+> -1#zstd-test         :   6126812 ->   1017901 (x6.019), 1055.7 MB/s, 2826.0 MB/s
+> -2#zstd-test         :   6126812 ->   1065645 (x5.749), 1143.0 MB/s, 3005.8 MB/s
+> -3#zstd-test         :   6126812 ->   1128314 (x5.430), 1204.2 MB/s, 3153.6 MB/s
+> -4#zstd-test         :   6126812 ->   1210669 (x5.061), 1220.5 MB/s, 3172.8 MB/s
+> -5#zstd-test         :   6126812 ->   1280004 (x4.787), 1242.7 MB/s, 3221.3 MB/s
+> -6#zstd-test         :   6126812 ->   1371974 (x4.466), 1259.8 MB/s  3277.1 MB/s
+> -7#zstd-test         :   6126812 ->   1440333 (x4.254), 1304.4 MB/s, 3293.0 MB/s
+> -8#zstd-test         :   6126812 ->   1496071 (x4.095), 1356.9 MB/s, 3391.2 MB/s
+> -9#zstd-test         :   6126812 ->   1566788 (x3.910), 1452.9 MB/s, 3613.6 MB/s
+> -10#std-test         :   6126812 ->   1613304 (x3.798), 1497.1 MB/s, 3738.7 MB/s
+>
+> -11#std-test         :   6126812 ->   1685217 (x3.636), 1541.4 MB/s, 3829.2 MB/s
+> -12#std-test         :   6126812 ->   1766056 (x3.469), 1556.0 MB/s, 3875.6 MB/s
+> -13#std-test         :   6126812 ->   1826338 (x3.355), 1563.3 MB/s, 3886.6 MB/s
+> -14#std-test         :   6126812 ->   1899464 (x3.226), 1623.8 MB/s, 3963.5 MB/s
+> -15#std-test         :   6126812 ->   1989219 (x3.080), 1641.9 MB/s, 3901.3 MB/s
+> -16#std-test         :   6126812 ->   2057101 (x2.978), 1646.0 MB/s, 3781.2 MB/s
+> -17#std-test         :   6126812 ->   2101038 (x2.916), 1639.9 MB/s, 3809.8 MB/s
+> -18#std-test         :   6126812 ->   2151170 (x2.848), 1667.4 MB/s, 3887.3 MB/s
+> -19#std-test         :   6126812 ->   2185255 (x2.804), 1675.8 MB/s, 3932.5 MB/s
+> -20#std-test         :   6126812 ->   2228180 (x2.750), 1655.2 MB/s, 3983.3 MB/s
+>
+> -21#std-test         :   6126812 ->   2275855 (x2.692), 1748.4 MB/s, 4188.4 MB/s
+> -22#std-test         :   6126812 ->   2324370 (x2.636), 1758.7 MB/s, 4245.0 MB/s
+> -23#std-test         :   6126812 ->   2373789 (x2.581), 1810.8 MB/s, 4345.4 MB/s
+> -24#std-test         :   6126812 ->   2423045 (x2.529), 1856.4 MB/s, 4326.7 MB/s
+> -25#std-test         :   6126812 ->   2470722 (x2.480), 1860.7 MB/s, 4425.6 MB/s
+> -26#std-test         :   6126812 ->   2519621 (x2.432), 1872.8 MB/s, 4447.8 MB/s
+> -27#std-test         :   6126812 ->   2571890 (x2.382), 1865.0 MB/s, 4432.7 MB/s
+> -28#std-test         :   6126812 ->   2630088 (x2.330), 1892.7 MB/s, 4480.3 MB/s
+> -29#std-test         :   6126812 ->   2678598 (x2.287), 1892.3 MB/s, 4458.1 MB/s
+> -30#std-test         :   6126812 ->   2730233 (x2.244), 1886.9 MB/s, 4415.0 MB/s
+>
+> -100#td-test         :   6126812 ->   3878531 (x1.580), 2546.7 MB/s, 7076.8 MB/s
+> -101#td-test         :   6126812 ->   3873153 (x1.582), 2549.6 MB/s, 7053.4 MB/s
+> -102#td-test         :   6126812 ->   3878200 (x1.580), 2572.9 MB/s  7173.3 MB/s
+> -103#td-test         :   6126812 ->   3900441 (x1.571), 2581.2 MB/s  7164.9 MB/s
+> -104#td-test         :   6126812 ->   3902470 (x1.570), 2559.0 MB/s, 7133.3 MB/s
+> -105#td-test         :   6126812 ->   3912874 (x1.566), 2596.4 MB/s, 7150.9 MB/s
+> -106#td-test         :   6126812 ->   3917867 (x1.564), 2553.8 MB/s, 7260.1 MB/s
+> -107#td-test         :   6126812 ->   3930050 (x1.559), 2599.6 MB/s, 7284.5 MB/s
+> -108#td-test         :   6126812 ->   3946701 (x1.552), 2622.5 MB/s, 7288.1 MB/s
+> -109#td-test         :   6126812 ->   3954437 (x1.549), 2605.8 MB/s, 7334.4 MB/s
+> -110#td-test         :   6126812 ->   3955273 (x1.549), 2601.0 MB/s, 7389.1 MB/s
+>
+> -1000#d-test         :   6126812 ->   5982024 (x1.024), 9253.0 MB/s, 22210.0 MB/s
+> -1001#d-test         :   6126812 ->   5986021 (x1.024), 9120.1 MB/s, 23034.3 MB/s
+> -1002#d-test         :   6126812 ->   5984005 (x1.024), 9086.7 MB/s, 22827.0 MB/s
+> -1003#d-test         :   6126812 ->   5978004 (x1.025), 9199.4 MB/s, 21718.3 MB/s
+> -1004#d-test         :   6126812 ->   5977133 (x1.025), 9120.3 MB/s, 21995.3 MB/s
+> -1005#d-test         :   6126812 ->   5979294 (x1.025), 9231.6 MB/s, 22204.5 MB/s
+> -1006#d-test         :   6126812 ->   5981595 (x1.024), 9175.6 MB/s, 21794.4 MB/s
+> -1007#d-test         :   6126812 ->   5989283 (x1.023), 9298.9 MB/s, 24239.1 MB/s
+> -1008#d-test         :   6126812 ->   5986954 (x1.023), 9242.1 MB/s, 23809.4 MB/s
+> -1009#d-test         :   6126812 ->   5988383 (x1.023), 9199.3 MB/s, 24322.1 MB/s
+> -1010#d-test         :   6126812 ->   5985304 (x1.024), 9221.2 MB/s, 23711.9 MB/s
+>
+> Up to -15 it's 3x improvement which translates to about 33% of the
+> original size. And this is only for rough estimate, kernel compression
+> could be slightly worse due to slightly different parameters.
+>
+> We can let it to -15, so it's same number as the upper limit.
 
-Yeah, that should have been mentioned under the ---.
+I was getting less favorable results with my testing which leads me to
+the ultimate rhetorical question:
 
-Gr{oetje,eeting}s,
+What do we know about the dataset users are possibly going to apply?
+And how do you want to assess the right cut-off having incomplete
+information about the nature of the data?
+Why doesn't zstd enforce any limit itself?
+Is this even a matter (or responsibility) of the filesystem to force
+some arbitrary limit here? Maybe yes?
 
-                        Geert
+As mentioned before, personally I'd leave it to the users so that they
+can freely choose whatever suits them the best. I don't see any
+technical or maintenance issues opening this limit.
+Well in the end as a maintainer it's up to you. Feel free to amend the
+patch to your liking. I'm fine with both -10 or -15. Or whatever else
+you choose, that said.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+So let me know if you need v4 and how to tune it or if you're fine
+fixing the v3 up yourself.
