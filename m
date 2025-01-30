@@ -1,239 +1,188 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C1A1DA5F;
-	Thu, 30 Jan 2025 21:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CCA1F130B
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 21:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738274035; cv=none; b=WRwX80/F1SOd6Yne8xpTPBSpJPydKCRt0iPeqrUjlZP3o9l7k9CwASIRQ1Y6egMyHNx9hG4D/px0DsiwR+xx/9W1TU8iXW5KG5I/W2aOuM5vtwx5cY7N4WsDKp2JAYmaSaMITeIhVhFE1CxxwM3j+r3T8zQs2GME1CGIGKDr2H8=
+	t=1738274288; cv=none; b=UQ5Y56uzPSlgG11hPif0oqriwIx45Ujm69up5MoTu5xsgwFFJFpsufWeuBOROCaAFWwPQAFrgLGFawxoBayB8BikB5zI8mKZrUenptoaaOetow/3KdMQlZDJ1M5KvmKRAa2uH9ZU7uxOpSyV5hz+7cFuZui2fFJzFND5pB0qRoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738274035; c=relaxed/simple;
-	bh=BlisCc4UQ53UOk7mUSn+L0PAgkzzYubPamyOMdZ/dbw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iw/j186Fcgywogk75f4uI/XVREZyjWZF0a6E6cqPD9oeiCt5oQU3bHJAGPOUF0LOT7dyUIJWJfZ70Uk+HmuyOFtfgmpRA2xe67+K5HBqS+VJqUXeB1DEHNPvs9JcvBAcZyEF/1eVj6DLuqokLw68petGQl5tdKmVF+zGqA8S264=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MljO4/1x; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738274288; c=relaxed/simple;
+	bh=lbfyUXhCCR3o5Q2J4+vh8DwWzWC9xj8OAuoAhTdea1M=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DAUT11NOuN6gSi0gqagcUS0sqxbgZSv8cF3Hx9ciZYfBPR99BAf29AWbQsPf5mLTZLDYD4WQp5tkNiZn97JdppWHe6/BY5sSgJOOVhR/ph/t96ucFKTj/bT6LxFNOT3g/rFBaWyNDDgCUZvTYriTcEc+oM4C3WqwlsXI3it51gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R0qj4C7+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MljO4/1x"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3863c36a731so1042024f8f.1;
-        Thu, 30 Jan 2025 13:53:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738274030; x=1738878830; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SElByFX55HRRZEi5sy6VH1uZg/J2K83OEEcHgYpO8qo=;
-        b=MljO4/1xMEpoMlflKETNVosK0MR2+hbcv7QJqvU/UG1bM+GqE5ZAuLU1ftIuwneNyt
-         cVXu3TwgDbM+ot+FQN2elkLI+fd/2lobHrDpr2DbNnO59Qe17lUnTfl87hP1gQF3AnI8
-         GPOg8JMEm3N5zpQIXRvH1q7X06OzY8BPmH3XtnUykmUZNiwXrht/JbBYI5WsbZndTz6T
-         o1a9eETYyr7Sa0+NnGwa9Vp77KbkKbMtVFbd9DSQnAcRYl4No5pjvS4nuhPPNZcMIY5b
-         zooql22dy1ALxnufx7qlDgcUbUXQUg4zmraR93mn+dbmYuhHKrPs5olgyGWay6I7EJ4f
-         u4yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738274030; x=1738878830;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SElByFX55HRRZEi5sy6VH1uZg/J2K83OEEcHgYpO8qo=;
-        b=acNvMw0yQ1hAdKLFXj+1dt5fM1Npt08cHzTcq6Fit02s1JK9KAIW/0RkD9gZmuu6Uq
-         g7+VKJQSVYj0aNKnSRwB1M6QZCAyUctSyIzFxpNNSJ8FPQLc2FAR+FkT+wNy09Xq/moD
-         X9WdPZEgoIdlIjJIlTUeIQQmrw5u35NQJLGu66HWezfxnLSRS/XGdl9yNAwZPHomEvpD
-         QmfEX0ykVkby53diB7cOrKS1/XqhWIVSKcCvsmd3H4pHcu0LOxfSHhY8/a+Og/4jnpoy
-         6mKtpEiPEVy4NjZesOxmyffsd9ce87s244sWBdZtyY/9RVadNrFSjXE76ChhAdnUQZS8
-         gRNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeHTA07fxL6J/ZTjOFXXlkPIO1KdpkZlw/ot4gvvWt3IM43Q734bRXV1Lz0NAmrM6VvAc=@vger.kernel.org, AJvYcCW5jEjnRVEQkSdREKmLyHYaIU5F+CTRpw+1ttsStFoHVKpwDWEiuo2T6776O/Ir8ZAQRIzJsFIJ@vger.kernel.org, AJvYcCWAXHJFEvk0Jinm+PkPTOKOgWZDVJYdwFRyOyMObWG+pY1asrC//p/x10DziIILmSvYZOwWc3SfAE/5iBnW@vger.kernel.org, AJvYcCWWYQzrqp+DwajXyK7nlXsWCa16nylSwQI+yfJEVezzOEMuTDdRBq6I4Dg7hyzGhC1VZ351gFh58rI+@vger.kernel.org, AJvYcCXXIvoTmse6LHuuN1C+XRbq563FziPVOeUR46oquoznclbZFKzDKY+YvaN0xDICnAld5l3MrifzYD8Z2WLlsRYyMJx8@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKt6W3N5TZcJbV5amaQi1hZr4QQeEniXqiG8BoswUsWTcU8GlI
-	bNPa7bFj6a/62RmW/lswQ/BHJ+z1bGfnM6w2GxHjgJCEYbQC7ckD
-X-Gm-Gg: ASbGncv7aOW000pZS5BvD0KSYSWqh4L3hbIsnz5qburUJCNfjLkSZuOFhZ0HaJHKcyJ
-	8y5gbEUGC4m6dhpHXN2o5I7sA9r+BYG5hgrH/S95H8b1R/JM/tU3epeBVezVC0LPfzVfUzNLEMC
-	X+5lMKOovUi0rV1zsp1E/AtNihNNEw7tTmYmdILAKyIlcsJQ2HhBcWZwf9z41OZScPRNx6kHDcS
-	LFGYQwkVYc0hfsVPG6O029IpJmQe6+NF9l6g/SJQGEwGS8f5FNtM29LdSnW1HHcV0vrqxI9vLCF
-	Xdel/JSUx+vrpcU3Tas=
-X-Google-Smtp-Source: AGHT+IEh6os44BnNcNnrkansmGStdkdiA/EweUgFYf4Q/Kzk+a8Jf2qrIaH2MEgysghthnExU6q14A==
-X-Received: by 2002:a5d:588d:0:b0:38a:68f4:66a2 with SMTP id ffacd0b85a97d-38c51b600f7mr7386249f8f.31.1738274030038;
-        Thu, 30 Jan 2025 13:53:50 -0800 (PST)
-Received: from krava (85-193-35-4.rib.o2.cz. [85.193.35.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b57b6sm3042176f8f.72.2025.01.30.13.53.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 13:53:49 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 30 Jan 2025 22:53:47 +0100
-To: Eyal Birger <eyal.birger@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Kees Cook <kees@kernel.org>,
-	luto@amacapital.net, wad@chromium.org, oleg@redhat.com,
-	mhiramat@kernel.org, andrii@kernel.org,
-	alexei.starovoitov@gmail.com, cyphar@cyphar.com,
-	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
-	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de,
-	daniel@iogearbox.net, ast@kernel.org, andrii.nakryiko@gmail.com,
-	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com,
-	bpf@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] seccomp: passthrough uretprobe systemcall without
- filtering
-Message-ID: <Z5v063xNVJfXCnKV@krava>
-References: <20250128145806.1849977-1-eyal.birger@gmail.com>
- <202501281634.7F398CEA87@keescook>
- <CAHsH6Gsv3DB0O5oiEDsf2+Go4O1+tnKm-Ab0QPyohKSaroSxxA@mail.gmail.com>
- <Z5s3S5X8FYJDAHfR@krava>
- <CAHsH6GvsGbZ4a=-oSpD1j8jx11T=Y4SysAtkzAu+H4_Gh7v3Qg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R0qj4C7+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738274285;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yZGR9n2NxO5o2uz/dG2BP9wPYFCxYVeESyInJLxbGQ0=;
+	b=R0qj4C7+4Z+g6QRJ4ND7NBLEqWEzSivxRqjZbWOH5BsKysrWPnFKIE+R2n16CCSpaU0eZ2
+	r/JnuN4k2RjRFyr3eLUCXSRkNPgzu7k8E/Cb6MjiiAG4q1HwwRsYqu2vbiB4OU5SUgUv+e
+	wdbCMN78P0iBLJwDsPUHH27JWle+32Q=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-54-E9TRZP3lPXmwyJSOiYoOfA-1; Thu,
+ 30 Jan 2025 16:57:59 -0500
+X-MC-Unique: E9TRZP3lPXmwyJSOiYoOfA-1
+X-Mimecast-MFC-AGG-ID: E9TRZP3lPXmwyJSOiYoOfA
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9F1E19560B1;
+	Thu, 30 Jan 2025 21:57:57 +0000 (UTC)
+Received: from lszubowi.redhat.com (unknown [10.22.80.22])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 40281195E3E0;
+	Thu, 30 Jan 2025 21:57:55 +0000 (UTC)
+From: Lenny Szubowicz <lszubowi@redhat.com>
+To: pavan.chebbi@broadcom.com,
+	mchan@broadcom.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	george.shuklin@gmail.com,
+	andrea.fois@eventsense.it,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net v3] tg3: Disable tg3 PCIe AER on system reboot
+Date: Thu, 30 Jan 2025 16:57:54 -0500
+Message-ID: <20250130215754.123346-1-lszubowi@redhat.com>
+In-Reply-To: <20241129203640.54492-1-lszubowi@redhat.com>
+References: <20241129203640.54492-1-lszubowi@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHsH6GvsGbZ4a=-oSpD1j8jx11T=Y4SysAtkzAu+H4_Gh7v3Qg@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Thu, Jan 30, 2025 at 07:05:42AM -0800, Eyal Birger wrote:
-> On Thu, Jan 30, 2025 at 12:24 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Wed, Jan 29, 2025 at 09:27:49AM -0800, Eyal Birger wrote:
-> > > Hi,
-> > >
-> > > Thanks for the review!
-> > >
-> > > On Tue, Jan 28, 2025 at 5:41 PM Kees Cook <kees@kernel.org> wrote:
-> > > >
-> > > > On Tue, Jan 28, 2025 at 06:58:06AM -0800, Eyal Birger wrote:
-> > > > > Note: uretprobe isn't supported in i386 and __NR_ia32_rt_tgsigqueueinfo
-> > > > > uses the same number as __NR_uretprobe so the syscall isn't forced in the
-> > > > > compat bitmap.
-> > > >
-> > > > So a 64-bit tracer cannot use uretprobe on a 32-bit process? Also is
-> > > > uretprobe strictly an x86_64 feature?
-> > > >
-> > >
-> > > My understanding is that they'd be able to do so, but use the int3 trap
-> > > instead of the uretprobe syscall.
-> > >
-> > > > > [...]
-> > > > > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> > > > > index 385d48293a5f..23b594a68bc0 100644
-> > > > > --- a/kernel/seccomp.c
-> > > > > +++ b/kernel/seccomp.c
-> > > > > @@ -734,13 +734,13 @@ seccomp_prepare_user_filter(const char __user *user_filter)
-> > > > >
-> > > > >  #ifdef SECCOMP_ARCH_NATIVE
-> > > > >  /**
-> > > > > - * seccomp_is_const_allow - check if filter is constant allow with given data
-> > > > > + * seccomp_is_filter_const_allow - check if filter is constant allow with given data
-> > > > >   * @fprog: The BPF programs
-> > > > >   * @sd: The seccomp data to check against, only syscall number and arch
-> > > > >   *      number are considered constant.
-> > > > >   */
-> > > > > -static bool seccomp_is_const_allow(struct sock_fprog_kern *fprog,
-> > > > > -                                struct seccomp_data *sd)
-> > > > > +static bool seccomp_is_filter_const_allow(struct sock_fprog_kern *fprog,
-> > > > > +                                       struct seccomp_data *sd)
-> > > > >  {
-> > > > >       unsigned int reg_value = 0;
-> > > > >       unsigned int pc;
-> > > > > @@ -812,6 +812,21 @@ static bool seccomp_is_const_allow(struct sock_fprog_kern *fprog,
-> > > > >       return false;
-> > > > >  }
-> > > > >
-> > > > > +static bool seccomp_is_const_allow(struct sock_fprog_kern *fprog,
-> > > > > +                                struct seccomp_data *sd)
-> > > > > +{
-> > > > > +#ifdef __NR_uretprobe
-> > > > > +     if (sd->nr == __NR_uretprobe
-> > > > > +#ifdef SECCOMP_ARCH_COMPAT
-> > > > > +         && sd->arch != SECCOMP_ARCH_COMPAT
-> > > > > +#endif
-> > > >
-> > > > I don't like this because it's not future-proof enough. __NR_uretprobe
-> > > > may collide with other syscalls at some point.
-> > >
-> > > I'm not sure I got this point.
-> > >
-> > > > And if __NR_uretprobe_32
-> > > > is ever implemented, the seccomp logic will be missing. I think this
-> > > > will work now and in the future:
-> > > >
-> > > > #ifdef __NR_uretprobe
-> > > > # ifdef SECCOMP_ARCH_COMPAT
-> > > >         if (sd->arch == SECCOMP_ARCH_COMPAT) {
-> > > > #  ifdef __NR_uretprobe_32
-> > > >                 if (sd->nr == __NR_uretprobe_32)
-> > > >                         return true;
-> > > > #  endif
-> > > >         } else
-> > > > # endif
-> > > >         if (sd->nr == __NR_uretprobe)
-> > > >                 return true;
-> > > > #endif
-> > >
-> > > I don't know if implementing uretprobe syscall for compat binaries is
-> > > planned or makes sense - I'd appreciate Jiri's and others opinion on that.
-> > > That said, I don't mind adding this code for the sake of future proofing.
-> >
-> > as Andrii wrote in the other email ATM it's just strictly x86_64,
-> > but let's future proof it
-> 
-> Thank you. So I'm ok with using the suggestion above, but more on this below.
-> 
-> >
-> > AFAIK there was an attempt to do similar on arm but it did not show
-> > any speed up
-> >
-> > >
-> > > >
-> > > > Instead of doing a function rename dance, I think you can just stick
-> > > > the above into seccomp_is_const_allow() after the WARN().
-> > >
-> > > My motivation for the renaming dance was that you mentioned we might add
-> > > new syscalls to this as well, so I wanted to avoid cluttering the existing
-> > > function which seems to be well defined.
-> > >
-> > > >
-> > > > Also please add a KUnit tests to cover this in
-> > > > tools/testing/selftests/seccomp/seccomp_bpf.c
-> > >
-> > > I think this would mean that this test suite would need to run as
-> > > privileged. Is that Ok? or maybe it'd be better to have a new suite?
-> > >
-> > > > With at least these cases combinations below. Check each of:
-> > > >
-> > > >         - not using uretprobe passes
-> > > >         - using uretprobe passes (and validates that uretprobe did work)
-> > > >
-> > > > in each of the following conditions:
-> > > >
-> > > >         - default-allow filter
-> > > >         - default-block filter
-> > > >         - filter explicitly blocking __NR_uretprobe and nothing else
-> > > >         - filter explicitly allowing __NR_uretprobe (and only other
-> > > >           required syscalls)
-> > >
-> > > Ok.
-> >
-> > please let me know if I can help in any way with tests
-> 
-> Thanks! Is there a way to partition this work? I'd appreciate the help
-> if we can find some way of doing so.
+Disable PCIe AER on the tg3 device on system reboot on a limited
+list of Dell PowerEdge systems. This prevents a fatal PCIe AER event
+on the tg3 device during the ACPI _PTS (prepare to sleep) method for
+S5 on those systems. The _PTS is invoked by acpi_enter_sleep_state_prep()
+as part of the kernel's reboot sequence as a result of commit
+38f34dba806a ("PM: ACPI: reboot: Reinstate S5 for reboot").
 
-sure, I'll check the seccomp selftests and let you know
+There was an earlier fix for this problem by commit 2ca1c94ce0b6
+("tg3: Disable tg3 device on system reboot to avoid triggering AER").
+But it was discovered that this earlier fix caused a reboot hang
+when some Dell PowerEdge servers were booted via ipxe. To address
+this reboot hang, the earlier fix was essentially reverted by commit
+9fc3bc764334 ("tg3: power down device only on SYSTEM_POWER_OFF").
+This re-exposed the tg3 PCIe AER on reboot problem.
 
-> 
-> >
-> > >
-> > > >
-> > > > Hm, is uretprobe expected to work on mips? Because if so, you'll need to
-> > > > do something similar to the mode1 checking in the !SECCOMP_ARCH_NATIVE
-> > > > version of seccomp_cache_check_allow().
-> > >
-> > > I don't know if uretprobe syscall is expected to run on mips. Personally
-> > > I'd avoid adding this dead code.
-> 
-> Jiri, what is your take on this one?
+This fix is not an ideal solution because the root cause of the AER
+is in system firmware. Instead, it's a targeted work-around in the
+tg3 driver.
 
-uretprobe syscall is not expected to work on mips, atm it's strictly x86_64
+Note also that the PCIe AER must be disabled on the tg3 device even
+if the system is configured to use "firmware first" error handling.
 
-jirka
+V3:
+   - Fix sparse warning on improper comparison of pdev->current_state
+   - Adhere to netdev comment style
+
+Fixes: 9fc3bc764334 ("tg3: power down device only on SYSTEM_POWER_OFF")
+Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
+---
+ drivers/net/ethernet/broadcom/tg3.c | 58 +++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+
+diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
+index 9cc8db10a8d6..5ba22fe0995f 100644
+--- a/drivers/net/ethernet/broadcom/tg3.c
++++ b/drivers/net/ethernet/broadcom/tg3.c
+@@ -55,6 +55,7 @@
+ #include <linux/hwmon.h>
+ #include <linux/hwmon-sysfs.h>
+ #include <linux/crc32poly.h>
++#include <linux/dmi.h>
+ 
+ #include <net/checksum.h>
+ #include <net/gso.h>
+@@ -18192,6 +18193,50 @@ static int tg3_resume(struct device *device)
+ 
+ static SIMPLE_DEV_PM_OPS(tg3_pm_ops, tg3_suspend, tg3_resume);
+ 
++/* Systems where ACPI _PTS (Prepare To Sleep) S5 will result in a fatal
++ * PCIe AER event on the tg3 device if the tg3 device is not, or cannot
++ * be, powered down.
++ */
++static const struct dmi_system_id tg3_restart_aer_quirk_table[] = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge R440"),
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge R540"),
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge R640"),
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge R650"),
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge R740"),
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge R750"),
++		},
++	},
++	{}
++};
++
+ static void tg3_shutdown(struct pci_dev *pdev)
+ {
+ 	struct net_device *dev = pci_get_drvdata(pdev);
+@@ -18208,6 +18253,19 @@ static void tg3_shutdown(struct pci_dev *pdev)
+ 
+ 	if (system_state == SYSTEM_POWER_OFF)
+ 		tg3_power_down(tp);
++	else if (system_state == SYSTEM_RESTART &&
++		 dmi_first_match(tg3_restart_aer_quirk_table) &&
++		 pdev->current_state != PCI_D3cold &&
++		 pdev->current_state != PCI_UNKNOWN) {
++		/* Disable PCIe AER on the tg3 to avoid a fatal
++		 * error during this system restart.
++		 */
++		pcie_capability_clear_word(pdev, PCI_EXP_DEVCTL,
++					   PCI_EXP_DEVCTL_CERE |
++					   PCI_EXP_DEVCTL_NFERE |
++					   PCI_EXP_DEVCTL_FERE |
++					   PCI_EXP_DEVCTL_URRE);
++	}
+ 
+ 	rtnl_unlock();
+ 
+-- 
+2.47.1
+
