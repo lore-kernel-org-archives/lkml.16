@@ -1,128 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22AD819;
-	Thu, 30 Jan 2025 13:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5DE819
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738243528; cv=none; b=daFegD/T+3DVEjZbDsetAhl7YYIhD9ujbB1ikVT6d7ApVQJMrgWynjgi5f0nQwQKsBMozP2KnFKyyAG4Z8GCZ4ZfeK2hh3CQj9Nuw7xPT309XnXFW8OY+eDTOrWsLjxVkAZYkSOT+6Q7LX7sjAfByNbP7N5xHP8meReJ+RJ7Wco=
+	t=1738243575; cv=none; b=YOfIJyNtM0mZfVaJBHctDh8WClrOlz30dMhDnsxWFG8Dz/QT8K8kpmqhEjpSo1zKFxjZ9WkuoZDHStf96eMTYLDOV2K8OnW+AjtV+Y4dOcNDiWQSOGEhuPC/TzB8fFEsPascdqobeyEiTSet01Nw5EEqkT/c3XOMfxPWq+gY3B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738243528; c=relaxed/simple;
-	bh=SzvFFMSfP6Mm1H6JGD78EZYrFbiROfqXxHife8p2lZ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LnBS0U37+kFNjmHzEk2JnTko4ULEy4aDad0t1ZKz+eXCangDCkRYnzW1OaS1I4JthYMkqpqtTW1JBYA/iY6EtRSCW58noDSvqEcX6Ue9Chw9envZnq2eZ0qK7JrGkT1HU5UsKHATppNyTc63UH/L8mOHUvyHVNwc8PcqExhpkms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZArjtJgJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZArjtJgJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28ADAC4CED2;
-	Thu, 30 Jan 2025 13:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738243528;
-	bh=SzvFFMSfP6Mm1H6JGD78EZYrFbiROfqXxHife8p2lZ4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZArjtJgJOtt2zO8Ds9hhTBZ6Cip7ztSItXYlMI+3Wby3sbIdjSg13JCTjcGVEUrVy
-	 477w5XvibraWxa5LyaOrC/G0C9M5pIH4To5x5yMfj786kHYlLpXJpBJCkpiNodBP2M
-	 c8TgdRfyEwshEvU0J6nr+ANlcEUtaaQuDma+5+I45EUpMED6MQn3ttDJ4rfrmIL8+h
-	 WFAE2eyUxnnOURV6BUVeOwDhVd2U36VsIIzyxHSXTt9FsRzf6eaiqio1MG09jb8Dwj
-	 v5K40ip5cIQZSddX5UNQKXASh6Nfb/dmU4NTX+FgcwgDXNahR/g8E2lL8Guq7KzWHc
-	 /duo7iPWQu1kg==
-Message-ID: <7234f25c-a2aa-4834-931b-aeeb7a49dfa7@kernel.org>
-Date: Thu, 30 Jan 2025 14:25:16 +0100
+	s=arc-20240116; t=1738243575; c=relaxed/simple;
+	bh=EluioHgTrDfBtlMLrqNjhpzUXx5fQlBJiL9K5UDjawM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L5BNOWyjrqGDJbfaCg+c+HlxZ8pJjAT2ruQo6xvi8v/rWcmdWvRo1/LBf1m9JgxVQ8FkXRXMh3JiRwetOciDJhKCu7I/ttwZ/iDlQZbeFKM3RvE980v/aU07h4STw7M9Hilp1TcZcj6rk6rk9Hqc7T9O6IeTo9M/xrxav1GhP08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5188c6f260cso252827e0c.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:26:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738243570; x=1738848370;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RcnCdea0Cg2xhZ905GiM0LEi2fn/A0TJy6vLZwAFU5g=;
+        b=wdaedNmSf0Rt9wvt2mDCDhnV55AFIj5ceDmDCG/ILHWAmRaO77WxUu/L+4gjmda2iM
+         /Zbsl8V3V4yRKeHcGqr3STpgZ9K+p3mSLg4UEvlDsLBNz9HvBCgUxByqoaizVf5UTKIG
+         A3sIYRsCRuV4PoGpPaxQ6rT7PYDfIrzuC445vkuDPzHVOnE7NCLG5lrCfV+VY2knxg7W
+         banvqync4LjruFmURBufLAFbYTY8gUq7yA3w9FyVHXgCoqhDfW63oNOvhxzIR0BpWnqy
+         Fw5zOddRlclHEVRwEwZ3shpU4uWiR5koAa3G2NfSOSb7XmdpbUzrDeOn8L0JwZ9a/N8H
+         64uw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9OR+zPCd2BDbn+uWtaLTOOx5wqYRtn5YLnColitgHyfCdH1c5eTzSopZ8/MEJ1DA/Y61y0wPHqTf11TQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIT33LsEAl6Z2yxOIYBpCbJYuACfmcRbgOGoeyN1dVSXMYMuEd
+	I+itxbo2sCoGvEO2PBK4/9Nmg3AqvOZ87roKrg0OgvLIn0eLeXrJvJyxmUMa
+X-Gm-Gg: ASbGncsZHwJbZm50GJF8EhD/dy/82fZQA+PT9ONCLKVAYwKqwv/EWnqHRoFhyueL0Op
+	WiCHPnfgH1behNM1Dj+0vvETc104KxJ8Gtvhr2DdvHWikdGQAwcB11hwHcQBzGYimodKgNXtQyL
+	Ak2AtbBVSYDFiNXMKwwOpIM9NgcGc0BxpZsgY3tKl/s+lzhQGZox6oJ15NYo+v+RCftKCq4WsNI
+	jqyQRMqwn6Ixjg69sYjcn/Fe9SQEoOkrlcOBdKjeBFzVDQju9EuN2Ahv51+e/Z6sZ/E8W5LdeNd
+	TVbk7+mmzzr6Eqt/+ALbgtLBF28nn7dmtZzmZ06DqnGeJxvQPZQmxg==
+X-Google-Smtp-Source: AGHT+IFJhGUl+mH+UbQuEUrHdBs2UYBaFFG1kvKDTgBjNtLbd+R1FCdr6SSr4mb87tz1meo8TZ0AKQ==
+X-Received: by 2002:a05:6122:32cb:b0:516:2833:1b8d with SMTP id 71dfb90a1353d-51e9e55db69mr6851377e0c.11.1738243570375;
+        Thu, 30 Jan 2025 05:26:10 -0800 (PST)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1d917c1sm183095e0c.43.2025.01.30.05.26.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 05:26:09 -0800 (PST)
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4affd0fb6adso291507137.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:26:09 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX+u1uKwFcxrYvfVpXi3n5HMaIZOij/GHy6zVhvZWRBaXnJtabmorfwPm40l0et5hdGVDnLIc6B42A4kG4=@vger.kernel.org
+X-Received: by 2002:a05:6102:2ad3:b0:4af:bb06:62d with SMTP id
+ ada2fe7eead31-4b9a4f499c9mr6186530137.11.1738243569336; Thu, 30 Jan 2025
+ 05:26:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/5] dt-bindings: gpu: Add protected heap name to Mali
- Valhall CSF binding
-To: Florent Tomasin <florent.tomasin@arm.com>, Vinod Koul <vkoul@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
- "T . J . Mercier" <tjmercier@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Yong Wu <yong.wu@mediatek.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- nd@arm.com, Akash Goel <akash.goel@arm.com>
-References: <cover.1738228114.git.florent.tomasin@arm.com>
- <36b57dcf20860398ba83985e1c5b6f6958d08ba7.1738228114.git.florent.tomasin@arm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <36b57dcf20860398ba83985e1c5b6f6958d08ba7.1738228114.git.florent.tomasin@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
+ <07cf896e-adf8-414f-a629-a808fc26014a@oracle.com> <qdq4k6323orqifgzo7pbg5vakezr3gptfdehghxsyfrhc4kwvb@d4fxbwcl4gjm>
+ <CAJ-ks9=U4PZv4NgyH8B7SbHkecGLy+M=G639hSTv-hnPySqk6w@mail.gmail.com>
+ <xf3445vgszstqfwycf5wc5owhnifxb3mny5xjjaihghqgnozmd@3h7hnifir4vu>
+ <CAMuHMdVcuhzO57Qn-kcUJDM=HmkSwuheyNJPF1tx+gxRKnKZXA@mail.gmail.com> <mp6lnt3stfnfd74rwaza5xffh2ya5gylqnxotgrnqaqo3eh2zl@5g257jeiugfn>
+In-Reply-To: <mp6lnt3stfnfd74rwaza5xffh2ya5gylqnxotgrnqaqo3eh2zl@5g257jeiugfn>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 30 Jan 2025 14:25:57 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWDRLi8AE0PgfAnXundbS0hyTyovUH7yScrY7GtmYYPOQ@mail.gmail.com>
+X-Gm-Features: AWEUYZn0su9wB3Rua7xZlN_jsLurJgHhePP-DQxZFLycHjingwrtS3E5xZdT-fo
+Message-ID: <CAMuHMdWDRLi8AE0PgfAnXundbS0hyTyovUH7yScrY7GtmYYPOQ@mail.gmail.com>
+Subject: Re: [PATCH] xarray: port tests to kunit
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Sidhartha Kumar <sidhartha.kumar@oracle.com>, akpm@linux-foundation.org, 
+	christophe.leroy@csgroup.eu, justinstitt@google.com, 
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+	linuxppc-dev@lists.ozlabs.org, llvm@lists.linux.dev, maddy@linux.ibm.com, 
+	morbo@google.com, mpe@ellerman.id.au, nathan@kernel.org, naveen@kernel.org, 
+	ndesaulniers@google.com, npiggin@gmail.com, 
+	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 30/01/2025 14:08, Florent Tomasin wrote:
-> Allow mali-valhall-csf driver to retrieve a protected
-> heap at probe time by passing the name of the heap
-> as attribute to the device tree GPU node.
+Hi Liam,
 
-Please wrap commit message according to Linux coding style / submission
-process (neither too early nor over the limit):
-https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+On Thu, 30 Jan 2025 at 13:52, Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
+> * Geert Uytterhoeven <geert@linux-m68k.org> [250130 03:21]:
+> > On Wed, 29 Jan 2025 at 23:26, Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
+> > > I've never used the kunit testing of xarray and have used the userspace
+> > > testing instead, so I can't speak to the obscure invocation as both
+> > > commands seem insanely long and obscure to me.
+> >
+> > The long and obscure command line is a red herring: a simple
+> > "modprobe test_xarray" is all it takes...
+>
+> That command worked before too...
 
-Why this cannot be passed by phandle, just like all reserved regions?
+Exactly, great!
 
-From where do you take these protected heaps? Firmware? This would
-explain why no relation is here (no probe ordering, no device links,
-nothing connecting separate devices).
+> > > You should look at the userspace testing (that this broke) as it has
+> > > been really useful in certain scenarios.
+> >
+> > BTW, how do I even build tools/testing/radix-tree?
+> > "make tools/help" doesn't show the radix-tree test.
+> > "make tools/all" doesn't seem to try to build it.
+> > Same for "make kselftest-all".
+>
+> make
 
-Best regards,
-Krzysztof
+Where?
+
+> Or look at the make file and stop guessing.  Considering how difficult
+
+There is no Makefile referencing tools/testing/radix-tree or the
+radix-tree subdir. That's why I asked...
+
+Oh, I am supposed to run make in tools/testing/radix-tree/?
+What a surprise!
+
+Which is a pain when building in a separate output directory, as you
+cannot just do "make -C tools/testing/radix-tree" there, but have to
+type the full "make -C tools/testing/radix-tree O=..." (and optionally
+ARCH=... and CROSS_COMPILE=...; oh wait, these are ignored :-( in the
+source directory instead...
+
+If these tests are not integrated into the normal build system (see
+also [1]), I am not so surprised the auto-builders don't build them,
+and breakages are introduced...
+
+> it is to get m68k to build, you should probably know how to read a
+> makefile.
+
+Like all other kernel cross-compilation? Usually you don't even have
+to know where your cross-compiler is living:
+
+    make ARCH=m68k
+
+> > When trying the above, and ignoring failures due to missing packages
+> > on my host:
+> >   - there are several weird build errors,
+> >   - this doesn't play well with O=,
+> >   - lots of scary warnings when building for 32-bit,
+> >   - ...
+> >
+> > At least the kunit tests build (and run[1] ;-) most of the time...
+>
+> Do they?  How about you break something in xarray and then try to boot
+> the kunit, or try to boot to load that module.
+
+If you break the kernel beyond the point of booting, you can indeed
+not run any test modules...
+
+Which does _not_ mean the userspace tests are not useful, and that I
+approve breaking the userspace tests...
+
+[1] https://lore.kernel.org/all/CAK7LNASdA+5_pdTjr1dY-cKGSDq804Huc_CX_8-Gg+ypFCmajQ@mail.gmail.com/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
