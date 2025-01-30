@@ -1,70 +1,70 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666DB139B
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A72E139B
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738207282; cv=none; b=tVnUiwSjeWUfMe3h2nbPC9xWw6dWFUp4PeRNaQhj3UCxdPKY1/rkiA7x5IP6+P7xlys3+eoomrqLlG5iO+yZrKA3Z0lZWJjyAPfnzfbtFWuLVd19LXQMsGJlAYcG384P+hVC/6Lly3g7x4iFoRv6l6EqwTgo92GXQupL1knrqvE=
+	t=1738207337; cv=none; b=oHzCiYyyJy9Tw+j/RJHcEg1j4i72ds7Ew+0PDx8MXqKeQRBGIohNXhlqUt9UyNo4LIyOpG5Hw+uT19jDyarg1p/9yvIi7QCAYHOluVr2POBkwDAuDafFfMQdRB1Jp9ewTo3zrppXND9VU9BlpRsIfErrVlBPIjTkEZCLb2ygNls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738207282; c=relaxed/simple;
-	bh=833m0TONNKz2uaQ8J4FnS7DL1U7EyJEVS6iVDnZ1CQw=;
+	s=arc-20240116; t=1738207337; c=relaxed/simple;
+	bh=YrV5s1afiLTZ8aJzAPbd9iA5+2JzwX2PIQjlwXCgHU4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QHL0cdCXGoECOik87rR0IiYhOB8YCOWTKSRhsN6tTn+Rizr8+5NgmSXwkzY+DlP5yeSx1Ge1DdY4yOsPzmbKrb4kmUjxzYW96z9WtNAZfIoCArhIiRmM86qYssVmNAToUcwr/ePf8EPEdgYKYZR7o8TWof5ZUb7V77k9g73Q4M4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NaP2tBsS; arc=none smtp.client-ip=209.85.214.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=sxsd5+m+I92GnWcBp6CnBFuVJWw56HaZF9JIM1fj5ZL2dW4TMsun+8OqoU6yBREbl5n03glAz/eulJzPjfW+nIkpjLDSSf9C9koNLX3Jdad1IUIMAJxZRtw+6lnixTQepcrP1nr6z6jXuESMmqsm4xdJosY62dVzPPz4SzzzxGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=X7RnxK4w; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NaP2tBsS"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21619108a6bso4329205ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:21:21 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X7RnxK4w"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2f833af7a09so361043a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:22:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738207280; x=1738812080; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1738207334; x=1738812134; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8LFwMbEdYeenrWulReSvIxHvIEZ86bGfQIBWhk4yajU=;
-        b=NaP2tBsS3TtG34eGMUr5EgG6PGGEqfX0a2Pxjkt7chs6RRvWDcWkX6z7gpRul1R+oG
-         Z8QQrfXkHkxzBltufXk/Fj2A7/N2ORTMf5lRrYrmeGyH0l7LCrqZK/TTksc9QqFzhVoo
-         ndz9sS0br8Aj6kZQY/3nTLGgh8jDF1uxxg8/E=
+        bh=fNv/qF5L9DYQG4GRInYjrKbioOHCY/rhDAdj8Plp3Ls=;
+        b=X7RnxK4wfhDqtdYhkY9HYItmL+rdAuzqTABxVOS35DWEV1WTwFG1dtf6+wbFRTLFcK
+         cTNBUMwvr/u9E7q74Z7rxYKv5EgMma5nOXCgK+HGBI1l894V4IaaZ2vF41ZiidMu0Cx9
+         hYsf1JHZr2DFcYU18cghEMRkcsDaKt2h+NMHo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738207280; x=1738812080;
+        d=1e100.net; s=20230601; t=1738207334; x=1738812134;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8LFwMbEdYeenrWulReSvIxHvIEZ86bGfQIBWhk4yajU=;
-        b=VrlNPUNBXT6QoiRqSB/3uAfQfaKrUcuF30i/iPU833VFuj/IqJEzNc4raLCf4hJy4A
-         Cqrc4DdJPLJ3dug1+LQidq+7gYkeOSBEz0HkOBQ/HRQZTGO2c51G+VhV4Z6FCp++2AnZ
-         BiBIoAPmiZz3RG8ovWdzuvLPl0aRqIVbWwvnulmCG8+FqmrXA2Hmjkmh5Nze3hgFgqx/
-         HyhnGrH/yzxnR4U94R+MsnzNqDolxXntdTwPGwB54dmjbF+4rA9L5nSsfmjy2eQtrCMm
-         IQx/B+tVb0hDpNMv7ZluNfiJZ/mDwUhusHEOapaMw6Mck9AJBiazcFvXDo+nNlGZiXIP
-         fKgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdhgAQHY0aPEW1cwRJYWNZMPcXso3e2jgBKA2ZfJMLxjfiTszwcR/5QoIBM/u4V5ZGA2gQGJDmMko1/ww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztQlJjCZq8i5xOf6Z2VUU36cnQYMwYXy0qGH6rKk98kfOiPeh0
-	GlwQLh4RO1FN/0n5eibLkFw6GFsiT6Zm0rrDOazjiefEZRwqpk0cDd+0uLkn1g==
-X-Gm-Gg: ASbGncuEBIJTw3Yj/xASsraG7letsjBAJ49AslFGkIpaAIX9I9jhK9NBpZ1Z/W0Ojbt
-	tDukeX7LcDTEB4SdfPMUGDX0l+IkAGvp+LXJPLqSJlHGiqUBQ5uMM/Im7B8mx4i3XmTi4yefRW7
-	4VsqFYE461nUG7mDMJcu/ixpRk7G2Dmm5Yoe1ct9KYTSItmbvQTehu3318hOuu5ktF39viuojGn
-	Ig5Qy1aFGbrlxJl5JCOW4G5k+7niKPYUksebEB1o85uKENegusawgsrc0UQwsG5YsLj3jyCYmwh
-	HaUz/TaECwfbB9KpzOI=
-X-Google-Smtp-Source: AGHT+IGCVAO7sy+stGRd4OaRulYCU1tHhr1fCPxXx6dky7QdPIH1J9SteiQhQlAN7tDgfLKzNK5J5g==
-X-Received: by 2002:a17:902:fc4e:b0:216:2bd7:1c49 with SMTP id d9443c01a7336-21dd7d7bfb8mr98669585ad.29.1738207280645;
-        Wed, 29 Jan 2025 19:21:20 -0800 (PST)
+        bh=fNv/qF5L9DYQG4GRInYjrKbioOHCY/rhDAdj8Plp3Ls=;
+        b=gTR1aTcO0IEgp+qlu0O9oRZOeljg7Sa8A0mOpLnTLa0EqUGbujHDFUS2dldD5BzivG
+         WZTuZGiLLzRmtQoABoirLiH1F0UIn/s/KPwAeu71llgZ/Rr3IxpLEVhjvYNHMuY+CRcr
+         HfnVj5V7P1Dl2u4y7lVj5gNrQ+melniiGPibHK+hsaba3wo86V6cz3ANDCnR6ReC7pT8
+         HDl15kq8feeH2KCWEgJM9qVtrw8DJ7QXxrbXb4GN0v7Nc8OXE4iHNX3bioz1lpFJoUve
+         r8axgtXA1I6eyQP/6sj/1SzSjHJMqo3LQfry4wghDCqogMUL7vw8cwpoZbMRu6Jdf8gW
+         h7eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAEE+buAJnhs/SgslF6n5z2LV1p5EJda7Dj54YcqjB5Uik+6lNwkjs4Doie/BVaFl4UzXGECumNGkJSoo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHtZngFou/ozNme73ZO2NRVI1eMXKtBDYKMQdULnZMLYrT3Ov/
+	d7c5TUD96oSwf4zUxoiaWLUxE8FTZ7g3AbrRVDsgZwdK5dCU1+QMm2WtGXvKmA==
+X-Gm-Gg: ASbGncvP7miPC//sKpOWVGbeNqflJJ4exBkA/M+I+sObZoXhH7I3uM68GaYNiaBs6NB
+	LBnWVUojS3eCS29AZAsU0n5lt/xwVFiPtqCXJTlDz7nsIGHHaxMIUh8zowMrojtr4lfZ5p9KTkD
+	sSufyvbRa1bjDZLjXMgngg3P0cx2HUyCfBGQ/yzO+wcjXinW7T9wolj3yd7Zn2XlecYdt70ZVBp
+	RYYLiGWFTemI5sZKLidCuYkEfuEAwLQAYO6H1lIV7cjdd6AMnAg64COY98WCSN6iMgyoVyXQHoz
+	De31d7mNCSyTjsipQDk=
+X-Google-Smtp-Source: AGHT+IEHDzUZi3lg9xMhHt59OkIpdTDr2gsnd0+almGl7slYViWjk4HBx7jwg26XFrThilzoksJunQ==
+X-Received: by 2002:a17:90b:548c:b0:2ee:a6f0:f54 with SMTP id 98e67ed59e1d1-2f83abda260mr8524977a91.13.1738207334658;
+        Wed, 29 Jan 2025 19:22:14 -0800 (PST)
 Received: from google.com ([2401:fa00:8f:203:d794:9e7a:5186:857e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31ede21sm3581955ad.27.2025.01.29.19.21.18
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bd0ce4dsm2639680a91.27.2025.01.29.19.22.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 19:21:20 -0800 (PST)
-Date: Thu, 30 Jan 2025 12:21:14 +0900
+        Wed, 29 Jan 2025 19:22:14 -0800 (PST)
+Date: Thu, 30 Jan 2025 12:22:08 +0900
 From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Uros Bizjak <ubizjak@gmail.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
 	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv1 4/6] zsmalloc: introduce new object mapping API
-Message-ID: <4slya4kbgfvkvlgkvwep2cgghs233lfhfpctfrrgvho4fpgzwr@cjp643bd4ml6>
+	Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
+	Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv1 3/6] zsmalloc: make zspage lock preemptible
+Message-ID: <3oxqvpghezesl6nj474v3xchpseeavc6p3u752yaxswpfmcqxd@ohdx62ahgle5>
 References: <20250129064853.2210753-1-senozhatsky@chromium.org>
- <20250129064853.2210753-5-senozhatsky@chromium.org>
- <Z5pl6OOVcb_rsgTC@google.com>
+ <20250129064853.2210753-4-senozhatsky@chromium.org>
+ <3f787832-fbb7-8590-c090-1f511b16449a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,65 +73,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z5pl6OOVcb_rsgTC@google.com>
+In-Reply-To: <3f787832-fbb7-8590-c090-1f511b16449a@gmail.com>
 
-On (25/01/29 17:31), Yosry Ahmed wrote:
-> On Wed, Jan 29, 2025 at 03:43:50PM +0900, Sergey Senozhatsky wrote:
-[..]
-> > The old API will stay around until the remaining users switch
-> > to the new one.  After that we'll also remove zsmalloc per-CPU
-> > buffer and CPU hotplug handling.
-> 
-> I will propose removing zbud (in addition to z3fold) soon. If that gets
-> in then we'd only need to update zpool and zswap code to use the new
-> API. I can take care of that if you want.
-
-Sounds like a plan.  I think I saw zbud deprecation patch (along with z3fold
-removal).  I guess you still want to keep zpool, just because it's there
-already?
-
-> > Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> 
-> I have a couple of questions below, but generally LGTM:
-> 
-> Reviewed-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-
-Thanks.
-
-[..]
-> > +void zs_obj_read_end(struct zs_pool *pool, unsigned long handle,
-> > +		     void *handle_mem);
-> > +void *zs_obj_read_begin(struct zs_pool *pool, unsigned long handle,
-> > +			void *local_copy);
-> 
-> Nit: Any reason to put 'end' before 'begin'? Same for the function
-> definitions.
-
-An old habit, I just put release() before init() (or end() before
-begin()) because often times you call end() from begin() error path.
-Not in this particular case, but I just do that semi-automatically.
-
-[..]
-> > +	if (off + class->size <= PAGE_SIZE) {
-> > +		/* this object is contained entirely within a page */
-> > +		void *dst = kmap_local_zpdesc(zpdesc);
+On (25/01/29 16:22), Uros Bizjak wrote:
+> > +static void zspage_read_lock(struct zspage *zspage)
+> > +{
+> > +	atomic_t *lock = &zspage->lock;
+> > +	int old;
 > > +
-> > +		if (!ZsHugePage(zspage))
-> > +			off += ZS_HANDLE_SIZE;
-> > +		memcpy(dst + off, handle_mem, mem_len);
-> > +		kunmap_local(dst);
-> > +	} else {
-> > +		size_t sizes[2];
+> > +	while (1) {
+> > +		old = atomic_read(lock);
+> > +		if (old == ZS_PAGE_WRLOCKED) {
+> > +			cpu_relax();
+> > +			continue;
+> > +		}
 > > +
-> > +		/* this object spans two pages */
-> > +		off += ZS_HANDLE_SIZE;
+> > +		if (atomic_try_cmpxchg(lock, &old, old + 1))
+> > +			return;
+> > +
+> > +		cpu_relax();
+> > +	}
+> > +}
+
+[..]
+
+> Based on the above, cpu_relax() should be removed from the loop, which
+> becomes:
 > 
-> Are huge pages always stored in a single page? If yes, can we just do
-> this before the if block for both cases:
+> {
+>         atomic_t *lock = &zspage->lock;
+>         int old = atomic_read(lock);
+> 
+>         do {
+>                 if (old == ZS_PAGE_WRLOCKED) {
+>                         cpu_relax();
+>                         old = atomic_read(lock);
+>                         continue;
+>                 }
+> 
+>         } while (!atomic_try_cmpxchg(lock, &old, old + 1));
+>  }
 
-Yes.
+Ack.
 
-> if (!ZsHugePage(zspage))
-> 	off += ZS_HANDLE_SIZE;
+> > +static int zspage_try_write_lock(struct zspage *zspage)
+> 
+> This function can be declared as bool, returning true/false.
 
-Looks good.
+Ack.  Thank you.
