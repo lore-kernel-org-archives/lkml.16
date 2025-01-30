@@ -1,84 +1,83 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0BD1BDA95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A37C1E6DCF
 	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738246742; cv=none; b=bBxvKCTDS3dv+7DG/D3uQVgh9My2MFtHFpu9TBwYCFTR8rOs+1UN5Xhk535gAAH7Hmg/uFITXqJIdGOQxJdc/DJnlB/1nwrw4Zj/SNz4QiTQsoofDmyOLC0T/PdFzLlsRdvaIV0OzJ/nlzUHtp7/oF7RX9S79kdYF+qSru5y5Kg=
+	t=1738246740; cv=none; b=WVlsO6PEFVwJNQLHZp4xRqQCY4XQCpZHC3190bPCHoVWVKvu58LZS2EFfR03ao+HTn1TY8FcW6ewe/2zm8wabsUWwI6patdTAu7QlmKLcGMYabFUp8aaps8hAExM8BfZ2/GeJJgkA5j9oGN8QIvdTrEYnNfPsC7F7ezPVLfMKxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738246742; c=relaxed/simple;
-	bh=huFJZqVBqMBxZ+Sr0+yAHVKHVLF92iEzvgQ9lCZ3dFg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VMXPSEvnhrUKiBlypo3ZCsMoz3/Dr2VfRU8/ZerXw8Dq99BBJFvIt0ftXhnUGwWtDCjWDa3U965EvQsJMkXUwzUYmlJ1Zut3eVKkYCzjz1g771QVtUvbzWtjVcy9v6Unx7WD5TTCdEEHV1y1CY4UxpO2BqgcIxkGP89/6DxXG1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6B91E41DF3;
-	Thu, 30 Jan 2025 14:18:55 +0000 (UTC)
-Message-ID: <c9cbc2be-d1fd-44ef-aa14-fd25a5ff8490@ghiti.fr>
-Date: Thu, 30 Jan 2025 15:18:54 +0100
+	s=arc-20240116; t=1738246740; c=relaxed/simple;
+	bh=/EdnLnwgqpgYnJOlt9Wonh398iiQ10JCnD5IDSk8dgE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QciUXtHeXZ3Fu3VcYOPe7Nn77MaCAzHDLB9EDm6nXYffaxwPIlqGPabpUsub+gVy1nKzt8j4i8q6h1AZ03+k0WDampwUGt9eD3fhB/tUBndTu0Vy6h3lJGCLrdLbh2MiGJ2G1W1Z7wfn2FtbIrsu7WF4uyd87dlhdGfv1HgiE+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gc3s1b62; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gc3s1b62"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2eec9b3a1bbso1105934a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:18:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738246738; x=1738851538; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OwIKPbP90dAareLYcXFAh/Wx2pfCe1g3ZgGplrN6PRo=;
+        b=gc3s1b6215jo8uXiMqDHVL9anjrjCFC8JpoyCk4y0qUUfQNpk5eRIKZstqtKa6NfAY
+         fFrKX10CFTc0HKAacBwpre9K4eGYOowdjyx4NrXPnfn1ZZYdgguc/uYq7AfSmPcFQQWD
+         vSn87fFnia752OEoBsbQiHbzHwDuN8QW7Dj5U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738246738; x=1738851538;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OwIKPbP90dAareLYcXFAh/Wx2pfCe1g3ZgGplrN6PRo=;
+        b=pCRPZ5VXY0wtWfIOcKGEYVOUvgXs5+LuTkbkJvLU6TZFiZHNgaJ4kWF4g7JDCKQLzu
+         rULKKiswjslF41vzb7HQf52L9Zh0VqW9ELqf7WlK8laTZ7kzZWJcwkTLjHtaqfuIrmUB
+         RUF9Xx8qAXNQYhlt95ODnl6y8FxbzzyGrLcIDwOtO9MxDG4Y/K/bcfq2YNBMKDaFEQ9a
+         WQeZzFQdTO2d73nfbTBku+ZbOkwqUoydozP7iCG28oG5LmurGAp0xfEglZl0yobmJkyw
+         2ZpeMy+b05+gFnV//ZDIgY9tXu67FcyCVFdYSaSsSPfpIe0Snxn8b2MZD1UysRKziP2Z
+         NddA==
+X-Forwarded-Encrypted: i=1; AJvYcCXWA4C8IAbRqG+Rjr3n2EMta7CS4C7q9ToDYSFMIpskXULigF+G6nMAA57q7zNtSDOu5VMblUBq4/RLUAY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9Om8QN050tNLCktRCDsVxQu490XLfB2ghx5mDaGNUw08kt7+b
+	QMJRDc84W3Ewm7hbqI1d5itYSCh1jK49KkD42FIEvTSxIaXLL0Xw+dohzOf1Vg==
+X-Gm-Gg: ASbGncv0PZH+7V4JueeYOzz+UjKA26m2Bdgb34olW/kT++MQc2LqMs8CbCNHYZAEXtR
+	nhAF8x+RwGVKLCprDOlqCL7t8CH5eCwAGMT8l2ZCTV+/dYfyvrd6uAoFeM1qBGi1vEeRaajICm1
+	sHRdmwlMg/CnnegFkQlwJluXLI4DqDOWs5dpzC2BQ9lYjDQSQPIUeiZBoXTQMYLWmdZy/X1h7LE
+	BvSv+UJbjrzrQ33/pdpV1HFmaB4G+LRx5tD+NePIlx4SstwgklA1Nf9UoOt4ad4tbpr2pzfara4
+	LhK6r4fN6G7Ml9KA4w==
+X-Google-Smtp-Source: AGHT+IFHmt1NKsoPDnOd3kJmqp4FgP/LLfp0mRa9d8YxFpHm21eOGLbNWdtcKe1ldYZK4C+cg40zkg==
+X-Received: by 2002:a05:6a00:b4b:b0:729:1b8f:9645 with SMTP id d2e1a72fcca58-72fd0c7f7camr11432203b3a.24.1738246738612;
+        Thu, 30 Jan 2025 06:18:58 -0800 (PST)
+Received: from google.com ([2401:fa00:8f:203:d4ce:e744:f46b:4fb])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6426aa7sm1477602b3a.46.2025.01.30.06.18.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 06:18:58 -0800 (PST)
+Date: Thu, 30 Jan 2025 23:18:53 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 00/11] zram: preemptible writes and occasionally
+ preemptible reads
+Message-ID: <hghqkqaomtdf3mgj6iiw4ctqf4l5c6plrsnquhmckubivr6emm@7m4qm5tmkwzz>
+References: <20250130111105.2861324-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv/atomic: Do proper sign extension also for unsigned
- in arch_cmpxchg
-Content-Language: en-US
-To: Andreas Schwab <schwab@suse.de>, linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-References: <mvmed0k4prh.fsf@suse.de>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <mvmed0k4prh.fsf@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeitdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedvledugfelffetkefgleehtedvuefggfeitdeuteegtdeffeelieelheeikedvudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtdegmegtvggttdemuddutdejmedvvdduleemiegtuggrmeefudefrgemjeelsgdtmegsuggtvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtgeemtggvtgdtmeduuddtjeemvddvudelmeeitggurgemfedufegrmeejlegstdemsggutgdvpdhhvghloheplgfkrfggieemvdgrtdegmegtvggttdemuddutdejmedvvdduleemiegtuggrmeefudefrgemjeelsgdtmegsuggtvdgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepfedprhgtphhtthhopehstghhfigrsgesshhushgvrdguvgdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpt
- hhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250130111105.2861324-1-senozhatsky@chromium.org>
 
-Hi Andreas,
+On (25/01/30 20:10), Sergey Senozhatsky wrote:
+> This is Part I which only changes zram.  In order to make reads()
+> preemptible we also need Part II [1] which changes zsmalloc.
 
-On 30/01/2025 10:25, Andreas Schwab wrote:
-> Sign extend also an unsigned compare value to match what lr.w is doing.
-> Otherwise try_cmpxchg may spuriously return true when used on a u32 value
-> that has the sign bit set, as it happens often in inode_set_ctime_current.
->
-> Do this in three conversion steps.  The first conversion to long is needed
-> to avoid a -Wpointer-to-int-cast warning when arch_cmpxchg is used with a
-> pointer type.  Then convert to int and back to long to always sign extend
-> the 32-bit value to 64-bit.
->
-> Fixes: 6c58f25e6938 ("riscv/atomic: Fix sign extension for RV64I")
-> Signed-off-by: Andreas Schwab <schwab@suse.de>
-> ---
->   arch/riscv/include/asm/cmpxchg.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-> index 4cadc56220fe..427c41dde643 100644
-> --- a/arch/riscv/include/asm/cmpxchg.h
-> +++ b/arch/riscv/include/asm/cmpxchg.h
-> @@ -231,7 +231,7 @@
->   		__arch_cmpxchg(".w", ".w" sc_sfx, ".w" cas_sfx,		\
->   			       sc_prepend, sc_append,			\
->   			       cas_prepend, cas_append,			\
-> -			       __ret, __ptr, (long), __old, __new);	\
-> +			       __ret, __ptr, (long)(int)(long), __old, __new);	\
->   		break;							\
->   	case 8:								\
->   		__arch_cmpxchg(".d", ".d" sc_sfx, ".d" cas_sfx,		\
+I think it's a good time/chance to combine the two series (this one is
+and the zsmalloc one [1]) and send out as one patch set, because there
+is a little of dependency between them.
 
-
-That's a nice catch indeed. IIUC, we have the same issue here 
-https://elixir.bootlin.com/linux/v6.13/source/arch/riscv/include/asm/futex.h#L89 
-right?
-
-hanks,
-
-Alex
-
+[1] https://lore.kernel.org/linux-mm/20250130044455.2642465-1-senozhatsky@chromium.org
