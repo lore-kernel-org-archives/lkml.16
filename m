@@ -1,187 +1,294 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83631EEA43
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 19:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EFA1E522
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 19:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738265756; cv=none; b=kdjMYpEOF1X4yUiWlZFxEzPPMf4S16i7J7cgdmV/ESHavy4LGzykrEeqX98oiBVmBl2xKO9sgU/npNY1FIK2GRAUHh0se3Qy8DENzqAxJTGTONVyls+CPcIvyasq+qRoc+AMkMcqekCEpDX9ICkDhdIIxBLz21PLugawCR1Imno=
+	t=1738265913; cv=none; b=jlV8OG19H88Gsff/jo7vvSzB8RUn2w9dBwzy088A6N8ym2E69tDufCtxjhMcK1rW8RzJcTScoxaoYxkEDWKruezOq9KoeuPF+8Qsk8epbA+GvHzux0Gz+o81nQdGpD/2CroIhhiHftjJT7XmV49zByvNzART1siQXvPOT2jdVU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738265756; c=relaxed/simple;
-	bh=tc/PDcSzixb+iXX1akNgTyMJBuee/WcKU6Flx+8L31o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bqG42OvwAf6rLOoZEC6zCc2ScVfV090/C3eR/sZnLZCdEOjwZ4knkOoobkNd5bIkj0sHJfsJOJolwWJkKF2UgI74iNqWPngsejnbiC6DAYV8Y+h2sYRqWMplBU55zKVT4syhr3dFQK2plHD31fd/+u4D3b0xQTX8Fxvcq3UE6JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hwkgi8AS; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738265913; c=relaxed/simple;
+	bh=+7fGP9GShMAdoK7fXjSbRea/KXhtyWSqOV6O1WKdfBI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=cvnQ1VqGKjmSA48WP6wUDIfcpjKYOul+EOD304Cpsb1lyzlE9w4VuuDfY6Ha7icOxviq8tNColK1NpOcz6SazE601HQ6vhKA1a3AzCrYhJstimw00uaxjnY6ldTChhu8xSdFWctria9ZLqkLajb45Ng/IW4OQEe2I2SSGcnK9qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2PWcLiA1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WcIn2wPh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2PWcLiA1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WcIn2wPh; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hwkgi8AS"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-85ba92b3acfso596138241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 11:35:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738265753; x=1738870553; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/s8I8F9pmlrzQR5tZezmCD4RoX0HPxCcaLCSVaDRDLw=;
-        b=Hwkgi8ASSxU30FBDwYpYrNozMGg0w6NHlfKWr9GuTJ7AcRuWe4cIm0xhWMUgJb2lHr
-         JPk7uCdy8+1MM7GxbZ7eKM+aj97/lL1e+B+Nl744J7BjlU8ZXQdqHycE7UC4MQk/NCr4
-         tEsf01gsbpoHNendHm1XJGhJpnD4ZalHmQSiHa1asn3u+mGQ0Ovy7OvyXa+QhkZAMikw
-         spaxslk+se+Y6GPiGhMGGF3ZGFeCweNSpk7l4vlivj6TTt+LM6FTpV1xn3AdkAjExkvZ
-         V3C5G6GYSjb84tZLL/6j46hRz/tep8g37OLapnbDHFlA3lJuukzJXwZspMay2MFl3xTE
-         I1Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738265753; x=1738870553;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/s8I8F9pmlrzQR5tZezmCD4RoX0HPxCcaLCSVaDRDLw=;
-        b=cuXZl66GSM5/1hqqC8igq2gxEPc3czBpyU6TUvR8vYEWfjLj4guMjGwHKidgLWMeVb
-         bYancz5jCHZUGlEKufBn1pT4S82Wy4lQ1RToLRIlNIumPqZVVd6c1uX701vmnU0GKT7a
-         kDiDNi+CMR0oNgR+UPFFXW8mX2olkSC5CBQ5QxuRYB0ccL/FzR66XQbcuKaBlDSnoPc4
-         aW8E+E0TlvuhwTFLUOm4tROuzzC0Ol9uIrEJ9gstJQk00MjFw6rK6nj8kLyHmcjHbuXm
-         rQit3csMg6Om73CazMEK/5BYrvH6OgQ9bQMyD/SyQH8YlrBvfMU+0MocFOnZHEMCsKoG
-         iT3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWuDzjHgnRz6ZwrpYq5gTPvFqbYP6f6mmEk/2auEBwdm0beov+V3D2pBtMAGS7JBt3OxezO3jryzjigTOo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqZwIf7f5SWKdIXk3opkFbdrUHnQs68HxojayVcX2wh2Sd3iXW
-	TraytdL/AZm6iggtmFFmg0yoO1rer8OxxYAL5dKzwEd3N5OkpkYpwQkge0mkLgyarOu4mmARYTi
-	sSuXavSLYGcoyzVIBbPWIY8pUD+/ufieH6hGBjA==
-X-Gm-Gg: ASbGncubJuhFSZxvFANby80gnx091Y6ZV/Tb5+sCXtXcft+SqyS93fGquRSPjN88J59
-	i5Ogqq87x0bBO1UT4ytMqaNXVp+7Ct97yX4ieHFV9L084+U5SMwu0S1jUd8AWba7zc1ZSOQaMtS
-	aWAKbjSxCX2Eo+md4U00pkdBRGthEs
-X-Google-Smtp-Source: AGHT+IGiEPzFzPkapPW9tYKkO6D7+5pRUyuylUBuGphS/MvvFc6gbIMXzc0fsmezXugCb4QptmMQodulfJJCcyzSat4=
-X-Received: by 2002:a05:6102:800e:b0:4b2:5d10:58f2 with SMTP id
- ada2fe7eead31-4b9a4fc15bdmr7858997137.14.1738265753545; Thu, 30 Jan 2025
- 11:35:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2PWcLiA1";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WcIn2wPh";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2PWcLiA1";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WcIn2wPh"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A8A5B2116E;
+	Thu, 30 Jan 2025 19:38:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738265908; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=YuwcywBHK+9NBumtOsA7uMb8hiISXXwIDTQuXCfkjKE=;
+	b=2PWcLiA1byfTAhCMeqtZGKFJxR+bncShRqp2lwumUk2CQqajsQgZ03Eq7RiX9FBvhSXOmj
+	GxYzDyw49MtP+8ZamL8J4khL3ZTCh3oT7Q4J+AYCnWuCf0yN+zrsCb3foPHAHt6Wuh7KWz
+	X3P8RIcqAnACF4cCFsy84kJ8ngPHkCE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738265908;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=YuwcywBHK+9NBumtOsA7uMb8hiISXXwIDTQuXCfkjKE=;
+	b=WcIn2wPh9ABO8DEHf9o8P/D8QsfsvpSTcOoR5HUkT2fYu1Cj/f4u6IaiIN/83bmMikhyBI
+	G5ztRWFUATwSgzAQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=2PWcLiA1;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=WcIn2wPh
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738265908; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=YuwcywBHK+9NBumtOsA7uMb8hiISXXwIDTQuXCfkjKE=;
+	b=2PWcLiA1byfTAhCMeqtZGKFJxR+bncShRqp2lwumUk2CQqajsQgZ03Eq7RiX9FBvhSXOmj
+	GxYzDyw49MtP+8ZamL8J4khL3ZTCh3oT7Q4J+AYCnWuCf0yN+zrsCb3foPHAHt6Wuh7KWz
+	X3P8RIcqAnACF4cCFsy84kJ8ngPHkCE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738265908;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=YuwcywBHK+9NBumtOsA7uMb8hiISXXwIDTQuXCfkjKE=;
+	b=WcIn2wPh9ABO8DEHf9o8P/D8QsfsvpSTcOoR5HUkT2fYu1Cj/f4u6IaiIN/83bmMikhyBI
+	G5ztRWFUATwSgzAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9591C1366F;
+	Thu, 30 Jan 2025 19:38:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id qH0yJDTVm2cHSgAAD6G6ig
+	(envelope-from <chrubis@suse.cz>); Thu, 30 Jan 2025 19:38:28 +0000
+Date: Thu, 30 Jan 2025 20:38:26 +0100
+From: Cyril Hrubis <chrubis@suse.cz>
+To: ltp@lists.linux.it, linux-kernel@vger.kernel.org,
+	libc-alpha@sourceware.org
+Cc: lwn@lwn.net, akpm@linux-foundation.org, torvalds@linux-foundation.org
+Subject: [ANNOUNCE] The Linux Test Project has been released for JANUARY 2025
+Message-ID: <Z5vVMpub3x__Bj64@yuki.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130140133.662535583@linuxfoundation.org>
-In-Reply-To: <20250130140133.662535583@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 31 Jan 2025 01:05:40 +0530
-X-Gm-Features: AWEUYZkm0r6LQxZqc8VnDXBKmK1_Cm3f9f2joOD8H6qqpOf194TFrPp8tavbzQE
-Message-ID: <CA+G9fYsiw4GSjL7Sf51OaGM_-uWAQYaLCb14L_RC81nwoZJJzA@mail.gmail.com>
-Subject: Re: [PATCH 5.4 00/91] 5.4.290-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Vincent Guittot <vincent.guittot@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Rspamd-Queue-Id: A8A5B2116E
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_NONE(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Thu, 30 Jan 2025 at 19:47, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.290 release.
-> There are 91 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 01 Feb 2025 14:01:13 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.290-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Good news everyone,
+
+the Linux Test Project test suite stable release for *January 2025* has been
+released.
+
+Since the last release 236 patches by 25 authors were merged.
+
+Patch review is what most of the projects struggle with and LTP is no
+different. If you can spare some effort helping with the patch review it
+is more than welcomed.
+
+NOTABLE CHANGES
+===============
+
+* New tests
+
+  - madvise12 Tests that MADV_GUARD_INSTALL is causing SIGSEGV on access.
+  - fsplough A test that checks data integrity between reads and writes for a file.
+  - landlock08 Test for landlock bind()/connect().
+  - hugemmap34 Tests that kernel handles properly when stack grows into a
+               hugepage segment.
+  - rt_sigqueueinfo02 Tests for rt_sigqueueinfo() errors.
+
+  - listmount04 Tests for listmout() errors.
+  - listmount03 Test for EPERM on inaccesible mount point.
+  - listmount02 Test for group mount IDs.
+  - listmount01 Test for LSMT_ROOT.
+
+  - statmount08 Test for EPERM on inaccesible mount point.
+  - statmount07 Tests for statmount() errors.
+  - statmount06 Test for STATMOUNT_FS_TYPE.
+  - statmount05 Test for STATMOUNT_VFS_ROOT and STATMOUNT_MNT_POINT.
+  - statmount04 Test for STATMOUNT_PROPAGATE_FROM.
+  - statmount03 Test for STATMOUNT_MNT_BASIC.
+  - statmount02 Test for STATMOUNT_MNT_BASIC.
+  - statmount01 Test for statmount() without any flags.
+
+  - ioctl_ficlone01 Basic test for FICLONE ioctl().
+  - ioctl_ficlone02 Test for EOPNOTSUPP for usupported FS.
+  - ioctl_ficlone03 Tests for FICLONE errors.
+
+  - ioctl_ficlonerange01 Basic test for FICLONERANGE ioctl().
+  - ioctl_ficlonerange02 Tests for FICLONERANGE errors.
+
+* Increased coverage
+
+  - getrandom05 Tests the getrandom() syscall along with the VDSO implementation.
+  - landlock02 Adds landlock network coverage.
+
+* The failure hits (possible missing kernel patches) are now disabled until the
+  test library finishes intialization. This is because if we fail to set up the
+  test environment we haven't had a chance to reproduce the bug.
+
+* The test library now supports per filesystem mkfs options, mount flags and
+  min_kver. This is immediatelly used by FICLONE and FICLONERANGE tests since
+  the support for different filesystems was added into different kernel versions.
+
+* Rewritten tests
+
+  - both pty01 and ptem01 test were cleaned up and split into several tests
+  - vma05.sh is a first test rewritten to the new shell test library
+  - process_madvise01 now runs in memory cgroup, where we can properly control
+                      memory pressure.
+  - fanotify10 Now drops cache three times to make sure inode is evicted, if
+               the test stil fails in certain setups, please let us know.
 
 
-The following build regressions were noticed and reported last time
-on 5.15 and found here again on arc, arm, mips, parisc, powerpc with
-gcc and clang toolchains on 5.4.290-rc1 and 5.10.234-rc1.
+* Removed tests
 
-Build regression: arc, arm, mips, parisc, powerpc,
-drivers/usb/core/port.c struct usb_device has no member named
-port_is_suspended
+  - logrotate_tests.sh Since logrotate has it's own testsuite it's pointless to
+                       keep the broken LTP test.
 
-First seen on Linux (5.4.290-rc1)
-  Good: v5.4.289
-  Bad: Linux 5.4.290-rc1 (v5.4.289-92-gd06b29df5286)
+* Changes in test runtime and timeout handling
+  - the runtime and timeout values are now tracked separately
+  - runtime is now the time limit for a loop in the main test function
+  - timeout is now an safety upper limit for the test execution
+  - both values are per test iteration (e.g. for a single filesystem)
+  - the LTP_TIMEOUT_MUL now multiplies the safety limit
+  - the LTP_RUNTIME_MUL now multiplies for how long certain test will run
+  - selected (debug) kernel CONFIG_ options, if enabled now, multiply the
+    test timeouts
+  - many testcases that run >= 1s on a slow reference hardware (RPi zero) were
+    annotated with a proper timeout
+  - generally the timeout handling should just work fine (tm) without any
+    user adjustenments
 
-* arc:
-  build:
-  - gcc-9-axs103_defconfig
-  - gcc-9-vdk_hs38_smp_defconfig
+* Couple of fixes were applied to the test metadata extractor
+  so the data in ltp.json file are now more useful
 
-* arm:
-  build:
-  - clang-19-axm55xx_defconfig
-  - clang-19-footbridge_defconfig
-  - gcc-12-axm55xx_defconfig
-  - gcc-12-footbridge_defconfig
-  - gcc-8-axm55xx_defconfig
-  - gcc-8-footbridge_defconfig
+* The syscall number fallback definitions are now automatically generated from
+  kernel sources.
 
-* mips:
-  build:
-  - gcc-12-ath79_defconfig
-  - gcc-12-bcm47xx_defconfig
-  - gcc-12-rt305x_defconfig
-  - gcc-8-ath79_defconfig
-  - gcc-8-bcm47xx_defconfig
-  - gcc-8-rt305x_defconfig
+* 20 testcases were converted to the new test library
 
-* parisc:
-  build:
-  - gcc-11-allyesconfig
-  - gcc-11-defconfig
-
-* powerpc:
-  build:
-  - clang-19-ppc64e_defconfig
-  - gcc-12-cell_defconfig
-  - gcc-12-ppc64e_defconfig
-  - gcc-8-cell_defconfig
-  - gcc-8-ppc64e_defconfig
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
++ The usual amount of fixes and cleanups
 
 
-Build log:
--------
-drivers/usb/core/port.c:299:21: error: no member named
-'port_is_suspended' in 'struct usb_device'
-  299 |         if (udev && !udev->port_is_suspended) {
-      |                      ~~~~  ^
-1 error generated.
+NOTABLE CHANGES IN NETWORK TESTS
+================================
+brought to you by Petr Vorel
 
-metadata:
----------
-* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.4.y/build/v5.4.289-92-gd06b29df5286/testrun/27079097/suite/build/test/clang-19-footbridge_defconfig/log
-* Details: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.4.y/build/v5.4.289-92-gd06b29df5286/testrun/27079097/suite/build/test/clang-19-footbridge_defconfig/details/
-* build: https://storage.tuxsuite.com/public/linaro/lkft/builds/2sLvp68rK3neoKGJil8eoZjIS1y/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2sLvp68rK3neoKGJil8eoZjIS1y/config
-* git_describe: v5.4.289-92-gd06b29df5286
-* git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-* git_sha: d06b29df52866ecaf06746ab6997a9ffabfd4357
-* Architectures: arc, arm, mips, parisc, powerpc
-* Toolchain version: gcc-12, gcc-11, gcc-8 and clang-19
+* New nfs10.sh test data integrity over NFS (uses fsplough)
+* Removed old ftp01.sh
 
-Please find the lore email discussion
-Link: https://lore.kernel.org/stable/eec53047-6118-4a73-9535-335babf68685@app.fastmail.com/
-Link: https://lore.kernel.org/stable/CA+G9fYvacKD7aFkMCW6nwjZ4t-cpH0deLiPY-cFvGkRn5hgK3w@mail.gmail.com/
 
-Steps to reproduce:
-------
-$ tuxmake --runtime podman --target-arch arm --toolchain gcc-12
---kconfig footbridge_defconfig
-$ tuxmake --runtime podman --target-arch sh --toolchain gcc-11
---kconfig defconfig
+DOWNLOAD AND LINKS
+==================
 
---
-Linaro LKFT
-https://lkft.linaro.org
+The latest version of the test-suite contains 3000+ tests for the Linux
+and can be downloaded at:
+
+https://github.com/linux-test-project/ltp/releases/tag/20250130
+
+The project pages as well as GIT repository are hosted on GitHub:
+
+https://github.com/linux-test-project/ltp
+
+If you ever wondered how to write a LTP testcase, don't miss our developer
+documentation at:
+
+https://linux-test-project.readthedocs.io/en/latest/developers/test_case_tutorial.html
+
+And our library API documentation at:
+
+https://linux-test-project.readthedocs.io/en/latest/developers/api_c_tests.html
+
+Patches, new tests, bugs, comments or questions should go to to our mailing
+list at ltp@lists.linux.it.
+
+CREDITS
+=======
+
+Many thanks to the people contributing to this release:
+
+git shortlog -s -e -n 20240930..
+
+    61  Petr Vorel <pvorel@suse.cz>
+    59  Andrea Cervesato <andrea.cervesato@suse.com>
+    29  Cyril Hrubis <chrubis@suse.cz>
+    18  Xinjian Ma (Fujitsu) <maxj.fnst@fujitsu.com>
+    12  Li Wang <liwang@redhat.com>
+    11  Martin Doucha <mdoucha@suse.cz>
+     8  Jan Stancek <jstancek@redhat.com>
+     6  Ricardo B. Marliere <rbm@suse.com>
+     5  Wei Gao <wegao@suse.com>
+     3  Attila Fazekas <afazekas@redhat.com>
+     3  David Hildenbrand <david@redhat.com>
+     3  lufei <lufei@uniontech.com>
+     2  Avinesh Kumar <akumar@suse.de>
+     2  Edward Liaw <edliaw@google.com>
+     2  Li Zhijian <lizhijian@fujitsu.com>
+     2  Ma Xinjian via ltp <ltp@lists.linux.it>
+     2  Po-Hsu Lin <po-hsu.lin@canonical.com>
+     1  Alessandro Carminati <acarmina@redhat.com>
+     1  Ian Whitfield <ian.whitfield@canonical.com>
+     1  Khem Raj <raj.khem@gmail.com>
+     1  Nathaniel Manista <nathaniel@google.com>
+     1  Samir Mulani <samir@linux.vnet.ibm.com>
+     1  Sven Schnelle <svens@linux.ibm.com>
+     1  Xiubo Li <xiubli@redhat.com>
+     1  Zizhi Wo <wozizhi@huawei.com>
+
+
+And also thanks to patch reviewers:
+
+git log 20240930.. | grep -Ei '(reviewed|acked)-by:' | sed 's/.*by: //' | sort | uniq -c | sort -n -r
+
+    107 Petr Vorel <pvorel@suse.cz>
+     86 Cyril Hrubis <chrubis@suse.cz>
+     31 Li Wang <liwang@redhat.com>
+     12 Andrea Cervesato <andrea.cervesato@suse.com>
+     11 Wei Gao <wegao@suse.com>
+      9 Jan Stancek <jstancek@redhat.com>
+      7 Avinesh Kumar <akumar@suse.de>
+      3 Po-Hsu Lin <po-hsu.lin@canonical.com>
+      2 Martin Doucha <mdoucha@suse.cz>
+      2 Jan Kara <jack@suse.cz>
+      1 Mimi Zohar <zohar@linux.ibm.com>
+      1 Chuck Lever <chuck.lever@oracle.com>
+-- 
+Cyril Hrubis
+chrubis@suse.cz
