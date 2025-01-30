@@ -1,159 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18CA1990DB
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0828C2770C
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738257587; cv=none; b=CAgL8vmhfr3brdTX8hzukLhSXn+unioHavovPkD/e4tqpqIlUfIlJ1rpn621WAVG1hvpoKq3ooBcpwV+vc35itD3XBO0lPHF7w6Mxs5FU1KSIR9qbcMGW94rxe5PL8szIDkfCgBJVudNuwwNYRjMVGPkS+chwtZs67bCqXlsuQE=
+	t=1738257703; cv=none; b=kGQbQ+IX99rNFcJH7q1mPPI2WYWrPbE6JyXz+YUMhSk2q6RkIpxhLuBStnjpMA7h16CHajU5wFM6/IVWTvCYCc62/31VdAtoSnOFLTad18GfIRKmajb7tIIqiw9tiRNMYjnvmnEBUYZsJ8VCJGizT7GYu7WYKLYGL+4/6s9wThs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738257587; c=relaxed/simple;
-	bh=Vtiz1noff7UBW9h8Hf2OkTnw2ywNN7YazG3F+I5mBxw=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jp/VnxbzERW2fotnzbi/eDE/qbUEUkEhlpDr2M5quqPcHRmctQCcpXINQubN2WG7koOCa7qYN8pTGXezRT4rY8Ck+ol5g4eaIKfHOUdvU1VO4DZs8W2oLMxcf/LwGkIk70bcUC/E0c692WrL+PHXaAa0fqAupPwoapTd5aFYVPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ecCjZEFu; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738257703; c=relaxed/simple;
+	bh=EmlbAWWBKZdvIU2V9lLarLuH6pI9xLKB4n4tT0QWAsA=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Kv4bQ2MTMGGYFGhw86IPuMpGEd35drBRNgjYi95GsxXAOmsBcrnS3bBXeiR64vm3unMouUH+W4ezAA7bvCVOOShBlRo4KmnWdNEli8FNb6cck7eLjvGS2FxPe2goIIZH8VR8LuwRFtPNBTzWJB8LqHStw1lQvuS8/q0Kpwq9TgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com; spf=pass smtp.mailfrom=jrtc27.com; dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b=JaLrz+vr; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jrtc27.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ecCjZEFu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738257584;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0Fa6Fgsa1RBhChBXyZSptjF+ocBVY25XthbUA+IR9Lc=;
-	b=ecCjZEFuaxne/mPr5QTzB0bfCUYBn4a6c8Zh2DH4EWknTQn4MS+8TUQ2yoCNsy1iOzrhNw
-	OpXrSqf+OQphY0a+UTB+k+yPpgRISluXxZdU4hpc/KpBXSThS6etWFKrEr9wX1ErapZre4
-	JwhDey0ygBIAcCNbUGsJUGTBZDuD5GY=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-546-qloeT3osP2e9IEz6S7gUnA-1; Thu, 30 Jan 2025 12:19:42 -0500
-X-MC-Unique: qloeT3osP2e9IEz6S7gUnA-1
-X-Mimecast-MFC-AGG-ID: qloeT3osP2e9IEz6S7gUnA
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e2378169a4so23082566d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:19:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="JaLrz+vr"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4368a293339so12537125e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:21:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jrtc27.com; s=gmail.jrtc27.user; t=1738257700; x=1738862500; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EmlbAWWBKZdvIU2V9lLarLuH6pI9xLKB4n4tT0QWAsA=;
+        b=JaLrz+vrF8pjRsOJlLnlA3aiZFCnmUT0MsUrNt/IgJ9lgU5Ko/Ua2pAz8e5w5Fck/D
+         1sywoxvDbVL67z4QEPRKbSXuylrQDlJZ+pJ1odt+B9lo46ovbsdo84A17vjdZ4g6pT+J
+         /m8dD/kFfqZvhlBQ3SJjDCuGyMauXJ26LMPZ1Ar3zNEp+LvSwVhkRCdrgAlR9IUJxCU0
+         h9WNPvntogMF5yBaoZJYuQ4pTJv1j18QQ7cMM+cpKhfKuXsjx8XutwkihIBys0SIu+Eh
+         C/eYJ1qWBYcb03TEcOmNtniswMI0H7sEGMEePtfVn44lRYHNg7hHkQbGbQ0F8ij8TC5J
+         /Kgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738257581; x=1738862381;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Fa6Fgsa1RBhChBXyZSptjF+ocBVY25XthbUA+IR9Lc=;
-        b=ci4ZJ5pLak9KjENsVotC/yAJ3m4jmRfk9EJHZPbFwhI4uGlu434aSIMlnj1VgZ7jIQ
-         x/BYQyumGyRXZhLKu6qJxxBkNpxEJJWF3dStWPAR8MRU6ws/E6vUSUmh1Vj3GUU5PKEY
-         9J+BEIiMNRGkxpntKvfB0hkzuG604dVdbwoOi3NYxlxdr3tDnV8ZshYmcW+ZY6VdhszI
-         6nOQW+HwZKeFnr2L1iu1dDazmt1wst6phBclHUAM9EI/SPadg7t3MiFgxYEFIx7UPm8W
-         PSwAAwNTc4paSG3/1cEzwEk1wMSSvBFZD/0o4fbgP3cuXWUFY2zRc6GpZM+lywbJ/vJY
-         ZM0A==
-X-Forwarded-Encrypted: i=1; AJvYcCV7fI6I7+bxyD9w7Q7i/9cQoaYzHqAtReptUkh8w/Ea7seowBh0bOmtWsRL5f0oKzt5IjouYWs3+sIxNO4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVuqUyzUbu65W3FAsZs+IRZ9zRHddqJgjwQht36DjZwgDptSoY
-	ArBnv7RegTCb0VU5kDTZNrj1mYMZIBC2vQ8+ksolNRSoh27OsjSNQzdBSEEYEXbET+1mamuOYFz
-	iDUp1gcbakQuvvOIm/xa30Nk2fAK19ho8tl46UPmkueO2+LqoOp3jQF2d4QGiHFP/bofvDIxT
-X-Gm-Gg: ASbGnctrLyLCfEm6BWCoPzexs/I6wqDNYN914Hob8gRU+9pqZz0BbKiWcXT6TrkKx1E
-	DpXO8O+HULhla6IgR0AzQ9c3tq6U77rPdxTBmSg2g4akFeKTd4I1QTsySriYzL57mSI8OrLgdlj
-	2fnUdbKME6c1Ejm/yx01acrbr8luinjQ/t2GX7/lfQY+FVrbXqRkW9VlQvnx4oSIRY9Lfg6gJhK
-	Mi01ZSKTPYZRron8YUabP7zxTHxnUZoDp5vR0Ml209Cqi2g15kmW+UtsySWmi+xSrOZOx8zuqIb
-	Bd5KNZx1DLyMQG3609ZCZFoos3IujUr9WiHgMUtZchk9rF8m/To=
-X-Received: by 2002:a05:6214:4603:b0:6d4:215d:91c3 with SMTP id 6a1803df08f44-6e243c62dddmr131733406d6.28.1738257581138;
-        Thu, 30 Jan 2025 09:19:41 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE8ypqrhL6idza3miOhUWJjRsaz1USTPrfph2cDh2w5Kr5q2g9rBY4V4Gt+j9lmXVuYoB025g==
-X-Received: by 2002:a05:6214:4603:b0:6d4:215d:91c3 with SMTP id 6a1803df08f44-6e243c62dddmr131733076d6.28.1738257580864;
-        Thu, 30 Jan 2025 09:19:40 -0800 (PST)
-Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e25495e76bsm8107936d6.125.2025.01.30.09.19.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 09:19:40 -0800 (PST)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <a309f420-4a25-4cf5-b6f0-750059c8467c@redhat.com>
-Date: Thu, 30 Jan 2025 12:19:38 -0500
+        d=1e100.net; s=20230601; t=1738257700; x=1738862500;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EmlbAWWBKZdvIU2V9lLarLuH6pI9xLKB4n4tT0QWAsA=;
+        b=TEGzvzgS6VGvnbT7KJ/5x80jWrFQDVEt21Vxs19m+AtsQK2QTigINXbQQ15JQzwuj/
+         AOfQdpIOfFfjJBO0s0YQaRox6d+ZlRQ13u7/e6gxa/LKApSkdhl2xoLb5it4jSSdOeOr
+         4uDAtm0gh4D1BhFFPb6VhOHuvQR2IjH0xBzAQibRaLrqXbCzDBgS0SWRPJ1MwzJldFqV
+         pTAcCf1M+sbNswUNPeyJ171h3eDTYvA1+3FF0f7DQVhc2AfW+PZ7EgWhZ80D3tqW7ac7
+         iC39qAM84BNRYyxqXDfZsX1ddKs3biWEcl+eYxITW8G5ryl4LerOrgFgpw3o6F1vlzzJ
+         cx6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUv6zrwX9SfidEYHfSHqX4hZUQ3NfKbJP8mzLe6r/aW+RudF1SGc5EKpaiRd4m2b5R9eijudRbuXMiwqIw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLYSzh1YJCUB3hMjBO6ZRFWjYDGxHwb58uLPP8JNn807p9aRY5
+	cReVsUbhRJbU3Q7qyPAtzNGSRgDHk09vQrZ+/K7UM1/68BS+D51yUzVuL0nyooI1B0vRZzLvg3J
+	d
+X-Gm-Gg: ASbGncvlyNsm9KUbgpVZm0r3OY27PXOv0s9jDXZ5qMDE4AczFAOrI45CqqiqyUFZ9H6
+	u1Q6KX0mFgpw8LshV2OGF6TgtQcrXCurC4oyjt2pxX1UZucVNftdvrmYmDRnpvOoCVHh0KsahlN
+	jYCOTEcMBArleZyF3QFWQqYWttrVfhZcP4GifhIrfTsulSg77IbyYqIj9mLUli/X+o/6K14dVR4
+	1wt61dJZbXG5pQ/jAhY4T0Wy//vrEv4zJlWTR6ERiXX2NFDPcuck0IXpQTwabPg4ohWB/3Z4oSs
+	GBRurx+CPFmPnx1Q9kiNAaizdAb7
+X-Google-Smtp-Source: AGHT+IEA3QinVd6YP+HnUwsrfnbEDxZBHCObVP3XKrEUyZXRM0hNCM4PGW5LxoktwFLYP/PvE7wd0A==
+X-Received: by 2002:a05:600c:3149:b0:434:fd15:3adc with SMTP id 5b1f17b1804b1-438dc424f5emr62875505e9.25.1738257699900;
+        Thu, 30 Jan 2025 09:21:39 -0800 (PST)
+Received: from smtpclient.apple ([131.111.5.201])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ec02bsm2593578f8f.13.2025.01.30.09.21.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 Jan 2025 09:21:39 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm, memcg: introduce memory.high.throttle
-To: Roman Gushchin <roman.gushchin@linux.dev>, Waiman Long <llong@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Jonathan Corbet <corbet@lwn.net>,
- Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- Peter Hunt <pehunt@redhat.com>
-References: <20250129191204.368199-1-longman@redhat.com>
- <Z5s1DG2YVH78RWpR@tiehlicka>
- <211b394b-3b9a-4872-8c07-b185386487d3@redhat.com>
- <Z5uxVzFf7Pk7yk9f@google.com>
-Content-Language: en-US
-In-Reply-To: <Z5uxVzFf7Pk7yk9f@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
+Subject: Re: [PATCH] riscv/atomic: Do proper sign extension also for unsigned
+ in arch_cmpxchg
+From: Jessica Clarke <jrtc27@jrtc27.com>
+In-Reply-To: <mvmwmec2t7u.fsf@suse.de>
+Date: Thu, 30 Jan 2025 17:21:28 +0000
+Cc: Alexandre Ghiti <alex@ghiti.fr>,
+ linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CC2D9220-F8DE-4CC8-ACAD-7B1A21E276FE@jrtc27.com>
+References: <mvmed0k4prh.fsf@suse.de>
+ <c9cbc2be-d1fd-44ef-aa14-fd25a5ff8490@ghiti.fr> <mvm5xlw4anb.fsf@suse.de>
+ <ac53a62e-4f89-49c9-a755-fdfa7a582337@ghiti.fr> <mvmwmec2t7u.fsf@suse.de>
+To: Andreas Schwab <schwab@suse.de>
+X-Mailer: Apple Mail (2.3826.300.87.4.3)
 
-On 1/30/25 12:05 PM, Roman Gushchin wrote:
-> On Thu, Jan 30, 2025 at 10:05:34AM -0500, Waiman Long wrote:
->> On 1/30/25 3:15 AM, Michal Hocko wrote:
->>> On Wed 29-01-25 14:12:04, Waiman Long wrote:
->>>> Since commit 0e4b01df8659 ("mm, memcg: throttle allocators when failing
->>>> reclaim over memory.high"), the amount of allocator throttling had
->>>> increased substantially. As a result, it could be difficult for a
->>>> misbehaving application that consumes increasing amount of memory from
->>>> being OOM-killed if memory.high is set. Instead, the application may
->>>> just be crawling along holding close to the allowed memory.high memory
->>>> for the current memory cgroup for a very long time especially those
->>>> that do a lot of memcg charging and uncharging operations.
->>>>
->>>> This behavior makes the upstream Kubernetes community hesitate to
->>>> use memory.high. Instead, they use only memory.max for memory control
->>>> similar to what is being done for cgroup v1 [1].
->>> Why is this a problem for them?
->> My understanding is that a mishaving container will hold up memory.high
->> amount of memory for a long time instead of getting OOM killed sooner and be
->> more productively used elsewhere.
->>>> To allow better control of the amount of throttling and hence the
->>>> speed that a misbehving task can be OOM killed, a new single-value
->>>> memory.high.throttle control file is now added. The allowable range
->>>> is 0-32.  By default, it has a value of 0 which means maximum throttling
->>>> like before. Any non-zero positive value represents the corresponding
->>>> power of 2 reduction of throttling and makes OOM kills easier to happen.
->>> I do not like the interface to be honest. It exposes an implementation
->>> detail and casts it into a user API. If we ever need to change the way
->>> how the throttling is implemented this will stand in the way because
->>> there will be applications depending on a behavior they were carefuly
->>> tuned to.
->>>
->>> It is also not entirely sure how is this supposed to be used in
->>> practice? How do people what kind of value they should use?
->> Yes, I agree that a user may need to run some trial runs to find a proper
->> value. Perhaps a simpler binary interface of "off" and "on" may be easier to
->> understand and use.
->>>> System administrators can now use this parameter to determine how easy
->>>> they want OOM kills to happen for applications that tend to consume
->>>> a lot of memory without the need to run a special userspace memory
->>>> management tool to monitor memory consumption when memory.high is set.
->>> Why cannot they achieve the same with the existing events/metrics we
->>> already do provide? Most notably PSI which is properly accounted when
->>> a task is throttled due to memory.high throttling.
->> That will require the use of a userspace management agent that looks for
->> these stalling conditions and make the kill, if necessary. There are
->> certainly users out there that want to get some benefit of using memory.high
->> like early memory reclaim without the trouble of handling these kind of
->> stalling conditions.
-> So you basically want to force the workload into some sort of a proactive
-> reclaim but without an artificial slow down?
-> It makes some sense to me, but
-> 1) Idk if it deserves a new API, because it can be relatively easy implemented
->    in userspace by a daemon which monitors cgroups usage and reclaims the memory
->    if necessarily. No kernel changes are needed.
-> 2) If new API is introduced, I think it's better to introduce a new limit,
->    e.g. memory.target, keeping memory.high semantics intact.
+On 30 Jan 2025, at 15:53, Andreas Schwab <schwab@suse.de> wrote:
+>=20
+> On Jan 30 2025, Alexandre Ghiti wrote:
+>=20
+>> a2 is used as it is passed by the calling function, so we can't be =
+sure a2
+>> is sign extended to me, what am I missing?
+>=20
+> 32-bit scalar arguments are guaranteed to be sign extended on entry.
 
-Yes, you are right about that. Introducing a new "memory.target" without 
-disturbing the existing "memory.high" semantics will work for me too.
+Firstly, the calling convention is irrelevant if the function is
+inlined, which this almost always will be.
 
-Cheers,
-Longman
+Secondly, whilst GCC (still?) maintains the invariant that 32-bit
+registers are kept sign-extended in registers on RISC-V, and there=E2=80=99=
+s a
+non-normative note in the unprivileged spec about this, LLVM does not,
+any extra bits are wholly unspecified, so you must not write inline
+assembly that depends on them being well-define, either by ignoring the
+bits or by converting your arguments to be whole-register types. If
+your compiler has already extended the value in the manner you care
+about then that=E2=80=99ll be a no-op, and if it hasn=E2=80=99t then =
+it=E2=80=99ll do what you
+need.
+
+We had an issue like this years ago in FreeBSD (also for a uint32_t
+CAS) and this was the conclusion I reached [1].
+
+Jess
+
+[1] https://reviews.freebsd.org/D22084
 
