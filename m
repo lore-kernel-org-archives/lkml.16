@@ -1,252 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF583145B27;
-	Thu, 30 Jan 2025 08:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A12145B27;
+	Thu, 30 Jan 2025 08:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738225700; cv=none; b=Lg1jRybyK5lmh6QaWdcHkyjHxfYYltHBQD7iljBU53DOxXUDPODs0yOzFnWf4D8Y2RHFepJIBnPrcwd+Szn35wco2Yr0w1Qcotx0TK6P7Tposhn7A++aU1Q0K4q0DSSJsOnFAIMKSk7c/cjwkAgZmI00GlShMmolWR/wKthrt08=
+	t=1738225712; cv=none; b=LKSy+JU8y0HjAT5PLg1vMXv9It8wRc2A9c6V0Z0Fs8/kC4I5TKJFAPmgl35pzEIKDv5gqtd8Ig0MrRiuohifhAM5Zwst5GZorrrStwq+KJPJ2/A++xr6rHW3rPKTE6l3eJnf/p4864gi7j0qIGYiYBQeAqE3av2gzXEE/o+U8XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738225700; c=relaxed/simple;
-	bh=IsoMpdDBx+byAmxT3k6y9t2ZP5/v4grlO+yHnBpVvPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DdN1FOoz3Yd+Hkt/cLnYNkq7oZE4GA4i1lU4rQ1BbLamKOE3jOHKiVi0QLFyf/kDdpRo0rSIGJQEAbgezqkMAo8UFyQnkCxP5OP1gx3wY1p11DUaQYQXj+wFZ3Mur4H8osgetMKxO9sCVw8PYyUrqeXAN5/Q7TbPoOxWQCnh/AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kdk4+Os4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738225712; c=relaxed/simple;
+	bh=bbBgEkFsletXi8yE0h2piyiQJMcoIugxE8tLFE+KzbI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=C+YD6LkyAVQHp2GKEHp1+k9VIP7gBpsllV2zBalq1y5XD9Sz4s6e1u6RcUOl6PCMrHK5QKPRjhIETh1V/2H4IpB3O3OvUksdqwB171z0ifU5jzOSWloQa4gttVJjBqOUV6NerP5OVWRHrm6mRnud5GEXpgkXA9qdXuA0yBJfXd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=VA1ZCumS; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kdk4+Os4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CA33C4CED2;
-	Thu, 30 Jan 2025 08:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738225700;
-	bh=IsoMpdDBx+byAmxT3k6y9t2ZP5/v4grlO+yHnBpVvPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kdk4+Os46KBumfKAnPZcx06v/7laVPm7Ge95CDXpTUgnuTWp372r65aJyWcEhbows
-	 NsUcxjnO8eRtcuF4+ULfgP1pAkMyJXf5IgP0XWtm8XXRzqCF/KBMLcmfUSk6GsSbtd
-	 Ui1W1XeOZJiuPqtufGkjxVnT2cgV87CJ4ekZJgGyJkfzuuEoIDMXt4EynOqDbmOUmc
-	 vh7wkjbs+7UKA3bdCO5EbG91YgPLCEqnDLfW4hmz6MxmikVPBu5mP0hLujCFwqvQbb
-	 PNezRr0uVV6BTOxaP/66Ga6yWtyiYlhXQ8JBi5dWVVCPHB8O3C2GyOG20FJbz4Mdj8
-	 b2diw9O+Z1aGw==
-Date: Thu, 30 Jan 2025 09:28:17 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-Cc: ath12k@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	Kalle Valo <kvalo@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jeff Johnson <jjohnson@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 01/13] dt-bindings: net: wireless: describe the ath12k
- AHB module
-Message-ID: <20250130-cunning-quail-of-opportunity-76d0ad@krzk-bin>
-References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
- <20250130043508.1885026-2-quic_rajkbhag@quicinc.com>
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="VA1ZCumS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WtOOCJkEduRa01QsR9Cft5tnAPFPRfNF932iIKtL0G4=; t=1738225709; x=1738830509; 
+	b=VA1ZCumSHSMacdq8BsD2EACMh7y+hIYl20OK21tyZl2i/VshwqrCrvVxzxuri/9I5bYTygKI9j0
+	ZVgZSow3leNdezvMnQhUBU3KUGa7DUm34abkvzzv1JsXBtMwkYd7rxW9cVC8OATpl0MSak4EwhGN7
+	nNLF27S4FOoPqAg/KFRpAAr5VjyWNL/CK5jf4LBH6pZCuGXscdj1yMsi924pZDkDvB/7H3X33N9sk
+	ZxSpdQV9tZ9obMNyF1L5S/ILG9/IxGy9EnQqmq4ZQENTscsHkFUqIBF0Pf4etrGXuyS2xfnC/r1QI
+	jL7UYDh7GRw9TxVYpkjUUbkW0klygqz6hESg==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1tdPuU-00000000ARd-2sqZ; Thu, 30 Jan 2025 09:28:26 +0100
+Received: from p5dc55198.dip0.t-ipconnect.de ([93.197.81.152] helo=[192.168.178.61])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1tdPuU-00000001j8H-1sco; Thu, 30 Jan 2025 09:28:26 +0100
+Message-ID: <8754dbeecb9ee16f84a82548f5e4121ec422ae3a.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v2] sh/irq: use seq_put_decimal_ull_width() for decimal
+ values
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: David Wang <00107082@163.com>
+Cc: dalias@libc.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
+Date: Thu, 30 Jan 2025 09:28:25 +0100
+In-Reply-To: <20241130134909.171183-1-00107082@163.com>
+References: 
+	<a9fe22747f20cae9fcc9b9d20109e7afbf8e6b93.camel@physik.fu-berlin.de>
+	 <20241130134909.171183-1-00107082@163.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250130043508.1885026-2-quic_rajkbhag@quicinc.com>
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Thu, Jan 30, 2025 at 10:04:56AM +0530, Raj Kumar Bhagat wrote:
-> Add device-tree bindings for the ATH12K module found in the IPQ5332
-> device.
-> 
-> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+Hi David,
+
+On Sat, 2024-11-30 at 21:49 +0800, David Wang wrote:
+> On a system with n CPUs and m interrupts, there will be n*m decimal
+> values yielded via seq_printf(.."%10u "..) which has significant costs
+> parsing format string and is less efficient than
+> seq_put_decimal_ull_width(). Stress reading /proc/interrupts
+> indicates ~30% performance improvement with this patch.
+>=20
+> Signed-off-by: David Wang <00107082@163.com>
 > ---
->  .../net/wireless/qcom,ath12k-ahb.yaml         | 319 ++++++++++++++++++
->  1 file changed, 319 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
-> new file mode 100644
-> index 000000000000..bd953a028dc3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+>  arch/sh/kernel/irq.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/sh/kernel/irq.c b/arch/sh/kernel/irq.c
+> index 4e6835de54cf..9022d8af9d68 100644
+> --- a/arch/sh/kernel/irq.c
+> +++ b/arch/sh/kernel/irq.c
+> @@ -43,9 +43,9 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+>  {
+>  	int j;
+> =20
+> -	seq_printf(p, "%*s: ", prec, "NMI");
+> +	seq_printf(p, "%*s:", prec, "NMI");
+>  	for_each_online_cpu(j)
+> -		seq_printf(p, "%10u ", per_cpu(irq_stat.__nmi_count, j));
+> +		seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat.__nmi_count, j), 10=
+);
+>  	seq_printf(p, "  Non-maskable interrupts\n");
+> =20
+>  	seq_printf(p, "%*s: %10u\n", prec, "ERR", atomic_read(&irq_err_count));
 
-Filename should match compatible. This binding does not look like
-supporting more devices, so there is no much benefit calling it by generic name.
+Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
+Thanks,
+Adrian
 
-> @@ -0,0 +1,319 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/wireless/qcom,ath12k-ahb.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies ath12k wireless devices (AHB)
-> +
-> +maintainers:
-> +  - Kalle Valo <kvalo@kernel.org>
-> +  - Jeff Johnson <jjohnson@kernel.org>
-> +
-> +description:
-> +  Qualcomm Technologies IEEE 802.11be AHB devices.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,ipq5332-wifi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: XO clock used for copy engine
-> +
-> +  clock-names:
-> +    items:
-> +      - const: xo
-> +
-> +  interrupts:
-> +    items:
-> +      - description: Fatal interrupt
-> +      - description: Ready interrupt
-> +      - description: Spawn acknowledge interrupt
-> +      - description: Stop acknowledge interrupt
-> +      - description: misc-pulse1 interrupt events
-> +      - description: misc-latch interrupt events
-> +      - description: sw exception interrupt events
-> +      - description: interrupt event for ring CE0
-> +      - description: interrupt event for ring CE1
-> +      - description: interrupt event for ring CE2
-> +      - description: interrupt event for ring CE3
-> +      - description: interrupt event for ring CE4
-> +      - description: interrupt event for ring CE5
-> +      - description: interrupt event for ring CE6
-> +      - description: interrupt event for ring CE7
-> +      - description: interrupt event for ring CE8
-> +      - description: interrupt event for ring CE9
-> +      - description: interrupt event for ring CE10
-> +      - description: interrupt event for ring CE11
-> +      - description: interrupt event for ring host2wbm-desc-feed
-> +      - description: interrupt event for ring host2reo-re-injection
-> +      - description: interrupt event for ring host2reo-command
-> +      - description: interrupt event for ring host2rxdma-monitor-ring1
-> +      - description: interrupt event for ring reo2ost-exception
-> +      - description: interrupt event for ring wbm2host-rx-release
-> +      - description: interrupt event for ring reo2host-status
-> +      - description: interrupt event for ring reo2host-destination-ring4
-> +      - description: interrupt event for ring reo2host-destination-ring3
-> +      - description: interrupt event for ring reo2host-destination-ring2
-> +      - description: interrupt event for ring reo2host-destination-ring1
-> +      - description: interrupt event for ring rxdma2host-monitor-destination-mac3
-> +      - description: interrupt event for ring rxdma2host-monitor-destination-mac2
-> +      - description: interrupt event for ring rxdma2host-monitor-destination-mac1
-> +      - description: interrupt event for ring host2rxdma-host-buf-ring-mac3
-> +      - description: interrupt event for ring host2rxdma-host-buf-ring-mac2
-> +      - description: interrupt event for ring host2rxdma-host-buf-ring-mac1
-> +      - description: interrupt event for ring host2tcl-input-ring4
-> +      - description: interrupt event for ring host2tcl-input-ring3
-> +      - description: interrupt event for ring host2tcl-input-ring2
-> +      - description: interrupt event for ring host2tcl-input-ring1
-> +      - description: interrupt event for ring wbm2host-tx-completions-ring4
-> +      - description: interrupt event for ring wbm2host-tx-completions-ring3
-> +      - description: interrupt event for ring wbm2host-tx-completions-ring2
-> +      - description: interrupt event for ring wbm2host-tx-completions-ring1
-> +      - description: interrupt event for ring host2tx-monitor-ring1
-> +      - description: interrupt event for ring txmon2host-monitor-destination-mac3
-> +      - description: interrupt event for ring txmon2host-monitor-destination-mac2
-> +      - description: interrupt event for ring txmon2host-monitor-destination-mac1
-> +      - description: interrupt event for umac-reset
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: fatal
-> +      - const: ready
-> +      - const: spawn
-> +      - const: stop-ack
-> +      - const: misc-pulse1
-> +      - const: misc-latch
-> +      - const: sw-exception
-> +      - const: ce0
-> +      - const: ce1
-> +      - const: ce2
-> +      - const: ce3
-> +      - const: ce4
-> +      - const: ce5
-> +      - const: ce6
-> +      - const: ce7
-> +      - const: ce8
-> +      - const: ce9
-> +      - const: ce10
-> +      - const: ce11
-> +      - const: host2wbm-desc-feed
-> +      - const: host2reo-re-injection
-> +      - const: host2reo-command
-> +      - const: host2rxdma-monitor-ring1
-> +      - const: reo2ost-exception
-> +      - const: wbm2host-rx-release
-> +      - const: reo2host-status
-> +      - const: reo2host-destination-ring4
-> +      - const: reo2host-destination-ring3
-> +      - const: reo2host-destination-ring2
-> +      - const: reo2host-destination-ring1
-> +      - const: rxdma2host-monitor-destination-mac3
-> +      - const: rxdma2host-monitor-destination-mac2
-> +      - const: rxdma2host-monitor-destination-mac1
-> +      - const: host2rxdma-host-buf-ring-mac3
-> +      - const: host2rxdma-host-buf-ring-mac2
-> +      - const: host2rxdma-host-buf-ring-mac1
-> +      - const: host2tcl-input-ring4
-> +      - const: host2tcl-input-ring3
-> +      - const: host2tcl-input-ring2
-> +      - const: host2tcl-input-ring1
-> +      - const: wbm2host-tx-completions-ring4
-> +      - const: wbm2host-tx-completions-ring3
-> +      - const: wbm2host-tx-completions-ring2
-> +      - const: wbm2host-tx-completions-ring1
-> +      - const: host2tx-monitor-ring1
-> +      - const: txmon2host-monitor-destination-mac3
-> +      - const: txmon2host-monitor-destination-mac2
-> +      - const: txmon2host-monitor-destination-mac1
-> +      - const: umac-reset
-> +
-> +  memory-region:
-> +    description:
-> +      phandle to a node describing reserved memory (System RAM memory)
-> +      used by ath12k firmware (see bindings/reserved-memory/reserved-memory.txt)
-
-Do not say what DT syntax is, so "phandle to a node" is redundant,
-reserved-memory.txt is redundant. The only useful part here is "used by
-ath12k firmware", so based on this none of below are used by the driver
-and driver just passes them to the firmware?
-
-> +    items:
-> +      - description: Q6 memory region
-> +      - description: m3 dump memory region
-> +      - description: Q6 caldata memory region
-> +      - description: Multi Link Operation (MLO) Global memory region
-> +
-> +  memory-region-names:
-> +    description:
-> +      Name of the reserved memory region used by ath12k firmware
-
-Drop description.
-
-> +    items:
-> +      - const: q6-region
-> +      - const: m3-dump
-> +      - const: q6-caldb
-> +      - const: mlo-global-mem
-> +
-> +  qcom,ath12k-calibration-variant:
-> +    $ref: /schemas/types.yaml#/definitions/string
-
-Why this is named after ath12k? Why this is just not
-"qcom,calibration-variant"? None of the other properties have ath12k in
-their names, so why this one in the WSI schema was named like that?
-
-> +    description:
-> +      String to uniquely identify variant of the calibration data for designs
-> +      with colliding bus and device ids
-
-I don't think this property is here possible. How could you have on the
-same SoC different devices?
-
-Best regards,
-Krzysztof
-
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
