@@ -1,122 +1,142 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7001F1513
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 21:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED85191F92;
+	Thu, 30 Jan 2025 21:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738274312; cv=none; b=klFE/WMwN+RigQ5j9KRXSU+N8M+zX00kCkLcCcF9vhCUNNsvwJpkNRRN+gMXPu3mi+VEwBMry3GfiexKCDroed3Y4x2BSEW3q5uSLXy5i1aMILpigSJWwbkeiOJapiaPi9MhKl3j+iTdvHJIaI4lSq633gzOxlcidin3x1aj4DM=
+	t=1738274321; cv=none; b=k56iV3vAGVB7wNVMzsFuLa6xNzkTb7Cm4xxnxw0lYV0W/GFUWgmrczH7eHb8cAQWQItXFgIXCwoN2YAgNheY66w1RQC7Gv3GJND6f0fO0/Q/EkbenG/V1c0mbpYcwvjSX1iKxBOVuAmXaugaWnS07syZcT4MDOcpthhftXlpkuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738274312; c=relaxed/simple;
-	bh=i84G3SmkD1FSn/qiCtc5Rh03DuaSUwH0up34eflh8ro=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=TM2eNrZEBSxWIs9V9FHIODhls1dJVBOTYPh09/oRdQM3Zn1E+Oc5nla2diyQeUlm8AWqroW3qrqV7sfhSkbbRAyAYreDCcl+ZCkJZaNDPTsHDV+NVn600+wql/uEUH2V5zFQmBlahbF0qXjQaXCqswvv+/kSsKVx5vo74WYgF/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SCDfb3fG; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com
+	s=arc-20240116; t=1738274321; c=relaxed/simple;
+	bh=koBOY6WA4J7SvINAk61HqnW4fSta3hJHJZsswInLOLM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VGAXfQ+OKx9+IKyePpaX26rmTOPHQjV4Z9s1ysiDJ1b5O19cXjXzsZZ/tCjq4lIihs36VH0Ej+SZdivM5ZBLE+v0R2+UeI3yooZMQi0fxJNdvbDbFIoykuetk2mEM+zwEKL7FxQL6pdxkHFwOgBdt3DjF6va91uLp8TjdA6R0bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WlA5xeun; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SCDfb3fG"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef79d9c692so3370259a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:58:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WlA5xeun"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3eb87127854so318754b6e.2;
+        Thu, 30 Jan 2025 13:58:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738274310; x=1738879110; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sP+PSXxGrOmF+G6y4EyqF6nMuKUGJmNHFz94ds/u0fQ=;
-        b=SCDfb3fGuUvhHA0RUWsiQ/SWbiFIhRgaHK/cFuLMSBo8cSskAmpNx5VLqjmSt76hy8
-         TIOWx3UrKeUDIaYUX5VlMWPgfN+idLmWZdk9x2FzTkOE+6CJ1OzAZNqZJCUYEdYQGJke
-         cdgjkxpZfoXqqsJR9OSffCDfOSxwZY9i/ZYdxjx5f4VekmmFbCbzj73sIMwSwEy1U+Am
-         uAJ/9JW2CewtED6Y3j0DVOQsRaBiLMtFh8pPsF2dwrNsWY5pVTQvbT4KPxm1m84fRhJa
-         5bwXRA17ZrkYnSBEFG94SZJ7cwqftTgKFvcIuyYBdP2JlQIEPdPwc7SvOxhTsj/NM2eu
-         gjsg==
+        d=gmail.com; s=20230601; t=1738274319; x=1738879119; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=45H8jazX3FnWTJ7rFH/v78Os4zB6WXeDsIdcS1O2AL0=;
+        b=WlA5xeunkr8UdkFvfaJwgSUpVTKuxVCKP0Gk0Ztpr4oo28Le2fRNCtWEHaypIVgL4q
+         Q19yy+i7YAMbPKeHGg9z0zzMVphnYFN6siCBDxN5+iCgRY1PwjtbIHoDE2PCycRNLFVf
+         fBQv4tizTRzBSiCR+pxoKbT9RB8Wh+BWmg9WkTp6F3CzVKF/93f0+7c7hYKjFmHVyBlv
+         tBorwo0MNiRoUE4/hs1vgabYjWHQE6fOSmA8KRqXhoTdIV7+2vhuCCW+Qt4faP6/jHuZ
+         bolMd/I7cIlOwXBeMKslq1tPHMptNyIsCmEd6UvrGHSRrC0mSS12ymyDA8eUg5e6ARbA
+         h+5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738274310; x=1738879110;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sP+PSXxGrOmF+G6y4EyqF6nMuKUGJmNHFz94ds/u0fQ=;
-        b=oiwmY3nxwcq8r7RW522Ak8YtJ4z9nJg16tx//UZWRMxDdTX+EZabmsKNt06NAUM1RE
-         v+kq685bNzz++QGDsENA3fVk+KmhgSieQI685PHnQgLEHidja7sYGMUbS/khpBXo7XEz
-         eNNMldTkYgL6bW/vfIAuD45BQpL7P2lDQXXmOWNTfh0IcgY4ej10VByWjgJG2KQuNPnw
-         qH3EUAboKZdwfdM4NIfwVrp9RxSDhHiCh9AKJN6IA1y/tT0XnSwrchGs3YbshjL2+Hzd
-         nz6r0Ub2pJgn0ga4+cEHfniWQ6l214WHYT0GHoN5q9agyNfE+rytkOJ9LFHrCwzqOlFP
-         aI7Q==
-X-Gm-Message-State: AOJu0YxO3BTToGDV1Wml75aBGijoq7nbs3DwZEpq/UpDlmwNDcEo00xI
-	rFDqA3W6T7W3x3rLuaYAR4MvYnUXj33g4KVMfFg59WNyWpiOBZSh1X8V9YKtYeuwrZvWPG6zXXH
-	xd+xwkwafxw==
-X-Google-Smtp-Source: AGHT+IGl1w1MKzWkKbM7ScftD/Z+sWuD+nXViJBNKnkiSS+kF4yMpnUpSO6IRT4QJWmuw8vNVTEla8I2jPf3nw==
-X-Received: from pfbbd35.prod.google.com ([2002:a05:6a00:27a3:b0:728:e508:8a3e])
- (user=cmllamas job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:218a:b0:725:eb85:f7ef with SMTP id d2e1a72fcca58-72fd0bffcf0mr11984683b3a.14.1738274310017;
- Thu, 30 Jan 2025 13:58:30 -0800 (PST)
-Date: Thu, 30 Jan 2025 21:58:22 +0000
+        d=1e100.net; s=20230601; t=1738274319; x=1738879119;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=45H8jazX3FnWTJ7rFH/v78Os4zB6WXeDsIdcS1O2AL0=;
+        b=h5q5rugAIc+ToQtBAOJet5sI3HJnwW3vSjB5vCNGxggo1qj3B6bLUkRtZUlgPYFzHh
+         9FEjOaemkx2P9fgMTxosHFY4BGcXB/wmjgA8++WhfwFhnxspfBqS8tqnKt1A5MjSULmy
+         qbn61oSgAsNiPLJFo/p9qy7iw/yVBmIhALTMiLDNbezHI20Xevo61zDBQffewrrABxxy
+         2u6ni8N7YLmudhqxIa8dBtQL5ZUCiE8AFs/jFMaBrAxu1QX+5RKth2oenj0ejIMJgRAf
+         4bzPBpXDEHeGfXVoAmnCfaqh3bhJ74b1x3WO3sKob5WvaqjnK2zzeOWYbFwhlRzgp25z
+         3V1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUUPATXOX8KZY2T8OHqIGO5Nrm9fmtbETBnCNisIomRZgvxbqv/ijrZdBYgJ0A9AgwG1/x0tnvO40lLK+k=@vger.kernel.org, AJvYcCXFpE30pMDVhpzsX9cw3AAHqI33zrkvJY25+GA0zq8NmdndTJJuTiaxQ+sosjnJIbfuZiiUOelr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTpeHpCT6JZ69AnSGi9dRwZiDoikG+0nW3VYEOpV50yQrjy8lh
+	IlsKNfaYGEW8Gtq+hfVO4EMoVNwi8Z1XdCuRj9QyYwAZ9uVycf2H
+X-Gm-Gg: ASbGnctfitPS7MiQ4FKQ5M41RkWRCraiBQ0EYxyqkqLwJAEgyLnGR+qdQdoVUl5SrvH
+	dN5O3BDEXvoLYGOP0TNGfc5qbKXwtUFjNBJu4vO5CwutyUFYh6oA7ChFFuTNn3Kagx0yEVnDm/l
+	Ro8b+UFLo5WYpnYlho4ISvSY0f7aLWq2Ruvru8VP9HmNKu9AjjZvJCgfOfHnYjIXSRlx3JS+Ppk
+	On31impDSmbKCGEG6MpZDRngATq0ClAnoKWe68okZI7Zm0AOuVNFkwIufkMFVE83lGE9QmcKxYo
+	pMVhl3qfxjvG1vGYjGI86V4XyAWOD9242HJ1bffiM+Y=
+X-Google-Smtp-Source: AGHT+IG/5qmEC79tM3LwUKI+aofohBr4/LVVWbjCOfUPG82ma84IxgHWdr5ufZGuFw1H+G50YrLrhQ==
+X-Received: by 2002:a05:6871:5e04:b0:29e:6bdb:e362 with SMTP id 586e51a60fabf-2b32f12d880mr5671552fac.17.1738274319477;
+        Thu, 30 Jan 2025 13:58:39 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b3565b64d1sm649809fac.40.2025.01.30.13.58.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 13:58:38 -0800 (PST)
+Message-ID: <461f1fb0-2dc0-48c5-b35d-e7425e5c9d3a@gmail.com>
+Date: Thu, 30 Jan 2025 13:58:36 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250130215823.1518990-1-cmllamas@google.com>
-Subject: [PATCH] binderfs: fix use-after-free in binder_devices
-From: Carlos Llamas <cmllamas@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, Li Li <dualli@google.com>
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	syzbot+7015dcf45953112c8b45@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.12 00/41] 6.12.12-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250130144136.126780286@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+In-Reply-To: <20250130144136.126780286@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Devices created through binderfs are added to the global binder_devices
-list but are not removed before being destroyed. This leads to dangling
-pointers in the list and subsequent use-after-free errors:
+On 1/30/25 06:41, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.12 release.
+> There are 41 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 01 Feb 2025 14:41:19 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.12-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-  ==================================================================
-  BUG: KASAN: slab-use-after-free in binder_add_device+0x5c/0x9c
-  Write of size 8 at addr ffff0000c258d708 by task mount/653
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-  CPU: 7 UID: 0 PID: 653 Comm: mount Not tainted 6.13.0-09030-g6d61a53dd6f5 #1
-  Hardware name: linux,dummy-virt (DT)
-  Call trace:
-   binder_add_device+0x5c/0x9c
-   binderfs_binder_device_create+0x690/0x84c
-   [...]
-   __arm64_sys_mount+0x324/0x3bc
-
-  Allocated by task 632:
-   binderfs_binder_device_create+0x168/0x84c
-   binder_ctl_ioctl+0xfc/0x184
-   [...]
-   __arm64_sys_ioctl+0x110/0x150
-
-  Freed by task 649:
-   kfree+0xe0/0x338
-   binderfs_evict_inode+0x138/0x1dc
-   [...]
-  ==================================================================
-
-Remove devices from binder_devices before destroying them.
-
-Cc: Li Li <dualli@google.com>
-Reported-by: syzbot+7015dcf45953112c8b45@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=7015dcf45953112c8b45
-Fixes: 12d909cac1e1 ("binderfs: add new binder devices to binder_devices")
-Signed-off-by: Carlos Llamas <cmllamas@google.com>
----
- drivers/android/binderfs.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-index bc6bae76ccaf..94c6446604fc 100644
---- a/drivers/android/binderfs.c
-+++ b/drivers/android/binderfs.c
-@@ -274,6 +274,7 @@ static void binderfs_evict_inode(struct inode *inode)
- 	mutex_unlock(&binderfs_minors_mutex);
- 
- 	if (refcount_dec_and_test(&device->ref)) {
-+		hlist_del_init(&device->hlist);
- 		kfree(device->context.name);
- 		kfree(device);
- 	}
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-2.48.1.362.g079036d154-goog
-
+Florian
