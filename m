@@ -1,47 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560E11F1523;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0431F153A;
 	Thu, 30 Jan 2025 19:03:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738263800; cv=none; b=FRHr5zAIjr5AJJlEMchWRYseGDi5Jm6EZAIgecCOumjdTr4+3J+Znj5LSqsTgbcEYiziuNHEeRy1rInJUWQhQoQkjKTAwUsmFF0WSZh8Lo/z2+X9I1QFT6DDcRQRb2zbWaieHL19pNH+qnfxpwyGOxWUx2S+BPBEig/uJKKLVZY=
+	t=1738263800; cv=none; b=Bb5d1zmNAcXyGPfi/CRtaeDpa6n/Gg8+92q/IrZwgSYvO+/t+Coq7ARMbuR7q+dSybeVwr5yymW8keb/NGi4U4ilD+kZQeVvb0qIvPQfjGIvVmyU/+jnyGrQTO7wibDvHnY3CiKJf3pfclF7UJoSUiAKQM/113QkkSZ7GGQDVPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738263800; c=relaxed/simple;
-	bh=rzttFulWXFHlVagRx0vJ3s9U1XCsDzVFtAX/Lp+7Vq0=;
+	bh=LnmdL188NqHxw3lfVetaHFxF6Y2A5ACDtvpGDB0Bd6E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dmS2gBO9jmY6ve333vph5hH/3lFIyPezBRNSzxz72dMuFpfTaH7+VidALUciHqaCoOHnyv6mcjPf6kIpdAiRBxWqWPlTZwhMAip5mAkmnkALT8gUwT+nQUqUrBr+PXt/Ndxf0ThTWNklurVTfZlNBuDvJSWV+Y3sNTiCW2GT5sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jvqgOp/a; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZdJiAWhLZVlVU3uwfWFzt9DE3OUnIa6FZWSK+2Gp/33dOECpzP74pUfmGEpCgWC5cTP7xNgbsdsYInIs6kdTo7Id4H/4qVtHI2pZV4Hm1j2MeXRXTM8RCbZWp/T15MlEdaVOqmv4BfUI3LA5oYKplnEDNkcaCDy7aq+EpNO+WJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jam1cppR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jvqgOp/a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2434C4CED2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jam1cppR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF773C2BCB3;
 	Thu, 30 Jan 2025 19:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1738263799;
-	bh=rzttFulWXFHlVagRx0vJ3s9U1XCsDzVFtAX/Lp+7Vq0=;
+	bh=LnmdL188NqHxw3lfVetaHFxF6Y2A5ACDtvpGDB0Bd6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jvqgOp/a4GfsCpTIWU0Mj/KxW8kVoqGOYWbEW4wd+dkdTfecfRCz0kaY7d1Y7gtsf
-	 jfslVsVLL7cj8TzhjIwZ7dcmwPy919XsebZBxf8ZXbZD/NmSfArFF6SyYShLiau3S3
-	 FG8UpxbAxhm0b8Zbq3aXPFH6n36mi8rdlMG8K1UPEKUiztihwUHRzSvMLGQJGIkzo+
-	 WvsL7uoanq+YHZqV0C7sfXb7yZ7c0y23Xf2qxXghQveF1OvfnWYTxGKCBjW/qnW5q9
-	 nIyPCp39R8g2GlOC5NKIXuZw3G901dDrEZgSeT1UqxSGUhFUjFx1pTsGD5NnTtqOF2
-	 3PiDaU0wDhQ9g==
+	b=jam1cppR+8cWvYRYtsTPVaa7kvN8riz12/ldGxTy4f15WVnsC8iDTNMzmYy0MEgeN
+	 a3yceUkJ+hdwlLuKLpeoZURHTpeA1wdSqk6897NigoqV68atfytFO8HLD4mGUfA3Md
+	 jSfkG92Eql/e8VEdlelzJTyP0RaCjmM2/DWpcRy4AfEPbp82NvwtBj1UCGjB106mOT
+	 3S6U149vVcw43ABy6Eo7pWLFOm60tGfOThg1TNtbAglaZFj1we07GGBRU5cCF3kSLO
+	 7yNgZQmR0JCkxV3Ee6socdwRbqGy7D84aKI2yN2WfOMcPMeLpMSY3BQTd4lZ+iFshs
+	 QuNX9GqRaqdgA==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 0748CCE3806; Thu, 30 Jan 2025 11:03:19 -0800 (PST)
+	id 0A18CCE3807; Thu, 30 Jan 2025 11:03:19 -0800 (PST)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: rcu@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	kernel-team@meta.com,
 	rostedt@goodmis.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	bpf@vger.kernel.org
-Subject: [PATCH rcu v2] 15/20] refscale: Add srcu_read_lock_fast() support using "srcu-fast"
-Date: Thu, 30 Jan 2025 11:03:12 -0800
-Message-Id: <20250130190317.1652481-15-paulmck@kernel.org>
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH rcu v2] 16/20] rcutorture:  Make scenario SRCU-P use srcu_read_lock_fast()
+Date: Thu, 30 Jan 2025 11:03:13 -0800
+Message-Id: <20250130190317.1652481-16-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <1034ef54-b6b3-42bb-9bd8-4c37c164950d@paulmck-laptop>
 References: <1034ef54-b6b3-42bb-9bd8-4c37c164950d@paulmck-laptop>
@@ -53,70 +48,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit creates a new srcu-fast option for the refscale.scale_type
-module parameter that selects srcu_read_lock_fast() and
-srcu_read_unlock_fast().
+This commit causes the rcutorture SRCU-P scenario use the
+srcu_read_lock_fast() and srcu_read_unlock_fast() functions.  This will
+cause these two functions to be regularly tested by several developers
+(myself included), for example, those who use torture.sh as an RCU
+acceptance test.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: <bpf@vger.kernel.org>
 ---
- kernel/rcu/refscale.c | 32 +++++++++++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
+ tools/testing/selftests/rcutorture/configs/rcu/SRCU-P.boot | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/rcu/refscale.c b/kernel/rcu/refscale.c
-index 1b47376acdc4..f11a7c2af778 100644
---- a/kernel/rcu/refscale.c
-+++ b/kernel/rcu/refscale.c
-@@ -216,6 +216,36 @@ static const struct ref_scale_ops srcu_ops = {
- 	.name		= "srcu"
- };
- 
-+static void srcu_fast_ref_scale_read_section(const int nloops)
-+{
-+	int i;
-+	struct srcu_ctr __percpu *scp;
-+
-+	for (i = nloops; i >= 0; i--) {
-+		scp = srcu_read_lock_fast(srcu_ctlp);
-+		srcu_read_unlock_fast(srcu_ctlp, scp);
-+	}
-+}
-+
-+static void srcu_fast_ref_scale_delay_section(const int nloops, const int udl, const int ndl)
-+{
-+	int i;
-+	struct srcu_ctr __percpu *scp;
-+
-+	for (i = nloops; i >= 0; i--) {
-+		scp = srcu_read_lock_fast(srcu_ctlp);
-+		un_delay(udl, ndl);
-+		srcu_read_unlock_fast(srcu_ctlp, scp);
-+	}
-+}
-+
-+static const struct ref_scale_ops srcu_fast_ops = {
-+	.init		= rcu_sync_scale_init,
-+	.readsection	= srcu_fast_ref_scale_read_section,
-+	.delaysection	= srcu_fast_ref_scale_delay_section,
-+	.name		= "srcu-fast"
-+};
-+
- static void srcu_lite_ref_scale_read_section(const int nloops)
- {
- 	int i;
-@@ -1163,7 +1193,7 @@ ref_scale_init(void)
- 	long i;
- 	int firsterr = 0;
- 	static const struct ref_scale_ops *scale_ops[] = {
--		&rcu_ops, &srcu_ops, &srcu_lite_ops, RCU_TRACE_OPS RCU_TASKS_OPS
-+		&rcu_ops, &srcu_ops, &srcu_fast_ops, &srcu_lite_ops, RCU_TRACE_OPS RCU_TASKS_OPS
- 		&refcnt_ops, &rwlock_ops, &rwsem_ops, &lock_ops, &lock_irq_ops,
- 		&acqrel_ops, &sched_clock_ops, &clock_ops, &jiffies_ops,
- 		&typesafe_ref_ops, &typesafe_lock_ops, &typesafe_seqlock_ops,
+diff --git a/tools/testing/selftests/rcutorture/configs/rcu/SRCU-P.boot b/tools/testing/selftests/rcutorture/configs/rcu/SRCU-P.boot
+index 2db39f298d18..fb61703690cb 100644
+--- a/tools/testing/selftests/rcutorture/configs/rcu/SRCU-P.boot
++++ b/tools/testing/selftests/rcutorture/configs/rcu/SRCU-P.boot
+@@ -2,3 +2,4 @@ rcutorture.torture_type=srcud
+ rcupdate.rcu_self_test=1
+ rcutorture.fwd_progress=3
+ srcutree.big_cpu_lim=5
++rcutorture.reader_flavor=0x8
 -- 
 2.40.1
 
