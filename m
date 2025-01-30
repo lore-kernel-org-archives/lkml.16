@@ -1,166 +1,108 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151172CAB
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F17A23;
+	Thu, 30 Jan 2025 03:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738208330; cv=none; b=vFpLAyPvA7TBNDKBtRRX+gpRKxxg2VeYh5ufz0+RC9pDm4lOf46SSN79p0c/YecCvdN8h+Ngu1SsQtnIROHCNaL76eH305e54u2HYzP3DaNe2V6g8+6c6VdKcAsljxej4zXU2nxycKprkVLouqR2KcmgKG2L887tlh8JwXQaIQQ=
+	t=1738208875; cv=none; b=rB+INolEPmOfJokiQEbYr1ZdaCqxSf86d65aHRS7MR2TFM9bwNzr6BlSttLMbPTSeHsCm3LtfhkV/42VJzckS9o3okm6ZLlxPq4RFhG0rtV+x3b78llfDQFYaIUW6/GB2zhlmw/GfnCoQJ6ZrQJjun+HRz+MTxGbd6v5mabowpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738208330; c=relaxed/simple;
-	bh=DTfc/rqScGLLM2GuFcyHT2WxKXJBR/LNSPwsq6X05Bk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bySNKoNrSx3b2dBwe5nf7gxyh62dISqs/E49OBPoglo029P/2Yg0NvJ7U1gJ94iphLKXgiB9chuf7dTOLiyfOh0c8K+XC8bjA71J/E97PHFJBuGXj7sZG5YS/53qi+d+qMLnm14A7Xk8z0nYgnOolclmT6BseDZKKq3p2st3bPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JvuCoiVT; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738208875; c=relaxed/simple;
+	bh=pIkZbvbWGUeN/Ycv3ABKfmi4ASKA6ChqmpXCdQeUA34=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rtfdFv3zmASgQETIfj5xDM1t1SxxZMQdVB7gtrFCC/U7AtmlkDoDNBJctGSiq+FzYSVQtTHhPyOxDgPxOvQMb/LFb+B0tLlbKIceSDlcNV1kAKC/z7x8m9gfZOZiVmvT4VmG00reES5+e/Ut5iB6e2j92gAZBPYRAvyvZzu1eLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odFBvwdO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JvuCoiVT"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21625b4f978so68275ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 19:38:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738208328; x=1738813128; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=g2h6VqPwvBVdpdP0LT4AllXhem4WjK7tkni7E0ZVamc=;
-        b=JvuCoiVTeVKb5KS2ou/lb4W6UQU0y6LRzszyQ79a2ZHlQb/EfSu1mB4XMKL4PU7B7K
-         XEfmz3z7Dfe70L2swJ2yVzOKKRIYKzoLNfgQyx7GjXx6/Q+TikwkvSFnD8AWCacWkFFs
-         beMcAQzdZ98NSbB6+226dbHUo79Xf0EmYyvkyADyn6rdNFnGwU0+I/SjFDbUb/AcEHD6
-         5k014tr9xPC2sEEMClKDMfHvuiHenYmwrGOCQtT7rXyIDRuND5kOUt2yFlr3C2hFArvB
-         g7sxCXgtRGEOoLGfZ61mFNlbqgj0JKJjmN4DGIZJCuAYSu0WXZ5ISNyAbeqOIXcs3vWv
-         id6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738208328; x=1738813128;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g2h6VqPwvBVdpdP0LT4AllXhem4WjK7tkni7E0ZVamc=;
-        b=eup+OaWZKf31OJr56ae893EY8KRr8Kk8rpWKt3d5paZvqr+TedIlTa+Qu3hZQzPhiZ
-         hJtJkxPmRdvGBb55LzuHWWxu3GjQSbfSndauB2FAD+jDRFUH7NBp4XdskdnI1maDEppB
-         82zv3xJ+3jmInqbmBvhO6IveRewcs3ybQg8E5YmDxmOkEeZUxEvsE1JLf7bxbsHNCfFy
-         48gfdajgSbS6A6ff9xMsvLhsb8InEdeLULoOQjZ4FavsyZiEPFK3l0iXOCXHUVenyDp0
-         lWqZkpJ5SXIZDvOt36YA62ABbKrExs8bhrqOT1zN4GKrrbpJk4M9KQrdX/5sbgfK4h9R
-         XgNg==
-X-Forwarded-Encrypted: i=1; AJvYcCXAlnUHq/5tkILDfjBIalljz3GZrgowAOekt8D1wIk0o6aIwv5cA2HSMMOiRWcJUsZb3AWDribgsd8ItJk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyPPgFzKc+22l4pTPf011/9IF3D2IGMk5TkYQbXsWRGyIE69Jd
-	m8m/BlqGS/s9kAm77ZIrlKD1rsoLP3VNGCzYNGOAzUpSMt9Pk0evZs3onqtes8RCa8qzK3bu9oR
-	XZZwC
-X-Gm-Gg: ASbGncvqod+LAsPJ0G72GWO/XypyeqyyqzlGAW5WzilqCcU+vat3dbzJ+Qjmg9Nmxrt
-	6w5lkr6jFMgKqMyhCel4CUIOL3u9SJwa/4BohUWKP2nhdTNK82frPZSapdf3PXMlfevDKIW7HTj
-	68S6ttbvFx/Fvk157J/YFU0JhncmWI/CXlrqH3JqOT5Y9DNMdsgVF0qYyDMprlCJFuzxVOXkwiZ
-	1DGxva1NP0Njce4W6afZdyauHNO9xREFZC0ZPRDnrKaCrrR6mAMlV8hgyCKwmkef1lIV2+8fiXB
-	8pNWquCgoXwtyJdLvBhrNUDQoqO0WANZX79NVaVy4UpAp+epju4=
-X-Google-Smtp-Source: AGHT+IHf+GQ922YV6u5BNC7Ftbuq76Fd/ay4ZcRcje5lxIC7r0ijg+0L68jiiIT8FOmQyUwd54xnLw==
-X-Received: by 2002:a17:903:298f:b0:216:6ecd:8950 with SMTP id d9443c01a7336-21de36cdb21mr885165ad.19.1738208328087;
-        Wed, 29 Jan 2025 19:38:48 -0800 (PST)
-Received: from google.com (55.131.16.34.bc.googleusercontent.com. [34.16.131.55])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acec04796d6sm302970a12.55.2025.01.29.19.38.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 19:38:47 -0800 (PST)
-Date: Thu, 30 Jan 2025 03:38:43 +0000
-From: Peilin Ye <yepeilin@google.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: bpf <bpf@vger.kernel.org>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	bpf@ietf.org, Xu Kuohai <xukuohai@huaweicloud.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	David Vernet <void@manifault.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Quentin Monnet <qmo@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
-	Neel Natu <neelnatu@google.com>,
-	Benjamin Segall <bsegall@google.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v1 3/8] bpf: Introduce load-acquire and
- store-release instructions
-Message-ID: <Z5r0Q-JXYPb3mCL-@google.com>
-References: <cover.1737763916.git.yepeilin@google.com>
- <e52e4ab7bea5b29475d70e164c4b07992afd6033.1737763916.git.yepeilin@google.com>
- <CAADnVQ+5Ybu+rMBz5D-0GcZWemTwrzxy7vUfEiWpQ2CKugwwOA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odFBvwdO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA24C4CED2;
+	Thu, 30 Jan 2025 03:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738208875;
+	bh=pIkZbvbWGUeN/Ycv3ABKfmi4ASKA6ChqmpXCdQeUA34=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=odFBvwdOAAzBJZk8fcRUPX7qQ3QWNXoz08ePhvdLVtcc/ajobd3vOdM+saC1Fsmon
+	 SFN0bGuySg7U9jqD134DY3goAJJPPQDTiTMVoQrolcZvcF/1bVqua/IDXAhbDJu/o9
+	 Bvwe55RPaOK+DdfnNVtxEW7QoxVXo2tD905T+PFs5p58BjuLeiaiCxhDWqsFaHncGS
+	 Z4JkQOGX1ZmAOsL0OXjrXmOpAxA9kifl1Qb8h9QiokWbAck7voR+jAd16X2pIop924
+	 uDEZpNvIteqSbkgm29EV3uOlHVCSRl8on3uoGgorLUSVMdG9w4FghbCFNwu/5QRfHL
+	 30jyhX1nEPfVg==
+From: SeongJae Park <sj@kernel.org>
+To: Yuanchu Xie <yuanchu@google.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	Gregory Price <gourry@gourry.net>,
+	lsf-pc@lists.linux-foundation.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	Raghavendra K T <raghavendra.kt@amd.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Kaiyang Zhao <kaiyang2@cs.cmu.edu>,
+	Jiaming Yan <jiamingy@amazon.com>,
+	Honggyu Kim <honggyu.kim@sk.com>
+Subject: Re: [LSF/MM/BPF TOPIC] DAMON Requirements for Access-aware MM of Future
+Date: Wed, 29 Jan 2025 19:47:49 -0800
+Message-Id: <20250130034749.49417-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <CAJj2-QF1y1XNRYy9sT5c5=pi20+67Duf9B2Amatnu01HLmw06Q@mail.gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADnVQ+5Ybu+rMBz5D-0GcZWemTwrzxy7vUfEiWpQ2CKugwwOA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Alexei,
+Hi Yuanchu,
 
-On Wed, Jan 29, 2025 at 04:41:31PM -0800, Alexei Starovoitov wrote:
-> > diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> > index da729cbbaeb9..ab082ab9d535 100644
-> > --- a/kernel/bpf/core.c
-> > +++ b/kernel/bpf/core.c
-> > @@ -1663,14 +1663,17 @@ EXPORT_SYMBOL_GPL(__bpf_call_base);
-> >         INSN_3(JMP, JSET, K),                   \
-> >         INSN_2(JMP, JA),                        \
-> >         INSN_2(JMP32, JA),                      \
-> > +       /* Atomic operations. */                \
-> > +       INSN_3(STX, ATOMIC, B),                 \
-> > +       INSN_3(STX, ATOMIC, H),                 \
-> > +       INSN_3(STX, ATOMIC, W),                 \
-> > +       INSN_3(STX, ATOMIC, DW),                \
-> >         /* Store instructions. */               \
-> >         /*   Register based. */                 \
-> >         INSN_3(STX, MEM,  B),                   \
-> >         INSN_3(STX, MEM,  H),                   \
-> >         INSN_3(STX, MEM,  W),                   \
-> >         INSN_3(STX, MEM,  DW),                  \
-> > -       INSN_3(STX, ATOMIC, W),                 \
-> > -       INSN_3(STX, ATOMIC, DW),                \
-> >         /*   Immediate based. */                \
-> >         INSN_3(ST, MEM, B),                     \
-> >         INSN_3(ST, MEM, H),                     \
-> > @@ -2169,6 +2172,8 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn)
+On Wed, 29 Jan 2025 18:15:08 -0800 Yuanchu Xie <yuanchu@google.com> wrote:
+
+> On Mon, Jan 13, 2025 at 7:06 PM Gregory Price <gourry@gourry.net> wrote:
+> > 5) Scarce resources
 > >
-> >         STX_ATOMIC_DW:
-> >         STX_ATOMIC_W:
-> > +       STX_ATOMIC_H:
-> > +       STX_ATOMIC_B:
-> >                 switch (IMM) {
-> >                 ATOMIC_ALU_OP(BPF_ADD, add)
-> >                 ATOMIC_ALU_OP(BPF_AND, and)
-> 
-> STX_ATOMI_[BH] looks wrong.
-> It will do atomic64_*() ops in wrong size.
-> BPF_INSN_MAP() applies to bpf_opcode_in_insntable()
-> and the verifier will allow such new insns.
+> >    We need to be careful not to consume excessive amounts of resources
+> >    in an attempt to track all these identifying mechanisms.  Even 1 byte
+> >    per folio is 256MB on a 1TB machine.  This gets out of hand quick.
+> >
+> >    With task-work, I was able to add no additional resource consumption,
+> >    but deferring to a fully async scenario and needing to track things
+> >    like last-accessing CPU, timestamps, and etc.
+> >
+> >    We'll need to examine this closely if we decide to aggregate either
+> >    of these mechanisms.
+> My concern with physical address space monitoring is fragmentation. I
+> ran some numbers on a few prod machines. Grouping by regions with the
+> same memcg and ignoring any unmapped memory to be generous, machines
+> with higher utilization can have a region/total pages ratio of ~40%,
+> and even those with lower utilization (<50%) can also reach 20%.
+> Accurately tracking these regions would require quite the region
+> metadata, on the order of GBs.
 
-We still have this check in check_atomic():
+You're right, if we need page level accuracy access monitoring and want to use
+DAMON with its regions based mechanism for that, the memory overhead of
+damon_region could be high.  That's mainly because DAMON's regions-based
+mechanism has not designed for such usage.  It is more for a best-effort
+tradeoff between the overhead and the accuracy.
 
-  if (BPF_SIZE(insn->code) != BPF_W && BPF_SIZE(insn->code) != BPF_DW) {
-          verbose(env, "invalid atomic operand size\n");
-          return -EINVAL;
-  }
+Regions-based mechanism is not necessarily the only mechanism of future DAMON,
+though.  If there are use cases that regions-based best-effort accuracy cannot
+be used while exactly the page level accuracy is really required, we can think
+about optimizing regions based mechanism or developing new one.
 
-(moved to check_atomic_rmw() in PATCH 2/8)
+But, IMHO, the page level accurate access pattern is not always essential.  In
+many cases, being able to distinguish some amount of regions agains others
+based on access pattern is practical enough.  Indeed, DAMON has been used on
+real-world products with physical address based moitoring mode for years with
+no significant problem.  Also I think physical address space based monitoring
+results[1] on a real server workload that I shared recently seems not very bad.
 
-Looks like it cannot be triggered before this patch, since
-STX_ATOMIC_[BH] would've already been rejected by that
-bpf_opcode_in_insntable() check before reaching check_atomic().
+Of course your use case could be different from what I have experienced so far.
+I'm curious if and why you really need page level accuracy.
 
-I agree that the interpreter code handling RMW atomics might now look a
-bit confusing though.  In v2 I'll refactor that part and/or add comments
-to make it clearer in the code that:
+[1] https://lore.kernel.org/20250110185232.54907-3-sj@kernel.org
 
-  * only W and DW are allowed for atomic RMW
-  * all of B, H, W and DW are allowed for atomic load/store
 
 Thanks,
-Peilin Ye
-
+SJ
