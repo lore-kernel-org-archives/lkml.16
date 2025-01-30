@@ -1,93 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11020135.outbound.protection.outlook.com [52.101.56.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C36B660;
-	Thu, 30 Jan 2025 19:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738264701; cv=none; b=ZnpoJOf/27RTQSeb+lcbO5AbVSDjIedCVhR8VLTA+WfKjK2F5cS2I0M1SM+j+2jzDIfK+hbRZOuIZsNYUDbJi27pst4fvc8NLsSeRnn4O8qTlWBBq8Hu76p01Do/CiPaXZYGKtD1f3SAgn0DsDhcHOLmALnJ5qru8Gi4RsY5+50=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738264701; c=relaxed/simple;
-	bh=F5UGl/zyxdIAV/PnK3hvp6JjpBmI+QG3xWDiGJq3kkQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OUUd0NFBRYxPVxOYJP9PwQCSaugxAm+v1SxSVO2pY3jxNrLVw5fM40kDwliZAc2PTT/KTyRzrsBuLmf8cpPoj0+kJaQyfd+GvQ6jjwbJbThrzI48OtVbyPIj+CVJU5MKkVjb4R1cc22WOCkWHyq/FBQdY228otZggPWUvsdWnNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxts4S7A; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA54B660;
+	Thu, 30 Jan 2025 19:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.135
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738264709; cv=fail; b=VTwaUmSPeu/OWLfxT7AHMaMkC7oIr/cItavfm74i2GWDb7iaMaYfS8l38dysDP6ixdTRe9TZ3zCSG4Hlfi0/NuczN0VrZ/D9rFELpEf2lM0K2gHfIZberidAa8LJo+k+1yiVAiN+TN/Go3Z+qkZCB9aKi+WRarW1N3QtgWndmFg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738264709; c=relaxed/simple;
+	bh=S1iqBEy3dzYEm5PTL2tMof1x8/zIiZ09qP4rVs5rJg4=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ilV6bxLOixrjCL4i+dyt3BU8O57tQJsJ3CrN9p8/5tg80QjCahxWpyzVVKQ239568SMAY47rBuWxkRWxOe6kFwChD5KcAQ/ero27LzvC11k1nkzqzITBXHY+J/BD5hYRPXKFOnP2PEufX64/xqoD+axNT1TLecfH4uHTrX3C/G8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=KlS1ku3I; arc=fail smtp.client-ip=52.101.56.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxts4S7A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06F4DC4CEE5;
-	Thu, 30 Jan 2025 19:18:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738264701;
-	bh=F5UGl/zyxdIAV/PnK3hvp6JjpBmI+QG3xWDiGJq3kkQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mxts4S7Asqr6bFnK/cRLSSQZiC6BwHs5f8TsYszYAMpuATd5EhwAEBBDyzWJ2IrT0
-	 G594T75mOh9bqW4/ErnJDNBfbMvw9QvBPVcKGX3yn9LwvBSuskDU0Qt4pxXKKGPkRL
-	 9TkVwAvv0nDqOuwNVBkejgpsCjiSm+JDy0VXIP0P29XdV73NmHQhPn9mZyWSGw/6TN
-	 elQwnXV4GfDmgtfa+0Wu/dE3G7BpnLbGp9OqnvfXp2F65KUQf1WPMTQjcbcaWeM6Ed
-	 So6O+DSjNRl3huYNpRdfspWIFEpHX2h5Naa2DLYKK08VK+DFwBtMbzwIr1Z5C3TKc/
-	 LRK36OU36l01Q==
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3ce915a8a25so4390375ab.1;
-        Thu, 30 Jan 2025 11:18:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVp4m2jsLrrpUzI8Q0Jm+u5iLg1wST25Fnm0mJB/bbP6/p9A0cIlz0DeGA5VW9kuoBDqAfpN/b4lJWpM9M06RzOQw==@vger.kernel.org, AJvYcCWNlUKQ2jZdD9O4VYbFHYLmZxX366c0452IWl1Lanzk3n8BR2avk8BJAJXcxrtkBI4COK8914UaI+ozNJw=@vger.kernel.org, AJvYcCXVZX0OSZkKmCiwS5bF13oUPzXLhOzBvvjnW6kPLPExq+/gvmWBvtZkzE+2wTrKIOzmYkFhJ2D9EgnC3I1gaA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7TDbQYSbpPsH0QGkiCjUe+KU6YpRzJY/3Lvqof+wwlpjJ1B5d
-	FliWSL2QapeuZs6IYWoWQvcyqD03vmIpYUKVkQzYXpE+lapkzQQeCXf3GbdsI69sY3k3e3G8kWx
-	Ejp0jTlbYXBlTH72emtK28VV95ho=
-X-Google-Smtp-Source: AGHT+IHUAYnxNLSeDzHfkzX1E3E112OVV5uSNRIVJGtQAZwP0tGOWJ3I4OfIGX6ECRcDvvRqzClf1YSfKdpdBdzPRDY=
-X-Received: by 2002:a05:6e02:1fe4:b0:3cf:c8ec:d375 with SMTP id
- e9e14a558f8ab-3cffe2680cemr69771655ab.0.1738264700324; Thu, 30 Jan 2025
- 11:18:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="KlS1ku3I"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yFMmpRFGegIMmp87rt1k2O42PaLUZyFQE7NWkZM7g0SH4c6mLYwsUEegUJoemDTJXBECULaAL5cnmPoCIOjRnI8xeLkdreLv4SFLbnuBqT4gzDgbdEWE7Yak0PgLrKPAhd4zfruB8BnYLrD6l5LPM1Ey/lUum3w2KGW9/leAj5Qo/G4iD5g/za4YvUjkj4RtzDYu1Q9Y8Pzd9JfZ/PLsyaSA/AERzbJjyt2eKtkrpRvGoUfVQZU3RpA48mgrK2RTFe90HgFW4xrm3/nv/zfhFdiztrCpWA5Pyeu6Lv2vIL+5knL+zKYi4M+903DLVYUM6teQ8Kga7PspTbIptWUjWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S1iqBEy3dzYEm5PTL2tMof1x8/zIiZ09qP4rVs5rJg4=;
+ b=LQQj4lILsn+ntTnnRHGunHx+1C1ZUFpQjddDQUNNP656KPKIVf1IiR3NBrBvjXVYWKiQzWldmWYZ1XcvmIbqKZLwGVjOXjoUjJAOCzSOzzvUyhmbqCM1ZBh2i42dcLtHs6XUN5QWbdRrb5L05IdFWs7w3G8hvt219/tjVcrmN/MrEGTVaaOR6l/eFEnNBpEwiz5rJsjHCOhwF9+bcXPoqvAnoiiDWkjPx2piF+zNPoZrQ/OF67dZal/W7hNc+nLaofUrkc4p9RAjh8jHtF9PjKl8sW/VGQwT88EDkV4ngBFt7lVm5kRqiyebKVdh1GpDN/nSk8YwBSvTiV+UDniXKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S1iqBEy3dzYEm5PTL2tMof1x8/zIiZ09qP4rVs5rJg4=;
+ b=KlS1ku3IBRc96dJN0NGmrYLoHzN9ZDx0XFQB0Vpp7DZ4m+0B51Ru+wWc6oE1xI6FWYEulxM5jLz6GSKl2j0Ku3lOl54sJtJ0tNfYNrtGyeau9jrPortFi1Gm81Ii1p/fwU0/yfH0+p6kaCKs0rd1fnav7cVJe0zHnPpZNmtX0dE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from SA3PR01MB8473.prod.exchangelabs.com (2603:10b6:806:397::12) by
+ MW6PR01MB8599.prod.exchangelabs.com (2603:10b6:303:23e::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8422.5; Thu, 30 Jan 2025 19:18:22 +0000
+Received: from SA3PR01MB8473.prod.exchangelabs.com
+ ([fe80::46d7:1d3a:dc9c:69c3]) by SA3PR01MB8473.prod.exchangelabs.com
+ ([fe80::46d7:1d3a:dc9c:69c3%3]) with mapi id 15.20.8398.014; Thu, 30 Jan 2025
+ 19:18:22 +0000
+Message-ID: <a6af63e2-227a-4909-9b87-8eff96be088b@os.amperecomputing.com>
+Date: Thu, 30 Jan 2025 11:18:18 -0800
+User-Agent: Mozilla Thunderbird
+From: Daniel Ferguson <danielf@os.amperecomputing.com>
+Subject: Re: [PATCH v18 00/19] EDAC: Scrub: introduce generic EDAC RAS control
+ feature driver + CXL/ACPI-RAS2 drivers
+To: shiju.jose@huawei.com, linux-edac@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Cc: bp@alien8.de, tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org,
+ mchehab@kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ david@redhat.com, Vilas.Sridharan@amd.com, leo.duran@amd.com,
+ Yazen.Ghannam@amd.com, rientjes@google.com, jiaqiyan@google.com,
+ Jon.Grimm@amd.com, dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
+ james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
+ erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+ gthelen@google.com, wschwartz@amperecomputing.com,
+ dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
+ nifan.cxl@gmail.com, tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
+ roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
+ wanghuiqiang@huawei.com, linuxarm@huawei.com
+References: <20250106121017.1620-1-shiju.jose@huawei.com>
+Content-Language: en-US
+In-Reply-To: <20250106121017.1620-1-shiju.jose@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR04CA0358.namprd04.prod.outlook.com
+ (2603:10b6:303:8a::33) To SA3PR01MB8473.prod.exchangelabs.com
+ (2603:10b6:806:397::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127213310.2496133-1-wnliu@google.com> <CAPhsuW4UrhaYKj6pbAC9Cq1ZW+igFrA284nnCFsVdKdOfRpi6w@mail.gmail.com>
- <CAPhsuW7f5--hzr0Y3eb1JNpfNqepJuE92yq3y8dzaL_mQF+U5w@mail.gmail.com> <Z5vMfxFSIEtPMrMi@google.com>
-In-Reply-To: <Z5vMfxFSIEtPMrMi@google.com>
-From: Song Liu <song@kernel.org>
-Date: Thu, 30 Jan 2025 11:18:09 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW76YZRBFgQf9PJ3OkaarbyDyWg=yXin9CXgNSwZYRnTZg@mail.gmail.com>
-X-Gm-Features: AWEUYZmLoMdmanvQBUPm_vYlT3JWc_8Gli-r02xY9oR7T0OMt03HFwtkZr0PplE
-Message-ID: <CAPhsuW76YZRBFgQf9PJ3OkaarbyDyWg=yXin9CXgNSwZYRnTZg@mail.gmail.com>
-Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Weinan Liu <wnliu@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>, linux-toolchains@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
-	joe.lawrence@redhat.com, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA3PR01MB8473:EE_|MW6PR01MB8599:EE_
+X-MS-Office365-Filtering-Correlation-Id: b7514eac-9627-458f-7dd0-08dd4162dccc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|7416014|376014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dE1FS1k1MXJoRlM0Rng2c0hISmp2WXFFUUNzdHB2UTdVSnB3SmZFeVlmUHhL?=
+ =?utf-8?B?QlhnUU1XR2paUEhCSmdjMU1HSU1ad2VJZWo5VVFXNk5SV3hmT1FJNHV5WkRv?=
+ =?utf-8?B?dkdqUmU4VlZ3WjZuMjBlTnFrZkg1K2VTSE1XTlN0Ym9xMTd5dHRVTTV0Y2d0?=
+ =?utf-8?B?cmtSdHdlSWxHNFU2blY3c09iWW9tUVpnbExqV2xCUy9zUUhRVDBva1RuUFdI?=
+ =?utf-8?B?TSt3Z083ZHNtalJSUjNobWlOZklJejNuMys3QTNPZFIrYTUveXNZYTNlbUEx?=
+ =?utf-8?B?VkFRYWhFb1ZhOEhNaVE0eS9wU2NVdEg0bldMcHYxNFNJL04wUCt0dnBIdHhD?=
+ =?utf-8?B?K3BCY2I3R2dZRlhWNGJ0bGwySkplUjNyeUVScC9CeTBvaFRjZGhDN2I3MWRv?=
+ =?utf-8?B?R0prTHhBU0dHdE90SFFQTVg1V1AyM3UwMHU2UGlhb2drSEVpaUZSSkJnMlRk?=
+ =?utf-8?B?U2pSOVc1N0daZll3dDhINW54SGFKcHhyRHpBTFF4blZsd0lFN2RkR1BKT2lQ?=
+ =?utf-8?B?NFhQZGRKU2lFWXg3RU12a3hiOUFNN2FScmREdHFoNE0xZTVOQ3BSVW4yVFZL?=
+ =?utf-8?B?eEVSWlJnY3R0WHNQaEJDQXlZT0pwVjlKRzZuUVR0U1F6Tkx4OTlFa0lpM08v?=
+ =?utf-8?B?Mzdwa3JIMjhVUzRpekhzUUhUbXhNQitGVktCd2paZEdaUTVRMGVqSHVROW1N?=
+ =?utf-8?B?RzlCajFDSzRKRlkxaENpZnFoc3VDSUl3U1lvNG1oYmtsaEJpU3o3UG5WOWRY?=
+ =?utf-8?B?VlBhbzd6QkVRQTk4T2dsTTVvdG9XUGd5QW4rZHZaWnJkbWNlKytyKzVnOGx6?=
+ =?utf-8?B?Z0hMbllpa2wxWmtGZ0NmR1NqUGpBeFp3alRUZTNtbDJqTWFHSE9KMC9Yd29X?=
+ =?utf-8?B?czQwdDE3RExKaVZ1T3RBaUVTQmw2YVcwYmRLNWRpR0dRTldTU1VGZ2dsR3Ro?=
+ =?utf-8?B?UXZCMStkcDY2cGxnNFVsNzRQSEpqNUJ0cktER0tWbTJreVhEVktrNTM0eE0r?=
+ =?utf-8?B?Mk9FOG4vOFlTb2M4NVJOTFRPdlNCMzJzdFF2NENBYTJuMGpITmJ4VElVQ1E1?=
+ =?utf-8?B?NndYWmVOOUpiR1VvejRudEd2SGNzMkdpRDczeVR0eDNzak9LSXczSXpGamJB?=
+ =?utf-8?B?VWhhOStWeGJ4TmZSZFUyMXNLSkhFalgzb3ZjbzVJQjRaYk1pZmNqTjJ6SWNN?=
+ =?utf-8?B?ZHhOTFdmZTZXNFYwZVRVT1NpY0ZiOFdpeXBTb25sdCtKVFdVdm1KUWs0WU05?=
+ =?utf-8?B?VTQwSGt6dEt5S0xCMjN3a1ZIK01hZ28xMTRXWmc0bG93VncrbGFaS29nUmYv?=
+ =?utf-8?B?dCt0V3Q0VHMxUHF2NGRqOEROVnZvWm5ibDA5ZXArTTVTUGxBRytwb2tSSFkv?=
+ =?utf-8?B?Rk95RUh3cGMrbHRpYUx0TmJYeE56aTRXeW0yMnRqOTlKYUsxV0VYYWpqSnB2?=
+ =?utf-8?B?dHduWTBPNGdLc0ZHZ2FZcU9JWHhFaG5NOXJmdlZrOWc3SEtKTHVYeHRBTWUz?=
+ =?utf-8?B?SlIrbE9CNzdMSTRVUEkxMjhtODNncVBlZ1JpUWJsRjd1aUNXU3Z0d1YveVh2?=
+ =?utf-8?B?Z2o0anVqeFFjUnNSem9mckh5ald3eDl4NkRlaDljaGZ1eWRzOGhKY0pscDNt?=
+ =?utf-8?B?TlF4V0NiY0crTmxOSTVCd2pwNzYzUWZSdjRTUHdGNTh6VEUwZlF3cUhnNHJn?=
+ =?utf-8?B?QVBHc1Fid1N5NEVyQ0tZaW5YMEtFSm9JT3pEdU5zWDUwNEJLMmtETTRvZ0lw?=
+ =?utf-8?B?MWFuMjVIR1pCWUJxUW1xMjNOMGZuSXR0QWtRQjFYdXMyc0dqOGpxZnZLRjJS?=
+ =?utf-8?B?a2dYVWJEUGoxRWtNMEZqU3ZzZEloU3daczRiUTBoRTZwYUw5VFV3RXRqSG5x?=
+ =?utf-8?B?OGhPQUx3czBzZ1lZR2lqWHZBK3dHOVhKNW9KNXZmZzZDdkdZczNrNHhCOGo1?=
+ =?utf-8?Q?f5E6f7hYBq+yHTnSIxN/y7AhwtfTqKMi?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR01MB8473.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(7416014)(376014)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YTQydU5tZHlJTHJjMWxVSlY2STNnVkFuZkhRTDNid3pYSUh0YXBhS3VDb1NU?=
+ =?utf-8?B?QXZycHczZWZHN24xZHNid3oxUWsvTVVTeHduTXF4Rk5aNGhQY0RhYkwyQ2JT?=
+ =?utf-8?B?YUwvNCtod0o3TDFnR2RwVjViNEJWV2JjLzJIVHdlSmJhRVArVG9Bb2hzb2Qv?=
+ =?utf-8?B?aVlENmh5Vis0OXArRmxrWkZWdXJHYnRjU2FPWk95V09XL3BSWEJJKzNlalVD?=
+ =?utf-8?B?aUhmeHFuS0MwNGZHMDBEY3dNcmpjU2FtR043TENuYUFqQkpLRWgzcnBjV3pu?=
+ =?utf-8?B?SGthMXNxLzhmK3lNcHZmUXBPa2Y4OTdIdDNtVUx0c2lUdE00SUFuUzRldWpI?=
+ =?utf-8?B?TVdYWERZaytGL3JtKzdzZTFxZ2dESkxBSVF1bzU2N2JlcGc1Zm9XRzNKaElT?=
+ =?utf-8?B?VmpuVUgxRENOSkVNd3ZoWWNEUXVMcGlDWmV2Kzhhck84b1gybnRqSjFRVDB1?=
+ =?utf-8?B?SitEU2p5VjZOcGJYZmxrMjlDWWJEbnNzemlVVjdmdlgyN214TGZPcjRsOHI1?=
+ =?utf-8?B?N0N5Mks0RDBWWUY5S3Yrc05YVVVYdG1UY3dLM0NjRU1jV3QvNmM0ZDJlZkRK?=
+ =?utf-8?B?d0ZpWUpac2RJbGF0OHZ4ZCtheWhxKzZKOXZPZTh4U3c4cmcyUnMyVkFWbVd1?=
+ =?utf-8?B?azMzYzJRbVdUVHp1blVLR09VNXNFZHNLTms4QkxnWUpYNFBDa1BncjdBWGFu?=
+ =?utf-8?B?eGZnekFBd0xIQVZtVXVFVUJOV09aNjVBajhhVldKcjlkVklOUW1La0FBdlFa?=
+ =?utf-8?B?d2VRenVOMm1JVjN4eDVoY254YWJUV3F1TUhqWkVWa3NGR3NkYzcxTVZDL2Ew?=
+ =?utf-8?B?S2tiakNWZUxpS2xoakZqY1l4c1o0SzNnSjhhOVlvWjNiM0tnMTJvOHE5UzU2?=
+ =?utf-8?B?bWZyanllMW1BRWFDMGJOS1JONDYwYkRsNmFuSDN4QmlQN3l4M1hKcm9iS2M2?=
+ =?utf-8?B?STRjdHA2Wmt6dDNjUlAzeS9UNVNTM1ZsVkJETEt0SHdkSWdaZUd0VCt0Snpt?=
+ =?utf-8?B?Nk5aaUV2dUtuR3ZuRGR1cHMwUkM5ODhyMHp3TUtUc001ZWpyL0M0T0xrUkZi?=
+ =?utf-8?B?WDZZdVpWWFFaMTlEYTZ3L05GWGI3Q2F3dS9zR3ZrcjN5b1lNRE9aVE9GdXE2?=
+ =?utf-8?B?WEZheTh1bTBxRFMvU0d4UEhYVlUrOUFxR09sYjhHRWxSMjBKY3dMTFlIY01R?=
+ =?utf-8?B?ZkIzZHRhQnVIUlMzczQwR3MwTXUzOU9DMGw0b1VlcmZCU1ZnaU1CSzFBVHJF?=
+ =?utf-8?B?YXV5SllxWmNtSTZ2bVJBaHB2Y0djVDZSRUxoSEs0dithQXNiRWUxR3NDaXNH?=
+ =?utf-8?B?VmtKNUdtVDJTZXBhWkgyL3lXR21MTFdQcWlicVl0SDRraGZMOEFoTjNJdkJS?=
+ =?utf-8?B?Tk4rUHp3N3ViNjNsRi8vNTJBSlB1WnhQV0x3RUlORDYrS1lsZDdpanJNS1Vt?=
+ =?utf-8?B?LzZSaitSZDA5NDRqdXQwSkIwQTRRdUREb2NjZklSQXlLMlBHb2pkVDV4dllM?=
+ =?utf-8?B?VHpRdmF0K3kzeWU4SlBIazRMUlByWkppbFZKY1Z3WmJGVWJPNlhuLzY2YUpP?=
+ =?utf-8?B?Ujd1dEJ3T0xrSEZSTnFWUzFqK1E3OXNSajZENmcxV0RZM2xoYVVpMVhDTFRn?=
+ =?utf-8?B?dE10NVNRUVZ2NkdlUVZHdXhJTDVzZGRXbGR2ZFdya0Y0NXZheWRZbTkwREhh?=
+ =?utf-8?B?RGhFaWR2N3QrQk1DSjlwWjFwS08yNlkxSUgwUlkzOGRLbDUxZDVGaG9QYXZI?=
+ =?utf-8?B?a2JRSDcrWm85bTgrS0hzNHVxVzVjT0x3cG4xbk5yL3B2U01Zd2Vyc0lKd0Vu?=
+ =?utf-8?B?NEVicmhwd3JnQTFuZVJ2VklnU2ZCWHRvOS9sY3NtSlNBS09HNUppWi9tNjZ1?=
+ =?utf-8?B?VGw2TjBlMUU5Z2V0MWlVbk5haVAwTlovOVpoNElYUFRtMlRNVGJ4dWUzVFIx?=
+ =?utf-8?B?MFNXSVBBR3B1Y2ZJSkFDNzh4RVFMeVdRRnNoRlZEK1E5UWpiOG16OXRZQytK?=
+ =?utf-8?B?OFk2aTVUOWtHZjMxTzdKNzVTUXNBeWNSS3djSnFONElmOVlKSFRFZGJNQTdP?=
+ =?utf-8?B?WmlMUnVDdTVTTmJWVWdEQ1dOdFhGYlBCUTNMeGgwMVdoMGZ1bVdFTFlVRUpi?=
+ =?utf-8?B?R3IvZHppdmFmSUtHS2p5RG1leUROV1dIdk9XdDJNV2tjNnpGelp2c1h6dC80?=
+ =?utf-8?Q?qvIwAQGW1uAMHZBsX27j4nQ=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7514eac-9627-458f-7dd0-08dd4162dccc
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR01MB8473.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 19:18:22.6089
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C3nLnvxRCobDJHxTGJJGN4RL7f9/MPKfRl3NH3WTo3neAQJ3koBseKtjo/Gle7E0Qw43BU5TzfxCHtLqSa0NE89izOMQUd53MuEIy7lBbJ+67AZvDndJkO/O0ayFdKNk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR01MB8599
 
-Hi Roman,
+Hi Shiju,
 
-On Thu, Jan 30, 2025 at 11:01=E2=80=AFAM Roman Gushchin
-<roman.gushchin@linux.dev> wrote:
->
-> On Thu, Jan 30, 2025 at 10:34:09AM -0800, Song Liu wrote:
-> > On Thu, Jan 30, 2025 at 9:59=E2=80=AFAM Song Liu <song@kernel.org> wrot=
-e:
-> > >
-> > > I missed this set before sending my RFC set. If this set works well, =
-we
-> > > won't need the other set. I will give this one a try.
-> >
-> > I just realized that llvm doesn't support sframe yet. So we (Meta) stil=
-l
-> > need some sframe-less approach before llvm supports sframe.
-> >
-> > IIRC, Google also uses llvm to compile the kernel. Weinan, would
-> > you mind share your thoughts on how we can adopt this before
-> > llvm supports sframe? (compile arm64 kernel with gcc?)
->
-> Hi Song,
->
-> the plan is to start the work on adding sframe support to llvm
-> in parallel to landing these changes upstream. From the initial
-> assessment it shouldn't be too hard.
+I've tested the Scrub specific pieces and the EDAC infrastructure pieces(as far
+as how it relates to the Scrub pieces). I am using an ARM64 platform for this
+testing. I would like to offer my tested-by to those pieces I have personal
+experience with. I will send them as replies to their respective patches.
 
-Thanks for the information!
-
-Song
+Thank you,
+~Daniel
