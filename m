@@ -1,379 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7E61AF0DC;
-	Thu, 30 Jan 2025 12:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738239155; cv=none; b=W6fMCCXLjQc6+qDw8aN2Hdjb7eTgLUx3l9n5TwwhFOHW62iuVIrcYUv0+vL8Z9mWPa7iSrYbGmdKj5FDJIqT+iGMML9o1daiEHfQH5frF4fQr5v7iBgF8UapXhGKRG25H959MyA29W79mmGLJL/rQ19F2HB+L5f9LxxaDDrtNf4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738239155; c=relaxed/simple;
-	bh=Hi6/OCGoOquSDrzW77IQQxL0ssxA8h7c2jy3kT2D8oI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kWYDQS1VFZmJ66pfWF2l1E9pOyZi29+/e4HpJf2w4/wVYzjCRZ3vIt0P1O6u+GPJZLS+r6gtz/v7Hn+F0ZX+rgJ4t/WDIam7xSHHznZoX2jyDvETHC2TckT2WAyWJVTU34qXAkrcc0uS4Wg4uB5qR2xcrR7BUwCZ+NKsOLrP4wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQ8BYJkp; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C34EB660;
+	Thu, 30 Jan 2025 12:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738239373; cv=pass; b=rcp9sz6JjV0VMX1yd4AXkkQEPYTN1wdb2EE8E6Id/KamyUEvwkUFs+Nntdt1yUJ62lM4Ni7FpoRprUh+RuVtrf4PwQPVXYbVqF4bwrTO+F2Vp3fmhuXDViIlHOJCXu9BI1AZmdA1GJBngSjWxq52utUyt6O1/W1eusI2NTp7DlE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738239373; c=relaxed/simple;
+	bh=NhjWn71blrawadwTQcygIseL1rRYAGUDgnjHvN3IQ9A=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=NOCgTHyAYrhuU5Ok9UxRMpkvX/uWSxEK9RDUZU/H0LR2vBVZlkrLubmfa92pEUCawUIqsQ08mnOa42WHrpeRUumnQicstBJl87yBs40IyIR7I1oD6lOgXNunXxLVxPd7oncqK/f/fPY7PXCeXe1aL+30L5nKdKGNmFrxpLndHpU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b=Xy6QLsBv; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQ8BYJkp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3835CC4CED3;
-	Thu, 30 Jan 2025 12:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738239155;
-	bh=Hi6/OCGoOquSDrzW77IQQxL0ssxA8h7c2jy3kT2D8oI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PQ8BYJkp+8SCQEsLzT/ygA0Naqkd5pjBYpsvxAyWTPVSRc0gPaQx5zbSCiTedfSBq
-	 sWGRVzgb92E3MJZyBK62IS/+GeeLc3BQB9SMjRfc/nc7S0jPQDH5knQvdiqjPkAvyv
-	 FWHHDiH7SrjXDjMeujlIpNtvuffxnb9Fd7Dy7jJmQcNN0PuVojmsPn7RBC6g+k+8Ch
-	 n2PzuVLrTNgTNh3TxJs+S2nhV1WDIfITnlOeGrZb1NumEEhG66F/O2SnTi4ffaDvlM
-	 n0z86Dsk5lt5dxn+DO8llwlaO/IAy6rVGVaWc3zICTafy9Qrnw2Wf/XPr3/vCZuVbz
-	 VBBnSqWCDrenA==
-Message-ID: <951e4d16-2bb2-44b1-99e7-dd28349f20aa@kernel.org>
-Date: Thu, 30 Jan 2025 13:12:26 +0100
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b="Xy6QLsBv"
+ARC-Seal: i=1; a=rsa-sha256; t=1738239343; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=kUKLD131ujnf9MGxdR4qc0pAWhSJI16fuG3rsd7YkP9WoGJOl3ngEVtMmhHhRaDgMOl+qDKC1FktFleXTsoNQnexiVnZI6rgnMTjpTiR41qM8906YQSNDpOVIaiR0/h7YMSqzyr/srfN9nZSBj/IUYjYEnNrT6SEOX5cK6cfhc0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738239343; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=vtqvkjW++P13EILfu6kPduF5HHVIDhPG3bCc05q2yIw=; 
+	b=RN52rTs/CG5wK9wqAIr1XIzrinACSwAq/TPtbhYbeFWdW02NSPaSKMJ22qRzI7AYNGXdVMaVHxrgx9J0OZ4JVwpM+a0RUgmi1hvWVD/uUZDLBds05yon9a/2VmgBiD3zSWquGaP6ZY4SEn9rqgDkwWKYkdXWMt2mNakHmzJ7WxU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=louisalexis.eyraud@collabora.com;
+	dmarc=pass header.from=<louisalexis.eyraud@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738239343;
+	s=zohomail; d=collabora.com; i=louisalexis.eyraud@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=vtqvkjW++P13EILfu6kPduF5HHVIDhPG3bCc05q2yIw=;
+	b=Xy6QLsBv399RQrHj3yLnO4xSaVy1gQtccoGnHwsh1kT7Z3gRzhZp81Oul7fJFv2F
+	oLiyxt2zC0WDndQG+BnhKMXGik3kSVOB/qb3v0vAF6Ye/Q/ImQkn7g8MWPVPN+jSNcy
+	UGtwIHj4VbItttr+CjWKeQPcD3f6ArGfn5ryfpd8=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1738239340867764.380040312308; Thu, 30 Jan 2025 04:15:40 -0800 (PST)
+Date: Thu, 30 Jan 2025 13:15:40 +0100
+From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>
+Cc: "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+	"Maxime Ripard" <mripard@kernel.org>,
+	"Thomas Zimmermann" <tzimmermann@suse.de>,
+	"David Airlie" <airlied@gmail.com>,
+	"Simona Vetter" <simona@ffwll.ch>, "Rob Herring" <robh@kernel.org>,
+	"Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+	"Conor Dooley" <conor+dt@kernel.org>,
+	"Matthias Brugger" <matthias.bgg@gmail.com>,
+	"AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
+	"Boris Brezillon" <boris.brezillon@collabora.com>,
+	"Steven Price" <steven.price@arm.com>,
+	"kernel" <kernel@collabora.com>,
+	"dri-devel" <dri-devel@lists.freedesktop.org>,
+	"devicetree" <devicetree@vger.kernel.org>,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
+	"linux-mediatek" <linux-mediatek@lists.infradead.org>
+Message-ID: <194b7237128.10f9923a41656565.5574753983898665940@collabora.com>
+In-Reply-To: <20250118-meticulous-black-caracal-ec7f0d@krzk-bin>
+References: <20250116-mt8370-enable-gpu-v1-0-0a6b78e925c8@collabora.com>
+ <20250116-mt8370-enable-gpu-v1-2-0a6b78e925c8@collabora.com> <20250118-meticulous-black-caracal-ec7f0d@krzk-bin>
+Subject: Re: [PATCH 2/3] drm/panfrost: Add support for Mali on the MT8370
+ SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/9] dt-bindings: memory-controllers: Add STM32 Octo
- Memory Manager controller
-To: Patrice CHOTARD <patrice.chotard@foss.st.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, linux-spi@vger.kernel.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- christophe.kerello@foss.st.com
-References: <20250128081731.2284457-1-patrice.chotard@foss.st.com>
- <20250128081731.2284457-4-patrice.chotard@foss.st.com>
- <20250129-hilarious-glittering-mustang-fb5471@krzk-bin>
- <3660580d-72eb-45ca-8240-55557e334e37@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <3660580d-72eb-45ca-8240-55557e334e37@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-On 30/01/2025 09:57, Patrice CHOTARD wrote:
-> 
-> 
-> On 1/29/25 08:52, Krzysztof Kozlowski wrote:
->> On Tue, Jan 28, 2025 at 09:17:25AM +0100, patrice.chotard@foss.st.com wrote:
->>> From: Patrice Chotard <patrice.chotard@foss.st.com>
->>>
->>> Add bindings for STM32 Octo Memory Manager (OMM) controller.
->>>
->>> OMM manages:
->>>   - the muxing between 2 OSPI busses and 2 output ports.
->>>     There are 4 possible muxing configurations:
->>>       - direct mode (no multiplexing): OSPI1 output is on port 1 and OSPI2
->>>         output is on port 2
->>>       - OSPI1 and OSPI2 are multiplexed over the same output port 1
->>>       - swapped mode (no multiplexing), OSPI1 output is on port 2,
->>>         OSPI2 output is on port 1
->>>       - OSPI1 and OSPI2 are multiplexed over the same output port 2
->>>   - the split of the memory area shared between the 2 OSPI instances.
->>>   - chip select selection override.
->>>   - the time between 2 transactions in multiplexed mode.
->>>
->>> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
->>> ---
->>>  .../memory-controllers/st,stm32-omm.yaml      | 190 ++++++++++++++++++
->>>  1 file changed, 190 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml b/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
->>> new file mode 100644
->>> index 000000000000..7e0b150e0005
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
->>
->>
->> Filename as compatible, so st,stm32mp25-omm.yaml
->>
->> You already received this comment.
-> 
-> Sorry, i missed this update
-> 
->>
->>> @@ -0,0 +1,190 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/memory-controllers/st,stm32-omm.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: STM32 Octo Memory Manager (OMM)
->>> +
->>> +maintainers:
->>> +  - Patrice Chotard <patrice.chotard@foss.st.com>
->>> +
->>> +description: |
->>> +  The STM32 Octo Memory Manager is a low-level interface that enables an
->>> +  efficient OCTOSPI pin assignment with a full I/O matrix (before alternate
->>> +  function map) and multiplex of single/dual/quad/octal 		SPI interfaces over
->>> +  the same bus. It Supports up to:
->>> +    - Two single/dual/quad/octal SPI interfaces
->>> +    - Two ports for pin assignment
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: st,stm32mp25-omm
->>> +
->>> +  "#address-cells":
->>> +    const: 2
->>> +
->>> +  "#size-cells":
->>> +    const: 1
->>> +
->>> +  ranges:
->>> +    description: |
->>> +      Reflects the memory layout with four integer values per OSPI instance.
->>> +      Format:
->>> +      <chip-select> 0 <registers base address> <size>
->>
->> Do you always have two children? If so, this should have maxItems.
-> 
-> No, we can have one child.
+Hello,
 
-For the same SoC? How? You put the spi@ in the soc, so I don't
-understand how one child is possible.
+sorry for the delay,
 
-> 
->>
->>> +
->>> +  reg:
->>> +    items:
->>> +      - description: OMM registers
->>> +      - description: OMM memory map area
->>> +
->>> +  reg-names:
->>> +    items:
->>> +      - const: regs
->>> +      - const: memory_map
->>> +
->>> +  memory-region:
->>> +    description: Phandle to node describing memory-map region to used.
->>> +    minItems: 1
->>> +    maxItems: 2
->>
->> List the items with description instead with optional minItems. Why is
->> this flexible in number of items?
-> 
-> If only one child (OCTOSPI instance), only one memory-region is needed.
+ ---- On Sat, 18 Jan 2025 17:08:10 +0100  Krzysztof Kozlowski  wrote ---=20
+ > On Thu, Jan 16, 2025 at 03:25:58PM +0100, Louis-Alexis Eyraud wrote:
+ > > This commit adds a compatible for the MediaTek MT8370 SoC, with an
+ > > integrated ARM Mali G57 MC2 GPU (Valhall-JM, dual core), and adds
+ > > platform data using the same supplies and the same power domain lists
+ > > as MT8186 (one regulator, two power domains).
+ > >=20
+ > > Signed-off-by: Louis-Alexis Eyraud louisalexis.eyraud@collabora.com>
+ > > ---
+ > >  drivers/gpu/drm/panfrost/panfrost_drv.c | 10 ++++++++++
+ > >  1 file changed, 10 insertions(+)
+ > >=20
+ > > diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm=
+/panfrost/panfrost_drv.c
+ > > index 0f3935556ac761adcd80197d87e8e478df436fd5..1d51b64ed0f0660cc95263=
+a289d5dad204540cfd 100644
+ > > --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
+ > > +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+ > > @@ -837,6 +837,15 @@ static const struct panfrost_compatible mediatek_=
+mt8192_data =3D {
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0.pm_features =3D BIT(GPU_PM_CLK_DIS) | BIT(GP=
+U_PM_VREG_OFF),
+ > >  };
+ > > =20
+ > > +/* MT8370 uses the same power domains and power supplies as MT8186 */
+ > > +static const struct panfrost_compatible mediatek_mt8370_data =3D {
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0.num_supplies =3D ARRAY_SIZE(mediatek_mt8183_=
+b_supplies) - 1,
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0.supply_names =3D mediatek_mt8183_b_supplies,
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0.num_pm_domains =3D ARRAY_SIZE(mediatek_mt818=
+6_pm_domains),
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0.pm_domain_names =3D mediatek_mt8186_pm_domai=
+ns,
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0.pm_features =3D BIT(GPU_PM_CLK_DIS) | BIT(GP=
+U_PM_VREG_OFF),
+ > > +};
+ >=20
+ > No, people, stop this nonsense. This is exactly the same as previous.
+ > Don't duplicate entries just because you want a commit.
+ >=20
+I added this new compatible in bindings and panfrost driver because there w=
+ere no other matching compatible=20
+Using another mali-vallhal-jm compatible would make the driver probe fail b=
+ecause of power domains number difference.=20
+Using mt8186-mali compatible would work without modifications but as it is =
+not the same architecture (mali-bifrost), it would be incorrect.
 
-Which is not possible... look at your DTSI.
+I've also misguessed on the dt_match array modifications, sorry.
+I'll amend this patch in order to reuse the mt8186 platform data instead.
 
-> 
-> Another update, i will reintroduce "memory-region-names:" which was 
-> wrongly removed in V2, i have forgotten one particular case.
-> 
-> We need memory-region-names in case only one OCTOSPI instance is 
-> used. If it's OCTOCPI2 and the whole memory-map region
-> is dedicated to OCTOSPI2 (OCTOSPI1 unmapped, OCTOSPI2 (256 Mbytes)
-> 
-> We need to know to which OCTOSPI instance the memory region is associated
-> with, in order to check "st,syscfg-amcr" 's value which must be coherent 
-> with memory region declared.
-> 
-> so i will add :
-> 
->   memory-region-names:
->     description: |
->       OCTOSPI instance's name to which memory region is associated
->     items:
->       - const: ospi1
->       - const: ospi2
-> 
+ > > +
+ > >  static const struct of_device_id dt_match[] =3D {
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0/* Set first to probe before the generic comp=
+atibles */
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "amlogic,meson-gxm-mali",
+ > > @@ -859,6 +868,7 @@ static const struct of_device_id dt_match[] =3D {
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "mediatek,mt8186-mali", .da=
+ta =3D &mediatek_mt8186_data },
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "mediatek,mt8188-mali", .da=
+ta =3D &mediatek_mt8188_data },
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "mediatek,mt8192-mali", .da=
+ta =3D &mediatek_mt8192_data },
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "mediatek,mt8370-mali", .da=
+ta =3D &mediatek_mt8370_data },
+ >=20
+ > No, express properly compatibility or say in bindings commit msg why
+ > devices are not compatible.
+ >=20
+I'll reword in V2 the commit messages to make the compatible need more expl=
+icit.
 
-I don't think this matches what you are saying to us. Let's talk about
-the hardware which is directly represented by DTS/DTSI. You always have
-two instances.
+ > Best regards,
+ > Krzysztof
+ >=20
+ >=20
 
-
->>
->>> +
->>> +  clocks:
->>> +    maxItems: 1
->>> +
->>> +  resets:
->>> +    maxItems: 1
->>> +
->>> +  access-controllers:
->>> +    maxItems: 1
->>> +
->>> +  st,syscfg-amcr:
->>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->>> +    description: |
->>> +      The Address Mapping Control Register (AMCR) is used to split the 256MB
->>> +      memory map area shared between the 2 OSPI instance. The Octo Memory
->>> +      Manager sets the AMCR depending of the memory-region configuration.
->>> +      Format is phandle to syscfg / register offset within syscfg / memory split
->>> +      bitmask.
->>
->> Don't repeat constraints in free form text.
-> 
-> ok
-> 
->>
->>> +      The memory split bitmask description is:
->>> +        - 000: OCTOSPI1 (256 Mbytes), OCTOSPI2 unmapped
->>> +        - 001: OCTOSPI1 (192 Mbytes), OCTOSPI2 (64 Mbytes)
->>> +        - 010: OCTOSPI1 (128 Mbytes), OCTOSPI2 (128 Mbytes)
->>> +        - 011: OCTOSPI1 (64 Mbytes), OCTOSPI2 (192 Mbytes)
->>> +        - 1xx: OCTOSPI1 unmapped, OCTOSPI2 (256 Mbytes)
->>> +    items:
->>> +      minItems: 3
->>> +      maxItems: 3
->>
->> You do not have there three phandles, but one. Look how other bindings
->> encode this.
-> 
-> yes, i see, will update with 
-> 
->     items:
->       - description: phandle to syscfg
->       - description: register offset within syscfg
->       - description: register bitmask for memory split
-> 
->>
->>> +
->>> +  st,omm-req2ack-ns:
->>> +    description: |
->>> +      In multiplexed mode (MUXEN = 1), this field defines the time in
->>> +      nanoseconds between two transactions.
->>> +
->>> +  st,omm-cssel-ovr:
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    description: |
->>> +      Configure the chip select selector override for the 2 OCTOSPIs.
->>> +      The 2 bits mask muxing description is:
->>
->> bit mask of size? 1? Then just enum string, no?
-> 
-> I didn't get your point ? the size of bitmask is 2 bits as indicated.
->     -bit 0: Chip select selector override setting for OCTOSPI1
->     -bit 1: Chip select selector override setting for OCTOSPI2
-> 
-> 
->>
->>> +        -bit 0: Chip select selector override setting for OCTOSPI1
->>> +          0x0: the chip select signal from OCTOSPI1 is sent to NCS1
->>> +          0x1: the chip select signal from OCTOSPI1 is sent to NCS2
->>> +        -bit 1: Chip select selector override setting for OCTOSPI2
->>> +          0x0: the chip select signal from OCTOSPI2 is sent to NCS1
->>> +          0x1: the chip select signal from OCTOSPI2 is sent to NCS2
->>
->> I don't understand why this is so complicated. First, can you even send
->> chip select OCTOSPI1 to NCS2 and use 0x1 as mux? or 0x3 as mux?
-> 
-> 
-> By default, if st,omm-cssel-ovr property is not present:
->   _ chip select OCTOSPI1 is send to NCS1
->   _ chip select OCTOSPI2 is send to NCS2
-> 
-> It's the default configuration.
-> 
-> If st,omm-cssel-ovr property is present, you can mux the chip select 
-> of both OCTOSPI instance on NCS1 or NCS2 as you want.
-> 
-> Yes you can send chip select OCTOSPI1 to NCS2 by using 0x1 as bitmask mux
-> (in this case chip select OCTOSPI2 is sent to NCS1).
-> 
-> If you use 0x3 as bitmask mux, you send  :
->    _ chip select OCTOSPI1 is sent to NCS2
->    _ chip select OCTOSPI2 is sent to NCS2
-> 
->>
->> Second, your bitmask value of "0x0" means OCTOSPI1 and OCTOSPI2 are sent
-> 
-> i think the 0x0/0x1 in the description brings to confusion as it's only the 
-> bit value not the bitmask.
-> 
->> to NCS1 (whateveer NCS is). This sounds wrong, but your binding says is
->> perfectly correct. Is that true? Is that correct binding?
-> 
->  4 bitmask possible choice :
->    0x0 : the chip select signal from OCTOSPI1 is sent to NCS1
-> 	 the chip select signal from OCTOSPI2 is sent to NCS1
-> 
->    0x1 : the chip select signal from OCTOSPI1 is sent to NCS2
-> 	 the chip select signal from OCTOSPI2 is sent to NCS1
-> 
->    0x2 : the chip select signal from OCTOSPI1 is sent to NCS1
-> 	 the chip select signal from OCTOSPI2 is sent to NCS2
-> 
->    0x3 : the chip select signal from OCTOSPI1 is sent to NCS2
-> 	 the chip select signal from OCTOSPI2 is sent to NCS2
-> 
-> 
-> I propose to update the st,omm-cssel-ovr description as following
-> 
->   st,omm-cssel-ovr:
->     $ref: /schemas/types.yaml#/definitions/uint32
->     description: |
->       Configure the chip select selector override for the 2 OCTOSPIs.
->         - 0: OCTOSPI1 chip select send to NCS1 OCTOSPI2 chip select send to NCS1
->         - 1: OCTOSPI1 chip select send to NCS2 OCTOSPI2 chip select send to NCS1
->         - 2: OCTOSPI1 chip select send to NCS1 OCTOSPI2 chip select send to NCS2
->         - 3: OCTOSPI1 chip select send to NCS2 OCTOSPI2 chip select send to NCS2
->     minimum: 0
->     maximum: 3
-> 
-
-My concerns were because I understood that this is not a real bitmask,
-IOW you cannot set two of them to NCS2. But you said that setting of
-0x3, so both going to NCS2, is perfectly correct setting, so it's fine.
-
-
-
-Best regards,
-Krzysztof
+Regards,
+Louis-Alexis Eyraud
