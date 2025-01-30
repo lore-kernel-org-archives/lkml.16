@@ -1,140 +1,143 @@
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC4515382E;
-	Thu, 30 Jan 2025 10:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E1520328
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 10:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738232329; cv=none; b=T1pcDQjwyLXXzoqo6RlHtiZn5hebsYIkjBxrOYJm6T19umk5kO3ZjMoW38TKYsWb0hhK17iqF2BxIv3CBuBuQA7WZl5GbbqjKGhnYeUzjXbQgC6bDhjuHy+2s5B4IuIoh93BRiybgfayl9afxfL1sgZkIZU8qsbxs8OOocv2NYY=
+	t=1738232431; cv=none; b=clyDKnn1zTrUrzSwifggNGIGyuLl3/ldlsiUMfYsKeOhysdlAH9lBNahFlCNYMiaxgZUErR507UZpt68ytzzAOipSR82/DzBqORA+GlpJibDU4L7MyaImmT+uqaLtOfdTTFfCQATvAu4Lo5fOkUIiRr1RFDGHBdLvGbkBa4x4qU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738232329; c=relaxed/simple;
-	bh=+s4r1GvbxlRMtbGSoWce7lF5k148Yo+ZaRKH/SzNE1U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HDxNyR0NqxIegou+ZPc+wcsje3MWG14uTnRH40pAFMlRUyqtERTio0bFFwTFYdXBISCIcWuxL9Vg5xaSZxy6TRLCjoOcSNPRjKr8u07j1bsFs2y3bccdUR0TKX7S28Ef1fdA1W44WPg8aAoDVtisSzU9hunXOzRSMicZ0POQAFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4b63d564e13so405326137.1;
-        Thu, 30 Jan 2025 02:18:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738232324; x=1738837124;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z4hq9DpTUck7EropQITP0m18mFkp0fBnMhAtlqVjjrw=;
-        b=sCpGyEiwz+49MM7b997CAZ+xgJRCzRiTXxg0czmXCyzxE4Rgg8BK5l/UvzXHipa5gD
-         VELzzgMg+r946u7cMIVLK2Anqc5EsSHYaPJAUtUD3TL7TK3fngQ4/w+RaydKRM9gL4Qh
-         MclDsFwjlncSYm0rQCxw2FL+RQxQCMX11+H8SgJcH5z4Bn/k1fFPrlQ58zXQTRzujL1X
-         gPwgABXEdr4str3zIzfwEfkZXTQnwqAZfBpVCKjg2jhhjIbacSWXjrz162OWNtN70ziw
-         wjAIhFUrBFrpRwi2pzpO7Y9NCEnT8EFyG6iC3VNiZ6tim9c4Sx9/XlA1Xyz81Dr8Q6LO
-         Lw3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUhWck7gyezVAq08BYq6YG+kUVGzBv+ErmnvPUyw/18hS0Dwgu4UAYp4RHEZzmgjA6GotqZW5JlmfTKgxw=@vger.kernel.org, AJvYcCW6s6F9qBYVkgsaDHa0IgYxPZSvwn7xT6loDgjhzwrGU0s0mgr7Neswx+Ek4xU9rR+p7Lz4AgF79iw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG5gvmy6FyK3ZMv1vBrEgH0sXOiUylohokWxaDz0X3zfz+WbYN
-	HmPHLiai2+rcifFr3yvJxwswFWX7DJ0MR3iaK2JwH4FAtvwPZ4bkjZKyHimF
-X-Gm-Gg: ASbGncutI3K2nbjHPhcUsIu215UwVs1ReIKXNZ2g6uIAB5R9AEEmEIQXdUj6m5Dbebo
-	3kimLQViltPW+2fa44mqvV7r4uR/uvIwNuyMsXPZ4/5M//Q6QdrYae74EBJBI3nrW6l8Vw3ySoQ
-	jpYSN3LCCFi0iEFROP70JPT4x4oSJcUi4ILMasXlNJHzgoLF0WB169FwT1CfOQ4OMXSqHMnyVq0
-	QcJ+D4lECC3yBkVHAvr4jqSD3yTCFzLFY6rXcseKICK7iV0LBb8gaXGzj+OgpnLz/GNsgWem6vZ
-	bHCS/zK/lJ8GgFv1aS1rPz9jliJ8yqMnAcdehijG7n7lWPEuOY8lpQ2dmA==
-X-Google-Smtp-Source: AGHT+IHAvhvRA52S0gPf9PBRG4rGNwc0TlWvRRw87ZDN1j2f5iQXErS0503Gw1iNLA9QRna64wL2Tg==
-X-Received: by 2002:a05:6102:3709:b0:4b2:adce:bcfe with SMTP id ada2fe7eead31-4b9a52ac141mr5816255137.22.1738232324654;
-        Thu, 30 Jan 2025 02:18:44 -0800 (PST)
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com. [209.85.221.181])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b9baa9aefcsm188395137.12.2025.01.30.02.18.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 02:18:44 -0800 (PST)
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-517aea3ee2aso383233e0c.2;
-        Thu, 30 Jan 2025 02:18:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUSsaiROm1huPZ1yvylWRzhhfNzsJMENHaEb36hOzhWapx7MrzSCe3KLjBS/yXGFp7yGWuU9v7p6GRn4dM=@vger.kernel.org, AJvYcCV7YFBN2EINvlXlHy1GTBlfHddkqpruae+t4KO7Py0muHwcuVLHP4zTTsMbgyUmhaB5Vpf1vEzvmXU=@vger.kernel.org
-X-Received: by 2002:a05:6122:3541:b0:516:2d4e:448a with SMTP id
- 71dfb90a1353d-51e9e33abdcmr7318300e0c.3.1738232324074; Thu, 30 Jan 2025
- 02:18:44 -0800 (PST)
+	s=arc-20240116; t=1738232431; c=relaxed/simple;
+	bh=/Q//3YDpTj6b0GFe3MiWrtEA6Oe/J9oX4I2pg998Ito=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J6dF5odEXpGLG6ShPoQQ7fD5MBSNhsLdNMQf1HqhgY6lxEzpcuJvVPzUa6UFzl/iEarQXAMB97QQFwBIOsc/gvzTfIilkx5zsInCplE4Ge6m4z/nNxzxPinUf/49lX2V0Q5Zk+7LPGCeWpr8lnWjr0MIdWSNWhYtJEfQqwODHn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.169) with Microsoft SMTP Server (TLS) id 14.3.498.0; Thu, 30 Jan
+ 2025 13:20:16 +0300
+Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Thu, 30 Jan
+ 2025 13:20:16 +0300
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+To: syzbot <syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com>
+CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	<syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [syzbot] [usb?] UBSAN: array-index-out-of-bounds in usbhid_parse
+Date: Thu, 30 Jan 2025 02:20:12 -0800
+Message-ID: <20250130102012.640564-1-n.zhandarovich@fintech.ru>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <000000000000d330500607d85a5f@google.com>
+References:
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250128101306.1475491-1-julian@outer-limits.org>
-In-Reply-To: <20250128101306.1475491-1-julian@outer-limits.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 Jan 2025 11:18:32 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXnfsJ9K=6q5YzTUS=etjQvAWQqbNksaMkysX9bJtMRwA@mail.gmail.com>
-X-Gm-Features: AWEUYZmE-D_hg7XFYZP9LcWIVqhH4NIG3_Qqc19_4CWpxiayhWNZDUaX3vYh_g8
-Message-ID: <CAMuHMdXnfsJ9K=6q5YzTUS=etjQvAWQqbNksaMkysX9bJtMRwA@mail.gmail.com>
-Subject: Re: [PATCH v2] sh: Remove IO memcpy and memset from sh code
-To: Julian Vetter <julian@outer-limits.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, linux-sh@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-Hi Julian,
+Test to see that changes made to hid_descriptor are fine.
 
-On Tue, 28 Jan 2025 at 16:22, Julian Vetter <julian@outer-limits.org> wrote:
-> Remove IO memcpy and memset from sh specific code and fall back to the
-> new implementations from lib/iomem_copy.c. They use word accesses if the
-> buffers are aligned and only fall back to byte accesses for potentially
-> unaligned parts of a buffer.
->
-> Signed-off-by: Julian Vetter <julian@outer-limits.org>
-> ---
-> Changes for V2:
-> - Removed also SH4 specific memcpy_fromio code
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+---
+ drivers/hid/usbhid/hid-core.c       |  2 +-
+ drivers/usb/gadget/function/f_fs.c  |  3 ++-
+ drivers/usb/gadget/function/f_hid.c | 22 ++++++++++++++--------
+ include/linux/hid.h                 |  2 +-
+ 4 files changed, 18 insertions(+), 11 deletions(-)
 
-Thanks for the update!
-
-> --- a/arch/sh/kernel/io.c
-> +++ /dev/null
-> @@ -1,111 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -/*
-> - * arch/sh/kernel/io.c - Machine independent I/O functions.
-> - *
-> - * Copyright (C) 2000 - 2009  Stuart Menefy
-> - * Copyright (C) 2005  Paul Mundt
-> - */
-> -#include <linux/module.h>
-> -#include <linux/pci.h>
-> -#include <asm/machvec.h>
-> -#include <asm/io.h>
-> -
-> -/*
-> - * Copy data from IO memory space to "real" memory space.
-> - */
-> -void memcpy_fromio(void *to, const volatile void __iomem *from, unsigned long count)
-> -{
-
-[...]
-
-> -       mb();
-> -}
-> -EXPORT_SYMBOL(memcpy_fromio);
-> -
-> -/*
-> - * Copy data from "real" memory space to IO memory space.
-> - */
-> -void memcpy_toio(volatile void __iomem *to, const void *from, unsigned long count)
-> -{
-
-[...]
-
-> -
-> -       mb();
-> -}
-> -EXPORT_SYMBOL(memcpy_toio);
-
-LGTM. My only worry is the removal of the mb() calls, cfr. the
-scary warning at
-https://elixir.bootlin.com/linux/v6.13/source/arch/sh/include/asm/barrier.h#L13
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+index a6eb6fe6130d..eb4807785d6d 100644
+--- a/drivers/hid/usbhid/hid-core.c
++++ b/drivers/hid/usbhid/hid-core.c
+@@ -1010,7 +1010,7 @@ static int usbhid_parse(struct hid_device *hid)
+ 		return -ENODEV;
+ 	}
+ 
+-	if (hdesc->bLength < sizeof(struct hid_descriptor)) {
++	if (hdesc->bLength < struct_size(hdesc, desc, hdesc->bNumDescriptors)) {
+ 		dbg_hid("hid descriptor is too short\n");
+ 		return -EINVAL;
+ 	}
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 2dea9e42a0f8..a4b6d7cbf56d 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -2550,7 +2550,8 @@ static int __must_check ffs_do_single_desc(char *data, unsigned len,
+ 	case USB_TYPE_CLASS | 0x01:
+ 		if (*current_class == USB_INTERFACE_CLASS_HID) {
+ 			pr_vdebug("hid descriptor\n");
+-			if (length != sizeof(struct hid_descriptor))
++			if (length < sizeof(struct hid_descriptor) +
++				     sizeof(struct hid_class_descriptor))
+ 				goto inv_length;
+ 			break;
+ 		} else if (*current_class == USB_INTERFACE_CLASS_CCID) {
+diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
+index 740311c4fa24..ec8c2e2d6812 100644
+--- a/drivers/usb/gadget/function/f_hid.c
++++ b/drivers/usb/gadget/function/f_hid.c
+@@ -139,13 +139,17 @@ static struct usb_interface_descriptor hidg_interface_desc = {
+ };
+ 
+ static struct hid_descriptor hidg_desc = {
+-	.bLength			= sizeof hidg_desc,
++	.bLength			= struct_size(&hidg_desc, desc, 1),
+ 	.bDescriptorType		= HID_DT_HID,
+ 	.bcdHID				= cpu_to_le16(0x0101),
+ 	.bCountryCode			= 0x00,
+ 	.bNumDescriptors		= 0x1,
+-	/*.desc[0].bDescriptorType	= DYNAMIC */
+-	/*.desc[0].wDescriptorLenght	= DYNAMIC */
++	.desc				= {
++		{
++			.bDescriptorType	= 0, /* DYNAMIC */
++			.wDescriptorLength	= 0, /* DYNAMIC */
++		}
++	}
+ };
+ 
+ /* Super-Speed Support */
+@@ -936,16 +940,18 @@ static int hidg_setup(struct usb_function *f,
+ 		switch (value >> 8) {
+ 		case HID_DT_HID:
+ 		{
+-			struct hid_descriptor hidg_desc_copy = hidg_desc;
++			DEFINE_FLEX(struct hid_descriptor, hidg_desc_copy,
++				desc, bNumDescriptors, 1);
++			*hidg_desc_copy = hidg_desc;
+ 
+ 			VDBG(cdev, "USB_REQ_GET_DESCRIPTOR: HID\n");
+-			hidg_desc_copy.desc[0].bDescriptorType = HID_DT_REPORT;
+-			hidg_desc_copy.desc[0].wDescriptorLength =
++			hidg_desc_copy->desc[0].bDescriptorType = HID_DT_REPORT;
++			hidg_desc_copy->desc[0].wDescriptorLength =
+ 				cpu_to_le16(hidg->report_desc_length);
+ 
+ 			length = min_t(unsigned short, length,
+-						   hidg_desc_copy.bLength);
+-			memcpy(req->buf, &hidg_desc_copy, length);
++						   hidg_desc_copy->bLength);
++			memcpy(req->buf, hidg_desc_copy, length);
+ 			goto respond;
+ 			break;
+ 		}
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index cdc0dc13c87f..85a58ae2c4a0 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -739,7 +739,7 @@ struct hid_descriptor {
+ 	__u8  bCountryCode;
+ 	__u8  bNumDescriptors;
+ 
+-	struct hid_class_descriptor desc[1];
++	struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
+ } __attribute__ ((packed));
+ 
+ #define HID_DEVICE(b, g, ven, prod)					\
