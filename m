@@ -1,93 +1,164 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E05513FEE;
-	Thu, 30 Jan 2025 16:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FC841EE035;
+	Thu, 30 Jan 2025 16:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738256174; cv=none; b=rVRNUXoejiDjbDPtpFlzoH1kWdVoV65nFo6y4HE5tmf/lvbEKjMq4SuB39kC1CsOoRLArOoRXTC6zDP8LZh/e5836o8gslEaYFrmICAZGLvZCzyJ0OJRZeWRd6r2tEF8tT5EhJNt7n5SbaEYKog72E4LXJzFHrY+jAMHWfAr+DM=
+	t=1738256191; cv=none; b=BUMoCWunthEIr1dodOMdoJAZyeVEimDspvIoIbt9CbWVKuFTCdlQI9Mqe/hoS1Z68XIKhzl99z7KKlQdWHXeumvw97G1xsTzwvX6KrX97DU40b2dC+rYkmmCRj0i1ObH4JrgwW1mGWqVzM0Dszigvno7Ceb6DX8N/K0b2/2vjmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738256174; c=relaxed/simple;
-	bh=UhfdpQm5JGzhS99lZ+Wp2n+UfSdJp6jak6E0tscqSZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g+74x5+Ey+62slKTQ+bBdLD7tfcxhIA/2oHfyGsj/ib5Qw2jZNJWRU1mH4GU8bUFc10VWoW7B+82nm9KULMp2a0jDkI3tywOr09KYiPxOcuPsu0qA/cxh2/YibfArG1nNUbfSc6ug1WxxE0Uv8/lQY5Hq3hbx2HJfBYg5i8uMpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=G2eAOhkB; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="G2eAOhkB"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9F78D44325;
-	Thu, 30 Jan 2025 16:56:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738256169;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u57qeUqfDY/mpFryGyfjHV6XRJwlw/bi3UET/NkyKLc=;
-	b=G2eAOhkBR9tR0h5uspHH48myfoTgsNreJ8XkXQDc1tUNSuVnomlK0YI4qrd5Gg6RTr8Yny
-	CaL91YkfEtpFLNDLop6pM/8rVycs5gG1vYLDJQCzaL/tsGysmpzYFo1Dw4p2yOOdM7r6EO
-	Nm3NLjeaMQhqzJt8sqEtrkOdCTgby65B9ysTKRjpurnob4ydkdqvdb012yUjDHCMbob94h
-	ep0aANmqJZMVJDQ8t7dqAKJQOmJ5BL031cLjv92oCpum6Ui56d1IPO+Oz+GCXLlyqp3YCR
-	xzfVZqWoHRfr1ny4Nb/npsCjEiAMPH1Rz+je4lzjXZHgyB6TZoBBADR+nqv8Ag==
-Date: Thu, 30 Jan 2025 17:56:07 +0100
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Donald Hunter
- <donald.hunter@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net 1/3] MAINTAINERS: Add myself as maintainer for
- socket timestamping and expand file list
-Message-ID: <20250130175607.79af57a3@kmaincent-XPS-13-7390>
-In-Reply-To: <20250130083104.7f66ff2e@kernel.org>
-References: <20250128-fix_tsconfig-v1-0-87adcdc4e394@bootlin.com>
-	<20250128-fix_tsconfig-v1-1-87adcdc4e394@bootlin.com>
-	<20250129163916.46b2ea5c@kernel.org>
-	<20250130101811.5459c3f8@kmaincent-XPS-13-7390>
-	<20250130083104.7f66ff2e@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738256191; c=relaxed/simple;
+	bh=eLyjG0G1KbV38YOTYlWw6vyTB9t+tEh09C2FyplIcgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AQfK+yHJaR5gXHUsAzRyXwAxAZgQ0DTdJbpGt9WIbuARDeHBETRlu1qQEdgY27PJF7tYrGAoNpsLAgj8atxUmStnrDRNfYwsn248IfpmNjZfZBaI2m4bCjmdhcNUya4P1gAkJXlZ7dRfVkw77Ws6LW0GyxVs+SoHhVNs1iFMFiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E7DB497;
+	Thu, 30 Jan 2025 08:56:55 -0800 (PST)
+Received: from [10.1.32.52] (e122027.cambridge.arm.com [10.1.32.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20D4F3F63F;
+	Thu, 30 Jan 2025 08:56:24 -0800 (PST)
+Message-ID: <699f918e-5db4-467c-9dcf-c1474aaef265@arm.com>
+Date: Thu, 30 Jan 2025 16:56:22 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 16/43] arm64: RME: Allow VMM to set RIPAS
+To: Gavin Shan <gshan@redhat.com>, kvm@vger.kernel.org, kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20241212155610.76522-1-steven.price@arm.com>
+ <20241212155610.76522-17-steven.price@arm.com>
+ <4c1c507d-25ae-488f-88d3-fd6ffe337d0d@redhat.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <4c1c507d-25ae-488f-88d3-fd6ffe337d0d@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeifeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllhgvmhguvggsrhhuihhjnhdrkhgvrhhnvghlsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrt
- ghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On Thu, 30 Jan 2025 08:31:04 -0800
-Jakub Kicinski <kuba@kernel.org> wrote:
+On 29/01/2025 23:25, Gavin Shan wrote:
+> On 12/13/24 1:55 AM, Steven Price wrote:
+>> Each page within the protected region of the realm guest can be marked
+>> as either RAM or EMPTY. Allow the VMM to control this before the guest
+>> has started and provide the equivalent functions to change this (with
+>> the guest's approval) at runtime.
+>>
+>> When transitioning from RIPAS RAM (1) to RIPAS EMPTY (0) the memory is
+>> unmapped from the guest and undelegated allowing the memory to be reused
+>> by the host. When transitioning to RIPAS RAM the actual population of
+>> the leaf RTTs is done later on stage 2 fault, however it may be
+>> necessary to allocate additional RTTs to allow the RMM track the RIPAS
+>> for the requested range.
+>>
+>> When freeing a block mapping it is necessary to temporarily unfold the
+>> RTT which requires delegating an extra page to the RMM, this page can
+>> then be recovered once the contents of the block mapping have been
+>> freed.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>> Changes from v5:
+>>   * Adapt to rebasing.
+>>   * Introduce find_map_level()
+>>   * Rename some functions to be clearer.
+>>   * Drop the "spare page" functionality.
+>> Changes from v2:
+>>   * {alloc,free}_delegated_page() moved from previous patch to this one.
+>>   * alloc_delegated_page() now takes a gfp_t flags parameter.
+>>   * Fix the reference counting of guestmem pages to avoid leaking memory.
+>>   * Several misc code improvements and extra comments.
+>> ---
+>>   arch/arm64/include/asm/kvm_rme.h |  17 ++
+>>   arch/arm64/kvm/mmu.c             |   8 +-
+>>   arch/arm64/kvm/rme.c             | 411 +++++++++++++++++++++++++++++++
+>>   3 files changed, 433 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/
+>> asm/kvm_rme.h
+>> index be64b749fcac..4e7758f0e4b5 100644
+>> --- a/arch/arm64/include/asm/kvm_rme.h
+>> +++ b/arch/arm64/include/asm/kvm_rme.h
+>> @@ -92,6 +92,15 @@ void kvm_realm_destroy_rtts(struct kvm *kvm, u32
+>> ia_bits);
+>>   int kvm_create_rec(struct kvm_vcpu *vcpu);
+>>   void kvm_destroy_rec(struct kvm_vcpu *vcpu);
+>>   +void kvm_realm_unmap_range(struct kvm *kvm,
+>> +               unsigned long ipa,
+>> +               u64 size,
+>> +               bool unmap_private);
+>> +int realm_set_ipa_state(struct kvm_vcpu *vcpu,
+>> +            unsigned long addr, unsigned long end,
+>> +            unsigned long ripas,
+>> +            unsigned long *top_ipa);
+>> +
+> 
+> The declaration of realm_set_ipa_state() is unnecessary since its scope has
+> been limited to rme.c
 
-> On Thu, 30 Jan 2025 10:18:11 +0100 Kory Maincent wrote:
->  [...] =20
-> > >=20
-> > > Does that sound fair?   =20
-> >=20
-> > Yes it does. Whether setting me as reviewer for the SOCKET TIMESTAMPING
-> > subpart or adding me as maintainer of these two files it is ok for me. =
-What
-> > do you prefer? =20
->=20
-> The latter, TBH. I'll send the patch. We recommend setting up lore+lei
-> to subscribe to threads which touch particular files. It's much more
-> scalable than adding interested folks to MAINTAINERS. Tho, last time
-> I looked lei didn't support the weird mdir format used by claws :(
+Ack, the function can be static too.
 
-You are right don't bother to add me to MAINTAINERS file, I am indeed not an
-experienced reviewer for now.
+>>   #define RMM_RTT_BLOCK_LEVEL    2
+>>   #define RMM_RTT_MAX_LEVEL    3
+>>   @@ -110,4 +119,12 @@ static inline unsigned long
+>> rme_rtt_level_mapsize(int level)
+>>       return (1UL << RMM_RTT_LEVEL_SHIFT(level));
+>>   }
+>>   +static inline bool realm_is_addr_protected(struct realm *realm,
+>> +                       unsigned long addr)
+>> +{
+>> +    unsigned int ia_bits = realm->ia_bits;
+>> +
+>> +    return !(addr & ~(BIT(ia_bits - 1) - 1));
+>> +}
+>> +
+>>   #endif
+> 
+> The check on the specified address to determine its range seems a bit
+> complicated
+> to me, it can be simplified like below. Besides, it may be a good idea
+> to rename
+> it to have the prefix "kvm_realm_".
+> 
+> static inline bool kvm_realm_is_{private | protected}_address(struct
+> realm *realm,
+>                           unsigned long addr)
+> {
+>     return !(addr & BIT(realm->ia_bits - 1));
+> }
 
-Oh, didn't know the lei tools. Thanks!
+Ack
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+> A question related to the terms used in this series to describe a
+> granule's state:
+> "protected" or "private", "unprotected" or "shared". Those terms are all
+> used in
+> the function names of this series. I guess it would be nice to unify so
+> that
+> "private" and "shared" to be used, which is consistent to the terms used by
+> guest-memfd. For example, kvm_realm_is_protected_address() can be
+> renamed to
+> kvm_realm_is_private_address().
+
+Happy with the rename here. More generally it's a little awkward because
+the RMM spec does refer to protected/unprotected (e.g.
+RMI_RTT_MAP_UNPROTECTED). So there's always a choice between aligning
+with the RMM spec or aligning with guest-memfd.
+
+Thanks,
+
+Steve
+
