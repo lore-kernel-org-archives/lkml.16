@@ -1,162 +1,114 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CC7192B85
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F4E9475
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738229495; cv=none; b=pbxy2iy8o8ZCrAEYwZAaaNWtqq17V2+Fq4nzGA287fbVY+nVgpQ5BGF/gKXV2OXhUU6xnSU/Z2aaeOHaIJyIxaQUdw9Bwb37gFWsEINnAfPpLyobTEB7zu4ZCq033sDfhIaRl+VegXi/2XY6C/sDTwUNS5v9cY8gQsNpx+PnPEA=
+	t=1738229702; cv=none; b=BXiKGK1dLrcZ06I+RtAIhsHyky+B9Onad511Zax/sCb3KbuvSN6XEQUgRfbjLzAEPaFK5ukmaJtQTNgAkZa+Q4xAQeJ1200ONkCN1dj7izyHh3IQpX+eNXtqlSgF7Ymyxxi52pX5uS1wk4PzPxKpMmlK0oxV/ahos7ovUeQ8uYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738229495; c=relaxed/simple;
-	bh=FABrqX+Hjw484256YaPHen56rdftKHMIcVK00b4E1jA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=GjW/Wn5Etw8isfyQieRkB3AXsTHL2Hp+dJ0dXaUxrotHnwtW6ZO/OXbr89o6tKxmQzns7N4D7LtuzGXcHRuytqAy/sYT0U24tx2Ygv2J8KGdYRulZa1LOT69A1IzXw2VyiiCh+TE4RXY2mzCflgSxDslMKzEY6Y8TTwjtjEleKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F80jOlUk; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738229702; c=relaxed/simple;
+	bh=xc4ELH0oFFibv3guQwRbvL5jq5ER+aQUIwoOEf5VieE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oExinLQXsgkitQXY8Oe+80sLGFwYOIPLQYcvT0CamTTGb/c5Uv2TJCNDPOhJxyl+W9MEWKeuCNk198hYBnbNzOkv1W1ogsuMqZM00uD9qyPamAqwsQ3PS+OEZ0lBBttEB+cpUVPk7ApE9AM7bjxOzqyYAvZuZBSA1d/rMM+pcIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=b/rwV8AB; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F80jOlUk"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-85c5adbca8eso165481241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 01:31:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="b/rwV8AB"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4363dc916ceso10906855e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 01:35:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738229492; x=1738834292; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dmWcBJcs6Wk755m4D9DSq+3kzSFiV3zXYSE9SNe/ZDI=;
-        b=F80jOlUkdY7BAeP1WiOo9GYvKT/IyTiR0z/kPdq09j/2dWK5IF+4ewxBhen0R51DPq
-         bVsXbA2bAGA0oWil7tSCh2Ufl68DCBKTOH/aKDTk+5NYKnbXtw2N3mACeFo/SNvbS35Y
-         aYP5u+Vm1tmO0fA4CWhyFttEY9GddMnYVOqQ8aCQy2dwr2iNlw4ltMGlGRCluzfeTSBC
-         E0RM3MEQvsXo8QRk58P77MMvPlRalLwmxlcQIi9Y3NCl4pMjHe37C2p5jX3ADZ4HepPQ
-         zgCmVFJY56RUeoY9tHJO//SxjysLbE6Tk2Fxgm6ToZgOpYvukUlXPnSM6FUuYpsQYikC
-         YRBQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738229698; x=1738834498; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rCSZkLmd87J+p3Gt97ywpEqoOmcq5P4BFSZvxAfGIHM=;
+        b=b/rwV8ABI5nYr/4fiX5v88Mn0+25O6xUxjxGVipfVcNj3zaSWNycyDSaeScWdq2JGv
+         WImdv6dd5Pnt+GPEHrCsJHNPxN/Fb0xAmaZ3rnp+kvHkqNaxqj0a68NF5Wcvc3PxOGw0
+         u/6Rm50EUPrbffdMIUM38OsW5+SEt6nkEGxY4Iu4AT4PeRd+6bzrvyaPXxKxhN+XzHl7
+         A6Pu6M4Rj93247gzH98ctOXdQlfncjYbqDLyTae8bE0uralKMmjO1B65N/tEWZL/jkVc
+         7YoBZTS/1criRf5Kaex7JSDlXzrH7hZDakOUimzUC0hA1ias7BmHcf3RvfbHxzOICVDq
+         HKMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738229492; x=1738834292;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dmWcBJcs6Wk755m4D9DSq+3kzSFiV3zXYSE9SNe/ZDI=;
-        b=hV4Nc/YAuQX51LNey6tOfUjZgu6JqS6eCA1OMmqXTQxNIyTTjrWL+t3NmuxRRoMVZ9
-         osTMlUvTA6C/4lCxyvuI06VP++3S5sotU6Tj4UiaEIE6dM75wurRLLe2xZTVTfBbL4qK
-         jgag3zRYANGLsFfZekajznKrLkk5nuOlbubWt+aF1j+LJmI5pDZ3lXwjRmI9NQVQTAKU
-         6cIkP+ir69lxrHtPjd7mSRc7LVidrFJykOLJcisZUsxDCl72T8LU354lrRh2U9zmlaTX
-         t7+GYxqYJTuqrBM2Q2lvSI6Z/n5AE4o6BubpsmKBmvbVMu+U099h3tM38ijRR/ITfHuE
-         +gIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkpNeU7VAeUFsNywoRr5FmcB5dboRziyjxhYwTX+uUtAyWE1BxJSWMtG5H05eXJ6hPwHWCu+y1IodIiRQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywkOfrN1EzE7TlAp95zYXS/MiC0ATFY/FHmEc7yrvxG5TuRBlB
-	QFQGONQtJH4v5u1/15BoJIgb3TaM5oChnE/S9fVmanc/tLL3M+2rnlndL2Fu0+2ik5V/Ig/UO+7
-	P5iVZl/ApfTTaAv6mgGhnBkuEGGTupur2PIx1wQ==
-X-Gm-Gg: ASbGncs+o6HIN6o9CYoAE/CZN4rJSINbRZvTbcBoNUubWY35IzlNPiTQzzZrFc96GWv
-	hfLoe1O71DGVcjl10dW7VoFo01DfLrn4TZfZS+E3Ge/c/kK9fetr418DdVMQNlkTwhfAxfxHpvM
-	ngSCSFZMAw7NJe43HMd/pVmPkFznne1w==
-X-Google-Smtp-Source: AGHT+IHHO4p75yBvoZrH4CWt7Sm3+WjJipBubc0F5yEZyIihuApBbf7n+j83VZzoGbXPEsG7JEuXYNAUETI3Fr3UyNs=
-X-Received: by 2002:a05:6102:161e:b0:4b2:5d16:f75 with SMTP id
- ada2fe7eead31-4b9a4ec7f86mr5303490137.4.1738229492696; Thu, 30 Jan 2025
- 01:31:32 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738229698; x=1738834498;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rCSZkLmd87J+p3Gt97ywpEqoOmcq5P4BFSZvxAfGIHM=;
+        b=IeplRzwOhtpMFNvI0eJn8L3heTokHkqX857S2sghc72/obRiwdLh//OlkmSO90xuXP
+         U/QL85fpG/qyX12JADL0EtmAN9cSUoyeeER6Dc968tzKSpekoof/IV7YgMU7vr1WzUzc
+         d8dHFdCgTYjmP2JTdP9XGKseUVloG7N3cWQBv86lwD2d/PueBFPOfS52A7T/fxSBeTaG
+         j6UR5O9MRZutpk07n1heZ9DvPxj4dhfiXMuzo02RozbGBbVpTtdUlVKyEL7HDKTdpSLU
+         fuE5Zdf3KC63AMvNacyyN8g9UTA4p/n5mheOjXpr1UrnlypsouTVCfoKsjb5lDD7ht3x
+         sPeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsQ2jr1Gt/U4YhQm7HbTHNKWPGQiVal6br37ZsIajG/3YInclj/seN/af3mZrUxf1+7FS5opFX3n8uvqM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzetEYSk/Y6bo/YZ242Fn86zz+OGxZgP26U4J85SsjAxSGRxIEt
+	nMBEvHjmdqx0PBE2ITRlwxSB7wx9mGHDLt/Mwrro23bxhx08BorlktMdd9a6hH0ALTS/RtRWu5r
+	0AH8=
+X-Gm-Gg: ASbGncuRH14w70eERY/aqDfQpY/bwNPJQHRs4TBaCWeIdg56BIdt5O/EZFBMjnwYyjf
+	m9oyqEYUaVsIGrf8J7gKMMD2NXtQhMh+ftVXQKRT9fAIMsLf+FLp0eQsmygg5F6A2GfUrV1daiX
+	2sNvR9a8fuiXaP/ms4B+jsep1Hk5A3NNdQiT80gZSM4q/xf2ULDCgMo33rmvMceysD97DTRCd/L
+	8TeeG8TIPKsb2rYusXO0xxRmMfQAMUSxBnY9f0gHN/60EJs9BpXUiQBauMxlmi8JbqEfEHTovd+
+	s6+wiqVK7hAU1dM=
+X-Google-Smtp-Source: AGHT+IFzBjXuzrIBGDmUC2JKEWFepdBNmuLP1BuRm1yt6BvEzzR/DXv8vtpiKd7cVq/Tc/3hfJbxQA==
+X-Received: by 2002:a05:600c:3d0d:b0:434:ff08:202e with SMTP id 5b1f17b1804b1-438e15ee1cemr19665025e9.8.1738229697826;
+        Thu, 30 Jan 2025 01:34:57 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:fc6d:e56b:f84b:f494])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23de35csm16705785e9.10.2025.01.30.01.34.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 01:34:57 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.14-rc1
+Date: Thu, 30 Jan 2025 10:34:54 +0100
+Message-ID: <20250130093454.17264-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 30 Jan 2025 15:01:21 +0530
-X-Gm-Features: AWEUYZmjjTJhG4gbVvsZPMKcHyLA3_iG79mE5k3okwZmPnMLWYy8tDLAX5wqlig
-Message-ID: <CA+G9fYtNfM399_=_ff81zeRJv=0+z7oFJfPGmJgTp6yrJmU+1w@mail.gmail.com>
-Subject: linux: master: x86_64: gcc-8: error: call to '__compiletime_assert_909'
- declared with attribute error: clamp() low limit dsc_min_bpc * 3 greater than
- high limit dsc_max_bpc * 3
-To: lkft-triage@lists.linaro.org, open list <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>
-Cc: David Laight <david.laight@aculab.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-The x86_64 and i386 build failed with defconfig with gcc-8 toolchain due to
-following build warnings / errors on the Torvalds Linux master branch.
-But gcc-13 builds pass.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-First seen on v6.13-9485-g72deda0abee6 on Jan. 27, 2025
-Good:  v6.13-7644-gc2da8b3f914f on Jan. 27, 2025
-Bad:  v6.13-8265-g9c5968db9e62 on Jan. 27, 2025
+Linus,
 
-i386:
-  build:
-    * gcc-8-i386_defconfig
+Please pull the following set of GPIO fixes for the upcoming rc1.
 
-x86_64:
-  build:
-    * gcc-8-x86_64_defconfig
+Thanks,
+Bartosz
 
-Reported-by: Linux Kernel Functional Testing
+The following changes since commit 4abae5b6af811ab2b53aa761bf9ae2139757d594:
 
-Build log:
----
-make --silent --keep-going --jobs=8
-O=/home/tuxbuild/.cache/tuxmake/builds/1/build ARCH=x86_64 SRCARCH=x86
-CROSS_COMPILE=x86_64-linux-gnu- 'CC=sccache x86_64-linux-gnu-gcc'
-'HOSTCC=sccache gcc'
-In file included from <command-line>:
-In function 'intel_dp_dsc_compute_pipe_bpp_limits.isra.80',
-    inlined from 'intel_dp_compute_config_limits' at
-drivers/gpu/drm/i915/display/intel_dp.c:2547:3:
-include/linux/compiler_types.h:542:38: error: call to
-'__compiletime_assert_909' declared with attribute error: clamp() low
-limit dsc_min_bpc * 3 greater than high limit dsc_max_bpc * 3
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-                                      ^
-include/linux/compiler_types.h:523:4: note: in definition of macro
-'__compiletime_assert'
-    prefix ## suffix();    \
-    ^~~~~~
-include/linux/compiler_types.h:542:2: note: in expansion of macro
-'_compiletime_assert'
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-  ^~~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:39:37: note: in expansion of macro
-'compiletime_assert'
- #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                     ^~~~~~~~~~~~~~~~~~
-include/linux/minmax.h:188:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-  BUILD_BUG_ON_MSG(statically_true(ulo > uhi),    \
-  ^~~~~~~~~~~~~~~~
-include/linux/minmax.h:195:2: note: in expansion of macro '__clamp_once'
-  __clamp_once(type, val, lo, hi, __UNIQUE_ID(v_), __UNIQUE_ID(l_),
-__UNIQUE_ID(h_))
-  ^~~~~~~~~~~~
-include/linux/minmax.h:206:28: note: in expansion of macro '__careful_clamp'
- #define clamp(val, lo, hi) __careful_clamp(__auto_type, val, lo, hi)
-                            ^~~~~~~~~~~~~~~
-drivers/gpu/drm/i915/display/intel_dp.c:2506:25: note: in expansion of
-macro 'clamp'
-  limits->pipe.max_bpp = clamp(limits->pipe.max_bpp, dsc_min_bpc * 3,
-dsc_max_bpc * 3);
-                         ^~~~~
-make[7]: *** [scripts/Makefile.build:194:
-drivers/gpu/drm/i915/display/intel_dp.o] Error 1
+  Merge tag 'gpio-updates-for-v6.14-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux (2025-01-22 08:47:54 -0800)
 
+are available in the Git repository at:
 
-Links:
----
- build log: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.13-9485-g72deda0abee6/testrun/27066663/suite/build/test/gcc-8-x86_64_defconfig/log
- details: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.13-9485-g72deda0abee6/testrun/27066663/suite/build/test/gcc-8-x86_64_defconfig/details/
- history: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.13-9485-g72deda0abee6/testrun/27066663/suite/build/test/gcc-8-x86_64_defconfig/history/
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v6.14-rc1
 
-Steps to reproduce:
-------------
-$ tuxmake --runtime podman --target-arch x86_64 --toolchain gcc-8
---kconfig x86_64_defconfig
+for you to fetch changes up to f8524ac33cd452aef5384504b3264db6039a455e:
 
-metadata:
----
-  git describe: v6.13-9485-g72deda0abee6
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-  git sha: 72deda0abee6e705ae71a93f69f55e33be5bca5c
-  kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2sKEcVft7ytiSSvOSnAuAxlCgRH/config
-  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2sKEcVft7ytiSSvOSnAuAxlCgRH/
-  toolchain: gcc8
-  config: gcc-8-defconfig
-  arch: i386 and x86_64
+  selftests: gpio: gpio-sim: Fix missing chip disablements (2025-01-23 15:44:48 +0100)
 
---
-Linaro LKFT
-https://lkft.linaro.org
+----------------------------------------------------------------
+gpio fixes for v6.14-rc1
+
+- update gpio-sim selftests to not fail now that we no longer allow
+  rmdir() on configfs entries of active devices
+- remove leftover code from gpio-mxc
+
+----------------------------------------------------------------
+Ahmad Fatoum (1):
+      gpio: mxc: remove dead code after switch to DT-only
+
+Koichiro Den (1):
+      selftests: gpio: gpio-sim: Fix missing chip disablements
+
+ drivers/gpio/gpio-mxc.c                  |  3 +--
+ tools/testing/selftests/gpio/gpio-sim.sh | 31 +++++++++++++++++++++++++------
+ 2 files changed, 26 insertions(+), 8 deletions(-)
