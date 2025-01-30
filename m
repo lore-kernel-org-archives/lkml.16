@@ -1,198 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A411AF0DC;
-	Thu, 30 Jan 2025 12:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107301AF0DC;
+	Thu, 30 Jan 2025 12:06:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738238771; cv=none; b=HE7kcZlnobmQ24xPN1pyNbCgXU4peoLW8kduo8c/Sys2H4vlMyo3m+qak93hxphLtQzsaxxl3HquADp1/Z1MSJwTxrpqNRyLQnJjJ1VAWidNkzh7diR/HNf98EjUukyVXujPWGfzzZjp41qbf8GXmpT0qc9l9FxRHH8hQR8hqpI=
+	t=1738238796; cv=none; b=JBdIdbOQ7Ruf3yJqTTuAMX4SOXkPyi9UZilz4c8xHjf3e6vdCt9dmwztIEns/R+L0W37oppIXCb8Gsyb+Kt7h5yMeOJvfK75/048ZU+drt0pPm/GRvgjC++oSxonZr7UTg9uoCp+3ByEOW3KZefh5Le2QiCLGUfe5VXPlbuj16g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738238771; c=relaxed/simple;
-	bh=xopmZEADxLu17v8s1oec48v9swghvqcukEWRE5i/ArQ=;
+	s=arc-20240116; t=1738238796; c=relaxed/simple;
+	bh=b4lyXCs00W4v0PX6NjYUFGe3MRcYlInXkes936v3VrU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rg89ZkYP4ZL6PDEwKg+5i1XdCvDfpA7fRzP22ETPFI93fGKu/ebaaCHbwu8WqIs59oSj9N9n3StZqmifvtg1OdMT1PPu1b3XYK2JDWssBWUdyoi0vULxoqI4Gyeuo23Cjs8Sdxxs5MIITL1sj7cABUvtPe4brdxw68d1CTvWy6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAR3DGWc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=mkZDuC7Mt3JIAvqSAJJafXjoHE50HkPwWZrPpJFfPfIAw3ULebAVelHd2W8Du+vM5qDooDXVFn4PYXssZrCNolXCvZz3G2cehA92VscTuyLUYd2EnB4SdjHVLRY7JXO4JGqwk5tMqjXIXk5r0haXkh+1X+PtlDAKFFs5Fh59pSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OPMik30u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAR3DGWc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D33C4C4CED2;
-	Thu, 30 Jan 2025 12:05:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OPMik30u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CFB0C4CED2;
+	Thu, 30 Jan 2025 12:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738238770;
-	bh=xopmZEADxLu17v8s1oec48v9swghvqcukEWRE5i/ArQ=;
+	s=k20201202; t=1738238795;
+	bh=b4lyXCs00W4v0PX6NjYUFGe3MRcYlInXkes936v3VrU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mAR3DGWcYda1w4z0OEHonKPUaUDc0dWMf/3YYEXtK61VMN/NDdh1hVPVJF54ImIb1
-	 fBhqehjqpuNIDlQOBHjtXaWdqlW0quBcdIUcAEdRGZCN+wqL/b+bJOJQWbIyRJhirr
-	 GyWrVb0JimepHfBcJTgTUuKieX/YqXI/8fP8hY8jsthxtlOqQZr8hp/xDISGE0owm0
-	 gYGE+ahAYxDoTtKItvF6X3BQEmd4knWu/UJl/DUXleKBH/xvYVzkkLdZlTIYkyik6Z
-	 aMwzkD6yE42iXUkpvOEHiEA2T8cB/kSyu05k5dHLcL/Mwp2WUiez14Oo3o2OIxLFtT
-	 b3mdKDD/0Nz0Q==
-Message-ID: <3b5af48e-4155-4b98-b67b-b75d9fb6285e@kernel.org>
-Date: Thu, 30 Jan 2025 13:05:54 +0100
+	b=OPMik30uzeRZV6DX4CH/FYVipBa9lpJgZjjaa3s7/Vkzd4+y+f9Sk+f33lYBq/NV7
+	 /22u5QjN9VWnsVUxa5IJLGK9eAYtiwIGIq0Zm7T7ECPpiITBC14fd7BUTtV1eTAV+n
+	 X9dQfbc+u8JyUohCvsaE19OJ30fxKYP+s0r8d2fUJwn27dNSqtk6XqhqMoDJ+/vdP6
+	 bCtKi2/BiN7PcbJXMFkVOriQwyoA3wgWsravVoZ0ZV/FxRwIPottRn+WMEK17SBX3I
+	 kwAA0ISMDaYXUlaRiVZsLPCYpElWg1YZLrPvjf0DNQYh/+kLCb3qRSHZNSR2sHafTM
+	 WDlxSuPZiNynA==
+Message-ID: <42879d73-e983-4246-83cd-a5bd55b02d32@kernel.org>
+Date: Thu, 30 Jan 2025 13:06:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH bpf-next/net v2 4/7] bpf: Add mptcp_subflow bpf_iter
-Content-Language: en-GB
-To: Martin KaFai Lau <martin.lau@linux.dev>, Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Martin KaFai Lau <martin.lau@kernel.org>
-References: <20241219-bpf-next-net-mptcp-bpf_iter-subflows-v2-0-ae244d3cdbbc@kernel.org>
- <20241219-bpf-next-net-mptcp-bpf_iter-subflows-v2-4-ae244d3cdbbc@kernel.org>
- <fdf0ddbe-e007-4a5f-bbdf-9a144e8fbe35@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <fdf0ddbe-e007-4a5f-bbdf-9a144e8fbe35@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: clock: gcc-sdm660: Add missing SDCC
+ resets
+To: Alexey Minnekhanov <alexeymin@postmarketos.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>,
+ Taniya Das <quic_tdas@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ phone-devel@vger.kernel.org
+References: <20250129212328.1627891-1-alexeymin@postmarketos.org>
+ <20250130-cheerful-splendid-cockatoo-d833f6@krzk-bin>
+ <6312f316-f407-494b-91c4-04d761396e22@postmarketos.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <6312f316-f407-494b-91c4-04d761396e22@postmarketos.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Martin,
-
-Thank you for your review!
-
-Sorry for the delay here, Geliang started to work on a new version, but
-it might take a bit of time as he is currently off for a few days.
-
-On 24/01/2025 01:47, Martin KaFai Lau wrote:
-> On 12/19/24 7:46 AM, Matthieu Baerts (NGI0) wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 30/01/2025 12:29, Alexey Minnekhanov wrote:
+> On 1/30/25 11:35 AM, Krzysztof Kozlowski wrote:
+>> On Thu, Jan 30, 2025 at 12:23:25AM +0300, Alexey Minnekhanov wrote:
+>>> Add resets for eMMC/SD card blocks that were missed during initial
+>>> driver submission.
+>>>
+>>> Signed-off-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
+>>> Fixes: f2a76a2955c0 ("clk: qcom: Add Global Clock controller (GCC) driver for SDM660")
 >>
->> It's necessary to traverse all subflows on the conn_list of an MPTCP
->> socket and then call kfunc to modify the fields of each subflow. In
->> kernel space, mptcp_for_each_subflow() helper is used for this:
+>> Your SoB is always the last tag, but repeating what I asked during
+>> previous review - what sort of bug is here? Missing feature is not a bug
+>> per se.
 >>
->>     mptcp_for_each_subflow(msk, subflow)
->>         kfunc(subflow);
+>> Best regards,
+>> Krzysztof
 >>
->> But in the MPTCP BPF program, this has not yet been implemented. As
->> Martin suggested recently, this conn_list walking + modify-by-kfunc
->> usage fits the bpf_iter use case.
->>
->> So this patch adds a new bpf_iter type named "mptcp_subflow" to do
->> this and implements its helpers bpf_iter_mptcp_subflow_new()/_next()/
->> _destroy(). And register these bpf_iter mptcp_subflow into mptcp
->> common kfunc set. Then bpf_for_each() for mptcp_subflow can be used
->> in BPF program like this:
->>
->>     bpf_for_each(mptcp_subflow, subflow, msk)
->>         kfunc(subflow);
-
-(...)
-
->> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
->> index
->> c5bfd84c16c43230d9d8e1fd8ff781a767e647b5..e39f0e4fb683c1aa31ee075281daee218dac5878 100644
->> --- a/net/mptcp/bpf.c
->> +++ b/net/mptcp/bpf.c
-
-(...)
-
->> @@ -47,10 +56,54 @@ bpf_mptcp_subflow_ctx(const struct sock *sk)
->>       return NULL;
->>   }
->>   +__bpf_kfunc static int
->> +bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
->> +               struct mptcp_sock *msk)
->> +{
->> +    struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
->> +    struct sock *sk = (struct sock *)msk;
->> +
->> +    BUILD_BUG_ON(sizeof(struct bpf_iter_mptcp_subflow_kern) >
->> +             sizeof(struct bpf_iter_mptcp_subflow));
->> +    BUILD_BUG_ON(__alignof__(struct bpf_iter_mptcp_subflow_kern) !=
->> +             __alignof__(struct bpf_iter_mptcp_subflow));
->> +
->> +    kit->msk = msk;
->> +    if (!msk)
 > 
-> NULL check is not needed. verifier should have rejected it for
-> KF_TRUSTED_ARGS.
+> I was hesitant about adding fixes tag myself, because there is no any 
+> user-observable bug being fixed here. In fact the behavior is unchanged, 
+> eMMC and SD worked fine before this and still work fine with this patch.
+>  From Linux side this is mostly for consistency with other 
+> younger/sibling SoCs, like MSM8998 & 8996 all have these resets 
+> specified. This will probably be much more useful for U-Boot port.
 > 
->> +        return -EINVAL;
->> +
->> +    if (!sock_owned_by_user_nocheck(sk) &&
->> +        !spin_is_locked(&sk->sk_lock.slock))
-> 
-> I could have missed something. If it is to catch bug, should it be
-> sock_owned_by_me() that has the lockdep splat? For the cg get/setsockopt
-> hook here, the lock should have already been held earlier in the kernel.
+> Perhaps fixes tag should be removed completely?
 
-Good point. Because in this series, the kfunc is currently restricted to
-CG [gs]etsockopt hooks, we should use msk_owned_by_me(msk) here.
+Yes, drop the Fixes tag.
 
-> This set is only showing the cg sockopt bpf prog but missing the major
-> struct_ops piece. It is hard to comment. I assumed the lock situation is
-> the same for the struct_ops where the lock will be held before calling
-> the struct_ops prog?
-
-I understand it is hard to comment on that point. In the 'struct_ops' we
-are designing, the lock will indeed be held before calling the stuct_ops
-program. So we will just need to make sure this assumption is correct
-for all callbacks of our struct_ops.
-Also, if I understood correctly, it is possible to restrict a kfunc to
-some specific struct_ops, e.g. not to call this kfunc for the TCP CA
-struct_ops. So these checks should indeed not be needed, but I will
-double-check that with Geliang.
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+Best regards,
+Krzysztof
