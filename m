@@ -1,118 +1,81 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE1F1BEF91;
-	Thu, 30 Jan 2025 10:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F891494CC;
+	Thu, 30 Jan 2025 10:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738234161; cv=none; b=kNWLVf9qo2T5QkCmcz5CThltMXH7Oa5e1DiHdarOUz+gRiw2W0JoT6bmvIJrTjeXnpt81bgeZwo7xV1hfpvRlEwHweAEJBk4ZutvGaaQlvLBa5uF/SzJvDGKulf8h/lNFO2f38h8yIcT1InHUZ0sbWnh0vzhCiPyzJOZ87lRRxY=
+	t=1738234207; cv=none; b=esh3AxvVPmQnePbIo1jzgcHkAdorBHzsXlTtSbVtYqf4SfOF9CPMYrIHiWMu62VaxtL9IDv2q5wMffJxY64PAfsXqZKedViY9PSRk3hZk/ek6Hf5gH0ynax/NfGSjYQ2SZ1/Z7XalkCByiCGLdo2vsETHEBuzgZh30Y5ncfa8Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738234161; c=relaxed/simple;
-	bh=K/7NsZgIrjKsuEex5ZvC88K7F2tkcUpl+oNZ/6zISaM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=IdqO/O5Fd91jtqYtKqgKYf3yR28Cin0DVNDVXo+PxNRrh5hFGYtS0Rk/QX3C/zWocQUcoP+SZfME672DnSgz8poQ3ebqW2HhHs6UoXbRn3xLrCDLcWt7Kgc+s7wHx3+CVB4DMllCoSaEuqceEbxjT8u0BPipPLqsZwL5QbSBF/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pXsco+d6; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738234207; c=relaxed/simple;
+	bh=/jTCSM1Q9klSusG46f2IQAhJNRjmn48ROwnnQe6r2pQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=jCM4LtxeAXp6XVKOa5xTnkFNEbEGf7RqOq+5b2PfsxsfqPigLe1TCSWNbPb8f1npM4W0d2ZdkgjVhq8Smc88HDzJuye0THJfHRazpu7je5KNquYPpZRSAu0pwOKKFmKnVtiAGw6L5RFRmRExHuFSUq27TIdBKDEJDZQBvjTohxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fr5dKSYR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pXsco+d6"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50U17pAr028982;
-	Thu, 30 Jan 2025 10:48:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=K/7NsZ
-	gIrjKsuEex5ZvC88K7F2tkcUpl+oNZ/6zISaM=; b=pXsco+d6ocPYaR8/WOHSbg
-	velSBjxr/03t4VCDPTmYw6mEL1Ch0PZyS5EWZIXktVbtXhWVmw+VNm4Eq+rV2Mw/
-	MoOsaUYDug8XAKUxDrsIXYpdq/j3FmHgo2hx2E7VntWCw22j9YYEh+yG0ZakMiHH
-	ayKrbo3ccmcF/+P5B8m6h4NXZINJUGCohMVS9j/Fy5yXQVrN4WQfQiLqIkdaW9OF
-	9mxvv2YcJ98DKGgKYgJjdv6q6YTMxZ4904QgUWnhZohRNQwXDjDswqIGLMHV3O5P
-	F8N1xk5FLdD+XRE/j01cEicQX7t9WB+49kC1jDm9ht29AfBZRQceUWJbQjkfUlQg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fyg9a6uv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 10:48:51 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UAUAum030383;
-	Thu, 30 Jan 2025 10:48:51 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fyg9a6uh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 10:48:51 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50U71YNx012476;
-	Thu, 30 Jan 2025 10:48:49 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44danydvb7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 10:48:49 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UAmlQo27263592
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 10:48:47 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B4E91200BD;
-	Thu, 30 Jan 2025 10:48:47 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B47CC200BB;
-	Thu, 30 Jan 2025 10:48:46 +0000 (GMT)
-Received: from li-1de7cd4c-3205-11b2-a85c-d27f97db1fe1.ibm.com (unknown [9.171.93.188])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 30 Jan 2025 10:48:46 +0000 (GMT)
-From: "Marc Hartmayer" <mhartmay@linux.ibm.com>
-To: Daniel Xu <dxu@dxuuu.xyz>, Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: shuah@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, john.fastabend@gmail.com, martin.lau@linux.dev,
-        song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
-        sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, mykolal@fb.com,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf-next v7 4/5] bpf: verifier: Support eliding map
- lookup nullness
-In-Reply-To: <f7rhmwrp3fgx3qd7gn3pzczxeztvsg45u4vrl6ls3ylcvflapx@3yi3shfnrmb3>
-References: <cover.1736886479.git.dxu@dxuuu.xyz>
- <68f3ea96ff3809a87e502a11a4bd30177fc5823e.1736886479.git.dxu@dxuuu.xyz>
- <78b2e750b4568e294b5fc5a33cf4bc8f62fae7f6.camel@linux.ibm.com>
- <hsgmutuoi4kvjkr7erm5ty2fdrhdrjpz4fpp5doe65l3pzguxv@lcbmvmjpyykq>
- <f7rhmwrp3fgx3qd7gn3pzczxeztvsg45u4vrl6ls3ylcvflapx@3yi3shfnrmb3>
-Date: Thu, 30 Jan 2025 11:48:45 +0100
-Message-ID: <87v7twk25u.fsf@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fr5dKSYR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2BCEC4CED2;
+	Thu, 30 Jan 2025 10:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738234206;
+	bh=/jTCSM1Q9klSusG46f2IQAhJNRjmn48ROwnnQe6r2pQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=fr5dKSYRj2gmHdEklgFlRC5ztKlg1RRL8IqF6ctBXAQlmoBo1VPt0/tCDewpbZeFa
+	 DWvqu6+ngcE0HRT19MkS3Cy7PzrUAOo7yomQG8s1wn5ZwFGLu5ePuFCRL7n8PrP4y4
+	 BnYNF1bq95zw++xvIoBC7GvUK1geaiLMHjF+xCWDOvjSsu1hKFpp7M7HAzbEtqCw4m
+	 VmtQtowaBjZ/Jg8dxJVssl8b8pBvfK5bSBUvDT8ueIfNm3q5CtoEH01TN2YxtDgL2I
+	 vMLr5gi1rjMLMKkoX9w/RgRz1Rt+WpFohxOKd91Me1QZ3fQB/XUfLljR2imdmliwpJ
+	 uxni2SEaAFJQg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33F65380AA66;
+	Thu, 30 Jan 2025 10:50:34 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: rbcTz21OcV-kXIN5hrfaK2av094Ai-Fz
-X-Proofpoint-GUID: JJk2nesWaLPlyEjwN1he4ky6oOUdvs_l
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_06,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=800
- priorityscore=1501 suspectscore=0 spamscore=0 mlxscore=0 malwarescore=0
- clxscore=1011 phishscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2501300081
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v3 0/2] Fix missing rtnl lock in suspend path
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173823423301.921316.7275460470502894424.git-patchwork-notify@kernel.org>
+Date: Thu, 30 Jan 2025 10:50:33 +0000
+References: <20250129-fix_missing_rtnl_lock_phy_disconnect-v3-0-24c4ba185a92@bootlin.com>
+In-Reply-To: <20250129-fix_missing_rtnl_lock_phy_disconnect-v3-0-24c4ba185a92@bootlin.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: paul.barker.ct@bp.renesas.com, niklas.soderlund@ragnatech.se,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, s.shtylyov@omp.ru,
+ thomas.petazzoni@bootlin.com, niklas.soderlund+renesas@ragnatech.se,
+ claudiu.beznea.uj@bp.renesas.com, netdev@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2025 at 10:45 AM -0700, Daniel Xu <dxu@dxuuu.xyz> wrote:
-> On Wed, Jan 29, 2025 at 09:49:12AM -0700, Daniel Xu wrote:
->> Hi Ilya,
->>=20
+Hello:
 
-[=E2=80=A6snip=E2=80=A6]
+This series was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
->
-> I cribbed the source from [0] and tested before and after. I think this
-> should work. Mind giving it a try?
+On Wed, 29 Jan 2025 10:50:45 +0100 you wrote:
+> Fix the suspend path by ensuring the rtnl lock is held where required.
+> Calls to open, close and WOL operations must be performed under the
+> rtnl lock to prevent conflicts with ongoing ndo operations.
+> 
+> Discussion about this issue can be found here:
+> https://lore.kernel.org/netdev/20250120141926.1290763-1-kory.maincent@bootlin.com/
+> 
+> [...]
 
-Hi Daniel,
+Here is the summary with links:
+  - [net,v3,1/2] net: ravb: Fix missing rtnl lock in suspend/resume path
+    https://git.kernel.org/netdev/net/c/2c2ebb2b4957
+  - [net,v3,2/2] net: sh_eth: Fix missing rtnl lock in suspend/resume path
+    https://git.kernel.org/netdev/net/c/b95102215a8d
 
-thanks for the fix! I=E2=80=99ve tested the fix and it fixed the problem.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Tested-by: Marc Hartmayer <mhartmay@linux.ibm.com>
 
-[=E2=80=A6snip=E2=80=A6]
