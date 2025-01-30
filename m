@@ -1,250 +1,200 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024B6B660
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 12:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738241558; cv=fail; b=D/0dxKeLNf9Tx9lJHrj0n1Hcy8BIgsQO/njd5C2nOE1vFW3R1fAIg/NRu4dJI7uUv0D3odR39IxZIfzCvxhknfkXmp9n925TAWpwyah3lO+9YjTlW8hc3XI/g8X1ALRSsMgLYrz5UaVyvcxP1yA1GKw9p4GJUsF3plHpJqBHaTg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738241558; c=relaxed/simple;
-	bh=zhEtR+K1qM4R1AkgCr+tah/OVkPKQHNxA8xAeQmYpIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YxbKvcQ6c981qFeJ5v1xEeOOGXsRDlPtvjjTH279eXp0d1BCZwXLF8xwsu2YzaWIhIsbFA9o8wRsHFxXXnYzYOr0Cjc8cSufBNaLJ+4OXCzjYuGsBFRLCu0OzvnniStSL+ky6kzk8zpNqs+ym1FNK5XJ5gVXO36tPISdSdttLOo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=RIoGbK9C; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=YEr3RMzs; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787E97483
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738242026; cv=none; b=huNp+7Tj0CKvedRT1pBJKt7wzAq375syYUc9vqY+WbN3YtAhmaWGWu+ZAsDlxLxlFKbtuEQ5KokTvZ7wVHG4dFD1+27RIbE1SHPQxHeeobAiQeawMQvSL1d5XKDCD3MmpzNzWZjHQQ7IcgNvym/85Jr51UWD0jti0XGLgKQi10U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738242026; c=relaxed/simple;
+	bh=9otkl0t4ZKJA5aPENgIvM3CXzDR0ZypaALTLpy5Nllc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KVGovohopT/JvhJ47EpGK+gkM9kUxYYvlSJ5rgiLBhW9foiue01wzG/hsezVU9Xk7fLOhRqsR1cdipQQUQM6ezTNLuN4082gRrI/CMphWrIHOmj0O/7gHEekWuc0P3ZEflG3j4GG4y0oVvH54bCUNzY/I6pYndJJpWjfrPtjFwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=Kd/1Nz4F; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RIoGbK9C";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="YEr3RMzs"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UCauux022582;
-	Thu, 30 Jan 2025 12:51:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=qYezRoozm9Wjx2E3RJ
-	Han+GQspple+HA5+1gMy2bn3E=; b=RIoGbK9CY/eTLbG/tu0tu3KIbOpCRteVoX
-	qAaO1/I9jv0QBPE8A7xFO8RF5xVfpVV91TnqlqvMfHhW1UfRkF9t9C9sXJHp9S6n
-	LPcF6rBuaoRpxWqmEgrSbF36Lm8pHxG7xrOijqS/R3vQK1fpSfRXTG+mKfN8pU8i
-	vjrbRKQbxrqYJMBgXaj967maYNfR6xH1i2nBrVkYKy5DBRCbspv2LyfnN0anYcJC
-	FLkxUAD2ZOCvZ20FG23j+ZCRIJzYDpwIo4QL9FT4FycgVqMHSKgp5QufbCarZSCp
-	kB1IeHSzezgvlYpsnLVoMN4ZAnUIIRQ4e7h8ia4sg78A8f2YFbXQ==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44g9k4r0m7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 12:51:56 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50UATX2J005386;
-	Thu, 30 Jan 2025 12:51:54 GMT
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2042.outbound.protection.outlook.com [104.47.57.42])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44cpdb6496-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 12:51:54 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rzHepfceB838+17Bvdu4NpQWw3cwU2Z954Jo4W0eh1ipdUAJLvqVcC3C/81NPDI2Ti3C+M5toUBZaoT0CRO8XB1e4U5FSBufZ5ML/lkaWHWRBH0AjGM0XjDfSzH/pvcK20OrU4xY/zt6P1WBQbAb1mFCKQM+a/W9KLp0LO6GVvWtgkXYLLEp7cq1djPwqXgelOAO3z3+JSVFfeimhpuBfgKps2la4X8Gm0g7Q+HheXSSdAXJd6oGmmoI1XxVWCOZoRe3iPnHdWl6NTYp7I4lzDNxEWZ2Skgjsx9XBUKYK2j2md8WNXAMJQWZu6JaixK11LlE4dKzdJ/FvyXPqMPrbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qYezRoozm9Wjx2E3RJHan+GQspple+HA5+1gMy2bn3E=;
- b=mWjYkWgqYFE1EWcygmGKwBy72UDzV22V6spN3R1uwN1xclm0sUn9GpRZ8euV6OvDapJEdMiN5zv6CTg0QYc3iZmkGUREcQcj2bUjspkFn56mYg1wYhaX9XdKI+DbYZ+WqKK0qCVgqWPqZsjIN0mnqUzVSV95Zpaa8fFh/N14BSVmh6ro9jWYK/OMc+b9kYkPIzhd3sVHHOtpJePqZCybolxICw3vltYHdK/H4RKAJz+7Jw3+MjKqCEOQWDrPGEMGyrkdzpKsTQUn/UK1DgtPY+1X2vk2b0tHidjE0UqRFPYuSQanzy8OWZ3d0XEHLW11hecKlOq8042zAhczpUtpgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Kd/1Nz4F"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43618283dedso7858185e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:00:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qYezRoozm9Wjx2E3RJHan+GQspple+HA5+1gMy2bn3E=;
- b=YEr3RMzs3kIhPEi9NCdv5jU0nu59mOBUT7z3UXsKxjKuNWHsEWe57zbnP6R5UeYGR9hNs/sni1+qKaqdOGqa8UsWPK5lbGn7MkqjBzMJvdFlGztvjcFUK1BNypDDtbRDErCSD6YwSrujP5sQHFvveS5byZOi5NeRF0Zge2qkFnU=
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
- by MN2PR10MB4333.namprd10.prod.outlook.com (2603:10b6:208:199::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.20; Thu, 30 Jan
- 2025 12:51:52 +0000
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c]) by PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c%4]) with mapi id 15.20.8398.018; Thu, 30 Jan 2025
- 12:51:52 +0000
-Date: Thu, 30 Jan 2025 07:51:48 -0500
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sidhartha Kumar <sidhartha.kumar@oracle.com>, akpm@linux-foundation.org,
-        christophe.leroy@csgroup.eu, justinstitt@google.com,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linuxppc-dev@lists.ozlabs.org, llvm@lists.linux.dev,
-        maddy@linux.ibm.com, morbo@google.com, mpe@ellerman.id.au,
-        nathan@kernel.org, naveen@kernel.org, ndesaulniers@google.com,
-        npiggin@gmail.com, Matthew Wilcox <willy@infradead.org>,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] xarray: port tests to kunit
-Message-ID: <mp6lnt3stfnfd74rwaza5xffh2ya5gylqnxotgrnqaqo3eh2zl@5g257jeiugfn>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Sidhartha Kumar <sidhartha.kumar@oracle.com>, 
-	akpm@linux-foundation.org, christophe.leroy@csgroup.eu, justinstitt@google.com, 
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
-	llvm@lists.linux.dev, maddy@linux.ibm.com, morbo@google.com, mpe@ellerman.id.au, 
-	nathan@kernel.org, naveen@kernel.org, ndesaulniers@google.com, npiggin@gmail.com, 
-	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org
-References: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
- <07cf896e-adf8-414f-a629-a808fc26014a@oracle.com>
- <qdq4k6323orqifgzo7pbg5vakezr3gptfdehghxsyfrhc4kwvb@d4fxbwcl4gjm>
- <CAJ-ks9=U4PZv4NgyH8B7SbHkecGLy+M=G639hSTv-hnPySqk6w@mail.gmail.com>
- <xf3445vgszstqfwycf5wc5owhnifxb3mny5xjjaihghqgnozmd@3h7hnifir4vu>
- <CAMuHMdVcuhzO57Qn-kcUJDM=HmkSwuheyNJPF1tx+gxRKnKZXA@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVcuhzO57Qn-kcUJDM=HmkSwuheyNJPF1tx+gxRKnKZXA@mail.gmail.com>
-User-Agent: NeoMutt/20240425
-X-ClientProxiedBy: YT1PR01CA0136.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2f::15) To PH0PR10MB5777.namprd10.prod.outlook.com
- (2603:10b6:510:128::16)
+        d=ffwll.ch; s=google; t=1738242023; x=1738846823; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PWEfvcfTsN7T0tilikMhQJMX7DbMz278YnuholCTh1k=;
+        b=Kd/1Nz4FvW13J0pgqtNCmp2K/pu6Sxksc+2bU88LmgELawRhKtP2azx+q6PmhMRW1X
+         efyp0BrKc5hWPCLhqcJDKrxE90JaIWOwjUVkYfLxLOQq0fI68CRqmXLCGozUxzIUKLcO
+         n8gY0kQw0U9SI0u6yYViIk4vEPkG6s6Ci6Urg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738242023; x=1738846823;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PWEfvcfTsN7T0tilikMhQJMX7DbMz278YnuholCTh1k=;
+        b=Y4HdDBY2Qlb7i/aMF6ZW/FcDsWx2klNfWRybUbHkce/1BV3Tb/6CTsffVt5KPjRyP9
+         la0/Mn6cGrScFSNiyUZeuVrm7j0tEo02TwlwlBHgH1dxDUUHJ8yJvy6r1w6LUVrvof8a
+         oR3RJRuSVHcby8m1QnjD+2ceJG4FChd/+3BhX/EhGMMNPcMUVnbTrrL14YxCpW9JSlEz
+         mLE+YK6EKlS2MPTbEI0K2TSkLyc5kl7sCzqTBzECQiPQPzuOBxd7PWw9mQVaD+Crsy/M
+         YJJtoPCPHLhGTZdnLi+EAk3RwNN9TjzfSBAoTsHAWR0U97viwKk9Zcx3J0EdttgR03RS
+         RVhw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+tqPQm8IZxWJhrCNLxPIz4c5ULjNeRKLpZTNZBJ509cdSSVoavdRYfKwVUzFKkhOUo7rCRYC2x9GWfHI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7YSP77kq8wNQJgfq4jYQaLBBl2jhjpBAzjvGUw5DLSxrtWdGc
+	HiTRy7mjxGPYnUm1D4gXJvXgcUJ3cFeOVTi5uzJTxA0jLSTxjrxeIFpmq1iORps=
+X-Gm-Gg: ASbGncs44+SXTzqcafAKgYOw/HoeBELCHGSFzhScN6160Uwbuh1h1La7bf0jX/mAbYZ
+	Gm8sDuN04BizttmpuBzz85rDS13/cVAtgD+dGd2OKk9VHtiUftm4JRw7Pw55Gjz5OZs9c3A9X8y
+	TOWaiKdhgEH0ge77NH5+49i0htJJq1oZtZrMqAvTJua/bolKNCZbnEthg4W+jMgshLxw6NzdlJu
+	FP2KDITXQGHjbtbwbs4IVNS0/2m5vql49bXypSZMKME5HTs62faZXoOkqnMhdjdAlDiK3yyn4yT
+	/eu8SL3N8T7CP4nTK6w60L77uFM=
+X-Google-Smtp-Source: AGHT+IG/nMuUBD3KzbbfR2aeV/qZxqQT5Q4oWBw/1zX9VuChXzIPGd76LlGfkfl60EN6WAkMb4jFOQ==
+X-Received: by 2002:a5d:5986:0:b0:385:ec6e:e87a with SMTP id ffacd0b85a97d-38c520904ebmr6377248f8f.43.1738242022392;
+        Thu, 30 Jan 2025 05:00:22 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b59f6sm1937111f8f.69.2025.01.30.05.00.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 05:00:21 -0800 (PST)
+Date: Thu, 30 Jan 2025 14:00:19 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: David Hildenbrand <david@redhat.com>
+Cc: Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-mm@kvack.org, nouveau@lists.freedesktop.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+	Yanteng Si <si.yanteng@linux.dev>,
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v1 04/12] mm/rmap: implement make_device_exclusive()
+ using folio_walk instead of rmap walk
+Message-ID: <Z5t34-0K9FJKVQe6@phenom.ffwll.local>
+Mail-Followup-To: David Hildenbrand <david@redhat.com>,
+	Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-mm@kvack.org, nouveau@lists.freedesktop.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+	Yanteng Si <si.yanteng@linux.dev>,
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
+References: <20250129115411.2077152-1-david@redhat.com>
+ <20250129115411.2077152-5-david@redhat.com>
+ <7tzcpx23vufmp5cxutnzhjgdj7kwqrw5drwochpv5ern7zknhj@h2s6y2qjbr3f>
+ <Z5tI-cOSyzdLjoe_@phenom.ffwll.local>
+ <54a55ff7-38c8-42c2-886f-d6d1985072a9@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5777:EE_|MN2PR10MB4333:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce4013fb-8d7b-45d7-c303-08dd412cde2e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6IldgG4hhoXTuXGTTfK6YIpMJFZjxg3e9yam6GFTmYo6t0hMkpH92oTDwWSB?=
- =?us-ascii?Q?wTGA1ahRi4RVW8UJQa9M7/JJYUT8GT5jcD0uJjtGtxIOsbpwlsJRgOIiyTO5?=
- =?us-ascii?Q?YsxiouSzb85KPck+hYoZVWvl5S7KSdtLfWMPaXKiI3mWbCo8z3HtBnLqXeIo?=
- =?us-ascii?Q?WXv7RIFaqHWjAmy/UFEc0f1gFv6hvRyKSUQtVulZUJ9yFa1b9P0vVN9242RQ?=
- =?us-ascii?Q?hhYQrnOnxQDqiwzFklTsChf0aRy1alRcSZ6oMlTsxrkwA9w8UtOnwfvQX7/i?=
- =?us-ascii?Q?92reNv99XdNBb6OhYzekmtgDeltRZJo1j1OLapoXmza89A2seV4YkqZLfE47?=
- =?us-ascii?Q?4tq5YOCfqu+3WG+Leu235dhyD6p5wGcM/bnK9U+a5ExMBxqUPmKQEKmCvEiK?=
- =?us-ascii?Q?YfwS50D9pHoPR+LlsenQL/nWdlwcbVIkJsleZ2OI5LLvpvqRFWWsCPVQbW/q?=
- =?us-ascii?Q?kf6u9r2CZnL9d9kEJhUqSdxiSnZ+6Maz9ejHREfy7swya4dBOfNRiZ/KOOYN?=
- =?us-ascii?Q?Ip2ZtMGXK+oF1ka+iAJVvqzMWRRxz59fArEnrt+rts4Rug54DolKpdDtq/pp?=
- =?us-ascii?Q?oHfd7/uaPhItYqJ8P+EasxMv6MpFi9IShOOttm6rHakaJKyvtQZEjCK2eTu8?=
- =?us-ascii?Q?UbZoUcG37DzCygIScViNfctZm1alPec80SgOFZLrMcknQERP0b3CNjZLbI6B?=
- =?us-ascii?Q?GVueFUN4tLTejOnp3KCfFudMJYB+layTqEFjYSiWPxDuMWJcaTHYTaiiRi2+?=
- =?us-ascii?Q?OWzj6sboIIo/kS//h5Nt5J9Ae48TevTv/BdqmvonFobRYVJeU9J+hNEaPfXT?=
- =?us-ascii?Q?g0gptSgVEMfws8eFD43o9XrmbSUELrPCUc7BsftinFwZy/DAKqm9dLbSDkaQ?=
- =?us-ascii?Q?Oqe4UgAkh35AIAj8a1EWGCRR6ewprchcofOuznOx9883lIOiyACz+8OLFIlS?=
- =?us-ascii?Q?8PY2hfrbmxLGFSRAu5HeLhalOZLkpPXMLOiCbfpWB0uJqIKtO2wQ7hQUvFhl?=
- =?us-ascii?Q?cKkfZ4nlkPaXmjbZgL5B6kxH1EeE+zdxplqinTIYoekCxpDx+GQ0Dn+XOgq1?=
- =?us-ascii?Q?hljV32etrZJu/LEP/PcIaGAwJ0jgUhJVZU4QeTF2KYvzH403wGavKUQymMgf?=
- =?us-ascii?Q?U2j7bFaTPzPfgh+gqJoZ8JlSXh/ho9K+nfewXSwnFCybzuiZKzMgLgV6frXg?=
- =?us-ascii?Q?1e/YnYxjEBk2jd5g+JBG2QOP67spDj+OHx+i2W1yBKJdZM7i9aujek+5/+dW?=
- =?us-ascii?Q?b+Z496JxZq2Nx5fhjCHKK0WkLU51lJfS6k4tNY9P9uONs2S1jfJMt2ACa9mg?=
- =?us-ascii?Q?wz1bNWDC0TUoE5u7eTbtufzxvJvECRBheukM4KS0ALmIIw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5777.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?3ivupZKyebXgnmVGHdVKBJpOXwUilbtnIsFptNVTdKCQc2p9wl+wi8BjKWVQ?=
- =?us-ascii?Q?brVPyZcWqD6rGWVx7ChXZ0fb4T+/XyePbBGV7SZWyv8VIayNg4NkLrYqbyGL?=
- =?us-ascii?Q?LNn/oWFWuEq3Xzrdsw5f8TXocPJsCUjn+AUDoMQk6PYAs8fWAYyg1htvZYXp?=
- =?us-ascii?Q?V05ewxpJb4EML0hrhB42cyJjOHPdi419x5dATzLkbhnbDIJJIR5BGirRmPfG?=
- =?us-ascii?Q?9QLPdXjlJ1tc1VQGNn/VzGKOK0eBWIXEhl1+yGLKlRfX0pAZCX0N33pRWD1k?=
- =?us-ascii?Q?7b1T5kfL9JjJ601ubjZitH/pCFI+UYsaBP+y+/dTJPDmXX0/4Ot86KLmm6SY?=
- =?us-ascii?Q?GH75jmn4bSUAtKAGMAJYN89CunYhN8zR96VBMAWp1zCD9hFy6FbKcyd1qzfs?=
- =?us-ascii?Q?edSkK19iievHDKMq1DtO/9ffx8zlB77N/lAH+cZoBdQCtSf6HlOtJN6V/eGV?=
- =?us-ascii?Q?lcPEhQHmppNbEPp1VwEjkIqCo4NHEhSwVnClLVF+dR91ad4zA5ViA75XaYI1?=
- =?us-ascii?Q?sd3fduzZDHiFqNDFeVfw8VmS8/z6ZBUEIc6jSXawh+R/RMuO8uecw3jd+B4K?=
- =?us-ascii?Q?XaLxwoIBT1d4/rUx+2pcOcVt2PkrxO4n639rAM1wwWBlrOhDragQXsBgd3uY?=
- =?us-ascii?Q?lYVoO1MojguGvNeHbE1vho4fF9rVrtgyDqIT6ZgXjrP45uRTygAZkcEgwKSf?=
- =?us-ascii?Q?4Z42XAqOv5rQRaVpc6W0fTe1BbuCFStjZlNjaxc3PZpWncJC4LVGZFwHYZ8R?=
- =?us-ascii?Q?CSq5kGdMJ2vQc0JhXQe5hleyxX0kXG531s7AAaB4csqBAwbOXSPAIySg84f4?=
- =?us-ascii?Q?IyzzxElt9PB345igU9u2DJZiiyES2w0qoiQZXOrPZHfuPrnBNX9tPN2cHlNw?=
- =?us-ascii?Q?gQxmNcBqk5N4hddPqEcA9ItHSuAoOqq92Hm226iwUJetbVSStcipads8RB1E?=
- =?us-ascii?Q?gPOCJaQvEbk/bFxHRMgRsdRlK2VJQa66D0w4pimHkf8MmdAOBdTjZt5ktFhY?=
- =?us-ascii?Q?+msVx3H793mVtaHoGr/GxsNsInW8d4uR25xQqZWLs3bUhqsyAamWNkYvd3HT?=
- =?us-ascii?Q?vLFKXhgss2NWxj9+B8sfdEELwHib/QrPPAVpolTCg6TmbPS6pej/am9LeVoE?=
- =?us-ascii?Q?57jvWlV2U8xxUunG/AUiVo65UJO6SazWmjsE1JfjoT+sL7U3yc/gFtDytJD/?=
- =?us-ascii?Q?vpV6DxfrZTDvM0OATP+o7kRqlyuzHcSMJ+wcPArKHC4PX9OzQixUHoIowoJY?=
- =?us-ascii?Q?Vr2Xs2fn11GCN6ZwfhPTDO9wglEb3OEcyHcmEkRWYlDaabS49GkShX0Xm2cz?=
- =?us-ascii?Q?ftE6l9cCTOs047eEP7EMLONK1puuisZCdDrB5HqjlU6RAe/UTlQgiBV57aQ0?=
- =?us-ascii?Q?SAan1MDIuWTlBZop7y7pU2vLANhn4Khw4FIEDO/cxBOhi8eGKtvbWs753FYZ?=
- =?us-ascii?Q?t0EoZE5CXsQAMDYJZAtrNexIyey6HIm79H7htGyevC7tMZTxGSApWKjmFiHe?=
- =?us-ascii?Q?kUuKDFgwYrEKRDeRlLg2Nj0YQRieysh2GMWkCh/NNbPfkzc9HiVNv5NBRBiF?=
- =?us-ascii?Q?BKtDhDl1yiFvyn9m3CXn+aE0qys4e2tume8xJi2j?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	TM1nm1/RjP28+db3kK4v3WmzYna6OIcteNyGZ+OF9uYRXFbDMNCjzP29FAPQWMnMZpjxuuNJBMqLCmV8/c8WLACuDFy1dS0zfztb+fk+cim/wHMk+GbRaU6QQYij94ieCDA1eLcoPPvFEFzP/XcgY3rsFxuov6i2vtj0+cezbWyJfCjqUxPoLFGjc/rARc6loWfn5VYLI1qv3ydTp1D4z+t2ZG7bREjwDIOz0+f+Jk0d7fjXhUzuYnNWQRT3T8xdt0D2CqEYncotErmQ8ROKrosuRj1JGDQxxTYQhpnn7ANGBcO2FbLRPCp07y5zJRhMYa8w82LyEC/qU626OVMGC3lzHFWxbkSgvRWvv3rPQwXYU2gbqcIPvncuuUEZKAPnaC7zEHoeDGIwuvVoUGIsCVSYnYiNnz9NrpxMEzIRzTTrCnISHHys1gT3Spn4QReJZKIXbIZCHYGk8FGAjARf4I6aqwjcIMTArRbnfKjdz0IgeIYhJx/5vn0PNMaCfIIB2w27FZshqa7mzzqDf+Z9fpwBG0l7LchupxlkOJR4S52I5w0eHfuzjgjyl/nJfbT/L/iqt4lVXXy/BOjKkBhr0PAnwD4/KGXl2VWswQ1s5fY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce4013fb-8d7b-45d7-c303-08dd412cde2e
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5777.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 12:51:52.0835
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1ldHejpqkfdkyXF3f1Ndi8Jv0tpt+3LXAMkrAriyeJ2yPZHsPr3A1TMNPw1ArToy5Bvh9JStnFph8byA4C47ow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4333
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_06,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 adultscore=0
- malwarescore=0 spamscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
- definitions=main-2501300099
-X-Proofpoint-GUID: dzbRpUesWZUfeeD1CdTQZPualMBJpj-U
-X-Proofpoint-ORIG-GUID: dzbRpUesWZUfeeD1CdTQZPualMBJpj-U
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <54a55ff7-38c8-42c2-886f-d6d1985072a9@redhat.com>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
-* Geert Uytterhoeven <geert@linux-m68k.org> [250130 03:21]:
-> Hi Liam,
+On Thu, Jan 30, 2025 at 10:47:29AM +0100, David Hildenbrand wrote:
+> On 30.01.25 10:40, Simona Vetter wrote:
+> > On Thu, Jan 30, 2025 at 05:11:49PM +1100, Alistair Popple wrote:
+> > > On Wed, Jan 29, 2025 at 12:54:02PM +0100, David Hildenbrand wrote:
+> > > > We require a writable PTE and only support anonymous folio: we can only
+> > > > have exactly one PTE pointing at that page, which we can just lookup
+> > > > using a folio walk, avoiding the rmap walk and the anon VMA lock.
+> > > > 
+> > > > So let's stop doing an rmap walk and perform a folio walk instead, so we
+> > > > can easily just modify a single PTE and avoid relying on rmap/mapcounts.
+> > > > 
+> > > > We now effectively work on a single PTE instead of multiple PTEs of
+> > > > a large folio, allowing for conversion of individual PTEs from
+> > > > non-exclusive to device-exclusive -- note that the other way always
+> > > > worked on single PTEs.
+> > > > 
+> > > > We can drop the MMU_NOTIFY_EXCLUSIVE MMU notifier call and document why
+> > > > that is not required: GUP will already take care of the
+> > > > MMU_NOTIFY_EXCLUSIVE call if required (there is already a device-exclusive
+> > > > entry) when not finding a present PTE and having to trigger a fault and
+> > > > ending up in remove_device_exclusive_entry().
+> > > 
+> > > I will have to look at this a bit more closely tomorrow but this doesn't seem
+> > > right to me. We may be transitioning from a present PTE (ie. a writable
+> > > anonymous mapping) to a non-present PTE (ie. a device-exclusive entry) and
+> > > therefore any secondary processors (eg. other GPUs, iommus, etc.) will need to
+> > > update their copies of the PTE. So I think the notifier call is needed.
+> > 
+> > I guess this is a question of semantics we want, for multiple gpus do we
+> > require that device-exclusive also excludes other gpus or not. I'm leaning
+> > towards agreeing with you here.
 > 
-> On Wed, 29 Jan 2025 at 23:26, Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
-> > I've never used the kunit testing of xarray and have used the userspace
-> > testing instead, so I can't speak to the obscure invocation as both
-> > commands seem insanely long and obscure to me.
-> 
-> The long and obscure command line is a red herring: a simple
-> "modprobe test_xarray" is all it takes...
+> See my reply, it's also relevant for non-device, such as KVM. So it's the
+> right thing to do.
 
-That command worked before too...
+Yeah sounds good.
 
+> > > > Note that the PTE is
+> > > > always writable, and we can always create a writable-device-exclusive
+> > > > entry.
+> > > > 
+> > > > With this change, device-exclusive is fully compatible with THPs /
+> > > > large folios. We still require PMD-sized THPs to get PTE-mapped, and
+> > > > supporting PMD-mapped THP (without the PTE-remapping) is a different
+> > > > endeavour that might not be worth it at this point.
+> > 
+> > I'm not sure we actually want hugepages for device exclusive, since it has
+> > an impact on what's allowed and what not. If we only ever do 4k entries
+> > then userspace can assume that as long atomics are separated by a 4k page
+> > there's no issue when both the gpu and cpu hammer on them. If we try to
+> > keep thp entries then suddenly a workload that worked before will result
+> > in endless ping-pong between gpu and cpu because the separate atomic
+> > counters (or whatever) now all sit in the same 2m page.
 > 
-> > You should look at the userspace testing (that this broke) as it has
-> > been really useful in certain scenarios.
+> Agreed. And the conversion + mapping into the device gets trickier.
 > 
-> BTW, how do I even build tools/testing/radix-tree?
-> "make tools/help" doesn't show the radix-tree test.
-> "make tools/all" doesn't seem to try to build it.
-> Same for "make kselftest-all".
+> > 
+> > So going with thp might result in userspace having to spread out atomics
+> > even more, which is just wasting memory and not saving any tlb entries
+> > since often you don't need that many.
+> > 
+> > tldr; I think not supporting thp entries for device exclusive is a
+> > feature, not a bug.
+> 
+> So, you agree with my "different endeavour that might not be worth it"
+> statement?
 
-make
+Yes.
 
-Or look at the make file and stop guessing.  Considering how difficult
-it is to get m68k to build, you should probably know how to read a
-makefile.
+Well I think we should go further and clearly document that we
+intentionally return split pages. Because it's part of the uapi contract
+with users of all this.
 
-> When trying the above, and ignoring failures due to missing packages
-> on my host:
->   - there are several weird build errors,
->   - this doesn't play well with O=,
->   - lots of scary warnings when building for 32-bit,
->   - ...
-> 
-> At least the kunit tests build (and run[1] ;-) most of the time...
+And if someone needs pmd entries for performance or whatever, we need two
+things:
 
-Do they?  How about you break something in xarray and then try to boot
-the kunit, or try to boot to load that module.
+a) userspace must mmap that memory as hugepage memory, to clearly signal
+the promise that atomics are split up on hugepage sizes and not just page
+size
 
+b) we need to extend make_device_exclusive and drivers to handle the
+hugetlb folio case
 
-This exchange is a good argument against doing any kunit work on my
-tests.
+I think thp is simply not going to work here, it's impossible (without
+potentially causing fault storms) to figure out what userspace might want.
 
-> 
-> [1] test_xarray started failing on m68k recently
->     https://lore.kernel.org/all/CAMuHMdU_bfadUO=0OZ=AoQ9EAmQPA4wsLCBqohXR+QCeCKRn4A@mail.gmail.com/
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Cheers, Sima
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
