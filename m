@@ -1,183 +1,132 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB0E1ACEB3;
-	Thu, 30 Jan 2025 10:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9591ACEB3;
+	Thu, 30 Jan 2025 10:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738233985; cv=none; b=lR/l92T9oa7qUMa1tSHj73tRnzgjaiLjBehuIE2wc1w1ipOzymcNnJX3hFFfEjdQb1dCMdpkhA2okApTIYn6/v5zjdMihMAdUjRzvftseTCWugq0X9ClNkd+sdkFWuMzj45c7nOw7Bpz4MSSwjAF0c588XYPMgYPbBm/VXNPuFM=
+	t=1738233997; cv=none; b=rmAnc+5PwquIklBc/g5jWUX3+n/KH08xqB1JZfEr7BAQbqUnqvJCSHL6B8VirP96XpGZMXHE/p+syeJ1ttuivtVNowQ3NTVKVsYclGNrKSVZUCM+ab0CIMGAV7rXs6gFpImMLI2oTMalLpQllgaVJq3ziTKDkbB8vzMcK8DBp68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738233985; c=relaxed/simple;
-	bh=gnlUmrWlO7OgOPSRJanEmk9xOsvql/02GYnysEms+X4=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=rQapo+/cVhZy4bz/zKNaueIbXF9m6ih+gkdjIlmLrj33ZK+P7LppjUHW3ArZaimhtqGP5KkTZ3hpxMbuiaj6lLc6pYv55hYnPNZ8f3JQelYYYg3FurKeUyZse2jFsO5674QUUYv42P2Ce7qZwjUbgesWyQ/rphsuvB39FcLYSUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NGcgQbHz; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738233997; c=relaxed/simple;
+	bh=XnLyFFk1L3o2T1GAGQ8JEFb5LfLnzJHt7dvXNVvn8Zs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OgYblXSSsKTlvYXbTNQFr09duOhkX45WuxMDc/NUneaq+A7pGoHQ2rZUFy1cwua9LCkZM2i/PfVx4k1c/OSdPv8RThEj0WrRy6VnvoOYStTvnCb5mbqIB4vH5LH3NwwZv7R9DUXUoNdVpcXLRI5a/I5Hu8dFvGDjFBcQTWPfZV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OC85zOnT; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGcgQbHz"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5dc0522475eso1183400a12.1;
-        Thu, 30 Jan 2025 02:46:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738233982; x=1738838782; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dvH7kPRqDnGEpR7MN/c0OEfUDsiKTUq2RFU3G+hwaFA=;
-        b=NGcgQbHziT0Mv4GMx0mhnTtCnuNqyKcK/yJYRS3J+fJisz2epNgSVFm0j8519ncZEp
-         WNGvkuB1rQrLUAQPSpvsTbWwAMTHA0QUTRlEfjHtn+Z7U521HMUaCByZ/jq3tDWn7MaF
-         +cBSzB9OeMWQWOFSnQNBjDx7cd1Nrs5mBkkP26vfAd64agtptZxRONPAqMJecVMJPCp3
-         aEjZhn/U3xqoIzNkQU+K5IarpZE4ZsgA0RK2KvDNuIqevNENFzQ8c5+yg3ubiG5EWXSj
-         WIxiKEDHEaXbZvP8+tc5LgApYba7tWx7J/6DBGXg6+bNQl9h/dLJGfqF0KrVfWmbdHBA
-         pPhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738233982; x=1738838782;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dvH7kPRqDnGEpR7MN/c0OEfUDsiKTUq2RFU3G+hwaFA=;
-        b=tfNUbS95yrjAaBXzPHV3jvd3JcDRhVGtiBuNQ6q9aTWhRMB6RV05rM9fd0euVIBjDx
-         +xIxofWp3cXVO13wEvC+FgUMDZoL3/hhefloztXjWodQRpaBk4/3gkxEfdAYNBdMjtmz
-         xF3x/ZkVaVQ90hC/I66E1m9SRGzWmMdKTuC8d5NtzxHleBt1EqFLy6ASxfYkDErIYVMK
-         +LYLzPlSM9EjFZW4bh1Xh80t32/lZpI68ORkD2tCYTi1HD0Fo2C6vnzj1eDekO3Ji0Ec
-         gW5YlraXPZnr6krwkqoaIegMcwPgymNGanxh/1sjr00JLInEqmUw5EwK9UCOLmDS66Cb
-         H/sg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzJw4OukkdyyAC2xSd8jNhQ/sOCix+tqfF25HS4PoT7DEVTi/5nCpY9pOJ2HyMHwyWkzurCPxm5VbN18Q=@vger.kernel.org, AJvYcCXnorH/Tp68Rb37Kuj15x/j2ucXBxFF+1AIvZOqIVO95cBAJsfX5kKh/s2iFoK9EWRNt0g4nampKaUU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHGrlA60CnesmyK2MEtO5eJhoyq9VgF0wPubZUDvfBwuuekR6F
-	3oUNFe1DEHS/v+FZCowGorxHoaZoMaw9n47S/k6h0ITMysI2DE76
-X-Gm-Gg: ASbGnct/6DinA6V9NHhTw39K3+izzBCrzZVuRkD6KV26PlSPf9HtTkTJMFde/eHj7sq
-	fqNqXamac6gRSQn0IcfDfkkMC/0/XDNnEPAz7Q/rDifSMBdbpgRjOw9C6v2oJlj32phxHmNXULy
-	Bf+PZ5m/nbRrq7chA4/GD2OpI9fKEMZyCw08uWJ4qjJBm7tgN+RVLzy4/IHs4S8ti+RF5/z9f3X
-	tr8XFgmBDWowS6IeYNxQGORP9gVoRDC1jOybPvrAfYB82YZLrUnmQq8ncRCclIclYEBt5zhdIbe
-	JyyoMY8eboYqtZOLEZY/aFmkMAlPaGWdmFpqMY/P+0ZtGs2SJujGxK/0g1oP/E1iMe3cHQCG
-X-Google-Smtp-Source: AGHT+IEqE7nySufMnirHCjAVfxj7jngqk9FZNYT/ymSENzVPV3ZLZzx1oB1e3XlK0q5RDTVUp4kFhg==
-X-Received: by 2002:a05:6402:50ca:b0:5d0:b2c8:8d04 with SMTP id 4fb4d7f45d1cf-5dc5efcab34mr5837467a12.18.1738233982119;
-        Thu, 30 Jan 2025 02:46:22 -0800 (PST)
-Received: from smtpclient.apple (89-66-237-154.dynamic.chello.pl. [89.66.237.154])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc725aae6esm854530a12.1.2025.01.30.02.46.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Jan 2025 02:46:21 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OC85zOnT"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50U1ILwU008475;
+	Thu, 30 Jan 2025 10:46:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=rbQ0iV
+	5kMkAPr98XhQIgEokS+6oo7ofi+Sa+NyvSgwQ=; b=OC85zOnTl/VQmPikdMYnGa
+	prkfC3/uLAdyQE9cr9aE54C+FlBj6LMMXjzN8jZsF81wGmd5yWB3bSmNCbSB4xPF
+	anxnB0PeYA8eLYjiSuL139O9fs1ubD+s7ApJkk2J1kjf7KQQBHBU3Iloya1Pxcaz
+	lCBPXuIvE/uj4UUbHAE01MSdf//ae6PoNa6xYTPnNV+3c9SehkcuaM4VA85Q5Vzd
+	VUmZvJc+cn5X3bQAo1xdUNNSugOdnu+EQ6p/ZS+6juAkUJP9Fe+oa+MUiV31B5jg
+	JkOBCWHS+kKGj1rcauHkuOp1j6jwF5Fs8uO4ZN0dRm3nSWu0LEeJNFM8chwJDYcg
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fq5tvgsq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 10:46:22 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50U8DVAn028051;
+	Thu, 30 Jan 2025 10:46:21 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44dbsknpaw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 10:46:21 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UAkHNW53871032
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jan 2025 10:46:17 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9531B20081;
+	Thu, 30 Jan 2025 10:46:17 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 69B4120084;
+	Thu, 30 Jan 2025 10:46:17 +0000 (GMT)
+Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.152.224.212])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 30 Jan 2025 10:46:17 +0000 (GMT)
+Date: Thu, 30 Jan 2025 11:46:15 +0100
+From: Halil Pasic <pasic@linux.ibm.com>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+        Tony Krowiak
+ <akrowiak@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Harald
+ Freudenberger <freude@linux.ibm.com>,
+        Holger Dengler
+ <dengler@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian
+ Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle
+ <svens@linux.ibm.com>, linux-hardening@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Halil Pasic
+ <pasic@linux.ibm.com>
+Subject: Re: [PATCH] s390/vfio-ap: Replace one-element array with flexible
+ array member
+Message-ID: <20250130114615.6f591882.pasic@linux.ibm.com>
+In-Reply-To: <85863d7a-2d8b-4c1b-b76a-e2f40834a7a8@embeddedor.com>
+References: <20250116131859.105756-2-thorsten.blum@linux.dev>
+	<20250129213826.291cfe12.pasic@linux.ibm.com>
+	<85863d7a-2d8b-4c1b-b76a-e2f40834a7a8@embeddedor.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH 1/3] media: rockchip: Introduce the rkvdec2 driver
-From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-In-Reply-To: <8541055.T7Z3S40VBb@trenzalore>
-Date: Thu, 30 Jan 2025 11:46:09 +0100
-Cc: linux-kernel@vger.kernel.org,
- Diederik de Haas <didi.debian@cknow.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Heiko Stuebner <heiko@sntech.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Dragan Simic <dsimic@manjaro.org>,
- Alexey Charkov <alchark@gmail.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Andy Yan <andy.yan@rock-chips.com>,
- linux-media@vger.kernel.org,
- devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org,
- linux-staging@lists.linux.dev
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <278CF0E0-7277-40F3-942C-6FA61AA759A0@gmail.com>
-References: <20240615015734.1612108-1-detlev.casanova@collabora.com>
- <5969581.LvFx2qVVIh@arisu> <CE4343FE-94AA-4F84-8C43-8366013AED84@gmail.com>
- <8541055.T7Z3S40VBb@trenzalore>
-To: Detlev Casanova <detlev.casanova@collabora.com>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: q9NxGqcZI12C94KXtUoH1A5QT5ao1ZLb
+X-Proofpoint-ORIG-GUID: q9NxGqcZI12C94KXtUoH1A5QT5ao1ZLb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-30_06,2025-01-30_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=635 lowpriorityscore=0 impostorscore=0 phishscore=0
+ adultscore=0 priorityscore=1501 clxscore=1011 mlxscore=0 malwarescore=0
+ spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501300081
 
+On Thu, 30 Jan 2025 10:30:30 +1030
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
+> On 30/01/25 07:08, Halil Pasic wrote:
+> > On Thu, 16 Jan 2025 14:18:59 +0100
+> > Thorsten Blum <thorsten.blum@linux.dev> wrote:
+> >   
+> >> Replace the deprecated one-element array with a modern flexible array
+> >> member in the struct ap_matrix_dev.
+> >>  
+> > 
+> > I'm not sure I understand the value of this. What we have here is not
+> > a flexible array but a one element array. Something that in the generic
+> > case could be many but particularly for vfio-ap is always one.  
+> 
+> You are correct. Only fake flexible arrays should be transformed into
+> C99 flex-array members [1].
+> 
+> Thanks
+> -Gustavo
+> 
+> [1] https://lwn.net/Articles/908817/
+> 
 
-> Wiadomo=C5=9B=C4=87 napisana przez Detlev Casanova =
-<detlev.casanova@collabora.com> w dniu 29 sty 2025, o godz. 17:50:
->=20
-> Hi Piotr,
->=20
-> On Wednesday, 29 January 2025 09:48:51 EST Piotr Oniszczuk wrote:
->=20
-> I suppose you tested with my hevc branch, which is not really ready =
-yet (Some=20
-> ref frames will work but usually, it won't) Can you confirm which =
-branch/commit=20
-> you based your tests on ?
-
-Indeed  - i=E2=80=99m using your rkvdec2 hevc code from: =
-https://gitlab.collabora.com/detlev/linux/-/commits/add-rkvdec2-driver-hev=
-c with iommu from =
-https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux/-/com=
-mit/bc47c445bfd9586115e9bcf5f231c5a5c5f0f828
-and =
-https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux/-/com=
-mit/9a9fd791513bc0d02c2242c88f23b41bd47de30a
-=20
-
->=20
-> For the iommu, do you see those errors like that only on 356x or also =
-on 3588=20
-> ?
-
-3588 has no any iommu errors.=20
-I see iommu errors only on 356x
-=20
-
-> The hevc branch should have the iommu patches to fix that kind of =
-things.
-
-I=E2=80=99m using:
-=
-https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux/-/com=
-mit/bc47c445bfd9586115e9bcf5f231c5a5c5f0f828
-=
-https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux/-/com=
-mit/9a9fd791513bc0d02c2242c88f23b41bd47de30a
-
-I see there is: =
-https://gitlab.collabora.com/detlev/linux/-/commits/add-rkvdec2-driver-iom=
-mu
-Let me update iommu code to above branch and report back here how it =
-goes in 3588 and 356x
-
-
->=20
-> (but note that hevc support is really new, so it may have bugs with =
-buffer=20
-> allocations)
-
-It is already great work.
-I=E2=80=99m awaiting for hevc in 35xx during last 2+ years :-) =20
-
->=20
->> If anybody hints me for way/tool to analyse of playing/failing =
-samples to
->> catch: what encoding specifics makes given sample failing to decode  =
-on
->> rkvdec2 - i'll be more that happy to provide details=E2=80=A6 (doing =
-simple
->> mediainfo <file> shows no differences for me=E2=80=A6)
->=20
-> Few features are supported for HEVC as of now:
-> - No scanlist support (only default 16x16 blocks will work)
-> - Long term reference frames are also not configured yet.
-> - hevc 10 bits is also not supported yet
->=20
-> These are specific to the encoding and mediainfo won't really give you=20=
-
-> information on that, except maybe on the 10 bits format.
->=20
-> You can also checkout YUView (https://github.com/IENT/YUView) to get=20=
-
-> information on media files structure, but I have had issues with HEVC =
-support=20
-> lately.
-
-oh great. will do and report!
-
+Thanks! Alex, what do we do with this then? I think you picked it up
+yesterday late. And I think, it might make sense to make this look
+less like a fake flex-array...
