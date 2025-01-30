@@ -1,119 +1,97 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E9E1714A5
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5A14431
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738214940; cv=none; b=P2TEg6r1ceiaXyCr3YwhO3x3c1TiJiEfV9iYKpo3ie4C/VggbjutRScC6Om4tuNfVvMlMg7tnCEbSUt4ps+uCXefc2h9aLYmSJrzCOxo5iezR/5ecTEstaaH0YhLkx3p+oke2q2kdt4+HMyifDpL5vr60TzQcMlEu+pwrJ6pL94=
+	t=1738215136; cv=none; b=qEq2ru4nIDKLJSa3Pk1FUxWoQj7P1ZMjY4qcggrPcFUzkhUTH+znghn2irE+331edqTFZIMPYaFd66wJXp5moX0p/7n3GEDva8OIG0l9f/QuQUBxkl03dPnSZWN71BzbfitKuwF+DwNO+ioHDPOXTBO0AH5dECk5/JnqSKLuBAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738214940; c=relaxed/simple;
-	bh=u6YkVusD/Op7sqnbvcd5wk9G8T1i8o928y5G6z6230Y=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=j5jRlLzbb8a7bAVUcFLQruwh3wOBMfm5HHMMVVntMS567eiWifbMsZSFc1lf2huBB+GtYPhCzeE6G9GKpULJFgKygpuJrirMAhKLHWir/RV3KPf831Ca9Zgdwbceir8LOqF8tBtDqNV95G75AwYVdUPqr887S6PHVBRnuZMbI7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bQbWsjfW; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1738215136; c=relaxed/simple;
+	bh=gFQ7g+YN21EUHYN7l+aFFtAggeW26EdwSPTQBPw5JIA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oFg+2mNSYWWrXf95623bV1BNfTgM4ilsOTAaKBp5nAJVhoMfNwpFh7DdtvrOUGtHPE6Xaweh8aDBikhfg9tOqbmZA/km4B/7KECZxjUQCwFpm2K54Qy4AOSFXBoNt9IOlSvBKeaAkpTgxxroZXD64wmbN5C3vzoewSPbqk8uejQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=LlkoPShM; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bQbWsjfW"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2efa0eb9cfeso876302a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 21:28:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="LlkoPShM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738214938; x=1738819738; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+0ShH9N5Xn6KPuPHJxS7CDMVtVwzvZCJ66gbSr17EIs=;
-        b=bQbWsjfWDiiBc437PwMiY3W+X8Y/xqCxzfik1FMZyZUl6M51Ih+YjNrC0IK1t5UinZ
-         jtjjHe+P0wQY/0iE0OH7V8SxZHGwzgVNcXS9fSypWtb8S4xccVXxn43SK3n5TmrcKNNP
-         bo0Df8pSmrb2Gupahpnfp9nCXbNF1CP5gl3SsrP89voqqH0KC1FDT+NdVB1CcOcBuLtL
-         k7+18RZ8NQ1CO+sip31TCI+hbDQHfY9nR8+0OlEr+XivwEw2Zw4S5No0EwScsBrs88iG
-         n8YZArMzpR/rnOiypT4IvF17QjyDUX6P6GPL4QOyTqHOyvDYYneaNXuAEi40uYeTMRNq
-         XEnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738214938; x=1738819738;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+0ShH9N5Xn6KPuPHJxS7CDMVtVwzvZCJ66gbSr17EIs=;
-        b=MNP0L5Hqpj4TZ9n0zKXACeURW4GOUmsRulsLuZKNWqrSRpurjj9RiSjn5yj49xBVpN
-         Cfuts74lnOEyxmGsDwVo4ya0A7Uo8BVeEh3P9Lfs3sq+CBU4xL2PMWFyW/2x5f7hyFLa
-         BdkfrMdTrwzvjDYd8u56dri188I8UXBjdFo23qgaiyfcJOpywAPU2KYmRETe7vE3tUCD
-         moW4c72+0sVhaBTwxMgRIqwueHF+52VKFCgJRzC/IyFdbeNz5Qe62/PhIrRaNd7lCagO
-         l/IalvmUDC8QxC6GQ9uoHTeM47z1CA0W/pwHvglXpxp2usyGqo1R/6OOAJ7Oh3DhgePZ
-         yldA==
-X-Gm-Message-State: AOJu0YxnPlhdujLFqSiFekRBAk58A//FlSQNzOcAbqPBs3D2xBFozNHl
-	vp7lEIwZ3cSPZclwKejFWfLsxFV7FKcgIlnuZOZUvM0nCyFn8ntQJZXzyxqGrz6MPFwvmubPmu1
-	JBuSx+dEfdpEPPFyDPE7DfTPrAf9aXyr4/ilDm+qnTP/qMDO2NeE1rLcRXv2CRUWBNS1cN6RYiQ
-	WNLVzgpL3hqBTT8/hJGxgdL8o82wH6ATWcJEjgDlCv
-X-Google-Smtp-Source: AGHT+IGAa4sALHMHuka14HUWGEWJicF6lkEI38f6YBOpiimEmEVwBwfSoQdPngmhzipeF6VwLNy0lnnvIIA=
-X-Received: from pjboi16.prod.google.com ([2002:a17:90b:3a10:b0:2da:5868:311c])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:518b:b0:2ee:8cbb:de28
- with SMTP id 98e67ed59e1d1-2f846388b5cmr3469102a91.8.1738214938246; Wed, 29
- Jan 2025 21:28:58 -0800 (PST)
-Date: Wed, 29 Jan 2025 21:21:39 -0800
-In-Reply-To: <20250130052510.860318-1-ctshao@google.com>
+	d=codeconstruct.com.au; s=2022a; t=1738215126;
+	bh=gFQ7g+YN21EUHYN7l+aFFtAggeW26EdwSPTQBPw5JIA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=LlkoPShMIY3IbkAOzb1KgLzgG8YOLulzUiA6dqoqMW35xYM1vY4FUxuyCclGILpYC
+	 IJdPkr0eO2aU1S4RZJ82yPuiFDJg5q2lE1bfAyD+54vhNauy/40V0JqAiOYMuAxYT/
+	 Q2k+tCOwgqrz3bJvt6XPO1WtELw104gr2JBqDUcfgndWOAnOkSOG1gA3spVGBKw2X1
+	 9aURVXj532gT/Q8Joss7WwNumv9lyGY6e597x3LGlGCDJpIVT4x8a5TyuK54JK0ELB
+	 enXAG4EEYPp5fOHwx2er0mYGSdpYRP37/eC5/pGcc86wWKG0w6xtA6DqfWNlWyjDAC
+	 nRayZo2kLifTw==
+Received: from [192.168.68.112] (58-7-158-64.dyn.iinet.net.au [58.7.158.64])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 2E8DC73836;
+	Thu, 30 Jan 2025 13:32:02 +0800 (AWST)
+Message-ID: <daa6bcaf1e612f667c5d5d26b9d515f43985b595.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v2] drm/aspeed: Use
+ devm_platform_get_and_ioremap_resource()
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: oushixiong1025@163.com, Joel Stanley <joel@jms.id.au>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ linux-aspeed@lists.ozlabs.org, dri-devel@lists.freedesktop.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dmitry
+ Baryshkov <dmitry.baryshkov@linaro.org>, Shixiong Ou <oushixiong@kylinos.cn>
+Date: Thu, 30 Jan 2025 16:02:00 +1030
+In-Reply-To: <20250122030155.57802-1-oushixiong1025@163.com>
+References: <20250122030155.57802-1-oushixiong1025@163.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250130052510.860318-1-ctshao@google.com>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250130052510.860318-6-ctshao@google.com>
-Subject: [PATCH v4 5/5] perf lock: Update documentation for -o option in
- contention mode
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
 
-This patch also decouple -o with -t, and shows warning to notify the new
-behavior for -ov.
+On Wed, 2025-01-22 at 11:01 +0800, oushixiong1025@163.com wrote:
+> From: Shixiong Ou <oushixiong@kylinos.cn>
+>=20
+> Convert platform_get_resource(), devm_ioremap_resource() to a single
+> call to
+> devm_platform_get_and_ioremap_resource().
+>=20
+> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+> ---
+> V1 -> V2: Add Missing commit message.
+>=20
+> =C2=A0drivers/gpu/drm/aspeed/aspeed_gfx_drv.c | 3 +--
+> =C2=A01 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/aspeed/aspeed_gfx_drv.c
+> b/drivers/gpu/drm/aspeed/aspeed_gfx_drv.c
+> index a7a6b70220eb..33f81b53771d 100644
+> --- a/drivers/gpu/drm/aspeed/aspeed_gfx_drv.c
+> +++ b/drivers/gpu/drm/aspeed/aspeed_gfx_drv.c
+> @@ -146,8 +146,7 @@ static int aspeed_gfx_load(struct drm_device
+> *drm)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct resource *res;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int ret;
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0res =3D platform_get_resource(=
+pdev, IORESOURCE_MEM, 0);
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0priv->base =3D devm_ioremap_re=
+source(drm->dev, res);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0priv->base =3D devm_platform_g=
+et_and_ioremap_resource(pdev, 0,
+> &res);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (IS_ERR(priv->base))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0return PTR_ERR(priv->base);
+> =C2=A0
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/builtin-lock.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+I think I prefer this one:
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 3dc100cf30ef..e16bda6ce525 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1817,7 +1817,7 @@ static void print_contention_result(struct lock_contention *con)
- 			break;
- 	}
- 
--	if (con->owner && con->save_callstack) {
-+	if (con->owner && con->save_callstack && verbose > 0) {
- 		struct rb_root root = RB_ROOT;
- 
- 		if (symbol_conf.field_sep)
-@@ -1978,6 +1978,11 @@ static int check_lock_contention_options(const struct option *options,
- 		}
- 	}
- 
-+	if (show_lock_owner && !show_thread_stats) {
-+		pr_warning("Now -o try to show owner's callstack instead of pid and comm.\n");
-+		pr_warning("Please use -t option too to keep the old behavior.\n");
-+	}
-+
- 	return 0;
- }
- 
-@@ -2569,7 +2574,8 @@ int cmd_lock(int argc, const char **argv)
- 		     "Filter specific address/symbol of locks", parse_lock_addr),
- 	OPT_CALLBACK('S', "callstack-filter", NULL, "NAMES",
- 		     "Filter specific function in the callstack", parse_call_stack),
--	OPT_BOOLEAN('o', "lock-owner", &show_lock_owner, "show lock owners instead of waiters"),
-+	OPT_BOOLEAN('o', "lock-owner", &show_lock_owner, "show lock owners instead of waiters.\n"
-+		"\t\t\tThis option can be combined with -t, which shows owner's per thread lock stats, or -v, which shows owner's stacktrace"),
- 	OPT_STRING_NOEMPTY('x', "field-separator", &symbol_conf.field_sep, "separator",
- 		   "print result in CSV format with custom separator"),
- 	OPT_BOOLEAN(0, "lock-cgroup", &show_lock_cgroups, "show lock stats by cgroup"),
--- 
-2.48.1.362.g079036d154-goog
+https://lore.kernel.org/all/20250128-cocci-memory-api-v1-1-0d1609a29587@red=
+hat.com/
 
+Andrew
