@@ -1,323 +1,211 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970C61E7C25
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94351E6DCF
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738247028; cv=none; b=VJR6Uh401B5mfUH2vyCEg6iumUu+K6tyzL2GiIzQxWGEym8kKX+8Gc1hehtGJ433pXAbJtYVRx0gDQ2jmHy+X+EBDC2ubKF5BO4t92+HJfUkJkTdJb8pQKoR/SMmAoE5CA+07dwUufmxBDU4XDF3f9kdqjxDeL/dBsp7WWmgLIM=
+	t=1738247105; cv=none; b=Yrof9K4wpLiWI5C6mCBXqPjdRt/nPYO59u6jotmDTU4Dgk/J8z6Ld3luB7z6XhjT5rjjQBcnTfkmPKeXqBmNLKf3xYOcB4i4fj3yx/UQSetGHgrj5OA/pDX+frG71NAhCbBcWSzKIWMyr97t5TymYmx7iG3OIa9iOcCigXjC9rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738247028; c=relaxed/simple;
-	bh=5K+pg8TTMFnjVWGrRD6NisXu+17jcfQKKzI4XAsF8h4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hM02VMdrZkGtdIrJM/70QopbSQtx0DXnH+NsfkF/2e+H40El/iszMrZqBbXyONaB7TGP7OtD72HhSVvW0XYctdH4BVsNNDiYl9E9Y1488mnwpGto6b1QqsBqCs/EXnGcnoqvZfpSh7XLdrOtsZqdWk6KvdXcVug6ZlyUnMd6LD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kR77OTix; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kR77OTix"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738247027; x=1769783027;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=5K+pg8TTMFnjVWGrRD6NisXu+17jcfQKKzI4XAsF8h4=;
-  b=kR77OTixDBoc5x2halqoF2UaDOc89mHaYhFinysgfzZ0N8J8pfLidQpK
-   7fZ1mLMXo3E1n1lLlSNREW6hI6D3J6icOBffT8qbzfiDHvzwuxHHWbWnH
-   3IKsrEojLtkZJ8GGFQ+BUZUqlqLqlrPCaBbKitb5yCHXQTdPfiDVXMPJ8
-   xh5r6L1rDgRD+GNGUkl0n61b8aKlTv1vlZHS1uqzaItKmHI+tWigUHBSg
-   gA3FhwQzk8WlotiNo1xL7zKb9DsioAfpN77QvIa3e7LEpZXCDmpk3iW2Z
-   yEXubOFVh8QqRUoIN/iGdvEP+M/ANzpHBATg+8acwO/PdXUeXYRt5g/JI
-   A==;
-X-CSE-ConnectionGUID: pGMxKs5TQ2iGUIjrxLDSmQ==
-X-CSE-MsgGUID: Oum0L/mbTfytD8zbihS1vQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="64154959"
-X-IronPort-AV: E=Sophos;i="6.13,245,1732608000"; 
-   d="scan'208";a="64154959"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 06:23:46 -0800
-X-CSE-ConnectionGUID: dDvItgeSSbmxwmUmFjFN7Q==
-X-CSE-MsgGUID: 9XR6dBqFQvOYkkxBcgQ53g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,245,1732608000"; 
-   d="scan'208";a="109900423"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 30 Jan 2025 06:23:44 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tdVSI-000kDj-1O;
-	Thu, 30 Jan 2025 14:23:42 +0000
-Date: Thu, 30 Jan 2025 22:23:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/wfamnae-next20250124 14/15]
- fs/hpfs/anode.c:103:25: error: 'anode_btree' undeclared
-Message-ID: <202501302224.mRgkKFRI-lkp@intel.com>
+	s=arc-20240116; t=1738247105; c=relaxed/simple;
+	bh=Iy/xG3SkC+UDJNTJyBx1NonxLGE6Q/iYylKG6XvhG1g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L/oaG2a+tcFMieriaMPpS2CxO/Zpq4ALSZxobfroJL2+P+CWOE5g/NkgLaJBY9ICKiRU1dGfB+R3tX06lLVz70HN+oaMglKCPmW/wmoabMt4d31JSvSFXX1QGJHmg9Xm95JGYR75jPA1IPZBaNLzrf8E1DzgyCohw+PJAVrgTv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ab6ed8a3f6aso74476466b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:25:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738247100; x=1738851900;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3OqrPZhmeATdEa/SarwcrPzfDvhKK4nRH2GJQ3Y2/Ao=;
+        b=Yv3HNnkUwINdBMqmRwafDE+UYZswjKaDyP/hrxgjcBC34zFtUy0ZqHBogFxHFnsCLw
+         US1AdXbFoBQfgxnRtgFlAWaSwkkdPHrSHRR0fGLa97wqyydClg5zFdPa93GK9AJF+o8p
+         iHwt8ZnEWHVbIRQCQ+6wsS0S5PF9Iuu4whbunLdnjzrGIkEYgoiW7yeFcU8Rr7ZW0YoK
+         U3C/msCxYQY55fp9vudvUUteNLR2T3J3KYKr2A/yafVxtUP4tMnm3XEuw/gaUAGNocxE
+         lEhPoR/uYXbELEoa4dy8m8/Adg8Ncbmpi/SZvqD3CqYEZDhFYf09vUEsJptKtBMFkDgY
+         WXWg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6G8g3BpNOCXVmOBbsKv3QIq79hmRWx1DLtTttS5XR72q5qdWgGpGsJ09CFaHzCj89Q0HHtMl5APdTj1U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQccr9PCI6hlYnRqtz+QxkXYemOZ49YA8BKXap+rJecG6vSmS3
+	xTl4KUMgoysxVs0Fr97N1w64KFbZ8c+PQPCrvQyf4MVnvy1SNlPsEtOZrvzHigA=
+X-Gm-Gg: ASbGnctcPwqFAh56eT732ycWPWD1MespLn70cDzPhzWDY8syhB8sj6gOhWA1Di2lVfI
+	5i7E9CC5UzhWrgUUG1USPxOu7jssf/x9RlMZW8hojazc42/5/ITF/ienz/CzS/ISQ0Twvj0L/gR
+	xJo5hqFvIygmk4UhsJcq+8wSVi9wx8W+Lrd1mM35+xzukWbO8nhy3FGJ4K2hY0Vg96+EtmyObFR
+	IIN7YKRWYYNXNX2ym5ZnycoTTgTx3NMhn4+u1OWO6v8Sckb9lzPDxqbZrrxPysuMl1nPEM5SEsA
+	ItXu2zi6IBwMkVwSbgCCfA1qNSGCMZK8Mwu56zcBMG7fwtFI+j1XBA==
+X-Google-Smtp-Source: AGHT+IHS3qa8waJPpOyqkZEsCusZdkNgXjtWCuQmwgXoPBUJWi7GEz0dOzvASeNd+zRqwy4jxCgQQg==
+X-Received: by 2002:a17:907:94d1:b0:ab6:eec9:5c08 with SMTP id a640c23a62f3a-ab6eec95d8emr139698766b.10.1738247099743;
+        Thu, 30 Jan 2025 06:24:59 -0800 (PST)
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a7dcfsm130907466b.17.2025.01.30.06.24.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 06:24:59 -0800 (PST)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5d3e6f6cf69so1453844a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:24:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUmoii2no1U88SJm3WoFQ5ePLanXCj40hp4P5Sa+Y/+TdQ/qaG920LidVeEbVcH0UkRQkEk1MnrTGOniWk=@vger.kernel.org
+X-Received: by 2002:a05:6402:40c9:b0:5d0:efaf:fb73 with SMTP id
+ 4fb4d7f45d1cf-5dc5efc5baamr7107488a12.15.1738247099100; Thu, 30 Jan 2025
+ 06:24:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
+ <07cf896e-adf8-414f-a629-a808fc26014a@oracle.com> <qdq4k6323orqifgzo7pbg5vakezr3gptfdehghxsyfrhc4kwvb@d4fxbwcl4gjm>
+ <CAJ-ks9=U4PZv4NgyH8B7SbHkecGLy+M=G639hSTv-hnPySqk6w@mail.gmail.com>
+ <xf3445vgszstqfwycf5wc5owhnifxb3mny5xjjaihghqgnozmd@3h7hnifir4vu>
+ <CAMuHMdVcuhzO57Qn-kcUJDM=HmkSwuheyNJPF1tx+gxRKnKZXA@mail.gmail.com>
+ <mp6lnt3stfnfd74rwaza5xffh2ya5gylqnxotgrnqaqo3eh2zl@5g257jeiugfn>
+ <CAMuHMdWDRLi8AE0PgfAnXundbS0hyTyovUH7yScrY7GtmYYPOQ@mail.gmail.com> <zlcagbwyskb4nkl4usbq4foc4vjcau3exp42zpfsl5b4tabr7u@o42mpfcsfygr>
+In-Reply-To: <zlcagbwyskb4nkl4usbq4foc4vjcau3exp42zpfsl5b4tabr7u@o42mpfcsfygr>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 30 Jan 2025 15:24:45 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVUZQTgLpa9L9R117s39nEqxdGy=CJLyLQaTv_16EDhZg@mail.gmail.com>
+X-Gm-Features: AWEUYZmmaZQOtaNUMvBrswZCS49ixh1s35CzIVK-s4dUf7w23LLrATAr9KprGzw
+Message-ID: <CAMuHMdVUZQTgLpa9L9R117s39nEqxdGy=CJLyLQaTv_16EDhZg@mail.gmail.com>
+Subject: Re: [PATCH] xarray: port tests to kunit
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Sidhartha Kumar <sidhartha.kumar@oracle.com>, akpm@linux-foundation.org, 
+	christophe.leroy@csgroup.eu, justinstitt@google.com, 
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+	linuxppc-dev@lists.ozlabs.org, llvm@lists.linux.dev, maddy@linux.ibm.com, 
+	morbo@google.com, mpe@ellerman.id.au, nathan@kernel.org, naveen@kernel.org, 
+	ndesaulniers@google.com, npiggin@gmail.com, 
+	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250124
-head:   63f1602f557a3ea1a3396e876b6648cf6c3635c4
-commit: 140def2fc1dc741f3f85d6d90e65ac79b8d8fc06 [14/15] fs: hpfs: Avoid multiple -Wflex-array-member-not-at-end warnings
-config: csky-randconfig-001-20250130 (https://download.01.org/0day-ci/archive/20250130/202501302224.mRgkKFRI-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250130/202501302224.mRgkKFRI-lkp@intel.com/reproduce)
+Hi Liam,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501302224.mRgkKFRI-lkp@intel.com/
+On Thu, 30 Jan 2025 at 15:06, Liam R. Howlett <Liam.Howlett@oracle.com> wro=
+te:
+> * Geert Uytterhoeven <geert@linux-m68k.org> [250130 08:26]:
+> > On Thu, 30 Jan 2025 at 13:52, Liam R. Howlett <Liam.Howlett@oracle.com>=
+ wrote:
+> > > * Geert Uytterhoeven <geert@linux-m68k.org> [250130 03:21]:
+> > > > On Wed, 29 Jan 2025 at 23:26, Liam R. Howlett <Liam.Howlett@oracle.=
+com> wrote:
+> > > > > I've never used the kunit testing of xarray and have used the use=
+rspace
+> > > > > testing instead, so I can't speak to the obscure invocation as bo=
+th
+> > > > > commands seem insanely long and obscure to me.
+> > > >
+> > > > The long and obscure command line is a red herring: a simple
+> > > > "modprobe test_xarray" is all it takes...
+> > >
+> > > That command worked before too...
+> >
+> > Exactly, great!
+> >
+> > > > > You should look at the userspace testing (that this broke) as it =
+has
+> > > > > been really useful in certain scenarios.
+> > > >
+> > > > BTW, how do I even build tools/testing/radix-tree?
+> > > > "make tools/help" doesn't show the radix-tree test.
+> > > > "make tools/all" doesn't seem to try to build it.
+> > > > Same for "make kselftest-all".
+> > >
+> > > make
+> >
+> > Where?
+> > > > BTW, how do I even build tools/testing/radix-tree?
+>                                 ^^^^^^^^^^^^^^^^^^^^^^^
 
-All error/warnings (new ones prefixed by >>):
+Things like "make -C drivers/net/ethernet/" stopped working
+ca. 20y ago.
 
-   fs/hpfs/anode.c: In function 'hpfs_add_sector_to_btree':
->> fs/hpfs/anode.c:103:25: error: 'anode_btree' undeclared (first use in this function)
-     103 |                 btree = anode_btree;
-         |                         ^~~~~~~~~~~
-   fs/hpfs/anode.c:103:25: note: each undeclared identifier is reported only once for each function it appears in
->> fs/hpfs/anode.c:161:38: warning: unused variable 'ranode_btree' [-Wunused-variable]
-     161 |                 struct bplus_header *ranode_btree =
-         |                                      ^~~~~~~~~~~~
->> fs/hpfs/anode.c:185:33: error: 'fnode_btree' undeclared (first use in this function); did you mean 'fnode_ea'?
-     185 |                         btree = fnode_btree;
-         |                                 ^~~~~~~~~~~
-         |                                 fnode_ea
-   fs/hpfs/anode.c:255:9: error: 'ranode_btree' undeclared (first use in this function)
-     255 |         ranode_btree->n_free_nodes = (bp_internal(ranode_btree) ? 60 : 40) - ranode_btree->n_used_nodes;
-         |         ^~~~~~~~~~~~
+> > > Or look at the make file and stop guessing.  Considering how difficul=
+t
+> >
+> > There is no Makefile referencing tools/testing/radix-tree or the
+> > radix-tree subdir. That's why I asked...
+> >
+> > Oh, I am supposed to run make in tools/testing/radix-tree/?
+> > What a surprise!
+> >
+> > Which is a pain when building in a separate output directory, as you
+> > cannot just do "make -C tools/testing/radix-tree" there, but have to
+> > type the full "make -C tools/testing/radix-tree O=3D..." (and optionall=
+y
+> > ARCH=3D... and CROSS_COMPILE=3D...; oh wait, these are ignored :-( in t=
+he
+> > source directory instead...
+>
+> I'll await your patch to link all this together.  Please Cc the authors.
 
+I gave it a try for kselftests a few years ago.
+https://lore.kernel.org/all/20190114135144.26096-1-geert+renesas@glider.be
+Unfortunately only one patch was applied...
 
-vim +/anode_btree +103 fs/hpfs/anode.c
+> > > it is to get m68k to build, you should probably know how to read a
+> > > makefile.
+> >
+> > Like all other kernel cross-compilation? Usually you don't even have
+> > to know where your cross-compiler is living:
+> >
+> >     make ARCH=3Dm68k
+>
+> Ignoring that I had to make a config - which asked challenging
+> questions...
 
-    60	
-    61	secno hpfs_add_sector_to_btree(struct super_block *s, secno node, int fnod, unsigned fsecno)
-    62	{
-    63		struct bplus_header *btree;
-    64		struct anode *anode = NULL, *ranode = NULL;
-    65		struct fnode *fnode;
-    66		anode_secno a, na = -1, ra, up = -1;
-    67		secno se;
-    68		struct buffer_head *bh, *bh1, *bh2;
-    69		int n;
-    70		unsigned fs;
-    71		int c1, c2 = 0;
-    72	
-    73		if (fnod) {
-    74			if (!(fnode = hpfs_map_fnode(s, node, &bh))) return -1;
-    75			struct bplus_header *fnode_btree =
-    76						container_of(&fnode->btree,
-    77							     struct bplus_header,
-    78							     __hdr);
-    79			btree = fnode_btree;
-    80		} else {
-    81			if (!(anode = hpfs_map_anode(s, node, &bh))) return -1;
-    82			struct bplus_header *anode_btree =
-    83						container_of(&anode->btree,
-    84							     struct bplus_header,
-    85							     __hdr);
-    86			btree = anode_btree;
-    87		}
-    88		a = node;
-    89		go_down:
-    90		if ((n = btree->n_used_nodes - 1) < -!!fnod) {
-    91			hpfs_error(s, "anode %08x has no entries", a);
-    92			brelse(bh);
-    93			return -1;
-    94		}
-    95		if (bp_internal(btree)) {
-    96			a = le32_to_cpu(btree->u.internal[n].down);
-    97			btree->u.internal[n].file_secno = cpu_to_le32(-1);
-    98			mark_buffer_dirty(bh);
-    99			brelse(bh);
-   100			if (hpfs_sb(s)->sb_chk)
-   101				if (hpfs_stop_cycles(s, a, &c1, &c2, "hpfs_add_sector_to_btree #1")) return -1;
-   102			if (!(anode = hpfs_map_anode(s, a, &bh))) return -1;
- > 103			btree = anode_btree;
-   104			goto go_down;
-   105		}
-   106		if (n >= 0) {
-   107			if (le32_to_cpu(btree->u.external[n].file_secno) + le32_to_cpu(btree->u.external[n].length) != fsecno) {
-   108				hpfs_error(s, "allocated size %08x, trying to add sector %08x, %cnode %08x",
-   109					le32_to_cpu(btree->u.external[n].file_secno) + le32_to_cpu(btree->u.external[n].length), fsecno,
-   110					fnod?'f':'a', node);
-   111				brelse(bh);
-   112				return -1;
-   113			}
-   114			if (hpfs_alloc_if_possible(s, se = le32_to_cpu(btree->u.external[n].disk_secno) + le32_to_cpu(btree->u.external[n].length))) {
-   115				le32_add_cpu(&btree->u.external[n].length, 1);
-   116				mark_buffer_dirty(bh);
-   117				brelse(bh);
-   118				return se;
-   119			}
-   120		} else {
-   121			if (fsecno) {
-   122				hpfs_error(s, "empty file %08x, trying to add sector %08x", node, fsecno);
-   123				brelse(bh);
-   124				return -1;
-   125			}
-   126			se = !fnod ? node : (node + 16384) & ~16383;
-   127		}	
-   128		if (!(se = hpfs_alloc_sector(s, se, 1, fsecno*ALLOC_M>ALLOC_FWD_MAX ? ALLOC_FWD_MAX : fsecno*ALLOC_M<ALLOC_FWD_MIN ? ALLOC_FWD_MIN : fsecno*ALLOC_M))) {
-   129			brelse(bh);
-   130			return -1;
-   131		}
-   132		fs = n < 0 ? 0 : le32_to_cpu(btree->u.external[n].file_secno) + le32_to_cpu(btree->u.external[n].length);
-   133		if (!btree->n_free_nodes) {
-   134			up = a != node ? le32_to_cpu(anode->up) : -1;
-   135			if (!(anode = hpfs_alloc_anode(s, a, &na, &bh1))) {
-   136				brelse(bh);
-   137				hpfs_free_sectors(s, se, 1);
-   138				return -1;
-   139			}
-   140			if (a == node && fnod) {
-   141				anode->up = cpu_to_le32(node);
-   142				anode->btree.flags |= BP_fnode_parent;
-   143				anode->btree.n_used_nodes = btree->n_used_nodes;
-   144				anode->btree.first_free = btree->first_free;
-   145				anode->btree.n_free_nodes = 40 - anode->btree.n_used_nodes;
-   146				memcpy(&anode->u, &btree->u, btree->n_used_nodes * 12);
-   147				btree->flags |= BP_internal;
-   148				btree->n_free_nodes = 11;
-   149				btree->n_used_nodes = 1;
-   150				btree->first_free = cpu_to_le16((char *)&(btree->u.internal[1]) - (char *)btree);
-   151				btree->u.internal[0].file_secno = cpu_to_le32(-1);
-   152				btree->u.internal[0].down = cpu_to_le32(na);
-   153				mark_buffer_dirty(bh);
-   154			} else if (!(ranode = hpfs_alloc_anode(s, /*a*/0, &ra, &bh2))) {
-   155				brelse(bh);
-   156				brelse(bh1);
-   157				hpfs_free_sectors(s, se, 1);
-   158				hpfs_free_sectors(s, na, 1);
-   159				return -1;
-   160			}
- > 161			struct bplus_header *ranode_btree =
-   162						container_of(&ranode->btree, struct bplus_header, __hdr);
-   163			brelse(bh);
-   164			bh = bh1;
-   165			btree = anode_btree;
-   166		}
-   167		btree->n_free_nodes--; n = btree->n_used_nodes++;
-   168		le16_add_cpu(&btree->first_free, 12);
-   169		btree->u.external[n].disk_secno = cpu_to_le32(se);
-   170		btree->u.external[n].file_secno = cpu_to_le32(fs);
-   171		btree->u.external[n].length = cpu_to_le32(1);
-   172		mark_buffer_dirty(bh);
-   173		brelse(bh);
-   174		if ((a == node && fnod) || na == -1) return se;
-   175		c2 = 0;
-   176		while (up != (anode_secno)-1) {
-   177			struct anode *new_anode;
-   178			if (hpfs_sb(s)->sb_chk)
-   179				if (hpfs_stop_cycles(s, up, &c1, &c2, "hpfs_add_sector_to_btree #2")) return -1;
-   180			if (up != node || !fnod) {
-   181				if (!(anode = hpfs_map_anode(s, up, &bh))) return -1;
-   182				btree = anode_btree;
-   183			} else {
-   184				if (!(fnode = hpfs_map_fnode(s, up, &bh))) return -1;
- > 185				btree = fnode_btree;
-   186			}
-   187			if (btree->n_free_nodes) {
-   188				btree->n_free_nodes--; n = btree->n_used_nodes++;
-   189				le16_add_cpu(&btree->first_free, 8);
-   190				btree->u.internal[n].file_secno = cpu_to_le32(-1);
-   191				btree->u.internal[n].down = cpu_to_le32(na);
-   192				btree->u.internal[n-1].file_secno = cpu_to_le32(fs);
-   193				mark_buffer_dirty(bh);
-   194				brelse(bh);
-   195				brelse(bh2);
-   196				hpfs_free_sectors(s, ra, 1);
-   197				if ((anode = hpfs_map_anode(s, na, &bh))) {
-   198					anode->up = cpu_to_le32(up);
-   199					if (up == node && fnod)
-   200						anode->btree.flags |= BP_fnode_parent;
-   201					else
-   202						anode->btree.flags &= ~BP_fnode_parent;
-   203					mark_buffer_dirty(bh);
-   204					brelse(bh);
-   205				}
-   206				return se;
-   207			}
-   208			up = up != node ? le32_to_cpu(anode->up) : -1;
-   209			btree->u.internal[btree->n_used_nodes - 1].file_secno = cpu_to_le32(/*fs*/-1);
-   210			mark_buffer_dirty(bh);
-   211			brelse(bh);
-   212			a = na;
-   213			if ((new_anode = hpfs_alloc_anode(s, a, &na, &bh))) {
-   214				anode = new_anode;
-   215				/*anode->up = cpu_to_le32(up != -1 ? up : ra);*/
-   216				anode->btree.flags |= BP_internal;
-   217				anode->btree.n_used_nodes = 1;
-   218				anode->btree.n_free_nodes = 59;
-   219				anode->btree.first_free = cpu_to_le16(16);
-   220				anode_btree->u.internal[0].down = cpu_to_le32(a);
-   221				anode_btree->u.internal[0].file_secno = cpu_to_le32(-1);
-   222				mark_buffer_dirty(bh);
-   223				brelse(bh);
-   224				if ((anode = hpfs_map_anode(s, a, &bh))) {
-   225					anode->up = cpu_to_le32(na);
-   226					mark_buffer_dirty(bh);
-   227					brelse(bh);
-   228				}
-   229			} else na = a;
-   230		}
-   231		if ((anode = hpfs_map_anode(s, na, &bh))) {
-   232			anode->up = cpu_to_le32(node);
-   233			if (fnod)
-   234				anode->btree.flags |= BP_fnode_parent;
-   235			mark_buffer_dirty(bh);
-   236			brelse(bh);
-   237		}
-   238		if (!fnod) {
-   239			if (!(anode = hpfs_map_anode(s, node, &bh))) {
-   240				brelse(bh2);
-   241				return -1;
-   242			}
-   243			btree = anode_btree;
-   244		} else {
-   245			if (!(fnode = hpfs_map_fnode(s, node, &bh))) {
-   246				brelse(bh2);
-   247				return -1;
-   248			}
-   249			btree = fnode_btree;
-   250		}
-   251		ranode->up = cpu_to_le32(node);
-   252		memcpy(&ranode->btree, btree, le16_to_cpu(btree->first_free));
-   253		if (fnod)
-   254			ranode->btree.flags |= BP_fnode_parent;
-   255		ranode_btree->n_free_nodes = (bp_internal(ranode_btree) ? 60 : 40) - ranode_btree->n_used_nodes;
-   256		if (bp_internal(ranode_btree)) for (n = 0; n < ranode_btree->n_used_nodes; n++) {
-   257			struct anode *unode;
-   258			if ((unode = hpfs_map_anode(s, le32_to_cpu(ranode->u.internal[n].down), &bh1))) {
-   259				unode->up = cpu_to_le32(ra);
-   260				unode->btree.flags &= ~BP_fnode_parent;
-   261				mark_buffer_dirty(bh1);
-   262				brelse(bh1);
-   263			}
-   264		}
-   265		btree->flags |= BP_internal;
-   266		btree->n_free_nodes = fnod ? 10 : 58;
-   267		btree->n_used_nodes = 2;
-   268		btree->first_free = cpu_to_le16((char *)&btree->u.internal[2] - (char *)btree);
-   269		btree->u.internal[0].file_secno = cpu_to_le32(fs);
-   270		btree->u.internal[0].down = cpu_to_le32(ra);
-   271		btree->u.internal[1].file_secno = cpu_to_le32(-1);
-   272		btree->u.internal[1].down = cpu_to_le32(na);
-   273		mark_buffer_dirty(bh);
-   274		brelse(bh);
-   275		mark_buffer_dirty(bh2);
-   276		brelse(bh2);
-   277		return se;
-   278	}
-   279	
+make ARCH=3Dm68k defconfig
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> And ignoring the steps to get m68k compiler...
+
+apt install gcc-m68k-linux-gnu?
+
+> > > > When trying the above, and ignoring failures due to missing package=
+s
+> > > > on my host:
+> > > >   - there are several weird build errors,
+> > > >   - this doesn't play well with O=3D,
+> > > >   - lots of scary warnings when building for 32-bit,
+> > > >   - ...
+> > > >
+>
+> In file included from ./include/linux/sched.h:12,
+>                  from arch/m68k/kernel/asm-offsets.c:15:
+> ./arch/m68k/include/asm/current.h:7:30: error: invalid register name for =
+=E2=80=98current=E2=80=99
+>     7 | register struct task_struct *current __asm__("%a2");
+
+Which compiler are you using?
+
+> > > > At least the kunit tests build (and run[1] ;-) most of the time...
+> > >
+> > > Do they?  How about you break something in xarray and then try to boo=
+t
+> > > the kunit, or try to boot to load that module.
+> >
+> > If you break the kernel beyond the point of booting, you can indeed
+> > not run any test modules...
+>
+> Which is extremely easy when you are changing code that runs so early in
+> the boot.
+>
+> My code found a compiler issue because it's the first function that
+> returns a boolean.  This is stupid.
+
+Sorry. I don't understand this comment.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
