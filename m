@@ -1,96 +1,192 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013070.outbound.protection.outlook.com [52.101.67.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321451E8837
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 16:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738252941; cv=none; b=u+6gbSWgPIsRG2yhvSP9iUGrtrm161rxGmLmzWacjHYxxLdP5NWrkeNasJ3Tk7+bLMWnvJHC9GYstcZjG7tUGeSiDmVOowyAVxaG1swm6wKwrZRBAQ7hhWMytsi7hPzzp+zyTezB/4z6dUkMtwWCtJMJkTy6meHgHuzSh3ZCAXM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738252941; c=relaxed/simple;
-	bh=7MBdSk1BwpNy2hET1MIgRuFKrd5FE+flA5d+9r0ciIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B19rJxFpDt/1vK23XRoMynpJX+gf7i21YUI/6htHXU0SbfZbAnyReF5FXQTfACB1SILTa0OktbyXY+HCBqGj5yeJMgFi/qkYiBeicCp5D4zAh1woYiRP0msjqUaD56ehA8zVU69XQVyM/CJhq3OA/jpGPEnsxXstBIfiM94yDCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=IRqJGuea; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E978E1E7668;
+	Thu, 30 Jan 2025 16:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738252942; cv=fail; b=SZSd/AjbPjLzoqgP0e8st7eEWANT+sNdHQlHLOVz5vMU0ZZEd3nT3xAa8F+eXP5ytoKIbDDovi+vuDqiIKKvJF8f+vSPklC0yrvda0au5feRF+tJiTDe6acL/HbXKF8E1kEmGNn45QNhw7Doqh6KRCpTLkoBhWBjR/Bcyze5kSw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738252942; c=relaxed/simple;
+	bh=siXu+mw85J+DAcM1MAEDhYKxcBuE1CwP2TyA9610uCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=SX9lSimDVc1GBHBrXn6Xzy4RVC8NeosaaLPezt9eS+9AY6tofgnDc/rLjLaxROLQlGa47qlFDOjZWLVqZ3i+CyoMydZUPa2m0kUWxynqZ8o7ekmf7NxWKuUD9INN57IENiS+0TNQA5+Enx3VAGOf0BNEDmwDepnhm46JrFB1jlU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=UsDFf0uQ; arc=fail smtp.client-ip=52.101.67.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="IRqJGuea"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3cf880d90bdso3491505ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:02:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1738252938; x=1738857738; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ltspuTTT7wImpABc2X8tmjQrqpC9O8a4ARLx4Ty4zio=;
-        b=IRqJGueao5qD+6ixAouFt+o9SWa52+dH87GtKc7qCVMzTaC8sK1B8yhhAL0po7iHlp
-         usceISkwJLFDEReA2UcCPLmBP9Dn98TJSmof8AlkgGDyWE4msYarFU7B2l85WqjoLOhT
-         zu99jC2HV9gjRGjLcVsc9kKiO43KuTtvFyRLI7bZigRyy2iesnlorg0z9T22Q4+lAYSA
-         +jH82qE4gUH/xJPPIdQOLSyHC4CsyttFgP3KYob/5mOCvKbFmLfnmDUw6agdBb3pXgrB
-         gEwCgnykkJdxFQXAsc+cAT0J01PvDdXA9lOnd90MeAA8KdOJ6UwLziMuAesH38t7dXZC
-         3jBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738252938; x=1738857738;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ltspuTTT7wImpABc2X8tmjQrqpC9O8a4ARLx4Ty4zio=;
-        b=fYpXRpNZ+cmQS/k2CLO4hdNhSgw181ud79XeiUPCCTRHEY1o+f4LuPE9ayeOkWzNhh
-         GeGVWUaLiXWO8c8KYdOrR48mDbIV5TRQ+DYPO/eMbcmOEiRxx10dqbqWGDQpUE1v/yto
-         2I9nQnzQ0ow+keVPVdIaxKbUwfXLXpLysdBpiuXLrwBuPLti7Z7DEx5kSYjLuoX5qSSr
-         INuTnQRXs9q2XasCrkExEgV1NUxmg3BlB7k27xpiV1p6KwYDuZ+Z6bYcIzvnzCB+6Yuk
-         NxrG/mFuEtzBAhVSWqSvHfopZiIyLEsc9Js/uwBrqhAPMAq2bHH+1pmUln4/X2gmutgS
-         8gcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUak4PSIn15bIEwdH8cxj3KRKD2HqkkfmaxfYauF+Zcrz+NEsvSIGNv2pZgXH4IfMPUX0AHFBhwi54E2Mw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyI4GlysWehd2J+oFC5vz3XmIl0Z/gspnyTKIHxIqzvUfqipXRJ
-	qlo9mZ0EFKMh/fRWaFz6Nc8Upq8zDeAKRznmoutL9NAjbedk01YApHWz6MTL0o8=
-X-Gm-Gg: ASbGncv6rOUZJAV9Sc6ni5mTdQkbjPjzN+EfSvNA1zzemVQQqJDtIFHcbE7/n4V5mft
-	uECOogwOVfoAS/HAPaiydHpockCd9QuJ+L/HEi2rcpgWuzUvDtAj/elDNO+nPyHH4th00N0x1W2
-	RAi5cmN2jV3nyVysfqNrYNsi/M9fXP6M0aXE5UIYGBntVtw0jGo6H26+8E9W6MaYexrscrbj92v
-	ObNIPE7LXaLublBljxbG9GnBsDdbdiYhTpvr+3TXjAOLD37fdDqUSMlHOcqpzQFjWgssaiZSs/g
-	EniBt8woarA=
-X-Google-Smtp-Source: AGHT+IEyfjBLFtwVqhDL1I53GZ/4BxHmuOhR1GSFC1bm0nbAYhWgUJncLJfkZcCqVW2Vcnd1wsa9Jw==
-X-Received: by 2002:a05:6e02:17c7:b0:3cf:ba21:8a20 with SMTP id e9e14a558f8ab-3cffe470222mr76274605ab.18.1738252938099;
-        Thu, 30 Jan 2025 08:02:18 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ec7469f02esm396436173.90.2025.01.30.08.02.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 08:02:17 -0800 (PST)
-Message-ID: <04ca477d-36f8-4b5a-b4b8-a33afc75d144@kernel.dk>
-Date: Thu, 30 Jan 2025 09:02:15 -0700
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="UsDFf0uQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Lz1kUilZ/R8IhdpT3Rhtau0tsrs2tvgtIFLXUIu0feRJIskHvazj1LyTi1+nHBDqtKvJPX0OF3SokZ56U3nHWuqp80DdfdQtXSm7TFLmFeMR6Cm7r+2zxJdYyww88nitUtJpNatfQ+MYROl4IDmVAmlWDAs4O7xYEI5UkSA1B+iCtC6SJ+3crQhodD7Nbg+G3qtpAXG4CSaCsVUN+7FF3IJj6BeyWZ7PEXVMAdc7xofEkrpo6n9SJvfCxdhbwKrg5J9joCA1PPN58nBz6aELN7HCjWXM2F/VnodY0DKEF/EWImogatennM4GHqCITBmhdqyUFUGe+f+8cmJfKu7fNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CB6sJzB6Q8GJk38e9tC5ZhC02L4dBQL3G8RyYCigd1Y=;
+ b=Nxl+KwFrqMoqIEdsqyunxW6MNCTRn8eTMHwIdsavr3AsLljIUZuk9B5C39XfUmv6TkmmzxQ04vkBPYr9TjN/n00Fz2IcHMs/pngPaBQ4eYLS6kZIEl7L+SbGOxVjBCDuPrnueaxyt7Rhi+h9/RFRj9ylZX7YZi3mdYjCFkA/Tw7aZjjP2nyxL+wQO3GaVNjtrJZWz7skl2HNidzJ3RJHHHpUIREUacapb7Y9DTaUlHJ3ZH1cBzLZe2x3WKMJg4iv93fwfis/Kx5+djrt28XntKsHvqA+rsFaHbCmdQmSXVwVFQh9LnXiLCxIfHXGlLiZSybIDt5hiP9Fi1RFWDZwnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CB6sJzB6Q8GJk38e9tC5ZhC02L4dBQL3G8RyYCigd1Y=;
+ b=UsDFf0uQzVe6/YfVQEtiVDztTm6sEKXjtJK7mJ8xYA86iqDEJ97v1EW/2t337OhV6AbmZZ6M7cu2pE2JALGxOyZumw+q7laiSIJ7FT3zQzytx+7lRVx6uy5tsGUOyWEfojKeESfZWv1aYHmGKWvqMhrC820gntpr7tzBHgFH0EgjPV3zI91K6/3f0YR71W+ZnGUSHYzr4xaYJTFmOs2FdjMI68DL6w/P3br9C7JwP0coPNXVBByvVQNpDUzrnbEZXRFiHSEXbWqPGq32q7h9G49crcaEaPuu59wwpGl0ZC2INRCmRggKIAR0fK+g1XuR7CIEFC6oX+TuBMwW7+T+Ng==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
+ by PAXPR04MB8373.eurprd04.prod.outlook.com (2603:10a6:102:1bc::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Thu, 30 Jan
+ 2025 16:02:16 +0000
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d%7]) with mapi id 15.20.8398.018; Thu, 30 Jan 2025
+ 16:02:16 +0000
+Date: Thu, 30 Jan 2025 11:02:06 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v9 2/7] PCI: dwc: Rename cpu_addr to parent_bus_addr for
+ ATU configuration
+Message-ID: <Z5uifr5+JE0xSi2l@lizhi-Precision-Tower-5810>
+References: <20250128-pci_fixup_addr-v9-2-3c4bb506f665@nxp.com>
+ <20250129232350.GA527937@bhelgaas>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129232350.GA527937@bhelgaas>
+X-ClientProxiedBy: SJ0PR03CA0004.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a::9) To DB9PR04MB9626.eurprd04.prod.outlook.com
+ (2603:10a6:10:309::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] kasan, mempool: don't store free stacktrace in
- io_alloc_cache objects.
-To: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: kasan-dev@googlegroups.com, io-uring@vger.kernel.org, linux-mm@kvack.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- juntong.deng@outlook.com, lizetao1@huawei.com, stable@vger.kernel.org,
- Alexander Potapenko <glider@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Pavel Begunkov <asml.silence@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-References: <20250122160645.28926-1-ryabinin.a.a@gmail.com>
- <20250127150357.13565-1-ryabinin.a.a@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250127150357.13565-1-ryabinin.a.a@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|PAXPR04MB8373:EE_
+X-MS-Office365-Filtering-Correlation-Id: e8b23fbb-14f9-4afb-460f-08dd41477799
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|52116014|7416014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7n/s9qaUgp1dRQUimWasTn6Lv/OqBXbynbtuT+/URdCFrVhOXJrv2ey5IgUP?=
+ =?us-ascii?Q?DnghDLiQW9Erwn3dIX0oRlXmsoky+Lp4GZtBxJWd7BqcGpf2tsl29QIJVHVs?=
+ =?us-ascii?Q?h2e7aTRC4Fh6N+2q5zt4KfZevjQj/0xs3HOeNB6btZk2zvZE44gQxx7FmAgN?=
+ =?us-ascii?Q?HKtgiqvLD6/1wi4UjIhIKDYQ59CPnNMU+MHmlvd421QiUuTYq7X2Yvz9VO5b?=
+ =?us-ascii?Q?Ej0JHXukZRWMJZos9MaaF6qStd7UEGwsyXcOuuCVH6KWRW1AMut2KuB5Say4?=
+ =?us-ascii?Q?HsGce43D3yi5CbCvolcxbW7Ek3X4Uy+ujC/51hbjf6Cckra0XCJxo3oCD5Sx?=
+ =?us-ascii?Q?qzf2/hBQhcx7+wzYSkRMY8bNvqJ9kO4Qp+dlRFxuzNJdMp9tSBqzzkY4GLcK?=
+ =?us-ascii?Q?4j9ot7aYrvsTycawjBNYZGEzKqM9pKOD8y42p7tf+2lsEVLGlpvFdUcB4gGN?=
+ =?us-ascii?Q?XsZGmVFWPIp4JG7c2qWPhxK8tcHEaRiAH5HxTAlHcPdoMicoDuTm9soiCDuI?=
+ =?us-ascii?Q?ezSB2ieRZE2QrQ5rkFw8Nm4ldXTXfD0kKEn0GWnW2wW/8iD3824VYMC2BCsb?=
+ =?us-ascii?Q?NY1TNEevO2yuUwcQnJCT4Lw6YbNjqzlxGpnyKh1UpGx15t9s1Fa7aEANbKGF?=
+ =?us-ascii?Q?p/+jA7T7iagz7Vd0AoB5RZtCDgQwEJD4+tJtBu5eJekPh9RXxKhlBpgXXtll?=
+ =?us-ascii?Q?QmfL4JRAkiwdH9VfzE14INF+fspbVh2bpY5EEdHBjQjcpaL5VHFnnLteDqAy?=
+ =?us-ascii?Q?HEZ7vUexdT4ieBSVq4OoGhyfJVENtJE/qyT9Fldbd0cQ2It9JePlu4Y7EqHW?=
+ =?us-ascii?Q?7zIX9fA/CIkPuzkM2J6FNCOibEFrR6SKNmkNmaIYbLG0oENKq5DTjPc1RzQp?=
+ =?us-ascii?Q?BJOARcovohGpQktdugqKDPS/eREXCpiONxP8uPtUYaJT1Ns6X6Ut5XQMHwqn?=
+ =?us-ascii?Q?K9s1X6+12YEYDbM61Xk/HykhE/VBBxhX2N0Jta6Std+o69qeNWXGhapVFpOM?=
+ =?us-ascii?Q?JigxjWBdV0yxCKSA5dN/Rjr2wVq6Am+85uBvX79mc9Bwpnl1jT5kRuzUpK4U?=
+ =?us-ascii?Q?9q8RvQeUq9pJwuy82Q4WUaD5y/mcFxJyXMKKTJ9sAy+InxOZgTM3PYC7156/?=
+ =?us-ascii?Q?0wr0CptpDlsu/6wOFYqB/5Nid+hKdXWMxx1gEWdjYmPMNDUeCkaUq3kp5ry9?=
+ =?us-ascii?Q?z5whLlAqYmO+IYscpcSE0C0WhbBg+DpiXtgze/7wh89otaE7FBJwAgyh4ylE?=
+ =?us-ascii?Q?vBFUv/eLomUz07Ra/DXu4YTpuqldIFeLAqKSmbbpIifrQSDO7FlTcnHUDcGK?=
+ =?us-ascii?Q?ZDrwhwcIT0TpI8wvfIVYqB8oyeX3Ii9hOyI3tD7pXIY+RNtXC2uFoihT/9el?=
+ =?us-ascii?Q?CMBFYoyiTqqiwWqBUM63AZb4SoB8bygTuNQzOJdf6ffB6w0YycseAHn8BFB7?=
+ =?us-ascii?Q?yVBChMPU75ml0fjXGy8FIgn8r11AHnRT?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(7416014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?lnAMQ7sNBN47I4m/45t8OpP6QcL/xEg2oEG7dx4P0gzkyLL7D8B/AQdwdKhI?=
+ =?us-ascii?Q?+w0gPfwaTGZ231il/L95i2my/y8SLmc7T2IDDmFaKZldvakuja2LpmxlfhyY?=
+ =?us-ascii?Q?pFdxPmYqit3XJ3JmXyCaPeguqEEIQriF6fGN2m3T08THQzIHCvIe8D0WmEQx?=
+ =?us-ascii?Q?/je9Ax6IXSpyr9eOgGs2UzhqSRpbImlCOZw60z3x8F8hcNMECdHt7B83310i?=
+ =?us-ascii?Q?Q0AiF40dYypNSUHzsmHkfsuHs5n1lsKeRMniI3DZ9QhY0zpgtVcAbWAm9nmh?=
+ =?us-ascii?Q?qUSIxv0ut62ci08azdJT+OTl7nvO9fgeVndpOUUOz3AtA0upxXBpwvCurXhC?=
+ =?us-ascii?Q?el6mwsxaXjM4K045l5BmQuhmUs0C+5C9ujeZoy+pxWJgzfezmSEbZuFiQGV8?=
+ =?us-ascii?Q?pPNHe9nZ4ivPyr16r3sFgF3FfjpU18cW3Sth0gcbNB94uVxvcIKUeFVXOPhc?=
+ =?us-ascii?Q?bk7/G3MnQQ+PdJN2RP9hHuCUFbpZdbvIxxaR0+tEveh+S77G5/r/VHcE+ma6?=
+ =?us-ascii?Q?akhKLlICD57ZEv+WlD9auJhXDagqJBuQ/llOgY+ldEyJE3SqSv0vPoFb3yOl?=
+ =?us-ascii?Q?IQLcKnVPhXGUDaonAAGSMY8ini/7G6V7Y6ii7ySo1iFozlMvEzwK2CCRAoiN?=
+ =?us-ascii?Q?1/9BMjWyKS13Azt1kPUmyEhejCqD1O5cp1mwA4NcZW8VkqGW6l1FzvQbawUn?=
+ =?us-ascii?Q?OSEuMvgGUqEHylPSadRdCti2HyuBH1ZDIofWirx7F4vUQ15i0QkzW5qgUmFc?=
+ =?us-ascii?Q?hBPvAL9XvLx5ngPYwUeXpaeT05VTdGHGz3EYlekPfutz4ZFuc6nmg1xyYPRZ?=
+ =?us-ascii?Q?cqfj8chAND50v991MJ7SlWDeOroXUbnTP6/PMnGcGdR/iBpRKYwc7imCVqqs?=
+ =?us-ascii?Q?CrTG2qWf91qBRxYRxozEv9fE0pzobqW+cmqK43jFm7zKC9Ppp4AH5fO8GFQH?=
+ =?us-ascii?Q?uXcqyjJfSQi1XbGIOkfvJCtjz1fjmmOnEzg9fPKhrPXTIzo4/Dlm4L6VA08w?=
+ =?us-ascii?Q?WsnD7sSj9RRzXXMnimMFI3nSv+IGXI4Z7QObVcXAxBiWx0lTIE3rLG2+17i6?=
+ =?us-ascii?Q?/gMiR3hNcQxwTQg1/WFRr+evdhBOYowzlZMz/ORD7FYe5dnOXPBRImg4VUM3?=
+ =?us-ascii?Q?rTu3y09JUwoT+cF0w4fqdLsLUlxjf8r2c4LiLpOQ9GeoOtrp2H68uCj86lDJ?=
+ =?us-ascii?Q?EtlU2g0UlEfKfUzOSgeXl9sW0hCC5/yt9hRCvM47STg2+Hmq1lr+K1oIMXZm?=
+ =?us-ascii?Q?JmblxnYMwrcNUlXZSI5nUqMGLJUoqZtAjQ9xxQv42TDVcuzJkUlZORRIzfCZ?=
+ =?us-ascii?Q?odukn2xfOPQd4I39hiYjFxIBK7wQkMUQnFzGcadx53kQqj+WpTM7kJ+B7LU+?=
+ =?us-ascii?Q?lXJyZduD/eQfGZrofh9EDWuj/VbM2Os0l6yq9XmY1WhC8t3p/WltBfSnw9Ts?=
+ =?us-ascii?Q?WRdjkEj2xKaf07CtO2YQmalBqN9cF9qGB8vE1mYwDAnhWxpHR3WyN3gUw/Lj?=
+ =?us-ascii?Q?/u8bwJHLTsLjzGANvwALckPOVX+Ok72yosrmCiPadf7GgO8d2gDbXTfMTMoQ?=
+ =?us-ascii?Q?ZtuZ1O/i4xlM97RxUUzLCJ4+PaIItdEwCuny7892?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8b23fbb-14f9-4afb-460f-08dd41477799
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 16:02:16.3582
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6CupvFe8qnJ5yY4zzZscj9f/GS0g+TbYMkKmunNJOoEGbXOlV6sM5YwRTUGaaBljA8rQxROrX1TamyrNemRIvw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8373
 
-I don't think we need this with the recent cleanup of the io_uring
-struct caching. That should go into 6.14-rc1, it's queued up. So I think
-let's defer on this one for now? It'll conflict with those changes too.
+On Wed, Jan 29, 2025 at 05:23:50PM -0600, Bjorn Helgaas wrote:
+> On Tue, Jan 28, 2025 at 05:07:35PM -0500, Frank Li wrote:
+> > Rename `cpu_addr` to `parent_bus_addr` in the DesignWare ATU configuration.
+> > The ATU translates parent bus addresses to PCI addresses, which are often
+> > the same as CPU addresses but can differ in systems where the bus fabric
+> > translates addresses before passing them to the PCIe controller. This
+> > renaming clarifies the purpose and avoids confusion.
+>
+> Based on dw_pcie_ep_inbound_atu() below, I guess the ATU can also
+> translate PCI addresses from incoming DMA to parent bus addresses?
 
--- 
-Jens Axboe
+Yes, but root complex don't use it. Only EP use it. because most PCI root
+complex system doesn't transfer incoming address, which generally use iommu
+to do that. Linux already allow a simple map by use dt's dma-ranges and dma
+API already handle it.
+
+previous 'cpu_addr' is actually 'dma_bus_addr'.
+
+>
+> It's worth noting here that this patch only renames the member, and
+> IIUC, parent_bus_addr still incorrectly contains CPU physical
+> addresses.
+
+Anyway, call 'cpu_addr' for dw_pcie_ep_inbound_atu is wrong. Only one place
+call dw_pcie_ep_inbound_atu(), that's dw_pcie_ep_set_bar(), which use
+epf_bar->phys_addr, I think name 'phys_addr' is okay because most case it
+is refer to dma address space.
+
+Frank
+>
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -128,7 +128,7 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> >  }
+> >
+> >  static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+> > -				  dma_addr_t cpu_addr, enum pci_barno bar,
+> > +				  dma_addr_t parent_bus_addr, enum pci_barno bar,
+> >  				  size_t size)
