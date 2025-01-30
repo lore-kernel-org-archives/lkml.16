@@ -1,69 +1,215 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F7FB660
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFB5145B24;
+	Thu, 30 Jan 2025 06:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738218548; cv=none; b=fWkl433sgGYQxIf/Py0tj9XzuAmXIT0ulFFM0DVglg8btXUfmOtab6PSWrVYnpAgi69Yn50ZrL4NxvfN3dfl3bTTzARYIZ/dvEktFPqE6scQpUnBkHqpCTa5JBtDWp7KLOB8V6rzLHpnKImfXD3Auy2TbnnVfPK8g2cWGO0BDRU=
+	t=1738218610; cv=none; b=pei0WUh0IGXfYUmktbsmlegbTjTjF8cyGjXcumYL/7zaAKbkZaDjJBZ9jxUmJJMkLn1ZT0OoIkVymP4c56p5nJNC4eIfVPBJcT5edum0wreVE2aqdBVARpTF7oDXSwDUqxvQeW6eXhnf3YtYGNSdJZ8eFmQ/POgMe0zLUvJitEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738218548; c=relaxed/simple;
-	bh=/DbgeWISVhmCpRpIIuVZAM/1R1rHVI08nJWSCQC68LU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tBcWzc3HMb2tISRf77koW7B5F9WfTALnyjCTW90t5SJeaJUaOrQmE0g5vIR0xPLXQuY5+XoOiEFf31CvCRGhr/w8ZMLseI1tuTRy0erMi24J45BAQqjtBeGGmwCtlz7Q6hMIROdJfUJndfNgbj7axeGeaUOO56TY4Q9x05u4zAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=PeyomC5w; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1738218610; c=relaxed/simple;
+	bh=sVkmUUPh4YLSPorZuqJX284KUinJpLgBrTR6CpJDNsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g70HcR7Kil8VJsv/9BRzCuVGzCPF0CHrVKdpnJUteLUWzqZ4XZ4pjpDsuE2VjSX4b+h4MWzFiAdgJvS5ZhKyOE0D1n+2MtUfFRYr3QIc4IffFekdCvmhgs8F7bSIAQQkkY7fx4mB6xl6clwc8YLMHiVUOuP2B3jBXx0QuITnSwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6cBWVOC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="PeyomC5w"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DOfyxhskjsYIKZsjol1+lv/UJpOhs5joGJ/xvA7v8mI=; b=PeyomC5wPe1w+mhNlHeFCu+RjU
-	RPsYbzwCFpVsR+fgYVqjuP8jmdjIYtX+6bTEFqh1Y4G0bF6Pect2miZqgHU3plPNY8xLRNEpZez3i
-	AAVLy8CNydOQ6fArY+Nvw1rY2doodbjOrhXPO2udhfQDHgdtS7cj8zV122ng016YnJ/Ke1H+x8U9F
-	FQWcVhGz2TyjCzjpNpTbIt/9gTAyYw/1RVNI4QZEPbgTUsXGA7X8HLkHi14xKqxS+VKB8yzTw7yae
-	ju/2cjF7LCozlKDXKd6ECHmmjSTg/YtVL244mZhNvF1SbWPu6fRbC/8i4o3LZ35HtlpLOWacJfFc4
-	Gjlu1Q/A==;
-Received: from [58.29.143.236] (helo=[192.168.1.6])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1tdO2o-000uzE-4W; Thu, 30 Jan 2025 07:29:00 +0100
-Message-ID: <6bf8fd97-5113-4944-902c-250fca9d9b5c@igalia.com>
-Date: Thu, 30 Jan 2025 15:28:56 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6cBWVOC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B00CEC4CED2;
+	Thu, 30 Jan 2025 06:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738218609;
+	bh=sVkmUUPh4YLSPorZuqJX284KUinJpLgBrTR6CpJDNsU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c6cBWVOCRHsdDwCsmKvQUfDXErr/YDNAeqfgEBD/CUMI4aA/qUSkIDhrS2+iDqM8N
+	 T6Ee580cCzy5dIDFFC0F4diBziXau08LZYNcfT2gOf39BI7L7/woBlxjmeCgde+kwl
+	 VW4olio1SjZz/dXx3M5bNKU1tH7kBstVOXj1IdXhXvmnkM02tHzk1Sll+bfw8XJkQ7
+	 f3vbQi8yKMX+c08o+1TLfHi8fpUKRlHRryuaCgSKUB9wBs1J8GqYpLfIPl6Q4/J/5P
+	 hnY92PawlXUHL5JPOQM1gzUl+ROCKFdvAcwEkSyyhGazIepZALQzmyKGwIqWFa2z6m
+	 NqU7X7vCoILbA==
+Date: Wed, 29 Jan 2025 22:30:08 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v3 6/7] perf report: Add --latency flag
+Message-ID: <Z5sccIPaYBeB_yab@google.com>
+References: <cover.1737971364.git.dvyukov@google.com>
+ <70523ae7dd5d5c41d2d954324297d9d2cfad1b1f.1737971364.git.dvyukov@google.com>
+ <Z5m2hdR3HZxIdhWR@google.com>
+ <CACT4Y+Z6KoYxY0AiC1eK=Ch9CQFuk7rWud_4GAMyjGdv+yemtQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/11] sched_ext: Implement core event counters
-To: Tejun Heo <tj@kernel.org>
-Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org
-References: <20250126101614.232388-1-changwoo@igalia.com>
- <Z5foIViipcxdjzQ1@slm.duckdns.org>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <Z5foIViipcxdjzQ1@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Z6KoYxY0AiC1eK=Ch9CQFuk7rWud_4GAMyjGdv+yemtQ@mail.gmail.com>
 
-Hello,
-
-On 25. 1. 28. 05:10, Tejun Heo wrote:
-> On Sun, Jan 26, 2025 at 07:16:03PM +0900, Changwoo Min wrote:
->> The sched_ext core often has to override the BPF scheduler decisions,
->> and some events could be interesting but not easily visible.
+On Wed, Jan 29, 2025 at 08:12:51AM +0100, Dmitry Vyukov wrote:
+> On Wed, 29 Jan 2025 at 06:03, Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Mon, Jan 27, 2025 at 10:58:53AM +0100, Dmitry Vyukov wrote:
+> > > Add record/report --latency flag that allows to capture and show
+> > > latency-centric profiles rather than the default CPU-consumption-centric
+> > > profiles. For latency profiles record captures context switch events,
+> > > and report shows Latency as the first column.
+> >
+> > It'd be nice if you could add a small example output in the commit
+> > message.
+> >
+> > >
+> > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > Cc: Ian Rogers <irogers@google.com>
+> > > Cc: linux-perf-users@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > ---
+> > [SNIP]
+> > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > > index bc4c3acfe7552..2b6023de7a53a 100644
+> > > --- a/tools/perf/util/sort.c
+> > > +++ b/tools/perf/util/sort.c
+> > > @@ -2622,6 +2622,7 @@ struct hpp_dimension {
+> > >       const char              *name;
+> > >       struct perf_hpp_fmt     *fmt;
+> > >       int                     taken;
+> > > +     int                     was_taken;
+> > >  };
+> > >
+> > >  #define DIM(d, n) { .name = n, .fmt = &perf_hpp__format[d], }
+> > > @@ -3513,6 +3514,7 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
+> > >               return -1;
+> > >
+> > >       hd->taken = 1;
+> > > +     hd->was_taken = 1;
+> > >       perf_hpp_list__register_sort_field(list, fmt);
+> > >       return 0;
+> > >  }
+> > > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
+> > >       return 0;
+> > >  }
+> > >
+> > > -int hpp_dimension__add_output(unsigned col)
+> > > +int hpp_dimension__add_output(unsigned col, bool implicit)
+> > >  {
+> > > +     struct hpp_dimension *hd;
+> > > +
+> > >       BUG_ON(col >= PERF_HPP__MAX_INDEX);
+> > > -     return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
+> > > +     hd = &hpp_sort_dimensions[col];
+> > > +     if (implicit && !hd->was_taken)
+> > > +             return 0;
+> >
+> > I don't understand why you need 'was_taken' field.  Can it use the
+> > 'taken' field?
 > 
-> Generally looks good to me. Left several comments which should be
-> straightforward to address.
+> I've started getting failed asserts in
+> perf_hpp__cancel_cumulate/latency when removing columns still linked
+> into sort order list.
 
-Thank you for the review! I will cook another version in a day or two.
+Ok.
 
-Regards,
-Changwoo Min
+> 
+> I've figured out that columns we implicitly add in setup_overhead and
+> perf_hpp__init must match exactly. If we add one in setup_overhead,
+> but not in perf_hpp__init, then it starts failing.
+
+Right, I don't remember why we don't have unregister_sort_field or let
+the perf_hpp__column_unregister() remove it from the sort_list too.
+
+> 
+> Taken does not work b/c there is reset_dimensions call between these
+> functions, so they actually add the same columns twice to field/sort
+> lists (and that prevents failures in
+> perf_hpp__cancel_cumulate/latency).
+
+I see.
+
+> 
+> Initially I've just tried to match logic in setup_overhead and in
+> perf_hpp__init. But it turned out quite messy, duplicate logic, and
+> e.g. in setup_overhead we look at sort_order, but in perf_hpp__init we
+> already can't look at it b/c we already altered it in setup_overhead.
+> That logic would also be quite fragile. Adding was_taken looks like
+> the simplest, most reliable, and less fragile with respect to future
+> changes approach.
+
+Maybe just remove it from the sort_list.  There should be no reason to
+keep it in the list.
+
+> 
+> 
+> > > +     return __hpp_dimension__add_output(&perf_hpp_list, hd);
+> > >  }
+> > >
+> > >  int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
+> > > @@ -3809,10 +3816,24 @@ static char *setup_overhead(char *keys)
+> > >       if (sort__mode == SORT_MODE__DIFF)
+> > >               return keys;
+> > >
+> > > -     keys = prefix_if_not_in("overhead", keys);
+> > > -
+> > > -     if (symbol_conf.cumulate_callchain)
+> > > -             keys = prefix_if_not_in("overhead_children", keys);
+> > > +     if (symbol_conf.prefer_latency) {
+> > > +             keys = prefix_if_not_in("overhead", keys);
+> > > +             keys = prefix_if_not_in("latency", keys);
+> > > +             if (symbol_conf.cumulate_callchain) {
+> > > +                     keys = prefix_if_not_in("overhead_children", keys);
+> > > +                     keys = prefix_if_not_in("latency_children", keys);
+> > > +             }
+> > > +     } else if (!keys || (!strstr(keys, "overhead") &&
+> > > +                     !strstr(keys, "latency"))) {
+> > > +             if (symbol_conf.enable_latency)
+> > > +                     keys = prefix_if_not_in("latency", keys);
+> > > +             keys = prefix_if_not_in("overhead", keys);
+> > > +             if (symbol_conf.cumulate_callchain) {
+> > > +                     if (symbol_conf.enable_latency)
+> > > +                             keys = prefix_if_not_in("latency_children", keys);
+> > > +                     keys = prefix_if_not_in("overhead_children", keys);
+> > > +             }
+> > > +     }
+> >
+> > Do you really need this complexity?  I think it's better to fix the order
+> > of columns in both case.
+> 
+> This is sort order which affects ordering of row, and order of rows is
+> basically the most important thing for a profiler. If we fix the
+> order, it will be showing completely different things.
+> 
+> "latency" and "overhead" are equivalent with respect to their
+> fundamentality for a profile. So we shouldn't be adding any of them,
+> if any of them are already explicitly specified by the user.
+> 
+> For example, the command from tips.txt:
+> 
+> perf report --hierarchy --sort latency,parallelism,comm,symbol
+> 
+> if we prepend "overhead", it all falls apart.
+> 
+> Or for 2 default modes (normals and latency) we want "overhead" or
+> "latency" to come first. Prepending "latency" for the current CPU mode
+> would lead to completely different ordering.
+
+I see.  You want to sort by overhead in the default mode even if it has
+implicitly-added latency field, and to sort by latency if --latency is
+given explicitly.
+
+I think it can be done with the following command line.
+
+  $ perf report -F overhead,latency,parallelism,comm,sym -s overhead
+
+or
+
+  $ perf report -F overhead,latency,parallelism,comm,sym -s latency
+
+IOW, you can keep the same output column ordering and sort the result
+differently.  But I'm not sure if it'd make the code simpler. :)
+
+Thanks,
+Namhyung
+
