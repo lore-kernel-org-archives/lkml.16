@@ -1,114 +1,157 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373781E500C;
-	Thu, 30 Jan 2025 13:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF7C1BCA0C;
+	Thu, 30 Jan 2025 13:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738243664; cv=none; b=T79VdH7TM2ME6vSNZ3UyH/+9OMhUzPjMaGLwQs156p4rk+IG8xf2CV2D7g2B/7fGUdGEycqALr+pL07EUGQ1wxHQMLh19q4hAmS/QaT/iYI2clFfGxzlp7lUdVtykVg5vmPQKsn2CEouVRp4bapmHg6yPgiyH9U7L8juVWMY8+Q=
+	t=1738243743; cv=none; b=OSDW236fmYewPGSOmu1yk+46xaHfkeYCjkPzLDiK5uefXrvU8B0OR6bovpRdmUffUXMIcW/XjbAQmacLXtW3gWTaAhh1x2HX0BNj3Q0+a1uth4m2nZjkD4308wV3G6cjFa8IIilnWKWQIsRrfHh9x1TM9dvlM4tyxRu8n2div44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738243664; c=relaxed/simple;
-	bh=O7YyO+uijoU7i+42mLeb/uq7ar3D8ZwmNJb9tmfdZFA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=noypXb8GseRomxAKlwTpsEgokUpFVQ4vr/DQywth1d6vpUJpUnMAqy+eyC/ZrXFeAEdvm9L3bek2UpxyMJHKqHJkvYHgFTjtLX69NxfjupeGHf+JPhks9IFR6AQEXBsU2ErFxb76vkLNgBNJjoZ+5W4vORG7HHtv8L4bdRvgfxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=NiimSCwf; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1738243743; c=relaxed/simple;
+	bh=SzL+0ECLZhbMXBiNpxvhWK0pVhnz1sd91qYL9DClqgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pry2kgYnREUJXeAxfO5beZ7dnwsJLcWd1i0xjOC3oBX5EyKQAgPnHN8gv38BbH+lVLPRczPpPX4+KcHbPQyiXNk662h6gWmjD9WMBBbmpspYIw2K6r7u4YwuVreb6Oor8iLQ90CSMyAu6t1076+tAi21NSNiUeD+sKObyFvCVcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WECUUaVM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="NiimSCwf"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4YkKP74clyz9sqN;
-	Thu, 30 Jan 2025 14:19:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1738243163; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O7YyO+uijoU7i+42mLeb/uq7ar3D8ZwmNJb9tmfdZFA=;
-	b=NiimSCwfvQEAAZ3FZ8x3y+CWPynqeHSRRVngAj2pnMIRqS2v3RaVhMRop/VGitmr8iBg1D
-	c5143vHykbQIQ5gW8XWt5GceKu37fPni0E3n8zi7YYzgb7kP+OtjDVZrw/w7LhU6LTW9nj
-	PogkQS54EpQhdkBUB4vtrmhCyxC0Kq+Rj9zBVgASO/aylqwT+oNgB7pCHq4tW+UnWh8F6C
-	olqLKh3UpuopW+odHjYDVnwKD2j1DejbJf685ks+CInZzhSaKWcvOwaG8iVxDf3coSmPXY
-	kH5I4WNhCN+TzCNZiRne067kdl8flDydeDLSsWCUy38bauQSy4hbhy8zQkrJpw==
-Message-ID: <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
-Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Abdiel Janulgue
- <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com,
- aliceryhl@google.com,  robin.murphy@arm.com,
- rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, Alex
- Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo
- <gary@garyguo.net>,  =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
- Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Valentin Obst <kernel@valentinobst.de>, open list
- <linux-kernel@vger.kernel.org>, Marek Szyprowski
- <m.szyprowski@samsung.com>, airlied@redhat.com, "open list:DMA MAPPING
- HELPERS" <iommu@lists.linux.dev>, Greg KH <gregkh@linuxfoundation.org>
-Date: Thu, 30 Jan 2025 14:19:16 +0100
-In-Reply-To: <20250128092334.GA28548@lst.de>
-References: <20250108122825.136021-3-abdiel.janulgue@gmail.com>
-	 <20250108135951.GA18074@lst.de>
-	 <CANiq72=R2N+QiCiHZQu-6YJ9aYpn_bik3BW3U=nAW3jL7unzLw@mail.gmail.com>
-	 <20250108151858.GB24499@lst.de> <Z36X_ZnCmBQBMoZ6@pollux>
-	 <20250109080812.GA20431@lst.de> <Z3-NqwAG_96yq8VD@pollux>
-	 <20250110083955.GA5395@lst.de> <Z4D5a5NYrAbNxUL6@pollux>
-	 <Z4kG5AcVeQKegLnb@pollux> <20250128092334.GA28548@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WECUUaVM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2243C4CEE0;
+	Thu, 30 Jan 2025 13:29:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738243742;
+	bh=SzL+0ECLZhbMXBiNpxvhWK0pVhnz1sd91qYL9DClqgA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WECUUaVMInqFHMFwEGhbamsuAJkqp8L1NgIs5r8eaLytvmVkM94f3iOFQ0V8wiZah
+	 s6MTIhHnm1Ws1dq3R4zMdLL/5JuLl/vi90+PsRsK7dHwtj9aRxOOC5WYoDGBIJrJLu
+	 4pUKyhI7WFCKj0kjsyDtb7XV1ctGhun4+H1ciLLpRQh8VnagZbY1ezED7b8a9WOJuX
+	 jRF77ATie3d4fYpEckR58GXo2APy/MesYmtoYDr+yONY4qqo1DEbmfKnS5GOIjXOdd
+	 00zp0ifUehqpMff0Y3vdGvcBnRsdUDJ2XUYN3Wv5+hTGMa7zz3GSC1z1a7YIy6wFrN
+	 XJhSoqRZISXYA==
+Date: Thu, 30 Jan 2025 14:28:59 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Florent Tomasin <florent.tomasin@arm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
+	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, nd@arm.com, 
+	Akash Goel <akash.goel@arm.com>
+Subject: Re: [RFC PATCH 1/5] dt-bindings: dma: Add CMA Heap bindings
+Message-ID: <ats2unrml5a7vbpdrqrzowodrsfj44bnubpbujg2igk3imeklx@nrpmg5oeq3gz>
+References: <cover.1738228114.git.florent.tomasin@arm.com>
+ <771534be8dfa2a3bdc3876502752f518224b9298.1738228114.git.florent.tomasin@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: 4cdc5cbb72f064dabb6
-X-MBO-RS-META: 6tazpg4mgfk94i9qjk4o41ieqhr1ppzr
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="bmhdmohxtvk6vpli"
+Content-Disposition: inline
+In-Reply-To: <771534be8dfa2a3bdc3876502752f518224b9298.1738228114.git.florent.tomasin@arm.com>
 
-On Tue, 2025-01-28 at 10:23 +0100, Christoph Hellwig wrote:
-> On Thu, Jan 16, 2025 at 02:17:24PM +0100, Danilo Krummrich wrote:
-> > Since there hasn't been a reply so far, I assume that we're good
-> > with
-> > maintaining the DMA Rust abstractions separately.
+
+--bmhdmohxtvk6vpli
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH 1/5] dt-bindings: dma: Add CMA Heap bindings
+MIME-Version: 1.0
+
+Hi,
+
+On Thu, Jan 30, 2025 at 01:08:57PM +0000, Florent Tomasin wrote:
+> Introduce a CMA Heap dt-binding allowing custom
+> CMA heap registrations.
 >=20
-> No, I'm not.=C2=A0 This was an explicit:
+> * Note to the reviewers:
+> The patch was used for the development of the protected mode
+> feature in Panthor CSF kernel driver and is not initially thought
+> to land in the Linux kernel. It is mostly relevant if someone
+> wants to reproduce the environment of testing. Please, raise
+> interest if you think the patch has value in the Linux kernel.
 >=20
-> Nacked-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Florent Tomasin <florent.tomasin@arm.com>
+> ---
+>  .../devicetree/bindings/dma/linux,cma.yml     | 43 +++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/linux,cma.yml
 >=20
-> And I also do not want another maintainer.=C2=A0 If you want to make Linu=
-x
-> impossible to maintain due to a cross-language codebase do that in
-> your driver so that you have to do it instead of spreading this
-> cancer
-> to core subsystems.=C2=A0 (where this cancer explicitly is a cross-
-> language
-> codebase and not rust itself, just to escape the flameware brigade).
+> diff --git a/Documentation/devicetree/bindings/dma/linux,cma.yml b/Docume=
+ntation/devicetree/bindings/dma/linux,cma.yml
+> new file mode 100644
+> index 000000000000..c532e016bbe5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/linux,cma.yml
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/linux-cma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Custom Linux CMA heap
+> +
+> +description:
+> +  The custom Linux CMA heap device tree node allows registering
+> +  of multiple CMA heaps.
+> +
+> +  The CMA heap name will match the node name of the "memory-region".
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - linux,cma
+> +
+> +  memory-region:
+> +    maxItems: 1
+> +    description: |
+> +      Phandle to the reserved memory node associated with the CMA Heap.
+> +      The reserved memory node must follow this binding convention:
+> +       - Documentation/devicetree/bindings/reserved-memory/reserved-memo=
+ry.txt
+> +
+> +examples:
+> +  - |
+> +    reserved-memory {
+> +      #address-cells =3D <2>;
+> +      #size-cells =3D <2>;
+> +
+> +      custom_cma_heap: custom-cma-heap {
+> +        compatible =3D "shared-dma-pool";
+> +        reg =3D <0x0 0x90600000 0x0 0x1000000>;
+> +        reusable;
+> +      };
+> +    };
+> +
+> +    device_cma_heap: device-cma-heap {
+> +      compatible =3D "linux,cma";
+> +      memory-region =3D <&custom_cma_heap>;
+> +    };
 
+Isn't it redundant with the linux,cma-default shared-dma-pool property
+already?
 
-Hallo,
+Maxime
 
-would some sort of official statement by the "entire community"
-reassure you that the burden of keeping Rust abstractions working with
-any changes on the C side rests entirely on the Rust side's shoulders?
-(because that's what the statements made by the latter seem to mean to
-me)
+--bmhdmohxtvk6vpli
+Content-Type: application/pgp-signature; name="signature.asc"
 
-As I see it, at least as long as Rust code is just drivers and
-abstractions which sit on top of the core infrastructure, which is C,
-breakages or a hypothetical unmaintainability would only affect the
-Rust side, whereas the traditional kernel could go on working and being
-maintained as it always did.
+-----BEGIN PGP SIGNATURE-----
 
-I'm thinking about something like a linux/LANGUAGES file, which
-specifies what languages you can use and what the rules are. Written
-down transparently black on white. As a counterpart to linux/LICENSES,
-basically.
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ5t+lgAKCRAnX84Zoj2+
+donhAX9x/cTFDmyFuCnkSVtxn7cvuf3F9KhUXKz36q10FjqdD7EC8VQn3wUym/Z7
+8wtTJXcBfiiGdCFDdeUNdXAechjJXITJhWsytboK18cCIe6R1dyzOx/J+Wvt4WIW
+SACe2NmJ9Q==
+=VxzG
+-----END PGP SIGNATURE-----
 
-
-Philipp
+--bmhdmohxtvk6vpli--
