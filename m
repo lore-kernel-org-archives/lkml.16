@@ -1,115 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415E928F3;
-	Thu, 30 Jan 2025 02:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F021D52B
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 02:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738202873; cv=none; b=CIa8uT9929xbTUeOyD5rlKKHiepvRTteGv8s9q1WJtW5wW0/VHfGHv1T9UBzxKSvzQ1QEG4rQ0UgJZn78CDtuiEu/8+SJgdk/Ukt1WyCOUNvvAXS2wdpCWzVWMe0aVek+1pwuecP/9NmXe+FJAiIJIxmwo+pVI2wS927bXcmCWE=
+	t=1738203327; cv=none; b=nNUguHkr2kZ1sqfA9OKnCzl0Rs1rRW3sgpXuKY2/S59HaXVR1MaqrG3gxAn0rFylhdjeyXzsKIqmjpdBZ5gLJvu/aZvdoUkh1/RYCOmun2quh+5/DsKdCZ1wMbNVp1W0jBhhP3nGffzUuEImBM0Oa+r4dtHWiJtVlZ7TnM/Qun4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738202873; c=relaxed/simple;
-	bh=ojgfQkn3Kkd9q23VDwOsl3QP/6qNttcggfPTEkNxGw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kT5GfJIR/XlTx14o0n5eIB07aYiU91jyJuanKLQbo+NHUMKiL2tloZOhfUiVJp/UmBAaQ0qfHCf31HGImADDF8lY/Rfchz1jzfbRfNM9mF2QXmh+Z2uLPj0gRXjoDvVJF0Hho9XAj79tuhfnB6vbBiGGDacWd+gyJPEaYet9rho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E0d6ylW6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738203327; c=relaxed/simple;
+	bh=orZla9O2A+E4DJv6OiX5psoqxdTYbHyT5BwavlcaGG0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PMapkwyE0hsZWeR9kaaQJd8P1jbYhDZl/5ditPY4d2JvF5KAV9k6LiEpilAb6FaWdCRxzVomFgYwlTpQXYNaPVoRMtFYLtov3lkiyi7zz8xaEkWcbqc77vV6TSFSb4c7FsnKFNfmMhYBufpZDgpAp31ScBD8oKUxiQVRqAtvdiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BfNww3rh; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E0d6ylW6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B84FC4CED1;
-	Thu, 30 Jan 2025 02:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738202872;
-	bh=ojgfQkn3Kkd9q23VDwOsl3QP/6qNttcggfPTEkNxGw4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=E0d6ylW6U0fPppPk4GxypN0u9hj+bxJyVFUhdZ9GSAxpeM2hNgzum10uUadjMAx/K
-	 PGCbLQRthqGiXRs/PEOwjaCChcGTPx/MAEYIU54b8Ok44L89c+Qhfy1Scs6FaWXhF9
-	 DMtRLTH2TMfB/uJ2jBmmyDkKcsiWXbHJ5jLlWvUcNZjKtp8MCXZ5LVgnVrQMx1ogtk
-	 qnG2THe+cxwufk9rudL1YAmnKs7vGhC8ZueUb+QqrYQtAm7yevCza5fAo9mVj26sYu
-	 pPPiBJUnKLRGxJXF3bK2G2Bo9OUL0EaQUSucKV+Dor6JCTmXMPyElFuauwPSX5J0Bi
-	 69HVOAlvel1XA==
-Date: Wed, 29 Jan 2025 18:07:51 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Joe Damato <jdamato@fastly.com>
-Cc: netdev@vger.kernel.org, sridhar.samudrala@intel.com, Shuah Khan
- <shuah@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
- Fastabend <john.fastabend@gmail.com>, linux-kernel@vger.kernel.org (open
- list), linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST
- FRAMEWORK), bpf@vger.kernel.org (open list:XDP (eXpress Data
- Path):Keyword:(?:\b|_)xdp(?:\b|_))
-Subject: Re: [RFC net-next 2/2] selftests: drv-net: Test queue xsk attribute
-Message-ID: <20250129180751.6d30c8c4@kernel.org>
-In-Reply-To: <20250129172431.65773-3-jdamato@fastly.com>
-References: <20250129172431.65773-1-jdamato@fastly.com>
-	<20250129172431.65773-3-jdamato@fastly.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BfNww3rh"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-215740b7fb8so70715ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 18:15:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738203325; x=1738808125; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zL2bVoQzvTlTDBwGlrT2Hn0lIShKB5FFgTt+rq/GXUE=;
+        b=BfNww3rhe9D6YW5M0coUHWN6svgvOxl73iKKcANftmERO7j2prqEXZ3PsNPVkRZk5X
+         cGnDPBGPdDHE8/WS3C8TQI9feGAeyHaImf6iomFugmkXky98/RW/CKcdVQ4Y4w+91H8D
+         d993eotiXptRV9os8lm0rNNdEEoq3xDmJ4J7LkfwFp53Y/JfWTCm8cnq/P7Ml8Q+F/U6
+         rUl0fXlBC5Hrq6Oe1UbbOYz0iz+CbXz91TbHieWWqvs989OvWx3AZtv1Zhnlbp7ZUyG/
+         PjrtYTw2E1HRKtQ6hCEehf4D8nnSDJj/C06IUhG6OE+M43quUq0TLzEzHgY6peHXZZ2v
+         lICw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738203325; x=1738808125;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zL2bVoQzvTlTDBwGlrT2Hn0lIShKB5FFgTt+rq/GXUE=;
+        b=XHExpyTSHOdI3x5AcBaOpKqwXhrPCZpoySA/znw6vINSFr0HitOnh3Pgk6srkXR7cL
+         pYwG/OiOf/kDkkSgro0ucRUdTcS0hSuLkhE0EKVGnHj0mRj5i2kwr3u7V8KGISYFcZUu
+         r0m7W/SP9fZkKXeRyk84XoAGfp+i7xLL80IOhnlIJKzaJjj6nzPdACFN+chVOv0165uc
+         gVinb24fk8t/ESKIxzu7wN3ZmPY+a6ew0KsUoKDoHEpysXyyXLtzQ//pvT3E2Is8jJuQ
+         1C5cWEZmD9yDrnD4obNNVKKF4YBDXZYkqD0LjYNmM7tfQIFPVNxHX+RuWC523Q2EJjH4
+         KPkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXeDcuHgbrJg1+uN0eSQTQ2czjLWxTTi+kuWXcqLqCBEzJctzNR+QSmMwlpxrDY1vk7FTr/iovDEFxvGiY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0VVJXxtaY+RbWqWetIGiRFIfqznawEeQtG4/1PTnEEJehLrW9
+	YJVQsIpf6E1LdylTtnVIEu0YzCcYF9ZmUnHnS6BNBsL/qndNriEZ5xJXuLrdzTjr9dYgWEPorY2
+	VJbhpcVRGoto5tccGw2vsiCKFdalyFNqJpjEp
+X-Gm-Gg: ASbGncvSXW45b9LDa93nkUIz6Ny8wRFoU4eDNleQsPaBAPGBp2Gg5kZGpVHidaQo8Ax
+	wkTBu+KwIDiEPYQktT5HhXiCwO3XYnQyFmaqNUw+PKMGI9E5kRKOGubEkoFaqTTjKy0Z8AswQaD
+	H5kbPO6X25kh87KXm4GlvYq0NB5w==
+X-Google-Smtp-Source: AGHT+IHiw/l5Uly3TxfT60Bv+QsNpJ//IE32/Ma11U6wfwDQu474zQr3xgWxbyPKTz1IoSdCOksR8RL+mMMOIfQlrUY=
+X-Received: by 2002:a17:902:6b01:b0:215:7ced:9d67 with SMTP id
+ d9443c01a7336-21de2479655mr1342275ad.24.1738203324959; Wed, 29 Jan 2025
+ 18:15:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250101222039.74565-1-sj@kernel.org> <Z4XUoWlU-UgRik18@gourry-fedora-PF4VCD3F>
+In-Reply-To: <Z4XUoWlU-UgRik18@gourry-fedora-PF4VCD3F>
+From: Yuanchu Xie <yuanchu@google.com>
+Date: Wed, 29 Jan 2025 18:15:08 -0800
+X-Gm-Features: AWEUYZmwbhWtFQt8BXt48jdRBHbwVMypC1AoImNfsGOiL3MKq8A1xAi_a-yZ7Ek
+Message-ID: <CAJj2-QF1y1XNRYy9sT5c5=pi20+67Duf9B2Amatnu01HLmw06Q@mail.gmail.com>
+Subject: Re: [LSF/MM/BPF TOPIC] DAMON Requirements for Access-aware MM of Future
+To: Gregory Price <gourry@gourry.net>
+Cc: SeongJae Park <sj@kernel.org>, lsf-pc@lists.linux-foundation.org, damon@lists.linux.dev, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+	Raghavendra K T <raghavendra.kt@amd.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Kaiyang Zhao <kaiyang2@cs.cmu.edu>, Jiaming Yan <jiamingy@amazon.com>, 
+	Honggyu Kim <honggyu.kim@sk.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 29 Jan 2025 17:24:25 +0000 Joe Damato wrote:
-> Test that queues which are used for AF_XDP have the xsk attribute set.
-
-> diff --git a/tools/testing/selftests/drivers/.gitignore b/tools/testing/selftests/drivers/.gitignore
-> index 09e23b5afa96..3c109144f7ff 100644
-> --- a/tools/testing/selftests/drivers/.gitignore
-> +++ b/tools/testing/selftests/drivers/.gitignore
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  /dma-buf/udmabuf
->  /s390x/uvdevice/test_uvdevice
-> +/net/xdp_helper
-
-Let's create our own gitignore, under drivers/net
-we'll get conflicts with random trees if we add to the shared one
-
->  def sys_get_queues(ifname, qtype='rx') -> int:
->      folders = glob.glob(f'/sys/class/net/{ifname}/queues/{qtype}-*')
-> @@ -21,6 +24,31 @@ def nl_get_queues(cfg, nl, qtype='rx'):
->          return len([q for q in queues if q['type'] == qtype])
->      return None
->  
-> +def check_xdp(cfg, nl, xdp_queue_id=0) -> None:
-> +    test_dir = os.path.dirname(os.path.realpath(__file__))
-> +    xdp = subprocess.Popen([f"{test_dir}/xdp_helper", f"{cfg.ifindex}", f"{xdp_queue_id}"],
-> +                           stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1,
-> +                           text=True)
-
-add:
-	defer(xdp.kill)
-
-here, to make sure test cleanup will always try to kill the process,
-then you can remove the xdp.kill() at the end
-
-> +    stdout, stderr = xdp.communicate(timeout=10)
-> +    rx = tx = False
-> +
-> +    queues = nl.queue_get({'ifindex': cfg.ifindex}, dump=True)
-> +    if queues:
-
-if not queues:
-	raise KsftSkipEx("Netlink reports no queues")
-
-That said only reason I can think of for no queues to be reported would
-be that the device is down, which is very weird and we could as well
-crash. So maybe the check for queues is not necessary ?
-
-> +        for q in queues:
-> +            if q['id'] == 0:
-> +                if q['type'] == 'rx':
-> +                    rx = True
-> +                if q['type'] == 'tx':
-> +                    tx = True
-> +
-> +                ksft_eq(q['xsk'], 1)
-> +            else:
-> +                ksft_eq(q['xsk'], 0)
-> +
-> +    ksft_eq(rx, True)
-> +    ksft_eq(tx, True)
-> +    xdp.kill()
+On Mon, Jan 13, 2025 at 7:06=E2=80=AFPM Gregory Price <gourry@gourry.net> w=
+rote:
+> 5) Scarce resources
+>
+>    We need to be careful not to consume excessive amounts of resources
+>    in an attempt to track all these identifying mechanisms.  Even 1 byte
+>    per folio is 256MB on a 1TB machine.  This gets out of hand quick.
+>
+>    With task-work, I was able to add no additional resource consumption,
+>    but deferring to a fully async scenario and needing to track things
+>    like last-accessing CPU, timestamps, and etc.
+>
+>    We'll need to examine this closely if we decide to aggregate either
+>    of these mechanisms.
+My concern with physical address space monitoring is fragmentation. I
+ran some numbers on a few prod machines. Grouping by regions with the
+same memcg and ignoring any unmapped memory to be generous, machines
+with higher utilization can have a region/total pages ratio of ~40%,
+and even those with lower utilization (<50%) can also reach 20%.
+Accurately tracking these regions would require quite the region
+metadata, on the order of GBs.
