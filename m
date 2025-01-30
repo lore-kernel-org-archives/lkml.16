@@ -1,198 +1,234 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2052.outbound.protection.outlook.com [40.107.223.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149702AE74;
-	Thu, 30 Jan 2025 05:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738215683; cv=none; b=UvnJFq6s38vKGARfj46cl0iu7Y1WiWzmlHqBM+wTm0b/H4XTf22lYonEeKYVveA4CmQJxO7SCF+cjnzHeS7eWsqtIwJ3i9bxnOSfKVwlSNTwRf46ppmopBEzRAmQDWqXSVG+tzGAUrxFlb5NS71yurlgO6IcAA48JRW0YSJCobw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738215683; c=relaxed/simple;
-	bh=OS7zJYaqdtmlc1+LJim/nI8jhP+5wi3QjafWV8fA92w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=okxbZdFtHyuj1DYFKnw3+KVjptZC/fwjfoBfEjf88zhkRQFKMXeNlxRFfYprkoiyHnTW0QESY7bwqAYP2Pp4aatasw75zOaFw7qKr0Zzk9nTxHISKzSt7oKB07dYXzTXjOsksqs0jxDOj6k18o6QxXzktWxN1XZyK94H8JT/NhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HR87IvFp; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492117DA82;
+	Thu, 30 Jan 2025 05:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738215981; cv=fail; b=FyJcMWRpp0tw5Mvv+DupQhK2m0Y1GoJVvssoLQf0ulDlDce5yv2SLWvr5Oe7kKo99IdY2KRAgSes5oYzWjGL39w6uOSnmGg6uMfXwLtjvIKwtf2Rqr71wxgxcUTFhMF9AAJaIjp2ir/UYm/k5eXgMHOgnq4b/qEReEaSsdvXEZU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738215981; c=relaxed/simple;
+	bh=PN1t2G/GFJQjSKGKYEUxpMjAxdAJ0JGkPr2UuGp8+5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=HSJA1jpcwqtSe5tupp5AG1fKB7co6ZBpZITubeYND2NERsd8HYkGeg6vqgllSUECb1BrF2dBciMOgB+V91qKTUv1oI2A95mBnJ9kPgx3PPyu6DZu1zlHBliZsUFQbCCjqsyOr2lZOxSx4aFBXa8u8E0LrIhAU/Cpto7juV8592A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=UemLSSkA; arc=fail smtp.client-ip=40.107.223.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HR87IvFp"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50U0Qht5008837;
-	Thu, 30 Jan 2025 05:41:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/zeS9/cSYNvAfuPbgs78wHUPJ8+rbANcaQU7MjneQro=; b=HR87IvFpBxkc18tL
-	A631DMAGmgOyVHBMfE+4jMwxZN21Ss2FZYU1GJHGmhmEs7aWbL9iLDJmuvv85YO5
-	cnOIisXY08k08Wu+BjcZSCktfJLqYpxfUUL3bkJJ9sXZ2sqfLqsRSy8TQdK0Euzx
-	LfquKmadmU79hgTUXAW1AJmeB0lY0Q2RCkPDZQSlk4xUlgXqhLZP16xJNsKaGQb2
-	Pi1n36/r8ol1kx+msLxEtSOoAZ5uJn4QVEZVlBZyk3OGTb/tw8oxoWVlzz0h/Fs6
-	LRxk3vxFVTWuq/mVtCXXQivPzjJ4PJMg43vGmVvqWbjrMjZ3aiL6CnBr+b7Gzx+G
-	/nznSA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44fxvwrdyq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 05:41:18 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50U5ew0o013712
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 05:40:58 GMT
-Received: from [10.216.18.103] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 29 Jan
- 2025 21:40:54 -0800
-Message-ID: <d28f5482-81bc-4600-9a60-872dadd22b96@quicinc.com>
-Date: Thu, 30 Jan 2025 11:10:45 +0530
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="UemLSSkA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BT9tyAVARc7z/yHnKbLMnIDiHYtuD4rFyUmzXwZhLL4QXQMPKDBrdgJ5PaKRTXt9x8TFhy539CZdK54ktfbiSzhdqIW40MCUZtHAI94UQvyjNvpJ7vKcHtqGEhUvXGvtVFD91ynPCoZ8iMBTFa5CUMf/ArkP6AJU1uuTimH79CGWR2ylXbszRuQwIru+siwH65W0IMe1Yerg/NHidcTwIU2imohLTE36I+NMeVXmlnDUlsx0g5VihEyy0tzacVib0qPhcyv7wIff1DR4HKj2feRDmjWKBYwDnUgvILUZz+OGT2qBnZnWP1cLEhbofcrQ1fAjntNn+FiQeK7maPZZvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p3FTj8q6llI27MN6AYtzXFxHUMMnvCsgyXqr0zFAaRQ=;
+ b=E4zELsq+/HVUE+pgd2Wd5dWj9S5W4sZV/xRQbiyoIXKvmV8sTt2ymO9lK3saRIebEEk+6JeioFaoYiuZcNXC90bSf+HBRHI4dYfq8UFkXB5y0CKyopLWUyVNRwT6HIOwCuYI7F7aBONL0S8J974Y/pKTV8nLN2N3HXJ0DKsB7lfIJAb0drN0JqnIJUb51pwGFzWa7/s23gZRPaLGLfbNFw7ukKMEFFap982Y6trANMhOoRYp+4N4yO3/EELJxxnzJ3N5UkvJaZFlADBZ5btrrWcCqFOF8zHwd3Ir885JPPR2Dl3vLWA9YnuxpBozgR2pf6wuT9AIvsDAewsLDTdznQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p3FTj8q6llI27MN6AYtzXFxHUMMnvCsgyXqr0zFAaRQ=;
+ b=UemLSSkAWCj6A0PJbCr3ZglALV+qxWAHGF6T1PG36M1Rj2oRXysxwGP2r++JZwkBmKB4aWQpdYzzXvrFJhmVKijYOGjttXhOCayfAgMLDyBIS2H5V+XfPlnDo8MRoThqhtKMc9clsuaO4gu62fWJDS/YcISqscmbq/h4itb/zmt1Sy2ErV7E7lmBtF5rgBs6UTMaqgKDs9XUFthWY4041efFgn/CbR8xyH1hngzKMb80IOJ0SBm0wEiP4bL2hGQLShKVi38iQ7MJs1GJEdsLqeeCZmsqtZIs7Zg2cb3vO3ijUgC5SMIccMBnZYOXMUSZvLFrRPlyRdLmPhlGxMv0xw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ IA1PR12MB7520.namprd12.prod.outlook.com (2603:10b6:208:42f::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8398.18; Thu, 30 Jan 2025 05:46:17 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8398.017; Thu, 30 Jan 2025
+ 05:46:17 +0000
+Date: Thu, 30 Jan 2025 16:46:10 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-mm@kvack.org, nouveau@lists.freedesktop.org, 
+	Andrew Morton <akpm@linux-foundation.org>, =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
+	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH v1 01/12] mm/gup: reject FOLL_SPLIT_PMD with hugetlb VMAs
+Message-ID: <ffuio46xoqweudqg7qxnjoufhodwdy2sdcmbet2ddsoagutxzi@sw26penoyceu>
+References: <20250129115411.2077152-1-david@redhat.com>
+ <20250129115411.2077152-2-david@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129115411.2077152-2-david@redhat.com>
+X-ClientProxiedBy: SYCPR01CA0021.ausprd01.prod.outlook.com
+ (2603:10c6:10:31::33) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: qcs8300: Add device node for
- gfx_smmu
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <andersson@kernel.org>
-CC: <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Prakash Gupta
-	<quic_guptap@quicinc.com>
-References: <20241227110024.30203-1-quic_pbrahma@quicinc.com>
- <1c8af731-c551-4d72-84a0-f14d57bec4ec@oss.qualcomm.com>
- <e7abe34c-9df9-425b-933e-cc744a63b80c@quicinc.com>
- <41fd6b59-249d-4f19-9ff8-4ae169a6db05@oss.qualcomm.com>
- <27aa8dc3-34b9-40e7-93bc-e52118b46138@quicinc.com>
- <ba800255-e2b0-4b92-9ff0-f7ed744fec8c@oss.qualcomm.com>
-Content-Language: en-US
-From: Pratyush Brahma <quic_pbrahma@quicinc.com>
-In-Reply-To: <ba800255-e2b0-4b92-9ff0-f7ed744fec8c@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 0cE47wSXT8dYRztXFVImDF1IvjYcS4aP
-X-Proofpoint-ORIG-GUID: 0cE47wSXT8dYRztXFVImDF1IvjYcS4aP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_02,2025-01-29_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- mlxlogscore=935 malwarescore=0 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 clxscore=1015 adultscore=0 suspectscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501300042
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|IA1PR12MB7520:EE_
+X-MS-Office365-Filtering-Correlation-Id: fdd6c9c5-56d5-4803-c4ea-08dd40f16a28
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?58brCuYcmbiRjN6fdduoRzaqIcczaDNLo6levqOBxHg0/ebseWJByzW7OyAM?=
+ =?us-ascii?Q?DBy9rcLEe+Ih0/cK6Okcrmt+TVzhe3sKV4y/F/mOIbF0vY9kbQuk3qY9v0eK?=
+ =?us-ascii?Q?bAE9D7v8CYR9PNy0Fa2rxJdt1DhhXxYplSIvidp8+yJyoEqWp2SwvtmNzgRI?=
+ =?us-ascii?Q?2XxcCgAA7zAchkzQa2V8k84nQf5Nq9NXy2avLTzguWbJe9t2VLzbkOPoCrjA?=
+ =?us-ascii?Q?mtgvdZFvM7H3n9MTRXphWsgvALygfZiFVCRqdh/774AzjMFPMG7c+8u6U4pz?=
+ =?us-ascii?Q?H/NhTNbFc4S302Q3GWi4F4g/hON1JfQkg6Yima3SWLIX9l//oAfhvlIvFJEe?=
+ =?us-ascii?Q?i1WSvmXxobV511hyfGjgzlvIgwyfEI0WfCv3n9iVXKlQ8oGVwpnDnPdYaLvH?=
+ =?us-ascii?Q?Bo9tHFEfJwqZLk/yBydayNW8P1y7P5IOj+dg380+MVe+a8x4R4ZyvQp8U1ka?=
+ =?us-ascii?Q?U5eT5hGqznqAyi8jIdE56eZvzBirpbswxoeMscnOWLlePFMu3n38jp10SNLX?=
+ =?us-ascii?Q?iVFfd1aJ3tywmupomr4zHzVhaa4BMJhjsK8Uy6KFzPW968Jp1gjLEnyv75wj?=
+ =?us-ascii?Q?ldJAWsSsdDZW7HxMpgn+avDQG3RCIzGHknAhLuC1zEl9/JJz3u6a1yvlHTnI?=
+ =?us-ascii?Q?MiM19DmCFsUNUDT0URSw3C1UWYm9eL4XRthdgln2yJwzjRKO24aKiEEyJpM7?=
+ =?us-ascii?Q?ybnSbc6KnHO1/IIwRSf69VzMEQJM/DwhfMImABZeKleroipfEXknxQayH3Rx?=
+ =?us-ascii?Q?c1wsmJpnMXLnhq1mLfC043pknU1pMLNnib/Zf7MaFO9DgdD5YC9HIGzOxu/J?=
+ =?us-ascii?Q?X8kNILAJVdDd1o+pnoUmj34UGnafy7XppnjZZtCqaI1BqMUsY7iHEgQLM4Z+?=
+ =?us-ascii?Q?udb85VH3KDaa3JU8ud/NaMSyiTe0hWp/cbaTvMZmCIPZ7omPxRpMcB6LCzuB?=
+ =?us-ascii?Q?qinAHpekZn7SIaQLg035cqp+zt5nAVu/y23IzLVPl2h5fWvcZ1Zml+HzGf4U?=
+ =?us-ascii?Q?EQV7V/em+yOgekXkwQ5oYCgflQyeWQrGyOw7sZXI8V9bxLCx/XZ+VuThX4ym?=
+ =?us-ascii?Q?GFFCU8sBoU49tWdB3Y7H1cUm0jXocfBHv8ncnHBU0W7JcxPkyl4qpQa0AGSI?=
+ =?us-ascii?Q?Z47uIeI1rUHhry/DUE7dt36a0OxmLBB71XBcxtC2tXUsh7r/1WmbrXYtoH48?=
+ =?us-ascii?Q?nYx9Sva3HrIxMWR22bXq8pn8+SeQcJT066LQAEf3JlI3xj2rgoz7MDjzcwql?=
+ =?us-ascii?Q?jyII8VbkeUJ1ugmu85McPtzfdeZc+dVsghml8dDSjFy8Uv3mP7eVGew0xMqE?=
+ =?us-ascii?Q?rzMJ0Tc1+5dFYfd9v/MuXZLAKcCj0Cw8Lh1yq+0LDejPP6Ls2fLlLylw3Q5b?=
+ =?us-ascii?Q?K6wA89GRcd8a+b6QYqPHYIf/cTtR?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?V1u4KQILwUMrqZMcl6XItqCX5Bm+tEGurIa+eUV9WdNnKu8bf3xlM88J+yUs?=
+ =?us-ascii?Q?OlhPkjU9O6K3qBGjV+HJ0183N8l6nZrxqjZIuB58rhXSgGyoMwsPIZ7K8diA?=
+ =?us-ascii?Q?oJFkxZKfm2zNrflGOhegp28PJgh0UwjOpeTL8fgvU+8BkiawPV6/5Gtxy/nG?=
+ =?us-ascii?Q?wnTxAh/eBj2y8YjnwnB2diGJgrHEf3uPoGUBXxNSI/pAgvwna4vTj1oa8x/L?=
+ =?us-ascii?Q?sWO6wPIutdzDADfEwp4wJygIb0SXAzpGG1LI7doymD/RZjWLaarNk896swP5?=
+ =?us-ascii?Q?p+WCpDclF97LaFGSx7j+aGg1RLZl7SwUicS50AQCBsNSfyf0UohiDfMwCYYA?=
+ =?us-ascii?Q?VTtgxTV4l/IMPfdJAfxk2F3pDz8YbTgKvLISsrGojXyCPR9ZxgzgA1hPs0Ey?=
+ =?us-ascii?Q?LPUeBOQiCWQC44Kzf3jiXswEP60mUehOYEfBfaLw276PiTZyj0yNSdkCemqo?=
+ =?us-ascii?Q?rar6h5pCF0AnOrpa4hxY+okelCZm/r13xGIXaT97zK0xCiYg5MEu7Vkcmldr?=
+ =?us-ascii?Q?0GQeBHIVCGldKnM7CktvskKzMnkuQ8xH+WsoRZ/1zdNDuyk/kpC7zNuT9ZTJ?=
+ =?us-ascii?Q?UuaO2iAXgMxsRoJmITLQPEEXWlwdVqt1uurQWc4tZun6Zny9vxinWPGWrjJE?=
+ =?us-ascii?Q?t+66ZoDD+g7QlQehaCnoytxJAAuhftmbg3nMczAZk5WP26f4fLl0Yk7CEcxS?=
+ =?us-ascii?Q?p6YC3cdn61E+wKlhmlbj794JcrJKCnnE4Tiwi3tPGd2BTFrhrnSvWCLIhqAu?=
+ =?us-ascii?Q?XYW7TytA2tZg8Ky3L3O1ABoSIOlayKePxXlQ5O7En4uWcULoedkOeUHOxvkO?=
+ =?us-ascii?Q?TIf8CcyjzBUX/zOE0VYtP3faSDddvz2W0Rcwf/5gNaEgI6UvmTf5jTezAPW4?=
+ =?us-ascii?Q?3+haMnS7n9eulI/cFRmaSG+afvE9Ms0W7OQvdTY48u8g6V8WA5Wg6iZ2F7eV?=
+ =?us-ascii?Q?mIyZMifA54KSo6IGKznLBnXAZE2UmTSA8NH1CPd0SUQBapwzjKs62PE96/1N?=
+ =?us-ascii?Q?u7foguerRuRvzG9aYM2k1fUyUaKAChWiPTTMzhpRJ9T2fYHKXGrnChEpB0Qc?=
+ =?us-ascii?Q?UsFJa5BNj+paTD0UtOX++lpmS/+8obmWlC2/WOMLVn9w+mafFnyNUC3nN6dn?=
+ =?us-ascii?Q?se5KLTrbm6mg7c/42IvdhPgz2UUVweC6+/Yw7vs7u+q5bH5iULW0jSbfaq5y?=
+ =?us-ascii?Q?h4CfgH+ChDtRb7/UlandO6bSaTE5JmndKpdvAizgw5aZyc53JYavw/iYJak9?=
+ =?us-ascii?Q?VnTwCfvB+n6OlgHHoqSIlgj3hIVO3Jq7MHhUDfTDGqQj3IfKjH8dFC1xhxH/?=
+ =?us-ascii?Q?QXDtICXX83CshPgfm9Cg6SChi2my7NvYK2mM2lKRnpMQofv65b2oHeuxP97Y?=
+ =?us-ascii?Q?ACiP4dSPIeko7+FPHQn2OdiniUdPYLVOXu8GlwyKqFbOJ4qLw60S96ybxqKm?=
+ =?us-ascii?Q?rSvSwGltSaPSgXim+Yn0PeX9oWXLBb+edxEcGcmWx96gFp7XZukF9UlG3lgO?=
+ =?us-ascii?Q?3XGkYrAgR+qsPzJ12QH120sUAjqqjQ2nyZuM/jlZP7UjA6FzNVMdjqIW1Qs2?=
+ =?us-ascii?Q?lLHX+KLtlGt5z7Yoy65F1FMnmKV2h1YHap9Si8pR?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fdd6c9c5-56d5-4803-c4ea-08dd40f16a28
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 05:46:17.1804
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J770+0ogY4tGLvt4IERXP3cNX7AmXDg0N1eTwwzb0ZFY8P/yogpQim3bQEePIaGpHN/cOTEesDg5CBVKg41juA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7520
 
+On Wed, Jan 29, 2025 at 12:53:59PM +0100, David Hildenbrand wrote:
+> We only have two FOLL_SPLIT_PMD users. While uprobe refuses hugetlb
+> early, make_device_exclusive_range() can end up getting called on
+> hugetlb VMAs.
+> 
+> Right now, this means that with a PMD-sized hugetlb page, we can end
+> up calling split_huge_pmd(), because pmd_trans_huge() also succeeds
+> with hugetlb PMDs.
+> 
+> For example, using a modified hmm-test selftest one can trigger:
 
-On 1/29/2025 7:56 PM, Konrad Dybcio wrote:
-> On 28.01.2025 11:02 AM, Pratyush Brahma wrote:
->> On 1/9/2025 8:56 PM, Konrad Dybcio wrote:
->>> On 8.01.2025 1:10 PM, Pratyush Brahma wrote:
->>>> On 12/30/2024 6:49 PM, Konrad Dybcio wrote:
->>>>> On 27.12.2024 12:00 PM, Pratyush Brahma wrote:
->>>>>> Add the device node for gfx smmu that is required for gpu
->>>>>> specific address translations.
->>>>>>
->>>>>> This patch depends on the patch series [1] posted by Imran Shaik
->>>>>> adding the clock support for gpu.
->>>>>>
->>>>>> [1] https://lore.kernel.org/all/802d32f1-ff7e-4d61-83f1-f804ee1750ed@oss.qualcomm.com/
->>>>>>
->>>>>> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
->>>>>> ---
->>>>>>     arch/arm64/boot/dts/qcom/qcs8300.dtsi | 37 +++++++++++++++++++++++++++
->>>>>>     1 file changed, 37 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->>>>>> index 80226992a65d..8eb688e2df0a 100644
->>>>>> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->>>>>> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->>>>>> @@ -816,6 +816,43 @@
->>>>>>                 #power-domain-cells = <1>;
->>>>>>             };
->>>>>>     +        adreno_smmu: iommu@3da0000 {
->>>>>> +            compatible = "qcom,qcs8300-smmu-500", "qcom,adreno-smmu",
->>>>>> +                   "qcom,smmu-500", "arm,mmu-500";
->>>>>> +            reg = <0x0 0x3da0000 0x0 0x20000>;
->>>>>> +            #iommu-cells = <2>;
->>>>>> +            #global-interrupts = <2>;
->>>>>> +            dma-coherent;
->>>>>> +
->>>>>> +            power-domains = <&gpucc GPU_CC_CX_GDSC>;
->>>>>> +            clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
->>>>>> +                 <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>,
->>>>>> +                 <&gpucc GPU_CC_AHB_CLK>,
->>>>>> +                 <&gpucc GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK>,
->>>>>> +                 <&gpucc GPU_CC_CX_GMU_CLK>,
->>>>>> +                 <&gpucc GPU_CC_HUB_CX_INT_CLK>,
->>>>>> +                 <&gpucc GPU_CC_HUB_AON_CLK>;
->>>>>> +            clock-names = "gcc_gpu_memnoc_gfx_clk",
->>>>>> +                      "gcc_gpu_snoc_dvm_gfx_clk",
->>>>>> +                      "gpu_cc_ahb_clk",
->>>>>> +                      "gpu_cc_hlos1_vote_gpu_smmu_clk",
->>>>>> +                      "gpu_cc_cx_gmu_clk",
->>>>>> +                      "gpu_cc_hub_cx_int_clk",
->>>>>> +                      "gpu_cc_hub_aon_clk";
->>>>> Most of these entries look totally bogus, please make sure you only
->>>>> reference the ones actually required
->>>> These entries are exactly similar to the ones we use in sa8775p as well [1] and the usecases
->>>> haven't changed between qcs8300 and sa8775p.
->>>>
->>>> Can you please let me know which entries you find irrelevant here?
->>> Well, I'm particularly unsure about CX_GMU and the HUB clocks.
->>> I >>don't think<< they don't have much to do with the SMMU, but please
->>> check internally with someone who knows for sure
->> I checked internally and found that these clocks are required for gpu smmu operations
->> as we don't use interconnect voting mechanism here as we do downstream. Hence the
->> list of clocks is same across all targets using gpu smmu as described in [1] previously.
-> I managed to dig up some documents too.. It seems you're right, however the order
-> is supposed to be slightly different:
->
-> GPU_CC_CX_GMU_CLK
-> GPU_CC_HUB_CX_INT_CLK
-> GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK
-> GCC_GPU_MEMNOC_GFX_CLK
->
-> Unsure if it *actually* matters given we've added them in a random order on a
-> multitude of platforms and there haven't been any visible adverse effects.
-Thanks for checking this. We haven't really adhered to this order in
-most of our platforms and things have been running fine. So I guess it 
-doesn't matter.
-However, I'll still send out the next patchset in the order you've 
-mentioned. Just so that we
-are in consonance, the final order would look like the following. Please 
-correct me if you'd
-prefer otherwise.
+I haven't explicitly tested this with nouveau but I can't see anything that
+would prevent this being called on a hugetlb vma there either.
 
-                 clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
-                                <&gpucc GPU_CC_HUB_CX_INT_CLK>,
-                                <&gpucc GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK>,
-                                <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-                                <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>,
-                                <&gpucc GPU_CC_AHB_CLK>,
-                                <&gpucc GPU_CC_HUB_AON_CLK>;
+Reviewed-by: Alistair Popple <apopple@nvidia.com>
 
->
-> With GPU_CC_AHB not being mentioned but it being quite reasonable to be there
-> judging by its name. Enabling HLOS1_VOTE normally enables some more clocks (some
-> known by Linux, some not), but here the docs are rather cryptic on that topic.
->
-> I'm not sure about SNoC_DVM on this one as well, but other SoCs require it so
-> it's probably safe so assume this one does so as well
-Yes, I have been conservative to include all the clocks that are 
-required on other platforms
-here as well.
->
-> I've verified the interrupt numbers, so please just alter the property order /
-> whitespaces / general style of the node to match x1e80100.dtsi and we'll get
-> this merged
-
-Sure, will take care of this in the next version.
-
-> Konrad
-
--- 
-Thanks and Regards
-Pratyush Brahma
-
+> [  207.017134][T14945] ------------[ cut here ]------------
+> [  207.018614][T14945] kernel BUG at mm/page_table_check.c:87!
+> [  207.019716][T14945] Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
+> [  207.021072][T14945] CPU: 3 UID: 0 PID: ...
+> [  207.023036][T14945] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-2.fc40 04/01/2014
+> [  207.024834][T14945] RIP: 0010:page_table_check_clear.part.0+0x488/0x510
+> [  207.026128][T14945] Code: ...
+> [  207.029965][T14945] RSP: 0018:ffffc9000cb8f348 EFLAGS: 00010293
+> [  207.031139][T14945] RAX: 0000000000000000 RBX: 00000000ffffffff RCX: ffffffff8249a0cd
+> [  207.032649][T14945] RDX: ffff88811e883c80 RSI: ffffffff8249a357 RDI: ffff88811e883c80
+> [  207.034183][T14945] RBP: ffff888105c0a050 R08: 0000000000000005 R09: 0000000000000000
+> [  207.035688][T14945] R10: 00000000ffffffff R11: 0000000000000003 R12: 0000000000000001
+> [  207.037203][T14945] R13: 0000000000000200 R14: 0000000000000001 R15: dffffc0000000000
+> [  207.038711][T14945] FS:  00007f2783275740(0000) GS:ffff8881f4980000(0000) knlGS:0000000000000000
+> [  207.040407][T14945] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  207.041660][T14945] CR2: 00007f2782c00000 CR3: 0000000132356000 CR4: 0000000000750ef0
+> [  207.043196][T14945] PKRU: 55555554
+> [  207.043880][T14945] Call Trace:
+> [  207.044506][T14945]  <TASK>
+> [  207.045086][T14945]  ? __die+0x51/0x92
+> [  207.045864][T14945]  ? die+0x29/0x50
+> [  207.046596][T14945]  ? do_trap+0x250/0x320
+> [  207.047430][T14945]  ? do_error_trap+0xe7/0x220
+> [  207.048346][T14945]  ? page_table_check_clear.part.0+0x488/0x510
+> [  207.049535][T14945]  ? handle_invalid_op+0x34/0x40
+> [  207.050494][T14945]  ? page_table_check_clear.part.0+0x488/0x510
+> [  207.051681][T14945]  ? exc_invalid_op+0x2e/0x50
+> [  207.052589][T14945]  ? asm_exc_invalid_op+0x1a/0x20
+> [  207.053596][T14945]  ? page_table_check_clear.part.0+0x1fd/0x510
+> [  207.054790][T14945]  ? page_table_check_clear.part.0+0x487/0x510
+> [  207.055993][T14945]  ? page_table_check_clear.part.0+0x488/0x510
+> [  207.057195][T14945]  ? page_table_check_clear.part.0+0x487/0x510
+> [  207.058384][T14945]  __page_table_check_pmd_clear+0x34b/0x5a0
+> [  207.059524][T14945]  ? __pfx___page_table_check_pmd_clear+0x10/0x10
+> [  207.060775][T14945]  ? __pfx___mutex_unlock_slowpath+0x10/0x10
+> [  207.061940][T14945]  ? __pfx___lock_acquire+0x10/0x10
+> [  207.062967][T14945]  pmdp_huge_clear_flush+0x279/0x360
+> [  207.064024][T14945]  split_huge_pmd_locked+0x82b/0x3750
+> ...
+> 
+> Before commit 9cb28da54643 ("mm/gup: handle hugetlb in the generic
+> follow_page_mask code"), we would have ignored the flag; instead, let's
+> simply refuse the combination completely in check_vma_flags(): the
+> caller is likely not prepared to handle any hugetlb folios.
+> 
+> We'll teach make_device_exclusive_range() separately to ignore any hugetlb
+> folios as a future-proof safety net.
+> 
+> Fixes: 9cb28da54643 ("mm/gup: handle hugetlb in the generic follow_page_mask code")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/gup.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 3883b307780e..61e751baf862 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1283,6 +1283,9 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+>  	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
+>  		return -EOPNOTSUPP;
+>  
+> +	if ((gup_flags & FOLL_SPLIT_PMD) && is_vm_hugetlb_page(vma))
+> +		return -EOPNOTSUPP;
+> +
+>  	if (vma_is_secretmem(vma))
+>  		return -EFAULT;
+>  
+> -- 
+> 2.48.1
+> 
