@@ -1,98 +1,156 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B331E8840;
-	Thu, 30 Jan 2025 16:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489D91EE036
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 16:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738254557; cv=none; b=g5yY2mVYbcpICFCmmYmmZCxmQGXjWIzVyuAJUiuRg9Rzx+cSTskNwS6K/dvloZekNzorS+86TI5fePfRYfzKmLJxOpPjkS/nWSGQi7/CHgltMAQo9t8F4y6J8Y2eBUyyUC8TSUZwKIkCvuS0hsrL5aHU18Lffa8DlcuALFVOGnE=
+	t=1738254565; cv=none; b=oNKwoK/TIPwL2DpGmca+n8Y9aQH+mIYk3LcbVIAgYgnHUFqL6MAAeRq+T6p/AsOaKeZirTQxPrVay6aN5PpoVewbNyOCMEk4lRYy/hghjZ6LBKP9hT/+WsH/RQTd0xOtDHHP8Ppf/KTd/09oRE8RowGXNTEKb6TeWW+nrOBJvhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738254557; c=relaxed/simple;
-	bh=8luDU6XnJlZZahfK28xMxnzyZnvq4ajSgN6v7JNJph0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OaAOTBil8FxshTeMavBxLQ3fdb31TymQPHJWdVTEdkWc0d6WtfI945FLryHWRNKU0CCpKf+qBRxwLo8U66gUw2tIRe27udmJ7LxrRDaF2CZUq7vRoTYVCPLbbhqtRC1gQx3ktaufcEtdAVKbefPNqiM0p4FhZuPhQkdBEFQNNWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YkPYh3RSJz6M4Wy;
-	Fri, 31 Jan 2025 00:27:04 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 91E761400DB;
-	Fri, 31 Jan 2025 00:29:11 +0800 (CST)
-Received: from localhost (10.195.245.124) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 Jan
- 2025 17:29:10 +0100
-Date: Thu, 30 Jan 2025 16:29:09 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: David Lechner <dlechner@baylibre.com>
-CC: Jonathan Santos <Jonathan.Santos@analog.com>, <linux-iio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-	<marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <jonath4nns@gmail.com>,
-	<marcelo.schmitt1@gmail.com>
-Subject: Re: [PATCH v2 05/16] Documentation: ABI: add wideband filter type
- to sysfs-bus-iio
-Message-ID: <20250130162909.00001573@huawei.com>
-In-Reply-To: <95e9fc42-db0a-45fd-9155-9c8721c849d7@baylibre.com>
-References: <cover.1737985435.git.Jonathan.Santos@analog.com>
-	<351b15550f8d8e7126ed8253f3a8028c708327f8.1737985435.git.Jonathan.Santos@analog.com>
-	<95e9fc42-db0a-45fd-9155-9c8721c849d7@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738254565; c=relaxed/simple;
+	bh=t83gBk3R1gJYHaKAAfvjNUShPqKhN3qh0uSgLbPTP6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D8IwY+5XHb+1m3lINOKhRtjNCGuHIM6DDhbF/oWLoCrZvUTqrFz5jaKcuQjHDcbltzzXk3vgs16ahEeEMskPi4e2cGs5AJbPRnMheXb7kRD0I4qQhODeXj+heQx4skxhny7imFvsvcw35n8d9V3a3S8zymPL9WqVL+DR+3eiJrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=tY7tASqR; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="tY7tASqR"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-467918c35easo14297631cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:29:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1738254561; x=1738859361; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PaELnFzz9aRPiHl2MvgwZe5wGfHA1Rh3SyrWRVQiS98=;
+        b=tY7tASqRwmsVr0Dhlx1A8MFyV/JSYFFol9/Bes0rqSbY9GWcaUPkgNkGRpWEcPlo5B
+         878X5HvRTANi1bsYLe16QeRnx8iNkiTevyzI9fEjA8b5QeGYtIdM1GbI5wr4+hi/Keyj
+         2iZu1umLxJx+cXQ55F/Bmm2r7ALCuowRI7rjw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738254561; x=1738859361;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PaELnFzz9aRPiHl2MvgwZe5wGfHA1Rh3SyrWRVQiS98=;
+        b=AEU/bi4aWu+LL5mQNScWB0yQY+EpGXCVOEtjaqRPDAi0KJisreD733ueC+mTd9s9qZ
+         8so1+NZvRuk9rWv7ppA5iZNQcLrdRLvsZl95f1JCVn9FPZuWLwtTUVa0OrPJvMO+tUr+
+         Aou9w8C/dTSOX6bWZ2fwT8wRiqlZ/NdDbSuvJ7nzN8DAKDjKVSkwHQyTXjkZ+DGk8KpK
+         xpFhcmQwFKyr8In+8jodNOkB+MU3HkzfOpBvbeSMaqv5b7un59p0FpFdxsWTqfA6wWwK
+         xx6vBG1XzCQKVsGeH+nbG8H1ZWVZ4Y5Rbkd5dbU6CjmsIiD1mTGmXezIyq5E0k1lWQyZ
+         vLEg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUq37hR/gF+dAqgqTRBF073uusUZJblWxNaM3hXEguuQNoqk4Uzx45wpMofeDzjb45rNjT+v9JIFB9eBg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ7bQlOKuPBEjUrKCfW32FMT9rXbHd23V3h40rwu3oun5ekZyF
+	t25r7mmXED9hMF8OnU4PQgp85WVTSY1zvl0ezQttMfwO4NiPgeFgk6MI8NXnnrz0K2cF1QmfUpx
+	U
+X-Gm-Gg: ASbGncthai9kq4uN51JlxARlu8HIrMPCvaWs/X2gmHWUJ+gdo8u5TdqY9HyUBo49mne
+	9oVhDhyoXsi0+KRZyHfQ1b5k1B9soJlyUj/Stvg//9Iz+y7cVu8I2F7obN0Pi3xz50gtNcjDrs3
+	lBoTMa81he+3GqUjK7dIzm2l2NOWO2CyL/e8pM6xSMsTxf2irUiXmOG72HirboT5Fco5lcTEsOD
+	KTto1D4LeJ9rUJYmf6FDeNJJnIbH0PgX7U5sSsPOfr4+971eXzgHhfZtWNmnwAaXjGpzS3ry3OK
+	WIYmftO6Btx1k1o6L4n7
+X-Google-Smtp-Source: AGHT+IFMhjJxwdWrG2OptdCx16imUHT/yVI/4gwEFDkVKpzed2hScRedqGpI22WePJd4xDb4S84Whg==
+X-Received: by 2002:a05:622a:114d:b0:46c:791f:bf3e with SMTP id d75a77b69052e-46fd0ba20c4mr121048431cf.48.1738254561168;
+        Thu, 30 Jan 2025 08:29:21 -0800 (PST)
+Received: from LQ3V64L9R2 ([208.64.28.18])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0e0d5fsm8544561cf.44.2025.01.30.08.29.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 08:29:20 -0800 (PST)
+Date: Thu, 30 Jan 2025 11:29:18 -0500
+From: Joe Damato <jdamato@fastly.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, sridhar.samudrala@intel.com,
+	Shuah Khan <shuah@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
+Subject: Re: [RFC net-next 2/2] selftests: drv-net: Test queue xsk attribute
+Message-ID: <Z5uo3ugZB13k1aKW@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	sridhar.samudrala@intel.com, Shuah Khan <shuah@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
+References: <20250129172431.65773-1-jdamato@fastly.com>
+ <20250129172431.65773-3-jdamato@fastly.com>
+ <20250129180751.6d30c8c4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129180751.6d30c8c4@kernel.org>
 
-On Mon, 27 Jan 2025 19:32:45 -0600
-David Lechner <dlechner@baylibre.com> wrote:
+On Wed, Jan 29, 2025 at 06:07:51PM -0800, Jakub Kicinski wrote:
+> On Wed, 29 Jan 2025 17:24:25 +0000 Joe Damato wrote:
+> > Test that queues which are used for AF_XDP have the xsk attribute set.
+> 
+> > diff --git a/tools/testing/selftests/drivers/.gitignore b/tools/testing/selftests/drivers/.gitignore
+> > index 09e23b5afa96..3c109144f7ff 100644
+> > --- a/tools/testing/selftests/drivers/.gitignore
+> > +++ b/tools/testing/selftests/drivers/.gitignore
+> > @@ -1,3 +1,4 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> >  /dma-buf/udmabuf
+> >  /s390x/uvdevice/test_uvdevice
+> > +/net/xdp_helper
+> 
+> Let's create our own gitignore, under drivers/net
+> we'll get conflicts with random trees if we add to the shared one
 
-> On 1/27/25 9:12 AM, Jonathan Santos wrote:
-> > The Wideband Low Ripple filter is used for AD7768-1 Driver.
-> > Document wideband filter option into filter_type_available
-> > attribute.
-> > 
-> > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> > ---
-> > v2 Changes:
-> > * Removed FIR mentions.
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-iio | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> > index f83bd6829285..9b879e7732cd 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-iio
-> > +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> > @@ -2291,6 +2291,8 @@ Description:
-> >  		* "sinc3+pf2" - Sinc3 + device specific Post Filter 2.
-> >  		* "sinc3+pf3" - Sinc3 + device specific Post Filter 3.
-> >  		* "sinc3+pf4" - Sinc3 + device specific Post Filter 4.
-> > +		* "wideband" - filter with wideband low ripple passband
-> > +		  and sharp transition band.
+OK, SGTM.
+
+> >  def sys_get_queues(ifname, qtype='rx') -> int:
+> >      folders = glob.glob(f'/sys/class/net/{ifname}/queues/{qtype}-*')
+> > @@ -21,6 +24,31 @@ def nl_get_queues(cfg, nl, qtype='rx'):
+> >          return len([q for q in queues if q['type'] == qtype])
+> >      return None
 > >  
-> >  What:		/sys/.../events/in_proximity_thresh_either_runningperiod
-> >  KernelVersion:	6.6  
+> > +def check_xdp(cfg, nl, xdp_queue_id=0) -> None:
+> > +    test_dir = os.path.dirname(os.path.realpath(__file__))
+> > +    xdp = subprocess.Popen([f"{test_dir}/xdp_helper", f"{cfg.ifindex}", f"{xdp_queue_id}"],
+> > +                           stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1,
+> > +                           text=True)
 > 
-> I'm a bit shy to make any more suggestions on this one since my previous
-> suggestions were clearly not the "right way". :-)
+> add:
+> 	defer(xdp.kill)
 > 
-> But, the key takeaway I got from the discussion on v1 is that this describes the
-> _shape_ of the filter. To me, "wideband" describes the size but not the shape.
-> Would rectangular be the correct shape?
-> 
-It's tricky.  The filter definition is really vague!  No filter is ever rectangular.
-Also, I've just noticed. This one is fully programable. It could be anything!
-I kind of hope no one cares about that feature as it looks really tricky to support.
+> here, to make sure test cleanup will always try to kill the process,
+> then you can remove the xdp.kill() at the end
 
+OK, will do.
 
-Wideband normally means 'flattish to a wide range of frequencies'.  Not sure
-how best to convey that.
+> > +    stdout, stderr = xdp.communicate(timeout=10)
+> > +    rx = tx = False
+> > +
+> > +    queues = nl.queue_get({'ifindex': cfg.ifindex}, dump=True)
+> > +    if queues:
+> 
+> if not queues:
+> 	raise KsftSkipEx("Netlink reports no queues")
+> 
+> That said only reason I can think of for no queues to be reported would
+> be that the device is down, which is very weird and we could as well
+> crash. So maybe the check for queues is not necessary ?
+
+I kind of feel like raising is slightly more verbose, which I tend
+to slightly prefer over just a crash that might leave a future
+person confused.
+
+I'll go with the raise as you suggested instead.
