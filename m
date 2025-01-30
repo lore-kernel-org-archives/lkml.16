@@ -1,111 +1,255 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879E51BB6BC
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34A71BB6BC;
+	Thu, 30 Jan 2025 14:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738248030; cv=none; b=pGWI/yjiLlYCBV3LlnaNm0i49wfqO7oOhKn+6Ol3iIhywOhJpBVFESlI3JRobcCFqprzqgf5adoSnCQi9YmCo0v+MvFxiagMJ8hgRX9BYpg4/hvBczB4zgZNotCdHPhvCz7FjsTC4Os4xYV3h1yMtZ+cu8bSjjQbPq/gqRy392o=
+	t=1738248121; cv=none; b=owYiZNCpdpKT43u2LlnRv48vFXO5sF0Db+1Pq4noMAIT3GMaguObLOjfUI+9jCOmGmpj/Cfrxlt0TPPan6+x1PdbSYmIS6ewWG/mVdaJFcDYnYq1BPzrTpfRIl32HI/BzzBL6+BD5PSMMPwjndAYAuLGoPSZE6pPMSNXYyskNtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738248030; c=relaxed/simple;
-	bh=atZ/x/APC8cnkpoYOoikaT0M2WZdbQIDnN6vZPmwfdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UcIV6MbNov8O681EKK1A3HQxl/bvzuXoanlI1Goe1DNXRBpX+fOKg4C9kyuVXmdSP6JvH/MkP8kSWSDmyFi7LKaGwOyZsD0o0SM5D9dZ1XziCo3Zb848V/rI3nrxI1m8nwnsG/7VrVwRyNovlrYddiYrT5aY0TlgH18uVOK9Wqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=aJqz6TmT; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1738248121; c=relaxed/simple;
+	bh=r3sv6fFRRGZvTveb8sHIdX5RYZnqpIFZKrqWClagnCk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JBRC2MjMANXxRh04CAiRP9qAqjBeqt9ZJ3Yw2XIDH042q+7dP8aRhE4qZnSnpBCdvqSytI9qvGSG0CpuZ9rTB2ADzbFbLxQ/BrfIhClBwJ8lIlaBkq5GksfoyMQ+88WVpxNUawJHZtXuFZQxWiX8XHAa/b6z6ndNOePjNlrCrY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ezpbYUzC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="aJqz6TmT"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-436a03197b2so6344515e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:40:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1738248027; x=1738852827; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pPBTtW6Kt1BXFlVK5dAgEJRX/SS7fw33DzTFtzfc1pU=;
-        b=aJqz6TmTLOBT6JtAZhELiB4how1nc4vl0c9ZSMnUZEEqamgr0YMFUHrZYOjK+xxr0q
-         oWY7HOlNWEslgQtX4Np49APLHwTKjqz0lOaTNUCHSM2ibES8C2VyhkvXviZrdczhR9nz
-         l89X0rHfwDM1ZkufzRAqWgwC4P6q5bFaxVfwZqtXrUG6xzGMP82p404PnUkwOMKJp9Vw
-         hYx7xUmcqwO/u9dR1SbrVg0De1FA1S/0PW+vd9ahC/E2JMseZvcNBksd8tplZYmykzHK
-         xsjUDMEkQjaPcAoqVk69uejniF4pUP5JQgH0YO20WaV2Q+UEBSizo4QR6bTqVPv+yL/j
-         qGdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738248027; x=1738852827;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pPBTtW6Kt1BXFlVK5dAgEJRX/SS7fw33DzTFtzfc1pU=;
-        b=Z9VpyANeFMGMyhNmVt3uoMlue1mMMPARu1qb+NbsDFQGyqQZErw79Rt+BZS+CG/0WW
-         kBD8I9AS0U29mZ2wuum6dxmx4lef+e+4QvzJg/3oH9Jheugz6+3ixWvJJ4nu6h6xYEb+
-         59Zj1iichjxqOnYFVtnebT6f9AffmSLLj041KmlMxuhLQ8qxjHDOilK9aDa93OFskqfw
-         4/LkoXU35t/GiFnqGksnXTj0IUCP9x9cs+K6PSgU1xZXLIZV7c0EovPgRJT87y64lzhd
-         jnfCUu/Dxcg93oTlvL7HweI2KrKUaD2VdsgAugvzsOne9R31+GilUgRIzcdkw6dWecQw
-         hgCw==
-X-Forwarded-Encrypted: i=1; AJvYcCVzuoR8ub58oBq0L845R2lRlSDPijfV/Z/cnHiLg725Q2w4VA/Pk6rsxwiq+LKIzNtb3KKSoKiMr9bzmFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMbPCHb6V375ExOphJhCrD2JPZuF/weFKRBlCy+5dCI0Tol0AG
-	Fs/cQR5VvgQf/Qunk+oZyyUkhvdyPfQ4JQbH2qm0/p9zQon0llHMypcDtfXVr3k=
-X-Gm-Gg: ASbGncv4PWc/yLYN4cPTu7mnwJ72T6XsOmZLAJFnd9wPfsjEgves2G2Kdzmf+AOFpjI
-	VIj9dysBRgWR3y0V7kqfHjGi/wftQqE3R7j/osn4FYc5IB82elLgpUyv9fhR+mAuBlKCranaeha
-	pZSuwWV3nSufzpziGz9+MrqlIm5titESX0CneIdiZbFgy4l4S52+niYEVJgSt4oPJDtlhJCCksM
-	Xq0Im3Ey9TZTHfKQQCa3xcUcFs9DVsVXfULHE2Pjy5kJJ/9zn4bcoPY2nKXPlJbCw1RZEGrA/jI
-	34s=
-X-Google-Smtp-Source: AGHT+IE9c1sUJxYYOz0IV0uwPeN3BgTxowpPJeI70581kypJPFyN9A9c1n7gfvfSwFoNCtR1uaegeA==
-X-Received: by 2002:a05:600c:1e0d:b0:436:f960:3427 with SMTP id 5b1f17b1804b1-438dc40ffbbmr62574215e9.22.1738248025991;
-        Thu, 30 Jan 2025 06:40:25 -0800 (PST)
-Received: from localhost ([2a02:8308:a00c:e200::76fd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc1317fsm62032805e9.8.2025.01.30.06.40.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 06:40:25 -0800 (PST)
-Date: Thu, 30 Jan 2025 15:40:24 +0100
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Andreas Schwab <schwab@suse.de>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv/atomic: Do proper sign extension also for unsigned
- in arch_cmpxchg
-Message-ID: <20250130-603e0305dde8009a25bfb257@orel>
-References: <mvmed0k4prh.fsf@suse.de>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ezpbYUzC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FCA7C4CED2;
+	Thu, 30 Jan 2025 14:42:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738248121;
+	bh=r3sv6fFRRGZvTveb8sHIdX5RYZnqpIFZKrqWClagnCk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ezpbYUzCiCj79iNYFDeRZh32VGlr0cWFvTT4A3p0wNJB+QVaQYmoW3mqow+D0w+Nt
+	 LYeeCvGLPU77cDku/+cDQMm+P36hyNKwxjInMMN8sKX6V5pmJdZcoC/+L6Iz/5ve8X
+	 Avxqw58LyemzOIkBghhWUH4E7hSBbtuG1pdWJIYY=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	hargar@microsoft.com,
+	broonie@kernel.org
+Subject: [PATCH 6.12 00/41] 6.12.12-rc2 review
+Date: Thu, 30 Jan 2025 15:41:57 +0100
+Message-ID: <20250130144136.126780286@linuxfoundation.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <mvmed0k4prh.fsf@suse.de>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.12-rc2.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-6.12.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 6.12.12-rc2
+X-KernelTest-Deadline: 2025-02-01T14:41+00:00
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 30, 2025 at 10:25:38AM +0100, Andreas Schwab wrote:
-> Sign extend also an unsigned compare value to match what lr.w is doing.
-> Otherwise try_cmpxchg may spuriously return true when used on a u32 value
-> that has the sign bit set, as it happens often in inode_set_ctime_current.
-> 
-> Do this in three conversion steps.  The first conversion to long is needed
-> to avoid a -Wpointer-to-int-cast warning when arch_cmpxchg is used with a
-> pointer type.  Then convert to int and back to long to always sign extend
-> the 32-bit value to 64-bit.
-> 
-> Fixes: 6c58f25e6938 ("riscv/atomic: Fix sign extension for RV64I")
-> Signed-off-by: Andreas Schwab <schwab@suse.de>
-> ---
->  arch/riscv/include/asm/cmpxchg.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-> index 4cadc56220fe..427c41dde643 100644
-> --- a/arch/riscv/include/asm/cmpxchg.h
-> +++ b/arch/riscv/include/asm/cmpxchg.h
-> @@ -231,7 +231,7 @@
->  		__arch_cmpxchg(".w", ".w" sc_sfx, ".w" cas_sfx,		\
->  			       sc_prepend, sc_append,			\
->  			       cas_prepend, cas_append,			\
-> -			       __ret, __ptr, (long), __old, __new);	\
-> +			       __ret, __ptr, (long)(int)(long), __old, __new);	\
->  		break;							\
->  	case 8:								\
->  		__arch_cmpxchg(".d", ".d" sc_sfx, ".d" cas_sfx,		\
-> -- 
-> 2.48.1
-> 
->
+This is the start of the stable review cycle for the 6.12.12 release.
+There are 41 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Responses should be made by Sat, 01 Feb 2025 14:41:19 +0000.
+Anything received after that time might be too late.
+
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.12-rc2.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 6.12.12-rc2
+
+Jann Horn <jannh@google.com>
+    io_uring/rsrc: require cloned buffers to share accounting contexts
+
+Jack Greiner <jack@emoss.org>
+    Input: xpad - add support for wooting two he (arm)
+
+Matheos Mattsson <matheos.mattsson@gmail.com>
+    Input: xpad - add support for Nacon Evol-X Xbox One Controller
+
+Leonardo Brondani Schenkel <leonardo@schenkel.net>
+    Input: xpad - improve name of 8BitDo controller 2dc8:3106
+
+Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+    Input: xpad - add QH Electronics VID/PID
+
+Nilton Perim Neto <niltonperimneto@gmail.com>
+    Input: xpad - add unofficial Xbox 360 wireless receiver clone
+
+Mark Pearson <mpearson-lenovo@squebb.ca>
+    Input: atkbd - map F23 key to support default copilot shortcut
+
+Nicolas Nobelis <nicolas@nobelis.eu>
+    Input: xpad - add support for Nacon Pro Compact
+
+Jason Gerecke <jason.gerecke@wacom.com>
+    HID: wacom: Initialize brightness of LED trigger
+
+Hans de Goede <hdegoede@redhat.com>
+    wifi: rtl8xxxu: add more missing rtl8192cu USB IDs
+
+Lianqin Hu <hulianqin@vivo.com>
+    ALSA: usb-audio: Add delay quirk for USB Audio Device
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "usb: gadget: u_serial: Disable ep before setting port to null to fix the crash caused by port being null"
+
+Qasim Ijaz <qasdev00@gmail.com>
+    USB: serial: quatech2: fix null-ptr-deref in qt2_process_read_urb()
+
+Easwar Hariharan <eahariha@linux.microsoft.com>
+    scsi: storvsc: Ratelimit warning logs to prevent VM denial of service
+
+Alex Williamson <alex.williamson@redhat.com>
+    vfio/platform: check the bounds of read/write syscalls
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    cachestat: fix page cache statistics permission checking
+
+Jiri Kosina <jikos@kernel.org>
+    Revert "HID: multitouch: Add support for lenovo Y9000P Touchpad"
+
+Jamal Hadi Salim <jhs@mojatatu.com>
+    net: sched: fix ets qdisc OOB Indexing
+
+Paulo Alcantara <pc@manguebit.com>
+    smb: client: handle lack of EA support in smb2_query_path_info()
+
+Chuck Lever <chuck.lever@oracle.com>
+    libfs: Use d_children list to iterate simple_offset directories
+
+Chuck Lever <chuck.lever@oracle.com>
+    libfs: Replace simple_offset end-of-directory detection
+
+Chuck Lever <chuck.lever@oracle.com>
+    Revert "libfs: fix infinite directory reads for offset dir"
+
+Chuck Lever <chuck.lever@oracle.com>
+    Revert "libfs: Add simple_offset_empty()"
+
+Chuck Lever <chuck.lever@oracle.com>
+    libfs: Return ENOSPC when the directory offset range is exhausted
+
+Andreas Gruenbacher <agruenba@redhat.com>
+    gfs2: Truncate address space when flipping GFS2_DIF_JDATA flag
+
+Yosry Ahmed <yosryahmed@google.com>
+    mm: zswap: move allocations during CPU init outside the lock
+
+Yosry Ahmed <yosryahmed@google.com>
+    mm: zswap: properly synchronize freeing resources during CPU hotunplug
+
+Charles Keepax <ckeepax@opensource.cirrus.com>
+    ASoC: samsung: Add missing depends on I2C
+
+Russell Harmon <russ@har.mn>
+    hwmon: (drivetemp) Set scsi command timeout to 10s
+
+Philippe Simons <simons.philippe@gmail.com>
+    irqchip/sunxi-nmi: Add missing SKIP_WAKE flag
+
+Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+    drm/connector: hdmi: Validate supported_formats matches ycbcr_420_allowed
+
+Yage Geng <icoderdev@gmail.com>
+    ALSA: hda/realtek: Fix volume adjustment issue on Lenovo ThinkBook 16P Gen5
+
+Rob Herring (Arm) <robh@kernel.org>
+    of/unittest: Add test that of_address_to_resource() fails on non-translatable address
+
+Alex Hung <alex.hung@amd.com>
+    drm/amd/display: Initialize denominator defaults to 1
+
+Tom Chung <chiahsuan.chung@amd.com>
+    drm/amd/display: Use HW lock mgr for PSR1
+
+Xiang Zhang <hawkxiang.cpp@gmail.com>
+    scsi: iscsi: Fix redundant response for ISCSI_UEVENT_GET_HOST_STATS request
+
+Maciej Strozek <mstrozek@opensource.cirrus.com>
+    ASoC: cs42l43: Add codec force suspend/resume ops
+
+Linus Walleij <linus.walleij@linaro.org>
+    seccomp: Stub for !CONFIG_SECCOMP
+
+Charles Keepax <ckeepax@opensource.cirrus.com>
+    ASoC: samsung: Add missing selects for MFD_WM8994
+
+Marian Postevca <posteuca@mutex.one>
+    ASoC: codecs: es8316: Fix HW rate calculation for 48Mhz MCLK
+
+Charles Keepax <ckeepax@opensource.cirrus.com>
+    ASoC: wm8994: Add depends on MFD core
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ .../gpu/drm/amd/display/dc/dce/dmub_hw_lock_mgr.c  |   3 +-
+ .../dml21/src/dml2_core/dml2_core_dcn4_calcs.c     |   4 +-
+ drivers/gpu/drm/drm_connector.c                    |   3 +
+ drivers/hid/hid-ids.h                              |   1 -
+ drivers/hid/hid-multitouch.c                       |   8 +-
+ drivers/hid/wacom_sys.c                            |  24 +--
+ drivers/hwmon/drivetemp.c                          |   2 +-
+ drivers/input/joystick/xpad.c                      |   9 +-
+ drivers/input/keyboard/atkbd.c                     |   2 +-
+ drivers/irqchip/irq-sunxi-nmi.c                    |   3 +-
+ drivers/net/wireless/realtek/rtl8xxxu/core.c       |  20 +++
+ drivers/of/unittest-data/tests-platform.dtsi       |  13 ++
+ drivers/of/unittest.c                              |  14 ++
+ drivers/scsi/scsi_transport_iscsi.c                |   4 +-
+ drivers/scsi/storvsc_drv.c                         |   8 +-
+ drivers/usb/gadget/function/u_serial.c             |   8 +-
+ drivers/usb/serial/quatech2.c                      |   2 +-
+ drivers/vfio/platform/vfio_platform_common.c       |  10 ++
+ fs/gfs2/file.c                                     |   1 +
+ fs/libfs.c                                         | 162 ++++++++++-----------
+ fs/smb/client/smb2inode.c                          | 104 +++++++++----
+ include/linux/fs.h                                 |   1 -
+ include/linux/seccomp.h                            |   2 +-
+ io_uring/rsrc.c                                    |   7 +
+ mm/filemap.c                                       |  19 +++
+ mm/shmem.c                                         |   4 +-
+ mm/zswap.c                                         |  90 ++++++++----
+ net/sched/sch_ets.c                                |   2 +
+ sound/pci/hda/patch_realtek.c                      |   4 +-
+ sound/soc/codecs/Kconfig                           |   1 +
+ sound/soc/codecs/cs42l43.c                         |   1 +
+ sound/soc/codecs/es8316.c                          |  10 +-
+ sound/soc/samsung/Kconfig                          |   6 +-
+ sound/usb/quirks.c                                 |   2 +
+ 35 files changed, 374 insertions(+), 184 deletions(-)
+
+
