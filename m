@@ -1,414 +1,507 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9171A1F03F3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99F51F03F7;
 	Thu, 30 Jan 2025 16:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738254762; cv=none; b=pmXifKCW0GK2FfEAEhNDZPm6HOX1gYPwS2EQZ5oVbWtgKDTmyz/6gqoKY9GIS14QR2vbSGUaVPCThTda3xWMRHFKaP5FPYSNA7qadMBml5Pmz6+y83QUbuOyIAnDjvIDXqmOonkVmKD/AoF78xTxJ9saw65Kzvtln1EuuNBf+OE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738254762; c=relaxed/simple;
-	bh=N3uRZNOg+mOiqM6Y63kR3dKZjLlgCxorZswyB7Jn/CE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lAIyKFyA5NkTn2QMR2eNzu74Dltn+WmY0hf3Uv0+zGrXh/yWCMw8Ipx7u3Sa6aqXoW3dV65aeHlbZ/ldrlyZ7S31FLW7LsW+PtvTxb/kowscWn0EfMbfHIbsDTd96pbjnOAAAzKQXdtEwIuOx6PpNeOvVOvD5dmRvWrtSFyZk3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YkPgK6kq6z6K61b;
-	Fri, 31 Jan 2025 00:31:57 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2465B140D1A;
-	Fri, 31 Jan 2025 00:32:37 +0800 (CST)
-Received: from localhost (10.195.245.124) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 Jan
- 2025 17:32:36 +0100
-Date: Thu, 30 Jan 2025 16:32:34 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-CC: <648eedbee0e7702eda10034531de4611597cd9f2.camel@gmail.com>, David Lechner
-	<dlechner@baylibre.com>, Jonathan Santos <Jonathan.Santos@analog.com>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lars@metafoo.de>,
-	<Michael.Hennerich@analog.com>, <marcelo.schmitt@analog.com>,
-	<jic23@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <marcelo.schmitt1@gmail.com>
-Subject: Re: [PATCH v2 07/16] iio: adc: ad7768-1: convert driver to use
- regmap
-Message-ID: <20250130163234.000021e9@huawei.com>
-In-Reply-To: <80d444cbed3d30cf24b4d40e129caf6b1ebe358d.camel@gmail.com>
-References: <cover.1737985435.git.Jonathan.Santos@analog.com>
-	<0968f9cfc55c5ac80492a88bbe95fc8ff7208fa5.1737985435.git.Jonathan.Santos@analog.com>
-	<9b8204f2-107a-477e-a822-c1649af12d02@baylibre.com>
-	<648eedbee0e7702eda10034531de4611597cd9f2.camel@gmail.com>
-	<Z5jtx6QaSMxBXoyk@JSANTO12-L01.ad.analog.com>
-	<80d444cbed3d30cf24b4d40e129caf6b1ebe358d.camel@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738254763; cv=pass; b=aJqzJAy3g9um1aIn7EviIok+KsUJLnbJGRdPDktCPSDD5vn6vjmCa/gRSlPTPZyBd94bdQuTHFP7QJ8RiZRIKvXC+SbiGRgLp6f41/nyLjrb8MgSBCfWj+bZOYCsNLeroIgUrXLjoiLjAMxjBldc6p+ePNLTaT5uGAEnW3omRE4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738254763; c=relaxed/simple;
+	bh=4UI5jo8QWitjFwhmPQxipFtJpPy9XREW5Te5754aVjA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=s/s+gHAs5BDcZ2G3MxSVsc0q/q+ffMEKeqNo6Z2Q54aFVAUqhfSwfSXsQQJxy+YzsWO8Bs0119eHJTsUihQhW1J0YTDGw67rztmolPPoNrxt2iG5RyDxmnZJX9NqkgSvKZmDl+yGZQ1iI6yWKS31s7tDfDoTZ8I+/bRWjyQxT68=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=cRveWBVX; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="cRveWBVX"
+ARC-Seal: i=1; a=rsa-sha256; t=1738254726; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=BTmOT0gVNAvrpJLNBoLkJ8OqkY/CoXwMIGeOCHSjE8e6BWyqnjPOp7iRgll6H5jqmjSWLhAJePGJddwO9rWPd+MughIuReyYTV2HeM192vu2U99lRCDkOxe9k+6njAJvaWJwj9CY6qnMSLdERsaeDIubIckyj6IEk0T1V6TmhAc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738254726; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=oXEUGmeDTmhvBSXe+dKsV4Yd6t7b7aHta03FjR428QY=; 
+	b=iujU3SieLSvhV10QxmKSIHhW3u8RF1aBYfhKcpaMLp3eEFwDgjw5duJlxbZkaYyMOBwl176AxiAiayMS7SwBPu45XAXMIB26ciWfC0Or6ctIvBqvWiirHiJrzMturf28KzmAb4G0uAoeqQtliywVratxaa2fyWJtSDa05QPrj8k=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738254726;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=oXEUGmeDTmhvBSXe+dKsV4Yd6t7b7aHta03FjR428QY=;
+	b=cRveWBVXr30qCrjUP4O6gjYF2aDGOLI2w3JzAzRhfPM7zZY98Ru4cm5EJtQravdw
+	FQZ3iWZ3LlUrMmsNUZhZdbrWrv8jrhoIjNND/kyulz+osPUSzp0B2OISZgsa5ALsHmr
+	vVH/MYEBL3xAqnbWusoPLGvBGGhG8LVPjzI0Q9J4=
+Received: by mx.zohomail.com with SMTPS id 1738254722198430.36549964890287;
+	Thu, 30 Jan 2025 08:32:02 -0800 (PST)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Thu, 30 Jan 2025 17:31:19 +0100
+Subject: [PATCH 5/7] hwrng: rockchip: add support for rk3588's standalone
+ TRNG
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250130-rk3588-trng-submission-v1-5-97ff76568e49@collabora.com>
+References: <20250130-rk3588-trng-submission-v1-0-97ff76568e49@collabora.com>
+In-Reply-To: <20250130-rk3588-trng-submission-v1-0-97ff76568e49@collabora.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Olivia Mackall <olivia@selenic.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Daniel Golle <daniel@makrotopia.org>, Aurelien Jarno <aurelien@aurel32.net>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Lin Jinhan <troy.lin@rock-chips.com>
+X-Mailer: b4 0.14.2
 
-On Tue, 28 Jan 2025 15:09:36 +0000
-Nuno S=E1 <noname.nuno@gmail.com> wrote:
+The RK3588 SoC includes several TRNGs, one part of the Crypto IP block,
+and the other one (referred to as "trngv1") as a standalone new IP.
 
-> On Tue, 2025-01-28 at 11:46 -0300, Jonathan Santos wrote:
-> > On 01/28, Nuno S=E1 wrote: =20
-> > > On Mon, 2025-01-27 at 19:29 -0600, David Lechner wrote: =20
-> > > > On 1/27/25 9:12 AM, Jonathan Santos wrote: =20
-> > > > > Convert the AD7768-1 driver to use the regmap API for register
-> > > > > access. This change simplifies and standardizes register interact=
-ions,
-> > > > > reducing code duplication and improving maintainability.
-> > > > >=20
-> > > > > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> > > > > ---
-> > > > > v2 Changes:
-> > > > > * New patch in v2.
-> > > > > ---
-> > > > > =A0drivers/iio/adc/ad7768-1.c | 82 +++++++++++++++++++++++++++---=
---------
-> > > > > =A01 file changed, 58 insertions(+), 24 deletions(-)
-> > > > >=20
-> > > > > diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-=
-1.c
-> > > > > index 95ba89435652..fb8d6fae5f8a 100644
-> > > > > --- a/drivers/iio/adc/ad7768-1.c
-> > > > > +++ b/drivers/iio/adc/ad7768-1.c
-> > > > > @@ -12,6 +12,7 @@
-> > > > > =A0#include <linux/gpio/consumer.h>
-> > > > > =A0#include <linux/kernel.h>
-> > > > > =A0#include <linux/module.h>
-> > > > > +#include <linux/regmap.h>
-> > > > > =A0#include <linux/regulator/consumer.h>
-> > > > > =A0#include <linux/sysfs.h>
-> > > > > =A0#include <linux/spi/spi.h>
-> > > > > @@ -153,6 +154,7 @@ static const struct iio_chan_spec ad7768_chan=
-nels[]
-> > > > > =3D {
-> > > > > =A0
-> > > > > =A0struct ad7768_state {
-> > > > > =A0	struct spi_device *spi;
-> > > > > +	struct regmap *regmap;
-> > > > > =A0	struct regulator *vref;
-> > > > > =A0	struct mutex lock;
-> > > > > =A0	struct clk *mclk;
-> > > > > @@ -176,12 +178,17 @@ struct ad7768_state {
-> > > > > =A0	} data __aligned(IIO_DMA_MINALIGN);
-> > > > > =A0};
-> > > > > =A0
-> > > > > -static int ad7768_spi_reg_read(struct ad7768_state *st, unsigned=
- int
-> > > > > addr,
-> > > > > -			=A0=A0=A0=A0=A0=A0 unsigned int len)
-> > > > > +static int ad7768_spi_reg_read(void *context, unsigned int addr,
-> > > > > +			=A0=A0=A0=A0=A0=A0 unsigned int *val)
-> > > > > =A0{
-> > > > > -	unsigned int shift;
-> > > > > +	struct iio_dev *dev =3D context;
-> > > > > +	struct ad7768_state *st;
-> > > > > +	unsigned int shift, len;
-> > > > > =A0	int ret;
-> > > > > =A0
-> > > > > +	st =3D iio_priv(dev); =20
-> > > >=20
-> > > > This can be combined with the variable declaration.
-> > > >  =20
-> > > > > +	/* Regular value size is 1 Byte, but 3 Bytes for ADC data */ =20
-> > > >=20
-> > > > Probably not currently needed but COEFF_DATA register is also 3 byt=
-es.
-> > > >  =20
-> > > > > +	len =3D (addr =3D=3D AD7768_REG_ADC_DATA) ? 3 : 1;
-> > > > > =A0	shift =3D 32 - (8 * len);
-> > > > > =A0	st->data.d8[0] =3D AD7768_RD_FLAG_MSK(addr);
-> > > > > =A0
-> > > > > @@ -190,13 +197,19 @@ static int ad7768_spi_reg_read(struct ad776=
-8_state
-> > > > > *st, unsigned int addr,
-> > > > > =A0	if (ret < 0)
-> > > > > =A0		return ret;
-> > > > > =A0
-> > > > > -	return (be32_to_cpu(st->data.d32) >> shift);
-> > > > > +	*val =3D be32_to_cpu(st->data.d32) >> shift;
-> > > > > +
-> > > > > +	return 0;
-> > > > > =A0}
-> > > > > =A0
-> > > > > -static int ad7768_spi_reg_write(struct ad7768_state *st,
-> > > > > +static int ad7768_spi_reg_write(void *context,
-> > > > > =A0				unsigned int addr,
-> > > > > =A0				unsigned int val)
-> > > > > =A0{
-> > > > > +	struct iio_dev *dev =3D context;
-> > > > > +	struct ad7768_state *st;
-> > > > > +
-> > > > > +	st =3D iio_priv(dev);
-> > > > > =A0	st->data.d8[0] =3D AD7768_WR_FLAG_MSK(addr);
-> > > > > =A0	st->data.d8[1] =3D val & 0xFF;
-> > > > > =A0
-> > > > > @@ -206,16 +219,16 @@ static int ad7768_spi_reg_write(struct
-> > > > > ad7768_state
-> > > > > *st,
-> > > > > =A0static int ad7768_set_mode(struct ad7768_state *st,
-> > > > > =A0			=A0=A0 enum ad7768_conv_mode mode)
-> > > > > =A0{
-> > > > > -	int regval;
-> > > > > +	int regval, ret;
-> > > > > =A0
-> > > > > -	regval =3D ad7768_spi_reg_read(st, AD7768_REG_CONVERSION, 1);
-> > > > > -	if (regval < 0)
-> > > > > -		return regval;
-> > > > > +	ret =3D regmap_read(st->regmap, AD7768_REG_CONVERSION, &regval);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > =A0
-> > > > > =A0	regval &=3D ~AD7768_CONV_MODE_MSK;
-> > > > > =A0	regval |=3D AD7768_CONV_MODE(mode);
-> > > > > =A0
-> > > > > -	return ad7768_spi_reg_write(st, AD7768_REG_CONVERSION, regval);
-> > > > > +	return regmap_write(st->regmap, AD7768_REG_CONVERSION, regval);
-> > > > > =A0}
-> > > > > =A0
-> > > > > =A0static int ad7768_scan_direct(struct iio_dev *indio_dev)
-> > > > > @@ -234,9 +247,10 @@ static int ad7768_scan_direct(struct iio_dev
-> > > > > *indio_dev)
-> > > > > =A0	if (!ret)
-> > > > > =A0		return -ETIMEDOUT;
-> > > > > =A0
-> > > > > -	readval =3D ad7768_spi_reg_read(st, AD7768_REG_ADC_DATA, 3);
-> > > > > -	if (readval < 0)
-> > > > > -		return readval;
-> > > > > +	ret =3D regmap_read(st->regmap, AD7768_REG_ADC_DATA, &readval);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +
-> > > > > =A0	/*
-> > > > > =A0	 * Any SPI configuration of the AD7768-1 can only be
-> > > > > =A0	 * performed in continuous conversion mode.
-> > > > > @@ -258,13 +272,11 @@ static int ad7768_reg_access(struct iio_dev
-> > > > > *indio_dev,
-> > > > > =A0
-> > > > > =A0	mutex_lock(&st->lock);
-> > > > > =A0	if (readval) {
-> > > > > -		ret =3D ad7768_spi_reg_read(st, reg, 1);
-> > > > > -		if (ret < 0)
-> > > > > +		ret =3D regmap_read(st->regmap, reg, readval);
-> > > > > +		if (ret)
-> > > > > =A0			goto err_unlock; =20
-> > > >=20
-> > > > Can drop the if and goto.
-> > > >  =20
-> > > > > -		*readval =3D ret;
-> > > > > -		ret =3D 0;
-> > > > > =A0	} else {
-> > > > > -		ret =3D ad7768_spi_reg_write(st, reg, writeval);
-> > > > > +		ret =3D regmap_write(st->regmap, reg, writeval);
-> > > > > =A0	}
-> > > > > =A0err_unlock:
-> > > > > =A0	mutex_unlock(&st->lock);
-> > > > > @@ -283,7 +295,7 @@ static int ad7768_set_dig_fil(struct ad7768_s=
-tate
-> > > > > *st,
-> > > > > =A0	else
-> > > > > =A0		mode =3D AD7768_DIG_FIL_DEC_RATE(dec_rate);
-> > > > > =A0
-> > > > > -	ret =3D ad7768_spi_reg_write(st, AD7768_REG_DIGITAL_FILTER,
-> > > > > mode);
-> > > > > +	ret =3D regmap_write(st->regmap, AD7768_REG_DIGITAL_FILTER,
-> > > > > mode);
-> > > > > =A0	if (ret < 0)
-> > > > > =A0		return ret;
-> > > > > =A0
-> > > > > @@ -320,7 +332,7 @@ static int ad7768_set_freq(struct ad7768_stat=
-e *st,
-> > > > > =A0	 */
-> > > > > =A0	pwr_mode =3D AD7768_PWR_MCLK_DIV(ad7768_clk_config[idx].mclk_=
-div)
-> > > > > |
-> > > > > =A0		=A0=A0 AD7768_PWR_PWRMODE(ad7768_clk_config[idx].pwrmode);
-> > > > > -	ret =3D ad7768_spi_reg_write(st, AD7768_REG_POWER_CLOCK,
-> > > > > pwr_mode);
-> > > > > +	ret =3D regmap_write(st->regmap, AD7768_REG_POWER_CLOCK,
-> > > > > pwr_mode);
-> > > > > =A0	if (ret < 0)
-> > > > > =A0		return ret;
-> > > > > =A0
-> > > > > @@ -447,11 +459,11 @@ static int ad7768_setup(struct ad7768_state=
- *st)
-> > > > > =A0	 * to 10. When the sequence is detected, the reset occurs.
-> > > > > =A0	 * See the datasheet, page 70.
-> > > > > =A0	 */
-> > > > > -	ret =3D ad7768_spi_reg_write(st, AD7768_REG_SYNC_RESET, 0x3);
-> > > > > +	ret =3D regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x3);
-> > > > > =A0	if (ret)
-> > > > > =A0		return ret;
-> > > > > =A0
-> > > > > -	ret =3D ad7768_spi_reg_write(st, AD7768_REG_SYNC_RESET, 0x2);
-> > > > > +	ret =3D regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x2);
-> > > > > =A0	if (ret)
-> > > > > =A0		return ret;
-> > > > > =A0
-> > > > > @@ -509,18 +521,19 @@ static int ad7768_buffer_postenable(struct =
-iio_dev
-> > > > > *indio_dev)
-> > > > > =A0	 * continuous read mode. Subsequent data reads do not require
-> > > > > an
-> > > > > =A0	 * initial 8-bit write to query the ADC_DATA register.
-> > > > > =A0	 */
-> > > > > -	return ad7768_spi_reg_write(st, AD7768_REG_INTERFACE_FORMAT,
-> > > > > 0x01);
-> > > > > +	return regmap_write(st->regmap, AD7768_REG_INTERFACE_FORMAT,
-> > > > > 0x01);
-> > > > > =A0}
-> > > > > =A0
-> > > > > =A0static int ad7768_buffer_predisable(struct iio_dev *indio_dev)
-> > > > > =A0{
-> > > > > =A0	struct ad7768_state *st =3D iio_priv(indio_dev);
-> > > > > +	unsigned int regval; =20
-> > > >=20
-> > > > Intention could be more clear by calling this "unused". Otherwise, =
-it can
-> > > > look
-> > > > like a bug if you don't fully understand what the comment below mea=
-ns.
-> > > >  =20
-> > > > > =A0
-> > > > > =A0	/*
-> > > > > =A0	 * To exit continuous read mode, perform a single read of the
-> > > > > ADC_DATA
-> > > > > =A0	 * reg (0x2C), which allows further configuration of the
-> > > > > device.
-> > > > > =A0	 */
-> > > > > -	return ad7768_spi_reg_read(st, AD7768_REG_ADC_DATA, 3);
-> > > > > +	return regmap_read(st->regmap, AD7768_REG_ADC_DATA, &regval);
-> > > > > =A0}
-> > > > > =A0
-> > > > > =A0static const struct iio_buffer_setup_ops ad7768_buffer_ops =3D=
+Add support for this new standalone TRNG to the driver by both
+generalising it to support multiple different rockchip RNGs and then
+implementing the required functionality for the new hardware.
+
+This work was partly based on the downstream vendor driver by Rockchip's
+Lin Jinhan, which is why they are listed as a Co-author.
+
+While the hardware does support notifying the CPU with an IRQ when the
+random data is ready, I've discovered while implementing the code to use
+this interrupt that this results in significantly slower throughput of
+the TRNG even when under heavy CPU load. I assume this is because with
+only 32 bytes of data per invocation, the overhead of reinitialising a
+completion, enabling the interrupt, sleeping and then triggering the
+completion in the IRQ handler is way more expensive than busylooping.
+
+Speaking of busylooping, the poll interval for reading the ISTAT is an
+atomic read with a delay of 0. In my testing, I've found that this gives
+us the largest throughput, and it appears the random data is ready
+pretty much the moment we begin polling, as increasing the poll delay
+leads to a drop in throughput significant enough to not just be due to
+the poll interval missing the ideal timing by a microsecond or two.
+
+According to downstream, the IP should take 1024 clock cycles to
+generate 56 bits of random data, which at 150MHz should work out to
+6.8us. I did not test whether the data really does take 256/56*6.8us
+to arrive, though changing the readl to a __raw_readl makes no
+difference in throughput, and this data does pass the rngtest FIPS
+checks, so I'm not entirely sure what's going on but I presume it's got
+something to do with the AHB bus speed and the memory barriers that
+mainline's readl/writel functions insert.
+
+The only other current SoC that uses this new IP is the Rockchip RV1106,
+but that SoC does not have mainline support as of the time of writing,
+so we make no effort to declare it as supported for now.
+
+Co-developed-by: Lin Jinhan <troy.lin@rock-chips.com>
+Signed-off-by: Lin Jinhan <troy.lin@rock-chips.com>
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+ drivers/char/hw_random/Kconfig        |   3 +-
+ drivers/char/hw_random/rockchip-rng.c | 248 ++++++++++++++++++++++++++++++----
+ 2 files changed, 224 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+index 17854f052386efa0cf3e4c83d60dd9d6d64755ea..6abf832abeba372d2152bd4905447f4b8fbfb6a0 100644
+--- a/drivers/char/hw_random/Kconfig
++++ b/drivers/char/hw_random/Kconfig
+@@ -606,7 +606,8 @@ config HW_RANDOM_ROCKCHIP
+ 	default HW_RANDOM
+ 	help
+ 	  This driver provides kernel-side support for the True Random Number
+-	  Generator hardware found on some Rockchip SoC like RK3566 or RK3568.
++	  Generator hardware found on some Rockchip SoCs like RK3566, RK3568
++	  or RK3588.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called rockchip-rng.
+diff --git a/drivers/char/hw_random/rockchip-rng.c b/drivers/char/hw_random/rockchip-rng.c
+index 082daea27e937e147195070454f9511a71c8c67e..f0c8a09a67406726a43866001ed09515eeeba03e 100644
+--- a/drivers/char/hw_random/rockchip-rng.c
++++ b/drivers/char/hw_random/rockchip-rng.c
+@@ -1,12 +1,14 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * rockchip-rng.c True Random Number Generator driver for Rockchip RK3568 SoC
++ * rockchip-rng.c True Random Number Generator driver for Rockchip SoCs
+  *
+  * Copyright (c) 2018, Fuzhou Rockchip Electronics Co., Ltd.
+  * Copyright (c) 2022, Aurelien Jarno
++ * Copyright (c) 2025, Collabora Ltd.
+  * Authors:
+  *  Lin Jinhan <troy.lin@rock-chips.com>
+  *  Aurelien Jarno <aurelien@aurel32.net>
++ *  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+  */
+ #include <linux/clk.h>
+ #include <linux/hw_random.h>
+@@ -32,6 +34,9 @@
+  */
+ #define RK_RNG_SAMPLE_CNT		1000
+ 
++/* after how many bytes of output TRNGv1 implementations should be reseeded */
++#define RK_TRNG_V1_AUTO_RESEED_CNT	16000
++
+ /* TRNG registers from RK3568 TRM-Part2, section 5.4.1 */
+ #define TRNG_RST_CTL			0x0004
+ #define TRNG_RNG_CTL			0x0400
+@@ -49,25 +54,85 @@
+ #define TRNG_RNG_SAMPLE_CNT		0x0404
+ #define TRNG_RNG_DOUT			0x0410
+ 
++/*
++ * TRNG V1 register definitions
++ * The TRNG V1 IP is a stand-alone TRNG implementation (not part of a crypto IP)
++ * and can be found in the Rockchip RK3588 SoC
++ */
++#define TRNG_V1_CTRL				0x0000
++#define TRNG_V1_CTRL_NOP			0x00
++#define TRNG_V1_CTRL_RAND			0x01
++#define TRNG_V1_CTRL_SEED			0x02
++
++#define TRNG_V1_STAT				0x0004
++#define TRNG_V1_STAT_SEEDED			BIT(9)
++#define TRNG_V1_STAT_GENERATING			BIT(30)
++#define TRNG_V1_STAT_RESEEDING			BIT(31)
++
++#define TRNG_V1_MODE				0x0008
++#define TRNG_V1_MODE_128_BIT			(0x00 << 3)
++#define TRNG_V1_MODE_256_BIT			(0x01 << 3)
++
++/* Interrupt Enable register; unused because polling is faster */
++#define TRNG_V1_IE				0x0010
++#define TRNG_V1_IE_GLBL_EN			BIT(31)
++#define TRNG_V1_IE_SEED_DONE_EN			BIT(1)
++#define TRNG_V1_IE_RAND_RDY_EN			BIT(0)
++
++#define TRNG_V1_ISTAT				0x0014
++#define TRNG_V1_ISTAT_RAND_RDY			BIT(0)
++
++/* RAND0 ~ RAND7 */
++#define TRNG_V1_RAND0				0x0020
++#define TRNG_V1_RAND7				0x003C
++
++/* Auto Reseed Register */
++#define TRNG_V1_AUTO_RQSTS			0x0060
++
++#define TRNG_V1_VERSION				0x00F0
++#define TRNG_v1_VERSION_CODE			0x46bc
++/* end of TRNG_V1 register definitions */
++
++/* Before removing this assert, give rk3588_rng_read an upper bound of 32 */
++static_assert(RK_RNG_MAX_BYTE <= (TRNG_V1_RAND7 + 4 - TRNG_V1_RAND0),
++	      "You raised RK_RNG_MAX_BYTE and broke rk3588-rng, congrats.");
++
+ struct rk_rng {
+ 	struct hwrng rng;
+ 	void __iomem *base;
+ 	int clk_num;
+ 	struct clk_bulk_data *clk_bulks;
++	struct rk_rng_soc_data	*soc_data;
+ 	struct device *dev;
+ };
+ 
++struct rk_rng_soc_data {
++	int (*rk_rng_init)(struct hwrng *rng);
++	int (*rk_rng_read)(struct hwrng *rng, void *buf, size_t max, bool wait);
++	void (*rk_rng_cleanup)(struct hwrng *rng);
++	unsigned short quality;
++	bool reset_optional;
++};
++
+ /* The mask in the upper 16 bits determines the bits that are updated */
+ static void rk_rng_write_ctl(struct rk_rng *rng, u32 val, u32 mask)
  {
-> > > > > @@ -563,6 +576,20 @@ static int ad7768_set_channel_label(struct i=
-io_dev
-> > > > > *indio_dev,
-> > > > > =A0	return 0;
-> > > > > =A0}
-> > > > > =A0
-> > > > > +static const struct regmap_bus ad7768_regmap_bus =3D {
-> > > > > +	.reg_write =3D ad7768_spi_reg_write,
-> > > > > +	.reg_read =3D ad7768_spi_reg_read,
-> > > > > +	.reg_format_endian_default =3D REGMAP_ENDIAN_BIG,
-> > > > > +	.val_format_endian_default =3D REGMAP_ENDIAN_BIG, =20
-> > > >=20
-> > > > The bus read function is calling be32_to_cpu(), so we probably want=
- to
-> > > > remove
-> > > > that or change the default here.
-> > > >  =20
-> > > > > +};
-> > > > > +
-> > > > > +static const struct regmap_config ad7768_regmap_config =3D {
-> > > > > +	.name =3D "ad7768-1",
-> > > > > +	.reg_bits =3D 8,
-> > > > > +	.val_bits =3D 8, =20
-> > > >=20
-> > > > Should this be 24 since the largest registers are 24-bit?
-> > > >=20
-> > > > Another option could be to just use a regular spi_*() API for that
-> > > > register
-> > > > instead of regmap_*() and avoid trying to do something that regmap =
-doesn't
-> > > > really handle.
-> > > >=20
-> > > > Or we could possibly use regmap_bulk_read(), but that feels a bit h=
-acky
-> > > > too
-> > > > since it isn't actually how that function was intended to be used.
-> > > >  =20
-> > >=20
-> > > Hmm I might be missing something but looking at the register map, It =
-seems
-> > > we do
-> > > have 8bit registers? We do have values that span multiple registers (=
-3 for
-> > > the
-> > > 24bit values) and regmap_bulk_read() should actually fit right? I mea=
-n,
-> > > looking
-> > > at the docs:
-> > >=20
-> > > "regmap_bulk_read() - Read multiple sequential registers from the dev=
-ice"
-> > >  =20
-> >=20
-> > Isn't regmap_bulk_*() for reading a value spread in sequential register=
-s,
-> > like the offset calibration (registers 0x22, 0x23 and 0x24, 8 bits value
-> > for each reg)? For the ADC data (0x2C) we have a 24 bits value in only =
-one
-> > register, so I beleive this does not apply.
-> >  =20
->=20
-> Ah got it. I failed to see that. Yeah, in that case you're right... it wo=
-n't
-> work out of the box.
->=20
-> > > But I do agree that what we have right now does not make much sense. =
-If we
-> > > need
-> > > to do
-> > >=20
-> > > len =3D (addr =3D=3D AD7768_REG_ADC_DATA) ? 3 : 1;
-> > >=20
-> > > for supporting regmap, then I have to question using it. Also note th=
-at we
-> > > have
-> > > things like gain and offset that are also 3 bytes which means that our
-> > > custom
-> > > read would need to become more questionable if we add support for it.
-> > >  =20
-> >=20
-> > For those cases the regmap_bulk_*() works.
-> >  =20
-> > > Jonathan, did you tried to use plain regmap (without the custom bus)?
-> > > Assuming
-> > > bulk reads work, I'm not seeing an apparent reason for the custom bus=
-... I
-> > > would
-> > > also suspect that if bulk reads don't work out of the box, providing a
-> > > regmap
-> > > cache would make it work but relying on implementation details is not=
- a very
-> > > good practice.
-> > >  =20
-> >=20
-> > Yes, i tried and only works for the register with 8-bits value. David
-> > suggested using regular spi_*() functions for the unsual registers with
-> > 24-bits value, such as the ADC data (0x2C). That is the only way of
-> > having the default spi bus interface using regmap. Otherwise we should
-> > drop the regmap.  =20
->=20
-> Yeah, might be better to do plain spi for the unusual registers rather th=
-an the
-> custom bus. But no strong feelings on my side...
-I'm not keen on a mix or on a regmap that handles the size under the hood.
-I think this quirk should be obvious.
+ 	writel((mask << 16) | val, rng->base + TRNG_RNG_CTL);
+ }
+ 
+-static int rk_rng_init(struct hwrng *rng)
++static inline void rk_rng_writel(struct rk_rng *rng, u32 val, u32 offset)
+ {
+-	struct rk_rng *rk_rng = container_of(rng, struct rk_rng, rng);
+-	int ret;
++	writel(val, rng->base + offset);
++}
++
++static inline u32 rk_rng_readl(struct rk_rng *rng, u32 offset)
++{
++	return readl(rng->base + offset);
++}
+ 
++static int rk_rng_enable_clks(struct rk_rng *rk_rng)
++{
++	int ret;
+ 	/* start clocks */
+ 	ret = clk_bulk_prepare_enable(rk_rng->clk_num, rk_rng->clk_bulks);
+ 	if (ret < 0) {
+@@ -75,6 +140,18 @@ static int rk_rng_init(struct hwrng *rng)
+ 		return ret;
+ 	}
+ 
++	return 0;
++}
++
++static int rk3568_rng_init(struct hwrng *rng)
++{
++	struct rk_rng *rk_rng = container_of(rng, struct rk_rng, rng);
++	int ret;
++
++	ret = rk_rng_enable_clks(rk_rng);
++	if (ret < 0)
++		return ret;
++
+ 	/* set the sample period */
+ 	writel(RK_RNG_SAMPLE_CNT, rk_rng->base + TRNG_RNG_SAMPLE_CNT);
+ 
+@@ -87,7 +164,7 @@ static int rk_rng_init(struct hwrng *rng)
+ 	return 0;
+ }
+ 
+-static void rk_rng_cleanup(struct hwrng *rng)
++static void rk3568_rng_cleanup(struct hwrng *rng)
+ {
+ 	struct rk_rng *rk_rng = container_of(rng, struct rk_rng, rng);
+ 
+@@ -98,7 +175,7 @@ static void rk_rng_cleanup(struct hwrng *rng)
+ 	clk_bulk_disable_unprepare(rk_rng->clk_num, rk_rng->clk_bulks);
+ }
+ 
+-static int rk_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
++static int rk3568_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+ {
+ 	struct rk_rng *rk_rng = container_of(rng, struct rk_rng, rng);
+ 	size_t to_read = min_t(size_t, max, RK_RNG_MAX_BYTE);
+@@ -128,9 +205,126 @@ static int rk_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+ 	return (ret < 0) ? ret : to_read;
+ }
+ 
++static int rk3588_rng_init(struct hwrng *rng)
++{
++	struct rk_rng *rk_rng = container_of(rng, struct rk_rng, rng);
++	u32 version, status, mask, istat;
++	int ret;
++
++	ret = rk_rng_enable_clks(rk_rng);
++	if (ret < 0)
++		return ret;
++
++	version = rk_rng_readl(rk_rng, TRNG_V1_VERSION);
++	if (version != TRNG_v1_VERSION_CODE) {
++		dev_err(rk_rng->dev,
++			"wrong trng version, expected = %08x, actual = %08x\n",
++			TRNG_V1_VERSION, version);
++		ret = -EFAULT;
++		goto err_disable_clk;
++	}
++
++	mask = TRNG_V1_STAT_SEEDED | TRNG_V1_STAT_GENERATING |
++	       TRNG_V1_STAT_RESEEDING;
++	if (readl_poll_timeout(rk_rng->base + TRNG_V1_STAT, status,
++			       (status & mask) == TRNG_V1_STAT_SEEDED,
++			       RK_RNG_POLL_PERIOD_US, RK_RNG_POLL_TIMEOUT_US) < 0) {
++		dev_err(rk_rng->dev, "timed out waiting for hwrng to reseed\n");
++		ret = -ETIMEDOUT;
++		goto err_disable_clk;
++	}
++
++	/*
++	 * clear ISTAT flag, downstream advises to do this to avoid
++	 * auto-reseeding "on power on"
++	 */
++	istat = rk_rng_readl(rk_rng, TRNG_V1_ISTAT);
++	rk_rng_writel(rk_rng, istat, TRNG_V1_ISTAT);
++
++	/* auto reseed after RK_TRNG_V1_AUTO_RESEED_CNT bytes */
++	rk_rng_writel(rk_rng, RK_TRNG_V1_AUTO_RESEED_CNT / 16, TRNG_V1_AUTO_RQSTS);
++
++	return 0;
++err_disable_clk:
++	clk_bulk_disable_unprepare(rk_rng->clk_num, rk_rng->clk_bulks);
++	return ret;
++}
++
++static void rk3588_rng_cleanup(struct hwrng *rng)
++{
++	struct rk_rng *rk_rng = container_of(rng, struct rk_rng, rng);
++
++	clk_bulk_disable_unprepare(rk_rng->clk_num, rk_rng->clk_bulks);
++}
++
++static int rk3588_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
++{
++	struct rk_rng *rk_rng = container_of(rng, struct rk_rng, rng);
++	size_t to_read = min_t(size_t, max, RK_RNG_MAX_BYTE);
++	int ret = 0;
++	u32 reg;
++
++	ret = pm_runtime_resume_and_get(rk_rng->dev);
++	if (ret < 0)
++		return ret;
++
++	/* Clear ISTAT, even without interrupts enabled, this will be updated */
++	reg = rk_rng_readl(rk_rng, TRNG_V1_ISTAT);
++	rk_rng_writel(rk_rng, reg, TRNG_V1_ISTAT);
++
++	/* generate 256 bits of random data */
++	rk_rng_writel(rk_rng, TRNG_V1_MODE_256_BIT, TRNG_V1_MODE);
++	rk_rng_writel(rk_rng, TRNG_V1_CTRL_RAND, TRNG_V1_CTRL);
++
++	ret = readl_poll_timeout_atomic(rk_rng->base + TRNG_V1_ISTAT, reg,
++					(reg & TRNG_V1_ISTAT_RAND_RDY), 0,
++					RK_RNG_POLL_TIMEOUT_US);
++	if (ret < 0)
++		goto out;
++
++	/* Read random data that's in registers TRNG_V1_RAND0 through RAND7 */
++	memcpy_fromio(buf, rk_rng->base + TRNG_V1_RAND0, to_read);
++
++out:
++	/* Clear ISTAT */
++	rk_rng_writel(rk_rng, reg, TRNG_V1_ISTAT);
++	/* close the TRNG */
++	rk_rng_writel(rk_rng, TRNG_V1_CTRL_NOP, TRNG_V1_CTRL);
++
++	pm_runtime_mark_last_busy(rk_rng->dev);
++	pm_runtime_put_sync_autosuspend(rk_rng->dev);
++
++	return (ret < 0) ? ret : to_read;
++}
++
++static const struct rk_rng_soc_data rk3568_soc_data = {
++	.rk_rng_init = rk3568_rng_init,
++	.rk_rng_read = rk3568_rng_read,
++	.rk_rng_cleanup = rk3568_rng_cleanup,
++	.quality = 900,
++	.reset_optional = false,
++};
++
++static const struct rk_rng_soc_data rk3588_soc_data = {
++	.rk_rng_init = rk3588_rng_init,
++	.rk_rng_read = rk3588_rng_read,
++	.rk_rng_cleanup = rk3588_rng_cleanup,
++	.quality = 999,		/* as determined by actual testing */
++	.reset_optional = true,
++};
++
++static const struct of_device_id rk_rng_dt_match[] = {
++	{ .compatible = "rockchip,rk3568-rng", .data = (void *)&rk3568_soc_data },
++	{ .compatible = "rockchip,rk3588-rng", .data = (void *)&rk3588_soc_data },
++	{ /* sentinel */ },
++};
++
++MODULE_DEVICE_TABLE(of, rk_rng_dt_match);
++
+ static int rk_rng_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	const struct of_device_id *match;
+ 	struct reset_control *rst;
+ 	struct rk_rng *rk_rng;
+ 	int ret;
+@@ -139,6 +333,8 @@ static int rk_rng_probe(struct platform_device *pdev)
+ 	if (!rk_rng)
+ 		return -ENOMEM;
+ 
++	match = of_match_node(rk_rng_dt_match, dev->of_node);
++	rk_rng->soc_data = (struct rk_rng_soc_data *)match->data;
+ 	rk_rng->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(rk_rng->base))
+ 		return PTR_ERR(rk_rng->base);
+@@ -148,24 +344,30 @@ static int rk_rng_probe(struct platform_device *pdev)
+ 		return dev_err_probe(dev, rk_rng->clk_num,
+ 				     "Failed to get clks property\n");
+ 
+-	rst = devm_reset_control_array_get_exclusive(dev);
+-	if (IS_ERR(rst))
+-		return dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset property\n");
++	if (rk_rng->soc_data->reset_optional)
++		rst = devm_reset_control_array_get_optional_exclusive(dev);
++	else
++		rst = devm_reset_control_array_get_exclusive(dev);
++
++	if (rst) {
++		if (IS_ERR(rst))
++			return dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset property\n");
+ 
+-	reset_control_assert(rst);
+-	udelay(2);
+-	reset_control_deassert(rst);
++		reset_control_assert(rst);
++		udelay(2);
++		reset_control_deassert(rst);
++	}
+ 
+ 	platform_set_drvdata(pdev, rk_rng);
+ 
+ 	rk_rng->rng.name = dev_driver_string(dev);
+ 	if (!IS_ENABLED(CONFIG_PM)) {
+-		rk_rng->rng.init = rk_rng_init;
+-		rk_rng->rng.cleanup = rk_rng_cleanup;
++		rk_rng->rng.init = rk_rng->soc_data->rk_rng_init;
++		rk_rng->rng.cleanup = rk_rng->soc_data->rk_rng_cleanup;
+ 	}
+-	rk_rng->rng.read = rk_rng_read;
++	rk_rng->rng.read = rk_rng->soc_data->rk_rng_read;
+ 	rk_rng->dev = dev;
+-	rk_rng->rng.quality = 900;
++	rk_rng->rng.quality = rk_rng->soc_data->quality;
+ 
+ 	pm_runtime_set_autosuspend_delay(dev, RK_RNG_AUTOSUSPEND_DELAY);
+ 	pm_runtime_use_autosuspend(dev);
+@@ -184,7 +386,7 @@ static int __maybe_unused rk_rng_runtime_suspend(struct device *dev)
+ {
+ 	struct rk_rng *rk_rng = dev_get_drvdata(dev);
+ 
+-	rk_rng_cleanup(&rk_rng->rng);
++	rk_rng->soc_data->rk_rng_cleanup(&rk_rng->rng);
+ 
+ 	return 0;
+ }
+@@ -193,7 +395,7 @@ static int __maybe_unused rk_rng_runtime_resume(struct device *dev)
+ {
+ 	struct rk_rng *rk_rng = dev_get_drvdata(dev);
+ 
+-	return rk_rng_init(&rk_rng->rng);
++	return rk_rng->soc_data->rk_rng_init(&rk_rng->rng);
+ }
+ 
+ static const struct dev_pm_ops rk_rng_pm_ops = {
+@@ -203,13 +405,6 @@ static const struct dev_pm_ops rk_rng_pm_ops = {
+ 				pm_runtime_force_resume)
+ };
+ 
+-static const struct of_device_id rk_rng_dt_match[] = {
+-	{ .compatible = "rockchip,rk3568-rng", },
+-	{ /* sentinel */ },
+-};
+-
+-MODULE_DEVICE_TABLE(of, rk_rng_dt_match);
+-
+ static struct platform_driver rk_rng_driver = {
+ 	.driver	= {
+ 		.name	= "rockchip-rng",
+@@ -221,8 +416,9 @@ static struct platform_driver rk_rng_driver = {
+ 
+ module_platform_driver(rk_rng_driver);
+ 
+-MODULE_DESCRIPTION("Rockchip RK3568 True Random Number Generator driver");
++MODULE_DESCRIPTION("Rockchip True Random Number Generator driver");
+ MODULE_AUTHOR("Lin Jinhan <troy.lin@rock-chips.com>");
+ MODULE_AUTHOR("Aurelien Jarno <aurelien@aurel32.net>");
+ MODULE_AUTHOR("Daniel Golle <daniel@makrotopia.org>");
++MODULE_AUTHOR("Nicolas Frattaroli <nicolas.frattaroli@collabora.com>");
+ MODULE_LICENSE("GPL");
 
-Can we do two regmap, one for each of the register size?  We have other
-drivers taking that approach and I'm not sure if it was ruled out for
-this one.
-
-Jonathan
-
->=20
-> - Nuno S=E1
-> >  =20
->=20
->=20
->=20
+-- 
+2.48.1
 
