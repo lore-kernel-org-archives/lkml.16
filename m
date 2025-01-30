@@ -1,158 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A66D1EBA09;
-	Thu, 30 Jan 2025 16:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3899713FEE
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 16:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738255525; cv=none; b=ebS5b8gJkwUrAuaphjyVIF24pwLGCR1G22YX0N5g/Iil26SAJodorVlWdpwM1gyD7ONenzrCENVKVwSSoorZzDQBdnyrm+WlbQNyYG7BhlPofWts4+ratKWaoa5hl9kxCWbtO4NqEyyb+WgkDdBtNx9K9phRBQAxdnUvyFsTKRY=
+	t=1738255899; cv=none; b=RlxhK5q49hy3WFuy2fBoHdCNVk+E/3/aPyo7SuM6hRicGKE6CnCmodw2IvJja1+i1ko/mLah3AGK1/d2AzY/gOSZFJXYHHaHSYUKCsEQJZhJguZempv4p3GmFoeUKLOloVbe9e/4ZfCqrlIkw+9GTiptcai4zztQesC1iaOrrb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738255525; c=relaxed/simple;
-	bh=jWf2CZnQEG7SXBVcZ508uMx8eAuNJOnmC6clM+twjls=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VltCn5zE8IJizQifBtJFxXhCY+kbn7rJXr2xs8m9CDSPo11ieVAZqvR8bjdwelGgTFIvGchcbLX0mLE2wuFQYyZRUI8bWBjPTrN8fPLnrD3rr2C8rtmM+PWWez9u0hIUUGms5q/LgPLWZ9hE3cur+JaeVYwf9mY4bBBLrAz5jbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FKvn5QCO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738255899; c=relaxed/simple;
+	bh=2bRUWw2O9Noy/C1Q5lFO5hLXAY9YkzOTUGuuFGIficY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FkAxvWRel24P/vgrZSJsPJ74ilGlU3xDsFpXWzKRILaXAQQkUR76z7Zj+Z4DXgWMPSxy68iJHB834fB+sxbOEi19hBq9aYQ32hEdTWcuSw9ka8Da5cZbsiQ5+53J1nlKrukmFwYUPkjzpg0A9BF0zhf7GjcpfQvJTjmf+3MlypE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YAJvNCHz; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FKvn5QCO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9C2FC4CED2;
-	Thu, 30 Jan 2025 16:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738255524;
-	bh=jWf2CZnQEG7SXBVcZ508uMx8eAuNJOnmC6clM+twjls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FKvn5QCOkmjdiW7oAvxSc53AAMbliawqVOmafoZBGgMUkKmyvWZEDSmgHMoULI265
-	 Czvx3xXh7pri/q2XDmdAJggeTXuumXpkNCGzFdh/FFC5i8JjVxHY5tNwAN4a2DbFGI
-	 /3Ge7T5ZCTdFiF9A695f99qEXU7XnGfRx3y8U20Oh+7qy/70naYUhuNrn5kTMsYTuW
-	 U2D/kTuia4LZEq7qynyoPn2X409eLvRg/Wdjq7RrroTj6dsOYZDDSlFNhkqu63aFwt
-	 FxLVcVl0evUzQJr5IWClNnoYuV4TUGdu8bQxghvDkmB+NVxFUW2I7F4V/rQBLuMQXU
-	 +8GcAn12P9cmw==
-Date: Thu, 30 Jan 2025 16:45:15 +0000
-From: Simon Horman <horms@kernel.org>
-To: Basharath Hussain Khaja <basharath@couthit.com>
-Cc: danishanwar@ti.com, rogerq@kernel.org, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-	tony@atomide.com, richardcochran@gmail.com, parvathi@couthit.com,
-	schnelle@linux.ibm.com, rdunlap@infradead.org,
-	diogo.ivo@siemens.com, m-karicheri2@ti.com,
-	jacob.e.keller@intel.com, m-malladi@ti.com,
-	javier.carrasco.cruz@gmail.com, afd@ti.com, s-anna@ti.com,
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org, pratheesh@ti.com, prajith@ti.com,
-	vigneshr@ti.com, praneeth@ti.com, srk@ti.com, rogerq@ti.com,
-	krishna@couthit.com, pmohan@couthit.com, mohan@couthit.com
-Subject: Re: [RFC v2 PATCH 04/10] net: ti: prueth: Adds link detection, RX
- and TX support.
-Message-ID: <20250130164515.GC13457@kernel.org>
-References: <20250124122353.1457174-1-basharath@couthit.com>
- <20250124123707.1457639-5-basharath@couthit.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YAJvNCHz"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5da135d3162so1566345a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:51:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738255895; x=1738860695; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=81HSDWEdiMAQgD6KhXnAvyTh/gnHSXEcWZxUzDH+tPE=;
+        b=YAJvNCHzN9Wk7C2gTjdxQ/4txHhQiHyP+fWQS13Gn1VlqTSBSBcuQJjZZUJ8+5ZW+7
+         gVyuFS5c8x6NACFBMFmAoGT8ekvaMLDT9pfvUyY9Aiqcmy63ECfgrfcRJbTzS+fG3+v7
+         4gyIoOLbi86JemyySg1MCKOdtjIpq2QP3JiXLf1+5vODxYj7AZW/W7olLf52D8FVamwC
+         XWfDbVWL5NHX6k8njv4JMg+pJkMIYtgl5hI9du1r8IVprjyTivNbpKZseka6lgBbAwja
+         qKDyL8gP0kO5MSL2YoZ3BjWsdJNCd9fYAJe37Spiw1ouMArsnQ+oFAmehU8VJP+sBAe3
+         /7nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738255895; x=1738860695;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=81HSDWEdiMAQgD6KhXnAvyTh/gnHSXEcWZxUzDH+tPE=;
+        b=IUzApRnRS9bxcFxIbmjO+BdMUPwwRt4oyD5e1Ut8mvJtA6d57Jdi93jsiWVshRFs6J
+         zjetl+spyxGgk/0VjCkoYW3wWA4J5Gp6WXdZdGpgdbHAAZtr2xEAFpBP6T8GU3vWR8s2
+         8ZbPEqF5GN4d0isuk/ltP0oadW88m0f2rIuVtWWUmsVmYC/lMzzkvZtad4hBsi0nX6yW
+         K3MBI2MeDSzraev6Z/GBYkBVlv4CcQ+j4MktQH/VBgDlLp/wk26ge4xLUerWC5y6bLoK
+         +VwGlN6HjWud7I76trXfCggxjkCMCvXIQQzPxQQTwN3t4/HxCEpqrBXGq8TeCxDiSxMr
+         YSog==
+X-Forwarded-Encrypted: i=1; AJvYcCXd/ZLTae4RkvaOcQhhpDCw2Ag1K5IVW8MChq/S1Y4SWKp+fwBtDbL9O9vDHTgn8ZlJ/jJGZfc6JtBYwpM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkKIsZ1N9EWKXMN267oB7NnzQzPXWH/WYTOsnHDTruwyB1JylD
+	k+lQUf083IlAuTV16U0RJVG8WfS3B9gDxzec66iaJBefNKy4qRObTZDmflA3buhh5nm5GMFPx2I
+	OLSm5RjhMW4kumzGhaUnPcXPLyLg=
+X-Gm-Gg: ASbGncuywDEZdd6Mge0INjOnAnBB+/rMc++TBwmm+VZECT8sf+ac287GXIGNVZP45HG
+	eoy3V0ovf/hzcJk/4CkzZ8/QkUIiVP6aqwxiyzEd0ySxInjIb4lP+tMtSoMGFf7mBYMNFOtcP
+X-Google-Smtp-Source: AGHT+IHcvuC0uEwgAU5Pv5wffcB1EVUbDGkSKyYmw4kAdumq2eCkcdMgs4YHeNNiGeLdokpjp5siFjdtJlL/G8kwOXw=
+X-Received: by 2002:a17:907:1c13:b0:ab6:36fd:942a with SMTP id
+ a640c23a62f3a-ab6cfe27037mr883979966b.50.1738255895318; Thu, 30 Jan 2025
+ 08:51:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250124123707.1457639-5-basharath@couthit.com>
+References: <202501291646.VtwF98qd-lkp@intel.com> <CAHp75VcOYyVx=wcopvi-0iA5XePsGOrNO1wUSzYcYB4q86=7gA@mail.gmail.com>
+ <CAHp75VcUEaUSeu5K2GDbkgevTkFjR8=4ppw_e5FAy28iW=NhSQ@mail.gmail.com> <CAMuHMdVsCt=x_3KdHKHFmr9xgqcMvFNjKGjd4WNHx+LEwiEDOA@mail.gmail.com>
+In-Reply-To: <CAMuHMdVsCt=x_3KdHKHFmr9xgqcMvFNjKGjd4WNHx+LEwiEDOA@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 30 Jan 2025 18:50:59 +0200
+X-Gm-Features: AWEUYZn0zOWPpu25GOiVPEugFi9n6vxgdNY0v-zO10JxexKk9vaGfgUqQMagZZw
+Message-ID: <CAHp75VecdT+p3GANoYphVea67j6mFSXAPSxvO=fNjbcha8o-jA@mail.gmail.com>
+Subject: Re: drivers/platform/surface/surface3_power.c:243:2: warning:
+ 'snprintf' will always be truncated; specified size is 10, but format string
+ expands to at least 12
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: kernel test robot <lkp@intel.com>, Maximilian Luz <luzmaximilian@gmail.com>, llvm@lists.linux.dev, 
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 24, 2025 at 06:07:01PM +0530, Basharath Hussain Khaja wrote:
-> From: Roger Quadros <rogerq@ti.com>
-> 
-> Changes corresponding to link configuration such as speed and duplexity.
-> IRQ and handler initializations are performed for packet reception.Firmware
-> receives the packet from the wire and stores it into OCMC queue. Next, it
-> notifies the CPU via interrupt. Upon receiving the interrupt CPU will
-> service the IRQ and packet will be processed by pushing the newly allocated
-> SKB to upper layers.
-> 
-> When the user application want to transmit a packet, it will invoke
-> sys_send() which will inturn invoke the PRUETH driver, then it will write
-> the packet into OCMC queues. PRU firmware will pick up the packet and
-> transmit it on to the wire.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
-> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
-> ---
->  drivers/net/ethernet/ti/icssm/icssm_prueth.c | 599 ++++++++++++++++++-
->  drivers/net/ethernet/ti/icssm/icssm_prueth.h |  46 ++
->  2 files changed, 640 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+On Thu, Jan 30, 2025 at 10:57=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Wed, 29 Jan 2025 at 13:51, Andy Shevchenko <andy.shevchenko@gmail.com>=
+ wrote:
+> > On Wed, Jan 29, 2025 at 2:45=E2=80=AFPM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Wed, Jan 29, 2025 at 10:09=E2=80=AFAM kernel test robot <lkp@intel=
+.com> wrote:
+> >
+> > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/li=
+nux.git master
+> > > > head:   05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
+> > > > commit: 85f7582cd484dbf491b6d9bb2af6ef1467a024d2 platform/surface: =
+Move Surface 3 Power OpRegion driver to platform/surface
+> > > > date:   4 years, 3 months ago
+> > > > config: x86_64-randconfig-071-20241231 (https://download.01.org/0da=
+y-ci/archive/20250129/202501291646.VtwF98qd-lkp@intel.com/config)
+> > > > compiler: clang version 19.1.3 (https://github.com/llvm/llvm-projec=
+t ab51eccf88f5321e7c60591c5546b254b6afab99)
+> > > > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci=
+/archive/20250129/202501291646.VtwF98qd-lkp@intel.com/reproduce)
+> > > >
+> > > > If you fix the issue in a separate patch/commit (i.e. not just a ne=
+w version of
+> > > > the same patch/commit), kindly add following tags
+> > > > | Reported-by: kernel test robot <lkp@intel.com>
+> > > > | Closes: https://lore.kernel.org/oe-kbuild-all/202501291646.VtwF98=
+qd-lkp@intel.com/
+> > > >
+> > > > All warnings (new ones prefixed by >>):
+> > > >
+> > > > >> drivers/platform/surface/surface3_power.c:243:2: warning: 'snpri=
+ntf' will always be truncated; specified size is 10, but format string expa=
+nds to at least 12 [-Wformat-truncation-non-kprintf]
+> > > >      243 |         snprintf(bix->serial, ARRAY_SIZE(bix->serial), "=
+%3pE%6pE", buf + 7, buf);
+> > >
+> > > 3 + 'E' + 6 + 'E' + NUL, that's how the compiler thinks about this
+> > > formatting string...
+> > >
+> > > >          |         ^
+> > > >    1 warning generated.
+> > >
+> > > I do not know how to properly address this because it's false positiv=
+e
+> > > due to the compiler not being aware of pointer extensions used in
+> > > Linux kernel. The w/a is to increase the buffer if we can, but is it
+> > > practical? OTOH, this warning will be translated to a compilation
+> > > error in case of default WERROR settings on `make W=3D1` builds which=
+ is
+> > > also annoying to people who want to have that clean.
+> >
+> > Actually using %pE implies that the buffer should be 4 times bigger
+> > than the input string. So, with the given format string the
+> > ARRAY_SIZE(bix->serial) has to be equal to or greater than 3 * 4 + 6 *
+> > 4 + 1, i.e. 37.
+>
+>     #define SURFACE_3_STRLEN                10
+>
+>     struct bix {
+>             ...
+>             char    serial[SURFACE_3_STRLEN];
+>
+> Oops...
 
-...
+It works because IRL we haven't seen the broken strings that %pE
+escapes with help of an octal code. But if one doesn't trust that
+input and uses %pE they should provide enough buffer for that
+translation to happen.
 
-> +/**
-> + * icssm_emac_ndo_start_xmit - EMAC Transmit function
-> + * @skb: SKB pointer
-> + * @ndev: EMAC network adapter
-> + *
-> + * Called by the system to transmit a packet  - we queue the packet in
-> + * EMAC hardware transmit queue
-> + *
-> + * Return: success(NETDEV_TX_OK) or error code (typically out of desc's)
-> + */
-> +static int icssm_emac_ndo_start_xmit(struct sk_buff *skb,
-> +				     struct net_device *ndev)
-
-I think the return type of this function should be netdev_tx_t
-rather than int to match the signature of ndo_start_xmit
-in struct net_device_ops.
-
-Flagged by W=1 build with clang-19
-(-Wincompatible-function-pointer-types-strict).
-
-...
-
->  static const struct net_device_ops emac_netdev_ops = {
->  	.ndo_open = icssm_emac_ndo_open,
->  	.ndo_stop = icssm_emac_ndo_stop,
-> +	.ndo_start_xmit = icssm_emac_ndo_start_xmit,
->  };
->  
->  /* get emac_port corresponding to eth_node name */
-
-...
-
-> diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
-
-...
-
-> @@ -76,6 +82,32 @@ struct prueth_queue_info {
->  	u16 buffer_desc_end;
->  } __packed;
->  
-> +/**
-> + * struct prueth_packet_info - Info about a packet in buffer
-> + * @start_offset: start offset of the frame in the buffer for HSR/PRP
-> + * @shadow: this packet is stored in the collision queue
-> + * @port: port packet is on
-> + * @length: length of packet
-> + * @broadcast: this packet is a broadcast packet
-> + * @error: this packet has an error
-> + * @sv_frame: indicate if the frame is a SV frame for HSR/PRP
-> + * @lookup_success: src mac found in FDB
-> + * @flood: packet is to be flooded
-> + * @timstamp: Specifies if timestamp is appended to the packet
-
-nit: @timestamp
-
-> + */
-> +struct prueth_packet_info {
-> +	bool start_offset;
-> +	bool shadow;
-> +	unsigned int port;
-> +	unsigned int length;
-> +	bool broadcast;
-> +	bool error;
-> +	bool sv_frame;
-> +	bool lookup_success;
-> +	bool flood;
-> +	bool timestamp;
-> +};
-
-...
+--=20
+With Best Regards,
+Andy Shevchenko
