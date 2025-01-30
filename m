@@ -1,231 +1,151 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DE0190058
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC63190058;
+	Thu, 30 Jan 2025 06:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738217631; cv=none; b=BXiLF/f6w5gb/DNnDbBq2agah5sDdwkW/b+AipehPWhtW/YqKKQM1wgotDuMRqw8wN67imSCrOJiEPtzpN5i5ilVe5dsVtMTkNBMEiTfmFwDD2VoV7psE5JUCVMiRH/zjaaIpRgyoHXBhVrP9APBZawr1cjhGzOwN2jsbV4yws8=
+	t=1738217645; cv=none; b=CYLBosKwDFM6Eq51JEdCJ9uuOf27+01HevFMTQBKNS/Kqz7ukTqmqcdh07LG6SttAi5pyAkYQ83P9rLcCcx8a2p2N7RGn//MJ/8Omjks4phlWsqSz0ilkMfZzegJxpNMbOHTFwEcMRt2anNPj8thNq1bc1jovufXBHg9C6/S6/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738217631; c=relaxed/simple;
-	bh=uF9JA9Ob30UgQwQ1EYDlYDH5pEk2arl1xRBWSnFEHyo=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=m28PJx+RBng7kw6lBazAJjdOeFGCr2rLYxYwmtb/3Cs1TodnULGuXaUGgwKQ2ojcbYNMOXUEcAJ8jrNLxTS4t3H++qYNj3703gtgOM4yGZCTMkyeBQGC34xUuSPTKUk+U9dDyLFauSk6/mkXpjY5ONjm+aewUO87IW/9xyu8YxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=rIxNK1SJ; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1738217645; c=relaxed/simple;
+	bh=piqnWVU9aUejBh25VUCTtHqSvx12RW2XNfKQy/OkbBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iJZ7RC5HvExE4DidveZg/2nRfuSt9qco2MNE2nKNUCSlu5e3yh+GNJkJQoGiHWFFsmeqDZ1gN1kZ2Nyu7eY9S6aCX6WNlwXG1hLXYyPezg/zz6GIMkucx4P7jTPHFJtkonKWeuhzUF7mH+kVlXo6bk4SBH9fk43fWwVYrWs75U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LVSSnnAO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rIxNK1SJ"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250130061341epoutp03b33105153b7f3e952130a0872beeaf67~fY7es-S9Q0535705357epoutp03w
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:13:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250130061341epoutp03b33105153b7f3e952130a0872beeaf67~fY7es-S9Q0535705357epoutp03w
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1738217621;
-	bh=mztnCaIfHV9x+Yu8hRVDPHeOy7Gt+locQNzg3InAHw0=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=rIxNK1SJxI+kr8oKzEzSnj/WY8bjOZUxA+10qURZa3MHn/TQ8QsnmXKnpuJ0+/GGZ
-	 Xghd2imI7C+FCvPfyyNaBhASoeoAMIKtBbSh3uT2UQkaFO6yLG868OX6suCo4nisvC
-	 Q2gfEUWf46w791KaQ1YVnWjVeWcxcFVrRJVNJIgo=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250130061340epcas5p14b19103336506df38be9e60b4b6ed97e~fY7eADqDL0799607996epcas5p1t;
-	Thu, 30 Jan 2025 06:13:40 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.182]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Yk7xv05Z6z4x9Py; Thu, 30 Jan
-	2025 06:13:39 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	8F.A0.19710.2981B976; Thu, 30 Jan 2025 15:13:38 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250130060554epcas5p4035cae282c2bf0df98d9d1086ec86c97~fY0sAw_OS0133901339epcas5p4L;
-	Thu, 30 Jan 2025 06:05:54 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250130060554epsmtrp2f4afe7f2e17be1554037ce8a5e047085~fY0r-tffn1752517525epsmtrp2i;
-	Thu, 30 Jan 2025 06:05:54 +0000 (GMT)
-X-AuditID: b6c32a44-363dc70000004cfe-5c-679b189231f5
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	95.D2.18949.2C61B976; Thu, 30 Jan 2025 15:05:54 +0900 (KST)
-Received: from FDSFTE596 (unknown [107.122.82.131]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250130060551epsmtip274c505e64f7493196e8cdb953c009479~fY0oaE8sX0835108351epsmtip2a;
-	Thu, 30 Jan 2025 06:05:50 +0000 (GMT)
-From: "Swathi K S" <swathi.ks@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzk@kernel.org>
-Cc: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
-	<alexandre.torgue@foss.st.com>, <peppe.cavallaro@st.com>,
-	<joabreu@synopsys.com>, <rcsekar@samsung.com>, <ssiddha@tesla.com>,
-	<jayati.sahu@samsung.com>, <pankaj.dubey@samsung.com>,
-	<ravi.patel@samsung.com>, <gost.dev@samsung.com>, <robh@kernel.org>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <conor+dt@kernel.org>, <richardcochran@gmail.com>,
-	<mcoquelin.stm32@gmail.com>, <andrew@lunn.ch>, <alim.akhtar@samsung.com>,
-	<linux-fsd@tesla.com>
-In-Reply-To: <1da56c20-c522-428e-81ff-bc2f9ee0f524@kernel.org>
-Subject: RE: [PATCH v5 1/4] dt-bindings: net: Add FSD EQoS device tree
- bindings
-Date: Thu, 30 Jan 2025 11:35:17 +0530
-Message-ID: <005b01db72dd$059f81c0$10de8540$@samsung.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LVSSnnAO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 591DEC4CED2;
+	Thu, 30 Jan 2025 06:14:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738217644;
+	bh=piqnWVU9aUejBh25VUCTtHqSvx12RW2XNfKQy/OkbBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LVSSnnAOS+vyGmBU+a7q4FlRjDkoqO7XbFhENgwC8vzzq6WOsV+30IHP2+g+g/4wU
+	 Ic6JyOxN87Wtq0bxBHcncQXAsppKhgWFoksgNcKF3YZ/ZODueMKaBfnvopPw61TaPP
+	 RAzIduM84+PzsZjorO+OJSbQUfXbuDIVnos9PnPw=
+Date: Thu, 30 Jan 2025 07:14:01 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] container_of: add container_first() macro
+Message-ID: <2025013030-unleaded-answering-165d@gregkh>
+References: <Z5m76U5zh34WbeQY@kspp>
+ <2025012955-hypnotic-patronize-8931@gregkh>
+ <f6e24dfa-450e-4de6-87a6-6fcf7d83888d@embeddedor.com>
+ <2025012921-dense-unplanted-952b@gregkh>
+ <06aa1194-a7aa-4a5a-adb8-f6cd447d35d9@stanley.mountain>
+ <2025012951-plenty-clang-1e2b@gregkh>
+ <3979f87d-b7d7-48bb-b6ab-cd8165dbc3cc@stanley.mountain>
+ <2025012940-hardhat-usual-fbc6@gregkh>
+ <7f165e66-a0ff-48e2-a3f3-d5405a66c867@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQDx5RsunPn3lkU9PtjwM0wRa6rGBAHz93duAhzDMjcC64gLR7TKB+9g
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta0xTZxj2O6ftaZnVIyB8YlRSRyIo0GLBjylOJ5JjcJFpgruopYFjIZTS
-	9YKDP6AYcWyCqEwpt0rEcWcCZeVWGTCIsFAIl5QfqAgoAooBR7hMWeHAxr/nfd7nfZ/vfb+8
-	XNy2gHDiRig0tEohlQs4NqzqZtc97rdgpkyYPHUAzb/+BaDnOdUcZB5swlFJQyeGssxXWSi3
-	pZONRltfEGigsQZDLe0PMPQ07y0bmc2/EairOoWNKob72Who/Czqqc3ioHtmE4aS+0fYKOdD
-	KRu16h3QbMckQHmG9wRamjAANPSunkC6LiMbtfw1hqOleiOB8p7r2Ue2U1WFAxg1mmogqBrd
-	IEHpK7RURdGPHKryQTxVY5zBqClTH4dKqSoC1B8mETU614BTVY9nAPXxSjZBzVTsDNr0beSh
-	cFoaRqucaUVodFiEQuYnCDwjOSbx9hGK3EW+6IDAWSGNov0E/ieD3AMi5NaVCJxjpHKtlQqS
-	qtUCz8OHVNFaDe0cHq3W+AloZZhcKVZ6qKVRaq1C5qGgNZ+JhEIvb6swJDJcbxoGyjb7H54m
-	nUwAiWQy4HEhKYZJKfUgGdhwbck6AHvLuwgmmAYwe2EKY4JZAIde1eNrJabKIRaTaAAwdbyD
-	zQRjABYYGtjLKg7pBvNSTMQytifdYaXl15W+ONnBho2GRM5ygkcehvllmSsFduRXMNeSssKz
-	SBf40jDMWsZ80hdeK+zjMHgLfJIxssLj5F748P7E6pOc4fzoQzZjFgC7em5hjMYR/jn/M75s
-	DMkXPNjfxogg6Q8n7idwGGwHx9uqCAY7wZm3Dau8BBan9LEYHA4HF9JW+c9hY2+WledaDVxh
-	ea0nQ++A6e1lq76b4I3FEYzh+dCYs4Z3ww8T/astt8Hq/CniJhDo1o2mWzeabt0Iuv/d9IBV
-	BLbRSnWUjA71VooU9KX/fjw0OqoCrJyMm78RWHI/ejQBjAuaAOTiAnv++c57Mlt+mDQ2jlZF
-	S1RaOa1uAt7WfafhTltDo603p9BIRGJfodjHx0fsu99HJHDkJ9ZcldmSMqmGjqRpJa1aq8O4
-	PKcEzFE2Nxev3zceQwTu/vSfR5dr8yebIkp2bd9nfLS57ja59afjxQVzAbpaMHNK3k1nfBnZ
-	+e5Cb2mI5e6068usuMVdScfza2KulHvcPSoZEB3Fp429YwqvwCFPiSD/mqj8WZrtTQde5cXr
-	b5o23jjRLXP5PZh1MN1iep8xa2zM3umRvDFLsn8DT3xa6H2ncD5kMj1e7uV1omqpLHM+zgYE
-	F5R+08dvPphxvvv22BGXZwt5RKKDvtUibY5VnslSnlp0jHjzxeO8jNoNId9dNidpMJu/z13c
-	0vH95pIdX3Ne1bVrdf09n+xluehen8vck2qHTxWrL9iPXXriGnv9rG6XIfj0nckcAUsdLhW5
-	4Sq19F9IxoHduwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAKsWRmVeSWpSXmKPExsWy7bCSvO4hsdnpBhP7TCx+vpzGaPFg3jY2
-	i/N3DzFbrNl7jslizvkWFov5R86xWjw99ojd4uaBnUwWR04tYbK4t+gdq8X58xvYLS5s62O1
-	2PT4GqvFw1fhFpd3zWGzmHF+H5NF17UnrBbz/q5ltTi2QMzi2+k3jBaLtn5ht/j/eiujxcMP
-	e9gtZl3YwWpx5MwLZov/e3awWyx6sIDVQdpjy8qbTB5P+7eye+ycdZfdY8GmUo9NqzrZPDYv
-	qffYueMzk8f7fVfZPPq2rGL0OLjP0OPpj73MHlv2f2b0+Nc0l93j8ya5AL4oLpuU1JzMstQi
-	fbsEroyzc6ewFfwUrrh6eRpLA+NW/i5GTg4JAROJfZsfsnQxcnEICexmlHizaSk7REJS4lPz
-	VFYIW1hi5b/n7BBFzxglrnQdYAZJsAloSSzq2wfWICKgK7H5xnIwm1ngJavE0TUREA1vGSVW
-	PtnCCJLgFLCTWLpuNthUYQF/iWmXDoLZLAKqEs+2PmYBsXkFLCXaVl5lg7AFJU7OfMICMVRb
-	ovdhKyOMvWzha2aI6xQkfj5dxgpxhJvEhcuTmCBqxCWO/uxhnsAoPAvJqFlIRs1CMmoWkpYF
-	jCyrGCVTC4pz03OLDQuM8lLL9YoTc4tL89L1kvNzNzGCE42W1g7GPas+6B1iZOJgPMQowcGs
-	JMIbe25GuhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeb697U4QE0hNLUrNTUwtSi2CyTBycUg1M
-	3OVbvh24Xx9z46iF5twNx3wUJLfnTZ49k7/nwDvGcy++rTv760GlvfR534SDB5Y2FWU2ul2c
-	6LfmUniZRB+DrafvRrHQCebXah8Z8HPfOnJb3VZrR+Hs9MDPN0IU8+z/n+Lo0nqmedlddMax
-	itOLSlISli/8uKgmaPXODV82zO8Olr5fXnv8xIkHe9cGHFLJcdY0Y7617oXB1ZaMPUJf1myd
-	HjVPTbrwdN/eeaskWrb5S+XMObxldUCl1CX/ia7C3p/27wrz4DMLXv32tfr2z1fn8b5IviW2
-	a91UrWUFLTMt7/q4fZpes7BCivFp7JLDygGt1/nqxd5J2pmEPHqVO6PjUGnu8QZpLuFWEcWl
-	ukosxRmJhlrMRcWJALevC2mjAwAA
-X-CMS-MailID: 20250130060554epcas5p4035cae282c2bf0df98d9d1086ec86c97
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250128102725epcas5p44b02ac2980a3aeb0016ce9fdef011ecf
-References: <20250128102558.22459-1-swathi.ks@samsung.com>
-	<CGME20250128102725epcas5p44b02ac2980a3aeb0016ce9fdef011ecf@epcas5p4.samsung.com>
-	<20250128102558.22459-2-swathi.ks@samsung.com>
-	<1da56c20-c522-428e-81ff-bc2f9ee0f524@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7f165e66-a0ff-48e2-a3f3-d5405a66c867@embeddedor.com>
 
+On Thu, Jan 30, 2025 at 10:06:00AM +1030, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 30/01/25 02:38, Greg KH wrote:
+> > On Wed, Jan 29, 2025 at 05:06:54PM +0300, Dan Carpenter wrote:
+> > > On Wed, Jan 29, 2025 at 02:14:14PM +0100, Greg KH wrote:
+> > > > On Wed, Jan 29, 2025 at 01:39:27PM +0300, Dan Carpenter wrote:
+> > > > > On Wed, Jan 29, 2025 at 09:34:07AM +0100, Greg KH wrote:
+> > > > > > On Wed, Jan 29, 2025 at 06:35:18PM +1030, Gustavo A. R. Silva wrote:
+> > > > > > > 
+> > > > > > > 
+> > > > > > > On 29/01/25 16:24, Greg KH wrote:
+> > > > > > > > On Wed, Jan 29, 2025 at 03:56:01PM +1030, Gustavo A. R. Silva wrote:
+> > > > > > > > > This is like container_of_const() but it contains an assert to
+> > > > > > > > > ensure that it's using the first member in the structure.
+> > > > > > > > 
+> > > > > > > > But why?  If you "know" it's the first member, just do a normal cast.
+> > > > > > > > If you don't, then you probably shouldn't be caring about this anyway,
+> > > > > > > > right?
+> > > > > > > 
+> > > > > > > This is more about the cases where the member _must_ be first in the
+> > > > > > > structure. See below for an example related to -Wflex-array-member-not-at-end
+> > > > > > 
+> > > > > > That's fine, but that's a build-time issue, you should enforce that in
+> > > > > > the structure itself, why are you forcing people to remember to use this
+> > > > > > macro when you want to use the field?  There's nothing preventing anyone
+> > > > > > from using container_of() instead here, and nothing will catch that from
+> > > > > > what I can tell.
+> > > > > 
+> > > > > The new definition has a static_assert() in it so it's enforced about
+> > > > > build time.
+> > > > 
+> > > > Yes, but that forces you to "know" to do that in the .c file.  How do
+> > > > you know to use this, and if you remove it or change it to
+> > > > container_of(), it works just fine again.
+> > > > 
+> > > 
+> > > I guess my use case is different from Gustavo's.  For him, using
+> > > container_of() is fine.  We probably don't even need an assert because
+> > > once you see a struct_group_tagged() then you know the order is important.
+> > 
+> > Who knows this?  The developer?  What are they supposed to "know" here?
+> > I sure don't :)
+> > 
+> > Having some sort of "__must_be_first" marking for a field is fine and
+> > break the build if that doesn't happen.  Otherwise this is something
+> > that is not going to be used properly over time.
+> 
+> I'm currently dealing with this situation in the following way:
+> 
+>  struct libipw_hdr_3addr {
+> -	__le16 frame_ctl;
+> -	__le16 duration_id;
+> -	u8 addr1[ETH_ALEN];
+> -	u8 addr2[ETH_ALEN];
+> -	u8 addr3[ETH_ALEN];
+> -	__le16 seq_ctl;
+> +	/* New members MUST be added within the __struct_group() macro below. */
+> +	__struct_group(libipw_hdr_3addr_hdr, hdr, __packed,
+> +		__le16 frame_ctl;
+> +		__le16 duration_id;
+> +		u8 addr1[ETH_ALEN];
+> +		u8 addr2[ETH_ALEN];
+> +		u8 addr3[ETH_ALEN];
+> +		__le16 seq_ctl;
+> +	);
+>  	u8 payload[];
+>  } __packed;
+> +static_assert(offsetof(struct libipw_hdr_3addr, payload) == sizeof(struct libipw_hdr_3addr_hdr),
+> +	      "struct member likely outside of __struct_group()");
+> 
+> "We also want to ensure that when new members need to be added to the
+> flexible structure, they are always included within the newly created
+> tagged struct. For this, we use `static_assert()`. This ensures that the
+> memory layout for both the flexible structure and the new tagged struct
+> is the same after any changes." [1]
 
+That's nice, much better and it is right where the structure is defined
+making it more likely to stay there over time.
 
-> -----Original Message-----
-> From: Krzysztof Kozlowski <krzk=40kernel.org>
-> Sent: 28 January 2025 19:45
-> To: Swathi K S <swathi.ks=40samsung.com>; robh=40kernel.org;
-> davem=40davemloft.net; edumazet=40google.com; kuba=40kernel.org;
-> pabeni=40redhat.com; conor+dt=40kernel.org; richardcochran=40gmail.com;
-> mcoquelin.stm32=40gmail.com; andrew=40lunn.ch; alim.akhtar=40samsung.com;
-> linux-fsd=40tesla.com
-> Cc: netdev=40vger.kernel.org; devicetree=40vger.kernel.org; linux-
-> kernel=40vger.kernel.org; linux-stm32=40st-md-mailman.stormreply.com;
-> linux-arm-kernel=40lists.infradead.org; linux-samsung-soc=40vger.kernel.o=
-rg;
-> alexandre.torgue=40foss.st.com; peppe.cavallaro=40st.com;
-> joabreu=40synopsys.com; rcsekar=40samsung.com; ssiddha=40tesla.com;
-> jayati.sahu=40samsung.com; pankaj.dubey=40samsung.com;
-> ravi.patel=40samsung.com; gost.dev=40samsung.com
-> Subject: Re: =5BPATCH v5 1/4=5D dt-bindings: net: Add FSD EQoS device tre=
-e
-> bindings
->=20
-> On 28/01/2025 11:25, Swathi K S wrote:
-> > +  Tesla ethernet devices based on dwmmac support Gigabit ethernet.
-> > +
-> > +allOf:
-> > +  - =24ref: snps,dwmac.yaml=23
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: tesla,fsd-ethqos.yaml
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    minItems: 5
-> > +    maxItems: 10
->=20
-> Why is this flexible?
->=20
-> Anyway, you need to list and describe the items instead of min/maxItems.
->=20
-> > +
-> > +  clock-names:
-> > +    minItems: 5
-> > +    maxItems: 10
->=20
-> Same here.
->=20
-> > +
-> > +  iommus:
-> > +    maxItems: 1
-> > +
-> > +  phy-mode:
-> > +    enum:
-> > +     - rgmii-id
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - clock-names
-> > +  - iommus
-> > +  - phy-mode
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - =7C
-> > +    =23include <dt-bindings/clock/fsd-clk.h>
-> > +    =23include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +    ethernet_1: ethernet=4014300000 =7B
->=20
-> Please implement last comment from Rob.
+> We could probably create struct_group_first() instead of container_first().
 
-This label is used to enable the node in dts. Could see similar labels in o=
-ther yaml files. Am I missing something here?
+Like this?
 
->=20
-> > +              compatible =3D =22tesla,fsd-ethqos=22;
-> > +              reg =3D <0x0 0x14300000 0x0 0x10000>;
->=20
-> And since there is going to be new version, switch to the preferred
-> indentation (4-space). Other option is 2 spaces, but not 8.
->=20
-> > +...
->=20
->=20
-> Best regards,
-> Krzysztof
+	#define struct_group_first(s, n)	static_assert(offsetof(s, n) == sizeof(s), "struct member likely outside of __struct_group(), please fix!")
 
+And then the above would be:
+struct_group_fist(struct libipw_hdr_3addr, payload);
+
+Hm, use of "payload" here feels odd but you get the idea.
+
+> Anyways, so far so good.  For some reason I was under the impression
+> that you two guys wanted the container_first() macro.
+
+I don't :)
+
+thanks,
+
+greg k-h
