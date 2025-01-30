@@ -1,75 +1,117 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D32139B
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 16:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92814286A1
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 16:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738253722; cv=none; b=o4LLMUrUufYPnpDcqIweW5/XZh5JRqXx6D55Fd07yxniu7p9FDXbymYZiyDKM3v2/Ewec7wdDHiNvfsq0tjcNeLp/NO6Iv2xnB/VyZC3fkVqEetMkHPmPTueHwudoHbzs/UVteA7zaKPQgRwP5al2mctIZ9OxqtocGgTZl3Ngik=
+	t=1738253732; cv=none; b=ds7GvKhwwf7DoQ/E+9nk69siMMNpg9ddLGtIEC4WbOC89XAWWd+CeuY6wT093wjsuyBT8+jofNljZUZeDFQCDLgtjy+7oI+EZ+sXUGMFhecsExiqQPRgsb/IR6YwhKcYVxstysrzYtxFGVQxswQtmifSp/ln+gVHiYw+MeYvy4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738253722; c=relaxed/simple;
-	bh=dO+OPJCXXibwKzWyjQUcel5uqQk/wf0H/j7qRS1SYbY=;
+	s=arc-20240116; t=1738253732; c=relaxed/simple;
+	bh=LjC9nGzAa/sZ5dNduS+zcVelMAVnhMI3/KmvffdlNPM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HY+9zta+nrw3N2RTWJ+jKsKz6O79802aGobWDGG6hwhoQNsAMxj4nly7ZiaZQ+Li8MUMdadMjE6cIIG1Gx9XfeDEPCNKxtDl1sQn3hWp76oph8wCs94ws9ZrVG/YcphejjblQD2/gg8VSAFd4K31EURVc2KUcUoc3RrFdgEHvTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FUI1oZOb; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=NdMtPuwqnUnvEyY84crR3isuefa8QIzVJRXC5GqE1iSx6/BAx+uyLHB4qQQ89pizXbJFdXi77ifq4EhNqh0AuWqIHvVj/PIuCG5aDc2u1f6m1T878uQlWFrm82AuXF17t08AX8pRO2fVFH06kR7DXR0catIRSva9+FDLaZuUISY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=FWt9Gu/N; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FUI1oZOb"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3862d161947so570050f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:15:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FWt9Gu/N"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-385dece873cso538514f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:15:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738253719; x=1738858519; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tJ5gAZC0bHzN8tU6kHMbxQ3VEtHEehzEjoAQRurzPa4=;
-        b=FUI1oZObzcKk2iz0B2Qa6z/W/aCnRcPtTguKz24LZ1wewpQplNLfgsWBXB+B57zPLM
-         0fhPGYEmva18x2QxE1y5RsXUCaC6SWA09ciQba3DytGW4dpIx3tqA/xyVjJfbpQDF3AG
-         d8EmR6sv+lSzzkl8X9zXBP1YUdDsseb2RB2ctrF/kRXy3FrFUVwfF1KvDnsjRDow/PWx
-         GYcuuJgZxTihfMbfbSGCdwJPn2KoTceNw+YyFF6QiVmP/dbfxX7Bb4z0b6ZpkSTGRE87
-         tCU81CsxDEQB1PdNzEynCd58N/hCzXI/aKqbuMHZPigluxxfh3rV8CC4XFb1mjPWsGL1
-         wsJw==
+        d=ffwll.ch; s=google; t=1738253729; x=1738858529; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=egOGJAXdzlspJHrqV9BICD/kSifyMaJ0VQH1AZZmLmM=;
+        b=FWt9Gu/NWDPCJhcwr1+skgn6XCwEt2Vp8MiBBWdROIx+gs9H+X0FreJ05P4jElgdZr
+         FWrppqk2N2X0FsYD1XhK6cmRmSkis80iRxbPG6q+rX4gzTC4uxXI24rjKl+iPqc1eXwC
+         35mBTN/dsqyU2124Eid0My6XaJtwNoNJLBv4k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738253719; x=1738858519;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tJ5gAZC0bHzN8tU6kHMbxQ3VEtHEehzEjoAQRurzPa4=;
-        b=jbVEKeZKc5DRc0YMLkwkh9NVyd+gI6rDE43fjj+3RvoKBAYgP786Q60VJ+2TCEv+SK
-         KXo+fO/ODfns1a25J83TY8DBOefGJSIBpm/KrggYn4FJTP9zCDuAWnVT7MoY/7Kc1Rac
-         cPd75E59eVKaWDqlV7QDa3nqlN8LlD0vnvp4TYW+GIu1TF6BmjvOPAukJfexOck567LN
-         NiLHMVSY8pnoEXi9mh1wZlu5aQOTaIEUPp/XJ59m72rnWcxR33BewkFirXfBwjzKS2H7
-         0q/D4EGMX16A7WUrdAOX0t7XpW3TyNhEKRkPbBHrMM0GMbmURnZkx2UuGbFVMy2EE3S3
-         AgFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXh1GYJq6Rqoc8ZkrcGEpftJ6zRhFUzl1bzaIrV9JqESkIujQq29iP+oncQ0J9dK6FQP/n618/cBvZ+lgQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzTA3rj3RVexwQ4SCr9f01BYPXj9qaHJ+OdTt7iJFttGVw2vX8
-	SKdtA3av3/qLoGXplMaqwBykAke1q3jb18l3NJy6G+WWnFoARbKUAbT3EbPglOM=
-X-Gm-Gg: ASbGncvgEm/LnPsCF8fykyAq4tfPPCk1fiOndRLTnDMhvZV3/FoujKA3JkWeXijb86j
-	/F4S9yKVjkokbTwOeq1ztGvRYsN1SwqftKcbrMaRiZXEJ23I62Nyb7PFWngPNSyWFDQRS8wpuY3
-	dKxios1qrc3BnHMUMKxIAWPjduvb+9P3je0vMhKal9rymkyglE3FWhjBXvsx07/b7yuCjyDZDZ5
-	L6l480y30bZiv67NCnYdzd3c3prrMCBxyKytZ992ikYx7A5TgDL82tfXeQm9sERNUfDWv2F53cR
-	mBxiPF3jWEiUDfW3Ta/t
-X-Google-Smtp-Source: AGHT+IEWAxjoEy901q5jZtjgoOuXqWVHPE/3mfWiQmIt2BfJ1PCxbLkP3Jb1C2QUHIQvntE2tv4LNw==
-X-Received: by 2002:a5d:6d86:0:b0:38b:ef22:d8c3 with SMTP id ffacd0b85a97d-38c5209395cmr8931986f8f.35.1738253718683;
-        Thu, 30 Jan 2025 08:15:18 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38c5c1b5492sm2419555f8f.73.2025.01.30.08.15.17
+        d=1e100.net; s=20230601; t=1738253729; x=1738858529;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=egOGJAXdzlspJHrqV9BICD/kSifyMaJ0VQH1AZZmLmM=;
+        b=qPwFpzKtAypXTqO58GecYvJdVJ3szgSpkIGsfDNgkAgFO+ByMa6zhuRPC83lStRlNc
+         K5Q/Ywpl+ZcBQJihdWvOT7C0/3QOJ47r5TWwm6xxdc49hDL+fH6Dh91aD/uytISKX+nV
+         ch6Q/gOetNoP5JA8uZJnAdVftKGjm+R5is9Uql4C5s0ZlIGZk++w1aiVRCS96SvVB8WH
+         lkTZthJcbmrJZivkeVzmIBm6wVZcomxOQDAc5U7gsouivLuek1NLhuDo/w2O0KIi/fR3
+         KNa24h2/z+lq6DBPovLrY79sFUIcX1lqrSA23oXFsjLLGuXXDFnVzW4+ChVkqx9XU3WK
+         d71w==
+X-Forwarded-Encrypted: i=1; AJvYcCVZBJPWEPCVTy/aO7svNDOIB+K06hDhpGfOISmGAsALMR6CjPcSfRnc+hcuv/i87Muu7/SmbTEmLB8Gle8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl/31wg35srWsHWv1fENrGm8yKYfjSWtV2bSw1WkUFsVQprGNw
+	LtxQMRSNY9cbqbB7Rp1UbhWKhsUE4kr5rSa+ieUDFmuWqTpZk2ciMTk0WyQ1Ru0=
+X-Gm-Gg: ASbGncs3G6Giy/wlGTkiJ1eINN659RnUxnlJevXCVNz9sw6xc3g2e70IcPQ0UOnmaaZ
+	Ztz4SiRk2jIv7b9rSFck565Brfu2Q7JjVx7zJwEmE+D3r57FNGn4PjB2mEK74M2EGn5IBta9r4b
+	9mtXVSGyxib4rzj5rxz9xOoHjvGkB6o2gvJyrBExqKUSLJiNAX7Z2oyHBWRULKYoQByxb0Ku+3x
+	GYPAc5lFQpJFlI4htZitIk3HTGK6jemTcxqiLJIUmK6en4mRdUb/2J7frjWRcV8UNJgoJm8W/zm
+	FG3VrnTzWhvCY3HHicxCcMa8ViU=
+X-Google-Smtp-Source: AGHT+IFrK9TYn7kQQFdMHsFiVHo3J2E8mwQ+Y3KTlIT27Ql0a3K5so/x8gXOhuMpz8Mjv2POiya4DQ==
+X-Received: by 2002:a05:6000:1a86:b0:385:e3b8:f331 with SMTP id ffacd0b85a97d-38c5194a53dmr7160268f8f.14.1738253727206;
+        Thu, 30 Jan 2025 08:15:27 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b57b6sm2393207f8f.72.2025.01.30.08.15.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 08:15:18 -0800 (PST)
-Date: Thu, 30 Jan 2025 19:15:15 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: less size_t please (was Re: [PATCH net] xfrm: fix integer
- overflow in xfrm_replay_state_esn_len())
-Message-ID: <1ee57015-a2c3-4dd1-99c2-53e9ff50a09f@stanley.mountain>
-References: <03997448-cd88-4b80-ab85-fe1100203339@p183>
+        Thu, 30 Jan 2025 08:15:26 -0800 (PST)
+Date: Thu, 30 Jan 2025 17:15:24 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Florent Tomasin <florent.tomasin@arm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Yong Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, nd@arm.com,
+	Akash Goel <akash.goel@arm.com>
+Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali CSF
+ GPUs
+Message-ID: <Z5ulnIuzapOVBQgb@phenom.ffwll.local>
+Mail-Followup-To: Florent Tomasin <florent.tomasin@arm.com>,
+	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Yong Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, nd@arm.com,
+	Akash Goel <akash.goel@arm.com>
+References: <cover.1738228114.git.florent.tomasin@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,61 +120,253 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <03997448-cd88-4b80-ab85-fe1100203339@p183>
+In-Reply-To: <cover.1738228114.git.florent.tomasin@arm.com>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
-On Thu, Jan 30, 2025 at 04:44:42PM +0300, Alexey Dobriyan wrote:
-> > -static inline unsigned int xfrm_replay_state_esn_len(struct xfrm_replay_state_esn *replay_esn)
-> > +static inline size_t xfrm_replay_state_esn_len(struct xfrm_replay_state_esn *replay_esn)
-> >  {
-> > -	return sizeof(*replay_esn) + replay_esn->bmp_len * sizeof(__u32);
-> > +	return size_add(sizeof(*replay_esn), size_mul(replay_esn->bmp_len, sizeof(__u32)));
+On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin wrote:
+> Hi,
 > 
-> Please don't do this.
+> This is a patch series covering the support for protected mode execution in
+> Mali Panthor CSF kernel driver.
 > 
-> You can (and should!) make calculations and check for overflow at the
-> same time. It's very efficient.
+> The Mali CSF GPUs come with the support for protected mode execution at the
+> HW level. This feature requires two main changes in the kernel driver:
 > 
-> > 1) Use size_add() and size_mul().  This change is necessary for 32bit systems.
+> 1) Configure the GPU with a protected buffer. The system must provide a DMA
+>    heap from which the driver can allocate a protected buffer.
+>    It can be a carved-out memory or dynamically allocated protected memory region.
+>    Some system includes a trusted FW which is in charge of the protected memory.
+>    Since this problem is integration specific, the Mali Panthor CSF kernel
+>    driver must import the protected memory from a device specific exporter.
 > 
-> This bloats code on 32-bit.
+> 2) Handle enter and exit of the GPU HW from normal to protected mode of execution.
+>    FW sends a request for protected mode entry to the kernel driver.
+>    The acknowledgment of that request is a scheduling decision. Effectively,
+>    protected mode execution should not overrule normal mode of execution.
+>    A fair distribution of execution time will guaranty the overall performance
+>    of the device, including the UI (usually executing in normal mode),
+>    will not regress when a protected mode job is submitted by an application.
+> 
+> 
+> Background
+> ----------
+> 
+> Current Mali Panthor CSF driver does not allow a user space application to
+> execute protected jobs on the GPU. This use case is quite common on end-user-device.
+> A user may want to watch a video or render content that is under a "Digital Right
+> Management" protection, or launch an application with user private data.
+> 
+> 1) User-space:
+> 
+>    In order for an application to execute protected jobs on a Mali CSF GPU the
+>    user space application must submit jobs to the GPU within a "protected regions"
+>    (range of commands to execute in protected mode).
+> 
+>    Find here an example of a command buffer that contains protected commands:
+> 
+> ```
+>           <--- Normal mode ---><--- Protected mode ---><--- Normal mode --->
+>    +-------------------------------------------------------------------------+
+>    | ... | CMD_0 | ... | CMD_N | PROT_REGION | CMD_N+1 | ... | CMD_N+M | ... |
+>    +-------------------------------------------------------------------------+
+> ```
+> 
+>    The PROT_REGION command acts as a barrier to notify the HW of upcoming
+>    protected jobs. It also defines the number of commands to execute in protected
+>    mode.
+> 
+>    The Mesa definition of the opcode can be found here:
+> 
+>      https://gitlab.freedesktop.org/mesa/mesa/-/blob/main/src/panfrost/lib/genxml/v10.xml?ref_type=heads#L763
+
+Is there also something around that implements egl_ext_protected_context
+or similar in mesa? I think that's the minimal bar all the protected gpu
+workload kernel support patches cleared thus far, since usually getting
+the actual video code stuff published seems to be impossible.
+-Sima
+
+> 
+> 2) Kernel-space:
+> 
+>    When loading the FW image, the Kernel driver must also load the data section of
+>    CSF FW that comes from the protected memory, in order to allow FW to execute in
+>    protected mode.
+> 
+>    Important: this memory is not owned by any process. It is a GPU device level
+>               protected memory.
+> 
+>    In addition, when a CSG (group) is created, it must have a protected suspend buffer.
+>    This memory is allocated within the kernel but bound to a specific CSG that belongs
+>    to a process. The kernel owns this allocation and does not allow user space mapping.
+>    The format of the data in this buffer is only known by the FW and does not need to
+>    be shared with other entities. The purpose of this buffer is the same as the normal
+>    suspend buffer but for protected mode. FW will use it to suspend the execution of
+>    PROT_REGION before returning to normal mode of execution.
+> 
+> 
+> Design decisions
+> ----------------
+> 
+> The Mali Panthor CSF kernel driver will allocate protected DMA buffers
+> using a global protected DMA heap. The name of the heap can vary on
+> the system and is integration specific. Therefore, the kernel driver
+> will retrieve it using the DTB entry: "protected-heap-name".
+> 
+> The Mali Panthor CSF kernel driver will handle enter/exit of protected
+> mode with a fair consideration of the job scheduling.
+> 
+> If the system integrator does not provide a protected DMA heap, the driver
+> will not allow any protected mode execution.
+> 
+> 
+> Patch series
+> ------------
+> 
+> The series is based on:
+> 
+>   https://lore.kernel.org/lkml/20230911023038.30649-1-yong.wu@mediatek.com/#t
+> 
+> [PATCHES 1-2]:
+>   These patches were used for the development of the feature and are not
+>   initially thought to land in the Linux kernel. They are mostly relevant
+>   if someone wants to reproduce the environment of testing.
+> 
+>   Note: Please, raise interest if you think those patches have value in
+>         the Linux kernel.
+> 
+>   * dt-bindings: dma: Add CMA Heap bindings
+>   * cma-heap: Allow registration of custom cma heaps
+> 
+> [PATCHES 3-4]:
+>   These patches introduce the Mali Panthor CSF driver DTB binding to pass
+>   the protected DMA Heap name and the handling of the protected DMA memory
+>   allocations in the driver.
+> 
+>   Note: The registration of the protected DMA buffers is done via GEM prime.
+>   The direct call to the registration function, may seems controversial and
+>   I would appreciate feedback on that matter.
+> 
+>   * dt-bindings: gpu: Add protected heap name to Mali Valhall CSF binding
+>   * drm/panthor: Add support for protected memory allocation in panthor
+> 
+> [PATCH 5]:
+>   This patch implements the logic to handle enter/exit of the GPU protected
+>   mode in Panthor CSF driver.
+> 
+>   Note: to prevent scheduler priority inversion, only a single CSG is allowed
+>         to execute while in protected mode. It must be the top priority one.
+> 
+>   * drm/panthor: Add support for entering and exiting protected mode
+> 
+> Testing
+> -------
+> 
+> 1) Platform and development environment
+> 
+>    Any platform containing a Mali CSF type of GPU and a protected memory allocator
+>    that is based on DMA Heap can be used. For example, it can be a physical platform
+>    or a simulator such as Arm Total Compute FVPs platforms. Reference to the latter:
+> 
+>      https://developer.arm.com/Tools%20and%20Software/Fixed%20Virtual%20Platforms/Total%20Compute%20FVPs
+> 
+>    To ease the development of the feature, a carved-out protected memory heap was
+>    defined and managed using a modified version of the CMA heap driver.
+> 
+> 2) Protected job submission:
+> 
+>    A protected mode job can be created in Mesa following this approach:
+> 
+> ```
+> diff --git a/src/gallium/drivers/panfrost/pan_csf.c b/src/gallium/drivers/panfrost/pan_csf.c
+> index da6ce875f86..13d54abf5a1 100644
+> --- a/src/gallium/drivers/panfrost/pan_csf.c
+> +++ b/src/gallium/drivers/panfrost/pan_csf.c
+> @@ -803,8 +803,25 @@ GENX(csf_emit_fragment_job)(struct panfrost_batch *batch,
+>        }
+>     }
+> 
+> +   if (protected_cmd) {
+> +      /* Number of commands to execute in protected mode in bytes.
+> +       * The run fragment and wait commands. */
+> +      unsigned const size = 2 * sizeof(u64);
+> +
+> +      /* Wait for all previous commands to complete before evaluating
+> +       * the protected commands. */
+> +      cs_wait_slots(b, SB_ALL_MASK, false);
+> +      cs_prot_region(b, size);
+> +   }
+> +
+>     /* Run the fragment job and wait */
+>     cs_run_fragment(b, false, MALI_TILE_RENDER_ORDER_Z_ORDER, false);
+> +
+> +   /* Wait for all protected commands to complete before evaluating
+> +    * the normal mode commands. */
+> +   if (protected_cmd)
+> +      cs_wait_slots(b, SB_ALL_MASK, false);
+> +
+>     cs_wait_slot(b, 2, false);
+> 
+>     /* Gather freed heap chunks and add them to the heap context free list
+> ```
+> 
+> 
+> Constraints
+> -----------
+> 
+> At the time of developing the feature, Linux kernel does not have a generic
+> way of implementing protected DMA heaps. The patch series relies on previous
+> work to expose the DMA heap API to the kernel drivers.
+> 
+> The Mali CSF GPU requires device level allocated protected memory, which do
+> not belong to a process. The current Linux implementation of DMA heap only
+> allows a user space program to allocate from such heap. Having the ability
+> to allocate this memory at the kernel level via the DMA heap API would allow
+> support for protected mode on Mali CSF GPUs.
+> 
+> 
+> Conclusion
+> ----------
+> 
+> This patch series aims to initiate the discussion around handling of protected
+> mode in Mali CSG GPU and highlights constraints found during the development
+> of the feature.
+> 
+> Some Mesa changes are required to construct a protected mode job in user space,
+> which can be submitted to the GPU.
+> 
+> Some of the changes may seems controversial and we would appreciate getting
+> opinion from the community.
+> 
+> 
+> Regards,
+> 
+> Florent Tomasin (5):
+>   dt-bindings: dma: Add CMA Heap bindings
+>   cma-heap: Allow registration of custom cma heaps
+>   dt-bindings: gpu: Add protected heap name to Mali Valhall CSF binding
+>   drm/panthor: Add support for protected memory allocation in panthor
+>   drm/panthor: Add support for entering and exiting protected mode
+> 
+>  .../devicetree/bindings/dma/linux,cma.yml     |  43 ++++++
+>  .../bindings/gpu/arm,mali-valhall-csf.yaml    |   6 +
+>  drivers/dma-buf/heaps/cma_heap.c              | 120 +++++++++++------
+>  drivers/gpu/drm/panthor/Kconfig               |   1 +
+>  drivers/gpu/drm/panthor/panthor_device.c      |  22 +++-
+>  drivers/gpu/drm/panthor/panthor_device.h      |  10 ++
+>  drivers/gpu/drm/panthor/panthor_fw.c          |  46 ++++++-
+>  drivers/gpu/drm/panthor/panthor_fw.h          |   2 +
+>  drivers/gpu/drm/panthor/panthor_gem.c         |  49 ++++++-
+>  drivers/gpu/drm/panthor/panthor_gem.h         |  16 ++-
+>  drivers/gpu/drm/panthor/panthor_heap.c        |   2 +
+>  drivers/gpu/drm/panthor/panthor_sched.c       | 124 ++++++++++++++++--
+>  12 files changed, 382 insertions(+), 59 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/linux,cma.yml
+> 
+> --
+> 2.34.1
 > 
 
-I'm not sure I understand.  On 32-bit systems a size_t and an unsigned
-int are the same size.  Did you mean to say 64-bit?
-
-Declaring sizes as u32 leads to integer overflows like this one.  If
-you look at integer overflows with security implications there is a
-5 to 1 ratio of bugs that only affect 32-bit vs bugs that affect
-everything because it's just so much easier to overflow a 32-bit size.
-
-aab98e2dbd64 ("ksmbd: fix integer overflows on 32 bit systems")
-16ebb6f5b629 ("nfp: bpf: prevent integer overflow in nfp_bpf_event_output()")
-09c4a6101532 ("rtc: tps6594: Fix integer overflow on 32bit systems")
-55cf2f4b945f ("binfmt_flat: Fix integer overflow bug on 32 bit systems")
-fbbd84af6ba7 ("chelsio/chtls: prevent potential integer overflow on 32bit")
-bd96a3935e89 ("rdma/cxgb4: Prevent potential integer overflow on 32bit")
-d0257e089d1b ("RDMA/uverbs: Prevent integer overflow issue")
-3c63d8946e57 ("svcrdma: Address an integer overflow")
-7f33b92e5b18 ("NFSD: Prevent a potential integer overflow")
-
-> 	int len;
-> 	if (__builtin_mul_overflow(replay_esn->bmp_len, 4, &len)) {
-> 		return true;
-> 	}
-> 	if (__builtin_add_overflow(len, sizeof(*replay_esn), &len)) {
-> 		return true;
-> 	}
-
-This is so ugly...  :/  I'd prefer to just do open code the check at
-that point.
-
-static inline int xfrm_replay_state_esn_len(struct xfrm_replay_state_esn *replay_esn)
-{
-	if (replay_esn->bmp_len > (INT_MAX - sizeof(*replay_esn)) / sizeof(__u32))
-		return -EINVAL;
-	return sizeof(*replay_esn) + replay_esn->bmp_len * sizeof(__u32);
-}
-
-regards,
-dan carpenter
-
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
