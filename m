@@ -1,106 +1,190 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED42F1E9B18
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 16:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9080B1EE026;
+	Thu, 30 Jan 2025 16:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738254934; cv=none; b=MJhsF8nW8jR4XiLW/NEj8ClFupjIjHrH0sujafEYTMQFp+OvJ0o3v1w8WmTB/rBIELS1YXt8uo+K902YJGS9pOynh8ETwAEXx5YEyCUVZJ6cm+UvZrvI5lOe1FbxH14chFDz2mf/Fy0YlFbtrfw8Zc07pOLLUo78IdgHJtNRNAM=
+	t=1738254938; cv=none; b=QBzmiKpVHRjaqJFEUpF2lYraEB7AljQlMWv7WGl6UO9knLWu1mxc+Bj7EMh9KQk9yxbLerTUSnLvBulSkcoLC7DU0IvzJRLmsft/0aAUfjRI0dAPX+CjLlsm8FJKd4KNyfoqaT5pxVUTV4vLfArGfO8LeBXSZWYWI1D1R+KAI3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738254934; c=relaxed/simple;
-	bh=wm/GjTYZmSoQIdMarvhxBrtJ0uNjvcCc+5oIO1kYldE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mmHVgCH4Po7yuJE1/zYTO+wVOthXRF7C4cKjiLnMf5MxtDL/HPufuKdlZaDdGGxTjS/l+pzVt6NaVHZMZUBt+5PG2BLRimFv4fJOnyUgXu7MiK5iXcEPG0gx5dN8985eTkOaXULr1odRkEj4aWHmRs1nrpC+AF3m8IoWsBmdPjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=L8YxryfM; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1738254938; c=relaxed/simple;
+	bh=tWdej+t6ZKarkkq3deB7eqzecP5bcOdeKj0Mm82AvKs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=cgajDCTGTeIsSqNzgibXFBMJ3WOVZ/0WN88ogEGDcgLWBQMxpE9oZjKKFDZiQQDV0kkjoio3RRL/g8FkYof87PPiJ5sBzrJrZn+5Q3TIxyWON5ooeviaeF/ckIfUimDD5UkSwWIKkXPoYE2ex0mzn//fry1ehJIt13SoGkSHvHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=ny6QvcX/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=k4DQPbj+; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="L8YxryfM"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab6f636d821so23783166b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:35:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1738254931; x=1738859731; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fuEDpAnG1sazTNLQRV+DgH04oKDY04Gu9xv5BY6PwaA=;
-        b=L8YxryfMBFK/GtAKJM+myKxzvn1A3xfuMj7aOo3p+6j8RKpP/kt8bQQxZSF7bA9gYn
-         nHz72CoTEBzWL99qAe5OVltJaZFYHCf8mdKqe1KesjlzxmDJfrY4fWY+7kBpl63bmr7L
-         WDp1n5m3otMOSKXML7y691AoeUpx0RfCS2GuQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738254931; x=1738859731;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fuEDpAnG1sazTNLQRV+DgH04oKDY04Gu9xv5BY6PwaA=;
-        b=vprTY8iXGOSnq1Z4mit7wTSDNcnUw/VEVIZ34aEsCglC05fvsd8ywn8v61+knkkW9e
-         ImuG2bE+FgIvfgct6A256ABfVgHsdlb3q1HoRNdg9wZeyl/0qufeEvlKUiEdnFD0RyOd
-         OmxPGYIs39cl8+/JGRv2lxxgWK1NhIHfcIMdIRWl/a03R4SIhGjkop0H3DtGWE0YbMvD
-         sCagWQvE3+aq8TachMic3oKdkCaWepLIHYYv9oS/DjPraPBwnSN+SJYRGYgag3sy6N8U
-         R/mPS1KbjNAhPlH98j4YT0GecP5kKr+E1ej0fH9bToqYZ+qKf1lcfymGpXH6U6dQ6bmR
-         XrZw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7QwGQCvECo0ANA9+tOTld5lQGTHJr34wIo9N+arZW/JSD/lmeuX3UoSeLxUOElYSBFwkak36EU0WlnGg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo5GuobjQVCDlR9omAb8gMyJiUYDBI7ogrVNKreOtuV2RqA0+a
-	3l5OJJz+D4cg7CS1Fkmfw75yvtzAWK28HP+zpFU4HaJBpQodxgRnfhL9MThONJZD7S5QqVWNGDl
-	o9JA=
-X-Gm-Gg: ASbGncut5tdj4spgXWN/MleM6TG03yVa8uz0HEBJgd7Dz5W6TAGxWfdDTAel8EbJ3dc
-	3yUKzBT7iDVdrf+znl47fiNHrYWQV293t/vLQX4K4uaEfkZ/BqjbxNHWRH9ss8vNLOPAvL/uakB
-	ug/iiqjhqrEWe9GuFHswXZWXuWZX4e2PGT4cEoQ5cGFMgnXAnfYL8NnmpKSy79PCb30b2i7eL8J
-	hcCjY5krQWYxuDBGxFiTqgtYRFas5l9bHns+1UNO0A5DWXOHsBgeL5zKs8JmnFMeFCZKblfvUT2
-	MSg3u05KYE+0ZFPi/4Xu+dyIjTTlmKeltDG5qS73bG00wG9QScT+qymfQYSzMQaFdg==
-X-Google-Smtp-Source: AGHT+IHTnMvoMXKhznrFLfDuJSeiAz7w2kUh5CixuntY1K6UWuwlLmp61BIUp2iOLMKT0c1u/yA7Og==
-X-Received: by 2002:a17:906:5785:b0:ab6:d575:9540 with SMTP id a640c23a62f3a-ab6d575972fmr623267366b.50.1738254931000;
-        Thu, 30 Jan 2025 08:35:31 -0800 (PST)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6ee76b8fcsm79895566b.137.2025.01.30.08.35.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 08:35:30 -0800 (PST)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5dc10fe4e62so1892155a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:35:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXgNj8G0fK+kFFIBxjLvf+gotpWMbogIsM4X6oEz8KMVCkd+tldraXDYYKnIDbUrk6vc7jekh0WtIKcufU=@vger.kernel.org
-X-Received: by 2002:a05:6402:50c9:b0:5db:e7eb:1b4a with SMTP id
- 4fb4d7f45d1cf-5dc5efbd32amr6334804a12.10.1738254929601; Thu, 30 Jan 2025
- 08:35:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="ny6QvcX/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k4DQPbj+"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 7F8F72540130;
+	Thu, 30 Jan 2025 11:35:35 -0500 (EST)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-02.internal (MEProxy); Thu, 30 Jan 2025 11:35:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1738254935;
+	 x=1738341335; bh=OWtQx+eXQZELW3YguQwDvp8SJzRnZKdY5XAQrMTivWM=; b=
+	ny6QvcX/yLr0XxH5BxUtt1IiQzqiZNtRdlfazPFET3KAoh/y2K5FNH08mYSoqkdX
+	E2Vu1lI3RZJsUf6zv2ZVmB3VBKROLT5NzyFxpL96p1Y1Ul/fKYqkNg4FpfUm7bLc
+	ojGUTbVhD0TA0G6d18cKKRapi7Be0Gc4BXFgHGufuxXyY/jyHcqgg5lGoXSrTAsr
+	5AsIF/Aq9GqdSslcYEfqDsPuvMay2aJ74m30Y/hS9+d7VdKsWTWDkkHnHIZkQs6Q
+	HYWQSHOCB6BA6QI8GEMPdJ+JwLb9cECZssOFmuvHWfrpL7R++oPQQ9IFXJoN/Kdb
+	8N1H7Gd4ucPPkcy9W7pNiQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738254935; x=
+	1738341335; bh=OWtQx+eXQZELW3YguQwDvp8SJzRnZKdY5XAQrMTivWM=; b=k
+	4DQPbj+Uh8iLRwBUZgKHWjP8+F49Phz+ZqFG5oEQhJkg6SosNPJstjN79MHyzyrx
+	fVqdm+qzZDQ8q6pikZWgPMIHoGHP6YSUigxaeJQl9ZU8mcMAJ6Ihv73+/rPMwop8
+	2AoNCapDM8HlXZsJsNM/FNS6VUkp2ZfH+TrK4GnrfiNSB9BMXBA06FVIH2GICgSH
+	jkYURuBnrWSwjAYPskAXPD1ojSTF2WRXWbvU/iK3h61aQJ4CCb+CPp7jr7MEKrJT
+	p/f9mLgceDSAbUNoNsH3wg/y/uf0Pr//xNKvyERQt7SpTNSJ1gNzFWR39PqZDtjX
+	P1Rs8DaUWw3vlGMqBfiPw==
+X-ME-Sender: <xms:V6qbZwA8iQhihGrqDRQsrjZGfIA-D_TNSak5__KdWT9cZol2GTnfdQ>
+    <xme:V6qbZyioTIb9omIF10Ewdr4sWxNSJL3HIz6kGAp0-stwbVZpwMPMiFB-CXzmRHLWF
+    _cPnl55VrmnOGxxJJE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeifeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
+    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdeh
+    tdevheduvdejjefggfeijedvgeekhfefleehkeehvdffheenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
+    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuth
+    dprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgt
+    ohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtth
+    hopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrd
+    horhhg
+X-ME-Proxy: <xmx:V6qbZznh97k0ZvpIeOijvPPOBvLY2GtFgAVef_bK1SV-ObpauLmZjg>
+    <xmx:V6qbZ2yHUzZtJFO6G8npYq8S-Ida3-9kESRADlxPgVQKf5x_AmbkfQ>
+    <xmx:V6qbZ1R1D-mfqlK2u4Gnioakd80h_BPEzCg7LW_lqjAV7zxyKE72Ow>
+    <xmx:V6qbZxYJVaFNe3R-sVSZ8OapOWol0b_EMxdTd3gWxDa-hfQd21tWsg>
+    <xmx:V6qbZ3c7cXyU_fXuCZmzO7KiSNcJIZPutx5bQHwxWA3lGz2mMB327cwF>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 1562E3C0066; Thu, 30 Jan 2025 11:35:35 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <AM6PR03MB50801990BD93BFA2297A123599EC2@AM6PR03MB5080.eurprd03.prod.outlook.com>
- <AM6PR03MB50802EA81C89D22791CCF09099EC2@AM6PR03MB5080.eurprd03.prod.outlook.com>
- <20250130-hautklinik-quizsendung-d36d8146bc7b@brauner>
-In-Reply-To: <20250130-hautklinik-quizsendung-d36d8146bc7b@brauner>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 30 Jan 2025 08:35:13 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjLWFa3i6+Tab67gnNumTYipj_HuheXr2RCq4zn0tCTzA@mail.gmail.com>
-X-Gm-Features: AWEUYZneNxaHhpPSYfPAUA_rUTrk891uuSVIWZIkTE-aPADGZkPCsAjzruuXyrc
-Message-ID: <CAHk-=wjLWFa3i6+Tab67gnNumTYipj_HuheXr2RCq4zn0tCTzA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v9 1/5] bpf: Introduce task_file open-coded
- iterator kfuncs
-To: Christian Brauner <brauner@kernel.org>
-Cc: Juntong Deng <juntong.deng@outlook.com>, Alexander Viro <viro@zeniv.linux.org.uk>, ast@kernel.org, 
-	daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org, 
-	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me, 
-	haoluo@google.com, jolsa@kernel.org, memxor@gmail.com, snorcht@gmail.com, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Date: Thu, 30 Jan 2025 11:35:14 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Hans de Goede" <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <4f1a853a-7903-40a7-96a1-f5a00056fa31@app.fastmail.com>
+In-Reply-To: <5a12b6f5-c501-4c7f-b27b-c9e63fbcffa1@redhat.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250130154520.26469-1-mpearson-lenovo@squebb.ca>
+ <5a12b6f5-c501-4c7f-b27b-c9e63fbcffa1@redhat.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Support for V9 DYTC platform profiles
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Thu, 30 Jan 2025 at 08:04, Christian Brauner <brauner@kernel.org> wrote:
+Hi Hans,
+
+Thanks for the review.
+
+On Thu, Jan 30, 2025, at 11:25 AM, Hans de Goede wrote:
+> Hi Mark,
 >
-> I deeply dislike that this allows bpf programs to iterate through
-> another tasks files more than what is already possible with the
-> task_file_seq_* bpf api.
+> On 30-Jan-25 4:45 PM, Mark Pearson wrote:
+>> Newer Thinkpad AMD platforms are using V9 DYTC and this changes the
+>> profiles used for PSC mode. Add support for this update.
+>> Tested on P14s G5 AMD
+>> 
+>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> ---
+>>  drivers/platform/x86/thinkpad_acpi.c | 33 ++++++++++++++++++----------
+>>  1 file changed, 21 insertions(+), 12 deletions(-)
+>> 
+>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+>> index 1fcb0f99695a..cae457bc0b07 100644
+>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>> @@ -10319,6 +10319,10 @@ static struct ibm_struct proxsensor_driver_data = {
+>>  #define DYTC_MODE_PSC_BALANCE  5  /* Default mode aka balanced */
+>>  #define DYTC_MODE_PSC_PERFORM  7  /* High power mode aka performance */
+>>  
+>> +#define DYTC_MODE_PSCV9_LOWPOWER 1  /* Low power mode */
+>> +#define DYTC_MODE_PSCV9_BALANCE  3  /* Default mode aka balanced */
+>> +#define DYTC_MODE_PSCV9_PERFORM  4  /* High power mode aka performance */
+>> +
+>>  #define DYTC_ERR_MASK       0xF  /* Bits 0-3 in cmd result are the error result */
+>>  #define DYTC_ERR_SUCCESS      1  /* CMD completed successful */
+>>  
+>> @@ -10339,6 +10343,10 @@ static int dytc_capabilities;
+>>  static bool dytc_mmc_get_available;
+>>  static int profile_force;
+>>  
+>> +static int platform_psc_profile_lowpower = DYTC_MODE_PSC_LOWPOWER;
+>> +static int platform_psc_profile_balanced = DYTC_MODE_PSC_BALANCE;
+>> +static int platform_psc_profile_performance = DYTC_MODE_PSC_PERFORM;
+>> +
+>>  static int convert_dytc_to_profile(int funcmode, int dytcmode,
+>>  		enum platform_profile_option *profile)
+>>  {
+>> @@ -10360,19 +10368,14 @@ static int convert_dytc_to_profile(int funcmode, int dytcmode,
+>>  		}
+>>  		return 0;
+>>  	case DYTC_FUNCTION_PSC:
+>> -		switch (dytcmode) {
+>> -		case DYTC_MODE_PSC_LOWPOWER:
+>> +		if (dytcmode == platform_psc_profile_lowpower)
+>>  			*profile = PLATFORM_PROFILE_LOW_POWER;
+>> -			break;
+>> -		case DYTC_MODE_PSC_BALANCE:
+>> +		else if (dytcmode == platform_psc_profile_balanced)
+>>  			*profile =  PLATFORM_PROFILE_BALANCED;
+>> -			break;
+>> -		case DYTC_MODE_PSC_PERFORM:
+>> +		else if (dytcmode == platform_psc_profile_performance)
+>>  			*profile =  PLATFORM_PROFILE_PERFORMANCE;
+>> -			break;
+>> -		default: /* Unknown mode */
+>> +		else
+>>  			return -EINVAL;
+>> -		}
+>>  		return 0;
+>
+> Maybe replace the removed '}' with an empty line instead of
+> removing the entire line?
+>
+> Currently after your patch the new code looks like this:
+>
+> 			...
+> 		else
+> 			return -EINVAL;
+> 		return 0;
+>
+> which look a bit weird, personally I would prefer:
+>
+> 			...
+> 		else
+> 			return -EINVAL;
+>
+> 		return 0;
 
-Ack. This needs to just die.
+Agreed - it does look oddly ugly doesn't it.
 
-There is no excuse for this, and no, CRIU is absolutely *not* that excuse.
+I'll wait and see if there is any other feedback, and then make that change for v2
 
-In fact, CRIU is a huge red flag, and has caused endless issues before.
-
-We should absolutely not add special BPF interfaces for CRIU. It only
-leads to pain and misery.
-
-           Linus
+>
+> Otherwise this looks good to me:
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>
+Thanks
+Mark
