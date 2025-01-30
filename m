@@ -1,129 +1,299 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF47819;
-	Thu, 30 Jan 2025 13:17:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BEE819;
+	Thu, 30 Jan 2025 13:19:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738243033; cv=none; b=GExU4wytCr53cx7kiuYBFNzg4tj8E3IDW3lZB5i+uONFW9dPWXF+L+8AMCKXxhzEj9IT9HzkkRM8YysxoVpLxW2AHw82YyJRE+H4Krz8mzS1rEDz3Et62QhZr5m6KwGLsuX4ni9zeTR2OwdbtpWfS6NQKBOci1LVecf8BWRTv2E=
+	t=1738243161; cv=none; b=kyZyyVACoo8kgThXrDF++IqbSCZgUW2GQRnzxMrkYAAC0kAXp2ZOKEzbvQsrjERAUL39q9D7TvJaFQjzKEzbzMGabHzSQyt6Rx3HW4gt2eTCKYPK+4uz4rGh+TNf+pH1NPJKeDLEIDfr6Jv0Gcklqg0IVKtS7sZMJ0sdJwtYmZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738243033; c=relaxed/simple;
-	bh=d35FUQkRnX6u6XtUEnsoIUHr8KEsQwWHRMzj9kdigCY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qr78x/IYxH2EM/LopCqY0HmXJjC92ucI6F+0jKkYsMiFfjM2ieNEuR2d1UyEADQ321cvfM0mOYNRAQUQvSFoWR3Bmg+GFLPqm67JNTB9SQBKvy6yABhuMpXdQzuwsKXzGc4DDa9VKlsKN2mNiaNrpOTz4FkIX7pVATc+Jy1XBog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kf4xH2dw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738243161; c=relaxed/simple;
+	bh=d0fQXsgYaqdw22vo14ZJcic4Yd0EFPXGVcjLVtYasCs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EhfS/2dqwzbWnYm6y89L+6ewIHT8v/aR1kKoBXSSZAEpMQdr6Z/jSsILvBvOZf7+84orT0M+l49yCFax31g+Nlr5smOUVAa/TAtsC3Je6aFKFB2UuZL1TmF1DZH02HGHXPOWSoY8JDRwsDN/EUVSE+FTXISJL6W2pm9+vRcJazg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pjnRDida; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kf4xH2dw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A05C4CED2;
-	Thu, 30 Jan 2025 13:17:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pjnRDida"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC94C4CEE0;
+	Thu, 30 Jan 2025 13:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738243033;
-	bh=d35FUQkRnX6u6XtUEnsoIUHr8KEsQwWHRMzj9kdigCY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Kf4xH2dw4/15igEUXdM049neQ2AuHqQrsd26zswkiafbOLZC98JGNQ5xo38QvM0KX
-	 VEtpTENB++vb3q7j5AhebbgZrdPuDODdIAiUaTyHdwUcek2cytpqWTouypoOT2XThH
-	 mS97Ij28FiciBT4b8PNM8gTG+GnSytXXbAJchmUmsk5KM4Uis3GlVohnYJ9ajSSk0v
-	 l2qPFOi4CQ17eay03EmOLzUlqDJ2xVKHkAkZ4gRcRm/jXFyjbDJlNsjkjm5F6EJKZE
-	 XgEwtKaCqJ++zxhN5lUvFnNZsZjTqJOe8Co21rCxrom2Ci77BpIVSWh101V6GIS9pP
-	 qBvI/tfLdSE+Q==
-Message-ID: <2d1780d3-ae78-4adf-a20a-8b6b3891b9b0@kernel.org>
-Date: Thu, 30 Jan 2025 14:17:05 +0100
+	s=k20201202; t=1738243160;
+	bh=d0fQXsgYaqdw22vo14ZJcic4Yd0EFPXGVcjLVtYasCs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pjnRDidavSlir7nsvL3qUhkCstiFPh3TgABu9pVx09NH+Gz+ZJehgGznftu27JA/r
+	 XuQRCSHfTEG5RFrv+FVRTlD8Ywjll5Mn6fjXIVz23JRex9UoAjhD2NuswAZaP/bzxU
+	 UMdZi1F0tUOz4cLtEpt2eSf7mdM9NymWAn6cp2jIFuWtqL4CinaFRruOFuKiaEtfle
+	 +mbdTxnVtBNnXu4MtjQpns+IQE9eBvML/9jvC+mwdBikNLTrBRLzPlOr2WYtAZzgBg
+	 mYQtDmk0s959TGdOmEEa19qQvgdq7ID12oe0jJqOUCcQxMgUdbjHbK/qYcLhB8yPMn
+	 2qUlCMB9ugtFA==
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-71deb3745easo159443a34.3;
+        Thu, 30 Jan 2025 05:19:20 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVonIp/ght7llnadQtljcFtPJF9dSwcA6G18zidmzI2DXrsHsMoQv9jJkxYprIfgxQRyqIJCa0pUXE=@vger.kernel.org, AJvYcCWndxXSSIJDb1lj0gvd29gjDHNUcvWJVB9zDaMlYzCLdE8Mv+eFpbnEeyNUoC2D+4wSJOCP3WLBQIeXna8=@vger.kernel.org, AJvYcCXNlOPnnIYV6AldN4/4i8gsbTcziqAul1QALthCQrqxJ7MNTEm++belhWUK/vqgvY41GoSQ9wOmoe4g@vger.kernel.org
+X-Gm-Message-State: AOJu0YyygsIg1QCcZO+W/yy1bRg6q9KbIBMGCiWbipVDj4YNInfT6Qxm
+	mTnDUrI/8NhEmm+Bot9BDIc8WuRPmG1CFfnrf9ceTy12i73//pyh601ClS3oSD0yBqtvQH15L5b
+	T7C9uUHeZGyjSZFJJAhIu0NxxPT4=
+X-Google-Smtp-Source: AGHT+IHaApAH2151fdQMr2K/rWXcq1IdxdXfRWxi2MmSzy1jmhyjcfQCMBVbsYm7hN21Oljw+1RbMonmbAllyu9MA+o=
+X-Received: by 2002:a05:6870:4e07:b0:288:563b:e48d with SMTP id
+ 586e51a60fabf-2b32f03426dmr4140022fac.10.1738243159985; Thu, 30 Jan 2025
+ 05:19:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] drm/panfrost: Add support for Mali on the MT8370
- SoC
-To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250130-mt8370-enable-gpu-v2-0-c154d0815db5@collabora.com>
- <20250130-mt8370-enable-gpu-v2-2-c154d0815db5@collabora.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250130-mt8370-enable-gpu-v2-2-c154d0815db5@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <12619233.O9o76ZdvQC@rjwysocki.net> <CAPDyKFpc5p3sXZ6LfdVgt8jR5ZbsQExTgeyMNA-PzcWs5A9U0A@mail.gmail.com>
+ <CAJZ5v0gvQjp_P-5Ww7iN1cGiiMJ6tvLLnPpkTQNk++KhoRe=GA@mail.gmail.com>
+ <CAPDyKFrBO+r8qYRrhoFZN21__8RuR61ofbsGQZbA=pyQbti5CA@mail.gmail.com>
+ <CAJZ5v0jTutgKeXtg3YLR1Onw9gOmvHudHamVVgMxEsieNDXViw@mail.gmail.com> <CAPDyKFpmNPhyV3YoBFu7KnW04550DQgqzGHAbGLLqp7=TggVtw@mail.gmail.com>
+In-Reply-To: <CAPDyKFpmNPhyV3YoBFu7KnW04550DQgqzGHAbGLLqp7=TggVtw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 30 Jan 2025 14:19:08 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iYHBeMra_ba-1Ht4xoPGsyt7gg05RtGxoa_gG91s1xEA@mail.gmail.com>
+X-Gm-Features: AWEUYZmtyfD-QjORpGH8sT5RY4RaUd5cb129O2vvjWcJUTrONPCuwcwwF2sdMz0
+Message-ID: <CAJZ5v0iYHBeMra_ba-1Ht4xoPGsyt7gg05RtGxoa_gG91s1xEA@mail.gmail.com>
+Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
+ parents and children
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, Johan Hovold <johan@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30/01/2025 13:31, Louis-Alexis Eyraud wrote:
-> Add a compatible for the MediaTek MT8370 SoC, with an
-> integrated ARM Mali G57 MC2 GPU (Valhall-JM, dual core),
-> with the same platform data as MT8186 (one regulator, two power
-> domains).
-> 
-> Reviewed-by: Steven Price <steven.price@arm.com>
-> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-> ---
->  drivers/gpu/drm/panfrost/panfrost_drv.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> index 0f3935556ac761adcd80197d87e8e478df436fd5..7b7e9f6f620659a7fdcb5d907ebc4f01eca876e0 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> @@ -859,6 +859,7 @@ static const struct of_device_id dt_match[] = {
->  	{ .compatible = "mediatek,mt8186-mali", .data = &mediatek_mt8186_data },
->  	{ .compatible = "mediatek,mt8188-mali", .data = &mediatek_mt8188_data },
->  	{ .compatible = "mediatek,mt8192-mali", .data = &mediatek_mt8192_data },
-> +	{ .compatible = "mediatek,mt8370-mali", .data = &mediatek_mt8186_data },
+On Thu, Jan 30, 2025 at 12:11=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.or=
+g> wrote:
+>
+> On Wed, 29 Jan 2025 at 17:58, Rafael J. Wysocki <rafael@kernel.org> wrote=
+:
+> >
+> > On Wed, Jan 29, 2025 at 5:42=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro=
+.org> wrote:
+> > >
+> > > On Wed, 29 Jan 2025 at 16:55, Rafael J. Wysocki <rafael@kernel.org> w=
+rote:
+> > > >
+> > > > On Wed, Jan 29, 2025 at 12:53=E2=80=AFPM Ulf Hansson <ulf.hansson@l=
+inaro.org> wrote:
+> > > > >
+> > > > > On Tue, 28 Jan 2025 at 20:24, Rafael J. Wysocki <rjw@rjwysocki.ne=
+t> wrote:
+> > > > > >
+> > > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > >
+> > > > > > Commit 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in=
+ the
+> > > > > > resume phase") overlooked the case in which the parent of a dev=
+ice with
+> > > > > > DPM_FLAG_SMART_SUSPEND set did not use that flag and could be r=
+untime-
+> > > > > > suspended before a transition into a system-wide sleep state.  =
+In that
+> > > > > > case, if the child is resumed during the subsequent transition =
+from
+> > > > > > that state into the working state, its runtime PM status will b=
+e set to
+> > > > > > RPM_ACTIVE, but the runtime PM status of the parent will not be=
+ updated
+> > > > > > accordingly, even though the parent will be resumed too, becaus=
+e of the
+> > > > > > dev_pm_skip_suspend() check in device_resume_noirq().
+> > > > > >
+> > > > > > Address this problem by tracking the need to set the runtime PM=
+ status
+> > > > > > to RPM_ACTIVE during system-wide resume transitions for devices=
+ with
+> > > > > > DPM_FLAG_SMART_SUSPEND set and all of the devices depended on b=
+y them.
+> > > > > >
+> > > > > > Fixes: 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in=
+ the resume phase")
+> > > > > > Closes: https://lore.kernel.org/linux-pm/Z30p2Etwf3F2AUvD@hovol=
+dconsulting.com/
+> > > > > > Reported-by: Johan Hovold <johan@kernel.org>
+> > > > > > Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.=
+org>
+> > > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > > ---
+> > > > > >  drivers/base/power/main.c |   29 ++++++++++++++++++++---------
+> > > > > >  include/linux/pm.h        |    1 +
+> > > > > >  2 files changed, 21 insertions(+), 9 deletions(-)
+> > > > > >
+> > > > > > --- a/drivers/base/power/main.c
+> > > > > > +++ b/drivers/base/power/main.c
+> > > > > > @@ -656,13 +656,15 @@
+> > > > > >          * so change its status accordingly.
+> > > > > >          *
+> > > > > >          * Otherwise, the device is going to be resumed, so set=
+ its PM-runtime
+> > > > > > -        * status to "active", but do that only if DPM_FLAG_SMA=
+RT_SUSPEND is set
+> > > > > > -        * to avoid confusing drivers that don't use it.
+> > > > > > +        * status to "active" unless its power.set_active flag =
+is clear, in
+> > > > > > +        * which case it is not necessary to update its PM-runt=
+ime status.
+> > > > > >          */
+> > > > > > -       if (skip_resume)
+> > > > > > +       if (skip_resume) {
+> > > > > >                 pm_runtime_set_suspended(dev);
+> > > > > > -       else if (dev_pm_skip_suspend(dev))
+> > > > > > +       } else if (dev->power.set_active) {
+> > > > > >                 pm_runtime_set_active(dev);
+> > > > > > +               dev->power.set_active =3D false;
+> > > > > > +       }
+> > > > > >
+> > > > > >         if (dev->pm_domain) {
+> > > > > >                 info =3D "noirq power domain ";
+> > > > > > @@ -1189,18 +1191,24 @@
+> > > > > >         return PMSG_ON;
+> > > > > >  }
+> > > > > >
+> > > > > > -static void dpm_superior_set_must_resume(struct device *dev)
+> > > > > > +static void dpm_superior_set_must_resume(struct device *dev, b=
+ool set_active)
+> > > > > >  {
+> > > > > >         struct device_link *link;
+> > > > > >         int idx;
+> > > > > >
+> > > > > > -       if (dev->parent)
+> > > > > > +       if (dev->parent) {
+> > > > > >                 dev->parent->power.must_resume =3D true;
+> > > > > > +               if (set_active)
+> > > > > > +                       dev->parent->power.set_active =3D true;
+> > > > > > +       }
+> > > > > >
+> > > > > >         idx =3D device_links_read_lock();
+> > > > > >
+> > > > > > -       list_for_each_entry_rcu_locked(link, &dev->links.suppli=
+ers, c_node)
+> > > > > > +       list_for_each_entry_rcu_locked(link, &dev->links.suppli=
+ers, c_node) {
+> > > > > >                 link->supplier->power.must_resume =3D true;
+> > > > > > +               if (set_active)
+> > > > > > +                       link->supplier->power.set_active =3D tr=
+ue;
+> > > > >
+> > > > > If I understand correctly, the suppliers are already handled when=
+ the
+> > > > > pm_runtime_set_active() is called for consumers, so the above sho=
+uld
+> > > > > not be needed.
+> > > >
+> > > > It is needed because pm_runtime_set_active() doesn't cause the sett=
+ing
+> > > > to propagate to the parent's/suppliers of the suppliers AFAICS.
+> > >
+> > > Hmm, even if that sounds reasonable, I don't think it's a good idea a=
+s
+> > > it may introduce interesting propagation problems between drivers.
+> > >
+> > > For example, consider that Saravana is trying to enable runtime PM fo=
+r
+> > > fw_devlinks. It would mean synchronization issues for the runtime PM
+> > > status, all over the place.
+> >
+> > What synchronization issues?
+>
+> Changing the runtime PM status for a parent/supplier that doesn't have
+> DPM_FLAG_SMART_SUSPEND, is likely to confuse their drivers.
 
-Nothing improved here. All my previous comments still stand.
+I'm not sure why though.
 
-Best regards,
-Krzysztof
+> You also removed that part of the comment a few lines above, in
+> device_resume_noirq(). I am not sure I understand why?
+
+Not removed, but replaced.
+
+The set_active flag is only set for devices with
+DPM_FLAG_SMART_SUSPEND set and devices depended on by them.  Also, it
+is only set for devices whose must_resume is set, which for devices
+with DPM_FLAG_SMART_SUSPEND means that they literally must be resumed.
+Consequently, the devices depended on by them also must be resumed.
+
+> >
+> > > That said, is even consumer/suppliers part of the problem we are
+> > > trying to solve?
+> >
+> > They are in general.
+> >
+> > It's just that stuff that was runtime-suspended prior to a system-wide
+> > suspend may need to be resumed and marked as RPM_ACTIVE during
+> > system-wide resume because one of the devices wants/needs to be
+> > resumed then.
+> >
+> > If this turns out to be problematic, the problem will need to be
+> > addressed, but for now I'm not seeing why there would be a problem.
+> >
+> > > >
+> > > > > That said, maybe we instead allow parent/child to work in the sim=
+ilar
+> > > > > way as for consumer/suppliers, when pm_runtime_set_active() is ca=
+lled
+> > > > > for the child. In other words, when pm_runtime_set_active() is ca=
+lled
+> > > > > for a child and the parent is runtime PM enabled, let's runtime r=
+esume
+> > > > > it too, as we do for suppliers. Would that work, you think?
+> > > >
+> > > > The parent is not runtime-PM enabled when this happens.
+> > >
+> > > That sounds really weird to me.
+> > >
+> > > Does that mean that the parent has not been system resumed either?
+> >
+> > Yes.
+> >
+> > It hasn't been resumed yet, but it is known that it will be resumed.
+> >
+> > > If so, isn't that really the root cause for this problem,
+> >
+> > No, it is not.
+> >
+> > > or what am I missing?
+> >
+> > Essentially, what I said above.
+> >
+> > If a device that was suspended prior to a system-wide suspend
+> > wants/needs to be resumed during the subsequent system-wide resume,
+> > and it was runtime-PM-enabled before the suspend transition, it needs
+> > to (a) be runtime-PM-enabled during the subsequent system-wide resume
+> > transition and (b) it also needs to be marked as RPM_ACTIVE because in
+> > fact it is not suspended any more.  The existing code before the patch
+> > takes care of this for the device itself, but not for the devices it
+> > depends on which also need to be resumed (which happens) and marked as
+> > RPM_ACTIVE (which doesn't happen) and the patch just makes sure that
+> > the latter will happen.
+>
+> Thanks for clarifying!
+>
+> >
+> > Actually, what happens now is that the actual state of the parent
+> > during the system-wide resume, right before re-enabling runtime PM for
+> > it, does not match its runtime PM status which is still RPM_SUSPENDED.
+> > That's what is fixed here and it applies to the parent as well as to
+> > all of the other devices depended on by the child and the parent.
+>
+> Well, unfortunately I don't think it will work to call
+> pm_runtime_set_active() for parents/suppliers like this.
+
+As stated above, if a device with DPM_FLAG_SMART_SUSPEND has
+power.must_resume set, it must be resumed.  Therefore, all of the
+devices depended on by it must be resumed (literally, they need to be
+powered up and configured to work).  This is already a rule without
+the patch.
+
+Accordingly, they all effectively will be "active" and so their
+runtime PM status must reflect this.
+
+I don't see anything that cannot work, but I see why it is broken
+without this patch.
+
+> I think we need the drivers for the parents/suppliers to be in
+> agreement with the behaviour of DPM_FLAG_SMART_SUSPEND to allow the
+> propagation. Not sure how to best achieve this though.
+
+It would be good to actually identify the cases in which it may not
+work and they can be fixed on top of this patch.
