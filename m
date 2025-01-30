@@ -1,58 +1,58 @@
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65C31E5729;
-	Thu, 30 Jan 2025 13:01:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF521E7C23;
+	Thu, 30 Jan 2025 13:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738242087; cv=none; b=rHOU3IH461VF0R8+cU2L4J5uDJqbmJq7CJICgaIlf0Tl49RaWwPnQgyug8OSu9ZLz1xuaPnzLQIwNUInEDJMy8weHJF3+4CmXbXlA3RGT6tyEHc+CbpQOKQLvSR2kv3oWUR3FYY7P4Mg0oz8brOoWYXDKDlTfzADjs2h2Cu7kw4=
+	t=1738242092; cv=none; b=SoNOnyDky1i2haYDuWmt5OA18VQSXC3n935VosPYYjL4KbbJ69EniGatG25eN4DHaWG5luLXZFIP+KHwMUviS6ty15TIjwbWN6DCjUfnGXtruf3ynHFy4J1iQ4ZDqNMy5pJmWwv8SaxjNu0MOvzVZXwna2xGQGf2oyUmR2by5wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738242087; c=relaxed/simple;
-	bh=FZMM4uSzGo1xAgbI2jjgAzL0LHxvkef1Lz4E4kC6gr0=;
+	s=arc-20240116; t=1738242092; c=relaxed/simple;
+	bh=P9XZBv7n0lW6d5WknlTRfBLwahv7WR08AupNBY5sORE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Qo4/opAQXEpbLLx0tElPFQu9coDIRviFU7d/dn2a5v1a95SNh3xYVxlgyXWVvbDFgrvSce/fl/bfz2IMHHCPSb1ksQ44xQlZhcMPCh+Agw56En4kJDXQJx4HQ0YJg9mdD+Za3zs3bN11iLmQ9MkppnwazR7LbrajBknAzU7LGBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=ejBcVXmg; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=E30/0s4c reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+	 MIME-Version; b=acX2cKOdITV9EQbZDy9VKVrIvcQKcD1ANjyQNpFCm7qfgUcAVh+n0Di3J5Qih7wfv9uqby+UX12xew+0D4ZK6u/q/MdmZYjRLkUNC3d/EPpGu2vqKtzTPN9swKI0vy53U36jjEUxIHTsM+GA87I2H7yRXqRyNbBkCetG5H/qtZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=K95XFuhp; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Dp8aGpHn reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ejBcVXmg";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="E30/0s4c"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="K95XFuhp";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Dp8aGpHn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1738242085; x=1769778085;
+  t=1738242090; x=1769778090;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=LyKkikvY80+GKiSyONnc9vcmv/5ZXa6vRuWd2+cvLNU=;
-  b=ejBcVXmgYgriV21V5MYGG5GF14Tpvc4sM8E32JQ/tKsBn0UEPdA8tW/B
-   MMEp2eavvqg7BwGLMg7wsdkI5ksA3sPx22cq4ciIDuaKwDyZJsPdIKjv2
-   uF0722xgKnnJEBkKwo7yD2xfxIkiIjArT/xKmxX1R29sNvYBXYECJSugw
-   yYvwgTUr5fm8diebbZms9P48+kKWkmtIksVc0Lh5XOmqcZbDSEu+Mf40K
-   Co0FivOuIdjYwnotMZTrcHBmNFktjyvZ/fVuG+pn2cQoza7SFAXZAAVjs
-   r9oU/d86HRCxytoH1OZnQlpZexYNlTwlLvruqGfAUkvVNxkgD3rwhe937
-   A==;
-X-CSE-ConnectionGUID: yIqcFOdySnOPsjZWKtoG3g==
-X-CSE-MsgGUID: HrRJxZPMRCew96JoOAIhlg==
+  bh=XlXAWMI0jccQM6/g/C8LaMfR+EC5iEa5X2zR+R/BcUg=;
+  b=K95XFuhpyzuY4ePqJHnsArTnKDwM305YyOyqhh6sZkJG7ThXHfL48Fqs
+   YCGd8IcvtGlneoe4nSUMUehg7uiKe/iR+CgUwgmSLjgOSYXGOpDaN1UQL
+   q+jY2bmEwS++BnPwFYi0OxUDtxd4WqfbARNZEDEds+X7sydxIIsHGaZ7/
+   N9b2pxFDIXf3lrfFEOMXNQadV1LazWMo5izjnZXUD3qYCIJUfWvsVfuig
+   oHUNMNqAa8lCIrnjDG87ICqe4nT8LEj8adfVrLLDOsgzi1sGtVN7zjGd2
+   3LftbTxco+iReSkT9OhNI4vc62x9tJ7fH70m1hBPY1I3iQc8emhg5BY3i
+   g==;
+X-CSE-ConnectionGUID: tVv2S7LDQKaRqxAvRIMJ7A==
+X-CSE-MsgGUID: ucsh4h+SRWOeH0M15uviNQ==
 X-IronPort-AV: E=Sophos;i="6.13,245,1732575600"; 
-   d="scan'208";a="41374617"
+   d="scan'208";a="41374630"
 Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 30 Jan 2025 14:01:24 +0100
-X-CheckPoint: {679B7824-E-1D00F64B-E6C57517}
-X-MAIL-CPID: 2551D003E15F2F7538C09A8A99662D09_3
-X-Control-Analysis: str=0001.0A682F1E.679B7824.0080,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8600B1675B4;
-	Thu, 30 Jan 2025 14:01:19 +0100 (CET)
+  by mx1.tq-group.com with ESMTP; 30 Jan 2025 14:01:29 +0100
+X-CheckPoint: {679B7829-1B-3C670366-E45AD810}
+X-MAIL-CPID: AD046D59AB2B64B0B01BA9A3A0E2865C_4
+X-Control-Analysis: str=0001.0A682F1E.679B7829.0086,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BF14016A8C6;
+	Thu, 30 Jan 2025 14:01:24 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1738242079;
+	s=dkim; t=1738242085;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LyKkikvY80+GKiSyONnc9vcmv/5ZXa6vRuWd2+cvLNU=;
-	b=E30/0s4co8oDMYj/gRd7177975fwdVx6WXD8jH+PJbApatPtxR0HyvIeQDaWKD+GDqiJFN
-	pV6yr57uFgQpI9iknuLeDx2W1gF8Or+CQu6t8c9iU+2Q0KNmyoNhbI6iwXYr1jxfTTb3cu
-	DAnhuMtVO46porBxvwv1k8RN3zRRKp9Sph6uhjA6uYWTvIgx5HpV+22lroeyAVrOsOoC9j
-	2mEx7cWgKxv5ID7BJGIIRenf5dEMfrg0IERVqiia5WuNiUu9mjd8SvmiioWWauA1GZd5yB
-	IfL5wnscsJIxuFRhnlPFfn5Ok8lb2benuljhQsurlELexW5JSYAs3K+3Q/pP5Q==
+	bh=XlXAWMI0jccQM6/g/C8LaMfR+EC5iEa5X2zR+R/BcUg=;
+	b=Dp8aGpHnOwlDVpj+8nvp6MWlvkBPp+0y3Gh66FW2SuYuXbC4FX+Jar2TCn59V0XhDRA2Dh
+	sbgvY/4L+z2s5c2q9RvwmO9bXqVQfxWvXzotg5AL6Tb+GTmevpPCrVTn7ASOg+U+pQTZ4U
+	F3rt6JjghVsCtnjl1h37mSW+IKcXNkn5/wmXceFeeEdhWWke2oDjUqP2gm9enXUyT+TbAU
+	hgezjjEVJljmYtPsFRAdeXX0wKF/n5T84IGO8/mo390SPZiXv5HB9Dz3M1w9B3W/QYhmhY
+	uixvtci4mKBRqKyB1rM2u1MEYpiAgKPBo+1BktjFLsFjypl4MFIFi8y5Y+hqeg==
 From: Alexander Stein <alexander.stein@ew.tq-group.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -67,9 +67,9 @@ Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
 	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] nvmem: imx-ocotp: Support accessing controller for i.MX8M Nano
-Date: Thu, 30 Jan 2025 14:01:00 +0100
-Message-Id: <20250130130101.1040824-4-alexander.stein@ew.tq-group.com>
+Subject: [PATCH 4/4] arm64: dts: imx8mn: Add access-controller references
+Date: Thu, 30 Jan 2025 14:01:01 +0100
+Message-Id: <20250130130101.1040824-5-alexander.stein@ew.tq-group.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250130130101.1040824-1-alexander.stein@ew.tq-group.com>
 References: <20250130130101.1040824-1-alexander.stein@ew.tq-group.com>
@@ -82,188 +82,82 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-i.MX8M OCOTP supports a specific peripheral or function being fused
-which means disabled, so
- - Introduce disable_fuse for a list of possible fused peripherals.
- - Iterate all nodes to check accessing permission. If not
-   allowed to be accessed, detach the node
+Mark ocotp as a access-controller and add references on peripherals
+which can be disabled (fused).
 
 Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 ---
- drivers/nvmem/Kconfig     |   3 ++
- drivers/nvmem/imx-ocotp.c | 105 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 107 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index 8671b7c974b93..ba5c928cab520 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -84,6 +84,9 @@ config NVMEM_IMX_OCOTP
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nvmem-imx-ocotp.
- 
-+	  If built as modules, any other driver relying on this working
-+	  as access controller also needs to be a module as well.
-+
- config NVMEM_IMX_OCOTP_ELE
- 	tristate "i.MX On-Chip OTP Controller support"
- 	depends on ARCH_MXC || COMPILE_TEST
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index c5086a16450ac..e3ea026a37d0d 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -23,6 +23,7 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+index a5f9cfb46e5dd..b023724679b80 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
 +#include <dt-bindings/nvmem/fsl,imx8mn-ocotp.h>
+ #include <dt-bindings/thermal/thermal.h>
  
- #define IMX_OCOTP_OFFSET_B0W0		0x400 /* Offset from base address of the
- 					       * OTP Bank0 Word0
-@@ -91,11 +92,20 @@ struct ocotp_ctrl_reg {
- 	u32 bm_rel_shadows;
- };
+ #include "imx8mn-pinfunc.h"
+@@ -431,6 +432,7 @@ easrc: easrc@300c0000 {
+ 					firmware-name = "imx/easrc/easrc-imx8mn.bin";
+ 					fsl,asrc-rate = <8000>;
+ 					fsl,asrc-format = <2>;
++					access-controllers = <&ocotp IMX8MN_OCOTP_ASRC_DISABLE>;
+ 					status = "disabled";
+ 				};
+ 			};
+@@ -571,6 +573,7 @@ ocotp: efuse@30350000 {
+ 				clocks = <&clk IMX8MN_CLK_OCOTP_ROOT>;
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
++				#access-controller-cells = <1>;
  
-+#define OCOTP_MAX_NUM_GATE_WORDS 4
-+
-+struct disable_fuse {
-+	u32 fuse_addr;
-+	u32 mask;
-+};
-+
- struct ocotp_params {
- 	unsigned int nregs;
- 	unsigned int bank_address_words;
- 	void (*set_timing)(struct ocotp_priv *priv);
- 	struct ocotp_ctrl_reg ctrl;
-+	u32 num_disables;
-+	struct disable_fuse *disables;
- };
+ 				/*
+ 				 * The register address below maps to the MX8M
+@@ -1053,6 +1056,7 @@ fec1: ethernet@30be0000 {
+ 				nvmem-cells = <&fec_mac_address>;
+ 				nvmem-cell-names = "mac-address";
+ 				fsl,stop-mode = <&gpr 0x10 3>;
++				access-controllers = <&ocotp IMX8MN_OCOTP_ENET_DISABLE>;
+ 				status = "disabled";
+ 			};
  
- static int imx_ocotp_wait_for_busy(struct ocotp_priv *priv, u32 flags)
-@@ -552,11 +562,25 @@ static const struct ocotp_params imx8mm_params = {
- 	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
- };
+@@ -1091,6 +1095,7 @@ mipi_dsi: dsi@32e10000 {
+ 				clock-names = "bus_clk", "sclk_mipi";
+ 				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&disp_blk_ctrl IMX8MN_DISPBLK_PD_MIPI_DSI>;
++				access-controllers = <&ocotp IMX8MN_OCOTP_MIPI_DSI_DISABLE>;
+ 				status = "disabled";
  
-+struct disable_fuse imx8mn_disable_fuse[] = {
-+		[IMX8MN_OCOTP_M7_DISABLE]	= { .fuse_addr = 20, .mask = BIT(8) },
-+		[IMX8MN_OCOTP_M7_MPU_DISABLE]	= { .fuse_addr = 20, .mask = BIT(9) },
-+		[IMX8MN_OCOTP_M7_FPU_DISABLE]	= { .fuse_addr = 20, .mask = BIT(10) },
-+		[IMX8MN_OCOTP_USB_OTG1_DISABLE]	= { .fuse_addr = 20, .mask = BIT(11) },
-+		[IMX8MN_OCOTP_GPU3D_DISABLE]	= { .fuse_addr = 20, .mask = BIT(24) },
-+		[IMX8MN_OCOTP_MIPI_DSI_DISABLE]	= { .fuse_addr = 20, .mask = BIT(28) },
-+		[IMX8MN_OCOTP_ENET_DISABLE]	= { .fuse_addr = 20, .mask = BIT(29) },
-+		[IMX8MN_OCOTP_MIPI_CSI_DISABLE]	= { .fuse_addr = 20, .mask = BIT(30) },
-+		[IMX8MN_OCOTP_ASRC_DISABLE]	= { .fuse_addr = 20, .mask = BIT(31) },
-+};
-+
- static const struct ocotp_params imx8mn_params = {
- 	.nregs = 256,
- 	.bank_address_words = 0,
- 	.set_timing = imx_ocotp_set_imx6_timing,
- 	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
-+	.num_disables = ARRAY_SIZE(imx8mn_disable_fuse),
-+	.disables = imx8mn_disable_fuse,
- };
+ 				ports {
+@@ -1195,6 +1200,7 @@ mipi_csi: mipi-csi@32e30000 {
+ 					 <&clk IMX8MN_CLK_DISP_AXI_ROOT>;
+ 				clock-names = "pclk", "wrap", "phy", "axi";
+ 				power-domains = <&disp_blk_ctrl IMX8MN_DISPBLK_PD_MIPI_CSI>;
++				access-controllers = <&ocotp IMX8MN_OCOTP_MIPI_CSI_DISABLE>;
+ 				status = "disabled";
  
- static const struct ocotp_params imx8mp_params = {
-@@ -589,6 +613,81 @@ static void imx_ocotp_fixup_dt_cell_info(struct nvmem_device *nvmem,
- 	cell->read_post_process = imx_ocotp_cell_pp;
- }
+ 				ports {
+@@ -1225,6 +1231,7 @@ usbotg1: usb@32e40000 {
+ 				phys = <&usbphynop1>;
+ 				fsl,usbmisc = <&usbmisc1 0>;
+ 				power-domains = <&pgc_hsiomix>;
++				access-controllers = <&ocotp IMX8MN_OCOTP_USB_OTG1_DISABLE>;
+ 				status = "disabled";
+ 			};
  
-+static int imx_ocotp_check_access(struct ocotp_priv *priv, u32 id)
-+{
-+	u32 addr, mask, ret, val;
-+
-+	if (id >= priv->params->num_disables) {
-+		dev_err(priv->dev, "Index %d too large\n", id);
-+		return -EACCES;
-+	}
-+
-+	addr = priv->params->disables[id].fuse_addr;
-+	mask = priv->params->disables[id].mask;
-+
-+	ret = imx_ocotp_read(priv, addr, &val, sizeof(val));
-+	if (ret)
-+		return ret;
-+
-+	dev_dbg(priv->dev, "id:%d addr:%#x mask:0x%08x\n", id, addr, mask);
-+	/* true means disabled */
-+	if (val & mask)
-+		return -EACCES;
-+
-+	return 0;
-+}
-+
-+static int imx_ocotp_grant_access(struct ocotp_priv *priv, struct device_node *parent)
-+{
-+	struct device *dev = priv->dev;
-+
-+	for_each_available_child_of_node_scoped(parent, child) {
-+		struct of_phandle_args args;
-+		u32 id, idx = 0;
-+
-+		while (!of_parse_phandle_with_args(child, "access-controllers",
-+						   "#access-controller-cells",
-+						   idx++, &args)) {
-+			of_node_put(args.np);
-+			if (args.np != dev->of_node)
-+				continue;
-+
-+			/* Only support one cell */
-+			if (args.args_count != 1) {
-+				dev_err(dev, "wrong args count\n");
-+				continue;
-+			}
-+
-+			id = args.args[0];
-+
-+			dev_dbg(dev, "Checking node: %pOF disable ID: %d\n", child, id);
-+
-+			if (imx_ocotp_check_access(priv, id)) {
-+				of_detach_node(child);
-+				dev_info(dev, "%pOF: disabled by fuse, device driver will not be probed\n",
-+					 child);
-+			}
-+		}
-+
-+		imx_ocotp_grant_access(priv, child);
-+	}
-+
-+	return 0;
-+}
-+
-+static int imx_ocotp_access_control(struct ocotp_priv *priv)
-+{
-+	struct device_node *root __free(device_node) = of_find_node_by_path("/");
-+
-+	if (!priv->params->disables)
-+		return 0;
-+
-+	if (WARN_ON(!root))
-+		return -EINVAL;
-+
-+	return imx_ocotp_grant_access(priv, root);
-+}
-+
- static int imx_ocotp_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -622,9 +721,13 @@ static int imx_ocotp_probe(struct platform_device *pdev)
- 	imx_ocotp_clr_err_if_set(priv);
- 	clk_disable_unprepare(priv->clk);
+@@ -1288,6 +1295,7 @@ gpu: gpu@38000000 {
+ 					       <400000000>,
+ 					       <1200000000>;
+ 			power-domains = <&pgc_gpumix>;
++			access-controllers = <&ocotp IMX8MN_OCOTP_GPU3D_DISABLE>;
+ 		};
  
-+	platform_set_drvdata(pdev, priv);
-+
- 	nvmem = devm_nvmem_register(dev, &imx_ocotp_nvmem_config);
-+	if (IS_ERR(nvmem))
-+		return PTR_ERR(nvmem);
- 
--	return PTR_ERR_OR_ZERO(nvmem);
-+	return imx_ocotp_access_control(priv);
- }
- 
- static struct platform_driver imx_ocotp_driver = {
+ 		gic: interrupt-controller@38800000 {
 -- 
 2.34.1
 
