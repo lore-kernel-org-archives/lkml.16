@@ -1,165 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5EF1A8F71;
-	Thu, 30 Jan 2025 08:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CE318FDC5
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738226894; cv=none; b=RzVSJ8Soz6Fz8afL2qKFfZp6xXyTiF03o2XpciEg46cj7shuSW0I3QGZCcVfAUfz7oNpTIVZBnao63q/dyLAz6ywq/2POFj4W9mnjRQ4xcnWgh1vPI2FJ5nLdx9gjBFCmiEKbIE89Mk/ZNhWeXim7wNnMsHaWpcG+aXYEpueSrQ=
+	t=1738227025; cv=none; b=GJ4ZD/Red8j8f3z8clm0ldlV8u174ersGaelsUEUozZMjLMoFDszgDEfCWIafZ0HXD7BeJ0ocl8i6wYBLce1mtJsWbLtxH32hWlA/mK97CNvNGYBmqLO254bpci629BuKBTgV2yI4P78eWBhjRBhG++q0J7Gm1+ALah66IM7q0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738226894; c=relaxed/simple;
-	bh=FWJwQiogQ+hxCJVsbSYT68kgHA+GtG0m8mRQyC9+PGs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tOvnlMlIEakrNXSmZonY/nqIUkWD95at3KnlNf7OGjgmhspGAkHtt16mppNbWqVsF/689oibhwk99os1NQdDo1zMdCbbsXOQYTD8Dv2oa3isMSmHZHdmUR6OAnKkMo8PlRUISxwfJdzomy5ux+Tn6tXbD9keFaGz5vhWPkW4P/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8nqdkgk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738227025; c=relaxed/simple;
+	bh=l1Opr4boPN/nyhUljDuiqObrJzE1y9lh35ZzM12FkRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=elrf0E1gdMFVBRizSr3QAEAJmYzFNgzfsbfl4cOWb+u/BCK+cR8jdy42FOr4aOi58cyxxi41C427DycVBW7b9zj8V7Q46vF4A3RhpjgTzPoKkkXWH2GJNtX6HFVmSaE2EeIv7oAFIOWrczi+kcEqSTrCj2u5upG+ZGOw3RBEVmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=AZ/SH9Fs; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8nqdkgk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA6E7C4CED2;
-	Thu, 30 Jan 2025 08:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738226893;
-	bh=FWJwQiogQ+hxCJVsbSYT68kgHA+GtG0m8mRQyC9+PGs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n8nqdkgk1zoGYhcUzBBCkhmcFB0QYcJE3pH2NeziUqcUn1RF/jZiCMFKZQT2vZo9S
-	 IMa2HHiLn/ZM63yHUFgndiQy6I0wbsu1KIeFHYvlB+vLYnvzkhig2OBLFY8pGVwXFh
-	 0ncqLYFtA+d9FAA+JFOsfJg7xrpOHvq0MiYHclxnER3LweTOWY5LD4KWG6RdboXp8B
-	 SLYz/qI9RMD5nxZCYvEYRUfjOKdUiqUcCT+e9pstAuHyyJtRgymrniKyF/NFQ+4bgi
-	 AfysMqz2FdXWbWxRAXL+llPYgzucRD+rsCnFJKdw2e8chGd/m/7itZXwfBUB3WekyU
-	 MerEow4OpYnyg==
-Message-ID: <ac1ea985-15cd-4001-9700-a185ceb338d7@kernel.org>
-Date: Thu, 30 Jan 2025 09:48:07 +0100
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="AZ/SH9Fs"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38a88ba968aso439868f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 00:50:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1738227022; x=1738831822; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dsy4uJKogIVKQPzs6Ct+upQYMgDG3MEIF1C0cRa7EYs=;
+        b=AZ/SH9Fs7Hq/0uP9Dh9LYDXT7K+IPXR8zaLbhyMJ5SmBTvXEwxhPRfs8rn0wEsoW2b
+         voSClV7a/1Hld8V/Bayzl5om6U+Vm1b12e6OhgpoJURQuTvLih0VeglOwk7WOkm5mZCD
+         f2LuiwYFvK6VRa2p39Nm77OdQFqDK7PyU33T1JvQwbF9sbQ469xvlBpIy4y8thnCatTA
+         xwoxLx+pQG8sK6f4AWRYf5yf+c7tiG9GUTwjWg5zlhDEOTCgjjO1Ga10/7BKWrGqc3F3
+         PKht9Lt/5cruh1JZ2IQz7NS7ueI1MDhpJkzdQJY77xucrIFnjXLgiHe3jTylqudVYTME
+         UPpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738227022; x=1738831822;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dsy4uJKogIVKQPzs6Ct+upQYMgDG3MEIF1C0cRa7EYs=;
+        b=huF5RmSzUy0Cg5TKpyCOj+f9V1Beyn244FHcfLmsMW/6zy2JBLfvq1PGK3cFMpUrZY
+         RbjuALCdK6P7hJGdh0XD94xqNls2eAB51z3M2iDoC1g8hQCKMDEpeMpGi9KCCzmQDWa6
+         lwxQhkLDtLsDWRkqo3FNmzFf1K2Gcy4qbX2WPG7KeYvaf5ljmnfs73+QdZ0HrO3z2byH
+         iQ/HTMBOGyfotiwkKoM3aXdo0Hcb4PYgd7eUu/utvxq/izqgmVK8sYllcl72Fcr0oDJs
+         1doUfpnlsIwMZMbTGn4kPrr4mN+j1s3F44+UVwtLb6zSqgANigSIVhS66bb6uLlhjMHT
+         AXtA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNkFWTd6t3WkfkcPuHeJgkIxYZZ1cozpXotgBDSwXzpCesoYAjcILbvUuxJcD68C1LomOyZbt/CvIB/F4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3dwbY2PCZXafaGHpTUXYreXpj4GBVu3FgNd8r0J5kJn6YW7ys
+	5kkIbCgxcf6GEaHeHTW6/U/AT5X+eCRr6h3+hD+h7+exwG8OgPHaFFf8ld+f5aI=
+X-Gm-Gg: ASbGnctKZ+EpJm2ew3ch3wSO56ewZbHFKnLzW0pLD7Xti/jijwRSd+fil6h7lY9mp4+
+	i3ad6Lz9wNvjVF7gNI8w84S/Qz4R9mrOhPgd05s4lgfwNrC66Y33fq5zwfhBkLbl4POo237OJG2
+	tt2xar1yKazd+MH9EpBX6h3y03kQkjZu2s3ZG+KBUGF1RXcHhkd3vgpnJltpBTiGSl+NgRH1lYN
+	/ohj1SGFDrwOSMqL384ZHJLriVbquAWbXnkrAjLnfoAoNJN3lvWrtcmsHALYUUsr/uqemJGOacq
+	S28=
+X-Google-Smtp-Source: AGHT+IGFTRL2KbdYIq3lZmW40A2vF/C6ptAw5dWdjhbhxqUZ/ka0NH0NQk5FJYnWzTdk9Dk9H8tYmQ==
+X-Received: by 2002:a5d:47cd:0:b0:385:e88a:7037 with SMTP id ffacd0b85a97d-38c51939740mr5747204f8f.6.1738227021805;
+        Thu, 30 Jan 2025 00:50:21 -0800 (PST)
+Received: from localhost ([2a02:8308:a00c:e200::76fd])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ec7e6sm1332565f8f.19.2025.01.30.00.50.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 00:50:21 -0800 (PST)
+Date: Thu, 30 Jan 2025 09:50:20 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Chin Yik Ming <yikming2222@gmail.com>
+Cc: conor@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, charlie@rivosinc.com, samuel.holland@sifive.com, 
+	cleger@rivosinc.com, andybnac@gmail.com, alexghiti@rivosinc.com, 
+	peterlin@andestech.com, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: Simplify base extension checks and direct boolean
+ return
+Message-ID: <20250130-77bf6cf799f468b43fb5382e@orel>
+References: <20250129203843.1136838-1-yikming2222@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: s32g: add the eDMA nodes
-To: Larisa Grigore <larisa.grigore@oss.nxp.com>, Frank Li <Frank.Li@nxp.com>,
- Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Peng Fan <peng.fan@nxp.com>
-Cc: imx@lists.linux.dev, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, s32@nxp.com,
- Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>,
- Enric Balletbo <eballetb@redhat.com>
-References: <20250130072951.373027-1-larisa.grigore@oss.nxp.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250130072951.373027-1-larisa.grigore@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129203843.1136838-1-yikming2222@gmail.com>
 
-On 30/01/2025 08:29, Larisa Grigore wrote:
-> Add the two eDMA nodes in the device tree in order to enable the probing
-> of the S32G2/S32G3 eDMA driver.
+On Thu, Jan 30, 2025 at 04:38:43AM +0800, Chin Yik Ming wrote:
+> Reduce three lines checking to single line using a ternary conditional
+> expression for getting the base extension word. In addition, the
+> test_bit macro function already return a boolean which matches the
+> return type of the caller, so directly return the result of the test_bit
+> macro function.
 > 
-> Signed-off-by: Larisa Grigore <larisa.grigore@oss.nxp.com>
+> Signed-off-by: Chin Yik Ming <yikming2222@gmail.com>
 > ---
->  arch/arm64/boot/dts/freescale/s32g2.dtsi | 34 ++++++++++++++++++++++++
->  arch/arm64/boot/dts/freescale/s32g3.dtsi | 34 ++++++++++++++++++++++++
->  2 files changed, 68 insertions(+)
+>  arch/riscv/kernel/cpufeature.c        | 6 ++----
+>  arch/riscv/kernel/vendor_extensions.c | 2 +-
+>  2 files changed, 3 insertions(+), 5 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/s32g2.dtsi b/arch/arm64/boot/dts/freescale/s32g2.dtsi
-> index 7be430b78c83..f73cd5a0906d 100644
-> --- a/arch/arm64/boot/dts/freescale/s32g2.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/s32g2.dtsi
-> @@ -317,6 +317,23 @@ usdhc0-200mhz-grp4 {
->  			};
->  		};
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index c0916ed318c2..32525b69ab99 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -49,9 +49,7 @@ struct riscv_isainfo hart_isa[NR_CPUS];
+>   */
+>  unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap)
+>  {
+> -	if (!isa_bitmap)
+> -		return riscv_isa[0];
+> -	return isa_bitmap[0];
+> +	return !isa_bitmap ? riscv_isa[0] : isa_bitmap[0];
+>  }
+>  EXPORT_SYMBOL_GPL(riscv_isa_extension_base);
 >  
-> +		edma0: dma-controller@40144000 {
-> +			#dma-cells = <2>;
-
-Any reason for not following DTS coding style in order of properties?
-This is odd style.
-
-> +			compatible = "nxp,s32g2-edma";
-> +			reg = <0x40144000 0x24000>,
-> +			      <0x4012c000 0x3000>,
-> +			      <0x40130000 0x3000>;
-> +			dma-channels = <32>;
-> +			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "tx-0-15",
-> +					  "tx-16-31",
-> +					  "err";
-> +			clock-names = "dmamux0", "dmamux1";
-> +			clocks = <&clks 63>, <&clks 64>;
-> +		};
-> +
->  		uart0: serial@401c8000 {
->  			compatible = "nxp,s32g2-linflexuart",
->  				     "fsl,s32v234-linflexuart";
-> @@ -333,6 +350,23 @@ uart1: serial@401cc000 {
->  			status = "disabled";
->  		};
+> @@ -72,7 +70,7 @@ bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, unsigned i
+>  	if (bit >= RISCV_ISA_EXT_MAX)
+>  		return false;
 >  
-> +		edma1: dma-controller@40244000 {
-> +			#dma-cells = <2>;
-> +			compatible = "nxp,s32g2-edma";
-> +			reg = <0x40244000 0x24000>,
-> +			      <0x4022c000 0x3000>,
-> +			      <0x40230000 0x3000>;
-> +			dma-channels = <32>;
-> +			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "tx-0-15",
-> +					  "tx-16-31",
-> +					  "err";
+> -	return test_bit(bit, bmap) ? true : false;
+> +	return test_bit(bit, bmap);
+>  }
+>  EXPORT_SYMBOL_GPL(__riscv_isa_extension_available);
+>  
+> diff --git a/arch/riscv/kernel/vendor_extensions.c b/arch/riscv/kernel/vendor_extensions.c
+> index a8126d118341..62f55bc779e9 100644
+> --- a/arch/riscv/kernel/vendor_extensions.c
+> +++ b/arch/riscv/kernel/vendor_extensions.c
+> @@ -51,6 +51,6 @@ bool __riscv_isa_vendor_extension_available(int cpu, unsigned long vendor, unsig
+>  	if (bit >= RISCV_ISA_VENDOR_EXT_MAX)
+>  		return false;
+>  
+> -	return test_bit(bit, bmap->isa) ? true : false;
+> +	return test_bit(bit, bmap->isa);
+>  }
+>  EXPORT_SYMBOL_GPL(__riscv_isa_vendor_extension_available);
+> -- 
+> 2.34.1
+>
 
-interrupts, then interrupt-names but:
+Since the changes are harmless and I do prefer the way the code looks
+with them,
 
-> +			clock-names = "dmamux0", "dmamux1";
-> +			clocks = <&clks 63>, <&clks 64>;
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 
-here reversed.
+but these types of changes are pretty much just pointless churn...
 
-Best regards,
-Krzysztof
+Thanks,
+drew
+
