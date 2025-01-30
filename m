@@ -1,133 +1,103 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66405148832;
-	Thu, 30 Jan 2025 08:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04240148832;
+	Thu, 30 Jan 2025 08:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738225930; cv=none; b=vFHoFW4XzxcrWvFZlDNaJAiTyFkO7KPLJnQeFkdHRW+Ddz5OYYK1xYttr43STCo/uEt2xPJj+PNXj5gRVtBf00G5JhmEasDJ9wdbcfhKzQBzUAFJXEVo4klw66Slj0kDnf4oPN+H0OtN/HxWCFMSvkYxOhbwP1l50a7gAPxiZlY=
+	t=1738225963; cv=none; b=T0Zv1aJuUC8fswJICekvObFs7MC1KxPTaDQEvHF7CoFxkKt0DVWl4ndXuM2BYTCq91pzhy2FN84q4FqPRPgKHV3EjBe/lixABEuuz06RxeT0wpIDGfKetOhYLrfpKSJLmvnFNqFNN2F7Ro/gt9SAoh1DRvhzjSaeKWw9kEPG7Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738225930; c=relaxed/simple;
-	bh=ch0mvzHl7BtRiR+ehcr7+FmBj2pnIcAvO/xV3NS3aMo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aQQ0sRkxvZEDM8mszL+s9TiJ5CEcxFCQOURnRdy8DmZ9gG9+QusQuVYO27TUpguP812QAe2Ff5atHN7TncV6HHiaVP5S9FugdKN2GW6x9MaeMY83hvPFKcvzuQNHZQVS/hibRVTWnd+j1cookQoHXOrYqSvEeVGW79zlV3yAvcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=N4wWQj1C; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1738225963; c=relaxed/simple;
+	bh=KGZn6Xt9v0IKvMBO/XZlgfWkSXISMGsYFaHeuoOmrSM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XEdpVEXYJCN1CYCQpZWhvdH9o0ZNm/u213H1rUOuA+xYY+vm7ibptLrDV9bJwuOX8SdKIyYPsKytjGZ3FaNc5PcKinn0Dz2AmdFgTLebQG9ozQJi1f/9gt8HMHbXUracfQB+WrEZqkG3GRvE8hR375ZlNeLIPplWkdAeOaEvi58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tdz1WU4N; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="N4wWQj1C"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Ul7+mqvJN+pEzAZI3KgN5ZCGEQWBECJtRWmuoSN3Ln4=; t=1738225928; x=1738830728; 
-	b=N4wWQj1CVi//bhpXC8PV5L+bUKBmL80KHPjuqUOoawTe7V6K6OVYvIXc16w+xNz78ripc3zvwr/
-	k02CJ5y90yUFc/fgPiBL414I4VGo6bn0+LhQZt1wrAkGMj3o6qPabYxjdLHXqVVONsJKU/pglJFqk
-	VL+SwhkwuYIhKQrD5ctuNl1aRBKs12R8XSB6QRiPvuEazi6fH3+rLC2mjL35Hd2zquDzWCmLyfpoI
-	y+wZvvVj8KD3LRqHY6xk2XfjUjg96OSNIIhfI6uCwADXg5+UlH6I30Q6fMvUz9TZWoBEj1v8BDfSf
-	bhbHxyFpb1irtNy3+iXoYFERSNxusqgEHu6Q==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1tdPy1-00000000CAQ-29Q6; Thu, 30 Jan 2025 09:32:05 +0100
-Received: from p5dc55198.dip0.t-ipconnect.de ([93.197.81.152] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1tdPy1-00000001jkB-17z8; Thu, 30 Jan 2025 09:32:05 +0100
-Message-ID: <3ec5a6621cabddad686f727d20b725ed9658dddd.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH] sh: Remove memset_io from sh specific code
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Julian Vetter <julian@outer-limits.org>, Arnd Bergmann <arnd@arndb.de>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>
-Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 30 Jan 2025 09:32:04 +0100
-In-Reply-To: <20241204164020.48361-1-julian@outer-limits.org>
-References: <20241204164020.48361-1-julian@outer-limits.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tdz1WU4N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738225963; x=1769761963;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KGZn6Xt9v0IKvMBO/XZlgfWkSXISMGsYFaHeuoOmrSM=;
+  b=Tdz1WU4N+/N3pymK5rHLunob92AHSw1jTGuflUkggBMyQQDldpyrw+Pt
+   17D76t5T9Ld8ki613y++FrfzS5LE+27XDqzS4OF44PMj8lrWAUqs5VtS5
+   X5V09txXM07XJx64tdlsKu0kCLx0kPZzcXU1iTVSgAMJdGS5HK5SNJ7rL
+   PazlB9ANOsJk+aCPqjfEE7Sy6K0znIeW33UGS2MwS2AOMUZLdgmqLJbIb
+   4f5FFyAXSAaqwuRFTvNkcuMJoGCx4DqXGsOXu9jG5zv6xeza0aY0w2Yfy
+   36CHEdaN7wOlLdU31hrOf8pRfs2n4sSHMYSNdkfkRGKIfHJE4YU0hT73K
+   g==;
+X-CSE-ConnectionGUID: dMRdtSosRDiW4JLc0Pipsw==
+X-CSE-MsgGUID: eC/NbXjGTpyGInoLc4qr1w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="56186019"
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="56186019"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 00:32:42 -0800
+X-CSE-ConnectionGUID: MsL1juu8Rza5VqiPNSHU4A==
+X-CSE-MsgGUID: IFKHj+vcReOFJ/dMDX0nAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="109066052"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 00:32:38 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tdPyT-00000006cxf-3VBL;
+	Thu, 30 Jan 2025 10:32:33 +0200
+Date: Thu, 30 Jan 2025 10:32:33 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Daniel Thompson <danielt@kernel.org>,
+	"Dr . David Alan Gilbert" <linux@treblig.org>,
+	kgdb-bugreport@lists.sourceforge.net,
+	Anton Vorontsov <anton.vorontsov@linaro.org>,
+	Sumit Garg <sumit.garg@linaro.org>, linux-serial@vger.kernel.org,
+	Arnd Bergmann <arnd@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Robert Marko <robert.marko@sartura.hr>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] Revert "tty/serial: Add kgdb_nmi driver"
+Message-ID: <Z5s5IThpnMNdY62v@smile.fi.intel.com>
+References: <20250129162700.848018-1-dianders@chromium.org>
+ <20250129082535.1.Ia095eac1ae357f87d23e7af2206741f5d40788f1@changeid>
+ <Z5s38S7sJ2mka3-1@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5s38S7sJ2mka3-1@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Julian,
+On Thu, Jan 30, 2025 at 10:27:29AM +0200, Andy Shevchenko wrote:
+> On Wed, Jan 29, 2025 at 08:25:50AM -0800, Douglas Anderson wrote:
 
-On Wed, 2024-12-04 at 17:40 +0100, Julian Vetter wrote:
-> Remove memset_io from sh specific code and fall back to the new
-> implementation from lib/iomem_copy.c. It uses word accesses if the
-> buffer is aligned and only falls back to byte accesses for potentially
-> unaligned parts of a buffer (i.e., at the beginning and end).
->=20
-> Signed-off-by: Julian Vetter <julian@outer-limits.org>
-> ---
->  arch/sh/include/asm/io.h |  2 --
->  arch/sh/kernel/io.c      | 14 --------------
->  2 files changed, 16 deletions(-)
->=20
-> diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
-> index cf5eab840d57..3771bfa984af 100644
-> --- a/arch/sh/include/asm/io.h
-> +++ b/arch/sh/include/asm/io.h
-> @@ -269,12 +269,10 @@ __BUILD_IOPORT_STRING(q, u64)
->  #define IO_SPACE_LIMIT 0xffffffff
-> =20
->  /* We really want to try and get these to memcpy etc */
-> -#define memset_io memset_io
->  #define memcpy_fromio memcpy_fromio
->  #define memcpy_toio memcpy_toio
->  void memcpy_fromio(void *, const volatile void __iomem *, unsigned long)=
-;
->  void memcpy_toio(volatile void __iomem *, const void *, unsigned long);
-> -void memset_io(volatile void __iomem *, int, unsigned long);
-> =20
->  /* Quad-word real-mode I/O, don't ask.. */
->  unsigned long long peek_real_address_q(unsigned long long addr);
-> diff --git a/arch/sh/kernel/io.c b/arch/sh/kernel/io.c
-> index da22f3b32d30..16e963bab595 100644
-> --- a/arch/sh/kernel/io.c
-> +++ b/arch/sh/kernel/io.c
-> @@ -95,17 +95,3 @@ void memcpy_toio(volatile void __iomem *to, const void=
- *from, unsigned long coun
->  	mb();
->  }
->  EXPORT_SYMBOL(memcpy_toio);
-> -
-> -/*
-> - * "memset" on IO memory space.
-> - * This needs to be optimized.
-> - */
-> -void memset_io(volatile void __iomem *dst, int c, unsigned long count)
-> -{
-> -        while (count) {
-> -                count--;
-> -                writeb(c, dst);
-> -                dst++;
-> -        }
-> -}
-> -EXPORT_SYMBOL(memset_io);
+...
 
-Looks good to me. I looked up the generic implementation in lib/iomem_copy.=
-c and
-it looks much better than the sh-specific implementation due to the smarter
-use of conditional word-long memset.
+> > [1] https://lore.kernel.org/lkml/1348522080-32629-9-git-send-email-anton.vorontsov@linaro.org/
+> 
+> It might be possible to use Link tag here in a form
+> 
+> Link: URL [1]
 
-Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Hmm... I'm not sure what this Link is supposed to mean. You might be forgotten
+to update an URL to point out to the cover letter? (This is the link to patch 9
+in the series and looks a bit unrelated).
 
-Adrian
+-- 
+With Best Regards,
+Andy Shevchenko
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+
