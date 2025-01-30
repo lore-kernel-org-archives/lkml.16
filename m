@@ -1,220 +1,178 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012064.outbound.protection.outlook.com [52.101.66.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C9E1E9B33;
-	Thu, 30 Jan 2025 16:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738253279; cv=fail; b=C0owuMhByi41pZsZogInq0AOLaabOwtPQ/gypCnCo2Bvc5xN0jJ8DUCvkz+3TS8ZAZncoQVQlT8d82Pnh4chL1sqJZMEB3qfpRPxQywlhDdfMXLvveF9IUjxnZmT1XmKwITd81xUP6Fr49kXAtJb17lCdc+JvDoS1opfd8qnrmE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738253279; c=relaxed/simple;
-	bh=ibVYamS7oopw4pfQf2n0olZKn1dWd549FrupwLtgUK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nIdUZY8DYU6Jz54Bb2E2JLjL0yJxlCu7P46oCgOjfnT2+SX9VuMewXtpSMMN2vK+PZciNSDXnEoPvAQL5PINokPaks0fNU8QzQDmpHL+WgpQd9Nr2vONs3epey/kCgf5GneEhNXjGoEtGpQaaFlYuVMOgAaNPAtur23DvLpfUIE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=HoOwF7eF; arc=fail smtp.client-ip=52.101.66.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC3784D34
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 16:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738253391; cv=none; b=f/WuVgW0uk7k8KJq5vYcXAYXDiDtnkPCBXxHMATjSOx5+l941ZCC76HnDpGiykNeyXuWSyM3WSNuQ1k4HzaOWFw+uUSKmsT0CBEds3r0HP8CzxygImfmKqhYXLBuU4oWNnHYti2OamXq48Mn69B8DFEb6z6sXbR9AF/erDMuUKc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738253391; c=relaxed/simple;
+	bh=+YGWdOLH796KgtIQHApwLPR2A7IV2UrR8iSarAPSu9Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iCv7mnPfwcuBdmy7KEWbUlxRMyR2DQJ955BR1GMO/0dJ4MNlhb0oabCOCjKgrd++BpXBXdo+oE+0SyljNhOqWvzEqpw4aUmqTGLS6veGRx1Xvi78uR9zHMBCul5PalZFqLWamFQtHe74hp2x6j2G6y/5cxeSsP9UTiMHPOrVZ8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=kGtmDMmi; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="HoOwF7eF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m4R6VcoQ6jfvhySdHGR0rrlzYWaxTvUWSYZOnKyzzeeHKeALCWSWT3Ft8bPrnP9jBRd7q/lKGUhtqw28KiFIei+Z8n5T6eWEXjcMstSXp8qyS39iUjhM457sOa1v5I5DpveBGbUw4uIV0L/fsKSxQw3pZgaJ7nnWLxgmhT+uZzhxnu8e7nNFhKQkEcaqFi0fg6KeLApNEj4l+cykHEeohuOJseHPybw6N53RClunW9XqERC1v5Yn2+xsyutwZPszbSXYD/2Y+q2Q+J5Mtdj3WqEmKZmSojG2QuUn9SZnlHiD4f6pSwg6ZfN2ZUbeHyY44RLR5AuTzCYOMLEHSnxx2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xvZEWV5+1gluiYffVenZPiFIyE/eX6THHLAEROIDwQc=;
- b=hHSiDBsaBiOZCbyQKkZei3wzQCvxgdkpp55fE7LESM89HGY8GGvu6UtyEzVMhNHj72lM6zI/mM0/vXN/VTc/QeJLq8R+TEl+uB5aytLY6vNILyG0wIyF8XPqJvXSHBUEJ8QZMb2KhiA7iLh5pIirGPSxgG0EontzraLCi7fYOdENfqv0HNzmcFfLDR8b4ypqqu99VgA33m/RhtPdfm+8PwhpPjlz86T3eQujOhLE5Qu722OqnA3fAVVcDFhCphLphp/rTd4MWpSuzr15VWsjwczEERBRhmeG9Mq+PPAq7dHgm2d1P6dI13iFy1iWMBmqx8xqbaViorENjihq5SkpfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xvZEWV5+1gluiYffVenZPiFIyE/eX6THHLAEROIDwQc=;
- b=HoOwF7eF7/jVvAYRi0ETtITZ9X903tmKMbUGG3z1o8CXhrpmTJmyVkFupwapykLqWipPaA76K2Bd0rRgDKWbI7fZSIiUKdl3lh1kZKh5+cEtI4QHijF/6lhQjGHtjyKGHqYYFem5OLZ8YLqsZX7CDNKjmMYaA4R+uMtRnIOP4F++31/JeX3dGldt1489+yXJiaQ7bhqt38C7aHGsykILBJ8dZuE/YqgsmRHrnP8qA+z0AJB7r5hZIaMRMGyrsvcZK+w0tniYbyV5jtO33kesGuMl49Wav+cNaqCJsWMR5kBOt5u/b//sP1w8DCza4ol0aLnBi/aD4nu0FgsfzllcZQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by PAXPR04MB8373.eurprd04.prod.outlook.com (2603:10a6:102:1bc::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Thu, 30 Jan
- 2025 16:07:53 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%7]) with mapi id 15.20.8398.018; Thu, 30 Jan 2025
- 16:07:53 +0000
-Date: Thu, 30 Jan 2025 11:07:44 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v9 1/7] PCI: dwc: Use resource start as iomap() input in
- dw_pcie_pme_turn_off()
-Message-ID: <Z5uj0Jw9/UQ/wE0e@lizhi-Precision-Tower-5810>
-References: <20250128-pci_fixup_addr-v9-1-3c4bb506f665@nxp.com>
- <20250129231937.GA523281@bhelgaas>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250129231937.GA523281@bhelgaas>
-X-ClientProxiedBy: SJ0PR13CA0116.namprd13.prod.outlook.com
- (2603:10b6:a03:2c5::31) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="kGtmDMmi"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4361815b96cso7301085e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:09:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1738253388; x=1738858188; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DHjECDXWr9DtzEWz0JXb8DxrPMtRT+1WnFwQ9T4qTYY=;
+        b=kGtmDMmiKsOTTSd1nxMT6b/rVp8Z5iwuxjyUOhOlAE1wo+hzjW7SyxgXgNsvFmgv2G
+         SG8uYz0MzKEpLQfvxVsSTMoQarFpR45K09iAM3/J4AHh7uxrUpwJ1JNr4+kTjfVc7rDA
+         g5QKrnD707dqUeFathBYAk1d5nmn51t1dVDqY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738253388; x=1738858188;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DHjECDXWr9DtzEWz0JXb8DxrPMtRT+1WnFwQ9T4qTYY=;
+        b=MG0AELbPJHRt6hpjHj0eKir5j+OT+kfR6jNzQNMpx7CNlycGmFSMdWslkMnsYJ4zda
+         GsUqY13vNxA5NKJht1I212bxjx8jPFIdFdec2LbwH1kAwhmuLKUiTH65dycfgPWTCxjI
+         V/L4cqrh0t5VVdfvfsACMOyf9HoTINr5V1q0Gab00Qa4sLqxPfIfok8SV3dGtjPhr0Hk
+         46uoI59fkkv7C6/5hwW7dW0LStO2l/7jI+oulRyS4SmbbKVA7xyCHaMldqPzUQxpL0b2
+         BDHTLKE6zCnSddzv/GccUVSPYT2JSfGSIXxmkK7P5mycza/9KcguuWLuwawpZr2wmebD
+         Rc6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVInEgI+CiA7SnV2ZmEUrJKRmHkS4EbEY2+Wc/VjqdPJhoyLefeQjaLnvVA3mUyKN3aBIxphd56Afph9UA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCmowl++IcxNd39+wGIgDMOfpwfanUr7NASJVjnUPZhuCD4KmL
+	a5kECjic9QFCJwPbzINM6FM0SEl02iNhxTpZ8iD0XgAD7/x5ac2owSKpx9TKkcE=
+X-Gm-Gg: ASbGncvObaCDfN6+lP5yRf7lSYdopTAvdYDc/K2YKRNDzAM0Df9oQsjtBeW3BUPQXjT
+	+bcjUSPFcgVSJorVQ1xa4mH8glFOVsUjNZ5fVPQGgBew2sDGJx3uqydZmBpgUwWnqceHDU9Z4TH
+	qeQWY8X35wFbSGJKM8dO/nk6RF9bhHhKDay3FCBXE0tuNQKWiY05NabL8LJWGAvQmYr7V2PSoeC
+	tejDQMv60FiCVIvzODcdUaqUBkw2E9wtXfWntiFQouaF1OT+5g0B/+VlfqpUX3SIALo9aoY0qgG
+	qnyeLOqFnbnGwtJM0CXBg7SvZrg=
+X-Google-Smtp-Source: AGHT+IHzkAlG33CPN/kMrEln846pAhOyRPiLkWV/nev8K+POyx7veXX/IQAiWwM1YsBE7oYiCeZW/A==
+X-Received: by 2002:a05:600c:1e0d:b0:436:f960:3427 with SMTP id 5b1f17b1804b1-438dc40ffbbmr65699075e9.22.1738253387756;
+        Thu, 30 Jan 2025 08:09:47 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2ef08sm64120395e9.22.2025.01.30.08.09.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 08:09:46 -0800 (PST)
+Date: Thu, 30 Jan 2025 17:09:44 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com,
+	lyude@redhat.com, dakr@redhat.com, airlied@gmail.com,
+	simona@ffwll.ch, leon@kernel.org, jglisse@redhat.com,
+	akpm@linux-foundation.org, GalShalom@nvidia.com,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-mm@kvack.org, linux-tegra@vger.kernel.org
+Subject: Re: [RFC 1/5] mm/hmm: HMM API to enable P2P DMA for device private
+ pages
+Message-ID: <Z5ukSNjvmQcXsZTm@phenom.ffwll.local>
+Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com,
+	lyude@redhat.com, dakr@redhat.com, airlied@gmail.com,
+	simona@ffwll.ch, leon@kernel.org, jglisse@redhat.com,
+	akpm@linux-foundation.org, GalShalom@nvidia.com,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-mm@kvack.org, linux-tegra@vger.kernel.org
+References: <7282ac68c47886caa2bc2a2813d41a04adf938e1.camel@linux.intel.com>
+ <20250128132034.GA1524382@ziepe.ca>
+ <de293a7e9b4c44eab8792b31a4605cc9e93b2bf5.camel@linux.intel.com>
+ <20250128151610.GC1524382@ziepe.ca>
+ <b78d32e13811ef1fa57b0535749c811f2afb4dcd.camel@linux.intel.com>
+ <20250128172123.GD1524382@ziepe.ca>
+ <Z5ovcnX2zVoqdomA@phenom.ffwll.local>
+ <20250129134757.GA2120662@ziepe.ca>
+ <Z5tZc0OQukfZEr3H@phenom.ffwll.local>
+ <20250130132317.GG2120662@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|PAXPR04MB8373:EE_
-X-MS-Office365-Filtering-Correlation-Id: fe36c0d0-bc88-462a-3ee6-08dd41484085
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|52116014|7416014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AsBFToRDeaQYMiJVs6fdkbRWRDF39AuAljmgayYYcf0goBglTTHNazJlDRsJ?=
- =?us-ascii?Q?XVD7mhc5BMMnt74HfKmiM8QuGG0BNPPHpGsq6uebXqGQZcW9jrtvApKM/njI?=
- =?us-ascii?Q?AwxC3O8Oe/GcS4n832BBrv/IcnMbH3LlVB6NsMAD0CBb5eBoz6cVOApIk2Fc?=
- =?us-ascii?Q?i5bOqTOOeAvPMJGY9SHUK6D13keqaT1yLVjPV6mmePtXPXIJ1CtxmoW8daAC?=
- =?us-ascii?Q?nBb4Irq/mgMAYoe+BdzgOkFmbG42ny0GDb8Dg01iumkVnUXSACqsno1AwiQZ?=
- =?us-ascii?Q?v5cX1N3VgDG+dSo/+uZVPOfyhjnuq1xUavsf4TtA1Djok5H+AgTU6vZX1y07?=
- =?us-ascii?Q?GrmuKxjFnFfvoAGkISJWpc9dlumSNcTJyVverQ7xn9bKbQk3+Tw36INlIc1G?=
- =?us-ascii?Q?98sx0xyBK58kBnYeTVZYKc7kiW/FxqRmYHflOPxOY2KIf1UcTl/VkktmWhYA?=
- =?us-ascii?Q?aFQwkTvTZduFHWXbpcZgJPOXhvabvIDHDbZkRfgucFUf/X+O2Pr8H7d5HboQ?=
- =?us-ascii?Q?ilBREg62WAGgJbRHqBGXemG0/PvgIEiGWBOAXSbAZe9RRptQdpXCeLQYP+S7?=
- =?us-ascii?Q?JpSQm8oVXg89r1RespqDE9zEyxt+KEmd0NWmPsXHF+tjFobedock9vGX1xV0?=
- =?us-ascii?Q?EYg0s/Yl9CPlogYvWALv1dUoQJAq39+BMepm9vNQ4nw5vwHATcvdVc5ZZKET?=
- =?us-ascii?Q?A7HXwgk5U/VHJVvGP8kGBC8jfqnLiKqVM91QYK3Xf1nREtKN8NQ1Xr9mkFCy?=
- =?us-ascii?Q?mQw2r8S28833o/WyoIvrcbD+QrAxUardnMORtENqURgfwLA0R903bMghGoT/?=
- =?us-ascii?Q?XCnIsn+ww4JO+ni6BaK0oEaNLy9ka4N/IXIZEg2wmIazSMESuDy/VNz6XAgv?=
- =?us-ascii?Q?ogbTGDOwXtmOcCP3v4Lvou1gVhqvW8aYpJsV76+hmw9bDdOY8Serk8qRglgb?=
- =?us-ascii?Q?6xC5ICSj1/mDYM4vQtv7k5pYMVGjxApbWJgI+2GEyO+wJr4REL2nTecWu4BS?=
- =?us-ascii?Q?mOm6gTyt5c+YurMf/zAdQeVqDos7YzPfJodM6HJRxSOFbIQ6g2YxdRC52UzW?=
- =?us-ascii?Q?dxfbaFNw9Z2w39OdG4Dfwtu1BAz15o5t0K0YyCs8g8r7isWdESyqFzusFUgy?=
- =?us-ascii?Q?zDPuwGdq++oLGX1twptvDYhpgjlK9mCJgcNhC7BBDdfGaz/76y9B15gIoVCM?=
- =?us-ascii?Q?BbVpuOu419h9jafTc+GsA577qsKMLBzwmzoxKd5a5NaXsKadyD+RVzbCbxvN?=
- =?us-ascii?Q?RZ9qKQmHh0SvIx4BY+ui17xvs/BGoh6RYmTlA2i9pJrUsv+Ca3jwt5b2QKrv?=
- =?us-ascii?Q?pIK6HBfNkKWCjiu5q99Q/vNxMV51z6nm/VLC3mrgKrZdwFQ2qGeCrl2+l1ad?=
- =?us-ascii?Q?s7QEfA4WUQ16TbPQcNGSgsrBiuScmNLzs7UH/5oD5GFPb04y1oXyS2wiLTZ7?=
- =?us-ascii?Q?NqF9oUkrqX6oyCfEkDifT/crpRke1aIX?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(7416014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Mt8RaFFAK+vyz/xQrFTO/A7Be0//2tac1k8JFO9JEGsYiWrw49e+nSZnSROT?=
- =?us-ascii?Q?MVvhOIwfZc+GLRgF2FC3Mx5Gig2ctaWwljiRp25pO0ov/ZiFABl0stWsFqgQ?=
- =?us-ascii?Q?kscwoE4ZwD90rB3gciYpe8Jb6Kk8aTJkSDWmod6CmONG68FUBnbOSuPgQEaw?=
- =?us-ascii?Q?E9trJ/4yq6FJj7fohaRm1yClYZrwVsF06NsBFSgkRSDDjzFE5gYD6y3RP878?=
- =?us-ascii?Q?f7Jh+4KXpy/6Zv3QHZ/Rb5S7Q1yX+s3MYqFpHr1hb3HDX09nT0PDJFA/s62T?=
- =?us-ascii?Q?hay7CHrtD2SVHFa9HaL6UPiWbkRlQSM/fBPzWh/jS7vvRfT9LXvah6EsobyX?=
- =?us-ascii?Q?FjccxWFhdqbt98H+5oqhXSCS3BDvOFHgMEEhjXP4SdHHf29eV75uI5F9Mu2N?=
- =?us-ascii?Q?EEbUa4G+/pFza0cIM3jeineWDcWRUG7qFTD2hVIsIotvSSGEpJf3Z8OAcLO2?=
- =?us-ascii?Q?0jzlQsGz+W/Rf8Vleh7WX+Khr+8b18BWzncZpQo7YumxRBuwCRe4zKugxlmF?=
- =?us-ascii?Q?YRJZfEHz4jdvYA1dgHjiOFlYKbYsszAw1KmYQnfSNeQkoB2izZFuOaVfTgW3?=
- =?us-ascii?Q?EbS558CyUdSq9fKMSl+dbwUA60kDmXYHSmS/89RyLncMXRev3CPdc+J2lkyp?=
- =?us-ascii?Q?SDGHPwog39o2S43Em9j68zG5XtWtZ8vKwPNU0Pd+Fh8fx6yMQ3O6YPGkwkv6?=
- =?us-ascii?Q?mLZJSmQhvRt5pVzTx+oe7TEWc3zw9O1C0GX/TJ+9sLJSaot62ej2CdfJp9Hl?=
- =?us-ascii?Q?yB4PtLN3kActZTPLElyOrledd5HWxqnUfk/BuvVRXu9/I2XonQNQNA61mbP3?=
- =?us-ascii?Q?Elh54ppyKKjlcF/WfPMFcqV5erioCQxg7TKBDcdGVvZXCx8b/OaKYkwHB4Mn?=
- =?us-ascii?Q?yF+h+hLYT5GGFRvDeDq9fGdDXqjfp2H8euxqKkpEB5iki1hEOYTYM6b27yoU?=
- =?us-ascii?Q?+qZyhdlpw+XA/yZ5Uv3tg05WjOYz9dCJDbk4PMKE0vfM54W6xFOyL7mAH6bv?=
- =?us-ascii?Q?t0Q/c8G69Vp5uO7Rph9JuPP2k+MCjvewRRYSUt9yR76niFSZbeBp+dMq3xKc?=
- =?us-ascii?Q?IwThgl88yrcI2ixIcz0W+YQO1Alk7To3rrPtMSHPdvqU4ezuDA/MC0Rebo+q?=
- =?us-ascii?Q?5wK7QlcAWzuHYIcUhdx48Sm68r0FX0jWchSqqme390Us7cng2jHhnPk1nbmD?=
- =?us-ascii?Q?ZRvdMQL9Dyh3EOum2/3El3bfQnZfEXO0+l+4OVtYYa7/fVuRCa86ddI25dat?=
- =?us-ascii?Q?LNXJD8f7HKxvDEkwaED2zfsfP7EPUELQ3FEjPlU9fByXjTNp6xuOY0tjInYM?=
- =?us-ascii?Q?2p5DfrbaVA7MVMvrv3+px0+p5thrOURXtLTWDjeJEm05Ty0T2yqlFIiIf8GH?=
- =?us-ascii?Q?ft3lKH11NlrlUzfg2e1DO4NyGtWRggrDaeZ36zAlkdhfPzz+qAjSZEckScHL?=
- =?us-ascii?Q?/jGaw0Iuvod+tVnf03CZnLlrfjQOzDm/TDIwTHinYJRtDIYpfGeKsE3mm0se?=
- =?us-ascii?Q?a4A67G7yiGSfHyyTiNRyRB1N2z0nzxlMdQxJTBt12TBIHNL1Bhx1wdDhmo9G?=
- =?us-ascii?Q?yzdP51RmQNcHHXeB83cywk3lxuIOJDGOcutc4vDk?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe36c0d0-bc88-462a-3ee6-08dd41484085
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 16:07:53.4590
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2G8W33g5MUFlJqA5j3BKk1F/1Hvx7OKsbRsT/VpPrpZ38n8kOqy3n9Bh5NOyWo9bKLcYuPs3QChJJN5ZGxB+SA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8373
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250130132317.GG2120662@ziepe.ca>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
-On Wed, Jan 29, 2025 at 05:19:37PM -0600, Bjorn Helgaas wrote:
-> On Tue, Jan 28, 2025 at 05:07:34PM -0500, Frank Li wrote:
-> > Pass resource start as the input argument to iomap() instead of
-> > atu.cpu_address in dw_pcie_pme_turn_off(). While atu.cpu_address happens to
-> > be the same here, it actually represents the parent bus address before ATU,
-> > which may not always align with the CPU address. Using resource start
-> > ensures correctness and clarity.
->
-> 1) "atu.cpu_address happens to be the same here" is currently true
->    but only because this function is buggy and assumes the ATU input
->    address is the same as a CPU physical address.
->
-> 2) We're trying to make a correctness fix, not a clarity fix.  This
->    patch by itself isn't a functional change because of the cpu_addr
->    bug, but without this patch, fixing the cpu_addr bug would break
->    the iomap.
->
-> 3) "Pass resource start as the input to iomap()" just restates the
->    patch.  We should say *why* this is important.  Something like
->    this:
->
->      The msg_res region translates writes into PCIe Message TLPs.
->      Previously we mapped this region using atu.cpu_addr, the input
->      address programmed into the ATU.
->
->      "cpu_addr" is a misnomer because when a bus fabric translates
->      addresses between the CPU and the ATU, the ATU input address is
->      different from the CPU address.  A future patch will rename
->      "cpu_addr" and correct the value to be the ATU input address
->      instead of the CPU physical address.
->
->      Map the msg_res region before writing to it using the msg_res
->      resource start, a CPU physical address.
+On Thu, Jan 30, 2025 at 09:23:17AM -0400, Jason Gunthorpe wrote:
+> On Thu, Jan 30, 2025 at 11:50:27AM +0100, Simona Vetter wrote:
+> > On Wed, Jan 29, 2025 at 09:47:57AM -0400, Jason Gunthorpe wrote:
+> > > On Wed, Jan 29, 2025 at 02:38:58PM +0100, Simona Vetter wrote:
+> > > 
+> > > > > The pgmap->owner doesn't *have* to fixed, certainly during early boot before
+> > > > > you hand out any page references it can be changed. I wouldn't be
+> > > > > surprised if this is useful to some requirements to build up the
+> > > > > private interconnect topology?
+> > > > 
+> > > > The trouble I'm seeing is device probe and the fundemantal issue that you
+> > > > never know when you're done. And so if we entirely rely on pgmap->owner to
+> > > > figure out the driver private interconnect topology, that's going to be
+> > > > messy. That's why I'm also leaning towards both comparing owners and
+> > > > having an additional check whether the interconnect is actually there or
+> > > > not yet.
+> > > 
+> > > Hoenstely, I'd rather invest more effort into being able to update
+> > > owner for those special corner cases than to slow down the fast path
+> > > in hmm_range_fault..
+> > 
+> > I'm not sure how you want to make the owner mutable.
+> 
+> You'd probably have to use a system where you never free them until
+> all the page maps are destroyed.
+> 
+> You could also use an integer instead of a pointer to indicate the
+> cluster of interconnect, I think there are many options..
 
-Thanks, will update commit message. The key change is patch 3
+Hm yeah I guess an integer allocater of the atomic_inc kind plus "surely
+32bit is enough" could work. But I don't think it's needed, if we can
+reliable just unregister the entire dev_pagemap and then just set up a new
+one. Plus that avoids thinking about which barriers we might need where
+exactly all over mm code that looks at the owner field.
 
-PCI: Add parent_bus_offset to resource_entry
+> > And I've looked at the lifetime fun of unregistering a dev_pagemap for
+> > device hotunplug and pretty firmly concluded it's unfixable and that I
+> > should run away to do something else :-P
+> 
+> ? It is supposed to work, it blocks until all the pages are freed, but
+> AFAIK ther is no fundamental life time issue. The driver is
+> responsible to free all its usage.
 
-Frank
+Hm I looked at it again, and I guess with the fixes to make migration to
+system memory work reliable in Matt Brost's latest series it should indeed
+work reliable. The devm_ version still freaks me out because of how easily
+people misuse these for things that are memory allocations.
 
->
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> > change from v9 to v10
-> > - new patch
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index ffaded8f2df7b..ae3fd2a5dbf85 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -908,7 +908,7 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
-> >  	if (ret)
-> >  		return ret;
-> >
-> > -	mem = ioremap(atu.cpu_addr, pci->region_align);
-> > +	mem = ioremap(pci->pp.msg_res->start, pci->region_align);
-> >  	if (!mem)
-> >  		return -ENOMEM;
-> >
-> >
-> > --
-> > 2.34.1
-> >
+> > An optional callback is a lot less scary to me here (or redoing
+> > hmm_range_fault or whacking the migration helpers a few times) looks a lot
+> > less scary than making pgmap->owner mutable in some fashion.
+> 
+> It extra for every single 4k page on every user :\
+> 
+> And what are you going to do better inside this callback?
+
+Having more comfy illusions :-P
+
+Slightly more seriously, I can grab some locks and make life easier,
+whereas sprinkling locking or even barriers over pgmap->owner in core mm
+is not going to fly. Plus more flexibility, e.g. when the interconnect
+doesn't work for atomics or some other funny reason it only works for some
+of the traffic, where you need to more dynamically decide where memory is
+ok to sit. Or checking p2pdma connectivity and all that stuff.
+
+But we can also do all that stuff by checking afterwards or migrating
+memory around as needed. At least for drivers who cooperate and all set
+the same owner, which I think is Thomas' current plan.
+
+Also note that fundamentally you can't protect against the hotunplug or
+driver unload case for hardware access. So some access will go to nowhere
+when that happens, until we've torn down all the mappings and migrated
+memory out.
+-Sima
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
