@@ -1,355 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D689322B;
-	Thu, 30 Jan 2025 21:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AEE2AD20;
+	Thu, 30 Jan 2025 21:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738272687; cv=none; b=AQm8eR0V52B9qNgZxhxueVzPjhwLgt9Im72oKSp7ZG5gNMCQZXfRPRNUQHnuoSSrI9WxNRkZnuvJxqKarke3hN6kAlCDmEfc+iPeaqVmgAbgsN6VdRuLIFd21KXsqf6wSMA8JeBVccMPVdxVMqyRX+IhyzOwRegSmc2QKCXB0Uw=
+	t=1738272709; cv=none; b=uv2m5nHTtnc/daRNa8bx/3cxRM+V6ZfCMme4M1sk9/Jl5BeLVkbOJG67BfBt/fTqr7WS/FrH+66KKSnUNOzDbPzSiZE1jvrZK6VoMEKn011bidABgNxx3lyfUTgVLrM3SIc86kXmyyQkkCvVIk7Oic0/Yc3WhXkxNIjffI5si/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738272687; c=relaxed/simple;
-	bh=/VPTNf6kv2G1qLnaa7PZxmpgicixURiI5N/N0YxT8Qg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BP/xaLgjIdV1T/s+NRfKYvchuqyJKyYXvfImofma/0FGBT5YVt3jyDed9Ejf4vB6zZvitU8FrHdMGPuPl6C+9jqjMqt1f7el3Dq+C4lBvBEYNScLmeJM5LR8ZQZSZcx1N6+KjIZclKDURYOrsH7X4uQibOqpPE0uU61FguAk1L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ReNjQK5o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738272709; c=relaxed/simple;
+	bh=V0zt8pNpSVxm3rzhk6TitG9qt6QVSI1feLDgYAggktk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Da/zsFBRluTmx6HtG4fr6CbkqqVEbSp+digakTXPu+gqUNLjE73Kwg78B+2HXZF+AXqEZ4RF6F86+df8n75t0QSnSYpsWhM+7GLIHWysm5+OMcfaZgPOJTkzjy8gaxGyX1Mg0o1Nn4Jj5NBv4KMM8JOf60nA+yf7zyeaMsDext4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eRyWzwV/; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ReNjQK5o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56FE9C4CED2;
-	Thu, 30 Jan 2025 21:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738272686;
-	bh=/VPTNf6kv2G1qLnaa7PZxmpgicixURiI5N/N0YxT8Qg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ReNjQK5ofR+danry2PSj58WLHyoCBOBn6MTWxBLdCn0E52DaEZ0FGNcMJ8WpiowW0
-	 TvBvTxD6gZVI7uQC8RNoJCVAfaxTf0YX3DyV79eupdJezctz/M+1RS++/TEhckq+AF
-	 jLRoItDft8LUGYLznwD45iVKeTK5uTZtaeTH4zyyBD3mR3pvDt3UZaMAn01TRKTJyp
-	 nrkZk5/jvTY2TVGJjAvaoawQ3i5QHQfQ4hYpjuFQFIh75akmjxeDR7sWeHgvCXFXDo
-	 n/coqTkDmcxYb981tPQBajlC06YbcVHA1Qz9Dcj/YMgVld90zDpMzVVdJcCkfZA5cl
-	 T5PmI1XdPzpxA==
-Date: Thu, 30 Jan 2025 15:31:23 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jan Beulich <jbeulich@suse.com>
-Cc: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	xen-devel <xen-devel@lists.xenproject.org>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
- reset in Xen PV dom0 (regression, Linux 6.12)
-Message-ID: <20250130213123.GA633869@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eRyWzwV/"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-71e36b27b53so725367a34.1;
+        Thu, 30 Jan 2025 13:31:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738272706; x=1738877506; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=6ezGOPK7HRCXcFfaMlxExVACmV+hJUfqNwX+Seyi/4I=;
+        b=eRyWzwV/0IMgkalf+YXFUj7Bg/BpTDUuDIfD7pdNJP4K0FEngqcnilKQPKcv8+zQrt
+         KrjMRHai3nqH+V5S0bfN+oqQFLnsH0n6yKUmG528OrGu2U/9DquaPxhvoepq3oeyqnVc
+         gs5smFNm0dn3Nf84g1T5YLzmHGVveugzn9vigA3tZF+jqN4K9I76zwHwYIlVqbhjXqCo
+         rWEKN7n+lx4MG9rCKCp9e30GW2qIOE12n2YS9w5StZnSCVoFWRUrq2NH2sRUUclwiLOo
+         ARbue8dv7LVWE/Pkfy5VUNyBLzWNt44PeQOfTEway2QQTP0EPlh0i4HBHiV9xF4CFvRG
+         dW7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738272706; x=1738877506;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6ezGOPK7HRCXcFfaMlxExVACmV+hJUfqNwX+Seyi/4I=;
+        b=ObVvMvpGSpFwwScF24veFZ7e086gvsTOMtDu35u577Gr35Dok6rjPM2o5v1S6ba8KM
+         sieYOuUpvVqHrw2F0rpUwZQCmWpOPig1mNv2VSRrTerxSW3zo0We2BJYxOB0Vnim64H0
+         eLBY9yyhtL/8QOYr6ta2PtdCaGCxxoH9Xc0e8WRaD/a7s1AFf9Z8OsUF0939Yzu0CQJu
+         +98QO79CJ/L6oLYNUiaZSCIHJRh9+CoCRZrmZLFQVGheNNKd+HvwhcFAR+STsM/cQRdb
+         JXx6mU+vPKyvlMkTBir2Eahi9Iv/tZNBN6kBkAPkT668NRhE6ANqjt3XddI56yQMhu2Y
+         0bUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUF+5xQSwR/sqtHmQb4eEGjR7R/2h0xQEOLn56vFLgWSlTdDfWP5Bu33naTFJpVGNsH0ajGb9k3@vger.kernel.org, AJvYcCVa8sbE1MWjCRH8GLY+bwRXk8LvwlWISozlZZaZIvMYcPKuG9aWIOLqJHKjaJAZmGID4uYHUMqXpkQ8tkM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1yI4k0NyyF4vJcU3ahb9G5uWPynVXXyrpf6eHZSLlBob5scML
+	lpR2fv1dzcepI5FDYPA5qK8eSBXGff5WSsKhPJanF3JAcRVUosq4
+X-Gm-Gg: ASbGncujLpCpHdQmOTezBZjQOkSIU/P72zKiMXMSvElxGS99u+iuqDjV5wxMy5YoZbZ
+	v2+jA71EX7OC8eQhaz9NjESOtrONoW0A7ZE9wb9g8v/j5/Epg6DOtJAUZUsuF9q9WlDFLWkiOu0
+	zAkDHUgbvHv40EKgEa5H+j243JfWw2PTVKf4lD4JDw9em/QxrQQC8s0R2gX2UD+jCPHRuOwB2c7
+	h7t4enHOh1HCyESnKbKZvxUl2mr9U65bQhhhLeDv7uiyZG+fFad4ziQJ025wy4YYACt/pZgbGel
+	qUMVSDtZON3saXFOTtxWSP6rnKXTY6q7cZzkwNvSKC0=
+X-Google-Smtp-Source: AGHT+IFUr1xveW4w10nfBCGJ015z8r5ITT3QydOzpsub58Ot+H6hSWiyQH7L828e1Xn3dhTQX5jg1Q==
+X-Received: by 2002:a05:6830:6089:b0:71d:4698:7b24 with SMTP id 46e09a7af769-7265679639cmr6534153a34.16.1738272705983;
+        Thu, 30 Jan 2025 13:31:45 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726618b9f72sm506458a34.50.2025.01.30.13.31.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 13:31:45 -0800 (PST)
+Message-ID: <ab292ebc-69c1-4f44-b8bd-f761147397da@gmail.com>
+Date: Thu, 30 Jan 2025 13:31:42 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cfe0af0e-132b-4390-a3b0-dde0e6326e19@suse.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.1 00/49] 6.1.128-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250130140133.825446496@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+In-Reply-To: <20250130140133.825446496@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 30, 2025 at 10:30:33AM +0100, Jan Beulich wrote:
-> On 30.01.2025 05:55, Marek Marczykowski-Górecki wrote:
-> > I've added logging of all config read/write to this device. Full log at
-> > [1].
-> ...
+On 1/30/25 06:01, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.128 release.
+> There are 49 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 01 Feb 2025 14:01:16 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.128-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-I suspect there's something wrong with the Root Port RRS SV
-configuration.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-Can you add the two patches below?
-
-I don't *think* either should make a difference.  The first enables
-RRS SV earlier and maybe in a cleaner place; the second should avoid
-some pointless capability searches that clutter the logs.
-
-What does d0v1/d0v2/d0v3 mean?
-
-Can you add 00:02.2, the Root Port leading to bus 01, so we can see
-the RRS SV configuration?  Maybe also lspci -vv for both 00:02.2 and
-01:00.0?
-
-Maybe include timestamps and try an FLR without Xen (which I assume
-works correctly) so we can see how long the device typically takes to
-become ready?
-
-Notes below on the snippet that you commented on, Jan.  I think it
-makes sense until the read after FLR returns 0xffffffff.
-
-> > (XEN) d0v1 conf read cf8 0x80010034 bytes 1 offset 0 data 0x80
-
-PCI_CAPABILITY_LIST, first cap at 0x80
-
-> > (XEN) d0v1 conf read cf8 0x80010080 bytes 2 offset 0 data 0xe010
-
-PCI_CAP_ID_EXP (0x10) at 0x80, next cap at 0xe0
-
-> > (XEN) d0v1 conf read cf8 0x800100e0 bytes 2 offset 0 data 0xf805
-
-PCI_CAP_ID_MSI (0x05) at 0xe0, next cap at 0xf8
-
-> > (XEN) d0v1 conf read cf8 0x800100f8 bytes 2 offset 0 data 0x1
-
-PCI_CAP_ID_PM (0x01) at 0xf8, end of cap list
-
-These caps match the offsets from the lspci output in the full log:
-
-  1:00.0 Network controller: MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
-	  Subsystem: MEDIATEK Corp. Device e616
-	  Flags: fast devsel, IRQ 255
-	  Memory at 8010900000 (64-bit, prefetchable) [disabled] [size=1M]
-	  Memory at 90b00000 (64-bit, non-prefetchable) [disabled] [size=32K]
-	  Capabilities: [80] Express Endpoint, IntMsgNum 0
-	  Capabilities: [e0] MSI: Enable- Count=1/32 Maskable+ 64bit+
-	  Capabilities: [f8] Power Management version 3
-
-> > (XEN) d0v1 conf write cf8 0x80010004 bytes 2 offset 0 data 0x400
-
-Set PCI_COMMAND_INTX_DISABLE, disable BARs, Bus Master.  Looks like
-the end of pci_dev_save_and_disable().
-
-> > (XEN) d0v1 conf read cf8 0x80010088 bytes 2 offset 2 data 0x9
-
-PCIe Cap at 0x80, PCI_EXP_DEVCTL is 0x08, PCI_EXP_DEVSTA is 0x0a.
-
-0x80010088 would be PCI_EXP_DEVCTL (a 2-byte register), maybe offset 2
-gets us to PCI_EXP_DEVSTA?  Not sure.
-
-  0x0001 PCI_EXP_DEVSTA_CED /* Correctable Error Detected */
-  0x0008 PCI_EXP_DEVSTA_URD /* Unsupported Request Detected */
-
-Not impossible that these would be set.  Lots of URs happen during
-enumeration and we're not very good about cleaning these up.
-Correctable errors are common for some devices.  lspci -vv would
-decode the PCIe cap registers, including this.
-
-> > (XEN) d0v1 conf read cf8 0x80010088 bytes 2 offset 0 data 0x2910
-
-PCI_EXP_DEVCTL:
-  0x2000 PCI_EXP_DEVCTL_READRQ_512B
-  0x0800 PCI_EXP_DEVCTL_NOSNOOP_EN
-  0x0100 PCI_EXP_DEVCTL_EXT_TAG
-  0x0010 PCI_EXP_DEVCTL_RELAX_EN
-
-> > (XEN) d0v1 conf write cf8 0x80010088 bytes 2 offset 0 data 0xa910
-
-PCI_EXP_DEVCTL:
-  set 0x8000 PCI_EXP_DEVCTL_BCR_FLR
-
-This looks like the actual FLR being initiated.
-
-> This is the express capability's Link Control 2 Register afaict.
-
-Unless I'm missing something this is actually Device Control.  So far
-I think this all looks OK.  The next part:
-
-> > (XEN) d0v2 conf read cf8 0x80010000 bytes 4 offset 0 data 0xffffffff
-
-looks like a problem.  The normal successful read gets 0x061614c3.
-After the FLR, if RRS SV is enabled, we should get either 0x0001ffff
-or 0x061614c3.
-
-Here we would exit the loop in pci_dev_wait() because we didn't see
-0x0001 and we expect that the device is ready and we got a valid
-Vendor ID.
-
-So we proceed to restoring config space via pci_restore_state(), where
-we restore some PCIe registers and the header (first 64 bytes).  My
-*guess* is the device isn't ready (or at least not responding) since
-all the reads return ~0.
-
-> > [1] https://gist.github.com/marmarek/b4391c71801145e52590e877c559c5e0
-
-
-
-commit c2fd12204dcb ("PCI: Enable Configuration RRS SV early")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Thu Jan 30 15:16:40 2025 -0600
-
-    PCI: Enable Configuration RRS SV early
-
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b6536ed599c3..0b013b196d00 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1373,8 +1373,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
- 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL,
- 			      bctl & ~PCI_BRIDGE_CTL_MASTER_ABORT);
- 
--	pci_enable_rrs_sv(dev);
--
- 	if ((secondary || subordinate) && !pcibios_assign_all_busses() &&
- 	    !is_cardbus && !broken) {
- 		unsigned int cmax, buses;
-@@ -1615,6 +1613,11 @@ void set_pcie_port_type(struct pci_dev *pdev)
- 	pdev->pcie_cap = pos;
- 	pci_read_config_word(pdev, pos + PCI_EXP_FLAGS, &reg16);
- 	pdev->pcie_flags_reg = reg16;
-+
-+	type = pci_pcie_type(pdev);
-+	if (type == PCI_EXP_TYPE_ROOT_PORT)
-+		pci_enable_rrs_sv(pdev);
-+
- 	pci_read_config_dword(pdev, pos + PCI_EXP_DEVCAP, &pdev->devcap);
- 	pdev->pcie_mpss = FIELD_GET(PCI_EXP_DEVCAP_PAYLOAD, pdev->devcap);
- 
-@@ -1631,7 +1634,6 @@ void set_pcie_port_type(struct pci_dev *pdev)
- 	 * correctly so detect impossible configurations here and correct
- 	 * the port type accordingly.
- 	 */
--	type = pci_pcie_type(pdev);
- 	if (type == PCI_EXP_TYPE_DOWNSTREAM) {
- 		/*
- 		 * If pdev claims to be downstream port but the parent
-
-
-
-commit 4ea25d50c7c1 ("PCI: Avoid needless capability searches")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Thu Jan 30 14:33:00 2025 -0600
-
-    PCI: Avoid needless capability searches
-    
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..02d592b81bc6 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1742,19 +1742,17 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
- 
- static int pci_save_pcix_state(struct pci_dev *dev)
- {
--	int pos;
- 	struct pci_cap_saved_state *save_state;
-+	u8 pos;
-+
-+	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
-+	if (!save_state)
-+		return -ENOMEM;
- 
- 	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
- 	if (!pos)
- 		return 0;
- 
--	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
--	if (!save_state) {
--		pci_err(dev, "buffer not found in %s\n", __func__);
--		return -ENOMEM;
--	}
--
- 	pci_read_config_word(dev, pos + PCI_X_CMD,
- 			     (u16 *)save_state->cap.data);
- 
-@@ -1763,14 +1761,19 @@ static int pci_save_pcix_state(struct pci_dev *dev)
- 
- static void pci_restore_pcix_state(struct pci_dev *dev)
- {
--	int i = 0, pos;
- 	struct pci_cap_saved_state *save_state;
-+	u8 pos;
-+	int i = 0;
- 	u16 *cap;
- 
- 	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
--	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
--	if (!save_state || !pos)
-+	if (!save_state)
- 		return;
-+
-+	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
-+	if (!pos)
-+		return;
-+
- 	cap = (u16 *)&save_state->cap.data[0];
- 
- 	pci_write_config_word(dev, pos + PCI_X_CMD, cap[i++]);
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index e0bc90597dca..007e4a082e6f 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -35,16 +35,14 @@ void pci_save_ltr_state(struct pci_dev *dev)
- 	if (!pci_is_pcie(dev))
- 		return;
- 
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-+	if (!save_state)
-+		return;
-+
- 	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
- 	if (!ltr)
- 		return;
- 
--	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
--	if (!save_state) {
--		pci_err(dev, "no suspend buffer for LTR; ASPM issues possible after resume\n");
--		return;
--	}
--
- 	/* Some broken devices only support dword access to LTR */
- 	cap = &save_state->cap.data[0];
- 	pci_read_config_dword(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, cap);
-@@ -57,8 +55,11 @@ void pci_restore_ltr_state(struct pci_dev *dev)
- 	u32 *cap;
- 
- 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-+	if (!save_state)
-+		return;
-+
- 	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
--	if (!save_state || !ltr)
-+	if (!ltr)
- 		return;
- 
- 	/* Some broken devices only support dword access to LTR */
-diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
-index a4ff7f5f66dd..c39f3be518d4 100644
---- a/drivers/pci/vc.c
-+++ b/drivers/pci/vc.c
-@@ -355,20 +355,17 @@ int pci_save_vc_state(struct pci_dev *dev)
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(vc_caps); i++) {
--		int pos, ret;
- 		struct pci_cap_saved_state *save_state;
-+		int pos, ret;
-+
-+		save_state = pci_find_saved_ext_cap(dev, vc_caps[i].id);
-+		if (!save_state)
-+			return -ENOMEM;
- 
- 		pos = pci_find_ext_capability(dev, vc_caps[i].id);
- 		if (!pos)
- 			continue;
- 
--		save_state = pci_find_saved_ext_cap(dev, vc_caps[i].id);
--		if (!save_state) {
--			pci_err(dev, "%s buffer not found in %s\n",
--				vc_caps[i].name, __func__);
--			return -ENOMEM;
--		}
--
- 		ret = pci_vc_do_save_buffer(dev, pos, save_state, true);
- 		if (ret) {
- 			pci_err(dev, "%s save unsuccessful %s\n",
-@@ -392,12 +389,15 @@ void pci_restore_vc_state(struct pci_dev *dev)
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(vc_caps); i++) {
--		int pos;
- 		struct pci_cap_saved_state *save_state;
-+		int pos;
-+
-+		save_state = pci_find_saved_ext_cap(dev, vc_caps[i].id);
-+		if (!save_state)
-+			continue;
- 
- 		pos = pci_find_ext_capability(dev, vc_caps[i].id);
--		save_state = pci_find_saved_ext_cap(dev, vc_caps[i].id);
--		if (!save_state || !pos)
-+		if (!pos)
- 			continue;
- 
- 		pci_vc_do_save_buffer(dev, pos, save_state, false);
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
