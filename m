@@ -1,172 +1,165 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA9A1EF0A1
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAAB1EF0B6
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738258905; cv=none; b=cU+55M3hvZpp2DAlduZAN1D+J0ml2FgyEzCATVLY05NLd5558ALWj6X+HtbZWkOFwcQ7L3WMLUNTgcqFBPuOeZ+UAMDpHHdeVlnAM+6npG75RcqbOuao5iHhlZmTGCGhcQbCZbxXSycjlsDbUVOO2M/FKjMncxJltvThZeBKphA=
+	t=1738258941; cv=none; b=X0dx8f6xoDArdCuRIB0s26vdifq5JXGWWmjyN/Xpana/uYDjvZDXVF5JYXYP64mgHcnCejSPV7sSf7MgHGPHQBhWvD42cA6NyMJK9VGjfDKw5Wsfol5BrmCF6f+xW5DUcThyy/Xmz34PQNvFeNAXvasgC+sOQBTdNPvU6jtk5+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738258905; c=relaxed/simple;
-	bh=54+R2sjbPzxH95p1aLqpNRduh3BFRRBTsu4iZaeg+WI=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=D5+rTKbI5CIdH8eTCDYfmxTdz6oUv1zvB94Q1T1cdnx1ZiuX3PfA1/lQSmqosPsi5pUWUZDX3ZyQBuc6BV2PzZqqQaSo+IvK4EhyyzQbYTZfa5AvBATkkF3mSur6Ddp35IEV9/Vz/CMYpFrkbWueJONWulnebRQ6ekaqeiM6/YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dc8w3AFt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738258941; c=relaxed/simple;
+	bh=XtQCDwDTly37QPz8i9jNWoc4Mmbx4e+kSb49dC5tsSc=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SHg8nrbQSbkpPPxAk9tc17gEX/GOedqWyjkV0SbzeON+bbm8wRM+EWRW+cinrRKFi59QVKdwxpj51anvGMqTjBDg4mlcLM90ZDuzAEZjfMkldnpEXGDHBwicaxnWqPkBvQXEMMfB5Ew5lQ79di6JgpxrVAWonF16CrxfOkDXv5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=LfsE6GDQ; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dc8w3AFt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738258901;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a+Tm4MMuMgMNaWCuqAB5supWyn/zNxaUSBKarskhg04=;
-	b=dc8w3AFt81TzTMR7puoyqf3i7newJeO8Kp70+WRT6tKXgBQ9OBWFck2Z2WO8S+bba3HzeO
-	HHlAzeoPnsLDNNLUB6YI0ND0X3GBgkgJXMCoY5PzUpC/+aJzCNRdSk4LmrU0AS3kBa4yGc
-	qknW/2t8KcEtqa33sVTiNQ4AsHmKpLk=
-Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
- [209.85.167.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-362-xCczzswzMHulWAf_3oAYMg-1; Thu, 30 Jan 2025 12:41:38 -0500
-X-MC-Unique: xCczzswzMHulWAf_3oAYMg-1
-X-Mimecast-MFC-AGG-ID: xCczzswzMHulWAf_3oAYMg
-Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-3eb9278f4daso760138b6e.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:41:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LfsE6GDQ"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-467a37a2a53so12114791cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:42:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1738258938; x=1738863738; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CVNKXypQwOopSf1xgwOwZSkCQwewZeK8ItDq6p8m+EY=;
+        b=LfsE6GDQbmYz3qyZKrOOziUjzv179Xd1geXzDq1D1pJ1I3nL4P/i9faJFv9Mafzuf/
+         XRNY3NccZdtAfzb19CipjL0ZlTTuj41b8kkLmh59wxXq7OwNlsA7NfYC2BfcpG6umeYg
+         30bih2wE91r8OTRvykqMRowpx4/Dzg4LgxeUuS9T/bMT/LUJcRBzJ3PgFfsL8ORdulNT
+         M5awNuStAudAyLBH9Mgkjc7PXFTkNUS+xMtRI2wtWmXPucEQThOrrlqKvbnQ4QvEyUMH
+         Qm8PlG/V7lW3XKxvJsTp9nco93OtVB8q7Uoa9c2xF1AQFDBp/hnCQe2wNcTaI+cWIv8P
+         caxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738258894; x=1738863694;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a+Tm4MMuMgMNaWCuqAB5supWyn/zNxaUSBKarskhg04=;
-        b=m1IiXeQ70tu1nupulOV+cqcUM8l8Xq36kRs0qiCAQZZJTCWNJXPBUwlb8cByrsEFCV
-         UNe49WOMZbVx87LdPIUzXIiALlkrLsVShi+DCOx1M0XnBGrYYOwzkd7YYE/4lKKN2zHO
-         HfbXKRQZa4Yq1RZzbtVLTppcOZmst6qVsweYcaFgzmtmRkFCKiXzbrJwsdwD82cdtoZk
-         UAospDzz8ULQNa6WgT+9A+KHmc4oOWTnpXXwp6Rl0TZLptAIam+uVKNThmHkga4ZsL73
-         Zc9v8imP7Z6LKfxpV7R6wEOLxBPsvmm37+RmqJIH9Wxe4NgpBGWZoGHLPSuW5wZ9CFM7
-         7koQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVD2AAmyJpMwOL3/mnEKWlPOxIFwUC9F/IpKwtDDMNmw0EYqF/K0vOqZbqJRZrWXJ+YYoZx2VX4LKVbhfI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOFmJmphEQRmqzaaPmhNytTYdqrQjCFFVjIytxSqHUeYViJ9G9
-	zwgfu6+eidrQK2gHC7IllVzQJwMKV9Vlr5sYl/sSA8fn9p9XXdqHnyAJc/j2je0ngKgplPGHHKh
-	30hecACO0Mr1Lj+4cgaUcAayCravui1x19DPiudWQlI+W2MDajdSalVvkWSaS40/GSqX06Xsi
-X-Gm-Gg: ASbGncuNUwYLDsDyJae92e+5k2LL9g8HYb7smhURw1zPJfe8PN2KGJmFBReSn8dR38H
-	ZqvvnhqOuoWk39ft/cnIhAL7xEPtXHJcS+P/S7IvpfKbINAaKmCUqQ5WXWskY88fCeuS09urOmr
-	sKg7IEc+xcIhCuQw3AXk6HkZSRnzIgrBdQ2UdWTAgF6rWxwt5KwTA6+0pbWs1ZzebWYgo5CBb4a
-	uuxxRZV9etv/FDAyXzn1fNB/hEzxsoCKHfK9Hu9ZxSdFw7L2itCQHKaxFVrabweA+Q5w4y4QXdM
-	Oq5Tk9TdE3klx5ndeumj7vIqiYpETleIR0RPCthf8tlCskcmFRM=
-X-Received: by 2002:a05:6808:f03:b0:3e5:f656:dd19 with SMTP id 5614622812f47-3f323a59d92mr5783984b6e.19.1738258894195;
-        Thu, 30 Jan 2025 09:41:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHGKmbRw3DSmtj5+GCkf1IDjlUIoa6aTSZ6+uzH9hTvj6m3TrzQxzX+gu+fF8o1zU4D3OZgNQ==
-X-Received: by 2002:ac8:5f88:0:b0:467:4f0a:1b5d with SMTP id d75a77b69052e-46fd0b68880mr124572611cf.42.1738258881566;
-        Thu, 30 Jan 2025 09:41:21 -0800 (PST)
-Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0c62d4sm8874501cf.17.2025.01.30.09.41.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 09:41:20 -0800 (PST)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <8785134d-3012-42c1-a67c-b64862d89fc5@redhat.com>
-Date: Thu, 30 Jan 2025 12:41:19 -0500
+        d=1e100.net; s=20230601; t=1738258938; x=1738863738;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CVNKXypQwOopSf1xgwOwZSkCQwewZeK8ItDq6p8m+EY=;
+        b=f9nO7+mofgMTzrarsqB7Gi+dtB87c0vvb3ewDHGZt8g9aZrHimx0I1lZPem2MJOt5w
+         3sBpfuXBQVDh7Rv3NyfQRBFpvQbKTfS2b6cDtukQZ3jIGzKZSV9IE1/ZgqnKxnUilP0H
+         k3Z9DAjn8hTrmZg87WEe9WEOVtSyK7UKpqEEimgWkYxpch2+bmmEdw70rqP+PkJQeNjk
+         u84csyop3idAFXnAh+bs0E7fkRSOepjgsXWABW+KNy9irl8JOdb2lCLTLoYk8Ffx/WtC
+         gVRgua0KHm+SPnkvNHjJzdfduXYxGq626csg60l8FaKh9BRQ1L65z0MUyLFpU8zp5wfN
+         bxUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWByrAkagtGNKGcg0urHdBmMPD3LNknwnoI8CTHJgjoj1MhyJGxY8zt0W5Hv5Pr6lfPWp4dMb2kqX3aDfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr06PVf8AR8QRFeJaUsB06F6sU5iPX3A0cU1R0gKGRv0iIolF9
+	+jSDwBC8QD/yXVTUkFBTAb8alvxBvKq4cywt44FgAUxsAcZOvzCYY66eeQYNLf8=
+X-Gm-Gg: ASbGncsR7uIET7g4vWg84CV9+y5UvN04JNHIe+g/AK67VpY7de4nDYOboQlYlWyqrVJ
+	4BLZD3lpklBnBpiiYN2m70LJQkeYWWZ2wA98fGOBLvke+4YwDM14DC6/jcIP9aIYfa9yovt4Tkc
+	Jh9DmQmJP95dMUxCfHVydK5IuMRirFC/SNaRyumAKOLeI5y5V3MNfY1H/UStTryGGri0p16irML
+	QKfdHsc4ekGxdhqwIWrb6g8cCuR8zO4DhYz9f9P19GGQ98f0QwbaAVb1FSuCXQKsMgCMLX5cYX2
+	qQDdws/du78WHrAZV65zKY2dbCXZD+5WTZjCciYeR9eAFIj6m+9d8amoe5ySf/XE
+X-Google-Smtp-Source: AGHT+IFnQ+3H7xNChFVcqgc9dwjk4L8UEnbD/nNL/ykdDG0Q22FK3UpLRKkWb0FWjYtvwvzMuLT+BQ==
+X-Received: by 2002:a05:622a:4296:b0:467:451b:eba3 with SMTP id d75a77b69052e-46fd0a7fe1dmr108793531cf.8.1738258938311;
+        Thu, 30 Jan 2025 09:42:18 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0ceacesm8793061cf.31.2025.01.30.09.42.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 09:42:17 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tdYYT-00000009ew4-0Jjs;
+	Thu, 30 Jan 2025 13:42:17 -0400
+Date: Thu, 30 Jan 2025 13:42:17 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com,
+	lyude@redhat.com, dakr@redhat.com, airlied@gmail.com,
+	simona@ffwll.ch, leon@kernel.org, jglisse@redhat.com,
+	akpm@linux-foundation.org, GalShalom@nvidia.com,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-mm@kvack.org, linux-tegra@vger.kernel.org
+Subject: Re: [RFC 1/5] mm/hmm: HMM API to enable P2P DMA for device private
+ pages
+Message-ID: <20250130174217.GA2296753@ziepe.ca>
+References: <20250128132034.GA1524382@ziepe.ca>
+ <de293a7e9b4c44eab8792b31a4605cc9e93b2bf5.camel@linux.intel.com>
+ <20250128151610.GC1524382@ziepe.ca>
+ <b78d32e13811ef1fa57b0535749c811f2afb4dcd.camel@linux.intel.com>
+ <20250128172123.GD1524382@ziepe.ca>
+ <Z5ovcnX2zVoqdomA@phenom.ffwll.local>
+ <20250129134757.GA2120662@ziepe.ca>
+ <Z5tZc0OQukfZEr3H@phenom.ffwll.local>
+ <20250130132317.GG2120662@ziepe.ca>
+ <Z5ukSNjvmQcXsZTm@phenom.ffwll.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm, memcg: introduce memory.high.throttle
-To: Shakeel Butt <shakeel.butt@linux.dev>, Waiman Long <llong@redhat.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>, Michal Hocko
- <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Jonathan Corbet <corbet@lwn.net>,
- Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- Peter Hunt <pehunt@redhat.com>
-References: <20250129191204.368199-1-longman@redhat.com>
- <Z5s1DG2YVH78RWpR@tiehlicka>
- <211b394b-3b9a-4872-8c07-b185386487d3@redhat.com>
- <Z5uxVzFf7Pk7yk9f@google.com>
- <a309f420-4a25-4cf5-b6f0-750059c8467c@redhat.com>
- <eyl6rcqdwinppl4cyvqrli5pqugxdhrsgpvu64oomgvqd7m7c4@q4gz5v2zovwe>
-Content-Language: en-US
-In-Reply-To: <eyl6rcqdwinppl4cyvqrli5pqugxdhrsgpvu64oomgvqd7m7c4@q4gz5v2zovwe>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5ukSNjvmQcXsZTm@phenom.ffwll.local>
 
-On 1/30/25 12:32 PM, Shakeel Butt wrote:
-> On Thu, Jan 30, 2025 at 12:19:38PM -0500, Waiman Long wrote:
->> On 1/30/25 12:05 PM, Roman Gushchin wrote:
->>> On Thu, Jan 30, 2025 at 10:05:34AM -0500, Waiman Long wrote:
->>>> On 1/30/25 3:15 AM, Michal Hocko wrote:
->>>>> On Wed 29-01-25 14:12:04, Waiman Long wrote:
->>>>>> Since commit 0e4b01df8659 ("mm, memcg: throttle allocators when failing
->>>>>> reclaim over memory.high"), the amount of allocator throttling had
->>>>>> increased substantially. As a result, it could be difficult for a
->>>>>> misbehaving application that consumes increasing amount of memory from
->>>>>> being OOM-killed if memory.high is set. Instead, the application may
->>>>>> just be crawling along holding close to the allowed memory.high memory
->>>>>> for the current memory cgroup for a very long time especially those
->>>>>> that do a lot of memcg charging and uncharging operations.
->>>>>>
->>>>>> This behavior makes the upstream Kubernetes community hesitate to
->>>>>> use memory.high. Instead, they use only memory.max for memory control
->>>>>> similar to what is being done for cgroup v1 [1].
->>>>> Why is this a problem for them?
->>>> My understanding is that a mishaving container will hold up memory.high
->>>> amount of memory for a long time instead of getting OOM killed sooner and be
->>>> more productively used elsewhere.
->>>>>> To allow better control of the amount of throttling and hence the
->>>>>> speed that a misbehving task can be OOM killed, a new single-value
->>>>>> memory.high.throttle control file is now added. The allowable range
->>>>>> is 0-32.  By default, it has a value of 0 which means maximum throttling
->>>>>> like before. Any non-zero positive value represents the corresponding
->>>>>> power of 2 reduction of throttling and makes OOM kills easier to happen.
->>>>> I do not like the interface to be honest. It exposes an implementation
->>>>> detail and casts it into a user API. If we ever need to change the way
->>>>> how the throttling is implemented this will stand in the way because
->>>>> there will be applications depending on a behavior they were carefuly
->>>>> tuned to.
->>>>>
->>>>> It is also not entirely sure how is this supposed to be used in
->>>>> practice? How do people what kind of value they should use?
->>>> Yes, I agree that a user may need to run some trial runs to find a proper
->>>> value. Perhaps a simpler binary interface of "off" and "on" may be easier to
->>>> understand and use.
->>>>>> System administrators can now use this parameter to determine how easy
->>>>>> they want OOM kills to happen for applications that tend to consume
->>>>>> a lot of memory without the need to run a special userspace memory
->>>>>> management tool to monitor memory consumption when memory.high is set.
->>>>> Why cannot they achieve the same with the existing events/metrics we
->>>>> already do provide? Most notably PSI which is properly accounted when
->>>>> a task is throttled due to memory.high throttling.
->>>> That will require the use of a userspace management agent that looks for
->>>> these stalling conditions and make the kill, if necessary. There are
->>>> certainly users out there that want to get some benefit of using memory.high
->>>> like early memory reclaim without the trouble of handling these kind of
->>>> stalling conditions.
->>> So you basically want to force the workload into some sort of a proactive
->>> reclaim but without an artificial slow down?
-> I wouldn't call it a proactive reclaim as reclaim will happen
-> synchronously in allocating thread.
->
->>> It makes some sense to me, but
->>> 1) Idk if it deserves a new API, because it can be relatively easy implemented
->>>     in userspace by a daemon which monitors cgroups usage and reclaims the memory
->>>     if necessarily. No kernel changes are needed.
->>> 2) If new API is introduced, I think it's better to introduce a new limit,
->>>     e.g. memory.target, keeping memory.high semantics intact.
->> Yes, you are right about that. Introducing a new "memory.target" without
->> disturbing the existing "memory.high" semantics will work for me too.
->>
-> So, what happens if reclaim can not reduce usage below memory.target?
-> Infinite reclaim cycles or just give up?
+On Thu, Jan 30, 2025 at 05:09:44PM +0100, Simona Vetter wrote:
 
-Just give up in this case. It is used mainly to reduce the chance of 
-reaching max and cause OOM kill.
+> > You could also use an integer instead of a pointer to indicate the
+> > cluster of interconnect, I think there are many options..
+> 
+> Hm yeah I guess an integer allocater of the atomic_inc kind plus "surely
+> 32bit is enough" could work. But I don't think it's needed, if we can
+> reliable just unregister the entire dev_pagemap and then just set up a new
+> one. Plus that avoids thinking about which barriers we might need where
+> exactly all over mm code that looks at the owner field.
 
-Cheers,
-Longman
+IMHO that is the best answer if it works for the driver.
+> > ? It is supposed to work, it blocks until all the pages are freed, but
+> > AFAIK ther is no fundamental life time issue. The driver is
+> > responsible to free all its usage.
+> 
+> Hm I looked at it again, and I guess with the fixes to make migration to
+> system memory work reliable in Matt Brost's latest series it should indeed
+> work reliable. The devm_ version still freaks me out because of how easily
+> people misuse these for things that are memory allocations.
 
+I also don't like the devm stuff, especially in costly places like
+this. Oh well.
+
+> > > An optional callback is a lot less scary to me here (or redoing
+> > > hmm_range_fault or whacking the migration helpers a few times) looks a lot
+> > > less scary than making pgmap->owner mutable in some fashion.
+> > 
+> > It extra for every single 4k page on every user :\
+> > 
+> > And what are you going to do better inside this callback?
+> 
+> Having more comfy illusions :-P
+
+Exactly!
+
+> Slightly more seriously, I can grab some locks and make life easier,
+
+Yes, but then see my concern about performance again. Now you are
+locking/unlocking every 4k? And then it still races since it can
+change after hmm_range_fault returns. That's not small, and not really
+better.
+
+> whereas sprinkling locking or even barriers over pgmap->owner in core mm
+> is not going to fly. Plus more flexibility, e.g. when the interconnect
+> doesn't work for atomics or some other funny reason it only works for some
+> of the traffic, where you need to more dynamically decide where memory is
+> ok to sit.
+
+Sure, an asymmetric mess could be problematic, and we might need more
+later, but lets get to that first..
+
+> Or checking p2pdma connectivity and all that stuff.
+
+Should be done in the core code, don't want drivers open coding this
+stuff.
+
+> Also note that fundamentally you can't protect against the hotunplug or
+> driver unload case for hardware access. So some access will go to nowhere
+> when that happens, until we've torn down all the mappings and migrated
+> memory out.
+
+I think a literal (safe!) hot unplug must always use the page map
+revoke, and that should be safely locked between hmm_range_fault and
+the notifier.
+
+If the underlying fabric is loosing operations during an unplanned hot
+unplug I expect things will need resets to recover..
+
+Jason
