@@ -1,94 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84591DA5F;
-	Thu, 30 Jan 2025 21:49:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5D81DA5F;
+	Thu, 30 Jan 2025 21:49:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738273751; cv=none; b=sflngozXzhTXQs493pSS96UkUPvFkvtE87QLHLrDo7yGfJ1cu0SWvNqkH8iuKLss13QiQslRnU5mQfOtzOJmNR/O9nYYGLXcaOMr6bBQBBZ7d2aJMAc7gIyiuIzOm6ppBwl+BmESGCRAtTq5WwuqoXvQH2gLGC8tEefTKLU2eo0=
+	t=1738273777; cv=none; b=drCRIiiVcXUaJ+8cNV11HHR3hc9C+pbiPrljlLa6NqBjU90CDI0XJSxoL2lHqvXaEMkKLooLwO9dMW3CJlCbl8G+kkDHgGlZzb0fD6kvXAjD/FGRzTRRoD8vpDRHvYw1XuJTUrcdlfUEgUXbgSN+63AP9+E7ZdTHv2Xl1/p2Zzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738273751; c=relaxed/simple;
-	bh=v9cA1UeLXNARJOxVOlCXVATDoCFX4K7MnNcdOFH14rk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=svM9cFjwNHlJlV1xCqiuaFG/B06dLkkLAnDJvWiUmc/Y5xHItRmiI/bmIpgWxCRlH7gwmNcyBlnhqsaDUV9ISyogYGKno/27r/zo6M9Z++C0Qx4x50p3sPJ1AdwEVT1Kxu6JyVgla3HR0yfJa5gjj6YIrKdDpKrOmhWNZLSQbhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BSkJIVEl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738273777; c=relaxed/simple;
+	bh=2t8rVTMwBcb/P3DZwdZDi3FNG5kEb1diABrmtIkiEHQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V7G/Z/dAwxR0xZrSKTKcLjAe+MP1dCoLKt1JctjKXqVm/1+OrVwtomT3ACFc1+4mH55Fqu95JfCRUfU4CpfflKU7fEvNxqMfuG3zXKCWRLwHsgTfZUhD6L53SPvbBkN2n0XoqH939Z49/O6bhBvRPzNqIyzDMRU3mh3TDprpXk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BfzWXRAw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BSkJIVEl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13EC5C4CEE4;
-	Thu, 30 Jan 2025 21:49:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BfzWXRAw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9EC3C4CED2;
+	Thu, 30 Jan 2025 21:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738273751;
-	bh=v9cA1UeLXNARJOxVOlCXVATDoCFX4K7MnNcdOFH14rk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BSkJIVElc5hm3FBv0tBJK/9SQvqb3rg2WqjDGiRayeIG18GV6uN/QXgZ6har2Crmy
-	 2q01SbUOlCvwDptGAGz07dF2DroOh00wMr18QP6Ee0Qf72dVI7To6OUS+D367j7G41
-	 MXrrU3ZkUjyZzyQrkiITZuLmqUObDhVsBMM3SgFy1pB+tE9ms6SjwPS+hXCWLTzlrS
-	 JHASK6K81Pw6AWCOaBCbP/48B3nJ0snbcMBBtKm9F0GtGmXMQL4jcKZPRuayJoyJ4e
-	 dSdm1AhrD9juO5Z9omChhaBsX1DJ9zJOGVow4GyHvoP+I5tuRAYRhTBiGhxtytxRlN
-	 6b1q57SY1BJSw==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-53ff1f7caaeso1333811e87.0;
-        Thu, 30 Jan 2025 13:49:10 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUonKiSLxs3Stj2g+L0PKEIxCSEw2lC2ipzbBMKePH1kquJIS2Pr5mdNqpppsLkvlNJ1Na04VXg@vger.kernel.org, AJvYcCVWs/q1/mvE/71YErSOA2IzSPtxxDq9A7jID1/afKAuwQ+tGbWI7d80ZnTKKemvpGziMevoRYiMH/h6dek=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLh5N8VTdAXoGMGzx8MRNpQUXVudATJFDM1Vis1SkdZFL9prA0
-	VoVIcIfJ8By0zByaGmAVsrel3q+kGzc+j02sk4NHBs5xpmyVa8DS3lT9GD8yd0/kff/ru6uOW4h
-	70E0LRchz5S6a0KJeZ5c0xu0giqs=
-X-Google-Smtp-Source: AGHT+IGvsZ9UV23BN7NAzI3cBwpZgGYzUNfAG/ADzOOwOyeo8NhgHVLMg1B/e14T3YmWFv4z3T9psdaM5dSo92pIl0w=
-X-Received: by 2002:a05:6512:10d6:b0:540:20f5:be77 with SMTP id
- 2adb3069b0e04-543e4be00e6mr3243865e87.3.1738273749389; Thu, 30 Jan 2025
- 13:49:09 -0800 (PST)
+	s=k20201202; t=1738273777;
+	bh=2t8rVTMwBcb/P3DZwdZDi3FNG5kEb1diABrmtIkiEHQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BfzWXRAw4iuFmLQ8LTGUpnU9FwXhxf3IQjTTKgjQTepwrYt0Pt4sOlNRbpDKkbB7f
+	 rw8oOlS4r4vWM1Qnm9QWlrRoQFcQnwJzWXEkWMGLsabtyfb+aHMbmzWiPYGiJGanEt
+	 JzAp+FPzMlh4OE1QwDfClrJ8cxqC7xjVWh2ypY4+qhx6lmMxz0maJo3VkATAVacBnN
+	 0JDWnlklvDDgXQ4fvD61RBZ4xfux5AheDQK8nKc+BXOUBdN9hv/ISL+nnQW05l+Wv8
+	 gmdpDm3+hVQ7guz9QV25ZFwmq4SSRUU44y6+w+iWlpF9YsxXG29HL6eS0itRv/ZuRX
+	 jsEX86mBsC1EA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [GIT PULL] perf-tools fixes for v6.14
+Date: Thu, 30 Jan 2025 13:49:35 -0800
+Message-ID: <20250130214935.2148549-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130204614.64621-1-oliver.upton@linux.dev>
-In-Reply-To: <20250130204614.64621-1-oliver.upton@linux.dev>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 30 Jan 2025 22:48:58 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHchMo1dMAd5N--vZOnegoci=kRDQ2N06dVZueixzzhaw@mail.gmail.com>
-X-Gm-Features: AWEUYZnBwtpu0VhT2GWd3rq9lUk_NVWIl74tK03ECfTc-9lJwZURu3xgt8g3hZU
-Message-ID: <CAMj1kXHchMo1dMAd5N--vZOnegoci=kRDQ2N06dVZueixzzhaw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: Move storage of idreg overrides into mmuoff section
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Mark Brown <broonie@kernel.org>, Joey Gouly <joey.gouly@arm.com>, 
-	James Morse <james.morse@arm.com>, stable@vger.kernel.org, 
-	Moritz Fischer <moritzf@google.com>, Pedro Martelletto <martelletto@google.com>, 
-	Jon Masters <jonmasters@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Oliver,
+Hi Linus,
 
-On Thu, 30 Jan 2025 at 21:47, Oliver Upton <oliver.upton@linux.dev> wrote:
->
-> There are a few places where the idreg overrides are read w/ the MMU
-> off, for example the VHE and hVHE checks in __finalise_el2. And while
-> the infrastructure gets this _mostly_ right (i.e. does the appropriate
-> cache maintenance), the placement of the data itself is problematic and
-> could share a cache line with something else.
->
-> Depending on how unforgiving an implementation's handling of mismatched
-> attributes is, this could lead to data corruption. In one observed case,
-> the system_cpucaps shared a line with arm64_sw_feature_override and the
-> cpucaps got nuked after entering the hyp stub...
->
+Please consider pulling the following changes in perf tools for v6.14.
 
-I'd like to understand this part a bit better: we wipe BSS right
-before we parse the idreg overrides, all via the ID map with the
-caches enabled. The ftr_override globals are cleaned+invalidated to
-the PoC after we populate them. At this point, system_cpucaps is still
-cleared, and it gets populated only much later.
-
-So how do you reckon this corruption occurs? Is there a memory type
-mismatch between the 1:1 mapping and the kernel virtual mapping?
+Thanks,
+Namhyung
 
 
-> Even though only a few overrides are read without the MMU on, just throw
-> the whole lot into the mmuoff section and be done with it.
->
+The following changes since commit 91b7747dc70d64b5ec56ffe493310f207e7ffc99:
 
-This is fine in principle, but I suspect that it could be anywhere as
-long as it is inside the kernel image, rather than memory like BSS
-that is part of the executable image but not covered by the file.
+  perf test: Update event_groups test to use instructions (2025-01-18 10:32:57 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.14-2025-01-30
+
+for you to fetch changes up to 9fae5884bb0e3480dbb69314b82ed3d8f8482eef:
+
+  perf cpumap: Fix die and cluster IDs (2025-01-28 10:03:26 -0800)
+
+----------------------------------------------------------------
+perf-tools fixes for 6.14
+
+An early round of random fixes in perf tools for this cycle.
+
+perf trace
+----------
+* Fix loading of BPF program on certain clang versions
+* Fix out-of-bound access in syscalls with 6 arguments
+* Skip syscall enum test if landlock syscall is not available
+
+perf annotate
+-------------
+* Fix segfaults due to invalid access in disasm arrays
+
+perf stat
+---------
+* Fix error handling in topology parsing
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+----------------------------------------------------------------
+Howard Chu (2):
+      perf trace: Fix BPF loading failure (-E2BIG)
+      perf trace: Fix runtime error of index out of bounds
+
+Ian Rogers (1):
+      perf annotate: Use an array for the disassembler preference
+
+James Clark (1):
+      perf cpumap: Fix die and cluster IDs
+
+Namhyung Kim (1):
+      perf test: Skip syscall enum test if no landlock syscall
+
+ tools/perf/builtin-trace.c                         |  6 +-
+ tools/perf/tests/shell/trace_btf_enum.sh           |  8 ++-
+ tools/perf/util/annotate.c                         | 76 ++++++++++++++++++--
+ tools/perf/util/annotate.h                         | 15 ++--
+ .../util/bpf_skel/augmented_raw_syscalls.bpf.c     | 11 ++-
+ tools/perf/util/cpumap.c                           |  4 +-
+ tools/perf/util/disasm.c                           | 83 ++++------------------
+ 7 files changed, 113 insertions(+), 90 deletions(-)
