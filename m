@@ -1,264 +1,174 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DD61B0415;
-	Thu, 30 Jan 2025 08:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CBA1B0415;
+	Thu, 30 Jan 2025 08:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738226388; cv=none; b=Lmd9BrC0GOsXTPPKcm4PSUsRpTGrqraiJmrNAj+zJr8yoctCoMBiEexhH9oYDj1oS0IMzgoGdyMcS1sjtSNh/FZWzF776PWMrWEfmnZT/XtJNTHmdn1xc3xpASX0Q6YCuyN8twiy0mIW5oAgkCv1qoek4gDLhLo8iUxsTUSaCAQ=
+	t=1738226396; cv=none; b=Y3pU0QwqpxL5gBawZhVlW9dk2G9capf/Kg/t6UTPu+Fz012R9yGS8bLW8lL4m3jk/bo6uyO7GHRd3ZTO8LVKiK4LF9suSXrQn+vdwx6OXBgtsfimClOOPLroW2wrOjz2NdMwgGRd+KB/v4NL+rPwSR3GgupDBGbOMTucEhM7wk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738226388; c=relaxed/simple;
-	bh=hEU3o0VHdE4gvNTVBSXXNoknR0x/IOoLOJaNOWiJVG8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cFi4gerkKupk9aJM3JpJNhYV7RZgCNZbR6VMk2OUQL+8hdFa8S4GlE4bMHlqd+wmSoLtQMp3c6nXsF29f/+XNdUZTG9py6VaUmg8R1ZjissKEy0KG3+7Ao3683yNvqPeeT2/1LyBXIWsy1QHdXP0wrK9doNjYEdC764XfETXqDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-51878cf85a7so168436e0c.0;
-        Thu, 30 Jan 2025 00:39:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738226384; x=1738831184;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SbxArew7idoCnWrfmn0lEUjbJUOklyP0/MoH1REd+Rk=;
-        b=olakqq//VPv6hypAE0UxXz0f4RGOACls0NZfJ1v8jQPiI4X3p14IqNeFs//jFPONRK
-         IE0M9m9JTPsdLrmSe/UhVnXrLYvmpz0jvLaq0GROO7sk1wcegLd0momkpULl1NVVK9q/
-         AiIgSYupBGleQK3FIfFkypzzPl7bgCKU1mX8mHyrA5jNZNMs36VIaD298UvnbDGyxbuq
-         JeQN0MjICkAl6Ir895hSw0L0fe/48xrNO4fUwKXLiBiLZZTprpnR5JAfc0Wu+9PyLMxi
-         /O2xs7xm9Ld9atL132+x5n31l+KDZy9QqduSCPYjHMg+8F+I6+N5VPfQQ4AymagNGNFS
-         bDjw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2tdOGX8R7ZYtdRJDLhUPT3R6bqSCDlPWUc4toEKwNrql8YNZPLHzt7opWgdJqIUZfOImNhjROUnpkIUA=@vger.kernel.org, AJvYcCX6ayFRhaK6wWJi8oaV7THhYpo/TBWbgs6kOBqntacFVxAV7NddatMJiI1XAPAjFfn36zxZWxzy0eLgkGrf@vger.kernel.org, AJvYcCXPc1Auwme5Cg3/QO78cbk6NYKRdqFCHGJe6e98GoBwoATVMvpeOazLEROaBBmcZM3GLWdQS9oDA2vBHiV6pmNrrH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx63EMR2kYHzqfFWrdSXEEbmgBebJ+L5cbKiJ7okWTHtlN2G9N+
-	HigmXgrD4S5+K4kCPwGjr4fao2EMjVhZEEf1l3gHDcUfY97vYfTol6tvrT1o
-X-Gm-Gg: ASbGncvA4QvA9CyBiFMHqdKyjhuklY2TBQkg54tDiCxHlod+WdG90LIlVex4RiLdOcK
-	SLBrgOO+de6mQZpG6EuliPIGHiC/UdD7rj00nY4J6cbuzACRZ1XclAMkkaCSLTj4pDmHaXy7B2W
-	7/WxtUkYix2TvhcuesmNbPlbZcLkJAG978114lNvehfbKNwxzD5oMTPKENA/kcmh1sJ59MbfxWH
-	IVARxnSTUZXdeobEJQcJpe/rqNC2swMjl2SaJCuLn3eCMw/Qr0eosbodsaE5MElH5TgYh80MYDf
-	hlFJWvhTq9KLQsjp3KLfuRyHiwEpZn6yDDNwb0hBNttUlVHridP/6g==
-X-Google-Smtp-Source: AGHT+IGc0f4OaZnrvelbXW0SlzpQrKsIwxl2NOnb/we+cxxCAd5n2uPhgZ9LG0duZZ2UUNRf28gKDQ==
-X-Received: by 2002:a05:6122:240c:b0:518:859e:87c3 with SMTP id 71dfb90a1353d-51e9e3edb13mr6880767e0c.7.1738226384042;
-        Thu, 30 Jan 2025 00:39:44 -0800 (PST)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1c3d224sm143308e0c.26.2025.01.30.00.39.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 00:39:43 -0800 (PST)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-85b83479f45so130782241.0;
-        Thu, 30 Jan 2025 00:39:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUM9k8foFpzGANxSZsFjMhtobMTK1ZYUybeRlXSnNEPYn0RXHnZUgwpaHMzHMGcBf5XhF822k55If5gbqPA@vger.kernel.org, AJvYcCUTeWYnE8256aS0eq3H1QTrRzYmeo2KAYKm8NinBgfdrrhPyHcZXS9AxtcnozZ8FiwXta5Fv9FYJ1CaRQDF13BEUJA=@vger.kernel.org, AJvYcCXKFnUq86RtAXjHS/cf7KkI/pcIWCbxZg3G3Cys2d5wz6FI0utMbHqhDabCuMDkWMa3k5xIr5gyvmNVqdo=@vger.kernel.org
-X-Received: by 2002:a05:6102:d94:b0:4b6:18b3:a4db with SMTP id
- ada2fe7eead31-4b9a4f10949mr5799048137.8.1738226383366; Thu, 30 Jan 2025
- 00:39:43 -0800 (PST)
+	s=arc-20240116; t=1738226396; c=relaxed/simple;
+	bh=xru6o8b5Uqfw2olO4dSfWMmnEM5D0REdzLt7kl7S5FU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZTO6aI00tcl5jQhh2kphz4T6M/AKesSxxTPXrCoPwp7MpV14dguSgoSUAPGKoVyLJQwv2nMUd6tIPuamsYb8HI6MA7w0ZSrKBixS1lKR4zpG95EwxLJeMen3pECOgPV13rnZzrEk0OYdYRwRVc/tsY86E5A76ZgnBVPI3Fl2dFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=nSjo+f0Z; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="nSjo+f0Z"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=v9opNwDwn255UtavLuQBZ+mOTvHfGlJaF7SL6xxekMY=; t=1738226394; x=1738831194; 
+	b=nSjo+f0ZqkjmsnQ2kTBHhaTAgkIIRNvap5ObGbZ+MwURQr0Up96xFd+zhqhQDxGttT0rQUKaRTs
+	DSlxY4jsHGi+g6XfosHdP2U9phxAVbEWUoRrc0288c19PKVXa40hZBh64PGRaONNobPTdEM1XEX2J
+	517WU2/Rm1jTXSVqOfkNLb0KfxM2TKsTqSiAjqp/ru0LOCzCAQzjpW2oWiKr+8lGUgyVuFhc8FOOW
+	ELpIY41IZHqflgrgrV+kIXLm5U7NcP3dnTklxIXyf7hg04b/6Uyr7iE8dKXNBX89k6TyrDxz8iYkA
+	5yG1Y4zjwHYFXjJuNFtnfos93JcqvLiOpMGQ==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1tdQ5W-00000000EmF-3Q5N; Thu, 30 Jan 2025 09:39:50 +0100
+Received: from p5dc55198.dip0.t-ipconnect.de ([93.197.81.152] helo=[192.168.178.61])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1tdQ5W-00000001l3r-2KTZ; Thu, 30 Jan 2025 09:39:50 +0100
+Message-ID: <f447d1a9256033253d9bd9193ad639479e7c8575.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] sh: migrate to the generic rule for built-in DTB
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Masahiro Yamada <masahiroy@kernel.org>, Yoshinori Sato
+	 <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+	linux-sh@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org
+Date: Thu, 30 Jan 2025 09:39:49 +0100
+In-Reply-To: <20241222003315.2582655-1-masahiroy@kernel.org>
+References: <20241222003315.2582655-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com> <20250129165122.2980-11-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250129165122.2980-11-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 Jan 2025 09:39:31 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVa2Msd=h15vQyJ_OmT18w_qpYacVQjNwRBbLYtc+j41g@mail.gmail.com>
-X-Gm-Features: AWEUYZnhP0Uy0tLjT6-o6e8xKWfli_TtvP2yCgnPu03_XShJ62odRQ9EYMMgy1E
-Message-ID: <CAMuHMdVa2Msd=h15vQyJ_OmT18w_qpYacVQjNwRBbLYtc+j41g@mail.gmail.com>
-Subject: Re: [PATCH 10/14] serial: sh-sci: Introduced sci_of_data
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-CC linux-renesas-soc
+Hi Masahiro,
 
-On Wed, 29 Jan 2025 at 17:56, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> The aim here is to provide an easier support to more different SCI
-> controllers, like the RZ/T2H one.
->
-> The existing .data field of_sci_match is changed to a structure containing
-> all what that can be statically initialized, and avoid a call to
-> 'sci_probe_regmap', in both 'sci_init_single', and 'early_console_setup'.
->
-> 'sci_probe_regmap' is now assumed to be called in the only case where the
-> device description is from a board file instead of a dts.
->
-> In this way, there is no need to patch 'sci_probe_regmap' for adding new
-> SCI type, and also, the specific sci_port_params for a new SCI type can be
-> provided by an external file.
->
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+On Sun, 2024-12-22 at 09:32 +0900, Masahiro Yamada wrote:
+> Commit 654102df2ac2 ("kbuild: add generic support for built-in boot
+> DTBs") introduced generic support for built-in DTBs.
+>=20
+> Select GENERIC_BUILTIN_DTB when built-in DTB support is enabled.
+>=20
+> To keep consistency across architectures, this commit also renames
+> CONFIG_USE_BUILTIN_DTB to CONFIG_BUILTIN_DTB, and
+> CONFIG_BUILTIN_DTB_SOURCE to CONFIG_BUILTIN_DTB_NAME.
+>=20
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
->  drivers/tty/serial/sh-sci.c        | 64 +++++++++++++++++++-----------
->  drivers/tty/serial/sh-sci_common.h |  3 +-
->  2 files changed, 43 insertions(+), 24 deletions(-)
->
-> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-> index 1b83a246c7ed..c58c0793c521 100644
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-> @@ -2968,9 +2968,7 @@ static int sci_init_single(struct platform_device *dev,
->         int ret;
->
->         sci_port->cfg   = p;
-> -       sci_port->ops   = &sci_port_ops;
->
-> -       port->ops       = &sci_uart_ops;
->         port->iotype    = UPIO_MEM;
->         port->line      = index;
->         port->has_sysrq = IS_ENABLED(CONFIG_SERIAL_SH_SCI_CONSOLE);
-> @@ -3010,7 +3008,16 @@ static int sci_init_single(struct platform_device *dev,
->                 for (i = 1; i < ARRAY_SIZE(sci_port->irqs); i++)
->                         sci_port->irqs[i] = sci_port->irqs[0];
->
-> -       sci_port->params = sci_probe_regmap(p);
-> +       /*
-> +        * sci_port->params params can be NULL when using a board file instead
-> +        * of a dts.
-> +        */
-> +       if (sci_port->params == NULL) {
-> +               sci_port->params = sci_probe_regmap(p);
-> +               if (unlikely(sci_port->params == NULL))
-> +                       return -EINVAL;
-> +       }
-> +
->         if (unlikely(sci_port->params == NULL))
->                 return -EINVAL;
->
-> @@ -3266,9 +3273,14 @@ static void sci_remove(struct platform_device *dev)
->                 device_remove_file(&dev->dev, &dev_attr_rx_fifo_timeout);
->  }
->
-> -#define SCI_OF_DATA(type, regtype)     (void *)((type) << 16 | (regtype))
-> -#define SCI_OF_TYPE(data)              ((unsigned long)(data) >> 16)
-> -#define SCI_OF_REGTYPE(data)           ((unsigned long)(data) & 0xffff)
-> +#define SCI_OF_DATA(_type, _regtype) (\
-> +&(struct sci_of_data) {\
-> +       .type = (_type), \
-> +       .regtype = (_regtype),\
-> +       .ops = &sci_port_ops,\
-> +       .uart_ops = &sci_uart_ops,\
-> +       .params = &sci_port_params[_regtype],\
-> +})
->
->  static const struct of_device_id of_sci_match[] __maybe_unused = {
->         /* SoC-specific types */
-> @@ -3336,7 +3348,7 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
->         struct reset_control *rstc;
->         struct plat_sci_port *p;
->         struct sci_port *sp;
-> -       const void *data;
-> +       const struct sci_of_data *data;
->         int id, ret;
->
->         if (!IS_ENABLED(CONFIG_OF) || !np)
-> @@ -3382,8 +3394,12 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
->         sp = &sci_ports[id];
->         *dev_id = id;
->
-> -       p->type = SCI_OF_TYPE(data);
-> -       p->regtype = SCI_OF_REGTYPE(data);
-> +       p->type = data->type;
-> +       p->regtype = data->regtype;
-> +
-> +       sp->ops = data->ops;
-> +       sp->port.ops = data->uart_ops;
-> +       sp->params = data->params;
->
->         sp->has_rtscts = of_property_read_bool(np, "uart-has-rtscts");
->
-> @@ -3562,19 +3578,23 @@ sh_early_platform_init_buffer("earlyprintk", &sci_driver,
->  static struct plat_sci_port port_cfg __initdata;
->
->  int __init early_console_setup(struct earlycon_device *device,
-> -                                     int type)
-> +                              const struct sci_of_data *data)
->  {
->         const struct sci_common_regs *regs;
->
->         if (!device->port.membase)
->                 return -ENODEV;
->
-> -       device->port.type = type;
-> +       device->port.type = data->type;
->         memcpy(&sci_ports[0].port, &device->port, sizeof(struct uart_port));
-> -       port_cfg.type = type;
-> +
-> +       port_cfg.type = data->type;
-> +       port_cfg.regtype = data->regtype;
-> +
->         sci_ports[0].cfg = &port_cfg;
-> -       sci_ports[0].ops = &sci_port_ops;
-> -       sci_ports[0].params = sci_probe_regmap(&port_cfg);
-> +       sci_ports[0].params = data->params;
-> +       sci_ports[0].ops = data->ops;
-> +       sci_ports[0].port.ops = data->uart_ops;
->         regs = sci_ports[0].params->common_regs;
->
->         port_cfg.scscr = sci_ports[0].ops->read_reg(&sci_ports[0].port, regs->control);
-> @@ -3588,41 +3608,39 @@ int __init early_console_setup(struct earlycon_device *device,
->  static int __init sci_early_console_setup(struct earlycon_device *device,
->                                           const char *opt)
->  {
-> -       return early_console_setup(device, PORT_SCI);
-> +       return early_console_setup(device, SCI_OF_DATA(PORT_SCI, SCIx_SCI_REGTYPE));
->  }
->  static int __init scif_early_console_setup(struct earlycon_device *device,
->                                           const char *opt)
->  {
-> -       return early_console_setup(device, PORT_SCIF);
-> +       return early_console_setup(device, SCI_OF_DATA(PORT_SCIF, SCIx_SH4_SCIF_REGTYPE));
->  }
->  static int __init rzscifa_early_console_setup(struct earlycon_device *device,
->                                           const char *opt)
->  {
-> -       port_cfg.regtype = SCIx_RZ_SCIFA_REGTYPE;
-> -       return early_console_setup(device, PORT_SCIF);
-> +       return early_console_setup(device, SCI_OF_DATA(PORT_SCIF, SCIx_RZ_SCIFA_REGTYPE));
->  }
->
->  static int __init rzv2hscif_early_console_setup(struct earlycon_device *device,
->                                                 const char *opt)
->  {
-> -       port_cfg.regtype = SCIx_RZV2H_SCIF_REGTYPE;
-> -       return early_console_setup(device, PORT_SCIF);
-> +       return early_console_setup(device, SCI_OF_DATA(PORT_SCIF, SCIx_RZV2H_SCIF_REGTYPE));
->  }
->
->  static int __init scifa_early_console_setup(struct earlycon_device *device,
->                                           const char *opt)
->  {
-> -       return early_console_setup(device, PORT_SCIFA);
-> +       return early_console_setup(device, SCI_OF_DATA(PORT_SCIFA, SCIx_SCIFA_REGTYPE));
->  }
->  static int __init scifb_early_console_setup(struct earlycon_device *device,
->                                           const char *opt)
->  {
-> -       return early_console_setup(device, PORT_SCIFB);
-> +       return early_console_setup(device, SCI_OF_DATA(PORT_SCIFB, SCIx_SCIFB_REGTYPE));
->  }
->  static int __init hscif_early_console_setup(struct earlycon_device *device,
->                                           const char *opt)
->  {
-> -       return early_console_setup(device, PORT_HSCIF);
-> +       return early_console_setup(device, SCI_OF_DATA(PORT_HSCIF, SCIx_HSCIF_REGTYPE));
->  }
->
->  OF_EARLYCON_DECLARE(sci, "renesas,sci", sci_early_console_setup);
-> diff --git a/drivers/tty/serial/sh-sci_common.h b/drivers/tty/serial/sh-sci_common.h
-> index cbfacdc1a836..f75c185079dd 100644
-> --- a/drivers/tty/serial/sh-sci_common.h
-> +++ b/drivers/tty/serial/sh-sci_common.h
-> @@ -172,7 +172,8 @@ extern void sci_flush_buffer(struct uart_port *port);
->  #define max_sr(_port)          fls((_port)->sampling_rate_mask)
->
->  #ifdef CONFIG_SERIAL_SH_SCI_EARLYCON
-> -extern int __init early_console_setup(struct earlycon_device *device, int);
-> +extern int __init early_console_setup(struct earlycon_device *device,
-> +                                     const struct sci_of_data *data);
->  #endif
->
->  #endif /* __SH_SCI_COMMON_H__ */
-> --
-> 2.43.0
-\
+>=20
+>  arch/sh/Kbuild            | 1 -
+>  arch/sh/Kconfig           | 7 ++++---
+>  arch/sh/boot/dts/Makefile | 2 +-
+>  arch/sh/kernel/setup.c    | 4 ++--
+>  4 files changed, 7 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/arch/sh/Kbuild b/arch/sh/Kbuild
+> index 056efec72c2a..0da6c6d6821a 100644
+> --- a/arch/sh/Kbuild
+> +++ b/arch/sh/Kbuild
+> @@ -1,7 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  obj-y				+=3D kernel/ mm/ boards/
+>  obj-$(CONFIG_SH_FPU_EMU)	+=3D math-emu/
+> -obj-$(CONFIG_USE_BUILTIN_DTB)	+=3D boot/dts/
+> =20
+>  obj-$(CONFIG_HD6446X_SERIES)	+=3D cchips/hd6446x/
+> =20
+> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+> index 04ff5fb9242e..89185af7bcc9 100644
+> --- a/arch/sh/Kconfig
+> +++ b/arch/sh/Kconfig
+> @@ -648,10 +648,11 @@ endmenu
+> =20
+>  menu "Boot options"
+> =20
+> -config USE_BUILTIN_DTB
+> +config BUILTIN_DTB
+>  	bool "Use builtin DTB"
+>  	default n
+>  	depends on SH_DEVICE_TREE
+> +	select GENERIC_BUILTIN_DTB
+>  	help
+>  	  Link a device tree blob for particular hardware into the kernel,
+>  	  suppressing use of the DTB pointer provided by the bootloader.
+> @@ -659,10 +660,10 @@ config USE_BUILTIN_DTB
+>  	  not capable of providing a DTB to the kernel, or for experimental
+>  	  hardware without stable device tree bindings.
+> =20
+> -config BUILTIN_DTB_SOURCE
+> +config BUILTIN_DTB_NAME
+>  	string "Source file for builtin DTB"
+>  	default ""
+> -	depends on USE_BUILTIN_DTB
+> +	depends on BUILTIN_DTB
+>  	help
+>  	  Base name (without suffix, relative to arch/sh/boot/dts) for the
+>  	  a DTS file that will be used to produce the DTB linked into the
+> diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
+> index 4a6dec9714a9..d109978a5eb9 100644
+> --- a/arch/sh/boot/dts/Makefile
+> +++ b/arch/sh/boot/dts/Makefile
+> @@ -1,2 +1,2 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -obj-$(CONFIG_USE_BUILTIN_DTB) +=3D $(addsuffix .dtb.o, $(CONFIG_BUILTIN_=
+DTB_SOURCE))
+> +obj-$(CONFIG_BUILTIN_DTB) +=3D $(addsuffix .dtb.o, $(CONFIG_BUILTIN_DTB_=
+NAME))
+> diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
+> index f2b6f16a46b8..039a51291002 100644
+> --- a/arch/sh/kernel/setup.c
+> +++ b/arch/sh/kernel/setup.c
+> @@ -249,7 +249,7 @@ void __ref sh_fdt_init(phys_addr_t dt_phys)
+>  	/* Avoid calling an __init function on secondary cpus. */
+>  	if (done) return;
+> =20
+> -#ifdef CONFIG_USE_BUILTIN_DTB
+> +#ifdef CONFIG_BUILTIN_DTB
+>  	dt_virt =3D __dtb_start;
+>  #else
+>  	dt_virt =3D phys_to_virt(dt_phys);
+> @@ -323,7 +323,7 @@ void __init setup_arch(char **cmdline_p)
+>  	sh_early_platform_driver_probe("earlyprintk", 1, 1);
+> =20
+>  #ifdef CONFIG_OF_EARLY_FLATTREE
+> -#ifdef CONFIG_USE_BUILTIN_DTB
+> +#ifdef CONFIG_BUILTIN_DTB
+>  	unflatten_and_copy_device_tree();
+>  #else
+>  	unflatten_device_tree();
+
+Looks like a good idea to address possible race conditions during build.
+
+Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+
+Thanks,
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
