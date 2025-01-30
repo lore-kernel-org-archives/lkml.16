@@ -1,117 +1,168 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96AEB8831
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 22:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BBD12C499
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 22:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738277923; cv=none; b=qyvfa2JbtQrjMZbfOfmFlRiHpgijoj2X07Dq0Zkzu5kAi7oTFNqPCw/o3eFF71ZC2t8BJAFvzVQbOfo+OmZF2VbJoiZywAVgHbmslBl30aas9h7ZJGNIX3ktxUlQ9r+rgcLhqYX/8xGGJPFAfgnzolQDMoN6Dsj7+laJ2DBB+X8=
+	t=1738277935; cv=none; b=I6xZAnccIygzFI6EFiCsHzZe80dwm2KL+UtWcu3J0947Urq8l9VB+6Z2BcNYexnPJ+9ltPQqUdqw2mSzKSfufHE16cdpCYaLIsUBvOMkgn2ESREAnF16VFztlH/DPaZDNMXn6IqyrLNVh7MK5+59tVxbLmZ6wQnHD4tGGR/Mjd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738277923; c=relaxed/simple;
-	bh=Lno2lN5Lt7jgtykrzuFDJBTQ257aoerI1EUF+64+Jgc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cVBhyMRDmuMmCmUE47J+SFdFGKQ3W5DffQxSKjgp/IJBdz/KMwYuI29I67/5uJEKV+92YKnFzxLls00rxswoc+dOJg1/Yda+lUlq+NPDGQrUxP/lJOKfMk3R+Y+fZTAoE1J3GNiR/Jr3ekGqxqret1QrzcM1SUN0lHpRIdOBOco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=n/7u8rXa; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1738277935; c=relaxed/simple;
+	bh=pAn1iIMRIIBCqSolqYletqe8y+x3siOw0uL2FvEbOF0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pImF7ybkNKBLDzkgwrKFsgPkNad3GUBSd7wOAs4oh+Y/sM5t1yG9FmilJlg+2Z1sJDyXmZ92XjqQpSKi22R0brwtCRzVDISSWOnwYgy0cFV2bjeF4ZqkdPqkpEy5aGNGodAGdnr+FPwuY5nhjoT3xUaAjt/SXFjfRYBbLVMMan8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=aEssRJr4; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="n/7u8rXa"
-Received: from thinkpad-p16sg1.corp.microsoft.com (unknown [20.236.10.120])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D4D082109CFE;
-	Thu, 30 Jan 2025 14:58:40 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D4D082109CFE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738277921;
-	bh=3zyc+5vnD6HAZrw0BgzncJmVsUlMeKixfDLju3gIc50=;
-	h=From:To:Cc:Subject:Date:From;
-	b=n/7u8rXau5jtAiLY6KGZZcnUkNNwzKiFHu9ND4Ot3ibnFatT3+h52j/RAnkcc6Bar
-	 0H6AeSzi59Y6ibgv8vu8UvMD4ty9NeaEhbOK3JGyTXJ9FRWVU6fGVQro6TTUv5kmpN
-	 kfy5yo3wki1h/QyEbjCWi+YbDRwBGUjnQ+P14YTQ=
-From: Shyam Saini <shyamsaini@linux.microsoft.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux@rasmusvillemoes.dk,
-	mcgrof@kernel.org,
-	code@tyhicks.com,
-	okaya@linux.microsoft.com,
-	vijayb@linux.microsoft.com
-Subject: [RFC] Revert "kernel/params.c: defer most of param_sysfs_init() to late_initcall time"
-Date: Thu, 30 Jan 2025 14:58:03 -0800
-Message-Id: <20250130225803.321004-1-shyamsaini@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="aEssRJr4"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-2166651f752so14024925ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:58:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738277931; x=1738882731; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=iqrirXyAiJow4eUPN0yWoilteak1+pXXR1BTytYKwjs=;
+        b=aEssRJr4oujzoLm/qvgL7KfCT/6j/0JIa8E/ILuee4Ww7WNs9ez6k/QtQ65uE51cJ3
+         pHoS1ZXb/RPU9DPpxWAycGxXIk9HunTLbvMvcXDKYtb7Yd9wCbpdyqUfBohhoyvhNjB+
+         RKWr6TWxsoLCJmzxcKaRSB3Dg9GfFrq7WXdbW8odVGIbp9q6CZC6ZW+MFVqsOv4H0Edl
+         sI8sQxnDr/Uxz+nqxOnsXNef68KdFYdl0Zo96bvkZWfRi7jbTChE/pcQSdhP4p7zqD6/
+         NcRazf/DoVrcA2vXSvu+Od29CH5913bv2j0yF+kd2q7PPzhwWVZLI7zqcakp7klo8kDx
+         5aEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738277931; x=1738882731;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iqrirXyAiJow4eUPN0yWoilteak1+pXXR1BTytYKwjs=;
+        b=J5jUr6z/AG++ZyY2CGiGIVVsipL34Zwqi8Xmbn9smZpE4wSAXfR/xQsBPe2K7GEtyC
+         qmBCAAOWde+yKpEa7RexasPcMgPsWb2yelsbyLUUbFmrnmNy8eIzoFNlIuoqP4V/LcR3
+         1xJMbrVu5VmYppCHU0zADr+fVToTnpY7juFB9QN0KZ9PNbACqMCzxkegeBke1rE1Tdk4
+         FjWyEP32IVC/JE931EcyEd6lLKxQW0YP8O6UdD0Sd+izCFO6h0CQlIw6jx0qdWf9MMLK
+         fqFgz1mU+yliyyvFZJCLJCQMkV/7bn6V/uAxSNQRvN/zz9/GUXJtJXxiRm1hlAAq018U
+         Pnog==
+X-Forwarded-Encrypted: i=1; AJvYcCWYf/d8ai6nfnsR6t14VpMZrFziPuyY3avj7v8hDcScEky6PBJBTpsoTOHM+3QRtzrg6em/tCIIn3T5s1E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbVPKAE0A2nSH9Au7p2Q8Ei17pTM0HoOtr5Moc7md2ECZ5klM6
+	lksU4b38oeYY6Cv9suAkCRp0xN9JqZj5S6vy4JBcxvEAoT71Wb6aeMTWUdour8k=
+X-Gm-Gg: ASbGncuxu7xoNriNRihe75dnll8zD4fO132wxVcubXLt55rjJuNkRiex3NYEGj7aQQJ
+	OvRulKkH/d5kEv2dOLJ3zST7UnwLQT+qJCRahxI5nowU49EZ6XCUoFK+4YjiDC8jEeNSzlMiD9t
+	YTYslcb+ptnSXa4/0S+l9E0VSX1rFj6VjFlFn9L/6sVZOy8QzShvSnxl2beIEpEV20kZYVwH2Aj
+	BW2IPMBYQJfs/Gke2ojSyD3wqlLG3Pq1OAsq0/H82x055ZMo/qZbnhugWPBI2QAKgb7A4xK9nKy
+	4sXzOEAO5Q==
+X-Google-Smtp-Source: AGHT+IHYG+kmnkJ+gnSZiRaOKEhXPOUeShSwAFPSZgtsxgjBVvqKWV5HeZeT27pl7Y4bSuSI8Ka2Tw==
+X-Received: by 2002:a17:903:18c:b0:216:49b1:fadc with SMTP id d9443c01a7336-21dd7deeef3mr132651725ad.42.1738277931641;
+        Thu, 30 Jan 2025 14:58:51 -0800 (PST)
+Received: from ghost ([2001:428:6405:1e0:cd5c:b7b4:1f3d:62bb])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f7885sm18881625ad.54.2025.01.30.14.58.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 14:58:50 -0800 (PST)
+Date: Thu, 30 Jan 2025 14:58:49 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Aleksandar Rikalo <arikalo@gmail.com>, linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Christoph =?iso-8859-1?Q?M=FCllner?= <christoph.muellner@vrull.eu>,
+	linux-kernel@vger.kernel.org,
+	Djordje Todorovic <djordje.todorovic@htecgroup.com>
+Subject: Re: [PATCH v3] riscv: Fix the PAUSE Opcode for MIPS P8700.
+Message-ID: <Z5wEKS9q8-nYPO7h@ghost>
+References: <20250129131703.733098-1-arikalo@gmail.com>
+ <20250129-museum-slider-3bb634d124de@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250129-museum-slider-3bb634d124de@spud>
 
-This reverts commit 96a1a2412acba8c057c041833641d9b7dbf52170,
-as it breaks the creation of /sys/module/<built-in-module>/drivers.
+On Wed, Jan 29, 2025 at 04:19:58PM +0000, Conor Dooley wrote:
+> On Wed, Jan 29, 2025 at 02:17:03PM +0100, Aleksandar Rikalo wrote:
+> > From: Djordje Todorovic <djordje.todorovic@htecgroup.com>
+> > 
+> > The riscv MIPS P8700 uses a different opcode for PAUSE.
+> > It is a ‘hint’ encoding of the SLLI instruction, with rd=0, rs1=0 and
+> > imm=5. It will behave as a NOP instruction if no additional behavior
+> > beyond that of SLLI is implemented.
+> 
+> You say p8700, but the erratum will be applied on all systems that are
+> identified as using a mips cpu. Why's that?
+> 
+> > +void mips_errata_patch_func(struct alt_entry *begin,
+> > +					     struct alt_entry *end,
+> > +					     unsigned long archid,
+> > +					     unsigned long impid,
+> > +					     unsigned int stage)
+> > +{
+> > +	struct alt_entry *alt;
+> > +
+> > +	BUILD_BUG_ON(ERRATA_MIPS_NUMBER >= RISCV_VENDOR_EXT_ALTERNATIVES_BASE);
+> > +
+> > +	if (stage == RISCV_ALTERNATIVES_EARLY_BOOT)
+> > +		return;
+> > +
+> > +	for (alt = begin; alt < end; alt++) {
+> > +		if (alt->vendor_id != MIPS_VENDOR_ID)
+> > +			continue;
+> > +
+> > +		if (alt->patch_id >= ERRATA_MIPS_NUMBER) {
+> > +			WARN(1, "MIPS errata id:%d not in kernel errata list\n",
+> > +			     alt->patch_id);
+> > +			continue;
+> > +		}
+> > +
+> > +		mutex_lock(&text_mutex);
+> > +		patch_text_nosync(ALT_OLD_PTR(alt), ALT_ALT_PTR(alt), alt->alt_len);
+> > +		mutex_unlock(&text_mutex);
+> > +	}
+> > +}
+> 
+> > diff --git a/tools/arch/riscv/include/asm/vdso/processor.h b/tools/arch/riscv/include/asm/vdso/processor.h
+> > index 662aca039848..880f26a24f69 100644
+> > --- a/tools/arch/riscv/include/asm/vdso/processor.h
+> > +++ b/tools/arch/riscv/include/asm/vdso/processor.h
+> > @@ -14,7 +14,10 @@ static inline void cpu_relax(void)
+> >  	__asm__ __volatile__ ("div %0, %0, zero" : "=r" (dummy));
+> >  #endif
+> >  
+> > -#ifdef CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE
+> > +#ifdef CONFIG_ERRATA_MIPS_P8700_PAUSE_OPCODE
+> > +    /* MIPS P8700 pause opcode */
+> > +    __asm__ __volatile__ (".4byte 0x00501013");
+> > +#elif CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE
+> >  	/*
+> >  	 * Reduce instruction retirement.
+> >  	 * This assumes the PC changes.
+> 
+> What about when the erratum is enabled and the toolchain supports
+> Zihintpause?
 
-The reverted commit changed the initcall order for
-param_sysfs_builtin() from subsys_initcall() to late_initcall(),
-which impacts the module_kset list and its population.
+So the other way to do this is having an hwprobe call to check if the
+currently running processor is effected by this. However I was concerned
+about the performance penalty of calling hwprobe here in the previous
+version so I had suggested to use a flag instead so there is not the
+penalty on other architectures. This does make it invalid to enable
+this errata in the defconfig. This is a precedent for how we want to
+handle errata in tools.
 
-Drivers which are initialized from subsys_initcall() or any other
-higher precedence initcall couldn't find the related kobject entry
-in the module_kset list because module_kset is not fully populated
-at this point due to the reverted change. As a consequence,
-module_add_driver() returns early without calling make_driver_name().
-Therefore, /sys/module/<built-in-module>/drivers is never created.
+> Why don't you use the same implementation as the !tools
+> copy of the header? (I'm not sure why they're different in the first
+> place).
 
-This breaks user-space applications for eg: DPDK, which expect
-/sys/module/vfio_pci/drivers/pci:vfio-pci/new_id to be present.
+It is different because the headers in tools are userspace so it doesn't
+make sense to have alternatives.
 
-This revert restores the initcall order for param_sysfs_builtin()
-and fixes the above mentioned issue.
+- Charlie
 
-Fixes: 96a1a2412acb ("kernel/params.c: defer most of param_sysfs_init() to late_initcall time")
-Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
----
- kernel/params.c | 21 ++-------------------
- 1 file changed, 2 insertions(+), 19 deletions(-)
-
-diff --git a/kernel/params.c b/kernel/params.c
-index 0074d29c9b80..890b44d36b1e 100644
---- a/kernel/params.c
-+++ b/kernel/params.c
-@@ -958,11 +958,7 @@ const struct kobj_type module_ktype = {
- };
- 
- /*
-- * param_sysfs_init - create "module" kset
-- *
-- * This must be done before the initramfs is unpacked and
-- * request_module() thus becomes possible, because otherwise the
-- * module load would fail in mod_sysfs_init.
-+ * param_sysfs_init - wrapper for built-in params support
-  */
- static int __init param_sysfs_init(void)
- {
-@@ -973,24 +969,11 @@ static int __init param_sysfs_init(void)
- 		return -ENOMEM;
- 	}
- 
--	return 0;
--}
--subsys_initcall(param_sysfs_init);
--
--/*
-- * param_sysfs_builtin_init - add sysfs version and parameter
-- * attributes for built-in modules
-- */
--static int __init param_sysfs_builtin_init(void)
--{
--	if (!module_kset)
--		return -ENOMEM;
--
- 	version_sysfs_builtin();
- 	param_sysfs_builtin();
- 
- 	return 0;
- }
--late_initcall(param_sysfs_builtin_init);
-+subsys_initcall(param_sysfs_init);
- 
- #endif /* CONFIG_SYSFS */
--- 
-2.34.1
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
