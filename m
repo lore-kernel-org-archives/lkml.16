@@ -1,94 +1,81 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9378BFF
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544A31E9916;
+	Thu, 30 Jan 2025 14:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738247540; cv=none; b=HVL97tjIJnpvtAZCICDiFH5/L3QviT+yeJI4hO3H2qtJOcNZV3auo3sDur4f79UYZvGjno3OS5VU8huRYAx7h1yvRSmnsBCHUTVxLZxB0g3DNyRIcQjBi+bPSn6DyhPBlRl0sKyrMhbFrMWbdsqLzH/5M0V6Ia6qKQiLTJtWtK4=
+	t=1738247545; cv=none; b=rgxLvAd0/2AXIEnaWnurnTr2C0WiZUdUdJH05/KdPDAV6N6DKe6Vy9bi29FjQdT6+ewUiNOdn992WrWQKhy5XDdRCiEdMmQG3FHrV2Bv8GP8rGbhQzSWLbjnKZ6ovwZzsbWsIOK8EIuYZ7TWfMtTp5M6eNeRGdhzB3XFr6f4OtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738247540; c=relaxed/simple;
-	bh=sA7asZK9ucRprwdIDQlSVHXLkerrhcndTmOGBsM3rV0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dhQX3QWZi0b/hnWdUospY9/xuAZDnShZTiFYhBqYRvr524OgIvRNjI/U1RBaqAOvP/pYM6IN/sYbkrchffhjgtvrw7r57W6e9dieo+923hNH1m4tgcGc1dinLQVHccC7nsaS6KrixOqk6SISzP0w2XWFk50t2ropHevGNblYoRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V2zEdZ2g; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738247545; c=relaxed/simple;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=UYmdsOjb5vlN5KOF8YwCspbIlCqJ4I4qLmobbxx/mUTtmBNVCyYKkPkstaahvM2Xsg5NXRJ1zrjVya3r/edcfz7mR5iEklUSTfr8OfXLJB3C4YwOTGgb3kP+RnF1tfs/2oAuWA+ybXwtNhwrvBMiGLBJe+lh4AiGX20ddRMSbN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=ot7SORaC; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V2zEdZ2g"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-219f8263ae0so16377935ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:32:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738247537; x=1738852337; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4qvx3FpdL5oMIU/2IZipgSLR8aHKwTjhISv/FQnfDRk=;
-        b=V2zEdZ2gKCphQbLlurGdaxPIRp6rjAnMM2URWTEB36pXIru7WNMNHvs/pm17om7goC
-         IyzlTD+BgXiryx3kaGwRKug1L0GNxzvR5kIFzElRCBmf0Y8BYBOvHX82LKcLrBC8MmjF
-         dhKP5HeiVBt07w4Pp3fiQFAB3zcI6Bm9sZvgcRyCDFc52oLprAAXpAQJ/Q8EICBBEp7g
-         1H9HDJnE72Jg9Fj9qcHNAlKoypIdHqryCsl1BogzqXHDk/IeVj5wtkB9wUWcLfsQtfQU
-         tX7H2XkuaaC/JrAq0PpAisfuplje/qL5Z2y8NwniHQiHVuIopqLkOmWbmravQcl5SIuh
-         bkig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738247537; x=1738852337;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4qvx3FpdL5oMIU/2IZipgSLR8aHKwTjhISv/FQnfDRk=;
-        b=hXFxZ97Ft3GdEymyRwS6h4McH85HL2IxKY1eWoyC4Pz1f8vNP0vlVz+vDsMPAupz37
-         eQAPuhm4qp2wIUQ2eamP/sjuYEbd2scjdqEtG0gPNN5LVeZg/G5xnAHk50DgBj4VvKy3
-         nYcJGIXUqmj9wjsc3Fq4Wj2vAQfWm+9YBj0tSZ8s1gMWOdAxjTJpyFL6MHhKwAUQEeUI
-         h1PlC5NrL0h7BxYsTC1SvbPqRDixTeIy9MA8ppBEQd3w6E8SMhekOnWSYBWvd8VokBtV
-         7n4FP3TFlz1IhpEdMy4sc546XuPPKU6tqIsiestCX8jibWqCpCOkTrQPBsUzaek+ooHW
-         s0eg==
-X-Gm-Message-State: AOJu0YyvXEDpRX3jfEQe8lh0BRHlvQf61vHmXFS3j/baf2M2llAohvYu
-	STqvB8W5hQy4Pigdpep7aneCIl/xSR99HsmW4rwDJcQVd6USUhmP6uPwvOvF
-X-Gm-Gg: ASbGncs78TRd4OqhhBXeLbBwUz7N2+IEXDeulmIcH9p+whoLolyxrEm+lTFROjnLIvV
-	xBfqiM9kbl2nNcfHUx4Y2VhMq5pJFKu6B/kuZRl1XI7uR1TtW8fmqKz0olQhbYFzmzOzWi5K//l
-	Xg9BIa2gEdd60H1K2pvpfRg95HUuKSLaMv1uzFqZZ9rcDBfDR1MR308oU9g10OuatZynanCOfTc
-	NInInq+3R+C2RF2Yt1NcX7y35JpzZhwTtKZxXzoxlUrZQQIj0tPcGteQiKHFn/04tzCAg+bqGAQ
-	dbGSiom0hy0xkocEMDciPO5icnH2IctnX2wz5g==
-X-Google-Smtp-Source: AGHT+IE8c/vt2QdbZ2f5T200wHLHXYN4IpnyykL+38gCR+TZE2Z882J7JRKJG8r+myXOCnI0SUTICg==
-X-Received: by 2002:a17:903:2343:b0:216:1ad4:d8fd with SMTP id d9443c01a7336-21dd7c4994amr88436165ad.8.1738247536332;
-        Thu, 30 Jan 2025 06:32:16 -0800 (PST)
-Received: from localhost.localdomain ([2401:4900:170a:61d3:1c2c:a5df:6611:5aca])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de33200e7sm14690825ad.240.2025.01.30.06.32.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 06:32:15 -0800 (PST)
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	skhan@linuxfoundation.org
-Cc: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Subject: [PATCH] grammatical correction as part of lfx mentee selection tasks
-Date: Thu, 30 Jan 2025 20:02:05 +0530
-Message-ID: <20250130143205.13564-1-pranav.tyagi03@gmail.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="ot7SORaC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1738247540; x=1738852340; i=rwarsow@gmx.de;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:To:Cc:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=ot7SORaCNOGdC/HDo+R/rdoGnWyFpuRXMBUxHj8of+AeE6atChqvnMlMAdCMFO9B
+	 tqwc4FyfkMegac/yzc78vw2yTqVYAougpXN9gzJ2mfZ6WpBSChhafy4dfFenBZAwi
+	 hUlkksUQ9EyQZbOXeO+yb/ZGcJZmyZgeyG534G/CLdbpy1jXA3GHhfrFexWDL677r
+	 KB6lTO9DRq4tlqf62KeeU3b6NxGM+w/uvwi40ZtbBADb/tHkxbviGoql4hINXy1AI
+	 3/oL4wSGzUFJJSos6m2V7fCDzmAxgStNKw1Io85Z5/dBRGPFxdstrvRGvJUc89oEJ
+	 5UyH0h0uxmTJKqFBnA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.200.20] ([46.142.33.199]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MfYLa-1sxaCC3LUO-00pRHF; Thu, 30
+ Jan 2025 15:32:20 +0100
+Message-ID: <09ddd9ca-4b3f-4f42-9d44-67ff0b5467d5@gmx.de>
+Date: Thu, 30 Jan 2025 15:32:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Ronald Warsow <rwarsow@gmx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Content-Language: de-DE, en-US
+Subject: Re: [PATCH 6.13 00/25] 6.13.1-rc1 review
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:w/UvebSVJhUFe/jMaL8hLmWysYMmrY0t1qlyvh/j69pz/yfasGz
+ uTrxUPtvkxHGlwy3sspqsQxxnuBgZ3pOnt7kH5fdmI9VrTCgUZsGA5XgIKRSsznhCJQD3FY
+ gRkUior+YNRt4jcgjIkoDtsQZ714xYplsDMdajtoWUoG56lwB5kzR7ssih6YvOMSuGRUk3s
+ 9laVj4Uq1D3xusik8Fiqw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+4/GsMXmssQ=;wN8pOPwVLi75bXzhukJR+Hnx8bl
+ LTBbj1rmDghJxXdpTAZYHwdpVzjNID42qBYLn5iI1XOboBLrJ8fXzJtfnZUbW1gIyLmIxBE/I
+ T0QE4v5ZcDXYhSKxBrYJvGZaB8R9gbmDFA1PZcm5sq8KQYW6ldukt42lg6ULNBOyaNsBAmpbV
+ i1UnQgtbXrhhOE0OcLDuWtQoXU+XdY7YtBkdTX0b4+UyvZ8FcWsd66Xkzwrj9xo7JsOKaAZ4Y
+ qtu+mZVBKTvKieZkMMxi/tj8uxw5/RU4SnnzGKIVUV0aEcQV2NDBCpT7a9idjQfwqq0K7sYJh
+ q/EdyeBhr8p3P1BH85w6VgkEQqhTht8XVsIpFMPd4NxHw1qGJlxrsnKWM1fA9H/NpoKPRv2ue
+ 89BrCXPj0ov0jzKlC8SsQn3B1fIdKK1dq/9l63iZuzXmXUrIoPHwIwUsDC+qM2Ub31LKFqUvb
+ 3ZtjJpZ2Pf/Lzu4A2LG5cu8tkh5rLc5sbz0YxAGy0O9XjBvOLmOpP7yXQ5zZfIoDTVm2HMiVe
+ rn9TxS79Y/Cj69stbHyKHiuMl8tmpGACvOntzZ/5aPfuORgCsf0Q2pzk4sUrwkxyAVZLvGUqv
+ DIyB2L6aHP4WRdb7l8ScuilK+Xjr92RxthBN6zkMRabI2hzXTosXFYk5AvXGva71qFjAmV4sJ
+ GUgrJmPsvBDn7lxSZKIoUuBpZqQKsNonoFO4QVUlEtB27/h+Y76EELe0FWi580uT3ZY6/4R95
+ 3ILWDBnmGhtTUcmnFBAGyfV8yryC+n/snasempMi/lmUxYnNPg3/5nyVu9Kcvf8+b/MxRu5M1
+ bP8f/Ybezw2C9h7FdDhqW7dmarNJnm+5fcJmILPRGr+RMc5d6hz6+v45wulA3/LEMr9YJvz+l
+ dIHGuPvQO5tFWWiwbSQjpkjgZ5rDaU29h5rdh8snA9yNnnBLRmIeqAClKAUSlKXwojp6OUd1w
+ XRUepsa5d/aFpA8o6elzxrIK/tWIq1Ag07YSNZhEFVcXJ5vBRm8OBUszU8XWeUICIDzyPWYvr
+ ez7BLFjvo49XkrKvAc411y5FZznC5+TOkWQdH9ThNaGlLwrADtthutg5/yishP9Px7Wo2+EGX
+ VhOGvRzqso3oRVfut7BXejsgflVo3IGGIICOPnK7wNZtO53bFDfL6mBy3xZkOXEzsFPL9h40p
+ 5iIA0wgP7m4CFfYwwWpQkzoSn4r3C8G30Es36TZCwKQ==
 
-Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
----
- tools/testing/selftests/net/reuseaddr_ports_exhausted.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Greg
 
-diff --git a/tools/testing/selftests/net/reuseaddr_ports_exhausted.c b/tools/testing/selftests/net/reuseaddr_ports_exhausted.c
-index 066efd30e294..7b9bf8a7bbe1 100644
---- a/tools/testing/selftests/net/reuseaddr_ports_exhausted.c
-+++ b/tools/testing/selftests/net/reuseaddr_ports_exhausted.c
-@@ -112,7 +112,7 @@ TEST(reuseaddr_ports_exhausted_reusable_same_euid)
- 		ASSERT_NE(-1, fd[0]) TH_LOG("failed to bind.");
- 
- 		if (opts->reuseport[0] && opts->reuseport[1]) {
--			EXPECT_EQ(-1, fd[1]) TH_LOG("should fail to bind because both sockets succeed to be listened.");
-+			EXPECT_EQ(-1, fd[1]) TH_LOG("should fail to bind because both sockets successfully listened.");
- 		} else {
- 			EXPECT_NE(-1, fd[1]) TH_LOG("should succeed to bind to connect to different destinations.");
- 		}
--- 
-2.47.1
+no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
+Thanks
+
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
