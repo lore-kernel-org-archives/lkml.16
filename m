@@ -1,51 +1,51 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3213B1E9B1B
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566901E9B37
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738244908; cv=none; b=JdN5lj3eMmgiKegnnO10QWXsr10TF0NEcCb7U9cFMuNKTV7AXMB3WzI8Yh25NzsgN1pjp5CpdxYhZFLr4q3cmqLRu8sQP+DXps82YE7B2Es3YArdQR/eCe7e76hh4Mw+KUzvmJk28qs4a6Xt7BetfnUuMSPLzjAkB8QB/1JPl5E=
+	t=1738244910; cv=none; b=Qk0eIzv/XOhe4FZMt5VGMIXsxSuluu6R8EPRi2JrsQ1aFUGDsvjCbF2altrWQrXyxWdP83BltBUQLriy+4wjfODD50m309NWtmY27Ba5Q59S0+GpAmI2jLtC0q93jqwbx0wHHSBYcPs5FgDNCBmeRBGuyyMJRk0gc74qpIteoCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738244908; c=relaxed/simple;
-	bh=jeTa4QRsHDMyQtMfoxdWoa+LfkrPqOiSkK7yMKMwjh4=;
+	s=arc-20240116; t=1738244910; c=relaxed/simple;
+	bh=rMZ14btJhhptqID9ovs1VN1w2N97LfuUChqbSNyEwoE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IqQTfcaej7C+jw9jJ/XffwqM+Hs1h9SWs5Wt6VkeQjchnanNRokIFm+ky71A7CyHLY5Yy++W9WcgTiAMm+Y2dPFNu+8n8+/GFj96iosff6XysOaZcvhKCdh+F0OGUcUKsvarL4RWI8jRatN3MuolkK9/Z+XM41mWd2V/3QdIczs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=X5vC5MBr; arc=none smtp.client-ip=217.70.183.197
+	 Content-Type:Content-Disposition:In-Reply-To; b=UzO3A1B7f1boTa3JeD2pgI0Ad8+KNJWX75WsNKOq0mFd/A6Id62zS7APPFqdQfzuY2L/H9mh0SO2HQDQw4t2/Ndl/rqkBJeXWKJ09ALZBNeRqY5Kv2RrntvYFscHWoTVrBSJ31eOeNZVCqTE9//azmVqWaNKVQXDLNNAsc2BKbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FgjmtF6h; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="X5vC5MBr"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 67980442F8;
-	Thu, 30 Jan 2025 13:48:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FgjmtF6h"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 52F0042D46;
+	Thu, 30 Jan 2025 13:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738244901;
+	t=1738244905;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PUaEcvOqojO5KkZeiqdnobiTzfbr0lXwcEOXB0Nb2a0=;
-	b=X5vC5MBr60Wm7RxL1IJ66VdaK5BV8KbRRI23QmJQipyiZLhyQ8j765zjKaLLlPXY1EYvDP
-	yJj08dKuzxZC1O4uXP8OvLBeQ9WuRH2edJXIr6T4pYeQ52KwoiwU8HRkX5gWi5bWDDky2L
-	eiKzU4dHnzhqX9hx5bYTwhOK6mRttbMr2P4R5YnhP9P4DwgXfnYutgDUvIxSa+EKB/L8+M
-	qYSlGWbTq5oYJUN8hsevZe30JJHi967Vs644G7gg5O7w7Wu5qS5KWnf9Immmg5cFRZ1YPr
-	plYwLrmGnbLwxkP6magg/fZKyhSsJlJjXY/DQ7sVIvyF76NggKiVnMV8Jktf3w==
-Date: Thu, 30 Jan 2025 14:48:19 +0100
+	bh=ZocM4giOQVihnodEGteLJuYb1jmPUBAiMkOwHG12o8M=;
+	b=FgjmtF6hTRFo3m866G9nf13GdMQZc0CBg8K11E8SbDHJpLU/A8k0PlG4ksueixoX/XGPUk
+	OwkdDT36P5gSeYyuNkhWQXkhiZpOxqUM88OeiclC14PwHGV4lck/Z2CtkqV7vOokMv58co
+	yqQkMo3i0p5U9V0AMPATTRFYv/4KcsUU2bvuG75my2nq7JZzrAS0dFomDeGK27Bj3I2hHA
+	EfhakddT3gqpJmAv6r2otVOmszEIJ4iVcSfYWj4kICg1zJCVtQFSsov4KqRh7uFOVpbsX6
+	ZPP41OFxRmJCM1Cl7vPVqSunuGnuFKM4oIdWJ+r0sN+N4BmoAVBhgKprZVkicw==
+Date: Thu, 30 Jan 2025 14:48:24 +0100
 From: Louis Chauvet <louis.chauvet@bootlin.com>
 To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
 Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
 	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
 	tzimmermann@suse.de, airlied@gmail.com,
 	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/13] drm/vkms: Allow to configure multiple planes
-Message-ID: <Z5uDI0QiP2UWGzI8@louis-chauvet-laptop>
+Subject: Re: [PATCH 11/13] drm/vkms: Allow to attach encoders and CRTCs
+Message-ID: <Z5uDKNye2pkivNWj@louis-chauvet-laptop>
 Mail-Followup-To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
 	hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
 	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
 	tzimmermann@suse.de, airlied@gmail.com,
 	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 References: <20250129110059.12199-1-jose.exposito89@gmail.com>
- <20250129110059.12199-8-jose.exposito89@gmail.com>
+ <20250129110059.12199-12-jose.exposito89@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,20 +55,19 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250129110059.12199-8-jose.exposito89@gmail.com>
+In-Reply-To: <20250129110059.12199-12-jose.exposito89@gmail.com>
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehleejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefgjeevteekvdelteduuedugeefjeehueejfeekgfdtuefgteefuedtveeikedvkeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhouhhishdqtghhrghuvhgvthdqlhgrphhtohhppdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhhoshgvrdgvgihpohhsihhtohekleesghhmrghilhdrtghomhdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhst
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehleekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefgjeevteekvdelteduuedugeefjeehueejfeekgfdtuefgteefuedtveeikedvkeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhouhhishdqtghhrghuvhgvthdqlhgrphhtohhppdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhhoshgvrdgvgihpohhsihhtohekleesghhmrghilhdrtghomhdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhst
  heslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
 X-GND-Sasl: louis.chauvet@bootlin.com
 
 On 29/01/25 - 12:00, José Expósito wrote:
-> Add a list of planes to vkms_config and create as many planes as
-> configured during output initialization.
+> Add a list of possible CRTCs to the encoder configuration and helpers to
+> attach and detach them.
 > 
-> For backwards compatibility, add one primary plane and, if configured,
-> one cursor plane and NUM_OVERLAY_PLANES planes to the default
-> configuration.
+> Now that the default configuration has its encoder and CRTC correctly
+> attached, configure the output following the configuration.
 > 
 > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
@@ -83,108 +82,21 @@ Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 
 [...]
 
-> +static void vkms_config_test_get_planes(struct kunit *test)
+> +struct vkms_config_crtc **
+> +vkms_config_encoder_get_possible_crtcs(struct vkms_config_encoder *encoder_cfg,
+> +				       size_t *out_length)
 > +{
-> +	struct vkms_config *config;
-> +	struct vkms_config_plane *plane_cfg1, *plane_cfg2;
-> +	struct vkms_config_plane **array;
-> +	size_t length;
-> +
-> +	config = vkms_config_create("test");
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
-> +
-> +	array = vkms_config_get_planes(config, &length);
-> +	KUNIT_ASSERT_EQ(test, length, 0);
-> +	KUNIT_ASSERT_NULL(test, array);
-> +
-> +	plane_cfg1 = vkms_config_add_plane(config);
-> +	array = vkms_config_get_planes(config, &length);
-> +	KUNIT_ASSERT_EQ(test, length, 1);
-> +	KUNIT_ASSERT_PTR_EQ(test, array[0], plane_cfg1);
-> +	kfree(array);
-> +
-> +	plane_cfg2 = vkms_config_add_plane(config);
-> +	array = vkms_config_get_planes(config, &length);
-> +	KUNIT_ASSERT_EQ(test, length, 2);
-> +	KUNIT_ASSERT_PTR_EQ(test, array[0], plane_cfg1);
-> +	KUNIT_ASSERT_PTR_EQ(test, array[1], plane_cfg2);
-> +	kfree(array);
-> +
-> +	vkms_config_destroy_plane(plane_cfg1);
-> +	array = vkms_config_get_planes(config, &length);
-> +	KUNIT_ASSERT_EQ(test, length, 1);
-> +	KUNIT_ASSERT_PTR_EQ(test, array[0], plane_cfg2);
-> +	kfree(array);
-> +
-> +	vkms_config_destroy(config);
-> +}
-
-In this test I have the feeling that vkms_config_get_planes always returns 
-a predictable order. It is maybe trivial here, but I would prefer to shows 
-that the order is not stable, for example:
-
-	bool plane_cfg1_found = false;
-	bool plane_cfg2_found = false;
-
-	vkms_config_for_each_plane(config, plane_cfg) {
-		if (plane_cfg == plane_cfg1)
-			plane_cfg1_found = true;
-		else if (plane_cfg == plane_cfg2)
-			plane_cfg2_found = true;
-		else
-			KUNIT_FAILS("Unexpected plane");
-	}
-
-	KUNIT_ASSERT(test, plane_cfg1_found);
-	KUNIT_ASSERT(test, plane_cfg2_found);
-
-[...]
-
-> +static void vkms_config_test_valid_plane_number(struct kunit *test)
-> +{
-> +	struct vkms_config *config;
-> +	struct vkms_config_plane *plane_cfg;
-> +	int n;
-> +
-> +	config = vkms_config_default_create(false, false, false);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
-> +
-> +	/* Invalid: No planes */
-> +	plane_cfg = list_first_entry(&config->planes, typeof(*plane_cfg), link);
-> +	vkms_config_destroy_plane(plane_cfg);
-> +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
-> +
-> +	/* Invalid: Too many planes */
-> +	for (n = 0; n <= 32; n++)
-> +		vkms_config_add_plane(config);
-> +
-> +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
-> +
-> +	vkms_config_destroy(config);
-> +}
-
-For this function, the naming is a bit strange, it says 
-"valid_plane_number", but you test only invalid plane number.
-
-Can you rename it to vkms_config_test_invalid_plane_number?
-
-[...]
-
-> diff --git a/drivers/gpu/drm/vkms/vkms_config.c b/drivers/gpu/drm/vkms/vkms_config.c
-
-[...]
-
-> +struct vkms_config_plane **vkms_config_get_planes(const struct vkms_config *config,
-> +						  size_t *out_length)
-> +{
-> +	struct vkms_config_plane **array;
-> +	struct vkms_config_plane *plane_cfg;
-> +	size_t length;
+> +	struct vkms_config_crtc **array;
+> +	struct vkms_config_crtc *possible_crtc;
+> +	unsigned long idx;
+> +	size_t length = 0;
 > +	int n = 0;
 > +
-> +	length = list_count_nodes((struct list_head *)&config->planes);
+> +	xa_for_each(&encoder_cfg->possible_crtcs, idx, possible_crtc)
+> +		length++;
+> +
 > +	if (length == 0) {
-> +		*out_length = length;
+> +		*out_length = 0;
 > +		return NULL;
 > +	}
 > +
@@ -192,8 +104,8 @@ Can you rename it to vkms_config_test_invalid_plane_number?
 > +	if (!array)
 > +		return ERR_PTR(-ENOMEM);
 > +
-> +	list_for_each_entry(plane_cfg, &config->planes, link) {
-> +		array[n] = plane_cfg;
+> +	xa_for_each(&encoder_cfg->possible_crtcs, idx, possible_crtc) {
+> +		array[n] = possible_crtc;
 > +		n++;
 > +	}
 > +
@@ -201,126 +113,34 @@ Can you rename it to vkms_config_test_invalid_plane_number?
 > +	return array;
 > +}
 
-To join the comment on the test, I am not a big fan of creating a new list 
-to return to the caller, for three reasons:
-- the caller needs to manage an other pointer;
-- the caller needs to understand that the content of the array is only 
-  valid if: the config is not freed, nobody else removed anything from the 
-  planes;
-- the caller may think this list always have the same order if he looks at 
-  the tests.
-
-I would prefer a simple macro to do an iteration over the config->planes 
-list: (I did not test this macro, but you have this idea)
-
-	#define vkms_config_iter_plane(config, plane_cfg) \
-		list_for_each_entry((plane_cfg), &(config).planes, link)
-
-This way:
-- no new pointer to manage;
-- if one day we have concurency issue, we just have to protect config, not 
-  config+all the planes;
-- there is no expected order.
-
-[...]
-
->  bool vkms_config_is_valid(struct vkms_config *config)
->  {
-> +	if (!valid_plane_number(config))
-> +		return false;
-> +
-> +	if (!valid_plane_type(config))
-> +		return false;
-> +
->  	return true;
->  }
-
-I really like the idea to split the validation function, way simpler!
-
-[...]
-
-> +void vkms_config_destroy_plane(struct vkms_config_plane *plane_cfg)
-> +{
-> +	list_del(&plane_cfg->link);
-> +	kfree(plane_cfg);
-> +}
-
-I would prefer a "standard" function pair, i.e.: add/remove or 
-create/destroy, not add/destroy.
-
-For me it should be create/destroy, you create the plane by using a 
-config, so it is clear it will be attached to it.
-
-If you choose add/remove, you should explains in the documentation that 
-remove is also doing kfree.
-
-[...]
+Same as before, can we use an iterator?
 
 > diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
 
 [...]
 
-> @@ -11,61 +11,63 @@ int vkms_output_init(struct vkms_device *vkmsdev)
->  	struct vkms_connector *connector;
->  	struct drm_encoder *encoder;
->  	struct vkms_output *output;
-> -	struct vkms_plane *primary, *overlay, *cursor = NULL;
-> -	int ret;
-> +	struct vkms_plane *primary = NULL, *cursor = NULL;
-> +	struct vkms_config_plane **plane_cfgs = NULL;
-> +	size_t n_planes;
-> +	int ret = 0;
->  	int writeback;
->  	unsigned int n;
-
-I think it could be interesting to have a vkms_config_is_valid call here. 
-It will avoid raising DRM errors or create unexpected devices.
-
-It will also garantee in a later patch that 
-vkms_config_crtc_get_primary_plane is a valid pointer.
-
-> -	/*
-> -	 * Initialize used plane. One primary plane is required to perform the composition.
-> -	 *
-> -	 * The overlay and cursor planes are not mandatory, but can be used to perform complex
-> -	 * composition.
-> -	 */
-> -	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY);
-> -	if (IS_ERR(primary))
-> -		return PTR_ERR(primary);
-> +	plane_cfgs = vkms_config_get_planes(vkmsdev->config, &n_planes);
-> +	if (IS_ERR(plane_cfgs))
-> +		return PTR_ERR(plane_cfgs);
-
-If you agree on the iterator implementation, this code could be simplified 
-a lot.
-
-> -	if (vkmsdev->config->cursor) {
-> -		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR);
-> -		if (IS_ERR(cursor))
-> -			return PTR_ERR(cursor);
-> +	for (n = 0; n < n_planes; n++) {
-> +		struct vkms_config_plane *plane_cfg;
-> +		enum drm_plane_type type;
-> +
-> +		plane_cfg = plane_cfgs[n];
-> +		type = vkms_config_plane_get_type(plane_cfg);
-> +
-> +		plane_cfg->plane = vkms_plane_init(vkmsdev, type);
-
-Can we pass plane_cfg in vkms_plane_init? This way we don't have to 
-touch vkms_output_init when adding new vkms_config_plane members.
-
-> +		if (IS_ERR(plane_cfg->plane)) {
-> +			DRM_DEV_ERROR(dev->dev, "Failed to init vkms plane\n");
-> +			ret = PTR_ERR(plane_cfg->plane);
-> +			goto err_free;
-> +		}
-> +
-> +		if (type == DRM_PLANE_TYPE_PRIMARY)
-> +			primary = plane_cfg->plane;
-> +		else if (type == DRM_PLANE_TYPE_CURSOR)
-> +			cursor = plane_cfg->plane;
+> @@ -98,22 +143,8 @@ int vkms_output_init(struct vkms_device *vkmsdev)
+>  		goto err_free;
 >  	}
+>  
+> -	encoder = drmm_kzalloc(dev, sizeof(*encoder), GFP_KERNEL);
+> -	if (!encoder) {
+> -		DRM_ERROR("Failed to allocate encoder\n");
+> -		ret = -ENOMEM;
+> -		goto err_free;
+> -	}
+> -	ret = drmm_encoder_init(dev, encoder, NULL,
+> -				DRM_MODE_ENCODER_VIRTUAL, NULL);
+> -	if (ret) {
+> -		DRM_ERROR("Failed to init encoder\n");
+> -		goto err_free;
+> -	}
+> -	encoder->possible_crtcs = drm_crtc_mask(&crtc_cfgs[0]->crtc->crtc);
+> -
+>  	/* Attach the encoder and the connector */
+> -	ret = drm_connector_attach_encoder(&connector->base, encoder);
+> +	ret = drm_connector_attach_encoder(&connector->base, encoder_cfgs[0]->encoder);
+
+Why do you only attach the first encoder? Can't we attach all of them?
 
 [...]
