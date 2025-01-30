@@ -1,51 +1,51 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7549A1EE7B7
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A2C1EE7DA
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738244914; cv=none; b=qjNuW9ijstYDcEOndSARukHdbWdjzR2RDk25t4zdIRmc/euZCLvTQ4X+KRkyrtreGMG5EAqfxZO1qhHTWZtTdrvtCBaSdZrljvkwBD10fSwDPmP1eiruqh1V3FxjNQ6/h5OwASc14Qr/YQ4TVmvKRXLvhqXB0fIIHR1yZYGgayQ=
+	t=1738244915; cv=none; b=V5povtoQgryot3Zs9HByK0jg2DZCtHOAU8vRvqPCJ3DfRIls8xrcPK7uFPy7iaU2V7rDyDNWHbN10o+CGZmu3Up7Z/vRTU4+EVB2+SEPqG3t3eWeeHc6w+ocu0QBSGsIlR19Q7+f7E5oGNfMBt0UGlciMQIP2fYIeW4RfFIbENI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738244914; c=relaxed/simple;
-	bh=xJWIvSN+l2XpX/ADXHkzUUOA+zx8sxUQoAoKUeEUf/w=;
+	s=arc-20240116; t=1738244915; c=relaxed/simple;
+	bh=43L69UphyWyMqeZk43aaNkuUM4FvoMW3nuCDqunybJo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jVoVUETAIgj34tWI3PTOi2xSheb6CS5nEw9wwyYoqeYjyx3rmIJJdZiQuxZ5APwBPhKngdxbyCji1Ic/yZDAZiysHH5fZUmjhnMj00AzB79Y26YnsA1NLYbgvCNW3sdaRZTpyW5vj7tX7vMpR00eT3VDTT96q49sc2ibnyZZ/wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lRhCZi/8; arc=none smtp.client-ip=217.70.183.196
+	 Content-Type:Content-Disposition:In-Reply-To; b=OdMJeJQaI7pgGVoAN4kov6ndagtTOPXIYMLuq+yjNofRxzb2+zD6vOUuuwiNoquEXwQNJCXptCaNJnIIjOeid5ENImkeipukKgSbuzaQd/AnqbVTiOybITGAZg5hG2bDIYVT8dvlGoz/R6N5NiaCoXfLiw4yqaSykOtcOc/JTes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kpvlUAoe; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lRhCZi/8"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 05A47443CD;
-	Thu, 30 Jan 2025 13:48:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kpvlUAoe"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C9CD044296;
+	Thu, 30 Jan 2025 13:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738244907;
+	t=1738244905;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eH/Z+gByAJwUFVDz5FkDRyz1/FIuT3KGBVj+zs6yvKU=;
-	b=lRhCZi/85aIrIGfAJVrPqbbQu97cU73Xfmw4rApblzHpQinoCAJ6GMXVMU4MyHctL9a5es
-	vjEKurZ0YKZGMNUdgerP0QzomaJpHVsjpZ0coldQjg0CW74EZ/buhZ9bFik3GN7tijeoTO
-	fOdFnEHRSTamVUspsg2zqUsqZV8CFI7rpu5pSegnP2NWLxqHTg77EIUrqw1yaFaGWOD/wf
-	FCd7JpZroxk+fGl6KTIEnSdIeG0xMnNYoBUAivpdG7vMc5nWwzEeAAqjjDDMg9qg/qTq8k
-	0bjDwK7BQgde8Bnx76CqkWc23xKp123+YvM40Y6XtOhZ0os8PLuu7KAIaAyfHA==
-Date: Thu, 30 Jan 2025 14:48:24 +0100
+	bh=0uQmB25EJhB+8/HLFAr4UH4azwGCGo+vs6Zi+bry4J4=;
+	b=kpvlUAoexrm8muR1mbmhp/JeCUEtGZOeeOL08ScXyfKp+0vLRMoMmUyuc34CYCPuZIcxZg
+	V0p42CTAgYw44P7i5I3eFuAuC1msuxa29wM1pF+z06mglTnljKS000qFaI0XJVprrmomII
+	Mlbj83hS6vwuMrK2XZiW3H1rORW5UmjSeaMPRgALrIKWTaWsO9G6jUnhosKdsUWxfkUUo2
+	FT72iO0VuZ1tCx6k87BUixhp3E1n+D8PEKMwAdgx+6ieie90p+lkTyP++fo5IKGH/X3Ug4
+	uNL6iLpKNCDWjj5E4Y6dRiA1sMXI1JQUvIlQeKaEEjZcqUPeoJ3PoVTtg1gx9g==
+Date: Thu, 30 Jan 2025 14:48:23 +0100
 From: Louis Chauvet <louis.chauvet@bootlin.com>
 To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
 Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
 	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
 	tzimmermann@suse.de, airlied@gmail.com,
 	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/13] drm/vkms: Allow to configure multiple connectors
-Message-ID: <Z5uDKKlLPTWHtFzr@louis-chauvet-laptop>
+Subject: Re: [PATCH 10/13] drm/vkms: Allow to configure multiple encoders
+Message-ID: <Z5uDJ00o6Hqm6i9a@louis-chauvet-laptop>
 Mail-Followup-To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
 	hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
 	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
 	tzimmermann@suse.de, airlied@gmail.com,
 	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 References: <20250129110059.12199-1-jose.exposito89@gmail.com>
- <20250129110059.12199-13-jose.exposito89@gmail.com>
+ <20250129110059.12199-11-jose.exposito89@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,7 +55,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250129110059.12199-13-jose.exposito89@gmail.com>
+In-Reply-To: <20250129110059.12199-11-jose.exposito89@gmail.com>
 X-GND-State: clean
 X-GND-Score: -100
 X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehleejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefgjeevteekvdelteduuedugeefjeehueejfeekgfdtuefgteefuedtveeikedvkeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhouhhishdqtghhrghuvhgvthdqlhgrphhtohhppdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhhoshgvrdgvgihpohhsihhtohekleesghhmrghilhdrtghomhdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhst
@@ -63,22 +63,13 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehleejucetufdoteggodetrfd
 X-GND-Sasl: louis.chauvet@bootlin.com
 
 On 29/01/25 - 12:00, José Expósito wrote:
-> Add a list of connectors to vkms_config and helper functions to add and
-> remove as many connectors as wanted.
+> Add a list of encoders to vkms_config and helper functions to add and
+> remove as many encoders as wanted.
 > 
-> Unlike planes, CRTCs and encoders, connectors can be added and removed
-> once the device is created. To reflect it, add an "enabled" flag in the
-> configuration and filter disabled connectors in the
-> vkms_config_get_connectors() function.
-> 
-> For the moment, changing the enabled status of the connector has no
-> effect after the device is created, but a future patch will add this
-> capability.
-> 
-> For backwards compatibility, add one enabled connector to the default
+> For backwards compatibility, add one encoder to the default
 > configuration.
 > 
-> A future patch will allow to attach connectors and encoders, but for the
+> A future patch will allow to attach encoders and CRTCs, but for the
 > moment there are no changes in the way the output is configured.
 > 
 > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
@@ -88,6 +79,85 @@ Co-developped-by: Louis Chauvet <louis.chauvet@bootlin.com>
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 
-Same comments as previous commits:
-- I am not fan of the add/destroy naming
-- I think it is better to have an iterator to use connectors
+[...]
+
+> +static void vkms_config_test_valid_encoder_number(struct kunit *test)
+
+Same as before, can you rename to vkms_config_test_invalid_encoder_number
+
+> +{
+> +	struct vkms_config *config;
+> +	struct vkms_config_encoder *encoder_cfg;
+> +	int n;
+> +
+> +	config = vkms_config_default_create(false, false, false);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
+> +
+> +	/* Invalid: No encoders */
+> +	encoder_cfg = list_first_entry(&config->encoders, typeof(*encoder_cfg), link);
+> +	vkms_config_destroy_encoder(config, encoder_cfg);
+> +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
+> +
+> +	/* Invalid: Too many encoders */
+> +	for (n = 0; n <= 32; n++)
+> +		vkms_config_add_encoder(config);
+> +
+> +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
+> +
+> +	vkms_config_destroy(config);
+> +}
+> +
+
+[...]
+
+> +struct vkms_config_encoder **vkms_config_get_encoders(const struct vkms_config *config,
+> +						      size_t *out_length)
+> +{
+> +	struct vkms_config_encoder **array;
+> +	struct vkms_config_encoder *encoder_cfg;
+> +	size_t length;
+> +	int n = 0;
+> +
+> +	length = list_count_nodes((struct list_head *)&config->encoders);
+> +	if (length == 0) {
+> +		*out_length = length;
+> +		return NULL;
+> +	}
+> +
+> +	array = kmalloc_array(length, sizeof(*array), GFP_KERNEL);
+> +	if (!array)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	list_for_each_entry(encoder_cfg, &config->encoders, link) {
+> +		array[n] = encoder_cfg;
+> +		n++;
+> +	}
+> +
+> +	*out_length = length;
+> +	return array;
+> +}
+
+Same as before, can we use an iterator?
+
+> +struct vkms_config_encoder *vkms_config_add_encoder(struct vkms_config *config)
+> +{
+> +	struct vkms_config_encoder *encoder_cfg;
+> +
+> +	encoder_cfg = kzalloc(sizeof(*encoder_cfg), GFP_KERNEL);
+> +	if (!encoder_cfg)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	list_add_tail(&encoder_cfg->link, &config->encoders);
+> +
+> +	return encoder_cfg;
+> +}
+> +
+> +void vkms_config_destroy_encoder(struct vkms_config *config,
+> +				 struct vkms_config_encoder *encoder_cfg)
+> +{
+> +	list_del(&encoder_cfg->link);
+> +	kfree(encoder_cfg);
+> +}
+
+Same as before, can we change the add/destroy naming?
+
