@@ -1,78 +1,73 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2976319006F
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9161547C9
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 08:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738225012; cv=none; b=MmwGx2pROIEVLwqZgS+0vvwR3LDOYJk2ujsnHP5+pf1qlfG7x59WGxCZI/j2uHHz7n1ybM/s+IkDhZVmFzy+fmezCUon+CmXDcsEuWpV2b04hDcNeI1VgjqHohrZwR3VMQzEcLzKbi3eZzSvFtNkNFIK7N+dWOdufx3eu+6QYhM=
+	t=1738225289; cv=none; b=PSDu1ErD7VG5S4cJewYiE2SJGBZe0760F+6dZYVaEp5/ClzDe5ZiaSAqmPyNsf7FvoPnelX6DaR5m8ryfg2esSCKapzXHiTHFa/LsNn3W1xaaELNEoK4EBMpQ5I/3EukEl5gzblj295bd6axg0YWGz8XCN61OgHVzvIRLcysP+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738225012; c=relaxed/simple;
-	bh=thFpIKSrzc48zBWfFcfPLiqFrhjEdaU6F0FW+zf4rsM=;
+	s=arc-20240116; t=1738225289; c=relaxed/simple;
+	bh=M1qt6yIqv7j8m2gxhiDBq3JhCbnCFKoGYMctlmrwUuo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jqrPDlL+VIoMCLuJa7yJyGHTC75zTPjjGR3Jgt7YPtE9nu3vQe/4Qcrj2wsc+YSMSFsRBcyhd8QgzcQHXmHPraMcYuptcmtb8/45c+kPrKmfXZ3gZuWccbBhN8M/9A1wV6c18qj30yMT3OcgLRete92B/XFM9jAByrWpdMtFNpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g3zFRLgg; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=i507kDLuyXbJhgaC+WjZ0oqH42XNWZDYK6h+wpC5OHEw7SvKJZs6/vL+ulCXxd9qmBL4zJp16MTge2HL8fSLQ4NTCo7/e3QWz1J+3JA/COqBi54GvNsla+Vb2WLQsabpDysuIVgrgxWBqF8JQQo21I6gOOLphGTVMGnbnK22efI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R+joXJeH; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g3zFRLgg"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso2898965e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 00:16:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738225007; x=1738829807; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HbemEf+xhUc2mT3lWThkeJWiexh/Of8vPXBaz6+0qAg=;
-        b=g3zFRLggPFw0YtjBkN6YnEFRlZMZW9LTQXOBwWWYMPG0QndvItFdHI8KWn5lFbs+Fg
-         mNGM8mryHwjJFpsBw8gluchHkA5fqxMlaYGBojfjn3MbH7KX3DNRSKrnOmIuj8HrrpSy
-         Rw4hFUZjbTp+8unK9frVIWeWY60yGLOhxL1heS3pt6edPBh9ge/EXqIq+bX3T7SoZjIH
-         j3HiatdDWSBG24X59yvSKGI58SKls9nukbw9oL02TfJ/Tsw2WYzoCO2SAzBDM+xLqHxQ
-         7knVL4nsCO2RMAN1ifT0SGVLfUG7ln+VLGpxMvcV49U2TaTqawi79z2nRUtmk8x3qA6U
-         iiIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738225007; x=1738829807;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HbemEf+xhUc2mT3lWThkeJWiexh/Of8vPXBaz6+0qAg=;
-        b=UPzX0M2h6wXqcXDYcQAcje9erhvNz3NKHv48xFwsi6YygCtfN5xI+LPdeEw5IOJjeU
-         de8VXwV7Ti+dtDf+MsHVK7gR10xJnrnuqgyNzK072cfdwXqc7uw3Ct6fR/r9w1eQbBZI
-         LSIMnZLPnq+Ohir3esImVqhRVttkNrJlv5qF2w/oYweplYyG6PX2QLtO2bVb2q0LjpU7
-         gFl0bkzZjbZJaw2w0VqO0aPERnQ0KbtVddZIFynIIXlSjJ4WZ05x1R2mrhIN46OuRTIz
-         dZd/Qmry/TQ4vxg5WmOzXRkNJyk0iUiXj3OzqvhwXuZftkUA93561HSuRp4JFwmYXUn0
-         A0XA==
-X-Forwarded-Encrypted: i=1; AJvYcCWAh/VQlSCHmVWxnbIK1jfl7+0i05vqV3xotjilKQ0vWcZIWjWmjqRU88TqEYgUxOawxWguN6+Y3QiVOxs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGujtBe3Iwbmio2/Vp/R/2m9Cwl/ctzWQLnCgmlLGZFI7/hYWT
-	Iq5D8lAcrkH3biPnSBL5tSqTVaQlQHhG+TzjqGqqbfJrq00GbdAjELtySvzL6DE=
-X-Gm-Gg: ASbGncsOjayIUtPj84sxyGoAncLQqk1FleUN9htD6iBBkLfIBXFXdyDczWlCNAICC8D
-	Q8XF+65+QAMsboRpcB1nFO4LjQkNlvA1VOfN7EolXcXoVRpCNOdV5FmMr0/hPuA9MLouDz7UHiU
-	7SoUieruofYBe3M188QxV9ZjvVXYkLUGCdx8t3liiLqTqr1t+0B6eCvkhMeu786zbphay0iO2AY
-	lUL7iLYURbRkEAyQ1cNfZMg4L2bls0EUyJAUi1TlJo/GHE5gE8Nnv4r6fES8QV+QOdly5gLd688
-	nVFh5WnQGqB0rNyh/m30
-X-Google-Smtp-Source: AGHT+IHhtr9w91Nho4TPvuAAvm8MqwAGRZsNV86QLdJ6VOdB7b7cJnCAZnjkLka/hqqB6XtKlVfCAg==
-X-Received: by 2002:a05:600c:870a:b0:434:a7b6:10e9 with SMTP id 5b1f17b1804b1-438dc3cbadcmr53604745e9.17.1738225007382;
-        Thu, 30 Jan 2025 00:16:47 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc6df1esm50323705e9.27.2025.01.30.00.16.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 00:16:46 -0800 (PST)
-Date: Thu, 30 Jan 2025 11:16:43 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Dan Carpenter <error27@gmail.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	oe-kbuild-all@lists.linux.dev,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net] xfrm: fix integer overflow in
- xfrm_replay_state_esn_len()
-Message-ID: <f86c7660-0910-4ca2-9ff9-d2d142a968c7@stanley.mountain>
-References: <018ecf13-e371-4b39-8946-c7510baf916b@stanley.mountain>
- <202501230035.cFbLTHtZ-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R+joXJeH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738225288; x=1769761288;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=M1qt6yIqv7j8m2gxhiDBq3JhCbnCFKoGYMctlmrwUuo=;
+  b=R+joXJeHAQS/3BFYZBm2Nh4zsbysvb6DsxfUNtWxd+Z8Givhp4TidHQ1
+   MzxkXqQ7aOGPzb6BfBiR4OA/iESEFWMf6mWTy6pwNwUqk/NYxMZqFv+RR
+   CmVmLenU/zl93Ndtz1AdE0jrX1bHkLr1JZ4Uu95g/TYoeW91tzzvAcxt2
+   XT5ryO/OWew+VPXcoY2dnVy8uEzfrPo5J4leztmH4JtAvaBJZEa/LJs8g
+   f19SIyBI34FD2E8bbeMNFKL03gIvAh4hUwMId8Rx5dSzoxNQpLVlksxka
+   wNVDloB26pjFVpkublRODSqyDn83jiCSsa6/3B2nzTfyM+3hUoHn+bWnC
+   A==;
+X-CSE-ConnectionGUID: eIrWza2yQPK0rNvmwHdO0g==
+X-CSE-MsgGUID: n6CojmGzQTusQho7YHziTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="38664562"
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="38664562"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 00:21:27 -0800
+X-CSE-ConnectionGUID: Jg+3FL3KT4OdJNtJ2Qsjuw==
+X-CSE-MsgGUID: 0uzz3YCcQgq+3fMLp1Bocg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113877805"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 00:21:25 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tdPne-00000006coi-2jbv;
+	Thu, 30 Jan 2025 10:21:22 +0200
+Date: Thu, 30 Jan 2025 10:21:22 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	DRI mailing list <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v3 1/1] regmap: Synchronize cache for the page selector
+Message-ID: <Z5s2gpIj-HOiHD3C@smile.fi.intel.com>
+References: <Z4pktkZ1ihfkZjHm@smile.fi.intel.com>
+ <Z4ppo8wV3nicOfAQ@smile.fi.intel.com>
+ <8a7581e4-6422-4d77-8027-02df0d7da489@samsung.com>
+ <Z4qTQ9ypkX6iS1Pl@smile.fi.intel.com>
+ <42fe4488-0ff2-4b92-ae11-cce1664a7176@samsung.com>
+ <Z4-hMdUUTeQHN5W_@smile.fi.intel.com>
+ <6b4cba29-786c-4999-ac1d-27b3e4cea6f8@samsung.com>
+ <Z5kJLrE6xOzOKaeb@smile.fi.intel.com>
+ <Z5pESDSekep9ChAN@smile.fi.intel.com>
+ <c2c2f613-3b65-4efe-99c2-135f043b2d3b@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,89 +76,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202501230035.cFbLTHtZ-lkp@intel.com>
+In-Reply-To: <c2c2f613-3b65-4efe-99c2-135f043b2d3b@samsung.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-I've added linux-hardening to the CC.
+On Wed, Jan 29, 2025 at 06:50:57PM +0100, Marek Szyprowski wrote:
+> On 29.01.2025 16:07, Andy Shevchenko wrote:
+> >> [...]
+> > Meanwhile, can you test this patch (on top of non-working case)?
+> >
+> > If I understood the case, the affected driver doesn't use case and we actually
+> > write to the selector register twice which most likely messes up the things.
+> > But this is only a theory (since we don't have the traces yet).
+> 
+> Bingo! This patch (on top of current linux-next) fixed the probe issue. 
+> Feel free to add:
+> 
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-This is a fortify false positive.  I can't reproduce it on x86 with
-gcc-14.  Perhaps it only affect mips?  It's a W=1 warning so it shouldn't
-be a blocker in that sense.
+Thank you! I will test it on my HW as well to confirm that there no regressions
+and will submit a formal fix.
 
-regards,
-dan carpenter
+> (although I'm not sure if this is a fix for the generic case or just 
+> this driver)
 
-On Thu, Jan 23, 2025 at 12:53:14AM +0800, kernel test robot wrote:
-> Hi Dan,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on net/main]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Carpenter/xfrm-fix-integer-overflow-in-xfrm_replay_state_esn_len/20250121-191827
-> base:   net/main
-> patch link:    https://lore.kernel.org/r/018ecf13-e371-4b39-8946-c7510baf916b%40stanley.mountain
-> patch subject: [PATCH net] xfrm: fix integer overflow in xfrm_replay_state_esn_len()
-> config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20250123/202501230035.cFbLTHtZ-lkp@intel.com/config)
-> compiler: mips-linux-gcc (GCC) 14.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250123/202501230035.cFbLTHtZ-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202501230035.cFbLTHtZ-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from include/linux/string.h:389,
->                     from include/linux/bitmap.h:13,
->                     from include/linux/cpumask.h:12,
->                     from arch/mips/include/asm/processor.h:15,
->                     from arch/mips/include/asm/thread_info.h:16,
->                     from include/linux/thread_info.h:60,
->                     from include/asm-generic/preempt.h:5,
->                     from ./arch/mips/include/generated/asm/preempt.h:1,
->                     from include/linux/preempt.h:79,
->                     from include/linux/spinlock.h:56,
->                     from include/net/xfrm.h:7,
->                     from net/xfrm/xfrm_replay.c:10:
->    In function 'memcmp',
->        inlined from 'xfrm_replay_notify_bmp' at net/xfrm/xfrm_replay.c:336:7:
-> >> include/linux/fortify-string.h:120:33: warning: '__builtin_memcmp' specified bound 4294967295 exceeds maximum object size 2147483647 [-Wstringop-overread]
->      120 | #define __underlying_memcmp     __builtin_memcmp
->          |                                 ^
->    include/linux/fortify-string.h:727:16: note: in expansion of macro '__underlying_memcmp'
->      727 |         return __underlying_memcmp(p, q, size);
->          |                ^~~~~~~~~~~~~~~~~~~
->    net/xfrm/xfrm_replay.c: In function 'xfrm_replay_notify_bmp':
->    net/xfrm/xfrm_replay.c:308:53: note: source object allocated here
->      308 |         struct xfrm_replay_state_esn *replay_esn = x->replay_esn;
->          |                                                    ~^~~~~~~~~~~~
->    In function 'memcmp',
->        inlined from 'xfrm_replay_notify_esn' at net/xfrm/xfrm_replay.c:402:7:
-> >> include/linux/fortify-string.h:120:33: warning: '__builtin_memcmp' specified bound 4294967295 exceeds maximum object size 2147483647 [-Wstringop-overread]
->      120 | #define __underlying_memcmp     __builtin_memcmp
->          |                                 ^
->    include/linux/fortify-string.h:727:16: note: in expansion of macro '__underlying_memcmp'
->      727 |         return __underlying_memcmp(p, q, size);
->          |                ^~~~~~~~~~~~~~~~~~~
->    net/xfrm/xfrm_replay.c: In function 'xfrm_replay_notify_esn':
->    net/xfrm/xfrm_replay.c:360:53: note: source object allocated here
->      360 |         struct xfrm_replay_state_esn *replay_esn = x->replay_esn;
->          |                                                    ~^~~~~~~~~~~~
-> 
-> 
-> vim +/__builtin_memcmp +120 include/linux/fortify-string.h
-> 
-> 78a498c3a227f2 Alexander Potapenko 2022-10-24  118  
-> 78a498c3a227f2 Alexander Potapenko 2022-10-24  119  #define __underlying_memchr	__builtin_memchr
-> 78a498c3a227f2 Alexander Potapenko 2022-10-24 @120  #define __underlying_memcmp	__builtin_memcmp
-> a28a6e860c6cf2 Francis Laniel      2021-02-25  121  #define __underlying_strcat	__builtin_strcat
-> a28a6e860c6cf2 Francis Laniel      2021-02-25  122  #define __underlying_strcpy	__builtin_strcpy
-> a28a6e860c6cf2 Francis Laniel      2021-02-25  123  #define __underlying_strlen	__builtin_strlen
-> a28a6e860c6cf2 Francis Laniel      2021-02-25  124  #define __underlying_strncat	__builtin_strncat
-> a28a6e860c6cf2 Francis Laniel      2021-02-25  125  #define __underlying_strncpy	__builtin_strncpy
-> 2e577732e8d28b Andrey Konovalov    2024-05-17  126  
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+This is for all cases where cache is not in use.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
