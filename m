@@ -1,81 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E294179BC;
-	Thu, 30 Jan 2025 18:47:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440B71F03E8;
+	Thu, 30 Jan 2025 18:48:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738262852; cv=none; b=h0Hnxj8b5b/f5uaa1oqjhNouyRIMHWrT4ml2bYLEUojssDclNL4comnwlKaFnKq9VNKGtjIhtDhR7Y/uGTYgJbytqvVf/4RTXHIW7fMDFXleVvh/nc/YNK9JdzqyDH8x39HbtxyiLII6zsZ+9jwMKy300Lcjc6yk1+Eufyqj0n0=
+	t=1738262896; cv=none; b=ShSAW6oTU7dbnaB3QlkKNpdf+KGpYO0k6Z38E/IFA02gPF4esfvdgq2ItXg1Pqe1x1UHIJ+nZSEiVayvAZGupbVDB4YboXda8ObC0if2GFvissLvdbF2eCmHniGk6wTAiPffuofQ+VAnt8NCaEaqha2EdyrmVMCvJBtgxgSWUW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738262852; c=relaxed/simple;
-	bh=mZJRq9k9X5Pu3nkmopql7LVi/y4tYssCQBqEevf/y7Y=;
+	s=arc-20240116; t=1738262896; c=relaxed/simple;
+	bh=F3oDO0zGg9WaxeKpNxyuoUnxWP5uFAlvZGjOwcLextE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=crwe6+pzW65w8IJ2UqmKaPtwVcY7nPaO/K/YPEU9x1IUysYDbliHn+zEnqTEt2gcPFULPEiM7Wiz1uaP9sohQkU1SmEscrbga/dt6vaj37RzSLD6hQd6dTVTTNs6uilja24D8K6XL109S6A4Qbx9YkjTtpVmx4iMGsC41xBDHyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8XhSYpV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WawT72CgiVFgrhcPvukLZ9lZYHZjVnO79Fq8IHgrhLbsQXbKkl78R4RYrzUP3xDULnaBsiICa1gpcsYuZI4FrKAFA3GEAWLIsYM56jY3JtxsIIgnFqrCPoxpc2+OUsZilsBBwlSXdusGf2qUvQaunL4URajD9wiWgJIN4LjJ048=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=be3cPjGd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8XhSYpV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85B95C4CED2;
-	Thu, 30 Jan 2025 18:47:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="be3cPjGd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30165C4CED2;
+	Thu, 30 Jan 2025 18:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738262851;
-	bh=mZJRq9k9X5Pu3nkmopql7LVi/y4tYssCQBqEevf/y7Y=;
+	s=k20201202; t=1738262894;
+	bh=F3oDO0zGg9WaxeKpNxyuoUnxWP5uFAlvZGjOwcLextE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n8XhSYpVEgOVg7CPv7mdSBjxIe6IM3wMxmJpnF+fyePkW2XCp9406387nlnCAsT0a
-	 rydEh1IhviEaaJd2XioVWIzivnsyLO0nOldlRSQJPjpyWPFeHwXaONkLtMKTKmPFNX
-	 Q5DgkbSVUDEgN4pVDymRUV7WhO0MtsVSj5OxjKoL1Ec7ugVkxO41vWZSXF0o42J3N9
-	 HVzZPCCX/PjWnZjirRKRbMM3PJ7DWGYOAzvc6IDqRcsZ679rHFBQCmCJTwzHx6g2WW
-	 yPy2a53dNB6jMUdEqCVzJuO4ka2fvxm/wJRczp2yE+1wzo4vhWBJxzC+BmU0Sagqnf
-	 o5lSFtaEbXEwQ==
-Date: Thu, 30 Jan 2025 18:47:26 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: nvmem: imx-ocotp: Add i.MX8M Nano
- access controller definitions
-Message-ID: <20250130-awkward-referee-3bec6c8cb1cd@spud>
-References: <20250130130101.1040824-1-alexander.stein@ew.tq-group.com>
- <20250130130101.1040824-2-alexander.stein@ew.tq-group.com>
+	b=be3cPjGdHNzNVmm/2OVwHKkcHqFAS6nYSmSh7jsMmmAbjhUHCNkixp/gY6CmGJpYc
+	 UKIDe6lbwYIVgU1wwUFA4fbTc6ABcupq11YBepEnkO4p0J2olDo2o//5+8aJ8yDlJg
+	 q4jtSBM0dfmPyu5lMx5YeuU2SpV+CBhkrQyouE13nEPWUlYnpFTTf6o+vSq7Why9zl
+	 OkHtm7Z+ms+7oetVSsQLWaa1Y6bKr15O2eIMFzUjfW94SwIPDRZsOSg1jwikYttTft
+	 5FRO+I98Y4IE4LRz1fmxNZ41LQWGvrNhmTWW/8HBN0ov6WT/GanNWzSxSuIYyqF6iM
+	 9MF9keFSOt2Mw==
+Date: Thu, 30 Jan 2025 18:48:07 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 5.10 000/133] 5.10.234-rc1 review
+Message-ID: <fba617d6-4ad8-42a0-9843-651074731de9@sirena.org.uk>
+References: <20250130140142.491490528@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4mU4vkAAU2Hn3gqn"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ufd37B9Xb16cEoAj"
 Content-Disposition: inline
-In-Reply-To: <20250130130101.1040824-2-alexander.stein@ew.tq-group.com>
+In-Reply-To: <20250130140142.491490528@linuxfoundation.org>
+X-Cookie: Password:
 
 
---4mU4vkAAU2Hn3gqn
+--ufd37B9Xb16cEoAj
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 30, 2025 at 02:00:58PM +0100, Alexander Stein wrote:
-> These are the definition for the bindings of imx-ocotp for disabling
-> fuses.
->=20
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+On Thu, Jan 30, 2025 at 02:59:49PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.10.234 release.
+> There are 133 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Tested-by: Mark Brown <broonie@kernel.org>
 
---4mU4vkAAU2Hn3gqn
+--ufd37B9Xb16cEoAj
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ5vJPgAKCRB4tDGHoIJi
-0u+EAQDYdX6jxw/RzEi8k4fHQSVdiqM7o4HubF0JSKkZjwwU2wD8CffUuSP6JtiJ
-RfePnNXmBYGsnu0cSu/Ttx6O7v6IhQ4=
-=loIX
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmebyWcACgkQJNaLcl1U
+h9DZEQf+IjkD2cM39u9CmgoHKcbmGe54pPluMMnpaLOkx3Fqjz6wVBiRVWmTen5+
+kgRwlDkUZgB9k/jPZEwrkPHoGKcv4YZLpZs9FVNm3KrikDEzFHpUSsWnBphVrLEx
+oqohCFq8Mc1/tS8rc/y6jkWEJV+fpBZm7lES9PEOd26qi21l+/kk65SQ1+d7PJJv
+IHkhCPANFuGrsH05Jp1UBNOk6JRfTlAFR7nI8rQrtoGfduTlYfSzvCBj9GPa2U65
+noJ+Uqeq6FERSjUdWx9a0y2zdaXSKUVxbIUN1b3kr1sWy3QMLt21LvnyKA9CvJqB
+vvli0B/yH4Cj950AHEBuHTYOkZS86A==
+=fhn/
 -----END PGP SIGNATURE-----
 
---4mU4vkAAU2Hn3gqn--
+--ufd37B9Xb16cEoAj--
