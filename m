@@ -1,109 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C70B3B19A;
-	Thu, 30 Jan 2025 21:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68433B19A
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 21:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738273141; cv=none; b=LfGhOirnzRLscUvGqa1dOv8R0i5FCtfiMjuc8JcOoHJfwjTcPMcTw3qbWgYovAphvcJiCBEzOLSIccRe/vEfEm2kiUIzX5EoJ5beZM0t/a5c9lisAqdZ0Cejm2FoEoaO4riiPpvYmWsOxKw7iw0sBDgiBbuaaXYYGLj5rM/fdBk=
+	t=1738273188; cv=none; b=YOHz8o4M0q2H1j/psLXhebZLMEa5QmTwlNeknFoIcH/a4oCc6SMXG9J6yO1XrtHgETu17zvHS5yHLU1BWKa3tNEZkkDOTlYOEXhBp8qNrEl9NwnHI5E4YHmcnBpArdgVJESTRXuL7upHNjGueHGV/hhQXLV0ZTHT5J9G6ZoYr6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738273141; c=relaxed/simple;
-	bh=wc1tNpgJLpWggi8IlWrXWtLJ3zyOJ2kgWlb9ikLJCkQ=;
+	s=arc-20240116; t=1738273188; c=relaxed/simple;
+	bh=fC+P2IebC8WVyk8SpwdTZ2LQvnssGMegCTt+C9XzYbU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=iIa0FOkfMUcaHZTkVej5GCrMbudqx6mgPMswI/A9RNKD1nIyeBC4yf4G+3+77dLQ9r4KqwJZjGIc5T3tf9qxUUnNiz2SVJnEWtpHWncmyyb4e1lQsDfcCf/I2zOIrHVwDcnF8Dw69BAuSAlSOXp8rm1sl66quGEYFH0+h+kAceQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3YV97O/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=MMYhGOVv7Fe8sEWZNd0MMumrb1Jly5bCbssY1Luo/zOO7VYV4ZDeCKxS2ltMUcsFSDXaiNST0u8eyZfhb/2ZFtY7/jwULmx+r3itkz27Y2teZmyW8IoI+l43p4G7owhZQSgsGF+c/84BX+N3gNQ2RoQNc45turhUpghqKn1/xU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G2NX9wRE; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3YV97O/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1E44C4CED2;
-	Thu, 30 Jan 2025 21:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738273141;
-	bh=wc1tNpgJLpWggi8IlWrXWtLJ3zyOJ2kgWlb9ikLJCkQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=H3YV97O/LI6VBnVCz3iJJmvAzI9DBWVVLMbxwfLWaeRx+mi06tZzfvHD5AKpZytbX
-	 XOzBntCV2NFiUI8AjymcPB/cjal1E0g18/C8T8+f20HWhe2ox3rPxPZc1BatWKfjZ8
-	 54Lf12ohjWc5k2yCpwg3HitMQ0msqrpLcWeFkhZa+GkGWJ2gTdrIJfDEASMlq7XzCL
-	 FyDt5AURSoqR41EvIvyiuy/4r4OV7fTu+YI+zX9vEBNQtDxR7/eKIQiUMt1MtxRiUt
-	 DMOwZvnC3od1B3hip03FiFBM1eR5Pm5a89Ih/jEDMGOEGQ1rWCR7hCe/RLhgi4a9iu
-	 Ys99BRrLacqZA==
-Date: Thu, 30 Jan 2025 22:38:57 +0100
-From: Wolfram Sang <wsa@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Rosin <peda@axentia.se>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andi Shyti <andi.shyti@kernel.org>
-Subject: [PULL REQUEST] i2c-for-6.14-rc1-take2
-Message-ID: <Z5vxcfD8RPYzfsCe@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Rosin <peda@axentia.se>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andi Shyti <andi.shyti@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G2NX9wRE"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3003c0c43c0so13928281fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:39:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738273185; x=1738877985; darn=vger.kernel.org;
+        h=user-agent:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KZ1GQnEty6Mke6uTt1jeBFa4XTqIbSiGTlVoRGUyYe8=;
+        b=G2NX9wREBI815kVD/dOqic7MgaSt3bHTKCE/JhbY1Pfe6TTC96paJgdD4bUUP+DfBo
+         WO34l3X9AXFJDUBz2miya9KhcyAy/TwV//jyomFnRvwUssgDBomII9MviX3nqLCX/KU+
+         Jp2Swc3g16ZDliRxiUfYV/XbFVxWLACiglL3KDbE4eQn7eXGzYRG7/9iNIi9LHMDD4hK
+         aPtbYTOzDy0w0shNclf8ktoQuGOtDu5QnGgm+92zd46DJemDjoM2+J6gBT+iv3mPtSTR
+         0qqK6IkoQAQAFmtXNC+5a932wXUKSkucU9BhvSuFrWGSzrxHy3Fe0cTf0g8+HpkZUe68
+         FvsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738273185; x=1738877985;
+        h=user-agent:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KZ1GQnEty6Mke6uTt1jeBFa4XTqIbSiGTlVoRGUyYe8=;
+        b=Ee2UEaaGrbiqfckeV344j2u+x20UQegby7dFd9RHUlZbArgn6wtQMXoZEM+1ECu26J
+         wm5OmUoGeiRHwFlTP6iPLpDRJjUCD5HUU4NnqRT5/u/8au3Nuv9TuUPMVgyRVeBaZyPm
+         WJbyo8238BhjSvA3FZ97XZ9SYB9najNqq2WVGPxtULg2T3O0l149pr0MwS8oXrssKEgy
+         USb4XY4wNFIkMtz/YcvL+zalc1hTX62zkQy+7n3co/XGHqZK4hbZ/J5AbtJC1XPAIb+O
+         FSetE/w66RoWZ1dn7rOCsn4bShzjibkNld6ovDzlvjzypkW1/Oql5/rU/s0IoM17tL/S
+         n+fA==
+X-Gm-Message-State: AOJu0Yzrg1uWxhHeoCcdXu0UrV3S2D4mc4ufAUByaCN8UgoferA0FSRK
+	s9sRaVrb+j2Vkwurq5147QRmtto+Pi9qyj3dKTDIF77Ztdw/uZhTMnBMcW366Ho=
+X-Gm-Gg: ASbGncuUaknaqCLnlzgb095RTMxn00U6LTcKum98kJof8Mw4U/DOTrKrs/ggmGgyfwn
+	fWW2J14aUvgMgy61BxOxhAjJgOOhi8D5bDqT+oY8bxAWGdrvsWuA/cpFBQkGLB7fnLV1JJdW/3E
+	Qlem3GoV1bR6QY+1qyoegyTDwdOloQLuej9CqIvyh3V3KSo+h44I0BLfxxd4ODfmAMbKLkO8neE
+	6VhH6YbdHmRJnV0ZqD5azlqbOMsQ16SGDMzOu9kYFlCiEod3dycjFLwLVI0WtQcIKJrQxmaKK8t
+	jR9nF3oHkHYJhVQh
+X-Google-Smtp-Source: AGHT+IGxGisndNC8Wz9DW/JhEhJFi2T7Gb0tguxD9LTmrs0AuyeStmAbQS9Cggvg0/tnzclpfWNa+g==
+X-Received: by 2002:a05:651c:12c9:b0:300:329e:23fb with SMTP id 38308e7fff4ca-30796975e4dmr39181741fa.34.1738273184600;
+        Thu, 30 Jan 2025 13:39:44 -0800 (PST)
+Received: from grain.localdomain ([5.18.253.97])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a3086e45sm2937341fa.25.2025.01.30.13.39.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 13:39:44 -0800 (PST)
+Received: by grain.localdomain (Postfix, from userid 1000)
+	id D24385A004E; Fri, 31 Jan 2025 00:39:43 +0300 (MSK)
+Date: Fri, 31 Jan 2025 00:39:43 +0300
+From: Cyrill Gorcunov <gorcunov@gmail.com>
+To: LKML <linux-kernel@vger.kernel.org>, linux-afs@lists.infradead.org
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>
+Subject: [PATCH] afs: Add missing init for srx_service member
+Message-ID: <Z5vxn699b0YtTAc-@grain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="sAwcvmC92/QKl4eh"
-Content-Disposition: inline
-
-
---sAwcvmC92/QKl4eh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+User-Agent: Mutt/2.2.13 (2024-03-09)
 
-The following changes since commit d0d106a2bd21499901299160744e5fe9f4c83ddb:
+Both afs_merge_fs_addr4 and afs_merge_fs_addr6 helpers allocate
+sockaddr_rxrpc structure on kernel stack and never init srx_service
+member before passing it down for peer lookup/creation. Looks
+insignificant in current context but better be on a safe side for
+future use. Thus initialize them explicitly.
 
-  Merge tag 'bpf-next-6.14' of git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next (2025-01-23 08:04:07 -0800)
+Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Marc Dionne <marc.dionne@auristor.com>
+---
+ fs/afs/addr_list.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.14-rc1-take2
-
-for you to fetch changes up to 6250ebe666e425e173df5e11e8a612d57921f48d:
-
-  i2c: Fix core-managed per-client debugfs handling (2025-01-26 12:03:54 +0100)
-
-----------------------------------------------------------------
-i2c-for-6.14-rc1-take2
-
-Fixes two issues introduced with the first pull request:
-
-- add a missing Kconfig dependency for imx-lpi2c
-- in the core, handle the new per-client debugfs directory during
-  probe/remove, not during {un}register
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      i2c: imx-lpi2c: select CONFIG_I2C_SLAVE
-
-Guenter Roeck (1):
-      i2c: Fix core-managed per-client debugfs handling
-
- drivers/i2c/busses/Kconfig  | 1 +
- drivers/i2c/i2c-core-base.c | 9 ++++++---
- 2 files changed, 7 insertions(+), 3 deletions(-)
-
---sAwcvmC92/QKl4eh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmeb8XEACgkQFA3kzBSg
-Kbaz3hAAh0agosSwngsRzx8DViqXvFPzkOTAWe8vuu1AyxmRRVCsrFdiMcP1OUfY
-qHdTZs6DuAlTMIcXsVk7JtdHT211glrL9tUfZUGgQAjt90IYcIUfZbshuu0543tN
-uoJgAqmSbah1he0bay96iYxU95sDqadfuVekyJL+vOs1EYscIwo6YVDusl5rJpNI
-jzsVsOvpH/DQIBAupmMDolDevBSP39HXDUKy8Apiabug+mQrEfVCvBhDAc3cTORb
-oqjh0oyTueNVdbYjs5DslZJYDq5TW9MWmuNdUofQ4RaXsLbf1zPghFg0oxh90bag
-MmdA1yyQsacRgwWxoNTjJCEbed+TwBTbo02NbSIncO3btZr85vx3Zo24j/z8Li7d
-hJuOJ1D26Mz3QtBSj7FxI21Aa1uwUeJ0xalPFrY/kyC43IugReYOjZpFI2V+h7Vb
-0JAhi+M5P5nxk5GwyhbzNlGIGgAUqTvaurf+lVC4i8Wfd4v7yophFpnkjDaHQTxA
-lJXfkeOEqkhrXssxtk/3fKT39H43F89QEJgPlcY86yUUtM6FZ6cIYy8NuaeEWf28
-5jySxjsQ7qnlEtpoZYwLz1/eH9Mm5ywgCW501vDgc5hIGBReE1vGVkhsueLSjBXw
-MzdsM/vGqZTn72CkqJ8cPUm2jPHsl8FuQapUxI20fGxjf475wQE=
-=FVV+
------END PGP SIGNATURE-----
-
---sAwcvmC92/QKl4eh--
+Index: linux-tip.git/fs/afs/addr_list.c
+===================================================================
+--- linux-tip.git.orig/fs/afs/addr_list.c
++++ linux-tip.git/fs/afs/addr_list.c
+@@ -291,6 +291,7 @@ int afs_merge_fs_addr4(struct afs_net *n
+ 		return 0;
+ 
+ 	srx.srx_family = AF_RXRPC;
++	srx.srx_service = 0;
+ 	srx.transport_type = SOCK_DGRAM;
+ 	srx.transport_len = sizeof(srx.transport.sin);
+ 	srx.transport.sin.sin_family = AF_INET;
+@@ -335,6 +336,7 @@ int afs_merge_fs_addr6(struct afs_net *n
+ 		return 0;
+ 
+ 	srx.srx_family = AF_RXRPC;
++	srx.srx_service = 0;
+ 	srx.transport_type = SOCK_DGRAM;
+ 	srx.transport_len = sizeof(srx.transport.sin6);
+ 	srx.transport.sin6.sin6_family = AF_INET6;
