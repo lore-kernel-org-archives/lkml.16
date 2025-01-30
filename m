@@ -1,202 +1,273 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF7F1E98E8;
-	Thu, 30 Jan 2025 15:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738251207; cv=fail; b=aYqdEC6fuIwNC1DfPMa6ClDb5+ZdkyUqy3d6GWYjXXTNgVK78NlffPo0e9cHhVkcAe/OA6WObMB/7xVvRdwC3iFul3DQhfsG9DXlfBoUp7sARkwgKk+6ca0fXf4Ez1aQ+pzYl4Ft/6DtDrWxQINhWMKhWnSroy+eDizOPYsEgqw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738251207; c=relaxed/simple;
-	bh=YGjK6SIpTKfpqH9klUd0+IjwGXh+NNtsmZAUkZ9+O2g=;
-	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
-	 Content-Type:MIME-Version; b=RHM9wfjeJX1O+LWoDmfLZIsGJebS/fUL3e1lc7/tW+g/wnCjG4p90FOGM/m2/kfWJI/Oqog63nm364DWDpNpbN832FL7i3nxNCcUatqDy69DXIEI9NivNEfBY+JmBy4vneYioTcAIq/CGx10k3oR2cjVHwnrA95H9R9OWRojrls=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ki9Hgay+; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Wg7Jz9sA; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BD21E7668;
+	Thu, 30 Jan 2025 15:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738251309; cv=none; b=oc6grvYLDf1ZDZhas3XQQa5SWNrvw9AXO4mXBM5cOnEVYPVBrH0kp8cUUYTwnLR548gpgxhNT2cROXyVxCXph/GuBGY4hwhoNuMviENrbLSJePk2oL8/1pZEtp5QS3f5GgMpkzzPb5scZj+3ij3Z3dMfqaJ2zDPwHJzGH6PsN08=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738251309; c=relaxed/simple;
+	bh=F0L0UFJMFu1dNFDx+bZr4INjxQJbiHCHvJicfSQSXmI=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=h0HfsvNGCzVTr0xMRQcpcuI3qLN4FdBXBCxgiczGIqL9fXFlxM8Gloj5oqNRfdloBRG9g9WbkJTeN4vij5FnNmSZxEFu6I9N5r5Z8jIZFDP1uAlHCvhriMA55drGHdNf1nYI2euF761BJH/tHzQApy+0L9+WUvChWwVl/31wTRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rn7IU0Xl; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ki9Hgay+";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Wg7Jz9sA"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UFLP6r025678;
-	Thu, 30 Jan 2025 15:33:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=hgeeszasWN+3+kHMvO
-	3YRuX4x1pniLe1ycm0vL4Fxns=; b=Ki9Hgay+H7Jwolhzp5VSQjhirOsVMywZpe
-	pIwY2EhwqhROeHCAVNUgnmn8zYHoQZnp3vHrMRzqrW5scIxNWcIY+l5jw3OvKvv/
-	GkkTTjxmHQDZx6G5nDE8/QL+sukrXzlPm4Zw6Ezjp158aXQaEqT+D1EwIBFTazdV
-	Qn4fgJs2N/YaZrbrQlfskIal59PdJ3/uYpmvwsI/ZvfA8tQ233gxIM/bo3qNvq/l
-	PdfVdRRzl4XShFl4IlsjFgrBBZPynIPJND9+LcGDgeKr4SwtvElts/fjC9ErZvMl
-	KyW0TguM/sYY9Zwiqmba3QkxZKlpSmER6GQYxwceIP9qbMzY2lwg==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44gbyy81ec-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 15:33:15 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50UEAUw3034111;
-	Thu, 30 Jan 2025 15:20:21 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2174.outbound.protection.outlook.com [104.47.55.174])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44cpdb73h2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 15:20:20 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FDXTu9f59ybLN2XlAbTBE9h3HlY25WgSYy5Wn5aP3oEekPxGumdwFXpD7frfYIRaP5jfNokaRKL1TCGlZX1kt1NIas5le9r4Gz4wu2YLzemoc184rXUd4bBW46skqlTHOtm5ldw5/3lJvyspWQUFQkWGVUtFsdLRP02E8ZoWsczmXG+Z+q4adrXgP/x/c9iOkeYovbaeiEXaBEEhXxaB/KJSuGEFPKiZIouJfkAuqenRV58Telt7jKZlWkS5zAuEUhuT0Z04WrsHAEG/zSEVL9caT8rfxGPMp1SFpFvLqehlvxwDC6S5XftHKEV7wqtobdwF/qXTovjIkuOzYWE/8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hgeeszasWN+3+kHMvO3YRuX4x1pniLe1ycm0vL4Fxns=;
- b=b27qddai8dDeCxWqAy0w3VK41LPv72aFhFKRg6aq8OKxe58BN8LX9z9kKhIDM2XF29BxpY5VT1ASfaIAY32XFw9qCadgidsoi0nfqziqOrEytF7nrE17aK3JbvLnkc4UI03i9jkc9VNWXNNx2OwgNAFZLurrlSVtJ9rEw9SXa8vNi5yD684qG5GkQjN50O2L6Nd6VTFmHqRsOhNxnarKohS35A3pkMAiDOW7Wc06hlLNtSK1jRa4pzHz0Qkesatv0sUj5LQ/NB1d2jd4rQBUxah/2ZLqlnBU8MdZg44zyzpYkJ78pm40XrQVW+VlfqOwTUQKSuzMGoNAK3aJ4Q8CHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rn7IU0Xl"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7be8f28172dso44928785a.3;
+        Thu, 30 Jan 2025 07:35:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hgeeszasWN+3+kHMvO3YRuX4x1pniLe1ycm0vL4Fxns=;
- b=Wg7Jz9sAy4a4fOLn3oNERO1zlSbft0UPrYTTXgxVkOSPTxmgxrdyiRcfy0it36+Y4csmE/FdN57a+K5N4DGxzLLRCnYyUT31AS7RgzO3k7vFFb7pcqEifGjmFnXX5j3bp2CZBQVk/IHNpfhTfcKNGS35nRZa0/FKDtXdQRl4WXk=
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
- by MN2PR10MB4287.namprd10.prod.outlook.com (2603:10b6:208:1da::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Thu, 30 Jan
- 2025 15:20:18 +0000
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf%4]) with mapi id 15.20.8398.020; Thu, 30 Jan 2025
- 15:20:18 +0000
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-block@vger.kernel.org, Ard Biesheuvel
- <ardb@kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Kent Overstreet
- <kent.overstreet@linux.dev>,
-        "Martin K . Petersen"
- <martin.petersen@oracle.com>
-Subject: Re: [PATCH v2 00/11] CRC64 library rework and x86 CRC optimization
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-In-Reply-To: <20250130035130.180676-1-ebiggers@kernel.org> (Eric Biggers's
-	message of "Wed, 29 Jan 2025 19:51:19 -0800")
-Organization: Oracle Corporation
-Message-ID: <yq1plk4pbvw.fsf@ca-mkp.ca.oracle.com>
-References: <20250130035130.180676-1-ebiggers@kernel.org>
-Date: Thu, 30 Jan 2025 10:20:15 -0500
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR03CA0017.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::30) To CH0PR10MB5338.namprd10.prod.outlook.com
- (2603:10b6:610:cb::8)
+        d=gmail.com; s=20230601; t=1738251306; x=1738856106; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Y7vjNKJSsbv0kKdvCQ/SyM2oijPldetOL5qOy4DLoo=;
+        b=Rn7IU0XlldET1plmoz/H23owQqbVjvkTtMkN6LWhQopnHgJBiTDlx7PZ0ras3J/8kj
+         G/KbDqd09MlnNo3wK+1MhMp/uAruKMVzTLonV+bINI1oydfoUwL6qlH50HCDpnOGyCIa
+         tYq9yzkjQa23xk+MaAorN2z1ZhP+5eVSlLNdfwCFCayTgoac1vsPVtc9laegOkQGZApw
+         MenxVewtjAGb0QWkht6Od245uzDCuww2gU7vZoMyKiZ5jaDJaHesFc3S0AK9JK3gg7aT
+         R480C50P95/uqwUKluU+nCgrp6ajojyiKWeUryK5oFO9d8ICf0bGuBsr5eHjq2iskkvl
+         tufg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738251306; x=1738856106;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2Y7vjNKJSsbv0kKdvCQ/SyM2oijPldetOL5qOy4DLoo=;
+        b=G+M0gQhdBid9srGwvTVBupep5AqHp/X8feMSJ8fKXRfSaw7JuFina2Yb94iqGPbHb0
+         Q0g+Cpctnuhqn5ONlLEyCoYQcssClXFoNvH0CJYPll/5xeG3zjas6tSxGnhBJi8Zn69N
+         JQjElSUCp3OuufGivdJHLsrB2SW2oHe0xHF+x5BPdK1dYGPcIk6mJjLXsFjdcDZqCFsR
+         2jTkni1rdckoB8Ran5vBak2gK11saJsDXcAYpfcpZd+OhQ6temFBzSfiapfTK2oXDTz7
+         q4G7W078L6qAwrTk+7Mei0hYXuKDQRFjZug1GcCvfQUsVwUBhFN3NkuYB8dwrS6Yix/N
+         9Iug==
+X-Forwarded-Encrypted: i=1; AJvYcCVFzyVyOUWfVTJobDB9e4jaEttgY5ny0hB05AUipB3eOqYhDw2XTWq1VOPf0ytFbyh2fZ4nm0ye@vger.kernel.org, AJvYcCX1oDju0H9/nSG1eXI6Yqg0vXgUsFkOUjwCNnzlsrijVlvOVelXApQNScW/8L8tDFCBBZFhR14SIImaM8UIuqH9@vger.kernel.org, AJvYcCXF613tS+96AAg7caOh20aZSnoudS/cKTjn9xK0aHfTIdr/Y8yOvgAKxmW82+LnwfJT7NLtzA9/Dw9GW9w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxedXDl6/ck4UeDpuwMo4JJWelC2HwT9wVYyZgf6duuhqfd3g54
+	B4QMRcEGPF1w4Y/NP0ICrQyjKahsk7prcINuVftidxqbSPpWhIcC
+X-Gm-Gg: ASbGnctEbMZdWALfvwCANRYZm5KPs9r5pfzPQLw94ehzWgpmcOXCqb5S9RN9kZ7oCCD
+	DUmrvvbwPJQL52jlbh5U56bBI1u6VwPosdxH5ieIAbV9d9TEa/KrAFh9125EeEXsJlmeBPvbJ1v
+	VLs7SExno6Vzttk0742eMXYeXuATMZWpbKshHigxX55KXT7W4Lva7GTj20OFpT8n0dvIwFfaeoG
+	ImSMP/jLtOny4xXVgb0CdZFGzgsv2W+SvA+9ffYQbEdpo0sDaXk+ugUmSth3LL6rXwVCQ59QVns
+	F0uB9YizqE1sQcVM9snh5eSK4h1ZLnzNJrzXw+d11veAKkeloJZh1eK47HURSXk=
+X-Google-Smtp-Source: AGHT+IHSjgwd2Y2TrZu6CGi6QE0CtItO07MK1UrUGiqrJJpEqUAJ+4VQla2VPs79AMFsMXLQTlNKdQ==
+X-Received: by 2002:a05:620a:2a10:b0:7b6:deab:d485 with SMTP id af79cd13be357-7bffcce52c5mr911716685a.16.1738251306156;
+        Thu, 30 Jan 2025 07:35:06 -0800 (PST)
+Received: from localhost (15.60.86.34.bc.googleusercontent.com. [34.86.60.15])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e25495e831sm7274446d6.123.2025.01.30.07.35.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 07:35:05 -0800 (PST)
+Date: Thu, 30 Jan 2025 10:35:05 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Yan Zhai <yan@cloudflare.com>, 
+ netdev@vger.kernel.org
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ David Ahern <dsahern@kernel.org>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, 
+ Shuah Khan <shuah@kernel.org>, 
+ Josh Hunt <johunt@akamai.com>, 
+ Alexander Duyck <alexander.h.duyck@linux.intel.com>, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ kernel-team@cloudflare.com
+Message-ID: <679b9c293471b_1ca8082949b@willemb.c.googlers.com.notmuch>
+In-Reply-To: <Z5swit7ykNRbJFMS@debian.debian>
+References: <Z5swit7ykNRbJFMS@debian.debian>
+Subject: Re: [PATCH v2 net] udp: gso: do not drop small packets when PMTU
+ reduces
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|MN2PR10MB4287:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a50cc5f-42c3-469d-a104-08dd41419ad1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OxWkTrmkv1wMIIDncj0T7ODjbrH/hRizfJ78ErGjsBsJXFyfeeeAWw5rOF1h?=
- =?us-ascii?Q?SmFQ4Hy+tRawGPPjEz5bg7LftapELF5m9bM0RyMs3EvU0XHnhI/HyURXeIRM?=
- =?us-ascii?Q?4fjWyl6djOL4Gm4B/2YxX9Af/UAKXwivDM/dhkK9XCynFoiLcVLwv/FCjAzl?=
- =?us-ascii?Q?RL7totpLC3+8pGuqprXsBqmHc7qgDQjImrisxzbqwCbhQx10Qb4bgfflzGuV?=
- =?us-ascii?Q?IKeAzK8zNdMuX3HzS+zWAusIs8XGBoPINEwKk2xK9LTmned+BAWXOzSfv4lr?=
- =?us-ascii?Q?VbDjvVFvnQv8PxK+Ph/q0J7vxsNZq9TB4GggZeomBrD08afaVDhTcBGlIZOA?=
- =?us-ascii?Q?fBY/gbmUf4SRInwo5sdKgYmdDE2Y0XNGoxhLyTlw+vvjEOtjwPSrcm/sOm2H?=
- =?us-ascii?Q?JZBiV4xX9Qxt2/4J2TMH0yAURXJTlYDWysTnBzVclNyfQzkjw8jx/ij6st7O?=
- =?us-ascii?Q?zAiD5zU2JDS8jsXDvTnrWaV9+CkUly0MWJhFs6BQ2q7aioYlRXsoKt6h0+aJ?=
- =?us-ascii?Q?FMtknV9KUr9929HVKdToc00LEuHE20PfolsGkuDAyvKxDmfHDWrkwpqySKvk?=
- =?us-ascii?Q?3ovd9IUk5Kdl5RFc97UKdJDZAJyUKeuQpvapnB+ZYYAmqTfsVMBM+9sz4CIO?=
- =?us-ascii?Q?jlj16WNT79ne/C/wqsIGrbGCGDFeWfKoFKLeUBhOfmx0+zDB7Sq97sQ7HFVo?=
- =?us-ascii?Q?tnBvKPaa+KQ05eXtc7B/GKGI+8t3ltVsqpanZhEAEUguzDMb4ODwMvOIft+G?=
- =?us-ascii?Q?oYy8UbBzy7CC3pngp0dY0lV/bR4RYFuvmwyWi/o4dbg9TG9mBK7OckvbdYbW?=
- =?us-ascii?Q?kRL8BjYrf8fyuS3oBVoOGAYLRWuoOiicgNo8k6maFioVntS85b00A3c2559z?=
- =?us-ascii?Q?vUzJTP4coziOFPMElLLc6+hOkGhtjSgKYCPCA0KI0YiyEGRY2Z3WvtbiK6iQ?=
- =?us-ascii?Q?2XjVoT5N86UHZXbJ+2ME7DcqELz93j/MtjH8LBKz8pFH88+XYadRXTlj0ykl?=
- =?us-ascii?Q?NrRlAloBGcnb2cC/F0IuuZhb6dNj+yxDun9vc2KaFuvfgN+fyXFmto39ACww?=
- =?us-ascii?Q?TaP7e0nyEsDVIVswv/LXQ30YxNvUZ5xrzvyvzIEGyCM782vD7KaoaYzEvnMK?=
- =?us-ascii?Q?mJ/9YBRPLXDWtJYd1W7Al+nIAEOi+4JqGr/562qCXBAIwdlTYjlhaRiKK80N?=
- =?us-ascii?Q?/KhwOZnNWf30UXmgmNuuCWRRH8Mwhe+o0xrWSh4drFPlxv0ZeJGA2LOI8wzV?=
- =?us-ascii?Q?K+1Rc17akufBjP9Uo2fsO2TvXLzRt983X6piZW/qaCNyB8EbfDVaXxMgf/A+?=
- =?us-ascii?Q?N0Ph5i/Rwf6DGc9CRmfjcJC24s0pQunF6eUtiG+WsOUBtSVpNR2+DiMn6beV?=
- =?us-ascii?Q?r3bWr3gC/yt0ipLbm5c4Hygbaxb6?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?N25XH/cXQxEHiUMmZc/xBUPWKgZr8jVZQZ4uISYoLOAHH0fcZc+pfhA5q5in?=
- =?us-ascii?Q?Dyk9FeEz/gdspCCXiqCI6t9nkaNEfmHbcVAUYiOBL49UFss677v5sTRtekdK?=
- =?us-ascii?Q?cmx6VIGLMGnnvKGoE0uA/YT5PNhENQIZ8gIWsFPa30fL0WH626XTkGNHyLjb?=
- =?us-ascii?Q?5OJFFUm4WOBigG8qG/CfcWWZ+ARIWPKAMASyZ51xFA6TG7L7cvonup3/OaPz?=
- =?us-ascii?Q?x1tEWZykRZ3nMrUzOhL8Xz1Jh2LFR1IjCNZZk45UYh0FzY+hl9IS/7IWttiY?=
- =?us-ascii?Q?XM4fJqdxM3muveFhcIiaXLbgp2pqoQGGxvlpNXTBlhPRFCXMHYGN+ff+aM/c?=
- =?us-ascii?Q?lAm7r2yt8RmaYJL8Kt/oSqc1pNg+6EL17Yu4fDTlSwh0d6XK4zR7Ct/wIsu+?=
- =?us-ascii?Q?2WVGLdliGXdgx5CiGWEr1h4KzJcQlrHF0xRR3l7E0DGzPMFBjjp9lmHonyNW?=
- =?us-ascii?Q?Py39fjzaAo309VdooCjtj14T4Ko9UIFm31Li9sfAYSwkPtDOIQPVFBNzTPTx?=
- =?us-ascii?Q?puOwFsotI2tKp48njjrqR7SK6mXE47C4BtCfwHogVRoQ/yNWlEV1oLj3K1wQ?=
- =?us-ascii?Q?U5zeNm7KUW9bPTq6PrCztjtPEuIFYGZ6WaUnnlTB3SGEpLpNDdfA4TvFdjqD?=
- =?us-ascii?Q?UcNYJ2Z5tjx8u0wPrpsJaYtXdDWw+ARiYs+jBuJtYxGYf1rznnRKt6QfLQ6V?=
- =?us-ascii?Q?TY8LXvhUBsMQCVEE01tO5S7JaPF0LlPbWejESpFk/skSmM+gfjUiypUF9N81?=
- =?us-ascii?Q?15n+uSs9EnRDjh1AXV2Dpd/soMHRUXcmFQ4mnKzlfmAL6ABKS7p4jOtOw6Yv?=
- =?us-ascii?Q?C4VZWkhcuLgMviQHQhZ5weLZkebJDSpMCXx95EoRzqXHxFlw2HdsG/Z1aK7C?=
- =?us-ascii?Q?IUwJ6BwpCfpNIGbu0w8uWaZD/IoU2itanfKBrWbuYsG/+2cFA0Bw3zymCQTR?=
- =?us-ascii?Q?5yH0SyO73yYoN5p7reajTuRAX68glmxnNkRB+kyg/3/kjqLHsTNLmaJQwPJq?=
- =?us-ascii?Q?kTRfi/JvowlmKxE+shJ1+QZiyQQMJxnnTVX9mTVonoGt2u9QXc1wSXgF1MKc?=
- =?us-ascii?Q?reKFqhdCd/3fIP7uhabbenwQNryLEIuo1YgAoLOUTp91bgb/igvrFQgCux11?=
- =?us-ascii?Q?xVVv3YJNWINGxxZLHT2tMQ2HbAeh7XeYM7QIrTfOfWRVpMMV89T250oP34aG?=
- =?us-ascii?Q?AznMoCA60hcxmJPFIpZx7h+AIGRORGXeWHlN42HLRcjBsYq/3saCOH/zneCm?=
- =?us-ascii?Q?0bgTJE9960uHyYXsh68e2BzIr+zwoXMVcOF4BEE+3xlSgXgQ9L0GRQB/TN8o?=
- =?us-ascii?Q?nvqaEs1G+SFfChKwnBId3UzdFTqjU0CQz2n1VreqjtY5y42WrS0colXmeKlh?=
- =?us-ascii?Q?fTV6kbNo0K9gAN/OWIBtS4dgFKQBEGqyLKJjkv8w+VP6vZ55ESsBOI0huVpB?=
- =?us-ascii?Q?D0o37nCpJFekFpdadGieSepKaKWl73nBA65ujOayu00Qqpghx+iNVz0PSSu+?=
- =?us-ascii?Q?QTEQjobJeNp/H8dvLONBkxi1+BPmyfF/fK5nV+KFFNa+PP6e9N9UnBzPGJvh?=
- =?us-ascii?Q?euDg2Uxq09HbeBPDUfox/6GNmd9iyPY/AZFIk5A+QFMlu/Hb8CkgpRd+AhLe?=
- =?us-ascii?Q?Uw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	K4h6EAQWVYeW9el5CArXnaLjosnCLgUoYgopQYUnhBFlhaTaRfGXu7GhIxho66NCNuj1inPFtYJcbUDbm5j1F1wi85Fr/1kxXWoo5sv7DuV1huw3OWPcXGaJSgRjBcqjiMxQATyvHO3W7XMaI4W1/f34yQtOf6TRZRfHRXagEYOcqYktGpXgu7PkJicRttm0JcQt+pVDL8goMhpiUVSwcBhYhB8idvc24/wKT+52Smy1Hp+vC/TIMjcOuJVZegAq3FFYgRiv8/andb9GVDG4gLVXfXmPIhHD1j/H5NX9if2iNIXxSj7hfdErTEVXs2lvPsoI8wf4uxpbzQCZHOPpNSFlw7hMjX/DKZ0rk5J7CKV7Kg93lGlIEisgIScwVgQXBQYJtDxzuyCOgX+zRqJstox/J1KxdG9RuANm9NpCc/mnoR0ENgzd0vJu5pWUP/QMzE5ySxj0dOlDkTPa20zeYo0qVx16EqkozNo1cQltp2UHcZSnVIW6ADe8iOv1YOAVmSfPJ8OCmg7Pi+Ll2/NXdw6p53fhjhM+2Qc9/l/MHWA45A+zP4jjJcStFjWhjwQAA9p3VG8hPaTXuZujjiPnXLO8838aWLkHJG0iCo/Zt74=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a50cc5f-42c3-469d-a104-08dd41419ad1
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 15:20:18.3864
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rpr3UphjI6p5s09vn03Y7mTc1nlchySjfeRxrTyyrsHuoDVktC42vG8xbGni9o/twdWvxR1CMF5JDfSaspkKk3zq8gENF2PoIBR1gbSMfSg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4287
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_06,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 suspectscore=0
- mlxlogscore=999 phishscore=0 adultscore=0 mlxscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
- definitions=main-2501300116
-X-Proofpoint-ORIG-GUID: lU9Nx6grYwTxE1IMoywnBVVVegBcYVVX
-X-Proofpoint-GUID: lU9Nx6grYwTxE1IMoywnBVVVegBcYVVX
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+Yan Zhai wrote:
+> Commit 4094871db1d6 ("udp: only do GSO if # of segs > 1") avoided GSO
+> for small packets. But the kernel currently dismisses GSO requests only
+> after checking MTU/PMTU on gso_size. This means any packets, regardless
+> of their payload sizes, could be dropped when PMTU becomes smaller than
+> requested gso_size. We encountered this issue in production and it
+> caused a reliability problem that new QUIC connection cannot be
+> established before PMTU cache expired, while non GSO sockets still
+> worked fine at the same time.
+> 
+> Ideally, do not check any GSO related constraints when payload size is
+> smaller than requested gso_size, and return EMSGSIZE instead of EINVAL
+> on MTU/PMTU check failure to be more specific on the error cause.
+> 
+> Fixes: 4094871db1d6 ("udp: only do GSO if # of segs > 1")
+> Signed-off-by: Yan Zhai <yan@cloudflare.com>
+> --
+> v1->v2: add a missing MTU check when fall back to no GSO mode suggested
+> by Willem de Bruijn <willemdebruijn.kernel@gmail.com>; Fixed up commit
+> message to be more precise.
+> 
+> v1: https://lore.kernel.org/all/Z5cgWh%2F6bRQm9vVU@debian.debian/
+> ---
+>  net/ipv4/udp.c                       | 28 +++++++++++++++++++---------
+>  net/ipv6/udp.c                       | 28 +++++++++++++++++++---------
+>  tools/testing/selftests/net/udpgso.c | 14 ++++++++++++++
+>  3 files changed, 52 insertions(+), 18 deletions(-)
+> 
+> diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+> index c472c9a57cf6..0b5010238d05 100644
+> --- a/net/ipv4/udp.c
+> +++ b/net/ipv4/udp.c
+> @@ -1141,9 +1141,20 @@ static int udp_send_skb(struct sk_buff *skb, struct flowi4 *fl4,
+>  		const int hlen = skb_network_header_len(skb) +
+>  				 sizeof(struct udphdr);
+>  
+> +		if (datalen <= cork->gso_size) {
+> +			/*
+> +			 * check MTU again: it's skipped previously when
+> +			 * gso_size != 0
+> +			 */
+> +			if (hlen + datalen > cork->fragsize) {
+> +				kfree_skb(skb);
+> +				return -EMSGSIZE;
+> +			}
+> +			goto no_gso;
+
+This is almost the same as the test below.
+
+How about just
+
+    if (hlen + min(cork->gso_size, datalen) > cork->fragsize)
+
+And don't bypass the subsequent checks with a goto, or modify the
+rest of the code.
+
+> +		}
+>  		if (hlen + cork->gso_size > cork->fragsize) {
+>  			kfree_skb(skb);
+> -			return -EINVAL;
+> +			return -EMSGSIZE;
+>  		}
+>  		if (datalen > cork->gso_size * UDP_MAX_SEGMENTS) {
+>  			kfree_skb(skb);
+> @@ -1158,17 +1169,16 @@ static int udp_send_skb(struct sk_buff *skb, struct flowi4 *fl4,
+>  			return -EIO;
+>  		}
+>  
+> -		if (datalen > cork->gso_size) {
+> -			skb_shinfo(skb)->gso_size = cork->gso_size;
+> -			skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
+> -			skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(datalen,
+> -								 cork->gso_size);
+> +		skb_shinfo(skb)->gso_size = cork->gso_size;
+> +		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
+> +		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(datalen,
+> +							 cork->gso_size);
+>  
+> -			/* Don't checksum the payload, skb will get segmented */
+> -			goto csum_partial;
+> -		}
+> +		/* Don't checksum the payload, skb will get segmented */
+> +		goto csum_partial;
+>  	}
+>  
+> +no_gso:
+>  	if (is_udplite)  				 /*     UDP-Lite      */
+>  		csum = udplite_csum(skb);
+>  
+> diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
+> index 6671daa67f4f..d97befa7f80d 100644
+> --- a/net/ipv6/udp.c
+> +++ b/net/ipv6/udp.c
+> @@ -1389,9 +1389,20 @@ static int udp_v6_send_skb(struct sk_buff *skb, struct flowi6 *fl6,
+>  		const int hlen = skb_network_header_len(skb) +
+>  				 sizeof(struct udphdr);
+>  
+> +		if (datalen <= cork->gso_size) {
+> +			/*
+> +			 * check MTU again: it's skipped previously when
+> +			 * gso_size != 0
+> +			 */
+> +			if (hlen + datalen > cork->fragsize) {
+> +				kfree_skb(skb);
+> +				return -EMSGSIZE;
+> +			}
+> +			goto no_gso;
+> +		}
+>  		if (hlen + cork->gso_size > cork->fragsize) {
+>  			kfree_skb(skb);
+> -			return -EINVAL;
+> +			return -EMSGSIZE;
+>  		}
+>  		if (datalen > cork->gso_size * UDP_MAX_SEGMENTS) {
+>  			kfree_skb(skb);
+> @@ -1406,17 +1417,16 @@ static int udp_v6_send_skb(struct sk_buff *skb, struct flowi6 *fl6,
+>  			return -EIO;
+>  		}
+>  
+> -		if (datalen > cork->gso_size) {
+> -			skb_shinfo(skb)->gso_size = cork->gso_size;
+> -			skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
+> -			skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(datalen,
+> -								 cork->gso_size);
+> +		skb_shinfo(skb)->gso_size = cork->gso_size;
+> +		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
+> +		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(datalen,
+> +							 cork->gso_size);
+>  
+> -			/* Don't checksum the payload, skb will get segmented */
+> -			goto csum_partial;
+> -		}
+> +		/* Don't checksum the payload, skb will get segmented */
+> +		goto csum_partial;
+>  	}
+>  
+> +no_gso:
+>  	if (is_udplite)
+>  		csum = udplite_csum(skb);
+>  	else if (udp_get_no_check6_tx(sk)) {   /* UDP csum disabled */
+> diff --git a/tools/testing/selftests/net/udpgso.c b/tools/testing/selftests/net/udpgso.c
+> index 3f2fca02fec5..fb73f1c331fb 100644
+> --- a/tools/testing/selftests/net/udpgso.c
+> +++ b/tools/testing/selftests/net/udpgso.c
+> @@ -102,6 +102,13 @@ struct testcase testcases_v4[] = {
+>  		.gso_len = CONST_MSS_V4,
+>  		.r_num_mss = 1,
+>  	},
+> +	{
+> +		/* datalen <= MSS < gso_len: will fall back to no GSO */
+> +		.tlen = CONST_MSS_V4,
+> +		.gso_len = CONST_MSS_V4 + 1,
+> +		.r_num_mss = 0,
+> +		.r_len_last = CONST_MSS_V4,
+> +	},
+
+Please also add a test where datalen > MSS < gso_len (with .tfail = true).
+
+>  	{
+>  		/* send a single MSS + 1B */
+>  		.tlen = CONST_MSS_V4 + 1,
+> @@ -205,6 +212,13 @@ struct testcase testcases_v6[] = {
+>  		.gso_len = CONST_MSS_V6,
+>  		.r_num_mss = 1,
+>  	},
+> +	{
+> +		/* datalen <= MSS < gso_len: will fall back to no GSO */
+> +		.tlen = CONST_MSS_V6,
+> +		.gso_len = CONST_MSS_V6 + 1,
+> +		.r_num_mss = 0,
+> +		.r_len_last = CONST_MSS_V6,
+> +	},
+>  	{
+>  		/* send a single MSS + 1B */
+>  		.tlen = CONST_MSS_V6 + 1,
+> -- 
+> 2.30.2
+> 
+> 
 
 
-Eric,
-
-> Patches 1-5 rework the CRC64 library along the lines of what I did for
-> CRC32 and CRC-T10DIF in 6.14. They add direct support for
-> architecture-specific optimizations, fix the naming of the NVME CRC64
-> variant, and eliminate a pointless use of the crypto API.
->
-> Patches 6-10 replace the existing x86 PCLMULQDQ optimized CRC code
-> with new code that is shared among the different CRC variants and also
-> adds VPCLMULQDQ support, greatly improving performance on recent CPUs.
-> Patch 11 wires up the same optimization to crc64_be() and crc64_nvme()
-> (a.k.a. the old "crc64_rocksoft") which previously were unoptimized,
-> improving the performance of those CRC functions by as much as 100x.
-> crc64_be is used by bcachefs, and crc64_nvme is used by blk-integrity.
-
-Very nice!
-
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
