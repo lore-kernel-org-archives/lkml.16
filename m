@@ -1,181 +1,101 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD78D187346;
-	Thu, 30 Jan 2025 18:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831BA187346
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 18:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738262259; cv=none; b=NfypKwvtaw5lPEtbzl9XxMYiwVk3BbDDFtLuI4U7Hhf7AWNbJT5H+x7hJV7NYafEAzyly72F+r30pLQBNUl4B5upzieM9OpP3mZXuxD6yPaW/dORuXwdqcvUpI2UOzLMd6KCdLSVaM1qioTgffKqKlSgdhtoTJuLbOnqKErDULw=
+	t=1738262431; cv=none; b=MK88nh1y6aoPGZrpTsNxXmaWXm+n3h8bKMAu9GsHkBxoUpEVb93JlJ9Sjf/SueX8Sg4fMvDInwgBRSBpiJgzDqDnxJk1CNiaAl/KrcXi/q0OocChPCqMRNGlPXuUGvWEqIRS2T48RaUHrl3sBEz5RyjCw6IR6Bboh+nYG5KrUEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738262259; c=relaxed/simple;
-	bh=vOwZ+ACAFpMPdDLsWCC7+eR5A4+jCPqA+ASIm8GRAzM=;
+	s=arc-20240116; t=1738262431; c=relaxed/simple;
+	bh=PZGkakFNco4kbSBjz1opxRPk8R7MLaQEpY8TCV6WYk8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R29y+eYUf7q6KB0Kqd0p1eEcgBi9XKKPgWcyA0ZKC1/B9dE1b7FUCca4zJh5Rl46ZIAgaHkxkrM7OyTn1dMe87x4k6WpaThfWhdk1zqzZL5b3TXtYNRar+Oo8HEFmxmiVhGiWlLtzkTIRFp5MHgMoqp2WwfjNbLwHSo3mZeJfaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yedl69cZ; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=T4HKyLSNKWPwxt08ojo2k+z2ZdAiKMvSPTtCHm6KV+bIbbmO4y0YhMNCs8CyHY1kod2izO95MD8RPiLkZziZvpzjqubkLd26lJDY1v/GMpBuoC/weIVFcgcKyu3xrr4R4wydJYXjFj1+Z4gQiqekFOxHT29AMY4IcvWfxz8UEl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=P2d14isu; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yedl69cZ"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-543e4bbcd86so1402244e87.1;
-        Thu, 30 Jan 2025 10:37:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="P2d14isu"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-540218726d5so1171155e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 10:40:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738262256; x=1738867056; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738262427; x=1738867227; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oRQgpcZ93mW5DBGdzNIoBycuwMkboGtcanKKs6jsCyI=;
-        b=Yedl69cZnOnJB1TETA5M7Ou5Z/S1aZBEfo6fjKl8sxirq0J/MPUI+AqQLffqSDzKsr
-         tLVmRB6vcxLo1SHEc8jGS9l6BMmMcfsCLSOwyvngVG/JJjdWdWG1VuH8WDgrg902x5g+
-         nA//7eG9Rhrz2NmR1CQP7lUkJRyG8TIifAsSQqNUILo/0OvIctxgScw8kGRoAnLyAdMG
-         3+9u9FdTHA7cHsQoMimd9rvNo4G9BTmWQQiAZZYDQ0zYqdyxRySIXx74aKU88GxTQ1Vp
-         2sz6hqk7SERUPGskKOBJVT7pyvBNApvgWBFOHaTscKqqzq68rUFG8Z29BD/oI/Afuvji
-         ndrQ==
+        bh=PZGkakFNco4kbSBjz1opxRPk8R7MLaQEpY8TCV6WYk8=;
+        b=P2d14isuB/UpS1h0JVpov8wUPkxiHqsBn7NOfpqfF6i0ksAR2P1b//+Jz8ug1DTjND
+         L8oIsZ/gBOuNcclS0f2e3de2FWsjMd4JlNlRkQ7cPBqoHtM8tGGVUBlfCIy17Fi3Y397
+         I9oL9BgPSh72WtpGWEv6oeMmKA5RCzezM+MkvlYXED6yjV4tLV/A5CD1vDvzJ/iqjDvy
+         dAetuwoyA28ByAbO6rlmZE4AMsSneSEi3T44GPITaQopDHIaQQarqLbpzFvrJ39KPjzc
+         r+3kbr5YzhIHsKvpbhxggswjo9p2y1/9KEm03UCJcfNW5sM9b2kVQzHB7M/wzDWVUF1y
+         M6MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738262256; x=1738867056;
+        d=1e100.net; s=20230601; t=1738262427; x=1738867227;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oRQgpcZ93mW5DBGdzNIoBycuwMkboGtcanKKs6jsCyI=;
-        b=Zs3WXkcgt8/wPDGYEYygAj+tE+j54xY0V8ENhz5nvZbEe8jCkx3khG3r9BwTGsgjli
-         6fH8w7eoyocfoEGJF6OjakTuBKDGlahHbQK0qbfO66sLf/Twm3UC3BZTK0jPpH+1YKyu
-         MuAHrRjqHV3CQ6uOrGNIpSlXszhTR9zPnQrPTEVGtUWzLBeCcfRGFvUYyzRPbp8GGRIz
-         9V/ZqMNBvedjkK7mhNXq1++gHHfaIrZhX/4r/nXGuD50rehbGulbpt8sgQlBNrCIWwx0
-         +G3jQyczePTPhyQOnHARRZKqAlGC/cz4kYJy8KNVIVGDeZBPJwe7a/QyTcRgLmhwspgQ
-         R1jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7YdJdRmYsNuOvbFTEozMbhtGkVhk6nrS5mgu0oRcuzDzfsRc53VBCD5kUbbj7sLbGBTPAa88hO282R0sEJHQ=@vger.kernel.org, AJvYcCVF4kOeelXZlmvyg77oL8XXGBcanemSCRetC7I6p4uikGKbPW4+3s59N/Q3iGcAO8KsI0PiorbznOFDK1B4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4I73z8xLmZ47gJSTkDLRRc4A7s7J8x64ZflzEz2/1ObRGcOs4
-	Utnrhan4baBmaltWknfnHu9oLiOkmLLQgiAA+vKFOHj9vIBu2SxyDZwR4qYWHkpiLdvwHAEpthI
-	LVJ2gCwyjdIHwI/W8xGVxsWI382s=
-X-Gm-Gg: ASbGncstd4bDUlTFzLEBFZJ6YE0LbNfIU3jW6ih4LwxSGG0DudBRXpK5BcEGmFTd1OG
-	iiYLK7a3VmvHm6fiK1DXD8imctrvGYi2fW5Jg0UaXVTXZZ98KgiWKsdDf6cXnNfEyRgPMe88=
-X-Google-Smtp-Source: AGHT+IFjnKx48Ypj22gunFniX94bJSH4EsZTSx08ahplfbQ/Lu9eEN9a6ZYdcMY/45PT7s/zgK5zB+DioKmQUWoAm0E=
-X-Received: by 2002:a05:6512:3d21:b0:540:1fae:b355 with SMTP id
- 2adb3069b0e04-543e4c37a94mr2802777e87.52.1738262255391; Thu, 30 Jan 2025
- 10:37:35 -0800 (PST)
+        bh=PZGkakFNco4kbSBjz1opxRPk8R7MLaQEpY8TCV6WYk8=;
+        b=lmw9N3N35PbeE/Vq4sR6a2YPH1nAJhR1wMrZD9ttqKXZ0KX+jXrt3Jj0QiWnCFFCsV
+         XCt8w+ZI6dP0ObvUaYoKUyN+V5QTrQuiYbNijV6wzfeW0L6Y7HCKWCEEM1KWXgsGZnVP
+         gCqmkO81o6eErIR50bnUljbwVzio7nrSNO9PCs3A3YasKbWxRoOet58cPqkmnu1Odvdu
+         qIV3UXtkjEm5lgn4N6YsJDf+CsYM8jecwIXj3xhCY5mHBC37zTSA13r4UXd8KuRrzZUg
+         JnTl/eRtK/RTnemZTLEBd9mCAIJJmkpfkx9kFuhPaNsqCGG6Uy7Xx2Z4XNhZ++o3hTSw
+         O0Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCXXrNddiWKc2Gjf1ZqFqUWDxeVhdALCwwl+giQVrLKapErwuc9+NzNToVjj26exwUesHVU3iw405X6BoP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxIhFN0UdXmSqk/hIUEKCscCp5ChoEnXm4wl7YMSoZLr5WGaT1
+	sT0SIByosIONO6cBbAspo8jcQcO4DLqdm3Dma/aKNWZCPcy7jinFMRlxGn76bywnKdQ68SxiFEC
+	rcISHlNnqwmvQeKIPyT7pfwJnUP9zenMQ0CuU2A==
+X-Gm-Gg: ASbGncv7GqgC5TLJV0PvoOdrKIzfkyEDheCUrTTL5rln5JKlCbbPTpT6CxxyTZLfOXL
+	2fgnQZCY1kVaz7coQmj6oRilwnaQNK2ykdtWsGlUKczaOLuLGpHqmsNy/kJo71qTHGkec27CiNh
+	9WuoucFtvGFLlg4RiHPdmw6TEeis4+
+X-Google-Smtp-Source: AGHT+IGTxA9Lst4wTIFbwdnHGpnqqupbNJQuRozQiYPZiFE1ggaSkErWWKv0+xtu4qHAe68MDpH55DgfT9AWtcrExiI=
+X-Received: by 2002:ac2:4e45:0:b0:542:2e04:edc5 with SMTP id
+ 2adb3069b0e04-543e4ba6c02mr2187230e87.0.1738262427290; Thu, 30 Jan 2025
+ 10:40:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d159c57f-8490-4c26-79da-6ad3612c4a14@salutedevices.com>
- <CABBYNZLa9amkcQzqRyiCK7acKeXiPLkfX8thMonQhXN+5PnmmQ@mail.gmail.com>
- <e0b77a36-2d2b-735c-7a23-bbaab5adeba7@salutedevices.com> <a2a239f1-5697-cb09-5e4f-83c024fd5ea6@salutedevices.com>
- <95904850-fe5c-4866-3da6-3e021c6becf8@salutedevices.com>
-In-Reply-To: <95904850-fe5c-4866-3da6-3e021c6becf8@salutedevices.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Thu, 30 Jan 2025 13:37:22 -0500
-X-Gm-Features: AWEUYZnwRPiumDhFkYKDhybUiE_2LzKeM2ZIjMZ-9cHMHz2_AqDwGEFtj48ANRU
-Message-ID: <CABBYNZL4AAdr3HaOQheSmHr2TMWpH2bXNgwn20tGSbuewys_SQ@mail.gmail.com>
-Subject: Re: [PATCH v2] Bluetooth: hci_uart: fix race during initialization
-To: Arseniy Krasnov <avkrasnov@salutedevices.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, oxffffaa@gmail.com, 
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel@salutedevices.com
+References: <20250129155525.663780-1-koichiro.den@canonical.com>
+ <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com> <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
+In-Reply-To: <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 30 Jan 2025 19:40:16 +0100
+X-Gm-Features: AWEUYZnj93d-FrMXvMxOaT44mXfI_4z33u8XVZrqCy6OvCJmKQ4xghRlKCNsUtU
+Message-ID: <CAMRc=Mc3qBXaATpYRAXeHne0+mBjErivjvUe4rBEj2ksansatQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for gpio-aggregator
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Arseniy,
-
-On Thu, Jan 30, 2025 at 1:34=E2=80=AFPM Arseniy Krasnov
-<avkrasnov@salutedevices.com> wrote:
+On Thu, Jan 30, 2025 at 5:04=E2=80=AFPM Koichiro Den <koichiro.den@canonica=
+l.com> wrote:
 >
-> Hi, sorry ping
+> On Thu, Jan 30, 2025 at 11:30:59AM GMT, Bartosz Golaszewski wrote:
+> >
+> > 3. I don't think the user should need to specify the number of lines
+> > to aggregate. That information should be automatically inferred from
+> > the number of lineX attributes they created instead. [...]
 >
-> Thanks
+> I agree that it's essentially unnecessary, but considering the current
+> state of gpio-sim's configfs, having the user set num_lines doesn't seem
+> too unnatural to me. What do you think?
 >
-> On 08.01.2025 15:39, Arseniy Krasnov wrote:
-> >
-> >
-> > On 19.12.2024 23:07, Arseniy Krasnov wrote:
-> >>
-> >>
-> >> On 19.12.2024 22:18, Luiz Augusto von Dentz wrote:
-> >>> Hi Arseniy,
-> >>>
-> >>> On Tue, Dec 17, 2024 at 3:12=E2=80=AFAM Arseniy Krasnov
-> >>> <avkrasnov@salutedevices.com> wrote:
-> >>>>
-> >>>> 'hci_register_dev()' calls power up function, which is executed by
-> >>>> kworker - 'hci_power_on()'. This function does access to bluetooth c=
-hip
-> >>>> using callbacks from 'hci_ldisc.c', for example 'hci_uart_send_frame=
-()'.
-> >>>> Now 'hci_uart_send_frame()' checks 'HCI_UART_PROTO_READY' bit set, a=
-nd
-> >>>> if not - it fails. Problem is that 'HCI_UART_PROTO_READY' is set aft=
-er
-> >>>> 'hci_register_dev()', and there is tiny chance that 'hci_power_on()'=
- will
-> >>>> be executed before setting this bit. In that case HCI init logic fai=
-ls.
-> >>>>
-> >>>> Patch moves setting of 'HCI_UART_PROTO_READY' before calling functio=
-n
-> >>>> 'hci_uart_register_dev()'.
-> >>>>
-> >>>> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
-> >>>> ---
-> >>>>  Changelog v1->v2:
-> >>>>  * Move 'set_bit()' before 'hci_uart_register_dev()' instead of
-> >>>>    adding new bit 'HCI_UART_PROTO_INIT'.
-> >>>
-> >>> What drivers/controllers this was tested with? I want to make sure
-> >>> this doesn't cause regressions to other drivers if there are perhaps
-> >>> some drivers assuming HCI_UART_PROTO_READY was set in a certain order=
-.
-> >>
-> >> Hi,
-> >>
-> >> I tested this on:
-> >>
-> >> CONFIG_BT=3Dy
-> >> CONFIG_BT_HCIUART=3Dy
-> >> CONFIG_BT_HCIUART_H4=3Dy
-> >
-> > Hi, sorry, but is this enough info about my test env ?
-> >
-> > Thanks
-> >
-> >>
-> >> Yes, my v1 patchset with extra INIT bit was targeted to keep
-> >> original behaviour - e.g. PROTO_READY bit usage still the same,
-> >> just adding extra bit to handle this specific case.
-> >>
-> >> Thanks
-> >>
-> >>>
-> >>>>  drivers/bluetooth/hci_ldisc.c | 3 ++-
-> >>>>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_l=
-disc.c
-> >>>> index 30192bb083549..07b9aa09bbe2e 100644
-> >>>> --- a/drivers/bluetooth/hci_ldisc.c
-> >>>> +++ b/drivers/bluetooth/hci_ldisc.c
-> >>>> @@ -704,12 +704,13 @@ static int hci_uart_set_proto(struct hci_uart =
-*hu, int id)
-> >>>>
-> >>>>         hu->proto =3D p;
-> >>>>
-> >>>> +       set_bit(HCI_UART_PROTO_READY, &hu->flags);
-> >>>> +
-> >>>>         err =3D hci_uart_register_dev(hu);
-> >>>>         if (err) {
-> >>>>                 return err;
-> >>>>         }
-> >>>>
-> >>>> -       set_bit(HCI_UART_PROTO_READY, &hu->flags);
-> >>>>         return 0;
-> >>>>  }
-> >>>>
-> >>>> --
-> >>>> 2.30.1
-> >>>
-> >>>
-> >>>
 
-Please resend it.
+No, this is completely different. We cannot figure out how many lines
+the user wants gpio-sim to have without explicitly providing that
+information over the num_lines attribute. For the aggregator, we know
+exactly how many lines the user wants - it's determined by the number
+of line groups. We can simply wait for the live attribute to be set to
+1 and then count them. While at it: there's no reason to impose a
+naming convention of lineX, lineY etc., the names don't matter for the
+aggregator setup (unlike gpio-sim where they indicate the offset of
+the line they concern).
 
---=20
-Luiz Augusto von Dentz
+Bart
