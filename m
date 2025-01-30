@@ -1,106 +1,130 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0375919F13F
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 10:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399A61B87F8;
+	Thu, 30 Jan 2025 10:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738231323; cv=none; b=s4jExzO37xCHvlBR4pyfzq7Qzm/jff+k49QkCxQ6GcRuX8YO27EcKFnJBjT+70/cX/PLeqbzKtVB+NI67hgZ2etnBPblkwgjE4Zh/G6VrI5sW5Js80Shdg5H9EdKVBFfXP54xHUXdRVwlzIQh4Bb9iBvSc1WNqWW6PXbwPTW/cs=
+	t=1738231332; cv=none; b=POtBIoEd/H6iSCYy3DxrpC88MjuUEOos9zrSD2tMxAOS5St1kRvo+l2PdyZIhU0ppPUNNzBvJ2deQ2lMBMHM6DZXrblSkteVFxZJB2b/m6eRuhGNp0rSmDLm3Q1xYbFhlBeGtjeYzh4r2J0catScI/FOAVsEW7EprbRkwYqtavs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738231323; c=relaxed/simple;
-	bh=iA9qHjm74xAiI8KdifL6xBUSzz+XVlgjCmJbMIp2zug=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gqf7TqwHkExKBABAn3MLqDXrIIrVlQfqsNploqABu3TAM83ciiKiPKLoOyBBUu79B4mmhOkcNHPeN2n3emvTvslUa1Swd1DHft76HODKHeFgD9dtMIqpIgDE55cuc2gIhI/LpMYCHiphz0cbh6n1gnfoWBvI27lSDMNX7rdAuNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2040D43423;
-	Thu, 30 Jan 2025 10:01:38 +0000 (UTC)
-Message-ID: <03594835-6f12-4582-a4f7-cbb1630dba91@ghiti.fr>
-Date: Thu, 30 Jan 2025 11:01:37 +0100
+	s=arc-20240116; t=1738231332; c=relaxed/simple;
+	bh=aS6HpbmyxvbjmHbJmaZLMg1p+vRZnZDTOx85EKv2YcA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VZDBn0rBgH1bOSEEP56UPSN7MC1iHtWb1eyRdalkUgZDq5m8jMNNSB717BMkFrQoVJmIC0OmBU1AkTSBYXtGCHDmWEJ7E5ceBifH0mJE903OyIei7dJupeClodHyiQtQcZ1FcFNzxWvUqZvcCKGWrRJrFlP4XNGXgSL0cYDZ964=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BFmEoazA; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BFmEoazA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738231332; x=1769767332;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=aS6HpbmyxvbjmHbJmaZLMg1p+vRZnZDTOx85EKv2YcA=;
+  b=BFmEoazAp4vJSom91wSLJnmnzRbIMcl9RACEd/gSHR1a2PlSbEuUoKL9
+   bnNXij3srtvpIp30Zu2Rzb68YDvU1qzerDTh+hsA+pxpEZWg9XVj8OqIc
+   i3crgHCIlT08JdUPawhF5v3tp9mQSxdErHRdsuhdgOeuQPIHKxXej2pa/
+   a+vb6xmwBsBQdRurvVyD8QxRd/mmiUWKBpOKESQEq+0gzQzJjMcJ2N81M
+   L62MEDYohHhxYZTT32ixAweLagx15eP4LmBv8h0tOwQ+xjJ1UTQpkfHGn
+   mFx0xM/Zcbptym9Qp9xwptddzTj0RZleIaVtErFUBSLTxTa5xm5OyYNxh
+   w==;
+X-CSE-ConnectionGUID: 38wjL2A/ST6+HQPwKjz8NA==
+X-CSE-MsgGUID: Vu7Kql7qQX+4LhLGt7DvBw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="38648220"
+X-IronPort-AV: E=Sophos;i="6.13,245,1732608000"; 
+   d="scan'208";a="38648220"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 02:02:11 -0800
+X-CSE-ConnectionGUID: FEElXW6TTEKqjuklFWBz5g==
+X-CSE-MsgGUID: 8dwYoa7wR4mkal0gKBUanA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="140161515"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 30 Jan 2025 02:01:02 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id CD0ED116; Thu, 30 Jan 2025 12:01:01 +0200 (EET)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Christian Brauner <brauner@kernel.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	David Airlie <airlied@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Hao Ge <gehao@kylinos.cn>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Ran Xiaokai <ran.xiaokai@zte.com.cn>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	Yu Zhao <yuzhao@google.com>,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCHv3 04/11] mm/zswap: Use PG_dropbehind instead of PG_reclaim
+Date: Thu, 30 Jan 2025 12:00:42 +0200
+Message-ID: <20250130100050.1868208-5-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
+References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] riscv: add support for SBI Supervisor Software
- Events extension
-Content-Language: en-US
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Himanshu Chauhan <hchauhan@ventanamicro.com>,
- Anup Patel <apatel@ventanamicro.com>, Xu Lu <luxu.kernel@bytedance.com>,
- Atish Patra <atishp@atishpatra.org>
-References: <20241206163102.843505-1-cleger@rivosinc.com>
- <20241206163102.843505-3-cleger@rivosinc.com>
- <a21df8a8-a50f-49df-a098-69faa51ed8cb@ghiti.fr>
- <649fdead-09b0-4f94-a6ff-099fc970d890@rivosinc.com>
- <a0012a8d-0c2b-4948-b5c7-7d8efdf1cab0@ghiti.fr>
- <32cc0753-a033-4f55-8aca-09416f62faa8@rivosinc.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <32cc0753-a033-4f55-8aca-09416f62faa8@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehheduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedtgeeuhffhveeujeetveevieekleekvdffudefleevgefgieekkefggefhtddtveenucfkphepudelfedrfeefrdehjedrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleefrdeffedrheejrdduleelpdhhvghloheplgduledvrdduieekrddvuddrvdehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedutddprhgtphhtthhopegtlhgvghgvrhesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhop
- ehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehhtghhrghuhhgrnhesvhgvnhhtrghnrghmihgtrhhordgtohhmpdhrtghpthhtoheprghprghtvghlsehvvghnthgrnhgrmhhitghrohdrtghomh
-X-GND-Sasl: alex@ghiti.fr
 
-Hi Clément,
+The recently introduced PG_dropbehind allows for freeing folios
+immediately after writeback. Unlike PG_reclaim, it does not need vmscan
+to be involved to get the folio freed.
 
-On 28/01/2025 09:10, Clément Léger wrote:
->
-> On 27/01/2025 09:09, Alexandre Ghiti wrote:
->>> I believe the goal is not the same. Using CONFIG_VMAP_STACK allows the
->>> kernel exception handling to catch any stack overflow when entering the
->>> kernel and thus using vmalloc is required to allocate twice the page
->>> size (overflow is when sp is located in the upper half of the allocated
->>> vmalloc stack. So basically, this is two distinct purposes.
->>>
->>> AFAIU, kvmalloc allows to fallback to vmalloc if kmalloc fails. This is
->>> not what we are looking for here since our allocation size is always
->>> quite small and known (STACK_SIZE basically).
->>>
->>> But I might be missing something.
->>
->> arch_alloc_vmap_stack() only vmalloc the stack and does not implement
->> any stack overflow mechanism, so I'm still unsure we need the define.
-> Hi Alex,
->
-> So actually, the stack overflow check itself is done in the exception
-> entry. It check if the stack pointer did passed in the upper part of the
-> vmalloc allocation (see entry.S:122). In this allocation, the stack size
-> is actually * 2:
->
-> #ifdef CONFIG_VMAP_STACK
-> #define THREAD_ALIGN            (2 * THREAD_SIZE)
-> #else
-> #define THREAD_ALIGN            THREAD_SIZE
-> #endif
->
-> So even though it does nothing special by itself, it centralize the
-> allocation size/method. And size the size is larger, using vamlloc makes
-> sense I guess. The same mechanism is used to allocate irq stack as well.
+Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
+zswap_writeback_entry().
 
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Yosry Ahmed <yosryahmed@google.com>
+---
+ mm/zswap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-You're right, it makes sense! Nit: we can avoid the ifdef by using 
-IS_ENABLED() but do as you prefer.
+diff --git a/mm/zswap.c b/mm/zswap.c
+index 6504174fbc6a..611adf3d46a5 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -1102,8 +1102,8 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
+ 	/* folio is up to date */
+ 	folio_mark_uptodate(folio);
+ 
+-	/* move it to the tail of the inactive list after end_writeback */
+-	folio_set_reclaim(folio);
++	/* free the folio after writeback */
++	folio_set_dropbehind(folio);
+ 
+ 	/* start writeback */
+ 	__swap_writepage(folio, &wbc);
+-- 
+2.47.2
 
-Thanks for the explanation,
-
-Alex
-
-
->
-> Thanks,
->
-> Clément
->
->> Thanks,
->>
->> Alex
