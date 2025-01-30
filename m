@@ -1,186 +1,142 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6A64A35;
-	Thu, 30 Jan 2025 20:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9F1194141;
+	Thu, 30 Jan 2025 20:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738268648; cv=none; b=kjPkUmAuIT9uYCvbuNabB8BxXMUDAigEOWQy4FouJtKF4NtyPmt0tEQBE5MJ0mvHyd5yAYwPISYiikmf7cK240BYaJClMtB3NFl+nwcqmHWSAtoaBYBXYPvwQKbWnRWQGH2IDNx5HPkD6ThxDLE/x252QMzHD5QZtByiOl2oYGg=
+	t=1738268694; cv=none; b=B+qGX4UefQA41LUcYQo3sI5w3qWh3B2bT+tI7fEk5Vls1K+Vji2cTL6BoFx85lY8jJsLq1oc0hBPJtEqSgVIqeGmN353cPHNWeG4XLQyp7VgXI6ugeqnnwH0YrN3woHzT8VCoggazcc90wA80dk8jlBGc6ZUnhu2Hx9HwtugDmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738268648; c=relaxed/simple;
-	bh=fcVzhnqBbO27IvJ9WownzhHG6Rj7fo3UL/gsFbTqje8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P71VBgco/v+hGabtWrLAkHFGKWLDuQryCcojLK+C/ajPAhjxRB6mec1bQRpSzPumasaUrfkrqjxYjLHc8oGQmv1b9E8BgbabFKJEQ3kaxCArS2M6ooUZbsnoCpV2MM/We0uj79NLGUCy0/unS3BAIV7/BTKJxLWmrLkkChlQceo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DRlkk74m; arc=none smtp.client-ip=209.85.221.42
+	s=arc-20240116; t=1738268694; c=relaxed/simple;
+	bh=yFI2K7k1DYXfkT8AOWYfMld5LKYdMpO4AcfHcfiC+Rk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xq/QfHY7dEipCgQ5tvRVRtOD5soX12nqpbcqlMoTiOneEyB6/0EjjmPp782z+9Cheps5xE9T53VXad7Gm+0L6QrdHCoBMxHoO5+ieA6ppvj/upeUO1dCQ+ca7MQ6JIXSD9/n7sd3bbSULYTb8lwdqo5R/nK5maTTIXQC6x57yzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W1LPAwxB; arc=none smtp.client-ip=209.85.167.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRlkk74m"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3863703258fso1539443f8f.1;
-        Thu, 30 Jan 2025 12:24:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1LPAwxB"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3eba0f09c3aso374406b6e.1;
+        Thu, 30 Jan 2025 12:24:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738268645; x=1738873445; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xV+2ASZNLztOoZlL3PTiOudYi7XA5OszIeYYPdoNj+s=;
-        b=DRlkk74mTF2GsGqMXSpR3vj+j3M/9ui1TPBZ03yf7xw+0/2fxHBkHM9HTESULhy2Lt
-         oGirF3yzJUaX9Lhl7Ze8u5newYzMOBsWE5TUoW63KPjjQWUnS4oQ1jkR3P1RRTBIGAdI
-         XdLB3tUyyINzmzf1jKfhjmwBpGwhaS8qDxu5k7Xz9dDz29Pd00xkxSMuWhpw22evVOVM
-         EKxHQgj+mq8jBSxya12rLOh8mhfWQ6ZCANzkKG/34VVnlj6nix/MTKER43930Yk0Hnl6
-         cReEfxPkG9/JgpNV/EEIeXxpLl318LvksfeuI0AxTpUXBE14rFsAmvb4qwJUwfr2vsNK
-         STWw==
+        d=gmail.com; s=20230601; t=1738268692; x=1738873492; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=MSZrxWZoTLP5LT/YGVk/BMp7ULLcYj5MlBHfkghYdjk=;
+        b=W1LPAwxBLxqwQV5D4Hmg6MBxYWydJFt+iqO+viVHrfZUvpRTogk8ZC//uPIMw3ldHB
+         XCO/xTqvlWlKdLhvwhiqq+6HP8M73fNImWIGpIQuWsY0E/tN23GdvDJviOFQa1wcjQF5
+         mUxdz+vSCCwt4Nyx1Mw8shnXqVlMYBteeeRO8PkFU/PMM7N+ObVL/y8YmSakSdkhkIDj
+         kYFm5MMo1+n5tWTfSAOlULB8CPAUsZQkOAgb4iPgAjIrc9mqIdAYFlLAsl4kiqEPzgs2
+         qU0AcrHzRcossyaOhMXW/XHdWewI7G5aPYWl3Cd31AsXO199kYUjFAG3lv3uRYn3GesG
+         z5ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738268645; x=1738873445;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xV+2ASZNLztOoZlL3PTiOudYi7XA5OszIeYYPdoNj+s=;
-        b=xQ/sq/6Y9oFo7PKDs0D6LYcrfwuNt1sLhgwjWDhb/jfdAQ3cG7QB8UK+LWrEgZUOGb
-         IDpsTBEO5fOjq+dwum0YOd8txWRbs7wyn7GX33kOKOhU58Xkn/LSCb/r24Hw7erhXk81
-         A55po8g9Hmz0GdXC0MoCRf4u4mxiJ+9oJxodRDqUOk6vHkBtXFk46gAJ+P0nsJBU4U7o
-         k3b7YKFu6bU5M40mvnADRtVqon2MpbtNiTUL6E3nOaZ9BtVv65Fd8f+F3ss34JH6H10y
-         bGQYHvTtSZO5tZNVAP++Qoi7GWKtYGXILXIQkWPyLXhzIP0G1HdXF3HzxTxqwUcyKW77
-         1ZKw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1wvFisYK7oYSYbgLIRbqVtFND+MsM9AxbJmb9wsnp08sSDJ/OHwm6pNinWCvnna2/Z+4twW065d/oclwP@vger.kernel.org, AJvYcCVdKAzWMbp2crW+WZvkxHftAsVHpYgBCiAYtwrU0+bNdMbxd58LA/WxOsi8u+0JONV+bRoTcGl/FoMrYBcXSw==@vger.kernel.org, AJvYcCVwUie2uFVjP/uv7jKuTdhGEaiAP9NHox78ybMXXqhWTTrwtvAbVl3xMMLj4Cfu/7niGYP49TTJAkh1APuic6gDaGEkyIZb@vger.kernel.org, AJvYcCWDcrXvAOPnS+hJ9DxWl6B/y6tshmjnWa1aFs3Wx/528ofgmnO8e1eWXqz85fXDgc6Lg8E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywng7m4FgNZCIhp/saYcKr7JWikwIlU2F7CgKAHWqTfsMBpqmSL
-	Me/s/Hf6lG3TKo5M/dJad804Gqr8MI1WffEalaaPvMqdO941NkuyXUc8GD0B+xyK9ix5jmn7/kI
-	gWptx0TBAsmgEjvYALy0D7uCe7vc=
-X-Gm-Gg: ASbGncsiEsg/yxDAh9kVdKIWNI/SszDOQFrI5atVuJ1xGT2wzaP4Lx9w/pn7/8K58Zc
-	alCA6cfk7PDuji+wRF8uBXca5IK10GO/9ZMQojRUSRw6ys2lE3F+l/K4/Q0/yb1GYWafjuuQR
-X-Google-Smtp-Source: AGHT+IFY02Fh9zFX1R5GIBuszCAimxxCsMAyxTddZA8UoFzTX5lo9Jl4O/3oYK9N+WgwYxNJeKpaVeeATA8PccpYr4g=
-X-Received: by 2002:a05:6000:1a85:b0:38b:ee01:a5b with SMTP id
- ffacd0b85a97d-38c5a98de08mr4507429f8f.15.1738268644516; Thu, 30 Jan 2025
- 12:24:04 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738268692; x=1738873492;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MSZrxWZoTLP5LT/YGVk/BMp7ULLcYj5MlBHfkghYdjk=;
+        b=V9H1yE7ll/WpIVd2OlvmjM5oN6x7NU/y7k6Di7YvtDfdjF8ox0yKMdw8UdrDLVKAVP
+         1AatUAHrJwUtO33tPPdsKza5u80fIRueUqJMv5I3uxPA6kn1YJNhh5S7FDcMQAldSkpO
+         CCjPHwyhv/DcDS6idC5UFFcmEyetreUITz0K/Ja99SzZ0VVWwkeWwWfOOB7fDxsaVTcw
+         NAe9OYUQA7w23k/9nSZXxdz4dln4+UzqehJ997MqwNzD4iujULdVLqASf0fIAvAcuP2Y
+         +hihhZauTRcR2J80xQKOr5+vLR+aC22gbcMv+Nqom46yOzVr7BVLmnCvwVLZOOb6oBfi
+         Y8LA==
+X-Forwarded-Encrypted: i=1; AJvYcCVh8odZj5LvyhAkFJc4U5jem2VN6Ca2mm124gxUcGx4pzgvQ/4HaACuRzL3IY57ZSBsafLkvOoWvaLn/JI=@vger.kernel.org, AJvYcCW2yAWA17opyQx8i4OH0QAWbnQJtnwaOucRRw0GvkHKiAIx7ckIldBpq+/PzAejjhaZ/430t8Vi@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWXFZzO5jOKdrj3NjuZ1y73VQrBYqOZgG6nrbfI/Uk58ciS4xw
+	r0VwExIbgDyqIR9ycRy6KFyer8+Snx7k6ya6tVCYlMPTPVdowSXy
+X-Gm-Gg: ASbGncty1raqwIdwaAjcgWs7J9IBtMeOIwWvlM9novEcz9pPSBx2LHC5hjo/F5o9R0O
+	BM09zoemTthF4p6d3A0T4iiWVRZuQfQNv86mFJJxiGXM+1eWqSer2+6T0FlSZVayKs/Hjlvw8pV
+	XuncptuzaEPoqjmYiEZ9E/9GTlsdeZTikuoBx0WWZ1fNIhpC8oYxytVoJpu8pUx7Hmmm+spCS13
+	BkpTw0Hpy7HqXxJu/lp8npZAm7wFUBuYLGbsdbT4eVhR6IZ6QmMo+0gg1oTi7blm+9ceAp3KWlX
+	Zy3h7UzNECCw6VuZp083K237J8tEIdhAW5oXrPfDtuo=
+X-Google-Smtp-Source: AGHT+IH+wdR8z/my3k+Wtg9bRozw/6mpj2un8CmOp1PD/NwoijSOx6W5JZiGI0j06z7YWKK8abFg5g==
+X-Received: by 2002:a05:6808:2f0b:b0:3eb:3b6e:a73c with SMTP id 5614622812f47-3f323a158f2mr6695042b6e.1.1738268691896;
+        Thu, 30 Jan 2025 12:24:51 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f33365be5dsm406349b6e.33.2025.01.30.12.24.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 12:24:50 -0800 (PST)
+Message-ID: <8d436706-d9ee-4a63-8110-a9c2e67c84a2@gmail.com>
+Date: Thu, 30 Jan 2025 12:24:47 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129205957.2457655-1-song@kernel.org> <20250129205957.2457655-6-song@kernel.org>
- <CAADnVQ+1Woq_mh_9iz+Dhdhw1TuXZgVrx38+aHn-bGZBVa5_uw@mail.gmail.com> <58833120-DD06-4024-B7F5-E255AC9261E6@fb.com>
-In-Reply-To: <58833120-DD06-4024-B7F5-E255AC9261E6@fb.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 30 Jan 2025 12:23:53 -0800
-X-Gm-Features: AWEUYZkkB50lvEISP2yfaCc8Z9aDGSq3hqMxf2vZ8lIYrimfx1QglBOlzd77btw
-Message-ID: <CAADnVQLa97RqLONmcrfBWckGRWD+OKOFY0FMEu4_pSsoALtdgQ@mail.gmail.com>
-Subject: Re: [PATCH v11 bpf-next 5/7] bpf: Use btf_kfunc_id_set.remap logic
- for bpf_dynptr_from_skb
-To: Song Liu <songliubraving@meta.com>
-Cc: Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eddy Z <eddyz87@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, KP Singh <kpsingh@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Liam Wisehart <liamwisehart@meta.com>, 
-	Shankaran Gnanashanmugam <shankaran@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.4 00/91] 5.4.290-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250130140133.662535583@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+In-Reply-To: <20250130140133.662535583@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 30, 2025 at 9:49=E2=80=AFAM Song Liu <songliubraving@meta.com> =
-wrote:
->
-> Hi Alexei,
->
-> Thanks for the review!
->
-> > On Jan 29, 2025, at 6:32=E2=80=AFPM, Alexei Starovoitov <alexei.starovo=
-itov@gmail.com> wrote:
->
-> [...]
->
-> >>
-> >> +BTF_ID_LIST(bpf_dynptr_from_skb_list)
-> >> +BTF_ID(func, bpf_dynptr_from_skb)
-> >> +BTF_ID(func, bpf_dynptr_from_skb_rdonly)
-> >> +
-> >> +static u32 bpf_kfunc_set_skb_remap(const struct bpf_prog *prog, u32 k=
-func_id)
-> >> +{
-> >> +       if (kfunc_id !=3D bpf_dynptr_from_skb_list[0])
-> >> +               return 0;
-> >> +
-> >> +       switch (resolve_prog_type(prog)) {
-> >> +       /* Program types only with direct read access go here! */
-> >> +       case BPF_PROG_TYPE_LWT_IN:
-> >> +       case BPF_PROG_TYPE_LWT_OUT:
-> >> +       case BPF_PROG_TYPE_LWT_SEG6LOCAL:
-> >> +       case BPF_PROG_TYPE_SK_REUSEPORT:
-> >> +       case BPF_PROG_TYPE_FLOW_DISSECTOR:
-> >> +       case BPF_PROG_TYPE_CGROUP_SKB:
-> >
-> > This copy pastes the logic from may_access_direct_pkt_data(),
-> > so any future change to that helper would need to update
-> > this one as well.
->
-> We can probably improve this with some helpers/macros.
->
-> >
-> >> +               return bpf_dynptr_from_skb_list[1];
-> >
-> > The [0] and [1] stuff is quite error prone.
-> >
-> >> +
-> >> +       /* Program types with direct read + write access go here! */
-> >> +       case BPF_PROG_TYPE_SCHED_CLS:
-> >> +       case BPF_PROG_TYPE_SCHED_ACT:
-> >> +       case BPF_PROG_TYPE_XDP:
-> >> +       case BPF_PROG_TYPE_LWT_XMIT:
-> >> +       case BPF_PROG_TYPE_SK_SKB:
-> >> +       case BPF_PROG_TYPE_SK_MSG:
-> >> +       case BPF_PROG_TYPE_CGROUP_SOCKOPT:
-> >> +               return kfunc_id;
-> >> +
-> >> +       default:
-> >> +               break;
-> >> +       }
-> >> +       return bpf_dynptr_from_skb_list[1];
-> >> +}
-> >> +
-> >> static const struct btf_kfunc_id_set bpf_kfunc_set_skb =3D {
-> >>        .owner =3D THIS_MODULE,
-> >>        .set =3D &bpf_kfunc_check_set_skb,
-> >> +       .hidden_set =3D &bpf_kfunc_check_hidden_set_skb,
-> >
-> > If I'm reading it correctly the hidden_set serves no additional purpose=
-.
-> > It splits the set into two, but patch 4 just adds them together.
->
-> hidden_set does not have BTF_SET8_KFUNCS, so pahole will not export
-> these kfuncs to vmlinux.h.
->
-> >
-> >> +       .remap =3D &bpf_kfunc_set_skb_remap,
-> >
-> > I'm not a fan of callbacks in general.
-> > The makes everything harder to follow.
->
-> This motivation here is to move polymorphism logic from verifier
-> core to kfuncs owners. I guess we will need some callback to
-> achieve this goal. Of course, we don't have to do it in this set.
->
->
-> > For all these reasons I don't like this approach.
-> > This "generality" doesn't make it cleaner or easier to extend.
-> > For the patch 6... just repeat what specialize_kfunc()
-> > currently does for dynptr ?
->
-> Yes, specialize_kfunc() can handle this. But we will need to use
-> d_inode_locked_hooks from 6/7 in specialize_kfunc(). It works,
-> but it is not clean (to me).
+On 1/30/25 06:00, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.290 release.
+> There are 91 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 01 Feb 2025 14:01:13 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.290-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-I'm missing why that would be necessary to cross the layers
-so much. I guess the code will tell.
-Pls send an rfc to illustrate the unclean part.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-> I will revise this set so that the polymorphism logic in handled
-> in specialize_kfunc(). For longer term, maybe we should discuss
-> "move some logic from verifier core to kfuncs" in the upcoming
-> LSF/MM/BPF?
-
-imo such topic is too narrow and detail oriented.
-There is not much to gain from discussing it at lsfmm.
-email works well for such discussions.
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
