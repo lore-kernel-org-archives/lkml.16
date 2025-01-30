@@ -1,135 +1,170 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB3C1B4156
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 22:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738275188; cv=none; b=WQsdc4FRPvSBjx0YDcgop98xiYkMNgbdbm2Hzs3HRCpW3jleHauV0EkvQXNo/APJc8k7EOuh87GPC8oRoEAWIpTFqClOd6YZdKPn3Us7dwQYAAbaqzlwPvGCKeiRCcXP0T9bCbsLue5IHjNLbitDwfirEUZYU9plFtvuI3yuKYA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738275188; c=relaxed/simple;
-	bh=ZV6FlMXD2252vz0OBq25tRE9rjj2v6FTayK5muBz2Nc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=osanaQ3/QG0J/pyDp7xZwv7z0scmnXhe/oYPblkYj8hCZcIT0o2FK2cDY1vjjy5gfToWk+CQyE5rjSdWvlyseO2Vr42e0ZYooSh1KXVu4DHewAIzCHsLUgaWyiN6ZDemhmyVL4QVRfiub9h8pa95g8413sSmAqcEDYlq39BZtqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Wut1mONI; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7881A83FF;
+	Thu, 30 Jan 2025 22:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738275282; cv=pass; b=lfoR8clmvHeSpELZiAR9Va91HbLn7mbZArqW+LoWJxF130jYKdWEImGRAkWZGr+3XvLHyFWRsOZNb3nvk8ExpjyqheigpbIMfuO3/QDH3/WJuSFNMdnzPrt6d0MNDYuN1H5SwDXEDbzIPEur8Z85eCv9Z4CPI4m1NYpN9gEGhw0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738275282; c=relaxed/simple;
+	bh=fbfiaVMl6L2bbAvT/hyHjcQ5Lhez61yBIEau0QH8jPQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=vA0FTK0GYmlG1Huch4BvOqthPGMkeCJo3RhQJ7MBaWTCbhMrC+/mleWkfNlIrRgB94bL0bGqaEjPwICpAw7NLFfbVVRVdkWFUXKkg0LVY95kSemwF+H9FrY9eWxQMT8qE75T5ZPnoFy1yCgTjdFnaWXV9tmJUOzWj3JJelcH8p0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=CdTYumnD; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Wut1mONI"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5fc13355a5bso455190eaf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:13:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1738275186; x=1738879986; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=M3RknPmbAgH7Zo71GAVzAj0fabQZcf9EFTBkp1G+LJ0=;
-        b=Wut1mONIFZ/PLmlb6mRYJmTNMTkZV1ui+WXvSJsaHJN5H2QMEUYzPAWuaIZ4O5OYfZ
-         MrDwBb4ZpEIW219rRrujGSQNZUEFj1NJ5fFoMR2JcU76BPKS57hZ/Q+TNnKhR3JZYqen
-         n7XLf3OCUTsnII+FKEE0m/rgsXs+b8a13m0M4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738275186; x=1738879986;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M3RknPmbAgH7Zo71GAVzAj0fabQZcf9EFTBkp1G+LJ0=;
-        b=XMkqWqzNXx46mD+4S18DNaNTGprfQwLG9d9Aztmadp8f2QDk6C+4tCTjKaYzf0yM6j
-         7SPt4UPJJA7bk0+gnU6ET851unUIvi3ekDcVMzurt8d2xgp/f+9OWZN0F4BWm3c064mo
-         nchgsjRhNtVhuKoX40da4/+u6rk9KtKSjq416Z12bxQEcWV79YxctKo4p+yuTeCEsqD6
-         hnJNBRy+MJNwm9t4amKqWAip1YkGXq/ETaUNK+mNiFCwlr3bDJ4u9SG5UhLja9xdPhNo
-         nJ4ohM1/07g3Mesf34HmpGPz+graM5X4nVcea3yyy9CobKldRRq9qWWM4KmINJs9Gkx9
-         lNBg==
-X-Forwarded-Encrypted: i=1; AJvYcCXweaU0fN+j16JOVd0Vt4Wqwc1pzqWL+OV/Pn2GWiR/fpod4j3YgQPi0dAeq8W3mQqOG9+ZgQhn/CZxfPc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj/vX6cjHB5qgSSDfZccmy3hkLQZUUBmblSweH5FYHiliLofXy
-	Mm6hZbKqaVIHLdyT/m6reu2GvM8jVnCtIplxsyO2rc8IniMjyeDD5hrsILnjOA==
-X-Gm-Gg: ASbGncvhDQoWwl0v6IBXnVyxXEB7wDek4YrAGwS8n/Wxwzj5+r41EAtlZTtoDZRLtRf
-	bAJStV+yypr9tUutBEW7puELIPsHT9uzoWps75mFF2ZjGcGjI/iS+xs9hTnmX0uZ2NLyKEch8E2
-	yxV2gQZSceAZhVUiYFDq25dmPSo+6Yt5wJo2gQyCwczf157vZi2dOwqxMNm3lWBkbGXhlulA0Ed
-	NiQmeRoBHsGitq+AN2S1Aichblkk2qxxmX8pNSlHUbCAxlpFXOlWOI00nnTk2cFCx7mCY2p76nO
-	yhJ1WSw5MvW0EfftYHSfVdtxfP6UCNzSSdTfqHLszC2xIFbMO7OjoxI=
-X-Google-Smtp-Source: AGHT+IGEOfUHHL4aDQshI1kV0F2HcWh2MzgUSVtxSrQ5ZrGN+EAiOGyR9TNTrD4etw5eNv69qLkhog==
-X-Received: by 2002:a4a:e90a:0:b0:5fa:840b:19aa with SMTP id 006d021491bc7-5fc0031b4a8mr6402835eaf.4.1738275186130;
-        Thu, 30 Jan 2025 14:13:06 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726617cb804sm528520a34.15.2025.01.30.14.13.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 14:13:04 -0800 (PST)
-Message-ID: <356d5a78-85ee-45ef-90a4-b88dc1a3448c@broadcom.com>
-Date: Thu, 30 Jan 2025 14:13:02 -0800
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="CdTYumnD"
+ARC-Seal: i=1; a=rsa-sha256; t=1738275262; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=DwnooMHrbllwW04twfg5TkOsKbXUyAvl+72RUmaTpAoI1QIZTSQeFUwrKP0ChXR1Dob/RAoZtNENQnEDl97xKSGU8I1Lb8Taz7SFCwx/eUhkT8C7wmtaYJmVDCPbKJ5CY5Jmh+3sv3E87q68bpqDZyEeqO2/cCnEtyLfT6gGVn8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738275262; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=mHblir7ZzbIrVXH6+I13EXrbtUaLe8zc0rFUvXWi08E=; 
+	b=A7+os+ERQ4ftdd9Fu72eoh50YQNQJ9HNzdgc5tiIE6YOvwh5z7CdYwLLGV87+P3wrdxe3hNhXOWd1gGAuHkkFBvFOkpvtaOwBLHmEnfaNDU3r9v02cAZ0g+Tl7oYh8Ib4vqy4+sTh2FwM8dkh0yUopdY7o3XMsqa0e/KO88Y+io=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738275262;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=mHblir7ZzbIrVXH6+I13EXrbtUaLe8zc0rFUvXWi08E=;
+	b=CdTYumnDq+ATchYZHj0E0OdxWPNZdbUMnZt6I7SXkIjj2z4vnc08VTWNmisElstO
+	atES/BlKMIDcDgoSxnwdrSG1OhVH+LEIx1woSvtSOv1Eb3kglUfWrG5Bb4KdisXUnoc
+	JpafjJbPCSQecuMf4aOljuUwBbsSYh1ziyJSsyv8=
+Received: by mx.zohomail.com with SMTPS id 1738275257577947.6320559063956;
+	Thu, 30 Jan 2025 14:14:17 -0800 (PST)
+From: Daniel Almeida <daniel.almeida@collabora.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.mco,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	dakr@kernel.org,
+	boris.brezillon@collabora.com,
+	robh@kernel.org
+Cc: Daniel Almeida <daniel.almeida@collabora.com>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/3] rust: platform: add Io support
+Date: Thu, 30 Jan 2025 19:05:20 -0300
+Message-ID: <20250130220529.665896-1-daniel.almeida@collabora.com>
+X-Mailer: git-send-email 2.48.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] gpio: bcm-kona: Make sure GPIO bits are unlocked when
- requesting IRQ
-To: Artur Weber <aweber.kernel@gmail.com>, Ray Jui <rjui@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Scott Branden <sbranden@broadcom.com>,
- Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>,
- Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>,
- Christian Daudt <csd@broadcom.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht
-References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
- <20250130-kona-gpio-fixes-v1-2-dd61e0c0a9e7@gmail.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250130-kona-gpio-fixes-v1-2-dd61e0c0a9e7@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On 1/30/25 09:10, Artur Weber wrote:
-> The settings for all GPIOs are locked by default in bcm_kona_gpio_reset.
-> The settings for a GPIO are unlocked when requesting it as a GPIO, but
-> not when requesting it as an interrupt, causing the IRQ settings to not
-> get applied.
-> 
-> Fix this by making sure to unlock the right bits when an IRQ is requested.
-> To avoid a situation where an IRQ being released causes a lock despite
-> the same GPIO being used by a GPIO request or vice versa, add an unlock
-> counter and only lock if it reaches 0.
-> 
-> Fixes: 757651e3d60e ("gpio: bcm281xx: Add GPIO driver")
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+Changes in v6:
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+- Added Fiona as co-developer in the first patch, as I merged part of his code
+from the LED driver series (thanks, Fiona)
+
+- (Fiona) added the ResourceSize type, thereby fixing the u32 vs u64 issues
+  pointed out by Christian
+
+- Moved the request_region, release_region and friends to resource.rs
+
+- Added the Region type. This type represents a resource returned by
+  `request_region` and friends. It is also owned, representing the fact
+  that the region remains marked as busy until release_region is called on
+  drop. (Thanks Alice, for pointing out this pattern)
+
+- Rewrote the IoMem abstraction to implement a separate type for exclusive
+  access to an underlying region. I really disliked the `EXCLUSIVE` const
+  generic, as it was definitely not ergonomic, i.e.:
+
+  `IoMem<0, false>` 
+
+  ...doesn't really say much. In fact, I believe that boolean parameters
+  hurt readability in general.
+
+  This new approach lets users build either regular IoMem's, which basically
+  call ioremap under the covers, and ExclusiveIoMem's , which also call request_region
+  via the Region type.
+
+- Added access to the ioresource_port and ioresource_mem globals.
+
+Link to v5: https://lore.kernel.org/rust-for-linux/20250116125632.65017-1-daniel.almeida@collabora.com/
+
+Changes in v5:
+
+- resend v5, as the r4l list was not cc'd
+- use srctree where applicable in the docs (Alice)
+- Remove 'mut' in Resource::from_ptr() (Alice)
+- Add 'invariants' section for Resource (Alice)
+- Fix typos in mem.rs (Alice)
+- Turn 'exclusive' into a const generic (Alice)
+- Fix example in platform.rs (Alice)
+- Rework the resource.is_null() check (Alice)
+- Refactor IoMem::new() to return DevRes<IoMem> directly (Danilo)
+
+link to v4: https://lore.kernel.org/rust-for-linux/20250109133057.243751-1-daniel.almeida@collabora.com/
+
+Changes in v4:
+
+- Rebased on top of driver-core-next
+- Split series in multiple patches (Danilo)
+- Move IoMem and Resource into its own files (Danilo)
+- Fix a missing "if exclusive {...}" check (Danilo)
+- Fixed the example, since it was using the old API (Danilo)
+- Use Opaque in `Resource`, instead of NonNull and PhantomData (Boqun)
+- Highlight that non-exclusive access to the iomem might be required in some cases
+- Fixed the safety comment in IoMem::deref()
+
+Link to v3: https://lore.kernel.org/rust-for-linux/20241211-topic-panthor-rs-platform_io_support-v3-1-08ba707e5e3b@collabora.com/
+
+Changes in v3:
+- Rebased on top of v5 for the PCI/Platform abstractions
+- platform_get_resource is now called only once when calling ioremap
+- Introduced a platform::Resource type, which is bound to the lifetime of the
+ platform Device
+- Allow retrieving resources from the platform device either by index or
+ name
+- Make request_mem_region() optional
+- Use resource.name() in request_mem_region
+- Reword the example to remove an unaligned, out-of-bounds offset
+- Update the safety requirements of platform::IoMem
+
+Changes in v2:
+- reworked the commit message
+- added missing request_mem_region call (Thanks Alice, Danilo)
+- IoMem::new() now takes the platform::Device, the resource number and
+ the name, instead of an address and a size (thanks, Danilo)
+- Added a new example for both sized and unsized versions of IoMem.
+- Compiled the examples using kunit.py (thanks for the tip, Alice!)
+- Removed instances of `foo as _`. All `as` casts now spell out the actual
+ type.
+- Now compiling with CLIPPY=1 (I realized I had forgotten, sorry)
+- Rebased on top of rust-next to check for any warnings given the new
+ unsafe lints.
+
+Daniel Almeida (3):
+  rust: io: add resource abstraction
+  rust: io: mem: add a generic iomem abstraction
+  rust: platform: allow ioremap of platform resources
+
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers/io.c               |  36 +++++
+ rust/kernel/io.rs               |   3 +
+ rust/kernel/io/mem.rs           | 125 ++++++++++++++++
+ rust/kernel/io/resource.rs      | 252 ++++++++++++++++++++++++++++++++
+ rust/kernel/platform.rs         | 123 +++++++++++++++-
+ 6 files changed, 539 insertions(+), 1 deletion(-)
+ create mode 100644 rust/kernel/io/mem.rs
+ create mode 100644 rust/kernel/io/resource.rs
+
 -- 
-Florian
+2.48.0
+
