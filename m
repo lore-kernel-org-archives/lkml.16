@@ -1,159 +1,117 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EF01BEF84;
-	Thu, 30 Jan 2025 18:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A27284D34;
+	Thu, 30 Jan 2025 18:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738263077; cv=none; b=SvfvXeWV7dLOrmL/bMkSXawR0OJDtyt+ZUqxAhAgzi2FNwXgTG5H7CZTpmUN/+FhQLdhkyuiCOLoZC16svrExljKo7iFmW8ng4CrUsGBIJBQeUJkkPAmU+oKz2ePjuF9XCPg2Elj9ilwc2tz0Y678qB9aK8sL7gIBvvqRYjMUTw=
+	t=1738263129; cv=none; b=lvgxUjfneBu1ZKRvGLsx31xqmF3mmxSg2W/p19+Bpogh2eMj7rhS46uVevLQr2lPNBfldzMqaa6ZKwadXyl98U6oMO3OUGehDnsBaos9v/lAm25yy7xnSui0pkXhJlCtd5xQLh7WfKqYvVgzQlh1jhl37/I3gslaUzFrx1veCmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738263077; c=relaxed/simple;
-	bh=AY6y/Upb7xXfL5BBLdq3Flb4SGxbpApJndQuezqqpz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YR5W4KTaWkQxbbi7gFobichln5hvHvl2/MmthKYp5WnKQR3wzc7jPBE4UIPb0gFaDpuq/dCTI7Aem9eG8/8JLIj9/j2COeO/Q5o27LHaHAE6ifFDtH4SzP6QHAyEL9TbXWmgW8nv9hG7EfvMSn9d6bPwWIqOHkK743sE0WC9KY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=YrsFpKD7; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1738263129; c=relaxed/simple;
+	bh=niSBM8uN492sYfrh8aruBEe2wGD7WsVhbrC96mz4Nw8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=NpvXYCHt4x3HbGQoH8Cl6HkDaz+mcbUt1AKwM7JZnT2IdlftnOY5n466qvmkrja/ekuyTlm32rV0SArgwBFh+JNJfz2huC+LTczPcqQbtcK4jOvCHOE9TazUfjpZLPIXi85svR6QUNRPzXeXFpYj5V6cf3f8UjA+mkN7xrvGawI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aGVvHyZY; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="YrsFpKD7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1738263070;
-	bh=AY6y/Upb7xXfL5BBLdq3Flb4SGxbpApJndQuezqqpz4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YrsFpKD7eZDdv+tfF90Ff6tZPSeDK2ReNTXoy/RmwQvNENlgptTdQH6bCuI0lNXEu
-	 Ja+svrVPArVXSgDxHIbcMIvBF+MiBVI3Maz8EpyiY4HLH/q3YCg97kiV2d5FeMu/pO
-	 OLzvACfPQLNk+DCK4jzixWrga5tcgaZ7pm3Pn8GM=
-Date: Thu, 30 Jan 2025 19:51:09 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Joshua Grisham <josh@joshuagrisham.com>
-Cc: Kurt Borja <kuurtb@gmail.com>, W_Armin@gmx.de, 
-	ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, 
-	corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-Message-ID: <c952132b-c0ef-4f8d-a93c-46cdb8f5cad3@t-8ch.de>
-References: <20250118202632.8352-1-josh@joshuagrisham.com>
- <e67bf708-be8a-4331-b250-d2f31e38536b@t-8ch.de>
- <CAMF+Keb5UzEUeim=33JR=Vv8qK7xqGn_jjNdtZMQTFtrpKrgSA@mail.gmail.com>
- <D7B8WVUD7F4B.1BL2WE2BNRCX6@gmail.com>
- <CAMF+Kebx4sU+0p+pFaH1Lz4q1xApM8iS9UAYP=sZnE2GDa32ww@mail.gmail.com>
- <628d5725-2d20-4298-862d-ad0e47782d15@t-8ch.de>
- <CAMF+KeaM2DhOX3h+HyUBDXp9xNtFAuw+7ooZp1XEJQxdp6CVKg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGVvHyZY"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2167141dfa1so20612085ad.1;
+        Thu, 30 Jan 2025 10:52:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738263127; x=1738867927; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9bwKh460Cy5gn1CkY7H0LmuRVxYlu6SjHTcnPiPPdgw=;
+        b=aGVvHyZYyaFHHAXehvCjFBIPtCpIsPOO4wYO+QKJJtbKHH+9OujkpCP2X3E4xjR4zR
+         IKm6MqVQs3tS2w9tsZ4w+AdoCKldDP8mT22WaeQOinlcNJgQK7bj3u/du0cZTAwJk9yR
+         cQUSwRRH2rG8UEAWleRZMtt9CBrskQZpAQJZ+9uT0YtFuXjRYz5jKIagOx3QGmfVf8Lg
+         B3h0R2QW5ZsWcALXZ4JPPxddGr9+fmqn5zql+NARoJeUzr2avHkva5SFGRFCvOxX0l+A
+         Z03wR+iSMqU92NOnmZ7IFtlrhS2/YFuOxY3Le7aGmNxqQf7W0zOgHLNoPd0cfiGLNPSl
+         ystA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738263127; x=1738867927;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9bwKh460Cy5gn1CkY7H0LmuRVxYlu6SjHTcnPiPPdgw=;
+        b=Nb8Cq1yxtWZWNVwDqXV/XICmsm+KyOchAKhslNXKHqCBcumyTV2TI5LMXgxAnJjqIh
+         7yj6UTyFeGRNLKfQM6f0sZp4XXL/4H7lsrdYuCxSP9QG+pqiHuNEm5aoB4J6BsIShiof
+         mwjGkNaQJN2WrO/HjdxOnpGTLt+aTtwbFPu6o7U+FKTWalywIsgR1EnZosEHr3lTKQoX
+         McqGYm9bUs90sqfdfhRmDtCsIAKQasYxXhI+0wVjAbYTmpKH5rZHqNCHvmLMdR6L7Hz7
+         hp/rkZODMp/I0wIaUsSn0PggfKeSkhJA81yTNH4P4GGnAz62QRHYYUXLl38KsILkSVFE
+         XJ+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUAiwyJBl+QTMD7xLfRbV7oKYCRkafUjCR/xs5hBDbwPKpJIOY2m/6fjoXq1yI8jbYUfInD3sJJqhpneFXj6nE=@vger.kernel.org, AJvYcCVATTaoPNSc557HFG+Kdu1CC83ojQvlfGnB92l77y3zrbeShr3FGSXC8uXNhN/HA01mtV56dha+NxiUMt4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJcGzRlU/5NIlw52CSZsxObqezdM+8bKbiYoBK4WTBCTbbTuWZ
+	9DMw1nCmDrvuhHI0FQtzfMBMCjo5uzlAF84swF+Lgqn2MZ5CuIFe
+X-Gm-Gg: ASbGncs5IZSdNoQv1VQd2Bzb8mrX8AEPjq+ecw15scPww/jWo1tPD10bfrSDWS1dh8T
+	ZMw4nfXhyhky90dQ7ypx0m84uiZ2pnsRbnhlME+TQv927Ofy/56Hy4y/g7Z5YaBcEdaMNmhjcVT
+	mi16IQnFwOwWDgdnTfojVysTnMqH7EhGHeJxQYUwxv/Uc0+HkekYWoiEszZYcAWy+ALJxLoPYw9
+	XPlvg4cB3ZPMseZ8yx+fXqTHAX6xtm788ILEPZN7bSof6A6fX1X0xQHMlWztYOW3wTJWVXiUvPH
+	FJz/kHApYUOmDoPRMW6tMPbs
+X-Google-Smtp-Source: AGHT+IFcXhuIYZqkqqFKvhDePkcRoAzQDn3xqtb2hBtn+2eXM8a7dejhy3qcMXvlEtNxIK4Rm0QVWg==
+X-Received: by 2002:a17:903:440f:b0:215:58be:3349 with SMTP id d9443c01a7336-21de1969daemr73235925ad.14.1738263127138;
+        Thu, 30 Jan 2025 10:52:07 -0800 (PST)
+Received: from linuxsimoes.. ([187.120.154.251])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de4a9cfcdsm15396945ad.20.2025.01.30.10.52.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 10:52:06 -0800 (PST)
+From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	will@kernel.org,
+	boqun.feng@gmail.com,
+	longman@redhat.com,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu
+Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH] rust: sync: create the `get_mut()` function
+Date: Thu, 30 Jan 2025 15:51:38 -0300
+Message-Id: <20250130185138.200993-1-trintaeoitogc@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMF+KeaM2DhOX3h+HyUBDXp9xNtFAuw+7ooZp1XEJQxdp6CVKg@mail.gmail.com>
 
-On 2025-01-30 18:17:47+0100, Joshua Grisham wrote:
-> Den tis 28 jan. 2025 kl 22:17 skrev Thomas Weißschuh <linux@weissschuh.net>:
-> >
-> > Hi Joshua,
-> >
-> > sorry for the late reply.
-> >
-> > On 2025-01-28 20:17:53+0100, Joshua Grisham wrote:
-> > > Thank you Kurt!
-> > >
-> > > Den lör 25 jan. 2025 kl 16:06 skrev Kurt Borja <kuurtb@gmail.com>:
-> > > >
-> > > > Now I understand the original problem better. I didn't consider this
-> > > > possibility when designing the callback.
-> > > >
-> > > > While this is a fine solution I believe Thomas' EOPNOTSUPP solution is
-> > > > the way to go. I think positive err value would be the safest but you
-> > > > should wait for the advice of someone with more experience.
-> > > >
-> > > > Aside from that I really like how the whole platform profile sections
-> > > > works now. Good design choices :)
-> > > >
-> > > > ~ Kurt
-> > > >
-> > > > > <snip>
-> > >
-> > > Regarding using this positive error code internally within the module,
-> > > I thought about maybe adding a comment to galaxybook_probe() before
-> > > all of the inits which describe this a bit -- do you all think this
-> > > will be helpful or is it clear enough / does not matter and can be
-> > > skipped?
-> >
-> > To me that sounds reasonable.
-> >
-> > <snip>
-> >
-> > > If this comment (you all are welcome to suggest wording tweaks as
-> > > well, of course!) plus the few other small tweaks make sense then I
-> > > can prep this to send as a new version. But I am holding a bit in
-> > > hopes that the 6.14 stuff gets merged to pdx86 for-next so that I can
-> > > go ahead with implementing Thomas's new power supply extension
-> > > interface at the same time.
-> >
-> > Nice :-)
-> >
-> > <snip>
-> 
-> Hi Thomas! I have been looking into this now and it seems I have
-> gotten it working using the new power_supply_register_extension
-> without too much fuss. It seems like a nice API but especially helpful
-> when there are multiple attributes (in this case there is only 1, but
-> still feels "nicer" than manually creating sysfs files!).
+Create a `get_mut()` function that receive a mutable instance of Lock,
+and return a mutable reference to data because if the instance is
+mutable, the rust compiler guarantee the access control.
 
-There are also some functional improvements :-)
+Suggested-by: Björn Roy Baron <bjorn3_gh@protonmail.com>
+Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+---
+ rust/kernel/sync/lock.rs | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> One thing I noticed was that, as I still needed a pointer to the
-> battery's struct power_supply, then it seemed to still work best if I
-> left in the existing battery hook (devm_battery_hook_register) and
-> then within the add_battery callback I could take the pointer to the
-> struct power_supply to hang my new power_supply_ext onto.  Essentially
-> much of the code for the "init" + using a battery hook that I had from
-> before is still the same, I have just replaced manually creating the
-> sysfs file (and its show/store callbacks) with the extension and then
-> implemented the callbacks to get/set the value from power_supply_ext
-> instead. Does this sound basically as you would have expected?
+diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
+index eb80048e0110..3f9d78bcb37c 100644
+--- a/rust/kernel/sync/lock.rs
++++ b/rust/kernel/sync/lock.rs
+@@ -140,6 +140,12 @@ pub fn new(t: T, name: &'static CStr, key: &'static LockClassKey) -> impl PinIni
+             }),
+         })
+     }
++
++    /// Get a mutable reference to data
++    pub fn get_mut(&mut self) -> &mut T {
++        // SAFETY: the caller must guarantee that the instance is only used in one place
++        unsafe { &mut *self.data.get() }
++    }
+ }
+ 
+ impl<B: Backend> Lock<(), B> {
+-- 
+2.34.1
 
-Yes.
-
-> Regarding the possibility for the module to be loaded multiple times
-> and/or if one of these devices suddenly had multiple battery devices,
-> is there anything within power supply extension framework that will
-> handle multiple instances (e.g. auto-appending a number to the name or
-> something like with LED classes) or would this case need to be somehow
-> covered in each individual implementation (e.g. samsung-galaxybook)?
-
-First some nitpicking about the wording:
-A module can only ever be loaded once at the same time.
-However the driver from the module can be probed and bound multiple
-times.
-
-The extensions are hanging off the original struct power_supply.
-The battery hook will be called for each battery and then it can add a
-dedicated extension instance for each one.
-
-> I had not really covered this so well either when just manually
-> creating the sysfs attribute (working assumption is that
-> device_create_file() would have failed if trying to create the same
-> file more than once under the same battery device, which would have
-> lead to a probe fail and the module unloaded for this "second"
-> instance ? ) and not sure what exactly the best approach would be
-> without giving it a bit more thought.. but maybe you can think about
-> this a bit when I send v9 of the patch up in just a few minutes :)
->
-> This is again a super "corner case" and it would certainly be very
-> weird if one of these devices suddenly had multiple instances of one
-> of the supporting ACPI device IDs so I am not sure if it would ever
-> really be a reasonable possibility. More than one battery in the same
-> device seems more likely, but not super reasonable either given that
-> one of the hallmarks of these devices is "thin and light" then I would
-> guess it is not likely there would ever be one with multiple
-> batteries?
-
-More than one battery should work fine. Your hook gets called for each.
-If you think that doesn't make sense just restrict the hook to a single
-instance. For an example see drivers/power/supply/cros_charge-control.c
-The same can be done for ACPI device, but I think many drivers share
-this issue and don't have any handling for that.
