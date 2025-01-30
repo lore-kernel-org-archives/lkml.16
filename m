@@ -1,98 +1,118 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8DFC1B21A9
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E0E1E9B3F;
+	Thu, 30 Jan 2025 15:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738250411; cv=none; b=jSMywK5xV7G1MZDL3Mm/JrIyL4GizzcAtXqSlxL2WOSiAYbFwx6RlpfCD9gvUw0A6/Yi6llTL9QfDgWoMfWlkWVT99thP2sJUP5bJpHj8ifAop+9PR3BowkRKGnCtfS+lGNaQfQmK49QyZ/iCLtLiGUqfDgAom/uJBY/UWm+Wds=
+	t=1738250412; cv=none; b=Var1toKtvx81UFy2PE+513/xFQxgo+cGjv00xDA28AGsOQ7cMYmtn+jCM24PkIyYXmeWY6rbu6T3iFjxsqBjIr7un3pdXk6nVmJ+nkb+cq2YDKiRhqHUE90zIV2W5aZB2yG6fudatEbKszkOjDtn/5kOHSdAKMSiu+59YmasYoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738250411; c=relaxed/simple;
-	bh=geV7bZQ9kn2RnS6n8JJtmB9/FyC+NjZVuvwdpgQHfLo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YZP1PHxpft1VW5h0R4YPt5rioNfxt3pLOUtxYvA4wE7DVFuJUhErF+zuVQAZFn8sA617+jP5m7T4OlcbE2j/1UlFdaLQ0kLz1SVjHjszN4DBZJgXdx4Tw4mZTdgYktBit1FMf9tW6L0I31wYZIiL3kigR6PXGxP00hG8xbAhMNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4YkMhs5qpGz9sS8;
-	Thu, 30 Jan 2025 16:03:09 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 97DfCRLs5zAY; Thu, 30 Jan 2025 16:03:09 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4YkMhs534sz9sS7;
-	Thu, 30 Jan 2025 16:03:09 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 9AC968B774;
-	Thu, 30 Jan 2025 16:03:09 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 9tEHCDtSNdJp; Thu, 30 Jan 2025 16:03:09 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 4199A8B763;
-	Thu, 30 Jan 2025 16:03:09 +0100 (CET)
-Message-ID: <05f6f732-e155-4b60-8c4e-984e42e51ee4@csgroup.eu>
-Date: Thu, 30 Jan 2025 16:03:09 +0100
+	s=arc-20240116; t=1738250412; c=relaxed/simple;
+	bh=LzJikOHTQrKhiSfwSHwXbPkw3fyrXwxEDOZFzZUeWWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bUxasOC6w62oMSKuB3MOufb7qdSNZTmi5D1LgWDbrC77qMHbXUOofK0hnsErO27+qI1eYfLxPPcWkYcN+Edr9MgXJYztYsU9jS6Ct4h/w1lR0YoC0AqHdVD15XUOVXsQ/F5vqvevGxc+2EfdCybIwJjWLa0b8jwM5eUbAN+mgI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OW+rZwmM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OW+rZwmM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57258C4CED2;
+	Thu, 30 Jan 2025 15:20:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738250412;
+	bh=LzJikOHTQrKhiSfwSHwXbPkw3fyrXwxEDOZFzZUeWWU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OW+rZwmMF9dPYRDw7+8Pu8ODOo9lCCF9S9P1aYZNpd20WyCl4ax7Az98braP/Vw0r
+	 cgcpXs9oQsBOlLFbMNjs1nryS9QfwQ+2xowT3uxz3DNDXH8pVse0jSm20CNEI2OYtV
+	 EYd4YjIHfkEN34M9S5TWCdL4Zamtgdh3TK2zyPlOau4X2s5Hqy77ZvprC4R99AgAXJ
+	 tWFfI5COyFLEf30LJbSr43O/yqmH0oWJBiKMkKwXwW2CMdAPjop15kz5QJSW+spd5+
+	 C2bSTvMJsW1UCWxEb6O7eCjl1R5lmaBLMjC4qFSaWaasUo8WfI1tpZLtldN1UzfqXj
+	 VgpuQv0KAiHsw==
+Date: Thu, 30 Jan 2025 16:20:04 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Matt Bobrowski <mattbobrowski@google.com>
+Cc: Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, 
+	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, 
+	viro@zeniv.linux.org.uk, jack@suse.cz, kpsingh@kernel.org, liamwisehart@meta.com, 
+	shankaran@meta.com
+Subject: Re: [PATCH v11 bpf-next 1/7] fs/xattr: bpf: Introduce security.bpf.
+ xattr name prefix
+Message-ID: <20250130-erklimmen-erstversorgung-93daf77c9dc4@brauner>
+References: <20250129205957.2457655-1-song@kernel.org>
+ <20250129205957.2457655-2-song@kernel.org>
+ <Z5tbH13qK6rLJVUI@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] powerpc: Enable dynamic preemption
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: mpe@ellerman.id.au, maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
- npiggin@gmail.com, linux-kernel@vger.kernel.org
-References: <20250106051919.55020-1-sshegde@linux.ibm.com>
- <20250106051919.55020-2-sshegde@linux.ibm.com>
- <20250130145409.D_so_mR1@linutronix.de>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250130145409.D_so_mR1@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z5tbH13qK6rLJVUI@google.com>
 
-
-
-Le 30/01/2025 à 15:54, Sebastian Andrzej Siewior a écrit :
-> On 2025-01-06 10:49:19 [+0530], Shrikanth Hegde wrote:
->> --- a/arch/powerpc/kernel/interrupt.c
->> +++ b/arch/powerpc/kernel/interrupt.c
->> @@ -25,6 +25,10 @@
->>   unsigned long global_dbcr0[NR_CPUS];
->>   #endif
->>   
->> +#if defined(CONFIG_PREEMPT_DYNAMIC) && defined(CONFIG_HAVE_PREEMPT_DYNAMIC_KEY)
->> +DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
->> +#endif
+On Thu, Jan 30, 2025 at 10:57:35AM +0000, Matt Bobrowski wrote:
+> On Wed, Jan 29, 2025 at 12:59:51PM -0800, Song Liu wrote:
+> > Introduct new xattr name prefix security.bpf., and enable reading these
+> > xattrs from bpf kfuncs bpf_get_[file|dentry]_xattr().
+> > 
+> > As we are on it, correct the comments for return value of
+> > bpf_get_[file|dentry]_xattr(), i.e. return length the xattr value on
+> > success.
 > 
-> I am uncertain here: Do you need to DEFINE it? It is set by the sched
-> core which also defines it. It should be same thing after all, right?
+> Reviewed-by: Matt Bobrowski <mattbobrowski@google.com>
+> 
+> > Signed-off-by: Song Liu <song@kernel.org>
+> > Acked-by: Christian Brauner <brauner@kernel.org>
+> > Reviewed-by: Jan Kara <jack@suse.cz>
+> > ---
+> >  fs/bpf_fs_kfuncs.c         | 19 ++++++++++++++-----
+> >  include/uapi/linux/xattr.h |  4 ++++
+> >  2 files changed, 18 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/fs/bpf_fs_kfuncs.c b/fs/bpf_fs_kfuncs.c
+> > index 3fe9f59ef867..8a65184c8c2c 100644
+> > --- a/fs/bpf_fs_kfuncs.c
+> > +++ b/fs/bpf_fs_kfuncs.c
+> > @@ -93,6 +93,11 @@ __bpf_kfunc int bpf_path_d_path(struct path *path, char *buf, size_t buf__sz)
+> >  	return len;
+> >  }
+> >  
+> > +static bool match_security_bpf_prefix(const char *name__str)
+> > +{
+> > +	return !strncmp(name__str, XATTR_NAME_BPF_LSM, XATTR_NAME_BPF_LSM_LEN);
+> > +}
+> 
+> I think this can also just be match_xattr_prefix(const char
+> *name__str, const char *prefix, size_t len) such that we can do the
+> same checks for aribitrary xattr prefixes i.e. XATTR_USER_PREFIX,
+> XATTR_NAME_BPF_LSM.
+> 
+> >  /**
+> >   * bpf_get_dentry_xattr - get xattr of a dentry
+> >   * @dentry: dentry to get xattr from
+> > @@ -101,9 +106,10 @@ __bpf_kfunc int bpf_path_d_path(struct path *path, char *buf, size_t buf__sz)
+> >   *
+> >   * Get xattr *name__str* of *dentry* and store the output in *value_ptr*.
+> >   *
+> > - * For security reasons, only *name__str* with prefix "user." is allowed.
+> > + * For security reasons, only *name__str* with prefix "user." or
+>       	  	   	    	 	     	  ^ prefixes
+> 						  
+> > + * "security.bpf." is allowed.
+>                       ^ are
+> 
+> Out of curiosity, what is the security reasoning here? This isn't
+> obvious to me, and I'd like to understand this better. Is it simply
+> frowned upon to read arbitrary xattr values from the context of a BPF
+> LSM program, or has it got something to do with the backing xattr
+> handler that ends up being called once we step into __vfs_getxattr()
+> and such?  Also, just so that it's clear, I don't have anything
+> against this allow listing approach either, I just genuinely don't
+> understand the security implications.
 
-As far as I can see it is not handled by sched core.
-
-$ git grep sk_dynamic_irqentry_exit_cond_resched
-arch/arm64/include/asm/preempt.h:DECLARE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
-arch/arm64/kernel/entry-common.c:DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
-arch/arm64/kernel/entry-common.c: 
-(static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
-include/linux/entry-common.h:DECLARE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
-kernel/entry/common.c:DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
-kernel/entry/common.c:  if 
-(!static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
-
-It is in common entry but arm64 and powerpc don't use common entry.
-
-$ git grep GENERIC_ENTRY arch
-arch/Kconfig:config GENERIC_ENTRY
-arch/loongarch/Kconfig: select GENERIC_ENTRY
-arch/riscv/Kconfig:     select GENERIC_ENTRY
-arch/s390/Kconfig:      select GENERIC_ENTRY
-arch/x86/Kconfig:       select GENERIC_ENTRY
-
-
-Christophe
-
+I've explained this at lenghts in multiple threads. The gist is various
+xattrs require you to have access to properties that are carried by
+objects you don't have access to (e.g., the mount) or can't guarantee
+that you're in the correct context and interpreting those xattrs without
+this information is either meaningless or actively wrong.
