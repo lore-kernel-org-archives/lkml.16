@@ -1,65 +1,62 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AEE2AD20;
-	Thu, 30 Jan 2025 21:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4A014A099
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 21:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738272709; cv=none; b=uv2m5nHTtnc/daRNa8bx/3cxRM+V6ZfCMme4M1sk9/Jl5BeLVkbOJG67BfBt/fTqr7WS/FrH+66KKSnUNOzDbPzSiZE1jvrZK6VoMEKn011bidABgNxx3lyfUTgVLrM3SIc86kXmyyQkkCvVIk7Oic0/Yc3WhXkxNIjffI5si/k=
+	t=1738272793; cv=none; b=sGdxRJymaenYR7aVK57Oc3BVYHubURhZYosXnZZSIjLEhTKfatty0jNnEQ/4Ekbdv2OpoZP/kCh+LDJDcML2qwkXt3ynU9lUXpHtbkB8fX8GFs7GOqUU/dc6CLJmZnQFD7Tl361iTpCkqxDp/bu+LPJDhgTxWJyiQNn7Bg0CBMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738272709; c=relaxed/simple;
-	bh=V0zt8pNpSVxm3rzhk6TitG9qt6QVSI1feLDgYAggktk=;
+	s=arc-20240116; t=1738272793; c=relaxed/simple;
+	bh=CA6nupbZUo05G5Iuc4kBMccAvvIoOja3loUSPbRfne8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Da/zsFBRluTmx6HtG4fr6CbkqqVEbSp+digakTXPu+gqUNLjE73Kwg78B+2HXZF+AXqEZ4RF6F86+df8n75t0QSnSYpsWhM+7GLIHWysm5+OMcfaZgPOJTkzjy8gaxGyX1Mg0o1Nn4Jj5NBv4KMM8JOf60nA+yf7zyeaMsDext4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eRyWzwV/; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=KB9uyq2FDxn4iwc+JDf9wPhdknA6nl5cD9K3yDVKKNndeQeVBvtMgseI8vw9KM+UULGmC3mmKbn4TC2/qQ+smX+ubbYJafb6u65xVWggoedkZfnKGSel0WAlrRzpECaezhfya1YDG7J7pqdSWMeEHhSMJ1ig8snrKmf83t5Hcqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=dbI5No0E; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eRyWzwV/"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-71e36b27b53so725367a34.1;
-        Thu, 30 Jan 2025 13:31:46 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dbI5No0E"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-71e181fb288so736641a34.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:33:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738272706; x=1738877506; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1738272791; x=1738877591; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ezGOPK7HRCXcFfaMlxExVACmV+hJUfqNwX+Seyi/4I=;
-        b=eRyWzwV/0IMgkalf+YXFUj7Bg/BpTDUuDIfD7pdNJP4K0FEngqcnilKQPKcv8+zQrt
-         KrjMRHai3nqH+V5S0bfN+oqQFLnsH0n6yKUmG528OrGu2U/9DquaPxhvoepq3oeyqnVc
-         gs5smFNm0dn3Nf84g1T5YLzmHGVveugzn9vigA3tZF+jqN4K9I76zwHwYIlVqbhjXqCo
-         rWEKN7n+lx4MG9rCKCp9e30GW2qIOE12n2YS9w5StZnSCVoFWRUrq2NH2sRUUclwiLOo
-         ARbue8dv7LVWE/Pkfy5VUNyBLzWNt44PeQOfTEway2QQTP0EPlh0i4HBHiV9xF4CFvRG
-         dW7A==
+        bh=ZKkftTHEIQ8NUHqycqtSFEDm/0Wht2CIlZPfEKZ0mXo=;
+        b=dbI5No0E5Sj0iz3jZCaP6KjIK4+tOQQWLoY+6dj+btmW+14JfIN1e4ykZ1xqJY3YIK
+         uOkEjSyyXd0Yz9WtAyOhESifvWxmY0oHMhw5qmgUMqasMluwhuuPV2i7x7qfS0ln5oO1
+         mT01dKMbrrAyWKNONsa8z5y/iiX5ldqoqHW9s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738272706; x=1738877506;
+        d=1e100.net; s=20230601; t=1738272791; x=1738877591;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6ezGOPK7HRCXcFfaMlxExVACmV+hJUfqNwX+Seyi/4I=;
-        b=ObVvMvpGSpFwwScF24veFZ7e086gvsTOMtDu35u577Gr35Dok6rjPM2o5v1S6ba8KM
-         sieYOuUpvVqHrw2F0rpUwZQCmWpOPig1mNv2VSRrTerxSW3zo0We2BJYxOB0Vnim64H0
-         eLBY9yyhtL/8QOYr6ta2PtdCaGCxxoH9Xc0e8WRaD/a7s1AFf9Z8OsUF0939Yzu0CQJu
-         +98QO79CJ/L6oLYNUiaZSCIHJRh9+CoCRZrmZLFQVGheNNKd+HvwhcFAR+STsM/cQRdb
-         JXx6mU+vPKyvlMkTBir2Eahi9Iv/tZNBN6kBkAPkT668NRhE6ANqjt3XddI56yQMhu2Y
-         0bUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUF+5xQSwR/sqtHmQb4eEGjR7R/2h0xQEOLn56vFLgWSlTdDfWP5Bu33naTFJpVGNsH0ajGb9k3@vger.kernel.org, AJvYcCVa8sbE1MWjCRH8GLY+bwRXk8LvwlWISozlZZaZIvMYcPKuG9aWIOLqJHKjaJAZmGID4uYHUMqXpkQ8tkM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1yI4k0NyyF4vJcU3ahb9G5uWPynVXXyrpf6eHZSLlBob5scML
-	lpR2fv1dzcepI5FDYPA5qK8eSBXGff5WSsKhPJanF3JAcRVUosq4
-X-Gm-Gg: ASbGncujLpCpHdQmOTezBZjQOkSIU/P72zKiMXMSvElxGS99u+iuqDjV5wxMy5YoZbZ
-	v2+jA71EX7OC8eQhaz9NjESOtrONoW0A7ZE9wb9g8v/j5/Epg6DOtJAUZUsuF9q9WlDFLWkiOu0
-	zAkDHUgbvHv40EKgEa5H+j243JfWw2PTVKf4lD4JDw9em/QxrQQC8s0R2gX2UD+jCPHRuOwB2c7
-	h7t4enHOh1HCyESnKbKZvxUl2mr9U65bQhhhLeDv7uiyZG+fFad4ziQJ025wy4YYACt/pZgbGel
-	qUMVSDtZON3saXFOTtxWSP6rnKXTY6q7cZzkwNvSKC0=
-X-Google-Smtp-Source: AGHT+IFUr1xveW4w10nfBCGJ015z8r5ITT3QydOzpsub58Ot+H6hSWiyQH7L828e1Xn3dhTQX5jg1Q==
-X-Received: by 2002:a05:6830:6089:b0:71d:4698:7b24 with SMTP id 46e09a7af769-7265679639cmr6534153a34.16.1738272705983;
-        Thu, 30 Jan 2025 13:31:45 -0800 (PST)
+        bh=ZKkftTHEIQ8NUHqycqtSFEDm/0Wht2CIlZPfEKZ0mXo=;
+        b=iuvRULEKYnHqJdoOVoDopWfmcO3H4dBBjiGebahmdj6GIMx0qnXetjPw1bCjXaKdGc
+         RZuJakozO8EJb7zb6EyN+ojbfHUcvkiTNMbKKvNz0BLWmGoOOhGn+j7t4OFRql5/FIa9
+         Hn4ZQ6pG+ySBXp7GwAto/bWKEDUMbKHwF5F5PIBB7X4/2RV8gENFayMtESaEEIp9V6Ih
+         4CTlofkZR+GJENot3J1KAP08JFWOt4Fduk2SliCgSgUa5PSCAupQecJtp1Ez4QkG8+oQ
+         LReTDdKOAJQYAh6kMoTnd7JCm+hl5lDCE/5cb42iSMhZCkUs4ng4HpXgWBKihX/aaoYl
+         ZKzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVD85j6IXyoIFIGa0m2Odl5ShcPMDtsll0SZHvylC4de07fMu/rv6Jkp2gqYq5rtCK+srnR9xzc4AwiBmM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj+TIwKveL5elJEtNXq/f5BbeDPFV18J/bQ0lGtWUPX2MVzgzd
+	tpCk3OWjejq8sHDuuNBJc9NGxXRt10vc7B38FTCavZOrupgL1m5VFEEDIy5w0w==
+X-Gm-Gg: ASbGnct2eFI7HyMh1NcU7JNmtAKPZmtPCKWs9yUjoPk9Hp4tpZgEZQqRGup/dCz/YXJ
+	PX2OJIR+nHO388VlXws3aEvqADHqoHOzuRiuVf/i4VYma54CvtjhVrINH5ZnhLEJqBxxglzbjn3
+	V9T948W33jdhxxKUfroHkkBAZ2abQgIuZQGdk5hpii4kEgl6svvhhM8zAQePUYwyxkeibSnMlXB
+	KkRGcpIMgd5YsnWkZu400pXGp1s6R5wRm3Oh1cRlnH9t4pMCrN4pkID5dS5m0jGQSx7B6DNGa6Q
+	TLf57Pe6gRgk3umyylaZhMVcSlZuFBbr6/dEaP5SvZi0J1TCJEDfECI=
+X-Google-Smtp-Source: AGHT+IFOQsgC420bIwaDwZ9ScUNrgNM+VOWl+T2RCXC+4Y9wntTtyqlSsCdcsjQOSG+D2pf6mky+zQ==
+X-Received: by 2002:a05:6830:61ce:b0:718:f57:11ea with SMTP id 46e09a7af769-72656758b56mr6177848a34.3.1738272791389;
+        Thu, 30 Jan 2025 13:33:11 -0800 (PST)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726618b9f72sm506458a34.50.2025.01.30.13.31.43
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726617eb274sm511565a34.33.2025.01.30.13.33.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 13:31:45 -0800 (PST)
-Message-ID: <ab292ebc-69c1-4f44-b8bd-f761147397da@gmail.com>
-Date: Thu, 30 Jan 2025 13:31:42 -0800
+        Thu, 30 Jan 2025 13:33:10 -0800 (PST)
+Message-ID: <b7662246-813e-4e5f-b41a-574751110833@broadcom.com>
+Date: Thu, 30 Jan 2025 13:33:08 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,76 +64,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 00/49] 6.1.128-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250130140133.825446496@linuxfoundation.org>
+Subject: Re: [PATCH 1/3] gpio: bcm-kona: Fix GPIO lock/unlock for banks above
+ bank 0
+To: Artur Weber <aweber.kernel@gmail.com>, Ray Jui <rjui@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Scott Branden <sbranden@broadcom.com>,
+ Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>,
+ Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>,
+ Christian Daudt <csd@broadcom.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht
+References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
+ <20250130-kona-gpio-fixes-v1-1-dd61e0c0a9e7@gmail.com>
 Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
-In-Reply-To: <20250130140133.825446496@linuxfoundation.org>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250130-kona-gpio-fixes-v1-1-dd61e0c0a9e7@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 1/30/25 06:01, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.128 release.
-> There are 49 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 1/30/25 09:10, Artur Weber wrote:
+> The GPIO lock/unlock functions clear/write a bit to the relevant
+> register for each bank. However, due to an oversight the bit that
+> was being written was based on the total GPIO number, not the index
+> of the GPIO within the relevant bank, causing it to fail for any
+> GPIO above 32 (thus any GPIO for banks above bank 0).
 > 
-> Responses should be made by Sat, 01 Feb 2025 14:01:16 +0000.
-> Anything received after that time might be too late.
+> Fix lock/unlock for these banks by using the correct bit.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.128-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> Fixes: bdb93c03c550 ("gpio: bcm281xx: Centralize register locking")
+> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
-
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
 Florian
