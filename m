@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2745F18FDCE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C1B1A2632;
 	Thu, 30 Jan 2025 03:54:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738209296; cv=none; b=P1VM+TJ3dixeMF42CuyJvGTFVxGCvd3RVYpswnrKph9dhXxEckwpPmH0+yixUL0srHmYmHSNOwN/DtkLmnvs96Cfvif+Xrkl8Y8/kwa/v7zxntGedjU266W/VUWf8eUG6fdPwpOJCrU4U2NB7ddKJZTW/e0B7j5DKQCcIwEP1ys=
+	t=1738209297; cv=none; b=l1iW3NYrDVbYpS0U3eWXUBxWXG5GKvMSb5aJkpvx/U8KPL5S2jPUAy9gqYLWbqUV9j0Y6lCue0QT1w5wN4XcLNameDeC4K756o7kK56/RyLE6BOzQEncGN8CWm7qrN31O5KcwPK1+vmWlXyv6SkjDvUuYa5Ab+NYwX94JGbtEiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738209296; c=relaxed/simple;
-	bh=QRRCUWyJW5APRTxb3nbBV8cp5LLgT38nfnJmlMzi1F0=;
+	s=arc-20240116; t=1738209297; c=relaxed/simple;
+	bh=9FD8VvUjRvNUvnFXFuLzjGCCdVNoapXDy550cogH+p4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HZdPfP9uc+sdkF85tQEka+mTLaiu3h+YltGpUO8p6ZBvvlSUQyN97X8jZgINqaVG4HgaD+30yPQmgGIY03nbOzU/Ccp4GZEXsVxiRLLvXMI3PRfrvBFsJH5L6UUR8oaXOukPs4LTgv+lV/ITMrjDvBADPhb6H98mJfqzAN/0+qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VEAGKlo1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Xfd9mzba0v5SDh9WtnAMN8pJqjC6vpClJEV6RaW6R3+9SANy2do670oxeH4HjpXPgQsJfX2AdrvwiQ2PmSefz3HGCusgqL9DAT4+OU9tt2Kc3gzqJe7ohQavz+jPavO7tpGQDqu/ROuT8wBDQ0b5BE8qa741pEyPqozLb1OvlFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uek6K8O0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VEAGKlo1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF8E6C4CEEF;
-	Thu, 30 Jan 2025 03:54:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uek6K8O0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D17BC4CEE8;
+	Thu, 30 Jan 2025 03:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1738209296;
-	bh=QRRCUWyJW5APRTxb3nbBV8cp5LLgT38nfnJmlMzi1F0=;
+	bh=9FD8VvUjRvNUvnFXFuLzjGCCdVNoapXDy550cogH+p4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VEAGKlo1BbpUOCo9J7B7EsyY8Mo0LMB4pOP0DH5jFwds4v11+xvxM3uQUkXSCU7Pt
-	 FQ6GWdHvkfchUURyN5PE2gU2wXQwSm0hB/rHllaa0xyywSvHVdDQrY2+dcxivKFtyW
-	 616RdpmcC9V+T40mj0FxUMhYeV2VXTrOFVWh1FBaIkUuxMJkTqpdMYse53eIXLcCow
-	 bSnVJypLz3gvcGkDCoSBsdQTG8Z4XgRdqfqSx4SXfDFqowb9SfGFfmKQQjPOJNONXW
-	 r6Yd30i81ikxXXF/BshublNkf6W3oT6mp5F3iKdcEEnJ2dJQrGHVssd58lt1aeXHet
-	 klAQjHckmCRCA==
+	b=Uek6K8O05b+q5GE/oXYKF3vAkPPo1XqqW+2vetLHAsguAsm5bCTXOv2vLn3UQ0t95
+	 HRqVmOBcMeYvVaGCVxBD3dFjfi1y18enjIxYCFswir4XZFutpQDRcWBjVDkY3Qui3b
+	 872/Ygl5eVZVHMJe/5alAC0i6UGA24vgFumKJtdxOHQpWYrpWTvHqnybPoU7R5HO4Q
+	 EmnIesNT6FQ9tUL6ZZQA4lVEvdRPvJMqrpLT0o93rnz61EQcozoyYTwLLTqPgTuxD6
+	 83E3FLikVwJ9pjDSThHAkYkPvxDnZSRirD/H88fMqIHdpQ8XXWz7xZGDBT3GiXOaQ0
+	 B/clEegcPW5yA==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: linux-crypto@vger.kernel.org,
@@ -35,9 +35,9 @@ Cc: linux-crypto@vger.kernel.org,
 	Keith Busch <kbusch@kernel.org>,
 	Kent Overstreet <kent.overstreet@linux.dev>,
 	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH v2 09/11] x86/crc32: implement crc32_le using new template
-Date: Wed, 29 Jan 2025 19:51:28 -0800
-Message-ID: <20250130035130.180676-10-ebiggers@kernel.org>
+Subject: [PATCH v2 11/11] x86/crc64: implement crc64_be and crc64_nvme using new template
+Date: Wed, 29 Jan 2025 19:51:30 -0800
+Message-ID: <20250130035130.180676-12-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250130035130.180676-1-ebiggers@kernel.org>
 References: <20250130035130.180676-1-ebiggers@kernel.org>
@@ -51,63 +51,178 @@ Content-Transfer-Encoding: 8bit
 
 From: Eric Biggers <ebiggers@google.com>
 
-Instantiate crc-pclmul-template.S for crc32_le, and delete the original
-PCLMULQDQ optimized implementation.  This has the following advantages:
+Add x86_64 [V]PCLMULQDQ optimized implementations of crc64_be() and
+crc64_nvme() by wiring them up to crc-pclmul-template.S.
 
-- Less CRC-variant-specific code.
-- VPCLMULQDQ support, greatly improving performance on sufficiently long
-  messages on newer CPUs.
-- A faster reduction from 128 bits to the final CRC.
-- Support for lengths not a multiple of 16 bytes, improving performance
-  for such lengths.
-- Support for misaligned buffers, improving performance in such cases.
+crc64_be() is used by bcache and bcachefs, and crc64_nvme() is used by
+blk-integrity.  Both features can CRC large amounts of data, and the
+developers of both features have expressed interest in having these CRCs
+be optimized.  So this optimization should be worthwhile.  (See
+https://lore.kernel.org/r/v36sousjd5ukqlkpdxslvpu7l37zbu7d7slgc2trjjqwty2bny@qgzew34feo2r
+and
+https://lore.kernel.org/r/20220222163144.1782447-11-kbusch@kernel.org)
 
 Benchmark results on AMD Ryzen 9 9950X (Zen 5) using crc_kunit:
 
+crc64_be:
+
 	Length     Before        After
 	------     ------        -----
-	     1     427 MB/s      605 MB/s
-	    16     710 MB/s     3631 MB/s
-	    64     704 MB/s     7615 MB/s
-	   127    3610 MB/s     9710 MB/s
-	   128    8759 MB/s    12702 MB/s
-	   200    7083 MB/s    15343 MB/s
-	   256   17284 MB/s    22904 MB/s
-	   511   10919 MB/s    27309 MB/s
-	   512   19849 MB/s    48900 MB/s
-	  1024   21216 MB/s    62630 MB/s
-	  3173   22150 MB/s    72437 MB/s
-	  4096   22496 MB/s    79593 MB/s
-	 16384   22018 MB/s    85106 MB/s
+	     1     633 MB/s      477 MB/s
+	    16     717 MB/s     2517 MB/s
+	    64     715 MB/s     7525 MB/s
+	   127     714 MB/s    10002 MB/s
+	   128     713 MB/s    13344 MB/s
+	   200     715 MB/s    15752 MB/s
+	   256     714 MB/s    22933 MB/s
+	   511     715 MB/s    28025 MB/s
+	   512     714 MB/s    49772 MB/s
+	  1024     715 MB/s    65261 MB/s
+	  3173     714 MB/s    78773 MB/s
+	  4096     714 MB/s    83315 MB/s
+	 16384     714 MB/s    89487 MB/s
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+crc64_nvme:
+
+        Length     Before        After
+	------     ------        -----
+	     1     716 MB/s      474 MB/s
+	    16     717 MB/s     3303 MB/s
+	    64     713 MB/s     7940 MB/s
+	   127     715 MB/s     9867 MB/s
+	   128     714 MB/s    13698 MB/s
+	   200     715 MB/s    15995 MB/s
+	   256     714 MB/s    23479 MB/s
+	   511     714 MB/s    28013 MB/s
+	   512     715 MB/s    51533 MB/s
+	  1024     715 MB/s    66788 MB/s
+	  3173     715 MB/s    79182 MB/s
+	  4096     715 MB/s    83966 MB/s
+	 16384     715 MB/s    89739 MB/s
+
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- arch/x86/lib/crc-pclmul-consts.h |  53 ++++++++
- arch/x86/lib/crc32-glue.c        |  37 ++----
- arch/x86/lib/crc32-pclmul.S      | 219 +------------------------------
- 3 files changed, 65 insertions(+), 244 deletions(-)
- create mode 100644 arch/x86/lib/crc-pclmul-consts.h
+ arch/x86/Kconfig                 |  1 +
+ arch/x86/lib/Makefile            |  3 +
+ arch/x86/lib/crc-pclmul-consts.h | 98 +++++++++++++++++++++++++++++++-
+ arch/x86/lib/crc64-glue.c        | 50 ++++++++++++++++
+ arch/x86/lib/crc64-pclmul.S      |  7 +++
+ 5 files changed, 158 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/lib/crc64-glue.c
+ create mode 100644 arch/x86/lib/crc64-pclmul.S
 
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 7f59d73201ce..aa7c9d57e4d3 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -75,10 +75,11 @@ config X86
+ 	select ARCH_HAS_CACHE_LINE_SIZE
+ 	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+ 	select ARCH_HAS_CPU_FINALIZE_INIT
+ 	select ARCH_HAS_CPU_PASID		if IOMMU_SVA
+ 	select ARCH_HAS_CRC32
++	select ARCH_HAS_CRC64			if X86_64
+ 	select ARCH_HAS_CRC_T10DIF
+ 	select ARCH_HAS_CURRENT_STACK_POINTER
+ 	select ARCH_HAS_DEBUG_VIRTUAL
+ 	select ARCH_HAS_DEBUG_VM_PGTABLE	if !X86_PAE
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index 08496e221a7d..71c14329fd79 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -40,10 +40,13 @@ lib-$(CONFIG_MITIGATION_RETPOLINE) += retpoline.o
+ 
+ obj-$(CONFIG_CRC32_ARCH) += crc32-x86.o
+ crc32-x86-y := crc32-glue.o crc32-pclmul.o
+ crc32-x86-$(CONFIG_64BIT) += crc32c-3way.o
+ 
++obj-$(CONFIG_CRC64_ARCH) += crc64-x86.o
++crc64-x86-y := crc64-glue.o crc64-pclmul.o
++
+ obj-$(CONFIG_CRC_T10DIF_ARCH) += crc-t10dif-x86.o
+ crc-t10dif-x86-y := crc-t10dif-glue.o crc16-msb-pclmul.o
+ 
+ obj-y += msr.o msr-reg.o msr-reg-export.o hweight.o
+ obj-y += iomem.o
 diff --git a/arch/x86/lib/crc-pclmul-consts.h b/arch/x86/lib/crc-pclmul-consts.h
-new file mode 100644
-index 000000000000..ee22cf221c35
---- /dev/null
+index d7beee26d158..1ea26b99289a 100644
+--- a/arch/x86/lib/crc-pclmul-consts.h
 +++ b/arch/x86/lib/crc-pclmul-consts.h
-@@ -0,0 +1,53 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * CRC constants generated by:
-+ *
-+ *	./scripts/gen-crc-consts.py x86_pclmul crc32_lsb_0xedb88320
-+ *
-+ * Do not edit manually.
-+ */
+@@ -1,10 +1,10 @@
+ /* SPDX-License-Identifier: GPL-2.0-or-later */
+ /*
+  * CRC constants generated by:
+  *
+- *	./scripts/gen-crc-consts.py x86_pclmul crc16_msb_0x8bb7,crc32_lsb_0xedb88320
++ *	./scripts/gen-crc-consts.py x86_pclmul crc16_msb_0x8bb7,crc32_lsb_0xedb88320,crc64_msb_0x42f0e1eba9ea3693,crc64_lsb_0x9a6c9329ac4bc9b5
+  *
+  * Do not edit manually.
+  */
+ 
+ /*
+@@ -95,5 +95,101 @@ static const struct {
+ 	.barrett_reduction_consts = {
+ 		0xb4e5b025f7011641,	/* floor(x^95 / G(x)) */
+ 		0x1db710641,	/* G(x) */
+ 	},
+ };
 +
 +/*
-+ * CRC folding constants generated for least-significant-bit-first CRC-32 using
-+ * G(x) = x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 +
-+ *        x^5 + x^4 + x^2 + x + 1
++ * CRC folding constants generated for most-significant-bit-first CRC-64 using
++ * G(x) = x^64 + x^62 + x^57 + x^55 + x^54 + x^53 + x^52 + x^47 + x^46 +
++ *        x^45 + x^40 + x^39 + x^38 + x^37 + x^35 + x^33 + x^32 + x^31 +
++ *        x^29 + x^27 + x^24 + x^23 + x^22 + x^21 + x^19 + x^17 + x^13 +
++ *        x^12 + x^10 + x^9 + x^7 + x^4 + x + 1
++ */
++static const struct {
++	u8 bswap_mask[16];
++	u64 fold_across_2048_bits_consts[2];
++	u64 fold_across_1024_bits_consts[2];
++	u64 fold_across_512_bits_consts[2];
++	u64 fold_across_256_bits_consts[2];
++	u64 fold_across_128_bits_consts[2];
++	u8 shuf_table[48];
++	u64 barrett_reduction_consts[2];
++} crc64_msb_0x42f0e1eba9ea3693_consts ____cacheline_aligned __maybe_unused = {
++	.bswap_mask = {15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0},
++	.fold_across_2048_bits_consts = {
++		0x7f52691a60ddc70d,	/* x^(2048+0) mod G(x) */
++		0x7036b0389f6a0c82,	/* x^(2048+64) mod G(x) */
++	},
++	.fold_across_1024_bits_consts = {
++		0x05cf79dea9ac37d6,	/* x^(1024+0) mod G(x) */
++		0x001067e571d7d5c2,	/* x^(1024+64) mod G(x) */
++	},
++	.fold_across_512_bits_consts = {
++		0x5f6843ca540df020,	/* x^(512+0) mod G(x) */
++		0xddf4b6981205b83f,	/* x^(512+64) mod G(x) */
++	},
++	.fold_across_256_bits_consts = {
++		0x571bee0a227ef92b,	/* x^(256+0) mod G(x) */
++		0x44bef2a201b5200c,	/* x^(256+64) mod G(x) */
++	},
++	.fold_across_128_bits_consts = {
++		0x05f5c3c7eb52fab6,	/* x^128 mod G(x) * x^0 */
++		0x4eb938a7d257740e,	/* x^(128+64) mod G(x) */
++	},
++	.shuf_table = {
++		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
++		 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
++		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
++	},
++	.barrett_reduction_consts = {
++		0x578d29d06cc4f872,	/* floor(x^128 / G(x)) - x^64 */
++		0x42f0e1eba9ea3693,	/* G(x) - x^64 */
++	},
++};
++
++/*
++ * CRC folding constants generated for least-significant-bit-first CRC-64 using
++ * G(x) = x^64 + x^63 + x^61 + x^59 + x^58 + x^56 + x^55 + x^52 + x^49 +
++ *        x^48 + x^47 + x^46 + x^44 + x^41 + x^37 + x^36 + x^34 + x^32 +
++ *        x^31 + x^28 + x^26 + x^23 + x^22 + x^19 + x^16 + x^13 + x^12 +
++ *        x^10 + x^9 + x^6 + x^4 + x^3 + 1
 + */
 +static const struct {
 +	u64 fold_across_2048_bits_consts[2];
@@ -117,26 +232,26 @@ index 000000000000..ee22cf221c35
 +	u64 fold_across_128_bits_consts[2];
 +	u8 shuf_table[48];
 +	u64 barrett_reduction_consts[2];
-+} crc32_lsb_0xedb88320_consts ____cacheline_aligned __maybe_unused = {
++} crc64_lsb_0x9a6c9329ac4bc9b5_consts ____cacheline_aligned __maybe_unused = {
 +	.fold_across_2048_bits_consts = {
-+		0xce3371cb,	/* x^(2048+64-33) mod G(x) */
-+		0xe95c1271,	/* x^(2048+0-33) mod G(x) */
++		0x37ccd3e14069cabc,	/* x^(2048+64-1) mod G(x) */
++		0xa043808c0f782663,	/* x^(2048+0-1) mod G(x) */
 +	},
 +	.fold_across_1024_bits_consts = {
-+		0x33fff533,	/* x^(1024+64-33) mod G(x) */
-+		0x910eeec1,	/* x^(1024+0-33) mod G(x) */
++		0xa1ca681e733f9c40,	/* x^(1024+64-1) mod G(x) */
++		0x5f852fb61e8d92dc,	/* x^(1024+0-1) mod G(x) */
 +	},
 +	.fold_across_512_bits_consts = {
-+		0x8f352d95,	/* x^(512+64-33) mod G(x) */
-+		0x1d9513d7,	/* x^(512+0-33) mod G(x) */
++		0x0c32cdb31e18a84a,	/* x^(512+64-1) mod G(x) */
++		0x62242240ace5045a,	/* x^(512+0-1) mod G(x) */
 +	},
 +	.fold_across_256_bits_consts = {
-+		0xf1da05aa,	/* x^(256+64-33) mod G(x) */
-+		0x81256527,	/* x^(256+0-33) mod G(x) */
++		0xb0bc2e589204f500,	/* x^(256+64-1) mod G(x) */
++		0xe1e0bb9d45d7a44c,	/* x^(256+0-1) mod G(x) */
 +	},
 +	.fold_across_128_bits_consts = {
-+		0xae689191,	/* x^(128+64-33) mod G(x) */
-+		0xccaa009e,	/* x^(128+0-33) mod G(x) */
++		0xeadc41fd2ba3d420,	/* x^(128+64-1) mod G(x) */
++		0x21e9761e252621ac,	/* x^(128+0-1) mod G(x) */
 +	},
 +	.shuf_table = {
 +		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -144,309 +259,79 @@ index 000000000000..ee22cf221c35
 +		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 +	},
 +	.barrett_reduction_consts = {
-+		0xb4e5b025f7011641,	/* floor(x^95 / G(x)) */
-+		0x1db710641,	/* G(x) */
++		0x27ecfa329aef9f77,	/* floor(x^127 / G(x)) */
++		0x34d926535897936b,	/* G(x) - 1 */
 +	},
 +};
-diff --git a/arch/x86/lib/crc32-glue.c b/arch/x86/lib/crc32-glue.c
-index 2dd18a886ded..1a579a4fcded 100644
---- a/arch/x86/lib/crc32-glue.c
-+++ b/arch/x86/lib/crc32-glue.c
-@@ -5,47 +5,24 @@
-  * Copyright (C) 2008 Intel Corporation
-  * Copyright 2012 Xyratex Technology Limited
-  * Copyright 2024 Google LLC
-  */
- 
--#include <asm/cpufeatures.h>
--#include <asm/simd.h>
--#include <crypto/internal/simd.h>
- #include <linux/crc32.h>
--#include <linux/linkage.h>
- #include <linux/module.h>
--
--/* minimum size of buffer for crc32_pclmul_le_16 */
--#define CRC32_PCLMUL_MIN_LEN	64
+diff --git a/arch/x86/lib/crc64-glue.c b/arch/x86/lib/crc64-glue.c
+new file mode 100644
+index 000000000000..b0e1b719ecbf
+--- /dev/null
++++ b/arch/x86/lib/crc64-glue.c
+@@ -0,0 +1,50 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * CRC64 using [V]PCLMULQDQ instructions
++ *
++ * Copyright 2025 Google LLC
++ */
++
++#include <linux/crc64.h>
++#include <linux/module.h>
 +#include "crc-pclmul-template.h"
- 
- static DEFINE_STATIC_KEY_FALSE(have_crc32);
- static DEFINE_STATIC_KEY_FALSE(have_pclmulqdq);
- 
--u32 crc32_pclmul_le_16(u32 crc, const u8 *buffer, size_t len);
-+DECLARE_CRC_PCLMUL_FUNCS(crc32_lsb, u32);
- 
- u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
- {
--	if (len >= CRC32_PCLMUL_MIN_LEN + 15 &&
--	    static_branch_likely(&have_pclmulqdq) && crypto_simd_usable()) {
--		size_t n = -(uintptr_t)p & 15;
--
--		/* align p to 16-byte boundary */
--		if (n) {
--			crc = crc32_le_base(crc, p, n);
--			p += n;
--			len -= n;
--		}
--		n = round_down(len, 16);
--		kernel_fpu_begin();
--		crc = crc32_pclmul_le_16(crc, p, n);
--		kernel_fpu_end();
--		p += n;
--		len -= n;
--	}
--	if (len)
--		crc = crc32_le_base(crc, p, len);
--	return crc;
-+	CRC_PCLMUL(crc, p, len, crc32_lsb, crc32_lsb_0xedb88320_consts,
++
++static DEFINE_STATIC_KEY_FALSE(have_pclmulqdq);
++
++DECLARE_CRC_PCLMUL_FUNCS(crc64_msb, u64);
++DECLARE_CRC_PCLMUL_FUNCS(crc64_lsb, u64);
++
++u64 crc64_be_arch(u64 crc, const u8 *p, size_t len)
++{
++	CRC_PCLMUL(crc, p, len, crc64_msb, crc64_msb_0x42f0e1eba9ea3693_consts,
 +		   have_pclmulqdq);
-+	return crc32_le_base(crc, p, len);
- }
- EXPORT_SYMBOL(crc32_le_arch);
- 
- #ifdef CONFIG_X86_64
- #define CRC32_INST "crc32q %1, %q0"
-@@ -95,12 +72,14 @@ EXPORT_SYMBOL(crc32_be_arch);
- 
- static int __init crc32_x86_init(void)
- {
- 	if (boot_cpu_has(X86_FEATURE_XMM4_2))
- 		static_branch_enable(&have_crc32);
--	if (boot_cpu_has(X86_FEATURE_PCLMULQDQ))
++	return crc64_be_generic(crc, p, len);
++}
++EXPORT_SYMBOL_GPL(crc64_be_arch);
++
++u64 crc64_nvme_arch(u64 crc, const u8 *p, size_t len)
++{
++	CRC_PCLMUL(crc, p, len, crc64_lsb, crc64_lsb_0x9a6c9329ac4bc9b5_consts,
++		   have_pclmulqdq);
++	return crc64_nvme_generic(crc, p, len);
++}
++EXPORT_SYMBOL_GPL(crc64_nvme_arch);
++
++static int __init crc64_x86_init(void)
++{
 +	if (boot_cpu_has(X86_FEATURE_PCLMULQDQ)) {
- 		static_branch_enable(&have_pclmulqdq);
-+		INIT_CRC_PCLMUL(crc32_lsb);
++		static_branch_enable(&have_pclmulqdq);
++		INIT_CRC_PCLMUL(crc64_msb);
++		INIT_CRC_PCLMUL(crc64_lsb);
 +	}
- 	return 0;
- }
- arch_initcall(crc32_x86_init);
- 
- static void __exit crc32_x86_exit(void)
-diff --git a/arch/x86/lib/crc32-pclmul.S b/arch/x86/lib/crc32-pclmul.S
-index f9637789cac1..f20f40fb0172 100644
---- a/arch/x86/lib/crc32-pclmul.S
-+++ b/arch/x86/lib/crc32-pclmul.S
-@@ -1,217 +1,6 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * Copyright 2012 Xyratex Technology Limited
-- *
-- * Using hardware provided PCLMULQDQ instruction to accelerate the CRC32
-- * calculation.
-- * CRC32 polynomial:0x04c11db7(BE)/0xEDB88320(LE)
-- * PCLMULQDQ is a new instruction in Intel SSE4.2, the reference can be found
-- * at:
-- * http://www.intel.com/products/processor/manuals/
-- * Intel(R) 64 and IA-32 Architectures Software Developer's Manual
-- * Volume 2B: Instruction Set Reference, N-Z
-- *
-- * Authors:   Gregory Prestas <Gregory_Prestas@us.xyratex.com>
-- *	      Alexander Boyko <Alexander_Boyko@xyratex.com>
-- */
++	return 0;
++}
++arch_initcall(crc64_x86_init);
++
++static void __exit crc64_x86_exit(void)
++{
++}
++module_exit(crc64_x86_exit);
++
++MODULE_DESCRIPTION("CRC64 using [V]PCLMULQDQ instructions");
++MODULE_LICENSE("GPL");
+diff --git a/arch/x86/lib/crc64-pclmul.S b/arch/x86/lib/crc64-pclmul.S
+new file mode 100644
+index 000000000000..4173051b5197
+--- /dev/null
++++ b/arch/x86/lib/crc64-pclmul.S
+@@ -0,0 +1,7 @@
 +/* SPDX-License-Identifier: GPL-2.0-or-later */
 +// Copyright 2025 Google LLC
- 
--#include <linux/linkage.h>
++
 +#include "crc-pclmul-template.S"
- 
--
--.section .rodata
--.align 16
--/*
-- * [x4*128+32 mod P(x) << 32)]'  << 1   = 0x154442bd4
-- * #define CONSTANT_R1  0x154442bd4LL
-- *
-- * [(x4*128-32 mod P(x) << 32)]' << 1   = 0x1c6e41596
-- * #define CONSTANT_R2  0x1c6e41596LL
-- */
--.Lconstant_R2R1:
--	.octa 0x00000001c6e415960000000154442bd4
--/*
-- * [(x128+32 mod P(x) << 32)]'   << 1   = 0x1751997d0
-- * #define CONSTANT_R3  0x1751997d0LL
-- *
-- * [(x128-32 mod P(x) << 32)]'   << 1   = 0x0ccaa009e
-- * #define CONSTANT_R4  0x0ccaa009eLL
-- */
--.Lconstant_R4R3:
--	.octa 0x00000000ccaa009e00000001751997d0
--/*
-- * [(x64 mod P(x) << 32)]'       << 1   = 0x163cd6124
-- * #define CONSTANT_R5  0x163cd6124LL
-- */
--.Lconstant_R5:
--	.octa 0x00000000000000000000000163cd6124
--.Lconstant_mask32:
--	.octa 0x000000000000000000000000FFFFFFFF
--/*
-- * #define CRCPOLY_TRUE_LE_FULL 0x1DB710641LL
-- *
-- * Barrett Reduction constant (u64`) = u` = (x**64 / P(x))` = 0x1F7011641LL
-- * #define CONSTANT_RU  0x1F7011641LL
-- */
--.Lconstant_RUpoly:
--	.octa 0x00000001F701164100000001DB710641
--
--#define CONSTANT %xmm0
--
--#ifdef __x86_64__
--#define CRC     %edi
--#define BUF     %rsi
--#define LEN     %rdx
--#else
--#define CRC     %eax
--#define BUF     %edx
--#define LEN     %ecx
--#endif
--
--
--
--.text
--/**
-- *      Calculate crc32
-- *      CRC - initial crc32
-- *      BUF - buffer (16 bytes aligned)
-- *      LEN - sizeof buffer (16 bytes aligned), LEN should be greater than 63
-- *      return %eax crc32
-- *      u32 crc32_pclmul_le_16(u32 crc, const u8 *buffer, size_t len);
-- */
--
--SYM_FUNC_START(crc32_pclmul_le_16) /* buffer and buffer size are 16 bytes aligned */
--	movdqa  (BUF), %xmm1
--	movdqa  0x10(BUF), %xmm2
--	movdqa  0x20(BUF), %xmm3
--	movdqa  0x30(BUF), %xmm4
--	movd    CRC, CONSTANT
--	pxor    CONSTANT, %xmm1
--	sub     $0x40, LEN
--	add     $0x40, BUF
--	cmp     $0x40, LEN
--	jb      .Lless_64
--
--#ifdef __x86_64__
--	movdqa .Lconstant_R2R1(%rip), CONSTANT
--#else
--	movdqa .Lconstant_R2R1, CONSTANT
--#endif
--
--.Lloop_64:/*  64 bytes Full cache line folding */
--	prefetchnta    0x40(BUF)
--	movdqa  %xmm1, %xmm5
--	movdqa  %xmm2, %xmm6
--	movdqa  %xmm3, %xmm7
--#ifdef __x86_64__
--	movdqa  %xmm4, %xmm8
--#endif
--	pclmulqdq $0x00, CONSTANT, %xmm1
--	pclmulqdq $0x00, CONSTANT, %xmm2
--	pclmulqdq $0x00, CONSTANT, %xmm3
--#ifdef __x86_64__
--	pclmulqdq $0x00, CONSTANT, %xmm4
--#endif
--	pclmulqdq $0x11, CONSTANT, %xmm5
--	pclmulqdq $0x11, CONSTANT, %xmm6
--	pclmulqdq $0x11, CONSTANT, %xmm7
--#ifdef __x86_64__
--	pclmulqdq $0x11, CONSTANT, %xmm8
--#endif
--	pxor    %xmm5, %xmm1
--	pxor    %xmm6, %xmm2
--	pxor    %xmm7, %xmm3
--#ifdef __x86_64__
--	pxor    %xmm8, %xmm4
--#else
--	/* xmm8 unsupported for x32 */
--	movdqa  %xmm4, %xmm5
--	pclmulqdq $0x00, CONSTANT, %xmm4
--	pclmulqdq $0x11, CONSTANT, %xmm5
--	pxor    %xmm5, %xmm4
--#endif
--
--	pxor    (BUF), %xmm1
--	pxor    0x10(BUF), %xmm2
--	pxor    0x20(BUF), %xmm3
--	pxor    0x30(BUF), %xmm4
--
--	sub     $0x40, LEN
--	add     $0x40, BUF
--	cmp     $0x40, LEN
--	jge     .Lloop_64
--.Lless_64:/*  Folding cache line into 128bit */
--#ifdef __x86_64__
--	movdqa  .Lconstant_R4R3(%rip), CONSTANT
--#else
--	movdqa  .Lconstant_R4R3, CONSTANT
--#endif
--	prefetchnta     (BUF)
--
--	movdqa  %xmm1, %xmm5
--	pclmulqdq $0x00, CONSTANT, %xmm1
--	pclmulqdq $0x11, CONSTANT, %xmm5
--	pxor    %xmm5, %xmm1
--	pxor    %xmm2, %xmm1
--
--	movdqa  %xmm1, %xmm5
--	pclmulqdq $0x00, CONSTANT, %xmm1
--	pclmulqdq $0x11, CONSTANT, %xmm5
--	pxor    %xmm5, %xmm1
--	pxor    %xmm3, %xmm1
--
--	movdqa  %xmm1, %xmm5
--	pclmulqdq $0x00, CONSTANT, %xmm1
--	pclmulqdq $0x11, CONSTANT, %xmm5
--	pxor    %xmm5, %xmm1
--	pxor    %xmm4, %xmm1
--
--	cmp     $0x10, LEN
--	jb      .Lfold_64
--.Lloop_16:/* Folding rest buffer into 128bit */
--	movdqa  %xmm1, %xmm5
--	pclmulqdq $0x00, CONSTANT, %xmm1
--	pclmulqdq $0x11, CONSTANT, %xmm5
--	pxor    %xmm5, %xmm1
--	pxor    (BUF), %xmm1
--	sub     $0x10, LEN
--	add     $0x10, BUF
--	cmp     $0x10, LEN
--	jge     .Lloop_16
--
--.Lfold_64:
--	/* perform the last 64 bit fold, also adds 32 zeroes
--	 * to the input stream */
--	pclmulqdq $0x01, %xmm1, CONSTANT /* R4 * xmm1.low */
--	psrldq  $0x08, %xmm1
--	pxor    CONSTANT, %xmm1
--
--	/* final 32-bit fold */
--	movdqa  %xmm1, %xmm2
--#ifdef __x86_64__
--	movdqa  .Lconstant_R5(%rip), CONSTANT
--	movdqa  .Lconstant_mask32(%rip), %xmm3
--#else
--	movdqa  .Lconstant_R5, CONSTANT
--	movdqa  .Lconstant_mask32, %xmm3
--#endif
--	psrldq  $0x04, %xmm2
--	pand    %xmm3, %xmm1
--	pclmulqdq $0x00, CONSTANT, %xmm1
--	pxor    %xmm2, %xmm1
--
--	/* Finish up with the bit-reversed barrett reduction 64 ==> 32 bits */
--#ifdef __x86_64__
--	movdqa  .Lconstant_RUpoly(%rip), CONSTANT
--#else
--	movdqa  .Lconstant_RUpoly, CONSTANT
--#endif
--	movdqa  %xmm1, %xmm2
--	pand    %xmm3, %xmm1
--	pclmulqdq $0x10, CONSTANT, %xmm1
--	pand    %xmm3, %xmm1
--	pclmulqdq $0x00, CONSTANT, %xmm1
--	pxor    %xmm2, %xmm1
--	pextrd  $0x01, %xmm1, %eax
--
--	RET
--SYM_FUNC_END(crc32_pclmul_le_16)
-+DEFINE_CRC_PCLMUL_FUNCS(crc32_lsb, /* bits= */ 32, /* lsb= */ 1)
++
++DEFINE_CRC_PCLMUL_FUNCS(crc64_msb, /* bits= */ 64, /* lsb= */ 0)
++DEFINE_CRC_PCLMUL_FUNCS(crc64_lsb, /* bits= */ 64, /* lsb= */ 1)
 -- 
 2.48.1
 
