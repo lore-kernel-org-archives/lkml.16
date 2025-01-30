@@ -1,82 +1,146 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6951E1BB6BC;
-	Thu, 30 Jan 2025 14:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B1D1BB6BC;
+	Thu, 30 Jan 2025 14:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738247816; cv=none; b=dspOR5N9gv9ROE2y7s4DLT8tmbh4xSh5p6XBGrnMHutFoTODGggfbic3xa3EIHkbfWRBF/J6sxnxyZZfoNMToQEeXH+8TsKG+8lyzVqg3HnyGT8+O9SVgbyDC2t/x+V4sCQvjhKcewILdH9arLjYCiG5RxyWv5Q/5hOwpfSMkww=
+	t=1738247910; cv=none; b=ISZHORS1Ko5CL4hCJSaQQNvW/eWirMnWRtLoz1DjKMJG56mrMoGudh9FPJHi33vWFyd4D2Er4c8sgm8LgsXJQNaNTTOTkMRx/vwXgaan2r3CFI4NlU88G13vBFn14OORiePzIM2Vl3eN/0EnmSfs4SzYrNih4KQhEJ0iAbO1kZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738247816; c=relaxed/simple;
-	bh=w4zTxfa4CCDrQAqGDdWlBpCt/2B8kWrn1L7k7sZwIxw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Sr8QbhO9sA14/AMJsFleFefqK7aLmFnPbnhPJxJTdT70fv1WTS7R0Jgy2w3Gk35WYxUJfxfAyc8BfYr+PToiVnIhNsS9tZ1ANgoCkh+z6CqxBiT2r4/782/lShni0C1SApDjCmksFVzzOC2yJ2Wm5NXWAIswkYReQ3a0kPjbJq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=sKEKC6A5; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1738247910; c=relaxed/simple;
+	bh=JV7b0o3v1+xzAtErM1HhLNkNgRvCoFydIlxgoByPDWY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JDbc+evO8/IYvfRgTFhtIzzlfkEIek9Jr+2fwD2Zlj3n7y4P6wY/GvNFUPzQKxkOgnvX2oFDYslQdMjuvxAKhviYP6/L9A8sdNNvu3wfT/oDdS5098md1E/j9m3ytB50iREoPoWWjgiz8Jwou0HDIorLIwtqphb/GI2ck0leUvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=U0wkuDXZ; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="sKEKC6A5"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2A488411A9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1738247474; bh=o6c9Xty8LBnNCjw4IIteZjg2Dft0pgS1FqTeBELLb/s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=sKEKC6A5mJNrWh2OnYdq4XrzlSBVffqzWdJUguTsQbBj9drsXtFOgeef3xmLeJ4lg
-	 /PjJl21/gpJUMJcSlyoXz4wFPT5XDnIcqabEboDohTJeSD0N/MfB7WMqkGWTIS7Rcy
-	 OdwEOZI8s7lHDnUmCsPWv2hkfgANWG5YaoqVMpVDiqq/zBgs1t86wEURsyuYWeOxwq
-	 DCzAjUgxGr+l3ZThZ45iElLUMPxwPJmLa6d/E+S7QRpN+O0OoPytaxBrAxtTyGVA4I
-	 GhkQXOyCZymZcfdaKhZnERHVIT5HC1AE/yqk7CauHk3/AfrlNZnuMxWIRveSQykYgD
-	 xUI2FJhDNiPiA==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 2A488411A9;
-	Thu, 30 Jan 2025 14:31:14 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Donald Hunter <donald.hunter@gmail.com>, Mauro Carvalho Chehab
- <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
- linux-kernel@vger.kernel.org, Bill Wendling <morbo@google.com>, Justin
- Stitt <justinstitt@google.com>, Nick
- Desaulniers <ndesaulniers@google.com>, bpf@vger.kernel.org,
- llvm@lists.linux.dev, workflows@vger.kernel.org
-Subject: Re: [RFC 0/6] Raise the bar with regards to Python and Sphinx
- requirements
-In-Reply-To: <m2zfj87ij9.fsf@gmail.com>
-References: <cover.1738166451.git.mchehab+huawei@kernel.org>
- <m2zfj87ij9.fsf@gmail.com>
-Date: Thu, 30 Jan 2025 07:31:13 -0700
-Message-ID: <87jzac2x1q.fsf@trenco.lwn.net>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="U0wkuDXZ"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 66B9DA0A58;
+	Thu, 30 Jan 2025 15:38:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=4shPxN5Zjg8CWO7oqCIY3l3k+e0q+fmoz+kF6bIkmVM=; b=
+	U0wkuDXZ+YCja8dGH6AgFVUuhRRiTGpVsVSgrioEsLNMSaRslidLO77DUIz95Fvg
+	LJqArNXFUbe+iqINh8q6JwEVMFrbOKWxKw44i2iTbQs9JUeeYOsrqCco1iG+EOpm
+	0CuZ8fY1Pecu6VbX9mz5AOWSavH3W+T6aISUqYv78/JLihcKJ/bTGdz05ICqv6Fb
+	HCp1EtU3wq3IUQftnD+Nc2A/2Md0pa/FWr5Q/+cSIgPlFs/3bhasMhH6bPK8O88Z
+	Q52FtabKvw4/JcHIQrM9D+vDBRBzHePWb3p4nP3U5JKOh/mV+HFVRZPcGCJwRpMt
+	MfwkhHmjgNyDz3PPj9UX1rr7n49koEDj1oIJ2Gf3d0vdC9gKWG/Ke+gKFCqyW8a6
+	rKxqZfc5udt8/BGNEYdAMDOxyGD3toCnHmDq3HOsAn3kYuEg+EdqFbiAvor0WSPl
+	XhpoaUb34qBhfc6Lgvg8Xc/B+Ayz6y9G2xZwxx7IKJph43piKHeJVIU7W4tsyHD+
+	5GE4BgXNDusoNpGH410FCvwDk+BSqd6q2yXmpOrSTSLdDD97KtRKNBa2HH6fK8NY
+	a325R2RuPYzDpYeuGeBbzOFVnZS3FLLq5vZTDx3HwFDvfF2QQaBReBfkSfSpP63L
+	8jdxXRNOIIcMxyc97HbxaUnhlTCZ/45i8IaN7ES2yxM=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Kamel
+ Bouhara" <kamel.bouhara@bootlin.com>, William Breathitt Gray <wbg@kernel.org>
+Subject: [PATCH] counter: microchip-tcb-capture: Add capture extensions for registers RA-RC
+Date: Thu, 30 Jan 2025 15:38:16 +0100
+Message-ID: <20250130143817.41625-1-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1738247904;VERSION=7984;MC=3846925481;ID=123382;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852667464
 
-Donald Hunter <donald.hunter@gmail.com> writes:
+TCB hardware is capable of capturing the timer value to registers RA and
+RB. On top, it is capable of triggering on compare against a third
+register, RC. Add these registers as extensions.
 
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
->
->> This series comes after https://lore.kernel.org/linux-doc/87a5b96296.fsf@trenco.lwn.net/T/#t
->> It  increases the minimal requirements for Sphinx and Python.
->>
->> Sphinx release dates:
->>
->> 	Release 2.4.0 (released Feb 09, 2020)
->> 	Release 2.4.4 (released Mar 05, 2020) (current minimal requirement)
->> 	Release 3.4.0 (released Dec 20, 2020)
->> 	Release 3.4.3 (released Jan 08, 2021)
->>
->> 	(https://www.sphinx-doc.org/en/master/changes/index.html)
->
-> It's worth mentioning here that my fix for the C performance regression
-> landed in Sphinx 7.4.0. All versions from 3.0.0 to 7.3.x are much slower
-> for building the kernel docs. See #12162 here:
->
-> https://www.sphinx-doc.org/en/master/changes/7.4.html#id7
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+---
+ drivers/counter/microchip-tcb-capture.c | 58 +++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-Indeed, we have noticed the speedup - much appreciated, thank you!
+diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
+index 2f096a5b973d..524b9edfaa5f 100644
+--- a/drivers/counter/microchip-tcb-capture.c
++++ b/drivers/counter/microchip-tcb-capture.c
+@@ -247,6 +247,62 @@ static int mchp_tc_count_read(struct counter_device *counter,
+ 	return 0;
+ }
+ 
++static int mchp_tc_count_cap_read(struct counter_device *counter,
++				  struct counter_count *count, size_t idx, u64 *val)
++{
++	struct mchp_tc_data *const priv = counter_priv(counter);
++	u32 cnt;
++
++	switch (idx) {
++	case 0:
++		regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RA), &cnt);
++		break;
++	case 1:
++		regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RB), &cnt);
++		break;
++	case 2:
++		regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RC), &cnt);
++		break;
++	default:
++		return -EINVAL;
++	}
++	*val = cnt;
++
++	return 0;
++}
++
++static int mchp_tc_count_cap_write(struct counter_device *counter,
++				   struct counter_count *count, size_t idx, u64 val)
++{
++	struct mchp_tc_data *const priv = counter_priv(counter);
++
++	if (val > U32_MAX)
++		return -ERANGE;
++
++	switch (idx) {
++	case 0:
++		regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RA), val);
++		break;
++	case 1:
++		regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RB), val);
++		break;
++	case 2:
++		regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RC), val);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static DEFINE_COUNTER_ARRAY_CAPTURE(mchp_tc_cnt_cap_array, 3);
++
++static struct counter_comp mchp_tc_count_ext[] = {
++	COUNTER_COMP_ARRAY_CAPTURE(mchp_tc_count_cap_read, mchp_tc_count_cap_write,
++				   mchp_tc_cnt_cap_array),
++};
++
+ static struct counter_count mchp_tc_counts[] = {
+ 	{
+ 		.id = 0,
+@@ -255,6 +311,8 @@ static struct counter_count mchp_tc_counts[] = {
+ 		.num_functions = ARRAY_SIZE(mchp_tc_count_functions),
+ 		.synapses = mchp_tc_count_synapses,
+ 		.num_synapses = ARRAY_SIZE(mchp_tc_count_synapses),
++		.ext = mchp_tc_count_ext,
++		.num_ext = ARRAY_SIZE(mchp_tc_count_ext),
+ 	},
+ };
+ 
+-- 
+2.48.1
 
-jon
+
