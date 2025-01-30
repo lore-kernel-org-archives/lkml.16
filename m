@@ -1,112 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.crpt.ru (mail1.crpt.ru [91.236.205.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ED5C2FB;
-	Thu, 30 Jan 2025 07:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B98C2FB;
+	Thu, 30 Jan 2025 07:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.236.205.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738222655; cv=none; b=iDVVPEw0EgnHe6Pvte8r2HyGsETbFDjaQTJ0TwgaZgccwFpIaCkPfPhCIDKBpdJoAqUcWTPZkDYmZKFigRVN7Y7dP3Lz61cRl3BY/1sBpWcg3I3Ps1EdrJB5u7f54aP7a7LGLdA2foBplj8E1uzZ7SVBW5ZGTox6tmI7O+Wl7tw=
+	t=1738222852; cv=none; b=piafleps+XJvmCo9/ZzL2xzEcJQVbo9OX0prkc7avvyzfULCLbOKTZWIOk+Tb11qnD/Vd4rO0i0nLTo7ZhfrQKcBh5ziCw4846/uTHv6SsZUbSjEVL4c3jX9//CEMHTmV/+Glr2uYv0JfXfKi9IzeylDnuk1pWc/diosEjAqs4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738222655; c=relaxed/simple;
-	bh=5X77AvIgq4Fo1Fp8a31/KKOXgMONk2UfKmvIYDuGpZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OtZLz6boXNtzTMUnx27hJL17ocpQhYRDBqGVzggO236J0fqQaPPvSI12ncvQKLBcVn/FBo3yl1XgukypXyNkaJa67NNOEV+TuZ69ekoT/lC0UwsjNunawMw8XRKMC3Yd+rsi1jcT/vWErpEE9A4GWit/OuUUENomWihCCsQ34zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CbENHeGE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738222852; c=relaxed/simple;
+	bh=h2r953js5KMe/res5ngDhGH2T4wfjVJi31+pTjx2Bs8=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=gsxXEOJC3tda6s833GF0mhxWUfailZm9KAdcoqI7ziATIYTwZbT8vy8BWFz1GPDfUpmoE7r4EPRgY5vDHMz3ON1lUaFvvBiI6X0z7GHxYZTgaqU1E6iDOCWxeBirCmLulFQtH2dTP51couuoR0lIuvooJkQqmxn8UMuEgYTpM5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru; spf=pass smtp.mailfrom=crpt.ru; dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b=CQivQhkL; arc=none smtp.client-ip=91.236.205.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crpt.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CbENHeGE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3DDC4CED2;
-	Thu, 30 Jan 2025 07:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738222653;
-	bh=5X77AvIgq4Fo1Fp8a31/KKOXgMONk2UfKmvIYDuGpZY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CbENHeGEZH8xImy0A2q/bbVLxRIgqLOfpGHB0VENHsJTnXhstb2isvAuK/W7xvlSe
-	 +ymog6Sb5PTBPlueZpNE6Y5yeSvnRhanTfAhoMipDbd/A9KE+8gos7UYN0K2JnU/nD
-	 UHrwe63cTRMJYILs6P2Y8u764ffDi3LUz+54UPmPT6tGezlogjdWtuA9BGaPc7iRdA
-	 xm94RhsjWnrOyRSBF9etEFvmN7+m4JStknU30R4LpQxcmP0JlXKB59FbqfsKUNmobG
-	 ptUjktiAIOPuqFc+/P76JeZm6uSsVUR1wtnTqvTNy0JgvR03qDfKnv+JfVk0KBZeOO
-	 nGk38+Ep9KnCQ==
-Message-ID: <3db11710-8ad7-439b-8674-ce07fa221920@kernel.org>
-Date: Thu, 30 Jan 2025 08:37:27 +0100
+	dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b="CQivQhkL"
+Received: from mail.crpt.ru ([192.168.60.4])
+	by mail.crpt.ru  with ESMTP id 50U7eM0L018830-50U7eM0N018830
+	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
+	Thu, 30 Jan 2025 10:40:22 +0300
+Received: from EX2.crpt.local (192.168.60.4) by ex2.crpt.local (192.168.60.4)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Thu, 30 Jan
+ 2025 10:40:22 +0300
+Received: from EX2.crpt.local ([192.168.60.4]) by EX2.crpt.local
+ ([192.168.60.4]) with mapi id 15.01.2507.044; Thu, 30 Jan 2025 10:40:22 +0300
+From: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>
+To: Jean Delvare <jdelvare@suse.com>
+CC: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>, Guenter Roeck
+	<linux@roeck-us.net>, "linux-hwmon@vger.kernel.org"
+	<linux-hwmon@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "lvc-project@linuxtesting.org"
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH] hwmon: Use 64-bit arithmetic instead of 32-bit
+Thread-Topic: [PATCH] hwmon: Use 64-bit arithmetic instead of 32-bit
+Thread-Index: AQHbcuo3gZrlGSxZTk2kVGyH8yJOOA==
+Date: Thu, 30 Jan 2025 07:40:22 +0000
+Message-ID: <20250130073949.32154-1-a.vatoropin@crpt.ru>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-kse-serverinfo: EX2.crpt.local, 9
+x-kse-antivirus-interceptor-info: scan successful
+x-kse-antivirus-info: Clean, bases: 1/29/2025 10:00:00 PM
+x-kse-attachment-filter-triggered-rules: Clean
+x-kse-attachment-filter-triggered-filters: Clean
+x-kse-bulkmessagesfiltering-scan-result: protection disabled
+Content-Type: text/plain; charset="koi8-r"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/5] wifi: ath12k: Enable IPQ5424 AHB WiFi device
-To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>, ath12k@lists.infradead.org
-Cc: linux-wireless@vger.kernel.org, Kalle Valo <kvalo@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250130051838.1924079-1-quic_rajkbhag@quicinc.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250130051838.1924079-1-quic_rajkbhag@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-FEAS-Client-IP: 192.168.60.4
+X-FE-Policy-ID: 2:4:0:SYSTEM
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=crpt.ru; s=crpt.ru; c=relaxed/relaxed;
+ h=from:to:cc:subject:date:message-id:content-type:mime-version;
+ bh=nH+fCocC71NvxcKmnj5F8xJxc2NZj7A/PmZ+0JCxCps=;
+ b=CQivQhkLcG0A1SLRvkWBEuSwGkhTVQ+kHk7gbPpO3Zy82+cC2O4o6UGspJa+AdxIqdLBh+J/lBDv
+	Wecb9bZVWxWD2YY6TKi/3JNbBCBeN+uNsKEfpptiSqpQYyPRhIG3UV2z1xPkY291qgQB1AXYfRYs
+	mj3rSTIOh5l5l1difHKpTsks6PJB0tvjPdjtuAASXUChSx+xL+B0jZy+q8eIfGxgpJg4Px5WaOAV
+	RP3zgwQ0Ec4OPAsYV99xHOTdZjAYa209Iglq+A0yd1Ljty6FON6NC4NNj62JT9miVlgvWsiirdvz
+	bF2jXAtVyyvjVVp2uIfDOYNCIKsENxJm4AbMPg==
 
-On 30/01/2025 06:18, Raj Kumar Bhagat wrote:
-> Add support for the new ath12k AHB device IPQ5424, as currently, Ath12k
-> AHB only supports IPQ5332 WiFi devices.
-> 
-> The IPQ5424 is an IEEE 802.11be 2 GHz WiFi device, supporting 4x4
-> configurations. To enable the IPQ5424 device:
-> - Add the necessary hardware parameters for IPQ5424.
-> - Modify the boot-up sequence for ath12k AHB to accommodate the
->   requirements of the IPQ5424 device.
-> 
-> Depends-On: [PATCH v5 00/13] wifi: ath12k: add Ath12k AHB driver support for IPQ5332
-> Link: https://lore.kernel.org/all/20250130043508.1885026-1-quic_rajkbhag@quicinc.com/
-> 
-You marked this a RFC, so this is not ready, but nothing explains this
-here. What sort of comments are you looking for? What's incomplete with
-this work?
+From: Andrey Vatoropin <a.vatoropin@crpt.ru>
 
-Best regards,
-Krzysztof
+Add suffix ULL to constant 500 in order to give the compiler complete
+information about the proper arithmetic to use. Notice that this
+constant is used in a context that expects an expression of type
+u64 (64 bits, unsigned).
+
+The expression PCC_NUM_RETRIES * pcc_chan->latency, which at
+preprocessing time translates to pcc_chan->latency; is currently
+being evaluated using 32-bit arithmetic.
+
+This is similar to commit b52f45110502=20
+("ACPI / CPPC: Use 64-bit arithmetic instead of 32-bit")
+
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
+---
+ drivers/hwmon/xgene-hwmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwmon/xgene-hwmon.c b/drivers/hwmon/xgene-hwmon.c
+index 1e3bd129a922..43a08ddb964b 100644
+--- a/drivers/hwmon/xgene-hwmon.c
++++ b/drivers/hwmon/xgene-hwmon.c
+@@ -61,7 +61,7 @@
+  * Arbitrary retries in case the remote processor is slow to respond
+  * to PCC commands
+  */
+-#define PCC_NUM_RETRIES			500
++#define PCC_NUM_RETRIES			500ULL
+=20
+ #define ASYNC_MSG_FIFO_SIZE		16
+ #define MBOX_OP_TIMEOUTMS		1000
+--=20
+2.43.0
