@@ -1,200 +1,121 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787E97483
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8357483;
+	Thu, 30 Jan 2025 13:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738242026; cv=none; b=huNp+7Tj0CKvedRT1pBJKt7wzAq375syYUc9vqY+WbN3YtAhmaWGWu+ZAsDlxLxlFKbtuEQ5KokTvZ7wVHG4dFD1+27RIbE1SHPQxHeeobAiQeawMQvSL1d5XKDCD3MmpzNzWZjHQQ7IcgNvym/85Jr51UWD0jti0XGLgKQi10U=
+	t=1738242075; cv=none; b=OLPXhx1I/H2OezzQCgUn9z34B2AJCMdilXWRb+uMDqKQuSKUjT/ElTq3z8LG6O4zNrFRcuzD/3X7eWg44wGlKf76D6/qR2S5SXyd4g8Bsd23EtAVOjR5osTbsEcMkI+9x+aHcgxFgdhATPouph8pSfpGl1Ra4SLlH0MUkfyGPhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738242026; c=relaxed/simple;
-	bh=9otkl0t4ZKJA5aPENgIvM3CXzDR0ZypaALTLpy5Nllc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KVGovohopT/JvhJ47EpGK+gkM9kUxYYvlSJ5rgiLBhW9foiue01wzG/hsezVU9Xk7fLOhRqsR1cdipQQUQM6ezTNLuN4082gRrI/CMphWrIHOmj0O/7gHEekWuc0P3ZEflG3j4GG4y0oVvH54bCUNzY/I6pYndJJpWjfrPtjFwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=Kd/1Nz4F; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1738242075; c=relaxed/simple;
+	bh=VxRkETfKHmTAhNRv4hdfVEutIx+9IVlNgDyAqsRrGpw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VMz1bcRL/P7qfif8Ti0I7sA+j88X6MDssKtHPBZNDamRXvFcuesG45TJ3vhDd7tdyYXZzSsOTik+lqWcHC4iYw0wP5wNZ67Zo7neU6KlqZ+jdksx7Y8XA/32gePjp2h6UbZB81qjdwVQEA0CHQglwfi0VEI1We2d7v+xN4EMlMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=VyzKl7hS; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=mbcFpJJx reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Kd/1Nz4F"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43618283dedso7858185e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:00:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="VyzKl7hS";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="mbcFpJJx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1738242023; x=1738846823; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PWEfvcfTsN7T0tilikMhQJMX7DbMz278YnuholCTh1k=;
-        b=Kd/1Nz4FvW13J0pgqtNCmp2K/pu6Sxksc+2bU88LmgELawRhKtP2azx+q6PmhMRW1X
-         efyp0BrKc5hWPCLhqcJDKrxE90JaIWOwjUVkYfLxLOQq0fI68CRqmXLCGozUxzIUKLcO
-         n8gY0kQw0U9SI0u6yYViIk4vEPkG6s6Ci6Urg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738242023; x=1738846823;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PWEfvcfTsN7T0tilikMhQJMX7DbMz278YnuholCTh1k=;
-        b=Y4HdDBY2Qlb7i/aMF6ZW/FcDsWx2klNfWRybUbHkce/1BV3Tb/6CTsffVt5KPjRyP9
-         la0/Mn6cGrScFSNiyUZeuVrm7j0tEo02TwlwlBHgH1dxDUUHJ8yJvy6r1w6LUVrvof8a
-         oR3RJRuSVHcby8m1QnjD+2ceJG4FChd/+3BhX/EhGMMNPcMUVnbTrrL14YxCpW9JSlEz
-         mLE+YK6EKlS2MPTbEI0K2TSkLyc5kl7sCzqTBzECQiPQPzuOBxd7PWw9mQVaD+Crsy/M
-         YJJtoPCPHLhGTZdnLi+EAk3RwNN9TjzfSBAoTsHAWR0U97viwKk9Zcx3J0EdttgR03RS
-         RVhw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+tqPQm8IZxWJhrCNLxPIz4c5ULjNeRKLpZTNZBJ509cdSSVoavdRYfKwVUzFKkhOUo7rCRYC2x9GWfHI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7YSP77kq8wNQJgfq4jYQaLBBl2jhjpBAzjvGUw5DLSxrtWdGc
-	HiTRy7mjxGPYnUm1D4gXJvXgcUJ3cFeOVTi5uzJTxA0jLSTxjrxeIFpmq1iORps=
-X-Gm-Gg: ASbGncs44+SXTzqcafAKgYOw/HoeBELCHGSFzhScN6160Uwbuh1h1La7bf0jX/mAbYZ
-	Gm8sDuN04BizttmpuBzz85rDS13/cVAtgD+dGd2OKk9VHtiUftm4JRw7Pw55Gjz5OZs9c3A9X8y
-	TOWaiKdhgEH0ge77NH5+49i0htJJq1oZtZrMqAvTJua/bolKNCZbnEthg4W+jMgshLxw6NzdlJu
-	FP2KDITXQGHjbtbwbs4IVNS0/2m5vql49bXypSZMKME5HTs62faZXoOkqnMhdjdAlDiK3yyn4yT
-	/eu8SL3N8T7CP4nTK6w60L77uFM=
-X-Google-Smtp-Source: AGHT+IG/nMuUBD3KzbbfR2aeV/qZxqQT5Q4oWBw/1zX9VuChXzIPGd76LlGfkfl60EN6WAkMb4jFOQ==
-X-Received: by 2002:a5d:5986:0:b0:385:ec6e:e87a with SMTP id ffacd0b85a97d-38c520904ebmr6377248f8f.43.1738242022392;
-        Thu, 30 Jan 2025 05:00:22 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b59f6sm1937111f8f.69.2025.01.30.05.00.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 05:00:21 -0800 (PST)
-Date: Thu, 30 Jan 2025 14:00:19 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: David Hildenbrand <david@redhat.com>
-Cc: Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v1 04/12] mm/rmap: implement make_device_exclusive()
- using folio_walk instead of rmap walk
-Message-ID: <Z5t34-0K9FJKVQe6@phenom.ffwll.local>
-Mail-Followup-To: David Hildenbrand <david@redhat.com>,
-	Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
-References: <20250129115411.2077152-1-david@redhat.com>
- <20250129115411.2077152-5-david@redhat.com>
- <7tzcpx23vufmp5cxutnzhjgdj7kwqrw5drwochpv5ern7zknhj@h2s6y2qjbr3f>
- <Z5tI-cOSyzdLjoe_@phenom.ffwll.local>
- <54a55ff7-38c8-42c2-886f-d6d1985072a9@redhat.com>
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1738242071; x=1769778071;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wj58s5CoC7A+ZuNeV/ZGyINoKzUF6v+v74SipQCF2NQ=;
+  b=VyzKl7hSpaCYcHiLFtHeADZENyqpKopQClvKvO845GSzUz+Q0nssNe6q
+   m+1DPXTKetO+rjqvAv+/EyBfS3XqdOO6vb1DQ4sgBNP+OQdMt5PIy+wmQ
+   em832LOpikDdKQ+Md8hlG6BHLWhZV85q65DG4UNSSYM4Aw2im+cHK5D45
+   CiA1MsPkTFGZlNsqcNMlCL792+6RolZeOlIDyvw+KLw4v1Nxt1EDi5PxE
+   MSRAG7Xc4J0YJU/0+xQ5HXKj+NVyKflOC1s6lGFXszpuLYs/7Nk72+d+F
+   OWDl6PE+109HUdZHNdu4v9JDoreefk39MaNxUThPi8cfe45ePM9TAXrgm
+   w==;
+X-CSE-ConnectionGUID: F346eup2RHyq5Mx9HZjn4Q==
+X-CSE-MsgGUID: gyO9Yn/jRTGuTzpjVybASA==
+X-IronPort-AV: E=Sophos;i="6.13,245,1732575600"; 
+   d="scan'208";a="41374596"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 30 Jan 2025 14:01:08 +0100
+X-CheckPoint: {679B7814-32-1CE016C0-E589DA3E}
+X-MAIL-CPID: 96EE492516499171CB9FDB906F9A685E_1
+X-Control-Analysis: str=0001.0A682F1C.679B7814.00B1,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 54FB41675B4;
+	Thu, 30 Jan 2025 14:01:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1738242064;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wj58s5CoC7A+ZuNeV/ZGyINoKzUF6v+v74SipQCF2NQ=;
+	b=mbcFpJJxFpOyy8kUEWQbTB4M3Gyw3lSYbYE2ZwwM71ysmoV3w6Ji6wTZTN2JStwPupDawb
+	8oJm98ESPJuBxIw39klfQBSnrNZW2mpTHF63+7yl6yuDP73OPy8YXaqMgEcFhPvNpUFVGy
+	ZpLcDLLIxq99QSzbia1Jq3B3cuVRRsnBx2T+i69+06Z3pVH4LX/noYMF+xa0/G8AUHqNUR
+	b5lrSwd6ZPo3I0k+9/9kBk8IwCoZ3KJ0MoMs+qzRWY7N1xZMrffxRfyBBpVMnPTelOeY/v
+	MYo3ID28tMD4RHvQ4lKzDIL3/iSBu6gkLjZxn3aHjD5PbLsK3sse3Ip7dn1+Jg==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] Make i.MX8M Nano OCOTP work as accessing controller
+Date: Thu, 30 Jan 2025 14:00:57 +0100
+Message-Id: <20250130130101.1040824-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <54a55ff7-38c8-42c2-886f-d6d1985072a9@redhat.com>
-X-Operating-System: Linux phenom 6.12.11-amd64 
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, Jan 30, 2025 at 10:47:29AM +0100, David Hildenbrand wrote:
-> On 30.01.25 10:40, Simona Vetter wrote:
-> > On Thu, Jan 30, 2025 at 05:11:49PM +1100, Alistair Popple wrote:
-> > > On Wed, Jan 29, 2025 at 12:54:02PM +0100, David Hildenbrand wrote:
-> > > > We require a writable PTE and only support anonymous folio: we can only
-> > > > have exactly one PTE pointing at that page, which we can just lookup
-> > > > using a folio walk, avoiding the rmap walk and the anon VMA lock.
-> > > > 
-> > > > So let's stop doing an rmap walk and perform a folio walk instead, so we
-> > > > can easily just modify a single PTE and avoid relying on rmap/mapcounts.
-> > > > 
-> > > > We now effectively work on a single PTE instead of multiple PTEs of
-> > > > a large folio, allowing for conversion of individual PTEs from
-> > > > non-exclusive to device-exclusive -- note that the other way always
-> > > > worked on single PTEs.
-> > > > 
-> > > > We can drop the MMU_NOTIFY_EXCLUSIVE MMU notifier call and document why
-> > > > that is not required: GUP will already take care of the
-> > > > MMU_NOTIFY_EXCLUSIVE call if required (there is already a device-exclusive
-> > > > entry) when not finding a present PTE and having to trigger a fault and
-> > > > ending up in remove_device_exclusive_entry().
-> > > 
-> > > I will have to look at this a bit more closely tomorrow but this doesn't seem
-> > > right to me. We may be transitioning from a present PTE (ie. a writable
-> > > anonymous mapping) to a non-present PTE (ie. a device-exclusive entry) and
-> > > therefore any secondary processors (eg. other GPUs, iommus, etc.) will need to
-> > > update their copies of the PTE. So I think the notifier call is needed.
-> > 
-> > I guess this is a question of semantics we want, for multiple gpus do we
-> > require that device-exclusive also excludes other gpus or not. I'm leaning
-> > towards agreeing with you here.
-> 
-> See my reply, it's also relevant for non-device, such as KVM. So it's the
-> right thing to do.
+Hi,
 
-Yeah sounds good.
+inspired by [1] this adds the accessing controller feature to i.MX8M Nano.
+The OCOTP eFuse has bits which can disable particular peripherals, such as
+GPU, MIPI-DSI oder USB.
 
-> > > > Note that the PTE is
-> > > > always writable, and we can always create a writable-device-exclusive
-> > > > entry.
-> > > > 
-> > > > With this change, device-exclusive is fully compatible with THPs /
-> > > > large folios. We still require PMD-sized THPs to get PTE-mapped, and
-> > > > supporting PMD-mapped THP (without the PTE-remapping) is a different
-> > > > endeavour that might not be worth it at this point.
-> > 
-> > I'm not sure we actually want hugepages for device exclusive, since it has
-> > an impact on what's allowed and what not. If we only ever do 4k entries
-> > then userspace can assume that as long atomics are separated by a 4k page
-> > there's no issue when both the gpu and cpu hammer on them. If we try to
-> > keep thp entries then suddenly a workload that worked before will result
-> > in endless ping-pong between gpu and cpu because the separate atomic
-> > counters (or whatever) now all sit in the same 2m page.
-> 
-> Agreed. And the conversion + mapping into the device gets trickier.
-> 
-> > 
-> > So going with thp might result in userspace having to spread out atomics
-> > even more, which is just wasting memory and not saving any tlb entries
-> > since often you don't need that many.
-> > 
-> > tldr; I think not supporting thp entries for device exclusive is a
-> > feature, not a bug.
-> 
-> So, you agree with my "different endeavour that might not be worth it"
-> statement?
+In OCOTP driver, the nodes under "/" will be iterated, and checked
+if property "#access-controllers" exsits. If not allow access, detach
+the node.
 
-Yes.
+I successfully used this on a i.MX8M Nano DualLite which has GPU disabled.
+Without this patchset the default DT completly freezes the SoC if GPU
+is accessed.
+Using this patchset the GPU is disabled without any DT modification from
+bootloader:
+> imx_ocotp 30350000.efuse: /soc@0/gpu@38000000: disabled by fuse, device driver will not be probed
 
-Well I think we should go further and clearly document that we
-intentionally return split pages. Because it's part of the uapi contract
-with users of all this.
+Adding the other i.MX8M SoCs is straight forward.
 
-And if someone needs pmd entries for performance or whatever, we need two
-things:
+Best regards,
+Alexander
 
-a) userspace must mmap that memory as hugepage memory, to clearly signal
-the promise that atomics are split up on hugepage sizes and not just page
-size
+[1] https://lore.kernel.org/all/20250121-imx-ocotp-v6-0-76dab40e13db@nxp.com/
 
-b) we need to extend make_device_exclusive and drivers to handle the
-hugetlb folio case
+Alexander Stein (4):
+  dt-bindings: nvmem: imx-ocotp: Add i.MX8M Nano access controller
+    definitions
+  nvmem: imx-ocotp: Sort header alphabetically
+  nvmem: imx-ocotp: Support accessing controller for i.MX8M Nano
+  arm64: dts: imx8mn: Add access-controller references
 
-I think thp is simply not going to work here, it's impossible (without
-potentially causing fault storms) to figure out what userspace might want.
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi    |   8 ++
+ drivers/nvmem/Kconfig                        |   3 +
+ drivers/nvmem/imx-ocotp.c                    | 107 ++++++++++++++++++-
+ include/dt-bindings/nvmem/fsl,imx8mn-ocotp.h |  16 +++
+ 4 files changed, 132 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/nvmem/fsl,imx8mn-ocotp.h
 
-Cheers, Sima
 -- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.34.1
+
