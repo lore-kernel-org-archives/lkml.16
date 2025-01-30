@@ -1,211 +1,259 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31261EEA37
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D791EE7CB;
+	Thu, 30 Jan 2025 17:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738256864; cv=none; b=DbxLBCALW2gt5vCHjbNIebjpiYJZZZrgLQeR74EISGELDXJ/6WY24oY/+kWXk00r0tmZ53x3nud+haBCDfNCiwYzMYljg+thgsaJRwtnGweLqITmB5wfc6SYJ1EsEnx6Qhu8N3mqarqR6WID0EPSbzAdnio+b3hrgeskxXCp4Bk=
+	t=1738256915; cv=none; b=tmLjd1Zz+eXtV0CMhoNN+UNi2AK1oK9xI90D5cNUqvDhlWhRCXVi+UdO4ek6tIwHlEhpMaMlGSQrwn/KW2C4dw3Zcimljh6XaPlMwlwC0rbkoMLS/E018zOSigDKPLvA6S7VkhwkfDKlOpJ1t4sMnb9cqknGQBhk+TGNrjXHOj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738256864; c=relaxed/simple;
-	bh=Se6rdfyXF9Uvn3rmO7oCGY6t7gZsY2JFIiP8oFXH5/k=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=kWe3BPEPmq4fWQTC4+dFiAflCn0GLtjemkvhv9m46Yo3SnR4KjaEGLcRDq3hH+47ptW04xLuIv/46s9lwvRo4va228mMfmegVHjTubUwglO7vL3jWAJLvyaeEeu9lVfLOiaWdllTOtHlsm+W0UrdcUrZYOT3TE00NOwUikeaReQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E8IW0Y9g; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E8IW0Y9g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738256860;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n0kKJ1G6ZjljaFWbHC2zuPfe2Sm4wdicJSq0zfASmEg=;
-	b=E8IW0Y9ge5tkppek8PaLCNMJzRTWYo3GX3jJeN6Mqg3bInJTVUzdjx7SltSV/8B0agOXtc
-	g8vG6ViK4RcytFCwf4CIhXoGyncTwEDcgdo7Vwqbg1/QHL+etCdDQDUb9rwzLzMdqIMLLh
-	NOSmBkW997rTFRqKGLbCH6i3OzXSjTo=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-297-5kgZBlH6N3GmU5-9GfAm7Q-1; Thu, 30 Jan 2025 12:07:39 -0500
-X-MC-Unique: 5kgZBlH6N3GmU5-9GfAm7Q-1
-X-Mimecast-MFC-AGG-ID: 5kgZBlH6N3GmU5-9GfAm7Q
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4679db55860so20417631cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:07:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738256854; x=1738861654;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n0kKJ1G6ZjljaFWbHC2zuPfe2Sm4wdicJSq0zfASmEg=;
-        b=fDdESFzXrkRobDK2M40q9JoteVdiRkgJZ18CfmondTkjB5J4g9PaRq3pAEsCbm1GMv
-         qEFAZ8B/senIx9wlVNjmm7kqndPSSOB+UanHY0LcVTjxQtPWZnS6zqfCVE0tOKOAJ8bO
-         eXoG2xDBQcIwW/pclH7x2AL7MyyFF7prqpj4QRecZRKHypQnJ12LPxIpvjlv1FeAD+uF
-         cUcBLUz1aZE0346x52lv6EXuxCTrak5WFm7xpDMv9LYRLWz3YR9j6S3tnb+PNiZ2R+3v
-         +FvEUYDe+F3aRk3oFC+eTFfPB53+I0kdbYPD7/VyU+UrgeKUO1G7AhrL9OmRl5PX4UwT
-         VpTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxyw6S4XYEq8Mxh3/dqSoyB2sAQcRe1TsAZbB9skoQqtYZUBbd+0SNjqOJGC1WCRcDvDC0NWUD8qMIRA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1VYLAP9L0ssrIQeV6o3iAGaOC5NTvoFjFM9+oZcsFEo0HMz5k
-	UPFn6+4V8gCoLxKD1ClZq2Cq1CHQb1LDtCDtwULlu7FVDK1Ob8NztUQg3qZa+luoZs6DUz/KJoY
-	61g+Ii1dFmCYt38AaAKOY8TZnksxtNtZ3yeB/AmIM4jQmb0PY2PG2BfiAS0IbcA==
-X-Gm-Gg: ASbGncsvQWpwaAGrGkEYsJ1kUYABh1mkiPhp7w4eNX2r0TK7SbnZAgS3/Onon8uzfgs
-	Vv+9YMKZyhXUyXNT4Pq2ZFcX/Vyj80L4qPsHaabVzJvPqPNyqrBJgkyEiunBbyBmWVSh/oMUPWm
-	xSC8IwEsKnFEp7UWUTRXS5o6RnWrTACwUoYM7jLXKnkRnwmkXBcjarl1x+c2oxMYomYlnpJMD+m
-	14/4bTBpMwtj56/U5DtoJ2G7D5QOR+SqkbRiAP1lXTjjyT8WZi/45HwTZXHIbXJhYmC/G6b+ndX
-	QMpo7tBAEdWi/tpKOzhGucTZnJkn5D5vG3c4rE+/8zcXjFOpRFs=
-X-Received: by 2002:a05:622a:199c:b0:467:5f17:94d with SMTP id d75a77b69052e-46fd0c03bfcmr133200211cf.52.1738256853808;
-        Thu, 30 Jan 2025 09:07:33 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGZoq1XD68jE07xNm/4TeJ099xQ48miPov6sXEUGROQlV7OEIV2eqoSMcfINVON3Hybe9Q/fw==
-X-Received: by 2002:a05:622a:199c:b0:467:5f17:94d with SMTP id d75a77b69052e-46fd0c03bfcmr133199731cf.52.1738256853411;
-        Thu, 30 Jan 2025 09:07:33 -0800 (PST)
-Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0e2d7asm8648331cf.34.2025.01.30.09.07.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 09:07:32 -0800 (PST)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <baf1f9bf-4226-47f5-b795-c8862fd0554f@redhat.com>
-Date: Thu, 30 Jan 2025 12:07:31 -0500
+	s=arc-20240116; t=1738256915; c=relaxed/simple;
+	bh=20kLcjrVgKmLD98J9wLDKFPVtflp1wqGbPpBl+pgsAg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qDvSyrK6iv/Mi0IXiNuDaNWpcloZVAA9V06CJP7DJ2wjnKXukLB1kHE0pokIYHlTHMsYUSAkyWySYoS5QqqXdWWNlW2S1d293F1sfuXpS6r0ohjowPcfja+uS7ckyek1JFx0IFbvbCqaVREe6h/gNEoNAjQX/dIKTqml9vgi8R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YkQR23HZFz6M4JS;
+	Fri, 31 Jan 2025 01:06:22 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9BBAC140391;
+	Fri, 31 Jan 2025 01:08:29 +0800 (CST)
+Received: from localhost (10.195.245.124) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 Jan
+ 2025 18:08:28 +0100
+Date: Thu, 30 Jan 2025 17:08:26 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Yoshihiro Furudera <fj5100bi@fujitsu.com>
+CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>,
+	<linux-arm-kernel@lists.infradead.org>, "Bjorn Andersson"
+	<quic_bjorande@quicinc.com>, Geert Uytterhoeven <geert+renesas@glider.be>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>, Konrad Dybcio <konradybcio@kernel.org>, "Neil
+ Armstrong" <neil.armstrong@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "
+ =?ISO-8859-1?Q?N=EDcolas?= \"F. R. A. Prado\"" <nfraprado@collabora.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] perf: Fujitsu: Add the Uncore PCI PMU driver
+Message-ID: <20250130170826.00000299@huawei.com>
+In-Reply-To: <20250116045911.3382537-3-fj5100bi@fujitsu.com>
+References: <20250116045911.3382537-1-fj5100bi@fujitsu.com>
+	<20250116045911.3382537-3-fj5100bi@fujitsu.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm, memcg: introduce memory.high.throttle
-To: Johannes Weiner <hannes@cmpxchg.org>, Waiman Long <llong@redhat.com>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, Tejun Heo <tj@kernel.org>,
- =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
- Jonathan Corbet <corbet@lwn.net>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- Peter Hunt <pehunt@redhat.com>
-References: <20250129191204.368199-1-longman@redhat.com>
- <Z5qLQ1o6cXbcvc0o@google.com>
- <366fd30f-033d-48d6-92b4-ac67c44d0d9b@redhat.com>
- <20250130163904.GB1283@cmpxchg.org>
-Content-Language: en-US
-In-Reply-To: <20250130163904.GB1283@cmpxchg.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 1/30/25 11:39 AM, Johannes Weiner wrote:
-> On Thu, Jan 30, 2025 at 09:52:29AM -0500, Waiman Long wrote:
->> On 1/29/25 3:10 PM, Yosry Ahmed wrote:
->>> On Wed, Jan 29, 2025 at 02:12:04PM -0500, Waiman Long wrote:
->>>> Since commit 0e4b01df8659 ("mm, memcg: throttle allocators when failing
->>>> reclaim over memory.high"), the amount of allocator throttling had
->>>> increased substantially. As a result, it could be difficult for a
->>>> misbehaving application that consumes increasing amount of memory from
->>>> being OOM-killed if memory.high is set. Instead, the application may
->>>> just be crawling along holding close to the allowed memory.high memory
->>>> for the current memory cgroup for a very long time especially those
->>>> that do a lot of memcg charging and uncharging operations.
->>>>
->>>> This behavior makes the upstream Kubernetes community hesitate to
->>>> use memory.high. Instead, they use only memory.max for memory control
->>>> similar to what is being done for cgroup v1 [1].
->>>>
->>>> To allow better control of the amount of throttling and hence the
->>>> speed that a misbehving task can be OOM killed, a new single-value
->>>> memory.high.throttle control file is now added. The allowable range
->>>> is 0-32.  By default, it has a value of 0 which means maximum throttling
->>>> like before. Any non-zero positive value represents the corresponding
->>>> power of 2 reduction of throttling and makes OOM kills easier to happen.
->>>>
->>>> System administrators can now use this parameter to determine how easy
->>>> they want OOM kills to happen for applications that tend to consume
->>>> a lot of memory without the need to run a special userspace memory
->>>> management tool to monitor memory consumption when memory.high is set.
->>>>
->>>> Below are the test results of a simple program showing how different
->>>> values of memory.high.throttle can affect its run time (in secs) until
->>>> it gets OOM killed. This test program allocates pages from kernel
->>>> continuously. There are some run-to-run variations and the results
->>>> are just one possible set of samples.
->>>>
->>>>     # systemd-run -p MemoryHigh=10M -p MemoryMax=20M -p MemorySwapMax=10M \
->>>> 	--wait -t timeout 300 /tmp/mmap-oom
->>>>
->>>>     memory.high.throttle	service runtime
->>>>     --------------------	---------------
->>>>               0		    120.521
->>>>               1		    103.376
->>>>               2		     85.881
->>>>               3		     69.698
->>>>               4		     42.668
->>>>               5		     45.782
->>>>               6		     22.179
->>>>               7		      9.909
->>>>               8		      5.347
->>>>               9		      3.100
->>>>              10		      1.757
->>>>              11		      1.084
->>>>              12		      0.919
->>>>              13		      0.650
->>>>              14		      0.650
->>>>              15		      0.655
->>>>
->>>> [1] https://docs.google.com/document/d/1mY0MTT34P-Eyv5G1t_Pqs4OWyIH-cg9caRKWmqYlSbI/edit?tab=t.0
->>>>
->>>> Signed-off-by: Waiman Long <longman@redhat.com>
->>>> ---
->>>>    Documentation/admin-guide/cgroup-v2.rst | 16 ++++++++--
->>>>    include/linux/memcontrol.h              |  2 ++
->>>>    mm/memcontrol.c                         | 41 +++++++++++++++++++++++++
->>>>    3 files changed, 57 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
->>>> index cb1b4e759b7e..df9410ad8b3b 100644
->>>> --- a/Documentation/admin-guide/cgroup-v2.rst
->>>> +++ b/Documentation/admin-guide/cgroup-v2.rst
->>>> @@ -1291,8 +1291,20 @@ PAGE_SIZE multiple when read back.
->>>>    	Going over the high limit never invokes the OOM killer and
->>>>    	under extreme conditions the limit may be breached. The high
->>>>    	limit should be used in scenarios where an external process
->>>> -	monitors the limited cgroup to alleviate heavy reclaim
->>>> -	pressure.
->>>> +	monitors the limited cgroup to alleviate heavy reclaim pressure
->>>> +	unless a high enough value is set in "memory.high.throttle".
->>>> +
->>>> +  memory.high.throttle
->>>> +	A read-write single value file which exists on non-root
->>>> +	cgroups.  The default is 0.
->>>> +
->>>> +	Memory usage throttle control.	This value controls the amount
->>>> +	of throttling that will be applied when memory consumption
->>>> +	exceeds the "memory.high" limit.  The larger the value is,
->>>> +	the smaller the amount of throttling will be and the easier an
->>>> +	offending application may get OOM killed.
->>> memory.high is supposed to never invoke the OOM killer (see above). It's
->>> unclear to me if you are referring to OOM kills from the kernel or
->>> userspace in the commit message. If the latter, I think it shouldn't be
->>> in kernel docs.
->> I am sorry for not being clear. What I meant is that if an application
->> is consuming more memory than what can be recovered by memory reclaim,
->> it will reach memory.max faster, if set, and get OOM killed. Will
->> clarify that in the next version.
-> You're not really supposed to use max and high in conjunction. One is
-> for kernel OOM killing, the other for userspace OOM killing. That's tho
-> what the documentation that you edited is trying to explain.
->
-> What's the usecase you have in mind?
+On Thu, 16 Jan 2025 04:59:11 +0000
+Yoshihiro Furudera <fj5100bi@fujitsu.com> wrote:
 
-That is new to me that high and max are not supposed to be used 
-together. One problem with v1 is that by the time the limit is reached 
-and memory reclaim is not able to recover enough memory in time, the 
-task will be OOM killed. I always thought that by setting high to a bit 
-below max, say 90%, early memory reclaim will reduce the chance of OOM 
-kills. There are certainly others that think like that.
+> This adds a new dynamic PMU to the Perf Events framework to program and
+> control the Uncore PCI PMUs in Fujitsu chips.
+> 
+> This driver was created with reference to drivers/perf/qcom_l3_pmu.c.
+> 
+> This driver exports formatting and event information to sysfs so it can
+> be used by the perf user space tools with the syntaxes:
+> 
+> perf stat -e pci_iod0_pci0/ea-pci/ ls
+> perf stat -e pci_iod0_pci0/event=0x80/ ls
+> 
+> FUJITSU-MONAKA Specification URL:
+> https://github.com/fujitsu/FUJITSU-MONAKA
+> 
+> Signed-off-by: Yoshihiro Furudera <fj5100bi@fujitsu.com>
+Hi,
 
-So the use case here is to reduce the chance of OOM kills without 
-letting really mishaving tasks from holding up useful memory for too long.
+As you can probably guess, similar comments in here.
+Assuming those little things tidied up feel free to add
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+to your v5.
 
-Cheers,
-Longman
+> diff --git a/drivers/perf/fujitsu_pci_pmu.c b/drivers/perf/fujitsu_pci_pmu.c
+> new file mode 100644
+> index 000000000000..2ce2ca19b5ea
+> --- /dev/null
+> +++ b/drivers/perf/fujitsu_pci_pmu.c
+> @@ -0,0 +1,553 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Driver for the Uncore PCI PMUs in Fujitsu chips.
+> + *
+> + * See Documentation/admin-guide/perf/fujitsu_pci_pmu.rst for more details.
+> + *
+> + * This driver is based on drivers/perf/qcom_l3_pmu.c
+> + * Copyright (c) 2015-2017, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2024 Fujitsu. All rights reserved.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/bitops.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
 
+mod_devicetable.h probably should be here.
+
+> +#include <linux/perf_event.h>
+> +#include <linux/platform_device.h>
+> +
+> +/* Number of counters on each PMU */
+> +#define PCI_NUM_COUNTERS  8
+> +/* Mask for the event type field within perf_event_attr.config and EVTYPE reg */
+> +#define PCI_EVTYPE_MASK   0xFF
+> +
+> +/* Perfmon registers */
+> +#define PCI_PM_EVCNTR(__cntr) (0x000 + __cntr * 8)
+> +#define PCI_PM_CNTCTL(__cntr) (0x100 + __cntr * 8)
+> +#define PCI_PM_EVTYPE(__cntr) (0x200 + __cntr * 8)
+(__cntr)
+
+> +/*
+> + * We must NOT create groups containing events from multiple hardware PMUs,
+> + * although mixing different software and hardware PMUs is allowed.
+> + */
+> +static bool fujitsu_pci__validate_event_group(struct perf_event *event)
+> +{
+> +	struct perf_event *leader = event->group_leader;
+> +	struct perf_event *sibling;
+> +	int counters = 0;
+> +
+> +	if (leader->pmu != event->pmu && !is_software_event(leader))
+> +		return false;
+> +
+> +	/* The sum of the counters used by the event and its leader event */
+> +	counters = 2;
+> +
+> +	for_each_sibling_event(sibling, leader) {
+> +		if (is_software_event(sibling))
+> +			continue;
+> +		if (sibling->pmu != event->pmu)
+> +			return false;
+> +		counters += 1;
+counters++;
+
+> +	}
+> +
+> +	/*
+> +	 * If the group requires more counters than the HW has, it
+> +	 * cannot ever be scheduled.
+> +	 */
+> +	return counters <= PCI_NUM_COUNTERS;
+> +}
+
+> +
+> +static const struct attribute_group fujitsu_pci_pmu_events_group = {
+> +	.name = "events",
+> +	.attrs = fujitsu_pci_pmu_events
+As below
+
+> +};
+> +
+> +static ssize_t cpumask_show(struct device *dev,
+> +			    struct device_attribute *attr, char *buf)
+> +{
+> +	struct pci_pmu *pcipmu = to_pci_pmu(dev_get_drvdata(dev));
+> +
+> +	return cpumap_print_to_pagebuf(true, buf, &pcipmu->cpumask);
+> +}
+> +
+> +static DEVICE_ATTR_RO(cpumask);
+> +
+> +static struct attribute *fujitsu_pci_pmu_cpumask_attrs[] = {
+> +	&dev_attr_cpumask.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group fujitsu_pci_pmu_cpumask_attr_group = {
+> +	.attrs = fujitsu_pci_pmu_cpumask_attrs
+
+Another trailing comma missing here.
+
+> +static int fujitsu_pci_pmu_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct acpi_device *acpi_dev;
+> +	struct pci_pmu *pcipmu;
+> +	struct resource *memrc;
+> +	char *name;
+> +	int ret;
+> +	u64 uid;
+> +
+> +	acpi_dev = ACPI_COMPANION(dev);
+> +	if (!acpi_dev)
+> +		return -ENODEV;
+> +
+> +	ret = acpi_dev_uid_to_integer(acpi_dev, &uid);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "unable to read ACPI uid\n");
+> +
+> +	pcipmu = devm_kzalloc(dev, sizeof(*pcipmu), GFP_KERNEL);
+> +	if (!pcipmu)
+> +		return -ENOMEM;
+> +
+> +	name = devm_kasprintf(dev, GFP_KERNEL, "pci_iod%llu_pci%llu",
+> +			  (uid >> 4) & 0xF, uid & 0xF);
+> +	if (!name)
+> +		return -ENOMEM;
+> +
+> +	pcipmu->pmu = (struct pmu) {
+> +		.parent		= dev,
+> +		.task_ctx_nr	= perf_invalid_context,
+> +
+> +		.pmu_enable	= fujitsu_pci__pmu_enable,
+> +		.pmu_disable	= fujitsu_pci__pmu_disable,
+> +		.event_init	= fujitsu_pci__event_init,
+> +		.add		= fujitsu_pci__event_add,
+> +		.del		= fujitsu_pci__event_del,
+> +		.start		= fujitsu_pci__event_start,
+> +		.stop		= fujitsu_pci__event_stop,
+> +		.read		= fujitsu_pci__event_read,
+> +
+> +		.attr_groups	= fujitsu_pci_pmu_attr_grps,
+> +		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE
+
+As in previous.  Add trailing commas to all structure field fills that
+aren't terminating NULL type entries.
+
+> +	};
+> +
+> +	pcipmu->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &memrc);
+> +	if (IS_ERR(pcipmu->regs))
+> +		return PTR_ERR(pcipmu->regs);
+> +
+> +	fujitsu_pci__init(pcipmu);
+> +
+> +	ret = platform_get_irq(pdev, 0);
+> +	if (ret <= 0)
+> +		return ret;
+> +
+> +	ret = devm_request_irq(dev, ret, fujitsu_pci__handle_irq, 0,
+> +			       name, pcipmu);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Request for IRQ failed for slice @%pa\n",
+> +						&memrc->start);
+> +
+> +	/* Add this instance to the list used by the offline callback */
+> +	ret = cpuhp_state_add_instance(pci_pmu_cpuhp_state, &pcipmu->node);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Error registering hotplug");
+> +
+> +	ret = perf_pmu_register(&pcipmu->pmu, name, -1);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to register PCI PMU\n");
+> +
+> +	dev_dbg(dev, "Registered %s, type: %d\n", name, pcipmu->pmu.type);
+> +
+> +	return 0;
+> +}
