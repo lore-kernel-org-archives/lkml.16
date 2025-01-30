@@ -1,231 +1,123 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FC51AB507;
-	Thu, 30 Jan 2025 11:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5EA1AB507
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 11:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738237125; cv=none; b=MFmy5Qm5UPUqK+6pfIIjlRvuPdoionzD1jMSusVQFLZW0qKFMt8ylz5wbt3S9Qg8Csa7wHysfw00E8p8/S4ZXyrIwHv3vo4Uvqu4wrZ916G5buB9v8RxeGvUQA087+3D795AHZShc7rkuroAh/m5aGp7J2tTKC1rJX+Q6svxjLY=
+	t=1738237178; cv=none; b=mP3BIjILQIZnGo3dvonDzkSwBjbiO7QsbGOi6o1TFNTjpNxPUYZ4SfRkniqX44uE7YcSKsAKp0GpK8/ORRxchlBVgjY4q8Q55AH4u+A75ay73i04zcOygaD8Omrq0GEKKhHJzcU1mRh3jAgFFWtWCNrfsDbYS3/+XxqkVljcUpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738237125; c=relaxed/simple;
-	bh=jmiaRDktbJa4wMJVa0qU3LftfvlPnAN8/Soy8xz+2dw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Q5h28uomGtKf9LzkYrpXFn9xJT4asW1MUj4lbYhCt1/YX7d3P+1oS+riLsMoVjiip1IQVKoHnK3h+WByLMDFuMO0Bvz0t/q+qf4efkCpVFasf10otOqkzUrK/KzPeZzoG5DdMe637HHJ42Z3W2HsDrj/ZT9z0n7uIGuaWicuJVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=py0si/7i; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738237178; c=relaxed/simple;
+	bh=z09MSjwDq3x03OMcWtquxluKiirLlNkUHQZSEoobtnY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BS18IHb/7NgtjDgN+gTaW82N1hLdHyAjoQSGO55USHE+mBtDeBPJLOLn42Svvec0cnfzcGfcn2U1K6f9CwbJoJB2ZKkca2VLlXK7Y0OXMkEMQzXA+6EhNAOsIPpkQPu/5MxHbANnQKxWVY+NW0vWMEXD5EwN3/m3ca6V16uMrNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=344xhj6e; arc=none smtp.client-ip=209.85.221.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="py0si/7i"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50U3S03G009805;
-	Thu, 30 Jan 2025 11:36:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=BpEfUaBr1Cw8QWsiOsJ1W6pndXsaAO
-	xt2vlVbbXMbZU=; b=py0si/7i7sYpYpgY+Cd85pkVNtrLlOqwSMEhmRUcKRZj7F
-	AdWm9g97BBEh/k1QMz1gyW8k5eUcYgkXR7GTOMktSJAFpG3LMbyg98XYXGPU8sUo
-	eqeaQ4p53wCU0NhpBpfouxy1ummA3PnohqoCPPT9kZK6xXqL8bMd1HPK3stTNTCc
-	i9hgrzpbOa8Oy7fd/8G+IJIcqiisWNhctW460864Z4NJPiiQN3G8K0UqP+6d4dzH
-	cmzmA7ITybYy/TOKFRbQlq2Z27a5FDfLohiHJU8VcETS6330kiMTctNfd+g/5c0g
-	zhFPjq0jgTlDsz9Dp+ySr7XDG4pHCTnnLQrHeZDw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fq5tvqhw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 11:36:36 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UBWjRY023426;
-	Thu, 30 Jan 2025 11:36:35 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fq5tvqhs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 11:36:35 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50U947Bm022193;
-	Thu, 30 Jan 2025 11:36:34 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44dcgjwkcf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 11:36:34 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UBaU8D29491780
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 11:36:30 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B3743200BB;
-	Thu, 30 Jan 2025 11:36:30 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2B194200BC;
-	Thu, 30 Jan 2025 11:36:30 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 30 Jan 2025 11:36:30 +0000 (GMT)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: "Dmitry V. Levin" <ldv@strace.io>
-Cc: linux-snps-arc@lists.infradead.org, Rich Felker <dalias@libc.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andreas Larsson
- <andreas@gaisler.com>,
-        John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>,
-        x86@kernel.org, Arnd Bergmann
- <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>,
-        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, sparclinux@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, WANG Xuerui
- <kernel@xen0n.name>,
-        Will Deacon <will@kernel.org>,
-        Eugene Syromyatnikov
- <evgsyr@gmail.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Jonas Bonn <jonas@southpole.se>, linux-s390@vger.kernel.org,
-        Alexander
- Gordeev <agordeev@linux.ibm.com>,
-        Madhavan Srinivasan
- <maddy@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Yoshinori Sato
- <ysato@users.sourceforge.jp>, linux-sh@vger.kernel.org,
-        Michael Ellerman
- <mpe@ellerman.id.au>, Helge Deller <deller@gmx.de>,
-        Huacai Chen
- <chenhuacai@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen
- <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Vineet
- Gupta <vgupta@kernel.org>,
-        Christian Borntraeger
- <borntraeger@linux.ibm.com>,
-        strace-devel@lists.strace.io, linux-arch@vger.kernel.org,
-        Albert Ou <aou@eecs.berkeley.edu>, Mike
- Frysinger <vapier@gentoo.org>,
-        Davide Berardi <berardi.dav@gmail.com>,
-        Renzo Davoli <renzo@cs.unibo.it>, linux-um@lists.infradead.org,
-        Heiko
- Carstens <hca@linux.ibm.com>,
-        Charlie Jenkins <charlie@rivosinc.com>,
-        Naveen N Rao <naveen@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Borislav Petkov
- <bp@alien8.de>, loongarch@lists.linux.dev,
-        Paul Walmsley
- <paul.walmsley@sifive.com>,
-        Stafford Horne <shorne@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, Brian Cain <bcain@quicinc.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-parisc@vger.kernel.org, linux-openrisc@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Oleg
- Nesterov <oleg@redhat.com>, Dinh Nguyen <dinguyen@kernel.org>,
-        linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@dabbelt.com>,
-        Richard Weinberger <richard@nod.at>,
-        Johannes Berg
- <johannes@sipsolutions.net>,
-        Alexey Gladkov <legion@kernel.org>,
-        "David
- S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 2/6] syscall.h: add syscall_set_arguments() and
- syscall_set_return_value()
-In-Reply-To: <20250130112207.GA6617@strace.io> (Dmitry V. Levin's message of
-	"Thu, 30 Jan 2025 13:22:07 +0200")
-References: <20250128091626.GB8601@strace.io> <yt9dwmecya4g.fsf@linux.ibm.com>
-	<20250130112207.GA6617@strace.io>
-Date: Thu, 30 Jan 2025 12:36:29 +0100
-Message-ID: <yt9dsep0y1mq.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="344xhj6e"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-385dcadffebso344048f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 03:39:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738237175; x=1738841975; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VGo3EITKDuqzI2mFnnCbN9UqnOTjC364NT023OylZNU=;
+        b=344xhj6e5Mo6mvAev8lfxQNmo0w9pervB1v7fQh4PY6tUQJ2U1V0dOVLK8rHahC874
+         OdncteT3QoKWAR2rcp8AOZ8TmIBf+r+quMbjCaq5Q/cQnM5xK9o62C4UYQaNGMqh7WeK
+         ExX/r2BeJXafzCB6EgdAxCoRxQv6pkgP72SxfdIfKhb+F+2J9xLQbqeLBPRhMBpKqJgu
+         sKq0LTI4+KMfcaxejLqUifSy+QQ+DiDjm9/6CLo3Ha09NsbLG6rDPVX3crTneENy2O3a
+         cx1qRZTtZzeHRd7onvqPeJlYPomtRcGwhjCaL7kDhUQpwMwXAh4q/hIxxWan9PQuCHR3
+         fxpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738237175; x=1738841975;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VGo3EITKDuqzI2mFnnCbN9UqnOTjC364NT023OylZNU=;
+        b=ALkXclbA98b9IE8kJ57KfRrur0hTmfczBbsQ3kL6C1WDMDVs8isHHKyS2LBHtsALb+
+         BM81cgPtRA2ycc+/psZfdgYCx6zjAHgCL6NkHY7fzwnAYcijj1na1V3JyWQHv1pHtFWQ
+         00aj5GUZZTgz50OR6ucTPK+joaf8pW3dwFpbyNr0ZVkgktuLCk8bdBXcr1Nsbl1Rnbxa
+         YHCzXYuX3wdWXiHEvrj3B5AWf+Rb/g68KxJ5q9UFbPTDA+YZ4ZCfO7I94YCoxBPCAfJK
+         8FbPC3rk049UCn9MJyUKw+Cs0CxHCJ9NQlw2LG+++pkHyeyW/J3E6Kph/FsNAdk9f85j
+         6kAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXs9ZjoTLFUjLhtiGSXAD5O6CcS80JLf0fEyVXUxRCFtgHO9fr1mqc1zryGknlGh4N5crjuQCRA+0bXzQ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywt6FSp8q3fewBTwbXwRhRfdTEN9zlP7piJFKHyrbwhc8Exue4u
+	dWydwcQRayVaWln9ql9tvnoXrvmJPzRvys+fNxGnMD7A1nn7xO0NedQYJtw15i/YoAe0UPwjC+W
+	yZL2NLvI1rHA5rg==
+X-Google-Smtp-Source: AGHT+IE+09N8sHthOacR8ESd3Iq7tsbi7sK6xaLeKnkcqKBwgRsPt3aDZ6wYwmhbpcNhsUZL0I+aaVYtnAPvCEQ=
+X-Received: from wmfv10.prod.google.com ([2002:a05:600c:15ca:b0:438:d998:de29])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:1f86:b0:38c:5b62:9fdf with SMTP id ffacd0b85a97d-38c5b62a3b2mr1790393f8f.31.1738237175281;
+ Thu, 30 Jan 2025 03:39:35 -0800 (PST)
+Date: Thu, 30 Jan 2025 11:39:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 3aUZNse446PGQfVafhK1HcR2G4gnMUaQ
-X-Proofpoint-ORIG-GUID: 64WUIlsja2UYCCT0QvJj0Ow022g8u5FP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_06,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=982 lowpriorityscore=0 impostorscore=0 phishscore=0
- adultscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 malwarescore=0
- spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501300089
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAPNkm2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDQ2MD3fTSxKIU3fTUEt2c/ORs3ZQUUxNTI3NL4xTLRCWgpoKi1LTMCrC B0bG1tQBaxwGKYAAAAA==
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1429; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=z09MSjwDq3x03OMcWtquxluKiirLlNkUHQZSEoobtnY=;
+ b=kA0DAAoBBFi+7ljGOUYByyZiAGebZPSgMXrXPfQrpCYksFqzld5g2EhNym3ceREca4cTa/ZH0
+ okCMwQAAQoAHRYhBIOSopRNZAcK8Ui9sgRYvu5YxjlGBQJnm2T0AAoJEARYvu5YxjlGBLMP/iD2
+ BNcTkFloH8Yk+EADTrnfKVKs0IU/DKJeBzf7XqjGCdteSPyJ7P/DFvQk3aoFSRTCmHDqUFGr0k1
+ 4XDpBZdWrfVvHoI2qxE98emsCQ3dy7Qh7w0z4OcWdrAX/xLRbkkvr79jYWFX9U6tW8AZSFcjFOa
+ l344x2C2WW+0da7xOzJT/JpCHlP0yUHu/xcWMvKiiXqy0Zh42yIg7iVu/bE0SzMPsnNly4wl5HU
+ JNp56+johtodasKFj/5DkY1PsJ5yerD1R+EgBKeA773MfVZ8O3cv/AgkS9E+nfLpXXFmvAATXm9
+ saVvARmC8SFFZ13aNfd2Tk4nS+RuzT1m6fF9rmBtzIm1PucX+dH4V/6iUbUxmrqRsaZoYfJHPzb
+ AS5p0BPkcvkDLZliYgIcF62gB9NMMoA8LL6rF+IQ7Dgm3Pd1+dFRNGLXsNXBnB1Y65N6VBzR/9f
+ v7Vow6KodpzxncXNLkoHbwAbVuwFMOYBVZ4GVxQ42kPwUIdma+XDWlklLncIG/7GN2sUhnTXKAl
+ eIROV70oN4F0gK9qZiflCgfMbtjaibE4qapxcEru89kvc2UeQ58qp+JJNv0T64z7BiU9tESrM3q
+ KCs2PMXbeC2glVbbXiV873hJVfB00WVah288feAt/BHe5tHlZ9bou9O73z4RTL2pp1jMf69+xFo +YZpu
+X-Mailer: b4 0.13.0
+Message-ID: <20250130-guard-get-lock-v1-1-8ed87899920a@google.com>
+Subject: [PATCH] rust: sync: add accessor for the lock behind a given guard
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Waiman Long <longman@redhat.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-"Dmitry V. Levin" <ldv@strace.io> writes:
+Binder has some methods where the caller provides a lock guard, and
+Binder needs to be able to assert that the guard is associated with the
+right lock. To enable this, add an accessor to obtain a reference to the
+underlying lock that you can pass to `ptr::eq`.
 
-> On Thu, Jan 30, 2025 at 09:33:03AM +0100, Sven Schnelle wrote:
->> "Dmitry V. Levin" <ldv@strace.io> writes:
->> 
->> > These functions are going to be needed on all HAVE_ARCH_TRACEHOOK
->> > architectures to implement PTRACE_SET_SYSCALL_INFO API.
->> >
->> > This partially reverts commit 7962c2eddbfe ("arch: remove unused
->> > function syscall_set_arguments()") by reusing some of old
->> > syscall_set_arguments() implementations.
->> >
->> > Signed-off-by: Dmitry V. Levin <ldv@strace.io>
->> > Tested-by: Charlie Jenkins <charlie@rivosinc.com>
->> > Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
->> > ---
->> >  arch/arc/include/asm/syscall.h        | 14 +++++++++++
->> >  arch/arm/include/asm/syscall.h        | 13 ++++++++++
->> >  arch/arm64/include/asm/syscall.h      | 13 ++++++++++
->> >  arch/csky/include/asm/syscall.h       | 13 ++++++++++
->> >  arch/hexagon/include/asm/syscall.h    | 14 +++++++++++
->> >  arch/loongarch/include/asm/syscall.h  |  8 ++++++
->> >  arch/mips/include/asm/syscall.h       | 32 ++++++++++++++++++++++++
->> >  arch/nios2/include/asm/syscall.h      | 11 ++++++++
->> >  arch/openrisc/include/asm/syscall.h   |  7 ++++++
->> >  arch/parisc/include/asm/syscall.h     | 12 +++++++++
->> >  arch/powerpc/include/asm/syscall.h    | 10 ++++++++
->> >  arch/riscv/include/asm/syscall.h      |  9 +++++++
->> >  arch/s390/include/asm/syscall.h       | 12 +++++++++
->> >  arch/sh/include/asm/syscall_32.h      | 12 +++++++++
->> >  arch/sparc/include/asm/syscall.h      | 10 ++++++++
->> >  arch/um/include/asm/syscall-generic.h | 14 +++++++++++
->> >  arch/x86/include/asm/syscall.h        | 36 +++++++++++++++++++++++++++
->> >  arch/xtensa/include/asm/syscall.h     | 11 ++++++++
->> >  include/asm-generic/syscall.h         | 16 ++++++++++++
->> >  19 files changed, 267 insertions(+)
->> >
->> > diff --git a/arch/s390/include/asm/syscall.h b/arch/s390/include/asm/syscall.h
->> > index 27e3d804b311..b3dd883699e7 100644
->> > --- a/arch/s390/include/asm/syscall.h
->> > +++ b/arch/s390/include/asm/syscall.h
->> > @@ -78,6 +78,18 @@ static inline void syscall_get_arguments(struct task_struct *task,
->> >  	args[0] = regs->orig_gpr2 & mask;
->> >  }
->> >  
->> > +static inline void syscall_set_arguments(struct task_struct *task,
->> > +					 struct pt_regs *regs,
->> > +					 const unsigned long *args)
->> > +{
->> > +	unsigned int n = 6;
->> > +
->> > +	while (n-- > 0)
->> > +		if (n > 0)
->> > +			regs->gprs[2 + n] = args[n];
->> > +	regs->orig_gpr2 = args[0];
->> > +}
->> 
->> Could that be changed to something like:
->> 
->> for (int n = 1; n < 6; n++)
->>         regs->gprs[2 + n] = args[n];
->> regs->orig_gpr2 = args[0];
->> 
->> I think this is way easier to parse.
->
-> I don't mind changing syscall_set_arguments() this way, but it just
-> mirrors syscall_get_arguments(), so I think it would be better if these
-> two functions were written in the same style.  Would you like to change
-> syscall_get_arguments() as well?
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+ rust/kernel/sync/lock.rs | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Oh. I'll prepare a patch for syscall_get_arguments(), wasn't aware
-that this function looks the same. I'll send this via the s390 tree, so
-it's independent of your patch series. Thanks!
+diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
+index 41dcddac69e2..681d67275b49 100644
+--- a/rust/kernel/sync/lock.rs
++++ b/rust/kernel/sync/lock.rs
+@@ -169,7 +169,12 @@ pub struct Guard<'a, T: ?Sized, B: Backend> {
+ // SAFETY: `Guard` is sync when the data protected by the lock is also sync.
+ unsafe impl<T: Sync + ?Sized, B: Backend> Sync for Guard<'_, T, B> {}
+ 
+-impl<T: ?Sized, B: Backend> Guard<'_, T, B> {
++impl<'a, T: ?Sized, B: Backend> Guard<'a, T, B> {
++    /// Returns the lock that this guard originates from.
++    pub fn lock(&self) -> &'a Lock<T, B> {
++        self.lock
++    }
++
+     pub(crate) fn do_unlocked<U>(&mut self, cb: impl FnOnce() -> U) -> U {
+         // SAFETY: The caller owns the lock, so it is safe to unlock it.
+         unsafe { B::unlock(self.lock.state.get(), &self.state) };
+
+---
+base-commit: ceff0757f5dafb5be5205988171809c877b1d3e3
+change-id: 20250130-guard-get-lock-dd5452793d9a
+
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
+
