@@ -1,93 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E5D1AC884;
-	Thu, 30 Jan 2025 21:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68C01482E1;
+	Thu, 30 Jan 2025 21:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738271206; cv=none; b=r8WE5TtjOk7kghZ24m+eIMvWquGAkCydtTVNIC+x1QhknrNaCGa9dNiXOSp+YtW/adECzPmiAj5nV4pXWT6EbB/Y8XpZ/42svbnsh/D0boR99OTE8iM9ftknRGupMADTIZEMzxF3JVWpUG+JbfI9DludCcDCY6Ze5HnNs9zRopk=
+	t=1738271493; cv=none; b=WLrOXGcoAcaqqJQuVC0SRbg+fnxbvo+rQhFsSjONZ01IA/EEcP2Vg7r/vjirgM+z4JkydyBCcZiJA6GAjNWv80myYKXYH1hEBPKkqoX3ntcXIPhUcrVE3vKG0otu/N4QbpThCFekQ7vgylmkrj7hP77wLvo+Q5lRtm2+coHR7LI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738271206; c=relaxed/simple;
-	bh=uKOu5xoHzaHq9aArS/2GZ9s3Qm3F9AEuVkbisnOrqoI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bcmwNJmdAvexkavNdKM7u+AWQecjY+9oJEKTCzrNumvh6BPLmVlIOCsZU9+79N6Z8tLJLGMeYxE3gR7og7+C+/S6jBUB9kryv3hbuFIcp8EZIsDMtJ1yVfl5WkNc7Wv23JDBYv5AqQE0B1bzdox3HJhukw1zBKm20L5WvGkhnWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkdTbpXo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738271493; c=relaxed/simple;
+	bh=IJ6fzV5t/Err4DKXH2EkjkKQTSF4qSpO2IdN+SraNWo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ubHGFv1KWMGz3f2JCERVOyqB11DPMZhNX1fKDEoW4wrcz8gyEpsSn9ko7b2DBYop3qfn+XntVwkHmT+sozgED44qKxDXvc8Jog7aHDNDxG5MFCEsNNvuaimlSr13ZUXYlzZPQxepWhYFm1JdLJ5YlVtNSgHDq6+S8Wt+0T26pUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T9Hymzly; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkdTbpXo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5336C4CED2;
-	Thu, 30 Jan 2025 21:06:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738271205;
-	bh=uKOu5xoHzaHq9aArS/2GZ9s3Qm3F9AEuVkbisnOrqoI=;
-	h=From:Date:Subject:To:Cc:From;
-	b=AkdTbpXoV6j82sLw94JUroFXeB8elyv+DCQT+hnTZhrNn8d5D/v6wkJM3sfRGqHG+
-	 j+ikK+lj1aawDnUUnEe+NlE6kOyZFspYDFbrCeJdlptd/yKjDrQ3BRu5PGVMT05R4s
-	 P29+Dp9BfTlarNBVBpFpmPfJevVqVGLMCdPg4o6I+1yPZBC5NejW5SUQChWegwcfVg
-	 FwLIP3GG/uUN46i/3j0bbhyrez6/CxY50+601yfNfD2bGOjBSgPcUX8fR+U2rCbbi+
-	 P64xoLriPXCm4xrJX7DfY/FuU5VHNOmFou0ZbH3clVyHa020uO9A7iyhf/Eeg009WQ
-	 NXSPHgsVnAeSQ==
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2b1f7406e49so538618fac.3;
-        Thu, 30 Jan 2025 13:06:45 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW5Mt3f1pgCrh5mZiLegLxyW5XpSmRgg+pQs+96m1h/QhnWmBTYXYAvdJHiHU4NHLqcuEb8XJsVRiUziKE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/rJ3sAc0BGxFezhSkK7QeheU6e+vIMkeufoEYAbPK27NMgrpy
-	KbgzNTpJ1VU1OMIZ2kFgAFGfvyJybkoeuyxbiGCYSgHo5tJVx2X2lm1KOIwPfFUb/Nz/hZT9nfn
-	0oBiWf6V/QLTJgcrIZgKGxgh0xes=
-X-Google-Smtp-Source: AGHT+IHvXUTarGMYeOaKKsW+FN3QwtQv2QpSGOZ23ZRLPE5CzPFtcgCvZSOOCJ7H6AXnol9+HR1kh2qnv8rowRMDuRA=
-X-Received: by 2002:a05:6871:538e:b0:297:2719:deb6 with SMTP id
- 586e51a60fabf-2b32f0997bamr5266199fac.1.1738271205069; Thu, 30 Jan 2025
- 13:06:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9Hymzly"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5fa2685c5c0so598776eaf.3;
+        Thu, 30 Jan 2025 13:11:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738271491; x=1738876291; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=zrozKZhUsf0BYF6M/RZ+jLUhYLZg8n+tyBNJQipgXl4=;
+        b=T9HymzlyUgIMXHozME3OxV0ioE8o+W2qiw0dy1sLOji3jW1phPTk9p/NB8su7su2DV
+         o6B83XSclyt0GwhUtOWbG+MSgXn0H3zWQtNeoqYKAaDsoh+FnhjaqwpgDt3HEdqGzOxR
+         mVo3+Zj8eEUctlewZ0TL8NVxGhYeSvZO72E9tnveBKlhKgpPxYstep3Ua62M8TTtRQhd
+         Q8gu4EXrOqIV9BtDADoAOzmV/2K455/UrN9XSrDzLuo/scQsMakhT+FpaZGLqEdDK+H9
+         Se9QT3G/Uku64eg0CfHh9e+amhDYBcp09BlVhZkQ+nBX5eA0Myy+yzHasyDp7nIcEUrR
+         UAAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738271491; x=1738876291;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zrozKZhUsf0BYF6M/RZ+jLUhYLZg8n+tyBNJQipgXl4=;
+        b=P8EYHT6IiCHxsBhPQbVnF0XeCG9iu0tD+CL3xbVpBADxzzx7MtmhCmHxOFS/OJ95Sr
+         xDiatmuwTk44UIZnU+zchN6JM0hh8oMs3wTxKjnbLJ+LBEAlRfVjp5TrrldU+fMiGDLp
+         VkEOCaVN5r1ZgDZ6khmUZI6igT+IR4ylOCsns2UcDRKVGUFSs2RXbgtJP3NZ+7f59FTW
+         w7OiE2vNPS6edPxo/CW9wP0IKTiD5J0Bly4vfHMYfDyhMi+I3FecYcKlk/1R8UEisJ9b
+         8FRzmeGrFKRmCPHNTNIVWiN5+GSSEezy/KbjdRJhiycQ8yU3jFnGg22KRyRvKTWGIGIo
+         G/Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXtDIO1k/I0QI3UtmnMeHo7qfu3TJeNte2/yWDTh/w386PSFyDIhMyEoPfZCau2EMcOHYSaULe@vger.kernel.org, AJvYcCVIXedKEZhdY/QFjE7iSatIFcPwa7Vq8cPsonfbs+sOtMdj8eiFu4WiKPGqAt3YDK58HpQ8s5hK6haEvqw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6rZq7cqMkENOkhHGL+XOrLHL6lXUOmEjMCuF76waGyTfgS/Ci
+	StmjvX0UUthdO9/KIhqpqjsLrpOxXf+3tObAWDa19QQrETHz1xpY
+X-Gm-Gg: ASbGncvtAenKx6F7mtJb0C0uheRiU93W7rgbT8q9K3b4/9sSPkjPXJhNMQgJ9mkeNNl
+	EfyPe3TGulnzfaa9V6eu0+hjs13SA3+RiZr9opoYt4i1dOCrVZewzpBXfg6iJHxbETnzw7CJeWm
+	u9tfcpN18L6KYTdRfBImCmuox7bEiO9fy8kRNw9HCbqj8t9iNjMKS6gT7Ij7fV8dLrnCD202cZA
+	R6qJnRNp75aQqJ7XXWXt1HA/VkISEuv649g2bwiJo9CdwoBFhRLkmeiPIK5DpUVOAZvAnim+6n+
+	9ofvwPmVuorykJWN4hv355dcSj84w/Xp7imvIf2i39E=
+X-Google-Smtp-Source: AGHT+IFj1l7gMmlp1b021UFXOKqvtrROOkTwStsq4sQZ8D5840chGoARIZF5cP4ECTA+XUsVsDzK7g==
+X-Received: by 2002:a05:6870:e0d0:b0:27b:61df:2160 with SMTP id 586e51a60fabf-2b32f2806c7mr6358267fac.31.1738271490772;
+        Thu, 30 Jan 2025 13:11:30 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b3565b4d43sm631689fac.38.2025.01.30.13.11.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 13:11:29 -0800 (PST)
+Message-ID: <51782a25-3bb1-4b49-89d3-25721ad9c3cc@gmail.com>
+Date: Thu, 30 Jan 2025 13:11:26 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 30 Jan 2025 22:06:34 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0htsHzumnajMzcndHi1C1SjxQXXZp6Sg4qo6mnkftHUng@mail.gmail.com>
-X-Gm-Features: AWEUYZn2FeCVR0sHvPIe_QR3ehy2o7_H-nv_bLEDhZD3nCeLHyBl1qcK8NwADN8
-Message-ID: <CAJZ5v0htsHzumnajMzcndHi1C1SjxQXXZp6Sg4qo6mnkftHUng@mail.gmail.com>
-Subject: [GIT PULL] ACPI fixes for v6.14-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.15 00/24] 5.15.178-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250130140127.295114276@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+In-Reply-To: <20250130140127.295114276@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+On 1/30/25 06:01, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.178 release.
+> There are 24 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 01 Feb 2025 14:01:15 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.178-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Please pull from the tag
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-6.14-rc1-2
-
-with top-most commit 0141978ae75bd48bac13fca6de131a5071c32011
-
- x86/acpi: Fix LAPIC/x2APIC parsing order
-
-on top of commit 603f162a02d5ccf0b3c5b2c6f488e456be81007f
-
- Merge tag 'acpi-6.14-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-
-to receive ACPI fixes for 6.14-rc1.
-
-These add a new ACPI-related quirk for Vexia EDU ATLA 10 tablet 5V (Hans
-de Goede) and fix the MADT parsing code so that CPUs with different entry
-types (LAPIC and x2APIC) are initialized in the order in which they appear
-in the MADT as required by the ACPI specification (Zhang Rui).
-
-Thanks!
-
-
----------------
-
-Hans de Goede (1):
-      ACPI: x86: Add skip i2c clients quirk for Vexia EDU ATLA 10 tablet 5V
-
-Zhang Rui (1):
-      x86/acpi: Fix LAPIC/x2APIC parsing order
-
----------------
-
- arch/x86/kernel/acpi/boot.c | 50 ++++++++++++++++++++++++++++++++++++++++-----
- drivers/acpi/x86/utils.c    | 13 ++++++++++++
- 2 files changed, 58 insertions(+), 5 deletions(-)
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
