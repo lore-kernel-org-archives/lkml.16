@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28ED91F1503;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560E11F1523;
 	Thu, 30 Jan 2025 19:03:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738263800; cv=none; b=smF74UgK0YpxT7WmGS/ekGu0SVpTHkhI8oFFZzGuvuB3USIF8ji4IyT7ShT/DvilYJ4kPI1sf228Qgzi8L65io2a/uAYT3DyRmbs3wmqc2qtvLSoNdWuNKUfK4CPoyw7Q0qCMkVlhMVL7C3SwUi3iwTxtLhYYPcx09mzzQjfT7M=
+	t=1738263800; cv=none; b=FRHr5zAIjr5AJJlEMchWRYseGDi5Jm6EZAIgecCOumjdTr4+3J+Znj5LSqsTgbcEYiziuNHEeRy1rInJUWQhQoQkjKTAwUsmFF0WSZh8Lo/z2+X9I1QFT6DDcRQRb2zbWaieHL19pNH+qnfxpwyGOxWUx2S+BPBEig/uJKKLVZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738263800; c=relaxed/simple;
-	bh=FgQr+mfpSSSft5WT23ngWflMJ8+VHwKTgm4CveuSOKc=;
+	bh=rzttFulWXFHlVagRx0vJ3s9U1XCsDzVFtAX/Lp+7Vq0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mWURivt/mfPrqOJZDATBowyjS/PrY52T9WCx2MXzKafVz8LgiEDuXa3tdHR5q7x8KfqBFL0nw4WWckVDSaodL+ye6UOpv3REhuKXQXrLC0ddpdVfPcc/8UrAMHEK2WhHoO6kV5xPxXBcjaWw4iuFWMhHSH7oz+xx0UYTzOhuj7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5F8PaT9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dmS2gBO9jmY6ve333vph5hH/3lFIyPezBRNSzxz72dMuFpfTaH7+VidALUciHqaCoOHnyv6mcjPf6kIpdAiRBxWqWPlTZwhMAip5mAkmnkALT8gUwT+nQUqUrBr+PXt/Ndxf0ThTWNklurVTfZlNBuDvJSWV+Y3sNTiCW2GT5sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jvqgOp/a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5F8PaT9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B93AAC116B1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jvqgOp/a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2434C4CED2;
 	Thu, 30 Jan 2025 19:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1738263799;
-	bh=FgQr+mfpSSSft5WT23ngWflMJ8+VHwKTgm4CveuSOKc=;
+	bh=rzttFulWXFHlVagRx0vJ3s9U1XCsDzVFtAX/Lp+7Vq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X5F8PaT94MAk6AKePBNQYZaZxbCJsguT59Su7HZK0glvX/l5myeOxqRPWLSYhat+A
-	 nTIHAnItZasx7R3O+dB4YCrVYXDk/lJHDhIAQF0ItAKecELlDsfmi0zq3horYqeGRU
-	 eqejRMGzAwPCoo/ggMYImJTCbs/cxyL53I/UzEHYmNlv4O4uq1jmgihriVdtDXfixh
-	 Z1hyGLOubGDac0KQG7pYQvNNWQN1Zakn5kzGeuPX0mPy+ucQRZMTXY1vY46sBRUtfG
-	 FlbBSw0PIxFxVmeI9zfDSAKXuNE+tEHvMQ62Lae0RASO8ymQ/TOQT/ZXw+mZLoPQ+f
-	 HDGgbOTrlu6pw==
+	b=jvqgOp/a4GfsCpTIWU0Mj/KxW8kVoqGOYWbEW4wd+dkdTfecfRCz0kaY7d1Y7gtsf
+	 jfslVsVLL7cj8TzhjIwZ7dcmwPy919XsebZBxf8ZXbZD/NmSfArFF6SyYShLiau3S3
+	 FG8UpxbAxhm0b8Zbq3aXPFH6n36mi8rdlMG8K1UPEKUiztihwUHRzSvMLGQJGIkzo+
+	 WvsL7uoanq+YHZqV0C7sfXb7yZ7c0y23Xf2qxXghQveF1OvfnWYTxGKCBjW/qnW5q9
+	 nIyPCp39R8g2GlOC5NKIXuZw3G901dDrEZgSeT1UqxSGUhFUjFx1pTsGD5NnTtqOF2
+	 3PiDaU0wDhQ9g==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 011DACE3800; Thu, 30 Jan 2025 11:03:19 -0800 (PST)
+	id 0748CCE3806; Thu, 30 Jan 2025 11:03:19 -0800 (PST)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: rcu@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -39,9 +39,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Peter Zijlstra <peterz@infradead.org>,
 	Kent Overstreet <kent.overstreet@linux.dev>,
 	bpf@vger.kernel.org
-Subject: [PATCH rcu v2] 13/20] srcu: Add SRCU-fast readers
-Date: Thu, 30 Jan 2025 11:03:10 -0800
-Message-Id: <20250130190317.1652481-13-paulmck@kernel.org>
+Subject: [PATCH rcu v2] 15/20] refscale: Add srcu_read_lock_fast() support using "srcu-fast"
+Date: Thu, 30 Jan 2025 11:03:12 -0800
+Message-Id: <20250130190317.1652481-15-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <1034ef54-b6b3-42bb-9bd8-4c37c164950d@paulmck-laptop>
 References: <1034ef54-b6b3-42bb-9bd8-4c37c164950d@paulmck-laptop>
@@ -53,30 +53,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit adds srcu_read_{,un}lock_fast(), which is similar
-to srcu_read_{,un}lock_lite(), but avoids the array-indexing and
-pointer-following overhead.  On a microbenchmark featuring tight
-loops around empty readers, this results in about a 20% speedup
-compared to RCU Tasks Trace on my x86 laptop.
-
-Please note that SRCU-fast has drawbacks compared to RCU Tasks
-Trace, including:
-
-o	Lack of CPU stall warnings.
-o	SRCU-fast readers permitted only where rcu_is_watching().
-o	A pointer-sized return value from srcu_read_lock_fast() must
-	be passed to the corresponding srcu_read_unlock_fast().
-o	In the absence of readers, a synchronize_srcu() having _fast()
-	readers will incur the latency of at least two normal RCU grace
-	periods.
-o	RCU Tasks Trace priority boosting could be easily added.
-	Boosting SRCU readers is more difficult.
-
-SRCU-fast also has a drawback compared to SRCU-lite, namely that the
-return value from srcu_read_lock_fast()-fast is a 64-bit pointer and
-that from srcu_read_lock_lite() is only a 32-bit int.
-
-[ paulmck: Apply feedback from Akira Yokosawa. ]
+This commit creates a new srcu-fast option for the refscale.scale_type
+module parameter that selects srcu_read_lock_fast() and
+srcu_read_unlock_fast().
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
@@ -85,166 +64,59 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Kent Overstreet <kent.overstreet@linux.dev>
 Cc: <bpf@vger.kernel.org>
 ---
- include/linux/srcu.h     | 47 ++++++++++++++++++++++++++++++++++++++--
- include/linux/srcutiny.h | 22 +++++++++++++++++++
- include/linux/srcutree.h | 38 ++++++++++++++++++++++++++++++++
- 3 files changed, 105 insertions(+), 2 deletions(-)
+ kernel/rcu/refscale.c | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/srcu.h b/include/linux/srcu.h
-index 2bd0e24e9b55..63bddc301423 100644
---- a/include/linux/srcu.h
-+++ b/include/linux/srcu.h
-@@ -47,9 +47,10 @@ int init_srcu_struct(struct srcu_struct *ssp);
- #define SRCU_READ_FLAVOR_NORMAL	0x1		// srcu_read_lock().
- #define SRCU_READ_FLAVOR_NMI	0x2		// srcu_read_lock_nmisafe().
- #define SRCU_READ_FLAVOR_LITE	0x4		// srcu_read_lock_lite().
-+#define SRCU_READ_FLAVOR_FAST	0x8		// srcu_read_lock_fast().
- #define SRCU_READ_FLAVOR_ALL   (SRCU_READ_FLAVOR_NORMAL | SRCU_READ_FLAVOR_NMI | \
--				SRCU_READ_FLAVOR_LITE) // All of the above.
--#define SRCU_READ_FLAVOR_SLOWGP	SRCU_READ_FLAVOR_LITE
-+				SRCU_READ_FLAVOR_LITE | SRCU_READ_FLAVOR_FAST) // All of the above.
-+#define SRCU_READ_FLAVOR_SLOWGP	(SRCU_READ_FLAVOR_LITE | SRCU_READ_FLAVOR_FAST)
- 						// Flavors requiring synchronize_rcu()
- 						// instead of smp_mb().
- void __srcu_read_unlock(struct srcu_struct *ssp, int idx) __releases(ssp);
-@@ -253,6 +254,33 @@ static inline int srcu_read_lock(struct srcu_struct *ssp) __acquires(ssp)
- 	return retval;
- }
+diff --git a/kernel/rcu/refscale.c b/kernel/rcu/refscale.c
+index 1b47376acdc4..f11a7c2af778 100644
+--- a/kernel/rcu/refscale.c
++++ b/kernel/rcu/refscale.c
+@@ -216,6 +216,36 @@ static const struct ref_scale_ops srcu_ops = {
+ 	.name		= "srcu"
+ };
  
-+/**
-+ * srcu_read_lock_fast - register a new reader for an SRCU-protected structure.
-+ * @ssp: srcu_struct in which to register the new reader.
-+ *
-+ * Enter an SRCU read-side critical section, but for a light-weight
-+ * smp_mb()-free reader.  See srcu_read_lock() for more information.
-+ *
-+ * If srcu_read_lock_fast() is ever used on an srcu_struct structure,
-+ * then none of the other flavors may be used, whether before, during,
-+ * or after.  Note that grace-period auto-expediting is disabled for _fast
-+ * srcu_struct structures because auto-expedited grace periods invoke
-+ * synchronize_rcu_expedited(), IPIs and all.
-+ *
-+ * Note that srcu_read_lock_fast() can be invoked only from those contexts
-+ * where RCU is watching, that is, from contexts where it would be legal
-+ * to invoke rcu_read_lock().  Otherwise, lockdep will complain.
-+ */
-+static inline struct srcu_ctr __percpu *srcu_read_lock_fast(struct srcu_struct *ssp) __acquires(ssp)
++static void srcu_fast_ref_scale_read_section(const int nloops)
 +{
-+	struct srcu_ctr __percpu *retval;
++	int i;
++	struct srcu_ctr __percpu *scp;
 +
-+	srcu_check_read_flavor_force(ssp, SRCU_READ_FLAVOR_FAST);
-+	retval = __srcu_read_lock_fast(ssp);
-+	rcu_try_lock_acquire(&ssp->dep_map);
-+	return retval;
++	for (i = nloops; i >= 0; i--) {
++		scp = srcu_read_lock_fast(srcu_ctlp);
++		srcu_read_unlock_fast(srcu_ctlp, scp);
++	}
 +}
 +
- /**
-  * srcu_read_lock_lite - register a new reader for an SRCU-protected structure.
-  * @ssp: srcu_struct in which to register the new reader.
-@@ -356,6 +384,21 @@ static inline void srcu_read_unlock(struct srcu_struct *ssp, int idx)
- 	__srcu_read_unlock(ssp, idx);
- }
- 
-+/**
-+ * srcu_read_unlock_fast - unregister a old reader from an SRCU-protected structure.
-+ * @ssp: srcu_struct in which to unregister the old reader.
-+ * @scp: return value from corresponding srcu_read_lock_fast().
-+ *
-+ * Exit a light-weight SRCU read-side critical section.
-+ */
-+static inline void srcu_read_unlock_fast(struct srcu_struct *ssp, struct srcu_ctr __percpu *scp)
-+	__releases(ssp)
++static void srcu_fast_ref_scale_delay_section(const int nloops, const int udl, const int ndl)
 +{
-+	srcu_check_read_flavor(ssp, SRCU_READ_FLAVOR_FAST);
-+	srcu_lock_release(&ssp->dep_map);
-+	__srcu_read_unlock_fast(ssp, scp);
++	int i;
++	struct srcu_ctr __percpu *scp;
++
++	for (i = nloops; i >= 0; i--) {
++		scp = srcu_read_lock_fast(srcu_ctlp);
++		un_delay(udl, ndl);
++		srcu_read_unlock_fast(srcu_ctlp, scp);
++	}
 +}
 +
- /**
-  * srcu_read_unlock_lite - unregister a old reader from an SRCU-protected structure.
-  * @ssp: srcu_struct in which to unregister the old reader.
-diff --git a/include/linux/srcutiny.h b/include/linux/srcutiny.h
-index 07a0c4489ea2..380260317d98 100644
---- a/include/linux/srcutiny.h
-+++ b/include/linux/srcutiny.h
-@@ -71,6 +71,28 @@ static inline int __srcu_read_lock(struct srcu_struct *ssp)
- 	return idx;
- }
- 
-+struct srcu_ctr;
++static const struct ref_scale_ops srcu_fast_ops = {
++	.init		= rcu_sync_scale_init,
++	.readsection	= srcu_fast_ref_scale_read_section,
++	.delaysection	= srcu_fast_ref_scale_delay_section,
++	.name		= "srcu-fast"
++};
 +
-+static inline bool __srcu_ptr_to_ctr(struct srcu_struct *ssp, struct srcu_ctr __percpu *scpp)
-+{
-+	return (int)(intptr_t)(struct srcu_ctr __force __kernel *)scpp;
-+}
-+
-+static inline struct srcu_ctr __percpu *__srcu_ctr_to_ptr(struct srcu_struct *ssp, int idx)
-+{
-+	return (struct srcu_ctr __percpu *)(intptr_t)idx;
-+}
-+
-+static inline struct srcu_ctr __percpu *__srcu_read_lock_fast(struct srcu_struct *ssp)
-+{
-+	return __srcu_ctr_to_ptr(ssp, __srcu_read_lock(ssp));
-+}
-+
-+static inline void __srcu_read_unlock_fast(struct srcu_struct *ssp, struct srcu_ctr __percpu *scp)
-+{
-+	__srcu_read_unlock(ssp, __srcu_ptr_to_ctr(ssp, scp));
-+}
-+
- #define __srcu_read_lock_lite __srcu_read_lock
- #define __srcu_read_unlock_lite __srcu_read_unlock
- 
-diff --git a/include/linux/srcutree.h b/include/linux/srcutree.h
-index ef3065c0cadc..bdc467efce3a 100644
---- a/include/linux/srcutree.h
-+++ b/include/linux/srcutree.h
-@@ -226,6 +226,44 @@ static inline struct srcu_ctr __percpu *__srcu_ctr_to_ptr(struct srcu_struct *ss
- 	return &ssp->sda->srcu_ctrs[idx];
- }
- 
-+/*
-+ * Counts the new reader in the appropriate per-CPU element of the
-+ * srcu_struct.  Returns a pointer that must be passed to the matching
-+ * srcu_read_unlock_fast().
-+ *
-+ * Note that this_cpu_inc() is an RCU read-side critical section either
-+ * because it disables interrupts, because it is a single instruction,
-+ * or because it is a read-modify-write atomic operation, depending on
-+ * the whims of the architecture.
-+ */
-+static inline struct srcu_ctr __percpu *__srcu_read_lock_fast(struct srcu_struct *ssp)
-+{
-+	struct srcu_ctr __percpu *scp = READ_ONCE(ssp->srcu_ctrp);
-+
-+	RCU_LOCKDEP_WARN(!rcu_is_watching(), "RCU must be watching srcu_read_lock_fast().");
-+	this_cpu_inc(scp->srcu_locks.counter); /* Y */
-+	barrier(); /* Avoid leaking the critical section. */
-+	return scp;
-+}
-+
-+/*
-+ * Removes the count for the old reader from the appropriate
-+ * per-CPU element of the srcu_struct.  Note that this may well be a
-+ * different CPU than that which was incremented by the corresponding
-+ * srcu_read_lock_fast(), but it must be within the same task.
-+ *
-+ * Note that this_cpu_inc() is an RCU read-side critical section either
-+ * because it disables interrupts, because it is a single instruction,
-+ * or because it is a read-modify-write atomic operation, depending on
-+ * the whims of the architecture.
-+ */
-+static inline void __srcu_read_unlock_fast(struct srcu_struct *ssp, struct srcu_ctr __percpu *scp)
-+{
-+	barrier();  /* Avoid leaking the critical section. */
-+	this_cpu_inc(scp->srcu_unlocks.counter);  /* Z */
-+	RCU_LOCKDEP_WARN(!rcu_is_watching(), "RCU must be watching srcu_read_unlock_fast().");
-+}
-+
- /*
-  * Counts the new reader in the appropriate per-CPU element of the
-  * srcu_struct.  Returns an index that must be passed to the matching
+ static void srcu_lite_ref_scale_read_section(const int nloops)
+ {
+ 	int i;
+@@ -1163,7 +1193,7 @@ ref_scale_init(void)
+ 	long i;
+ 	int firsterr = 0;
+ 	static const struct ref_scale_ops *scale_ops[] = {
+-		&rcu_ops, &srcu_ops, &srcu_lite_ops, RCU_TRACE_OPS RCU_TASKS_OPS
++		&rcu_ops, &srcu_ops, &srcu_fast_ops, &srcu_lite_ops, RCU_TRACE_OPS RCU_TASKS_OPS
+ 		&refcnt_ops, &rwlock_ops, &rwsem_ops, &lock_ops, &lock_irq_ops,
+ 		&acqrel_ops, &sched_clock_ops, &clock_ops, &jiffies_ops,
+ 		&typesafe_ref_ops, &typesafe_lock_ops, &typesafe_seqlock_ops,
 -- 
 2.40.1
 
