@@ -1,213 +1,171 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0A11EE7D3
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308091EBFE2
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738259643; cv=none; b=MhMsX0VIlZmxXqD/gAwquRf1+uxbBYUh7la2yt4k7IxZMv5a+EFRUP3Mkr076NI6PING/JhFYMnhFfCaeq9m5w9nIiZyEEKgnQyO61JS1vZMwZAzxPR4vtPnlg29z8b3b9kbOILwMuR4OMQp7BqqJRloptCqeh3H3chbUld7gJg=
+	t=1738259739; cv=none; b=rdAuLZBy9q2Iuc1PrvRn8rYUBaqP+0AQTyEmHNQ7KSlSp496BmwU190vXCfUQyi6LyIGL3p0dGif1EJ0B7fFbd0p+tDPy/QcwZIFuXrX/8W2UBfk+/08Izo6AWIj0woIM/iWq1bRERDxe8A+oxEycwkwxf5glKKAIkXPp/Z68Fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738259643; c=relaxed/simple;
-	bh=WUw+cg2C7p4c6woyhzeIifv4ld0H2t+UcA3JTslN+0Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WDY3BjKjdYxDhgHLydjPigZQ6iFxcQqWGs0AKmnx7cPjc+yQOTX3KXtPkJ79V8NEMOSaLhRkJf+oP9x1vIfjU9hQGM3PwX4k6WpXVeqlntMmvgT4wZ6N/HBijd8q1ukpSHeMC6FQhE022mq67NYMThF0hXS66Wkswppc6XWQCeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SDNoEJt7; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738259739; c=relaxed/simple;
+	bh=HN4oaVw6L4NZ7pdZIl7QwpK6oiJkLd7pgPdgW/nJ+wQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fMJtAeIMeJAGQeDT0Sk2a8EOVLYaacVBgdfFVxmx8yAHu34dN17+vzR+HSS0tm7efZwuXJ1PSh4EYtP8rp+MrtZnhdMoXB7zZblvP9sr0ufQzVfWp0Cy3DIv3X94K5qvaEM5SFAV1Nrp9xyyX2pYlhe/IIehl57duQ5IyzQvKwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ew4Jm8QA; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SDNoEJt7"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3862b40a6e0so766428f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:54:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738259640; x=1738864440; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z8JJUa/aNAV/P70L0oa1PWI0esDvQnXBP48aD2W+hbQ=;
-        b=SDNoEJt7SGYkbHVNdjvckU8rtSPLBWRK1Di315zd5pcyoUWrZBRVKknXL0hHQEmAah
-         gPQKNRm+BQmaDaOH/DQd/vNh+vq2kT+5QnvfxZkcF5Iw+fnWH+6gckIY/9QXVqQveMbS
-         qU94ss1EcYjTdTmTj34HuVKYFUeWnXk9shEGjYKNSH3iC5ANjJwVjiXyyCBAcrd0nhK4
-         Anf1df7Ip2ZJXvjnA6TcGiBC8KWxSOB1gzT8w8CXtDJrxFaaGbZ2G00gdQ2HMKg46X8N
-         0t/ZBexechWA0P3jhzHe+w2pvbtUbm8G3l2f8vHv2fyT7kyPq2ZaSrJR4tfH8Hg7e+N8
-         txFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738259640; x=1738864440;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z8JJUa/aNAV/P70L0oa1PWI0esDvQnXBP48aD2W+hbQ=;
-        b=mTidJ6J4k/k5sz0ll260F7eBxi+7kM7l1YWGv/8mucuep+VZD/9gzWMV+zoimKkdMZ
-         YngzMiS3sh8BgZHb+L6y0a8kdDV6qzKkb6P4o69npgRbgN7iUVUGoYyZa3DXcgPCSPlW
-         /pXW3MSKElx78UIjQqYQsFuXZ//yFpueDzV25D3rLLE+M4ZSYbVXeGjv9mH6CqR/kvSi
-         dAsMnUU97yVbAI8KpIT5nbknNl+VWmHGPZ6LyFBXWVeJ8RkKvC14/BaT9sz506CeBGTA
-         Jz6JGw0hzkJMu1SSwhGsFQcP3KAqVBUeyD/IUXwkMJD8ZUuOzFfP86048fJ7RxNZjg4W
-         SkhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1X70SnIxj9Q5vxXsSmi4VP53iaiOaZBT8HhXds08jRqWO3W0VPUnAOYS/P8VLhVH/mY16AQBU4DXqq7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTK0079eX3QlSDp6mgBt6rWbtPuy1PPKYFhPBcFQ4DckN6hWLb
-	/yRE5+LORD0XftjKGvZh4YMRZ1IiJ6ew2KxsQjbuaacuQMDFT0hoZ5zMrkIWwLo=
-X-Gm-Gg: ASbGnctcnSZ4jQM2P28XrHOiN/JCTqCD3tHMiJ9s3ahG9dQIdx7Fhn6tR9uNNsCdywT
-	lgNnxCWaduY9VUD9aX7NwSEQ5VqIMS/su6ncumkfWPHaQ9DBapw4I5Ze3iLGCxkiFVjMkcWlu/0
-	0CefQlRR+rDDp8DDgqX/FxJa5MgYwPfIkhPQfHPISioCa2LfUluG/2YS8fGbQCybZJ5xzj3Rbkw
-	90LajEOGvI7k2MOdZJLEyu0IcUcK6VYVPV12fNh+lKWLkiXfl/RBE10w1dgaTSodvs3pAn2eGGz
-	Hv/kst9Jrw1B0z1zyrViWlF8hjbE1twk9CQWXu+JFu8BMCxVR3aMNG8=
-X-Google-Smtp-Source: AGHT+IE96tMjtmz3u9v3Eic5ID5HrbnpMbVJNYNsrTeZ4kPIWPh0vN3o9LQirB4Tqm2SD1jL2Q6Ung==
-X-Received: by 2002:a05:6000:186d:b0:38c:617c:ee22 with SMTP id ffacd0b85a97d-38c617cf0c1mr173456f8f.54.1738259638478;
-        Thu, 30 Jan 2025 09:53:58 -0800 (PST)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-438dcc2f17dsm65847425e9.23.2025.01.30.09.53.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 09:53:58 -0800 (PST)
-Message-ID: <034707dd-e6b1-4a39-860b-b972fa438645@linaro.org>
-Date: Thu, 30 Jan 2025 18:53:57 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ew4Jm8QA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738259737; x=1769795737;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=HN4oaVw6L4NZ7pdZIl7QwpK6oiJkLd7pgPdgW/nJ+wQ=;
+  b=Ew4Jm8QASxlPqRI4ENIbRds6JprDS5E7mNv3msYWh40n2dVNulZHmM0Z
+   QnTLhcsdmbCx2GElUXjlQoqyMaLQO+dMTHPMkxt8OP/fCVgs96efG53MI
+   PI43Axl5BIO9MCzL1hAKeyZDm/YPbH/JdAlxDISRxMl4DiKg0PCubBYAm
+   5nATjAviNIRMo2XY+6/r4EktZUTUiT0HTw5HwEngisxsRjT3pzfc7+TuF
+   L9piUYVsbjpTgH1XgYrgVJU/yXFhYgVjcyH2NdoSFMQfmPVeUK+Axb3Aw
+   kqcRQFs5BQBBUaglHsz2GvecvDoly0t0XEyLkaX62Z4bRQieS4KlYefSI
+   Q==;
+X-CSE-ConnectionGUID: 8bKk/Ll+RL+vv6as2rH8gQ==
+X-CSE-MsgGUID: 6JZoym91Tmy7ZO/0QIhtvw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="49477208"
+X-IronPort-AV: E=Sophos;i="6.13,246,1732608000"; 
+   d="scan'208";a="49477208"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 09:55:35 -0800
+X-CSE-ConnectionGUID: jWsZPQwBROyZGkQvzxsUrg==
+X-CSE-MsgGUID: Aufc8seVSM2gN8kE4nLRKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="110295082"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 30 Jan 2025 09:55:33 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tdYlH-000kn1-16;
+	Thu, 30 Jan 2025 17:55:31 +0000
+Date: Fri, 31 Jan 2025 01:55:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	mptcp@lists.linux.dev, matthieu.baerts@tessares.net,
+	Jakub Kicinski <kuba@kernel.org>,
+	Matthieu Baerts <matttbe@kernel.org>
+Subject: net/ipv4/ip_gre.c:141:22: warning: variable 'data_len' set but not
+ used
+Message-ID: <202501310132.oGDmspPN-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] arm64: dts: renesas: r9a08g045: Add TSU node
-To: Claudiu <claudiu.beznea@tuxon.dev>, rafael@kernel.org,
- rui.zhang@intel.com, lukasz.luba@arm.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be,
- magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org,
- p.zabel@pengutronix.de, ulf.hansson@linaro.org
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
- Biju Das <biju.das.jz@bp.renesas.com>
-References: <20250103163805.1775705-1-claudiu.beznea.uj@bp.renesas.com>
- <20250103163805.1775705-6-claudiu.beznea.uj@bp.renesas.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20250103163805.1775705-6-claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 03/01/2025 17:38, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> Add TSU node along with thermal zones and keep it enabled in the SoC DTSI.
-> The temperature reported by the TSU can only be read through channel 8 of
-> the ADC. Therefore, enable the ADC by default.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->   arch/arm64/boot/dts/renesas/r9a08g045.dtsi    | 43 ++++++++++++++++++-
->   .../boot/dts/renesas/rzg3s-smarc-som.dtsi     |  4 --
->   2 files changed, 42 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-> index a9b98db9ef95..fd74138198a8 100644
-> --- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-> @@ -205,7 +205,6 @@ adc: adc@10058000 {
->   			#address-cells = <1>;
->   			#size-cells = <0>;
->   			#io-channel-cells = <1>;
-> -			status = "disabled";
->   
->   			channel@0 {
->   				reg = <0>;
-> @@ -244,6 +243,17 @@ channel@8 {
->   			};
->   		};
->   
-> +		tsu: thermal@10059000 {
-> +			compatible = "renesas,r9a08g045-tsu";
-> +			reg = <0 0x10059000 0 0x1000>;
-> +			clocks = <&cpg CPG_MOD R9A08G045_TSU_PCLK>;
-> +			resets = <&cpg R9A08G045_TSU_PRESETN>;
-> +			power-domains = <&cpg>;
-> +			#thermal-sensor-cells = <0>;
-> +			io-channels = <&adc 8>;
-> +			io-channel-names = "tsu";
-> +		};
-> +
->   		vbattb: clock-controller@1005c000 {
->   			compatible = "renesas,r9a08g045-vbattb";
->   			reg = <0 0x1005c000 0 0x1000>;
-> @@ -690,6 +700,37 @@ timer {
->   				  "hyp-virt";
->   	};
->   
-> +	thermal-zones {
-> +		cpu_thermal: cpu-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +			thermal-sensors = <&tsu>;
-> +			sustainable-power = <423>;
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&target>;
-> +					cooling-device = <&cpu0 0 2>;
-> +					contribution = <1024>;
-> +				};
-> +			};
-> +
-> +			trips {
-> +				sensor_crit: sensor-crit {
-> +					temperature = <125000>;
-> +					hysteresis = <1000>;
-> +					type = "critical";
-> +				};
-> +
-> +				target: trip-point {
-> +					temperature = <100000>;
-> +					hysteresis = <1000>;
-> +					type = "passive";
-> +				};
+Hi Geert,
 
-1. As you specified the sustainable power, the power allocator would be 
-used. However, it needs an intermediate passive trip point before 
-reaching the mitigation because the governor has to collect data ahead 
-of the passive mitigation trip point in order to feed the PID loop. This 
-trip point is not bound to any cooling device
+FYI, the error/warning still remains.
 
-2. The mitigation temperature is set to 100°C. The MTBF decay factor of 
-the semi-conductor will be increased by more the 100x times during the 
-thermal episodes stress thus reducing its lifespan considerably if it 
-hits this temperature often (but I doubt with a single Cortex-A55).
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   72deda0abee6e705ae71a93f69f55e33be5bca5c
+commit: 010b430d5df556d5d232e3751ac691ba9e88c041 mptcp: MPTCP_IPV6 should depend on IPV6 instead of selecting it
+date:   4 years, 3 months ago
+config: csky-randconfig-p001-20220406 (https://download.01.org/0day-ci/archive/20250131/202501310132.oGDmspPN-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250131/202501310132.oGDmspPN-lkp@intel.com/reproduce)
 
-3. It would make sense to add a 'hot' trip point so the user space can 
-take an action to reduce the thermal pressure before reaching the 
-critical temperature
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501310132.oGDmspPN-lkp@intel.com/
 
-4. IIUC, the CPU does not do voltage scaling but only frequency scaling, 
-right ? If it is the case, then it is even more true that the mitigation 
-trip point should be reduced because the frequency scaling only may not 
-suffice to provide a cooling effect
+All warnings (new ones prefixed by >>):
+
+   net/ipv4/ip_gre.c: In function 'ipgre_err':
+>> net/ipv4/ip_gre.c:141:22: warning: variable 'data_len' set but not used [-Wunused-but-set-variable]
+     141 |         unsigned int data_len = 0;
+         |                      ^~~~~~~~
 
 
-> +			};
-> +		};
-> +	};
-> +
->   	vbattb_xtal: vbattb-xtal {
->   		compatible = "fixed-clock";
->   		#clock-cells = <0>;
-> diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
-> index ef12c1c462a7..041d256d7b79 100644
-> --- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
-> @@ -102,10 +102,6 @@ x3_clk: x3-clock {
->   	};
->   };
->   
-> -&adc {
-> -	status = "okay";
-> -};
-> -
->   #if SW_CONFIG3 == SW_ON
->   &eth0 {
->   	pinctrl-0 = <&eth0_pins>;
+vim +/data_len +141 net/ipv4/ip_gre.c
 
+^1da177e4c3f41 Linus Torvalds           2005-04-16  122  
+071f92d05967a0 Rami Rosen               2008-05-21  123  	/* All the routers (except for Linux) return only
+^1da177e4c3f41 Linus Torvalds           2005-04-16  124  	   8 bytes of packet payload. It means, that precise relaying of
+^1da177e4c3f41 Linus Torvalds           2005-04-16  125  	   ICMP in the real Internet is absolutely infeasible.
+^1da177e4c3f41 Linus Torvalds           2005-04-16  126  
+^1da177e4c3f41 Linus Torvalds           2005-04-16  127  	   Moreover, Cisco "wise men" put GRE key to the third word
+c5441932145563 Pravin B Shelar          2013-03-25  128  	   in GRE header. It makes impossible maintaining even soft
+c5441932145563 Pravin B Shelar          2013-03-25  129  	   state for keyed GRE tunnels with enabled checksum. Tell
+c5441932145563 Pravin B Shelar          2013-03-25  130  	   them "thank you".
+^1da177e4c3f41 Linus Torvalds           2005-04-16  131  
+^1da177e4c3f41 Linus Torvalds           2005-04-16  132  	   Well, I wonder, rfc1812 was written by Cisco employee,
+bff528578fc3c4 stephen hemminger        2012-02-24  133  	   what the hell these idiots break standards established
+bff528578fc3c4 stephen hemminger        2012-02-24  134  	   by themselves???
+^1da177e4c3f41 Linus Torvalds           2005-04-16  135  	   */
+c5441932145563 Pravin B Shelar          2013-03-25  136  	struct net *net = dev_net(skb->dev);
+c5441932145563 Pravin B Shelar          2013-03-25  137  	struct ip_tunnel_net *itn;
+96f5a846bdd609 Eric Dumazet             2013-05-18  138  	const struct iphdr *iph;
+88c7664f13bd1a Arnaldo Carvalho de Melo 2007-03-13  139  	const int type = icmp_hdr(skb)->type;
+88c7664f13bd1a Arnaldo Carvalho de Melo 2007-03-13  140  	const int code = icmp_hdr(skb)->code;
+20e1954fe238db Eric Dumazet             2016-06-18 @141  	unsigned int data_len = 0;
+^1da177e4c3f41 Linus Torvalds           2005-04-16  142  	struct ip_tunnel *t;
+^1da177e4c3f41 Linus Torvalds           2005-04-16  143  
+32bbd8793f24b0 Stefano Brivio           2018-11-08  144  	if (tpi->proto == htons(ETH_P_TEB))
+32bbd8793f24b0 Stefano Brivio           2018-11-08  145  		itn = net_generic(net, gre_tap_net_id);
+32bbd8793f24b0 Stefano Brivio           2018-11-08  146  	else if (tpi->proto == htons(ETH_P_ERSPAN) ||
+32bbd8793f24b0 Stefano Brivio           2018-11-08  147  		 tpi->proto == htons(ETH_P_ERSPAN2))
+32bbd8793f24b0 Stefano Brivio           2018-11-08  148  		itn = net_generic(net, erspan_net_id);
+32bbd8793f24b0 Stefano Brivio           2018-11-08  149  	else
+32bbd8793f24b0 Stefano Brivio           2018-11-08  150  		itn = net_generic(net, ipgre_net_id);
+32bbd8793f24b0 Stefano Brivio           2018-11-08  151  
+32bbd8793f24b0 Stefano Brivio           2018-11-08  152  	iph = (const struct iphdr *)(icmp_hdr(skb) + 1);
+32bbd8793f24b0 Stefano Brivio           2018-11-08  153  	t = ip_tunnel_lookup(itn, skb->dev->ifindex, tpi->flags,
+32bbd8793f24b0 Stefano Brivio           2018-11-08  154  			     iph->daddr, iph->saddr, tpi->key);
+32bbd8793f24b0 Stefano Brivio           2018-11-08  155  
+32bbd8793f24b0 Stefano Brivio           2018-11-08  156  	if (!t)
+32bbd8793f24b0 Stefano Brivio           2018-11-08  157  		return -ENOENT;
+32bbd8793f24b0 Stefano Brivio           2018-11-08  158  
+^1da177e4c3f41 Linus Torvalds           2005-04-16  159  	switch (type) {
+^1da177e4c3f41 Linus Torvalds           2005-04-16  160  	default:
+^1da177e4c3f41 Linus Torvalds           2005-04-16  161  	case ICMP_PARAMETERPROB:
+32bbd8793f24b0 Stefano Brivio           2018-11-08  162  		return 0;
+^1da177e4c3f41 Linus Torvalds           2005-04-16  163  
+^1da177e4c3f41 Linus Torvalds           2005-04-16  164  	case ICMP_DEST_UNREACH:
+^1da177e4c3f41 Linus Torvalds           2005-04-16  165  		switch (code) {
+^1da177e4c3f41 Linus Torvalds           2005-04-16  166  		case ICMP_SR_FAILED:
+^1da177e4c3f41 Linus Torvalds           2005-04-16  167  		case ICMP_PORT_UNREACH:
+^1da177e4c3f41 Linus Torvalds           2005-04-16  168  			/* Impossible event. */
+32bbd8793f24b0 Stefano Brivio           2018-11-08  169  			return 0;
+^1da177e4c3f41 Linus Torvalds           2005-04-16  170  		default:
+^1da177e4c3f41 Linus Torvalds           2005-04-16  171  			/* All others are translated to HOST_UNREACH.
+^1da177e4c3f41 Linus Torvalds           2005-04-16  172  			   rfc2003 contains "deep thoughts" about NET_UNREACH,
+^1da177e4c3f41 Linus Torvalds           2005-04-16  173  			   I believe they are just ether pollution. --ANK
+^1da177e4c3f41 Linus Torvalds           2005-04-16  174  			 */
+^1da177e4c3f41 Linus Torvalds           2005-04-16  175  			break;
+^1da177e4c3f41 Linus Torvalds           2005-04-16  176  		}
+^1da177e4c3f41 Linus Torvalds           2005-04-16  177  		break;
+9f57c67c379d88 Pravin B Shelar          2015-08-07  178  
+^1da177e4c3f41 Linus Torvalds           2005-04-16  179  	case ICMP_TIME_EXCEEDED:
+^1da177e4c3f41 Linus Torvalds           2005-04-16  180  		if (code != ICMP_EXC_TTL)
+32bbd8793f24b0 Stefano Brivio           2018-11-08  181  			return 0;
+20e1954fe238db Eric Dumazet             2016-06-18  182  		data_len = icmp_hdr(skb)->un.reserved[1] * 4; /* RFC 4884 4.1 */
+^1da177e4c3f41 Linus Torvalds           2005-04-16  183  		break;
+55be7a9c6074f7 David S. Miller          2012-07-11  184  
+55be7a9c6074f7 David S. Miller          2012-07-11  185  	case ICMP_REDIRECT:
+55be7a9c6074f7 David S. Miller          2012-07-11  186  		break;
+^1da177e4c3f41 Linus Torvalds           2005-04-16  187  	}
+^1da177e4c3f41 Linus Torvalds           2005-04-16  188  
+
+:::::: The code at line 141 was first introduced by commit
+:::::: 20e1954fe238dbe5f8d3a979e593fe352bd703cf ipv6: RFC 4884 partial support for SIT/GRE tunnels
+
+:::::: TO: Eric Dumazet <edumazet@google.com>
+:::::: CC: David S. Miller <davem@davemloft.net>
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
