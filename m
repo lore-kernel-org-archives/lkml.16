@@ -1,77 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BCC1F12E8;
-	Thu, 30 Jan 2025 18:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A49179BC;
+	Thu, 30 Jan 2025 18:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738262899; cv=none; b=so6YDjwOW3Dm3VM0xuKBr6/p3X+RCFO48VMpQJc2Nkz45We1HUjWXPo02J1hRTS9d2RnF58XDBjQodRzXkALQ4yLXseA4bQcX2aFS6F/f5HBEcP3x1ZloySMbG5pI0ZO8s2cInD5dhRs85dc8uHMQsPDYQi4Uvniao4Rb+kxEx8=
+	t=1738262967; cv=none; b=C3CiRgfxuGmOTo5zW5h+SqmHzU5OJjTNKY6TIxuYR8xXAbRmL9TuFlqOO/oyHHPSX2M5+Mm/4pMNTkaBHud62UwC4OpbuR0Q2qBrfcWFUPFxBi173PqlCDsFgylq4lK5Ix1GIAsmc0m5bb8YpmCJOVpLJh9+Scar75DNJ5Ogfzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738262899; c=relaxed/simple;
-	bh=M4II0zr0MftMPwumgoOEcjOdPlhZ4Zq5Rr+hN0fU5sM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eJ58wLCm0PmHBRECGjStYiu8E1fHv0KafY8EyOjoNpw3zNbgWqOAkm2Fh+0JogasRbtjxa3LivRhwKR4FMo5/43ZDD4NgJFrGtCvDR0OjyIBkzQNOGNfH20pIVOm1lP01H24QSEhtdl6wGZafR7REC8MWZQeQz8H07hLEbxJ8C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZLnTb2fw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738262967; c=relaxed/simple;
+	bh=AWn5SFxUzI8JsIufek7SpD9CBh9ZRnNH+qA6EOcFSqo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rPoo8wWOQvddHMpY+nG5AiPjGAn8bq79jkwh1S2NPo7MNS178FMN4Mx81hti8HUiKVCnAFxx0pDGv7NDsvFrXGXAmhtlYoF8+vg17Z/hkxHi4OxjtYNuwIwUE9hLDaYTWyaHFZVqN/azfV3oDUG3H0qGfoGPhPOahIq/tjQbbpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UmBoRQYU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZLnTb2fw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5D61C4CED2;
-	Thu, 30 Jan 2025 18:48:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UmBoRQYU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D75CC4CED2;
+	Thu, 30 Jan 2025 18:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738262899;
-	bh=M4II0zr0MftMPwumgoOEcjOdPlhZ4Zq5Rr+hN0fU5sM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZLnTb2fwOQTIVS5IxR+sEBhmz7TaHuJWwJV3DD1fESoMqcR3RIptog8HS+ynmQ+WJ
-	 rXzWjg4jQuYVNcgngIVMX6CKpnh/ga57arz67d99fkn3lIG2b2a/6hVdia0Pu2Ft8d
-	 89SkABRSEdD6T1tbaGRDhJDdB4VVqbMdEMCwf+gs/SGkK0VEoJNIArHC0+W7lj1+MD
-	 +HeKJnfD9Mgl7J7gl5CHkHgzHQBp/eL7FzDSdFDscTR8f19syv+PHthWqfKXkb42Qf
-	 3vTe0URwSGGWlAuwD6XqwSLEeWHE7+1bXjNa2fC+sbUWASzH6yY861+rbQ4ah+tBI1
-	 i1KBzF5awX8JQ==
-Date: Thu, 30 Jan 2025 18:48:14 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Harini T <harini.t@amd.com>
-Cc: linux@roeck-us.net, michal.simek@amd.com, srinivas.neeli@amd.com,
-	shubhrajyoti.datta@amd.com, srinivas.goud@amd.com,
-	wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-	linux-kernel@vger.kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, devicetree@vger.kernel.org, git@amd.com
-Subject: Re: [PATCH V2] dt-bindings: watchdog: xlnx,versal-wwdt: Add optional
- power-domains property
-Message-ID: <20250130-antidote-visible-f66f18b8dcb5@spud>
-References: <20250130120233.742879-1-harini.t@amd.com>
+	s=k20201202; t=1738262967;
+	bh=AWn5SFxUzI8JsIufek7SpD9CBh9ZRnNH+qA6EOcFSqo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UmBoRQYUylOkaYKgPlDbmdgRXtkkRqXsNpISCQWLiGoCZ7Yw5KJviPWEH2DrnGa4J
+	 eqGjGQ3myKMvr3X91jvmVBqQfQWNvz2VBuFFCNQJ151DW2TQyalyae9rZu2qEPXjvW
+	 z0S2amaYE1QjLUPGQtVoXp/hUfYieN/P4gl9Zxr9GK7w01IO05xoNj3vosBkE303Ib
+	 nulYKx7/TSd98b2I53jL2sgNFPGCnGL+TOmu7HAeXuN4yr39g9OYr50XdK8Y2iUTy2
+	 bxQFoFNQdxoY7BS/yEL5QcUUTUqfIEQLY/bliyAv+CeXm7iYKJXkqKdFWaD5uZr4bW
+	 VvKzSe3BRIo4w==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 29482CE37D9; Thu, 30 Jan 2025 10:49:27 -0800 (PST)
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: rcu@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	rostedt@goodmis.org,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH rcu v2 1/7] doc: Add broken-timing possibility to stallwarn.rst
+Date: Thu, 30 Jan 2025 10:49:19 -0800
+Message-Id: <20250130184925.1651665-1-paulmck@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <851fd11f-6397-4411-983b-96f7234326d5@paulmck-laptop>
+References: <851fd11f-6397-4411-983b-96f7234326d5@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="H8KKBVW5x3KBHCFI"
-Content-Disposition: inline
-In-Reply-To: <20250130120233.742879-1-harini.t@amd.com>
+Content-Transfer-Encoding: 8bit
 
+Currently, stallwarn.rst does not mention the fact that timer bugs can
+result in false-positive RCU CPU stall warnings.  This commit therefore
+adds this to the list.
 
---H8KKBVW5x3KBHCFI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ Documentation/RCU/stallwarn.rst | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-On Thu, Jan 30, 2025 at 05:32:33PM +0530, Harini T wrote:
-> AMD/Xilinx Versal Window Watchdog Timer has its own power domain, so add
-> an optional property to describe it.
->=20
-> Signed-off-by: Harini T <harini.t@amd.com>
+diff --git a/Documentation/RCU/stallwarn.rst b/Documentation/RCU/stallwarn.rst
+index 30080ff6f406..d1ccd6039a8c 100644
+--- a/Documentation/RCU/stallwarn.rst
++++ b/Documentation/RCU/stallwarn.rst
+@@ -96,6 +96,13 @@ warnings:
+ 	the ``rcu_.*timer wakeup didn't happen for`` console-log message,
+ 	which will include additional debugging information.
+ 
++-	A timer issue causes time to appear to jump forward, so that RCU
++	believes that the RCU CPU stall-warning timeout has been exceeded
++	when in fact much less time has passed.  This could be due to
++	timer hardware bugs, timer driver bugs, or even corruption of
++	the "jiffies" global variable.	These sorts of timer hardware
++	and driver bugs are not uncommon when testing new hardware.
++
+ -	A low-level kernel issue that either fails to invoke one of the
+ 	variants of rcu_eqs_enter(true), rcu_eqs_exit(true), ct_idle_enter(),
+ 	ct_idle_exit(), ct_irq_enter(), or ct_irq_exit() on the one
+-- 
+2.40.1
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
---H8KKBVW5x3KBHCFI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ5vJbgAKCRB4tDGHoIJi
-0sTBAQC8ZjArlWelKI1K/wdrhTo3M8DLRODr0SI8A2zDUdWoQgD+P0/oVBYho3oL
-29bYov564YboB7+fP0DKP+2y/po+agw=
-=GB3D
------END PGP SIGNATURE-----
-
---H8KKBVW5x3KBHCFI--
