@@ -1,268 +1,82 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C848F64;
-	Thu, 30 Jan 2025 00:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E3D4C79;
+	Thu, 30 Jan 2025 00:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738197164; cv=none; b=ACnvzDqTCKchIGOMqGmmeEYwr1OdPnS79Kvo3cL258pIRrO5YXdGnnNQZlNDWb7PUwpdY2w7HM7aYZ9Zzxlp/PgJCruMrCRkFkVhvo3MoA5IzlaAuIO7DFCtkzH9VtFEds5n0H0HKC74uTJ70wmMbwtKcxTn686rBtrf2GGmFRc=
+	t=1738197558; cv=none; b=YyWjEuoRNAaHFS9JHQMtypODzwOZdZlbYCX4Plu/i6K97Y9k430rWZbey3UeTdo2oqZh6B/WC+1Z/ICsEEtU5+rhLKMk1z3BYFcUhB8AQEXTidqEGx9z39jmgPH9j93An+Zo31xgfPZyxfnK1pxFAPFO6pwtXkp6Byvxig1bQVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738197164; c=relaxed/simple;
-	bh=DDB7bg56NMUnL0uBNcrrhWdgBIpdvW8qwY9az36IAfg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o7abOcasJdg+PaHDPNfswIPc6cej98549PU1pqYCisbftnhkUG+lNHJDXwSpVjpxTmRnzdpEKAS4QYsbCm5HLX0/e6BSE2G19may1IlH6yiPHaGek5asN1ZMhjPHorvZH4JOTFLZJyM85O44JhUv1D69fVo/v7QBgY5CwT9L0L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fta9FzCi; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738197558; c=relaxed/simple;
+	bh=WQQRBTG8nViAwagWRgVW8s+Tgu2sdifMLiyfQMot608=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PIrGCa0KLFSHorPyKzRlobdLMTWcr03IA0cG0VbJ6AZxjxNkOMsmpXtqbGimLqvGfTcdqvLT6Z40Ow3gedThRfN7PSQRV5Wo1L28ZQ2JTPU8xOt+J7YbcgGaaGXc8FvnITOCfKqqOTF6lNSX3QMgrsmJyp3OH2ECTG0t9wl2pvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAZzq8ZX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fta9FzCi"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4361c705434so1148515e9.3;
-        Wed, 29 Jan 2025 16:32:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738197161; x=1738801961; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BNzfEvmIosIfU1ngPn58wZoWxqS9wyN0+JhAfuT1oug=;
-        b=Fta9FzCiGATtqLCWiQGJ4rLgYLEKRB3UIId2CFBHrFARsdSELM/hfaBGa/he8btNGO
-         H79IZaMkdTTclIK5RQNeH4LC4cTTs1n84KCg7uQuV30vngfEyj1Z14OcQvRVDyUydzSx
-         rmTQz6j0Rh4DIUMiKrWVe+4VqNEkLJO4TBvEBOcCgVuU9J+u88JUTuQVoUz+CDz7ZcGt
-         zttCPyn+VcO38DHIRfxHyNYjnjJ+BQG0XACv2R//ZTK1Gj6Vl8RUeuoEsoOoOrdrADII
-         FE4RsNw4+EuMnc/1I6ZpaVt26cF2vMh2L1LjdImmm+C4bljLeBagOthiE+0I+J1eEqSs
-         FgdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738197161; x=1738801961;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BNzfEvmIosIfU1ngPn58wZoWxqS9wyN0+JhAfuT1oug=;
-        b=FmK+n5bQ9Ow8rn5Adew4IxTOp6jwYNRaYfzLkpo8mRSYHNU+Zz/Oeb5VLMMDl/7sGU
-         0kfchtpYLRyplw/rHVwtPXidEploo3pNBjxN5mb6u88YzdHlxW/7sC3sDVomsY6dVO+W
-         Ufnh501y535kzrl2vwpENcyofXSeXjyltszTd5PWiYD8FAtG+FGe6g1t2iNVF4DoRoR/
-         bbeazNEWha8gMlgrscAF+g2wUH5Oo8C/7rxidgvLtGOwtARwYUQv29eLOw/fp86exr4C
-         wsTQFLnsjZG3czNUiblm+bPyWm9JFkyNb/7jn9JfvF0iGOHsaPAMPoKqeT+tZiVEk4Mf
-         Hj2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUd/9pPpmZZYY3qoFARzvfk92KbCbIW5fX6K2wEqiEGPMt8/wjhNZ9GQl1fnOjiuPN3q/I=@vger.kernel.org, AJvYcCVyerlau0Em0GoWQ4G4NmfdL0eggwoKQCAHaie/TH3gxnCtxW3nxj26wZtQUv1XeUjd7Zy2ExkWvxpLmcwL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxt2wwRhwkQw1lA3UOoI9FwGLpnp/r7Crbr1GMgLtsO3WdMUq+W
-	y1RHwLP1XZHwCcufeD9QCBXfHUoLaGgTEw4hZhPFq8sN+d4Cl36DZEzry29a9t6xenRoGYNbWXJ
-	UBwaZoN0Q2geD8aGFGN/NTp+olYE=
-X-Gm-Gg: ASbGnctKzt4Io+z0V1TsjCoe9tGffUGgvc23MlP1/uH1lXcyEg2LdiQSmpa9vrKGWnd
-	WsB2a01obYhJ4qs3F9yF31j2XlnqEF8HthY89xctHupfwTF1Ixr3arkHDf+WEK9ZAjFPLZxMW9r
-	f7hN9PAhTDZuu9aK6BEOkNj4GjVEs2
-X-Google-Smtp-Source: AGHT+IEeFINjC/PS45B3CX1IvC3COG13SjBgpFW6KdRZ53J9i76fzk41QBl+YeP3YC6GTiac3T6gmvBce6S9cZmsyY0=
-X-Received: by 2002:a05:600c:3d96:b0:434:fe3c:c67c with SMTP id
- 5b1f17b1804b1-438dc41d7b0mr39398365e9.26.1738197160384; Wed, 29 Jan 2025
- 16:32:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAZzq8ZX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79FDFC4CED1;
+	Thu, 30 Jan 2025 00:39:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738197557;
+	bh=WQQRBTG8nViAwagWRgVW8s+Tgu2sdifMLiyfQMot608=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NAZzq8ZXN0wFZZytsnIYXqDTmq1Q5HoY8fzprKJVJfb4SF0p7CKlmCoRAUWdnuWex
+	 pngyQwSwJeSxYjGkWBT6k3Djh1qoBGaNY/wdLl1ciyebhLJzULdvCPrrP+xMaC3Bda
+	 bBRtFAIPyjtebPz8wJlrhYek7o1DgQABD5HMpmm7EgRDWDQyk9HFLbaovIrpUNt/R+
+	 SXlg27Fs2RU0yDzlxlRszk0zSLGhOo+A9yiNUgQYZto0mxfWYQb/g29h94u580NE+V
+	 n44wmMEnMg19mqWVTZN2uwWOjEXxO64MmpmZSDw2rwbzyNYNb/h8Zg4DvcPIzFV4w1
+	 1QswOibGnHozg==
+Date: Wed, 29 Jan 2025 16:39:16 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Donald Hunter
+ <donald.hunter@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net 1/3] MAINTAINERS: Add myself as maintainer for
+ socket timestamping and expand file list
+Message-ID: <20250129163916.46b2ea5c@kernel.org>
+In-Reply-To: <20250128-fix_tsconfig-v1-1-87adcdc4e394@bootlin.com>
+References: <20250128-fix_tsconfig-v1-0-87adcdc4e394@bootlin.com>
+ <20250128-fix_tsconfig-v1-1-87adcdc4e394@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <AM6PR03MB5080C05323552276324C4B4C991A2@AM6PR03MB5080.eurprd03.prod.outlook.com>
- <AM6PR03MB50802A825536C00D2B53333C991A2@AM6PR03MB5080.eurprd03.prod.outlook.com>
- <CAADnVQLidcL-WU-VWXZtBph=qjJfAhoyrsYWyL7JwB0ZEH5KFQ@mail.gmail.com> <AM6PR03MB508053DF89CDFEB95CBEB20C99E32@AM6PR03MB5080.eurprd03.prod.outlook.com>
-In-Reply-To: <AM6PR03MB508053DF89CDFEB95CBEB20C99E32@AM6PR03MB5080.eurprd03.prod.outlook.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 29 Jan 2025 16:32:29 -0800
-X-Gm-Features: AWEUYZlwuECsWL28zSlFQ_NeuuPdVQ0K8Lec8PolHq1YLAepHv0utvfsqH1Vnpw
-Message-ID: <CAADnVQJN+C2Bdoe1w62vmDrPhcoweBxBy8Ck4a_SWrd5k=493A@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next 6/7] sched_ext: Make SCX use BPF capabilities
-To: Juntong Deng <juntong.deng@outlook.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 24, 2025 at 2:45=E2=80=AFPM Juntong Deng <juntong.deng@outlook.=
-com> wrote:
->
-> On 2025/1/24 04:52, Alexei Starovoitov wrote:
-> > On Thu, Jan 16, 2025 at 11:47=E2=80=AFAM Juntong Deng <juntong.deng@out=
-look.com> wrote:
-> >>
-> >> This patch modifies SCX to use BPF capabilities.
-> >>
-> >> Make all SCX kfuncs register to BPF capabilities instead of
-> >> BPF_PROG_TYPE_STRUCT_OPS.
-> >>
-> >> Add bpf_scx_bpf_capabilities_adjust as bpf_capabilities_adjust
-> >> callback function.
-> >>
-> >> Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
-> >> ---
-> >>   kernel/sched/ext.c | 74 ++++++++++++++++++++++++++++++++++++++------=
---
-> >>   1 file changed, 62 insertions(+), 12 deletions(-)
-> >>
-> >> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-> >> index 7fff1d045477..53cc7c3ed80b 100644
-> >> --- a/kernel/sched/ext.c
-> >> +++ b/kernel/sched/ext.c
-> >> @@ -5765,10 +5765,66 @@ bpf_scx_get_func_proto(enum bpf_func_id func_i=
-d, const struct bpf_prog *prog)
-> >>          }
-> >>   }
-> >
-> > 'capabilities' name doesn't fit.
-> > The word already has its meaning in the kernel.
-> > It cannot be reused for a different purpose.
-> >
-> >> +static int bpf_scx_bpf_capabilities_adjust(unsigned long *bpf_capabil=
-ities,
-> >> +                                          u32 context_info, bool ente=
-r)
-> >> +{
-> >> +       if (enter) {
-> >> +               switch (context_info) {
-> >> +               case offsetof(struct sched_ext_ops, select_cpu):
-> >> +                       ENABLE_BPF_CAPABILITY(bpf_capabilities, BPF_CA=
-P_SCX_KF_SELECT_CPU);
-> >> +                       ENABLE_BPF_CAPABILITY(bpf_capabilities, BPF_CA=
-P_SCX_KF_ENQUEUE);
-> >> +                       break;
-> >> +               case offsetof(struct sched_ext_ops, enqueue):
-> >> +                       ENABLE_BPF_CAPABILITY(bpf_capabilities, BPF_CA=
-P_SCX_KF_ENQUEUE);
-> >> +                       break;
-> >> +               case offsetof(struct sched_ext_ops, dispatch):
-> >> +                       ENABLE_BPF_CAPABILITY(bpf_capabilities, BPF_CA=
-P_SCX_KF_DISPATCH);
-> >> +                       break;
-> >> +               case offsetof(struct sched_ext_ops, running):
-> >> +               case offsetof(struct sched_ext_ops, stopping):
-> >> +               case offsetof(struct sched_ext_ops, enable):
-> >> +                       ENABLE_BPF_CAPABILITY(bpf_capabilities, BPF_CA=
-P_SCX_KF_REST);
-> >> +                       break;
-> >> +               case offsetof(struct sched_ext_ops, init):
-> >> +               case offsetof(struct sched_ext_ops, exit):
-> >> +                       ENABLE_BPF_CAPABILITY(bpf_capabilities, BPF_CA=
-P_SCX_KF_UNLOCKED);
-> >> +                       break;
-> >> +               default:
-> >> +                       return -EINVAL;
-> >> +               }
-> >> +       } else {
-> >> +               switch (context_info) {
-> >> +               case offsetof(struct sched_ext_ops, select_cpu):
-> >> +                       DISABLE_BPF_CAPABILITY(bpf_capabilities, BPF_C=
-AP_SCX_KF_SELECT_CPU);
-> >> +                       DISABLE_BPF_CAPABILITY(bpf_capabilities, BPF_C=
-AP_SCX_KF_ENQUEUE);
-> >> +                       break;
-> >> +               case offsetof(struct sched_ext_ops, enqueue):
-> >> +                       DISABLE_BPF_CAPABILITY(bpf_capabilities, BPF_C=
-AP_SCX_KF_ENQUEUE);
-> >> +                       break;
-> >> +               case offsetof(struct sched_ext_ops, dispatch):
-> >> +                       DISABLE_BPF_CAPABILITY(bpf_capabilities, BPF_C=
-AP_SCX_KF_DISPATCH);
-> >> +                       break;
-> >> +               case offsetof(struct sched_ext_ops, running):
-> >> +               case offsetof(struct sched_ext_ops, stopping):
-> >> +               case offsetof(struct sched_ext_ops, enable):
-> >> +                       DISABLE_BPF_CAPABILITY(bpf_capabilities, BPF_C=
-AP_SCX_KF_REST);
-> >> +                       break;
-> >> +               case offsetof(struct sched_ext_ops, init):
-> >> +               case offsetof(struct sched_ext_ops, exit):
-> >> +                       DISABLE_BPF_CAPABILITY(bpf_capabilities, BPF_C=
-AP_SCX_KF_UNLOCKED);
-> >> +                       break;
-> >> +               default:
-> >> +                       return -EINVAL;
-> >> +               }
-> >> +       }
-> >> +       return 0;
-> >> +}
-> >
-> > and this callback defeats the whole point of u32 bitmask.
-> >
->
-> Yes, you are right, I agree that procedural callbacks defeat the purpose
-> of BPF capabilities.
->
-> > In earlier patch
-> > env->context_info =3D __btf_member_bit_offset(t, member) / 8; // moff
-> >
-> > is also wrong.
-> > The context_info name is too generic and misleading.
-> > and 'env' isn't a right place to save moff.
-> >
-> > Let's try to implement what was discussed earlier:
-> >
-> > 1
-> > After successful check_struct_ops_btf_id() save moff in
-> > prog->aux->attach_st_ops_member_off.
-> >
-> > 2
-> > Add .filter callback to sched-ext kfunc registration path and
-> > let it allow/deny kfuncs based on st_ops attach point.
-> >
-> > 3
-> > Remove scx_kf_allow() and current->scx.kf_mask.
-> >
-> > That will be a nice perf win and will prove that
-> > this approach works end-to-end.
->
-> I am trying, but I found a problem (bug?) when I added test cases
-> to bpf_testmod.c.
->
-> Filters currently do not work with kernel modules.
->
-> Filters rely heavily on (bpf_fs_kfunc_set_ids as an example)
->
-> if (!btf_id_set8_contains(&bpf_fs_kfunc_set_ids, kfunc_id)
->
-> exclude kfuncs that are not part of its own set
-> (__btf_kfunc_id_set_contains performs all the filters for each kfunc),
-> otherwise it will result in false rejects.
->
-> But this method cannot be used in kernel modules because the BTF ids of
-> all kfuncs are relocated.
->
-> The BTF ids of all kfuncs in the kernel module will be relocated by
-> btf_relocate_id in btf_populate_kfunc_set.
->
-> This results in the kfunc_id passed into the filter being different from
-> the BTF id in set_ids.
->
-> One possible solution is to export btf_relocate_id and
-> btf_get_module_btf, and let the kernel module do the relocation itself.
->
-> But I am not sure exporting them is a good idea.
->
-> Do you have any suggestions?
+On Tue, 28 Jan 2025 16:35:46 +0100 Kory Maincent wrote:
+> Add myself as maintainer for socket timestamping. I have contributed
+> modifications to the timestamping core to support selection between
+> multiple PTP instances within a network topology.
+> 
+> Expand the file list to include timestamping ethtool support.
 
-That's not a problem to fix today.
-Currently only sched-ext needs this new ->filter() logic
-and it's builtin.
-Let's prototype the steps 1,2,3 end-to-end and see whether
-anything big is missing.
-The lack of bpf_testmod can be addressed later if the whole
-approach works for sched-ext.
+Hi Kory, is there more context you could provide for this change?
 
-> In addition, BTF_KFUNC_FILTER_MAX_CNT is currently 16, which is not a
-> large enough size.
->
-> If we use filters to enforce restrictions on struct_ops for different
-> contexts, then each different context needs a filter.
->
-> All filters for scenarios using struct_ops (SCX, HID, TCP congestion,
-> etc.) are placed in the same struct btf_kfunc_hook_filter
-> (filters array).
->
-> It is foreseeable that the 16 slots will be exhausted soon.
->
-> Should we change it to a linked list?
+For core pieces of the stack, with a long history, we tend to
+designate as maintainer folks who review the changes, not just
+write code. According to our development stats that doesn't
+describe you, just yet:
 
-No. Don't fix what is not broken.
-We have a concrete run-time inefficiency on sched-ext side
-let's address that first and deal with everything later.
-Not the other way around.
+Top reviewer score:
+
+6.12: Negative # 5 ( +6) [ 50] Kory Maincent (Dent Project)
+6.13: Negative #11 (***) [ 29] Kory Maincent (Dent Project)
+
+https://lore.kernel.org/20250121200710.19126f7d@kernel.org
+https://lore.kernel.org/20241119191608.514ea226@kernel.org
+https://lore.kernel.org/20240922190125.24697d06@kernel.org
+
+That said, I do feel like we're lacking maintainers for sections 
+of the ethtool code. Maybe we could start with adding and entry 
+for you for just:
+
+> +F:	net/ethtool/tsconfig.c
+> +F:	net/ethtool/tsinfo.c
+
+Does that sound fair?
