@@ -1,98 +1,78 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F021D52B
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 02:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F07433B1;
+	Thu, 30 Jan 2025 02:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738203327; cv=none; b=nNUguHkr2kZ1sqfA9OKnCzl0Rs1rRW3sgpXuKY2/S59HaXVR1MaqrG3gxAn0rFylhdjeyXzsKIqmjpdBZ5gLJvu/aZvdoUkh1/RYCOmun2quh+5/DsKdCZ1wMbNVp1W0jBhhP3nGffzUuEImBM0Oa+r4dtHWiJtVlZ7TnM/Qun4=
+	t=1738203328; cv=none; b=sIlca1UlbnaQoIjPXavmgkcqoeSQrlHzm9EeHOsRHysBHCAQ5nCCUUxsHKQLh32oy8AkCkNcPTfvhM3HRjlQ9a5i15xOXGqohY9ifUddbwxYIZ/xv62t0/MzbQjoqEpVn7Uo7Sv/cce7THxJnjT44/MMguK08zWIVJ8kswRnYTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738203327; c=relaxed/simple;
-	bh=orZla9O2A+E4DJv6OiX5psoqxdTYbHyT5BwavlcaGG0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PMapkwyE0hsZWeR9kaaQJd8P1jbYhDZl/5ditPY4d2JvF5KAV9k6LiEpilAb6FaWdCRxzVomFgYwlTpQXYNaPVoRMtFYLtov3lkiyi7zz8xaEkWcbqc77vV6TSFSb4c7FsnKFNfmMhYBufpZDgpAp31ScBD8oKUxiQVRqAtvdiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BfNww3rh; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738203328; c=relaxed/simple;
+	bh=CRTsNUbgUpcoO1cuJagb2/cJuSugxV4ZBgSDa/DD+TU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QdCYlCGp/nPTdbXOP457ydCmLJCKAUaHg9/MtrG0F5doqXnN5Ei7WLOAWX0njEuUdNoOGb2rrIEJqBp9oaN0CZBa/ZUeQdg/Fbtxb03+TmoTuxJCnzjdk1KGOSV3nX1u2gs0qMq9gKW96xW0LJ8btMIX7UPQ541Y1CdHDC/CQVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyTvKsJv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BfNww3rh"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-215740b7fb8so70715ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 18:15:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738203325; x=1738808125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zL2bVoQzvTlTDBwGlrT2Hn0lIShKB5FFgTt+rq/GXUE=;
-        b=BfNww3rhe9D6YW5M0coUHWN6svgvOxl73iKKcANftmERO7j2prqEXZ3PsNPVkRZk5X
-         cGnDPBGPdDHE8/WS3C8TQI9feGAeyHaImf6iomFugmkXky98/RW/CKcdVQ4Y4w+91H8D
-         d993eotiXptRV9os8lm0rNNdEEoq3xDmJ4J7LkfwFp53Y/JfWTCm8cnq/P7Ml8Q+F/U6
-         rUl0fXlBC5Hrq6Oe1UbbOYz0iz+CbXz91TbHieWWqvs989OvWx3AZtv1Zhnlbp7ZUyG/
-         PjrtYTw2E1HRKtQ6hCEehf4D8nnSDJj/C06IUhG6OE+M43quUq0TLzEzHgY6peHXZZ2v
-         lICw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738203325; x=1738808125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zL2bVoQzvTlTDBwGlrT2Hn0lIShKB5FFgTt+rq/GXUE=;
-        b=XHExpyTSHOdI3x5AcBaOpKqwXhrPCZpoySA/znw6vINSFr0HitOnh3Pgk6srkXR7cL
-         pYwG/OiOf/kDkkSgro0ucRUdTcS0hSuLkhE0EKVGnHj0mRj5i2kwr3u7V8KGISYFcZUu
-         r0m7W/SP9fZkKXeRyk84XoAGfp+i7xLL80IOhnlIJKzaJjj6nzPdACFN+chVOv0165uc
-         gVinb24fk8t/ESKIxzu7wN3ZmPY+a6ew0KsUoKDoHEpysXyyXLtzQ//pvT3E2Is8jJuQ
-         1C5cWEZmD9yDrnD4obNNVKKF4YBDXZYkqD0LjYNmM7tfQIFPVNxHX+RuWC523Q2EJjH4
-         KPkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXeDcuHgbrJg1+uN0eSQTQ2czjLWxTTi+kuWXcqLqCBEzJctzNR+QSmMwlpxrDY1vk7FTr/iovDEFxvGiY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0VVJXxtaY+RbWqWetIGiRFIfqznawEeQtG4/1PTnEEJehLrW9
-	YJVQsIpf6E1LdylTtnVIEu0YzCcYF9ZmUnHnS6BNBsL/qndNriEZ5xJXuLrdzTjr9dYgWEPorY2
-	VJbhpcVRGoto5tccGw2vsiCKFdalyFNqJpjEp
-X-Gm-Gg: ASbGncvSXW45b9LDa93nkUIz6Ny8wRFoU4eDNleQsPaBAPGBp2Gg5kZGpVHidaQo8Ax
-	wkTBu+KwIDiEPYQktT5HhXiCwO3XYnQyFmaqNUw+PKMGI9E5kRKOGubEkoFaqTTjKy0Z8AswQaD
-	H5kbPO6X25kh87KXm4GlvYq0NB5w==
-X-Google-Smtp-Source: AGHT+IHiw/l5Uly3TxfT60Bv+QsNpJ//IE32/Ma11U6wfwDQu474zQr3xgWxbyPKTz1IoSdCOksR8RL+mMMOIfQlrUY=
-X-Received: by 2002:a17:902:6b01:b0:215:7ced:9d67 with SMTP id
- d9443c01a7336-21de2479655mr1342275ad.24.1738203324959; Wed, 29 Jan 2025
- 18:15:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyTvKsJv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9600DC4CED1;
+	Thu, 30 Jan 2025 02:15:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738203327;
+	bh=CRTsNUbgUpcoO1cuJagb2/cJuSugxV4ZBgSDa/DD+TU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fyTvKsJvamQuj4/90uBqDMT5cNUJSn2WDgiQe8diCKjtHeLIV+hm13n4nF9+WYHmv
+	 w7RkmRCGmX4v3RUoJIUMxBMJ7Vp8bpmlYsH5YyskMDY5N9hHg996xV/tjmVto0xICm
+	 lLXjfzABYwfJ0AK0bg3uVjRIswF50qk6rNos27Mu21vp8tiHmEJqLtXJCUfSQHMuew
+	 r7QeNFcLia1EVdzglI86G0Sm/QMsxW9Bkcg9M4MYOr4EleUdjKApfdHpgZqJ86aBt9
+	 spTdL6kRI47E+5xa4MiprEO+BY0gEQUmrvcN2e9JwU7bgzp99q7UuFPCFR3kRQGTDf
+	 pQXsY+1ECC8WA==
+Date: Wed, 29 Jan 2025 18:15:26 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: Zhu Yanjun <yanjun.zhu@linux.dev>
+Cc: linux-rdma@vger.kernel.org, Mustafa Ismail <mustafa.ismail@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Bernard Metzler <bmt@zurich.ibm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] RDMA/rxe: consolidate code for calculating ICRC of
+ packets
+Message-ID: <20250130021526.GD66821@sol.localdomain>
+References: <20250127223840.67280-1-ebiggers@kernel.org>
+ <20250127223840.67280-3-ebiggers@kernel.org>
+ <048daa22-fdc6-4f5f-9fa3-e023dc421aab@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250101222039.74565-1-sj@kernel.org> <Z4XUoWlU-UgRik18@gourry-fedora-PF4VCD3F>
-In-Reply-To: <Z4XUoWlU-UgRik18@gourry-fedora-PF4VCD3F>
-From: Yuanchu Xie <yuanchu@google.com>
-Date: Wed, 29 Jan 2025 18:15:08 -0800
-X-Gm-Features: AWEUYZmwbhWtFQt8BXt48jdRBHbwVMypC1AoImNfsGOiL3MKq8A1xAi_a-yZ7Ek
-Message-ID: <CAJj2-QF1y1XNRYy9sT5c5=pi20+67Duf9B2Amatnu01HLmw06Q@mail.gmail.com>
-Subject: Re: [LSF/MM/BPF TOPIC] DAMON Requirements for Access-aware MM of Future
-To: Gregory Price <gourry@gourry.net>
-Cc: SeongJae Park <sj@kernel.org>, lsf-pc@lists.linux-foundation.org, damon@lists.linux.dev, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com, 
-	Raghavendra K T <raghavendra.kt@amd.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Kaiyang Zhao <kaiyang2@cs.cmu.edu>, Jiaming Yan <jiamingy@amazon.com>, 
-	Honggyu Kim <honggyu.kim@sk.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <048daa22-fdc6-4f5f-9fa3-e023dc421aab@linux.dev>
 
-On Mon, Jan 13, 2025 at 7:06=E2=80=AFPM Gregory Price <gourry@gourry.net> w=
-rote:
-> 5) Scarce resources
->
->    We need to be careful not to consume excessive amounts of resources
->    in an attempt to track all these identifying mechanisms.  Even 1 byte
->    per folio is 256MB on a 1TB machine.  This gets out of hand quick.
->
->    With task-work, I was able to add no additional resource consumption,
->    but deferring to a fully async scenario and needing to track things
->    like last-accessing CPU, timestamps, and etc.
->
->    We'll need to examine this closely if we decide to aggregate either
->    of these mechanisms.
-My concern with physical address space monitoring is fragmentation. I
-ran some numbers on a few prod machines. Grouping by regions with the
-same memcg and ignoring any unmapped memory to be generous, machines
-with higher utilization can have a region/total pages ratio of ~40%,
-and even those with lower utilization (<50%) can also reach 20%.
-Accurately tracking these regions would require quite the region
-metadata, on the order of GBs.
+On Wed, Jan 29, 2025 at 07:11:35PM +0100, Zhu Yanjun wrote:
+> 在 2025/1/27 23:38, Eric Biggers 写道:
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > Since rxe_icrc_hdr() is always immediately followed by updating the CRC
+> > with the packet's payload, just rename it to rxe_icrc() and make it
+> > include the payload in the CRC, so it now handles the entire packet.
+> > 
+> > This is a refactor with no change in behavior.
+> 
+> In this commit, currently the entire packet are checked while the header is
+> checked in the original source code.
+> 
+> Now it can work between RXE <----> RXE.
+> I am not sure whether RXE <---> MLX can work or not.
+> 
+> If it can work well, I am fine with this patch.
+> 
+> Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
+> 
+
+Both the header and payload are checksummed both before and after this patch.
+Can you elaborate on why you think this patch changed any behavior?
+
+- Eric
