@@ -1,86 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B0B1537C6;
-	Thu, 30 Jan 2025 23:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7CD1537C6;
+	Thu, 30 Jan 2025 23:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738280503; cv=none; b=CPKqK9ERm9HIjq1LOEkrYstUz+8B9pBBmdH+ukdnC/ibENpwFqwT0L4zx4CqKcMLNes80tlfKaCYQpOdJ/8fUazGC5GIl0vkhszkqmTpKqreVAd1lwppFeOOo3yU8eaYMJ0EUhcvZhtMtt/Drzt417e3/OmkDk5VyOyeFsvhV4o=
+	t=1738280565; cv=none; b=Z+qiGuLARqZHt8OAlL0yRv339yMcz/ySJXPpzfjrsp013IAwXvc13WliwOKafT1tL/1X5ngV3ytviBOYkFQXhM99rzX3/YNkTodIFM+yU0LmD8PYJJEmF+Ckcv1ypekJD1lmVl1DGjFDtBGVrfj+glq0hQwFSuJBCmEONcgbpf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738280503; c=relaxed/simple;
-	bh=DZnH1OSKYAieF5ajIrEhZsFh+kHI8uiA/TPKhL3dw6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=smjvfQBnJz8Vgg/VJEq49tDJefn18tI1XnNF/72kYLMdo+zrqSeW3VwoI8GknHZnC5xmPrGtb+tv50778U2GmaIJIZU5xqnYLfzXgAralKUq6cXnbB9aZQCZ+a2UMg0fXvUKA/Jr/ENWpIpvzbFEhtJJioQWYZBsfVtBzPgDsXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R2KR7MBN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738280565; c=relaxed/simple;
+	bh=SNgWdW0+w8g7zWzmvBJ6hqxTIrMFupouLSnDTRPedqs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=J0Cf9nrwbfYy1nk/OPvNKgmUxvVCpf1YGyn6cb2AZiHbMd7YNcxJHdu8ePWpuObn6tDGsA590kB/e3gqJf18T1JVX/oeB7+ggUpJPutMGJ5+BwO+viR+3O9Q7J5/RAlSqPu6mWalSOZfunnJLukeAIVZBfYEhhrew1Rze2UvkN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=njBD4Cqe; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R2KR7MBN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6ED8C4CED2;
-	Thu, 30 Jan 2025 23:41:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738280502;
-	bh=DZnH1OSKYAieF5ajIrEhZsFh+kHI8uiA/TPKhL3dw6E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R2KR7MBNQ4Tja4tmqdEkZ5iykHJ4wCpJOEvqyeIHvOgBCLF7/UoybAVbtfKhGjY7Z
-	 gbWdeF78SBMSgoQ7xnFKODerJdP0Keg849c1MP9wDJVztXas3HtuGCU1k8US6JIZuP
-	 2sG4aUR//On7A71s5W4A7CAqIWQoUHFsNEVTqDQGwKrIKQbnsZJ8fg+O0NniDyGDmI
-	 KOChyx/PamnoM0xzQL4wiI1C8/9qgqCph8Gtnc04t54bJPK/5m0qWCB7xYa/T7ZyLB
-	 LpRgJftE2rFgFUSE99QPR8D5Kf/9CNFaJcGteFSlgxjX93c0lXv3CNyNIEIogiUHYy
-	 Hstal6Id2r56Q==
-Date: Thu, 30 Jan 2025 17:41:41 -0600
-From: Rob Herring <robh@kernel.org>
-To: Ryan.Wanner@microchip.com
-Cc: lee@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	claudiu.beznea@tuxon.dev, sre@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	p.zabel@pengutronix.de, linux@armlinux.org.uk,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rtc@vger.kernel.org
-Subject: Re: [PATCH 05/16] dt-bindings: reset: atmel,at91sam9260-reset: add
- microchip,sama7d65-rstc
-Message-ID: <20250130234141.GA1872305-robh@kernel.org>
-References: <cover.1738257860.git.Ryan.Wanner@microchip.com>
- <2350540fd22b181875d3cce272fba87fff924670.1738257860.git.Ryan.Wanner@microchip.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="njBD4Cqe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738280564; x=1769816564;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=SNgWdW0+w8g7zWzmvBJ6hqxTIrMFupouLSnDTRPedqs=;
+  b=njBD4CqeB5D6xy51Tc8bVyUbpf5GhYjisE/+RIUI25Dnsi7knQt37i8z
+   //ijX4l6nYKHHS0knmhUaRKBvco9pV0iarSJuxZiyu+5SezGAvDMIM5Wp
+   ZebOAruyR7yqYNWyBgB+8QvxPNhS3svWXqCR+52c2YqLUYR74D8l2Q84/
+   pCmMfO0mKFOpQ4vocePBpmNlezhf/mtWNCM/Q5G0aJVj2IkyYocXzXbar
+   06Z5WWdawqfu5mnVYRxKJXPqZqq7Ygu8v0fokcd9mA1JmlvYZoLDXEzUk
+   r+kX2xXFiXUlnvL0BF162Gw11lvWf2qEnJ6vCpVf8UpKOR8sRFWDMd6QT
+   w==;
+X-CSE-ConnectionGUID: MFZdPN7BRiOJxwDUgsSmuA==
+X-CSE-MsgGUID: osTrCAaoTqugUPDE/80O4A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="56392369"
+X-IronPort-AV: E=Sophos;i="6.13,246,1732608000"; 
+   d="scan'208";a="56392369"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 15:42:43 -0800
+X-CSE-ConnectionGUID: AX6mNGHhQwWBZd3qMSmH6A==
+X-CSE-MsgGUID: tg0EZPT9SgeNGo2EEfp3cg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="114081720"
+Received: from johunt-mobl9.ger.corp.intel.com (HELO vcostago-mobl3) ([10.124.222.4])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 15:42:41 -0800
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: Zdenek Bouska <zdenek.bouska@siemens.com>, Tony Nguyen
+ <anthony.l.nguyen@intel.com>, Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
+ Fastabend <john.fastabend@gmail.com>, Florian Bezdeka
+ <florian.bezdeka@siemens.com>, Jan Kiszka <jan.kiszka@siemens.com>, Song
+ Yoong Siang <yoong.siang.song@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, Zdenek Bouska
+ <zdenek.bouska@siemens.com>
+Subject: Re: [PATCH] igc: Fix HW RX timestamp when passed by ZC XDP
+In-Reply-To: <20250128-igc-fix-hw-rx-timestamp-when-passed-by-zc-xdp-v1-1-b765d3e972de@siemens.com>
+References: <20250128-igc-fix-hw-rx-timestamp-when-passed-by-zc-xdp-v1-1-b765d3e972de@siemens.com>
+Date: Thu, 30 Jan 2025 15:42:41 -0800
+Message-ID: <87r04jc1hq.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2350540fd22b181875d3cce272fba87fff924670.1738257860.git.Ryan.Wanner@microchip.com>
+Content-Type: text/plain
 
-On Thu, Jan 30, 2025 at 10:33:45AM -0700, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
-> 
-> Add SAMA7D65 RSTC compatible to DT bindings documentation. The
-> sama7g54-rstc is compatible with the sama7g5-rstc.
+Zdenek Bouska <zdenek.bouska@siemens.com> writes:
 
-sama7d65-rstc?
+> Fixes HW RX timestamp in the following scenario:
+> - AF_PACKET socket with enabled HW RX timestamps is created
+> - AF_XDP socket with enabled zero copy is created
+> - frame is forwarded to the BPF program, where the timestamp should
+>   still be readable (extracted by igc_xdp_rx_timestamp(), kfunc
+>   behind bpf_xdp_metadata_rx_timestamp())
+> - the frame got XDP_PASS from BPF program, redirecting to the stack
+> - AF_PACKET socket receives the frame with HW RX timestamp
+>
+> Moves the skb timestamp setting from igc_dispatch_skb_zc() to
+> igc_construct_skb_zc() so that igc_construct_skb_zc() is similar to
+> igc_construct_skb().
+>
+> This issue can also be reproduced by running:
+>  # tools/testing/selftests/bpf/xdp_hw_metadata enp1s0
+> When a frame with the wrong port 9092 (instead of 9091) is used:
+>  # echo -n xdp | nc -u -q1 192.168.10.9 9092
+> then the RX timestamp is missing and xdp_hw_metadata prints:
+>  skb hwtstamp is not found!
+>
+> With this fix or when copy mode is used:
+>  # tools/testing/selftests/bpf/xdp_hw_metadata -c enp1s0
+> then RX timestamp is found and xdp_hw_metadata prints:
+>  found skb hwtstamp = 1736509937.852786132
+>
+> Fixes: 069b142f5819 ("igc: Add support for PTP .getcyclesx64()")
+> Signed-off-by: Zdenek Bouska <zdenek.bouska@siemens.com>
 
-> 
-> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
-> ---
->  .../devicetree/bindings/reset/atmel,at91sam9260-reset.yaml   | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/atmel,at91sam9260-reset.yaml b/Documentation/devicetree/bindings/reset/atmel,at91sam9260-reset.yaml
-> index 98465d26949ee..a1c21c3880f9d 100644
-> --- a/Documentation/devicetree/bindings/reset/atmel,at91sam9260-reset.yaml
-> +++ b/Documentation/devicetree/bindings/reset/atmel,at91sam9260-reset.yaml
-> @@ -23,6 +23,11 @@ properties:
->                - atmel,sama5d3-rstc
->                - microchip,sam9x60-rstc
->                - microchip,sama7g5-rstc
-> +
-> +      - items:
-> +          - const: microchip,sama7d65-rstc
-> +          - const: microchip,sama7g5-rstc
-> +
->        - items:
->            - const: atmel,sama5d3-rstc
->            - const: atmel,at91sam9g45-rstc
-> -- 
-> 2.43.0
-> 
+Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+
+
+Cheers,
+-- 
+Vinicius
