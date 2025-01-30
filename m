@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9279C1E573F;
-	Thu, 30 Jan 2025 14:10:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017011E7C27
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:10:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738246212; cv=none; b=R0fYEl2fUQ7QM6jtoNZiy6klnI5FvE28TDl0kHxzqJz3lP6KUbEdVF2yxGsNFVUisPcX0SOeCD0SiS5yS6BvAKiQq/wP4zsgLdB+lkBeAWYQSXw7lCG5eKyxNXfc0RHOzWtm/w4xPthMoCV8DTvf6PvsXBNQ5XOOJ1rlNs2tgng=
+	t=1738246217; cv=none; b=Kx9oMgjLJYi8wy1V+zZ+hiDzNoRkD4fIm0dr1VkhVPgu27w8+w0GgoDFDdO/WHNqCfYkAkQBRtH7EaHB76ZTZ/DnByoToR8rMbG8x/y5JRbnK4gC2+FNjPZWLrGSGIZ3Jdh/7X2H9pxJLPrHG/AqXgcmLmLNnJoc+i3K2Jfeds4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738246212; c=relaxed/simple;
-	bh=kXMtPvKQuZHL9xcm4hq3kkVSDGMX5Os3i3OJFM8PSIo=;
+	s=arc-20240116; t=1738246217; c=relaxed/simple;
+	bh=gAB9uXM+mzKAnOJm4WDzv7NrurFgJ8yv0HwEZuN0vEM=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=uGfJyE28+Az1QJTRVbgpmt53kKGeCbPNZpS5m/oB7OtNb112ul0oiSzADb3eCC8Hkvd9vjKKHkXhCoBAUBK49B5SXhswHwiZ8f7FD2g7AokR44FNxgqglmdkBgr/4UyJlfIDGI82SEcNdbh0h8STIoUZNS/u5MtoAijLglB80MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FC/e0Ajn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=uOrmnmwZAAxrlavUOTVPQFLzdpiSEUYA+IAuCCFfFKF7ANMLv21j7ROOkZx1oInqFbGSa9lFnSU9qR9MAwqMsu9U+mQyARk76FViybGZWHolZMsqKa56HKWn59UyZM2yOueFtCAFdA0ycVRaZglfDkf8025dydPYAXtzoLEprok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JFgL0D+p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FC/e0Ajn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C027C4CED2;
-	Thu, 30 Jan 2025 14:10:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JFgL0D+p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0206C4CEE0;
+	Thu, 30 Jan 2025 14:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738246212;
-	bh=kXMtPvKQuZHL9xcm4hq3kkVSDGMX5Os3i3OJFM8PSIo=;
+	s=k20201202; t=1738246215;
+	bh=gAB9uXM+mzKAnOJm4WDzv7NrurFgJ8yv0HwEZuN0vEM=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=FC/e0Ajnb6yigUYE+68RWjMmE2hdLowFH7ZjlxuOc49+h3pHnNVQIv92HciGk/veu
-	 l1jqLQaZr2jUbt8dQGfDtinIahleHwrW28sIiDWSodyN11u5+4iFEsHoLTP3r4pbWk
-	 Db3LcSsWuclPXhWwqvS+dlaEHsD8NPXMYUYitlRZJtnFFFh7Er53eerdaLXx9jRc3R
-	 HNgtRa+x/qFi+HCxmQHcJn/jH1KwsWku+nTy3G41+eSbMYj5ydbcK51rCieBsL7Uzs
-	 EphNuo4965I9C7qr/gTH7RETVZsRASw04DpP6gu2lNstqCuy5XmXqCkncugX4n91pY
-	 j0A3fEdKN4KZA==
+	b=JFgL0D+pIOR7mYWIT8c7JyfpDpVVX1jPS+Qf9Auu7deL2K3kYHffWESrxmQbSy02D
+	 g393bUZumPvkXgq80/hlG1GyHr2m9QvntEu9tBH+QWT0PY9rk4Xvf0Q5clRPSMiqTi
+	 KnYZjfshz+D+R08PH2Byn7SwbwFLSZJUx94oH6HImEEsQHGDt7bQzo0+RQGYJfm9A/
+	 J/leE7FOJ8zvv7jbAqvhz3oOcw6XTASz1+jauF42kXDbS3fjcWFzZM/CVWfw//BpDI
+	 icl7h56nvGPEcoTwBU8E6Rpk4dFHITVlKJ+3nRuS6LCI0d1eGDAxefAxWHGoYPLRsj
+	 zJR2lIF1RehNw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7136E380AA66;
-	Thu, 30 Jan 2025 14:10:39 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70F86380AA66;
+	Thu, 30 Jan 2025 14:10:42 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,69 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v11 00/14] riscv: Add support for xtheadvector
+Subject: Re: [PATCH] riscv: add a warning when physical memory address overflows
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <173824623824.971083.4395426797923401446.git-patchwork-notify@kernel.org>
-Date: Thu, 30 Jan 2025 14:10:38 +0000
-References: <20241113-xtheadvector-v11-0-236c22791ef9@rivosinc.com>
-In-Reply-To: <20241113-xtheadvector-v11-0-236c22791ef9@rivosinc.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, conor@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, jszhang@kernel.org, wens@csie.org,
- jernej.skrabec@gmail.com, samuel@sholland.org, samuel.holland@sifive.com,
- corbet@lwn.net, shuah@kernel.org, guoren@kernel.org, evan@rivosinc.com,
- jrtc27@jrtc27.com, ajones@ventanamicro.com, cyy@cyyself.name,
- andybnac@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-sunxi@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, conor.dooley@microchip.com, heiko@sntech.de
+ <173824624099.971083.29484788191658517.git-patchwork-notify@kernel.org>
+Date: Thu, 30 Jan 2025 14:10:40 +0000
+References: <20240814062625.19794-1-cuiyunhui@bytedance.com>
+In-Reply-To: <20240814062625.19794-1-cuiyunhui@bytedance.com>
+To: yunhui cui <cuiyunhui@bytedance.com>
+Cc: linux-riscv@lists.infradead.org, punit.agrawal@bytedance.com,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alexghiti@rivosinc.com, chenjiahao16@huawei.com, guoren@kernel.org,
+ vishal.moola@gmail.com, stuart.menefy@codasip.com,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
-This series was applied to riscv/linux.git (for-next)
+This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Wed, 13 Nov 2024 18:21:06 -0800 you wrote:
-> xtheadvector is a custom extension that is based upon riscv vector
-> version 0.7.1 [1]. All of the vector routines have been modified to
-> support this alternative vector version based upon whether xtheadvector
-> was determined to be supported at boot.
+On Wed, 14 Aug 2024 14:26:25 +0800 you wrote:
+> The part of physical memory that exceeds the size of the linear mapping
+> will be discarded. When the system starts up normally, a warning message
+> will be printed to prevent confusion caused by the mismatch between the
+> system memory and the actual physical memory.
 > 
-> vlenb is not supported on the existing xtheadvector hardware, so a
-> devicetree property thead,vlenb is added to provide the vlenb to Linux.
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [v11,01/14] dt-bindings: riscv: Add xtheadvector ISA extension description
-    https://git.kernel.org/riscv/c/e576b7cb8183
-  - [v11,02/14] dt-bindings: cpus: add a thead vlen register length property
-    https://git.kernel.org/riscv/c/bf6279b38a4b
-  - [v11,03/14] riscv: dts: allwinner: Add xtheadvector to the D1/D1s devicetree
-    https://git.kernel.org/riscv/c/ce1daeeba600
-  - [v11,04/14] riscv: Add thead and xtheadvector as a vendor extension
-    https://git.kernel.org/riscv/c/cddd63869f92
-  - [v11,05/14] riscv: vector: Use vlenb from DT for thead
-    https://git.kernel.org/riscv/c/377be47f90e4
-  - [v11,06/14] RISC-V: define the elements of the VCSR vector CSR
-    https://git.kernel.org/riscv/c/66f197785d51
-  - [v11,07/14] riscv: csr: Add CSR encodings for CSR_VXRM/CSR_VXSAT
-    https://git.kernel.org/riscv/c/b9a931442451
-  - [v11,08/14] riscv: Add xtheadvector instruction definitions
-    https://git.kernel.org/riscv/c/01e3313e34d0
-  - [v11,09/14] riscv: vector: Support xtheadvector save/restore
-    https://git.kernel.org/riscv/c/d863910eabaf
-  - [v11,10/14] riscv: hwprobe: Add thead vendor extension probing
-    https://git.kernel.org/riscv/c/a5ea53da65c5
-  - [v11,11/14] riscv: hwprobe: Document thead vendor extensions and xtheadvector extension
-    https://git.kernel.org/riscv/c/7fa00fd6ff53
-  - [v11,12/14] selftests: riscv: Fix vector tests
-    https://git.kernel.org/riscv/c/57d7713af93e
-  - [v11,13/14] selftests: riscv: Support xtheadvector in vector tests
-    https://git.kernel.org/riscv/c/c384c5d4a2ae
-  - [v11,14/14] riscv: Add ghostwrite vulnerability
-    https://git.kernel.org/riscv/c/4bf97069239b
+  - riscv: add a warning when physical memory address overflows
+    https://git.kernel.org/riscv/c/101971298be2
 
 You are awesome, thank you!
 -- 
