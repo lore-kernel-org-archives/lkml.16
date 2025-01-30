@@ -1,134 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5FB1B425D;
-	Thu, 30 Jan 2025 12:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EC71A7046;
+	Thu, 30 Jan 2025 12:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738240000; cv=none; b=T3tEPa5ompd8tUJ2TkhLZ5c0sV6DT27B/3FF4l/0yOEmsnElCEXiVIAawetOG82QgYjrtjSB/DfTTQ+von4zr02ppK3uAqzy2LFQkAzHQawynDadjUQ3vPeORH7Cbl3v9iRC/rrkiGGgoml7Zo/I80Xbys7IrB4j/jihM1G0H2s=
+	t=1738240081; cv=none; b=q0AkXBUSVZTKrmjoKb6JEBAYETWp63Is94qyzhsD69VA/eDV9aYPQ8hSPFI9oe08mXnZFa55F2whK6lkh7rXSOl2bQFjNL2d/8Jg9h6EK+tiQ6TSKSctdr29vS9UFh0DY0BkKaLvqj9FjkHZuVjJ94pRabIRZl0r9fvd7I2byx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738240000; c=relaxed/simple;
-	bh=HHmjXkaKxsC+1UnEXF18DKMoqxPUcAEuG5lP/kgW/IY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RE6Tb9wbzFW2j5cV4Lb9D5mU47+1h0e4otWjBeMVUG3I4CoI9uDCzSJMU+khNRZWKzScHlIBR90D7JMyHv03IMr7czQgcVHEMmTYNQ5CPQ0Bq7+mlm/BFLlQW7oO2KYlbgpiEMlJcY2jqkje2XeJEix5lniPvf48XWh418rpSOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/1iZ3U4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738240081; c=relaxed/simple;
+	bh=P30awTIgOo2Uq6vzrX/mHfFsNCzACVlR9l24Wo+/T30=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=WXZqP2bF3d9aii5Xc4eMkGCkFGCnCa56eFkVSW5peFLLIwIUigkRlGaS7SRvae2gt6/HAxHQZuCy7hMagZpjJSan0/UZMIXvgmJ/Drp0+lALp3Jb0ncnq/I/DC8+DFOLeSzBTwAAt6kUzvB7DgUyDMTsVJCNKDOYdDcWGn0LDbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UCWX2gpv; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/1iZ3U4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48274C4CED2;
-	Thu, 30 Jan 2025 12:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738240000;
-	bh=HHmjXkaKxsC+1UnEXF18DKMoqxPUcAEuG5lP/kgW/IY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W/1iZ3U4cvPSzdOJBxJmD4V4Pr3COXPPlnlnjek7O6QtEYVLAeis0abM8WPIMTzVm
-	 Jt8F5Gz1ClOrbMBYdJMxA5ePzRIzZk4S1yqd0K1IAK7hjonr5W2hLNuRL/v5rlNMHk
-	 K6ckFWc5D2yhw0yk8ubb0rONrSRVKk5p8pPIG3Vf7GG8upCqUAPeUUUYen3XIKjfkY
-	 r9/v0WwAtJdcVrf6qpJYskv4+cmlCTk6odrfaAEpARGKQEDrvNuqj9dVk8QkUhpOZx
-	 U8T+L3HHvIuSKUWg46GYYNCYp6BAJehhkgK9davHmFGeV66C24mzCcTA3l88puJ+zO
-	 OOnxrVsoMT9kg==
-Message-ID: <7323e5ae-21b7-43cc-aed2-e23cd528842e@kernel.org>
-Date: Thu, 30 Jan 2025 13:26:31 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCWX2gpv"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ee76befe58so1113287a91.2;
+        Thu, 30 Jan 2025 04:27:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738240079; x=1738844879; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=P30awTIgOo2Uq6vzrX/mHfFsNCzACVlR9l24Wo+/T30=;
+        b=UCWX2gpvUaobPitCdb1Y7seVPXD7H3oWHkdx8YBpdUeTldBoJcNoyvkxC+YeguBMOf
+         MWqr1GfIyrY1kp79xAuuzp7R4+oUrqjydOPwWCgsqrgkwaFBky7d4C4WHavHv/AlGTo/
+         LPN2LeQbCmlINdl59exrdI45dFcRwaHxdSB5z4LjPnMUfSxDJ/3CCDbc7GKeWsPTvw47
+         sDhZVT24au+ERchloGQ7Np1JGv3KuLMuCn7U7Y5uxDgxKZJY4D5a6V243ZZTEseBjI9D
+         jraNkPRh5sHLVGHGTITpL0wql1FgcujfpVi97I5TTXJO+e7GrvSD+a6x+UA6VvdYiQVU
+         jHVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738240079; x=1738844879;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P30awTIgOo2Uq6vzrX/mHfFsNCzACVlR9l24Wo+/T30=;
+        b=bg38inwjE3Rv6Md4QtjEpCW2E4whCix3SyXrXp/3QBn4IgquiEy1DGh1QvyAqsLbcM
+         GvENuDg4YaUS5BnikLTE0pLtsK9YJtV2dwmo2LO8/LoDVcj4TqhZQRm7RgQDK57lnU33
+         bwHALNUT5Eku84Ey8Ifk0ihIu961QzV5KGRSooX6RPi76GL/EoGpwotzeHaiAe01aM4B
+         qrcj/Za5X7AaTbCRn8lQNn38tivy4YQ9EDRFEiGHEOfSpMwbcZIoJ1IgRvzPiI7Movm/
+         TmBRqRbjf5D2VSXvq5mOH6G9X9AvdSIW0xP+sJjNlYD3WimrB+z8ZLliH019X0rNf+82
+         j8kg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3/NH6sq7Lzqqa2yrRssrovk0kyQjai+en0Ox2j8OiZv99S/Qx7lYpmjv5RozqqtfDdB3+xaNYZcwhahtQ@vger.kernel.org, AJvYcCWz1O5jPKTA9yq12D4ak1/c7lpQBqJ/Rgla4dtUSnTo5aRNZZcSf5CMXkFJLgntyncTFmEiSCxdtU0H@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrhqjKG97HES8al4CjjNgTp+3uLo7RuFtNCpBlYkwVFaX+r7Oj
+	/6pZbDlPjJjRjRoqVaaYC87HV5bHLh7mt09WLbnUb49Ghst+7cVQzq/HlL5jUwYx3M8zIkg48De
+	lKOpmkIkrku6XUAzCFQJ/XW6C9tQ1DhJhYmifBKAM
+X-Gm-Gg: ASbGnctXIEbDK+vgMd36HYeiaReHH/f8vcwGj6zvxOdKdEeRUQG2HUW3brFN8EydfIT
+	gy4qDbJ7Hod9VgcOKHy0ZVfhW6w5MtCfoQuf86LJEo2YCpLKR61OdvZeUKSIUpORWj8p7sJ6HQw
+	==
+X-Google-Smtp-Source: AGHT+IFRdApf/Rq5yRkaHkNj89NZ/mM5SEEYhgKNdcZYuusoezHf09GeOj7SYZie9Ajp3bjkJjaTyF3XG54Whwen3M8=
+X-Received: by 2002:a17:90b:258c:b0:2f6:be57:49d2 with SMTP id
+ 98e67ed59e1d1-2f83ac00d00mr11902671a91.17.1738240079007; Thu, 30 Jan 2025
+ 04:27:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/9] dt-bindings: spi: Add STM32 OSPI controller
-To: Patrice CHOTARD <patrice.chotard@foss.st.com>,
- Conor Dooley <conor@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, linux-spi@vger.kernel.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- christophe.kerello@foss.st.com
-References: <20250128081731.2284457-1-patrice.chotard@foss.st.com>
- <20250128081731.2284457-2-patrice.chotard@foss.st.com>
- <20250128-panama-manly-a753d91c297c@spud>
- <e3d01bce-a7d4-4690-8a2f-3bbb1ee5ccb7@foss.st.com>
- <20250129-feminize-spotlight-2cee53f8b463@spud>
- <5892e452-96e7-4945-a2dd-2e713d85d751@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <5892e452-96e7-4945-a2dd-2e713d85d751@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Haoyu Li <lihaoyu499@gmail.com>
+Date: Thu, 30 Jan 2025 20:27:47 +0800
+X-Gm-Features: AWEUYZlgQZeucUXJy48UbS4_ed9USTa4AQqnRbLL6SJuoEkiKdrLJWvLj5HOC3Q
+Message-ID: <CAPbMC766gbD52cADhXwK0BC-gN-pmTa0+4Kk4+hyM6LfAWrhJg@mail.gmail.com>
+Subject: x86/mce: Potential Information Leak in __mce_read_apei Due to
+ Uninitialized Bytes
+To: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, linux-edac@vger.kernel.org
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, chenyuan0y@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 30/01/2025 11:28, Patrice CHOTARD wrote:
-> For example:
-> 
->  access-controllers:
->     description: phandle to the rifsc device to check access right
->       and in some cases, an additional phandle to the rcc device for
->       secure clock control.
->     items:
->       - description: phandle to bus controller
->       - description: phandle to clock controller
->     minItems: 1
->     maxItems: 2
-> 
-> 
-> make dt_binding_check DT_SCHEMA_FILES=st,stm32mp25-ospi.yaml
-> 
-> Documentation/devicetree/bindings/spi/st,stm32mp25-ospi.yaml: properties:access-controllers: {'description': 'phandle to the rifsc device to check access right and in some cases, an additional phandle to the rcc device for secure clock control.', 'items': [{'description': 'phandle to bus controller'}, {'description': 'phandle to clock controller'}], 'minItems': 1, 'maxItems': 2} should not be valid under {'required': ['maxItems']}
-> 	hint: "maxItems" is not needed with an "items" list
-> 	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
->   DTC [C] Documentation/devicetree/bindings/spi/st,stm32mp25-ospi.example.dtb
-> 
-> How can i indicate that at least one items is mandatory, the second one is optional and in the same
-> time describing the both items as required without getting the above error ? 
+Dear Linux Kernel Developers,
 
-maxItems is redundant.
+I hope this email finds you well.
+
+I would like to bring to your attention a potential issue in the
+"__mce_read_apei" function. Specifically, the struct mce m is
+initialized via the "apei_read_mce" function before being copied to
+user space. However, upon inspecting the call trace (apei_read_mce ->
+erst_read_record -> erst_read), we found that not all fields of struct
+mce are properly initialized.
+
+This could lead to an information leakage due to uninitialized bytes
+being exposed to user space.
+
+Could you please confirm if this is a valid concern? Looking forward
+to your insights.
 
 Best regards,
-Krzysztof
+Haoyu Li
