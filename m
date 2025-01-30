@@ -1,123 +1,122 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C11F139B
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D760139B;
+	Thu, 30 Jan 2025 09:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738228646; cv=none; b=jyanhbE6XzNYU3JzAN81C1OHeak5UbOvyM/krDkJ7IUhloJhVl8QQ6H0Gza6Fb8GiQgmYZDwXFpCoY7Hlof1XcJ9j84VyO+4i2bhVuUGXpdjKOOev/RQGJw75zlWRQJvm04dnECFPyaQY8D2My91u66eHELZ5NxTFgo4NIQ6uPE=
+	t=1738228703; cv=none; b=t41S0jzSV3C1wYGz7ZTE5KCnfcRKVJzJOgsbiUIm4FplB7G8eXAHrvXrV4IWWKJiT5jznYd1oMeHoGeOmKu52j9Fbpy0tXhTw3EbGKC6fHjn15zGJ6N9sEBspXLmKjZcuJ+pmMxBtSu0as743AfGpnsqKq8EddtJJ43ErcWTgKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738228646; c=relaxed/simple;
-	bh=4c+G/QXyXIyW+db+AzIawUuoUqLWZPB7WUowgajOpw8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TR8AwM0G8aeJTAIwsNUtGW2OvtZ0gOCpQq2NPadaHNmNF5tu7i8tesjNbER7dei1GBNUJVeoiqnyNkTa6TEnEFiNEMs02cQGLFb/yDtyc+SJRZZhey51Sb3/xjTjKTzQjo8nfbPAGPPWn39jOZSRjFNFDzhA8uoFzPKmloiFGQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qnbfDMAV; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738228703; c=relaxed/simple;
+	bh=NUOK2qVCCo5WQquLSVd5u1bqkOLCbNJ42xZvBg0Pmqo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Cx96HKl2wyfY7I6F0Igw9TVv5NbgPxnFqPg/RRDhw4tcGl0JdNBC99RFExLMGRPhKmsU6xjWGE1qGOcOqvDmCPSV/QHCnINiE5YgipFt6abNI66hoTXYR5xWEHdBrHkBPV6fRfPNvVphfqQbsiXU+t35uYstzHXO3jMwhU+Alyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lLOOs7TQ; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qnbfDMAV"
-Message-ID: <bb650c16-8d22-4527-9378-2025a6ad1cb3@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738228641;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lLOOs7TQ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BA00E432EB;
+	Thu, 30 Jan 2025 09:18:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738228693;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xKj8xiJaOUldXpOs/fuN9givLSKmgfZHEO8V0DKV1/I=;
-	b=qnbfDMAVXL64TU8kZRudE9HgUdUo3DqDEn/amkeKgJSTf97adcvPni2vA5tzPtYKWATcku
-	fVKLtdm25pbHRXg1y0zl5ZeTZHCFZ35eRw/qfz4YxVSjYP5BqRkEACwLUGX1zSx8jsCt8K
-	v6LS3yMTvgA3kpTDrS8SmQW6T1mcNeo=
-Date: Thu, 30 Jan 2025 10:17:17 +0100
+	bh=F2vHnTx0uU8R/JSBydXEgqbPIcNPEeT1TGZLUdk5tTw=;
+	b=lLOOs7TQkmUJgRH8qDAelpPYRw7pVdm2/rpWBGMslFEnb+QSflqYxnJYI/2ADALu1MBjTY
+	RQP0q52I6GmlCLi4RkLTnEx3w9iFwj0T+sbfYZWlJ7Lg2GTFkj0LnFQ9yREjIz7XbStBOT
+	+5BF0G4S85rfaXpwNctLapQbbzaTeHglqz9zweekgCkgU2oxhh95tcTTucT8bO+I8m3Dk3
+	bMdJMVImw25LnqymQjGS2/RqE5ajDB2DFm2oBQy4YwrleC88t7Wv8X/Nhm/aUBGz8yQi9z
+	oVcPi9cJCVOfm29MM/vyIT1fBg5ZxwCSvNBZQHDWPTyzt2U2NowZou6vYpT9gA==
+Date: Thu, 30 Jan 2025 10:18:11 +0100
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Donald Hunter
+ <donald.hunter@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net 1/3] MAINTAINERS: Add myself as maintainer for
+ socket timestamping and expand file list
+Message-ID: <20250130101811.5459c3f8@kmaincent-XPS-13-7390>
+In-Reply-To: <20250129163916.46b2ea5c@kernel.org>
+References: <20250128-fix_tsconfig-v1-0-87adcdc4e394@bootlin.com>
+	<20250128-fix_tsconfig-v1-1-87adcdc4e394@bootlin.com>
+	<20250129163916.46b2ea5c@kernel.org>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/6] RDMA/rxe: handle ICRC correctly on big endian systems
-To: Jason Gunthorpe <jgg@ziepe.ca>, Eric Biggers <ebiggers@kernel.org>
-Cc: linux-rdma@vger.kernel.org, Mustafa Ismail <mustafa.ismail@intel.com>,
- Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
- Leon Romanovsky <leon@kernel.org>, Zhu Yanjun <zyjzyj2000@gmail.com>,
- Bernard Metzler <bmt@zurich.ibm.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250127223840.67280-1-ebiggers@kernel.org>
- <20250127223840.67280-2-ebiggers@kernel.org>
- <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
- <20250129183009.GC2120662@ziepe.ca> <20250129185115.GA2619178@google.com>
- <20250129194344.GD2120662@ziepe.ca>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20250129194344.GD2120662@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehgeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfduveekuedtvdeiffduleetvdegteetveetvdelteehhfeuhfegvdeuuedtleegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfihilhhlvghmuggvsghruhhijhhnrdhkvghrnhgvlhesghhmrghilhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgo
+ hhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohephhhorhhmsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On 29.01.25 20:43, Jason Gunthorpe wrote:
-> On Wed, Jan 29, 2025 at 06:51:15PM +0000, Eric Biggers wrote:
->> Hi Jason,
->>
->> On Wed, Jan 29, 2025 at 02:30:09PM -0400, Jason Gunthorpe wrote:
->>> On Wed, Jan 29, 2025 at 10:44:39AM +0100, Zhu Yanjun wrote:
->>>> 在 2025/1/27 23:38, Eric Biggers 写道:
->>>>> From: Eric Biggers <ebiggers@google.com>
->>>>>
->>>>> The usual big endian convention of InfiniBand does not apply to the
->>>>> ICRC field, whose transmission is specified in terms of the CRC32
->>>>> polynomial coefficients.
->>>
->>> This patch is on to something but this is not a good explanation.
->>>
->>> The CRC32 in IB is stored as big endian and computed in big endian,
->>> the spec says so explicitly:
->>>
->>> 2) The CRC calculation is done in big endian byte order with the least
->>>     significant bit of the most significant byte being the first
->>>     bits in the CRC calculation.
->>
->> (2) just specifies the order in which the bits are passed to the CRC.  It says
->> nothing about how the CRC value is stored; that's in (4) instead.
-> 
-> It could be. The other parts of the spec are more definitive.
->   
->> The mention of "big endian" seems to refer to the bytes being passed
->> from first to last, which is the nearly universal convention.
-> 
-> The LFSR Figure 57 shows how the numerical representation the spec
-> uses (ie the 0x9625B75A) maps to the LFSR, and it could be called big
-> endian.
-> 
-> Regardless, table 29 makes this crystal clear, it shows how the
-> numerical representation of 0x9625B75A is placed on the wire, it is
-> big endian as all IBTA values are - byte 52 is 0x96, byte 55 is 0x5A.
-> 
->> (I would not have used the term "big endian" here, as it's
->> confusing.)
-> 
-> It could be read as going byte-by-byte, or it could be referring to
-> the layout of the numerical representation..
-> 
->>> If you feed that to the CRC32 you should get 0x9625B75A in a CPU
->>> register u32.
->>>
->>> cpu_to_be32() will put it in the right order for on the wire.
->>
->> I think cpu_to_be32() would put it in the wrong order.  Refer to the following:
-> 
-> It is fully explicit in table 29, 0x9625B75A is stored in big
-> endian format starting at byte 52.
-> 
-> It is easy to answer without guessing, Zhu should just run the sample
-> packet through the new crc library code and determine what the u32
-> value is. It is either 0x9625B75A or swab(0x9625B75A) and that will
-> tell what the code should be.
+On Wed, 29 Jan 2025 16:39:16 -0800
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-Got it. I will run the sample packet through the new crc library code 
-and determine what the u32 value is.
+> On Tue, 28 Jan 2025 16:35:46 +0100 Kory Maincent wrote:
+> > Add myself as maintainer for socket timestamping. I have contributed
+> > modifications to the timestamping core to support selection between
+> > multiple PTP instances within a network topology.
+> >=20
+> > Expand the file list to include timestamping ethtool support. =20
+>=20
+> Hi Kory, is there more context you could provide for this change?
+>=20
+> For core pieces of the stack, with a long history, we tend to
+> designate as maintainer folks who review the changes, not just
+> write code. According to our development stats that doesn't
+> describe you, just yet:
+>=20
+> Top reviewer score:
+>=20
+> 6.12: Negative # 5 ( +6) [ 50] Kory Maincent (Dent Project)
+> 6.13: Negative #11 (***) [ 29] Kory Maincent (Dent Project)
 
-Zhu Yanjun
+Yes indeed, I am not really confident reviewing code part that I don't know
+well. My thought that I did not have lots on review in the PTP patch series=
+ I
+just managed to get merged. So I would try to change that.
+Moreover I have changed a bit the management of time stamping configuration=
+ so
+if there is changes or fixes I could be helpful.
+Indeed adding myself as maintainer is a bit overestimated, maybe I could be=
+ set
+as a reviewer to be in the CC of the patches.
 
-> 
-> Jason
+> https://lore.kernel.org/20250121200710.19126f7d@kernel.org
+> https://lore.kernel.org/20241119191608.514ea226@kernel.org
+> https://lore.kernel.org/20240922190125.24697d06@kernel.org
+>=20
+> That said, I do feel like we're lacking maintainers for sections=20
+> of the ethtool code. Maybe we could start with adding and entry=20
+> for you for just:
+>=20
+> > +F:	net/ethtool/tsconfig.c
+> > +F:	net/ethtool/tsinfo.c =20
+>=20
+> Does that sound fair?
 
+Yes it does. Whether setting me as reviewer for the SOCKET TIMESTAMPING sub=
+part
+or adding me as maintainer of these two files it is ok for me. What do you
+prefer?
+
+I will try to review more ethtool code now that I began to understand how it
+works thanks to my PoE and PTP work.=20
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
