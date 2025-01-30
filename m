@@ -1,130 +1,125 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8258D1E0B82;
-	Thu, 30 Jan 2025 12:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9443EC2FB;
+	Thu, 30 Jan 2025 12:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738241122; cv=none; b=Eud3pe85NdM/4CVmw1LEZlIHv/OoxZQqCJc5VOU8tUu/khAwwRn3HHbs9rGgEo2FjOB7RTkW9WCsxRbjBEfXtnt4mYWBKCcmPDuAjqmPQ1rLi/Fnm3+k3XO0RXPqhooiyWIVrVDp44wEQek1IysjJ85JjWTfxRusgr76uffAteE=
+	t=1738241230; cv=none; b=M/SV12xUtwPcVnfoJfl2MhmjlHkVFVKfYM5xVdZPt+9FZryY3lsT9Imx9ShcQukZ4iBrrMaANvVGzd1Kcf2xUt+Ecy5ZidUl0liyTOstO/cyqtI3ddb3tReSvrgIMkinHLRRyv+c80i9lE0/dm0AR/NeSvK32xmFCAj9sZpwODY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738241122; c=relaxed/simple;
-	bh=DZ7OhWamVOAQLcGbQsGGQ8bXE0p2z2sPoRkv7jPGuw0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=q5yTpI4JWOJ5qVrX5dLq6ThpUO/QlGOpCgSrRu2z5uHWzdVd1MV7GoURLoS0/dFe7RfFmDggMfKQTaIeEFBo5+EHXEVE2t38U+ypuC0otgkGulLH+0Dd0J3bFZVpYyUbNp6AIZ20SvW9wYq9JY8rrcNfvJNZE3tV4gLZckgf0Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Xf4anVNW; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1738241230; c=relaxed/simple;
+	bh=XFIi9/G4BdxJp/q7ezQ2sTXJjNG8dXMzsSOWQ29LQzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jeBzxL8La/tWK2uW6L+pKf6yIwxTeHTp0zKwWdF9Vh1NIegL2cq+noY3KXHAQTIyDRVbsHUVODzYgOnDxr8+B89uPp/6lQC62Mf2pIvY1DPcExnPDa+VsN9zh1xtG/nH0WXUAR077sdRBJ0fn9EQ7dRdyqQbVCcf/Wh4k4r0ADY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=McPT4469; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Xf4anVNW"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UCfHYh030056;
-	Thu, 30 Jan 2025 13:44:56 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	9hREfD9h0pyFa6Qh0S2jAB9bMfbE7Dv/kgHfimMyy6w=; b=Xf4anVNWbLdKR6tL
-	p0daiYsMRYArJabcArI+84aYSLasTmT8sRaVYO0J5KO5tXyNVkdM1qe50TBwCZyv
-	x/f/yVEsRhG/ZGxuSJUkLJIzX4S+88rohm7990nR3uRLt0QBHnaLOuiEdG0BA6h/
-	3I8jWYmch5qKFAH1Hpi2okIh8hucv6T4VQGe5pf6OH7qxpQRkyaDiMO50nSpvRDg
-	A8/IXObLAfeCr8XIcICq2AvqXamZo0q28jfTtZsL9ZvzuNSkJeV1JUkDyZI5jdjZ
-	URQ+g8ZcwN7BHxazwd6gtUoQxOIyQICqxyk+A/0mSlpxlkuTcQg+LopviFb2d/hm
-	c/4+Kw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44fy472c6p-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="McPT4469"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50TNDpjX024171;
+	Thu, 30 Jan 2025 12:46:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=P7A10YjjX/Sg2ZycU7nTPVJJJYoZPA
+	N1YEp6GFHnJU0=; b=McPT4469+ZHA3duOjLKDp+oSl6vIW3nuSih6I8vQTLxPla
+	EzxZMXysqNc0e0MlyQuIcDjgPTPHtKU5yUFMvNsZ+MeVJ/PTGHNv8sIJCdMrWNfc
+	nETY0GX4r4szLBLxVHGIQ9dFHSnuK0P3VkTxb+WIGm/JV3ZpFkzKqMyIrQQvDjpn
+	4yCzGnN6qgIcBvVnokzLwJjnoKMst9LHaDQHVwqsGDO40XbB86ZzbtR8IKbCjXuo
+	+3HId1WuzGXyBjvSW2vv0B+BTW6aeFgZ7U1x7ewB/MJ5CnqGkx75OGojJFMZiW2P
+	NjpKsRtU2PurSdOYAJidpEi0aJiUVNQVWEhkFStQ==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fpm1nhwv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 13:44:56 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7DD514002D;
-	Thu, 30 Jan 2025 13:43:36 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6A4743B1A42;
-	Thu, 30 Jan 2025 13:39:13 +0100 (CET)
-Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Thu, 30 Jan
- 2025 13:39:12 +0100
-Message-ID: <1098622d-d9a6-428c-9bbe-1f0de5f3d113@foss.st.com>
-Date: Thu, 30 Jan 2025 13:39:11 +0100
+	Thu, 30 Jan 2025 12:46:53 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50UBUwgg012337;
+	Thu, 30 Jan 2025 12:46:52 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44danye8u2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 12:46:52 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UCkmPq32899692
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jan 2025 12:46:48 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6379E20103;
+	Thu, 30 Jan 2025 12:46:48 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2252E20102;
+	Thu, 30 Jan 2025 12:46:48 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 30 Jan 2025 12:46:48 +0000 (GMT)
+Date: Thu, 30 Jan 2025 13:46:47 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Halil Pasic <pasic@linux.ibm.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thorsten Blum <thorsten.blum@linux.dev>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Holger Dengler <dengler@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-hardening@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/vfio-ap: Replace one-element array with flexible
+ array member
+Message-ID: <20250130124647.15115-A-hca@linux.ibm.com>
+References: <20250116131859.105756-2-thorsten.blum@linux.dev>
+ <20250129213826.291cfe12.pasic@linux.ibm.com>
+ <85863d7a-2d8b-4c1b-b76a-e2f40834a7a8@embeddedor.com>
+ <20250130114615.6f591882.pasic@linux.ibm.com>
+ <Z5tkaaMNh83x2t/x@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/9] dt-bindings: spi: Add STM32 OSPI controller
-To: Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor@kernel.org>
-CC: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <christophe.kerello@foss.st.com>
-References: <20250128081731.2284457-1-patrice.chotard@foss.st.com>
- <20250128081731.2284457-2-patrice.chotard@foss.st.com>
- <20250128-panama-manly-a753d91c297c@spud>
- <e3d01bce-a7d4-4690-8a2f-3bbb1ee5ccb7@foss.st.com>
- <20250129-feminize-spotlight-2cee53f8b463@spud>
- <5892e452-96e7-4945-a2dd-2e713d85d751@foss.st.com>
- <7323e5ae-21b7-43cc-aed2-e23cd528842e@kernel.org>
-Content-Language: en-US
-From: Patrice CHOTARD <patrice.chotard@foss.st.com>
-In-Reply-To: <7323e5ae-21b7-43cc-aed2-e23cd528842e@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5tkaaMNh83x2t/x@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: m4jugxUgEvR6yqup8jLp5WjVveREgZ-n
+X-Proofpoint-GUID: m4jugxUgEvR6yqup8jLp5WjVveREgZ-n
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-30_06,2025-01-30_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=2 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ mlxscore=2 bulkscore=0 phishscore=0 mlxlogscore=166 spamscore=2
+ adultscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501300097
 
-
-
-On 1/30/25 13:26, Krzysztof Kozlowski wrote:
-> On 30/01/2025 11:28, Patrice CHOTARD wrote:
->> For example:
->>
->>  access-controllers:
->>     description: phandle to the rifsc device to check access right
->>       and in some cases, an additional phandle to the rcc device for
->>       secure clock control.
->>     items:
->>       - description: phandle to bus controller
->>       - description: phandle to clock controller
->>     minItems: 1
->>     maxItems: 2
->>
->>
->> make dt_binding_check DT_SCHEMA_FILES=st,stm32mp25-ospi.yaml
->>
->> Documentation/devicetree/bindings/spi/st,stm32mp25-ospi.yaml: properties:access-controllers: {'description': 'phandle to the rifsc device to check access right and in some cases, an additional phandle to the rcc device for secure clock control.', 'items': [{'description': 'phandle to bus controller'}, {'description': 'phandle to clock controller'}], 'minItems': 1, 'maxItems': 2} should not be valid under {'required': ['maxItems']}
->> 	hint: "maxItems" is not needed with an "items" list
->> 	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
->>   DTC [C] Documentation/devicetree/bindings/spi/st,stm32mp25-ospi.example.dtb
->>
->> How can i indicate that at least one items is mandatory, the second one is optional and in the same
->> time describing the both items as required without getting the above error ? 
+On Thu, Jan 30, 2025 at 12:37:13PM +0100, Alexander Gordeev wrote:
+> On Thu, Jan 30, 2025 at 11:46:15AM +0100, Halil Pasic wrote:
+> > > > I'm not sure I understand the value of this. What we have here is not
+> > > > a flexible array but a one element array. Something that in the generic
+> > > > case could be many but particularly for vfio-ap is always one.  
+> > > 
+> > > You are correct. Only fake flexible arrays should be transformed into
+> > > C99 flex-array members [1].
+> > > 
+> > > Thanks
+> > > -Gustavo
+> > > 
+> > > [1] https://lwn.net/Articles/908817/
+> > > 
+> > 
+> > Thanks! Alex, what do we do with this then? I think you picked it up
+> > yesterday late. And I think, it might make sense to make this look
+> > less like a fake flex-array...
 > 
-> maxItems is redundant.
+> Dropped.
+> Thanks for looking into it!
 
-ok, it solves the issue
+Given that we already have 5dd4241964c8 ("vfio/ccw: replace one-element
+array with flexible-array member") applied, we now end up with inconsistent
+code. I'd prefer if we address _both_ code locations in a way that the code
+looks similar, and people won't send similar patches again and again.
 
-Thanks
-Patrice
-
-
-> 
-> Best regards,
-> Krzysztof
+Halil, since you started this discussion, can you address this please?
