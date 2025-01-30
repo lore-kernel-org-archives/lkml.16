@@ -1,68 +1,53 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED4B1E8823
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047BA1E522;
+	Thu, 30 Jan 2025 14:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738246884; cv=none; b=MSTpob0/oLVKVllYwpbJvynXsrsjWCpfuyLkSvcM96f2MhCR4EBtIYAMZ1fsOCltZFHRXH56FDXlXyFUKyIQrPx54o8qDFr0Sen8ZLhInHeP8GjjEOK5MAqm/bZZom1Wq88YToCo8dbX0aV6Bu+M0dv3SxzcrIlyks6paddqlTY=
+	t=1738246967; cv=none; b=DQThIgonBDNRDiF5w1kdlp89nnvtRcFQk0am6OqlGXoa7Q4BZccI5QKGb/y6RiI9FsDM+LpCJGMgVc1tFpNZvzG3TVPMF3Pcvzv0vqpRW2s2n2rgvEoeI0PNOkGISVqkUE/y5yz8W3bBbTPhEN2t1Qy+Spe62MWZkfg9/KAKy+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738246884; c=relaxed/simple;
-	bh=hlP0fLuRPUJSDcijkHX+KUit5h/ociTs81FNlrGzm2M=;
+	s=arc-20240116; t=1738246967; c=relaxed/simple;
+	bh=BzaA+L3AkoSgeI35XiFXPlmilMmMNoIl8rF6OWp33Zo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ttL2EXi9BcK01Zr/3pb4F6saiqnRj7WwCXkPRE/nG62YfhVXb9RCIGpT4/vAzx3HQY4Bnm1rnqoXBCYbQTrz1GcDv8+N+3FYoru/LiKNi492YMySLbsMy73sgP3zb3jk1CENfzuazkvoeazQgYN9zQfwlSh85Xc5AeYHtJ79S54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kSkd0faQ; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=uYG44F7rZiKULeO2HK9jZZhST2Gga3tBpd7crC0klh/aVE4dEX8IHcJL5F79xaMOc83tqRm6knsCmEKVfNpS7YB7o5qVKnSLrkdxBo5KLXrq3VNtVkQtTmSQPykZvGO59onLzOnrZqAOAA5kbiTz48xftVBXrIxtL67pgcsHlB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XmC540MW; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kSkd0faQ"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ef8c012913so1113823a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:21:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738246882; x=1738851682; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NqhTfjT1zxbId5gVT3Fchb/kBjZWREIt51i3/gBR220=;
-        b=kSkd0faQT3aJNYs5SDQN2Fi7fKf064pFVY7626Hsbi9LlFIK05TyU+B1vr0CAS0w+Q
-         kTM5Wg2P7H6XNU9Gq9UZDHqllPZLrKLm4pBsXIDexvUz37ia7qXbk+HattKJNMJaUhNi
-         j098w2oOvwhHxVNEkdkoJgpTYGatnbdagiyZI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738246882; x=1738851682;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NqhTfjT1zxbId5gVT3Fchb/kBjZWREIt51i3/gBR220=;
-        b=RLrC5mj0jHspXdGZubQCNosM1LodPkny0YUAO9pfpsFgm73358v8PEssrNrnxQuUlT
-         01X1BKATNRxr79cokZjBwSyHwo5OW0D4Nnb/pUE1nhx/f6o9bzJR8HF8wxf1UH+wkomu
-         UjKJFHFnwjaerBR5jq3IYkWxkgJGA27jOnWEj+KTdAxQdTMSl46+mmrvobhdlHZlS5cD
-         DC2hfkpP80XEV/xVcp+m9eBgXZS779HSxWPabZQxW0iB8kYIq2xMcmL5ANsvszPcSolm
-         3+9bWVDvMTwP5gcKBtnxnltGKT/stee/+pDuL4kUt68vmBHo5PytQ9ooGcVPkcR6Z51u
-         Da5g==
-X-Forwarded-Encrypted: i=1; AJvYcCV9DbPU4N+z1/JVQFKgrrQ1JMj2ZQ7u0Kg7CscZv4B22b/kIl3a/i1qzfG0V8tEgkYCxnzbM2zofXTn5rA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFH+3Dyye4evAdB2irgJYo3m1MavexCrPJ29F3/FtZ79M792PE
-	EFeEQdzUatOdQMMJwsBlGk7CajlKPF1URuNmQlY//x9bhnOqQqPjps0/wTSjMw==
-X-Gm-Gg: ASbGncuaH1XMWEUMumnYO/AQFv9cfZ/RHfi84rKcXQNG3wNB3venM4er7DdJJu3UXXa
-	BL/jXgwh1EOJJka9ooU79arT3oO/sosVwniJSJSPY2dHmfdfLR09Rqt2mlE0A+edALuPWET0jYr
-	XVlM/D54nED1c9YIsjfPJ9JB0pVOKYsNWb5BgxFG0Aizj0O1t29yiXeQpF8dm4tQ9kxgZ7R2x1P
-	MvLUy/4TKqPDUbWwfjy+KRtTCIgTDyRQjIn9D7ZOvlVpVF1gggUMaZ4pZeCU5FH1PjBxrLsqiWh
-	IjRDoBXyT3Lb1pddsg==
-X-Google-Smtp-Source: AGHT+IEIDj0DKTRAcc46NPrLBSCskSXSvStIOyNtXISUhnAvpm3MYKwMCn14LOk1QaNxFmN53KGy1Q==
-X-Received: by 2002:a17:90b:520d:b0:2ee:c457:bf83 with SMTP id 98e67ed59e1d1-2f83ac09200mr10220522a91.19.1738246882479;
-        Thu, 30 Jan 2025 06:21:22 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:d4ce:e744:f46b:4fb])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bf93ef3sm3933996a91.30.2025.01.30.06.21.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 06:21:22 -0800 (PST)
-Date: Thu, 30 Jan 2025 23:21:16 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Minchan Kim <minchan@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 0/7] zsmalloc: preemptible object mapping
-Message-ID: <x3b5fm2oecr5rlaytfpopbntg5mam2xsd6nnvvsgou2qxzegon@nsqfbkmhvnd7>
-References: <20250130044455.2642465-1-senozhatsky@chromium.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XmC540MW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zBPwFHdewPI4agr5Oh0ubR+XXLYYmNdQxuFDAt/itGs=; b=XmC540MWIRUY45L1ZCKLWbQEFZ
+	bFzbA57v/pSPALqI/QMDIzNsLcNmdbaK1Pw7benRStsfZ+yD89AllrhvD/9SSvYZLKwc/HEZap7H5
+	Tmo/lLD6pflRJt8WceDAkoaBVdmiYQD+nyRDSzgntYutmfwHb1IDYBwlkL37uXMzFS1lzpeeed0/F
+	8aZdMxv6lowImW7mKCVtHuMrQtgvtL8SrMOToNw+4KsytgZA6Unq1YwUnRDciVNwTa9y8RdYAINco
+	DUkHdD5f2u4J/1SyNI31E1jbCNH49TJczCyNKDwfzveGbfDpHYm79SEfAtWr90iEO+L7Vq2kTwh2O
+	aFiEUMsg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tdVRI-0000000DRjY-17hY;
+	Thu, 30 Jan 2025 14:22:40 +0000
+Date: Thu, 30 Jan 2025 14:22:40 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Sidhartha Kumar <sidhartha.kumar@oracle.com>,
+	akpm@linux-foundation.org, christophe.leroy@csgroup.eu,
+	justinstitt@google.com, linux-kernel@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org,
+	llvm@lists.linux.dev, maddy@linux.ibm.com, morbo@google.com,
+	mpe@ellerman.id.au, nathan@kernel.org, naveen@kernel.org,
+	ndesaulniers@google.com, npiggin@gmail.com, linux-mm@kvack.org
+Subject: Re: [PATCH] xarray: port tests to kunit
+Message-ID: <Z5uLMC7J4KKjuax4@casper.infradead.org>
+References: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
+ <07cf896e-adf8-414f-a629-a808fc26014a@oracle.com>
+ <qdq4k6323orqifgzo7pbg5vakezr3gptfdehghxsyfrhc4kwvb@d4fxbwcl4gjm>
+ <CAJ-ks9=U4PZv4NgyH8B7SbHkecGLy+M=G639hSTv-hnPySqk6w@mail.gmail.com>
+ <xf3445vgszstqfwycf5wc5owhnifxb3mny5xjjaihghqgnozmd@3h7hnifir4vu>
+ <CAMuHMdVcuhzO57Qn-kcUJDM=HmkSwuheyNJPF1tx+gxRKnKZXA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,17 +56,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250130044455.2642465-1-senozhatsky@chromium.org>
+In-Reply-To: <CAMuHMdVcuhzO57Qn-kcUJDM=HmkSwuheyNJPF1tx+gxRKnKZXA@mail.gmail.com>
 
-On (25/01/30 13:42), Sergey Senozhatsky wrote:
-> This is Part II of the series [1] that makes zram read() and write()
-> preemptible.  This part focuses only zsmalloc because zsmalloc imposes
-> atomicity restrictions on its users.  One notable example is object
-> mapping API, which returns with:
-> a) local CPU lock held
-> b) zspage rwlock held
+On Thu, Jan 30, 2025 at 09:21:12AM +0100, Geert Uytterhoeven wrote:
+> The long and obscure command line is a red herring: a simple
+> "modprobe test_xarray" is all it takes...
 
-I'll combine this series and zram series [1] and send out as one patch
-set.
+That's all I've ever done.  I'm confused/annoyed by all this "let's
+wrap everything up in some complex and obscure new thing" practice.
 
-[1] https://lore.kernel.org/linux-mm/20250130111105.2861324-1-senozhatsky@chromium.org
+> > You should look at the userspace testing (that this broke) as it has
+> > been really useful in certain scenarios.
+> 
+> BTW, how do I even build tools/testing/radix-tree?
+> "make tools/help" doesn't show the radix-tree test.
+> "make tools/all" doesn't seem to try to build it.
+> Same for "make kselftest-all".
+
+I've never heard of any of those things.  So I didn't try to make any of
+them work.
+
+> When trying the above, and ignoring failures due to missing packages
+> on my host:
+>   - there are several weird build errors,
+>   - this doesn't play well with O=,
+>   - lots of scary warnings when building for 32-bit,
+>   - ...
+
+Really?  Turns out I haven't built for 32-bit on this laptop, so I'm
+installing all the packages I need now.  I seem to reemember it being
+painful due to liburcu packaging not allowing me to install both a
+32-bit and 64-bit package at the same time.
+
+> At least the kunit tests build (and run[1] ;-) most of the time...
+
+That's unworthy.  kunit isn't trying to do anything nearly as hard
+as the radix tree tests are.
+
+> [1] test_xarray started failing on m68k recently
+>     https://lore.kernel.org/all/CAMuHMdU_bfadUO=0OZ=AoQ9EAmQPA4wsLCBqohXR+QCeCKRn4A@mail.gmail.com/
+
+I really wish Andrew would stop merging xarray patches.
