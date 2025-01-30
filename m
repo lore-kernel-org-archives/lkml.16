@@ -1,115 +1,114 @@
-Received: from lichtman.org (lichtman.org [149.28.33.109])
+Received: from mail.crpt.ru (mail1.crpt.ru [91.236.205.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703FE1B21B8;
-	Thu, 30 Jan 2025 08:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.33.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC92881E;
+	Thu, 30 Jan 2025 09:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.236.205.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738227587; cv=none; b=cuFS4waqSk8vZ+nB1vAY8zeg23ICU9G8sSbpdKnf+ad99YwYWvG31fPx0HRmck/H5TWXfTD5pSYCALWgt61MLmwp19/bCxqt0+qyfrafG/W3z48/TIsYH4yFqcrQkYooS9+gwCv9Fxccece2Hq4oD5jS/0pCTnEH20RjlrTvzSk=
+	t=1738227652; cv=none; b=Jz5gCfzcnL1pe819mSLyiTKFCxF7XifDnhuymQic8zDnLdziaTXRi88x8/EPixV0upCww1i+SV+i1256JCSe5OdUlh8jEh1OU58qOkkxNvtpiiXLFV8W16hOntVajJrs3lGoHjbay2/qeFBv+FBM4NjlXnbA0BAMjrcyvzuFOxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738227587; c=relaxed/simple;
-	bh=fe89As24UTHXOJ8+TpUHOCJwA7sS3Uoo/FIqxuY3Xow=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KENYEI82vIyjr5adHj+onephmmGUowcy48DoVR/tzxuhwyLg51Rp4bBeWr74q5jL6QFTvY40vP0/Gu8xdmPBhOMuUcHxZhYlKKJzB7XsYH1PfZVJza75I/ELp7L0SzbkCfeqtvsRqsMouLpQe4Uca51wF7GhGBQQuIPgF5Z9rzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org; spf=pass smtp.mailfrom=lichtman.org; dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b=O69xAuRS; arc=none smtp.client-ip=149.28.33.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtman.org
+	s=arc-20240116; t=1738227652; c=relaxed/simple;
+	bh=/PrXWxohQ205RW/ae0fQlLa42s0+6zVNBySmFktGVTw=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=lu2C007leddw3fsol2zA3a7xK6EplYdlguRk1NiB7CTUnYIdYfFSZUi/Hp7mwGRSQ8EHE+CtWeU8jk/6CK1ArLNK6Ya8NR7YzpuXHpWr/QARrTqS2TdrCfylILERqkG4THL4YfGFGwiOnnfKuzkyx388j4QiPEv432r17l6RViw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru; spf=pass smtp.mailfrom=crpt.ru; dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b=duwaHRn6; arc=none smtp.client-ip=91.236.205.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crpt.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b="O69xAuRS"
-Received: from nirslaptop (unknown [85.130.135.138])
-	by lichtman.org (Postfix) with ESMTPSA id B6AEB1771BE;
-	Thu, 30 Jan 2025 08:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=lichtman.org; s=mail;
-	t=1738227577; bh=fe89As24UTHXOJ8+TpUHOCJwA7sS3Uoo/FIqxuY3Xow=;
-	h=From:To:Cc:Subject:Date:From;
-	b=O69xAuRSZpQv81p6I9iBF1a5CP9eH198sDbadWyrZUaEcFsmRerzFKcrsCyjoBr+v
-	 Q0MeMy6nS4nuVH4o8O4hrQuZsqxeds/hLz9KChsGcBEQZuQQE/CPRPMpO37Ur3y521
-	 YDjDB3hNJCzrf82gs93w41kobfmWHxBgtR8FUDuT/Rut3D/mAhQzeCf7nlAFoYkoW9
-	 JfZMkz87ZdfPakTv5E4wgjLMbLsG5W4CNzltT/AvKkuHMWlyv6F+MQqVpnf5EAbBim
-	 fKKuKjT7PhjJZ/aHbEdJOBePs/R2PZunEyGdd5WzvNY3hIyqik9uDmePxGzkuMCnXa
-	 dqnQqZLZAQAXg==
-From: "Nir Lichtman" <nir@lichtman.org>
-To: <corbet@lwn.net>,
-	<paulmck@kernel.org>,
-	<akpm@linux-foundation.org>,
-	<rostedt@goodmis.org>,
-	<Neeraj.Upadhyay@amd.com>,
-	<mcanal@igalia.com>,
-	<thuth@redhat.com>,
-	<ardb@kernel.org>,
-	<gregkh@linuxfoundation.org>,
-	<bp@alien8.de>,
-	<linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Cc: <rob@landley.net>
-Subject: [PATCH] docs: clarify rdinit precedence and correct ramdisk to initramfs
-Date: Thu, 30 Jan 2025 10:59:33 +0200
-Message-ID: <000201db72f5$49b11e60$dd135b20$@lichtman.org>
+	dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b="duwaHRn6"
+Received: from mail.crpt.ru ([192.168.60.3])
+	by mail.crpt.ru  with ESMTP id 50U90Zgn005319-50U90Zgp005319
+	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
+	Thu, 30 Jan 2025 12:00:35 +0300
+Received: from EX2.crpt.local (192.168.60.4) by ex1.crpt.local (192.168.60.3)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Thu, 30 Jan
+ 2025 12:00:34 +0300
+Received: from EX2.crpt.local ([192.168.60.4]) by EX2.crpt.local
+ ([192.168.60.4]) with mapi id 15.01.2507.044; Thu, 30 Jan 2025 12:00:34 +0300
+From: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>
+To: Support Opensource <support.opensource@diasemi.com>
+CC: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>, "Sebastian
+ Reichel" <sre@kernel.org>, Adam Thomson
+	<Adam.Thomson.Opensource@diasemi.com>, Lee Jones <lee@kernel.org>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
+Subject: [PATCH] power: supply: da9150-fg: fix potential overflow
+Thread-Topic: [PATCH] power: supply: da9150-fg: fix potential overflow
+Thread-Index: AQHbcvVskkaaNoCx5ECWTkugta3T2Q==
+Date: Thu, 30 Jan 2025 09:00:34 +0000
+Message-ID: <20250130090030.53422-1-a.vatoropin@crpt.ru>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-kse-serverinfo: EX1.crpt.local, 9
+x-kse-antivirus-interceptor-info: scan successful
+x-kse-antivirus-info: Clean, bases: 1/29/2025 10:00:00 PM
+x-kse-attachment-filter-triggered-rules: Clean
+x-kse-attachment-filter-triggered-filters: Clean
+x-kse-bulkmessagesfiltering-scan-result: protection disabled
+Content-Type: text/plain; charset="koi8-r"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: Adty8/StsQsnRXVtRbWdiiQII3bvxw==
-Content-Language: en-us
+X-FEAS-Client-IP: 192.168.60.3
+X-FE-Policy-ID: 2:4:0:SYSTEM
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=crpt.ru; s=crpt.ru; c=relaxed/relaxed;
+ h=from:to:cc:subject:date:message-id:content-type:mime-version;
+ bh=o54c9MrkUFXn90FGbRmy5zFWqtUULMfirflS/ppsvvI=;
+ b=duwaHRn6/D8wlbZcYcIk+99RcTwIlw0VAvIV6C1nsLUEsMgLGlelLiNcsVA8WccodBWXuF0LiErL
+	X1fEWqK6gfWjQBnSoUKs10u7oPP27IuBwIY+sZ9bO+O1hbM/xfqoxdGkSUzkVH51RVgOGX4o00w8
+	4FRTrAyklHnUW52KEZldKGYXDpw1sTcVKISamUxFwNZ0+XxpwNaiWfJhe6EmvcyBdExl7ftIfWwW
+	8XIBBn5o9p/b3BUYk6IgBaTtrjoErsU/GlSW8R/5Gtnun8qNJzxruv6X3ypnwxJdyAPeZDd0aMt3
+	vJA54QyScXpftzlseMNQVUmdLE4MuYmC4VDE9w==
 
-Problem: Current documentation regarding the init and rdinit params is
-confusing,
-The description of rdinit claims that it is related to ramdisks, even though
-in practice
-It only controls the init executable of the initramfs
-(the deprecated ramdisk mechanism is initialized only after attempting to
-load rdinit
-or its default "/init")
-Rob Landley's document from 2005 "Ramfs, rootfs and initramfs"
-clarifies the distinction between initramfs and ramdisk.
-Another confusing point is that the init param is ignored, in case rdinit or
-"/init"
-exist and are executable in the initramfs; the source code gives priority to
-rdinit.
+From: Andrey Vatoropin <a.vatoropin@crpt.ru>
 
-Solution: Add more clarification to the kernel params documentation, and fix
-From ramdisk to initramfs in the rdinit doc.
+Size of variable sd_gain equals four bytes - DA9150_QIF_SD_GAIN_SIZE.
+Size of variable shunt_val equals two bytes - DA9150_QIF_SHUNT_VAL_SIZE.
 
-Signed-off-by: Nir Lichtman <nir@lichtman.org>
+The expression sd_gain * shunt_val is currently being evaluated using
+32-bit arithmetic. So during the multiplication an overflow may occur.
+
+As the value of type 'u64' is used as storage for the eventual result, put
+ULL variable at the first position of each expression in order to give the
+compiler complete information about the proper arithmetic to use. According
+to C99 the guaranteed width for a variable of type 'unsigned long long' >=
+=3D
+64 bits.
+
+Remove the explicit cast to u64 as it is meaningless.
+
+Just for the sake of consistency, perform the similar trick with another
+expression concerning 'iavg'.
+
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: a419b4fd9138 ("power: Add support for DA9150 Fuel-Gauge")
+Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>=20
 ---
- Documentation/admin-guide/kernel-parameters.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/power/supply/da9150-fg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt
-b/Documentation/admin-guide/kernel-parameters.txt
-index fb8752b42ec8..246cb73f71a8 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2182,6 +2182,8 @@
- 			Format: <full_path>
- 			Run specified binary instead of /sbin/init as init
- 			process.
-+			Note that rdinit= or /init if rdinit= is not set
-will take
-+			precedence in case they are found in the initramfs.
- 
- 	initcall_debug	[KNL] Trace initcalls as they are executed.  Useful
- 			for working out where the kernel is dying during
-@@ -5933,8 +5935,8 @@
- 
- 	rdinit=		[KNL]
- 			Format: <full_path>
--			Run specified binary instead of /init from the
-ramdisk,
--			used for early userspace startup. See initrd.
-+			Run specified binary instead of /init from the
-initramfs,
-+			used for early userspace startup.
- 
- 	rdrand=		[X86,EARLY]
- 			force - Override the decision by the kernel to hide
-the
--- 
-2.39.5
-
-
+diff --git a/drivers/power/supply/da9150-fg.c b/drivers/power/supply/da9150=
+-fg.c
+index 652c1f213af1..63bec706167c 100644
+--- a/drivers/power/supply/da9150-fg.c
++++ b/drivers/power/supply/da9150-fg.c
+@@ -247,7 +247,7 @@ static int da9150_fg_current_avg(struct da9150_fg *fg,
+ 				      DA9150_QIF_SD_GAIN_SIZE);
+ 	da9150_fg_read_sync_end(fg);
+=20
+-	div =3D (u64) (sd_gain * shunt_val * 65536ULL);
++	div =3D 65536ULL * sd_gain * shunt_val;
+ 	do_div(div, 1000000);
+-	res =3D (u64) (iavg * 1000000ULL);
++	res =3D 1000000ULL * iavg;
+ 	do_div(res, div);
+--=20
+2.43.0
