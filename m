@@ -1,142 +1,199 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312711E0B74
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7601E1C22;
+	Thu, 30 Jan 2025 15:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738251817; cv=none; b=gKW9KliRONla/XG3TKfe4svo/Aus4eGzo8ge0FHWDfpRdPHG8/8al9W/ImraJ9ESpawQnG6B1cn0JB70aSH2T9gRmubC5gmj/wSW/pxEeTknsSpsvh/iH7nBB4LgUC2mGgSGS/LTAYw8l7ndY3KU2gP1XfXvgeXMVX22Od6kUK8=
+	t=1738251933; cv=none; b=UxUC5+4yGK6sQ01Kpv7OxytxklT6nEBhoFgxWsyXrBXjk7MrEpGdjyBGswMkTnFlhOLLgFpy9yUOVBSfLKHAkW0yBKtXBWfmEPrZzr3BfVunnaWtdEEnvuvFS3a4BipXn8LOdc6H31HpHC7EcIIDg6rEclvUUC7mtXYMqzluilY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738251817; c=relaxed/simple;
-	bh=gnkuw7EAWfIkyzyYly9eVU4x+t+1CaTxemTEoAKj0aQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=omE9Kkm0z8xPxZOFZDTlfTmgIT5z5LcwjcE1T97e7l1GFRNYQosBKd6OtOwaKe3N+1ZBvRT7w/R+rPtq9bGvbqQYJNXyv447aO/eRlYmhumkzcUki3Qkw/kiXWr2hZF0AQfbJlI1s2QpmsY8m3ZHG31E3LIdk/jQ8MmOnLxslu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=joTpTYa/; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738251933; c=relaxed/simple;
+	bh=weQOwIjYJYH9Fvc6f2vO7vqMSQYvHZgRIwIM++ObIXE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=edtuCWvQgy8PvgYwPd7dihdgih0jyf8BOcGRLEi9VN1M9cdohZbb+jGU8bod3D6OkRjzZiYq+CcHCBxTKccZI1+duxDbKqKIVN/2ksmMSiyT5aqdmXAdUul9EFK9+zXepfiCTIQVw/xYiq5O/JrJEtr06cluoEfnZFT3E/Ij19Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=f9D4XRCC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZL3SUWyR; arc=none smtp.client-ip=202.12.124.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="joTpTYa/"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4361f664af5so11364725e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 07:43:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738251814; x=1738856614; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=azPhhQ7rfyfc+5KTeibaMiwEyxa9c6hfQ+sTaARSFUY=;
-        b=joTpTYa/OgWirXLl+pf0YZNrduLOSczQVOcROH92AS8DNHkjp3bcCwnholeE7oLNAv
-         EDwkYjtdw/XkeYdJAxcQVvssbIqmfPxP7NLWzXCrhLjR87DOUjJNfbr7fBVJ+dSyjkx+
-         CnoCfNS77v6m0cNngyYbDFc0Su2uabwJmcZSidVsQMeQg05X1K4n8OneG9V/e6hAcRvj
-         P9Amc71ueXW6O+TnnTrRXwzIDztqDYwtOeMNNw+5qEIpQ6CKKEX6PnCidwtsgZlpz1/E
-         Bpc8YXnC9CJz3XyS17nUGOZlF3JjiX+zVk1l6l1jwP6INXNZ7k7b2x9PPSKszKAA5xnQ
-         rmyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738251814; x=1738856614;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=azPhhQ7rfyfc+5KTeibaMiwEyxa9c6hfQ+sTaARSFUY=;
-        b=D2cL3TaxFuJfzSNEmC6D6Elxd+2fdwYGx1sdx68ie5ZmxSdeWaDDCOGJNDRzpFh8vT
-         fCY4yNmrNwXzsSpbC9jz9dE2+p5oQ3ImRl4/+VtNMG+IuiYffGjkG6mukouy2YZaaVl4
-         Z2sKTzcB3Z457fv+0yptrYeVjSdWDOxGKjN6Bqr9CNhmVGDQKLOCw6hZ3l7NqXl1SlOR
-         xdgblGYhNjfyEBfbkzNUXJ3VsZ0pSeSpL2eL9EkJPuTONAyofJMWjV6IvvO7lpNZApv0
-         O3Vr6Y+s/GFZn7Y7UNbGQ6ORGMSZmEkn5L36MhN7/+mlSel/4sVx52biH02TI0TxEyZ3
-         EbGA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkMtGv2x/NDs+7RNRMrwwXxM+lG0Ue47hNO0WA0UwrjFBvQFBoCJ+IEJSsBCRIlYj/nhiQv10KMaDHxWQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ5sxN0vJ0Li89zO0C7YxGXzdSIae+K26643XHKLubVTyNXRXI
-	sGhnW0PWBbHNrR7vGM8NCMM8msiXGZE1E41UXlEAJxob6/6ENhEyGHpVAsPlg3GnuVSHhSLKu5K
-	fAaMgilHvEDeyqHzqViqoelyYZcvM5Tjd74QU
-X-Gm-Gg: ASbGncvZ+RaD2MaTdAonPHDp98PszqV4ay2+YhOK5jKPzbDfpmj+6DQY7yPoANeAlCl
-	+k95QsaB27fJJFRGo/NiZuhFe77rLN+1Or4r+3TKKH4hxcIrcfdQF4PkZQFKrwIwTWOtPsl+l2g
-	qsIoWXMWeO9BaEiXVda5GMe3/n+RI=
-X-Google-Smtp-Source: AGHT+IE1Yi3yMptv3DDYAHG2MYfvszB3hKN7BJNtoVBKle5XEPlSkpwHhdKDdo6JiVKJ17MLIwR92OsOs1d3e6GeOqo=
-X-Received: by 2002:a05:6000:4024:b0:38a:8ace:85e8 with SMTP id
- ffacd0b85a97d-38c51e8e42fmr7581190f8f.44.1738251814358; Thu, 30 Jan 2025
- 07:43:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="f9D4XRCC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZL3SUWyR"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.stl.internal (Postfix) with ESMTP id 9D28D114010B;
+	Thu, 30 Jan 2025 10:45:29 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Thu, 30 Jan 2025 10:45:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1738251929; x=
+	1738338329; bh=SgQyaIVGztkMCarUps60DVXh+PXZsKmvoBlXKnoc3d4=; b=f
+	9D4XRCCqfLJRx3YDZN8P9nk8ZahQVkNl/634bcnFN70UAi8EAdKJdhuz3+ruIuM0
+	+hPe9PEraBHrA6DWjaE7kNamSbP+vEhje/FbINXGQUB6LfdB8u0Q8+gVwHmwrtu8
+	cCDfDtWH7c7y3rTK3EBNkROiNhkMRki1N6TAu3OKnBh/Svi25gg5dTDQmWx2392Y
+	xeC50h7L3KW1MhHjJIFQyaWQdr4ajBaLRZ7OTVEbGJgoTJYyJi9r+AzkDXXnudkP
+	Pj1ZIQzpumqK8Rl11GmNqdCWUx2JMOJPrROOvA9dLZs0an92ryFmSiYO66klw6rK
+	AefG9hYsUx/QLEdCii29Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1738251929; x=1738338329; bh=S
+	gQyaIVGztkMCarUps60DVXh+PXZsKmvoBlXKnoc3d4=; b=ZL3SUWyRHEYXIT1vv
+	RKPDyG7vVa82WYRWA3a+TQMTRnMJLa+9/wVp94O0NRM0qUi4EO5fE/Evn2zUnJuI
+	lfEYGQmC8oX0YJYIl92JFbfulEECMlBeTWD1M9NuXaNxYT8n1Yp7Gmy1HNkVvOGl
+	6s3KJIlTxv6PZ8hZQyxj57Pld12TlQyjCxU6NCwvbhZFUtXh+M6jpkVe0lc+W/wk
+	O6QeXIqa6KK3u6CMATZDidMBICHGzJOjM3k7ZVumjiF9oTDEbU4CJ2bLS6Ys5o81
+	NPH2g8T3DsAVNy+fHjEWMlfaAzqw0VyqcbJcVuE9k4EhEDNpiSIbEHng/9doYC5e
+	XvKFw==
+X-ME-Sender: <xms:mJ6bZ_oXhbNcsVoCMYdZLvDYFXHc_CiX2RVTn0CoVn5iAdIcqV9XIA>
+    <xme:mJ6bZ5rtozFamldEGOcwkkr_1aMwzLzIvpzelyie2Lk2H75rBDNcQBbm5lRFWDkDF
+    MXCp6EozJgmvwlKgsM>
+X-ME-Received: <xmr:mJ6bZ8PenPefoTHPN_SjIecfJGtxo0mBEKCvKvwyzWNOQ32av6CzJmpvcU6BoPJxr9IbvbMyI2zBMfNCNqdnJHRRSqac1IFjCHxC9Tt05dDe>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeivddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucgoteeftdduqddtudculd
+    duhedmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhep
+    ofgrrhhkucfrvggrrhhsohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
+    gsrdgtrgeqnecuggftrfgrthhtvghrnhepfedtvdejfeelffevhffgjeejheduteetieeg
+    uefgkefhhfegjeduueethefgvdffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgt
+    rgdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmh
+    hpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdprhgtphhtthhopehhuggv
+    ghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinh
+    gvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdq
+    ughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:mJ6bZy53lRgbmINIPsq6csmHLeQ9V48KTlbLrZkpbWO-u06q3YeA7Q>
+    <xmx:mJ6bZ-7WYr9bXsKierJNjQvLRrHQ73FYF8bcQ-w0_6dex4yqu2UHRw>
+    <xmx:mJ6bZ6jzfVLjc6GEgIdjVsk4I6HkVfUCx20_-7098d2q2FQ8ymNeZw>
+    <xmx:mJ6bZw5ABwrH0xrsm9pFv8FHAucBOGV-96dmwXfi6DlxMLAxLKk2zw>
+    <xmx:mZ6bZwShGEEc2zIRfCDX0boMEIX4VnMDWAJd_07lyxjUdTpYeFiy9Ro3>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 30 Jan 2025 10:45:28 -0500 (EST)
+From: Mark Pearson <mpearson-lenovo@squebb.ca>
+To: mpearson-lenovo@squebb.ca
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: thinkpad_acpi: Support for V9 DYTC platform profiles
+Date: Thu, 30 Jan 2025 10:45:15 -0500
+Message-ID: <20250130154520.26469-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130-guard-get-lock-v1-1-8ed87899920a@google.com> <Z5ubrUcSuaTtj_wW@tardis.local>
-In-Reply-To: <Z5ubrUcSuaTtj_wW@tardis.local>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 30 Jan 2025 16:43:22 +0100
-X-Gm-Features: AWEUYZlOeHhELDW2pMXb6HRxrDbsoc5f9z0QdhkMHT2sBQi04pokpKUhfBztReM
-Message-ID: <CAH5fLgiTG8nNRdb2=3PdZN=2Bg=KLGy4hvrae+E0jcOeCTBpjw@mail.gmail.com>
-Subject: Re: [PATCH] rust: sync: add accessor for the lock behind a given guard
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 30, 2025 at 4:33=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> Hi Alice,
->
-> The patch looks reasonable to me, however...
->
-> On Thu, Jan 30, 2025 at 11:39:32AM +0000, Alice Ryhl wrote:
-> > Binder has some methods where the caller provides a lock guard, and
-> > Binder needs to be able to assert that the guard is associated with the
-> > right lock. To enable this, add an accessor to obtain a reference to th=
-e
-> > underlying lock that you can pass to `ptr::eq`.
-> >
->
-> ... could you provide more details on this usage, for example, why do
-> you need the assertion, is it for debug purposes? Does the current C
-> code have the same or similar logic? Besides...
+Newer Thinkpad AMD platforms are using V9 DYTC and this changes the
+profiles used for PSC mode. Add support for this update.
+Tested on P14s G5 AMD
 
-I added the assertion because it makes the SAFETY comment on a call to
-kernel::list::List::remove simpler. The C driver does not have the
-assertion.
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 33 ++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
 
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > ---
-> >  rust/kernel/sync/lock.rs | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
-> > index 41dcddac69e2..681d67275b49 100644
-> > --- a/rust/kernel/sync/lock.rs
-> > +++ b/rust/kernel/sync/lock.rs
-> > @@ -169,7 +169,12 @@ pub struct Guard<'a, T: ?Sized, B: Backend> {
-> >  // SAFETY: `Guard` is sync when the data protected by the lock is also=
- sync.
-> >  unsafe impl<T: Sync + ?Sized, B: Backend> Sync for Guard<'_, T, B> {}
-> >
-> > -impl<T: ?Sized, B: Backend> Guard<'_, T, B> {
-> > +impl<'a, T: ?Sized, B: Backend> Guard<'a, T, B> {
-> > +    /// Returns the lock that this guard originates from.
-> > +    pub fn lock(&self) -> &'a Lock<T, B> {
->
-> How about we name this as `lock_ref()` or something else, because
-> `lock()` itself is already used by `Lock` for the lock *operation*, and
-> this is just an accessor, I would like we don't confuse code readers
-> when they see code like "let b =3D a.lock()".
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 1fcb0f99695a..cae457bc0b07 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -10319,6 +10319,10 @@ static struct ibm_struct proxsensor_driver_data = {
+ #define DYTC_MODE_PSC_BALANCE  5  /* Default mode aka balanced */
+ #define DYTC_MODE_PSC_PERFORM  7  /* High power mode aka performance */
+ 
++#define DYTC_MODE_PSCV9_LOWPOWER 1  /* Low power mode */
++#define DYTC_MODE_PSCV9_BALANCE  3  /* Default mode aka balanced */
++#define DYTC_MODE_PSCV9_PERFORM  4  /* High power mode aka performance */
++
+ #define DYTC_ERR_MASK       0xF  /* Bits 0-3 in cmd result are the error result */
+ #define DYTC_ERR_SUCCESS      1  /* CMD completed successful */
+ 
+@@ -10339,6 +10343,10 @@ static int dytc_capabilities;
+ static bool dytc_mmc_get_available;
+ static int profile_force;
+ 
++static int platform_psc_profile_lowpower = DYTC_MODE_PSC_LOWPOWER;
++static int platform_psc_profile_balanced = DYTC_MODE_PSC_BALANCE;
++static int platform_psc_profile_performance = DYTC_MODE_PSC_PERFORM;
++
+ static int convert_dytc_to_profile(int funcmode, int dytcmode,
+ 		enum platform_profile_option *profile)
+ {
+@@ -10360,19 +10368,14 @@ static int convert_dytc_to_profile(int funcmode, int dytcmode,
+ 		}
+ 		return 0;
+ 	case DYTC_FUNCTION_PSC:
+-		switch (dytcmode) {
+-		case DYTC_MODE_PSC_LOWPOWER:
++		if (dytcmode == platform_psc_profile_lowpower)
+ 			*profile = PLATFORM_PROFILE_LOW_POWER;
+-			break;
+-		case DYTC_MODE_PSC_BALANCE:
++		else if (dytcmode == platform_psc_profile_balanced)
+ 			*profile =  PLATFORM_PROFILE_BALANCED;
+-			break;
+-		case DYTC_MODE_PSC_PERFORM:
++		else if (dytcmode == platform_psc_profile_performance)
+ 			*profile =  PLATFORM_PROFILE_PERFORMANCE;
+-			break;
+-		default: /* Unknown mode */
++		else
+ 			return -EINVAL;
+-		}
+ 		return 0;
+ 	case DYTC_FUNCTION_AMT:
+ 		/* For now return balanced. It's the closest we have to 'auto' */
+@@ -10393,19 +10396,19 @@ static int convert_profile_to_dytc(enum platform_profile_option profile, int *pe
+ 		if (dytc_capabilities & BIT(DYTC_FC_MMC))
+ 			*perfmode = DYTC_MODE_MMC_LOWPOWER;
+ 		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
+-			*perfmode = DYTC_MODE_PSC_LOWPOWER;
++			*perfmode = platform_psc_profile_lowpower;
+ 		break;
+ 	case PLATFORM_PROFILE_BALANCED:
+ 		if (dytc_capabilities & BIT(DYTC_FC_MMC))
+ 			*perfmode = DYTC_MODE_MMC_BALANCE;
+ 		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
+-			*perfmode = DYTC_MODE_PSC_BALANCE;
++			*perfmode = platform_psc_profile_balanced;
+ 		break;
+ 	case PLATFORM_PROFILE_PERFORMANCE:
+ 		if (dytc_capabilities & BIT(DYTC_FC_MMC))
+ 			*perfmode = DYTC_MODE_MMC_PERFORM;
+ 		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
+-			*perfmode = DYTC_MODE_PSC_PERFORM;
++			*perfmode = platform_psc_profile_performance;
+ 		break;
+ 	default: /* Unknown profile */
+ 		return -EOPNOTSUPP;
+@@ -10599,6 +10602,7 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+ 	if (output & BIT(DYTC_QUERY_ENABLE_BIT))
+ 		dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
+ 
++	dbg_printk(TPACPI_DBG_INIT, "DYTC version %d\n", dytc_version);
+ 	/* Check DYTC is enabled and supports mode setting */
+ 	if (dytc_version < 5)
+ 		return -ENODEV;
+@@ -10637,6 +10641,11 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+ 		}
+ 	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) { /* PSC MODE */
+ 		pr_debug("PSC is supported\n");
++		if (dytc_version >= 9) { /* update profiles for DYTC 9 and up */
++			platform_psc_profile_lowpower = DYTC_MODE_PSCV9_LOWPOWER;
++			platform_psc_profile_balanced = DYTC_MODE_PSCV9_BALANCE;
++			platform_psc_profile_performance = DYTC_MODE_PSCV9_PERFORM;
++		}
+ 	} else {
+ 		dbg_printk(TPACPI_DBG_INIT, "No DYTC support available\n");
+ 		return -ENODEV;
+-- 
+2.47.1
 
-The usual name for this operation in userspace is "mutex".
-https://docs.rs/lock_api/0.4.12/lock_api/struct.MutexGuard.html#method.mute=
-x
-
-But since our code is generic over many lock types, I went for "lock".
-But I guess it could make sense to rename it.
-
-> Moreover, if the only usage
-> of this is for asserting the right lock, maybe we can instead add an:
->
->     pub fn assert_lock_associated(&self, lock_ptr: *const Lock<T, B>)
-
-I guess, though there is precedent for having a method that gets the
-underlying lock, so I think it makes sense. If we had an assertion, it
-would probably take an &Lock<T,B>.
-
-Alice
