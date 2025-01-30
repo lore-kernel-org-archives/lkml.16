@@ -1,82 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D525139B;
-	Thu, 30 Jan 2025 16:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DC5139B;
+	Thu, 30 Jan 2025 16:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738254017; cv=none; b=PWJsPuKY4FFcf0acX75BqOzjWb9Ixl2oepxEh+LbKNQ3RPmmtk+dVj31TidhBMZqZDo/oNINduk3Ywhfbww+ZxKs5kbg4rVXC0VQBFG6eiyj6S43gILmemPuwY6a57xc4oqkVTKA7zBTWQxpuSvsZ/oMVuH4IXka0hQwNhp/5yo=
+	t=1738254120; cv=none; b=p80ymKwcI8TnkL37Yfz6chYVrbMqWYHZpeBK8um7vIyrdMEquQ6SochHa5H6n48t0Z7z1QrZDi6kxmGL3Yw+wuAg/MfkeXDY8Ic58UvhXL8pytnsN4WMCiAwagwwoPMKyH8+JbhHXCw5ySDx2fUOB+6qRTbMXHjxAtUGqnmwcUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738254017; c=relaxed/simple;
-	bh=FYEXyEAib+ybKB4YBQDIvAkC2oKSQt7aP7l4qin8tv4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tTYd+EUEslsQUdL2cMfDFUUSbanLtKSJ5wfXf1Jp1ZEsKZIrHskykJc/4Fzp13tcPghNWrOw/olNa1jcpj3IBPmkTPQC1quIMqrV1nQ3dUrDT7sUZxE6+k/LfJlV0dA0KkzoaUPUb6okzB0X11QbqS6FU/vSHCw1IJRFCW0PinQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBOquXda; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBOquXda"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB15C4AF09;
-	Thu, 30 Jan 2025 16:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738254016;
-	bh=FYEXyEAib+ybKB4YBQDIvAkC2oKSQt7aP7l4qin8tv4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mBOquXdacEo5mkOV5G8iKJ1cuHEC7axtYUMoGv9elW7G/5XcFFAxJeajyBiY7fJGr
-	 Dhj8QudOUZwSadqthnR8h9o+w71mCF2KWABUY5JrSokf8HkqDf8nl8XwMyO2DNqhHg
-	 lRQg4HIKFX7GyMGPx22mxxVz7QKlGrFT+YkvjZOcBrOlWXPCF2hp2gJAG91mzo2ujV
-	 yYZi5jvqSUpofuQDSReQCpKbQsmTI1Ovlt95gUgXXkGY6PvjHEnb81KD6hXnFD+C6o
-	 7ADB0I9dzvNHpTsAiN7JNuXDKyhM+Vo2CyyslMGG2uwTAiRW3PZXgv2ybAa2itx9BM
-	 ytXxuiGIr8fRA==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-543d8badc30so1105250e87.0;
-        Thu, 30 Jan 2025 08:20:16 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVtPrTENVnNL+bSPXhWi9iQ/GfvPKwtuR+0viRQ1NAvLEyqRf/14k0652KkCSMgzhG71xzwg/r00FZZIhle@vger.kernel.org, AJvYcCWS6saNH6odKgj6oZltg2bRFOcIp3W8mng4bTC0F1/IpBk2Brn6NG/d1nynz69ORQn8YnoYR+lwx3A=@vger.kernel.org, AJvYcCXdy+K1EiLnBvgqdPL3Iak3uy1exPfjtSldPHkQGXNynUS/wpY4BBoueZhRc/lgVabxjJlcaN3x@vger.kernel.org
-X-Gm-Message-State: AOJu0YypzTBe9riWBCPDPKNPGyZfJHsgVNJs6c0pjH/Y6EXxYGGO2DG8
-	joQN327dxuZSGga62UpZ4IWI1snvCotOgDsYBy8CjeWYTeILcerQ2pdaFzOx1SxdnyQ4YfpCWRM
-	HUM8FH6M01WglHemiJes+1s7QFD8=
-X-Google-Smtp-Source: AGHT+IE1C8s1VteGDGRQ35A6NwlNvkftxbcxG3ORQcL/+819zw8iJPqJkpUleI0FcgMO+muHiYGV2FURQ1bQvolF4AE=
-X-Received: by 2002:a05:6512:3a8e:b0:542:213f:78fd with SMTP id
- 2adb3069b0e04-543e4c373e2mr2566854e87.40.1738254014946; Thu, 30 Jan 2025
- 08:20:14 -0800 (PST)
+	s=arc-20240116; t=1738254120; c=relaxed/simple;
+	bh=KC6+0vBEUgM0iPzYCxcTwkQWdeVBF7STXSN2kMjW09I=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NKvwZAJft6J0yvAdT7V1219EO18fUMLh+oIZagdRTH4gKyhb9M2zCD5oRr8+DdBGnIlbXsISyRZDyt2eRBXerraC0m3isE6vb5euSnYMRxyuEWe9BCY5vFCVFo0w6AEzqVeNGhs5urtqIyIcL6g3LKv4FzgXhefGXNnY4YEWzqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YkPQz6YLmz6K8Rw;
+	Fri, 31 Jan 2025 00:21:15 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0F5AA140B55;
+	Fri, 31 Jan 2025 00:21:55 +0800 (CST)
+Received: from localhost (10.195.245.124) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 Jan
+ 2025 17:21:54 +0100
+Date: Thu, 30 Jan 2025 16:21:52 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: David Lechner <dlechner@baylibre.com>
+CC: Jonathan Santos <Jonathan.Santos@analog.com>, <linux-iio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+	<marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <jonath4nns@gmail.com>,
+	<marcelo.schmitt1@gmail.com>
+Subject: Re: [PATCH v2 04/16] dt-bindings: iio: adc: ad7768-1: add VMC
+ output property
+Message-ID: <20250130162152.0000470a@huawei.com>
+In-Reply-To: <55eb1af7-775e-4f3d-8532-0f0300057a75@baylibre.com>
+References: <cover.1737985435.git.Jonathan.Santos@analog.com>
+	<e17337bc3b0f2e95d3d4f7b6daa7755881e11fba.1737985435.git.Jonathan.Santos@analog.com>
+	<55eb1af7-775e-4f3d-8532-0f0300057a75@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250121-x86-use-std-consistently-gcc-15-v1-0-8ab0acf645cb@kernel.org>
- <202501300804.20D8CC2@keescook>
-In-Reply-To: <202501300804.20D8CC2@keescook>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 30 Jan 2025 17:20:03 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXH0T5XJGMyC72DQjp0zjTAC5JbtDjY=rDGPeMs6cVDXug@mail.gmail.com>
-X-Gm-Features: AWEUYZnwsfsYJJdne2_iTicN1qLSgaMkQiOjaWjhQMNVqVd5tyGM7exSGwdd-h8
-Message-ID: <CAMj1kXH0T5XJGMyC72DQjp0zjTAC5JbtDjY=rDGPeMs6cVDXug@mail.gmail.com>
-Subject: Re: [PATCH 0/2] A couple of build fixes for x86 when using GCC 15
-To: Kees Cook <kees@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Nathan Chancellor <nathan@kernel.org>, Sam James <sam@gentoo.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, stable@vger.kernel.org, 
-	Kostadin Shishmanov <kostadinshishmanov@protonmail.com>, Jakub Jelinek <jakub@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 30 Jan 2025 at 17:07, Kees Cook <kees@kernel.org> wrote:
->
-> On Tue, Jan 21, 2025 at 06:11:32PM -0700, Nathan Chancellor wrote:
-> > GCC 15 changed the default C standard version from gnu17 to gnu23, which
-> > reveals a few places in the kernel where a C standard version was not
-> > set, resulting in build failures because bool, true, and false are
-> > reserved keywords in C23 [1][2]. Update these places to use the same C
-> > standard version as the rest of the kernel, gnu11.
->
-> Hello x86 maintainers!
->
-> I think this would be valuable to get into -rc1 since we're getting very
-> close to a GCC 15 release. Can someone get this into -tip urgent,
-> please? If everyone is busy I can take it via the hardening tree, as we
-> appear to be the ones tripping over it the most currently. :)
->
+On Mon, 27 Jan 2025 19:28:10 -0600
+David Lechner <dlechner@baylibre.com> wrote:
 
-+1
+> On 1/27/25 9:12 AM, Jonathan Santos wrote:
+> > The AD7768-1 provides a buffered common-mode voltage output
+> > on the VCM pin that can be used to bias analog input signals.
+> >=20
+> > Add adi,vcm-output to enable the configuration of the VCM output
+> > circuit.
+> >=20
+> > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> > ---
+> > v2 Changes:
+> > * New patch in v2.
+> > ---
+> >  .../bindings/iio/adc/adi,ad7768-1.yaml           | 10 ++++++++++
+> >  include/dt-bindings/iio/adc/adi,ad7768-1.h       | 16 ++++++++++++++++
+> >  2 files changed, 26 insertions(+)
+> >  create mode 100644 include/dt-bindings/iio/adc/adi,ad7768-1.h
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yam=
+l b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > index da05c8448530..e26513a9469b 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > @@ -59,6 +59,15 @@ properties:
+> >        In the absence of this property, Synchronization over SPI will be
+> >        enabled.
+> > =20
+> > +  adi,vcm-output:
+> > +    description: |
+> > +      Configures the Common-Mode Voltage Output. The VCM is provided b=
+y an
+> > +      amplifier external to the AD7768-1 and can be used as common-mod=
+e voltage
+> > +      by the ADC. There are 8 output voltage options available, and th=
+e macros
+> > +      for these values can be found at dt-bindings/iio/adi,ad7768-1.h
+> > +    items:
+> > +        enum: [0, 1, 2, 3, 4, 5, 6, 7]
+> > + =20
+>=20
+> I was expecting this to use regulator provider bindings rather than using=
+ a
+> custom property. Then the regulator consumer could request the voltage th=
+at
+> they need. But maybe that is more complicated than what is practical.
+If we need to represent the analog front end (likely we do as will affect s=
+caling
+etc) then regulator makes sense.  That front end will need a driver. Perhaps
+an extension of drivers/iio/afe/iio-rescale.c
 
-Note that I already took the EFI one.
+>=20
+> If we don't need regulator bindings, then this should be vcm-microvolt to=
+ use
+> standard units [1].
+>=20
+> [1]: https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schem=
+as/property-units.yaml
+>=20
+> >    reset-gpios:
+> >      maxItems: 1
+> > =20
+> > @@ -132,6 +141,7 @@ examples:
+> >              gpio-controller;
+> >              #gpio-cells =3D <2>;
+> >              vref-supply =3D <&adc_vref>;
+> > +            adi,vcm-output =3D <AD7768_VCM_OUTPUT_AVDD1_AVSS_2>;
+> >              interrupts =3D <25 IRQ_TYPE_EDGE_RISING>;
+> >              interrupt-parent =3D <&gpio>;
+> >              adi,sync-in-gpios =3D <&gpio 22 GPIO_ACTIVE_LOW>;
+> > diff --git a/include/dt-bindings/iio/adc/adi,ad7768-1.h b/include/dt-bi=
+ndings/iio/adc/adi,ad7768-1.h
+> > new file mode 100644
+> > index 000000000000..469ea724c0d5
+> > --- /dev/null
+> > +++ b/include/dt-bindings/iio/adc/adi,ad7768-1.h
+> > @@ -0,0 +1,16 @@
+> > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> > +
+> > +#ifndef _DT_BINDINGS_ADI_AD7768_1_H
+> > +#define _DT_BINDINGS_ADI_AD7768_1_H
+> > +
+> > +/* Sets VCM output to (AVDD1 =E2=88=92 AVSS)/2 */
+> > +#define AD7768_VCM_OUTPUT_AVDD1_AVSS_2	0x00
+> > +#define AD7768_VCM_OUTPUT_2_5V		0x01
+> > +#define AD7768_VCM_OUTPUT_2_05V		0x02
+> > +#define AD7768_VCM_OUTPUT_1_9V		0x03
+> > +#define AD7768_VCM_OUTPUT_1_65V		0x04
+> > +#define AD7768_VCM_OUTPUT_1_1V		0x05
+> > +#define AD7768_VCM_OUTPUT_0_9V		0x06
+> > +#define AD7768_VCM_OUTPUT_OFF		0x07
+> > +
+> > +#endif /* _DT_BINDINGS_ADI_AD7768_1_H */ =20
+>=20
+>=20
+>=20
+
