@@ -1,158 +1,420 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2042.outbound.protection.outlook.com [40.107.236.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662811898F2;
-	Thu, 30 Jan 2025 06:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738217307; cv=none; b=fFsG/rb0hvS0AvdzD+iWaZJlWl4NQplL1OOWKWi27ex9qcsWkjA0JF8+R3cniFSP71Q2l7j9Wi3zTVZqDnbu+5//Al+xwg73oWzQaVFl6IhATp8bxXSvwpTSL/kKEwfzrFKWHtJcrY6UqUvA8j7RI8QVsDLs6e5dg09jXJgjrPE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738217307; c=relaxed/simple;
-	bh=hWxX0k8NfWnIIBYC4hnebw+/2oeVHme7dZRUuFADz/Q=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=U7LVDHutFs6wrizdckxUrwFFbdEl/zZYAPBY8AzM5L2jVuVvZwBgAI9dGKQbORDmvO2tYoE02joIzPAx6CpC0dGYAdRHA2QJn/TA1H6E2/O2IM0+QkxCKae4kyEtFSyur9jf8Oacf5QYwGgrbkyzN+mqy1X2O8XzjabrcSR3yck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu; spf=pass smtp.mailfrom=astier.eu; dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b=1+hEJYBp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pA19uaPq; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astier.eu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA971898F2;
+	Thu, 30 Jan 2025 06:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738217521; cv=fail; b=q6EUwGJBX/YSMcD/tNE030sWWvf/WvbgcpilCRr/mTQkQLsks4OOlN8b1wpeyfL+M0eeKXSmGK6M3dPju3F+qF/CyR8LPgx0EEeZZMNZSbg+tyynupNASxk2nQHNUEul2zKbvyHe54WefhxSZm+hypiUF6b/VhbJXm5qIaCjE1w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738217521; c=relaxed/simple;
+	bh=Nv1CXZbCeYIJes5tGayi4xFM2o6a4DN/3CKF6vd1/to=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=hCcn+4FwDfWcEO7fd8BO9v64EIxtndjlq3Xc08zo9QlUAY4/h4xTO6befNViueBz1qUyrOg6SiCflBHoYGalMmm4JgFBUDC6DincWE6+Jo4AszMVM4KaJSsoIp9WL1LWt45ElVw7YbtPWIGrd4cYa4ZIgdOQtcjtNp3lL7HRTjY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=HXzrDWjE; arc=fail smtp.client-ip=40.107.236.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b="1+hEJYBp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pA19uaPq"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id 12E321140168;
-	Thu, 30 Jan 2025 01:08:24 -0500 (EST)
-Received: from phl-imap-06 ([10.202.2.83])
-  by phl-compute-01.internal (MEProxy); Thu, 30 Jan 2025 01:08:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738217303;
-	 x=1738303703; bh=eXlxeAbfF+h/MVR2CK24l8IlVBLEsznJYpx0+feHxYY=; b=
-	1+hEJYBp5STrJrCmuvGpK9zMFz6e0UFBjwmO7gzlGRp5U/XTPWLSidnCvJbahlMR
-	8/xFbwxHCeWgG0+vKcQaPY5K0Uw0P8+j77a+LPAhaBHMQisuvu6JVBZsD2kHdj8x
-	uDwKJTs5RhEBZWFv/yhzeCK4p5uCLKIGi8sPG9EZFOTtBceNRbDurQc0+OxXfSXP
-	2oMxgWrZ9RFL3LHU1GltFTlErl8rcpywhzFu1ZbNT1eSvfDW6DXLkikVp+4gi5AQ
-	68hr9xgorfupFzW1DmjhKpCth7ULVOIXN/KfuesONQXu9bY8GAFeelW5gLSPyPH8
-	Cls/emIrbsnlO/JTa5ojfQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738217303; x=
-	1738303703; bh=eXlxeAbfF+h/MVR2CK24l8IlVBLEsznJYpx0+feHxYY=; b=p
-	A19uaPqwp/V7coy8JuMqKnU2g+QEzJYYk4KT/JyjIkMeqHO5CIXcETzDzscf5FbC
-	5es2dPJa2p7DfCg7pCkMl+fC3lbeo2aXzpEk1j7Hdit0URZ7kHDGMF4oLrInBEZ2
-	+9PVYPfXgcjtoom7CdpdQMorvpYLVG9oUMDy3suFRMnIIWmSDP9Ps3dv3OAh1cHn
-	vGQMmsX7nkRn/ZHmHXQsGbIXHqjFMb/DHR98AIxdlr+Zbcfz4fRrybRjeiSj1lMD
-	HHHeqw6TBQrGlYQUW1VQyEpAz1JkF2OE3LiQ8Uso16JGu0TPVI63wcGsAwFt0h02
-	oDBcC5mT3+PW6gBZzUxGA==
-X-ME-Sender: <xms:VxebZ_ZQzhcvFY4M0z4rNHy_bM8t_-LjrbhgL5CqrU8goOFacsUjmA>
-    <xme:VxebZ-aYU76BpzFae4Nnr2HQomAYhkooQ1wWPBKKaOty129dFFT_rp_1KB87D0EZW
-    wjQlMVtoFQDhPl93Ck>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehtdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnegoufhushhpvggtthffohhmrghinhculdegledmnecujfgurhep
-    ofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehnihhsshgvuc
-    etshhtihgvrhdfuceorghnihhsshgvsegrshhtihgvrhdrvghuqeenucggtffrrghtthgv
-    rhhnpeelkeegvddtudduheeugfejiedvgffggeeiueeuveevkeelgeeljeefgedvtdeihe
-    enucffohhmrghinhepghhithhhuhgsrdhiohenucevlhhushhtvghrufhiiigvpedtnecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpegrnhhishhsvgesrghsthhivghrrdgvuhdpnhgspg
-    hrtghpthhtohepudehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehgrghrhies
-    ghgrrhihghhuohdrnhgvthdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrih
-    hlrdgtohhmpdhrtghpthhtohepsghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmpdhr
-    tghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprg
-    drhhhinhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepvhhinhgtvghnthdrghhuihhtthhotheslhhinhgrrhhordhorhhgpdhr
-    tghpthhtohepvhhirhgvshhhrdhkuhhmrghrsehlihhnrghrohdrohhrgh
-X-ME-Proxy: <xmx:VxebZx8WX4TEvLHGAWX_jt1xf4PVNVADi63R3Yyb4S5VULGg3Ebaaw>
-    <xmx:VxebZ1qx01XW7gelKc2dT7GkhXFW74GrRHj5I0OjXljHAq6O2Nlu1w>
-    <xmx:VxebZ6ojtYOHwxNp0ZGZwXlwiNM74Zj6lyLDgZ0i49Ejcc0IY-WudQ>
-    <xmx:VxebZ7SHyZ_0y1kP1PH5INzlSoCaHmBinlM62CLEhxMzJoKuuxaQww>
-    <xmx:VxebZ1Bnfg7LN-2DJKoUhPrdmW9acqMiryilfD6EQ5z-oRP_Y7W_1RJu>
-Feedback-ID: iccec46d4:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 73E5929C006F; Thu, 30 Jan 2025 01:08:23 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="HXzrDWjE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MfCPZddNez4Cu8ZfrKV8fhy1Yj5V7NY4R54TGcJ72uOtczL/Y4v2IjY2hIt7/52w2SbGrb/DDwdbgXmttbAIXnUr0eVUL9y4934fDg302DjPE9dLMtp5lDde3Ts7X9w69s+hdDg6sD2VR0A2p1TkER+X8GW6q5dSmTnH/hOopVm5wn3JrZRoAroVe0SWjloCXYpPjctb1e2gsCig2/e6o9LaxcmfliG1IZ17LX+0nR5isDlcx4CCeOesCihkjTxTRENVbjrOjbA9wxDrZDnQarTbEQyagPCbOqQfC6RQo4XcR2Q1n4lWwdkpRVZeT4C2FDgY+O9yLB4TDGfBGkxaLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DVkXc55kyyzdFuzdqnJYRdEZ6As1MD6JH8vbZZgmQ0A=;
+ b=YYm33cZ08KM6zqFj9azO+HSzPBNL1S3MnGN8pI2H6pEEQkYy1/blXNlcH/YZoLXZrcqmOxPrsR9ZIu9T+LQ36g9resmvP1JrJ9AKeX1rhRN2Dg7iR+5maxqGTjKuttB3sn3xPnO/MRvzjsrJUo1nY2dZi9OiWblk9VWQPASfToOwX9XbbbrIRPgJO3ntUaYUC6oPa+W7CJp2ZY+1Jj/Rl11LSmcfpQZIVjdR9XXVZ1k62Dza7jZlZlAYvnW9VJbccXvNj6oANU9KCj/+LKpO+HJvxAC4ZVxwdnNLbRSfSmc1XV/cATdifoSG8xL39sSg2KUFYtUiVY9rja6rUe9YTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DVkXc55kyyzdFuzdqnJYRdEZ6As1MD6JH8vbZZgmQ0A=;
+ b=HXzrDWjEtMPoJK221T+B9khzb6gwPzK0SjlbnD3WCAT57YpEQ6d0ueWA/ciFYoEQD1B/3oqs2ZoJuT33uJJMVTJHpuoj1fH8qYsCY7usAq/op69VE55oCGhNug1MQlmoN0cOMB424W5sx7zOCZG1koQgpBv9gbefX17JaGTFffpcKVtuiC1DelD7VdM4pzFpyMC8oSN5VFki2F4T4YvtAipABviulZmx+lEzo3eziCP6IfjyVc26ippJa4Tqy8f3T+myPg1rqkzqmKsRvkmvdMO4V+lrb+tZW8pTTtqrb2jFYkq0bvIl6jhffsWorB4AvWKlyiS0UcGmtZGEfP4lnA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ PH0PR12MB8151.namprd12.prod.outlook.com (2603:10b6:510:299::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.21; Thu, 30 Jan
+ 2025 06:11:54 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8398.017; Thu, 30 Jan 2025
+ 06:11:53 +0000
+Date: Thu, 30 Jan 2025 17:11:49 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-mm@kvack.org, nouveau@lists.freedesktop.org, 
+	Andrew Morton <akpm@linux-foundation.org>, =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
+	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v1 04/12] mm/rmap: implement make_device_exclusive()
+ using folio_walk instead of rmap walk
+Message-ID: <7tzcpx23vufmp5cxutnzhjgdj7kwqrw5drwochpv5ern7zknhj@h2s6y2qjbr3f>
+References: <20250129115411.2077152-1-david@redhat.com>
+ <20250129115411.2077152-5-david@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129115411.2077152-5-david@redhat.com>
+X-ClientProxiedBy: SYYP282CA0010.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:b4::20) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 30 Jan 2025 07:08:04 +0100
-From: "Anisse Astier" <anisse@astier.eu>
-To: "Viresh Kumar" <viresh.kumar@linaro.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
- "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- linux-pm@vger.kernel.org, "Vincent Guittot" <vincent.guittot@linaro.org>,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Message-Id: <4919d080-43e4-41e3-a392-fddb1aac2666@app.fastmail.com>
-In-Reply-To: <20250130045814.ve2jsdi3wmzdlhbw@vireshk-i7>
-References: <20250122131812.466080-1-anisse@astier.eu>
- <20250122133952.501055-1-anisse@astier.eu>
- <20250130045814.ve2jsdi3wmzdlhbw@vireshk-i7>
-Subject: Re: [PATCH v2] rust: macros: enable use of hyphens in module names
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|PH0PR12MB8151:EE_
+X-MS-Office365-Filtering-Correlation-Id: f8027d37-4d56-45d0-b6ae-08dd40f4fe12
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?cJlRHFwhAkZ03U7Sm62azcx9L7jT2xvH8BII7JNs7RmmFPl5YekLRIgDCNfb?=
+ =?us-ascii?Q?9aGgo4lx/G3ux7xJiodpD4/EmPqn/SUSmTzuArQ1Z0aVX6g6llYlmH6A8VCe?=
+ =?us-ascii?Q?yfxp3h0oHBbm2kQws9o0kfor1LHbxoWEsN+d94r/beJak3w00DLTQRa7oyv9?=
+ =?us-ascii?Q?PEGqeyeaaRUH36c3g0Zh/c4DrAbkPUaKheJSG3G3C3hhuSo1e4Kob95nGShy?=
+ =?us-ascii?Q?IZrDZvBlWlV9NYtpo1y6W9XNv0Z23mqcfZICl43ZUNNCxslJfAbAKRNmVTj+?=
+ =?us-ascii?Q?NAhXYrgS5FaZufCS2IoLC1A3uaE9oDAg2A1PkIjA2nZO6f3Am0akMvlE4ToY?=
+ =?us-ascii?Q?dJMZmDXAr1/zhkkg0tK9ujd3zh9jO0jyQ2Wjs1JH4uAcEqw4F72EAlNwWF9t?=
+ =?us-ascii?Q?kKnXbDpqgp5bIvElvSgPfBA6b5VJ7NQtHziy2c86P0CGQs0RxTf76ROwCmHT?=
+ =?us-ascii?Q?lQ/tZdceBbGL5uLhQsXo5hQlg/9m77YTzu55A1IV71+YbVmJFngxrv4fnyd8?=
+ =?us-ascii?Q?fLHn4kMpYKRelqpE4p7sgIaF623g9tzb6dcuHcvrelxF9Up6TmJOOguEczxt?=
+ =?us-ascii?Q?0mowrEnRoDQndV2P65rwmuZqT/KKbrHqCYEeUNLx78LbrR+GfDN2cOJJSuJ+?=
+ =?us-ascii?Q?EDcQJ6g0GUZ4SaO2uUZs2fC30259rY2J2GgZwYIoRxbKUaSgR6lX3GndBrt7?=
+ =?us-ascii?Q?dKWh8/N67/DfcDSYy+fp0LYdtw0YZzspNkiZ73WexmOe8hZCT6QM7Wk8BrwV?=
+ =?us-ascii?Q?zX+XwD1D8d+BQV58TKbNcj/X1tbuvm2mNpjnKpkUPdhHhahNlFqMWOMJwaFH?=
+ =?us-ascii?Q?B1tGDshocwWKg0oiw6hUoLpBG7+nkgfh56DJmRoguOvFdBM1P+NmLa+7XDDl?=
+ =?us-ascii?Q?eMwibmOtTS/8hFZ9fIxYZ18UtOx8HK2pVem8gyHYUr7NFk70scTPoj8PNgS3?=
+ =?us-ascii?Q?rxqc9zBpsLH0cZCiLi7PD04aIGxrDxTyOKqjauUin7E0dFz8MYzwZwqpGwsn?=
+ =?us-ascii?Q?7mNS4oFkoppfwQgoddQNEmRLNyq/rClb22j6BOT3GrYnc9WC35PkKcmBQlrA?=
+ =?us-ascii?Q?EJ+vpO6Vxu8K8MiKQl62Dcc3pW07lfDPNHhhUlm7O4PMS9PFXRSvGnBT3yMq?=
+ =?us-ascii?Q?0YIADu/csBb0eBEQ/m3XxKOdlrQL3n8yFryrzVPcwzlERHK0eAmySgi+CZR6?=
+ =?us-ascii?Q?bnYz85bjmr7xAu5mBbfhZBCbYqJ8bwRAGqn5343vvSnsu8UpQAJRJJjvR0ia?=
+ =?us-ascii?Q?fGHPAIqWNi3YmCWl2Pxua6yLdjmyISACQ4eykwNPb87M5k29cORl0Wc58q5n?=
+ =?us-ascii?Q?RwSH1nS2Pw37D2ast/KRmQFuKOJDCmOOFN+lXYPA81jEDKXunWtezOcWfqVA?=
+ =?us-ascii?Q?8nCgMzgFfOHj1u6QjL8TIZ1BYqUP?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NQ2DPP2YhKkDIThGceRul72P9fQdS0YTdy3SlSNoNWF0UUJEBLVyjmThDnDK?=
+ =?us-ascii?Q?PaxF9Qqxa0K54NrsI4gzoo1GDXw59+OMPpvppiQ2cxGFv0vfzZXq/cdzOmrC?=
+ =?us-ascii?Q?dE32FNluH4je90tOVMZ11WCQUQItSaVIWA2hBjFv71Fs2IPPrv/9j0s47Khf?=
+ =?us-ascii?Q?mw8CjK+SmXc2lhCkuznp0jd0L2E/YfnvDZKQqSwKlEwm2GdHAeEUxhRLKCIB?=
+ =?us-ascii?Q?Y5vJJi0OUKrUmoe7M5j6v79d8zPgXnZMw8WEIbiE1xJOt/5AGZMet2Ya0XPB?=
+ =?us-ascii?Q?pBDr0qyDy9dSqzSRAkE6mTBOX93dHJNim7KaneX/5Za7EYDDD5M3OWxPvK1+?=
+ =?us-ascii?Q?HDG7McSeZWjcMh3fxv6uqVNjx72cZK7CaAzxRJhTSQqoDpz3IQSOR2ZZB0po?=
+ =?us-ascii?Q?2hKtyLlc3pRPe3JZiSxBKU8SP8PQCdFKpFalIwPO8E+KAPWvalquonxv65pL?=
+ =?us-ascii?Q?xMjn2ufMcCdOmfsICMgbCxBlIalzeeGuU7yZ0SkcJjYvnaqBHHJzE9mMU8Y5?=
+ =?us-ascii?Q?t0WMmxbiuWBJHsOjTm6b8+qdmDQhbDnn4oa0NaMAmj/V+i9goT36xw1mvPli?=
+ =?us-ascii?Q?6m3BmZb7nphmcZCW7oWWeuP4+JpRVGW7NqJ953AKDk2RMHI9QR5StrZ8H9ex?=
+ =?us-ascii?Q?3bYTNi2jKUzauzYqa0WU9C6yEeo3xpN4x2etOoCsK32rf4WvIEG6u6D2CzAk?=
+ =?us-ascii?Q?tcw9iymHw+hvtvoOUD9IKK0xHWVCIFFV/uJePXt8e44xP6UB+fvceQh+bMp2?=
+ =?us-ascii?Q?bEUI+xXkjOj7pISRPUKnNArRWkrjR41NdzHLo9wnHh8Us0uWeSuwDFdMyr8B?=
+ =?us-ascii?Q?SnIEX1gzR7A0wlX+7VKp2qzSvpBUAI9BLJO1fSuRhuoNy4tzOoZ70G4tGGU0?=
+ =?us-ascii?Q?8ZWJFa2KyOvQy75yVSfW/J0bGQ9a/EpvlvUhbZpd9C6W1jH2CkbAYXRNCJNp?=
+ =?us-ascii?Q?Fji7kcRiL4IiwrijJAOL8+TZkbnZfBwmpsthkRJQXFWOrc8A3I4ATLYBYXOH?=
+ =?us-ascii?Q?nORFuc1RHHaLqZNHWfsV39y/dzm/abfvss7z2p/HDAwiHspO4ZdhSFUJTZgx?=
+ =?us-ascii?Q?A4+ned0O6a3glJL1If52bqyTQKiLlDmVEyduTL6DQd5SXtYk/h7Jfdaqh9oV?=
+ =?us-ascii?Q?LZB5e+WyH4So+T2VQMXwYyg17v4/2t0OVsC/ywINUQqHxRRkxPgKn+V5MhY7?=
+ =?us-ascii?Q?FDLZ6DNWRtUMfief0Htgn+7+asR76fCyx5+OC67ahcX1QVzlYqkusEWZpNYj?=
+ =?us-ascii?Q?0piwCGmlHMsnEr63AkAVv0q3TejnvvAAJotHwkcoGxZJKIEUJ8MTXMlYKWNo?=
+ =?us-ascii?Q?oxcG8xnprYazpoEK4lH0tKiLdEf5w6mducSMdPniTcggqqQcazyjRYkawFv1?=
+ =?us-ascii?Q?zKkd40f3A0J09+GgZVP59d16ec9YCVBO5ixUxulK+YDUnHuwC9l8XIWI3Y9a?=
+ =?us-ascii?Q?yR/zRamrArJBfU8jd93qmDp6JAvcwk3CsEnKrYzUoYGpFjWl4ameHKydsABR?=
+ =?us-ascii?Q?MXMKDm+8g+PDwJ6diqyeVwmjc39IwSIHw3Qo/pGHN2bSBahvZJ8f0NdJ+ppd?=
+ =?us-ascii?Q?zXClOjbq1O9VLAhWDQxgMtypWRJlygXrPBAcxAg+?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8027d37-4d56-45d0-b6ae-08dd40f4fe12
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 06:11:53.8127
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: doLbSHC6dSByMWijwHcSHWDWbgWmvhDm767BqG9CRgY/vLSjHBWZRq6ySHCQQAEcmkdK2mcR41kKjWHMc+cPjQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8151
 
+On Wed, Jan 29, 2025 at 12:54:02PM +0100, David Hildenbrand wrote:
+> We require a writable PTE and only support anonymous folio: we can only
+> have exactly one PTE pointing at that page, which we can just lookup
+> using a folio walk, avoiding the rmap walk and the anon VMA lock.
+> 
+> So let's stop doing an rmap walk and perform a folio walk instead, so we
+> can easily just modify a single PTE and avoid relying on rmap/mapcounts.
+> 
+> We now effectively work on a single PTE instead of multiple PTEs of
+> a large folio, allowing for conversion of individual PTEs from
+> non-exclusive to device-exclusive -- note that the other way always
+> worked on single PTEs.
+> 
+> We can drop the MMU_NOTIFY_EXCLUSIVE MMU notifier call and document why
+> that is not required: GUP will already take care of the
+> MMU_NOTIFY_EXCLUSIVE call if required (there is already a device-exclusive
+> entry) when not finding a present PTE and having to trigger a fault and
+> ending up in remove_device_exclusive_entry().
 
+I will have to look at this a bit more closely tomorrow but this doesn't seem
+right to me. We may be transitioning from a present PTE (ie. a writable
+anonymous mapping) to a non-present PTE (ie. a device-exclusive entry) and
+therefore any secondary processors (eg. other GPUs, iommus, etc.) will need to
+update their copies of the PTE. So I think the notifier call is needed.
 
-Jeu 30 janv 2025, =C3=A0 05:58, Viresh Kumar a =C3=A9crit=E2=80=AF:
-> On 22-01-25, 14:39, Anisse Astier wrote:
->> +    /* Rust does not allow hyphens in identifiers, use underscore in=
-stead */
->> +    let name_identifier =3D info.name.replace("-", "_");
->
-> With CLIPPY=3D1 W=3D1, this gives:
->
-> warning: single-character string constant used as pattern
->    --> /mnt/ssd/all/work/repos/kernel/linux/rust/macros/module.rs:186:=
-45
->     |
-> 186 |     let name_identifier =3D info.name.replace("-", "_");
->     |                                             ^^^ help: consider=20
-> using a `char`: `'-'`
->     |
->     =3D help: for further information visit=20
-> https://rust-lang.github.io/rust-clippy/master/index.html#single_char_=
-pattern
->     =3D note: `-W clippy::single-char-pattern` implied by `-W clippy::=
-all`
->     =3D help: to override `-W clippy::all` add=20
-> `#[allow(clippy::single_char_pattern)]`
->
-> warning: 1 warning emitted
->
-> This fixes it:
->
-> diff --git a/rust/macros/module.rs b/rust/macros/module.rs
-> index 1eff30d2ca6a..2e740bbdb598 100644
-> --- a/rust/macros/module.rs
-> +++ b/rust/macros/module.rs
-> @@ -183,7 +183,7 @@ pub(crate) fn module(ts: TokenStream) -> TokenStre=
-am {
->      let info =3D ModuleInfo::parse(&mut it);
->
->      /* Rust does not allow hyphens in identifiers, use underscore ins=
-tead */
-> -    let name_identifier =3D info.name.replace("-", "_");
-> +    let name_identifier =3D info.name.replace('-', "_");
->      let mut modinfo =3D ModInfoBuilder::new(name_identifier.as_ref());
->      if let Some(author) =3D info.author {
->          modinfo.emit("author", &author);
->
->
-> Will include it in my V8 now, unless you have any objections to it.
-
-No objections and nice catch!
-
-Regards,
-
-Anisse=20
+> Note that the PTE is
+> always writable, and we can always create a writable-device-exclusive
+> entry.
+> 
+> With this change, device-exclusive is fully compatible with THPs /
+> large folios. We still require PMD-sized THPs to get PTE-mapped, and
+> supporting PMD-mapped THP (without the PTE-remapping) is a different
+> endeavour that might not be worth it at this point.
+> 
+> This gets rid of the "folio_mapcount()" usage and let's us fix ordinary
+> rmap walks (migration/swapout) next. Spell out that messing with the
+> mapcount is wrong and must be fixed.
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/rmap.c | 188 ++++++++++++++++--------------------------------------
+>  1 file changed, 55 insertions(+), 133 deletions(-)
+> 
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index 676df4fba5b0..49ffac6d27f8 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -2375,131 +2375,6 @@ void try_to_migrate(struct folio *folio, enum ttu_flags flags)
+>  }
+>  
+>  #ifdef CONFIG_DEVICE_PRIVATE
+> -struct make_exclusive_args {
+> -	struct mm_struct *mm;
+> -	unsigned long address;
+> -	void *owner;
+> -	bool valid;
+> -};
+> -
+> -static bool page_make_device_exclusive_one(struct folio *folio,
+> -		struct vm_area_struct *vma, unsigned long address, void *priv)
+> -{
+> -	struct mm_struct *mm = vma->vm_mm;
+> -	DEFINE_FOLIO_VMA_WALK(pvmw, folio, vma, address, 0);
+> -	struct make_exclusive_args *args = priv;
+> -	pte_t pteval;
+> -	struct page *subpage;
+> -	bool ret = true;
+> -	struct mmu_notifier_range range;
+> -	swp_entry_t entry;
+> -	pte_t swp_pte;
+> -	pte_t ptent;
+> -
+> -	mmu_notifier_range_init_owner(&range, MMU_NOTIFY_EXCLUSIVE, 0,
+> -				      vma->vm_mm, address, min(vma->vm_end,
+> -				      address + folio_size(folio)),
+> -				      args->owner);
+> -	mmu_notifier_invalidate_range_start(&range);
+> -
+> -	while (page_vma_mapped_walk(&pvmw)) {
+> -		/* Unexpected PMD-mapped THP? */
+> -		VM_BUG_ON_FOLIO(!pvmw.pte, folio);
+> -
+> -		ptent = ptep_get(pvmw.pte);
+> -		if (!pte_present(ptent)) {
+> -			ret = false;
+> -			page_vma_mapped_walk_done(&pvmw);
+> -			break;
+> -		}
+> -
+> -		subpage = folio_page(folio,
+> -				pte_pfn(ptent) - folio_pfn(folio));
+> -		address = pvmw.address;
+> -
+> -		/* Nuke the page table entry. */
+> -		flush_cache_page(vma, address, pte_pfn(ptent));
+> -		pteval = ptep_clear_flush(vma, address, pvmw.pte);
+> -
+> -		/* Set the dirty flag on the folio now the pte is gone. */
+> -		if (pte_dirty(pteval))
+> -			folio_mark_dirty(folio);
+> -
+> -		/*
+> -		 * Check that our target page is still mapped at the expected
+> -		 * address.
+> -		 */
+> -		if (args->mm == mm && args->address == address &&
+> -		    pte_write(pteval))
+> -			args->valid = true;
+> -
+> -		/*
+> -		 * Store the pfn of the page in a special migration
+> -		 * pte. do_swap_page() will wait until the migration
+> -		 * pte is removed and then restart fault handling.
+> -		 */
+> -		if (pte_write(pteval))
+> -			entry = make_writable_device_exclusive_entry(
+> -							page_to_pfn(subpage));
+> -		else
+> -			entry = make_readable_device_exclusive_entry(
+> -							page_to_pfn(subpage));
+> -		swp_pte = swp_entry_to_pte(entry);
+> -		if (pte_soft_dirty(pteval))
+> -			swp_pte = pte_swp_mksoft_dirty(swp_pte);
+> -		if (pte_uffd_wp(pteval))
+> -			swp_pte = pte_swp_mkuffd_wp(swp_pte);
+> -
+> -		set_pte_at(mm, address, pvmw.pte, swp_pte);
+> -
+> -		/*
+> -		 * There is a reference on the page for the swap entry which has
+> -		 * been removed, so shouldn't take another.
+> -		 */
+> -		folio_remove_rmap_pte(folio, subpage, vma);
+> -	}
+> -
+> -	mmu_notifier_invalidate_range_end(&range);
+> -
+> -	return ret;
+> -}
+> -
+> -/**
+> - * folio_make_device_exclusive - Mark the folio exclusively owned by a device.
+> - * @folio: The folio to replace page table entries for.
+> - * @mm: The mm_struct where the folio is expected to be mapped.
+> - * @address: Address where the folio is expected to be mapped.
+> - * @owner: passed to MMU_NOTIFY_EXCLUSIVE range notifier callbacks
+> - *
+> - * Tries to remove all the page table entries which are mapping this
+> - * folio and replace them with special device exclusive swap entries to
+> - * grant a device exclusive access to the folio.
+> - *
+> - * Context: Caller must hold the folio lock.
+> - * Return: false if the page is still mapped, or if it could not be unmapped
+> - * from the expected address. Otherwise returns true (success).
+> - */
+> -static bool folio_make_device_exclusive(struct folio *folio,
+> -		struct mm_struct *mm, unsigned long address, void *owner)
+> -{
+> -	struct make_exclusive_args args = {
+> -		.mm = mm,
+> -		.address = address,
+> -		.owner = owner,
+> -		.valid = false,
+> -	};
+> -	struct rmap_walk_control rwc = {
+> -		.rmap_one = page_make_device_exclusive_one,
+> -		.done = folio_not_mapped,
+> -		.anon_lock = folio_lock_anon_vma_read,
+> -		.arg = &args,
+> -	};
+> -
+> -	rmap_walk(folio, &rwc);
+> -
+> -	return args.valid && !folio_mapcount(folio);
+> -}
+> -
+>  /**
+>   * make_device_exclusive() - Mark an address for exclusive use by a device
+>   * @mm: mm_struct of associated target process
+> @@ -2530,9 +2405,12 @@ static bool folio_make_device_exclusive(struct folio *folio,
+>  struct page *make_device_exclusive(struct mm_struct *mm, unsigned long addr,
+>  		void *owner, struct folio **foliop)
+>  {
+> -	struct folio *folio;
+> +	struct folio *folio, *fw_folio;
+> +	struct vm_area_struct *vma;
+> +	struct folio_walk fw;
+>  	struct page *page;
+> -	long npages;
+> +	swp_entry_t entry;
+> +	pte_t swp_pte;
+>  
+>  	mmap_assert_locked(mm);
+>  
+> @@ -2540,12 +2418,16 @@ struct page *make_device_exclusive(struct mm_struct *mm, unsigned long addr,
+>  	 * Fault in the page writable and try to lock it; note that if the
+>  	 * address would already be marked for exclusive use by the device,
+>  	 * the GUP call would undo that first by triggering a fault.
+> +	 *
+> +	 * If any other device would already map this page exclusively, the
+> +	 * fault will trigger a conversion to an ordinary
+> +	 * (non-device-exclusive) PTE and issue a MMU_NOTIFY_EXCLUSIVE.
+>  	 */
+> -	npages = get_user_pages_remote(mm, addr, 1,
+> -				       FOLL_GET | FOLL_WRITE | FOLL_SPLIT_PMD,
+> -				       &page, NULL);
+> -	if (npages != 1)
+> -		return ERR_PTR(npages);
+> +	page = get_user_page_vma_remote(mm, addr,
+> +					FOLL_GET | FOLL_WRITE | FOLL_SPLIT_PMD,
+> +					&vma);
+> +	if (IS_ERR(page))
+> +		return page;
+>  	folio = page_folio(page);
+>  
+>  	if (!folio_test_anon(folio) || folio_test_hugetlb(folio)) {
+> @@ -2558,11 +2440,51 @@ struct page *make_device_exclusive(struct mm_struct *mm, unsigned long addr,
+>  		return ERR_PTR(-EBUSY);
+>  	}
+>  
+> -	if (!folio_make_device_exclusive(folio, mm, addr, owner)) {
+> +	/*
+> +	 * Let's do a second walk and make sure we still find the same page
+> +	 * mapped writable. If we don't find what we expect, we will trigger
+> +	 * GUP again to fix it up. Note that a page of an anonymous folio can
+> +	 * only be mapped writable using exactly one page table mapping
+> +	 * ("exclusive"), so there cannot be other mappings.
+> +	 */
+> +	fw_folio = folio_walk_start(&fw, vma, addr, 0);
+> +	if (fw_folio != folio || fw.page != page ||
+> +	    fw.level != FW_LEVEL_PTE || !pte_write(fw.pte)) {
+> +		if (fw_folio)
+> +			folio_walk_end(&fw, vma);
+>  		folio_unlock(folio);
+>  		folio_put(folio);
+>  		return ERR_PTR(-EBUSY);
+>  	}
+> +
+> +	/* Nuke the page table entry so we get the uptodate dirty bit. */
+> +	flush_cache_page(vma, addr, page_to_pfn(page));
+> +	fw.pte = ptep_clear_flush(vma, addr, fw.ptep);
+> +
+> +	/* Set the dirty flag on the folio now the pte is gone. */
+> +	if (pte_dirty(fw.pte))
+> +		folio_mark_dirty(folio);
+> +
+> +	/*
+> +	 * Store the pfn of the page in a special device-exclusive non-swap pte.
+> +	 * do_swap_page() will trigger the conversion back while holding the
+> +	 * folio lock.
+> +	 */
+> +	entry = make_writable_device_exclusive_entry(page_to_pfn(page));
+> +	swp_pte = swp_entry_to_pte(entry);
+> +	if (pte_soft_dirty(fw.pte))
+> +		swp_pte = pte_swp_mksoft_dirty(swp_pte);
+> +	/* The pte is writable, uffd-wp does not apply. */
+> +	set_pte_at(mm, addr, fw.ptep, swp_pte);
+> +
+> +	/*
+> +	 * TODO: The device-exclusive non-swap PTE holds a folio reference but
+> +	 * does not count as a mapping (mapcount), which is wrong and must be
+> +	 * fixed, otherwise RMAP walks don't behave as expected.
+> +	 */
+> +	folio_remove_rmap_pte(folio, page, vma);
+> +
+> +	folio_walk_end(&fw, vma);
+>  	*foliop = folio;
+>  	return page;
+>  }
+> -- 
+> 2.48.1
+> 
