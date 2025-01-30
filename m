@@ -1,204 +1,94 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5806185955;
-	Thu, 30 Jan 2025 10:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49759185955;
+	Thu, 30 Jan 2025 10:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738233305; cv=none; b=e0hSMamlBNPMsk4BLsIcrqCce9fTBxAi8v9k1tME0tA7BCb3TmQGIsbrRLuUC0nQM04+iXQH0jj/IG1gw2vUDBd3RiVkQemwaWQHWUGryT9NejhPicXoVLImv6uH7ukd7xS6cs6X5XzUNDHOm9cAhqTGFUCBYesou/oois/Udso=
+	t=1738233351; cv=none; b=AGuNKJx9hNEQvxR/4VRw94NQoPBzlMZ7MfL2+EPWLbL7nYFne7Yc0rIsg7t/WUwKYp216yusR1ib7UTZEs2uFGyiQVlXyFuPJU2Ri9PlRZHjCSLa1HSc6auG95Oz8RR/F95uKnD989rrc92eHt9xJorQrFs5pTYVK54ZJx0kWtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738233305; c=relaxed/simple;
-	bh=hdKhXgaK3f//0AkZjxuDWr02rhY/QoJKzXHPooHD51A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=irXgJTYhEeQLEqV461Aihw+6NDEgwQDvR4Az0Nn1W/9BAtrI4mYG9AAmG/8BOm5un7EoIUfVrcjs66fYwUyCLctTkGquR02hnhv53Y44DRlT0y9ht7Pp1DC/JqHI+ECHwmNdIGitq929T8AzFN6pSGSaX3ka2AnvmVvmjELwKZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=K1dCig9e; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1738233351; c=relaxed/simple;
+	bh=8JZcVpcGWcqfEFuX82FHVX+6WV6k8ISLrVwBtu4Esoo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d3ILwKm0eNaJbMUgLxE5iZDi12ekqbIM78+WEEcRr0umgka8EH9N6GZfy9JATlcJDNbcVTaaM9SBFHfgKXiFayKHT6mX8Xni+eSYUwMjcNODuqHTZMPk2HhNPfVEV2eIllODFaNzg4y4ByINBMeHrd0O0mQBwhuPuyhwX7HmLLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNGCKl4S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="K1dCig9e"
-Received: from [10.156.205.88] (unknown [167.220.238.88])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 08CCF2109CD7;
-	Thu, 30 Jan 2025 02:34:59 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 08CCF2109CD7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738233303;
-	bh=zVxf1UYtEnYrkLL5hJZ5QlBHDjxANnAboqvzYXh5U+g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=K1dCig9el0oa/CufgrNC59jLSZ4uDmmETUxrotOCcTRTtmSR76F0u8ePBztpNA0Dx
-	 ApYzof/Kaow0caEadeNkSHDC9/1jaqtV1XE0KzQ8OXzbNRz738nPbZZiAOBkfkKMeF
-	 ogJ+/z2GDWMeFSr/hiw+UHD5ZjxCV0VU9Gh3Lp28=
-Message-ID: <e109763f-d4c1-4016-83eb-c8973b291cee@linux.microsoft.com>
-Date: Thu, 30 Jan 2025 16:04:58 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNGCKl4S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F456C4CED2;
+	Thu, 30 Jan 2025 10:35:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738233350;
+	bh=8JZcVpcGWcqfEFuX82FHVX+6WV6k8ISLrVwBtu4Esoo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RNGCKl4Sjf3cTNpyQiwFUw2Q3xlNGEDvKTlicGmu2Ukyk/MM4owz71fGRPSFLcAPj
+	 PsfbxL+RHQpcU6tkfw6qJdOMuRO2XjjmP9ysl/vjbIedHUxox9K94sWLnFuvDYebPp
+	 UJYA8EafEC6WqJwfUhqfkONziANCiVG23iQB+oFS8PsR+ZK0B4dfPovqfhkf06fsOK
+	 gU2FIQypX8wdGbVUa8Sh3NFN7ICgLrQ8CWUWcjAYq+zn1qvywja5oTZBE0yzIZtJC4
+	 PmhXCtsiyBRI9ZINKXMLR9DCdXeNs1i2Is9cU0/Gjkn0gX/IbSkNI/WVqOE+Fsy3ZL
+	 89+xFPl/bprrQ==
+Date: Thu, 30 Jan 2025 10:35:44 +0000
+From: Simon Horman <horms@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	rdunlap@infradead.org, kernel-team@meta.com
+Subject: Re: [PATCH RFC net-next v3 1/8] netconsole: consolidate send buffers
+ into netconsole_target struct
+Message-ID: <20250130103544.GE113107@kernel.org>
+References: <20250124-netcon_cpu-v3-0-12a0d286ba1d@debian.org>
+ <20250124-netcon_cpu-v3-1-12a0d286ba1d@debian.org>
+ <20250128161128.GB277827@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] unwind: arm64: Add sframe unwinder on arm64
-To: Weinan Liu <wnliu@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Indu Bhagat <indu.bhagat@oracle.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev,
- Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>,
- linux-toolchains@vger.kernel.org, linux-kernel@vger.kernel.org,
- live-patching@vger.kernel.org, joe.lawrence@redhat.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250127213310.2496133-1-wnliu@google.com>
- <20250127213310.2496133-6-wnliu@google.com>
-Content-Language: en-US
-From: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
-In-Reply-To: <20250127213310.2496133-6-wnliu@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250128161128.GB277827@kernel.org>
 
+On Tue, Jan 28, 2025 at 04:11:28PM +0000, Simon Horman wrote:
+> On Fri, Jan 24, 2025 at 07:16:40AM -0800, Breno Leitao wrote:
+> > Move the static buffers from send_msg_no_fragmentation() and
+> > send_msg_fragmented() into the netconsole_target structure. This
+> > simplifies the code by:
+> > - Eliminating redundant static buffers
+> > - Centralizing buffer management in the target structure
+> > - Reducing memory usage by 1KB (one buffer instead of two)
+> > 
+> > The buffer in netconsole_target is protected by target_list_lock,
+> > maintaining the same synchronization semantics as the original code.
+> > 
+> > Suggested-by: Jakub Kicinski <kuba@kernel.org>
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> >  drivers/net/netconsole.c | 29 +++++++++++++++--------------
+> >  1 file changed, 15 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
+> > index 86ab4a42769a49eebe5dd6f01dafafc6c86ec54f..1a78704681184673f5c1ba8ae665e46751384293 100644
+> > --- a/drivers/net/netconsole.c
+> > +++ b/drivers/net/netconsole.c
+> > @@ -137,6 +137,8 @@ struct netconsole_target {
+> >  	bool			extended;
+> >  	bool			release;
+> >  	struct netpoll		np;
+> > +	/* protected by target_list_lock */
+> > +	char			buf[MAX_PRINT_CHUNK];
+> 
+> nit: buf should also be added to the Kernel doc for this structure.
+> 
+> ...
 
-On 28-01-2025 03:03, Weinan Liu wrote:
-> Add unwind_next_frame_sframe() function to unwind by sframe info.
-> Built with GNU Binutils 2.42 to verify that this sframe unwinder can
-> backtrace correctly on arm64.
->
-> Signed-off-by: Weinan Liu <wnliu@google.com>
-> ---
->   arch/arm64/include/asm/stacktrace/common.h |  4 ++
->   arch/arm64/kernel/setup.c                  |  2 +
->   arch/arm64/kernel/stacktrace.c             | 59 ++++++++++++++++++++++
->   3 files changed, 65 insertions(+)
->
-> diff --git a/arch/arm64/include/asm/stacktrace/common.h b/arch/arm64/include/asm/stacktrace/common.h
-> index 821a8fdd31af..19edae8a5b1a 100644
-> --- a/arch/arm64/include/asm/stacktrace/common.h
-> +++ b/arch/arm64/include/asm/stacktrace/common.h
-> @@ -25,6 +25,7 @@ struct stack_info {
->    * @stack:       The stack currently being unwound.
->    * @stacks:      An array of stacks which can be unwound.
->    * @nr_stacks:   The number of stacks in @stacks.
-> + * @cfa:         The sp value at the call site of the current function.
->    */
->   struct unwind_state {
->   	unsigned long fp;
-> @@ -33,6 +34,9 @@ struct unwind_state {
->   	struct stack_info stack;
->   	struct stack_info *stacks;
->   	int nr_stacks;
-> +#ifdef CONFIG_SFRAME_UNWINDER
-> +	unsigned long cfa;
-> +#endif
->   };
->   
->   static inline struct stack_info stackinfo_get_unknown(void)
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 4f613e8e0745..d3ac92b624f3 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -32,6 +32,7 @@
->   #include <linux/sched/task.h>
->   #include <linux/scs.h>
->   #include <linux/mm.h>
-> +#include <linux/sframe_lookup.h>
->   
->   #include <asm/acpi.h>
->   #include <asm/fixmap.h>
-> @@ -377,6 +378,7 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
->   			"This indicates a broken bootloader or old kernel\n",
->   			boot_args[1], boot_args[2], boot_args[3]);
->   	}
-> +	init_sframe_table();
->   }
->   
->   static inline bool cpu_can_disable(unsigned int cpu)
-> diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
-> index 1d9d51d7627f..c035adb8fe8a 100644
-> --- a/arch/arm64/kernel/stacktrace.c
-> +++ b/arch/arm64/kernel/stacktrace.c
-> @@ -14,6 +14,7 @@
->   #include <linux/sched/debug.h>
->   #include <linux/sched/task_stack.h>
->   #include <linux/stacktrace.h>
-> +#include <linux/sframe_lookup.h>
->   
->   #include <asm/efi.h>
->   #include <asm/irq.h>
-> @@ -242,6 +243,53 @@ kunwind_next_frame_record(struct kunwind_state *state)
->   	return 0;
->   }
->   
-> +#ifdef CONFIG_SFRAME_UNWINDER
-> +/*
-> + * Unwind to the next frame according to sframe.
-> + */
-> +static __always_inline int
-> +unwind_next_frame_sframe(struct unwind_state *state)
-> +{
-> +	unsigned long fp = state->fp, ip = state->pc;
-> +	unsigned long base_reg, cfa;
-> +	unsigned long pc_addr, fp_addr;
-> +	struct sframe_ip_entry entry;
-> +	struct stack_info *info;
-> +	struct frame_record *record = (struct frame_record *)fp;
-> +
-> +	int err;
-> +
-> +	/* frame record alignment 8 bytes */
-> +	if (fp & 0x7)
-> +		return -EINVAL;
-> +
-> +	info = unwind_find_stack(state, fp, sizeof(*record));
-> +	if (!info)
-> +		return -EINVAL;
-> +
-> +	err = sframe_find_pc(ip, &entry);
-> +	if (err)
-> +		return -EINVAL;
-> +
-> +	unwind_consume_stack(state, info, fp, sizeof(*record));
-> +
-> +	base_reg = entry.use_fp ? fp : state->cfa;
-> +
-> +	/* Set up the initial CFA using fp based info if CFA is not set */
-> +	if (!state->cfa)
-> +		cfa = fp - entry.fp_offset;
-> +	else
-> +		cfa = base_reg + entry.cfa_offset;
-> +	fp_addr = cfa + entry.fp_offset;
-> +	pc_addr = cfa + entry.ra_offset;
-> +	state->cfa = cfa;
-> +	state->fp = READ_ONCE(*(unsigned long *)(fp_addr));
-> +	state->pc = READ_ONCE(*(unsigned long *)(pc_addr));
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
->   /*
->    * Unwind from one frame record (A) to the next frame record (B).
->    *
-> @@ -261,7 +309,15 @@ kunwind_next(struct kunwind_state *state)
->   	case KUNWIND_SOURCE_CALLER:
->   	case KUNWIND_SOURCE_TASK:
->   	case KUNWIND_SOURCE_REGS_PC:
-> +#ifdef CONFIG_SFRAME_UNWINDER
-> +	err = unwind_next_frame_sframe(&state->common);
-> +
-> +	/* Fallback to FP based unwinder */
-> +	if (err)
->   		err = kunwind_next_frame_record(state);
-> +#else
-> +	err = kunwind_next_frame_record(state);
-> +#endif
->   		break;
->   	default:
->   		err = -EINVAL;
-> @@ -347,6 +403,9 @@ kunwind_stack_walk(kunwind_consume_fn consume_state,
->   		.common = {
->   			.stacks = stacks,
->   			.nr_stacks = ARRAY_SIZE(stacks),
-> +#ifdef CONFIG_SFRAME_UNWINDER
-> +			.cfa = 0,
-> +#endif
->   		},
->   	};
->   
+Hi Breno,
 
-Looks good to me.
-Reviewed-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>.
+With that fixed feel free to add:
+
+Reviewed-by: Simon Horman <horms@kernel.org>
 
