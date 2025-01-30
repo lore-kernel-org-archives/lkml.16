@@ -1,106 +1,118 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EF6286A9;
-	Thu, 30 Jan 2025 10:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE1F1BEF91;
+	Thu, 30 Jan 2025 10:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738234158; cv=none; b=CMDHLkJIEFJhgZyQZRv1C+oXIMEwOeH8norZeSWPv/jBtLc6S6YiRNu+kh+Y85dhoi1XhQM0SMec2HQHSPfRPgqTqu4e2K3WAkDQOrVKNCNro9NYEZnPNzV6wQ1veniAy6rf4V9PUQKvHU4L8vp1XP7wFp+2Epfh1LVhX6U6vJ4=
+	t=1738234161; cv=none; b=kNWLVf9qo2T5QkCmcz5CThltMXH7Oa5e1DiHdarOUz+gRiw2W0JoT6bmvIJrTjeXnpt81bgeZwo7xV1hfpvRlEwHweAEJBk4ZutvGaaQlvLBa5uF/SzJvDGKulf8h/lNFO2f38h8yIcT1InHUZ0sbWnh0vzhCiPyzJOZ87lRRxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738234158; c=relaxed/simple;
-	bh=0RTanvAzYD+EF8kxdht5R+xzJ2uGLD4tho9tZLyYhd4=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=dsuVBM2h7m20D6Vjwp1pr16GfWTrRARQg0t1wCCBK6Fz6MWiwGme/vLM919yn19nu4QuJpNSf4tQgRL9CpvuqnQk69j60Y1qhck0XAfVHfWvtLbTh76JMZoi/sWkn2f19kBfQPTx2qTkvyp3bAqcL298Mm+rvTnMStFhCHUPlrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=fail smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=alpha.franken.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CCE5B21843;
-	Thu, 30 Jan 2025 10:49:12 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AFAA21364B;
-	Thu, 30 Jan 2025 10:49:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id bCLBKihZm2dzMAAAD6G6ig
-	(envelope-from <tsbogend@alpha.franken.de>); Thu, 30 Jan 2025 10:49:12 +0000
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "mips: fix shmctl/semctl/msgctl syscall for o32"
-Date: Thu, 30 Jan 2025 11:48:56 +0100
-Message-Id: <20250130104857.56251-1-tsbogend@alpha.franken.de>
-X-Mailer: git-send-email 2.35.3
+	s=arc-20240116; t=1738234161; c=relaxed/simple;
+	bh=K/7NsZgIrjKsuEex5ZvC88K7F2tkcUpl+oNZ/6zISaM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IdqO/O5Fd91jtqYtKqgKYf3yR28Cin0DVNDVXo+PxNRrh5hFGYtS0Rk/QX3C/zWocQUcoP+SZfME672DnSgz8poQ3ebqW2HhHs6UoXbRn3xLrCDLcWt7Kgc+s7wHx3+CVB4DMllCoSaEuqceEbxjT8u0BPipPLqsZwL5QbSBF/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pXsco+d6; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pXsco+d6"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50U17pAr028982;
+	Thu, 30 Jan 2025 10:48:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=K/7NsZ
+	gIrjKsuEex5ZvC88K7F2tkcUpl+oNZ/6zISaM=; b=pXsco+d6ocPYaR8/WOHSbg
+	velSBjxr/03t4VCDPTmYw6mEL1Ch0PZyS5EWZIXktVbtXhWVmw+VNm4Eq+rV2Mw/
+	MoOsaUYDug8XAKUxDrsIXYpdq/j3FmHgo2hx2E7VntWCw22j9YYEh+yG0ZakMiHH
+	ayKrbo3ccmcF/+P5B8m6h4NXZINJUGCohMVS9j/Fy5yXQVrN4WQfQiLqIkdaW9OF
+	9mxvv2YcJ98DKGgKYgJjdv6q6YTMxZ4904QgUWnhZohRNQwXDjDswqIGLMHV3O5P
+	F8N1xk5FLdD+XRE/j01cEicQX7t9WB+49kC1jDm9ht29AfBZRQceUWJbQjkfUlQg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fyg9a6uv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 10:48:51 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UAUAum030383;
+	Thu, 30 Jan 2025 10:48:51 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fyg9a6uh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 10:48:51 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50U71YNx012476;
+	Thu, 30 Jan 2025 10:48:49 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44danydvb7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 10:48:49 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UAmlQo27263592
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jan 2025 10:48:47 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B4E91200BD;
+	Thu, 30 Jan 2025 10:48:47 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B47CC200BB;
+	Thu, 30 Jan 2025 10:48:46 +0000 (GMT)
+Received: from li-1de7cd4c-3205-11b2-a85c-d27f97db1fe1.ibm.com (unknown [9.171.93.188])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 30 Jan 2025 10:48:46 +0000 (GMT)
+From: "Marc Hartmayer" <mhartmay@linux.ibm.com>
+To: Daniel Xu <dxu@dxuuu.xyz>, Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: shuah@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, john.fastabend@gmail.com, martin.lau@linux.dev,
+        song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
+        sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, mykolal@fb.com,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v7 4/5] bpf: verifier: Support eliding map
+ lookup nullness
+In-Reply-To: <f7rhmwrp3fgx3qd7gn3pzczxeztvsg45u4vrl6ls3ylcvflapx@3yi3shfnrmb3>
+References: <cover.1736886479.git.dxu@dxuuu.xyz>
+ <68f3ea96ff3809a87e502a11a4bd30177fc5823e.1736886479.git.dxu@dxuuu.xyz>
+ <78b2e750b4568e294b5fc5a33cf4bc8f62fae7f6.camel@linux.ibm.com>
+ <hsgmutuoi4kvjkr7erm5ty2fdrhdrjpz4fpp5doe65l3pzguxv@lcbmvmjpyykq>
+ <f7rhmwrp3fgx3qd7gn3pzczxeztvsg45u4vrl6ls3ylcvflapx@3yi3shfnrmb3>
+Date: Thu, 30 Jan 2025 11:48:45 +0100
+Message-ID: <87v7twk25u.fsf@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-0.999];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_NONE(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: rbcTz21OcV-kXIN5hrfaK2av094Ai-Fz
+X-Proofpoint-GUID: JJk2nesWaLPlyEjwN1he4ky6oOUdvs_l
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-30_06,2025-01-30_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=800
+ priorityscore=1501 suspectscore=0 spamscore=0 mlxscore=0 malwarescore=0
+ clxscore=1011 phishscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2501300081
 
-This reverts commit bc7584e009c39375294794f7ca751a6b2622c425.
+On Wed, Jan 29, 2025 at 10:45 AM -0700, Daniel Xu <dxu@dxuuu.xyz> wrote:
+> On Wed, Jan 29, 2025 at 09:49:12AM -0700, Daniel Xu wrote:
+>> Hi Ilya,
+>>=20
 
-The split IPC system calls for o32 have been introduced with modern
-version only. Changing this breaks ABI.
+[=E2=80=A6snip=E2=80=A6]
 
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
----
- arch/mips/kernel/syscalls/syscall_o32.tbl | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> I cribbed the source from [0] and tested before and after. I think this
+> should work. Mind giving it a try?
 
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index e8a57c206758..349b8aad1159 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -382,15 +382,15 @@
- 368	o32	io_pgetevents			sys_io_pgetevents_time32	compat_sys_io_pgetevents
- # room for arch specific calls
- 393	o32	semget				sys_semget
--394	o32	semctl				sys_old_semctl		compat_sys_old_semctl
-+394	o32	semctl				sys_semctl			compat_sys_semctl
- 395	o32	shmget				sys_shmget
--396	o32	shmctl				sys_old_shmctl		compat_sys_old_shmctl
-+396	o32	shmctl				sys_shmctl			compat_sys_shmctl
- 397	o32	shmat				sys_shmat			compat_sys_shmat
- 398	o32	shmdt				sys_shmdt
- 399	o32	msgget				sys_msgget
- 400	o32	msgsnd				sys_msgsnd			compat_sys_msgsnd
- 401	o32	msgrcv				sys_msgrcv			compat_sys_msgrcv
--402	o32	msgctl				sys_old_msgctl		compat_sys_old_msgctl
-+402	o32	msgctl				sys_msgctl			compat_sys_msgctl
- 403	o32	clock_gettime64			sys_clock_gettime		sys_clock_gettime
- 404	o32	clock_settime64			sys_clock_settime		sys_clock_settime
- 405	o32	clock_adjtime64			sys_clock_adjtime		sys_clock_adjtime
--- 
-2.35.3
+Hi Daniel,
 
+thanks for the fix! I=E2=80=99ve tested the fix and it fixed the problem.
+
+Tested-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+
+[=E2=80=A6snip=E2=80=A6]
