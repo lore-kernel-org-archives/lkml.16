@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2FC1F191D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2031F1922;
 	Thu, 30 Jan 2025 19:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738263886; cv=none; b=NO/cokSjUYUDUMKdsb2yUj7Svuh5nIqcatI8J0BvgZ36vBSLk464b/muMk6lQp6jJE1GKPXN8IGIiOgysOJJF7wjipILRWM7wzWyulToCwRMr8moBSZ61krtYV12exRdxLiIjF6sutMTCD+jlE1lMSCNK0FICzGVH9pTyKG2Qqg=
+	t=1738263886; cv=none; b=RU79It6beotJx7EU3xgsoNFMIGp9SmqJCDLm4IzogejWngsjbGRsuJKqspaZh0WIzqO4nlih7aF0810h1Nl2tCBEkmIfGP/qnwgceAvqLKE0RTc7ga15uikn65ZtbWtLTb9LYgHIQJU+we0Ts6z9C/Z7w70opxoj2zYX+1KAupo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738263886; c=relaxed/simple;
-	bh=UNQk2ATolkqpeiqVZVbCqxJE/hAAQKMoYHelpeesn2Y=;
+	bh=VszyCCDaAvuHXyR3DQ0kAWvSJ2VAo8gjm831J0qsyQw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ffJPq+JUrl//NiiMWgG0AvlgnCC3PeVkc8+EE8/bxppsCVuVCNH0rt0wKkW2nYKRGB94H9AwTlqQRYFs7KrkFozQEoFGSPWnmXnvRICjz0rD/e6Z8iAOxe0zd1SZKlPTZGACkwgkSWKlifZi7sk72NPLGmr2eGjC7n2RfDZqzgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K/yDa/sc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HTYCxbWiLhG6Bv16o3jgQoqv47sH5ePC5qxdlQV/QU1hw5Q2WqIyMiY+dJ9XKMPkxwBHzPnwMfpCbGhMsP0yUgnVbF17ZphEiobc09IB86xXl1WwjzIcbPg54cpqw2xhlMsT2M8QllCDl5TSnSygBIrcAhFMrS/XB29nIEl964I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8KzasM9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/yDa/sc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 116FAC4CEE7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8KzasM9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11D64C4CEE9;
 	Thu, 30 Jan 2025 19:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1738263886;
-	bh=UNQk2ATolkqpeiqVZVbCqxJE/hAAQKMoYHelpeesn2Y=;
+	bh=VszyCCDaAvuHXyR3DQ0kAWvSJ2VAo8gjm831J0qsyQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K/yDa/sc6BgovWpVbBRqRZJl+QFgFL/rnMAm8Sm2C8Dpp7X6LFXkhYuaImdpZFc0V
-	 Ds2GrMGfQnw3AXkutiAzIZLvMoVCm6EEfAlDC/ePvx3SNnR6EedzONwPKVozZYq1kl
-	 kEqLDUuTlh1bniLkLLfdgvHvrwhV1Uy0k9DSOfBaYJogJWvcmX3N+svywZeEiVphA3
-	 x81s5Qas4e6Czgpthmo8ltL/22AFUUlsVhiuI3+rccFAw0FEU2lCf86daDNf7aXRU8
-	 tRWDglivqR5EQmxy7pR3ASD15ZRTpnEomMxkGPncFTu9jM1FyhVZSjH8uiqh1JU/RL
-	 RTFE3X0TPXkjA==
+	b=C8KzasM9vnyRNG4s5uZZTDiWdD4dGfVQM8yHwKUueNAQM6MDHkD+KnsQi70rM4nq7
+	 f672VKxSWOSp3pCzIW+ctxIv7R7ujjwrSJR1ewWxz1PQoTo1Grsocx9PFiUWoWSbMO
+	 e0ez6LxyRQEULfjUqWHbZJ5TLXb7CWHjAiYrI8Up2QGTgGfoNB1iVwfeXyUruJW3N2
+	 ZuE59JiNtGbQMlnjcGZHJ00jq8dfwsn3IQyDJ42TjYyRQn+V4AK4+qyUSV/qxCxRqw
+	 4xdMn/rCSxomzEfInBDwulaprcuquV90Zl6cPIANeakYlQUePgb881+zGbYaT0HVYY
+	 2L9qLd48uDDGw==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 844E4CE37E0; Thu, 30 Jan 2025 11:04:45 -0800 (PST)
+	id 90EC1CE37F3; Thu, 30 Jan 2025 11:04:45 -0800 (PST)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: rcu@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	kernel-team@meta.com,
 	rostedt@goodmis.org,
 	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH rcu v2] 06/11] rcutorture: Add ftrace-compatible timestamp to GP# failure/close-call output
-Date: Thu, 30 Jan 2025 11:04:39 -0800
-Message-Id: <20250130190444.1652700-6-paulmck@kernel.org>
+Subject: [PATCH rcu v2] 11/11] torture: Make SRCU lockdep testing use srcu_read_lock_nmisafe()
+Date: Thu, 30 Jan 2025 11:04:44 -0800
+Message-Id: <20250130190444.1652700-11-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <bd22a7da-a4e0-45dc-b43c-1532af4dcfc7@paulmck-laptop>
 References: <bd22a7da-a4e0-45dc-b43c-1532af4dcfc7@paulmck-laptop>
@@ -48,48 +48,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit adds an ftrace-compatible microsecond-scale timestamp
-to the failure/close-call output, but only in kernels built with
-CONFIG_RCU_TORTURE_TEST_LOG_GP=y.
+Recent experience shows that the srcu_read_lock_nmisafe() and
+srcu_read_unlock_nmisafe() functions are not sufficiently tested.
+This commit therefore causes the torture.sh script's SRCU lockdep testing
+to use these two functions.  This will cause these two functions to
+be regularly tested by several developers (myself included) who use
+torture.sh as an RCU acceptance test.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/rcutorture.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/testing/selftests/rcutorture/bin/srcu_lockdep.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 5b0510c79fde..0f5a94542719 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -275,6 +275,7 @@ struct rt_read_seg {
- 	int rt_end_cpu;
- 	unsigned long long rt_gp_seq;
- 	unsigned long long rt_gp_seq_end;
-+	u64 rt_ts;
- };
- static int err_segs_recorded;
- static struct rt_read_seg err_segs[RCUTORTURE_RDR_MAX_SEGS];
-@@ -2000,6 +2001,7 @@ static void rcutorture_one_extend(int *readstate, int newstate, bool insoftirq,
- 	// Sample grace-period sequence number, as good a place as any.
- 	if (IS_ENABLED(CONFIG_RCU_TORTURE_TEST_LOG_GP) && cur_ops->gather_gp_seqs) {
- 		rtrsp->rt_gp_seq = cur_ops->gather_gp_seqs();
-+		rtrsp->rt_ts = ktime_get_mono_fast_ns();
- 		if (!first)
- 			rtrsp[-1].rt_gp_seq_end = rtrsp->rt_gp_seq;
- 	}
-@@ -3674,7 +3676,11 @@ rcu_torture_cleanup(void)
- 			pr_alert("\t: No segments recorded!!!\n");
- 		firsttime = 1;
- 		for (i = 0; i < rt_read_nsegs; i++) {
--			pr_alert("\t%d: %#4x", i, err_segs[i].rt_readstate);
-+			if (IS_ENABLED(CONFIG_RCU_TORTURE_TEST_LOG_GP))
-+				pr_alert("\t%lluus ", div64_u64(err_segs[i].rt_ts, 1000ULL));
-+			else
-+				pr_alert("\t");
-+			pr_cont("%d: %#4x", i, err_segs[i].rt_readstate);
- 			if (err_segs[i].rt_delay_jiffies != 0) {
- 				pr_cont("%s%ldjiffies", firsttime ? "" : "+",
- 					err_segs[i].rt_delay_jiffies);
+diff --git a/tools/testing/selftests/rcutorture/bin/srcu_lockdep.sh b/tools/testing/selftests/rcutorture/bin/srcu_lockdep.sh
+index 2e63ef009d59..2db12c5cad9c 100755
+--- a/tools/testing/selftests/rcutorture/bin/srcu_lockdep.sh
++++ b/tools/testing/selftests/rcutorture/bin/srcu_lockdep.sh
+@@ -49,7 +49,7 @@ do
+ 		do
+ 			err=
+ 			val=$((d*1000+t*10+c))
+-			tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 5s --configs "SRCU-P" --bootargs "rcutorture.test_srcu_lockdep=$val" --trust-make --datestamp "$ds/$val" > "$T/kvm.sh.out" 2>&1
++			tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 5s --configs "SRCU-P" --kconfig "CONFIG_FORCE_NEED_SRCU_NMI_SAFE=y" --bootargs "rcutorture.test_srcu_lockdep=$val rcutorture.reader_flavor=0x2" --trust-make --datestamp "$ds/$val" > "$T/kvm.sh.out" 2>&1
+ 			ret=$?
+ 			mv "$T/kvm.sh.out" "$RCUTORTURE/res/$ds/$val"
+ 			if test "$d" -ne 0 && test "$ret" -eq 0
 -- 
 2.40.1
 
