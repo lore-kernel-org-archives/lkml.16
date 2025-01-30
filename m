@@ -1,105 +1,160 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C871EF0AB;
-	Thu, 30 Jan 2025 17:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738258216; cv=pass; b=Z2N4CaPKP1A1/MWG7+0YeGhCU4J7N8JZFvV0jELgVameE+DXrFW9eaB324YPQNzyAOaUIR79d6rkQ0g4Mh3jyBXkgEk9CyyCjU6wNpf8T5Vt4JRwUVyDmEA7AuzBOJgluS5zaPxpHL3PlYkEMRQ3I8/aZCuYjT67IdUbKBItDOc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738258216; c=relaxed/simple;
-	bh=1fgguBGZqx6t+pTxfQu9adrSJCSSJkTXqTPvFN/QrYk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OGOw11Hu9+f55h/lPNtG9Q4lWMFGegM/ikWPaV+k+eSc7pkSmxAibf3YKJ1FU6a++3cQUMwzRHZFQfvoWTKs/5b4Z8/IsT7mxGklFuuzYfUoM9FWIGuE72gIYRCgCiWcOCpvWsWFGuzlQwWXecMSh70zykSKWrj3wPcyJhRNi28=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=kgsFQRXk; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6D44C7C
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738258319; cv=none; b=gcq+/lbWn9EgFlEmH8L1UsNZkzOVgvuwONXZSLDi3FNIKxe9SIFfKwA62D0TPrJxsWO/eTQTpuYrJyB5BO7URWsXF/eSPnwrQfVCk1Vm6naS2yUAQmOmkRd0um5XJYtCO/ZNRvU4eRFcqu3vVF3TnKe7ngL1W8NUe5sGcAu/rNM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738258319; c=relaxed/simple;
+	bh=xuMqgfxSwdbvy3i+zP5z3UiMW6qWNT7u1ikBE5pPpQE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hw041xDxWk4cHpTrMqNDDMdgjmwfKwe6pCsRZ2YpJ8GTYYJzQPVt/IlupWGw8wxr49mQRGzdab/3rO2M2ho7T50FrhrW0oOb6G4NULS1deW/rj22jsgrHrxAHz8QVzT0c+ySZH4refCfpEVCF2RZgzwA/8z67vXDXIVW6szAhsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uKs1s+Xl; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="kgsFQRXk"
-ARC-Seal: i=1; a=rsa-sha256; t=1738258188; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=VQAKzV9mcUTO6J8jy5cc+UMQyftB3RHW95WiG7yLlMh06/WLVOAr+LIRuGC6/Fh45zxpHkEJA5dZotRn1YRRkI0SuKWFV2gpUujEPlUnVzDSgKMsbX5ARPmpDAY+JNaurEHatw0ovCXg+7LTRPgYTc1QIPIKlF/a60VjUC4Fu40=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738258188; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=oe9yz0LUgW/HyWP7QYNCqzc/hVt9PtaAICLV4Q8wDfo=; 
-	b=i9C7pnx4rUKNzocCoYHPAHenweKpOK2qYTYpp4u7ugE0rt0Yk5Rm6R9iQwpECXZzOcXojJiVnWtHvgzPaHt7nhuM3UJ9JPeU0jraJusKZPfEnZE8Y+8RNbxodYZnqNWJyOre9WPTDBuAXdMaZuZON51EwKLUr8/1RpsAqaE7IK4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
-	dmarc=pass header.from=<adrian.larumbe@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738258188;
-	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=oe9yz0LUgW/HyWP7QYNCqzc/hVt9PtaAICLV4Q8wDfo=;
-	b=kgsFQRXk1Pl9A90mfMshBGa9FRinEQx17r3QHzoZYjLCtLmD0libdXyjGuTkebzq
-	J2UeyUGrQXry5OE7+TXCc6tCh5doFm9p+WjELyGSdsAHriBGD4+UrfARDVmvAXU9pgs
-	D3BHQeGpRlyP1IGJ1RV+BYOmM0FGCQP1ajM7SkmQ=
-Received: by mx.zohomail.com with SMTPS id 1738258170262965.1122189634012;
-	Thu, 30 Jan 2025 09:29:30 -0800 (PST)
-From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
-To: David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>
-Cc: kernel@collabora.com,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
-Subject: [PATCH v10 5/5] drm/panthor: Fix race condition when gathering fdinfo group samples
-Date: Thu, 30 Jan 2025 17:28:13 +0000
-Message-ID: <20250130172851.941597-6-adrian.larumbe@collabora.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250130172851.941597-1-adrian.larumbe@collabora.com>
-References: <20250130172851.941597-1-adrian.larumbe@collabora.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uKs1s+Xl"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38a8b17d7a7so605631f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:31:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738258316; x=1738863116; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oGFJ/SZJyjcLl8OPYBdzU/HVC+kA3jQp0maWZ+GZ/dM=;
+        b=uKs1s+Xl2mknT0EeYXSAJ7/h+OeDJejIr300abkJLiaZQHDp2+Dad5LzZATmj2ZqnK
+         rnImpBO/HMJZQHJjpIOi+CaudQmCRTcrbeX05wocVPZvKP0KXObFDJYtuHEqhhfPIhuZ
+         tEnRpeeey3xRt7nmC+6OiW7YZqoV6XOb3P+HHEEXxpCYw+TuAVeJ/HmjpAoNqCfIPLBb
+         jLFH+CQKTmPLbNoHX+QJcIxm0MG97LrUkhBLGMIYIrgvWUjoVuBPoSRapuYtowsoQswz
+         6UUfqzFY8EMDA6h6mk8wIgX3xvAucL519lPXhcddO55puJdcsESgGXayIM1tx/3EWEMr
+         uBLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738258316; x=1738863116;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oGFJ/SZJyjcLl8OPYBdzU/HVC+kA3jQp0maWZ+GZ/dM=;
+        b=pE5U24YJx/qL4oZPOKQQIykoOgpUYuqUgvsr9+br4R5I9MuCaCBPIJqUu5aacGr678
+         jWRZ8r0yie4MxynGvTYONkHEqUSsJzH6uScNVOSC1YKIjsHmo+AFzas84eHJ7db2VMgu
+         lSPFH59DgP4n65G4iwaNXsVphXUX7AZktumIVJLAGs4SRSQZNVLnMulZRkJuEIA2Zqjx
+         ou09qDLkClCR4Qyq7YdfU9uH9xBuUxjXsfCIwpDlPJWryZTk5ejtmh5sxvnND3qf29Ty
+         qW0PmcNmkBa7voc+cU5Gic0a/aBPEueRpUyTGjktDeIumZt/xAVqawsj5janlSnwCEMZ
+         hMqg==
+X-Forwarded-Encrypted: i=1; AJvYcCXlt0jPuwyOKtv0at1Om7MYTP/prwTgeiTpOf1KO3L1h7FFdPloMQ9ITYhbFak4PVhSmWyq9ckA+w4809I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcvLRtApSO5Oara3794emtKJNv8rmIHJPyAwpU1gytMIBQQ/mR
+	rurOsuqL8auaMLaf996kuQ+XjfzlSvq1gp6AjdEMJ1Wybfo9FamsOhCFscl6yHY=
+X-Gm-Gg: ASbGncuNKmBQVqL6NG42XUH4Rt20EbDN+PtomFCUPxentxFzFx144kuttkXwkFvdYe2
+	bsks8HFz9oPvS2sGqm8oi5bJEpcp07fb3h3ZuMg7HXoKBupr3Ws2gheItuDTgpzXjGMwCwqJGQw
+	TrNy4/etCdtK1qSOUYDokisu0+/mWGT8ZXdUy1qNmmgRJta2EB3RQv0KhF21660+CWAUjj3koqf
+	1cLoX0LHkOL80PtJ2lkDBPC9e1mpRQCwyxyfuvc4tEoUSdVTglG3lsb443MQMUs7RKtgSw2jUHI
+	u1C7WeQ2dA6rEIbT6MqzeGGZlNkVB/V0FeC2D8+J2AF6CJAqcGU2aH8=
+X-Google-Smtp-Source: AGHT+IEi5kedgLMkork5YJAKY/3aI2UDvYGuUStK46XPsuiG324UkAjxLQwuOm9AwPnUYK4o3lkp9Q==
+X-Received: by 2002:a5d:64a1:0:b0:38a:86fe:52b5 with SMTP id ffacd0b85a97d-38c5195f256mr8386213f8f.14.1738258316013;
+        Thu, 30 Jan 2025 09:31:56 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-438e244f087sm29478855e9.29.2025.01.30.09.31.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 09:31:54 -0800 (PST)
+Message-ID: <867eb310-11a7-48bd-b2fa-35e001875498@linaro.org>
+Date: Thu, 30 Jan 2025 18:31:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] thermal: of: Export non-devres helper to
+ register/unregister thermal zone
+To: Biju Das <biju.das.jz@bp.renesas.com>,
+ "Claudiu.Beznea" <claudiu.beznea@tuxon.dev>
+Cc: "rafael@kernel.org" <rafael@kernel.org>,
+ "rui.zhang@intel.com" <rui.zhang@intel.com>,
+ "lukasz.luba@arm.com" <lukasz.luba@arm.com>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "geert+renesas@glider.be" <geert+renesas@glider.be>,
+ "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
+ "mturquette@baylibre.com" <mturquette@baylibre.com>,
+ "sboyd@kernel.org" <sboyd@kernel.org>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250103163805.1775705-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250103163805.1775705-3-claudiu.beznea.uj@bp.renesas.com>
+ <Z5pkUNNvsWPjRQvy@mai.linaro.org>
+ <65a16c3f-456e-40ec-91b0-afb57269ed46@tuxon.dev>
+ <Z5tPR_tv7vWDkUI7@mai.linaro.org>
+ <TY3PR01MB11346E087A4DFCC5BDCCB10B486E92@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <TY3PR01MB11346E087A4DFCC5BDCCB10B486E92@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Commit e16635d88fa0 ("drm/panthor: add DRM fdinfo support") failed to
-protect access to groups with an xarray lock, which could lead to
-use-after-free errors.
+On 30/01/2025 11:33, Biju Das wrote:
+> Hi Daniel Lezcano,
+> 
+>> -----Original Message-----
 
-Fixes: e16635d88fa0 ("drm/panthor: add DRM fdinfo support")
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Reviewed-by: Steven Price <steven.price@arm.com>
-Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
----
- drivers/gpu/drm/panthor/panthor_sched.c | 2 ++
- 1 file changed, 2 insertions(+)
+[ ... ]
 
-diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-index f3c6ca4dc11c..6d49b4f40f58 100644
---- a/drivers/gpu/drm/panthor/panthor_sched.c
-+++ b/drivers/gpu/drm/panthor/panthor_sched.c
-@@ -2865,6 +2865,7 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
- 	if (IS_ERR_OR_NULL(gpool))
- 		return;
- 
-+	xa_lock(&gpool->xa);
- 	xa_for_each(&gpool->xa, i, group) {
- 		mutex_lock(&group->fdinfo.lock);
- 		pfile->stats.cycles += group->fdinfo.data.cycles;
-@@ -2873,6 +2874,7 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
- 		group->fdinfo.data.time = 0;
- 		mutex_unlock(&group->fdinfo.lock);
- 	}
-+	xa_unlock(&gpool->xa);
- }
- 
- static void group_sync_upd_work(struct work_struct *work)
+>>>> I've been through the driver before responding to this change. What
+>>>> is the benefit of powering down / up (or clock off / on) the thermal
+>>>> sensor when reading the temperature ?
+>>>>
+>>>> I can understand for disable / enable but I don't get for the
+>>>> classic usage where a governor will be reading the temperature regularly.
+>>>
+>>> I tried to be as power saving as possible both at runtime and after
+>>> the IP is not used anymore as the HW manual doesn't mentioned anything
+>>> about accuracy or implications of disabling the IP clock at runtime.
+>>> We use similar approach (of disabling clocks at runtime) for other IPs
+>>> in the RZ/G3S SoC as well.
+>>>
+>>>>
+>>>> Would the IP need some cycles to capture the temperature accurately
+>>>> after the clock is enabled ?
+>>>
+>>> There is nothing about this mentioned about this in the HW manual of
+>>> the RZ/G3S SoC. The only points mentioned are as described in the driver code:
+>>> - wait at least 3us after each IIO channel read
+>>> - wait at least 30us after enabling the sensor
+>>> - wait at least 50us after setting OE bit in TSU_SM
+>>>
+>>> For this I chose to have it implemented as proposed.
+>>
+>> IMO, disabling/enabling the clock between two reads through the pm runtime may not be a good thing,
+>> especially if the system enters a thermal situation where it has to mitigate.
+> 
+> Just a question, You mean to avoid device destruction due to high temperature?? Assuming disabling the clk happens
+> when the temp reaches the boundary and re-enabling of the clk after a time(which involves monitoring the CLK ON
+> bit after enabling it, or a run time enable failure happens), where it exceeds the threshold??
+
+
+Well, I have some comments with the device tree thermal configuration 
+which may answer your question but I'll wait for Claudiu to check the 
+temperature read comparison without rounding to 0.5°C
+
+What I meant is if the temperature read is inaccurate, the mitigation 
+will be inaccurate too. It may not reach the critical temperature but it 
+is possible the performance could be impacted negatively under thermal 
+stress.
+
+
+
 -- 
-2.47.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
