@@ -1,133 +1,94 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F08B1DA5F;
-	Thu, 30 Jan 2025 21:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84591DA5F;
+	Thu, 30 Jan 2025 21:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738273567; cv=none; b=fjX/BQ7TwMSEvQaB578oPHtEp013J2Kzz1D3qLOtzYXHCnMsB5frEaZIbaZ//eAPOmPTrj+WHshtVZZPEXg74u1QPwWQHZQsa6+cmFKDixccFWgqOCro8VUaAWozlZhdmUtGqcUzA+VN2BYiY3RaQD9/2vC80LM0yeBJxUyloTU=
+	t=1738273751; cv=none; b=sflngozXzhTXQs493pSS96UkUPvFkvtE87QLHLrDo7yGfJ1cu0SWvNqkH8iuKLss13QiQslRnU5mQfOtzOJmNR/O9nYYGLXcaOMr6bBQBBZ7d2aJMAc7gIyiuIzOm6ppBwl+BmESGCRAtTq5WwuqoXvQH2gLGC8tEefTKLU2eo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738273567; c=relaxed/simple;
-	bh=R4FHMuV58xYlq998ABzbvKFlrNrBrpyWWpTE7o7JLmc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=urncz2rJtnkuzlOgwd/KU8z/b/H9qRmy3It+x5gPBbjMQLKeqDJVliEeXMyxwNCuPc4IqhsBkmFx8CdbNb6eMrZRhBKGAJkSE6LmXiT3W03PnrG0dOmJA48V+04moFyop1yXPtYGxP39DGtcPjKZ95WrQ/HcOaMUUiEKsNTAo7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iCZb3GWy; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738273751; c=relaxed/simple;
+	bh=v9cA1UeLXNARJOxVOlCXVATDoCFX4K7MnNcdOFH14rk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=svM9cFjwNHlJlV1xCqiuaFG/B06dLkkLAnDJvWiUmc/Y5xHItRmiI/bmIpgWxCRlH7gwmNcyBlnhqsaDUV9ISyogYGKno/27r/zo6M9Z++C0Qx4x50p3sPJ1AdwEVT1Kxu6JyVgla3HR0yfJa5gjj6YIrKdDpKrOmhWNZLSQbhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BSkJIVEl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iCZb3GWy"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5d3bbb0f09dso2117667a12.2;
-        Thu, 30 Jan 2025 13:46:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738273564; x=1738878364; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8mMQmtr895BcP7Uq42BO3VPGUJukAXM2Ir4hDL4HfMk=;
-        b=iCZb3GWyvAVdkRmOZtAoFHaXtMTh0fYloB7h6CXrNVrUMYOuosxZPmthabqKH6MmsS
-         xI6BF0onsvmmpyhOVVboDrpPRKf7LD8uyZqRVsIEPJpIS4ssS819/hkJO+Yh9uWRhogi
-         0CAgp1/DYsKnWrVTqXGm0MfrWFfFQ5RZK+Vdgvgd1j1c0znpG9X2QEvYibxyYNulpY/2
-         5x4Jz62cPhAqVukrxN9Cp5NZJx4+si2hJZjKUqbII8wdFptgSJDAYPegqLRn4mDqRW0R
-         2yVkv5T1b299aTRHv2dwobBvHAugXF7G6QGWmpjUecg1MfXaV09Nnv+QwMD9vR99iyle
-         8xLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738273564; x=1738878364;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8mMQmtr895BcP7Uq42BO3VPGUJukAXM2Ir4hDL4HfMk=;
-        b=ZfjLLRCdXYFtwOIcuyxpNxmVzZGWxEyPIOlJY8heySScjZmiJZuBW2TbJHA0Ip/Qn0
-         7ZKfFkd8R2Zz7kr1Ug41xCJGBYRSDdBTKJsXgbqOqWE9aZ3lcCk0kEvVtEhw1b6rLBCM
-         ovA2zoBmQBbiR5SU1FcqU5bsgWG6JeqHBGCy5R/1HQ66IDMR/nXZikjsT0xtTuZPwBST
-         OTrak8BQXlxG3C3rhPSGIAbNzuZ6dtZEg6+CuryoUtmJwEOYJyI83B2yipQO99pc3wQU
-         bVqHv46bmZMkxFn27wx0DslKIVET+YyNpXuHAKe3/2VUMF6UtfWNr75iUVavjmjoxpDL
-         HZng==
-X-Forwarded-Encrypted: i=1; AJvYcCVl7p0MFs5dYz2v15SOMDQJrof/i0xZ/Nafyp/gSuaQxTHctlic4oXHizi6cOhodFp3eIZeaNPCf/i/Vak=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDEmnMnnmQBBBOV7SGUnle/7BLhmWPZ9ddeEeQm4mWA9Z5HDu4
-	4nJUV0qzybDXHRHIVlzK1O+VQHiFC4NHTl6LU5k7DUNCss6H401+FW8akg==
-X-Gm-Gg: ASbGncsJi/1FkcKbLSaOsupwS5asmM7+JeroTa3Dz2BDEtaDaqTc6Q9swqzq/9nFNrY
-	/LIwLvDG8LCLCXgxgmuOCYPwjBV8giZdSlKQE017mI/E3fXKtuy/iXrWEaOzK602c7R8o0IzpNn
-	Ly3mfzWBOBRqNRtH5cq1B6B79FyFHP2g3pslashcwus+h8htAXeLyRmqytRz7MJgDsw95DNcWe1
-	S67QC0c7hYuUrXhAsXWJt+slViOMWY6wge2NKi8Ksj/g7FnXiDQ9XXc3D+tHHJIlMeHDb5uOVJ1
-	TwqeucnPOWD5fpCPtB+759be26jeFrcctZWILRY3ju6FT2X4NLamBAxnot+y7y1LKw==
-X-Google-Smtp-Source: AGHT+IFjiyeDausgvZCLfUPyAgq7BMODwBxf3BmLLPI3rslS2Zj0a31k5dE6uWJF9nE2VVrQAPreww==
-X-Received: by 2002:a05:6402:50ce:b0:5d1:1f2:1143 with SMTP id 4fb4d7f45d1cf-5dc5efc70ebmr9622139a12.18.1738273564293;
-        Thu, 30 Jan 2025 13:46:04 -0800 (PST)
-Received: from [192.168.50.244] (83.11.225.21.ipv4.supernova.orange.pl. [83.11.225.21])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc724056e0sm1711392a12.41.2025.01.30.13.46.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 13:46:03 -0800 (PST)
-Message-ID: <4af2c24d-1c79-4119-a112-eeac1112d49c@gmail.com>
-Date: Thu, 30 Jan 2025 22:46:01 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BSkJIVEl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13EC5C4CEE4;
+	Thu, 30 Jan 2025 21:49:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738273751;
+	bh=v9cA1UeLXNARJOxVOlCXVATDoCFX4K7MnNcdOFH14rk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BSkJIVElc5hm3FBv0tBJK/9SQvqb3rg2WqjDGiRayeIG18GV6uN/QXgZ6har2Crmy
+	 2q01SbUOlCvwDptGAGz07dF2DroOh00wMr18QP6Ee0Qf72dVI7To6OUS+D367j7G41
+	 MXrrU3ZkUjyZzyQrkiITZuLmqUObDhVsBMM3SgFy1pB+tE9ms6SjwPS+hXCWLTzlrS
+	 JHASK6K81Pw6AWCOaBCbP/48B3nJ0snbcMBBtKm9F0GtGmXMQL4jcKZPRuayJoyJ4e
+	 dSdm1AhrD9juO5Z9omChhaBsX1DJ9zJOGVow4GyHvoP+I5tuRAYRhTBiGhxtytxRlN
+	 6b1q57SY1BJSw==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-53ff1f7caaeso1333811e87.0;
+        Thu, 30 Jan 2025 13:49:10 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUonKiSLxs3Stj2g+L0PKEIxCSEw2lC2ipzbBMKePH1kquJIS2Pr5mdNqpppsLkvlNJ1Na04VXg@vger.kernel.org, AJvYcCVWs/q1/mvE/71YErSOA2IzSPtxxDq9A7jID1/afKAuwQ+tGbWI7d80ZnTKKemvpGziMevoRYiMH/h6dek=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLh5N8VTdAXoGMGzx8MRNpQUXVudATJFDM1Vis1SkdZFL9prA0
+	VoVIcIfJ8By0zByaGmAVsrel3q+kGzc+j02sk4NHBs5xpmyVa8DS3lT9GD8yd0/kff/ru6uOW4h
+	70E0LRchz5S6a0KJeZ5c0xu0giqs=
+X-Google-Smtp-Source: AGHT+IGvsZ9UV23BN7NAzI3cBwpZgGYzUNfAG/ADzOOwOyeo8NhgHVLMg1B/e14T3YmWFv4z3T9psdaM5dSo92pIl0w=
+X-Received: by 2002:a05:6512:10d6:b0:540:20f5:be77 with SMTP id
+ 2adb3069b0e04-543e4be00e6mr3243865e87.3.1738273749389; Thu, 30 Jan 2025
+ 13:49:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] gpio: bcm-kona: Make sure GPIO bits are unlocked when
- requesting IRQ
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
- Ray Jui <rjui@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Scott Branden <sbranden@broadcom.com>,
- Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>,
- Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>,
- Christian Daudt <csd@broadcom.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht
-References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
- <20250130-kona-gpio-fixes-v1-2-dd61e0c0a9e7@gmail.com>
- <9965d0b3-f169-45c4-9345-8588865a2ca4@broadcom.com>
-From: Artur Weber <aweber.kernel@gmail.com>
-Content-Language: en-US
-In-Reply-To: <9965d0b3-f169-45c4-9345-8588865a2ca4@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250130204614.64621-1-oliver.upton@linux.dev>
+In-Reply-To: <20250130204614.64621-1-oliver.upton@linux.dev>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 30 Jan 2025 22:48:58 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHchMo1dMAd5N--vZOnegoci=kRDQ2N06dVZueixzzhaw@mail.gmail.com>
+X-Gm-Features: AWEUYZnBwtpu0VhT2GWd3rq9lUk_NVWIl74tK03ECfTc-9lJwZURu3xgt8g3hZU
+Message-ID: <CAMj1kXHchMo1dMAd5N--vZOnegoci=kRDQ2N06dVZueixzzhaw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: Move storage of idreg overrides into mmuoff section
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, Joey Gouly <joey.gouly@arm.com>, 
+	James Morse <james.morse@arm.com>, stable@vger.kernel.org, 
+	Moritz Fischer <moritzf@google.com>, Pedro Martelletto <martelletto@google.com>, 
+	Jon Masters <jonmasters@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 30.01.2025 22:35, Florian Fainelli wrote:
-> On 1/30/25 09:10, Artur Weber wrote:
->> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
->> index 
->> 77bd4ec93a231472d7bc40db9d5db12d20bb1611..eeaa921df6f072129dbdf1c73d6da2bd7c1fe716 100644
->> --- a/drivers/gpio/gpio-bcm-kona.c
->> +++ b/drivers/gpio/gpio-bcm-kona.c
->> ...
->> @@ -87,14 +103,25 @@ static void bcm_kona_gpio_lock_gpio(struct 
->> bcm_kona_gpio *kona_gpio,
->>       unsigned long flags;
->>       int bank_id = GPIO_BANK(gpio);
->>       int bit = GPIO_BIT(gpio);
->> +    struct bcm_kona_gpio_bank *bank = &kona_gpio->banks[bank_id];
->> -    raw_spin_lock_irqsave(&kona_gpio->lock, flags);
->> +    if (bank->gpio_unlock_count[bit] == 0) {
->> +        dev_err(kona_gpio->gpio_chip.parent,
->> +            "Unbalanced locks for GPIO %u\n", gpio);
->> +        return;
-> 
-> Don't you want to release &kona_gpio->lock here?
-> 
+Hi Oliver,
 
-If you're talking about the "raw_spin_lock_irqsave" call above the if
-condition - note that it has been removed and was actually moved below:
+On Thu, 30 Jan 2025 at 21:47, Oliver Upton <oliver.upton@linux.dev> wrote:
+>
+> There are a few places where the idreg overrides are read w/ the MMU
+> off, for example the VHE and hVHE checks in __finalise_el2. And while
+> the infrastructure gets this _mostly_ right (i.e. does the appropriate
+> cache maintenance), the placement of the data itself is problematic and
+> could share a cache line with something else.
+>
+> Depending on how unforgiving an implementation's handling of mismatched
+> attributes is, this could lead to data corruption. In one observed case,
+> the system_cpucaps shared a line with arm64_sw_feature_override and the
+> cpucaps got nuked after entering the hyp stub...
+>
 
->> +    if (bank->gpio_unlock_count[bit] == 0) {
->> +        raw_spin_lock_irqsave(&kona_gpio->lock, flags);
->> +
->> +        val = readl(kona_gpio->reg_base + GPIO_PWD_STATUS(bank_id));
->> +        val |= BIT(bit);
->> +        bcm_kona_gpio_write_lock_regs(kona_gpio->reg_base, bank_id, 
->> val);
->> +
->> +        raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
->> +    }
+I'd like to understand this part a bit better: we wipe BSS right
+before we parse the idreg overrides, all via the ID map with the
+caches enabled. The ftr_override globals are cleaned+invalidated to
+the PoC after we populate them. At this point, system_cpucaps is still
+cleared, and it gets populated only much later.
 
-In general, the diff for this patch did not generate very well, sorry
-about that. I'll see if there's anything I can do to improve that in the
-future.
+So how do you reckon this corruption occurs? Is there a memory type
+mismatch between the 1:1 mapping and the kernel virtual mapping?
 
-Best regards
-Artur
+
+> Even though only a few overrides are read without the MMU on, just throw
+> the whole lot into the mmuoff section and be done with it.
+>
+
+This is fine in principle, but I suspect that it could be anywhere as
+long as it is inside the kernel image, rather than memory like BSS
+that is part of the executable image but not covered by the file.
