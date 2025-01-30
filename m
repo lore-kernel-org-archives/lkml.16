@@ -1,198 +1,341 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11D31487E1;
-	Thu, 30 Jan 2025 18:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DD21487E1;
+	Thu, 30 Jan 2025 18:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738262536; cv=none; b=uk7teB42kurDzd4gbE9fUcLjL6Yx3d9n7pZ7nzlHXQzATJbvbJk1eQXltm5cJ3SLMaPYZIr8eH0J0g0wFahWrWjOPXu9xV2rPsnf+lTZsqnu6M+fc81+peqXI+L1BfExBpn1s/bqY1AHLtRbLJ0kFvToUA1wTteCifm9OL4HYsg=
+	t=1738262543; cv=none; b=cfA/6ydnkhOjQV8Jl26h+L5XtGn+nuImMo64Xf4rrHLUPLQZj0zv4eClyi1W4GZSO66rHwcNtkE1Gf+EVllrnRJh8E3DDaJmvKoKA5EV0Fjiu9caJZAQm6/ZmM2yTE1q1K2ltw5v4JfRKrl+uiKLa4cuUvbIIkLYli9DSNAeCuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738262536; c=relaxed/simple;
-	bh=7SyZ5zCEJ4aNJvlmHMl8pZTMFw6jNB5EeCSDItXKy7s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P4yJOfiHjZMHC/mZpv/trmq/CY398rr3yNdcaFY/3tpuJn9c1l80+hAEvFqETTDkA0yFT9OFLO+EzBqL9Qj2az9HCgd+4FptXQ13HVz+yfYd0ouxK0mFAH7sdMGBEnCY3tYB0RbQzdJUMqtVLEcx/btiQs/dokii0jsPsb7GX1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MP/S47nA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738262543; c=relaxed/simple;
+	bh=g0IQwxMYVVFXX2ZDTdvXAiamvpAiO+krIPQp++uGEec=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=IEozjyoJ8ronrm9fHZYyzb7A+KBRy6hN1heIQscCdxtetfdrRv2+nFhUJyDM99r30TujernIuudrxEfnlJhv2YB9MoOB+29bwwNO6jNec8iBDR93hOfSAVyOt4UcCyb/kRGYQ6A93bDT+Q9SM2071AHN4pVdX3hh4BVm336p5+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=SIYI2UPc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=sGJxb52a; arc=none smtp.client-ip=202.12.124.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MP/S47nA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C3C8C4CED2;
-	Thu, 30 Jan 2025 18:42:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738262535;
-	bh=7SyZ5zCEJ4aNJvlmHMl8pZTMFw6jNB5EeCSDItXKy7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MP/S47nA8FE9AkuHWURw/yUclraFw1sFDgbUmalMDZV0/vbCb5U0HkRgrIxFDVQbR
-	 jmTquZPkUs7UbzmAwoMc4DmXmNprefYqz2iiZfqflLMIIWSCHcE2hRIARNd4lneK7m
-	 PawsARXf+YXzjgMryCAxyE6UcQQaUJPyr3VIxDkf6Exjpgxl2P8B8nW/c2fmUc4rE6
-	 /hY1qrBH7jbokFST3GNofAdKQ4JRX3Wbzzv8OCwS0oL2+b7aIeFq7xLEcugnTFGnfk
-	 tdXvdFKA/8jTj+TM0Pv/TsAQlqkSBJOKjpuiHhN/iZAiLO+epc56JaVm1vKuGGMtJ+
-	 yFV9Ay6+9RgQg==
-Date: Thu, 30 Jan 2025 18:42:09 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Olivia Mackall <olivia@selenic.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Aurelien Jarno <aurelien@aurel32.net>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH 2/7] dt-bindings: rng: add binding for Rockchip RK3588 RNG
-Message-ID: <20250130-anything-scholar-01f4c9145893@spud>
-References: <20250130-rk3588-trng-submission-v1-0-97ff76568e49@collabora.com>
- <20250130-rk3588-trng-submission-v1-2-97ff76568e49@collabora.com>
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="SIYI2UPc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sGJxb52a"
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfout.stl.internal (Postfix) with ESMTP id B84081140100;
+	Thu, 30 Jan 2025 13:42:19 -0500 (EST)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-03.internal (MEProxy); Thu, 30 Jan 2025 13:42:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738262539;
+	 x=1738348939; bh=Z9bH9AOEMGGz/NR9FlqFzvsaqJ/UrZx/S0LGxttDpvc=; b=
+	SIYI2UPcEjF5HcjpRsfjFTPQtwe4jgR0bCGFcHSXiCla5Y4y5khnAIvv9WvEi3Cb
+	BRmVtf28CvGbosSqlN6IQJk411SGJOgIjInQ4ng5b+jQST1eQZu1dRULmRqTss4X
+	lsWuuoj111SWFawQsVJlWLylFEKts71PPuExgplx50sWKIckMtm25KJKZZkPVzC8
+	eQ1U5iOPTfRRkoFE4C+p62S3zXPmCxtE3lXXH1Kj1VBBByhwDHcixtN8rEsl7Wqm
+	nPbytlFrXRt3STtHhwSZt9b/SBik+HH06bNameG8y8jFD2xIbCpZt13kdMFKmt8H
+	24mIEynV+euJyPLVw/bpQg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738262539; x=
+	1738348939; bh=Z9bH9AOEMGGz/NR9FlqFzvsaqJ/UrZx/S0LGxttDpvc=; b=s
+	GJxb52aQpaiX/9m91Wv6xvjGVh0l0GocgdN6Bwbu+FafDvkGHryzLBMrZvUpBJWq
+	v6AAnV8SCL5JFaSJZcDDlS8DkKlJvOlAssGE5/DpzGhuINekfNBqJG4JmuUiUdxx
+	2yDMpZJM5ami4SUkD1wz7qnASkmsVmKGjocno8VUPUrSC82xNi50mCHl2psS8rig
+	ge3fS7hAgY/aPTGMIYJC7aD1htDQ8lD6IJOoDbOLXnl0R9C9AgCBFcXzfDnuhB5g
+	3kJMC5luvUZjCheGvhubMwDfslLJvBuapb6ilO1HiCoU/lcQtGocXrKQL+dPrqC+
+	jHh0nG9gbLooX4wNvkQ2w==
+X-ME-Sender: <xms:CsibZ0RCX2RniUwj5NA7a-JRF5VLBxDb5JWyxAY84gbexV4aqsYkrA>
+    <xme:CsibZxxrvqiEd0LFmGPM1m-fFF3mp_lP_rM3o4s8l_AYKNbDn2N8y4eeROz33F3g-
+    uuAgy-3dbFhnKmwqQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeiheejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnegfrhhlucfvnfffucdlfeehmdenucfjughrpefoggffhffvvefk
+    jghfufgtgfesthhqredtredtjeenucfhrhhomhepfdffrghnihgvlhcuighufdcuoegugi
+    husegugihuuhhurdighiiiqeenucggtffrrghtthgvrhhnpeeikeduveeiffekveffieeh
+    hfdtffdtveetjeefieevveffveevudetkeffffelleenucffohhmrghinhepghhithhhuh
+    gsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
+    mhepugiguhesugiguhhuuhdrgiihiidpnhgspghrtghpthhtohepudelpdhmohguvgepsh
+    hmthhpohhuthdprhgtphhtthhopehmhihkohhlrghlsehfsgdrtghomhdprhgtphhtthho
+    pehsughfsehfohhmihgthhgvvhdrmhgvpdhrtghpthhtohepvgguugihiiekjeesghhmrg
+    hilhdrtghomhdprhgtphhtthhopehjohhhnhdrfhgrshhtrggsvghnugesghhmrghilhdr
+    tghomhdprhgtphhtthhopehhrgholhhuohesghhoohhglhgvrdgtohhmpdhrtghpthhtoh
+    epuggrnhhivghlsehiohhgvggrrhgsohigrdhnvghtpdhrtghpthhtoheprghnughrihhi
+    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehjohhlshgrsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:CsibZx0bf-oM7sRzQD2nQwp7CJxC32Z_awPJdUTEMa4p64dcG3vJwQ>
+    <xmx:CsibZ4AFGnRDSnGphGEfzvlMo9fxFMRxUFDTJcaG2x8tKmP9GTng5w>
+    <xmx:CsibZ9gbSR6KnXYZ7FykB_EqKbxNURAdWMKoINs36Qn2BVCy8YT81w>
+    <xmx:CsibZ0qHKxDFCm0uDWMH62yEde5v1vR9vVd_9UQykZVJ2BSUc6u95w>
+    <xmx:C8ibZ2ZkX53eIRsKzYFQJnsDHp84WSNOKVoG9X0ZBwDYaAnn9eT46acm>
+Feedback-ID: i6a694271:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C1E0B18A006B; Thu, 30 Jan 2025 13:42:18 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hYobnhEFDnkdMhyO"
-Content-Disposition: inline
-In-Reply-To: <20250130-rk3588-trng-submission-v1-2-97ff76568e49@collabora.com>
-
-
---hYobnhEFDnkdMhyO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Date: Thu, 30 Jan 2025 10:41:58 -0800
+From: "Daniel Xu" <dxu@dxuuu.xyz>
+To: "Ilya Leoshkevich" <iii@linux.ibm.com>
+Cc: "Shuah Khan" <shuah@kernel.org>, "Eduard Zingerman" <eddyz87@gmail.com>,
+ "Alexei Starovoitov" <ast@kernel.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>,
+ "Andrii Nakryiko" <andrii@kernel.org>,
+ "John Fastabend" <john.fastabend@gmail.com>,
+ "Martin KaFai Lau" <martin.lau@linux.dev>, "Song Liu" <song@kernel.org>,
+ "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh" <kpsingh@kernel.org>,
+ "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
+ "Jiri Olsa" <jolsa@kernel.org>, "Mykola Lysenko" <mykolal@fb.com>,
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, "Marc Hartmayer" <mhartmay@linux.ibm.com>
+Message-Id: <20f56c02-688d-4f22-97dc-cc5b3800de3f@app.fastmail.com>
+In-Reply-To: <ae5e32ff2269eb4c190aeb882b17cb1bb8e6c70d.camel@linux.ibm.com>
+References: <cover.1736886479.git.dxu@dxuuu.xyz>
+ <68f3ea96ff3809a87e502a11a4bd30177fc5823e.1736886479.git.dxu@dxuuu.xyz>
+ <78b2e750b4568e294b5fc5a33cf4bc8f62fae7f6.camel@linux.ibm.com>
+ <hsgmutuoi4kvjkr7erm5ty2fdrhdrjpz4fpp5doe65l3pzguxv@lcbmvmjpyykq>
+ <f7rhmwrp3fgx3qd7gn3pzczxeztvsg45u4vrl6ls3ylcvflapx@3yi3shfnrmb3>
+ <ae5e32ff2269eb4c190aeb882b17cb1bb8e6c70d.camel@linux.ibm.com>
+Subject: Re: [PATCH bpf-next v7 4/5] bpf: verifier: Support eliding map lookup nullness
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 30, 2025 at 05:31:16PM +0100, Nicolas Frattaroli wrote:
-> The Rockchip RK3588 SoC has two hardware RNGs accessible to the
-> non-secure world: an RNG in the Crypto IP, and a standalone RNG that is
-> new to this SoC.
->=20
-> Add a binding for this new standalone RNG.
->=20
-> The RNG is capable of firing an interrupt when entropy is ready, but
-> all known driver implementations choose to poll instead for performance
-> reasons. Hence, make the interrupt optional, as it may disappear in
-> future hardware revisions entirely and certainly isn't needed for the
-> hardware to function.
->=20
-> The reset is optional as well, as the RNG functions without an explicit
-> reset. Rockchip's downstream driver does not use the reset at all,
-> indicating that their engineers have deemed it unnecessary.
->=20
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
->  .../bindings/rng/rockchip,rk3588-rng.yaml          | 61 ++++++++++++++++=
-++++++
->  MAINTAINERS                                        |  2 +
->  2 files changed, 63 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.ya=
-ml b/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..dff843fa4bf9d5704bbcd1063=
-98328588d80b02d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/rng/rockchip,rk3588-rng.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip RK3588 TRNG
-> +
-> +description: True Random Number Generator on Rockchip RK3588 SoC
-> +
-> +maintainers:
-> +  - Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - rockchip,rk3588-rng
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: TRNG AHB clock
-> +
-> +  # Optional, not used by some driver implementations
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  # Optional, hardware works without explicit reset
+Hi Ilya,
 
-These sorts of comments are not needed, "required" conveys this
-information.
+On Thu, Jan 30, 2025, at 2:06 AM, Ilya Leoshkevich wrote:
+> On Wed, 2025-01-29 at 10:45 -0700, Daniel Xu wrote:
+>> On Wed, Jan 29, 2025 at 09:49:12AM -0700, Daniel Xu wrote:
+>> > Hi Ilya,
+>> >=20
+>> > On Wed, Jan 29, 2025 at 03:58:54PM +0100, Ilya Leoshkevich wrote:
+>> > > On Tue, 2025-01-14 at 13:28 -0700, Daniel Xu wrote:
+>> > > > This commit allows progs to elide a null check on statically
+>> > > > known
+>> > > > map
+>> > > > lookup keys. In other words, if the verifier can statically
+>> > > > prove
+>> > > > that
+>> > > > the lookup will be in-bounds, allow the prog to drop the null
+>> > > > check.
+>> > > >=20
+>> > > > This is useful for two reasons:
+>> > > >=20
+>> > > > 1. Large numbers of nullness checks (especially when they
+>> > > > cannot
+>> > > > fail)
+>> > > > =C2=A0=C2=A0 unnecessarily pushes prog towards
+>> > > > BPF_COMPLEXITY_LIMIT_JMP_SEQ.
+>> > > > 2. It forms a tighter contract between programmer and verifier.
+>> > > >=20
+>> > > > For (1), bpftrace is starting to make heavier use of percpu
+>> > > > scratch
+>> > > > maps. As a result, for user scripts with large number of
+>> > > > unrolled
+>> > > > loops,
+>> > > > we are starting to hit jump complexity verification errors.=C2=A0
+>> > > > These
+>> > > > percpu lookups cannot fail anyways, as we only use static key
+>> > > > values.
+>> > > > Eliding nullness probably results in less work for verifier as
+>> > > > well.
+>> > > >=20
+>> > > > For (2), percpu scratch maps are often used as a larger stack,
+>> > > > as the
+>> > > > currrent stack is limited to 512 bytes. In these situations, it
+>> > > > is
+>> > > > desirable for the programmer to express: "this lookup should
+>> > > > never
+>> > > > fail,
+>> > > > and if it does, it means I messed up the code". By omitting the
+>> > > > null
+>> > > > check, the programmer can "ask" the verifier to double check
+>> > > > the
+>> > > > logic.
+>> > > >=20
+>> > > > Tests also have to be updated in sync with these changes, as
+>> > > > the
+>> > > > verifier is more efficient with this change. Notable, iters.c
+>> > > > tests
+>> > > > had
+>> > > > to be changed to use a map type that still requires null
+>> > > > checks, as
+>> > > > it's
+>> > > > exercising verifier tracking logic w.r.t iterators.
+>> > > >=20
+>> > > > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+>> > > > ---
+>> > > > =C2=A0kernel/bpf/verifier.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 92
+>> > > > ++++++++++++++++++-
+>> > > > =C2=A0tools/testing/selftests/bpf/progs/iters.c=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 14 +--
+>> > > > =C2=A0.../selftests/bpf/progs/map_kptr_fail.c=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+>> > > > =C2=A0.../selftests/bpf/progs/verifier_map_in_map.c |=C2=A0 2 +-
+>> > > > =C2=A0.../testing/selftests/bpf/verifier/map_kptr.c |=C2=A0 2 +-
+>> > > > =C2=A05 files changed, 99 insertions(+), 13 deletions(-)
+>> > >=20
+>> > > [...]
+>> > >=20
+>> > > > @@ -9158,6 +9216,7 @@ static int check_func_arg(struct
+>> > > > bpf_verifier_env *env, u32 arg,
+>> > > > =C2=A0	enum bpf_arg_type arg_type =3D fn->arg_type[arg];
+>> > > > =C2=A0	enum bpf_reg_type type =3D reg->type;
+>> > > > =C2=A0	u32 *arg_btf_id =3D NULL;
+>> > > > +	u32 key_size;
+>> > > > =C2=A0	int err =3D 0;
+>> > > > =C2=A0
+>> > > > =C2=A0	if (arg_type =3D=3D ARG_DONTCARE)
+>> > > > @@ -9291,8 +9350,13 @@ static int check_func_arg(struct
+>> > > > bpf_verifier_env *env, u32 arg,
+>> > > > =C2=A0			verbose(env, "invalid map_ptr to
+>> > > > access map-
+>> > > > > key\n");
+>> > > > =C2=A0			return -EACCES;
+>> > > > =C2=A0		}
+>> > > > -		err =3D check_helper_mem_access(env, regno,
+>> > > > meta-
+>> > > > > map_ptr->key_size,
+>> > > > -					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BPF_READ, false,
+>> > > > NULL);
+>> > > > +		key_size =3D meta->map_ptr->key_size;
+>> > > > +		err =3D check_helper_mem_access(env, regno,
+>> > > > key_size,
+>> > > > BPF_READ, false, NULL);
+>> > > > +		if (err)
+>> > > > +			return err;
+>> > > > +		meta->const_map_key =3D
+>> > > > get_constant_map_key(env, reg,
+>> > > > key_size);
+>> > > > +		if (meta->const_map_key < 0 && meta-
+>> > > > >const_map_key
+>> > > > !=3D -EOPNOTSUPP)
+>> > > > +			return meta->const_map_key;
+>> > >=20
+>> > > Mark Hartmayer reported a problem that after this commit the
+>> > > verifier
+>> > > started refusing to load libvirt's virCgroupV2DevicesLoadProg(),
+>> > > which
+>> > > contains the following snippet:
+>> > >=20
+>> > > 53: (b7) r1 =3D -1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 ; R1_w=3D-1
+>> > > 54: (7b) *(u64 *)(r10 -8) =3D r1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 ; R1_w=3D-1 R10=3Dfp0 fp-8_w=3D-1
+>> > > 55: (bf) r2 =3D r10=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ ; R2_w=3Dfp0 R10=3Dfp0
+>> > > 56: (07) r2 +=3D -8=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ ; R2_w=3Dfp-8
+>> > > 57: (18) r1 =3D 0x9553c800=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ; R1_w=3Dmap_ptr(ks=3D8,vs=3D4)
+>> > > 59: (85) call bpf_map_lookup_elem#1
+>> > >=20
+>> > > IIUC here the actual constant value is -1, which this code
+>> > > confuses
+>> > > with an error.
+>> >=20
+>> > Thanks for reporting. I think I know what the issue is - will send
+>> > a
+>> > patch shortly.
+>> >=20
+>> > Daniel
+>> >=20
+>>=20
+>> I cribbed the source from [0] and tested before and after. I think
+>> this
+>> should work. Mind giving it a try?
+>>=20
+>> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+>> index 9971c03adfd5..e9176a5ce215 100644
+>> --- a/kernel/bpf/verifier.c
+>> +++ b/kernel/bpf/verifier.c
+>> @@ -9206,6 +9206,8 @@ static s64 get_constant_map_key(struct
+>> bpf_verifier_env *env,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return reg->var_off.value;
+>> =C2=A0}
+>>=20
+>> +static bool can_elide_value_nullness(enum bpf_map_type type);
+>> +
+>> =C2=A0static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 struct bpf_call_arg_meta *meta,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 const struct bpf_func_proto *fn,
+>> @@ -9354,9 +9356,11 @@ static int check_func_arg(struct
+>> bpf_verifier_env *env, u32 arg,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 err =3D check_helper_mem_access(env, regno, key_si=
+ze,
+>> BPF_READ, false, NULL);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 if (err)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
+turn err;
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 meta->const_map_key =3D get_constant_map_key(env, reg,
+>> key_size);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 if (meta->const_map_key < 0 && meta->const_map_key !=3D
+>> -EOPNOTSUPP)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return m=
+eta->const_map_key;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 if (can_elide_value_nullness(meta->map_ptr-
+>> >map_type)) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 meta->co=
+nst_map_key =3D
+>> get_constant_map_key(env, reg, key_size);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (meta=
+->const_map_key < 0 && meta-
+>> >const_map_key !=3D -EOPNOTSUPP)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return meta->const_map_key;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 }
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 break;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case ARG_PTR_TO_MAP_VALUE:
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 if (type_may_be_null(arg_type) &&
+>> register_is_null(reg))
+>>=20
+>> Thanks,
+>> Daniel
+>>=20
+>>=20
+>> [0]:
+>> https://github.com/libvirt/libvirt/blob/c1166be3475a0269f5164d87fec62=
+27d6cb34b47/src/util/vircgroupv2devices.c#L66-L135
+>
+> Thanks, I tried this in isolation and it fixed the issue for me.
+> I talked to Mark and he will try it with his libvirt scenario.
 
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
-> +    bus {
-> +      #address-cells =3D <2>;
-> +      #size-cells =3D <2>;
-> +
-> +      rng@fe378000 {
-> +        compatible =3D "rockchip,rk3588-rng";
-> +        reg =3D <0x0 0xfe378000 0x0 0x200>;
-> +        interrupts =3D <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH 0>;
-> +        clocks =3D <&scmi_clk SCMI_HCLK_SECURE_NS>;
-> +        resets =3D <&scmi_reset SCMI_SRST_H_TRNG_NS>;
-> +        status =3D "disabled";
-> +      };
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index bc8ce7af3303f747e0ef028e5a7b29b0bbba99f4..7daf9bfeb0cb4e9e594b80901=
-2c7aa243b0558ae 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20420,8 +20420,10 @@ F:	include/uapi/linux/rkisp1-config.h
->  ROCKCHIP RK3568 RANDOM NUMBER GENERATOR SUPPORT
->  M:	Daniel Golle <daniel@makrotopia.org>
->  M:	Aurelien Jarno <aurelien@aurel32.net>
+Thanks for testing!=20
 
-> +M:	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-^^
-tbh, not really sure this part of the change should be in this patch
+>
+> The code looks reasonable to me, but I have a small concern regarding
+> what will happen if the BPF code uses a -EOPNOTSUPP immediate with an
+> array. Unlike other immediates, IIUC this will cause check_func_arg()
+> to return 0. Is there a reason to have this special?
 
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/rng/rockchip,rk3568-rng.yaml
-> +F:	Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
->  F:	drivers/char/hw_random/rockchip-rng.c
-> =20
->  ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
->=20
-> --=20
-> 2.48.1
->=20
+That's a good point. Lemme check on that.
 
---hYobnhEFDnkdMhyO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ5vIAQAKCRB4tDGHoIJi
-0qgrAQCzakFSQyHjHTH6QESUz0gqsobwUVK1Lds0RZkRNrR/OAD/dXxihZAQuiUY
-9ILx114VGQkUr92cCeWnQD49v7U/hwQ=
-=wfH8
------END PGP SIGNATURE-----
-
---hYobnhEFDnkdMhyO--
+Thanks,
+Daniel
