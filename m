@@ -1,168 +1,137 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670AF819;
-	Thu, 30 Jan 2025 01:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875DF4A35
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 01:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738199743; cv=none; b=b5J7YozqF7gN+mT21n9D4PMDierABDXx/lagOZ0u+RKfXylDdgHyaYjl01Dm/s0P6nTg9t06tAWsoNe5LlYanN8JPP0GvIbmIQ9jqOlpJkx9CS9JHgLmLgXEN2b7obDriKTP9JDf3CT0+rv4E9NvEMf+1wOO6QXAf2ZO0EYmw1w=
+	t=1738199832; cv=none; b=VX0KvEbkOXbxvI3agwNsk20t4GgBnx9dr6c8BfYX+Kv8B5j1H9JTBcmbYRwrZ9AH9RL4pHUPr1VLXFXjW9gqA1XNyskKOxjjZom6EjrB76cs7RU2QX+v44Fmp6KmH8bfMNQE5W2sx2E2WBcaOOmcvlCBYDm0SPfUjRfLjF8Tk7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738199743; c=relaxed/simple;
-	bh=iMXJ4VVzwQBEJVtOzdE6VBxooj9HwN6ZoAbAxUzUS8s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pr3ETivJ8Wbim/ANVJWwR3PnXTBFKgnFrKt6lvJE8FJ46ClJfr1eI8zo/WqwqigbBL9xBmP0HTztsR7lCcFLMg2h2/A82jwPYbFdKJgQKdhTKbENzFwyZcu5knH02TV37csbfaNzivAqR0M0ykZSzEQWsbCnrI96QN09R0beYwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=On7+cl1n; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738199832; c=relaxed/simple;
+	bh=ffujUAFbgmhz7ZUYLUcWVIeAykLQM4Ew03siKaJwKrI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RCKmcdbryNeLOIbRFitjH4KlYdXb7OCVUZ9Ao0vvafagephBEd8tmxK8I89xRiso7RYXYOQuykp5MtcubDWgTd9hRCdOTnNfVO7pZZcN6/XJoB08bpORCO3BV0z4Mq7JtzZjMqTsf6q9o0wtSKTLg4F+SGoN+fPZsMi5/J/07JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MWayy1YE; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="On7+cl1n"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e2362ea655so2417046d6.3;
-        Wed, 29 Jan 2025 17:15:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MWayy1YE"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so61755ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 17:17:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738199741; x=1738804541; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1738199829; x=1738804629; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HKegh2EpTKNUtfTcnTSK1uYtDN9J7j7dQ8HyltMMtSs=;
-        b=On7+cl1nim9j1DCqzWx16Fb3hOD0xr07H2kJ0vZL+38V/OOX64G0fK4q931WsYP5UA
-         ZX5kMHSzhbx5vtJ5aF4Z8MIqN1nCDXNil8dIXmfsHNXpHA+1E/SE13m50DjroaKCilpI
-         8JLrBAjKtRpUGt+IaKE8Vp4jMZkQlf2rp+Yo9RcthBvaCKouwVQ+QxxhQjsYR7DAx3wd
-         bV/uBvVgQD7k8n+w3vhDtbVbpCMvzjVSgXkq/u9NxTKPjuYIkFgmlFGluRh8rpnDiX1n
-         iVU0OP3m1Scm2WqtFvirs0jMP/R/A5kwQvV+Ujz0hzUX+RTR5/1+B4TwUSJHN1K+JNbb
-         hn6g==
+        bh=aV812xzV0e8aXKpif8S9KTZu09HRGN+g2VGxhmlJ8I0=;
+        b=MWayy1YEu7zt6yH03dE+6yhskyWCiBc2wRS5gaMUZZtUs8JZvO5cR9k2C30bl6s4YT
+         jTOGJmf5YQmmpl4LCQTsyOy8t8+/FPZwFElLM7Qcr4bT11yxTKwTmulqdRXq8Bfty9TY
+         7arM6E3wuAY9dzyEXgKtzjW8+9yDDeH2mrkTf4NlaHJQ8v/c0OEtVEXqDT26WTac/nAh
+         KaHRlnt69Gdwd3jSBPOdWL6iqAa8CEefb0yvXHalrpduj/oVCZyAVFgfZUXCbWsPxj1k
+         QKlI7i6W9hUkXeeqnrNWsgiOZwckrigknwYLR5AsiSj/kjmDoOVpd4STzh764naehdxg
+         8ehQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738199741; x=1738804541;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1738199829; x=1738804629;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HKegh2EpTKNUtfTcnTSK1uYtDN9J7j7dQ8HyltMMtSs=;
-        b=DjflK3/7xvhI3QGZYcu/07jt4bEkOY8s3Et4or5hNMpQXVjeD19I+fGSajrPSSyEWU
-         TZvz4KkOoIP/Mjy/HzEnFfNZfofArYn0WYuZ3reUtWQAcqV0Misk1NH+XHFkuvQI0BKO
-         mpEMtLn9QH3g/2eQcja36ibSrIU0Fw1HmoI5jEEcDmvHsObzG3siWCqKivJ7C4fZALbk
-         77+Mlpny9BJhNwB95KhOMkMUDP6R4vi74GuunJnPwxeb+4CDrAwl0DWLNHsu1sUiSODB
-         AphU8nbHMOHfDFESMwqzIj2u96PvCVhS76sRiMxF7Hh6wuUm9jKLLGe5GsE9M63XpHQ2
-         Vn8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVDZhNHhjjNnlg0x7k9JsmYrMvEAs8MQM4mYmZ2X/QzRRIQ3AOfRF441uZHA7ic01tSYBumy5lSrD8QsWU=@vger.kernel.org, AJvYcCVUxBiZk7WWTPCwGdOXKWWP1TAMMKAfjfEC9j+taPm3u6lGsWfcdzizeq57Z4Xl44ttgHiMI9sJ4avVHEzsM8Y=@vger.kernel.org, AJvYcCWwsTeZyJ69Pi3x6h7CcIkRiuMKOd5rmm/fu2j3DAYBHweB/PV3aqOoD9S+6hk4GlgWjKy6MwB0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2dczsq49A89HMttH3FLSDV6VfHA3AILiw31HtxbyuvvjUMGMl
-	XbG++DFRsvTA/bwiBIfwPoA1f62yyFfDPQU890Dy5f60MWZtJ07Z
-X-Gm-Gg: ASbGnct/NfgCO/HUvdOPDIRiZ2yVsk9fcc4m1ufI/8JdBY8u6HiXoe/lGuXcQj1DzSD
-	+SUv7YoabvSHkEy0LsiJAuKhztQzEObsFVfWdYoVdHq2QlRAfoCooFf8LB+WunzBywe50URPaG7
-	2CxUayhBMGCScCkFtbWxV4KaXC3CJpcGgF7yXLwc2vzbr54ANfYCHxCjLw4aaJ6M3WPdCK6yjkS
-	UT1ybS0JsEv6uicVM08xWtDA/4pLXnVBzMwavFz4YWowmWpbEDd1eGicqJV1TZxd1ElIHevMjiK
-	lvNIBvJj3fh21Vx50ebPwhSY1RXbdJ0hwJ8OA7wkW5g7Qs4Ux5Dpa+6Vh2Ab9Z+EuxNWgSq5DTr
-	4f2IJpg==
-X-Google-Smtp-Source: AGHT+IFRVe8KbgAHHR3mO7reIimkVt4TlkjskaYMqr+SD06SBZVkEITSeORXZAmNoyf3IBgcAEuXcA==
-X-Received: by 2002:a05:6214:5985:b0:6dd:84b7:dd86 with SMTP id 6a1803df08f44-6e243c80546mr106859026d6.36.1738199741194;
-        Wed, 29 Jan 2025 17:15:41 -0800 (PST)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e2547f0e00sm1027056d6.24.2025.01.29.17.15.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 17:15:40 -0800 (PST)
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 458C61200043;
-	Wed, 29 Jan 2025 20:15:39 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Wed, 29 Jan 2025 20:15:39 -0500
-X-ME-Sender: <xms:u9KaZx9y0t60We4j14DCVffM84lIdzFxOJsBnf2aSDuRwSqefH9MaQ>
-    <xme:u9KaZ1uNrFC9t2yerab7ETzyOIoYx53NV4CSQFpquBXjLhRMVbJ8By4m7K2oWLkmV
-    gcq2z81Q3hXtKo7dQ>
-X-ME-Received: <xmr:u9KaZ_BJvJG3beLntRNTsrhQAFxMjlkVR8BoHe478V4ir5_9BRSYYkZcE9o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeggeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvden
-    ucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrd
-    gtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleei
-    vedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhi
-    thihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmh
-    grihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepfedupdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopehfuhhjihhtrgdrthhomhhonhhorhhisehgmh
-    grihhlrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohephhhkrghllhif
-    vghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhmghhrohhsshesuhhmihgthh
-    drvgguuhdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:u9KaZ1eHvMU7fOSUnfgTgAQtRAWhxE4GZN1qGnx2c4dykktPD9JO5A>
-    <xmx:u9KaZ2OOVQXEWcC-aNnkzoLOUyjeHqdQEdviGMV0suuwGjlFDeIwJQ>
-    <xmx:u9KaZ3kuhcFaJIgTkPbvSQiZ3zT5DoOKXwQutZwrefWLmjyXEjy0jQ>
-    <xmx:u9KaZwsRn0VsgwtfTSPrWFuJXcov5isDGPJXhm65vL5Oxekb0y8qWw>
-    <xmx:u9KaZ4vw3tbmOLBxioIrwBFWhKQT3JTS1WeqoSIvvtwkrTYAxYjiUouI>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 29 Jan 2025 20:15:38 -0500 (EST)
-Date: Wed, 29 Jan 2025 17:14:54 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: peterz@infradead.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, netdev@vger.kernel.org,
-	andrew@lunn.ch, hkallweit1@gmail.com, tmgross@umich.edu,
-	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@samsung.com, aliceryhl@google.com,
-	anna-maria@linutronix.de, frederic@kernel.org, tglx@linutronix.de,
-	arnd@arndb.de, jstultz@google.com, sboyd@kernel.org,
-	mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, tgunders@redhat.com
-Subject: Re: [PATCH v9 1/8] sched/core: Add __might_sleep_precision()
-Message-ID: <Z5rSjsdwG2aonZrB@boqun-archlinux>
-References: <20250125101854.112261-1-fujita.tomonori@gmail.com>
- <20250125101854.112261-2-fujita.tomonori@gmail.com>
- <20250128113738.GC7145@noisy.programming.kicks-ass.net>
- <20250130.085644.2298700991414831587.fujita.tomonori@gmail.com>
+        bh=aV812xzV0e8aXKpif8S9KTZu09HRGN+g2VGxhmlJ8I0=;
+        b=D1kUZfMXgsxzYnLw3xIpPV1PD1WLFrGQXNqscnIghCzAm6SzPL41u3ecB394LljNfZ
+         kXM7kw/0721lw81LOIBZ0+pQgsuj6rhcihtraZ8qYmts3mJQR6ZzmHYZ1YYeEVgg7KYV
+         3A4+5SV5WlTut9VXS8v0EOlv81ZOcFsJae+v22kedrtvFCB2ZUfDpC3n57SqVgPUcSis
+         8hIjmhHl32AoS3A6cFR5manTYgnJKETPLUDmIYJf7/libqYJDaXz2syvSWxxiwUJTB4C
+         wAqEZdKqHCDzov6PCiyJCq8ZWYwZq6Zrr00X/RhmhGJp+347puFghLqyT8Q1mKNeiqyz
+         jScw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQnbXb3KRz45XNvxihrs4wEhTbMy4UQB6JU7sfay6JkHbhxzOu6UcLm/dowO2gRU1z6ukUGJ+p7XjgPIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVe1496Qoyf5JVZ43SmOV/F42XD2IY52aEyy2m8d3l8T19Z7L/
+	v/b5DgCRoHxRmwGeNz9EL4gYu7cok+j7ARIAU6nCC6svREOJqxTWkoaFWS+fWwsVOwZuv/AbgpC
+	Gr8gTPogNdexhZLoENsqhCddRgAKV1+xXBTZ1
+X-Gm-Gg: ASbGncs2mYGE139mSUdHQbvJVaPfyqSD7umogbetSJHblokeMdigfWJn/+haoH0F+r5
+	btsfhwVhnl56YBNJWbIO7O5s6lUAr6sUGhyXzgG8VPHPtEa7uRFmInti4guQMzpa3DxT/NuSK8A
+	==
+X-Google-Smtp-Source: AGHT+IFhocnKz4pRt+VZ0uZ9s3H2wf4R31X+Xz/KNOrL7es1lE5yacExWvi0pwSx5uErWY3GdGGuofp+Or8NaGNpP0g=
+X-Received: by 2002:a05:6e02:1fe7:b0:3cf:fbc9:5c10 with SMTP id
+ e9e14a558f8ab-3d0098e6eeamr1546535ab.26.1738199829397; Wed, 29 Jan 2025
+ 17:17:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130.085644.2298700991414831587.fujita.tomonori@gmail.com>
+References: <20250109222109.567031-1-irogers@google.com> <20250109222109.567031-5-irogers@google.com>
+ <Z4F3qxFaYnMTtPw7@google.com> <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
+ <Z4WNT_UX9eMD_txf@google.com> <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
+ <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
+ <Z4f3fDXemAMpBNMS@google.com> <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
+ <Z5qjwRG5jX9zAGtf@google.com>
+In-Reply-To: <Z5qjwRG5jX9zAGtf@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 29 Jan 2025 17:16:58 -0800
+X-Gm-Features: AWEUYZkyz1aRG7eZlk2U-0ehtuXuPlJRKOQYBIhCifcFv0gorlC6qNGUTSogmnQ
+Message-ID: <CAP-5=fV4Q-J+Coybk5Uw=Xpx9sm5MG=2b-fvRLX14K+ZJcmz5Q@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, 
+	Atish Patra <atishp@rivosinc.com>, Leo Yan <leo.yan@arm.com>, 
+	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 30, 2025 at 08:56:44AM +0900, FUJITA Tomonori wrote:
-> On Tue, 28 Jan 2025 12:37:38 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > On Sat, Jan 25, 2025 at 07:18:46PM +0900, FUJITA Tomonori wrote:
-> >> Add __might_sleep_precision(), Rust friendly version of
-> >> __might_sleep(), which takes a pointer to a string with the length
-> >> instead of a null-terminated string.
-> >> 
-> >> Rust's core::panic::Location::file(), which gives the file name of a
-> >> caller, doesn't provide a null-terminated
-> >> string. __might_sleep_precision() uses a precision specifier in the
-> >> printk format, which specifies the length of a string; a string
-> >> doesn't need to be a null-terminated.
-> >> 
-> >> Modify __might_sleep() to call __might_sleep_precision() but the
-> >> impact should be negligible. strlen() isn't called in a normal case;
-> >> it's called only when printing the error (sleeping function called
-> >> from invalid context).
-> >> 
-> >> Note that Location::file() providing a null-terminated string for
-> >> better C interoperability is under discussion [1].
-> > 
-> > Urgh :/
-> 
-> Yeah... so not acceptable?
-> 
+On Wed, Jan 29, 2025 at 1:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+> On Wed, Jan 15, 2025 at 01:20:32PM -0800, Ian Rogers wrote:
+> > On Wed, Jan 15, 2025 at 9:59=E2=80=AFAM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > > I think the behavior should be:
+> > >
+> > >   cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > >   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > >   cpu_cycles -> no legacy -> sysfs or json
+> > >   cpu/cycles/ -> sysfs or json
+> > >   cpu/cpu-cycles/ -> sysfs or json
+> >
+> > So I disagree as if you add a PMU to an event name the encoding
+> > shouldn't change:
+> > 1) This historically was perf's behavior.
+>
+> Well.. I'm not sure about the history.  I believe the logic I said above
+> is the historic and (I think) right behavior.
 
-I would like to see some concrete and technical reasons for why it's not
-acceptable ;-) I'm not sure whether Peter was against this patch or just
-not happy about Location::file() providing a null-terminated string is a
-WIP.
+You're wrong as you are describing the behavior post:
+https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
+commit a24d9d9dc096fc0d0bd85302c9a4fe4fe3b1107b from Nov 2022, but
+somehow without legacy event fall backs which Intel added with a PMU
+for hybrid.
 
-To me, null-terminated string literals don't provide much benefits
-other than you can pass it via only one pointer value, the cost is that
-you will always need to calculate the length of the string when needed,
-so hard to say it's a straightforward win.
+The behavior in this patch series is best for RISC-V, presumably ARM
+(particularly for Apple M? CPUs), carries ARM and Intel's tags,
+implements the behavior Arnaldo asked for, and solves the
+inconsistency that I think is fundamentally wrong in the tool that PMU
+names shouldn't matter on an event name (an inconsistency my past
+fixes introduced). It is also part of solving other problems:
+https://lore.kernel.org/linux-perf-users/20250127-counter_delegation-v3-0-6=
+4894d7e16d5@rivosinc.com/
 
-Regards,
-Boqun
+You've not pointed at anything wrong in the scheme that these patches
+introduce, and are supported by vendors, except that it is a behavior
+change. I can, and have, pointed at many issues with your proposal
+above and the current behavior. The behavior change came about to work
+around PMU bugs over 2 years ago but only partially did so. It makes
+sense to remedy this and for the clean, consistent behavior this
+series achieves. It is unfortunate that it is a behavior change, but
+the first step for that was made 2 years ago. I think it also makes
+sense that something self described as legacy is a lower priority and
+of the past (wrt event naming moving forward).
 
-> Then I switch to the implementation with Rust macros, which gives a
-> null terminated string.
+Thanks,
+Ian
