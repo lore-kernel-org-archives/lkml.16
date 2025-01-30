@@ -1,116 +1,160 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0828C2770C
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258852770C;
+	Thu, 30 Jan 2025 17:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738257703; cv=none; b=kGQbQ+IX99rNFcJH7q1mPPI2WYWrPbE6JyXz+YUMhSk2q6RkIpxhLuBStnjpMA7h16CHajU5wFM6/IVWTvCYCc62/31VdAtoSnOFLTad18GfIRKmajb7tIIqiw9tiRNMYjnvmnEBUYZsJ8VCJGizT7GYu7WYKLYGL+4/6s9wThs=
+	t=1738257795; cv=none; b=uS9siY3wV7+QlXujOFbja5vK2p8NMBHANnwy3v3+/C3upAvNix6y/bg9p/NK3LW+bwT6sP7Zkllj8Okx6apo2oLWvdaOjkFHaq5WPLZQNR8eN02nU+XWOumXFRiWGOpLsvmSunEJSZx3XRzJ9a7oFdt2Ddv2vNQLwrt1lr9evfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738257703; c=relaxed/simple;
-	bh=EmlbAWWBKZdvIU2V9lLarLuH6pI9xLKB4n4tT0QWAsA=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Kv4bQ2MTMGGYFGhw86IPuMpGEd35drBRNgjYi95GsxXAOmsBcrnS3bBXeiR64vm3unMouUH+W4ezAA7bvCVOOShBlRo4KmnWdNEli8FNb6cck7eLjvGS2FxPe2goIIZH8VR8LuwRFtPNBTzWJB8LqHStw1lQvuS8/q0Kpwq9TgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com; spf=pass smtp.mailfrom=jrtc27.com; dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b=JaLrz+vr; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jrtc27.com
+	s=arc-20240116; t=1738257795; c=relaxed/simple;
+	bh=yH4FEbQVXyMxFaB7hk1ruwl/3FyAw8z0JzuE+B/DXpM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ERKgkTT7TUXz91oi/BYNTi8l//KPdKsPQn8p97lnyWS6Ou7qiZ5mOJE4PqqEAw3hzt27T6+goKtgAMdgpwOf6sVSTkcLNXzHLgUs24uA4lfZxc4S5UyD+AHWAFhY2PadjWTnocunoKe1nO3k5uyTYBhnZe33SeC+yaMADreU6PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=upySuXt6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="JaLrz+vr"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4368a293339so12537125e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:21:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jrtc27.com; s=gmail.jrtc27.user; t=1738257700; x=1738862500; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EmlbAWWBKZdvIU2V9lLarLuH6pI9xLKB4n4tT0QWAsA=;
-        b=JaLrz+vrF8pjRsOJlLnlA3aiZFCnmUT0MsUrNt/IgJ9lgU5Ko/Ua2pAz8e5w5Fck/D
-         1sywoxvDbVL67z4QEPRKbSXuylrQDlJZ+pJ1odt+B9lo46ovbsdo84A17vjdZ4g6pT+J
-         /m8dD/kFfqZvhlBQ3SJjDCuGyMauXJ26LMPZ1Ar3zNEp+LvSwVhkRCdrgAlR9IUJxCU0
-         h9WNPvntogMF5yBaoZJYuQ4pTJv1j18QQ7cMM+cpKhfKuXsjx8XutwkihIBys0SIu+Eh
-         C/eYJ1qWBYcb03TEcOmNtniswMI0H7sEGMEePtfVn44lRYHNg7hHkQbGbQ0F8ij8TC5J
-         /Kgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738257700; x=1738862500;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EmlbAWWBKZdvIU2V9lLarLuH6pI9xLKB4n4tT0QWAsA=;
-        b=TEGzvzgS6VGvnbT7KJ/5x80jWrFQDVEt21Vxs19m+AtsQK2QTigINXbQQ15JQzwuj/
-         AOfQdpIOfFfjJBO0s0YQaRox6d+ZlRQ13u7/e6gxa/LKApSkdhl2xoLb5it4jSSdOeOr
-         4uDAtm0gh4D1BhFFPb6VhOHuvQR2IjH0xBzAQibRaLrqXbCzDBgS0SWRPJ1MwzJldFqV
-         pTAcCf1M+sbNswUNPeyJ171h3eDTYvA1+3FF0f7DQVhc2AfW+PZ7EgWhZ80D3tqW7ac7
-         iC39qAM84BNRYyxqXDfZsX1ddKs3biWEcl+eYxITW8G5ryl4LerOrgFgpw3o6F1vlzzJ
-         cx6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUv6zrwX9SfidEYHfSHqX4hZUQ3NfKbJP8mzLe6r/aW+RudF1SGc5EKpaiRd4m2b5R9eijudRbuXMiwqIw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLYSzh1YJCUB3hMjBO6ZRFWjYDGxHwb58uLPP8JNn807p9aRY5
-	cReVsUbhRJbU3Q7qyPAtzNGSRgDHk09vQrZ+/K7UM1/68BS+D51yUzVuL0nyooI1B0vRZzLvg3J
-	d
-X-Gm-Gg: ASbGncvlyNsm9KUbgpVZm0r3OY27PXOv0s9jDXZ5qMDE4AczFAOrI45CqqiqyUFZ9H6
-	u1Q6KX0mFgpw8LshV2OGF6TgtQcrXCurC4oyjt2pxX1UZucVNftdvrmYmDRnpvOoCVHh0KsahlN
-	jYCOTEcMBArleZyF3QFWQqYWttrVfhZcP4GifhIrfTsulSg77IbyYqIj9mLUli/X+o/6K14dVR4
-	1wt61dJZbXG5pQ/jAhY4T0Wy//vrEv4zJlWTR6ERiXX2NFDPcuck0IXpQTwabPg4ohWB/3Z4oSs
-	GBRurx+CPFmPnx1Q9kiNAaizdAb7
-X-Google-Smtp-Source: AGHT+IEA3QinVd6YP+HnUwsrfnbEDxZBHCObVP3XKrEUyZXRM0hNCM4PGW5LxoktwFLYP/PvE7wd0A==
-X-Received: by 2002:a05:600c:3149:b0:434:fd15:3adc with SMTP id 5b1f17b1804b1-438dc424f5emr62875505e9.25.1738257699900;
-        Thu, 30 Jan 2025 09:21:39 -0800 (PST)
-Received: from smtpclient.apple ([131.111.5.201])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ec02bsm2593578f8f.13.2025.01.30.09.21.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Jan 2025 09:21:39 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upySuXt6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1F4AC4CED2;
+	Thu, 30 Jan 2025 17:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738257793;
+	bh=yH4FEbQVXyMxFaB7hk1ruwl/3FyAw8z0JzuE+B/DXpM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=upySuXt69EgxtJcJBjPKJLKq/sT++GHdJLl2ro5gBbZNK4U64HWApRXSLxfb8eFw0
+	 CI/IjFGVut8N3OHewG3MvKiRmcSfSNNZ5ykiHjTTGmeYvMj9VBh5/2BZ1n2iVT7nRk
+	 +EI23txGIo3cN3lTDEqeHccBBtQHqfvwuULpBtGjEi0XC4aivzW02RTO80hTOgADBc
+	 wbX9ocvq5U3cJU64lLn7bWeQyrWuXI050ij/SsZRqm8NAzJfMoTZk8rUqPfzOJTngl
+	 +g8cdyMfWtmFvIENKtDO8EOaaMMMKJtNs7wz+mFGikGXV2YXP/9TUsiVK8Mo47P7TW
+	 GabRao+AJ+L0Q==
+Date: Thu, 30 Jan 2025 17:23:04 +0000
+From: Simon Horman <horms@kernel.org>
+To: Basharath Hussain Khaja <basharath@couthit.com>
+Cc: danishanwar@ti.com, rogerq@kernel.org, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+	tony@atomide.com, richardcochran@gmail.com, parvathi@couthit.com,
+	schnelle@linux.ibm.com, rdunlap@infradead.org,
+	diogo.ivo@siemens.com, m-karicheri2@ti.com,
+	jacob.e.keller@intel.com, m-malladi@ti.com,
+	javier.carrasco.cruz@gmail.com, afd@ti.com, s-anna@ti.com,
+	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org, pratheesh@ti.com, prajith@ti.com,
+	vigneshr@ti.com, praneeth@ti.com, srk@ti.com, rogerq@ti.com,
+	krishna@couthit.com, pmohan@couthit.com, mohan@couthit.com
+Subject: Re: [RFC v2 PATCH 05/10] net: ti: prueth: Adds ethtool support for
+ ICSSM PRUETH Driver
+Message-ID: <20250130172304.GD13457@kernel.org>
+References: <20250124122353.1457174-1-basharath@couthit.com>
+ <20250124134056.1459060-6-basharath@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH] riscv/atomic: Do proper sign extension also for unsigned
- in arch_cmpxchg
-From: Jessica Clarke <jrtc27@jrtc27.com>
-In-Reply-To: <mvmwmec2t7u.fsf@suse.de>
-Date: Thu, 30 Jan 2025 17:21:28 +0000
-Cc: Alexandre Ghiti <alex@ghiti.fr>,
- linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CC2D9220-F8DE-4CC8-ACAD-7B1A21E276FE@jrtc27.com>
-References: <mvmed0k4prh.fsf@suse.de>
- <c9cbc2be-d1fd-44ef-aa14-fd25a5ff8490@ghiti.fr> <mvm5xlw4anb.fsf@suse.de>
- <ac53a62e-4f89-49c9-a755-fdfa7a582337@ghiti.fr> <mvmwmec2t7u.fsf@suse.de>
-To: Andreas Schwab <schwab@suse.de>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250124134056.1459060-6-basharath@couthit.com>
 
-On 30 Jan 2025, at 15:53, Andreas Schwab <schwab@suse.de> wrote:
->=20
-> On Jan 30 2025, Alexandre Ghiti wrote:
->=20
->> a2 is used as it is passed by the calling function, so we can't be =
-sure a2
->> is sign extended to me, what am I missing?
->=20
-> 32-bit scalar arguments are guaranteed to be sign extended on entry.
+On Fri, Jan 24, 2025 at 07:10:51PM +0530, Basharath Hussain Khaja wrote:
+> From: Roger Quadros <rogerq@ti.com>
+> 
+> Changes for enabling ethtool support for the newly added PRU Ethernet
+> interfaces. Extends the support for statistics collection from PRU internal
+> memory and displays it in the user space. Along with statistics,
+> enable/disable of features, configuring link speed etc.are now supported.
+> 
+> The firmware running on PRU maintains statistics in internal data memory.
+> When requested ethtool collects all the statistics for the specified
+> interface and displays it in the user space.
+> 
+> Makefile is updated to include ethtool support into PRUETH driver.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
 
-Firstly, the calling convention is irrelevant if the function is
-inlined, which this almost always will be.
+...
 
-Secondly, whilst GCC (still?) maintains the invariant that 32-bit
-registers are kept sign-extended in registers on RISC-V, and there=E2=80=99=
-s a
-non-normative note in the unprivileged spec about this, LLVM does not,
-any extra bits are wholly unspecified, so you must not write inline
-assembly that depends on them being well-define, either by ignoring the
-bits or by converting your arguments to be whole-register types. If
-your compiler has already extended the value in the manner you care
-about then that=E2=80=99ll be a no-op, and if it hasn=E2=80=99t then =
-it=E2=80=99ll do what you
-need.
+> diff --git a/drivers/net/ethernet/ti/icssm/icssm_ethtool.c b/drivers/net/ethernet/ti/icssm/icssm_ethtool.c
 
-We had an issue like this years ago in FreeBSD (also for a uint32_t
-CAS) and this was the conclusion I reached [1].
+...
 
-Jess
+> +static const struct {
+> +	char string[ETH_GSTRING_LEN];
+> +	u32 offset;
+> +} prueth_ethtool_stats[] = {
+> +	{"txBcast", PRUETH_STAT_OFFSET(tx_bcast)},
+> +	{"txMcast", PRUETH_STAT_OFFSET(tx_mcast)},
+> +	{"txUcast", PRUETH_STAT_OFFSET(tx_ucast)},
+> +	{"txOctets", PRUETH_STAT_OFFSET(tx_octets)},
+> +	{"rxBcast", PRUETH_STAT_OFFSET(rx_bcast)},
+> +	{"rxMcast", PRUETH_STAT_OFFSET(rx_mcast)},
+> +	{"rxUcast", PRUETH_STAT_OFFSET(rx_ucast)},
+> +	{"rxOctets", PRUETH_STAT_OFFSET(rx_octets)},
 
-[1] https://reviews.freebsd.org/D22084
+Hi Roger, Basharath, all,
 
+There seems to be some overlap between the above and struct rtnl_link_stats64.
+
+Please implement those stats which are present in struct rtnl_link_stats64
+using ndo_get_stats64 and omit them from your implementation of
+get_ethtool_stats.
+
+IOW, get_ethtool_stats() is for extended stats, whereas is for standard
+stats ndo_get_stats64().  And standard stats should not be presented to the
+user as extended stats.
+
+Link: https://docs.kernel.org/networking/statistics.html#notes-for-driver-authors
+
+> +	{"tx64byte", PRUETH_STAT_OFFSET(tx64byte)},
+> +	{"tx65_127byte", PRUETH_STAT_OFFSET(tx65_127byte)},
+> +	{"tx128_255byte", PRUETH_STAT_OFFSET(tx128_255byte)},
+> +	{"tx256_511byte", PRUETH_STAT_OFFSET(tx256_511byte)},
+> +	{"tx512_1023byte", PRUETH_STAT_OFFSET(tx512_1023byte)},
+> +	{"tx1024byte", PRUETH_STAT_OFFSET(tx1024byte)},
+> +	{"rx64byte", PRUETH_STAT_OFFSET(rx64byte)},
+> +	{"rx65_127byte", PRUETH_STAT_OFFSET(rx65_127byte)},
+> +	{"rx128_255byte", PRUETH_STAT_OFFSET(rx128_255byte)},
+> +	{"rx256_511byte", PRUETH_STAT_OFFSET(rx256_511byte)},
+> +	{"rx512_1023byte", PRUETH_STAT_OFFSET(rx512_1023byte)},
+> +	{"rx1024byte", PRUETH_STAT_OFFSET(rx1024byte)},
+
+Similarly, the above, along with rxOverSizedFrames and rxUnderSizedFrames
+below seem to be RMON (RFC 2819) statistics. So I think they should
+be handled by implementing get_rmon_stats().
+
+> +
+> +	{"lateColl", PRUETH_STAT_OFFSET(late_coll)},
+> +	{"singleColl", PRUETH_STAT_OFFSET(single_coll)},
+> +	{"multiColl", PRUETH_STAT_OFFSET(multi_coll)},
+> +	{"excessColl", PRUETH_STAT_OFFSET(excess_coll)},
+
+And likewise, the section above and below seem to overlap
+with Basic IEEE 802.3 MAC statistics which I believe
+should be handled by implementing get_eth_mac_stats()
+
+> +
+> +	{"rxMisAlignmentFrames", PRUETH_STAT_OFFSET(rx_misalignment_frames)},
+> +	{"stormPrevCounterBC", PRUETH_STAT_OFFSET(stormprev_counter_bc)},
+> +	{"stormPrevCounterMC", PRUETH_STAT_OFFSET(stormprev_counter_mc)},
+> +	{"stormPrevCounterUC", PRUETH_STAT_OFFSET(stormprev_counter_uc)},
+> +	{"macRxError", PRUETH_STAT_OFFSET(mac_rxerror)},
+> +	{"SFDError", PRUETH_STAT_OFFSET(sfd_error)},
+> +	{"defTx", PRUETH_STAT_OFFSET(def_tx)},
+> +	{"macTxError", PRUETH_STAT_OFFSET(mac_txerror)},
+> +	{"rxOverSizedFrames", PRUETH_STAT_OFFSET(rx_oversized_frames)},
+> +	{"rxUnderSizedFrames", PRUETH_STAT_OFFSET(rx_undersized_frames)},
+> +	{"rxCRCFrames", PRUETH_STAT_OFFSET(rx_crc_frames)},
+> +	{"droppedPackets", PRUETH_STAT_OFFSET(dropped_packets)},
+> +
+> +	{"txHWQOverFlow", PRUETH_STAT_OFFSET(tx_hwq_overflow)},
+> +	{"txHWQUnderFlow", PRUETH_STAT_OFFSET(tx_hwq_underflow)},
+> +	{"vlanDropped", PRUETH_STAT_OFFSET(vlan_dropped)},
+> +	{"multicastDropped", PRUETH_STAT_OFFSET(multicast_dropped)},
+> +};
+
+...
