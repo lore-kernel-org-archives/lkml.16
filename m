@@ -1,158 +1,101 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C7301A7046;
-	Thu, 30 Jan 2025 11:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86921BC065;
+	Thu, 30 Jan 2025 11:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738236138; cv=none; b=f8A/GY7YpDB9uvdOgPQyj9O6X3C85aHtx9/LJ/tPbkvuWkE07FJVZ4jbjV9KomO4gSNGeW6XCX1bdxMjmJU4Hffa5eY+dt2tOfhS0zCTr8mWjunm1sUGh75TLyYHq/NgMW99Ip3V3Wln52TlmR5MA58Amcnu9qcii9vtr8KGPC4=
+	t=1738236249; cv=none; b=JdTI7itO1r6G+5A5j81G3+xUKGpXZOCZmhf/9kuJ993BGSsVTX2fk+ohyQ+/d0a26titABF93t1buUOyJLxWHJf8ks/wtumed1xhCVxIsLzyFh+sOVaRDe6aV0aV6I14vYulnMsVF2u2piK9/6Pmwb5srTLBEmfTS3iIQvofPhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738236138; c=relaxed/simple;
-	bh=MghFTWMvhJ+aN7aFXsfim1mSQbCrS8tySxPnq4M2kjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RH296WwIxTpxaq2ZXqI58hPWdhLFwSIXuhVTSqpnlXuO+n97xZKm/kN4PJWmnG6MMLA6agUxGzuuX4SReAzNyFDJsOgu8rvAnPfZlVVnPovc7dG0rdGbUV4jZ9ulEu0jE/e/vHNeBAe7uIerZ+WEHDqAN2nYfLjILMq55QeD1JE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 2997B72C97E;
-	Thu, 30 Jan 2025 14:22:08 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-	id F28277CCB3A; Thu, 30 Jan 2025 13:22:07 +0200 (IST)
-Date: Thu, 30 Jan 2025 13:22:07 +0200
-From: "Dmitry V. Levin" <ldv@strace.io>
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: linux-snps-arc@lists.infradead.org, Rich Felker <dalias@libc.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andreas Larsson <andreas@gaisler.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, sparclinux@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>,
-	Eugene Syromyatnikov <evgsyr@gmail.com>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Jonas Bonn <jonas@southpole.se>, linux-s390@vger.kernel.org,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Vineet Gupta <vgupta@kernel.org>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	strace-devel@lists.strace.io, linux-arch@vger.kernel.org,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Mike Frysinger <vapier@gentoo.org>,
-	Davide Berardi <berardi.dav@gmail.com>,
-	Renzo Davoli <renzo@cs.unibo.it>, linux-um@lists.infradead.org,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Borislav Petkov <bp@alien8.de>, loongarch@lists.linux.dev,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Stafford Horne <shorne@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Brian Cain <bcain@quicinc.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-parisc@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Oleg Nesterov <oleg@redhat.com>, Dinh Nguyen <dinguyen@kernel.org>,
-	linux-riscv@lists.infradead.org,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Richard Weinberger <richard@nod.at>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Alexey Gladkov <legion@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 2/6] syscall.h: add syscall_set_arguments() and
- syscall_set_return_value()
-Message-ID: <20250130112207.GA6617@strace.io>
-References: <20250128091626.GB8601@strace.io>
- <yt9dwmecya4g.fsf@linux.ibm.com>
+	s=arc-20240116; t=1738236249; c=relaxed/simple;
+	bh=wDl2kfGArafP0t3yD1cDiGvh5wGA0nD57PSF/Ozc0fU=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=cs7iKwVZWv1vDOAoAF9xl9BZFgbRnHjtfWWwOniHxTgzFBYBDCB5SfWpe3H6mYk+I4lgHNVDtaYyzWWdosMiQTsBqfCqMDcinq4W5jREVZV+LbXkl5eJF7mHXAOCvd3iPU024E/XixNmFWPxdKHGGlyMGE+S15PCjfUbGhFLmOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsQspPtZ; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsQspPtZ"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4361815b96cso4447655e9.1;
+        Thu, 30 Jan 2025 03:24:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738236244; x=1738841044; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Id92T0AVX6JDwaxiz3z7oRBD6wW+GTifuBoqUY0sTA=;
+        b=gsQspPtZ81aBimV9bj/pdPd8nM6yfXJ8NADl+XtoGPZt1NXM5W2TbNm0yJUG6BQa8S
+         kJuI2A6nDUXH9XoCVZNcOwjwwTmYmHKA5bxs8oAw8VX86pQXQAsF48ySHqhPust3b2YN
+         0JY+rv+WXJNHcbWY9LBTIhabj9RqVOg1dMyp2oa82KWBD/yu8ow8xk2X/2CB3D5QUO4F
+         S7mlBQ6gRd0fbzVNijIFrgVlk2aezeNHC2Yzk2OZW54qgko5wJDOuC9UH2589o4hyXgU
+         gxwCRSfsPmLYkgCrmkjzXGLu4mMjAqo3F8bbr4tB9rZiK6gkSNttHOtip5S3C7Hazy1i
+         k2Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738236244; x=1738841044;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Id92T0AVX6JDwaxiz3z7oRBD6wW+GTifuBoqUY0sTA=;
+        b=MLBZ5AAwACWnGzvAjUzQu+mrKXOtv2EeHNNrO++WELB5Ofu1AiViAcaQhgS9vR+XeU
+         LoOhQpdEh5rn5Duv7ooAFwuhpYFNfYwItaagYY07oepf1xX59pHD8DDAy4D5BG19pvch
+         69fTR98XJEg8nqH0+3Ft9Hikph1q9HpfxQ/JX/hGZfDDHqGiylipJMhk00zVJg4cQk7L
+         F6kHHrCNaMajBEYv/fbYWWwSKNSixzTLu0FR/Ukxl7lcyYhVT7kHrtS95IVXNWp8P+Ga
+         8Fx+kpiWOczYUuPTQjaud0sk1J8XhURgB0rB+jyHOTBW2/Je0PfISiMMbRuVSg5nmqcX
+         y7qA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgPXzyinkNz6DxIOK7lUP3B15wVgWJRAwnGFMGorx2qWm+xF8evWC8xvp19y2S8ghhOZA=@vger.kernel.org, AJvYcCWLJHOJ0NzTAGO061tTm/TPFJiQfN7DxTTTIu9hDBrIr0N7ho/9iqZ0LbdB80TiSq3lYOvuh1oHcuLeqS7E@vger.kernel.org, AJvYcCXzi80VCHmIY+Bewu15DtrVc3D5lnezUoTi+ztelujOlDN5VW6ZJNwYyO8jzCl4/vCdMDWUaHd/T2wD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE8J5oRE3p78IiqfmkpZpyfAD0ujDjlsbwILWeX1OFuC45MOkE
+	/n9MXr9ZGzGxT0kZzmdOrCshbc/LLFTWLh+h9Tj5EuZmvKT69stHhKO1CA==
+X-Gm-Gg: ASbGncv3UeEDJOnUKylOljseL3QUc0IkzHrLmgd2Rt5+Od7j1Hxs3ypnG8yASTYaEg3
+	2HEQf4kfuci/BLELPisAPL8MPgNi+qdgLIXyBMh4MGFnfrQW/tyrZ5j/IYN8OM6rumD73Dt3BkZ
+	k5BdXGCezWUcpRNnyKvLvnXHDJ3oz1EiszXFCFfld4btvD47iuPINAx98eQVSyy52kBfAr4/DbW
+	4g1pQQoOB1HeEUiForKlY+U3LtvZjnW5jVwsS9VdnjagCdxbAdOtZRBtAsTPv/w+riOA9vxAMzY
+	uwEyddreNwKJtxFfS0z5fdCewG15
+X-Google-Smtp-Source: AGHT+IGn3W76KCgmgMIkQT/WdD1sCcWCm5LqI+wFsAmXytxdLRcHtMo25bA2WjiLnRFQbbwNF4GiZg==
+X-Received: by 2002:a05:600c:3494:b0:434:a315:19c with SMTP id 5b1f17b1804b1-438dc3a85b3mr56757135e9.3.1738236244282;
+        Thu, 30 Jan 2025 03:24:04 -0800 (PST)
+Received: from imac ([2a02:8010:60a0:0:846f:7c2d:e5a5:73a3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438d75de282sm49377315e9.2.2025.01.30.03.24.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 03:24:03 -0800 (PST)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  "Jonathan Corbet"
+ <corbet@lwn.net>,  linux-kernel@vger.kernel.org,  Bill Wendling
+ <morbo@google.com>,  Justin Stitt <justinstitt@google.com>,  Nick
+ Desaulniers <ndesaulniers@google.com>,  bpf@vger.kernel.org,
+  llvm@lists.linux.dev,  workflows@vger.kernel.org
+Subject: Re: [RFC 0/6] Raise the bar with regards to Python and Sphinx
+ requirements
+In-Reply-To: <cover.1738166451.git.mchehab+huawei@kernel.org> (Mauro Carvalho
+	Chehab's message of "Wed, 29 Jan 2025 17:09:31 +0100")
+Date: Thu, 30 Jan 2025 09:33:30 +0000
+Message-ID: <m2zfj87ij9.fsf@gmail.com>
+References: <cover.1738166451.git.mchehab+huawei@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yt9dwmecya4g.fsf@linux.ibm.com>
+Content-Type: text/plain
 
-On Thu, Jan 30, 2025 at 09:33:03AM +0100, Sven Schnelle wrote:
-> "Dmitry V. Levin" <ldv@strace.io> writes:
-> 
-> > These functions are going to be needed on all HAVE_ARCH_TRACEHOOK
-> > architectures to implement PTRACE_SET_SYSCALL_INFO API.
-> >
-> > This partially reverts commit 7962c2eddbfe ("arch: remove unused
-> > function syscall_set_arguments()") by reusing some of old
-> > syscall_set_arguments() implementations.
-> >
-> > Signed-off-by: Dmitry V. Levin <ldv@strace.io>
-> > Tested-by: Charlie Jenkins <charlie@rivosinc.com>
-> > Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
-> > ---
-> >  arch/arc/include/asm/syscall.h        | 14 +++++++++++
-> >  arch/arm/include/asm/syscall.h        | 13 ++++++++++
-> >  arch/arm64/include/asm/syscall.h      | 13 ++++++++++
-> >  arch/csky/include/asm/syscall.h       | 13 ++++++++++
-> >  arch/hexagon/include/asm/syscall.h    | 14 +++++++++++
-> >  arch/loongarch/include/asm/syscall.h  |  8 ++++++
-> >  arch/mips/include/asm/syscall.h       | 32 ++++++++++++++++++++++++
-> >  arch/nios2/include/asm/syscall.h      | 11 ++++++++
-> >  arch/openrisc/include/asm/syscall.h   |  7 ++++++
-> >  arch/parisc/include/asm/syscall.h     | 12 +++++++++
-> >  arch/powerpc/include/asm/syscall.h    | 10 ++++++++
-> >  arch/riscv/include/asm/syscall.h      |  9 +++++++
-> >  arch/s390/include/asm/syscall.h       | 12 +++++++++
-> >  arch/sh/include/asm/syscall_32.h      | 12 +++++++++
-> >  arch/sparc/include/asm/syscall.h      | 10 ++++++++
-> >  arch/um/include/asm/syscall-generic.h | 14 +++++++++++
-> >  arch/x86/include/asm/syscall.h        | 36 +++++++++++++++++++++++++++
-> >  arch/xtensa/include/asm/syscall.h     | 11 ++++++++
-> >  include/asm-generic/syscall.h         | 16 ++++++++++++
-> >  19 files changed, 267 insertions(+)
-> >
-> > diff --git a/arch/s390/include/asm/syscall.h b/arch/s390/include/asm/syscall.h
-> > index 27e3d804b311..b3dd883699e7 100644
-> > --- a/arch/s390/include/asm/syscall.h
-> > +++ b/arch/s390/include/asm/syscall.h
-> > @@ -78,6 +78,18 @@ static inline void syscall_get_arguments(struct task_struct *task,
-> >  	args[0] = regs->orig_gpr2 & mask;
-> >  }
-> >  
-> > +static inline void syscall_set_arguments(struct task_struct *task,
-> > +					 struct pt_regs *regs,
-> > +					 const unsigned long *args)
-> > +{
-> > +	unsigned int n = 6;
-> > +
-> > +	while (n-- > 0)
-> > +		if (n > 0)
-> > +			regs->gprs[2 + n] = args[n];
-> > +	regs->orig_gpr2 = args[0];
-> > +}
-> 
-> Could that be changed to something like:
-> 
-> for (int n = 1; n < 6; n++)
->         regs->gprs[2 + n] = args[n];
-> regs->orig_gpr2 = args[0];
-> 
-> I think this is way easier to parse.
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-I don't mind changing syscall_set_arguments() this way, but it just
-mirrors syscall_get_arguments(), so I think it would be better if these
-two functions were written in the same style.  Would you like to change
-syscall_get_arguments() as well?
+> This series comes after https://lore.kernel.org/linux-doc/87a5b96296.fsf@trenco.lwn.net/T/#t
+> It  increases the minimal requirements for Sphinx and Python.
+>
+> Sphinx release dates:
+>
+> 	Release 2.4.0 (released Feb 09, 2020)
+> 	Release 2.4.4 (released Mar 05, 2020) (current minimal requirement)
+> 	Release 3.4.0 (released Dec 20, 2020)
+> 	Release 3.4.3 (released Jan 08, 2021)
+>
+> 	(https://www.sphinx-doc.org/en/master/changes/index.html)
 
+It's worth mentioning here that my fix for the C performance regression
+landed in Sphinx 7.4.0. All versions from 3.0.0 to 7.3.x are much slower
+for building the kernel docs. See #12162 here:
 
--- 
-ldv
+https://www.sphinx-doc.org/en/master/changes/7.4.html#id7
+
