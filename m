@@ -1,124 +1,176 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54F71E503D
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4DE14EC73
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738259212; cv=none; b=O1q7lX3dm/l5JMTSfhQbTo0IR4nBGJUOwTyIXis/UtN5+Pt8bFVFiGS8RNvhcJCHEeRtzUWRBDPHxtIxsjTLwQ7DgCMkmKOieL5+6MJfV0oIXX1sqT3Okr0MwSqUm818TTNT/1jAE6A2oxhhZ7RS7OdPBmjQMeUHP3FbBgi48ck=
+	t=1738259227; cv=none; b=TCQxBoLR93RPSexsd1g1XSeYHC6DuQiHz4Lt2/NG65zS2P3F4OUiOK8F4NcXk6I1FaKZvnjfEpO9U9Q24JTRVEbodcMO3I7f6753MbrLDIs9Lxgox5XzpKBKqSD3bwVcy6MyQlt8wgB4XYvczsZEswQoBDFmRwITdXjGhXZUcvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738259212; c=relaxed/simple;
-	bh=ogl1Z2kVUAuTJ+ak39fztfgetEJPSLa4WcOE8DCy6Pc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tgY7NJem1eFPigSZjAEJaM1ltiy1YRDmkWlD+AMlK9c8YMphGPQUqzValiuYgYuRcJZ/qk6Ie5aqpzUzLUxYSUK2V9vCNpF5+s7xYie+wFiAF1M0xUKYOzKI49Eedvlh/Fl7TXeqhpf3/qULDjn5ioOazHoVXBbSzCPRx4Y+nHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YZi+b1a/; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738259227; c=relaxed/simple;
+	bh=KNUH+6ciWQ2/YjPugaObywWt7VpfXwdkL5OgwJ5YfKw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Fybv5QyiaadQBLIq7cvndpfPtyj3giBNryqSgO19pFC+S/MzZ7yORvaGa4sYArP17WMqvWDIvksMQvLERcAdrGDCr0ddKVfcFo/wZ0NaF1KZea2LfMpS2wA2uSiQZaJZJS12+QdIkQWsmgoopjEOzz9y2Dgd/CG4C+BE+E4yheM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=Fu73KLwq; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YZi+b1a/"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5db6890b64eso2012371a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:46:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="Fu73KLwq"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6dd420f82e2so13839566d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:47:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738259208; x=1738864008; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5snQbJ38VvBoZa24EBcVoHQPXCYbY/0kZ4L1ZVXjM+M=;
-        b=YZi+b1a/jON4BqrLs+ezTnwhL4NgdofSHfrgK+qvtHjDe/ds4mBOY4KYiBBJjXGk/U
-         bnQiViaEr7fhHnK7l4c5RvPUAn+IisHW63N6LiLzwooImLYdP5JoPk6IP/w244JK/DTT
-         qUFTiOGMxxkcwoBk/7H4LKfv5epKt88UvvlRPLu6D67/qKB7jCjR7Z8twLUBmz1Kjt3D
-         AjDDNgCNa75BiyEvtzDkeEnCasLMT/Gwm9qV9PZCFLoKbPC66DG0HrmlPxnXjYZx8XWw
-         MTQRJuRotDeuaEi+3NrX60/boLoXyHvVt2a1yEVf5AGr+fqTMxmaLivS6ON4lMqAt+au
-         rQ/Q==
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1738259225; x=1738864025; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=M2KnSOALVun40U0rx69PL5LHkQdFIbv2CoISnegMh7s=;
+        b=Fu73KLwqbNGurdb8VrTtxE+X0/w79aHq4QU9Nqxf0O4w78nIfK0qK9fGeB5NKXzGO9
+         t5aSF9vFW2n47dJhp6eDjgGibX+bCBGpDFxreUTwHfO+uD70I7GuRqJ4SIS885jnHkFq
+         LSEcGz3LQs6nOCrdeFEQNcYv074aSeLGVpV4hLnlI3LFkYUgR8mJ2+ZPaOJgbNb47Hcy
+         lzPWJB8BO/aJ41TcrVUo4opm17k/YzkaKOsJyr/AJZEX09+TfEYfDwVFIj37fZSS1IE8
+         dHS+kQustTvahJVJjkfFF334l3Y6J3qG9NdCCU3Elvnq11r0zImvWU3pwaSd/w8blLl8
+         wtVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738259208; x=1738864008;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5snQbJ38VvBoZa24EBcVoHQPXCYbY/0kZ4L1ZVXjM+M=;
-        b=p7ytvZw76VM31v5qN7VVI9qPJTHee/9y2NTnY8gdnvfhS/aAmOHjofCH48+8pfjeVz
-         oef0SKobzbYhUoKNei5kKJspkLxDzKksbkktZlTWfbuSmPd94K4fhkk5Wur6a3Rgatc4
-         ccSTAL/H9nzF8nKJI07Nq6Cee1LoqFSvbNu0TZFPJXWjSg+JXJ0vZ3QdI1CkzNIat9O9
-         n6hJziXjzpv67/fDKmyHzA0pia2VyFVXiZjuIul3Ik37+ub7QtblcI9o2d15fC2zZRjI
-         ImbCrzbUJ4rKHym+QwdsTExk3MnVLnDEjhT7QnWKxaE2dlZsbocOUFgiwu5kW90eYZMA
-         5RJw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+/5T3W4PAHpnRiyzmQ3LaI6cx8qTgq4Wfp7hBLZmdoOrSpa7ijLPSavyfoCnoKptUsBng+mnK/AZrAEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoD25lWmh69hWG+MxjHCVvECk96zJKiV9IKDB2PVdBzSRSIncx
-	tEAbk6mfvhjvfcNc45NMVqVNXdMjWjf1RX3i05vHIEkGscB4fC+fkKkTN0tZqy4=
-X-Gm-Gg: ASbGncu2/5bmOlwwLsKGVKOM+q/C/iFklRvCwqCMbw9vOnkkb+NlzNxu402B5XoRUoo
-	yf4YDoIyTH7PdQaVGOjlEUH6FpqYqGYBadX0k2IhwLBbNAhVynaupfR3zzNwgnSzHekqTG/YS8i
-	cED25oZVm2rvXjzlN6mT09insunrfgTWNFwVUeftwmHp+WVuRXvQ3h20G8wQJQwxCHniA42+j+S
-	/1PdDa1zkumPh7dnW/uZHBPtKu9aoxA33dSKvBZA79pDbXKm8JDwmKVxmkM4UAB3h5rF+p6zuxJ
-	XOH4L/rE6KlhcgO6yeCnYt5dsA==
-X-Google-Smtp-Source: AGHT+IECYjOfJz2tOjzTqFxLsspzu/nakrwmV49yfXfMxCTrHiIH5vR5VrgKigD70NLDeXJhSYb9BA==
-X-Received: by 2002:a17:907:9726:b0:aa6:b473:8500 with SMTP id a640c23a62f3a-ab6cfda4249mr845523666b.42.1738259208184;
-        Thu, 30 Jan 2025 09:46:48 -0800 (PST)
-Received: from localhost (109-81-84-37.rct.o2.cz. [109.81.84.37])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ab6e47cf883sm154114966b.49.2025.01.30.09.46.47
+        d=1e100.net; s=20230601; t=1738259225; x=1738864025;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=M2KnSOALVun40U0rx69PL5LHkQdFIbv2CoISnegMh7s=;
+        b=GaMKCQSpDZfQGosJ4u4ONBcQA1kxvs5A4TrXQop1jEumygtNU4IzJTVyz9aVYg95rf
+         AG7sBm60ZYESLHzUDI69Fuf2CB6Xe8ZXtTCNNFu8Neu6LWPQjhQVdO1xIP6lxhnizwiS
+         dszzI6pakMzjGSIXJM6aCignaOEt6R8hLhzQo7CYBWQZAVxPtryWPnJWXknJduYBehia
+         4E5/uWd5JfL0huixxqeocYCIbsga3TEZb+tj+x20J2Wz1omGZjUOPPW5BljmbAV+4ieu
+         tov67SqxIYpvHtMvJ4HT0GtcOv99zZHBIN7ZaSGri+uS7Sy4sggV4+XUy1KUjde25OoB
+         R6Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmZqepifCLGit5wyIZmnfeZb6KKXy1teWdnEqAj/mYLMC3DTvpQrVSULSgv3ZKH7twaW0C/6hzmb2JbU0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtIDChJ34N78V79ngIwvxLc3rCZxbML0y+R/lEhHrqE84vQ4e7
+	uEHIhMyS43oMbFRwLvzYrFXKOC2131SvT9x//XoCxOFvWMrEBVQddrWAOKK2Jzc=
+X-Gm-Gg: ASbGnct6F2l/u3xcE6zYU8QHo6srllT9scutJ8ZyNcy8h5ZAT56qSAx9g8AuJErXhbl
+	Ry4Cr1Iyjrt5WgQwg0Max13lZNbO05X07P6MdXnuaq/tkaw68dP4IN0NlHMr+ZafQqUW1wZDdCP
+	y4JiHfBdSVmq7uQyHfeYheXCrQj2anEaTcmmI4cF2T0jr0rf6gkyATQ/f58O1+ULhFfmLGHHCCW
+	GtHx2vG3aEGHnb7Lq8UNguLTnNrCSFPL41xxJWSe7kW5QZf2uFTZxmwpEtXmLLNd/SHdoC2rtAk
+	atXHUgCPjJrJPtb8
+X-Google-Smtp-Source: AGHT+IFb98ThAFaKwElwJF/sopgUxhTZjXeuvxkotRwiLF8RhVhCp7fJLzKCy+1eOfFzQ+qv/2X0Lw==
+X-Received: by 2002:a05:6214:1d0e:b0:6d8:9124:8795 with SMTP id 6a1803df08f44-6e243b94159mr102405256d6.1.1738259224602;
+        Thu, 30 Jan 2025 09:47:04 -0800 (PST)
+Received: from nicolas-tpx395.localdomain ([2606:6d00:11:e976::7a9])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e25481419fsm8430276d6.27.2025.01.30.09.47.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 09:46:47 -0800 (PST)
-Date: Thu, 30 Jan 2025 18:46:46 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Waiman Long <llong@redhat.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>, Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	Peter Hunt <pehunt@redhat.com>
-Subject: Re: [RFC PATCH] mm, memcg: introduce memory.high.throttle
-Message-ID: <Z5u7Bk_ph6AJWt4O@tiehlicka>
-References: <20250129191204.368199-1-longman@redhat.com>
- <Z5s1DG2YVH78RWpR@tiehlicka>
- <211b394b-3b9a-4872-8c07-b185386487d3@redhat.com>
- <Z5uxVzFf7Pk7yk9f@google.com>
- <a309f420-4a25-4cf5-b6f0-750059c8467c@redhat.com>
+        Thu, 30 Jan 2025 09:47:04 -0800 (PST)
+Message-ID: <9d0e381758c0e83882b57102fb09c5d3a36fbf57.camel@ndufresne.ca>
+Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali
+ CSF GPUs
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Florent Tomasin <florent.tomasin@arm.com>, Vinod Koul
+ <vkoul@kernel.org>,  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,  Boris Brezillon
+ <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, Liviu
+ Dudau	 <liviu.dudau@arm.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>,  Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, Benjamin
+ Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey
+ <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T . J .
+ Mercier"	 <tjmercier@google.com>, Christian =?ISO-8859-1?Q?K=F6nig?=	
+ <christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong
+ Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+	linaro-mm-sig@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, nd@arm.com, Akash Goel
+ <akash.goel@arm.com>
+Date: Thu, 30 Jan 2025 12:47:02 -0500
+In-Reply-To: <ppznh3xnfuqrozhrc7juyi3enxc4v3meu4wadkwwzecj7oxex7@moln2fiibbxo>
+References: <cover.1738228114.git.florent.tomasin@arm.com>
+	 <3ykaewmjjwkp3y2f3gf5jvqketicd4p2xqyajqtfnsxci36qlm@twidtyj2kgbw>
+	 <1a73c3acee34a86010ecd25d76958bca4f16d164.camel@ndufresne.ca>
+	 <ppznh3xnfuqrozhrc7juyi3enxc4v3meu4wadkwwzecj7oxex7@moln2fiibbxo>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a309f420-4a25-4cf5-b6f0-750059c8467c@redhat.com>
 
-On Thu 30-01-25 12:19:38, Waiman Long wrote:
-> On 1/30/25 12:05 PM, Roman Gushchin wrote:
-> > On Thu, Jan 30, 2025 at 10:05:34AM -0500, Waiman Long wrote:
-[...]
-> > > > Why cannot they achieve the same with the existing events/metrics we
-> > > > already do provide? Most notably PSI which is properly accounted when
-> > > > a task is throttled due to memory.high throttling.
-> > > That will require the use of a userspace management agent that looks for
-> > > these stalling conditions and make the kill, if necessary. There are
-> > > certainly users out there that want to get some benefit of using memory.high
-> > > like early memory reclaim without the trouble of handling these kind of
-> > > stalling conditions.
+Le jeudi 30 janvier 2025 =C3=A0 17:38 +0100, Maxime Ripard a =C3=A9crit=C2=
+=A0:
+> Hi Nicolas,
+>=20
+> On Thu, Jan 30, 2025 at 10:59:56AM -0500, Nicolas Dufresne wrote:
+> > Le jeudi 30 janvier 2025 =C3=A0 14:46 +0100, Maxime Ripard a =C3=A9crit=
+=C2=A0:
+> > > Hi,
+> > >=20
+> > > I started to review it, but it's probably best to discuss it here.
+> > >=20
+> > > On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin wrote:
+> > > > Hi,
+> > > >=20
+> > > > This is a patch series covering the support for protected mode exec=
+ution in
+> > > > Mali Panthor CSF kernel driver.
+> > > >=20
+> > > > The Mali CSF GPUs come with the support for protected mode executio=
+n at the
+> > > > HW level. This feature requires two main changes in the kernel driv=
+er:
+> > > >=20
+> > > > 1) Configure the GPU with a protected buffer. The system must provi=
+de a DMA
+> > > >    heap from which the driver can allocate a protected buffer.
+> > > >    It can be a carved-out memory or dynamically allocated protected=
+ memory region.
+> > > >    Some system includes a trusted FW which is in charge of the prot=
+ected memory.
+> > > >    Since this problem is integration specific, the Mali Panthor CSF=
+ kernel
+> > > >    driver must import the protected memory from a device specific e=
+xporter.
+> > >=20
+> > > Why do you need a heap for it in the first place? My understanding of
+> > > your series is that you have a carved out memory region somewhere, an=
+d
+> > > you want to allocate from that carved out memory region your buffers.
+> > >=20
+> > > How is that any different from using a reserved-memory region, adding
+> > > the reserved-memory property to the GPU device and doing all your
+> > > allocation through the usual dma_alloc_* API?
+> >=20
+> > How do you then multiplex this region so it can be shared between
+> > GPU/Camera/Display/Codec drivers and also userspace ?
+>=20
+> You could point all the devices to the same reserved memory region, and
+> they would all allocate from there, including for their userspace-facing
+> allocations.
 
-Could you expand more on that? As long as the memory is reasonably
-reclaimable then the hard (max) limit is exactly what you need. If you
-want to implement oom policy in the userspace you have high limit to get
-notifications about the memory pressure. Why this is insufficient?
+I get that using memory region is somewhat more of an HW description, and
+aligned with what a DT is supposed to describe. One of the challenge is tha=
+t
+Mediatek heap proposal endup calling into their TEE, meaning knowing the re=
+gion
+is not that useful. You actually need the TEE APP guid and its IPC protocol=
+. If
+we can dell drivers to use a head instead, we can abstract that SoC specifi=
+c
+complexity. I believe each allocated addressed has to be mapped to a zone, =
+and
+that can only be done in the secure application. I can imagine similar need=
+s
+when the protection is done using some sort of a VM / hypervisor.
 
-> > So you basically want to force the workload into some sort of a proactive
-> > reclaim but without an artificial slow down?
-> > It makes some sense to me, but
-> > 1) Idk if it deserves a new API, because it can be relatively easy implemented
-> >    in userspace by a daemon which monitors cgroups usage and reclaims the memory
-> >    if necessarily. No kernel changes are needed.
-> > 2) If new API is introduced, I think it's better to introduce a new limit,
-> >    e.g. memory.target, keeping memory.high semantics intact.
-> 
-> Yes, you are right about that. Introducing a new "memory.target" without
-> disturbing the existing "memory.high" semantics will work for me too.
+Nicolas
 
-I thought those usecases want to kill misbehaving containers rather than
-burning time trying to reclaim. I do not understand how will such a new
-limit help to achieve that.
--- 
-Michal Hocko
-SUSE Labs
+>=20
+> > Also, how the secure memory is allocted / obtained is a process that
+> > can vary a lot between SoC, so implementation details assumption
+> > should not be coded in the driver.
+>=20
+> But yeah, we agree there, it's also the point I was trying to make :)
+>=20
+> Maxime
+
