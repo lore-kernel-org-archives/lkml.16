@@ -1,95 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE67C84D34;
-	Thu, 30 Jan 2025 18:55:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D63C1865FA;
+	Thu, 30 Jan 2025 18:55:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738263306; cv=none; b=s8+z6sNK+actWKXtFAFE7wp3qdw2CB//qVknylV+HPxNJrMEk6/oIL3gKwzfpIyiuV5WmQQjlAzi4Ge4JxjSUGmQPcLx8sc1hKilZ7hlHBG5HEacIuxI22ncQaQ9CG18cUo0JijDdr8E4vb6qrVmpuwgOl6E1Am4WU3xZUMfTQk=
+	t=1738263324; cv=none; b=kDRtQLjo/Am6lvFhkH8ghOcZlHu9O7l5Yi39hWnAiMS6knqttQwYvNGlt61aEDrqf+PGd5Tf3SEMrFHXNiJ99eTxl/3CAvlueKfRtDW7Rp+hNglyKt+GbMKNZJB8GO5XWRlQ0AOR297fJOOnNzuLA8xIZeRIZIc7YD9+BQ+hM/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738263306; c=relaxed/simple;
-	bh=+qwT0MPbAWnP5VSmEeKF7QOYVy8cIZLmTNtK+kCmOfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SsFie/bf2vGj5JaOQlEC1qFd1B2HuKqAewvN0d4y/R94q+ZZAHUVJkqtvhaC+b6jkleSe7MPKpMHTtExq1J6Ae5rR6iBwWmND+Jmza6Eyy9D0uXj9Eub9+iykScZyztRKat42I8SoT8P7U/ja/4S80SHTCdd1zg+mabkU+xkpDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYdOg76O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738263324; c=relaxed/simple;
+	bh=efLrKy8qqjkUcQS3cdfrbL+4GrIptjk7nMLVvA5SR+4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gSmMfpgdvD34Gs/H9crbDj0ac6Lmu+QcJOwcRMGJmfhwciGFWkpLWtit2UsFLVEgpEmtkRq3ysbStAUzdM3BRr6nedGen6Niwftq66jwGmy0Jp6Bk8BJO27dDaMx0GWzbYF4k/Wyv+F00ugl5Ho85OvZEDZwxCfcf/ZGIyZ0vvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EjeYWDaT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYdOg76O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D611C4CED2;
-	Thu, 30 Jan 2025 18:55:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EjeYWDaT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC1D7C4CEE7;
+	Thu, 30 Jan 2025 18:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738263305;
-	bh=+qwT0MPbAWnP5VSmEeKF7QOYVy8cIZLmTNtK+kCmOfI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=DYdOg76OuVvDGAxBH1Sti/WZgxfjW5LsR4/pO8Bhh00gQLGBAoqVJVA5Jpz8re7AJ
-	 tFAKdouXNvWAhD2v9dw12uRMZaLv9O975isUnQ7Zj3HHdtphuy5gSvzqWfGr8TFjJN
-	 MMujwKDaRV1oa/V20eD04AV8j56srIZ1fulLVCLjUJ6jvn6D9G8wdZIeHxlIQQxlTz
-	 BKnbcVo+WkOI1yKru+p9T2WL5WA0bvKCKLJxKOo5b1T3mFkLNb6MyL9DXL/iaCqPKm
-	 U8oUt53nsNPl08N6yTemFdKjAtxTT6nTPKegB5LyDKKzolNs3t8psHdjhIpyzk+OIY
-	 37G4Rk1HwpW5Q==
+	s=k20201202; t=1738263324;
+	bh=efLrKy8qqjkUcQS3cdfrbL+4GrIptjk7nMLVvA5SR+4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=EjeYWDaTI/Erq2G+HTE71scMidmYi/3xRv07FLFWP+R7bYy6gL/VRfQWQvGPcYUxp
+	 oM7yMUHWhi7jLIeafRk0O5M7eSxNuBIOoq0sWl3NYcBfyI/URNejRL9IVYWAqOCc4n
+	 5d4+/1GzUpkQToVn6JPxSS2F8gG0zlESpMEF+IeJPiVe/AZpmvYLoXghnyysZC2SaP
+	 8gFKWJn9GVfuNWccdAa/HP1XEI4/aCkgWwznL/5GPvND7xrYGcsrIvJWdu5ZKySsXa
+	 VU1E5tL/mhLMBMc7LLOGGhVXXaHJqG2eny6TI9yt5DuvTTBxDcYTV3zB/E4Qzk33IZ
+	 Txu0JIkHmjZqg==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id E72CCCE37D9; Thu, 30 Jan 2025 10:55:04 -0800 (PST)
-Date: Thu, 30 Jan 2025 10:55:04 -0800
+	id 8DBC1CE37DD; Thu, 30 Jan 2025 10:55:23 -0800 (PST)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: rcu@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org
-Subject: Re: [PATCH rcu 0/9] Lazy-preemption-related updates
-Message-ID: <9bc6e5fe-d49f-495a-9f55-537ed97a3615@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <df73d8ef-ef52-4f99-ac22-e2b66f0c644e@paulmck-laptop>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	rostedt@goodmis.org,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH rcu v2] 4/9] rcu: handle unstable rdp in rcu_read_unlock_strict()
+Date: Thu, 30 Jan 2025 10:55:17 -0800
+Message-Id: <20250130185522.1652093-4-paulmck@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <9bc6e5fe-d49f-495a-9f55-537ed97a3615@paulmck-laptop>
+References: <9bc6e5fe-d49f-495a-9f55-537ed97a3615@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <df73d8ef-ef52-4f99-ac22-e2b66f0c644e@paulmck-laptop>
+Content-Transfer-Encoding: 8bit
 
-Hello!
+From: Ankur Arora <ankur.a.arora@oracle.com>
 
-This series makes adjustments to RCU to better handle lazy preemption:
+rcu_read_unlock_strict() can be called with preemption enabled
+which can make for an unstable rdp and a racy norm value.
 
-1.	fix header guard for rcu_all_qs(), courtesy of Ankur Arora.
+Fix this by dropping the preempt-count in __rcu_read_unlock()
+after the call to rcu_read_unlock_strict(), adjusting the
+preempt-count check appropriately.
 
-2.	rename PREEMPT_AUTO to PREEMPT_LAZY, courtesy of Ankur Arora.
+Suggested-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ include/linux/rcupdate.h |  2 +-
+ kernel/rcu/tree_plugin.h | 11 ++++++++++-
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-3.	update __cond_resched comment about RCU quiescent states,
-	courtesy of Ankur Arora.
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index c6c4aee47df2..9b05db8ff061 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -95,9 +95,9 @@ static inline void __rcu_read_lock(void)
+ 
+ static inline void __rcu_read_unlock(void)
+ {
+-	preempt_enable();
+ 	if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD))
+ 		rcu_read_unlock_strict();
++	preempt_enable();
+ }
+ 
+ static inline int rcu_preempt_depth(void)
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index bb7ca6eb9ef0..b025e95ede05 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -833,8 +833,17 @@ void rcu_read_unlock_strict(void)
+ {
+ 	struct rcu_data *rdp;
+ 
+-	if (irqs_disabled() || preempt_count() || !rcu_state.gp_kthread)
++	if (irqs_disabled() || in_atomic_preempt_off() || !rcu_state.gp_kthread)
+ 		return;
++
++	/*
++	 * rcu_report_qs_rdp() can only be invoked with a stable rdp and
++	 * from the local CPU.
++	 *
++	 * The in_atomic_preempt_off() check ensures that we come here holding
++	 * the last preempt_count (which will get dropped once we return to
++	 * __rcu_read_unlock().
++	 */
+ 	rdp = this_cpu_ptr(&rcu_data);
+ 	rdp->cpu_no_qs.b.norm = false;
+ 	rcu_report_qs_rdp(rdp);
+-- 
+2.40.1
 
-4.	handle unstable rdp in rcu_read_unlock_strict(), courtesy of
-	Ankur Arora.
-
-5.	handle quiescent states for PREEMPT_RCU=n, PREEMPT_COUNT=y,
-	courtesy of Ankur Arora.
-
-6.	provide quiescent states, courtesy of Ankur Arora.
-
-7.	limit PREEMPT_RCU configurations, courtesy of Ankur Arora.
-
-8.	Make scenario TREE10 build CONFIG_PREEMPT_LAZY=y.
-
-9.	Make scenario TREE07 build CONFIG_PREEMPT_LAZY=y.
-
-Changes since v1:
-
-o	Reword commit-log line containing only "to:" to avoid confusing
-	tools that parse commit logs.
-
-						Thanx, Paul
-
-------------------------------------------------------------------------
-
- b/include/linux/rcupdate.h                              |    2 -
- b/include/linux/rcutree.h                               |    2 -
- b/include/linux/srcutiny.h                              |    2 -
- b/kernel/rcu/Kconfig                                    |    2 -
- b/kernel/rcu/srcutiny.c                                 |   14 +++----
- b/kernel/rcu/tree_plugin.h                              |   11 +++++
- b/kernel/sched/core.c                                   |    4 +-
- b/kernel/trace/trace_osnoise.c                          |   32 +++++++---------
- b/tools/testing/selftests/rcutorture/configs/rcu/TREE07 |    3 +
- b/tools/testing/selftests/rcutorture/configs/rcu/TREE10 |    3 +
- kernel/rcu/Kconfig                                      |    2 -
- kernel/rcu/tree_plugin.h                                |   11 +++--
- 12 files changed, 51 insertions(+), 37 deletions(-)
