@@ -1,160 +1,128 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6D44C7C
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD423BBF2
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738258319; cv=none; b=gcq+/lbWn9EgFlEmH8L1UsNZkzOVgvuwONXZSLDi3FNIKxe9SIFfKwA62D0TPrJxsWO/eTQTpuYrJyB5BO7URWsXF/eSPnwrQfVCk1Vm6naS2yUAQmOmkRd0um5XJYtCO/ZNRvU4eRFcqu3vVF3TnKe7ngL1W8NUe5sGcAu/rNM=
+	t=1738258348; cv=none; b=ttERDRRBuVN2JQMAx5YyXOSbsgkhAqeh8ZGMSx3INjNyayiDT5RqJnjCU2mf4dCYtZmQxnxmihgmimcBqvMjpUG/TTwamnP6QtxwpfSjFyd3fI6Cs4beXBdBST7sDI9WzU2g+hTRt5St1ql1lOFu5UBrkoz4bgrpKY6ktaaL7Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738258319; c=relaxed/simple;
-	bh=xuMqgfxSwdbvy3i+zP5z3UiMW6qWNT7u1ikBE5pPpQE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hw041xDxWk4cHpTrMqNDDMdgjmwfKwe6pCsRZ2YpJ8GTYYJzQPVt/IlupWGw8wxr49mQRGzdab/3rO2M2ho7T50FrhrW0oOb6G4NULS1deW/rj22jsgrHrxAHz8QVzT0c+ySZH4refCfpEVCF2RZgzwA/8z67vXDXIVW6szAhsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uKs1s+Xl; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738258348; c=relaxed/simple;
+	bh=kFmwyElWOpSYAGhkk/qey9pL1U6+PO/aeAJAChhfSF0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s66oL2StxOWTd/XvnHZlGnoqUVw9OqQGksBrcPG46XjPViQp5TIjI9GuQDwRwhQeNzOT+PDkRfaQrldHfO/the6FDq7XlQG49lGuyafGOL+Dx1+X1OSdS9ZxPXxhNaIpE7CpuPl5EFDWmd9LQgs41O9F/QFuk3kt7rkczOE8KLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Kbx8wAkW; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uKs1s+Xl"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38a8b17d7a7so605631f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:31:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738258316; x=1738863116; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oGFJ/SZJyjcLl8OPYBdzU/HVC+kA3jQp0maWZ+GZ/dM=;
-        b=uKs1s+Xl2mknT0EeYXSAJ7/h+OeDJejIr300abkJLiaZQHDp2+Dad5LzZATmj2ZqnK
-         rnImpBO/HMJZQHJjpIOi+CaudQmCRTcrbeX05wocVPZvKP0KXObFDJYtuHEqhhfPIhuZ
-         tEnRpeeey3xRt7nmC+6OiW7YZqoV6XOb3P+HHEEXxpCYw+TuAVeJ/HmjpAoNqCfIPLBb
-         jLFH+CQKTmPLbNoHX+QJcIxm0MG97LrUkhBLGMIYIrgvWUjoVuBPoSRapuYtowsoQswz
-         6UUfqzFY8EMDA6h6mk8wIgX3xvAucL519lPXhcddO55puJdcsESgGXayIM1tx/3EWEMr
-         uBLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738258316; x=1738863116;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oGFJ/SZJyjcLl8OPYBdzU/HVC+kA3jQp0maWZ+GZ/dM=;
-        b=pE5U24YJx/qL4oZPOKQQIykoOgpUYuqUgvsr9+br4R5I9MuCaCBPIJqUu5aacGr678
-         jWRZ8r0yie4MxynGvTYONkHEqUSsJzH6uScNVOSC1YKIjsHmo+AFzas84eHJ7db2VMgu
-         lSPFH59DgP4n65G4iwaNXsVphXUX7AZktumIVJLAGs4SRSQZNVLnMulZRkJuEIA2Zqjx
-         ou09qDLkClCR4Qyq7YdfU9uH9xBuUxjXsfCIwpDlPJWryZTk5ejtmh5sxvnND3qf29Ty
-         qW0PmcNmkBa7voc+cU5Gic0a/aBPEueRpUyTGjktDeIumZt/xAVqawsj5janlSnwCEMZ
-         hMqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXlt0jPuwyOKtv0at1Om7MYTP/prwTgeiTpOf1KO3L1h7FFdPloMQ9ITYhbFak4PVhSmWyq9ckA+w4809I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcvLRtApSO5Oara3794emtKJNv8rmIHJPyAwpU1gytMIBQQ/mR
-	rurOsuqL8auaMLaf996kuQ+XjfzlSvq1gp6AjdEMJ1Wybfo9FamsOhCFscl6yHY=
-X-Gm-Gg: ASbGncuNKmBQVqL6NG42XUH4Rt20EbDN+PtomFCUPxentxFzFx144kuttkXwkFvdYe2
-	bsks8HFz9oPvS2sGqm8oi5bJEpcp07fb3h3ZuMg7HXoKBupr3Ws2gheItuDTgpzXjGMwCwqJGQw
-	TrNy4/etCdtK1qSOUYDokisu0+/mWGT8ZXdUy1qNmmgRJta2EB3RQv0KhF21660+CWAUjj3koqf
-	1cLoX0LHkOL80PtJ2lkDBPC9e1mpRQCwyxyfuvc4tEoUSdVTglG3lsb443MQMUs7RKtgSw2jUHI
-	u1C7WeQ2dA6rEIbT6MqzeGGZlNkVB/V0FeC2D8+J2AF6CJAqcGU2aH8=
-X-Google-Smtp-Source: AGHT+IEi5kedgLMkork5YJAKY/3aI2UDvYGuUStK46XPsuiG324UkAjxLQwuOm9AwPnUYK4o3lkp9Q==
-X-Received: by 2002:a5d:64a1:0:b0:38a:86fe:52b5 with SMTP id ffacd0b85a97d-38c5195f256mr8386213f8f.14.1738258316013;
-        Thu, 30 Jan 2025 09:31:56 -0800 (PST)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-438e244f087sm29478855e9.29.2025.01.30.09.31.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 09:31:54 -0800 (PST)
-Message-ID: <867eb310-11a7-48bd-b2fa-35e001875498@linaro.org>
-Date: Thu, 30 Jan 2025 18:31:53 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Kbx8wAkW"
+Date: Thu, 30 Jan 2025 09:32:15 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738258342;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oWFaS3UTJxiWqFEp5gwjlr0r8i+ewsDGNS92rk/uZf0=;
+	b=Kbx8wAkWixPZU0LONO1qz11C4y1+8LqtNQVTHWGPGBlLqUlyH/AjkP1v5TRjhuo23YWViK
+	s+aJ5xZ0GJ8yzS5ToOmWOkGFBSCfnkev+wQ+ce/4FclhMAo1PxCwJoHsB95oIN2K89r8RJ
+	ZbLK3VUPtFQDSQwCvNhMcavHYv2jIMQ=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Waiman Long <llong@redhat.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>, 
+	Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-doc@vger.kernel.org, Peter Hunt <pehunt@redhat.com>
+Subject: Re: [RFC PATCH] mm, memcg: introduce memory.high.throttle
+Message-ID: <eyl6rcqdwinppl4cyvqrli5pqugxdhrsgpvu64oomgvqd7m7c4@q4gz5v2zovwe>
+References: <20250129191204.368199-1-longman@redhat.com>
+ <Z5s1DG2YVH78RWpR@tiehlicka>
+ <211b394b-3b9a-4872-8c07-b185386487d3@redhat.com>
+ <Z5uxVzFf7Pk7yk9f@google.com>
+ <a309f420-4a25-4cf5-b6f0-750059c8467c@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] thermal: of: Export non-devres helper to
- register/unregister thermal zone
-To: Biju Das <biju.das.jz@bp.renesas.com>,
- "Claudiu.Beznea" <claudiu.beznea@tuxon.dev>
-Cc: "rafael@kernel.org" <rafael@kernel.org>,
- "rui.zhang@intel.com" <rui.zhang@intel.com>,
- "lukasz.luba@arm.com" <lukasz.luba@arm.com>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "geert+renesas@glider.be" <geert+renesas@glider.be>,
- "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
- "mturquette@baylibre.com" <mturquette@baylibre.com>,
- "sboyd@kernel.org" <sboyd@kernel.org>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250103163805.1775705-1-claudiu.beznea.uj@bp.renesas.com>
- <20250103163805.1775705-3-claudiu.beznea.uj@bp.renesas.com>
- <Z5pkUNNvsWPjRQvy@mai.linaro.org>
- <65a16c3f-456e-40ec-91b0-afb57269ed46@tuxon.dev>
- <Z5tPR_tv7vWDkUI7@mai.linaro.org>
- <TY3PR01MB11346E087A4DFCC5BDCCB10B486E92@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <TY3PR01MB11346E087A4DFCC5BDCCB10B486E92@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a309f420-4a25-4cf5-b6f0-750059c8467c@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 30/01/2025 11:33, Biju Das wrote:
-> Hi Daniel Lezcano,
+On Thu, Jan 30, 2025 at 12:19:38PM -0500, Waiman Long wrote:
+> On 1/30/25 12:05 PM, Roman Gushchin wrote:
+> > On Thu, Jan 30, 2025 at 10:05:34AM -0500, Waiman Long wrote:
+> > > On 1/30/25 3:15 AM, Michal Hocko wrote:
+> > > > On Wed 29-01-25 14:12:04, Waiman Long wrote:
+> > > > > Since commit 0e4b01df8659 ("mm, memcg: throttle allocators when failing
+> > > > > reclaim over memory.high"), the amount of allocator throttling had
+> > > > > increased substantially. As a result, it could be difficult for a
+> > > > > misbehaving application that consumes increasing amount of memory from
+> > > > > being OOM-killed if memory.high is set. Instead, the application may
+> > > > > just be crawling along holding close to the allowed memory.high memory
+> > > > > for the current memory cgroup for a very long time especially those
+> > > > > that do a lot of memcg charging and uncharging operations.
+> > > > > 
+> > > > > This behavior makes the upstream Kubernetes community hesitate to
+> > > > > use memory.high. Instead, they use only memory.max for memory control
+> > > > > similar to what is being done for cgroup v1 [1].
+> > > > Why is this a problem for them?
+> > > My understanding is that a mishaving container will hold up memory.high
+> > > amount of memory for a long time instead of getting OOM killed sooner and be
+> > > more productively used elsewhere.
+> > > > > To allow better control of the amount of throttling and hence the
+> > > > > speed that a misbehving task can be OOM killed, a new single-value
+> > > > > memory.high.throttle control file is now added. The allowable range
+> > > > > is 0-32.  By default, it has a value of 0 which means maximum throttling
+> > > > > like before. Any non-zero positive value represents the corresponding
+> > > > > power of 2 reduction of throttling and makes OOM kills easier to happen.
+> > > > I do not like the interface to be honest. It exposes an implementation
+> > > > detail and casts it into a user API. If we ever need to change the way
+> > > > how the throttling is implemented this will stand in the way because
+> > > > there will be applications depending on a behavior they were carefuly
+> > > > tuned to.
+> > > > 
+> > > > It is also not entirely sure how is this supposed to be used in
+> > > > practice? How do people what kind of value they should use?
+> > > Yes, I agree that a user may need to run some trial runs to find a proper
+> > > value. Perhaps a simpler binary interface of "off" and "on" may be easier to
+> > > understand and use.
+> > > > > System administrators can now use this parameter to determine how easy
+> > > > > they want OOM kills to happen for applications that tend to consume
+> > > > > a lot of memory without the need to run a special userspace memory
+> > > > > management tool to monitor memory consumption when memory.high is set.
+> > > > Why cannot they achieve the same with the existing events/metrics we
+> > > > already do provide? Most notably PSI which is properly accounted when
+> > > > a task is throttled due to memory.high throttling.
+> > > That will require the use of a userspace management agent that looks for
+> > > these stalling conditions and make the kill, if necessary. There are
+> > > certainly users out there that want to get some benefit of using memory.high
+> > > like early memory reclaim without the trouble of handling these kind of
+> > > stalling conditions.
+> > So you basically want to force the workload into some sort of a proactive
+> > reclaim but without an artificial slow down?
+
+I wouldn't call it a proactive reclaim as reclaim will happen
+synchronously in allocating thread.
+
+> > It makes some sense to me, but
+> > 1) Idk if it deserves a new API, because it can be relatively easy implemented
+> >    in userspace by a daemon which monitors cgroups usage and reclaims the memory
+> >    if necessarily. No kernel changes are needed.
+> > 2) If new API is introduced, I think it's better to introduce a new limit,
+> >    e.g. memory.target, keeping memory.high semantics intact.
 > 
->> -----Original Message-----
-
-[ ... ]
-
->>>> I've been through the driver before responding to this change. What
->>>> is the benefit of powering down / up (or clock off / on) the thermal
->>>> sensor when reading the temperature ?
->>>>
->>>> I can understand for disable / enable but I don't get for the
->>>> classic usage where a governor will be reading the temperature regularly.
->>>
->>> I tried to be as power saving as possible both at runtime and after
->>> the IP is not used anymore as the HW manual doesn't mentioned anything
->>> about accuracy or implications of disabling the IP clock at runtime.
->>> We use similar approach (of disabling clocks at runtime) for other IPs
->>> in the RZ/G3S SoC as well.
->>>
->>>>
->>>> Would the IP need some cycles to capture the temperature accurately
->>>> after the clock is enabled ?
->>>
->>> There is nothing about this mentioned about this in the HW manual of
->>> the RZ/G3S SoC. The only points mentioned are as described in the driver code:
->>> - wait at least 3us after each IIO channel read
->>> - wait at least 30us after enabling the sensor
->>> - wait at least 50us after setting OE bit in TSU_SM
->>>
->>> For this I chose to have it implemented as proposed.
->>
->> IMO, disabling/enabling the clock between two reads through the pm runtime may not be a good thing,
->> especially if the system enters a thermal situation where it has to mitigate.
+> Yes, you are right about that. Introducing a new "memory.target" without
+> disturbing the existing "memory.high" semantics will work for me too.
 > 
-> Just a question, You mean to avoid device destruction due to high temperature?? Assuming disabling the clk happens
-> when the temp reaches the boundary and re-enabling of the clk after a time(which involves monitoring the CLK ON
-> bit after enabling it, or a run time enable failure happens), where it exceeds the threshold??
 
+So, what happens if reclaim can not reduce usage below memory.target?
+Infinite reclaim cycles or just give up?
 
-Well, I have some comments with the device tree thermal configuration 
-which may answer your question but I'll wait for Claudiu to check the 
-temperature read comparison without rounding to 0.5°C
-
-What I meant is if the temperature read is inaccurate, the mitigation 
-will be inaccurate too. It may not reach the critical temperature but it 
-is possible the performance could be impacted negatively under thermal 
-stress.
-
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> Cheers,
+> Longman
+> 
