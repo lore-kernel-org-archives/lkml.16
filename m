@@ -1,102 +1,124 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994821AFB36;
-	Thu, 30 Jan 2025 08:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7691B0422;
+	Thu, 30 Jan 2025 08:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738226438; cv=none; b=E+Z0a28XV0vARfrZY6cm8CQPWeUBMVVht3atQK2c51fGwJiEA/J1bfD+sv8xgkizgyl4KCMwXZqKgPyVYYuUc821YweET/Pkg2pFZ0YbmWHk4KqmBe+jXyQEgK30DFht0ZS3bCNzRGNCJ//72+l8i01cfnWhDvFdNmBtOqnmqek=
+	t=1738226450; cv=none; b=pzAA5G3wou/O1PMbX4tVPHA2Ni10r7j5FC8gwHnTdiay9DdOdJQpoNewVhFnAGRgqIMBiFTXtieefVIPZIrCybYuF2Cg8RszGoFVUkpTWb1Hwt4i6anNSziN5Ua+UZVJDGc03ZE8d8Nn3g2Gh3E5F0adPSMalCfdgLW/XrVp5AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738226438; c=relaxed/simple;
-	bh=I25I53tKnpgJTRS/GrRux20jaj3Vvn2RwNk+4ICeVgU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YYU8GbmepDrpwrMkluuLUoeoZ57xlbrfy8MGvG7YyV59/t6ISnYJy5M8Bm3oW6yNXuvEp83aU78f1z5l6LLiXvgqFFtxtnQvxpJMtZCuUvzceyrpvbhlZpqQttEmxDJf14f1/DIwEHSSVq2m4lPlSmQqJdfA4B4EIij8KHt6CMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4b1279ca1d2so169382137.3;
-        Thu, 30 Jan 2025 00:40:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738226434; x=1738831234;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=reKlDefPaChUTykY+ITPpKv9Nus8Na5+cRD7++mWhUI=;
-        b=Usd6Zpe5Mgg3nySaUdco6BT8j5NklNj2SPS0413kqHnJN9l7krtKzFKeyjwqh4TEtI
-         Lni0CncKgbWKs4tRso9TRyTkFkJc9eSHaPJc9EfqRfPKrf4q7KALtBXyBSCkNGZjC6j3
-         bG62+/1E2WFpXbjOjtFA9MrjyUDjSl2aoEdnLTRjIT5Nlq4CyERXukVl66On5taaxxT+
-         mVx40VGl8SNrP2KGUQFU5eW23sbklfsFzPn0D+RwwA1k7YknfX+rQ7YUpXNPbx8vsNCI
-         G06huM6V038Mv8ymuXBptYI1CD8TKm+J8FyAJNTWZy+yTQpWg5g+bQ7AR1IuFAllLOZc
-         p5kA==
-X-Forwarded-Encrypted: i=1; AJvYcCU46ZdsgkWGmeyFntUPWgygPcCy+aIfJNhEdqCjdjFpnWZTWJaPhvqKrRIXTNWAaWMatQNYpbQOwvmBVQg0hkfeFl0=@vger.kernel.org, AJvYcCUWZtODl3cFsqcZS2154ZUBdp84RhycJIeo2wZ3VCdeqI1k2+mL4TtT9leXPHculPcS0JNY41sAKpDpNrI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD/a6jNsFytfEzgurLJXQgy4N6AXbts7iiKM/eE0CPj1OeVJ53
-	6PG8HhMbFQv6lMGeOM2yw+0DheCu+1pnWPsUJ/JZO1mPLjDxtoOfc5O4Zn4w
-X-Gm-Gg: ASbGncsVfk+8uI+AKNhHyWOAPTr3Sw8p66qmlXieCmfQM+1w3530NtBcXquFrfxkJ6a
-	jgrgLvJXKNeg36735VVPsRGbcTZ7LboeZO9LSI8taKJaY61PU+bkihu3zIMhdX4eaJ13wYoLLvd
-	ca4YdmQnz2NfN4SUv9cmwkxvmAfOOphph4yvDdWC13e+SzrC3aSqr/t3ArvXaajCheiYKyTMORG
-	CUpyvchEZXlap1KNexViagoi1+QO7jbJUTqgIvnMWMgI1ZvNQQsrWkKCSXLXb6I5Cse9Lc75rCB
-	kscOWFvGm5qQI0FXr8DGuLosHULTgPNKO5ZN9JKTjwSKAQQmPjE/yQ==
-X-Google-Smtp-Source: AGHT+IHEC8BbHV3pzAM7WgMTc1gGGOXf0HfAlRqi+5oYb6wfLZB9r1ScEOB5SxBHeYfxUtZg/VNi+Q==
-X-Received: by 2002:a05:6102:3e85:b0:4b2:48ba:9943 with SMTP id ada2fe7eead31-4b9a527dademr6122206137.24.1738226434223;
-        Thu, 30 Jan 2025 00:40:34 -0800 (PST)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866941f13b0sm166539241.30.2025.01.30.00.40.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 00:40:33 -0800 (PST)
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4b11a110e4eso180461137.1;
-        Thu, 30 Jan 2025 00:40:33 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVC28MCQiCskGuZtswN8VCvkH+trHD0iINhkbUxMEMN5Dp1wxK8eFNalJrfhqP3sdWe8t2Kkfbbs96WYt8=@vger.kernel.org, AJvYcCWr0rQkodLZ04wM0pTgyGMFUyG4cC0ltP3fSFDt524BVm/HwD9ezKEm/F4gtZT9huAJRW2mUhBRQXEl/IrRa1e0/FA=@vger.kernel.org
-X-Received: by 2002:a05:6102:38d4:b0:4b2:ae3a:35d6 with SMTP id
- ada2fe7eead31-4b9a52369camr5735036137.19.1738226433365; Thu, 30 Jan 2025
- 00:40:33 -0800 (PST)
+	s=arc-20240116; t=1738226450; c=relaxed/simple;
+	bh=YvbJnh/HicZ8svAByNknxks8ZnMOCqU0Cb9AnJtFmUU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=N4poMD1cRAN7xwUVYxNd7cJbq6eI83jNwdVDyaN9RSBYtGIb0+4j+MbVF3jQE4BmHv4/JWt299HWoytiGyG2bZVBS/xiGmNXwZlkBPAC6t+qH9YcpSNmNsvzzbN7VEgMyMnn33b1uCKEKwI+nlhNIXreEs+9ojknCr1B4Hw0bDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jx/AKb2j; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jx/AKb2j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AE8C4CED2;
+	Thu, 30 Jan 2025 08:40:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738226450;
+	bh=YvbJnh/HicZ8svAByNknxks8ZnMOCqU0Cb9AnJtFmUU=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=jx/AKb2jKdDU3K9xze5RT0UAbgJDDbNv8p3XMvh9QIsjmkI5NaEyDbfZWD2z0GRM8
+	 ETXfmzPU2JhSkdT9h2iTm2GFVzqHGeoXq1E96kx5e2IZ4rFVmvp/wR4EbA1Iw0psmu
+	 Il1Sen1fbIQkVGMgq3vhEY+3spvSQjEqE46qV6jUo91U/X8Bo1y9Mcyj3/ZD8PGaGP
+	 HKzxVpVkLoz/9BQbc4LA5GNCE9OcZrU2ma1IimecHw6//blPiM78VEUo1HIokcqd3L
+	 SPDD1Zl+9HmD4Sxzg1q5KA+jeu++w6m7TjCC+d3bfe3t69S4pF+MmlVez7e9SQW5uR
+	 dQV8SOxlTNwNA==
+Message-ID: <104e6b6f-3c1e-4a00-8822-aa6fb4562411@kernel.org>
+Date: Thu, 30 Jan 2025 09:40:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com> <20250129165122.2980-15-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250129165122.2980-15-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 Jan 2025 09:40:21 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdW3KFJzNx3tEpMTobNYT9odEJ3S1g+wx7NY32TFv91TWw@mail.gmail.com>
-X-Gm-Features: AWEUYZmW_sT5X4Wa-mPPzDPgmdW5QEJL-LtPYhMiRhBaVWxg-vKjEcEY64LYB6Y
-Message-ID: <CAMuHMdW3KFJzNx3tEpMTobNYT9odEJ3S1g+wx7NY32TFv91TWw@mail.gmail.com>
-Subject: Re: [PATCH 14/14] defconfig: Enable RZ/T2H Soc and RZ_SCI
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/13] dt-bindings: net: wireless: describe the ath12k
+ AHB module
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+Cc: ath12k@lists.infradead.org, linux-wireless@vger.kernel.org,
+ Kalle Valo <kvalo@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
+ <20250130043508.1885026-2-quic_rajkbhag@quicinc.com>
+ <20250130-cunning-quail-of-opportunity-76d0ad@krzk-bin>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250130-cunning-quail-of-opportunity-76d0ad@krzk-bin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-CC linux-renesas-soc
+On 30/01/2025 09:28, Krzysztof Kozlowski wrote:
+> On Thu, Jan 30, 2025 at 10:04:56AM +0530, Raj Kumar Bhagat wrote:
+>> Add device-tree bindings for the ATH12K module found in the IPQ5332
+>> device.
+>>
+>> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+>> ---
+>>  .../net/wireless/qcom,ath12k-ahb.yaml         | 319 ++++++++++++++++++
+>>  1 file changed, 319 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+>> new file mode 100644
+>> index 000000000000..bd953a028dc3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+> 
+> Filename should match compatible. This binding does not look like
+> supporting more devices, so there is no much benefit calling it by generic name.
 
-On Wed, 29 Jan 2025 at 17:57, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> ---
->  arch/arm64/configs/defconfig | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index c62831e61586..a1cc7a37386d 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -486,6 +486,7 @@ CONFIG_SERIAL_TEGRA_TCU=y
->  CONFIG_SERIAL_IMX=y
->  CONFIG_SERIAL_IMX_CONSOLE=y
->  CONFIG_SERIAL_SH_SCI=y
-> +CONFIG_SERIAL_RZ_SCI=y
->  CONFIG_SERIAL_MSM=y
->  CONFIG_SERIAL_MSM_CONSOLE=y
->  CONFIG_SERIAL_QCOM_GENI=y
-> @@ -1457,6 +1458,7 @@ CONFIG_ARCH_R9A07G054=y
->  CONFIG_ARCH_R9A08G045=y
->  CONFIG_ARCH_R9A09G011=y
->  CONFIG_ARCH_R9A09G057=y
-> +CONFIG_ARCH_R9A09G077=y
->  CONFIG_ROCKCHIP_IODOMAIN=y
->  CONFIG_ARCH_TEGRA_132_SOC=y
->  CONFIG_ARCH_TEGRA_210_SOC=y
-> --
-> 2.43.0
+
+I saw now your other patchset, so you have here two devices, but I still
+do not understand why this cannot follow standard naming practice like
+most bindings supporting one or more devices. Like every review we give.
+
+Best regards,
+Krzysztof
