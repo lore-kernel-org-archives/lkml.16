@@ -1,107 +1,192 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659B31E9B01
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49D62BB15;
+	Thu, 30 Jan 2025 13:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738245404; cv=none; b=ABEwf9U0k/xnKJqC/7JB4KN2EXyjGcCeQ3ZsQpyPXB2gVk29BDWXkLs4GWEWnGOtcxUnkyB8WQOyBEBpXNAaNfXqh0Q78N28RQq78bu28HhwvcHgdPu7vDIXbjeNto14/Vb5KCQs/hAokKGr8r9EK8/bZF7sBDpTGyadsViMhCI=
+	t=1738245560; cv=none; b=r5NKHPz6gnUMUAKclqbhE+FdJff/6aBoAPl37/Qxai6uhur8tQq8oyUi/PPixkqDe66mOE5K/Opl0U+l6ed0WZ+ToyK936cwviRv2idGLlUol3nE73rxs/TxN806ot8aEw+m3MEDc+Gz6Q9epKtjgEOBk0NSmSdpf0r6miXbsS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738245404; c=relaxed/simple;
-	bh=g0d1WeXvq6Xn8ifYHVuYao7Y1sjKWiBoiqlf7KqX2RY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XHTDorQIDNcNrkLPTit+8SmP6HIsfZsBe8p8IlEHbJ55IHvGgi2Mr6VIHLUTTA9UvpXByyUzJxU/czKo1fmt5hki4mnLzTfcadteTUZMTJ3z6g0kw1aOfhdN4GhqTjspO7plpa1T/ujsFRW51/XKIswJ9wHeXyor2HpZquFDZ7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fByHpEPj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738245560; c=relaxed/simple;
+	bh=lmNrBa/Hppu71b0Ym3PaKoW0EoP6tAtGudaU5PsXPRA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QFJuIApZZ4uK38/cBG0pIWB2CUvEI4NgK03gP1tE5HJrG9pANXuAjAi2Y87mOh+F/vLQyx6AgGJcXHIJibnb7oWVduGv2tLCq9nBar0OJXrDwMdNhd3sKfcZAxxeL+Gi7crfSywKBVv+ndf8KXmeplEWahO7AsBu2Q25egzoOk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FJ0mvW4k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fByHpEPj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738245400;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pW7fdJ0dDdWhu8G/+S1u5Fbt6vZEjXQe74WQ+27cozU=;
-	b=fByHpEPjX0easuT/10MMxn7Kghv+RtZJVWNVSmatWtMrSFVfxPEXntg2g7Qh1eqyFi10Dr
-	u5FWOxHBdd50uN6IJ3+oa7HK6mc8qbfkbXvgfY+07saiyVvNAo3QTpbBSY/2SxyODh0n3d
-	nsu4xa88R+uKiB+G+nqdSTxn5NrGfkY=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-88-86FrBdMHNrC3xcIxhASqEA-1; Thu,
- 30 Jan 2025 08:56:35 -0500
-X-MC-Unique: 86FrBdMHNrC3xcIxhASqEA-1
-X-Mimecast-MFC-AGG-ID: 86FrBdMHNrC3xcIxhASqEA
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B2BCA1801330;
-	Thu, 30 Jan 2025 13:56:33 +0000 (UTC)
-Received: from pasta.fast.eng.rdu2.dc.redhat.com (unknown [10.45.224.234])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7D59C1800268;
-	Thu, 30 Jan 2025 13:56:31 +0000 (UTC)
-From: Andreas Gruenbacher <agruenba@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Andreas Gruenbacher <agruenba@redhat.com>,
-	Christoph Hellwig <hch@lst.de>,
-	gfs2@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] gfs2: switch to lockref_init(..., 1)
-Date: Thu, 30 Jan 2025 14:56:22 +0100
-Message-ID: <20250130135624.1899988-3-agruenba@redhat.com>
-In-Reply-To: <20250130135624.1899988-1-agruenba@redhat.com>
-References: <20250130135624.1899988-1-agruenba@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FJ0mvW4k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD7C2C4CED2;
+	Thu, 30 Jan 2025 13:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738245559;
+	bh=lmNrBa/Hppu71b0Ym3PaKoW0EoP6tAtGudaU5PsXPRA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FJ0mvW4kMwXoYiMj+HrcC+f/mr6eip2og9lXNUJS+mI85jNmHLlVLolNH9tdW083H
+	 TGTy9z5psa4pT9aA3e/irVm1/Ow/eT9KXgXRmYrIzUY1Waa1rCyYSaxxNejl8idOGO
+	 Wl8bwgFUkcYGXYg8eJVc9fCVpmp8hyxL5D/rhn6M=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	hargar@microsoft.com,
+	broonie@kernel.org
+Subject: [PATCH 6.13 00/25] 6.13.1-rc1 review
+Date: Thu, 30 Jan 2025 14:58:46 +0100
+Message-ID: <20250130133456.914329400@linuxfoundation.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.1-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-6.13.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 6.13.1-rc1
+X-KernelTest-Deadline: 2025-02-01T13:34+00:00
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-In qd_alloc(), initialize the lockref count to 1 to cover the common
-case.  Compensate for that in gfs2_quota_init() by adjusting the count
-back down to 0; this only occurs when mounting the filesystem rw.
+This is the start of the stable review cycle for the 6.13.1 release.
+There are 25 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
----
- fs/gfs2/quota.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Responses should be made by Sat, 01 Feb 2025 13:34:42 +0000.
+Anything received after that time might be too late.
 
-diff --git a/fs/gfs2/quota.c b/fs/gfs2/quota.c
-index 58bc5013ca49..6ae529a5388b 100644
---- a/fs/gfs2/quota.c
-+++ b/fs/gfs2/quota.c
-@@ -236,7 +236,7 @@ static struct gfs2_quota_data *qd_alloc(unsigned hash, struct gfs2_sbd *sdp, str
- 		return NULL;
- 
- 	qd->qd_sbd = sdp;
--	lockref_init(&qd->qd_lockref, 0);
-+	lockref_init(&qd->qd_lockref, 1);
- 	qd->qd_id = qid;
- 	qd->qd_slot = -1;
- 	INIT_LIST_HEAD(&qd->qd_lru);
-@@ -297,7 +297,6 @@ static int qd_get(struct gfs2_sbd *sdp, struct kqid qid,
- 	spin_lock_bucket(hash);
- 	*qdp = qd = gfs2_qd_search_bucket(hash, sdp, qid);
- 	if (qd == NULL) {
--		new_qd->qd_lockref.count++;
- 		*qdp = new_qd;
- 		list_add(&new_qd->qd_list, &sdp->sd_quota_list);
- 		hlist_bl_add_head_rcu(&new_qd->qd_hlist, &qd_hash_table[hash]);
-@@ -1450,6 +1449,7 @@ int gfs2_quota_init(struct gfs2_sbd *sdp)
- 			if (qd == NULL)
- 				goto fail_brelse;
- 
-+			qd->qd_lockref.count = 0;
- 			set_bit(QDF_CHANGE, &qd->qd_flags);
- 			qd->qd_change = qc_change;
- 			qd->qd_slot = slot;
--- 
-2.48.1
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.1-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 6.13.1-rc1
+
+Jack Greiner <jack@emoss.org>
+    Input: xpad - add support for wooting two he (arm)
+
+Matheos Mattsson <matheos.mattsson@gmail.com>
+    Input: xpad - add support for Nacon Evol-X Xbox One Controller
+
+Leonardo Brondani Schenkel <leonardo@schenkel.net>
+    Input: xpad - improve name of 8BitDo controller 2dc8:3106
+
+Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+    Input: xpad - add QH Electronics VID/PID
+
+Nilton Perim Neto <niltonperimneto@gmail.com>
+    Input: xpad - add unofficial Xbox 360 wireless receiver clone
+
+Mark Pearson <mpearson-lenovo@squebb.ca>
+    Input: atkbd - map F23 key to support default copilot shortcut
+
+Nicolas Nobelis <nicolas@nobelis.eu>
+    Input: xpad - add support for Nacon Pro Compact
+
+Jann Horn <jannh@google.com>
+    io_uring/rsrc: require cloned buffers to share accounting contexts
+
+Jason Gerecke <jason.gerecke@wacom.com>
+    HID: wacom: Initialize brightness of LED trigger
+
+Hans de Goede <hdegoede@redhat.com>
+    wifi: rtl8xxxu: add more missing rtl8192cu USB IDs
+
+Lianqin Hu <hulianqin@vivo.com>
+    ALSA: usb-audio: Add delay quirk for USB Audio Device
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "usb: gadget: u_serial: Disable ep before setting port to null to fix the crash caused by port being null"
+
+Qasim Ijaz <qasdev00@gmail.com>
+    USB: serial: quatech2: fix null-ptr-deref in qt2_process_read_urb()
+
+Easwar Hariharan <eahariha@linux.microsoft.com>
+    scsi: storvsc: Ratelimit warning logs to prevent VM denial of service
+
+Alex Williamson <alex.williamson@redhat.com>
+    vfio/platform: check the bounds of read/write syscalls
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    cachestat: fix page cache statistics permission checking
+
+Jiri Kosina <jikos@kernel.org>
+    Revert "HID: multitouch: Add support for lenovo Y9000P Touchpad"
+
+Jamal Hadi Salim <jhs@mojatatu.com>
+    net: sched: fix ets qdisc OOB Indexing
+
+Paulo Alcantara <pc@manguebit.com>
+    smb: client: handle lack of EA support in smb2_query_path_info()
+
+Chuck Lever <chuck.lever@oracle.com>
+    libfs: Use d_children list to iterate simple_offset directories
+
+Chuck Lever <chuck.lever@oracle.com>
+    libfs: Replace simple_offset end-of-directory detection
+
+Chuck Lever <chuck.lever@oracle.com>
+    Revert "libfs: fix infinite directory reads for offset dir"
+
+Chuck Lever <chuck.lever@oracle.com>
+    Revert "libfs: Add simple_offset_empty()"
+
+Chuck Lever <chuck.lever@oracle.com>
+    libfs: Return ENOSPC when the directory offset range is exhausted
+
+Andreas Gruenbacher <agruenba@redhat.com>
+    gfs2: Truncate address space when flipping GFS2_DIF_JDATA flag
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                     |   4 +-
+ drivers/hid/hid-ids.h                        |   1 -
+ drivers/hid/hid-multitouch.c                 |   8 +-
+ drivers/hid/wacom_sys.c                      |  24 ++--
+ drivers/input/joystick/xpad.c                |   9 +-
+ drivers/input/keyboard/atkbd.c               |   2 +-
+ drivers/net/wireless/realtek/rtl8xxxu/core.c |  20 ++++
+ drivers/scsi/storvsc_drv.c                   |   8 +-
+ drivers/usb/gadget/function/u_serial.c       |   8 +-
+ drivers/usb/serial/quatech2.c                |   2 +-
+ drivers/vfio/platform/vfio_platform_common.c |  10 ++
+ fs/gfs2/file.c                               |   1 +
+ fs/libfs.c                                   | 162 +++++++++++++--------------
+ fs/smb/client/smb2inode.c                    | 104 ++++++++++++-----
+ include/linux/fs.h                           |   1 -
+ io_uring/rsrc.c                              |   7 ++
+ mm/filemap.c                                 |  17 +++
+ mm/shmem.c                                   |   4 +-
+ net/sched/sch_ets.c                          |   2 +
+ sound/usb/quirks.c                           |   2 +
+ 20 files changed, 251 insertions(+), 145 deletions(-)
+
 
