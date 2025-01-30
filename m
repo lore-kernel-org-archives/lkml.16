@@ -1,59 +1,59 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCCD149C50
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 04:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6945B14F102
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 04:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738212312; cv=none; b=LncvHpo3uBMprc9/I7ddLZSB0YN5NO0zlIQ3STrD001obJ5WYNYX3qTk5qeNEbc9QkR1GUtdWumPlIWPTIXw3la5BC74MgGm6+2Pqc6W6XqauU5oF5WU4mdgrXmkgTCKTcbQI9ZoqeXROj0Lpvqdn/wi+HTM+vTsRhcvGB/YCoY=
+	t=1738212317; cv=none; b=BnESuGAeq0OSGDQzfyjo7jvei0kHHcJpjP846rgr+3ZUXmW/HVtFvvSFYKHhrS1nYmOQelzEuay/XwdNkhA/T89KsGLiUWihQFtI6bR7Mx4BPbD4Yv4q1Z0S+WGcCqKqaQ4rvehZ/OBxUzg0tNG8aPLB6JOBEHR7zmSD5jUK5YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738212312; c=relaxed/simple;
-	bh=BziQv4iV5STepAfuHgjzd6hfIYwqdyff/nRvfV2Mdgw=;
+	s=arc-20240116; t=1738212317; c=relaxed/simple;
+	bh=mf8hb9oMGAcg6xZZocFsqBCJKRD7U4e7NciQTHCeCJk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=giUQTR96XgeFJX4Slwe/Bozzzd4YiV+d9RNnwQODbcvKW/uALD3b1RG9w9TdpjyBwQHiyuczx6sfng47HM6KltQ8HdDLfHAeZTVnYhpbeDSykVaD3iQtEPTWacANmsFvFrJbkcgxiZjqWjiwlWRfSG0SDjDPSFe5ZJJ/2jrWCHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RH0T0V/B; arc=none smtp.client-ip=209.85.214.172
+	 MIME-Version; b=sS+YqSJR+o/3V6nPzxmTBCNKIwr8LP6aKZFWRR0aW0rvOScHU1vHCZQRrFnSm93N/kguMM2b7Ys2cxMea21ovvtmfNmNbC1OKS+ehY1Oa1TpnFUIZIDr3EQbmTTQt5e9NaICqa9Gx0fCMXZfhvDbmsysXflPkRZZoy6SvVAfXxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Tc2klEBG; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RH0T0V/B"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2164b1f05caso5695945ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 20:45:09 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tc2klEBG"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ef8c012913so427934a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 20:45:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738212309; x=1738817109; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1738212315; x=1738817115; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MkZn1kC+dMtAGDYo9TtmpyB1pyvIkC5NDATu7QnxsYw=;
-        b=RH0T0V/BKaIB59ZUpFze0UZpkYBCFsQFpmmBJY82Y5lKVKE9O9GN1LC8SeszqJSmzv
-         5PfE4ZJ+4/Ij/UoxHUnEEu1XXLAI2H4z++EqeEQuHZCXN3psLruhclla7yv+xzNT5w2h
-         jXa8g5F/WuFYs7ojlQAXeknHakORlzGe1UR6w=
+        bh=qoanfGA+iKM2lkr04fEBeNmdyi5bnUfmaHtYhcyT7Yw=;
+        b=Tc2klEBGL5ZPnOVYJaERNOol/ecdMnAh4PAIcnlDdkfNhm/1gALnZG75b2WEBLD3z+
+         T8zzAbOTg1LrbTPfzaqzSdT5F2ebixwXM+bwsjjkbu1TWlcBm0VdnFz+owMOqxMzM2kX
+         clBRVRI9bfwWMbXOWY4CjYj9Op+Jj2M2XdKW4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738212309; x=1738817109;
+        d=1e100.net; s=20230601; t=1738212315; x=1738817115;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MkZn1kC+dMtAGDYo9TtmpyB1pyvIkC5NDATu7QnxsYw=;
-        b=PEfH9G09IMLVcsgCCnoA1WvZN8PSuYxgfvjK9sYiQjTsJICTfM69M/Z6RcEakDgjQJ
-         LvpiZpszoi8ECo3tudpwQDKiyUvX3X+uPjSP9eLxHS80RYg1Sv3YftDPG2CJvOfVNXji
-         GzUJnNDmor9uUl8CR2svo+Gksen3m6QPypb2pkdqQ+sMTvJJpunbGJpZcq+J87oTYVb3
-         qT3sBVjHXlyAUnL1KJDuXt6an9aqIvQ/SLmB9xWC55h6tpQk/wghJPj/5WUxcDdiqatf
-         5/+cvliTU9qcEYY1aG8upUjQXtkGCIeLTrA7QSThP1lz5O46W1scoSIaYe7iyPe42cQl
-         dwZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVD/5N8pbL66P5eQCLezpOGNALympBByhDIRMX8Z451FV+421TZpFp3bw/9V6RVcc4hsr+EYN5tSYhkYlY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCGJeqhBtbIs1qmoYRtM3EMbspetlhyZeC+RIzguWhvAQibz84
-	j1nkbxFeDlmNl70CKObEG+31kzg37/ZZkPWvtNxrheQSykIp2uBoSXVK5Ny4Ww==
-X-Gm-Gg: ASbGnctWdnyJ2rWFwGTXRFVYqxR7tY8IANFn7tQ3wuYkvKZF5BaVFQ9FeyabcNavqQT
-	F3iAnrtNPWPpbAcVgSj+gG5nvqOhB46fSx1lbtUCUk8QDZctcO3Xos+7xNGn/sOWnyLcd/nUHXt
-	ZVx1CZ29JyrVhi0zOXENtuZoXGPFW5/ZJTi9O3M1q+6BX6pKCjlBqTw9KQajl8XSLqamXkC723v
-	9/7aIQNwUBUhYughJx36p+Xv74fJy6b6wrWOLhV6yggo2HI0BaN6895NAoLdPF4GGI/3oDBu6BV
-	tNaGIn4GwOX41jv9sA==
-X-Google-Smtp-Source: AGHT+IGZ3YC1dM+qQG3bGdWrkOZcidEoUlnu3m+rti9TiEBtmbAsSMQiEuLAx2BRY18SnHSZlarSww==
-X-Received: by 2002:a05:6a20:1584:b0:1e3:cf57:5f5f with SMTP id adf61e73a8af0-1ed7a6b290dmr9388630637.27.1738212308930;
-        Wed, 29 Jan 2025 20:45:08 -0800 (PST)
+        bh=qoanfGA+iKM2lkr04fEBeNmdyi5bnUfmaHtYhcyT7Yw=;
+        b=quq+EZ7lBFn/uCvIFdx4IPOdDQAwVfRw4wQQIIQGuyxMKURx0elmo2BrZziJNX61H2
+         FFAnJwpT3fMlLcaHmzdBd+cgJhojKHLfVwZAePsJoTgAZHoo6jS4jujDxThBmB0TZpUH
+         O66JwyOcAKd08+tUVGfEdOyrQ5dwvLYKLOMDaVijNmr0B+vmEQNC0NJBOH/Gc3Pk04Ba
+         boL6UCVNwwbd3yAlO3FtCjuwcdNTVQNtiTNhJmomILZJYUdK1Z7ryZqJ+gACT6gbWELJ
+         O89tt8cdc6KPEJeAsSN2s8Pa9o8jMNF9x+b3V7EkKAk9XRmVxc1e/gtZczlpI9L/pcZ0
+         NWFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIfm8sXaqDvZvdYDrnfWML6/PhRmSOn9k5jJeweaEhWuU8HLNmMnxIFssR9dYS81ZhR4E24y4BAMsGLaU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyL7M0FMyq0ygZ1igXb6jtnNbT5vuwZ+p90UQE/BuGYqgz6S+3P
+	U/LST9W9iiBkjbuFxldGtG7KBN4G45UK3+Uur3mtwlKXKr4CwZ7nltr6yYbvKw==
+X-Gm-Gg: ASbGncskxsE5m8hZj2xeNFc1sllnsvSeAgb123U+jp1uv/gUvq9OOC0V9e8AZe4gqfn
+	bZHku1v7qi2uEKgVIO6Xl6eQ9A3jFyJgThtdqhKUb+/YDjU5/SArH2loJrBnXcypDt+BRv0npgX
+	HSlm1A4AotLdkrRhIrkSLqSNdpF1OKeDCeuwWw/MnHIhPJuSaYBIJstQPVK5ouXIFgh8sHPoQ19
+	FK0Bq3ZtL+k1mtqgwZauXf+UlZzN8Um4nvsbbVeeX5XYjaXhLbM/EHqMCVX5RSZqsakeRYScnOF
+	sV3zwMckF/hhNiEulQ==
+X-Google-Smtp-Source: AGHT+IF2UbQJQ89YEqryPhFxoeZX28FVlFBfWDCACr57M7BnO6sGVckgAr34ZiwemLJQw2ugQkpK1Q==
+X-Received: by 2002:a17:90b:5190:b0:2ee:ad18:b30d with SMTP id 98e67ed59e1d1-2f83abbd886mr7881534a91.6.1738212314683;
+        Wed, 29 Jan 2025 20:45:14 -0800 (PST)
 Received: from localhost ([2401:fa00:8f:203:d794:9e7a:5186:857e])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-acebe8568fesm402564a12.40.2025.01.29.20.45.06
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2f83bc98ae9sm3012541a91.10.2025.01.29.20.45.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2025 20:45:08 -0800 (PST)
+        Wed, 29 Jan 2025 20:45:14 -0800 (PST)
 From: Sergey Senozhatsky <senozhatsky@chromium.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Yosry Ahmed <yosry.ahmed@linux.dev>
@@ -64,9 +64,9 @@ Cc: Minchan Kim <minchan@kernel.org>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv2 1/7] zsmalloc: factor out pool locking helpers
-Date: Thu, 30 Jan 2025 13:42:44 +0900
-Message-ID: <20250130044455.2642465-2-senozhatsky@chromium.org>
+Subject: [PATCHv2 2/7] zsmalloc: re-shuffle zs_pool members
+Date: Thu, 30 Jan 2025 13:42:45 +0900
+Message-ID: <20250130044455.2642465-3-senozhatsky@chromium.org>
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
 In-Reply-To: <20250130044455.2642465-1-senozhatsky@chromium.org>
 References: <20250130044455.2642465-1-senozhatsky@chromium.org>
@@ -78,141 +78,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We currently have a mix of migrate_{read,write}_lock() helpers
-that lock zspages, but it's zs_pool that actually has a ->migrate_lock
-access to which is opene-coded.  Factor out pool migrate locking
-into helpers, zspage migration locking API will be renamed to
-reduce confusion.
+There is no need in having ->name at offset 0, it's never user and is
+being followed but a very large RO (after init) array of size classes,
+so each time we need to lock pool->migrate_lock (which happens relatively
+often) we need to jump over that RO region.  Swap ->migrate_lock and ->name.
+
+Move ->pages_allocated is modified relatively often, move it up
+right after RO size_classes arrays.
+
+We modify ->compaction_in_progress and ->stats only from compaction
+(defragmentation), which can run only on one CPU at a time and,
+depending on the case, may or may not be common.  Move both to down.
 
 Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- mm/zsmalloc.c | 47 ++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 36 insertions(+), 11 deletions(-)
+ mm/zsmalloc.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
 diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-index 6d0e47f7ae33..8972b4b56cd3 100644
+index 8972b4b56cd3..2280ea17796b 100644
 --- a/mm/zsmalloc.c
 +++ b/mm/zsmalloc.c
-@@ -228,6 +228,31 @@ struct zs_pool {
- 	atomic_t compaction_in_progress;
+@@ -204,18 +204,15 @@ struct link_free {
  };
  
-+static void pool_write_unlock(struct zs_pool *pool)
-+{
-+	write_unlock(&pool->migrate_lock);
-+}
+ struct zs_pool {
+-	const char *name;
++	/* protect page/zspage migration */
++	rwlock_t migrate_lock;
+ 
+ 	struct size_class *size_class[ZS_SIZE_CLASSES];
+-	struct kmem_cache *handle_cachep;
+-	struct kmem_cache *zspage_cachep;
+ 
+ 	atomic_long_t pages_allocated;
+ 
+-	struct zs_pool_stats stats;
+-
+-	/* Compact classes */
+-	struct shrinker *shrinker;
++	struct kmem_cache *handle_cachep;
++	struct kmem_cache *zspage_cachep;
+ 
+ #ifdef CONFIG_ZSMALLOC_STAT
+ 	struct dentry *stat_dentry;
+@@ -223,9 +220,14 @@ struct zs_pool {
+ #ifdef CONFIG_COMPACTION
+ 	struct work_struct free_work;
+ #endif
+-	/* protect page/zspage migration */
+-	rwlock_t migrate_lock;
++	const char *name;
 +
-+static void pool_write_lock(struct zs_pool *pool)
-+{
-+	write_lock(&pool->migrate_lock);
-+}
-+
-+static void pool_read_unlock(struct zs_pool *pool)
-+{
-+	read_unlock(&pool->migrate_lock);
-+}
-+
-+static void pool_read_lock(struct zs_pool *pool)
-+{
-+	read_lock(&pool->migrate_lock);
-+}
-+
-+static bool pool_lock_is_contended(struct zs_pool *pool)
-+{
-+	return rwlock_is_contended(&pool->migrate_lock);
-+}
-+
- static inline void zpdesc_set_first(struct zpdesc *zpdesc)
- {
- 	SetPagePrivate(zpdesc_page(zpdesc));
-@@ -1206,7 +1231,7 @@ void *zs_map_object(struct zs_pool *pool, unsigned long handle,
- 	BUG_ON(in_interrupt());
++	/* Compact classes */
++	struct shrinker *shrinker;
++	/* Permit only once compaction at a time */
+ 	atomic_t compaction_in_progress;
++	/* compaction stats */
++	struct zs_pool_stats stats;
+ };
  
- 	/* It guarantees it can get zspage from handle safely */
--	read_lock(&pool->migrate_lock);
-+	pool_read_lock(pool);
- 	obj = handle_to_obj(handle);
- 	obj_to_location(obj, &zpdesc, &obj_idx);
- 	zspage = get_zspage(zpdesc);
-@@ -1218,7 +1243,7 @@ void *zs_map_object(struct zs_pool *pool, unsigned long handle,
- 	 * which is smaller granularity.
- 	 */
- 	migrate_read_lock(zspage);
--	read_unlock(&pool->migrate_lock);
-+	pool_read_unlock(pool);
- 
- 	class = zspage_class(pool, zspage);
- 	off = offset_in_page(class->size * obj_idx);
-@@ -1453,13 +1478,13 @@ void zs_free(struct zs_pool *pool, unsigned long handle)
- 	 * The pool->migrate_lock protects the race with zpage's migration
- 	 * so it's safe to get the page from handle.
- 	 */
--	read_lock(&pool->migrate_lock);
-+	pool_read_lock(pool);
- 	obj = handle_to_obj(handle);
- 	obj_to_zpdesc(obj, &f_zpdesc);
- 	zspage = get_zspage(f_zpdesc);
- 	class = zspage_class(pool, zspage);
- 	spin_lock(&class->lock);
--	read_unlock(&pool->migrate_lock);
-+	pool_read_unlock(pool);
- 
- 	class_stat_sub(class, ZS_OBJS_INUSE, 1);
- 	obj_free(class->size, obj);
-@@ -1796,7 +1821,7 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
- 	 * The pool migrate_lock protects the race between zpage migration
- 	 * and zs_free.
- 	 */
--	write_lock(&pool->migrate_lock);
-+	pool_write_lock(pool);
- 	class = zspage_class(pool, zspage);
- 
- 	/*
-@@ -1833,7 +1858,7 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
- 	 * Since we complete the data copy and set up new zspage structure,
- 	 * it's okay to release migration_lock.
- 	 */
--	write_unlock(&pool->migrate_lock);
-+	pool_write_unlock(pool);
- 	spin_unlock(&class->lock);
- 	migrate_write_unlock(zspage);
- 
-@@ -1956,7 +1981,7 @@ static unsigned long __zs_compact(struct zs_pool *pool,
- 	 * protect the race between zpage migration and zs_free
- 	 * as well as zpage allocation/free
- 	 */
--	write_lock(&pool->migrate_lock);
-+	pool_write_lock(pool);
- 	spin_lock(&class->lock);
- 	while (zs_can_compact(class)) {
- 		int fg;
-@@ -1983,14 +2008,14 @@ static unsigned long __zs_compact(struct zs_pool *pool,
- 		src_zspage = NULL;
- 
- 		if (get_fullness_group(class, dst_zspage) == ZS_INUSE_RATIO_100
--		    || rwlock_is_contended(&pool->migrate_lock)) {
-+		    || pool_lock_is_contended(pool)) {
- 			putback_zspage(class, dst_zspage);
- 			dst_zspage = NULL;
- 
- 			spin_unlock(&class->lock);
--			write_unlock(&pool->migrate_lock);
-+			pool_write_unlock(pool);
- 			cond_resched();
--			write_lock(&pool->migrate_lock);
-+			pool_write_lock(pool);
- 			spin_lock(&class->lock);
- 		}
- 	}
-@@ -2002,7 +2027,7 @@ static unsigned long __zs_compact(struct zs_pool *pool,
- 		putback_zspage(class, dst_zspage);
- 
- 	spin_unlock(&class->lock);
--	write_unlock(&pool->migrate_lock);
-+	pool_write_unlock(pool);
- 
- 	return pages_freed;
- }
+ static void pool_write_unlock(struct zs_pool *pool)
 -- 
 2.48.1.262.g85cc9f2d1e-goog
 
