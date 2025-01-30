@@ -1,206 +1,153 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B949D17597;
-	Thu, 30 Jan 2025 17:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7584431
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738258973; cv=none; b=BeNXGev4Lx832K2lju/hPWwDLHBvKQNsVIO/8pDpODCB06WmtWUCwKLZfw8/KL02d04kS9+37La6uW7XH9WXi7kr454JMTwrvRKH6PRVCw26xsfv6mpBgQsPQr2o1ZxRYcy3F2rhrvySSU9rWAPmOOraSLuRZkL3zx8DXOgijRk=
+	t=1738259142; cv=none; b=WiRTmxJKG/t0F6bE33veJMrqzL6ztag6jT+eO82NKN1fwWOdWiQVKTxFHbbJXdSV1Kr1WwpxOxFoD/OTy1BOCyKcijzZuM+4lAAXBdRSTenYjLc2kjDzYrxyGdn6NZLYibI/7cdgzymCuuHZk8AwmQoH5zm9hYlyh6yVSjRrbZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738258973; c=relaxed/simple;
-	bh=owHGhlOxqkTJZf1QKp2zLFkv9bpKwBGaiiWtVHtyhuI=;
+	s=arc-20240116; t=1738259142; c=relaxed/simple;
+	bh=EVrtNTsPO/P2O4DvtiGaiSzdL4nRi6J2mKnT4zGXZjE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DVZ7wCGIxlIRSx7FduoOv9iOzyoy6vlSTwMT2ZRlmAWVFEukv4S+KDKvmXLEyhK3FhSkd3xiOu8mN5m92ZxsjjYDEvSFOUIn5OWsxFBYRy3wkOEGvTbyS3P9ljI20UMGa/2Tjp1IEAKhAdmh8cKzyPaTluelvwCaKB+am3mxALQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=pAOGNf1x; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=LRkaF3SrwOb3BaHm6fhwzh2SqIoBlQ16bMUQ5LQPHcuX6CJui2Axd1qVWnS9n0BxmL4wV8RO+MUESovc0IcgpNSqunV6XJ21GwpwBU5+YOi41TJv2vvuZKHtf8kAhIdIpgi1KlzudkjdtI4pIP52hZ2IWPzhUBnzBf+6QRtmmH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WRb3rEUF; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pAOGNf1x"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xasRZEja/joABEkMp98bjtx1gSYQAG+ohRktNZoL2vw=; b=pAOGNf1xfxkTbyoApyyRbDfzwb
-	bM7Cxb4AHGNfMqMoMr3h2AGCgs8xtWfDH5dRjvQP8u1YVRhfqHblcg6ciXkf1trQwKNC/xPk3zcjh
-	E6vkLZoLEn2aySQuEEvHcleEMEOgoI94h3wH3ITNDI6ly34tAqlNslSAx+mq3jANZzkMOPwCApztY
-	2rcrq6gMPN3fjKSX0+9fldOThtJXOMJ0aM0i0TrK186i2+mHTOj9C+jnaGFgL3GqGopXiH7yu/9+B
-	Vcu8oAYh4yfiX2S3xCo4Y4NSkxE+hc4vCkiueJCVT2KPmRRjsBrbcP2Ww8zGyo0EO+wYcAQ6IdZtn
-	fyqYpsaw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46808)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tdYYn-0004nx-15;
-	Thu, 30 Jan 2025 17:42:37 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tdYYj-0004wV-2A;
-	Thu, 30 Jan 2025 17:42:33 +0000
-Date: Thu, 30 Jan 2025 17:42:33 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: Tristram.Ha@microchip.com, Woojung.Huh@microchip.com, andrew@lunn.ch,
-	hkallweit1@gmail.com, maxime.chevallier@bootlin.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, UNGLinuxDriver@microchip.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC net-next 1/2] net: pcs: xpcs: Add special code to
- operate in Microchip KSZ9477 switch
-Message-ID: <Z5u6CajmOV6T1Tkv@shell.armlinux.org.uk>
-References: <Z5iiXWkhm2OvbjOx@shell.armlinux.org.uk>
- <20250128102128.z3pwym6kdgz4yjw4@skbuf>
- <Z5jOhzmQAGkv9Jlw@shell.armlinux.org.uk>
- <20250128152324.3p2ccnxoz5xta7ct@skbuf>
- <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
- <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
- <20250129211226.cfrhv4nn3jomooxc@skbuf>
- <Z5qmIEc6xEaeY6ys@shell.armlinux.org.uk>
- <20250129230549.kwkcxdn62mghdlx3@skbuf>
- <Z5t0RvoUOhxqeh25@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WRb3rEUF"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4363ae65100so12925935e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:45:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1738259138; x=1738863938; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6EgpIwGsn1WWtOnlk05/NPJfqorVon4W4KT22F+TzpE=;
+        b=WRb3rEUFmjbymaL5LslFDaW0OoamlbEjQTlsMzTmopK7t1xptwIDQYFCIkzNcjWQJa
+         kiu00H+cqUA3fIPd0qVQrYGsd3ulm1pUbtQiPEfvX3mbd3A6G7vNdj0ZIXaAlDBZNITg
+         mt9EM2iSDZReNGaZJ3B57BWQlP7wgg5yTJCPWHZ6brgzTs6Xuv1+r4DlzbfKJZAJvrKJ
+         0ynu6QUNWv/Ph5LPpYDqhAGjdYXemBB/0KdC5xX0eCiWS3+fCH9jHB/pxi7BFLm35uuB
+         fYCfGup9H6msHHUYjmbzyNYQ2WsLeCxrcVNXeY3RRWRnZNVSSI5USOqtaXkvoRF95Jw2
+         Bajw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738259138; x=1738863938;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6EgpIwGsn1WWtOnlk05/NPJfqorVon4W4KT22F+TzpE=;
+        b=Yop8SjWql4wo7tVwD27hxHKITUFhszwJ1rxR0KY9g72Ag2CZmD6/JpVmrlPfooFAP7
+         C3kuiHP7LxOkIIRK78KuxCuWrnseva0t1WcrUaQyq4nUqtJ2ufukQcoqOD6ElRGk6NoL
+         k8sPlsRsYG1zdifrvBGwSu1ml7kskwtjiezyzDdKCvgKJ/p2FmXtqWAFNPHv4hhQfrT8
+         P1ppaAMCGGKPYmb9T+o/OQrr4+TBNUMWjoQ2lf9OL/Hg1HeSEoMf2fB54cdcgkt5LgXO
+         sLdPdKboHfNW6UFYaNgzBdfaR2fiBMozvJqVHiX7HpVEirX/EnCY62Qnw1790HS68KiC
+         O4MA==
+X-Forwarded-Encrypted: i=1; AJvYcCUm5vRYJ0WjctR7HEqWnPKGESes4WQvY8JVVk1K8W6VQftL7LvbowKyJZElxMewsN1TsT8+JL6CfYGc/SA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY79ZUpdpDVjUElnK99JiHFF/5INngUL4ospGmetQLb7I7UiGa
+	TGQhEi532Tp6CcsUqFHWMNqzSDpvfmctCoQ63ptf4iyM8dreQQqzWTkij80el+A=
+X-Gm-Gg: ASbGncv4gwcup0EWGqcZIAzKYQk7p52y52o+CTpMw/8PBGWa9Ur8l5eCYnyvqky4wwM
+	qOPrEU5h1/MBq5fiiURPuxNX6LHfDC6ajT/gHN0VpSlOpeEQxnX+ODKTfH/iswJBfVYeIWiGPqZ
+	31Xnp4iJdBjmxSzXTKOH942ELGvNI/UCn1kxj41tun6n0iurZLKRqNwNu8e8+8jJnrIXTzhlanI
+	eGuwDZbmP685HZNtTCbjlstrbwwtfVJU+Aj8/GJP9aFu+PbBPskOwFn5cBVkok9SvcqvcSt5dA6
+	+cr7axll7GOBIQqlfA==
+X-Google-Smtp-Source: AGHT+IFj8MDsjH+8vES34DECS+Nvk4kyesL/8Ep1onP3XcXT1XH4h0vd2HbX4C8Jynku1M9x3qyrng==
+X-Received: by 2002:a05:600c:3b8d:b0:434:f0df:9fd with SMTP id 5b1f17b1804b1-438dc3ab58bmr88690115e9.2.1738259138481;
+        Thu, 30 Jan 2025 09:45:38 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e244ecd6sm31400035e9.28.2025.01.30.09.45.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 09:45:37 -0800 (PST)
+Date: Thu, 30 Jan 2025 18:45:36 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Cc: brauner@kernel.org, stgraber@stgraber.org, tycho@tycho.pizza, 
+	cyphar@cyphar.com, yun.zhou@windriver.com, joel.granados@kernel.org, 
+	rostedt@goodmis.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] pid_namespace: namespacify sysctl kernel.pid_max
+Message-ID: <bnxhqrq7tip6jl2hu6jsvxxogdfii7ugmafbhgsogovrchxfyp@kagotkztqurt>
+References: <20241122132459.135120-1-aleksandr.mikhalitsyn@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="dB35/U62McMbXIoP"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jmeexeaauvphfbm3"
 Content-Disposition: inline
-In-Reply-To: <Z5t0RvoUOhxqeh25@shell.armlinux.org.uk>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20241122132459.135120-1-aleksandr.mikhalitsyn@canonical.com>
 
 
---dB35/U62McMbXIoP
-Content-Type: text/plain; charset=us-ascii
+--jmeexeaauvphfbm3
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
+Subject: Re: [PATCH v2 0/2] pid_namespace: namespacify sysctl kernel.pid_max
+MIME-Version: 1.0
 
-On Thu, Jan 30, 2025 at 12:44:54PM +0000, Russell King (Oracle) wrote:
-> @@ -1123,7 +1126,9 @@ static void xpcs_link_up_sgmii_1000basex(struct dw_xpcs *xpcs,
->  {
->  	int ret;
->  
-> -	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED)
-> +	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED &&
-> +	    !(interface == PHY_INTERFACE_MODE_SGMII &&
-> +	      xpcs->sgmii_mode == )
-                                  ^ DW_XPCS_SGMII_MODE_MAC_MANUAL
+Hello.
 
-Not sure where that went. :(
+On Fri, Nov 22, 2024 at 02:24:57PM +0100, Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com> wrote:
+>
+(Sorry for responding only now as I missed this until I read v6.14 news.)
 
->  		return;
->  
->  	if (interface == PHY_INTERFACE_MODE_1000BASEX) {
+> The pid_max sysctl is a global value. For a long time the default value
+> has been 65535 and during the pidfd dicussions Linus proposed to bump
+> pid_max by default (cf. [1]). Based on this discussion systemd started
+> bumping pid_max to 2^22. So all new systems now run with a very high
+> pid_max limit with some distros having also backported that change.
 
-Note that with this change, we also need to change the xpcs_write() to
-BMCR at the end of this function to xpcs_modify() so we don't clear the
-AN-enable bit. It's also a good idea in general to only modify the bits
-we need to modify.
+Yes, multiple [1] people [2] proposed even lifting the legacy limit in
+kernel directly.
 
-New patch attached.
+> Of course, giving containers the ability to restrict the number of
+> processes in their respective pid namespace indepent of the global limit
+> through pid_max is something desirable in itself and comes in handy in
+> general.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Yes, this is what pids.max of a cgroup (already) does.
 
---dB35/U62McMbXIoP
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-net-xpcs-add-support-for-manual-update-for-SGMII.patch"
+(It is already difficult for users to troubleshoot which of multiple pid
+limits restricts their workload. I'm afraid making pid_max
+per-(hierarchical-)NS will contribute to confusion.)
+Also, the implementation copies the limit upon creation from
+parent, this pattern showed cumbersome with some attributes in legacy
+cgroup controllers e.g.  it's subject to race condition between parent's
+limit modification and children creation.
 
-From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH net-next] net: xpcs: add support for manual update for SGMII
+> Independent of motivating use-cases the existence of pid namespaces
+> makes this also a good semantical extension and there have been prior
+> proposals pushing in a similar direction.
+> The trick here is to minimize the risk of regressions which I think is
+> doable. The fact that pid namespaces are hierarchical will help us here.
 
-Older revisions of the XPCS IP do not support the MAC_AUTO_SW flag and
-need the BMCR register updated with the speed information from the PHY.
-Split the DW_XPCS_SGMII_MODE_MAC mode into _AUTO and _MANUAL variants,
-where _AUTO mode means the update happens in hardware autonomously,
-whereas the _MANUAL mode means that we need to update the BMCR register
-when the link comes up.
+I understand it is tempting to make pid_max part of a pid namespace but
+was the overlap with pids controller considered?
 
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
----
- drivers/net/pcs/pcs-xpcs.c | 16 +++++++++++-----
- drivers/net/pcs/pcs-xpcs.h | 11 ++++++++---
- 2 files changed, 19 insertions(+), 8 deletions(-)
+I'd consider the alternative of relying of virtualized PID numbers in
+pid namespaces with appropriate pids.max limit and numbers allocation
+strategy that would keep PID values below the limit (i.e. taking the
+first free pid number in given NS, actually I thought it is already the
+case but it doesn't work like that (when I try now [3])).
+WDYT?
 
-diff --git a/drivers/net/pcs/pcs-xpcs.c b/drivers/net/pcs/pcs-xpcs.c
-index e7aad3c402a4..29269d5c5f3a 100644
---- a/drivers/net/pcs/pcs-xpcs.c
-+++ b/drivers/net/pcs/pcs-xpcs.c
-@@ -691,11 +691,14 @@ static int xpcs_config_aneg_c37_sgmii(struct dw_xpcs *xpcs,
- 	mask = DW_VR_MII_DIG_CTRL1_2G5_EN | DW_VR_MII_DIG_CTRL1_MAC_AUTO_SW;
- 
- 	switch (xpcs->sgmii_mode) {
--	case DW_XPCS_SGMII_MODE_MAC:
-+	case DW_XPCS_SGMII_MODE_MAC_AUTO:
- 		if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED)
- 			val = DW_VR_MII_DIG_CTRL1_MAC_AUTO_SW;
- 		break;
- 
-+	case DW_XPCS_SGMII_MODE_MAC_MANUAL:
-+		break;
-+
- 	case DW_XPCS_SGMII_MODE_PHY_HW:
- 		val |= DW_VR_MII_DIG_CTRL1_PHY_MODE_CTRL;
- 		fallthrough;
-@@ -1123,7 +1126,9 @@ static void xpcs_link_up_sgmii_1000basex(struct dw_xpcs *xpcs,
- {
- 	int ret;
- 
--	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED)
-+	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED &&
-+	    !(interface == PHY_INTERFACE_MODE_SGMII &&
-+	      xpcs->sgmii_mode == DW_XPCS_SGMII_MODE_MAC_MANUAL)
- 		return;
- 
- 	if (interface == PHY_INTERFACE_MODE_1000BASEX) {
-@@ -1140,10 +1145,11 @@ static void xpcs_link_up_sgmii_1000basex(struct dw_xpcs *xpcs,
- 				__func__);
- 	}
- 
--	ret = xpcs_write(xpcs, MDIO_MMD_VEND2, MII_BMCR,
--			 mii_bmcr_encode_fixed(speed, duplex));
-+	ret = xpcs_modify(xpcs, MDIO_MMD_VEND2, MII_BMCR,
-+			  BMCR_SPEED1000 | BMCR_FULLDPLX | BMCR_SPEED100,
-+			  mii_bmcr_encode_fixed(speed, duplex));
- 	if (ret)
--		dev_err(&xpcs->mdiodev->dev, "%s: xpcs_write returned %pe\n",
-+		dev_err(&xpcs->mdiodev->dev, "%s: xpcs_modify returned %pe\n",
- 			__func__, ERR_PTR(ret));
- }
- 
-diff --git a/drivers/net/pcs/pcs-xpcs.h b/drivers/net/pcs/pcs-xpcs.h
-index 4bd6a82f1a18..be8fab40b012 100644
---- a/drivers/net/pcs/pcs-xpcs.h
-+++ b/drivers/net/pcs/pcs-xpcs.h
-@@ -112,8 +112,12 @@ enum dw_xpcs_sgmii_10_100 {
- };
- 
- /* The SGMII mode:
-- * DW_XPCS_SGMII_MODE_MAC: the XPCS acts as a MAC, reading and acknowledging
-- * the config word.
-+ * DW_XPCS_SGMII_MODE_MAC_AUTO: the XPCS acts as a MAC, accepting the
-+ * parameters from the PHY end of the SGMII link and acknowledging the
-+ * config word. The XPCS autonomously switches speed.
-+ *
-+ * DW_XPCS_SGMII_MODE_MAC_MANUAL: the XPCS acts as a MAC as above, but
-+ * does not autonomously switch speed.
-  *
-  * DW_XPCS_SGMII_MODE_PHY_HW: the XPCS acts as a PHY, deriving the tx_config
-  * bits 15 (link), 12 (duplex) and 11:10 (speed) from hardware inputs to the
-@@ -125,7 +129,8 @@ enum dw_xpcs_sgmii_10_100 {
-  * integration documentation states that MII_ADVERTISE must be written last.
-  */
- enum dw_xpcs_sgmii_mode {
--	DW_XPCS_SGMII_MODE_MAC,		/* XPCS is MAC on SGMII */
-+	DW_XPCS_SGMII_MODE_MAC_AUTO,	/* XPCS is MAC, auto update */
-+	DW_XPCS_SGMII_MODE_MAC_MANUAL,	/* XPCS is MAC, manual update */
- 	DW_XPCS_SGMII_MODE_PHY_HW,	/* XPCS is PHY, tx_config from hw */
- 	DW_XPCS_SGMII_MODE_PHY_REG,	/* XPCS is PHY, tx_config from regs */
- };
--- 
-2.30.2
+TL;DR instead of getting rid of the legacy limit, it was further
+extended to pid namespaces because of legacy workloads and it (almost)
+duplicates existing mechanism. Can this be rethought please?
 
+Thanks,
+Michal
 
---dB35/U62McMbXIoP--
+[1] https://lore.kernel.org/all/20240408145819.8787-1-mkoutny@suse.com/
+[2] https://lore.kernel.org/linux-api/CAHk-=wiZ40LVjnXSi9iHLE_-ZBsWFGCgdmNiYZUXn1-V5YBg2g@mail.gmail.com/
+
+--jmeexeaauvphfbm3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ5u6sgAKCRAt3Wney77B
+SQWbAPsGFStp0GAzhKCfkvSpQQ8sj6799UdLZlbFppMcphp8ygD/evJePd9Dzg4F
+E+bGNE3QDDlYpUWCwfhYrnpmASxCGAc=
+=5Pav
+-----END PGP SIGNATURE-----
+
+--jmeexeaauvphfbm3--
