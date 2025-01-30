@@ -1,76 +1,54 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7969E148832;
-	Thu, 30 Jan 2025 08:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66405148832;
+	Thu, 30 Jan 2025 08:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738225850; cv=none; b=eim1Wdf4rkcwAbFYq6CoZhDF40csSVYgBIufu4GkyAlDOQ1pw0Cb5oUJmOoTNwZGJTC3mCmb6zHReBN/2g0X5yRkDFWqydA2HmlqBrh0/ZCbJeR+K0qID9TYRSQW4Octdmgum4p4Rokm8ryA9ybpq5E/py2FETHJDSvzb0wE8mI=
+	t=1738225930; cv=none; b=vFHoFW4XzxcrWvFZlDNaJAiTyFkO7KPLJnQeFkdHRW+Ddz5OYYK1xYttr43STCo/uEt2xPJj+PNXj5gRVtBf00G5JhmEasDJ9wdbcfhKzQBzUAFJXEVo4klw66Slj0kDnf4oPN+H0OtN/HxWCFMSvkYxOhbwP1l50a7gAPxiZlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738225850; c=relaxed/simple;
-	bh=iBoVNDPKj/Gbf0c/W+t3asbzNss/FHHKnMcQ8SQIC7o=;
+	s=arc-20240116; t=1738225930; c=relaxed/simple;
+	bh=ch0mvzHl7BtRiR+ehcr7+FmBj2pnIcAvO/xV3NS3aMo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=T5kfWiSDvBg8tlOmW6CR5Xy02AtRS7GvpYovLUXdWfoqcMsZhrhYRSb6JkKMuclk9eAflIh4B5iqFY4D7CZXlgjJz8S5oXfstlzGMRFjfIKDznVpzSqM1jRdg4DjDXojLzBDhl2eN53K0lNpGao2iW6kgj3zQn9aSBRFriDUHY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZCoJs7AQ; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:MIME-Version; b=aQQ0sRkxvZEDM8mszL+s9TiJ5CEcxFCQOURnRdy8DmZ9gG9+QusQuVYO27TUpguP812QAe2Ff5atHN7TncV6HHiaVP5S9FugdKN2GW6x9MaeMY83hvPFKcvzuQNHZQVS/hibRVTWnd+j1cookQoHXOrYqSvEeVGW79zlV3yAvcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=N4wWQj1C; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCoJs7AQ"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso2998645e9.3;
-        Thu, 30 Jan 2025 00:30:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738225847; x=1738830647; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iBoVNDPKj/Gbf0c/W+t3asbzNss/FHHKnMcQ8SQIC7o=;
-        b=ZCoJs7AQZk/ef6DYAeKI4N6JAXlJxZlnn/9eysW7MNv5tRJlri2tg5in0btEAmslX9
-         o1YxpwYJV/vdpUqBdRUCABoAkFqfN3YrjKbaaMebVeXHLTayYtVPlfgMnBCVn5gfU5dL
-         sqz9bcX6SBEjU6ZynIVmYkEAYBcWrgsRPRNJ+7LSIOR/dp1zsfIRZVQaZFOmCEmXQP2p
-         s94NHbupX0+4yR9/nHFVx+zec6uvFqJj1x2aV37GLCwpV3ww3lV+s6dN+WSrLfiu1sud
-         29yhycpYZRQF6r99q7Lgx7KvwUP2IVWXCcQzZbOBM9lRE22R/DgpGzQlgXtspvl8ZKWE
-         f0Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738225847; x=1738830647;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iBoVNDPKj/Gbf0c/W+t3asbzNss/FHHKnMcQ8SQIC7o=;
-        b=F+5raxYWyyHbxsyQJVAm5LaE6oxIkfihiPk6eDAonEk9ZLZr4m5WHa2oCATkqam+Q3
-         JpcLJsvxaguxnrxvCovgYaZ3WzWScQgHeD/blFv8kKoqW1rNfwqAVQ+wUQ8Wd80eqW7D
-         /EbMmP/bHiiOhfUCFVy07CnguIGYrqA85++RqqNDjNSXoSwkU38t3Uo11pcAbaFx7yKG
-         hPZWXTZIScf3iy8gSJHaw8FZVUT2rAhAmhii5NnOLA3xOJiCOk4uQOVNwInlZSeJRxWp
-         Xc8IpRqgVYqobWN5bS/Wea6SHBRK0giXMrBE/JeQn8CadP7uJ0Dx1HCNhbh9NwBiwQZ0
-         YmSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYXIlRtSV7EE4OzwzvB2OmUL6J2s0UlFvTq+zVzS4irVXfRRFYvgMqWe4+4zeDK+/s++UkCgdyqDL7z919@vger.kernel.org, AJvYcCWnQGaQuMpcTCqEDKKIgl9xrcyLMzmen65U+IyqG2X7Woyz/VOcFNX1tIyEkJV2iUjvox9070WP70o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmIJ08ISAQKVJlYDwnsmqam0uuMGRzhJRRRNylFpZJIdOZyX3A
-	RpUPuo+bWgFdrwxWuQBz5uFub5LvFrVA5rEJAeduX91lFVju24HL
-X-Gm-Gg: ASbGncscJkglpVnCBmagnTjHttMz6SL8yMgHrjVTF6sMdKMfmxwJHnV7mBshvRdUX+T
-	12gJvvRY+XoeEcq1IRSOSO0kI0yhg4oXqzQXWF7UERN8wrvH0n8BdCHV+5TX4J9VZCTpd2vuVVp
-	dzx7cBLIaPAHQb1fugYFnyynjVUVCXK0lfevCpRqTPxnuZ2yv25FIygUjS7e3XBdkU67ew0SrRn
-	YiOUYoFpWeh6WDm7wod6Z7QOqH/RUlq0n8vJmmlFw6Jrko2xNxZh6FVTDurqfDo7ALiyBadQ6IG
-	OFBhhTjFHUBDsXXUvfuN3cbOgQxK1mInFRwsTZWfzegBd14KNQ6OLUHF+oBEt0k=
-X-Google-Smtp-Source: AGHT+IG5LQnrAkV7laFoY5uti4KcngXW3+Wd1vnOWp2ue0jCML1uupplCcuvj7bn12N3LoFdpRnPZA==
-X-Received: by 2002:a05:600c:4f55:b0:436:51bb:7a43 with SMTP id 5b1f17b1804b1-438dc3ab675mr59301785e9.5.1738225846463;
-        Thu, 30 Jan 2025 00:30:46 -0800 (PST)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc26d05sm50249665e9.12.2025.01.30.00.30.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 00:30:46 -0800 (PST)
-Message-ID: <a63a6a52102fc918ef60ed5ced0505729387a4fc.camel@gmail.com>
-Subject: Re: [PATCH v1 0/3] iio: drop useless assignment of cache_type
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jonathan Cameron	
- <Jonathan.Cameron@huawei.com>, Icenowy Zheng <icenowy@aosc.io>, "Peter
- Zijlstra (Intel)" <peterz@infradead.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
-	 <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
- =?UTF-8?Q?Ond=C5=99ej?= Jirman
-	 <megi@xff.cz>
-Date: Thu, 30 Jan 2025 08:30:47 +0000
-In-Reply-To: <20250129152546.1798306-1-andriy.shevchenko@linux.intel.com>
-References: <20250129152546.1798306-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="N4wWQj1C"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Ul7+mqvJN+pEzAZI3KgN5ZCGEQWBECJtRWmuoSN3Ln4=; t=1738225928; x=1738830728; 
+	b=N4wWQj1CVi//bhpXC8PV5L+bUKBmL80KHPjuqUOoawTe7V6K6OVYvIXc16w+xNz78ripc3zvwr/
+	k02CJ5y90yUFc/fgPiBL414I4VGo6bn0+LhQZt1wrAkGMj3o6qPabYxjdLHXqVVONsJKU/pglJFqk
+	VL+SwhkwuYIhKQrD5ctuNl1aRBKs12R8XSB6QRiPvuEazi6fH3+rLC2mjL35Hd2zquDzWCmLyfpoI
+	y+wZvvVj8KD3LRqHY6xk2XfjUjg96OSNIIhfI6uCwADXg5+UlH6I30Q6fMvUz9TZWoBEj1v8BDfSf
+	bhbHxyFpb1irtNy3+iXoYFERSNxusqgEHu6Q==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1tdPy1-00000000CAQ-29Q6; Thu, 30 Jan 2025 09:32:05 +0100
+Received: from p5dc55198.dip0.t-ipconnect.de ([93.197.81.152] helo=[192.168.178.61])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1tdPy1-00000001jkB-17z8; Thu, 30 Jan 2025 09:32:05 +0100
+Message-ID: <3ec5a6621cabddad686f727d20b725ed9658dddd.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] sh: Remove memset_io from sh specific code
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Julian Vetter <julian@outer-limits.org>, Arnd Bergmann <arnd@arndb.de>, 
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>
+Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 30 Jan 2025 09:32:04 +0100
+In-Reply-To: <20241204164020.48361-1-julian@outer-limits.org>
+References: <20241204164020.48361-1-julian@outer-limits.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.54.3 
@@ -80,24 +58,76 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Wed, 2025-01-29 at 17:24 +0200, Andy Shevchenko wrote:
-> Default value is REGCACHE_NONE, no need to assign it explicitly.
-> Fix all IIO drivers that do that.
->=20
-> Andy Shevchenko (3):
-> =C2=A0 iio: light: adux1020: Drop unneeded assignment for cache_type
-> =C2=A0 iio: magnetometer: af8133j: Drop unneeded assignment for cache_typ=
-e
-> =C2=A0 iio: pressure: zpa2326: Drop unneeded assignment for cache_type
->=20
-> =C2=A0drivers/iio/light/adux1020.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | =
-1 -
-> =C2=A0drivers/iio/magnetometer/af8133j.c | 1 -
-> =C2=A0drivers/iio/pressure/zpa2326_i2c.c | 1 -
-> =C2=A0drivers/iio/pressure/zpa2326_spi.c | 1 -
-> =C2=A04 files changed, 4 deletions(-)
->=20
+Hi Julian,
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+On Wed, 2024-12-04 at 17:40 +0100, Julian Vetter wrote:
+> Remove memset_io from sh specific code and fall back to the new
+> implementation from lib/iomem_copy.c. It uses word accesses if the
+> buffer is aligned and only falls back to byte accesses for potentially
+> unaligned parts of a buffer (i.e., at the beginning and end).
+>=20
+> Signed-off-by: Julian Vetter <julian@outer-limits.org>
+> ---
+>  arch/sh/include/asm/io.h |  2 --
+>  arch/sh/kernel/io.c      | 14 --------------
+>  2 files changed, 16 deletions(-)
+>=20
+> diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
+> index cf5eab840d57..3771bfa984af 100644
+> --- a/arch/sh/include/asm/io.h
+> +++ b/arch/sh/include/asm/io.h
+> @@ -269,12 +269,10 @@ __BUILD_IOPORT_STRING(q, u64)
+>  #define IO_SPACE_LIMIT 0xffffffff
+> =20
+>  /* We really want to try and get these to memcpy etc */
+> -#define memset_io memset_io
+>  #define memcpy_fromio memcpy_fromio
+>  #define memcpy_toio memcpy_toio
+>  void memcpy_fromio(void *, const volatile void __iomem *, unsigned long)=
+;
+>  void memcpy_toio(volatile void __iomem *, const void *, unsigned long);
+> -void memset_io(volatile void __iomem *, int, unsigned long);
+> =20
+>  /* Quad-word real-mode I/O, don't ask.. */
+>  unsigned long long peek_real_address_q(unsigned long long addr);
+> diff --git a/arch/sh/kernel/io.c b/arch/sh/kernel/io.c
+> index da22f3b32d30..16e963bab595 100644
+> --- a/arch/sh/kernel/io.c
+> +++ b/arch/sh/kernel/io.c
+> @@ -95,17 +95,3 @@ void memcpy_toio(volatile void __iomem *to, const void=
+ *from, unsigned long coun
+>  	mb();
+>  }
+>  EXPORT_SYMBOL(memcpy_toio);
+> -
+> -/*
+> - * "memset" on IO memory space.
+> - * This needs to be optimized.
+> - */
+> -void memset_io(volatile void __iomem *dst, int c, unsigned long count)
+> -{
+> -        while (count) {
+> -                count--;
+> -                writeb(c, dst);
+> -                dst++;
+> -        }
+> -}
+> -EXPORT_SYMBOL(memset_io);
 
+Looks good to me. I looked up the generic implementation in lib/iomem_copy.=
+c and
+it looks much better than the sh-specific implementation due to the smarter
+use of conditional word-long memset.
+
+Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
