@@ -1,183 +1,134 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9705CB660
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 19:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E58C1E376C
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 19:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738266135; cv=none; b=OBj20KFB67XeA9EPUeJqYfTovFfhHQkYWcHeHVOoc/QFvzcH2MPzSGaMFB4+vaWHnMScbc7ewj7VW0ES402zx+wkb2eChJFWNot8g6NmcUXEu2TjHijrluEA9g9JH6kfwV8Sqnd+TXgzVeY/Y95fnWpCpfYybDwH8F1QAa5kZy0=
+	t=1738266317; cv=none; b=nW1gdkRDyN6/IBBHIyFhpRKO6Qm3tWVNlO57NDg80zKh/Boh60SGo6zEmu+aId20h327VzeJLS+x2N7mQi77UNwWit7x2apzHGV9Z/HVeNMNrlzfgzTaB+2Z5zZtT7++/irkCSPol+dNwsLqeeuFTVWLsWvhCaW6nZoTk1ZSD/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738266135; c=relaxed/simple;
-	bh=zehHH8Y1Wwzx+YfhbDuyZL+H1gwEL6TAie0nbVvLEMM=;
+	s=arc-20240116; t=1738266317; c=relaxed/simple;
+	bh=9fbyLsH88G6tyoNdu7/EPSxn8u+wW28k1RNwWOmH2mQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W76HI5jk5BN+2bB01kwliIeKhKWsAfi3UzDlPbfiyKJzaFV7CZ9FWSmZ7y10gihheytZFF3Ve0cvGmYjyTfewqj5mmC9hUxpMNsCTkr5OBlIKOxNYNuJMa9yZiofOXgd5viGLcTf52oBJprNbOOo2zqGefAr6H4MMWnbAQUe048=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=baJpEIHb; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=n82MfO1SBtFKqxSpdzNDeG8sldP0dvIYHNcNRo1+r+3MV5e88QswRPVmMwnbU/VAUpwXrbym8XdMpnD52xfLXAodOuMRcFtLG+5SrNgJZQV7wpBHEY3vh9kZeZh7+x2cKmawMbGCZN69B/PCENbarvngV8vxBzeXu3RxT06kwRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eNseV6t1; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="baJpEIHb"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-85c4d855fafso258062241.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 11:42:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eNseV6t1"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-53e44a42512so1012e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 11:45:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738266132; x=1738870932; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RjqHYSGSUkq0Y5wudcQHXFnXTvjYr8lKpJ37kSClfG0=;
-        b=baJpEIHbsPD/MQdNSMG6DfxgebgRB0ctxK1/fqT7Nf4nX6GkmG5/GVxKAj+4OgfJKp
-         h8QQdJpqZe7BG+z7m1qES919ToXk5nR1LrMoQ0DONj7fEMyyhApSqgCBhjgQUW5z/ibd
-         mFGzgyXASPCwOrXRYIOf8/6ojDrUrbAotQsdZvDLpzKO4TkefyCPXp2JBi0WPc+8xfc3
-         VksTfeKueOKsnT/udSGi5Zzx+CTjL4rI0CgZ0LUCyo4tHMwa0Ekyh+fg11nlXsLlTKkn
-         Jq4NKhbCddBgfHWVzvQH9sjgCrWl05NuC7o7y1P2AUaCnZSINpJQ0s98cAU8Nejhl2Jl
-         VV8A==
+        d=google.com; s=20230601; t=1738266313; x=1738871113; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dPqRKKVz/y2KC5CJ8jv2zxFft8RZ+YOxuhSdEo17vUE=;
+        b=eNseV6t1d7W4rXL22Rh5mzaI651WV7rprPcZhpDFjMt82V89FJKynBhH6rvhUruWaY
+         DVWulus1vlg7n9O2NMBxLQglZGPo97ebqr9j6pTNJ0Os45TF2xhVSUnwyWRTOSQw/SVE
+         KIBNPbY0/1AzMT8zv/26z89U0x4TbugqT7eqZ9XpvHaYfTveL1H1OL3EpmuUz2nQZoAp
+         XXugd+ZpYkNcDWq6E6mz9HyUUepahdSedckpmF1K+PaVFG/1bqGJ1YVDuVGE+kTjTJ88
+         967sDiuN6OuoJCNy19WLghl/FVF/YmFUXJFUId28hOZwDXoUM+3NMOmg5QVUVNFxvxK0
+         CBVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738266132; x=1738870932;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RjqHYSGSUkq0Y5wudcQHXFnXTvjYr8lKpJ37kSClfG0=;
-        b=UXBokLbCw9qmo6LHaTdVYpMEgDzlL5X3kE3JPq57cPzESwXYW6IrstXSo1oCaKjpYB
-         3Qy+jHQpaP89is9T39+eztK6A3/ckuQp0WlAOxlBbLuHQ5Y/HgMy5PU4Ewrr2IQxsSHk
-         rQaloZBWqvsQvURaUFI4+qVdzT9ZbskWMhoH43Tj37QnbUZ3EfJYxgq3t1ypOk1n5GqV
-         f6/mMmpvH7N6qC2e/DYW5V0JvakCLo4/D/nAXtyjTxyXWPqdXzQUS3RKyGsJIwptPlmB
-         S07lEvr/IPEsj1m1NA/p1ON0VCaReJGO9JsDmg0eWXPaw/dT0nxilxY8+thUNtZe+wqe
-         b1FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyUTyKy6L6MhXJwd6QnICkv0s3TgXjhp4NpjQpqD1s1fJnVpeJ4TP06L7i1CoEn5MrmwkWxiww6AE2y1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBCN+0C5kIK6aSuGWP36pk+RXDZxSQ2qF9MLC7nbr2vpTszrWI
-	7hwaoOKD1lr556xUDIMnYOnlUFv+6ep8qLHdf3FiOiORek3FFf9BboYmJh04ZGhceP1bfkg4PmQ
-	PyJ/lG0xQz77AD3jqi0n7RHb3ZSuAPHB+hZUYUw==
-X-Gm-Gg: ASbGncun7ocTdFWpnVymSmipQm++3q3WTFiOkgB55YxInAf7Xi/AdAwK7+zg4mWWSHO
-	dVxgb0TpShmVzp83uj6iFNiPzA13dvEIXsGnBahOId6PdzdOq8yZl1iNji4nbpeyYbWA+MIbIfw
-	OJC/pGNGZun4xVSgB6Eo6ygUHkOwoH
-X-Google-Smtp-Source: AGHT+IFD6Vvxc8sA0n3TKBPikH9o0k59Sle6GqOsO74NocpNslG2/xlUymWtQlqSxJl8oiD0U4+4dEziqRxDIGqKyxQ=
-X-Received: by 2002:a05:6102:292b:b0:4b2:af6e:5fef with SMTP id
- ada2fe7eead31-4b9a4f6986emr8241190137.9.1738266132325; Thu, 30 Jan 2025
- 11:42:12 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738266313; x=1738871113;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dPqRKKVz/y2KC5CJ8jv2zxFft8RZ+YOxuhSdEo17vUE=;
+        b=Q8rDnMOCi/U2fTmyJ91Oljmvft+EKDJLEVt9OIk9Kj1gFQmYCocwqsx8umwkZaO/vu
+         1xRZuLioITu7CrnVJntjKqcdiGjzwIGvfmM+57mvM4c13TP+1LcvHr7HC4jHXRr3/b3B
+         xp8v2hGUp82HqAndrnx7nwWZu2WkOmHRHoON9Rl92L1x0VvMCE1g6UyNK1RwvT/WOyjq
+         +c0H94diutaOaQJtlV9yahNuRlmWS67XkjxaEq2IXFqmBEgjdURKG8A8TOpe2kSbwOAH
+         h2Cmg0RXOvL4DrpSXKo77Li62iW1X/gNsy58h0RVgAoz0wasijRWIuRiS4qwqdlImq0I
+         u8AA==
+X-Forwarded-Encrypted: i=1; AJvYcCWvgwI1sX6ick7RzZQSypARb367aRrBP82f5DdnUseVd0aKwDHKHKltdqwtGZpPZn7lRFxwtyrklBN3QuA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxItXgkpIZapRe7Bn8e4FXjMLuzM614672XyRHWg4kJfLTZKlXg
+	Yf28f95bCkKIWlBSRGhfg0DhZIibEe15jpvoRW1vgyMEk+rZoRi/6lQBog+WIo1KxIj1ioUrRXA
+	6cQbTIz3ggsGJh5i5KnaOW3yeOoh8zjpztBLa
+X-Gm-Gg: ASbGncthDdCgB4/2fLu4ua1vae0GjKfS5295UVZlPLaT9sYVmtZJIhyZ+W/snOEVGUT
+	CwVUF4D7cjQ05uly3j5Y1Kika6KozYlySgjbV17NlLO4D+XMPxbYSYL2l768sKeVOEdaVaafRQJ
+	Ga5Pw8sZoM32TMojp2qsZFsVc=
+X-Google-Smtp-Source: AGHT+IGBvwWSv1IiLAFKoJbSGBLJk+W5yCPPaqTr3SntN2b5XHQRP2haPQPs+ZrJJmWM2zhJ+gtyW2WGNQ4WHrBS1Pg=
+X-Received: by 2002:a05:6512:33d6:b0:543:e496:81d2 with SMTP id
+ 2adb3069b0e04-543f1c0ce53mr24953e87.4.1738266312941; Thu, 30 Jan 2025
+ 11:45:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130140142.491490528@linuxfoundation.org>
-In-Reply-To: <20250130140142.491490528@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 31 Jan 2025 01:12:01 +0530
-X-Gm-Features: AWEUYZkZA79PZ9fsrU-3OmddYVaf7TuCnzxZur-Nd2qPMPZyDfxA-jiR_FByOOE
-Message-ID: <CA+G9fYsDgsJSj=WfH+5pMFJe6pLmBMAp1PiYyCbVn4Nh1Lt3pQ@mail.gmail.com>
-Subject: Re: [PATCH 5.10 000/133] 5.10.234-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
+References: <20250129232525.3519586-1-vannapurve@google.com>
+ <p6sbwtdmvwcbr55a4fmiirabkvp3f542nawdgxoyq22cdhnu33@ffbmyh2zuj2z>
+ <CAGtprH8pJ3Zj_umygzxp8=4sJTdwY5v2bFDhoBdX=-3KQaDnCw@mail.gmail.com> <wmdg54v56uizuifhaufllnjtecmvhllv35jyrvdilf4ty4pfs5@y4zppjm2sthr>
+In-Reply-To: <wmdg54v56uizuifhaufllnjtecmvhllv35jyrvdilf4ty4pfs5@y4zppjm2sthr>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Thu, 30 Jan 2025 11:45:01 -0800
+X-Gm-Features: AWEUYZmdkF4eXD8cW9j3g94r1RQgW0GcoVRfXjOD-b2Tcyejz6I5I8r9tUSmJdw
+Message-ID: <CAGtprH82OjizyORJ91d6f6VAn_E9LY7WptN-DsoxwLT4VwOccg@mail.gmail.com>
+Subject: Re: [PATCH V2 1/1] x86/tdx: Route safe halt execution via tdx_safe_halt()
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	seanjc@google.com, erdemaktas@google.com, ackerleytng@google.com, 
+	jxgao@google.com, sagis@google.com, oupton@google.com, pgonda@google.com, 
+	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, 
+	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 30 Jan 2025 at 19:52, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Thu, Jan 30, 2025 at 10:48=E2=80=AFAM Kirill A. Shutemov
+<kirill@shutemov.name> wrote:
+> ...
+> > >
+> > > I think it is worth to putting this into a separate patch and not
+> > > backport. The rest of the patch is bugfix and this doesn't belong.
+> > >
+> > > Otherwise, looks good to me:
+> > >
+> > > Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>@lin=
+ux.intel.com>
+> > >
+> > > --
+> > >   Kiryl Shutsemau / Kirill A. Shutemov
+> >
+> > Thanks Kirill for the review.
+> >
+> > Thinking more about this fix, now I am wondering why the efforts [1]
+> > to move halt/safe_halt under CONFIG_PARAVIRT were abandoned. Currently
+> > proposed fix is incomplete as it would not handle scenarios where
+> > CONFIG_PARAVIRT_XXL is disabled. I am tilting towards reviving [1] and
+> > requiring CONFIG_PARAVIRT for TDX VMs. WDYT?
+> >
+> > [1] https://lore.kernel.org/lkml/20210517235008.257241-1-sathyanarayana=
+n.kuppuswamy@linux.intel.com/
 >
-> This is the start of the stable review cycle for the 5.10.234 release.
-> There are 133 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Many people dislike paravirt callbacks. We tried to avoid relying on them
+> for core TDX enabling.
 >
-> Responses should be made by Sat, 01 Feb 2025 14:01:14 +0000.
-> Anything received after that time might be too late.
+> Can you explain the issue you see with CONFIG_PARAVIRT_XXL being disabled=
+?
+> I don't think I follow.
+
+Relevant callers of *_safe_halt() are:
+1) kvm_wait() -> safe_halt() -> raw_safe_halt() -> arch_safe_halt()
+2) acpi_safe_halt() -> safe_halt() -> raw_safe_halt() -> arch_safe_halt()
+
+arch_safe_halt() can get routed to native_safe_halt if
+CONFIG_PARAVIRT_XXL is disabled and will use "sti; hlt" combination
+which is unsafe for TDX VMs as of now.
+
+Either patch suggested by Sean [1] earlier or the implementation [2]
+to implement safe_halt always for TDX VMs seem functionally more
+correct to me. [2] being better where it avoids #VEs altogether. I
+haven't come across configurations where CONFIG_PARAVIRT_XXL is
+disabled but I don't see any guarantees around keeping it enabled for
+TDX VMs.
+
+[1] https://lore.kernel.org/lkml/Z5l6L3Hen9_Y3SGC@google.com/
+[2] https://lore.kernel.org/lkml/20210517235008.257241-1-sathyanarayanan.ku=
+ppuswamy@linux.intel.com/
+
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.234-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
-
-The following build regressions were noticed and reported last time
-on 5.15 and found here again on arc, arm, mips, parisc, powerpc with
-gcc and clang toolchains on 5.10.234-rc1 and 5.4.290-rc1.
-
-Build regression: arc, arm, mips, parisc, powerpc,
-drivers/usb/core/port.c struct usb_device has no member named
-port_is_suspended
-
-First seen on Linux (5.10.234-rc1)
-  Good: v5.10.233
-  Bad:  5.10.234-rc1
-
-* arc:
-  build:
-  - gcc-9-axs103_defconfig
-  - gcc-9-vdk_hs38_smp_defconfig
-
-* arm:
-  build:
-  - clang-19-axm55xx_defconfig
-  - clang-19-footbridge_defconfig
-  - gcc-12-axm55xx_defconfig
-  - gcc-12-footbridge_defconfig
-  - gcc-8-axm55xx_defconfig
-  - gcc-8-footbridge_defconfig
-
-* mips:
-  build:
-  - gcc-12-ath79_defconfig
-  - gcc-12-bcm47xx_defconfig
-  - gcc-12-rt305x_defconfig
-  - gcc-8-ath79_defconfig
-  - gcc-8-bcm47xx_defconfig
-  - gcc-8-rt305x_defconfig
-
-* parisc:
-  build:
-  - gcc-11-allyesconfig
-  - gcc-11-defconfig
-
-* powerpc:
-  build:
-  - clang-19-ppc64e_defconfig
-  - gcc-12-cell_defconfig
-  - gcc-12-ppc64e_defconfig
-  - gcc-8-cell_defconfig
-  - gcc-8-ppc64e_defconfig
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-
-Build log:
--------
-drivers/usb/core/port.c:299:26: error: 'struct usb_device' has no
-member named 'port_is_suspended'
-  299 |         if (udev && !udev->port_is_suspended) {
-      |
-
-metadata:
----------
-* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10.233-134-gd215826da15b/testrun/27078309/suite/build/test/gcc-12-footbridge_defconfig/log
-* Details: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10.233-134-gd215826da15b/testrun/27078309/suite/build/test/gcc-12-footbridge_defconfig/details/
-* build: https://storage.tuxsuite.com/public/linaro/lkft/builds/2sLvkKOcaJTFWGOHFpeqcAkyaIB/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2sLvkKOcaJTFWGOHFpeqcAkyaIB/config
-* git_describe: v5.10.233-134-gd215826da15b
-* git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-* git_sha: d215826da15b526aadf99923695890c777190399
-* Architectures: arc, arm, mips, parisc, powerpc
-* Toolchain version: gcc-12, gcc-11, gcc-8 and clang-19
-
-Please find the email discussion
-Link: https://lore.kernel.org/stable/eec53047-6118-4a73-9535-335babf68685@app.fastmail.com/
-Link: https://lore.kernel.org/stable/CA+G9fYvacKD7aFkMCW6nwjZ4t-cpH0deLiPY-cFvGkRn5hgK3w@mail.gmail.com/
-
-Steps to reproduce:
-------
-$ tuxmake --runtime podman --target-arch arm --toolchain gcc-12
---kconfig footbridge_defconfig
-$ tuxmake --runtime podman --target-arch sh --toolchain gcc-11
---kconfig defconfig
-
---
-Linaro LKFT
-https://lkft.linaro.org
+> --
+>   Kiryl Shutsemau / Kirill A. Shutemov
