@@ -1,437 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696B87483;
-	Thu, 30 Jan 2025 07:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287C91953A1
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 07:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738223848; cv=none; b=rhXrwQa3yUAf+gUBcSICHfkhcPJk7Nu54ucqYAoh6/wh5R+BK2RQzzh+p68NhNoKQ7EobDUgW25FepQk8PKSqGq4awQdMo4qlMLycSUVaHR8dmY8eMYERX/uL9pNlP6H19HFEIGklW1q0euuL1UhcVW55BOzWUfM3dIuSilEV2s=
+	t=1738223896; cv=none; b=rqLyjJVBdxaUN4KRzS6++yPEv5o4A0M+v1FFP5PkYrJRV2YaxYhhWF2jF4ZS4Ksc5IW613IMHw0LtMTzi19PEnO1gerTqFHNsEv9wmpwWXVS3/0a9RSQuQFF70VGWlIdyx3RTwLiYZ9ilAFS8ll+UyiJwPJF7szI6L6isQireGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738223848; c=relaxed/simple;
-	bh=BYlQq/pkwdQhlwIVZLdyRUVsHeIdBy2FiTDekNBGSFI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VIhulrwi6ZPMxlh1ZzNP9xIqRPc5W/PuhoPT/jHS75C3bufiok99n6Let1CLstYjJFiRHk+dpzmq3OMcRLBRC80nAB4dxsGFRfheZ0qIT3YFfrA/wj/bpEzlILk2qUsG6txw+yypTpsvxphPRGppYK6qDG8581YE3AJGyXRJDsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mS/T+YyM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738223896; c=relaxed/simple;
+	bh=ud20V6QcRGKAvhDwAyQxiR+SaarhmXAASLV/SlYpMvk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VgnrGhzMtxB3fzn78cz+qx5JavY11UZEA0rMZAR5YN8AK4GsaMiAJJH9ROeLG5QgO+Aaz7sG5nhKwUWzsRe1FCZBeOz50DRbucp24lajmN6+qLqz//yHNa4yTAC4n5OR6OEvHtpfQHNn+l6AQ9zF+Ny9CU1hoOiREMDygPlNJkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=Cbc3pIJe; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mS/T+YyM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BB3FC4CED2;
-	Thu, 30 Jan 2025 07:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738223847;
-	bh=BYlQq/pkwdQhlwIVZLdyRUVsHeIdBy2FiTDekNBGSFI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mS/T+YyMkee7coIp+FFdMOANerJ9qn368Vg7D/Iqby5kMhU4Kc5Mn2lQ6eQe6Ga8h
-	 DpvZAIcqVwS3cKamfPTB84JglBTd1D6xCErWIX8Ycmc/dgncXASb/igCkYPIXPCEAL
-	 y1rbFMa2pdMqc5z+Op+Fv5kJ9sxXpwjXSCApmQdp3zBAuDBDO7nP0bVEnSUp/r8Nro
-	 He3zXZwdoUNlj9hSV2A3Yqe2bsnlIYyqsFOhC/L78gQFXbOGDqUss7MjINHIiKn5i2
-	 mZ60/ZkRJ38sC/wahtQFYZ5Xqnj69mObcZkTBOfaRG+43r3s8QGAsjzeS9qQ3RdmbX
-	 LvqiVvzDXIQuA==
-Message-ID: <0f3efa0c-b5e0-44e4-850a-d63b0beeb0b8@kernel.org>
-Date: Thu, 30 Jan 2025 08:57:21 +0100
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Cbc3pIJe"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5d3e6274015so782300a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 23:58:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1738223892; x=1738828692; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IuVbeCxd0ZLjYqubDflCtwEntaz5VobEV+1D/OC0S9k=;
+        b=Cbc3pIJenBVO2tztWrzp85DAQOEqiBr/zgraOcg3SEXMuq1HkLjKSrEqhOg++5m1zX
+         2ONxhOFFjgWRO9GfZVdSxbBId6SCQ36Gk00f8pILwPzk4yDHJq7RZmIN2R6A1VdhggfU
+         /uvxnmgf4XcPS50Kuzz6akgjxsolpj4zs+GGEHIdRMRW/oQDcBAzObt9Wz0oU6gRFnpd
+         +B4s9O8Eu16zbH5sBXsR8VHsIjLO0zPH0xpM46cjN/G3O3gUjmHtBhBbuGmL/KT5dx9S
+         OF9yY81pebz7WFVb0nEmT9F30vRRxKnPW3wafYik/aUAR4RM2kfOisbZwfBKONa8MOEX
+         15CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738223892; x=1738828692;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IuVbeCxd0ZLjYqubDflCtwEntaz5VobEV+1D/OC0S9k=;
+        b=ngBfVlDkxUESNTNz8cyzEx63ZCeCo9q2b+fId+Cpvtv5EMjcrHwZMJsFzWU/F7pj7t
+         gON73hNbgqtdNCux25+n+7Cngx4SiB1TH4YFRCRs5UH3pXpsZ0cxH9LDrqAyDBU8dIAp
+         ASkQdMR3rgbyyFHQcE1INdid9B7bUgS4tCcRNKuGBjLrgoGcONYjdfXot+Xc0Wr8+tuB
+         jbnFTBcgghmAhT4BnBpXtatlu+F0p8VA/+JaKrAlF5rcHoFdhQv7aMCRM1tpmFsNeIez
+         UBBENua4//l+2MMtGwesZr4GT5vWCP1uUGrCrWtsbisXziCff1XqkaZTqO1+qw3di+gq
+         X8Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUuQ20GqxLypMV3avGzPmh8HGKnnNIVVMyRRCiod1MvdT6q/yCQEMQMuRllsgTEVB4f5dBcDGxP8DG3M4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzw+48PG0PvV4wvs1T2l8H+6v5pQPzGtHljzfvfFPhbAcOB9mq6
+	YtbscEzlC9Wv49KPhpWoytNB7WaTrVVWzpKCswPchkZjDFp175CX6qCrdvi7b1IwxGicYnuAp99
+	0jj2oLzBAfni0hnbzX5T7ChWuai2f+Igj3F8fcg==
+X-Gm-Gg: ASbGncuWHKpwgqA9JrcUtXkxFIUQ3zf16YUtyaAGE4/S5R4aZgVBAz7KcAiQdkpG9AU
+	IToV5w17mUPmn9APWeRYswwbOXEQBJtSVDtdatP2DRcjw7i6kJC9qLve6NHWnrhfJaRNhswzDSr
+	OjstWriuAizyY=
+X-Google-Smtp-Source: AGHT+IEu5lJQlOicODKczVeGYUaXZ9FX4E8/+oKNod2zLD4ot+JEbvh8Y3J3ZdJXFjEPZknUYwrYq/HGPzvpTbHvk+w=
+X-Received: by 2002:a05:6402:2346:b0:5dc:21a9:d0f1 with SMTP id
+ 4fb4d7f45d1cf-5dc5efc07c3mr5580642a12.14.1738223892155; Wed, 29 Jan 2025
+ 23:58:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/13] wifi: ath12k: add AHB driver support for IPQ5332
-To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>, ath12k@lists.infradead.org
-Cc: linux-wireless@vger.kernel.org, Kalle Valo <kvalo@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Balamurugan S <quic_bselvara@quicinc.com>,
- P Praneesh <quic_ppranees@quicinc.com>
-References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
- <20250130043508.1885026-9-quic_rajkbhag@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250130043508.1885026-9-quic_rajkbhag@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <Z5cgWh/6bRQm9vVU@debian.debian> <6797992c28a23_3f1a294d6@willemb.c.googlers.com.notmuch>
+ <CAO3-Pbqx_sLxdLsTg+NX3z1rrenK=0qpvfL5h_K-RX-Yk9A4YA@mail.gmail.com>
+ <6798ed91e94a9_987d9294c2@willemb.c.googlers.com.notmuch> <CAO3-PboS3JB1GhhbmoJc2-h5zvHe-iNsk9Hkg-_-eNATq99D1Q@mail.gmail.com>
+ <679a367198f13_132e0829467@willemb.c.googlers.com.notmuch> <CAO3-Pbpxt9K=mT3ozFqMHAQcy0B30snxq9Kg9xvP7pmzmXP5=w@mail.gmail.com>
+In-Reply-To: <CAO3-Pbpxt9K=mT3ozFqMHAQcy0B30snxq9Kg9xvP7pmzmXP5=w@mail.gmail.com>
+From: Yan Zhai <yan@cloudflare.com>
+Date: Thu, 30 Jan 2025 01:58:01 -0600
+X-Gm-Features: AWEUYZmOZY41-_m8tByw1qpE3RBZEagqOtpv0-Bq3dYhzbDRQJv54tOveKY4Feo
+Message-ID: <CAO3-PbrUw4XM0-ns=L_TXP=m07bdr22DGO6gJ=gAYWOoJ32+qw@mail.gmail.com>
+Subject: Re: [PATCH] udp: gso: fix MTU check for small packets
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Shuah Khan <shuah@kernel.org>, Josh Hunt <johunt@akamai.com>, 
+	Alexander Duyck <alexander.h.duyck@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kernel-team <kernel-team@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30/01/2025 05:35, Raj Kumar Bhagat wrote:
-> +static int ath12k_ahb_clock_init(struct ath12k_base *ab)
-> +{
-> +	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
-> +	int ret;
-> +
-> +	ab_ahb->xo_clk = devm_clk_get(ab->dev, "xo");
-> +	if (IS_ERR_OR_NULL(ab_ahb->xo_clk)) {
+v2 link here: https://lore.kernel.org/netdev/Z5swit7ykNRbJFMS@debian.debian=
+/T/#u
 
-No, you are not supposed to use IS_ERR_OR_NULL(). That's indication of bug.
-
-> +		ret = ab_ahb->xo_clk ? PTR_ERR(ab_ahb->xo_clk) : -ENODEV;
-
-I don't understand this. It's the third time you are reimplementing
-standard code in some odd way, different than all other drivers.
-
-Read the description of this function. Can clk_get return NULL? Of
-course not. This is so overcomplicated for no reason, I wonder if it is
-actually buggy here.
-
-
-> +		return dev_err_probe(&ab->pdev->dev, ret, "failed to get xo clock\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void ath12k_ahb_clock_deinit(struct ath12k_base *ab)
-> +{
-> +	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
-> +
-> +	devm_clk_put(ab->dev, ab_ahb->xo_clk);
-> +	ab_ahb->xo_clk = NULL;
-> +}
-> +
-> +static int ath12k_ahb_clock_enable(struct ath12k_base *ab)
-> +{
-> +	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
-> +	int ret;
-> +
-> +	if (IS_ERR_OR_NULL(ab_ahb->xo_clk)) {
-> +		ath12k_err(ab, "clock is not initialized\n");
-
-NAK.
-
-Sorry, this code makes no sense. This is some random code. This code
-cannot be executed before probe. If it can: your driver is buggy, so fix
-your driver.
-
-After the probe(), this is never NULL as an error. Either you have here
-valid pointer or you failed the probe.
-
-This driver fails on basics of driver probing.
-
-> +		return -EIO;
-> +	}
-> +
-> +	ret = clk_prepare_enable(ab_ahb->xo_clk);
-> +	if (ret) {
-> +		ath12k_err(ab, "failed to enable gcc_xo_clk: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void ath12k_ahb_clock_disable(struct ath12k_base *ab)
-> +{
-> +	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
-> +
-> +	clk_disable_unprepare(ab_ahb->xo_clk);
-
-Don't create such wrappers for single clock. Does not help.
-
-> +}
-> +
-> +static int ath12k_ahb_resource_init(struct ath12k_base *ab)
-> +{
-> +	struct platform_device *pdev = ab->pdev;
-> +	struct resource *mem_res;
-> +	int ret;
-> +
-> +	ab->mem = devm_platform_get_and_ioremap_resource(pdev, 0, &mem_res);
-> +	if (IS_ERR(ab->mem)) {
-> +		ret = dev_err_probe(&pdev->dev, PTR_ERR(ab->mem), "ioremap error\n");
-> +		goto out;
-> +	}
-> +
-> +	ab->mem_len = resource_size(mem_res);
-> +
-> +	if (ab->hw_params->ce_remap) {
-> +		const struct ce_remap *ce_remap = ab->hw_params->ce_remap;
-> +		/* CE register space is moved out of WCSS and the space is not
-> +		 * contiguous, hence remapping the CE registers to a new space
-> +		 * for accessing them.
-> +		 */
-> +		ab->mem_ce = ioremap(ce_remap->base, ce_remap->size);
-> +		if (IS_ERR(ab->mem_ce)) {
-> +			dev_err(&pdev->dev, "ce ioremap error\n");
-> +			ret = -ENOMEM;
-> +			goto err_mem_unmap;
-> +		}
-> +		ab->ce_remap = true;
-> +		ab->ce_remap_base_addr = HAL_IPQ5332_CE_WFSS_REG_BASE;
-> +	}
-> +
-> +	ret = ath12k_ahb_clock_init(ab);
-> +	if (ret)
-> +		goto err_mem_ce_unmap;
-> +
-> +	ret =  ath12k_ahb_clock_enable(ab);
-> +	if (ret)
-> +		goto err_clock_deinit;
-> +
-> +	return 0;
-> +
-> +err_clock_deinit:
-> +	ath12k_ahb_clock_deinit(ab);
-> +
-> +err_mem_ce_unmap:
-> +	if (ab->hw_params->ce_remap)
-> +		iounmap(ab->mem_ce);
-> +
-> +err_mem_unmap:
-> +	ab->mem_ce = NULL;
-> +	devm_iounmap(ab->dev, ab->mem);
-> +
-> +out:
-> +	ab->mem = NULL;
-> +	return ret;
-> +}
-> +
-> +static void ath12k_ahb_resource_deinit(struct ath12k_base *ab)
-> +{
-> +	if (ab->mem)
-> +		devm_iounmap(ab->dev, ab->mem);
-> +
-> +	if (ab->mem_ce)
-> +		iounmap(ab->mem_ce);
-> +
-> +	ab->mem = NULL;
-> +	ab->mem_ce = NULL;
-> +
-> +	ath12k_ahb_clock_disable(ab);
-> +	ath12k_ahb_clock_deinit(ab);
-> +}
-> +
-> +static enum ath12k_hw_rev ath12k_ahb_get_hw_rev(struct platform_device *pdev)
-> +{
-> +	const struct of_device_id *of_id;
-> +
-> +	of_id = of_match_device(ath12k_ahb_of_match, &pdev->dev);
-> +	if (!of_id) {
-> +		dev_err(&pdev->dev, "Failed to find matching device tree id\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	return (enum ath12k_hw_rev)of_id->data;
-
-You just open-coded of_device_get_match_data().
-
-> +}
-> +
-> +static int ath12k_ahb_probe(struct platform_device *pdev)
-> +{
-> +	struct ath12k_base *ab;
-> +	const struct ath12k_hif_ops *hif_ops;
-> +	struct device_node *mem_node;
-> +	enum ath12k_hw_rev hw_rev;
-> +	u32 addr;
-> +	int ret;
-> +
-> +	hw_rev = ath12k_ahb_get_hw_rev(pdev);
-> +	switch (hw_rev) {
-> +	case ATH12K_HW_IPQ5332_HW10:
-> +		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to set 32-bit coherent dma\n");
-> +		return ret;
-> +	}
-> +
-> +	ab = ath12k_core_alloc(&pdev->dev, sizeof(struct ath12k_ahb),
-> +			       ATH12K_BUS_AHB);
-> +	if (!ab) {
-> +		dev_err(&pdev->dev, "failed to allocate ath12k base\n");
-
-No, driver never prints allocation errors. You are duplicating existing
-core printk.
-
-
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ab->hif.ops = hif_ops;
-> +	ab->pdev = pdev;
-> +	ab->hw_rev = hw_rev;
-> +	platform_set_drvdata(pdev, ab);
-> +
-> +	/* Set fixed_mem_region to true for platforms that support fixed memory
-> +	 * reservation from DT. If memory is reserved from DT for FW, ath12k driver
-> +	 * need not to allocate memory.
-> +	 */
-> +	if (!of_property_read_u32(ab->dev->of_node, "memory-region", &addr)) {
-> +		set_bit(ATH12K_FLAG_FIXED_MEM_REGION, &ab->dev_flags);
-> +
-> +		/* If the platform supports fixed memory, then it should define/
-> +		 * reserve MLO global memory in DT to support Multi Link Operation
-> +		 * (IEEE 802.11be).
-> +		 * If MLO global memory is not reserved in fixed memory mode, then
-> +		 * MLO cannot be supported.
-> +		 */
-> +		mem_node = ath12k_core_get_reserved_mem_by_name(ab, "mlo-global-mem");
-> +		if (!mem_node)
-> +			ab->single_chip_mlo_supp = false;
-> +		else
-> +			of_node_put(mem_node);
-> +	}
-> +
-> +	ret = ath12k_core_pre_init(ab);
-> +	if (ret)
-> +		goto err_core_free;
-> +
-> +	ret = ath12k_ahb_resource_init(ab);
-> +	if (ret)
-> +		goto err_core_free;
-> +
-> +	ret = ath12k_hal_srng_init(ab);
-> +	if (ret)
-> +		goto err_resource_deinit;
-> +
-> +	ret = ath12k_ce_alloc_pipes(ab);
-> +	if (ret) {
-> +		ath12k_err(ab, "failed to allocate ce pipes: %d\n", ret);
-> +		goto err_hal_srng_deinit;
-> +	}
-> +
-> +	ath12k_ahb_init_qmi_ce_config(ab);
-> +
-> +	ret = ath12k_ahb_config_irq(ab);
-> +	if (ret) {
-> +		ath12k_err(ab, "failed to configure irq: %d\n", ret);
-> +		goto err_ce_free;
-> +	}
-> +
-> +	ret = ath12k_core_init(ab);
-> +	if (ret) {
-> +		ath12k_err(ab, "failed to init core: %d\n", ret);
-> +		goto err_ce_free;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_ce_free:
-> +	ath12k_ce_free_pipes(ab);
-> +
-> +err_hal_srng_deinit:
-> +	ath12k_hal_srng_deinit(ab);
-> +
-> +err_resource_deinit:
-> +	ath12k_ahb_resource_deinit(ab);
-> +
-> +err_core_free:
-> +	ath12k_core_free(ab);
-> +	platform_set_drvdata(pdev, NULL);
-> +
-> +	return ret;
-> +}
-> +
-> +static void ath12k_ahb_remove_prepare(struct ath12k_base *ab)
-> +{
-> +	unsigned long left;
-> +
-> +	if (test_bit(ATH12K_FLAG_RECOVERY, &ab->dev_flags)) {
-> +		left = wait_for_completion_timeout(&ab->driver_recovery,
-> +						   ATH12K_AHB_RECOVERY_TIMEOUT);
-> +		if (!left)
-> +			ath12k_warn(ab, "failed to receive recovery response completion\n");
-> +	}
-> +
-> +	set_bit(ATH12K_FLAG_UNREGISTERING, &ab->dev_flags);
-> +	cancel_work_sync(&ab->restart_work);
-> +	cancel_work_sync(&ab->qmi.event_work);
-> +}
-> +
-> +static void ath12k_ahb_free_resources(struct ath12k_base *ab)
-> +{
-> +	struct platform_device *pdev = ab->pdev;
-> +
-> +	ath12k_hal_srng_deinit(ab);
-> +	ath12k_ce_free_pipes(ab);
-> +	ath12k_ahb_resource_deinit(ab);
-> +	ath12k_core_free(ab);
-> +	platform_set_drvdata(pdev, NULL);
-> +}
-> +
-> +static void ath12k_ahb_remove(struct platform_device *pdev)
-> +{
-> +	struct ath12k_base *ab = platform_get_drvdata(pdev);
-> +
-> +	if (test_bit(ATH12K_FLAG_QMI_FAIL, &ab->dev_flags)) {
-> +		ath12k_qmi_deinit_service(ab);
-> +		goto qmi_fail;
-> +	}
-> +
-> +	ath12k_ahb_remove_prepare(ab);
-> +	ath12k_core_deinit(ab);
-> +
-> +qmi_fail:
-> +	ath12k_ahb_free_resources(ab);
-> +}
-> +
-> +static void ath12k_ahb_shutdown(struct platform_device *pdev)
-> +{
-> +	struct ath12k_base *ab = platform_get_drvdata(pdev);
-> +
-> +	/* platform shutdown() & remove() are mutually exclusive.
-> +	 * remove() is invoked during rmmod & shutdown() during
-> +	 * system reboot/shutdown.
-> +	 */
-
-You should rather explain why you cannot use one callback for both. Why
-this has to be duplicated?
-
-> +	ath12k_ahb_remove_prepare(ab);
-> +
-> +	if (!(test_bit(ATH12K_FLAG_REGISTERED, &ab->dev_flags)))
-> +		goto free_resources;
-> +
-> +	ath12k_core_deinit(ab);
-
-And why this is actually different order than remove().
-
-You
-Best regards,
-Krzysztof
+On Wed, Jan 29, 2025 at 10:48=E2=80=AFAM Yan Zhai <yan@cloudflare.com> wrot=
+e:
+>
+> On Wed, Jan 29, 2025 at 8:08=E2=80=AFAM Willem de Bruijn
+> <willemdebruijn.kernel@gmail.com> wrote:
+> >
+> > Yan Zhai wrote:
+> > > On Tue, Jan 28, 2025 at 8:45=E2=80=AFAM Willem de Bruijn
+> > > <willemdebruijn.kernel@gmail.com> wrote:
+> > > >
+> > > > Yan Zhai wrote:
+> > > > > Hi Willem,
+> > > > >
+> > > > > Thanks for getting back to me.
+> > > > >
+> > > > > On Mon, Jan 27, 2025 at 8:33=E2=80=AFAM Willem de Bruijn
+> > > > > <willemdebruijn.kernel@gmail.com> wrote:
+> > > > > >
+> > > > > > Yan Zhai wrote:
+> > > > > > > Commit 4094871db1d6 ("udp: only do GSO if # of segs > 1") avo=
+ided GSO
+> > > > > > > for small packets. But the kernel currently dismisses GSO req=
+uests only
+> > > > > > > after checking MTU on gso_size. This means any packets, regar=
+dless of
+> > > > > > > their payload sizes, would be dropped when MTU is smaller tha=
+n requested
+> > > > > > > gso_size.
+> > > > > >
+> > > > > > Is this a realistic concern? How did you encounter this in prac=
+tice.
+> > > > > >
+> > > > > > It *is* a misconfiguration to configure a gso_size larger than =
+MTU.
+> > > > > >
+> > > > > > > Meanwhile, EINVAL would be returned in this case, making it
+> > > > > > > very misleading to debug.
+> > > > > >
+> > > > > > Misleading is subjective. I'm not sure what is misleading here.=
+ From
+> > > > > > my above comment, I believe this is correctly EINVAL.
+> > > > > >
+> > > > > > That said, if this impacts a real workload we could reconsider
+> > > > > > relaxing the check. I.e., allowing through packets even when an
+> > > > > > application has clearly misconfigured UDP_SEGMENT.
+> > > > > >
+> > > > > We did encounter a painful reliability issue in production last m=
+onth.
+> > > > >
+> > > > > To simplify the scenario, we had these symptoms when the issue oc=
+curred:
+> > > > > 1. QUIC connections to host A started to fail, and cannot establi=
+sh new ones
+> > > > > 2. User space Wireguard to the exact same host worked 100% fine
+> > > > >
+> > > > > This happened rarely, like one or twice a day, lasting for a few
+> > > > > minutes usually, but it was quite visible since it is an office
+> > > > > network.
+> > > > >
+> > > > > Initially this prompted something wrong at the protocol layer. Bu=
+t
+> > > > > after multiple rounds of digging, we finally figured the root cau=
+se
+> > > > > was:
+> > > > > 3. Something sometimes pings host B, which shares the same IP wit=
+h
+> > > > > host A but different ports (thanks to limited IPv4 space), and it=
+s
+> > > > > PMTU was reduced to 1280 occasionally. This unexpectedly affected=
+ all
+> > > > > traffic to that IP including traffic toward host A. Our QUIC clie=
+nt
+> > > > > set gso_size to 1350, and that's why it got hit.
+> > > > >
+> > > > > I agree that configurations do matter a lot here. Given how broke=
+n the
+> > > > > PMTU was for the Internet, we might just turn off pmtudisc option=
+ on
+> > > > > our end to avoid this failure path. But for those who hasn't yet,=
+ this
+> > > > > could still be confusing if it ever happens, because nothing seem=
+s to
+> > > > > point to PMTU in the first place:
+> > > > > * small packets also get dropped
+> > > > > * error code was EINVAL from sendmsg
+> > > > >
+> > > > > That said, I probably should have used PMTU in my commit message =
+to be
+> > > > > more clear for our problem. But meanwhile I am also concerned abo=
+ut
+> > > > > newly added tunnels to trigger the same issue, even if it has a s=
+tatic
+> > > > > device MTU. My proposal should make the error reason more clear:
+> > > > > EMSGSIZE itself is a direct signal pointing to MTU/PMTU. Larger
+> > > > > packets getting dropped would have a similar effect.
+> > > >
+> > > > Thanks for that context. Makes sense that this is a real issue.
+> > > >
+> > > > One issue is that with segmentation, the initial mtu checks are
+> > > > skipped, so they have to be enforced later. In __ip_append_data:
+> > > >
+> > > >     mtu =3D cork->gso_size ? IP_MAX_MTU : cork->fragsize;
+> > > >
+> > > You are right, if packet sizes are between (PMTU, gso_size), then the=
+y
+> > > should still be dropped. But instead of checking explicitly in
+> > > udp_send_skb, maybe we can leave them to be dropped in
+> > > ip_finish_output?
+> >
+> > Not sure how to do this, or whether it will be simpler than having all
+> > the UDP GSO checks in udp_send_skb.
+> >
+> > For a "don't add cost to the hot path" point of view, it's actually
+> > best to keep all these checks in one place only when UDP_SEGMENT is
+> > negotiated (where the hot path is the common case without GSO).
+> >
+> I mean ip_finish_output is already dropping packets with length larger
+> than dst MTU. But I guess it doesn't hurt to check it also in GSO
+> branch. Let me send a V2 later to address it.
+>
+> > > This way there is no need to add an extra branch for
+> > > non GSO code paths. PMTU shrinking should be rare, so the overhead
+> > > should be minimal.
+> > >
+> > > > Also, might this make the debugging actually harder, as the
+> > > > error condition is now triggered intermittently.
+> > > Yes sendmsg may only return errors for a portion of packets now under
+> > > the same situation. But IMHO it's not trading debugging for
+> > > reliability. Consistent error is good news for engineers to reproduce
+> > > locally, but in production I find people (SREs, solution and
+> > > escalation engineers) rely on pcaps and errno a lot. The pattern in
+> > > pcaps (lack of large packets of certain sizes, since they are dropped
+> > > before dev_queue_xmit), and exact error reasons like EMSGSIZE are bot=
+h
+> > > good indicators for root causes. EINVAL is more generic on the other
+> > > hand. For example, I remembered we had another issue on UDP sendmsg,
+> > > which also returned a bunch of EINVAL. But that was due to some
+> > > attacker tricking us to reply with source port 0.
+> >
+> > Relying on error code is fraught anyway. For online analysis (which
+> > I think can be assumed when pcap is mentioned), function tracing and
+> > bpf trace are much more powerful.
+> >
+> Totally agree tracing is more powerful. Time by time we see issues
+> lingering for a few months get addressed in a few days or even hours
+> when tracing is plugged in. Unfortunately at least for us, the number
+> of people who can trace properly is far behind the volume of problems.
+> I can only hope in the future more people will recognize this as a
+> golden skill, in addition to current standard skills like pcap
+> analysis.
+>
+> Yan
+>
+> > That said, no objections to returning EMSGSIZE instead of EINVAL. That
+> > is the same UDP returns when sending a single datagram that exceeds
+> > MTU, after all.
+> >
