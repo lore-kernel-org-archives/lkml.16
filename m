@@ -1,160 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258852770C;
-	Thu, 30 Jan 2025 17:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A071EE7DF
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738257795; cv=none; b=uS9siY3wV7+QlXujOFbja5vK2p8NMBHANnwy3v3+/C3upAvNix6y/bg9p/NK3LW+bwT6sP7Zkllj8Okx6apo2oLWvdaOjkFHaq5WPLZQNR8eN02nU+XWOumXFRiWGOpLsvmSunEJSZx3XRzJ9a7oFdt2Ddv2vNQLwrt1lr9evfw=
+	t=1738257886; cv=none; b=JFG71aUo5stQGHg0/8qZitet+bOJVo9kzigyCuf3Dqs/nr424tHYm3g6ve6I3Hsow5i5dCiDld47RuMeWF1VBXmvMS/Lw0oZEW9sQm65/Z327zamWXQfqPkTkAW2uKWWuIXVUJkxjGjS1MMQKeREhzx+3PmITkrBGf2CBJXW4uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738257795; c=relaxed/simple;
-	bh=yH4FEbQVXyMxFaB7hk1ruwl/3FyAw8z0JzuE+B/DXpM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ERKgkTT7TUXz91oi/BYNTi8l//KPdKsPQn8p97lnyWS6Ou7qiZ5mOJE4PqqEAw3hzt27T6+goKtgAMdgpwOf6sVSTkcLNXzHLgUs24uA4lfZxc4S5UyD+AHWAFhY2PadjWTnocunoKe1nO3k5uyTYBhnZe33SeC+yaMADreU6PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=upySuXt6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738257886; c=relaxed/simple;
+	bh=lhgUmgTEIT/vBwhj68pfvvbInab5tq3uuxQ9tFQKC3Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dhywdxmdSSzU7IAothbFlW7mMLIWXoCEpfHaZ8tCgLSnR3DJOTIgy0HwiXMPNZjSF5cX4ukbD5mosPXbW2oQCiAEOGr4rqSGheJzVhcqGuLiAowVjeFqYECqkdeEOkWTp8cJ0DwRqIyGIEZ0MBus/tUnWfeQbWPKcHHWzaoFbwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rsa9f5ku; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upySuXt6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1F4AC4CED2;
-	Thu, 30 Jan 2025 17:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738257793;
-	bh=yH4FEbQVXyMxFaB7hk1ruwl/3FyAw8z0JzuE+B/DXpM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=upySuXt69EgxtJcJBjPKJLKq/sT++GHdJLl2ro5gBbZNK4U64HWApRXSLxfb8eFw0
-	 CI/IjFGVut8N3OHewG3MvKiRmcSfSNNZ5ykiHjTTGmeYvMj9VBh5/2BZ1n2iVT7nRk
-	 +EI23txGIo3cN3lTDEqeHccBBtQHqfvwuULpBtGjEi0XC4aivzW02RTO80hTOgADBc
-	 wbX9ocvq5U3cJU64lLn7bWeQyrWuXI050ij/SsZRqm8NAzJfMoTZk8rUqPfzOJTngl
-	 +g8cdyMfWtmFvIENKtDO8EOaaMMMKJtNs7wz+mFGikGXV2YXP/9TUsiVK8Mo47P7TW
-	 GabRao+AJ+L0Q==
-Date: Thu, 30 Jan 2025 17:23:04 +0000
-From: Simon Horman <horms@kernel.org>
-To: Basharath Hussain Khaja <basharath@couthit.com>
-Cc: danishanwar@ti.com, rogerq@kernel.org, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-	tony@atomide.com, richardcochran@gmail.com, parvathi@couthit.com,
-	schnelle@linux.ibm.com, rdunlap@infradead.org,
-	diogo.ivo@siemens.com, m-karicheri2@ti.com,
-	jacob.e.keller@intel.com, m-malladi@ti.com,
-	javier.carrasco.cruz@gmail.com, afd@ti.com, s-anna@ti.com,
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org, pratheesh@ti.com, prajith@ti.com,
-	vigneshr@ti.com, praneeth@ti.com, srk@ti.com, rogerq@ti.com,
-	krishna@couthit.com, pmohan@couthit.com, mohan@couthit.com
-Subject: Re: [RFC v2 PATCH 05/10] net: ti: prueth: Adds ethtool support for
- ICSSM PRUETH Driver
-Message-ID: <20250130172304.GD13457@kernel.org>
-References: <20250124122353.1457174-1-basharath@couthit.com>
- <20250124134056.1459060-6-basharath@couthit.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rsa9f5ku"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-386329da1d9so574438f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:24:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738257883; x=1738862683; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XyeDfNgF8wSUnxJsK4c0ibCBKb5iWxSmVaedgdkZ/qE=;
+        b=rsa9f5kuF/qfLSmiWJdpoofhGH81/rcL7eupFaAbtfsJfFjsYXwusoVMGSkta+NOQJ
+         rsGWqUcf/Kw6padrDj75HTJwZ2INUAArnhcxlCaTRDElPQ0UT4rPdhecRn96PmhpC0Y0
+         RZx76cgRq2wAxLbNglfXxcGcWw7U8rea3vWPOJx/D+wGeotjJA1UWP70L9zLel7dtV61
+         4aXksx6NqkeukoWuLCRiGLDuAwLAFcKbam/Uu6g+Vux2zMhTBl6nfA9MB/Fd04TubxI/
+         zFYShFOjY2OmCB8eDOsmrBQ6JBognAdRYK+pUwfSqGIQ1b9Nymah82RzfvJHjg8/Klzg
+         DjKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738257883; x=1738862683;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XyeDfNgF8wSUnxJsK4c0ibCBKb5iWxSmVaedgdkZ/qE=;
+        b=ntykUiRM0dsLOZrDbIW/fPBkzlxHEFQ3YAT5RBg18NGWOhnMLLMjI+2W6DWWFxGoJH
+         LDA7n5B7tcuXebg8jEm9pJ3B953Qn0hoRq3lUDsUrUtsAyAP25J5IGSsPuv63Tzjkhk8
+         cxm5A6MhQTmn/zlAoK2M+0XxYMKdc6Cwc1fN2hCM66V8veEYHkzSI0sjpRnBS682WCg+
+         fNtCLdCBIWHHT3gOaD+hvSS1IZ8pCAcxcz9lPEKdKqPlKTuyj0Lof6+wv9JgzTn4MV3c
+         8RwviRQ76g39BhY0ZppDrf6dhwZFMByHv/IYKPkQv6w2QH/+Pdy7JPLNwmH5LZVNQq48
+         ed/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVvOGB6se2rm4YMiTqlZVUEL2TxqV0HyPHdXcO8JW03BeX78x+xb2nLpAXPCza18nH8tnSqdWNioTIHl8g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBLOukX1ICX23NpIQ5oK6kGyaoCxj0ZuOFoaTUxDCgMC2ri8cF
+	RofUQz5w0UaasR9pMEXuO9g8P9UFFhFyKTfVf/LU9JvP4cw5Cz9NLVbKZEj+Ngg=
+X-Gm-Gg: ASbGncshkalDML1jkFxja5PKS82jUkl/ELm+jhxSl4sYmU4YRIrCHl4d6GO0c+/p/qE
+	qo95lKMYIYLO0aFSwStxV+lcyfMpzHh5bKEq9PIU5tX9F2tBI0UM6oi/kkzm/Xu+rDHyToUFeal
+	yzwfA1ru3OvFkidMCHsHQD/I2AQAzSAQYoo6jDAbiNn50kTR0wrSIGP47eBg7B/b6imT6UDyEmL
+	b3sjefaNM4EaMozrlK/k9QSA+TefrLn5ppwqS/ZIfJ5w89O3kre9K5Oox/yz/WtYcJNkhq3sTvW
+	4vw+IPzoTzQ4B+4Dv2nGjk1w6HrhnM5NxV1TVL+OvtKsOMSWnch7Qtc=
+X-Google-Smtp-Source: AGHT+IFOKhwS7SVTZlAgB/KmUq5YUcsnKXwUcdqRruGMwNm81PK27tTx5RK+9qsQBjRXDr0I6E36aQ==
+X-Received: by 2002:a5d:6d02:0:b0:385:f092:e1a with SMTP id ffacd0b85a97d-38c5194c3b6mr6343222f8f.11.1738257883252;
+        Thu, 30 Jan 2025 09:24:43 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-38c5c0ebfdasm2599755f8f.17.2025.01.30.09.24.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 09:24:42 -0800 (PST)
+Message-ID: <b496d933-3c57-4b02-ab65-0582a30939af@linaro.org>
+Date: Thu, 30 Jan 2025 18:24:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250124134056.1459060-6-basharath@couthit.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] thermal: of: Export non-devres helper to
+ register/unregister thermal zone
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: rafael@kernel.org, rui.zhang@intel.com, lukasz.luba@arm.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ geert+renesas@glider.be, magnus.damm@gmail.com, mturquette@baylibre.com,
+ sboyd@kernel.org, p.zabel@pengutronix.de, ulf.hansson@linaro.org,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250103163805.1775705-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250103163805.1775705-3-claudiu.beznea.uj@bp.renesas.com>
+ <Z5pkUNNvsWPjRQvy@mai.linaro.org>
+ <65a16c3f-456e-40ec-91b0-afb57269ed46@tuxon.dev>
+ <Z5tPR_tv7vWDkUI7@mai.linaro.org>
+ <6ed7d545-82d7-4bca-95ec-95447586bb58@tuxon.dev>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <6ed7d545-82d7-4bca-95ec-95447586bb58@tuxon.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 24, 2025 at 07:10:51PM +0530, Basharath Hussain Khaja wrote:
-> From: Roger Quadros <rogerq@ti.com>
+On 30/01/2025 11:30, Claudiu Beznea wrote:
 > 
-> Changes for enabling ethtool support for the newly added PRU Ethernet
-> interfaces. Extends the support for statistics collection from PRU internal
-> memory and displays it in the user space. Along with statistics,
-> enable/disable of features, configuring link speed etc.are now supported.
 > 
-> The firmware running on PRU maintains statistics in internal data memory.
-> When requested ethtool collects all the statistics for the specified
-> interface and displays it in the user space.
+> On 30.01.2025 12:07, Daniel Lezcano wrote:
+>> On Thu, Jan 30, 2025 at 11:08:03AM +0200, Claudiu Beznea wrote:
+>>> Hi, Daniel,
+
+[ ... ]
+
+>>>> Would the IP need some cycles to capture the temperature accurately after the
+>>>> clock is enabled ?
+>>>
+>>> There is nothing about this mentioned about this in the HW manual of the
+>>> RZ/G3S SoC. The only points mentioned are as described in the driver code:
+>>> - wait at least 3us after each IIO channel read
+>>> - wait at least 30us after enabling the sensor
+>>> - wait at least 50us after setting OE bit in TSU_SM
+>>>
+>>> For this I chose to have it implemented as proposed.
+>>
+>> IMO, disabling/enabling the clock between two reads through the pm runtime may
+>> not be a good thing, especially if the system enters a thermal situation where
+>> it has to mitigate.
+>>
+>> Without any testing capturing the temperatures and compare between the always-on
+>> and on/off, it is hard to say if it is true or not. Up to you to test that or
+>> not. If you think it is fine, then let's go with it.
 > 
-> Makefile is updated to include ethtool support into PRUETH driver.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
-> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+> I tested it with and w/o the runtime PM and on/off support (so, everything
+> ON from the probe) and the reported temperature values were similar.
 
-...
 
-> diff --git a/drivers/net/ethernet/ti/icssm/icssm_ethtool.c b/drivers/net/ethernet/ti/icssm/icssm_ethtool.c
+Did you remove the roundup to 0.5°C ?
 
-...
 
-> +static const struct {
-> +	char string[ETH_GSTRING_LEN];
-> +	u32 offset;
-> +} prueth_ethtool_stats[] = {
-> +	{"txBcast", PRUETH_STAT_OFFSET(tx_bcast)},
-> +	{"txMcast", PRUETH_STAT_OFFSET(tx_mcast)},
-> +	{"txUcast", PRUETH_STAT_OFFSET(tx_ucast)},
-> +	{"txOctets", PRUETH_STAT_OFFSET(tx_octets)},
-> +	{"rxBcast", PRUETH_STAT_OFFSET(rx_bcast)},
-> +	{"rxMcast", PRUETH_STAT_OFFSET(rx_mcast)},
-> +	{"rxUcast", PRUETH_STAT_OFFSET(rx_ucast)},
-> +	{"rxOctets", PRUETH_STAT_OFFSET(rx_octets)},
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Hi Roger, Basharath, all,
-
-There seems to be some overlap between the above and struct rtnl_link_stats64.
-
-Please implement those stats which are present in struct rtnl_link_stats64
-using ndo_get_stats64 and omit them from your implementation of
-get_ethtool_stats.
-
-IOW, get_ethtool_stats() is for extended stats, whereas is for standard
-stats ndo_get_stats64().  And standard stats should not be presented to the
-user as extended stats.
-
-Link: https://docs.kernel.org/networking/statistics.html#notes-for-driver-authors
-
-> +	{"tx64byte", PRUETH_STAT_OFFSET(tx64byte)},
-> +	{"tx65_127byte", PRUETH_STAT_OFFSET(tx65_127byte)},
-> +	{"tx128_255byte", PRUETH_STAT_OFFSET(tx128_255byte)},
-> +	{"tx256_511byte", PRUETH_STAT_OFFSET(tx256_511byte)},
-> +	{"tx512_1023byte", PRUETH_STAT_OFFSET(tx512_1023byte)},
-> +	{"tx1024byte", PRUETH_STAT_OFFSET(tx1024byte)},
-> +	{"rx64byte", PRUETH_STAT_OFFSET(rx64byte)},
-> +	{"rx65_127byte", PRUETH_STAT_OFFSET(rx65_127byte)},
-> +	{"rx128_255byte", PRUETH_STAT_OFFSET(rx128_255byte)},
-> +	{"rx256_511byte", PRUETH_STAT_OFFSET(rx256_511byte)},
-> +	{"rx512_1023byte", PRUETH_STAT_OFFSET(rx512_1023byte)},
-> +	{"rx1024byte", PRUETH_STAT_OFFSET(rx1024byte)},
-
-Similarly, the above, along with rxOverSizedFrames and rxUnderSizedFrames
-below seem to be RMON (RFC 2819) statistics. So I think they should
-be handled by implementing get_rmon_stats().
-
-> +
-> +	{"lateColl", PRUETH_STAT_OFFSET(late_coll)},
-> +	{"singleColl", PRUETH_STAT_OFFSET(single_coll)},
-> +	{"multiColl", PRUETH_STAT_OFFSET(multi_coll)},
-> +	{"excessColl", PRUETH_STAT_OFFSET(excess_coll)},
-
-And likewise, the section above and below seem to overlap
-with Basic IEEE 802.3 MAC statistics which I believe
-should be handled by implementing get_eth_mac_stats()
-
-> +
-> +	{"rxMisAlignmentFrames", PRUETH_STAT_OFFSET(rx_misalignment_frames)},
-> +	{"stormPrevCounterBC", PRUETH_STAT_OFFSET(stormprev_counter_bc)},
-> +	{"stormPrevCounterMC", PRUETH_STAT_OFFSET(stormprev_counter_mc)},
-> +	{"stormPrevCounterUC", PRUETH_STAT_OFFSET(stormprev_counter_uc)},
-> +	{"macRxError", PRUETH_STAT_OFFSET(mac_rxerror)},
-> +	{"SFDError", PRUETH_STAT_OFFSET(sfd_error)},
-> +	{"defTx", PRUETH_STAT_OFFSET(def_tx)},
-> +	{"macTxError", PRUETH_STAT_OFFSET(mac_txerror)},
-> +	{"rxOverSizedFrames", PRUETH_STAT_OFFSET(rx_oversized_frames)},
-> +	{"rxUnderSizedFrames", PRUETH_STAT_OFFSET(rx_undersized_frames)},
-> +	{"rxCRCFrames", PRUETH_STAT_OFFSET(rx_crc_frames)},
-> +	{"droppedPackets", PRUETH_STAT_OFFSET(dropped_packets)},
-> +
-> +	{"txHWQOverFlow", PRUETH_STAT_OFFSET(tx_hwq_overflow)},
-> +	{"txHWQUnderFlow", PRUETH_STAT_OFFSET(tx_hwq_underflow)},
-> +	{"vlanDropped", PRUETH_STAT_OFFSET(vlan_dropped)},
-> +	{"multicastDropped", PRUETH_STAT_OFFSET(multicast_dropped)},
-> +};
-
-...
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
