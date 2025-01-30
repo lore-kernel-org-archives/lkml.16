@@ -1,116 +1,115 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42AD1A2398;
-	Wed, 29 Jan 2025 23:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6ACEA41
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 00:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738195017; cv=none; b=IrGGJCE7GJpHHJ/8Xaea/QgF4IrO0hngAqkGxVEXzAVXAMFmhSwk3Rz3WMtLQ3sZLc4Hce+ADXiSIlZZOh0x5IMs0hgQd3NnfNuyO2ur1l/fXx9AtadnqXCSALqIa+XiS0v9mIrPwnoHsNn/NeWSk04x7yHnG+IFVIbSex8UXPk=
+	t=1738195345; cv=none; b=b41fqTXmZZBKPvyrv+S+9Rk3Fhg8zMVE1q7jHl3JVuJyj1adBiBb+FdcBWTgmrIGxGvbvR/KYvelteTF/s/FXdxYM7Z/r+KbBwWJqXF7XVXiVhUK9m4MBwVqTvUMXjQ0FJumK9oWQyxytnBJL8i44yBN55J2ICRZUoOoubDzkTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738195017; c=relaxed/simple;
-	bh=CUV6idxLMiMBeotyTkobqVkSejdUQmJ3omLElEEXwk8=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=HGjH52rkBzFz4dj1+Z/T7b4Se181Pyh2R9TJ+FZrjkH4/ndflAvQ4Z9TONIzgS8Y2awtNjopwUoVSHStEn0N8Iu1gvVEELDZIn4w/T/Zx1XAsgrJKqBe1Qy7nJ+GCzJsXDaCZmqplBfs1hFGEmP3Rvsfly8B/dhY8WLv4+sHCVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fgkciRK0; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738195345; c=relaxed/simple;
+	bh=rmhEJBdAhw6QWgALtZAaFHAuvlmZ9phQrUbVP1Dwna8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HqGFesZ9FsCp16T6MHu4qgoVYUE2yUM0kgplbFG2QV+UHQ1BN59z6ycDNf+7adFJDsMGlz8+xrkDDvYeKqfiVtEkK80PdZ9MCIIEakjMt5icer+/5ah3VSBbvNhEiNCdopyWXcJ2uBZqh8TeR7UzUlhTwHN4jfYUjL/q2/o2ssY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=GgWJ7fEk; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgkciRK0"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21649a7bcdcso3281075ad.1;
-        Wed, 29 Jan 2025 15:56:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738195014; x=1738799814; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eHWUEFLBFWIm/AfPLL++N3GkQDYP6DoVXgxmhuGsEuM=;
-        b=fgkciRK0MxY/frtPwkOeSr9zX0osZPCS3RXbISKxPjPkTWnyN2hmBWEaVZH6OoMKAe
-         xJvAWebpRbZDGNKmjZEjNMJSMEwy2/5AsLJEYU5UOncD444vXWKTQCmARJvGZ/4HF5cF
-         cCr5YfrqXMUQKmFCIHotOSok3ajR9t4+Wxig/inFEtsIkZ59xtnLn0CNlRvh/O9HR0Gp
-         WYdx3MD220B8t+ZCwzl1TgKr7WzwOsyfFY3H59SOWgx0aiDsveZExI31nyRBbeHlZhTy
-         R04UzLpyUM6bINWYqsM/riWy8WwX5DGRZCDG13K9Z2bGbjGVs7+Mx6zojy87q8y+TZZ7
-         W7Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738195014; x=1738799814;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eHWUEFLBFWIm/AfPLL++N3GkQDYP6DoVXgxmhuGsEuM=;
-        b=sYWDn4DltSo2/npFneRoIR2qiakqSPvwpnHoddqFmcyMWNRvI+p1M1gSv5dQQuryRA
-         DQ0b/oCdecffs0ktC2h6X6a8g+qGdB++IKX2qepa5ZNGduFeBSppbyBkBoII8sXT6DWf
-         nA9eTHEBICZSaRPSFWPi1WEftnuHbeuhjA4tELGVeru/MdWdcl55tzRlM8XMsTbr9SgN
-         OWDGjugSSwGgWrgbzSqW5HwEdSlhyAQcsYTUu73beSKfB0QtSEO9i2Oqrq5SQ+wVM4f3
-         HivIqSVPiHl2OVMjyMElVZBYez2mHdE55BNcxtvSf4pl6YC+DnvPRQwotWk+WSd/DDSG
-         2TiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNOTOfRJ2wS9Hw+x4YBztDtYz3WFqJjyrE4aO3dxZknw6S1aLrtCdOAeMTXCdfFY24sSuT8l7l@vger.kernel.org, AJvYcCXb4B3NuYFjF1eOyF7LIzyHp6CRdFN9JKGhJo9zVE32fXk61PH/xlW4wYSGnbnAwCrh4LsmtwZVP3Lyvd8=@vger.kernel.org, AJvYcCXtxq6+ZkXkmc4QQOC5zXeD2+vV8iTa2MRGRmuJZsy464F3lsKjQGQ49cDPn5kU2UTPquAFc/kmP6cJAXxjnsU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxX4wV3d0xe5MWuahBls1eqIN6TEIwi94vhiqbnb/b72DLxOJuU
-	H6kuK/9B5DRLWkr2NZTRoBja/bpUKc9uNPoQtUNU/Byy/Pme+Qge
-X-Gm-Gg: ASbGncuMu3IQYgmuhdb9NNbdl6fiy41dmzH69IBTMbDpp1+Wn0jeJn2kTfgfOcDMfh/
-	K5a/DyVrn/QnOTqmYo90iYDOpRQQ+XyvQ5s774LMN2zT5jXXZdpSDn340jLZL6Cdo8PZ6Gr4fZU
-	qmzG3SKZaYfR0/ocJMCG4dVCfby9zQBfiJju8HlUiXY5TbqkColKFT80nxeAdh9iRyHcIGQSVLF
-	5tMJyqQCCh3nLI/58mKNeiPKOd9E2q5Pery/dbpc3UVP98VwBqRTpCjjvUp3mssSJDSld2M6Twr
-	0E25L98QwAmMiM/KXG0wqu5g0beBsUVWROkMA9vdlWbbNdqoAAyfkDWwqd4ZagueJ64Bu38Y
-X-Google-Smtp-Source: AGHT+IEqQHqIq3nQXCLQ1vzxdYZ9/MIsGlho7lL+QRLnpBBE205Ui9H7sSwJ72ErcpH3zk5dJUcvKQ==
-X-Received: by 2002:a05:6a00:4642:b0:724:f86e:e3d9 with SMTP id d2e1a72fcca58-72fd0c02ec9mr7271441b3a.14.1738195014049;
-        Wed, 29 Jan 2025 15:56:54 -0800 (PST)
-Received: from localhost (p3882177-ipxg22501hodogaya.kanagawa.ocn.ne.jp. [180.15.148.177])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6a1a958sm58138b3a.172.2025.01.29.15.56.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 15:56:53 -0800 (PST)
-Date: Thu, 30 Jan 2025 08:56:44 +0900 (JST)
-Message-Id: <20250130.085644.2298700991414831587.fujita.tomonori@gmail.com>
-To: peterz@infradead.org
-Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
- boqun.feng@gmail.com, rust-for-linux@vger.kernel.org,
- netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
- tmgross@umich.edu, ojeda@kernel.org, alex.gaynor@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
- a.hindborg@samsung.com, aliceryhl@google.com, anna-maria@linutronix.de,
- frederic@kernel.org, tglx@linutronix.de, arnd@arndb.de,
- jstultz@google.com, sboyd@kernel.org, mingo@redhat.com,
- juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, tgunders@redhat.com
-Subject: Re: [PATCH v9 1/8] sched/core: Add __might_sleep_precision()
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <20250128113738.GC7145@noisy.programming.kicks-ass.net>
-References: <20250125101854.112261-1-fujita.tomonori@gmail.com>
-	<20250125101854.112261-2-fujita.tomonori@gmail.com>
-	<20250128113738.GC7145@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GgWJ7fEk"
+Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
+	by cmsmtp with ESMTPS
+	id dGj9tSYBlzZPadHzDt38fz; Thu, 30 Jan 2025 00:00:47 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id dHzCtKy19dQyldHzDt17jX; Thu, 30 Jan 2025 00:00:47 +0000
+X-Authority-Analysis: v=2.4 cv=McOnuI/f c=1 sm=1 tr=0 ts=679ac12f
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=3GLQtCDrk5mhnYkuwPoHkA==:17
+ a=IkcTkHD0fZMA:10 a=VdSt8ZQiCzkA:10 a=7T7KSl7uo7wA:10 a=07d9gI8wAAAA:8
+ a=MSH2wtueLVmAUOx7J90A:9 a=QEXdDO2ut3YA:10 a=e2CUPOnPG4QKp8I52DXD:22
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=6l2UYJ7Tp33S5DDlVadMkoWryUzh14qbffLQOgOz8/Q=; b=GgWJ7fEkeCw5i/y11psWiaF5ci
+	/c/U6KqIRyruQ/NiOzSg8VvnSPe47Vbmx4RXBSY56rJEsnhtAjKxyfs15+zOvyQRy1UkXPpfW7L16
+	3eDiKKVppbafQ4NVWFJY5n+WaxTPPf+FI/irPI0FD8iRIkx8UB7uQU1D2OOei51ZkCV8yY7l+EhyZ
+	Ckzn+9W40eu9/x/6/qXR34OwBpGiPEGdU3TpSoefGnQ+GOoV5S58bG3jqD+S81mhYJM1DHPbNBF+G
+	ZZTpuN+DhxaY3/OD7oXekGkdK663PYdfYG+eVyUdCEk5Vd7l3sRyKig3RIgkmGmz8/vFGUnpTucqK
+	jAwYzKaQ==;
+Received: from [45.124.203.141] (port=55369 helo=[192.168.0.153])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1tdHzA-0042mT-0G;
+	Wed, 29 Jan 2025 18:00:44 -0600
+Message-ID: <85863d7a-2d8b-4c1b-b76a-e2f40834a7a8@embeddedor.com>
+Date: Thu, 30 Jan 2025 10:30:30 +1030
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] s390/vfio-ap: Replace one-element array with flexible
+ array member
+To: Halil Pasic <pasic@linux.ibm.com>, Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Tony Krowiak <akrowiak@linux.ibm.com>, Jason Herne
+ <jjherne@linux.ibm.com>, Harald Freudenberger <freude@linux.ibm.com>,
+ Holger Dengler <dengler@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, linux-hardening@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250116131859.105756-2-thorsten.blum@linux.dev>
+ <20250129213826.291cfe12.pasic@linux.ibm.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20250129213826.291cfe12.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 45.124.203.141
+X-Source-L: No
+X-Exim-ID: 1tdHzA-0042mT-0G
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.153]) [45.124.203.141]:55369
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfEMn9XnaqzuDBeb3s5I9HMvCNzmaDEgFzvyeXBs+mOKlgtJAB1Npaak+SHTHVivzorcs/az9R1bAMKnFA7vpIBt+GR8z3peYYobics9IM0qrmpBe3Eoz
+ 6OIIGhvmDwUogtZ4sQijdeYoRltfq3W2metLXfaeH5u165UjyOddK5wuf1/EINn80oYR0WMK+E/oU/YYE4yk0t8/kePb/GuDjDPlxOzxrxrOX1mZkcqz+85S
 
-On Tue, 28 Jan 2025 12:37:38 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
 
-> On Sat, Jan 25, 2025 at 07:18:46PM +0900, FUJITA Tomonori wrote:
->> Add __might_sleep_precision(), Rust friendly version of
->> __might_sleep(), which takes a pointer to a string with the length
->> instead of a null-terminated string.
->> 
->> Rust's core::panic::Location::file(), which gives the file name of a
->> caller, doesn't provide a null-terminated
->> string. __might_sleep_precision() uses a precision specifier in the
->> printk format, which specifies the length of a string; a string
->> doesn't need to be a null-terminated.
->> 
->> Modify __might_sleep() to call __might_sleep_precision() but the
->> impact should be negligible. strlen() isn't called in a normal case;
->> it's called only when printing the error (sleeping function called
->> from invalid context).
->> 
->> Note that Location::file() providing a null-terminated string for
->> better C interoperability is under discussion [1].
+
+On 30/01/25 07:08, Halil Pasic wrote:
+> On Thu, 16 Jan 2025 14:18:59 +0100
+> Thorsten Blum <thorsten.blum@linux.dev> wrote:
 > 
-> Urgh :/
+>> Replace the deprecated one-element array with a modern flexible array
+>> member in the struct ap_matrix_dev.
+>>
+> 
+> I'm not sure I understand the value of this. What we have here is not
+> a flexible array but a one element array. Something that in the generic
+> case could be many but particularly for vfio-ap is always one.
 
-Yeah... so not acceptable?
+You are correct. Only fake flexible arrays should be transformed into
+C99 flex-array members [1].
 
-Then I switch to the implementation with Rust macros, which gives a
-null terminated string.
+Thanks
+-Gustavo
+
+[1] https://lwn.net/Articles/908817/
