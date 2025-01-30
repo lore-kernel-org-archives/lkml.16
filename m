@@ -1,101 +1,198 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599004A35
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 20:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22174A35;
+	Thu, 30 Jan 2025 20:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738268800; cv=none; b=fcJWe3o3Yjj+Eu8Gl2uN6gsGPIHA15kPaYa76FK6bUe91wZjphthALFB5AK6OfaRnx0UTlCKsjx4hRLoDCCkjJW6OWxgAI17/zn19QFOh64sPLzJIuCdqe+RJCoLk4NjdsdkabFgNPjRx+wpMBNDOLumOTMtRtqJzOUQX2lzA18=
+	t=1738268883; cv=none; b=j0iX6AeJNTnuSAABXiWGwqUlvg6ZmIA28gUbFGieYRzEbWJzGRFbtpRSwWrobAcu+4wypSUtKaU/4a675Nj6ZWvoNP/2AsDF9rKdJZesPauAcmIsNV8m+tDSPYPJlXBpIvzTXS1ULJQc0FLquVsGc+Vy8SBQ2tiOzdB+LAgOFig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738268800; c=relaxed/simple;
-	bh=96TCbnC06LiDkWQVhnQQKMqfY2RjsADjMkvAHJ4kSsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TO3VY10tiM/Gz8OBqhU5/GWaQeJovB1GLRlFbjaZyI+Z9FVyjcURUhhK1/GrL3pQwCRaDMGtqlyJPOjyViaI8ZGvlTernozwUtWAg8Nb/Mbln9up7ohrQCab/XRLxrg2Injj/d6MbrYyBDiWDwEMRxUkBov/mGDc2I6PgLnLv7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0ko0sTai; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MaqkWpfu; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738268883; c=relaxed/simple;
+	bh=p9nVrigsDYKicwkfzbW1Xes5NHnGUH3hN9svLzouh8Q=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=tLYIkKQASV9YAnpiz7HQM7bnUuDa7umkNGvcyBnPLdGUwhJHJe4wJzeiYOgkNImGpfJlL1FIB9MwiiXeZiD9VIvYsTwTXXt8Ejb4eyq9F01+gkW1xqdsipcjY6TRVNjd2/rMkFGnG4MfxfTZnG57hj5ztBk75S7VzP2i7S20dQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWZH8ahg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0ko0sTai";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MaqkWpfu"
-Date: Thu, 30 Jan 2025 21:26:34 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738268796;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=raKStGmQ1HgcDzebMHePJVys7D0i3X8hHAKlsWuJCIA=;
-	b=0ko0sTaiJJwaxW8bhn13GnM7LjqYjETxlX1v5/dPILw7a8h+A1dw+OPBtBgHpD3MWPMQvK
-	+7fabej8mr1u1GhgVImjjm1oI5HgPf+PvJY2UCuunyGfZvYwSOvAIYdyuuo8TVD8DpvRtQ
-	FjV/9KY14DF6G38sW2l/RJVWnyJu1rFJznFAIkAn5E9NRU3Bf/h0mT8qEoPpGiI8wAw43F
-	QIZP/i7RtljRdDPAYGxF5pezvSLzHPNXup1IUw7m1QpGkaTW/kBrD6bh+EQTgk/RH7/Bv4
-	7AJX+68opRRVXyy/F8N0SNicKhlAMUHzTJhNimmcQD7WXUmYGj2PJP1SkIF+DA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738268796;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=raKStGmQ1HgcDzebMHePJVys7D0i3X8hHAKlsWuJCIA=;
-	b=MaqkWpfuGWBc1JyZ5Qgj5qBjueGmZfGBO1JQrK/JVn4QpWW3wFPIpaDe2Of2y95FyM228e
-	AZe2qZ2c0igSNVDg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: mpe@ellerman.id.au, maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-	npiggin@gmail.com, christophe.leroy@csgroup.eu,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] powerpc: Enable dynamic preemption
-Message-ID: <20250130202634.eeb9TfkW@linutronix.de>
-References: <20250106051919.55020-1-sshegde@linux.ibm.com>
- <20250106051919.55020-2-sshegde@linux.ibm.com>
- <20250130145409.D_so_mR1@linutronix.de>
- <b73b5143-1a7f-4032-ac06-43db3bf4abea@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWZH8ahg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C64CCC4CEE4;
+	Thu, 30 Jan 2025 20:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738268883;
+	bh=p9nVrigsDYKicwkfzbW1Xes5NHnGUH3hN9svLzouh8Q=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=HWZH8ahgB9vx8+j2xBmxLOgm/lRsFpULHlwwbuM3e7CmaCIy6OtCK9mfeiRlax8p0
+	 fw0S/FZLbB6ohnL9+Yvw/7Ib9hEq6T2dT07pBk6yBFfZ9JerJ1AapMsYmswZqYJ1Td
+	 8LBPM30TI7oU059pdPqOwq3pQKPbtjojjD78VNoQsKbs0WTf6LNsS8I42R5CSAulpf
+	 RRSihr6ry39uarymYt9lNPj0OimRKczyTUqUuhYoBL17i5gTyFN4+MszolUtxw/cnx
+	 jj94tHlLOGcpaIIuGpIz2MeQvZYbjlnBz40SnmVZZK1kLyFmdKCrn4iZeTg/G4Hv3z
+	 CNrbsI1C57kew==
+Date: Thu, 30 Jan 2025 12:28:00 -0800 (PST)
+From: Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
+To: =?UTF-8?Q?J=C3=BCrgen_Gro=C3=9F?= <jgross@suse.com>
+cc: Harshvardhan Jha <harshvardhan.j.jha@oracle.com>, 
+    Greg KH <gregkh@linuxfoundation.org>, Konrad Wilk <konrad.wilk@oracle.com>, 
+    Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+    "sstabellini@kernel.org" <sstabellini@kernel.org>, 
+    "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, 
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+    Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>, 
+    stable@vger.kernel.org
+Subject: Re: v5.4.289 failed to boot with error megasas_build_io_fusion 3219
+ sge_count (-12) is out of range
+In-Reply-To: <5a7d969b-b2ab-4fac-b95e-4a536e2c8d5c@suse.com>
+Message-ID: <alpine.DEB.2.22.394.2501301226330.11632@ubuntu-linux-20-04-desktop>
+References: <7dc143fa-4a48-440b-b624-ac57a361ac74@oracle.com> <9dd91f6e-1c66-4961-994e-dbda87d69dad@oracle.com> <2025012919-series-chaps-856e@gregkh> <8eb33b38-23e1-4e43-8952-3f2b05660236@oracle.com> <2025012936-finalize-ducktail-c524@gregkh>
+ <1f017284-1a29-49d8-b0d9-92409561990e@oracle.com> <2025012956-jiffy-condone-3137@gregkh> <1f225b8d-d958-4304-829e-8798884d9b6b@oracle.com> <83bd90c7-8879-4462-9548-bb5b69cac39e@suse.com> <b4ab0246-3846-41d1-8e84-64bd7fefc089@oracle.com>
+ <de6912ad-3dba-4d66-8ca2-71a0aa09172c@suse.com> <686986a0-c981-4aa3-ae88-92a34368129e@oracle.com> <5a7d969b-b2ab-4fac-b95e-4a536e2c8d5c@suse.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b73b5143-1a7f-4032-ac06-43db3bf4abea@linux.ibm.com>
+Content-Type: multipart/mixed; boundary="8323329-717441065-1738268883=:11632"
 
-On 2025-01-30 22:27:07 [+0530], Shrikanth Hegde wrote:
-> > | #DEFINE need_irq_preemption() \
-> > |          (static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
-> > |
-> > | 	if (need_irq_preemption()) {
-> > 
-> > be a bit smaller/ quicker? This could be a fast path ;)
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-717441065-1738268883=:11632
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+
+On Thu, 30 Jan 2025, Jürgen Groß wrote:
+> Can you try the attached patch, please? I don't have a system at hand
+> showing the problem.
+>
+> From cff43e997f79a95dc44e02debaeafe5f127f40bb Mon Sep 17 00:00:00 2001
+> From: Juergen Gross <jgross@suse.com>
+> Date: Thu, 30 Jan 2025 09:56:57 +0100
+> Subject: [PATCH] x86/xen: allow larger contiguous memory regions in PV guests
 > 
-> I am okay with either way. I did try both[1], there wasn't any significant difference,
-> hence chose a simpler one. May be system size, workload pattern might matter.
+> Today a PV guest (including dom0) can create 2MB contiguous memory
+> regions for DMA buffers at max. This has led to problems at least
+> with the megaraid_sas driver, which wants to allocate a 2.3MB DMA
+> buffer.
 > 
-> Let me do some more testing to see which one wins.
-> Is there any specific benchmark which might help here?
-
-No idea. As per bean counting: preempt_model_preemptible() should
-resolve in two function calls + conditional in the dynamic case. This
-should be more expensive compared to a nop/ branch ;)
-But you would still need preempt_model_preemptible() for the !DYN case.
-
-> > > +	       preempt_model_voluntary() ? "voluntary" :
-> > > +	       preempt_model_full()      ? "full" :
-> > > +	       preempt_model_lazy()      ? "lazy" :
-> > > +	       "",
-> > 
-> > So intend to rework this part. I have patches stashed at
-> > 	https://git.kernel.org/pub/scm/linux/kernel/git/bigeasy/staging.git/log/?h=preemption_string
-> > 
-> > which I didn't sent yet due to the merge window. Just a heads up ;)
+> The limiting factor is the frame array used to do the hypercall for
+> making the memory contiguous, which has 512 entries and is just a
+> static array in mmu_pv.c.
 > 
-> Makes sense. I had seen at-least two places where this code was there, ftrace/powerpc.
-> There were way more places..
+> In case a contiguous memory area larger than the initially supported
+> 2MB is requested, allocate a larger buffer for the frame list. Note
+> that such an allocation is tried only after memory management has been
+> initialized properly, which is tested via the early_boot_irqs_disabled
+> flag.
 > 
-> You want me to remove this part?
+> Fixes: 9f40ec84a797 ("xen/swiotlb: add alignment check for dma buffers")
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> ---
+> Note that the "Fixes:" tag is not really correct, as that patch didn't
+> introduce the problem, but rather made it visible. OTOH it is the best
+> indicator we have to identify kernel versions this patch should be
+> backported to.
+> ---
+>  arch/x86/xen/mmu_pv.c | 44 ++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 37 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
+> index 55a4996d0c04..62aec29b8174 100644
+> --- a/arch/x86/xen/mmu_pv.c
+> +++ b/arch/x86/xen/mmu_pv.c
+> @@ -2200,8 +2200,10 @@ void __init xen_init_mmu_ops(void)
+>  }
+>  
+>  /* Protected by xen_reservation_lock. */
+> -#define MAX_CONTIG_ORDER 9 /* 2MB */
+> -static unsigned long discontig_frames[1<<MAX_CONTIG_ORDER];
+> +#define MIN_CONTIG_ORDER 9 /* 2MB */
+> +static unsigned int discontig_frames_order = MIN_CONTIG_ORDER;
+> +static unsigned long discontig_frames_early[1UL << MIN_CONTIG_ORDER];
+> +static unsigned long *discontig_frames = discontig_frames_early;
+>  
+>  #define VOID_PTE (mfn_pte(0, __pgprot(0)))
+>  static void xen_zap_pfn_range(unsigned long vaddr, unsigned int order,
+> @@ -2319,18 +2321,44 @@ int xen_create_contiguous_region(phys_addr_t pstart, unsigned int order,
+>  				 unsigned int address_bits,
+>  				 dma_addr_t *dma_handle)
+>  {
+> -	unsigned long *in_frames = discontig_frames, out_frame;
+> +	unsigned long *in_frames, out_frame;
+> +	unsigned long *new_array, *old_array;
+>  	unsigned long  flags;
+>  	int            success;
+>  	unsigned long vstart = (unsigned long)phys_to_virt(pstart);
+>  
+> -	if (unlikely(order > MAX_CONTIG_ORDER))
+> -		return -ENOMEM;
+> +	if (unlikely(order > discontig_frames_order)) {
+> +		if (early_boot_irqs_disabled)
+> +			return -ENOMEM;
+> +
+> +		new_array = vmalloc(sizeof(unsigned long) * (1UL << order));
+> +
+> +		if (!new_array)
+> +			return -ENOMEM;
+> +
+> +		spin_lock_irqsave(&xen_reservation_lock, flags);
+> +
+> +		if (order > discontig_frames_order) {
 
-No, just be aware.
-I don't know how this will be routed I guess we merge the sched pieces
-first and then I submit the other pieces via the relevant maintainer
-tree. In that case please be aware that all parts get removed/ replaced
-properly.
 
-Sebastian
+This second if check should not be needed because it is the same as the
+outer if check.
+
+
+
+> +			if (discontig_frames == discontig_frames_early)
+> +				old_array = NULL;
+> +			else
+> +				old_array = discontig_frames;
+> +			discontig_frames = new_array;
+> +			discontig_frames_order = order;
+> +		} else
+> +			old_array = new_array;
+> +
+> +		spin_unlock_irqrestore(&xen_reservation_lock, flags);
+> +
+> +		vfree(old_array);
+> +	}
+>  
+>  	memset((void *) vstart, 0, PAGE_SIZE << order);
+>  
+>  	spin_lock_irqsave(&xen_reservation_lock, flags);
+>  
+> +	in_frames = discontig_frames;
+> +
+>  	/* 1. Zap current PTEs, remembering MFNs. */
+>  	xen_zap_pfn_range(vstart, order, in_frames, NULL);
+>  
+> @@ -2354,12 +2382,12 @@ int xen_create_contiguous_region(phys_addr_t pstart, unsigned int order,
+>  
+>  void xen_destroy_contiguous_region(phys_addr_t pstart, unsigned int order)
+>  {
+> -	unsigned long *out_frames = discontig_frames, in_frame;
+> +	unsigned long *out_frames, in_frame;
+>  	unsigned long  flags;
+>  	int success;
+>  	unsigned long vstart;
+>  
+> -	if (unlikely(order > MAX_CONTIG_ORDER))
+> +	if (unlikely(order > discontig_frames_order))
+>  		return;
+>  
+>  	vstart = (unsigned long)phys_to_virt(pstart);
+> @@ -2367,6 +2395,8 @@ void xen_destroy_contiguous_region(phys_addr_t pstart, unsigned int order)
+>  
+>  	spin_lock_irqsave(&xen_reservation_lock, flags);
+>  
+> +	out_frames = discontig_frames;
+> +
+>  	/* 1. Find start MFN of contiguous extent. */
+>  	in_frame = virt_to_mfn((void *)vstart);
+>  
+> -- 
+> 2.43.0
+> 
+--8323329-717441065-1738268883=:11632--
