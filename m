@@ -1,300 +1,491 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2043.outbound.protection.outlook.com [40.107.243.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA661AE01B;
-	Thu, 30 Jan 2025 23:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738279719; cv=fail; b=a6F7iBZbnVDVcpSE/yb5oJWqNhakdYIiKdZCKdvWqABNaaeJQXrNm6gzWj10T5Pw9gaSUbKn7UslMC+XifdjPGESoUksCUvbg3bbg/6dQtqfzJMhiPcDMii+ms2gKjBnv8FrSf8ypuR2LVLFb3vG1hJHTfT+0DwB+7QrD0+n1DY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738279719; c=relaxed/simple;
-	bh=40mwZJtPt6v8WsrfZ84r89JnLseA2w6UqgLv21pHu88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=FsAfZG768GOZQ4GkDd1tK4FDtHvAWKgxIgWOe8r+fLLvja1u5L1+LjeWONoJjWasCDfdxHVO8btm3hB/plqcOa5I+c8DwebFVfprqp7pcjBuLsJXvpuVoMu2D5upIm9NjT2ROoWhv+e9QtXcG+biZhctDHVR0GyUzWCpkMpQW2c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kYMtaWze; arc=fail smtp.client-ip=40.107.243.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19211F1906
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 23:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738279814; cv=none; b=t3ekTAdDfiwREBAJaxTJRPKwO7Nv4lGTKn2nBZnJXL409p9AcFPoIykO5MToDVsqKIzB2Q2lJRjpRIxFzmSd8t6rMYMJyrJPww199z7CCNftJau5Q2fi+RRlqVZW53lgV9xhUbPEVppydi8W4U4QP5MLLzfWQ56boVufIbWoBK8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738279814; c=relaxed/simple;
+	bh=j1zJsxZDjmgRXarrUjCuotIAKoRYOS5g0bOFikrRh64=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tl5okWHBIa8wI/ZyQyqRNzJ7aXtcQnlivOqgHn+YDqfjodxJ9LIwRfWlE+k8qXkV3cgYBoenlbsVqADaDMvadM0KOmVI1sDXTvCDL+l6XlDFCrbt89mzaCl8YOJ4GzyMsvAyOy49lQNNL0jRU4FQc2ORXXY7DAktGqGYLY+tAI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ebtU0B/u; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kYMtaWze"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XUWLRB4OtSdGCAuZUZVfASOuvaLu3NXy2lcaKJlwpyNkG+PqVz7SqBPF1DDxuDB4d3omqq9eqZ47nT55fpL013ePN/URzVWPi+ND8WJh2twcN/1qFgPLXR5+IRalZIj9jpO+ezMMFp/2QYGFwgTNq5j2w8t4/93080A9sH6GmslCtsONQfvo6x/2mvoqjUsgmrkvpgiMbkyF/fL0enjVRywILT149WH7+9FChvG72JhPFJO10vWw3yck5tcm3CKpfGSh51BLiAeOjdZiGNQkS8hMmSBCPLgv+9buGr/N46c14W559mbVdX/SjjcJQpGT2R3RQR7oEUuAhYk106uaVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i62BICeCmMsX+SSgaFMLacWhxpQwoY4mnKKbhV+O+18=;
- b=J8MyhESoLqDAqn+cKxhuJ2AtGgdZTkcC0VIUwwSQ4wWagII1GP2m4xwDnQyFokS86qan3reWvfKz37Bx93bM3IwIUO5pgm+m9cQNhTV9K89UGVc631ebcHcPhMe5mNNZXCapsLUgmBOD1PqHBzNfhtBx2vtrpxgaAViKVg2+E1b5Mhh1Qo6TfHVeKZY5BTLbVz2JKl2hULci/7dSCDB2o4KwxGgjbbcYlpU0jXielXDJGpLk29BmBiTt8jC3+bDt6tfSY3b/U2e1rE1RSu2/P/5vlQ5YollwfC+qvrWnW4CRM7OxxQw0dbQsyOzQCe+EMaw02nwghdBSO6Nyx6C0xw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i62BICeCmMsX+SSgaFMLacWhxpQwoY4mnKKbhV+O+18=;
- b=kYMtaWzeDg2IiWvet+U+xjp5ALwtcZ1Svgf/ANhiv0hpYWzu7c1xegBCt8Jf7kcVWwTMv+m02I2GpPF1LhBievYm0lgXLxWpg7P1F3hVoHmVq60aRHj3zOzfJQ9G2v30rmYaVuzyyC72UNenEHKwcKjLHfNbgMkcIRE1NyDCNB5VFX/Ke4kcsgI9oJxxnq0yyyifWc/myVSz/7b/efzUe25TKt1O2sTENaMi4OwNSqbtoGNGkqcMltd2kFCe6BCLUf+53vbcx1uE85B9AwplkCuFvgAITV10gEGDiZftrSkshcXhEj5g3FWIr33UD/mXLUOiwWzl0hogzatD6Xhusg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- IA1PR12MB8407.namprd12.prod.outlook.com (2603:10b6:208:3d9::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.20; Thu, 30 Jan
- 2025 23:28:33 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8398.017; Thu, 30 Jan 2025
- 23:28:32 +0000
-Date: Fri, 31 Jan 2025 10:28:28 +1100
-From: Alistair Popple <apopple@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-mm@kvack.org, nouveau@lists.freedesktop.org, 
-	Andrew Morton <akpm@linux-foundation.org>, =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
-	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v1 06/12] mm: use single SWP_DEVICE_EXCLUSIVE entry type
-Message-ID: <5rsaabu5vznqejwwcntwabyqjjmxm325x4rz335jrjozvqvsij@mt4eobxi6j5e>
-References: <20250129115411.2077152-1-david@redhat.com>
- <20250129115411.2077152-7-david@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250129115411.2077152-7-david@redhat.com>
-X-ClientProxiedBy: SY5P282CA0012.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:208::13) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ebtU0B/u"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2163affd184so21255ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:30:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738279812; x=1738884612; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1rmIesab6i2p3RCJXlVDBZqIYZ/awInCMyNBMuFmviI=;
+        b=ebtU0B/uGfDkO8tUxFKtKkduhi1YuBR1gS5w8Ic4YpTySruqa7JWFzve29C1STke9h
+         2Is4GPtWaWLXnQx0UV7OTacnj4R6uVs+TarHdYBH0rwLcZ52gAIS3tQGdOW1Wr07JM43
+         nr9igxJXaGbLmLkCU2o1wciBGyHrMLXbHVnOJeE3yZWJCm4o7UMGBmr3j66U6nRPhpNv
+         q9CDWrlZdkQ6fbS+DfqSVaGqhtFlQw32Ot6PGuv/oAEGQVASfg538T6PAiPID6go5a/i
+         CdpYc7YLyzfGPWZhIUqim9VtCOmvFA3+SWHYEgGIwykWefq5zEGSfxfKeTlzYCGXUOf9
+         4Cig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738279812; x=1738884612;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1rmIesab6i2p3RCJXlVDBZqIYZ/awInCMyNBMuFmviI=;
+        b=aSdR/ZJIz1X3/Z0fVFVV+lKQpVWavDHACeqrU7XkzlPriTfIxFFaXFjW++vdcFLxYy
+         XPNAIY1cnd48vZl9fTdL72xm7et7syRw7WQGs5nbxiSNmvNHthVCmFxExTx9DGWIUUHI
+         aSg15zK9cKZPADwHw/Kih715Gir0VbyyISKfxC14ZwYokEa1A9pQoi+v4NIW/wMKWyEi
+         bC4J9Pzq5jPRtcyLSIIa8xYHphWBaOOb4g1E64vVzImTlH2Bz/Tum1W34z9710m/87xy
+         M7bh55Y/0VgwB65pdkQ27dgA4TvGkV5kzhQB8rtrAXLb5R1GsZNg7FZ59vUXBKLC0L1n
+         f/uw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLoAOgd21kEdJD2Tvbysnfv7SsEye4w91Z0zDy/+l5M5ktUWD4rzojGcxz4oD3jCg68npEBOVnXRYUheE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7gEXsa5eL7wX/ZuFMHG5NabRYN9EYdBMBpbhJzIKTW1j67LUF
+	jPRdxcdZzuEyP6iVF5n2Tqu7SQWkkCtRWKkvouI5KDX6YJjAsnFSfrhWmmkecqN9J0YpVRZPdx0
+	3MEoqV7FO+pWl7pJePaDUbo2MHAh1dgNzfk2OurCoEZNtAkIM2lNb
+X-Gm-Gg: ASbGnctm1yzV/TbVsNXXrAKgTEeSA3hbsJ729WhTrHBKjjv7rpN8wEydlnuvnEA4J9V
+	wTnzRwcZAmEO5wIQ4oEaXXaUcsH4pMNMHd1lVpcBNrKPhDsBhs2c/VBvyLx3+sfjN865u1qGkVW
+	gdv2NaY9CXCgDre+LMyeIkaU99PyE=
+X-Google-Smtp-Source: AGHT+IF4fex0zEZPDdhq4r0hwOdVVLdnLANJBfKGdI2Hv9YV8rfN/WnxP54e/v6+9MLpQlX+TdRkKqMftmE/vS75cus=
+X-Received: by 2002:a17:902:778f:b0:216:25a2:2ee3 with SMTP id
+ d9443c01a7336-21edf067fc8mr351855ad.25.1738279811617; Thu, 30 Jan 2025
+ 15:30:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|IA1PR12MB8407:EE_
-X-MS-Office365-Filtering-Correlation-Id: a07de21c-657e-41a5-0882-08dd4185cf76
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?XmSo4EF5xRbmruY8k2F4rUhUjFlani/Vp056iMUY6D9xk74PbnJq/z/TX5ds?=
- =?us-ascii?Q?m3Fp03/0BEmOn8U2Gz8OApsqm77TWEempMVJrul5iUuZMOnV/BggTxauZ2vz?=
- =?us-ascii?Q?uxmFRefiChn40FnXK7y6CJQszZiXMr3XqCwzDDF56WdvGY7LwKKJ6kgszjlS?=
- =?us-ascii?Q?ubtdEc2ISJLzOTdF+Wwy2Gw4A3bTrUb9JHcxq8aQopXD2hcy/YO656Y3QxBr?=
- =?us-ascii?Q?Fd4aPQcZzI5+Lf1FAWr4k7TMCtAGet7TMamiYoee04yJ8bwtRZCJnFCc9uTB?=
- =?us-ascii?Q?VRCR4jx+GQOlhXHai6WVC6RNO2d3/dMJmpYNsf3fLJhRDJaZLsIOUqkNKhvR?=
- =?us-ascii?Q?svP1w9mQ4lRfI20zeJQWqtyNfhEbV7y3bpnuquUWLSGZqW+GDqUl/DO7YDbf?=
- =?us-ascii?Q?Q9zihg9NZ1jTneJEkPN4ikp0ENbyj2TP1lk4bF/LZJiD274QN83+FxMWL+BK?=
- =?us-ascii?Q?/+ow2tXbGI6x91t5yOhrRcHlfLeElV0UVkcXHY4s5cgm4xQ9qkeHZ2824xKy?=
- =?us-ascii?Q?R85qbBr7s8ggM7LHLE+8ezZYvinuunr3+GarTm2Chuotu5V8pPsnnSS3vI9s?=
- =?us-ascii?Q?mtY/NEQkvJpSt1dSk3k2oor5ngt1iizzAFQARpuV0WxrMO8bKh+z2NNEYWvY?=
- =?us-ascii?Q?r+whrzmz44N1ybDSG8UolJ0Arz/AGt8chm4xVvY71se805DdImKVqU760f1e?=
- =?us-ascii?Q?v4KqvvCHMa0QRARlUpqfSfvWw2/MzY2A/zLDCVBQk9lLqPu2QmMMBb8BcAha?=
- =?us-ascii?Q?VKxrhyiWVJIZzEiVkR5dS3EjaylFmXsOoxPmkCy+FdkI1RlOhkQJatx+Dbkd?=
- =?us-ascii?Q?FK0vgPU47bAcFKGAnnxi8i2TcCnNPX/CMT9gGfULdxSbEJ89yhw4zS1VXN4l?=
- =?us-ascii?Q?H3lWYQw4HgN/LaHNz6KPQhdQgpU9MEBnSDhWtqXkkMPRup1bTKnKMGlXfRWc?=
- =?us-ascii?Q?jhBAO/3dRKKR7sjjekuX9k1sgYTJjyhwhscr17YdU2mGMxEqv7tVL+aqyauw?=
- =?us-ascii?Q?SzckFEEdLm5LNMFiZl3h4x09cpnChWSr93RvAPONl07AqvssmJbQs7GSpeoW?=
- =?us-ascii?Q?9SIQB0uNe8a8ArkIpWX5Xr0NFjqpsMBAhPK3xpAhN/sh8a4mwZS27cjG5xRp?=
- =?us-ascii?Q?Zp8kQHC3hIl9R580y0yDpHQjLAjFn9uMQY7VHgdkcrg/MSSgmYHLx5acBest?=
- =?us-ascii?Q?yjNnz3qQe6IRoepsKtCO4soD0voIYgUCQoU9BIF614qSqbHfW/T9N8+hM+3H?=
- =?us-ascii?Q?CcN/AoyU8e1iYijuGGbCLmTwy7AC0qwqgcDPR3izuYWQcFta2e0qiXuxDjLJ?=
- =?us-ascii?Q?RNaESreSxp9U9QKpubkAFwmf3jr8Dqvi58vKPPwqGQxiH+f5Z6eHkBDUBuCy?=
- =?us-ascii?Q?3zAxHvqeLHCALeUTWaJIJZwOSFMA?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ILhu+6xPTTelzAzwzTXy2SgdbTvWVsvMZC+NPvVJ4A43C/qz7HT6Kw3XmDg1?=
- =?us-ascii?Q?NfUQY8ER/CCDMW+EJ6SZjp3biVhDv1ht0IGGG9welrRkM7Ddv/OCq3Hcr8Y2?=
- =?us-ascii?Q?CKiKciVRPAvp3Ibbl3lNGrLITR8OUy6ewSq9ZiLqoVBTyiRt1r5cML/oGQE7?=
- =?us-ascii?Q?RFZ45DkxT62GnzwFfFmTRdSaiDQQMWsvDPYrD1HNcDtGc+SssxPog3irVIaK?=
- =?us-ascii?Q?bVpu5BkRUUUekDHjfO55w4IcoHPs9ZS1JR8jMpyxIiQUNZ6un1fF3WS2IxA4?=
- =?us-ascii?Q?f11vSOZ6+oIK9R9a+u+h+r4IvZcPWYA2iJiAdYTGL22FjCfe8emR4Ce5UjiE?=
- =?us-ascii?Q?O0Zpb3A88NYHsHt6OO0oXyzZL3YS0UeAH1n5Ta9fzzFgDmCP1T7pLsV2U66M?=
- =?us-ascii?Q?WJO6K1s+aqO61978fAZhJc1PEOPN2Kwg4dDrHn9Xu8glGvx9ZhJjUaNTKzzb?=
- =?us-ascii?Q?7+jhQY7cq8WNRVC4Xh4Q9z/ejcovkWcPHBa8LIJL2MIjwz5+ze125aRh1Og9?=
- =?us-ascii?Q?XzgsBVtNQX2Oowlv8aB68nqK3gffV0zEk2PYCG6OcQJ31kuYxd3/2Lj26mJx?=
- =?us-ascii?Q?/wJze3CE0W0DatJIsxog06QcDZISiH8tSrQpXtusObZN82a2xSpCQLzER9Mz?=
- =?us-ascii?Q?doLaropWmbBjjq//OeV6HeBcQMNSeaAhucOztYKFpEuC24bqeySG3R+9KMR/?=
- =?us-ascii?Q?f5YpeZWLHRIPS2hi3s204A/k/2LR4n74sIZ8I7xFpwThOCQck/g0y7B1DbZT?=
- =?us-ascii?Q?inXmWCXKE3lTA7SscasFVCTDsqfmd0JT4fjHeVgyeROuCkJjWIIp33Ce9J04?=
- =?us-ascii?Q?p2I+o9mVGUNpC/b5gZqAS8vpMy2bZG9aZ1EEgGCie8AZFa6VenzH1If+M1UA?=
- =?us-ascii?Q?MTbEoqwEREGI8OkxBXw9m7iJm4+lrQbh4kn7SKlT8/7vzOEQcV/tesIYu9aY?=
- =?us-ascii?Q?8n9bf1dymx/3tmZ9Ppb1p87O7FZfUt/EKMYClNO3uajaImlzQYigQetKmQUn?=
- =?us-ascii?Q?0O/OaCjjdu7A1vJfHMAZDYOfKPFyA2/eH3j0u7at3ueUbaiFBNCrEVxPLicw?=
- =?us-ascii?Q?wuWd6a99R9YrfFV4RLUMhEPFyrODI4Kr049NgKZk4kRDuZGkjRW/uL3qs2vz?=
- =?us-ascii?Q?nkHJJYg4UVatorOFbRhGr4XYx7DcGrFgfqhEdjYDIZI/QnKyNEpDpJwpJU+J?=
- =?us-ascii?Q?SVM0KKaYjETl+/LRsw8E21pKYFYHnjid/YCEYZQL5qwpVq/ZcN/kwxWCsagS?=
- =?us-ascii?Q?bfcxjjaBlBA4hi6xmFZybwe/zcaGV88oI8JCg54lfna3gEZ9J0N2riHUyVtI?=
- =?us-ascii?Q?qfuOF0uomwcYrK6StbbzO39A5Ywdjgw9a1IxK5gPf6zTqhA2uPg7ztg33eyy?=
- =?us-ascii?Q?6VTvM4q1H7Z/tb7POH1PFuWtL5M+uH2nOootcOIgObMmvgzRVbA+JU7PJcmv?=
- =?us-ascii?Q?iHNCuLdAMXQFnZ4BhKL89KiEBe4Gpb1Bx2dRk/SCetekXVdsRxGyGMN9lyU6?=
- =?us-ascii?Q?aR9k0p25zaq8lZswz0srfCgF1sqvrw9MkBdB9EouJdCQAdJZmGj6IPlG44UV?=
- =?us-ascii?Q?qAfJsUsEPKvhhePYLr+sU5SVS/i/UlBlF3lhXMMU?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a07de21c-657e-41a5-0882-08dd4185cf76
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 23:28:32.7099
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: G/4y8ymVRLmqbJCefOn4ZG+H2GjTQBuKntlDInWjK2gXgSbmjhCT5AckkodFx/80MIl7z64BHOz65JSHtdlzcg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8407
+References: <20250130211539.428952-1-almasrymina@google.com>
+ <20250130211539.428952-3-almasrymina@google.com> <Z5wFs3-6pNWARhRL@mini-arch>
+In-Reply-To: <Z5wFs3-6pNWARhRL@mini-arch>
+From: Mina Almasry <almasrymina@google.com>
+Date: Thu, 30 Jan 2025 15:29:57 -0800
+X-Gm-Features: AWEUYZkPTESrno2iYzeo1K78PcJfaZsMxGDDzhBy002v1BDbsQGxVfN2xbBIxT0
+Message-ID: <CAHS8izMMm--CSCm1c9Ud1WdjxLeCXdNiqLzjeM_ACgKUP35O0w@mail.gmail.com>
+Subject: Re: [PATCH RFC net-next v2 2/6] selftests: ncdevmem: Implement devmem
+ TCP TX
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, David Ahern <dsahern@kernel.org>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Shuah Khan <shuah@kernel.org>, sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
+	Pedro Tammela <pctammela@mojatatu.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 29, 2025 at 12:54:04PM +0100, David Hildenbrand wrote:
-> There is no need for the distinction anymore; let's merge the readable
-> and writable device-exclusive entries into a single device-exclusive
-> entry type.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  include/linux/swap.h    |  7 +++----
->  include/linux/swapops.h | 27 ++++-----------------------
->  mm/mprotect.c           |  8 --------
->  mm/page_table_check.c   |  5 ++---
->  mm/rmap.c               |  2 +-
->  5 files changed, 10 insertions(+), 39 deletions(-)
-> 
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index 91b30701274e..9a48e79a0a52 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -74,14 +74,13 @@ static inline int current_is_kswapd(void)
->   * to a special SWP_DEVICE_{READ|WRITE} entry.
->   *
->   * When a page is mapped by the device for exclusive access we set the CPU page
-> - * table entries to special SWP_DEVICE_EXCLUSIVE_* entries.
-> + * table entries to a special SWP_DEVICE_EXCLUSIVE entry.
->   */
->  #ifdef CONFIG_DEVICE_PRIVATE
-> -#define SWP_DEVICE_NUM 4
-> +#define SWP_DEVICE_NUM 3
->  #define SWP_DEVICE_WRITE (MAX_SWAPFILES+SWP_HWPOISON_NUM+SWP_MIGRATION_NUM)
->  #define SWP_DEVICE_READ (MAX_SWAPFILES+SWP_HWPOISON_NUM+SWP_MIGRATION_NUM+1)
-> -#define SWP_DEVICE_EXCLUSIVE_WRITE (MAX_SWAPFILES+SWP_HWPOISON_NUM+SWP_MIGRATION_NUM+2)
-> -#define SWP_DEVICE_EXCLUSIVE_READ (MAX_SWAPFILES+SWP_HWPOISON_NUM+SWP_MIGRATION_NUM+3)
-> +#define SWP_DEVICE_EXCLUSIVE (MAX_SWAPFILES+SWP_HWPOISON_NUM+SWP_MIGRATION_NUM+2)
->  #else
->  #define SWP_DEVICE_NUM 0
->  #endif
-> diff --git a/include/linux/swapops.h b/include/linux/swapops.h
-> index 96f26e29fefe..64ea151a7ae3 100644
-> --- a/include/linux/swapops.h
-> +++ b/include/linux/swapops.h
-> @@ -186,26 +186,16 @@ static inline bool is_writable_device_private_entry(swp_entry_t entry)
->  	return unlikely(swp_type(entry) == SWP_DEVICE_WRITE);
->  }
->  
-> -static inline swp_entry_t make_readable_device_exclusive_entry(pgoff_t offset)
-> +static inline swp_entry_t make_device_exclusive_entry(pgoff_t offset)
->  {
-> -	return swp_entry(SWP_DEVICE_EXCLUSIVE_READ, offset);
-> -}
-> -
-> -static inline swp_entry_t make_writable_device_exclusive_entry(pgoff_t offset)
-> -{
-> -	return swp_entry(SWP_DEVICE_EXCLUSIVE_WRITE, offset);
-> +	return swp_entry(SWP_DEVICE_EXCLUSIVE, offset);
->  }
->  
->  static inline bool is_device_exclusive_entry(swp_entry_t entry)
->  {
-> -	return swp_type(entry) == SWP_DEVICE_EXCLUSIVE_READ ||
-> -		swp_type(entry) == SWP_DEVICE_EXCLUSIVE_WRITE;
-> +	return swp_type(entry) == SWP_DEVICE_EXCLUSIVE;
->  }
->  
-> -static inline bool is_writable_device_exclusive_entry(swp_entry_t entry)
-> -{
-> -	return unlikely(swp_type(entry) == SWP_DEVICE_EXCLUSIVE_WRITE);
-> -}
->  #else /* CONFIG_DEVICE_PRIVATE */
->  static inline swp_entry_t make_readable_device_private_entry(pgoff_t offset)
->  {
-> @@ -227,12 +217,7 @@ static inline bool is_writable_device_private_entry(swp_entry_t entry)
->  	return false;
->  }
->  
-> -static inline swp_entry_t make_readable_device_exclusive_entry(pgoff_t offset)
-> -{
-> -	return swp_entry(0, 0);
-> -}
-> -
-> -static inline swp_entry_t make_writable_device_exclusive_entry(pgoff_t offset)
-> +static inline swp_entry_t make_device_exclusive_entry(pgoff_t offset)
->  {
->  	return swp_entry(0, 0);
->  }
-> @@ -242,10 +227,6 @@ static inline bool is_device_exclusive_entry(swp_entry_t entry)
->  	return false;
->  }
->  
-> -static inline bool is_writable_device_exclusive_entry(swp_entry_t entry)
-> -{
-> -	return false;
-> -}
->  #endif /* CONFIG_DEVICE_PRIVATE */
->  
->  #ifdef CONFIG_MIGRATION
-> diff --git a/mm/mprotect.c b/mm/mprotect.c
-> index 516b1d847e2c..9cb6ab7c4048 100644
-> --- a/mm/mprotect.c
-> +++ b/mm/mprotect.c
-> @@ -225,14 +225,6 @@ static long change_pte_range(struct mmu_gather *tlb,
->  				newpte = swp_entry_to_pte(entry);
->  				if (pte_swp_uffd_wp(oldpte))
->  					newpte = pte_swp_mkuffd_wp(newpte);
-> -			} else if (is_writable_device_exclusive_entry(entry)) {
-> -				entry = make_readable_device_exclusive_entry(
-> -							swp_offset(entry));
-> -				newpte = swp_entry_to_pte(entry);
-> -				if (pte_swp_soft_dirty(oldpte))
-> -					newpte = pte_swp_mksoft_dirty(newpte);
-> -				if (pte_swp_uffd_wp(oldpte))
-> -					newpte = pte_swp_mkuffd_wp(newpte);
+On Thu, Jan 30, 2025 at 3:05=E2=80=AFPM Stanislav Fomichev <stfomichev@gmai=
+l.com> wrote:
+>
+> On 01/30, Mina Almasry wrote:
+> > Add support for devmem TX in ncdevmem.
+> >
+> > This is a combination of the ncdevmem from the devmem TCP series RFCv1
+> > which included the TX path, and work by Stan to include the netlink API
+> > and refactored on top of his generic memory_provider support.
+> >
+> > Signed-off-by: Mina Almasry <almasrymina@google.com>
+> > Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+> >
+> > ---
+> >
+> > v2:
+> > - make errors a static variable so that we catch instances where there
+> >   are less than 20 errors across different buffers.
+> > - Fix the issue where the seed is reset to 0 instead of its starting
+> >   value 1.
+> > - Use 1000ULL instead of 1000 to guard against overflow (Willem).
+> > - Do not set POLLERR (Willem).
+> > - Update the test to use the new interface where iov_base is the
+> >   dmabuf_offset.
+> > - Update the test to send 2 iov instead of 1, so we get some test
+> >   coverage over sending multiple iovs at once.
+> > - Print the ifindex the test is using, useful for debugging issues wher=
+e
+> >   maybe the test may fail because the ifindex of the socket is differen=
+t
+> >   from the dmabuf binding.
+> > ---
+> >  .../selftests/drivers/net/hw/ncdevmem.c       | 276 +++++++++++++++++-
+> >  1 file changed, 272 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/testing/selftests/drivers/net/hw/ncdevmem.c b/tools/=
+testing/selftests/drivers/net/hw/ncdevmem.c
+> > index 19a6969643f4..8455f19ecd1a 100644
+> > --- a/tools/testing/selftests/drivers/net/hw/ncdevmem.c
+> > +++ b/tools/testing/selftests/drivers/net/hw/ncdevmem.c
+> > @@ -40,15 +40,18 @@
+> >  #include <fcntl.h>
+> >  #include <malloc.h>
+> >  #include <error.h>
+> > +#include <poll.h>
+> >
+> >  #include <arpa/inet.h>
+> >  #include <sys/socket.h>
+> >  #include <sys/mman.h>
+> >  #include <sys/ioctl.h>
+> >  #include <sys/syscall.h>
+> > +#include <sys/time.h>
+> >
+> >  #include <linux/memfd.h>
+> >  #include <linux/dma-buf.h>
+> > +#include <linux/errqueue.h>
+> >  #include <linux/udmabuf.h>
+> >  #include <libmnl/libmnl.h>
+> >  #include <linux/types.h>
+> > @@ -80,6 +83,8 @@ static int num_queues =3D -1;
+> >  static char *ifname;
+> >  static unsigned int ifindex;
+> >  static unsigned int dmabuf_id;
+> > +static uint32_t tx_dmabuf_id;
+> > +static int waittime_ms =3D 500;
+> >
+> >  struct memory_buffer {
+> >       int fd;
+> > @@ -93,6 +98,8 @@ struct memory_buffer {
+> >  struct memory_provider {
+> >       struct memory_buffer *(*alloc)(size_t size);
+> >       void (*free)(struct memory_buffer *ctx);
+> > +     void (*memcpy_to_device)(struct memory_buffer *dst, size_t off,
+> > +                              void *src, int n);
+> >       void (*memcpy_from_device)(void *dst, struct memory_buffer *src,
+> >                                  size_t off, int n);
+> >  };
+> > @@ -153,6 +160,20 @@ static void udmabuf_free(struct memory_buffer *ctx=
+)
+> >       free(ctx);
+> >  }
+> >
+> > +static void udmabuf_memcpy_to_device(struct memory_buffer *dst, size_t=
+ off,
+> > +                                  void *src, int n)
+> > +{
+> > +     struct dma_buf_sync sync =3D {};
+> > +
+> > +     sync.flags =3D DMA_BUF_SYNC_START | DMA_BUF_SYNC_WRITE;
+> > +     ioctl(dst->fd, DMA_BUF_IOCTL_SYNC, &sync);
+> > +
+> > +     memcpy(dst->buf_mem + off, src, n);
+> > +
+> > +     sync.flags =3D DMA_BUF_SYNC_END | DMA_BUF_SYNC_WRITE;
+> > +     ioctl(dst->fd, DMA_BUF_IOCTL_SYNC, &sync);
+> > +}
+> > +
+> >  static void udmabuf_memcpy_from_device(void *dst, struct memory_buffer=
+ *src,
+> >                                      size_t off, int n)
+> >  {
+> > @@ -170,6 +191,7 @@ static void udmabuf_memcpy_from_device(void *dst, s=
+truct memory_buffer *src,
+> >  static struct memory_provider udmabuf_memory_provider =3D {
+> >       .alloc =3D udmabuf_alloc,
+> >       .free =3D udmabuf_free,
+> > +     .memcpy_to_device =3D udmabuf_memcpy_to_device,
+> >       .memcpy_from_device =3D udmabuf_memcpy_from_device,
+> >  };
+> >
+> > @@ -188,7 +210,7 @@ void validate_buffer(void *line, size_t size)
+> >  {
+> >       static unsigned char seed =3D 1;
+> >       unsigned char *ptr =3D line;
+> > -     int errors =3D 0;
+> > +     static int errors;
+> >       size_t i;
+> >
+> >       for (i =3D 0; i < size; i++) {
+> > @@ -202,7 +224,7 @@ void validate_buffer(void *line, size_t size)
+> >               }
+> >               seed++;
+> >               if (seed =3D=3D do_validation)
+> > -                     seed =3D 0;
+> > +                     seed =3D 1;
+> >       }
+> >
+> >       fprintf(stdout, "Validated buffer\n");
+> > @@ -394,6 +416,49 @@ static int bind_rx_queue(unsigned int ifindex, uns=
+igned int dmabuf_fd,
+> >       return -1;
+> >  }
+> >
+> > +static int bind_tx_queue(unsigned int ifindex, unsigned int dmabuf_fd,
+> > +                      struct ynl_sock **ys)
+> > +{
+> > +     struct netdev_bind_tx_req *req =3D NULL;
+> > +     struct netdev_bind_tx_rsp *rsp =3D NULL;
+> > +     struct ynl_error yerr;
+> > +
+> > +     *ys =3D ynl_sock_create(&ynl_netdev_family, &yerr);
+> > +     if (!*ys) {
+> > +             fprintf(stderr, "YNL: %s\n", yerr.msg);
+> > +             return -1;
+> > +     }
+> > +
+> > +     req =3D netdev_bind_tx_req_alloc();
+> > +     netdev_bind_tx_req_set_ifindex(req, ifindex);
+> > +     netdev_bind_tx_req_set_fd(req, dmabuf_fd);
+> > +
+> > +     rsp =3D netdev_bind_tx(*ys, req);
+> > +     if (!rsp) {
+> > +             perror("netdev_bind_tx");
+> > +             goto err_close;
+> > +     }
+> > +
+> > +     if (!rsp->_present.id) {
+> > +             perror("id not present");
+> > +             goto err_close;
+> > +     }
+> > +
+> > +     fprintf(stderr, "got tx dmabuf id=3D%d\n", rsp->id);
+> > +     tx_dmabuf_id =3D rsp->id;
+> > +
+> > +     netdev_bind_tx_req_free(req);
+> > +     netdev_bind_tx_rsp_free(rsp);
+> > +
+> > +     return 0;
+> > +
+> > +err_close:
+> > +     fprintf(stderr, "YNL failed: %s\n", (*ys)->err.msg);
+> > +     netdev_bind_tx_req_free(req);
+> > +     ynl_sock_destroy(*ys);
+> > +     return -1;
+> > +}
+> > +
+> >  static void enable_reuseaddr(int fd)
+> >  {
+> >       int opt =3D 1;
+> > @@ -432,7 +497,7 @@ static int parse_address(const char *str, int port,=
+ struct sockaddr_in6 *sin6)
+> >       return 0;
+> >  }
+> >
+> > -int do_server(struct memory_buffer *mem)
+> > +static int do_server(struct memory_buffer *mem)
+> >  {
+> >       char ctrl_data[sizeof(int) * 20000];
+> >       struct netdev_queue_id *queues;
+> > @@ -686,6 +751,207 @@ void run_devmem_tests(void)
+> >       provider->free(mem);
+> >  }
+> >
+> > +static uint64_t gettimeofday_ms(void)
+> > +{
+> > +     struct timeval tv;
+> > +
+> > +     gettimeofday(&tv, NULL);
+> > +     return (tv.tv_sec * 1000ULL) + (tv.tv_usec / 1000ULL);
+> > +}
+> > +
+> > +static int do_poll(int fd)
+> > +{
+> > +     struct pollfd pfd;
+> > +     int ret;
+> > +
+> > +     pfd.revents =3D 0;
+> > +     pfd.fd =3D fd;
+> > +
+> > +     ret =3D poll(&pfd, 1, waittime_ms);
+> > +     if (ret =3D=3D -1)
+> > +             error(1, errno, "poll");
+> > +
+> > +     return ret && (pfd.revents & POLLERR);
+> > +}
+> > +
+> > +static void wait_compl(int fd)
+> > +{
+> > +     int64_t tstop =3D gettimeofday_ms() + waittime_ms;
+> > +     char control[CMSG_SPACE(100)] =3D {};
+> > +     struct sock_extended_err *serr;
+> > +     struct msghdr msg =3D {};
+> > +     struct cmsghdr *cm;
+> > +     int retries =3D 10;
+> > +     __u32 hi, lo;
+> > +     int ret;
+> > +
+> > +     msg.msg_control =3D control;
+> > +     msg.msg_controllen =3D sizeof(control);
+> > +
+> > +     while (gettimeofday_ms() < tstop) {
+> > +             if (!do_poll(fd))
+> > +                     continue;
+> > +
+> > +             ret =3D recvmsg(fd, &msg, MSG_ERRQUEUE);
+> > +             if (ret < 0) {
+> > +                     if (errno =3D=3D EAGAIN)
+> > +                             continue;
+> > +                     error(1, ret, "recvmsg(MSG_ERRQUEUE)");
+> > +                     return;
+> > +             }
+> > +             if (msg.msg_flags & MSG_CTRUNC)
+> > +                     error(1, 0, "MSG_CTRUNC\n");
+> > +
+> > +             for (cm =3D CMSG_FIRSTHDR(&msg); cm; cm =3D CMSG_NXTHDR(&=
+msg, cm)) {
+> > +                     if (cm->cmsg_level !=3D SOL_IP &&
+> > +                         cm->cmsg_level !=3D SOL_IPV6)
+> > +                             continue;
+> > +                     if (cm->cmsg_level =3D=3D SOL_IP &&
+> > +                         cm->cmsg_type !=3D IP_RECVERR)
+> > +                             continue;
+> > +                     if (cm->cmsg_level =3D=3D SOL_IPV6 &&
+> > +                         cm->cmsg_type !=3D IPV6_RECVERR)
+> > +                             continue;
+> > +
+> > +                     serr =3D (void *)CMSG_DATA(cm);
+> > +                     if (serr->ee_origin !=3D SO_EE_ORIGIN_ZEROCOPY)
+> > +                             error(1, 0, "wrong origin %u", serr->ee_o=
+rigin);
+> > +                     if (serr->ee_errno !=3D 0)
+> > +                             error(1, 0, "wrong errno %d", serr->ee_er=
+rno);
+> > +
+> > +                     hi =3D serr->ee_data;
+> > +                     lo =3D serr->ee_info;
+> > +
+> > +                     fprintf(stderr, "tx complete [%d,%d]\n", lo, hi);
+> > +                     return;
+> > +             }
+> > +     }
+> > +
+> > +     error(1, 0, "did not receive tx completion");
+> > +}
+> > +
+> > +static int do_client(struct memory_buffer *mem)
+> > +{
+> > +     char ctrl_data[CMSG_SPACE(sizeof(struct dmabuf_tx_cmsg))];
+> > +     struct sockaddr_in6 server_sin;
+> > +     struct sockaddr_in6 client_sin;
+> > +     struct dmabuf_tx_cmsg ddmabuf;
+> > +     struct ynl_sock *ys =3D NULL;
+> > +     struct msghdr msg =3D {};
+> > +     ssize_t line_size =3D 0;
+> > +     struct cmsghdr *cmsg;
+> > +     struct iovec iov[2];
+> > +     uint64_t off =3D 100;
+> > +     char *line =3D NULL;
+> > +     size_t len =3D 0;
+> > +     int socket_fd;
+> > +     int ret, mid;
+> > +     int opt =3D 1;
+> > +
+> > +     ret =3D parse_address(server_ip, atoi(port), &server_sin);
+> > +     if (ret < 0)
+> > +             error(1, 0, "parse server address");
+> > +
+> > +     socket_fd =3D socket(AF_INET6, SOCK_STREAM, 0);
+> > +     if (socket_fd < 0)
+> > +             error(1, socket_fd, "create socket");
+> > +
+> > +     enable_reuseaddr(socket_fd);
+> > +
+> > +     ret =3D setsockopt(socket_fd, SOL_SOCKET, SO_BINDTODEVICE, ifname=
+,
+> > +                      strlen(ifname) + 1);
+> > +     if (ret)
+> > +             error(1, ret, "bindtodevice");
+> > +
+> > +     if (bind_tx_queue(ifindex, mem->fd, &ys))
+> > +             error(1, 0, "Failed to bind\n");
+> > +
+> > +     ret =3D parse_address(client_ip, atoi(port), &client_sin);
+> > +     if (ret < 0)
+> > +             error(1, 0, "parse client address");
+> > +
+> > +     ret =3D bind(socket_fd, &client_sin, sizeof(client_sin));
+> > +     if (ret)
+> > +             error(1, ret, "bind");
+> > +
+> > +     ret =3D setsockopt(socket_fd, SOL_SOCKET, SO_ZEROCOPY, &opt, size=
+of(opt));
+> > +     if (ret)
+> > +             error(1, ret, "set sock opt");
+> > +
+> > +     fprintf(stderr, "Connect to %s %d (via %s)\n", server_ip,
+> > +             ntohs(server_sin.sin6_port), ifname);
+> > +
+> > +     ret =3D connect(socket_fd, &server_sin, sizeof(server_sin));
+> > +     if (ret)
+> > +             error(1, ret, "connect");
+> > +
+> > +     while (1) {
+> > +             free(line);
+> > +             line =3D NULL;
+> > +             /* Subtract 1 from line_size to remove trailing newlines =
+that
+> > +              * get_line are surely to parse...
+> > +              */
+> > +             line_size =3D getline(&line, &len, stdin) - 1;
+>
+> Why not send the '\n' as well? If we skip the '\n', it's not keeping
+> netcat-like behavior :-(
+>
 
-So just to check my understanding the idea is we now check vma->vm_flags in
-restore_exclusive_pte() to restore them as read-only in the case of mprotect()
-write protecting the range? That makes sense to me, so assuming that's true:
+Ah, this is to make the validation on the RX side work. The validation
+expects a repeating pattern:
 
-Reviewed-by: Alistair Popple <apopple@nvidia.com>
+1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, ....
 
->  			} else if (is_pte_marker_entry(entry)) {
->  				/*
->  				 * Ignore error swap entries unconditionally,
-> diff --git a/mm/page_table_check.c b/mm/page_table_check.c
-> index 509c6ef8de40..c2b3600429a0 100644
-> --- a/mm/page_table_check.c
-> +++ b/mm/page_table_check.c
-> @@ -196,9 +196,8 @@ EXPORT_SYMBOL(__page_table_check_pud_clear);
->  /* Whether the swap entry cached writable information */
->  static inline bool swap_cached_writable(swp_entry_t entry)
->  {
-> -	return is_writable_device_exclusive_entry(entry) ||
-> -	    is_writable_device_private_entry(entry) ||
-> -	    is_writable_migration_entry(entry);
-> +	return is_writable_device_private_entry(entry) ||
-> +	       is_writable_migration_entry(entry);
->  }
->  
->  static inline void page_table_check_pte_flags(pte_t pte)
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index 49ffac6d27f8..65d9bbea16d0 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -2470,7 +2470,7 @@ struct page *make_device_exclusive(struct mm_struct *mm, unsigned long addr,
->  	 * do_swap_page() will trigger the conversion back while holding the
->  	 * folio lock.
->  	 */
-> -	entry = make_writable_device_exclusive_entry(page_to_pfn(page));
-> +	entry = make_device_exclusive_entry(page_to_pfn(page));
->  	swp_pte = swp_entry_to_pte(entry);
->  	if (pte_soft_dirty(fw.pte))
->  		swp_pte = pte_swp_mksoft_dirty(swp_pte);
-> -- 
-> 2.48.1
-> 
+With no newlines.
+
+But it does become weird that TX doesn't match netcat. Let me think on
+this a bit. Maybe I can resolve this in a way where the validation
+works but also the tx side behaves like netcat. Maybe the RX
+validation can skip newlines or something. Maybe I can massage how I
+invoke the test.
+
+This can become a rabbit hole because I do want to invoke multiple
+sendmsg() in one iteration of the test as well, and not overcomplicate
+the series.
+
+> > +
+> > +             if (line_size < 0)
+> > +                     break;
+>
+> [..]
+>
+> > +             mid =3D (line_size / 2) + 1;
+> > +
+> > +             iov[0].iov_base =3D (void *)100;
+> > +             iov[0].iov_len =3D mid;
+> > +             iov[1].iov_base =3D (void *)2000;
+> > +             iov[1].iov_len =3D line_size - mid;
+>
+> This seems a bit hard-coded. We should at least test that mid is < 2000?
+>
+
+Yep, I should do at least do that. FWIW (although missed it in this
+iteration), at the top of the file I put docs that list exactly what I
+run for others to repro the results (and nipa should eventually run
+similar, I have that on my todo list), but the test should be more
+flexible to at least catch instances where mid is too large.
+
+> But ideally we should have two modes for tx with a flag (and run them
+> both from the selftest):
+> - pass one big iov, this will test the sendmsg path which creates
+>   multiple skbs internally
+> - break 'line' into N sections (as you do here), but maybe have more
+>   control over the number of sections?
+>
+> Maybe let's have a new --max-iov-size flag? Then we can call ncdevmem
+> with --max-iov-size <some prime number close to 4k> to exercise all
+> sorts of weird offsets?
+>
+> (seems ok to also follow up on that separately)
+
+Yeah, improvements to tests are always possible, lets have some
+reasonable tests in the first iteration and expand.
+
+
+--=20
+Thanks,
+Mina
