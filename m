@@ -1,83 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0801E47BA;
-	Thu, 30 Jan 2025 13:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E2D7483
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738242605; cv=none; b=DAwnp/5v92FUwh6gKy3xZuqY+vUxelj3/gA7K22S9yZy+LfLGLreFoha+Xi/Fr9HrGIQ7+cfsvC5dqc7XYXlzn4c931c/ZR3f7dip4u2zF8o6NwoqpeUfPHk3CP0dNzjXtPKqsoYjX6iTL0oOI5gQE01E8/aKoUln4Uo/Dy8d8s=
+	t=1738242750; cv=none; b=L106Pe7/BcNraOIz8XXKa/OI04c9V9JpNGQjzykgPmMcKKgKhX90rEIkZalM98hbTy+M1DWdfO53DGSX5ticGMDzrKpHl5LzeMU2Hk7F15Y/CYpm8t2gqKZqN7EB6u4GMpvQXY2rtaC0t/6e906PkSrhOZzQWLn8f65vm6iATzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738242605; c=relaxed/simple;
-	bh=cBceCA/xS8yHpbhHipp+y3e2MOgF35l21oMstBDuqKQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=lz3j4Puo/pPaci+DlCy68tXpjqpgF9cfU0goJGewGt1tUmJWZyXxCegX6KTTKfar3Rn98igtAG4FmKHyiJum/YvB8ky9n6lovgMG/xwTd3Wb868Gh+8yyHhxD3k8h4AsWmdFpnWvYTgMSaM/H117EOm0ajm5euvVeadFED2oKX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=na/IuZnz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="na/IuZnz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85735C4CED2;
-	Thu, 30 Jan 2025 13:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738242604;
-	bh=cBceCA/xS8yHpbhHipp+y3e2MOgF35l21oMstBDuqKQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=na/IuZnzG6iLaHJ0ekFF7NXxYd3Mq3AK2vtaFRQffsjwpd2kp5ISHfKa02MHazQ1J
-	 J2H1jl3OiqyjDUbgmzPHxo0LK3Ag1YpVGy8Budp5G1VgfMUgOXmQ5ddaV0G4sU30/+
-	 DLoAU8RuGuSfAniQp9oyD/rLB7QuRogjxE13xmNFJxcKKG8TGAQegPS164m9x4PYoE
-	 ahO2/JydR0bfnmfr4+XN976VqAuynPc2DDCh27WAA9PZr/lbwI8OJxiugWGq3oFcK5
-	 uMvhj/MQxPnWIWRMxMTITU3cTpOwnUfr+xEZlo8qui1sY8vBoTQfrBrsoz9/or9qda
-	 VW6bj7IJFZqdQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB7EC380AA66;
-	Thu, 30 Jan 2025 13:10:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1738242750; c=relaxed/simple;
+	bh=UWhx295qmY3GWSKOMZW+APOnFJqWoObpRK5OQrnQBYk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=KeLvj8ZT8+BefOs6S4QwtBHN1CavquPiAg3b2aU0ekFADtLO1tDzHN4LDEwy/NF5ak5nFyTEh740Vjjcow6xpN6tgz4H0TEryNXj7He5ufjdwl+OlC60wYSzTqA8uO5xhIXZOyBTdPHbFoniMUUuA7nqghmgMhvkW0IGV3ZR81Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3a7e4bfae54so7035325ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:12:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738242748; x=1738847548;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fcXw+weI9Kk8+GGZ8VUeVAxRzMM7UfZFaRgdoYJYpjg=;
+        b=rEtAFUqPIDG72mVw+YVJ+HXuNhtvhH4DFpayJ14X/Hf8Q/guY/YA+1b7+vWwEkPdIg
+         kNiX8PcWdkpf/qrLa+kkLl8AwpMH+AzH1QNoTji+7U9XD0CYmh6VYeoAFyZPr0EcmCwA
+         cJKMua53ItOUOrFrtIvhTJ8yEUOfnYxRiA0WeUGEeiDYoVgrabGl3NW5PxATFH5FHRgH
+         +wySK8Ioy68Z58TfOb+uzUeTBoM/QM/N1f0LWfWpGPb5mTUcAYeBhQstU9fqifhjoCky
+         M0760NbnzNPSQl3hSJrHsfh4M7rQy42kFb9XQZMtuM8AQTF+oWL3ukX85LR9zON7KUyS
+         lVKg==
+X-Gm-Message-State: AOJu0YxiHlTAsF3rK9I2WtuZzMLbPn4MIK28VvU653XaiPVWyGV6j+Cj
+	9CMxDG71UF1+XA3AfkF5gGfNgBBZjVe0Kl/9Z3q7c41QUzyN5dxfpwv2VGFdvMTCbIkWsiaLsUu
+	VMlpTNvrGc80G9ABKUSfhwCT3UFfOYp5fPCkDNveEK/CP2ualbun0Y94=
+X-Google-Smtp-Source: AGHT+IGNGlTx07cXqgLqsCN1w/mv7AKqoofadPmiBbvugykq4wQQuUgPz9Is0j9cRsAtzgcYvLYd/T0AsKEqT//r1fcggDQhJ3Q9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/2] mptcp: blackhole only if 1st SYN retrans w/o MPC
- is accepted
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173824263075.953543.6219182517471965649.git-patchwork-notify@kernel.org>
-Date: Thu, 30 Jan 2025 13:10:30 +0000
-References: <20250129-net-mptcp-blackhole-fix-v1-0-afe88e5a6d2c@kernel.org>
-In-Reply-To: <20250129-net-mptcp-blackhole-fix-v1-0-afe88e5a6d2c@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, corbet@lwn.net, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- stable@vger.kernel.org
+X-Received: by 2002:a92:cda7:0:b0:3cf:bac5:d90c with SMTP id
+ e9e14a558f8ab-3cffe42f28cmr68960695ab.18.1738242748599; Thu, 30 Jan 2025
+ 05:12:28 -0800 (PST)
+Date: Thu, 30 Jan 2025 05:12:28 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <679b7abc.050a0220.48cbc.0006.GAE@google.com>
+Subject: [syzbot] Monthly rdma report (Jan 2025)
+From: syzbot <syzbot+list68ee45d79914eff2710d@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
+Hello rdma maintainers/developers,
 
-This series was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+This is a 31-day syzbot report for the rdma subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/rdma
 
-On Wed, 29 Jan 2025 13:24:31 +0100 you wrote:
-> Here are two small fixes for issues introduced in v6.12.
-> 
-> - Patch 1: reset the mpc_drop mark for other SYN retransmits, to only
->   consider an MPTCP blackhole when the first SYN retransmitted without
->   the MPTCP options is accepted, as initially intended.
-> 
-> - Patch 2: also mention in the doc that the blackhole_timeout sysctl
->   knob is per-netns, like all the others.
-> 
-> [...]
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 9 issues are still open and 62 have already been fixed.
 
-Here is the summary with links:
-  - [net,1/2] mptcp: blackhole only if 1st SYN retrans w/o MPC is accepted
-    https://git.kernel.org/netdev/net/c/e598d8981fd3
-  - [net,2/2] doc: mptcp: sysctl: blackhole_timeout is per-netns
-    https://git.kernel.org/netdev/net/c/18da4b5d1232
+Some of the still happening issues:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Ref Crashes Repro Title
+<1> 267     No    INFO: task hung in rdma_dev_change_netns
+                  https://syzkaller.appspot.com/bug?extid=73c5eab674c7e1e7012e
+<2> 88      No    WARNING in rxe_pool_cleanup
+                  https://syzkaller.appspot.com/bug?extid=221e213bf17f17e0d6cd
+<3> 61      No    INFO: task hung in add_one_compat_dev (3)
+                  https://syzkaller.appspot.com/bug?extid=6dee15fdb0606ef7b6ba
+<4> 59      Yes   possible deadlock in sock_set_reuseaddr
+                  https://syzkaller.appspot.com/bug?extid=af5682e4f50cd6bce838
+<5> 39      No    INFO: task hung in rdma_dev_exit_net (6)
+                  https://syzkaller.appspot.com/bug?extid=3658758f38a2f0f062e7
+<6> 5       No    possible deadlock in siw_create_listen (2)
+                  https://syzkaller.appspot.com/bug?extid=3eb27595de9aa3cf63c3
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
