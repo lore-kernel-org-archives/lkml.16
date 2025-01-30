@@ -1,188 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CCA1F130B
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 21:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7001F1513
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 21:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738274288; cv=none; b=UQ5Y56uzPSlgG11hPif0oqriwIx45Ujm69up5MoTu5xsgwFFJFpsufWeuBOROCaAFWwPQAFrgLGFawxoBayB8BikB5zI8mKZrUenptoaaOetow/3KdMQlZDJ1M5KvmKRAa2uH9ZU7uxOpSyV5hz+7cFuZui2fFJzFND5pB0qRoI=
+	t=1738274312; cv=none; b=klFE/WMwN+RigQ5j9KRXSU+N8M+zX00kCkLcCcF9vhCUNNsvwJpkNRRN+gMXPu3mi+VEwBMry3GfiexKCDroed3Y4x2BSEW3q5uSLXy5i1aMILpigSJWwbkeiOJapiaPi9MhKl3j+iTdvHJIaI4lSq633gzOxlcidin3x1aj4DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738274288; c=relaxed/simple;
-	bh=lbfyUXhCCR3o5Q2J4+vh8DwWzWC9xj8OAuoAhTdea1M=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DAUT11NOuN6gSi0gqagcUS0sqxbgZSv8cF3Hx9ciZYfBPR99BAf29AWbQsPf5mLTZLDYD4WQp5tkNiZn97JdppWHe6/BY5sSgJOOVhR/ph/t96ucFKTj/bT6LxFNOT3g/rFBaWyNDDgCUZvTYriTcEc+oM4C3WqwlsXI3it51gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R0qj4C7+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738274312; c=relaxed/simple;
+	bh=i84G3SmkD1FSn/qiCtc5Rh03DuaSUwH0up34eflh8ro=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=TM2eNrZEBSxWIs9V9FHIODhls1dJVBOTYPh09/oRdQM3Zn1E+Oc5nla2diyQeUlm8AWqroW3qrqV7sfhSkbbRAyAYreDCcl+ZCkJZaNDPTsHDV+NVn600+wql/uEUH2V5zFQmBlahbF0qXjQaXCqswvv+/kSsKVx5vo74WYgF/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SCDfb3fG; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R0qj4C7+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738274285;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yZGR9n2NxO5o2uz/dG2BP9wPYFCxYVeESyInJLxbGQ0=;
-	b=R0qj4C7+4Z+g6QRJ4ND7NBLEqWEzSivxRqjZbWOH5BsKysrWPnFKIE+R2n16CCSpaU0eZ2
-	r/JnuN4k2RjRFyr3eLUCXSRkNPgzu7k8E/Cb6MjiiAG4q1HwwRsYqu2vbiB4OU5SUgUv+e
-	wdbCMN78P0iBLJwDsPUHH27JWle+32Q=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-54-E9TRZP3lPXmwyJSOiYoOfA-1; Thu,
- 30 Jan 2025 16:57:59 -0500
-X-MC-Unique: E9TRZP3lPXmwyJSOiYoOfA-1
-X-Mimecast-MFC-AGG-ID: E9TRZP3lPXmwyJSOiYoOfA
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9F1E19560B1;
-	Thu, 30 Jan 2025 21:57:57 +0000 (UTC)
-Received: from lszubowi.redhat.com (unknown [10.22.80.22])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 40281195E3E0;
-	Thu, 30 Jan 2025 21:57:55 +0000 (UTC)
-From: Lenny Szubowicz <lszubowi@redhat.com>
-To: pavan.chebbi@broadcom.com,
-	mchan@broadcom.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	george.shuklin@gmail.com,
-	andrea.fois@eventsense.it,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net v3] tg3: Disable tg3 PCIe AER on system reboot
-Date: Thu, 30 Jan 2025 16:57:54 -0500
-Message-ID: <20250130215754.123346-1-lszubowi@redhat.com>
-In-Reply-To: <20241129203640.54492-1-lszubowi@redhat.com>
-References: <20241129203640.54492-1-lszubowi@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SCDfb3fG"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef79d9c692so3370259a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:58:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738274310; x=1738879110; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sP+PSXxGrOmF+G6y4EyqF6nMuKUGJmNHFz94ds/u0fQ=;
+        b=SCDfb3fGuUvhHA0RUWsiQ/SWbiFIhRgaHK/cFuLMSBo8cSskAmpNx5VLqjmSt76hy8
+         TIOWx3UrKeUDIaYUX5VlMWPgfN+idLmWZdk9x2FzTkOE+6CJ1OzAZNqZJCUYEdYQGJke
+         cdgjkxpZfoXqqsJR9OSffCDfOSxwZY9i/ZYdxjx5f4VekmmFbCbzj73sIMwSwEy1U+Am
+         uAJ/9JW2CewtED6Y3j0DVOQsRaBiLMtFh8pPsF2dwrNsWY5pVTQvbT4KPxm1m84fRhJa
+         5bwXRA17ZrkYnSBEFG94SZJ7cwqftTgKFvcIuyYBdP2JlQIEPdPwc7SvOxhTsj/NM2eu
+         gjsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738274310; x=1738879110;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sP+PSXxGrOmF+G6y4EyqF6nMuKUGJmNHFz94ds/u0fQ=;
+        b=oiwmY3nxwcq8r7RW522Ak8YtJ4z9nJg16tx//UZWRMxDdTX+EZabmsKNt06NAUM1RE
+         v+kq685bNzz++QGDsENA3fVk+KmhgSieQI685PHnQgLEHidja7sYGMUbS/khpBXo7XEz
+         eNNMldTkYgL6bW/vfIAuD45BQpL7P2lDQXXmOWNTfh0IcgY4ej10VByWjgJG2KQuNPnw
+         qH3EUAboKZdwfdM4NIfwVrp9RxSDhHiCh9AKJN6IA1y/tT0XnSwrchGs3YbshjL2+Hzd
+         nz6r0Ub2pJgn0ga4+cEHfniWQ6l214WHYT0GHoN5q9agyNfE+rytkOJ9LFHrCwzqOlFP
+         aI7Q==
+X-Gm-Message-State: AOJu0YxO3BTToGDV1Wml75aBGijoq7nbs3DwZEpq/UpDlmwNDcEo00xI
+	rFDqA3W6T7W3x3rLuaYAR4MvYnUXj33g4KVMfFg59WNyWpiOBZSh1X8V9YKtYeuwrZvWPG6zXXH
+	xd+xwkwafxw==
+X-Google-Smtp-Source: AGHT+IGl1w1MKzWkKbM7ScftD/Z+sWuD+nXViJBNKnkiSS+kF4yMpnUpSO6IRT4QJWmuw8vNVTEla8I2jPf3nw==
+X-Received: from pfbbd35.prod.google.com ([2002:a05:6a00:27a3:b0:728:e508:8a3e])
+ (user=cmllamas job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:218a:b0:725:eb85:f7ef with SMTP id d2e1a72fcca58-72fd0bffcf0mr11984683b3a.14.1738274310017;
+ Thu, 30 Jan 2025 13:58:30 -0800 (PST)
+Date: Thu, 30 Jan 2025 21:58:22 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250130215823.1518990-1-cmllamas@google.com>
+Subject: [PATCH] binderfs: fix use-after-free in binder_devices
+From: Carlos Llamas <cmllamas@google.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
+	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, Li Li <dualli@google.com>
+Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, 
+	syzbot+7015dcf45953112c8b45@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Disable PCIe AER on the tg3 device on system reboot on a limited
-list of Dell PowerEdge systems. This prevents a fatal PCIe AER event
-on the tg3 device during the ACPI _PTS (prepare to sleep) method for
-S5 on those systems. The _PTS is invoked by acpi_enter_sleep_state_prep()
-as part of the kernel's reboot sequence as a result of commit
-38f34dba806a ("PM: ACPI: reboot: Reinstate S5 for reboot").
+Devices created through binderfs are added to the global binder_devices
+list but are not removed before being destroyed. This leads to dangling
+pointers in the list and subsequent use-after-free errors:
 
-There was an earlier fix for this problem by commit 2ca1c94ce0b6
-("tg3: Disable tg3 device on system reboot to avoid triggering AER").
-But it was discovered that this earlier fix caused a reboot hang
-when some Dell PowerEdge servers were booted via ipxe. To address
-this reboot hang, the earlier fix was essentially reverted by commit
-9fc3bc764334 ("tg3: power down device only on SYSTEM_POWER_OFF").
-This re-exposed the tg3 PCIe AER on reboot problem.
+  ==================================================================
+  BUG: KASAN: slab-use-after-free in binder_add_device+0x5c/0x9c
+  Write of size 8 at addr ffff0000c258d708 by task mount/653
 
-This fix is not an ideal solution because the root cause of the AER
-is in system firmware. Instead, it's a targeted work-around in the
-tg3 driver.
+  CPU: 7 UID: 0 PID: 653 Comm: mount Not tainted 6.13.0-09030-g6d61a53dd6f5 #1
+  Hardware name: linux,dummy-virt (DT)
+  Call trace:
+   binder_add_device+0x5c/0x9c
+   binderfs_binder_device_create+0x690/0x84c
+   [...]
+   __arm64_sys_mount+0x324/0x3bc
 
-Note also that the PCIe AER must be disabled on the tg3 device even
-if the system is configured to use "firmware first" error handling.
+  Allocated by task 632:
+   binderfs_binder_device_create+0x168/0x84c
+   binder_ctl_ioctl+0xfc/0x184
+   [...]
+   __arm64_sys_ioctl+0x110/0x150
 
-V3:
-   - Fix sparse warning on improper comparison of pdev->current_state
-   - Adhere to netdev comment style
+  Freed by task 649:
+   kfree+0xe0/0x338
+   binderfs_evict_inode+0x138/0x1dc
+   [...]
+  ==================================================================
 
-Fixes: 9fc3bc764334 ("tg3: power down device only on SYSTEM_POWER_OFF")
-Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
+Remove devices from binder_devices before destroying them.
+
+Cc: Li Li <dualli@google.com>
+Reported-by: syzbot+7015dcf45953112c8b45@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=7015dcf45953112c8b45
+Fixes: 12d909cac1e1 ("binderfs: add new binder devices to binder_devices")
+Signed-off-by: Carlos Llamas <cmllamas@google.com>
 ---
- drivers/net/ethernet/broadcom/tg3.c | 58 +++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+ drivers/android/binderfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index 9cc8db10a8d6..5ba22fe0995f 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -55,6 +55,7 @@
- #include <linux/hwmon.h>
- #include <linux/hwmon-sysfs.h>
- #include <linux/crc32poly.h>
-+#include <linux/dmi.h>
+diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+index bc6bae76ccaf..94c6446604fc 100644
+--- a/drivers/android/binderfs.c
++++ b/drivers/android/binderfs.c
+@@ -274,6 +274,7 @@ static void binderfs_evict_inode(struct inode *inode)
+ 	mutex_unlock(&binderfs_minors_mutex);
  
- #include <net/checksum.h>
- #include <net/gso.h>
-@@ -18192,6 +18193,50 @@ static int tg3_resume(struct device *device)
- 
- static SIMPLE_DEV_PM_OPS(tg3_pm_ops, tg3_suspend, tg3_resume);
- 
-+/* Systems where ACPI _PTS (Prepare To Sleep) S5 will result in a fatal
-+ * PCIe AER event on the tg3 device if the tg3 device is not, or cannot
-+ * be, powered down.
-+ */
-+static const struct dmi_system_id tg3_restart_aer_quirk_table[] = {
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge R440"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge R540"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge R640"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge R650"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge R740"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge R750"),
-+		},
-+	},
-+	{}
-+};
-+
- static void tg3_shutdown(struct pci_dev *pdev)
- {
- 	struct net_device *dev = pci_get_drvdata(pdev);
-@@ -18208,6 +18253,19 @@ static void tg3_shutdown(struct pci_dev *pdev)
- 
- 	if (system_state == SYSTEM_POWER_OFF)
- 		tg3_power_down(tp);
-+	else if (system_state == SYSTEM_RESTART &&
-+		 dmi_first_match(tg3_restart_aer_quirk_table) &&
-+		 pdev->current_state != PCI_D3cold &&
-+		 pdev->current_state != PCI_UNKNOWN) {
-+		/* Disable PCIe AER on the tg3 to avoid a fatal
-+		 * error during this system restart.
-+		 */
-+		pcie_capability_clear_word(pdev, PCI_EXP_DEVCTL,
-+					   PCI_EXP_DEVCTL_CERE |
-+					   PCI_EXP_DEVCTL_NFERE |
-+					   PCI_EXP_DEVCTL_FERE |
-+					   PCI_EXP_DEVCTL_URRE);
-+	}
- 
- 	rtnl_unlock();
- 
+ 	if (refcount_dec_and_test(&device->ref)) {
++		hlist_del_init(&device->hlist);
+ 		kfree(device->context.name);
+ 		kfree(device);
+ 	}
 -- 
-2.47.1
+2.48.1.362.g079036d154-goog
 
