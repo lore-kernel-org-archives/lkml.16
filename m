@@ -1,263 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5B01DDC22;
-	Thu, 30 Jan 2025 14:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4261DDE9
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738246529; cv=none; b=KPwaM+6raY59d6A5Bxi379EQysqR8Sg9wfQDDDAhJqdeW9Wy9u8jLKvioujFQReejGV79q3PdADl48yosuptpEfp443XxrAQizTga3NRNAyxxPxhai9vuVEIQuzLhXBSE8fY5uruW39UhJ7G4wdcc8GROO6+acst410mdRiQ77U=
+	t=1738246610; cv=none; b=Aq580yjuPab0dCHQHTLQZRi+3SfkDWA3z0k2EvQjsYtHnZp23Ybv+QN3rPwoxsI2tB8m02sISzpKpDnchX5bN+TQOgi0/jFNWYuQdQTEpg8qRoAPgKmDYJK7ny8qo0I0Ho1fWxKTZs3shLsN25L4OtI5WZbvDwF7YfP8cdk5xMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738246529; c=relaxed/simple;
-	bh=8zWhU41ndvJaNliM7IEN72PmnFRDUdYgWtsK1tXg06s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rf9xqhmpJw/6qzB+yBJ2MltAcspfAwL5gWjXApc8sXnqUV1LlyQ0O8jzt4v4yet8zkYA75dEsM+At/xBSKoj4bbjIPzhcwfhFUy/mb/fF0vT+gLlGD7qltNz3TlKM2v359oN8bUQMjNwdf6NVdQXi34u/+hXjLRAKSqWIZtKXn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1I239/gg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738246610; c=relaxed/simple;
+	bh=eKFtaSi1HdST9VVRKgENgSCnuaaTdZ8+rnXRb1CzOrM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jRcoOG2u+JF1bnrq7omRN1s5AiCQ+FVaFtJT2HnxFImLqQWyqWc032CFNGuLEnOuAk6+b7JEbIYFV6ZcKp8ZrLrA9+oAYyK+f5dFVswMDRKHsvtVHvuQchiI6ZRKqhuwgoANugGdcAsAoO+/yGPezMY6bdfGaszF5I2OJ0tObtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=MsIkWBNy; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1I239/gg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3DC6C4CED2;
-	Thu, 30 Jan 2025 14:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738246528;
-	bh=8zWhU41ndvJaNliM7IEN72PmnFRDUdYgWtsK1tXg06s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=1I239/ggY9DKIHz+ZFq/STSyvrsl2+wfw0QqyDDPEnVP5CpRZ+eT9lmcWgVbUw6EK
-	 NvitUmlwaDMutvKeizXJVwrSHAOHouDnXlbgv/uQLvBE+KZhy7yEcFmtMIsGxRLaxI
-	 PJfI1w2bDZtxOJJSQafPs0UlJHWvSmrgoyaCv2lE=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	hargar@microsoft.com,
-	broonie@kernel.org
-Subject: [PATCH 6.6 00/43] 6.6.75-rc1 review
-Date: Thu, 30 Jan 2025 14:59:07 +0100
-Message-ID: <20250130133458.903274626@linuxfoundation.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MsIkWBNy"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6d92e457230so7959446d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:16:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1738246608; x=1738851408; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dANM8Zs9s576kPdyfPzTz1kKsCDxnvejE2CxJSYcFDo=;
+        b=MsIkWBNykBjqnUpJlH+uF2Y8AVA8zAweiu7G8vvuH5N/Or3ra5TFmOetF+humoyGQM
+         IQu7f/uJY5j0wm91AZADSf8hdmLEklNA2vKTuT2KDAG+tH8+PYwZOzjXQTVefDtxtFhL
+         1ujXis/OOojP4oZMlkvNCYeVfbbBr6Bc3RUluSYj7FkwD6Mr4omIgvbqscXELUcMdWyT
+         Yf6ZHonKRkAMku6iMsRvw8MxErgpakq5dnhjNJx930wkDRBrWxMTR8UOat2O1FDzCJal
+         xMZCxmSevVqBhgUVhWiQZeAXRuTeqKdMoTU8yzR0RZdM+H+IJ5PdNJXSGvzSYcIS96Vi
+         BB9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738246608; x=1738851408;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dANM8Zs9s576kPdyfPzTz1kKsCDxnvejE2CxJSYcFDo=;
+        b=O5n0ovsq7KiwM0lKdnWVDgngZRVVfajzsoUFXkkW6ay47GLDA3ZQnBy2DtDjzBpFn/
+         gZ//eDVTyAaW/QGhH8qKcbH7B0TUCZbpi/JsjeKOgny3a2oNxNQEShgyODvwysLRnMLa
+         6teXU82s9hT0sSjcSUsZcfCh+Gu8XLMJx0dFCxz/0CPUCE8fK0y5qmO06zvhnCMypJBS
+         q3N3N7+jJ9Gc45NVXFEvyQBHmvBRL8iqelA8+HzPlXzAY3VAX9/+EL+/WbAk7os/G3CE
+         cBkmbWVrm3+mlmm7/D5+ojDSj6LO80PLz/xJ3imThMeAVNRsPMZRgDn6GvutO5Fa5hMb
+         Xv3w==
+X-Forwarded-Encrypted: i=1; AJvYcCV9cdbkEJjMbj+SB0S6B0gZP3TjT5suejakNrlK1kpeHDt0EZ3DU92m5xvH6xloFMxmPOXsozdAj7zUO8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuQGuaHnF0oNxhz6uK99otiFBPazCTbaQwUfGOgtPz/Vkmo0Pe
+	RLyPurLfdFWZS7LTUpS8kWxxdV6K+HaE0vfJBiOHmNMzp9GYgmPtcEC29d0BERWibK0yU30aLEH
+	E
+X-Gm-Gg: ASbGncsHjaxNEnhYVJrH7/yqj4R4sTusd/XBdlvKy9BSg5qp8/kVh8NiN1T3uA/02OW
+	ZydwBAiqxVDd9zdI25TWaAPfZj3Bkgr96vKo/KmGFIEZ4hrhCPfvb2TcX3w+wiDzhcVPhOtr9e+
+	KcUa56NoHyO2TaoMa/De+pKAjRUEpH8cbeZdI2Sn5odzQxSwoMONlfbbS/kK2zWfTi9KwWrcwsZ
+	t+cMXObrHhZ92a/8shxmBKK9mPFbd8djI5H9t8XFU3rRvvyCzd0O0DQjIBQwMtwQhbfjNx0+mh2
+	7H+GLsW4rUXAhNeBbXrtgm90bkkgRWMp/BqlMilxas1/bM2+qJLAyWNLYrwEvDGi
+X-Google-Smtp-Source: AGHT+IHHBHiH5Qa9dCXahKb1sFmoeQt6qg2bkg8fltQLMSNrrtwlCR66jinyVsJRAPaY2qDwMvtwEQ==
+X-Received: by 2002:a05:6214:248e:b0:6d8:a9dc:5a65 with SMTP id 6a1803df08f44-6e243c98d55mr111873236d6.45.1738246608197;
+        Thu, 30 Jan 2025 06:16:48 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254814405sm6609706d6.40.2025.01.30.06.16.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 06:16:46 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tdVLa-00000009dOr-1GlW;
+	Thu, 30 Jan 2025 10:16:46 -0400
+Date: Thu, 30 Jan 2025 10:16:46 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	"open list:IOMMU SUBSYSTEM" <iommu@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iommu: Fix a spelling error
+Message-ID: <20250130141646.GI2120662@ziepe.ca>
+References: <20250128190522.70800-1-eahariha@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.75-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.6.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.6.75-rc1
-X-KernelTest-Deadline: 2025-02-01T13:35+00:00
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250128190522.70800-1-eahariha@linux.microsoft.com>
 
-This is the start of the stable review cycle for the 6.6.75 release.
-There are 43 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+On Tue, Jan 28, 2025 at 07:05:21PM +0000, Easwar Hariharan wrote:
+> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+> ---
+>  drivers/iommu/iommu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Responses should be made by Sat, 01 Feb 2025 13:34:42 +0000.
-Anything received after that time might be too late.
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.75-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.6.75-rc1
-
-Jack Greiner <jack@emoss.org>
-    Input: xpad - add support for wooting two he (arm)
-
-Matheos Mattsson <matheos.mattsson@gmail.com>
-    Input: xpad - add support for Nacon Evol-X Xbox One Controller
-
-Leonardo Brondani Schenkel <leonardo@schenkel.net>
-    Input: xpad - improve name of 8BitDo controller 2dc8:3106
-
-Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-    Input: xpad - add QH Electronics VID/PID
-
-Nilton Perim Neto <niltonperimneto@gmail.com>
-    Input: xpad - add unofficial Xbox 360 wireless receiver clone
-
-Mark Pearson <mpearson-lenovo@squebb.ca>
-    Input: atkbd - map F23 key to support default copilot shortcut
-
-Nicolas Nobelis <nicolas@nobelis.eu>
-    Input: xpad - add support for Nacon Pro Compact
-
-Lianqin Hu <hulianqin@vivo.com>
-    ALSA: usb-audio: Add delay quirk for USB Audio Device
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "usb: gadget: u_serial: Disable ep before setting port to null to fix the crash caused by port being null"
-
-Qasim Ijaz <qasdev00@gmail.com>
-    USB: serial: quatech2: fix null-ptr-deref in qt2_process_read_urb()
-
-Easwar Hariharan <eahariha@linux.microsoft.com>
-    scsi: storvsc: Ratelimit warning logs to prevent VM denial of service
-
-Ido Schimmel <idosch@nvidia.com>
-    ipv4: ip_tunnel: Fix suspicious RCU usage warning in ip_tunnel_find()
-
-Luis Henriques (SUSE) <luis.henriques@linux.dev>
-    ext4: fix access to uninitialised lock in fc replay path
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio/platform: check the bounds of read/write syscalls
-
-Linus Torvalds <torvalds@linux-foundation.org>
-    cachestat: fix page cache statistics permission checking
-
-Jiri Kosina <jkosina@suse.com>
-    Revert "HID: multitouch: Add support for lenovo Y9000P Touchpad"
-
-Alexey Dobriyan <adobriyan@gmail.com>
-    block: fix integer overflow in BLKSECDISCARD
-
-Jamal Hadi Salim <jhs@mojatatu.com>
-    net: sched: fix ets qdisc OOB Indexing
-
-Paulo Alcantara <pc@manguebit.com>
-    smb: client: handle lack of EA support in smb2_query_path_info()
-
-Chuck Lever <chuck.lever@oracle.com>
-    libfs: Use d_children list to iterate simple_offset directories
-
-Chuck Lever <chuck.lever@oracle.com>
-    libfs: Replace simple_offset end-of-directory detection
-
-Chuck Lever <chuck.lever@oracle.com>
-    Revert "libfs: Add simple_offset_empty()"
-
-Chuck Lever <chuck.lever@oracle.com>
-    libfs: Return ENOSPC when the directory offset range is exhausted
-
-Chuck Lever <chuck.lever@oracle.com>
-    shmem: Fix shmem_rename2()
-
-Chuck Lever <chuck.lever@oracle.com>
-    libfs: Add simple_offset_rename() API
-
-Chuck Lever <chuck.lever@oracle.com>
-    libfs: Fix simple_offset_rename_exchange()
-
-Chuck Lever <chuck.lever@oracle.com>
-    libfs: Add simple_offset_empty()
-
-Chuck Lever <chuck.lever@oracle.com>
-    libfs: Define a minimum directory offset
-
-Chuck Lever <chuck.lever@oracle.com>
-    libfs: Re-arrange locking in offset_iterate_dir()
-
-Andreas Gruenbacher <agruenba@redhat.com>
-    gfs2: Truncate address space when flipping GFS2_DIF_JDATA flag
-
-Selvin Xavier <selvin.xavier@broadcom.com>
-    RDMA/bnxt_re: Avoid CPU lockups due fifo occupancy check loop
-
-Omid Ehtemam-Haghighi <omid.ehtemamhaghighi@menlosecurity.com>
-    ipv6: Fix soft lockups in fib6_select_path under high next hop churn
-
-Anastasia Belova <abelova@astralinux.ru>
-    cpufreq: amd-pstate: add check for cpufreq_cpu_get's return value
-
-Igor Pylypiv <ipylypiv@google.com>
-    ata: libata-core: Set ATA_QCFLAG_RTF_FILLED in fill_result_tf()
-
-Charles Keepax <ckeepax@opensource.cirrus.com>
-    ASoC: samsung: Add missing depends on I2C
-
-Russell Harmon <russ@har.mn>
-    hwmon: (drivetemp) Set scsi command timeout to 10s
-
-Philippe Simons <simons.philippe@gmail.com>
-    irqchip/sunxi-nmi: Add missing SKIP_WAKE flag
-
-Rob Herring (Arm) <robh@kernel.org>
-    of/unittest: Add test that of_address_to_resource() fails on non-translatable address
-
-Tom Chung <chiahsuan.chung@amd.com>
-    drm/amd/display: Use HW lock mgr for PSR1
-
-Xiang Zhang <hawkxiang.cpp@gmail.com>
-    scsi: iscsi: Fix redundant response for ISCSI_UEVENT_GET_HOST_STATS request
-
-Linus Walleij <linus.walleij@linaro.org>
-    seccomp: Stub for !CONFIG_SECCOMP
-
-Charles Keepax <ckeepax@opensource.cirrus.com>
-    ASoC: samsung: Add missing selects for MFD_WM8994
-
-Charles Keepax <ckeepax@opensource.cirrus.com>
-    ASoC: wm8994: Add depends on MFD core
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- block/ioctl.c                                      |   9 +-
- drivers/ata/libahci.c                              |  12 +-
- drivers/ata/libata-core.c                          |   8 +
- drivers/cpufreq/amd-pstate.c                       |   7 +-
- .../gpu/drm/amd/display/dc/dce/dmub_hw_lock_mgr.c  |   3 +-
- drivers/hid/hid-ids.h                              |   1 -
- drivers/hid/hid-multitouch.c                       |   8 +-
- drivers/hwmon/drivetemp.c                          |   2 +-
- drivers/infiniband/hw/bnxt_re/main.c               |  10 +
- drivers/input/joystick/xpad.c                      |   9 +-
- drivers/input/keyboard/atkbd.c                     |   2 +-
- drivers/irqchip/irq-sunxi-nmi.c                    |   3 +-
- drivers/of/unittest-data/tests-platform.dtsi       |  13 +
- drivers/of/unittest.c                              |  14 ++
- drivers/scsi/scsi_transport_iscsi.c                |   4 +-
- drivers/scsi/storvsc_drv.c                         |   8 +-
- drivers/usb/gadget/function/u_serial.c             |   8 +-
- drivers/usb/serial/quatech2.c                      |   2 +-
- drivers/vfio/platform/vfio_platform_common.c       |  10 +
- fs/ext4/super.c                                    |   3 +-
- fs/gfs2/file.c                                     |   1 +
- fs/libfs.c                                         | 177 ++++++++++----
- fs/smb/client/smb2inode.c                          | 104 +++++---
- include/linux/fs.h                                 |   2 +
- include/linux/seccomp.h                            |   2 +-
- mm/filemap.c                                       |  19 ++
- mm/shmem.c                                         |   3 +-
- net/ipv4/ip_tunnel.c                               |   2 +-
- net/ipv6/ip6_fib.c                                 |   8 +-
- net/ipv6/route.c                                   |  45 ++--
- net/sched/sch_ets.c                                |   2 +
- sound/soc/codecs/Kconfig                           |   1 +
- sound/soc/samsung/Kconfig                          |   6 +-
- sound/usb/quirks.c                                 |   2 +
- tools/testing/selftests/net/Makefile               |   1 +
- .../selftests/net/ipv6_route_update_soft_lockup.sh | 262 +++++++++++++++++++++
- 37 files changed, 640 insertions(+), 137 deletions(-)
-
-
+Jason
