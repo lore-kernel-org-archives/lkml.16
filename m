@@ -1,76 +1,75 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDF61B6D10
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 10:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11321BEF70
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 10:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738234443; cv=none; b=mZRLM7nfUl0F3kxw4nPZkWRNaB5Pi+qv+9eB9WyJ/xCTI0EyxoyTPC+Y4656ed0AuGt+EvvYdw/WmE3LvGzYoYqWunOAZlyMBj6pBLW5T8+M//7MnvKQs8Nb93YcwEFOx6rfqEaPU7RPWXulSqxAB22vx+MUO24uMXMFdycR5CI=
+	t=1738234665; cv=none; b=HZudUrnpcXsZgGcOXFZtlzZceUucQL8ffRhwqi17VrLy471dFAfskD6/JKilLQ2no55cUPm41vRS4Q0Qw9bXjrg5CQRSvdBIRiHe/8lgRshFzbEhZ0CCRdvOmBeOOo3S5lIhBqNBbAbTQz3YzBqRDd5lzhGJ7X1K3pi0LyqD8Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738234443; c=relaxed/simple;
-	bh=9HTHek1dmkQ8Qe+MriUAq+WvBkohEfAoyj0Y9lB3LNc=;
+	s=arc-20240116; t=1738234665; c=relaxed/simple;
+	bh=nNu9Wao+7prXi/lZmkqsyM/BD7Vjd0eXW4mg6ypLdK8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UtZxWhvXH7cnuG2ud7J88QWR0VPDIaaACess3gN2HSiUDkm8hbE8uwQYY9DdBPH9a+LNYXvJEajVqXzzxSrQwveE0NCWnTyazXjczdah28GaZx/J0HtL9HRvR/kM+ortIDHgafZBZOF4dLx9CPMpQc2i2HXhiroU4aH6kczu0g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FhgHYfWe; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=uB2MSaMRv1sPoOFqLMQ16mhaYfWpywkcLqJgQ2Om27aY2bhUQ5OWz/X9p2e7/jTv2MG4IDD5yad+DvTHUO+V4aJvp48Hc6a6iQPdhyuzhv+P/9Vcy1iEOXestgRQmGQqP1tXOcd/KKqV0F2qwTwjjQAI/L0Yi6jFqihBb371Enw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gXB+OxBF; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FhgHYfWe"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43635796b48so3710835e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 02:54:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gXB+OxBF"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso144138966b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 02:57:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738234439; x=1738839239; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738234661; x=1738839461; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=463H0ryAldONuNur80/Z8cz/xApgRCPX52vvMZzIz4Y=;
-        b=FhgHYfWeK+JPkPebotIDq1VUD7TaYjz9dOM3WauscsfNE76Oa0E9hVyGWmypylpHa1
-         pdRUMZwM+WGTFrUesOWJk8RDME4qIRzylqxWaJNwlc0ut0ZZBYvgITDpcL41/4hYtElK
-         SCHiQxgVxWrkgvka9KHRhdrD+OvFRphK1JDV+ptm9pbSrnJnV01nIG7ekU67K08uiRXu
-         kyQxg5SlSCrxNcw79vODavIxPTzU3nc2+lqVJQGBacxJElCCH3DeFjS8a7g1eH76mwNt
-         VxDKiFjUE2yCXIGFsDsmTjmAYLJKMYhQkskXVDlx6iOQcAW8XRSI+9Sq2XShCaiZOFJo
-         NSJg==
+        bh=4buYOzRn3STaO6q6gOT5tyrD4opUgcG/7dM/VZkAIwU=;
+        b=gXB+OxBFJi6AUs+RjuIWleNEHOJI5ToBBhj7tAFTZFT+uLl3uY3O5TAQrhPLZCNpAD
+         CIddkVjlXfGiNwL5dgRxaxBpG/aooAGPaRircb3uLcjZ9bcsTQwYd2VHXhwMAWxIqPtH
+         ukYK6VdxWx/gUi/wnJEoyO95sAwH94A6bwhu0RpnlcWW9zYx2aYmEZnN94eErUqKpGMd
+         Hx1JFS9/rrRLFG+5RhG200NEsvnuLfivsRm5/xu/R6iy8I9EfuzUiqjb269UOKd3QV1U
+         kKeropsbO5cR0NJ7czMWJXo3J4g3ef4VKUIuR4nRGH5DS77t0LOs9NYUSopdrkEAPuI2
+         13Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738234439; x=1738839239;
+        d=1e100.net; s=20230601; t=1738234661; x=1738839461;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=463H0ryAldONuNur80/Z8cz/xApgRCPX52vvMZzIz4Y=;
-        b=RH5M0fatxdV4UHL4weBe+d04gLWlJUO3N4LGnDbTd9JGHM7W+itGDKosmKAlhMcDSD
-         Or9f85HgM66/JwVnKjngLlKmO+cZz5NY2ktZEfDU93+q906gpCgxjQmgja4WFM77bSBr
-         QkKJ9K5JFQ2UyycCQj/FarnR57gwONc0dklfsMkjqeV/ZDIg3Ftz3+DU3UKnp7JY/Pff
-         x6TlCqhjw7IdLD7VT+KClqys/QYqPuwlJzFrBYk5Iv6nMifaRZFXx+F/2kAa/wSNnTcd
-         J2IyQbA5avXDjq11E2DBRpROa/kefqaVmz9VvqxuQruy7Z/JKKwqMyPqcsVvTHfKgNTU
-         +/IA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYmRfWpq7IS1RZrTqUHf6x2igOhZ+uf+K92ULMcIIglRtHbSfSrs9B0g7+AZU7m9c+2rSR844+UEs/Wzo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywko/YRqGa2J381DiJYvN1HotyYy+hOasH6KcTdEpyu8XeER7aC
-	YoapwhtdysCAqTeqTqXtHONStjBop0IBeQiGEje1mwZBoeLixlmIaqaXK9qxkeM=
-X-Gm-Gg: ASbGnctBKLb5RwydmWDgRyOivMptJDVGh/ADprcyMRGmsW2636SZZWKuDS9j5TaQQWJ
-	92D3WqSpdbleXuTYd1YG7KX6VajyTe/rnN6clyLAtYqdxC3j3uD5OYvhbWnGafekNrD2SBf3xFu
-	+++tZnPf5r65zn7SE4q+fKaf2FGew7kIVQ69Ynh6VUIuyAcl7ItSEOIvRVn2RU7kcnbXSMMDA0L
-	2jNfuj+TYZDjF6jcKeP+gmmQaC+6nkWYJWcKrEtlBtf1A1mt3SnZoo4KzcRIVKTmHYitfvz2qxm
-	3zrsKl5Guyaokg==
-X-Google-Smtp-Source: AGHT+IHiDFpxMP68wQ6LjOR1WCEBWr3xqs+Yj4+VT6M4CR/kMwsvp5X0TCoKZFy4smul3HHtJfE/4Q==
-X-Received: by 2002:a05:600c:4710:b0:436:1af3:5b13 with SMTP id 5b1f17b1804b1-438e171a60fmr24268765e9.15.1738234439389;
-        Thu, 30 Jan 2025 02:53:59 -0800 (PST)
-Received: from linaro.org ([86.123.96.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc6df2asm54389675e9.29.2025.01.30.02.53.58
+        bh=4buYOzRn3STaO6q6gOT5tyrD4opUgcG/7dM/VZkAIwU=;
+        b=tismpJYLq9tg7AZS3QA6Y2sPY6vtRKhOwatd7QUdiqlfEwNkW4dp6kVIaXLolSAF6W
+         Ou6GZeK499AP0Tv7Jkj2IJAcTs6yE3llcEwRTnMCUdBbahIz5pyhiMbmE2bP5CiQK2Pn
+         GJAx4dCrnLzzcsfjpagpDQXy5Qxx6cOapt3rPk/TPMElFGnTBbQKTfy9oqo0ZbAkthp4
+         sDp43aPw+MLOSt/jksQyfZVFJFzqNOr5AV0ypkGas3cckIw+gt/389dD7CTmI8JWRVa3
+         eP8/4jMEdDO3eb98N25PtyNvZ89wguFUF7BQswRTYCNMnHlaLo3kAU+ZqYyLzOEOo4z5
+         c2zw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkv/WEf/PPR6M7cJrfP9gUAJ0YBcAjTWehVomcqejgcqDZyaZOnM6XOkq3zQJ7aAEfTyOG4hICbNUIhd8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBa3PJhLyGqOvaIwBcJbj06sPLWyDt0lYcjNdkVPdFnN5hC1FW
+	nt4u/eNxZ9jtirSK8PjDpcK4Y20GcRlqLEQrRunGoLp2qHykdeSfE19bw7ZVig==
+X-Gm-Gg: ASbGnct7PXvxGucL1lBT8qbT4F1zREPFn3m87KpGOejrzfI9y7Rux9q13WHmvgnLg2P
+	eQJitFWkd4B8eeElfQ1dD1kmiL7KRkyC/hZUP/IoFTppGvhEbAxj3Ufm/ZKGYnx4UEDDdCGk16s
+	urJSgbNnOPbOI8rdjGIBYjubFb2mevwb7D2Tb5UZCGq5X76kqbjMCopVxjdm2+VpnYzziGJ+bQG
+	MDYKd3LeZaZZ1dkXJU19nAx6kBqFS9qJGXB+KKRHxUvLXqUc1E5vJUoF4SxPSPWUfzkbuoELXmB
+	uhyfktLgOjVSjuHgRQlo/c4foYMLWgA75euzsdpyl3XjMJZNBNHOgfsjjA==
+X-Google-Smtp-Source: AGHT+IFtF+henE/8ZRauZhMwrPj3UgPcvyIRaqNYReNS1dcsHzGE0KZapxpRvfWEVPtVflrXOmEgNw==
+X-Received: by 2002:a17:907:94cd:b0:ab6:3633:13e with SMTP id a640c23a62f3a-ab6cfdbd071mr781688366b.41.1738234660778;
+        Thu, 30 Jan 2025 02:57:40 -0800 (PST)
+Received: from google.com (201.31.90.34.bc.googleusercontent.com. [34.90.31.201])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc723efc45sm871854a12.32.2025.01.30.02.57.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 02:53:58 -0800 (PST)
-Date: Thu, 30 Jan 2025 12:53:57 +0200
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Caleb Connolly <caleb.connolly@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH RFC v2] soc: qcom: pmic_glink: Fix device access from
- worker during suspend
-Message-ID: <Z5taRZ0om5y/DJ69@linaro.org>
-References: <20250129-soc-qcom-pmic-glink-fix-device-access-on-worker-while-suspended-v2-1-de2a3eca514e@linaro.org>
- <Z5tJvgrYS5UoAHRD@hovoldconsulting.com>
+        Thu, 30 Jan 2025 02:57:40 -0800 (PST)
+Date: Thu, 30 Jan 2025 10:57:35 +0000
+From: Matt Bobrowski <mattbobrowski@google.com>
+To: Song Liu <song@kernel.org>
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com,
+	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	kpsingh@kernel.org, liamwisehart@meta.com, shankaran@meta.com
+Subject: Re: [PATCH v11 bpf-next 1/7] fs/xattr: bpf: Introduce security.bpf.
+ xattr name prefix
+Message-ID: <Z5tbH13qK6rLJVUI@google.com>
+References: <20250129205957.2457655-1-song@kernel.org>
+ <20250129205957.2457655-2-song@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,155 +78,120 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z5tJvgrYS5UoAHRD@hovoldconsulting.com>
+In-Reply-To: <20250129205957.2457655-2-song@kernel.org>
 
-On 25-01-30 10:43:26, Johan Hovold wrote:
-> On Wed, Jan 29, 2025 at 01:46:15PM +0200, Abel Vesa wrote:
-> > For historical reasons, the GLINK smem interrupt is registered with
+On Wed, Jan 29, 2025 at 12:59:51PM -0800, Song Liu wrote:
+> Introduct new xattr name prefix security.bpf., and enable reading these
+> xattrs from bpf kfuncs bpf_get_[file|dentry]_xattr().
 > 
-> Please spell out these reasons so that we can determine if they are
-> still valid or not.
+> As we are on it, correct the comments for return value of
+> bpf_get_[file|dentry]_xattr(), i.e. return length the xattr value on
+> success.
 
-Sure.
+Reviewed-by: Matt Bobrowski <mattbobrowski@google.com>
 
-Bjorn, Caleb, please correct me if I'm wrong, but IIRC the historical
-reasons here have to do with notifications from mdsp and sdsp being
-needed on mobile platforms. Was there something else?
-
+> Signed-off-by: Song Liu <song@kernel.org>
+> Acked-by: Christian Brauner <brauner@kernel.org>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> ---
+>  fs/bpf_fs_kfuncs.c         | 19 ++++++++++++++-----
+>  include/uapi/linux/xattr.h |  4 ++++
+>  2 files changed, 18 insertions(+), 5 deletions(-)
 > 
-> > IRRQF_NO_SUSPEND flag set, which is the underlying problem here, since the
-> > incoming messages can be delivered during late suspend and early
-> > resume.
-> > 
-> > In this specific case, the pmic_glink_altmode_worker() currently gets
-> > scheduled on the system_wq which can be scheduled to run while devices
-> > are still suspended. This proves to be a problem when a Type-C retimer,
-> > switch or mux that is controlled over a bus like I2C, because the I2C
-> > controller is suspended.
+> diff --git a/fs/bpf_fs_kfuncs.c b/fs/bpf_fs_kfuncs.c
+> index 3fe9f59ef867..8a65184c8c2c 100644
+> --- a/fs/bpf_fs_kfuncs.c
+> +++ b/fs/bpf_fs_kfuncs.c
+> @@ -93,6 +93,11 @@ __bpf_kfunc int bpf_path_d_path(struct path *path, char *buf, size_t buf__sz)
+>  	return len;
+>  }
+>  
+> +static bool match_security_bpf_prefix(const char *name__str)
+> +{
+> +	return !strncmp(name__str, XATTR_NAME_BPF_LSM, XATTR_NAME_BPF_LSM_LEN);
+> +}
+
+I think this can also just be match_xattr_prefix(const char
+*name__str, const char *prefix, size_t len) such that we can do the
+same checks for aribitrary xattr prefixes i.e. XATTR_USER_PREFIX,
+XATTR_NAME_BPF_LSM.
+
+>  /**
+>   * bpf_get_dentry_xattr - get xattr of a dentry
+>   * @dentry: dentry to get xattr from
+> @@ -101,9 +106,10 @@ __bpf_kfunc int bpf_path_d_path(struct path *path, char *buf, size_t buf__sz)
+>   *
+>   * Get xattr *name__str* of *dentry* and store the output in *value_ptr*.
+>   *
+> - * For security reasons, only *name__str* with prefix "user." is allowed.
+> + * For security reasons, only *name__str* with prefix "user." or
+      	  	   	    	 	     	  ^ prefixes
+						  
+> + * "security.bpf." is allowed.
+                      ^ are
+
+Out of curiosity, what is the security reasoning here? This isn't
+obvious to me, and I'd like to understand this better. Is it simply
+frowned upon to read arbitrary xattr values from the context of a BPF
+LSM program, or has it got something to do with the backing xattr
+handler that ends up being called once we step into __vfs_getxattr()
+and such?  Also, just so that it's clear, I don't have anything
+against this allow listing approach either, I just genuinely don't
+understand the security implications.
+
+> - * Return: 0 on success, a negative value on error.
+> + * Return: length of the xattr value on success, a negative value on error.
+>   */
+>  __bpf_kfunc int bpf_get_dentry_xattr(struct dentry *dentry, const char *name__str,
+>  				     struct bpf_dynptr *value_p)
+> @@ -117,7 +123,9 @@ __bpf_kfunc int bpf_get_dentry_xattr(struct dentry *dentry, const char *name__st
+>  	if (WARN_ON(!inode))
+>  		return -EINVAL;
+>  
+> -	if (strncmp(name__str, XATTR_USER_PREFIX, XATTR_USER_PREFIX_LEN))
+> +	/* Allow reading xattr with user. and security.bpf. prefix */
+> +	if (strncmp(name__str, XATTR_USER_PREFIX, XATTR_USER_PREFIX_LEN) &&
+> +	    !match_security_bpf_prefix(name__str))
+
+I think it would be cleaner to have single function
+i.e. is_allowed_xattr_prefix(const char *name__str) which simply
+checks all the allowed xattr prefixes that can be read by this BPF
+kfunc.
+
+>  		return -EPERM;
+>  
+>  	value_len = __bpf_dynptr_size(value_ptr);
+> @@ -139,9 +147,10 @@ __bpf_kfunc int bpf_get_dentry_xattr(struct dentry *dentry, const char *name__st
+>   *
+>   * Get xattr *name__str* of *file* and store the output in *value_ptr*.
+>   *
+> - * For security reasons, only *name__str* with prefix "user." is allowed.
+> + * For security reasons, only *name__str* with prefix "user." or
+      	  	   	    	 	     	  ^ prefixes
+
+> + * "security.bpf." is allowed.
+      		      ^ are
+
+> - * Return: 0 on success, a negative value on error.
+> + * Return: length of the xattr value on success, a negative value on error.
+>   */
+>  __bpf_kfunc int bpf_get_file_xattr(struct file *file, const char *name__str,
+>  				   struct bpf_dynptr *value_p)
+> diff --git a/include/uapi/linux/xattr.h b/include/uapi/linux/xattr.h
+> index 9854f9cff3c6..c7c85bb504ba 100644
+> --- a/include/uapi/linux/xattr.h
+> +++ b/include/uapi/linux/xattr.h
+> @@ -83,6 +83,10 @@ struct xattr_args {
+>  #define XATTR_CAPS_SUFFIX "capability"
+>  #define XATTR_NAME_CAPS XATTR_SECURITY_PREFIX XATTR_CAPS_SUFFIX
+>  
+> +#define XATTR_BPF_LSM_SUFFIX "bpf."
+> +#define XATTR_NAME_BPF_LSM (XATTR_SECURITY_PREFIX XATTR_BPF_LSM_SUFFIX)
+> +#define XATTR_NAME_BPF_LSM_LEN (sizeof(XATTR_NAME_BPF_LSM) - 1)
+> +
+>  #define XATTR_POSIX_ACL_ACCESS  "posix_acl_access"
+>  #define XATTR_NAME_POSIX_ACL_ACCESS XATTR_SYSTEM_PREFIX XATTR_POSIX_ACL_ACCESS
+>  #define XATTR_POSIX_ACL_DEFAULT  "posix_acl_default"
+> -- 
+> 2.43.5
 > 
-> This is not just an issue with an i2c retimer, this is a plain generic
-> bug in that the glink code which is calling drivers while their devices
-> are suspended.
-
-Yes, that's true. I merely used the i2c scenario since this is the first real
-usecase where this proves to be a problem. I do agree that this is a
-problem in the glink code design though and needs to be reworked
-properly.
-
-> 
-> > This has been proven to be the case on the X Elite boards where such
-> > retimers (ParadeTech PS8830) are used in order to handle Type-C
-> > orientation and altmode configuration. The following warning is thrown:
-> 
-> > The proper solution here should be to not deliver these kind of messages
-> > during system suspend at all, or at least make it configurable per glink
-> > client. But simply dropping the IRQF_NO_SUSPEND flag entirely will break
-> > other clients.
-> 
-> Which clients? Do we care enough about them to be papering over this
-> very real bug which can potentially crash the system (e.g. due to
-> unclocked register accesses)?
-
-Well, you just pointed out the ucsi below, which I totally missed.
-
-I guess this fix would have to be replicated to ucsi as well in this
-case. But then it is not just a one-off anymore, like Bjorn suggested.
-
-Since this hasn't proved to be a problem until now, I guess all the
-other clients are fine with scheduling work while suspended. But this
-might be a wrong assumption as well.
-
-> 
-> > The final shape of the rework of the pmic glink driver in
-> > order to fulfill both the filtering of the messages that need to be able
-> > to wake-up the system and the queueing of these messages until the system
-> > has properly resumed is still being discussed and it is planned as a
-> > future effort.
-> > 
-> > Meanwhile, the stop-gap fix here is to schedule the pmic glink altmode
-> > worker on the system_freezable_wq instead of the system_wq. This will
-> > result in the altmode worker not being scheduled to run until the
-> > devices are resumed first, which will give the controllers like I2C a
-> > chance to resume before the transfer is requested.
-> 
-> This is incomplete at best, even as a stop gap. I just threw a
-> dump_stack() in qmp_combo_typec_switch_set() and see that it is being
-> called four times (don't ask me why) from two different workers on
-> hotplug.
-
-Yes, that is expected. From the pmic glink altmode worker and then the
-ucsi worker (for the gpio based orientation).
-
-> 
-> Even if you use the freezable workqueue for altmode notifications, you
-> can still end up here via the ucsi notifications, and that now also
-> seems to generate a warning in the PM code during resume.
-> 
-> [   25.684039] Call trace:
-> [   25.686633]  show_stack+0x18/0x24 (C)
-> [   25.690492]  dump_stack_lvl+0xc0/0xd0
-> [   25.694350]  dump_stack+0x18/0x24
-> [   25.697851]  qmp_combo_typec_switch_set+0x28/0x210 [phy_qcom_qmp_combo]
-> [   25.704764]  typec_switch_set+0x58/0x90 [typec]
-> [   25.709525]  ps883x_sw_set+0x2c/0x98 [ps883x]
-> [   25.714092]  typec_switch_set+0x58/0x90 [typec]
-> [   25.718861]  typec_set_orientation+0x24/0x6c [typec]
-> [   25.724068]  pmic_glink_ucsi_connector_status+0x5c/0x88 [ucsi_glink]
-> [   25.730726]  ucsi_handle_connector_change+0xc4/0x448 [typec_ucsi]
-> [   25.737099]  process_one_work+0x20c/0x610
-> [   25.741322]  worker_thread+0x23c/0x378
-> [   25.745274]  kthread+0x124/0x128
-> [   25.748680]  ret_from_fork+0x10/0x20
-> [   25.753631] typec port4-partner: PM: parent port4 should not be sleeping
-
-Yes, totally missed this one. I guess in the end we could apply the same
-fix, considering the alternative of reworking the glink code now.
-
-Or I can just start reworking the glink code now but that is a broader
-effort since we will be trying to fix the unconditionally wake-up glink
-interrupts as well in one go. And will impact all platforms ...
-
-> 
-> When you first brought up the possible workaround of using a freezable
-> workqueue, I mistakenly thought this would apply to all glink messages
-> (I realise that would defeat the purpose of allowing some early
-> notifications).
-
-No, only the altmode worker. In fact, everything stays the same with
-respect to the other glink messages as we don't want to break other
-clients (hopefully Caleb and Bjorn can describe better the ones that
-they know about, IIRC, mobile platforms related).
-
-That was the whole point of doing the altmode only (for now).
-
-But now I'm not sure this is a good idea anymore, since we are starting
-to play wack-a-mole if we add ucsi to the list.
-
-> 
-> You've also found that the glink interrupts are waking up the system
-> unconditionally on battery notifications, which would be yet another
-> reason for disabling the interrupts (or implementing some kind of
-> masking).
-
-Yes, that is something that needs to be addressed. But IIUC it involves
-telling adsp to keep quiet about some notifications, which I don't know
-if it's possible and how should be done.
-
-For example, with some chargers, I do get "unknown notification: 0x283"
-from the pmic_glink.power-supply and it wakes up from suspend even.
-
-> 
-> I'm leaning towards just disabling the glink interrupts during suspend,
-> but that depends a bit on what (historical?) functionality actually need
-> them.
-
-So the disabling needs to be at least per platform if not per client (or
-even notification type). This is what the proper solution discussed with
-Bjorn off-list was, IIRC.
-
-> 
-> Johan
-
-Thanks for reviewing and reporting this new ucsi case.
-
-Abel
