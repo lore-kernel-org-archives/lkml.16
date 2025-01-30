@@ -1,112 +1,229 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87EC11DA5F;
-	Thu, 30 Jan 2025 16:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBC51DA5F;
+	Thu, 30 Jan 2025 16:12:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738253506; cv=none; b=KmB0yiz3ZfgJvYvtTxhZLpC63r3SxtxkmOF6d6g9kCr0Ukp0oX2PhqSBvCofsD6kJ0oWkdQaCF3DVISyhTgKSrH2RlTlhhomc4Fw82npK7SMOk8jHWxdrH/hU0hwq4dUz9fUF+ai2jeD5iMqiQzscjr5MMbUFJhkWl3CMsBWFBM=
+	t=1738253575; cv=none; b=ewBeEDaM2Lcxb8QItKLDKvTn7p2EwNyzCSThY6aKlBV1JAHeD7Z+FILOprX2bAeoMZBcYB4mqNUlJlDtIbAQWNfluhwLaGxiNBlHZPGKJtOqeaLNVLPOsEtRIDoVtQOO3BqhHBEEkICGRo4W1Pbyl9v2lm4GCAJNeUJtqL4gyAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738253506; c=relaxed/simple;
-	bh=wuudZ+Kk0FfZzmSB0ISGNWeut8WxUl/ah4/eXNRVmdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oGtdtEYUC20g3tSAh0iZG2rbxpzG8tABJqTZ/qoHVhSBVFXTknMKQYN1f4isEfmZmGYOicoclpt/9bfEFtmIDqUZGyhZQNg7pxcZYdApbQXuR7XoIHbZNbLoXl4W9m7yof9Lh11BLLbdyk3j2kkyMwQQlAyzdgrMWJ3wJsuMuyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=A0Y+oxR/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738253575; c=relaxed/simple;
+	bh=B0WiyP8kxOBx9oHNPc/Vy+XK0t+Gnb5cVEaSaHNC+IY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=YA938I7aG890FNzgLjv7ufaWDvDqhnOAQkmoz3KJWKIPkvcLNTrY6s8vYSDoBGgqo1NmsBW5Saxv8iFrYEy0uFYG/YQ5nV52rR084V1tx0Y3kFir4rDMwM7o4Sc8gmFBZ8sc/ivJDbROMoH4q2oKojCXMi38YZoYqGDVAGjdvOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B4zLAEby; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="A0Y+oxR/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 754A9C4CED2;
-	Thu, 30 Jan 2025 16:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738253506;
-	bh=wuudZ+Kk0FfZzmSB0ISGNWeut8WxUl/ah4/eXNRVmdc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A0Y+oxR/zZlo6DKq7jrn2mYqDOVlpPC8isqRZqAJ78Yh3N9a8NII3Dacy67zh/DyQ
-	 eHXxGw7ES7UfctDRiezRJLIVdw02VxYe8g7dreo9WRNS2c4/AV0Gh2lJS+OFzGhfPM
-	 E/XmeUIUW2i1QoG9FUY/TOtxt1bLpmiyJJmElA0E=
-Date: Thu, 30 Jan 2025 17:11:43 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: phasta@kernel.org, Christoph Hellwig <hch@lst.de>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	daniel.almeida@collabora.com, aliceryhl@google.com,
-	robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
-Message-ID: <2025013030-gummy-cosmic-7927@gregkh>
-References: <20250108151858.GB24499@lst.de>
- <Z36X_ZnCmBQBMoZ6@pollux>
- <20250109080812.GA20431@lst.de>
- <Z3-NqwAG_96yq8VD@pollux>
- <20250110083955.GA5395@lst.de>
- <Z4D5a5NYrAbNxUL6@pollux>
- <Z4kG5AcVeQKegLnb@pollux>
- <20250128092334.GA28548@lst.de>
- <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
- <20250130154646.GA2298732@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B4zLAEby"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28336C4CEE0;
+	Thu, 30 Jan 2025 16:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738253575;
+	bh=B0WiyP8kxOBx9oHNPc/Vy+XK0t+Gnb5cVEaSaHNC+IY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=B4zLAEbyaXFQ1A7gMx0FuLfBziPwEhReXIdTy6jtSQxG3Qw2dMzivdoBEdJKf8avM
+	 j+rSC1EvyRye4HdGOMgbYN1YmxYiCJZdvjveYk62oU748su8ncXGLjeTim5a7aXa7j
+	 oZFlQyPGujRZqkn2cy+BjlSzgaTrY0sg7o61d2IhrTOfbqvgy23SZMutw4cJEYUjaw
+	 2PjAfjSIPyWyAzGq+URH46wx1vfz6QJ2RhHaUO8ONHJfFT2qJ3cjEunGZmw2CMqCUk
+	 U8y/ho6GWuaC0KLWACPgcT5+mU6vw0mN6fJXhMhFPdfwrQe63o2qcB/QNZ/+U6XpKh
+	 V//HFpXVlZ0wA==
+Message-ID: <febb1225-3c14-4377-90e0-4d4aee307ede@kernel.org>
+Date: Thu, 30 Jan 2025 17:12:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130154646.GA2298732@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] i2c: tegra: Add support for SW mutex register
+To: Kartik Rajput <kkartik@nvidia.com>, akhilrajeev@nvidia.com,
+ andi.shyti@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
+ ldewangan@nvidia.com, digetx@gmail.com, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250130143424.52389-1-kkartik@nvidia.com>
+ <20250130143424.52389-5-kkartik@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20250130143424.52389-5-kkartik@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 30, 2025 at 11:46:46AM -0400, Jason Gunthorpe wrote:
-> On Thu, Jan 30, 2025 at 02:19:16PM +0100, Philipp Stanner wrote:
-> > would some sort of official statement by the "entire community"
-> > reassure you that the burden of keeping Rust abstractions working with
-> > any changes on the C side rests entirely on the Rust side's
-> > shoulders?
+On 30/01/2025 15:34, Kartik Rajput wrote:
+> From: Akhil R <akhilrajeev@nvidia.com>
 > 
-> You'd have to reconcile that with the recent event where Linus defered
-> the MM pull request and some C patches were dropped because of rust
-> kbuild bugs:
+> Add support for SW mutex register introduced in Tegra264 to provide
+> an option to share the interface between multiple firmwares and/or
+> VMs.
 > 
-> https://lore.kernel.org/linux-mm/CAHk-=whddBhfi5DUi370W3pYs+z3r2E7KYuHjwR=a1eRig5Gxg@mail.gmail.com/
+> However, the hardware does not ensure any protection based on the
+> values. The driver/firmware should honor the peer who already holds
+> the mutex.
 > 
-> It seems to me the message is now crystal clear, and the opposite of
-> what you claim.
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> Signed-off-by: Kartik Rajput <kkartik@nvidia.com>
+> ---
+> v1 -> v2:
+> 	* Fixed typos.
+> 	* Fix tegra_i2c_mutex_lock() logic.
+> 	* Add a timeout in tegra_i2c_mutex_lock() instead of polling for
+> 	  mutex indefinitely.
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 132 +++++++++++++++++++++++++++++----
+>  1 file changed, 117 insertions(+), 15 deletions(-)
 > 
-> All PRs to Linus must not break the rust build and the responsibilty
-> for that falls to all the maintainers. If the Rust team is not quick
-> enough to resolve any issues during the development window then
-> patches must be dropped before sending PRs, or Linus will refuse the
-> PR.
-> 
-> Effectively this seems to imply that patches changing some of the C
-> API cannot be merged by maintainers unless accompanied by matching
-> Rust hunks.
-> 
-> If there are different instructions to maintainers I would be
-> interested to know.
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index 7c8b76406e2e..aa92faa6f5cb 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -135,6 +135,14 @@
+>  #define I2C_MST_FIFO_STATUS_TX			GENMASK(23, 16)
+>  #define I2C_MST_FIFO_STATUS_RX			GENMASK(7, 0)
+>  
+> +#define I2C_SW_MUTEX				0x0ec
+> +#define I2C_SW_MUTEX_REQUEST			GENMASK(3, 0)
+> +#define I2C_SW_MUTEX_GRANT			GENMASK(7, 4)
+> +#define I2C_SW_MUTEX_ID				9
+> +
+> +/* SW mutex acquire timeout value in milliseconds. */
+> +#define I2C_SW_MUTEX_TIMEOUT			25
+> +
+>  /* configuration load timeout in microseconds */
+>  #define I2C_CONFIG_LOAD_TIMEOUT			1000000
+>  
+> @@ -203,6 +211,7 @@ enum msg_end_type {
+>   * @has_interface_timing_reg: Has interface timing register to program the tuned
+>   *		timing settings.
+>   * @has_hs_mode_support: Has support for high speed (HS) mode transfers.
+> + * @has_mutex: Has mutex register for mutual exclusion with other firmwares or VM.
+>   */
+>  struct tegra_i2c_hw_feature {
+>  	bool has_continue_xfer_support;
+> @@ -229,6 +238,7 @@ struct tegra_i2c_hw_feature {
+>  	u32 setup_hold_time_hs_mode;
+>  	bool has_interface_timing_reg;
+>  	bool has_hs_mode_support;
+> +	bool has_mutex;
+>  };
+>  
+>  /**
+> @@ -372,6 +382,103 @@ static void i2c_readsl(struct tegra_i2c_dev *i2c_dev, void *data,
+>  	readsl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
+>  }
+>  
+> +static int tegra_i2c_poll_register(struct tegra_i2c_dev *i2c_dev,
+> +				   u32 reg, u32 mask, u32 delay_us,
+> +				   u32 timeout_us)
+> +{
+> +	void __iomem *addr = i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg);
+> +	u32 val;
+> +
+> +	if (!i2c_dev->atomic_mode)
+> +		return readl_relaxed_poll_timeout(addr, val, !(val & mask),
+> +						  delay_us, timeout_us);
+> +
+> +	return readl_relaxed_poll_timeout_atomic(addr, val, !(val & mask),
+> +						 delay_us, timeout_us);
+> +}
+> +
+> +static int tegra_i2c_mutex_trylock(struct tegra_i2c_dev *i2c_dev)
+> +{
+> +	u32 val, id;
+> +
+> +	val = i2c_readl(i2c_dev, I2C_SW_MUTEX);
+> +	id = FIELD_GET(I2C_SW_MUTEX_GRANT, val);
+> +	if (id != 0 && id != I2C_SW_MUTEX_ID)
+> +		return 0;
+> +
+> +	val = FIELD_PREP(I2C_SW_MUTEX_REQUEST, I2C_SW_MUTEX_ID);
+> +	i2c_writel(i2c_dev, val, I2C_SW_MUTEX);
 
-That's not the case, the one you point at above was a tooling issue that
-people missed due to the holidays.  Fixing it up was simple enough and
-people did so and moved on.
+And how do you exactly prevent concurrent, overwriting write? This looks
+like pure race.
 
-Once a core api changes in a tree and it hits linux-next and that blows
-up a rust build, obviously people should notice it then and the rust
-maintainers/developers have said they will fix it up.
+> +
+> +	val = i2c_readl(i2c_dev, I2C_SW_MUTEX);
+> +	id = FIELD_GET(I2C_SW_MUTEX_GRANT, val);
+> +
+> +	if (id != I2C_SW_MUTEX_ID)
+> +		return 0;
+> +
+> +	return 1;
+> +}
+> +
+> +static void tegra_i2c_mutex_lock(struct tegra_i2c_dev *i2c_dev)
+> +{
+> +	unsigned int num_retries = I2C_SW_MUTEX_TIMEOUT;
+> +
+> +	/* Poll until mutex is acquired or timeout. */
+> +	while (--num_retries && !tegra_i2c_mutex_trylock(i2c_dev))
+> +		usleep_range(1000, 2000);
+> +
+> +	WARN_ON(!num_retries);
 
-So the claim remains the same here.  It's just like staging, api changes
-to subsystems are allowed to break staging, and rust code, and
-maintainers do NOT have to fix them up there, that's up to the staging
-and rust maintainers/developers to do so.
 
-thanks,
+Blocked thread is not a reason to reboot entire system (see panic on
+warn). Drop or change to some dev_warn.
 
-greg k-h
+
+> +}
+> +
+> +static void tegra_i2c_mutex_unlock(struct tegra_i2c_dev *i2c_dev)
+> +{
+> +	u32 val, id;
+> +
+> +	val = i2c_readl(i2c_dev, I2C_SW_MUTEX);
+> +	id = FIELD_GET(I2C_SW_MUTEX_GRANT, val);
+> +
+> +	if (WARN_ON(id != I2C_SW_MUTEX_ID))
+
+Same problem here.
+
+
+
+Best regards,
+Krzysztof
