@@ -1,465 +1,190 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2054.outbound.protection.outlook.com [40.107.244.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CEE183CBB;
-	Thu, 30 Jan 2025 05:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738216670; cv=fail; b=buenAq07E24fA9/ylEmug0giLVNwfZinGDOz0hooSDAkiEvUiGDRAVpW5MlScPwVzY953Ia/iVzE5eTgIuNsGftptQt1NwLMG+eEOOOIdIBLejzwtpzY3J9bO31IkWNwT5Rzt5PwxWRFKN6lxmg22CqQfkXt257BIt7OOZHLYFw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738216670; c=relaxed/simple;
-	bh=DVjzbX9IUXDirnI90NYjzinoc6sxBInwggfKDvWFzw8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=iGMjwBRYTXl4ifA1a/fxP0Xsy4h82yTRz6iiLZ9Xo2VAIsnH5IpOBDaSsEULCDQ6b/Dq078OogzO85ZalLfQis0qmX7Pc2uM8MtRn606yuOf61phxsY3B2xg/l6stsWzT8j8MSbmfcp+8uDJMGe7lX2QHZjjjYjApJxVEVi7m/U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fIkKYz8j; arc=fail smtp.client-ip=40.107.244.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F87614A4C6
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738216998; cv=none; b=tk8sVBEPfXBJzdGcUm+vi8RU5kbBVNkHKvR/0hIxj7meuXMdR3rgU1wOa21qyKmgCtr1rqyFvHWTt/Wze+pPJVZD9l82uE0GRtXUZFrxzm6ta7PIw+e+2mBiN8UrsJAzHN2qpnqh49eA8HlRs8VlmJtXxlBL9p1wUM1euO8tBHM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738216998; c=relaxed/simple;
+	bh=oWGw9zHIGHKeMe5UKOq/ra6FucSB6XTYH8/uPHPEy7U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JicroQCJdiqaOKVQlZVTk+GKS7bquncUbzJFKA9uRWirH0NRS4zrJBhbikkaytuqZhlC/f9a5MmDWj7b2fs3KaG45IBLCATdH/NERJuxP+54OZYGAQXp8ZamG1rZ/kULSeKlB0nENYSBE/jtPluf3/NNFXeRo0DCCT4Y+k/JRA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hoiodxtz; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fIkKYz8j"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RIwRcZoZxRXSGMO2FVMB+JrfdVgg20Hg//93zoFGhSHwVd+UsM5aRPA8dVISO996zfgpT7GDYg/cZV2R1pPLjHaPgQDbBvixB4b77IjoBuI1dWDnr4/P+QoMiDTNellL9sQOEXeIhGmvazsm0v5mnarSIrAbU30f1hjAhJfDq93Lsl8sZW0COM1kzFUd1DAdFqv1D1FS/+cbRC61UmXtWOmDS8pLSW14uIX9m6FGqNUs1C5uwcLHzceZzmyACf5hXSImQ10jPWwYmMf+Vxx4lEhp/FBpghSbHRSH5vYMIuWU5dO2UGal776CCrrLvt9eeJOffm7HAgeltScz6phZ+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X5IvnWBKUY28sduoPE9X1UdM49yGMTHK2Yl2vJWmXgI=;
- b=aK7nftN2oDvR537vCCVgKyf5oFcqU3wobfhG9FY3+sMNOa743K81Fl64DzoEyxM1myuFcbUn3sMta+KXAUJuFOtPMVCsIOzcSYSRbhWg8Wk/Ks1tnDefHmj/l869XHS3gQNLZmdDhU9TmCiQOx6QLfSM7nAoCApScpbhWQFxRMd+3xdmHlgJQgLH/zCYvjzAduQsxAgb63h1xqrg4Y1pTuPibVqjGjxyAgPBE+rah+N/fSLtcQMEB9yj6U0kcOhNDXy+YvrYfBxSOcCw57sk85RR/AKgnfe4JlVkRI0R4Jbx7CVI5bjmuUdWd53tyaP9Npy4e5cSXO779hdWdGX6mw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X5IvnWBKUY28sduoPE9X1UdM49yGMTHK2Yl2vJWmXgI=;
- b=fIkKYz8j1Kd8fB0lGFJJNBywGuklNEeQKZNf0+vYahCdkEWsB6XkSi9Z1aPoCSvBQs9ZJQeWCAdRelwIn9slgxwr2Jl1xyRqQgdFJ5++iYEcagszh3vqL7SOVBk/Szsm6xpDzMfhVYptARfJxEdH9zTo/PHMsf3E+8p06ieJYhLS41VvVOCA5mKKMER5f89KnqDWKfIUx+UahWasVOTvsUqT8jmM0ELUJG7YlnDWnREwLH3ZqfJoDSpVagLJSOJA/m3A2elbavQZaEfCt4JlAxuPF1k2/7OPrs9VhCd/lF/d4zXawoJhj5Cm+IH36BHZonbOCMf/sj36pWcBRPoMig==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- MN0PR12MB6055.namprd12.prod.outlook.com (2603:10b6:208:3cd::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Thu, 30 Jan
- 2025 05:57:43 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8398.017; Thu, 30 Jan 2025
- 05:57:43 +0000
-Date: Thu, 30 Jan 2025 16:57:39 +1100
-From: Alistair Popple <apopple@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-mm@kvack.org, nouveau@lists.freedesktop.org, 
-	Andrew Morton <akpm@linux-foundation.org>, =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
-	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v1 03/12] mm/rmap: convert make_device_exclusive_range()
- to make_device_exclusive()
-Message-ID: <b3stuhf2s6236zawaa6zt6x3fg6oamrtj3pwajlyoxlaxdmdtf@arqxcoemsjfg>
-References: <20250129115411.2077152-1-david@redhat.com>
- <20250129115411.2077152-4-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250129115411.2077152-4-david@redhat.com>
-X-ClientProxiedBy: SY5P282CA0166.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:24a::14) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hoiodxtz"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so97665ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 22:03:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738216995; x=1738821795; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K2Q6UcIc4PGXAsHOkvLpiqRFBRRcsEgb9coO2t90kXo=;
+        b=HoiodxtzK3vEdtiFD77wegRTEUk5RXzvce2GG0hNYRnf3V81BvnVL3vx1TZKbfrV5V
+         RnnRBqr0SkmQrGjeW6tfogBqae6cbqkmuW7q1IWlGRdHEJWSEAM7HYRh24IObbpfkNsM
+         O8teUfveknrUaK7SpUG2rbq7ha7CKI8+huVnMJnyUgrPCYLn8nXxLFuddXSWhETyDcFF
+         tgWHUvX6tom8Dy1LrHnDglSBsh2DGRgkHCobR6caIwzBLLUwfkuwa7VPfIYMC/TwUTnJ
+         vdguLbXWW5T5fg0aKFQOEppUWfLzKVkTCkPkrTZsVhe4Ut38OannmN9iWiv1plZ+Qe37
+         xNZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738216995; x=1738821795;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K2Q6UcIc4PGXAsHOkvLpiqRFBRRcsEgb9coO2t90kXo=;
+        b=xJcbooOxzc5mWZXqW3DZoS9X1kQfHOTBAga9lHhQWknVLvbpHbTofeWZQtYAuIXAQg
+         lxJj/BbqV6z5f6KcBn472L8UH9oY9KAdwlqDHuqDOo80LJGGW+rOUavHjfmfhLo2HkgN
+         LHUGmEYQh0XIQ8VVEUd15Fxs2ah78pR9gbOnfW+3iot8oUEGcTWOs0LPGiHsM5kFpypA
+         rwkOIHg75c1TujiTNmn8vicyncQB8jz/yHrkq9sITXtvALA5KqNW40E9Ea1/ILg4R3yO
+         zobBG/p1kgctq+wDtJ388Ncef0TN2vV1t7QmsUMRzQRVyo9w48ehRfJdkf6sLzr5WWTy
+         xetA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjXni8/8Bll0/Udir8lHR7mpKVjNOCZKUvZTtUX4flIwZJfzsiqz/fw7ugRwR9UFiuYD9ipEe3oj6bGBY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBIFNkZti7fx5vc2YtFm410xaZ1NuoudZVCZxfcYr1+0yXhJrN
+	5xFJIgxPdJjs2KN25z5nXC6Gm3CfZAfaMjKD7hSpQ7zJ58UE3LFph6ND3BfksLq5OBAOMDqPVRs
+	0vKM+2Lp519xLINPzdGDvM8sMmXae9KsowRFc
+X-Gm-Gg: ASbGnctvnxXmfyq/62s+HS1cNohFnJAvmpJ+ZwXaZWSqL+rZIy5DmCcAZI3U1UiXD9v
+	t2ahB/e0ZUtmMu5RiKPT+dY5rnJ+nAN9O/7QBnjCpCHJclW7RMKZbr8Z9Zv8Or2jqLyAYFYa7jw
+	==
+X-Google-Smtp-Source: AGHT+IFHzVhMXvUnn9VwRutFPGkQv1pkOqgyHubMbKWWcsDCfVwiS1XBYCxqWpL1TyAKTQZ8GVoXBMEXCjw+qobWal8=
+X-Received: by 2002:a05:6e02:144e:b0:3a7:e301:a1f2 with SMTP id
+ e9e14a558f8ab-3d00a937f4amr1330055ab.15.1738216995337; Wed, 29 Jan 2025
+ 22:03:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|MN0PR12MB6055:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0e83c001-4951-4561-d4bd-08dd40f3033b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007|27256017;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TzdSR1V6Tk5vVVVkT0hMalZXRUR1Sm9yQjN4M2NCTDljQ081RzNITlhpTmtu?=
- =?utf-8?B?Ky9KSlpPKzdWeGVZd05PMjlsSkhPT21OamlwQlhnT1JjUWlDSS9hbnoxUk5C?=
- =?utf-8?B?Z0hsNkpkNWt1U01hcFJGOGpGVzJySjhwRnhRMjhBWEYxSFF2cHNPOHAxSWdw?=
- =?utf-8?B?RWpKL3JKMVlKYmJvekRZR2hSUE0vN3hRblpPUktHT2liY1JhS0xqOFdCOHZs?=
- =?utf-8?B?V2UxWmdKbS90T3hFdEMxWVEzNHFxRVBHQWh1d0Vlb0IwTXlSMjIxNGtIZ0c1?=
- =?utf-8?B?Mm53b1A3UU9BYlRCMzRDWnY0NlRIU1dvcXhMVnhCQjd2N1g2YTJHRURYejAz?=
- =?utf-8?B?RlpRSU14aTRoRTFuZEZYVVhEWXcycVoyOXllNExCWlJpQUNqdkVycVBEM2ZR?=
- =?utf-8?B?MzZhVlJPMGhvRWU5bTQ2aVB4SjhNWGVKN1BRZ2hTMW56V2phS1RDVzBxRndt?=
- =?utf-8?B?OEg3R1d6dnBaSnRkOHRhNzg2SnFxbktELzd6eWJKM0VmRUhyTjFjVnRFd3c5?=
- =?utf-8?B?OFJxM1VKMzlHQlBKY1AxSWNsNVRTWjZjclh3NWY5NmVOZVZidVplenVRQkFy?=
- =?utf-8?B?b0RKSGJZZUc4ODk5eWVXazlNZDdkZnNsUllob3lGQnU5dUtMWWxPZTBQSTZP?=
- =?utf-8?B?UDIxcElNN0RqWkVXdjZydHZGTDVGTmZJR3Bra1M3STRUMERqR3VRb1NtZzVS?=
- =?utf-8?B?UGg5Z0dZTXZCVXRrM3JkazRvWTNkZTFIWk96eDZWOU8wc09aVDlydjVaS01Z?=
- =?utf-8?B?UkR6dFN5WCtMNXhCOVFBeXQ0RHJqVDQ2Y3c3UkF0OXFFUWFqVmdZckkrdjV4?=
- =?utf-8?B?VHo2a0I1bDFCeGI5K2s1R3pxWklBa0FmOW4zRElCZ1RjQUVma3c5eFlJaFkz?=
- =?utf-8?B?SjRacWY1ZkFuT3M5QU1xSW0wa01WMlJINE0wY2h1cnM2VFR6bzhRandLeVV5?=
- =?utf-8?B?N3lpUytsM2VlOFBHL01qVmJOWE1jdTF4S29KZnl6RUROQmRsdUF5ZitWaGQv?=
- =?utf-8?B?VWR0MFhwQWF5SUhyQ3hhcGJvK282L3A0a0lwSVEvbFBxcUNxWTE4R1BoU0I4?=
- =?utf-8?B?dFROWWpyVUhDNHpmOVZCc2VKTldWQ3hCRVFtZHVLM3BNU3lWUU5yNml6QVlW?=
- =?utf-8?B?cjdYZXdQQjlhZml3STlWUzFtcmRLdGVydHZHcGZhMnlzNlhyYU52QjZjay9k?=
- =?utf-8?B?d0kxSlZjVlVuUk02SXQ4UFhjUkVBSm90eUpFdHN6Y1JCV3UxUlBlSTFtVjNT?=
- =?utf-8?B?Nkk5a2NLWGwvRVFsTlN4VU50L3ppdW1GNHNDa3ovb2dwVmt6SnRMU2gybjBZ?=
- =?utf-8?B?Q1VoSjd1NjJITS9WMHpVMjhDT1pkayswVUJuakJnRDV5M1BrTDdPVmY0RDlF?=
- =?utf-8?B?KzBZdDEvb1ZuQXhGd0d3eFlLNEd5OVFiRDRXR1NNaFByY1BvYk9RVUtBWmFI?=
- =?utf-8?B?S1JFc1hQcFl4Wm5BRUNTZ01RaUlWZGJZZHMzRVI5YmlWSE8xK3MwWTNsd0Rn?=
- =?utf-8?B?WlVRUXFKVDQwRzdMRUh5TFhueUxMOU0rWVFmSXYxdTJ6aE1ic2NjUVp2Y3Nj?=
- =?utf-8?B?MlM2YjdUdzVGNDVNUVovdFhPS1I3Zys0NjFEUW5jdkNTcEZUc1EzR1o2MGl0?=
- =?utf-8?B?ajlDZkRDUVF4dDhneFZtK2I0a01Fb2xUN0JWY3NLeDRGandmbTMyN1E5OXpv?=
- =?utf-8?B?SlVXYWJQNHVqcWswemlBcVBnVVVkbFhBa2E2L2VTMEdBdDFia3E3bGZQN2Ew?=
- =?utf-8?B?NVkrUDZ2bXYxdXJPWXJlSUN2UXdRWitUYmZ0ZjM1N2lZeHFDalJ6QzB4clAx?=
- =?utf-8?B?ZUhVR1pVNkFUdGppQWk0U1BWdy9BekxmQnB3Zko5cEFuNDhTQldoTTU2OE9w?=
- =?utf-8?B?MUZEM0tscW9IMVFvM0RDM0pDNVgzRnpYUTRiRmI1R25wcCs1cStsMjR6YlpT?=
- =?utf-8?Q?beWzcXOEAzu9x0Z5i/deTcXcFl/726Dq?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007)(27256017);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aC9lSUdEUFB4S3FVTjhlM1BKTDA2YlJOdG5Lc3hSelRGbG9Razd4YTdUbVNs?=
- =?utf-8?B?bzhZVWhhMERmZ2Z3Nm5WRGo3NWhGRnJDdlozYml1NUxzVzllWWZTSmR0eDZB?=
- =?utf-8?B?ZXByTW1aTjJ6V2ZZY0Y2bWR5VnZpQUtoWVFuOGtyNHhXdWtEeklpSGthQTB4?=
- =?utf-8?B?R1dWZTZMN0laQ2tEaWVidlRaQUNmUzFVU2dla1dHMVVHczhJNU51NmJKKysy?=
- =?utf-8?B?bFJXS1BIWEhtNFJiZ0JBQTVtRFNmWTJoQ29GckdGRStCQ1hGNTdVb2lkaDJS?=
- =?utf-8?B?MkpFMlpyWjdxaE9WVkQ1bitrcXRLaWpOWGJPVGtPbTJPdVJUSWhVUGY5Y3Yw?=
- =?utf-8?B?V2JPbFNOdE5QaWM0bmh5NTMvOTdtVGEwR3dKVlJhWS9yWllsRFhSNUQzMjhV?=
- =?utf-8?B?OUxiWG02bmRjN0Q0SklXNU5kVHJJWnBPbkJTTUFvazF4eHdGTUVMcWYreU12?=
- =?utf-8?B?UVNCNHN1cVN3ZnhkaUxqb1VnT21TREhKTENQbVMvT0FUdEhZZ0p5ZGhqNy96?=
- =?utf-8?B?ODBaOVBWbkFCWWZEZ1FnR3pHWHp5T1JkaURTQ3dOdFVLclJmMWFlaFNSZWF6?=
- =?utf-8?B?NElBV2NrR2dteDh0WkRZSXFBU0I0enFQd0NmODQ5Z1BseTlNZGhwWUJ4czJU?=
- =?utf-8?B?c2ZlNXBpeFB3R0VDMWdaUFlEZzEyQjVZWXV5Y29jdGpkdG83YWROQ0x5bWJj?=
- =?utf-8?B?ZE5zQkIxUU9maWd2ZWpzRlBGa3YyTnVqbzhyMW1uRnZTTG4ydjFnV1grMldC?=
- =?utf-8?B?ZEtHelZCWFNyMlZjQWlGNlBiZEVzU000ZEg5TEZqMXlka3RkR3pDaTNndlVB?=
- =?utf-8?B?MVBqVjZTM1F2UnlQRmRzbWZzMzlTK3Rkdk1qZ0MrZVNvS2M5MDAvQ3lLNEZK?=
- =?utf-8?B?Sm5mdWtVWU0xSVBqbi92c0hUTUk5dDk2SzhmQnRxVHM2WUplN2ttRmo5Mkl5?=
- =?utf-8?B?c2pjTnRHeEgvbHQyK0MvUVI5NitabFF2WDV3K2dTQ250N1QxWnUzVmVkbDIy?=
- =?utf-8?B?RE1ROU9SbXZOLzBVczlwdHVUcngrYVA4VUs2c29rVFZlUGlTYncrMHZ5a1Iy?=
- =?utf-8?B?TTNmSjM2NWQ3MGlaMzRXcXYzRDQwM1FFMmp2USt1Qk8vTjVQbWVaeFpscFJC?=
- =?utf-8?B?Nk5JanNUcVAzSWlFVjg3dXk5eTlhc1k0SXRKTXBWZ1paR05jVVJmcVNyVHY0?=
- =?utf-8?B?eDNPYWljMGI2SG9aZEFvaDNvVUVsVVZmSmhCS1ZUeXdjVDRFT0hoSTkrbS9v?=
- =?utf-8?B?ZUtPc0d4cVdXWDE3VmpQMEUvMDIzVllxclU5bGJyWU9DRVFldWNmbGlPMlhw?=
- =?utf-8?B?TXRzZDFZUC8xa0gxejRacXBBa1ZqVElpeTJzdGdzQnlzMDdTdTZpZ1lIQU9Z?=
- =?utf-8?B?WFU4N1FtdVF4MmxJTloveGdkV1dKb0tDS2hVSVZsdjY0dVkvN25idERGcVIw?=
- =?utf-8?B?a2NzMEwremRxQ20vL2FOUjZBUTBGV0tqOGMzbFF3QlpPcTM5T096VFRRQVk3?=
- =?utf-8?B?STVLcHhla3g2VDR0T1MxYk9qZXZ2dGdPdlNPdzRxUHNJVGFUdHpUOHY3eFB3?=
- =?utf-8?B?S1JqUEhSMHpqN3lsUllUSjNJRXNMU2NWdmV2OGVwcTh6Ymw0c0txdjUzUElZ?=
- =?utf-8?B?dDNoOTFkMmlFemRVOXZHNnVBOXJ0SkhJTWRhQzRROE1TOFk3L1loZnNMSmNZ?=
- =?utf-8?B?Ymk0ZlZNZks1VzQzbUQ0dHpFRXQrMkt4b05YV2lmN1p3ZER1OGhZd213dVRW?=
- =?utf-8?B?WXE2OTBhWEMrd2VnblNmcS96MzZRWUhUZ084MC9HeDZoNG9lVCtTeTBzM2FZ?=
- =?utf-8?B?bHlSanNKRVBCYUM5eDJZVXRJS01sRW1QYjdKZUUxYWswWlZnb0xTUERtY1Yx?=
- =?utf-8?B?dzZZM2hwZjI1TDNEWVhyU0ovR3Jnb2RVMWxydWR2NWpQZnZoWDI1SDc1OHZl?=
- =?utf-8?B?RHFHSERtREN2VWhkcG5MaGdTR1NudUhHdnhiWVVZeFhPcU03UHpIa0VmZDdx?=
- =?utf-8?B?NUdCd3dXNHJsNk5OOE1QQWFKR3hLSFJ4QWNyNkt0cHo5TXpiL3FxM0JEa1Qr?=
- =?utf-8?B?azZ3WGNqazAzNld4L1R2UVR3SFRHUy9qVVFQUEZuK1VEbGdaUHdpSmg4bHhp?=
- =?utf-8?Q?NAqa/sbEXFWakYeBLu0LhWB4U?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e83c001-4951-4561-d4bd-08dd40f3033b
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 05:57:43.3555
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eR7gwLyA+07plTE3HXeMZlyUZxwGFbHvk7tbXeJhFv0Xl3LH3mElkZrIcHVqs2N3KRSdMCT6yAff+4K6HBhTjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6055
+References: <20250109222109.567031-5-irogers@google.com> <Z4F3qxFaYnMTtPw7@google.com>
+ <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
+ <Z4WNT_UX9eMD_txf@google.com> <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
+ <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
+ <Z4f3fDXemAMpBNMS@google.com> <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
+ <Z5qjwRG5jX9zAGtf@google.com> <CAP-5=fV4Q-J+Coybk5Uw=Xpx9sm5MG=2b-fvRLX14K+ZJcmz5Q@mail.gmail.com>
+ <Z5sLIiU7D6GwpWY1@google.com>
+In-Reply-To: <Z5sLIiU7D6GwpWY1@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 29 Jan 2025 22:03:03 -0800
+X-Gm-Features: AWEUYZl872MFdgcO8clNe045ru989pjy5VODtjPfzJKZqjiort1kw_xtslpQuuA
+Message-ID: <CAP-5=fXHuR37Q-1qhZx_wLeSTh6k-T1DrV0EquDuLEpwnHa21A@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, 
+	Atish Patra <atishp@rivosinc.com>, Leo Yan <leo.yan@arm.com>, 
+	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 29, 2025 at 12:54:01PM +0100, David Hildenbrand wrote:
-> The single "real" user in the tree of make_device_exclusive_range() always
-> requests making only a single address exclusive. The current implementation
-> is hard to fix for properly supporting anonymous THP / large folios and
-> for avoiding messing with rmap walks in weird ways.
-> 
-> So let's always process a single address/page and return folio + page to
-> minimize page -> folio lookups. This is a preparation for further
-> changes.
-> 
-> Reject any non-anonymous or hugetlb folios early, directly after GUP.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  Documentation/mm/hmm.rst                    |  2 +-
->  Documentation/translations/zh_CN/mm/hmm.rst |  2 +-
->  drivers/gpu/drm/nouveau/nouveau_svm.c       |  5 +-
->  include/linux/mmu_notifier.h                |  2 +-
->  include/linux/rmap.h                        |  5 +-
->  lib/test_hmm.c                              | 45 +++++------
->  mm/rmap.c                                   | 90 +++++++++++----------
->  7 files changed, 75 insertions(+), 76 deletions(-)
-> 
-> diff --git a/Documentation/mm/hmm.rst b/Documentation/mm/hmm.rst
-> index f6d53c37a2ca..7d61b7a8b65b 100644
-> --- a/Documentation/mm/hmm.rst
-> +++ b/Documentation/mm/hmm.rst
-> @@ -400,7 +400,7 @@ Exclusive access memory
->  Some devices have features such as atomic PTE bits that can be used to implement
->  atomic access to system memory. To support atomic operations to a shared virtual
->  memory page such a device needs access to that page which is exclusive of any
-> -userspace access from the CPU. The ``make_device_exclusive_range()`` function
-> +userspace access from the CPU. The ``make_device_exclusive()`` function
->  can be used to make a memory range inaccessible from userspace.
->  
->  This replaces all mappings for pages in the given range with special swap
-> diff --git a/Documentation/translations/zh_CN/mm/hmm.rst b/Documentation/translations/zh_CN/mm/hmm.rst
-> index 0669f947d0bc..22c210f4e94f 100644
-> --- a/Documentation/translations/zh_CN/mm/hmm.rst
-> +++ b/Documentation/translations/zh_CN/mm/hmm.rst
-> @@ -326,7 +326,7 @@ devm_memunmap_pages() 和 devm_release_mem_region() 当资源可以绑定到 ``s
->  
->  一些设备具有诸如原子PTE位的功能，可以用来实现对系统内存的原子访问。为了支持对一
->  个共享的虚拟内存页的原子操作，这样的设备需要对该页的访问是排他的，而不是来自CPU
-> -的任何用户空间访问。  ``make_device_exclusive_range()`` 函数可以用来使一
-> +的任何用户空间访问。  ``make_device_exclusive()`` 函数可以用来使一
->  个内存范围不能从用户空间访问。
->  
->  这将用特殊的交换条目替换给定范围内的所有页的映射。任何试图访问交换条目的行为都会
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-> index b4da82ddbb6b..39e3740980bb 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-> @@ -609,10 +609,9 @@ static int nouveau_atomic_range_fault(struct nouveau_svmm *svmm,
->  
->  		notifier_seq = mmu_interval_read_begin(&notifier->notifier);
->  		mmap_read_lock(mm);
-> -		ret = make_device_exclusive_range(mm, start, start + PAGE_SIZE,
-> -					    &page, drm->dev);
-> +		page = make_device_exclusive(mm, start, drm->dev, &folio);
->  		mmap_read_unlock(mm);
-> -		if (ret <= 0 || !page) {
-> +		if (IS_ERR(page)) {
->  			ret = -EINVAL;
->  			goto out;
->  		}
-> diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
-> index e2dd57ca368b..d4e714661826 100644
-> --- a/include/linux/mmu_notifier.h
-> +++ b/include/linux/mmu_notifier.h
-> @@ -46,7 +46,7 @@ struct mmu_interval_notifier;
->   * @MMU_NOTIFY_EXCLUSIVE: to signal a device driver that the device will no
->   * longer have exclusive access to the page. When sent during creation of an
->   * exclusive range the owner will be initialised to the value provided by the
-> - * caller of make_device_exclusive_range(), otherwise the owner will be NULL.
-> + * caller of make_device_exclusive(), otherwise the owner will be NULL.
->   */
->  enum mmu_notifier_event {
->  	MMU_NOTIFY_UNMAP = 0,
-> diff --git a/include/linux/rmap.h b/include/linux/rmap.h
-> index 683a04088f3f..86425d42c1a9 100644
-> --- a/include/linux/rmap.h
-> +++ b/include/linux/rmap.h
-> @@ -663,9 +663,8 @@ int folio_referenced(struct folio *, int is_locked,
->  void try_to_migrate(struct folio *folio, enum ttu_flags flags);
->  void try_to_unmap(struct folio *, enum ttu_flags flags);
->  
-> -int make_device_exclusive_range(struct mm_struct *mm, unsigned long start,
-> -				unsigned long end, struct page **pages,
-> -				void *arg);
-> +struct page *make_device_exclusive(struct mm_struct *mm, unsigned long addr,
-> +		void *owner, struct folio **foliop);
->  
->  /* Avoid racy checks */
->  #define PVMW_SYNC		(1 << 0)
-> diff --git a/lib/test_hmm.c b/lib/test_hmm.c
-> index 056f2e411d7b..9e1b07a227a3 100644
-> --- a/lib/test_hmm.c
-> +++ b/lib/test_hmm.c
-> @@ -780,10 +780,8 @@ static int dmirror_exclusive(struct dmirror *dmirror,
->  	unsigned long start, end, addr;
->  	unsigned long size = cmd->npages << PAGE_SHIFT;
->  	struct mm_struct *mm = dmirror->notifier.mm;
-> -	struct page *pages[64];
->  	struct dmirror_bounce bounce;
-> -	unsigned long next;
-> -	int ret;
-> +	int ret = 0;
->  
->  	start = cmd->addr;
->  	end = start + size;
-> @@ -795,36 +793,31 @@ static int dmirror_exclusive(struct dmirror *dmirror,
->  		return -EINVAL;
->  
->  	mmap_read_lock(mm);
-> -	for (addr = start; addr < end; addr = next) {
-> -		unsigned long mapped = 0;
-> -		int i;
-> -
-> -		next = min(end, addr + (ARRAY_SIZE(pages) << PAGE_SHIFT));
-> +	for (addr = start; addr < end; addr += PAGE_SIZE) {
-> +		struct folio *folio;
-> +		struct page *page;
->  
-> -		ret = make_device_exclusive_range(mm, addr, next, pages, NULL);
-> -		/*
-> -		 * Do dmirror_atomic_map() iff all pages are marked for
-> -		 * exclusive access to avoid accessing uninitialized
-> -		 * fields of pages.
-> -		 */
-> -		if (ret == (next - addr) >> PAGE_SHIFT)
-> -			mapped = dmirror_atomic_map(addr, next, pages, dmirror);
-> -		for (i = 0; i < ret; i++) {
-> -			if (pages[i]) {
-> -				unlock_page(pages[i]);
-> -				put_page(pages[i]);
-> -			}
-> +		page = make_device_exclusive(mm, addr, &folio, NULL);
-> +		if (IS_ERR(page)) {
-> +			ret = PTR_ERR(page);
-> +			break;
->  		}
->  
-> -		if (addr + (mapped << PAGE_SHIFT) < next) {
-> -			mmap_read_unlock(mm);
-> -			mmput(mm);
-> -			return -EBUSY;
-> -		}
-> +		ret = dmirror_atomic_map(addr, addr + PAGE_SIZE, &page, dmirror);
-> +		if (!ret)
-> +			ret = -EBUSY;
-> +		folio_unlock(folio);
-> +		folio_put(folio);
-> +
-> +		if (ret)
-> +			break;
->  	}
->  	mmap_read_unlock(mm);
->  	mmput(mm);
->  
-> +	if (ret)
-> +		return -EBUSY;
-> +
->  	/* Return the migrated data for verification. */
->  	ret = dmirror_bounce_init(&bounce, start, size);
->  	if (ret)
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index 17fbfa61f7ef..676df4fba5b0 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -2495,70 +2495,78 @@ static bool folio_make_device_exclusive(struct folio *folio,
->  		.arg = &args,
->  	};
->  
-> -	/*
-> -	 * Restrict to anonymous folios for now to avoid potential writeback
-> -	 * issues.
-> -	 */
-> -	if (!folio_test_anon(folio) || folio_test_hugetlb(folio))
-> -		return false;
+On Wed, Jan 29, 2025 at 9:16=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Wed, Jan 29, 2025 at 05:16:58PM -0800, Ian Rogers wrote:
+> > On Wed, Jan 29, 2025 at 1:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > > On Wed, Jan 15, 2025 at 01:20:32PM -0800, Ian Rogers wrote:
+> > > > On Wed, Jan 15, 2025 at 9:59=E2=80=AFAM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > > I think the behavior should be:
+> > > > >
+> > > > >   cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > > >   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > > >   cpu_cycles -> no legacy -> sysfs or json
+> > > > >   cpu/cycles/ -> sysfs or json
+> > > > >   cpu/cpu-cycles/ -> sysfs or json
+> > > >
+> > > > So I disagree as if you add a PMU to an event name the encoding
+> > > > shouldn't change:
+> > > > 1) This historically was perf's behavior.
+> > >
+> > > Well.. I'm not sure about the history.  I believe the logic I said ab=
+ove
+> > > is the historic and (I think) right behavior.
+> >
+> > You're wrong as you are describing the behavior post:
+> > https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
+> > commit a24d9d9dc096fc0d0bd85302c9a4fe4fe3b1107b from Nov 2022, but
+> > somehow without legacy event fall backs which Intel added with a PMU
+> > for hybrid.
+> >
+> > The behavior in this patch series is best for RISC-V, presumably ARM
+> > (particularly for Apple M? CPUs), carries ARM and Intel's tags,
+> > implements the behavior Arnaldo asked for, and solves the
+> > inconsistency that I think is fundamentally wrong in the tool that PMU
+> > names shouldn't matter on an event name (an inconsistency my past
+> > fixes introduced). It is also part of solving other problems:
+> > https://lore.kernel.org/linux-perf-users/20250127-counter_delegation-v3=
+-0-64894d7e16d5@rivosinc.com/
+>
+> So you think the below behavior is preferred, right?
+>
+>   cycles -> cpu/cycles/ (or whatever PMU name) -> sysfs or json
+>
+> And there's no way to use legacy event encodings anymore?
 
-A bit of churn with the previous patch but I suppose it makes a stable backport
-of the previous patch easier. The rest looks good so:
+This is absolutely the right thing to do! If sysfs/json knows better
+than to allow a legacy event named cycles, advertises it, then perf
+should select it. Not doing this was the cause of the ARM Apple M?
+breakage - because their PMUs looked uncore before hybrid fixes and so
+weren't known previously to accept legacy events and always used the
+sysfs/json encodings in preference. Why would or not having the PMU in
+the event name imply a different and sometimes known broken encoding?
+And then in the perf stat uniquification we can rename the event to be
+the version with a different encoding. It is madness to me.
 
-Reviewed-by: Alistair Popple <apopple@nvidia.com>
+If a user wants to force a legacy event, even though most typically
+the driver is saying it knows better, they can use a raw event
+encoding or in the case of cycles its alias cpu-cycles. If there
+really is a use-case for using legacy encodings, we could introduce
+new legacy-cpu and legacy-cache PMUs that advertise the events, but
+then the wildcard behavior would be weird.
 
->  	rmap_walk(folio, &rwc);
->  
->  	return args.valid && !folio_mapcount(folio);
->  }
->  
->  /**
-> - * make_device_exclusive_range() - Mark a range for exclusive use by a device
-> + * make_device_exclusive() - Mark an address for exclusive use by a device
->   * @mm: mm_struct of associated target process
-> - * @start: start of the region to mark for exclusive device access
-> - * @end: end address of region
-> - * @pages: returns the pages which were successfully marked for exclusive access
-> + * @addr: the virtual address to mark for exclusive device access
->   * @owner: passed to MMU_NOTIFY_EXCLUSIVE range notifier to allow filtering
-> + * @foliop: folio pointer will be stored here on success.
-> + *
-> + * This function looks up the page mapped at the given address, grabs a
-> + * folio reference, locks the folio and replaces the PTE with special
-> + * device-exclusive non-swap entry, preventing userspace CPU access. The
-> + * function will return with the folio locked and referenced.
->   *
-> - * Returns: number of pages found in the range by GUP. A page is marked for
-> - * exclusive access only if the page pointer is non-NULL.
-> + * On fault these special device-exclusive entries are replaced with the
-> + * original PTE under folio lock, after calling MMU notifiers.
->   *
-> - * This function finds ptes mapping page(s) to the given address range, locks
-> - * them and replaces mappings with special swap entries preventing userspace CPU
-> - * access. On fault these entries are replaced with the original mapping after
-> - * calling MMU notifiers.
-> + * Only anonymous non-hugetlb folios are supported and the VMA must have
-> + * write permissions such that we can fault in the anonymous page writable
-> + * in order to mark it exclusive. The caller must hold the mmap_lock in read
-> + * mode.
->   *
->   * A driver using this to program access from a device must use a mmu notifier
->   * critical section to hold a device specific lock during programming. Once
->   * programming is complete it should drop the page lock and reference after
->   * which point CPU access to the page will revoke the exclusive access.
-> + *
-> + * Returns: pointer to mapped page on success, otherwise a negative error.
->   */
-> -int make_device_exclusive_range(struct mm_struct *mm, unsigned long start,
-> -				unsigned long end, struct page **pages,
-> -				void *owner)
-> +struct page *make_device_exclusive(struct mm_struct *mm, unsigned long addr,
-> +		void *owner, struct folio **foliop)
->  {
-> -	long npages = (end - start) >> PAGE_SHIFT;
-> -	long i;
-> +	struct folio *folio;
-> +	struct page *page;
-> +	long npages;
-> +
-> +	mmap_assert_locked(mm);
->  
-> -	npages = get_user_pages_remote(mm, start, npages,
-> +	/*
-> +	 * Fault in the page writable and try to lock it; note that if the
-> +	 * address would already be marked for exclusive use by the device,
-> +	 * the GUP call would undo that first by triggering a fault.
-> +	 */
-> +	npages = get_user_pages_remote(mm, addr, 1,
->  				       FOLL_GET | FOLL_WRITE | FOLL_SPLIT_PMD,
-> -				       pages, NULL);
-> -	if (npages < 0)
-> -		return npages;
-> -
-> -	for (i = 0; i < npages; i++, start += PAGE_SIZE) {
-> -		struct folio *folio = page_folio(pages[i]);
-> -		if (PageTail(pages[i]) || !folio_trylock(folio)) {
-> -			folio_put(folio);
-> -			pages[i] = NULL;
-> -			continue;
-> -		}
-> +				       &page, NULL);
-> +	if (npages != 1)
-> +		return ERR_PTR(npages);
-> +	folio = page_folio(page);
->  
-> -		if (!folio_make_device_exclusive(folio, mm, start, owner)) {
-> -			folio_unlock(folio);
-> -			folio_put(folio);
-> -			pages[i] = NULL;
-> -		}
-> +	if (!folio_test_anon(folio) || folio_test_hugetlb(folio)) {
-> +		folio_put(folio);
-> +		return ERR_PTR(-EOPNOTSUPP);
-> +	}
-> +
-> +	if (!folio_trylock(folio)) {
-> +		folio_put(folio);
-> +		return ERR_PTR(-EBUSY);
->  	}
->  
-> -	return npages;
-> +	if (!folio_make_device_exclusive(folio, mm, addr, owner)) {
-> +		folio_unlock(folio);
-> +		folio_put(folio);
-> +		return ERR_PTR(-EBUSY);
-> +	}
-> +	*foliop = folio;
-> +	return page;
->  }
-> -EXPORT_SYMBOL_GPL(make_device_exclusive_range);
-> +EXPORT_SYMBOL_GPL(make_device_exclusive);
->  #endif
->  
->  void __put_anon_vma(struct anon_vma *anon_vma)
-> -- 
-> 2.48.1
-> 
+To be clear, I do not know of a single use-case where the legacy
+encodings are actually wanted when sysfs/json have an encoding. The
+opposite is very much true, that legacy encodings are not wanted -
+hence wanting the lowering of their priority everywhere originally by
+ARM to fix Apple M? and then by RISC-V.
+
+> >
+> > You've not pointed at anything wrong in the scheme that these patches
+> > introduce, and are supported by vendors, except that it is a behavior
+> > change. I can, and have, pointed at many issues with your proposal
+> > above and the current behavior. The behavior change came about to work
+> > around PMU bugs over 2 years ago but only partially did so. It makes
+> > sense to remedy this and for the clean, consistent behavior this
+> > series achieves. It is unfortunate that it is a behavior change, but
+> > the first step for that was made 2 years ago. I think it also makes
+> > sense that something self described as legacy is a lower priority and
+> > of the past (wrt event naming moving forward).
+>
+> I want to clarify the event parsing behavior and to find the right way
+> to deal with various cases.  I haven't followed the activities in this
+> area closely so I missed some changes in the past.  Maybe the problem
+> is that the behavior is complex and not clarified.  Hopefully we can
+> write it down in a doc.
+
+I think what is typical in the kernel is the source is the best
+documentation. By simplifying event parsing, for example,
+parse-events.y has been reduced from 952 lines (in v5.10) to 762 lines
+- so we're about 25% simpler whilst being more correct (I've fixed all
+the memory leaks, etc.) and avoiding expensive start-up costs, lazy
+initialization, etc.
+
+Having a single priority for which events are preferred, legacy vs
+sysfs/json with or without PMU, will further make the code base
+simpler and easy to understand.
+
+Thanks,
+Ian
