@@ -1,150 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43681EF0B7;
-	Thu, 30 Jan 2025 17:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A6B1EF0A1;
+	Thu, 30 Jan 2025 17:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738258626; cv=none; b=S9t6B0UOWvdnBn5pP8E2nkgY4RMsf46JFVqLBgJRhtOfVKSu42epgG+4/uWTUXSc2TpEQ3MirTpgKPGhJq+rfQSQUC0JpLB3+fGVL7c5m+UB/qo1tkFVL3wmIns5iYeebBgXr08FlXw+hOmKDBZKbBHP2aiWP0sU5LLGB/ZXb20=
+	t=1738258806; cv=none; b=QS8VxvbPZe+LeD4bt+MgcoaDg6LYcAfluuBjL21kYKOHFVVFKl1UMJuVsCTTNm8rlHXOo8IU3pHRnliJ0hCFE1bIiB8IbsOnVQ1ubrYDy786/didXD6IikASIzh8RERx2IOYGItG7vq1pHulvXA/U+GjMefjREQ1H/CGGIDiZ7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738258626; c=relaxed/simple;
-	bh=uSM1MPbvBqUgJ0jp5x1Q+m8RSmC36vz1+mKZC8DAuew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I9bjemDxR/o7qBQ8liVPXVPJ97zSorL0v/WFJaiY0d1CL06D9+Yc5fZNwOPNX5dmfgyAwHy7UJYMxcbD0Cg4/tpj1/xuIWEXrIdL7lFcmxGrMPsUFksZcisTPCCtMv8ELg+hiPnT9SKrXNb/XNLs2R9Z3fxYvuHnXC0vTKtGcoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3aXBrT1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738258806; c=relaxed/simple;
+	bh=fOyS2SgUQBtaRtcTvGzojZKstYzn/7x6VS/0J+NwWk4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tQkaCsfyfInoRQV809cZGtJmrfh6GFRgc4FqXGJCOPfqix6+vQ6vvBTPyoFuGKhu2n2tN3vim5ME45BD9fzOI+nZIKmwdDtDfOttEAeXgVPye0OvhGcqhnYnVzRajZi3EoEiWvBrzMs2H+WvR4pH2smoOEpFjYaTyDc+kynq4l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gAXsUcpb; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3aXBrT1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 766E9C4CED2;
-	Thu, 30 Jan 2025 17:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738258626;
-	bh=uSM1MPbvBqUgJ0jp5x1Q+m8RSmC36vz1+mKZC8DAuew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M3aXBrT1xWurjBUpscuGw4PcYy9pbYV8+odimCcMebVNDWpTgDv1Cb/DfvS7o9RrW
-	 7vwbI46DvKvtqWyNRqdmNUnTR1xQjxfiNGLF/QtG8BCPczGZkGvw1vfYYGG9r6JzoV
-	 uMMy889mgmFWrw4CpPWuXbXjSygGQLqwAU5z1SCwefC02EfCb6VIX4D/5Lu5F3wy2F
-	 RqKYGc+4Zr9tLA4nh8/jAVgtwGwNfM8Zwy7ikxu/Rdp8iSd/XP6PDr8IJm9n/nqQMa
-	 tyOtbIpUAzVQp6wIoh8PR011LfVWQqyrXwOl9b28ZMutQQ7dxPI+gDtupBfewd+kwG
-	 xCfLjLTn0aQ4w==
-Date: Thu, 30 Jan 2025 18:37:00 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Zheng Zengkai <zhengzengkai@huawei.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] ACPI: GTDT: Relax sanity checking on Platform Timers
- array count
-Message-ID: <Z5u4vCwVCIhiE72I@lpieralisi>
-References: <20250128001749.3132656-1-oliver.upton@linux.dev>
- <Z5i2j9gFB2iyN9g4@lpieralisi>
- <Z5lBMBY7XoFJmpGM@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAXsUcpb"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-46785fbb949so11733711cf.3;
+        Thu, 30 Jan 2025 09:40:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738258803; x=1738863603; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fOyS2SgUQBtaRtcTvGzojZKstYzn/7x6VS/0J+NwWk4=;
+        b=gAXsUcpbB5/gIZxCpCL7g0uzUd++ACA/TNH8RcUa6dLivjE/lnfbeJPW6WdshCsju2
+         97M1pNtCgAPBtpV/bVg0cgeHdOUl32zhAdDSAJ81v1u1KpBHFBdxmhdNiH4z76dPPx8C
+         yL3kUZWcMebPUITyJ0y7h50YeQj2FheCFhHuDmM9zzrf+CRXqsNo+fQkTNUPZ+BmeU/a
+         3J5NZf5iJFynDbjNN2YHZrCIf6FBCcFwgsphZmYkHXoNiJoxRxF1H4tEX4eCP+JYIfiW
+         ko03sJlyHj4nc8OpgjiTHDkWy9aEHEnTI8h+znPw4ztQJvnv5UmAwX+j2EAZuB+OvgPX
+         oLMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738258803; x=1738863603;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fOyS2SgUQBtaRtcTvGzojZKstYzn/7x6VS/0J+NwWk4=;
+        b=Rw/iR9AKRxlpxWRiYC5LIxvCm1nKzvzk/cr3J5B2p3/tBa3olWtNEf/fQWeZG3sVeZ
+         ur68kckwyXoN6wYyGRLYoJk9UafkcDG34reCLAQD6n6O4wanU631oEbUkLtjCV3fEy02
+         3XJX8U4ZhdN3piQOM3qyWkVI+zh/0Y+fzMaXWK9FBHgT0/oLcYZH7wNF1A4NCu3OA9c/
+         GKjKOFslcrGWD+y99WJzq2wauASdI7MA9Zyoh1OlYgGPYU+aAfjyVle8IDs4y5XGiO/p
+         IJKESwTNrE2b0O5R2guyCj9YELQcxa9R7GEzH4lairhWADhtbP6ONv3RWUsWuoQyXIpe
+         An9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWFBACDpCUD0OBrEBh2As3kHI8pb2Pc5PKQH45jo/eh1lSP72JY17AHxXBz8H481UWCmUHUkyG0HNGpq9OE@vger.kernel.org, AJvYcCWi1CeKAvtAY1BO/CP7aWFd5aVAhwd1tW4bYOj6IR/aRtr130umAROeI2bFdroNnNK2CZRQsV3B9QuqIw4N5tL9UTmw@vger.kernel.org, AJvYcCXRZtW63KF6smfpHjOGFp/3BozC1UN7tMwwKudvXNAi/W7Nm3h0dgpylW2YkGdSYd63uR1sLbHNhRIVPVFG@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB+0KTepwVoCa9tQAMQRzIkxY2qxo1gZPb8DGRF4qD9hUyCjRY
+	5K/QywBw4IB4hUXt20aOieNImVLJj1OCjCUCpBy/DBici11BODGhF0Ho0cdV6w7jQ5tpxTl1N4z
+	CL1BTmQcxIuSOTEG9cCSS/11pb9I=
+X-Gm-Gg: ASbGncuLQ99+rkHnsVkHpHPQNy0f03rMS22Rj82yXE/lbG5MoTiDw5VMFZFlYVqq7Ds
+	a8AgYrC4GJg+W5wfkByDKV4nKRmOPOvypOLIB3PMr8JHGWxZTK6SZeKAGoNsFafLebCP9oUG7gZ
+	W+hj597PKugeOs3ENMU2K1LhX3saIF
+X-Google-Smtp-Source: AGHT+IE6pqda5eKDzRAyzpwontPmN7eYd0zcmoX6OYSqt3IrbDhFMaTFRiKg3Ru2dzaKD+7BQ6lfXTG07MedePcTXtg=
+X-Received: by 2002:a05:6214:1310:b0:6e1:a51d:e96f with SMTP id
+ 6a1803df08f44-6e243bef7cemr117873546d6.8.1738258803328; Thu, 30 Jan 2025
+ 09:40:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z5lBMBY7XoFJmpGM@linux.dev>
+References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com> <20250130100050.1868208-5-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250130100050.1868208-5-kirill.shutemov@linux.intel.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Thu, 30 Jan 2025 09:39:52 -0800
+X-Gm-Features: AWEUYZnhGHhGD14z9UZ4qeG3B1M4JKsk80YTUhLoPK-rRv81OyfD8wOiyVhXCtw
+Message-ID: <CAKEwX=POeBSHBXxdNWua5cPJ=7+P6x4qG6gWgN0HnT2K+_ULtQ@mail.gmail.com>
+Subject: Re: [PATCHv3 04/11] mm/zswap: Use PG_dropbehind instead of PG_reclaim
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Oscar Salvador <osalvador@suse.de>, 
+	Ran Xiaokai <ran.xiaokai@zte.com.cn>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Simona Vetter <simona@ffwll.ch>, Steven Rostedt <rostedt@goodmis.org>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, Vlastimil Babka <vbabka@suse.cz>, 
+	Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 28, 2025 at 12:42:24PM -0800, Oliver Upton wrote:
-> Hi Lorenzo,
-> 
-> On Tue, Jan 28, 2025 at 11:50:55AM +0100, Lorenzo Pieralisi wrote:
-> > > @@ -188,13 +188,17 @@ int __init acpi_gtdt_init(struct acpi_table_header *table,
-> > >  		cnt++;
-> > >  
-> > >  	if (cnt != gtdt->platform_timer_count) {
-> > > +		cnt = min(cnt, gtdt->platform_timer_count);
-> > 
-> > Thank you for reporting this.
-> > 
-> > There is something I need to understand.
-> > 
-> > What's wrong cnt (because platform_timer_valid() fails for some
-> > reason on some entries whereas before the commit we
-> > are fixing was applied we *were* parsing those entries) or
-> > gtdt->platform_timer_count ?
-> > 
-> > I *guess* the issue is the following:
-> > 
-> > gtdt->platform_timer_count reports the number of GT blocks in the
-> > GTDT not including Arm generic watchdogs, whereas cnt counts both
-> > structure types (and that's what gtdt->platform_timer_count should
-> > report too if it was correct).
-> 
-> I've seen two different issues so far:
-> 
->  - In one case, the offset of the platform timer array is entirely
->    beyond the GTDT
+On Thu, Jan 30, 2025 at 2:02=E2=80=AFAM Kirill A. Shutemov
+<kirill.shutemov@linux.intel.com> wrote:
+>
+> The recently introduced PG_dropbehind allows for freeing folios
+> immediately after writeback. Unlike PG_reclaim, it does not need vmscan
+> to be involved to get the folio freed.
 
-And we were parsing it before the commit you are fixing was applied
-because we weren't validating the first entry ?
+Neat!
 
-That's how the loop was working before:
+>
+> Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
+> zswap_writeback_entry().
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Yosry Ahmed <yosryahmed@google.com>
 
-#define for_each_platform_timer(_g)
-	for (_g = acpi_gtdt_desc.platform_timer; _g;
-		_g = next_platform_timer(_g))
-
-We were parsing the first entry and now we don't anymore (rightly so),
-even with this fix applied, correct ?
-
->  - In another, the GTDT has a timer array of length 2, but only the
->    first structure falls within the length of the overall GTDT
-
-Right.
-
-> Since cnt is the result of doing a bounds-checked walk of the platform
-> timer array, both of these issues cause the sanity check to fail.
-
-Yep.
-
-> > >  	if (platform_timer_count)
-> > > -		*platform_timer_count = gtdt->platform_timer_count;
-> > > +		*platform_timer_count = cnt;
-> > 
-> > I think this should be fine as things stand (but see above).
-> > 
-> > It is used in:
-> > 
-> > gtdt_sbsa_gwdt_init() - just to check if there are platform timers entries
-> > 
-> > arch_timer_mem_acpi_init() - to create a temporary array to init arch mem timer
-> > 			     entries (the array is oversized because it
-> > 			     includes watchdog entries in the count)
-> > 
-> > In both cases taking the
-> > 
-> > min(cnt, gtdt->platform_timer_count);
-> > 
-> > should work AFAICS
-> 
-> It was probably worth noting in the changelog that I did this to
-> gracefully handle the reverse of this issue where we could dereference
-> platform timer entries that are within the bounds of the GTDT but exceed
-> gtdt->platform_timer_count.
-
-Yes, that's strike three, where platform_timer_count is borked,
-I understand you have not hit this one though but it seems
-right to fix it the way you did.
-
-I am just trying to understand given that we are sending the fix to
-stable whether this fix can affect other broken GTDTs (or better, whether
-other borked FW can affect this change) but I hope not, it should not.
-
-> > (hard to grok though, we - as in ACPI maintainers -
-> > need to clean this up).
-> 
-> Heh, thought this smelled a little ripe ;-) Went for the minimal fix
-> first.
-
-I am sorry you have to deal with this, the kernel is not there to
-validate the firmware but on the other hand when it doesn't that's the
-outcome. Apologies.
-
-Lorenzo
+Acked-by: Nhat Pham <nphamcs@gmail.com>
