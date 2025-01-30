@@ -1,108 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7CD1537C6;
-	Thu, 30 Jan 2025 23:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B851537C6;
+	Thu, 30 Jan 2025 23:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738280565; cv=none; b=Z+qiGuLARqZHt8OAlL0yRv339yMcz/ySJXPpzfjrsp013IAwXvc13WliwOKafT1tL/1X5ngV3ytviBOYkFQXhM99rzX3/YNkTodIFM+yU0LmD8PYJJEmF+Ckcv1ypekJD1lmVl1DGjFDtBGVrfj+glq0hQwFSuJBCmEONcgbpf4=
+	t=1738280586; cv=none; b=EhoPQINglNa5tQO7o8UKtuSdMAa79IhfqR2baxv/hAGrz427GeUkV402lQRRW0odXXe2kt5cMmX1xroOGMCw4CXmyOL4eARDKuhnNjkIXllWdpuwyjeYPkfjaBMF686amFpMIbaVN+rQm3YrdX2FIglpsCqZRSRszxm7wbNmwbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738280565; c=relaxed/simple;
-	bh=SNgWdW0+w8g7zWzmvBJ6hqxTIrMFupouLSnDTRPedqs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=J0Cf9nrwbfYy1nk/OPvNKgmUxvVCpf1YGyn6cb2AZiHbMd7YNcxJHdu8ePWpuObn6tDGsA590kB/e3gqJf18T1JVX/oeB7+ggUpJPutMGJ5+BwO+viR+3O9Q7J5/RAlSqPu6mWalSOZfunnJLukeAIVZBfYEhhrew1Rze2UvkN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=njBD4Cqe; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738280586; c=relaxed/simple;
+	bh=kGamlnZuXM/luZYB3EXKEGCyON9TbAXiQo4Ki9RcCIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qdNsbDm3HgvBL/XPJFo4IdOJCAT4iGyhcfp5sW63RknP5StEmhuKLLz8sfJ7N56FnJFErXTCxwrbjkjXJxTafz4ivvPG0APMYzy21cXHYcu6EmRFBZLXbMTC/txdJ93w/U6TowrrSopvOa+FduXeF0RpStTleIhbqWHW8OagDDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HKD2DAFE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="njBD4Cqe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738280564; x=1769816564;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=SNgWdW0+w8g7zWzmvBJ6hqxTIrMFupouLSnDTRPedqs=;
-  b=njBD4CqeB5D6xy51Tc8bVyUbpf5GhYjisE/+RIUI25Dnsi7knQt37i8z
-   //ijX4l6nYKHHS0knmhUaRKBvco9pV0iarSJuxZiyu+5SezGAvDMIM5Wp
-   ZebOAruyR7yqYNWyBgB+8QvxPNhS3svWXqCR+52c2YqLUYR74D8l2Q84/
-   pCmMfO0mKFOpQ4vocePBpmNlezhf/mtWNCM/Q5G0aJVj2IkyYocXzXbar
-   06Z5WWdawqfu5mnVYRxKJXPqZqq7Ygu8v0fokcd9mA1JmlvYZoLDXEzUk
-   r+kX2xXFiXUlnvL0BF162Gw11lvWf2qEnJ6vCpVf8UpKOR8sRFWDMd6QT
-   w==;
-X-CSE-ConnectionGUID: MFZdPN7BRiOJxwDUgsSmuA==
-X-CSE-MsgGUID: osTrCAaoTqugUPDE/80O4A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="56392369"
-X-IronPort-AV: E=Sophos;i="6.13,246,1732608000"; 
-   d="scan'208";a="56392369"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 15:42:43 -0800
-X-CSE-ConnectionGUID: AX6mNGHhQwWBZd3qMSmH6A==
-X-CSE-MsgGUID: tg0EZPT9SgeNGo2EEfp3cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114081720"
-Received: from johunt-mobl9.ger.corp.intel.com (HELO vcostago-mobl3) ([10.124.222.4])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 15:42:41 -0800
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To: Zdenek Bouska <zdenek.bouska@siemens.com>, Tony Nguyen
- <anthony.l.nguyen@intel.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
- Fastabend <john.fastabend@gmail.com>, Florian Bezdeka
- <florian.bezdeka@siemens.com>, Jan Kiszka <jan.kiszka@siemens.com>, Song
- Yoong Siang <yoong.siang.song@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org, Zdenek Bouska
- <zdenek.bouska@siemens.com>
-Subject: Re: [PATCH] igc: Fix HW RX timestamp when passed by ZC XDP
-In-Reply-To: <20250128-igc-fix-hw-rx-timestamp-when-passed-by-zc-xdp-v1-1-b765d3e972de@siemens.com>
-References: <20250128-igc-fix-hw-rx-timestamp-when-passed-by-zc-xdp-v1-1-b765d3e972de@siemens.com>
-Date: Thu, 30 Jan 2025 15:42:41 -0800
-Message-ID: <87r04jc1hq.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HKD2DAFE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D9C9C4CED2;
+	Thu, 30 Jan 2025 23:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738280586;
+	bh=kGamlnZuXM/luZYB3EXKEGCyON9TbAXiQo4Ki9RcCIA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HKD2DAFEHSWmHOxoRZxHSvYGppN4hzv+Kx/waC17L8ORp8M3GS4bjMeTUwa7RJy8E
+	 OJ3oNxubfspnI7VFe7H8Fqi8ykSk0sxQ52TRtg1uLuq6oB4vywRMULCNpYDPQquQrf
+	 Podu6TF8HqqQvCMhaw6+ex0DKR3HPjfxTaI39qZmkOXTR2yJRwBgfgwwpMRKYBYjxx
+	 CHHiBnF3Dlda+nj3UsQo03o6Ps6vF+ZdCYQkPujPGLvngm4D6O4YYdu82208F7jZe7
+	 9ODqDwKHqBoapfxrHwSb779mgHCK53ZxiuG6Kwf6D+qvKyNLy1KdxaWmQu85tpNENC
+	 5HXcRsFKyvgrg==
+Date: Thu, 30 Jan 2025 17:43:05 -0600
+From: Rob Herring <robh@kernel.org>
+To: Ryan.Wanner@microchip.com
+Cc: lee@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	claudiu.beznea@tuxon.dev, sre@kernel.org,
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+	p.zabel@pengutronix.de, linux@armlinux.org.uk,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 06/16] dt-bindings: rtc: at91rm9200: Reorganize
+ compatible items
+Message-ID: <20250130234305.GA1887365-robh@kernel.org>
+References: <cover.1738257860.git.Ryan.Wanner@microchip.com>
+ <2846391c5ffab332ad7a4b65aa60aac9c49a3496.1738257860.git.Ryan.Wanner@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2846391c5ffab332ad7a4b65aa60aac9c49a3496.1738257860.git.Ryan.Wanner@microchip.com>
 
-Zdenek Bouska <zdenek.bouska@siemens.com> writes:
+On Thu, Jan 30, 2025 at 10:33:46AM -0700, Ryan.Wanner@microchip.com wrote:
+> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+> 
+> Reorganize compatible to allow more devices to be added to this enum.
 
-> Fixes HW RX timestamp in the following scenario:
-> - AF_PACKET socket with enabled HW RX timestamps is created
-> - AF_XDP socket with enabled zero copy is created
-> - frame is forwarded to the BPF program, where the timestamp should
->   still be readable (extracted by igc_xdp_rx_timestamp(), kfunc
->   behind bpf_xdp_metadata_rx_timestamp())
-> - the frame got XDP_PASS from BPF program, redirecting to the stack
-> - AF_PACKET socket receives the frame with HW RX timestamp
->
-> Moves the skb timestamp setting from igc_dispatch_skb_zc() to
-> igc_construct_skb_zc() so that igc_construct_skb_zc() is similar to
-> igc_construct_skb().
->
-> This issue can also be reproduced by running:
->  # tools/testing/selftests/bpf/xdp_hw_metadata enp1s0
-> When a frame with the wrong port 9092 (instead of 9091) is used:
->  # echo -n xdp | nc -u -q1 192.168.10.9 9092
-> then the RX timestamp is missing and xdp_hw_metadata prints:
->  skb hwtstamp is not found!
->
-> With this fix or when copy mode is used:
->  # tools/testing/selftests/bpf/xdp_hw_metadata -c enp1s0
-> then RX timestamp is found and xdp_hw_metadata prints:
->  found skb hwtstamp = 1736509937.852786132
->
-> Fixes: 069b142f5819 ("igc: Add support for PTP .getcyclesx64()")
-> Signed-off-by: Zdenek Bouska <zdenek.bouska@siemens.com>
+This is doing more than reorganizing. It is changing the binding. Now 
+7g5 is compatible with 9x60?
 
-Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-
-
-Cheers,
--- 
-Vinicius
+> 
+> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+> ---
+>  .../devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml        | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml
+> index c8bb2eef442dd..30d87b74c51dc 100644
+> --- a/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml
+> +++ b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml
+> @@ -21,9 +21,10 @@ properties:
+>            - atmel,sama5d4-rtc
+>            - atmel,sama5d2-rtc
+>            - microchip,sam9x60-rtc
+> -          - microchip,sama7g5-rtc
+>        - items:
+> -          - const: microchip,sam9x7-rtc
+> +          - enum:
+> +              - microchip,sama7g5-rtc
+> +              - microchip,sam9x7-rtc
+>            - const: microchip,sam9x60-rtc
+>  
+>    reg:
+> -- 
+> 2.43.0
+> 
