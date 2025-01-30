@@ -1,153 +1,144 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1647482
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 01:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0809C8BE8
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 01:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738198826; cv=none; b=WO6WX6sSOloh1PDegm7IaBk+pw5xzdq4/FVcO3oO1xBUAU2shnU++b/1KurRRKnhTgZX77Zw+LDv1QExQvXIYF1b0+kbs3Ob3qFoDq2DqtuiQ7B9O/99YqkOeuQN7JVClXzA/pHEZqFLNKvzMh9LcGIpN9SD2D4BDOMwLiK4HIg=
+	t=1738199313; cv=none; b=Bz0GjkZ9DxqDJ7CQ2hAvuZIoM0dP+oX7k8W6IcS4mSbBR2DtUiwOVHlvveKNCtZMm1IYL6EW4mA+tIGBVl4jGhF+9n89n8iUqzWqKQHRzt4tVy2xWKlk+gAu8gZlBh+EMER3ZSzKu45Stdd/bjmBPbH/Mlq5szFupVXzUYwnnDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738198826; c=relaxed/simple;
-	bh=gDdLlLY96LiStuvimQHbYFWJtnuNfhr4Ul8KlJuj/jk=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=SQNSW3VWy/3kZ/88Yu+GQMZE2EcRIt4YUpfeX2mvUhijah7KjtZH03aJzFOR5XjckZsnyg3NroLJAwNljAZtEhb+4LtTBj/hBo8LpHFhZetTflrAE0LStzCgPL9Lzc2pqB6x8xRAK7z2KA0xmiXiThqgRbcJEYBhEw6i6/njpoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=grYieowW; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1738199313; c=relaxed/simple;
+	bh=3bVFGY9QT4BopDtVjaJpCSBGeel8QZQOrPMDFvWCRH0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Z8LNlKM37BGDyDMybauIXjlZGJ3lr0VpyCSzQDwKunspNEACTijQk4KqWUP+QYZJr7bwjXkAPLMh/0MGoYamr+j+EaX4Ax3uvaCh62OyDepmyC8sDWgHWM86+hOl/l1SwCSHaE3x9VZFStQOOPogEU0iMfjQ6zalbYC8aqcmZLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aJ6Hgs6U; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="grYieowW"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6df83fd01cbso1235376d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 17:00:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aJ6Hgs6U"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-21650d4612eso7161245ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2025 17:08:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1738198823; x=1738803623; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=50YnZfhZ1EwddeerDDyK0b3+VDRyxiKAG8Byj60y0A0=;
-        b=grYieowWP2Sd3vX2yzPvI1T7WaTE6MHoY8GBU7NrM2sUcHFI5vD9PMauK4uQRViXEC
-         O7OQjWLnNTxeUcM+nqqwsA+IJtcSyxvs+rTPpjsbHXbLcXVWbPQHuJ99AncLKxLNjZ6F
-         +JZZEbsA+y52HUDfmjRCCumMwOnchuwuH5hkaCxnmZHcLjsKYS/AY3aI2uH6+qbnn6Ig
-         boDbwDkBM6oEvJFA76eeXI6y4jQTJf3LH4ozm5ufjxlcEUmhmN8aF90Zvs9n3a7gaE7a
-         Zkibv54GmeMgE8LD1fB11ATFodk+V+KkWDb2Ij3r6TBzOvILhTMk9UWzLz8UeyEbz/Cz
-         a7/g==
+        d=google.com; s=20230601; t=1738199311; x=1738804111; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Rc2C9OSGqh03u9AzmrBpK1aeARz9rL8/Sym1bmsKMYw=;
+        b=aJ6Hgs6Ui27zgpVfei26VL4biHntFPYvcPen5BHRrpr93U8azGblOD3iesFmBonKC2
+         kmQzrbRYckkcKoJE9jcC7sZyrgfuh/AQIndOOM5mPIYSbvWBaExnVpEmv4HoWkRMZWvG
+         jU2agM53HAvU8cvsO6Vdj7AWhsyrRYNQh2EZCsR1aZKLJQkBL6z2CnaMcQUMfHTtcTSY
+         qHWC+F5dJsprFshguOHSVzJ82BhKpQBrHoS1AvTobPtJS36PF09+s8wICReGoabW5QNB
+         zGleYJ5KKr8bUv5xQkfpcyKzaHg7m426t3uWYyzTix/aelGtuFkWZozZY0RU1pipEgnI
+         IajA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738198823; x=1738803623;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=50YnZfhZ1EwddeerDDyK0b3+VDRyxiKAG8Byj60y0A0=;
-        b=vN7mtqnWO4qsKovAZYyN1tuNHoRpdyYMtiM/Fn3aqcCU0mJzgptxtSGLei1dUTt4M5
-         +96gy4sAL7fEMAW8R+Hs/XrWLRv+vRctLjVPpQqlYflDi1QSg7roUiQPH1W9LNRsv4cA
-         e9A5mb8euV3WG5y0gAxqGiYep5lI4puKWUlTbLhebrMCIfkLb0Tp+WMqglUUpaxsy87C
-         iwa0Gg7jfsz98ugHos/tlL+IOo3xdhNP3j0f+wvLyt/8Cawzp/RYaW1ccjmWvCD4UqrK
-         nt0VK99eI8iljMCYaSD647msC7N3s0GhzJ8ckPiMKDh1N12WSlXQufRCW1nm+5CyO2hG
-         EsZA==
-X-Forwarded-Encrypted: i=1; AJvYcCViTMdV3/VSK4DI/q89Xy35ZkuXSs6dN3PanZtGNT4/ONpd+yPmchLl1hAMlESZxHQwkcSciRQMMa63HKg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynQ+GHffiuJcQdt7zvxCPfF616TWqiokzrnDcXwcjTWSwfAaUY
-	tJsbf86LMh89fm5gPJm2PcuGGJflKxKf89zx404Rt+6+JpOFsTSDWlctT2bLCA==
-X-Gm-Gg: ASbGncu/qXC34luSV8lh8CiPo6QPpYjf22DQQyHiu5D7gj2QDhznziHm4G1fi6OZARl
-	WvOGT4qGCdq2thW5qX3534NtrRygdty3B78xGrhUD8/phbsiNP3T0lTZNq8/7ot1q6JZwvPnSbi
-	PdLeQqWhHdHllvrI1CZIIsaPo9fdFSUE9ngmawFFiyTx6l176FTxcGAeCN2ttyg/sp6gpFnGwQ6
-	pt9Hk8cyJk/v0AzbT0DS2HE11q3an5VDLx7EdUIcQ63UdyvJwABsxeuUKlPq96e3Lxby53/3pe/
-	1uIcH9a1eg==
-X-Google-Smtp-Source: AGHT+IEX3S7oi/KHeM8vE5UDB3mf3Ubtv0N0TphAa3ZFzJW0gx7CAmYdrXLSKC9jB+hZgEHqPRIUzA==
-X-Received: by 2002:a05:6214:1c86:b0:6d8:a32e:8426 with SMTP id 6a1803df08f44-6e243b91093mr102586276d6.3.1738198823555;
-        Wed, 29 Jan 2025 17:00:23 -0800 (PST)
-Received: from localhost ([70.22.175.108])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e2547f0e00sm913736d6.24.2025.01.29.17.00.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 17:00:22 -0800 (PST)
-Date: Wed, 29 Jan 2025 20:00:22 -0500
-Message-ID: <c8c74158894e1b955a8b09509b8ce26d@paul-moore.com>
+        d=1e100.net; s=20230601; t=1738199311; x=1738804111;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rc2C9OSGqh03u9AzmrBpK1aeARz9rL8/Sym1bmsKMYw=;
+        b=lMwT418q8tTCcg0We2Ie8YzCf45mEStUHw5XPe4wlhPp60IBk5XKrV+qCvkja+RDSE
+         9OTpwbllcOGxdfBprM9W3QNxMWYj+XibfeNusVew9TiV/1hcKdj35YCfHBcvEosdV2F9
+         md09iugw0awwPIz30Za2kEFVQDzbwmlHJUK4WEmr5J4JYk2OJ5/OET8sSA3LGhVQuXls
+         nLEIBRTFI6cQxN0IwrNvv9DNAh6N74zOlCVIue9qfUZITEmJHpnMmVIMXaBOSoC7wwjK
+         6XrcC04h/DxDv1urj8o5MwBFQ0mmkeds+Zj/jXN185SQFQ3Q2/UjNvSYRkk2XWbHyK30
+         iwlw==
+X-Forwarded-Encrypted: i=1; AJvYcCUd6WSC0DJI/x44pZHZMoTpDLgaHpDbE97Wc320SIX/5zOFdcBsqC/NWS8FJstOy1GVY/YXpPRB1iwwf8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ9O66uS2IkbHoRsNAMmXL/blaEOOGRVCWHTQ0WGIkJFCdoIAw
+	GMH4wU9ojt+O6hyTyFagSWui0OT+FHUgKlngCNet1t93QbkD7Y8ugT0h+44WHzKcoh2YlyiBG+k
+	8WQ==
+X-Google-Smtp-Source: AGHT+IEPTQavdniKSS4fFn5TSLdnEp2tGG2VCyWzDf4ixkR6pQ/JrmIhNA3s//IUDoICtd7D5Ar15LzvgUs=
+X-Received: from pfbea24.prod.google.com ([2002:a05:6a00:4c18:b0:72d:35be:2e97])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:d04e:b0:1db:eb82:b22f
+ with SMTP id adf61e73a8af0-1ed7a5c42c6mr8074352637.5.1738199311326; Wed, 29
+ Jan 2025 17:08:31 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Wed, 29 Jan 2025 17:08:25 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20250129_1952/pstg-lib:20250129_1951/pstg-pwork:20250129_1952
-From: Paul Moore <paul@paul-moore.com>
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Eric Paris <eparis@redhat.com>, Casey Schaufler <casey@schaufler-ca.com>, James Morris <jmorris@namei.org>, "Serge E . Hallyn" <serge@hallyn.com>, audit@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v3] audit: Initialize lsmctx to avoid memory allocation  error
-References: <20250129120652.308571-1-chenhuacai@loongson.cn>
-In-Reply-To: <20250129120652.308571-1-chenhuacai@loongson.cn>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
+Message-ID: <20250130010825.220346-1-seanjc@google.com>
+Subject: [PATCH] KVM: nSVM: Enter guest mode before initializing nested NPT MMU
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yosry Ahmed <yosry.ahmed@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Jan 29, 2025 Huacai Chen <chenhuacai@loongson.cn> wrote:
-> 
-> When audit is enabled in a kernel build, and there are no LSMs active
-> that support LSM labeling, it is possible that local variable lsmctx
-> in the AUDIT_SIGNAL_INFO handler in audit_receive_msg() could be used
-> before it is properly initialize. Then kmalloc() will try to allocate
-> a large amount of memory with the uninitialized length. 
-> 
-> This patch corrects this problem by initializing the lsmctx to a safe
-> value when it is declared, which avoid errors like:
-> 
->  WARNING: CPU: 2 PID: 443 at mm/page_alloc.c:4727 __alloc_pages_noprof
->  pc 900000000304d588 ra 9000000003059644 tp 9000000107774000 sp 9000000107777890
->  a0 0000000000040cc0 a1 0000000000000012 a2 0000000000000000 a3 0000000000000000
->  a4 9000000107777bd0 a5 0000000000000280 a6 0000000000000010 a7 0000000000000000
->  t0 9000000004b4c000 t1 0000000000000001 t2 1f3f37829c264c80 t3 000000000000002e
->  t4 0000000000000000 t5 00000000000003f6 t6 90000001066b6310 t7 000000000000002f
->  t8 000000000000003c u0 00000000000000b4 s9 900000010006f880 s0 9000000004a4b000
->  s1 0000000000000000 s2 9000000004a4b000 s3 9000000106673400 s4 9000000107777af0
->  s5 90000001066b6300 s6 0000000000000012 s7 fffffffffffff000 s8 0000000000000004
->     ra: 9000000003059644 ___kmalloc_large_node+0x84/0x1e0
->    ERA: 900000000304d588 __alloc_pages_noprof+0x4c8/0x1040
->   CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
->   PRMD: 00000004 (PPLV0 +PIE -PWE)
->   EUEN: 00000007 (+FPE +SXE +ASXE -BTE)
->   ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
->  ESTAT: 000c0000 [BRK] (IS= ECode=12 EsubCode=0)
->   PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
->  CPU: 2 UID: 0 PID: 443 Comm: auditd Not tainted 6.13.0-rc1+ #1899
->  Stack : ffffffffffffffff 0000000000000000 9000000002debf5c 9000000107774000
->          90000001077774f0 0000000000000000 90000001077774f8 900000000489e480
->          9000000004b380e8 9000000004b380e0 9000000107777380 0000000000000001
->          0000000000000001 9000000004a4b000 1f3f37829c264c80 90000001001a9b40
->          9000000107774000 9000000004b080e8 00000000000003d4 9000000004b080e8
->          9000000004a580e8 000000000000002d 0000000006ebc000 900000010006f880
->          00000000000000b4 0000000000000000 0000000000000004 0000000000001277
->          900000000489e480 90000001066b6300 0000000000000012 fffffffffffff000
->          0000000000000004 900000000489e480 9000000002def6a8 00007ffff2ba4065
->          00000000000000b0 0000000000000004 0000000000000000 0000000000071c1d
->          ...
->  Call Trace:
->  [<9000000002def6a8>] show_stack+0x30/0x148
->  [<9000000002debf58>] dump_stack_lvl+0x68/0xa0
->  [<9000000002e0fe18>] __warn+0x80/0x108
->  [<900000000407486c>] report_bug+0x154/0x268
->  [<90000000040ad468>] do_bp+0x2a8/0x320
->  [<9000000002dedda0>] handle_bp+0x120/0x1c0
->  [<900000000304d588>] __alloc_pages_noprof+0x4c8/0x1040
->  [<9000000003059640>] ___kmalloc_large_node+0x80/0x1e0
->  [<9000000003061504>] __kmalloc_noprof+0x2c4/0x380
->  [<9000000002f0f7ac>] audit_receive_msg+0x764/0x1530
->  [<9000000002f1065c>] audit_receive+0xe4/0x1c0
->  [<9000000003e5abe8>] netlink_unicast+0x340/0x450
->  [<9000000003e5ae9c>] netlink_sendmsg+0x1a4/0x4a0
->  [<9000000003d9ffd0>] __sock_sendmsg+0x48/0x58
->  [<9000000003da32f0>] __sys_sendto+0x100/0x170
->  [<9000000003da3374>] sys_sendto+0x14/0x28
->  [<90000000040ad574>] do_syscall+0x94/0x138
->  [<9000000002ded318>] handle_syscall+0xb8/0x158
-> 
-> Fixes: 6fba89813ccf333d ("lsm: ensure the correct LSM context releaser")
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
-> V2: Update commit message and CC list.
-> V3: Update commit message again (thanks to Paul).
-> 
->  kernel/audit.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+When preparing vmcb02 for nested VMRUN (or state restore), "enter" guest
+mode prior to initializing the MMU for nested NPT so that guest_mode is
+set in the MMU's role.  KVM's model is that all L2 MMUs are tagged with
+guest_mode, as the behavior of hypervisor MMUs tends to be significantly
+different than kernel MMUs.
 
-The backtrace in the commit description still exceeded the width of an 80
-character wide terminal :(  I trimmed the problem sections of the
-backtrace and merged this into audit/stable-6.14; as soon as I can get a
-clean kernel build I'll send this up to Linus.
+Practically speaking, the bug is relatively benign, as KVM only directly
+queries role.guest_mode in kvm_mmu_free_guest_mode_roots(), which SVM
+doesn't use, and in paths that are optimizations (mmu_page_zap_pte() and
+shadow_mmu_try_split_huge_pages()).
 
---
-paul-moore.com
+And while the role is incorprated into shadow page usage, because nested
+NPT requires KVM to be using NPT for L1, reusing shadow pages across L1
+and L2 is impossible as L1 MMUs will always have direct=1, while L2 MMUs
+will have direct=0.
+
+Hoist the TLB processing and setting of HF_GUEST_MASK to the beginning
+of the flow instead of forcing guest_mode in the MMU, as nothing in
+nested_vmcb02_prepare_control() between the old and new locations touches
+TLB flush requests or HF_GUEST_MASK, i.e. there's no reason to present
+inconsistent vCPU state to the MMU.
+
+Fixes: 69cb877487de ("KVM: nSVM: move MMU setup to nested_prepare_vmcb_control")
+Cc: stable@vger.kernel.org
+Reported-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/mmu/mmu.c    |  2 +-
+ arch/x86/kvm/svm/nested.c | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 74fa38ebddbf..3ff55a18347d 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -5524,7 +5524,7 @@ void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, unsigned long cr0,
+ 	union kvm_mmu_page_role root_role;
+ 
+ 	/* NPT requires CR0.PG=1. */
+-	WARN_ON_ONCE(cpu_role.base.direct);
++	WARN_ON_ONCE(cpu_role.base.direct || !cpu_role.base.guest_mode);
+ 
+ 	root_role = cpu_role.base;
+ 	root_role.level = kvm_mmu_get_tdp_level(vcpu);
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index d77b094d9a4d..04c375bf1ac2 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -646,6 +646,11 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
+ 	u32 pause_count12;
+ 	u32 pause_thresh12;
+ 
++	nested_svm_transition_tlb_flush(vcpu);
++
++	/* Enter Guest-Mode */
++	enter_guest_mode(vcpu);
++
+ 	/*
+ 	 * Filled at exit: exit_code, exit_code_hi, exit_info_1, exit_info_2,
+ 	 * exit_int_info, exit_int_info_err, next_rip, insn_len, insn_bytes.
+@@ -762,11 +767,6 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
+ 		}
+ 	}
+ 
+-	nested_svm_transition_tlb_flush(vcpu);
+-
+-	/* Enter Guest-Mode */
+-	enter_guest_mode(vcpu);
+-
+ 	/*
+ 	 * Merge guest and host intercepts - must be called with vcpu in
+ 	 * guest-mode to take effect.
+
+base-commit: eb723766b1030a23c38adf2348b7c3d1409d11f0
+-- 
+2.48.1.262.g85cc9f2d1e-goog
+
