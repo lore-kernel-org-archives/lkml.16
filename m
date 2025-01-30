@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0175C1E7C2B
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:10:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954711E7C2E;
+	Thu, 30 Jan 2025 14:10:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738246217; cv=none; b=hxn4Qc06nkiMqLFfGb51d+2Zkwa8NrlPwrvqkJfUZAuT3omFNHLKVg6R33Sda+AKogWA3idTry1EGxh5Vgm13z2BpI1/RB4tikPyK3xtKLMgUDFTYKzb0kxO/ktlDWiFmVlEMfZ6G5xWvIyVJmQR+/Eoooe9ryeTAGjZLXT8BF4=
+	t=1738246218; cv=none; b=ozuNlG9eDEQJdSvROIiXCcr4JwRqpMuvywHdfFXuubDOYYlFPGmcOausZcDrS9EjKzubAmCf9D7R6QlgyC9dyUuCf8fKyMkIRXmGXFgOvAWfo/o4S7A1E2xUyqYtp93tslRe26QK22/t2n8yEZd5jiHUe0qjS0jxlPamHh010jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738246217; c=relaxed/simple;
-	bh=CbMMJF1uQMgPSz1soY9p3lNPl/Y6u9Wb56FJLQKyfSo=;
+	s=arc-20240116; t=1738246218; c=relaxed/simple;
+	bh=9+g/CdbDGQY0MKh8KuXIORy84Cune0MY5qj0W7Kj2Qs=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=t4Af3jB1G5GrKihq22e6ntCw2znWDWyhagjOmmXQLl+6eyVhx2dBo3iFxev8SGO71uQFHpGIxTJOWpXmwceTSI7BqD5M6GvOGp4KuLZqT+aV8Iox8M+q6e1UZHYxEYt3quyduRXF3FmiF70gfy1g1cFDnptGIRyxsZ5UE/XZGk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QwVDph6H; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=XjiKgm92iaULHc1gCyXztLJSqtnVnyL8rGEd4mkH3PfdDOF9g4hYUMPFNdS1l//EMBZx53tyyisHGc8g1t9TkvQZfHJOr3OA30Hx7FVrxqhPfdheb0SQTi/6NniGGDbxfQkL5BP3NIVaWFDBNA9ZQgHqw4xwxu56LcZvfuCXlUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjr7SdDB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QwVDph6H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83485C4CED2;
-	Thu, 30 Jan 2025 14:10:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjr7SdDB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 078F6C4CEE0;
+	Thu, 30 Jan 2025 14:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738246216;
-	bh=CbMMJF1uQMgPSz1soY9p3lNPl/Y6u9Wb56FJLQKyfSo=;
+	s=k20201202; t=1738246218;
+	bh=9+g/CdbDGQY0MKh8KuXIORy84Cune0MY5qj0W7Kj2Qs=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=QwVDph6HjKDRoF7VVkblK2s4GXMm7YUaZyR2O+5ZDZSY8UFdaws5nM6s4tKUlljOd
-	 u0AVW43U64Rh+kxwkMZyjbpYbg6bPxkXHafV/3Bykl/i0Q/BGwJLPKiPhzVy3IbEtg
-	 Y8MGnjeqmoUsFF9SRVM2lfRmUzcuqdLOpO6cuK+mihuVO/ihUc5XpeNFAzcIgn9/OR
-	 fdgUt/LiNxN2dKLao4zEQj204vp0i4x4Oq2o3Z7zRZRLXgwmHksVkniCWX1biku70h
-	 LWgNGPpggnY2vUrcJZNVPlF6uDJO5wkrX1QcjIT+K2jggCBNUYlmayzaDvQ8oEQv6G
-	 8PES+PGMogm0w==
+	b=tjr7SdDBr3+Fs5IbJYELFc574X1htZLZbpExQuJpDk6mlc5B3WtoRHftpc2AuN4jI
+	 xquntxyf3Wx3YVhFUFadZRK2T/ZZIBkq38GU5TeMsAXqXcwyEAFvoj8SvpmmHK1a4D
+	 o4U2lBqkVv1HLfl5so3xYsMVWLVHMKLUth3KVKM6KGPPAY/NBHXJy30Zyc8U34a1KE
+	 k1GkM8ffZTFa6U1c5ldyoqgp0Gy8/UsZpsuO8Jqj7HjN/Ud9VjP1+NAgI6zSpV7qjG
+	 vZZt+SxdpF0paX7sLwgIwnwZwCKwu3BvJfJqMBdSimzREinVNOGl7tUsnk/ZfhrOSU
+	 hs20squu2pOCA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EBB7A380AA66;
-	Thu, 30 Jan 2025 14:10:43 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71114380AA66;
+	Thu, 30 Jan 2025 14:10:45 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,36 +37,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv/futex: Optimize atomic cmpxchg
+Subject: Re: [PATCH v4 0/4] defconfig: drop RT_GROUP_SCHED=y
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <173824624249.971083.10928021960691626990.git-patchwork-notify@kernel.org>
-Date: Thu, 30 Jan 2025 14:10:42 +0000
-References: <20241113183321.491113-1-dave@stgolabs.net>
-In-Reply-To: <20241113183321.491113-1-dave@stgolabs.net>
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com, jimw@sifive.com,
- guoren@kernel.org, dlustig@nvidia.com, parri.andrea@gmail.com,
- boqun.feng@gmail.com, peterz@infradead.org, will@kernel.org,
- linux-kernel@vger.kernel.org
+ <173824624400.971083.13259437466133760961.git-patchwork-notify@kernel.org>
+Date: Thu, 30 Jan 2025 14:10:44 +0000
+References: <20250115-fix-riscv-rt_group_sched-v4-0-607606fe73a5@coelacanthus.name>
+In-Reply-To: <20250115-fix-riscv-rt_group_sched-v4-0-607606fe73a5@coelacanthus.name>
+To: Celeste Liu <uwu@coelacanthus.name>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, guoren@kernel.org,
+ anup@brainfault.org, heinrich.schuchardt@canonical.com,
+ chenhuacai@kernel.org, kernel@xen0n.name, ysato@users.sourceforge.jp,
+ dalias@libc.org, glaubitz@physik.fu-berlin.de, linux@armlinux.org.uk,
+ florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+ rjui@broadcom.com, sbranden@broadcom.com, tony@atomide.com,
+ thierry.reding@gmail.com, jonathanh@nvidia.com, aaro.koskinen@iki.fi,
+ andreas@kemnade.info, khilman@baylibre.com, rogerq@kernel.org,
+ palmer@rivosinc.com, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-tegra@vger.kernel.org, charlie@rivosinc.com, xry111@xry111.site,
+ wahrenst@gmx.net, treding@nvidia.com
 
 Hello:
 
-This patch was applied to riscv/linux.git (for-next)
+This series was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Wed, 13 Nov 2024 10:33:21 -0800 you wrote:
-> Remove redundant release/acquire barriers, optimizing the lr/sc sequence
-> to provide conditional RCsc synchronization, per the RVWMO.
+On Wed, 15 Jan 2025 04:41:19 +0800 you wrote:
+> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
+> needs an RT budget assigned, otherwise the processes in it will not be able to
+> get RT at all. The problem with RT group scheduling is that it requires the
+> budget assigned but there's no way we could assign a default budget, since the
+> values to assign are both upper and lower time limits, are absolute, and need to
+> be sum up to < 1 for each individal cgroup. That means we cannot really come up
+> with values that would work by default in the general case.[1]
 > 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  arch/riscv/include/asm/futex.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> [...]
 
 Here is the summary with links:
-  - riscv/futex: Optimize atomic cmpxchg
-    https://git.kernel.org/riscv/c/9d0593da9459
+  - [v4,1/4] riscv: defconfig: drop RT_GROUP_SCHED=y
+    https://git.kernel.org/riscv/c/26f2d6de4179
+  - [v4,2/4] loongarch: defconfig: drop RT_GROUP_SCHED=y
+    (no matching commit)
+  - [v4,3/4] sh: defconfig: drop RT_GROUP_SCHED=y from sdk7786/urquell
+    (no matching commit)
+  - [v4,4/4] arm: defconfig: drop RT_GROUP_SCHED=y from bcm2835/tegra/omap2plus
+    (no matching commit)
 
 You are awesome, thank you!
 -- 
