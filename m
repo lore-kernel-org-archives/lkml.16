@@ -1,142 +1,112 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DB612E7E;
-	Thu, 30 Jan 2025 22:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B5C199239
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 22:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738275971; cv=none; b=kG+VV4s8nN+CKzKCUDRKFivK2zXzEPSjk3Jon/nI3BsXPDbSV5lg6wVU6RFh1NLiosnndCDMLVBJEqkfJu2zBWwzwsTPVcEu7S8aALyUqv8AObR89K9z3vHk8fLxQORmOGR035QQdu8UuTg7evIuBXGQ0HgdWUFpjDOM4Xg1/wE=
+	t=1738276002; cv=none; b=TIMfxC7xQzJTniaDC8k7gh9kA1tZY9r0kf+VPf/zHVv2RmQ681Xg8skti9ronosmsjFQfudy0NM+qq2R+nIEk5LQzFdZ6nbkLGuOOuCRzFAeAGhijZzygZeFEhKI+corXc2vcaYmgE8kS7OjIKCjTmsNdTAiv/+GEmPrpvr0xzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738275971; c=relaxed/simple;
-	bh=xHl2SQMgOA2XBZOrSdNO1kp9Qrn0rIX+mKbYFjUHk+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CGRGl5AuUV+f9VqPGQp/WVw5tbY6/Brdn1B5OV1PXoYQi13oUVZU2OjgpCjoZ7/Wwq1ogYG6OJaV+L80tuCmN9AURjUPsiCdNv0zwVKlL3qD94KyAGcGxZfpejjJtjKVwQry0QCJ3GryKbCo94G+Sy5OV2mHBzAqECtv/5QSqLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jz8YnXTZ; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738276002; c=relaxed/simple;
+	bh=/IKT+yepxHpw3FUdTOo0EZ0qxAvIfIXVH6sHUFA2SA0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=UxWK9IYdChV9aNW8q04GjMAAfagCXwH1H5jkAosZSkA0ra4sDpabRxNWS7QOUH5eWwIiradgQ9mCbRwBotCW1CJtZ4bMGA5EgPAR+tGQFkW4ZIOC5gBA/d7pmssM2E0bKYmB8KCDIM8I8iLXLiL1B4rGKhDge7SKIMTRxZVoh8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k+q892sx; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jz8YnXTZ"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2f833af7a09so1823869a91.2;
-        Thu, 30 Jan 2025 14:26:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k+q892sx"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef91d5c863so2594603a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:26:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738275969; x=1738880769; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=qptudTT3cNZ8XsCDenWkL6YV3Q4JTNcPbCB8ghHw3uE=;
-        b=Jz8YnXTZXewTCyAPwXzn6O875NqNQXK4Pmut3rD6FfusVVK4RL8B/shICamo5ZvFp+
-         Iosa3GijuCYkvr0o5LD/+OCkzcRlND+B4mkXKIrWAupAEaWVJeSkAg+vCLuG5jxl4dZ2
-         puqDSuxVXiJF4a/M9aQVQsingysTOhz4n0BiRGieONm3YTWrojRZ4VFjzWwaRrW7X8WA
-         cy2qFMYUBVZTIfxV0oYbwZgg4p5/yJ6WjDSUjVLaYZVnKxmw353CxucLKf+09N8TV/VE
-         fxUJNCRH+ZT1+d9MjCxmSm6IO29EAXsD5aQF5+Ug2aYxFJ+8uptdPi5jwGlYX/5qCDbs
-         sodg==
+        d=google.com; s=20230601; t=1738276000; x=1738880800; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7Vn5xvnNabtpVvJcGhVJ5cQ/Nehi1UgqdDUDznPExT0=;
+        b=k+q892sx8u5uy6qmyoYZaoqQPDlGFPkSYW+hRIqToj3CQ4RGn0p89XUvV2uFLk9PBi
+         /2ifhCpJI25D3olVIWP4DyRYKT72mmXWJ0EKr3D+TZ11OzTSgACg7YHHC/ompMTbwqKX
+         /NcRSIlfW4itk6FVpi4w2r69podA5vgML3RHW0HH+zkNDpNhjjQDDzj39VOQqnW5SVjN
+         8nEJg/M5vkZC2/+8jbpek2XtRORLA8xVi6T4+77uk4FYLKo/CPjg+agkh0cb5ZULHNb2
+         3ekFVhVxPiJUnRpLGZPidkz5q6Yh0qygPDnM3IAe8F11okHEhbpWZ1ev7znbfYmyJXnO
+         ziwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738275969; x=1738880769;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qptudTT3cNZ8XsCDenWkL6YV3Q4JTNcPbCB8ghHw3uE=;
-        b=p0pA7O59QXnPVEW7aaK4YfLhCA4iGn3sqCEueYI+NtJhUKBQaLgvJW2AVc/DOXFcyc
-         9afFx5b3Se2BZXjBYnwcs4qH6x7DjBo7sSOLoAnwt+lArRufrghN0B2YDJC7Jq6uo6Z/
-         wQeC4g3gMAcP6hlzY1ue/2B7AltYtL44heyVgRe1uknaZ3l7HXPCSOhtIyr2948K2Vvt
-         ZtU3bvrCup4PsaTRQQ81wuzEcjoNi4ax1p0XiN87pYhZk1mG8vwgdKBpiOttv+aCKlzt
-         anXoNgClQSOjXamRUUdOC2Vtce3xqrxH7txmDowbom0jhWkHRs9xMk4iiYDDiawPo9vd
-         6sQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVpKMhPqiBYnOq6KyF14+km0hnMgE+ttjfBI+1kc6Tfm6gWwsjbq483JqcwrxXSYSTaMMTmttiZDLuzvc0=@vger.kernel.org, AJvYcCXiZ2oWNx0PmPkzzrPGRwf7xve4xLLoS1bdLwDqcQjMXK2KUNS/QfOaQykaymy4ngw6C44DsH91@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/pvyJxN72BFPu1kRP7JGlZTDkRI2n+OBTGu5arauElm5ZQAwh
-	eX9G76zOpeAIL5gp8OWQOQ4tty10/cnmEg8IfxtRkXHpu0hRnVRI
-X-Gm-Gg: ASbGncve/seqPMcXavQmEOUZKTUIR5VolYubDXU9nbnAHoAIJrXO/D6W7Eravcgz+3A
-	3hcELpanEVrQ45y9obIrL1vaYy0t1bMdNvjzkL0+uNGbs56AHAOXNtVR+cX3Gh2x8EbQUzURN9F
-	SDRRkwPW7cMGbzPA1avcBVvGK2EX+eYFeFoBf4FWcMpy2go0bnBXM0jOGfJLg6SmEClZNZh7bMC
-	vJH1ROBgBPgU7D8xkhG2/vwr02gL7QFj76YUc5wROipqwNKh6FB6W28uSOAMUR7IjReco/UyG1X
-	YZnfiG/cOc7OMv3ydPnC9ijJpcYRgCmNbfLYAv946q8=
-X-Google-Smtp-Source: AGHT+IGK07wTgifXspdE/ygnEIrvYCe4ktwMGoUL+Q/ZZyV5X//pqHLw9f5VXS1Xyf3fTr9Dt02PdQ==
-X-Received: by 2002:a17:90b:4d06:b0:2ee:d024:e4e2 with SMTP id 98e67ed59e1d1-2f83abb3be9mr14009883a91.7.1738275969016;
-        Thu, 30 Jan 2025 14:26:09 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32ebf4csm18997975ad.141.2025.01.30.14.26.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 14:26:08 -0800 (PST)
-Message-ID: <0a1af8e4-2fe9-4a0e-a9da-f93fa9716767@gmail.com>
-Date: Thu, 30 Jan 2025 14:26:06 -0800
+        d=1e100.net; s=20230601; t=1738276000; x=1738880800;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7Vn5xvnNabtpVvJcGhVJ5cQ/Nehi1UgqdDUDznPExT0=;
+        b=JxEgDxPuzp+S59U7HzYy09pkwRqLKOrogE2VLXTuBITZhngblulQXCzf79jhdbZoJ1
+         OYFzgdPKo7SbMzBDojaQa9B5NQtvTX5YPkMOJGsvo98OioArKAHOKBnIcch+caHm9LGq
+         AuZF3IKSMUMRPr63Vpul/ZXnen2Bei7c8z/HNDkmEbajwq4LNURwsz/pKGXE57gDwaCa
+         PSUdQfgzZ6AFC4HqmJ+JNRaQxjKNkupKzkAfWXqJ9G+B6KglqZfSMkZewsyn2uFvdwkJ
+         nAGLKlPPoY0dq+aoRcMTaMNdhTKak+rho0qZDZXa9pa8unfPfd/odMKUWnP0+2J66zNS
+         ye/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUq0lzVNLaYJlqg/LRTMkfaZDHRa8ZKFkY5VCjBNn1cwnjDGVkMpaE2KeHDTFWgRQqPV3TfFpU8QIleabI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzz0UdNVFM2Lo+dSiGmZlFQ7SbdoSXhWlWc7SHNGqZYGdYNspVx
+	KHih/YCeYnqRka/vwUvt+oWF9/Y11GDFdHuvi0vSuwD3bb7rV848+8ZjTTXQ9zIqcWg3Gt8FXWK
+	7HerpeIzBYw==
+X-Google-Smtp-Source: AGHT+IEhIfk3j2i6VmvDwKe28X9qilZk698oRuesLeDpuFZFzUV6xO38uLPNkF2hD6iHeXD6hJTcANO0VJ3OmQ==
+X-Received: from pfxa32.prod.google.com ([2002:a05:6a00:1d20:b0:72d:261f:af23])
+ (user=ipylypiv job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:1396:b0:72d:710d:611c with SMTP id d2e1a72fcca58-72fd0c7c142mr10819644b3a.20.1738275999973;
+ Thu, 30 Jan 2025 14:26:39 -0800 (PST)
+Date: Thu, 30 Jan 2025 14:26:31 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.13 00/25] 6.13.1-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250130133456.914329400@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
-In-Reply-To: <20250130133456.914329400@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250130222632.1462218-1-ipylypiv@google.com>
+Subject: [PATCH] scsi: core: Do not retry I/Os during depopulation
+From: Igor Pylypiv <ipylypiv@google.com>
+To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Douglas Gilbert <dgilbert@interlog.com>, linux-scsi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Igor Pylypiv <ipylypiv@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 1/30/25 05:58, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.1 release.
-> There are 25 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 01 Feb 2025 13:34:42 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.1-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Fail I/Os instead of retry to prevent user space processes from being
+blocked on the I/O completion for several minutes.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+Retrying I/Os during "depopulation in progress" or "depopulation restore
+in progress" results in a continuous retry loop until the depopulation
+completes or until the I/O retry loop is aborted due to a timeout by
+the scsi_cmd_runtime_exceeced().
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Depopulation is slow and can take 24+ hours to complete on 20+ TB HDDs.
+Most I/Os in the depopulation retry loop end up taking several minutes
+before returning the failure to user space.
+
+Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
+---
+ drivers/scsi/scsi_lib.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index e7ea1f04164a..3ab4c958da45 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -872,13 +872,18 @@ static void scsi_io_completion_action(struct scsi_cmnd *cmd, int result)
+ 				case 0x1a: /* start stop unit in progress */
+ 				case 0x1b: /* sanitize in progress */
+ 				case 0x1d: /* configuration in progress */
+-				case 0x24: /* depopulation in progress */
+-				case 0x25: /* depopulation restore in progress */
+ 					action = ACTION_DELAYED_RETRY;
+ 					break;
+ 				case 0x0a: /* ALUA state transition */
+ 					action = ACTION_DELAYED_REPREP;
+ 					break;
++				/*
++				 * Depopulation might take many hours,
++				 * thus it is not worthwhile to retry.
++				 */
++				case 0x24: /* depopulation in progress */
++				case 0x25: /* depopulation restore in progress */
++					fallthrough;
+ 				default:
+ 					action = ACTION_FAIL;
+ 					break;
 -- 
-Florian
+2.48.1.362.g079036d154-goog
+
