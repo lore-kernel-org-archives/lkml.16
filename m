@@ -1,162 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E2A433B1;
-	Thu, 30 Jan 2025 07:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DF1433B1
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 07:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738221977; cv=none; b=D2yW++DTDMxYzcQxI4EnApzlnB+h81L96crnhIs7uE0B1fSy8W1EWqAfh/OulhzIpu9/SB146ay6Cvwcg6MoWtxBe9ES2vRzX7XqMhaKvycFtMJE7XlfELtpoAuhVnkItHL6BpbIoERKvymdXO7vNAClS8tcFstSApdafVbOzEs=
+	t=1738222072; cv=none; b=nnD9D/EpLeCUtLS9p72YQb/qzIsdsi+T8Ty0Gr9WvQ2l2W3CL5nL2qIpArxtveEj6NvsAY2E2wvK2bU5RUch3MVDYjq70phR48COGCWNOmz8nrKWj+Oj+D1XdkKFoqZQ6CDX0fx4CfTNB2Sq1krPTDtgJJB369nCWgjFO6REWS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738221977; c=relaxed/simple;
-	bh=ZU/fxjXisLMnyON1qchdh4GygxZ4cUrjTB3cD3A/U2A=;
+	s=arc-20240116; t=1738222072; c=relaxed/simple;
+	bh=7ooFrYEvXGppgi1m3ADXnhqtmfTzP2mkrJO+malDlR4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NpfmajGx6oyDXn4pyhxxUgx0c526lMJZ7oxKZKSMHvr1gA5LMKo3RltyODDEVqZjthEfeugd45ZrbAxzf8LWi6ySRHFykrgSbdV/iv+BDUFPP6UYeQprJQdlpkhQ+mVuZTJOLTvpg/CCjngmDrlIG9+gC3gsOyzOp/pvoSmm1SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJUCz+xp; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=jd+KhPHVC5xpxVwb6+9fVjmvR3KCttaNs9rc+bNyuG21YNSEt6VvsouqaEbeHzYhaB55wQkfc1dFYx1N7jfo3E3/hP7ccMeJUCwxhDB2QkOO9IxsMTA96fLcxn2hGFdnIAsT0RFR99EYl9wKLiQAkTU/U4Qx58stn7XzMgjTkOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=r7LC5MFg; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJUCz+xp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4782C4CED2;
-	Thu, 30 Jan 2025 07:26:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738221974;
-	bh=ZU/fxjXisLMnyON1qchdh4GygxZ4cUrjTB3cD3A/U2A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tJUCz+xpg5g+kXWEG5k3Zc42O5EY/L1E2iHx4PNy9sTGAGoL67gwnVdEY+VooE/L/
-	 ZX1MTcJX9kO0zy5f6BR3L80uDp7/Hsbe2fZT7X4JPzdctxCv9xnJ8ulnQCIiR09H/o
-	 /ixs7JY+/UxylFiJhnjr/r268z8ZNkyQu1XofS4dg41rnaWBj8DCOiVV8LmFReOoFN
-	 1APBVU0MiGitnHqI4w8v3mJxAIsZHFiGKzc9j56XO2tbE5PBKWEMmxlPjy+qnyKIPX
-	 YMRW5iXSq0xKyTLmfsDPYoqalqL67J3JtGIeeumX9aBSDRKbt19QcMsrCN0fbqQmfr
-	 IfZK/FVvN6W7A==
-Message-ID: <40a3dced-defe-412d-b5b2-efcc9619d172@kernel.org>
-Date: Thu, 30 Jan 2025 08:26:07 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="r7LC5MFg"
+Message-ID: <d3feb12a-aca9-40b8-8a51-cc9fedce45e5@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738222068;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f+Av1dENmYikaBPtQcog50en8sIRIC8K1StuKHu6dvA=;
+	b=r7LC5MFgaJkLjxdR5esCnPD3wUbYJeEgscYb+Ks2vKqP+lfq1iqkEL9OotkKWLlilxryJn
+	efBJK9fS9K9QhFnH+UAFFJa4E35W61e7yJeQXEwhGP9V/r7hiyUtFcsA4uPzXgx69mqqNl
+	LGrG3Ke+hbCgGAGlZFvGnNRyDY8gWRQ=
+Date: Thu, 30 Jan 2025 08:27:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
-To: matthew.gerlach@linux.intel.com
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
- conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, matthew.gerlach@altera.com,
- peter.colberg@altera.com
-References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
- <20250127173550.1222427-4-matthew.gerlach@linux.intel.com>
- <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org>
- <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 1/6] RDMA/rxe: handle ICRC correctly on big endian systems
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Eric Biggers <ebiggers@kernel.org>, linux-rdma@vger.kernel.org,
+ Mustafa Ismail <mustafa.ismail@intel.com>,
+ Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+ Leon Romanovsky <leon@kernel.org>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+ Bernard Metzler <bmt@zurich.ibm.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250127223840.67280-1-ebiggers@kernel.org>
+ <20250127223840.67280-2-ebiggers@kernel.org>
+ <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
+ <20250129183009.GC2120662@ziepe.ca>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20250129183009.GC2120662@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 29/01/2025 20:42, matthew.gerlach@linux.intel.com wrote:
-> 
-> 
-> On Wed, 29 Jan 2025, Krzysztof Kozlowski wrote:
-> 
->> On 27/01/2025 18:35, Matthew Gerlach wrote:
->>> Add the base device tree for support of the PCIe Root Port
->>> for the Agilex family of chips.
+在 2025/1/29 19:30, Jason Gunthorpe 写道:
+> On Wed, Jan 29, 2025 at 10:44:39AM +0100, Zhu Yanjun wrote:
+>> 在 2025/1/27 23:38, Eric Biggers 写道:
+>>> From: Eric Biggers <ebiggers@google.com>
 >>>
->>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->>> ---
->>> v3:
->>>  - Remove accepted patches from patch set.
->>>
->>> v2:
->>>  - Rename node to fix schema check error.
->>> ---
->>>  .../intel/socfpga_agilex_pcie_root_port.dtsi  | 55 +++++++++++++++++++
->>>  1 file changed, 55 insertions(+)
->>>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
->>>
->>> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
->>> new file mode 100644
->>> index 000000000000..50f131f5791b
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
->>> @@ -0,0 +1,55 @@
->>> +// SPDX-License-Identifier:     GPL-2.0
->>
->> Odd spaces in SPDX tag.
+>>> The usual big endian convention of InfiniBand does not apply to the
+>>> ICRC field, whose transmission is specified in terms of the CRC32
+>>> polynomial coefficients.
 > 
-> Yes, there should only be one space.
+> This patch is on to something but this is not a good explanation.
 > 
->>
->>> +/*
->>> + * Copyright (C) 2024, Intel Corporation
->>> + */
->>> +&soc0 {
->>> +	aglx_hps_bridges: fpga-bus@80000000 {
->>> +		compatible = "simple-bus";
->>> +		reg = <0x80000000 0x20200000>,
->>> +		      <0xf9000000 0x00100000>;
->>> +		reg-names = "axi_h2f", "axi_h2f_lw";
->>
->> Where is this binding defined?
+> The CRC32 in IB is stored as big endian and computed in big endian,
+> the spec says so explicitly:
 > 
-> The bindings for these reg-names are not currently defined anywhere, but 
+> 2) The CRC calculation is done in big endian byte order with the least
+>     31 significant bit of the most significant byte being the first
+>     bits in the 32 CRC calculation.
+> 
+> In this context saying it is not "big endian" doesn't seem to be quite
+> right..
+> 
+> The spec gives a sample data packet (in offset/value pairs):
+> 
+> 0  0xF0 15 0xB3 30 0x7A 45 0x8B
+> 1  0x12 16 0x00 31 0x05 46 0xC0
+> 2  0x37 17 0x0D 32 0x00 47 0x69
+> 3  0x5C 18 0xEC 33 0x00 48 0x0E
+> 4  0x00 19 0x2A 34 0x00 49 0xD4
+> 5  0x0E 20 0x01 35 0x0E 50 0x00
+> 6  0x17 21 0x71 36 0xBB 51 0x00
+> 7  0xD2 22 0x0A 37 0x88
+> 8  0x0A 23 0x1C 38 0x4D
+> 9  0x20 24 0x01 39 0x85
+> 10 0x24 25 0x5D 40 0xFD
+> 11 0x87 26 0x40 41 0x5C
+> 12 0xFF 27 0x02 42 0xFB
+> 13 0x87 28 0x38 43 0xA4
+> 14 0xB1 29 0xF2 44 0x72
+> 
+> If you feed that to the CRC32 you should get 0x9625B75A in a CPU
+> register u32.
+> 
+> cpu_to_be32() will put it in the right order for on the wire.
+> 
+> Since rxe doesn't have any cpu_to_be32() on this path, I'm guessing
+> the Linux CRC32 implementations gives a u32 with the
+> value = 0x5AB72596 ie swapped.
+> 
+> Probably the issue here is that the Linux CRC32 and the IBTA CRC32 are
+> using a different mapping of LFSR bits. I love CRCs. So many different
+> ways to implement the same thing.
+> 
+> Thus, I guess, the code should really read:
+>   linux_crc32 = swab32(be32_to_cpu(val));
+> 
+> Which is a NOP on x86 and requires a swap on BE.
+> 
+> Zhu, can you check it for Eric? (this is page 229 in the spec).
 
-Then you cannot use them.
+Got it. In my IBTA spec, I can find what you mentioned in the IBTA spec.
+Your explanation is in details and very nice.
+Thanks a lot.
 
-> they are also referenced in the following:
->      Documentation/devicetree/bindings/soc/intel/intel,hps-copy-engine.yaml
->      arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
-> I am not exactly sure where the right place is to define them, maybe
-> Documentation/devicetree/bindings/arm/intel,socfpga.yaml. On the other 
-> hand, no code references these names; so it might make sense to just 
-> remove them.
+Zhu Yanjun
 
-In general: nowhere, because simple bus does not have such properties.
-It's not about reg-names only - you cannot have reg. You just did not
-define here simple-bus.
+> 
+> I assume the Linux CRC32 always gives the same CPU value regardless of
+> LE or BE?
+> 
+> Jason
 
-Best regards,
-Krzysztof
