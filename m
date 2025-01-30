@@ -1,105 +1,103 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCE213D89D;
-	Thu, 30 Jan 2025 20:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B5F13D89D
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 20:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738269243; cv=none; b=mf6spGo6CC2ULhXveSXJnSFi2VZc0R86oESFjP4DnHjbJrAkTuf4xCamMwuBR8Yfd1WTAhPrg+/p8gzCSv7A1/6gT3B/INSInXhcXqZUVqEP34P12YEAkMYK6rAP8CR58/ix+rYo9+xGv+f3Nmgw9h24OyD17f1+hc9QHBmRHsQ=
+	t=1738269304; cv=none; b=ApCKmB6T+miumPSIlIywb40E0bonDxElkACFhlXnZ52OagtH+C13kbW4rNsSb7XaHusvTUu+bq9YpkJItAIbzHWPuXL6dDLRobbcCBOdmf7Tqr+EFyG5Uyg2pPX44qb+dP284F2LAJqRJCKC82ZOV0HrZyxq5AfkaaNqaC2yynw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738269243; c=relaxed/simple;
-	bh=Ut9zIlhirxl3yLYUOuo34o+FEI0eWkaDFYu4wC1gpS0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HsvIkmkuq2fBaRSrj0FefJue+R3NjzNZngPhUZ0qHPRraQhPOQl5ak5Pq6iOv7e5YoQBpsQWoYkbmbHNhpCKlOUGlEAYkc0YvOAnK4kQXY4LFbweBEl33o2OEpkhrni7KfF1cR9p4W9Qz5LyL34lxTXtdouKTWGh6W8nnEuuqYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=wsGxR3Wo; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1738269304; c=relaxed/simple;
+	bh=i90LZEJP39KZzuaancmUFtDGdMy9w3zyTcWopQWmg60=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tZ7UehKNnIyPOxJEtHNKODhmjGFmAofz+RS1e/oep8NMyyWZHIV0YThsNuiQXFsT4wzQOz5vxJvVx/0SJTbH+x05QR1Vg/GLMbPkX/17MG0cXl9U1eQw0b0ypRMk8O3J3+WTRRZIQ2fCf7MVyB58V5H6WG9Q9ddBypvXD5UBFVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C0SDAGsb; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="wsGxR3Wo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=GDjyYngW/V8rZ/9s/V2isOq01Zq2IRay1Y1ld6/4IKA=; b=wsGxR3WotEAaoIbMjuMGP44tEV
-	h30tAbAt8BGPE+tBCGMkjfFLPpQbldEY68cX2M2Asp9fLBgbgU5FRpJQ0IDxBoGSMsTjqdq6oy5vU
-	gfldPf0af8xcnoO7be0Feo+EMaKxOprioif7Jr0WAbtsfZYFw25CqABkFVU4vwvL8uzz+yCl9OqOr
-	zMbEXrtT3trtJRQgoV/bJHlh2NZsZxyU5mb1VGJpi9MFs2e8tVeFGgzoXKAH47doMdvX1iSPRNVNy
-	QlzQu7E2NRD0ycPV8L/1GWI1wJ1DJYJy//Bh+u1sT9IfuucEfyUo1O6J6MuHEmd0yFmmUFLAjEGHE
-	YAJWXOOQ==;
-Received: from i53875b5c.versanet.de ([83.135.91.92] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tdbEM-0001gn-Po; Thu, 30 Jan 2025 21:33:42 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Damon Ding <damon.ding@rock-chips.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- rfoss@kernel.org, vkoul@kernel.org, sebastian.reichel@collabora.com,
- cristian.ciocaltea@collabora.com, l.stach@pengutronix.de,
- dmitry.baryshkov@linaro.org, andy.yan@rock-chips.com, hjc@rock-chips.com,
- algea.cao@rock-chips.com, kever.yang@rock-chips.com,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- Damon Ding <damon.ding@rock-chips.com>
-Subject:
- Re: [PATCH v6 08/14] drm/rockchip: analogix_dp: Add support to get panel from
- the DP AUX bus
-Date: Thu, 30 Jan 2025 21:33:41 +0100
-Message-ID: <3340006.44csPzL39Z@diego>
-In-Reply-To: <20250123100747.1841357-9-damon.ding@rock-chips.com>
-References:
- <20250123100747.1841357-1-damon.ding@rock-chips.com>
- <20250123100747.1841357-9-damon.ding@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C0SDAGsb"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab2aea81cd8so233156966b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 12:35:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738269301; x=1738874101; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i90LZEJP39KZzuaancmUFtDGdMy9w3zyTcWopQWmg60=;
+        b=C0SDAGsb6aoxiIDl26VA28h6nEEWfzLSputwGsqgRGp/0q5KH4/B0nVzCAlLlQ45kA
+         mN27ySAI//VFOz0+FNnTkUwbQNNdOLZIO6f+58MDqB9qvURN4cxEQp2//QNJaPcdosWn
+         Oyqt3gMx+3wQRAy6cyLn5M3n8YAYPO3wycteGkxICxwACC+EIEBdpHR1x83ZE4mO0BCM
+         nDKq7N8vxhABhZTuLruzsQZSlTOtuMhffpkL7orZXpr+0Q2FWb8vs8M6uQPkI4yLzfuC
+         YrnebunTh0M+I3HUOy8VP31rUceAu8O1dyrmzNa8T/HrvgJT5IZ+pgQZrrrPT9y9Z2zU
+         xQZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738269301; x=1738874101;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i90LZEJP39KZzuaancmUFtDGdMy9w3zyTcWopQWmg60=;
+        b=o9mEaQ3YLUD3xZ2x9MKEyh2t9lwmV8RIMT26rvP9v0FB0livBtwuhd+Dhaz7xOpu/p
+         xlNzLk3K9AiZTVtdJUIpB7bDNaPJgQuD1DmMYfGp3EMQS4CneqCjfrwG1CiE9HxlhP7k
+         z0A52k+ss6hC7oXzExUD3TWoXEGROBC+W0qvLfy1rWWJpXAPOXtj2Q/bFej1YXc1EXzI
+         shPdjI+zCtAPEvlsuPP2QJ71Knu2sCvXyWDVg70mx/9b2Ifg6StANSunMcKAVgGiohtY
+         611rZG7DYy4Tvjjmm8Xv7HpV+qFrJYzKnf/ucZ2K4PI7kDXvFDMKpw3D7l0uMNbFQLYg
+         NIog==
+X-Forwarded-Encrypted: i=1; AJvYcCVuLHBBLDonaEGVXajoCeWjK/DnvPfl3Pf4GharF7aazoX9XVJ03snzI59KpE/tX08B9+tIbAZQzTLRTDQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyczb+nFjFtqShZW30JkHnedeIpYPWeWt48Cf/+Dyny4J65eQwC
+	Mu+baR1sEtjTwF61DDPzjHwNdyHZyzUED2TqWo2PgvYSp7PznHlTBDo2FXZPeYSRaR1/CtUgXCP
+	UEMX1vUFq4fqYvs2rKstBQqObAiSCYzn7AXgc
+X-Gm-Gg: ASbGncuNPlm1zRWsn0vsOiUmUUQUqnDwx1SDLI+AEkFdoQE2w1uiuzkJiWPS2s70Wbf
+	3wf55taauHozpQA+K8MjVltDZBH55bm7XC52UKyINtc77u8/rvLNvgcP7ai78xiEROJOb4ITNzj
+	BDP3eFgYREWSAMyEsnY2vp8R2dGUhoHw==
+X-Google-Smtp-Source: AGHT+IGECMPAgyniOqYNB21R66I8EdMyOHzZpuuSW7CxtAKNGfo7YHvttie355d+QCVHN1qEbYdE+9qUUvFsylnBIlM=
+X-Received: by 2002:a17:907:1c0e:b0:aab:8ca7:43df with SMTP id
+ a640c23a62f3a-ab6cfe11fa5mr941990066b.39.1738269300801; Thu, 30 Jan 2025
+ 12:35:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com> <20250130100050.1868208-6-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250130100050.1868208-6-kirill.shutemov@linux.intel.com>
+From: Yu Zhao <yuzhao@google.com>
+Date: Thu, 30 Jan 2025 13:34:24 -0700
+X-Gm-Features: AWEUYZl3-5-D2vyBu6SH4C2leVIlg1PIhkFjDOkk3Xxy6Plb6I0iqOiSPQjOIdU
+Message-ID: <CAOUHufbZAp9jJb7AA_LF2sS9TbN-T4ssSrp2GbqWSAbf5rUCVg@mail.gmail.com>
+Subject: Re: [PATCHv3 05/11] mm/truncate: Use folio_set_dropbehind() instead
+ of deactivate_file_folio()
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+	Vlastimil Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, intel-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Damon,
+On Thu, Jan 30, 2025 at 3:01=E2=80=AFAM Kirill A. Shutemov
+<kirill.shutemov@linux.intel.com> wrote:
+>
+> The recently introduced PG_dropbehind allows for freeing folios
+> immediately after writeback. Unlike PG_reclaim, it does not need vmscan
+> to be involved to get the folio freed.
+>
+> The new flag allows to replace whole deactivate_file_folio() machinery
+> with simple folio_set_dropbehind().
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-Am Donnerstag, 23. Januar 2025, 11:07:41 MEZ schrieb Damon Ding:
-> Move drm_of_find_panel_or_bridge() a little later and combine it with
-> component_add() into a new function rockchip_dp_link_panel(). The function
-> will serve as done_probing() callback of devm_of_dp_aux_populate_bus(),
-> aiding to support for obtaining the eDP panel via the DP AUX bus.
-> 
-> If failed to get the panel from the DP AUX bus, it will then try the other
-> way to get panel information through the platform bus.
-> 
-> Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
-> 
-> ---
-
-> @@ -450,9 +461,17 @@ static int rockchip_dp_probe(struct platform_device *pdev)
->  	if (IS_ERR(dp->adp))
->  		return PTR_ERR(dp->adp);
->  
-> -	ret = component_add(dev, &rockchip_dp_component_ops);
-> -	if (ret)
-> -		return ret;
-> +	ret = devm_of_dp_aux_populate_bus(analogix_dp_get_aux(dp->adp), rockchip_dp_link_panel);
-
-This causes an undefined-reference error, so you probably need something like:
-
-diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
-index f9cbbb40b36f..fa946a809858 100644
---- a/drivers/gpu/drm/rockchip/Kconfig
-+++ b/drivers/gpu/drm/rockchip/Kconfig
-@@ -8,6 +8,7 @@ config DRM_ROCKCHIP
-        select DRM_PANEL
-        select VIDEOMODE_HELPERS
-        select DRM_ANALOGIX_DP if ROCKCHIP_ANALOGIX_DP
-+       select DRM_DISPLAY_DP_AUX_BUS if ROCKCHIP_ANALOGIX_DP
-        select DRM_DW_HDMI if ROCKCHIP_DW_HDMI
-        select DRM_DW_HDMI_QP if ROCKCHIP_DW_HDMI_QP
-        select DRM_DW_MIPI_DSI if ROCKCHIP_DW_MIPI_DSI
-
-
-
+Acked-by: Yu Zhao <yuzhao@google.com>
