@@ -1,106 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77E71E9B29
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 18:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1200B38DD3
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 18:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738260929; cv=none; b=H9POQJLTtriBMDWGgu51iMN2CbeevIlYp92NfcvAf1prULV+bcLMgvMdn5BT0sdxZN4Ux4lTmSmfaOgy0VUD5hz/eDtjiJTBaBky7jJjc7Uwnn0TVbkzjdHx3zQSFNREt8ckN2MITTYna1yMgla1QNCc2MM7Mfu8WeOvG9ezks4=
+	t=1738260952; cv=none; b=l3ygcsHQ3ZALyCL6coU2E6z7ErqrEo+pCwcIEptW0y8fVioETrqJBLxb8x6180cwAvbS4s/nG0qhBHyA6AjtF4ascaRxcvGTyjBE6WyXC9i5IPuwr11QVDSNpT3X8c8cgi4JWEaLCPJP4D0nkj3XmbTMFM6ZZt5iByQO4nxIqDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738260929; c=relaxed/simple;
-	bh=XPT+9XkaTAzObYJ1bdlbTqw6s3LWjn4zwDx+3v+UTR4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=QKyGaznY/xmHIyUVtsw4zhyoiUTX7kH1b1tpk2BYIVIVjGatLK8MrYLxlOMQwaNtyWK7UDIoTGCKPmipLaBCDf8/1UDgnRGKYIKBeOxJIb/iLZvAfDYkGnAH9vMip6AOd6+w1iBvkhCLDUMGPx+6+Pysds41EHPjqL/f1wg18+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=daXhFsUU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738260952; c=relaxed/simple;
+	bh=At5pzXzArVUwf/ifDdm/Z1ds0BoRp6LnLgHv8zhoARI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KfyQco9QENSvUVHFDoroDW0SamrATK6A/kFiltqriKXfyK0h940/8duo4YwS+vpTwU8uhtBec6OSBlwC88MahqdxcINkM+xMUuzWxbWHi1hWcMBQoV8JyK8U/63MIbntIKbE0mv4ot93rcQ65e8ArLcLf5lYatk5uxVvxIyhmmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZFSKpVzr; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="daXhFsUU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738260926;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=d23NPHmcbepta9lyEp40cUJkMkXp8ZsIbiHpFpP824s=;
-	b=daXhFsUUY+29N1SIYDoUwOi/zsE4f2AnbJrDlmyVug0pGRajLYGZcD11ITodaLk+b40REf
-	pfumkNquJLHNQDcPbkaWkuInPyL8yG8euPdjmeV94zKtXcmm9LwmZxeWuA4jV4IxEZm7O/
-	j6OcGOLuUxDLgeRlg192ncaEyzEkx58=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-592-utabT-OKMDqFep12mqVStA-1; Thu,
- 30 Jan 2025 13:15:23 -0500
-X-MC-Unique: utabT-OKMDqFep12mqVStA-1
-X-Mimecast-MFC-AGG-ID: utabT-OKMDqFep12mqVStA
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C7DC419560AB;
-	Thu, 30 Jan 2025 18:15:21 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.88.125])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F2D2C1800268;
-	Thu, 30 Jan 2025 18:15:16 +0000 (UTC)
-From: Wander Lairson Costa <wander@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Takashi Iwai <tiwai@suse.de>,
-	Wander Lairson Costa <wander@redhat.com>,
-	linux-kernel@vger.kernel.org (open list:TRACING),
-	linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Subject: [PATCH] irq/tracing: Add IRQ name to irq_handler_exit tracepoint
-Date: Thu, 30 Jan 2025 15:14:38 -0300
-Message-ID: <20250130181439.58130-1-wander@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZFSKpVzr"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-467abce2ef9so8231cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 10:15:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738260950; x=1738865750; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NEOd77SjPb3m7UT+5pRuzEhuc6qBHIUpHw9saacVwdQ=;
+        b=ZFSKpVzr45UPgxBYQxiPSDkR/NkP6BNxBqb+aZP5fxBY1jJH2KxX2O7z8LHQJ0puKI
+         JU87GHeRSOYyh2JZEk578Lnj852FUDq7RdYjvB2bulZvYLDk7QOH9Ba35fP0/n58KE7S
+         +iMcDrRWYJMPAR+KMxTH9HKbK2mJM/hwLbkdgcAwZ6b8u6nr8MVmSmHhUHamC9Zdg9WP
+         k9hdThNZU1fID3+l+EIm54JtX5KBSHUeZ+grepEpbionP0u/hRs0eqHnidE5BZzz42Ed
+         NupzRsq0fArJhShFAaEsK1vB0VVo1Wm0uqz74eyE2rDjafvwF0dNPDwGvYoTTYzBL97m
+         zq0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738260950; x=1738865750;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NEOd77SjPb3m7UT+5pRuzEhuc6qBHIUpHw9saacVwdQ=;
+        b=utqG7MSBFhTrlQ2G1Q2lDQ73NAl+ANe9V15r6duLohcCxa6bxiwCOsVglFYxSDB1+w
+         4anuBjdCTFrvO/vh8Z9zUtGkruY1yDmM7xCSOZKvlkDzWBYOTCSySkurfqSrHancW1/D
+         CJKrYqnNp1cf/No02YW+WJ9s9uJOSz5vQqaaryYkpxOwRW3TatwbroOGJBgTxGgzb1HE
+         limZEFzG7lFPjgVk1e+T8tH+oqRFcN3qunHfFgbstA4IXfYYi1ZozCV1dsFUoexElKZ3
+         KtjtnlW295chv9DdlO1caw1fkwM54zRw9+cDuG+6CHSfj0KgAvUGPQ50nnZdzlG681Lx
+         UK9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU3hV4KesA6aaglLNjjHfRtWVz6cozS6uCGt24iLkgc7bjEavpSswsWVdMPImagAbN0nZuOZKB2Qblqerc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywr6gnAflV5Mmg051bAIkxSQ8Qk5y3NrpMkcSerecAt5HfxDDCY
+	jFD1Zrpu3TCSCK2gCKfc0as/sFlLG8qpqSgZzHTCiifX916Zv6ZJf0PrH/k6sDM4FJogH2cB8yr
+	v5WwV+GQBUR7X3Wxnjs668Z1P3coAyn+oNHYL
+X-Gm-Gg: ASbGncsZt/2s04UZnFnFnw0OUWZTNZK31Md5NwnyDjn/B6J1rXMgXnYLulY2fME2xF/
+	2YCUg6jREc5hUVMj38xkZPlmja3jmR7Sl4E27hiad/f2icXGqblQ0kv76mA8L12OFUfSSl5cqFE
+	ZJs78qNrZ//8P91fWLRiTzk4uY
+X-Google-Smtp-Source: AGHT+IFp3IJsIIJ2xzyXdmC4xIiXCDX+fRic3ZlvOOA8Nre+b/VfyACkHHml3EuDasdckZPGmgEzAI0EypULH8+K6l8=
+X-Received: by 2002:a05:622a:3cb:b0:466:861a:f633 with SMTP id
+ d75a77b69052e-46fdf5b7ce6mr3849541cf.5.1738260949710; Thu, 30 Jan 2025
+ 10:15:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <20250127215020.4023545-1-mclapinski@google.com>
+ <20250127215020.4023545-3-mclapinski@google.com> <20250127171857.34c71d3a6f0cde1953b02a58@linux-foundation.org>
+ <e524abae-918b-4b23-8648-bf56f78464de@suse.cz>
+In-Reply-To: <e524abae-918b-4b23-8648-bf56f78464de@suse.cz>
+From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
+Date: Thu, 30 Jan 2025 19:15:38 +0100
+X-Gm-Features: AWEUYZnKb3rdQYIrF52rDuhVSFHUBikcqJzeUKWyTV-PGmhKIVE_rm6uFpOUdG0
+Message-ID: <CAAi7L5cc7q=3f_vF+7AYE15WTRDs8Tr1mkb6cm5YuU8n8Wu0cg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] mm/compaction: make proactive compaction high
+ watermark configurable via sysctl
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Pasha Tatashin <tatashin@google.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The irq_handler_entry tracepoint includes a "name" field, which allows
-for easy identification and filtering of specific IRQs. However, the
-irq_handler_exit tracepoint lacks this field, making it difficult to
-pair corresponding entry and exit events for analysis.
+On Thu, Jan 30, 2025 at 3:18=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz> wr=
+ote:
+>
+> On 1/28/25 02:18, Andrew Morton wrote:
+> > On Mon, 27 Jan 2025 22:50:20 +0100 Michal Clapinski <mclapinski@google.=
+com> wrote:
+> >
+> >> Currently, the difference between the high and low watermarks for
+> >> proactive compaction is hardcoded to 10. This hardcoded difference is
+> >> too large for free page reporting to work well.
+> >>
+> >> Add a new sysctl, `compaction_proactiveness_leeway`, to control the
+> >> difference between the high and low watermarks.
+> >>
+> >
+> > Oh dear, yet another tunable.  Is there any way in which we can
+> > acceptably improve the kernel without adding this?
+>
+> compaction_proactiveness between 0 and 90 works as usual,
+> thus up to low watermark of 10 and high watermark of 20
+>
+> compaction_proactiveness between 90 and 100 additionally reduces leeway,
+> with value of 100 resulting of low =3D high =3D 0
+>
+> or some similar scheme, as long as a value of 100 does low =3D high =3D 0
 
-Add the "name" field to irq_handler_exit to enable consistent tracking
-and correlation of IRQ entry and exit events.
+Yes, I was thinking about
+leeway =3D min(10, (100 - wmark_low) / 2);
+to be able to get small leeway (and therefore more stable memory usage
+on the host) without having to opt for very aggressive compaction
+goals.
 
-Signed-off-by: Wander Lairson Costa <wander@redhat.com>
----
- include/trace/events/irq.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Both of those solutions have the disadvantage of introducing even
+bigger changes to the behavior of systems that were already set to
+compaction_proactiveness close to 100. Though I'm not sure how common
+changing this tunable at all is.
 
-diff --git a/include/trace/events/irq.h b/include/trace/events/irq.h
-index 837c1740d0d0..d705406daa37 100644
---- a/include/trace/events/irq.h
-+++ b/include/trace/events/irq.h
-@@ -88,16 +88,18 @@ TRACE_EVENT(irq_handler_exit,
- 
- 	TP_STRUCT__entry(
- 		__field(	int,	irq	)
-+		__string(	name,	action->name	)
- 		__field(	int,	ret	)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->irq	= irq;
-+		__assign_str(name);
- 		__entry->ret	= ret;
- 	),
- 
--	TP_printk("irq=%d ret=%s",
--		  __entry->irq, __entry->ret ? "handled" : "unhandled")
-+	TP_printk("irq=%d name=%s ret=%s",
-+		  __entry->irq, __get_str(name), __entry->ret ? "handled" : "unhandled")
- );
- 
- DECLARE_EVENT_CLASS(softirq,
--- 
-2.48.1
-
+> It's rather arbitrary but AFAIU does what Michal needs and higher
+> proactiveness means more aggressive compaction.
+>
+> Question is, would anyone else find it useful to have low_watermark of 0 =
+and
+> high watermark of 10?
+>
+>
