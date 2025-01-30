@@ -1,118 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E0E1E9B3F;
-	Thu, 30 Jan 2025 15:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7780E13FEE
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738250412; cv=none; b=Var1toKtvx81UFy2PE+513/xFQxgo+cGjv00xDA28AGsOQ7cMYmtn+jCM24PkIyYXmeWY6rbu6T3iFjxsqBjIr7un3pdXk6nVmJ+nkb+cq2YDKiRhqHUE90zIV2W5aZB2yG6fudatEbKszkOjDtn/5kOHSdAKMSiu+59YmasYoU=
+	t=1738250585; cv=none; b=uNlk1XkSZnSkxZ1tB1OB53+1ANa3U8nHwpJS9le9BqgFPfBfzqoppkdkn6oLn7Frn0tBsObjnXwQ7u5/h2K3oMfuDKAUlzSLHAPpYEyBHvsWOr9u8DTBGg6kxQA8xk70GSFLxNfWwDV8ZhY6wyzw3RwRNAyrWwYVKuf41BzbNW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738250412; c=relaxed/simple;
-	bh=LzJikOHTQrKhiSfwSHwXbPkw3fyrXwxEDOZFzZUeWWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bUxasOC6w62oMSKuB3MOufb7qdSNZTmi5D1LgWDbrC77qMHbXUOofK0hnsErO27+qI1eYfLxPPcWkYcN+Edr9MgXJYztYsU9jS6Ct4h/w1lR0YoC0AqHdVD15XUOVXsQ/F5vqvevGxc+2EfdCybIwJjWLa0b8jwM5eUbAN+mgI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OW+rZwmM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OW+rZwmM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57258C4CED2;
-	Thu, 30 Jan 2025 15:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738250412;
-	bh=LzJikOHTQrKhiSfwSHwXbPkw3fyrXwxEDOZFzZUeWWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OW+rZwmMF9dPYRDw7+8Pu8ODOo9lCCF9S9P1aYZNpd20WyCl4ax7Az98braP/Vw0r
-	 cgcpXs9oQsBOlLFbMNjs1nryS9QfwQ+2xowT3uxz3DNDXH8pVse0jSm20CNEI2OYtV
-	 EYd4YjIHfkEN34M9S5TWCdL4Zamtgdh3TK2zyPlOau4X2s5Hqy77ZvprC4R99AgAXJ
-	 tWFfI5COyFLEf30LJbSr43O/yqmH0oWJBiKMkKwXwW2CMdAPjop15kz5QJSW+spd5+
-	 C2bSTvMJsW1UCWxEb6O7eCjl1R5lmaBLMjC4qFSaWaasUo8WfI1tpZLtldN1UzfqXj
-	 VgpuQv0KAiHsw==
-Date: Thu, 30 Jan 2025 16:20:04 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Matt Bobrowski <mattbobrowski@google.com>
-Cc: Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, 
-	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, 
-	viro@zeniv.linux.org.uk, jack@suse.cz, kpsingh@kernel.org, liamwisehart@meta.com, 
-	shankaran@meta.com
-Subject: Re: [PATCH v11 bpf-next 1/7] fs/xattr: bpf: Introduce security.bpf.
- xattr name prefix
-Message-ID: <20250130-erklimmen-erstversorgung-93daf77c9dc4@brauner>
-References: <20250129205957.2457655-1-song@kernel.org>
- <20250129205957.2457655-2-song@kernel.org>
- <Z5tbH13qK6rLJVUI@google.com>
+	s=arc-20240116; t=1738250585; c=relaxed/simple;
+	bh=uww7W12zRIdXHNpWXGHheoZMHdMXMeB1fBakeVZJAmk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uIlh7Q9w/QORNAQZ/KyCeX04HHrsq2I4yNALH8iG+U2EKNiHt4VgLgjSpXFZ5Q7KPaeKcs5l+Pr/xmComKpjrYbMSIgymMH8G/GU20wWn7GGGc7WR5FHgkHldG1TvbjHEMtOAkpCGRgtAiToe12Ry5QrKC8QuGrJO2mk5Y8Igc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4AF97442BB;
+	Thu, 30 Jan 2025 15:23:01 +0000 (UTC)
+Message-ID: <ac53a62e-4f89-49c9-a755-fdfa7a582337@ghiti.fr>
+Date: Thu, 30 Jan 2025 16:23:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z5tbH13qK6rLJVUI@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv/atomic: Do proper sign extension also for unsigned
+ in arch_cmpxchg
+Content-Language: en-US
+To: Andreas Schwab <schwab@suse.de>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <mvmed0k4prh.fsf@suse.de>
+ <c9cbc2be-d1fd-44ef-aa14-fd25a5ff8490@ghiti.fr> <mvm5xlw4anb.fsf@suse.de>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <mvm5xlw4anb.fsf@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeiudeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeeuieegveegudffiedvveejhfejiefhgefhkeejtdeufedufeehhfeufeduleehieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepudelfedrfeefrdehjedrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleefrdeffedrheejrdduleelpdhhvghloheplgduledvrdduieekrddvuddrvdehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeefpdhrtghpthhtohepshgthhifrggssehsuhhsvgdruggvpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alex@ghiti.fr
 
-On Thu, Jan 30, 2025 at 10:57:35AM +0000, Matt Bobrowski wrote:
-> On Wed, Jan 29, 2025 at 12:59:51PM -0800, Song Liu wrote:
-> > Introduct new xattr name prefix security.bpf., and enable reading these
-> > xattrs from bpf kfuncs bpf_get_[file|dentry]_xattr().
-> > 
-> > As we are on it, correct the comments for return value of
-> > bpf_get_[file|dentry]_xattr(), i.e. return length the xattr value on
-> > success.
-> 
-> Reviewed-by: Matt Bobrowski <mattbobrowski@google.com>
-> 
-> > Signed-off-by: Song Liu <song@kernel.org>
-> > Acked-by: Christian Brauner <brauner@kernel.org>
-> > Reviewed-by: Jan Kara <jack@suse.cz>
-> > ---
-> >  fs/bpf_fs_kfuncs.c         | 19 ++++++++++++++-----
-> >  include/uapi/linux/xattr.h |  4 ++++
-> >  2 files changed, 18 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/fs/bpf_fs_kfuncs.c b/fs/bpf_fs_kfuncs.c
-> > index 3fe9f59ef867..8a65184c8c2c 100644
-> > --- a/fs/bpf_fs_kfuncs.c
-> > +++ b/fs/bpf_fs_kfuncs.c
-> > @@ -93,6 +93,11 @@ __bpf_kfunc int bpf_path_d_path(struct path *path, char *buf, size_t buf__sz)
-> >  	return len;
-> >  }
-> >  
-> > +static bool match_security_bpf_prefix(const char *name__str)
-> > +{
-> > +	return !strncmp(name__str, XATTR_NAME_BPF_LSM, XATTR_NAME_BPF_LSM_LEN);
-> > +}
-> 
-> I think this can also just be match_xattr_prefix(const char
-> *name__str, const char *prefix, size_t len) such that we can do the
-> same checks for aribitrary xattr prefixes i.e. XATTR_USER_PREFIX,
-> XATTR_NAME_BPF_LSM.
-> 
-> >  /**
-> >   * bpf_get_dentry_xattr - get xattr of a dentry
-> >   * @dentry: dentry to get xattr from
-> > @@ -101,9 +106,10 @@ __bpf_kfunc int bpf_path_d_path(struct path *path, char *buf, size_t buf__sz)
-> >   *
-> >   * Get xattr *name__str* of *dentry* and store the output in *value_ptr*.
-> >   *
-> > - * For security reasons, only *name__str* with prefix "user." is allowed.
-> > + * For security reasons, only *name__str* with prefix "user." or
->       	  	   	    	 	     	  ^ prefixes
-> 						  
-> > + * "security.bpf." is allowed.
->                       ^ are
-> 
-> Out of curiosity, what is the security reasoning here? This isn't
-> obvious to me, and I'd like to understand this better. Is it simply
-> frowned upon to read arbitrary xattr values from the context of a BPF
-> LSM program, or has it got something to do with the backing xattr
-> handler that ends up being called once we step into __vfs_getxattr()
-> and such?  Also, just so that it's clear, I don't have anything
-> against this allow listing approach either, I just genuinely don't
-> understand the security implications.
+On 30/01/2025 15:52, Andreas Schwab wrote:
+> On Jan 30 2025, Alexandre Ghiti wrote:
+>
+>> That's a nice catch indeed. IIUC, we have the same issue here
+>> https://elixir.bootlin.com/linux/v6.13/source/arch/riscv/include/asm/futex.h#L89
+>> right?
+> Indeed, though it doesn't result in wrong code currently.  This is
+> because the compare value is passed unmodified as u32 to the asm and the
+> compiler keeps the value sign extended in registers.  That would break
+> if you would add a cast to long like in commit 6c58f25e6938 as that
+> would erroneously zero extend it.
+>
 
-I've explained this at lenghts in multiple threads. The gist is various
-xattrs require you to have access to properties that are carried by
-objects you don't have access to (e.g., the mount) or can't guarantee
-that you're in the correct context and interpreting those xattrs without
-this information is either meaningless or actively wrong.
+This is the disassembly I get:
+
+ffffffff800fc540 <futex_atomic_cmpxchg_inatomic>:
+
+...
+
+ffffffff800fc566:       1605a8af                lr.w.aqrl a7,(a1)
+ffffffff800fc56a:       00c89563                bne 
+a7,a2,ffffffff800fc574 <futex_atomic_cmpxchg_inatomic+0x3
+4>
+ffffffff800fc56e:       1ed5a52f                sc.w.aqrl a0,a3,(a1)
+
+a2 is used as it is passed by the calling function, so we can't be sure 
+a2 is sign extended to me, what am I missing?
+
