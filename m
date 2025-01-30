@@ -1,323 +1,199 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D945A372;
-	Thu, 30 Jan 2025 10:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF161ACECA
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 10:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738231597; cv=none; b=DYvIQ9W0XgAATrAQtlIE4HTApeyHyl9cisYvHrPcyAYhRMEthE8vpelN9evxS7caaNjN9Qxsm6kjuZQiwtKsm2cgUCnJ1NKqj8qT8mfBVEH9htuV5seMobv/u2rZnppSpmyWOoI0q8cd4wxvfMkGw2xDQYl/1mv3kEgchuipomU=
+	t=1738231629; cv=none; b=C9QTwT4CRgkV1AV6bOkD9o4VvRA9NQ96LRczJunefU+PCXJPk6h1ADPDvxtHtKv0BqM/Fmmt46/0M8AVLKTKPx/tQky6QWa+Gqz2CdTc6ZUsE4sxTSaCXnSjGroc2vi/yWqgjl5WLwsZs9aeBmpXdp1aB1SW73O/u83hHlAQiHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738231597; c=relaxed/simple;
-	bh=zansQwwQO8AW6eGLsqO6BvUiuPrL917pAn1G5Yf2tZE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Y9xY4VtUXq/4mA7ZrvR8fgQ1aQdjypH5KE533OEfhMsDeK4XPdGELUNmNgrdQCWygq5uhgOgp/kwR1LFjjq4XZiTk+RgJaWD7t1uMaaEWZBX1zLHPLjAGnY26DMm0jyxkOLYg0hvALBvhJdeViSi07dhTF2gFXHsKYSunq+lPhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cAdhZGfd; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738231629; c=relaxed/simple;
+	bh=C1KMbrXvFtdznovRiPt5L1gSHd5K3c+dyr52XHXQN34=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qBMW6OrN30ZijrOcnP/H9e4DCrvQZ/hEO5aIywsBfnIw2jAdP7T2t26bgLuNZqETFzu1AgzwzgDzokXrGt2T0COV3sBXtehZ7ZQP8nR4iLAs01G7/Vq0HIVCOWMJwlouzcAdj26asF++JUuI276quS2qOSuxFikB7roT4kSCmZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g8tiIT5p; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cAdhZGfd"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50U219Wj020932;
-	Thu, 30 Jan 2025 10:06:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=u+ERtO
-	Zjd2yOUTdjgroZYl4cuMkHyd6zo7sQ1PWp69Q=; b=cAdhZGfdj/GC0rZYZ9krLq
-	jtjgqLr73yaY/By4K3fu3gPP8tddg6azXxIpLMcIiRBa/cQJW2HPhu16+PZmRjdt
-	O4Xbyo9sF9gd+yWAsD6fLEHrMIvadPpWG3T7Ak7vqyriizlTSKk/E2VwHx0ChZ1A
-	+CBHodisPAgiBLky4J6W7jwh8TFl96UlvOLUaLAyu2uErB5pJloDZnbWSm1bMPd5
-	R/ESqoLMEJFi2nEsVvTy/ES6drDN7ihqAWv6DJnApWftq1Y9y6NScih3DoNNJKAM
-	f5hNPZMHaNHZrDIVF/RKmtPQDPD6L9hx6ldtMEfZyTGbZ/E88hqmhQklZblxT2Pg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44g08ysqfd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 10:06:10 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50U9oTl2005987;
-	Thu, 30 Jan 2025 10:06:09 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44g08ysqfa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 10:06:09 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50U6WeqF012328;
-	Thu, 30 Jan 2025 10:06:08 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44danydqc7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 10:06:08 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UA66Ur35717828
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 10:06:07 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D6C3320128;
-	Thu, 30 Jan 2025 10:06:06 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9FD7020126;
-	Thu, 30 Jan 2025 10:06:05 +0000 (GMT)
-Received: from [127.0.0.1] (unknown [9.152.108.100])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 30 Jan 2025 10:06:05 +0000 (GMT)
-Message-ID: <ae5e32ff2269eb4c190aeb882b17cb1bb8e6c70d.camel@linux.ibm.com>
-Subject: Re: [PATCH bpf-next v7 4/5] bpf: verifier: Support eliding map
- lookup nullness
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Daniel Xu <dxu@dxuuu.xyz>
-Cc: shuah@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, john.fastabend@gmail.com, martin.lau@linux.dev,
-        song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
-        sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, mykolal@fb.com,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Marc Hartmayer <mhartmay@linux.ibm.com>
-Date: Thu, 30 Jan 2025 11:06:05 +0100
-In-Reply-To: <f7rhmwrp3fgx3qd7gn3pzczxeztvsg45u4vrl6ls3ylcvflapx@3yi3shfnrmb3>
-References: <cover.1736886479.git.dxu@dxuuu.xyz>
-	 <68f3ea96ff3809a87e502a11a4bd30177fc5823e.1736886479.git.dxu@dxuuu.xyz>
-	 <78b2e750b4568e294b5fc5a33cf4bc8f62fae7f6.camel@linux.ibm.com>
-	 <hsgmutuoi4kvjkr7erm5ty2fdrhdrjpz4fpp5doe65l3pzguxv@lcbmvmjpyykq>
-	 <f7rhmwrp3fgx3qd7gn3pzczxeztvsg45u4vrl6ls3ylcvflapx@3yi3shfnrmb3>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g8tiIT5p"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-436ce2ab251so3790615e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 02:07:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738231626; x=1738836426; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/xgSZrYTjR4wYm9y2TJ/8whEMF1KaaIbp8HFp2h/RHw=;
+        b=g8tiIT5ppT1wLscAShXselPlb+hOOyG1Fb8G/cJ3dZ1GBEs9n2E91JUlQzV3mXxIjy
+         02JiOtragBUKYnF1pxsrZ3N/YaQLjGDUSbtprN11ym68uc+vw/mPNf4qZDXZ8Ui/FIGE
+         4KeZ72siLe88N7C0JFQBWoytRp6XAoueaz2WcCFlv1f2960/s1ZBE/CXRZ/sJyse4cT7
+         VDKXdOyfKvomHO2oIz6zlf5j/y8t8wlzWDbc/LuiN1Y3U9gaAEBlkordseo9l+4SxJ4n
+         CC7wGKJOTzFOBQHTeM77FcoYnZZJzbiqRAc1MiQEefekWMx+fh4Rwvbiv8pbu8cqAzVe
+         fu3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738231626; x=1738836426;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/xgSZrYTjR4wYm9y2TJ/8whEMF1KaaIbp8HFp2h/RHw=;
+        b=oYGL9/475X/JTFgcPm8yu0AoHqD4fiftjXahb/MPNpgll8dWT+Z6DqCGntQPNEstgJ
+         ryHDcRcHhA4UfkLBoFpCau3TmriWEjQne4M1sgPdMrKVf4khLAU4S2lTTKwtMojfvlp7
+         ebXa5zO97FFvgu82zuhRrphsv3oiaXjDoLTXbsQbHWEdAhAdVOjujGLe+nnDVlPbSdvt
+         /gKmR3vDzLP6Jcz6x5kNHsPZzu1dxntPaKUhGnE8hoTa275qQwhoJaZtTtjxNw1CjWtZ
+         7I08L1e+slZOYfjvsESc4iYM445NB3MnpB5W5c0wo8L3KDRUt0zJTWUnekxqN3mJZdi7
+         ZoBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNOZQT+JoR8wnMd0UOZzj3Syoz2EsmZ5jLUBUJP+e2oXFjyKAXb+QsJntvhYTULbAQRPoTl1hjOgJJzXk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQgTYUESm80+h//BYz7b/5qe6PD43o8lOgK8NVBkJ7tlVoqtxk
+	m2knmbC37t+YSCrBOT3skeBYz+Z73+5/vddRZ8SLMDoFf7+sjBnd8rUvRkhwdY0=
+X-Gm-Gg: ASbGnctKD3P0eCa6vBOdy03w/p+OzILhkTcnuRU+73urKK/KgpdUGxDc7y7w4QJKamR
+	VGjKh/r3TU3kpmVQ0D3hjZSgyRNIZ5phazGlmqTDcIv1YCL1GQaPahthDnubhPDkVgqKdNJgsSV
+	tQG8Z5eK1ncC9qKcg2D15ixIYGP4pDTO8D8wgcZ4+3qnu5ZTo8QECR3h1yCM4p5nwRvfnmbbe/4
+	uQWNzL2xZ8+M7Yo95hQ8D7RcITPUK/i7joldDp/4wU0ETtw4wS8V+TcMnHKYNIA+lLt7xXguZsU
+	BBLLjX6vmAPqD/phvtPhN6aDiNPFAfBhENI8q46tQUFpN4TahgAcjw==
+X-Google-Smtp-Source: AGHT+IG1KyMFpNfsa8g5lwEoCzkFattulfz3yPh36W1lbzjbEMttPBKcz1auUhyGCxe1asfnZ5I/UQ==
+X-Received: by 2002:a05:600c:1d1e:b0:436:a3a3:a70c with SMTP id 5b1f17b1804b1-438dc4214c3mr43534915e9.28.1738231625956;
+        Thu, 30 Jan 2025 02:07:05 -0800 (PST)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e245efbcsm17275025e9.33.2025.01.30.02.07.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 02:07:05 -0800 (PST)
+Date: Thu, 30 Jan 2025 11:07:03 +0100
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: rafael@kernel.org, rui.zhang@intel.com, lukasz.luba@arm.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	geert+renesas@glider.be, magnus.damm@gmail.com,
+	mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
+	ulf.hansson@linaro.org, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH 2/6] thermal: of: Export non-devres helper to
+ register/unregister thermal zone
+Message-ID: <Z5tPR_tv7vWDkUI7@mai.linaro.org>
+References: <20250103163805.1775705-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250103163805.1775705-3-claudiu.beznea.uj@bp.renesas.com>
+ <Z5pkUNNvsWPjRQvy@mai.linaro.org>
+ <65a16c3f-456e-40ec-91b0-afb57269ed46@tuxon.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: rTBXDs4Ib8zCKzEG9_s6HbyOdMbw_K39
-X-Proofpoint-ORIG-GUID: FM4pVpcguPeeLI5jjdfJZmNLgxnyFCzz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_06,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- malwarescore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0 mlxscore=0
- impostorscore=0 phishscore=0 adultscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501300077
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <65a16c3f-456e-40ec-91b0-afb57269ed46@tuxon.dev>
 
-On Wed, 2025-01-29 at 10:45 -0700, Daniel Xu wrote:
-> On Wed, Jan 29, 2025 at 09:49:12AM -0700, Daniel Xu wrote:
-> > Hi Ilya,
-> >=20
-> > On Wed, Jan 29, 2025 at 03:58:54PM +0100, Ilya Leoshkevich wrote:
-> > > On Tue, 2025-01-14 at 13:28 -0700, Daniel Xu wrote:
-> > > > This commit allows progs to elide a null check on statically
-> > > > known
-> > > > map
-> > > > lookup keys. In other words, if the verifier can statically
-> > > > prove
-> > > > that
-> > > > the lookup will be in-bounds, allow the prog to drop the null
-> > > > check.
-> > > >=20
-> > > > This is useful for two reasons:
-> > > >=20
-> > > > 1. Large numbers of nullness checks (especially when they
-> > > > cannot
-> > > > fail)
-> > > > =C2=A0=C2=A0 unnecessarily pushes prog towards
-> > > > BPF_COMPLEXITY_LIMIT_JMP_SEQ.
-> > > > 2. It forms a tighter contract between programmer and verifier.
-> > > >=20
-> > > > For (1), bpftrace is starting to make heavier use of percpu
-> > > > scratch
-> > > > maps. As a result, for user scripts with large number of
-> > > > unrolled
-> > > > loops,
-> > > > we are starting to hit jump complexity verification errors.=C2=A0
-> > > > These
-> > > > percpu lookups cannot fail anyways, as we only use static key
-> > > > values.
-> > > > Eliding nullness probably results in less work for verifier as
-> > > > well.
-> > > >=20
-> > > > For (2), percpu scratch maps are often used as a larger stack,
-> > > > as the
-> > > > currrent stack is limited to 512 bytes. In these situations, it
-> > > > is
-> > > > desirable for the programmer to express: "this lookup should
-> > > > never
-> > > > fail,
-> > > > and if it does, it means I messed up the code". By omitting the
-> > > > null
-> > > > check, the programmer can "ask" the verifier to double check
-> > > > the
-> > > > logic.
-> > > >=20
-> > > > Tests also have to be updated in sync with these changes, as
-> > > > the
-> > > > verifier is more efficient with this change. Notable, iters.c
-> > > > tests
-> > > > had
-> > > > to be changed to use a map type that still requires null
-> > > > checks, as
-> > > > it's
-> > > > exercising verifier tracking logic w.r.t iterators.
-> > > >=20
-> > > > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-> > > > ---
-> > > > =C2=A0kernel/bpf/verifier.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 92
-> > > > ++++++++++++++++++-
-> > > > =C2=A0tools/testing/selftests/bpf/progs/iters.c=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 14 +--
-> > > > =C2=A0.../selftests/bpf/progs/map_kptr_fail.c=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > > > =C2=A0.../selftests/bpf/progs/verifier_map_in_map.c |=C2=A0 2 +-
-> > > > =C2=A0.../testing/selftests/bpf/verifier/map_kptr.c |=C2=A0 2 +-
-> > > > =C2=A05 files changed, 99 insertions(+), 13 deletions(-)
-> > >=20
-> > > [...]
-> > >=20
-> > > > @@ -9158,6 +9216,7 @@ static int check_func_arg(struct
-> > > > bpf_verifier_env *env, u32 arg,
-> > > > =C2=A0	enum bpf_arg_type arg_type =3D fn->arg_type[arg];
-> > > > =C2=A0	enum bpf_reg_type type =3D reg->type;
-> > > > =C2=A0	u32 *arg_btf_id =3D NULL;
-> > > > +	u32 key_size;
-> > > > =C2=A0	int err =3D 0;
-> > > > =C2=A0
-> > > > =C2=A0	if (arg_type =3D=3D ARG_DONTCARE)
-> > > > @@ -9291,8 +9350,13 @@ static int check_func_arg(struct
-> > > > bpf_verifier_env *env, u32 arg,
-> > > > =C2=A0			verbose(env, "invalid map_ptr to
-> > > > access map-
-> > > > > key\n");
-> > > > =C2=A0			return -EACCES;
-> > > > =C2=A0		}
-> > > > -		err =3D check_helper_mem_access(env, regno,
-> > > > meta-
-> > > > > map_ptr->key_size,
-> > > > -					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BPF_READ, false,
-> > > > NULL);
-> > > > +		key_size =3D meta->map_ptr->key_size;
-> > > > +		err =3D check_helper_mem_access(env, regno,
-> > > > key_size,
-> > > > BPF_READ, false, NULL);
-> > > > +		if (err)
-> > > > +			return err;
-> > > > +		meta->const_map_key =3D
-> > > > get_constant_map_key(env, reg,
-> > > > key_size);
-> > > > +		if (meta->const_map_key < 0 && meta-
-> > > > >const_map_key
-> > > > !=3D -EOPNOTSUPP)
-> > > > +			return meta->const_map_key;
-> > >=20
-> > > Mark Hartmayer reported a problem that after this commit the
-> > > verifier
-> > > started refusing to load libvirt's virCgroupV2DevicesLoadProg(),
-> > > which
-> > > contains the following snippet:
-> > >=20
-> > > 53: (b7) r1 =3D -1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- ; R1_w=3D-1
-> > > 54: (7b) *(u64 *)(r10 -8) =3D r1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 ; R1_w=3D-1 R10=3Dfp0 fp-8_w=3D-1
-> > > 55: (bf) r2 =3D r10=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ; =
-R2_w=3Dfp0 R10=3Dfp0
-> > > 56: (07) r2 +=3D -8=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ; =
-R2_w=3Dfp-8
-> > > 57: (18) r1 =3D 0x9553c800=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ; R1_w=3Dmap_ptr(ks=3D8,vs=3D4)
-> > > 59: (85) call bpf_map_lookup_elem#1
-> > >=20
-> > > IIUC here the actual constant value is -1, which this code
-> > > confuses
-> > > with an error.
-> >=20
-> > Thanks for reporting. I think I know what the issue is - will send
-> > a
-> > patch shortly.
-> >=20
-> > Daniel
-> >=20
->=20
-> I cribbed the source from [0] and tested before and after. I think
-> this
-> should work. Mind giving it a try?
->=20
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index 9971c03adfd5..e9176a5ce215 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -9206,6 +9206,8 @@ static s64 get_constant_map_key(struct
-> bpf_verifier_env *env,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return reg->var_off.value;
-> =C2=A0}
->=20
-> +static bool can_elide_value_nullness(enum bpf_map_type type);
-> +
-> =C2=A0static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 struct bpf_call_arg_meta *meta,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 const struct bpf_func_proto *fn,
-> @@ -9354,9 +9356,11 @@ static int check_func_arg(struct
-> bpf_verifier_env *env, u32 arg,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 err =3D check_helper_mem_access(env, regno, key_size,
-> BPF_READ, false, NULL);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if (err)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return e=
-rr;
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 meta->const_map_key =3D get_constant_map_key(env, reg,
-> key_size);
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 if (meta->const_map_key < 0 && meta->const_map_key !=3D
-> -EOPNOTSUPP)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return meta->c=
-onst_map_key;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 if (can_elide_value_nullness(meta->map_ptr-
-> >map_type)) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 meta->const_ma=
-p_key =3D
-> get_constant_map_key(env, reg, key_size);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (meta->cons=
-t_map_key < 0 && meta-
-> >const_map_key !=3D -EOPNOTSUPP)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return meta->const_map_key;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 }
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 break;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case ARG_PTR_TO_MAP_VALUE:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if (type_may_be_null(arg_type) &&
-> register_is_null(reg))
->=20
-> Thanks,
-> Daniel
->=20
->=20
-> [0]:
-> https://github.com/libvirt/libvirt/blob/c1166be3475a0269f5164d87fec6227d6=
-cb34b47/src/util/vircgroupv2devices.c#L66-L135
+On Thu, Jan 30, 2025 at 11:08:03AM +0200, Claudiu Beznea wrote:
+> Hi, Daniel,
+> 
+> On 29.01.2025 19:24, Daniel Lezcano wrote:
+> > Hi Claudiu,
+> > 
+> > On Fri, Jan 03, 2025 at 06:38:01PM +0200, Claudiu wrote:
+> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>
+> >> On the Renesas RZ/G3S (and other Renesas SoCs, e.g., RZ/G2{L, LC, UL}),
+> >> clocks are managed through PM domains. These PM domains, registered on
+> >> behalf of the clock controller driver, are configured with
+> >> GENPD_FLAG_PM_CLK. In most of the Renesas drivers used by RZ SoCs, the
+> >> clocks are enabled/disabled using runtime PM APIs.
+> >>
+> >> During probe, devices are attached to the PM domain controlling their
+> >> clocks. Similarly, during removal, devices are detached from the PM domain.
+> >>
+> >> The detachment call stack is as follows:
+> >>
+> >> device_driver_detach() ->
+> >>   device_release_driver_internal() ->
+> >>     __device_release_driver() ->
+> >>       device_remove() ->
+> >>         platform_remove() ->
+> >> 	  dev_pm_domain_detach()
+> >>
+> >> In the upcoming Renesas RZ/G3S thermal driver, the
+> >> struct thermal_zone_device_ops::change_mode API is implemented to
+> >> start/stop the thermal sensor unit. Register settings are updated within
+> >> the change_mode API.
+> >>
+> >> In case devres helpers are used for thermal zone register/unregister the
+> >> struct thermal_zone_device_ops::change_mode API is invoked when the
+> >> driver is unbound. The identified call stack is as follows:
+> >>
+> >> device_driver_detach() ->
+> >>   device_release_driver_internal() ->
+> >>     device_unbind_cleanup() ->
+> >>       devres_release_all() ->
+> >>         devm_thermal_of_zone_release() ->
+> >> 	  thermal_zone_device_disable() ->
+> >> 	    thermal_zone_device_set_mode() ->
+> >> 	      rzg3s_thermal_change_mode()
+> >>
+> >> The device_unbind_cleanup() function is called after the thermal device is
+> >> detached from the PM domain (via dev_pm_domain_detach()).
+> >>
+> >> The rzg3s_thermal_change_mode() implementation calls
+> >> pm_runtime_resume_and_get()/pm_runtime_put_autosuspend() before/after
+> >> accessing the registers. However, during the unbind scenario, the
+> >> devm_thermal_of_zone_release() is invoked after dev_pm_domain_detach().
+> >> Consequently, the clocks are not enabled, as the device is removed from
+> >> the PM domain at this time, leading to an Asynchronous SError Interrupt.
+> >> The system cannot be used after this.
+> > 
+> > I've been through the driver before responding to this change. What is the
+> > benefit of powering down / up (or clock off / on) the thermal sensor when
+> > reading the temperature ?
+> > 
+> > I can understand for disable / enable but I don't get for the classic usage
+> > where a governor will be reading the temperature regularly.
+> 
+> I tried to be as power saving as possible both at runtime and after the IP
+> is not used anymore as the HW manual doesn't mentioned anything about
+> accuracy or implications of disabling the IP clock at runtime. We use
+> similar approach (of disabling clocks at runtime) for other IPs in the
+> RZ/G3S SoC as well.
+> 
+> > 
+> > Would the IP need some cycles to capture the temperature accurately after the
+> > clock is enabled ?
+> 
+> There is nothing about this mentioned about this in the HW manual of the
+> RZ/G3S SoC. The only points mentioned are as described in the driver code:
+> - wait at least 3us after each IIO channel read
+> - wait at least 30us after enabling the sensor
+> - wait at least 50us after setting OE bit in TSU_SM
+> 
+> For this I chose to have it implemented as proposed.
 
-Thanks, I tried this in isolation and it fixed the issue for me.
-I talked to Mark and he will try it with his libvirt scenario.
+IMO, disabling/enabling the clock between two reads through the pm runtime may
+not be a good thing, especially if the system enters a thermal situation where
+it has to mitigate.
 
-The code looks reasonable to me, but I have a small concern regarding
-what will happen if the BPF code uses a -EOPNOTSUPP immediate with an
-array. Unlike other immediates, IIUC this will cause check_func_arg()
-to return 0. Is there a reason to have this special?
+Without any testing capturing the temperatures and compare between the always-on
+and on/off, it is hard to say if it is true or not. Up to you to test that or
+not. If you think it is fine, then let's go with it.
+ 
+> If any, the HW manual is available here
+> https://www.renesas.com/en/document/mah/rzg3s-group-users-manual-hardware?r=25458591
+> (an archive is here; the manual is in Deliverables/r01uh1014ej0110-rzg3s.pdf)
+> 
+> Thank you for your review,
+> Claudiu
+> 
+> > 
+> >> Add thermal_of_zone_register()/thermal_of_zone_unregister(). These will
+> >> be used in the upcomming RZ/G3S thermal driver.
+> >>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
