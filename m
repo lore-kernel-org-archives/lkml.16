@@ -1,186 +1,215 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2076.outbound.protection.outlook.com [40.107.223.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49C11B4220
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738228431; cv=none; b=gAzhZ0bK+NFqkATAWn4WV1r2GKaZ3VT0l3DKTmcQHVutJuO2bpO/CJdEp22/hlyr3GLzK236e0pvtUzy9td/LcPgxVRBDAUK/mU2DAiUS/M/RQFfsTQKrbsMQVEH9w5Fsop6OH/TBhvDjZXVHOW71l2q38Am4+806rXCIw1sS/0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738228431; c=relaxed/simple;
-	bh=ctulR3cRWtcJlO4spCKfZY6Dgeg/I15rDLRkaQwAcu4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G59owVLJ12a/iwXEia9ofV8tFVjYY20FIGPFvuuxy++jas6d3LAFCu77lNdK1rRHf8Mv8bDsNO2uCO6l32C6m2yhT3I3xSQ88EXNCDZAE8eFVISTG6WYQrXsnFTgbEuaCnoBVlZovfRwcWrNCeaYaeWM0E4k2jVx24jQHGf7Opg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Lpx4tRMy; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0EA139B;
+	Thu, 30 Jan 2025 09:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738228572; cv=fail; b=lXan496lPJikigTYBnpzjjjVLGOZn8jplACDdy3fSejhrdx34vPSQbbeymYYW1E4Wdu3UnzZSgY9FnX3gBzY2qME4jDEUoZdHPGewMqJA/qgS3HtneiP5keDC+izA0Q2XSXVsQQQgQKfUxnHKTa2f2yE4sF0D/e4e+ilOx/GqLE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738228572; c=relaxed/simple;
+	bh=pIacVaVVfFqHKV513VnePTMOmjr2mCMhCKFGVD4KA1E=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=YuR987rxpF0UIbqMig+wqsGYzOqgOFrth1VHudz7wDzPRxJwygL4XpmQxN3SBaMQCVCXAJ3szhGW/hE/8PWsrFHIpmPNT4jhHb9pMIp59FrCBbPEoTFXODqwfDMJ0jY9Qhcv5pJ6Z8zEO44JAJRzec16MPrNciiLDLgZPTeorq4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Vvp5eVGj; arc=fail smtp.client-ip=40.107.223.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Lpx4tRMy"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ab633d9582aso119242866b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 01:13:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738228427; x=1738833227; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8p8aAb0X1bp6hHlymQNq9HzSfsnECJPQUElhLE6JPO0=;
-        b=Lpx4tRMyM9Sw7tFZwuNXlZFIZpIclesbAMfNgxXKMad5f2+Z3SueqNsq2zQmOjhMEA
-         0M4TDoVdtOM0upYlOwGF6PWsL7scxSDbax3JrgEz7iQ5/fKUyhNrSXEsZYL5i3OxNXUP
-         5oqUXxi026Z/R62i0EvOJzXpGkVKHf4O4/Aiv154U9sb99NZdQlThdMyCyj1/ccKbfAp
-         jCzaQcXfQjo8Sea6eunt3dXvJPOFLamKcfoxg0Uw5WBVKXJQkBj78cKlyEAXs/1+aLUH
-         QzTlefZyKa0BBJjvdvbIVlhTIEnEysJVIxN12mO6zH78d2yw8Pq0HZZg5GoEQvd7rn7z
-         /w2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738228427; x=1738833227;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8p8aAb0X1bp6hHlymQNq9HzSfsnECJPQUElhLE6JPO0=;
-        b=ev3GO4zbcr0deELBd8owLt/s87uBBPb55eqcY1ync3LYCGOfIV9wIg92i5ba3+dm7g
-         tq6c/7/ReSbsOvko6NZx3qQl7YYBMQs9qhUoNVehhGH35IR7IzwEI0lNBRzgUCKj2cdX
-         p0YiILPpLSty4AhE+CWFuTfJeJ5OBymqIj9y2cj4muzP5MMkBl2vnkSOePl1juwOO+4e
-         QGKAU/ybm9ZQeHeB6pCjnVvErs7tfwAKh1r5aUjfFX7HEiiKTl4ehvJBYgjaneYNafJk
-         rXjnm+B9hiTsXV4yNuNyo8hQQ8rthoEd/PODy38i7w26RuA2JvGmAeDK804y46lmzNPS
-         INag==
-X-Forwarded-Encrypted: i=1; AJvYcCXK/2PCeI3ZxqdP+Hi/aqrfzEQwHxj3JrtC01B/TBS8vDekWmY/p7qpdgfSZhiEXC/0UpYW0TwbixRy2oM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoH+FNUZoZEURGdYSlTEmDQz5OpiE9PU/bTglt7YS+MZZgeT0V
-	eGWxThnOsaqzvCWlmyn3YYtGzP6nlhsMEY6R4jK5hOPpc5/qqc7K0bCEPNowlCmUy4zfaITw4Ap
-	mJf9CSk6frZ6M5TlkC5yfeseUYHI21Kerd+um/g==
-X-Gm-Gg: ASbGnctUZr3ZSjuC8dTWVaP+lcLAvJ/JbgVXSd+meCQ3kAvMsG5sh0YeBbEDx0L4xFz
-	Ky0DapB9/3ztr30JrLGduClScX+vBdxWmx0ykWH/kHw3oMUk2jo/8jsk5oeHNQX03qJidKlY=
-X-Google-Smtp-Source: AGHT+IF/2X4mlWad9vHOgVn9WF5VBG09lohncqS+VBI3G2OOsXV4DtAXNxX6+CrCHPNcEVR9WF0nlwvMYCHczIlI02A=
-X-Received: by 2002:a17:907:1c08:b0:ab2:c0b9:68d with SMTP id
- a640c23a62f3a-ab6cfc859b1mr644296866b.1.1738228427035; Thu, 30 Jan 2025
- 01:13:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Vvp5eVGj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=v/NXZ9QgRJwwkPjVONGFqI9ezBrV1nPx7bS+rPrgqe3Apvcu2b/4mLDsaBoBqKfJBIeQ/8JV6DtEtEXAcCqeuVdGXltNGUFO/0EofKG5KZjyGfSHvVB77+nPe6tN4QC1ZuiolPmUi98UH+Xh4lGB2GrscfKR/cDUqM5jKZ5YRE+FHLYj8BQedl2hBf+UNRHPQ5m5EZruOCCJAVxCNBjuKp1irQOLV/bl6nlN9mYmQaBaT1F2Tyn1P+t5PuerqcW/NVK+v2jN3PJp1KSmzR1+EnuSspPcsTk2kprzkkfDJa0rWaAJrZHPMzfIGlaibLs/rL8JMkxiApdiMa+N7+wKRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BvSVvIKVpI90J5nsSM3bP7zhiII11rGfmxocbgIl3z0=;
+ b=d6ElrNpKkYwMcyJljmV+mgxZ+adL8inq/zMUZ9qd9sr+YSK2rZNqi4VPQQuDT3IBeD3/nKBsGFWJcIdo9fv8xBVAYVVaH+c/vsw/xGLWr7ETpp47gMait2CCZxno0c/wOAr2gD6GHRv2sXe8OT4fHfA93hUFpTPUQ5QHdzYcFZzH8TKXvPOzo4CMQtS66C9Y4B7uo8zqfUKS0eD+5PSqUBMQQzhDOD2ZNiI1fM6ZhvoE6y4Ii+ysOeFVYU9y0OFTfB/PXprBoy2aDgSNy1FnPPwWODmCSGPMq/366Udij53ldhZYMNf/rloYXrs+nWWiWG/qmolVngxa7rIwnSA++A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BvSVvIKVpI90J5nsSM3bP7zhiII11rGfmxocbgIl3z0=;
+ b=Vvp5eVGjBtYmyT4Vh6L0d7SF2uEcZ9++WLd3EiLyxjK1DUX5j1vmCKs3bQtV3YeBmyi5QfcgZxh1HRwJBDrkzV8/s9kPWRvNrsq7ACbyeVVeaVbYRlejCfSmPRPsA4Dpq8iV8E01ZESBT8tkrU9AOq0YPootPqCETbkJvW7rMSg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
+ by CY8PR12MB8067.namprd12.prod.outlook.com (2603:10b6:930:74::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.17; Thu, 30 Jan
+ 2025 09:16:07 +0000
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9%7]) with mapi id 15.20.8398.017; Thu, 30 Jan 2025
+ 09:16:07 +0000
+Message-ID: <ebd0ad3c-7f91-4a59-b32a-1de98341ad13@amd.com>
+Date: Thu, 30 Jan 2025 14:45:59 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/15] cpufreq: amd: Set policy->boost_supported
+To: Viresh Kumar <viresh.kumar@linaro.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Huang Rui <ray.huang@amd.com>,
+ "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>
+Cc: linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>,
+ Lifeng Zheng <zhenglifeng1@huawei.com>, linux-kernel@vger.kernel.org
+References: <cover.1737707712.git.viresh.kumar@linaro.org>
+ <e16c06d4b8ffdb20e802ffe648f14dc515e60426.1737707712.git.viresh.kumar@linaro.org>
+Content-Language: en-US
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+In-Reply-To: <e16c06d4b8ffdb20e802ffe648f14dc515e60426.1737707712.git.viresh.kumar@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PEPF00000179.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c04::44) To LV8PR12MB9207.namprd12.prod.outlook.com
+ (2603:10b6:408:187::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250124075558.530088-1-neelx@suse.com> <20250127180250.GQ5777@twin.jikos.cz>
- <CAPjX3FdaxfzULnRjN7TqyS9uK_ZJSk2PRzLgQCLVGBrR0yKLGw@mail.gmail.com> <20250129224253.GF5777@twin.jikos.cz>
-In-Reply-To: <20250129224253.GF5777@twin.jikos.cz>
-From: Daniel Vacek <neelx@suse.com>
-Date: Thu, 30 Jan 2025 10:13:36 +0100
-X-Gm-Features: AWEUYZnie91Dh1atsgKxQgjtcE2FM4rg-rsuiaBZqXyHQkMZTEOeDoYysmlCatA
-Message-ID: <CAPjX3FdJynRY91N-1aJ0wOrMJY+cKvSuhLDPGAuCybEvSzS0KA@mail.gmail.com>
-Subject: Re: [PATCH] btrfs/zstd: enable negative compression levels mount option
-To: dsterba@suse.cz
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	Nick Terrell <terrelln@fb.com>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|CY8PR12MB8067:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9241d96-7e47-4ce9-b0ae-08dd410eba41
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MWlwUzMyQ2ZWeDdVQU5OZUdWbUQwUDFTNWpxM1FJVVY0TVFFOE1odUh0cmFz?=
+ =?utf-8?B?UVk1QXdCYXF1M3ovMVMrRXhHRDZWajh1NzB3L2dHOTREd1pjdU1JVVF3aXdK?=
+ =?utf-8?B?Mm5DZEpyamc0MjFwaGxCSnBYU3JFUE41VEorVjBRbFVsMFc4Vlo1Y0ZkYk51?=
+ =?utf-8?B?V29DQVRqWjZIcTNZek9ndEtZd1k0MXZYcVBFb2pON25Sd1lOQTBVZ2dMVG1h?=
+ =?utf-8?B?MmFDSFYrL0xxVHh6bW0rVnBLUlBNTGk0eGFOTUNqQXptOWFZazlubU1vVVpS?=
+ =?utf-8?B?TGNXd2s1Mk5IaUhmWjlnSjg0MGVQanNnSFhVZ0FTcm9qOWtFb0Qrci9JVFdP?=
+ =?utf-8?B?NXJjSVdoR1hNbE9WUW0rY00rSDkxMG5nSDhPbW5rNEJQUjd0eU1BMk81VTZ4?=
+ =?utf-8?B?TjcxODNVWHVYdkR5K3FIcDRxQ1FaWW5YTTd6RWhialFEUE12bVNNNThqZlJM?=
+ =?utf-8?B?MjZ6WTFmazgyNzAyYnpWQm1ZUjg2a25OU2dPejFLSlpJQnZ0U1JYNU54VS9w?=
+ =?utf-8?B?TUpkMFhFS2sxZDd2L0MyUHkwTm52QzNBK3pvRFBvcUNpdDFmaDRrM1Z2cC9U?=
+ =?utf-8?B?MGtidWxiQlRtcGx0eHJCS2xpaEF3RkZUR0twYm52bXFFa24zaFBKelhpa2J3?=
+ =?utf-8?B?MGl0WmJvNEFnK1ArRkFWYnNkcmNPWTg5cVBQZGY1UDlqaFhJTm1nRWtnd3Fy?=
+ =?utf-8?B?a1FsL0h0ZlppeE5QUlFISlZPR215QTNtTEZ3dHgrMlNJMGlsWEhTNEVxNU9T?=
+ =?utf-8?B?U1JScm1yL0NrNjgzSDBWSHV1MHdZREhVWkUxL2xuUis4clptaDVKZnZWczIw?=
+ =?utf-8?B?NHpiKzhDTFlFMkVCYVYyWnZBZXZJYlpHOElvUEtxUGx5SmFVK2FBSndhV3Ux?=
+ =?utf-8?B?WlR6MGc5bG8xUzZKdVpVZkljSlBHMkZZaW41d1VPYng1UGZNdTAxaTEwSTFH?=
+ =?utf-8?B?SlVadUt2R2x2RDRlY0VSOEt4VUFMc2Zjd01yN0RxOHV0NG04dEZIN3JuaEda?=
+ =?utf-8?B?MTlRdndWRGc5eFNRdWFaWTJ4SmlYaVdTNmtUZnQzUjZ6N21aN1VlV1AxL3p2?=
+ =?utf-8?B?cGYyOHhGblN1a3Y3bzVEN1U4VjRLVm0zK3NzMWdjK3NoRkNjNFEvVXJ0UTdm?=
+ =?utf-8?B?VklZNFRPVDJvYUtjZG91cERwb0NSejNUeGVjeWU0b0J6c2NaL2xtdDE3THJD?=
+ =?utf-8?B?WXphZ0dJb0UzdjZkRTdPRjZDTkFQdmtMb1BuMXdBNXZTVWNmWTkrUkpRd1J5?=
+ =?utf-8?B?SzVvNDB0NlFFNCt6MUxHVURaRUFiWlZMeHVJNEh1cjdVeWhEUFU3dkFMZS9H?=
+ =?utf-8?B?TS9jU3JPZ05YbzhySHRwN2xESSs3Tm1hRUFmUDVQNTdQc0tvd3BGbmZueGpw?=
+ =?utf-8?B?b0c1cEc0YmlZMWduVkpZWHUrQkVZMFpMQ2NYMEJXUUF3NWVlK3I4Wm1OaHRq?=
+ =?utf-8?B?RHFSbG9zdlE1VXpYZi9jVlBwcmRzYXdwTlp0dVlyZDh1cGh6RWU5NnVBaGM4?=
+ =?utf-8?B?c1IwVld4VzVPbGRwaTNseUQ1U0dpbjdlZm5jc2YwM3RMUjZuU2dTTXdzeGU1?=
+ =?utf-8?B?ekd2VDFIcFI2aFppM2FOa0lZMjQya3ZyUzlQZUV4cjBCWHZNUlVoeHNDb3Fs?=
+ =?utf-8?B?MlVwdFdtdGhkQ1FQeXBwenR4WWdIMFhjUi9oTTBJVVovUlArNDJPdWRETEMw?=
+ =?utf-8?B?cnRxVlpuTjRybjcyRTBjV3E3cXd0cVJYQ3N0WHpkMytuamJXWm56THRGWEhu?=
+ =?utf-8?B?c2ZFcENNNHlrdWdQdEJRbmh3T0dqRjNNaWpBRFlCTldacjhybU13S21xM29M?=
+ =?utf-8?B?YnBQU0ZSL09GbnE1ZGQydz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WjBzQzNERUJ5RDBQckFlVmwzRmQ0SGVpTXIxdGhtS1czcDVQYjB0WjNZUzZM?=
+ =?utf-8?B?ZncwQjVUY2tmZ0l0N3l0RXVCZ0pTQ1VuTDBTd3dPd1ovTlZSOFByTjVwYnlK?=
+ =?utf-8?B?bnlvYlhqd2sxM3ZRWjN0eUxSUUZwMFRacE0raTE1WmlOQ2RtUnF6dThFLzY3?=
+ =?utf-8?B?QkFodGkwVng5eTJJaXp2S3RJZ0VmWDlKSmQvdXF2UTY4Q3hmdDIxdUgyVUhS?=
+ =?utf-8?B?QitBdG4wQnVxQTdEWjFUME1QNTFVbXkrM3BRRjRhbG4rbXU3dUR4RmxGL3ZW?=
+ =?utf-8?B?a0JUZEJQSGttNVRNdUM2am9mcHhFbGUydlFCWHZpK1BwdCtLTmNGZ2dpQjNW?=
+ =?utf-8?B?REo1MlE4ZDVJejVGZEJGU2trRFRUT240WC9jQi9CN2NPM3NwK2diSG5Mb1hm?=
+ =?utf-8?B?QzcrcXNYZFB1bE1qNFg2enFsbjRMWGNqMjFUR1RnUzhpMklsMUJEckMweVh5?=
+ =?utf-8?B?RFRRUUpmeWZGMVJ6MVhxZmRGVE5PTThidUxqVjBVeTZMdEU2ZVZxdGhzZXh6?=
+ =?utf-8?B?OXRWRDBiY1NURFhGVjF0VWdPdHhPRzZzZVdXZ3NCbUQ0Z2poWnNwbzFMdmQv?=
+ =?utf-8?B?a1dPOW5tZTlMa2c0Wm5sei9SR2NRSS9TbnNFY01jNnN5Tk10alRTTFpMM0JF?=
+ =?utf-8?B?REgwME9qb0J0ZHhGQzBhdGY1U21pNHlqZFRlNTg2a1lseEJUZ2FObnNoaVdR?=
+ =?utf-8?B?T3lvSmdxbWR5SkZ2MXF5bC9LZFBOcnhSRFZKMTZJeUJEVzFxRjE0c3pFT0RZ?=
+ =?utf-8?B?b0NaRmhqYTdqVUtuOWZZSkhNQTVKUDJaeUEzTzdSYzJ5ZUJoV1lFbVpNTXJt?=
+ =?utf-8?B?VzFIVllJeEVBRE1kUm13eS9wL1ZKalpCZHNRRkVOS1hTWG94QXRNcHpEUmFv?=
+ =?utf-8?B?bjMzSTJNdXB3WS9NcWM5ZmlESzBsRFF0MHNqR3VFd0VxNDZmZ0FuMjAzN2xa?=
+ =?utf-8?B?N2VEandmZVlWbFdVMkFFbWM3RHV1QmNEQlNodTVDRW9tMTJseHl1QzFrUVRL?=
+ =?utf-8?B?NFNta0ZaMmVBRE1iZXN4bEpESUFKT2h5WlFRblJ3ZGpHWWdTY3ZKejhvNnd2?=
+ =?utf-8?B?SytDWWJrY2FlTUJaaWFVZksvWnBQeGdnYzNkbUwxOVNiTE5SWk44TEtNMm9Y?=
+ =?utf-8?B?YW13RTVwcTJSeWduaWR0Uk5UYTlRcUhnOXU4azhZT0NiY2h5T1g4U0NKclg1?=
+ =?utf-8?B?U1FJaUV1dXc1MlppTlFKdkg4U25POSttV3ZWVnhCVFBGTjdub05uVUZ5VlJD?=
+ =?utf-8?B?KytaTWJQTzNZSjBPSTE0RkpSOXpKWGVMQzNnMll2RmRNZWs4L05tUWd6UFFh?=
+ =?utf-8?B?elBERUlaLzVlVUhwdm42MnhhTW9KZjZEY0xtL3l1MlRic21BelZJQWRMcTRl?=
+ =?utf-8?B?ZW9oRHJGOE00d0xYaERLQzRRbDhyd2NBbXVaZDlabkpsekNYeW9KaWhXaCtR?=
+ =?utf-8?B?TkpyZk4vK0xIOXBibE16bWpOak12cy96MXJqdktQL1FxdVBwQXVHV3dKTkhu?=
+ =?utf-8?B?YUs2QVNMbThlczlnNVZ2citZYjJtUWZyZ2tsMHh0d08xcnlsUEpmR3d0ckdX?=
+ =?utf-8?B?c2hrVDNOSGY0U1JBWkJ1cUw0R0tKeVN0cm5QVE9GVnFGU0lvUDVFVHI2Qngy?=
+ =?utf-8?B?R3FqNUZWNXV4d0hmb3IwczBwbndHN1NjRXdLUTVkWG1Bek1pSC8wTjlFYStN?=
+ =?utf-8?B?TUVoMzhzZ1hxelVMamdJMHA3YUpweTdDaVpNL293bmF1OEFmOFQrZWlKUGhT?=
+ =?utf-8?B?WitiR1dURVpGU0VDdk15OXhtVTFZbnRBN2Y3OW1MZWNuL0tYRXJFWnJlSjVt?=
+ =?utf-8?B?OFVvdW4rbi91cUxRamJHOWpleVlIK0ZFc1lPV2FySkpPK3lweXpUM0x0ZnQ4?=
+ =?utf-8?B?b25ENnVOOHNiM0NKb0RDOWFkZUdFKytRcjRSY1phVFNEbUhrOFQrSlhuYm05?=
+ =?utf-8?B?Vnh2bnF1VDBxd29QRUpuZzBRZ1gwUGZid1RraWVNQWU3NTRHY1l6ZUxRWUs5?=
+ =?utf-8?B?OVNWb251NDZXRmdZcEh4dnBlYTY5K0xFWjYrVVFnejYvalVCSWZBbjVQUzcy?=
+ =?utf-8?B?S1ZqODhSeVA1d01FbXBReXRRTW5kNHdoTXNObGJQY3FoR0FxR0lsR2F0ZVly?=
+ =?utf-8?Q?niL+pI8es5y2v8V3IdyjTn0Bb?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9241d96-7e47-4ce9-b0ae-08dd410eba41
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 09:16:07.0248
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6DqXbemdtbm+WnHbvZDtruh4v4pujdZGSyVduhJM6moJ3B+rZtsU+Bxc3tzN6JqOFBhR2LE3xRsQh0+QwSKZqw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8067
 
-On Wed, 29 Jan 2025 at 23:42, David Sterba <dsterba@suse.cz> wrote:
->
-> On Tue, Jan 28, 2025 at 09:46:02AM +0100, Daniel Vacek wrote:
-> > > > ==============================================================+===============================================
-> > > > level -15     0m0,261s        0m0,329s        141M    100%  | 0m2,511s        0m2,794s        598M    40%  |
-> > > > level -14     0m0,145s        0m0,291s        141M    100%  | 0m1,829s        0m2,443s        581M    39%  |
-> > > > level -13     0m0,141s        0m0,289s        141M    100%  | 0m1,832s        0m2,347s        566M    38%  |
-> > > > level -12     0m0,140s        0m0,291s        141M    100%  | 0m1,879s        0m2,246s        548M    37%  |
-> > > > level -11     0m0,133s        0m0,271s        141M    100%  | 0m1,789s        0m2,257s        530M    35%  |
-> > >
-> > > I found an old mail asking ZSTD people which realtime levels are
-> > > meaningful, the -10 was mentioned as a good cut-off. The numbers above
-> > > confirm that although this is on a small sample.
-> >
-> > The limit is really arbitrary. We may as well not even set one and
-> > leave it to the user. It's not like we allocate additional memory or
-> > any other resources.
->
-> Yes, it is arbitrary, the criteria is what are the practical benefits of
-> keeping the levels, what is the trade off compression/speed. It does not
-> matter much if the realtime level is ultra fast when it is not able to
-> reduce the size, given the constraints.
->
-> I agree that we should leave it up to user but I'd say it may be unclear
-> which level select. The level number is translated to some internal
-> compression logic so even very high numbers are allowed.
->
-> The testing file I've used is output of 'find -ls', so mostly textual
-> data, high level of redundancy.
->
-> Generated by a series of "zstd -b$i --fast=$i zstd-test"
->
-> -1#zstd-test         :   6126812 ->   1017901 (x6.019), 1055.7 MB/s, 2826.0 MB/s
-> -2#zstd-test         :   6126812 ->   1065645 (x5.749), 1143.0 MB/s, 3005.8 MB/s
-> -3#zstd-test         :   6126812 ->   1128314 (x5.430), 1204.2 MB/s, 3153.6 MB/s
-> -4#zstd-test         :   6126812 ->   1210669 (x5.061), 1220.5 MB/s, 3172.8 MB/s
-> -5#zstd-test         :   6126812 ->   1280004 (x4.787), 1242.7 MB/s, 3221.3 MB/s
-> -6#zstd-test         :   6126812 ->   1371974 (x4.466), 1259.8 MB/s  3277.1 MB/s
-> -7#zstd-test         :   6126812 ->   1440333 (x4.254), 1304.4 MB/s, 3293.0 MB/s
-> -8#zstd-test         :   6126812 ->   1496071 (x4.095), 1356.9 MB/s, 3391.2 MB/s
-> -9#zstd-test         :   6126812 ->   1566788 (x3.910), 1452.9 MB/s, 3613.6 MB/s
-> -10#std-test         :   6126812 ->   1613304 (x3.798), 1497.1 MB/s, 3738.7 MB/s
->
-> -11#std-test         :   6126812 ->   1685217 (x3.636), 1541.4 MB/s, 3829.2 MB/s
-> -12#std-test         :   6126812 ->   1766056 (x3.469), 1556.0 MB/s, 3875.6 MB/s
-> -13#std-test         :   6126812 ->   1826338 (x3.355), 1563.3 MB/s, 3886.6 MB/s
-> -14#std-test         :   6126812 ->   1899464 (x3.226), 1623.8 MB/s, 3963.5 MB/s
-> -15#std-test         :   6126812 ->   1989219 (x3.080), 1641.9 MB/s, 3901.3 MB/s
-> -16#std-test         :   6126812 ->   2057101 (x2.978), 1646.0 MB/s, 3781.2 MB/s
-> -17#std-test         :   6126812 ->   2101038 (x2.916), 1639.9 MB/s, 3809.8 MB/s
-> -18#std-test         :   6126812 ->   2151170 (x2.848), 1667.4 MB/s, 3887.3 MB/s
-> -19#std-test         :   6126812 ->   2185255 (x2.804), 1675.8 MB/s, 3932.5 MB/s
-> -20#std-test         :   6126812 ->   2228180 (x2.750), 1655.2 MB/s, 3983.3 MB/s
->
-> -21#std-test         :   6126812 ->   2275855 (x2.692), 1748.4 MB/s, 4188.4 MB/s
-> -22#std-test         :   6126812 ->   2324370 (x2.636), 1758.7 MB/s, 4245.0 MB/s
-> -23#std-test         :   6126812 ->   2373789 (x2.581), 1810.8 MB/s, 4345.4 MB/s
-> -24#std-test         :   6126812 ->   2423045 (x2.529), 1856.4 MB/s, 4326.7 MB/s
-> -25#std-test         :   6126812 ->   2470722 (x2.480), 1860.7 MB/s, 4425.6 MB/s
-> -26#std-test         :   6126812 ->   2519621 (x2.432), 1872.8 MB/s, 4447.8 MB/s
-> -27#std-test         :   6126812 ->   2571890 (x2.382), 1865.0 MB/s, 4432.7 MB/s
-> -28#std-test         :   6126812 ->   2630088 (x2.330), 1892.7 MB/s, 4480.3 MB/s
-> -29#std-test         :   6126812 ->   2678598 (x2.287), 1892.3 MB/s, 4458.1 MB/s
-> -30#std-test         :   6126812 ->   2730233 (x2.244), 1886.9 MB/s, 4415.0 MB/s
->
-> -100#td-test         :   6126812 ->   3878531 (x1.580), 2546.7 MB/s, 7076.8 MB/s
-> -101#td-test         :   6126812 ->   3873153 (x1.582), 2549.6 MB/s, 7053.4 MB/s
-> -102#td-test         :   6126812 ->   3878200 (x1.580), 2572.9 MB/s  7173.3 MB/s
-> -103#td-test         :   6126812 ->   3900441 (x1.571), 2581.2 MB/s  7164.9 MB/s
-> -104#td-test         :   6126812 ->   3902470 (x1.570), 2559.0 MB/s, 7133.3 MB/s
-> -105#td-test         :   6126812 ->   3912874 (x1.566), 2596.4 MB/s, 7150.9 MB/s
-> -106#td-test         :   6126812 ->   3917867 (x1.564), 2553.8 MB/s, 7260.1 MB/s
-> -107#td-test         :   6126812 ->   3930050 (x1.559), 2599.6 MB/s, 7284.5 MB/s
-> -108#td-test         :   6126812 ->   3946701 (x1.552), 2622.5 MB/s, 7288.1 MB/s
-> -109#td-test         :   6126812 ->   3954437 (x1.549), 2605.8 MB/s, 7334.4 MB/s
-> -110#td-test         :   6126812 ->   3955273 (x1.549), 2601.0 MB/s, 7389.1 MB/s
->
-> -1000#d-test         :   6126812 ->   5982024 (x1.024), 9253.0 MB/s, 22210.0 MB/s
-> -1001#d-test         :   6126812 ->   5986021 (x1.024), 9120.1 MB/s, 23034.3 MB/s
-> -1002#d-test         :   6126812 ->   5984005 (x1.024), 9086.7 MB/s, 22827.0 MB/s
-> -1003#d-test         :   6126812 ->   5978004 (x1.025), 9199.4 MB/s, 21718.3 MB/s
-> -1004#d-test         :   6126812 ->   5977133 (x1.025), 9120.3 MB/s, 21995.3 MB/s
-> -1005#d-test         :   6126812 ->   5979294 (x1.025), 9231.6 MB/s, 22204.5 MB/s
-> -1006#d-test         :   6126812 ->   5981595 (x1.024), 9175.6 MB/s, 21794.4 MB/s
-> -1007#d-test         :   6126812 ->   5989283 (x1.023), 9298.9 MB/s, 24239.1 MB/s
-> -1008#d-test         :   6126812 ->   5986954 (x1.023), 9242.1 MB/s, 23809.4 MB/s
-> -1009#d-test         :   6126812 ->   5988383 (x1.023), 9199.3 MB/s, 24322.1 MB/s
-> -1010#d-test         :   6126812 ->   5985304 (x1.024), 9221.2 MB/s, 23711.9 MB/s
->
-> Up to -15 it's 3x improvement which translates to about 33% of the
-> original size. And this is only for rough estimate, kernel compression
-> could be slightly worse due to slightly different parameters.
->
-> We can let it to -15, so it's same number as the upper limit.
+Hello Viresh,
 
-I was getting less favorable results with my testing which leads me to
-the ultimate rhetorical question:
+On 1/24/2025 2:28 PM, Viresh Kumar wrote:
+> With a later commit, the cpufreq core will call the ->set_boost()
+> callback only if the policy supports boost frequency. The
+> boost_supported flag is set by the cpufreq core if policy->freq_table is
+> set and one or more boost frequencies are present.
+> 
+> For other drivers, the flag must be set explicitly.
+> 
+> The policy->boost_enabled flag is set by the cpufreq core once the
+> policy is initialized, don't set it anymore.
 
-What do we know about the dataset users are possibly going to apply?
-And how do you want to assess the right cut-off having incomplete
-information about the nature of the data?
-Why doesn't zstd enforce any limit itself?
-Is this even a matter (or responsibility) of the filesystem to force
-some arbitrary limit here? Maybe yes?
+This patch uncovers a bug in the amd_pstate mode switch path (e.g when 
+we do "echo passive > /sys/devices/system/cpu/amd_pstate/status"). 
+I have posted a fix for it at 
+https://lore.kernel.org/all/20250130085251.155146-1-dhananjay.ugwekar@amd.com/T/#u
 
-As mentioned before, personally I'd leave it to the users so that they
-can freely choose whatever suits them the best. I don't see any
-technical or maintenance issues opening this limit.
-Well in the end as a maintainer it's up to you. Feel free to amend the
-patch to your liking. I'm fine with both -10 or -15. Or whatever else
-you choose, that said.
+Can we try to merge this fix before your patch?, so we fix the bug 
+before it is uncovered. Currently, the fix is based on top of superm1/bleeding-edge 
+(amd-pstate maintainer's dev tree). It wont apply cleanly on your tree i.e. 
+vireshk/pm/cpufreq/boost. I can rebase it on your tree and repost, if needed.
 
-So let me know if you need v4 and how to tune it or if you're fine
-fixing the v3 up yourself.
+Thanks,
+Dhananjay
+
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/cpufreq/amd-pstate.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+> index d7630bab2516..8d3cc494c92c 100644
+> --- a/drivers/cpufreq/amd-pstate.c
+> +++ b/drivers/cpufreq/amd-pstate.c
+> @@ -995,7 +995,7 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
+>  	policy->cpuinfo.min_freq = min_freq;
+>  	policy->cpuinfo.max_freq = max_freq;
+>  
+> -	policy->boost_enabled = READ_ONCE(cpudata->boost_supported);
+> +	policy->boost_supported = READ_ONCE(cpudata->boost_supported);
+>  
+>  	/* It will be updated by governor */
+>  	policy->cur = policy->cpuinfo.min_freq;
+> @@ -1480,7 +1480,7 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+>  	policy->min = policy->cpuinfo.min_freq;
+>  	policy->max = policy->cpuinfo.max_freq;
+>  
+> -	policy->boost_enabled = READ_ONCE(cpudata->boost_supported);
+> +	policy->boost_supported = READ_ONCE(cpudata->boost_supported);
+>  
+>  	/*
+>  	 * Set the policy to provide a valid fallback value in case
+
