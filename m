@@ -1,106 +1,81 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111071E522
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 13:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04A91E47B4;
+	Thu, 30 Jan 2025 13:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738245145; cv=none; b=APjvG0CFlfJW2nYlieM1og2bqQlc5DmmJyE0zMMvCJA9X/UCV+ql+3waKMuYdMMtGFDoy5DTVH/oerXahs0S0gZhi/0hpSffcxehSdH4Jzr6xDP6oZo0A4CQoqLdY3YQ9BLXVLYXmbFKqIl09TV+N1bvtjeLos0EVFuruQrg/eo=
+	t=1738245149; cv=none; b=bbR36Nmb/7EjYQ740SW6J/Wyt23py1zCcZgN73tQU2KdN9p7Bj/vt0fob3sfB0x+NK1UJN9ZEopTOL2iJ7S39PVaFF2Ed8IfDDokhQTOczIsj8ey3h96kugWAG9xxhgYIWu8h3cgXkJtQ3ID8cqlUXCAGakcPDGBrBj321qBH7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738245145; c=relaxed/simple;
-	bh=ls9P0i/GRWtBwGhsWvhdGH07tsy5ngv1cNRvnDQoBhM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZSFzTDydSphMRrdvDI+PZkJnP2Ox4VU9rThoJPwiuIx0J2k0LTvk9T6sp4eKhI1VuDMACWz6iMeSDZb0BbORL6fB/68Mq431G4qYYnfaGCimaX+LJYha0KgamdR2L+8shWS9+M96cIgw9Ut+HMfuZYVDjY7Ljl7HrjhmNlM0zRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Cny256E3; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Cny256E3"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7b6e9586b82so70987885a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 05:52:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1738245143; x=1738849943; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dronaurD70UfCsj5vY2MdRtwONKnWgd6meaR5gvRCPA=;
-        b=Cny256E33eSCjmKueOVCaei4LQffwLniRCGskAKXCobYZSkKy6JSlPBi/3fkpP87vB
-         ajQR5SD19O/NPmIxpfoIkOcPtpVVbFqw3IMlii/lSVRX/mWOOWi6WqZAMDfQ+y/WagL3
-         9sGWUcCEIu1ZvWiAVfVaIV7U5P2RCql3Nm6yk9OTn++vOB+nTPWivQraKVa0pDWxQmiv
-         c6FR8rK+YWFFRLF3u5D5W1G/z3ggOk3JLrKkUrwl+pGEha3MxHOeNeq54hYIRLl3FylO
-         TMaudGmU7/SVOggVLz7cFp6SJ6GjNSTFvmOYW8penCvZWp6TPilK8p1Zcgci8m6GdYwo
-         UKkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738245143; x=1738849943;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dronaurD70UfCsj5vY2MdRtwONKnWgd6meaR5gvRCPA=;
-        b=bVXXD9WD0AZxtOPetWcj8aSKLyq1bavJAOwLwUz97MEYV+dM8jXVFVWg7BYl6/JU/X
-         93X91DbGv+tyntQi69pQSGUXJxRMptpq+yosK55NB82emgFYG4FTWcx32dgTKcurE9ff
-         WdTHZZBtYJemHBUumxC9pW8rtkZAOGiv9Z4KWB5SYHDTi/kn2TZJmvOe201Wntd7or6x
-         OFVBSKN1a6ZKu/8Zq35Z8dJ4jHQzBQCuy3ijXvq0dqpY76ZDGIV0/lBZcngrX0s3li0N
-         BVijvk/Uo2djS0gt5ap7bM0eELpTHhDcIwHVZN7cqL0BmRqQOL3+Xed0IP7X87ml8Zs6
-         RH+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUK8V43YUhHsosZlHCJXK8fUc3oDL+MdaLuPVkY/V2B8fGuqiGxFdxXC3RWGncPt94fsvc4dU4gWs1vS3s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwclSvKm7F+E/ERCwka1FEeFJQ8SZZdj9XbicveYHFM8wP8s0mC
-	zjOf3G/ypodAokzqGigmZPNjaMfaSRiA7vhhqJx0o6LcKkr93emxtg1iFql07+jVy4EdVc1l+Xs
-	c
-X-Gm-Gg: ASbGnct14H0X4k33/yC8K+MXW7WMYEokwE0Eu9qf1B5aEhuQqWv5XJscPDB1Cs3yh+t
-	+VbeCI0aaivOFZ8jO+NGq0r+dcJ5g47u2uDm/0USIgoO43LScU6fzqfUsbnng52FHjOTnt/+06y
-	xzlwFeihunjlXybBMj2YGmkjLm0gmfY0dic7wRImuynJI2E4O77tP3TYGKWDLB8H9ZFNkIMlXCu
-	QG7tXWy7lg6niownM/QaPkWZi3EVgVdcdUWcbQqnnZ5qhqkbmttGhtnxpG3Upt4xidQBdN7qz5c
-	ZdazuOnNimaUNR6wpqE8jtCN2Dz5b/cdPMIgtXN+eud8iocBA+c6TWoTH5Gutzaq
-X-Google-Smtp-Source: AGHT+IFofaCbYRRD8xzlZNxnfbRD/rF9UdWbu/0/YCSq+I8ZkCQdGDfrRjYIkRD3w76XWM43R4/A8A==
-X-Received: by 2002:a05:620a:8f07:b0:7bf:ff64:336a with SMTP id af79cd13be357-7bfff643509mr655590485a.38.1738245143001;
-        Thu, 30 Jan 2025 05:52:23 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a906518sm74801785a.84.2025.01.30.05.52.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 05:52:20 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tdUxv-00000009cxB-1aP1;
-	Thu, 30 Jan 2025 09:52:19 -0400
-Date: Thu, 30 Jan 2025 09:52:19 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Zhu Yanjun <yanjun.zhu@linux.dev>, linux-rdma@vger.kernel.org,
-	Mustafa Ismail <mustafa.ismail@intel.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Bernard Metzler <bmt@zurich.ibm.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/6] RDMA/rxe: handle ICRC correctly on big endian systems
-Message-ID: <20250130135219.GH2120662@ziepe.ca>
-References: <20250127223840.67280-2-ebiggers@kernel.org>
- <ae41a37e-3ee4-484e-ba53-1cad9225df7a@linux.dev>
- <20250129183009.GC2120662@ziepe.ca>
- <20250129185115.GA2619178@google.com>
- <20250129194344.GD2120662@ziepe.ca>
- <20250129202537.GA66821@sol.localdomain>
- <20250129211651.GE2120662@ziepe.ca>
- <20250129222147.GC2619178@google.com>
- <20250130012951.GF2120662@ziepe.ca>
- <20250130020403.GC66821@sol.localdomain>
+	s=arc-20240116; t=1738245149; c=relaxed/simple;
+	bh=Hjvqi2y2L2JDEIZ53bqSE/CbrFVhGJvyvNXDAnto0z8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DYYRnMEmQxOIQI5/pVnFlOzg2DgjWfhFg4boQd/Ji1ICDGXvFWbpp5/Hy4jyvDrIFKI+9oFFUPNKjVo+8Q29yXKjuXZJGTKfBuGJsT/KSMkioB5IckkSmSCv8+szKA+4DZvTrILErj2oiue6ePeam2yjY2ZqK/PLwDF5lBKSDQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YkL4n00bvz6M4Yk;
+	Thu, 30 Jan 2025 21:50:17 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id EB22B140517;
+	Thu, 30 Jan 2025 21:52:23 +0800 (CST)
+Received: from localhost (10.47.30.69) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 Jan
+ 2025 14:52:23 +0100
+Date: Thu, 30 Jan 2025 13:52:20 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC 2/2] cxl/memdev: Remove temporary variables from
+ cxl_memdev_state
+Message-ID: <20250130135220.00003637@huawei.com>
+In-Reply-To: <20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
+References: <20250128-rfc-rearch-mem-res-v1-0-26d1ca151376@intel.com>
+	<20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130020403.GC66821@sol.localdomain>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Jan 29, 2025 at 06:04:03PM -0800, Eric Biggers wrote:
-> > From a spec perspective is *total nonsense* to describe something the
-> > spec explicitly says is big endian as little endian.
+On Tue, 28 Jan 2025 12:51:08 -0600
+Ira Weiny <ira.weiny@intel.com> wrote:
+
+> As was mentioned by Dan[1] cxl_memdev_state stores values which are only
+> used during device probe.  This clutters the data structure and is a
+> hindrance on code maintenance.  Those values are best handled with
+> temporary variables.
 > 
-> The spec also says "The least significant bit, most significant byte first
-> ordering of the packet does not apply to the ICRC field."
+> Adjust the query of memory devices to read byte sizes in one call which
+> takes partition information into account.  Use the values to create
+> partitions for device state initialization.  Take care to separate the
+> mailbox queries from the initialization of device state to steer the
+> mbox code toward taking mailbox objects rather than memdev states.
+> Update spec references while changing these calls.
+Why not jump to 3.2? 
+> 
+> Link: https://lore.kernel.org/all/67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch/ [1]
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-I'm pretty sure this is text trying to explain the Remainder -> ICRC
-transformation in Figure 57.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Jason
+Not sure why you had this as an RFC!
+Was it just that we are waiting for v3 from Dan?
+
+If so maybe Dan, just stick these on the back of your series if you are
+happen with these and make Dave's job a tiny bit easier (and so
+rebases happen without needing to sync the two sets).
+
+Jonathan
