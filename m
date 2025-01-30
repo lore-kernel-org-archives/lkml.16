@@ -1,304 +1,163 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D641B415D
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 23:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3551AE01B;
+	Thu, 30 Jan 2025 23:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738278988; cv=none; b=H8aLR5WETYaVGMQ5kPEqWcCwLsQp6Ki29zFjv0BmB53ReJVGzCYDGrSx+YdjQ8ltlgEcjroAFmzmSNTfSWeTp1rdlvBlcgOJ/hJZP83LxP+sSZ0nUfTFtShddALpO33UOs4HFuZLi3JimEcPv5cuFfI+1joZvdVNws7m5a+NC/I=
+	t=1738279018; cv=none; b=eka3HERzqDxb6hHXIl0fHcxSKWEeWgDcA7VgR8U31kjnQYAuPVIiCO8Kpm4sMdQeQcHSOXS+ckDuhL0rXhVdPzP9WGd9QjcEkowNI1a0UK0ff1hw5W0E5UfA+TaK4dz43SqW08LY9wQBl1L0j/CSY4p+7G15DrU4NPtpGKpcA+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738278988; c=relaxed/simple;
-	bh=TGahVvidfwxP6TepVdPQTcGpGmgLsnQxPjpRz+CZAFc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q2gqnTo+T4adEPUzWutdwvOp1fD/tfVxfnIY6kWfaj5rvCaruOJg2lpFru6Y4C9OciHzydvD3Hi2OoKAOKoNi3nKomEOQc1VcBF3hEUUMJ1xvFCDbZBQJWB7qXdWNaY2LhU8G83O5lyBYdUneT1VQEjKA7DnbsYoSNUj6WZuBPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=MLjAIdE0; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1738279018; c=relaxed/simple;
+	bh=wo+wStWFEQrrBjO1OBO/vWO6WU339RRuHvfA7tbjhlk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OPaH0lXLe5/1atNy9lKDVlAOe+3DpNAHVX/B43iflgGaQqvr1gC0/ERRp7QsIoO72j+O4k7bftq9a2ymy97PKSzP3H5XaZteTiVGvw28aOk4X47g0MTF4Dje6fo1cL6Irlh1va1br4QvEBBgdF0D6/xjA2BUAvXbrP+Yct7CG9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F5VVkaEC; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="MLjAIdE0"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4361b6f9faeso8685495e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:16:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5VVkaEC"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2166360285dso23421475ad.1;
+        Thu, 30 Jan 2025 15:16:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1738278984; x=1738883784; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kKipKjwmAYHSpItleSKPId0JyA0V7zJvz2+mQe2PcFk=;
-        b=MLjAIdE0bylsUNSGJSESLj3wBUGEji1zgn06/qPyMPOCUntKk8Od+sUK5F/IZ60XV7
-         BLDOTLmOuyaZLrkt8eTQfNk+WpMLz6cOvZ+NlJEKBFmNye2XK9F7FQweTOiz4pOFnJ+O
-         839VJxQ0VVOR4nkcmzPdAbk+PVqi/8GG/lHrwBHADWjE42LwI42Vd/e88qyDhPykm03t
-         F1xoLOr5Wa+FXDhBUOfK9dgZPM5de2VzjyHsastItVpeUXw8UYdTEwqqpFH5t1158yD+
-         9Dfb8ZNxrjqaxvgTYELht8Bpu+B2JhR3sNIYgH335q9pxbvfaK4MUM1bCJu6ua/p5IEW
-         RwDA==
+        d=gmail.com; s=20230601; t=1738279017; x=1738883817; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tbqava3jtlaDprzajGDs9SGnWXc8v9IpGNHGKUCgKIc=;
+        b=F5VVkaECbA7pvOzbCFpwTSeGVTZ6/fWt11sGfCW+YvJLxjHJDMvN4MnzQ2HhF5TVij
+         18qJ3okTM5tacy2k3ul0CvZKJYu0xwnSYmG2OGwOHWR6K911xWFKA2aWYNrSz3T12C6B
+         4uIc+WyD8dViP+bQuqwFy8C9ifMX3ncq9XJ9KA8oLBB2aqU7ivpIB92rbpj7PHvhkm7A
+         ATGCPqeBe8Rfymxojv75rCHldHApp809/JzD8vZfhfivk2yMq49uT53lpDaI+s7TYJJE
+         JVsFZYKUf3TOzkwOP1vv7rkHxK5Z/d/Lfh4tLxsbN4jGpVUpOsvetuL/65yoLja8IoxU
+         6mVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738278984; x=1738883784;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kKipKjwmAYHSpItleSKPId0JyA0V7zJvz2+mQe2PcFk=;
-        b=bqBXrlueuWEci/7g4MohWtfCXOl7H0TMs1vixfrfVwevPq0CK7IGVlfaVCxQ41rATj
-         llJaDffVi5IBt+AQ6LD4hZcz6dsBL5pXrgxMeqZ9ED2xeGlmiOJKGHY1w1hFyRgDBIGo
-         yI8on1NyFw9X6RuLtRZuwNmZGJH/GUGqzPRn+NbNV5zCJIGWQUqC3Qgcepy3XqcR8z4i
-         r0uAuRI65oUDHshYbwkhFvtkihZdG00vJJexpBSUuHpI6VtUt2RvHQRsDuPBwRKVLXEq
-         J0aJVdWgQyvTJL8zQRObRKKcW/kjQke9TMBDyn8mzolMhS/Y0NuqTD0VjhCq5h6WkGcx
-         TIOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUC+zrKoCHfNzQng4SfI36Cln/yU9BhYWR2j/WKrD3YOWdtFxiCNcYVqjMhdvGR8OZs/YdjxHQxE8SYVCY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX5/LfkuirUFrS6dbV0TTgMcsP5BeBww3WW07gJONAHZri4fUV
-	CYL/Wu6u6mOnJ0Af7EPprf+dmf/2Q7F18QH4QTRlakzdHTfGQXqMjayfwCL7VlA=
-X-Gm-Gg: ASbGncvpAtgN2grOjsMoust9PVpdUlJmmwNUBF1H+S4/H4oYJpmRV46hjLHfDWk1wPs
-	2K0wPtYYz8azdBo1iksHW29N7OgFUQgT8/N9kFLBwCYc78Q/GGvn94AyIV+c7oQ9QwBGXo9Lxnp
-	uv3zzwNtv6JQs9dhTSWGZYTKwXu+WDJyibW7YKmvjblw7SVoNy45/pBmP85PHe+7LbD5qM1qAvB
-	rWhBk5gbD9bT1ywzkXleSyVXa394nncL1oEm435aL0JoaztInVx5n/iILsZVc+gb0xgK1bgonef
-	uXSZcA2sXbKR65xaGuJN2XaI
-X-Google-Smtp-Source: AGHT+IFcX0KAMJy9mDTmsmnBGbqaMI8pUxKSFAWR413yvxqX324Lhy/8MDI3PwdZ8Dx+waNguOL2CQ==
-X-Received: by 2002:a05:600c:3b83:b0:436:e3ea:64dd with SMTP id 5b1f17b1804b1-438e6eff1fbmr11181485e9.11.1738278984176;
-        Thu, 30 Jan 2025 15:16:24 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.173])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ecc80sm3263917f8f.16.2025.01.30.15.16.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 15:16:23 -0800 (PST)
-Message-ID: <e7374f91-a65d-4882-8a9b-de478582e09e@tuxon.dev>
-Date: Fri, 31 Jan 2025 01:16:21 +0200
+        d=1e100.net; s=20230601; t=1738279017; x=1738883817;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tbqava3jtlaDprzajGDs9SGnWXc8v9IpGNHGKUCgKIc=;
+        b=sPaznHmHvqJEs9n54g3KknE/E35M0yLh0Vb1d9i8r6Gwq1JeluIcSkxOqZ1QEGZ/nD
+         jRf9rDWF84N2SdHyuDAUEnoBW9mZrNxTZKq00s5IYlQl1oOBYV/OgVmFwsrW7fahFVUj
+         x+BTldaG0aP2VTuXB6G+iiVatDxGomITdkrNxYo5V5B8kVDORljuUbDeNGANXZAyoiq7
+         E2VgY8uPLJqL+3lxXAHo7OX5J/qzEHfrJ3tq1GZezJz6WvH54nBa3tRaGiypfOieyH5p
+         PQ7+yOkMzpM1ZrUrc4OKayna+W+vrSA3AS+m7H/0Paulju8WdqOC+yWIPzidejr36OZj
+         cx3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVmQqb+K8E+wdeO1vIKXCJEAZdTmr/xVXhS9mbGtjVw35XzBitjWDHnF5gxfuqmOyr1Iwo=@vger.kernel.org, AJvYcCW590mvGS21k8foh+qfk07pgPJvp0+hrsQdUh3UPgG8sR6k+BqzGZsjIcDeFg74frFBME6LChOsGQWYbwGz@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGKXf7H320lzeYi+JCwGPAvx8716+G4FKLOPfLkAXLshKd3wft
+	nNiPiZgQqoSaon00uraVmGg2T8qskU9eJF0qqvH+dtrzXIPcGrbHbyox
+X-Gm-Gg: ASbGncs6K//hHnGUq9vwVL4ARvBeuRXL2F5It60JNE5x9M04DDM9M93M9unE6V3qYDp
+	xjPBdaHMkYTiNJF37wHpfQ6wXXvv6Ka/yCqwnLCB2UFNv1Rry9IlCqT/cVhScWKT/eGIj2xmNNW
+	He8iDRwzxhm8xk1q8FtunWN3Tb2eQRnB7h8q0b/oIuKU36lND6UFghi3QvsznL4uP8GA0cGHEdM
+	saV/iVvKk8DVX8Vpau2x+9sD2v6p6YRPao8QtmsoRi8BPdnbK/JaFMO5vcWaFX8GlRZHcHrr1Gg
+	Xt5XfScKAfVW2xU=
+X-Google-Smtp-Source: AGHT+IE6hCBfx4/xoaxPyXHXQbecrCD/hL19H6rR5ZPSMy1Iv75zVThdZOL2MTyzyF8zrr40aso6SA==
+X-Received: by 2002:a05:6a21:3388:b0:1e0:d1db:4d8a with SMTP id adf61e73a8af0-1ed7a5f6ea8mr12515356637.10.1738279016578;
+        Thu, 30 Jan 2025 15:16:56 -0800 (PST)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-72fe69ba38bsm2054920b3a.90.2025.01.30.15.16.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 15:16:56 -0800 (PST)
+Date: Thu, 30 Jan 2025 15:16:55 -0800
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, willemdebruijn.kernel@gmail.com,
+	jasowang@redhat.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+	john.fastabend@gmail.com
+Subject: Re: [PATCH 1/1] net: tun: add XDP metadata support
+Message-ID: <Z5wIZ2LAjz0wTWg5@mini-arch>
+References: <20250130171614.1657224-1-marcus.wichelmann@hetzner-cloud.de>
+ <20250130171614.1657224-2-marcus.wichelmann@hetzner-cloud.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] thermal: of: Export non-devres helper to
- register/unregister thermal zone
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: rafael@kernel.org, rui.zhang@intel.com, lukasz.luba@arm.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- geert+renesas@glider.be, magnus.damm@gmail.com, mturquette@baylibre.com,
- sboyd@kernel.org, p.zabel@pengutronix.de, ulf.hansson@linaro.org,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250103163805.1775705-1-claudiu.beznea.uj@bp.renesas.com>
- <20250103163805.1775705-3-claudiu.beznea.uj@bp.renesas.com>
- <Z5pkUNNvsWPjRQvy@mai.linaro.org>
- <65a16c3f-456e-40ec-91b0-afb57269ed46@tuxon.dev>
- <Z5tPR_tv7vWDkUI7@mai.linaro.org>
- <6ed7d545-82d7-4bca-95ec-95447586bb58@tuxon.dev>
- <b496d933-3c57-4b02-ab65-0582a30939af@linaro.org>
- <98ddf1b6-1804-4116-b4e2-f54a62c27966@tuxon.dev>
- <7d1bf72b-183a-429d-9a0c-10e1936a9abe@linaro.org>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <7d1bf72b-183a-429d-9a0c-10e1936a9abe@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250130171614.1657224-2-marcus.wichelmann@hetzner-cloud.de>
 
-Hi, Daniel,
+On 01/30, Marcus Wichelmann wrote:
+> Enable the support for bpf_xdp_adjust_meta for XDP buffers initialized
+> by the tun driver. This is useful to pass metadata from an XDP program
+> that's attached to a tap device to following XDP/TC programs.
+> 
+> When used together with vhost_net, the batched XDP buffers were already
+> initialized with metadata support by the vhost_net driver, but the
+> metadata was not yet passed to the skb on XDP_PASS. So this also adds
+> the required skb_metadata_set calls.
 
-On 31.01.2025 00:33, Daniel Lezcano wrote:
-> On 30/01/2025 21:53, Claudiu Beznea wrote:
->> Hi, Daniel,
->>
->> On 30.01.2025 19:24, Daniel Lezcano wrote:
->>> On 30/01/2025 11:30, Claudiu Beznea wrote:
->>>>
->>>>
->>>> On 30.01.2025 12:07, Daniel Lezcano wrote:
->>>>> On Thu, Jan 30, 2025 at 11:08:03AM +0200, Claudiu Beznea wrote:
->>>>>> Hi, Daniel,
->>>
->>> [ ... ]
->>>
->>>>>>> Would the IP need some cycles to capture the temperature accurately
->>>>>>> after the
->>>>>>> clock is enabled ?
->>>>>>
->>>>>> There is nothing about this mentioned about this in the HW manual of the
->>>>>> RZ/G3S SoC. The only points mentioned are as described in the driver
->>>>>> code:
->>>>>> - wait at least 3us after each IIO channel read
->>>>>> - wait at least 30us after enabling the sensor
->>>>>> - wait at least 50us after setting OE bit in TSU_SM
->>>>>>
->>>>>> For this I chose to have it implemented as proposed.
->>>>>
->>>>> IMO, disabling/enabling the clock between two reads through the pm
->>>>> runtime may
->>>>> not be a good thing, especially if the system enters a thermal situation
->>>>> where
->>>>> it has to mitigate.
->>>>>
->>>>> Without any testing capturing the temperatures and compare between the
->>>>> always-on
->>>>> and on/off, it is hard to say if it is true or not. Up to you to test
->>>>> that or
->>>>> not. If you think it is fine, then let's go with it.
->>>>
->>>> I tested it with and w/o the runtime PM and on/off support (so, everything
->>>> ON from the probe) and the reported temperature values were similar.
->>>
->>>
->>> Did you remove the roundup to 0.5°C ?
->>
->> I did the testing as suggested and, this time, collected results and
->> compared side by side. I read the temperature for 10 minutes, 60 seconds
->> after the Linux prompt showed up. There is, indeed, a slight difference b/w
->> the 2 cases.
->>
->> When the runtime PM doesn't touch the clocks on read the reported
->> temperature varies b/w 53-54 degrees while when the runtime PM
->> enables/disables the clocks a single read reported 55 degrees, the rest
->> reported 54 degrees.
->>
->> I plotted the results side by side here:
->> https://i2.paste.pics/f07eaeddc2ccc3c6695fe5056b52f4a2.png?
->> trs=0a0eaab99bb59ebcb10051eb298f437c7cd50c16437a87392aebc16cd9013e18&rand=vWXm2VTrbt
->>
->> Please let me know how do you consider it.
-> 
+Can you expand more on what kind of metadata is present with vhost_net
+and who fills it in? Is it virtio header stuff? I wonder how you
+want to consume it..
 
-After sending this to you I figured it out that precision is lost somewhere
-so I re-tested it with the following diff (multiplied parts of the equation
-with 1000):
+Can you also add a selftest to use this new functionality?
 
-diff --git a/drivers/thermal/renesas/rzg3s_thermal.c
-b/drivers/thermal/renesas/rzg3s_thermal.c
-index 6719f9ca05eb..84e18ff69d7c 100644
---- a/drivers/thermal/renesas/rzg3s_thermal.c
-+++ b/drivers/thermal/renesas/rzg3s_thermal.c
-@@ -83,7 +83,7 @@ static int rzg3s_thermal_get_temp(struct
-thermal_zone_device *tz, int *temp)
-        }
+> Signed-off-by: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
+> ---
+>  drivers/net/tun.c | 23 ++++++++++++++++++-----
+>  1 file changed, 18 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> index e816aaba8..d3cfea40a 100644
+> --- a/drivers/net/tun.c
+> +++ b/drivers/net/tun.c
+> @@ -1600,7 +1600,8 @@ static bool tun_can_build_skb(struct tun_struct *tun, struct tun_file *tfile,
+>  
+>  static struct sk_buff *__tun_build_skb(struct tun_file *tfile,
+>  				       struct page_frag *alloc_frag, char *buf,
+> -				       int buflen, int len, int pad)
+> +				       int buflen, int len, int pad,
+> +				       int metasize)
+>  {
+>  	struct sk_buff *skb = build_skb(buf, buflen);
+>  
+> @@ -1609,6 +1610,8 @@ static struct sk_buff *__tun_build_skb(struct tun_file *tfile,
+>  
+>  	skb_reserve(skb, pad);
+>  	skb_put(skb, len);
+> +	if (metasize)
+> +		skb_metadata_set(skb, metasize);
+>  	skb_set_owner_w(skb, tfile->socket.sk);
+>  
+>  	get_page(alloc_frag->page);
+> @@ -1668,6 +1671,7 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+>  	char *buf;
+>  	size_t copied;
+>  	int pad = TUN_RX_PAD;
+> +	int metasize = 0;
+>  	int err = 0;
+>  
+>  	rcu_read_lock();
+> @@ -1695,7 +1699,7 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+>  	if (hdr->gso_type || !xdp_prog) {
+>  		*skb_xdp = 1;
+>  		return __tun_build_skb(tfile, alloc_frag, buf, buflen, len,
+> -				       pad);
+> +				       pad, metasize);
+>  	}
+>  
+>  	*skb_xdp = 0;
+> @@ -1709,7 +1713,7 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+>  		u32 act;
+>  
+>  		xdp_init_buff(&xdp, buflen, &tfile->xdp_rxq);
+> -		xdp_prepare_buff(&xdp, buf, pad, len, false);
+> +		xdp_prepare_buff(&xdp, buf, pad, len, true);
+>  
+>  		act = bpf_prog_run_xdp(xdp_prog, &xdp);
+>  		if (act == XDP_REDIRECT || act == XDP_TX) {
+> @@ -1730,12 +1734,16 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+>  
+>  		pad = xdp.data - xdp.data_hard_start;
+>  		len = xdp.data_end - xdp.data;
+> +
+> +		metasize = xdp.data - xdp.data_meta;
 
-        ret = 0;
--       ts_code_ave = DIV_ROUND_CLOSEST(ts_code_ave, TSU_READ_STEPS);
-+       ts_code_ave = DIV_ROUND_CLOSEST(MCELSIUS(ts_code_ave), TSU_READ_STEPS);
+[..]
 
-        /*
-         * According to the HW manual (section 40.4.4 Procedure for
-Measuring the Temperature)
-@@ -91,11 +91,8 @@ static int rzg3s_thermal_get_temp(struct
-thermal_zone_device *tz, int *temp)
-         *
-         * Tj = (ts_code_ave - priv->calib0) * 165 / (priv->calib0 -
-priv->calib1) - 40
-         */
--       *temp = DIV_ROUND_CLOSEST((ts_code_ave - priv->calib1) * 165,
--                                 (priv->calib0 - priv->calib1)) - 40;
--
--       /* Report it in mili degrees Celsius and round it up to 0.5 degrees
-Celsius. */
--       *temp = roundup(MCELSIUS(*temp), 500);
-+       *temp = DIV_ROUND_CLOSEST((u64)(ts_code_ave -
-MCELSIUS(priv->calib1)) * MCELSIUS(165),
-+                                 MCELSIUS(priv->calib0 - priv->calib1)) -
-MCELSIUS(40);
+> +		metasize = metasize > 0 ? metasize : 0;
 
- rpm_put:
-        pm_runtime_mark_last_busy(dev);
-
-With this, the results seems similar b/w runtime PM and no runtime PM cases.
-
-The tests were executed after the board was off for few hours. The
-first test was with runtime PM suspend/resume on each read. Then the board
-was rebooted and re-run the test w/o runtime PM suspend/resume on reads.
-
-Figure with results is here:
-https://i2.paste.pics/5f353a4f04b07b4bead3086624aba23f.png?trs=0a0eaab99bb59ebcb10051eb298f437c7cd50c16437a87392aebc16cd9013e18&rand=5n34QNjWID
-
-
-> Thanks for taking the time to provide a figure
-> 
-> Testing thermal can be painful because it should be done under certain
-> conditions.
-> 
-> I guess there was no particular work load on the system when running the
-> tests.
-
-No load, indeed.
-
-> 
-> At the first glance, it seems, without the pm runtime, the measurement is
-> more precise as it catches more thermal changes. But the test does not give
-> information about the thermal behavior under stress. And one second
-> sampling is too long to really figure it out.
-> 
-> In the kernel source tree, there is a tool to read the temperature in an
-> optimized manner, you may want to use it to read the temperature at a
-> higher rate. It is located in tools/thermal/thermometer
-> 
-> Compiling is a bit fuzzy ATM, so until it is fixed, here are the steps:
-> 
-> (you should install libconfig-dev and libnl-3-dev packages).
-> 
-> cd $LINUX_DIR/tools/thermal/lib
-> make
-> LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LINUX_DIR/tools/thermal/lib
-> 
-> cd $LINUX_DIR/tools
-> make thermometer
-> 
-> 
-> 
-> Then change directory:
-> 
-> cd $LINUX_DIR/tools/thermal/thermometer
-> 
-> 
-> Run the tool:
-> 
-> ./thermometer -o out -c t.conf -l DEBUG -- <my_command>
-> 
-> 
-> The content of the configuration file t.conf is:
-> 
-> thermal-zones = (
->           {    name = "cpu[0_9].*-thermal";
->         polling = 100; }
->       )
-> 
-> All the captured data will be in the 'out' directory
-> 
-> For 'my_command', I suggest to use a script containing:
-> 
-> sleep 10; dhrystone -t 1 -r 120; sleep 10
-> 
-> If you need the dhrystone binary, let me know.
-> 
-> The thermal zone device tree configuration should be changed to use a 65°C
-> passive trip point instead of 100°C (and the kernel setup with the step
-> wise governor as default).
-> 
-> The resulting figure from the temperature should show a flat temperature
-> figure during 10 seconds, then the temperature increasing until reaching
-> the temperature threshold of 65°C, the temperature stabilizing around it,
-> then followed by a temperature decreasing when the test finishes.
-> 
-> If the temperature does not reach the limit, decrease the trip point
-> temperature or increase the dhrystone duration (the -r 120 option)
-> 
-> At this point, you should the test with and without pm runtime but in order
-> to have consistent results, you should wait ~20 minutes between two tests.
-> 
-> The shape of the figures will give the immediate information about how the
-> mitigation vs thermal sensor vs cooling device behave.
-> 
-> Additionally, you can enable the thermal DEBUGFS option and add the
-> collected information statistics from /sys/kernel/debug/thermal/*** in the
-> results.
-> 
-> 
-> Hope that helps
-
-Thank you for all these details. I'll have a look on it but starting with
-Monday as I won't have access to setup in the following days.
-
-Thank you,
-Claudiu
-
-> 
-> 
-> 
-> 
-> 
-> 
-
+Why is this part needed?
