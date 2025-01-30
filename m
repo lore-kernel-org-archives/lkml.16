@@ -1,308 +1,181 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDEA187346;
-	Thu, 30 Jan 2025 18:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738262243; cv=fail; b=RXmjwm1zUb2BlG/cDoibwpAYgFgJBtiNw5vm/XP9KzrET1D/hCeR/NzwakdWITffmNJ20l87+u6cZ/PgU7Up/LH1kf7VK0yBZZkRK/EWbUoGaWCsVJvxMMUJ8umKXh+8pLwZPTm4CI3z0WzH5u7kAisDGKuKqDjHSUCxMDE01mw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738262243; c=relaxed/simple;
-	bh=cvaS3Hf2phG8jayoMyXdSokJ/59uF6L6uKRXLNksjVI=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=CBzX5niWsa2EadmT3AMMY2z8KGoPMdiGfwXdr7KngkEObfdyksqgc27P7WcO8nNpUz68o5IZ/hK+NbtR5gv8olF19bnTlaOdQo3KfSCMI10vqFwHgqQp3i/41fTU3s0y6MsTitRVcPmoOdnt4+6BZtbmiNt7Gi7pFgWZIr5JWzQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ctxMNYI1; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=QzRKKwxi; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD78D187346;
+	Thu, 30 Jan 2025 18:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738262259; cv=none; b=NfypKwvtaw5lPEtbzl9XxMYiwVk3BbDDFtLuI4U7Hhf7AWNbJT5H+x7hJV7NYafEAzyly72F+r30pLQBNUl4B5upzieM9OpP3mZXuxD6yPaW/dORuXwdqcvUpI2UOzLMd6KCdLSVaM1qioTgffKqKlSgdhtoTJuLbOnqKErDULw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738262259; c=relaxed/simple;
+	bh=vOwZ+ACAFpMPdDLsWCC7+eR5A4+jCPqA+ASIm8GRAzM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R29y+eYUf7q6KB0Kqd0p1eEcgBi9XKKPgWcyA0ZKC1/B9dE1b7FUCca4zJh5Rl46ZIAgaHkxkrM7OyTn1dMe87x4k6WpaThfWhdk1zqzZL5b3TXtYNRar+Oo8HEFmxmiVhGiWlLtzkTIRFp5MHgMoqp2WwfjNbLwHSo3mZeJfaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yedl69cZ; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ctxMNYI1";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="QzRKKwxi"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UHni6C017548;
-	Thu, 30 Jan 2025 18:37:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=corp-2023-11-20; bh=J6pVX6LFjP6kaQag
-	tWnGhyS1kOv9ynY4q3WfFShkhbU=; b=ctxMNYI1SFUNmUwio76YJHTWTdyschtU
-	jz35WCtw1qt+mvqV2yLGbGEFNVTxJGefYjplgf6O2lrG4KijgNY5rgo0m6hUS54+
-	RY00iczVePB9l24Qh49VDVLrf4ntYmnYTvwF9gA2/JFRUtEakC13i1RdkZ9H+C1m
-	aAMGF0bo1/rwzWyH+nIsXKQm1Fs1JNfawmrdvArH+EJ0wZa6H96CosaxYkIrOeCf
-	KDDa3Ts6dm5XuZVZUQQHWPO/PeawXKGV8msHbNhfLxwC3Ou4ZqyXkU7Hfdt2aY7s
-	joXaLFOr4Dqwa8ooyUInx56mhbyqRrLNzr6bc9KwT8CwPpJDTnc4Rw==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44ge5w837d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 18:37:00 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50UHBPRk028275;
-	Thu, 30 Jan 2025 18:36:59 GMT
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2045.outbound.protection.outlook.com [104.47.74.45])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44g0vbf4w5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 18:36:59 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=W2VfLfp1JcGMsTXShKSTkckN9zzc3ECb3Dmf87aysbnWmD8FYrutiiI6SVr70ILQ8bFWGVDb1Vq97rBKB2ZXZIzYO1wHPnJx+Fo/60xOkIzq9Epc00ggLOwvU4e/sNfmwNjQwiHSe22s13Y4a1nHZwnM26O1ZqpCJ0ZXyBICgLy75wR04lais2IHrO/UKDhT19n/ZU9Q8HBLATosef7NhqGB9hp+5Ifi5cPTqIRRmLt6RapakkHFTRHhP6NmMgJ4seOyn2XtfpsHL61qOCyHwyLtIHczsauxzTXwtabB/pctYSwsnZ5N5tch+7VzTyfhO0n/lYw9FSCHyhH5LagWZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J6pVX6LFjP6kaQagtWnGhyS1kOv9ynY4q3WfFShkhbU=;
- b=IptvL0wFVceWUBtVWdPVGpTVnfdKiuEuIfrArqHFYpcO8udJQ9VIUyKGi9inXDOrHkFBtFJW4BXOWklPwQ/kIm67UGfNQXtNELH/Y2W5NVGtVzvdUee/k+qRawf+nVdwEIxaBpO8r0bSRxUyr2hzI4Vi7lzMQL38d4+FewxNT6SaFy5QbJw5Nb0HOY+HPAdroj78E/wW6SZa6enQVN6WeN7LvpNCq1kJHEw6ToeZIyqEuf/IGvXHUve8lID+OaYUKFx/sZrjJps60MkXnx3b6o5jpk7l/ym6+SPlt+nVSqLZaLgDpeAzuhCzqE2tZ4FcgLYDR9WXptm/sDW7KpZhYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yedl69cZ"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-543e4bbcd86so1402244e87.1;
+        Thu, 30 Jan 2025 10:37:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J6pVX6LFjP6kaQagtWnGhyS1kOv9ynY4q3WfFShkhbU=;
- b=QzRKKwxiJ0G41m635AQYSe5IWutiXxIJvD/fwCbMt7msRAA/Jc7s4RGhwVg6n2EizzGegDaxxo2NHTA0CTXBiSAujm9D93OzMnrYtJQXG8DxIDNome7JtxMj++cMLdQSaEZ/D9EDYTIWSO7bky40TLNfzpoDN0YwdC3NZbYYAGs=
-Received: from BLAPR10MB5217.namprd10.prod.outlook.com (2603:10b6:208:327::10)
- by SJ1PR10MB6001.namprd10.prod.outlook.com (2603:10b6:a03:488::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.22; Thu, 30 Jan
- 2025 18:36:55 +0000
-Received: from BLAPR10MB5217.namprd10.prod.outlook.com
- ([fe80::68fa:11c9:9f82:f7be]) by BLAPR10MB5217.namprd10.prod.outlook.com
- ([fe80::68fa:11c9:9f82:f7be%7]) with mapi id 15.20.8398.018; Thu, 30 Jan 2025
- 18:36:55 +0000
-From: Thomas Tai <thomas.tai@oracle.com>
-To: "mhkelley58@gmail.com" <mhkelley58@gmail.com>,
-        "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "decui@microsoft.com" <decui@microsoft.com>,
-        "drawat.floss@gmail.com"
-	<drawat.floss@gmail.com>,
-        "javierm@redhat.com" <javierm@redhat.com>,
-        Helge
- Deller <deller@gmx.de>, "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "airlied@gmail.com" <airlied@gmail.com>,
-        "tzimmermann@suse.de"
-	<tzimmermann@suse.de>
-CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Thomas Tai
-	<thomas.tai@oracle.com>
-Subject: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or executing
- kexec
-Thread-Topic: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or
- executing kexec
-Thread-Index: AdtzQ0vu6eNj8snBS+OSvfShEIJEjQ==
-Date: Thu, 30 Jan 2025 18:36:54 +0000
-Message-ID:
- <BLAPR10MB521793485093FDB448F7B2E5FDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BLAPR10MB5217:EE_|SJ1PR10MB6001:EE_
-x-ms-office365-filtering-correlation-id: bfaac5a7-db21-47ff-2859-08dd415d1230
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|1800799024|366016|921020|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?wZUeXrAvfcNr9QqfcQ8ZzB8/U6hg5hfXiu3/mmhOezCFxwPZ2L40eQBi1YOI?=
- =?us-ascii?Q?m4NRVXzowJijZVUipYlxWEMwsdpU9Ha9IeklPlL5OEFjzgX76mEeyEft7YPU?=
- =?us-ascii?Q?XB6xoGO/WtipFsgNadbUkpNeGvFjG/EtxN2nC3RE8WSIc8qnC7m6EatqsFE2?=
- =?us-ascii?Q?gM/VJ8WPk5Jg8slRLHuixsK3DbXFZBrh390RuyjPsFpbhB1sbIZqgWmoaLN5?=
- =?us-ascii?Q?4pv7yokbKFFE0kUxJVogqhh0U7HCaICEAO1HN/ogmEbPV5o0jorP27MKc7f/?=
- =?us-ascii?Q?qqrIiToQu1TRw5x3bDH7ycSEzS4qKbIyVSWB/sS/7V9EcdPE3/xuZz0BnXhM?=
- =?us-ascii?Q?bZ41O3EkiHgCjseZSUIwvrigfSyVHQmzPXe2xFD0DfcJ7eckul2GrUSXjdCW?=
- =?us-ascii?Q?hVD8VQznPz+m/KXEfu3eLn4fc1nzEMA+ACXwEHG30GyvVF23Xl7DwQGWTI11?=
- =?us-ascii?Q?bWSiVIrZiehoXwfyMdcQMsfe0xwMT8pxe9LiwkMkzd/G9Vr/U7HKuC8Yldkd?=
- =?us-ascii?Q?Rj4AHx7GTrorxKrJSRTDU5hYKtbQWgEmMvQOqvnkUd0OpAUYFoUveMIKxS3u?=
- =?us-ascii?Q?tgl+Kbg9hVv2E5Uc/DtusC5eRzRKOU9HrDiYYmNHIisJA7G8Wrb9T8ysp3Y8?=
- =?us-ascii?Q?X8ACNHvAtMtK+YyqXYixzluOy/YU9bRDSR15Mj0pDOj4hi3nIL8If+Kesc/J?=
- =?us-ascii?Q?Oi91CtVe/PMUTllp4asLoVis7Lz2IMm0/I1UzLoU7CZjesVlzWKaNzR8qPkn?=
- =?us-ascii?Q?ADRirv0jSy473rNmhZdTlUmJPNZnZ8bkv4rfaKB3yvR+sBx4B5wd/udLdCpC?=
- =?us-ascii?Q?2z2eoDJnJt87lPIsGT+Clt6s0ajS3cVOGtCMS7wJT3tsT38rNnBiKFEdjAaw?=
- =?us-ascii?Q?0O/9fyFm2YRNvw0fcwMcW0G23qbCEY34EeVjTq5VR0tnueoXpOUeI+5mPPU2?=
- =?us-ascii?Q?5DrGXLGTDW0HpqfIIquPDXKQNFrOF9vXYEuMY4OqjNXnvxAzSupeanpgOJ+q?=
- =?us-ascii?Q?M2QysDzf5YYMP1hia76dclWO1G15MFGwG0bHSu0UKnophj7xA3vmLl1EB8vT?=
- =?us-ascii?Q?PGSYg3WjRWG7PtYqYiTVgkhFcfyj2zI/uwjbbYv+qF2I42OlSRHveobeMpRP?=
- =?us-ascii?Q?kz2GaRhO8U8Noc6SVX3d6wKh6Am+D/gC4kv4hn21t7CRAvEwjS270grjeRJ/?=
- =?us-ascii?Q?mizCd8U72M7aaMy0jh3ggjA7zpjq67DaNsuOegF5YuCOnzxv4H3vOvwsjdYE?=
- =?us-ascii?Q?XueC5/pdtselGi8xyY4/8bhHoSopozAbzTt8hfXHpmlujqJg6ktn9iK7zlSC?=
- =?us-ascii?Q?Cb9yNVdhG2Jc26iUUns79I8UO64rqVtg+RrQU2QB0kQlVV6TuEiDP7VFmOnq?=
- =?us-ascii?Q?G0fIxS4D3W4ny6IedUr6+UcKXIn0ArADb0RX6SnokJZoEmvqvyFpl3aU/NZF?=
- =?us-ascii?Q?SJOfWWzrNNwPXjKPibhNJszp57jreNtHtlC4igFwm/qrPjRmxxFs3g=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5217.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(921020)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?3djauXFDYkvWfUoXpcNEwmzubbWKf1ze1NT1ULJ3hPxSUl3ZdGdhu+QDaIKZ?=
- =?us-ascii?Q?x/Q3vHohT2E6kqJ8XrheXhay13/VjhsRUnNaXMyspK9lm9oUX5CHNBTtYsDc?=
- =?us-ascii?Q?rwp+rzkva4hGDtYE+WLInvLOBpxR4Nw6LuWzJzrjsEz+D5R8WUkIihB4T9Lt?=
- =?us-ascii?Q?y/KtOgBT2zvB5j91dTFsKop+0T8lCpNDy3wj4G5bv3fy3lGmyh/0XDTmhsAj?=
- =?us-ascii?Q?6Fkk+jFMYmnST0SdGWV7FjItq1duE1ZCQeIQnqkvduwkOzV8t2GNGEyEtHlQ?=
- =?us-ascii?Q?pwFndec8zKUSebnJF9yuX2uipWCRyEcUDw1kjrPomZwGCpidIsrjVSa5rhnY?=
- =?us-ascii?Q?UfwINkXpYYgwhgAr+acsiJXszhg8R5zkpjbsDgipYCpvXwRwIm79cLseBav/?=
- =?us-ascii?Q?kNZTsTnGnjXYRZUMbKlIbHWNL+F3xGQpBfGCngPRogn8VoK4VlNoJUFYvgl1?=
- =?us-ascii?Q?g+D+CNZNACturcqPKps/GcDjx6vBFAOq4009AMSFwdNxvt28/G1vX4Htqo0f?=
- =?us-ascii?Q?3MYzkmJ5zKmic0/s74SFkmbKIwlJvnuvdLfFvNpomy3KFw/PPHpLk1AeWfgw?=
- =?us-ascii?Q?5kZIx5aUKtIFxIxZO4zgC1etogKSceAlV/4s01O7Lkuua5zOEMG+rOB+CrJn?=
- =?us-ascii?Q?hXGp9yYqWcU6Vmp+OdHibx2qRfT58LsDYfbj90n/MO5VIv+050ycL5Y/Ngjb?=
- =?us-ascii?Q?H90RpcXiijAZ8Hjs0qUMp+d8iJNEqn+9KBSH5i/zvRY6+1B4HYhPoUl/3Kij?=
- =?us-ascii?Q?dQrjo4NUBOLwfw2/LMMYfRETx9/bZzQDC9ozfDYpW3K/p1MDStwCkiTVeLpM?=
- =?us-ascii?Q?3Ork7kBDFDxOcywr+31CnvHqtaKMvDHlaVHVBDrfRJw9J5nmvMu3HtlooO2C?=
- =?us-ascii?Q?HXVtD+Xq0kt2DPyEpClHKIP1tz2itjW1XB5Y/oERsjmh+zBS/zFdTDAkHsxe?=
- =?us-ascii?Q?Nf3Axod6VM5H+2Bol7oXoJMyYSgAaBO6tf3ChbIal5H600sIgHzraxZjab9/?=
- =?us-ascii?Q?cBppz/ZTVyvJchXPeek99/AqlAlI7rvHpmhiwnPaVAuOsF4Ug0awh5l9tFXY?=
- =?us-ascii?Q?d6t1M6WuJH+jxJF1j6LsCN6MbaX7v9dt3Btd6beBBMS/gJRjrg2pa7jAl4bR?=
- =?us-ascii?Q?KImk845HS3Pbuyzd6D3/+kSiSa/SnG2Z1R9b3zXTOf8dvADJdLUoWpUNTprz?=
- =?us-ascii?Q?rLMAvaav05YDzVd1z9YNO2EsEDOjVa3rs64Reow/bndk3oSluXU98yMWL50w?=
- =?us-ascii?Q?vLIDl6tR6fHxgu0qfenUkvTN2xm27rfKBaU3wSdGfJbCOsybdNcPfJeYAlrk?=
- =?us-ascii?Q?9gXildm5bhwcT+KTbHhvmTvDyBEqYnX+e4XMyj3hc8FEcrAld9Aqyqonas5K?=
- =?us-ascii?Q?mG4rLsOBtCCo98fJQeyZQPspjpntioQDwOj6ICxFXI+Fjx17ZvdLnA+n1kQc?=
- =?us-ascii?Q?CYcbOnr6vtDrMp906tKymc7p+cNgcMM/NoNMFj0RIYp86nUDSBvnaSBCWerJ?=
- =?us-ascii?Q?5ZumS5IZykElAA1uBNU9lVIZq+ICp0YIHx+PcTbIvZVvUUIGnNGkkteimgPU?=
- =?us-ascii?Q?fgGNSxZk0vIrLVhTnATz5jighTLCzJ4tWH6RVlym?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20230601; t=1738262256; x=1738867056; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oRQgpcZ93mW5DBGdzNIoBycuwMkboGtcanKKs6jsCyI=;
+        b=Yedl69cZnOnJB1TETA5M7Ou5Z/S1aZBEfo6fjKl8sxirq0J/MPUI+AqQLffqSDzKsr
+         tLVmRB6vcxLo1SHEc8jGS9l6BMmMcfsCLSOwyvngVG/JJjdWdWG1VuH8WDgrg902x5g+
+         nA//7eG9Rhrz2NmR1CQP7lUkJRyG8TIifAsSQqNUILo/0OvIctxgScw8kGRoAnLyAdMG
+         3+9u9FdTHA7cHsQoMimd9rvNo4G9BTmWQQiAZZYDQ0zYqdyxRySIXx74aKU88GxTQ1Vp
+         2sz6hqk7SERUPGskKOBJVT7pyvBNApvgWBFOHaTscKqqzq68rUFG8Z29BD/oI/Afuvji
+         ndrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738262256; x=1738867056;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oRQgpcZ93mW5DBGdzNIoBycuwMkboGtcanKKs6jsCyI=;
+        b=Zs3WXkcgt8/wPDGYEYygAj+tE+j54xY0V8ENhz5nvZbEe8jCkx3khG3r9BwTGsgjli
+         6fH8w7eoyocfoEGJF6OjakTuBKDGlahHbQK0qbfO66sLf/Twm3UC3BZTK0jPpH+1YKyu
+         MuAHrRjqHV3CQ6uOrGNIpSlXszhTR9zPnQrPTEVGtUWzLBeCcfRGFvUYyzRPbp8GGRIz
+         9V/ZqMNBvedjkK7mhNXq1++gHHfaIrZhX/4r/nXGuD50rehbGulbpt8sgQlBNrCIWwx0
+         +G3jQyczePTPhyQOnHARRZKqAlGC/cz4kYJy8KNVIVGDeZBPJwe7a/QyTcRgLmhwspgQ
+         R1jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7YdJdRmYsNuOvbFTEozMbhtGkVhk6nrS5mgu0oRcuzDzfsRc53VBCD5kUbbj7sLbGBTPAa88hO282R0sEJHQ=@vger.kernel.org, AJvYcCVF4kOeelXZlmvyg77oL8XXGBcanemSCRetC7I6p4uikGKbPW4+3s59N/Q3iGcAO8KsI0PiorbznOFDK1B4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4I73z8xLmZ47gJSTkDLRRc4A7s7J8x64ZflzEz2/1ObRGcOs4
+	Utnrhan4baBmaltWknfnHu9oLiOkmLLQgiAA+vKFOHj9vIBu2SxyDZwR4qYWHkpiLdvwHAEpthI
+	LVJ2gCwyjdIHwI/W8xGVxsWI382s=
+X-Gm-Gg: ASbGncstd4bDUlTFzLEBFZJ6YE0LbNfIU3jW6ih4LwxSGG0DudBRXpK5BcEGmFTd1OG
+	iiYLK7a3VmvHm6fiK1DXD8imctrvGYi2fW5Jg0UaXVTXZZ98KgiWKsdDf6cXnNfEyRgPMe88=
+X-Google-Smtp-Source: AGHT+IFjnKx48Ypj22gunFniX94bJSH4EsZTSx08ahplfbQ/Lu9eEN9a6ZYdcMY/45PT7s/zgK5zB+DioKmQUWoAm0E=
+X-Received: by 2002:a05:6512:3d21:b0:540:1fae:b355 with SMTP id
+ 2adb3069b0e04-543e4c37a94mr2802777e87.52.1738262255391; Thu, 30 Jan 2025
+ 10:37:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	/9fgoKdenHxO3A/kbVDVMTMRuvYniSVeD6rhm3SjIvVzNnxgqE+5H2PcnLsDekQiwpmXs57J8j95Zb0c72g/rHJIPL5hIr65FRveNewjlmD4LuJ94sIFqvm5jmJ27nnnEn5fxA7/jTrsIy14w5TyISfqJvAUx/8I1VLUsVrL7SClcbCahJUMpWQj1H1qdJartXV1DkOdq+h6GX+uWYGhIY7dfG8QblRFcp+mIgv8EWrgx9RWMj3eHzZWH3B8x+bBB5hRLqS56l1UFa1hXpoJduLBoMQ1bH/VIlsyPJjQhpnUsKjLoE619gJk2tBWuN75qTHiNu56BpSe8VmHQ5VMLQaPi1s8aNyoYIhLHIRm9nlcvumMSG9Y89oNYJnlfECEBbwxliQFiRXgzYXQzb5H3e2U11lH3yEEc86MILQToHbGeaHPUZeVqHNmc5uANrGmR/Fc8ljyIQBz/pmxUe+Pg6b66NUJeM9kNBoi+8ok9bIVO280KIyB/LB4KB7XTaik9Dy/dJDjLHpb9kH9kR5iWpD7lM0vHxSQSGR/k0KV9VN8PjKw8Tx9j/xwts3ayX5HtgSYP1oa4ypKWn+9GF7ft/LglZvdwrhdpz1jKE7WKAM=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5217.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfaac5a7-db21-47ff-2859-08dd415d1230
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2025 18:36:54.8758
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mhHpNCoZruSvmomTD5254DdOG+ykJAXo9BcC/gBrpdxME4I4vt/EgWKVp7X3pSEPHzy8tlBPTSvPDsnQgfL+zA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR10MB6001
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_08,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 spamscore=0
- phishscore=0 bulkscore=0 malwarescore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
- definitions=main-2501300141
-X-Proofpoint-ORIG-GUID: SOCore22ldVxRen_Hx6-mjYOgQFSfW_Z
-X-Proofpoint-GUID: SOCore22ldVxRen_Hx6-mjYOgQFSfW_Z
+References: <d159c57f-8490-4c26-79da-6ad3612c4a14@salutedevices.com>
+ <CABBYNZLa9amkcQzqRyiCK7acKeXiPLkfX8thMonQhXN+5PnmmQ@mail.gmail.com>
+ <e0b77a36-2d2b-735c-7a23-bbaab5adeba7@salutedevices.com> <a2a239f1-5697-cb09-5e4f-83c024fd5ea6@salutedevices.com>
+ <95904850-fe5c-4866-3da6-3e021c6becf8@salutedevices.com>
+In-Reply-To: <95904850-fe5c-4866-3da6-3e021c6becf8@salutedevices.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Thu, 30 Jan 2025 13:37:22 -0500
+X-Gm-Features: AWEUYZnwRPiumDhFkYKDhybUiE_2LzKeM2ZIjMZ-9cHMHz2_AqDwGEFtj48ANRU
+Message-ID: <CABBYNZL4AAdr3HaOQheSmHr2TMWpH2bXNgwn20tGSbuewys_SQ@mail.gmail.com>
+Subject: Re: [PATCH v2] Bluetooth: hci_uart: fix race during initialization
+To: Arseniy Krasnov <avkrasnov@salutedevices.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, oxffffaa@gmail.com, 
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel@salutedevices.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Michael,
+Hi Arseniy,
 
-We see an issue with the mainline kernel on the Azure Gen 2 VM when trying =
-to induce a kernel panic with sysrq commands. The VM would hang with soft l=
-ockup. A similar issue happens when executing kexec on the VM. This issue i=
-s seen only with Gen2 VMs(with UEFI boot). Gen1 VMs with bios boot are fine=
+On Thu, Jan 30, 2025 at 1:34=E2=80=AFPM Arseniy Krasnov
+<avkrasnov@salutedevices.com> wrote:
+>
+> Hi, sorry ping
+>
+> Thanks
+>
+> On 08.01.2025 15:39, Arseniy Krasnov wrote:
+> >
+> >
+> > On 19.12.2024 23:07, Arseniy Krasnov wrote:
+> >>
+> >>
+> >> On 19.12.2024 22:18, Luiz Augusto von Dentz wrote:
+> >>> Hi Arseniy,
+> >>>
+> >>> On Tue, Dec 17, 2024 at 3:12=E2=80=AFAM Arseniy Krasnov
+> >>> <avkrasnov@salutedevices.com> wrote:
+> >>>>
+> >>>> 'hci_register_dev()' calls power up function, which is executed by
+> >>>> kworker - 'hci_power_on()'. This function does access to bluetooth c=
+hip
+> >>>> using callbacks from 'hci_ldisc.c', for example 'hci_uart_send_frame=
+()'.
+> >>>> Now 'hci_uart_send_frame()' checks 'HCI_UART_PROTO_READY' bit set, a=
+nd
+> >>>> if not - it fails. Problem is that 'HCI_UART_PROTO_READY' is set aft=
+er
+> >>>> 'hci_register_dev()', and there is tiny chance that 'hci_power_on()'=
+ will
+> >>>> be executed before setting this bit. In that case HCI init logic fai=
+ls.
+> >>>>
+> >>>> Patch moves setting of 'HCI_UART_PROTO_READY' before calling functio=
+n
+> >>>> 'hci_uart_register_dev()'.
+> >>>>
+> >>>> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
+> >>>> ---
+> >>>>  Changelog v1->v2:
+> >>>>  * Move 'set_bit()' before 'hci_uart_register_dev()' instead of
+> >>>>    adding new bit 'HCI_UART_PROTO_INIT'.
+> >>>
+> >>> What drivers/controllers this was tested with? I want to make sure
+> >>> this doesn't cause regressions to other drivers if there are perhaps
+> >>> some drivers assuming HCI_UART_PROTO_READY was set in a certain order=
 .
+> >>
+> >> Hi,
+> >>
+> >> I tested this on:
+> >>
+> >> CONFIG_BT=3Dy
+> >> CONFIG_BT_HCIUART=3Dy
+> >> CONFIG_BT_HCIUART_H4=3Dy
+> >
+> > Hi, sorry, but is this enough info about my test env ?
+> >
+> > Thanks
+> >
+> >>
+> >> Yes, my v1 patchset with extra INIT bit was targeted to keep
+> >> original behaviour - e.g. PROTO_READY bit usage still the same,
+> >> just adding extra bit to handle this specific case.
+> >>
+> >> Thanks
+> >>
+> >>>
+> >>>>  drivers/bluetooth/hci_ldisc.c | 3 ++-
+> >>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_l=
+disc.c
+> >>>> index 30192bb083549..07b9aa09bbe2e 100644
+> >>>> --- a/drivers/bluetooth/hci_ldisc.c
+> >>>> +++ b/drivers/bluetooth/hci_ldisc.c
+> >>>> @@ -704,12 +704,13 @@ static int hci_uart_set_proto(struct hci_uart =
+*hu, int id)
+> >>>>
+> >>>>         hu->proto =3D p;
+> >>>>
+> >>>> +       set_bit(HCI_UART_PROTO_READY, &hu->flags);
+> >>>> +
+> >>>>         err =3D hci_uart_register_dev(hu);
+> >>>>         if (err) {
+> >>>>                 return err;
+> >>>>         }
+> >>>>
+> >>>> -       set_bit(HCI_UART_PROTO_READY, &hu->flags);
+> >>>>         return 0;
+> >>>>  }
+> >>>>
+> >>>> --
+> >>>> 2.30.1
+> >>>
+> >>>
+> >>>
 
-git bisect identifies the issue is cased by the commit 20ee2ae8c5899 ("fbde=
-v/hyperv_fb: Fix logic error for Gen2 VMs in hvfb_getmem()" ). However, rev=
-erting the commit would cause the frame buffer not to work on the Gen2 VM.=
-=20
+Please resend it.
 
-Do you have any hints on what caused this issue?
-
-To reproduce the issue with kdump:
-- Install mainline kernel on an Azure Gen 2 VM and trigger a kdump
-- echo 1 > /proc/sys/kernel/sysrq
-- echo c > /proc/sysrq-trigger
-
-To reproduce the issue with executing kexec:=20
-- Install mainline kernel on Azure Gen 2 VM and use kexec
-- sudo kexec -l /boot/vmlinuz --initrd=3D/boot/initramfs.img --command-line=
-=3D"$( cat /proc/cmdline )"
-- sudo kexec -e
-
-Thank you,
-Thomas
-
---- soft lockup log---
-[    1.690032] efifb: probing for efifb
-[    1.693989] efifb: framebuffer at 0x40000000, using 3072k, total 3072k
-[    1.700996] efifb: mode is 1024x768x32, linelength=3D4096, pages=3D1
-[    1.706999] efifb: scrolling: redraw
-[    1.710981] efifb: Truecolor: size=3D8:8:8:8, shift=3D24:16:8:0
-[    1.716806] Console: switching to colour frame buffer device 128x48
-[   29.176649] watchdog: BUG: soft lockup - CPU#0 stuck for 26s! [swapper/0=
-:1]
-[   29.176655] Modules linked in:
-[   29.176658] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.13.0+ #1
-[   29.176661] Hardware name: Microsoft Corporation Virtual Machine/Virtual=
- Machine, BIOS Hyper-V UEFI Release v4.1 03/08/2024
-[   29.176663] RIP: 0010:fast_imageblit.isra.0+0x2de/0x460
-[   29.176669] Code: 07 49 21 f1 41 83 e1 01 46 8b 4c 8c 40 44 89 09 41 89 =
-d1 4c 8d 79 08 41 c0 e9 06 49 21 f1 41 83 e1 03 46 8b 4c 8c 40 45 89 0e <41=
-> 89 d1 4c 8d 71 0c 41 c0 e9 05 49 21 f1 41 83 e1 07 46 8b 4c 8c
-[   29.176671] RSP: 0018:ffffc900000437a8 EFLAGS: 00010246
-[   29.176673] RAX: 0000000000000400 RBX: 0000000000000005 RCX: ffffc900006=
-bb140
-[   29.176674] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8880121=
-46600
-[   29.176675] RBP: 0000000000000080 R08: ffffc900006bb000 R09: 00000000000=
-00000
-[   29.176676] R10: 0000000000000001 R11: ffff888012146580 R12: 00000000000=
-01000
-[   29.176677] R13: ffff88801214658a R14: ffffc900006bb144 R15: ffffc900006=
-bb148
-[   29.176678] FS:  0000000000000000(0000) GS:ffff888026a00000(0000) knlGS:=
-0000000000000000
-[   29.176680] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   29.176681] CR2: 00007f8bc160c238 CR3: 000000002ac38002 CR4: 00000000003=
-706b0
-[   29.176683] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000=
-00000
-[   29.176684] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 00000000000=
-00400
-[   29.176685] Call Trace:
-[   29.176687]  <IRQ>
-[   29.176690]  ? watchdog_timer_fn+0x220/0x2a0
-[   29.176695]  ? __pfx_watchdog_timer_fn+0x10/0x10
-[   29.176697]  ? __hrtimer_run_queues+0x112/0x2b0
-[   29.176702]  ? hrtimer_interrupt+0x108/0x270
-[   29.176704]  ? sched_clock_cpu+0x60/0x1a0
-[   29.176708]  ? __sysvec_hyperv_stimer0+0x32/0x60
-[   29.176712]  ? sysvec_hyperv_stimer0+0x70/0x90
-[   29.176715]  </IRQ>
-[   29.176716]  <TASK>
-[   29.176716]  ? asm_sysvec_hyperv_stimer0+0x1a/0x20
-[   29.176722]  ? fast_imageblit.isra.0+0x2de/0x460
-[   29.176724]  cfb_imageblit+0x433/0x470
-[   29.176726]  bit_putcs+0x291/0x570
-[   29.176731]  ? __pfx_bit_putcs+0x10/0x10
-[   29.176733]  fbcon_putcs+0x139/0x1a0
-[   29.176735]  do_update_region+0xf1/0x110
-[   29.176740]  redraw_screen+0x22f/0x290
-[   29.176743]  do_bind_con_driver.isra.0+0x2ab/0x3d0
-[   29.176745]  do_take_over_console+0x3a/0x50
-[   29.176747]  do_fbcon_takeover+0x5c/0xe0
-[   29.176749]  fbcon_fb_registered+0x4f/0x70
-[   29.176751]  do_register_framebuffer+0x1bc/0x2a0
-[   29.176755]  devm_register_framebuffer+0x28/0x90
-[   29.176757]  efifb_probe+0x544/0x720
-[   29.176760]  platform_probe+0x43/0xb0
-[   29.176763]  really_probe+0xd9/0x390
-[   29.176767]  ? __pfx___device_attach_driver+0x10/0x10
-[   29.176769]  __driver_probe_device+0x78/0x160
-[   29.176771]  driver_probe_device+0x1e/0xa0
-[   29.176773]  __device_attach_driver+0x99/0x130
-[   29.176775]  bus_for_each_drv+0x98/0xf0
-[   29.176777]  __device_attach+0xbc/0x1f0
-[   29.176779]  bus_probe_device+0x8d/0xb0
-[   29.176781]  device_add+0x4f1/0x6e0
-[   29.176785]  platform_device_add+0xfa/0x260
-[   29.176787]  sysfb_init+0x109/0x120
-[   29.176791]  ? __pfx_sysfb_init+0x10/0x10
-[   29.176793]  do_one_initcall+0x5b/0x330
-[   29.176796]  do_initcalls+0xac/0x130
-[   29.176800]  kernel_init_freeable+0x134/0x1e0
-[   29.176802]  ? __pfx_kernel_init+0x10/0x10
-[   29.176806]  kernel_init+0x1a/0x1d0
-[   29.176808]  ret_from_fork+0x34/0x50
-[   29.176813]  ? __pfx_kernel_init+0x10/0x10
-[   29.176815]  ret_from_fork_asm+0x1a/0x30
-[   29.176819]  </TASK>
-[  432.306986] fb0: EFI VGA frame buffer device
+--=20
+Luiz Augusto von Dentz
