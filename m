@@ -1,410 +1,119 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279C62770C;
-	Thu, 30 Jan 2025 17:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484D52770C
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738256671; cv=none; b=gQ9rhHHOdvgjNiIQ/0HPXYeIiXWYzZudWz8OPNqe4DtLKdufHdBGWM27LTFM7Sx+6INeY6jhs+j8k+NsOvBod5tyzqpzC3atjM+3J+3fi6BcxQSvlheIAtREkaWekRhGFQZVZ1rgyr1p53uQ1fueY/LR6+VKU/Lp1xMelXw5ivw=
+	t=1738256748; cv=none; b=ToAYkIJ6xQ3hrHXdWFRuqDSGtVQCCjoVLJFv4Nbn9KkVAkgfdXqTnNXg5xtk1eTGZj1+34BeaoSSy8rrO4S4SyFxqSWOqJSVfS2mMNGFraz6fgBf5ReSaE+00D8PVT/6zzKgk5CcqC7cdMoVN2d2xFkCU7E0vUqYyGiT3zogxzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738256671; c=relaxed/simple;
-	bh=Lu7Ly00M64WhlWAHI8xibHOBtF91GEe1SiFuc3Gedtg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YYaXFC7VK6zg7vaTxiszFI0PA15rceiBIn4PLLVaLuiu+4Q/jvN+NufG3vuSBCfNYWzbnkxVns9ybOx2U3ULGHrc1uWaEDV8uEqkNSCCwzE8EHhswFd10AbJBYBsbNxbIe2I68fBfE1layZyhIt0qT5WIRMfUWFtZSKa1toGxyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YkQL54sWyz6L4tt;
-	Fri, 31 Jan 2025 01:02:05 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 20E02140A71;
-	Fri, 31 Jan 2025 01:04:25 +0800 (CST)
-Received: from localhost (10.195.245.124) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 Jan
- 2025 18:04:24 +0100
-Date: Thu, 30 Jan 2025 17:04:22 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Yoshihiro Furudera <fj5100bi@fujitsu.com>
-CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>,
-	<linux-arm-kernel@lists.infradead.org>, "Bjorn Andersson"
-	<quic_bjorande@quicinc.com>, Geert Uytterhoeven <geert+renesas@glider.be>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>, Konrad Dybcio <konradybcio@kernel.org>, "Neil
- Armstrong" <neil.armstrong@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "
- =?ISO-8859-1?Q?N=EDcolas?= \"F. R. A. Prado\"" <nfraprado@collabora.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] perf: Fujitsu: Add the Uncore MAC PMU driver
-Message-ID: <20250130170422.00004c6f@huawei.com>
-In-Reply-To: <20250116045911.3382537-2-fj5100bi@fujitsu.com>
-References: <20250116045911.3382537-1-fj5100bi@fujitsu.com>
-	<20250116045911.3382537-2-fj5100bi@fujitsu.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738256748; c=relaxed/simple;
+	bh=thIebkEPPygCuNesBzz3Xc0iFlCdhHjffCSZT4jHToY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t2M0GGnIudXunY49xzoD+980D+93FxtSmdr38t5AsHYfRcK/JaDVp/rv2ugwwKtqjYoENoqBo91Xugz9PH7rMMpv0+l/xjtOtZM2q+6LqBmcZeaXFpRT5TO1rt5afdbdSAA2mEMy1oMAZI5ROMSO6+kk6rzH4wyppa9szwBHdQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KY8LfgwG; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KY8LfgwG"
+Date: Thu, 30 Jan 2025 17:05:27 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738256734;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NnZwLBy82NCMVLhxeD5jG2Y+xA/NL2R/qYb3QRlxudk=;
+	b=KY8LfgwGgRos8hY5KQjjcDTCNQ8DIBMn2BrfgTxm/ZIka2DguWWNT247PDYBfpCVJRYMvG
+	Gmm6agodQx4XS55CzEP6E0i1uc7/E5fbr9SVjgSGD9+u6pbo40j2Nljj74kxxPKILVwSJU
+	zbq94y6lt6n2rbcmWOGXC3dJ7xk7al8=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Waiman Long <llong@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-doc@vger.kernel.org,
+	Peter Hunt <pehunt@redhat.com>
+Subject: Re: [RFC PATCH] mm, memcg: introduce memory.high.throttle
+Message-ID: <Z5uxVzFf7Pk7yk9f@google.com>
+References: <20250129191204.368199-1-longman@redhat.com>
+ <Z5s1DG2YVH78RWpR@tiehlicka>
+ <211b394b-3b9a-4872-8c07-b185386487d3@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <211b394b-3b9a-4872-8c07-b185386487d3@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 16 Jan 2025 04:59:10 +0000
-Yoshihiro Furudera <fj5100bi@fujitsu.com> wrote:
-
-> This adds a new dynamic PMU to the Perf Events framework to program and
-> control the Uncore MAC PMUs in Fujitsu chips.
+On Thu, Jan 30, 2025 at 10:05:34AM -0500, Waiman Long wrote:
+> On 1/30/25 3:15 AM, Michal Hocko wrote:
+> > On Wed 29-01-25 14:12:04, Waiman Long wrote:
+> > > Since commit 0e4b01df8659 ("mm, memcg: throttle allocators when failing
+> > > reclaim over memory.high"), the amount of allocator throttling had
+> > > increased substantially. As a result, it could be difficult for a
+> > > misbehaving application that consumes increasing amount of memory from
+> > > being OOM-killed if memory.high is set. Instead, the application may
+> > > just be crawling along holding close to the allowed memory.high memory
+> > > for the current memory cgroup for a very long time especially those
+> > > that do a lot of memcg charging and uncharging operations.
+> > > 
+> > > This behavior makes the upstream Kubernetes community hesitate to
+> > > use memory.high. Instead, they use only memory.max for memory control
+> > > similar to what is being done for cgroup v1 [1].
+> > Why is this a problem for them?
+> My understanding is that a mishaving container will hold up memory.high
+> amount of memory for a long time instead of getting OOM killed sooner and be
+> more productively used elsewhere.
+> > 
+> > > To allow better control of the amount of throttling and hence the
+> > > speed that a misbehving task can be OOM killed, a new single-value
+> > > memory.high.throttle control file is now added. The allowable range
+> > > is 0-32.  By default, it has a value of 0 which means maximum throttling
+> > > like before. Any non-zero positive value represents the corresponding
+> > > power of 2 reduction of throttling and makes OOM kills easier to happen.
+> > I do not like the interface to be honest. It exposes an implementation
+> > detail and casts it into a user API. If we ever need to change the way
+> > how the throttling is implemented this will stand in the way because
+> > there will be applications depending on a behavior they were carefuly
+> > tuned to.
+> > 
+> > It is also not entirely sure how is this supposed to be used in
+> > practice? How do people what kind of value they should use?
+> Yes, I agree that a user may need to run some trial runs to find a proper
+> value. Perhaps a simpler binary interface of "off" and "on" may be easier to
+> understand and use.
+> > 
+> > > System administrators can now use this parameter to determine how easy
+> > > they want OOM kills to happen for applications that tend to consume
+> > > a lot of memory without the need to run a special userspace memory
+> > > management tool to monitor memory consumption when memory.high is set.
+> > Why cannot they achieve the same with the existing events/metrics we
+> > already do provide? Most notably PSI which is properly accounted when
+> > a task is throttled due to memory.high throttling.
 > 
-> This driver was created with reference to drivers/perf/qcom_l3_pmu.c.
-> 
-> This driver exports formatting and event information to sysfs so it can
-> be used by the perf user space tools with the syntaxes:
-> 
-> perf stat -e mac_iod0_mac0_ch0/ea-mac/ ls
-> perf stat -e mac_iod0_mac0_ch0/event=0x80/ ls
-> 
-> FUJITSU-MONAKA Specification URL:
-> https://github.com/fujitsu/FUJITSU-MONAKA
-> 
-> Signed-off-by: Yoshihiro Furudera <fj5100bi@fujitsu.com>
-Hi,
-Other than the docs issue, just minor comments inline.
+> That will require the use of a userspace management agent that looks for
+> these stalling conditions and make the kill, if necessary. There are
+> certainly users out there that want to get some benefit of using memory.high
+> like early memory reclaim without the trouble of handling these kind of
+> stalling conditions.
 
-With the docs adjusted,
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+So you basically want to force the workload into some sort of a proactive
+reclaim but without an artificial slow down?
+It makes some sense to me, but
+1) Idk if it deserves a new API, because it can be relatively easy implemented
+  in userspace by a daemon which monitors cgroups usage and reclaims the memory
+  if necessarily. No kernel changes are needed.
+2) If new API is introduced, I think it's better to introduce a new limit,
+  e.g. memory.target, keeping memory.high semantics intact.
 
-It's been a while since I closely reviewed a PMU driver
-so I may have missed some stuff!
-
-Jonathan
-
-> ---
->  .../admin-guide/perf/fujitsu_mac_pmu.rst      |  75 +++
->  Documentation/admin-guide/perf/index.rst      |   1 +
->  drivers/perf/Kconfig                          |   9 +
->  drivers/perf/Makefile                         |   1 +
->  drivers/perf/fujitsu_mac_pmu.c                | 573 ++++++++++++++++++
->  5 files changed, 659 insertions(+)
->  create mode 100644 Documentation/admin-guide/perf/fujitsu_mac_pmu.rst
->  create mode 100644 drivers/perf/fujitsu_mac_pmu.c
-> 
-> diff --git a/Documentation/admin-guide/perf/fujitsu_mac_pmu.rst b/Documentation/admin-guide/perf/fujitsu_mac_pmu.rst
-> new file mode 100644
-> index 000000000000..b6676526bde2
-> --- /dev/null
-> +++ b/Documentation/admin-guide/perf/fujitsu_mac_pmu.rst
-> @@ -0,0 +1,75 @@
-> +====================================================
-> +Fujitsu Uncore MAC Performance Monitoring Unit (PMU)
-> +====================================================
-> +
-> +This driver supports the Uncore MAC PMUs found in Fujitsu chips.
-> +Each MAC PMU on these chips is exposed as a uncore perf PMU with device name
-> +mac_iod<iod>_mac<mac>_ch<ch>.
-> +
-> +The driver provides a description of its available events and configuration
-> +options in sysfs, see /sys/bus/event_sources/devices/mac_iod<iod>_mac<mac>_ch<ch>/.
-> +This driver exports:
-> +- formats, used by perf user space and other tools to configure events
-> +- events, used by perf user space and other tools to create events
-> +  symbolically, e.g.:
-> +    perf stat -a -e mac_iod0_mac0_ch0/event=0x21/ ls
-> +- cpumask, used by perf user space and other tools to know on which CPUs
-> +  to open the events
-> +
-> +This driver supports the following events:
-> +- cycles
-> +  This event counts MAC cycles at MAC frequency.
-> +- read-count
-> +  This event counts the number of read requests to MAC.
-> +- read-count-request
-> +  This event counts the number of read requests including retry to MAC.
-> +- read-count-return
-> +  This event counts the number of read requests to MAC.
-> +- read-count-request-pftgt
-> +  This event counts the number of read requests including retry with PFTGT
-> +  flag.
-> +- read-count-request-normal
-> +  This event counts the number of read requests including retry without PFTGT
-> +  flag.
-> +- read-count-return-pftgt-hit
-> +  This event counts the number of read requests which hit the PFTGT buffer.
-> +- read-count-return-pftgt-miss
-> +  This event counts the number of read requests which miss the PFTGT buffer.
-> +- read-wait
-> +  This event counts outstanding read requests issued by DDR memory controller
-> +  per cycle.
-> +- write-count
-> +  This event counts the number of write requests to MAC (including zero write,
-> +  full write, partial write, write cancel).
-> +- write-count-write
-> +  This event counts the number of full write requests to MAC (not including
-> +  zero write).
-> +- write-count-pwrite
-> +  This event counts the number of partial write requests to MAC.
-> +- memory-read-count
-> +  This event counts the number of read requests from MAC to memory.
-> +- memory-write-count
-> +  This event counts the number of full write requests from MAC to memory.
-> +- memory-pwrite-count
-> +  This event counts the number of partial write requests from MAC to memory.
-> +- ea-mac
-> +  This event counts energy consumption of the MAC.
-> +- ea-memory
-> +  This event counts energy consumption of the memory.
-> +- ea-memory-mac-read
-> +  This event counts the number of read requests from MAC to memory.
-> +- ea-memory-mac-write
-> +  This event counts the number of write requests from MAC to memory.
-> +- ea-memory-mac-pwrite
-> +  This event counts the number of partial write requests from MAC to memory
-
-Text identical to memory-pwrite-count
-which suggest two things.
-a) naming inconsistent.  Why is mac mentioned here and not in the name earlier.
-b) This comment is perhaps wrong as I assume has something more tod owtih with
-   energy estimation?
-
-> +- ea-ha
-> +  This event counts energy consumption of the HA.
-> +
-> +  'ea' is the abbreviation for 'Energy Analyzer'.
-
-> diff --git a/drivers/perf/fujitsu_mac_pmu.c b/drivers/perf/fujitsu_mac_pmu.c
-> new file mode 100644
-> index 000000000000..788bf05b05e7
-> --- /dev/null
-> +++ b/drivers/perf/fujitsu_mac_pmu.c
-> @@ -0,0 +1,573 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Driver for the Uncore MAC PMUs in Fujitsu chips.
-> + *
-> + * See Documentation/admin-guide/perf/fujitsu_mac_pmu.rst for more details.
-> + *
-> + * This driver is based on drivers/perf/qcom_l3_pmu.c
-> + * Copyright (c) 2015-2017, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2024 Fujitsu. All rights reserved.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/bitops.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/list.h>
-> +#include <linux/module.h>
-
-mod_devicetable.h
-for the acpi device table.
-
-> +#include <linux/perf_event.h>
-> +#include <linux/platform_device.h>
-> +
-> +/* Number of counters on each PMU */
-> +#define MAC_NUM_COUNTERS  8
-> +/* Mask for the event type field within perf_event_attr.config and EVTYPE reg */
-> +#define MAC_EVTYPE_MASK   0xFF
-> +
-> +/* Perfmon registers */
-> +#define MAC_PM_EVCNTR(__cntr) (0x000 + __cntr * 8)
-> +#define MAC_PM_CNTCTL(__cntr) (0x100 + __cntr * 8)
-> +#define MAC_PM_EVTYPE(__cntr) (0x200 + __cntr * 8)
-(0x200 + (__cntr) * 8)
-preferred as avoids any possibility of precedence issues
-if __cntr isn't simply a number.
-
-
-
-> +/*
-> + * We must NOT create groups containing events from multiple hardware PMUs,
-> + * although mixing different software and hardware PMUs is allowed.
-> + */
-> +static bool fujitsu_mac__validate_event_group(struct perf_event *event)
-> +{
-> +	struct perf_event *leader = event->group_leader;
-> +	struct perf_event *sibling;
-> +	int counters = 0;
-> +
-> +	if (leader->pmu != event->pmu && !is_software_event(leader))
-> +		return false;
-> +
-> +	/* The sum of the counters used by the event and its leader event */
-> +	counters = 2;
-> +
-> +	for_each_sibling_event(sibling, leader) {
-> +		if (is_software_event(sibling))
-> +			continue;
-> +		if (sibling->pmu != event->pmu)
-> +			return false;
-> +		counters += 1;
-
-		counters++; ?
-
-> +	}
-> +
-> +	/*
-> +	 * If the group requires more counters than the HW has, it
-> +	 * cannot ever be scheduled.
-> +	 */
-> +	return counters <= MAC_NUM_COUNTERS;
-> +}
-
-
-> +
-> +#define MAC_PMU_FORMAT_ATTR(_name, _config)				      \
-> +	(&((struct dev_ext_attribute[]) {				      \
-> +		{ .attr = __ATTR(_name, 0444, device_show_string, NULL),      \
-> +		  .var = (void *) _config, }				      \
-> +	})[0].attr.attr)
-> +
-> +static struct attribute *fujitsu_mac_pmu_formats[] = {
-> +	MAC_PMU_FORMAT_ATTR(event, "config:0-7"),
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group fujitsu_mac_pmu_format_group = {
-> +	.name = "format",
-> +	.attrs = fujitsu_mac_pmu_formats
-Add trailing comma.
-> +};
-
-> +
-> +static const struct attribute_group fujitsu_mac_pmu_events_group = {
-> +	.name = "events",
-> +	.attrs = fujitsu_mac_pmu_events
-Add trailing comma. There might be other fields in future.
-
-> +};
-> +
-> +static ssize_t cpumask_show(struct device *dev,
-> +			    struct device_attribute *attr, char *buf)
-> +{
-> +	struct mac_pmu *macpmu = to_mac_pmu(dev_get_drvdata(dev));
-> +
-> +	return cpumap_print_to_pagebuf(true, buf, &macpmu->cpumask);
-> +}
-> +
-I would drop this blank line to tightly associate the following
-declaration with the function above.
-
-> +static DEVICE_ATTR_RO(cpumask);
-> +
-
-> +static int fujitsu_mac_pmu_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct acpi_device *acpi_dev;
-> +	struct mac_pmu *macpmu;
-> +	struct resource *memrc;
-> +	char *name;
-> +	int ret;
-> +	u64 uid;
-> +
-> +	acpi_dev = ACPI_COMPANION(dev);
-> +	if (!acpi_dev)
-> +		return -ENODEV;
-> +
-> +	ret = acpi_dev_uid_to_integer(acpi_dev, &uid);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "unable to read ACPI uid\n");
-> +
-> +	macpmu = devm_kzalloc(dev, sizeof(*macpmu), GFP_KERNEL);
-> +	if (!macpmu)
-> +		return -ENOMEM;
-> +
-> +	name = devm_kasprintf(dev, GFP_KERNEL, "mac_iod%llu_mac%llu_ch%llu",
-> +			  (uid >> 8) & 0xF, (uid >> 4) & 0xF, uid & 0xF);
-
-Slightly novel to encode that much in a UID, but nothing stops you doing
-that so I don't really mind.  We always went with additional properties
-for our platforms but this is fine I think.
-
-> +	if (!name)
-> +		return -ENOMEM;
-> +
-> +	macpmu->pmu = (struct pmu) {
-> +		.parent		= dev,
-> +		.task_ctx_nr	= perf_invalid_context,
-> +
-> +		.pmu_enable	= fujitsu_mac__pmu_enable,
-> +		.pmu_disable	= fujitsu_mac__pmu_disable,
-> +		.event_init	= fujitsu_mac__event_init,
-> +		.add		= fujitsu_mac__event_add,
-> +		.del		= fujitsu_mac__event_del,
-> +		.start		= fujitsu_mac__event_start,
-> +		.stop		= fujitsu_mac__event_stop,
-> +		.read		= fujitsu_mac__event_read,
-> +
-> +		.attr_groups	= fujitsu_mac_pmu_attr_grps,
-> +		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE
-> +	};
-> +
-> +	macpmu->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &memrc);
-> +	if (IS_ERR(macpmu->regs))
-> +		return PTR_ERR(macpmu->regs);
-> +
-> +	fujitsu_mac__init(macpmu);
-> +
-> +	ret = platform_get_irq(pdev, 0);
-> +	if (ret <= 0)
-> +		return ret;
-
-If it were 0 you'd not want to return that as would look like your driver
-probed successfully and none of the devm cleanup would happen.
-
-	if (ret < 0)
-is fine - see docs for platform_get_irq() that make it clear 0 is never
-returned.
-
-
-> +
-> +	ret = devm_request_irq(dev, ret, fujitsu_mac__handle_irq, 0,
-> +			       name, macpmu);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Request for IRQ failed for slice @%pa\n",
-
-I would wrap this under d of dev.
-
-> +						&memrc->start);
-
-Indent of this line is also unusual.
-
-> +
-> +	/* Add this instance to the list used by the offline callback */
-> +	ret = cpuhp_state_add_instance(mac_pmu_cpuhp_state, &macpmu->node);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Error registering hotplug");
-> +
-> +	ret = perf_pmu_register(&macpmu->pmu, name, -1);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to register MAC PMU\n");
-> +
-> +	dev_dbg(dev, "Registered %s, type: %d\n", name, macpmu->pmu.type);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct acpi_device_id fujitsu_mac_pmu_acpi_match[] = {
-> +	{ "FUJI200C", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, fujitsu_mac_pmu_acpi_match);
-> +
-> +static struct platform_driver fujitsu_mac_pmu_driver = {
-> +	.driver = {
-> +		.name = "fujitsu-mac-pmu",
-> +		.acpi_match_table = fujitsu_mac_pmu_acpi_match,
-> +		.suppress_bind_attrs = true
-
-Add trailing comma.  Not impossible we will want to set another field in
-here one day. So we should not make that harder.
-
-> +	},
-> +	.probe = fujitsu_mac_pmu_probe
-> +};
-
+Thanks!
