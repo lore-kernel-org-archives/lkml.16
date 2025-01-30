@@ -1,83 +1,115 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A37C1E6DCF
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 14:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB05F1E3DC8;
+	Thu, 30 Jan 2025 14:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738246740; cv=none; b=WVlsO6PEFVwJNQLHZp4xRqQCY4XQCpZHC3190bPCHoVWVKvu58LZS2EFfR03ao+HTn1TY8FcW6ewe/2zm8wabsUWwI6patdTAu7QlmKLcGMYabFUp8aaps8hAExM8BfZ2/GeJJgkA5j9oGN8QIvdTrEYnNfPsC7F7ezPVLfMKxU=
+	t=1738246782; cv=none; b=XbZw56gnhL2KkkYzm7lA50jsEl+N+0Rt/v2sN/JOceckFiey4VrfPxIx4H66x5Mnn6mYAH+F4WaRW/MPdCEffiNRxYhs0WqCv8j51IgMUVLa/mvaW7m4nSNvVni+P4pMEP/tOyrIaBPWQFaMnweBsNzgDrUeXY2Yzc5l6v+hcKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738246740; c=relaxed/simple;
-	bh=/EdnLnwgqpgYnJOlt9Wonh398iiQ10JCnD5IDSk8dgE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QciUXtHeXZ3Fu3VcYOPe7Nn77MaCAzHDLB9EDm6nXYffaxwPIlqGPabpUsub+gVy1nKzt8j4i8q6h1AZ03+k0WDampwUGt9eD3fhB/tUBndTu0Vy6h3lJGCLrdLbh2MiGJ2G1W1Z7wfn2FtbIrsu7WF4uyd87dlhdGfv1HgiE+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gc3s1b62; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1738246782; c=relaxed/simple;
+	bh=Bsv2iW63WoGZ0KDHVebw9lAh6mApNHHvA7ec+yONvMI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=o7MNtg3XlX/qefNJe2yb8PUuacsYJsm+fxAuSRv4eV8td8IflVgVJbI/yVya0e+ZZJemT3usj6Ay8xQIARqiH/+3WBPHQRTu/N4/gN0+VKtstyDuvy/kZxDX/8xEZbzVKQPVQPawudpDjoId88Y95q74+QhAdLL3uBLD0+q+W0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EefcbhtR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gc3s1b62"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2eec9b3a1bbso1105934a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 06:18:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738246738; x=1738851538; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OwIKPbP90dAareLYcXFAh/Wx2pfCe1g3ZgGplrN6PRo=;
-        b=gc3s1b6215jo8uXiMqDHVL9anjrjCFC8JpoyCk4y0qUUfQNpk5eRIKZstqtKa6NfAY
-         fFrKX10CFTc0HKAacBwpre9K4eGYOowdjyx4NrXPnfn1ZZYdgguc/uYq7AfSmPcFQQWD
-         vSn87fFnia752OEoBsbQiHbzHwDuN8QW7Dj5U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738246738; x=1738851538;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OwIKPbP90dAareLYcXFAh/Wx2pfCe1g3ZgGplrN6PRo=;
-        b=pCRPZ5VXY0wtWfIOcKGEYVOUvgXs5+LuTkbkJvLU6TZFiZHNgaJ4kWF4g7JDCKQLzu
-         rULKKiswjslF41vzb7HQf52L9Zh0VqW9ELqf7WlK8laTZ7kzZWJcwkTLjHtaqfuIrmUB
-         RUF9Xx8qAXNQYhlt95ODnl6y8FxbzzyGrLcIDwOtO9MxDG4Y/K/bcfq2YNBMKDaFEQ9a
-         WQeZzFQdTO2d73nfbTBku+ZbOkwqUoydozP7iCG28oG5LmurGAp0xfEglZl0yobmJkyw
-         2ZpeMy+b05+gFnV//ZDIgY9tXu67FcyCVFdYSaSsSPfpIe0Snxn8b2MZD1UysRKziP2Z
-         NddA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWA4C8IAbRqG+Rjr3n2EMta7CS4C7q9ToDYSFMIpskXULigF+G6nMAA57q7zNtSDOu5VMblUBq4/RLUAY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9Om8QN050tNLCktRCDsVxQu490XLfB2ghx5mDaGNUw08kt7+b
-	QMJRDc84W3Ewm7hbqI1d5itYSCh1jK49KkD42FIEvTSxIaXLL0Xw+dohzOf1Vg==
-X-Gm-Gg: ASbGncv0PZH+7V4JueeYOzz+UjKA26m2Bdgb34olW/kT++MQc2LqMs8CbCNHYZAEXtR
-	nhAF8x+RwGVKLCprDOlqCL7t8CH5eCwAGMT8l2ZCTV+/dYfyvrd6uAoFeM1qBGi1vEeRaajICm1
-	sHRdmwlMg/CnnegFkQlwJluXLI4DqDOWs5dpzC2BQ9lYjDQSQPIUeiZBoXTQMYLWmdZy/X1h7LE
-	BvSv+UJbjrzrQ33/pdpV1HFmaB4G+LRx5tD+NePIlx4SstwgklA1Nf9UoOt4ad4tbpr2pzfara4
-	LhK6r4fN6G7Ml9KA4w==
-X-Google-Smtp-Source: AGHT+IFHmt1NKsoPDnOd3kJmqp4FgP/LLfp0mRa9d8YxFpHm21eOGLbNWdtcKe1ldYZK4C+cg40zkg==
-X-Received: by 2002:a05:6a00:b4b:b0:729:1b8f:9645 with SMTP id d2e1a72fcca58-72fd0c7f7camr11432203b3a.24.1738246738612;
-        Thu, 30 Jan 2025 06:18:58 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:d4ce:e744:f46b:4fb])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6426aa7sm1477602b3a.46.2025.01.30.06.18.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 06:18:58 -0800 (PST)
-Date: Thu, 30 Jan 2025 23:18:53 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 00/11] zram: preemptible writes and occasionally
- preemptible reads
-Message-ID: <hghqkqaomtdf3mgj6iiw4ctqf4l5c6plrsnquhmckubivr6emm@7m4qm5tmkwzz>
-References: <20250130111105.2861324-1-senozhatsky@chromium.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EefcbhtR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38DECC4CED2;
+	Thu, 30 Jan 2025 14:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738246782;
+	bh=Bsv2iW63WoGZ0KDHVebw9lAh6mApNHHvA7ec+yONvMI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=EefcbhtR44DhcdKa6E9/2GIJJbimTUz85PWezw6rndsQ0uOPSfgf6oCWtjAIpKu3V
+	 z/YXckvkh+Lt2InU4etX23B5vWXlPsA8Tjb6r8tF98N8wXdT+dxpHkRZeEw5G2TDE9
+	 NauWqQTSo5IWfSpZBJzzcDDD9E4tZXHY0xP6FINM=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	David Howells <dhowells@redhat.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	linux-afs@lists.infradead.org,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 65/91] kheaders: Ignore silly-rename files
+Date: Thu, 30 Jan 2025 15:01:24 +0100
+Message-ID: <20250130140136.291051235@linuxfoundation.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250130140133.662535583@linuxfoundation.org>
+References: <20250130140133.662535583@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130111105.2861324-1-senozhatsky@chromium.org>
+Content-Transfer-Encoding: 8bit
 
-On (25/01/30 20:10), Sergey Senozhatsky wrote:
-> This is Part I which only changes zram.  In order to make reads()
-> preemptible we also need Part II [1] which changes zsmalloc.
+5.4-stable review patch.  If anyone has any objections, please let me know.
 
-I think it's a good time/chance to combine the two series (this one is
-and the zsmalloc one [1]) and send out as one patch set, because there
-is a little of dependency between them.
+------------------
 
-[1] https://lore.kernel.org/linux-mm/20250130044455.2642465-1-senozhatsky@chromium.org
+From: David Howells <dhowells@redhat.com>
+
+[ Upstream commit 973b710b8821c3401ad7a25360c89e94b26884ac ]
+
+Tell tar to ignore silly-rename files (".__afs*" and ".nfs*") when building
+the header archive.  These occur when a file that is open is unlinked
+locally, but hasn't yet been closed.  Such files are visible to the user
+via the getdents() syscall and so programs may want to do things with them.
+
+During the kernel build, such files may be made during the processing of
+header files and the cleanup may get deferred by fput() which may result in
+tar seeing these files when it reads the directory, but they may have
+disappeared by the time it tries to open them, causing tar to fail with an
+error.  Further, we don't want to include them in the tarball if they still
+exist.
+
+With CONFIG_HEADERS_INSTALL=y, something like the following may be seen:
+
+   find: './kernel/.tmp_cpio_dir/include/dt-bindings/reset/.__afs2080': No such file or directory
+   tar: ./include/linux/greybus/.__afs3C95: File removed before we read it
+
+The find warning doesn't seem to cause a problem.
+
+Fix this by telling tar when called from in gen_kheaders.sh to exclude such
+files.  This only affects afs and nfs; cifs uses the Windows Hidden
+attribute to prevent the file from being seen.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Link: https://lore.kernel.org/r/20241213135013.2964079-2-dhowells@redhat.com
+cc: Masahiro Yamada <masahiroy@kernel.org>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
+cc: linux-nfs@vger.kernel.org
+cc: linux-kernel@vger.kernel.org
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/gen_kheaders.sh | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/gen_kheaders.sh b/kernel/gen_kheaders.sh
+index 206ab3d41ee76..7fc44d8da2052 100755
+--- a/kernel/gen_kheaders.sh
++++ b/kernel/gen_kheaders.sh
+@@ -84,6 +84,7 @@ find $cpio_dir -type f -print0 |
+ 
+ # Create archive and try to normalize metadata for reproducibility.
+ tar "${KBUILD_BUILD_TIMESTAMP:+--mtime=$KBUILD_BUILD_TIMESTAMP}" \
++    --exclude=".__afs*" --exclude=".nfs*" \
+     --owner=0 --group=0 --sort=name --numeric-owner --mode=u=rw,go=r,a+X \
+     -I $XZ -cf $tarfile -C $cpio_dir/ . > /dev/null
+ 
+-- 
+2.39.5
+
+
+
