@@ -1,212 +1,161 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE781BD9CE
-	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 10:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5973F1B86DC
+	for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 10:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738234221; cv=none; b=WgRildfuu6TTVPGzX3rwc47lBoveFYM/tsuIdG3YTZr0ugzQlDvtW9RZ7Bjc+pqujv7EfTkmDO4/vVuuhOXtydM58bENwp+QGeE2Yep0fRbHqbIcpFXGIKfiwFhzO45Mp9NHJCXO+YmKhiVzfSy+FLxvB9q71XrwniTNb67GVi8=
+	t=1738234234; cv=none; b=QdptP/CQtM/zeQ0i2cA6aIrGpGoXbwEz47lLz8l5V/DzwQ91+Im2Xn6kQTII8HSoHmzOLgpaBoM7W2xtJMLiXbXoHgPAryOmc+oGh5s84LM7RPWwZzFQVjYHRY/41JnRSaMVm6Tyd0CZL+XolKU7/TnuMHk3oiPOzOatP8/YAnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738234221; c=relaxed/simple;
-	bh=b/mMBfe5yGAaGHpFmunxqm2ro+eOBQzP6/VLUP04LdU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Y6YA5JnVek5uFw/6wXcbzUbVSaLmUN2Tnx/NGv3z4o7JXcf7NTxns0GdBtETkUZUC2Vb7WVvjDJAEqCTQ5ePVwB9g/kAME1Kc5wUI0hmwf6mR01fOtIKq+j9lmkW4BAlFBrvZaKWFuGivUwqopQ38ydk6jPqUnld92Fcry8G0bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=okVltQAz; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1738234234; c=relaxed/simple;
+	bh=SKBfS0WQtXwhn3Zs8dAn0uRWcnVH3Fp+ioSiHvDMYtk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cRtrIG8I1GsopveZZ8Uj5V4BPfASzYo8L8nuUy/0J5MxSsxtS6tHqmPw0zDU25vH2zJ/mCE+s3s+OdC25WYOZ3Dv8G9C4L1y12U8fU8jTYKowOUl/nEEZoWDJeUD5UavcS5yix/0vAOagP2HC4Ijp1z+1RHaEWt2lGVBC1A4s+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=QMszmrbO; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="okVltQAz"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5d3e6f6cf69so1079229a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 02:50:18 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="QMszmrbO"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-437a92d7b96so6203955e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 02:50:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1738234217; x=1738839017; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=e62YlGUXIAw8wozyK1kiiHHdUZMhPFXjOjYgl63mVoA=;
-        b=okVltQAzwV1sHpvHR/UTSdG/nwUVINwH1R2vQDO9b88F7y+SiVPslB1SrpcjcuJwZw
-         fj4JSTNtu1iEOLv32q/CSldJcMDjpYlacdIdpGMtrWdnbhF+vfxnyMZIp9CfTM5k1gX9
-         qRSvaURQ7+Rbf6fzgMVNHUTCVLn7ejUucJnYXVxqCAxabyMEhOuQdSDUmHKIpuScpJZR
-         gM4q/WMqIYTRTkwTzbjcLk/mVXIQid9kQOiEzDtPZPnlgdVDJhPTllqQTLEGaIEYtqco
-         ZNjrKDJEitCsSXUCWbTYYdpOMmDJXAifKgH7xq3Kgk5DkXbvddmbf1noVdWXqIbe9/L4
-         f+hg==
+        d=ffwll.ch; s=google; t=1738234230; x=1738839030; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WlIOJ9U3QA9sHWVQXA2SUvaDy201Q+tlYK7jAEa09Tg=;
+        b=QMszmrbOwPzZGs7n/cbGZJGUOaxavUa2aEt33ex32VuH2DuuaxWrAXKz7CrUCST1xw
+         v6i59Phgs6MSJmw/t+V92CxSvX2UFeYiSrGVW4CS4+FsZhhZ7WC5xH9l1frJ4dRROgTx
+         1kbTy+NBs9t8IBXqIVygjJaWNiRKg5ScLu9ag=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738234217; x=1738839017;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1738234230; x=1738839030;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e62YlGUXIAw8wozyK1kiiHHdUZMhPFXjOjYgl63mVoA=;
-        b=HNd50uYwM0/G5bieU9ZA6mKNf+UMNEwBVZ6uDBvJ6E/yQ2UvqNjQmmt+yb6EuW3pjP
-         EyavFEQ1GflBJSL1+HPFYDn1CbYKYkPsTrqwV5tRLoTi3Lf9r9hihNYW2lWnj32Gj+X9
-         s3hn2yC1jyrN4jdAQfefXkhKJ0qvEfXo7SRRXVNJs0lvYLZS34GsJKhpPQ12AcTU0AEO
-         4JBvL7BnlQ0vK5UPR0WJux27pDpe2RMHMLxYJoCyKxSsRYwqtX6vPt7jsQAf4F4mcon5
-         YDb/JBe4bmq862rwQQzUDa+qddFgCCXQ1N4g+JfbOVWClfBNaigxzxDJvRopyoc4zk/W
-         4vew==
-X-Forwarded-Encrypted: i=1; AJvYcCUR/mkvmcF+IwqmNUQ2PFGJpU2qew/miTUWMJjnnVCetpjWZ1kuuSV+aNgzvylAaf5YhBT2NHiVf2izN80=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5UrYdsOCYV61HSDyclkzKOEDYaFhPDF+/BhYfB3nYEve/jnOl
-	kGpPEAZ5GyhWwprMG3OyKfB9HMFq/0Yoc4oiSlDCRJdMU3wyXdvFgxtKFzgmLYM=
-X-Gm-Gg: ASbGncucW99hm0sca21qUEMhiYhgQcBYS+uhCeYZC9PJ0fGeTcnn0fAR5zleSg8aM2j
-	wMRuAizKZwicXRGDbV38NKOrICK3dpnazWTOaTxDFKTu7/khyGHYKBqf9rwltdDXpBxNs1S1pJ2
-	i6ygr0Dlpbsv9NN3HxH2kDpGoxvAe5nTpSf8FwY9vhCMcVlYoBDsQnd5NyN0pgb8xjRDs2cPu1H
-	04YyLEC98LWjCMtFk8P23m3YsxrvpeVKYpV98V93zZjQ1NM7aScIN+H8nyPZshfqhH4Esjfhzbo
-	HKwpgGHQKQNa33ZXqUtGk41z
-X-Google-Smtp-Source: AGHT+IHWoNagdbyI+0VCJRCuNUgGA7SE/I4LH2LJrOHgZ3deawOyjrGsdrBIZ5qzd2KNDtUu3ZBA4Q==
-X-Received: by 2002:a17:906:178a:b0:ab6:d467:811b with SMTP id a640c23a62f3a-ab6d467849emr482692566b.32.1738234216026;
-        Thu, 30 Jan 2025 02:50:16 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.173])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a7df0sm100215566b.2.2025.01.30.02.50.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 02:50:15 -0800 (PST)
-Message-ID: <3d1abbd5-8ca6-4cd3-9800-e9aeda398e86@tuxon.dev>
-Date: Thu, 30 Jan 2025 12:50:13 +0200
+        bh=WlIOJ9U3QA9sHWVQXA2SUvaDy201Q+tlYK7jAEa09Tg=;
+        b=fsdipGsPLnLpKxqs1Oax+QN3Nk3PbRX8pcAINP3qxdbBje3lsk6CCLRIz8ArtLRaWU
+         phJlxcr+KTaTElAtJSpxrHEK6HTVVdr9p+m+2AOy/H4NwG7HwB2sy3hKn3GFdLqYJYHq
+         s1sDi/g9LjbSUNQ5EmbqySDKTmnKjwFzkYoAyvpsCEkb8aaKFuYOZZOXrVTKlLPRWbOC
+         F90Vu3DhGVWfIR0Egza8pJjv0C31ddGToYpowH+/fK9XaqX0HGzlFlxhaeR83EWFlgnD
+         UaksTeGcqEqVSUZezZLZVdCncbNR3mCQG5Xt+Zd9fi9oI1lBsIX5iwPGYcG5KOMbV97m
+         Scfg==
+X-Forwarded-Encrypted: i=1; AJvYcCXK2farGPeWS+ZsOjA+jIEmb51msPL1ELcm2KeCGYrz9x590M7tI1nVN3HGaLqo9D5ArVkfRyYIO+jas8Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9s59S1E6V7Jn20DfyPZRKJbHeCIjSf/YYdNA+3PJUoFuozzcC
+	aRlwfH78jwWa6oYbv/2aakduJlNlgoQwGAQZGXcpKsPSWscQd/ZpxbJWRafXgIE=
+X-Gm-Gg: ASbGnctJEXXZDjs4LhJV8utPQ02kZaCJdQg5Nqh9YifB2tCViTAOv4Tu5Cwy3otmBaa
+	bb7gRymPE2oCNr3f5705vPJ6JTkLJJUYR+G8m7OJZu+yd3Nj5W8tcs7g7Pz7zbK41zW3xVVyZtW
+	0YlagGdVJpptIj9wnc3COcVTOU6O/jQpWoqFEK29YGVcap1/WAAyqWOCSzDvI2aairheF4F8AAB
+	bHavfIeN3w9twFVj4kq28qWmhT3GsRowygpe6bMTMWXul+xPsBly/V6IMDLgb8Ljvye9Kv3CALt
+	Rq5MuXJa0UOr5q3bRr6lPfYBn/k=
+X-Google-Smtp-Source: AGHT+IHMw0cYgOTvVvK6HIRKMLy20cgFzE3d4vlaCtti/GNUtg6PxQxKz8d7r2TT9CWFYzLA0t+WOA==
+X-Received: by 2002:a05:600c:4e0c:b0:434:a386:6cf with SMTP id 5b1f17b1804b1-438dc3a8faemr61859005e9.2.1738234230580;
+        Thu, 30 Jan 2025 02:50:30 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc81d74sm54599715e9.37.2025.01.30.02.50.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 02:50:29 -0800 (PST)
+Date: Thu, 30 Jan 2025 11:50:27 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com,
+	lyude@redhat.com, dakr@redhat.com, airlied@gmail.com,
+	simona@ffwll.ch, leon@kernel.org, jglisse@redhat.com,
+	akpm@linux-foundation.org, GalShalom@nvidia.com,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-mm@kvack.org, linux-tegra@vger.kernel.org
+Subject: Re: [RFC 1/5] mm/hmm: HMM API to enable P2P DMA for device private
+ pages
+Message-ID: <Z5tZc0OQukfZEr3H@phenom.ffwll.local>
+Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com,
+	lyude@redhat.com, dakr@redhat.com, airlied@gmail.com,
+	simona@ffwll.ch, leon@kernel.org, jglisse@redhat.com,
+	akpm@linux-foundation.org, GalShalom@nvidia.com,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-mm@kvack.org, linux-tegra@vger.kernel.org
+References: <20241201103659.420677-1-ymaman@nvidia.com>
+ <20241201103659.420677-2-ymaman@nvidia.com>
+ <7282ac68c47886caa2bc2a2813d41a04adf938e1.camel@linux.intel.com>
+ <20250128132034.GA1524382@ziepe.ca>
+ <de293a7e9b4c44eab8792b31a4605cc9e93b2bf5.camel@linux.intel.com>
+ <20250128151610.GC1524382@ziepe.ca>
+ <b78d32e13811ef1fa57b0535749c811f2afb4dcd.camel@linux.intel.com>
+ <20250128172123.GD1524382@ziepe.ca>
+ <Z5ovcnX2zVoqdomA@phenom.ffwll.local>
+ <20250129134757.GA2120662@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] thermal: of: Export non-devres helper to
- register/unregister thermal zone
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: rafael@kernel.org, rui.zhang@intel.com, lukasz.luba@arm.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- geert+renesas@glider.be, magnus.damm@gmail.com, mturquette@baylibre.com,
- sboyd@kernel.org, p.zabel@pengutronix.de, ulf.hansson@linaro.org,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250103163805.1775705-1-claudiu.beznea.uj@bp.renesas.com>
- <20250103163805.1775705-3-claudiu.beznea.uj@bp.renesas.com>
- <Z5pkUNNvsWPjRQvy@mai.linaro.org>
- <65a16c3f-456e-40ec-91b0-afb57269ed46@tuxon.dev>
- <Z5tPR_tv7vWDkUI7@mai.linaro.org>
- <6ed7d545-82d7-4bca-95ec-95447586bb58@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <6ed7d545-82d7-4bca-95ec-95447586bb58@tuxon.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129134757.GA2120662@ziepe.ca>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
+On Wed, Jan 29, 2025 at 09:47:57AM -0400, Jason Gunthorpe wrote:
+> On Wed, Jan 29, 2025 at 02:38:58PM +0100, Simona Vetter wrote:
+> 
+> > > The pgmap->owner doesn't *have* to fixed, certainly during early boot before
+> > > you hand out any page references it can be changed. I wouldn't be
+> > > surprised if this is useful to some requirements to build up the
+> > > private interconnect topology?
+> > 
+> > The trouble I'm seeing is device probe and the fundemantal issue that you
+> > never know when you're done. And so if we entirely rely on pgmap->owner to
+> > figure out the driver private interconnect topology, that's going to be
+> > messy. That's why I'm also leaning towards both comparing owners and
+> > having an additional check whether the interconnect is actually there or
+> > not yet.
+> 
+> Hoenstely, I'd rather invest more effort into being able to update
+> owner for those special corner cases than to slow down the fast path
+> in hmm_range_fault..
 
+I'm not sure how you want to make the owner mutable.
 
-On 30.01.2025 12:30, Claudiu Beznea wrote:
-> 
-> 
-> On 30.01.2025 12:07, Daniel Lezcano wrote:
->> On Thu, Jan 30, 2025 at 11:08:03AM +0200, Claudiu Beznea wrote:
->>> Hi, Daniel,
->>>
->>> On 29.01.2025 19:24, Daniel Lezcano wrote:
->>>> Hi Claudiu,
->>>>
->>>> On Fri, Jan 03, 2025 at 06:38:01PM +0200, Claudiu wrote:
->>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>>
->>>>> On the Renesas RZ/G3S (and other Renesas SoCs, e.g., RZ/G2{L, LC, UL}),
->>>>> clocks are managed through PM domains. These PM domains, registered on
->>>>> behalf of the clock controller driver, are configured with
->>>>> GENPD_FLAG_PM_CLK. In most of the Renesas drivers used by RZ SoCs, the
->>>>> clocks are enabled/disabled using runtime PM APIs.
->>>>>
->>>>> During probe, devices are attached to the PM domain controlling their
->>>>> clocks. Similarly, during removal, devices are detached from the PM domain.
->>>>>
->>>>> The detachment call stack is as follows:
->>>>>
->>>>> device_driver_detach() ->
->>>>>   device_release_driver_internal() ->
->>>>>     __device_release_driver() ->
->>>>>       device_remove() ->
->>>>>         platform_remove() ->
->>>>> 	  dev_pm_domain_detach()
->>>>>
->>>>> In the upcoming Renesas RZ/G3S thermal driver, the
->>>>> struct thermal_zone_device_ops::change_mode API is implemented to
->>>>> start/stop the thermal sensor unit. Register settings are updated within
->>>>> the change_mode API.
->>>>>
->>>>> In case devres helpers are used for thermal zone register/unregister the
->>>>> struct thermal_zone_device_ops::change_mode API is invoked when the
->>>>> driver is unbound. The identified call stack is as follows:
->>>>>
->>>>> device_driver_detach() ->
->>>>>   device_release_driver_internal() ->
->>>>>     device_unbind_cleanup() ->
->>>>>       devres_release_all() ->
->>>>>         devm_thermal_of_zone_release() ->
->>>>> 	  thermal_zone_device_disable() ->
->>>>> 	    thermal_zone_device_set_mode() ->
->>>>> 	      rzg3s_thermal_change_mode()
->>>>>
->>>>> The device_unbind_cleanup() function is called after the thermal device is
->>>>> detached from the PM domain (via dev_pm_domain_detach()).
->>>>>
->>>>> The rzg3s_thermal_change_mode() implementation calls
->>>>> pm_runtime_resume_and_get()/pm_runtime_put_autosuspend() before/after
->>>>> accessing the registers. However, during the unbind scenario, the
->>>>> devm_thermal_of_zone_release() is invoked after dev_pm_domain_detach().
->>>>> Consequently, the clocks are not enabled, as the device is removed from
->>>>> the PM domain at this time, leading to an Asynchronous SError Interrupt.
->>>>> The system cannot be used after this.
->>>>
->>>> I've been through the driver before responding to this change. What is the
->>>> benefit of powering down / up (or clock off / on) the thermal sensor when
->>>> reading the temperature ?
->>>>
->>>> I can understand for disable / enable but I don't get for the classic usage
->>>> where a governor will be reading the temperature regularly.
->>>
->>> I tried to be as power saving as possible both at runtime and after the IP
->>> is not used anymore as the HW manual doesn't mentioned anything about
->>> accuracy or implications of disabling the IP clock at runtime. We use
->>> similar approach (of disabling clocks at runtime) for other IPs in the
->>> RZ/G3S SoC as well.
->>>
->>>>
->>>> Would the IP need some cycles to capture the temperature accurately after the
->>>> clock is enabled ?
->>>
->>> There is nothing about this mentioned about this in the HW manual of the
->>> RZ/G3S SoC. The only points mentioned are as described in the driver code:
->>> - wait at least 3us after each IIO channel read
->>> - wait at least 30us after enabling the sensor
->>> - wait at least 50us after setting OE bit in TSU_SM
->>>
->>> For this I chose to have it implemented as proposed.
->>
->> IMO, disabling/enabling the clock between two reads through the pm runtime may
->> not be a good thing, especially if the system enters a thermal situation where
->> it has to mitigate.
+The only design that I think is solid is to evict all device private
+memory, unregister the dev_pagemap and register a new one with the updated
+owner. I think any other approach boils down to the same issue, except we
+pretend it's easier and just ignore all the race conditions.
 
-If it's not 100% safe I can drop the runtime PM support.
+And I've looked at the lifetime fun of unregistering a dev_pagemap for
+device hotunplug and pretty firmly concluded it's unfixable and that I
+should run away to do something else :-P
 
->>
->> Without any testing capturing the temperatures and compare between the always-on
->> and on/off, it is hard to say if it is true or not. Up to you to test that or
->> not. If you think it is fine, then let's go with it.
-> 
-> I tested it with and w/o the runtime PM and on/off support (so, everything
-> ON from the probe) and the reported temperature values were similar.
-> 
-> Thank you,
-> Claudiu
-> 
->>  
->>> If any, the HW manual is available here
->>> https://www.renesas.com/en/document/mah/rzg3s-group-users-manual-hardware?r=25458591
->>> (an archive is here; the manual is in Deliverables/r01uh1014ej0110-rzg3s.pdf)
->>>
->>> Thank you for your review,
->>> Claudiu
->>>
->>>>
->>>>> Add thermal_of_zone_register()/thermal_of_zone_unregister(). These will
->>>>> be used in the upcomming RZ/G3S thermal driver.
->>>>>
->>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>
->>
-> 
+An optional callback is a lot less scary to me here (or redoing
+hmm_range_fault or whacking the migration helpers a few times) looks a lot
+less scary than making pgmap->owner mutable in some fashion.
 
+Cheers, Sima
+
+> The notion is that owner should represent a contiguous region of
+> connectivity. IMHO you can always create this, but I suppose there
+> could be corner cases where you need to split/merge owners.
+> 
+> But again, this isn't set in stone, if someone has a better way to
+> match the private interconnects without going to driver callbacks then
+> try that too.
+> 
+> I think driver callbacks inside hmm_range_fault should be the last resort..
+> 
+> > You can fake that by doing these checks after hmm_range_fault returned,
+> > and if you get a bunch of unsuitable pages, toss it back to
+> > hmm_range_fault asking for an unconditional migration to system memory for
+> > those. But that's kinda not great and I think goes at least against the
+> > spirit of how you want to handle pci p2p in step 2 below?
+> 
+> Right, hmm_range_fault should return pages that can be used and you
+> should not call it twice.
+> 
+> Jason
+
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
