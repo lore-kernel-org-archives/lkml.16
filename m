@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09A425634;
-	Thu, 30 Jan 2025 03:54:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BA814900F;
+	Thu, 30 Jan 2025 03:54:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738209293; cv=none; b=GzJOTwD7DozcIqIlhB63L9y8MA+ITFHWsgujYLim51E4B5qXfyNRaT7+NVnA/amRUbIWGHiMQo33KfDRiC8IMAaVLvaZDY5k5sEVfawfGFg9cvBNkmnf0PK6yVjRZvSFyFKB8eRWXMSYxZGZ8GIhaZ6K267qvl8Xya7q3Te9mRQ=
+	t=1738209294; cv=none; b=LzylPzSXCJQDn07lmSg5MMX8SmD/QtyATZsp6iDC8sin/DbVDKGwt8n+vi424114aFQSYnWJpqTY2Wwc2h6cBvfQAc1ZAoUvrUs3oZ3IyQqojnCuFq9fdykZ1hzfCCCKzzUOvZFDJgNS5vAd3p3azF3CQp7j/HXP1N2rMQA0PH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738209293; c=relaxed/simple;
-	bh=zb14REqSnK9mUMN1Rn8pCnFPl+DRVjCVkxPBmXkakQk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YPoT7k63LVhfWYXfcwZHabCF3I5G2rU1P/wzuJixIRDaeeX532sVn4SuZy5TpxZF88dEJGg97Gsg5G8mNBTzuJsZb1sWrB/gBccConT7lD+2aG+7FFvIeImGYiouS+4A/OEJU9IPL2tFlM5PbiLxLfBnju/vWUpRxnLposIL60U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4L2lXGi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738209294; c=relaxed/simple;
+	bh=ChZeGWewWWuvMusgIkj7sawm5gXtvRFO1sjNHB5gPgI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Pq6tQsfUaKY3QzPQcOntz8vejLGPSWD1wLkaEs67RyFn6tUaJMWgCRZQiYkEQ2wQVc61pdDEQ7B5RWkR7gwgQOqlgpMVgl5DBsZeiMJ6fa3h68YxlpC6zSTbdwby+f2A3YAgzdDd5qOpsGJo/1mdbSfpE55gJux+hz4CA8Ct8Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LX2GkZAi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4L2lXGi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16EE5C4CED2;
-	Thu, 30 Jan 2025 03:54:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LX2GkZAi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1D01C4CEE1;
+	Thu, 30 Jan 2025 03:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738209292;
-	bh=zb14REqSnK9mUMN1Rn8pCnFPl+DRVjCVkxPBmXkakQk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=q4L2lXGiP40VBAqvFDal9CBlJXqFUxUCuqn8mo825Avsag+WRT4s2He9FMPUi0r8E
-	 3jup90FqvZuKsU0VGvxb0hPY6fAvnbCaaByTobEADZlFsh9K171vyWgepd3/ep1Y0x
-	 EhEuT3rpSzbCQpOg7IhJmasKLX4wVkc87IfRItQE2osMHP0yScNEwr8GK+VL58iv55
-	 3wZ/ECLggLkvVaY5+hWa9xVpLYcoJq2hsW+5XfOWWuzogZBAjf/Xx11AE9NHQYItRG
-	 uyOV5bqn7nHy/NfqhNBy24lg2UFFB/JiDZ/5Y3NUxXi4X8jJ/urAKXvxVCVGK9POk/
-	 RY0nkT2GvN4lQ==
+	s=k20201202; t=1738209294;
+	bh=ChZeGWewWWuvMusgIkj7sawm5gXtvRFO1sjNHB5gPgI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LX2GkZAi6qrwFP5DySbxJKlbJwiEt89skwEnghrWWMf6yL4MUtsSPQmk+e5ldbma1
+	 3JS1049SOj9BUPt5eszU7nvJHi0ajzBCw8tw/rmy7W2Qsdxp/pebBfjeun8tMlEe8i
+	 nhwep5qYNQNAaMMRydBgzARvDlKMFcO31a9fplS1dhht6sM64uDwfWbg9sGjsb1in+
+	 xApNTSk7Jk92M6mH1ZpOXItpHfTC67cOch4S1CGYFul4tfK8qOQQiUYRt8FtptY07b
+	 P9+U6iEG5yPCzqQAoJiPasglxdm3lZOTfhDKnkYbByKVtPKlq5zpvSIw8h5Cd5Tl3u
+	 q1KsVNTwQ62og==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: linux-crypto@vger.kernel.org,
@@ -34,10 +35,12 @@ Cc: linux-crypto@vger.kernel.org,
 	Keith Busch <kbusch@kernel.org>,
 	Kent Overstreet <kent.overstreet@linux.dev>,
 	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH v2 00/11] CRC64 library rework and x86 CRC optimization
-Date: Wed, 29 Jan 2025 19:51:19 -0800
-Message-ID: <20250130035130.180676-1-ebiggers@kernel.org>
+Subject: [PATCH v2 04/11] lib/crc_kunit.c: add test and benchmark for CRC64-NVME
+Date: Wed, 29 Jan 2025 19:51:23 -0800
+Message-ID: <20250130035130.180676-5-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250130035130.180676-1-ebiggers@kernel.org>
+References: <20250130035130.180676-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,83 +49,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patchset applies to commit 72deda0abee6e7 and is also available at:
+From: Eric Biggers <ebiggers@google.com>
 
-    git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git crc-x86-v2
+Wire up crc64_nvme() to the new CRC unit test and benchmark.
 
-This is the next major set of CRC library improvements, targeting 6.15.
+This replaces and improves on the test coverage that was lost by
+removing this CRC variant from the crypto API.
 
-Patches 1-5 rework the CRC64 library along the lines of what I did for
-CRC32 and CRC-T10DIF in 6.14.  They add direct support for
-architecture-specific optimizations, fix the naming of the NVME CRC64
-variant, and eliminate a pointless use of the crypto API.
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ lib/crc_kunit.c | 30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
-Patches 6-10 replace the existing x86 PCLMULQDQ optimized CRC code with
-new code that is shared among the different CRC variants and also adds
-VPCLMULQDQ support, greatly improving performance on recent CPUs.
-Patch 11 wires up the same optimization to crc64_be() and crc64_nvme()
-(a.k.a. the old "crc64_rocksoft") which previously were unoptimized,
-improving the performance of those CRC functions by as much as 100x.
-crc64_be is used by bcachefs, and crc64_nvme is used by blk-integrity.
-
-Eric Biggers (11):
-  lib/crc64-rocksoft: stop wrapping the crypto API
-  crypto: crc64-rocksoft - remove from crypto API
-  lib/crc64: rename CRC64-Rocksoft to CRC64-NVME
-  lib/crc_kunit.c: add test and benchmark for CRC64-NVME
-  lib/crc64: add support for arch-optimized implementations
-  x86: move ZMM exclusion list into CPU feature flag
-  scripts/gen-crc-consts: add gen-crc-consts.py
-  x86/crc: add "template" for [V]PCLMULQDQ based CRC functions
-  x86/crc32: implement crc32_le using new template
-  x86/crc-t10dif: implement crc_t10dif using new template
-  x86/crc64: implement crc64_be and crc64_nvme using new template
-
- MAINTAINERS                         |   1 +
- arch/x86/Kconfig                    |   3 +-
- arch/x86/crypto/aesni-intel_glue.c  |  22 +-
- arch/x86/include/asm/cpufeatures.h  |   1 +
- arch/x86/kernel/cpu/intel.c         |  22 ++
- arch/x86/lib/Makefile               |   5 +-
- arch/x86/lib/crc-pclmul-consts.h    | 195 ++++++++++
- arch/x86/lib/crc-pclmul-template.S  | 578 ++++++++++++++++++++++++++++
- arch/x86/lib/crc-pclmul-template.h  |  81 ++++
- arch/x86/lib/crc-t10dif-glue.c      |  23 +-
- arch/x86/lib/crc16-msb-pclmul.S     |   6 +
- arch/x86/lib/crc32-glue.c           |  37 +-
- arch/x86/lib/crc32-pclmul.S         | 219 +----------
- arch/x86/lib/crc64-glue.c           |  50 +++
- arch/x86/lib/crc64-pclmul.S         |   7 +
- arch/x86/lib/crct10dif-pcl-asm_64.S | 332 ----------------
- block/Kconfig                       |   2 +-
- block/t10-pi.c                      |   2 +-
- crypto/Kconfig                      |  11 -
- crypto/Makefile                     |   1 -
- crypto/crc64_rocksoft_generic.c     |  89 -----
- crypto/testmgr.c                    |   7 -
- crypto/testmgr.h                    |  12 -
- include/linux/crc64.h               |  38 +-
- lib/Kconfig                         |  16 +-
- lib/Makefile                        |   1 -
- lib/crc64-rocksoft.c                | 126 ------
- lib/crc64.c                         |  49 +--
- lib/crc_kunit.c                     |  30 +-
- lib/gen_crc64table.c                |  10 +-
- scripts/gen-crc-consts.py           | 214 ++++++++++
- 31 files changed, 1270 insertions(+), 920 deletions(-)
- create mode 100644 arch/x86/lib/crc-pclmul-consts.h
- create mode 100644 arch/x86/lib/crc-pclmul-template.S
- create mode 100644 arch/x86/lib/crc-pclmul-template.h
- create mode 100644 arch/x86/lib/crc16-msb-pclmul.S
- create mode 100644 arch/x86/lib/crc64-glue.c
- create mode 100644 arch/x86/lib/crc64-pclmul.S
- delete mode 100644 arch/x86/lib/crct10dif-pcl-asm_64.S
- delete mode 100644 crypto/crc64_rocksoft_generic.c
- delete mode 100644 lib/crc64-rocksoft.c
- create mode 100755 scripts/gen-crc-consts.py
-
-
-base-commit: 72deda0abee6e705ae71a93f69f55e33be5bca5c
+diff --git a/lib/crc_kunit.c b/lib/crc_kunit.c
+index 6a61d4b5fd45..1e82fcf9489e 100644
+--- a/lib/crc_kunit.c
++++ b/lib/crc_kunit.c
+@@ -30,11 +30,12 @@ static size_t test_buflen;
+  *	polynomial coefficients in each byte), false if it's a "big endian" CRC
+  *	(natural mapping between bits and polynomial coefficients in each byte)
+  * @poly: The generator polynomial with the highest-order term omitted.
+  *	  Bit-reversed if @le is true.
+  * @func: The function to compute a CRC.  The type signature uses u64 so that it
+- *	  can fit any CRC up to CRC-64.
++ *	  can fit any CRC up to CRC-64.  The function is expected to *not*
++ *	  invert the CRC at the beginning and end.
+  * @combine_func: Optional function to combine two CRCs.
+  */
+ struct crc_variant {
+ 	int bits;
+ 	bool le;
+@@ -405,10 +406,35 @@ static void crc64_be_test(struct kunit *test)
+ static void crc64_be_benchmark(struct kunit *test)
+ {
+ 	crc_benchmark(test, crc64_be_wrapper);
+ }
+ 
++/* crc64_nvme */
++
++static u64 crc64_nvme_wrapper(u64 crc, const u8 *p, size_t len)
++{
++	/* The inversions that crc64_nvme() does have to be undone here. */
++	return ~crc64_nvme(~crc, p, len);
++}
++
++static const struct crc_variant crc_variant_crc64_nvme = {
++	.bits = 64,
++	.le = true,
++	.poly = 0x9a6c9329ac4bc9b5,
++	.func = crc64_nvme_wrapper,
++};
++
++static void crc64_nvme_test(struct kunit *test)
++{
++	crc_test(test, &crc_variant_crc64_nvme);
++}
++
++static void crc64_nvme_benchmark(struct kunit *test)
++{
++	crc_benchmark(test, crc64_nvme_wrapper);
++}
++
+ static struct kunit_case crc_test_cases[] = {
+ 	KUNIT_CASE(crc16_test),
+ 	KUNIT_CASE(crc16_benchmark),
+ 	KUNIT_CASE(crc_t10dif_test),
+ 	KUNIT_CASE(crc_t10dif_benchmark),
+@@ -418,10 +444,12 @@ static struct kunit_case crc_test_cases[] = {
+ 	KUNIT_CASE(crc32_be_benchmark),
+ 	KUNIT_CASE(crc32c_test),
+ 	KUNIT_CASE(crc32c_benchmark),
+ 	KUNIT_CASE(crc64_be_test),
+ 	KUNIT_CASE(crc64_be_benchmark),
++	KUNIT_CASE(crc64_nvme_test),
++	KUNIT_CASE(crc64_nvme_benchmark),
+ 	{},
+ };
+ 
+ static struct kunit_suite crc_test_suite = {
+ 	.name = "crc",
 -- 
 2.48.1
 
