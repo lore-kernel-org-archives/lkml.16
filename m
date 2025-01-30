@@ -1,147 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59E61BD000;
-	Thu, 30 Jan 2025 10:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9669F19F13F;
+	Thu, 30 Jan 2025 10:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738231334; cv=none; b=QAmCgBnhWZgT33sC75fbwHBCDCLUD5vzOPbwSkgW7Ze+/cVIG8T+EsDMhgeEQEJ0j/s4QGBypWMpl0b6VEWf71bTdCyxsZdXXc2RC5sUJ2hwPOzvhNYsH4W73+9MA2dGE2c6DOzFium3iaqgIxh9HFOhRxV8urBlzbESHkZrQIQ=
+	t=1738231354; cv=none; b=q5ec8xpFvJQna6WBNE7j3I0X8HE9ifMTevgjSzkVAv9SXcod2jlsJ30jLacSCIvJoxIxWW400G0AEyMAUQQ6DOBm+so3P3vXNU/05CHzWtw/6uLRWr5VHMbuRWg8dnHeQjAqJkWD2NOmzFBm82XM+f+/yozfBgFFF5pyrlOAMRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738231334; c=relaxed/simple;
-	bh=+dyUpBxVjxCxLu9VSrPpXrjdtVNMDemhFMBW2Yfb6UQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m7+qjvlP4FuveJMPmwznPZMxVp2R7ilXWSOQkRYkYlL4/EIm5Ebq3o1l2vp3peWl6Dymb3QiaN0+qmngfKR1OHl9DUSaoksssFn+LTaifySRJg+01vNmbkTu1yraXVxtx/hB0CzlPW1oJ0CywOqM096dEKwTcm1k+VDBSFzgb1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bqKJfFIc; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	s=arc-20240116; t=1738231354; c=relaxed/simple;
+	bh=g6NT99kCYlu2bAm2C7e45OSPi49TwQfekfaWpV+BLWs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VEi1vG1aJUpsGz6XOn1QSz/tVCf7GYZUVTiovbmgDU9lPvAwgqbIohjnJVWM+dKQpxyYLkDsq3dlrSwTTkVz38YzAeeAA1S06TW0173+PjwQU7qyMeRQR81t6pib5Ns2ehu6GcvIfRRvG3jtwysjtayn2FY0kClgBMWgDOj1/ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WusdYqMp; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bqKJfFIc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738231333; x=1769767333;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+dyUpBxVjxCxLu9VSrPpXrjdtVNMDemhFMBW2Yfb6UQ=;
-  b=bqKJfFIcj1hwQEa+sFVtLh5RmwnVKI18x3+C80BAOhq3T9/zP7a2Gq5O
-   TNM95k+48XDhQLGwDgqmw3AqrB7re/NhimtPR26L7gJ0HbH0t3K4SmYBF
-   8PygIJAaKFMh6I3BF9lzL+GvlbIsFUG2BAGFvk++KBJw1e9k1H2Usvhiq
-   q4L7Cr+WCGpUwOlqzlDM5ogJLfZ8LW0TvgDAhixwA2xeX2JrHerUNV/dv
-   S1RBegw1yqfkKqOJPZ2afPg3D1t1dbkp+bMmYRj6hXBqfUCqZiTi05NtY
-   hW3Ph+V9bAv+KMG1xgpVlfXpuoakfq5bHhhxmHY1NiZWPUYLX4AjT7vMB
-   w==;
-X-CSE-ConnectionGUID: IwrCgt8uTOmwO0Tj55DBlA==
-X-CSE-MsgGUID: uDs6k4B9Q36oHJ58tmpOEw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="38648251"
-X-IronPort-AV: E=Sophos;i="6.13,245,1732608000"; 
-   d="scan'208";a="38648251"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 02:02:11 -0800
-X-CSE-ConnectionGUID: nEIQsW3gTXeR6VDwGD3hYA==
-X-CSE-MsgGUID: 7L+VJ1VeTHWT7VMDRV9KSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="140161517"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa001.fm.intel.com with ESMTP; 30 Jan 2025 02:01:02 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 84483E1; Thu, 30 Jan 2025 12:01:01 +0200 (EET)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Christian Brauner <brauner@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	David Airlie <airlied@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Hao Ge <gehao@kylinos.cn>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Ran Xiaokai <ran.xiaokai@zte.com.cn>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	Yu Zhao <yuzhao@google.com>,
-	intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCHv3 00/11] Get rid of PG_reclaim and rename PG_dropbehind
-Date: Thu, 30 Jan 2025 12:00:38 +0200
-Message-ID: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WusdYqMp"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-385e44a1a2dso89550f8f.3;
+        Thu, 30 Jan 2025 02:02:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738231351; x=1738836151; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VAj/+6ugpW0lcARLGUzj2/Kg/DjBYxwbsq4/1Hp+yh8=;
+        b=WusdYqMpxx9EBwMCfi0AM0m0eaR/KmQLXULy17jS8r2a1tu5M1LQkWIOL9Nwq6qNMr
+         Vo4/vWeYAusN+315uE2a5qLD67hBQlCI+okvfbKJrh3Guq6N2tkhPknWDK0GZ+EpKiFX
+         wbOdpcO2ycm9sLDccK9RHX2rn0BvQq/FyBcgIiN1F4OqORApj7+knKOLwyD5gXPqXCbd
+         XBzRq7t70xvvQRVpB5QhmdmO4wMf9thoruVy3x8KjXb2KhkpaPjcI+5XOvmG82ipDTtJ
+         cY+h6pRiJhiai27Pt3FwKRWLL9ci8R+Yh23SPIR9ePhpJ/H+b9LxnB/mzFU9mQEV4HzL
+         s/tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738231351; x=1738836151;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VAj/+6ugpW0lcARLGUzj2/Kg/DjBYxwbsq4/1Hp+yh8=;
+        b=rEpzbh7y21myovm/ze8fN2Or337YMkhecvUP97EoMj/xlAuIabU5BZnCKsnjrAERPS
+         OvEFM0C3lROyTQOnDrPvkrkTbKgdi6kWTPW/RKv6UOG2nFr9lbeqNu/6mRt6nLnDBIET
+         LBwKYSsSQSs4uMNjEBY6AQSiBcFWloKNlVzKOv8V/vkn/o8YRy2RegI5GyPY5hKTdz70
+         /jidk2JkOE1axDLsnX2KavBykhIQUIk88CjL8LEryek4gK4jrCHPBl9TJtRx7hSi2Jux
+         u1rQ55hFKYtGG3/YLdHzbfPDgqy7Xv7LPGJqQv5q5WwlfCk9XvBxDYdHiH4LnhrOChwC
+         Cqvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxHKBzj1dP94BAJLF0TKvnC1BeYrCyNDNJwZokSUjvAr82Tn9jPqt4+uIlhafFL4bDkLTmM59s@vger.kernel.org, AJvYcCWFCEbo4SsVheRWpe8QjSqRkSuGDhHXPn88PqDkWfz2z8xGH02VVHuwAMll6siYZgNz8otvCaD57YCT3ok=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvP07rp53tFTIAXVFscl9NwPhWjZzpSAwvA7Ev9npldqUCchZM
+	W7JjgVAGu7al8rEK1MtECbRJ1qhBQant7W2I+HsGCGkK8begsgXa
+X-Gm-Gg: ASbGnctFV7eFSvHip/5f3tJEij+peVsDulY1vPgS/faTgM6ygPHbqD2dH6rB0skbMSY
+	SN7CNK5pKO4CpR4a3yk1oeBMcMXzVK1aGnBLa67+yn5VrUfAZKwUkhOY40nG+oYp2T6OFHCG/tu
+	IoIMQFhDUZyPTU4kUELn8XoPPSyjYkTGhib8wwdVWjkEFIgF5nnoSittfAx4R2N0NtM6oyrrv6u
+	ES8myKOZeTla3j+NWj3e/WjP73UHo2OCXGsrGLzUFApSVnVa4RAETR0VXXWHWtHpi3bSWDC0ZSH
+	xgs=
+X-Google-Smtp-Source: AGHT+IEFNuFJMrQJoYiBhgBqjUhkHpcE/Et30pFazQ0ZffCvLRewq6UyYNLYpoAzADLPNm/9TqsJdA==
+X-Received: by 2002:a5d:5f4b:0:b0:385:f909:eb33 with SMTP id ffacd0b85a97d-38c52092755mr2147799f8f.10.1738231350670;
+        Thu, 30 Jan 2025 02:02:30 -0800 (PST)
+Received: from skbuf ([86.127.124.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cf7cfsm1439532f8f.86.2025.01.30.02.02.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 02:02:29 -0800 (PST)
+Date: Thu, 30 Jan 2025 12:02:27 +0200
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Tristram.Ha@microchip.com
+Cc: linux@armlinux.org.uk, Woojung.Huh@microchip.com, andrew@lunn.ch,
+	hkallweit1@gmail.com, maxime.chevallier@bootlin.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, UNGLinuxDriver@microchip.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [WARNING: ATTACHMENT UNSCANNED]Re: [PATCH RFC net-next 1/2] net:
+ pcs: xpcs: Add special code to operate in Microchip KSZ9477 switch
+Message-ID: <20250130100227.isffoveezoqk5jpw@skbuf>
+References: <20250128033226.70866-2-Tristram.Ha@microchip.com>
+ <Z5iiXWkhm2OvbjOx@shell.armlinux.org.uk>
+ <20250128102128.z3pwym6kdgz4yjw4@skbuf>
+ <Z5jOhzmQAGkv9Jlw@shell.armlinux.org.uk>
+ <20250128152324.3p2ccnxoz5xta7ct@skbuf>
+ <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <20250129211226.cfrhv4nn3jomooxc@skbuf>
+ <Z5qmIEc6xEaeY6ys@shell.armlinux.org.uk>
+ <DM3PR11MB873652D36F1FC20999F45772ECE92@DM3PR11MB8736.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM3PR11MB873652D36F1FC20999F45772ECE92@DM3PR11MB8736.namprd11.prod.outlook.com>
 
-Use PG_dropbehind instead of PG_reclaim and remove PG_reclaim.
+On Thu, Jan 30, 2025 at 04:50:18AM +0000, Tristram.Ha@microchip.com wrote:
+> I explained in the other email that this SGMII_LINK_STS |
+> TX_CONFIG_PHY_SIDE_SGMII setting is only required for 1000BASEX where
+> C37_1000BASEX is used instead of C37_SGMII and auto-negotiation is
+> enabled.
+> 
+> This behavior only occurs in KSZ9477 with old IP and so may not reflect
+> in current specs.  If neg_mode can be set in certain way that disables
+> auto-negotiation in 1000BASEX mode but enables auto-negotiation in SGMII
+> mode then this setting is not required.
 
-After removing PG_relcaim, PG_readahead is exclusive user of the page
-flag bit.
+I see that the KSZ9477 documentation specifies that these bits "must be
+set to 1 when operating in SerDes mode", but gives no explanation whatsoever,
+and gives the description of the bits that matches what I see in the
+XPCS data book (which suggests they would not be needed for 1000Base-X,
+just for SGMII PHY role).
 
-Once PG_reclaim is gone, we can rename PG_dropbehind to PG_reclaim.
+There must exist a block guide of the Designware PCS that was integrated
+in KSZ9477 in the entire Microchip company. Or at least, the hardware
+architects must know what is going on. Can you help reconcile the XPCS
+specification with the KSZ9477 implementation? "The bits must be set" is
+not satisfactory when we are considering a common PCS driver. Were these
+bits overloaded by Microchip for 1000Base-X mode for KSZ9477?
 
-v3:
-  - Condition folio_set_dropbehind() call in mapping_try_invalidate() on
-    !unevictable and !mapped;
-  - Add Reviewed-by tag by Yu Zhao;
-
-Kirill A. Shutemov (11):
-  mm/migrate: Transfer PG_dropbehind to the new folio
-  drm/i915/gem: Convert __shmem_writeback() to folios
-  drm/i915/gem: Use PG_dropbehind instead of PG_reclaim
-  mm/zswap: Use PG_dropbehind instead of PG_reclaim
-  mm/truncate: Use folio_set_dropbehind() instead of
-    deactivate_file_folio()
-  mm/vmscan: Use PG_dropbehind instead of PG_reclaim
-  mm/vmscan: Use PG_dropbehind instead of PG_reclaim in
-    shrink_folio_list()
-  mm/mglru: Check PG_dropbehind instead of PG_reclaim in
-    lru_gen_folio_seq()
-  mm: Remove PG_reclaim
-  mm/vmscan: Do not demote PG_dropbehind folios
-  mm: Rename PG_dropbehind to PG_reclaim
-
- drivers/gpu/drm/i915/gem/i915_gem_shmem.c |  18 ++-
- fs/fuse/dev.c                             |   2 +-
- fs/proc/page.c                            |   2 +-
- include/linux/mm_inline.h                 |  18 +--
- include/linux/page-flags.h                |  23 ++--
- include/linux/pagemap.h                   |   2 +-
- include/trace/events/mmflags.h            |   4 +-
- include/uapi/linux/kernel-page-flags.h    |   2 +-
- mm/filemap.c                              |  46 +++----
- mm/internal.h                             |   1 -
- mm/migrate.c                              |  14 +-
- mm/page-writeback.c                       |  16 +--
- mm/page_io.c                              |  15 +--
- mm/readahead.c                            |   4 +-
- mm/swap.c                                 | 153 +---------------------
- mm/truncate.c                             |   5 +-
- mm/vmscan.c                               |  28 +---
- mm/zswap.c                                |   2 +-
- tools/mm/page-types.c                     |   8 +-
- 19 files changed, 68 insertions(+), 295 deletions(-)
-
--- 
-2.47.2
-
+At the very least, it sounds like it is improper to name these fields by
+their documented role for SGMII PHY mode, when clearly it is a different
+and undocumented role here.
