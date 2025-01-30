@@ -1,197 +1,216 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2053.outbound.protection.outlook.com [40.107.92.53])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55F51E1C22;
-	Thu, 30 Jan 2025 15:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738252015; cv=fail; b=KmpnTghE2jj36X+mx26oRwKqq5I1NcG4TRAbcsRspDirNS/xslPZnVE5U8sk5Td2JaLTui+88VMNePJ4HtlUUau/JZJH8n+/NjD9ryOPedgmq8mjtlqq4oBjiX+2gBJCHweJbq+Rj/xXp6P5VZVz1UXf3s+Y2oALByuiQmbz05Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738252015; c=relaxed/simple;
-	bh=xDZH9PM2XA6ixdIjGvoD+UqtNwqgTHvvXgju+lf3hKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IdbecVJaeHTw7H5C/jujzosVxaVzbWGtyMZlJpJ8NOBC1uPgI8fJXGH/+YNGxREeqVtrAwHVotRFkiAjjTyc+ztOm0ta5G+3gzlAGOplxFKunaMJkyzPIEX4qwoD6GfEaIe1OQv/uI0mzfpatqxN4WfAIKtnChm/B5sAHGrK5hA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=D04K8XxL; arc=fail smtp.client-ip=40.107.92.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AAD1E1C22;
+	Thu, 30 Jan 2025 15:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738252049; cv=none; b=LvZckarFbCHmAYYcLxm6TES2fb5pF/8IXfm51MxfqHL88rEh85s1UImLEmiXD6Rb1TD10ZZGN4RMkxB0yr5WzDfbuoteHed49pRKyKbtxtTCtEBPtKwKX3jw8dThicBkxznkQvTXYdbCmVTKkFdN+YC/Yt4+A8gx1zJhAYLHTog=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738252049; c=relaxed/simple;
+	bh=entpPE/XLPTAVOjCVIGfmXrS7TW5SiMVBiEBoUBQ29w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vo+W2GokPkZeeVLppuYCAyXKE7lVAJiVIe4Xn+xEVuu8NE4BMjHiXDQd+mgLQjMbWIntNbS2MOop8PAakCBw8LTi6jgIPT9zjkYoTZjfDXMDc+beK4P1zySsysDhlo+4CV4rpEUkJhthOydYA97Yd96FFb29DDlDjjm691LO7oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kNqhNetF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="D04K8XxL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nrEjILb6tOogZxmGikFx6+zS4O1AVRtDhU7dRoyRSP383kJMnHeS0WRLVBHrqwsakE1YJY7ikU5Fcawv0GhO7MQxDJftsggB4XV7HZvTNqKqrBrnSL54Ck6V1QZfK2dK4NFtifrmWSN6Y8P99fFA44RteE+iw2b+q4Cia+n4bPL214a/aS1sYheMGPbEDICTO4clAhlSVWjmB529wYpww8CNgp/qCVSYkVmlR2hgPjb+h+jbq2rNOMLHQpiu7+NsX4RaqQ9+nItM8dPn6jIXFJANhqZEWEwZfNLDfsnZuKCxfCx4fv6nyhFJ33CDr2JvVrPZxJ1xlizliL5f4i3fHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xDZH9PM2XA6ixdIjGvoD+UqtNwqgTHvvXgju+lf3hKQ=;
- b=robqh+MGKD1OekZBBD2I1X6cKk3/7WhIuqX3xmPW4J7KPgEVIaFJMH3d5+qe+jK7HmB50lhUtzpzmUZQPS3ri613eKMj3PoT/XdkXxaQ2hqOovqUYrClY30vfwQOPgYCYWVhD5UNC+wQwDrI1YvraBuuhlWF6OCSyEqNoFjRZECs/wkLcNTkCo553A4lv2naQWilrSFJ0ss8kSzq68Xx/tkuC9y5kQ+me8A/bl/cKuhLL+w/R1Dx85K9AN84FLJjTSYTTj7DSXSsfJMRsvYBiN7KU9dxWVJEmh0bxgXJN9M4IoH9gHLkkwRCgRMM+6itXN6Cln6tiCnoNgHwZC9xdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xDZH9PM2XA6ixdIjGvoD+UqtNwqgTHvvXgju+lf3hKQ=;
- b=D04K8XxLclDA44cgydIaVNpinCPjp1uY8ozgw8V7HxnXqYgIAVCe9OcJOxaJvGqDsf88yIeDpK/cbWVS2c8Me2zDvHVuRNG0KP9piUdV+vdOh7p2BwCf37Hu2PaasCI5IpPUbjRBd4hHupPIWMI/ipv2JscLWmkwXzQNOf1THv6mw0LWS165oESiIXX7mRyi0KYG9Dtf2Vc6CxMuXgii+IazTrUjz5kwV+b//KqPVCn4zkFi6ablP61CMu+ja8+VDjOjiRW6lVvlYEO6x7sd8Ih7Yc7ICD+MEOzJPJPuSMVGkZT6YVEo/C2/vIhSgnVm9CngAVichg5WLXiw76x7Dw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by SJ0PR12MB6942.namprd12.prod.outlook.com (2603:10b6:a03:449::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.17; Thu, 30 Jan
- 2025 15:46:48 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%5]) with mapi id 15.20.8377.021; Thu, 30 Jan 2025
- 15:46:47 +0000
-Date: Thu, 30 Jan 2025 11:46:46 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: phasta@kernel.org
-Cc: Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	daniel.almeida@collabora.com, aliceryhl@google.com,
-	robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
-	Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
-Message-ID: <20250130154646.GA2298732@nvidia.com>
-References: <CANiq72=R2N+QiCiHZQu-6YJ9aYpn_bik3BW3U=nAW3jL7unzLw@mail.gmail.com>
- <20250108151858.GB24499@lst.de>
- <Z36X_ZnCmBQBMoZ6@pollux>
- <20250109080812.GA20431@lst.de>
- <Z3-NqwAG_96yq8VD@pollux>
- <20250110083955.GA5395@lst.de>
- <Z4D5a5NYrAbNxUL6@pollux>
- <Z4kG5AcVeQKegLnb@pollux>
- <20250128092334.GA28548@lst.de>
- <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
-X-ClientProxiedBy: BN9PR03CA0767.namprd03.prod.outlook.com
- (2603:10b6:408:13a::22) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kNqhNetF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41A69C4CED2;
+	Thu, 30 Jan 2025 15:47:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738252049;
+	bh=entpPE/XLPTAVOjCVIGfmXrS7TW5SiMVBiEBoUBQ29w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kNqhNetF+tuv+izOBYtId4d7tRJktDS290e2LBOm4cuIvpZ6A7E38D1G0SYYXcSeb
+	 cbfc0TbNwZSvOERlqgXg8URWDnl6mi8Mp31xTLHfotUn9rbZ9vuLWxsC2q8jnvqPyH
+	 efPv2J30V36odxeIFjJ1uDWqbsSqmoauwdBOALu3Y/2p44ccNLjI7DYvOFS0WRVOvT
+	 vtGm9OsViLdQnCS4xO4b/bB9J7BRo4spcc3syfrZBZTBz9PUkhCNwh4lplMD9wrK6n
+	 JaIC9wW9InxbK3UabzuKAkfjlzhg1gt2rwx4vyTzf9J/Kj4WYDk7YEKAoUQp8KBGho
+	 LrO9SaR8Vyt9w==
+Date: Thu, 30 Jan 2025 15:47:19 +0000
+From: Simon Horman <horms@kernel.org>
+To: Basharath Hussain Khaja <basharath@couthit.com>
+Cc: danishanwar@ti.com, rogerq@kernel.org, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+	tony@atomide.com, richardcochran@gmail.com, parvathi@couthit.com,
+	schnelle@linux.ibm.com, rdunlap@infradead.org,
+	diogo.ivo@siemens.com, m-karicheri2@ti.com,
+	jacob.e.keller@intel.com, m-malladi@ti.com,
+	javier.carrasco.cruz@gmail.com, afd@ti.com, s-anna@ti.com,
+	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org, pratheesh@ti.com, prajith@ti.com,
+	vigneshr@ti.com, praneeth@ti.com, srk@ti.com, rogerq@ti.com,
+	krishna@couthit.com, pmohan@couthit.com, mohan@couthit.com
+Subject: Re: [RFC v2 PATCH 03/10] net: ti: prueth: Adds PRUETH HW and SW
+ configuration
+Message-ID: <20250130154719.GB13457@kernel.org>
+References: <20250124122353.1457174-1-basharath@couthit.com>
+ <20250124122353.1457174-4-basharath@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SJ0PR12MB6942:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3cdab4ea-713c-4c33-611a-08dd41454e00
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?q+WfBoxZlunD2a4bNGGatP54gb6XPYwMU6vExGmxud4p4YDZ5mymB6vs2bba?=
- =?us-ascii?Q?Og9PX3hI+Dd008DI2zEy3L0fCrvhWMEDIgV2ZT8siNWuFwJJ/ss7OMe43S2G?=
- =?us-ascii?Q?SR6D1duqULcKlAPspWA8RRRvES6w6DWJJrmugpyM2vPMWW1mSagATN5H0hct?=
- =?us-ascii?Q?5DWUuwSVS8VMNEqIQtID8twSzMnD1V0KdWRh52ATjJERgDZN6wWSUDfhKQpr?=
- =?us-ascii?Q?BPcaEEAfP2znTpJr1Sgndj5VSwu4YQBIbTHjkZ8biCLh2JgIGyCzHD2sE8ue?=
- =?us-ascii?Q?o2AWk3uozaglEZzkOoDqGwGLuEJ8q2C94EzYtGmdp8QtKNIfqYIMA/otPXaH?=
- =?us-ascii?Q?4FK6sjVw5EEXwRO5Bk7G739hDPtN1l5IboIHlaqM1zzbpHRqQePkKSYfxPvm?=
- =?us-ascii?Q?9ixj/x7ehyfxdHZJ6WT0pT4h2WqxFVO+KPkOYI0tl0cNEUMa82RKCGSczSJR?=
- =?us-ascii?Q?QOcY3FYZGWfaSLhFT221pSSS00ov2QbOJDVRK9qhWXvN3MqUqDUmiA9de9J+?=
- =?us-ascii?Q?F+SBSoQ85nPJU7efeRkQeMaGa5vuwFIPmexZyeih3gmZuAh48bqfJYtJ49sf?=
- =?us-ascii?Q?nrsC5hrzvEBCbIXjHgjT1HBfDLhUyfkvZ5c+DaMwJQiR2N28RBevKwG9UcCk?=
- =?us-ascii?Q?lSgfHH0+lmpuwsw4SrAuautIuk46yFudGChRwYOLj26N4GqApeZWMd2uhzab?=
- =?us-ascii?Q?8ea0+rEeg7IssCxWiev7pZTvK2jXGnB9Skxx2KtHTUkZBP+Y6EF9JigzTkvs?=
- =?us-ascii?Q?aNZmceWhmim6+sEXNkL61G48pFDUjL34oQLS3vKs0IFOD/gbHbBoKBw6i91e?=
- =?us-ascii?Q?wPMM6Ca4vHSy2/T1yZUpG6OzKNd4nOOojQN9yuKDSpHwkFSv8cH+S2Br/zRO?=
- =?us-ascii?Q?DvuajL4hAhHvipqhRhIRZ3JhbiQl2D+OLCCY2TyU1pbCsVzT0X7kKnFY+FqF?=
- =?us-ascii?Q?QazFJ32ekc5K2/4tAtnisiOJqVGI7PAMVGLBgMQymaF3h6QSGUapBuDEI5FV?=
- =?us-ascii?Q?ABHQBa4G27yMl914wEi1WA5J7UqQ6hgJlUjYjPskUTlM9Nmzba7PvD8jxHTf?=
- =?us-ascii?Q?0xZM/4F+yMVQlZhHtYZVrmCSaqp2G66k2W3phmYvqgokWsqbOCUgyAoEVpoh?=
- =?us-ascii?Q?gImf1i8C/xR8rkmkV0xuUY/K0HDbKbVrJvIsc8PhIs9tXVpS7+yTp9Da/oE2?=
- =?us-ascii?Q?h/e915Pv4JKcSMI1xYdBVDKGl7syDwB0O0C8T7SQBNvX/YEyIxqJyoEsS0yy?=
- =?us-ascii?Q?PmASEbYYpYxanRaYUPEfSY+bxDyzaUCKCMnDvb5iGnx9Tee/M2oVulBk/jrQ?=
- =?us-ascii?Q?uE9/wiGzZiBAgtgswgPQSQZgt2dK8VvCoGXFNWKb9QTKFMkRiHp/tHzi+XBB?=
- =?us-ascii?Q?nnBZALgs4d+EJQrLW/VWN+AtH1/L?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?COjD9x6yim2b1/VkKGlBE9VBAxHmjUNdW3e9Y1Wp6605givEweD2I3N3VWAL?=
- =?us-ascii?Q?0JHn7+ztWz2MLOwQ58IvsttqwUCHqDMgn33/WUQ8/WXsxoJS/GwuKW70TGfN?=
- =?us-ascii?Q?qh1x/T15DGypL7QlPDVFuHzHaDPpVTymBru+hlkZpWweYXgxBuu1A0RQRW1J?=
- =?us-ascii?Q?MuUAYun8GpjE2wY29f71JBrcigKHvaMzhDbwMhf0y/UldZF8qibOfr+nch80?=
- =?us-ascii?Q?i6r/E8yZ+Eb4V75cKoLXHJz+8wquIzbsuJ4p4P+MduPwokxtL3mrF+kGv11t?=
- =?us-ascii?Q?vBZoD6Wwh0CRjE3rwu6hvi5Xod1XZZhwv2UfuzivkESF+yXuB6/LEcFw62Mu?=
- =?us-ascii?Q?z3MwVJuqxldiC4ahd3IIc4W8/BPgQhkOO4w43aPS2hajpxlEugqZLiqv8DBn?=
- =?us-ascii?Q?wx5LU50UKSp5xuEvbJ3VcC3wAZvqVSdUaq1I3/aBB76pca2zTrtFhdH4+U5m?=
- =?us-ascii?Q?GBf1PI0NPzP1VX/BwyqMhezrzpRV7JEo2lujdZFG5aU6KvhC+DiVD5sbIi3r?=
- =?us-ascii?Q?FeCl16IsEvc1QoPIGCB2r90mOZShFZaX8P9RZXxrTKzCVHIZBzOi08VEMBUb?=
- =?us-ascii?Q?Y8ekryMAvzT8jOXinQnNyTjaSYQxlq0BCVNqCQgPHcHgimvJlPBdCBph4Bgs?=
- =?us-ascii?Q?a0WNsuXnDAXUXGJK2R9e4X+6suVfbvVTSqFl7+vn41Li3ysIOOM92yChu+/Y?=
- =?us-ascii?Q?owutNdMSrSku6ZonC4BSNiEoC2ANc/K9Gm+NI3BXrodEJryRK8vLMTvPIPDV?=
- =?us-ascii?Q?mI1VecVzR5tQ/IkvlDmsO7AFQEsw1EnGiz08zwLBknoK7iy26FVA/vNdtot0?=
- =?us-ascii?Q?TEsu0Rbo5VxSNJ8MDuIIHjfrlb1oRPiQ61Y6NdZbMhNJQBI4Tq3Y3rU088M4?=
- =?us-ascii?Q?NRCshEpvHiauqOBHBVbm5XOSB3hBPNeExJOkgk1dUIUdK7rQkxBcO5AqS5C6?=
- =?us-ascii?Q?r00SJStPTkTeBdTJ45XY5kvH2cVrYXwnW3u6PLpFLxceO2sEdOGJKr0EzttU?=
- =?us-ascii?Q?9BaER1tRaX8iyBd9C2RIK/O/9tIKOCGiROvW+cnBoVcReflYd+Z76upE5v4a?=
- =?us-ascii?Q?gegy7ixvu7vq/452c99cCqYIYt49RUYrx54shBFYrQ2X1ZgDCcfPmpRUfczU?=
- =?us-ascii?Q?9DtXsdUIn9GbFuZ2tJLN6rQNbGMtz52jcUJfvNW+/R17cykRyvetvxi2/vga?=
- =?us-ascii?Q?FeH8c2xKhKKWVP15LmZFfPeOOv7Zm+rSjr4gCV8dd8UnCbcbNVnWlAv+ND2Q?=
- =?us-ascii?Q?GLE8qzFy19gs7cDHFWlPekS82vzWazBTmTFDqLl77fDW3Kdb7SBVplRkno1P?=
- =?us-ascii?Q?eXJGYhRBeQTMMGmEx6ak5MPaOo9KTqU9sRd6e77AWIMgpd0Ey1DrRjcyogbH?=
- =?us-ascii?Q?HixPOV8vlc5KRG2LCNc0WPn2E/piIY4selTF0cJG7OswcFXwI9BLRM6JTvDo?=
- =?us-ascii?Q?jQMF9CAG8qCGr9RUPu+iXO/Q0rfwLe0owHd56NoDle6qpgM2Wb6VSDHyUvZ7?=
- =?us-ascii?Q?xRFcTdYsf8XWj2D9obmkXLXgEWCU6PZDOVQqcE0uPpOe7ERMEzBfykeAbpJL?=
- =?us-ascii?Q?r7JmVlnZw3YGu77fMu0QK0m+vV1NPl9x6Arb/0Sy?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3cdab4ea-713c-4c33-611a-08dd41454e00
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 15:46:47.7827
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FwM3tJzzOVSmbs6nQiHnW7YFN90QJI6NZb1VFrqe5c3XEQN14UABxoVSl0Th50/o
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6942
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250124122353.1457174-4-basharath@couthit.com>
 
-On Thu, Jan 30, 2025 at 02:19:16PM +0100, Philipp Stanner wrote:
-> would some sort of official statement by the "entire community"
-> reassure you that the burden of keeping Rust abstractions working with
-> any changes on the C side rests entirely on the Rust side's
-> shoulders?
+On Fri, Jan 24, 2025 at 05:53:46PM +0530, Basharath Hussain Khaja wrote:
+> From: Roger Quadros <rogerq@ti.com>
+> 
+> Updates for MII_RT hardware peripheral configuration such as RX and TX
+> configuration for PRU0 and PRU1, frame sizes, and MUX config.
+> 
+> Updates for PRU-ICSS firmware register configuration and DRAM, SRAM and
+> OCMC memory initialization, which will be used in the runtime for packet
+> reception and transmission.
+> 
+> DUAL-EMAC memory allocation for software queues and its supporting
+> components such as the buffer descriptors and queue discriptors. These
 
-You'd have to reconcile that with the recent event where Linus defered
-the MM pull request and some C patches were dropped because of rust
-kbuild bugs:
+nit: descriptors
 
-https://lore.kernel.org/linux-mm/CAHk-=whddBhfi5DUi370W3pYs+z3r2E7KYuHjwR=a1eRig5Gxg@mail.gmail.com/
+> software queues are placed in OCMC memory and are shared with CPU by
+> PRU-ICSS for packet receive and transmit.
+> 
+> All declarations and macros are being used from common header file
+> for various protocols.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
 
-It seems to me the message is now crystal clear, and the opposite of
-what you claim.
+...
 
-All PRs to Linus must not break the rust build and the responsibilty
-for that falls to all the maintainers. If the Rust team is not quick
-enough to resolve any issues during the development window then
-patches must be dropped before sending PRs, or Linus will refuse the
-PR.
+> diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
 
-Effectively this seems to imply that patches changing some of the C
-API cannot be merged by maintainers unless accompanied by matching
-Rust hunks.
+...
 
-If there are different instructions to maintainers I would be
-interested to know.
+> +static void icssm_prueth_mii_init(struct prueth *prueth)
+> +{
+> +	struct regmap *mii_rt;
+> +	u32 rxcfg_reg, rxcfg;
+> +	u32 txcfg_reg, txcfg;
+> +
+> +	mii_rt = prueth->mii_rt;
+> +
+> +	rxcfg = PRUSS_MII_RT_RXCFG_RX_ENABLE |
+> +		PRUSS_MII_RT_RXCFG_RX_DATA_RDY_MODE_DIS |
+> +		PRUSS_MII_RT_RXCFG_RX_L2_EN |
+> +		PRUSS_MII_RT_RXCFG_RX_CUT_PREAMBLE |
+> +		PRUSS_MII_RT_RXCFG_RX_L2_EOF_SCLR_DIS;
+> +
+> +	/* Configuration of Port 0 Rx */
+> +	rxcfg_reg = PRUSS_MII_RT_RXCFG0;
+> +
+> +	regmap_write(mii_rt, rxcfg_reg, rxcfg);
+> +
+> +	/* Configuration of Port 1 Rx */
+> +	rxcfg_reg = PRUSS_MII_RT_RXCFG1;
+> +
+> +	rxcfg |= PRUSS_MII_RT_RXCFG_RX_MUX_SEL;
+> +
+> +	regmap_write(mii_rt, rxcfg_reg, rxcfg);
+> +
+> +	txcfg = PRUSS_MII_RT_TXCFG_TX_ENABLE |
+> +		PRUSS_MII_RT_TXCFG_TX_AUTO_PREAMBLE |
+> +		PRUSS_MII_RT_TXCFG_TX_32_MODE_EN |
+> +		(TX_START_DELAY << PRUSS_MII_RT_TXCFG_TX_START_DELAY_SHIFT) |
+> +		(TX_CLK_DELAY_100M << PRUSS_MII_RT_TXCFG_TX_CLK_DELAY_SHIFT);
+> +
+> +	/* Configuration of Port 0 Tx */
+> +	txcfg_reg = PRUSS_MII_RT_TXCFG0;
+> +
+> +	regmap_write(mii_rt, txcfg_reg, txcfg);
+> +
+> +	txcfg	|= PRUSS_MII_RT_TXCFG_TX_MUX_SEL;
 
-Thus, I would not describe this situation as "rests entirely on the
-Rust side's shoulders".
+nit: a space seems more appropriate than a tab before '|='
 
-Regardless, it seem to be where we are now, and I have it on my list
-to follow Andrew and get a rust compiler setup..
+> +
+> +	/* Configuration of Port 1 Tx */
+> +	txcfg_reg = PRUSS_MII_RT_TXCFG1;
+> +
+> +	regmap_write(mii_rt, txcfg_reg, txcfg);
+> +
+> +	txcfg_reg = PRUSS_MII_RT_RX_FRMS0;
+> +
+> +	/* Min frame length should be set to 64 to allow receive of standard
+> +	 * Ethernet frames such as PTP, LLDP that will not have the tag/rct.
+> +	 * Actual size written to register is size - 1 per TRM. This also
+> +	 * includes CRC/FCS.
+> +	 */
+> +	txcfg = (((PRUSS_MII_RT_RX_FRMS_MIN_FRM - 1) <<
+> +			PRUSS_MII_RT_RX_FRMS_MIN_FRM_SHIFT) &
+> +			PRUSS_MII_RT_RX_FRMS_MIN_FRM_MASK);
+> +
+> +	/* For EMAC, set Max frame size to 1528 i.e size with VLAN.
+> +	 * Actual size written to register is size - 1 as per TRM.
+> +	 * Since driver support run time change of protocol, driver
+> +	 * must overwrite the values based on Ethernet type.
+> +	 */
+> +	txcfg |= (((PRUSS_MII_RT_RX_FRMS_MAX_SUPPORT_EMAC - 1) <<
+> +			   PRUSS_MII_RT_RX_FRMS_MAX_FRM_SHIFT)	&
+> +			   PRUSS_MII_RT_RX_FRMS_MAX_FRM_MASK);
+> +
+> +	regmap_write(mii_rt, txcfg_reg, txcfg);
+> +
+> +	txcfg_reg = PRUSS_MII_RT_RX_FRMS1;
+> +
+> +	regmap_write(mii_rt, txcfg_reg, txcfg);
+> +}
 
-Jason
+...
+
+> @@ -377,6 +705,70 @@ static int icssm_prueth_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	pruss = pruss_get(prueth->pru0 ? prueth->pru0 : prueth->pru1);
+> +	if (IS_ERR(pruss)) {
+> +		ret = PTR_ERR(pruss);
+> +		dev_err(dev, "unable to get pruss handle\n");
+> +		goto put_pru;
+> +	}
+> +	prueth->pruss = pruss;
+> +
+> +	ret = pruss_cfg_ocp_master_ports(prueth->pruss, 1);
+> +	if (ret) {
+> +		dev_err(dev, "couldn't enabled ocp master port: %d\n", ret);
+> +		goto put_pruss;
+> +	}
+
+FTR, I applied this patch set on top of the patch at the link below
+so that pruss_cfg_ocp_master_ports() is present.
+
+- [PATCH v2 1/1] soc: ti: PRUSS OCP configuration
+  https://lore.kernel.org/all/20250108125937.10604-2-basharath@couthit.com/
+
+  ...
+
+> diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+
+...
+
+> +/**
+> + * struct prueth_queue - Information about a queue in memory
+
+struct prueth_queue_info
+
+> + * @buffer_offset: buffer offset in OCMC RAM
+> + * @queue_desc_offset: queue descriptor offset in Shared RAM
+> + * @buffer_desc_offset: buffer descriptors offset in Shared RAM
+> + * @buffer_desc_end: end address of buffer descriptors in Shared RAM
+> + */
+> +struct prueth_queue_info {
+> +	u16 buffer_offset;
+> +	u16 queue_desc_offset;
+> +	u16 buffer_desc_offset;
+> +	u16 buffer_desc_end;
+> +} __packed;
+
+...
