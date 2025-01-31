@@ -1,184 +1,113 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEF71E570E
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC031C5D73;
+	Fri, 31 Jan 2025 17:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738342772; cv=none; b=sE9b98c+PKRPT49P2/D9ZXV5nE7zQY4FmQXkHm88K8+t41447cUPpXkIjh+A4vQeWepJyo6vnsSJXVYg6R+amLNNxt6pZtpEvcqT5/4tMua0MxQg6b0Vov2ujQNTPdzBw+m9Depct+qhHjzrn8Pz4c8Sm+RTj45sKTDo0o0tPfg=
+	t=1738342815; cv=none; b=n9taPda7s82FQh8rgXTTjijoxNT0uaZX+ZGC2pfWqbF8r8VyJdpergjRYU9QXCALepGrfebrhzycac1ikIerJX6tCN9Ntm4fL1Ar+gi9rTttvT43Tt68pusgg4UzqaZsYiIQtpwhihRuF5pBvuNKMXA14iGQussWJpFKVYnSIsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738342772; c=relaxed/simple;
-	bh=w7qsiws9e/OdN5oau4lMl1qWq0AxDi9MiZY/ULvr2q0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JMo7Aw9hK9LNBk9qJ3960SF8sHEoJGzsxEhxxeJ2zC6LlxYnbSJ1P/vNv+jwM8tlboL7tgVgD8CmD/KikAhFd8Si9AghzN9j8nzszk+m7DKgxV/FjIZk7mYm4+7OZWYN7k9SHU0WVl6mJ7TpgB2KMTofwW0AQaF88Lb6RRcaYw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=RGOm9qMl; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1738342815; c=relaxed/simple;
+	bh=OAf7ZA8VEl6RMYbsBFoYEqh2oE08y3k9VPFD9/eT+D8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=D0H/9aBQi/6IDiKoDfqqKrfc8Qi4V9xwBu7YmmySE2ItV1emwXx19tMjviAOIIk6UuOF7FaCq1slCxWPZJoFke6EDiTnXKmtY/UBtuFnbqfUSRyw1aNJKk5dyDXPf7nmsTx2VWYsP6BY2d9Jyrqe8XASJmuxl/dQVjW/YdG6+p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MNdtuBNX; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="RGOm9qMl"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43618283d48so17253415e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 08:59:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1738342769; x=1738947569; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VV6lM3YFA6dZ2gmoOiF/2v5mb84a3EuFvSRPBCXsykU=;
-        b=RGOm9qMlwTCaQpCLuKMLvcbtYxbH+kWLvtb85o/pZQl1zQFwOGKrBskiMAsgkPWGpq
-         Y+/kXeXIYyqosThld6GsQcsa7Arm/CgegUafOwZzod+lPxKLPWkn6akMuR+qGWTBj5Kt
-         1LFxLwirJ0J/DRMNdd1Oro5Khch/t+oZi9U3k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738342769; x=1738947569;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VV6lM3YFA6dZ2gmoOiF/2v5mb84a3EuFvSRPBCXsykU=;
-        b=ISmjRVtW0bzI9wMvzsYc5gtMTdbHH5L/DMNndjoPSYOIEKG/W0CO3gXv0+VkNm5jgW
-         Em6fKH096WsdkIfaP3/2x0WWUSylxbv3dLXZY4VZsuBe1seIRXYtgOl0gQgcZ230KyLp
-         uepXi+peHRboOsWnoc+huUx1TJdrH4Kyat3qPDeRHDPKJXeLHlb/HbmZSInUmZDz9qr1
-         y66ERvlCWuaWqQmE0dH/1iSC7Cs/b8Ss1Ps5YHgN0dA2jgz1IjdaKFk6o7sMOjy9wNZw
-         1z0myC1xXhv0YqqvIakuHTn2Bt2Y6Typ6AGZE5WbmNjyfcsFXO2erQ0qby+jftFpO3jY
-         FWnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ7ucLKfzhkwdQLjfGIji/I6mmmtxA9rhbruJWvzCr+r+q5z2qosCiyYlAOrM7cuJTA1Z0Vj7wA6K5O64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHmzEwgb3lCaS/xPFsLT4Z3trOnJ/yBBl1fmYBuuUeEKmaqLwf
-	7si0OEH9UYQxVx/ICtoNV7fvVSod26+6dHnJGsJHmKsDzgYCvI7pBKQYtUpINMg=
-X-Gm-Gg: ASbGncuRoCd0J/9swQVY25hAm6gY598/R8IEH8Uxpgovdss1S2bNirjzRKPBmGPSLBK
-	vmSM5Wcd5xv2ytLCkTDaPQr3/IWeY3MADQY0JWz2e6Oj1Ce38vLvCximbJfAaTByRRJDgB0lpsM
-	OqdMpMp8syXAM5BSWCM7qrHvXTF1sFx0qXsEvsbxLtKxkpQLBtuV8kitE5/87bwBqCftRuM1wlS
-	szxoZEqd2XnPUKhNnY7yxen0wLEcVCG/MHDrvO3ehn6E6GqELwIZySgGxk9+j0XnTA9HPGzcYiA
-	lDJRy2yz5hzfj80xh3Sb4UZ6iZE=
-X-Google-Smtp-Source: AGHT+IGol4Q1biN5R/T0S8PgIDvIBvNwryDWNshGEwCGFyy4OqFaWpi7Ea88cFCjbaHh4AUGnh4Gfg==
-X-Received: by 2002:a05:600c:5119:b0:434:f917:2b11 with SMTP id 5b1f17b1804b1-438dc40bd8dmr99961815e9.21.1738342768800;
-        Fri, 31 Jan 2025 08:59:28 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23de2d6sm59965215e9.11.2025.01.31.08.59.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 08:59:28 -0800 (PST)
-Date: Fri, 31 Jan 2025 17:59:26 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com,
-	lyude@redhat.com, dakr@redhat.com, airlied@gmail.com,
-	simona@ffwll.ch, leon@kernel.org, jglisse@redhat.com,
-	akpm@linux-foundation.org, GalShalom@nvidia.com,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-mm@kvack.org, linux-tegra@vger.kernel.org
-Subject: Re: [RFC 1/5] mm/hmm: HMM API to enable P2P DMA for device private
- pages
-Message-ID: <Z50BbuUQWIaDPRzK@phenom.ffwll.local>
-Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com,
-	lyude@redhat.com, dakr@redhat.com, airlied@gmail.com,
-	simona@ffwll.ch, leon@kernel.org, jglisse@redhat.com,
-	akpm@linux-foundation.org, GalShalom@nvidia.com,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-mm@kvack.org, linux-tegra@vger.kernel.org
-References: <de293a7e9b4c44eab8792b31a4605cc9e93b2bf5.camel@linux.intel.com>
- <20250128151610.GC1524382@ziepe.ca>
- <b78d32e13811ef1fa57b0535749c811f2afb4dcd.camel@linux.intel.com>
- <20250128172123.GD1524382@ziepe.ca>
- <Z5ovcnX2zVoqdomA@phenom.ffwll.local>
- <20250129134757.GA2120662@ziepe.ca>
- <Z5tZc0OQukfZEr3H@phenom.ffwll.local>
- <20250130132317.GG2120662@ziepe.ca>
- <Z5ukSNjvmQcXsZTm@phenom.ffwll.local>
- <20250130174217.GA2296753@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MNdtuBNX"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50VEJgRp014600;
+	Fri, 31 Jan 2025 16:59:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=OAf7ZA
+	8VEl6RMYbsBFoYEqh2oE08y3k9VPFD9/eT+D8=; b=MNdtuBNXRYk/9qDSAxRP2h
+	ZFX8tOFMI2lXBDJmUEuR009r0QVUuE5/n1lBhgRmdjtkZYS4TlXueq5V0OgPYXfF
+	TPf+HOj+vj98+A8xCzBYkzNXYG8z/fWXDZGwQwjW8PS5XrJ1E0HvP1z9aIdb6sVw
+	g0PqM86zdONS1hJrRDdGDZKHcxfUGx2a2E6WRFrSzNpCsDhzfJGX+hI+pmYiDnnu
+	s0UAnGonIVhDGwd0Jmm+FBa4h/HekTx8qh+mEwAsFZ91b3VRO3uc7YjnkMQyt2Cv
+	O2kRcA91/bJ1gDvsI0VGz8sORoQcXfmMS2JcJfgfFA+X+4FfjMpSijuRUX5IEptA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44grb7awf4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 16:59:50 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50VGc7ah008820;
+	Fri, 31 Jan 2025 16:59:50 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44grb7awea-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 16:59:49 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50VGNFor013878;
+	Fri, 31 Jan 2025 16:59:32 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44gf93cgjt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 16:59:32 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VGxVT730343712
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 31 Jan 2025 16:59:31 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2C5E458056;
+	Fri, 31 Jan 2025 16:59:31 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3E05258061;
+	Fri, 31 Jan 2025 16:59:30 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.73.176])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 31 Jan 2025 16:59:30 +0000 (GMT)
+Message-ID: <3432701f63ea1a2904a1e84aa5db4b1bc0d4331c.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 4/6] ima: Mark concurrent accesses to the iint
+ pointer in the inode security blob
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>, corbet@lwn.net,
+        viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+        dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Roberto Sassu
+ <roberto.sassu@huawei.com>
+Date: Fri, 31 Jan 2025 11:59:29 -0500
+In-Reply-To: <20250122172432.3074180-5-roberto.sassu@huaweicloud.com>
+References: <20250122172432.3074180-1-roberto.sassu@huaweicloud.com>
+	 <20250122172432.3074180-5-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130174217.GA2296753@ziepe.ca>
-X-Operating-System: Linux phenom 6.12.11-amd64 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: f52rQtxzKAMg65zWGxmx6Ys3D4TjoL__
+X-Proofpoint-ORIG-GUID: Dn1hRKMXgfrQ6FICyra519HicpOqwKhK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-31_06,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 spamscore=0 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 malwarescore=0 mlxscore=0 mlxlogscore=748 bulkscore=0
+ suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2501310129
 
-On Thu, Jan 30, 2025 at 01:42:17PM -0400, Jason Gunthorpe wrote:
-> On Thu, Jan 30, 2025 at 05:09:44PM +0100, Simona Vetter wrote:
-> > > > An optional callback is a lot less scary to me here (or redoing
-> > > > hmm_range_fault or whacking the migration helpers a few times) looks a lot
-> > > > less scary than making pgmap->owner mutable in some fashion.
-> > > 
-> > > It extra for every single 4k page on every user :\
-> > > 
-> > > And what are you going to do better inside this callback?
-> > 
-> > Having more comfy illusions :-P
-> 
-> Exactly!
-> 
-> > Slightly more seriously, I can grab some locks and make life easier,
-> 
-> Yes, but then see my concern about performance again. Now you are
-> locking/unlocking every 4k? And then it still races since it can
-> change after hmm_range_fault returns. That's not small, and not really
-> better.
+On Wed, 2025-01-22 at 18:24 +0100, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+>=20
+> Use the READ_ONCE() and WRITE_ONCE() macros to mark concurrent read and
+> write accesses to the portion of the inode security blob containing the
+> iint pointer.
+>=20
+> Writers are serialized by the iint lock.
+>=20
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 
-Hm yeah, I think that's the death argument for the callback. Consider me
-convinced on that being a bad idea.
-
-> > whereas sprinkling locking or even barriers over pgmap->owner in core mm
-> > is not going to fly. Plus more flexibility, e.g. when the interconnect
-> > doesn't work for atomics or some other funny reason it only works for some
-> > of the traffic, where you need to more dynamically decide where memory is
-> > ok to sit.
-> 
-> Sure, an asymmetric mess could be problematic, and we might need more
-> later, but lets get to that first..
-> 
-> > Or checking p2pdma connectivity and all that stuff.
-> 
-> Should be done in the core code, don't want drivers open coding this
-> stuff.
-
-Yeah so after amdkfd and noveau I agree that letting drivers mess this up
-isn't great. But see below, I'm not sure whether going all the way to core
-code is the right approach, at least for gpu internal needs.
-
-> > Also note that fundamentally you can't protect against the hotunplug or
-> > driver unload case for hardware access. So some access will go to nowhere
-> > when that happens, until we've torn down all the mappings and migrated
-> > memory out.
-> 
-> I think a literal (safe!) hot unplug must always use the page map
-> revoke, and that should be safely locked between hmm_range_fault and
-> the notifier.
-> 
-> If the underlying fabric is loosing operations during an unplanned hot
-> unplug I expect things will need resets to recover..
-
-So one aspect where I don't like the pgmap->owner approach much is that
-it's a big thing to get right, and it feels a bit to me that we don't yet
-know the right questions.
-
-A bit related is that we'll have to do some driver-specific migration
-after hmm_range_fault anyway for allocation policies. With coherent
-interconnect that'd be up to numactl, but for driver private it's all up
-to the driver. And once we have that, we can also migrate memory around
-that's misplaced for functional and not just performance reasons.
-
-The plan I discussed with Thomas a while back at least for gpus was to
-have that as a drm_devpagemap library, which would have a common owner (or
-maybe per driver or so as Thomas suggested). Then it would still not be in
-drivers, but also a bit easier to mess around with for experiments. And
-once we have some clear things that hmm_range_fault should do instead for
-everyone, we can lift them up.
-
-Doing this at a pagemap level should also be much more efficient, since I
-think we can make the assumption that access limitations are uniform for a
-given dev_pagemap (and if they're not if e.g. not the entire vram is bus
-visible, drivers can handle that by splitting things up).
-
-But upfront speccing all this out doesn't seem like a good idea to,
-because I honestly don't know what we all need.
-
-Cheers, Sima
--- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
