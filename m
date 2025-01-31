@@ -1,163 +1,566 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3477DBA4B
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 00:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D7F3C1F
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 00:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738284197; cv=none; b=Qyh9BkwSyluf9zCHuSG/kp6OyjxpQLxO/MfN/upup2oMt6TVoICiqKeimBEMoG6GIOyt1PCc6KUxFay8Va0T1xqUC3ymCZIpwmoJ+PpFNdSCk6mchW65Dml6y75TYhJh5b34eOQL323FyKAdw55ID9WT9f1ZFFWG2nZ8WyPsfHo=
+	t=1738284406; cv=none; b=fGrb0rnFzBTRhSkG9FNIbfAGx7YIp/ibQMTABtLijGoPJPv6Qm0yUO12P+MD83o2xfxzqGDSLVlY/KpUAGUoL49u+rksWMJUiUBcfmw6zYowDbdAMO28bird1eTZap5miz9tZjc7D++rqv+nIpjn0onBhjd9RTCeguzDWIv+0FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738284197; c=relaxed/simple;
-	bh=osraKWffuRHi5+Fhgf1LBp5HE5wFaVm6SYw/LayD9sQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hPc8Huf4PVd7Gx0pAFd45wVW40jEiZQy3sLrAxPsKD6QCUAtF30osLcO/JgW9UUg9GiHB6Ti5ks0PHXN2zQICxm50blp9NPUehI1MMv1XT+XGVV1Fh1jB90hnwXP4YnuWhFKBVH1v3/NBJFP0CHVh916gGKJpZM6NmVqcid964I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jP2AQrKj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738284406; c=relaxed/simple;
+	bh=Htfnpcxu+JcMlheooMOTZwD3RNQGTxz1889+J+XBXPs=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=ueTyBWsG0PNNwhTY2qmeayyJON9Npbrk1Bo4p4Wxy0SnpZTR1IRm2NVU6gY6ffTsUI5AIgDC8YW2FohYIXYsYBNVSaOZ9HwlfTz0ocGYPjqF03z4fBf8epcgGfqTaMIn11hSwCxYYRTMnn2RDwImbiYl0FzCemc/5Mk6n/6VsEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UziIETor; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jP2AQrKj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4DFFC4CED2;
-	Fri, 31 Jan 2025 00:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738284196;
-	bh=osraKWffuRHi5+Fhgf1LBp5HE5wFaVm6SYw/LayD9sQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jP2AQrKj6JoQ+QiZt4GZH8uInvOkEkg9jcocIfDTt+/9FLrG4JPI1USmF7qLYjb1K
-	 68GGOzKwtKzBC9yusZjLtcDt3fWF4yioMk6TlL/tFJO4Zo/X4wY8CTVpF+K7ytz/I7
-	 IMkYyrD+72HNyMg3esuosSBrf3wMbGSZE9CzhriFYxVcawtBr8PLCzZlA76lhsIXMu
-	 c8zTwSd+/ZEllWdPFRjxHIvoUd7NWluRdUgEfRISLcVoZ6exTTIkDmFr+NESdMrSa+
-	 NKr5NnuzE3iuTHjCjdYWtX2nJ2xhgqw16qgsfb8jnlvkTKDF5V2/jbUhUdSrCzywqy
-	 /l57sIdJzg0AQ==
-Date: Fri, 31 Jan 2025 00:43:12 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Aleksandar Rikalo <arikalo@gmail.com>, linux-riscv@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Christoph =?iso-8859-1?Q?M=FCllner?= <christoph.muellner@vrull.eu>,
-	linux-kernel@vger.kernel.org,
-	Djordje Todorovic <djordje.todorovic@htecgroup.com>
-Subject: Re: [PATCH v3] riscv: Fix the PAUSE Opcode for MIPS P8700.
-Message-ID: <20250131-unknotted-yoga-bccacad0c6d3@spud>
-References: <20250129131703.733098-1-arikalo@gmail.com>
- <20250129-museum-slider-3bb634d124de@spud>
- <Z5wEKS9q8-nYPO7h@ghost>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UziIETor"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738284404; x=1769820404;
+  h=date:from:to:cc:subject:message-id;
+  bh=Htfnpcxu+JcMlheooMOTZwD3RNQGTxz1889+J+XBXPs=;
+  b=UziIETorh2SW0V90qvP/RIByZ1X/9wjG0frUWVZ9hxGNx2hSiaypAEEf
+   qQgQbdU4Xb5xzRYUQDc7GUQv9lQ3yzRaYz5a/iC49eHRhTgLbW/QL8CQd
+   ZC85iRNPDbXz/Qp+GQ8SSyE6QSrxZkNvr3EnyF7P0OlNz+q+WSR/0ExDT
+   UYjkr8adw0XdPZC606cvZzavUAZMj8kclg/RNa3ZAZINWqutAyfkYG5AF
+   NDsZj8MqNYnIPdZKyuXapqjqmm7T/6C1bRz6YXnCRvl/+jam/RWt8PIW0
+   T2yjT+iTM1eM2oUw9iweQL5wVV7zcvLYdNd6Zpc0XiaH98hQNDXsk1Uq1
+   w==;
+X-CSE-ConnectionGUID: BYAOMdbFS9O417wCDtRsTw==
+X-CSE-MsgGUID: IcZe+IMDSkuooO/SYdcXRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="49449456"
+X-IronPort-AV: E=Sophos;i="6.13,246,1732608000"; 
+   d="scan'208";a="49449456"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 16:46:43 -0800
+X-CSE-ConnectionGUID: ZGCGgLFRTguvf+zZrmY0Kg==
+X-CSE-MsgGUID: VK59ZzMxQa2olRy0NPkobA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113515306"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 30 Jan 2025 16:46:42 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tdfBA-000lbj-0b;
+	Fri, 31 Jan 2025 00:46:40 +0000
+Date: Fri, 31 Jan 2025 08:45:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars:testing/wfamnae-next20250124] BUILD REGRESSION
+ 63f1602f557a3ea1a3396e876b6648cf6c3635c4
+Message-ID: <202501310841.ZJ0Ad1I0-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="AWGKnN15am8RC/Ax"
-Content-Disposition: inline
-In-Reply-To: <Z5wEKS9q8-nYPO7h@ghost>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250124
+branch HEAD: 63f1602f557a3ea1a3396e876b6648cf6c3635c4  treewide_some: fix multiple -Wfamnae warnings that must be audited separately
 
---AWGKnN15am8RC/Ax
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Error/Warning (recently discovered and may have been fixed):
 
-On Thu, Jan 30, 2025 at 02:58:49PM -0800, Charlie Jenkins wrote:
-> On Wed, Jan 29, 2025 at 04:19:58PM +0000, Conor Dooley wrote:
-> > On Wed, Jan 29, 2025 at 02:17:03PM +0100, Aleksandar Rikalo wrote:
-> > > From: Djordje Todorovic <djordje.todorovic@htecgroup.com>
-> > >=20
-> > > The riscv MIPS P8700 uses a different opcode for PAUSE.
-> > > It is a =E2=80=98hint=E2=80=99 encoding of the SLLI instruction, with=
- rd=3D0, rs1=3D0 and
-> > > imm=3D5. It will behave as a NOP instruction if no additional behavior
-> > > beyond that of SLLI is implemented.
-> >=20
-> > You say p8700, but the erratum will be applied on all systems that are
-> > identified as using a mips cpu. Why's that?
-> >=20
-> > > +void mips_errata_patch_func(struct alt_entry *begin,
-> > > +					     struct alt_entry *end,
-> > > +					     unsigned long archid,
-> > > +					     unsigned long impid,
-> > > +					     unsigned int stage)
-> > > +{
-> > > +	struct alt_entry *alt;
-> > > +
-> > > +	BUILD_BUG_ON(ERRATA_MIPS_NUMBER >=3D RISCV_VENDOR_EXT_ALTERNATIVES_=
-BASE);
-> > > +
-> > > +	if (stage =3D=3D RISCV_ALTERNATIVES_EARLY_BOOT)
-> > > +		return;
-> > > +
-> > > +	for (alt =3D begin; alt < end; alt++) {
-> > > +		if (alt->vendor_id !=3D MIPS_VENDOR_ID)
-> > > +			continue;
-> > > +
-> > > +		if (alt->patch_id >=3D ERRATA_MIPS_NUMBER) {
-> > > +			WARN(1, "MIPS errata id:%d not in kernel errata list\n",
-> > > +			     alt->patch_id);
-> > > +			continue;
-> > > +		}
-> > > +
-> > > +		mutex_lock(&text_mutex);
-> > > +		patch_text_nosync(ALT_OLD_PTR(alt), ALT_ALT_PTR(alt), alt->alt_len=
-);
-> > > +		mutex_unlock(&text_mutex);
-> > > +	}
-> > > +}
-> >=20
-> > > diff --git a/tools/arch/riscv/include/asm/vdso/processor.h b/tools/ar=
-ch/riscv/include/asm/vdso/processor.h
-> > > index 662aca039848..880f26a24f69 100644
-> > > --- a/tools/arch/riscv/include/asm/vdso/processor.h
-> > > +++ b/tools/arch/riscv/include/asm/vdso/processor.h
-> > > @@ -14,7 +14,10 @@ static inline void cpu_relax(void)
-> > >  	__asm__ __volatile__ ("div %0, %0, zero" : "=3Dr" (dummy));
-> > >  #endif
-> > > =20
-> > > -#ifdef CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE
-> > > +#ifdef CONFIG_ERRATA_MIPS_P8700_PAUSE_OPCODE
-> > > +    /* MIPS P8700 pause opcode */
-> > > +    __asm__ __volatile__ (".4byte 0x00501013");
-> > > +#elif CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE
-> > >  	/*
-> > >  	 * Reduce instruction retirement.
-> > >  	 * This assumes the PC changes.
-> >=20
-> > What about when the erratum is enabled and the toolchain supports
-> > Zihintpause?
->=20
-> So the other way to do this is having an hwprobe call to check if the
-> currently running processor is effected by this. However I was concerned
-> about the performance penalty of calling hwprobe here in the previous
-> version so I had suggested to use a flag instead so there is not the
-> penalty on other architectures. This does make it invalid to enable
-> this errata in the defconfig. This is a precedent for how we want to
-> handle errata in tools.
+    https://lore.kernel.org/oe-kbuild-all/202501302224.mRgkKFRI-lkp@intel.com
+    https://lore.kernel.org/oe-kbuild-all/202501310035.jc65cSS0-lkp@intel.com
 
-Gonna have to be marked non-portable then, if enabling it results in
-tools that might malfunction on other platforms.
+    fs/hpfs/anode.c:103:11: error: use of undeclared identifier 'anode_btree'; did you mean 'node_state'?
+    fs/hpfs/anode.c:103:25: error: 'anode_btree' undeclared (first use in this function)
+    fs/hpfs/anode.c:161:38: warning: unused variable 'ranode_btree' [-Wunused-variable]
+    fs/hpfs/anode.c:185:12: error: use of undeclared identifier 'fnode_btree'
+    fs/hpfs/anode.c:185:33: error: 'fnode_btree' undeclared (first use in this function); did you mean 'fnode_ea'?
 
-> > Why don't you use the same implementation as the !tools
-> > copy of the header? (I'm not sure why they're different in the first
-> > place).
->=20
-> It is different because the headers in tools are userspace so it doesn't
-> make sense to have alternatives.
+Error/Warning ids grouped by kconfigs:
 
-I assume that's an answer to the first part, and not the bit in
-brackets since the "first place" difference is about using the .4byte
-versus having an ifdef/else and you're talking about alternatives.
-That looks to have been some sort of sync issue or oversight in
-6da111574baff, no?
+recent_errors
+|-- alpha-allmodconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- alpha-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- arc-allmodconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- arc-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- arc-randconfig-001-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- arc-randconfig-002-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- arm-allmodconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- arm-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- arm-gemini_defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- arm-ixp4xx_defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- arm-randconfig-001-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- arm-randconfig-002-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- arm-randconfig-003-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- arm-tegra_defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- arm64-allmodconfig
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-anode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-fnode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- arm64-randconfig-001-20250130
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-anode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-fnode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- arm64-randconfig-002-20250130
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   `-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|-- arm64-randconfig-003-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- arm64-randconfig-004-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- csky-randconfig-001-20250130
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- csky-randconfig-002-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- hexagon-allmodconfig
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- hexagon-allyesconfig
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- hexagon-randconfig-001-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- hexagon-randconfig-002-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- i386-allmodconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- i386-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- i386-buildonly-randconfig-001-20250130
+|   `-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|-- i386-buildonly-randconfig-002-20250130
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- i386-buildonly-randconfig-003-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- i386-buildonly-randconfig-006-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- i386-defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- i386-randconfig-141-20250131
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- loongarch-allmodconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- loongarch-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- loongarch-randconfig-001-20250130
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- loongarch-randconfig-002-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- m68k-allmodconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- m68k-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- m68k-amcore_defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- microblaze-allmodconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- microblaze-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- mips-allmodconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- mips-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- mips-bigsur_defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- nios2-randconfig-001-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- nios2-randconfig-002-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- openrisc-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- openrisc-defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- parisc-allmodconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- parisc-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- parisc-defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- parisc-randconfig-001-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- parisc-randconfig-002-20250130
+|   `-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|-- powerpc-allmodconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- powerpc-allyesconfig
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-anode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-fnode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- powerpc-mgcoge_defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- powerpc-randconfig-001-20250130
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- powerpc-randconfig-002-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- powerpc-randconfig-003-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- powerpc-tqm8555_defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- powerpc-warp_defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- powerpc64-randconfig-001-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- powerpc64-randconfig-003-20250130
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-anode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-fnode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- riscv-allmodconfig
+|   |-- drivers-net-wireless-intel-iwlwifi-mvm-d3.c:error:call-to-__compiletime_assert_NNN-declared-with-error-attribute:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_CCMP
+|   |-- drivers-net-wireless-intel-iwlwifi-mvm-d3.c:error:call-to-__compiletime_assert_NNN-declared-with-error-attribute:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_GCMP_256
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-anode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-fnode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- riscv-allyesconfig
+|   |-- drivers-net-wireless-intel-iwlwifi-mvm-d3.c:error:call-to-__compiletime_assert_NNN-declared-with-error-attribute:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_CCMP
+|   |-- drivers-net-wireless-intel-iwlwifi-mvm-d3.c:error:call-to-__compiletime_assert_NNN-declared-with-error-attribute:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_GCMP_256
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-anode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-fnode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- riscv-defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- riscv-randconfig-001-20250131
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- s390-allmodconfig
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- s390-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- s390-randconfig-001-20250131
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-anode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-fnode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- s390-randconfig-002-20250131
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- sh-allmodconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- sh-allyesconfig
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- sh-defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- sh-randconfig-002-20250131
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- sparc-allmodconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   |-- include-linux-compiler_types.h:error:call-to-__compiletime_assert_NNN-declared-with-attribute-error:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_CCMP
+|   |-- include-linux-compiler_types.h:error:call-to-__compiletime_assert_NNN-declared-with-attribute-error:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_GCMP_256
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- sparc-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   |-- include-linux-compiler_types.h:error:call-to-__compiletime_assert_NNN-declared-with-attribute-error:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_CCMP
+|   |-- include-linux-compiler_types.h:error:call-to-__compiletime_assert_NNN-declared-with-attribute-error:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_GCMP_256
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- sparc-randconfig-002-20250131
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- sparc64-defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- sparc64-randconfig-002-20250131
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- um-allmodconfig
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-anode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-fnode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- um-allyesconfig
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- um-defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- um-randconfig-001-20250131
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- um-randconfig-002-20250131
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- x86_64-allmodconfig
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-anode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-fnode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- x86_64-allyesconfig
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-anode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-fnode_btree
+|   |-- fs-hpfs-anode.c:error:use-of-undeclared-identifier-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- x86_64-buildonly-randconfig-002-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- x86_64-buildonly-randconfig-003-20250130
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- x86_64-buildonly-randconfig-004-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- x86_64-buildonly-randconfig-005-20250130
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- x86_64-defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- x86_64-randconfig-161-20250131
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
+|-- xtensa-generic_kc705_defconfig
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+|-- xtensa-randconfig-001-20250131
+|   |-- fs-hpfs-anode.c:error:anode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:fnode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:error:ranode_btree-undeclared-(first-use-in-this-function)
+|   |-- fs-hpfs-anode.c:warning:unused-variable-ranode_btree
+|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+`-- xtensa-virt_defconfig
+    `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
 
---AWGKnN15am8RC/Ax
-Content-Type: application/pgp-signature; name="signature.asc"
+elapsed time: 800m
 
------BEGIN PGP SIGNATURE-----
+configs tested: 118
+configs skipped: 4
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ5wcoAAKCRB4tDGHoIJi
-0kGxAP9gLiRmKNud2bm4Gduu7MiGiDBQE0OTEQ+uFliEN11tFwEA4ORbhIgElazM
-/i2u5edP/3BVuE3y6mhHA1KLijH4Ewg=
-=et18
------END PGP SIGNATURE-----
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250130    gcc-13.2.0
+arc                   randconfig-002-20250130    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                          gemini_defconfig    clang-21
+arm                          ixp4xx_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250130    gcc-14.2.0
+arm                   randconfig-002-20250130    clang-20
+arm                   randconfig-003-20250130    gcc-14.2.0
+arm                   randconfig-004-20250130    clang-21
+arm                           tegra_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250130    clang-21
+arm64                 randconfig-002-20250130    gcc-14.2.0
+arm64                 randconfig-003-20250130    clang-21
+arm64                 randconfig-004-20250130    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250130    gcc-14.2.0
+csky                  randconfig-002-20250130    gcc-14.2.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250130    clang-20
+hexagon               randconfig-002-20250130    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250130    clang-19
+i386        buildonly-randconfig-002-20250130    clang-19
+i386        buildonly-randconfig-003-20250130    gcc-11
+i386        buildonly-randconfig-004-20250130    gcc-12
+i386        buildonly-randconfig-005-20250130    gcc-12
+i386        buildonly-randconfig-006-20250130    gcc-12
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250130    gcc-14.2.0
+loongarch             randconfig-002-20250130    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                         amcore_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                         bigsur_defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250130    gcc-14.2.0
+nios2                 randconfig-002-20250130    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250130    gcc-14.2.0
+parisc                randconfig-002-20250130    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                      mgcoge_defconfig    clang-21
+powerpc               randconfig-001-20250130    gcc-14.2.0
+powerpc               randconfig-002-20250130    clang-16
+powerpc               randconfig-003-20250130    gcc-14.2.0
+powerpc                     tqm8555_defconfig    gcc-14.2.0
+powerpc                        warp_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250130    gcc-14.2.0
+powerpc64             randconfig-002-20250130    clang-21
+powerpc64             randconfig-003-20250130    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-21
+riscv                               defconfig    clang-19
+riscv                 randconfig-001-20250131    clang-19
+riscv                 randconfig-002-20250131    clang-21
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250131    clang-16
+s390                  randconfig-002-20250131    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250131    gcc-14.2.0
+sh                    randconfig-002-20250131    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                 randconfig-001-20250131    gcc-14.2.0
+sparc                 randconfig-002-20250131    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250131    gcc-14.2.0
+sparc64               randconfig-002-20250131    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250131    clang-19
+um                    randconfig-002-20250131    clang-21
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250130    clang-19
+x86_64      buildonly-randconfig-002-20250130    gcc-12
+x86_64      buildonly-randconfig-003-20250130    gcc-12
+x86_64      buildonly-randconfig-004-20250130    clang-19
+x86_64      buildonly-randconfig-005-20250130    gcc-12
+x86_64      buildonly-randconfig-006-20250130    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                           alldefconfig    gcc-14.2.0
+xtensa                generic_kc705_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20250131    gcc-14.2.0
+xtensa                         virt_defconfig    gcc-14.2.0
 
---AWGKnN15am8RC/Ax--
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
