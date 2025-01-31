@@ -1,329 +1,328 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2046.outbound.protection.outlook.com [40.107.93.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B7211CA0;
-	Fri, 31 Jan 2025 01:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738285895; cv=fail; b=FvmrE6vXPOdI+HaVuTUvv1LEgxvrFVmmft3iugazANFOlY3Bme0+YimuGHPzyrW938odr2xmMXk4f/x45Ib025tzJQDL59FeDgoUVCrtA5NkeAU+P7tmqZ7a1EIuXWlf/dI2ELzMr1iaRj6+P4UPZ8QPMpGZAgUdYmEPHgyYfaI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738285895; c=relaxed/simple;
-	bh=18VFga2A8U+f99oeKM021zUOftlyBdM23l5rIu2JuuE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mHN/bFCY1k+6csr/fjcaIJNEI9wiLKv+IGRwbKR8RWxSKBDJzkDtb5inV4cCp5r2RU0p+p20mn6FSgPZh267VheeOekLvqEkEy+M/PJROZmHzkOk8fU5/9+OzRtuR2Kv8qGX9xk4LA8Bxtt8aiBwx7HAWy6GST4t0ujvL7F/UuU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JrsxfvXM; arc=fail smtp.client-ip=40.107.93.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D620520318;
+	Fri, 31 Jan 2025 01:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738285907; cv=none; b=Ent8XMc0gCqAxjjofmnePvQ7XLtcs2GCFftU1FpaWjDX/2/XVLxonYlALC9s85UB5X49hHMmS1qebbPBbM3ksg5qb0KZ4uRcDqQ7Oi8j+4vRZNFexNFgCGZNTILB+bfvMcuAsvsUvvJWDGIC/JU3gorOfA7OOLJEThBMAvalX3s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738285907; c=relaxed/simple;
+	bh=XjzSXkraxSwy8UjglFIK4wJQ+SKs6TIvw59tKH2tt48=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t5/ZUCwXqmNOz8L7d62dPfYqejST9wy/iIoI02Mva7128eI77NgrPckDUyn5QpwAVEQvBzrddMp0IZXnE3r85V6qfpOJPvG2L7DnePnyedlS9x5kjZbCNb31sDZMnrEZVVKz6AXHXzACDAJKVpD9g7RaZiFgXsawDlFTlhagxe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gMtm12gB; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JrsxfvXM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YXuwg2gv+oRvmMEWmjmUUh73ujl5Yk4U7qWZXbDv9SewdRhCiAla+u/mYHEb+CEal4tqBo94BqjMlay1TY40hQ4zutRoiNkpo0sY7rSCPSggOM7m/swh1XbwGXbQ6T6JClJgXnOkvBbj09ZouJ/f1uJjDiLEgT7+7jeXmzcwp12rOlPkRB77Nozt96UC29LAHEojFEnVYK8CRNzxXmoADXdwwjVVCmc5AHb8LsLlkM8JZ1ExJVyqmMr2mRTjLrxwU+HnqL087btg2uFp+cEdhsH+CRV45LjIBipBJufdcvy9CN7+J183TXn07ER5XwwnqjPdYG6nKuTVDQroioNGqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HtivGPbnb883clbG9t0WfS7v7VES/bz2yFmdZ6WXJAk=;
- b=l7eAKJfKkNANekKkvOhNXJTGjjiMnob5Qp/gcSzkKRny6XbP+bC/BddBvWIhei5t5p7x3DFcUZ413jyMAh8vAA3JqO0yKoBRVkvQtZs97Mc8bia7UnhdZMzdNA2Hf6PPue5VDnJ56Q1w1NKpUP97PKzIcNlqI2oSnleCYwmGSfvbGCI7c7qkqJG20mlJdsxnSC+Dbd4NiaV6waK/rgHrjctz9AfqkG3k2fVlRI5kQTVao01TcdBgW/w+0UO7x79uaTC5IgnhmDegJh/ghIp4b9NOzzYakGLKU3JQy+St1fnVyDGgWgryZeF+E1slS46fMhXudwbvbFWDKraxYHTtQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HtivGPbnb883clbG9t0WfS7v7VES/bz2yFmdZ6WXJAk=;
- b=JrsxfvXMvwYw5O70cqVusCBfB8HyJfbTarG+HUUwp8qvZAPeeT5ny/2Y49hhHUskkQDPuvGunx25tennHvdFNq2DcJecjafCwHztT26vdCqTCcv18TIGxpmmdSBEoKRkPB936NKjGzmQID7BCWizSIQcLjRro6pnpq9wGkajaYk=
-Received: from BY3PR10CA0028.namprd10.prod.outlook.com (2603:10b6:a03:255::33)
- by SJ2PR12MB7866.namprd12.prod.outlook.com (2603:10b6:a03:4cc::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.17; Fri, 31 Jan
- 2025 01:11:28 +0000
-Received: from SJ5PEPF000001CA.namprd05.prod.outlook.com
- (2603:10b6:a03:255:cafe::c4) by BY3PR10CA0028.outlook.office365.com
- (2603:10b6:a03:255::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.18 via Frontend Transport; Fri,
- 31 Jan 2025 01:11:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001CA.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Fri, 31 Jan 2025 01:11:28 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 30 Jan
- 2025 19:11:26 -0600
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <thomas.lendacky@amd.com>,
-	<john.allen@amd.com>, <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-	<joro@8bytes.org>, <suravee.suthikulpanit@amd.com>, <will@kernel.org>,
-	<robin.murphy@arm.com>
-CC: <michael.roth@amd.com>, <dionnaglaze@google.com>, <nikunj@amd.com>,
-	<ardb@kernel.org>, <kevinloughlin@google.com>, <Neeraj.Upadhyay@amd.com>,
-	<kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-crypto@vger.kernel.org>, <linux-coco@lists.linux.dev>,
-	<iommu@lists.linux.dev>
-Subject: [PATCH v2 3/4] x86/sev: Fix broken SNP support with KVM module built-in
-Date: Fri, 31 Jan 2025 01:11:16 +0000
-Message-ID: <8f73fc5a68f6713ba7ae1cbdbb7418145c4bd190.1738274758.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1738274758.git.ashish.kalra@amd.com>
-References: <cover.1738274758.git.ashish.kalra@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMtm12gB"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2162c0f6a39so46538455ad.0;
+        Thu, 30 Jan 2025 17:11:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738285905; x=1738890705; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MtChoqjOFgGNn4NofE//947FRmDIp0ClcKYH040Uq9Q=;
+        b=gMtm12gBXP3or0jDJjcf9OiU8Z43v4wIfpZQ9+HolgFYcIQTIOKiMvHpu4t0szEjKS
+         iPtFbQ1Ies1uSDQBy436S1NctmhyCcpddnIXuoPjjfYgxrpYVXGE2uslLM8bT5jXq+K+
+         +u3NmMubd2YYiXMn/FqNoQzTSsmrID87S3HcU0K2MPDPeAIet3kkKDcE9uO55xyjy76Z
+         geNfaiNwBlc0LqWejzxohsX8eT47drqzl+vPjWOeAGW+J/9hHONlPAPEmQPHmqkAwhX0
+         F11aDF+Ch2/MjhJpvn8dnJ6ZOImnN2MW5txIVnKGH4XujxnQROaNGjSdb4kJX+8Gqd03
+         RKTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738285905; x=1738890705;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MtChoqjOFgGNn4NofE//947FRmDIp0ClcKYH040Uq9Q=;
+        b=CbY+h8FRO7Lf62/7DkCjIEfPCPJki4ettWVkzVcpKBlVqwJN+4IQDzW3UQQplmkJBi
+         xtG5ClpxK/JXLHQGbaHDK4M8TEEiKaw+itk1Juny7fACGIPLe3ad+e8UlgD0QkPzxiyC
+         QjM/4l6NCqfcDfeX00vdGVQRxnX1NDwOp41Sn3WQXXBuR0P/n0rOR2EcFOAt+xG7ioOf
+         5uubsp3ZqMiWqpejg2HTTCBO6LhTwEe3LyAqTaJCT6uSFYoz4Vz622uKXejbehTb4kKP
+         kjQ/1gA8IkJi3pBJIkwJztlWkBHxaeXPZ6QIKI8aSYLhVyt2WfK/k+eBoDIc4uzVgyZ5
+         cemA==
+X-Forwarded-Encrypted: i=1; AJvYcCUb4s3cn8YDlbM/bt2rVizKVYwjXbVWpZAeLX/0c1rZECQ6L7g6dLTZmOmpI102Roq3xP/rRe5ftQ7h0HE=@vger.kernel.org, AJvYcCVjRstH6sPs7HfTNVF5DPuu1qnjwitxiHkKSn29/gEXcWAuQhVpL3i21q6k6JZQcU8rDoFRonkeyqWd@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWT8k0TNPnRnSa6AFQKh2tV7MlRnxdt4R/NjQFxUqwrTIB8SAz
+	cohMHZHT0Jz/mHmFZoj4sYbI8h01qu+BNlPs4FdfvcPKUw4jXLog
+X-Gm-Gg: ASbGncs+yKYb1+5ry6ot7eUa3HUlCd+mDMxCaEM/JtygeIQCuWEXiOFmBcgGNwagZOW
+	7KiwmUo4LkMFedlT/0Sqo+F/jnf0zDHweIIDNxVD09rH1EoHDD4N6yOM4SAM7GZBSba6XDYIvmd
+	b8PGy/c/L51bu0+t55o9vlQeL2sFu+aPW00v12/z239Rsqh/fWDT2/7Ua4qoSfVKdd3gTKpUFF2
+	yFccEiFiv/BN6xDEBWsojTABG4Cxn1eJSeLT3QmpUO14e8MTzQXlzf1E+FY2owxLeyi0Q6tiSqc
+	BOFpf29UXALy4Q==
+X-Google-Smtp-Source: AGHT+IHkmEYNh8vrNk9CC40ONQrdF/kevyJaIxtyqRaqmApIazbV4RVCnAt+SaPgBH2bM9xosaiadg==
+X-Received: by 2002:a05:6a00:2918:b0:725:4915:c0f with SMTP id d2e1a72fcca58-72fe2d5e058mr7545712b3a.11.1738285904895;
+        Thu, 30 Jan 2025 17:11:44 -0800 (PST)
+Received: from ubuntu ([175.141.178.229])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631bf8esm2106622b3a.28.2025.01.30.17.11.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 17:11:44 -0800 (PST)
+Date: Fri, 31 Jan 2025 01:11:40 +0000
+From: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: andreas.noever@gmail.com, michael.jamet@intel.com, 
+	YehezkelShB@gmail.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] thunderbolt: Disable Gen 4 Recovery on Asymmetric
+ Transitions
+Message-ID: <rbpvuczeeo4rmmsyj76g3dkx76jhuondyj22x7y6vozihriyvr@zuafqxw27l3l>
+References: <20250130095704.10779-1-rahimi.mhmmd@gmail.com>
+ <20250130095704.10779-4-rahimi.mhmmd@gmail.com>
+ <20250130124716.GW3713119@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CA:EE_|SJ2PR12MB7866:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff4b437b-9deb-4ef9-25d3-08dd419430b9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|82310400026|36860700013|921020|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yZFS5pQUMbDVIPMM6bIvE/7HXY77xV3oTeSIlzCl5dIGCBvGJcM26TXKUnCg?=
- =?us-ascii?Q?DBAAgXJYi9hcfYmvxtCAfnjBI8l9SnRSyuZTdyPWwc+rSTJcekoQIlHxezmq?=
- =?us-ascii?Q?mUHDtEbrRPxJNt+GkOF1subjBb05LyBgOFa/ckFPva2Id2B+4a3HI8q4QaIA?=
- =?us-ascii?Q?NK1HWqevx/IAQTnzGYnxXCHRhyUHYigummCxTOfy4vCi9mhTJxc14jBufgL7?=
- =?us-ascii?Q?tK/4KBRj8+uKfRi0d1PR9JJQnCwsV09Cb8i1YtRoZTkAftTdobqfrl5hKDJc?=
- =?us-ascii?Q?mxnBCQ+qpEFLSUus5HPOjFnDkT21lvTa2Hwg81a9wnarQvR38s0eR18jnEVB?=
- =?us-ascii?Q?dyJnJm0ldOh/fkXZ6lRGtQR0qqP7jzhyW7j8+iH6Fqx5gNHjdGgxFrkeJxIu?=
- =?us-ascii?Q?/hajxVg7vLgKn2dDmWbc9L8l+IqcUHlat8BRdxVLjFewIBAG1AKsRI3IYPiP?=
- =?us-ascii?Q?/b87qeB+JarkT3DQQ94607vhoiARmbVguZpuNlSSgw0Elj8zVSZhmNE07N8B?=
- =?us-ascii?Q?5+v25BbyV6D56+e5TjbzcZOMq6mv3INLVGtk06u7SMLqpEktu4wQ+ODr+CaV?=
- =?us-ascii?Q?qEaFJ8kcQ+nPfmSfNJh+pgVpe78avie8ylbIUB02lKomfGjQY9qEIFOROdGq?=
- =?us-ascii?Q?mVCBtxupOkhX5OQgbRGR4PFRSr32S8cq9uofl3/HN72/27mw3WhNTMEMo7gk?=
- =?us-ascii?Q?HRqOai4beJNnbrDm+EUk3yu7aHLdkQWxDwPWexQo+60kweLnCjd4UUbUvokd?=
- =?us-ascii?Q?PS22LoWpy3g5chSCSFxAZZTkxoveECR4La3vMEmMZmA6dj4bmYeEPUSrtmy0?=
- =?us-ascii?Q?pdwSN9m0VaE52Rue6v6yMks2DGycmGDeT4BXRgB8n8g2+vWQNfJUnECJrGkr?=
- =?us-ascii?Q?d7v0UboOogbPveJ3hdVX8CumjWo9isvS9nPXE/yBdvzrNpMP21emkk1ECuxu?=
- =?us-ascii?Q?uiUSwckOxMtTkGHDpcaulchmwLhNagBWbxMRFqyxox697VPWb08ktPHiY93+?=
- =?us-ascii?Q?6uDmGMc2KKfML+rHhluINMg3BVR7JmACAJDYl/Vm1gK71H8qJH1UU+fK9Snu?=
- =?us-ascii?Q?59DAEeBIA/H+tsqFSEUghnRsE3DZ0lJAv14BqYg0phPUSkYQa8R5CQMeAIlS?=
- =?us-ascii?Q?rHn2bkT766Eq4hQfYQ8oL8R59hMDznqMH4ZTCzTIrmaPrqnEFaZAFWo4EzvL?=
- =?us-ascii?Q?dOvvRoP+1kd6ZCKCS9IKcd8o/zut0EJgDxv1RxY/JvvrjsMHmutXFZY5ujtq?=
- =?us-ascii?Q?BDzyKhDKoHRcBqX7VrS+2P1Ubt9zquJNnIW63qM+q9LEcs43FRtkut2yToTP?=
- =?us-ascii?Q?j735v41uJ1Wm46Qey1uzrCcWXT7iZqtuAUXJNL8FocEdxBlYiHetGsi9JDt+?=
- =?us-ascii?Q?Aah9er7SJOq2PIAnqJcrzUgb703rBsvZR3FEObl7GKFvQpsOKx+o0Geec1Hr?=
- =?us-ascii?Q?ahC8oYqYUUa6FvX89G+px+iTOvuso4cm9FIM6u3h8i46bXmutVBWcF43/Ysd?=
- =?us-ascii?Q?LgiYZ6ZA+XE9PeeALq9svxYvO9Yve7URgEi+?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(82310400026)(36860700013)(921020)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 01:11:28.3321
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff4b437b-9deb-4ef9-25d3-08dd419430b9
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001CA.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7866
+In-Reply-To: <20250130124716.GW3713119@black.fi.intel.com>
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+Hello again, and thank you. I have three comments below:
 
-This patch fixes issues with enabling SNP host support and effectively
-SNP support which is broken with respect to the KVM module being
-built-in.
+On Thu, Jan 30, 2025 at 02:47:16PM GMT, Mika Westerberg wrote:
+> Hi,
+> 
+> On Thu, Jan 30, 2025 at 09:51:09AM +0000, Mohammad Rahimi wrote:
+> > Updates the Connection Manager to disable the Gen 4 Link Recovery
+> > flow before transitioning from a Symmetric Link to an Asymmetric
+> > Link, as specified in recent changes to the USB4 v2 specification.
+> > 
+> > According to the "USB4 2.0 ENGINEERING CHANGE NOTICE FORM"
+> > published in September 2024, the rationale for this change is:
+> > 
+> >   "Since the default value of the Target Asymmetric Link might be
+> >   different than Symmetric Link and Gen 4 Link Recovery flow checks
+> >   this field to make sure it matched the actual Negotiated Link Width,
+> >   we’re removing the condition for a Disconnect in the Gen 4 Link
+> >   Recovery flow when Target Asymmetric Link doesn’t match the actual
+> >   Link width and adding a Connection Manager note to Disable Gen 4 Link
+> >   Recovery flow before doing Asymmetric Transitions."
+> 
+> Looks good in general few comments still see below.
+> 
+> > Signed-off-by: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
+> > ---
+> >  drivers/thunderbolt/tb.c      | 28 +++++++++++++++++--
+> >  drivers/thunderbolt/tb.h      |  3 ++
+> >  drivers/thunderbolt/tb_regs.h |  1 +
+> >  drivers/thunderbolt/usb4.c    | 52 +++++++++++++++++++++++++++++++++++
+> >  4 files changed, 81 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
+> > index a7c6919fbf97..31a8269a5156 100644
+> > --- a/drivers/thunderbolt/tb.c
+> > +++ b/drivers/thunderbolt/tb.c
+> > @@ -1013,6 +1013,7 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
+> >  			     struct tb_port *dst_port, int requested_up,
+> >  			     int requested_down)
+> >  {
+> > +	bool link_recovery_up = false, link_recovery_down = false;
+> >  	bool clx = false, clx_disabled = false, downstream;
+> >  	struct tb_switch *sw;
+> >  	struct tb_port *up;
+> > @@ -1075,15 +1076,29 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
+> >  			continue;
+> >  
+> >  		/*
+> > -		 * Disable CL states before doing any transitions. We
+> > -		 * delayed it until now that we know there is a real
+> > -		 * transition taking place.
+> > +		 * Disable CL states and Link Recovery flow before doing any
+> > +		 * transitions. We delayed it until now that we know there is
+> > +		 * a real transition taking place.
+> >  		 */
+> >  		if (!clx_disabled) {
+> >  			clx = tb_disable_clx(sw);
+> >  			clx_disabled = true;
+> >  		}
+> >  
+> > +		ret = usb4_port_link_recovery_disable(up);
+> > +		if (ret < 0) {
+> > +			tb_port_warn(up, "failed to disable the link recovery\n");
+> 
+> failed to disable link recovery
+> 
+> also should we still continue? How catastrophic this actually is? I mean
+> this now prevents the user from using her new UHBR monitor even though it
+> probably works just fine even if we don't do this step.
+> 
 
-SNP host support is enabled in snp_rmptable_init() which is invoked as a
-device_initcall(). Here device_initcall() is used as snp_rmptable_init()
-expects AMD IOMMU SNP support to be enabled prior to it and the AMD
-IOMMU driver enables SNP support after PCI bus enumeration.
+I followed your suggestion and here is my analysis:
 
-Now, if kvm_amd module is built-in, it gets initialized before SNP host
-support is enabled in snp_rmptable_init() :
+Before this change, if an event occurred during the transition from
+Symmetric to Asymmetric mode with ELR set, the link would enter the
+Disconnect flow. According to section 4.4.5.2, the Router must then
+reset the Target Link Width and Target Asymmetric Link to their
+default values, effectively restarting the transition process.
 
-[   10.131811] kvm_amd: TSC scaling supported
-[   10.136384] kvm_amd: Nested Virtualization enabled
-[   10.141734] kvm_amd: Nested Paging enabled
-[   10.146304] kvm_amd: LBR virtualization supported
-[   10.151557] kvm_amd: SEV enabled (ASIDs 100 - 509)
-[   10.156905] kvm_amd: SEV-ES enabled (ASIDs 1 - 99)
-[   10.162256] kvm_amd: SEV-SNP enabled (ASIDs 1 - 99)
-[   10.171508] kvm_amd: Virtual VMLOAD VMSAVE supported
-[   10.177052] kvm_amd: Virtual GIF supported
-...
-...
-[   10.201648] kvm_amd: in svm_enable_virtualization_cpu
+This reset happens only if, during the transition, one of the conditions
+for Link Recovery is met. Regardless of whether the link goes through
+Link Recovery or the Disconnect flow, it will eventually resume normal operation.
 
-And then svm_x86_ops->enable_virtualization_cpu()
-(svm_enable_virtualization_cpu) programs MSR_VM_HSAVE_PA as following:
-wrmsrl(MSR_VM_HSAVE_PA, sd->save_area_pa);
+The only problematic scenario I see is a device that consistently triggers
+Link Recovery during the transition from Symmetric to Asymmetric, potentially
+causing the LLSM (section 4.2) to enter an infinite loop. Such a condition
+should have been caught during compliance testing.
 
-So VM_HSAVE_PA is non-zero before SNP support is enabled on all CPUs.
+To address this, I followed your suggestion and made errors from disabling
+Link Recovery non-fatal during the transition.
 
-snp_rmptable_init() gets invoked after svm_enable_virtualization_cpu()
-as following :
-...
-[   11.256138] kvm_amd: in svm_enable_virtualization_cpu
-...
-[   11.264918] SEV-SNP: in snp_rmptable_init
+> > +			break;
+> > +		}
+> > +		link_recovery_up = ret > 0;
+> > +
+> > +		ret = usb4_port_link_recovery_disable(down);
+> > +		if (ret < 0) {
+> > +			tb_port_warn(down, "failed to disable the link recovery\n");
+> 
+> failed to disable link recovery
+> 
+> and actually you can move this message into the function itself and drop
+> these messages here.
+> 
+> > +			break;
+> > +		}
+> > +		link_recovery_down = ret > 0;
+> > +
+> >  		tb_sw_dbg(up->sw, "configuring asymmetric link\n");
+> >  
+> >  		/*
+> > @@ -1091,6 +1106,13 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
+> >  		 * transtion the link into asymmetric now.
+> >  		 */
+> >  		ret = tb_switch_set_link_width(up->sw, width_up);
+> > +
+> > +		/* Re-enable Link Recovery flow if they were previosly enabled */
+> 
+> previously
+> 
 
-This triggers a #GP exception in snp_rmptable_init() when snp_enable()
-is invoked to set SNP_EN in SYSCFG MSR:
+Thanks for catching that.
 
-[   11.294289] unchecked MSR access error: WRMSR to 0xc0010010 (tried to write 0x0000000003fc0000) at rIP: 0xffffffffaf5d5c28 (native_write_msr+0x8/0x30)
-...
-[   11.294404] Call Trace:
-[   11.294482]  <IRQ>
-[   11.294513]  ? show_stack_regs+0x26/0x30
-[   11.294522]  ? ex_handler_msr+0x10f/0x180
-[   11.294529]  ? search_extable+0x2b/0x40
-[   11.294538]  ? fixup_exception+0x2dd/0x340
-[   11.294542]  ? exc_general_protection+0x14f/0x440
-[   11.294550]  ? asm_exc_general_protection+0x2b/0x30
-[   11.294557]  ? __pfx_snp_enable+0x10/0x10
-[   11.294567]  ? native_write_msr+0x8/0x30
-[   11.294570]  ? __snp_enable+0x5d/0x70
-[   11.294575]  snp_enable+0x19/0x20
-[   11.294578]  __flush_smp_call_function_queue+0x9c/0x3a0
-[   11.294586]  generic_smp_call_function_single_interrupt+0x17/0x20
-[   11.294589]  __sysvec_call_function+0x20/0x90
-[   11.294596]  sysvec_call_function+0x80/0xb0
-[   11.294601]  </IRQ>
-[   11.294603]  <TASK>
-[   11.294605]  asm_sysvec_call_function+0x1f/0x30
-...
-[   11.294631]  arch_cpu_idle+0xd/0x20
-[   11.294633]  default_idle_call+0x34/0xd0
-[   11.294636]  do_idle+0x1f1/0x230
-[   11.294643]  ? complete+0x71/0x80
-[   11.294649]  cpu_startup_entry+0x30/0x40
-[   11.294652]  start_secondary+0x12d/0x160
-[   11.294655]  common_startup_64+0x13e/0x141
-[   11.294662]  </TASK>
+> > +		if (link_recovery_up)
+> > +			usb4_port_link_recovery_enable(up);
+> > +		if (link_recovery_down)
+> > +			usb4_port_link_recovery_enable(down);
+> > +
+> >  		if (ret) {
+> >  			tb_sw_warn(up->sw, "failed to set link width\n");
+> >  			break;
+> > diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+> > index ddbf0cd78377..d37d778082fc 100644
+> > --- a/drivers/thunderbolt/tb.h
+> > +++ b/drivers/thunderbolt/tb.h
+> > @@ -1332,6 +1332,9 @@ int usb4_port_router_online(struct tb_port *port);
+> >  int usb4_port_enumerate_retimers(struct tb_port *port);
+> >  bool usb4_port_clx_supported(struct tb_port *port);
+> >  
+> > +int usb4_port_link_recovery_enable(struct tb_port *port);
+> > +int usb4_port_link_recovery_disable(struct tb_port *port);
+> > +
+> >  bool usb4_port_asym_supported(struct tb_port *port);
+> >  int usb4_port_asym_set_link_width(struct tb_port *port, enum tb_link_width width);
+> >  int usb4_port_asym_start(struct tb_port *port);
+> > diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
+> > index 4e43b47f9f11..085139e1a958 100644
+> > --- a/drivers/thunderbolt/tb_regs.h
+> > +++ b/drivers/thunderbolt/tb_regs.h
+> > @@ -398,6 +398,7 @@ struct tb_regs_port_header {
+> >  #define PORT_CS_19_WOD				BIT(17)
+> >  #define PORT_CS_19_WOU4				BIT(18)
+> >  #define PORT_CS_19_START_ASYM			BIT(24)
+> > +#define PORT_CS_19_ELR				BIT(31)
+> >  
+> >  /* Display Port adapter registers */
+> >  #define ADP_DP_CS_0				0x00
+> > diff --git a/drivers/thunderbolt/usb4.c b/drivers/thunderbolt/usb4.c
+> > index e51d01671d8e..99fd6aa1704e 100644
+> > --- a/drivers/thunderbolt/usb4.c
+> > +++ b/drivers/thunderbolt/usb4.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/delay.h>
+> >  #include <linux/ktime.h>
+> >  #include <linux/units.h>
+> > +#include <linux/string_helpers.h>
+> >  
+> >  #include "sb_regs.h"
+> >  #include "tb.h"
+> > @@ -1518,6 +1519,57 @@ bool usb4_port_clx_supported(struct tb_port *port)
+> >  	return !!(val & PORT_CS_18_CPS);
+> >  }
+> >  
+> > +static int __usb4_port_link_recovery_enable(struct tb_port *port, bool enable)
+> > +{
+> > +	bool was_enable;
+> > +	int ret;
+> > +	u32 val;
+> 
+> I think you should check here
+> 
+> 	if (!port->cap_usb4)
+> 		return -EINVAL;
+> 
+> > +
+> > +	ret = tb_port_read(port, &val, TB_CFG_PORT,
+> > +			   port->cap_usb4 + PORT_CS_19, 1);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	was_enable = !!(val & PORT_CS_19_ELR);
+> > +
+> > +	if (enable)
+> > +		val |= PORT_CS_19_ELR;
+> > +	else
+> > +		val &= ~PORT_CS_19_ELR;
+> > +
+> > +	ret = tb_port_write(port, &val, TB_CFG_PORT,
+> > +			    port->cap_usb4 + PORT_CS_19, 1);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	tb_port_dbg(port, "link recovery %s\n", str_enabled_disabled(enable));
+> > +	return was_enable ? 1 : 0;
+> > +}
+> > +
+> > +/**
+> > + * usb4_port_link_recovery_enable() - Enable the Link Recovery
+> > + * @port: USB4 port
+> > + *
+> > + * Enables the Link Recovery for @port.
+> > + * Returns -ERRNO on failure, otherwise the previous state of the Link Recovery.
+> 
+> Returns errno on failure..
+> 
+> or you can also specify which errors but then use %-EINVAL and so on.
+> 
+> Ditto to the other function.
+> 
 
-This #GP exception is getting triggered due to the following errata for
-AMD family 19h Models 10h-1Fh Processors:
+I traced all the function calls and identified the following three error numbers:
+-EINVAL
+-ENODEV
+-ETIMEDOUT
 
-Processor may generate spurious #GP(0) Exception on WRMSR instruction:
-Description:
-The Processor will generate a spurious #GP(0) Exception on a WRMSR
-instruction if the following conditions are all met:
-- the target of the WRMSR is a SYSCFG register.
-- the write changes the value of SYSCFG.SNPEn from 0 to 1.
-- One of the threads that share the physical core has a non-zero
-value in the VM_HSAVE_PA MSR.
-
-The document being referred to above:
-https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/revision-guides/57095-PUB_1_01.pdf
-
-To summarize, with kvm_amd module being built-in, KVM/SVM initialization
-happens before host SNP is enabled and this SVM initialization
-sets VM_HSAVE_PA to non-zero, which then triggers a #GP when
-SYSCFG.SNPEn is being set and this will subsequently cause
-SNP_INIT(_EX) to fail with INVALID_CONFIG error as SYSCFG[SnpEn] is not
-set on all CPUs.
-
-This patch fixes the current SNP host enabling code and effectively SNP
-which is broken with respect to the KVM module being built-in.
-
-Essentially SNP host enabling code should be invoked before KVM
-initialization, which is currently not the case when KVM is built-in.
-
-Now, snp_rmptable_init() will be called early from iommu_snp_enable()
-directly and not invoked via device_initcall() which enables SNP host
-support before KVM initialization with kvm_amd module built-in.
-
-Fixes: c3b86e61b756 ("x86/cpufeatures: Enable/unmask SEV-SNP CPU feature")
-Co-developed-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/include/asm/sev.h |  2 ++
- arch/x86/virt/svm/sev.c    | 23 +++++++----------------
- 2 files changed, 9 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 5d9685f92e5c..1581246491b5 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -531,6 +531,7 @@ static inline void __init snp_secure_tsc_init(void) { }
- 
- #ifdef CONFIG_KVM_AMD_SEV
- bool snp_probe_rmptable_info(void);
-+int snp_rmptable_init(void);
- int snp_lookup_rmpentry(u64 pfn, bool *assigned, int *level);
- void snp_dump_hva_rmpentry(unsigned long address);
- int psmash(u64 pfn);
-@@ -541,6 +542,7 @@ void kdump_sev_callback(void);
- void snp_fixup_e820_tables(void);
- #else
- static inline bool snp_probe_rmptable_info(void) { return false; }
-+static inline int snp_rmptable_init(void) { return -ENOSYS; }
- static inline int snp_lookup_rmpentry(u64 pfn, bool *assigned, int *level) { return -ENODEV; }
- static inline void snp_dump_hva_rmpentry(unsigned long address) {}
- static inline int psmash(u64 pfn) { return -ENODEV; }
-diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
-index 1dcc027ec77e..42e74a5a7d78 100644
---- a/arch/x86/virt/svm/sev.c
-+++ b/arch/x86/virt/svm/sev.c
-@@ -505,19 +505,19 @@ static bool __init setup_rmptable(void)
-  * described in the SNP_INIT_EX firmware command description in the SNP
-  * firmware ABI spec.
-  */
--static int __init snp_rmptable_init(void)
-+int __init snp_rmptable_init(void)
- {
- 	unsigned int i;
- 	u64 val;
- 
--	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
--		return 0;
-+	if (WARN_ON_ONCE(!cc_platform_has(CC_ATTR_HOST_SEV_SNP)))
-+		return -ENOSYS;
- 
--	if (!amd_iommu_snp_en)
--		goto nosnp;
-+	if (WARN_ON_ONCE(!amd_iommu_snp_en))
-+		return -ENOSYS;
- 
- 	if (!setup_rmptable())
--		goto nosnp;
-+		return -ENOSYS;
- 
- 	/*
- 	 * Check if SEV-SNP is already enabled, this can happen in case of
-@@ -530,7 +530,7 @@ static int __init snp_rmptable_init(void)
- 	/* Zero out the RMP bookkeeping area */
- 	if (!clear_rmptable_bookkeeping()) {
- 		free_rmp_segment_table();
--		goto nosnp;
-+		return -ENOSYS;
- 	}
- 
- 	/* Zero out the RMP entries */
-@@ -562,17 +562,8 @@ static int __init snp_rmptable_init(void)
- 	crash_kexec_post_notifiers = true;
- 
- 	return 0;
--
--nosnp:
--	cc_platform_clear(CC_ATTR_HOST_SEV_SNP);
--	return -ENOSYS;
- }
- 
--/*
-- * This must be called after the IOMMU has been initialized.
-- */
--device_initcall(snp_rmptable_init);
--
- static void set_rmp_segment_info(unsigned int segment_shift)
- {
- 	rmp_segment_shift = segment_shift;
--- 
-2.34.1
-
+> > + */
+> > +int usb4_port_link_recovery_enable(struct tb_port *port)
+> > +{
+> > +	return __usb4_port_link_recovery_enable(port, true);
+> > +}
+> > +
+> > +/**
+> > + * usb4_port_link_recovery_disable() - Disable the Link Recovery
+> > + * @port: USB4 port
+> > + *
+> > + * Disables the Link Recovery for @port.
+> > + * Returns -ERRNO on failure, otherwise the previous state of the Link Recovery.
+> > + */
+> > +int usb4_port_link_recovery_disable(struct tb_port *port)
+> > +{
+> > +	return __usb4_port_link_recovery_enable(port, false);
+> > +}
+> > +
+> >  /**
+> >   * usb4_port_asym_supported() - If the port supports asymmetric link
+> >   * @port: USB4 port
+> > -- 
+> > 2.45.2
