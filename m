@@ -1,115 +1,197 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-190e.mail.infomaniak.ch (smtp-190e.mail.infomaniak.ch [185.125.25.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EE11F2C24
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68331F37B1;
+	Fri, 31 Jan 2025 16:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738341441; cv=none; b=WBcaEah48SMq/loBuCECIhJ69xlCXAaO5ebPVZQqMt7jfHYMcnOcADvd9thl84T7sMWJtnwut54+89/NVIc2MtsN2vhigH2DblV+XgX/POflypCPpVQK4QihpoM0tcC5dfHx83kf9PueoU6+D3QoH6xrNbxvDdIPPRA88noCQbQ=
+	t=1738341456; cv=none; b=Oa5ShUSfkGlU33A04E42A6iQMq3evPBMrkvszB1vW/pg0OP9WAPgUwhnMaRm6XQRDD6wv+srKU3Hrkj5adcN9kOT+vRY974teY3JVlj5YciEkdsBqg68qxokeg6gGiF6imjDGEmOwDMrmATC9gjJYu/yBLGhwiKaIkT/ERncpjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738341441; c=relaxed/simple;
-	bh=6PxJERCfOlWdvjBBvwuCTiAa/h2g6rjj12EfEqksNAg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kmxMdwpU7+Ict2ANqFLmAEn40FGYxNjyg++qtTogZoCUlLj6ZuqtfKmc6OUWcI2I82sptrF9hUn3Dt+sMijiCShfVUpWWkt28P8odJkegfm64u9jTyhPqnvX3gPK3AQzrfWhHeA7o+E4YQt2ML2FiO1ygCNMvoXOU7DedXDeqU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fYzy2ldk; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738341456; c=relaxed/simple;
+	bh=oqub3yqXzb/VKihkceAvb8EKCMqm90Tlf8WycLxs3Wc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rDZM4MsYLMh1LIPKeQ5BmAt+Fi4Njn2B2jlvB5cGrUra0LVMGk6zg9JmS8RLNXZxsR5UuVMpx4EucFk+vb0I9fA3V0mWDbKJhCVHFa/wc4bNggeRjzeb65QDlsitPq04HeLi2VljwpVfA36wfIGIazIxuxNJlUPYSeMg97Sz4Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=vO31qoa6; arc=none smtp.client-ip=185.125.25.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fYzy2ldk"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43624b2d453so26127295e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 08:37:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738341438; x=1738946238; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EMx2YnOlJPDXeo1XJnfHHROuTOY3+drwNmWAuq+4lIg=;
-        b=fYzy2ldkXyrqgsmrhEnM/t0NNjNkMx4gvHm0o6VcrTaTT4yU9DqCQmpYV3ldYykfob
-         GS/28EUrrPEDcH6EuuArMgCbTCIxOYJTx1obMXA8RpFP7r7T6lpYOCNzvi7gy3N2q8FG
-         e/cZwIc/lRgWC0zDWk4bLFKsqgsIpHzC6cY00CvxQTocZfsXPl/GbTRi0OR8ZiOVO33G
-         +Rzu/TQ0yJQzVxeoGlCvAI+6aCrBOwqWhVU/XVspbnk/3YgC4nXrUJkOAfZtPr0yr5mG
-         Wr9IBTbbTwHL63dD8mpQiR3fq6P3P5Qw9AJwn0VZvpjOd+ltd01sM+k9iRgN9aZ+6jya
-         nL4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738341438; x=1738946238;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EMx2YnOlJPDXeo1XJnfHHROuTOY3+drwNmWAuq+4lIg=;
-        b=tHmg65BpIF8CXTxnobWK0Q7xL2pi0NFEhhxQTLE/AqAhIXXX9UEKwVQ3lS/gq8viys
-         EMryUx6wuNB2KGG9ZKPF3eRzW1iPAsNMCpc4neYJ+G0MX0Wyis/lkEKlnSEukJkzW90c
-         KNk+EXXoD2Xm/POTSnXAENM5dB/xvIdpj3mloMCOlUlAT7HWILDe6hbnMYxkf/pACLEn
-         hf2x5l/ADIPaUZfOZt3qam82P9SMlvwdlw6ySJzt2VC667D1fVTA9eDrHhI1+uigUSiG
-         Ejhckdr2GDlKu/skHyxcQ2mUoR/HzWSLN3/DsMDyx3BlWrbYHb3pmMlI1dnyi3zy4zpA
-         goCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvctYfBopsGiV6vFCuUwzXosTXQvKd1kBj2UpxIYZggwvk6tTEYAFENaqxOS8hTarXMjZdyny91PRydY8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxo3s4PnE3g2HNbxFmPO9ZYzNd/sJVWfrNc1pH+4Zbu5blT6KTW
-	amxq8CcDxVG4PlrIsj3ODTq+9wnDDbYEjqORT5FKIymquhVO7NTWtmJkjdQ9y+0=
-X-Gm-Gg: ASbGncth28ONGqWvx0oPY7vTuYD6ha9CUPtHHFuc09FreizeLbDNkt68SwKinlI0FDV
-	jHD4Gdd2w0ZokBtK47xZD3RtVV1vf8fMQum8FgMbZzBG8c6FsXEuFkqlYTHYoJiRcTARBS1Vs66
-	6q1/d7Gb2lyMxC25ROvbsP79qmNZJ52ueejCBv+RQaoXIvuzpIPbC4j830HojCW6W9uEz2PnM3N
-	VjkLVp9akXlmEOfH1i1T3Tf7aMMuB+eDfS93M65WVRGyc6zE9TtkOV9KXXCVbTPmv3ymybdlGl/
-	20P8bk9UgfiMGQE=
-X-Google-Smtp-Source: AGHT+IEK8aXASXk07qexYhvsAde0vZ0pJEgD444D81jkJ1PplRhBIzhtI0G4gtXUjh/qBfrt6nphdA==
-X-Received: by 2002:a05:600c:4ec7:b0:436:e751:e436 with SMTP id 5b1f17b1804b1-438dc40d574mr116288475e9.19.1738341437975;
-        Fri, 31 Jan 2025 08:37:17 -0800 (PST)
-Received: from pop-os.. ([145.224.90.107])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1e8f53sm4975118f8f.100.2025.01.31.08.37.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 08:37:11 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-To: quic_jiegan@quicinc.com
-Cc: quic_tingweiz@quicinc.com,
-	quic_jinlmao@quicinc.com,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="vO31qoa6"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Yl1cB3HrCzSYy;
+	Fri, 31 Jan 2025 17:31:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1738341082;
+	bh=FzVsYVAwdM95pvCRwAKz5t+Bv0kjzH255qCpGQBbsJo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=vO31qoa6cNMQSPEadLdfgDAAIFm30gZr9mb9Cg0eUwkKu6bqAddYAjjIjy3nkeHrQ
+	 rQ917dREERrsYwWjwAX6/P7eP52qAjjqfGbEZgdg3ntRFkg7bkG0Dlyq/0xBjxfD++
+	 j3Lfx72PB1kSmvOaqo9YdCS6eSwBYUPZK9yrkQ2c=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Yl1c94LxBzdTM;
+	Fri, 31 Jan 2025 17:31:21 +0100 (CET)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Eric Paris <eparis@redhat.com>,
+	Paul Moore <paul@paul-moore.com>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	"Serge E . Hallyn" <serge@hallyn.com>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Ben Scarlato <akhna@google.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Charles Zaffery <czaffery@roblox.com>,
+	Daniel Burgener <dburgener@linux.microsoft.com>,
+	Francis Laniel <flaniel@linux.microsoft.com>,
+	James Morris <jmorris@namei.org>,
+	Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@google.com>,
+	Jorge Lucangeli Obes <jorgelo@google.com>,
+	Kees Cook <kees@kernel.org>,
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>,
+	Phil Sutter <phil@nwl.cc>,
+	Praveen K Paladugu <prapal@linux.microsoft.com>,
+	Robert Salvet <robert.salvet@roblox.com>,
+	Shervin Oloumi <enlightened@google.com>,
+	Song Liu <song@kernel.org>,
+	Tahera Fahimi <fahimitahera@gmail.com>,
+	Tyler Hicks <code@tyhicks.com>,
+	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	suzuki.poulose@arm.com,
-	mike.leach@linaro.org,
-	alexander.shishkin@linux.intel.com,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andersson@kernel.org,
-	konradybcio@kernel.org,
-	James Clark <james.clark@linaro.org>
-Subject: [PATCH 2/3] coresight: Export coresight_get_sink()
-Date: Fri, 31 Jan 2025 16:36:14 +0000
-Message-Id: <20250131163617.1730505-3-james.clark@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250131163617.1730505-1-james.clark@linaro.org>
-References: <d5332d6d-237f-4b78-9eaf-2619bd97b7bd@quicinc.com>
- <20250131163617.1730505-1-james.clark@linaro.org>
+	linux-security-module@vger.kernel.org
+Subject: [PATCH v5 06/24] landlock: Prepare to use credential instead of domain for scope
+Date: Fri, 31 Jan 2025 17:30:41 +0100
+Message-ID: <20250131163059.1139617-7-mic@digikod.net>
+In-Reply-To: <20250131163059.1139617-1-mic@digikod.net>
+References: <20250131163059.1139617-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-Signed-off-by: James Clark <james.clark@linaro.org>
+This cosmetic change that is needed for audit support, specifically to
+be able to filter according to cross-execution boundaries.
+
+Replace hardcoded LANDLOCK_SCOPE_SIGNAL with the signal_scope.scope
+variable.
+
+Use scoped guards for RCU read-side critical sections.
+
+Cc: Günther Noack <gnoack@google.com>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Link: https://lore.kernel.org/r/20250131163059.1139617-7-mic@digikod.net
 ---
- drivers/hwtracing/coresight/coresight-core.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-index 253ef02fde12..f31c8477f7b7 100644
---- a/drivers/hwtracing/coresight/coresight-core.c
-+++ b/drivers/hwtracing/coresight/coresight-core.c
-@@ -526,6 +526,7 @@ struct coresight_device *coresight_get_sink(struct list_head *path)
+Changes since v4:
+- New patch.
+---
+ security/landlock/task.c | 50 +++++++++++++++++++++-------------------
+ 1 file changed, 26 insertions(+), 24 deletions(-)
+
+diff --git a/security/landlock/task.c b/security/landlock/task.c
+index 98894ad1abc7..dbdfac11e015 100644
+--- a/security/landlock/task.c
++++ b/security/landlock/task.c
+@@ -7,6 +7,7 @@
+  */
  
- 	return csdev;
- }
-+EXPORT_SYMBOL_GPL(coresight_get_sink);
- 
- u32 coresight_get_sink_id(struct coresight_device *csdev)
+ #include <asm/current.h>
++#include <linux/cleanup.h>
+ #include <linux/cred.h>
+ #include <linux/errno.h>
+ #include <linux/kernel.h>
+@@ -213,15 +214,15 @@ static int hook_unix_stream_connect(struct sock *const sock,
+ 				    struct sock *const other,
+ 				    struct sock *const newsk)
  {
+-	const struct landlock_ruleset *const dom =
+-		landlock_get_applicable_domain(landlock_get_current_domain(),
+-					       unix_scope);
++	const struct landlock_cred_security *const subject =
++		landlock_get_applicable_subject(current_cred(), unix_scope,
++						NULL);
+ 
+ 	/* Quick return for non-landlocked tasks. */
+-	if (!dom)
++	if (!subject)
+ 		return 0;
+ 
+-	if (is_abstract_socket(other) && sock_is_scoped(other, dom))
++	if (is_abstract_socket(other) && sock_is_scoped(other, subject->domain))
+ 		return -EPERM;
+ 
+ 	return 0;
+@@ -230,11 +231,11 @@ static int hook_unix_stream_connect(struct sock *const sock,
+ static int hook_unix_may_send(struct socket *const sock,
+ 			      struct socket *const other)
+ {
+-	const struct landlock_ruleset *const dom =
+-		landlock_get_applicable_domain(landlock_get_current_domain(),
+-					       unix_scope);
++	const struct landlock_cred_security *const subject =
++		landlock_get_applicable_subject(current_cred(), unix_scope,
++						NULL);
+ 
+-	if (!dom)
++	if (!subject)
+ 		return 0;
+ 
+ 	/*
+@@ -244,7 +245,8 @@ static int hook_unix_may_send(struct socket *const sock,
+ 	if (unix_peer(sock->sk) == other->sk)
+ 		return 0;
+ 
+-	if (is_abstract_socket(other->sk) && sock_is_scoped(other->sk, dom))
++	if (is_abstract_socket(other->sk) &&
++	    sock_is_scoped(other->sk, subject->domain))
+ 		return -EPERM;
+ 
+ 	return 0;
+@@ -256,27 +258,27 @@ static const struct access_masks signal_scope = {
+ 
+ static int hook_task_kill(struct task_struct *const p,
+ 			  struct kernel_siginfo *const info, const int sig,
+-			  const struct cred *const cred)
++			  const struct cred *cred)
+ {
+ 	bool is_scoped;
+-	const struct landlock_ruleset *dom;
++	const struct landlock_cred_security *subject;
+ 
+-	if (cred) {
+-		/* Dealing with USB IO. */
+-		dom = landlock_cred(cred)->domain;
+-	} else {
+-		dom = landlock_get_current_domain();
+-	}
+-	dom = landlock_get_applicable_domain(dom, signal_scope);
++	if (!cred)
++		/* Not dealing with USB IO. */
++		cred = current_cred();
++
++	subject = landlock_get_applicable_subject(cred, signal_scope, NULL);
+ 
+ 	/* Quick return for non-landlocked tasks. */
+-	if (!dom)
++	if (!subject)
+ 		return 0;
+ 
+-	rcu_read_lock();
+-	is_scoped = domain_is_scoped(dom, landlock_get_task_domain(p),
+-				     LANDLOCK_SCOPE_SIGNAL);
+-	rcu_read_unlock();
++	scoped_guard(rcu)
++	{
++		is_scoped = domain_is_scoped(subject->domain,
++					     landlock_get_task_domain(p),
++					     signal_scope.scope);
++	}
+ 	if (is_scoped)
+ 		return -EPERM;
+ 
 -- 
-2.34.1
+2.48.1
 
