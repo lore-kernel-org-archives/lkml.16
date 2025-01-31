@@ -1,87 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D687081F
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 21:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80F57081F;
+	Fri, 31 Jan 2025 21:41:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738359541; cv=none; b=bC9UOMOvDemei3yZ6THNlilnWbkUGMD/mtwZ/Prh2zdXa18hkOGZL29fqQjyRFmk1Jt1SHrdtI3kmLiY4bosSKDphY7+DFUH8MduFfJQyVQhW4BTtqrz0p6mGT2uOpla6AjZ619/o3OishhtxyLHmM4Fia6xiV7BHDOToo0MTOU=
+	t=1738359701; cv=none; b=kc641ODhoiWJT0GVvU7ppBGf3IKrpWAfV1qQ5IvRSJxfQ/JzyIUE9DXaPhOHE5fO0a3zWPqjG4lOFzdrEx4Dh7/JcYHGUvrxSlkSP6WZpNYtuILunz0Y4kIL453BA0CDMYlq2gHitm7EVMC+vU9iRteXh+yOh+LRhx/AJabAp+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738359541; c=relaxed/simple;
-	bh=0NVTgVUL2OmFRXsnrNqud03+GHXt0ed4+9DLShDgWuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=kLjmicvrTTqGFK3FdsGk/L2DA2a4t/KTxwj1hg749UmmdSI8Nih/3M+c9HqsiZsvgDitFaCsR4LbmtyGVYnnOWfw1n7r0QM9BtJWqGUhqDQP8Emffd5NehA9vCulUij0kLAlRLW12Sj6pl2S6iBoHofKaOkpwVLk8YLj6yKqn/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNS6RCuC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738359701; c=relaxed/simple;
+	bh=xjrlPeBG4WNIUU7fpf7l1Xd1y0KhADy+YvMS2wRVdA4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sx8d4F9FgaeoXpS/jzFvcREuaE+DecO6pPfguldK00ESaDkaJdHA4FTkySbahFeSKQCa8WYYhFje4KpiVf/Dv+FP8LOcukgkxI0SNlbBOHBbuEonWfDFqXL8BegZluz6fcODn8LJgyb5A69N9o3l6fp4eb80qHrADpF31BjktVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gLbMAb9s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNS6RCuC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A9DAC4CED1;
-	Fri, 31 Jan 2025 21:39:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gLbMAb9s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 514DBC4CEE3;
+	Fri, 31 Jan 2025 21:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738359541;
-	bh=0NVTgVUL2OmFRXsnrNqud03+GHXt0ed4+9DLShDgWuQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=oNS6RCuC55+T9l9iKLXpYRRQO74iLe1QTs7mfcOpwOFwNm3cC6kB9Wiijt3kcX80H
-	 w4Xrb1IDzAI2pVmlddHmJZr37Tj5IJDg2nKI4qDYU2liGLgoaG1bNFFGBmLML+o5PC
-	 UfMcuxoqlmF9srVpnNiYcsaO+3ModxnMqshbg8y57znFBYiVIT7w3qNI1csa+vvJoe
-	 GkjEpckTslI6PQSjzWz4YDdpc9lWVtKcn8n2bdXrzVKczHsEOo9R5rtF0MSwaTbvI0
-	 aW2f5fc18gNBOO6tLc4rHZDJqvHaT4EX6jMWj43oq2QLY1NBNGxU+BJcFO9Nrc26m0
-	 oZmHWfeGj1rTQ==
-Date: Fri, 31 Jan 2025 13:38:58 -0800
-From: Kees Cook <kees@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Jakub Jelinek <jakub@redhat.com>,
-	Kees Cook <kees@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>
-Subject: [GIT PULL] hardening updates for v6.14-rc1 (fix1)
-Message-ID: <202501311331.B5B6D45@keescook>
+	s=k20201202; t=1738359701;
+	bh=xjrlPeBG4WNIUU7fpf7l1Xd1y0KhADy+YvMS2wRVdA4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gLbMAb9sJJIwnYWk6N6K1/LW630zPucoGYiBtdwDLlFIFq5papYnxtUGIF1nDXE6G
+	 AFGZmNJp8Mg7God2MtsrnzqwKL6uNleiIBypkcttBnFycLodU6gR6ElmjjN1/xgzXl
+	 B2W1xQZPmmUUieVKYwpf8fBJu/H1R5z2jisbWi96izrMfR14iQGA76H2PpUPVprh4g
+	 m/Dx2rURW82kE616fexCWpIBJWlD0/VWb9Hh5RJ+yUF48crQqxz6aco96MH7s6zNbR
+	 +Uu0OuGXu0K2gud72MLaNvoaS8P0FZ/sH5xRnYSyXb09iYOF+Cdai9KLOxrdD3y5qb
+	 dA/QKJKd8Blrw==
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3ce87d31480so7883025ab.2;
+        Fri, 31 Jan 2025 13:41:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX75hVlrpCGa6ma6Jn+fJL1f1RJKmVgwhlescWrIJpuUlmcLjgxCqz7+cGKEEIMmQSSXo/t+F6P0yNV8fU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2BLKdaXClXrCWeoTpMxl+BkwXaUyq5MxUHUVHyDeYyxaLLbEM
+	rYivl0p1yAVbR1RY3U9MCHtEDxBYpmHxsTBwLwVf3U9S7HvNY3IGqZ8HNXsUkoaLMZ21ah79lkM
+	/QBTnY/SzTHqnkFC7Ig1sbGkghUs=
+X-Google-Smtp-Source: AGHT+IGsRtOKF92cDzqILaRoJNyVEWQl3SaFoHvDWV0af5w3tbe8Hx3MCLHCzCExBblLuM0SzvndJDqxS/xn1MJQa10=
+X-Received: by 2002:a05:6e02:1fe4:b0:3ce:5af3:79d5 with SMTP id
+ e9e14a558f8ab-3cffe4277d0mr105176065ab.6.1738359700599; Fri, 31 Jan 2025
+ 13:41:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250131140407.1392008-1-masahiroy@kernel.org>
+In-Reply-To: <20250131140407.1392008-1-masahiroy@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Fri, 31 Jan 2025 13:41:29 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5GsWe-hV7MwMPbFMDK24W5OAPzjE+HJQjNKQ4CKtKqqA@mail.gmail.com>
+X-Gm-Features: AWEUYZnvnI5gCbcie_yGEuQm0lJs01jxgmXraMkjAxhN7ygTbHoevId4pUbOGAo
+Message-ID: <CAPhsuW5GsWe-hV7MwMPbFMDK24W5OAPzjE+HJQjNKQ4CKtKqqA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: fix Clang LTO with CONFIG_OBJTOOL=n
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yonghong Song <yonghong.song@linux.dev>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Nicolas Schier <nicolas@fjasle.eu>, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Fri, Jan 31, 2025 at 6:04=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.o=
+rg> wrote:
+>
+> Since commit bede169618c6 ("kbuild: enable objtool for *.mod.o and
+> additional kernel objects"), Clang LTO builds do not perform any
+> optimizations when CONFIG_OBJTOOL is disable (e.g., for ARCH=3Darm64).
+> This is because every LLVM bitcode file is immediately converted to
+> ELF format before the object files are linked together.
+>
+> This commit fixes the breakage.
+>
+> Fixes: bede169618c6 ("kbuild: enable objtool for *.mod.o and additional k=
+ernel objects")
+> Reported-by: Yonghong Song <yonghong.song@linux.dev>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Please pull this hardening fix for v6.14-rc1. This is a fix for the soon
-to be released GCC 15 which has regressed its initialization of unions
-when performing explicit initialization (i.e. a general problem, not
-specifically a hardening problem; we're just carrying the fix). Details
-in the final patch, Acked by Masahiro, with updated selftests to validate
-the fix.
-
-Thanks!
-
--Kees
-
-The following changes since commit a9a5e0bdc5a77a7c662ad4be0ad661f0b0d5e99d:
-
-  hardening: Document INIT_STACK_ALL_PATTERN behavior with GCC (2025-01-08 14:17:33 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.14-rc1-fix1
-
-for you to fetch changes up to dce4aab8441d285b9a78b33753e0bf583c1320ee:
-
-  kbuild: Use -fzero-init-padding-bits=all (2025-01-30 08:48:34 -0800)
-
-----------------------------------------------------------------
-hardening updates for v6.14-rc1-fix1
-
-- Fix regression in GCC 15's initialization of union members
-
-----------------------------------------------------------------
-Kees Cook (3):
-      stackinit: Add old-style zero-init syntax to struct tests
-      stackinit: Add union initialization to selftests
-      kbuild: Use -fzero-init-padding-bits=all
-
- lib/stackinit_kunit.c      | 106 +++++++++++++++++++++++++++++++++++++++++++++
- scripts/Makefile.extrawarn |   3 ++
- 2 files changed, 109 insertions(+)
-
--- 
-Kees Cook
+Tested-by: Song Liu <song@kernel.org>
