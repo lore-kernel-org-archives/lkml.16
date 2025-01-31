@@ -1,151 +1,102 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0DC1B86F7
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F8D1C07FA
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738323205; cv=none; b=J52QBeLfiUJ+rGP8m0Q6cHgwG6jdr+RJtQ7tmh1vsOrzdeEf7jyROo1klOG/wJxemOEx0t+MR6Cb2VI6sjqlTCftiEgJD0vnFvgGZFLnxM/2LzmoKN4ZZj5pFiCRN+ygRJOdqGwqGozPZEZy8QIUKsJnAB20vU+yfsnvMuQPwFs=
+	t=1738323235; cv=none; b=tSpNEwd8svI7mAjog0Cfk/NEHaGnFI9HqbfBUxwB9tq0vMCxoFKWDh1bFnbJQXfXMbSchixPGgNvuHSVY8Kd+TaSlqK1r8tmI2dDex8gsAaljop+Tah/nP+4E+N+4z5YVfnzxbOL6naNw6coAoAkP/w3mUnDj48mmD4xYhU7yFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738323205; c=relaxed/simple;
-	bh=N/l/YOZ7YasWbku84WJiOPIQUhlmC6anStFROdBe0H4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=h7cjtamkW+4yT/Ky+PpvUhc+qsQet4TyoSubvdC6C3pxvwFbQtwSU/yrUmb3VicgeAVh6eY7Mad7htSE87Q2CUHxBx+Nv6Nw2hpq3mI0ZSIwYjRgbMfFWQKgVIak62dxLclli2Fd/pp8FJe3mBQEPFkiFBA24vnUlbvgiRY0kaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=XTdqilAI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iGk2BR36; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1738323235; c=relaxed/simple;
+	bh=476EBTGgcI5xdYOaJ6LQa3tfmwSruyF9mYzvA+HovWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ch7ymDcpJ6ZtUs/+N9YwtDdS6ggF6zdm0SiQyXt3ByzNBNnG34P2p/9FPXxrqyLSyfTFnS5fwN8uyfg48basZGNXdyGlHw1U5OPxMcqo9x+j3izrEN3jIWNY3w2mIh3J1Alb+cUeLT1stoiOz6BQEHR8HhqfG2XGDJJs/vHQ95g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=Mx0r3qb1; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="XTdqilAI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iGk2BR36"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id 9968B1380120;
-	Fri, 31 Jan 2025 06:33:21 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Fri, 31 Jan 2025 06:33:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738323201;
-	 x=1738409601; bh=t83pxTVoc+bxWv+k8uOmCii5XJa6SN5D5kCtdcorOSw=; b=
-	XTdqilAICmG/HpnUbiXCWhoHVUUWUeJYnnpx77yOeb36W2snZ0ejqfWT1avZgrwe
-	DU4yxCxz9+aGKHrtFwhXgz5AqRMkOQ+A3T8CTHecleNdhaGxl8nqEBuJPlwUWTPB
-	OJv3JqjObCjeI8GvUuFzuhV82viLAJfwZRRQd3Cv5Ifag9sba/KF1Q9BLMDKuJeq
-	R9Go5tOEKlWYu2aCwcXPYxMezDeVpAk6Q+Nr4HNmFxYEaPC65arrsZqwwKU7wZ+0
-	uTo1mG/5bd/2xmyQiGDs+aywhOUSQ9u9t7ts1KXtbGJxAgvAFTrSmVuSabq6di1y
-	TzV4NJFtl+GI1QfeDLU1Mg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738323201; x=
-	1738409601; bh=t83pxTVoc+bxWv+k8uOmCii5XJa6SN5D5kCtdcorOSw=; b=i
-	Gk2BR36hHD17JZ4AkEToDOnHfiqGKDISwQecHqBrAwxEfUMcX3R+W51eH+/KpTcx
-	/+1F1KkAky/tJXMtZYjFD/iT0N/wJFMGmv0qA4Ng+Z/ixNWys/9dqoLQkL0Hs4pB
-	RQzXdxwoe5rzDGf2DYhIqYBhINieQxR8PUsn3PLaNRwl2rrcN64/a0govD37aUbg
-	hVkxH0F4N1LPbLshV/+GcIAM7wY/UnXe9+hlK71BeEyLkwNOb7QzuhUqBzpXhYbA
-	W9iTE//6xEBBdeAz4SFCvIOwCs8m/De2BkaTA61KU9cpmpMUJ9xSVKSpXhaV5UaS
-	aR1u5OsRrjn9wtk9IOrYg==
-X-ME-Sender: <xms:AbWcZ0tNRc2ghAGm_kdVUcNxf2BPEy9YE-xLaN_S9E0cWVVr8ZXUfA>
-    <xme:AbWcZxdnDT3IkPg9DTn4BdB29UDuMp50vrKbepnAmceIO9VeX4OCB_eaKs642a3d4
-    tQODAFSL9rRqFecmTs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekieeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
-    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohephedp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhgvnhhsrdifihhklhgrnhguvghrse
-    hlihhnrghrohdrohhrghdprhgtphhtthhopehjvghrohhmvgdrfhhorhhishhsihgvrhes
-    lhhinhgrrhhordhorhhgpdhrtghpthhtohepshhumhhithdrghgrrhhgsehlihhnrghroh
-    drohhrghdprhgtphhtthhopehophdqthgvvgeslhhishhtshdrthhruhhsthgvughfihhr
-    mhifrghrvgdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrd
-    hkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:AbWcZ_zm5_u_FB2d812hfqUn5bLJi2fAh-08UflBVNI-92-3XGxpgg>
-    <xmx:AbWcZ3Mtd1gDv7pfPxXBsO733lpGHLgrCCWi2QKzADoTtB_ImPZNkw>
-    <xmx:AbWcZ09w25mzpkhpGmd7EeweWOM6dUvgYAtw7z6Fp87b4G2UAYhM1A>
-    <xmx:AbWcZ_VnEDXeXDVwttx59Kf6_bF4XYyEYSPud7CqHLqLTu8-B5PsJg>
-    <xmx:AbWcZ4ZlMiIf7tvGDe8M60J3RBXkja-FSDd3rVpMvjkqyDroqzdlDjx->
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 3DD192220072; Fri, 31 Jan 2025 06:33:21 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="Mx0r3qb1"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id E90FA24002D
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:33:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738323225; bh=476EBTGgcI5xdYOaJ6LQa3tfmwSruyF9mYzvA+HovWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=Mx0r3qb1A3UOSK2f5X2f8aZ/cla4BLWe91L6NYbDILMpq/Q2MMYQSatiaKTOK+wET
+	 j7OgiaufoPmoH/+Snv9ZwjkcNdXlH/NMIaqvl1zBf2tED2piB0SqSTRwBf6x2OjfzR
+	 /dFI1h+CGXmNQZh+TmIOXgNZuPk7SxlnDbT0VnojHMx/TWeOE4Q09ia2UYHvcIYMPJ
+	 mz6v71TLSUzt1+7woDn4qz/AL6OuEDPhJTIIEhPEA6CGUqUToYtXKGHt6s5x0xzKTw
+	 pHrCPKbTzrTKW3Fv4istIHCrFGWwa/sBMobWilniKzQXYhR2cfFyRi2ydyGf8uvOpu
+	 JEXELxAsRJREw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Ykv0g42F0z9rxF;
+	Fri, 31 Jan 2025 12:33:39 +0100 (CET)
+Date: Fri, 31 Jan 2025 11:33:39 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Frank Li <Frank.li@nxp.com>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 0/9] YAML conversion of several Freescale/PowerPC DT
+ bindings
+Message-ID: <Z5y1E6TUclqzV2Rp@probook>
+References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
+ <Z5qr1VkKSlyBE/E4@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 31 Jan 2025 12:32:59 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Sumit Garg" <sumit.garg@linaro.org>,
- "Jens Wiklander" <jens.wiklander@linaro.org>
-Cc: op-tee@lists.trustedfirmware.org,
- "Jerome Forissier" <jerome.forissier@linaro.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <11d19be4-85a2-40dd-b3c6-07bbdd794df0@app.fastmail.com>
-In-Reply-To: 
- <CAFA6WYNj0aWnV+jxoxHU7OOg8oWC2-AboUMztxaPCDQuO+c8gg@mail.gmail.com>
-References: <20241213111453.367031-1-sumit.garg@linaro.org>
- <CAFA6WYO+T2pZcB2VBhP=ut2w9HtkeCvYkqoM85LZnJ9iF+gvNw@mail.gmail.com>
- <CAHUa44EE6XL5zgf0VNeqPkUukFGz5BgiHz=0yAVdd=tEzLEq6Q@mail.gmail.com>
- <CAFA6WYNRD-CGTHufafFLX4SjvpH6fBKwqCac8JE2oLepqqsNOw@mail.gmail.com>
- <CAHUa44F76AqB4ijQHBfoNXveiyxeBLOLh6ULT+pc+va3y0qBdg@mail.gmail.com>
- <CAFA6WYO1aXiUozs8WiawSbok5hCmV8bXz9cRgEJ0r+LAwL9J9A@mail.gmail.com>
- <CAHUa44GdxO3TCLyOQdCHbdVGKpSHpnxBp_JAfAhpVgXuWYOVhw@mail.gmail.com>
- <c3c782f8-fb48-4d3e-95b0-d0707f57acff@app.fastmail.com>
- <CAHUa44H4yLvkU6ATvk0KOzVDa2TOgS9EBsU+BKR2piZbX26kLQ@mail.gmail.com>
- <CAFA6WYNj0aWnV+jxoxHU7OOg8oWC2-AboUMztxaPCDQuO+c8gg@mail.gmail.com>
-Subject: Re: [PATCH] tee: optee: Add support for supplicant timeout
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z5qr1VkKSlyBE/E4@lizhi-Precision-Tower-5810>
 
-On Fri, Jan 31, 2025, at 12:06, Sumit Garg wrote:
-> On Tue, 28 Jan 2025 at 13:49, Jens Wiklander <jens.wiklander@linaro.org> wrote:
->> >
->> > As far as I can tell, even that DEFAULT_HUNG_TASK_TIMEOUT
->> > limit is only for tasks that are in an unkillable state for more
->> > than two minutes, but the supplicant not providing results
->> > to the kernel could also happen when it waits in a killable
->> > or interruptible state, or when it does multiple I/Os in a
->> > row that each block for a time under 120 seconds.
->
-> The supplicant itself can be in a killable state but the client
-> application which will be waiting for it in the kernel is in
-> unkillable state. So if a shutdown/reboot is issued at that point
-> which has to kill the client application first and then the
-> tee-supplicant, it will just cause the system to hang up. That is a
-> real problem that I am trying to address here.
+On Wed, Jan 29, 2025 at 05:29:41PM -0500, Frank Li wrote:
+> On Sun, Jan 26, 2025 at 07:58:55PM +0100, J. Neuschäfer wrote:
+> > This is a spin-off of the series titled
+> > "powerpc: MPC83xx cleanup and LANCOM NWAPP2 board".
+> >
+> > During the development of that series, it became clear that many
+> > devicetree bindings for Freescale MPC8xxx platforms are still in the old
+> > plain-text format, or don't exist at all, and in any case don't mention
+> > all valid compatible strings.
+> >
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> 
+> Please cc imx@lists.linux.dev next time
+> 
+> Frank
 
-Is the client the one waiting in optee_supp_thrd_req(), or
-is that the supplicant?
+Will do.
 
-If the problem is the client being unkillable at the moment,
-could you address that by using wait_even_killable() or
-mutex_lock_killable() and just bail out safely? I assume
-at the point the system is rebooting, there is no need to
-wait for the supplicant to complete, other than making sure
-the function can return without running into undefined state
-of the kernel.
-
->> > A single sector write to an eMMC can easily take multiple
->> > seconds by itself when nothing is going on and the device is
->> > in need of garbage collection. If the system is already in
->> > low memory or there are other tasks writing to the file system,
->> > you can have many such I/O operations queued up in the device
->> > when it adds another I/O to the back of the queue.
->>
->> Adding a timeout means we must somehow handle them to avoid spurious errors.
->>
->
-> The timeout I am proposing here as default being 2 minutes is just for
-> a single tee-supplicant RPC request. I suppose that should be
-> sufficient to avoid any spurious errors.
-
-It won't guarantee that, but if there is a 2 minute delay, that
-likely means that the system has become quite unusable from being
-slow, even if it hasn't otherwise misbehaved to that point.
-
-     Arnd
+Best regards,
+J. Neuschäfer
