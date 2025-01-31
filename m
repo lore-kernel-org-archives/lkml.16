@@ -1,134 +1,156 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7381C174A;
-	Fri, 31 Jan 2025 13:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39311C245C
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738328548; cv=none; b=dA3gP26BkPXUlv2zAVBSlCjGAdQ3fcTimF67MZfpvty7A09FigsVEkbnzYg3rWOPcDwcCShq974GO/Ep3uK4LAljq6iaKblNbGuPYjq47NiOLoUcUB8d2oHJwblD1sjNH9A7uQBK8bW3BsBwb+/a9UBvCRechVqZDaTQ4D7jkcU=
+	t=1738328952; cv=none; b=Yw3tQNDeHdFtYkDc1KaprcIbrGd05Ziv8Fhr4wie6wMLHoMiKKQ1oVccpEliMyz0qzG+uWDL/522EUSJIzzmc4Fe/GL40xQVwowbpgDmFS05uQvTrbs0QoNnSUvmrJLnTEh7GzriLJxSInQ5BjeSUnlt/4unPSjhnuhJKa+tkc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738328548; c=relaxed/simple;
-	bh=ha3GA1YeJrWZZXOHK2YRUHj1Zw4fHBWjpmXy5ZEJcNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HA34l3IMxNjAlG7yta9CNcOSKluZOP0spJJYdqM1uPx8i+FS1ZBxVyEeBcLHwOMDi7I/RJamIPPI3y5sHj+0dLfL06y9ErR5IxCBhuk39tUPlVX/AZsieqygKzUySTqlVtVix/4D8BNkHyW90vDNHZpHHaspXg4L35VLAjodQfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Y4KKhUGL; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Y4KKhUGL"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B82E14426E;
-	Fri, 31 Jan 2025 13:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738328538;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+kwLBBAKHwJScVqX5D1od3kUCloHeVAnZHLlm04sT2g=;
-	b=Y4KKhUGLCwXU0ABQLBZThvOq6BCwbcDbX4a0O/V4To90dJCzQgQ9SaGSSeEGjx39cyM9xu
-	PWRi/uehJD9C7NzKqBMLblppKa1Dvge82TN4RUHzQcLeHkWChKHM/DSvrQ8ey8tuw0jK6j
-	fuXXgqtE73uIsQRK8gSWkjyPJcAQUtgGjoEjfWNthklzS3mxp5B5ADzEB/Lmhi43hARbnE
-	Jk/vsYSl+h2khKTWeJLOPxkC29Kuqz/AwdsZdX+D2hDKue1r25W4BX8quLyLoB1MPUYPqx
-	hpHR4iQEtmuiHJ1h9scyWtXKFhXie2uDqMzu+fjir1LLIBV2CZ/C76/QTEMgZA==
-Date: Fri, 31 Jan 2025 14:02:14 +0100
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-Cc: airlied@gmail.com, arthurgrillo@riseup.net, corbet@lwn.net,
-	dri-devel@lists.freedesktop.org, hamohammed.sa@gmail.com,
-	jeremie.dautheribes@bootlin.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-	mairacanal@riseup.net, marcheu@google.com, melissa.srw@gmail.com,
-	miquel.raynal@bootlin.com, mripard@kernel.org,
-	nicolejadeyee@google.com, pekka.paalanen@haloniitty.fi,
-	rdunlap@infradead.org, rodrigosiqueiramelo@gmail.com,
-	seanpaul@google.com, simona.vetter@ffwll.ch, simona@ffwll.ch,
-	thomas.petazzoni@bootlin.com, tzimmermann@suse.de
-Subject: Re: [PATCH v16 3/7] drm/vkms: Drop YUV formats TODO
-Message-ID: <Z5zJ1h91AINbQRVF@louis-chauvet-laptop>
-Mail-Followup-To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
-	airlied@gmail.com, arthurgrillo@riseup.net, corbet@lwn.net,
-	dri-devel@lists.freedesktop.org, hamohammed.sa@gmail.com,
-	jeremie.dautheribes@bootlin.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-	mairacanal@riseup.net, marcheu@google.com, melissa.srw@gmail.com,
-	miquel.raynal@bootlin.com, mripard@kernel.org,
-	nicolejadeyee@google.com, pekka.paalanen@haloniitty.fi,
-	rdunlap@infradead.org, rodrigosiqueiramelo@gmail.com,
-	seanpaul@google.com, simona.vetter@ffwll.ch, simona@ffwll.ch,
-	thomas.petazzoni@bootlin.com, tzimmermann@suse.de
-References: <20250121-yuv-v16-3-a61f95a99432@bootlin.com>
- <20250131084045.2874-1-jose.exposito89@gmail.com>
+	s=arc-20240116; t=1738328952; c=relaxed/simple;
+	bh=t4zcKHE90KfWeNDwXqb5TfI7Z9zckUGM6AekiBPuMTE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j2iJetyiUyHAPD/5Vu2aK1n2Tl2HKhx/lg5Eo8MwcdxzXDjqmTVEIJbnCSOcXVKdsFI/8Mrq6xGqueMZlD7ljmW4qwonLQrp5r/oOb6Zp6Qyc9XPmikj1+ULp89fbMMu8+9aucPbpnueKonD2jEMgXGldHAkSTjrIQgmLRHDtTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ykx4L0QbVz6M4Pp;
+	Fri, 31 Jan 2025 21:06:58 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 68CE6140517;
+	Fri, 31 Jan 2025 21:09:06 +0800 (CST)
+Received: from localhost (10.195.244.178) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 31 Jan
+ 2025 14:09:03 +0100
+Date: Fri, 31 Jan 2025 13:09:01 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Raghavendra K T <raghavendra.kt@amd.com>
+CC: <linux-mm@kvack.org>, <akpm@linux-foundation.org>,
+	<lsf-pc@lists.linux-foundation.org>, <bharata@amd.com>, <gourry@gourry.net>,
+	<nehagholkar@meta.com>, <abhishekd@meta.com>, <ying.huang@linux.alibaba.com>,
+	<nphamcs@gmail.com>, <hannes@cmpxchg.org>, <feng.tang@intel.com>,
+	<kbusch@meta.com>, <Hasan.Maruf@amd.com>, <sj@kernel.org>,
+	<david@redhat.com>, <willy@infradead.org>, <k.shutemov@gmail.com>,
+	<mgorman@techsingularity.net>, <vbabka@suse.cz>, <hughd@google.com>,
+	<rientjes@google.com>, <shy828301@gmail.com>, <liam.howlett@oracle.com>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <nadav.amit@gmail.com>,
+	<shivankg@amd.com>, <ziy@nvidia.com>, <jhubbard@nvidia.com>,
+	<AneeshKumar.KizhakeVeetil@arm.com>, <linux-kernel@vger.kernel.org>,
+	<jon.grimm@amd.com>, <santosh.shukla@amd.com>, <Michael.Day@amd.com>,
+	<riel@surriel.com>, <weixugc@google.com>, <leesuyeon0506@gmail.com>,
+	<honggyu.kim@sk.com>, <leillc@google.com>, <kmanaouil.dev@gmail.com>,
+	<rppt@kernel.org>, <dave.hansen@intel.com>
+Subject: [LSF/MM/BPF TOPIC] Unifying sources of page temperature information
+ - what info is actually wanted?
+Message-ID: <20250131130901.00000dd1@huawei.com>
+In-Reply-To: <20250131122803.000031aa@huawei.com>
+References: <20250123105721.424117-1-raghavendra.kt@amd.com>
+	<20250131122803.000031aa@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250131084045.2874-1-jose.exposito89@gmail.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekkeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedufeehgfefieeileeukeetfeduvdeiffeuhfdvleevfeefveelueduleeftdejteenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohhuihhsqdgthhgruhhvvghtqdhlrghpthhophdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvgedprhgtphhtthhopehjohhsvgdrvgigphhoshhithhokeelsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopegrrhhthhhurhhgrhhilhhlohesrhhishgvuhhprdhnvghtpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepughri
- hdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhgvrhgvmhhivgdruggruhhthhgvrhhisggvshessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: louis.chauvet@bootlin.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 31/01/25 - 09:40, José Expósito wrote:
-> Hi Louis,
-> 
-> Thanks a lot for the patches.
-> 
-> I'm not well versed in YUV color formats, so I did my best reading the kernel
-> documentation before reviewing this series... But I'll most likely ask some
-> basic/dump questions.
-> 
-> > From: Arthur Grillo <arthurgrillo@riseup.net>
-> > 
-> > VKMS has support for YUV formats now. Remove the task from the TODO
-> > list.
-> > 
-> > Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
-> > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> > ---
-> >  Documentation/gpu/vkms.rst | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
-> > index ba04ac7c2167a9d484c54c69a09a2fb8f2d9c0aa..13b866c3617cd44043406252d3caa912c931772f 100644
-> > --- a/Documentation/gpu/vkms.rst
-> > +++ b/Documentation/gpu/vkms.rst
-> > @@ -122,8 +122,7 @@ There's lots of plane features we could add support for:
-> >  
-> >  - Scaling.
-> >  
-> > -- Additional buffer formats, especially YUV formats for video like NV12.
-> > -  Low/high bpp RGB formats would also be interesting.
-> > +- Additional buffer formats. Low/high bpp RGB formats would be interesting.
-> 
-> I see that you implemented support for 6 DRM_FORMAT_NV* formats, but
-> DRM_FORMAT_NV15, DRM_FORMAT_NV20 and DRM_FORMAT_NV30 are not implemented.
-> 
-> The same applies to DRM_FORMAT_Y210 or DRM_FORMAT_YUV410 among others.
-> 
-> Could it be useful to implement all of them in the future? If so, should we add
-> it to the ToDo list?
+On Fri, 31 Jan 2025 12:28:03 +0000
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-I don't think we need "all of them" (there are ≈100 + all the modifiers), 
-but definitly all the commonly used ones (I have some of the "common" one 
-ready here [1], I just wait for the YUV series to be accepted to avoid 
-conflicts).
+> > Here is the list of potential discussion points:  
+> ...
+> 
+> > 2. Possibility of maintaining single source of truth for page hotness that would
+> > maintain hot page information from multiple sources and let other sub-systems
+> > use that info.  
+> Hi,
+> 
+> I was thinking of proposing a separate topic on a single source of hotness,
+> but this question covers it so I'll add some thoughts here instead.
+> I think we are very early, but sharing some experience and thoughts in a
+> session may be useful.
 
-> It might be a great task to get started in kernel development, as there are
-> already similar examples and tests.
+Thinking more on this over lunch, I think it is worth calling this out as a
+potential session topic in it's own right rather than trying to find
+time within other sessions.  Hence the title change.
 
-I don't think we need to specify which format are missing, the point 
-"Additionnal buffer formats. [...]" seems sufficient. If you think this is 
-relevant, I can add "Easy task" so beginners will find it easier?
- 
-[1]:https://lore.kernel.org/all/20241122-b4-new-color-formats-v3-0-23f7776197c9@bootlin.com/
+I think a session would start with a brief listing of the temperature sources
+we have and those on the horizon to motivate what we are unifying, then
+discussion to focus on need for such a unification + requirements 
+(maybe with a straw man).
 
-> >  
-> >  - Async updates (currently only possible on cursor plane using the legacy
-> >    cursor api).
-> > 
+> 
+> What do the other subsystems that want to use a single source of page hotness
+> want to be able to find out? (subject to filters like memory range, process etc)
+> 
+> A) How hot is page X?  
+> - Is this useful, or too much data? What would use it?
+>   * Application optimization maybe. Very handy for developing algorithms
+>     to do the rest of the options here as an Oracle!
+> - Provides both the cold and hot end of the scale, but maybe measurement
+>   techniques vary and can not be easily combined. Hard in general to combine
+>   multiple sources of truth if aiming for an absolute number.
+> 
+> B) Which pages are super hot?
+> - Probably these that make the most difference if they are in a slower memory tier.
+> 
+> C) Some pages are hot enough to consider moving?
+> - This may be good enough to get the key data into the fast memory over time.
+> - Can combine sources of info as being able to compare precise numbers doesn't matter.
+> 
+> D) Which pages are fairly cold?
+> - Likewise maybe good enough over time.
+> 
+> E) Which pages are very cold?
+> - Ideal case for tiering. Swap these with the super hot ones.
+> - Maybe extra signal for swap / zswap etc
+> 
+> F) Did these hot pages remain hot (and same for cold)
+> - This is needed to know when to back off doing things as we have unstable
+>   hotness (two phase applications are a pain for this), sampling a few
+>   pages may be fine.
+> 
+> Messy corners:
+> 
+> Temporal aspects.
+> - If only providing lists of hottest / coldest in last second, very hard
+>   to find those that are of a stable temperature. We end up moving
+>   very hot data (which is disruptive) and it doesn't stay hot.
+> - Can reduce that affect by long sampling windows on some measurement approaches
+>   (on hardware trackers that can trash accuracy due to resource exhaustion
+>    and other subtle effects).
+> - bistable / phase based applications are a pain but perhaps up to higher
+>   levels to back off.
+> 
+> My main interest is migrating in tiered systems but good to look at what
+> else would use a common layer.
+> 
+> Mostly I want to know something that is useful to move, and assume convergence
+> over the long term with the best things to move so to me the ideal layer has
+> following interface (strawman so shoot holes in it!):
+> 
+> 1) Give me up to X hotish pages from a slow tier (greater than a specific measure
+> of temperature)
+> 2) Give me X coldish pages a faster tier.
+> 3) I expect to ask again in X seconds so please have some info ready for me!
+> 4) (a path to get an idea of 'unhelpful moves' from earlier iterations - this
+>     is bleeding the tiering application into a shared interface though).
+> 
+> If we have multiple subsystems using the data we will need to resolve their
+> conflicting demands to generate good enough data with appropriate overhead.
+> 
+> I'd also like a virtualized solution for case of hardware PA trackers (what
+> I have with CXL Hotness Monitoring Units) and classic memory pool / stranding
+> avoidance case where the VM is the right entity to make migration decisions.
+> Making that interface convey what the kernel is going to use would be an
+> efficient option. I'd like to hide how the sausage was made from the VM.
+> 
+> Jonathan
+> 
+
