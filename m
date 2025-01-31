@@ -1,100 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35713D66
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738342251; cv=none; b=LTbYu7gaUsX8Ijw8F07AlJvIZ3/oKNX7zmSeIBSBe/yEsapYjPOFp+FKSXXPIQpQ4yjDdilNr9YNIajeLC5lyuoQ7FawHGTvVwGYADc0lCIcf47ry5KYz3G+e3Q5Y7mwuvDVo6O1KdW6V7TrPx08eph/NunFWEJH/nkVApVzJ74=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738342251; c=relaxed/simple;
-	bh=Y2B3nYXxQT5lYBuSQYYMv+4YZzmI5syScbq1opeNXtg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rns/D71q/+b3deS+abq4nfwFYw8M3nlrEciog4D4deEct2LQlurbwP0vv0Z3auEfG8JRbLqFuGbJI834VnsV3bmnsoHDZjtalM5FjmbVvTv2Uu4p2whIsIYU3/0tvj9XXB9ySFydjUkOT1/DABst0jYJl6kGl8hvFRuCtbdF1zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XfRojqE2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D40335C7;
+	Fri, 31 Jan 2025 16:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738342316; cv=pass; b=dVPmCyzO1C3okr2MWRpVzEvzsgRI32GDnLdyC0EkXQdL3qWKFkll5fWlUdIc5QNN8iOym2lk9iEYYMCQJsoQIGeq2PscKeP0LC9JMo6VkYBV+sDIgJqEsP6icQ8zHZ27ErTsGYKEeLC6sSxxOEz6lG5jIFRkrygtGdi+84ZclJU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738342316; c=relaxed/simple;
+	bh=x1iGMUUcu6wW19i38W2Ur4xL3NEUn11Mon/ruDx06w4=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=adUGl8+faGcISP1LAFUvW6y9pm/Sqg9udF3O4yQ6iOds2TMPVPPvJrHgN0koSqi+IudbXA4OXjpz+ejPJj1cRuHRRgscGPsA9d9ahT6iJJ4cbRyDWPoTLGvOL19pTsqsxrr3SVdPotIH6EdHsws66Qpxcp1Di7NtdGx47hj7F0o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=JdVYhf/b; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XfRojqE2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738342248;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=P09bdCpD6xxHO+8F3NMZflHFCzEaRC++QP8olA1L6Dg=;
-	b=XfRojqE2WimVS6W+ooh2LsIGSdJ8NEA9sq7tnplf7kKNMBjf2vWrgrWKlF+WP/0pVr4HUA
-	Mt7V1Q/QNQ25vLfbqWqpWrYX7408eJ/evSWno9kJsNiqWLrszeDpIgWKiv6d0ceW1+AwdW
-	64T6ftF0Uvy9Y7g6jpakKZiqEpUFPq8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-516-rtQN7VerPUWJJcf12oIC-g-1; Fri,
- 31 Jan 2025 11:50:44 -0500
-X-MC-Unique: rtQN7VerPUWJJcf12oIC-g-1
-X-Mimecast-MFC-AGG-ID: rtQN7VerPUWJJcf12oIC-g
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D11F118009A8;
-	Fri, 31 Jan 2025 16:50:42 +0000 (UTC)
-Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.80.150])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4D55719560AA;
-	Fri, 31 Jan 2025 16:50:40 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will.deacon@arm.com>,
-	Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH] locking/lockdep: Disable KASAN instrumentation of lockdep.c
-Date: Fri, 31 Jan 2025 11:50:20 -0500
-Message-ID: <20250131165020.878944-1-longman@redhat.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="JdVYhf/b"
+ARC-Seal: i=1; a=rsa-sha256; t=1738342281; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=UKyPXxorTljd50l3LPX8kNLdeMYZ96RAImkSFORSFwI+AkJd2aWJgYY8nHi44zRA9Oj9at5JVF43dkm8Q812+bU4ujqqzml889LVbi5t2o968Rbxq/djpJ1i3WCJt9MlRzwNoKLSlwi6gnQ06U4OWb9Wk5SIhAwVUk0D2LPCE/o=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738342281; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=AkBxWUIcT550OcxCFzVpvE5imOg6AQ2vl9Nfme++Cjs=; 
+	b=KOpave80XJxye8HUI/YBzj1IBFYvO5n/LK+eGiq0qi1RXd2r7X4RNf/OPRqCukwEF6rwdsXZsHQgMRkZV9xqKDiigmKv0nsG+3UOFp26F+XVfTrFO+nU9UiD9x/JW0VYsKOquv/jEt3XyCFSOc4OYW/SAiz0ojf47EuyEZo5ZRQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
+	dmarc=pass header.from=<Usama.Anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738342281;
+	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=AkBxWUIcT550OcxCFzVpvE5imOg6AQ2vl9Nfme++Cjs=;
+	b=JdVYhf/b2uwkeydaEbsvLMGaFS+sXiidlRg5T2Dy7bGBUcq6XNpBjhCTVX/G4GmB
+	fCvmR6tUmnFwo4rcYRGGXT3Wr65aMJ65UP2SQhfnhw8HGGLCmleJ1SsBrw5yutxNW5S
+	dOhoPebMZ75U/OB2rbedhZvhwDD/t4PqmMqoxN6Q=
+Received: by mx.zohomail.com with SMTPS id 1738342249812409.59874149103837;
+	Fri, 31 Jan 2025 08:50:49 -0800 (PST)
+Message-ID: <c9a01789-278b-4590-853f-9012a33541b2@collabora.com>
+Date: Fri, 31 Jan 2025 21:51:05 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+User-Agent: Mozilla Thunderbird
+Cc: Usama.Anjum@collabora.com, patches@lists.linux.dev,
+ linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+ akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+ patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+ jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+ srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+ hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.6 00/43] 6.6.75-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+References: <20250130133458.903274626@linuxfoundation.org>
+Content-Language: en-US
+From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
+In-Reply-To: <20250130133458.903274626@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Both KASAN and LOCKDEP are commonly enabled in building a debug kernel.
-Each of them can significantly slow down the speed of a debug kernel.
-Enabling KASAN instrumentation of the LOCKDEP code will further slow
-thing down.
+On 1/30/25 6:59 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.75 release.
+> There are 43 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 01 Feb 2025 13:34:42 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.75-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+OVERVIEW
 
-Since LOCKDEP is a high overhead debugging tool, it will never get
-enabled in a production kernel. The LOCKDEP code is also pretty mature
-and is unlikely to get major changes. There is also a possibility of
-recursion similar to KCSAN. As the small advantage of enabling KASAN
-instrumentation to catch potential memory access error is probably
-not worth the drawback of further slowing down a debug kernel, disable
-KASAN instrumentation to enable a debug kernel to gain a little bit of
-speed back.
+        Builds: 40 passed, 0 failed
 
-With a debug kernel with both LOCKDEP and KASAN enabled running on a
-2-socket 144-thread system, the time to do a "make -j144" kernel build
-was 18m40.641s. After applying this patch, the parallel kernel build
-time was reduced to 17m35.136s. This is a reduction of about 66s (5.8%).
+    Boot tests: 625 passed, 1 failed
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/locking/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+    CI systems: broonie, maestro
 
-diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
-index 0db4093d17b8..8a588b0227b1 100644
---- a/kernel/locking/Makefile
-+++ b/kernel/locking/Makefile
-@@ -6,6 +6,7 @@ KCOV_INSTRUMENT		:= n
- obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
- 
- # Avoid recursion lockdep -> sanitizer -> ... -> lockdep.
-+KASAN_SANITIZE_lockdep.o := n
- KCSAN_SANITIZE_lockdep.o := n
- 
- ifdef CONFIG_FUNCTION_TRACER
--- 
-2.48.1
+REVISION
 
+    Commit
+        name: v6.6.74-44-g2c44b59139a8
+        hash: 2c44b59139a8bd89a50d82ca7f695ca18d867362
+    Checked out from
+        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+
+
+BUILDS
+
+    No build failures found
+
+BOOT TESTS
+
+    Failures
+
+      i386:(defconfig)
+      -hp-14b-na0052xx-zork
+	https://kcidb.kernelci.org/d/test/test?var-datasource=edquppk2ghfcwc&var-origin=$__all&var-build_architecture=$__all&var-build_config_name=$__all&var-id=maestro:679b96be65fae3351e30f0f9&from=now-100y&to=now&timezone=browser&var-test_path=&var-issue_presence=$__all
+      CI system: maestro
+
+See complete and up-to-date report at:
+
+    https://kcidb.kernelci.org/d/revision/revision?orgId=1&var-git_commit_hash=2c44b59139a8bd89a50d82ca7f695ca18d867362&var-patchset_hash=
+
+
+Tested-by: kernelci.org bot <bot@kernelci.org>
+
+Thanks,
+KernelCI team
