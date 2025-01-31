@@ -1,104 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14801CA81;
-	Fri, 31 Jan 2025 10:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFC71CA81
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 10:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738320510; cv=none; b=LfL56rxMDvCKKIOawYiN22qVBHufC37iDAex2wAhHcoyoenQJUIWC3b2Lw7DdLzJo0rj9lK2ZZvj96IGHk6CvgmNMm0P73wtkDvA8j8IrOZm9hzZgEWVeeFfAmoATVt7V3lvNVm8FahQ9VMww/oPChAG8itDm9UJ6X/x/rWUmh8=
+	t=1738320557; cv=none; b=QVDw+VVsmfw1cJz8uF9TJqCF1wrAOn2/ObiC2EW6vbaOZgPY6StCKl6C5IDX/PHKFfDMBHI/8wXwUKIgAiaj0oVuYZ4JequyglfOJilCBt157U7oIyiViROX2uz1H4aMv96haFX6dKAyDQjIX2B3hFjgGDvDMSQmi0a99oGQigU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738320510; c=relaxed/simple;
-	bh=mbcVU4/KYOCDqVBfV1Wmm4rFmFhpD+8bSrlKxn6+4W4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h7XTXn4LbLBdFF3CzRLMExfgYMmMGbnQ4cFlRxlR3tCpNhvmlEzUlqEYDn/Uib3cBwnZlgvZtYKJki2ZEpesNflNIa0vcU38DhEkv2XJkBdtjvp5HMj8QIsTeSySxMwidiYl+NySfCYXpZT/L7wbgQC4SxsflAPv2lvSNNsoZoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iS6idcDf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738320557; c=relaxed/simple;
+	bh=IIYKwK6gZm3RIvkU5BV1j672fhQTKpiM8TLnp77ECi0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YuhzwSBfl0d6rIJEmjfDq/owoM7OOf37syb75IXIIOxY3Gd0RnwQdk4wz9rBdKDKNIi70a7Xncadv0AGVGy2q2G+P5RSxW20Y2rGR8nK2DXkJADEcPxW7UsntUqz3rTL8UeWnpZcnmVZNVFXXCi7utw2kcEe5V1dltvvoGsK0mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=TNNHzvuj; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iS6idcDf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB62C4CED1;
-	Fri, 31 Jan 2025 10:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738320510;
-	bh=mbcVU4/KYOCDqVBfV1Wmm4rFmFhpD+8bSrlKxn6+4W4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iS6idcDf46+1ZF0QPrJ+mG6y2lhOW6+egN5YwY6JjbkD7H9br1Gbfwrm3ePhfjBnL
-	 tGRSEtp5FumQLHq+0ucmY79PH0w2/Ps8t5qIhkEOPLL/HxrJzZEsLc4BqDgyrU3B66
-	 9NpuGRVrVvIrXAJFzgHFyTSEXY9SNtrLBNhzqvF4=
-Date: Fri, 31 Jan 2025 11:48:27 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Baoqi Zhang <zhangbaoqi@loongson.cn>
-Subject: Re: [PATCH] USB: pci-quirks: Fix HCCPARAMS register error for LS7A
- EHCI
-Message-ID: <2025013107-droplet-reset-127e@gregkh>
-References: <20250131100651.343015-1-chenhuacai@loongson.cn>
+	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="TNNHzvuj"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ee76befe58so3186406a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 02:49:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=futuring-girl.com; s=google; t=1738320554; x=1738925354; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NBZYZHrEvu4xGP6oPB0bXa2YOEKtC4uPTQviRrKj7b8=;
+        b=TNNHzvujLitZaC0N3syaPn552nxs0PmFz9PrxtWPDxcZlSGqCv2QHKR5sYrk77bsU7
+         7dpr2LJ4qmkPGpLiPCITOa264kdzsk+I2QYYxsGJ3hKo6dNqtyemeLSS5DhL6c5/IZv6
+         7W6EZjhNQZ9mRhhYSCHQHrt7u+LpZy0C03j/FPNmbY9csSNZ9OKkZkQSRr0jIPQ8IGHv
+         ND/W0zg0bIOk6cxtSneGLWGg1om3R/fy6MukY6gYQWT/4EyE8Gdpk+cH98lHhzuXl5It
+         4qFWlFgf4LtGs8/32az2qcM0/qxtjWtG7dw342Y/bdrCRGrU4BYPGAo+9kieXYqo5fQT
+         u7eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738320554; x=1738925354;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NBZYZHrEvu4xGP6oPB0bXa2YOEKtC4uPTQviRrKj7b8=;
+        b=DHx2McJ2fk1sjbnJm8tgp+iy6fZzleGLlIvsbPJBBmftAndxQET4x8yCyh8aDLIxuw
+         cyoFLM5WAhzxQ6P+DPz4pH5Ky2MqckAQgr7EU09tCy0qjbYA5ZZU3NCTL/liC6DWYb1q
+         KSYG5TfIVvt0Rt3fcyJ5OjPSZlUFjZYc0MUXAA+rH3AqCg/54D0NswVT32DvT/cClRKl
+         Mx2TaBLfcmWZ+/l/ywkGQeiZY70s9InApLbT8yDUDKJGx1b9pcKqhl5GOz/J9saCv3T+
+         tiyehFKTSU+vr4xbAdo3BIuvny8puRcNPW916qfqZNvUrADqy9/T/zRDB0nYvqeYsqa8
+         V3GA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZzFQnm/ER0dcAh2x/VvEK/cCaraOLE6xXXh9wdJT6z4zmLkebfjoHo0JU5aQGKoSbu4aBjz56FSS83HU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrcfBTqGw12jKmbnUteOsDbNM/49xh469jXLkpIL+rAtoLjdQ3
+	kyvSrYGvQKTombFC1PNwYXM0sW+HpfCEi1NGHktSNf1rNi1Fxqk0NXFqLjBvKT2k2quNwDbvCOS
+	TefTEdqUo8NvtOKW3QwlblKKeVHDiaq3qXtTx8A==
+X-Gm-Gg: ASbGncvvBSExaw/wCqTLNNRXpljXbAPDjqaBlzPoX76IdSKq6f6TtjiCMfNTulPzlXr
+	BVsVh9S0CcyTUOB1CCa3+Amdtf4u/WdURbdUjuZ7aOxTG077F2weY5VYbug4iuPdUGMFnk/3u
+X-Google-Smtp-Source: AGHT+IFKMXzXc4z9qRfH0nkfTgT5sHmXwdaig0w8m4WIvvOQeXzdGBoKKtImAcaIob7KYzCEPrYtBvH67mycnh7TPDw=
+X-Received: by 2002:a17:90b:2743:b0:2ee:48bf:7dc9 with SMTP id
+ 98e67ed59e1d1-2f83ac0068cmr16801592a91.15.1738320554447; Fri, 31 Jan 2025
+ 02:49:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131100651.343015-1-chenhuacai@loongson.cn>
+References: <20250130144136.126780286@linuxfoundation.org>
+In-Reply-To: <20250130144136.126780286@linuxfoundation.org>
+From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+Date: Fri, 31 Jan 2025 19:49:03 +0900
+X-Gm-Features: AWEUYZmlkcZeCyYCkqXYCWF1l8nqyTSyhAYJRU0GENQ8PIYwKOuQ7t-L7mtJL6E
+Message-ID: <CAKL4bV6=tBX95okqxpYJy8WqdWEsteb3+uK65Zf1xV+K8y-Gwg@mail.gmail.com>
+Subject: Re: [PATCH 6.12 00/41] 6.12.12-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 31, 2025 at 06:06:51PM +0800, Huacai Chen wrote:
-> LS7A EHCI controller doesn't have extended capabilities, so the EECP
-> (EHCI Extended Capabilities Pointer) field of HCCPARAMS register should
-> be 0x0, but it reads as 0xa0 now. This is a hardware flaw and will be
-> fixed in future, now just clear the EECP field to avoid error messages
-> on boot:
-> 
-> ......
-> [    0.581675] pci 0000:00:04.1: EHCI: unrecognized capability ff
-> [    0.581699] pci 0000:00:04.1: EHCI: unrecognized capability ff
-> [    0.581716] pci 0000:00:04.1: EHCI: unrecognized capability ff
-> [    0.581851] pci 0000:00:04.1: EHCI: unrecognized capability ff
-> ......
-> [    0.581916] pci 0000:00:05.1: EHCI: unrecognized capability ff
-> [    0.581951] pci 0000:00:05.1: EHCI: unrecognized capability ff
-> [    0.582704] pci 0000:00:05.1: EHCI: unrecognized capability ff
-> [    0.582799] pci 0000:00:05.1: EHCI: unrecognized capability ff
-> ......
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  drivers/usb/host/pci-quirks.c | 4 ++++
->  include/linux/pci_ids.h       | 1 +
->  2 files changed, 5 insertions(+)
-> 
-> diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-> index 1f9c1b1435d8..7e3151400a5e 100644
-> --- a/drivers/usb/host/pci-quirks.c
-> +++ b/drivers/usb/host/pci-quirks.c
-> @@ -958,6 +958,10 @@ static void quirk_usb_disable_ehci(struct pci_dev *pdev)
->  	 * booting from USB disk or using a usb keyboard
->  	 */
->  	hcc_params = readl(base + EHCI_HCC_PARAMS);
-> +	if (pdev->vendor == PCI_VENDOR_ID_LOONGSON &&
-> +	    pdev->device == PCI_DEVICE_ID_LOONGSON_EHCI)
-> +		hcc_params &= ~(0xffL << 8);
-> +
->  	offset = (hcc_params >> 8) & 0xff;
->  	while (offset && --count) {
->  		pci_read_config_dword(pdev, offset, &cap);
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index de5deb1a0118..74a84834d9eb 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -162,6 +162,7 @@
->  
->  #define PCI_VENDOR_ID_LOONGSON		0x0014
->  
-> +#define PCI_DEVICE_ID_LOONGSON_EHCI     0x7a14
+Hi Greg
 
-If you read the top of this file, does this patch meet the requirement
-to add this entry here to this file?
+On Thu, Jan 30, 2025 at 11:42=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.12 release.
+> There are 41 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 01 Feb 2025 14:41:19 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.12.12-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-thanks,
+6.12.12-rc2 tested.
 
-greg k-h
+Build successfully completed.
+Boot successfully completed.
+No dmesg regressions.
+Video output normal.
+Sound output normal.
+
+Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
+
+[    0.000000] Linux version 6.12.12-rc2rv
+(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 14.2.1 20240910, GNU ld (GNU
+Binutils) 2.43.1) #1 SMP PREEMPT_DYNAMIC Fri Jan 31 19:24:31 JST 2025
+
+Thanks
+
+Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
