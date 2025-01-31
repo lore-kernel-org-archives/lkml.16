@@ -1,48 +1,56 @@
-Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CE28467;
-	Fri, 31 Jan 2025 15:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5A51D0E2B
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 15:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738338972; cv=none; b=SAWVSpMF3kyR6B2s/HnpqSaZN2BTcdp+0YfMzWCbUPDZgsKIYq+5rbFd/rRNEWh3s7UENNoONs6sDkXqk8ij/xkpsLjnFHBUGK9aqYOOdnuXngQfL7HasQRpGfeWALJgC4ZmNPf5Wd3Ch+PkBZ2PeBZRXle+A9n9zjOIU9SRhZQ=
+	t=1738338997; cv=none; b=o+SGwVLzkAUzWDQceh+VjlwLTxD87yL+3lcS7IFYvSy1byi3BoX1wvqbl3mPylVtXGNZ+NlXYsl7iuP79/pzcHnjkq9yoHiOCEegiG5mLuTopJ2zinL0WxvIJRlSNQXW22FLvcqNYfzKE4MhRL0246YSxFAKG5Z/uSfYNX6O9hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738338972; c=relaxed/simple;
-	bh=AlvTp2e7ygReRno3yDhEOsCWB+UbBbU+N0HN5GEHHYA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U02c9wLam06NZpr9p3g22wjUJl/F7RRfzoLacV/6fRxZynFLk0pV/TUdLCNog3s3qbHCjM/BOpC1tyOYw6MdOnkZfqsmMim2qT1mBtKu3hcLJETvl7usmz06QO69bEu9SSQKP50SrNrQ8AfUuphsg6GfUUQuNCaTfXNhhbE/iQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=QvVIZAK4; arc=none smtp.client-ip=178.154.239.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="QvVIZAK4"
-Received: from mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:3b05:0:640:71ba:0])
-	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 29B4C60E97;
-	Fri, 31 Jan 2025 18:54:38 +0300 (MSK)
-Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:b507::1:c])
-	by mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 4si9xF0IYSw0-HFZZSi0r;
-	Fri, 31 Jan 2025 18:54:37 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1738338877;
-	bh=mbcYtgUlY1C77x8spKxz3wyMkgYGxe6OWqM5gvL8y88=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=QvVIZAK4vpXHY6xCv8qPsxByyoObl6R4v1uaPSs7URPS06724ZfFzph+/xqQgkPZV
-	 I/xYmyYmnHEUeGjuuCZPpkN8bAWDe+6BSfyEnf1wI/IY3d2AOwSjigfm03t6GWBal6
-	 MidHWVHHvYV1/+zTbVuIFR7Pg9n5auJDdK5DnjwQ=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Nikolay Kuratov <kniv@yandex-team.ru>
-To: linux-kernel@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	Wen Yang <wenyang@linux.alibaba.com>,
+	s=arc-20240116; t=1738338997; c=relaxed/simple;
+	bh=qhCrUkDqu+tuJIZICP6qRSOgEasfDCrNHQhsdKnSHzQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=eU7X1TgnKqCvfRkuTZA62mAz2bT5e2hHgUGfs208S7ESkh5FjKGFZyzvyZwlQ4YUJNvr+8JlQ9HTMye+cOyqgS/lX2+dBjyCDNbj1GhXu9MVgOBu2mamGM9nH6fITbKXxGlN5UqGwP/IP+kTQNgIL/TGjLoxcUz0b6R80W7AZg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-436a03197b2so15116715e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:56:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738338994; x=1738943794;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zx/xRUX7FtEOkTeqBTekDHvL5rbcYjwkX4K5fk2Dbwo=;
+        b=bNhvBaTTMgvVU7ejGOMA8h+GhXYEFDa4+dNibSVukuNpOFVe1CBemY8YNT2ImT+jwq
+         XQroXpvg+TNPQyqm7hXk57SK3UPs7cG80TVWOXpzEefxhuAhk81wOR66HzMR4Rg498a7
+         9iyfmwkKRnW4EfvXAr+cCcXIRoPfFkO/JqPH78YlCecQ6nnWZTWSDhfdyfrfBGmT3Wrt
+         n5Ve/vR9aWcY63AxJLWS0cJHNMxM2/7NVT70mdLxePwal1esQT0XyHzrl3UEYLqTYMBq
+         GBJe9nM/yg/gTEGmmb25Y6Nq0mUIRPQILOkWesrFMdH6MYe6ux/Fi3RaadBKD6NOXl6X
+         G6fw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+kycuk1DPP6nKbD4M+Z/ZNHBYcV5SjKQwIurT0AeVjHMrm+e3nFG0OiEJdqBIexxxXb97W1dlED3L50A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsE76DAJNKDvqUy8S122g7U9e/5lHZY71wyLvb1eKArfbVXPjJ
+	TnHxU3kqmJdLIkPKqyEwaj+8QpoU9jaix5VS7WbeJMxIIGvrN/c3
+X-Gm-Gg: ASbGncusbs2Uo4dlq9l5rDPSghdso/YtWlPv8YDjxzA/aDPQji7i0ihTet35/OLAvxl
+	jXwxeTv9Bcm4r1r7aOcM6FANyW9VpZh+K1MhIVDVn7uKeOECoMSbr2iZ7rfLsoZxp+wkFLp8jpA
+	KJLAO+m9v+AJXN/YF/FkB1zHbuPhHEX2X+iNOsK8uFPV/H9XMzvChG433wen+trflyzMXmUYsyZ
+	85pP1r3DPH/LewWorYYfDPdssKqp3jsUHE/s/HTRP9pGnCiZrzBvvSHDADiugZbPV333py/oFeW
+	C9Zrf1yPXI3Sd78fjTJxl6MrdYIYWg==
+X-Google-Smtp-Source: AGHT+IHCGPC1E5MTxqsL+RTkF+xGS32bN7kIrNxD8Sjj4Bmt3XzYrjQ647+b2/mACplxUitOrrirdQ==
+X-Received: by 2002:a05:600c:524a:b0:42a:a6d2:3270 with SMTP id 5b1f17b1804b1-438dc410c08mr96537465e9.21.1738338993571;
+        Fri, 31 Jan 2025 07:56:33 -0800 (PST)
+Received: from costa-tp.bos2.lab ([2a00:a041:e280:5300:9068:704e:a31a:c135])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2f73asm95153505e9.24.2025.01.31.07.56.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 07:56:33 -0800 (PST)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Costa Shulyupin <costa.shul@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Nikolay Kuratov <kniv@yandex-team.ru>,
-	stable@vger.kernel.org
-Subject: [PATCH] ftrace: Avoid potential division by zero in function_stat_show()
-Date: Fri, 31 Jan 2025 18:53:46 +0300
-Message-Id: <20250131155346.1313580-1-kniv@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] scripts/tags.sh: tag SYM_*START*() assembler symbols
+Date: Fri, 31 Jan 2025 17:54:30 +0200
+Message-ID: <20250131155439.2025038-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,41 +59,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Cases rec->counter == {0, 1} are checked already.
+The `startup_64` symbol and many other assembler symbols are not tagged.
 
-While x * (x - 1) * 1000 = 0 have many solutions greater than 1 for both
-modulo 2^32 and 2^64, that is not the case for x * (x - 1) = 0, so split
-division into two.
+Add a generic rule to tag assembler symbols defined with macros like
+SYM_*START*(symbol).
 
-It is not scary in practice because mod 2^64 solutions are huge and
-minimal mod 2^32 solution is 30-bit number.
-
-Cc: stable@vger.kernel.org
-Fixes: e31f7939c1c27 ("ftrace: Avoid potential division by zero in function profiler")
-Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 ---
- kernel/trace/ftrace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ scripts/tags.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 728ecda6e8d4..e1c05c4c29c2 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -570,12 +570,12 @@ static int function_stat_show(struct seq_file *m, void *v)
- 		stddev = rec->counter * rec->time_squared -
- 			 rec->time * rec->time;
- 
-+		stddev = div64_ul(stddev, rec->counter * (rec->counter - 1));
- 		/*
- 		 * Divide only 1000 for ns^2 -> us^2 conversion.
- 		 * trace_print_graph_duration will divide 1000 again.
- 		 */
--		stddev = div64_ul(stddev,
--				  rec->counter * (rec->counter - 1) * 1000);
-+		stddev = div64_ul(stddev, 1000);
- 	}
- 
- 	trace_seq_init(&s);
+diff --git a/scripts/tags.sh b/scripts/tags.sh
+index 45eaf35f5bff8..98680e9cd7be3 100755
+--- a/scripts/tags.sh
++++ b/scripts/tags.sh
+@@ -146,6 +146,7 @@ dogtags()
+ #   a ^[^#] is prepended by setup_regex unless an anchor is already present
+ regex_asm=(
+ 	'/^\(ENTRY\|_GLOBAL\)([[:space:]]*\([[:alnum:]_\\]*\)).*/\2/'
++	'/^SYM_[[:alnum:]_]*START[[:alnum:]_]*([[:space:]]*\([[:alnum:]_\\]*\)).*/\1/'
+ )
+ regex_c=(
+ 	'/^SYSCALL_DEFINE[0-9]([[:space:]]*\([[:alnum:]_]*\).*/sys_\1/'
 -- 
-2.34.1
+2.47.0
 
