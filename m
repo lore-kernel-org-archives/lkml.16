@@ -1,121 +1,141 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757D91B85EC
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FA21B85EC
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738326486; cv=none; b=c5oNeOxRQd8jon1nd9N0eFqcHBuIHIfWX5tIog2lgpN3pNFe0pNuYeE+DpDPvoxheW46/Sl/w22f8Ss218H5C+F3c3xZkde6HAr1I8GWT+wqoqAq0LXXHeKMOujcrc5/BRjCJ/B92mDvfSHMUONr4lpip8uuTeLHWw3S71m/oGQ=
+	t=1738326493; cv=none; b=L9oYzktn1MKL9dYcjFUumdZZn4pAibqf3Jc634ctjrBIyAAzCqMfWCUMBYghR+3J7tOyjGh05358GH6JhdiVXBEbqf+f+mhTnKl/GosQvFQgbwsf1F5Ihh5A8UjwdQiPTE349AxbWhRXTMMpcGV7FSszYihmIREuOsFiQ71H5uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738326486; c=relaxed/simple;
-	bh=HTjPQxs2wJPTueTcwsNaBCyvNgeRX1Oz2gshXWAVnzw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r/9Hvbm9kWrCXdZqDmQvXR6jXmt8K2eqgeNBHrYXrrdcUF5rr57+Dl+hJMBC1ucws7Hj5C5Eo5auyiShSR/+S1GQFiNNfbP9h828xf8KKy1O0MhFXPyX8Ee8iriz7vojNaWSGzpbbQsyGdc9THvTZB3Bys7N7pkm3GJQgR6thqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WP1/H9Rt; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WP1/H9Rt"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aafc9d75f8bso423816566b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 04:28:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738326483; x=1738931283; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ywyi6UD7rqtgXm1cChNDwHtl6jR/rmG4MDMhtqMH1AA=;
-        b=WP1/H9RtbdwslMD0bIutMFJnby94UOSjIVHwIhMNbpoMAzFN/pBDu1IQGow5w3x6mw
-         qX2HQDsXfCXrriVRjcV7fbI8n6BdAzSnvDzjlmtBziYBNnVhDFnmeLJ2Fg7o8dY7oPVa
-         ryir9LhCTV5q76+K47XciA0/1OJdI3Z8sSV4tL1Ehu5KtkkkAZsaG0sKcBAmBH9Ak4oW
-         9QfaW0qMlvvA++YsFQYcBp4xYCy0UASGJOxfiQjfx2ePbI7OcjoYqKu7bpuiRwqOCexQ
-         piCwWvhQoFN1Zb/LLsML3MXIKq++32CXZQM9nWySG3zKeN92KxC/GfgpbxyvGoDm1MKR
-         RnUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738326483; x=1738931283;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Ywyi6UD7rqtgXm1cChNDwHtl6jR/rmG4MDMhtqMH1AA=;
-        b=DcvDq/KrGXRHRoe/udqlJFyTcuN00O0fHO/mbBRw8nAzfVLZMMmOKf9LQIhppZt9z6
-         BsFxqd8YSacCGbXgVyZFL78h4aBJKoR1SE9PD/+At/DgcGjmsVy4UdqB7GKvpzrYc2zO
-         0OmoiMxrIfCZaMkP6YPz0mAE6MyVMMOoGUBOq8rGnE5dj6NmUrQErCRsJujRcO2WhVZj
-         i8ozcUGeLS9X3LOc3m28OOHjJWNr/8P/MT6Fg/BUoSg9mpEcm3NgCrZ6rG4sV/IvZpCk
-         y91VGY4qLW45TuFq7RmMEr/2o+Gj9ntRS0JyppbNGVlGa4PkE7Z9SDWHg9Zf4Ik2g1V4
-         mtcw==
-X-Forwarded-Encrypted: i=1; AJvYcCWurTJONLk1syY1SKQwZA66iWYrfH204qBsc0P/9qBpFP3uz1C0Cc9qC+CBKc+2SBmRU/T9vIamWdLtw5M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxkUyhPyHgs9o1JjIAZriacSYSz4MBTFBravNjhNUxzHj75OXt
-	OORMLIdgsujYIzSCEBrHrI734Jv+inP0ENJiBgHPm46hCH4WIt13
-X-Gm-Gg: ASbGncu9EwVH8wFrXQAMrZchwtCCMwwpVkbJ2EIzQXM7gpVugtkUVMn39Cf7tVqhULq
-	iEYQIc5d7fyg6vUsxT4WTwORGh2N+v429laprAwFhZDzMZMo6DgdPmWBc+tQeW0TgThjQE0wk6z
-	8rkTv0kmaghMVA/xE0DqIHqg5+ZfYQ2+JZpCsfrIxewPUFXkXpcw27rIfQ2C+00G/Ilfemm/4ap
-	3bXCq8ejHkAnjdq1uePpQAAqOZ31NNuyI1gu9oPAo5vU4B3pQKgfhBovPjXknN34UBMUqyamhwF
-	8DHGAOcHyiFORLM=
-X-Google-Smtp-Source: AGHT+IFY026YOYpMFgU07wmx4azLOjyAYf4Hxy61Vh/kibLKAk506di1UvWIEFX90ZnnvJvvNQob/Q==
-X-Received: by 2002:a17:907:7e9b:b0:ab3:8a8a:d1f2 with SMTP id a640c23a62f3a-ab6cfcec5b3mr1216531466b.30.1738326482424;
-        Fri, 31 Jan 2025 04:28:02 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a31531sm287405166b.141.2025.01.31.04.28.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 Jan 2025 04:28:01 -0800 (PST)
-Date: Fri, 31 Jan 2025 12:28:01 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Scall <scall@prosemail.net>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	maple-tree@lists.infradead.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: lib/maple_tree.c:4056:1: error: the frame size of 1144 bytes is
- larger than 1024 bytes
-Message-ID: <20250131122801.rb3bid7peznbgxwg@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <60cee319-4914-4a98-b74d-32e06fb3cbd8@prosemail.net>
- <hxxufpccovvtnoypt4bukrpt4qrhiydlena5tdxqdxpmlduiii@2wac57fy4mqj>
- <8415a24a-a19e-46f6-bb56-dfd529143dd9@prosemail.net>
+	s=arc-20240116; t=1738326493; c=relaxed/simple;
+	bh=AxlAmbsbklafPezcuVaKmZgzl38ZFNWKc4FmDA9Nofw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lfKR5+hqMRYvDuuUxdYkS8SdBuNVSN2L1BNIHEPBIWPj0eJuJWelt5WUbrvZdXJBLaswQCLDOsyZ07Q9JOtuM5QRWXYKU2wSJIJh/9FOHIW3R/dLyUIJCsdpeWzyG9dtGccfJ2fN0llyoGy80JRPpQXFX4g3NGQZGsXhbWkbDGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ykw932TKzz6M4NV;
+	Fri, 31 Jan 2025 20:25:59 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9BF571400DB;
+	Fri, 31 Jan 2025 20:28:07 +0800 (CST)
+Received: from localhost (10.195.244.178) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 31 Jan
+ 2025 13:28:05 +0100
+Date: Fri, 31 Jan 2025 12:28:03 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Raghavendra K T <raghavendra.kt@amd.com>
+CC: <linux-mm@kvack.org>, <akpm@linux-foundation.org>,
+	<lsf-pc@lists.linux-foundation.org>, <bharata@amd.com>, <gourry@gourry.net>,
+	<nehagholkar@meta.com>, <abhishekd@meta.com>, <ying.huang@linux.alibaba.com>,
+	<nphamcs@gmail.com>, <hannes@cmpxchg.org>, <feng.tang@intel.com>,
+	<kbusch@meta.com>, <Hasan.Maruf@amd.com>, <sj@kernel.org>,
+	<david@redhat.com>, <willy@infradead.org>, <k.shutemov@gmail.com>,
+	<mgorman@techsingularity.net>, <vbabka@suse.cz>, <hughd@google.com>,
+	<rientjes@google.com>, <shy828301@gmail.com>, <liam.howlett@oracle.com>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <nadav.amit@gmail.com>,
+	<shivankg@amd.com>, <ziy@nvidia.com>, <jhubbard@nvidia.com>,
+	<AneeshKumar.KizhakeVeetil@arm.com>, <linux-kernel@vger.kernel.org>,
+	<jon.grimm@amd.com>, <santosh.shukla@amd.com>, <Michael.Day@amd.com>,
+	<riel@surriel.com>, <weixugc@google.com>, <leesuyeon0506@gmail.com>,
+	<honggyu.kim@sk.com>, <leillc@google.com>, <kmanaouil.dev@gmail.com>,
+	<rppt@kernel.org>, <dave.hansen@intel.com>
+Subject: Re: [LSF/MM/BPF TOPIC] Overhauling hot page detection and promotion
+ based on PTE A bit scanning
+Message-ID: <20250131122803.000031aa@huawei.com>
+In-Reply-To: <20250123105721.424117-1-raghavendra.kt@amd.com>
+References: <20250123105721.424117-1-raghavendra.kt@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8415a24a-a19e-46f6-bb56-dfd529143dd9@prosemail.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi, Scall
 
-On Thu, Jan 30, 2025 at 11:31:50PM +0100, Scall wrote:
->On 1/30/25 5:13 PM, Liam R. Howlett wrote:
->> Do you have KASAN or lock debugging on?
->
->No, I don't.
->
->> Does the issue go away when reverting 8c7904a8cd0df ("maple_tree: i is
->> always less than or equal to mas_end") ?
->
->That commit has not been backported to the kernel version I tried to build
->(6.12.11, currently the latest stable version).
+> Here is the list of potential discussion points:
+...
 
-Is there a public git tree to get the code you do build?
+> 2. Possibility of maintaining single source of truth for page hotness that would
+> maintain hot page information from multiple sources and let other sub-systems
+> use that info.
+Hi,
 
->
->Good news: I learned that the issue has already been solved in the mainline
->version with commit 5059aa6334fcf ("maple_tree: memset maple_big_node as a
->whole") and backporting it is the solution.
+I was thinking of proposing a separate topic on a single source of hotness,
+but this question covers it so I'll add some thoughts here instead.
+I think we are very early, but sharing some experience and thoughts in a
+session may be useful.
 
-Or, is it possible to list the last several commits of file lib/maple_tree.c
-so that I can reproduce it on my side.
+What do the other subsystems that want to use a single source of page hotness
+want to be able to find out? (subject to filters like memory range, process etc)
 
-I guess maybe I can try to reproduce this with:
+A) How hot is page X?  
+- Is this useful, or too much data? What would use it?
+  * Application optimization maybe. Very handy for developing algorithms
+    to do the rest of the options here as an Oracle!
+- Provides both the cold and hot end of the scale, but maybe measurement
+  techniques vary and can not be easily combined. Hard in general to combine
+  multiple sources of truth if aiming for an absolute number.
 
-   * set CONFIG_FRAM_WARN to 1024
-   * set KCFLAGS="-O3"
+B) Which pages are super hot?
+- Probably these that make the most difference if they are in a slower memory tier.
 
-I would try to take a look first.
+C) Some pages are hot enough to consider moving?
+- This may be good enough to get the key data into the fast memory over time.
+- Can combine sources of info as being able to compare precise numbers doesn't matter.
 
-Is the GCC version matters? I don't have the exact version at hand. Have you
-tried other version?
+D) Which pages are fairly cold?
+- Likewise maybe good enough over time.
 
--- 
-Wei Yang
-Help you, Help me
+E) Which pages are very cold?
+- Ideal case for tiering. Swap these with the super hot ones.
+- Maybe extra signal for swap / zswap etc
+
+F) Did these hot pages remain hot (and same for cold)
+- This is needed to know when to back off doing things as we have unstable
+  hotness (two phase applications are a pain for this), sampling a few
+  pages may be fine.
+
+Messy corners:
+
+Temporal aspects.
+- If only providing lists of hottest / coldest in last second, very hard
+  to find those that are of a stable temperature. We end up moving
+  very hot data (which is disruptive) and it doesn't stay hot.
+- Can reduce that affect by long sampling windows on some measurement approaches
+  (on hardware trackers that can trash accuracy due to resource exhaustion
+   and other subtle effects).
+- bistable / phase based applications are a pain but perhaps up to higher
+  levels to back off.
+
+My main interest is migrating in tiered systems but good to look at what
+else would use a common layer.
+
+Mostly I want to know something that is useful to move, and assume convergence
+over the long term with the best things to move so to me the ideal layer has
+following interface (strawman so shoot holes in it!):
+
+1) Give me up to X hotish pages from a slow tier (greater than a specific measure
+of temperature)
+2) Give me X coldish pages a faster tier.
+3) I expect to ask again in X seconds so please have some info ready for me!
+4) (a path to get an idea of 'unhelpful moves' from earlier iterations - this
+    is bleeding the tiering application into a shared interface though).
+
+If we have multiple subsystems using the data we will need to resolve their
+conflicting demands to generate good enough data with appropriate overhead.
+
+I'd also like a virtualized solution for case of hardware PA trackers (what
+I have with CXL Hotness Monitoring Units) and classic memory pool / stranding
+avoidance case where the VM is the right entity to make migration decisions.
+Making that interface convey what the kernel is going to use would be an
+efficient option. I'd like to hide how the sausage was made from the VM.
+
+Jonathan
