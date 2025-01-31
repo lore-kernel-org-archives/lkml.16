@@ -1,167 +1,299 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DF91C461F;
-	Fri, 31 Jan 2025 13:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A337B1DFF0;
+	Fri, 31 Jan 2025 13:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738329155; cv=none; b=EuD9dq5jPmy2EyPgvawfy00Im4RLjC8sK3R/HXGMb+Tsoeq6nS6wdnyn1kPY7O0cYd5XU2SJn9UjfHowXAFP17vxyKlYvwS4K2uU8+KTZ6zsrjmvNn4/SYF4Wm23mnH4l2ZfxHqOo5SLUS6rSJN5rE0nYGl6h7bfEimFu4RwngA=
+	t=1738329190; cv=none; b=lUEc7rI03nALnuQBbv/LP5ygi6u0wBV/7plT8Sm9X3aNbqQkwOc5SFhtNajhbCdFrSZiIiBGFsRTQH+gnSSSnz/VkyuwbVc/bbxc38gGf93jh2D941rMWYm8unynomilIROiQhvEbGU7LLDbekr54MjGpvoC/vtzJhrmi0oxTR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738329155; c=relaxed/simple;
-	bh=BbyKo5qgSbKGRwmdExkn+VWyTR4nHKaDT3omlcynxiA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nOGZwhJLLIyr1IJzEdjPfsrsoD0Q4BGayxdO90vgzD51S6h1O1l2ZlWlxU0Ckhj4BFLNKAW1wstc0TwO3K4h5VLlhX6nk5yXSwoXZQSMy/WfMbT68AxLkvbGtgDJ9XrFIT3UtpdtUOPZQeaWIreGAiW300yjhckUfTOxZlnu6SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qv0Vx60V; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738329190; c=relaxed/simple;
+	bh=/MUniiE0dGVEQ0M5rByOa3nWbgHI7zpjqSXKU9kQKe0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=crQU9BkNyDY4JmfExKPgTakSWoNYc2F1P9Zw6TVm8pmmF7RmDKqSUdhYRBX4BOZ2db+xraGZpDatb29UlZhZTMVVzyJXDK4SPXu4scYUc1OJDNi6PrxioBGIk5K+av9/Y7NBi2mWHSqu0yRbOoOoVllD4cMt9qyukd7EyZGyXnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcvm43wf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qv0Vx60V"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-438a39e659cso13956365e9.2;
-        Fri, 31 Jan 2025 05:12:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738329152; x=1738933952; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8Qf5Ag+gkCkodLzQTGh44JB0E7mlh4X9B+GfpD3S+A8=;
-        b=Qv0Vx60VBM+8Zsw4WGl7PyVC0YU6tX1x0vigQSLoVhDY0TAngmkyCNQL/9WRSSVZrT
-         F1403CJERgUejvs4XuzXi6/fSS6Fy/zwVkFUe9wPTYtB3THJGDLq4TiXjGWjFS5tghAw
-         MZJBNrP7jjrRdhT2xbYsxD7d/4J4OXqj2mK9lZTRQAHSFnBY6rq8sL7io8ZoVRHAVnjj
-         aWTTn5EcgbHf7ZU3/oGmqt5W9fyk6IPrbq86Gnj6wbvdMlOHA3V9jP9pLuRFTba2h9h9
-         YzXAaevDIwq1wGtf7O5wHpOBBJQSyX27wZqEifiCDaSXXBiu8lJCw4nvpJjzx6bycMh4
-         arkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738329152; x=1738933952;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Qf5Ag+gkCkodLzQTGh44JB0E7mlh4X9B+GfpD3S+A8=;
-        b=AnNyP5ewAoXZcbqjo/S0EiLIB/Y+3YhC8b4OlR+myAsRSnk8hzVKnlVVNWVExXCFTA
-         KBUSmOQJ8SC9b2w/Tiaaqj1HPZ1IH7DmlIagr4Ko139ZMITJhinnqyYsexKP0tcoInA2
-         y8N2GfcIhiMO4gVQnt1olYFKjgufr6jM4XmAgatpdM0dk7JU8Ftui0mMIZP4kRsQT+hb
-         QVO6cks/fmwpPsg0peIX8Qg6BsMXqtUyyZQ0QM02RA+vgOscThJjgYILaVIPcQSw/2xF
-         heirOK0fXij+/mcOxyXvCbUaeGfyFyp9NmUdURDPRIH+YGE/24MhymPKLJ0aN3gLAwC1
-         CzAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUO0pyiEMyWQzYnPo0j0vc6OlOmS6cKXNCZSjGNxQuol4ga4KYaOYtG4PVQTVSbcMaL7O0GsRk8FcoyO2wy@vger.kernel.org, AJvYcCWQ4azVwjJVMlYImcxZokRqRXr0TxqK2ecP+xl6uDXNjfmpp1lHKKzoE5WYaYTJMZJVnDvn5BC7SzXH@vger.kernel.org, AJvYcCWeRSYX5AizuAj5ViqjUbh3flRWZtnD8dMJNbLMen/sTYdJh34CTh4fdsRwIniG9hLzkJNShRuNvErvTikh@vger.kernel.org, AJvYcCX/o/JmKx1TYbPOhEJvkf9TUrjfGPtbQr7NrYtKpNwdDtVTtnDv1Xn6AppT7FLkv3Pl4dS7t47g+yAAEg8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzXFEwucEpSQ1VXBPBphcmU1ZNqJc9adYPeLrOSMPuw6hCOvy1
-	pwjT4bxWzy8lxG6tF0I6M9zS3Iy93YnvL4h42KoOlc5AyeNkS9kY1scvhxY7
-X-Gm-Gg: ASbGnctUl3C6AZ309HPMGF5DvA79Pe+NRacZSmO+A2VJC0XjAjVQ0dorQaqQnft3BAG
-	Oz55F87wI4GLwEYyul3XgF4wYvNeQzeGns3xpvIYPootW/Q2Oc+qSiuXqHL0BrlqE31j1OIZjCw
-	jJqZFR/O/4aDVhXCL3a2PBeuI2DS2jLNbf96eUIufsG/uvS+xMgMV+tfe/it6J21tpc4k6kjVW3
-	yvQoEU1XsquQjrS7A8tfxnF9epqw0k1kCcTGueYCBlbaG59R5mv6/wN9pjhKu/BtlFZR7nppZ/G
-	gY+w+2HyS7ZGXoJLRFdc1OuW9lt8akkN/oyuN5BPtq+m
-X-Google-Smtp-Source: AGHT+IGKBtM8zdX0f/k9fSlmikQgi6UfU2qNH1ycY66SNDkJyOrXViqSqC8f4KUEz2AE7pAcFmrXww==
-X-Received: by 2002:a5d:59a6:0:b0:385:f1f2:13f1 with SMTP id ffacd0b85a97d-38c51951c51mr9664356f8f.22.1738329150361;
-        Fri, 31 Jan 2025 05:12:30 -0800 (PST)
-Received: from [10.254.108.83] (munvpn.amd.com. [165.204.72.6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc263f0sm90055545e9.9.2025.01.31.05.12.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 05:12:29 -0800 (PST)
-Message-ID: <0b20e88a-9009-4fa2-b5cb-ab78ce834587@gmail.com>
-Date: Fri, 31 Jan 2025 14:12:28 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcvm43wf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBC6CC4CED1;
+	Fri, 31 Jan 2025 13:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738329190;
+	bh=/MUniiE0dGVEQ0M5rByOa3nWbgHI7zpjqSXKU9kQKe0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hcvm43wf/U7ZRKf61BsOtETmytr+LoysnswBRuoQAECPYXmJOZbW6PGiWEoMH6WJB
+	 veZdYeQH0uebiH/DCxK9fx0tNXpemsa7I5rAYg8V+H8Tir8DAfi+uNzeNn3ejkQtrI
+	 7fdhSSjYx+ufOYCAxWRqoeTPfJenab9qUJIMmSyyTjrQbEW/TLSzOgF0LVWAFFlQTo
+	 qtVOHgxTJ49HehuMtNUCxWoRr+uM61Z0mmb1nLZLR10lI0qZ4PfXn175RnkKSflgEu
+	 ZpXSoSQ8umoml+88lrVRcYHw2zcvdR9yT4VaQzTgthoOvSW1her312rWnr7gR1CYjT
+	 P9aB2Z5EA/KXA==
+Date: Fri, 31 Jan 2025 14:13:05 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] misc: pci_endpoint_test: Fix irq_type to convey
+ the correct type
+Message-ID: <Z5zMYQAduf58ZXPJ@ryzen>
+References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
+ <20250122022446.2898248-4-hayashi.kunihiko@socionext.com>
+ <20250128143231.ondpjpugft37qwo5@thinkpad>
+ <Z5oX5Fe5FY2Pym0u@ryzen>
+ <fe8c2233-fa2a-4356-8005-6cbabf6a0e96@socionext.com>
+ <Z5y9zpFGkBnY2TG1@ryzen>
+ <Z5zAFhEJzwOQUccM@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/7] Improve gpu_scheduler trace events + uAPI
-To: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- etnaviv@lists.freedesktop.org, freedreno@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, lima@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, linux-arm-msm@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, nouveau@lists.freedesktop.org
-References: <20250131110328.706695-1-pierre-eric.pelloux-prayer@amd.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
-In-Reply-To: <20250131110328.706695-1-pierre-eric.pelloux-prayer@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="0zbjT5a9d7kNHMUA"
+Content-Disposition: inline
+In-Reply-To: <Z5zAFhEJzwOQUccM@ryzen>
 
-I can't see patch #1 in my inbox for some reason, but I already know 
-what it does from your repository.
 
-Feel free to add Reviewed-by: Christian König <christian.koenig@amd.com> 
-to the entire series.
+--0zbjT5a9d7kNHMUA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
-Christian.
+On Fri, Jan 31, 2025 at 01:20:38PM +0100, Niklas Cassel wrote:
+> On Fri, Jan 31, 2025 at 01:10:54PM +0100, Niklas Cassel wrote:
+> > > 
+> > > If SET_IRQTYPE is AUTO, how will test->irq_type be set?
+> > 
+> > I was thinking something like this:
+> > 
+> > pci_endpoint_test_set_irq()
+> > {
+> > 	u32 caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
+> > 
+> > 	...
+> > 
+> > 	if (req_irq_type == IRQ_TYPE_AUTO) {
+> > 		if (caps & MSI_CAPABLE)
+> > 			test->irq_type = IRQ_TYPE_MSI;
+> > 		else if (caps & MSIX_CAPABLE)
+> > 			test->irq_type = IRQ_TYPE_MSIX;
+> > 		else
+> > 			test->irq_type = IRQ_TYPE_INTX;
+> > 
+> > 	}
+> > 
+> > 	...
+> > }
+> 
+> 
+> Or even simpler (since it requires less changes to
+> pci_endpoint_test_set_irq()):
+> 
+> 	if (req_irq_type == IRQ_TYPE_AUTO) {
+> 		if (caps & MSI_CAPABLE)
+> 			req_irq_type = IRQ_TYPE_MSI;
+> 		else if (caps & MSIX_CAPABLE)
+> 			req_irq_type = IRQ_TYPE_MSIX;
+> 		else
+> 			req_irq_type = IRQ_TYPE_INTX;
+> 
+> 	}
+> 
+> 	...
+> 
+> 	/* Sets test->irq_type = req_irq_type; on success */
+> 	pci_endpoint_test_alloc_irq_vectors();
 
-Am 31.01.25 um 12:02 schrieb Pierre-Eric Pelloux-Prayer:
-> Hi,
->
-> The initial goal of this series was to improve the drm and amdgpu
-> trace events to be able to expose more of the inner workings of
-> the scheduler and drivers to developers via tools.
->
-> Then, the series evolved to become focused only on gpu_scheduler.
-> The changes around vblank events will be part of a different
-> series, as well as the amdgpu ones.
->
-> Moreover Sima suggested to make some trace events stable uAPI,
-> so tools can rely on them long term.
->
-> The first patches extend and cleanup the gpu scheduler events.
->
-> The last one adds a documentation entry in drm-uapi.rst.
->
-> Changes since v6:
-> * Addressed comments from Philipp, Tvrtko, Steven
-> * The commit storing drm_client_id in sched_fence adds an extra
-> field which looks like a duplicate of the owner field. Currently
-> amdgpu uses the owner field with some magic values, so we have to
-> have 2 separate fields for now, but ultimately one could be removed.
-> Similarly storing the drm_client_id in the sched_entity is not
-> really possible as there's nothing preventing a driver to use a
-> sched_entity with multiple drm_file instances.
->
->
-> Useful links:
-> - userspace tool using the updated events:
-> https://gitlab.freedesktop.org/tomstdenis/umr/-/merge_requests/37
-> - v6:
-> https://lists.freedesktop.org/archives/dri-devel/2024-November/477644.html
->
-> Pierre-Eric Pelloux-Prayer (7):
->    drm/debugfs: output client_id in in drm_clients_info
->    drm/sched: store the drm client_id in drm_sched_fence
->    drm/sched: add device name to the drm_sched_process_job event
->    drm/sched: cleanup gpu_scheduler trace events
->    drm/sched: trace dependencies for gpu jobs
->    drm/sched: add the drm_client_id to the drm_sched_run/exec_job events
->    drm/doc: document some tracepoints as uAPI
->
->   Documentation/gpu/drm-uapi.rst                |  19 +++
->   drivers/accel/amdxdna/aie2_ctx.c              |   3 +-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c    |   2 +-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c        |   3 +-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_job.c       |   8 +-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_job.h       |   3 +-
->   drivers/gpu/drm/drm_debugfs.c                 |  10 +-
->   drivers/gpu/drm/etnaviv/etnaviv_gem_submit.c  |   2 +-
->   drivers/gpu/drm/imagination/pvr_job.c         |   2 +-
->   drivers/gpu/drm/imagination/pvr_queue.c       |   5 +-
->   drivers/gpu/drm/imagination/pvr_queue.h       |   2 +-
->   drivers/gpu/drm/lima/lima_gem.c               |   2 +-
->   drivers/gpu/drm/lima/lima_sched.c             |   6 +-
->   drivers/gpu/drm/lima/lima_sched.h             |   3 +-
->   drivers/gpu/drm/msm/msm_gem_submit.c          |   8 +-
->   drivers/gpu/drm/nouveau/nouveau_sched.c       |   3 +-
->   drivers/gpu/drm/panfrost/panfrost_drv.c       |   2 +-
->   drivers/gpu/drm/panthor/panthor_drv.c         |   3 +-
->   drivers/gpu/drm/panthor/panthor_mmu.c         |   2 +-
->   drivers/gpu/drm/panthor/panthor_sched.c       |   5 +-
->   drivers/gpu/drm/panthor/panthor_sched.h       |   3 +-
->   .../gpu/drm/scheduler/gpu_scheduler_trace.h   | 123 ++++++++++++++----
->   drivers/gpu/drm/scheduler/sched_entity.c      |   8 +-
->   drivers/gpu/drm/scheduler/sched_fence.c       |   4 +-
->   drivers/gpu/drm/scheduler/sched_main.c        |   8 +-
->   drivers/gpu/drm/v3d/v3d_submit.c              |   2 +-
->   drivers/gpu/drm/xe/xe_sched_job.c             |   3 +-
->   include/drm/gpu_scheduler.h                   |  12 +-
->   28 files changed, 192 insertions(+), 64 deletions(-)
->
 
+See attached patch.
+
+Mani, removing the global irq_type would go on top of this.
+
+
+Kind regards,
+Niklas
+
+--0zbjT5a9d7kNHMUA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="auto_irq.patch"
+
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index d5ac71a49386..5e42930124e2 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -32,6 +32,7 @@
+ #define IRQ_TYPE_INTX				0
+ #define IRQ_TYPE_MSI				1
+ #define IRQ_TYPE_MSIX				2
++#define IRQ_TYPE_AUTO				3
+ 
+ #define PCI_ENDPOINT_TEST_MAGIC			0x0
+ 
+@@ -71,6 +72,8 @@
+ 
+ #define PCI_ENDPOINT_TEST_CAPS			0x30
+ #define CAP_UNALIGNED_ACCESS			BIT(0)
++#define CAP_MSI					BIT(1)
++#define CAP_MSIX				BIT(2)
+ 
+ #define PCI_DEVICE_ID_TI_AM654			0xb00c
+ #define PCI_DEVICE_ID_TI_J7200			0xb00f
+@@ -126,6 +129,7 @@ struct pci_endpoint_test {
+ 	struct miscdevice miscdev;
+ 	enum pci_barno test_reg_bar;
+ 	size_t alignment;
++	u32 ep_caps;
+ 	const char *name;
+ };
+ 
+@@ -805,11 +809,20 @@ static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
+ 	struct device *dev = &pdev->dev;
+ 	int ret;
+ 
+-	if (req_irq_type < IRQ_TYPE_INTX || req_irq_type > IRQ_TYPE_MSIX) {
++	if (req_irq_type < IRQ_TYPE_INTX || req_irq_type > IRQ_TYPE_AUTO) {
+ 		dev_err(dev, "Invalid IRQ type option\n");
+ 		return -EINVAL;
+ 	}
+ 
++	if (req_irq_type == IRQ_TYPE_AUTO) {
++		if (test->ep_caps & CAP_MSI)
++			req_irq_type = IRQ_TYPE_MSI;
++		else if (test->ep_caps & CAP_MSIX)
++			req_irq_type = IRQ_TYPE_MSIX;
++		else
++			req_irq_type = IRQ_TYPE_INTX;
++	}
++
+ 	if (test->irq_type == req_irq_type)
+ 		return 0;
+ 
+@@ -895,13 +908,12 @@ static void pci_endpoint_test_get_capabilities(struct pci_endpoint_test *test)
+ {
+ 	struct pci_dev *pdev = test->pdev;
+ 	struct device *dev = &pdev->dev;
+-	u32 caps;
+ 
+-	caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
+-	dev_dbg(dev, "PCI_ENDPOINT_TEST_CAPS: %#x\n", caps);
++	test->ep_caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
++	dev_dbg(dev, "PCI_ENDPOINT_TEST_CAPS: %#x\n", test->ep_caps);
+ 
+ 	/* CAP_UNALIGNED_ACCESS is set if the EP can do unaligned access */
+-	if (caps & CAP_UNALIGNED_ACCESS)
++	if (test->ep_caps & CAP_UNALIGNED_ACCESS)
+ 		test->alignment = 0;
+ }
+ 
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index b94e205ae10b..8917f7c6c741 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -45,6 +45,8 @@
+ #define TIMER_RESOLUTION		1
+ 
+ #define CAP_UNALIGNED_ACCESS		BIT(0)
++#define CAP_MSI				BIT(1)
++#define CAP_MSIX			BIT(2)
+ 
+ static struct workqueue_struct *kpcitest_workqueue;
+ 
+@@ -753,6 +755,12 @@ static void pci_epf_test_set_capabilities(struct pci_epf *epf)
+ 	if (epc->ops->align_addr)
+ 		caps |= CAP_UNALIGNED_ACCESS;
+ 
++	if (epf_test->epc_features->msi_capable)
++		caps |= CAP_MSI;
++
++	if (epf_test->epc_features->msix_capable)
++		caps |= CAP_MSIX;
++
+ 	reg->caps = cpu_to_le32(caps);
+ }
+ 
+diff --git a/include/uapi/linux/pcitest.h b/include/uapi/linux/pcitest.h
+index acd261f49866..1edbd4357470 100644
+--- a/include/uapi/linux/pcitest.h
++++ b/include/uapi/linux/pcitest.h
+@@ -23,6 +23,11 @@
+ #define PCITEST_BARS		_IO('P', 0xa)
+ #define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
+ 
++#define PCITEST_IRQ_TYPE_INTX	0
++#define PCITEST_IRQ_TYPE_MSI	1
++#define PCITEST_IRQ_TYPE_MSIX	2
++#define PCITEST_IRQ_TYPE_AUTO	3
++
+ #define PCITEST_FLAGS_USE_DMA	0x00000001
+ 
+ struct pci_endpoint_test_xfer_param {
+diff --git a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
+index c267b822c108..c820a67e6437 100644
+--- a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
++++ b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
+@@ -97,7 +97,7 @@ TEST_F(pci_ep_basic, LEGACY_IRQ_TEST)
+ {
+ 	int ret;
+ 
+-	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 0);
++	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_INTX);
+ 	ASSERT_EQ(0, ret) TH_LOG("Can't set Legacy IRQ type");
+ 
+ 	pci_ep_ioctl(PCITEST_LEGACY_IRQ, 0);
+@@ -108,7 +108,7 @@ TEST_F(pci_ep_basic, MSI_TEST)
+ {
+ 	int ret, i;
+ 
+-	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
++	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSI);
+ 	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
+ 
+ 	for (i = 1; i <= 32; i++) {
+@@ -121,7 +121,7 @@ TEST_F(pci_ep_basic, MSIX_TEST)
+ {
+ 	int ret, i;
+ 
+-	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 2);
++	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSIX);
+ 	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI-X IRQ type");
+ 
+ 	for (i = 1; i <= 2048; i++) {
+@@ -170,8 +170,8 @@ TEST_F(pci_ep_data_transfer, READ_TEST)
+ 	if (variant->use_dma)
+ 		param.flags = PCITEST_FLAGS_USE_DMA;
+ 
+-	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
+-	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
++	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_AUTO);
++	ASSERT_EQ(0, ret) TH_LOG("Can't set AUTO IRQ type");
+ 
+ 	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
+ 		param.size = test_size[i];
+@@ -189,8 +189,8 @@ TEST_F(pci_ep_data_transfer, WRITE_TEST)
+ 	if (variant->use_dma)
+ 		param.flags = PCITEST_FLAGS_USE_DMA;
+ 
+-	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
+-	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
++	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_AUTO);
++	ASSERT_EQ(0, ret) TH_LOG("Can't set AUTO IRQ type");
+ 
+ 	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
+ 		param.size = test_size[i];
+@@ -208,8 +208,8 @@ TEST_F(pci_ep_data_transfer, COPY_TEST)
+ 	if (variant->use_dma)
+ 		param.flags = PCITEST_FLAGS_USE_DMA;
+ 
+-	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
+-	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
++	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_AUTO);
++	ASSERT_EQ(0, ret) TH_LOG("Can't set AUTO IRQ type");
+ 
+ 	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
+ 		param.size = test_size[i];
+
+--0zbjT5a9d7kNHMUA--
