@@ -1,95 +1,99 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DE71DFF0;
-	Fri, 31 Jan 2025 17:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15F231CD215;
+	Fri, 31 Jan 2025 17:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738346377; cv=none; b=RtWpBbf64FVni4Anpn+r5X2Vafeo9eb8dPnhPUoqKqigNsGRBclunlPhYTQyVczbz0JYUfp0Q7Jp6ZI4JSy/7QJ7pra2LdzcXemIGkTLEkNdDM+IVsF4IECRaP3MKwcq6DiCgjZivD/lB5vaSwuS3m/paYvNwwvP2UyoedP2fbo=
+	t=1738346391; cv=none; b=bg5Vydx/PTNDD9sWSHGgVOMwPoG7gqDEM/hIABUbBqr9JPmuuwYkbV83QwcS13ThMcap48CHdgnjbDO+EVov55Axsd4ZQAJf/TFNMsQzdTVOUOLoCGftnHobysV7Lg2TQephBGDtI2q/vlFnU13CvF2kPqdfqbzf0CyssrrnFOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738346377; c=relaxed/simple;
-	bh=/oVUJgC/vzPFCfg5JbIjdx5Jcx6mbmN912WCYE2F8p8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VxIuf5tur6OICvG8QTaUjW+K9+YpU5zNYrgGcgpyPWkL6hrrrzuJ9C9R6vR5IIUKm83P6Yg6AIJRCXRjdWsJirx5CaW87mGSqrIAvvprDB6ey7og1ZY37AzKi6RrWxDaZJqHbLXsz4U8X7iJlpNAdFrONyeQ1d95qOleg4uXSYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IHpFGU0+; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738346391; c=relaxed/simple;
+	bh=nXWT8j2G/uzLN64vLb7vwc1laXXA983XpXlI9rAJRa0=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hNaHd8h3x29MzTxcZOLrfL4SAk+AT7CUcfVGUV39cYv2koPJzpzjTOALUIy3BAM5e/M/VaOrkWDY0dqYYmBxnuJ90nEY7KNQy7EdlrAtHQNHE6zBzEYTFRJf2AGIcxuGarx+V2J/TIGBpLxcBmE/FFAfnDsgFvBl5Futst+PDf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=a6dw5Bmq; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHpFGU0+"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30737db1aa9so21127881fa.1;
-        Fri, 31 Jan 2025 09:59:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738346373; x=1738951173; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/oVUJgC/vzPFCfg5JbIjdx5Jcx6mbmN912WCYE2F8p8=;
-        b=IHpFGU0+1RgGzVKev7UkqZg569hwClRT7rBDxfL6yF7egSl5+uJ/YZZsHfNqbbI8pi
-         trM6nNaxjJdasKLAGpXkMj6DRSZ5laQ7jN++z31Qq+GExXJMt5C0/alKRlecRS7gP1Zk
-         QARWFyeldUQJ327fic4TbdJGa/DavdPy6ZAgznVLXngNkfLYomVvxPA3xNTCIzEizOop
-         0ebpuYpUL0Vbjj96yonu3XyY0A7WIb7iI0m1FDaJjv8+tUJSjzd2TPg1LDzAtxka3v9U
-         ztkqoPi7Fzd6E5zYfssmJ7CkWfeqbD2i8L16tw4ARLeEZ2y2HMt/UtvAS/d10Tu+0bP0
-         pSKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738346373; x=1738951173;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/oVUJgC/vzPFCfg5JbIjdx5Jcx6mbmN912WCYE2F8p8=;
-        b=vYb7qH1ifrL/hOXTBd2kG1qfIaqt4DWO7KCDfduGXsdqxkkMMWR5QiaRrEI9BO6l8e
-         7AhQAAp0RHG9Mb8vcYode6aJ3FiZE10Ofp2r1t7AvNHyFBv9G1oVzR9tR74CJXsGnn9K
-         XiR5cVwZIEK71eMGSCBpvB1pqcKZqaTKNoSrKRjfbCv+gaaZrbq7vDn47qQsZ310f2FP
-         RUkAcDIX5SYmYOZCld3rn+NYEgjRx+KYbCpAOtdtEXIwPUJmyyzt+wd1kW+6xMUmC9aO
-         hfozqAbaPKlKnMIgPn89xIJo69Ugimn7RkINidcpkqZRqXcQQWh21RRtAnb1g0pIV01B
-         nR8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVuteJmqIHm63WhHrttfSr9IbLVzJPkRdkda/3W+iF3TWxmKRk1EcZcj1v53u7oDcHGNwPyVHvWwMsMPCbdTf5o@vger.kernel.org, AJvYcCWMtc85lifu32Lm4oPriDRwdswtNqFSX+t6grrejlRfTxGDbBRYXOL+zk2JoXH5SLh07sU2dtOQ1nAANqQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhrZDOI4IznyM7iYzc8YplwmMdmQeCZZ57/MBg/rio4mlzkMZo
-	x6usq9gUIYcI4OdqrpNFsDec4hlT1/f0KPqvLb92z+0ar2AlTTM7fO40heudS1q+kWBt+Fd7wAo
-	Cy5M42Mes2mD9QyNTP2d/67q2Gi6hzZX6DVU=
-X-Gm-Gg: ASbGnctlGnzyCDUmzos0vBMP5pmo99f6CwY4Cba66qr0EaywYYQw2psNCHnQpy19vH5
-	p2e4JTILsKUIN051Jynr4IUyTAKMh61/3Iu3YvhNyLr0yo3PoSWlU9NP+jV1NjXXzJcvPwMwX4H
-	k/WvWxIiLup4enrZ4bXjHFjqKEQ8mKjEE=
-X-Google-Smtp-Source: AGHT+IG2swpar+VI4RaxA6wkR2cNtRH6mriOvbMjIc1/+JmZGEJYFTDzv1GUefclH2X3D37t6TATaESQeJvXH+iKjTU=
-X-Received: by 2002:a05:651c:1505:b0:302:1d24:8db7 with SMTP id
- 38308e7fff4ca-30796858154mr45427611fa.19.1738346373019; Fri, 31 Jan 2025
- 09:59:33 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="a6dw5Bmq"
+Received: from [100.65.234.206] (unknown [20.236.10.66])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 24E8E210C322;
+	Fri, 31 Jan 2025 09:59:49 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 24E8E210C322
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738346389;
+	bh=XPbYcf6qzF2DMTTNx2lFPYl4W5TcffizNhSxUduMC2A=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=a6dw5BmqI18cQBFdJlYBMKyx5kbRldsQWBROTSkbGpDQ1utLrBFCv8LtYHmT3tuk6
+	 48NhnQjeEmR83rgegD+5CWd2uoJDbmYi26BZVc4lubYeduw5r0ipF7IkGiDRUIMUji
+	 Vo+/gmn0Nz6YZlI7SOf3Cp1KOiFDrRed7ezz+VdQ=
+Message-ID: <3bdffe1d-9355-4fad-8d4e-6526c094e3a3@linux.microsoft.com>
+Date: Fri, 31 Jan 2025 09:59:50 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131-scanf-kunit-convert-v1-1-0976524f0eba@gmail.com>
- <Z50EM7gxqyV0Eois@smile.fi.intel.com> <CAJ-ks9mMgkdNEHHKELa=5gNz+CzUNno08ZKJwwQDVEb5WvN32A@mail.gmail.com>
- <Z50NVYKv7JBn10hj@smile.fi.intel.com>
-In-Reply-To: <Z50NVYKv7JBn10hj@smile.fi.intel.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 31 Jan 2025 12:58:57 -0500
-X-Gm-Features: AWEUYZlQrOGKVseS4eq5Qs6ATxK_tAN32pS2khVl7QHudzZkdePOeDxt9NwVgWI
-Message-ID: <CAJ-ks9=wFZhmTE3kmVF=Ujn9xWgGoFrSnsihHmRoW1eD_3Cdww@mail.gmail.com>
-Subject: Re: [PATCH] scanf: convert self-test to KUnit
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: eahariha@linux.microsoft.com, Jiri Slaby <jirislaby@kernel.org>,
+ David Laight <david.laight.linux@gmail.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+ Miguel Ojeda <ojeda@kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ kernel test robot <lkp@intel.com>, linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH] jiffies: Cast to unsigned long for secs_to_jiffies()
+ conversion
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20250130184320.69553-1-eahariha@linux.microsoft.com>
+ <20250130201417.32b0a86f@pumpkin>
+ <9ae171e2-1a36-4fe1-8a9f-b2b776e427a0@kernel.org>
+ <CAMuHMdUNjKJ0CFw+i1qgVsHO2LU6uOqkAq5iGL0EZyCtrfzM=A@mail.gmail.com>
+ <47098c16-2cf3-44bc-985a-07eb2a225698@linux.microsoft.com>
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <47098c16-2cf3-44bc-985a-07eb2a225698@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 31, 2025 at 12:50=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Jan 31, 2025 at 12:22:39PM -0500, Tamir Duberstein wrote:
-> > On Fri, Jan 31, 2025 at 12:11=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Fri, Jan 31, 2025 at 10:47:49AM -0500, Tamir Duberstein wrote:
+On 1/31/2025 9:55 AM, Easwar Hariharan wrote:
+> On 1/31/2025 12:10 AM, Geert Uytterhoeven wrote:
+>> Hi Jiri,
+>>
+>> CC linux-xfs
+>>
+>> On Fri, 31 Jan 2025 at 08:05, Jiri Slaby <jirislaby@kernel.org> wrote:
+>>> On 30. 01. 25, 21:14, David Laight wrote:
+>>>> On Thu, 30 Jan 2025 18:43:17 +0000
+>>>> Easwar Hariharan <eahariha@linux.microsoft.com> wrote:
+>>>>
+>>>>> While converting users of msecs_to_jiffies(), lkp reported that some
+>>>>> range checks would always be true because of the mismatch between the
+>>>>> implied int value of secs_to_jiffies() vs the unsigned long
+>>>>> return value of the msecs_to_jiffies() calls it was replacing. Fix this
+>>>>> by casting secs_to_jiffies() values as unsigned long.
+>>>>
+>>>> Surely 'unsigned long' can't be the right type ?
+>>>> It changes between 32bit and 64bit systems.
+>>>> Either it is allowed to wrap - so should be 32bit on both,
+>>>> or wrapping is unexpected and it needs to be 64bit on both.
+>>>
+>>> But jiffies are really ulong.
+>>
+>> That's a good reason to make the change.
+>> E.g. msecs_to_jiffies() does return unsigned long.
+>>
+>> Note that this change may cause fall-out, e.g.
+>>
+>>     int val = 5.
+>>
+>>     pr_debug("timeout = %u jiffies\n", secs_to_jiffies(val));
+>>                         ^^
+>>                         must be changed to %lu
 
-[...]
+That was wrong even before the conversion to secs_to_jiffies() (or this
+patch) because as Jiri says, jiffies are ulong.
 
-> There are other options like CONFIG_TEST_PRINTF or so in defconfig files.
-> Why are they there to begin with? The answer to this Q will affect the ch=
-ange
-> you have done in this patch.
+<snip>
 
-CONFIG_TEST_PRINTF still exists; that test has not been converted to kunit.
+- Easwar (he/him)
