@@ -1,123 +1,119 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82F08467;
-	Fri, 31 Jan 2025 16:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6528467
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738340285; cv=none; b=eFVR2vu+5kO6YRGGcjAUIwbKprDPftmPod7ENmaBRy31K1DSo/qWTjAT/V5yJf1YHtXuW4LksEvEYRbsdqzE8cu9xg55Rki8STWRQYhiR3XjMKIhN71B9PTDPF3muRSgGvbHBavwmZy2eL3pwYXpuForZcElTf4DTsgrY9WUNEU=
+	t=1738340297; cv=none; b=l+HYWs/oZnfFtqWx6+1VQbcdxDrs3R36vwxd0znFpdX15QjUGpXUoaEZTeeZnIOowAXGyD01kktHwBJKwlfKgme6VZdJhtXbW787+Y3FJm0QE0ARTQK7+lrIF5JIti1PlQbVZFqBhzGQZU//cOGb4iRuh5Li77nEpKzka28kGIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738340285; c=relaxed/simple;
-	bh=zrqi3hXuCg/pOAs3BM+Y8qLb9r9I1zt3QwyRMaxjl4c=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=iZqxHQV7Vp1RN/eTVo+sWWWwlZFyo4VQ+aA85W00S532AdMtlJ5tny9+WvsN98vOUCf9Wi1SqpIyXCa4sSg+azkhkftj6PRt7fDiV6mmhK7W9eBslLEsQvC3z+K7p+vjYPDw5ieWKMezX9z4pdIOHlft3gZMCsB/Qdq0ugbx9UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=imtzkOOz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ibmkxLo1; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1738340297; c=relaxed/simple;
+	bh=+DKv5p5gtr/qhVvWh4VwKvw+q8ap1xODp8LMl0FjSLA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RU6kilr+BUwXn5wincYGrO+UKrEKGiIj2eesjuvcUSxRqoIEYNiL4cldoh1j5r2HpVoERj9GYbZbVKSqC0IsvB8BejJ6O5LTJWlaf80SJ5Dm8WiYyVWdLfrkqHD2H4DQ81WAYMVFHjEAgPkbEC0jjDomClHB2cNda41ok/OxWs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnLB8DrX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="imtzkOOz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ibmkxLo1"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id C99E713801B9;
-	Fri, 31 Jan 2025 11:18:01 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Fri, 31 Jan 2025 11:18:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1738340281;
-	 x=1738426681; bh=tctp8a/ADsUOAVTFosNL9TM08hrtr5AOZz+znhkKVOU=; b=
-	imtzkOOzlMo9KTK/nb3nUb2KdgXwlaZYZYAndhGa55juPdi6Xv36jRVx/OTwr4Xy
-	FnAqzVsgzrGLiqqNNw/njAj13qS4IIbdJGDZZT4Da7g6+YRZhJITWO3nOcdM2qrz
-	jsD3gsXhefXVWAgMj2ppZuAm8Jkf1EbFJm8LTC8zhl9lX8ka0srq6JiUgs0UN6+1
-	xy8YWENByZhKxYzQNZIyUnOPq7533Q0T7914OOh4tn6kJXN5b9QFS1gDajhCpNde
-	TeZf1JOZ1qyJjKF4UKHLsn5odnNMWmMPCM3N/7wUiLLqIrnzPyYWL2FvJZnuCvuA
-	eeJKnrcw2Hbx3yz5kSsOsA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738340281; x=
-	1738426681; bh=tctp8a/ADsUOAVTFosNL9TM08hrtr5AOZz+znhkKVOU=; b=i
-	bmkxLo152X2bvbVY9iU4JFWhM5MV01Qmjz0qexyUSeEoZKhywyv0lUhpT1WNgveH
-	20aiFxuqRtPATycraMZf00iPr8JAXzbwP6kQaMMyRDjXmJsd0GsuHr1Gc3/V8GNS
-	VZV2MX/l9yvEWAY0YV/keLVSZKSGI5D10PbNb9KE7rvmaZNU5Y6EVQBEYZ4nVTfb
-	NU4fr8tS/e1rHHPtHLJd+6Siboz1Tj2PTz+HYI+rXrLrPpssglZ4YY+jEwzZvnFB
-	oSfkA+WugddpMfDJKMvvBMtKwP2lyJDD0cg9hXco41aEN92U6+ifeS7b+JLTiavw
-	6GTx+TwkNqO/2Odct8yow==
-X-ME-Sender: <xms:ufecZxSgHkis6yjCT4DIzKS9u2PXhdICIaL6-h_h3LaWkQYiXuUSVA>
-    <xme:ufecZ6w8QmtiOUgM76E-etoGPnlHxaDDIgPZxh-ndckKe5JMIAr3ave92AX74gOcv
-    Z6shjst6eLobYQwlDE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelvddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
-    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdeh
-    tdevheduvdejjefggfeijedvgeekhfefleehkeehvdffheenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
-    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuth
-    dprhgtphhtthhopeguohgsvghrsehlvghnohhvohdrtghomhdprhgtphhtthhopeifihhm
-    sehlihhnuhigqdifrghttghhughoghdrohhrghdprhgtphhtthhopehlihhnuhigsehroh
-    gvtghkqdhushdrnhgvthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghr
-    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdifrghttghhughoghesvh
-    hgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:ufecZ221pjsUz9LC7-ruHq95Yuv5ugbRAONUmngi6Jrw7fww74FTpQ>
-    <xmx:ufecZ5CZWjhtjtrWY2oPnpMapOmrbVtyQzyiBW0V0Bjzi2EHkiLO2Q>
-    <xmx:ufecZ6iGjhE_2MBKcznQWww37Y03ypbAKHo3JuBbVaoM5IrdmLq42A>
-    <xmx:ufecZ9rhcNolYYHxmnO2rUAl4Hs_kTBbLsooeXcsYpWcXN99BpFlAA>
-    <xmx:ufecZye5Kz66PeK6thIEFU7IrXEC2HAHPHqIbte4XNqQlrbLL_p8XKM4>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5800F3C0068; Fri, 31 Jan 2025 11:18:01 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnLB8DrX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 597E5C4CED1;
+	Fri, 31 Jan 2025 16:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738340297;
+	bh=+DKv5p5gtr/qhVvWh4VwKvw+q8ap1xODp8LMl0FjSLA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lnLB8DrXKJwyzfLcdlDTYUyTZB+XsYmVs1/BWFMCFkQCBUaYmMTPG3LorYW97DY8q
+	 x9VtBYrXOMeVPxAs/U/lkP268bqg6WFUr79FymjuCk0u6k79iPxxWeuPakJ7CeBFmt
+	 MXhuSMmI5/WpddygbxZlEoqKO0xyiTRb0UZ9fFY4Khz2ubCwGYe7w6yMMDN+WQCXb7
+	 uMbx13/O6F9Zs+g7SUV1Spsu3kuxBmbZ5ofnscv0hXADi0wFkPfppa0CgHFiVVz+IL
+	 HtefOVT1j9EM49Ee9UAkLdVM/H9BcCfC+l7GN5yft12vwYoyjQYV2B6qW21ktzkM7G
+	 0THzba+BGbLoA==
+Date: Fri, 31 Jan 2025 17:18:12 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Igor Mammedov <imammedo@redhat.com>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+ qemu-arm@nongnu.org, qemu-devel@nongnu.org, Ani Sinha
+ <anisinha@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/13] tests/acpi: virt: allow acpi table changes for
+ a new table: HEST
+Message-ID: <20250131171812.2ad9b1fd@foz.lan>
+In-Reply-To: <20250130153830.2e4e081d@imammedo.users.ipa.redhat.com>
+References: <cover.1738137123.git.mchehab+huawei@kernel.org>
+	<1390b46682f2bac3587239d03a0ba22d18a9a044.1738137123.git.mchehab+huawei@kernel.org>
+	<20250129160328.2f66584c@imammedo.users.ipa.redhat.com>
+	<20250130140324.06cdd4bf@foz.lan>
+	<20250130153830.2e4e081d@imammedo.users.ipa.redhat.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 31 Jan 2025 11:17:41 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Guenter Roeck" <linux@roeck-us.net>
-Cc: "David Ober" <dober@lenovo.com>,
- "Wim Van Sebroeck" <wim@linux-watchdog.org>, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <c0981f17-1577-4f1e-ad38-919820f30c1b@app.fastmail.com>
-In-Reply-To: <c7571180-c643-42e9-b2b8-4da07c9394c1@roeck-us.net>
-References: <mpearson-lenovo@squebb.ca>
- <20250116182912.1844-1-mpearson-lenovo@squebb.ca>
- <c7571180-c643-42e9-b2b8-4da07c9394c1@roeck-us.net>
-Subject: Re: [PATCH v2] watchdog: lenovo_se30_wdt: Watchdog driver for Lenovo SE30
- platform
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Guenter
+Em Thu, 30 Jan 2025 15:38:30 +0100
+Igor Mammedov <imammedo@redhat.com> escreveu:
 
-On Fri, Jan 31, 2025, at 10:44 AM, Guenter Roeck wrote:
-> On 1/16/25 10:29, Mark Pearson wrote:
->> Watchdog driver implementation for Lenovo SE30 platform.
->> 
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ...
->> --- /dev/null
->> +++ b/drivers/watchdog/lenovo_se30_wdt.c
-> ...
->> +
->> +static int lenovo_se30_wdt_set_timeout(struct watchdog_device *wdog,
->> +				       unsigned int timeout)
->> +{
->> +	wdog->timeout = timeout;
->> +	return 0;
->> +}
->> +
->
-> This function, as implemented, is unnecessary. See watchdog_set_timeout()
-> in drivers/watchdog/watchdog_dev.c.
->
-Ah - good point. I'll remove this.
+> On Thu, 30 Jan 2025 14:03:24 +0100
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> 
+> > Em Wed, 29 Jan 2025 16:03:28 +0100
+> > Igor Mammedov <imammedo@redhat.com> escreveu:
+> >   
+> > > On Wed, 29 Jan 2025 09:04:08 +0100
+> > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> > >     
+> > > > The DSDT table will also be affected by such change.
+> > > > 
+> > > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>      
+> > > 
+> > > move it right before the patch that would actually make changes to tables (10/13)    
+> > 
+> > Table changes happens on two patches:
+> > 
+> > - patch 03/13: acpi/ghes: add a firmware file with HEST address  
+> 
+> this one shouldn't affect bios tables test as it only checks ACPI and SMBIOS tables,
+> and hest addr file is not either.
 
-Thanks
-Mark
+Heh, true.
+
+> Do you really see test failing on this patch?
+
+No. I just misunderstood the instructions, as it was not clear to me there 
+that I shouldn't be adding there the HEST table.
+
+> > 	HEST table was added here
+> > 
+> > - patch 10/13: arm/virt: Wire up a GED error device for ACPI / GHES 
+> > 
+> > 	DSDT changes happen here.
+> > 
+> > If the idea is to avoid make check to fail between those two patches,
+> > we need either to split them on 4 patches (one before/one after each
+> > change) or do like I did on this series: whitelist before patch 3,
+> > update after patch 10.  
+> 
+> It would be better to group patches that should change ACPI tables
+> close together so that a pair of whitelist/update could cover it.
+> However it depends on how many changes are there, i.e. acpi diff
+> should be digestible for a reader. So there is no hard border here,
+> just use common sense.
+> 
+> However when the whitelist is covers all series where only few patches
+> actually result in tables change, that miss-leads the reader since
+> whitelist patch basically tells 'watch out for changes since this moment'
+> and 'update' patch declares no more changes should happen.
+> The same applies to bisection, where closer the gap between
+> whitelist/update the better if the test case is the trigger.
+> No need to be fanatical and do it around each patch,
+> just make it observable (i.e. some small range of commits). 
+
+Got it. Yeah, there was just one patch affecting DSDT table: the one
+adding an AML representation for the GED notification device.
+
+I fixed it for the next (hopefully the final) version.
+
+Thanks,
+Mauro
