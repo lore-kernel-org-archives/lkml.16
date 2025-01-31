@@ -1,108 +1,104 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1EC1A8F98
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07C71A8419
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738314497; cv=none; b=PEIOHmsUE4rcxSSz6xfD0t/IeQaLqvHBvPRzR3Nn2rLe3pzGbGlEPFYtU2gESQ9DUMC1wxxOcIXxchKFKc6XMzIFduoblzoWf7ehlugz3T7Rp0RRque+rNEnpZSqo4+nAWmUli5hdSvq83UtvlF7H22W3OKiD6r8PSHs6sfVNRU=
+	t=1738314505; cv=none; b=n7+FPMl15K6YTCYlALIiEgGqsDfDUtZv6ZpnjxRgQJg3jvur6aXbhQzPXUdpfPLTtQWsSBuqKAKhqeGSyGKv2eGdzysMzFV48NSAFOxmpwjDeWstxZMH1TlGy8dqfkH7nV6xfFn/bqRydOGw0WkzewAOuht1gOElK3AdRWDRfzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738314497; c=relaxed/simple;
-	bh=pOm+fpdBAA+J1ecb0mT1Wv1tDOg3X9T9T8tfx6TqtYE=;
+	s=arc-20240116; t=1738314505; c=relaxed/simple;
+	bh=KPVdPMhIVgpNc7Gf2AkypDd57zx3GYx+s8m1RtCNULk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qQrhXugeAKa8m80CQh0jbOYQCrXLA4fGIzEcwYgbN/wGZQGu5PyC9ybzHmcLcnd89VxGuOCACwa/xNtUC043kuI4qH04lcvM/VO1JwuHzJMoDYosJrAkkaCoQs5T/dTeAZ8LspJt5NyXNlAaiqF5VXrTeijOgf9xgKW1/Pi7qWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=j4auTGAh; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 MIME-Version:Content-Type; b=kMwbACfiSVg/88eYfudDUjFMgyJCFlJJ8LhFSM6Dpzt3l2z3zL3HWyLJgS4kTADCFtK8+B6AlpNXApQt+74XpvF5DYJ2Y7YPXFnB45au9mtRLghQDPkUZfvyyeHAoQ1d001RnC21dFe6w6pIqaB1VNYPh4p8cqy2Xt2Ctqz0j1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=fpKcdvnb; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j4auTGAh"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2166022c5caso25914665ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:08:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738314495; x=1738919295; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DQcqfpSqnss0R3EkpuRQBovJzgNoPvoL6ThFstuCphQ=;
-        b=j4auTGAhfpit29QG5wuDpuxNC04UCN2QD/Gk/y/YkNGlR7QreOtzle5MLyBcjQOjsx
-         uhJ75UUpNA0OGNY87JBiuRcFcBrwndujEfYEUjxlpgaF8sIvXn9bb5Z4B2SrNvMD3L9q
-         N5VYAmlN41/HRzythvhU/kWXeeUYdP93L043Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738314495; x=1738919295;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DQcqfpSqnss0R3EkpuRQBovJzgNoPvoL6ThFstuCphQ=;
-        b=nSNEVBgXufPAHMtnZJElDP1x1Xn/yOAr6g3nB6NBfebvhOehQeKKDE5VOkoWDeBsmB
-         DvK7XgIgLVdc1m8O+aqPHoDYIZ4GSiQ/4Rt2z5VVSdbsQYD9E6DxJIfEwgW88lpTQP1D
-         s2npHT+VaueInAaGx7NTxAZhE9B35fjsaorq6+Sb8+EYiCnO2KfnpZ6jrSukmAmniYwH
-         SGlcKmc7NO7cFb94WMi4cxN1BtkiO0szMDQaBcIvHwkgQrLFg8XHBZkENpmxDY+J9sqM
-         7yEvRKyzffQg0ZAwh7i+gvf+hf6SCClkRRfulZArgoX9BWLR6/b7L7kn6jaXcJdO7ARQ
-         3nKg==
-X-Forwarded-Encrypted: i=1; AJvYcCW1iGNtQsppzFNQmpOuGmz+c8xDOYOhZe5RB4l0KzQCbEVarphdVTMBMrY7CaDWDIIpFZhlZ+B3Xt9i4nA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlL098pgoQo2t7qfevq0P60WxE+3rEw2SVJvgeac5l9roGoGFO
-	TZOU1pL61ynsCbfVGfdGhv/ZnryBBimhBclGRka0nC7MxMZxrb3o5vyWsrqeCyT4r7B57Vr0XAY
-	=
-X-Gm-Gg: ASbGnctwWrywvxNBoeTKL+P4guq6nzVo3BfpuTWKNlcAjWbZPjU+0CuZQ60gEl9WRaC
-	KPQKVfDaUDO9D+GER0a8bNC7mSt363aGrXLa0CDGZLh+4nKm86cSSXPtOwH37qtFmjtCloXWrc8
-	m+Aa/KbRolDr/VxPMcaxcUMwxTpbjcTZSYPDC1V9eysHFx1H/Tb808eZXKMDmzqEXMHnh1y58dn
-	QsBIobLgINeHKIDsSiihOofTwE9+YAmowp2lFzUXZHBlfxjJ79lB1g9sAk408mOi0zR7rIXhQ8z
-	OwF6Z9NPjR+nBV+RuA==
-X-Google-Smtp-Source: AGHT+IEmt7Kd9WrX0z/MrdYcFEjWtu/6bbm1WyY2+91BuQrMC+eYVRLixUf3IzSlvbxl7TXEySCQzg==
-X-Received: by 2002:a17:903:2f8c:b0:215:b9a6:5cb9 with SMTP id d9443c01a7336-21dd7c3555bmr174992725ad.5.1738314495518;
-        Fri, 31 Jan 2025 01:08:15 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:c752:be9d:3368:16fa])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2f8489d3982sm3396499a91.24.2025.01.31.01.08.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 01:08:15 -0800 (PST)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Minchan Kim <minchan@kernel.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv4 17/17] zram: add might_sleep to zcomp API
-Date: Fri, 31 Jan 2025 18:06:16 +0900
-Message-ID: <20250131090658.3386285-18-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-In-Reply-To: <20250131090658.3386285-1-senozhatsky@chromium.org>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="fpKcdvnb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=qBM19W687ds68sEqtJ4vSFA6vs5r5fWKLK9XgZ4ixE0=; b=fpKcdvnbProJpRtOff/uta2zO1
+	Xp+MVSiJ8TO4LfWykrj2Q+X02a+jr4pdNSgjS5XIu5LAtaubaR8GJll/OHqwF/qaAfLe5rf2MNWDp
+	F39cFgmoNVf8euCYGeiVzgjS3fGTT+Rh1JB1msyjEBkCfsIVnksuUerd3ze4Cj1eVG3QXeSijF8f1
+	nHwOl+5U5VLi7pFyh5w/7SpELWmgP41aoTsYFGQYYZldlTt0AUTbikzijwHvzIlLsIMCzJHyVt4AO
+	qML0o24k88Zso+sZNxx9meAvLEnBLp4BXhEnxF9/OeckaEzWTZTIUrpe5j+63VN27C5M1n0cdrJiv
+	/We0Uj+g==;
+Received: from [212.111.254.164] (helo=phil.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tdn0W-0006Bw-LK; Fri, 31 Jan 2025 10:08:12 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>
+Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Zhang Yubing <yubing.zhang@rock-chips.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] phy: rockchip: fix Kconfig dependency more
+Date: Fri, 31 Jan 2025 10:08:10 +0100
+Message-ID: <5999606.DvuYhMxLoT@phil>
+In-Reply-To: <20250122065249.1390081-1-arnd@kernel.org>
+References: <20250122065249.1390081-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-Explicitly state that zcomp compress/decompress must be
-called from non-atomic context.
+Am Mittwoch, 22. Januar 2025, 07:52:44 MEZ schrieb Arnd Bergmann:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> A previous patch ensured that USB Type C connector support is enabled,
+> but it is still possible to build the phy driver without enabling
+> CONFIG_USB (host support) or CONFIG_USB_GADGET (device support), and
+> in that case the common helper functions are unavailable:
+> 
+> aarch64-linux-ld: drivers/phy/rockchip/phy-rockchip-usbdp.o: in function `rk_udphy_probe':
+> phy-rockchip-usbdp.c:(.text+0xe74): undefined reference to `usb_get_maximum_speed'
+> 
+> Select CONFIG_USB_COMMON directly here, like we do in some other phy
+> drivers, to make sure this is available even when actual USB support
+> is disabled or in a loadable module that cannot be reached from a
+> built-in phy driver.
+> 
+> Fixes: 9c79b779643e ("phy: rockchip: fix CONFIG_TYPEC dependency")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- drivers/block/zram/zcomp.c | 2 ++
- 1 file changed, 2 insertions(+)
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
-index 675f2a51ad5f..f4235735787b 100644
---- a/drivers/block/zram/zcomp.c
-+++ b/drivers/block/zram/zcomp.c
-@@ -185,6 +185,7 @@ int zcomp_compress(struct zcomp *comp, struct zcomp_strm *zstrm,
- 	};
- 	int ret;
- 
-+	might_sleep();
- 	ret = comp->ops->compress(comp->params, &zstrm->ctx, &req);
- 	if (!ret)
- 		*dst_len = req.dst_len;
-@@ -201,6 +202,7 @@ int zcomp_decompress(struct zcomp *comp, struct zcomp_strm *zstrm,
- 		.dst_len = PAGE_SIZE,
- 	};
- 
-+	might_sleep();
- 	return comp->ops->decompress(comp->params, &zstrm->ctx, &req);
- }
- 
--- 
-2.48.1.362.g079036d154-goog
+@Vinod, I guess this should go into 6.14-rc?
+
+Thanks
+Heiko
+
+> ---
+>  drivers/phy/rockchip/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/phy/rockchip/Kconfig b/drivers/phy/rockchip/Kconfig
+> index 2f7a05f21dc5..dcb8e1628632 100644
+> --- a/drivers/phy/rockchip/Kconfig
+> +++ b/drivers/phy/rockchip/Kconfig
+> @@ -125,6 +125,7 @@ config PHY_ROCKCHIP_USBDP
+>  	depends on ARCH_ROCKCHIP && OF
+>  	depends on TYPEC
+>  	select GENERIC_PHY
+> +	select USB_COMMON
+>  	help
+>  	  Enable this to support the Rockchip USB3.0/DP combo PHY with
+>  	  Samsung IP block. This is required for USB3 support on RK3588.
+> 
+
+
+
 
