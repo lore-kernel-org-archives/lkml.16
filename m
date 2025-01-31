@@ -1,161 +1,153 @@
-Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE7116F271;
-	Fri, 31 Jan 2025 08:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD2424B28
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 08:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738312313; cv=none; b=b/MJmekcazh3hMmTIOvK2LF2Ct4cnH9abCLhXLaXd6MmtnZWbu3+SMNjYDNy3aY6bhxqubs+YieHNR24QrKSBAz9QEecrVnergXD2u2Crq3bhjXvLIUAZkqSioN8gCUnxfl/fjFYovkYxvgSwhn7WJ3WhhE2VS1OJTT1NsqnoMQ=
+	t=1738312384; cv=none; b=P6/IyfABWhrt7VvjMKvo3+qma8kHqQF1hvjyInd4Ni2oq1xYozXTVeigdYugZ/Ri/U3inVJo12tArM4EN4cTeZMNb8oI7nk3Xo+ehco4b9X70By1k3mMTOa45r+9OwaEdMtkXfZ1Ju+CxMSjqjIAyhTLNwQKNznkLq7n9AXFbqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738312313; c=relaxed/simple;
-	bh=xchRIW1eUY/yAMi/gmRW7+GFWbW0I+i78YtWFUkL+tA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hO0B+ohwk0OM1buDVtw0jS65eKeeh7KRagPuacHgPa2uQh5lh6kpbdTZiG7m03Y+hPFqebyRCK0VMVZ79O0mViIs4zILoYKveIrCtjNg423ztF9AWLGjBx8aVon2F9R2o5Om5hAKcXnhaMfMtfh4ZJfW4T0pDeHNb1EghzBODFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=caORf6kk; arc=none smtp.client-ip=95.143.211.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
+	s=arc-20240116; t=1738312384; c=relaxed/simple;
+	bh=sdw8l8+NwkV6INk3+hpf0YRFmqr5W8dwp/CmE3pzgZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FQiy7CARsfEo1qTSTw6sIefwHQehkH9izTcf2Y+sLAzOGjWdCK1UYlnQijo+HB+hTyB9qVM5tD+OB7p1L8bC7weQhyYgmMvOHNQAfptOz++9ntU/oJQod73haQi5U/rm3yFzzq7NmI6Q5Hz5FBA/x1rciFGm9W4BsYLBAbK3/zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oCjnKWSn; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="caORf6kk"
-From: Denis Arefev <arefev@swemel.ru>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
-	t=1738312308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=BMZR7EBilYf15P4LgXGO3rdBEyqkDdi2+Bs83Fslgg0=;
-	b=caORf6kkDEbOaCMRQw5haOE11RNSsKryd21QEEKEO4UTd0LVFLSaiUidZQfWRtUkVe5RSU
-	L7CkIfR9HFeThZqlgAIIbkZRSk5D4wFy4UaspIqnXOuP/srZs3Y3OW+wiyokPjZbkibLwu
-	RIawHTjvJi+Tsjn0nUlmT00ExF6BwEI=
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Willem de Bruijn <willemb@google.com>,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	netdev@vger.kernel.org,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.10 5/5] net: test for not too small csum_start in virtio_net_hdr_to_skb()
-Date: Fri, 31 Jan 2025 11:31:47 +0300
-Message-ID: <20250131083148.4238-1-arefev@swemel.ru>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oCjnKWSn"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaec111762bso439409366b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 00:33:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738312380; x=1738917180; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=egqRvUyLfakli10+ggYKvwxMdmYV8I7LQkQH/AIbN90=;
+        b=oCjnKWSnw0xz3XdYd0AUlrrzmdINHwwUmy5LAVsB5tzVjuacFz7dBVgD8ARiDae1Uu
+         b3tHfbI+ODwOE+ua8eQOWJg+KjVFVLx5ebHS6ldiAXX+i2HZvrdft4cVkv/8McyjOQ9J
+         3a/lEG5AvYvSaUcKXJ+mn0ylCDkjoJ0PfMIYVJfPjIvj4+hH37cEW/sJcaCoXK+CY4ZI
+         /73I8f4Kr9VCVMD46DfqkLzv855mSo0ucs0sNk78EQKQ9HpyByYx9U0yyOfKJIWZ5jcK
+         eHIZtKqnYl5jyVcow/euGp/iwowUSRh4tUI5sO+hF1mTLKuma00FEfsZEpb1S9GnnEy/
+         eVHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738312380; x=1738917180;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=egqRvUyLfakli10+ggYKvwxMdmYV8I7LQkQH/AIbN90=;
+        b=PPkbVcCWpXZHa4H849g8VbjhguDBu/ZiMt79vOrMe6ruPnNiOlRnir9m1/BD0DFatJ
+         cl/yd3lEHRD+i6nPGbQ4CylF/UzZjoazMdvdkXKjDEoJ+Mv0qfvXEBggK0Ula7s2Rog+
+         dzDDIP6ESVrD9mTIQ/T98A9jW+uP+++g02RO6a8Fdn0T7uUpFFf7lV27+6A3G+SvCqY6
+         I1z6u24giZCMNdd8QuZ/ZXzSx4V8NLRsDODVnDZlcIm2/JocZkAPmht4vOLF4KVPtPwF
+         jR3ul1WlGD+67LmFRgsQ400ILhHLvXZSfHQZazst8mEFESUm43dubZ4TY4LEGvIA0DoG
+         3EgA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0FGDY1Ul8WH4+zdGQYnzxOnq7syGBo3owMy5xHJjjpDx4/zpco1bYWuhVc4gl/lKPk9uXR+9Qkznxwio=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvHgIBaL38DIer66w/LbIPn5Pk1V1U33e+p1fG8qBkhzUUHe1M
+	O43nxlc16VwtEUwoizpbmG4tU3UzsQ1BrVm1OSwQGGbdF131zwTazDlma8LVGQ==
+X-Gm-Gg: ASbGncvNPF93SMESvVsAaCT4MSNaMnQLT4l5IeWKHIRnRvbDSx4AeZvqe7XlFmbB1Ub
+	w8whf3uitoehHAS4ikQZQ14XO+P1RtTjzoz+iRR/jTftQHc+f4kcRcd03M6hB4hs74xfff/Z6gw
+	4to53tIbLdhyxSxd8dsU7HlgBm17Bc1IpdFeTHcqaZsOtfb7c6qqqOshgi+JSQNGrBf3zgSEgDq
+	HxxRQhZt1lszOsCYg/BBhHaB8oyfROrybf7YdfMXQC6txYvpZPWbXiJ3H59n+gjjKYE6HcEvcaE
+	H2VczhQjd1+OoflvxJrLQz+OS6If1Ap5E54vcz9qtsQbj7MrpKRcDfBYJQ==
+X-Google-Smtp-Source: AGHT+IFEGaNvReG5vJZPY7iYHQObTDw/0zJqyBDYrLORPticbg6pyTqk9VcPWTbvbKqoh+zEKTKFpg==
+X-Received: by 2002:a17:907:7fa6:b0:ab6:b848:2ab with SMTP id a640c23a62f3a-ab6cfcdf2a3mr922586166b.16.1738312380051;
+        Fri, 31 Jan 2025 00:33:00 -0800 (PST)
+Received: from google.com (201.31.90.34.bc.googleusercontent.com. [34.90.31.201])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a5635bsm253140566b.164.2025.01.31.00.32.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 00:32:59 -0800 (PST)
+Date: Fri, 31 Jan 2025 08:32:55 +0000
+From: Matt Bobrowski <mattbobrowski@google.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Song Liu <song@kernel.org>, bpf@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, kernel-team@meta.com,
+	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
+	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
+	jack@suse.cz, kpsingh@kernel.org, liamwisehart@meta.com,
+	shankaran@meta.com
+Subject: Re: [PATCH v11 bpf-next 1/7] fs/xattr: bpf: Introduce security.bpf.
+ xattr name prefix
+Message-ID: <Z5yKtyJN3xLQRUNH@google.com>
+References: <20250129205957.2457655-1-song@kernel.org>
+ <20250129205957.2457655-2-song@kernel.org>
+ <Z5tbH13qK6rLJVUI@google.com>
+ <20250130-erklimmen-erstversorgung-93daf77c9dc4@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250130-erklimmen-erstversorgung-93daf77c9dc4@brauner>
 
-From: Eric Dumazet <edumazet@google.com>
+On Thu, Jan 30, 2025 at 04:20:04PM +0100, Christian Brauner wrote:
+> On Thu, Jan 30, 2025 at 10:57:35AM +0000, Matt Bobrowski wrote:
+> > On Wed, Jan 29, 2025 at 12:59:51PM -0800, Song Liu wrote:
+> > > Introduct new xattr name prefix security.bpf., and enable reading these
+> > > xattrs from bpf kfuncs bpf_get_[file|dentry]_xattr().
+> > > 
+> > > As we are on it, correct the comments for return value of
+> > > bpf_get_[file|dentry]_xattr(), i.e. return length the xattr value on
+> > > success.
+> > 
+> > Reviewed-by: Matt Bobrowski <mattbobrowski@google.com>
+> > 
+> > > Signed-off-by: Song Liu <song@kernel.org>
+> > > Acked-by: Christian Brauner <brauner@kernel.org>
+> > > Reviewed-by: Jan Kara <jack@suse.cz>
+> > > ---
+> > >  fs/bpf_fs_kfuncs.c         | 19 ++++++++++++++-----
+> > >  include/uapi/linux/xattr.h |  4 ++++
+> > >  2 files changed, 18 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/fs/bpf_fs_kfuncs.c b/fs/bpf_fs_kfuncs.c
+> > > index 3fe9f59ef867..8a65184c8c2c 100644
+> > > --- a/fs/bpf_fs_kfuncs.c
+> > > +++ b/fs/bpf_fs_kfuncs.c
+> > > @@ -93,6 +93,11 @@ __bpf_kfunc int bpf_path_d_path(struct path *path, char *buf, size_t buf__sz)
+> > >  	return len;
+> > >  }
+> > >  
+> > > +static bool match_security_bpf_prefix(const char *name__str)
+> > > +{
+> > > +	return !strncmp(name__str, XATTR_NAME_BPF_LSM, XATTR_NAME_BPF_LSM_LEN);
+> > > +}
+> > 
+> > I think this can also just be match_xattr_prefix(const char
+> > *name__str, const char *prefix, size_t len) such that we can do the
+> > same checks for aribitrary xattr prefixes i.e. XATTR_USER_PREFIX,
+> > XATTR_NAME_BPF_LSM.
+> > 
+> > >  /**
+> > >   * bpf_get_dentry_xattr - get xattr of a dentry
+> > >   * @dentry: dentry to get xattr from
+> > > @@ -101,9 +106,10 @@ __bpf_kfunc int bpf_path_d_path(struct path *path, char *buf, size_t buf__sz)
+> > >   *
+> > >   * Get xattr *name__str* of *dentry* and store the output in *value_ptr*.
+> > >   *
+> > > - * For security reasons, only *name__str* with prefix "user." is allowed.
+> > > + * For security reasons, only *name__str* with prefix "user." or
+> >       	  	   	    	 	     	  ^ prefixes
+> > 						  
+> > > + * "security.bpf." is allowed.
+> >                       ^ are
+> > 
+> > Out of curiosity, what is the security reasoning here? This isn't
+> > obvious to me, and I'd like to understand this better. Is it simply
+> > frowned upon to read arbitrary xattr values from the context of a BPF
+> > LSM program, or has it got something to do with the backing xattr
+> > handler that ends up being called once we step into __vfs_getxattr()
+> > and such?  Also, just so that it's clear, I don't have anything
+> > against this allow listing approach either, I just genuinely don't
+> > understand the security implications.
+> 
+> I've explained this at lenghts in multiple threads. The gist is various
+> xattrs require you to have access to properties that are carried by
+> objects you don't have access to (e.g., the mount) or can't guarantee
+> that you're in the correct context and interpreting those xattrs without
+> this information is either meaningless or actively wrong.
 
-commit 49d14b54a527289d09a9480f214b8c586322310a upstream.
-
-syzbot was able to trigger this warning [1], after injecting a
-malicious packet through af_packet, setting skb->csum_start and thus
-the transport header to an incorrect value.
-
-We can at least make sure the transport header is after
-the end of the network header (with a estimated minimal size).
-
-[1]
-[   67.873027] skb len=4096 headroom=16 headlen=14 tailroom=0
-mac=(-1,-1) mac_len=0 net=(16,-6) trans=10
-shinfo(txflags=0 nr_frags=1 gso(size=0 type=0 segs=0))
-csum(0xa start=10 offset=0 ip_summed=3 complete_sw=0 valid=0 level=0)
-hash(0x0 sw=0 l4=0) proto=0x0800 pkttype=0 iif=0
-priority=0x0 mark=0x0 alloc_cpu=10 vlan_all=0x0
-encapsulation=0 inner(proto=0x0000, mac=0, net=0, trans=0)
-[   67.877172] dev name=veth0_vlan feat=0x000061164fdd09e9
-[   67.877764] sk family=17 type=3 proto=0
-[   67.878279] skb linear:   00000000: 00 00 10 00 00 00 00 00 0f 00 00 00 08 00
-[   67.879128] skb frag:     00000000: 0e 00 07 00 00 00 28 00 08 80 1c 00 04 00 00 02
-[   67.879877] skb frag:     00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   67.880647] skb frag:     00000020: 00 00 02 00 00 00 08 00 1b 00 00 00 00 00 00 00
-[   67.881156] skb frag:     00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   67.881753] skb frag:     00000040: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   67.882173] skb frag:     00000050: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   67.882790] skb frag:     00000060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   67.883171] skb frag:     00000070: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   67.883733] skb frag:     00000080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   67.884206] skb frag:     00000090: 00 00 00 00 00 00 00 00 00 00 69 70 76 6c 61 6e
-[   67.884704] skb frag:     000000a0: 31 00 00 00 00 00 00 00 00 00 2b 00 00 00 00 00
-[   67.885139] skb frag:     000000b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   67.885677] skb frag:     000000c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   67.886042] skb frag:     000000d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   67.886408] skb frag:     000000e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   67.887020] skb frag:     000000f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   67.887384] skb frag:     00000100: 00 00
-[   67.887878] ------------[ cut here ]------------
-[   67.887908] offset (-6) >= skb_headlen() (14)
-[   67.888445] WARNING: CPU: 10 PID: 2088 at net/core/dev.c:3332 skb_checksum_help (net/core/dev.c:3332 (discriminator 2))
-[   67.889353] Modules linked in: macsec macvtap macvlan hsr wireguard curve25519_x86_64 libcurve25519_generic libchacha20poly1305 chacha_x86_64 libchacha poly1305_x86_64 dummy bridge sr_mod cdrom evdev pcspkr i2c_piix4 9pnet_virtio 9p 9pnet netfs
-[   67.890111] CPU: 10 UID: 0 PID: 2088 Comm: b363492833 Not tainted 6.11.0-virtme #1011
-[   67.890183] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[   67.890309] RIP: 0010:skb_checksum_help (net/core/dev.c:3332 (discriminator 2))
-[   67.891043] Call Trace:
-[   67.891173]  <TASK>
-[   67.891274] ? __warn (kernel/panic.c:741)
-[   67.891320] ? skb_checksum_help (net/core/dev.c:3332 (discriminator 2))
-[   67.891333] ? report_bug (lib/bug.c:180 lib/bug.c:219)
-[   67.891348] ? handle_bug (arch/x86/kernel/traps.c:239)
-[   67.891363] ? exc_invalid_op (arch/x86/kernel/traps.c:260 (discriminator 1))
-[   67.891372] ? asm_exc_invalid_op (./arch/x86/include/asm/idtentry.h:621)
-[   67.891388] ? skb_checksum_help (net/core/dev.c:3332 (discriminator 2))
-[   67.891399] ? skb_checksum_help (net/core/dev.c:3332 (discriminator 2))
-[   67.891416] ip_do_fragment (net/ipv4/ip_output.c:777 (discriminator 1))
-[   67.891448] ? __ip_local_out (./include/linux/skbuff.h:1146 ./include/net/l3mdev.h:196 ./include/net/l3mdev.h:213 net/ipv4/ip_output.c:113)
-[   67.891459] ? __pfx_ip_finish_output2 (net/ipv4/ip_output.c:200)
-[   67.891470] ? ip_route_output_flow (./arch/x86/include/asm/preempt.h:84 (discriminator 13) ./include/linux/rcupdate.h:96 (discriminator 13) ./include/linux/rcupdate.h:871 (discriminator 13) net/ipv4/route.c:2625 (discriminator 13) ./include/net/route.h:141 (discriminator 13) net/ipv4/route.c:2852 (discriminator 13))
-[   67.891484] ipvlan_process_v4_outbound (drivers/net/ipvlan/ipvlan_core.c:445 (discriminator 1))
-[   67.891581] ipvlan_queue_xmit (drivers/net/ipvlan/ipvlan_core.c:542 drivers/net/ipvlan/ipvlan_core.c:604 drivers/net/ipvlan/ipvlan_core.c:670)
-[   67.891596] ipvlan_start_xmit (drivers/net/ipvlan/ipvlan_main.c:227)
-[   67.891607] dev_hard_start_xmit (./include/linux/netdevice.h:4916 ./include/linux/netdevice.h:4925 net/core/dev.c:3588 net/core/dev.c:3604)
-[   67.891620] __dev_queue_xmit (net/core/dev.h:168 (discriminator 25) net/core/dev.c:4425 (discriminator 25))
-[   67.891630] ? skb_copy_bits (./include/linux/uaccess.h:233 (discriminator 1) ./include/linux/uaccess.h:260 (discriminator 1) ./include/linux/highmem-internal.h:230 (discriminator 1) net/core/skbuff.c:3018 (discriminator 1))
-[   67.891645] ? __pskb_pull_tail (net/core/skbuff.c:2848 (discriminator 4))
-[   67.891655] ? skb_partial_csum_set (net/core/skbuff.c:5657)
-[   67.891666] ? virtio_net_hdr_to_skb.constprop.0 (./include/linux/skbuff.h:2791 (discriminator 3) ./include/linux/skbuff.h:2799 (discriminator 3) ./include/linux/virtio_net.h:109 (discriminator 3))
-[   67.891684] packet_sendmsg (net/packet/af_packet.c:3145 (discriminator 1) net/packet/af_packet.c:3177 (discriminator 1))
-[   67.891700] ? _raw_spin_lock_bh (./arch/x86/include/asm/atomic.h:107 (discriminator 4) ./include/linux/atomic/atomic-arch-fallback.h:2170 (discriminator 4) ./include/linux/atomic/atomic-instrumented.h:1302 (discriminator 4) ./include/asm-generic/qspinlock.h:111 (discriminator 4) ./include/linux/spinlock.h:187 (discriminator 4) ./include/linux/spinlock_api_smp.h:127 (discriminator 4) kernel/locking/spinlock.c:178 (discriminator 4))
-[   67.891716] __sys_sendto (net/socket.c:730 (discriminator 1) net/socket.c:745 (discriminator 1) net/socket.c:2210 (discriminator 1))
-[   67.891734] ? do_sock_setsockopt (net/socket.c:2335)
-[   67.891747] ? __sys_setsockopt (./include/linux/file.h:34 net/socket.c:2355)
-[   67.891761] __x64_sys_sendto (net/socket.c:2222 (discriminator 1) net/socket.c:2218 (discriminator 1) net/socket.c:2218 (discriminator 1))
-[   67.891772] do_syscall_64 (arch/x86/entry/common.c:52 (discriminator 1) arch/x86/entry/common.c:83 (discriminator 1))
-[   67.891785] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
-
-Fixes: 9181d6f8a2bb ("net: add more sanity check in virtio_net_hdr_to_skb()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Link: https://patch.msgid.link/20240926165836.3797406-1-edumazet@google.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[Denis: minor fix to resolve merge conflict.]                                           
-Signed-off-by: Denis Arefev <arefev@swemel.ru>                                    
----
-Backport fix for CVE-2024-43817
-Link: https://nvd.nist.gov/vuln/detail/cve-2024-43817
----
- include/linux/virtio_net.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
-index e9e681fab607..b56f032de16a 100644
---- a/include/linux/virtio_net.h
-+++ b/include/linux/virtio_net.h
-@@ -96,8 +96,10 @@ static inline int virtio_net_hdr_to_skb(struct sk_buff *skb,
- 
- 		if (!skb_partial_csum_set(skb, start, off))
- 			return -EINVAL;
-+		if (skb_transport_offset(skb) < nh_min_len)
-+			return -EINVAL;
- 
--		nh_min_len = max_t(u32, nh_min_len, skb_transport_offset(skb));
-+		nh_min_len = skb_transport_offset(skb);
- 		p_off = nh_min_len + thlen;
- 		if (!pskb_may_pull(skb, p_off))
- 			return -EINVAL;
--- 
-2.43.0
-
+Oh, right, I see. Thank you Christian!
