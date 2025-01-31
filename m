@@ -1,100 +1,196 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88571F1907
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 19:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B13F1F0E4B
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 19:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738350897; cv=none; b=oSRydRvWPdVWpa7ojboxKvvZqCASJfrvV5bJb/mov2mnUYmekB9kYZ68GboxRtPtXJuiYfKPCFC5vWASvCM/NrGoCt29dA71RJkaGZ6XK5mwxy0N/1tP5aBx7coE9udngFsLnXnX9JkwRjRfQmKDy2vMO3mAGeUTAtwKDOK1/0A=
+	t=1738351032; cv=none; b=PDla4RcASsNi1wbofQwCD0Qqmu4qhGKcT2Db5dvIZCikMklH5Hu52cC10Z9mhCBjgts+fOdfQAL5cswa16kSECkqUoBRScZERMrSp/bBlXdE5lkxLHCsicfoTz3NZii49Pw1ql/ZTOLvaZy3891TaTOTjUhWyl708g4DX6kAv7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738350897; c=relaxed/simple;
-	bh=DIsKm1iFZ3pJzVPjHRPeQbx7XndtXv/0EmG6t+Tb/3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JWZGq1MwnztRnH9zjlEa2MpL0glh1HYRDrmkF/Spq1sT3wzSSG0OxNcgZOObwD1bexyIeAab7M6vVVdTOd4/njVdGJrZviPtKUJEmc+qiAJnu53JzhZPhNWwW2zTPpUMUMepvBTHzrLAHE0CuCtA4Zn54Gcn4bO+9hnshe0Xd/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PRqTIO2U; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738351032; c=relaxed/simple;
+	bh=HGKgCrD34eiQimlf4+cvDNwfNb/2Dei0o6sRjf0UFG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HyvbvtkIjPNMJAFJD3PIkzlX0atjIW6yPdXEt4wSjQBmBtHZ5hYy+UnyHwr6KmAxC2kUL96iBvDDML4EKvBcXEov5kQGt81bdP82BYeQvz9z06NU4bl636wSY3IyZm42biQMPKt4DCbTiUcZcdgvDOMo6W+xH512pbv7howLQpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OtRPh+/m; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PRqTIO2U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738350894; x=1769886894;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=DIsKm1iFZ3pJzVPjHRPeQbx7XndtXv/0EmG6t+Tb/3Y=;
-  b=PRqTIO2UUQcFwYla2r/uGD2d/JfP4s4ke5snDRZbEzV6VqKvbHANvvoP
-   hzyb76Pxhji5FU3PgR2LWdb+p1+VUHKRPtAtJn6t5JAwkh9keH5aZnTjv
-   D3dlZN0yWI9rK2WfvL2epCxdoGzBxNimRCRGWMJa14Yk2DAMRkmMUrUIg
-   tX+VvqcPOmEMJNchmLNLs88BS+l/4+yMUaukJmd/5/FMjjcHjHOE7X1BB
-   PmINA6lZqm+pVDaqG1RCz+ub1051/3rav1LWnQiR3lNX25jJ9FyDKxmll
-   MJCQwfLnkBFnHWDtw+4pRZ1C3tAvW+47Ct++LWcGQnkUETtAZi+AwuQBw
-   A==;
-X-CSE-ConnectionGUID: V9m6iOQhT266ZXS9U8rhzA==
-X-CSE-MsgGUID: Y6L7VNvASLKMzigDBHzmAQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="42848864"
-X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="42848864"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 11:14:53 -0800
-X-CSE-ConnectionGUID: la1/A1W6QN6DvfKEvx41CQ==
-X-CSE-MsgGUID: s7QZKNLQQOyx1bNkS0ljRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="140589114"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 31 Jan 2025 11:14:51 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tdwTZ-000mm6-25;
-	Fri, 31 Jan 2025 19:14:49 +0000
-Date: Sat, 1 Feb 2025 03:14:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Subject: drivers/cpufreq/airoha-cpufreq.c:109:34: warning: unused variable
- 'airoha_cpufreq_match_list'
-Message-ID: <202502010323.RZE0k8gB-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OtRPh+/m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738351029;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kBP2ejv55jQWoe5lkaW4/iObWJ65jHHcwOH2JS5+DwU=;
+	b=OtRPh+/mDsfxSaTWBOIZLr7wtGboUEzdysdGMYmtS5XYXOPhKcayUkLywagOHPNDYwxvMD
+	s6JlwnV5Onc/7C7MioW7oS6Kr7YFaIe99npmilWndE3OAGN161XNvQHK67b4lmosa/Jbgo
+	h44qj2wl8heY6weG7xGLrB56Id8Uq20=
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
+ [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-201-Mnx75jQkP9GyCMnXuetXFg-1; Fri, 31 Jan 2025 14:17:07 -0500
+X-MC-Unique: Mnx75jQkP9GyCMnXuetXFg-1
+X-Mimecast-MFC-AGG-ID: Mnx75jQkP9GyCMnXuetXFg
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3a81764054aso1398445ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:17:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738351027; x=1738955827;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kBP2ejv55jQWoe5lkaW4/iObWJ65jHHcwOH2JS5+DwU=;
+        b=BJDcfosS+Gy3PwQOkzUJrSwPRvnC9d/4Gd1xmHVLKWkjLpAwZA2JA2otDKXXceMSjE
+         u2oufiRFkHbUVFznJQ6cevqlPQtBRrcGRQPmygEI3yH1LfLTACI6L313QwxP2fWrvjqL
+         M9Cky2k7q+voy1zHsBFyo/w16jQUIwzIM2caTOg5T1DcflJQU1/mX5KZFOVsx/AU7B6V
+         NmJlOpErksSLIQuP2PB8b6JCbNpuapJl3V+EXOxkAwuKJCCH7PCqsUz8NanJOhVQe9TD
+         TDTIPmMCNpwUeOhmEa3aG+ZQrGCYOW3dOhsbaIM29xwR2pI0cUk+3LvxkvzxN4isdUCO
+         cu5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUocOXyq8Wm03DXzz6Y2EvyU8cQJd/fxLm2dtDZ4eyPE/tuuipW0Jqb1XOZscA9hbSlKQatCWo4OH+WgJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBfMu35Yv6dsbl+Hl/pZhcDUODibH03qKCJsGvQ2VIbvP2OBCF
+	7KSoDVM/7rtRwmRW8GzbFygDt9Y1BaGuPA//vSbLRwCKueWCp5NNre3Osxr1fVkeqfDDLtLMb3u
+	P0y4gYbwiXK/RFgbdMQBV/PpHt9JbigoMub1+PMjpJ3QgG4LsxbkaOsby+f+OnQ==
+X-Gm-Gg: ASbGncuq1H1ZJefAvGq0u+A3rmL510j8+w7nQttoOuQei+gUnHJnBtEFhlGwZrdBn5m
+	38M5ilH9WOW6Pce62yYxHcoSBAgrhjiuCj57M8YEoUT2Fax9HxcOLNLvPV6PYYZRir4WzcVF7U0
+	ucRdt7q0Vp0TY4i8zt0/mLJ8Y9p5Bfsyj79nkEZkZ9N59OP4gEASIpCeFSgLxQYYQkAjU9pnNnw
+	qlZXTr2BYYGAvRkKhDEsodGh6VihkUFD7GCuicbv8WDA9f3jN9BkAaX4PbXkuN6AMF8UDXVoKWf
+	VztR58BX
+X-Received: by 2002:a05:6602:6082:b0:854:a5e8:3294 with SMTP id ca18e2360f4ac-854a5e83361mr193246839f.3.1738351027028;
+        Fri, 31 Jan 2025 11:17:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH+Yzd6ZzAd6b5E6xmRCqs2veqaIHe5aVhmKvgpoGadfX/Fj5zXiz2QAdx8dJsDaTaRDEZ/zA==
+X-Received: by 2002:a05:6602:6082:b0:854:a5e8:3294 with SMTP id ca18e2360f4ac-854a5e83361mr193245939f.3.1738351026674;
+        Fri, 31 Jan 2025 11:17:06 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-854a15d0413sm100237339f.8.2025.01.31.11.17.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 11:17:06 -0800 (PST)
+Date: Fri, 31 Jan 2025 12:17:03 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Josef Bacik <josef@toxicpanda.com>
+Cc: kernel-team@fb.com, linux-fsdevel@vger.kernel.org, jack@suse.cz,
+ amir73il@gmail.com, brauner@kernel.org, torvalds@linux-foundation.org,
+ viro@zeniv.linux.org.uk, linux-xfs@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+ linux-ext4@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: [REGRESSION] Re: [PATCH v8 15/19] mm: don't allow huge faults for
+ files with pre content watches
+Message-ID: <20250131121703.1e4d00a7.alex.williamson@redhat.com>
+In-Reply-To: <9035b82cff08a3801cef3d06bbf2778b2e5a4dba.1731684329.git.josef@toxicpanda.com>
+References: <cover.1731684329.git.josef@toxicpanda.com>
+	<9035b82cff08a3801cef3d06bbf2778b2e5a4dba.1731684329.git.josef@toxicpanda.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   69e858e0b8b2ea07759e995aa383e8780d9d140c
-commit: 84cf9e541cccb8cb698518a9897942e8c78f1d83 cpufreq: airoha: Add EN7581 CPUFreq SMCCC driver
-date:   2 weeks ago
-config: x86_64-buildonly-randconfig-001-20250201 (https://download.01.org/0day-ci/archive/20250201/202502010323.RZE0k8gB-lkp@intel.com/config)
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250201/202502010323.RZE0k8gB-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502010323.RZE0k8gB-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/cpufreq/airoha-cpufreq.c:109:34: warning: unused variable 'airoha_cpufreq_match_list' [-Wunused-const-variable]
-     109 | static const struct of_device_id airoha_cpufreq_match_list[] __initconst = {
-         |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~
-   1 warning generated.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
 
-vim +/airoha_cpufreq_match_list +109 drivers/cpufreq/airoha-cpufreq.c
+20bf82a898b6 ("mm: don't allow huge faults for files with pre content watches")
 
-   108	
- > 109	static const struct of_device_id airoha_cpufreq_match_list[] __initconst = {
-   110		{ .compatible = "airoha,en7581" },
-   111		{},
-   112	};
-   113	MODULE_DEVICE_TABLE(of, airoha_cpufreq_match_list);
-   114	
+This breaks huge_fault support for PFNMAPs that was recently added in
+v6.12 and is used by vfio-pci to fault device memory using PMD and PUD
+order mappings.  Thanks,
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Alex
+
+
+On Fri, 15 Nov 2024 10:30:28 -0500
+Josef Bacik <josef@toxicpanda.com> wrote:
+
+> There's nothing stopping us from supporting this, we could simply pass
+> the order into the helper and emit the proper length.  However currently
+> there's no tests to validate this works properly, so disable it until
+> there's a desire to support this along with the appropriate tests.
+> 
+> Reviewed-by: Christian Brauner <brauner@kernel.org>
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> ---
+>  mm/memory.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index bdf77a3ec47b..843ad75a4148 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -78,6 +78,7 @@
+>  #include <linux/ptrace.h>
+>  #include <linux/vmalloc.h>
+>  #include <linux/sched/sysctl.h>
+> +#include <linux/fsnotify.h>
+>  
+>  #include <trace/events/kmem.h>
+>  
+> @@ -5637,8 +5638,17 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+>  static inline vm_fault_t create_huge_pmd(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+> +	struct file *file = vma->vm_file;
+>  	if (vma_is_anonymous(vma))
+>  		return do_huge_pmd_anonymous_page(vmf);
+> +	/*
+> +	 * Currently we just emit PAGE_SIZE for our fault events, so don't allow
+> +	 * a huge fault if we have a pre content watch on this file.  This would
+> +	 * be trivial to support, but there would need to be tests to ensure
+> +	 * this works properly and those don't exist currently.
+> +	 */
+> +	if (fsnotify_file_has_pre_content_watches(file))
+> +		return VM_FAULT_FALLBACK;
+>  	if (vma->vm_ops->huge_fault)
+>  		return vma->vm_ops->huge_fault(vmf, PMD_ORDER);
+>  	return VM_FAULT_FALLBACK;
+> @@ -5648,6 +5658,7 @@ static inline vm_fault_t create_huge_pmd(struct vm_fault *vmf)
+>  static inline vm_fault_t wp_huge_pmd(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+> +	struct file *file = vma->vm_file;
+>  	const bool unshare = vmf->flags & FAULT_FLAG_UNSHARE;
+>  	vm_fault_t ret;
+>  
+> @@ -5662,6 +5673,9 @@ static inline vm_fault_t wp_huge_pmd(struct vm_fault *vmf)
+>  	}
+>  
+>  	if (vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) {
+> +		/* See comment in create_huge_pmd. */
+> +		if (fsnotify_file_has_pre_content_watches(file))
+> +			goto split;
+>  		if (vma->vm_ops->huge_fault) {
+>  			ret = vma->vm_ops->huge_fault(vmf, PMD_ORDER);
+>  			if (!(ret & VM_FAULT_FALLBACK))
+> @@ -5681,9 +5695,13 @@ static vm_fault_t create_huge_pud(struct vm_fault *vmf)
+>  #if defined(CONFIG_TRANSPARENT_HUGEPAGE) &&			\
+>  	defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
+>  	struct vm_area_struct *vma = vmf->vma;
+> +	struct file *file = vma->vm_file;
+>  	/* No support for anonymous transparent PUD pages yet */
+>  	if (vma_is_anonymous(vma))
+>  		return VM_FAULT_FALLBACK;
+> +	/* See comment in create_huge_pmd. */
+> +	if (fsnotify_file_has_pre_content_watches(file))
+> +		return VM_FAULT_FALLBACK;
+>  	if (vma->vm_ops->huge_fault)
+>  		return vma->vm_ops->huge_fault(vmf, PUD_ORDER);
+>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+> @@ -5695,12 +5713,16 @@ static vm_fault_t wp_huge_pud(struct vm_fault *vmf, pud_t orig_pud)
+>  #if defined(CONFIG_TRANSPARENT_HUGEPAGE) &&			\
+>  	defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
+>  	struct vm_area_struct *vma = vmf->vma;
+> +	struct file *file = vma->vm_file;
+>  	vm_fault_t ret;
+>  
+>  	/* No support for anonymous transparent PUD pages yet */
+>  	if (vma_is_anonymous(vma))
+>  		goto split;
+>  	if (vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) {
+> +		/* See comment in create_huge_pmd. */
+> +		if (fsnotify_file_has_pre_content_watches(file))
+> +			goto split;
+>  		if (vma->vm_ops->huge_fault) {
+>  			ret = vma->vm_ops->huge_fault(vmf, PUD_ORDER);
+>  			if (!(ret & VM_FAULT_FALLBACK))
+
