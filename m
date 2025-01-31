@@ -1,116 +1,81 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D091EC00C;
-	Fri, 31 Jan 2025 17:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738343726; cv=pass; b=Sw4RyFb64D5H7CDoLqzSgYB2gsWYb3Y+LQ4hA2sH3VDgVjY6FMBOjlybZCo3Ce/kjvZkbCbMd7f39CgUmYSqmDR3LG7ojH+LSgZUeodGmfVCEQSruhwVghgcWdfng8OCjboVD8yeddlie5+HZQ0ZpK/bsZxnjx5+jpCyi429Sw0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738343726; c=relaxed/simple;
-	bh=oK1k3rEWrJmRR4OPtJz4C1rlVLLBu1Vzh9ut0mr4Kbk=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=thGTtZCO5/z8BOLX+qT05t6LMigUAk4is+mp+XbD5QpK2dWyjyMPSW3i2AU2oBRK6CCAUjrTpsQ4KsYJVbMTP7jFD2s2mjt1EANwiZjxaahq9dwPXOLM6EhJQ7Y4Q1DTZVyyUDKMg0EeKD74MucCOy1He30XMyTPJWBzVIHht14=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=LeftFOaa; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72412136351
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738343794; cv=none; b=hM5EM3vDELg+WNF4DdV3XckaoXDyetpoDQ3yh2gWf126cdQTN80gEeuijnWjBrtl9eKpnOzgrMG3mwgPG3BBJFzG61hmHn8qoHOBnmNklqvQfBjhcvPqMkD2dmBhg1MwYADpLPdxRmLCI518QXfr6jZ5gJbvhOZKIHv/76jPPGg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738343794; c=relaxed/simple;
+	bh=IJpXKd7iwRYoZffANHjuO9WmlQvJWizra56J/pdegfA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=osZ+3ycPYfZXRyiKh/72hR6ZY7Vvf5h32AXsonbU94+YWe35/KZNDLMa0Ku4cUoRqisOvxNa5NlnUsKJAY0KNByBLlRd0liLaYfVGjLAxvP3PhHf1kCMvZupWMa3amg0M6xECeshP0XW1deqF6TKeyy6jyI0u2PwTpz4qHDcHS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Vt4jj7fU; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="LeftFOaa"
-ARC-Seal: i=1; a=rsa-sha256; t=1738343691; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=oBfFf7YS+9DM1wSuZx46qHBPGEteeuSNFmKktsL/9vZJiEjo/EeP4go+8a9Z1HryUfRAxvTSgjLupFrM5VVRYeGx1rVmJzVq/U3eW7fcJ2nE+xoyOOvcosnCCjtdhRRIRhtna8IibGllWAU2SRIsHEHJa9MIwbXxbHuXN50Ls+g=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738343691; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=wMwHeEjetWELU3ewH8V8bdOBFfw6fj+ETIzH3dhS8Pw=; 
-	b=JG5MbuRDvch7lXvIdp5PinwUVikMuX76d/o+Yoth6n6jvY0bEy6cNZyPXuiZ9W7OCz8xBHR1k5WmZTDGWnzZne24QV7ER/Egsp7oO57EbbPeTVCq9QS9YcsVeJJKrRHmsWOabiBx0KghWDfjyBesY3cbVgOtJqucGkKJwD66hdM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
-	dmarc=pass header.from=<Usama.Anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738343691;
-	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=wMwHeEjetWELU3ewH8V8bdOBFfw6fj+ETIzH3dhS8Pw=;
-	b=LeftFOaaedobAJnZeKpDrYsv2CxSy03WhoQnpk5bA8n2EF3G4vf2Sei4ldA9evVv
-	6kSacW4yCzJrjRcQjDzbRvnmjcy+AcQbpXVnP71Kxsd3A1vYlRc/YGmYA/iFW6cNaml
-	pn1cle5WNif/0HbS4LihylkK/GL7ZBJYSdx9os7Y=
-Received: by mx.zohomail.com with SMTPS id 1738343685182938.1558923456199;
-	Fri, 31 Jan 2025 09:14:45 -0800 (PST)
-Message-ID: <d6717b2e-4138-425b-b8b1-daa40d30bbf3@collabora.com>
-Date: Fri, 31 Jan 2025 22:15:01 +0500
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Vt4jj7fU"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaeec07b705so367173966b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:16:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1738343791; x=1738948591; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kqSRqdRuMVUS0hR3bXfCSvdzWeHIS96mx4dwh5De168=;
+        b=Vt4jj7fUBJFyOLCUAOxOfXiwNgXuFY6Q0+0QTv81LcG8cTFIqNrdA3c1ZrI2WUjgYC
+         hgipZhXShaTH9CzqvPAOlko6JWk3hdwWhJuPSDgQ82X0XVB+dQAV/yGaxF5PTSszLoZb
+         gZW8e2Nd3To8gCqeaRHdoXBwmelP7wj7rPYnAZc+SJIl3H6o5TCVfh5YACEohsO3mWX2
+         665MBzMXP6VStOKIIQO/zR1bSm3N8h+pMgKDQYpbtNrBkxKfwzBx7uXec8c0e9FKTS3Q
+         r2umxkGhv0kTE61CmmqKmzJKcbAFpa0FWPBRcpVxehhjwOC3gcFGQFO+Ljixn9e5i3L/
+         UNHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738343791; x=1738948591;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kqSRqdRuMVUS0hR3bXfCSvdzWeHIS96mx4dwh5De168=;
+        b=LBNbWwsiX+9Ay4a8qOWPuRDzFLRegUCJTzQVihaywrMk614lEDXa/6rDnu0lv0kxr5
+         NISnZq6vudV+sbDoEtQsedPArYLnuiLLRT/VvlOj7BJ2Jz8On9+q5vkSdEv6Yq+evahJ
+         4VoHSBuqKujyv0DmaF2vWeBR9WOJMlJA9aZEXeugfH2EoQffAsVwJ7hJQ9Ln/rZshbww
+         jWOpNryCStZzIV+lgsDfu4NBMBOF4BYG7oCFY71oRn4PVNKVaDSKfNxNm+7c8Qmk1Nh/
+         6i25URy7D/QoFHi+EXmDbsS4iJ75e1EXx/czZj+SfWixgo6XvmOxEIvRIWEGeTX6plJB
+         7uMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVSIgNC9f+PZya0emY4TMKVSJiEaXCfHqRnermIqykpwvZKC3qsPFD1cwqBI8wMjw5R+EQniYKEHs8fNsM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrnUS75qBfwS128VdwwVxS08t85tDsiQmsCsOxayepF2EXrJZn
+	1fjrkfiDmn+YxlFnwHgyLxMGUp114hqF6qCz9TC4bQY+9RlZHQI7k3/OYKlfC3HG+n/GQ6IH2z0
+	gZEV0K1PW3/maE7r/gcGS+GMn4fQvLkudFm+gyw==
+X-Gm-Gg: ASbGncuvB5tH/8l3s/oQ3Hjqm/OiVIRoUbKESub1LYzpA5zqGPmaK98h0JILYhqMwGT
+	ZnoY+E3dTuQc2E6inzvGmxJKQFjZ5V+HetL9ExjH6i5O6GYrHa7eJo7UGZeyo0awZGtLfP3aSm4
+	Bt+IJQV8kbw7vL0LboZsyYE240Zw==
+X-Google-Smtp-Source: AGHT+IFrg/3LHjJ/lnlIA5OZd/lPJwrUoD7pnmT/wTf5Yed08bwxEvL1yRpJsQHHZdHQcPsit+hXF79AJUi6y8BFTXI=
+X-Received: by 2002:a17:907:728c:b0:ab3:64dd:bc89 with SMTP id
+ a640c23a62f3a-ab6cfce265fmr1329620366b.20.1738343790697; Fri, 31 Jan 2025
+ 09:16:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Usama.Anjum@collabora.com, patches@lists.linux.dev,
- linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
- akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
- patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
- jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
- srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
- hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 5.10 000/136] 5.10.234-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-References: <20250131112129.273288063@linuxfoundation.org>
-Content-Language: en-US
-From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
-In-Reply-To: <20250131112129.273288063@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+References: <20250128133927.3989681-1-max.kellermann@ionos.com>
+ <20250128133927.3989681-9-max.kellermann@ionos.com> <794043b6-4008-448e-b241-1390aa91d2ab@gmail.com>
+In-Reply-To: <794043b6-4008-448e-b241-1390aa91d2ab@gmail.com>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Fri, 31 Jan 2025 18:16:19 +0100
+X-Gm-Features: AWEUYZngMvc8L7CbnAKSWZY60DE5_wFqVJVZxAc2vuwSHc9kVxszNfA2g1obggI
+Message-ID: <CAKPOu+-SYVHAWbLgrih338E_wCyOqEqA3cBHXf3qa-Xbx43hgg@mail.gmail.com>
+Subject: Re: [PATCH 8/8] io_uring: skip redundant poll wakeups
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: axboe@kernel.dk, io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/31/25 4:21 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.10.234 release.
-> There are 136 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 02 Feb 2025 11:21:01 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.234-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-OVERVIEW
+On Fri, Jan 31, 2025 at 2:54=E2=80=AFPM Pavel Begunkov <asml.silence@gmail.=
+com> wrote:
+>                                  |     // it's still 0, wake up is lost
 
-        Builds: 31 passed, 0 failed
-
-    Boot tests: 420 passed, 0 failed
-
-    CI systems: broonie, maestro
-
-REVISION
-
-    Commit
-        name: v5.10.233-137-g99689d3bdd980
-        hash: 99689d3bdd980ed74fed764babc35d90522391ac
-    Checked out from
-        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-
-
-BUILDS
-
-    No build failures found
-
-BOOT TESTS
-
-    No boot failures found
-
-See complete and up-to-date report at:
-
-    https://kcidb.kernelci.org/d/revision/revision?orgId=1&var-git_commit_hash=99689d3bdd980ed74fed764babc35d90522391ac&var-patchset_hash=
-
-
-Tested-by: kernelci.org bot <bot@kernelci.org>
-
-Thanks,
-KernelCI team
+I think I misunderstood how these polling functions in the kernel work
+- thanks for the explanation, Pavel. This one patch is indeed flawed,
+and I'll try to come up with something better.
