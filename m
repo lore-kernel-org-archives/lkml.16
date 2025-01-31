@@ -1,100 +1,139 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BB31494CF
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452291F37D5
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738354562; cv=none; b=XyvHIIIvnFigmTOkFEQ+DXQgvVnjoEMgYdSS7HpknlOSISPe10ETNqvec100gSzLeQ5xBIW8Lp0MBvYwzaVjAi6rQVmMKD0JzMvofy9IRevbwYasg0v72UxWa4+m+lAtFDNkuvfombCNJGQe4i4aWlPf6G7sLAbq2lZqGn9vCrQ=
+	t=1738354567; cv=none; b=FYG8ZeGjQ84e5Xr4HxadgUqz/GhQykyw5JaPzP+CBz0VQGf1IgSVF86doJTPZHmMypjmW3QnWT7xC3/cPnLtx8sdhydZFRUaB5T3lu+VOFseznjkfuPeWjAD2tSdRWkovaEhPZYqAC7ORBKJrrqaLFFSDdqqywQD9jgAQwbp+9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738354562; c=relaxed/simple;
-	bh=uyfEtlalm7/2N01yVWSHdBZ3Ltv3eZdpHMgUF3R+Au8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ILGgQSEo1Nwh+whTMfrHOV5Up6AHOuq2vetIE52lmApp5Dj/MJ9PXIV5bX/GU0O6tbL1zGT4Uc+SgasrXrNBkbLbV1p/ByRNNTXwSlY97gE4kdHcoaTaqWDdBA2Sz+vwR7WUNC+fZYYELgo581vcKVm7wj6PCCbXXytD2SNRlVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZUyaBb5o; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1738354567; c=relaxed/simple;
+	bh=tIJDx3MGb8/u8yuG0YkbXmNQifDGVxb6LKspQe9uvXM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nUn5UAsWHn09mMzB7cckw3+xJD9qTuuUCx/zfuNKMcKGr3M6y8cUXUOWCCYrcC1wbIIu/6Nw4Q2O00FZ3qZOF6Ww/4XjjGPhcs7gfwPZ3sUKy2f5wfTCyfOry4CpYvwE1uTD4a8fscimBFo98rlHpkDD1jaGcM49YFPlKSuxqcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tjSha3Yv; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZUyaBb5o"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aa684b6d9c7so397859666b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:15:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tjSha3Yv"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3862c67763dso991829f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:16:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1738354558; x=1738959358; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+PfSgXSELrUaoTDkqCzKwOcJSGmSEs6lHYZmUXLsucE=;
-        b=ZUyaBb5obN+CAyN/xjV2tFQ1ZRHXsUAgOXpO+L4mg9Srd5g0Np6l2ARNvHihj1vbfp
-         83uHrJd1XNQktuJIorGPYEHCUFFNvrU3v0sUbY3qUNw6UuZC4ZnyuN5CEI3dWxLcGkBg
-         K4SRHfjnV6BXUJ85BZZTzefnjC0wl/Ab8HC6g=
+        d=google.com; s=20230601; t=1738354563; x=1738959363; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wE6V39i40d6NuTUP/8PV2tcJv+y8Kf5+SgzZFsCF0pc=;
+        b=tjSha3YvJTfdhaUn5NI2LYluOmxUj3+OgcJmwJfkT3Deeqis05mKg3qxqY4CLQ0oW6
+         yvhRb/PJzi0ee44v8+ZRS8P8nWLMuGCvb0dU5lhHAmmaU4H3eKylCu86biYRw6EuxBJG
+         ArJEcpsUtan1ciiTAik1TKi02wGKpqCnFZDlYjRS8r4CEYvawL5ADoNNcqLImwYtmgaA
+         TcJHG/BIGQyvfhnem/YuViH6VqCwTSJC4dS7Q/T4qA0Jc46OFyRJwnKJfupsZH9p1tZb
+         Z+QSe87Pt69QyGMWER/o+CuvQJO4nrbjNInwpl8wmQVE28yxYQ443GOWqWt10g7j+huR
+         7SFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738354558; x=1738959358;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+PfSgXSELrUaoTDkqCzKwOcJSGmSEs6lHYZmUXLsucE=;
-        b=dP7w7ChY8QDAnYjNPH32Z2yY6NeMnBqrKF6p87KhagAqIdyfp5qdVsrrVKsZuNzHq6
-         RCL9WIb4s1p5cMJ2i5SC5jA+SbjxMKLEgv8mqJtn4s2cbE7altKGOts0F3VU0yJyOfu6
-         V7PaYue3m7UFERszadZ/secM1AuZES4zLr59z2uxvFmGfDv+m5qoMS27qZ+fmLRICi6M
-         uvrNtFr3V5L1iUjIDsePcqFL9HEAUbsl/iua37lDDBsEjGNGWeMQVKrTaXymPw//seIX
-         smisQxOoh25/IG5E1oCNGfcosNVr0Pltpaq/xYG7OZnwfaTVCoLha5vyWKIevEsrLDxn
-         cEgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRVWh9iU6Wc7HsV+Ej6p5H3KbXOw/PANGkiyxfcauN+uwSDi00oMjmLLsKjS7M8O8lzFx04pS3FhfJMrM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC+nAJ7jfugMjtNT6gj1mDyj6J8+lxmxGXXTq9ro896ybrel5w
-	47doDrg8KcqUxPEVTZyrXcBwfp8DfJtrDpZnYDzKiN6Bj6Q1u7FVK0QftGvcOCFWc6JtynAuJgJ
-	a4uQ=
-X-Gm-Gg: ASbGncuKJop9rbRn+H7vh5TcFSAhFK3QvR908dCZcMzvlwArJo9P9294wKAS5f/Bj1A
-	/5t6dxCa58sER9lObjjC7/iIPnADIc+XveBwx2yM4k99+NmcQDS8yQuOREH90gawPe4iLVBui0c
-	usaEZwEqwzH5L17UaZP3hMt4xJ8AEz+uvxD2/49XHX+Qnn1+XZuhDCXPk0tRMxhDng5N/ZVogX9
-	Jhpjffxz2O64+MoTiKPkeH79u8ylHO+THxef74NAoTTkYQzCDYegRG7wdgfSX+cgX1swqjv6vVE
-	pKnRoLowBxf+ZN3p2cnrX39WkesfvssWvc4L7fU5Lh9lPCSK1aHtKvtdzugy53g4mw==
-X-Google-Smtp-Source: AGHT+IHRVV1jZhy43pihZcnluQMwTXZAQuqUOAQcdnoeg2xekLqBiUHKstRraEXiEylEnz/s+omV3A==
-X-Received: by 2002:a17:906:6a02:b0:ab3:875f:a246 with SMTP id a640c23a62f3a-ab6cfcb3a99mr1464027966b.7.1738354557832;
-        Fri, 31 Jan 2025 12:15:57 -0800 (PST)
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ffd42sm349178666b.95.2025.01.31.12.15.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 12:15:57 -0800 (PST)
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5d90a5581fcso4152511a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:15:57 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVN8hw+ASsDeAY0Xdt0G/VGEPNOXUJsVYD4tBpR0Z5/Uv7+TVdrmizKbRFbs7UQ5utkKHjlAis/GL39CjU=@vger.kernel.org
-X-Received: by 2002:a05:6402:2747:b0:5d9:f9b8:e7e5 with SMTP id
- 4fb4d7f45d1cf-5dc5efc6f82mr13561155a12.15.1738354556788; Fri, 31 Jan 2025
- 12:15:56 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738354563; x=1738959363;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wE6V39i40d6NuTUP/8PV2tcJv+y8Kf5+SgzZFsCF0pc=;
+        b=ViKRV4Jprhi1PYyCFDs+9FPN7mQq85lT/XFsjN0OfFBhtIQLANdj6PtbK0yI/zv6La
+         nH1zG4tKi+/YjBwnwO/IAQL8U6j/0bOlZdsjTa5gAiL9TG5l05VlxzlJN5Z6gpJlP9ne
+         cYiX8J94rQ3wwoNNurupyYyEAlDxiv2RdIUGaG58mNglS1RRanD40ZEB0v4loe9fiDnD
+         ncfL07fGJgrA2mbVGbWim4zL4qukGOIJwiMQr20aEITDM3w0NVWkY8uT7kxudAj65B6Q
+         ctjib8lWSmJdHCe29AalJOdr1tdq1brgeb7bLibHlJjZWRzEozPPv4lOh60VQXhIm5Zs
+         B0Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCUR/0pY66Qg1jBoxszddB8ucHsNoHUUIElPBoYpx/MolX4kpOt6+hyu2Ut5DINpUmry5Yeh6wkqFKyWCMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrRZY/Sq4xBpzstG6CLs0mZgx03i/De7UClccTgHianhKV5/YU
+	Ujye/c/Jawfu4lT75E8K9y5VsGl7/qN3uetnvghPE3jaGHirarjdWOKrkx/dVDbj6RJKLGMwzvy
+	RQa+YJDguoXsFYA==
+X-Google-Smtp-Source: AGHT+IHdZRSPnylky1cQaVOLb3uHYm9KoKlk1DX0c8hbcjLUvGhulR+Xs+vVmbcnVpig7x/2iQC1+PRt4CV+/aE=
+X-Received: from wmbbd20.prod.google.com ([2002:a05:600c:1f14:b0:436:e748:58a3])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a5d:4348:0:b0:385:f1f2:13ee with SMTP id ffacd0b85a97d-38c520b5646mr8375424f8f.46.1738354563744;
+ Fri, 31 Jan 2025 12:16:03 -0800 (PST)
+Date: Fri, 31 Jan 2025 20:15:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAK7LNAQeyWYm2OZ6p=vWJegs_VZMz5RN+0fze6GG=f-ZGWQ3nA@mail.gmail.com>
-In-Reply-To: <CAK7LNAQeyWYm2OZ6p=vWJegs_VZMz5RN+0fze6GG=f-ZGWQ3nA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 31 Jan 2025 12:15:40 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whzh=4XxP5mQEh9G+xYOjBLxpyV16Hk9NWMp5PszrKRWQ@mail.gmail.com>
-X-Gm-Features: AWEUYZlbFPcnU2fZBjulclvXOpxQ-WgVIzYy8hdJtliGciimcsvogBzeWwY4yos
-Message-ID: <CAHk-=whzh=4XxP5mQEh9G+xYOjBLxpyV16Hk9NWMp5PszrKRWQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Kbuild updates for v6.14-rc1
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAHUvnWcC/2XMy07DMBCF4VepvMbIM76GFe9RsfBlklqCGDklB
+ VV5d9wKpICX50jff2UL1UwLezpcWaU1L7nMbZiHA4snP0/Ec2qboUAFAgyPH3UplQc6X4hmDlo
+ FSk4PhJY19F5pzJ/34PGl7VNezqV+3fsr3N6fFOr/qRU4cOEGkBaU96Sfp1KmV3qM5Y3dWiv+e
+ i0AofPIBYeAKiZprQHXebn32HnZvPd+DMn5EVTqvNp72XnVfAzCmMGlMKjYeb33tvO6+dFG6Vx EaRT+8du2fQPFjJ8MrQEAAA==
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1887; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=tIJDx3MGb8/u8yuG0YkbXmNQifDGVxb6LKspQe9uvXM=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnnS93qDya932/5lX79+rSAq3zqOZrEQ+tQlTBp
+ L5AUbF0WTSJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ50vdwAKCRAEWL7uWMY5
+ Rn0UD/94CFTNdK9ET1r40OvEqWVfd4fKxLmRbdI7Maja7esva9fOCPxToCFY2Qonc/5aR09qe8D
+ E6M4vd5GNDSr8Uwn8T/0kj022fEyHsScH1BAcOnmYwBdTgmgQEnV5Ya1dRAr2CQ/lXth8fyxeef
+ 94VvO//OU006MsDP+cEl9bTKnKbV2/QeLlagHLLNncMxaYfDfbTJDk7Y+9+xl024fRdZkwvoRIY
+ idMcLIwc7/AzNOBpeL2BToA2Vhb2DAGddq/stVTqSYGfBoHdW/m+esg/hLxzzHUFuULJwjUSasF
+ TRY1vaJxdq9j9nnd39kJ+Egb3btG+J7N/BqG1oAT2CO2+tDFBl9FlXvQ7rvHqq5eev85NgR6IcG
+ 4I6FOrMn7jpNnEkRTNDt9WPZSK+g7hDYCbSJcGQVL3xEm2aFpsGJHiakxULHBJLw26m491DGOds
+ CL7NGaMLFYgLg2ohyDUNMgM4pDuswYFi/22O6C0yatg5H+Hec2h3fOyGOFdU1sQSKAMBnjvzq2p
+ 5vVwhhcqVXD0+9/dg0M0uo9rooDlPoaEVHtUArKOSaLm05EI2qkMYc4KquX7ojoF0ke+VbZWrmR
+ HRjbVLsjvuurzR+fyJLuJAUW4tU4hYBkry7IDEV2IFfej4ye0fiUK7z7t4mAUtxl+px/reSc5LO A0stcKtjvKicmAg==
+X-Mailer: b4 0.13.0
+Message-ID: <20250131-cursor-between-v6-0-603bdc7d4449@google.com>
+Subject: [PATCH v6 0/2] Make the Rust linked list cursor point between elements
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, 31 Jan 2025 at 11:45, Masahiro Yamada <masahiroy@kernel.org> wrote:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-> tags/kbuild-v6.14
+Please see the commit message of the last patch for more details and
+motivation.
 
-Hmm. I was expecting the CONFIG_TRIM_UNUSED_KSYMS fix to come in from
-you too. IOW, this:
+I was testing an application using this list and discovered a bug, so
+I'm sending a new version with a fix. I also added a new method to make
+code using the cursor less confusing in a certain case.
 
-  https://lore.kernel.org/all/20241214105726.92557-1-masahiroy@kernel.org/
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+Changes in v6:
+- Fix bug where Cursor::insert_inner does not update `self.list.first`
+  when inserting elements at the head of the list.
+- Add a new `Cursor::insert` method. See its implementation for
+  justification.
+- Link to v5: https://lore.kernel.org/r/20250127-cursor-between-v5-0-f7c388c23642@google.com
 
-which fixes the "load_utf8() ->symbol_request() -> symbol_get()
-returns NULL" case when CONFIG_TRIM_UNUSED_KSYMS is enabled.
+Changes in v5:
+- Fix list / list2 in example.
+- Add remove_last function to example.
+- Link to v4: https://lore.kernel.org/r/20250123-cursor-between-v4-0-cb06698db94c@google.com
 
-Obviously I can apply that patch directly, but the reason I _didn't_
-do so was that I was just expecting it to come through the normal
-Kbuild tree... Pls advice,
+Changes in v4:
+- Actually call the example functions.
+- Link to v3: https://lore.kernel.org/r/20250122-cursor-between-v3-0-aaafbd8af14d@google.com
 
-                Linus
+Changes in v3:
+- Fix `CursorPeek::deref` to use `self.ptr`.
+- Reword comment on `ArcBorrow` in `impl Deref for CursorPeek`.
+- Link to v2: https://lore.kernel.org/r/20250121-cursor-between-v2-0-1b24cd377618@google.com
+
+Changes in v2:
+- Extract insert_inner refactor to separate patch.
+- Make move_next/move_prev not wrap around.
+- Add some examples.
+- Link to v1: https://lore.kernel.org/r/20241025-cursor-between-v1-1-08913714aae5@google.com
+
+---
+Alice Ryhl (2):
+      rust: list: extract common code for insertion
+      rust: list: make the cursor point between elements
+
+ rust/kernel/list.rs | 471 ++++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 379 insertions(+), 92 deletions(-)
+---
+base-commit: ceff0757f5dafb5be5205988171809c877b1d3e3
+change-id: 20241016-cursor-between-154bed859e27
+
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
+
