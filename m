@@ -1,98 +1,166 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E0D1B423F;
-	Fri, 31 Jan 2025 10:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C66516ABC6;
+	Fri, 31 Jan 2025 10:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738319314; cv=none; b=YsNIYJv0j3ck3BfXOuCuCMNqAVwsYs5r7HVKfJnbtWcJKoyHnsaaqL/k8bKiFrTwDvkniwgOlXgqMT7mqiiaBmK6Hd6uVyFtoF2Fvf2cPW0Nq6wqIQKyCthk+KR/5VeeW2RmcwNzJ/TKM5hstLq+s3Oo4tMDMyXhw7FngWqQGwk=
+	t=1738319642; cv=none; b=cEYlE0K8uVVm4K6fU7mdiNjGVwqr44fnBT9wHB6LdBNCQKCyYWqoMiq11r3xRaHFQ0BlA5R1C6MB9uOMGhtk1VsvbgjPAO6YduoLAQUtKg1iuCZet6+0HOX2vE342rEKoV8iM95hnuGtuuNpWdSftAY9aA/EyyXf+DWvrapD0OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738319314; c=relaxed/simple;
-	bh=Ngn+x8n4rSzMDa4wvTm2K4/vqa/gKvM4HYdaqrX6lUM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GVO73eKjkF1ls0Zc9UKVC4n9zeOwKMR7Hl9dv3GGXqUO6DR1+nNppo20lHFGXHshWuvYWPllpHFF8HVDsjsRmoEuCkGPN/hcdUYe/7emg2U1iHy8WImMqrZk2VTSg7HVQWA8KHlVSESI6XNyA1qCtZV0C8Zu8k31yzBxCkP8nS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bEZwpGVW; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738319642; c=relaxed/simple;
+	bh=507IordbBCY3IYNuq34NGFeKCmJd+B5w6IiJLC+fePs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fDTlfEvOUZ2sQo8zEwrZZHBf2pVhbGB11nh9tsgyksuf57g39VTw1QIRJYFxgDQCSN9nZiCi/4OPGC7x9aOTbWh04oSkJn4IgUWPrS5RCyueFuKKszS0TCfQZRoRJHBKuXR9vj+qc9ezoS8AfCuDCQ28drS4ftiUoCDsjE7bh7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJKwgYx4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bEZwpGVW"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50V2OMvx021899;
-	Fri, 31 Jan 2025 10:28:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=JoJ3ONbSXjxLwrAbvzPcLxFgL2I7LrPSZ3omA2BJc
-	qY=; b=bEZwpGVWAaO/o0CFBIRiqtHF/vGGjtGdPtk+kDHPSd+b2/xvmmLKfyD6u
-	OzBV2PDjHAkmYICW83SQEhhO4lKHIey09tYca1kSyCV/9J7Fa+ESKcM/wu5RjaOr
-	YhutLosROnpsBoZIf779GkKHDty81cVg47d6cCeBLXqttz4Tb6MpA7J+6NHG97+G
-	Xz3pCoH6HNzGBq02+vKUkrs+LgAlkdlNW/z3HunCS0e3HL5oNQb7Pl72+S/pdvLW
-	Os03Nls2AZZFSClK3fDbj5U4rk4X1gosgkuFCiz5hY+ivpa5882149VLCtDZaaA4
-	iUzYDDuo9+FwD1skF5PGRXHLBiL/g==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gnby9qwg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 10:28:23 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50V8C3ot017213;
-	Fri, 31 Jan 2025 10:28:22 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44gfayb3w0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 10:28:22 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VASJW246793206
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 10:28:19 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0E7982004F;
-	Fri, 31 Jan 2025 10:28:19 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C6C7F2004D;
-	Fri, 31 Jan 2025 10:28:18 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 31 Jan 2025 10:28:18 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, namhyung@kernel.org, linux-s390@vger.kernel.org,
-        james.clark@linaro.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com
-Subject: [PATCH 0/2 v3] perf test: perf record tests (114) changes
-Date: Fri, 31 Jan 2025 11:27:54 +0100
-Message-ID: <20250131102756.4185235-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJKwgYx4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3B3EC4CED1;
+	Fri, 31 Jan 2025 10:33:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738319641;
+	bh=507IordbBCY3IYNuq34NGFeKCmJd+B5w6IiJLC+fePs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AJKwgYx4wGk4PbRGB4npZ2QBeZdqUHm9GDObPJLYwi4QVAeIiD/JUAEdJCA4jfVJX
+	 rUJtHR6NXauwiMPCI8XW39mtJWVtbqbHXrWIojC0Q9wyE6Ha2DVWQz1qoFjicDUSz0
+	 hxQIAv3AdOZAcrJShTqAxDvFYg4zExkFycMUDIy3KdBbHiTIwPuM4qfvswmshxj8dz
+	 MQHzCMpmponYQWuk6LezAa/Qlzp5c3quNX8bQml4td8phwAx9E4ghEJBsP5T6Kjc1J
+	 G9dXBO8Z8/Dak5ChT1OTFimS/bk21VAii6mJLZYx+xg9MbvJCPO9DGTYWtgX/cvHT/
+	 gmD2oalMNaqzA==
+Date: Fri, 31 Jan 2025 10:33:52 +0000
+From: Simon Horman <horms@kernel.org>
+To: Basharath Hussain Khaja <basharath@couthit.com>
+Cc: danishanwar@ti.com, rogerq@kernel.org, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+	tony@atomide.com, richardcochran@gmail.com, parvathi@couthit.com,
+	schnelle@linux.ibm.com, rdunlap@infradead.org,
+	diogo.ivo@siemens.com, m-karicheri2@ti.com,
+	jacob.e.keller@intel.com, m-malladi@ti.com,
+	javier.carrasco.cruz@gmail.com, afd@ti.com, s-anna@ti.com,
+	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org, pratheesh@ti.com, prajith@ti.com,
+	vigneshr@ti.com, praneeth@ti.com, srk@ti.com, rogerq@ti.com,
+	krishna@couthit.com, pmohan@couthit.com, mohan@couthit.com
+Subject: Re: [RFC v2 PATCH 06/10] net: ti: prueth: Adds HW timestamping
+ support for PTP using PRU-ICSS IEP module
+Message-ID: <20250131103352.GH24105@kernel.org>
+References: <20250124122353.1457174-1-basharath@couthit.com>
+ <20250124134056.1459060-7-basharath@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: nJ1lRXxB3AQiatglAv5QQdLXkrY0pEoG
-X-Proofpoint-GUID: nJ1lRXxB3AQiatglAv5QQdLXkrY0pEoG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-31_04,2025-01-31_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 mlxscore=0
- malwarescore=0 suspectscore=0 phishscore=0 mlxlogscore=799 clxscore=1011
- bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2501310075
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250124134056.1459060-7-basharath@couthit.com>
 
-Change event intructions to cycles for subtests
- - precise_max attribute
- - Basic leader sampling
-as event instructions can not be used for sampling on s390.
+On Fri, Jan 24, 2025 at 07:10:52PM +0530, Basharath Hussain Khaja wrote:
+> From: Roger Quadros <rogerq@ti.com>
+> 
+> PRU-ICSS IEP module, which is capable of timestamping RX and
+> TX packets at HW level, is used for time synchronization by PTP4L.
+> 
+> This change includes interaction between firmware and user space
+> application (ptp4l) with required packet timestamps. The driver
+> initializes the PRU firmware with appropriate mode and configuration
+> flags. Firmware updates local registers with the flags set by driver
+> and uses for further operation. RX SOF timestamp comes along with
+> packet and firmware will rise interrupt with TX SOF timestamp after
+> pushing the packet on to the wire.
+> 
+> IEP driver is available in upstream and we are reusing for hardware
+> configuration for ICSSM as well. On top of that we have extended it
+> with the changes for AM57xx SoC.
+> 
+> Extended ethtool for reading HW timestamping capability of the PRU
+> interfaces.
+> 
+> Currently ordinary clock (OC) configuration has been validated with
+> Linux ptp4l.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
 
-Thomas Richter (2):
-  perf test: Fix perf test 114 perf record test subtest precise_max
-  perf test: Change event in perf test 114 perf record test subtest
-    test_leader_sampling
+...
 
- tools/perf/tests/shell/record.sh | 53 ++++++++++++++++++++------------
- 1 file changed, 34 insertions(+), 19 deletions(-)
+> diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
 
--- 
-2.48.1
+...
 
+> @@ -682,9 +899,22 @@ int icssm_emac_rx_packet(struct prueth_emac *emac, u16 *bd_rd_ptr,
+>  		src_addr += actual_pkt_len;
+>  	}
+>  
+> +	if (pkt_info->timestamp) {
+> +		src_addr = (void *)roundup((uintptr_t)src_addr,
+> +					   ICSS_BLOCK_SIZE);
+
+Can PTR_ALIGN() be used here?
+
+> +		dst_addr = &ts;
+> +		memcpy(dst_addr, src_addr, sizeof(ts));
+> +	}
+> +
+>  	if (!pkt_info->sv_frame) {
+>  		skb_put(skb, actual_pkt_len);
+>  
+> +		if (icssm_prueth_ptp_rx_ts_is_enabled(emac) &&
+> +		    pkt_info->timestamp) {
+> +			ssh = skb_hwtstamps(skb);
+> +			memset(ssh, 0, sizeof(*ssh));
+> +			ssh->hwtstamp = ns_to_ktime(ts);
+> +		}
+>  		/* send packet up the stack */
+>  		skb->protocol = eth_type_trans(skb, ndev);
+>  		local_bh_disable();
+
+The code preceding the hunk below is:
+
+static int icssm_emac_request_irqs(struct prueth_emac *emac)
+{
+	struct net_device *ndev = emac->ndev;
+	int ret;
+
+	ret = request_threaded_irq(emac->rx_irq, NULL, icssm_emac_rx_thread,
+				   IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+				   ndev->name, ndev);
+	if (ret) {
+		netdev_err(ndev, "unable to request RX IRQ\n");
+		return ret;
+	}
+
+> @@ -855,9 +1085,64 @@ static int icssm_emac_request_irqs(struct prueth_emac *emac)
+>  		return ret;
+>  	}
+>  
+> +	if (emac->emac_ptp_tx_irq) {
+> +		ret = request_threaded_irq(emac->emac_ptp_tx_irq,
+> +					   icssm_prueth_ptp_tx_irq_handle,
+> +					   icssm_prueth_ptp_tx_irq_work,
+> +					   IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> +					   ndev->name, ndev);
+> +		if (ret) {
+> +			netdev_err(ndev, "unable to request PTP TX IRQ\n");
+> +			free_irq(emac->rx_irq, ndev);
+> +			free_irq(emac->tx_irq, ndev);
+
+This seems somewhat asymmetric. This function does request emac->rx_irq
+but not emac->tx_irq. So I don't think it is appropriate to free emac->tx_irq
+here.
+
+Also, I would suggest using a goto label for unwind here.
+
+> +		}
+> +	}
+> +
+>  	return ret;
+>  }
+>  
+
+...
