@@ -1,176 +1,261 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697321547E4;
-	Fri, 31 Jan 2025 19:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B4F53368;
+	Fri, 31 Jan 2025 19:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738352603; cv=none; b=F5q2MaVY4Mtyl7aFdZOKK6Mll3/x93NH4gL9efrr23rVrbOojaL/v2+UHOoEC3JQgmUHIG3wl9PhseqdGTZVpZ+I1hK8ksI3J4YfGsOU0tOLGI9SCDRP+H0R7cIDM4YUF/Dr+I4F+6aq+AZUTvO835cjl/PFRof1z40o6ETXrCE=
+	t=1738352716; cv=none; b=sCcOdldFbb3xuIhsn7HNt9VytDf13fXYEFWn9QWpjnzM0eh3Jj+ITjqPNiT/WbTB/44eNQQXOxsdUk0YG2+3dix2e3gmQUAGzx33Eqz7hc8lrWfRGRXkTxBzhHKDriipqKJ6HtKZKL7YrQuiJHeBeFmAGhTjiLg+5XaxPuT5yx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738352603; c=relaxed/simple;
-	bh=337HH7+vJoKIUO+OpQbcynXUqqyJYIq5z0C6e83MzDc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BdhbFiDoKWQah8ET3yJCnQHDeIOhb5hpJIrEL5oOy3hzVINjDtCkD0i3HwYpxbGprius4KY/D9kU0SIAzA43qBLTF7ZKJYszeAZiKU4OfBfoqSN6qyjl4aIFMxjD/RLKfcuMPh1UiWebSSiZO4HbT1SIlilep8VZUgX7vTi2qTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cVvbMHpU; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738352716; c=relaxed/simple;
+	bh=sG0jau21IA4HqzETbgkbN1xu0ZRDfUPymxj/fPfd6/E=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Q9+gO/N7JZoNGylMhfYQi781wChG5fKP/Vl6mXRXaqIyG9Q5qPSV57/vddK8QTO3wRSTmXNgiFGCqbmh/me/B9t3v40TEbOGd7dtw6mSh76fVIRBoIw0C6FRZRjOSRMXTdsh+espc1hXOF3Pn+3F72iEV5dy2pXzcGioQYP3jEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tdsvswzC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVvbMHpU"
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-71e36b27b53so1300741a34.1;
-        Fri, 31 Jan 2025 11:43:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738352600; x=1738957400; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LnQU5Rr0/pPs4UY8wE2SbKUww8KifTKoqqzsIGrrKzQ=;
-        b=cVvbMHpUEBAh6zYil3AofT6nutWvi4EMoOpmTddmyINNVHMrldZgszrIthO2cS8OBc
-         3a0zGE8JT/yexEFiCqX1X06yIqPHZUeq82XdMNiOr5aukjGm6a0UoVzfESMpL/ocAb25
-         kGUzLSlL/7hooQKOsUElSam0JkzlNnokeZC4uY0Eq2D7JLZG3RE0QfJUmpvhFDNeyAPT
-         3n7jnu9se8KS/Y6qpEQylb/2JDQCWOl4Fooohb2AbevOo1UTQSVh72ibM0XFBVwkcIS/
-         ObZN7KQcKomqVKBLeYn8QzBvq0K1tvHR46yCF4vCDWEIM0bw2dpu7lcYY4MScB7An6iS
-         HpsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738352600; x=1738957400;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LnQU5Rr0/pPs4UY8wE2SbKUww8KifTKoqqzsIGrrKzQ=;
-        b=azYkC0yvTvn4RYR7uwbBL1qjwycPs8iQ/vA5xoQEG0qyXAL8+H7ikEAkCJFVEpvdXO
-         yGFHXRcNQO9nwmr/QZ0SezuwMfVRE0DSkqjpszQyOkSU7r1BJCnij/B/zfZyyFdf9hMR
-         1qaizuM4J2cP/+fNVduM0xJyMNTJHtNs/viBs+o20VGQuI9lW2Y3zNokYIQFuSWhOfLK
-         UK51uebjAq8QGtmDxESDxCWUodtsF7X44JudObXjlfR8AZWJE5Ri7cuOr0p/gep4Z9xr
-         TMLiH1cjBZ2hFTVpEFf514X67VltGOxljdlz0TG+0XBcHRlhRKPvYK/akAIz/nq+lTLM
-         ZX/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUvL3ZMgDmpHMRwmkHyrkKuE5lDZlevIn8XT8Qi2lGaN89Iy7JNiSBK9hQOKCSKG7ADZsR67+S1V2r0oqLrQB5q6awb@vger.kernel.org, AJvYcCV5WQLXuTvBF4StySTknmEW5p77T4QPb41mMQhhdXGP2bcPYvp6ZjWMxCGnJtcEevycesBMdqMoX03K@vger.kernel.org, AJvYcCVyMtVDbBouBEFB3lYL3Bh/5EMz2/bBa/2xe2/AmyB9/isUE5/gTQBjc7fP5rTAscc/qqmOVfIj@vger.kernel.org, AJvYcCX1u7vS7snut7Pr2zijG+fZ8BVTkyF1OEbXbO+rwklM4E0RQpyV9p4+kpQbmC93GxNheqGS2Ge83a+r+V3Q@vger.kernel.org, AJvYcCXmAd9+RWkGQrYgN4FLZ+Q/zCcBBz3tlscabZyHx+m+sErKPJIxZfmfNzntHceK294rYTQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yycw4UJz0+sbT7rizqZWfL4F7Y1WvKWOiSQtJRNcBJz51DGVitb
-	d4vwaa1LVGuy50I2IcE8QRJ4v2aZBAobOuQhbPgaHJbyNY6ykIaviAxOIFOXbm0SDgATh4bQxwh
-	MEtzGHDWekJ3IkDZEpfTUVCdP5ks=
-X-Gm-Gg: ASbGncu0Dmjn8/E2IEfluu7T8ci/QTSR2vJ13lIc155FmcSBIjSJ4ZQZvh1ScOYy6wh
-	Vvoh4r7zitgljcAhA+QdFWXwoUaJl2mR2iw6/0VwgI5G7ZZQWIGZmIBhWYYfstlHFZTPbltrw
-X-Google-Smtp-Source: AGHT+IGuglKKu0Vj5KQ/a29Sd5LGjr6yBzimjsJ35ZemORPyvNkDias8l1Y0tRb/6HuBtFVnWBy223HrmE+yQva7CVM=
-X-Received: by 2002:a05:6830:498e:b0:71e:1ff9:e91b with SMTP id
- 46e09a7af769-726568fa816mr10533632a34.27.1738352600319; Fri, 31 Jan 2025
- 11:43:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tdsvswzC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCB01C4CEDF;
+	Fri, 31 Jan 2025 19:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738352715;
+	bh=sG0jau21IA4HqzETbgkbN1xu0ZRDfUPymxj/fPfd6/E=;
+	h=From:Date:Subject:To:Cc:From;
+	b=tdsvswzCZ/SO0i18vD2SIOvJYPDwrLfzLq7VZ9Xabhyf2whikWRTa8SPuDVGmUiGX
+	 LjIV/Wbk1aQEeGz/0TfAs2rpDCrLMnIeu+htGSr9HPqLu3W4ye6Y9L8uv5HUInImVP
+	 NF6SGX3PrO+OmVqP7QQs3uGsauMwnd42C39AcBV4bO9ahtTpo3eX6Sk7W9rn+YNmYG
+	 Lbv8+O4RdyJAoED1roOf7BXN+ChGI+BG5abseIxL4sEOFrmJceqaYvBieoddEKAuCA
+	 THcQOe/E3FssTPrC854nYNboCpUz4J2sVPwvAePfVvR0EIg+u4/wSe6ddbwQdAUJmb
+	 jN8hozhbW2+sQ==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54020b0dcd2so3668161e87.1;
+        Fri, 31 Jan 2025 11:45:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVd+VqYrJl1SvNzOY0B1Xe+uC6nfarAOIyeuja7PBFiTSJytQ2hhY2TwAAkobxGRcVNTX4KglaU0DvJDG0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyxQwXEs1Ppg/fRUYyyaFcvBkEfZu+uhgC7gvH4kniDwgc2o7Q
+	NT8uqY0PxJRuJlPGdsFs3R+lBJY7ki6UWuFkzcVPSqsRgBEcZZlpGkGv2K1sSCQfnvcwkQICwkm
+	4bdetKAi/SLKHq0kL5qbf2Fix2mI=
+X-Google-Smtp-Source: AGHT+IFJjWY2E48FyHWtr74qkLrspdp7h+gdranVS++fOeZxB1A0RAEJCZsRnOW+msNwq3PzlBKOVqCj6LIrwqwuXsg=
+X-Received: by 2002:a05:651c:b0d:b0:302:3021:9b23 with SMTP id
+ 38308e7fff4ca-307a1146f5amr23878061fa.17.1738352714426; Fri, 31 Jan 2025
+ 11:45:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250128145806.1849977-1-eyal.birger@gmail.com> <202501281634.7F398CEA87@keescook>
-In-Reply-To: <202501281634.7F398CEA87@keescook>
-From: Eyal Birger <eyal.birger@gmail.com>
-Date: Fri, 31 Jan 2025 11:43:08 -0800
-X-Gm-Features: AWEUYZmphJNzS8wDK_GnqcgmWuSZHukqLJ0pLgRgiK0wdkywYJy6YSyYJHeFJxE
-Message-ID: <CAHsH6Gsaq0678cUZxM80uMaA+G_G6=w9RbD3YGrxG110Fna4ww@mail.gmail.com>
-Subject: Re: [PATCH v2] seccomp: passthrough uretprobe systemcall without filtering
-To: Kees Cook <kees@kernel.org>
-Cc: luto@amacapital.net, wad@chromium.org, oleg@redhat.com, 
-	mhiramat@kernel.org, andrii@kernel.org, jolsa@kernel.org, 
-	alexei.starovoitov@gmail.com, olsajiri@gmail.com, cyphar@cyphar.com, 
-	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com, 
-	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de, daniel@iogearbox.net, 
-	ast@kernel.org, andrii.nakryiko@gmail.com, rostedt@goodmis.org, rafi@rbk.io, 
-	shmulik.ladkani@gmail.com, bpf@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: multipart/mixed; boundary="0000000000003ca82d062d05c16b"
-
---0000000000003ca82d062d05c16b
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 1 Feb 2025 04:44:38 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQeyWYm2OZ6p=vWJegs_VZMz5RN+0fze6GG=f-ZGWQ3nA@mail.gmail.com>
+X-Gm-Features: AWEUYZnXsF8oNxqsBw6v1b_FTvkbkC8cBUj2k6wshf06v1qie8vgO9Fb1SfisDo
+Message-ID: <CAK7LNAQeyWYm2OZ6p=vWJegs_VZMz5RN+0fze6GG=f-ZGWQ3nA@mail.gmail.com>
+Subject: [GIT PULL] Kbuild updates for v6.14-rc1
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Kees,
+Hello Linus,
 
-On Tue, Jan 28, 2025 at 5:41=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
-> [...]
-> Also please add a KUnit tests to cover this in
-> tools/testing/selftests/seccomp/seccomp_bpf.c
-> With at least these cases combinations below. Check each of:
->
->         - not using uretprobe passes
->         - using uretprobe passes (and validates that uretprobe did work)
->
-> in each of the following conditions:
->
->         - default-allow filter
->         - default-block filter
->         - filter explicitly blocking __NR_uretprobe and nothing else
->         - filter explicitly allowing __NR_uretprobe (and only other
->           required syscalls)
+Please pull Kbuild updates for v6.14-rc1.
+Thank you
 
-In order to validate my understanding of the required test cases,
-I've attached a small bash script which validates them.
-As expected, the script fails without the suggested change.
 
-If there are gaps in my understanding of the required scope, please
-let me know.
-I plan to port these test cases to use the kselftests infrastructure as
-requested.
+The following changes since commit 9d89551994a430b50c4fffcb1e617a057fa76e20:
 
-To my understanding, the other issues with regards to the proposed patch
-are resolved, i.e. there aren't plans to support a 32 bit or mips flavor
-of this syscall, and the suggested patch fails closed if they are added.
+  Linux 6.13-rc6 (2025-01-05 14:13:40 -0800)
 
-As such, is it possible to merge the suggested patch so it could be back
-merged? I'm suggesting this in the interest of time, as for example Ubuntu
-LTS is going to be using kernel 6.11 soon [1] and other distributions
-are probably going to as well, and I believe the coding/review process
-for the testing code will take a while and probably won't be backmerged
-anyway.
+are available in the Git repository at:
 
-Thanks!
-Eyal.
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-v6.14
 
-[1] https://www.omgubuntu.co.uk/2025/01/ubuntu-24-04-2-release-date
+for you to fetch changes up to 695ed93bb30e03e9f826ee70abdd83f970741a37:
 
---0000000000003ca82d062d05c16b
-Content-Type: text/x-sh; charset="US-ASCII"; name="u.sh"
-Content-Disposition: attachment; filename="u.sh"
-Content-Transfer-Encoding: base64
-Content-ID: <f_m6l67jpa0>
-X-Attachment-Id: f_m6l67jpa0
+  kbuild: fix Clang LTO with CONFIG_OBJTOOL=n (2025-02-01 04:28:05 +0900)
 
-IyEvYmluL2Jhc2ggLWUKCmJ0PS91c3IvYmluL2JwZnRyYWNlCgpkZWZhdWx0X2FsbG93X2ZpbHRl
-cj0kKGNhdCA8PCBFT0YKewogICAgCXNjbXBfZmlsdGVyX2N0eCBjdHg7CiAgICAKICAgIAljdHgg
-PSBzZWNjb21wX2luaXQoU0NNUF9BQ1RfQUxMT1cpOwogICAgCXNlY2NvbXBfbG9hZChjdHgpOwog
-ICAgCXNlY2NvbXBfcmVsZWFzZShjdHgpOwp9CkVPRgopCgpkZWZhdWx0X2Jsb2NrX2ZpbHRlcj0k
-KGNhdCA8PCBFT0YKewogICAgCXNjbXBfZmlsdGVyX2N0eCBjdHg7CiAgICAKICAgIAljdHggPSBz
-ZWNjb21wX2luaXQoU0NNUF9BQ1RfS0lMTCk7CiAgICAJZm9yIChpbnQgaSA9IDA7IGkgPCBudW1f
-c3lzY2FsbHM7IGkrKykgewogICAgCQlzZWNjb21wX3J1bGVfYWRkKGN0eCwgU0NNUF9BQ1RfQUxM
-T1csCiAgICAJCQkJIHNlY2NvbXBfc3lzY2FsbF9yZXNvbHZlX25hbWUoc3lzY2FsbHNbaV0pLCAw
-KTsKICAgIAl9CiAgICAJc2VjY29tcF9sb2FkKGN0eCk7CiAgICAJc2VjY29tcF9yZWxlYXNlKGN0
-eCk7Cn0KRU9GCikKCmFsbG93X3VyZXRwcm9iZV9maWx0ZXI9JChjYXQgPDwgRU9GCnsKICAgIAlz
-Y21wX2ZpbHRlcl9jdHggY3R4OwogICAgCiAgICAJY3R4ID0gc2VjY29tcF9pbml0KFNDTVBfQUNU
-X0tJTEwpOwogICAgCWZvciAoaW50IGkgPSAwOyBpIDwgbnVtX3N5c2NhbGxzOyBpKyspIHsKICAg
-IAkJc2VjY29tcF9ydWxlX2FkZChjdHgsIFNDTVBfQUNUX0FMTE9XLAogICAgCQkJCSBzZWNjb21w
-X3N5c2NhbGxfcmVzb2x2ZV9uYW1lKHN5c2NhbGxzW2ldKSwgMCk7CiAgICAJfQogICAgCXNlY2Nv
-bXBfcnVsZV9hZGQoY3R4LCBTQ01QX0FDVF9BTExPVywgMzM1LCAwKTsKICAgIAlzZWNjb21wX2xv
-YWQoY3R4KTsKICAgIAlzZWNjb21wX3JlbGVhc2UoY3R4KTsKfQpFT0YKKQoKYmxvY2tfdXJldHBy
-b2JlX2ZpbHRlcj0kKGNhdCA8PCBFT0YKewogICAgCXNjbXBfZmlsdGVyX2N0eCBjdHg7CiAgICAK
-ICAgIAljdHggPSBzZWNjb21wX2luaXQoU0NNUF9BQ1RfQUxMT1cpOwogICAgCXNlY2NvbXBfcnVs
-ZV9hZGQoY3R4LCBTQ01QX0FDVF9LSUxMLCAzMzUsIDApOwogICAgCXNlY2NvbXBfbG9hZChjdHgp
-OwogICAgCXNlY2NvbXBfcmVsZWFzZShjdHgpOwp9CkVPRgopCgp0KCkKewogICAgd2l0aF91cmV0
-cHJvYmU9JDE7CiAgICBmaWx0ZXJfbmFtZT0kMjsKICAgIGZpbHRlcj0keyFmaWx0ZXJfbmFtZX07
-CgogICAgZWNobyAiVGVzdDogdXJldHByb2JlICR3aXRoX3VyZXRwcm9iZSwgZmlsdGVyICRmaWx0
-ZXJfbmFtZSIKCiAgICBjYXQgPiAvdG1wL3guYyA8PCBFT0YKICAgICNpbmNsdWRlIDxzdGRpby5o
-PgogICAgI2luY2x1ZGUgPHNlY2NvbXAuaD4KICAgIAogICAgY2hhciAqc3lzY2FsbHNbXSA9IHsK
-ICAgIAkiZXhpdF9ncm91cCIsCiAgICB9OwogICAgCiAgICBfX2F0dHJpYnV0ZV9fKChub2lubGlu
-ZSkpIGludCBwcm9iZWQodm9pZCkKICAgIHsKICAgIAlyZXR1cm4gMTsKICAgIH0KICAgIAogICAg
-dm9pZCBhcHBseV9zZWNjb21wX2ZpbHRlcihjaGFyICoqc3lzY2FsbHMsIGludCBudW1fc3lzY2Fs
-bHMpCgkkZmlsdGVyCiAgICAKICAgIGludCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pCiAg
-ICB7CiAgICAJaW50IG51bV9zeXNjYWxscyA9IHNpemVvZihzeXNjYWxscykgLyBzaXplb2Yoc3lz
-Y2FsbHNbMF0pOwogICAgCiAgICAJYXBwbHlfc2VjY29tcF9maWx0ZXIoc3lzY2FsbHMsIG51bV9z
-eXNjYWxscyk7CiAgICAKICAgIAlwcm9iZWQoKTsKICAgIAogICAgCXJldHVybiAwOwogICAgfQpF
-T0YKICAgIAogICAgY2F0ID4gL3RtcC90cmFjZS5idCA8PCBFT0YKICAgIHVyZXRwcm9iZTovdG1w
-L3g6cHJvYmVkCiAgICB7CiAgICAgICAgcHJpbnRmKCJyZXQ9JWRcbiIsIHJldHZhbCk7CiAgICB9
-CkVPRgogICAgCiAgICBnY2MgLW8gL3RtcC94IC90bXAveC5jIC1sc2VjY29tcAogICAgCiAgICAk
-d2l0aF91cmV0cHJvYmUgJiYgewoJJGJ0IC90bXAvdHJhY2UuYnQgJgoJYnRwaWQ9JCEKICAgICAg
-ICBzbGVlcCA1ICMgd2FpdCBmb3IgdXJldHByb2JlIGF0dGFjaAogICAgfQogICAgCiAgICAvdG1w
-L3gKICAgIAogICAgJHdpdGhfdXJldHByb2JlICYmIGtpbGwgJGJ0cGlkCiAgICAKICAgIHJtIC90
-bXAveCAvdG1wL3guYyAvdG1wL3RyYWNlLmJ0Cn0KCnQgZmFsc2UgImRlZmF1bHRfYWxsb3dfZmls
-dGVyIgp0IHRydWUgImRlZmF1bHRfYWxsb3dfZmlsdGVyIgp0IGZhbHNlICJkZWZhdWx0X2Jsb2Nr
-X2ZpbHRlciIKdCB0cnVlICJkZWZhdWx0X2Jsb2NrX2ZpbHRlciIKdCBmYWxzZSAiYWxsb3dfdXJl
-dHByb2JlX2ZpbHRlciIKdCB0cnVlICJhbGxvd191cmV0cHJvYmVfZmlsdGVyIgp0IGZhbHNlICJi
-bG9ja191cmV0cHJvYmVfZmlsdGVyIgp0IHRydWUgImJsb2NrX3VyZXRwcm9iZV9maWx0ZXIiCg==
---0000000000003ca82d062d05c16b--
+----------------------------------------------------------------
+Kbuild updates for v6.14
+
+ - Support multiple hook locations for maint scripts of Debian package
+
+ - Remove 'cpio' from the build tool requirement
+
+ - Introduce gendwarfksyms tool, which computes CRCs for export symbols
+   based on the DWARF information
+
+ - Support CONFIG_MODVERSIONS for Rust
+
+ - Resolve all conflicts in the genksyms parser
+
+ - Fix several syntax errors in genksyms
+
+----------------------------------------------------------------
+Ard Biesheuvel (1):
+      kbuild: Strip runtime const RELA sections correctly
+
+HONG Yifan (1):
+      kheaders: prevent `find` from seeing perl temp files
+
+Johannes Schauer Marin Rodrigues (1):
+      kbuild: deb-pkg: allow hooks also in /usr/share/kernel
+
+Masahiro Yamada (36):
+      kbuild: deb-pkg: do not include empty hook directories
+      kbuild: refactor cross-compiling linux-headers package
+      kbuild: suppress stdout from merge_config for silent builds
+      kheaders: exclude include/generated/utsversion.h from kheaders_data.tar.xz
+      kheaders: avoid unnecessary process forks of grep
+      kheaders: rename the 'cpio_dir' variable to 'tmpdir'
+      kheaders: use 'tar' instead of 'cpio' for copying files
+      module: get symbol CRC back to unsigned
+      modpost: zero-pad CRC values in modversion_info array
+      genksyms: fix memory leak when the same symbol is added from source
+      genksyms: fix memory leak when the same symbol is read from *.symref file
+      genksyms: reduce the indentation in the for-loop in __add_symbol()
+      genksyms: refactor the return points in the for-loop in __add_symbol()
+      genksyms: use generic macros for hash table implementation
+      genksyms: use uint32_t instead of unsigned long for calculating CRC
+      ARC: migrate to the generic rule for built-in DTB
+      genksyms: rename m_abstract_declarator to abstract_declarator
+      genksyms: rename cvar_qualifier to type_qualifier
+      genksyms: reduce type_qualifier directly to decl_specifier
+      genksyms: fix 6 shift/reduce conflicts and 5 reduce/reduce conflicts
+      genksyms: fix last 3 shift/reduce conflicts
+      genksyms: remove Makefile hack
+      genksyms: restrict direct-abstract-declarator to take one
+parameter-type-list
+      genksyms: restrict direct-declarator to take one parameter-type-list
+      genksyms: record attributes consistently for init-declarator
+      genksyms: decouple ATTRIBUTE_PHRASE from type-qualifier
+      genksyms: fix syntax error for attribute before abstract_declarator
+      genksyms: fix syntax error for attribute before nested_declarator
+      genksyms: fix syntax error for attribute after abstact_declarator
+      genksyms: fix syntax error for attribute after 'struct'
+      genksyms: fix syntax error for attribute after 'union'
+      genksyms: fix syntax error for builtin (u)int*x*_t types
+      genksyms: fix syntax error for attribute before init-declarator
+      kconfig: fix file name in warnings when loading KCONFIG_DEFCONFIG_LIST
+      kconfig: fix memory leak in sym_warn_unmet_dep()
+      kbuild: fix Clang LTO with CONFIG_OBJTOOL=n
+
+Matthew Maurer (4):
+      modules: Support extended MODVERSIONS info
+      modpost: Produce extended MODVERSIONS information
+      modpost: Allow extended modversions without basic MODVERSIONS
+      Documentation/kbuild: Document storage of symbol information
+
+Rolf Eike Beer (1):
+      kconfig: qconf: use preferred form of QString API
+
+Sami Tolvanen (19):
+      tools: Add gendwarfksyms
+      gendwarfksyms: Add address matching
+      gendwarfksyms: Expand base_type
+      gendwarfksyms: Add a cache for processed DIEs
+      gendwarfksyms: Expand type modifiers and typedefs
+      gendwarfksyms: Expand subroutine_type
+      gendwarfksyms: Expand array_type
+      gendwarfksyms: Expand structure types
+      gendwarfksyms: Limit structure expansion
+      gendwarfksyms: Add die_map debugging
+      gendwarfksyms: Add symtypes output
+      gendwarfksyms: Add symbol versioning
+      gendwarfksyms: Add support for kABI rules
+      gendwarfksyms: Add support for reserved and ignored fields
+      gendwarfksyms: Add support for symbol type pointers
+      export: Add __gendwarfksyms_ptr_ references to exported symbols
+      kbuild: Add gendwarfksyms as an alternative to genksyms
+      Documentation/kbuild: Add DWARF module versioning
+      rust: Use gendwarfksyms + extended modversions for CONFIG_MODVERSIONS
+
+Torsten Hilbrich (1):
+      kbuild: Fix signing issue for external modules
+
+ Documentation/kbuild/gendwarfksyms.rst     |  308 ++++++++++++
+ Documentation/kbuild/index.rst             |    1 +
+ Documentation/kbuild/modules.rst           |   20 +
+ Documentation/process/changes.rst          |    6 -
+ MAINTAINERS                                |    7 +
+ arch/arc/Kconfig                           |    7 +-
+ arch/arc/Makefile                          |    3 -
+ arch/arc/boot/dts/Makefile                 |    9 +-
+ arch/arc/configs/axs101_defconfig          |    2 +-
+ arch/arc/configs/axs103_defconfig          |    2 +-
+ arch/arc/configs/axs103_smp_defconfig      |    2 +-
+ arch/arc/configs/haps_hs_defconfig         |    2 +-
+ arch/arc/configs/haps_hs_smp_defconfig     |    2 +-
+ arch/arc/configs/hsdk_defconfig            |    2 +-
+ arch/arc/configs/nsim_700_defconfig        |    2 +-
+ arch/arc/configs/nsimosci_defconfig        |    2 +-
+ arch/arc/configs/nsimosci_hs_defconfig     |    2 +-
+ arch/arc/configs/nsimosci_hs_smp_defconfig |    2 +-
+ arch/arc/configs/tb10x_defconfig           |    2 +-
+ arch/arc/configs/vdk_hs38_defconfig        |    2 +-
+ arch/arc/configs/vdk_hs38_smp_defconfig    |    2 +-
+ arch/powerpc/kernel/module_64.c            |   24 +-
+ arch/riscv/Makefile.postlink               |    8 +-
+ arch/s390/Makefile.postlink                |    6 +-
+ arch/x86/Makefile.postlink                 |    6 +-
+ include/linux/export.h                     |   15 +
+ include/linux/module.h                     |    4 +-
+ init/Kconfig                               |    3 +-
+ kernel/gen_kheaders.sh                     |   42 +-
+ kernel/module/Kconfig                      |   55 +++
+ kernel/module/internal.h                   |   21 +-
+ kernel/module/main.c                       |   94 +++-
+ kernel/module/version.c                    |   47 +-
+ rust/Makefile                              |   34 +-
+ scripts/Makefile                           |    3 +-
+ scripts/Makefile.build                     |   37 +-
+ scripts/Makefile.defconf                   |   13 +-
+ scripts/Makefile.lib                       |   13 +-
+ scripts/Makefile.modinst                   |    2 +-
+ scripts/Makefile.modpost                   |    2 +
+ scripts/gendwarfksyms/.gitignore           |    2 +
+ scripts/gendwarfksyms/Makefile             |   12 +
+ scripts/gendwarfksyms/cache.c              |   51 ++
+ scripts/gendwarfksyms/die.c                |  166 +++++++
+ scripts/gendwarfksyms/dwarf.c              | 1159
+++++++++++++++++++++++++++++++++++++++++++++++
+ scripts/gendwarfksyms/examples/kabi.h      |  157 +++++++
+ scripts/gendwarfksyms/examples/kabi_ex.c   |   30 ++
+ scripts/gendwarfksyms/examples/kabi_ex.h   |  263 +++++++++++
+ scripts/gendwarfksyms/examples/symbolptr.c |   33 ++
+ scripts/gendwarfksyms/gendwarfksyms.c      |  187 ++++++++
+ scripts/gendwarfksyms/gendwarfksyms.h      |  296 ++++++++++++
+ scripts/gendwarfksyms/kabi.c               |  336 ++++++++++++++
+ scripts/gendwarfksyms/symbols.c            |  341 ++++++++++++++
+ scripts/gendwarfksyms/types.c              |  481 +++++++++++++++++++
+ scripts/genksyms/Makefile                  |   18 -
+ scripts/genksyms/genksyms.c                |  107 ++---
+ scripts/genksyms/genksyms.h                |    9 +-
+ scripts/genksyms/lex.l                     |   17 +-
+ scripts/genksyms/parse.y                   |  168 ++++---
+ scripts/kconfig/Makefile                   |    4 +-
+ scripts/kconfig/confdata.c                 |    6 +-
+ scripts/kconfig/qconf.cc                   |    8 +-
+ scripts/kconfig/symbol.c                   |    1 +
+ scripts/mod/modpost.c                      |   71 ++-
+ scripts/package/PKGBUILD                   |    1 -
+ scripts/package/builddeb                   |   24 +-
+ scripts/package/install-extmod-build       |   33 +-
+ scripts/package/mkdebian                   |    2 +-
+ 68 files changed, 4492 insertions(+), 307 deletions(-)
+ create mode 100644 Documentation/kbuild/gendwarfksyms.rst
+ create mode 100644 scripts/gendwarfksyms/.gitignore
+ create mode 100644 scripts/gendwarfksyms/Makefile
+ create mode 100644 scripts/gendwarfksyms/cache.c
+ create mode 100644 scripts/gendwarfksyms/die.c
+ create mode 100644 scripts/gendwarfksyms/dwarf.c
+ create mode 100644 scripts/gendwarfksyms/examples/kabi.h
+ create mode 100644 scripts/gendwarfksyms/examples/kabi_ex.c
+ create mode 100644 scripts/gendwarfksyms/examples/kabi_ex.h
+ create mode 100644 scripts/gendwarfksyms/examples/symbolptr.c
+ create mode 100644 scripts/gendwarfksyms/gendwarfksyms.c
+ create mode 100644 scripts/gendwarfksyms/gendwarfksyms.h
+ create mode 100644 scripts/gendwarfksyms/kabi.c
+ create mode 100644 scripts/gendwarfksyms/symbols.c
+ create mode 100644 scripts/gendwarfksyms/types.c
+
+
+-- 
+Best Regards
+Masahiro Yamada
