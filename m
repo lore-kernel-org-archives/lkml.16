@@ -1,33 +1,33 @@
-Received: from smtp-bc08.mail.infomaniak.ch (smtp-bc08.mail.infomaniak.ch [45.157.188.8])
+Received: from smtp-bc0c.mail.infomaniak.ch (smtp-bc0c.mail.infomaniak.ch [45.157.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DEA1E32CB
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B852563
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738341082; cv=none; b=HD34YrXkL7NHkve3sUuKOocY5S0XPegwy1izPZA/Fhk7F+ln/Znp80jJkPtenPVPK6mHNVM52YqBcEl5w3pzx6lXTFWWkoD6qQrmYEI2/lvdktPRIKtixiayG8Kv0A7sWCMn6H63DddzpY77VMFaIJ/xd5bWW8G7wr/DfPBIees=
+	t=1738341086; cv=none; b=jUvCq4dB8WenVUAGanaAzukbHO+0G9OKVPTT7I3qnyjexVLkZ/w5IC4KgeLT+PKcwBtQxCXCBmc8x2TCwsezSGgFeQ5+CTqfhJjgsxZWpad/Tjlyz9WLZTvR0UtWZ4hGhVMf7bArXLNKRU+OFMNGZbAG7YS+/hOVXV+ozAjBZAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738341082; c=relaxed/simple;
-	bh=i9pEwHrisGVJyzI0TZDy/pJ6SOmGJ7CQO4jXIqZPDxQ=;
+	s=arc-20240116; t=1738341086; c=relaxed/simple;
+	bh=N8Om2n0KddmhOLHiv5L0C5QyD/YuD/cDRrTNRIclHOg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gtv0IZd8gncY86bq5rk76R+FuGjBTKY+iA6t5irQOeLCrJHihQ+IaCmvXhEbKrtY1eqbJa0yWMoqFt235h/Eo+jG3vNoOsHGhhpzK7gWdNl2Iy3JkKI9vJx/5a2DdVqbhiI9LEujSEeXGE/SjEKMVB8QunreB9tlBzvt8gzKdiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=1aUfZBd/; arc=none smtp.client-ip=45.157.188.8
+	 MIME-Version:Content-Type; b=cO6vL/pWdRolUMfO1sFwYvkrYBdCmCgKEjnPLhfHcg3zJtmswtMKUhdVx9dwsK06BoEz+DiwJqvuBzylzIv8HljRqGNPt8dnKV5yoXuyNnTAXlLEX8rALAoksb1gZifsf7a14H62UhiPdIJoZ4cNH9lTv6yjnNOox0tY2NeGQL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=DBQcl10f; arc=none smtp.client-ip=45.157.188.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="1aUfZBd/"
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Yl1bz2cJpzLyL;
-	Fri, 31 Jan 2025 17:31:11 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="DBQcl10f"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Yl1c44lVRzSw9;
+	Fri, 31 Jan 2025 17:31:16 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1738341071;
-	bh=8PBz5hunFNoJQ+sQTBYKyBSNUYyD/33RuKhb2i7LYWA=;
+	s=20191114; t=1738341076;
+	bh=aHQJl+dVGbOpW1bY4DGl2h1/OFoOfo4CmWzo2/nx1s8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=1aUfZBd/PI9jwsnJmpRM0wdUoyPltRSZZhNZJKQIqarO8kS/uAR8zqnkgk68F6Szs
-	 jbNk5kZcsHzgPX55Ee+2WL9BeeG/f2iYU/NSszLgaxpVccrQZkdbTc9mV1da2ABQgb
-	 G0ZC0F9go1Kr1MrohNw17YqlFDXpDBnkLUhO6R38=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Yl1by1KRtzdKm;
-	Fri, 31 Jan 2025 17:31:10 +0100 (CET)
+	b=DBQcl10f0f5D7/8u603fLWuzPyCxrKg6WKqyVNRjKJxqfKzXAcixwRxGpV/A72o8u
+	 bCUKQfQRObjITh5I5s3KKhldntUgWoEZLvjCh8BFN7DNSHNZPgNmXLU/S3EhX5VvUZ
+	 XfeTHZpWoZf2bIXFLpQA8Xs1SMCCJOjNFhR7pDpM=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Yl1c35h9szd0d;
+	Fri, 31 Jan 2025 17:31:15 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Eric Paris <eparis@redhat.com>,
 	Paul Moore <paul@paul-moore.com>,
@@ -57,9 +57,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-security-module@vger.kernel.org
-Subject: [PATCH v5 01/24] lsm: Add audit_log_lsm_data() helper
-Date: Fri, 31 Jan 2025 17:30:36 +0100
-Message-ID: <20250131163059.1139617-2-mic@digikod.net>
+Subject: [PATCH v5 03/24] landlock: Move domain hierarchy management
+Date: Fri, 31 Jan 2025 17:30:38 +0100
+Message-ID: <20250131163059.1139617-4-mic@digikod.net>
 In-Reply-To: <20250131163059.1139617-1-mic@digikod.net>
 References: <20250131163059.1139617-1-mic@digikod.net>
 Precedence: bulk
@@ -72,118 +72,186 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Extract code from dump_common_audit_data() into the audit_log_lsm_data()
-helper. This helps reuse common LSM audit data while not abusing
-AUDIT_AVC records because of the common_lsm_audit() helper.
+Create a new domain.h file containing the struct landlock_hierarchy
+definition and helpers.  This type will grow with audit support.  This
+also prepares for a new domain type.
 
-Cc: Casey Schaufler <casey@schaufler-ca.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Serge E. Hallyn <serge@hallyn.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
-Depends-on: 7ccbe076d987 ("lsm: Only build lsm_audit.c if CONFIG_SECURITY and CONFIG_AUDIT are set")
+Cc: Günther Noack <gnoack@google.com>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20250131163059.1139617-2-mic@digikod.net
+Link: https://lore.kernel.org/r/20250131163059.1139617-4-mic@digikod.net
 ---
 
 Changes since v4:
-- Add Depends-on tag.
+- Revert v3 changes because of the new audit rule patch removal.
 
 Changes since v3:
-- Rebase on top of the v6.13's get_task_comm() fix.
-- Add Acked-by Paul.
+- Export landlock_get_hierarchy() and landlock_put_hierarchy().
+- Clean up Makefile entries.
 
 Changes since v1:
-- Fix commit message (spotted by Paul).
-- Constify dump_common_audit_data()'s and audit_log_lsm_data()'s "a"
-  argument.
-- Fix build without CONFIG_NET: see previous patch.
+- New patch.
 ---
- include/linux/lsm_audit.h |  8 ++++++++
- security/lsm_audit.c      | 27 ++++++++++++++++++---------
- 2 files changed, 26 insertions(+), 9 deletions(-)
+ security/landlock/domain.h  | 48 +++++++++++++++++++++++++++++++++++++
+ security/landlock/ruleset.c | 21 +++-------------
+ security/landlock/ruleset.h | 17 +------------
+ security/landlock/task.c    |  1 +
+ 4 files changed, 53 insertions(+), 34 deletions(-)
+ create mode 100644 security/landlock/domain.h
 
-diff --git a/include/linux/lsm_audit.h b/include/linux/lsm_audit.h
-index e13d2f947b51..bddd694f7c4c 100644
---- a/include/linux/lsm_audit.h
-+++ b/include/linux/lsm_audit.h
-@@ -132,6 +132,9 @@ void common_lsm_audit(struct common_audit_data *a,
- 	void (*pre_audit)(struct audit_buffer *, void *),
- 	void (*post_audit)(struct audit_buffer *, void *));
- 
-+void audit_log_lsm_data(struct audit_buffer *ab,
-+			const struct common_audit_data *a);
-+
- #else /* CONFIG_AUDIT */
- 
- static inline void common_lsm_audit(struct common_audit_data *a,
-@@ -140,6 +143,11 @@ static inline void common_lsm_audit(struct common_audit_data *a,
- {
- }
- 
-+static inline void audit_log_lsm_data(struct audit_buffer *ab,
-+			const struct common_audit_data *a)
-+{
-+}
-+
- #endif /* CONFIG_AUDIT */
- 
- #endif
-diff --git a/security/lsm_audit.c b/security/lsm_audit.c
-index 52db886dbba8..a61c7ebdb6a7 100644
---- a/security/lsm_audit.c
-+++ b/security/lsm_audit.c
-@@ -189,16 +189,13 @@ static inline void print_ipv4_addr(struct audit_buffer *ab, __be32 addr,
- }
- 
- /**
-- * dump_common_audit_data - helper to dump common audit data
-+ * audit_log_lsm_data - helper to log common LSM audit data
-  * @ab : the audit buffer
-  * @a : common audit data
-- *
-  */
--static void dump_common_audit_data(struct audit_buffer *ab,
--				   struct common_audit_data *a)
-+void audit_log_lsm_data(struct audit_buffer *ab,
-+			const struct common_audit_data *a)
- {
--	char comm[sizeof(current->comm)];
--
- 	/*
- 	 * To keep stack sizes in check force programmers to notice if they
- 	 * start making this union too large!  See struct lsm_network_audit
-@@ -206,9 +203,6 @@ static void dump_common_audit_data(struct audit_buffer *ab,
- 	 */
- 	BUILD_BUG_ON(sizeof(a->u) > sizeof(void *)*2);
- 
--	audit_log_format(ab, " pid=%d comm=", task_tgid_nr(current));
--	audit_log_untrustedstring(ab, get_task_comm(comm, current));
--
- 	switch (a->type) {
- 	case LSM_AUDIT_DATA_NONE:
- 		return;
-@@ -431,6 +425,21 @@ static void dump_common_audit_data(struct audit_buffer *ab,
- 	} /* switch (a->type) */
- }
- 
-+/**
-+ * dump_common_audit_data - helper to dump common audit data
-+ * @ab : the audit buffer
-+ * @a : common audit data
+diff --git a/security/landlock/domain.h b/security/landlock/domain.h
+new file mode 100644
+index 000000000000..015d61fd81ec
+--- /dev/null
++++ b/security/landlock/domain.h
+@@ -0,0 +1,48 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Landlock LSM - Domain management
++ *
++ * Copyright © 2016-2020 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2018-2020 ANSSI
 + */
-+static void dump_common_audit_data(struct audit_buffer *ab,
-+				   const struct common_audit_data *a)
-+{
-+	char comm[sizeof(current->comm)];
 +
-+	audit_log_format(ab, " pid=%d comm=", task_tgid_nr(current));
-+	audit_log_untrustedstring(ab, get_task_comm(comm, current));
-+	audit_log_lsm_data(ab, a);
++#ifndef _SECURITY_LANDLOCK_DOMAIN_H
++#define _SECURITY_LANDLOCK_DOMAIN_H
++
++#include <linux/mm.h>
++#include <linux/refcount.h>
++
++/**
++ * struct landlock_hierarchy - Node in a domain hierarchy
++ */
++struct landlock_hierarchy {
++	/**
++	 * @parent: Pointer to the parent node, or NULL if it is a root
++	 * Landlock domain.
++	 */
++	struct landlock_hierarchy *parent;
++	/**
++	 * @usage: Number of potential children domains plus their parent
++	 * domain.
++	 */
++	refcount_t usage;
++};
++
++static inline void
++landlock_get_hierarchy(struct landlock_hierarchy *const hierarchy)
++{
++	if (hierarchy)
++		refcount_inc(&hierarchy->usage);
 +}
 +
++static inline void landlock_put_hierarchy(struct landlock_hierarchy *hierarchy)
++{
++	while (hierarchy && refcount_dec_and_test(&hierarchy->usage)) {
++		const struct landlock_hierarchy *const freeme = hierarchy;
++
++		hierarchy = hierarchy->parent;
++		kfree(freeme);
++	}
++}
++
++#endif /* _SECURITY_LANDLOCK_DOMAIN_H */
+diff --git a/security/landlock/ruleset.c b/security/landlock/ruleset.c
+index 241ce44375b6..fb955354912d 100644
+--- a/security/landlock/ruleset.c
++++ b/security/landlock/ruleset.c
+@@ -23,6 +23,7 @@
+ #include <linux/workqueue.h>
+ 
+ #include "access.h"
++#include "domain.h"
+ #include "limits.h"
+ #include "object.h"
+ #include "ruleset.h"
+@@ -307,22 +308,6 @@ int landlock_insert_rule(struct landlock_ruleset *const ruleset,
+ 	return insert_rule(ruleset, id, &layers, ARRAY_SIZE(layers));
+ }
+ 
+-static void get_hierarchy(struct landlock_hierarchy *const hierarchy)
+-{
+-	if (hierarchy)
+-		refcount_inc(&hierarchy->usage);
+-}
+-
+-static void put_hierarchy(struct landlock_hierarchy *hierarchy)
+-{
+-	while (hierarchy && refcount_dec_and_test(&hierarchy->usage)) {
+-		const struct landlock_hierarchy *const freeme = hierarchy;
+-
+-		hierarchy = hierarchy->parent;
+-		kfree(freeme);
+-	}
+-}
+-
+ static int merge_tree(struct landlock_ruleset *const dst,
+ 		      struct landlock_ruleset *const src,
+ 		      const enum landlock_key_type key_type)
+@@ -477,7 +462,7 @@ static int inherit_ruleset(struct landlock_ruleset *const parent,
+ 		err = -EINVAL;
+ 		goto out_unlock;
+ 	}
+-	get_hierarchy(parent->hierarchy);
++	landlock_get_hierarchy(parent->hierarchy);
+ 	child->hierarchy->parent = parent->hierarchy;
+ 
+ out_unlock:
+@@ -501,7 +486,7 @@ static void free_ruleset(struct landlock_ruleset *const ruleset)
+ 		free_rule(freeme, LANDLOCK_KEY_NET_PORT);
+ #endif /* IS_ENABLED(CONFIG_INET) */
+ 
+-	put_hierarchy(ruleset->hierarchy);
++	landlock_put_hierarchy(ruleset->hierarchy);
+ 	kfree(ruleset);
+ }
+ 
+diff --git a/security/landlock/ruleset.h b/security/landlock/ruleset.h
+index 52f4f0af6ab0..bbb5996545d2 100644
+--- a/security/landlock/ruleset.h
++++ b/security/landlock/ruleset.h
+@@ -17,6 +17,7 @@
+ #include <linux/workqueue.h>
+ 
+ #include "access.h"
++#include "domain.h"
+ #include "limits.h"
+ #include "object.h"
+ 
+@@ -108,22 +109,6 @@ struct landlock_rule {
+ 	struct landlock_layer layers[] __counted_by(num_layers);
+ };
+ 
+-/**
+- * struct landlock_hierarchy - Node in a ruleset hierarchy
+- */
+-struct landlock_hierarchy {
+-	/**
+-	 * @parent: Pointer to the parent node, or NULL if it is a root
+-	 * Landlock domain.
+-	 */
+-	struct landlock_hierarchy *parent;
+-	/**
+-	 * @usage: Number of potential children domains plus their parent
+-	 * domain.
+-	 */
+-	refcount_t usage;
+-};
+-
  /**
-  * common_lsm_audit - generic LSM auditing function
-  * @a:  auxiliary audit data
+  * struct landlock_ruleset - Landlock ruleset
+  *
+diff --git a/security/landlock/task.c b/security/landlock/task.c
+index dc7dab78392e..98894ad1abc7 100644
+--- a/security/landlock/task.c
++++ b/security/landlock/task.c
+@@ -18,6 +18,7 @@
+ 
+ #include "common.h"
+ #include "cred.h"
++#include "domain.h"
+ #include "fs.h"
+ #include "ruleset.h"
+ #include "setup.h"
 -- 
 2.48.1
 
