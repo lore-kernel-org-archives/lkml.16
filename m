@@ -1,296 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877084C79;
-	Fri, 31 Jan 2025 07:47:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AF24C79;
+	Fri, 31 Jan 2025 07:47:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738309636; cv=none; b=VBxl0ukuBH41ihY1NfFtDDp2ZMthg8P8brM1EGrG6YDdLd5fbTmcbqx0Oa5v1NztJaoy7uuQA7HX+xY0Lhfrmh26uAqosCZo7h6OeIgxy/HXxSvE7GKslQVsmN7qdP0Y04N2+RCkLUazpn9rLDkCK+ta8w4vVIY/kPfFiefxot8=
+	t=1738309678; cv=none; b=WOMqRoOU7wc4d2leUlqzTUz3KP82IFlDOcoZmSit1pdEbHW4ar2H1zQp4Uaso9wgxwTNVXPgmHuoB/aVHqw4kQboSQTnlWulD9qWjc1hZdfvk8cNpu4JNBfIHTmm7ShIp4QX28D4gyTSmFPcvf61vXYNjJnZFGYDKsA/n3oTugk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738309636; c=relaxed/simple;
-	bh=ccZFHqJNBUQZKzR/Y4K1/cN5filuLBXWBcaSuM5q6BI=;
+	s=arc-20240116; t=1738309678; c=relaxed/simple;
+	bh=9KrbAGChLqoeNT3MQUvj/T9v6fbmxb1jzCiBIdxSa+Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NykOAAgv1k5Ty6a4XIlVJEKleHhbIgRX/EvHO6N5mf+hp7vXkjwWL5waIFQZVqiG0IScGC87jjiQIETH3/wza8iQQ4kq7XO+P/6Oh3NeHzlxjbEzXsd4lGwrANmgdy8IZGHyoe+clfKuZJtFfaTHSWNo2WDhM/AhgxyFcqIZmzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pEqKMybv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HCo8Nrh3gSdpX09/nC0cpHcfM6+Oo9ynkL65+Zueba5EqQDnHNL0TvFy6sS0UhoSr38biI4mtsSyylyFKK9f02Q9yFeYSicjPqCeCy56DwTSXNGNC9SiU/mR0T3vh9VFa9sjfMKS+ynhoB4qtCShyzN4qsuLJ2Fan5r2ne+qaiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Xe6rsbif; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pEqKMybv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48CEDC4CED1;
-	Fri, 31 Jan 2025 07:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738309635;
-	bh=ccZFHqJNBUQZKzR/Y4K1/cN5filuLBXWBcaSuM5q6BI=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Xe6rsbif"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27CE4C4CED1;
+	Fri, 31 Jan 2025 07:47:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738309677;
+	bh=9KrbAGChLqoeNT3MQUvj/T9v6fbmxb1jzCiBIdxSa+Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pEqKMybv1aBK22Pq9pmJUU6R/Yhk43HLgK4t9onviHtjLZUKtd5F87rvEwHFgN5pJ
-	 71aAdDpkGNpXpFGISZgejVt0DhYmXeBPeFtPw+PIsM4AnCbJGAfSkL+Tm3HWTP/qci
-	 9rmRJ/i2B1AxJFMD0Rh1h7jWozTVqBTODKB37Bhs8wEjqNdCLaUx7/3kKzTJhPyhsv
-	 NxyTvDzImyIcVbY2JVVYNkyxV9Djlg4UNG4mqqULo/i1K1WFnjD/7xySz03D5DmNeK
-	 LdBqHjRF6FrAhx6izwUAIWzyJc8MmTD2qwj6D/oZ/MMx9HGRceKlcUZORYJ9gm1+Mj
-	 vVTkoG+ujvm8Q==
-Date: Fri, 31 Jan 2025 08:47:12 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Hironori KIKUCHI <kikuchan98@gmail.com>
-Cc: linux-kernel@vger.kernel.org, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: display: panel: Add generic
- MIPI-DSI/DPI panels
-Message-ID: <20250131-whispering-ermine-of-wealth-d3d88c@krzk-bin>
-References: <20250131064354.4163579-1-kikuchan98@gmail.com>
- <20250131064354.4163579-2-kikuchan98@gmail.com>
+	b=Xe6rsbif5zlZ7WayknOJZEC6cg/g+dNcOgdbWtMLRuvTemGFrZWRzVIWM0/T4PkU+
+	 W8kc1nu8fN9NUcrD8sJrWycqUSkMXoW5RZhAaqpWoPySLgXpOnB23uqQcgnFIIWxBK
+	 IArxyDxHfdfH1bx7gv3WSPOlkDtWt+d5JXFE56ns=
+Date: Fri, 31 Jan 2025 08:47:54 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: phasta@kernel.org, Christoph Hellwig <hch@lst.de>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	daniel.almeida@collabora.com, aliceryhl@google.com,
+	robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	open list <linux-kernel@vger.kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
+Message-ID: <2025013148-reversal-pessimism-1515@gregkh>
+References: <20250109080812.GA20431@lst.de>
+ <Z3-NqwAG_96yq8VD@pollux>
+ <20250110083955.GA5395@lst.de>
+ <Z4D5a5NYrAbNxUL6@pollux>
+ <Z4kG5AcVeQKegLnb@pollux>
+ <20250128092334.GA28548@lst.de>
+ <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
+ <20250130154646.GA2298732@nvidia.com>
+ <2025013030-gummy-cosmic-7927@gregkh>
+ <20250130172437.GN5556@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250131064354.4163579-2-kikuchan98@gmail.com>
+In-Reply-To: <20250130172437.GN5556@nvidia.com>
 
-On Fri, Jan 31, 2025 at 03:43:53PM +0900, Hironori KIKUCHI wrote:
-> This is a binding for generic MIPI-DSI/DPI panels that require
-> initialization with a simple command sequence before use.
+On Thu, Jan 30, 2025 at 01:24:37PM -0400, Jason Gunthorpe wrote:
+> On Thu, Jan 30, 2025 at 05:11:43PM +0100, Greg KH wrote:
+> > On Thu, Jan 30, 2025 at 11:46:46AM -0400, Jason Gunthorpe wrote:
+> > > On Thu, Jan 30, 2025 at 02:19:16PM +0100, Philipp Stanner wrote:
+> > > > would some sort of official statement by the "entire community"
+> > > > reassure you that the burden of keeping Rust abstractions working with
+> > > > any changes on the C side rests entirely on the Rust side's
+> > > > shoulders?
+> > > 
+> > > You'd have to reconcile that with the recent event where Linus defered
+> > > the MM pull request and some C patches were dropped because of rust
+> > > kbuild bugs:
+> > > 
+> > > https://lore.kernel.org/linux-mm/CAHk-=whddBhfi5DUi370W3pYs+z3r2E7KYuHjwR=a1eRig5Gxg@mail.gmail.com/
+> > > 
+> > > It seems to me the message is now crystal clear, and the opposite of
+> > > what you claim.
+> > > 
+> > > All PRs to Linus must not break the rust build and the responsibilty
+> > > for that falls to all the maintainers. If the Rust team is not quick
+> > > enough to resolve any issues during the development window then
+> > > patches must be dropped before sending PRs, or Linus will refuse the
+> > > PR.
+> > > 
+> > > Effectively this seems to imply that patches changing some of the C
+> > > API cannot be merged by maintainers unless accompanied by matching
+> > > Rust hunks.
+> > > 
+> > > If there are different instructions to maintainers I would be
+> > > interested to know.
+> > 
+> > That's not the case, the one you point at above was a tooling issue that
+> > people missed due to the holidays.  Fixing it up was simple enough and
+> > people did so and moved on.
 > 
-> Although the `panel-simple` binding exists for generic panels, it is not
-> suitable for panels that require initialization via their communication
-> bus, as such panels cannot be considered "simple".
-> 
-> While many dedicated bindings exist for such panels, the generic panels
-> are not complex enough to warrant a dedicated binding because they only
-> require a "simple" initialization before use.
+> Regardless of holidays, you seem to be saying that Linus should have
+> accepted Andrew's PR and left rust with build failures?
 
-All hardware warrants a dedicated binding. I don't get from where did
-you take such rule that you can skip actual hardware specific aspects.
+I can't answer for Linus, sorry.  But a generic "hey, this broke our
+working toolchain builds" is something that is much much much different
+than "an api changed so I now have to turn off this driver in my build"
+issue.
 
-> 
-> This binding addresses that gap.
-> 
-> Signed-off-by: Hironori KIKUCHI <kikuchan98@gmail.com>
-> ---
->  .../bindings/display/panel/panel-mipi.yaml    | 244 ++++++++++++++++++
->  1 file changed, 244 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-mipi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-mipi.yaml b/Documentation/devicetree/bindings/display/panel/panel-mipi.yaml
-> new file mode 100644
-> index 00000000000..681614333d8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-mipi.yaml
-> @@ -0,0 +1,244 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/panel-mipi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic MIPI-DSI/DPI Panels Requiring Initialization
-> +
-> +maintainers:
-> +  - Hironori KIKUCHI <kikuchan98@gmail.com>
-> +
-> +description:
-> +  This is a binding for generic MIPI-DSI/DPI panels that require
-> +  initialization with a simple command sequence before use.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +          - panel-mipi-dsi
-> +          - panel-mipi-dpi-spi
+thanks,
 
-Missing device specific compatibles.
-
-> +      - items:
-> +          - {}
-> +          - enum:
-> +              - panel-mipi-dsi
-> +              - panel-mipi-dpi-spi
-> +
-> +  reg:
-> +    description: DSI / SPI channel used by that screen
-> +    maxItems: 1
-> +
-> +  power-supply: true
-> +
-> +  io-supply:
-> +    description: I/O system regulator.
-> +      No need to set if this is the same as polwer-supply.
-> +
-> +  dc-gpios:
-> +    maxItems: 1
-> +    description: Controller data/command selection (D/CX) in 4-line SPI mode.
-> +      If not set, the controller is in 3-line SPI mode.
-> +      Disallowed for DSI.
-> +
-> +  width-mm: true
-> +  height-mm: true
-> +  panel-timing: true
-> +  display-timings: true
-> +
-> +  reset-delay:
-> +    description: Delay (in ms) after the reset command
-
-So use proper unit suffixes. Everywhere.
-
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  init-delay:
-> +    description: Delay (in ms) for sending the initial command sequence
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  sleep-delay:
-> +    description: Delay (in ms) after the sleep command
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  backlight-delay:
-> +    description: Delay (in ms) for enabling the backlight
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  port: true
-> +  reset-gpios: true
-> +  rotation: true
-> +
-> +  backlight: true
-> +
-> +  init-sequence:
-> +    description: Encoded initial command sequence.
-> +    $ref: /schemas/types.yaml#/definitions/uint8-array
-> +
-> +  firmware-name:
-> +    maxItems: 1
-> +
-> +  dsi-mode-video:
-> +    description: Enable MIPI_DSI_MODE_VIDEO.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +  dsi-mode-video-burst:
-> +    description: Enable MIPI_DSI_MODE_VIDEO_BURST.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +  dsi-mode-video-sync-pulse:
-> +    description: Enable MIPI_DSI_MODE_VIDEO_SYNC_PULSE.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +  dsi-mode-video-auto-vert:
-> +    description: Enable MIPI_DSI_MODE_VIDEO_AUTO_VERT.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +  dsi-mode-video-hse:
-> +    description: Enable MIPI_DSI_MODE_VIDEO_HSE.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +  dsi-mode-video-no-hfp:
-> +    description: Enable MIPI_DSI_MODE_VIDEO_NO_HFP.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +  dsi-mode-video-no-hbp:
-> +    description: Enable MIPI_DSI_MODE_VIDEO_NO_HBP.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +  dsi-mode-video-no-hsa:
-> +    description: Enable MIPI_DSI_MODE_VIDEO_NO_HSA.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +  dsi-mode-vsync-flush:
-> +    description: Enable MIPI_DSI_MODE_VSYNC_FLUSH.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +  dsi-mode-no-eot-packet:
-> +    description: Enable MIPI_DSI_MODE_NO_EOT_PACKET.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +  dsi-clock-non-continuous:
-> +    description: Enable MIPI_DSI_CLOCK_NON_CONTINUOUS.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +  dsi-mode-lpm:
-> +    description: Enable MIPI_DSI_MODE_LPM.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +  dsi-hs-pkt-end-aligned:
-
-All this must be deduced from the compatible which makes this binding
-redundant.  This binding is a no-go for me for obvious reasons: is not
-specific and you try to bypass the exact rule of bindings to be specific
-about hardware.
-
-
-> +    description: Enable MIPI_DSI_HS_PKT_END_ALIGNED.
-> +      Disallowed for SPI.
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - panel-mipi-dpi-spi
-> +    then:
-> +      # SPI mode
-> +      $ref: /schemas/spi/spi-peripheral-props.yaml#
-> +      properties:
-> +        dsi-mode-video: false
-> +        dsi-mode-video-burst: false
-> +        dsi-mode-video-sync-pulse: false
-> +        dsi-mode-video-auto-vert: false
-> +        dsi-mode-video-hse: false
-> +        dsi-mode-video-no-hfp: false
-> +        dsi-mode-video-no-hbp: false
-> +        dsi-mode-video-no-hsa: false
-> +        dsi-mode-vsync-flush: false
-> +        dsi-mode-no-eot-packet: false
-> +        dsi-clock-non-continuous: false
-> +        dsi-mode-lpm: false
-> +        dsi-hs-pkt-end-aligned: false
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - panel-mipi-dsi
-> +    then:
-> +      # DSI mode
-> +      properties:
-> +        dc-gpios: false
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    dsi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        panel@0 {
-> +            compatible = "vendor,some-panel", "panel-mipi-dsi";
-
-Undocumented compatible.
-
-Best regards,
-Krzysztof
-
+greg k-h
