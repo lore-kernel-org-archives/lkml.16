@@ -1,166 +1,63 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4779E24B28
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B649C23A9;
+	Fri, 31 Jan 2025 01:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738288105; cv=none; b=fyuXOhkUU116fQZtGCpZ4W5S3AU3Q9yg78QxXRr3cbsvbvWlUnBUgkY2nAvRv6jw7eh1BZmlMp9EA7KVV1dsR04L17ighsb8DYyFg8ORLWZGfLZ5zAhtHlMmPaCXAyzjPA+H5Fmyz37Xp1BT6tffOB6L60K77mEqGGcK5o6k5e4=
+	t=1738288770; cv=none; b=OcngnAOdw3r04RDh83TgMXtFBKoNvkMRKd0dq/yQ/UUGLecf9yyndOsgmXwZPB0WWJo/ECtUJoiQpa4REUBhRvD/2tc5p9KRj+lY658RXn1K7VPfRFxfotSxfdwuvt6SRbMNJjBdqhFBetdEF62xTST69//zamDIqPy7TAWo6zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738288105; c=relaxed/simple;
-	bh=PCcWp1tjtTTwT+4T+gwNe8f1pHXDJ+jDQQs7L3JrJJQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UbCFNxwOlRLpXUPsFdKQ4Su3eOpMvv9alpKUYg+97aaQ5tYmPKQbWaj0+ys1evr215mQy09YwOehfBSMtdemYD+Al+QxRdzl0ROSarRU2Cn14MaMuE5fRa+vZ1O1gGLfITFs6v2lEOjXGTUcB8SWJt8UlkxB31ms76oRDygN5P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yau81Eqe; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1738288770; c=relaxed/simple;
+	bh=Q1GKUWEjLaYVKphPM+rWeriA7aHz+oBCp5W0dlnVZ+A=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Mn8qCXPKFo9KCTi56vPUDFzs0KNtuSl9bh04f3i3wzcyNcZOeM9Be0lIBuaGbUFXyB8HD9pjDhNk2jPFCHpWMFA+HNTDZcveJfZaQLHvp0pkpx9wFdnAo8R/aZ1g9ScotGO/wbI3CxTOVvbPH77Sio6l346qn895NdWxwitro1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eN7OeM5I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yau81Eqe"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21650d4612eso40341145ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:48:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738288103; x=1738892903; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yk4T/kfqEFgVa3SrODaXARdMdIV0x31oxIDNkWjd6DU=;
-        b=yau81EqeHBHxeO9mmWpCTLmIVFhj5Qq0mJ3WUQlXJD7hOWXgO02KeZ8neZzxV+zOjv
-         RTYb5hUQRn6LKR2IDRXYAusLzkP9f0U0nDOeLmWkRZf57srGIO/QhHz8v9h/g4NUPCad
-         NTfBa7v+u88W6u3LGc5umo/8AK+qiZhnEEt4Z74njP151I3uFgXYia4OLp1N/Hjl6P8m
-         ysmpxc8DUAtfoWicnK2BmDriCC6RkOH0RG0u3wMTvYblrKRnmPB/klkEKvYTL7fcJ2T3
-         wHKkGGooLrRH+xe5mf2VZ4s96IFSmC96fLqE3iOF/vYP6EfAxgM5lZILgvgNSqPATBsn
-         GNOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738288103; x=1738892903;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yk4T/kfqEFgVa3SrODaXARdMdIV0x31oxIDNkWjd6DU=;
-        b=biOtJ4WqXnt4vVzNfurgqKKkNE/pYlCs3ofnaWcna1uPULbcI5+UJObqVxX3T4B8Ob
-         VmA1fl0owHIGx1ja1K1dDzOOJ4MtA87saqh0go3iKDR4y+LWC6JDXcpTCCPoZPiCbvIs
-         NQN9RreqqJGU2GmBXA5AUKzTsqbambGT/c2kYsD+4+VPXltDygesHFUwANQ45PZ9Cxjs
-         i5G+N1VDFRMAqhFl51TEQLME1/ToS6KM1ikILfnPwm+aCUKSznwKfUb2YVuW1nYqDdRP
-         rp2oyONzcuifjkYKcMTKEQOE0OBt06UXqbBPLnV5CoA0NcTGknRkSytVHCMxXTNlQfjB
-         UOBg==
-X-Forwarded-Encrypted: i=1; AJvYcCXXuaSNkvG86GSsV+iJ+JBVJ64lHwOx1XL0hpYqatpk9oNUzsmim11KleXb1niDhTWDsUyhDY5yrgCfBV0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUedxQVKzIGfBrXKXIs4iV925VD+E5vnLnYyA4nccwX+xcAc8B
-	8h1OF4+XY9yN7nhWE3NqpdzmqBhLz2BXO3wWtfFoG7foAhouYkvY9VjTUKqpQXKcwza6O7W4ntI
-	zKQ==
-X-Google-Smtp-Source: AGHT+IG0aBeCk8/iEUAOZ9Ro4ZQRn21EJE6cjItE25bpHK7iUdp9q2QgGNTaw88LaidLTqtzkYVxy3WfYW8=
-X-Received: from pjbso10.prod.google.com ([2002:a17:90b:1f8a:b0:2ef:82c0:cb8d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f70c:b0:21d:3bee:990c
- with SMTP id d9443c01a7336-21dd7de15b4mr143430755ad.42.1738288103586; Thu, 30
- Jan 2025 17:48:23 -0800 (PST)
-Date: Thu, 30 Jan 2025 17:48:22 -0800
-In-Reply-To: <afc1fb55dfcb1bccd8ee6730282b78a7e2f77a46.1738274758.git.ashish.kalra@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eN7OeM5I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A49C4CED2;
+	Fri, 31 Jan 2025 01:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738288770;
+	bh=Q1GKUWEjLaYVKphPM+rWeriA7aHz+oBCp5W0dlnVZ+A=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=eN7OeM5Icxx3Yr1q6ZwF+NN6omkZKaLDsAO1v3kMqe13rDE5iAEkC95yRv71zINUB
+	 jUzieluz1JjE7yeR5NNZE1RrvIdjKeCApJ81GgY3YtxsRxSgYds1866MwY6b5JY+nO
+	 XzVAYC563Xnv5b+y6wFnbIOqthyTw/beiPnQAcVLobhe2Vx2515kE/t6zQuDx4Q/kO
+	 4amPajblaNFwu9iqUl+z9fcNHot0q/ncAXhfJfhPDAzw+l6JpAVJWFHukhD78rwjHP
+	 NBZx42UrWWIs7JK+UcpiIUiR090A38TXbUdqw2e8GRGLofQWDRDLvpFpiii4tBkY7R
+	 bEsaxjM+PT+Yw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D49380AA66;
+	Fri, 31 Jan 2025 01:59:58 +0000 (UTC)
+Subject: Re: [GIT PULL] audit/audit-pr-20250130
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <e2fd759e32633e07ac8ad2799cf22acf@paul-moore.com>
+References: <e2fd759e32633e07ac8ad2799cf22acf@paul-moore.com>
+X-PR-Tracked-List-Id: <audit.vger.kernel.org>
+X-PR-Tracked-Message-Id: <e2fd759e32633e07ac8ad2799cf22acf@paul-moore.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git tags/audit-pr-20250130
+X-PR-Tracked-Commit-Id: 35fcac7a7c25cc04f730b9570c737f31295fa92d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e20f2bb8b7b6047182066dde0a101e0660519f6a
+Message-Id: <173828879688.1145982.8350251866833885244.pr-tracker-bot@kernel.org>
+Date: Fri, 31 Jan 2025 01:59:56 +0000
+To: Paul Moore <paul@paul-moore.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, audit@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1738274758.git.ashish.kalra@amd.com> <afc1fb55dfcb1bccd8ee6730282b78a7e2f77a46.1738274758.git.ashish.kalra@amd.com>
-Message-ID: <Z5wr5h03oLEA5WBn@google.com>
-Subject: Re: [PATCH v2 4/4] iommu/amd: Enable Host SNP support after enabling
- IOMMU SNP support
-From: Sean Christopherson <seanjc@google.com>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	thomas.lendacky@amd.com, john.allen@amd.com, herbert@gondor.apana.org.au, 
-	davem@davemloft.net, joro@8bytes.org, suravee.suthikulpanit@amd.com, 
-	will@kernel.org, robin.murphy@arm.com, michael.roth@amd.com, 
-	dionnaglaze@google.com, nikunj@amd.com, ardb@kernel.org, 
-	kevinloughlin@google.com, Neeraj.Upadhyay@amd.com, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-coco@lists.linux.dev, iommu@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Jan 31, 2025, Ashish Kalra wrote:
-> From: Sean Christopherson <seanjc@google.com>
-> 
-> This patch fixes the current SNP host enabling code and effectively SNP
-  ^^^^^^^^^^
-> ---
->  drivers/iommu/amd/init.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-> index c5cd92edada0..ee887aa4442f 100644
-> --- a/drivers/iommu/amd/init.c
-> +++ b/drivers/iommu/amd/init.c
-> @@ -3194,7 +3194,7 @@ static bool __init detect_ivrs(void)
->  	return true;
->  }
->  
-> -static void iommu_snp_enable(void)
-> +static __init void iommu_snp_enable(void)
+The pull request you sent on Thu, 30 Jan 2025 16:17:51 -0500:
 
-If you're feeling nitpicky, adding "__init" could be done in a separate patch.
+> https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git tags/audit-pr-20250130
 
->  {
->  #ifdef CONFIG_KVM_AMD_SEV
->  	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
-> @@ -3219,6 +3219,11 @@ static void iommu_snp_enable(void)
->  		goto disable_snp;
->  	}
->  
-> +	if (snp_rmptable_init()) {
-> +		pr_warn("SNP: RMP initialization failed, SNP cannot be supported.\n");
-> +		goto disable_snp;
-> +	}
-> +
->  	pr_info("IOMMU SNP support enabled.\n");
->  	return;
->  
-> @@ -3426,18 +3431,23 @@ void __init amd_iommu_detect(void)
->  	int ret;
->  
->  	if (no_iommu || (iommu_detected && !gart_iommu_aperture))
-> -		return;
-> +		goto disable_snp;
->  
->  	if (!amd_iommu_sme_check())
-> -		return;
-> +		goto disable_snp;
->  
->  	ret = iommu_go_to_state(IOMMU_IVRS_DETECTED);
->  	if (ret)
-> -		return;
-> +		goto disable_snp;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e20f2bb8b7b6047182066dde0a101e0660519f6a
 
-This handles initial failure, but it won't handle the case where amd_iommu_prepare()
-fails, as the iommu_go_to_state() call from amd_iommu_enable() will get
-short-circuited.  I don't see any pleasant options.  Maybe this?
+Thank you!
 
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index c5cd92edada0..436e47f13f8f 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -3318,6 +3318,8 @@ static int __init iommu_go_to_state(enum iommu_init_state state)
-                ret = state_next();
-        }
- 
-+       if (ret && !amd_iommu_snp_en && cc_platform_has(CC_ATTR_HOST_SEV_SNP))
-+               cc_platform_clear(CC_ATTR_HOST_SEV_SNP);
-        return ret;
- }
- 
-
-Somewhat of a side topic, what happens if the RMP is fully configured and _then_
-IOMMU initialization fails?  I.e. if amd_iommu_init_pci() or amd_iommu_enable_interrupts()
-fails?  Is that even survivable?
-
->  
->  	amd_iommu_detected = true;
->  	iommu_detected = 1;
->  	x86_init.iommu.iommu_init = amd_iommu_init;
-> +	return;
-> +
-> +disable_snp:
-> +	if (cc_platform_has(CC_ATTR_HOST_SEV_SNP))
-> +		cc_platform_clear(CC_ATTR_HOST_SEV_SNP);
->  }
->  
->  /****************************************************************************
-> -- 
-> 2.34.1
-> 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
