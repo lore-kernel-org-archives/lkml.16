@@ -1,147 +1,510 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E081E15575D
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 23:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F131199223;
+	Fri, 31 Jan 2025 23:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738367261; cv=none; b=NttV52aCdoEFNEmed9b56HG3mFQx+5Yo5bOV67b4Jcr5Ksc62WufXxavHjlp/7hVsatd8Iy88/hSZjRRoQDsOoSiHKJIpPAYNtg99NGx3bgq977mbitfNgHrXsb+YiWbjIzziMWECVbcrexV5uksnL/L7Ow076XWvLy0mbqIzGY=
+	t=1738367293; cv=none; b=bP1Vses6Que80pU4k2PjyemmpG8kTv3jJI+u+FvJ7J6vRzlEf55G7NVa3MWARAvegZKB2vcZCnygRY69OKdFp5v7tyDv3YoBqA1htsXwvymJQicoifvE3vcjRti+2W1Vb/JyT5+r5qwsOHq8yQjTTXbxAGoqXtgq/PpMBz3Lhk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738367261; c=relaxed/simple;
-	bh=Ho0vv4BiG1C1aYAWTl4onBfhoSdgY1cGMOyHVUUMoBA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QJtsWshL8Tr3fOzVs7bx3J7aGdkE/Du++VlBsxpTZiyro+3yjyUccQztBfDs2ItDSYZ3pJDdThl+Jna1pLyVw1GCriqTC5ckDqce++bkozRfakS/J29S2Our9iqJHYTGuzKmQ6iLVrBYrJ3lkQbNuTGGvFOSLnbHmOhCiHVhL80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YfUKnQfk; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738367293; c=relaxed/simple;
+	bh=5ZPTZZnQckEL3MJ/yg69NlY9wu5stDv4dICjfuahpQk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uwazpnsKJLHLCHsaC5iTQ/NbeZ/iFPx42WeHl/5K5gwjuwMIICDB8RzeRBaPNyx3Z13WUJ6YCvh1fHOVH0fMyYAU/RVm8lKuIqaJrn6AD6aDG7whZp9YSn/FCtLpz9PWAM0jVIfRwxbBau3L8Gv1GKeabi+09vIiq5BWyzwRRkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pFTAcsVi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YfUKnQfk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738367260; x=1769903260;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Ho0vv4BiG1C1aYAWTl4onBfhoSdgY1cGMOyHVUUMoBA=;
-  b=YfUKnQfktFZLf5fviuHEi+O64o5/9qfakYXHa0mICKWk/Cb75OEbOPs9
-   /g2H72KwGjqxfNm26h804emYU4652X8PriAf6V1rX2NWxuckjuYpc4FGG
-   wkOTi3SE4AqS2HRSD2nK+3z4WURFnh6bTEl5Wh45GReBFClLxXcKrqsrz
-   p/rzddqkvRdxO4mrc1kuO9EhdEYK4o/p9jZtmZbgekT8QzQ+yNitxMbKP
-   2E47D3CKwN7yCvfcRQfzWCtvIqNzA8km60QRuVV2LUuWCy3HM/MtYOY62
-   9uj/GJ5N4QyrmGeAi3/xriDXipjM/0qrys/h4MkTozqlTQ91x7/a/Lph/
-   Q==;
-X-CSE-ConnectionGUID: nCeWRLiNQFq7X+mu/Nm2bw==
-X-CSE-MsgGUID: XRRzd0osQlKiN1/EHX4Wzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="49544543"
-X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="49544543"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 15:47:39 -0800
-X-CSE-ConnectionGUID: 0huj2Ou7SCqLVP7Fspy+hA==
-X-CSE-MsgGUID: vYz8jqEZS5C32vMpZKpniA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="109590215"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 31 Jan 2025 15:47:37 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1te0jX-000nQd-21;
-	Fri, 31 Jan 2025 23:47:35 +0000
-Date: Sat, 1 Feb 2025 07:46:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shay Drory <shayd@nvidia.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>
-Subject: drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h:48:34: warning:
- '%s' directive argument is null
-Message-ID: <202502010749.671SSYTr-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFTAcsVi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1B44C4CED1;
+	Fri, 31 Jan 2025 23:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738367293;
+	bh=5ZPTZZnQckEL3MJ/yg69NlY9wu5stDv4dICjfuahpQk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pFTAcsVih2FdpF6daKb8snCU6bGJkLNQJ6RxPjolvPT0+zL/HvC7MCOhAEj6JoahI
+	 TJ490RszuNr4nWcDeXD/WSORKrX0PbfypnuEn2XPiidwZ3A2SgCj88uxFpU9ZtuueZ
+	 VzxYMTM0wtUVMStVRJBicfKsyQjl2inqB7l9QRdndtm9ZfeN6XdpUxlPuV+NaGqwQN
+	 3k66KTBIrmEPCuv8TSizahYMOKDgNy/pD8asEkZUsupvYcdko4/rsWF5WRDQouaOiM
+	 PxnvnMj6pVeR2ehAKllN7XVaUNKhyDC0Lsir60Pm/rIfHd+iY+ceUqWkHVmg6Y/rE8
+	 GhWCGClmOCt+w==
+Date: Fri, 31 Jan 2025 15:48:11 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v4 2/5] perf lock: Retrieve owner callstack in bpf program
+Message-ID: <Z51hO-0TCmayVc7F@google.com>
+References: <20250130052510.860318-1-ctshao@google.com>
+ <20250130052510.860318-3-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20250130052510.860318-3-ctshao@google.com>
 
-Hi Shay,
+On Wed, Jan 29, 2025 at 09:21:36PM -0800, Chun-Tse Shao wrote:
+> Tracks lock contention by tracing owner callstacks in
+> `contention_begin()` and `contention_end()`, storing data in the
+> owner_stat BPF map. `contention_begin()` records the owner and their
+> callstack. `contention_end()` updates contention statistics (count,
+> time), decrements the waiter count, and removes the record when no
+> waiters remain. Statistics are also updated if the owner's callstack
+> changes. Note that owner and its callstack retrieval may fail.
+> 
+> To elaborate the process in detail:
+>   /*
+>    * In `contention_begin(), the current task is the lock waiter`. We
+>    * create/update `owner_data` for the given `lock` address.
+>   contention_begin() {
+>     Try to get owner task. Skip entire process if fails.
+>     Try to get owner stack based on task. Use empty stack if fails.
+>     Store owner stack into `owner_stacks` and create `stack_id`. If fail
+>       to store, use negative `stack_id`, which will be ignored while
+>       reporting in usermode.
+>     Retrieve `owner_tracing_data` in `owner_data` with given `lock`
+>       address.
+> 
+>     /*
+>      * The first case means contention just happens, or mismatched owner
+>      * infomation so we just drop the previous record.
+>      */
+>     if (`owner_tracing_data` does not exist ||
+>         the recorded owner `pid` does not match with the detected owner) {
+>       Create `owner_tracing_data` with info from detected owner, and
+>         store it in `owner_data` with key `lock` address.
+>     }
+>     /*
+>      * The second case means contention is on going. One more waiter is
+>      * joining the lock contention. Both `owner_data` and `owner_stat`
+>      * should be updated.
+>      */
+>     else {
+>       `owner_tracing_data.count`++
+> 
+>       Create `contention_key` with owner `stack_id` and lookup
+>         `contention_data` in `owner_stat`.
+>       if (`contention_data` does not exist) {
+>         Create new entry for `contention_key`:`contention_data` in
+>           `owner_stat`.
+>       }
+>       else {
+>         Update the `count` and `total_time` in existing
+>         `contention_data`.
+>       }
+> 
+>       Update `timestamp` and `stack_id` in `owner_tracing_data`.
+>     }
+>   }
+> 
+>   /*
+>    * In `contention_end()`, the current task will be the new owner of
+>    * the `lock`, if `ctx[1]` is not 0.
+>    */
+>   contention_end() {
+>     Lookup `owner_tracing_data` in `owner_data` with key `lock`.
+> 
+>     Create `contention_key` with `owner_tracing_data.stack_id` and
+>       lookup `contention_data` in `owner_stat`.
+>     if (`contention_data` does not exist) {
+>       Create new entry for `contention_key`:`contention_data` in
+>         `owner_stat`.
+>     }
+>     else {
+>       Update the `count` and `total_time` in existing `contention_data`.
+>     }
+> 
+>     /*
+>      * There is no more waiters, contention is over, delete the record.
+>      */
+>     if (`owner_tracing_data.count` <= 1) {
+>       delete this record in `owner_data`.
+>     }
+>     /*
+>      * Contention is still on going.
+>      */
+>     else {
+>       `owner_tracing_data.count`--
+> 
+>       if (`!ctx[0]`) {
+>         The current task exits without acquiring the lock. However we
+>           check for the recorded owner if the stack is changed, and
+>           update `onwer_data` and `owner_stat` accordingly.
+>       }
+>       else {
+>         The current task is the new owner, retrieve its stack, store it
+>           in `owner_stack` and update `owner_tracing_data`.
+>       }
+>     }
+>   }
 
-FYI, the error/warning still remains.
+I think this is too much detail. :)
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   fd8c09ad0d87783b9b6a27900d66293be45b7bad
-commit: 71e084e26414b0f27d8befa1c30b74d39d9cb2a1 net/mlx5: Allocating a pool of MSI-X vectors for SFs
-date:   3 years, 8 months ago
-config: mips-randconfig-r015-20230807 (https://download.01.org/0day-ci/archive/20250201/202502010749.671SSYTr-lkp@intel.com/config)
-compiler: mips64el-linux-gcc (GCC) 12.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250201/202502010749.671SSYTr-lkp@intel.com/reproduce)
+I'd say something like this:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502010749.671SSYTr-lkp@intel.com/
+This implements per-callstack aggregation of lock owners in addition to
+per-thread.  The owner callstack is captured using bpf_get_task_stack()
+at contention_begin and it also adds a custom stackid function for the
+owner stacks to be compared easily.
 
-All warnings (new ones prefixed by >>):
+The owner info is kept in a hash map using lock addr as a key to handle
+multiple waiters for the same lock.  At contention_end, it updates the
+owner lock stat based on the info that was saved at contention_begin.
+If there are more waiters, it'd update the owner pid to itself as
+contention_end means it gets the lock now.  But it also needs to check
+the return value of the lock function in case task was killed by a signal
+or something.
 
-   In file included from include/linux/topology.h:33,
-                    from include/linux/irq.h:19,
-                    from include/asm-generic/hardirq.h:17,
-                    from arch/mips/include/asm/hardirq.h:16,
-                    from include/linux/hardirq.h:11,
-                    from include/linux/interrupt.h:11,
-                    from drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:4:
-   include/linux/mmzone.h: In function '__nr_to_section':
-   include/linux/mmzone.h:1320:13: warning: the comparison will always evaluate as 'true' for the address of 'mem_section' will never be NULL [-Waddress]
-    1320 |         if (!mem_section[SECTION_NR_TO_ROOT(nr)])
-         |             ^
-   include/linux/mmzone.h:1306:27: note: 'mem_section' declared here
-    1306 | extern struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
-         |                           ^~~~~~~~~~~
-   In file included from include/linux/printk.h:409,
-                    from include/linux/kernel.h:17,
-                    from include/linux/interrupt.h:6:
-   In function 'irq_pool_alloc',
-       inlined from 'irq_pools_init' at drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:332:19,
-       inlined from 'mlx5_irq_table_create' at drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:437:8:
->> drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h:48:34: warning: '%s' directive argument is null [-Wformat-overflow=]
-      48 |         dev_dbg((__dev)->device, "%s:%d:(pid %d): " format,             \
-         |                                  ^~~~~~~~~~~~~~~~~~
-   include/linux/dynamic_debug.h:134:29: note: in definition of macro '__dynamic_func_call'
-     134 |                 func(&id, ##__VA_ARGS__);               \
-         |                             ^~~~~~~~~~~
-   include/linux/dynamic_debug.h:166:9: note: in expansion of macro '_dynamic_func_call'
-     166 |         _dynamic_func_call(fmt,__dynamic_dev_dbg,               \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/linux/dev_printk.h:123:9: note: in expansion of macro 'dynamic_dev_dbg'
-     123 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~
-   include/linux/dev_printk.h:123:30: note: in expansion of macro 'dev_fmt'
-     123 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |                              ^~~~~~~
-   drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h:48:9: note: in expansion of macro 'dev_dbg'
-      48 |         dev_dbg((__dev)->device, "%s:%d:(pid %d): " format,             \
-         |         ^~~~~~~
-   drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:307:9: note: in expansion of macro 'mlx5_core_dbg'
-     307 |         mlx5_core_dbg(dev, "pool->name = %s, pool->size = %d, pool->start = %d",
-         |         ^~~~~~~~~~~~~
+> 
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> ---
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  | 248 +++++++++++++++++-
+>  1 file changed, 247 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> index 23fe9cc980ae..b12df873379f 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -197,6 +197,9 @@ int data_fail;
+>  int task_map_full;
+>  int data_map_full;
+>  
+> +struct task_struct *bpf_task_from_pid(s32 pid) __ksym __weak;
+> +void bpf_task_release(struct task_struct *p) __ksym __weak;
+> +
+>  static inline __u64 get_current_cgroup_id(void)
+>  {
+>  	struct task_struct *task;
+> @@ -420,6 +423,26 @@ static inline struct tstamp_data *get_tstamp_elem(__u32 flags)
+>  	return pelem;
+>  }
+>  
+> +static inline s32 get_owner_stack_id(u64 *stacktrace)
+> +{
+> +	s32 *id, new_id;
+> +	static s64 id_gen = 1;
+> +
+> +	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
+> +	if (id)
+> +		return *id;
+> +
+> +	new_id = (s32)__sync_fetch_and_add(&id_gen, 1);
+> +
+> +	bpf_map_update_elem(&owner_stacks, stacktrace, &new_id, BPF_NOEXIST);
+> +
+> +	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
+> +	if (id)
+> +		return *id;
+> +
+> +	return -1;
+> +}
+> +
+>  SEC("tp_btf/contention_begin")
+>  int contention_begin(u64 *ctx)
+>  {
+> @@ -437,6 +460,97 @@ int contention_begin(u64 *ctx)
+>  	pelem->flags = (__u32)ctx[1];
+>  
+>  	if (needs_callstack) {
+> +		u32 i = 0;
+> +		u32 id = 0;
+> +		int owner_pid;
+> +		u64 *buf;
+> +		struct task_struct *task;
+> +		struct owner_tracing_data *otdata;
+> +
+> +		if (!lock_owner)
+> +			goto skip_owner_begin;
+> +
+> +		task = get_lock_owner(pelem->lock, pelem->flags);
+> +		if (!task)
+> +			goto skip_owner_begin;
+> +
+> +		owner_pid = BPF_CORE_READ(task, pid);
+> +
+> +		buf = bpf_map_lookup_elem(&stack_buf, &i);
+> +		if (!buf)
+> +			goto skip_owner_begin;
+> +		for (i = 0; i < max_stack; i++)
+> +			buf[i] = 0x0;
+> +
+> +		if (bpf_task_from_pid) {
+
+I think you can do this instead:
+
+		if (bpf_task_from_pid == NULL)
+			goto skip_owner_begin;
+
+nit: it can be just 'skip_owner'. :)
 
 
-vim +48 drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
+> +			task = bpf_task_from_pid(owner_pid);
+> +			if (task) {
+> +				bpf_get_task_stack(task, buf, max_stack * sizeof(unsigned long), 0);
+> +				bpf_task_release(task);
+> +			}
+> +		}
+> +
+> +		otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
+> +		id = get_owner_stack_id(buf);
+> +
+> +		/*
+> +		 * Contention just happens, or corner case `lock` is owned by process not
+> +		 * `owner_pid`. For the corner case we treat it as unexpected internal error and
+> +		 * just ignore the precvious tracing record.
+> +		 */
+> +		if (!otdata || otdata->pid != owner_pid) {
+> +			struct owner_tracing_data first = {
+> +				.pid = owner_pid,
+> +				.timestamp = pelem->timestamp,
+> +				.count = 1,
+> +				.stack_id = id,
+> +			};
+> +			bpf_map_update_elem(&owner_data, &pelem->lock, &first, BPF_ANY);
+> +		}
+> +		/* Contention is ongoing and new waiter joins */
+> +		else {
+> +			__sync_fetch_and_add(&otdata->count, 1);
+> +
+> +			/*
+> +			 * The owner is the same, but stacktrace might be changed. In this case we
+> +			 * store/update `owner_stat` based on current owner stack id.
+> +			 */
+> +			if (id != otdata->stack_id) {
+> +				u64 duration = otdata->timestamp - pelem->timestamp;
 
-e126ba97dba9ed Eli Cohen    2013-07-07  46  
-5a7883989b1c57 Eli Cohen    2015-10-08  47  #define mlx5_core_dbg(__dev, format, ...)				\
-27b942fbbd3107 Parav Pandit 2019-04-29 @48  	dev_dbg((__dev)->device, "%s:%d:(pid %d): " format,		\
-9e5b2fc1d39b31 Kamal Heib   2016-12-06  49  		 __func__, __LINE__, current->pid,			\
-1a91de28831a1b Joe Perches  2014-05-07  50  		 ##__VA_ARGS__)
-e126ba97dba9ed Eli Cohen    2013-07-07  51  
+Isn't it the opposite?
 
-:::::: The code at line 48 was first introduced by commit
-:::::: 27b942fbbd3107d4e969ece133925cd646239ef4 net/mlx5: Get rid of storing copy of device name
+	u64 duration = pelem->timestamp - otdata->timestamp;
 
-:::::: TO: Parav Pandit <parav@mellanox.com>
-:::::: CC: Saeed Mahameed <saeedm@mellanox.com>
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +				struct contention_key ckey = {
+> +					.stack_id = id,
+> +					.pid = 0,
+> +					.lock_addr_or_cgroup = 0,
+> +				};
+> +				struct contention_data *cdata =
+> +					bpf_map_lookup_elem(&owner_stat, &ckey);
+> +
+> +				if (!cdata) {
+> +					struct contention_data first = {
+> +						.total_time = duration,
+> +						.max_time = duration,
+> +						.min_time = duration,
+> +						.count = 1,
+> +						.flags = pelem->flags,
+> +					};
+> +					bpf_map_update_elem(&owner_stat, &ckey, &first,
+> +							    BPF_NOEXIST);
+> +				} else {
+> +					__sync_fetch_and_add(&cdata->total_time, duration);
+> +					__sync_fetch_and_add(&cdata->count, 1);
+> +
+> +					/* FIXME: need atomic operations */
+> +					if (cdata->max_time < duration)
+> +						cdata->max_time = duration;
+> +					if (cdata->min_time > duration)
+> +						cdata->min_time = duration;
+> +				}
+
+And as I said before, can we move this block out as a function?
+
+> +
+> +				otdata->timestamp = pelem->timestamp;
+> +				otdata->stack_id = id;
+> +			}
+> +		}
+> +skip_owner_begin:
+>  		pelem->stack_id = bpf_get_stackid(ctx, &stacks,
+>  						  BPF_F_FAST_STACK_CMP | stack_skip);
+>  		if (pelem->stack_id < 0)
+> @@ -473,6 +587,7 @@ int contention_end(u64 *ctx)
+>  	struct tstamp_data *pelem;
+>  	struct contention_key key = {};
+>  	struct contention_data *data;
+> +	__u64 timestamp;
+>  	__u64 duration;
+>  	bool need_delete = false;
+>  
+> @@ -500,12 +615,143 @@ int contention_end(u64 *ctx)
+>  		need_delete = true;
+>  	}
+>  
+> -	duration = bpf_ktime_get_ns() - pelem->timestamp;
+> +	timestamp = bpf_ktime_get_ns();
+> +	duration = timestamp - pelem->timestamp;
+>  	if ((__s64)duration < 0) {
+>  		__sync_fetch_and_add(&time_fail, 1);
+>  		goto out;
+>  	}
+>  
+> +	if (needs_callstack && lock_owner) {
+> +		u64 owner_time;
+> +		struct contention_key ckey = {};
+> +		struct contention_data *cdata;
+> +		struct owner_tracing_data *otdata;
+> +
+> +		otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
+> +		if (!otdata)
+> +			goto skip_owner_end;
+> +
+> +		/* Update `owner_stat` */
+> +		owner_time = timestamp - otdata->timestamp;
+> +		ckey.stack_id = otdata->stack_id;
+> +		cdata = bpf_map_lookup_elem(&owner_stat, &ckey);
+> +
+> +		if (!cdata) {
+> +			struct contention_data first = {
+> +				.total_time = owner_time,
+> +				.max_time = owner_time,
+> +				.min_time = owner_time,
+> +				.count = 1,
+> +				.flags = pelem->flags,
+> +			};
+> +			bpf_map_update_elem(&owner_stat, &ckey, &first, BPF_NOEXIST);
+> +		} else {
+> +			__sync_fetch_and_add(&cdata->total_time, owner_time);
+> +			__sync_fetch_and_add(&cdata->count, 1);
+> +
+> +			/* FIXME: need atomic operations */
+> +			if (cdata->max_time < owner_time)
+> +				cdata->max_time = owner_time;
+> +			if (cdata->min_time > owner_time)
+> +				cdata->min_time = owner_time;
+> +		}
+> +
+> +		/* No contention is occurring, delete `lock` entry in `owner_data` */
+> +		if (otdata->count <= 1)
+> +			bpf_map_delete_elem(&owner_data, &pelem->lock);
+> +		/*
+> +		 * Contention is still ongoing, with a new owner (current task). `owner_data`
+> +		 * should be updated accordingly.
+> +		 */
+> +		else {
+> +			u32 i = 0;
+> +			u64 *buf;
+> +
+> +			__sync_fetch_and_add(&otdata->count, -1);
+> +
+> +			buf = bpf_map_lookup_elem(&stack_buf, &i);
+> +			if (!buf)
+> +				goto skip_owner_end;
+> +			for (i = 0; i < (u32)max_stack; i++)
+> +				buf[i] = 0x0;
+> +
+> +			/*
+> +			 * ctx[1] has the return code of the lock function.
+
+Then I think it's clearer to have a local variable named 'ret' or so.
+
+
+> +			 * If ctx[1] is not 0, the current task terminates lock waiting without
+> +			 * acquiring it. Owner is not changed, but we still need to update the owner
+> +			 * stack.
+> +			 */
+> +			if (!ctx[1]) {
+
+This doesn't match to the comment.  It should be:
+
+			if (ret < 0) {
+
+
+> +				s32 id = 0;
+> +				struct task_struct *task = NULL;
+> +
+> +				if (bpf_task_from_pid)
+
+Same as the above.  No need to go down if you cannot get the task and
+stack.
+
+				if (bpf_task_from_pid == NULL)
+					goto skip_owner;
+
+
+> +					task = bpf_task_from_pid(otdata->pid);
+> +
+> +				if (task) {
+> +					bpf_get_task_stack(task, buf,
+> +							   max_stack * sizeof(unsigned long), 0);
+> +					bpf_task_release(task);
+> +				}
+> +
+> +				id = get_owner_stack_id(buf);
+> +
+> +				/*
+> +				 * If owner stack is changed, update `owner_data` and `owner_stat`
+> +				 * accordingly.
+> +				 */
+> +				if (id != otdata->stack_id) {
+> +					u64 duration = otdata->timestamp - pelem->timestamp;
+> +					struct contention_key ckey = {
+> +						.stack_id = id,
+> +						.pid = 0,
+> +						.lock_addr_or_cgroup = 0,
+> +					};
+> +					struct contention_data *cdata =
+> +						bpf_map_lookup_elem(&owner_stat, &ckey);
+> +
+> +					if (!cdata) {
+> +						struct contention_data first = {
+> +							.total_time = duration,
+> +							.max_time = duration,
+> +							.min_time = duration,
+> +							.count = 1,
+> +							.flags = pelem->flags,
+> +						};
+> +						bpf_map_update_elem(&owner_stat, &ckey, &first,
+> +								    BPF_NOEXIST);
+> +					} else {
+> +						__sync_fetch_and_add(&cdata->total_time, duration);
+> +						__sync_fetch_and_add(&cdata->count, 1);
+> +
+> +						/* FIXME: need atomic operations */
+> +						if (cdata->max_time < duration)
+> +							cdata->max_time = duration;
+> +						if (cdata->min_time > duration)
+> +							cdata->min_time = duration;
+> +					}
+> +
+> +					otdata->timestamp = pelem->timestamp;
+> +					otdata->stack_id = id;
+> +				}
+> +			}
+> +			/*
+> +			 * If ctx[1] is 0, then update tracinng data with the current task, which is
+> +			 * the new owner.
+> +			 */
+> +			else {
+> +				otdata->pid = pid;
+> +				otdata->timestamp = timestamp;
+> +
+> +				bpf_get_task_stack(bpf_get_current_task_btf(), buf,
+> +						   max_stack * sizeof(unsigned long), 0);
+
+This would be meaningless since it's still in the contention path.
+Current callstack will be the same as the waiter callstack.  You'd 
+better just invalidate callstack here and let the next waiter update
+it.
+
+Thanks,
+Namhyung
+
+
+> +				otdata->stack_id = get_owner_stack_id(buf);
+> +			}
+> +		}
+> +	}
+> +skip_owner_end:
+> +
+>  	switch (aggr_mode) {
+>  	case LOCK_AGGR_CALLER:
+>  		key.stack_id = pelem->stack_id;
+> -- 
+> 2.48.1.362.g079036d154-goog
+> 
