@@ -1,100 +1,231 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800B31F1525
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 18:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE90C7081F;
+	Fri, 31 Jan 2025 18:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738348497; cv=none; b=uY8fgbkV8j0T72vO/uyJFJqnX0iyq6JaToPwTHG1Pu8UwLWXCCuZbuVMfihgrCgd+5gF+WCaUbuHSjTnEyEgcm0eTgmPNWfLCSu/9JbbpFsXHJhui1jf0CvwmmaRkWF7hAX7CDnhkyyfwPiQlrfNZsR9TrdNh9O6zXudo2LwVDg=
+	t=1738348543; cv=none; b=FASHWEOwHQMIeJdEjzcLTQRsjtOn8KSfa4kxzuCzPHMdDWaRL+UStuM5LqrZR7jK7QZEYlwj9ZEkFSozd44jxlSVoGMa7qhcfLEHjfgju0oao1sI1VsBnh+yZGhz8KE1iKME/d/xD52smXPPBLBqBvRpQFZA1EOPCGa51A8MZvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738348497; c=relaxed/simple;
-	bh=fNWXKiXO2P8ivV5RaHwtYShP97cRJPV2kvBURFYp/aA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=I5wXcqGZoA5kp5cqZ5IeHAWK2NmydgbgjvDRg/Px5QIeCWdolXmD96jmvGfgRBkJCZZTQik50kqd5wZZNtiG2Pqh/HBXsh3PWHPv0oo2Fk6jfJuJCdfepTRhQ4ibd7D9VB9rcrtg2sSR0I1QZrS91ZHoZftVzOAx3ImeLjkp8yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pZpZ67Yb; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1738348543; c=relaxed/simple;
+	bh=EaMcjhb4HCyABF3C5By3MXJbUDe+AyJi93ipbLgmkSY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bT38FY9AHfMwhKdD/3NvXxH24bzXkHpae3KNaCX8LBjAQK4HZmcpgU6iWQCpzkQCj4pPKWJ3B2DiHd/Y9UQIogQV9JFJIN4Ay7Df5tyeZTPm2Vei3ir3wZRucF2sl1pS63CIwt0pVhCy/5OkAo//guQurqLxx2V2H8Y3rAJ6f/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Je+OZp+s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pZpZ67Yb"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2efa0eb9dacso4460756a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 10:34:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738348495; x=1738953295; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OHvxpFXR5lAEIxk+o3Hek4ypvpPcHmc+gKmCjQ+uPaM=;
-        b=pZpZ67Yb1PKtqCEYRvpvaUzEAkDkxIVC5BGDYv+RfUPUqgN84fxL0YN/LpFbBjRbvz
-         bjUOCmA0c9qVE28o9NEzZxf/88U64Iaq14/6OUxdZyVpm0Kcuc3gON4tryW7LpfNUw8X
-         E1RrbK7lDIeZxbNArZCHeA8H50vPIR7QQgiG/TGT/+WfjnYRuIpZ0QCcCTzP5OTU5Y3O
-         mam/0Exvlj5Dq9U0ESiZD+ssLFg1HPfAi/Yfy4vS4giMTK0HytEDj/PHFW3MCXBR8pq1
-         mgvm9s8ocaTklrRghLwU9pHOvg3rGvzE0Z/sdt5bX/vOlQfTQv0Dcw7kPP9JKo7gedtN
-         2GvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738348495; x=1738953295;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OHvxpFXR5lAEIxk+o3Hek4ypvpPcHmc+gKmCjQ+uPaM=;
-        b=d//b3fU2lZvchioL6GaWsHAxUc9W10ZEK/RvxZBlFHzxDNsNvJwsZvMjcA9pagfSoF
-         8zwcp7sY54X9q/xE/0nw10pcyk641s1i7x/ifBC6eXRmsQ9PYG2NTyS6thb9AGX/ZFi+
-         8csHWFs3XxeEROuqO6HAKzpVob87WV2HWKc3jAvOyeQsAGcFXbL4cRxoUTjUPbTxsXFj
-         X9ssT1LOOZatnZ8H4BUdi2jHFu3UF4vV56rsuCxBggmWtbXcwPUrm0FAlNMKMRbinuMN
-         K9LHLmBDHYeyGHUAyVDyhKv5f2EDvZep8z8M25WeBzwp2lqCE5umZjW2AMUx9tWekHxl
-         aMCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+1wOqKVhO/KeVmijvWRzKbu5bWrpZDt0AvyqEDDfUTIjQiKYmWvoyDQIQALH6KVIS3cY/j1SsXuON8E4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxbg4SuZ3DfFy1Sm0eysmB4vRc5LcUBhCGD92o4BE4hywQpKB17
-	QS/kJ4bEhB9Hmkw/BUSoV+ZTW1M4WUs38g+pjU3+NTBKDi73kZ6wpwzwudB/cTjpbN2hoaXQrOB
-	+Mw==
-X-Google-Smtp-Source: AGHT+IE/oZCUZdCZRJTGm8rMH0vhTkQhVXUs+8QMDWccMmAQAm7pMQvcBwS4gYOfo5ygWQzF5ovfuAe5ry0=
-X-Received: from pfaq15.prod.google.com ([2002:a05:6a00:a88f:b0:725:eeaa:65e2])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:6f54:b0:730:1db:80b2
- with SMTP id d2e1a72fcca58-73001db80e2mr418968b3a.17.1738348494797; Fri, 31
- Jan 2025 10:34:54 -0800 (PST)
-Date: Fri, 31 Jan 2025 10:34:47 -0800
-In-Reply-To: <93e8a84a-d4cc-4dbc-a593-99995b000947@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Je+OZp+s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 398C2C4CED3;
+	Fri, 31 Jan 2025 18:35:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738348542;
+	bh=EaMcjhb4HCyABF3C5By3MXJbUDe+AyJi93ipbLgmkSY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Je+OZp+sMzZ8y8eJXBCGnqLSG3d7RO0OYZcVR/+Y6NMTcnvthl70g+5BmF80QBAY3
+	 ICTten8cPB0EQ8mggyhvGjsUwZOdGpDit5rzhBV+Y0gShH3F/VsxzAw1WBOuddrD5J
+	 68plw8Iyr/8u2la3flX78eJSYqw2/ANiI1/e0AwhCclp7ypgf7A1D89AumEmdm71lp
+	 FGn0FS3sMNCaMZ10cIbYCAealI+d7gN1AO7qYaZK4fjt5l45CN3OqRDlrERk/fsSCN
+	 F5RWpt0R91SRxGTkLqbLrXUgeSQ7fT0+6UMTHuChbP2uKCkXL8QUxtjkrMKYO9Lie0
+	 2zzsnvUI2Pmuw==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30762598511so23474691fa.0;
+        Fri, 31 Jan 2025 10:35:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU9VMqCQMPCki9EZ6tRnJPTXLThaepGVSjOcaFlrUjVsFCeC8EZoEq7dncSMLP3VD0VVlYAbMi/XZDciiU=@vger.kernel.org, AJvYcCVOi7rV/iuauBd9UJY4kCAPcuRUGBFPh682VnEXbaltYLFcM738JAMHGamY1ieC9TLoBdcGZ81vdvFMFA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YypIORFwOOb03CThEn8UnxBsRBY8pHYMIw5GZ1xWualMufmcDb1
+	o0aV7NZglzg3mDVXCmnSC7aHokCAuYK2RIgYySMFKBBgncswKl4fhCrFBX50GVEf6QS3pffzx6w
+	3EIDOgzrtw/eEkfdO/mbeG+XF2R4=
+X-Google-Smtp-Source: AGHT+IF/PkjaeYBFmgnvEk7vgpn8JvoIm/XXwf59wvtHOUK2C9lacjjTkP+Om+I3FP91kPVHYBT64zI31JRRVCpFHYs=
+X-Received: by 2002:a2e:a548:0:b0:307:2bc6:5eb9 with SMTP id
+ 38308e7fff4ca-307968c0568mr47983691fa.4.1738348540790; Fri, 31 Jan 2025
+ 10:35:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1738274758.git.ashish.kalra@amd.com> <8f73fc5a68f6713ba7ae1cbdbb7418145c4bd190.1738274758.git.ashish.kalra@amd.com>
- <Z5wqN5WSCpJ3OB0A@google.com> <93e8a84a-d4cc-4dbc-a593-99995b000947@amd.com>
-Message-ID: <Z50IQyFzuMQRihhF@google.com>
-Subject: Re: [PATCH v2 3/4] x86/sev: Fix broken SNP support with KVM module built-in
-From: Sean Christopherson <seanjc@google.com>
-To: Ashish Kalra <ashish.kalra@amd.com>
-Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	thomas.lendacky@amd.com, john.allen@amd.com, herbert@gondor.apana.org.au, 
-	davem@davemloft.net, joro@8bytes.org, suravee.suthikulpanit@amd.com, 
-	will@kernel.org, robin.murphy@arm.com, michael.roth@amd.com, 
-	dionnaglaze@google.com, nikunj@amd.com, ardb@kernel.org, 
-	kevinloughlin@google.com, Neeraj.Upadhyay@amd.com, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-coco@lists.linux.dev, iommu@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20250113155306.1922992-2-ardb+git@google.com>
+In-Reply-To: <20250113155306.1922992-2-ardb+git@google.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 1 Feb 2025 03:35:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARmPcM2RTBOfpep7puY8hSJ4rz6mOrw+5EuFHh6iQ0_iA@mail.gmail.com>
+X-Gm-Features: AWEUYZk_UMjgJBjWnjAjhexeeD2YPTkmaB1_Gb4gNChcZ5GhchP6_vEDlKvItsE
+Message-ID: <CAK7LNARmPcM2RTBOfpep7puY8hSJ4rz6mOrw+5EuFHh6iQ0_iA@mail.gmail.com>
+Subject: Re: [PATCH v3] kbuild: Strip runtime const RELA sections correctly
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	Ron Economos <re@w6rz.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 30, 2025, Ashish Kalra wrote:
-> On 1/30/2025 7:41 PM, Sean Christopherson wrote:
-> > On Fri, Jan 31, 2025, Ashish Kalra wrote:
-> >> -nosnp:
-> >> -	cc_platform_clear(CC_ATTR_HOST_SEV_SNP);
-> >> -	return -ENOSYS;
-> >>  }
-> >>  
-> >> -/*
-> >> - * This must be called after the IOMMU has been initialized.
-> >> - */
-> >> -device_initcall(snp_rmptable_init);
-> > 
-> > There's the wee little problem that snp_rmptable_init() is never called as of
-> > this patch.  Dropping the device_initcall() needs to happen in the same patch
-> > that wires up the IOMMU code to invoke snp_rmptable_init().
-> 
-> The issue with that is the IOMMU and x86 maintainers are different, so i
-> believe that we will need to split the dropping of device_initcall() in
-> platform code and the code to wire up the IOMMU driver to invoke
-> snp_rmptable_init(), to get the patch merged in different trees ?
+On Tue, Jan 14, 2025 at 12:53=E2=80=AFAM Ard Biesheuvel <ardb+git@google.co=
+m> wrote:
+>
+> From: Ard Biesheuvel <ardb@kernel.org>
+>
+> Due to the fact that runtime const ELF sections are named without a
+> leading period or double underscore, the RSTRIP logic that removes the
+> static RELA sections from vmlinux fails to identify them.
 
-No, that's pure insanity and not how patches that touch multiple subsystems are
-handled.  This all goes through one tree, with Acks from the necessary parties.
+
+Dumb question - why can't you rename the section 'runtime*' to '.runtime*' =
+?
+
+.rel* matches to sections that just happen to start with '.rel',
+which may not be REL or RELA.
+
+
+
+
+
+> This results
+> in a situation like below, where some sections that were supposed to get
+> removed are left behind.
+>
+>   [Nr] Name                              Type            Address         =
+ Off     Size   ES Flg Lk Inf Al
+>
+>   [58] runtime_shift_d_hash_shift        PROGBITS        ffffffff83500f50=
+ 2900f50 000014 00   A  0   0  1
+>   [59] .relaruntime_shift_d_hash_shift   RELA            0000000000000000=
+ 55b6f00 000078 18   I 70  58  8
+>   [60] runtime_ptr_dentry_hashtable      PROGBITS        ffffffff83500f68=
+ 2900f68 000014 00   A  0   0  1
+>   [61] .relaruntime_ptr_dentry_hashtable RELA            0000000000000000=
+ 55b6f78 000078 18   I 70  60  8
+>   [62] runtime_ptr_USER_PTR_MAX          PROGBITS        ffffffff83500f80=
+ 2900f80 000238 00   A  0   0  1
+>   [63] .relaruntime_ptr_USER_PTR_MAX     RELA            0000000000000000=
+ 55b6ff0 000d50 18   I 70  62  8
+>
+> So tweak the match expression to strip all sections starting with .rel.
+> While at it, consolidate the logic used by RISC-V, s390 and x86 into a
+> single shared Makefile library command.
+>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-s390@vger.kernel.org
+> Cc: Ron Economos <re@w6rz.net>
+> Link: https://lore.kernel.org/all/CAHk-=3Dwjk3ynjomNvFN8jf9A1k=3DqSc=3DJF=
+F591W00uXj-qqNUxPQ@mail.gmail.com/
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+> v3: put back missing 'endif' to fix the RISC-V build
+> v2: add missing include of scripts/Makefile.lib
+>
+>  arch/riscv/Makefile.postlink |  8 ++------
+>  arch/s390/Makefile.postlink  |  6 +-----
+>  arch/x86/Makefile.postlink   |  6 +-----
+>  scripts/Makefile.lib         |  3 +++
+>  4 files changed, 7 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/riscv/Makefile.postlink b/arch/riscv/Makefile.postlink
+> index 829b9abc91f6..750d2784f69e 100644
+> --- a/arch/riscv/Makefile.postlink
+> +++ b/arch/riscv/Makefile.postlink
+> @@ -10,6 +10,7 @@ __archpost:
+>
+>  -include include/config/auto.conf
+>  include $(srctree)/scripts/Kbuild.include
+> +include $(srctree)/scripts/Makefile.lib
+>
+>  quiet_cmd_relocs_check =3D CHKREL  $@
+>  cmd_relocs_check =3D                                                    =
+ \
+> @@ -19,11 +20,6 @@ ifdef CONFIG_RELOCATABLE
+>  quiet_cmd_cp_vmlinux_relocs =3D CPREL   vmlinux.relocs
+>  cmd_cp_vmlinux_relocs =3D cp vmlinux vmlinux.relocs
+>
+> -quiet_cmd_relocs_strip =3D STRIPREL $@
+> -cmd_relocs_strip =3D $(OBJCOPY)   --remove-section=3D'.rel.*'       \
+> -                                --remove-section=3D'.rel__*'      \
+> -                                --remove-section=3D'.rela.*'      \
+> -                                --remove-section=3D'.rela__*' $@
+>  endif
+>
+>  # `@true` prevents complaint when there is nothing to be done
+> @@ -33,7 +27,7 @@ vmlinux: FORCE
+>  ifdef CONFIG_RELOCATABLE
+>         $(call if_changed,relocs_check)
+>         $(call if_changed,cp_vmlinux_relocs)
+> -       $(call if_changed,relocs_strip)
+> +       $(call if_changed,strip_relocs)
+>  endif
+>
+>  clean:
+> diff --git a/arch/s390/Makefile.postlink b/arch/s390/Makefile.postlink
+> index df82f5410769..1ae5478cd6ac 100644
+> --- a/arch/s390/Makefile.postlink
+> +++ b/arch/s390/Makefile.postlink
+> @@ -11,6 +11,7 @@ __archpost:
+>
+>  -include include/config/auto.conf
+>  include $(srctree)/scripts/Kbuild.include
+> +include $(srctree)/scripts/Makefile.lib
+>
+>  CMD_RELOCS=3Darch/s390/tools/relocs
+>  OUT_RELOCS =3D arch/s390/boot
+> @@ -19,11 +20,6 @@ quiet_cmd_relocs =3D RELOCS  $(OUT_RELOCS)/relocs.S
+>         mkdir -p $(OUT_RELOCS); \
+>         $(CMD_RELOCS) $@ > $(OUT_RELOCS)/relocs.S
+>
+> -quiet_cmd_strip_relocs =3D RSTRIP  $@
+> -      cmd_strip_relocs =3D \
+> -       $(OBJCOPY) --remove-section=3D'.rel.*' --remove-section=3D'.rel__=
+*' \
+> -                  --remove-section=3D'.rela.*' --remove-section=3D'.rela=
+__*' $@
+> -
+>  vmlinux: FORCE
+>         $(call cmd,relocs)
+>         $(call cmd,strip_relocs)
+> diff --git a/arch/x86/Makefile.postlink b/arch/x86/Makefile.postlink
+> index fef2e977cc7d..8b8a68162c94 100644
+> --- a/arch/x86/Makefile.postlink
+> +++ b/arch/x86/Makefile.postlink
+> @@ -11,6 +11,7 @@ __archpost:
+>
+>  -include include/config/auto.conf
+>  include $(srctree)/scripts/Kbuild.include
+> +include $(srctree)/scripts/Makefile.lib
+>
+>  CMD_RELOCS =3D arch/x86/tools/relocs
+>  OUT_RELOCS =3D arch/x86/boot/compressed
+> @@ -20,11 +21,6 @@ quiet_cmd_relocs =3D RELOCS  $(OUT_RELOCS)/$@.relocs
+>         $(CMD_RELOCS) $@ > $(OUT_RELOCS)/$@.relocs; \
+>         $(CMD_RELOCS) --abs-relocs $@
+>
+> -quiet_cmd_strip_relocs =3D RSTRIP  $@
+> -      cmd_strip_relocs =3D \
+> -       $(OBJCOPY) --remove-section=3D'.rel.*' --remove-section=3D'.rel__=
+*' \
+> -                  --remove-section=3D'.rela.*' --remove-section=3D'.rela=
+__*' $@
+> -
+>  # `@true` prevents complaint when there is nothing to be done
+>
+>  vmlinux: FORCE
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 7395200538da..f604f51d23ca 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -374,6 +374,9 @@ quiet_cmd_ar =3D AR      $@
+>  quiet_cmd_objcopy =3D OBJCOPY $@
+>  cmd_objcopy =3D $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
+>
+> +quiet_cmd_strip_relocs =3D RSTRIP  $@
+> +cmd_strip_relocs =3D $(OBJCOPY) --remove-section=3D'.rel*' $@
+> +
+>  # Gzip
+>  # ----------------------------------------------------------------------=
+-----
+>
+> --
+> 2.47.1.688.g23fc6f90ad-goog
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
