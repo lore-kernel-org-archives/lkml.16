@@ -1,209 +1,576 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337491C5F30
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 15:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D22A3D66;
+	Fri, 31 Jan 2025 15:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738335808; cv=none; b=IXO0QodC3YsL/qfXtN2Du7YHUZEw7El7ETJjROXwEbBQ7fSMgC6TVGvw6LNstyNEMTRThdCAIfrgtRvbUROmDfBGUeGBmjjEWiXWuwbsYzL7/f8KzoOXI3BtnqsR8YUTDeXazfvY7SocyWrbJxd9kF0UiYCPdv5pBrGUrcZC0Pg=
+	t=1738335905; cv=none; b=klFqQuKM8fvJx+AiUsO6UHyT6JtfcCzYAQJZ9WJO1EW/MwGYFO0PJm3S2sVdCSkGIuUiykPpG5RFrpffKTqHxInH7LEwSTYXVtj4P/7CiKk6WHa1zOEQfIdix149hiZIFDIOHIb9Rdk3lxDyRymN8hZkNptk63dAVtPhmlDgPdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738335808; c=relaxed/simple;
-	bh=MzjWwbzWIs8H1LDVE5c7k4kuxK5nlvhG1DNnOpxI2Ws=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hiAYFWLmbAkOJ/q/wbomnkC2RRYGel9jv3teSF//CkshzJVujdqnIUxhUpeZ8JIlSIvjBNpYbuzWFSg/ePKx2J4n1nqSnNNmEmR8M3ikr/VjUN0sawDw06ZE67Kwnk8MGhq0p2EE1DTfAftpRe6pJj24qzAwIvCEfaRiVcV+XN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=auodjU7F; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738335905; c=relaxed/simple;
+	bh=Qzpd5lOdwagIa5yY9K1Vv8dFXngQH5Q1TcKdvpY4eZI=;
+	h=MIME-Version:Date:From:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=ONsD4OA20Q/Jf1PyAXICjfYi5CixZMzlthi+XIJJ1iqmI16t20RwVljJ7CIkSYFYXZJ/jGw/1mDw0wjbQRWVFFKvVckkKHb+Q5itiapMDI0boZj32XnxAtcNvEcFSyJYVbm8pN9fmw/M0KtaeTbdwiGar18Eaqy4ZeMZ9WLjEXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=mVzQW07K; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ElDoaEoQ; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="auodjU7F"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-436203f1203so2822925e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:03:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738335804; x=1738940604; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4h/tBpBjpFYt6cfG0kP8Ocw563Sweo8KNaY+K0HOhqg=;
-        b=auodjU7Fgm4xIeAbRsNuuMzfHIbb5/oTDYiuB/yA0GXenEK9ZsQhiVXBtR834V9NWQ
-         9AJVdpEHzvNZhxcwtBNSlkkQ0k1esqTy/elWzykYsTLsnCRH/BAEwTaLvEaXRQYXRHYJ
-         Pa9rkytyJUGSTjb1HqYvylcIrM5fYbIHMtS1eJaDuNu1R3xt/eco3ZAmAqVCHjnyaP4C
-         s+umbFxqu0+DagEAginZ8c3VtXm0uU0FqgEwjMS7s8kZyr1+Bze6X9C29UNIEn2PTyfL
-         TZpVF/LPDfEG9hQGLrvXBEjoHK6OdsYOlfNZvvabwumpsZHLU+qufWvzJuGcVG0/mx+l
-         ZoCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738335804; x=1738940604;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4h/tBpBjpFYt6cfG0kP8Ocw563Sweo8KNaY+K0HOhqg=;
-        b=b7nTANM+EjZdMmduXc1NtC2RaQFuBp2Qndch3cz5hy0P8qdE5aPcx0fqjDtXcgaIMZ
-         UBY7/k3Qv3V7ze5S5Ua7zR99mGXwQBphDKQSs5nDkpIvprc8Pao8QKt12F5atRVyDrue
-         6Iq5RAqUBt5he0sfHr2+iyJchCLEDuCYHylxne3Au5A546hhh20TSnZixbrT0b/8aADI
-         UPE4YSGWB8dL/qxRfV9KK0mPiFbhTf2Z+WKs8Msq4pTsLBVwEMRoDFflE4YnyzfuMHnu
-         YL0+fgZOwRph+PsZpqIg1wbiIA90ZC8gBHJU8oC9+bj1j3Us9DP7Dpgts3bYuyoF86q2
-         TvSg==
-X-Forwarded-Encrypted: i=1; AJvYcCWrfRRie6X6G3chxE4pE6yx7VhW0Epvf1uquNvM7AkzhhLSqAc82briyNOQeAEuiEjz+nDKkDqVR1EzP/c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9pu5qUE+YixAWQw5S0OtWoZm93Xay116NiqCfo/PDNw0q/oFL
-	KJXx4mHPPkCz9GkBJeZaHzAPNibTIv6RX++jgaD+/Dtnvut6eK3CJOrUeJwbLQg=
-X-Gm-Gg: ASbGnct1Dkqy0dukoDq8tnt4AxZNLv8p4FaBb3BIZIKJ6dBkq9hPVjwwxzrwRRtFkp/
-	tGy3GpKMUsA8YbRNKtl+d2K8PbHmcPnKw0VKZXecKB/kHclmyh//yam7PiFgtxQOeP7FWnJ1wR5
-	rx/fRWZ9AHb39rVyMthivgKvj/NW5OIHSZXhLMgZLVyUNoe1FCQHkvxCfu5bvz03AoElrCX+WPb
-	yXX+J9HrorNn+KyzSwS11C3GhZFRTT5RVYxrIjThm9O4Ih+30S8HxhjvkZrTf1lKhhy3m3bxLSW
-	FSjSITDn41W9PGkONGnFOo7i2Nki3Zk=
-X-Google-Smtp-Source: AGHT+IGt/Ma1+xcecSjAs+tIN0S9176VFMEJoZh0tWzQpjFDOP83vGEsqq8F/1t/+/uO38xWoiotQQ==
-X-Received: by 2002:a05:600c:1c94:b0:42c:aeee:80a with SMTP id 5b1f17b1804b1-438e183fecfmr30041345e9.7.1738335802809;
-        Fri, 31 Jan 2025 07:03:22 -0800 (PST)
-Received: from [127.0.1.1] ([178.197.218.144])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e245efbcsm56679925e9.33.2025.01.31.07.03.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 07:03:22 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Fri, 31 Jan 2025 16:02:51 +0100
-Subject: [PATCH 2/3] drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG1 against
- clock driver
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="mVzQW07K";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ElDoaEoQ"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id E46791380208;
+	Fri, 31 Jan 2025 10:05:00 -0500 (EST)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-02.internal (MEProxy); Fri, 31 Jan 2025 10:05:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to; s=fm1; t=1738335900; x=
+	1738422300; bh=cdEA8Xv0ME8czifOWzoqTXbRdYVOvXtwpw5FfsfMBbY=; b=m
+	VzQW07Kd7fEDpbVYnq2y6Zt1GKyUEgdbZ+YrwiSWQQq8Wts6jOm/YnOLGuU4YnN9
+	ahko0S9kROka294qUVv8goG7JLBYjvBeJfFS+ojueBArJDmrDOL9bljPL+HEPX6U
+	eGTAC+neZAn6o7PD3v5FyoCkvKSPxDpoPd0LC9BNemg/2FSan6NCzMw8OaTeDkEn
+	+W8gAA6jbq57fsf0PnJ2aMFS1d9Kxu2hqsz4a5COVv2GiL6wm//wzMomOiqcB4xv
+	acbF35nMcVWB5Aj14nxYx3iB9U4RlChAh3umwdcO/pqAlw3e1youzpKXNQRUGUKW
+	H/ko8zZYTVAKMGA1EF2Gg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1738335900; x=1738422300; bh=c
+	dEA8Xv0ME8czifOWzoqTXbRdYVOvXtwpw5FfsfMBbY=; b=ElDoaEoQwnw0dHOZy
+	4IJH6g4JWbuUq3K1k+fC5MAX9utqdyCDiofAV5CBeNWI06BGOPek7X5vp3VKi01d
+	4z7E8P0Px+e13KslDFeqkK9TbROgykf8O98AtOHj1M/HoYSGZyEhVpW++TCu7/gg
+	usX/uFENPbstS2Vg57M4+CAIVSSjpKQ0bTMNkBRqD9cr3z5uXrObM/3SiLtVQtGN
+	CDKdxFj8hdFl7TuqJ0HNWLHdjsgtIKJ7oJfc1/vzhCc78InnGJEo+TnJhgC2RNfJ
+	E/iwrwYbXXG2X9klE+NzIt92dGMuNTMMDlbT8X3pznTLthGlkNGhCpv8EHMTrJiM
+	39UvA==
+X-ME-Sender: <xms:m-acZ8DmlBfbTDoFnKhoHg03Kvhe_pr1QbM9JezVor1mv4HUaxhlFw>
+    <xme:m-acZ-jbrFKjsFQeugEEQd8JA2AvURfVz9F0G4xIEwxMXzKYnfn3FLPSbHcELWBpC
+    9a9jPqWalQLvBU2cE4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeltdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnehmihhsshhinhhgucfvqfcufhhivghlugculdeftddmnecujfgu
+    rhepofggfffhvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdforghrkhcurf
+    gvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeq
+    necuggftrfgrthhtvghrnhepvdekfeeufedvvdefvedujeffuefgledvudeggeettedufe
+    ehtdevjeffleetleeunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspg
+    hrtghpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepughosggvrhes
+    lhgvnhhovhhordgtohhmpdhrtghpthhtohepfihimheslhhinhhugidqfigrthgthhguoh
+    hgrdhorhhgpdhrtghpthhtoheplhhinhhugiesrhhovggtkhdquhhsrdhnvghtpdhrtghp
+    thhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheplhhinhhugidqfigrthgthhguohhgsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:m-acZ_lpbGLrdjBAHxe_4N8OkHvvtKR7jjC_GHssa_N3FzlKNz63dw>
+    <xmx:m-acZyxBzjNFnAcjf7cvvo3SbGj97p2MpN0FkI_MkEc6_NgEAm0BOg>
+    <xmx:m-acZxQMM9ZGU-nWMbNfrOhlJpj5dPon9DBPGh0P7nsTCe1GrmrXwQ>
+    <xmx:m-acZ9a47AvqgoN9ArmghZBK_Y5KXo3KIUqdJ9QbiATdO2GhEFsW0A>
+    <xmx:nOacZ_MHVWsspQsdGyq33nO-3qw5tiIx72NEyiA30lQwVnV0HigDLFhB>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3FAD13C0068; Fri, 31 Jan 2025 10:04:59 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Date: Fri, 31 Jan 2025 10:04:38 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+Cc: "David Ober" <dober@lenovo.com>,
+ "Wim Van Sebroeck" <wim@linux-watchdog.org>,
+ "Guenter Roeck" <linux@roeck-us.net>, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <3ce31af2-df31-4782-94cb-a53b8ad52d5b@app.fastmail.com>
+In-Reply-To: <20250116182912.1844-1-mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
+ <20250116182912.1844-1-mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH v2] watchdog: lenovo_se30_wdt: Watchdog driver for Lenovo SE30
+ platform
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250131-drm-msm-phy-pll-cfg-reg-v1-2-3b99efeb2e8d@linaro.org>
-References: <20250131-drm-msm-phy-pll-cfg-reg-v1-0-3b99efeb2e8d@linaro.org>
-In-Reply-To: <20250131-drm-msm-phy-pll-cfg-reg-v1-0-3b99efeb2e8d@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3807;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=MzjWwbzWIs8H1LDVE5c7k4kuxK5nlvhG1DNnOpxI2Ws=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBnnOYz5iDHf4Qp20YJL5Udj223hj4lS787xPTNp
- gaRdf1GgciJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ5zmMwAKCRDBN2bmhouD
- 14m0D/0TkOdX7O2JJNLdgRDCRNTqbqeEHBXzU2CW4U2CqKnMqlYR11fm4SNRjb2lGhLO6uReKsp
- XtbxR9n8y7E41NScMxHH1OhgTZ1PCjPA4j74nMRVl4NnATy/HjnM5viCLZVTtDOizYXTELLmR5n
- RjW7EWK/RVgGGcrFmpiWKOFHPsYVm6OP0ifu/9nwMSHUnoJPCTb+bTnPHxFunDh953Yq4bKZQNv
- aFUE3jCtlt7mW1wN/rWFZ2YkMgUBzocomJ2vGw5yKBm2fMA7LsuEXbguVTfkcQsN5LwzUHiW/us
- pBgwU5Gbc3NKrQRwRd7Om3LTx9+kLRGgJtp7CoTL8FzOQooEV3eklb767VX6nKJcVJXw23Uia22
- 4EMD6j1zjIcyN35Cl4NDiGoPVcY55CwBJfplyYePtrtLyII6wnlQvUWu+lLOcThXcWmUAgMzUIm
- 0aV0CyY1MRbo8low9GeH99bNc3XQc4uqtPvPGwy9acLUX6PiduZbF+UJUTfMbP8fw6/fu6+ks1Y
- bJwYEPwZ/U+ZRGl0m0eKMUw4vR8Mcm9WvAmxTwqrXJM3tJQpUjpZTyz6LJX3VwctKQaEioCgJa7
- NMrQ7cDPK4GrtzOx3mM5ZGTuQ/1tKKuJZm21addbAJvQoBxpq4Jf5wNcyjBIBVYWPswBumI49hB
- W4ZFi7pu8eAncyg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-PHY_CMN_CLK_CFG1 register is updated by the PHY driver and by a mux
-clock from Common Clock Framework:
-devm_clk_hw_register_mux_parent_hws().  There could be a path leading to
-concurrent and conflicting updates between PHY driver and clock
-framework, e.g. changing the mux and enabling PLL clocks.
+Hi,
 
-Add dedicated spinlock to be sure all PHY_CMN_CLK_CFG1 updates are
-synchronized.
+On Thu, Jan 16, 2025, at 1:29 PM, Mark Pearson wrote:
+> Watchdog driver implementation for Lenovo SE30 platform.
+>
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> ---
+> Changes in v2:
+>  - Removed acpi.h include as not needed
+>  - Cleaned up define formatting as requested
+>  - Rewrote timeout loop in shm_get_ready to use more sensible timeouts.
+>  - Moved mem region request into probe. This created some opportunities
+>    to simplify the lenovo_se30_wdt structure.
+>
+>  drivers/watchdog/Kconfig           |  12 +
+>  drivers/watchdog/Makefile          |   1 +
+>  drivers/watchdog/lenovo_se30_wdt.c | 401 +++++++++++++++++++++++++++++
+>  3 files changed, 414 insertions(+)
+>  create mode 100644 drivers/watchdog/lenovo_se30_wdt.c
+>
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index f81705f8539a..c73e8f0e436c 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -279,6 +279,18 @@ config LENOVO_SE10_WDT
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called lenovo-se10-wdt.
+> 
+> +config LENOVO_SE30_WDT
+> +	tristate "Lenovo SE30 Watchdog"
+> +	depends on (X86 && DMI) || COMPILE_TEST
+> +	depends on HAS_IOPORT
+> +	select WATCHDOG_CORE
+> +	help
+> +	  If you say yes here you get support for the watchdog
+> +	  functionality for the Lenovo SE30 platform.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called lenovo-se30-wdt.
+> +
+>  config MENF21BMC_WATCHDOG
+>  	tristate "MEN 14F021P00 BMC Watchdog"
+>  	depends on MFD_MENF21BMC || COMPILE_TEST
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 8411626fa162..c9482904bf87 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -124,6 +124,7 @@ obj-$(CONFIG_I6300ESB_WDT) += i6300esb.o
+>  obj-$(CONFIG_IE6XX_WDT) += ie6xx_wdt.o
+>  obj-$(CONFIG_ITCO_WDT) += iTCO_wdt.o
+>  obj-$(CONFIG_LENOVO_SE10_WDT) += lenovo_se10_wdt.o
+> +obj-$(CONFIG_LENOVO_SE30_WDT) += lenovo_se30_wdt.o
+>  ifeq ($(CONFIG_ITCO_VENDOR_SUPPORT),y)
+>  obj-$(CONFIG_ITCO_WDT) += iTCO_vendor_support.o
+>  endif
+> diff --git a/drivers/watchdog/lenovo_se30_wdt.c 
+> b/drivers/watchdog/lenovo_se30_wdt.c
+> new file mode 100644
+> index 000000000000..e17e0ab27b10
+> --- /dev/null
+> +++ b/drivers/watchdog/lenovo_se30_wdt.c
+> @@ -0,0 +1,401 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * WDT driver for Lenovo SE30 device
+> + */
+> +
+> +#define dev_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/dmi.h>
+> +#include <linux/delay.h>
+> +#include <linux/iommu.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define IOREGION_OFFSET	4 /* Use EC port 1 */
+> +#define IOREGION_LENGTH	4
+> +
+> +#define WATCHDOG_TIMEOUT	60
+> +
+> +#define MIN_TIMEOUT	1
+> +#define MAX_TIMEOUT	255
+> +#define MAX_WAIT	10
+> +
+> +static int timeout; /* in seconds */
+> +module_param(timeout, int, 0);
+> +MODULE_PARM_DESC(timeout,
+> +		 "Watchdog timeout in seconds. 1 <= timeout <= 255, default="
+> +		 __MODULE_STRING(WATCHDOG_TIMEOUT) ".");
+> +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, 0);
+> +MODULE_PARM_DESC(nowayout,
+> +		 "Watchdog cannot be stopped once started (default="
+> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +#define LNV_SE30_NAME	"lenovo-se30-wdt"
+> +#define LNV_SE30_ID	0x0110
+> +#define CHIPID_MASK	0xFFF0
+> +
+> +#define CHIPID_REG	0x20
+> +#define SIO_REG		0x2e
+> +#define LDN_REG		0x07
+> +#define UNLOCK_KEY	0x87
+> +#define LOCK_KEY	0xAA
+> +#define LD_NUM_SHM	0x0F
+> +#define LD_BASE_ADDR	0xF8
+> +
+> +#define WDT_MODULE	0x10
+> +#define WDT_CFG_INDEX	0x15 /* WD configuration register */
+> +#define WDT_CNT_INDEX	0x16 /* WD timer count register */
+> +#define WDT_CFG_RESET	0x2
+> +
+> +/* Host Interface WIN2 offset definition */
+> +#define SHM_WIN_SIZE		0xFF
+> +#define SHM_WIN_MOD_OFFSET	0x01
+> +#define SHM_WIN_CMD_OFFSET	0x02
+> +#define SHM_WIN_SEL_OFFSET	0x03
+> +#define SHM_WIN_CTL_OFFSET	0x04
+> +#define VAL_SHM_WIN_CTRL_WR	0x40
+> +#define VAL_SHM_WIN_CTRL_RD	0x80
+> +#define SHM_WIN_ID_OFFSET	0x08
+> +#define SHM_WIN_DAT_OFFSET	0x10
+> +
+> +struct nct6692_reg {
+> +	unsigned char mod;
+> +	unsigned char cmd;
+> +	unsigned char sel;
+> +	unsigned int idx;
+> +};
+> +
+> +/* Watchdog is based on NCT6692 device */
+> +struct lenovo_se30_wdt {
+> +	unsigned char __iomem *shm_base_addr;
+> +	struct nct6692_reg wdt_cfg;
+> +	struct nct6692_reg wdt_cnt;
+> +	struct watchdog_device wdt;
+> +};
+> +
+> +static inline void superio_outb(int ioreg, int reg, int val)
+> +{
+> +	outb(reg, ioreg);
+> +	outb(val, ioreg + 1);
+> +}
+> +
+> +static inline int superio_inb(int ioreg, int reg)
+> +{
+> +	outb(reg, ioreg);
+> +	return inb(ioreg + 1);
+> +}
+> +
+> +static inline int superio_enter(int key, int addr, const char *name)
+> +{
+> +	if (!request_muxed_region(addr, 2, name)) {
+> +		pr_err("I/O address 0x%04x already in use\n", addr);
+> +		return -EBUSY;
+> +	}
+> +	outb(key, addr); /* Enter extended function mode */
+> +	outb(key, addr); /* Again according to manual */
+> +
+> +	return 0;
+> +}
+> +
+> +static inline void superio_exit(int key, int addr)
+> +{
+> +	outb(key, addr); /* Leave extended function mode */
+> +	release_region(addr, 2);
+> +}
+> +
+> +static int shm_get_ready(unsigned char __iomem *shm_base_addr,
+> +			 const struct nct6692_reg *reg)
+> +{
+> +	unsigned char pre_id, new_id;
+> +	int loop = 0;
+> +
+> +	iowrite8(reg->mod, shm_base_addr + SHM_WIN_MOD_OFFSET);
+> +	iowrite8(reg->cmd, shm_base_addr + SHM_WIN_CMD_OFFSET);
+> +	iowrite8(reg->sel, shm_base_addr + SHM_WIN_SEL_OFFSET);
+> +
+> +	pre_id = ioread8(shm_base_addr + SHM_WIN_ID_OFFSET);
+> +	iowrite8(VAL_SHM_WIN_CTRL_RD, shm_base_addr + SHM_WIN_CTL_OFFSET);
+> +
+> +	/* Loop checking when interface is ready */
+> +	while (loop < MAX_WAIT) {
+> +		new_id = ioread8(shm_base_addr + SHM_WIN_ID_OFFSET);
+> +		if (new_id != pre_id)
+> +			return 0;
+> +		loop++;
+> +		usleep_range(10, 125);
+> +	}
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +static int read_shm_win(unsigned char __iomem *shm_base_addr,
+> +			const struct nct6692_reg *reg,
+> +			unsigned char idx_offset,
+> +			unsigned char *data)
+> +{
+> +	int err = shm_get_ready(shm_base_addr, reg);
+> +
+> +	if (err)
+> +		return err;
+> +	*data = ioread8(shm_base_addr + SHM_WIN_DAT_OFFSET + reg->idx + 
+> idx_offset);
+> +	return 0;
+> +}
+> +
+> +static int write_shm_win(unsigned char __iomem *shm_base_addr,
+> +			 const struct nct6692_reg *reg,
+> +			 unsigned char idx_offset,
+> +			 unsigned char val)
+> +{
+> +	int err = shm_get_ready(shm_base_addr, reg);
+> +
+> +	if (err)
+> +		return err;
+> +	iowrite8(val, shm_base_addr + SHM_WIN_DAT_OFFSET + reg->idx + 
+> idx_offset);
+> +	iowrite8(VAL_SHM_WIN_CTRL_WR, shm_base_addr + SHM_WIN_CTL_OFFSET);
+> +	err = shm_get_ready(shm_base_addr, reg);
+> +	return err;
+> +}
+> +
+> +static int lenovo_se30_wdt_enable(struct lenovo_se30_wdt *data, 
+> unsigned int timeout)
+> +{
+> +	if (timeout) {
+> +		int err = write_shm_win(data->shm_base_addr, &data->wdt_cfg, 0, 
+> WDT_CFG_RESET);
+> +
+> +		if (err)
+> +			return err;
+> +	}
+> +	return write_shm_win(data->shm_base_addr, &data->wdt_cnt, 0, timeout);
+> +}
+> +
+> +static int lenovo_se30_wdt_start(struct watchdog_device *wdog)
+> +{
+> +	struct lenovo_se30_wdt *data = watchdog_get_drvdata(wdog);
+> +
+> +	return lenovo_se30_wdt_enable(data, wdog->timeout);
+> +}
+> +
+> +static int lenovo_se30_wdt_stop(struct watchdog_device *wdog)
+> +{
+> +	struct lenovo_se30_wdt *data = watchdog_get_drvdata(wdog);
+> +
+> +	return lenovo_se30_wdt_enable(data, 0);
+> +}
+> +
+> +static int lenovo_se30_wdt_set_timeout(struct watchdog_device *wdog,
+> +				       unsigned int timeout)
+> +{
+> +	wdog->timeout = timeout;
+> +	return 0;
+> +}
+> +
+> +static unsigned int lenovo_se30_wdt_get_timeleft(struct 
+> watchdog_device *wdog)
+> +{
+> +	struct lenovo_se30_wdt *data = watchdog_get_drvdata(wdog);
+> +	unsigned char timeleft;
+> +	int err;
+> +
+> +	err = read_shm_win(data->shm_base_addr, &data->wdt_cnt, 0, &timeleft);
+> +	if (err)
+> +		return 0;
+> +	return timeleft;
+> +}
+> +
+> +static int lenovo_se30_wdt_ping(struct watchdog_device *wdt)
+> +{
+> +	struct lenovo_se30_wdt *data = watchdog_get_drvdata(wdt);
+> +	int err = 0;
+> +
+> +	/*
+> +	 * Device does not support refreshing WDT_TIMER_REG register when
+> +	 * the watchdog is active.  Need to disable, feed and enable again
+> +	 */
+> +	err = lenovo_se30_wdt_enable(data, 0);
+> +	if (err)
+> +		return err;
+> +
+> +	err = write_shm_win(data->shm_base_addr, &data->wdt_cnt, 0, 
+> wdt->timeout);
+> +	if (!err)
+> +		err = lenovo_se30_wdt_enable(data, wdt->timeout);
+> +
+> +	return err;
+> +}
+> +
+> +static const struct watchdog_info lenovo_se30_wdt_info = {
+> +	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
+> +			  WDIOF_MAGICCLOSE,
+> +	.identity	= "Lenovo SE30 watchdog",
+> +};
+> +
+> +static const struct watchdog_ops lenovo_se30_wdt_ops = {
+> +	.owner		= THIS_MODULE,
+> +	.start		= lenovo_se30_wdt_start,
+> +	.stop		= lenovo_se30_wdt_stop,
+> +	.ping		= lenovo_se30_wdt_ping,
+> +	.set_timeout	= lenovo_se30_wdt_set_timeout,
+> +	.get_timeleft	= lenovo_se30_wdt_get_timeleft,
+> +};
+> +
+> +static int lenovo_se30_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct lenovo_se30_wdt *priv;
+> +	unsigned long base_phys;
+> +	unsigned short val;
+> +	int err;
+> +
+> +	err = superio_enter(UNLOCK_KEY, SIO_REG, LNV_SE30_NAME);
+> +	if (err)
+> +		return err;
+> +
+> +	val = superio_inb(SIO_REG, CHIPID_REG) << 8;
+> +	val |= superio_inb(SIO_REG, CHIPID_REG + 1);
+> +
+> +	if ((val & CHIPID_MASK) != LNV_SE30_ID) {
+> +		superio_exit(LOCK_KEY, SIO_REG);
+> +		return -ENODEV;
+> +	}
+> +
+> +	superio_outb(SIO_REG, LDN_REG, LD_NUM_SHM);
+> +	base_phys = (superio_inb(SIO_REG, LD_BASE_ADDR) |
+> +			 (superio_inb(SIO_REG, LD_BASE_ADDR + 1) << 8) |
+> +			 (superio_inb(SIO_REG, LD_BASE_ADDR + 2) << 16) |
+> +			 (superio_inb(SIO_REG, LD_BASE_ADDR + 3) << 24)) &
+> +			0xFFFFFFFF;
+> +
+> +	superio_exit(LOCK_KEY, SIO_REG);
+> +	if (base_phys == 0xFFFFFFFF || base_phys == 0)
+> +		return -ENODEV;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	if (!devm_request_mem_region(dev, base_phys, SHM_WIN_SIZE, 
+> LNV_SE30_NAME))
+> +		return -EBUSY;
+> +
+> +	priv->shm_base_addr = devm_ioremap(dev, base_phys, SHM_WIN_SIZE);
+> +
+> +	priv->wdt_cfg.mod = WDT_MODULE;
+> +	priv->wdt_cfg.idx = WDT_CFG_INDEX;
+> +	priv->wdt_cnt.mod = WDT_MODULE;
+> +	priv->wdt_cnt.idx = WDT_CNT_INDEX;
+> +
+> +	priv->wdt.ops = &lenovo_se30_wdt_ops;
+> +	priv->wdt.info = &lenovo_se30_wdt_info;
+> +	priv->wdt.timeout = WATCHDOG_TIMEOUT; /* Set default timeout */
+> +	priv->wdt.min_timeout = MIN_TIMEOUT;
+> +	priv->wdt.max_timeout = MAX_TIMEOUT;
+> +	priv->wdt.parent = dev;
+> +
+> +	watchdog_init_timeout(&priv->wdt, timeout, dev);
+> +	watchdog_set_drvdata(&priv->wdt, priv);
+> +	watchdog_set_nowayout(&priv->wdt, nowayout);
+> +	watchdog_stop_on_reboot(&priv->wdt);
+> +	watchdog_stop_on_unregister(&priv->wdt);
+> +
+> +	return devm_watchdog_register_device(dev, &priv->wdt);
+> +}
+> +
+> +static struct platform_device *pdev;
+> +
+> +static struct platform_driver lenovo_se30_wdt_driver = {
+> +	.driver = {
+> +		.name = LNV_SE30_NAME,
+> +	},
+> +	.probe  = lenovo_se30_wdt_probe,
+> +};
+> +
+> +static int lenovo_se30_create_platform_device(const struct 
+> dmi_system_id *id)
+> +{
+> +	int err;
+> +
+> +	pdev = platform_device_alloc(LNV_SE30_NAME, -1);
+> +	if (!pdev)
+> +		return -ENOMEM;
+> +
+> +	err = platform_device_add(pdev);
+> +	if (err)
+> +		platform_device_put(pdev);
+> +
+> +	return err;
+> +}
+> +
+> +static const struct dmi_system_id lenovo_se30_wdt_dmi_table[] 
+> __initconst = {
+> +	{
+> +		.ident = "LENOVO-SE30",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "11NA"),
+> +		},
+> +		.callback = lenovo_se30_create_platform_device,
+> +	},
+> +	{
+> +		.ident = "LENOVO-SE30",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "11NB"),
+> +		},
+> +		.callback = lenovo_se30_create_platform_device,
+> +	},
+> +	{
+> +		.ident = "LENOVO-SE30",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "11NC"),
+> +		},
+> +		.callback = lenovo_se30_create_platform_device,
+> +	},
+> +	{
+> +		.ident = "LENOVO-SE30",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "11NH"),
+> +		},
+> +		.callback = lenovo_se30_create_platform_device,
+> +	},
+> +	{
+> +		.ident = "LENOVO-SE30",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "11NJ"),
+> +		},
+> +		.callback = lenovo_se30_create_platform_device,
+> +	},
+> +	{
+> +		.ident = "LENOVO-SE30",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "11NK"),
+> +		},
+> +		.callback = lenovo_se30_create_platform_device,
+> +	},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(dmi, lenovo_se30_wdt_dmi_table);
+> +
+> +static int __init lenovo_se30_wdt_init(void)
+> +{
+> +	if (!dmi_check_system(lenovo_se30_wdt_dmi_table))
+> +		return -ENODEV;
+> +
+> +	return platform_driver_register(&lenovo_se30_wdt_driver);
+> +}
+> +
+> +static void __exit lenovo_se30_wdt_exit(void)
+> +{
+> +	if (pdev)
+> +		platform_device_unregister(pdev);
+> +	platform_driver_unregister(&lenovo_se30_wdt_driver);
+> +}
+> +
+> +module_init(lenovo_se30_wdt_init);
+> +module_exit(lenovo_se30_wdt_exit);
+> +
+> +MODULE_AUTHOR("Mark Pearson <mpearson-lenovo@squebb.ca>");
+> +MODULE_AUTHOR("David Ober <dober@lenovo.com>");
+> +MODULE_DESCRIPTION("Lenovo SE30 watchdog driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.34.1
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 34 +++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 13 deletions(-)
+Wanted to see if there was any more feedback or concerns on this submission. Please let me know if I need to be making any further updates.
 
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-index c164f845653816291ad96c863257f75462ef58e7..6c18b9c0e1903bbd0090aceef13ae8c6f2e080ce 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-@@ -83,6 +83,9 @@ struct dsi_pll_7nm {
- 	/* protects REG_DSI_7nm_PHY_CMN_CLK_CFG0 register */
- 	spinlock_t postdiv_lock;
- 
-+	/* protects REG_DSI_7nm_PHY_CMN_CLK_CFG1 register */
-+	spinlock_t pclk_mux_lock;
-+
- 	struct pll_7nm_cached_state cached_state;
- 
- 	struct dsi_pll_7nm *slave;
-@@ -381,22 +384,31 @@ static void dsi_pll_cmn_clk_cfg0_write(struct dsi_pll_7nm *pll, u32 val)
- 	spin_unlock_irqrestore(&pll->postdiv_lock, flags);
- }
- 
--static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
-+static void dsi_pll_cmn_clk_cfg1_update(struct dsi_pll_7nm *pll, u32 mask,
-+					u32 val)
- {
-+	unsigned long flags;
- 	u32 data;
- 
-+	spin_lock_irqsave(&pll->pclk_mux_lock, flags);
- 	data = readl(pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
--	writel(data & ~BIT(5), pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
-+	data &= ~mask;
-+	data |= val & mask;
-+
-+	writel(data, pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
-+	spin_unlock_irqrestore(&pll->pclk_mux_lock, flags);
-+}
-+
-+static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
-+{
-+	dsi_pll_cmn_clk_cfg1_update(pll, BIT(5), 0);
- }
- 
- static void dsi_pll_enable_global_clk(struct dsi_pll_7nm *pll)
- {
--	u32 data;
--
- 	writel(0x04, pll->phy->base + REG_DSI_7nm_PHY_CMN_CTRL_3);
- 
--	data = readl(pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
--	writel(data | BIT(5) | BIT(4), pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
-+	dsi_pll_cmn_clk_cfg1_update(pll, BIT(5) | BIT(4), BIT(5) | BIT(4));
- }
- 
- static void dsi_pll_phy_dig_reset(struct dsi_pll_7nm *pll)
-@@ -574,7 +586,6 @@ static int dsi_7nm_pll_restore_state(struct msm_dsi_phy *phy)
- {
- 	struct dsi_pll_7nm *pll_7nm = to_pll_7nm(phy->vco_hw);
- 	struct pll_7nm_cached_state *cached = &pll_7nm->cached_state;
--	void __iomem *phy_base = pll_7nm->phy->base;
- 	u32 val;
- 	int ret;
- 
-@@ -585,11 +596,7 @@ static int dsi_7nm_pll_restore_state(struct msm_dsi_phy *phy)
- 
- 	dsi_pll_cmn_clk_cfg0_write(pll_7nm,
- 				   cached->bit_clk_div | (cached->pix_clk_div << 4));
--
--	val = readl(phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
--	val &= ~0x3;
--	val |= cached->pll_mux;
--	writel(val, phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
-+	dsi_pll_cmn_clk_cfg1_update(pll_7nm, 0x3, cached->pll_mux);
- 
- 	ret = dsi_pll_7nm_vco_set_rate(phy->vco_hw,
- 			pll_7nm->vco_current_rate,
-@@ -742,7 +749,7 @@ static int pll_7nm_register(struct dsi_pll_7nm *pll_7nm, struct clk_hw **provide
- 					pll_by_2_bit,
- 				}), 2, 0, pll_7nm->phy->base +
- 					REG_DSI_7nm_PHY_CMN_CLK_CFG1,
--				0, 1, 0, NULL);
-+				0, 1, 0, &pll_7nm->pclk_mux_lock);
- 		if (IS_ERR(hw)) {
- 			ret = PTR_ERR(hw);
- 			goto fail;
-@@ -787,6 +794,7 @@ static int dsi_pll_7nm_init(struct msm_dsi_phy *phy)
- 	pll_7nm_list[phy->id] = pll_7nm;
- 
- 	spin_lock_init(&pll_7nm->postdiv_lock);
-+	spin_lock_init(&pll_7nm->pclk_mux_lock);
- 
- 	pll_7nm->phy = phy;
- 
+I did get the notes from the kernel test robot, but the issues raised were against the v1 patch and already addressed in v2 so I have ignored those.
 
--- 
-2.43.0
-
+Thanks
+Mark
