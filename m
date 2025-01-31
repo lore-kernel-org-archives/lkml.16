@@ -1,111 +1,134 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033F41C174E;
-	Fri, 31 Jan 2025 18:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738346624; cv=none; b=dIA0uYp/CwPNZIOb5KJ6KZwUkW0nVTisr5VANQ5YafZnprQR1KbX/QZFLTxdhqauqgamhtvBTydUhYy5rBsF8WlWkUGTygJIk+sQvTR8m9kFlNFoCty0N+VDcd0OQm5BMdoBPKzhgPbKBYZut17TuLTzjhy1/a2R4XfLeEq4/Nk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738346624; c=relaxed/simple;
-	bh=6SHGPNnD+6Hd94JCDS4hKGOqSS6VX3tMan2zraCxxLc=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=uF/7tzNl7Jn1EUHx40Ghsld3Jr6TMjHyfFXULOtS5NAcchsEB/3F6ViMaVX46ILCjeC9XPS9X210JBhUzJAq5yaMfCYFV5VGWuDBcxj9lbdbxlFcceBPXfdoff9CaBwp9vRFOX9dtUb9WVArGTJx7uKnzHAmXnvy98K7TnA+tFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kl9iSp+d; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D745C4315A
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 18:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.248
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738346757; cv=pass; b=GARHaa+f2FASys8/sQggCEjVc9JhuGZVUBE3DfWrundjY0HKllU+1Qu80xipD2STlYaFu0sBu5A5zM1nuZipE0Z8uIYGtNTvqyt11P+5LcUJKRHkFIXxMJ7nn5H7pB50ha3Mkmf99D9oBqscPfB/Np3LSGqEN5+smbeNDw3cMMU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738346757; c=relaxed/simple;
+	bh=Xj7nAF1HokwYhi8a8kaMtwzRSfvG3L4b/uXwqS9N5Cs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lgjfe9C89zfmiVfARYEX6mRX9avCpZJrxArXWx4h+xVB7TqoQeXTC0ngL93G6ruGovZWoi5V0hfiNj5uf82EeO5ZaNeTrVmsAEa6jy5m4yA/c6NfySAJGGgE8fnLdvnOgVIeU1/sB9h37f95kSifaqLi9uSUqSaXpRnx3yJ2L4s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=lNpF1Ute; arc=pass smtp.client-ip=23.83.218.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kl9iSp+d"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6d8edad9932so16542766d6.0;
-        Fri, 31 Jan 2025 10:03:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738346621; x=1738951421; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tpMrr6tTcxUny5yGhg2pM7dvzKt66D5ST/0RRfO4vVk=;
-        b=kl9iSp+dCF8PnCn8UBWsBBcjGRUv5Y6guxvQ6E6Qh5uZCPRMsTG9Ma023aHpqp5pig
-         jR7rkMc5FgPg5wHquqOWNwRgFv/eBLzBqLfA9zFhN7ixnlvomb+wSanRUyvgl9DS0E3d
-         PHkqMNQSvR+8e8WfJmcoLvXd5q9L1NvKQyz9PzUehPhl8G5h2HG2OcPtpmzOJiL+E785
-         cW+jWF1FoUGSRr5rQOv6XF1B2tazCAphKvCeFo0uzZaI/xvI3TREIkic74bZeqPKiUKG
-         +U2MiO+pjH5HCq/8e9N5TQQPvgvtD7aG96DrprpH0tKhcnmp7SqvMxV5d7tD69aQWEgo
-         YU0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738346621; x=1738951421;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tpMrr6tTcxUny5yGhg2pM7dvzKt66D5ST/0RRfO4vVk=;
-        b=Ovy5CYaEqLgXajF0QucfR9MxtyReRf3vJj+1wEuB0gFYFe1H4rV8E/QNpCYTv1mGxc
-         pZCtJ0r0osz3jDbWMloHAVJdSt3ZZBY3cp15VGy+wfJJRxz0XDh0sHRUFIbvEAuH24hZ
-         uIuKQb+yQkryThdd/mwaarYhuWQDaBKNXWk8zq/oUD642ephaOyQdPu9UZSGxna4PqhX
-         d5xK2L88EQNvU8Dv0qbgILQI1oX4Wjs+4oseG+xrNXKQHauprC77ddud9Cj0l6ol2KtU
-         D6qB+WH6MX0YrkX14PMhZUKZGma7+zij2EuX9pWiwDBUWHMahkPM1mHsqrIT8IWIFVbo
-         iYdw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/w/n9o8dxy1QvoA7LEQ4ZqAOdPOXBqLhflbrvKZcxJSgUGKBtOuqDtvl4UvbhF09810qETjFr@vger.kernel.org, AJvYcCUJNyaywp1dR3cJCOwjb5tVp+kd3XfexFVCRopKDj3Gx6LBwkLIjikQuajjfNMeo9TQgk/92++MS6NFZziMEPzh@vger.kernel.org, AJvYcCXX83kA1hA1obBG0bRrf7iT+OJwAv4SHX14WJMRNlM3Lpg4R4phtrWj+6oX5BHeTVa/ft2Q4zkjfHJI9qY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxWyFDDk8Fux5aBXhNrR6Qim5/VhwZULMqkggRzK74Ue/33RC5
-	6U/IyWotO3LP7yxdPewvxMZcHKPP/2JTNS3UqPFqeDyxCHOQdQUR
-X-Gm-Gg: ASbGncurdBnXfCBMlOmtq8ACkQnZoN8nZYhFwx2pW48HhL5kqRQtbThyTTeGnT4zCXN
-	FQ3p8CfTdfGW+9JppR3JN8zzQ62im3lWfnApFB4jb1wqqdUSox8997P1DhkSZGoKp2T2jSG/6Oq
-	ykJdHXCsoYTcQSxS2nrmIEbWX16oiN2uK7ZRbgpWt/l6nHThTOCbdd1XGCAkPsvLAGGdQ8mtqy9
-	zgyGkkdNMNPTB7z9cD1SmXf/g+vdoKbMH+OxhJ+RP7yV2vvC7DLGY0VWdbw8oXXYiHZ9og4zgj8
-	BSAlscmWKIT8D7vUlVcIRWf6D+FKX/8sHl2VeTMz7sQUK+SbHs0Ebjx0IdeFacA=
-X-Google-Smtp-Source: AGHT+IF2NPh4aSX34R9VXcpivvt/FXmGXLUSxgcDOoxuyD4bDxVnP01OCVr3tTRXEza8746zaDnHug==
-X-Received: by 2002:a05:6214:2c05:b0:6d8:8d16:7cec with SMTP id 6a1803df08f44-6e243c8ff23mr217332476d6.37.1738346620730;
-        Fri, 31 Jan 2025 10:03:40 -0800 (PST)
-Received: from localhost (15.60.86.34.bc.googleusercontent.com. [34.86.60.15])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254814029sm20454326d6.29.2025.01.31.10.03.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 10:03:39 -0800 (PST)
-Date: Fri, 31 Jan 2025 13:03:39 -0500
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Yan Zhai <yan@cloudflare.com>, 
- netdev@vger.kernel.org
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- David Ahern <dsahern@kernel.org>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, 
- Shuah Khan <shuah@kernel.org>, 
- Josh Hunt <johunt@akamai.com>, 
- Alexander Duyck <alexander.h.duyck@linux.intel.com>, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- kernel-team@cloudflare.com
-Message-ID: <679d107b78924_2741f92949a@willemb.c.googlers.com.notmuch>
-In-Reply-To: <Z5yKa7gz72+JEOXr@debian.debian>
-References: <Z5yKa7gz72+JEOXr@debian.debian>
-Subject: Re: [PATCH v3 net] udp: gso: do not drop small packets when PMTU
- reduces
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="lNpF1Ute"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id EC05C8A51DA;
+	Fri, 31 Jan 2025 17:58:15 +0000 (UTC)
+Received: from pdx1-sub0-mail-a215.dreamhost.com (trex-4.trex.outbound.svc.cluster.local [100.116.71.144])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 5D0238A5202;
+	Fri, 31 Jan 2025 17:58:15 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738346295; a=rsa-sha256;
+	cv=none;
+	b=3EmE0PCDiiZoC4JBu0MtSfrbz+6+rT6FKFt/Jv8zoLnfFMIF/fD5uJatzJI1g4OwtCuNMa
+	NydLN2jvDMTHUi4imHCGficb8IR4m9ZjGDVzI6o+nEV8Up+MAf2UXT7/dGjwlWrkV754er
+	KB6H7UAE6ATS3vaIrvmfDHDZceC2yRTN9xqd4/NozkAyTHtLsbcXAe5PudDy+eHgNbCBO1
+	FV7pqkP+2Kdlc3h0LZ4Lw7L+SEjeDgztehWCaeL8a/ZUW7SRPR22E39Ffm1ohCQvZHfp27
+	gYpl2kOWd4GU8dUXJfqyjbXzxIGvvAUxWma/ja2NND1Vcx20qYFksX245g5Asw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1738346295;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=Xj7nAF1HokwYhi8a8kaMtwzRSfvG3L4b/uXwqS9N5Cs=;
+	b=GF0y7DUSrJhvQPPWIpzeQUiKm+UMM2Ln7HBEY+XyPZQc2XamuFrQSXV8B+bBfOCKyEy1Gq
+	ToQTWofjAlo8bMniOvvj+4ggPOnxGYso5j0BZdEqIpdvzNm90+iTDuM1dhwxGN6IqY91/C
+	Aq+mpJwHvJScJ1dLkTHuizKcPsoeH3zwrhVOkFHOW8v7RCMlqYkgKqnNziGADZ/j9AgL4A
+	Hj6tXUaPRHGDzAC6gwfBLkqaxX6TYc0HYEZx20vuDAxqi4aswIMnEc5g88O+vqC3zPJAD5
+	cWaOwBTTWjF4AtYPlEb8LgwMYFitDZa3Yq6pwsX5q3qdkYJwvZ2wyns8neg3Dw==
+ARC-Authentication-Results: i=1;
+	rspamd-8586946c78-5m7bq;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Juvenile-Continue: 52beb83522fde22f_1738346295649_334098669
+X-MC-Loop-Signature: 1738346295649:3239223652
+X-MC-Ingress-Time: 1738346295649
+Received: from pdx1-sub0-mail-a215.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.116.71.144 (trex/7.0.2);
+	Fri, 31 Jan 2025 17:58:15 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a215.dreamhost.com (Postfix) with ESMTPSA id 4Yl3XQ4lDSzL6;
+	Fri, 31 Jan 2025 09:58:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1738346295;
+	bh=Xj7nAF1HokwYhi8a8kaMtwzRSfvG3L4b/uXwqS9N5Cs=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=lNpF1UtePnKosIswfrACFOtjekaSXQFRR8a0tVIFi76znsk9WgCBMTAkzJ8t2smOf
+	 XEwSe3KR9JPfyydx5aUlUPfY/pDUtDI1zOxn7HdMs6+qRSLyN1HmXHJqbB89PW8sMb
+	 aLQ6TA2CR9lE8YlPZAUX5kpTrlnpQVkswmmqmRw21wOtv+tdmORf9cD71XeoQtmWq8
+	 +nkJaXGTgNc0LTeQSjmJcjn2ytRYLWeeLjmAHq34WYty06jqfsd9qfhZ+o6v+tiohd
+	 sMgnVSjE5LsRhTHaT3mBI857OGrvTqNXAmEFqigoJBRY4f/v1+QsIuiBhX2DCaXjpX
+	 Gn46mlRM7gfYA==
+Date: Fri, 31 Jan 2025 09:58:11 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 4/4] mm/madvise: remove redundant mmap_lock
+ operations from process_madvise()
+Message-ID: <20250131175811.37fcmoevcdpeoaj6@offworld>
+Mail-Followup-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+References: <20250117013058.1843-1-sj@kernel.org>
+ <20250117013058.1843-5-sj@kernel.org>
+ <aeeac6f3-f828-4bee-966f-c8df41df30bc@lucifer.local>
+ <20250131173132.uqjwrzj7e5vx2sbv@offworld>
+ <7k2gs6xmx2q7la6kle5xpn2p2f6bccbiv5lrdowp5hnecxpijx@rzwxdhcl6mc2>
+ <5fc4e100-70d3-44c1-99f7-f8a5a6a0ba65@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <5fc4e100-70d3-44c1-99f7-f8a5a6a0ba65@lucifer.local>
+User-Agent: NeoMutt/20220429
 
-Yan Zhai wrote:
-> Commit 4094871db1d6 ("udp: only do GSO if # of segs > 1") avoided GSO
-> for small packets. But the kernel currently dismisses GSO requests only
-> after checking MTU/PMTU on gso_size. This means any packets, regardless
-> of their payload sizes, could be dropped when PMTU becomes smaller than
-> requested gso_size. We encountered this issue in production and it
-> caused a reliability problem that new QUIC connection cannot be
-> established before PMTU cache expired, while non GSO sockets still
-> worked fine at the same time.
-> 
-> Ideally, do not check any GSO related constraints when payload size is
-> smaller than requested gso_size, and return EMSGSIZE instead of EINVAL
-> on MTU/PMTU check failure to be more specific on the error cause.
-> 
-> Fixes: 4094871db1d6 ("udp: only do GSO if # of segs > 1")
-> Signed-off-by: Yan Zhai <yan@cloudflare.com>
-> Suggested-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+On Fri, 31 Jan 2025, Lorenzo Stoakes wrote:
 
-Reviewed-by: Willem de Bruijn <willemb@google.com>
+>Keep in mind process_madvise() is not limited by IOV_MAX, which can be rather
+>high, but rather UIO_FASTIOV, which is limited to 8 entries.
+>
+>(Some have been surprised by this limitation...!)
+
+Ah if that is the case then I'm fine with this patch as is.
+
+>
+>So I think at this point scaling isn't a huge issue, I raise it because in
+>future we may want to increase this limit, at which point we should think about
+>it, which is why I sort of hand-waved it away a bit.
+
+Agreed.
+
+SJ, feel free to add my:
+
+Acked-by: Davidlohr Bueso <dave@stgolabs.net>
