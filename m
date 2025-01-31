@@ -1,88 +1,104 @@
-Received: from smtp-42a9.mail.infomaniak.ch (smtp-42a9.mail.infomaniak.ch [84.16.66.169])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D0F1CA81
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 10:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14801CA81;
+	Fri, 31 Jan 2025 10:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738320475; cv=none; b=eIE9M3dXsSevnP56tWW1SDRwqaQy/a3o3sKCjnE0IjHtT5lcqsAw5sYJKJVhW+yniar4kD6ptDuo2WfIJND74YXTuzgbFRm5uf9UVs8LE5FSvGNHhUa21N7YZP80zyw+WlpV7XU7JKz8j47hDy62PNwfQ9XubD8XEAPIAPWZGdE=
+	t=1738320510; cv=none; b=LfL56rxMDvCKKIOawYiN22qVBHufC37iDAex2wAhHcoyoenQJUIWC3b2Lw7DdLzJo0rj9lK2ZZvj96IGHk6CvgmNMm0P73wtkDvA8j8IrOZm9hzZgEWVeeFfAmoATVt7V3lvNVm8FahQ9VMww/oPChAG8itDm9UJ6X/x/rWUmh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738320475; c=relaxed/simple;
-	bh=DH0LDh5X5wTuKhWea7Mq96Cx9c3B7/rrQf3HiJ0yC0Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uXuCgVHC/bKLfHqDGTHgI7RQmbGdmlUaU5U6AZYGarGUw5VfieVfwrUKeeqoVSCGk+1T0wG6nU0M/sHS7VbRGBYhEkR8nwnc/WBtjDNY+I57G94BjaizV2v6HR9OZgjPyncGPpyazxP8VjCG6Vx6ab3mcrOSESstM1RGLotTn1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YksqL38fXzWFd;
-	Fri, 31 Jan 2025 11:40:30 +0100 (CET)
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4YksqK51TTz6gw;
-	Fri, 31 Jan 2025 11:40:29 +0100 (CET)
-From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Fri, 31 Jan 2025 11:40:16 +0100
-Subject: [PATCH v4 2/4] arm64: dts: rockchip: add overlay test for Edgeble
- NCM6A
+	s=arc-20240116; t=1738320510; c=relaxed/simple;
+	bh=mbcVU4/KYOCDqVBfV1Wmm4rFmFhpD+8bSrlKxn6+4W4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h7XTXn4LbLBdFF3CzRLMExfgYMmMGbnQ4cFlRxlR3tCpNhvmlEzUlqEYDn/Uib3cBwnZlgvZtYKJki2ZEpesNflNIa0vcU38DhEkv2XJkBdtjvp5HMj8QIsTeSySxMwidiYl+NySfCYXpZT/L7wbgQC4SxsflAPv2lvSNNsoZoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iS6idcDf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iS6idcDf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB62C4CED1;
+	Fri, 31 Jan 2025 10:48:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738320510;
+	bh=mbcVU4/KYOCDqVBfV1Wmm4rFmFhpD+8bSrlKxn6+4W4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iS6idcDf46+1ZF0QPrJ+mG6y2lhOW6+egN5YwY6JjbkD7H9br1Gbfwrm3ePhfjBnL
+	 tGRSEtp5FumQLHq+0ucmY79PH0w2/Ps8t5qIhkEOPLL/HxrJzZEsLc4BqDgyrU3B66
+	 9NpuGRVrVvIrXAJFzgHFyTSEXY9SNtrLBNhzqvF4=
+Date: Fri, 31 Jan 2025 11:48:27 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Baoqi Zhang <zhangbaoqi@loongson.cn>
+Subject: Re: [PATCH] USB: pci-quirks: Fix HCCPARAMS register error for LS7A
+ EHCI
+Message-ID: <2025013107-droplet-reset-127e@gregkh>
+References: <20250131100651.343015-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250131-pre-ict-jaguar-v4-2-c971e2852e8d@cherry.de>
-References: <20250131-pre-ict-jaguar-v4-0-c971e2852e8d@cherry.de>
-In-Reply-To: <20250131-pre-ict-jaguar-v4-0-c971e2852e8d@cherry.de>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Jagan Teki <jagan@edgeble.ai>, Niklas Cassel <cassel@kernel.org>, 
- Michael Riesch <michael.riesch@wolfvision.net>
-Cc: Jonas Karlman <jonas@kwiboo.se>, Dragan Simic <dsimic@manjaro.org>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Quentin Schulz <quentin.schulz@cherry.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131100651.343015-1-chenhuacai@loongson.cn>
 
-From: Quentin Schulz <quentin.schulz@cherry.de>
+On Fri, Jan 31, 2025 at 06:06:51PM +0800, Huacai Chen wrote:
+> LS7A EHCI controller doesn't have extended capabilities, so the EECP
+> (EHCI Extended Capabilities Pointer) field of HCCPARAMS register should
+> be 0x0, but it reads as 0xa0 now. This is a hardware flaw and will be
+> fixed in future, now just clear the EECP field to avoid error messages
+> on boot:
+> 
+> ......
+> [    0.581675] pci 0000:00:04.1: EHCI: unrecognized capability ff
+> [    0.581699] pci 0000:00:04.1: EHCI: unrecognized capability ff
+> [    0.581716] pci 0000:00:04.1: EHCI: unrecognized capability ff
+> [    0.581851] pci 0000:00:04.1: EHCI: unrecognized capability ff
+> ......
+> [    0.581916] pci 0000:00:05.1: EHCI: unrecognized capability ff
+> [    0.581951] pci 0000:00:05.1: EHCI: unrecognized capability ff
+> [    0.582704] pci 0000:00:05.1: EHCI: unrecognized capability ff
+> [    0.582799] pci 0000:00:05.1: EHCI: unrecognized capability ff
+> ......
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  drivers/usb/host/pci-quirks.c | 4 ++++
+>  include/linux/pci_ids.h       | 1 +
+>  2 files changed, 5 insertions(+)
+> 
+> diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
+> index 1f9c1b1435d8..7e3151400a5e 100644
+> --- a/drivers/usb/host/pci-quirks.c
+> +++ b/drivers/usb/host/pci-quirks.c
+> @@ -958,6 +958,10 @@ static void quirk_usb_disable_ehci(struct pci_dev *pdev)
+>  	 * booting from USB disk or using a usb keyboard
+>  	 */
+>  	hcc_params = readl(base + EHCI_HCC_PARAMS);
+> +	if (pdev->vendor == PCI_VENDOR_ID_LOONGSON &&
+> +	    pdev->device == PCI_DEVICE_ID_LOONGSON_EHCI)
+> +		hcc_params &= ~(0xffL << 8);
+> +
+>  	offset = (hcc_params >> 8) & 0xff;
+>  	while (offset && --count) {
+>  		pci_read_config_dword(pdev, offset, &cap);
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index de5deb1a0118..74a84834d9eb 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -162,6 +162,7 @@
+>  
+>  #define PCI_VENDOR_ID_LOONGSON		0x0014
+>  
+> +#define PCI_DEVICE_ID_LOONGSON_EHCI     0x7a14
 
-The Edgeble NCM6A can have WiFi modules connected and this is handled
-via an overlay (commit 951d6aaa37fe ("arm64: dts: rockchip: Add Edgeble
-NCM6A WiFi6 Overlay")).
+If you read the top of this file, does this patch meet the requirement
+to add this entry here to this file?
 
-In order to make sure the overlay is still valid in the future, let's
-add a validation test by applying the overlay on top of the main base
-at build time.
+thanks,
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
----
- arch/arm64/boot/dts/rockchip/Makefile | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index bba9b2f1c761040545bea561878e9b63f8c29488..267966ea69b194887d59e38a4220239a90a91306 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -136,7 +136,6 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-armsom-w3.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-coolpi-cm5-evb.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-coolpi-cm5-genbook.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-edgeble-neu6a-io.dtb
--dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-edgeble-neu6a-wifi.dtbo
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-edgeble-neu6b-io.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-evb1-v10.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-firefly-itx-3588j.dtb
-@@ -183,3 +182,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-vz-2-uhd.dtb
- rk3568-wolfvision-pf5-vz-2-uhd-dtbs := rk3568-wolfvision-pf5.dtb \
- 	rk3568-wolfvision-pf5-display-vz.dtbo \
- 	rk3568-wolfvision-pf5-io-expander.dtbo
-+
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-edgeble-neu6a-wifi.dtb
-+rk3588-edgeble-neu6a-wifi-dtbs := rk3588-edgeble-neu6a-io.dtb \
-+	rk3588-edgeble-neu6a-wifi.dtbo
-
--- 
-2.48.1
-
+greg k-h
