@@ -1,131 +1,265 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24C71F3D5A;
-	Fri, 31 Jan 2025 21:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBCD1F3D48
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 21:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738358605; cv=none; b=uIgsKGntBqwBAu8DkjsV+2f4dYcubWlL7suDb9qEfx6D3cQjtt1AM7nF75GtuOEAYbqBvGsSZnplHk4+X0vVoXj2btBu1/xWVZZbJ3oZfVMBih1H+az75XEmfr4LshGyIMf3E5mFpPKp39SKOOdxrRFiJPaTaAXFyzew9NYhIWo=
+	t=1738358870; cv=none; b=B8oeyoUYa5i1lXeyYC4qZf3VvxMYD0sdelcF2BzUJfJdUI9fvDUHxtmr/vpeoRtzJOaDHOJyDByrDoIecTNGfTORxYEMkTe0gVX2ZezNanBRCUMRAV9lCvJJEp5nA72rUllOJP3hZqWu+r2M/JJ86dx5ZaMCZZO/j0A5W2eJiXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738358605; c=relaxed/simple;
-	bh=/OS0LJz7wGEUpGR+VvSZsu8R7CgAohC+kmS8JtEiaVI=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=YbNaQmEYM47t68UH4Aac+yH75a6eIa/umbrOr1VY3hfgr3P1/Dzm+SZBgu6Hk3V9TdGgG+bIuCEkRdFcb6RXASqT9BxwGtRKlFoXe/E1aTw57KsQf0GDS+xBrx/3DVi/WKu4Wx0PZiJcZFwdOXMb8FAuhPHcGN18D72vCKZQHQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AMhwrxun; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738358870; c=relaxed/simple;
+	bh=FDeA4+B4xxJNSnAzEXIAJkVJ3PT2yy8D1E7IuSV3R88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e0FLCYbJfGYYiygnuAXDQUmtYpxd7KXw2V76c3sfc4AktQVUiPBW7rb/Efvv85dgAW8i12I3CoBZ/wlg3EE4A0Ex93Etp3hoc/Ww+lIInMWdv17KgAOH5mrQliP9tKQFwz3S6T5vYzyA0+ki7cR/eZ9aBryBQmTjRISQzrFx9CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=e4Y2HIpN; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AMhwrxun"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A26C4CED1;
-	Fri, 31 Jan 2025 21:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738358605;
-	bh=/OS0LJz7wGEUpGR+VvSZsu8R7CgAohC+kmS8JtEiaVI=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=AMhwrxuneDEerKPohzvNX4q54TznV3ECcDXgGN5gjOaRoDkjbtomCg7/2fV6fPYku
-	 VcV4M7zmZmqwqbbfHnZA+OPS+ykMcRQ3tNhmZ30B7Y4lp/4y/6LJTNMxh8ZPm+rqJ8
-	 XH5sL2NjUgq1lqPAI0uEQlpxVpeLrQDuo/6tjIg0JtVe3eefQZACbW8FwZImxUwKqA
-	 2yBOqp3XfXenCxWvNASz8upaFKPEq3DuMtg4Yr1C8hNfaepa+z0ppYlx1geJDnnVaD
-	 kzTvtkelBHO6e7z/yYZULxxLUrZTB+zWM4K0gyKmOo9Lul49qdGTVDAKzHcHav/k9X
-	 HPKd01fTMMsww==
-Date: Fri, 31 Jan 2025 15:23:24 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="e4Y2HIpN"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3ebbec36900so1292056b6e.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:27:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738358866; x=1738963666; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KVkeKDp8BQvTTjbPQCb4QrIee9efxV1gjW786NpzUDs=;
+        b=e4Y2HIpNPOehBcQ62KnLSDVdiZeuhR/hkb6MfarMJpdP2IkfPUktCRbtU60WMSR/Ka
+         8nXPWepALROf00EBfMTeIyOLDC5RQqGDruP/1gxACEwoHx+HtJhLQqNt5sEjk5+yVABO
+         Mn4XD1ybl6wNVERAeH6sXljGolDQn8tTb5585NwWrhUEOQaAi8Zf/TlLMymU0c36osKA
+         2M07WVZBdKs+XroXX2H/mCk2RcBG+9VSkMKfA0FKa5AeKpytlq5L8t6U8p2v4H/cIJFp
+         BuQ1wNbK38sXCgSDDi5ZcowgD/Na4lfWM8RChd6O6dPP5Vt5466ph7ryRJq8aQrxS6Te
+         90zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738358866; x=1738963666;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KVkeKDp8BQvTTjbPQCb4QrIee9efxV1gjW786NpzUDs=;
+        b=iQv6gFD/TuECiPuZ+Hpf23LCNGEFF4Oe1yVmXXcy5FKzo5C8l8OJzXnUEL53kld/ek
+         ggO3XT9LgBJvFBR/QnSOTAfsBz92mAdAjmVYGVf2YCBTve0vdpov5FlZzgdeYGINMVgf
+         hubuQxzop7hnU8iIlwD+wC0SCADXE9tWTOIkd8FYF0Pfldb6Y+M4kdSTVM8Zs1Y+yF5h
+         pC2pKLeqd7ywiqcIzB7CeqhnQZqQDNe05p41boUez8CEusc4HQV38720ZZ3myEg9iEkQ
+         qzZUTudDZ3pQEk8rREQ5ajR87cWIgC0G4qf8nR0gd57j+JXsTYVeflLDgrCxV8UUuHhK
+         gtOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHnLnWQc9fKp6zY8Y6/wuK4QQX9r6DJwrk5cdeUkLoItTZtqzZT/Rorhf5TvDLadozU1d7fuWNcfKzrhU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+6u8ln7ZsZ/3v/VBsFAS5oXyM/yS+RyPaz627vmq4vTsL4oPH
+	1pD9VckA5tH6f09IYl8B/QLujcyPbxp14ov3HBjtrxjMrHQnnB1et3fJJYwBKFaOaS2e3OBj+I3
+	0
+X-Gm-Gg: ASbGncs9eq7ij3EcsqodxlH267oZUR4A8ArQVMgGcINBEohZo72/0LIVuBhu2BDQI9k
+	f5WTYIaBbxcEi+Ds06qwdLaJpgGwHtfuS93HFlkiz87dctOtmQwdr/00sCyFkkvLg+c6YnKeJ+v
+	M61Mm2LgNqrKqBPgTpttYatY+UztejrQEPiVJWujwH6nbkOYOFDcWeI51q7NCsmMYesVNRsIIkD
+	rsTJuoTtf49fpLRdklnvDUNLIfgqizhQ4li6b4+B9VZA/cbzQja2rHeY5LBCoJHZ22Wa3CW11G1
+	GE3jQczq2EiD08EEOh/A66CsA0cRm37w5SL1vbJV6nJbNSR+z2S/
+X-Google-Smtp-Source: AGHT+IEEpoW16oUpV4LltsxdkHnvZnJdHh1ZTd/FlmpTGCBVtpCPewZ9omSGGA1Q5C14YqPjOnjbAw==
+X-Received: by 2002:a05:6808:1649:b0:3eb:5c03:2508 with SMTP id 5614622812f47-3f323a591ccmr8758300b6e.18.1738358866490;
+        Fri, 31 Jan 2025 13:27:46 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f33367f6c6sm1016692b6e.42.2025.01.31.13.27.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 13:27:45 -0800 (PST)
+Message-ID: <1da68f05-9d53-44dc-bef4-4364e841b791@baylibre.com>
+Date: Fri, 31 Jan 2025 15:27:43 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, linux-amlogic@lists.infradead.org, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Jerome Brunet <jbrunet@baylibre.com>, linux-arm-kernel@lists.infradead.org, 
- ~postmarketos/upstreaming@lists.sr.ht, devicetree@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, 
- Karl Chan <exxxxkc@getgoogleoff.me>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Artur Weber <aweber.kernel@gmail.com>
-To: Ferass El Hafidi <funderscore@postmarketos.org>
-In-Reply-To: <20250131200319.19996-1-funderscore@postmarketos.org>
-References: <20250131200319.19996-1-funderscore@postmarketos.org>
-Message-Id: <173835855352.46011.13506160179490240246.robh@kernel.org>
-Subject: Re: [PATCH 0/2] Add support for Xiaomi Mi TV Stick
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/10] iio: adc: adi-axi-adc: add support for AD7606
+ register writing
+To: Angelo Dureghello <adureghello@baylibre.com>,
+ Michael Hennerich <michael.hennerich@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Alexandru Ardelean <aardelean@baylibre.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Guillaume Stols <gstols@baylibre.com>
+References: <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-0-c3aec77c0ab7@baylibre.com>
+ <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-7-c3aec77c0ab7@baylibre.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-7-c3aec77c0ab7@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-On Fri, 31 Jan 2025 20:03:17 +0000, Ferass El Hafidi wrote:
-> From: Ferass El Hafidi <funderscore@postmarketos.org>
+On 1/29/25 5:03 AM, Angelo Dureghello wrote:
+> From: Guillaume Stols <gstols@baylibre.com>
 > 
-> This patch series aims to add initial support for the Xiaomi Mi TV
-> Stick.
+> Since we must access the bus parallel bus using a custom procedure,
+> let's add a specialized compatible, and define specialized callbacks for
+> writing the registers using the parallel interface.
 > 
-> Xiaomi Mi TV Stick is a small Amlogic-based Android TV stick released in
-> 2020, and known as `xiaomi-aquaman` internally (in the downstream kernel,
-> u-boot, ...)
-> Its specifications are as follows:
->  * Amlogic S805Y SoC (believed to be mostly identical to S805X)
->  * 8 GB eMMC
->  * 1 GB of RAM
->  * Android TV 9, upgradable to Android TV 10
+> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+> Co-developed-by: Angelo Dureghello <adureghello@baylibre.com>
+> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> ---
+>  drivers/iio/adc/adi-axi-adc.c | 100 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 100 insertions(+)
 > 
-> There are multiple variants:
->  * 1. Green PCB, manufactured in 2020, known UART pinout (helpfully
->    labeled on the board)
->  * 2. Blue PCB, not much documentation about it, presumably manufactured
->    between 2021 and 2023
->  * 3. Green PCB, manufactured in 2023, known UART pinout, some layout
->    changes compared to the 2020 variant
+> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
+> index 0923565cf5bb..aaeb445a8a3e 100644
+> --- a/drivers/iio/adc/adi-axi-adc.c
+> +++ b/drivers/iio/adc/adi-axi-adc.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/iio/buffer.h>
+>  #include <linux/iio/iio.h>
+>  
+> +#include "ad7606_bus_iface.h"
+>  /*
+>   * Register definitions:
+>   *   https://wiki.analog.com/resources/fpga/docs/axi_adc_ip#register_map
+> @@ -73,6 +74,12 @@
+>  #define ADI_AXI_ADC_REG_DELAY(l)		(0x0800 + (l) * 0x4)
+>  #define   AXI_ADC_DELAY_CTRL_MASK		GENMASK(4, 0)
+>  
+> +#define ADI_AXI_REG_CONFIG_WR			0x0080
+> +#define ADI_AXI_REG_CONFIG_RD			0x0084
+> +#define ADI_AXI_REG_CONFIG_CTRL			0x008c
+> +#define   ADI_AXI_REG_CONFIG_CTRL_READ		0x03
+> +#define   ADI_AXI_REG_CONFIG_CTRL_WRITE		0x01
+> +
+>  #define ADI_AXI_ADC_MAX_IO_NUM_LANES		15
+>  
+>  #define ADI_AXI_REG_CHAN_CTRL_DEFAULTS		\
+> @@ -80,6 +87,10 @@
+>  	 ADI_AXI_REG_CHAN_CTRL_FMT_EN |		\
+>  	 ADI_AXI_REG_CHAN_CTRL_ENABLE)
+>  
+> +#define ADI_AXI_REG_READ_BIT			0x8000
+> +#define ADI_AXI_REG_ADDRESS_MASK		0xff00
+> +#define ADI_AXI_REG_VALUE_MASK			0x00ff
+> +
+>  struct axi_adc_info {
+>  	unsigned int version;
+>  	const struct iio_backend_info *backend_info;
+> @@ -313,6 +324,81 @@ static struct iio_buffer *axi_adc_request_buffer(struct iio_backend *back,
+>  	return iio_dmaengine_buffer_setup(st->dev, indio_dev, dma_name);
+>  }
+>  
+> +static int axi_adc_raw_write(struct iio_backend *back, void *buf, unsigned int len)
+> +{
+> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
+> +	u32 data;
+> +
+> +	data = *(u32 *)(buf);
+
+Hmm... could result in unaligned access and len is not used. Can we just have
+`u32 val` as the parameter instead of buf and len?
+
+> +
+> +	regmap_write(st->regmap, ADI_AXI_REG_CONFIG_WR, data);
+> +	regmap_write(st->regmap, ADI_AXI_REG_CONFIG_CTRL,
+> +		     ADI_AXI_REG_CONFIG_CTRL_WRITE);
+> +	usleep_range(50, 100);
+
+Use fsleep().
+
+> +	regmap_write(st->regmap, ADI_AXI_REG_CONFIG_CTRL, 0x00);
+> +	usleep_range(50, 100);
+> +
+> +	return 0;
+> +}
+> +
+> +static int axi_adc_raw_read(struct iio_backend *back, void *buf, unsigned int len)
+> +{
+> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
+> +	u32 *bdata = buf;
+
+ditto (about buf and len)
+
+> +
+> +	regmap_write(st->regmap, ADI_AXI_REG_CONFIG_CTRL,
+> +		     ADI_AXI_REG_CONFIG_CTRL_READ);
+> +	usleep_range(50, 100);
+> +	regmap_read(st->regmap, ADI_AXI_REG_CONFIG_RD, bdata);
+> +	regmap_write(st->regmap, ADI_AXI_REG_CONFIG_CTRL, 0x00);
+> +	usleep_range(50, 100);
+
+ditto (fsleep)
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int ad7606_bus_reg_read(struct iio_backend *back, u32 reg, u32 *val)
+> +{
+> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
+> +	u32 buf;
+> +
+> +	guard(mutex)(&st->lock);
+> +
+> +	/*
+> +	 * The address is written on the highest weight byte, and the MSB set
+> +	 * at 1 indicates a read operation.
+> +	 */
+> +	buf = FIELD_PREP(ADI_AXI_REG_ADDRESS_MASK, reg) | ADI_AXI_REG_READ_BIT;
+> +	axi_adc_raw_write(back, &buf, sizeof(buf));
+> +	axi_adc_raw_read(back, val, 4);
+> +
+> +	/* Write 0x0 on the bus to get back to ADC mode */
+> +	buf = 0;
+> +	axi_adc_raw_write(back, &buf, sizeof(buf));
+> +	return 0;
+> +}
+> +
+> +static int ad7606_bus_reg_write(struct iio_backend *back, u32 reg, u32 val)
+> +{
+> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
+> +	u32 buf;
+> +
+> +	guard(mutex)(&st->lock);
+> +
+> +	/* Write any register to switch to register mode */
+> +	buf = 0xaf00;
+> +	axi_adc_raw_write(back, &buf, sizeof(buf));
+> +
+> +	buf = FIELD_PREP(ADI_AXI_REG_ADDRESS_MASK, reg) |
+> +	      FIELD_PREP(ADI_AXI_REG_VALUE_MASK, val);
+> +	axi_adc_raw_write(back, &buf, sizeof(buf));
+> +
+> +	/* Write 0x0 on the bus to get back to ADC mode */
+> +	buf = 0;
+> +	axi_adc_raw_write(back, &buf, sizeof(buf));
+> +
+> +	return 0;
+> +}
+> +
+>  static void axi_adc_free_buffer(struct iio_backend *back,
+>  				struct iio_buffer *buffer)
+>  {
+> @@ -484,9 +570,23 @@ static const struct axi_adc_info adc_generic = {
+>  	.backend_info = &adi_axi_adc_generic,
+>  };
+>  
+> +static const struct ad7606_platform_data ad7606_pdata = {
+> +	.bus_reg_read = ad7606_bus_reg_read,
+> +	.bus_reg_write = ad7606_bus_reg_write,
+> +};
+> +
+> +static const struct axi_adc_info adc_ad7606 = {
+> +	.version = ADI_AXI_PCORE_VER(10, 0, 'a'),
+
+Is this the actual current version we are testing with? IIRC there were some
+changes made recently for this variant of the IP block so would be best to make
+sure we have the latest version here since older versions might not be working.
+
+> +	.backend_info = &adi_axi_adc_generic,
+> +	.bus_controller = true,
+> +	.pdata = &ad7606_pdata,
+> +	.pdata_sz = sizeof(ad7606_pdata),
+> +};
+> +
+>  /* Match table for of_platform binding */
+>  static const struct of_device_id adi_axi_adc_of_match[] = {
+>  	{ .compatible = "adi,axi-adc-10.0.a", .data = &adc_generic },
+> +	{ .compatible = "adi,axi-ad7606x", .data = &adc_ad7606 },
+>  	{ /* end of list */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, adi_axi_adc_of_match);
 > 
-> Among these variants, there are many boards using multiple different
-> Wi-Fi chips.  Supporting all of them is out of scope for this patch
-> series.
-> 
-> As of the time of writing this has only been tested on the 3rd variant.
-> It is believed that software-wise all three work mostly the same (if we
-> don't count Wi-Fi), but testing on the other variants would still be
-> appreciated.
-> 
-> The devicetree is based on the Amlogic P241 DTS.
-> 
-> Ferass El Hafidi (2):
->   dt-bindings: arm: amlogic: add Xiaomi Mi TV Stick
->   arm64: dts: amlogic: add support for xiaomi-aquaman/Mi TV Stick
-> 
->  .../devicetree/bindings/arm/amlogic.yaml      |   1 +
->  arch/arm64/boot/dts/amlogic/Makefile          |   1 +
->  .../meson-gxl-s805y-xiaomi-aquaman.dts        | 311 ++++++++++++++++++
->  3 files changed, 313 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dts
-> 
-> --
-> 2.47.1
-> 
-> 
-
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/amlogic/' for 20250131200319.19996-1-funderscore@postmarketos.org:
-
-arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dtb: pwm@86c0: clock-names: False schema does not allow ['clkin0']
-	from schema $id: http://devicetree.org/schemas/pwm/pwm-amlogic.yaml#
-arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dtb: leds: led-white:default-state:0: 'heartbeat' is not one of ['on', 'off', 'keep']
-	from schema $id: http://devicetree.org/schemas/leds/leds-gpio.yaml#
-arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dtb: leds: led-white: Unevaluated properties are not allowed ('default-state' was unexpected)
-	from schema $id: http://devicetree.org/schemas/leds/leds-gpio.yaml#
-
-
-
-
 
