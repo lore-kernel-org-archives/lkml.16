@@ -1,605 +1,228 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D0424B34
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360BAEACD
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738285354; cv=none; b=Rx+DdS8KFpSyV3mZ2acbBQplpw9wYG7G4r7kC9AMQK4qefKolxf8fiP2cnEjxakBLwK4AJ8T9P4YTeIb76bLu2/6cOCMrlF5u+sVWfEQnJ8Whyp1vsDeKckQzGTphSUPEd7pFZGTI2DryzUmmnBC8AhMf6aR4fTdStJYem8FqWY=
+	t=1738285566; cv=none; b=iaKQ545R7SMt331gCOoVcd54L5ClgxwayLZEPeSrK4oRwjp26bWwM2LtkZKuY/maBQW+0Dh7N3neg41B/BlJlp+G5S13UvGLxoR3lgIpSss/vDs2qiHcPu1M8ZwQt57dGYH5TwLswBKBWzs57RrLz1p6H1qCrZUCOEHuUFaPF8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738285354; c=relaxed/simple;
-	bh=TSyLfj439DDAYhVTfjp27kz400NPLNm8/u2qemOyDcM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t8uf83lubnPppk711Qb1EYEqB+fO0GkaGyW2+ugPBnTA6QYv/DVfPj7i8E2jrGgrI5/OnJIw8iOcHQ/vzO3ngB5+dxaNBLjzrU3KmvfAuPwPZloiSgjEdB3TrH1wT/V3aAcL8L8XCIpIKcBvgSvXB7dLWnbzfMadr8PulF2TtyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=N7hw4pZQ; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1738285566; c=relaxed/simple;
+	bh=9jf/1nf6tAlLaTCV6LJ7jR9g3FGayPJbCfATcf783SU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rpEpZfXvDrBNlPXAP2jfaVKitalMCe8/+Cnr+paYsn3lraQDYLPnyo4B2kdUnyEzCa+3LyaAImvmCuYKiySSqZnI1hsin99hT7TAS7DC5nNGMJ6BKdHgtUe7Jy6hMCEP5P5XEP/wfRDSITKtg6E+Qxl9okCPLp6Yxv+8PWWGOd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TLbjc7d8; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="N7hw4pZQ"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id AB0E42C0125;
-	Fri, 31 Jan 2025 14:02:30 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1738285350;
-	bh=BjTHw9MdM9s5UjZintrwqlYxmBfW2wHuQ18gd2IymiQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=N7hw4pZQdK3km4/h1ybtAQh31+r0KyfaFpo2LqlSNM3kIy7twEjbnsJPgarJ69cIZ
-	 70CA3FrUe+LSROpXaEaS/+sUA0U8I5ky+HZtCFwbBQVMW3t9ZirI7NtDiRM7imUoSS
-	 QN8pxRnplUPT2FpmgQGMKIvSBp4rZfTwFUN37KkAsgJnupAq59hw8xws2pC7li5oGl
-	 jFKegjIES5W0nSlEMZbTuI0Ki0l1D3v19bOqDK16pYlhMohZs4vZeLFfZkDeGIPyCe
-	 Nve2+/jb4pVVpqzNMOwHGjlUXjIP32JwtBTqto1fkHvygc6OBBhG3/jXxPeeKANMx5
-	 lgYPgDpxwl1hg==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B679c21260000>; Fri, 31 Jan 2025 14:02:30 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 6451213EE2B;
-	Fri, 31 Jan 2025 14:02:30 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 6284E2809C0; Fri, 31 Jan 2025 14:02:30 +1300 (NZDT)
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-To: lee@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	tsbogend@alpha.franken.de,
-	hkallweit1@gmail.com,
-	linux@armlinux.org.uk,
-	sander@svanheule.net,
-	markus.stockhausen@gmx.de
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v5 4/4] net: mdio: Add RTL9300 MDIO driver
-Date: Fri, 31 Jan 2025 14:01:51 +1300
-Message-ID: <20250131010151.2527688-5-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250131010151.2527688-1-chris.packham@alliedtelesis.co.nz>
-References: <20250131010151.2527688-1-chris.packham@alliedtelesis.co.nz>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TLbjc7d8"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ee5616e986so3945068a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:06:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738285564; x=1738890364; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bTNYs099yFFyqnxNpuPISqHSrCDzZ6WUqK+9MhF5wbs=;
+        b=TLbjc7d87TeLS6RlN3HkAbeLlWBHyd0sIYW+HXVWqZDMeUxmHMbKiAkDT2OWtCZyXz
+         YFV/me68MZM5JkmpaedwWVDhDtASP+o6U1kTQEJn/1exclJmC5G0y7AigX5h7qchv1kp
+         RSFiy7fSldiH18zbkRxXdHQWWYiJkFriTuySUcFrHP1bd87PvVKD4QYMn0BR0U2Ykse6
+         pPO/mtEOK+yaGdzUbsy4igm8GtakIRaGXX8ivc0w1sJTW6R+PPN0HKQKJ+KIfFgf6JKu
+         na2C9ahYfV4rEcPBb3sFeacy5KnKKJ45BVUL7Q9b8E+B2pdku6PzvNY1Ks1e5WQ9jOdY
+         +WWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738285564; x=1738890364;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bTNYs099yFFyqnxNpuPISqHSrCDzZ6WUqK+9MhF5wbs=;
+        b=DDkT52fGJ7SXudub9xi3L3uwpS0a3Hi9WRGWBfR/HFB6Rb0aQRiscDBxnsQU6vHFc5
+         H9BacLyhhhoKWuATjYAewkvwvrMU3xDLhECTLB8taPi/KPyQxr9QTVZRydia1+qevCaF
+         c2l5VFuPzSmSWKaEkno1Q3OfHZ1Xqqu5/enPpAQDYlP8V8/XTyRA0OhpgrbjsG8MVT4L
+         YNzbUEIzuh/ip9DGnQDbWDatzSo05ngTszu9IgVmvD7TDPuxbfyo31pJbWWZBWd3kAhG
+         Wjgb7RHGNdMj2vu9fQbDS+PaQXXPifSaweomjbRPq8mAeMjTnD+STJEuHeG6qAxUdPkl
+         rIPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmg1SzF05NyAD9U146OWFjhoX7y0jx94dlM9Zq0fhvONV+JKQCLzNHqeY6AN3RLzuqN/Du+LXRzdvQxpo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPw8KQJBvjDMcEWsFRWelF2vEXufWAKdCuPErlYOs5Sr/qWDCN
+	SoUB3dGg7uliC+nHCiiXCJTnBQ95zW0c1h9anTTueim01D494nwkkuKalY8jeSaFOb0mpqqEnOc
+	cOQ==
+X-Google-Smtp-Source: AGHT+IGxiC3tKYAQHqYSiS3fnl5uGLVJ5CIUzG+4EgbzBj0T2X1p5kopc3CLdqk/XuszZgPILyjkbC2F5Vo=
+X-Received: from pgbcr6.prod.google.com ([2002:a05:6a02:4106:b0:7fd:5164:d918])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6f8f:b0:1eb:34a6:593e
+ with SMTP id adf61e73a8af0-1ed7a5c4575mr14718423637.1.1738285564440; Thu, 30
+ Jan 2025 17:06:04 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Thu, 30 Jan 2025 17:06:01 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=QNvLRRLL c=1 sm=1 tr=0 ts=679c2126 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=VdSt8ZQiCzkA:10 a=lorn_ZLQiSlGyWFY7CwA:9 a=3ZKOabzyN94A:10
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250131010601.469904-1-seanjc@google.com>
+Subject: [PATCH] KVM: nSVM: Never use L0's PAUSE loop exiting while L2 is running
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Add a driver for the MDIO controller on the RTL9300 family of Ethernet
-switches with integrated SoC. There are 4 physical SMI interfaces on the
-RTL9300 however access is done using the switch ports. The driver takes
-the MDIO bus hierarchy from the DTS and uses this to configure the
-switch ports so they are associated with the correct PHY. This mapping
-is also used when dealing with software requests from phylib.
+Never use L0's (KVM's) PAUSE loop exiting controls while L2 is running,
+and instead always configure vmcb02 according to L1's exact capabilities
+and desires.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+The purpose of intercepting PAUSE after N attempts is to detect when the
+vCPU may be stuck waiting on a lock, so that KVM can schedule in a
+different vCPU that may be holding said lock.  Barring a very interesting
+setup, L1 and L2 do not share locks, and it's extremely unlikely that an
+L1 vCPU would hold a spinlock while running L2.  I.e. having a vCPU
+executing in L1 yield to a vCPU running in L2 will not allow the L1 vCPU
+to make forward progress, and vice versa.
+
+While teaching KVM's "on spin" logic to only yield to other vCPUs in L2 is
+doable, in all likelihood it would do more harm than good for most setups.
+KVM has limited visibility into which L2 "vCPUs" belong to the same VM,
+and thus share a locking domain.  And even if L2 vCPUs are in the same
+VM, KVM has no visilibity into L2 vCPU's that are scheduled out by the
+L1 hypervisor.
+
+Furthermore, KVM doesn't actually steal PAUSE exits from L1. If L1 is
+intercepting PAUSE, KVM will route PAUSE exits to L1, not L0, as
+nested_svm_intercept() gives priority to the vmcb12 intercept.  As such,
+overriding the count/threshold fields in vmcb02 with vmcb01's values is
+nonsensical, as doing so clobbers all the training/learning that has been
+done in L1.
+
+Even worse, if L1 is not intercepting PAUSE, i.e. KVM is handling PAUSE
+exits, then KVM will adjust the PLE knobs based on L2 behavior, which could
+very well be detrimental to L1, e.g. due to essentially poisoning L1 PLE
+training with bad data.
+
+And copying the count from vmcb02 to vmcb01 on a nested VM-Exit makes even
+less sense, because again, the purpose of PLE is to detect spinning vCPUs.
+Whether or not a vCPU is spinning in L2 at the time of a nested VM-Exit
+has no relevance as to the behavior of the vCPU when it executes in L1.
+
+The only scenarios where any of this actually works is if at least one
+of KVM or L1 is NOT intercepting PAUSE for the guest.  Per the original
+changelog, those were the only scenarios considered to be supported.
+Disabling KVM's use of PLE makes it so the VM is always in a "supported"
+mode.
+
+Last, but certainly not least, using KVM's count/threshold instead of the
+values provided by L1 is a blatant violation of the SVM architecture.
+
+Fixes: 74fd41ed16fd ("KVM: x86: nSVM: support PAUSE filtering when L0 doesn't intercept PAUSE")
+Cc: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
+ arch/x86/kvm/svm/nested.c | 44 +++++++++++++--------------------------
+ arch/x86/kvm/svm/svm.c    |  6 ------
+ 2 files changed, 14 insertions(+), 36 deletions(-)
 
-Notes:
-    Changes in v5:
-    - Reword out of date comment
-    - Use GENMASK/FIELD_PREP where appropriate
-    - Introduce port validity bitmap.
-    - Use more obvious names for PHY_CTRL_READ/WRITE and
-      PHY_CTRL_TYPE_C45/C22
-    Changes in v4:
-    - rename to realtek-rtl9300
-    - s/realtek_/rtl9300_/
-    - add locking to support concurrent access
-    - The dtbinding now represents the MDIO bus hierarchy so we consume t=
-his
-      information and use it to configure the switch port to MDIO bus+add=
-r.
-    Changes in v3:
-    - Fix (another) off-by-one error
-    Changes in v2:
-    - Add clause 22 support
-    - Remove commented out code
-    - Formatting cleanup
-    - Set MAX_PORTS correctly for MDIO interface
-    - Fix off-by-one error in pn check
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index d77b094d9a4d..9330c15de6b7 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -171,6 +171,16 @@ void recalc_intercepts(struct vcpu_svm *svm)
+ 	if (!intercept_smi)
+ 		vmcb_clr_intercept(c, INTERCEPT_SMI);
+ 
++	/*
++	 * Intercept PAUSE if and only if L1 wants to.  KVM intercepts PAUSE so
++	 * that a vCPU that may be spinning waiting for a lock can be scheduled
++	 * out in favor of the vCPU that holds said lock.  KVM doesn't support
++	 * yielding across L2 vCPUs, as KVM has limited visilibity into which
++	 * L2 vCPUs are in the same L2 VM, i.e. may be contending for locks.
++	 */
++	if (!vmcb12_is_intercept(&svm->nested.ctl, INTERCEPT_PAUSE))
++		vmcb_clr_intercept(c, INTERCEPT_PAUSE);
++
+ 	if (nested_vmcb_needs_vls_intercept(svm)) {
+ 		/*
+ 		 * If the virtual VMLOAD/VMSAVE is not enabled for the L2,
+@@ -643,8 +653,6 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
+ 	struct kvm_vcpu *vcpu = &svm->vcpu;
+ 	struct vmcb *vmcb01 = svm->vmcb01.ptr;
+ 	struct vmcb *vmcb02 = svm->nested.vmcb02.ptr;
+-	u32 pause_count12;
+-	u32 pause_thresh12;
+ 
+ 	/*
+ 	 * Filled at exit: exit_code, exit_code_hi, exit_info_1, exit_info_2,
+@@ -736,31 +744,13 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
+ 		vmcb02->control.virt_ext |= VIRTUAL_VMLOAD_VMSAVE_ENABLE_MASK;
+ 
+ 	if (guest_cpu_cap_has(vcpu, X86_FEATURE_PAUSEFILTER))
+-		pause_count12 = svm->nested.ctl.pause_filter_count;
++		vmcb02->control.pause_filter_count = svm->nested.ctl.pause_filter_count;
+ 	else
+-		pause_count12 = 0;
++		vmcb02->control.pause_filter_count = 0;
+ 	if (guest_cpu_cap_has(vcpu, X86_FEATURE_PFTHRESHOLD))
+-		pause_thresh12 = svm->nested.ctl.pause_filter_thresh;
++		vmcb02->control.pause_filter_thresh = svm->nested.ctl.pause_filter_thresh;
+ 	else
+-		pause_thresh12 = 0;
+-	if (kvm_pause_in_guest(svm->vcpu.kvm)) {
+-		/* use guest values since host doesn't intercept PAUSE */
+-		vmcb02->control.pause_filter_count = pause_count12;
+-		vmcb02->control.pause_filter_thresh = pause_thresh12;
+-
+-	} else {
+-		/* start from host values otherwise */
+-		vmcb02->control.pause_filter_count = vmcb01->control.pause_filter_count;
+-		vmcb02->control.pause_filter_thresh = vmcb01->control.pause_filter_thresh;
+-
+-		/* ... but ensure filtering is disabled if so requested.  */
+-		if (vmcb12_is_intercept(&svm->nested.ctl, INTERCEPT_PAUSE)) {
+-			if (!pause_count12)
+-				vmcb02->control.pause_filter_count = 0;
+-			if (!pause_thresh12)
+-				vmcb02->control.pause_filter_thresh = 0;
+-		}
+-	}
++		vmcb02->control.pause_filter_thresh = 0;
+ 
+ 	nested_svm_transition_tlb_flush(vcpu);
+ 
+@@ -1033,12 +1023,6 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
+ 	vmcb12->control.event_inj         = svm->nested.ctl.event_inj;
+ 	vmcb12->control.event_inj_err     = svm->nested.ctl.event_inj_err;
+ 
+-	if (!kvm_pause_in_guest(vcpu->kvm)) {
+-		vmcb01->control.pause_filter_count = vmcb02->control.pause_filter_count;
+-		vmcb_mark_dirty(vmcb01, VMCB_INTERCEPTS);
+-
+-	}
+-
+ 	nested_svm_copy_common_state(svm->nested.vmcb02.ptr, svm->vmcb01.ptr);
+ 
+ 	svm_switch_vmcb(svm, &svm->vmcb01);
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 7640a84e554a..ad5accc29db8 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1079,9 +1079,6 @@ static void grow_ple_window(struct kvm_vcpu *vcpu)
+ 	struct vmcb_control_area *control = &svm->vmcb->control;
+ 	int old = control->pause_filter_count;
+ 
+-	if (kvm_pause_in_guest(vcpu->kvm))
+-		return;
+-
+ 	control->pause_filter_count = __grow_ple_window(old,
+ 							pause_filter_count,
+ 							pause_filter_count_grow,
+@@ -1100,9 +1097,6 @@ static void shrink_ple_window(struct kvm_vcpu *vcpu)
+ 	struct vmcb_control_area *control = &svm->vmcb->control;
+ 	int old = control->pause_filter_count;
+ 
+-	if (kvm_pause_in_guest(vcpu->kvm))
+-		return;
+-
+ 	control->pause_filter_count =
+ 				__shrink_ple_window(old,
+ 						    pause_filter_count,
 
- drivers/net/mdio/Kconfig                |   7 +
- drivers/net/mdio/Makefile               |   1 +
- drivers/net/mdio/mdio-realtek-rtl9300.c | 436 ++++++++++++++++++++++++
- 3 files changed, 444 insertions(+)
- create mode 100644 drivers/net/mdio/mdio-realtek-rtl9300.c
-
-diff --git a/drivers/net/mdio/Kconfig b/drivers/net/mdio/Kconfig
-index 4a7a303be2f7..058fcdaf6c18 100644
---- a/drivers/net/mdio/Kconfig
-+++ b/drivers/net/mdio/Kconfig
-@@ -185,6 +185,13 @@ config MDIO_IPQ8064
- 	  This driver supports the MDIO interface found in the network
- 	  interface units of the IPQ8064 SoC
-=20
-+config MDIO_REALTEK_RTL9300
-+	tristate "Realtek RTL9300 MDIO interface support"
-+	depends on MACH_REALTEK_RTL || COMPILE_TEST
-+	help
-+	  This driver supports the MDIO interface found in the Realtek
-+	  RTL9300 family of Ethernet switches with integrated SoC.
-+
- config MDIO_REGMAP
- 	tristate
- 	help
-diff --git a/drivers/net/mdio/Makefile b/drivers/net/mdio/Makefile
-index 1015f0db4531..c23778e73890 100644
---- a/drivers/net/mdio/Makefile
-+++ b/drivers/net/mdio/Makefile
-@@ -19,6 +19,7 @@ obj-$(CONFIG_MDIO_MOXART)		+=3D mdio-moxart.o
- obj-$(CONFIG_MDIO_MSCC_MIIM)		+=3D mdio-mscc-miim.o
- obj-$(CONFIG_MDIO_MVUSB)		+=3D mdio-mvusb.o
- obj-$(CONFIG_MDIO_OCTEON)		+=3D mdio-octeon.o
-+obj-$(CONFIG_MDIO_REALTEK_RTL9300)	+=3D mdio-realtek-rtl9300.o
- obj-$(CONFIG_MDIO_REGMAP)		+=3D mdio-regmap.o
- obj-$(CONFIG_MDIO_SUN4I)		+=3D mdio-sun4i.o
- obj-$(CONFIG_MDIO_THUNDER)		+=3D mdio-thunder.o
-diff --git a/drivers/net/mdio/mdio-realtek-rtl9300.c b/drivers/net/mdio/m=
-dio-realtek-rtl9300.c
-new file mode 100644
-index 000000000000..d2ee66890caf
---- /dev/null
-+++ b/drivers/net/mdio/mdio-realtek-rtl9300.c
-@@ -0,0 +1,436 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * MDIO controller for RTL9300 switches with integrated SoC.
-+ *
-+ * The MDIO communication is abstracted by the switch. At the software l=
-evel
-+ * communication uses the switch port to address the PHY. We work out th=
-e
-+ * mapping based on the MDIO bus described in device tree and the realte=
-k,port
-+ * property.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bitmap.h>
-+#include <linux/bits.h>
-+#include <linux/cleanup.h>
-+#include <linux/find.h>
-+#include <linux/mdio.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/mutex.h>
-+#include <linux/of_mdio.h>
-+#include <linux/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+
-+#define SMI_GLB_CTRL			0xca00
-+#define   GLB_CTRL_INTF_SEL(intf)	BIT(16 + (intf))
-+#define SMI_PORT0_15_POLLING_SEL	0xca08
-+#define SMI_POLL_CTRL			0xca90
-+#define SMI_ACCESS_PHY_CTRL_0		0xcb70
-+#define SMI_ACCESS_PHY_CTRL_1		0xcb74
-+#define   PHY_CTRL_WRITE		BIT(2)
-+#define   PHY_CTRL_READ			0
-+#define   PHY_CTRL_TYPE_C45		BIT(1)
-+#define   PHY_CTRL_TYPE_C22		0
-+#define   PHY_CTRL_CMD			BIT(0)
-+#define   PHY_CTRL_FAIL			BIT(25)
-+#define SMI_ACCESS_PHY_CTRL_2		0xcb78
-+#define SMI_ACCESS_PHY_CTRL_3		0xcb7c
-+#define SMI_PORT0_5_ADDR_CTRL		0xcb80
-+
-+#define MAX_PORTS       28
-+#define MAX_SMI_BUSSES  4
-+#define MAX_SMI_ADDR	0x1f
-+
-+struct rtl9300_mdio_priv {
-+	struct regmap *regmap;
-+	struct mutex lock; /* protect HW access */
-+	DECLARE_BITMAP(valid_ports, MAX_PORTS);
-+	u8 smi_bus[MAX_PORTS];
-+	u8 smi_addr[MAX_PORTS];
-+	bool smi_bus_is_c45[MAX_SMI_BUSSES];
-+	struct mii_bus *bus[MAX_SMI_BUSSES];
-+};
-+
-+struct rtl9300_mdio_chan {
-+	struct rtl9300_mdio_priv *priv;
-+	u8 mdio_bus;
-+};
-+
-+static int rtl9300_mdio_phy_to_port(struct mii_bus *bus, int phy_id)
-+{
-+	struct rtl9300_mdio_chan *chan =3D bus->priv;
-+	struct rtl9300_mdio_priv *priv =3D chan->priv;
-+	int i;
-+
-+	for (i =3D find_first_bit(priv->valid_ports, MAX_PORTS);
-+	     i < MAX_PORTS;
-+	     i =3D find_next_bit(priv->valid_ports, MAX_PORTS, i + 1))
-+		if (priv->smi_bus[i] =3D=3D chan->mdio_bus &&
-+		    priv->smi_addr[i] =3D=3D phy_id)
-+			return i;
-+
-+	return -ENOENT;
-+}
-+
-+static int rtl9300_mdio_wait_ready(struct rtl9300_mdio_priv *priv)
-+{
-+	struct regmap *regmap =3D priv->regmap;
-+	u32 val;
-+
-+	lockdep_assert_held(&priv->lock);
-+
-+	return regmap_read_poll_timeout(regmap, SMI_ACCESS_PHY_CTRL_1,
-+					val, !(val & PHY_CTRL_CMD), 10, 1000);
-+}
-+
-+static int rtl9300_mdio_read_c22(struct mii_bus *bus, int phy_id, int re=
-gnum)
-+{
-+	struct rtl9300_mdio_chan *chan =3D bus->priv;
-+	struct rtl9300_mdio_priv *priv =3D chan->priv;
-+	struct regmap *regmap =3D priv->regmap;
-+	int port;
-+	u32 val;
-+	int err;
-+
-+	guard(mutex)(&priv->lock);
-+
-+	port =3D rtl9300_mdio_phy_to_port(bus, phy_id);
-+	if (port < 0)
-+		return port;
-+
-+	err =3D rtl9300_mdio_wait_ready(priv);
-+	if (err)
-+		return err;
-+
-+	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_2, port << 16);
-+	if (err)
-+		return err;
-+
-+	val =3D FIELD_PREP(GENMASK(24, 20), regnum) |
-+	      FIELD_PREP(GENMASK(19, 15), 0x1f) |
-+	      FIELD_PREP(GENMASK(14, 3), 0xfff) |
-+	      PHY_CTRL_READ | PHY_CTRL_TYPE_C22 | PHY_CTRL_CMD;
-+	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_1, val);
-+	if (err)
-+		return err;
-+
-+	err =3D rtl9300_mdio_wait_ready(priv);
-+	if (err)
-+		return err;
-+
-+	err =3D regmap_read(regmap, SMI_ACCESS_PHY_CTRL_2, &val);
-+	if (err)
-+		return err;
-+
-+	return FIELD_GET(GENMASK(15, 0), val);
-+}
-+
-+static int rtl9300_mdio_write_c22(struct mii_bus *bus, int phy_id, int r=
-egnum, u16 value)
-+{
-+	struct rtl9300_mdio_chan *chan =3D bus->priv;
-+	struct rtl9300_mdio_priv *priv =3D chan->priv;
-+	struct regmap *regmap =3D priv->regmap;
-+	int port;
-+	u32 val;
-+	int err;
-+
-+	guard(mutex)(&priv->lock);
-+
-+	port =3D rtl9300_mdio_phy_to_port(bus, phy_id);
-+	if (port < 0)
-+		return port;
-+
-+	err =3D rtl9300_mdio_wait_ready(priv);
-+	if (err)
-+		return err;
-+
-+	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_0, BIT(port));
-+	if (err)
-+		return err;
-+
-+	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_2, value << 16);
-+	if (err)
-+		return err;
-+
-+	val =3D FIELD_PREP(GENMASK(24, 20), regnum) |
-+	      FIELD_PREP(GENMASK(19, 15), 0x1f) |
-+	      FIELD_PREP(GENMASK(14, 3), 0xfff) |
-+	      PHY_CTRL_WRITE | PHY_CTRL_TYPE_C22 | PHY_CTRL_CMD;
-+	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_1, val);
-+	if (err)
-+		return err;
-+
-+	err =3D regmap_read_poll_timeout(regmap, SMI_ACCESS_PHY_CTRL_1,
-+				       val, !(val & PHY_CTRL_CMD), 10, 100);
-+	if (err)
-+		return err;
-+
-+	if (val & PHY_CTRL_FAIL)
-+		return -ENXIO;
-+
-+	return 0;
-+}
-+
-+static int rtl9300_mdio_read_c45(struct mii_bus *bus, int phy_id, int de=
-v_addr, int regnum)
-+{
-+	struct rtl9300_mdio_chan *chan =3D bus->priv;
-+	struct rtl9300_mdio_priv *priv =3D chan->priv;
-+	struct regmap *regmap =3D priv->regmap;
-+	int port;
-+	u32 val;
-+	int err;
-+
-+	guard(mutex)(&priv->lock);
-+
-+	port =3D rtl9300_mdio_phy_to_port(bus, phy_id);
-+	if (port < 0)
-+		return port;
-+
-+	err =3D rtl9300_mdio_wait_ready(priv);
-+	if (err)
-+		return err;
-+
-+	val =3D FIELD_PREP(GENMASK(31, 16), port);
-+	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_2, val);
-+	if (err)
-+		return err;
-+
-+	val =3D FIELD_PREP(GENMASK(20, 16), dev_addr) |
-+	      FIELD_PREP(GENMASK(15, 0), regnum);
-+	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_3, val);
-+	if (err)
-+		return err;
-+
-+	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_1,
-+			   PHY_CTRL_READ | PHY_CTRL_TYPE_C45 | PHY_CTRL_CMD);
-+	if (err)
-+		return err;
-+
-+	err =3D rtl9300_mdio_wait_ready(priv);
-+	if (err)
-+		return err;
-+
-+	err =3D regmap_read(regmap, SMI_ACCESS_PHY_CTRL_2, &val);
-+	if (err)
-+		return err;
-+
-+	return FIELD_GET(GENMASK(15, 0), val);
-+}
-+
-+static int rtl9300_mdio_write_c45(struct mii_bus *bus, int phy_id, int d=
-ev_addr,
-+				  int regnum, u16 value)
-+{
-+	struct rtl9300_mdio_chan *chan =3D bus->priv;
-+	struct rtl9300_mdio_priv *priv =3D chan->priv;
-+	struct regmap *regmap =3D priv->regmap;
-+	int port;
-+	u32 val;
-+	int err;
-+
-+	guard(mutex)(&priv->lock);
-+
-+	port =3D rtl9300_mdio_phy_to_port(bus, phy_id);
-+	if (port < 0)
-+		return port;
-+
-+	err =3D rtl9300_mdio_wait_ready(priv);
-+	if (err)
-+		return err;
-+
-+	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_0, BIT(port));
-+	if (err)
-+		return err;
-+
-+	val =3D FIELD_PREP(GENMASK(31, 16), value);
-+	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_2, val);
-+	if (err)
-+		return err;
-+
-+	val =3D FIELD_PREP(GENMASK(20, 16), dev_addr) |
-+	      FIELD_PREP(GENMASK(15, 0), regnum);
-+	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_3, val);
-+	if (err)
-+		return err;
-+
-+	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_1,
-+			   PHY_CTRL_TYPE_C45 | PHY_CTRL_WRITE | PHY_CTRL_CMD);
-+	if (err)
-+		return err;
-+
-+	err =3D regmap_read_poll_timeout(regmap, SMI_ACCESS_PHY_CTRL_1,
-+				       val, !(val & PHY_CTRL_CMD), 10, 100);
-+	if (err)
-+		return err;
-+
-+	if (val & PHY_CTRL_FAIL)
-+		return -ENXIO;
-+
-+	return 0;
-+}
-+
-+static int rtl9300_mdiobus_init(struct rtl9300_mdio_priv *priv)
-+{
-+	u32 glb_ctrl_mask =3D 0, glb_ctrl_val =3D 0;
-+	struct regmap *regmap =3D priv->regmap;
-+	u32 port_addr[5] =3D { 0 };
-+	u32 poll_sel[2] =3D { 0 };
-+	int i, err;
-+
-+	/* Associate the port with the SMI interface and PHY */
-+	for (i =3D find_first_bit(priv->valid_ports, MAX_PORTS);
-+	     i < MAX_PORTS;
-+	     i =3D find_next_bit(priv->valid_ports, MAX_PORTS, i + 1)) {
-+		int pos;
-+
-+		pos =3D (i % 6) * 5;
-+		port_addr[i / 6] |=3D (priv->smi_addr[i] & 0x1f) << pos;
-+
-+		pos =3D (i % 16) * 2;
-+		poll_sel[i / 16] |=3D (priv->smi_bus[i] & 0x3) << pos;
-+	}
-+
-+	/* Stop the PPU from interfering */
-+	err =3D regmap_update_bits(regmap, SMI_POLL_CTRL, priv->valid_ports, 0)=
-;
-+	if (err)
-+		return err;
-+
-+	/* Put the interfaces into C45 mode if required */
-+	glb_ctrl_mask =3D GENMASK(19, 16);
-+	for (i =3D 0; i < MAX_SMI_BUSSES; i++)
-+		if (priv->smi_bus_is_c45[i])
-+			glb_ctrl_val |=3D GLB_CTRL_INTF_SEL(i);
-+
-+	err =3D regmap_bulk_write(regmap, SMI_PORT0_5_ADDR_CTRL,
-+				port_addr, 5);
-+	if (err)
-+		return err;
-+
-+	err =3D regmap_bulk_write(regmap, SMI_PORT0_15_POLLING_SEL,
-+				poll_sel, 2);
-+	if (err)
-+		return err;
-+
-+	err =3D regmap_update_bits(regmap, SMI_GLB_CTRL,
-+				 glb_ctrl_mask, glb_ctrl_val);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static int rtl9300_mdiobus_probe_one(struct device *dev, struct rtl9300_=
-mdio_priv *priv,
-+				     struct fwnode_handle *node)
-+{
-+	struct rtl9300_mdio_chan *chan;
-+	struct fwnode_handle *child;
-+	struct mii_bus *bus;
-+	u32 mdio_bus;
-+	int err;
-+
-+	err =3D fwnode_property_read_u32(node, "reg", &mdio_bus);
-+	if (err)
-+		return err;
-+
-+	if (mdio_bus >=3D MAX_SMI_BUSSES)
-+		return dev_err_probe(dev, -EINVAL, "illegal smi bus number %d\n", mdio=
-_bus);
-+
-+	fwnode_for_each_child_node(node, child) {
-+		u32 addr;
-+		u32 pn;
-+
-+		err =3D fwnode_property_read_u32(child, "reg", &addr);
-+		if (err)
-+			return err;
-+
-+		err =3D fwnode_property_read_u32(child, "realtek,port", &pn);
-+		if (err)
-+			return err;
-+
-+		if (pn >=3D MAX_PORTS)
-+			return dev_err_probe(dev, -EINVAL, "illegal port number %d\n", pn);
-+
-+		if (fwnode_device_is_compatible(child, "ethernet-phy-ieee802.3-c45"))
-+			priv->smi_bus_is_c45[mdio_bus] =3D true;
-+
-+		bitmap_set(priv->valid_ports, pn, 1);
-+		priv->smi_bus[pn] =3D mdio_bus;
-+		priv->smi_addr[pn] =3D addr;
-+	}
-+
-+	bus =3D devm_mdiobus_alloc_size(dev, sizeof(*chan));
-+	if (!bus)
-+		return -ENOMEM;
-+
-+	bus->name =3D "Reaktek Switch MDIO Bus";
-+	bus->read =3D rtl9300_mdio_read_c22;
-+	bus->write =3D rtl9300_mdio_write_c22;
-+	bus->read_c45 =3D rtl9300_mdio_read_c45;
-+	bus->write_c45 =3D  rtl9300_mdio_write_c45;
-+	bus->parent =3D dev;
-+	chan =3D bus->priv;
-+	chan->mdio_bus =3D mdio_bus;
-+	chan->priv =3D priv;
-+
-+	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-%d", dev_name(dev), mdio_bus);
-+
-+	err =3D devm_of_mdiobus_register(dev, bus, to_of_node(node));
-+	if (err)
-+		return dev_err_probe(dev, err, "cannot register MDIO bus\n");
-+
-+	return 0;
-+}
-+
-+static int rtl9300_mdiobus_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct rtl9300_mdio_priv *priv;
-+	struct fwnode_handle *child;
-+	int err;
-+
-+	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	err =3D devm_mutex_init(dev, &priv->lock);
-+	if (err)
-+		return err;
-+
-+	priv->regmap =3D syscon_node_to_regmap(dev->parent->of_node);
-+	if (IS_ERR(priv->regmap))
-+		return PTR_ERR(priv->regmap);
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	device_for_each_child_node(dev, child) {
-+		err =3D rtl9300_mdiobus_probe_one(dev, priv, child);
-+		if (err)
-+			return err;
-+	}
-+
-+	err =3D rtl9300_mdiobus_init(priv);
-+	if (err)
-+		return dev_err_probe(dev, err, "failed to initialise MDIO bus controll=
-er\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rtl9300_mdio_ids[] =3D {
-+	{ .compatible =3D "realtek,rtl9301-mdio" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, rtl9300_mdio_ids);
-+
-+static struct platform_driver rtl9300_mdio_driver =3D {
-+	.probe =3D rtl9300_mdiobus_probe,
-+	.driver =3D {
-+		.name =3D "mdio-rtl9300",
-+		.of_match_table =3D rtl9300_mdio_ids,
-+	},
-+};
-+
-+module_platform_driver(rtl9300_mdio_driver);
-+
-+MODULE_DESCRIPTION("RTL9300 MDIO driver");
-+MODULE_LICENSE("GPL");
---=20
-2.48.1
+base-commit: eb723766b1030a23c38adf2348b7c3d1409d11f0
+-- 
+2.48.1.362.g079036d154-goog
 
