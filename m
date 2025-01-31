@@ -1,114 +1,142 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAA91C3BF9
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3AA1C5D78
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 14:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738331882; cv=none; b=mkwNO6uhR5ZMmM2+zqGmxS1QJZ8R8zRiidVHSqFbVJsKzSyr7fCFXeOJroW2e461B8B5IHzxEmCux9vKCl4yceSvJuDeRBH+lAqNmzWEeeMNfFAWhfGLmTbqDr+PbbIs4mzyd0GqK4JUXZTfVrm4XQU3g5jLBZJJMrZjxxKbrSU=
+	t=1738332195; cv=none; b=D7L4xSJCBbtSTsGSFgHgF3k8lftleFoUPdru+QEmMq5suaBJ8WJefzVyPsz/VmwfQfDRyFiNnul1OiBabNxRtdZDWMptEdgFKZWjaMd/fgBSS7aM/FNGu4Rmo8P3VeZVJLi/0CRBl+l8g713Pn4hg52vMmsUcQLUyhiYjvY5UAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738331882; c=relaxed/simple;
-	bh=s+1qREqT4DAw6rTuocGPrmzUfhIfPLb0O7TbJKIqHz4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R9Q0Ww676P4NBDFCBdd4e8vBFDltW7FEoykM6zNkVlSb+j9D5de0byZpBYtTKG8y2myC7hblHmq5U1nhagrll8QeGZaRWxHHFbE/U+VQOU9i2ZkdmGEowg8Pe6zk2VplXjRako1SWtTq+2Bnc0t/rAwZlsyGotJYzCskAsoyizE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=jH8wbtYD; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1738332195; c=relaxed/simple;
+	bh=k6iepJ3khtCHe4wAP+Co9RM2WKV6wPbtel3+iGpB+ZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NEdF5nq0lmwBzFTh4t4vDZMSffliXu579sVwLtcJJD1xiSjAxuxUnl4M/1yhks78NDXgGU9HxAujSEmSCpiMN/qKhj7XmCQUCvOwsPFEiclo22ndWy8jpCCOgztRsJGiGaWaVEYb1aRxnp4Q1L8mtAwHfFbWOh8dPJNzlWmhpaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=rtUqgxeJ; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="jH8wbtYD"
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
-	by cmsmtp with ESMTPS
-	id do92tN3v4f1UXdrWrtBURg; Fri, 31 Jan 2025 13:57:53 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id drWqtstynCvIedrWrtk2c8; Fri, 31 Jan 2025 13:57:53 +0000
-X-Authority-Analysis: v=2.4 cv=fK8/34ae c=1 sm=1 tr=0 ts=679cd6e1
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=VdSt8ZQiCzkA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=Zh1W6WffNNBMdkN8ln4A:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=3cO7Ym7PHF7fFZ72MQIZAMjfyWw9eZGwU+CWNQ7HhEQ=; b=jH8wbtYD4Dgr52w9bc4ObknDuY
-	vT+txp4HQIzy2jRtLn+QebW3yD+4Zi3FhAZdc6nNQ2yOavEY02lHgz26C41Bhan6wP8au6QMYv7zf
-	7aLGsbJTs7DW5gIlsPBgit+tXfV90d2Vm0Hjf6NfJYLbnwrC47GIzfTSPLYNz01jORa5DVNYZ00pB
-	HYekrbyuWCZAVEWiNsPpAoDPitXAOgJW/W3ZhuldfIg/j9dZQGYyOGiz7bRCC3821xonoVmvfV9Ri
-	wO5KYhVo1GgMo4CUrVbljAFZnbrRM5hBYlRKrO7g/8GiXRMWmIzhcWGj8oBDtfZkppVXXfEQHVr02
-	1e5crfzw==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:32942 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1tdrWp-0016Ny-2b;
-	Fri, 31 Jan 2025 06:57:51 -0700
-Message-ID: <a6f9d6c0-bef7-44d0-af31-2f873a76c9b7@w6rz.net>
-Date: Fri, 31 Jan 2025 05:57:48 -0800
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="rtUqgxeJ"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 914A1240029
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 15:03:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738332191; bh=k6iepJ3khtCHe4wAP+Co9RM2WKV6wPbtel3+iGpB+ZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=rtUqgxeJqyjfeci389WwyVR3ezEklT/hG71YuMEM/th4+OQ59ErBQRc/+lh1XpvEE
+	 ARpoFnYEIaLOsT8bfAf2MGITZGJJJnBqvY+i1tSSxHXmLoebinLWZIrjXBgSAUj3du
+	 UPFDJr+mS6r4SeVtaBKT7Y3I7HRaKADOT88LsZoSnGmZ9QZNYhd9ZLxg5GejJbaMj2
+	 rObowSmd9hkyrWs/4LhJj3LxbDSkWXNkeF/oty1/5J9X2CTACIl7pLuuGb1/Ql1nML
+	 eDRmowT95Q+BGvmfr9bEhksCP3PjPZk/SuM2qbQd2uouOpsET6v60CmGEvE/PVyKLh
+	 VqP7g55lON8xA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YkyK53T11z6v08;
+	Fri, 31 Jan 2025 15:03:05 +0100 (CET)
+Date: Fri, 31 Jan 2025 14:03:05 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Rob Herring <robh@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 5/9] dt-bindings: dma: Convert fsl,elo*-dma bindings to
+ YAML
+Message-ID: <Z5zYGdZU-IXwIuR6@probook>
+References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
+ <20250126-ppcyaml-v1-5-50649f51c3dd@posteo.net>
+ <20250127044735.GD3106458-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 00/49] 6.1.128-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250130140133.825446496@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250130140133.825446496@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1tdrWp-0016Ny-2b
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:32942
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 73
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfL5C94md8MInaMX6NM7EsfgE9Pfi6q0e4wNkfzSmn1ayu9iM6ORa2m3xsWsn4GBgYW4NlnHY8lVO6R0zOy0M+nnO0ywU18po2nB4F3AHyprm4/ndVlCj
- /ZcJgpoQp7kBuJKDGqxBvxJng5yLhO/AKGcbAERVNMGV564O7Nc1pGsIdQ8KiFq3cWHWxGsA0zl6fP9OLfel52OdJbKm8bXW/W0=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250127044735.GD3106458-robh@kernel.org>
 
-On 1/30/25 06:01, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.128 release.
-> There are 49 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 01 Feb 2025 14:01:16 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.128-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Sun, Jan 26, 2025 at 10:47:35PM -0600, Rob Herring wrote:
+> On Sun, Jan 26, 2025 at 07:59:00PM +0100, J. Neuschäfer wrote:
+> > The devicetree bindings for Freescale DMA engines have so far existed as
+> > a text file. This patch converts them to YAML, and specifies all the
+> > compatible strings currently in use in arch/powerpc/boot/dts.
+> > 
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> > ---
+> >  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 129 +++++++++++++
+> >  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 105 +++++++++++
+> >  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 120 ++++++++++++
+> >  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
+> >  4 files changed, 354 insertions(+), 204 deletions(-)
+[...]
+> > +patternProperties:
+> > +  "^dma-channel@.*$":
+> > +    type: object
+> 
+>        additionalProperties: false
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+I'll add it.
 
-Tested-by: Ron Economos <re@w6rz.net>
+> (The tools should have highlighted this)
 
+With dtschema 2024.11 installed, "make dt_binding_check
+DT_SCHEMA_FILES=fsl,elo-dma.yaml" does not highlight this.
+
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        items:
+> > +          - enum:
+> > +              - fsl,mpc8315-dma-channel
+> > +              - fsl,mpc8323-dma-channel
+> > +              - fsl,mpc8347-dma-channel
+> > +              - fsl,mpc8349-dma-channel
+> > +              - fsl,mpc8360-dma-channel
+> > +              - fsl,mpc8377-dma-channel
+> > +              - fsl,mpc8378-dma-channel
+> > +              - fsl,mpc8379-dma-channel
+> > +          - const: fsl,elo-dma-channel
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +      cell-index:
+> > +        description: DMA channel index starts at 0.
+> > +
+> > +      interrupts: true
+> 
+> You have to define how many interrupts and what they are.
+
+Will do.
+
+(and the same for the other two files)
+
+
+Best regards,
+J. Neuschäfer
