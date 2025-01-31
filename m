@@ -1,153 +1,196 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD2424B28
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 08:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A504683;
+	Fri, 31 Jan 2025 08:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738312384; cv=none; b=P6/IyfABWhrt7VvjMKvo3+qma8kHqQF1hvjyInd4Ni2oq1xYozXTVeigdYugZ/Ri/U3inVJo12tArM4EN4cTeZMNb8oI7nk3Xo+ehco4b9X70By1k3mMTOa45r+9OwaEdMtkXfZ1Ju+CxMSjqjIAyhTLNwQKNznkLq7n9AXFbqI=
+	t=1738312451; cv=none; b=fYkMi1aKbeoTQyQ/B2yNAeLGF6mKpkYoc97rxSasWNZoR4S6Km82sGxTsWDJokKGnAUnd7Qwis93GLLqpRci2SjfilHbZKZuB1d5X1A5M/nB2qCsUpDFWMt2gLUYvQDvJjlHMiFacNnjL9EofzCzS3NkFTXCy0itB7FDY+YXUoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738312384; c=relaxed/simple;
-	bh=sdw8l8+NwkV6INk3+hpf0YRFmqr5W8dwp/CmE3pzgZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FQiy7CARsfEo1qTSTw6sIefwHQehkH9izTcf2Y+sLAzOGjWdCK1UYlnQijo+HB+hTyB9qVM5tD+OB7p1L8bC7weQhyYgmMvOHNQAfptOz++9ntU/oJQod73haQi5U/rm3yFzzq7NmI6Q5Hz5FBA/x1rciFGm9W4BsYLBAbK3/zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oCjnKWSn; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738312451; c=relaxed/simple;
+	bh=8zc6yBsAaJwfFYLXrwfQvFexqnj+mY5XmiFIpp8Hebw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KDOCODa7Jpa/wMp1YN+cgVnC3eC8q4DCLGngy1js1de6PzCHgQuvO6HdVYjJEhokChBSO/wUP9m11zJelfksbgTZAu7OjRvQM/AgEYghKs/e/jjXZmbYAQG/jor84HUnRMRjoR/pOnQH3RBHE0FLokeCPRk28G8+0vn5KVbbXew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z1/8PE5n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oCjnKWSn"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaec111762bso439409366b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 00:33:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738312380; x=1738917180; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=egqRvUyLfakli10+ggYKvwxMdmYV8I7LQkQH/AIbN90=;
-        b=oCjnKWSnw0xz3XdYd0AUlrrzmdINHwwUmy5LAVsB5tzVjuacFz7dBVgD8ARiDae1Uu
-         b3tHfbI+ODwOE+ua8eQOWJg+KjVFVLx5ebHS6ldiAXX+i2HZvrdft4cVkv/8McyjOQ9J
-         3a/lEG5AvYvSaUcKXJ+mn0ylCDkjoJ0PfMIYVJfPjIvj4+hH37cEW/sJcaCoXK+CY4ZI
-         /73I8f4Kr9VCVMD46DfqkLzv855mSo0ucs0sNk78EQKQ9HpyByYx9U0yyOfKJIWZ5jcK
-         eHIZtKqnYl5jyVcow/euGp/iwowUSRh4tUI5sO+hF1mTLKuma00FEfsZEpb1S9GnnEy/
-         eVHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738312380; x=1738917180;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=egqRvUyLfakli10+ggYKvwxMdmYV8I7LQkQH/AIbN90=;
-        b=PPkbVcCWpXZHa4H849g8VbjhguDBu/ZiMt79vOrMe6ruPnNiOlRnir9m1/BD0DFatJ
-         cl/yd3lEHRD+i6nPGbQ4CylF/UzZjoazMdvdkXKjDEoJ+Mv0qfvXEBggK0Ula7s2Rog+
-         dzDDIP6ESVrD9mTIQ/T98A9jW+uP+++g02RO6a8Fdn0T7uUpFFf7lV27+6A3G+SvCqY6
-         I1z6u24giZCMNdd8QuZ/ZXzSx4V8NLRsDODVnDZlcIm2/JocZkAPmht4vOLF4KVPtPwF
-         jR3ul1WlGD+67LmFRgsQ400ILhHLvXZSfHQZazst8mEFESUm43dubZ4TY4LEGvIA0DoG
-         3EgA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0FGDY1Ul8WH4+zdGQYnzxOnq7syGBo3owMy5xHJjjpDx4/zpco1bYWuhVc4gl/lKPk9uXR+9Qkznxwio=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvHgIBaL38DIer66w/LbIPn5Pk1V1U33e+p1fG8qBkhzUUHe1M
-	O43nxlc16VwtEUwoizpbmG4tU3UzsQ1BrVm1OSwQGGbdF131zwTazDlma8LVGQ==
-X-Gm-Gg: ASbGncvNPF93SMESvVsAaCT4MSNaMnQLT4l5IeWKHIRnRvbDSx4AeZvqe7XlFmbB1Ub
-	w8whf3uitoehHAS4ikQZQ14XO+P1RtTjzoz+iRR/jTftQHc+f4kcRcd03M6hB4hs74xfff/Z6gw
-	4to53tIbLdhyxSxd8dsU7HlgBm17Bc1IpdFeTHcqaZsOtfb7c6qqqOshgi+JSQNGrBf3zgSEgDq
-	HxxRQhZt1lszOsCYg/BBhHaB8oyfROrybf7YdfMXQC6txYvpZPWbXiJ3H59n+gjjKYE6HcEvcaE
-	H2VczhQjd1+OoflvxJrLQz+OS6If1Ap5E54vcz9qtsQbj7MrpKRcDfBYJQ==
-X-Google-Smtp-Source: AGHT+IFEGaNvReG5vJZPY7iYHQObTDw/0zJqyBDYrLORPticbg6pyTqk9VcPWTbvbKqoh+zEKTKFpg==
-X-Received: by 2002:a17:907:7fa6:b0:ab6:b848:2ab with SMTP id a640c23a62f3a-ab6cfcdf2a3mr922586166b.16.1738312380051;
-        Fri, 31 Jan 2025 00:33:00 -0800 (PST)
-Received: from google.com (201.31.90.34.bc.googleusercontent.com. [34.90.31.201])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a5635bsm253140566b.164.2025.01.31.00.32.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 00:32:59 -0800 (PST)
-Date: Fri, 31 Jan 2025 08:32:55 +0000
-From: Matt Bobrowski <mattbobrowski@google.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Song Liu <song@kernel.org>, bpf@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org, kernel-team@meta.com,
-	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
-	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
-	jack@suse.cz, kpsingh@kernel.org, liamwisehart@meta.com,
-	shankaran@meta.com
-Subject: Re: [PATCH v11 bpf-next 1/7] fs/xattr: bpf: Introduce security.bpf.
- xattr name prefix
-Message-ID: <Z5yKtyJN3xLQRUNH@google.com>
-References: <20250129205957.2457655-1-song@kernel.org>
- <20250129205957.2457655-2-song@kernel.org>
- <Z5tbH13qK6rLJVUI@google.com>
- <20250130-erklimmen-erstversorgung-93daf77c9dc4@brauner>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z1/8PE5n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 530C6C4CED1;
+	Fri, 31 Jan 2025 08:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738312449;
+	bh=8zc6yBsAaJwfFYLXrwfQvFexqnj+mY5XmiFIpp8Hebw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Z1/8PE5nHVhItfgy2FsiZzSUx6yyyu4UXNRWRDcSjluPCMk9G/nDxzTbE5xeFNUkq
+	 hjVgsE23h34LD77rjkUgLFI4wabgYN9jzTBA/HdVtrqrGuKWh5L0hw9Urxsk1eDyij
+	 +1dT0Fb+35gQ69faNmzvmb0O+REkK/79MzSmZJHoUU92uTpTDn9rGt3UU6/HVEs7rO
+	 qdqhNg9vHeneVNaYHdPjd0VUETOErDwJWfYx8GBW+HFAHehHZbNc7NaD7DF81qhv5p
+	 mDxWTzXpO3XgooYl1hTopR7HAg/HxQpj+4wkC0IlomVaaMF2GA0CdkeFKQz/qOYoST
+	 kPfdbzTU6+JOA==
+Message-ID: <c32d8455-1bf6-44de-acf8-34fe00ae2868@kernel.org>
+Date: Fri, 31 Jan 2025 09:34:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130-erklimmen-erstversorgung-93daf77c9dc4@brauner>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/7] hwrng: rockchip: add support for rk3588's standalone
+ TRNG
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Olivia Mackall <olivia@selenic.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Daniel Golle <daniel@makrotopia.org>,
+ Aurelien Jarno <aurelien@aurel32.net>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org, Lin Jinhan <troy.lin@rock-chips.com>
+References: <20250130-rk3588-trng-submission-v1-0-97ff76568e49@collabora.com>
+ <20250130-rk3588-trng-submission-v1-5-97ff76568e49@collabora.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250130-rk3588-trng-submission-v1-5-97ff76568e49@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 30, 2025 at 04:20:04PM +0100, Christian Brauner wrote:
-> On Thu, Jan 30, 2025 at 10:57:35AM +0000, Matt Bobrowski wrote:
-> > On Wed, Jan 29, 2025 at 12:59:51PM -0800, Song Liu wrote:
-> > > Introduct new xattr name prefix security.bpf., and enable reading these
-> > > xattrs from bpf kfuncs bpf_get_[file|dentry]_xattr().
-> > > 
-> > > As we are on it, correct the comments for return value of
-> > > bpf_get_[file|dentry]_xattr(), i.e. return length the xattr value on
-> > > success.
-> > 
-> > Reviewed-by: Matt Bobrowski <mattbobrowski@google.com>
-> > 
-> > > Signed-off-by: Song Liu <song@kernel.org>
-> > > Acked-by: Christian Brauner <brauner@kernel.org>
-> > > Reviewed-by: Jan Kara <jack@suse.cz>
-> > > ---
-> > >  fs/bpf_fs_kfuncs.c         | 19 ++++++++++++++-----
-> > >  include/uapi/linux/xattr.h |  4 ++++
-> > >  2 files changed, 18 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/fs/bpf_fs_kfuncs.c b/fs/bpf_fs_kfuncs.c
-> > > index 3fe9f59ef867..8a65184c8c2c 100644
-> > > --- a/fs/bpf_fs_kfuncs.c
-> > > +++ b/fs/bpf_fs_kfuncs.c
-> > > @@ -93,6 +93,11 @@ __bpf_kfunc int bpf_path_d_path(struct path *path, char *buf, size_t buf__sz)
-> > >  	return len;
-> > >  }
-> > >  
-> > > +static bool match_security_bpf_prefix(const char *name__str)
-> > > +{
-> > > +	return !strncmp(name__str, XATTR_NAME_BPF_LSM, XATTR_NAME_BPF_LSM_LEN);
-> > > +}
-> > 
-> > I think this can also just be match_xattr_prefix(const char
-> > *name__str, const char *prefix, size_t len) such that we can do the
-> > same checks for aribitrary xattr prefixes i.e. XATTR_USER_PREFIX,
-> > XATTR_NAME_BPF_LSM.
-> > 
-> > >  /**
-> > >   * bpf_get_dentry_xattr - get xattr of a dentry
-> > >   * @dentry: dentry to get xattr from
-> > > @@ -101,9 +106,10 @@ __bpf_kfunc int bpf_path_d_path(struct path *path, char *buf, size_t buf__sz)
-> > >   *
-> > >   * Get xattr *name__str* of *dentry* and store the output in *value_ptr*.
-> > >   *
-> > > - * For security reasons, only *name__str* with prefix "user." is allowed.
-> > > + * For security reasons, only *name__str* with prefix "user." or
-> >       	  	   	    	 	     	  ^ prefixes
-> > 						  
-> > > + * "security.bpf." is allowed.
-> >                       ^ are
-> > 
-> > Out of curiosity, what is the security reasoning here? This isn't
-> > obvious to me, and I'd like to understand this better. Is it simply
-> > frowned upon to read arbitrary xattr values from the context of a BPF
-> > LSM program, or has it got something to do with the backing xattr
-> > handler that ends up being called once we step into __vfs_getxattr()
-> > and such?  Also, just so that it's clear, I don't have anything
-> > against this allow listing approach either, I just genuinely don't
-> > understand the security implications.
-> 
-> I've explained this at lenghts in multiple threads. The gist is various
-> xattrs require you to have access to properties that are carried by
-> objects you don't have access to (e.g., the mount) or can't guarantee
-> that you're in the correct context and interpreting those xattrs without
-> this information is either meaningless or actively wrong.
+On 30/01/2025 17:31, Nicolas Frattaroli wrote:
+> +MODULE_DEVICE_TABLE(of, rk_rng_dt_match);
+> +
+>  static int rk_rng_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> +	const struct of_device_id *match;
+>  	struct reset_control *rst;
+>  	struct rk_rng *rk_rng;
+>  	int ret;
+> @@ -139,6 +333,8 @@ static int rk_rng_probe(struct platform_device *pdev)
+>  	if (!rk_rng)
+>  		return -ENOMEM;
+>  
+> +	match = of_match_node(rk_rng_dt_match, dev->of_node);
+> +	rk_rng->soc_data = (struct rk_rng_soc_data *)match->data;
 
-Oh, right, I see. Thank you Christian!
+Don't open code getting match data.
+
+>  	rk_rng->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(rk_rng->base))
+>  		return PTR_ERR(rk_rng->base);
+> @@ -148,24 +344,30 @@ static int rk_rng_probe(struct platform_device *pdev)
+>  		return dev_err_probe(dev, rk_rng->clk_num,
+>  				     "Failed to get clks property\n");
+>  
+> -	rst = devm_reset_control_array_get_exclusive(dev);
+> -	if (IS_ERR(rst))
+> -		return dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset property\n");
+> +	if (rk_rng->soc_data->reset_optional)
+> +		rst = devm_reset_control_array_get_optional_exclusive(dev);
+> +	else
+> +		rst = devm_reset_control_array_get_exclusive(dev);
+> +
+> +	if (rst) {
+> +		if (IS_ERR(rst))
+> +			return dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset property\n");
+>  
+> -	reset_control_assert(rst);
+> -	udelay(2);
+> -	reset_control_deassert(rst);
+> +		reset_control_assert(rst);
+> +		udelay(2);
+> +		reset_control_deassert(rst);
+> +	}
+>  
+>  	platform_set_drvdata(pdev, rk_rng);
+>  
+>  	rk_rng->rng.name = dev_driver_string(dev);
+>  	if (!IS_ENABLED(CONFIG_PM)) {
+> -		rk_rng->rng.init = rk_rng_init;
+> -		rk_rng->rng.cleanup = rk_rng_cleanup;
+> +		rk_rng->rng.init = rk_rng->soc_data->rk_rng_init;
+> +		rk_rng->rng.cleanup = rk_rng->soc_data->rk_rng_cleanup;
+>  	}
+> -	rk_rng->rng.read = rk_rng_read;
+> +	rk_rng->rng.read = rk_rng->soc_data->rk_rng_read;
+>  	rk_rng->dev = dev;
+> -	rk_rng->rng.quality = 900;
+> +	rk_rng->rng.quality = rk_rng->soc_data->quality;
+>  
+>  	pm_runtime_set_autosuspend_delay(dev, RK_RNG_AUTOSUSPEND_DELAY);
+>  	pm_runtime_use_autosuspend(dev);
+> @@ -184,7 +386,7 @@ static int __maybe_unused rk_rng_runtime_suspend(struct device *dev)
+>  {
+>  	struct rk_rng *rk_rng = dev_get_drvdata(dev);
+>  
+> -	rk_rng_cleanup(&rk_rng->rng);
+> +	rk_rng->soc_data->rk_rng_cleanup(&rk_rng->rng);
+>  
+>  	return 0;
+>  }
+> @@ -193,7 +395,7 @@ static int __maybe_unused rk_rng_runtime_resume(struct device *dev)
+>  {
+>  	struct rk_rng *rk_rng = dev_get_drvdata(dev);
+>  
+> -	return rk_rng_init(&rk_rng->rng);
+> +	return rk_rng->soc_data->rk_rng_init(&rk_rng->rng);
+>  }
+>  
+>  static const struct dev_pm_ops rk_rng_pm_ops = {
+> @@ -203,13 +405,6 @@ static const struct dev_pm_ops rk_rng_pm_ops = {
+>  				pm_runtime_force_resume)
+>  };
+>  
+> -static const struct of_device_id rk_rng_dt_match[] = {
+> -	{ .compatible = "rockchip,rk3568-rng", },
+> -	{ /* sentinel */ },
+> -};
+
+
+No, don't move it. Not necessary and not expected to be in other place.
+
+Best regards,
+Krzysztof
