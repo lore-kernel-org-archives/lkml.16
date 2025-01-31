@@ -1,144 +1,104 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6C7153838
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 21:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A996187876
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 21:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738359082; cv=none; b=G4kxLgZGSxvTaBdJwz8tAGCB9GbA3OiMtHLXBSneWFkweJkPdlWGX/XIMzAmf3jpTsSFqC5y4MecJpcL9WPcbTOgtk09Ci2Akvst0a3XMjUvOKrndFZ3aP9EZ4+bxuf2DsrqJN72QoL7UYKbBnZ5YvDl6guvjlQFrAGhC8Uitqw=
+	t=1738359084; cv=none; b=D86AgLZCaqjXOvyLqwsZbwqLtOtEifC/qYCPZo5aM4y6++WnL7Th2k5Nh4iT+lCDuKrFlNM3ok+UIvPz1xyh16QgJ5qMU7maI/oi485uN71PuoGy2r5F5V93ruYBNvbXpX3BHs+glcNkI+vdTN7EbkKV5VUFu7xIkc3qm0SJiuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738359082; c=relaxed/simple;
-	bh=CiooTMJp/iOTrvueIOCywb9gxlzNvjuRh+Q83kvM69I=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=PThkss8f+mhGxJ5TRZbRW1VF8LrZJXE+yFwuZLSmvQo4AVkpsTfyBPhPfo3OOjx4iAGJYiV7N7daT9B1yUpJm37okdgOdTkB2C4rA/p+0pWcgKs7fGpkDAkf2rQmp0gXKMf1ItweqvWvoTjDmNKCzlbz59VkA5nh1936s1w4b/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bs9i6C/a; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738359084; c=relaxed/simple;
+	bh=ftu7pmvGV2qr+jK4JxkhWrw+cRjCunxZf5kwDUQrlbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HoUD0AxhJZkI1DOAGN28mxYun5q0ftsa5xp0X+zuLyQqoivpRZgjd4ZfAyltrfTOckdsMCJb488VYbvCLAxZEC0woUEZiNc6SO7nRARKJ02Xget8NM0Yvogah260AwZ4lPIumo5Fy6OV9NeTFI9jDc7WVP/OvT0gaGm5P9Fu6oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=sZjwYpSj; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bs9i6C/a"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5d3f65844deso4266403a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:31:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="sZjwYpSj"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3eb972dd8e5so1305207b6e.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:31:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738359079; x=1738963879; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8sMFgyKuIAH8ly7F91V8rApj+AxzQFEz+0kCLCxW1So=;
-        b=Bs9i6C/aEJuGSXZYC1FjN++THoeTsFggel4S+HqEp4DzHsp9Qbue5lRpvQPZpzjkuM
-         DFqK4IpC5v9fYBAQvSO6ohAL5WkNBXJB1QCOHjTtJvkIPE7WA/Mng7I3BBkRv7rDVAtb
-         sCB+vmx/rG8kyGJLRrAWwNYx3ElDPxPtUEzNlhoWy7eN0BMcrLkRo49Qa58HExSJqlkd
-         qTKItmHBRT0Shd1Lp2mgIvGCdCCArSDaoMJICBznFPBmp9vzi9z+R+ShrZPxJDqxkGpW
-         ogZQd++MVz5P3u5U0LM1SB1i8Wz41RRsNsPbTjvCfOoXDGrnwiW/851Wasomwf43OyGu
-         ZVug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738359079; x=1738963879;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738359081; x=1738963881; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8sMFgyKuIAH8ly7F91V8rApj+AxzQFEz+0kCLCxW1So=;
-        b=vdp5Fwjp2qhUWoRNSX1NrdF80iPdM9BdVoW/gE15R6+5KHG4+ImzvYgLc3Jm424Vkg
-         P6ENhUfIt0cMTSfrLkPoc2JHQRCcBh8pFbNUJ5UExcxcJf2v8aMkMn2ZMiO4sewHJRUU
-         Anj4nNdzuoH12gwpYtsz9YNUi2ksRWnxXMdraGeSzdX2dbW2QFVFDiR67dXfQMZXIihr
-         sPIaC7V/1FX9yp438FKDFN0CjpsgUvz72iptM8UJVR82qZNPiDo32Ni1vHilF2NyOu5m
-         QuCtlzMv++HWM+4SoYMN9Tjy9rg3k/10qCnyaIpBjWigXlxm36MN23ZHUxrZ6Q76Anov
-         2Zmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpiVxQ8zA3fy1A10f+r+Nqg2TIaxJArlmO6kdQ2YwT6ixUPXzyovxhke8H4/L+8TCtqU0gdUYJCSiIecU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjXXPtDBweIlFQ08C74h5dSVOfV1GhKq3yHKtzd+ZejA4uKWSP
-	4l2Vz+g3xyzcQaAeBCu54IjqD+dND0riI2dW8323gQEfeGSl/0ZsGZqJrEGVL/SUz15r0hki+hl
-	G4Nl8CoMpS9U/5O3GafltqwPI5VY=
-X-Gm-Gg: ASbGncs4leALikQ1V0u57K8BkVWi2Z5Xo8jB0HKR3rg7As4Wfd6zm06jd5rTAP3kNqI
-	u13HDTSCTgpLBFIw0UVRK/0xOaLXS4KvrJTxfnRzXmaievpqXTICl7dEBEMH4hj8CHYPUSwA=
-X-Google-Smtp-Source: AGHT+IFCxjq7JVele5N0WAD/aWKOorY7Nl8XoPCWOwHdyUa4tKW4l5lQYN8VH9vBW8jEWSjHSdhpLpI8ipXmD1wj+v0=
-X-Received: by 2002:a17:907:9452:b0:ab6:fe30:f495 with SMTP id
- a640c23a62f3a-ab6fe31018emr545918366b.35.1738359079237; Fri, 31 Jan 2025
- 13:31:19 -0800 (PST)
+        bh=jDvnP9HNi8abDAufTXVzuVdU4XUJ2r6pu6gJGv0aC7A=;
+        b=sZjwYpSj624x16hqUYRvl0jZxfCo+u3ddY+Jp6rOrkw8hilEtnKKaJGtYakV4g4Ma6
+         jSKYcVBB1dNMUYAnE9o4JXUGSdbLh+hWNTAnaWEGlRDHxBHdSJpyjAfCYj3d4vJT89gS
+         lxypHg3HkRll+qtM4E7fUmoCYg0+8YFoA7ZVAZR8LvPvrMYrsUX80wHhdZXIz8HP2rw/
+         oPxAwlOE1nVpSALCPbW4wJc7bGAK8lPSVnhAQLpvNX5WH8BE8/LsQIvK/BiZeJX0azys
+         K2UV7N06Fn7faUutooPJu/QGzfYScbWke0nXOXdFZy8l6bU7tuZM0Ela7AUZCU9mtahk
+         r6sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738359081; x=1738963881;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jDvnP9HNi8abDAufTXVzuVdU4XUJ2r6pu6gJGv0aC7A=;
+        b=r+FFaUG3AnnEuJLVVMgrk3FaI0U9eF3Ywui1zMqeWiVT/WlhNbVP7L8j1DX/4A+K+B
+         oy8ZmwVQ0NmBUXy4X1VlrJvCredwFoMr00V0BseKEwoRgDZGyoh4XAD3cDJ6IEYD09Cr
+         ENRv2CpkyqpNg35oCq6EQCqCbTbTE6L+LO4xnhxG+gIsQW4A17st6VL8ew4VuJPHhqTO
+         oWso66a2/F27wjs5DOeP6YfTBRl1bPgAUVq07kUHOoQFdRjoTgKk+G2IEWaXnyJamF87
+         nCTGO3DQ80dxIQ+TCjMQEbp4wKiKrVU3QgA01/C7GEBqzV0vvWKi6OcgMk4ciq4spNy+
+         G3zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXpJ1YPqE2tdLAE09xd0E3CdKV1EbEjJqfAKX32PWofKyznQzlbM0KIE3gqv0X0u0ICd/gi01IC7SVDk1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyImQSrTtiN8jADGb/Hpk82JL0fz8zv4pZBj4SZdLyDR67rxMs1
+	tCRYKai2BE/d7s2q0KEMZVJboYerU1/wI9z2tcbsgn2dxR6eDgZzhMCT9ZVLz/Z2ytem5htq2JM
+	B
+X-Gm-Gg: ASbGncuESUeUTkWn2DnCg6TNruGxpRlI91X5nDmsvo+Ju1zBYY1dT3Qy8YjCpOsmVtA
+	mzc0Su+XKAmh84XUjR15AmyegRLlXjV0WQ/aXyNnuIfRf/f+XrgAW1x62nov562dUx/+/WK5JXQ
+	SNp3FBbCmyxcpXx5y8KZYvYcwv+EZrJshEunywB5+lk6eVOOY2Xb5ceyMIh9FfAiI+Fa1HWd8Al
+	voBC93c7S+5NSMKztKbJrHyQMD1O0OFbbtdH7owrQ5tu9EBdnu3zapxZEVhpidkXYsDcQNnRed+
+	V7JyBIypKspGbouboPb+x3UnEOxnHLb0R6ww9CDQpzvZ1MkXBT0Q
+X-Google-Smtp-Source: AGHT+IHD853czjvUWSx2EKQmtEracV4UoohrB2SBmjKc282qQiCd0uVnsaL5aEELB96obJY4/Zxf8A==
+X-Received: by 2002:a05:6808:2214:b0:3eb:3bcc:a9e7 with SMTP id 5614622812f47-3f323b74ce1mr9851115b6e.34.1738359081365;
+        Fri, 31 Jan 2025 13:31:21 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc104e29b7sm1073975eaf.17.2025.01.31.13.31.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 13:31:20 -0800 (PST)
+Message-ID: <2f604280-f4dd-494f-9f54-83e8f613b64f@baylibre.com>
+Date: Fri, 31 Jan 2025 15:31:18 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dave Airlie <airlied@gmail.com>
-Date: Sat, 1 Feb 2025 07:31:07 +1000
-X-Gm-Features: AWEUYZmar993kBa1Sp93Oc8tcUnpCbu80RjXzUnUNE47h24wGe57ZiO58684Qes
-Message-ID: <CAPM=9twWB85+Oz8ZSoAej1y4Otb6JesYm7_DE0XAfEU6CJbZxQ@mail.gmail.com>
-Subject: [git pull] drm fixes for 6.14-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>, Sima Vetter <sima@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 08/10] iio: adc: ad7606: change r/w_register signature
+To: Angelo Dureghello <adureghello@baylibre.com>,
+ Michael Hennerich <michael.hennerich@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Alexandru Ardelean <aardelean@baylibre.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Guillaume Stols <gstols@baylibre.com>
+References: <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-0-c3aec77c0ab7@baylibre.com>
+ <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-8-c3aec77c0ab7@baylibre.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-8-c3aec77c0ab7@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+On 1/29/25 5:03 AM, Angelo Dureghello wrote:
+> From: Guillaume Stols <gstols@baylibre.com>
+> 
+> The register read/write with IIO backend will require to claim the
+> direct mode, and doing so requires passing the corresponding iio_dev
+> structure.
+> So we need to modify the function signature to pass the iio_dev
+> structure.
+> 
+> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+> ---
+I don't think calling iio_device_claim_direct_mode() inside there reg_read/write
+functions is the right place to do that. It should be done at a higher level (in
+case we need to combine multiple reads/writes in an atomic operation). So I
+think we should drop this patch.
 
-Back from travel, thanks to Sima for taking care of things, only one
-MR left for me to finish the merge window, this is only AMD fixes.
-
-Dave.
-
-drm-next-2025-02-01:
-drm fixes for 6.14-rc1
-
-amdgpu:
-- GC 12 fix
-- Aldebaran fix
-- DCN 3.5 fix
-- Freesync fix
-
-amdkfd:
-- Per queue reset fix
-- MES fix
-The following changes since commit 64179a1416e1420a34226ab3beb5f84710953d16:
-
-  Merge tag 'drm-misc-next-fixes-2025-01-24' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-next
-(2025-01-24 17:06:06 +0100)
-
-are available in the Git repository at:
-
-  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-next-2025-02-01
-
-for you to fetch changes up to 8dcb26b493d3bab90851f93ae1c127af5cb2dbb5:
-
-  Merge tag 'amd-drm-fixes-6.14-2025-01-29' of
-https://gitlab.freedesktop.org/agd5f/linux into drm-next (2025-01-31
-09:41:25 +1000)
-
-----------------------------------------------------------------
-drm fixes for 6.14-rc1
-
-amdgpu:
-- GC 12 fix
-- Aldebaran fix
-- DCN 3.5 fix
-- Freesync fix
-
-amdkfd:
-- Per queue reset fix
-- MES fix
-
-----------------------------------------------------------------
-Dave Airlie (1):
-      Merge tag 'amd-drm-fixes-6.14-2025-01-29' of
-https://gitlab.freedesktop.org/agd5f/linux into drm-next
-
-Jay Cornwall (1):
-      drm/amdkfd: Block per-queue reset when halt_if_hws_hang=1
-
-Kenneth Feng (1):
-      drm/amd/amdgpu: change the config of cgcg on gfx12
-
-Lijo Lazar (1):
-      drm/amd/pm: Mark MM activity as unsupported
-
-Melissa Wen (1):
-      drm/amd/display: restore invalid MSA timing check for freesync
-
-Prike Liang (1):
-      drm/amdkfd: only flush the validate MES contex
-
-loanchen (1):
-      drm/amd/display: Correct register address in dcn35
-
- drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c                       | 11 -----------
- drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c        |  4 ++--
- drivers/gpu/drm/amd/amdkfd/kfd_process_queue_manager.c       |  7 +++++--
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c            | 12 ++++++++----
- drivers/gpu/drm/amd/display/dc/clk_mgr/dcn35/dcn35_clk_mgr.c |  2 +-
- drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c           |  1 -
- 6 files changed, 16 insertions(+), 21 deletions(-)
