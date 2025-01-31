@@ -1,59 +1,58 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118B2A935;
-	Fri, 31 Jan 2025 17:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9811CD215;
+	Fri, 31 Jan 2025 17:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738344939; cv=none; b=Ayl/hOG9gu5jTPEKk5UZm4HNYsRVaf9GE5o9kvqgqfZ0LTYXKCvIc7WxHzocDMvXY2AFkCiRgc37oLsTy+C9VExdmqiwfiycmlqKabe5iyy62Dx1UlMQJDDE0S6XDbewzWJZCr0DA++oDw7Wv2ijrfnB9pPv51HCcaxu+CuN4k4=
+	t=1738344950; cv=none; b=klcrrabvm3Hx92SZ7AxvXV6s2TtotXvM8I0XXr+dN4NEmSiRgKwfIJTavwNm/KuczgJFP9p03w9AnYvk+ggztc8vHpwrp7DRG5jfN+al8iMzPmzZMu/3yBP3S5y4dr8GBTjKFtwcQ0xbCcnxmyVv3TFZ7YyQeYpHexHHM8yS6iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738344939; c=relaxed/simple;
-	bh=rW/B4c2sktY5pFvCmp9zGsQDBPR2h/vT8lB1yr2iSH4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=spO0NM+DwU4S4xlxfwhRmcyBRk2umkoMkrbGOWPsIgs5Y6CMACDzetDyPktCy8Lo+wU7uv1+GPEnq67vaNr3zQSZDJPgToJvHaPiyT3x0GvKE/wocq8BeWUCZP1BlH54miyjvtpqbT1qPfuzErUyzP6JcOBpwa0Ey3hZ0iZRvXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wq68nPlM; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738344950; c=relaxed/simple;
+	bh=2Fsuwa5QOlgJIafMqhYpIuJVbNq69kCZGsHiteVNHmc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d9BxcS7plKTzRuBHYPDXaKcGtMtU5wFagi3hE2+VlGx1IrdlRFlAdcQCCX7L+xY5UVvR68wTcfjXWkXuqrJ8XhFbVcs8Jww5rS9FGtisl5dpcrOg+bNBwBjLC0XZIrKwAlg0zYcIdGFja7eptTtuFWvd4NPIHz9acjd96zlQ+K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lITZKn+W; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wq68nPlM"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 50VHZFQY2570155
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 11:35:15 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738344916;
-	bh=Xjkl3LwHhuNZADTBKn5p4bEX9MlgLUjUqR1mFpJOXTQ=;
-	h=From:To:CC:Subject:Date;
-	b=wq68nPlM4i31ObmHT4NGapHViMt/hhLqArlIWfDGZVhsl0/uAI4m1nHJqUO53284I
-	 LijKQ6i0tcrCgnoKmp/BvhZGEuq32dY1+c9QSp09p7V94i7S8HOdJ6Nb+tFEQ/74ke
-	 Hkc0l0NSPjFR8FI2Wlz0s/di2NyYXYyjjTRpUqRI=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 50VHZFjp028756
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 31 Jan 2025 11:35:15 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 31
- Jan 2025 11:35:15 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 31 Jan 2025 11:35:15 -0600
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 50VHZFtS070396;
-	Fri, 31 Jan 2025 11:35:15 -0600
-From: Nishanth Menon <nm@ti.com>
-To: Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, Vignesh Raghavendra
-	<vigneshr@ti.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Tero Kristo <kristo@kernel.org>, Nishanth Menon <nm@ti.com>
-Subject: [PATCH] arm64: dts: ti: k3-am625-beagleplay: Reserve 128MiB of global CMA
-Date: Fri, 31 Jan 2025 11:35:08 -0600
-Message-ID: <20250131173508.1338842-1-nm@ti.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lITZKn+W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738344949; x=1769880949;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2Fsuwa5QOlgJIafMqhYpIuJVbNq69kCZGsHiteVNHmc=;
+  b=lITZKn+WQS4t336CbmNscNH7K2C6/2UjTnNCQpoOnSFodMI37jKcCVMu
+   X377QxkJqsJJm6kK+FQRLu/ABK3j4Z4i0tSygBbeO7SH37aPD30ZFFOjE
+   UZekjZMyKxn14pi2CU9Alie2VXomvgp2aruTxdZ1aokkJTujOp3SLvz1s
+   N8z3tUCif6rr2U7qdobAaAb1YkQGTlXGxLDNoEskxwbGgXtKyVkT6s4Bj
+   I4CzTMRMflnM5XeZTt3nFGnmE3qbJ3E+8SqgeJTGd2iKehenAuIboIRs0
+   WI8v2fwNVMbFrizfbsY8xhG9FQ1smPA+q27XJSDMWfiMNpAm5dgtibU5b
+   A==;
+X-CSE-ConnectionGUID: u/x9QEHrTM2uwExKed+tFA==
+X-CSE-MsgGUID: NG0OySZDQLasFD6IP35jkA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="49912300"
+X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
+   d="scan'208";a="49912300"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 09:35:48 -0800
+X-CSE-ConnectionGUID: B0eAb5NoQ9myTitEHpdwIQ==
+X-CSE-MsgGUID: ENh2DwcHTjS1U0um05ZMEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="114675187"
+Received: from fyu1.sc.intel.com ([172.25.103.126])
+  by orviesa003.jf.intel.com with ESMTP; 31 Jan 2025 09:35:47 -0800
+From: Fenghua Yu <fenghua.yu@intel.com>
+To: "Vinod Koul" <vkoul@kernel.org>,
+	"Dave Jiang" <dave.jiang@intel.com>,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc: dmaengine@vger.kernel.org,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH] MAINTAINERS: Change maintainer for IDXD
+Date: Fri, 31 Jan 2025 09:35:51 -0800
+Message-Id: <20250131173551.3979408-1-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.37.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,41 +60,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-In the same lines of commit 9e8560556f9c ("arm64: dts: ti:
-k3-am62x-sk-common: Reserve 128MiB of global CMA"), reserve global CMA
-pool for:
+Due to job transition, I am stepping down as IDXD maintainer.
+Vinicius will take over maintainership responsibilities moving forward.
 
-LCD Display: 16MiB, HDMI (1080p): 16MiB, GPU: 16MiB, CSI2 1 1080p
-sensor: 32MiB with a 32MiB set for other peripherals and a 16MiB
-buffer.
-
-Signed-off-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-index 75c80290b12a..a5469f2712f0 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-@@ -65,6 +65,14 @@ ramoops: ramoops@9ca00000 {
- 			pmsg-size = <0x8000>;
- 		};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d1086e53a317..08ce00b6c1f3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11677,7 +11677,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git
+ F:	drivers/idle/intel_idle.c
  
-+		/* global cma region */
-+		linux,cma {
-+			compatible = "shared-dma-pool";
-+			reusable;
-+			size = <0x00 0x8000000>;
-+			linux,cma-default;
-+		};
-+
- 		secure_tfa_ddr: tfa@9e780000 {
- 			reg = <0x00 0x9e780000 0x00 0x80000>;
- 			no-map;
+ INTEL IDXD DRIVER
+-M:	Fenghua Yu <fenghua.yu@intel.com>
++M:	Vinicius Costa Gomes <vinicius.gomes@intel.com>
+ R:	Dave Jiang <dave.jiang@intel.com>
+ L:	dmaengine@vger.kernel.org
+ S:	Supported
 -- 
-2.47.0
+2.37.1
 
