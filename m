@@ -1,102 +1,110 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F8D1C07FA
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86CD1C07DB
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738323235; cv=none; b=tSpNEwd8svI7mAjog0Cfk/NEHaGnFI9HqbfBUxwB9tq0vMCxoFKWDh1bFnbJQXfXMbSchixPGgNvuHSVY8Kd+TaSlqK1r8tmI2dDex8gsAaljop+Tah/nP+4E+N+4z5YVfnzxbOL6naNw6coAoAkP/w3mUnDj48mmD4xYhU7yFs=
+	t=1738323397; cv=none; b=Hdq4Ob3C/PqdHC6ah5AETpC85yvEuyFYXd14Czl3UPG2GZOvWoTTLIG4ceSiymJ5iz8NgUfp/kLI8oQ3IWTQDS6hxZXUVCYuIVoS2EpyQeiTqJJHqI8AbMdC6vuz4gNjdn9Lc+VFy3aQjqQwhSEKBuhjg6ZyIxsBEzvopM9S2DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738323235; c=relaxed/simple;
-	bh=476EBTGgcI5xdYOaJ6LQa3tfmwSruyF9mYzvA+HovWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ch7ymDcpJ6ZtUs/+N9YwtDdS6ggF6zdm0SiQyXt3ByzNBNnG34P2p/9FPXxrqyLSyfTFnS5fwN8uyfg48basZGNXdyGlHw1U5OPxMcqo9x+j3izrEN3jIWNY3w2mIh3J1Alb+cUeLT1stoiOz6BQEHR8HhqfG2XGDJJs/vHQ95g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=Mx0r3qb1; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1738323397; c=relaxed/simple;
+	bh=BQ3PtgVwtTEF/h2ArOXr9xcoaHTj1o/+iFcvWi794Ns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=casbrD54lfH+2PtIYAenQ8D80gPO5HkKETW4i8/8+NkI/UeWrRuUpZN2TcXswbNzOTpvo4jZXPRvP767FRiHKQcTdaWfkvl/jfkRl9xRgJYPf9WvsG+vWBj4jL55y5OHJdgrEKd5fWFlQxR7S+wl32ojAy77pGeyECYraNCIBgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DsL/dhqq; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="Mx0r3qb1"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id E90FA24002D
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:33:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1738323225; bh=476EBTGgcI5xdYOaJ6LQa3tfmwSruyF9mYzvA+HovWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=Mx0r3qb1A3UOSK2f5X2f8aZ/cla4BLWe91L6NYbDILMpq/Q2MMYQSatiaKTOK+wET
-	 j7OgiaufoPmoH/+Snv9ZwjkcNdXlH/NMIaqvl1zBf2tED2piB0SqSTRwBf6x2OjfzR
-	 /dFI1h+CGXmNQZh+TmIOXgNZuPk7SxlnDbT0VnojHMx/TWeOE4Q09ia2UYHvcIYMPJ
-	 mz6v71TLSUzt1+7woDn4qz/AL6OuEDPhJTIIEhPEA6CGUqUToYtXKGHt6s5x0xzKTw
-	 pHrCPKbTzrTKW3Fv4istIHCrFGWwa/sBMobWilniKzQXYhR2cfFyRi2ydyGf8uvOpu
-	 JEXELxAsRJREw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Ykv0g42F0z9rxF;
-	Fri, 31 Jan 2025 12:33:39 +0100 (CET)
-Date: Fri, 31 Jan 2025 11:33:39 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Frank Li <Frank.li@nxp.com>
-Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
-	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 0/9] YAML conversion of several Freescale/PowerPC DT
- bindings
-Message-ID: <Z5y1E6TUclqzV2Rp@probook>
-References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
- <Z5qr1VkKSlyBE/E4@lizhi-Precision-Tower-5810>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DsL/dhqq"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3862a921123so1320300f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 03:36:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738323394; x=1738928194; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4SR7zm6aWfdAv+CDJx4pa3ob/BdGYMCgycDy3MUU93g=;
+        b=DsL/dhqqCDAA424wue1+zPwaUfBNK3xc2n8l8tKrRYqrEh9rmGt5OweXlxLHLQIgKJ
+         yjpQwS/vHx0Nk6wAdBIV2MeQa62YKPmKtBlz9jyKp2Www1Lrv7XJI6ZWzSHspILFQF0/
+         h50VAPU2SucABFVd6Qc/hVcVe3iFvY2gob++DJfQThcO0OdNBqBaPN+kTdPSyVJQy4w/
+         VlOnapYlRTt/1OfIn2vtaxlQoNN31toxdTRBcWkkYsjixNYol2xtAxff20oOSBESwJ9o
+         rvRk77njVonXJoNDk0KNvkIFabq3OGwlALIemc8iAyQnpcVYjvvXhkaPg4DHl9Lj/QYD
+         UTmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738323394; x=1738928194;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4SR7zm6aWfdAv+CDJx4pa3ob/BdGYMCgycDy3MUU93g=;
+        b=WOm3xwwyJhEf8JPwCXGsP7/JJw2TzWmUnywGijOsn/Ddjx87VffiA7nqoaIvp4GjFS
+         HMV+/PTFUaygjob39rPs7ACEEtzbA12Lm+CwRIS1is2gWOXFzbN4VzqdC50RpXqmduHz
+         dcDg0q6A/QeIl5Sy4P5plWFAGvgKQQ8WVSvb5Zu1pExaKaHw6AJWWggn0e8xUxNqMRZ8
+         dUKHVqGBvZt5KAZ4B/gNGR6Ypzbo+jEzBqp4bNgLRUzCxFXY+H8rmRdsUvlHB5UH6Wzk
+         ZfTtzsHW2dY0SXTGywlmKCZnkj8Y3kAoAEXNnj9/r+rnK02CkCosyCEijFjgI6LM2ydK
+         fTOg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMH/hHO+HmgbxNVZKgOfwp1+d7uJdpjqQXY6Fd++17AIT8D5Www+tuw7iioZbBL2xKSW6SK56YPUSsLU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4zzJoe2j66/JxUBxv+H2cXyoTAmuUa8hIY6hRU9s//HzT54nd
+	IfVgf8gpJ3nkaew/8SWryM7F7eYiiStpGPtuy2uhQzJpG26wCCeUHu1+9QryEvP5iyW/38dQ+Uc
+	3XGZobqrB8xhlHQSUaNQ5yHwjIZ6b9wh18Er8
+X-Gm-Gg: ASbGncvAlhn5p9R4egm7zeyXdzXXU+0GrMW0cqNhBOfd9oP8uV7Hl08VBEXYvVO4qaI
+	EkmWu2Fbr55+w5GKJ27BK5xqIsIaP4sDbXUJBkS3uQ4A/CtignQTbk0U3G/wSbX+ip/riuGF8vB
+	KdAK9m0caaRAF5+A/yJa3JO6edXjQ=
+X-Google-Smtp-Source: AGHT+IHRFoJje0XBfarURrX/WAI1h146aSMoYdSVlrd84+vg7Nzi1IUkjjsFrXIj4yq92bkDJ1yKtwkjwlbbL0fKzpo=
+X-Received: by 2002:a5d:59ae:0:b0:38c:3eca:b30 with SMTP id
+ ffacd0b85a97d-38c5194a7e3mr9796494f8f.14.1738323393804; Fri, 31 Jan 2025
+ 03:36:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z5qr1VkKSlyBE/E4@lizhi-Precision-Tower-5810>
+References: <20250130220529.665896-1-daniel.almeida@collabora.com>
+ <20250130220529.665896-4-daniel.almeida@collabora.com> <4518f68e-c6cb-4c97-957e-b8988e2b309b@sedlak.dev>
+In-Reply-To: <4518f68e-c6cb-4c97-957e-b8988e2b309b@sedlak.dev>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 31 Jan 2025 12:36:22 +0100
+X-Gm-Features: AWEUYZkpECKwFj2XE5cPc1r9KfvYcg1mII4V9PMbxHJsXk8rVDlWR9LASjOizDo
+Message-ID: <CAH5fLggUvcERo2+xwSkFcv-ds++4sy+Q5JoxCCjrx-R41KfDiA@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] rust: platform: allow ioremap of platform resources
+To: Daniel Sedlak <daniel@sedlak.dev>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.mco, 
+	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu, 
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, 
+	boris.brezillon@collabora.com, robh@kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 29, 2025 at 05:29:41PM -0500, Frank Li wrote:
-> On Sun, Jan 26, 2025 at 07:58:55PM +0100, J. Neuschäfer wrote:
-> > This is a spin-off of the series titled
-> > "powerpc: MPC83xx cleanup and LANCOM NWAPP2 board".
-> >
-> > During the development of that series, it became clear that many
-> > devicetree bindings for Freescale MPC8xxx platforms are still in the old
-> > plain-text format, or don't exist at all, and in any case don't mention
-> > all valid compatible strings.
-> >
-> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> 
-> Please cc imx@lists.linux.dev next time
-> 
-> Frank
+On Fri, Jan 31, 2025 at 11:19=E2=80=AFAM Daniel Sedlak <daniel@sedlak.dev> =
+wrote:
+>
+> Hi,
+>
+> On 1/30/25 11:05 PM, Daniel Almeida wrote:
+> > +
+> > +    /// Same as [`Self::ioremap_resource`] but with exclusive access t=
+o the underlying
+> > +    /// region.
+> > +    pub fn ioremap_resource_exclusive(
+> > +        &self,
+> > +        resource: &Resource,
+> > +    ) -> Result<Devres<ExclusiveIoMem<0>>> {
+> > +        self.ioremap_resource_exclusive_sized::<0>(resource)
+> > +    }
+> > +
+> > +    /// Returns the resource at `index`, if any.
+> > +    pub fn resource(&self, index: u32) -> Option<&Resource> {
+>
+> Maybe we could utilize the Index [1] trait to make the API more rust~ish?
+> Or at least name it `resource_by_index` to keep consistency with
+> `resource_by_name`?
+>
+> Link: https://doc.rust-lang.org/core/ops/trait.Index.html [1]
 
-Will do.
+Using the index trait would result in syntax like device[7] to get the
+resource at index 7. I think that would be unclear because it's not
+obvious that devices should behave like an array of resources.
 
-Best regards,
-J. Neuschäfer
+Alice
