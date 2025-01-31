@@ -1,111 +1,101 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8781B87E9
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 14:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DCC25761;
+	Fri, 31 Jan 2025 14:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738332789; cv=none; b=Rwpri/92sbpBctwebnL98zoigG3a/4tvH2EogtfpTWlK8SfM5bKzEI1M84fQj3rDkgf5iHk+8imqA3pK91VcX3QRPyjgvGBT3oLNCWWfjPS0ZXli3MTsCqJEdfi2eiK3Y8vspPM6RNLNXpqEL7Wja/6crMOLglMnyG9uy9OBs2U=
+	t=1738332969; cv=none; b=O4Fh3i6sbzB5UD/bZzBkBjrsA6gwQM4Uv0lL7rtzr9m3KZIIiusXnBD87nlEn/A/0YqxfSl5TtMXlzhXvuURNAP49Sqs+KjihwT3SW5rUL4T/faTHh9i+yZARgcIe+xyNgClKI6SbJ7Yn0PPYsEMlfzbV7qHRumbv+DNPNr+0bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738332789; c=relaxed/simple;
-	bh=XghCemtK9MiQOCdePWwNBlwwPmBOCo6aVrFS4lk1e0U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mxGKfZaNlbYPtnWkEdrVgprGzZFsAKfu1TzzHO7PLHKDWpjQogEA40G6GLqiENUf3QHzkUnflnQ0mWg1jKLN3TEjBfZztyvBPE8W4u8SV1c5P+UDLfvhbKJ68mMm1qQXuKmuEGxTpADpNKSwgx8IUWFX50DOn2RM74z9krMPg8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vd90o9a7; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738332969; c=relaxed/simple;
+	bh=MguGDaREPUyfjHAQR3E13sI9sAH/3W0uJMw+qIQdsso=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bsW6mFJqvuPwjfN2zvHR6OtAWcRysQKyoO05VS4oxqkSugPcLA/1f41nVRrh9kmLZ7tOxm2AqAbsxfxPSq1vHuiiOH++4nJdYdYBkx1UKJHUKL7Mtjay5Ko9Sb41OfZWBlVOEL14cBiSVxfUjeWVmGrbIb8qFMZDMEFrPaifR/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=cs/OOv4t; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vd90o9a7"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aaf57c2e0beso422685866b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 06:13:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738332786; x=1738937586; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lH11xScjXdBhwu0owdbMuzIidEXbN+tQBLtkebV8+ok=;
-        b=Vd90o9a7GNp2zWRouREwMbten1uXi/NBOCIu0hUvZocyWhtQKQM8JUnUKzZkqD21/0
-         s5nkuXT72yolChr/rfer0MDqQ6xUy5TRGgAP8iw5KYJUKrPsJwlQr95gF4Wmqw69hABv
-         cylHiuFNWJbuAAAlyPlu8+L7ZEhuRe0B/9CWLgDjPZRFjxPrqvZMnQNj0UNey7eoBQz0
-         qnYvUddiASNDJJIVi5B/ypGiQ/NzMhhP7KfAmEsbZ0lbuwDZErRXCfAUWRWN8C1CUOdL
-         gVAHqgy2cYcSwbGilAev9HNbadYvKBRqYUmAygcgJdy1drBdgCG9OeHsMeExy7u98bYT
-         T9FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738332786; x=1738937586;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lH11xScjXdBhwu0owdbMuzIidEXbN+tQBLtkebV8+ok=;
-        b=DSWHQcTEU6D5daA5fFKRCQAeYri1iKvDKw7qGy3Cy6jYx2Gh/Km5UoNiFISebY/Qxq
-         RjLfjCPLKG1ycEQkqlMd0KCblAcSDZ7tSHlveV7MDai5sT5DT8ZNQOhe3vUkGG9vLH1l
-         5lec7Tqwf5/KGP79D2ONjoYH6iozjfJWyKYz4jf1xpVo011uKVt+LVNSTjf9cfhPxh2L
-         m/ldKl0W+sJBfAYrrLMLdg8T6Y+24fow+oelhMECZhwOJuCouTAzM11FFeXbutlqzZSd
-         KGnmfO0bgfDyZJdoi94Pr46e8DUujyxyZiU7eczCUsmuaG+MFtJhssqNwEwMxQNGBned
-         6Ekg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJIDFEppBMK6eNR1X+9KO+9FA2Zy2jv6m1JcsA5n03CBxHfQHREB8FZBb0eYCznz8lw8cK1LzozhwEs2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNdi3aKitUiKMAOa/XNsw/4RxmFxY6/9DLY2Yc7aKEMdU4FY2s
-	3z9ItTmu9KsevnIT57CsPkM7JxZEkhRxECNzlErT0maKIqZUAqJV
-X-Gm-Gg: ASbGncuYtSbGa/M4XKHJUMUJAZmUAiAqxhDdo3G+jgiVUQg0Pmrqd184g6+ioqZYeIZ
-	RHFp6rU4C7dNodZJWFJcqYVIo53pc72Fsr6ymVoGUuuBcgIFurDNX6l0gapiu9dva8m7Ui2BbaD
-	oCjV11Kn6hblYSz109ApirL5TqdfZ4uyVx3p+eUPwqQFaS8Hq14S+dOsyQFfqa5/MteBDMIyf8B
-	Gcw5OGMpIIJ2nZ3YBlvtvLWjU7l1iH5Slbnh6NrQP+keKRJp5bhxdNkYxkXLAN+cU3EtoOKmHU=
-X-Google-Smtp-Source: AGHT+IGxnW7w2b2+d21bXlu4BddbT1XaKbwgCcXw8POUPSKV07AfU8TIbqWuTkwUJMe0YjlES78GBw==
-X-Received: by 2002:a17:907:9703:b0:aab:dc3e:1c84 with SMTP id a640c23a62f3a-ab6cfcbb88cmr979173866b.17.1738332786098;
-        Fri, 31 Jan 2025 06:13:06 -0800 (PST)
-Received: from 127.com ([2620:10d:c092:600::1:7071])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ffd63sm304535666b.94.2025.01.31.06.13.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 06:13:05 -0800 (PST)
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	linux-kernel@vger.kernel.org
-Cc: Christian Brauner <brauner@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	asml.silence@gmail.com
-Subject: [PATCH 1/1] lib/iov_iter: fix import_iovec_ubuf iovec management
-Date: Fri, 31 Jan 2025 14:13:15 +0000
-Message-ID: <378ae26923ffc20fd5e41b4360d673bf47b1775b.1738332461.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cs/OOv4t"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=6KGuy4EAuLHG4r0AND1uGQsHYqV6ULruAexpzmPJXj0=; b=cs/OOv4teDCakZI2PNJHMNZY5F
+	CSThPpDFV0qXz+D/8t74/eKu7sLH3JHb0lWt9GptCZKYkRblomsN3tBxQ2ezCc7QZ8ITuLvBv2ELB
+	Rl39HYkp2SOoBPdTfUr2haWDYhJDyPZfL0rzyIh88Kt3Jxl4qc24UOTI6XJ+lkFB5moQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tdrnz-009iDb-1e; Fri, 31 Jan 2025 15:15:35 +0100
+Date: Fri, 31 Jan 2025 15:15:35 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Steven Price <steven.price@arm.com>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Yanteng Si <si.yanteng@linux.dev>, Furong Xu <0x1207@gmail.com>,
+	Joao Pinto <Joao.Pinto@synopsys.com>, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v4 3/3] net: stmmac: Specify hardware capability
+ value when FIFO size isn't specified
+Message-ID: <fc08926d-b9af-428f-8811-4bfe08acc5b7@lunn.ch>
+References: <20250127013820.2941044-1-hayashi.kunihiko@socionext.com>
+ <20250127013820.2941044-4-hayashi.kunihiko@socionext.com>
+ <07af1102-0fa7-45ad-bcbc-aef0295ceb63@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <07af1102-0fa7-45ad-bcbc-aef0295ceb63@arm.com>
 
-import_iovec() says that it should always be fine to kfree the iovec
-returned in @iovp regardless of the error code. __import_iovec_ubuf()
-never reallocates it and thus should clear the pointer even in cases
-when copy_iovec_*() fail.
+On Fri, Jan 31, 2025 at 09:46:41AM +0000, Steven Price wrote:
+> On 27/01/2025 01:38, Kunihiko Hayashi wrote:
+> > When Tx/Rx FIFO size is not specified in advance, the driver checks if
+> > the value is zero and sets the hardware capability value in functions
+> > where that value is used.
+> > 
+> > Consolidate the check and settings into function stmmac_hw_init() and
+> > remove redundant other statements.
+> > 
+> > If FIFO size is zero and the hardware capability also doesn't have upper
+> > limit values, return with an error message.
+> 
+> This patch breaks my Firefly RK3288 board. It appears that all of the 
+> following are true:
+> 
+>  * priv->plat->rx_fifo_size == 0
+>  * priv->dma_cap.rx_fifo_size == 0
+>  * priv->plat->tx_fifo_size == 0
+>  * priv->dma_cap.tx_fifo_size == 0
+> 
+> Simply removing the "return -ENODEV" lines gets this platform working 
+> again (and AFAICT matches the behaviour before this patch was applied).
+> I'm not sure whether this points to another bug causing these to 
+> all be zero or if this is just an oversight. The below patch gets my 
+> board working:
 
-Cc: stable@vger.kernel.org
-Fixes: 3b2deb0e46da9 ("iov_iter: import single vector iovecs as ITER_UBUF")
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- lib/iov_iter.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thanks for the quick report of the problem.
 
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index 9ec806f989f25..65f550cb5081b 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -1428,6 +1428,8 @@ static ssize_t __import_iovec_ubuf(int type, const struct iovec __user *uvec,
- 	struct iovec *iov = *iovp;
- 	ssize_t ret;
- 
-+	*iovp = NULL;
-+
- 	if (compat)
- 		ret = copy_compat_iovec_from_user(iov, uvec, 1);
- 	else
-@@ -1438,7 +1440,6 @@ static ssize_t __import_iovec_ubuf(int type, const struct iovec __user *uvec,
- 	ret = import_ubuf(type, iov->iov_base, iov->iov_len, i);
- 	if (unlikely(ret))
- 		return ret;
--	*iovp = NULL;
- 	return i->count;
- }
- 
--- 
-2.47.1
+Your 'fix' basically just reverts the patch. Let first try to
+understand what is going on, and fix the patch. We can do a revert
+later if we cannot find a better solution.
 
+I'm guessing, but in your setup, i assume the value is never written
+to a register, hence 0 is O.K. e.g. dwmac1000_dma_operation_mode_rx(),
+the fifosz value is used to determine if flow control can be used, but
+is otherwise ignored.
+
+We should determine which versions of stmmac actually need values, and
+limit the test to those versions.
+
+	Andrew
