@@ -1,110 +1,142 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753001F37D6
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 19:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F02B1369BB;
+	Fri, 31 Jan 2025 19:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738351038; cv=none; b=pX0DI+K0IMyfxjOmhG9Z+BK20koVuxTDAVfCuh4jZCBAzyySdgfpkAEDql7A2S7Pf3Aiarms7k6R9QXpylqPS+zQsruE+PkqOggPngvMaaZFaVCiBU3CR0pt8gBQ/uEDEdbpJdRgjaHrlNGythZZdBh/2e3cnYrmHe3HgQi2Cjo=
+	t=1738351154; cv=none; b=i+FaMxlQD/xsAdYzcFbnvMTxseTb2nX2k7UFAy9pmIwPbtpQhTbA3PG+9ffxhV+1wc9EKU4G7Wpb7nYT65dWPQRXPrbkIeKlrdzr3kCLE5MQt3JLvjHDuMbNKXHoSxH0sQQrZVSeZuziuHiqwPGgESpw3atKRxEceIiJYGD1Kcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738351038; c=relaxed/simple;
-	bh=+INORLqOlyntJmAVonlWAUbrcuOfczPkBf4NEkg/74Q=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bb0zTQc4cpfnI98A4hSgE17oFlkSyOHwXiBpos5fcUIPD8YeDUXYQhL9xUsg7rZ+1aG5PVU7YBs9uQyB5H6Tbd7OEwCrmnJM+CaT8UJVRun5DV1BKVY6GsXWm9v3Cgn0X5tFdVeAbqpgQ5gCK0XL/UdaTIJtsx80UOH4jwb+ke8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VoNnT4D8; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738351154; c=relaxed/simple;
+	bh=kbdkLJKrHDJEBsMvYAxFY7nA3/6jNRXH50RRNyvn8GE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=acbt7KVB8/s/X2OtECvStttHxvrOFoUcFSEXxBrUfMRKIR0rp2SXUB6FSO/0fb4B9xNlbWkd4pOyWpQHHd2QBsX3hSju0/DSWfSw/6rrYmdET8QcagVawRb+d4GAu2TP8QOdxyZtt+VC1zu5T1rJTKn3fke3SsxFvhA+Z28+NFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Wnh90Mf6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VQ6tyt7c; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VoNnT4D8"
-Date: Fri, 31 Jan 2025 11:17:07 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738351033;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xb9vx+i3/j7E+ZJZlUO26diQjP2jWbKmw33LsH60EFQ=;
-	b=VoNnT4D8EQRl/F1SNHKZ8SgmJxynUcxK0Ct0DoCeNhjBywjd57zM8Svhx6d7YhJRDdUdHX
-	0TBntXMpcv/A3mmy7b3YsnKjgodSn5MyT1lVzCIiABVLNDlzNUAEF13NAurrghfQMvpjkY
-	pIVTAg3Hjo4Mo+1i+nrw7T5DNM3Ghio=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	SeongJae Park <sj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 4/4] mm/madvise: remove redundant mmap_lock
- operations from process_madvise()
-Message-ID: <porudk3upzmecss7afnve4gzmw2klwdlqfsyoqwa3j5jqritni@gwyql37fnbnw>
-References: <20250117013058.1843-1-sj@kernel.org>
- <20250117013058.1843-5-sj@kernel.org>
- <aeeac6f3-f828-4bee-966f-c8df41df30bc@lucifer.local>
- <20250131173132.uqjwrzj7e5vx2sbv@offworld>
- <7k2gs6xmx2q7la6kle5xpn2p2f6bccbiv5lrdowp5hnecxpijx@rzwxdhcl6mc2>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Wnh90Mf6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VQ6tyt7c"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 3A03711401CA;
+	Fri, 31 Jan 2025 14:19:10 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Fri, 31 Jan 2025 14:19:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738351150;
+	 x=1738437550; bh=d1Oq2awpWzl8pN+Yfslwu6iHpW3ylkSeTv0k6RL5fz0=; b=
+	Wnh90Mf6xrqZN+p2GBubtQNRzQcbytoMXOIMW1Mfu7FeyeQH6Iqhen/VpP75YqYw
+	Yq/WVmBrz2PSR7A7D0ZE62ASHERC+EokTtAn70SzlC55D6xQXfqD1yOcahSt3sPs
+	dZQrFN3G7J3ZPiC6JYCbKzk/eHJTfKl/80PlW+mxfpC729e/eQvGZLSFs0sgZmKv
+	JZY3/LUPpSQ352FTB6UbjbVnhu12kPQIThban2xpNiu/t3osijtkm/qalk2Sc93x
+	OfuFHV1fefX0ALB5wKu+cjmTk2nUHkTIl+fnqrr1I8pG3ygz6ByJDkZLi54fZTsB
+	4VzgYoZmYkgbxGG9r7hp4w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738351150; x=
+	1738437550; bh=d1Oq2awpWzl8pN+Yfslwu6iHpW3ylkSeTv0k6RL5fz0=; b=V
+	Q6tyt7cdxgnYAFWNma9c/opH0VWYsTY1Z29qSYxVHU+QMuoWAgghY5sJpxIePeJ9
+	dGG6/YNSP0l1hfnC9PvBBGxkZUAfd29O2La1sCDvk0+35fRznQ0jpPHtK7z+cP01
+	XSszqPt4oiYZIVLl7RWmOk1AGlUj7sp6lXrqQbYotmxoOCTRo1u894OBKOOsxWZo
+	qI8SxtyMjrFBbbdN/QPV4omuEDYxCZ4hDzYtvXVAz9ktm9jYwNWM3gFlCw/SgWsF
+	8M81vF7s/ICb96GDH6TsdtdotXYYJSd3QUHtWix2kT7smr5tg7Sm42Ha5z9xLaw2
+	7ak2ozirbtyApTJCPIH/Q==
+X-ME-Sender: <xms:LCKdZzmOX1dGpCeW8x-jxGiQIntAD3TCV5RT3-EsCnEp9EA2JNc22Q>
+    <xme:LCKdZ23g-N_lKSZCiLjQRE_io98db2Tzi0wcfEImiHiQ7znM3XX0ltmwCXiYYnn7k
+    PxyNre1sB3mudnvmUw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeliedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
+    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepvddv
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjrghmihgvrdgtuhhnlhhifhhfvg
+    esrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdr
+    uhhkpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoheprg
+    hlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopegsohhquhhnrdhf
+    vghnghesghhmrghilhdrtghomhdprhgtphhtthhopegthhhrihhsihdrshgthhhrvghflh
+    esghhmrghilhdrtghomhdprhgtphhtthhopehguhhpthgrrhhuugesghhmrghilhdrtgho
+    mhdprhgtphhtthhopehthhgvshhvvghnjeefsehgmhgrihhlrdgtohhmpdhrtghpthhtoh
+    eprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:LCKdZ5rUdVhmLgFDheLOQc3t0d4L_2yXqe9g4n1XXM2XkSnhYOhvhQ>
+    <xmx:LSKdZ7lNCVZ1AKw4MqbxQ80lkHuepbCD0kd7eFDKrwjwdnFqvujczQ>
+    <xmx:LSKdZx0Smk49vdDv953HH9k9yiaPnLIJvPaV27UhD_bpKV12uh0BJg>
+    <xmx:LSKdZ6tggj0tWGRu2VaTYxeE7j19sjEr6ZSkPdrSnw7AH0-9OAIB-w>
+    <xmx:LiKdZw_azkzA9v1-mkNsWM1OLyHLhA4xAqRX6wWlpqZQFXvcZtTu5lwJ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id D6F752220073; Fri, 31 Jan 2025 14:19:08 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7k2gs6xmx2q7la6kle5xpn2p2f6bccbiv5lrdowp5hnecxpijx@rzwxdhcl6mc2>
-X-Migadu-Flow: FLOW_OUT
+Date: Fri, 31 Jan 2025 20:18:37 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Christian Schrefl" <chrisi.schrefl@gmail.com>,
+ "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
+ "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Russell King" <linux@armlinux.org.uk>,
+ "Rudraksha Gupta" <guptarud@gmail.com>, "Ard Biesheuvel" <ardb@kernel.org>,
+ "Geert Stappers" <stappers@stappers.nl>, "Andrew Lunn" <andrew@lunn.ch>,
+ "Jamie Cunliffe" <Jamie.Cunliffe@arm.com>,
+ "Sven Van Asbroeck" <thesven73@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Message-Id: <45bc6648-5f3f-4d88-bbc3-3d5a0ff84386@app.fastmail.com>
+In-Reply-To: <f8b59f05-55b5-4208-8bdf-b4be8e93bc22@gmail.com>
+References: <20250123-rfl-arm32-v3-1-8f13623d42c5@gmail.com>
+ <a83b0149-7055-411b-ba86-d227919c7c32@app.fastmail.com>
+ <f8b59f05-55b5-4208-8bdf-b4be8e93bc22@gmail.com>
+Subject: Re: [PATCH v3] arm: rust: Enable Rust support for ARMv7
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 31, 2025 at 12:47:24PM -0500, Liam R. Howlett wrote:
-> * Davidlohr Bueso <dave@stgolabs.net> [250131 12:31]:
-> > On Fri, 31 Jan 2025, Lorenzo Stoakes wrote:
-> > 
-> > > On Thu, Jan 16, 2025 at 05:30:58PM -0800, SeongJae Park wrote:
-> > > > Optimize redundant mmap lock operations from process_madvise() by
-> > > > directly doing the mmap locking first, and then the remaining works for
-> > > > all ranges in the loop.
-> > > > 
-> > > > Signed-off-by: SeongJae Park <sj@kernel.org>
-> > > 
-> > > I wonder if this might increase lock contention because now all of the
-> > > vector operations will hold the relevant mm lock without releasing after
-> > > each operation?
-> > 
-> > That was exactly my concern. While afaict the numbers presented in v1
-> > are quite nice, this is ultimately a micro-benchmark, where no other
-> > unrelated threads are impacted by these new hold times.
-> 
-> Indeed, I was also concerned about this scenario.
-> 
-> But this method does have the added advantage of keeping the vma space
-> in the same state as it was expected during the initial call - although
-> the race does still exist on looking vs acting on the data.  This would
-> just remove the intermediate changes.
-> 
-> > 
-> > > Probably it's ok given limited size of iov, but maybe in future we'd want
-> > > to set a limit on the ranges before we drop/reacquire lock?
-> > 
-> > imo, this should best be done in the same patch/series. Maybe extend
-> > the benchmark to use IOV_MAX and find a sweet spot?
-> 
-> Are you worried this is over-engineering for a problem that may never be
-> an issue, or is there a particular usecase you have in mind?
-> 
-> It is probably worth investigating, and maybe a potential usecase would
-> help with the targeted sweet spot?
-> 
-> 
+On Fri, Jan 31, 2025, at 16:34, Christian Schrefl wrote:
+202397be76d8037b531b34dee16c7dfcfd0124ef..3375c91e698c024f95a85682f5a91d9815c355e5 
+>>> 100644
+>>> --- a/arch/arm/Kconfig
+>>> +++ b/arch/arm/Kconfig
+>>> @@ -130,6 +130,7 @@ config ARM
+>>>  	select MMU_GATHER_RCU_TABLE_FREE if SMP && ARM_LPAE
+>>>  	select HAVE_REGS_AND_STACK_ACCESS_API
+>>>  	select HAVE_RSEQ
+>>> +	select HAVE_RUST if CPU_LITTLE_ENDIAN && CPU_32v7
+>> 
+>> The ARMv7 dependency makes sense, but I think it needs
+>> be disabled on combined v6/v7 kernels, like (CPU_V7 && !CPU_V6 && !CPU_V6K).
+>
+> That might be correct, I don't know much about the build
+> system for the kernel. I've tried it and it still builds
+> with this change.
+>
+> Also it should probably be relatively easy to support 
+> armv6 as well.
 
-Lorenzo already explained that it is not an issue at the moment. I think
-this is good discussion to have as I think we will be expanding the
-limit from UIO_FASTIOV to higher value (maybe UIO_MAXIOV) soon in the
-followup. At the moment, my gut feeling is that batch size of regions
-given to the syscall will depend on the advise parameter. For example,
-For MADV_[NO]HUGEPAGE which is a simple flag [re]set, a single write
-lock and possible a single tree traversal will be better than multiple
-write lock/unlock operations even for large batch size. Anyways we will
-need some experimental data to show that.
+ARMv6K should be trivial to support, as it contains the same
+set of barriers and atomics as ARMv7, the main difference
+being the lack of Thumb2 mode. The plain ARMv6 may be
+a little harder to get right since that needs special barriers
+and can only do 32-bit atomics but not 8/16/64.
 
-JFYI SJ is planning to work on two improvements: (1) single tree
-traversal for all the given regions and (2) TLB flush batching for
-MADV_DONTNEED[_LOCKED] and MADV_FREE.
+As there is only really one relevant machine left with the
+original ARMv6 (Nokia N8x0), we already plan to drop that
+in a year, and I wouldn't put too much work into supporting
+it. ARMv5 and earlier will stay around for a while longer,
+but are getting rare enough that you probably don't need to
+worry about those either.
 
-Thanks everyone for your time and feedback.
+     Arnd
