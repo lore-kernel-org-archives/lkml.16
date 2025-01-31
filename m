@@ -1,72 +1,69 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7B4139E
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 03:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4457745BE3;
+	Fri, 31 Jan 2025 03:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738294495; cv=none; b=aZjFB4Ze/xYjEpKAyElI521f4WEY44GHFe+nfETh+VJzot1Qrd6MCGSXPQcAi49i8ZPfbfBz9upM0V48vwiJvFr3mwVGhC4N6Thr+AmmPBgQMDcau5X3fTJf9hGRZ21Pyl0agcryKD3vaR9Cp/KWsEnXTnPR7lB6fSBWe11zSCU=
+	t=1738294511; cv=none; b=iQO/JtZuy85dl7KOtvC3/wOp2dK9Lx1EsyuF014lwVWpJUoPDLNKyb+ak9j8krOupI4wcYDz2xxw/pMaUs+1hKAfXqLdmWUn+M/CT9eLdXZlITbwAWta5/hWaOqBCVmlI8Cz2DP/6N5+OrwV0CJZZXLus+3ZB9tGfNhz7kuHLaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738294495; c=relaxed/simple;
-	bh=N0sx+iPMuAqNEclN+D3TjbfcoEASQMbbhnntoORpJ8A=;
+	s=arc-20240116; t=1738294511; c=relaxed/simple;
+	bh=cg6bJdKfqd4yDHUF/vNdH6MAs9vW28seWl4OXdnbhH0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FsjTez0XaLfXOwLILLIlJJIQ0zKW9/c6dHupn3ssHW/SsIHEhbDXxZ+Yq2Rll5UZihzjyGHs/GBqZLLzllFhKD0wYgdVa12F2wiiqAKc21trYiAT8LqxWABA9EQPkwHJpc6bysH8odth0EDwyz20yYApK2Fv3eEs3rXIVdsZHxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AlYL5tHV; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=kfHiV0l1hKVmMP7j314QGMNBE5OUSUxEr2qi3uyqVT4Fny9HJD8/QFIQ5mCnU9o+HBpwvQw2RR9HKSlH49c5GhPP9fl/fLavPp/dKeAbXQGwasM+WZ6bbeJ6v7bWaPet32460GsGUEAZWj7D4k868OibPJqb62JBt5WlU922ypg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SMhy6lHk; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AlYL5tHV"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2166f1e589cso37238145ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 19:34:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738294493; x=1738899293; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=32D3HUGqP+ZFdFEF3wCZMSpfCGFHL5f2rNBX8ncFDZw=;
-        b=AlYL5tHVgK+Xj3CixKhz1frlle2lgQmvTq7o2JkpVic3bPQKvsLVx4zmw14vmDLok9
-         EqESX2ibtogbfGLqVmB7SFXiTCFoyXh9kRvBXb+BY8UgEJnxXrcolN5lHZJxrxjHlKzk
-         BERuJ2rTWJGkePrfWgdSW0CPESJHiOymfQ0JQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738294493; x=1738899293;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=32D3HUGqP+ZFdFEF3wCZMSpfCGFHL5f2rNBX8ncFDZw=;
-        b=gKYMhozc1S0qSoKtNGg3veAs2mIELz2WV5/Npv5mAMQPp9qLIRmGD621TQP0tKbDMn
-         N9MLYOzaoDJORCvM2r5eWpGqM4/V9IZRsZXKx7dF70ORJSr2TiSU7vEswLT3jsleWljE
-         ebrnwbkm7qPeQev7RcCq3DbHF6hz/5iKV9zOBS7MXIG6Aj9Xprxg4QwTlFDxD6yrXmN9
-         ra6NQVaQPDQnSTfGRaxWhNEfMvc5jit3s9V5Ujj04O4FA0zdpNdaUnoMuU8qKQQM4EjA
-         RQxkbzbl6QaUz7Z3NJ4JyBGTdvUDoO+njiztkMLupJzHJz28DKGOY3oEnyh0YcvtkDhj
-         hN3g==
-X-Forwarded-Encrypted: i=1; AJvYcCV2QiEp70eY43VXr3O9s7yUJpS3KAM2flekgoDCiIyBFKuqY8zJdqESuS592EQxgfieXUxwrirgsVxlE3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6GVPkTDTgi26F/blliXuy6xnQz7XY7r7f0z1dbYQc/j78b0pr
-	dVliQCHabv7UtQt/CUgtsCEfqshvRyJ4V6ZkBbnS0eL4A6X1Boa1/x5mdUF0oQ==
-X-Gm-Gg: ASbGncu1cD/ztwCJSYl+OmizqGmzjCzk5gucnXVe60ymgYWtXRJr9+87OuLaxd+x2kl
-	pR+ePvWIYEo5sIxSl6bGU5Iv9WVPhzIpg07i2/+1kC7Qs/JFx6xOEtR9TFjbKxbZ/Ekmyfsqn+R
-	E88E7tbVq/RZ9qVseK8Pt8eJ/mcuttFXkut4Cojq16OFurBTDnfodBTfacG7PZmhimTWz0ert82
-	9pS9tJX3k3zaoUmsfuppqO79xQkVLrVzccoS6so+eysZDpmp8c6kZeE+UpkZEOtMENC6ANKmrYX
-	ZWMGH3UV+HLyO3rN7Q==
-X-Google-Smtp-Source: AGHT+IEsFmLz+qIkj1EMr+GV0ijOaTbWPrqW3Z9zAfyz97XMlXwIn3rQRlPiOINIpfAoYRkCaZtcHQ==
-X-Received: by 2002:a05:6a21:78c:b0:1e1:9f77:da92 with SMTP id adf61e73a8af0-1ed7a5ee31emr14721480637.33.1738294493029;
-        Thu, 30 Jan 2025 19:34:53 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:d4ce:e744:f46b:4fb])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6a1a75bsm2224113b3a.167.2025.01.30.19.34.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 19:34:52 -0800 (PST)
-Date: Fri, 31 Jan 2025 12:34:47 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv1 1/6] zsmalloc: factor out pool locking helpers
-Message-ID: <qazrxmu2bdvsned3dp2fnoyagdsv4ueh57pghhjz5q7fmv5pz4@vzlp5kmcw354>
-References: <20250129064853.2210753-1-senozhatsky@chromium.org>
- <20250129064853.2210753-2-senozhatsky@chromium.org>
- <Z5pec33BWqdH_rCN@google.com>
- <blqetdedmmvheg4qri2o4gxbtiq7lz5ufcpacrrw7yvej7rcnp@i46mdzf7gqhk>
- <Z5un85j5P2Z7B9sg@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SMhy6lHk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738294508; x=1769830508;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cg6bJdKfqd4yDHUF/vNdH6MAs9vW28seWl4OXdnbhH0=;
+  b=SMhy6lHkaSq7kySlfx1zqC15kATgHXRXPcX+7CSRb4zrjShGJtQAxkw4
+   cK+05a54MwBozIHKYB5DU/SVDW9Yjmbe5PU8EHljJKZ71fFvErpu3qy0p
+   rkVWxq0feq+w3nPiVnNuRtSIy2jsXZHB0s9htIbI9w+nWmpVnbvmV/HHv
+   DJOTmAONqToj2SHJKMNuINqbXTzM3yo7+wZQvZKKQHiHfw6HqJcaAF9DU
+   ewI+s7TYTGJQF6+TPPK2UUyo71N7nr3OnVN7m5Ncu2X1U7oInPZYxLcww
+   26J29HxQNbg3gIpzBtCbRTyxuNXtYMY9Vo+cME97j8dZTsqEJsLTW7Z96
+   g==;
+X-CSE-ConnectionGUID: GXK/P8FcR7mhC0vcMJaFIQ==
+X-CSE-MsgGUID: 7C3r54VbS1aK1v4s8CGZkw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="38967063"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="38967063"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 19:35:08 -0800
+X-CSE-ConnectionGUID: KPPMDc6nRt69biBqFB8olw==
+X-CSE-MsgGUID: ZjTA2HAcRPGHnoR5nCKV7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="114518334"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 30 Jan 2025 19:35:04 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tdho5-000lrL-2t;
+	Fri, 31 Jan 2025 03:35:01 +0000
+Date: Fri, 31 Jan 2025 11:34:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH] WIP: drivers/base: Add virtual_device_create()
+Message-ID: <202501311112.BDhClMYs-lkp@intel.com>
+References: <20250130212843.659437-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,74 +72,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z5un85j5P2Z7B9sg@google.com>
+In-Reply-To: <20250130212843.659437-1-lyude@redhat.com>
 
-On (25/01/30 16:25), Yosry Ahmed wrote:
-> On Thu, Jan 30, 2025 at 01:01:15PM +0900, Sergey Senozhatsky wrote:
-> > On (25/01/29 16:59), Yosry Ahmed wrote:
-> > > On Wed, Jan 29, 2025 at 03:43:47PM +0900, Sergey Senozhatsky wrote:
-> > > > We currently have a mix of migrate_{read,write}_lock() helpers
-> > > > that lock zspages, but it's zs_pool that actually has a ->migrate_lock
-> > > > access to which is opene-coded.  Factor out pool migrate locking
-> > > > into helpers, zspage migration locking API will be renamed to
-> > > > reduce confusion.
-> > > 
-> > > But why did we remove "migrate" from the helpers' names if this is the
-> > > real migrate lock? It seems like the real problem is how the zspage lock
-> > > helpers are named, which is addressed later.
-> > 
-> > So this is deliberately.  I guess, just like with page-faults in
-> > zs_map_object(), this naming comes from the time when we had fewer
-> > locks and less functionality.  These days we have 3 zsmalloc locks that
-> > can "prevent migration" at different points.  Even size class spin-lock.
-> > But it's not only about migration anymore.  We also now have compaction
-> > (defragmentation) that these locks synchronize.  So I want to have a
-> > reader-write naming scheme.
-> 
-> In this case shouldn't we also rename the lock itself?
+Hi Lyude,
 
-Yeah, I guess, I thought about that for a second but figured that on
-the grand scheme of things it wasn't all that important.  I'm going to
-resend the series (after merge with zram series) so I'll rename it, to
-pool->lock maybe.
+kernel test robot noticed the following build warnings:
 
-[..]
-> > > I am generally scared to move hot members around unnecessarily
-> > > due to cache-line sharing problems -- although I don't know if
-> > > these are really hot.
-> > 
-> > Size classes are basically static - once we init the array it
-> > becomes RO.  Having migrate_lock at the bottom forces us to
-> > jump over a big RO zs_pool region, besides we never use ->name
-> > (unlike migrate_lock) so having it at offset 0 is unnecessary.
-> 
-> What's special about offset 0 though?
-> 
-> My understanding is that we want to put RW-mostly and RO-mostly members
-> apart to land in different cachelines to avoid unnecessary bouncing.
-> Also we want the elements that are usually accessed together next to one
-> another.
-> 
-> Placing the RW lock right next to the RO size classes seems like it will
-> result in unnecessary cacheline bouncing. For example, if a CPU holds
-> the lock and dirties the cacheline then all other CPUs have to drop it
-> and fetch it again when accessing the size classes.
 
-So the idea was that offset 0 is located very close to low size classes,
-which are a) not accessed that often and b) some of them are not accessed
-at all.  I don't think I've ever seen size-class-32 (the first size-class)
-being used.  I think for some algorithms compressing PAGE_SIZE below 32 bytes
-is practically impossible, because of all the internal data that the
-algorithms puts into compression output (checksums, flags, version numbers,
-etc. etc.).
 
-> > zs_pool_stats and compaction_in_progress are modified only
-> > during compaction, which we do not run in parallel (only one
-> > CPU can do compaction at a time), so we can do something like
-> 
-> But other CPUs can read compaction_in_progress, even if they don't
-> modify it.
+url:    https://github.com/intel-lab-lkp/linux/commits/UPDATE-20250131-052936/Lyude-Paul/rust-kernel-Add-platform-Device-from_raw/20250123-075718
+base:   the 2th patch of https://lore.kernel.org/r/20250122235340.2145383-3-lyude%40redhat.com
+patch link:    https://lore.kernel.org/r/20250130212843.659437-1-lyude%40redhat.com
+patch subject: [PATCH] WIP: drivers/base: Add virtual_device_create()
+config: arc-randconfig-001-20250131 (https://download.01.org/0day-ci/archive/20250131/202501311112.BDhClMYs-lkp@intel.com/config)
+compiler: arceb-elf-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250131/202501311112.BDhClMYs-lkp@intel.com/reproduce)
 
-Yes, well, that's the nature of that flag.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501311112.BDhClMYs-lkp@intel.com/
 
-I'll drop patch, I guess.  It's not worth our time.
+All warnings (new ones prefixed by >>):
+
+>> drivers/base/core.c:4409: warning: Excess function parameter 'class' description in 'virtual_device_create'
+
+
+vim +4409 drivers/base/core.c
+
+  4392	
+  4393	/**
+  4394	 * virtual_device_create - creates a virtual device and registers it with sysfs
+  4395	 * @class: optional pointer to a struct class this device should be registered to
+  4396	 * @drvdata: the data to be added to the device for the callbacks
+  4397	 * @fmt: string for the device's name
+  4398	 *
+  4399	 * This function can be used to create standalone virtual devices, optionally
+  4400	 * registered to a specific class. Drivers which create virtual devices can use
+  4401	 * this. The device will live in /sys/devices/virtual.
+  4402	 *
+  4403	 * A pointer to the struct device will be returned from the call. Any further
+  4404	 * sysfs files that might be required can be created using this pointer.
+  4405	 *
+  4406	 * Returns &struct device pointer on success or ERR_PTR() on error.
+  4407	 */
+  4408	struct device *virtual_device_create(void *drvdata, const char *fmt, ...)
+> 4409	{
+  4410		va_list vargs;
+  4411		struct device *dev;
+  4412	
+  4413		va_start(vargs, fmt);
+  4414		dev = device_create_groups_vargs(NULL, NULL, 0, drvdata, NULL,
+  4415						 fmt, vargs);
+  4416		va_end(vargs);
+  4417		return dev;
+  4418	}
+  4419	EXPORT_SYMBOL_GPL(virtual_device_create);
+  4420	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
