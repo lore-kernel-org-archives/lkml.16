@@ -1,112 +1,225 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D718467;
-	Fri, 31 Jan 2025 15:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2134A1E5020
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 15:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738337422; cv=none; b=FICJxMqo2GAAIOVifrwaWX3RrNdXfnynZ4RzAR77aHhVxUq456vBuzbdC7N3kfqGiaBz1FoV+p6eQhhWB403bR03s4GiVMNDfuspffOdI8WEq6jow2SHnVWDTc7g0zwjaN6qrNebA/BUbevarfG/F86xUiVbO2Xvrwj9YrK57oI=
+	t=1738337482; cv=none; b=PCa3VP/88kFxLsrGgf34sGMFRMlX7sKSiPJQsjIeQ4aXMi7h9PSjgZqwz6z0Rmce5EhvuP/QFbg7MZVp8RpfTqRPiRd3VWantkKFmhXOEY6r0Lnyxew5mLKm3W7wzlM2mbwSLGk/8RY7wX5ld2704Lvn/tqh3Nad4k+t9u0E2tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738337422; c=relaxed/simple;
-	bh=BJkAqQqySuQeiWwU8uJ1H711SOFSLwM8M/BynHk7CDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HDlLiLxC9mv5qPdwkLfSaz+Kh87aSnDKZN41VHpgbvOey8GJ/mOvZXsh8kRYJfCJ0EmefV0gjXS0ArtqoAJ2FoC6dVHYSOnuu3ahBGdf5yTOr8dmY/NDyTVwPJ65Q3YLkmUJ6Swa6rDxAswzWm6Flgb8Ji+voW5Ma5zoY/ofqY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=TY4DQdnn; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1738337482; c=relaxed/simple;
+	bh=QMlDGojvzkRCZR7kbIOQ8E4cO6o4dvPj6U6h454M/mk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IInSlCWZQMh1LsutBun1Ek8I8wb7BeC9Tb3bywmEDF6pmx+kEzw9NuD/shCkAOeGXqwJCy66D9KQl9j2GlUtexAfHjTwmplym8J3RCRaj84K3nb92rwu7WIRkgq1c3GUEWkkw4qLeILCtBo5IEFHC2Ma8cH8o7Ss++7lxNrt6vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LzT6XR1C; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TY4DQdnn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=N1KV8cAYAeUsEmP5FSI2GVwcvfBNoyMVKI/OP/TsMh8=; b=TY4DQdnn8BJ2u6ngBxO25+KLaf
-	4ykBv2v07Rolai551D/VQOGqrl0WPBg22TEkQkLdU2Sq+v2SRcl4lw6gy7GmKkHb6m+zZ38Acm0xr
-	MgipqQvRFSlPvkH9ArY3g43N1Tn32o2gIS0mScTeVUg7WTI+8cqUGfJB7Ncq0gN3RReE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tdsxz-009j7y-Au; Fri, 31 Jan 2025 16:29:59 +0100
-Date: Fri, 31 Jan 2025 16:29:59 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Steven Price <steven.price@arm.com>
-Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Yanteng Si <si.yanteng@linux.dev>, Furong Xu <0x1207@gmail.com>,
-	Joao Pinto <Joao.Pinto@synopsys.com>, netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v4 3/3] net: stmmac: Specify hardware capability
- value when FIFO size isn't specified
-Message-ID: <2ed9e7c7-e760-409e-a431-823bc3f21cb7@lunn.ch>
-References: <20250127013820.2941044-1-hayashi.kunihiko@socionext.com>
- <20250127013820.2941044-4-hayashi.kunihiko@socionext.com>
- <07af1102-0fa7-45ad-bcbc-aef0295ceb63@arm.com>
- <fc08926d-b9af-428f-8811-4bfe08acc5b7@lunn.ch>
- <f343c126-fed9-4209-a18d-61a4e604db2f@arm.com>
- <a4e31542-3534-4856-a90f-e47960ed0907@lunn.ch>
- <d6265f8e-51bc-4556-9ecb-bfb73f86260d@arm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LzT6XR1C"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-5188c6f260cso678515e0c.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:31:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738337480; x=1738942280; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OSLcjznXwcawPjtIwU5BGombRntUt4OgkySxl9N1PhM=;
+        b=LzT6XR1CHXCAf2rOD/SQvsN1qa17dekbzy6Brgqw5E2RRlfhq3NM9BckVojwFBbQ/8
+         KoBM0h8LykFwFnwaJWxQK3GuVn7hTclt9ZX1zrsEy5Cn/DgQvnRYiTz4OXze4rVbX4IH
+         Mtj09ypj+48L7TiJs4+Fs0nLGHrIxQFnhpj7+IzsVdF7nkgazW4PKTapsw9u+R6DGkiR
+         4+5OIZUfaRkRjlqc8WHWlhGwf9bk5kmWcQqM+GXghub6+SJvfsDnxpl+HqpB6RcqMVFM
+         6M5v5D+qFXDPjRldpYHfk5smHC3HHqekJwN2V1sNG2arJ8wkypLf9LDPUk8wfMw87TUE
+         gDmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738337480; x=1738942280;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OSLcjznXwcawPjtIwU5BGombRntUt4OgkySxl9N1PhM=;
+        b=llu3xnmfke7X7o2BKvq9jxpeoqa/hHl57YH5yBqmdRxzjBnL4rRKJpUCiaeArEOcfJ
+         fALIg9qsqCwL4ZwUg787JFDGuGuTC1uzVOWRXJa+60uFhvAaugzYOPDZdTAHcuGCcwz4
+         HgXikrwdU52l+8tSWaY/6y9b5f/jcwn7HQrgLaJcwcbnePyRGj8+8RGTTjQOGTHRPuR/
+         e3sf3d57noWBIaUziJd0exOmaJcKLTvjWNsdzoHU10JjmmS8iChMLQumQEDoTJ8bRrsD
+         vNbQN9HorS+VZtSIiW3X5SWpo8rgy9RQ2CEM08HKQeauwqkEjE6HowAU809bbvvVunge
+         aoSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUvEnJAVCWvC+DT4XLaDNBJ5BGUkYow4glpBvcMzltiCjf1KbIlsszXXJ52D5DLY2+qslvLs2VOg9drIwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP7Z5tsHa6kd4YZiVTQcHdciWpAExD2F79/0ZlOKS8FOsj1DJ9
+	+dJn0/FOV2Nc0B1CqSnW7ndmoqt402AhQhk3zJU9ZwhJ7xDJQ0xUhRBPmAtal4oNCN9in4nj0dz
+	LHIzlTSusIjl3O4vRCkcgyVsFIr6aUmFfSRFvqw==
+X-Gm-Gg: ASbGncuSXOHuN26Y7Qhwo7c2A3IlD7lZ7Z4S0pMY0SQ+Ltg8X1Wx4+vI7KSDDtvx933
+	Kv3rUshM1yP5hSZqjqxFhixWSrxX9oi+UQEBijdvOCphlarX9VVe9nlg6ZiDjYySoR/IdlZWK7V
+	FjrR0Mqd35gLwanK99OU7XCLn+dyjVsA==
+X-Google-Smtp-Source: AGHT+IHFRUS+MsNhqfxUXH+pmZt2MZ0qsI4i9mos4varzgd6PPfcrhXV9glJArwj7pFf+4scVbf+KZcnIil//YmXdcY=
+X-Received: by 2002:a05:6122:887:b0:515:5008:118b with SMTP id
+ 71dfb90a1353d-51e9e3e3e21mr9512155e0c.1.1738337479787; Fri, 31 Jan 2025
+ 07:31:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d6265f8e-51bc-4556-9ecb-bfb73f86260d@arm.com>
+References: <20250130133458.903274626@linuxfoundation.org>
+In-Reply-To: <20250130133458.903274626@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 31 Jan 2025 21:01:07 +0530
+X-Gm-Features: AWEUYZlxMqIJhC8ANbN2_8EU752o33FdmUNaGxshpQUfK6TFP0r1OcuJMY6slaU
+Message-ID: <CA+G9fYtfp=LANXpkohb0m=EDTG+N442Mrr8ZvmvKiDyPbvDrug@mail.gmail.com>
+Subject: Re: [PATCH 6.6 00/43] 6.6.75-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 31, 2025 at 03:03:11PM +0000, Steven Price wrote:
-> On 31/01/2025 14:47, Andrew Lunn wrote:
-> >>> I'm guessing, but in your setup, i assume the value is never written
-> >>> to a register, hence 0 is O.K. e.g. dwmac1000_dma_operation_mode_rx(),
-> >>> the fifosz value is used to determine if flow control can be used, but
-> >>> is otherwise ignored.
-> >>
-> >> I haven't traced the code, but that fits my assumptions too.
-> > 
-> > I could probably figure it out using code review, but do you know
-> > which set of DMA operations your hardware uses? A quick look at
-> > dwmac-rk.c i see:
-> > 
-> >         /* If the stmmac is not already selected as gmac4,
-> >          * then make sure we fallback to gmac.
-> >          */
-> >         if (!plat_dat->has_gmac4)
-> >                 plat_dat->has_gmac = true;
-> 
-> has_gmac4 is false on this board, so has_gmac will be set to true here.
+On Thu, 30 Jan 2025 at 19:45, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.6.75 release.
+> There are 43 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 01 Feb 2025 13:34:42 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.6.75-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Thanks. Looking in hwif.c, that means dwmac1000_dma_ops are used.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-dwmac1000_dma_operation_mode_rx() just does a check:
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-	if (rxfifosz < 4096) {
-		csr6 &= ~DMA_CONTROL_EFC;
+## Build
+* kernel: 6.6.75-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 2c44b59139a8bd89a50d82ca7f695ca18d867362
+* git describe: v6.6.74-44-g2c44b59139a8
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.7=
+4-44-g2c44b59139a8
 
-but otherwise does not use the value.
+## Test Regressions (compared to v6.6.71-130-g6a7137c98fe3)
 
-dwmac1000_dma_operation_mode_tx() appears to completely ignore fifosz.
+## Metric Regressions (compared to v6.6.71-130-g6a7137c98fe3)
 
-So i would say all zero is valid for has_gmac == true, but you might
-gain flow control if a value was passed.
+## Test Fixes (compared to v6.6.71-130-g6a7137c98fe3)
 
-A quick look at dwmac100_dma_operation_mode_tx() suggests fifosz is
-also ignored, and dwmac100_dma_operation_mode_rx() does not exist. So
-all 0 is also valid for gmac == false, gmac4 == false, and xgmac ==
-false.
+## Metric Fixes (compared to v6.6.71-130-g6a7137c98fe3)
 
-dwmac4_dma_rx_chan_op_mode() does use the value to determine mtl_rx_op
-which gets written to a register. So gmac4 == true looks to need
-values. dwxgmac2_dma_rx_mode() is the same, so xgmac = true also need
-valid values.
+## Test result summary
+total: 125925, pass: 88948, fail: 18749, skip: 17735, xfail: 493
 
-Could you cook up a fix based on this?
+## Build Summary
+* arc: 6 total, 5 passed, 1 failed
+* arm: 133 total, 133 passed, 0 failed
+* arm64: 46 total, 44 passed, 2 failed
+* i386: 31 total, 28 passed, 3 failed
+* mips: 30 total, 25 passed, 5 failed
+* parisc: 5 total, 5 passed, 0 failed
+* powerpc: 36 total, 32 passed, 4 failed
+* riscv: 23 total, 22 passed, 1 failed
+* s390: 18 total, 14 passed, 4 failed
+* sh: 12 total, 10 passed, 2 failed
+* sparc: 9 total, 8 passed, 1 failed
+* x86_64: 38 total, 37 passed, 1 failed
 
-	Andrew
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-filesystems
+* kselftest-filesystems-binderfs
+* kselftest-filesystems-epoll
+* kselftest-firmware
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-filecaps
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
