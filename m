@@ -1,323 +1,152 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F43D1C5D72;
-	Fri, 31 Jan 2025 13:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7012F1C5D78
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738331657; cv=none; b=oKtf7SJU5BS8UAkSKySlUo/CcUAU6I/10XYfAfCHuIjW7vdYhyyK79FSs/gpLg1+aZAiWgsWOLJ19SaRMRsfsSUdaTLqTyY01WjHEn1gvga8ua/EjK/rZ3805jiZh9A41W9bo+NZinyF7OsUQCySnr6crQ6AaAsKJ61dZNXw9ys=
+	t=1738331665; cv=none; b=j25rZ31jUDFpMEbYWgfUAq5FbVtlM3s80t8vUrqm01ZJ3FGTHIrO5WiDfmxmGBYfQ1ETa8T6amOhpRaKnT/BGObZKHDnxE8VWTw0BqeJeW3eiKcbvqUPYufj/z18y1oXITYa+r3H74JKEY7alrjk5Hh3c0irWy0FPlDPebwiHWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738331657; c=relaxed/simple;
-	bh=3Z35BJI9mvy50yMjGm4PIrv9QpGNucM7XHgLdenAYEc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zqme7o16Ll7+pof9RQx+2hvM3Akg6GSLc1rMyxHPwWBltp0cQO92v+uxYm+/1gqAcMcSq7ATtNzXi1vE1G7YSqbMeZORmVYG172mNPHMgrrXf/DVcfbCdvLA/n25g4NlPabAruZv1jeWRxE90TSD4sW9ai2vrFz3sW/k1H3+1sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=dX/L/JSs; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=ctYS/y5c reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="dX/L/JSs";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="ctYS/y5c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1738331654; x=1769867654;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/QZB+c4vz3gK2C8YI8nQ7dnMMdgQ34mpMKt5yfmxvEw=;
-  b=dX/L/JSsGJOHSKpqe6ldMwsGlkdP0vCQIsa4ep65Y5Rus4hvQub+xWRD
-   SU3X5btLjn1WyZmYtxhnxlQPsyGjELwJHeenlEWjZk+Otj5kGvJ9RK3By
-   kI8/7DAfonHwclWW3dZejtfk8R4efNhUzfcVQfVrguAeobbxCP9kUGmVw
-   UvDCiF6XTRxZ5ApVEs0se9VFTBa8Vi/Wguq2X6TkzTOqLhyh14/EkqtGf
-   Iv1uNQ7LcmQ+ruoniK3Az73BuxMwkw0wL7rhy8cy6cmN+ZVUYGEFTvXP9
-   XvHCqsj+U+5v9Vgma29LOUGFNeE7I5a6WKUutJ+Y+B66vgZfmrqBCsTcT
-   g==;
-X-CSE-ConnectionGUID: uVW/17usSSK4EMO6sCV8Qw==
-X-CSE-MsgGUID: /Ot5scxoR66WHux+Z85ozw==
-X-IronPort-AV: E=Sophos;i="6.13,248,1732575600"; 
-   d="scan'208";a="41406968"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 31 Jan 2025 14:54:12 +0100
-X-CheckPoint: {679CD604-4-1CE016C0-E589DA3E}
-X-MAIL-CPID: 9363A84F764F3A6F88C9FCC0A2363E63_1
-X-Control-Analysis: str=0001.0A682F22.679CD604.0039,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2D7E616B67E;
-	Fri, 31 Jan 2025 14:54:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1738331647;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/QZB+c4vz3gK2C8YI8nQ7dnMMdgQ34mpMKt5yfmxvEw=;
-	b=ctYS/y5c7PF26SO1xRPJM4kzDAhkuSj+fTmkB7ftrnzZ311QeHVto2eZ1NqW3RYXDmp4M+
-	IMm5/6D+h6mgHHB6ZoedzbwqkTM2xIYH1OKxs+Z0Uhb1upA2tl2MoxqMyvYQNdzgXDFhi1
-	oWPj5N1VBqhoOCCv5ecCr338zQCB1QuIXIyDMFUxZHO+6V5NBDkYUpRJZSROsIRr1XfiT8
-	lMGYwnpcFCWNdFJFYt1zWmNSLFVOj4UEHC3rRdpTeQzT9+ymA4a8qHkiEnBcH4jduhvx+N
-	HwyWctti29LZcVcMOy39V6NDQqTPsuffK/PKq+isgzDtow27asHR85wu8QPBuA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] nvmem: imx-ocotp: Support accessing controller for i.MX8M Nano
-Date: Fri, 31 Jan 2025 14:54:06 +0100
-Message-ID: <4961006.GXAFRqVoOG@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <Z5ur+NF9UlXJSWtL@lizhi-Precision-Tower-5810>
-References: <20250130130101.1040824-1-alexander.stein@ew.tq-group.com> <20250130130101.1040824-4-alexander.stein@ew.tq-group.com> <Z5ur+NF9UlXJSWtL@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1738331665; c=relaxed/simple;
+	bh=LpM1ratmDrpG7tvebM7y8MHbPCtiP2RE8bl86whe/6o=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=blYvYGVBgHt3yElfUAT1o4xgK+Ac5SmicokynBVMzTQuak+XE7UYecVhY+bkhUnHQmC3J3R6/2lxN7vmAf5u18Yq2h3us+V4b4OmeOCh7261jsdj7KiBJGJ/R6IF1AKrYECu2WHp1/EgdAO5OtgIzCjU4yQVf0STO7n6mx4b/hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3cf6ceaccdbso14804565ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 05:54:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738331662; x=1738936462;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zNAmo4ihhSxy8pLUbp5UzEpnOMNglctNA6lT+shWmDM=;
+        b=wCwvbx+IOqudPaEVouyOvGNUkZktUwwTGmj3v1fkiEBCvTwymgEBf1XsY8fi76hWKT
+         0rORYXasVMXqQvN3YbGy4L93oEI135nyOpTw+aPOPOPoeW4jrZcqowGpARADbYPMuBD2
+         o6ckF51AxBZkTtaaY8cXo6E/tJTsOKWe6P1iOAsszZjHh7RExvRhuMWtiNtz5enj49oz
+         P3Z9CmzcbsQ+mhPceWGaIhM3HYyivRBV7E4lX55og3rPXM1ueUw1QpY2zHUhSVKUnrwP
+         5XFlI0JFz41KvI752iD6lsenMNXjKahGqq6WZdqlfaFpWqY79RTSy02E7ulhy9QafOUx
+         BoAA==
+X-Gm-Message-State: AOJu0Yzl2BK6hn5J6O6HQclE5IbpJEtklpQ9lyN5mEwzR7NAQGvb7qnt
+	ItBhMVnQ8T5ap4nsymkYIR3vs2kg2DWhCf44hn5FxpC2FlfT7FWXDrSR/qTq08of2/Ci1RjZ6zI
+	xZYGzDTD3bojO+y1GlvDjbeOTU6tyzprtqOgtxX1xA/822Tft3myajp7R8A==
+X-Google-Smtp-Source: AGHT+IED8ogy78oTUggSAqvhG9GyRfoJE0Y9exge1EETL/shmGrMmp90MM/453diegBzRUwKIFp2Ikf8NU1osuasyBaj8kXXGt2J
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+X-Received: by 2002:a05:6e02:12e7:b0:3cf:bb11:a3a7 with SMTP id
+ e9e14a558f8ab-3cffe406b35mr88083435ab.17.1738331662366; Fri, 31 Jan 2025
+ 05:54:22 -0800 (PST)
+Date: Fri, 31 Jan 2025 05:54:22 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <679cd60e.050a0220.d7c5a.0045.GAE@google.com>
+Subject: [syzbot] [mtd?] WARNING in release_mtd_partition
+From: syzbot <syzbot+074732af3fc6c528f8a0@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	miquel.raynal@bootlin.com, richard@nod.at, syzkaller-bugs@googlegroups.com, 
+	vigneshr@ti.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Hello,
 
-Am Donnerstag, 30. Januar 2025, 17:42:32 CET schrieb Frank Li:
-> On Thu, Jan 30, 2025 at 02:01:00PM +0100, Alexander Stein wrote:
-> > i.MX8M OCOTP supports a specific peripheral or function being fused
-> > which means disabled, so
-> >  - Introduce disable_fuse for a list of possible fused peripherals.
-> >  - Iterate all nodes to check accessing permission. If not
-> >    allowed to be accessed, detach the node
-> >
-> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> > ---
-> >  drivers/nvmem/Kconfig     |   3 ++
-> >  drivers/nvmem/imx-ocotp.c | 105 +++++++++++++++++++++++++++++++++++++-
-> >  2 files changed, 107 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> > index 8671b7c974b93..ba5c928cab520 100644
-> > --- a/drivers/nvmem/Kconfig
-> > +++ b/drivers/nvmem/Kconfig
-> > @@ -84,6 +84,9 @@ config NVMEM_IMX_OCOTP
-> >  	  This driver can also be built as a module. If so, the module
-> >  	  will be called nvmem-imx-ocotp.
-> >
-> > +	  If built as modules, any other driver relying on this working
-> > +	  as access controller also needs to be a module as well.
-> > +
-> >  config NVMEM_IMX_OCOTP_ELE
-> >  	tristate "i.MX On-Chip OTP Controller support"
-> >  	depends on ARCH_MXC || COMPILE_TEST
-> > diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-> > index c5086a16450ac..e3ea026a37d0d 100644
-> > --- a/drivers/nvmem/imx-ocotp.c
-> > +++ b/drivers/nvmem/imx-ocotp.c
-> > @@ -23,6 +23,7 @@
-> >  #include <linux/of.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/slab.h>
-> > +#include <dt-bindings/nvmem/fsl,imx8mn-ocotp.h>
-> >
-> >  #define IMX_OCOTP_OFFSET_B0W0		0x400 /* Offset from base address of the
-> >  					       * OTP Bank0 Word0
-> > @@ -91,11 +92,20 @@ struct ocotp_ctrl_reg {
-> >  	u32 bm_rel_shadows;
-> >  };
-> >
-> > +#define OCOTP_MAX_NUM_GATE_WORDS 4
-> > +
-> > +struct disable_fuse {
-> > +	u32 fuse_addr;
-> > +	u32 mask;
-> > +};
-> > +
-> >  struct ocotp_params {
-> >  	unsigned int nregs;
-> >  	unsigned int bank_address_words;
-> >  	void (*set_timing)(struct ocotp_priv *priv);
-> >  	struct ocotp_ctrl_reg ctrl;
-> > +	u32 num_disables;
-> > +	struct disable_fuse *disables;
-> >  };
-> >
-> >  static int imx_ocotp_wait_for_busy(struct ocotp_priv *priv, u32 flags)
-> > @@ -552,11 +562,25 @@ static const struct ocotp_params imx8mm_params =
-=3D {
-> >  	.ctrl =3D IMX_OCOTP_BM_CTRL_DEFAULT,
-> >  };
-> >
-> > +struct disable_fuse imx8mn_disable_fuse[] =3D {
-> > +		[IMX8MN_OCOTP_M7_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D BIT(8) =
-},
-> > +		[IMX8MN_OCOTP_M7_MPU_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D BIT=
-(9) },
-> > +		[IMX8MN_OCOTP_M7_FPU_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D BIT=
-(10) },
-> > +		[IMX8MN_OCOTP_USB_OTG1_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D B=
-IT(11) },
-> > +		[IMX8MN_OCOTP_GPU3D_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D BIT(=
-24) },
-> > +		[IMX8MN_OCOTP_MIPI_DSI_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D B=
-IT(28) },
-> > +		[IMX8MN_OCOTP_ENET_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D BIT(2=
-9) },
-> > +		[IMX8MN_OCOTP_MIPI_CSI_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D B=
-IT(30) },
-> > +		[IMX8MN_OCOTP_ASRC_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D BIT(3=
-1) },
-> > +};
->=20
-> Can we direct define IMX8MN_OCOTP_M7_DISABLE as BIT(8), so avoid this
-> map data?
+syzbot found the following issue on:
 
-This would be possible for imx8mn, but not for imx8mp which uses
-multiples fuses for disables. This is an excerpt from imx8mp WIP
-> struct disable_fuse imx8mp_disable_fuse[] =3D {
-> 	[IMX8MP_OCOTP_CAN_DISABLE]		=3D { .fuse_addr =3D 16, .mask =3D BIT(28) },
-> 	[IMX8MP_OCOTP_CAN_FD_DISABLE]		=3D { .fuse_addr =3D 16, .mask =3D BIT(29=
-) },
-> 	[IMX8MP_OCOTP_VPU_VC8000E_DISABLE]	=3D { .fuse_addr =3D 16, .mask =3D BI=
-T(30) },
-> 	[IMX8MP_OCOTP_IMG_ISP1_DISABLE]		=3D { .fuse_addr =3D 20, .mask =3D BIT(=
-0) },
-> 	[IMX8MP_OCOTP_IMG_ISP2_DISABLE]		=3D { .fuse_addr =3D 20, .mask =3D BIT(=
-1) },
-> 	[IMX8MP_OCOTP_IMG_DEWARP_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D BIT=
-(2) },
-> };
+HEAD commit:    2a9f04bde07a Merge tag 'rtc-6.14' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11fe5ddf980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=98d83cc1742b7377
+dashboard link: https://syzkaller.appspot.com/bug?extid=074732af3fc6c528f8a0
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14590b24580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15fe5ddf980000
 
-Notice the fuse_addr of 16 and 20.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/89ef40be688f/disk-2a9f04bd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7471856a382f/vmlinux-2a9f04bd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d694ab107faf/bzImage-2a9f04bd.xz
 
-> > +
-> >  static const struct ocotp_params imx8mn_params =3D {
-> >  	.nregs =3D 256,
-> >  	.bank_address_words =3D 0,
-> >  	.set_timing =3D imx_ocotp_set_imx6_timing,
-> >  	.ctrl =3D IMX_OCOTP_BM_CTRL_DEFAULT,
-> > +	.num_disables =3D ARRAY_SIZE(imx8mn_disable_fuse),
-> > +	.disables =3D imx8mn_disable_fuse,
-> >  };
-> >
-> >  static const struct ocotp_params imx8mp_params =3D {
-> > @@ -589,6 +613,81 @@ static void imx_ocotp_fixup_dt_cell_info(struct nv=
-mem_device *nvmem,
-> >  	cell->read_post_process =3D imx_ocotp_cell_pp;
-> >  }
-> >
-> > +static int imx_ocotp_check_access(struct ocotp_priv *priv, u32 id)
-> > +{
-> > +	u32 addr, mask, ret, val;
-> > +
-> > +	if (id >=3D priv->params->num_disables) {
-> > +		dev_err(priv->dev, "Index %d too large\n", id);
-> > +		return -EACCES;
-> > +	}
-> > +
-> > +	addr =3D priv->params->disables[id].fuse_addr;
-> > +	mask =3D priv->params->disables[id].mask;
-> > +
-> > +	ret =3D imx_ocotp_read(priv, addr, &val, sizeof(val));
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	dev_dbg(priv->dev, "id:%d addr:%#x mask:0x%08x\n", id, addr, mask);
-> > +	/* true means disabled */
-> > +	if (val & mask)
-> > +		return -EACCES;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int imx_ocotp_grant_access(struct ocotp_priv *priv, struct devi=
-ce_node *parent)
-> > +{
-> > +	struct device *dev =3D priv->dev;
-> > +
-> > +	for_each_available_child_of_node_scoped(parent, child) {
-> > +		struct of_phandle_args args;
-> > +		u32 id, idx =3D 0;
-> > +
-> > +		while (!of_parse_phandle_with_args(child, "access-controllers",
-> > +						   "#access-controller-cells",
-> > +						   idx++, &args)) {
-> > +			of_node_put(args.np);
-> > +			if (args.np !=3D dev->of_node)
-> > +				continue;
-> > +
-> > +			/* Only support one cell */
-> > +			if (args.args_count !=3D 1) {
-> > +				dev_err(dev, "wrong args count\n");
-> > +				continue;
-> > +			}
-> > +
-> > +			id =3D args.args[0];
-> > +
-> > +			dev_dbg(dev, "Checking node: %pOF disable ID: %d\n", child, id);
-> > +
-> > +			if (imx_ocotp_check_access(priv, id)) {
-> > +				of_detach_node(child);
-> > +				dev_info(dev, "%pOF: disabled by fuse, device driver will not be p=
-robed\n",
-> > +					 child);
-> > +			}
-> > +		}
-> > +
-> > +		imx_ocotp_grant_access(priv, child);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
->=20
-> Can we have one method to share above code logic to avoid copy-paste to
-> every ocotp driver? Anyway, we can improve that later.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+074732af3fc6c528f8a0@syzkaller.appspotmail.com
 
-I need to check with STM32 implementation. The imx-ocotp-ele might use the
-same function as here.
-
-Best regards,
-Alexander
-
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
->=20
->=20
-> > +
-> > +static int imx_ocotp_access_control(struct ocotp_priv *priv)
-> > +{
-> > +	struct device_node *root __free(device_node) =3D of_find_node_by_path=
-("/");
-> > +
-> > +	if (!priv->params->disables)
-> > +		return 0;
-> > +
-> > +	if (WARN_ON(!root))
-> > +		return -EINVAL;
-> > +
-> > +	return imx_ocotp_grant_access(priv, root);
-> > +}
-> > +
-> >  static int imx_ocotp_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device *dev =3D &pdev->dev;
-> > @@ -622,9 +721,13 @@ static int imx_ocotp_probe(struct platform_device =
-*pdev)
-> >  	imx_ocotp_clr_err_if_set(priv);
-> >  	clk_disable_unprepare(priv->clk);
-> >
-> > +	platform_set_drvdata(pdev, priv);
-> > +
-> >  	nvmem =3D devm_nvmem_register(dev, &imx_ocotp_nvmem_config);
-> > +	if (IS_ERR(nvmem))
-> > +		return PTR_ERR(nvmem);
-> >
-> > -	return PTR_ERR_OR_ZERO(nvmem);
-> > +	return imx_ocotp_access_control(priv);
-> >  }
-> >
-> >  static struct platform_driver imx_ocotp_driver =3D {
-> > --
-> > 2.34.1
-> >
->=20
+RDX: 0000000000000008 RSI: 0000000000001269 RDI: 0000000000000003
+RBP: 0000000000000001 R08: 00007fff4fe6dbf7 R09: 0000000000000007
+R10: 0000000000000001 R11: 0000000000000246 R12: 00007f0fdafc421c
+R13: 00007f0fdafc4184 R14: 00007f0fdafc4077 R15: 00007f0fdafef570
+ </TASK>
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5826 at drivers/mtd/mtdpart.c:37 release_mtd_partition+0x71/0x90 drivers/mtd/mtdpart.c:37
+Modules linked in:
+CPU: 0 UID: 0 PID: 5826 Comm: syz-executor397 Not tainted 6.13.0-syzkaller-09734-g2a9f04bde07a #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+RIP: 0010:release_mtd_partition+0x71/0x90 drivers/mtd/mtdpart.c:37
+Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 1e 48 8b 7b 38 e8 ef 84 cd fb 48 89 df 5b 5d e9 e5 84 cd fb e8 70 4a 75 fb 90 <0f> 0b 90 eb c2 e8 a5 29 d8 fb eb db 48 89 ef e8 9b 29 d8 fb eb a5
+RSP: 0018:ffffc90003e1f828 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffff88802c1d1000 RCX: ffffffff8b417995
+RDX: ffff8880310c3c00 RSI: ffffffff86439150 RDI: ffff88802c1d1000
+RBP: ffff88802c1d1648 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000004 R11: ffffffff81000130 R12: 0000000000000000
+R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
+FS:  000055558b9cd480(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000008 CR3: 0000000034aca000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ mtd_release+0xa0/0xd0 drivers/mtd/mtdcore.c:101
+ device_release+0xa1/0x240 drivers/base/core.c:2567
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1e4/0x5a0 lib/kobject.c:737
+ put_device+0x1f/0x30 drivers/base/core.c:3773
+ add_mtd_device+0xbb3/0x1700 drivers/mtd/mtdcore.c:750
+ mtd_add_partition+0x300/0x650 drivers/mtd/mtdpart.c:279
+ mtdchar_blkpg_ioctl+0x20d/0x250 drivers/mtd/mtdchar.c:562
+ mtdchar_ioctl+0xbbe/0x2050 drivers/mtd/mtdchar.c:1216
+ mtdchar_unlocked_ioctl+0xb0/0xf0 drivers/mtd/mtdchar.c:1239
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f0fdaf83199
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff4fe6de58 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fff4fe6de70 RCX: 00007f0fdaf83199
+RDX: 0000000000000008 RSI: 0000000000001269 RDI: 0000000000000003
+RBP: 0000000000000001 R08: 00007fff4fe6dbf7 R09: 0000000000000007
+R10: 0000000000000001 R11: 0000000000000246 R12: 00007f0fdafc421c
+R13: 00007f0fdafc4184 R14: 00007f0fdafc4077 R15: 00007f0fdafef570
+ </TASK>
 
 
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
