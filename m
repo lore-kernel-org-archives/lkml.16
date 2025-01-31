@@ -1,135 +1,126 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AAE71386C9;
-	Fri, 31 Jan 2025 18:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216921386C9;
+	Fri, 31 Jan 2025 18:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738347974; cv=none; b=RWDuiY1TmXz0IEwWQGwbqfn6+pNtyq2lkE+QOdHAzwNBXnvLJS17SL3bDxPrROCtpVUHNko1j9yjdgUV+MhqGAMHpFEDrfbKXoUeuRiRJOrka5ORZANXdXzJEqt0WygpbfCnJxujeOtw0ycULCRFThHptR+4HwInmzK9WYd9YUM=
+	t=1738348014; cv=none; b=Wn04VlYDLg4c5Urkf65xmH/8DSQE/iyBsm43qfhGS5KAYIcb3KtVIxSDufaNfutiBdYdog1UdOLw0A30vCd+TscmYR1JLlg8oOH0lz0df2U3zickzQ/ykZ7h1sLHQASKQbrxAyicKhnlUXWK/bXbInlgthTTCunKmDHrY2zdnKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738347974; c=relaxed/simple;
-	bh=Sr8eo5dnSu4s16FpqH5wmJig+RqhC1EFzoPlT6WRzuk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=S+Tj3htx2030/qJJaSBjtoYVPZReCw8JTNCoIo2NUg8PSLymyl2f5y2C8xy5d7L3sRLBHO0mqwOp0TuNzY6FZPqodBvbY1+qqVLYkQVy7dFQQ3zBmkYaX8HtXt7SRiuiBqu1Y6CpakFc1IrmN5PzMk3Djz3/gHCvVhXPkj45ujM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KdJOymT1; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KdJOymT1"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 50VIPxaT1709913
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 12:25:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738347959;
-	bh=QeW7OzaxjVMicPl3OoEn58LA3cfkF615oS67GkKAOiI=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=KdJOymT1PgcvvIC6RprKEToSc33IG9pN6+wckktn3M6wKY617/V181+34vgG3fUWz
-	 wcdPSurnYvFjI3bW5UCsMOTaUpiflcc1rTpM8fVyGgs3EqAUPhU1L2ym3nC6zg0zHU
-	 N63R4V118ZBFstOjWEMiSXTAHOp4ZG9r3J4M9z0Q=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 50VIPxiw045233
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 31 Jan 2025 12:25:59 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 31
- Jan 2025 12:25:58 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 31 Jan 2025 12:25:58 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 50VIPwBL111109;
-	Fri, 31 Jan 2025 12:25:58 -0600
-Message-ID: <0b7cbf66-0c95-4ced-9cf7-cc5b953eebfe@ti.com>
-Date: Fri, 31 Jan 2025 12:25:58 -0600
+	s=arc-20240116; t=1738348014; c=relaxed/simple;
+	bh=89EpppYLahohyJXwbRVtozTnNghfoBYxxrd+uwpQ6gI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fdBOKmqbo0tWR2XBjt9k7MmhJG5n3y4sv3a+zW1i5L90+P5BihnA09YgEEyi4f15JRUoHVAiCA28JLJ7n2HUyV3l7S6xiVuVyclvJ4Dk1byViAGO/1ugXahwne9sqF3jH8UBfT/VOAj8WHihd3NGHz7GYGW+OnFKDX6G7cei2ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yl46g06r7z687rH;
+	Sat,  1 Feb 2025 02:24:27 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id D1B44140520;
+	Sat,  1 Feb 2025 02:26:49 +0800 (CST)
+Received: from localhost (10.195.244.178) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 31 Jan
+ 2025 19:26:48 +0100
+Date: Fri, 31 Jan 2025 18:26:46 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Alisa-Dariana Roman <alisadariana@gmail.com>
+CC: Alisa-Dariana Roman <alisa.roman@analog.com>, David Lechner
+	<dlechner@baylibre.com>, <linux-iio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "Michael
+ Hennerich" <Michael.Hennerich@analog.com>, Jonathan Cameron
+	<jic23@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet
+	<corbet@lwn.net>
+Subject: Re: [PATCH v3 0/3] Add support for AD7191
+Message-ID: <20250131182646.000074b6@huawei.com>
+In-Reply-To: <20250129143054.225322-1-alisa.roman@analog.com>
+References: <20250129143054.225322-1-alisa.roman@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] arm64: dts: ti: k3-am62a-mcu: Add R5F remote proc
- node
-To: Judith Mendez <jm@ti.com>, Hari Nagalla <hnagalla@ti.com>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Devarsh Thakkar <devarsht@ti.com>, Nishanth
- Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <devicetree@vger.kernel.org>
-References: <20250127221631.3974583-1-jm@ti.com>
- <20250127221631.3974583-3-jm@ti.com>
- <8b152f81-0848-4f34-adcb-fee9b4f2fd7f@ti.com>
- <76f9e9e8-dd7c-e783-fccc-0b6f913ce753@ti.com>
- <390aa52e-e9f2-4ce3-ad1b-eac71f4a211c@ti.com>
- <6ab56868-b2d2-4b8a-ac06-d0d35a5e8998@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <6ab56868-b2d2-4b8a-ac06-d0d35a5e8998@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 1/30/25 4:40 PM, Judith Mendez wrote:
-> On 1/28/25 11:48 AM, Judith Mendez wrote:
->> Hi Andrew,
->>
->> On 1/28/25 10:52 AM, Hari Nagalla wrote:
->>> On 1/28/25 10:27, Andrew Davis wrote:
->>>>> +    mcu_r5fss0: r5fss@79000000 {
->>>>> +        compatible = "ti,am62-r5fss";
->>>>> +        #address-cells = <1>;
->>>>> +        #size-cells = <1>;
->>>>> +        ranges = <0x79000000 0x00 0x79000000 0x8000>,
->>>>> +             <0x79020000 0x00 0x79020000 0x8000>;
->>>>> +        power-domains = <&k3_pds 7 TI_SCI_PD_EXCLUSIVE>;
->>>>
->>>> Newline here.
->>>>
->>>> Also this should be default "disabled". It can be set to "okay"
->>>> in the board DTS file when the needed mboxes and memory-region
->>>> are set. Speaking of that, where are those patches? This is
->>>> incomplete without them and these nodes will not function.
->>>> Same for the DSP patch.
->>>>
->>>> Andrew
->>> Yes, by default needs to set the node state to "disabled". This is HW description of the wake-up domain components. Memory carve outs and mailbox assignments for IPC are a separate patch as it is configurable and distro dependent.
->>
->> Yes I plan to disable the nodes in each domain .dtsi file.
->>
->> Also yes, my understanding is that the memory carveouts could
->> be a separate series if at all. Not sure if those patches can be
->> sent upstream since they are distro dependent. Can anyone clarify
->> if this is the case?
->>
+On Wed, 29 Jan 2025 16:29:01 +0200
+Alisa-Dariana Roman <alisadariana@gmail.com> wrote:
+
+> Thank you all for your feedback! Here is the updated series of patches!
 > 
-> As per offline discussion, I will include the memory carveouts in this
-> same series.
-
-It's usually good to fill in some details of "offline discussion" for
-folks on the list not in that conversation.
-
-By "distro dependent" we really mean firmware dependent. The carveouts
-are set in DT and then most firmware follows the same and hardcode
-these addresses. For example[0].
-
-This works well as long as all the firmware uses these standard
-addresses. Problem is some legacy firmware did not, and so to use
-those firmware the DT would need modified.
-
-For AM62 and AM62A I'm not aware of any such firmware. So this
-is a bit of a non-issue and we can safely add the carveouts
-like we already do for all other K3 devices.
-
-Andrew
-
-[0] https://github.com/zephyrproject-rtos/zephyr/blob/main/boards/beagle/beaglebone_ai64/beaglebone_ai64_j721e_main_r5f0_0.dts#L30
-
-> ~ Judith
+> I addressed all the replies' points, except for the one about the size of the
+> avail array being 1 when the pga/odr pins are pin-strapped. David raised a very
+> good point, but, for now, I left the size fixed to 4, since the functions for
+> setting the values return error anyway when they are pin-strapped.
+Shouldn't have them pretending they can be changed when they can't
+(which is what I think you mean about size fixed to 4). So this needs resolving.
 > 
->> ~ Judith
->>
+> I thought of 3 approaches:
+> 	- dynamic allocation for the avail arrays
+Probably best avoided.
+
+> 	- different avail array for the 2 different cases (pin-strap or gpios)
+That works for me.
+
+> 	- different channels array for the 2 different cases (probably too much)
+
+It is a bit odd to list avail when only one value, but not wrong as such so
+I think no need to go this far, though maybe there is a userspace library
+this might confuse?
+
 > 
+> If the current setup if not good enough, which approach would be the best?
+> 
+> Kind regards,
+> Alisa-Dariana Roman.
+> 
+> ---
+> 
+> v2: https://lore.kernel.org/all/20250122132821.126600-1-alisa.roman@analog.com/
+> 
+> v2 -> v3:
+> 	- correct binding title
+> 	- remove clksel_state and clksel_gpio, assume the clksel pin is always
+> pinstrapped
+> 	- rephrase clocks description accordingly
+> 	- simplify binding constraints
+> 	- specify in binding description that PDOWN must be connected to SPI's
+> controller's CS
+> 	- add minItems for gpios in bindings
+> 	- make scope explicit for mutex guard
+> 	- remove spi irq check
+> 	- add id_table to spi_driver struct
+> 	- changed comments as suggested
+> 	- use spi_message_init_with_transfers()
+> 	- default returns an error in ad7191_set_mode()
+> 	- replace hard-coded 2 with st->pga_gpios->ndescs
+> 	- use gpiod_set_array_value_cansleep()
+> 	- change .storagebits to 32
+> 	- check return value for ad_sd_init()
+> 	- change to adi,odr-value and adi,pga-value, which now accepts the value as
+> suggested
+> 	- modify variables names and refactor the setup of odr and pga gpios,
+> indexes and available arrays into ad7191_config_setup(), since they are all
+> related
+> 	- add ad7191.rst
+> 
+> v1: https://lore.kernel.org/all/20241221155926.81954-1-alisa.roman@analog.com/
+> 
+> v1 -> v2:
+> 	- removed patch adding function in ad_sigma_delta.h/.c
+> 	- added a function set_cs() for asserting/deasserting the cs
+> 	- handle pinstrapping cases
+> 	- refactored all clock handling
+> 	- updated bindings: corrected and added new things
+> 	- -> address of the channels is used in set_channel()  
+> 	- addressed all the other changes
+> 
+
