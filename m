@@ -1,114 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0E31C5486;
-	Fri, 31 Jan 2025 13:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACC71C5486
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738330741; cv=none; b=iu6YM4hdZQJS1S3xAaPYCXSerBs1udFZSOsI7eu8ZESkf9p6+LZhJD+2MVlCUbjG9Ie9q89e/HACYSQDbYFS/1zV6Eye70d7zlhGaGj1Wnfm4ZFxzRapPD7TknpS4hphVoF296CZMCUgBF5hrTL5V6a+hruej231tJJwqKVqojk=
+	t=1738330794; cv=none; b=edpzU1sM8ZQqrKTd9wwtb5ZqRAwFchKvq/QuNVnpZ4A4a1112sqF6uR+rj/uQ+cvwvXrGqJtD3rp+0Vs1skkudhLWh1/pMU9S0Xu0nKsgOOXCdQvdbd9JmQNIeifWu+eX6DhRZ3K/UY/Hzha/DMx4zYt/sGuO35Hx1+elYth54k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738330741; c=relaxed/simple;
-	bh=BlkMwqZELP0Gp0TzhdEuSlXKujbDb3xlMAHFMVLsdm8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sIuzqmnE9B7rOhOUJXINW3BUucwGQSxivQtRLqMjRLVtjaseagvduF4gXkjU45iYYDnRPkq2G6qmCOIxCpNgK0Cmut83vjFmvgAdZ2GggfSt5qU5LCJAgue2ypPRUtB5Q8tbIaLPLfG2hTf4bat/q4Z49mIRUYZYJ+q53XFAEBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y1GSRVG0; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738330794; c=relaxed/simple;
+	bh=ocByIrvPvPiznh+3UoEMt+a0DRHY7iLkhPgjk/zAa1g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BBvNBxc/sSyHY7rK7p3+2zf9Z8fdUp26bESmMcYV3bWsdOYRZkQjNbYE2kteJx8XrQRFXEyymZe9Lnkl3TDgusw/mJ8UuwB2YMNNsyRH3O9A87MBBjYxrAmjQAYGyf1pSra30OwJucxWl2U0gvU3o/51vNZFn/PT9zyTuGGe1rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=Bvcegygv; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y1GSRVG0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738330740; x=1769866740;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BlkMwqZELP0Gp0TzhdEuSlXKujbDb3xlMAHFMVLsdm8=;
-  b=Y1GSRVG0zPo2JYRw28LW1xP51qGwo4Sbm320todu55TO7kzYrQZ0b6a+
-   fo43MghPlQn6Fcy9BVFCMdjbNNlKDc0CuMr4tNepzrK7JENEZAp/CSDRj
-   8FRuTrjfdO4ak5T19dvT1sfzJguqzf5JmCzzqu8r4g94v8HoTRxQpWYBb
-   1V4huAvOJw3t7xFpDee8qOrUsoax+GRamr74+LSkFR153LNAfTQYQ+1yi
-   O74W9bnSP4HsbT7+H0g0cDO0RXr2B5XoLIW8/lbtmedFGnHdtoGU2PKgA
-   Sn5dtzBLUd95x7cUhuB9Hilp5bmfYuEAek5ErjKU3tuu7jRZAxptpDLaQ
-   w==;
-X-CSE-ConnectionGUID: 5u7Q1ErMS0CQ3xhla2sdGg==
-X-CSE-MsgGUID: dhnNj2pVR9up7opMIcfcRQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="50283182"
-X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
-   d="scan'208";a="50283182"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 05:38:58 -0800
-X-CSE-ConnectionGUID: yJ4rsx1GRSusxX/Vynh0XQ==
-X-CSE-MsgGUID: gJj2D0AhTKuPuWC4WLeG5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="146816937"
-Received: from dprybysh-mobl.ger.corp.intel.com (HELO intel.com) ([10.245.246.175])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 05:38:46 -0800
-Date: Fri, 31 Jan 2025 14:38:42 +0100
-From: Andi Shyti <andi.shyti@linux.intel.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Christian Brauner <brauner@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	David Airlie <airlied@gmail.com>,
-	David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Ran Xiaokai <ran.xiaokai@zte.com.cn>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 03/11] drm/i915/gem: Use PG_dropbehind instead of
- PG_reclaim
-Message-ID: <Z5zSYtcGGp73Ip2c@ashyti-mobl2.lan>
-References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
- <20250130100050.1868208-4-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="Bvcegygv"
+Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+	by cmsmtp with ESMTPS
+	id dqr8tlHxrAfjwdrFItQM06; Fri, 31 Jan 2025 13:39:44 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id drFIt6HrJNMSldrFItKsOs; Fri, 31 Jan 2025 13:39:44 +0000
+X-Authority-Analysis: v=2.4 cv=K9DpHDWI c=1 sm=1 tr=0 ts=679cd2a0
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=VdSt8ZQiCzkA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=JFz5sLme7EOQrv7eGfQA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=48JnqtXpYh3jPntJtpsJ0wyjkcS58NHjuI70m2I5qMM=; b=BvcegygvxCeVCJ9x4Q1sMOouM1
+	KalJxFTN9UOrCFcbE2+XtzwCaI8K+S6y0bt6ysZYmXnOnCz9+4JTACVwaWD1SUR7v/aFE9lpuUGpq
+	/hSZphisHFXMzEJJff0Kq3Svtu5w8eoSIwXin4oFX5gGiWNNEZ6vIJFCSSvS0oCP5psQ2QCHS/Y5A
+	4i+f+EShpKp7KhC0noOOFjuX6KOcB9r+4o08rtpXkwQWuE70RvPJNvOfPntfm/3u3Wg6ETqa3RV9w
+	Z4RYERKuaeH5mCtKSQeXVdKCaxkvcBrT2USiC14/uXBZAZ20mrRgFIWT0z3NpnQgGFALLQD6u2/T1
+	Ho+A3D2A==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:34732 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <re@w6rz.net>)
+	id 1tdrFH-000zXC-0K;
+	Fri, 31 Jan 2025 06:39:43 -0700
+Message-ID: <95de5a81-3d33-4bdb-aa09-c27924791d49@w6rz.net>
+Date: Fri, 31 Jan 2025 05:39:39 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130100050.1868208-4-kirill.shutemov@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.13 00/25] 6.13.1-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250130133456.914329400@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250130133456.914329400@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1tdrFH-000zXC-0K
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:34732
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 16
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfBzsNZE1cAoOHXfetRnOVNCRBGe7pn6SE9WPDkUdDWkxEm7fPjZA9v8tZ303JL6qFt7lQCp7xuTHaEsyqFCQdMthf1BoAzfEdcKnMoFScYEF2NFcH+DN
+ +XtUWGtVa3WzjqRlR0uD7dI0JRXLYIF0R3O8HK0Tb08VNsDVt7S3atwWQ6TXX1C7xDu8VSRqJQ+w5vcYy7FX4QDOWUKrtDukjt4=
 
-Hi Kirill,
+On 1/30/25 05:58, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.13.1 release.
+> There are 25 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 01 Feb 2025 13:34:42 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.1-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-On Thu, Jan 30, 2025 at 12:00:41PM +0200, Kirill A. Shutemov wrote:
-> The recently introduced PG_dropbehind allows for freeing folios
-> immediately after writeback. Unlike PG_reclaim, it does not need vmscan
-> to be involved to get the folio freed.
-> 
-> Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
-> __shmem_writeback()
-> 
-> It is safe to leave PG_dropbehind on the folio if, for some reason
-> (bug?), the folio is not in a writeback state after ->writepage().
-> In these cases, the kernel had to clear PG_reclaim as it shared a page
-> flag bit with PG_readahead.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com>
+Tested-by: Ron Economos <re@w6rz.net>
 
-Thanks,
-Andi
