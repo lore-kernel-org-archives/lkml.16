@@ -1,197 +1,98 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C0A918AFC
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 06:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D0CC8EB;
+	Fri, 31 Jan 2025 06:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738304407; cv=none; b=YRLVai4/fi8PH9565wuMDyrC2Xrm4AuRgpZVU5j5J4E155SRyjXDhneDtx/jOSN152Ob3BLCaCWJ2mkmL4OzkqSe0XUmscyxNGYaFpt8fSIcImytcjDtjloUuIbqL4J5ASKR9wNGClo6ciyvQvXm801WAHu/m+USLhYN71T7F9M=
+	t=1738304490; cv=none; b=FCsfaSvcAwdTYFKo5Hg1EqbuJUHdNmz6mrkg90Y8CPcoJ5px4aU9tPSy0fQdMI2ayJgmdI61GMEi/4KRS48WMHqMp5bBF8kQ3cnlTIeldsHnSYiFdewQJftrfNjxhpLOPD2KrLRdPrk50DnMJHWZKrD7sy8Gsxz5LDErq3RDTtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738304407; c=relaxed/simple;
-	bh=uhfL69VDqTIjX95rdq8D46D1cBeMIbGEDm1Zsu20v2Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TwEh8OH+08iUh5+k9gR0W7oFaq4mEieiwBxnxcPXxBxH4pieyDQaVhWuPz1Pk2aIVVqOcgKo9PfRuaaysjq07prbZS4TyHpBypgIeY1YKAmL2PNRIME+A0w5/e0v+nD8dbZSrkKhvrzPjOrNkK9iRNun7V87l9epJvPCrv0l2n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4Yklp73HJWz9sRr;
-	Fri, 31 Jan 2025 07:09:03 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id b1Ul4JWa_36c; Fri, 31 Jan 2025 07:09:03 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4Yklp72LmJz9sRk;
-	Fri, 31 Jan 2025 07:09:03 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 406AB8B774;
-	Fri, 31 Jan 2025 07:09:03 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 9ugh9ONY4wYh; Fri, 31 Jan 2025 07:09:03 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id C71218B763;
-	Fri, 31 Jan 2025 07:09:02 +0100 (CET)
-Message-ID: <01bc9e5c-fd47-4c26-8af3-59f10f3b9c76@csgroup.eu>
-Date: Fri, 31 Jan 2025 07:09:02 +0100
+	s=arc-20240116; t=1738304490; c=relaxed/simple;
+	bh=4457f3QO7jxAij1w8K8qI9z2zpN0Sb/yTbSaXGKXzAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=br9unCWde18V07l7eyuzwUWBQ81PhLZh9vIY3+9Q+u5BI4iHTjp4wjHX60lqw3yldmF96yKZs7WX/GaSf0dOQtyhVNfnSwksOCZqUaKNEumt9fFn2lYUrHTLGp5JH6WRJ987hk41Zrq0itDruR0Gevg92v6BgCW8u98c7OCGFQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BjzaAp7R; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BjzaAp7R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738304488; x=1769840488;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4457f3QO7jxAij1w8K8qI9z2zpN0Sb/yTbSaXGKXzAQ=;
+  b=BjzaAp7RuWCGEq2EGRmZmq376vgWvNLwp72iFMljd4h2P0qxod4EtIL+
+   rXRVzYR20/VZtOchotBT3inaLXy2nfDDA0pSRegvwQORcQkyTeDTKvw1n
+   s58tu5q3eOSh7y3Iec2DTZz701tYk/rnbeq+uidubgsN6vobtXivWZd/I
+   0DAHYxR8P1Lk04TdKNvO3gO7zhTjOvGy1ivdsrrJuzu/tK/8TzbWetPfj
+   gP8x10G4OLfOxhyHuq93ss+SdWBThWEa4UHPtiAHi+kTXRm9kEqQTHXzH
+   GH2QhRgUxysQjX3cJ7czeXIuP+UDQCet2lem/SWoXryGXXz4zQAt4P6+0
+   A==;
+X-CSE-ConnectionGUID: EZiD/ztZROeXaQyGj+m6lQ==
+X-CSE-MsgGUID: aDeXSpepS1acpB0xgdmJnA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="38898451"
+X-IronPort-AV: E=Sophos;i="6.13,247,1732608000"; 
+   d="scan'208";a="38898451"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 22:21:28 -0800
+X-CSE-ConnectionGUID: 8/BkORJtSKaC4/WFwBOUug==
+X-CSE-MsgGUID: 4dYWIjDlRoyHMpYHStLWJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,247,1732608000"; 
+   d="scan'208";a="110122754"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 22:21:24 -0800
+Date: Fri, 31 Jan 2025 07:17:54 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Cc: anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	wojciech.drewek@intel.com, piotr.raczynski@intel.com,
+	mateusz.polchlopek@intel.com, pawel.kaminski@intel.com,
+	michal.wilczynski@intel.com, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ice: Add check for devm_kzalloc()
+Message-ID: <Z5xrEtiFC4PtSFp6@mev-dev.igk.intel.com>
+References: <20250131013832.24805-1-jiashengjiangcool@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] powerpc: Enable dynamic preemption
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: mpe@ellerman.id.au, maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
- npiggin@gmail.com, linux-kernel@vger.kernel.org
-References: <20250106051919.55020-1-sshegde@linux.ibm.com>
- <20250106051919.55020-2-sshegde@linux.ibm.com>
- <20250130145409.D_so_mR1@linutronix.de>
- <b73b5143-1a7f-4032-ac06-43db3bf4abea@linux.ibm.com>
- <20250130202634.eeb9TfkW@linutronix.de>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250130202634.eeb9TfkW@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131013832.24805-1-jiashengjiangcool@gmail.com>
 
-
-
-Le 30/01/2025 à 21:26, Sebastian Andrzej Siewior a écrit :
-> On 2025-01-30 22:27:07 [+0530], Shrikanth Hegde wrote:
->>> | #DEFINE need_irq_preemption() \
->>> |          (static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
->>> |
->>> | 	if (need_irq_preemption()) {
->>>
->>> be a bit smaller/ quicker? This could be a fast path ;)
->>
->> I am okay with either way. I did try both[1], there wasn't any significant difference,
->> hence chose a simpler one. May be system size, workload pattern might matter.
->>
->> Let me do some more testing to see which one wins.
->> Is there any specific benchmark which might help here?
+On Fri, Jan 31, 2025 at 01:38:32AM +0000, Jiasheng Jiang wrote:
+> Add check for the return value of devm_kzalloc() to guarantee the success
+> of allocation.
 > 
-> No idea. As per bean counting: preempt_model_preemptible() should
-> resolve in two function calls + conditional in the dynamic case. This
-> should be more expensive compared to a nop/ branch ;)
-
-I did a build comparison on pmac32_defconfig + dynamic preemption, the 
-static branch looks definitely more optimal:
-
-Without static branch:
-
-...
-  294:	7c 08 02 a6 	mflr    r0
-  298:	90 01 00 24 	stw     r0,36(r1)
-  29c:	48 00 00 01 	bl      29c <interrupt_exit_kernel_prepare+0x50>
-			29c: R_PPC_REL24	preempt_model_full
-  2a0:	2c 03 00 00 	cmpwi   r3,0
-  2a4:	41 82 00 a4 	beq     348 <interrupt_exit_kernel_prepare+0xfc>
-...
-  2a8:	81 22 00 4c 	lwz     r9,76(r2)
-  2ac:	71 29 00 04 	andi.   r9,r9,4
-  2b0:	40 82 00 d4 	bne     384 <interrupt_exit_kernel_prepare+0x138>
-...
-  2b4:	7d 20 00 a6 	mfmsr   r9
-  2b8:	55 29 07 fa 	rlwinm  r9,r9,0,31,29
-...
-  348:	48 00 00 01 	bl      348 <interrupt_exit_kernel_prepare+0xfc>
-			348: R_PPC_REL24	preempt_model_lazy
-  34c:	2c 03 00 00 	cmpwi   r3,0
-  350:	40 a2 ff 58 	bne     2a8 <interrupt_exit_kernel_prepare+0x5c>
-  354:	4b ff ff 60 	b       2b4 <interrupt_exit_kernel_prepare+0x68>
-
-With the static branch:
-
-...
-  294:	48 00 00 58 	b       2ec <interrupt_exit_kernel_prepare+0xa0>
-...
-  298:	7d 20 00 a6 	mfmsr   r9
-  29c:	55 29 07 fa 	rlwinm  r9,r9,0,31,29
-...
-  2ec:	81 22 00 4c 	lwz     r9,76(r2)
-  2f0:	71 29 00 04 	andi.   r9,r9,4
-  2f4:	41 82 ff a4 	beq     298 <interrupt_exit_kernel_prepare+0x4c>
-...
-
-With the static branch it is just an unconditional branch being later 
-replaced by a NOP. It must be more efficient.
-
-So in first case we need to get and save LR, call preempt_model_full(), 
-compare with 0, call preempt_model_lazy() and compare again, and at some 
-point read and restore LR.
-
-And the preempt_model_() functions are not tiny functions:
-
-00003620 <preempt_model_full>:
-     3620:	3d 20 00 00 	lis     r9,0
-			3622: R_PPC_ADDR16_HA	preempt_dynamic_mode
-     3624:	94 21 ff f0 	stwu    r1,-16(r1)
-     3628:	80 69 00 00 	lwz     r3,0(r9)
-			362a: R_PPC_ADDR16_LO	preempt_dynamic_mode
-     362c:	2c 03 ff ff 	cmpwi   r3,-1
-     3630:	41 82 00 18 	beq     3648 <preempt_model_full+0x28>
-     3634:	68 63 00 02 	xori    r3,r3,2
-     3638:	38 21 00 10 	addi    r1,r1,16
-     363c:	7c 63 00 34 	cntlzw  r3,r3
-     3640:	54 63 d9 7e 	srwi    r3,r3,5
-     3644:	4e 80 00 20 	blr
-...
-     3648:	0f e0 00 00 	twui    r0,0
-     364c:	68 63 00 02 	xori    r3,r3,2
-     3650:	38 21 00 10 	addi    r1,r1,16
-     3654:	7c 63 00 34 	cntlzw  r3,r3
-     3658:	54 63 d9 7e 	srwi    r3,r3,5
-     365c:	4e 80 00 20 	blr
-
-00003660 <preempt_model_lazy>:
-     3660:	3d 20 00 00 	lis     r9,0
-			3662: R_PPC_ADDR16_HA	preempt_dynamic_mode
-     3664:	94 21 ff f0 	stwu    r1,-16(r1)
-     3668:	80 69 00 00 	lwz     r3,0(r9)
-			366a: R_PPC_ADDR16_LO	preempt_dynamic_mode
-     366c:	2c 03 ff ff 	cmpwi   r3,-1
-     3670:	41 82 00 18 	beq     3688 <preempt_model_lazy+0x28>
-     3674:	68 63 00 03 	xori    r3,r3,3
-     3678:	38 21 00 10 	addi    r1,r1,16
-     367c:	7c 63 00 34 	cntlzw  r3,r3
-     3680:	54 63 d9 7e 	srwi    r3,r3,5
-     3684:	4e 80 00 20 	blr
-...
-     3688:	0f e0 00 00 	twui    r0,0
-     368c:	68 63 00 03 	xori    r3,r3,3
-     3690:	38 21 00 10 	addi    r1,r1,16
-     3694:	7c 63 00 34 	cntlzw  r3,r3
-     3698:	54 63 d9 7e 	srwi    r3,r3,5
-     369c:	4e 80 00 20 	blr
-
-
-
-> But you would still need preempt_model_preemptible() for the !DYN case.
+> Fixes: 42c2eb6b1f43 ("ice: Implement devlink-rate API")
+> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+> ---
+>  drivers/net/ethernet/intel/ice/devlink/devlink.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
->>>> +	       preempt_model_voluntary() ? "voluntary" :
->>>> +	       preempt_model_full()      ? "full" :
->>>> +	       preempt_model_lazy()      ? "lazy" :
->>>> +	       "",
->>>
->>> So intend to rework this part. I have patches stashed at
->>> 	https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fbigeasy%2Fstaging.git%2Flog%2F%3Fh%3Dpreemption_string&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C553a8f640a9c4514597d08dd416c6534%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638738655988556429%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=ZfVQi1iRYaVCTrZ5vIhOQ7yAKaDnOwFi0NRjycfrI5A%3D&reserved=0
->>>
->>> which I didn't sent yet due to the merge window. Just a heads up ;)
->>
->> Makes sense. I had seen at-least two places where this code was there, ftrace/powerpc.
->> There were way more places..
->>
->> You want me to remove this part?
-> 
-> No, just be aware.
-> I don't know how this will be routed I guess we merge the sched pieces
-> first and then I submit the other pieces via the relevant maintainer
-> tree. In that case please be aware that all parts get removed/ replaced
-> properly.
-> 
-> Sebastian
+> diff --git a/drivers/net/ethernet/intel/ice/devlink/devlink.c b/drivers/net/ethernet/intel/ice/devlink/devlink.c
+> index d116e2b10bce..dbdb83567364 100644
+> --- a/drivers/net/ethernet/intel/ice/devlink/devlink.c
+> +++ b/drivers/net/ethernet/intel/ice/devlink/devlink.c
+> @@ -981,6 +981,9 @@ static int ice_devlink_rate_node_new(struct devlink_rate *rate_node, void **priv
+>  
+>  	/* preallocate memory for ice_sched_node */
+>  	node = devm_kzalloc(ice_hw_to_dev(pi->hw), sizeof(*node), GFP_KERNEL);
+> +	if (!node)
+> +		return -ENOMEM;
+> +
 
+Thanks for fixing:
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+
+>  	*priv = node;
+>  
+>  	return 0;
+> -- 
+> 2.25.1
