@@ -1,231 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F2E1F2C47;
-	Fri, 31 Jan 2025 20:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BB31494CF
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738354377; cv=none; b=dz74HG6/JDCBrPrqiuZ4Xdi6aPY6F8wBIXlDHKcttAdhX4kQBB7auaKSkpgaZhufaCMdCtBCwDdQ5uccmmkuh4Y3aT5Hn+7RMzzZhuiZWqzj0YrpIr5a07pvas0hBDj0z+JyRk1+3KQSYYgR9HNCYRIKUsqrMz8ttnRCMBwbEEs=
+	t=1738354562; cv=none; b=XyvHIIIvnFigmTOkFEQ+DXQgvVnjoEMgYdSS7HpknlOSISPe10ETNqvec100gSzLeQ5xBIW8Lp0MBvYwzaVjAi6rQVmMKD0JzMvofy9IRevbwYasg0v72UxWa4+m+lAtFDNkuvfombCNJGQe4i4aWlPf6G7sLAbq2lZqGn9vCrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738354377; c=relaxed/simple;
-	bh=vg/+jgyh0IRUSzgzqkliZ3s1/U6jUBUON10aCM43Ny0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ckp/AztJx+ISnGUizbYHdmkEXuTwyc3WDQ2JhpbeSpf0N+OtqsUerkMudVCfPIbmhpdWcipk2lqzQbEaEsnjS5JdZjcue7LrNtKo2izsHUYgUJvQ8fChVhnU4dFsc1Ax6MLzvsaEhs6SHDKCKOCMithgVYIpih6yG4QUOmviWVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aPjvJgg8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738354562; c=relaxed/simple;
+	bh=uyfEtlalm7/2N01yVWSHdBZ3Ltv3eZdpHMgUF3R+Au8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ILGgQSEo1Nwh+whTMfrHOV5Up6AHOuq2vetIE52lmApp5Dj/MJ9PXIV5bX/GU0O6tbL1zGT4Uc+SgasrXrNBkbLbV1p/ByRNNTXwSlY97gE4kdHcoaTaqWDdBA2Sz+vwR7WUNC+fZYYELgo581vcKVm7wj6PCCbXXytD2SNRlVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZUyaBb5o; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aPjvJgg8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE04DC4CED1;
-	Fri, 31 Jan 2025 20:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738354376;
-	bh=vg/+jgyh0IRUSzgzqkliZ3s1/U6jUBUON10aCM43Ny0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aPjvJgg824gCc0kSN+GlX5Dpiy38UxR3gJgZjjj5ncm8Q++AU2ucBbsVw/s5wux3l
-	 Toq21AkU3/EwcM38tMsJrm7Tba/vCH/4/kAGe0I4Ib6DsnCbpCwi7lCAWMb85G6keN
-	 j32ZMFHCajK5eWy88W4we0y1vqBxLy8EXCRjwOMJw7TGhV97Bh9JoNOgpSlRhswBRr
-	 DFxVEm+Rdc3kbq/0y9LQ9YiR6QmKfJm/YFONVcxGqviDH3q3c62fToIzAFuF5Bhf9M
-	 HQ34yWIslw7TY9n8M80PMjhyZ0URLmmm7RQkpmAcvSbSt5LygBhHBj2QHEpUkCjMtk
-	 q93MrlW6U4tPA==
-Date: Fri, 31 Jan 2025 12:12:53 -0800
-From: Kees Cook <kees@kernel.org>
-To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Cc: Jiri Kosina <jikos@kernel.org>, Alan Stern <stern@rowland.harvard.edu>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Terry Junge <linuxhid@cosmicgizmosystems.com>,
-	linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	syzbot <syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com>,
-	syzkaller-bugs@googlegroups.com, lvc-project@linuxtesting.org
-Subject: Re: [PATCH v2] HID: usbhid: fix recurrent out-of-bounds bug in
- usbhid_parse()
-Message-ID: <202501311205.DB75F95@keescook>
-References: <20250131151600.410242-1-n.zhandarovich@fintech.ru>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZUyaBb5o"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aa684b6d9c7so397859666b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:15:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1738354558; x=1738959358; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+PfSgXSELrUaoTDkqCzKwOcJSGmSEs6lHYZmUXLsucE=;
+        b=ZUyaBb5obN+CAyN/xjV2tFQ1ZRHXsUAgOXpO+L4mg9Srd5g0Np6l2ARNvHihj1vbfp
+         83uHrJd1XNQktuJIorGPYEHCUFFNvrU3v0sUbY3qUNw6UuZC4ZnyuN5CEI3dWxLcGkBg
+         K4SRHfjnV6BXUJ85BZZTzefnjC0wl/Ab8HC6g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738354558; x=1738959358;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+PfSgXSELrUaoTDkqCzKwOcJSGmSEs6lHYZmUXLsucE=;
+        b=dP7w7ChY8QDAnYjNPH32Z2yY6NeMnBqrKF6p87KhagAqIdyfp5qdVsrrVKsZuNzHq6
+         RCL9WIb4s1p5cMJ2i5SC5jA+SbjxMKLEgv8mqJtn4s2cbE7altKGOts0F3VU0yJyOfu6
+         V7PaYue3m7UFERszadZ/secM1AuZES4zLr59z2uxvFmGfDv+m5qoMS27qZ+fmLRICi6M
+         uvrNtFr3V5L1iUjIDsePcqFL9HEAUbsl/iua37lDDBsEjGNGWeMQVKrTaXymPw//seIX
+         smisQxOoh25/IG5E1oCNGfcosNVr0Pltpaq/xYG7OZnwfaTVCoLha5vyWKIevEsrLDxn
+         cEgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRVWh9iU6Wc7HsV+Ej6p5H3KbXOw/PANGkiyxfcauN+uwSDi00oMjmLLsKjS7M8O8lzFx04pS3FhfJMrM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC+nAJ7jfugMjtNT6gj1mDyj6J8+lxmxGXXTq9ro896ybrel5w
+	47doDrg8KcqUxPEVTZyrXcBwfp8DfJtrDpZnYDzKiN6Bj6Q1u7FVK0QftGvcOCFWc6JtynAuJgJ
+	a4uQ=
+X-Gm-Gg: ASbGncuKJop9rbRn+H7vh5TcFSAhFK3QvR908dCZcMzvlwArJo9P9294wKAS5f/Bj1A
+	/5t6dxCa58sER9lObjjC7/iIPnADIc+XveBwx2yM4k99+NmcQDS8yQuOREH90gawPe4iLVBui0c
+	usaEZwEqwzH5L17UaZP3hMt4xJ8AEz+uvxD2/49XHX+Qnn1+XZuhDCXPk0tRMxhDng5N/ZVogX9
+	Jhpjffxz2O64+MoTiKPkeH79u8ylHO+THxef74NAoTTkYQzCDYegRG7wdgfSX+cgX1swqjv6vVE
+	pKnRoLowBxf+ZN3p2cnrX39WkesfvssWvc4L7fU5Lh9lPCSK1aHtKvtdzugy53g4mw==
+X-Google-Smtp-Source: AGHT+IHRVV1jZhy43pihZcnluQMwTXZAQuqUOAQcdnoeg2xekLqBiUHKstRraEXiEylEnz/s+omV3A==
+X-Received: by 2002:a17:906:6a02:b0:ab3:875f:a246 with SMTP id a640c23a62f3a-ab6cfcb3a99mr1464027966b.7.1738354557832;
+        Fri, 31 Jan 2025 12:15:57 -0800 (PST)
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ffd42sm349178666b.95.2025.01.31.12.15.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 12:15:57 -0800 (PST)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5d90a5581fcso4152511a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:15:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVN8hw+ASsDeAY0Xdt0G/VGEPNOXUJsVYD4tBpR0Z5/Uv7+TVdrmizKbRFbs7UQ5utkKHjlAis/GL39CjU=@vger.kernel.org
+X-Received: by 2002:a05:6402:2747:b0:5d9:f9b8:e7e5 with SMTP id
+ 4fb4d7f45d1cf-5dc5efc6f82mr13561155a12.15.1738354556788; Fri, 31 Jan 2025
+ 12:15:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131151600.410242-1-n.zhandarovich@fintech.ru>
+References: <CAK7LNAQeyWYm2OZ6p=vWJegs_VZMz5RN+0fze6GG=f-ZGWQ3nA@mail.gmail.com>
+In-Reply-To: <CAK7LNAQeyWYm2OZ6p=vWJegs_VZMz5RN+0fze6GG=f-ZGWQ3nA@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 31 Jan 2025 12:15:40 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whzh=4XxP5mQEh9G+xYOjBLxpyV16Hk9NWMp5PszrKRWQ@mail.gmail.com>
+X-Gm-Features: AWEUYZlbFPcnU2fZBjulclvXOpxQ-WgVIzYy8hdJtliGciimcsvogBzeWwY4yos
+Message-ID: <CAHk-=whzh=4XxP5mQEh9G+xYOjBLxpyV16Hk9NWMp5PszrKRWQ@mail.gmail.com>
+Subject: Re: [GIT PULL] Kbuild updates for v6.14-rc1
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 31, 2025 at 06:15:58PM +0300, Nikita Zhandarovich wrote:
-> Syzbot reports [1] a reemerging out-of-bounds bug regarding hid
-> descriptors supposedly having unpredictable bNumDescriptors values in
-> usbhid_parse().
-> 
-> The issue stems from the fact that hid_class_descriptor is supposed
-> to be a flexible array, however it was sized as desc[1], using only
-> one element. Therefore, going beyond 1 element, courtesy of
-> bNumDescriptors, may lead to an error.
-> 
-> Modify struct hid_descriptor by employing __counted_by macro, tying
-> together struct hid_class_descriptor desc[] and number of descriptors
-> bNumDescriptors. Also, fix places where this change affects work with
-> newly updated struct.
-> 
-> [1] Syzbot report:
-> 
-> UBSAN: array-index-out-of-bounds in drivers/hid/usbhid/hid-core.c:1024:7
-> index 1 is out of range for type 'struct hid_class_descriptor[1]'
-> ...
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:88 [inline]
->  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
->  ubsan_epilogue lib/ubsan.c:231 [inline]
->  __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:429
->  usbhid_parse+0x5a7/0xc80 drivers/hid/usbhid/hid-core.c:1024
->  hid_add_device+0x132/0x520 drivers/hid/hid-core.c:2790
->  usbhid_probe+0xb38/0xea0 drivers/hid/usbhid/hid-core.c:1429
->  usb_probe_interface+0x645/0xbb0 drivers/usb/core/driver.c:399
->  really_probe+0x2b8/0xad0 drivers/base/dd.c:656
->  __driver_probe_device+0x1a2/0x390 drivers/base/dd.c:798
->  driver_probe_device+0x50/0x430 drivers/base/dd.c:828
->  __device_attach_driver+0x2d6/0x530 drivers/base/dd.c:956
->  bus_for_each_drv+0x24e/0x2e0 drivers/base/bus.c:457
->  __device_attach+0x333/0x520 drivers/base/dd.c:1028
->  bus_probe_device+0x189/0x260 drivers/base/bus.c:532
->  device_add+0x8ff/0xca0 drivers/base/core.c:3720
->  usb_set_configuration+0x1976/0x1fb0 drivers/usb/core/message.c:2210
->  usb_generic_driver_probe+0x88/0x140 drivers/usb/core/generic.c:254
->  usb_probe_device+0x1b8/0x380 drivers/usb/core/driver.c:294
-> 
-> Reported-by: syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=c52569baf0c843f35495
-> Fixes: f043bfc98c19 ("HID: usbhid: fix out-of-bounds bug")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-> ---
-> v1: https://lore.kernel.org/all/20240524120112.28076-1-n.zhandarovich@fintech.ru/
-> 
-> v2: Instead of essentially forcing usbhid_parse() to only check
-> the first descriptor, modify hid_descriptor struct to anticipate
-> multiple hid_class_descriptor in desc[] by utilizing __counted_by
-> macro. This change, in turn, requires several other ones wherever
-> that struct is used. Adjust commit description accordingly.
-> 
-> P.S. Since syzbot currently breaks trying to reproduce the issue,
-> with or without this patch, I only managed to test it locally with
-> syz repros. Would greatly appreciate other people's effort to test
-> it as well.
-> 
-> P.P.S. Terry Junge <linuxhid@cosmicgizmosystems.com> suggested a
-> different approach to this issue, see:
-> Link: https://lore.kernel.org/all/f7963a1d-e069-4ec9-82a1-e17fd324a44f@cosmicgizmosystems.com/
-> 
->  drivers/hid/usbhid/hid-core.c       |  2 +-
->  drivers/usb/gadget/function/f_fs.c  |  3 ++-
->  drivers/usb/gadget/function/f_hid.c | 22 ++++++++++++++--------
->  include/linux/hid.h                 |  2 +-
->  4 files changed, 18 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
-> index a6eb6fe6130d..eb4807785d6d 100644
-> --- a/drivers/hid/usbhid/hid-core.c
-> +++ b/drivers/hid/usbhid/hid-core.c
-> @@ -1010,7 +1010,7 @@ static int usbhid_parse(struct hid_device *hid)
->  		return -ENODEV;
->  	}
->  
-> -	if (hdesc->bLength < sizeof(struct hid_descriptor)) {
-> +	if (hdesc->bLength < struct_size(hdesc, desc, hdesc->bNumDescriptors)) {
->  		dbg_hid("hid descriptor is too short\n");
->  		return -EINVAL;
->  	}
+On Fri, 31 Jan 2025 at 11:45, Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+> tags/kbuild-v6.14
 
-I don't think you want this hunk in the patch. The existing logic will
-correctly adapt num_descriptors to a size that fits within
-hdesc->bLength. In theory, the above change could break a weird but
-working device that reported too high bNumDescriptors but still worked
-with what num_descriptors walks.
+Hmm. I was expecting the CONFIG_TRIM_UNUSED_KSYMS fix to come in from
+you too. IOW, this:
 
-> diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-> index 2dea9e42a0f8..a4b6d7cbf56d 100644
-> --- a/drivers/usb/gadget/function/f_fs.c
-> +++ b/drivers/usb/gadget/function/f_fs.c
-> @@ -2550,7 +2550,8 @@ static int __must_check ffs_do_single_desc(char *data, unsigned len,
->  	case USB_TYPE_CLASS | 0x01:
->  		if (*current_class == USB_INTERFACE_CLASS_HID) {
->  			pr_vdebug("hid descriptor\n");
-> -			if (length != sizeof(struct hid_descriptor))
-> +			if (length < sizeof(struct hid_descriptor) +
-> +				     sizeof(struct hid_class_descriptor))
->  				goto inv_length;
->  			break;
->  		} else if (*current_class == USB_INTERFACE_CLASS_CCID) {
+  https://lore.kernel.org/all/20241214105726.92557-1-masahiroy@kernel.org/
 
-Same here, I think? This isn't needed unless I'm misunderstanding
-something about the fix.
+which fixes the "load_utf8() ->symbol_request() -> symbol_get()
+returns NULL" case when CONFIG_TRIM_UNUSED_KSYMS is enabled.
 
-> diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
-> index 740311c4fa24..ec8c2e2d6812 100644
-> --- a/drivers/usb/gadget/function/f_hid.c
-> +++ b/drivers/usb/gadget/function/f_hid.c
-> @@ -139,13 +139,17 @@ static struct usb_interface_descriptor hidg_interface_desc = {
->  };
->  
->  static struct hid_descriptor hidg_desc = {
-> -	.bLength			= sizeof hidg_desc,
-> +	.bLength			= struct_size(&hidg_desc, desc, 1),
->  	.bDescriptorType		= HID_DT_HID,
->  	.bcdHID				= cpu_to_le16(0x0101),
->  	.bCountryCode			= 0x00,
->  	.bNumDescriptors		= 0x1,
-> -	/*.desc[0].bDescriptorType	= DYNAMIC */
-> -	/*.desc[0].wDescriptorLenght	= DYNAMIC */
-> +	.desc				= {
-> +		{
-> +			.bDescriptorType	= 0, /* DYNAMIC */
-> +			.wDescriptorLength	= 0, /* DYNAMIC */
-> +		}
-> +	}
->  };
->  
->  /* Super-Speed Support */
-> @@ -936,16 +940,18 @@ static int hidg_setup(struct usb_function *f,
->  		switch (value >> 8) {
->  		case HID_DT_HID:
->  		{
-> -			struct hid_descriptor hidg_desc_copy = hidg_desc;
-> +			DEFINE_FLEX(struct hid_descriptor, hidg_desc_copy,
-> +				desc, bNumDescriptors, 1);
-> +			*hidg_desc_copy = hidg_desc;
->  
->  			VDBG(cdev, "USB_REQ_GET_DESCRIPTOR: HID\n");
-> -			hidg_desc_copy.desc[0].bDescriptorType = HID_DT_REPORT;
-> -			hidg_desc_copy.desc[0].wDescriptorLength =
-> +			hidg_desc_copy->desc[0].bDescriptorType = HID_DT_REPORT;
-> +			hidg_desc_copy->desc[0].wDescriptorLength =
->  				cpu_to_le16(hidg->report_desc_length);
->  
->  			length = min_t(unsigned short, length,
-> -						   hidg_desc_copy.bLength);
-> -			memcpy(req->buf, &hidg_desc_copy, length);
-> +						   hidg_desc_copy->bLength);
-> +			memcpy(req->buf, hidg_desc_copy, length);
->  			goto respond;
->  			break;
->  		}
-> diff --git a/include/linux/hid.h b/include/linux/hid.h
-> index cdc0dc13c87f..85a58ae2c4a0 100644
-> --- a/include/linux/hid.h
-> +++ b/include/linux/hid.h
-> @@ -739,7 +739,7 @@ struct hid_descriptor {
->  	__u8  bCountryCode;
->  	__u8  bNumDescriptors;
->  
-> -	struct hid_class_descriptor desc[1];
-> +	struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
->  } __attribute__ ((packed));
->  
->  #define HID_DEVICE(b, g, ven, prod)					\
+Obviously I can apply that patch directly, but the reason I _didn't_
+do so was that I was just expecting it to come through the normal
+Kbuild tree... Pls advice,
 
-Otherwise, this looks correct to me.
-
--- 
-Kees Cook
+                Linus
