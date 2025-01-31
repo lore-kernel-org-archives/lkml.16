@@ -1,183 +1,377 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2083.outbound.protection.outlook.com [40.107.236.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968891C5F06;
-	Fri, 31 Jan 2025 13:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738330638; cv=fail; b=Ken3ZapG6SiXO5xv+26V+fD1YHDJZ64wQnX3ihLXOcRbaduNUKwpDyA985yinvk/K8Q/9gTSmDEITz29aNN8jhIaFxiPJt1GlLhBNuPb+b8aB8tay6SENJleeqePbp1MShN5v1t55C5l3yH2qp3jQsGNbH8Y0EYoHk4NUhuyoyY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738330638; c=relaxed/simple;
-	bh=mquDQ9G7LUc3Pi8d9FGVNXrlfJ+O3C8v9J2O7/9dDHU=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=cmPDJRvKynzYwipZ1+MENe4hl+sgpXhrJF0zzKEDW55D868N0/N5Y91zKRNULxfjUGc69PUiC5NI5hug3neFb07D6RpIQVidm8PNKq4qDl0HuJcxlNifyqcYDJ1K6S4wE+pI7IX2Mkz0U+QTtifx596dsQ7Jal0MtrW2lXTHM6g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RA2hcts4; arc=fail smtp.client-ip=40.107.236.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66DD1C8FB5;
+	Fri, 31 Jan 2025 13:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738330643; cv=none; b=QEePsZI+HbbftHMAxM0Ihr0szDVZpW1xe9jJQ/e/bk4EKfJW1qFfjZ8cS+/r/XzU+6lEhIHzxmSeIiT63GUURtTo2fo4q84mDD7uAvmpX5rUSpyowYYnYBo7mjgzglbDQBpjqd7B4m73HCa3mDSVGBlCibyAqZY8rVVOmpNXT6c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738330643; c=relaxed/simple;
+	bh=LbHCUrEdhbojNKZ/RR5Lpsxq1m/GASPMuuAZHnVP2S8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SumXtjS+ASSHVsnxlJeftYWqj2lSIv+PBTibGf5FeqZ8frNKKsGUQQxA/a3NE8/lNaavPiPZed4pVu3yr7glwXpe0bS4+TQFVYNxxbPRXmwHzQAupBoTp6S5EumxCmScET0DePMbM5c7igjsv3916H2izbWhIXSJitsD1ot9TMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ARyFZPhu; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RA2hcts4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ahm9+W+gpjZ2KM2OedLT30M7a30ILMuaUMokaff3bRBe3LCCL7nKob2R0mmXEZ8gfmwvd3w03qqpNVZ1odxmT15cjndrxkq0v9BSxuLO4bNR3OjZHvkrdj8cvPpYtD9RAHebsAjJ7N2Rkk6mqoKosWJGM7ozqa4tTY35iC5PvpSxVu+HM3NMdCHUCwrahCn5y2wDBfZn7l42Yxfz60PCZAFqpL4Gk98DZfmPdxJehfOU4XKDuuQgaxKLqKbBhLAeMNGshF9ox3plNn9vDzZwJl4vIRXAF/v3LdzN9HpgZrI4pKuxvu545c6Cd1aBV0hjPo3m9yCKcRp/nNraePMEPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B74ohBKO7XAj6Ws/Z9K8qZwL2zryUvpYKVzem02jThk=;
- b=VXU9pqQZbmInwv/F5mHdrSgm8Vx1MRPXXckOTvG206se76lN9gufRCNcr8CE9iOzyD0keNUGu0vNVCERtY7Lq7qgQsipaiX7JnHyNHN/3zePfmNw1jIjBMh++eEHqNFB/dImhzwIL9RZFndG0y9yqI92UG+EDNEqe4FtQb+AJVYi6rY7ZUyhQJZ2VKTXaZ22sM4j8sq8C6o0OgxD7botY0zwaVMHA2wjECRa6A7TeHoKs3k+EdPlRU3JinBAtoS3gvKe6cOS1sv6RtCYq+MvfdHJAJ3hRSb3aRXNEA/w9useRdIl+z+sn1yblS+Wz5IcPtRyY1X9tt8Je1qqI9iEVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B74ohBKO7XAj6Ws/Z9K8qZwL2zryUvpYKVzem02jThk=;
- b=RA2hcts4/1GnZNDalQbGSaT2EOG8nnH9U9QaKYs+IsjbL/F4SJMnrAaeMZ6EzqXvI7MnbFXL7/bC7xIc5NreagQMKYrc1EjRMeA8C/DwPkhPXxoC/0IHRmPKWnFuxylwloWpogfoPkdiikjcGxuZNAnNvsqtICzYkEgSap8Gp7tTZYqBmEgtJ2AjEUP6nWC6XmQmvyjU31kddHO5y95kuZrGuulXCY83PpmGd0iKeSSXVgNNCPYRT2okI3k+lE6vCEfAzuvOFFQVz5y+ykSOWTZeJLMO/XL/JjiKSLjXi+DMmqxPSRFUlEe8KWbhpFol32YCeW7qa80OHnj9zyJvEg==
-Received: from MN2PR16CA0050.namprd16.prod.outlook.com (2603:10b6:208:234::19)
- by BL1PR12MB5945.namprd12.prod.outlook.com (2603:10b6:208:398::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Fri, 31 Jan
- 2025 13:37:09 +0000
-Received: from BL6PEPF00020E5F.namprd04.prod.outlook.com
- (2603:10b6:208:234:cafe::ee) by MN2PR16CA0050.outlook.office365.com
- (2603:10b6:208:234::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.20 via Frontend Transport; Fri,
- 31 Jan 2025 13:37:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BL6PEPF00020E5F.mail.protection.outlook.com (10.167.249.20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.14 via Frontend Transport; Fri, 31 Jan 2025 13:37:08 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 31 Jan
- 2025 05:36:52 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 31 Jan
- 2025 05:36:51 -0800
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Fri, 31 Jan 2025 05:36:51 -0800
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
-	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.10 000/136] 5.10.234-rc2 review
-In-Reply-To: <20250131112129.273288063@linuxfoundation.org>
-References: <20250131112129.273288063@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARyFZPhu"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30613802a04so18269571fa.2;
+        Fri, 31 Jan 2025 05:37:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738330640; x=1738935440; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=d+5jra0SH2uQt8IrloFdsrAify0lpNpYCVPtA+7/PaI=;
+        b=ARyFZPhuCpRceLALYxF2gLT9JrxlFiLDPvUyWfwf2RC3GeSFHb81f8y3okuV0T1DSw
+         c8Uz9YvG0X3nE0uJ+0MOoDGHWX0SJXQPaFSFlHmIfIHe3oOAfaF/jh+WXYpQDQvZURiD
+         DBPv63z6UNkboyDvDI/es/7v6PmwfVZI61bd1WJnjMNSH2wHU1dYkViBc5/clIbX7i60
+         eIADBBLKUc+sKsI40d8cXvzTJCixBYmDwy8DuJ/yMvNYGmcIRnTdjhhV/rk4g3WK7JBU
+         rNMYbt65wTlxdQPlcBaOcqbUKBcRdn8mTEzdL27/oNyaJgaF1VylF3GW3puhL4xw7BaY
+         eh3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738330640; x=1738935440;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d+5jra0SH2uQt8IrloFdsrAify0lpNpYCVPtA+7/PaI=;
+        b=KTXMSfIGasmkoJCHMfZ2BSc04zwaQYwcJfTjFRFYs9s59b17AW+DZ59CyfJxY4S0b8
+         PWXxexKI8qPVmGiokOFyhT1IawSM9lZ8ZZo8CmgLhG7iZPMGe4tbktPTbqgw3n+P6wHi
+         Q00R8usogp6HjU9Nek/OB8vi+2Bv2zcTTIpr8nIsvTdkb/ENjHncD6GiSCt4hh8wvYTH
+         eaI7+nFuSCao/ohb0VyptWcvAB6MpLo8pg9cEUa2CR/+Aigm6z2pOmj23Wscc7PFmPoO
+         xLdzkqw7XXpxVB0OpENa98UwMsk211+HnMJTUv+lO9uhWO+waS38Bq4+XymeE72vZLKl
+         qf5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCURoVXz8nkuFSch4TShRcI9D6RgYzGVVITyoH20Yu0mUfBMDKbVCcaNbAajkk8mcqLWXSBYDKT/abRf@vger.kernel.org, AJvYcCW86T9jU0xnOM2iC1iitSq3QR0I6OM77psNhYHpzpcl/xwkMOFSL/5Vaf4csaYS/X7VMa3Nz4yC5Zyprw==@vger.kernel.org, AJvYcCW9G/QrgxPSsEiWiqB0z53lIO8JxZ+y0Ybb3NsSgSRPUO6I0tyB5urSq3LHV1IKsS+rRRwYjha9Eh1Re5Km@vger.kernel.org, AJvYcCXAKyge0CmgaoRM+ksJ+xDmSw9+pUB/aysJy4V5xZ/rwcWNsq5ADTARBUHHU7tXLCzCcIFoJatf1rSt@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxirKi5hl+1D/u2d9GxcW8CxWxrnBZS8OA1c5uCa2XvFavxDhR
+	8An0RVSjbYbN+WIQssBz1ptvuULImdWoY7DRUFTD7NJSYgBLhIV0
+X-Gm-Gg: ASbGncv/RVx6BDIytv/u76TIGX3qb7JYo5zA+8hutqu84ZvYYlCe1EstlsFqeaTno07
+	34u3ig2zZEPhtP4gHmRuxvhGrnQ149bm7Xhyyv3jpIjxk0TjBscsN9HRS2YY+Hl5tWoc/gMf2Jx
+	x1PFGFTRowSyHCHcm35OyFTPHRG6+gnIVSlfbU+c5g+gjS4Eg17HGaafYXzHXW9nLLCIpQ1FSF3
+	EVjyMyuJDIvxUxccyxSiYM7YaxkRt+RqAxZOSBMj6knsnUQ7fGxM4rewWJcfZuC5Jvur6cYbjgI
+	rZLHBs/iMGT/wqPbtJREgpPaYx83dLtgkYB4KjItDzAxBG0=
+X-Google-Smtp-Source: AGHT+IEZVmENbSjG/r2sUas2lBFwtK4YregPz+jUi4RWXqrXWLW1kIijOfmxTUWeA+ggD/8MDycmAA==
+X-Received: by 2002:a2e:bd16:0:b0:302:40ec:a1bc with SMTP id 38308e7fff4ca-307968e10ffmr37536271fa.30.1738330639355;
+        Fri, 31 Jan 2025 05:37:19 -0800 (PST)
+Received: from mva-rohm (85-23-190-22.bb.dnainternet.fi. [85.23.190.22])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a3069d54sm5496371fa.1.2025.01.31.05.37.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 05:37:17 -0800 (PST)
+Date: Fri, 31 Jan 2025 15:37:06 +0200
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Nuno Sa <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>,
+	Dumitru Ceclan <mitrutzceclan@gmail.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>,
+	Matteo Martelli <matteomartelli3@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [RFC PATCH 2/5] mfd: Add ROHM BD79124 ADC/GPO
+Message-ID: <cc30cf6859b5e5a7320282709f428cd42717ac6b.1738328714.git.mazziesaccount@gmail.com>
+References: <cover.1738328714.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <5a302e59-50d1-4fe0-9707-32952a0c9255@rnnvmail202.nvidia.com>
-Date: Fri, 31 Jan 2025 05:36:51 -0800
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E5F:EE_|BL1PR12MB5945:EE_
-X-MS-Office365-Filtering-Correlation-Id: e4f1664b-58c2-4748-c07e-08dd41fc5c20
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|36860700013|1800799024|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TXRGbTYrRXFlQ1R1VmRJbE1yTkxzZStGaGpNMml4N3luUklFRHhRMUlvUDB2?=
- =?utf-8?B?OHlMSWQ2RXRxaEpqaTdaZzZDbE5MUmpDbVl5N2VxTm9Yd0E3R28xMTZ1WnpM?=
- =?utf-8?B?d1JxR001MDFVL2ZOeVpIdUswQW0vRi9EK1JST3VVOERZNzBnUDA4bnhHclBD?=
- =?utf-8?B?R3dndGprd3RHS0dZdlh0dG5jWWFiUVBKek5zbk5oWmxsZiswcUJBUWwzeGdm?=
- =?utf-8?B?NnBaMWFIZUZkK2ZkU3dBY3RvamtPSTdDME4xTUlQM3BySTIzQ28zeXZrdW1t?=
- =?utf-8?B?THdPUldJTm5SOUViaWlydmlSRXpoUXZkWkp6dk9XNmlLa1cwczA0L01qQzRo?=
- =?utf-8?B?VjI1RXRNUCtwSjlhdk0vM3FZNVBIYXgzSGV0REtRbTlpM2IzT3ByME5TVEVu?=
- =?utf-8?B?WVNHaHVNaXFZOGVOUCs3Vy9wbEltSWI1M29CVitiTWh1YWUxM0x6azNFdmFM?=
- =?utf-8?B?dlpwQnRaZ29zSkd5Y0F6MGsrSTdtU2Jmdnd5VWNTTllROHBXNXQySWVWVHZK?=
- =?utf-8?B?TGRnbHV3aUZueURIcHM2RGlPQnJMQzNwRWdsMFFwbHVIaENXL05TVDJlWVpE?=
- =?utf-8?B?OHptVlY5R0EybG80TS8rTE13L2gzZnE2Q3Zydkt0T0pxWEFSU0VyYXJZcGw5?=
- =?utf-8?B?aUJaQkFyS00xSG5nMnorVUFwM1ZGdld4ZnBCMXlzSXlLT3pnU21Fam8wUlcz?=
- =?utf-8?B?bC9xSFlPd3hMTGZZVDR2WjdGcFFxRmdwS2lwbWFOb2thU3VLUHJPN1NEU3lW?=
- =?utf-8?B?eXpnSllPdm8rVzdBNnZnbzNXNkp1YXNIL2JibHlPWWRwU1VuWWdlc2NWeEtI?=
- =?utf-8?B?RnFRQW1MM1BWYlR3RlB1NkNyVDVqS3BBQXN5dEF3a05wK09OVXdqN3dNZ0d3?=
- =?utf-8?B?ck5qSU1USHlLSGJRYzhnbnVVWWpzR3h4eGl3UmhncUhpNk5UWUFHWmg3UDBx?=
- =?utf-8?B?ZFNFcURKRStoSS8yYnpLR00yUWp0Rk9xa1FQOXBpTUlacFRTb0lpZ25RK05O?=
- =?utf-8?B?eWNIblNWTi9KVENRZCtHQUFHUHJlY2F6b0pNZTFNWnB0OXlIZ1lHNWxZajVV?=
- =?utf-8?B?OG5qZDdrbnVaOVFQb1RNMGZyUWtoTU5LR0hBa1R1Y2lYQkpZTWc2Y2U3Z1Vr?=
- =?utf-8?B?dDgxVTBJdlhRSXBoWHVITWRnWmdTbzd5dGg5OFlWdWVBSGd0TjJWb3VDamxD?=
- =?utf-8?B?NDR0bFZMRmNXSmY0REtORUZNbnFKdVd2S0wrdzFiTFNIWUZIR1hqRU4zb2li?=
- =?utf-8?B?eCszeWtXb2hoVndTdmF2U08ySkV3aFRkVjVqS0xCeStaYWZuV1JpeTUrSE4x?=
- =?utf-8?B?TFcyMVlxR3o5U3lqR1ZTc0thOEwxaitSK3laNDY4c0Q5MHFmQ1BiNVYyeUE2?=
- =?utf-8?B?bDY5YWVOWHEydjhFa1B4QTFTVkVDOGtuNGdVQ3ROWDBad0ZYV2x4dk9qZDNR?=
- =?utf-8?B?Tm5uMW93aEZVRFZJSDZ6V1dPaFVzaFoyTHRhcG43Mi9GUENMaWF3alhyYU5F?=
- =?utf-8?B?eC9MR1gyTFRXZUREUXQ0WjZTM2hGZC9WU25vbkhTT2h1N3lQM2dzTWVVMkFS?=
- =?utf-8?B?d1RqNzdSc0ErQVR2WlZLRTk4NDBiZjZWZEk4TmYxR2RoRjBvSXRhenNnMktN?=
- =?utf-8?B?dCtJdi9wNWgxVHhpL0dveDRCSlFuLy9vU2c3UlFNVTJUcEl6ZTMwdGhNd1VU?=
- =?utf-8?B?Q3JMOXc0Nk03ZnBuNnBQUWM3cUN3VG1ZOEFvMVA5ZW9yVlV1UVcyQTFDTmZx?=
- =?utf-8?B?bE1KZnJMMEZJbDVvZnBqVTBTMkcvZTBVZ2IxWG5CNG5MTDZYRVBsTnlmOHpX?=
- =?utf-8?B?WWpYbUFpMEFYMEc3d3ZEaTBCc29hbjdpMlFBT3ZqdHFZME1IN3g2VGg1Vmd4?=
- =?utf-8?B?VDdLMXR6Zzc4UzRwa056Z3FOY2JvYlBUMy9IME1ibnFzOTd3dHI0ai9UREpQ?=
- =?utf-8?B?cXlhbDltMFdyeitPYXVVUGtFcHNQN3R3V3R0ZGF3alFLQmh4c292QnJLUWFi?=
- =?utf-8?Q?tzCdJs07hX54RtMxQECKt2NtHSYO0w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(1800799024)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 13:37:08.7661
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4f1664b-58c2-4748-c07e-08dd41fc5c20
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E5F.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5945
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZCYcIh57x3OhomXz"
+Content-Disposition: inline
+In-Reply-To: <cover.1738328714.git.mazziesaccount@gmail.com>
 
-On Fri, 31 Jan 2025 12:21:46 +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.10.234 release.
-> There are 136 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 02 Feb 2025 11:21:01 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.234-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
 
-All tests passing for Tegra ...
+--ZCYcIh57x3OhomXz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Test results for stable-v5.10:
-    10 builds:	10 pass, 0 fail
-    26 boots:	26 pass, 0 fail
-    67 tests:	67 pass, 0 fail
+Add core driver for the ROHM BD79124 ADC / GPO.
 
-Linux version:	5.10.234-rc2-g99689d3bdd98
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra194-p3509-0000+p3668-0000,
-                tegra20-ventana, tegra210-p2371-2180,
-                tegra210-p3450-0000, tegra30-cardhu-a04
+The core driver launches the sub-drivers for the pinmux/GPO and for the
+IIO ADC. It also provides the regmap, and forwards the IRQ resource to
+the ADC.
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+---
+ drivers/mfd/Kconfig              |  12 +++
+ drivers/mfd/Makefile             |   1 +
+ drivers/mfd/rohm-bd79124.c       | 165 +++++++++++++++++++++++++++++++
+ include/linux/mfd/rohm-bd79124.h |  32 ++++++
+ 4 files changed, 210 insertions(+)
+ create mode 100644 drivers/mfd/rohm-bd79124.c
+ create mode 100644 include/linux/mfd/rohm-bd79124.h
 
-Jon
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index ae23b317a64e..f024256fb180 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -2113,6 +2113,18 @@ config MFD_ROHM_BD71828
+ 	  also a single-cell linear charger, a Coulomb counter, a real-time
+ 	  clock (RTC), GPIOs and a 32.768 kHz clock gate.
+=20
++config MFD_ROHM_BD79124
++	tristate "Rohm BD79124 core driver"
++	depends on I2C
++	select REGMAP_I2C
++	help
++	  Say yes here to build support for the ROHM BD79124 ADC core. The
++	  ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The ADC supports
++	  also an automatic measurement mode, with an alarm interrupt for
++	  out-of-window measurements. The window is configurable for each
++	  channel. The ADC inputs can optionally be used as general purpose
++	  outputs.
++
+ config MFD_ROHM_BD957XMUF
+ 	tristate "ROHM BD9576MUF and BD9573MUF Power Management ICs"
+ 	depends on I2C=3Dy
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index e057d6d6faef..c7d64e933a7d 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -270,6 +270,7 @@ obj-$(CONFIG_MFD_SC27XX_PMIC)	+=3D sprd-sc27xx-spi.o
+ obj-$(CONFIG_RAVE_SP_CORE)	+=3D rave-sp.o
+ obj-$(CONFIG_MFD_ROHM_BD71828)	+=3D rohm-bd71828.o
+ obj-$(CONFIG_MFD_ROHM_BD718XX)	+=3D rohm-bd718x7.o
++obj-$(CONFIG_MFD_ROHM_BD79124)	+=3D rohm-bd79124.o
+ obj-$(CONFIG_MFD_ROHM_BD957XMUF)	+=3D rohm-bd9576.o
+ obj-$(CONFIG_MFD_ROHM_BD96801)	+=3D rohm-bd96801.o
+ obj-$(CONFIG_MFD_STMFX) 	+=3D stmfx.o
+diff --git a/drivers/mfd/rohm-bd79124.c b/drivers/mfd/rohm-bd79124.c
+new file mode 100644
+index 000000000000..c35ab0e03b0b
+--- /dev/null
++++ b/drivers/mfd/rohm-bd79124.c
+@@ -0,0 +1,165 @@
++// SPDX-License-Identifier: GPL-2.0-only
++//
++// Copyright (C) 2025 ROHM Semiconductors
++//
++// ROHM BD79124 ADC / GPO driver
++
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
++
++#include <linux/mfd/core.h>
++#include <linux/mfd/rohm-bd79124.h>
++
++static struct resource adc_alert;
++
++enum {
++	CELL_PINMUX,
++	CELL_ADC,
++};
++
++static struct mfd_cell bd79124_cells[] =3D {
++	[CELL_PINMUX]	=3D { .name =3D "bd79124-pinmux", },
++	[CELL_ADC]	=3D { .name =3D "bd79124-adc", },
++};
++
++/* Read-only regs */
++static const struct regmap_range bd79124_ro_ranges[] =3D {
++	{
++		.range_min =3D BD79124_REG_EVENT_FLAG,
++		.range_max =3D BD79124_REG_EVENT_FLAG,
++	}, {
++		.range_min =3D BD79124_REG_RECENT_CH0_LSB,
++		.range_max =3D BD79124_REG_RECENT_CH7_MSB,
++	},
++};
++
++static const struct regmap_access_table bd79124_ro_regs =3D {
++	.no_ranges	=3D &bd79124_ro_ranges[0],
++	.n_no_ranges	=3D ARRAY_SIZE(bd79124_ro_ranges),
++};
++
++static const struct regmap_range bd79124_volatile_ranges[] =3D {
++	{
++		.range_min =3D BD79124_REG_RECENT_CH0_LSB,
++		.range_max =3D BD79124_REG_RECENT_CH7_MSB,
++	}, {
++		.range_min =3D BD79124_REG_EVENT_FLAG,
++		.range_max =3D BD79124_REG_EVENT_FLAG,
++	}, {
++		.range_min =3D BD79124_REG_EVENT_FLAG_HI,
++		.range_max =3D BD79124_REG_EVENT_FLAG_HI,
++	}, {
++		.range_min =3D BD79124_REG_EVENT_FLAG_LO,
++		.range_max =3D BD79124_REG_EVENT_FLAG_LO,
++	}, {
++		.range_min =3D BD79124_REG_SYSTEM_STATUS,
++		.range_max =3D BD79124_REG_SYSTEM_STATUS,
++	},
++};
++
++static const struct regmap_access_table bd79124_volatile_regs =3D {
++	.yes_ranges	=3D &bd79124_volatile_ranges[0],
++	.n_yes_ranges	=3D ARRAY_SIZE(bd79124_volatile_ranges),
++};
++
++static const struct regmap_range bd79124_precious_ranges[] =3D {
++	{
++		.range_min =3D BD79124_REG_EVENT_FLAG_HI,
++		.range_max =3D BD79124_REG_EVENT_FLAG_HI,
++	}, {
++		.range_min =3D BD79124_REG_EVENT_FLAG_LO,
++		.range_max =3D BD79124_REG_EVENT_FLAG_LO,
++	},
++};
++
++static const struct regmap_access_table bd79124_precious_regs =3D {
++	.yes_ranges	=3D &bd79124_precious_ranges[0],
++	.n_yes_ranges	=3D ARRAY_SIZE(bd79124_precious_ranges),
++};
++
++static const struct regmap_config bd79124_regmap =3D {
++	.reg_bits		=3D 16,
++	.val_bits		=3D 8,
++	.read_flag_mask		=3D BD79124_I2C_MULTI_READ,
++	.write_flag_mask	=3D BD79124_I2C_MULTI_WRITE,
++	.max_register		=3D BD79124_REG_MAX,
++	.cache_type		=3D REGCACHE_MAPLE,
++	.volatile_table		=3D &bd79124_volatile_regs,
++	.wr_table		=3D &bd79124_ro_regs,
++	.precious_table		=3D &bd79124_precious_regs,
++};
++
++static int bd79124_probe(struct i2c_client *i2c)
++{
++	int ret;
++	struct regmap *map;
++	struct device *dev =3D &i2c->dev;
++	int *adc_vref;
++
++	adc_vref =3D devm_kzalloc(dev, sizeof(*adc_vref), GFP_KERNEL);
++	if (!adc_vref)
++		return -ENOMEM;
++
++	/*
++	 * Better to enable regulators here so we don't need to worry about the
++	 * order of sub-device instantiation. We also need to deliver the
++	 * reference voltage value to the ADC driver. This is done via
++	 * the MFD driver's drvdata.
++	 */
++	*adc_vref =3D devm_regulator_get_enable_read_voltage(dev, "vdd");
++	if (*adc_vref < 0)
++		return dev_err_probe(dev, ret, "Failed to get the Vdd\n");
++
++	dev_set_drvdata(dev, adc_vref);
++
++	ret =3D devm_regulator_get_enable(dev, "iovdd");
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Failed to enable I/O voltage\n");
++
++	map =3D devm_regmap_init_i2c(i2c, &bd79124_regmap);
++	if (IS_ERR(map))
++		return dev_err_probe(dev, PTR_ERR(map),
++				     "Failed to initialize Regmap\n");
++
++	if (i2c->irq) {
++		adc_alert =3D DEFINE_RES_IRQ_NAMED(i2c->irq, "thresh-alert");
++		bd79124_cells[CELL_ADC].resources =3D &adc_alert;
++		bd79124_cells[CELL_ADC].num_resources =3D 1;
++	}
++
++	ret =3D devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, bd79124_cells,
++				   ARRAY_SIZE(bd79124_cells), NULL, 0, NULL);
++	if (ret)
++		dev_err_probe(dev, ret, "Failed to create subdevices\n");
++
++	return ret;
++}
++
++static const struct of_device_id bd79124_of_match[] =3D {
++	{ .compatible =3D "rohm,bd79124" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, bd79124_of_match);
++
++static const struct i2c_device_id bd79124_id[] =3D {
++	{ "bd79124", },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, bd79124_id);
++
++static struct i2c_driver bd79124_driver =3D {
++	.driver =3D {
++		.name =3D "bd79124",
++		.of_match_table =3D bd79124_of_match,
++	},
++	.probe =3D bd79124_probe,
++	.id_table =3D bd79124_id,
++};
++module_i2c_driver(bd79124_driver);
++
++MODULE_AUTHOR("Matti Vaittinen <mazziesaccount@gmail.com>");
++MODULE_DESCRIPTION("Core Driver for ROHM BD79124");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/mfd/rohm-bd79124.h b/include/linux/mfd/rohm-bd79=
+124.h
+new file mode 100644
+index 000000000000..505faeb6f135
+--- /dev/null
++++ b/include/linux/mfd/rohm-bd79124.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Copyright 2021 ROHM Semiconductors.
++ *
++ * Author: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++ */
++
++#ifndef _MFD_BD79124_H
++#define _MFD_BD79124_H
++
++#define BD79124_I2C_MULTI_READ		0x30
++#define BD79124_I2C_MULTI_WRITE		0x28
++#define BD79124_REG_MAX			0xaf
++
++#define BD79124_REG_SYSTEM_STATUS	0x0
++#define BD79124_REG_GEN_CFG		0x01
++#define BD79124_REG_OPMODE_CFG		0x04
++#define BD79124_REG_PINCFG		0x05
++#define BD79124_REG_GPO_VAL		0x06
++#define BD79124_REG_SEQUENCE_CFG	0x10
++#define BD79124_REG_MANUAL_CHANNELS	0x11
++#define BD79124_REG_AUTO_CHANNELS	0x12
++#define BD79124_REG_ALERT_CH_SEL	0x14
++#define BD79124_REG_EVENT_FLAG		0x18
++#define BD79124_REG_EVENT_FLAG_HI	0x1a
++#define BD79124_REG_EVENT_FLAG_LO	0x1c
++#define BD79124_REG_HYSTERESIS_CH0	0x20
++#define BD79124_REG_EVENTCOUNT_CH0	0x22
++#define BD79124_REG_RECENT_CH0_LSB	0xa0
++#define BD79124_REG_RECENT_CH7_MSB	0xaf
++
++#endif
+--=20
+2.48.1
+
+
+--ZCYcIh57x3OhomXz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmec0gIACgkQeFA3/03a
+ocUY2QgAkM6qEm1sViic5TZYHjrGfuLkUZKJ0lcOE+YmLtGAfmoRj4M6Rpw+T6Lm
+PVqHq/tso/L9b4Ew58Cu5NiIyVhIp/CIeALxQMLyym8GS1mt7YBrPHFLHwsy/F5B
+dL+KIzE07hmM7bS/14X8BYPjFps0CK8xFDDaokxB8QlWQo3ixHbg5HsO7pey9qKK
+RHzkhTD6uMNJxDkYrBM1y1Dbbe6jzWa/DI8FIP+f0DY5y6BMrQB+CWllm7Ht7iVG
+P2J7HMA2fR1r2sO8um93Dr4bCE6OI9XCrsa+GGQfrAx5O48KZcBcd/p9GJbHrA8O
+MYrZSC3qkQPqOZCAFTmQaxTT6+prEw==
+=4avQ
+-----END PGP SIGNATURE-----
+
+--ZCYcIh57x3OhomXz--
