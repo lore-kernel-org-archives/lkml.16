@@ -1,185 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B4A2BB15;
-	Fri, 31 Jan 2025 09:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B976176242;
+	Fri, 31 Jan 2025 09:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738314575; cv=none; b=st7NQTqIAJrVvPlqnuik0T4dJlAccK/lYxbjjYI2SIKdHfhVYDZ2QUxg3WO/sHNZgFrzIziSCIS1OD4thKJQD4yhh5FlkAEzQQVforFt4IAgh7l/y0tSXyzHYB0rUD2q8ZBrIGP4/FeyZuwO3BmEH5obR5wPd1mXTFb2X2bbja4=
+	t=1738314623; cv=none; b=aHJnAsnEKXHSPzyh6uecDiHyZ0u/hKNA/D8H+XhOL3/ZQncqbpH9wg+gtRrQ1BykRT2J8APcy9+w8qL7ozY6Bu5yUhqUKHYHKC8lN9zQctdZxeS15P5TDMs3IizeGmRPyI71bRA0qMTuBN7U2VbkrrfmfZZJVY3oWoU7bTkmnzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738314575; c=relaxed/simple;
-	bh=OFkh54zJD2NZ80nIDeuODN8ZbPLuQVqC5NfP5c5+kts=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TmKIL3qsqSGAvY/7TyP/4qVVz4/lV5O1ZWX2U3X2nucHjh1uOob8zXKQwnnJj0F+xvgtUb19mkq6ACX/6OoWjwi+PcaZapBK0DMhd/B/xu3JfZS/qRxxovBaPdftGdlMambBGjjoZdoYMP4V0K7HiQQf+YOj0icrM2vz5QNoP4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vKHaGFiH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738314623; c=relaxed/simple;
+	bh=Zq1U6bkea/u9ETwViK/08OSEGHkjaLa87mgwuyoS/CU=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=o9Z1uTOhbH3Izgk/S5sUcgWoMjQ+urjII9XSvS9Wy5oacsLhofclanCrA4Fg07N1dVF2aruSJSg0pzrB/JDTuQ9CLdPwq3AxkJYaluogB6VHPSJnMcklofdilJr/M1R9ZRnG8PwUY3o4f47/V2QucWsFx+4zu4NrB26UABe2/1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=ls3/hWsG; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vKHaGFiH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3C1CC4CED1;
-	Fri, 31 Jan 2025 09:09:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738314575;
-	bh=OFkh54zJD2NZ80nIDeuODN8ZbPLuQVqC5NfP5c5+kts=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vKHaGFiH98f0ILT14IAQOj9WeQK3fwh8ZqZrFPqkhT7d7V3gg5a9AtVD7ggDEWU7O
-	 55GQdD1QJgbgrnJBkMCqgFajkud1Vdv5mLw0+nQlQl16WslYxZp4PiMcGH4+8pwrHJ
-	 mbZdG1nfcR/9pdWTsZmraM6P22/3Cxp4bdtb+t8CJQGgHiwyB1zO8BjcCq+1WQDJqz
-	 dkZh4/XawzORyNqsAd62JiwC1OjSQf544cd6yw6utMepLJ5vEMLz60g6B7Fmqa3yjr
-	 EFFbf1WP7PZgeudjucPZhdKiPOsjBYd3LUgnkg1jhhg1hCWDTM13Mfj6S+jmYsiUeg
-	 f7MZUYN2tPlvg==
-Date: Fri, 31 Jan 2025 09:09:27 +0000
-From: Simon Horman <horms@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvm@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	David Ahern <dsahern@kernel.org>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, sdf@fomichev.me,
-	asml.silence@gmail.com, dw@davidwei.uk,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Victor Nogueira <victor@mojatatu.com>,
-	Pedro Tammela <pctammela@mojatatu.com>,
-	Kaiyuan Zhang <kaiyuanz@google.com>
-Subject: Re: [PATCH RFC net-next v2 5/6] net: devmem: Implement TX path
-Message-ID: <20250131090927.GB24105@kernel.org>
-References: <20250130211539.428952-1-almasrymina@google.com>
- <20250130211539.428952-6-almasrymina@google.com>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="ls3/hWsG"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130211539.428952-6-almasrymina@google.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1738314613;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w66nwBa+GHbxorNXdWjdWunCnuLe88jUElmyfHxjB78=;
+	b=ls3/hWsGrRsivnoaVnIbnPU1Uf9z93L4dfcm0vJAunbPNK7qG5fKxjGBSNBFijT7dwRS/a
+	bz5zyUjR9T69n04l9K6VWu6S05JU/Q2pI3Qu8UfwBcGAjPf9+EZ033YZTwxR7VqYWU29cT
+	Hw9iqepXFumcPBXREvGBz5CnlTIGAFcRPM+XPa41FiOqXfvEZ3l2rN+/cSsMSMJ/9hO0AY
+	ZdiwDDeJIg8e93wV1GJTfiymUPl7n81Pkslusc+Ffsxl1VkMOTgBHMnalLrKfmjrHXGEj8
+	mQOJdfKvuyGmffR87bZtmzrJ4TLKUFA6WfQV55kTHgiCE7oQQOHasdnoRoDFUA==
+Date: Fri, 31 Jan 2025 10:10:13 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Tianling Shen <cnsztl@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Peter Geis <pgwipeout@gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: change eth phy mode to rgmii-id for
+ orangepi r1 plus lts
+In-Reply-To: <2910311.mvXUDI8C0e@phil>
+References: <20250119091154.1110762-1-cnsztl@gmail.com>
+ <98387508-10de-4c2e-80ad-05d0d86b7006@gmail.com>
+ <59e46b34e1c8f9197565fea917335d3f@manjaro.org> <2910311.mvXUDI8C0e@phil>
+Message-ID: <19d3590613746aef9af98361d8cda4bc@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Thu, Jan 30, 2025 at 09:15:38PM +0000, Mina Almasry wrote:
-> Augment dmabuf binding to be able to handle TX. Additional to all the RX
-> binding, we also create tx_vec needed for the TX path.
+Hello Heiko,
+
+On 2025-01-31 10:01, Heiko Stuebner wrote:
+> Am Freitag, 24. Januar 2025, 07:35:50 MEZ schrieb Dragan Simic:
+>> On 2025-01-24 07:28, Tianling Shen wrote:
+>> > On 2025/1/19 23:48, Tianling Shen wrote:
+>> >> On 2025/1/19 19:36, Dragan Simic wrote:
+>> >>> On 2025-01-19 12:15, Tianling Shen wrote:
+>> >>>> On 2025/1/19 17:54, Dragan Simic wrote:
+>> >>>>> Thanks for the patch.  Please, see a comment below.
+>> >>>>>
+>> >>>>> On 2025-01-19 10:11, Tianling Shen wrote:
+>> >>>>>> In general the delay should be added by the PHY instead of the
+>> >>>>>> MAC,
+>> >>>>>> and this improves network stability on some boards which seem to
+>> >>>>>> need different delay.
+>> >>>>>>
+>> >>>>>> Fixes: 387b3bbac5ea ("arm64: dts: rockchip: Add Xunlong OrangePi
+>> >>>>>> R1 Plus LTS")
+>> >>>>>> Cc: stable@vger.kernel.org # 6.6+
+>> >>>>>> Signed-off-by: Tianling Shen <cnsztl@gmail.com>
+>> >>>>>> ---
+>> >>>>>>  arch/arm64/boot/dts/rockchip/rk3328-orangepi-r1-plus-lts.dts | 3
+>> >>>>>> +--
+>> >>>>>>  arch/arm64/boot/dts/rockchip/rk3328-orangepi-r1-plus.dts     | 1
+>> >>>>>> +
+>> >>>>>>  arch/arm64/boot/dts/rockchip/rk3328-orangepi-r1-plus.dtsi    | 1
+>> >>>>>> -
+>> >>>>>>  3 files changed, 2 insertions(+), 3 deletions(-)
+>> >>>>>>
+>> >>>>>> diff --git
+>> >>>>>> a/arch/arm64/boot/dts/rockchip/rk3328-orangepi-r1-plus-lts.dts
+>> >>>>>> b/arch/arm64/boot/dts/rockchip/rk3328-orangepi-r1-plus-lts.dts
+>> >>>>>> index 67c246ad8b8c..ec2ce894da1f 100644
+>> >>>>>> --- a/arch/arm64/boot/dts/rockchip/rk3328-orangepi-r1-plus-lts.dts
+>> >>>>>> +++ b/arch/arm64/boot/dts/rockchip/rk3328-orangepi-r1-plus-lts.dts
+>> >>>>>> @@ -17,8 +17,7 @@ / {
+>> >>>>>>
+>> >>>>>>  &gmac2io {
+>> >>>>>>      phy-handle = <&yt8531c>;
+>> >>>>>> -    tx_delay = <0x19>;
+>> >>>>>> -    rx_delay = <0x05>;
+>> >>>>>> +    phy-mode = "rgmii-id";
+>> >>>>>
+>> >>>>> Shouldn't the "tx_delay" and "rx_delay" DT parameters be converted
+>> >>>>> into the "tx-internal-delay-ps" and "rx-internal-delay-ps"
+>> >>>>> parameters,
+>> >>>>> respectively, so the Motorcomm PHY driver can pick them up and
+>> >>>>> actually configure the internal PHY delays?
+>> >>>>
+>> >>>> The documentation[1] says "{t,r}x-internal-delay-ps" default to 1950
+>> >>>> and that value already works fine on my board.
+>> >>>>
+>> >>>> 1. https://www.kernel.org/doc/Documentation/devicetree/bindings/net/
+>> >>>> motorcomm%2Cyt8xxx.yaml
+>> >>>
+>> >>> I see, but those values differ from the values found in the
+>> >>> "tx_delay" and "rx_delay" DT parameters, so I think this patch
+>> >>> should be tested with at least one more Orange Pi R1 Plus LTS
+>> >>> board, to make sure it's all still fine.
+>> >>
+>> >> This patch has been tested on 2 boards, and we will do more tests in
+>> >> next week.
+>> >
+>> > Managed to test on another board and looks so far so good.
+>> > (Working network connection, no packet drop)
+>> 
+>> Sounds good to me, thanks for the additional testing.
 > 
-> Provide API for sendmsg to be able to send dmabufs bound to this device:
-> 
-> - Provide a new dmabuf_tx_cmsg which includes the dmabuf to send from.
-> - MSG_ZEROCOPY with SCM_DEVMEM_DMABUF cmsg indicates send from dma-buf.
-> 
-> Devmem is uncopyable, so piggyback off the existing MSG_ZEROCOPY
-> implementation, while disabling instances where MSG_ZEROCOPY falls back
-> to copying.
-> 
-> We additionally pipe the binding down to the new
-> zerocopy_fill_skb_from_devmem which fills a TX skb with net_iov netmems
-> instead of the traditional page netmems.
-> 
-> We also special case skb_frag_dma_map to return the dma-address of these
-> dmabuf net_iovs instead of attempting to map pages.
-> 
-> Based on work by Stanislav Fomichev <sdf@fomichev.me>. A lot of the meat
-> of the implementation came from devmem TCP RFC v1[1], which included the
-> TX path, but Stan did all the rebasing on top of netmem/net_iov.
-> 
-> Cc: Stanislav Fomichev <sdf@fomichev.me>
-> Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> I assume that means there are no more open issues, right?
+> At least I got that impression from glancing at the thread :-)
 
-...
-
-> diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
-
-> index 0e41699df419..9ba6994e2a05 100644
-> --- a/net/core/netdev-genl.c
-> +++ b/net/core/netdev-genl.c
-
-...
-
-> @@ -911,10 +912,68 @@ int netdev_nl_bind_rx_doit(struct sk_buff *skb, struct genl_info *info)
->  	return err;
->  }
->  
-> -/* stub */
->  int netdev_nl_bind_tx_doit(struct sk_buff *skb, struct genl_info *info)
->  {
-> -	return 0;
-> +	struct net_devmem_dmabuf_binding *binding;
-> +	struct list_head *sock_binding_list;
-> +	struct net_device *netdev;
-> +	u32 ifindex, dmabuf_fd;
-> +	struct sk_buff *rsp;
-> +	int err = 0;
-> +	void *hdr;
-> +
-> +	if (GENL_REQ_ATTR_CHECK(info, NETDEV_A_DEV_IFINDEX) ||
-> +	    GENL_REQ_ATTR_CHECK(info, NETDEV_A_DMABUF_FD))
-> +		return -EINVAL;
-> +
-> +	ifindex = nla_get_u32(info->attrs[NETDEV_A_DEV_IFINDEX]);
-> +	dmabuf_fd = nla_get_u32(info->attrs[NETDEV_A_DMABUF_FD]);
-> +
-> +	sock_binding_list =
-> +		genl_sk_priv_get(&netdev_nl_family, NETLINK_CB(skb).sk);
-> +	if (IS_ERR(sock_binding_list))
-> +		return PTR_ERR(sock_binding_list);
-> +
-> +	rsp = genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
-> +	if (!rsp)
-> +		return -ENOMEM;
-> +
-> +	hdr = genlmsg_iput(rsp, info);
-> +	if (!hdr) {
-> +		err = -EMSGSIZE;
-> +		goto err_genlmsg_free;
-> +	}
-> +
-> +	rtnl_lock();
-> +
-> +	netdev = __dev_get_by_index(genl_info_net(info), ifindex);
-> +	if (!netdev || !netif_device_present(netdev)) {
-> +		err = -ENODEV;
-> +		goto err_unlock;
-> +	}
-> +
-> +	binding = net_devmem_bind_dmabuf(netdev, DMA_TO_DEVICE, dmabuf_fd,
-> +					 info->extack);
-> +	if (IS_ERR(binding)) {
-> +		err = PTR_ERR(binding);
-> +		goto err_unlock;
-> +	}
-> +
-> +	list_add(&binding->list, sock_binding_list);
-> +
-> +	nla_put_u32(rsp, NETDEV_A_DMABUF_ID, binding->id);
-> +	genlmsg_end(rsp, hdr);
-> +
-> +	rtnl_unlock();
-> +
-> +	return genlmsg_reply(rsp, info);
-> +
-> +	net_devmem_unbind_dmabuf(binding);
-
-Hi Mina,
-
-It appears that the line above is unreachable.
-I guess it was part of an unwind that is no-longer needed
-and thus can now be removed.
-
-Flagged by Smatch.
-
-> +err_unlock:
-> +	rtnl_unlock();
-> +err_genlmsg_free:
-> +	nlmsg_free(rsp);
-> +	return err;
->  }
-
-...
+Yes, Tianling performed the additional testing, and the
+introduced changes worked fine on three boards in total.
+To me, that sounds good. :)
