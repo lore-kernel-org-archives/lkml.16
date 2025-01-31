@@ -1,146 +1,282 @@
-Received: from mail3-164.sinamail.sina.com.cn (mail3-164.sinamail.sina.com.cn [202.108.3.164])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E821B4253
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB9F2AD11
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738324047; cv=none; b=PPRk6OiiJYfPixv9l3qoVyL8rxw1u/e6y7SPIL/XbuAZsVtGjkawomshqvNyGUrfFg0wjOQJtkHczxGeqjC4b+6i90RIdksb/2hopgC/WBeY+EQjQi0SnkmBCXCwyNTtFJWQWdUrgni0MY3tEAB2tPN+zUEO6HC3LFR4KjpMNoI=
+	t=1738324082; cv=none; b=QK+DY13EuqjGNMgnLDZbc9uY/nq4meCgjnTw1KV7wzXwyYrD4EGoD9A/HO09jD22ywZJD3IV9V7ACgWawP5hEz1V1nwU383DS50zGoTxQ2OVW46IkyF9x6YiXqqPWYeeujGxWLn9+UhfYORH+7A7T74moj2uxf9r/lZs/4ubLZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738324047; c=relaxed/simple;
-	bh=G0zBmiWgwLVTZGTlXktqVquVQj7mZ2BvYn4kO4oV+CY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p4+fI/NKPHBHhJltmW10Db4cGrAl1k1Se6Tv9RL+ppdeeIXggNZr63ro7bS7gCixX4Rq63tNC5mYq+B6u7FWW4Gf3MBycepqKWGQXJNWQ/nKo9LZbJ17ISLlXFaDa6eWsI0XlspTNAt2I40pgAfJsRXtPiKhtZm/F+bXQl/Kv9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=202.108.3.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.56.205])
-	by sina.com (10.182.253.24) with ESMTP
-	id 679CB70000007643; Fri, 31 Jan 2025 19:41:54 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 7901151048633
-X-SMAIL-UIID: 41743EF9D83B418388C82C14F66606BF-20250131-194154-1
-From: Hillf Danton <hdanton@sina.com>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 01/17] zram: switch to non-atomic entry locking
-Date: Fri, 31 Jan 2025 19:41:40 +0800
-Message-ID: <20250131114141.1870-1-hdanton@sina.com>
-In-Reply-To: <20250131090658.3386285-2-senozhatsky@chromium.org>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
+	s=arc-20240116; t=1738324082; c=relaxed/simple;
+	bh=A8iq+feuGy17gunLxjvTfcPR4Gngp/VUM9bFTSzcHv4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=UsRvQOFuRSbaRI7tpYyjtCPsRdUt7whe7nazwup8MQSynRKFB25Ix1H02W/c3kvL6k3K9VO/WDSBvhFzvp53woQmzft3usNdULLpOFinLNF2gi7a/TwKleUyMTN06S7EXuWjeLyXbQq58llZkokJdCvU9BYZGI5+HCpw0YTP7mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UEqlqQWe; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UEqlqQWe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738324081; x=1769860081;
+  h=date:from:to:cc:subject:message-id;
+  bh=A8iq+feuGy17gunLxjvTfcPR4Gngp/VUM9bFTSzcHv4=;
+  b=UEqlqQWeK6Yo2wuNt7AGKFsTRu2C1BxtGrV17owgVsP9Z9EHixkhCgbC
+   1BiYvbxIwboqdddFaOlpf5zeikBBZc26zTVfXfHkOxIuPiSEYuDaPzUnH
+   4ps0Qrl4KHjBdOQlyidHqWX6+HEEjvAAuSAkaHnWbAsvTxSIysTt4ek1N
+   b1dbSJAEgu8xdn0fKVFx0slZ5qrQXj6qYBeRSwi4U0aSg+5rZcHGuG261
+   9w2yF2m/xPVCxgppQQKRTSKW5FwD6/KQwP2KdYXMglRDcpGaBd0ED+2ru
+   5TlG5giP8CEWInCLWGVyKzK+mhwX4GnqAqxCH+W1U4Dk8D0cEsGZPuBqW
+   w==;
+X-CSE-ConnectionGUID: ibx55DzYSdyZ9agLbC1jBA==
+X-CSE-MsgGUID: IgO68PHcRpOtfoZ3b6mqLQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="42641084"
+X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
+   d="scan'208";a="42641084"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 03:48:00 -0800
+X-CSE-ConnectionGUID: OoCu4a8hReuUm0Moa5HrGA==
+X-CSE-MsgGUID: CD13/CkrTreNnpPyjYCwZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
+   d="scan'208";a="109755698"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 31 Jan 2025 03:47:59 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tdpV6-000mK5-22;
+	Fri, 31 Jan 2025 11:47:56 +0000
+Date: Fri, 31 Jan 2025 19:46:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [paulmck-rcu:srcu.2025.01.30a] BUILD SUCCESS
+ e6b6939b65a685635cf7f9c7bb43c620ad2dcd72
+Message-ID: <202501311951.n3nELPtO-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On Fri, 31 Jan 2025 18:06:00 +0900 Sergey Senozhatsky
-> Concurrent modifications of meta table entries is now handled
-> by per-entry spin-lock.  This has a number of shortcomings.
-> 
-> First, this imposes atomic requirements on compression backends.
-> zram can call both zcomp_compress() and zcomp_decompress() under
-> entry spin-lock, which implies that we can use only compression
-> algorithms that don't schedule/sleep/wait during compression and
-> decompression.  This, for instance, makes it impossible to use
-> some of the ASYNC compression algorithms (H/W compression, etc.)
-> implementations.
-> 
-> Second, this can potentially trigger watchdogs.  For example,
-> entry re-compression with secondary algorithms is performed
-> under entry spin-lock.  Given that we chain secondary
-> compression algorithms and that some of them can be configured
-> for best compression ratio (and worst compression speed) zram
-> can stay under spin-lock for quite some time.
-> 
-> Do not use per-entry spin-locks and instead convert it to an
-> atomic_t variable which open codes reader-writer type of lock.
-> This permits preemption from slot_lock section, also reduces
-> the sizeof() zram entry when lockdep is enabled.
-> 
-Nope, the price of cut in size will be paid by extra hours in debugging,
-given nothing is free.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git srcu.2025.01.30a
+branch HEAD: e6b6939b65a685635cf7f9c7bb43c620ad2dcd72  srcu: Make SRCU-fast also be NMI-safe
 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  drivers/block/zram/zram_drv.c | 126 ++++++++++++++++++++--------------
->  drivers/block/zram/zram_drv.h |   6 +-
->  2 files changed, 79 insertions(+), 53 deletions(-)
-> 
-> diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-> index 9f5020b077c5..1c2df2341704 100644
-> --- a/drivers/block/zram/zram_drv.c
-> +++ b/drivers/block/zram/zram_drv.c
-> @@ -58,19 +58,50 @@ static void zram_free_page(struct zram *zram, size_t index);
->  static int zram_read_from_zspool(struct zram *zram, struct page *page,
->  				 u32 index);
->  
-> -static int zram_slot_trylock(struct zram *zram, u32 index)
-> +static bool zram_slot_try_write_lock(struct zram *zram, u32 index)
->  {
-> -	return spin_trylock(&zram->table[index].lock);
-> +	atomic_t *lock = &zram->table[index].lock;
-> +	int old = ZRAM_ENTRY_UNLOCKED;
-> +
-> +	return atomic_try_cmpxchg(lock, &old, ZRAM_ENTRY_WRLOCKED);
-> +}
-> +
-> +static void zram_slot_write_lock(struct zram *zram, u32 index)
-> +{
-> +	atomic_t *lock = &zram->table[index].lock;
-> +	int old = atomic_read(lock);
-> +
-> +	do {
-> +		if (old != ZRAM_ENTRY_UNLOCKED) {
-> +			cond_resched();
-> +			old = atomic_read(lock);
-> +			continue;
-> +		}
-> +	} while (!atomic_try_cmpxchg(lock, &old, ZRAM_ENTRY_WRLOCKED));
-> +}
-> +
-> +static void zram_slot_write_unlock(struct zram *zram, u32 index)
-> +{
-> +	atomic_set(&zram->table[index].lock, ZRAM_ENTRY_UNLOCKED);
->  }
->  
-> -static void zram_slot_lock(struct zram *zram, u32 index)
-> +static void zram_slot_read_lock(struct zram *zram, u32 index)
->  {
-> -	spin_lock(&zram->table[index].lock);
-> +	atomic_t *lock = &zram->table[index].lock;
-> +	int old = atomic_read(lock);
-> +
-> +	do {
-> +		if (old == ZRAM_ENTRY_WRLOCKED) {
-> +			cond_resched();
-> +			old = atomic_read(lock);
-> +			continue;
-> +		}
-> +	} while (!atomic_try_cmpxchg(lock, &old, old + 1));
->  }
->  
-> -static void zram_slot_unlock(struct zram *zram, u32 index)
-> +static void zram_slot_read_unlock(struct zram *zram, u32 index)
->  {
-> -	spin_unlock(&zram->table[index].lock);
-> +	atomic_dec(&zram->table[index].lock);
->  }
->  
-Given no boundaries of locking section marked in addition to lockdep, 
-this is another usual case of inventing lock in 2025.
+elapsed time: 1024m
 
-What sense could be made by exercising molar tooth extraction in the
-kitchen because of pain afetr downing a pint of vodka instead of 
-directly driving to see your dentist?
+configs tested: 205
+configs skipped: 5
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    clang-18
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    clang-18
+arc                              allyesconfig    gcc-13.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                   randconfig-001-20250131    gcc-13.2.0
+arc                   randconfig-002-20250131    gcc-13.2.0
+arm                              allmodconfig    clang-18
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    clang-18
+arm                              allyesconfig    gcc-14.2.0
+arm                                 defconfig    gcc-14.2.0
+arm                          gemini_defconfig    gcc-14.2.0
+arm                          ixp4xx_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250131    clang-17
+arm                   randconfig-002-20250131    clang-15
+arm                   randconfig-003-20250131    gcc-14.2.0
+arm                   randconfig-004-20250131    gcc-14.2.0
+arm                           tegra_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250131    clang-15
+arm64                 randconfig-002-20250131    gcc-14.2.0
+arm64                 randconfig-003-20250131    clang-21
+arm64                 randconfig-004-20250131    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250131    clang-21
+csky                  randconfig-001-20250131    gcc-14.2.0
+csky                  randconfig-002-20250131    clang-21
+csky                  randconfig-002-20250131    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                             defconfig    gcc-14.2.0
+hexagon               randconfig-001-20250131    clang-21
+hexagon               randconfig-002-20250131    clang-21
+i386                             allmodconfig    clang-19
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-19
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-19
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250131    clang-19
+i386        buildonly-randconfig-002-20250131    clang-19
+i386        buildonly-randconfig-003-20250131    gcc-12
+i386        buildonly-randconfig-004-20250131    gcc-12
+i386        buildonly-randconfig-005-20250131    clang-19
+i386        buildonly-randconfig-006-20250131    gcc-12
+i386                                defconfig    clang-19
+i386                  randconfig-001-20250131    clang-19
+i386                  randconfig-002-20250131    clang-19
+i386                  randconfig-003-20250131    clang-19
+i386                  randconfig-004-20250131    clang-19
+i386                  randconfig-005-20250131    clang-19
+i386                  randconfig-006-20250131    clang-19
+i386                  randconfig-007-20250131    clang-19
+i386                  randconfig-011-20250131    gcc-12
+i386                  randconfig-012-20250131    gcc-12
+i386                  randconfig-013-20250131    gcc-12
+i386                  randconfig-014-20250131    gcc-12
+i386                  randconfig-015-20250131    gcc-12
+i386                  randconfig-016-20250131    gcc-12
+i386                  randconfig-017-20250131    gcc-12
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250131    clang-21
+loongarch             randconfig-001-20250131    gcc-14.2.0
+loongarch             randconfig-002-20250131    clang-21
+loongarch             randconfig-002-20250131    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                         amcore_defconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                        bcm63xx_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250131    clang-21
+nios2                 randconfig-001-20250131    gcc-14.2.0
+nios2                 randconfig-002-20250131    clang-21
+nios2                 randconfig-002-20250131    gcc-14.2.0
+openrisc                          allnoconfig    clang-21
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-21
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250131    clang-21
+parisc                randconfig-001-20250131    gcc-14.2.0
+parisc                randconfig-002-20250131    clang-21
+parisc                randconfig-002-20250131    gcc-14.2.0
+parisc64                            defconfig    gcc-14.2.0
+powerpc                    adder875_defconfig    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-21
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                          allyesconfig    gcc-14.2.0
+powerpc                        icon_defconfig    gcc-14.2.0
+powerpc                      mgcoge_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250131    clang-21
+powerpc               randconfig-001-20250131    gcc-14.2.0
+powerpc               randconfig-002-20250131    clang-15
+powerpc               randconfig-002-20250131    clang-21
+powerpc               randconfig-003-20250131    clang-21
+powerpc                    socrates_defconfig    gcc-14.2.0
+powerpc                        warp_defconfig    gcc-14.2.0
+powerpc                 xes_mpc85xx_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250131    clang-15
+powerpc64             randconfig-001-20250131    clang-21
+powerpc64             randconfig-002-20250131    clang-17
+powerpc64             randconfig-002-20250131    clang-21
+powerpc64             randconfig-003-20250131    clang-15
+powerpc64             randconfig-003-20250131    clang-21
+riscv                            alldefconfig    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                            allmodconfig    gcc-14.2.0
+riscv                             allnoconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-21
+riscv                            allyesconfig    gcc-14.2.0
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250131    gcc-14.2.0
+riscv                 randconfig-002-20250131    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250131    gcc-14.2.0
+s390                  randconfig-002-20250131    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-12
+sh                    randconfig-001-20250131    gcc-14.2.0
+sh                    randconfig-002-20250131    gcc-14.2.0
+sh                           se7619_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250131    gcc-14.2.0
+sparc                 randconfig-002-20250131    gcc-14.2.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250131    gcc-14.2.0
+sparc64               randconfig-002-20250131    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250131    gcc-14.2.0
+um                    randconfig-002-20250131    gcc-14.2.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250131    gcc-11
+x86_64      buildonly-randconfig-002-20250131    clang-19
+x86_64      buildonly-randconfig-003-20250131    gcc-12
+x86_64      buildonly-randconfig-004-20250131    gcc-12
+x86_64      buildonly-randconfig-005-20250131    clang-19
+x86_64      buildonly-randconfig-006-20250131    clang-19
+x86_64                              defconfig    clang-19
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-19
+x86_64                randconfig-001-20250131    clang-19
+x86_64                randconfig-002-20250131    clang-19
+x86_64                randconfig-003-20250131    clang-19
+x86_64                randconfig-004-20250131    clang-19
+x86_64                randconfig-005-20250131    clang-19
+x86_64                randconfig-006-20250131    clang-19
+x86_64                randconfig-007-20250131    clang-19
+x86_64                randconfig-008-20250131    clang-19
+x86_64                randconfig-071-20250131    clang-19
+x86_64                randconfig-072-20250131    clang-19
+x86_64                randconfig-073-20250131    clang-19
+x86_64                randconfig-074-20250131    clang-19
+x86_64                randconfig-075-20250131    clang-19
+x86_64                randconfig-076-20250131    clang-19
+x86_64                randconfig-077-20250131    clang-19
+x86_64                randconfig-078-20250131    clang-19
+x86_64                               rhel-9.4    clang-19
+x86_64                           rhel-9.4-bpf    clang-19
+x86_64                         rhel-9.4-kunit    clang-19
+x86_64                           rhel-9.4-ltp    clang-19
+x86_64                          rhel-9.4-rust    clang-19
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250131    gcc-14.2.0
+xtensa                randconfig-002-20250131    gcc-14.2.0
+xtensa                         virt_defconfig    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
