@@ -1,125 +1,107 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2E716F271
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A642187FE4
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738307413; cv=none; b=DykA54WLXuzpS+y7Kct6fGss58GfY6ow/ByOgyBg0obK55M37SF1yXcckz4CdqGeXxmm3JuF6OlyCa2pWLI+xkNasEYV1KBwO4/OqsT2UjTnuVM9EwkRd44WpM7AH2h/Y/dBOhR9HWeOHSw0L7Zkgqv86BCRAMZL0cnyd6YWu0M=
+	t=1738307416; cv=none; b=oXPncRLJZecC56lIVyXz9pss0c4/rAhPuLgEQ+rvxUgi8jG/eBuNwBDe4y9sy2LSrS15LuZt3/2Tcf47ZHR0Xvz36k7NuHmqkw7IKrZBstQsRTm+W9yawadsFK+gWT4PmtzxgJWIz4Cop9tYn1IRwQ5eAA3wY+BUEIU2NP1LdLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738307413; c=relaxed/simple;
-	bh=YkfbNByqPN07H4VAKX8KkM+g7r2tCCsmJRGEXIoeTDw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=K3Wer/Ce48frfxd3gcxRx4xgtM3gN2gGqQTlwmtou8N10TzkDo8CBy4IWsh5wT9vm1s6XLi8d58jdoRtr8OUSn8HJcLSHeKUXzH15eTEPAjJ287nuNR6LT9GsUflGirQ0+eGrpDZfe/h/IMLbnoJKo36w0zQiLdd/+afl2borxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=tew+9jhQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vTKCvtMf; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1738307416; c=relaxed/simple;
+	bh=mDwzX9VrQutUfjwLuixleqNUJED35UXVAOa5fYcdFAw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qojp4GHVyI1y37KhjBCGO1ExpKFFKKwAFjDvbPE0hRU0Lf/MKOqybNoTYaObxK1hu7yVSXyjZS/Cf87Djnhb0RKaUhVMDYSLOD34OQsdGkfFxaVseUPhVHhsQpwB7QVtRIZjT5HNh8plXmciICyz4ePJtqxJdhprgXO+niAYoDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=rba8Y1uU; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="tew+9jhQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vTKCvtMf"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id 7899513800F3;
-	Fri, 31 Jan 2025 02:10:09 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Fri, 31 Jan 2025 02:10:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738307409;
-	 x=1738393809; bh=YAl96TURg6PF7G+PHmg5BT/uT8fASOvG3BeA1ovZCfk=; b=
-	tew+9jhQGs7FGdJx6t5kebTnlbG/l0LCyFqi2uxNUE7zUAncE5EbcwXTovSr2M28
-	WO5jXMeX2kcTSrWae2opih8p5uyvZRjckuBMh2OvKlCWJT+QzLlk1L607UToKeXC
-	dFGDGa6plP/99s26UwN39OWsjH9UviXVmkTS444UsCxwK3xg28/QLzOvqdq8OJrD
-	xgfO4hYKSXkd9KSOseKBRKuj4C7cXsaUMkGZoGn9ePANVuhDHjc8g+ocl98EjRQ3
-	pSO7OE/wgGWe5NGWZAif42Gac+PT27Md6iIGYv8R5uYVlWdZSZa82d77LFHtaIf0
-	cGUFN6m/FkHcRkZpobWL+w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738307409; x=
-	1738393809; bh=YAl96TURg6PF7G+PHmg5BT/uT8fASOvG3BeA1ovZCfk=; b=v
-	TKCvtMfoefAO0Vr2OVHvYpZJP0cTNscm1Zyw7tdiYbPWvatFT3zm/j4iEeeaETAL
-	FzX7K5B95QyWcknlfChlQklR/MwkNihzbVIKP2nGhejXG1KrYCos697lgYThCZZE
-	C0cCH4jglWQeFj5QCXPmZvoNPGcd9ZH66AY6ikHAIbJXCk2bl4M3dhZADBKGF4Sp
-	pge0bKnlAz1HyUNerXd4YZxOR4eSKQXlRP+FrrHp7YEcwqBkv3G8xRa7FCblmjCd
-	aKWrjGW3NLqZKTNLE9Oe9+l+ZoQ7NHnfTFRPGU7cIK4gVbUljdBHHMmc4f1htD2K
-	g2ZTdsFspJJclVMXZ1OSg==
-X-ME-Sender: <xms:UHecZ6Ypsc9pZ0n392ZlFODTVMh76PxkK0Bt2TZyaY5Xg_coTStzzQ>
-    <xme:UHecZ9b71zrkPU_zNpo8qbRHsX3fqioguHNjxD0C8aEJAhHaxDBedcfvnkmi10pwc
-    _tVNG9TQp6LfxMFbKg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
-    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepgedp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlvgigrghnuggvrhdruhhshihskh
-    hinhesihhnthgvlhdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhu
-    nhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigsehtrhgvsghlihhgrdhorh
-    hgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhg
-X-ME-Proxy: <xmx:UXecZ0_W4M4JwoPITrQ6dgdu0pOuuCA5N0PZWi8nwpP2lsYKKz_VlQ>
-    <xmx:UXecZ8ql_W0NQWemoIoX2wit1ypswIzoBjSMB_qtBuXwKhW7zopAHQ>
-    <xmx:UXecZ1rXbvYdB_KM9Z6IdqW4UZtHfdUAsciupOgOdR6lXMXdPLq-dQ>
-    <xmx:UXecZ6Qpi5a3pXVXLRkI-Ql82ZxJgVjduwrUgDGVjWZx_bsh90TI_A>
-    <xmx:UXecZ8WfKZ0LcQgYw7wIf1qgG-B2Nup4xR5wCKz8dDOfI1bWIBT8AfoM>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DBC902220072; Fri, 31 Jan 2025 02:10:08 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="rba8Y1uU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=bxwZ2LxOeAlK9DczuHndKbfrLafoKJEyndGUY9K2ifA=; b=rba8Y1uUxksQD78vj1/1msY5je
+	DEx1gCPqEKSbpyTfKW1yVZoGqG2VDWr9a03o/DcrM75LCqVeODCvJnyEl2VHoo5qcIYNXM/VdOkOw
+	BO/vzO3ybO5C8E7hXHe27D1XOV2tveRkXg5cfrylzah8J67VFuVTOq2LxNRjzteBhZTT6faK1nGqF
+	0srD+sw4p+GDgFqSHVCJXvNOiX0IE53E7pY2EEBSi+WSsWzyyGlV6rYAcXM0A0TKquhtOwkvD5che
+	RN0n83n6LZIv9bSCcp4XiIv4/IX1Ixs3xSTO2Z5aAtrunl4f9s8nICMlPpf/gklKWt2pboOvZAjlp
+	nVSgYSHg==;
+Received: from [58.29.143.236] (helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tdlAA-001KZa-SW; Fri, 31 Jan 2025 08:10:09 +0100
+From: Changwoo Min <changwoo@igalia.com>
+To: tj@kernel.org,
+	void@manifault.com,
+	arighi@nvidia.com
+Cc: kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org,
+	Changwoo Min <changwoo@igalia.com>
+Subject: [PATCH v3 05/11] sched_ext: Add an event, SCX_EV_ENQ_SKIP_EXITING
+Date: Fri, 31 Jan 2025 16:09:32 +0900
+Message-ID: <20250131070938.95551-6-changwoo@igalia.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250131070938.95551-1-changwoo@igalia.com>
+References: <20250131070938.95551-1-changwoo@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 31 Jan 2025 08:09:34 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: linux@treblig.org, "Alexander Usyskin" <alexander.usyskin@intel.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org
-Message-Id: <8c9f6d8f-cf4f-476c-aeda-25a68ea36b0b@app.fastmail.com>
-In-Reply-To: <20250130012654.255119-1-linux@treblig.org>
-References: <20250130012654.255119-1-linux@treblig.org>
-Subject: Re: [PATCH] mei: Remove unused functions
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 30, 2025, at 02:26, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+Add a core event, SCX_EV_ENQ_SKIP_EXITING, which represents how many
+times a task is enqueued to a local DSQ when exiting if
+SCX_OPS_ENQ_EXITING is not set.
 
-It looks like git-send-email failed to find your cleartext
-name in gitconfig.
+__scx_add_event() is used since the caller holds an rq lock,
+so the preemption has already been disabled.
 
-> The following functions have been in the mei code for
-> a long time but have never been used.
->
-> mei_txe_setup_satt2() was added in 2014 by
-> commit 32e2b59fca2c ("mei: txe: add hw-txe.c")
->
-> mei_me_cl_rm_by_uuid_id() was added in 2015 by
-> commit 79563db9ddd3 ("mei: add reference counting for me clients")
->
-> mei_cldev_uuid() was added in 2015 by
-> commit baeacd037697 ("mei: bus: export uuid and protocol version to mei_cl
-> bus drivers")
->
-> mei_cldev_recv_nonblock() was added in 2016 by
-> commit 076802d00615 ("mei: bus: enable non-blocking RX")
-> it is the only user of mei_cldev_recv_nonblock_vtag().
->
-> Remove them.
->
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Signed-off-by: Changwoo Min <changwoo@igalia.com>
+---
+ kernel/sched/ext.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-Makes sense to me. IIRC there are part of mei that are only
-used by out of tree code, but this is normally discouraged,
-so no objections from me on that.
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 7147f730850b..37f86a84ac5d 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -1461,6 +1461,12 @@ struct scx_event_stats {
+ 	 * continued to run because there were no other tasks on the CPU.
+ 	 */
+ 	u64		SCX_EV_DISPATCH_KEEP_LAST;
++
++	/*
++	 * If SCX_OPS_ENQ_EXITING is not set, the number of times that a task
++	 * is dispatched to a local DSQ when exiting.
++	 */
++	u64		SCX_EV_ENQ_SKIP_EXITING;
+ };
+ 
+ /*
+@@ -2068,8 +2074,10 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
+ 
+ 	/* see %SCX_OPS_ENQ_EXITING */
+ 	if (!static_branch_unlikely(&scx_ops_enq_exiting) &&
+-	    unlikely(p->flags & PF_EXITING))
++	    unlikely(p->flags & PF_EXITING)) {
++		__scx_add_event(SCX_EV_ENQ_SKIP_EXITING, 1);
+ 		goto local;
++	}
+ 
+ 	if (!SCX_HAS_OP(enqueue))
+ 		goto global;
+@@ -4986,6 +4994,7 @@ static void scx_dump_state(struct scx_exit_info *ei, size_t dump_len)
+ 	scx_dump_event(s, &events, SCX_EV_SELECT_CPU_FALLBACK);
+ 	scx_dump_event(s, &events, SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE);
+ 	scx_dump_event(s, &events, SCX_EV_DISPATCH_KEEP_LAST);
++	scx_dump_event(s, &events, SCX_EV_ENQ_SKIP_EXITING);
+ 
+ 	if (seq_buf_has_overflowed(&s) && dump_len >= sizeof(trunc_marker))
+ 		memcpy(ei->dump + dump_len - sizeof(trunc_marker),
+-- 
+2.48.1
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-
-      Arnd
