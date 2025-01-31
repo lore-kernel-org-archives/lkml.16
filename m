@@ -1,207 +1,457 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011001.outbound.protection.outlook.com [52.101.70.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B99C1F0E5E;
-	Fri, 31 Jan 2025 16:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738341586; cv=fail; b=gNeB6NtdBXbQX5w3ccFVdwQOKNpdM83hVnrkoh44gLdxBdtnvlSwtGOiEgnIhaSjPxm/SapQRBI6n65fih6rzhKx/au73Pc0qAVDzcNB1dda3jb63yKGaaZx+UV81yINKVKA+7zwOiqJQUycFSOlsXViSG9iOxrX4iTmP7nfGAU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738341586; c=relaxed/simple;
-	bh=ZXuMg8Calp0mmaMi/am1NWNuTPhXYnMV5P12k6lLpNo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=PYhno9gctlyFOIx0BIdamqRTZwU7IrF/Yg16aK6Q3MWTK+ZDf+OAsfcB2cg4Yy5s6JAsAWD8QeTDHNG7CBWtyMX9tbjO9zEqj0Pg2cRm6dsJ7CA80SyjyNcKqhF50NA5fVr01TkoIxPc6Tcnn1zwXPitx9TGdj3BoVBO1I61JH0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=aPtigUK4; arc=fail smtp.client-ip=52.101.70.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4C61F1529;
+	Fri, 31 Jan 2025 16:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738341604; cv=none; b=mtHPGQ7dLvlgwQto59Lc9WYh61YrrlL9+dV5K1wUFqLGSb1I/o5tjHAg97PMsR25XiNOqIH5LNBBBE+SO0Y0I5qKvTsEKazt4opa3Vle9UxAlsvrKDH0yZ4GDg2TFJF7Ll6sxEthHuZtbimXfczpOuXetejAN04yLCCzyfL+3k0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738341604; c=relaxed/simple;
+	bh=1BMGWoRMPguQcmdZmMAKa8mW+mK/0xFa042AO+EYMJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Elrl03plccKn1y9CPqlBKwbPNkQp2Gw54mLImeFfufMXiS11eHlW2kbk5Qk4Rqi8IHygLYL4G+q4cTWDgF16+3ZCTM5TbBhzrzFZn/Tex+OGofnhZ2QmwxV+P/Uv8d8w6tnONQjJ0WKrlFyyvDJx85DuEU3Ae0oKi+zd3fC1Eu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=amsujIN8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="aPtigUK4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WmzIR3HhTHVdGHx/StHHoabfXGbPDx2CS3WI939o+I5dfzofNo1JqTUjuLSgl0bqfXzKyaJo+IuuBe7OrDm3MIUERqqyM5TPXo3Sd+nFYJJzzE0To571UqmgQIvWXL4FHLvW4SBMwvnjfuq2gu39h0UJ5bHSkRIWl9tIw4fbhpb2K4hI0HbyAcOMuxDRFqDfiCccn2S+voBy9VQuXunQX8hIdSwgW+1lxMesDCCXw3syQqC5MGJNpeWWRIq4ODNaUtT+kyByGVzGw0BXBZW817Mm9C6Unsw76nNYeiFrjEwYQxdUoWcxXRUsInB6rhC9wCORLrtXvtOy0dabEWHxgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JI599mH3uVVpzvMq86gHs0paD8Qafc91HQxe1MzNyeU=;
- b=Gm+3A5esfrwD58hXs34UogBB89PoDkpqmiAaWAdOmsY3AV86I4alfK5WxIm1m5/CpxJzXBo/+pvu/6ijCuLZLLJEoeGIhrRqdUreaLV3dCcvFnR7LBXE9qvph1j4R4qXnYZ7ghocIwdFWrtgJfJBkOuON7ow1r77EGzq8LSFFPda7qkjJ84dgGnqRUi8kw8Wh4oPCKHUOYevrVm0XEjxntVms1wHwWYrr3K8M4wJ2l5ocvN8Se3gp6HtRV4KkW/q0MSZdyCJp0bHVhTfa8buuRvFNWw4fROidIW30EWxgKXEI5AdSAAmpaBRw42frqgc3sC0ndQlN25uRvVuZ4y7wA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JI599mH3uVVpzvMq86gHs0paD8Qafc91HQxe1MzNyeU=;
- b=aPtigUK4fZI58fPIIoYM2AYA6IunidZ7KwlDp10WcB9yKXcjIsrinsb3WYQisB0peWaMv9uGlQNmOowxGhf1t7XZq2q3n+kQM3ANaCLPLVzkhU0yicGKBGNIYjLu2Mp3k5XGCM/CUB2orMBS3Emcb115CLLiieBAlWf/ccagfuo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by DU2PR04MB8776.eurprd04.prod.outlook.com (2603:10a6:10:2e3::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.21; Fri, 31 Jan
- 2025 16:39:40 +0000
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a%3]) with mapi id 15.20.8398.018; Fri, 31 Jan 2025
- 16:39:39 +0000
-Message-ID: <8ab7c998-fb5b-4afb-aa50-b64a8e2a1db7@cherry.de>
-Date: Fri, 31 Jan 2025 17:39:38 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] drm/bridge: synopsys: Add audio support for
- dw-hdmi-qp
-To: Detlev Casanova <detlev.casanova@collabora.com>,
- linux-kernel@vger.kernel.org
-Cc: Algea Cao <algea.cao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- dri-devel@lists.freedesktop.org,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>, kernel@collabora.com,
- David Airlie <airlied@gmail.com>, Dragan Simic <dsimic@manjaro.org>,
- Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>,
- Robert Foss <rfoss@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Sugar Zhang <sugar.zhang@rock-chips.com>,
- linux-rockchip@lists.infradead.org, Alexey Charkov <alchark@gmail.com>,
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Johan Jonker <jbx6244@gmail.com>, FUKAUMI Naoki <naoki@radxa.com>,
- linux-arm-kernel@lists.infradead.org,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Jianfeng Liu <liujianfeng1994@gmail.com>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-References: <20250130165126.2292107-1-detlev.casanova@collabora.com>
- <20250130165126.2292107-2-detlev.casanova@collabora.com>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20250130165126.2292107-2-detlev.casanova@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR0P281CA0009.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:15::14) To AS8PR04MB8897.eurprd04.prod.outlook.com
- (2603:10a6:20b:42c::20)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="amsujIN8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72F30C4CED1;
+	Fri, 31 Jan 2025 16:40:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738341604;
+	bh=1BMGWoRMPguQcmdZmMAKa8mW+mK/0xFa042AO+EYMJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=amsujIN8+Sf8nS5EYxUyC1YIyVc22yePuztD1ZoGnXHrAnSz3TB05LSkr+7cjoa5t
+	 R+JrmCDmWB7qR46yokxeCqlXSHIMg0Gx5xeqdNWa3UAFmmAuYa2df3xQps1Twbcql6
+	 nCxwkerH6FcKQZkYoO2wwDNkqSVqEYEcVOc/Ja00=
+Date: Fri, 31 Jan 2025 17:40:01 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Lyude Paul <lyude@redhat.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] WIP: drivers/base: Add virtual_device_create()
+Message-ID: <2025013140-propeller-dirtiness-6cb4@gregkh>
+References: <Z5Nw8kaieLueWyUu@pollux>
+ <20250130212843.659437-1-lyude@redhat.com>
+ <2025013159-shabby-professor-515b@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|DU2PR04MB8776:EE_
-X-MS-Office365-Filtering-Correlation-Id: ea65d0a3-6c81-4a64-10d2-08dd4215db49
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?N2pLdGFmamVoNjczdzN2OFV4N0c5N3czdFoxZlpTNk82ZnZsc2dkeXZSZW82?=
- =?utf-8?B?OHZPbU5GK3JIVmQ5MzY5cmVQUW8rMlZFTnZMNjdhWEQza3hWajZnVGZSeVpI?=
- =?utf-8?B?OHFvaDdiU1VET1FVZDJyUnNIY1dFamREZVhpbzZEK2tkSWR6cHI1RU1iUktj?=
- =?utf-8?B?emt3b1ZINWtYOEs3UEpOY1FuRTUxVWFReVFiWG9iQnNlU0MrdHNzckJDQTRp?=
- =?utf-8?B?ODJndzdjb0hoUTNTTjJxcE9tZVdxRGdnZ1owTkovVWp2a1pCWEdvcUF4U1BD?=
- =?utf-8?B?YlVaU3l0OTNmQ2R2a1NnREZwT0dyUjhlY0JPZ1FhTHZDM1BOZGlSZ1BjbWxR?=
- =?utf-8?B?QklaMUxxaHJMYzYrWDdOcDJJdUF4bTZrYVV4eXM4N0lSQTZDdEJGcExORXRQ?=
- =?utf-8?B?cTBmN0lZTG52a3F0S0Jva0JtT0xPZFZFYUJjUzJaNVQ5dVVKU1pSU3RTK3dl?=
- =?utf-8?B?UDNzejRsZjNYZHdMNFdOa1Z1UTJRN2sxRFJUMEE1MngzRVEybVBXcXdOd2ZT?=
- =?utf-8?B?bFBLSEJJWlFhcHBzVnRpay9FSm5yaGR6L2luaUNscjNHN0d4VXdRMjhHaEor?=
- =?utf-8?B?bkNrUXJKVkd1NXVlazVld1RnWnY0UTAwVW84S0ZvUzZHTzZKM0NiQ24xQWti?=
- =?utf-8?B?TjA2cG1MSTBHb1ZDUzRyc1FQUXcrSUE4VjlPTG9mSndRUDVRckJ5WHhmSTRq?=
- =?utf-8?B?MmRYSHRjc040VVFLdzBwaFR6QU1WOHhXeHFmQ3RmRUNPL2o2U01IQUZHTXJM?=
- =?utf-8?B?MUVMOVFNVnI0Rk5hdTM2N2VxVG5WVjlhRm83TGNsS2lHSHFpdnkyUU54MG1P?=
- =?utf-8?B?Z0plOVNLNkZIL1Q4ZmNxLzhPU0RJV1pCdzdiVVhQcjZwUkVmYjEwOWtlMm9V?=
- =?utf-8?B?Mk5ES1RXSU9VVW16OVNhWmEzWnZJMytIbkRsYnVXWjd0QndYQzU5KzRzbW9B?=
- =?utf-8?B?TUJxaUZ5ejBWaitkL2J1WFBQTm9mS1MzZzhTR3Z5c2xYbXlKczk5VEYxZkVI?=
- =?utf-8?B?aEo0eEhHSktaRkEzVkVQS3RtTXY5dEdBVTdEM2d0emltZlZaZVdaNEtoZkNp?=
- =?utf-8?B?SllpODltU3pUQXhRU3hhZ0JsZm5GM3ppNjJibExDZzl2a3R1SVd0QXdWd2hm?=
- =?utf-8?B?K2Q1eElBTWY0V2V6UVNIYVhYbXFZZ0FibENZelhVVkxFUG9KbmU2QzEweS9k?=
- =?utf-8?B?YVVMdmFOUzBid1ZoVkVmWXBneVFrenZjTDYwclNXQlJmSTFJc05VcWFDOGNE?=
- =?utf-8?B?MXFuV1M4VG5ORDJqa3NNSnB2aTNrSFJ0N3prS3BNRjY0cVpuczFGZXUvVFc5?=
- =?utf-8?B?b3RHaXJYTU8zcTFNT2NYU2pMNXFxSjNFUUw4Qm54YUtDK0JWRUlDaDgvVjI4?=
- =?utf-8?B?d0xRVlErZDIvVVNPcktKR1h2c2ZQRjJSTk1rMmZWL0s2ZnJVU0hXSGU5bFpJ?=
- =?utf-8?B?M0FCcTV4Y0dxRjFYSlE4M2ExZWRaeGx3eHhNZHc0RVF3bXdKMU0wTFVWTWxD?=
- =?utf-8?B?RjZuMytOM3VNa296TllERHJkTUZMRGJSc2luTXg5RnVqTWE2OFYvWEdPSlhw?=
- =?utf-8?B?NWU5M3VZMFhGblNGdk5QYXA5WExKbEdLT2FkWEswSDZzenI5Y0VUOExmRzJF?=
- =?utf-8?B?YU9aS1kwd2Z5elBKaFZrK1NDTmkrR1BTbmdWUU0zRmk4aG1SWlRhb084NWRD?=
- =?utf-8?B?K2VreWkyVXVpZ1pQVkFFUitNVHcyTG83cG52ai9VYWo2cG5pZVFoWUhJZktM?=
- =?utf-8?B?dTluTmZkNUNRUmt0RWFJT05KYzYyMjlRYWZoOUVWa0MrcHhobVpsYW1qMmpi?=
- =?utf-8?B?TkkzYnVpMVhEMGhFaWYyVnc1SFJmeitETVZnMW9mVnFQS1o3SjdNZERaaHZQ?=
- =?utf-8?Q?haHFCGTZjpLk5?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?d2RhY1VMZEFJK3lMc3pzTzVXN0c1SU5zWnhJb2RPL1B3cmRJRDZXZ3daRVU4?=
- =?utf-8?B?YXhwTDJWcWgwNEwyQ3lLQmg5MWNVNklYNHEwdnBGRHljS2l1NkkvRlpVTldv?=
- =?utf-8?B?d2c0R05iNkhWTkFmUWdzQ0U3azBxSWhhcXNuSWlTWkRyQ0p1c0Z5NER3SEsz?=
- =?utf-8?B?bWdDZEMySk5NMHFKRmxwMjRHcUc1b1E4U2FOYnVzY09wbnQrUStvTG93Yzlx?=
- =?utf-8?B?TWhubGg4M2Job1dJVk5YdStYc1JWRXZrMnkwckMvUmNyNVg4ajQwWDYxaC82?=
- =?utf-8?B?Rk00KzA3UGNqbGJ4VHhYZDk0Z2RIU3ZjSDVQVlpzOTZJSHFaK2lrWS9XVElk?=
- =?utf-8?B?R1EwT0N2MXluVDQ3K2VaemJMOUk5S3V3WGIxSXk0WHRHTEV5aG5Kd2twR1M0?=
- =?utf-8?B?Nm45OWpPU250NUcwSyt2RC9IOGs1MFVLem5kUitWOGJBZ3UvdlJtR05SNlNZ?=
- =?utf-8?B?ZTZvZjJqMXFRTDRaSGtmZzdKL3IrS3BBcStreVkvUUJiZk1lRXI1SUlHR3kv?=
- =?utf-8?B?Wk9oRVZNeERBVXFqQXZGdzdUNE5XV2ZMSisvTkVsYWlkM0gwYWRIbGhUOTZ6?=
- =?utf-8?B?NWlUSkZLZEpkTlhTZG94bUYzTmhtMSsySi91R29SS3MwUU03b1ljVzQzN21a?=
- =?utf-8?B?L24ySEt2T2tWMThVVnFoUGRYWm44MXhsZjA2U0J3bGdzV2ZJZElTMFlnaWkw?=
- =?utf-8?B?c3pUSW9FeDdpeUE4bFBHNXl2Q1BzVUVKKzczdVpkbEVzbFU1MUwyOHl6S0RV?=
- =?utf-8?B?a3p3b2R6Y201ZFFSQWJzamRDbkJMdlY3R2liSllXM2xKbHdjMEh2ZEJWcU1S?=
- =?utf-8?B?UDkxNVlWdlVncVh3QzBHL0p5TXdsN0tEd0tyTDZUUFFYeDhQcE13SUNTdWFp?=
- =?utf-8?B?QW9EeE03a2JBRW1lbnkyQVE1SDZ6REc0KzExYmJlY0hWNC9oaXFnUGozaDBm?=
- =?utf-8?B?bXpaZXVJVWtqWEJCblEvU2VZVFE3VnJYcDVJbTl3UDlqQy9obU1Lci82MzhT?=
- =?utf-8?B?SUswTTgvZ010RTI1WmdlNFV0YVBGT3ZOYUlRMkZMRTVYdENjVEtYS044cHRL?=
- =?utf-8?B?enFQWVBpaEc3K2lDZmVtQmJlKytxRjBvR0xGUm5Fb2dXbWdldHYzS2o2Q0RH?=
- =?utf-8?B?YWRoeUdRVnE2QnZQSE8yNWJBV2lqbk56VGtndjJybWw5YVVKZjJVVTdXUkJD?=
- =?utf-8?B?QjNUYU01YWJod09pZWcvaGJrNEtFVXlsa0V4dEp5SU9KcWREckVQaUo0Vy9x?=
- =?utf-8?B?YnBSdXA3OTVyejIzSURuMk9VMHhnc2VrMXlFZXdmcE1pL0JtUFFmYmR3SGFC?=
- =?utf-8?B?WHhYd25hbTdLdE5WS2tZRXRoRm5RQ2xGUXhUazdqQm9pWStqT2lRMkdnTXNM?=
- =?utf-8?B?SGNCdGNHMEdxZkhSdkkvZk1HMkszaGpLWlBMMlRCdmJjUzJ2dmxZUUROVUpX?=
- =?utf-8?B?azREbkU2WlQ2OTZibXNmRlpZVHR3eDhHeit1LzdOSjFSVWcyZGlLZEZhbFkv?=
- =?utf-8?B?Ykw0cDRtY21hM2ZnU2djaGtUbm1Jc0NxTU0vY1NQNTFiWEZGT3FpcEJQTzVZ?=
- =?utf-8?B?cmR6bzJvV3BMMHpXUGJ2NU1kNlJ5OHdKOXVoMGpubFZzdnpOVE8zRjBHQXYx?=
- =?utf-8?B?ekhXZlhPZGlIMnR3RWFUL0VtRjlhNXJUeG4rQzU3WitneUpwZ1FoV1ZFVzcx?=
- =?utf-8?B?TlJLYTRxbktsbjIyd2pkQk9abkl1c0xGdTAzcWJGMUJVejBPaTgyL21qc0tT?=
- =?utf-8?B?dmpQT2M5bkpqeHpaM1FNa29oWWVvdnAzRUh3ZlZDWVM2VWYwUnVrdUtWd0dm?=
- =?utf-8?B?d0pSS3VpOUdRZmt6cnBGbW53bkkwV1ZhQ3lsaUFtVW9KTmY0R013RzNhZlZG?=
- =?utf-8?B?d1VSVm1vcGFPb1VGQjVOdVpjcTJnYXVPcURCUlg2QmxJaUdXTkJnbU9Hd2NK?=
- =?utf-8?B?b3hBOE1ySEFMcVY4b1hlK1A5YjlpMytxWjZSUy80dWRsdWdMZFlZV0dPQjZD?=
- =?utf-8?B?WjB4YnRKVUZ4MUY5Z1l1bEUyKzIwQzNjT3E2RFNsMjdEWlRLN2EyTU10K0NI?=
- =?utf-8?B?S3V1TFNmblhZdE9TaEpjNmJUN2NlNnhHMW9sUytud3NQeXZ2ekxTU0lhZW9i?=
- =?utf-8?B?NENlOURqcDlaSGh4dGkvUHJPd1J1Zit3TDZ2Q2JHMlFuNW9Ld2ZoQy9JV3ZY?=
- =?utf-8?B?K0E9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea65d0a3-6c81-4a64-10d2-08dd4215db49
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 16:39:39.9631
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Mb+iK56zOLBFg2MR5P79tca+bQSuYHWSUgcWsFRDKkwK4ogw+1AMkX9GEH4O5l/FlAuraMaLCu1qzStSPHm0NPPgr6kEcL4nE+hrgaS9LUs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8776
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025013159-shabby-professor-515b@gregkh>
 
-Hi Detlev,
-
-On 1/30/25 5:45 PM, Detlev Casanova wrote:
-> From: Sugar Zhang <sugar.zhang@rock-chips.com>
+On Fri, Jan 31, 2025 at 09:00:32AM +0100, Greg Kroah-Hartman wrote:
+> On Thu, Jan 30, 2025 at 04:28:26PM -0500, Lyude Paul wrote:
+> > As Greg KH pointed out, we have a nice /sys/devices/virtual directory free
+> > for the taking - but the vast majority of device drivers concerned with
+> > virtual devices do not use this and instead misuse the platform device API.
+> > 
+> > To fix this, let's start by adding a simple function that can be used for
+> > creating virtual devices - virtual_device_create().
+> > 
+> > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > 
+> > ---
+> > 
+> > So, WIP obviously because I wrote this up in a few minutes - but this goes
+> > off the idea that Danilo suggested to me off-list of coming up with a
+> > simple API for handling virtual devices that's a little more obvious to
+> > use. I wanted to get people's feedback and if we're happy with this idea,
+> > I'm willing to go through and add some pointers to this function in various
+> > platform API docs - along with porting over the C version of VKMS over to
+> > this API.
 > 
-> Register the dw-hdmi-qp bridge driver as an HDMI audio codec.
-> 
-> The register values computation functions (for n) are based on the
-> downstream driver, as well as the register writing functions.
-> 
-> The driver uses the generic HDMI Codec framework in order to implement
-> the HDMI audio support.
-> 
-> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-> Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+> This is a big better, but not quite.  Let me carve out some time today
+> to knock something a bit nicer together...
 
-I've tested with my suggested change on PATCH 2/2 and same changes than 
-for Rock 5B DTS on RK3588 Tiger Haikou with speaker-test -c 2 -t wav, 
-left is left, right is right, therefore:
+Ok, here's a rough first-cut.  It builds, and boots, and I've converted
+a driver to use the api to prove it works here.  I'll add a bunch more
+documentation before turning it into a "real" patch, but this should
+give you something to work off of.
 
-Tested-by: Quentin Schulz <quentin.schulz@cherry.de>
+I've run out of time for tonight (dinner is calling), but I think you
+get the idea, right?  If you want to knock up a rust binding for this
+api, it should almost be identical to the platform api you were trying
+to use before, right?
 
-Thanks!
-Quentin
+thanks,
+
+greg k-h
+
+diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+index 7fb21768ca36..13eec7a1a9db 100644
+--- a/drivers/base/Makefile
++++ b/drivers/base/Makefile
+@@ -6,7 +6,7 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
+ 			   cpu.o firmware.o init.o map.o devres.o \
+ 			   attribute_container.o transport_class.o \
+ 			   topology.o container.o property.o cacheinfo.o \
+-			   swnode.o
++			   swnode.o virtual.o
+ obj-$(CONFIG_AUXILIARY_BUS) += auxiliary.o
+ obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
+ obj-y			+= power/
+diff --git a/drivers/base/base.h b/drivers/base/base.h
+index 8cf04a557bdb..1eb68e416ee1 100644
+--- a/drivers/base/base.h
++++ b/drivers/base/base.h
+@@ -137,6 +137,7 @@ int hypervisor_init(void);
+ static inline int hypervisor_init(void) { return 0; }
+ #endif
+ int platform_bus_init(void);
++int virtual_bus_init(void);
+ void cpu_dev_init(void);
+ void container_dev_init(void);
+ #ifdef CONFIG_AUXILIARY_BUS
+diff --git a/drivers/base/init.c b/drivers/base/init.c
+index c4954835128c..58c98a156220 100644
+--- a/drivers/base/init.c
++++ b/drivers/base/init.c
+@@ -35,6 +35,7 @@ void __init driver_init(void)
+ 	of_core_init();
+ 	platform_bus_init();
+ 	auxiliary_bus_init();
++	virtual_bus_init();
+ 	memory_dev_init();
+ 	node_dev_init();
+ 	cpu_dev_init();
+diff --git a/drivers/base/virtual.c b/drivers/base/virtual.c
+new file mode 100644
+index 000000000000..6ade5dcbe2f3
+--- /dev/null
++++ b/drivers/base/virtual.c
+@@ -0,0 +1,200 @@
++// SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
++ * Copyright (c) 2025 Linux Foundation
++ */
++#include <linux/device/virtual.h>
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++#include "base.h"
++
++/*
++ * Wrapper structure so we can hold the memory
++ * for the name string of the virtual device.
++ */
++struct virtual_object {
++	struct virtual_device virt_dev;
++	char name[];
++};
++
++static struct device virtual_bus = {
++	.init_name	= "virt_bus",
++};
++
++static int virtual_match(struct device *dev, const struct device_driver *drv)
++{
++	const struct virtual_driver *virt_drv = to_virtual_driver(drv);
++	const struct virtual_device *virt_dev = to_virtual_device(dev);
++
++	pr_info("%s: %s %s\n", __func__, virt_dev->name, virt_drv->name);
++
++	/* Match is simple, strcmp()! */
++	return (strcmp(virt_dev->name, virt_drv->name) == 0);
++}
++
++static int virtual_probe(struct device *dev)
++{
++	struct virtual_driver *virt_drv = to_virtual_driver(dev->driver);
++	struct virtual_device *virt_dev = to_virtual_device(dev);
++	int ret = 0;
++
++	if (virt_drv->probe)
++		ret = virt_drv->probe(virt_dev);
++
++	return ret;
++}
++
++static void virtual_remove(struct device *dev)
++{
++	struct virtual_driver *virt_drv = to_virtual_driver(dev->driver);
++	struct virtual_device *virt_dev = to_virtual_device(dev);
++
++	if (virt_drv->remove)
++		virt_drv->remove(virt_dev);
++}
++
++static const struct bus_type virtual_bus_type = {
++	.name		= "virtual",
++	.match		= virtual_match,
++	.probe		= virtual_probe,
++	.remove		= virtual_remove,
++};
++
++static void virtual_device_release(struct device *dev)
++{
++	struct virtual_object *virt_obj = container_of(dev, struct virtual_object, virt_dev.dev);
++
++	kfree(virt_obj);
++}
++
++/**
++ * virtual_device_alloc - create a virtual device
++ * @name: name of the device we're adding
++ *
++ * Create a virtual device object which will be bound to any driver of the same name.
++ */
++struct virtual_device *virtual_device_alloc(const char *name)
++{
++	struct virtual_object *virt_obj;
++	struct virtual_device *virt_dev;
++
++	pr_info("%s: %s\n", __func__, name);
++
++	virt_obj = kzalloc(sizeof(*virt_obj) + strlen(name) + 1, GFP_KERNEL);
++	if (!virt_obj)
++		return NULL;
++
++	strcpy(virt_obj->name, name);
++	virt_dev = &virt_obj->virt_dev;
++	virt_dev->name = virt_obj->name;
++	device_initialize(&virt_dev->dev);
++	virt_dev->dev.release = virtual_device_release;
++
++	return virt_dev;
++}
++EXPORT_SYMBOL_GPL(virtual_device_alloc);
++
++int virtual_device_add(struct virtual_device *virt_dev)
++{
++	struct device *dev = &virt_dev->dev;
++
++	pr_info("%s: %s\n", __func__, virt_dev->name);
++
++	if (!dev->parent)
++		dev->parent = &virtual_bus;
++
++	dev_set_name(dev, "%s", virt_dev->name);
++	dev->bus = &virtual_bus_type;
++
++	return device_add(dev);
++}
++EXPORT_SYMBOL_GPL(virtual_device_add);
++
++/**
++ * virtual_device_del - remove a virtual device
++ * @virt_dev: virtual device to be removed
++ *
++ * This function must _only_ be externally called in error cases.  All other usage is a bug.
++ */
++void virtual_device_del(struct virtual_device *virt_dev)
++{
++	if (IS_ERR_OR_NULL(virt_dev))
++	    return;
++
++	device_del(&virt_dev->dev);
++}
++EXPORT_SYMBOL_GPL(virtual_device_del);
++
++/**
++ * virtual_device_put - destroy a platform device
++ * @virtual: virtual device to free
++ *
++ * Free all memory associated with a virtual device.  This function must
++ * _only_ be externally called in error cases.  All other usage is a bug.
++ */
++void virtual_device_put(struct virtual_device *virt_dev)
++{
++	if (IS_ERR_OR_NULL(virt_dev))
++	    return;
++
++	put_device(&virt_dev->dev);
++}
++EXPORT_SYMBOL_GPL(virtual_device_put);
++
++
++void virtual_device_unregister(struct virtual_device *virt_dev)
++{
++	virtual_device_del(virt_dev);
++	virtual_device_put(virt_dev);
++}
++EXPORT_SYMBOL_GPL(virtual_device_unregister);
++
++
++/**
++ * __virtual_driver_register - register a driver for virtual devices
++ * @virt_drv: virtual driver structure
++ * @owner: owning module/driver
++ */
++int __virtual_driver_register(struct virtual_driver *virt_drv, struct module *owner)
++{
++	struct device_driver *drv = &virt_drv->driver;
++
++	pr_info("%s: %s\n", __func__, virt_drv->name);
++
++	drv->owner = owner;
++	drv->name = virt_drv->name;
++	drv->bus = &virtual_bus_type;
++	drv->probe_type = PROBE_PREFER_ASYNCHRONOUS;
++
++	return driver_register(&virt_drv->driver);
++}
++EXPORT_SYMBOL_GPL(__virtual_driver_register);
++
++/**
++ * virtual_driver_unregister - unregister a driver for virtual devices
++ * @drv: virtual driver structure
++ */
++void virtual_driver_unregister(struct virtual_driver *virt_drv)
++{
++	driver_unregister(&virt_drv->driver);
++}
++EXPORT_SYMBOL_GPL(virtual_driver_unregister);
++
++int __init virtual_bus_init(void)
++{
++	int error;
++
++	error = device_register(&virtual_bus);
++	if (error) {
++		put_device(&virtual_bus);
++		return error;
++	}
++
++	error =  bus_register(&virtual_bus_type);
++	if (error)
++		device_unregister(&virtual_bus);
++
++	return error;
++}
+diff --git a/drivers/regulator/dummy.c b/drivers/regulator/dummy.c
+index 5b9b9e4e762d..652250455c6d 100644
+--- a/drivers/regulator/dummy.c
++++ b/drivers/regulator/dummy.c
+@@ -13,7 +13,7 @@
+ 
+ #include <linux/err.h>
+ #include <linux/export.h>
+-#include <linux/platform_device.h>
++#include <linux/device/virtual.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+ 
+@@ -37,15 +37,15 @@ static const struct regulator_desc dummy_desc = {
+ 	.ops = &dummy_ops,
+ };
+ 
+-static int dummy_regulator_probe(struct platform_device *pdev)
++static int dummy_regulator_probe(struct virtual_device *vdev)
+ {
+ 	struct regulator_config config = { };
+ 	int ret;
+ 
+-	config.dev = &pdev->dev;
++	config.dev = &vdev->dev;
+ 	config.init_data = &dummy_initdata;
+ 
+-	dummy_regulator_rdev = devm_regulator_register(&pdev->dev, &dummy_desc,
++	dummy_regulator_rdev = devm_regulator_register(&vdev->dev, &dummy_desc,
+ 						       &config);
+ 	if (IS_ERR(dummy_regulator_rdev)) {
+ 		ret = PTR_ERR(dummy_regulator_rdev);
+@@ -56,36 +56,33 @@ static int dummy_regulator_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static struct platform_driver dummy_regulator_driver = {
++static struct virtual_driver dummy_regulator_driver = {
++	.name		= "reg-dummy",
+ 	.probe		= dummy_regulator_probe,
+-	.driver		= {
+-		.name		= "reg-dummy",
+-		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+-	},
+ };
+ 
+-static struct platform_device *dummy_pdev;
++static struct virtual_device *dummy_vdev;
+ 
+ void __init regulator_dummy_init(void)
+ {
+ 	int ret;
+ 
+-	dummy_pdev = platform_device_alloc("reg-dummy", -1);
+-	if (!dummy_pdev) {
++	dummy_vdev = virtual_device_alloc("reg-dummy");
++	if (!dummy_vdev) {
+ 		pr_err("Failed to allocate dummy regulator device\n");
+ 		return;
+ 	}
+ 
+-	ret = platform_device_add(dummy_pdev);
++	ret = virtual_device_add(dummy_vdev);
+ 	if (ret != 0) {
+ 		pr_err("Failed to register dummy regulator device: %d\n", ret);
+-		platform_device_put(dummy_pdev);
++		virtual_device_put(dummy_vdev);
+ 		return;
+ 	}
+ 
+-	ret = platform_driver_register(&dummy_regulator_driver);
++	ret = virtual_driver_register(&dummy_regulator_driver);
+ 	if (ret != 0) {
+ 		pr_err("Failed to register dummy regulator driver: %d\n", ret);
+-		platform_device_unregister(dummy_pdev);
++		virtual_device_unregister(dummy_vdev);
+ 	}
+ }
+diff --git a/include/linux/device/virtual.h b/include/linux/device/virtual.h
+new file mode 100644
+index 000000000000..b646defe4a97
+--- /dev/null
++++ b/include/linux/device/virtual.h
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
++ * Copyright (c) 2025 Linux Foundation
++ */
++#ifndef _VIRTUAL_DEVICE_H
++#define _VIRTUAL_DEVICE_H_
++
++#include <linux/device.h>
++struct virtual_device {
++	struct device dev;
++	const char *name;
++
++};
++#define to_virtual_device(x) container_of_const((x), struct virtual_device, dev)
++
++struct virtual_driver {
++	struct device_driver driver;
++	const char *name;
++	int (*probe)(struct virtual_device *virt_dev);
++	void (*remove)(struct virtual_device *virt_dev);
++};
++#define to_virtual_driver(drv)	(container_of_const((drv), struct virtual_driver, driver))
++
++struct virtual_device *virtual_device_alloc(const char *name);
++int virtual_device_add(struct virtual_device *virt_dev);
++void virtual_device_del(struct virtual_device *virt_dev);
++void virtual_device_put(struct virtual_device *virt_dev);
++void virtual_device_unregister(struct virtual_device *virt_dev);
++
++#define virtual_driver_register(drv) __virtual_driver_register(drv, THIS_MODULE)
++int __virtual_driver_register(struct virtual_driver *virt_drv, struct module *module);
++void virtual_driver_unregister(struct virtual_driver *virt_drv);
++
++#endif /* _VIRTUAL_DEVICE_H_ */
+-- 
+2.48.1
+
+
