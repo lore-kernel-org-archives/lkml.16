@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D331EC011
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E431EF092
 	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738345390; cv=none; b=B717S5MMlxWXdb0JuA12cjCQHJM2ciMPcGEW6EVaQVg7MSw0BZL0SIvlFImUoGb8XfG2PMyKZ/CkX5J7iufGCYqRv9AoxbWVW7XpPCBdRoYrpimuIZUAH6kbl4DpIyfEf0xIGNc66fNuygyUaDmn02g0CwUnty47kVF+wE21zX8=
+	t=1738345390; cv=none; b=Vmu48/A2ppxwB/Cv1XCFNm06pMKvFac2VX0yWAXCOKBAuSwELIiKfL6qG8r5jXPHjFyVBj1urHWfi5bystYLT3/ei4QdbNMqNR4B/+Wyy9LYLKO6QtOqq4PRLI7cXDXLw9ihmQBhLC0GnUdsXlcRoA2xCoA6Okpd/gdffh3dn8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738345390; c=relaxed/simple;
-	bh=KouCoSf4mWghkLKK/X/OLNqtXx7bPryJTJFiRxmO5ak=;
+	bh=tu4BeykCl5tgl22Fm0xr0J7ZYFLcc0Ka3FDOBXSQxNA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SUkThcl3SGYKgm7fldr4OW+B4HMYhATscnSpFwjFv2K8XU6rGMGNmsB5dK6F0APR0AVgaGqsDNQysJWH30YfTPTAezYT+cIBLJZ8gzopyp9pFybWtDKU6BZiT/JJszgk7WELykJFwbhCGLgqBQhKgrYiklIGQUmDjj/FrBzlByw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWJTo5Kw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=e4FSmOigu6AOFdWWruEUuPiKgD7bEpDKsipcoCYw3vNOG3hf955CcKA08WQWBNyEA5FZ9P8sNPkQfqrsRfrZLa/8rXOb4L9BqWciscA98fx/rXU0dZ5P7NFkynw8h2qFvFXbBNBooWwPvyLpOTzUPgvDmVzOUYln8gFdBGC47PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HvFp0obq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWJTo5Kw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CDC1C4CEDF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HvFp0obq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06BBC4CEE6;
 	Fri, 31 Jan 2025 17:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1738345389;
-	bh=KouCoSf4mWghkLKK/X/OLNqtXx7bPryJTJFiRxmO5ak=;
+	bh=tu4BeykCl5tgl22Fm0xr0J7ZYFLcc0Ka3FDOBXSQxNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aWJTo5KwJAE32CQmmI0AJNKYYBZ2K/rQAezzsrgF3VfUY/hxpbmcvys3T+LhaHtuk
-	 Cd6rB4iAqIx16ps1U2k66YeDd444tUdPfyBCZJTzoQqhotCTxqhQTeArwEfvNpqfUB
-	 szzwHpcIIkmxOkU3FdO8NlpIVV+VJ2AM3khH0XzsbPZ/mWyB9y85N1rUNG9Ns3kzj1
-	 N232tx8cu8LdZu3wAwcIN4s/CoWs+dNsFYgyie9u/iLHM4ylrO2ZzRgSTYHyZgAOVV
-	 Z1qnSkreFKRc9xLDxM2EFl4s6ooHGS6Rm39njFtWnHvMlXsHWJpOL68W0XmWP7/qbW
-	 NXgaclXcmVDJA==
+	b=HvFp0obqAMNUofw3fRxBy1PPA4eITQ3ToL5izb+6GRsaHpH5HxqfzPTYqeYKKP6QX
+	 q27KMfCUi95NdXnoETjwLhhoqreLa4RN29Q+yCRDE63M7clVlrZ6h3O/Mf/1xPtBfy
+	 ZM0so6ZXt7F/esKpeyxQFMcGPq1YfkyznwQN88JC5J7DDdyghj1DkvTLoVJX61GnYq
+	 fQHWxIx3IUbzfQMqG08hjOPSCn9ipSaF/1Pt6l4w0mUuNVo39NL/GZ7Pq9htloF7uO
+	 1KFA0W/tmXusnsDJ7ro5lGw4j6p3WkorTKgIy9g1WikYCrn25kPZP8SxjHYmxpMONe
+	 ooxUAdm14B/kw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tdv2p-00000006ggm-0Bae;
+	id 1tdv2p-00000006gh2-0eyb;
 	Fri, 31 Jan 2025 18:43:07 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
@@ -41,9 +41,9 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Ani Sinha <anisinha@redhat.com>,
 	Dongjiu Geng <gengdongjiu1@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 02/14] acpi/ghes: add a firmware file with HEST address
-Date: Fri, 31 Jan 2025 18:42:43 +0100
-Message-ID: <5082df62da57450674413f13c20e937330676a0a.1738345063.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 06/14] acpi/ghes: only set hw_error_le or hest_addr_le
+Date: Fri, 31 Jan 2025 18:42:47 +0100
+Message-ID: <7fbe05cb97c50addb61920c68e1aa5027a64610c.1738345063.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1738345063.git.mchehab+huawei@kernel.org>
 References: <cover.1738345063.git.mchehab+huawei@kernel.org>
@@ -56,78 +56,81 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Store HEST table address at GPA, placing its the start of the table at
-hest_addr_le variable.
+The hw_error_le pointer is used for legacy support (virt-9.2).
+Starting from virt-10.0, HEST table is accessed via hest_addr_le.
+
+Remove fw_cfg logic for legacy support if virt is 10.0 or upper.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- hw/acpi/ghes.c         | 16 ++++++++++++++++
- include/hw/acpi/ghes.h |  1 +
- 2 files changed, 17 insertions(+)
+ hw/acpi/ghes.c | 30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
 diff --git a/hw/acpi/ghes.c b/hw/acpi/ghes.c
-index 4cabb177ad47..27478f2d5674 100644
+index a91dcd777433..ba8b1a3a13dc 100644
 --- a/hw/acpi/ghes.c
 +++ b/hw/acpi/ghes.c
-@@ -30,6 +30,7 @@
- 
- #define ACPI_HW_ERROR_FW_CFG_FILE           "etc/hardware_errors"
- #define ACPI_HW_ERROR_ADDR_FW_CFG_FILE      "etc/hardware_errors_addr"
-+#define ACPI_HEST_ADDR_FW_CFG_FILE          "etc/acpi_table_hest_addr"
- 
- /* The max size in bytes for one error block */
- #define ACPI_GHES_MAX_RAW_DATA_LENGTH   (1 * KiB)
-@@ -349,8 +350,11 @@ void acpi_build_hest(GArray *table_data, GArray *hardware_errors,
+@@ -232,8 +232,8 @@ ghes_gen_err_data_uncorrectable_recoverable(GArray *block,
+  * Initialize "etc/hardware_errors" and "etc/hardware_errors_addr" fw_cfg blobs.
+  * See docs/specs/acpi_hest_ghes.rst for blobs format.
+  */
+-static void build_ghes_error_table(GArray *hardware_errors, BIOSLinker *linker,
+-                                   int num_sources)
++static void build_ghes_error_table(AcpiGhesState *ags, GArray *hardware_errors,
++                                   BIOSLinker *linker, int num_sources)
  {
-     AcpiTable table = { .sig = "HEST", .rev = 1,
-                         .oem_id = oem_id, .oem_table_id = oem_table_id };
-+    uint32_t hest_offset;
-     int i;
+     int i, error_status_block_offset;
  
-+    hest_offset = table_data->len;
-+
-     build_ghes_error_table(hardware_errors, linker, num_sources);
- 
-     acpi_table_begin(&table, table_data);
-@@ -362,6 +366,15 @@ void acpi_build_hest(GArray *table_data, GArray *hardware_errors,
+@@ -278,13 +278,15 @@ static void build_ghes_error_table(GArray *hardware_errors, BIOSLinker *linker,
+                                        i * ACPI_GHES_MAX_RAW_DATA_LENGTH);
      }
  
-     acpi_table_end(linker, &table);
-+
-+    /*
-+     * Tell firmware to write into GPA the address of HEST via fw_cfg,
-+     * once initialized.
-+     */
-+    bios_linker_loader_write_pointer(linker,
-+                                     ACPI_HEST_ADDR_FW_CFG_FILE, 0,
-+                                     sizeof(uint64_t),
-+                                     ACPI_BUILD_TABLE_FILE, hest_offset);
+-    /*
+-     * tell firmware to write hardware_errors GPA into
+-     * hardware_errors_addr fw_cfg, once the former has been initialized.
+-     */
+-    bios_linker_loader_write_pointer(linker, ACPI_HW_ERROR_ADDR_FW_CFG_FILE, 0,
+-                                     sizeof(uint64_t),
+-                                     ACPI_HW_ERROR_FW_CFG_FILE, 0);
++    if (!ags->use_hest_addr) {
++        /*
++         * Tell firmware to write hardware_errors GPA into
++         * hardware_errors_addr fw_cfg, once the former has been initialized.
++         */
++        bios_linker_loader_write_pointer(linker, ACPI_HW_ERROR_ADDR_FW_CFG_FILE,
++                                         0, sizeof(uint64_t),
++                                         ACPI_HW_ERROR_FW_CFG_FILE, 0);
++    }
  }
  
- void acpi_ghes_add_fw_cfg(AcpiGhesState *ags, FWCfgState *s,
-@@ -375,6 +388,9 @@ void acpi_ghes_add_fw_cfg(AcpiGhesState *ags, FWCfgState *s,
-     fw_cfg_add_file_callback(s, ACPI_HW_ERROR_ADDR_FW_CFG_FILE, NULL, NULL,
-         NULL, &(ags->hw_error_le), sizeof(ags->hw_error_le), false);
+ /* Build Generic Hardware Error Source version 2 (GHESv2) */
+@@ -373,7 +375,7 @@ void acpi_build_hest(AcpiGhesState *ags, GArray *table_data,
  
-+    fw_cfg_add_file_callback(s, ACPI_HEST_ADDR_FW_CFG_FILE, NULL, NULL,
-+        NULL, &(ags->hest_addr_le), sizeof(ags->hest_addr_le), false);
-+
+     hest_offset = table_data->len;
+ 
+-    build_ghes_error_table(hardware_errors, linker, num_sources);
++    build_ghes_error_table(ags, hardware_errors, linker, num_sources);
+ 
+     acpi_table_begin(&table, table_data);
+ 
+@@ -404,13 +406,13 @@ void acpi_ghes_add_fw_cfg(AcpiGhesState *ags, FWCfgState *s,
+     fw_cfg_add_file(s, ACPI_HW_ERROR_FW_CFG_FILE, hardware_error->data,
+                     hardware_error->len);
+ 
+-    /* Create a read-write fw_cfg file for Address */
+-    fw_cfg_add_file_callback(s, ACPI_HW_ERROR_ADDR_FW_CFG_FILE, NULL, NULL,
+-        NULL, &(ags->hw_error_le), sizeof(ags->hw_error_le), false);
+-
+     if (ags->use_hest_addr) {
+         fw_cfg_add_file_callback(s, ACPI_HEST_ADDR_FW_CFG_FILE, NULL, NULL,
+             NULL, &(ags->hest_addr_le), sizeof(ags->hest_addr_le), false);
++    } else {
++        /* Create a read-write fw_cfg file for Address */
++        fw_cfg_add_file_callback(s, ACPI_HW_ERROR_ADDR_FW_CFG_FILE, NULL, NULL,
++            NULL, &(ags->hw_error_le), sizeof(ags->hw_error_le), false);
+     }
+ 
      ags->present = true;
- }
- 
-diff --git a/include/hw/acpi/ghes.h b/include/hw/acpi/ghes.h
-index 9f0120d0d596..237721fec0a2 100644
---- a/include/hw/acpi/ghes.h
-+++ b/include/hw/acpi/ghes.h
-@@ -58,6 +58,7 @@ enum AcpiGhesNotifyType {
- };
- 
- typedef struct AcpiGhesState {
-+    uint64_t hest_addr_le;
-     uint64_t hw_error_le;
-     bool present; /* True if GHES is present at all on this board */
- } AcpiGhesState;
 -- 
 2.48.1
 
