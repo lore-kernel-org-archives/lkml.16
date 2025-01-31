@@ -1,133 +1,114 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1318B1BE238;
-	Fri, 31 Jan 2025 13:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C69A1BE238
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738331464; cv=none; b=Eq/8v+BfV0lY+aWjceQGPPPA87q3aCXuphk4NsQKGrU2OYmP5/8fegcx4YiIrmpAcFVyEdxvWKjOw8R9jlfOn7DncLkoiOUOwtTt1xAgf6ZIcVjsD28Kn8iBkNBCTxqW8dYnjJ7vzB7xwHsldDk4TYCpcf0DR84yHooEZY9b88M=
+	t=1738331530; cv=none; b=HXbxs/D3DXBPIVwGtJwOLwwdzZEyVVmZRCtqa0N4EIEOgPCiv+aU5TjinJ21E3BVLg0k4XufrNLdFpqF9gIVsiQ11ONuuOnLjha8tSyKCHGdf8ubC6zHDUxaz6nLHc5VkkYEtzICCuUjgzqR7VnO6wqvmMraWs6F6izfVAoyG64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738331464; c=relaxed/simple;
-	bh=i5/PxM6BpFp735zXjwSxAuyz/3OjYTl5AW4EX03icco=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hjksGvak49wGUzQlOajjBWWTevzI6soQNB4q21w7QofcMYWJ217MKV3hNxvXBvbGwPUKpAB57wFGTc43JIxiOrx3mQpRiaBng1A6eT9DmiTlo/1EVP6BTEp39is6OoHOzL8AuT20GddR9R+DxEId8b/xdx3cBtgM6AwBTc2duDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=PpKh1Iy4; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=EVsc4krd reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1738331530; c=relaxed/simple;
+	bh=3yG6vF3BhAGzPGU/excw3Et8DTba1mIHbAF880jDHtc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RKLWNqlFXzunwHtfYHVggDg15p13xN+rf7C7zIxwDJeHk7a2NVsW4DhEurxhVgsTgnzEgBQMfWsTA2Q/nM0MDR1twGJZDovobknzBrwwuvpzavOeKKrvaSDG2Ieb31PhOjl3Tv6Hul+u4AiEE+sYUxsW29LHR5wXGlGOP/+At5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=nHxwJKs5; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="PpKh1Iy4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="EVsc4krd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1738331461; x=1769867461;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pGPC/hW5rIZq2gK7yDJbioksTlO1e7DjzYy5/dkDYdU=;
-  b=PpKh1Iy4IQN4VknncQulU2msWHaUxjqfg6n/2eg/MUJfPlLrKNOGdCT6
-   w5jeCRKGhJ/I4IX/GDSPbjwoi1pwsVNVzBKWXKs6Zjmc1fQMjbMsm6PfY
-   Wx9KtAk2gQPoaehZ1AmEwA+A8hgV9p2U7SBRpZ2MgjRjZs2sebvkqvqdF
-   eXrt7nQA9vOOywanF19wqxslDLVRb72eb/UKacVnMVtNXZ6iiiPbaqaky
-   RCIpAh5UvC7jce8z9mqoMxKEVX/X4lT3N4shGEBv2JZ+oc5Rxq3kKWVZl
-   2waMpn6fxRiFk/yRWq+6ODaN8tSH1WSS+A2OWZSJixGXd5s86h0qZQCjn
-   A==;
-X-CSE-ConnectionGUID: VPJl4Oi8QxuRrbOgBPYfKw==
-X-CSE-MsgGUID: OkSFhy6DTdGm4UslsPUvag==
-X-IronPort-AV: E=Sophos;i="6.13,248,1732575600"; 
-   d="scan'208";a="41406883"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 31 Jan 2025 14:50:52 +0100
-X-CheckPoint: {679CD53C-1A-9B2B6168-EB6F31C5}
-X-MAIL-CPID: 34B68224B8FC38765AC27969C122FFD7_5
-X-Control-Analysis: str=0001.0A682F21.679CD53C.0098,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6628516B72B;
-	Fri, 31 Jan 2025 14:50:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1738331448;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pGPC/hW5rIZq2gK7yDJbioksTlO1e7DjzYy5/dkDYdU=;
-	b=EVsc4krdjIMtoDa0hRHx1mKilyp25g9YTglPKr9VfffkrxA40Ccm8NQuxhWl30vKnRXuoP
-	ab3NHzUAB0LkHuMtwjOlh1Sxg+tDPDoJ4gjOkXA7LGRilx59MNf59ropLqwcI4VRR+qvll
-	Cjj7llTIJrf7cwoz5FX3+Ca9fmeqGT0IuUoZAPi0o/nbeoAJbhNYgl0mnStE2vA/FGSl4x
-	sDrURZAkbblN0ctVutb8j+wUsHWjDQw0c3zxLSk0GIXFwxZ0hylHWxN3Ou36bQg4f5w1Hf
-	jH5ZfcYh4HBqw52MAFH4UN2vh6qxs3R46gzXyQH6d6BxvgYtQ/C/vNJS3WtHpQ==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] nvmem: imx-ocotp: Support accessing controller for i.MX8M Nano
-Date: Fri, 31 Jan 2025 14:50:46 +0100
-Message-ID: <4989387.31r3eYUQgx@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <deef6dcd-27a0-4109-9788-a755fd390f55@kernel.org>
-References: <20250130130101.1040824-1-alexander.stein@ew.tq-group.com> <20250130130101.1040824-4-alexander.stein@ew.tq-group.com> <deef6dcd-27a0-4109-9788-a755fd390f55@kernel.org>
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="nHxwJKs5"
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
+	by cmsmtp with ESMTPS
+	id dmGHtk44tAfjwdrRHtQRbt; Fri, 31 Jan 2025 13:52:07 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id drRHtd5st3770drRHtkgil; Fri, 31 Jan 2025 13:52:07 +0000
+X-Authority-Analysis: v=2.4 cv=WYoKaVhX c=1 sm=1 tr=0 ts=679cd587
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=VdSt8ZQiCzkA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=gyRQ9LoAd9Ap2MThexAA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=u4ji1XhLeH5/mG0e96444tmc79AQZ0/wdJHGHUCYjDo=; b=nHxwJKs56LWuSMbXbSMLyhWpBH
+	+2OzxmfgQKZwpmFzk9939mYNmn7scqc9FY7sBL77gIKxq2Cs2+G30x2Y5CMD4fPtKEML65hh8xwpU
+	LwSncBf7SZfAIPMqr0Hb0/9BokkQaX5CIhhEw7glSLnO9wYtFN9PWnCFGnt7XBQO5yyJU9IRBwKSP
+	SqTrAxzW2h+ruUb3t3MMRkyuCudBosIhq/7KW87mbOJfdLG72mWG0a6Zm0TmdwmIjxyVy/K5xPqP+
+	Kv2Thg1LgqOPFnl28tRPZ0Pr9HTHBf8irigOfTPBo7F5ODlnl/AWBfV6AqfIJpPXaEvCPxu8lZ6ry
+	RdqSf6+g==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:45612 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <re@w6rz.net>)
+	id 1tdrRG-0014XI-0z;
+	Fri, 31 Jan 2025 06:52:06 -0700
+Message-ID: <d47bf7ff-e870-4e12-b6c4-c47817e5da5c@w6rz.net>
+Date: Fri, 31 Jan 2025 05:52:04 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.6 00/43] 6.6.75-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250130133458.903274626@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250130133458.903274626@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1tdrRG-0014XI-0z
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:45612
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 54
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfCqj8pu2Y2PULSM3jF3C/32U21bQICEVwrs65nre4RNubCjSaa/W/Fup94y2NMtVXQ1rrGUkF7vWm86Ye5pzGsTaDYnP3gJuc6ox2ze/897RSoasCtRi
+ Rfby+5CIs5QNxnjF/JdnH6Lbkid/yvYzUAkXjU1+PtU9W0KEni6QwPgAujA18LQXZMAE7JbdBwoP+1Dm7jDta/+eNqegtIfsYQM=
 
-Hi,
+On 1/30/25 05:59, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.75 release.
+> There are 43 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 01 Feb 2025 13:34:42 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.75-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Am Freitag, 31. Januar 2025, 08:20:40 CET schrieb Krzysztof Kozlowski:
-> On 30/01/2025 14:01, Alexander Stein wrote:
-> > +
-> > +static int imx_ocotp_grant_access(struct ocotp_priv *priv, struct devi=
-ce_node *parent)
-> > +{
-> > +	struct device *dev =3D priv->dev;
-> > +
-> > +	for_each_available_child_of_node_scoped(parent, child) {
-> > +		struct of_phandle_args args;
-> > +		u32 id, idx =3D 0;
-> > +
-> > +		while (!of_parse_phandle_with_args(child, "access-controllers",
-> > +						   "#access-controller-cells",
-> > +						   idx++, &args)) {
-> > +			of_node_put(args.np);
-> > +			if (args.np !=3D dev->of_node)
->=20
-> You are using args.np after dropping the reference.
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Indeed, but is it really a problem? The args.np pointer is still the same.
-So the comparison is unaffected.
-
-Both branches need to drop the reference, no?
-But the following looks awefull as well.
-> if (args.np !=3D dev->of_node) {
-> 	of_node_put(args.np);
-> 	continue;
-> }
-> of_node_put(args.np);
-
-Best regards,
-Alexander
-
->=20
-> > +				continue;
-> > +
-> > +			/* Only support one cell */
-> > +			if (args.args_count !=3D 1) {
-> > +				dev_err(dev, "wrong args count\n");
-> > +				continue;
-> > +			}
-> > +
->=20
->=20
-> Best regards,
-> Krzysztof
->=20
-
-
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
+Tested-by: Ron Economos <re@w6rz.net>
 
