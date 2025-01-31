@@ -1,91 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C993018CC1D;
-	Fri, 31 Jan 2025 10:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53854136A;
+	Fri, 31 Jan 2025 10:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738317951; cv=none; b=Vlbo+1Rbmx+JJo29p9QJuL1L/1+W31oskM4pSPVTSgvJ/vU0s32K2u5pCD9jQCVqo3cKk9v1OEcsv7XIqSDil1KKFdFUID49BIz6QMREmDPHbjXSNQZU5IiOYRkYf28q25jShGdmipv0vpRjBrs+xzn11eAAVOrE/bBjvjaKw2E=
+	t=1738318017; cv=none; b=TN7eQnVXsSUh4haNrjzO4f2ZYDzADrTmSqMVX6H382iu8kEMiLzdcb24N0cKVv20ecdkvuh9WfhDS0+qhZqeP9UsEQ/wSCAJtRmMPmeJyMnmjj2DWrKrbivPGUH+9d5a248ipbAmpauX6eOT3rvo1NN0s1z+Ho0p7bTTjkwB6Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738317951; c=relaxed/simple;
-	bh=fOGvzt4VXpEvCOY+kXMq0uNd0SgvKFlchoIyv6XU0bk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MCEYrh70tTq3SfKDitvPTQ4tGUGJMdIztcRafLNRS6G+NdMRM1x5KkvJW8xgSwQhh2U1iHbfOycwmziczud8P1IEoCsakC/71Q+9BLjJDMmAhBH+YOxPU4utyXcxbt7Fcrz/RwEkZPLKcBLMpXkS8ClvHJp0qxS4hCroJwExU3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QE4WKA7g; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QE4WKA7g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1ACCC4CED1;
-	Fri, 31 Jan 2025 10:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738317951;
-	bh=fOGvzt4VXpEvCOY+kXMq0uNd0SgvKFlchoIyv6XU0bk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QE4WKA7gY0xGktkyO5t3ED+S8CDsKoqhNJAwhoWmL9ESKRCS+SdHy30ikMQPjjlJY
-	 tSSdYtw94CkCLaMsRPNv6SAedBrxJ+E7C1BFvuuCUB9IfKVXWxDgbRqV6Y91qg9Qjy
-	 o0AAEs5Jx/XCYFnEHscsyLfHl5sshAPcXXfPJ/3iW5YfA7xSO1/p6zlXILM3jfbGRx
-	 tHvjQ+8De9sgFh2h4koz8akuFuhun4rrwYqRZlNVtSnFW4tCk5h1DNzDBwllZcUyFG
-	 prqRa/S8ACSaJsCnq4aMsnmhESAXlqBMt9BZSSllChd+zb3TFSaut1ZNfMjG9Ro5Uj
-	 kCe0B+zt5Yquw==
-Date: Fri, 31 Jan 2025 10:05:45 +0000
-From: Simon Horman <horms@kernel.org>
-To: Zdenek Bouska <zdenek.bouska@siemens.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Song Yoong Siang <yoong.siang.song@intel.com>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] igc: Fix HW RX timestamp when passed by ZC XDP
-Message-ID: <20250131100545.GF24105@kernel.org>
-References: <20250128-igc-fix-hw-rx-timestamp-when-passed-by-zc-xdp-v1-1-b765d3e972de@siemens.com>
+	s=arc-20240116; t=1738318017; c=relaxed/simple;
+	bh=hR1PJk5Vtg0pStm2OBnAppLW5Z9iaWW+/qQ2rU7s24o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V7BPZHHu6ed5JYOTlvLNvmVnoAuQbpB/lb/dsYu5u48OWiRL228LmwHb2WM5aKaaq0m0dSu3PJpZbojtaDaEPuht3nGHEo7awvMBv9YVsvfQFMd2NX2mE8JZ3rLJvzE4qg5QYD2VeCpaUSTZVclxqbcU0qsIHrk+HDGaBoMjFDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.38])
+	by gateway (Coremail) with SMTP id _____8DxGeGzoJxnUcdqAA--.11878S3;
+	Fri, 31 Jan 2025 18:06:43 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.38])
+	by front1 (Coremail) with SMTP id qMiowMDxK8WvoJxnc9MyAA--.15387S2;
+	Fri, 31 Jan 2025 18:06:42 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alan Stern <stern@rowland.harvard.edu>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] USB: core: Enable root_hub's remote wakeup for wakeup sources
+Date: Fri, 31 Jan 2025 18:06:30 +0800
+Message-ID: <20250131100630.342995-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250128-igc-fix-hw-rx-timestamp-when-passed-by-zc-xdp-v1-1-b765d3e972de@siemens.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxK8WvoJxnc9MyAA--.15387S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uw4DWF4xGr4xXFW5uFy8WFX_yoW8GFyrp3
+	4xC34Fkr4kWryxCa1qg3W8X3WUJa1xtFWUGFZa939rXw13Z34vkFy8A34FqayDtrnYqFW5
+	tF43X34YgFyUCFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
-On Tue, Jan 28, 2025 at 01:26:48PM +0100, Zdenek Bouska wrote:
-> Fixes HW RX timestamp in the following scenario:
-> - AF_PACKET socket with enabled HW RX timestamps is created
-> - AF_XDP socket with enabled zero copy is created
-> - frame is forwarded to the BPF program, where the timestamp should
->   still be readable (extracted by igc_xdp_rx_timestamp(), kfunc
->   behind bpf_xdp_metadata_rx_timestamp())
-> - the frame got XDP_PASS from BPF program, redirecting to the stack
-> - AF_PACKET socket receives the frame with HW RX timestamp
-> 
-> Moves the skb timestamp setting from igc_dispatch_skb_zc() to
-> igc_construct_skb_zc() so that igc_construct_skb_zc() is similar to
-> igc_construct_skb().
-> 
-> This issue can also be reproduced by running:
->  # tools/testing/selftests/bpf/xdp_hw_metadata enp1s0
-> When a frame with the wrong port 9092 (instead of 9091) is used:
->  # echo -n xdp | nc -u -q1 192.168.10.9 9092
-> then the RX timestamp is missing and xdp_hw_metadata prints:
->  skb hwtstamp is not found!
-> 
-> With this fix or when copy mode is used:
->  # tools/testing/selftests/bpf/xdp_hw_metadata -c enp1s0
-> then RX timestamp is found and xdp_hw_metadata prints:
->  found skb hwtstamp = 1736509937.852786132
-> 
-> Fixes: 069b142f5819 ("igc: Add support for PTP .getcyclesx64()")
-> Signed-off-by: Zdenek Bouska <zdenek.bouska@siemens.com>
+Now we only enable the remote wakeup function for the USB wakeup source
+itself at usb_port_suspend(). But on pre-XHCI controllers this is not
+enough to enable the S3 wakeup function for USB keyboards, so we also
+enable the root_hub's remote wakeup (and disable it on error). Frankly
+this is unnecessary for XHCI, but enable it unconditionally make code
+simple and seems harmless.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/usb/core/hub.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index c3f839637cb5..efd6374ccd1d 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3480,6 +3480,7 @@ int usb_port_suspend(struct usb_device *udev, pm_message_t msg)
+ 			if (PMSG_IS_AUTO(msg))
+ 				goto err_wakeup;
+ 		}
++		usb_enable_remote_wakeup(udev->bus->root_hub);
+ 	}
+ 
+ 	/* disable USB2 hardware LPM */
+@@ -3543,8 +3544,10 @@ int usb_port_suspend(struct usb_device *udev, pm_message_t msg)
+ 		/* Try to enable USB2 hardware LPM again */
+ 		usb_enable_usb2_hardware_lpm(udev);
+ 
+-		if (udev->do_remote_wakeup)
++		if (udev->do_remote_wakeup) {
+ 			(void) usb_disable_remote_wakeup(udev);
++			(void) usb_disable_remote_wakeup(udev->bus->root_hub);
++		}
+  err_wakeup:
+ 
+ 		/* System sleep transitions should never fail */
+-- 
+2.47.1
 
