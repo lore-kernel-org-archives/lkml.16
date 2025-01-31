@@ -1,107 +1,114 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE78E28373;
-	Fri, 31 Jan 2025 19:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8073328373;
+	Fri, 31 Jan 2025 19:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738351364; cv=none; b=MicLJGauNDX/Kqni6blmJDukYkOj1Jh2CvCLTTjXn50yhqdWaxoGtSXh4FavI0lqNSv5kuvWgZSiFrjVnSZdvQBR6ndaWIBLspJ9WLUfbgQvblLEmp7hPG5OOB/Rqp9UPfFWwvstu5ctIhVmEejq3+zt84IQslYzmL2cyS5NNYU=
+	t=1738351664; cv=none; b=Ha8zTanmK9tbygKl3+e4zvAvh0uPfrYuHGD1T1dpRC1Krf8YlUNZkOZEx0zee7uWnfrEmXf+rZy5IjSJ7AbvfKdIPzR6GkK2go/NFEdphF9ieEMO49TIkbVb00vUjiwC9z5DqcHgHCrjqLWrsbZjRPA0acPxfpxnobnN4nNFHN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738351364; c=relaxed/simple;
-	bh=yghr0hTYW6x5ZpWlpynxFmbYPgzAy1sXAnrK7wA649E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AszVP4fZbQvCIK5d+ewuQaak8njwhqk67ECj99k15kZATRTI7RvzQXDeczN1+gqaysJ29uMYAudV7fIegZGiZZ8Ur1XszZgoclEtx84iBzTAoXNmRDOvtuzrr/Oj5pfw7vQka2qESU3eiAkU0P053YbStghumaIoEdG7sKhu/gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HTXQCve+; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738351664; c=relaxed/simple;
+	bh=8ZjHAEUnHwb/OxfM2C7tCwLOoq0d4EVrXFDpiPBwwaQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O3GYYOmI/nnyR8p7jndzH8vAnaguNBLrnSjEzd9A52ofkkZCQat7q0eeFcUMVN6okUcxydJbw+AQyPn/HaVnQTbfy5NpVBZy0GDNKfxgeuJpWyQhH10bqXGktVsav8IDabxcdDHnFEfiSlXSgTiIk9UImn2zCabysaM4BEpfVmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=txIOvCgk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTXQCve+"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6dcdd9a3e54so21618366d6.3;
-        Fri, 31 Jan 2025 11:22:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738351362; x=1738956162; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TYEmwtHGBMGFTeXpG7wtUM+i1eLWWF68Mg6OG5symNU=;
-        b=HTXQCve+T0Rcw7RGa7QNqeQfcDFwepZVVDtx4ovnBa2dIMEFQrWh7wNrplTfjsvxoG
-         nQYfZqTyR24KLVz+2DY//GtfvEWeQeS4rGvRAH6gwUJ7fE5/6jh3m7Lg+Du/abDq9yh8
-         kdu7nc4ffiSAVR5VAquYFKy6O41L6KsQn9AVh0GaCAIxuBw+Kq+LfDiNVlt0nh1G0hVW
-         E8BjPqFrRWqrTOUDJWYZu5TVmkQMU1euVCf9xrjR/q6doaD7BQDrC8qBRLL5vrsb9F1y
-         GKxJa+plu/MSM5cERf6IAtIZGOfsgDLF5CzowBia+24b7MjagAPsnzuDAn0d7bdeNXhp
-         pxsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738351362; x=1738956162;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TYEmwtHGBMGFTeXpG7wtUM+i1eLWWF68Mg6OG5symNU=;
-        b=hXDJe3Wlddpe/FOk6mqBHwH9a/RCHwgeu7HekwGE7q0BU64lzVBoiuGid+yyIv/xqP
-         ZiFfjlggMtX9hJQhUV3Op6v9IfDnhE32X7AFlzNKcAlB+cXVLtf56pMZDIO/hKGJZmdp
-         gTHWIguh45QITFs8vFhXsO4oOHxXAq7g79GLeEwAkhSgCBClz3dAis7na7lpZWlHBdta
-         TmdJXI2uqcZOxH6gTTmi6FIiM8QDL1JkpubCCSBOokUfDp68ugIxfrS7sad0ovKvZwxq
-         /qAbPaTwl+zingjqBEfpvaq24CErzQdRKU74mXzdMCXvNZRuSM+/QgY0R7/YeTUsqtuf
-         Onzw==
-X-Forwarded-Encrypted: i=1; AJvYcCX6WnUizrHhWH+pkmbmchk+W5PV5dUsiWtl/CohYD/EVaV4Sx5y8L86EBNI8SMvgA/FfSveAGdojqBhYnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlG5mYzbpA3DzV/6yN9vynOp2K++MaxPBbssYXS6dz6cf77pYq
-	oS1LVQJo3qbbM/zWySdc82OpqfNiSjYZDXl+5OKFqa/UAp8YsoAz
-X-Gm-Gg: ASbGncvAlUeb/blWa9BtFjyKOWvF1nu42ccWflzDQfYxwAPUuqDdQvSgZKLUxJYI6cq
-	e+o5/e2uF6GFEJfw8xbmd6OBAiXRYv1UvY0j41+zCMaj/g8LyeKeMUX3tD5X2CusTCNi38N2CTx
-	xY+aBg6iAW067iyaj6ze/oIj7Jom0c4JRE7itTL2jcqciGxOoDPj8o2ZpJMpbPmw1NQMMC6aaoB
-	Qhqww+jcTWVVlvqypxnIuGiel7z8dGj42pNc9v9/PoGJUYuNBhgg+yKOQXoK7dbwOzKlUYcwDvk
-	uCg6su24/tnMwThBOUfAfXkoaDYzmSlW4NjtAA==
-X-Google-Smtp-Source: AGHT+IG+ijm9sa/JTLlFQQRggkYEDrym/Q5qnngX5KgsPMKZJIdZAYo91ml+DrcmVEN2Qub0+LlMsw==
-X-Received: by 2002:a0c:edca:0:b0:6e2:4e1a:bc82 with SMTP id 6a1803df08f44-6e263751a18mr15968036d6.35.1738351361606;
-        Fri, 31 Jan 2025 11:22:41 -0800 (PST)
-Received: from newman.cs.purdue.edu ([128.10.127.250])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254940f05sm20905606d6.113.2025.01.31.11.22.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 11:22:41 -0800 (PST)
-From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-To: skashyap@marvell.com,
-	jhasan@marvell.com,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com,
-	James.Bottomley@suse.de,
-	michaelc@cs.wisc.edu,
-	bprakash@broadcom.com
-Cc: linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Subject: [PATCH] scsi: bnx2fc: Add check for bdt_info to avoid NULL pointer dereference
-Date: Fri, 31 Jan 2025 19:22:39 +0000
-Message-Id: <20250131192239.34763-1-jiashengjiangcool@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="txIOvCgk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E30B7C4CEE5;
+	Fri, 31 Jan 2025 19:27:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738351663;
+	bh=8ZjHAEUnHwb/OxfM2C7tCwLOoq0d4EVrXFDpiPBwwaQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=txIOvCgkpu/lOG69LFDj5JBLEKhf69uclQlwLcLnC6J5VwmMQWh9lvQkCLvHllwvV
+	 D54AbWA3FVsI/Le0gRBTbxL//OZ6mP/MoM8ZXDL86Pp2oC9hIM2iK1HOPYnhoPWNZ4
+	 wh5Nb/gJrFUdVx51POAsFhSbnyTXpxOrQ8Pv86TBr4u3x85icGkSp8NPkhMoXMXFhO
+	 xd07dTxVlyfxycXBFZqI/01gunv5N8e/zDO7Q7ORRwzlVQbOJ2MjkO+JyofW3PtMDM
+	 DPWvCo7bTo9mddgmQ05l6TrV/DVrj+3J0Y5U04cAo8Q+jvPiBnANj+4LDmZpkVL39S
+	 RaAjKx+qa0ovg==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-304e4562516so22957761fa.1;
+        Fri, 31 Jan 2025 11:27:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUda35KgUxbhgtQHd3wF6hdkEmeRy99hSQ2av1BjRqAcRBFRGOMyTdD/E+MbGEO/3Z1Avh2oDM1gp7z1g==@vger.kernel.org, AJvYcCWQA38QS/HQWCCV5V9+rA89iueDeYFf0QfHwKm8EiCuv/uy7eFsgpHmRpSQ4TmvZbwJljr4aVRj6MzT+gY=@vger.kernel.org, AJvYcCXIuSlVwXU2eZxixSmYsU25fFFRHisVJcQWW6+8ts5mxwufY0pF+n4ANBKMW72jAnupFwNQYScVlBiTdK6d@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3DWSXyO5mpvVYTDzDqi/wRhdWkrgD58W0+RYrBVLDqNte57v+
+	OsrTcqd852uY/nXa4BAaUWLULKSmKDOD6ml6KhM17Ley9l28Go8jjMk6rNNZSs6Qt+zEI3DZz6A
+	75jGiHflzaYCldSH1fhyY9+bqEl8=
+X-Google-Smtp-Source: AGHT+IG2RakmGGM1ifb4d35368XxTcUkemgdpicReeEmtk37Jf3VqXy4jG1UwPWDnmp44ziy6t68f/4RjUVGL78PYO0=
+X-Received: by 2002:a05:651c:243:b0:300:182b:91a0 with SMTP id
+ 38308e7fff4ca-307a10d315fmr31677561fa.7.1738351662525; Fri, 31 Jan 2025
+ 11:27:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250113155306.1922992-2-ardb+git@google.com> <CAK7LNARmPcM2RTBOfpep7puY8hSJ4rz6mOrw+5EuFHh6iQ0_iA@mail.gmail.com>
+ <CAMj1kXHuyJ548mkPNcmU=+oj2mfeNk-4igTHXxo0oDbvz9f8wA@mail.gmail.com>
+ <CAK7LNAQA+VhDf3ZGLmTjLm1JCEvKYPu2jnAUghxMKoCn+BEQ=Q@mail.gmail.com> <CAMj1kXHeSnGcWRs1=kvJrqrUxgfsFDKPTAqQne6Le7pmComtYA@mail.gmail.com>
+In-Reply-To: <CAMj1kXHeSnGcWRs1=kvJrqrUxgfsFDKPTAqQne6Le7pmComtYA@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 1 Feb 2025 04:27:06 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATYYSQe5O0eWP0DZ_NJOd6Z+qUS99-QYEWnQhVJdBmyhA@mail.gmail.com>
+X-Gm-Features: AWEUYZkme6hiFtxkMTL26YwECmBvllAYv8R14z3ZK-yBJQzRbAelQsPtQwz4I5I
+Message-ID: <CAK7LNATYYSQe5O0eWP0DZ_NJOd6Z+qUS99-QYEWnQhVJdBmyhA@mail.gmail.com>
+Subject: Re: [PATCH v3] kbuild: Strip runtime const RELA sections correctly
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	Ron Economos <re@w6rz.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a check for "bdt_info". Otherwise, if one of the allocations for
-cmgr->io_bdt_pool[i] fails, "bdt_info->bd_tbl" will cause a NULL pointer
-dereference.
+On Sat, Feb 1, 2025 at 4:02=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> wro=
+te:
+>
+> On Fri, 31 Jan 2025 at 19:58, Masahiro Yamada <masahiroy@kernel.org> wrot=
+e:
+> >
+> > On Sat, Feb 1, 2025 at 3:40=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org>=
+ wrote:
+> > >
+> > > On Fri, 31 Jan 2025 at 19:35, Masahiro Yamada <masahiroy@kernel.org> =
+wrote:
+> > > >
+> > > > On Tue, Jan 14, 2025 at 12:53=E2=80=AFAM Ard Biesheuvel <ardb+git@g=
+oogle.com> wrote:
+> > > > >
+> > > > > From: Ard Biesheuvel <ardb@kernel.org>
+> > > > >
+> > > > > Due to the fact that runtime const ELF sections are named without=
+ a
+> > > > > leading period or double underscore, the RSTRIP logic that remove=
+s the
+> > > > > static RELA sections from vmlinux fails to identify them.
+> > > >
+> > > >
+> > > > Dumb question - why can't you rename the section 'runtime*' to '.ru=
+ntime*' ?
+> > > >
+> > > > .rel* matches to sections that just happen to start with '.rel',
+> > > > which may not be REL or RELA.
+> > > >
+> > >
+> > > That is what I proposed originally [0] but it was shot down by Linus.
+> > >
+> > > [0] https://lore.kernel.org/all/20241014125703.2287936-4-ardb+git@goo=
+gle.com/T/#u
+> >
+> >
+> > Does this work ?
+> >
+> > $(OBJCOPY) --remove-relocations=3D'*' $@
+> >
+>
+> Only with binutils, not with llvm-objcopy
 
-Fixes: 853e2bd2103a ("[SCSI] bnx2fc: Broadcom FCoE offload driver")
-Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
----
- drivers/scsi/bnx2fc/bnx2fc_io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/bnx2fc/bnx2fc_io.c b/drivers/scsi/bnx2fc/bnx2fc_io.c
-index 33057908f147..4ca8cc51e8d1 100644
---- a/drivers/scsi/bnx2fc/bnx2fc_io.c
-+++ b/drivers/scsi/bnx2fc/bnx2fc_io.c
-@@ -352,7 +352,7 @@ void bnx2fc_cmd_mgr_free(struct bnx2fc_cmd_mgr *cmgr)
- 	bd_tbl_sz = BNX2FC_MAX_BDS_PER_CMD * sizeof(struct fcoe_bd_ctx);
- 	for (i = 0; i < num_ios; i++) {
- 		bdt_info = cmgr->io_bdt_pool[i];
--		if (bdt_info->bd_tbl) {
-+		if (bdt_info && bdt_info->bd_tbl) {
- 			dma_free_coherent(&hba->pcidev->dev, bd_tbl_sz,
- 					    bdt_info->bd_tbl,
- 					    bdt_info->bd_tbl_dma);
--- 
-2.25.1
+Applied to linux-kbuild.
+Thanks.
 
+
+--=20
+Best Regards
+Masahiro Yamada
