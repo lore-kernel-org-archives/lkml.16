@@ -1,64 +1,32 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dediextern.your-server.de (dediextern.your-server.de [85.10.215.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD8DEAC6;
-	Fri, 31 Jan 2025 14:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7678EAC6;
+	Fri, 31 Jan 2025 14:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.215.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738333425; cv=none; b=tzssEfh2ydeG98s8gGWdUVmVZz4cIRFwSa3llb0IFIf15g8Ht2IQ9M96mQQHTZYILUU+FSVfKfcXioG/tsNQ/iA7F+VenyWQ7wv7rkLCrXmKpOWmzv9xYsT6pbqCpeNePQzmB63wFp3Zt5YM7TjafyLFsYnpSv01+4zDOwTItaA=
+	t=1738333550; cv=none; b=Lq4JuWGIux1Fr448p3R1Y0JfwN3+PpcLs+dxA+NXClJvoSJ5qKsnTj8ufpZbdkktKspmituq6yo8lFegHlSx6t8IP49LmJ0cDaR0K/NtTuHH3ZVJ+3I9IsYHcbwW2f6fXtdXZIDhpUkDW/rZ4ZgDJKHAuloS7FYRfEPr2qVLJPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738333425; c=relaxed/simple;
-	bh=UBp2J8DVFWNLCbpQgbGh7veRFV+5Pc0uSzzmwJVBfDc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ifv19Tr1npko/rP2GesjQIHX2meRBd6SO8Jt0IXNGWWkX/4ZAsKKr1a+WudoXVOBvE/qGq1Ry2kWImrDN5irG43LARaAfUB8njhgAMj9a/ZBtes4zkJXse156J9FYKfidscQfQThO4QnKIuPUsXOAqgOU+Ibno7uRCOjwTi9/KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kh1a399F; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kh1a399F"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21649a7bcdcso36768245ad.1;
-        Fri, 31 Jan 2025 06:23:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738333423; x=1738938223; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ARjCakve7mgdK1H0BwgCO4BIUlFMuzNVILcOIXbfRi8=;
-        b=Kh1a399FCVg05bUfORa65LXy3OifhBjsooedu23qhM+c7mMW0a1Qw3juSZZLZkcuNd
-         hYIAPLyIJgXtWAggdInk++HWorwbTa0TMm3fiWKU3/DMeop2RYDreDGko3M/xm+TKq+X
-         Kgz5EhhLTrRjg5F9VZVwpDmaqZn3EFHrMKeHrfuItQqoxby+JwDKCuLmsFNCQijFmLza
-         XZuGyfgt56ae3dZqht9F39OLAMZGeU22ANs3BR5cit4FWTrfRZtwFnj6PDFraviIKtUr
-         yWiXJtK3xBg3K8xDUbd7+yph2kSDg743GqtifElZ7EMcnXQ2+NH87wk0m3/7+eSINjjC
-         2qOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738333423; x=1738938223;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ARjCakve7mgdK1H0BwgCO4BIUlFMuzNVILcOIXbfRi8=;
-        b=SSCELUN//XmZ6VwgFZK5Dg3h2SJpamxGFe9LaKhnhkMcR4npk3AFu55+vsnBkt8/MI
-         rjGO0fcgmBbgRbC0215e58oDj8azjjc1dacuvtwHx8FqNJ7xMgf77hELAiQRgVmNImr5
-         SbefpPmGuX3V4PtQDs0DPVreKSzWX6b3L5rHV0w2vaAlnhkPvSJWK9mxInr8E3fFyKLf
-         kWyHCGkyMu2qTeTjqbWRzQlm0nYzg2DpFUVNs/ISO2N2tBc4EvWXhqAGYvw1e66Re757
-         ceeOlMWFErCUy8zF64yYr84f/Ile9o8obAUEP5oOS8xHs3edZaqLqbwCWupa1YZPYEnj
-         C57w==
-X-Forwarded-Encrypted: i=1; AJvYcCU5EOGJfpp+f0qgPYdZXmM3g7kgrJJ03Xc6YCV33pKhV6ZRsWGPVTw5Ivhd3/BVyvuBXWbx+cx4gtyXIH+n@vger.kernel.org, AJvYcCUkp7KazkRKRb/YTTWHjf2nteirwMBSHlnfucnXj4AMQ5jtj3AVeBlAaeV9r6ycugwGFy5daScF2/V5@vger.kernel.org
-X-Gm-Message-State: AOJu0YwODB+ThytOrkOXthmktrzmcHwhoBcockoG15dvTA+q6dXq1bba
-	+SqE3q5IBH547xNx9U9gG/HWLck1P7dNUJxGTWMpn8CmCVPxb5Je
-X-Gm-Gg: ASbGncs1LRLGOzDomMqSHw3SXiApAuboGu2e/1QaR2wPz06lCG5V8Z8LQKoXgPubXRg
-	fATaCYqOO1BgnQnLs2HE95F0tYu+Md2tjjkjqi7I+HVklg2AwfbZoiK2P8kUADgF21h+Y46yaGt
-	r7tbONEDJ+Kq0lM4moaMWVHwA4f/n2UpUmWdYLDnge/AwSL4nko3ov7jz8g2Z7CLmVssue0ZZrF
-	5Ynr9TWUzwZ7ZEpF9jJkgGydUw5rSEj2HymmKIHV8NPq5FuxmE03A/Smnrjokm1LDKFH6W/rDjF
-	mjXqUwLqVpvsZE8I/tJ/aVG/
-X-Google-Smtp-Source: AGHT+IHlix273zN3fIW6sOXprknGjDEnzUPDPgPG8ZJxarufv3yoAZJE7C8S3dO9ckkKc0A4GpUGbA==
-X-Received: by 2002:a17:902:ce8f:b0:215:9d29:9724 with SMTP id d9443c01a7336-21dd7ddfdc9mr176888955ad.38.1738333422691;
-        Fri, 31 Jan 2025 06:23:42 -0800 (PST)
-Received: from [192.168.75.213] ([116.121.188.179])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acec04796c9sm3137988a12.62.2025.01.31.06.23.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 06:23:42 -0800 (PST)
-Message-ID: <41ab5a11-f8d3-403c-9d68-33eb15aef8fa@gmail.com>
-Date: Fri, 31 Jan 2025 23:23:34 +0900
+	s=arc-20240116; t=1738333550; c=relaxed/simple;
+	bh=OTi2cYqbLdgIpg/bZoI0phHJLMi9IzMbOP86LVeI23Q=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
+	 In-Reply-To:Content-Type; b=VVqHTITyb0cAOwx4kq0AOQnRrWSNLPkudL8hmQObz1e1UDGsIzlucSU3crxbli5hIxeQyR6lzlKt0+MTS5aT/+P2+hFWDQEuMybGuhItiILTmvzLxrRiumeRmrFeTm1B77ROjomEDsXMzEsUBR7mjfwZxmjSTXMuskpErmcssbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de; spf=pass smtp.mailfrom=hetzner-cloud.de; arc=none smtp.client-ip=85.10.215.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hetzner-cloud.de
+Received: from sslproxy08.your-server.de ([78.47.166.52])
+	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
+	id 1tdrxf-000Lcb-9b; Fri, 31 Jan 2025 15:25:35 +0100
+Received: from [2a0d:3344:1523:1f10:f118:b2d4:edbb:54af]
+	by sslproxy08.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
+	id 1tdrxf-0000uD-0F;
+	Fri, 31 Jan 2025 15:25:35 +0100
+Message-ID: <a1120039-b0a6-4882-be23-7ea1174f8ab7@hetzner-cloud.de>
+Date: Fri, 31 Jan 2025 15:25:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,423 +34,208 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Honggyu Kim <honggyu.km@gmail.com>
-Subject: Re: [PATCH v4] Weighted Interleave Auto-tuning
-To: Joshua Hahn <joshua.hahnjy@gmail.com>, gourry@gourry.net,
- ying.huang@linux.alibaba.com
-Cc: rafael@kernel.org, lenb@kernel.org, gregkh@linuxfoundation.org,
- akpm@linux-foundation.org, honggyu.kim@sk.com, rakie.kim@sk.com,
- dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, dave.jiang@intel.com,
- horen.chuang@linux.dev, hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com,
- kernel_team@skhynix.com, 42.hyeyoo@gmail.com
-References: <20250128222332.3835931-1-joshua.hahnjy@gmail.com>
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, willemdebruijn.kernel@gmail.com, jasowang@redhat.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, ast@kernel.org, daniel@iogearbox.net,
+ hawk@kernel.org, john.fastabend@gmail.com
+References: <20250130171614.1657224-1-marcus.wichelmann@hetzner-cloud.de>
+ <20250130171614.1657224-2-marcus.wichelmann@hetzner-cloud.de>
+ <Z5wIZ2LAjz0wTWg5@mini-arch>
 Content-Language: en-US
-In-Reply-To: <20250128222332.3835931-1-joshua.hahnjy@gmail.com>
+From: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
+Autocrypt: addr=marcus.wichelmann@hetzner-cloud.de; keydata=
+ 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
+ wySmewx3h/yfMh0aFxHhvLPxrO2IEQ==
+Subject: Re: [PATCH 1/1] net: tun: add XDP metadata support
+In-Reply-To: <Z5wIZ2LAjz0wTWg5@mini-arch>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: marcus.wichelmann@hetzner-cloud.de
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27535/Fri Jan 31 10:33:54 2025)
 
-Hi Joshua,
-
-Thank you for the v4 update!
-
-It took a long time to give you a feedback due to Luna new year's
-holiday.  Happy new year anyway!
-
-On 1/29/25 07:23, Joshua Hahn wrote:
-> On machines with multiple memory nodes, interleaving page allocations
-> across nodes allows for better utilization of each node's bandwidth.
-> Previous work by Gregory Price [1] introduced weighted interleave, which
-> allowed for pages to be allocated across nodes according to user-set ratios.
+Am 31.01.25 um 00:16 schrieb Stanislav Fomichev:
+> On 01/30, Marcus Wichelmann wrote:
+>> Enable the support for bpf_xdp_adjust_meta for XDP buffers initialized
+>> by the tun driver. This is useful to pass metadata from an XDP program
+>> that's attached to a tap device to following XDP/TC programs.
+>>
+>> When used together with vhost_net, the batched XDP buffers were already
+>> initialized with metadata support by the vhost_net driver, but the
+>> metadata was not yet passed to the skb on XDP_PASS. So this also adds
+>> the required skb_metadata_set calls.
 > 
-> Ideally, these weights should be proportional to their bandwidth, so
-> that under bandwidth pressure, each node uses its maximal efficient
-> bandwidth and prevents latency from increasing exponentially.
+> Can you expand more on what kind of metadata is present with vhost_net
+> and who fills it in? Is it virtio header stuff? I wonder how you
+> want to consume it..
+
+Hm, my commit message may have been a bit misleading.
+
+I'm talking about regular support for the bpf_xdp_adjust_meta helper
+function. This allows to reserve a metadata area that is useful to pass
+any information from one XDP program to another one, for example when
+using tail-calls.
+
+Whether it can be used in an XDP program depends on how the xdp_buff
+was initialized. Most net drivers initialize the xdp_buff in a way, that
+allows bpf_xdp_adjust_meta to be used. In case of the tun driver, this is
+not always the case.
+
+There are two code paths in the tun driver that lead to a bpf_prog_run_xdp:
+
+1. tun_build_skb, which is called by tun_get_user and is used when writing
+    packets from userspace into the tap device. In this case, the xdp_buff
+    created in tun_build_skb has no support for bpf_xdp_adjust_meta and calls
+    of that helper function result in ENOTSUPP.
+
+2. tun_xdp_one, which is called by tun_sendmsg which again is called by other
+    drivers (e.g. vhost_net). When the TUN_MSG_PTR mode is used, another driver
+    may pass a batch of xdp_buffs to the tun driver. In this case, that other
+    driver is the one initializing the xdp_buff already. And in the case of
+    vhost_net,  it already initializes the buffer with metadata support (see
+    xdp_prepare_buff call).
+    See 043d222f93ab ("tuntap: accept an array of XDP buffs through sendmsg()")
+    for details.
+
+This patch enables metadata support for the first code path.
+
+It also adds the missing skb_metadata_set calls for both code paths. This is
+important when the attached XDP program returns with XDP_PASS, because then
+the code continues with creating an skb and that skb should be aware of the
+metadata area's size. At a later stage, a TC program, for example, can then
+access the metadata again using __sk_buff->data_meta.
+
+So I'm doing not much new here but am rather enabling a feature that is
+supported by other drivers already.
+
+> Can you also add a selftest to use this new functionality?
+
+Of course, I'll see what I can do.
+
+>> Signed-off-by: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
+>> ---
+>>   drivers/net/tun.c | 23 ++++++++++++++++++-----
+>>   1 file changed, 18 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+>> index e816aaba8..d3cfea40a 100644
+>> --- a/drivers/net/tun.c
+>> +++ b/drivers/net/tun.c
+>> @@ -1600,7 +1600,8 @@ static bool tun_can_build_skb(struct tun_struct *tun, struct tun_file *tfile,
+>>   
+>>   static struct sk_buff *__tun_build_skb(struct tun_file *tfile,
+>>   				       struct page_frag *alloc_frag, char *buf,
+>> -				       int buflen, int len, int pad)
+>> +				       int buflen, int len, int pad,
+>> +				       int metasize)
+>>   {
+>>   	struct sk_buff *skb = build_skb(buf, buflen);
+>>   
+>> @@ -1609,6 +1610,8 @@ static struct sk_buff *__tun_build_skb(struct tun_file *tfile,
+>>   
+>>   	skb_reserve(skb, pad);
+>>   	skb_put(skb, len);
+>> +	if (metasize)
+>> +		skb_metadata_set(skb, metasize);
+>>   	skb_set_owner_w(skb, tfile->socket.sk);
+>>   
+>>   	get_page(alloc_frag->page);
+>> @@ -1668,6 +1671,7 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+>>   	char *buf;
+>>   	size_t copied;
+>>   	int pad = TUN_RX_PAD;
+>> +	int metasize = 0;
+>>   	int err = 0;
+>>   
+>>   	rcu_read_lock();
+>> @@ -1695,7 +1699,7 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+>>   	if (hdr->gso_type || !xdp_prog) {
+>>   		*skb_xdp = 1;
+>>   		return __tun_build_skb(tfile, alloc_frag, buf, buflen, len,
+>> -				       pad);
+>> +				       pad, metasize);
+>>   	}
+>>   
+>>   	*skb_xdp = 0;
+>> @@ -1709,7 +1713,7 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+>>   		u32 act;
+>>   
+>>   		xdp_init_buff(&xdp, buflen, &tfile->xdp_rxq);
+>> -		xdp_prepare_buff(&xdp, buf, pad, len, false);
+>> +		xdp_prepare_buff(&xdp, buf, pad, len, true);
+>>   
+>>   		act = bpf_prog_run_xdp(xdp_prog, &xdp);
+>>   		if (act == XDP_REDIRECT || act == XDP_TX) {
+>> @@ -1730,12 +1734,16 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+>>   
+>>   		pad = xdp.data - xdp.data_hard_start;
+>>   		len = xdp.data_end - xdp.data;
+>> +
+>> +		metasize = xdp.data - xdp.data_meta;
 > 
-> At the same time, we want these weights to be as small as possible.
-> Having ratios that involve large co-prime numbers like 7639:1345:7 leads
-> to awkward and inefficient allocations, since the node with weight 7
-> will remain mostly unused (and despite being proportional to bandwidth,
-> will not aid in relieving the bandwidth pressure in the other two nodes).
+> [..]
 > 
-> This patch introduces an auto-configuration mode for the interleave
-> weights that aims to balance the two goals of setting node weights to be
-> proportional to their bandwidths and keeping the weight values low.
-> In order to perform the weight re-scaling, we use an internal
-> "weightiness" value (fixed to 32) that defines interleave aggression.
+>> +		metasize = metasize > 0 ? metasize : 0;
 > 
-> In this auto configuration mode, node weights are dynamically updated
-> every time there is a hotplug event that introduces new bandwidth.
-> 
-> Users can also enter manual mode by writing "N" or "0" to the new "auto"
-> sysfs interface. When a user enters manual mode, the system stops
-> dynamically updating any of the node weights, even during hotplug events
-> that can shift the optimal weight distribution. The system also enters
-> manual mode any time a user sets a node's weight directly by using the
-> nodeN interface introduced in [1]. On the other hand, auto mode is
-> only entered by explicitly writing "Y" or "1" to the auto interface.
-> 
-> There is one functional change that this patch makes to the existing
-> weighted_interleave ABI: previously, writing 0 directly to a nodeN
-> interface was said to reset the weight to the system default. Before
-> this patch, the default for all weights were 1, which meant that writing
-> 0 and 1 were functionally equivalent.
-> 
-> This patch introduces "real" defaults, but moves away from letting users
-> use 0 as a "set to default" interface. Rather, users who want to use
-> system defaults should use auto mode. This patch seems to be the
-> appropriate place to make this change, since we would like to remove
-> this usage before users begin to rely on the feature in userspace.
-> Moreover, users will not be losing any functionality; they can still
-> write 1 into a node if they want a weight of 1. Thus, we deprecate the
-> "write zero to reset" feature in favor of returning an error, the same
-> way we would return an error when the user writes any other invalid
-> weight to the interface.
-> 
-> [1] https://lore.kernel.org/linux-mm/20240202170238.90004-1-gregory.price@memverge.com/
-> 
-> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-> Co-developed-by: Gregory Price <gourry@gourry.net>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
-> Changelog
-> v4:
-> - Renamed the mode inerface to the "auto" interface, which now only
+> Why is this part needed?
 
-[nit] inerface -> interface
+When an xdp_buff was initialized withouth metadata support (meta_valid
+argument of xdp_prepare_buff is false), then data_meta == data + 1.
+So this check makes sure that metadata was supported for the given xdp_buff
+and metasize is not -1 (data - data_meta).
 
-So we're going back to similar to "use_default" now.  I prefer "mode"
-with string interface with "auto" and "manual", but I also agree with
-Ying that "mode" won't have more options in the future so this kind of
-binary interface with "auto" is also fine.
+But you have a good point here: Because we have control over the
+initialization of xdp_buff in the tun_build_skb function (first code path),
+we know, that metadata is always supported for that buffer and metasize
+is never < 0. So this check is redundant and I'll remove it.
 
->    emits either 'Y' or 'N'. Users can now interact with it by
->    writing 'Y', '1', 'N', or '0' to it.
-> - Added additional documentation to the nodeN sysfs interface.
-> - Makes sure iw_table locks are properly held.
-> - Removed unlikely() call in reduce_interleave_weights.
-> - Wordsmithing
-> 
-> v3:
-> - Weightiness (max_node_weight) is now fixed to 32.
-> - Instead, the sysfs interface now exposes a "mode" parameter, which
->    can either be "auto" or "manual".
->    - Thank you Hyeonggon and Honggyu for the feedback.
-> - Documentation updated to reflect new sysfs interface, explicitly
->    specifies that 0 is invalid.
->    - Thank you Gregory and Ying for the discussion on how best to
->      handle the 0 case.
-> - Re-worked nodeN sysfs store to handle auto --> manual shifts
-> - mempolicy_set_node_perf internally handles the auto / manual
->    caes differently now. bw is always updated, iw updates depend on
+But in the tun_xdp_one function (second code path), I'd prefer to keep that
+check, as the xdp_buff is externally passed to tun_sendmsg and the tun driver
+should probably not make assumptions about the metadata support of buffers
+created by other drivers (e.g. vhost_net).
 
-[nit] caes -> case
+Thank you for taking a look, I hope things are more clear now.
 
->    what mode the user is in.
-> - Wordsmithing comments for clarity.
-> - Removed RFC tag.
-> 
-> v2:
-> - Name of the interface is changed: "max_node_weight" --> "weightiness"
-> - Default interleave weight table no longer exists. Rather, the
->    interleave weight table is initialized with the defaults, if bandwidth
->    information is available.
->    - In addition, all sections that handle iw_table have been changed
->      to reference iw_table if it exists, otherwise defaulting to 1.
-> - All instances of unsigned long are converted to uint64_t to guarantee
->    support for both 32-bit and 64-bit machines
-> - sysfs initialization cleanup
-> - Documentation has been rewritten to explicitly outline expected
->    behavior and expand on the interpretation of "weightiness".
-> - kzalloc replaced with kcalloc for readability
-> - Thank you Gregory and Hyeonggon for your review & feedback!
-> 
-> ...fs-kernel-mm-mempolicy-weighted-interleave |  34 ++-
->   drivers/acpi/numa/hmat.c                      |   1 +
->   drivers/base/node.c                           |   7 +
->   include/linux/mempolicy.h                     |   4 +
->   mm/mempolicy.c                                | 200 ++++++++++++++++--
->   5 files changed, 229 insertions(+), 17 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
-> index 0b7972de04e9..c26879f59d5d 100644
-> --- a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
-> +++ b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
-> @@ -20,6 +20,34 @@ Description:	Weight configuration interface for nodeN
->   		Minimum weight: 1
->   		Maximum weight: 255
->   
-> -		Writing an empty string or `0` will reset the weight to the
-> -		system default. The system default may be set by the kernel
-> -		or drivers at boot or during hotplug events.
-> +		Writing invalid values (i.e. any values not in [1,255],
-> +		empty string, ...) will return -EINVAL.
-> +
-> +		Changing the weight to a valid value will automatically
-> +		update the system to manual mode as well.
-> +
-> +What:		/sys/kernel/mm/mempolicy/weighted_interleave/auto
-> +Date:		January 2025
-> +Contact:	Linux memory management mailing list <linux-mm@kvack.org>
-> +Description:	Auto-weighting configuration interface
-> +
-> +		Configuration mode for weighted interleave. A 'Y' indicates
-> +		that the system is in auto mode, and a 'N' indicates that
-> +		the system is in manual mode. All other values are invalid.
-> +
-> +		In auto mode, all node weights are re-calculated and overwritten
-> +		(visible via the nodeN interfaces) whenever new bandwidth data
-> +		is made available during either boot or hotplug events.
-> +
-> +		In manual mode, node weights can only be updated by the user.
-> +		If a node is hotplugged while the user is in manual mode,
-> +		the node will have a default weight of 1.
-
-Sorry for jumping into this discussion a bit late, but IMHO, setting a
-newly onlined node's weight to 1 can possibly make the entire weight
-ratio unbalanced.
-
-We can avoid this default weight by not choosing the new node in
-nodemask as Ying suggested, but some APIs of numactl uses all available
-nodes in the system and the following API is one of the example.
-
-   void *numa_alloc_weighted_interleaved(size_t size);
-   (Add by Hyeonggon at https://github.com/numactl/numactl/pull/238)
-
-The description of this API is as follows.
-
-   numa_alloc_weighted_interleaved() allocates size bytes of memory page
-   interleaved on _all nodes_ according to the weights in
-   /sys/kernel/mm/mempolicy/weighted_interleave/node*.
-
-Let's say there are 3 nodes and there bandwidth ratio is as follows.
-
-   node0 - 1000
-   node1 - 500
-   node2 - 100
-
-In this case, the weight ratio will be 10:5:1 in auto mode.  I worry
-about the following problematic scenario.
-
-   1. the auto mode set the weights as 10:5:1 for node{0-2}.
-   2. node2 is offlined, then recalculation makes it as 2:1 for node{0,1}.
-   3. the auto sysfs interface is set to 0 to make it manual mode.
-   4. node2 is onlined again, then the weights is now 2:1:1.
-   5. calling numa_alloc_weighted_interleaved() API works in bad weights.
-
-IMHO, the weight of onlined node is better to be 0 in manual mode and
-give responsibility of setting the proper weight to users.
-
-Could anyone please correct me if I miss something for this?
-
-> +
-> +		Modes can be changed by writing Y, N, 1, or 0 to the interface.
-> +		All other strings will be ignored, and -EINVAL will be returned.
-> +		If Y or 1 is written to the interface but the recalculation or
-> +		updates fail at any point (-ENOMEM or -ENODEV), then the mode
-> +		will remain in manual mode.
-> +
-> +		Writing a new weight to a node directly via the nodeN interface
-> +		will also automatically update the system to manual mode.
-> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> index 80a3481c0470..cc94cba112dd 100644
-> --- a/drivers/acpi/numa/hmat.c
-> +++ b/drivers/acpi/numa/hmat.c
-> @@ -20,6 +20,7 @@
->   #include <linux/list_sort.h>
->   #include <linux/memregion.h>
->   #include <linux/memory.h>
-> +#include <linux/mempolicy.h>
->   #include <linux/mutex.h>
->   #include <linux/node.h>
->   #include <linux/sysfs.h>
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 0ea653fa3433..16e7a5a8ebe7 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -7,6 +7,7 @@
->   #include <linux/init.h>
->   #include <linux/mm.h>
->   #include <linux/memory.h>
-> +#include <linux/mempolicy.h>
->   #include <linux/vmstat.h>
->   #include <linux/notifier.h>
->   #include <linux/node.h>
-> @@ -214,6 +215,12 @@ void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
->   			break;
->   		}
->   	}
-> +
-> +	/* When setting CPU access coordinates, update mempolicy */
-> +	if (access == ACCESS_COORDINATE_CPU) {
-> +		if (mempolicy_set_node_perf(nid, coord))
-> +			pr_info("failed to set node%d mempolicy attrs\n", nid);
-> +	}
->   }
->   EXPORT_SYMBOL_GPL(node_set_perf_attrs);
->   
-> diff --git a/include/linux/mempolicy.h b/include/linux/mempolicy.h
-> index ce9885e0178a..0fe96f3ab3ef 100644
-> --- a/include/linux/mempolicy.h
-> +++ b/include/linux/mempolicy.h
-> @@ -11,6 +11,7 @@
->   #include <linux/slab.h>
->   #include <linux/rbtree.h>
->   #include <linux/spinlock.h>
-> +#include <linux/node.h>
->   #include <linux/nodemask.h>
->   #include <linux/pagemap.h>
->   #include <uapi/linux/mempolicy.h>
-> @@ -178,6 +179,9 @@ static inline bool mpol_is_preferred_many(struct mempolicy *pol)
->   
->   extern bool apply_policy_zone(struct mempolicy *policy, enum zone_type zone);
->   
-> +extern int mempolicy_set_node_perf(unsigned int node,
-> +				   struct access_coordinate *coords);
-> +
->   #else
->   
->   struct mempolicy {};
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 04f35659717a..e41dbb3e9185 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -109,6 +109,7 @@
->   #include <linux/mmu_notifier.h>
->   #include <linux/printk.h>
->   #include <linux/swapops.h>
-> +#include <linux/gcd.h>
->   
->   #include <asm/tlbflush.h>
->   #include <asm/tlb.h>
-> @@ -138,16 +139,18 @@ static struct mempolicy default_policy = {
->   
->   static struct mempolicy preferred_node_policy[MAX_NUMNODES];
->   
-> +static uint64_t *node_bw_table;
-> +
->   /*
-> - * iw_table is the sysfs-set interleave weight table, a value of 0 denotes
-> - * system-default value should be used. A NULL iw_table also denotes that
-> - * system-default values should be used. Until the system-default table
-> - * is implemented, the system-default is always 1.
-> - *
-> + * iw_table is the interleave weight table.
-> + * If bandwiddth data is available and the user is in auto mode, the table
-
-[nit] bandwiddth -> bandwidth
-
-> + * is populated with default values in [1,255].
->    * iw_table is RCU protected
->    */
->   static u8 __rcu *iw_table;
->   static DEFINE_MUTEX(iw_table_lock);
-> +static const int weightiness = 32;
-> +static bool weighted_interleave_auto = true;
->   
->   static u8 get_il_weight(int node)
->   {
-> @@ -156,14 +159,113 @@ static u8 get_il_weight(int node)
->   
->   	rcu_read_lock();
->   	table = rcu_dereference(iw_table);
-> -	/* if no iw_table, use system default */
->   	weight = table ? table[node] : 1;
-> -	/* if value in iw_table is 0, use system default */
-> -	weight = weight ? weight : 1;
->   	rcu_read_unlock();
->   	return weight;
->   }
->   
-> +/*
-> + * Convert bandwidth values into weighted interleave weights.
-> + * Call with iw_table_lock.
-> + */
-> +static void reduce_interleave_weights(uint64_t *bw, u8 *new_iw)
-> +{
-> +	uint64_t ttl_bw = 0, ttl_iw = 0, scaling_factor = 1, iw_gcd = 1;
-
-[nit] Just curiosity but what does ttl mean? If this means "total", then
-what about using sum_bw or sum_iw?
-
-It's also a nitpick, but this single line defines too many variables so
-how about this?
-
-	uint64_t sum_bw = 0, sum_iw = 0;
-	uint64_t scaling_factor = 1, iw_gcd = 1;
-
-> +	unsigned int i = 0;
-> +
-> +	/* Recalculate the bandwidth distribution given the new info */
-> +	for (i = 0; i < nr_node_ids; i++)
-> +		ttl_bw += bw[i];
-> +
-> +	/* If node is not set or has < 1% of total bw, use minimum value of 1 */
-> +	for (i = 0; i < nr_node_ids; i++) {
-> +		if (bw[i]) {
-> +			scaling_factor = 100 * bw[i];
-> +			new_iw[i] = max(scaling_factor / ttl_bw, 1);
-> +		} else {
-> +			new_iw[i] = 1;
-> +		}
-> +		ttl_iw += new_iw[i];
-> +	}
-> +
-> +	/*
-> +	 * Scale each node's share of the total bandwidth from percentages
-> +	 * to whole numbers in the range [1, weightiness]
-> +	 */
-> +	for (i = 0; i < nr_node_ids; i++) {
-> +		scaling_factor = weightiness * new_iw[i];
-> +		new_iw[i] = max(scaling_factor / ttl_iw, 1);
-> +		if (i == 0)
-> +			iw_gcd = new_iw[0];
-> +		iw_gcd = gcd(iw_gcd, new_iw[i]);
-> +	}
-> +
-> +	/* 1:2 is strictly better than 16:32. Reduce by the weights' GCD. */
-> +	for (i = 0; i < nr_node_ids; i++)
-> +		new_iw[i] /= iw_gcd;
-> +}
-> +
-> +int mempolicy_set_node_perf(unsigned int node, struct access_coordinate *coords)
-> +{
-> +	uint64_t *old_bw, *new_bw;
-> +	uint64_t bw_val;
-> +	u8 *old_iw, *new_iw;
-> +
-> +	/*
-> +	 * Bandwidths above this limit cause rounding errors when reducing
-> +	 * weights. This value is ~16 exabytes, which is unreasonable anyways.
-> +	 */
-> +	bw_val = min(coords->read_bandwidth, coords->write_bandwidth);
-> +	if (bw_val > (U64_MAX / 10))
-> +		return -EINVAL;
-> +
-> +	new_bw = kcalloc(nr_node_ids, sizeof(uint64_t), GFP_KERNEL);
-> +	if (!new_bw)
-> +		return -ENOMEM;
-> +
-> +	new_iw = kcalloc(nr_node_ids, sizeof(u8), GFP_KERNEL);
-> +	if (!new_iw) {
-> +		kfree(new_bw);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/*
-> +	 * Update bandwidth info, even in manual mode. That way, when switching
-> +	 * to auto mode in the future, iw_table can be overwritten using
-> +	 * accurate bw data.
-> +	 */
-> +	mutex_lock(&iw_table_lock);
-> +	old_bw = node_bw_table;
-> +	old_iw = rcu_dereference_protected(iw_table,
-> +					   lockdep_is_held(&iw_table_lock));
-> +
-> +	if (old_bw)
-> +		memcpy(new_bw, old_bw, nr_node_ids*sizeof(uint64_t));
-
-[nit] nr_node_ids*sizeof(uint64_t) -> nr_node_ids * sizeof(uint64_t)
-
-Thanks,
-Honggyu
+Marcus
