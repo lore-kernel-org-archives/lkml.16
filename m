@@ -1,50 +1,50 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA0714A4C7;
-	Fri, 31 Jan 2025 08:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2476A1FAA
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 08:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738311233; cv=none; b=n6SgyL8OREXM7Ytg1au+J2oVHom5VxgEZFg78GHPhv1weMlXno8cXuKibdKQwbFMCijjoYKxypNpN3WhuQ500oYMbSN1MZcRIEybv8ZNipwSncSlqh2hSe4/zVNzy4zyHlB9n8TjIrrDcJUz+cU+GjTL/wVIElyIyOXieiZ0NXE=
+	t=1738311428; cv=none; b=Im4Hu6FD07KePvyfdhvgmMRJ5ZZGn0n6ikRnfehkiFTA+IgL3QOIK9OqemM/fjQ9IWm8qpBjxLFrCBz14/Q4lvK/dKSmdXx5eyG77a1S0K/jWLdvwjXqhZrSiOgVbdRovh/oAa0Dw6iyb1JVrMDf5yHp/+EQXAbrdvme+wtOhTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738311233; c=relaxed/simple;
-	bh=oxkRbc3o2P0p/SsOZc3MA32q9r/+xAgUWRcI37qjvj4=;
+	s=arc-20240116; t=1738311428; c=relaxed/simple;
+	bh=eEICYceBnxUsglQpj4kBo9pR0UZv5Dh3Y9WhkQTVNuo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LbkF/BtTfeL1fRlMzH2/Cj4EVhsligfZfNEnN0FHEJqYOaJov5qiSD0xl0fcRB3WzbnmuuNuYYeKOycB3Gcj1DKiwIzn6VEv/hMjJYQBoMCEin1L1uvZ742mSN2gjQGl2vM1qMmyKL7xj01CG8QxlhfVDRBZjfiJ9gTxUwP8sbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.44
+	 In-Reply-To:Content-Type; b=IfZcO+CWJDcCjYCnBEcoHU/ot4n172dayH3C18zpAb7ov2xpi8bdJu8FFEG8hugZiBtndpvW02k/nEGQYgTVWehqPFtU+kYWVp6NC05UT5p+db6w5BHjc+dFxhxtdPxSdsuepiZ0Nb0LpLWlzMJb3LJta0F+dbD1ZkHlqPcJ0Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4361c705434so12444925e9.3;
-        Fri, 31 Jan 2025 00:13:51 -0800 (PST)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43690d4605dso11511335e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 00:17:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738311230; x=1738916030;
+        d=1e100.net; s=20230601; t=1738311425; x=1738916225;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=50CUTD+eXlDFcOOIGMT4jmUgN1KvlNlJfvsnt0dgNiQ=;
-        b=bWoVLXzledjSk4AONgHep1gZbpajCLQqiGkFBKn7FJSQsePumy1XwcXaVOMp18u6rJ
-         5ahUo5+2G4L6wZiu+O7wjqaGCLfSyoNyY7OH/dwTWuyoAhAN8NFWLVmAIEd+papzfJzK
-         lXjPsz+Ej7n18GKVEqy4fZRDZ1an4AUwQCGU8dsXvzl8ljLBjKtaKfaZrL6RNvSDk0aO
-         aK2vIkRB8abqkrd7S/xw7/yDaoWd44sOEQYA/HOFZsSLfEOLdbhwDJ++WGqCgHytMmqR
-         oPHUu/LVkQGYFgy/XEnQoZNv5fM+PRFgvHvGXlS4Ovbd50eQcHeyFzpH9em3TT1rtgli
-         5rSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyZOXvUcEHJciTuceG3aMdAhteSJk21eDmhBa/QxPNit6skgxLqElhY2IHodc/DmZwi+v40W/KGdMKkA==@vger.kernel.org, AJvYcCXkl55XmpxQA2sqhHJw64CFd2cgq5zGTUI82wMB+oYNH6Olt8J2BQega1Dmeq8X1f7B5GvmP9r7EMcFW3Wu@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYcAdnL3jrLg7EkGeFLXFLqe95M7uOIoynKeQJsNU9HUFaJzyj
-	5c3CVbXY/2ebquBo3U0dd7iWn/WOOW1QjD1BQ4Rv5ry3wGfzV3TE
-X-Gm-Gg: ASbGnctxAhEn5d6o5mtG74kRlykg/os4Gp6UITk9cALuc97YbsDAfTiJ+YIQSmo5tdm
-	BPKRTcR+02BS65yjAN4ojb5QmikAgvZJp+jnbTjvUUZIfnqXHY5Ch979O/+C62DjAuoLqYEee4b
-	4fsZwYZLpNTYC2jzCay7MAGhzxJxbPShs9vnw15xNCdEEqEqzw0mZqWcG1Rc6Cu30GgLiSNIuiO
-	TbKRCE3cQpfV+7+nEt35bA5rsBy/TjBuql0ecNRwrxbSGUQgjG5elNMY4EeKQtLfNnG4CLanQWn
-	v8VS/M1N8ciTaeIcF0RNC/i2sDJEKJzIYI/uujbMZpoD62C0nnc=
-X-Google-Smtp-Source: AGHT+IEHmAcCX7brBdYswAnG+ah2odio1aZslsU8WT8VXhb3+lqKiizin7jbBKbTFIpnR2Acwshg1g==
-X-Received: by 2002:a05:600c:5252:b0:431:6153:a258 with SMTP id 5b1f17b1804b1-438dc3ca802mr92486035e9.13.1738311230257;
-        Fri, 31 Jan 2025 00:13:50 -0800 (PST)
+        bh=Xs+y/H49ZYpstA/B6kj1edFZvc3ilw64ChimuGOqo8I=;
+        b=rMD8kA7HAGoy6P2ri549Kq89axo6jQUQmH91hIGQbxgx9xxAe2Q/rE5EEFk1wi+qB0
+         /LRLpFWzTdwC7MLVKoqbqAFgnL1wax97uZVvepVsb5NZrBLRNxBkV3aPG2dH11yQlohk
+         7T8cuvrcThS54VvZU4a375ih0LwrvJZrDT6ZYTL/ahmpd+KSpeYtT2QC/H+QjVhYivm1
+         zCn6f28byL1OfJYxvO3esszUZXb16c4Iiu6YFfTnl6tzT2BZFKbjO+o75BqVFbS+Xd+f
+         MPEi+QWwXU7Y+i85ivtOngKur967Il0bjyF52iR8vSCEIsT7A9JOCh87sXDAeoQwmniB
+         gDZw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9J19u29ZMwFGMVzkfQ6gLBuGfb9pC6B76XprY3n7dcoNRyKbW3dEIPSD+hpTYSQjFc0SGicZJHOjFIDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVJiBXq4YzHpFzRY7rgyhbIjyp2UCakEUXyq7ZwSJD/wUQLKyP
+	o5dYK96trGnbYUZfIJhFFf/KEJtKPqi+n6wSRmL07Pip7Iuao2s5
+X-Gm-Gg: ASbGncupWEOOAAq0eSnNtwu0+gYFBFeZ3icuyHekm7dwRQmh136TEfu5n7F1nqPTRda
+	dyEIxIneO6BegfHst3gpzlM1WfMuxMk9IEsZcvOD6/w4ckflCbKdw0dxMAbFykBJEWKLqXJ+jnA
+	gq9wzDXBD/g3YFUTAMk+mJ0SbNjj6iLWm/FJxGwYkkqM8NMp0lmQq7s63eVpcA2L7a69chzFYzf
+	D7NemoaXrrO/5dR8gnbEXqXBE3YEH85EB8aYklbMARnZt4dT3MKLdXOecEppbHZ2hXr36yNFeZu
+	ClQ2jjtt5tB/q5DITG10wSH+eY+nXCcwB5YjrUkSkGxSatnUxzc=
+X-Google-Smtp-Source: AGHT+IF1OpcgJDoHfSd3dhQkUQD+i80JnH4gDdzqTVCiryEFOtuQTWcP2Iub7pMlPll9uNC1B2SB7Q==
+X-Received: by 2002:a05:600c:1d27:b0:436:5fc9:30ba with SMTP id 5b1f17b1804b1-438dc429771mr97301215e9.29.1738311425237;
+        Fri, 31 Jan 2025 00:17:05 -0800 (PST)
 Received: from [10.100.102.74] (89-138-75-149.bb.netvision.net.il. [89.138.75.149])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e244f087sm46717975e9.29.2025.01.31.00.13.48
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc6de7csm84088275e9.32.2025.01.31.00.17.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 00:13:49 -0800 (PST)
-Message-ID: <b53dad99-6a8e-402e-9330-597289ecd8fd@grimberg.me>
-Date: Fri, 31 Jan 2025 10:13:47 +0200
+        Fri, 31 Jan 2025 00:17:04 -0800 (PST)
+Message-ID: <3bcc6e3f-5172-40d4-a4d4-b0f914b9406b@grimberg.me>
+Date: Fri, 31 Jan 2025 10:17:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,34 +52,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] blk-mq: fix wait condition for tagset wait completed
- check
-To: Daniel Wagner <wagi@kernel.org>, Keith Busch <kbusch@kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
- Ming Lei <ming.lei@redhat.com>
-Cc: James Smart <james.smart@broadcom.com>, Hannes Reinecke <hare@suse.de>,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org
-References: <20250128-nvme-misc-fixes-v1-0-40c586581171@kernel.org>
- <20250128-nvme-misc-fixes-v1-3-40c586581171@kernel.org>
+Subject: Re: [PATCH v4] nvme-tcp: fix connect failure on receiving partial
+ ICResp PDU
+To: Caleb Sander <csander@purestorage.com>, Hannes Reinecke <hare@suse.de>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Christoph Hellwig <hch@lst.de>, Maurizio Lombardi <mlombard@redhat.com>,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250124184311.1642797-1-csander@purestorage.com>
+ <9ea74200-7cbc-4a30-9503-864dcec9b45d@suse.de>
+ <CADUfDZoT7JW+d+j6YNmWJ3CKZ45gbvcUSsE6boZwE1C3iXw2_g@mail.gmail.com>
+ <f75c62ce-04a7-4bc0-ae77-8ed80842bf37@suse.de>
+ <CADUfDZrvHmYQgqu5GiQDrAg_MOEiRigCLCmBSO6jeyd1z+Q-JQ@mail.gmail.com>
 Content-Language: en-US
 From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20250128-nvme-misc-fixes-v1-3-40c586581171@kernel.org>
+In-Reply-To: <CADUfDZrvHmYQgqu5GiQDrAg_MOEiRigCLCmBSO6jeyd1z+Q-JQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
 
-On 28/01/2025 18:34, Daniel Wagner wrote:
-> blk_mq_tagset_count_completed_reqs returns the number of completed
-> requests. The only user of this function is
-> blk_mq_tagset_wait_completed_request which wants to know how many
-> request are not yet completed. Thus return the number of in flight
-> requests and terminate the wait loop when there is no inflight request.
+On 29/01/2025 0:02, Caleb Sander wrote:
+> On Tue, Jan 28, 2025 at 12:28 AM Hannes Reinecke <hare@suse.de> wrote:
+>> On 1/27/25 18:38, Caleb Sander wrote:
+>>> On Sun, Jan 26, 2025 at 11:37 PM Hannes Reinecke <hare@suse.de> wrote:
+>>>> On 1/24/25 19:43, Caleb Sander Mateos wrote:
+>>>>> nvme_tcp_init_connection() attempts to receive an ICResp PDU but only
+>>>>> checks that the return value from recvmsg() is non-negative. If the
+>>>>> sender closes the TCP connection or sends fewer than 128 bytes, this
+>>>>> check will pass even though the full PDU wasn't received.
+>>>>>
+>>>>> Ensure the full ICResp PDU is received by checking that recvmsg()
+>>>>> returns the expected 128 bytes.
+>>>>>
+>>>>> Additionally set the MSG_WAITALL flag for recvmsg(), as a sender could
+>>>>> split the ICResp over multiple TCP frames. Without MSG_WAITALL,
+>>>>> recvmsg() could return prematurely with only part of the PDU.
+>>>>>
+>>>>> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+>>>>> Fixes: 3f2304f8c6d6 ("nvme-tcp: add NVMe over TCP host driver")
+>>>>> ---
+>>>>> v4: keep recvmsg() error return value
+>>>>> v3: fix return value to indicate error
+>>>>> v2: add Fixes tag
+>>>>>
+>>>>>     drivers/nvme/host/tcp.c | 5 ++++-
+>>>>>     1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+>>>>> index e9ff6babc540..56679eb8c0d6 100644
+>>>>> --- a/drivers/nvme/host/tcp.c
+>>>>> +++ b/drivers/nvme/host/tcp.c
+>>>>> @@ -1446,15 +1446,18 @@ static int nvme_tcp_init_connection(struct nvme_tcp_queue *queue)
+>>>>>         iov.iov_len = sizeof(*icresp);
+>>>>>         if (nvme_tcp_queue_tls(queue)) {
+>>>>>                 msg.msg_control = cbuf;
+>>>>>                 msg.msg_controllen = sizeof(cbuf);
+>>>>>         }
+>>>>> +     msg.msg_flags = MSG_WAITALL;
+>>>>>         ret = kernel_recvmsg(queue->sock, &msg, &iov, 1,
+>>>>>                         iov.iov_len, msg.msg_flags);
+>>>> But won't we have to wait for a TCP timeout now if the sender sends less
+>>>> than 128 bytes? With this patch we always wait for 128 bytes, and
+>>>> possibly wait for TCP timeout if not.
+>>> Yes, if the NVMe/TCP controller sends less than 128 bytes, we need to
+>>> wait for it to send the remainder of the ICResp PDU. That's just how
+>>> the NVMe/TCP protocol works. If we want to protect against
+>>> buggy/malicious controllers that don't send a full ICResp, we need a
+>>> timeout mechanism. That's the purpose of the existing
+>>> `queue->sock->sk->sk_rcvtimeo = 10 * HZ;` in nvme_tcp_alloc_queue().
+>>> Note that recvmsg() timing out was already possible in the original
+>>> code if the controller didn't send anything on the TCP connection
+>>> after accepting it.
+>>>
+>> Hmm. With checking the code 'rcvtimeo' is only evaluated if MSG_WAITALL
+>> is _not_ set. Makes me wonder why we do set it...
+>> But that's beside the point.
+> I am not seeing where sk_rcvtimeo is ignored when MSG_WAITALL is used,
+> can you point me to the code?
+> It is certainly ignored for *non-blocking* recvmsg() (MSG_DONTWAIT),
+> but I don't see why it would be ignored for MSG_WAITALL. man 7 socket
+> also suggests it applies to all blocking socket I/O.
 >
-> Fixes: f9934a80f91d ("blk-mq: introduce blk_mq_tagset_wait_completed_request()")
+> static inline long sock_rcvtimeo(const struct sock *sk, bool noblock)
+> {
+>          return noblock ? 0 : sk->sk_rcvtimeo;
+> }
+>
+> In tcp_recvmsg_locked():
+> timeo = sock_rcvtimeo(sk, flags & MSG_DONTWAIT);
+>
+>>>> Testcase for this would be nice ...
+>>>>
+>>>> And I need to check if secure concatenation is affected here; with
+>>>> secure concatenation we need to peek at the first packet to check
+>>>> if it's an ICRESP or a TLS negotiation.
+>>> Are you saying that with secure concatenation we don't know in advance
+>>> whether the connection is using TLS between the TCP and NVMe/TCP
+>>> protocol layers? Wouldn't the host already need to know that when it
+>>> sent its ICReq PDU?
+>> No, the host doesn't need to know. TLS is enabled by the lower
+>> layers.
+>>
+>> But upon further checking, I guess it'll be okay with secure
+>> concatenation.
+>>
+>> Nevertheless, I would vastly prefer to have a receive loop here
+>> instead of waiting to receive the full amount as per MSG_WAITALL.
+>> The entire tcp code is using nonblocking calls, so I'd rather
+>> keep it that way and implement a receive loop here.
+> The driver uses non-blocking socket I/O in the I/O path, but not the
+> connect path. nvme_tcp_init_connection() is already using blocking
+> socket I/O to send the ICReq PDU and receive the ICResp. I suppose we
+> could change the connect path to register poll interest and use
+> non-blocking operations, but that seems like a more involved code
+> change and orthogonal to the issue of receiving the full ICResp.
 
-Can you please describe what this patch is fixing? i.e. what is the 
-observed bug?
-It is not clear (to me) from the patch.
+I agree. the driver blocks on ICResp rcvmsg, there is no reason to
+use async interface.
+
+Caleb, can you please make sure to test this patch with TLS?
+Do you have a reliable way to reproduce this?
