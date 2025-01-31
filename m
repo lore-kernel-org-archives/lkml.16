@@ -1,150 +1,255 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A966013E02A
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 06:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A4A14F70
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 06:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738306457; cv=none; b=fcf/fvIDpdgdrfbcYzN2qLIJf8z8z6ZCrcm/HRVVPCovyS86751YzGR5WKE2VRGI5YXut6I7Vnmm9E6lnUIqctTUbo8mmBjmeqoChOGzMruhUDIWro+LoszOYKCOmL+zy/htuTLzweTXW3cB/Y3W7BGb9gFcxUwo3xUUOcdYwsM=
+	t=1738306496; cv=none; b=ax7GqS/D1nbOxRdBTO8yH6cS+jiB57MA6j0yde9+Cwt3hrZwvB9PXrWGvRcOp8DJ/DS9f3b51udh6PtLaPk1z/d1gNJI7FFWtrveKtDgZnJDhU/NrMLzQqnfKNdd6qDAyJu1MhX4xzG4OhoDOG3XL2AdmeM7OtJAuc9WKuMyDfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738306457; c=relaxed/simple;
-	bh=wPPZdwcTNReY/45pINziN8cWtHxbCtGIYeZW3L13D2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PHo+m9pLVp2OmHekscLG31FD4eTnvEFBzcIo55H64CfNu1MtDQBFPYjDvCxDHf0z2PPfeRHDaO7uORnkgWyMRpxyL9lo7y2dHyh4Def3E5oHdBec+a/XSjMZveYEitEukRbt19quDpy04R69meXwMt6zQlnYPOMR9GRYduZazDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=pTT0Hcmn; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738306496; c=relaxed/simple;
+	bh=nHf+Meg6V0HkhbmSYtBB9hu8TTxZvUvQcO9AmYQPUWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wjfa4Gpen8q1g2N3dVSw3Vkr+Umm4nmzINJ3lsapAdiYeekZyaucafdrWnZeJPBlBHjv1Z3WsOt60Z9yHpegegQLGe9vAzvOVZGJv8B6/6KYURFniIQ6aiaSm9YaxZ2d7idPnzcWAK1yBlC9iyVEIJzO98NalQXLG7GWmEgTnEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ASm5xZBC; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="pTT0Hcmn"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2efb17478adso2757234a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 22:54:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738306454; x=1738911254; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qjk/Bm1nilxEN/HqMvYtrvEtTOGs2l5rMV27l42M1Jg=;
-        b=pTT0Hcmny+wYvuaAFQjccuk+VdhUR20p9P/Tx4DR2e/J1rsXy6cJMAxNhGuwD/zNqj
-         sx3HAKt/VYY7NE2SljQ2D1Wl51MmcdXa6DJ9fJAU0JtyoQRJv9SIv/eE3DbJ5vGEmx8a
-         s0x9YPhczIqhDWJJFdFXX1bZIV+/pYRPGQiMrDeHddA6ZyDY9mPyCKRvtd0IY0amzgaX
-         6JBWeB998l4jpxM4MQc7e8JOP5kOyYZsXWjElg53WnNYtFzqtdCxGP78ijNUZspx0Wpy
-         JqmM5Nq6R/X2+p28bJqSl6LpgBur4O+EnqI2s5r//IeFtl+0L2KnbY/u1XRPIR396sVd
-         Ya6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738306454; x=1738911254;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qjk/Bm1nilxEN/HqMvYtrvEtTOGs2l5rMV27l42M1Jg=;
-        b=lPNWE4ASuqqjx01DhtrzuUxKG8dUvRNuQIkTwdHz3rJ+uYODP3Axg+D8xxWTUH6YwX
-         2Pie4IETYkYEq4eLzFfw1nFWTSEgga7Ya12HdeKRvS12y4vjDO04f/xXQNquHRf6E9va
-         SWu5tq1ZLxTDAQ+tBkGF3sDWkfC0f+n0HjnAx1wIhORtjGa81AWGVMZvhuec8eAdF5jY
-         fLrmItxbDRROvTuJBqfhtMFJNjdm1jXeVM3XM3uGIfIwuzW5ukglm/6uLBdRlbeQLzNg
-         Yl2+ZqqvZ3Aud/L55TeTCRACrPEDHrg5E3v7/7qur9WceExu6HZqvTlgU660gTKJrFLD
-         JOFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWX/wXroDjmOPH4NPNHtj7qpnbfafIlsqGl3eSoyxhxztsgy0+9XyChKY+Bga/W//Tj4QQRdkckqjDfaRY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7Cpl8ni49Kicdqa1YTgGL2eBml6xhE0SNm6kFnAc/aXIXPO6p
-	UmQgEUvkYlHfuSV/YQSC9QMm4AcPfu2TcCUxTcz88oZ5XlssF5D7kB/tPLvnuPs=
-X-Gm-Gg: ASbGncvWCkwBmzEAkDEWttCuiqn/eYM5TdVgw4wI/S/JGm47ypLpGnXDayRvxDGAlSp
-	sbRz7YAiXtOxt3Qgv+MYOmF1Knt1kpTk+3Or8CFYVuxMpJHEQoYdrOFeYzIehlgMHKVQz+VYWw9
-	AAi0JXXdRYHifLVdQQidul0YQ3Zr44elZPPo+6ep9nnQzPkTfFjUx4tcXSwzsmL30OFSR10RUa9
-	lvzYbOjoq+SKE5EJILGI2lYNRBQse0iV5SMVtvAIgK0jrFT3dQuJI60Tc0CdoNec6xZrrhElciP
-	z5bqNVrcTQT9GOIZLxFSUsyM7bJN461ciZi9JgEKCfdwLbXBTw==
-X-Google-Smtp-Source: AGHT+IEz7rjrhwL3HJk43f36FIy7rrYdmVDDgayhVQoH4Dh/eG3AVR0uPbtT1vdB4HpALYHMe7rawg==
-X-Received: by 2002:a17:90b:5408:b0:2f6:d266:f45c with SMTP id 98e67ed59e1d1-2f83abb34e6mr16241576a91.2.1738306453920;
-        Thu, 30 Jan 2025 22:54:13 -0800 (PST)
-Received: from ghost (c-24-56-227-58.customer.broadstripe.net. [24.56.227.58])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bf9497dsm5104201a91.35.2025.01.30.22.54.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 22:54:13 -0800 (PST)
-Date: Thu, 30 Jan 2025 22:54:11 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] kbuild: Use --strip-unneeded with INSTALL_MOD_STRIP
-Message-ID: <Z5xzkwwZAWRRLCdj@ghost>
-References: <20250122-strip_unneeded-v1-1-ac29a726cb41@rivosinc.com>
- <20250131035245.GA47826@ax162>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ASm5xZBC"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50V5NoTT013241;
+	Fri, 31 Jan 2025 06:54:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=pdT6BW
+	uty8tFs7wtb0wObYnkLDYoD1Aszv9GuAcjP0I=; b=ASm5xZBClDDEXXguDOe2tH
+	d7GQEw2tlLeCk8jGO3rmCfrGML9PKK5aig9lgbGRFvZDDxxOJgcQkNE4TMBoBYwj
+	06J3V0TpaQ7R6/CxmsX/e6GQHoBSiu8Yliv+UaZuMj5n5i8XHVweAargM/m7KLPy
+	I2PK43d9Lu0Kvzl237xKHC9IEV6HnzngpbRVMczFFbHVOmd8W9+6dSgfnJetDL1k
+	uG9FoqmXWieBNS1b3qDVUFWfUHRS9DrFtmen9xmQRk8EsGFTyPJvdX2AR/jjQ6xd
+	Ys4Um0k8sfLrC2FIZ4uYId7Akf8MmAIJn/aBUxb81NGZLnvgm/eyxcs7Iadg6luw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44grb7898t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 06:54:37 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50V6sbUl002694;
+	Fri, 31 Jan 2025 06:54:37 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44grb7898r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 06:54:36 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50V3faCQ024517;
+	Fri, 31 Jan 2025 06:54:35 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44gf912bx4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 06:54:35 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50V6sXNb16515536
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 31 Jan 2025 06:54:33 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B414F200D3;
+	Fri, 31 Jan 2025 06:54:33 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2BA7B200D1;
+	Fri, 31 Jan 2025 06:54:32 +0000 (GMT)
+Received: from [9.124.214.179] (unknown [9.124.214.179])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 31 Jan 2025 06:54:31 +0000 (GMT)
+Message-ID: <5c47950a-0102-4555-b056-e85f2abc2011@linux.ibm.com>
+Date: Fri, 31 Jan 2025 12:24:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131035245.GA47826@ax162>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] powerpc: Enable dynamic preemption
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: mpe@ellerman.id.au, maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        npiggin@gmail.com, linux-kernel@vger.kernel.org
+References: <20250106051919.55020-1-sshegde@linux.ibm.com>
+ <20250106051919.55020-2-sshegde@linux.ibm.com>
+ <20250130145409.D_so_mR1@linutronix.de>
+ <b73b5143-1a7f-4032-ac06-43db3bf4abea@linux.ibm.com>
+ <20250130202634.eeb9TfkW@linutronix.de>
+ <01bc9e5c-fd47-4c26-8af3-59f10f3b9c76@csgroup.eu>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <01bc9e5c-fd47-4c26-8af3-59f10f3b9c76@csgroup.eu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Cwn0zcJz5QuZgr2YkEjkhu31-Jb-mGvY
+X-Proofpoint-ORIG-GUID: 12JBoN9nPZsP7JSMdhEY3--Tq7KDkLFs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-31_02,2025-01-30_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 spamscore=0 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2501310047
 
-On Thu, Jan 30, 2025 at 08:52:45PM -0700, Nathan Chancellor wrote:
-> On Wed, Jan 22, 2025 at 07:17:26PM -0800, Charlie Jenkins wrote:
-> > On riscv, kernel modules end up with a significant number of local
-> > symbols. This becomes apparent when compiling modules with debug symbols
-> > enabled. Using amdgpu.ko as an example of a large module, on riscv the
-> > size is 754MB (no stripping), 53MB (--strip-debug), and 21MB
-> > (--strip-unneeded). ON x86, amdgpu.ko is 482MB (no stripping), 21MB
-> > (--strip-debug), and 20MB (--strip-unneeded).
-> > 
-> > Use --strip-unneeded instead of --strip-debug to strip modules so
-> > decrease the size of the resulting modules. This is particularly
-> > relevant for riscv, but also marginally aids other architectures.
-> > 
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+
+
+On 1/31/25 11:39, Christophe Leroy wrote:
 > 
-> Is there any sort of regression risk with this patch? If so, another
-> option may be to give another level to INSTALL_MOD_STRIP like 2 so that
-> INSTALL_MOD_STRIP=1 continues to behave as before but people can easily
-> opt into this option. No strong opinion because I am not sure but was
-> not sure if it was considered.
-
-I do not believe this would cause regressions. The description on gnu
-strip is:
-
-"Remove all symbols that are not needed for relocation processing in
-addition to debugging symbols and sections stripped by --strip-debug."
-
-The description on llvm-strip is:
-
-"Remove from the output all local or undefined symbols that are not
-required by relocations. Also remove all debug sections."
-
-gnu strip --strip-unneeded strips slightly more aggressively but it does
-not appear this causes any issues.
-
 > 
-> Regardless:
+> Le 30/01/2025 à 21:26, Sebastian Andrzej Siewior a écrit :
+>> On 2025-01-30 22:27:07 [+0530], Shrikanth Hegde wrote:
+>>>> | #DEFINE need_irq_preemption() \
+>>>> |          
+>>>> (static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
+>>>> |
+>>>> |     if (need_irq_preemption()) {
+>>>>
+>>>> be a bit smaller/ quicker? This could be a fast path ;)
+>>>
+>>> I am okay with either way. I did try both[1], there wasn't any 
+>>> significant difference,
+>>> hence chose a simpler one. May be system size, workload pattern might 
+>>> matter.
+>>>
+>>> Let me do some more testing to see which one wins.
+>>> Is there any specific benchmark which might help here?
+>>
+>> No idea. As per bean counting: preempt_model_preemptible() should
+>> resolve in two function calls + conditional in the dynamic case. This
+>> should be more expensive compared to a nop/ branch ;)
 > 
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> I did a build comparison on pmac32_defconfig + dynamic preemption, the 
+> static branch looks definitely more optimal:
+> 
+> Without static branch:
+> 
+> ...
+>   294:    7c 08 02 a6     mflr    r0
+>   298:    90 01 00 24     stw     r0,36(r1)
+>   29c:    48 00 00 01     bl      29c <interrupt_exit_kernel_prepare+0x50>
+>              29c: R_PPC_REL24    preempt_model_full
+>   2a0:    2c 03 00 00     cmpwi   r3,0
+>   2a4:    41 82 00 a4     beq     348 <interrupt_exit_kernel_prepare+0xfc>
+> ...
+>   2a8:    81 22 00 4c     lwz     r9,76(r2)
+>   2ac:    71 29 00 04     andi.   r9,r9,4
+>   2b0:    40 82 00 d4     bne     384 <interrupt_exit_kernel_prepare+0x138>
+> ...
+>   2b4:    7d 20 00 a6     mfmsr   r9
+>   2b8:    55 29 07 fa     rlwinm  r9,r9,0,31,29
+> ...
+>   348:    48 00 00 01     bl      348 <interrupt_exit_kernel_prepare+0xfc>
+>              348: R_PPC_REL24    preempt_model_lazy
+>   34c:    2c 03 00 00     cmpwi   r3,0
+>   350:    40 a2 ff 58     bne     2a8 <interrupt_exit_kernel_prepare+0x5c>
+>   354:    4b ff ff 60     b       2b4 <interrupt_exit_kernel_prepare+0x68>
+> 
+> With the static branch:
+> 
+> ...
+>   294:    48 00 00 58     b       2ec <interrupt_exit_kernel_prepare+0xa0>
+> ...
+>   298:    7d 20 00 a6     mfmsr   r9
+>   29c:    55 29 07 fa     rlwinm  r9,r9,0,31,29
+> ...
+>   2ec:    81 22 00 4c     lwz     r9,76(r2)
+>   2f0:    71 29 00 04     andi.   r9,r9,4
+>   2f4:    41 82 ff a4     beq     298 <interrupt_exit_kernel_prepare+0x4c>
+> ...
+> 
+> With the static branch it is just an unconditional branch being later 
+> replaced by a NOP. It must be more efficient.
+> 
+> So in first case we need to get and save LR, call preempt_model_full(), 
+> compare with 0, call preempt_model_lazy() and compare again, and at some 
+> point read and restore LR.
+> 
+> And the preempt_model_() functions are not tiny functions:
+> 
+> 00003620 <preempt_model_full>:
+>      3620:    3d 20 00 00     lis     r9,0
+>              3622: R_PPC_ADDR16_HA    preempt_dynamic_mode
+>      3624:    94 21 ff f0     stwu    r1,-16(r1)
+>      3628:    80 69 00 00     lwz     r3,0(r9)
+>              362a: R_PPC_ADDR16_LO    preempt_dynamic_mode
+>      362c:    2c 03 ff ff     cmpwi   r3,-1
+>      3630:    41 82 00 18     beq     3648 <preempt_model_full+0x28>
+>      3634:    68 63 00 02     xori    r3,r3,2
+>      3638:    38 21 00 10     addi    r1,r1,16
+>      363c:    7c 63 00 34     cntlzw  r3,r3
+>      3640:    54 63 d9 7e     srwi    r3,r3,5
+>      3644:    4e 80 00 20     blr
+> ...
+>      3648:    0f e0 00 00     twui    r0,0
+>      364c:    68 63 00 02     xori    r3,r3,2
+>      3650:    38 21 00 10     addi    r1,r1,16
+>      3654:    7c 63 00 34     cntlzw  r3,r3
+>      3658:    54 63 d9 7e     srwi    r3,r3,5
+>      365c:    4e 80 00 20     blr
+> 
+> 00003660 <preempt_model_lazy>:
+>      3660:    3d 20 00 00     lis     r9,0
+>              3662: R_PPC_ADDR16_HA    preempt_dynamic_mode
+>      3664:    94 21 ff f0     stwu    r1,-16(r1)
+>      3668:    80 69 00 00     lwz     r3,0(r9)
+>              366a: R_PPC_ADDR16_LO    preempt_dynamic_mode
+>      366c:    2c 03 ff ff     cmpwi   r3,-1
+>      3670:    41 82 00 18     beq     3688 <preempt_model_lazy+0x28>
+>      3674:    68 63 00 03     xori    r3,r3,3
+>      3678:    38 21 00 10     addi    r1,r1,16
+>      367c:    7c 63 00 34     cntlzw  r3,r3
+>      3680:    54 63 d9 7e     srwi    r3,r3,5
+>      3684:    4e 80 00 20     blr
+> ...
+>      3688:    0f e0 00 00     twui    r0,0
+>      368c:    68 63 00 03     xori    r3,r3,3
+>      3690:    38 21 00 10     addi    r1,r1,16
+>      3694:    7c 63 00 34     cntlzw  r3,r3
+>      3698:    54 63 d9 7e     srwi    r3,r3,5
+>      369c:    4e 80 00 20     blr
+> 
+> 
+> 
 
-Thanks!
+That's convincing. Thanks for the pointers. I will move it into static 
+branch method.
 
-- Charlie
+That makes the code same for arm64/powerpc. Maybe its worth moving it 
+into sched/core. Let me try that as well.
 
->
-> > ---
-> >  scripts/Makefile.modinst | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
-> > index f97c9926ed31b2b14601ff7773a2ea48b225628b..c22f35f6b9db3cac3923b9e787b219f752570642 100644
-> > --- a/scripts/Makefile.modinst
-> > +++ b/scripts/Makefile.modinst
-> > @@ -80,7 +80,7 @@ quiet_cmd_install = INSTALL $@
-> >  ifdef INSTALL_MOD_STRIP
-> >  
-> >  ifeq ($(INSTALL_MOD_STRIP),1)
-> > -strip-option := --strip-debug
-> > +strip-option := --strip-unneeded
-> >  else
-> >  strip-option := $(INSTALL_MOD_STRIP)
-> >  endif
-> > 
-> > ---
-> > base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
-> > change-id: 20250122-strip_unneeded-cab729310056
-> > -- 
-> > - Charlie
-> > 
+PS: on leave next week, so will be sending the patches after i get back.
+
+>> But you would still need preempt_model_preemptible() for the !DYN case.
+>>
+>>>>> +           preempt_model_voluntary() ? "voluntary" :
+>>>>> +           preempt_model_full()      ? "full" :
+>>>>> +           preempt_model_lazy()      ? "lazy" :
+>>>>> +           "",
+>>>>
+>>>> So intend to rework this part. I have patches stashed at
+>>>>     https://eur01.safelinks.protection.outlook.com/? 
+>>>> url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fbigeasy%2Fstaging.git%2Flog%2F%3Fh%3Dpreemption_string&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C553a8f640a9c4514597d08dd416c6534%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638738655988556429%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=ZfVQi1iRYaVCTrZ5vIhOQ7yAKaDnOwFi0NRjycfrI5A%3D&reserved=0
+>>>>
+>>>> which I didn't sent yet due to the merge window. Just a heads up ;)
+>>>
+>>> Makes sense. I had seen at-least two places where this code was 
+>>> there, ftrace/powerpc.
+>>> There were way more places..
+>>>
+>>> You want me to remove this part?
+>>
+>> No, just be aware.
+>> I don't know how this will be routed I guess we merge the sched pieces
+>> first and then I submit the other pieces via the relevant maintainer
+>> tree. In that case please be aware that all parts get removed/ replaced
+>> properly.
+>>
+>> Sebastian
+> 
+
