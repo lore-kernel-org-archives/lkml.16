@@ -1,52 +1,64 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509DA1C2309
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 14:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B14E1B6D14;
+	Fri, 31 Jan 2025 14:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738332304; cv=none; b=rL7mbrX6m44+dhTLfsdLsZcvxoe7qT+Ma8c0lNk0ydmhnln9bI4Dr+9iCr0WRpP3CiQ4R1RmvxSBb71U8BRbLDqbJRpgOmMYzehmxhgDp9AnWnRsn1oy57E7Wr7YcswHTxO813eiKYjfkSTGL9WGZZKbtd1TdKfuLoZ9QAigf94=
+	t=1738332361; cv=none; b=DnDFQKUIqc4qeYSbHLCSJff6nCxPfoDKP2NhdLwvBeW0W1/gtIDhTO3GG8jMxHl2QfA1ui8qtyofvU1V8bpB/GuJ7SbgKr1vyTx326lSr7MhGlSq7H1vmHUIgNf/xEXt+vgD5T+vNfR7dpxRLe1MoFi8gDu0qZBe9b3fcqpykak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738332304; c=relaxed/simple;
-	bh=h2nJTg4+mFrqi7EKmH+vkp6tINkKplVirc+FceWWcAE=;
+	s=arc-20240116; t=1738332361; c=relaxed/simple;
+	bh=AKhJcbhz9IeNHSLT4dpDp7insuh1ayTEsj8qNLzp5Rc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n9brtlYKtRrWVZk49TwVXndUDZWHYAzAstZsGQV8ulG7jGtt3QzyFzu2cwxpXPf1fWHEhGgrwxlD6Jhp69YbKt9ErerQWuJJHlA07HmNHejAa4jGINZgOllc9o9oF6jrXkb0bdzDaqpt+vyRvrZljyhjMf5OIpcnU4a4zmh4PP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=kEYt6DPT; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	 In-Reply-To:Content-Type; b=MEnlexMUjLu6wmhu32D7uWVVsuOhw7kQYWXrFe7uL8ldIesIMqBAO3M48iltGzBU3Da+/yMree4lhl6/hrqX6+/Akg7TzLE7lyLDzqsz+LCbgUbch7YhnoBlWazRHdWcwAULjjEnCIlmSbzE25rl9wgWHDUdVNWkKpCbtkRHESI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a8l3nyy+; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="kEYt6DPT"
-Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
-	by cmsmtp with ESMTPS
-	id dnoiti4VbiuzSdrdltjVi2; Fri, 31 Jan 2025 14:05:01 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id drdktBFZtwoAOdrdktrO0N; Fri, 31 Jan 2025 14:05:00 +0000
-X-Authority-Analysis: v=2.4 cv=UvVlNfwB c=1 sm=1 tr=0 ts=679cd88d
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=VdSt8ZQiCzkA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=Zh1W6WffNNBMdkN8ln4A:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MXjjPkOeD3dHk3jj1JswXbDQV12qv9i0c/h4Aa5O2xA=; b=kEYt6DPTNaXf3E0YgEGX8RSkqg
-	LX/TisN7iYvGPHmJdEXXRW4M+3k6nMZA6Ygp55POIicyuSJu6lIUq4OUQksbx5H63Bh/wF60cEPS/
-	tfBd1EG8uq9R0Io8qTrcamKcCD50AbRJiiXbcmtFvYSn/bmFTvaYhZKImdjj/QztI78hR0IT1gPw/
-	tuPl33eBtsa1qN/Rk0yVE5QZ+MCgHnXNnVHLKEo88rktiC/KnCjI6RO3fpsNrqXH9c/8PyRDlJeBo
-	9aRXV6b3rzboqkZ8ZhOgIGZOZ3Qcr32nbyc27/3c5e4FD8hYwp9G/y1zZIEq+FshG9n0NYLIuIngq
-	SVQD2oIQ==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:51690 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1tdrdj-00195U-1q;
-	Fri, 31 Jan 2025 07:04:59 -0700
-Message-ID: <7857e37c-5aad-478b-8501-d98c4dfa6d21@w6rz.net>
-Date: Fri, 31 Jan 2025 06:04:56 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8l3nyy+"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aa679ad4265so557597366b.0;
+        Fri, 31 Jan 2025 06:05:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738332358; x=1738937158; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z64d2y4NHdd0vk7o+MMO6lu7NEou/L8WkeEtJSuSlfs=;
+        b=a8l3nyy+B9RVn5GD/9UNooUh9wrpEs9SL1p7Jz7eIVYAkpnl3OZ0O2oqZ9a6Afwvmt
+         0e911jKh60FbTvQufjaGL5Lb2gVb5evTyqp7MfEHeSJRHYq4ImrJ5ZA7M8QmS5JjqeFd
+         JI5MR9+QtrvDK1EFccL6+ui57JIohJ1NfGk7Y6ptLmKRFln5XTd7P7rfm7kckS0ZPr6+
+         To5yATl3tZs7V0rNaeh+bavls5ex3BkAj7ghrBjyTtDO7Ungu+orvD/qr+e6dG+qQVDw
+         CU1jdd3shiqriX9JAMIOnVpBf/kLjji0m9ThwJ1Rgerlv0n4rHp+mKpuiRjzWt3xuFY8
+         qWaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738332358; x=1738937158;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z64d2y4NHdd0vk7o+MMO6lu7NEou/L8WkeEtJSuSlfs=;
+        b=ICw0tatFfur/+ghbnbDpdY/be4pIwUndmpITQdgnJxIfrixPaF8tsmXyuj+hDDsPCd
+         P+j3GzgoxN13pePJ9RP6VC4VXv8RS8YpM2uo4lFh07T0RppgW7qrIJHjgViQhTXjCyNY
+         2geNVFMG39UwSMiv0iK6vF7e3EmmL8O8gmSV8PjmGjeHVmirtk8z0CnRoDGXYRySBFth
+         LIqLbPOmkWFNxcm0h8WPsDMFOjLC7UyuTZeWtQjs137n2/VnRljOOr9DCKwCnnDhMVKP
+         94EKT1wPT4R/OamBR8qBQSMs+628septMvOfVD3hxcvzdty2QXgepDba1Xi5OM/rSvZP
+         pfMA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNul5HDTyin4hoSzd/aSh8e4VaGdWK8F49+JqCUiVPMt7QyrDnxS74Iob+U8Ni6DX3Lozqfztxt8SGLEs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4MBIKX/T6kt+EacKdWyaiuU4ELP0AVOD1JGxjrzWiAtBc20xU
+	bYIiz/sfcae0AmU1C8jhyNvHdBhLQ52ergoMzVCKm+r5YaX9sKue
+X-Gm-Gg: ASbGncsoFHmZKl2utJONaZcDupGzbUqV7dEgirurKuUGkEJ5Kk7KK9zPQTC1sOqxtch
+	VtAIgwudUaV1GH+yCXDsSIiXe1Ql/HPwpvlQbUOc8ABUG146FCsRBGz1MgB0aY9Btx49lUaA4uD
+	yVQAEckFicwWu2aVudPvoGvf0Q1eJh8JkEOz/5cw+ngTVTIgF6gn0uo2ZKVSyelilBIPStsi6ov
+	X22cgsxabfrRix4+IZIWrssBdCRFymA+hUGaIR3cy2kdmaXCifT0gzOhsOst/KD40A4tNy+g2u+
+	bMTJl73lyCH1du+OVG2DsK7ociQu058MwFOkOZx61l8M/z2y
+X-Google-Smtp-Source: AGHT+IGg/fxiAcoXZfZsEb9rL7dSaI71QWP8I8UBj92ldxrklztvC0JjhsHk2Yenwl45sS5zpiiUDg==
+X-Received: by 2002:a17:907:9729:b0:ab6:d575:3c4a with SMTP id a640c23a62f3a-ab6e0c2fcb2mr674035466b.9.1738332357767;
+        Fri, 31 Jan 2025 06:05:57 -0800 (PST)
+Received: from ?IPV6:2620:10d:c096:325:77fd:1068:74c8:af87? ([2620:10d:c092:600::1:7071])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a59862sm302799966b.178.2025.01.31.06.05.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 06:05:57 -0800 (PST)
+Message-ID: <274320d4-3031-4ef6-bb57-b45659acf58e@gmail.com>
+Date: Fri, 31 Jan 2025 14:06:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,61 +66,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.15 00/24] 5.15.178-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250130140127.295114276@linuxfoundation.org>
+Subject: Re: [PATCH 4/8] io_uring/io-wq: cache work->flags in variable
+To: Jens Axboe <axboe@kernel.dk>, Max Kellermann <max.kellermann@ionos.com>
+Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250128133927.3989681-1-max.kellermann@ionos.com>
+ <20250128133927.3989681-5-max.kellermann@ionos.com>
+ <856ed55d-b07b-499c-b340-2efa70c73f7a@gmail.com>
+ <CAKPOu+-Mfx9q79nin7tGi1Rr4qGGY=y-2OhuP80U=7EtRpfBdg@mail.gmail.com>
+ <19750632-1f9d-4075-ac5c-f44fab3690a6@gmail.com>
+ <CAKPOu+8_Tivtyh0oj7UEuWPmdw-P96k3qRLvte1F1C9XivjS7A@mail.gmail.com>
+ <6fa97ace-362c-425e-a721-5e2a9921fe5c@kernel.dk>
 Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250130140127.295114276@linuxfoundation.org>
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <6fa97ace-362c-425e-a721-5e2a9921fe5c@kernel.dk>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1tdrdj-00195U-1q
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:51690
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 16
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGIj4Z74rVDKScVhtlhXhElyXbIjB3UZ9jxeVg7XsgiM75euv+QrVcZ9FAw/fwKcQfYRzdA3CwWL0VcTl3ycddFysIyRauOaOlL17ORCuEbshLyFL6iP
- fd/+pqkX0bV2M6x1mDtvBOcuUvePGv+DS9pBMqaIMNYlINdimnGNTCkkhovzuc9YWtEj/H9oGYElBhJCGfhKwx1uWL3bwG2W0eA=
 
-On 1/30/25 06:01, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.178 release.
-> There are 24 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 01 Feb 2025 14:01:15 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.178-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 1/30/25 14:57, Jens Axboe wrote:
+> On 1/29/25 10:36 PM, Max Kellermann wrote:
+>> On Thu, Jan 30, 2025 at 12:41?AM Pavel Begunkov <asml.silence@gmail.com> wrote:
+>>> Ok, then it's an architectural problem and needs more serious
+>>> reengineering, e.g. of how work items are stored and grabbed
+>>
+>> Rough unpolished idea: I was thinking about having multiple work
+>> lists, each with its own spinlock (separate cache line), and each
+>> io-wq thread only uses one of them, while the submitter round-robins
+>> through the lists.
+> 
+> Pending work would certainly need better spreading than just the two
+> classes we have now.
+> 
+> One thing to keep in mind is that the design of io-wq is such that it's
+> quite possible to have N work items pending and just a single thread
+> serving all of them. If the io-wq thread doesn't go to sleep, it will
+> keep processing work units. This is done for efficiency reasons, and to
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Looking at people complaining about too many iowq tasks, we should be
+limiting the number of them even more aggressively, and maybe scaling
+them down faster if that's a problem.
 
-Tested-by: Ron Economos <re@w6rz.net>
+> avoid a proliferation of io-wq threads when it's not going to be
+> beneficial. This means than when you queue a work item, it's not easy to
+> pick an appropriate io-wq thread upfront, and generally the io-wq thread
+> itself will pick its next work item at the perfect time - when it
+> doesn't have anything else to do, or finished the existing work.
+> 
+> This should be kept in mind for making io-wq scale better.
+
+People are saying that work stealing is working well with thread
+pools, that might be an option, even though there are some
+differences from userspace thread pools. I also remember Hao was
+trying to do something for iowq a couple of years ago.
+
+-- 
+Pavel Begunkov
 
