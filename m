@@ -1,130 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1F81C5D4C;
-	Fri, 31 Jan 2025 14:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588D31C7B62
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 14:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738333733; cv=none; b=Is5Nf4EkoL8Koojrv+E9vi7/Zea4AbIUMcP2NHSGtJrCh5eeb4yrv0xDqOc1dSNMDF+3hgsz1cAvr5+JVGqn0pjVRo6byOuf67GC85bpwFTFDYYq7klvZzyVc1iCHjAVIgHwHAlMQHbWfaEDMmeJIOaD8UZyKIsTGo3W2Igh/g4=
+	t=1738333754; cv=none; b=ijaS24D+1yzsOXzefaITZeBgt6oKJU+o2T2qeURmdWlBzMAz/AvNC9MpIhp1KL0RdThlvgLx8ZpJQp6y1DLTlAlsJWX4h4gArXBTA/5YVQsot87/MOKPYzuJfezbG+QaJ9NCCTHv3FlFPsyOyAdfFjkhdcrAuq+6ljPlu3rlFDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738333733; c=relaxed/simple;
-	bh=A9muo+en6T68s7TNl988exsaw5hAsdSDQpNNPFl10qM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r9DDau0ndgDDJDp6qHMCQFYrsWTJb6B6JHw0wwGGJlhMUNUiFWIrNfTkl9d7eqsjMX9I6JepP7rBMdZtZwArVziW2uB1rdWM5pj0B7LWUxIycccbW99mGbO6lUe3VaEywERYusdtCtktYPdq6KmA9iMWS0ywaPpFR7UoPwMPdDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9+wSyXw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738333754; c=relaxed/simple;
+	bh=49ks3svcmPKxfz0ey+OjvWaS0B/BzEb56n3cHabFInw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JIcgooZwc//s+mZTx987RWXN46Fhxm+czKi0cMxbN5OX+ZwgIYyxNGtJVKOH1otaSraxWqCXehB5VztS/CawSmH9F3wRiW2AZviLZtmaaNTTHHlUll2GJuy4h6ii7g1wqLMSzJlU0DkppVsQ3zB5xwsbxQInO9cjpTrHQlcC2TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=2DIfhZpA; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9+wSyXw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD556C4CEE3;
-	Fri, 31 Jan 2025 14:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738333732;
-	bh=A9muo+en6T68s7TNl988exsaw5hAsdSDQpNNPFl10qM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=n9+wSyXwDlsjNIEC6UIthBDz//Yl85KzqQ+bK9GGL7jqcEyqcINSskkdysBO0XQbl
-	 MnbxPdP43bx2hXYWiSrqRtSXpXfhdPNV9Yk4US6S4VbIiPcoC48kePGem8maeeft9s
-	 xm1vNBpZ3/RbIfEfmFgCZszqcH6eLZw1SZe4y8Rm/lzzUC/MLwn/lQ3yamD2Pi9YgG
-	 XZ6Te8qAigWJBuHMOsMZhZU35TLPPYFvIgmaq+uue48kxYq1LEfPb+DGvOia4Hd0jA
-	 uzlencmoC5xlPqFnYQiNH0mWY1/DiQlcsxiubuhvSubtSiJ3MfkN9l9etdx4tuL5W/
-	 ga23B2BHTxT7A==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dc10fe4e62so3884862a12.1;
-        Fri, 31 Jan 2025 06:28:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVcclQAJwtotPmZ1iNbIuAT3wQwWaMP6Wiwu/7KS6KDLOzWa4yIdq9d7uR67UQ3uJwK461M5Vnd@vger.kernel.org, AJvYcCWzDvkqBeKx3dm+VUQOr1lIXjPD/Z0J6G7CZBjZaIQI+NOURK69NXip08SUgKN+ThzNOM05ETxNYIQy@vger.kernel.org, AJvYcCX3UXLEvghD4UnclzPiKMYTuuWPdMgxi+ByZgqG8VGetO1EiyXY8ZGURyOMq5ewqYmn4h9pUko8PbHw0Jo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF6IV2u3zpYjWBYlbHX4vJhMVNVAA0oLYS8EYT4YhahgznOwbl
-	VSRUCPaTyLHXCEvkMcEPPB3FrtXxJ/nCUykVzk1+wnktHA6fwHQs5VJ4Ej2V6hNXZkSnbwmoFgI
-	WN2goLdlxSVtfG3VILS3U5pnrWd0=
-X-Google-Smtp-Source: AGHT+IEUQQntaQTqJSLkFPH0tGJX/gR+KgBuOx+Lx2taIdYSwdqfNiv9Yak3PI3h35yIGKbORAZ2/iVlRL1+6RkGiuo=
-X-Received: by 2002:a05:6402:84d:b0:5d0:bdc1:75df with SMTP id
- 4fb4d7f45d1cf-5dc5efebbb2mr10651841a12.24.1738333731438; Fri, 31 Jan 2025
- 06:28:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="2DIfhZpA"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a9cdcec53fso13618045ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 06:29:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1738333750; x=1738938550; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vO7AINUTs9Bcl5Igs1/HkTjC3cy5/ndBlxu/0z00n3g=;
+        b=2DIfhZpAnAmbK7q1ghXbeKvB2J3/pRTK9GEuj92X2O8PcY8b/u5/5CaiyTW/8rzVkP
+         92nR4l+ckbhpLR2/5UDRF46NsxX0EW4tvjz2+orkL3fLv7+SkyjNxi1cas+Jg28Jd70o
+         SLK+D/hQVUkmk2IpgHF7TFOdyAucJhdFOXEOcLCOcymh2XJZO0/zo7RiUochhujMLf5S
+         HEpx0D/JHMkoHv5C2Z5s9XHqSCry4VJVW3CmoSgz49GCGXBe+PcNEV/5BHiQYEeP2sMQ
+         +tzG2S3uvHMPyav70Oxlv3Iti4VGM04UCZ6kQOiUM7n6AJFBQQuUT2AH8M6XI0ys21XM
+         z+JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738333750; x=1738938550;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vO7AINUTs9Bcl5Igs1/HkTjC3cy5/ndBlxu/0z00n3g=;
+        b=vUuCW8tT4rmMnCiFYcbEUzowgT5nmlkz4v5WEiiAwKaJCDCPHOy3krkJRs4OjoffJI
+         SQECWRK7RAhBQm82wteo1UF8tmSfc5D32Kl16Q9mv+z0pgyGEvzz/muO+atuzuHY+bNp
+         eoRZ9ypFYQbGOXvpJ4WKL/3/eVrXPIgNUscyD/TFQQ9kVF6LuysHIA0GiNEBmHv8vVT4
+         EP5OGg1Yl2D8txHezYfBuKtkzWpovQu4v2SCGfQERp7V6qDRE0pvdZHsy56HOYrIkPx4
+         fwJbff+MZj00XjIgJZLJaKwL5LwkkwFax5nBPkqXpVlZQywRS1q5kljVWyTPOPJvhByA
+         jh+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUOfqtp4WHFrK60zPA6XrXBhV/hoPcD64bTen7FetpioTqrKQxA0t8MsJ00a2l/NQrBy9gQ99V+tdV3JyY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7zO+m4PQwxhcfbaYYUzHofZiuBUYJ7ryjJ58Wr25TWTiF/dwu
+	WCjzzBGmsHMSmaoF/nP9ZNx6fZ958paFjvpaHmjTc0ET81N0ljinA68Q+N0wDZc=
+X-Gm-Gg: ASbGncuUrfZpwkZnvwSejX80jfOjxeR1fg3fMyoRANc/aMasWTaqsS27VGHa7/fMuFj
+	fsn2JobzWHfx8ALHYQjfI2mFXUDT+50y2FV4ENM61ROpFtef/p25PAXF7yNKHDp3RRI5KBAz/xh
+	Jz0tcA8QNpjM+YFPa8kqTWy9OlkO1BRtOGIbd29puA8O6uE2U7HTz4Jz+hlU4sAIYAOUJOj15fo
+	LKe0Sv+gwRXxEc/XSSbjXcK6EXT9joQfFa2ugwv9aQ9JEpq1KB9HBLGQS9stU3/t6UMat8db07r
+	K8LG7Nh0yHc=
+X-Google-Smtp-Source: AGHT+IFROu4zcQ6AI8HfgXNb6/4Gnd5URcbYiElqQwfNYStcpCtJCsAwZ3yUMWS2RDuJhPTyEZMuxg==
+X-Received: by 2002:a05:6e02:13a4:b0:3d0:10a6:99bc with SMTP id e9e14a558f8ab-3d010a69d2emr42957005ab.6.1738333750268;
+        Fri, 31 Jan 2025 06:29:10 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ec746c95b6sm829969173.131.2025.01.31.06.29.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 06:29:09 -0800 (PST)
+Message-ID: <d663b7d8-d148-4d24-ad31-c36c3af674da@kernel.dk>
+Date: Fri, 31 Jan 2025 07:29:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131100651.343015-1-chenhuacai@loongson.cn> <2025013107-droplet-reset-127e@gregkh>
-In-Reply-To: <2025013107-droplet-reset-127e@gregkh>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 31 Jan 2025 22:28:41 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6DS=Vne9O-pLdfUki7tfJPdwB3CWbCDH5ejypWCnsM5A@mail.gmail.com>
-X-Gm-Features: AWEUYZmfIXd5UQSR65fYRELf4Z4SYd6T1UR_-wZsgCtcjWU2irrd7qCjQcPLu1Y
-Message-ID: <CAAhV-H6DS=Vne9O-pLdfUki7tfJPdwB3CWbCDH5ejypWCnsM5A@mail.gmail.com>
-Subject: Re: [PATCH] USB: pci-quirks: Fix HCCPARAMS register error for LS7A EHCI
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Alan Stern <stern@rowland.harvard.edu>, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Baoqi Zhang <zhangbaoqi@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] lib/iov_iter: fix import_iovec_ubuf iovec management
+To: Pavel Begunkov <asml.silence@gmail.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org
+Cc: Christian Brauner <brauner@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <378ae26923ffc20fd5e41b4360d673bf47b1775b.1738332461.git.asml.silence@gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <378ae26923ffc20fd5e41b4360d673bf47b1775b.1738332461.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi, Greg,
+On 1/31/25 7:13 AM, Pavel Begunkov wrote:
+> import_iovec() says that it should always be fine to kfree the iovec
+> returned in @iovp regardless of the error code. __import_iovec_ubuf()
+> never reallocates it and thus should clear the pointer even in cases
+> when copy_iovec_*() fail.
 
-On Fri, Jan 31, 2025 at 6:48=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Jan 31, 2025 at 06:06:51PM +0800, Huacai Chen wrote:
-> > LS7A EHCI controller doesn't have extended capabilities, so the EECP
-> > (EHCI Extended Capabilities Pointer) field of HCCPARAMS register should
-> > be 0x0, but it reads as 0xa0 now. This is a hardware flaw and will be
-> > fixed in future, now just clear the EECP field to avoid error messages
-> > on boot:
-> >
-> > ......
-> > [    0.581675] pci 0000:00:04.1: EHCI: unrecognized capability ff
-> > [    0.581699] pci 0000:00:04.1: EHCI: unrecognized capability ff
-> > [    0.581716] pci 0000:00:04.1: EHCI: unrecognized capability ff
-> > [    0.581851] pci 0000:00:04.1: EHCI: unrecognized capability ff
-> > ......
-> > [    0.581916] pci 0000:00:05.1: EHCI: unrecognized capability ff
-> > [    0.581951] pci 0000:00:05.1: EHCI: unrecognized capability ff
-> > [    0.582704] pci 0000:00:05.1: EHCI: unrecognized capability ff
-> > [    0.582799] pci 0000:00:05.1: EHCI: unrecognized capability ff
-> > ......
-> >
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  drivers/usb/host/pci-quirks.c | 4 ++++
-> >  include/linux/pci_ids.h       | 1 +
-> >  2 files changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirk=
-s.c
-> > index 1f9c1b1435d8..7e3151400a5e 100644
-> > --- a/drivers/usb/host/pci-quirks.c
-> > +++ b/drivers/usb/host/pci-quirks.c
-> > @@ -958,6 +958,10 @@ static void quirk_usb_disable_ehci(struct pci_dev =
-*pdev)
-> >        * booting from USB disk or using a usb keyboard
-> >        */
-> >       hcc_params =3D readl(base + EHCI_HCC_PARAMS);
-> > +     if (pdev->vendor =3D=3D PCI_VENDOR_ID_LOONGSON &&
-> > +         pdev->device =3D=3D PCI_DEVICE_ID_LOONGSON_EHCI)
-> > +             hcc_params &=3D ~(0xffL << 8);
-> > +
-> >       offset =3D (hcc_params >> 8) & 0xff;
-> >       while (offset && --count) {
-> >               pci_read_config_dword(pdev, offset, &cap);
-> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > index de5deb1a0118..74a84834d9eb 100644
-> > --- a/include/linux/pci_ids.h
-> > +++ b/include/linux/pci_ids.h
-> > @@ -162,6 +162,7 @@
-> >
-> >  #define PCI_VENDOR_ID_LOONGSON               0x0014
-> >
-> > +#define PCI_DEVICE_ID_LOONGSON_EHCI     0x7a14
->
-> If you read the top of this file, does this patch meet the requirement
-> to add this entry here to this file?
-Emmm, the device id is also used in
-drivers/pci/controller/pci-loongson.c, but uses another code style so
-it is not suitable to share the definition. Maybe the best solution is
-use 0x7a14 directly.
+Looks good to me:
 
-Huacai
->
-> thanks,
->
-> greg k-h
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
+
+-- 
+Jens Axboe
+
