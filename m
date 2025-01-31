@@ -1,208 +1,212 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8DA1B6CE9
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 10:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E261B6CE9
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 10:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738320934; cv=none; b=cW2nM30Iic117H7JCZn7Npr5qhCJrkE0rXI9UJysOtWE+bf2QS+K18QdwpJSpZ4kWSnWH4CxfWpSS74GvUyrTsfP+DBSxLaoFQuK7bSFQSu5EgZ+E58IMukyuNLBhlPSnoNuFslGxziuDwzWifUa/8eLWqQ1zdy7SR9O9QeYX9I=
+	t=1738320971; cv=none; b=D7ClLmSjECVqSrIUNV7Xt9lcA0Xe7lclUdBv9ec+/MRRCYHX96BxBwWdP+gRf5Oh5W1wDYYELGAs2+5B7qEDFXPR5ddMKraVKNuprYB7dYnwVt0zvTAfKGkXJ1TUkPxTPQ75HO74hCCchQzU0e92fr5zFLRi/ZRZ+pBGj5blGwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738320934; c=relaxed/simple;
-	bh=L+t7rnM7rmH5q09taXDmcrKhj1PtNfnxnFxPKIUY6Iw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=rfyxySfLHU0ECINPP6LTAF8u7WN4tsDTxS0h3bWlIZXr5OWevf5Y8lKlEiw7FtX+/Jr9ik0w+qQBBe3jDwS3Ln+ctHnN4zu8v+GyzmNltlz3XS2Wcp3u92NcCcokJuYQBlUXKLL2Jk3mshjbGdScwCAhUloYlEA/TzCYUE6sSy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d01c66745cso140405ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 02:55:32 -0800 (PST)
+	s=arc-20240116; t=1738320971; c=relaxed/simple;
+	bh=ccsBtqqIC3L6dLUiqQA+w/n/Hdkk7VIposblQzQvNks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=lfFF4BAi9c2jJom6rhiCxaGBTeh0CaYcGw1zzgYl3F5Cr42ZCvO6e31glLhbEsqAFEu6OPl4EmtRMTm6f3If0eUCmL4SwHSYoqacrtYFEGeC/jV3iSLb7MbA1hiXXjDzG34FgFuGoZRZEQ9rM0khxk00pb4o2ni02mwdtnANJrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SsH01pe0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SsH01pe0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738320969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q3RpfUrdZBCMnrOyM0k8HuSUcAta7Y636lLqMrYrWx8=;
+	b=SsH01pe0MxZrQQJDVXTOY7/itGqNZ24qhWI2Xt63e9OrFkxxjSGN6dIEJ7tXlZXWN3Pu10
+	nNGngeCtGyxOlZSnfHLd8i6xSH6HX2kb27GsKQ22jWtk49R018NUeYU3A6bZB4WQ8J33QM
+	xQKmiDC2BrCRD5bIA0X0m9czMScTDOg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-355-2CxYdFRkOzifE3wkNnx80Q-1; Fri, 31 Jan 2025 05:56:07 -0500
+X-MC-Unique: 2CxYdFRkOzifE3wkNnx80Q-1
+X-Mimecast-MFC-AGG-ID: 2CxYdFRkOzifE3wkNnx80Q
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3862e986d17so702322f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 02:56:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738320932; x=1738925732;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=woC//orRGI2Di/y1i/twZ9EPOn4DcYdlMp3O75UV0P0=;
-        b=dWDtLOVW/fH6HgQfYofTzS3ZaqE27utVsv3Oc23RSA10ThQMo2o0Z+OeF77u0akzUj
-         bz3p4vfVlDBeCUzyHyUuOIGCpeITeatCsp1sW033xVisb6VjAbdj216pdvVhCJzoniO3
-         zBBL86azRYObwYmhH+pgRv5nQgOHUL81Vj1f5o/3PyZkyHeAWmnFSB9oqnrt2X2ziAl+
-         6MZm1W1vevcrpyIi6DqdaRQT77+R6sufjzZ5eO2NSGIC1A+QoGylhdZjsrSAEfCBrem+
-         +RE4ssCUINDGn4UCdALTPkMKbPXjRrGek0brtjr6C07Fy03vPNSMX/I2RHdLSXRrJWWV
-         IIbA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnrqf2qCrZRQit3h+kdYMbC63Wvoz4K2nydmO1axOzejJEgzRGO17QZTJtYAm9ZI6UaWFlGe3nP9QJCII=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmnmXaSreslOHxd95xjQDG9elkNex1Rx9GmQS2hBmUPWBbpFVb
-	365tNfSpZ8F7X3bzuFYAVdmhlZRfH7gIdUkRLXDoAIs7LX2DjmS4yIi6OaXdJIb/3L+2T9sTK62
-	xG/2bhFfJ0CZa/nbAMdnxKg55gdaC9VsdmNywBoTYTp3Po7LXRQWffSI=
-X-Google-Smtp-Source: AGHT+IHlogUV7bPPu2u+ZrptU9Y3T/DJ1H2T7ER6/oCJbXk42etX8850qUtyzsa3KlEIQphJrrg2IE1ZzYAqP7Imdk4EsDUX2k//
+        d=1e100.net; s=20230601; t=1738320966; x=1738925766;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q3RpfUrdZBCMnrOyM0k8HuSUcAta7Y636lLqMrYrWx8=;
+        b=rW1j1rtsN9Md3cNcSFlfDzJhOVSsacsAaHOTNot8OB0onsveM/Wg3FnkUw0HUKaZ5m
+         hSUiQ/ayQG+v3NDTUM7NFgvoqZnJSSa2ehMFBmwe30VPSenAIvkNxaSbvPhzl1ebOHd4
+         in46nnLxFIms6K1vwFMptvla6NlBz4Zxz430QVnByVHkdbwny27QptOfRL1lboYIeJ2V
+         SD9XV+C8CC3LK+U0y0x5w2JUFUnYZ/ad46aKe2xCupAd1K6wUom8SmEEoh18N7Isa+f2
+         K2JgQB1HYB23mf9qClR/hdDVVVXf9Wc24dghtDtKckL24tG3wMPt8tUxEC5LXAcInSPr
+         Sv+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWsFacc7jrwN04KojTAWhmG2X5R1LUJROmhxGvSV+Hc/6AyXBHABPe84Zno8m+KeAh2ljIOm2BvmVkDwuY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb4/pHxp0sT7cEI0VKXrGR+TcXjNtzYK+lSXs3aHQoipDmrF/a
+	9g+bGUReicrTwJGUXBxxXGljaTommmJkn9BM7pqMIOWtciH2HXpy++cD1IcmtAkfpjGfQNieaZt
+	IrK0sef4/fUesaRGMxhcvzzX315BIKh2CMHZ6ECt6AsH5jEpaWl1Pjq/eECGijQ==
+X-Gm-Gg: ASbGncs5y4EyBQvi7h6qrUKiqb+SwiTFRk7Sl2H+GLLUy8XpbgSqPoUbTl7oq3rYUY2
+	iAC+gpq8lTP8oyLCrEx+nmKOdRfSy2KPhcKlENInRGcdE7FvQpCTO5GNGw75OAkuryEvcPEkWCS
+	F0fLYhZpLVZqWRx0BlUs+wsPuysYlIJszn0/djMpRy7lny2Reehd/mwVIXswm8jGDRhksVMXz2K
+	9Cwyh79M6wB033HXDMjzIBnqQGqwzo++rmzEKWTqJSKF1cUCPE6/x3VFUxqtLcrkPyowt/BwPUo
+	7yGoPXpIbU5kcpLGzZAAuwODUwRRJXRUnNN6KEBRf5OYrNZJFKeea27Mu6HYH3d7+sgkl6UJRiG
+	s0sTNeHLQ/Rx/LREwVLQvA6WQC1MPSnNC
+X-Received: by 2002:a05:6000:1a8b:b0:385:f47b:1501 with SMTP id ffacd0b85a97d-38c5195fd82mr8250985f8f.32.1738320965943;
+        Fri, 31 Jan 2025 02:56:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH+I+ynCeZEHXX+6WrhMhXHSL94RRp5D9nLI6LDBxYzej6H/Ex/I2OwQyT0gbWRqDVNDvdr0w==
+X-Received: by 2002:a05:6000:1a8b:b0:385:f47b:1501 with SMTP id ffacd0b85a97d-38c5195fd82mr8250948f8f.32.1738320965490;
+        Fri, 31 Jan 2025 02:56:05 -0800 (PST)
+Received: from ?IPV6:2003:cb:c70a:1c00:b8d4:bc62:e7ed:ec0e? (p200300cbc70a1c00b8d4bc62e7edec0e.dip0.t-ipconnect.de. [2003:cb:c70a:1c00:b8d4:bc62:e7ed:ec0e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c102fcasm4451251f8f.38.2025.01.31.02.55.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 02:55:58 -0800 (PST)
+Message-ID: <d552cc03-b7af-44be-bcaf-13da720a2226@redhat.com>
+Date: Fri, 31 Jan 2025 11:55:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1aa7:b0:3cf:cac6:b61d with SMTP id
- e9e14a558f8ab-3cffe4068acmr86739795ab.16.1738320931934; Fri, 31 Jan 2025
- 02:55:31 -0800 (PST)
-Date: Fri, 31 Jan 2025 02:55:31 -0800
-In-Reply-To: <672dbfef.050a0220.69327.0001.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <679cac23.050a0220.163cdc.0007.GAE@google.com>
-Subject: Re: [syzbot] [ntfs3?] possible deadlock in ntfs_look_for_free_space
-From: syzbot <syzbot+d27edf9f96ae85939222@syzkaller.appspotmail.com>
-To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
-	ntfs3@lists.linux.dev, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 05/12] mm/memory: detect writability in
+ restore_exclusive_pte() through can_change_pte_writable()
+To: Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-mm@kvack.org, nouveau@lists.freedesktop.org,
+ Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
+ <jglisse@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
+ Jason Gunthorpe <jgg@nvidia.com>
+References: <20250129115411.2077152-1-david@redhat.com>
+ <20250129115411.2077152-6-david@redhat.com>
+ <Z5tLmYOQaZrdWQHN@phenom.ffwll.local>
+ <2670f65f-e973-483e-aed6-526d00125ad7@redhat.com>
+ <Z5t4rrkRiOsRY2jH@phenom.ffwll.local>
+ <z7s7xb2ftv5hqg3uzjqkou6enguleazwwehxbi5zulbkar2aej@zlbdh2kdewdn>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <z7s7xb2ftv5hqg3uzjqkou6enguleazwwehxbi5zulbkar2aej@zlbdh2kdewdn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-syzbot has found a reproducer for the following issue on:
+On 31.01.25 00:06, Alistair Popple wrote:
+> On Thu, Jan 30, 2025 at 02:03:42PM +0100, Simona Vetter wrote:
+>> On Thu, Jan 30, 2025 at 10:58:51AM +0100, David Hildenbrand wrote:
+>>> On 30.01.25 10:51, Simona Vetter wrote:
+>>>> On Wed, Jan 29, 2025 at 12:54:03PM +0100, David Hildenbrand wrote:
+>>>>> Let's do it just like mprotect write-upgrade or during NUMA-hinting
+>>>>> faults on PROT_NONE PTEs: detect if the PTE can be writable by using
+>>>>> can_change_pte_writable().
+>>>>>
+>>>>> Set the PTE only dirty if the folio is dirty: we might not
+>>>>> necessarily have a write access, and setting the PTE writable doesn't
+>>>>> require setting the PTE dirty.
+>>>>
+>>>> Not sure whether there's much difference in practice, since a device
+>>>> exclusive access means a write, so the folio better be dirty (unless we
+>>>> aborted halfway through). But then I couldn't find the code in nouveau to
+>>>> do that, so now I'm confused.
+>>>
+>>> That confused me as well. Requiring the PTE to be writable does not imply
+>>> that it is dirty.
+>>>
+>>> So something must either set the PTE or the folio dirty.
+>>
+>> Yeah I'm not finding that something.
+>>
+>>> ( In practice, most anonymous folios are dirty most of the time ... )
+>>
+>> And yup that's why I think it hasn't blown up yet.
+>>
+>>> If we assume that "device-exclusive entries" are always dirty, then it
+>>> doesn't make sense to set the folio dirty when creating device-exclusive
+>>> entries. We'd always have to set the PTE dirty when restoring the exclusive
+>>> pte.
+>>
+>> I do agree with your change, I think it's correct to put this
+>> responsibility onto drivers. It's just that nouveau seems to not be
+>> entirely correct.
+> 
+> Yeah, agree it should be a driver responsibility but also can't see how nouveau
+> is correct there either. I might see if I can get it to blow up...
 
-HEAD commit:    1950a0af2d55 Merge tag 'arm64-upstream' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=10404518580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cc031f8aa606a448
-dashboard link: https://syzkaller.appspot.com/bug?extid=d27edf9f96ae85939222
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=118aab64580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15865ddf980000
+(in context of the rmap walkers) The question is, how do we consider 
+device-exclusive entries:
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f7a210b6e168/disk-1950a0af.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/fffe4bd5b59c/vmlinux-1950a0af.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b5e6fc6340b2/Image-1950a0af.gz.xz
-mounted in repro #1: https://storage.googleapis.com/syzbot-assets/8ae15bf11712/mount_0.gz
-mounted in repro #2: https://storage.googleapis.com/syzbot-assets/3b6c55850042/mount_3.gz
+(1) dirty? Not from a CPU perspective.
+(2) referenced? Not from a CPU perspective.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d27edf9f96ae85939222@syzkaller.appspotmail.com
+If the answer is always "no" to all questions, then memory notifiers 
+must handle it, because we'd be answering the question from the CPU 
+point of view.
 
-ntfs3(loop3): Different NTFS sector size (4096) and media sector size (512).
-ntfs3(loop3): Mark volume as dirty due to NTFS errors
-======================================================
-WARNING: possible circular locking dependency detected
-6.13.0-rc7-syzkaller-g1950a0af2d55 #0 Not tainted
-------------------------------------------------------
-syz-executor323/6469 is trying to acquire lock:
-ffff0000c9402270 (&wnd->rw_lock){++++}-{4:4}, at: ntfs_look_for_free_space+0xe4/0x58c fs/ntfs3/fsntfs.c:362
+If the answer is always "yes", there is a problem: we can only make it 
+clean/young by converting it to an ordinary PTE first (requiring MMU 
+notifiers etc.), which makes it quite nasty.
 
-but task is already holding lock:
-ffff0000dca92dc0 (&ni->file.run_lock#2){++++}-{4:4}, at: ntfs_set_size+0x130/0x200 fs/ntfs3/inode.c:852
+Mixed answers are not possible, because we don't know just from staring 
+at the entry.
 
-which lock already depends on the new lock.
+-- 
+Cheers,
 
+David / dhildenb
 
-the existing dependency chain (in reverse order) is:
-
--> #1 (&ni->file.run_lock#2){++++}-{4:4}:
-       down_read+0x58/0x2fc kernel/locking/rwsem.c:1524
-       run_unpack_ex+0x43c/0x7fc fs/ntfs3/run.c:1119
-       ntfs_read_mft fs/ntfs3/inode.c:401 [inline]
-       ntfs_iget5+0x15b4/0x2c60 fs/ntfs3/inode.c:537
-       dir_search_u+0x298/0x324 fs/ntfs3/dir.c:264
-       ntfs_lookup+0x108/0x1f8 fs/ntfs3/namei.c:85
-       lookup_open fs/namei.c:3627 [inline]
-       open_last_lookups fs/namei.c:3748 [inline]
-       path_openat+0xf7c/0x2b14 fs/namei.c:3984
-       do_filp_open+0x1e8/0x404 fs/namei.c:4014
-       do_sys_openat2+0x124/0x1b8 fs/open.c:1402
-       do_sys_open fs/open.c:1417 [inline]
-       __do_sys_openat fs/open.c:1433 [inline]
-       __se_sys_openat fs/open.c:1428 [inline]
-       __arm64_sys_openat+0x1f0/0x240 fs/open.c:1428
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
-       el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
--> #0 (&wnd->rw_lock){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3161 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3280 [inline]
-       validate_chain kernel/locking/lockdep.c:3904 [inline]
-       __lock_acquire+0x34f0/0x7904 kernel/locking/lockdep.c:5226
-       lock_acquire+0x23c/0x724 kernel/locking/lockdep.c:5849
-       down_write_nested+0x58/0xcc kernel/locking/rwsem.c:1693
-       ntfs_look_for_free_space+0xe4/0x58c fs/ntfs3/fsntfs.c:362
-       attr_allocate_clusters+0x1dc/0x85c fs/ntfs3/attrib.c:159
-       attr_set_size+0x192c/0x3468 fs/ntfs3/attrib.c:574
-       ntfs_set_size+0x158/0x200 fs/ntfs3/inode.c:854
-       ntfs_extend+0x19c/0x8e8 fs/ntfs3/file.c:409
-       ntfs_setattr+0x220/0x95c fs/ntfs3/file.c:826
-       notify_change+0x9f0/0xca0 fs/attr.c:552
-       do_truncate+0x1c0/0x28c fs/open.c:65
-       vfs_truncate+0x2b8/0x360 fs/open.c:111
-       do_sys_truncate+0xe8/0x1ac fs/open.c:134
-       __do_sys_truncate fs/open.c:146 [inline]
-       __se_sys_truncate fs/open.c:144 [inline]
-       __arm64_sys_truncate+0x5c/0x70 fs/open.c:144
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
-       el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&ni->file.run_lock#2);
-                               lock(&wnd->rw_lock);
-                               lock(&ni->file.run_lock#2);
-  lock(&wnd->rw_lock);
-
- *** DEADLOCK ***
-
-4 locks held by syz-executor323/6469:
- #0: ffff0000c9404420 (sb_writers#10){.+.+}-{0:0}, at: mnt_want_write+0x44/0x9c fs/namespace.c:516
- #1: ffff0000dca92fa8 (&sb->s_type->i_mutex_key#18){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:818 [inline]
- #1: ffff0000dca92fa8 (&sb->s_type->i_mutex_key#18){+.+.}-{4:4}, at: do_truncate+0x1ac/0x28c fs/open.c:63
- #2: ffff0000dca92d10 (&ni->ni_lock#3/5){+.+.}-{4:4}, at: ni_lock fs/ntfs3/ntfs_fs.h:1110 [inline]
- #2: ffff0000dca92d10 (&ni->ni_lock#3/5){+.+.}-{4:4}, at: ntfs_set_size+0x124/0x200 fs/ntfs3/inode.c:851
- #3: ffff0000dca92dc0 (&ni->file.run_lock#2){++++}-{4:4}, at: ntfs_set_size+0x130/0x200 fs/ntfs3/inode.c:852
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 6469 Comm: syz-executor323 Not tainted 6.13.0-rc7-syzkaller-g1950a0af2d55 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Call trace:
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0xe4/0x150 lib/dump_stack.c:120
- dump_stack+0x1c/0x28 lib/dump_stack.c:129
- print_circular_bug+0x154/0x1c0 kernel/locking/lockdep.c:2074
- check_noncircular+0x310/0x404 kernel/locking/lockdep.c:2206
- check_prev_add kernel/locking/lockdep.c:3161 [inline]
- check_prevs_add kernel/locking/lockdep.c:3280 [inline]
- validate_chain kernel/locking/lockdep.c:3904 [inline]
- __lock_acquire+0x34f0/0x7904 kernel/locking/lockdep.c:5226
- lock_acquire+0x23c/0x724 kernel/locking/lockdep.c:5849
- down_write_nested+0x58/0xcc kernel/locking/rwsem.c:1693
- ntfs_look_for_free_space+0xe4/0x58c fs/ntfs3/fsntfs.c:362
- attr_allocate_clusters+0x1dc/0x85c fs/ntfs3/attrib.c:159
- attr_set_size+0x192c/0x3468 fs/ntfs3/attrib.c:574
- ntfs_set_size+0x158/0x200 fs/ntfs3/inode.c:854
- ntfs_extend+0x19c/0x8e8 fs/ntfs3/file.c:409
- ntfs_setattr+0x220/0x95c fs/ntfs3/file.c:826
- notify_change+0x9f0/0xca0 fs/attr.c:552
- do_truncate+0x1c0/0x28c fs/open.c:65
- vfs_truncate+0x2b8/0x360 fs/open.c:111
- do_sys_truncate+0xe8/0x1ac fs/open.c:134
- __do_sys_truncate fs/open.c:146 [inline]
- __se_sys_truncate fs/open.c:144 [inline]
- __arm64_sys_truncate+0x5c/0x70 fs/open.c:144
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
- el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
