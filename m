@@ -1,413 +1,100 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4AF1F2C3C
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144A6155C88
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738353938; cv=none; b=F6QohH2eskgzlux3FEOyZChRgCBqUKM6mMFtddjMLxbMtD5xHcHhxZ8nB/7ERKwCexreG68lKIkr+nyZ15QZN3E/rQZfjJtso4EaSUBc1h+aWOVkAX0K6KxndBGgLe8bnBWA/xJh34P9N+WxRj6DLsla0de2u7jMZy8ErLkvkT8=
+	t=1738354026; cv=none; b=o+dEOMv0WNGoKy/Ydbri2A7mdcQvOcfMt76ng11JjqLGR02fxiqrQHUqHEfJWCFRHysUNWRHh7OyR54Mm+PkUbkIZcPugC8UCZ790zfAsutDktsX5B1QnxIENSBOUGMs5uYTcsi3usL+HBx7pZ5w/o4S8lGkkpkiOrervnXCARE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738353938; c=relaxed/simple;
-	bh=p1s8jhBf7GZNQ5P1JFcq8IVYKQYEgjIDe5tZf5vztFc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EiTNtB+3Y0cwJs54Rv+7LqHmrAnzu9VwC3cZRZKLWXWeam2IdmAvtBgG4XI3Tt0cLP9xBTob/K/C5U/aA+mT5Y29v/yIlaBKn0m932bA+VfyBZWncU1LCaEWaIUHfLfHZlL2MYTspnabuyx3VvOCs4xm01N02NYMcrGQ1uoJvXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=Ah7jxw7a; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
+	s=arc-20240116; t=1738354026; c=relaxed/simple;
+	bh=FMQ3sOMKsQB43uj5pNEYT05d5zJRRgzna6CDksmwbeA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r5Sh/jeFusU6TTxK1c+19e5V/T/fLJ2KEADEXbpxH1cwo7WZBAc9apn2E7x8oZ3A5AiDI9tFiN8ZjDoDPAGfqJHPQhftYHLI3bz8j/FXiMUeGLm0DZ4vQkaMH1IosSD6hwpgBQyTwM8rT4BaeS40ia4sOJaE7NZbJTiwvy0wRXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gVa44gTQ; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="Ah7jxw7a"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1738353929;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J/3avnUvoY75i9AevVctoAbtNEgRUHYk1ttL7ziA2Ac=;
-	b=Ah7jxw7aYZJLZL8Dg4jvODVLJHGBofGOtzyCHHrT0DVk8foQyxwToh5823MEWbYURY9eO2
-	+2B+XTEi6wy0Q7hj/od1aConMLH8gsgkGyiXgY5EONZjQXYXDmtc3maySSjrSFURUZJPtn
-	AYgwGyv1wPKYUzSvtxdKBHnsVJwlg+5hET/MokEr9kuVCpHKskfHqfahvPC+/COlhRGMzr
-	yxquDcfrjy/gWtbTQcFFM9GMiz81x2Fsxro1ZQFgrWNM2wuU1rKslg7qbTy9aDjwD6wEk9
-	jwo5ZUvGSc484xhU+3fN8CB+2kJoYeiWBrde92Ho2GApV9H6vAuLSAatI0LyEQ==
-From: Ferass El Hafidi <funderscore@postmarketos.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-amlogic@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	funderscore@postmarketos.org,
-	~postmarketos/upstreaming@lists.sr.ht,
-	Artur Weber <aweber.kernel@gmail.com>,
-	Karl Chan <exxxxkc@getgoogleoff.me>
-Subject: [PATCH 2/2] arm64: dts: amlogic: add support for xiaomi-aquaman/Mi TV Stick
-Date: Fri, 31 Jan 2025 20:03:19 +0000
-Message-ID: <20250131200319.19996-3-funderscore@postmarketos.org>
-In-Reply-To: <20250131200319.19996-1-funderscore@postmarketos.org>
-References: <20250131200319.19996-1-funderscore@postmarketos.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gVa44gTQ"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-385d7b4da2bso2171305f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:07:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1738354022; x=1738958822; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=giWomTFI9TF/E38QchJwLWohYFKLV3+xm+Xcrv6mGrc=;
+        b=gVa44gTQbZoG40d03Bye7RzBRQbbi7acH0yzsVVuriNgMHXXjHVhUGuz//NgEFDnBN
+         rkaL5OIJGa+/4wl4bpTvYdyg4yKhZF3KP7InnO8D6DOO1aMeZ8ypcSX46hrWyA3jHiyO
+         hLvquOYantaup7tKSWTdZAjeZ9DxtarLmBuRE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738354022; x=1738958822;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=giWomTFI9TF/E38QchJwLWohYFKLV3+xm+Xcrv6mGrc=;
+        b=LEmKnpgs+v3B+2JWC0xto5EJ0jR7I1W1qwrhKQkpG+66i5HCZMo0eHoxhT05Syay0A
+         cXGhQUC3xiZeVoHFVFiuuR7uSimRUYrkSyvi4Yc5HBX0EmA2Tj6z9169RNPhW4dwomif
+         6YXHuVlOI+sfPCITDYAQYRpX6r6geyVnSTAPKMdwEBWOOIYaS7/nrukWTVnZEAo/Fknn
+         310kLqL35dLcFQ34ueZEx/lwH47iwEU9NB/fmQYOiRY7RI5UedalqeFHWgaQbpOkVKbl
+         SnMmue0jconX2RYKfpntVieKJ57yQvhWdMuWlBgKDNXQbf+7evQU+Zf+LVqZ2EgGZyFR
+         7Vxw==
+X-Forwarded-Encrypted: i=1; AJvYcCXln1otHfXxGog1LBz/jOHp45l8J+DcdDf3mI6hk3DpzBpZ5yMydc5a3U5c6iTX9TiGrYY6b3Rr0a6RJo4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPdNFfTGc2lDmxRoDfVGPMYOnCZgzCw9hObO3OJN3B1ZAn/euk
+	Yt+FXD+oPsppaVtcfUF8hmZ8ybLpPrMWXCPxv/PDLGx6l0NpZP8ykrJLGpzA7OO8vFKta5YDJEb
+	ddOk=
+X-Gm-Gg: ASbGncvlStVPT2XJrFG0J87Qro0A3njBMFvnpYAFmVhT87YTblqDYOMjvxeLvxcG9X7
+	/6dfHlJPs+wBouKBN1pnp7BCXpvm27zkbToxeo2g858QOgW4OLCVKE9a5ZlrgZQVVHdM2BJVROt
+	SrbaQy9d60aqTDh2auKHs4zCtd0mgMXnRFwvQk4bN6nK8EEoHCSnO8Iw2S2iWuDMJ7Jn7iVqst9
+	4mmKYCSwLLcXjwhTkLt0nhorfiMqlIeQ0Xn5fnLaGzSV1dCw0wpmvDB7Qd+ZdRr3tTXKZLAJoGr
+	ZdUoEJtZhkaqE5DjJz2+6R4asDIo8DQ15jBrrymluO8lM2fZrjn4bUpJ3bXMUXEEPw==
+X-Google-Smtp-Source: AGHT+IG6dY17LSfQpBCbDenowLxkFibaxRzTyGUQxrns+b2xgLJjbPbNBNiwRhwAgs3Tx5ZFQBbfSw==
+X-Received: by 2002:a05:6000:1842:b0:38c:5fbf:10ca with SMTP id ffacd0b85a97d-38c5fbf1211mr7678970f8f.39.1738354022185;
+        Fri, 31 Jan 2025 12:07:02 -0800 (PST)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a31f86sm347466966b.145.2025.01.31.12.07.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 12:07:00 -0800 (PST)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5d0d32cd31aso3190084a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:07:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVTGzlrg9VZm6ze9WSUQ0zvNaON+2JCPlfZXLNR9FgMdPlwMR+1kSA53Qmi3ymKT4ygvEV/D4mMxBvXWB0=@vger.kernel.org
+X-Received: by 2002:a05:6402:2546:b0:5d0:cfad:f71 with SMTP id
+ 4fb4d7f45d1cf-5dc5effe67amr28614245a12.32.1738354020481; Fri, 31 Jan 2025
+ 12:07:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250102140715.GA7091@redhat.com> <3170d16e-eb67-4db8-a327-eb8188397fdb@amd.com>
+In-Reply-To: <3170d16e-eb67-4db8-a327-eb8188397fdb@amd.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 31 Jan 2025 12:06:44 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wioaHG2P0KH=1zP0Zy=CcQb_JxZrksSS2+-FwcptHtntw@mail.gmail.com>
+X-Gm-Features: AWEUYZlc4nE8uEABWPl3kngqh7LgFJ1Rjob1HO3aFikc9cUu0-QUHp6KA_BURuI
+Message-ID: <CAHk-=wioaHG2P0KH=1zP0Zy=CcQb_JxZrksSS2+-FwcptHtntw@mail.gmail.com>
+Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still full
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Manfred Spraul <manfred@colorfullife.com>, 
+	Christian Brauner <brauner@kernel.org>, David Howells <dhowells@redhat.com>, 
+	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
+	Swapnil Sapkal <swapnil.sapkal@amd.com>, Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Ferass El Hafidi <funderscore@postmarketos.org>
+On Fri, 31 Jan 2025 at 01:50, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
+>
+> On my 3rd Generation EPYC system (2 x 64C/128T), I see that on reverting
+> the changes on the above mentioned commit, sched-messaging sees a
+> regression up until the 8 group case which contains 320 tasks, however
+> with 16 groups (640 tasks), the revert helps with performance.
 
-Xiaomi Mi TV Stick is a small Amlogic-based Android TV stick released in 
-2020.  It is known as `xiaomi-aquaman` internally.  Specifications:
- * Amlogic S805Y SoC
- * Android TV 9, upgradable to Android TV 10
- * 8 GB eMMC
- * 1 GB of RAM
+I suspect that the extra wakeups just end up perturbing timing, and
+then you just randomly get better performance on that particular
+test-case and machine.
 
-The devicetree is based on p241's DT, with some changes to better match
-the Mi TV Stick.
+I'm not sure this is worth worrying about, unless there's a real load
+somewhere that shows this regression.
 
-Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
----
- arch/arm64/boot/dts/amlogic/Makefile          |   1 +
- .../meson-gxl-s805y-xiaomi-aquaman.dts        | 311 ++++++++++++++++++
- 2 files changed, 312 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dts
-
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 2fbda8419..0921707f1 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -49,6 +49,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-wetek-hub.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-wetek-play2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805x-libretech-ac.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805x-p241.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805y-xiaomi-aquaman.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-libretech-pc.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-mecool-kii-pro.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dts
-new file mode 100644
-index 000000000..6b72f054a
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dts
-@@ -0,0 +1,311 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2025 Ferass El Hafidi <funderscore@postmarketos.org>
-+ * Based on meson-gxl-s805x-p241.dtb:
-+ *  - Copyright (c) 2018 BayLibre, SAS.
-+ *    Author: Neil Armstrong <narmstrong@baylibre.com>
-+ *    Author: Jerome Brunet <jbrunet@baylibre.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/sound/meson-aiu.h>
-+
-+#include "meson-gxl-s805x.dtsi"
-+
-+/ {
-+	compatible = "xiaomi,aquaman", "amlogic,s805x", "amlogic,meson-gxl";
-+	model = "Xiaomi Mi TV Stick (S805Y)";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+		serial1 = &uart_A;
-+	};
-+
-+	au2: analog-amplifier {
-+		compatible = "simple-audio-amplifier";
-+		sound-name-prefix = "AU2";
-+		VCC-supply = <&vcc_5v>;
-+		enable-gpios = <&gpio GPIOH_5 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	cvbs-connector {
-+		/* No CVBS connector */
-+		status = "disabled";
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_tmds_out>;
-+			};
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led-white {
-+			color = <LED_COLOR_ID_WHITE>;
-+			function = LED_FUNCTION_POWER;
-+			gpios = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
-+			default-state = "heartbeat";
-+			panic-indicator;
-+		};
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x40000000>;
-+	};
-+
-+	vddio_boot: regulator-vddio-boot {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_BOOT";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	vddao_3v3: regulator-vddao-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDAO_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vddio_ao18: regulator-vddio-ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	vcc_3v3: regulator-vcc-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vcc_5v: regulator-vcc-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	wifi32k: wifi32k {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-+		clocks = <&wifi32k>;
-+		clock-names = "ext_clock";
-+	};
-+
-+	sound {
-+		compatible = "amlogic,gx-sound-card";
-+		model = "MI-AQUAMAN";
-+		audio-aux-devs = <&au2>;
-+		audio-widgets = "Line", "Lineout";
-+		audio-routing = "AU2 INL", "ACODEC LOLN",
-+				"AU2 INR", "ACODEC LORN",
-+				"Lineout", "AU2 OUTL",
-+				"Lineout", "AU2 OUTR";
-+		clocks = <&clkc CLKID_MPLL0>,
-+			 <&clkc CLKID_MPLL1>,
-+			 <&clkc CLKID_MPLL2>;
-+
-+		assigned-clocks = <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>,
-+				  <&clkc CLKID_MPLL2>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+
-+		dai-link-0 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
-+			dai-format = "i2s";
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
-+			};
-+
-+			codec-1 {
-+				sound-dai = <&aiu AIU_ACODEC CTRL_I2S>;
-+			};
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
-+
-+			codec-0 {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+
-+		dai-link-3 {
-+			sound-dai = <&aiu AIU_ACODEC CTRL_OUT>;
-+
-+			codec-0 {
-+				sound-dai = <&acodec>;
-+			};
-+		};
-+	};
-+};
-+
-+&acodec {
-+	AVDD-supply = <&vddio_ao18>;
-+	status = "okay";
-+};
-+
-+&aiu {
-+	status = "okay";
-+};
-+
-+&cec_AO {
-+	status = "okay";
-+	pinctrl-0 = <&ao_cec_pins>;
-+	pinctrl-names = "default";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+&ethmac {
-+	/* No Ethernet connector */
-+	status = "disabled";
-+};
-+
-+&internal_phy {
-+	pinctrl-0 = <&eth_link_led_pins>, <&eth_act_led_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&ir {
-+	/* No IR */
-+	status = "disabled";
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-+	pinctrl-names = "default";
-+	hdmi-supply = <&vcc_5v>;
-+};
-+
-+&hdmi_tx_tmds_port {
-+	hdmi_tx_tmds_out: endpoint {
-+		remote-endpoint = <&hdmi_connector_in>;
-+	};
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_ao18>;
-+};
-+
-+/* Wireless SDIO Module */
-+&sd_emmc_a {
-+	status = "disabled";
-+	pinctrl-0 = <&sdio_pins>;
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <50000000>;
-+
-+	non-removable;
-+	disable-wp;
-+
-+	/* WiFi firmware requires power to be kept while in suspend */
-+	keep-power-in-suspend;
-+
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+
-+	vmmc-supply = <&vddao_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	max-frequency = <200000000>;
-+	non-removable;
-+	disable-wp;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-+
-+&pwm_ef {
-+	status = "okay";
-+	pinctrl-0 = <&pwm_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&clkc CLKID_FCLK_DIV4>;
-+	clock-names = "clkin0";
-+};
-+
-+/* This is connected to the Bluetooth module: */
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&usb2_phy0 {
-+	phy-supply = <&vcc_5v>;
-+};
--- 
-2.47.1
-
+            Linus
