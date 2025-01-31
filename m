@@ -1,71 +1,68 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3C01B85EC
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:25:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5D21BD018
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:25:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738326351; cv=none; b=SP28ZRqPv7oCU4zIZgeoA+rj/M8BMmqDD4WanphhduGicogHXos8vc0WVG9pf2ymLvc7YqNdlgucGe3N76y2wzbSb5oFC3uLolvgfjrzpzJkKtAV7n5lE1aQ+fgvmp+ajHw6R5DYikBywhAT9iF4fgxaPqgymMjeWt85t/vuy2k=
+	t=1738326352; cv=none; b=svayn4kn0FqawrTnYGmR0XNr+gRcYuNxeBPqq0C0Lhx1iUmcrD7GS5/OPDpQTzbAvrhZ+woDiK5NEPfI0iTofwI2XI/I7Skw3lqhoqOL7fjSNK/OTHtlVya4opMHd+hysPRWR/zmjSV02QXW/c/LnVSvyVZiW1FxOcbEHAsTl8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738326351; c=relaxed/simple;
-	bh=XMATi+BMPCBKLoLMjCaDJ1VGTmA00ZXYc7nIdEqIilI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pZDdmSmg1Hlqugbe/xUmEXQ350LO1IIAd72M7deOWjxn0pZGnLDs0xaeeranaIqnQ+xVIA/7EUBIkHWANf8eHiBhExUUINk+RhbJsHgMphKZenAhg5BbAk3q51pkP5RZNuFmOOxjHscbbo4g8hmPBV49UQx8V/vaL/kKZbyTsiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ICjSAuJN; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1738326352; c=relaxed/simple;
+	bh=xkIk+7mcQz9WUw8LhO83V7TOCvExKcaqiON81QvTOXo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dZcATzf9SjEx+PN4pbsApPMEKxDY3Fw7s6BaLMhJ8sjTbaRM5BzjhwIDB4J2daWgDKPOMV+e354o9Ew7L3jOzm3+auJKC1jzIxn09/QIVXUeqQMkCn6ljlGuIN/omjeX38/szu4LXYwhXBigbFc0PrWTgJesLhTR+1HcYhY9rbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mibX7pez; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ICjSAuJN"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50V2Q1ci017251;
-	Fri, 31 Jan 2025 12:25:36 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mibX7pez"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50V2OJkW016476;
+	Fri, 31 Jan 2025 12:25:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=jBDlLH2LZNzPNbkkI
-	8AcAIBcX6XfUJPGxSOUXJXt/V8=; b=ICjSAuJNY0BVWmGKsHCMXYYedO3d8EQ65
-	E4Heeq0rKAqzFBBLmU9tYrxILYmXucqDAOY/u8fxafCJYGAl0AJzpmWhOtaNb4Wf
-	zEFhPallD41gkvWw6MOztFRRp5l9a4c+8Rrs8KgtIz5YTZx9p3mhs3FQ1v7GAcoE
-	lHq8fog+7bCN7SR9qrt5GxGnTJlqSi46Alj0ypFPRqVZmDLSz9e9YCfKaA8zCym9
-	jMalninliI5jTaiPARR3439gA7aKaNTq83X8cpObeCfwXXYrRgIGa3Of1aYXQnvW
-	kuxRvnGtnQVkPrr4/83Aa4mm621nCMyEBKxhbQPHr1i+e+S0pZymA==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gfn4upvk-1
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=9ccUDYc1EcHDH2NmxewPM72NWsh2GLRbN3XP7uqVY
+	z4=; b=mibX7pezBgydwGC9klaT6XtbjGxjTRnUifweGaIlRaq8N2Utgw6kzIIeu
+	Wz9aU/SaN4b8tNyv6boj11TDEk+NWbj9ck//AZ9Oge2mvey8uFSbmGHHlz8k4Ju/
+	wima7q3AhAzk0pA4I5q3nU58FPIrsBnU/w2h5In+ys38YXK2MFZlzIOeajTBvvfz
+	bSYVtuuTPW+g8IyuE+3aSxaVzGH4laW2JRWjVb9h4wfgnqUYBr87CGSUUj8PmzZ6
+	Ct2hkRhHPx1nIKKxBum+CJqz/deMFW+EPiluEp7w80oZzBYVbK5juGupwVXGEWZK
+	Vm/4X3nfOf+KwxP1VsPi27XPB909g==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gmk92css-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 12:25:36 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50V8RIYT016065;
-	Fri, 31 Jan 2025 12:25:35 GMT
+	Fri, 31 Jan 2025 12:25:37 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50VCAvcP017237;
+	Fri, 31 Jan 2025 12:25:36 GMT
 Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44gfaubg3f-1
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44gfaybgwh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 12:25:35 +0000
+	Fri, 31 Jan 2025 12:25:36 +0000
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VCPVhH22086114
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VCPWuO35193348
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 12:25:31 GMT
+	Fri, 31 Jan 2025 12:25:32 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B583D20106;
-	Fri, 31 Jan 2025 11:39:04 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 9A1EE200F6;
+	Fri, 31 Jan 2025 11:38:36 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7C18620104;
-	Fri, 31 Jan 2025 11:39:01 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 881FF200F0;
+	Fri, 31 Jan 2025 11:38:33 +0000 (GMT)
 Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.16.21])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 31 Jan 2025 11:39:01 +0000 (GMT)
+	Fri, 31 Jan 2025 11:38:33 +0000 (GMT)
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 To: linuxppc-dev@lists.ozlabs.org
 Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
         Madhavan Srinivasan <maddy@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Subject: [PATCH v3 5/7] powerpc/crash: preserve user-specified memory limit
-Date: Fri, 31 Jan 2025 17:08:28 +0530
-Message-ID: <20250131113830.925179-6-sourabhjain@linux.ibm.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7] powerpc/crash: use generic crashkernel reservation
+Date: Fri, 31 Jan 2025 17:08:23 +0530
+Message-ID: <20250131113830.925179-1-sourabhjain@linux.ibm.com>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250131113830.925179-1-sourabhjain@linux.ibm.com>
-References: <20250131113830.925179-1-sourabhjain@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,59 +71,112 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: zIcQfU6K-k387vFosKZC_TETEcc9Lcb_
-X-Proofpoint-ORIG-GUID: zIcQfU6K-k387vFosKZC_TETEcc9Lcb_
+X-Proofpoint-GUID: IpMBxVikNIkI1ge4T6Sppr_sgL2rkU2_
+X-Proofpoint-ORIG-GUID: IpMBxVikNIkI1ge4T6Sppr_sgL2rkU2_
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-31_04,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 clxscore=1015 impostorscore=0 mlxlogscore=999 malwarescore=0
- phishscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 impostorscore=0 mlxscore=0 bulkscore=0 clxscore=1015
+ adultscore=0 spamscore=0 phishscore=0 priorityscore=1501 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2501170000 definitions=main-2501310091
 
-Commit 59d58189f3d9 ("crash: fix crash memory reserve exceed system
-memory bug") fails crashkernel parsing if the crash size is found to be
-higher than system RAM, which makes the memory_limit adjustment code
-ineffective due to an early exit from reserve_crashkernel().
+Commit 0ab97169aa05 ("crash_core: add generic function to do
+reservation") added a generic function to reserve crashkernel memory.
+So let's use the same function on powerpc and remove the
+architecture-specific code that essentially does the same thing.
 
-Regardless lets not violate the user-specified memory limit by
-adjusting it. Remove this adjustment to ensure all reservations stay
-within the limit. Commit f94f5ac07983 ("powerpc/fadump: Don't update
-the user-specified memory limit") did the same for fadump.
+The generic crashkernel reservation also provides a way to split the
+crashkernel reservation into high and low memory reservations, which can
+be enabled for powerpc in the future.
+
+Additionally move powerpc to use generic APIs to locate memory hole for
+kexec segments while loading kdump kernel.
+
+Patch series summary:
+=====================
+Patch 1-3: generic changes
+Patch 4-7: powerpc changes
+
+Changelog:
+
+v1:
+ https://lore.kernel.org/all/20241217064613.1042866-1-sourabhjain@linux.ibm.com/
+
+v1 Resend:
+ https://lore.kernel.org/all/20250108101458.406806-1-sourabhjain@linux.ibm.com/
+ - Rebased on top of 6.13-rc6
+
+v2:
+ https://lore.kernel.org/all/20250121115442.1278458-1-sourabhjain@linux.ibm.com/
+ - 01/06 new patch, fixes a bug with ELF load address
+   It was posted in community as individual path but
+   since it align with this patch series so include here:
+   https://lore.kernel.org/all/20241210091314.185785-1-sourabhjain@linux.ibm.com/
+ - Fixed a typo 06/06
+
+ - Added Acked-by and Reviewed-by tags
+
+ - Rebased it on 6.13
+
+ - It was suggested to try HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY and
+   see if 03/06 patch can be avoided:
+   https://lore.kernel.org/all/Z35gnO2N%2FLFt1E7E@MiWiFi-R3L-srv/
+   But after adding HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY the issue
+   persisted and kernel prints below logs on boot:
+   ...snip ...
+
+v3:
+ - Split the patch that adds the arch hook to handle special regions in
+   crashkernel reserved: Now 03/07 and 04/07.
+
+ - Dropped the patch that adds arch hooks to skip `Crash Kernel` from
+   iomem_resource (/proc/iomem). Instead, a patch is added to include
+   both `System RAM` and `Crash Kernel` memory ranges in iomem_resource: 06/07.
+
+ - Rearranged the patches to ensure that generic patches come first,
+   followed by PowerPC-specific patches.
+
+ - Added Acked-by tags.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Baoquan he <bhe@redhat.com>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
 CC: Madhavan Srinivasan <maddy@linux.ibm.com>
 Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: kexec@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
-Acked-by: Hari Bathini <hbathini@linux.ibm.com>
-Reviewed-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
----
- arch/powerpc/kexec/core.c | 8 --------
- 1 file changed, 8 deletions(-)
+Cc: sourabhjain@linux.ibm.com
 
-diff --git a/arch/powerpc/kexec/core.c b/arch/powerpc/kexec/core.c
-index b8333a49ea5d..4945b33322ae 100644
---- a/arch/powerpc/kexec/core.c
-+++ b/arch/powerpc/kexec/core.c
-@@ -150,14 +150,6 @@ void __init reserve_crashkernel(void)
- 		return;
- 	}
- 
--	/* Crash kernel trumps memory limit */
--	if (memory_limit && memory_limit <= crashk_res.end) {
--		memory_limit = crashk_res.end + 1;
--		total_mem_sz = memory_limit;
--		printk("Adjusted memory limit for crashkernel, now 0x%llx\n",
--		       memory_limit);
--	}
--
- 	printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
- 			"for crashkernel (System RAM: %ldMB)\n",
- 			(unsigned long)(crash_size >> 20),
+Sourabh Jain (7):
+  kexec: Initialize ELF lowest address to ULONG_MAX
+  crash: remove an unused argument from reserve_crashkernel_generic()
+  crash: Let arch decide usable memory range in reserved area
+  powerpc/crash: Use generic APIs to locate memory hole for kdump
+  powerpc/crash: preserve user-specified memory limit
+  powerpc: insert System RAM resource to prevent crashkernel conflict
+  powerpc/crash: use generic crashkernel reservation
+
+ arch/arm64/mm/init.c                     |   6 +-
+ arch/loongarch/kernel/setup.c            |   5 +-
+ arch/powerpc/Kconfig                     |   3 +
+ arch/powerpc/include/asm/crash_reserve.h |   8 +
+ arch/powerpc/include/asm/kexec.h         |  10 +-
+ arch/powerpc/kernel/prom.c               |   2 +-
+ arch/powerpc/kexec/core.c                |  96 ++++-----
+ arch/powerpc/kexec/file_load_64.c        | 259 +----------------------
+ arch/powerpc/mm/mem.c                    |   2 +-
+ arch/riscv/mm/init.c                     |   6 +-
+ arch/x86/kernel/setup.c                  |   6 +-
+ include/linux/crash_reserve.h            |  11 +-
+ include/linux/kexec.h                    |   9 +
+ kernel/crash_reserve.c                   |   9 +-
+ kernel/kexec_elf.c                       |   2 +-
+ kernel/kexec_file.c                      |  12 ++
+ 16 files changed, 105 insertions(+), 341 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/crash_reserve.h
+
 -- 
 2.48.1
 
