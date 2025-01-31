@@ -1,46 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4C61F1529;
-	Fri, 31 Jan 2025 16:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AB11E3DFF
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738341604; cv=none; b=mtHPGQ7dLvlgwQto59Lc9WYh61YrrlL9+dV5K1wUFqLGSb1I/o5tjHAg97PMsR25XiNOqIH5LNBBBE+SO0Y0I5qKvTsEKazt4opa3Vle9UxAlsvrKDH0yZ4GDg2TFJF7Ll6sxEthHuZtbimXfczpOuXetejAN04yLCCzyfL+3k0=
+	t=1738341682; cv=none; b=uhzfPzxWPtUqtGQy/VjFSpX8S3GYaoQ+CjsMNax3hIS0dGEYRu6iCwzcBIwZo7N8/jAoPz6++cOhKrqDymd2qsM4v2jn4KEkhPhFH0bdVeoQKiAx8esJRYFRj8/TMapzt5l08wFtCE4WIZbtaqIUFEJpQiskPYqGdEQlKBj+LGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738341604; c=relaxed/simple;
-	bh=1BMGWoRMPguQcmdZmMAKa8mW+mK/0xFa042AO+EYMJs=;
+	s=arc-20240116; t=1738341682; c=relaxed/simple;
+	bh=vYqcK28rlnAXUTMWzDVKIWmMxjod4LKRg0bWBlV1A68=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Elrl03plccKn1y9CPqlBKwbPNkQp2Gw54mLImeFfufMXiS11eHlW2kbk5Qk4Rqi8IHygLYL4G+q4cTWDgF16+3ZCTM5TbBhzrzFZn/Tex+OGofnhZ2QmwxV+P/Uv8d8w6tnONQjJ0WKrlFyyvDJx85DuEU3Ae0oKi+zd3fC1Eu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=amsujIN8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XxZ4cxL125SntvmW0oZde9OE8CuYYzfhV8fbIRHeQUgdulMg23bXF10uPhmQqDDXo9IzschrXI4O81ckYtAJ3rSh2Xm7YN6APL64xr3TK3pNhFGxdSrlE7BWEBRReGNlnnKL6gJ+I+9rQwAIZWBoFbPjmvfh3U947hGbpqm3VNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=Uq3KDUFS; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="amsujIN8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72F30C4CED1;
-	Fri, 31 Jan 2025 16:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738341604;
-	bh=1BMGWoRMPguQcmdZmMAKa8mW+mK/0xFa042AO+EYMJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=amsujIN8+Sf8nS5EYxUyC1YIyVc22yePuztD1ZoGnXHrAnSz3TB05LSkr+7cjoa5t
-	 R+JrmCDmWB7qR46yokxeCqlXSHIMg0Gx5xeqdNWa3UAFmmAuYa2df3xQps1Twbcql6
-	 nCxwkerH6FcKQZkYoO2wwDNkqSVqEYEcVOc/Ja00=
-Date: Fri, 31 Jan 2025 17:40:01 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Lyude Paul <lyude@redhat.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Uq3KDUFS"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43626213fffso21541065e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 08:41:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1738341679; x=1738946479; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fzHjJrpyeP9mqc5JWkuMLQPalXYBqZxzyJtrO92iNow=;
+        b=Uq3KDUFSO0a/LL/NTHQfIpiS46zaXiu5OsGdS0ujUf8UuVw7bs198u5plFv62IOblj
+         V055LAWjdbNmrgoj0F7Mt3pOG37xUXgpxVGn5uY8b6CCYIIUytCZi909kpGbNuVXshlJ
+         f4HkgC2PgwqGNE7nsat8LwvJtX5hXX8VFDb2U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738341679; x=1738946479;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fzHjJrpyeP9mqc5JWkuMLQPalXYBqZxzyJtrO92iNow=;
+        b=MfO/REEdIxEh4Yo7Jtf1Q8l40V1KscGorjHeNQP7WGVSI0dlJEBIC40nrZcgdUwAvo
+         ySRLGc7kmH3VRUrH7iKw5rG2FKkBpL0feBypeiGeRdqkBQgQ9wHVH3kNR7VwSeiIWnm/
+         dS7LO+IjzgQjNtzf3tGmrrQh/PUwq+m+yiOVjFKY1U293LNaY8l8bW4KQQN+50d79FvX
+         0qVFvgRPyogwd5Y/rrQITFmn1SZAUi/kbxfVpWB9W8X8qIwkrudgmlLX4/sNuxvdmhf0
+         B0q9qcuZllm1K2dmd99bOpjmTVbcatG9T1FwVENHxJg98uLfCJ13pssuD1OIJ+HNuaKx
+         dyLA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZVwyDNyd9f0IeGVkwiqZCJ+i9f4d4Z+i/EUs9sJAp38gW/n1X5NnSUqSI7jAloZX7rfe43E3qiKXqVrw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGzvKCgtchNzNR/yOqta6SCr6eUUC7/NLoeCLceS7lGQG+R6We
+	ALOkaKJ70d2cEIVjR+ut8iJJZQ9n9a8qYdGkQ3e6pJw+OwUc8yxbJHvxeRJUC3M=
+X-Gm-Gg: ASbGncuaFWVPBVMG4EKRwLInvsTZ04E9VFyEYk5UbvsP4XMW41zj3SnQupm9fvdfdlA
+	PjkdbYcMoxSDibha0dOHExuZzsfvHogcF1ocR6P1Yd16i7eCsj41Tf4urlcRk0UQ7KjyYBEJLws
+	+dGjduFPi9ixJFxMVtJh3HqhSU6CHBTO6u7nssU3UhPL9SfIIhzSzAt85wFxtfmFMvIPY2HESoU
+	9GTEvG/C7BBJjqrg2JFqY89TRAXWLE3ntZhDfWOG0rIyJuvkF9DBFkiFBzKbqjfnGr0I+EhXLV0
+	8+NAXy/tds3wgsluOoszjEoHY1Q=
+X-Google-Smtp-Source: AGHT+IGGDNp58bJr6qYY2kJIlfhFeC89Du/2iP4Ei/5xa7Mm39ysUYRti1e2Tbipv2p0tujjvYi4wA==
+X-Received: by 2002:a5d:6d08:0:b0:388:c61d:4415 with SMTP id ffacd0b85a97d-38c5a99037emr6251050f8f.18.1738341679367;
+        Fri, 31 Jan 2025 08:41:19 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b5edasm4973797f8f.80.2025.01.31.08.41.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 08:41:18 -0800 (PST)
+Date: Fri, 31 Jan 2025 17:41:16 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Lyude Paul <lyude@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
 	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] WIP: drivers/base: Add virtual_device_create()
-Message-ID: <2025013140-propeller-dirtiness-6cb4@gregkh>
-References: <Z5Nw8kaieLueWyUu@pollux>
- <20250130212843.659437-1-lyude@redhat.com>
- <2025013159-shabby-professor-515b@gregkh>
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
+Subject: Re: [PATCH 2/2] rust/kernel: Add platform::ModuleDevice
+Message-ID: <Z5z9LPzNuF2IdPGa@phenom.ffwll.local>
+Mail-Followup-To: Danilo Krummrich <dakr@kernel.org>,
+	Lyude Paul <lyude@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
+References: <20250122235340.2145383-1-lyude@redhat.com>
+ <20250122235340.2145383-3-lyude@redhat.com>
+ <2025012329-candied-walk-f57d@gregkh>
+ <0bb7270e879ae3a40d4e5500f9a7992563a68d9f.camel@redhat.com>
+ <Z5NzTsm7Hw-OD4n5@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,409 +97,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2025013159-shabby-professor-515b@gregkh>
+In-Reply-To: <Z5NzTsm7Hw-OD4n5@pollux>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
-On Fri, Jan 31, 2025 at 09:00:32AM +0100, Greg Kroah-Hartman wrote:
-> On Thu, Jan 30, 2025 at 04:28:26PM -0500, Lyude Paul wrote:
-> > As Greg KH pointed out, we have a nice /sys/devices/virtual directory free
-> > for the taking - but the vast majority of device drivers concerned with
-> > virtual devices do not use this and instead misuse the platform device API.
+On Fri, Jan 24, 2025 at 12:02:38PM +0100, Danilo Krummrich wrote:
+> On Thu, Jan 23, 2025 at 07:33:28PM -0500, Lyude Paul wrote:
+> > On Thu, 2025-01-23 at 07:23 +0100, Greg Kroah-Hartman wrote:
+> > > On Wed, Jan 22, 2025 at 06:49:22PM -0500, Lyude Paul wrote:
+> > > 
+> > > And modules are code, not data.  Let's not start to even attempt to tie
+> > > lifetimes of device structures to module code, that way lies madness and
+> > > rolls back the work we did decades ago to split the two apart :)
 > > 
-> > To fix this, let's start by adding a simple function that can be used for
-> > creating virtual devices - virtual_device_create().
-> > 
-> > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > 
-> > ---
-> > 
-> > So, WIP obviously because I wrote this up in a few minutes - but this goes
-> > off the idea that Danilo suggested to me off-list of coming up with a
-> > simple API for handling virtual devices that's a little more obvious to
-> > use. I wanted to get people's feedback and if we're happy with this idea,
-> > I'm willing to go through and add some pointers to this function in various
-> > platform API docs - along with porting over the C version of VKMS over to
-> > this API.
+> > To make sure I'm understanding you properly, by "are code not data" you're
+> > suggesting that resources (devices, driver registrations, etc.) should have
+> > their lifetime entirely managed by the kernel and not as part of the module
+> > data structure correct?
 > 
-> This is a big better, but not quite.  Let me carve out some time today
-> to knock something a bit nicer together...
+> I think that's two different things.
+> 
+> Driver registrations are bound to the module lifetime and in Rust, where we have
+> a structure that represents the module lifetime, driver registrations are part
+> of the module structure. That's fine.
+> 
+> Device are more of a concern here, since they ideally orginate from real
+> hardware and hence shouldn't be bound to a module lifetime.
+> 
+> I think a virtual device would need to be an exception though. What else, if not
+> the module should define its lifetime?
 
-Ok, here's a rough first-cut.  It builds, and boots, and I've converted
-a driver to use the api to prove it works here.  I'll add a bunch more
-documentation before turning it into a "real" patch, but this should
-give you something to work off of.
-
-I've run out of time for tonight (dinner is calling), but I think you
-get the idea, right?  If you want to knock up a rust binding for this
-api, it should almost be identical to the platform api you were trying
-to use before, right?
-
-thanks,
-
-greg k-h
-
-diff --git a/drivers/base/Makefile b/drivers/base/Makefile
-index 7fb21768ca36..13eec7a1a9db 100644
---- a/drivers/base/Makefile
-+++ b/drivers/base/Makefile
-@@ -6,7 +6,7 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
- 			   cpu.o firmware.o init.o map.o devres.o \
- 			   attribute_container.o transport_class.o \
- 			   topology.o container.o property.o cacheinfo.o \
--			   swnode.o
-+			   swnode.o virtual.o
- obj-$(CONFIG_AUXILIARY_BUS) += auxiliary.o
- obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
- obj-y			+= power/
-diff --git a/drivers/base/base.h b/drivers/base/base.h
-index 8cf04a557bdb..1eb68e416ee1 100644
---- a/drivers/base/base.h
-+++ b/drivers/base/base.h
-@@ -137,6 +137,7 @@ int hypervisor_init(void);
- static inline int hypervisor_init(void) { return 0; }
- #endif
- int platform_bus_init(void);
-+int virtual_bus_init(void);
- void cpu_dev_init(void);
- void container_dev_init(void);
- #ifdef CONFIG_AUXILIARY_BUS
-diff --git a/drivers/base/init.c b/drivers/base/init.c
-index c4954835128c..58c98a156220 100644
---- a/drivers/base/init.c
-+++ b/drivers/base/init.c
-@@ -35,6 +35,7 @@ void __init driver_init(void)
- 	of_core_init();
- 	platform_bus_init();
- 	auxiliary_bus_init();
-+	virtual_bus_init();
- 	memory_dev_init();
- 	node_dev_init();
- 	cpu_dev_init();
-diff --git a/drivers/base/virtual.c b/drivers/base/virtual.c
-new file mode 100644
-index 000000000000..6ade5dcbe2f3
---- /dev/null
-+++ b/drivers/base/virtual.c
-@@ -0,0 +1,200 @@
-+// SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-+ * Copyright (c) 2025 Linux Foundation
-+ */
-+#include <linux/device/virtual.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include "base.h"
-+
-+/*
-+ * Wrapper structure so we can hold the memory
-+ * for the name string of the virtual device.
-+ */
-+struct virtual_object {
-+	struct virtual_device virt_dev;
-+	char name[];
-+};
-+
-+static struct device virtual_bus = {
-+	.init_name	= "virt_bus",
-+};
-+
-+static int virtual_match(struct device *dev, const struct device_driver *drv)
-+{
-+	const struct virtual_driver *virt_drv = to_virtual_driver(drv);
-+	const struct virtual_device *virt_dev = to_virtual_device(dev);
-+
-+	pr_info("%s: %s %s\n", __func__, virt_dev->name, virt_drv->name);
-+
-+	/* Match is simple, strcmp()! */
-+	return (strcmp(virt_dev->name, virt_drv->name) == 0);
-+}
-+
-+static int virtual_probe(struct device *dev)
-+{
-+	struct virtual_driver *virt_drv = to_virtual_driver(dev->driver);
-+	struct virtual_device *virt_dev = to_virtual_device(dev);
-+	int ret = 0;
-+
-+	if (virt_drv->probe)
-+		ret = virt_drv->probe(virt_dev);
-+
-+	return ret;
-+}
-+
-+static void virtual_remove(struct device *dev)
-+{
-+	struct virtual_driver *virt_drv = to_virtual_driver(dev->driver);
-+	struct virtual_device *virt_dev = to_virtual_device(dev);
-+
-+	if (virt_drv->remove)
-+		virt_drv->remove(virt_dev);
-+}
-+
-+static const struct bus_type virtual_bus_type = {
-+	.name		= "virtual",
-+	.match		= virtual_match,
-+	.probe		= virtual_probe,
-+	.remove		= virtual_remove,
-+};
-+
-+static void virtual_device_release(struct device *dev)
-+{
-+	struct virtual_object *virt_obj = container_of(dev, struct virtual_object, virt_dev.dev);
-+
-+	kfree(virt_obj);
-+}
-+
-+/**
-+ * virtual_device_alloc - create a virtual device
-+ * @name: name of the device we're adding
-+ *
-+ * Create a virtual device object which will be bound to any driver of the same name.
-+ */
-+struct virtual_device *virtual_device_alloc(const char *name)
-+{
-+	struct virtual_object *virt_obj;
-+	struct virtual_device *virt_dev;
-+
-+	pr_info("%s: %s\n", __func__, name);
-+
-+	virt_obj = kzalloc(sizeof(*virt_obj) + strlen(name) + 1, GFP_KERNEL);
-+	if (!virt_obj)
-+		return NULL;
-+
-+	strcpy(virt_obj->name, name);
-+	virt_dev = &virt_obj->virt_dev;
-+	virt_dev->name = virt_obj->name;
-+	device_initialize(&virt_dev->dev);
-+	virt_dev->dev.release = virtual_device_release;
-+
-+	return virt_dev;
-+}
-+EXPORT_SYMBOL_GPL(virtual_device_alloc);
-+
-+int virtual_device_add(struct virtual_device *virt_dev)
-+{
-+	struct device *dev = &virt_dev->dev;
-+
-+	pr_info("%s: %s\n", __func__, virt_dev->name);
-+
-+	if (!dev->parent)
-+		dev->parent = &virtual_bus;
-+
-+	dev_set_name(dev, "%s", virt_dev->name);
-+	dev->bus = &virtual_bus_type;
-+
-+	return device_add(dev);
-+}
-+EXPORT_SYMBOL_GPL(virtual_device_add);
-+
-+/**
-+ * virtual_device_del - remove a virtual device
-+ * @virt_dev: virtual device to be removed
-+ *
-+ * This function must _only_ be externally called in error cases.  All other usage is a bug.
-+ */
-+void virtual_device_del(struct virtual_device *virt_dev)
-+{
-+	if (IS_ERR_OR_NULL(virt_dev))
-+	    return;
-+
-+	device_del(&virt_dev->dev);
-+}
-+EXPORT_SYMBOL_GPL(virtual_device_del);
-+
-+/**
-+ * virtual_device_put - destroy a platform device
-+ * @virtual: virtual device to free
-+ *
-+ * Free all memory associated with a virtual device.  This function must
-+ * _only_ be externally called in error cases.  All other usage is a bug.
-+ */
-+void virtual_device_put(struct virtual_device *virt_dev)
-+{
-+	if (IS_ERR_OR_NULL(virt_dev))
-+	    return;
-+
-+	put_device(&virt_dev->dev);
-+}
-+EXPORT_SYMBOL_GPL(virtual_device_put);
-+
-+
-+void virtual_device_unregister(struct virtual_device *virt_dev)
-+{
-+	virtual_device_del(virt_dev);
-+	virtual_device_put(virt_dev);
-+}
-+EXPORT_SYMBOL_GPL(virtual_device_unregister);
-+
-+
-+/**
-+ * __virtual_driver_register - register a driver for virtual devices
-+ * @virt_drv: virtual driver structure
-+ * @owner: owning module/driver
-+ */
-+int __virtual_driver_register(struct virtual_driver *virt_drv, struct module *owner)
-+{
-+	struct device_driver *drv = &virt_drv->driver;
-+
-+	pr_info("%s: %s\n", __func__, virt_drv->name);
-+
-+	drv->owner = owner;
-+	drv->name = virt_drv->name;
-+	drv->bus = &virtual_bus_type;
-+	drv->probe_type = PROBE_PREFER_ASYNCHRONOUS;
-+
-+	return driver_register(&virt_drv->driver);
-+}
-+EXPORT_SYMBOL_GPL(__virtual_driver_register);
-+
-+/**
-+ * virtual_driver_unregister - unregister a driver for virtual devices
-+ * @drv: virtual driver structure
-+ */
-+void virtual_driver_unregister(struct virtual_driver *virt_drv)
-+{
-+	driver_unregister(&virt_drv->driver);
-+}
-+EXPORT_SYMBOL_GPL(virtual_driver_unregister);
-+
-+int __init virtual_bus_init(void)
-+{
-+	int error;
-+
-+	error = device_register(&virtual_bus);
-+	if (error) {
-+		put_device(&virtual_bus);
-+		return error;
-+	}
-+
-+	error =  bus_register(&virtual_bus_type);
-+	if (error)
-+		device_unregister(&virtual_bus);
-+
-+	return error;
-+}
-diff --git a/drivers/regulator/dummy.c b/drivers/regulator/dummy.c
-index 5b9b9e4e762d..652250455c6d 100644
---- a/drivers/regulator/dummy.c
-+++ b/drivers/regulator/dummy.c
-@@ -13,7 +13,7 @@
- 
- #include <linux/err.h>
- #include <linux/export.h>
--#include <linux/platform_device.h>
-+#include <linux/device/virtual.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
- 
-@@ -37,15 +37,15 @@ static const struct regulator_desc dummy_desc = {
- 	.ops = &dummy_ops,
- };
- 
--static int dummy_regulator_probe(struct platform_device *pdev)
-+static int dummy_regulator_probe(struct virtual_device *vdev)
- {
- 	struct regulator_config config = { };
- 	int ret;
- 
--	config.dev = &pdev->dev;
-+	config.dev = &vdev->dev;
- 	config.init_data = &dummy_initdata;
- 
--	dummy_regulator_rdev = devm_regulator_register(&pdev->dev, &dummy_desc,
-+	dummy_regulator_rdev = devm_regulator_register(&vdev->dev, &dummy_desc,
- 						       &config);
- 	if (IS_ERR(dummy_regulator_rdev)) {
- 		ret = PTR_ERR(dummy_regulator_rdev);
-@@ -56,36 +56,33 @@ static int dummy_regulator_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static struct platform_driver dummy_regulator_driver = {
-+static struct virtual_driver dummy_regulator_driver = {
-+	.name		= "reg-dummy",
- 	.probe		= dummy_regulator_probe,
--	.driver		= {
--		.name		= "reg-dummy",
--		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
--	},
- };
- 
--static struct platform_device *dummy_pdev;
-+static struct virtual_device *dummy_vdev;
- 
- void __init regulator_dummy_init(void)
- {
- 	int ret;
- 
--	dummy_pdev = platform_device_alloc("reg-dummy", -1);
--	if (!dummy_pdev) {
-+	dummy_vdev = virtual_device_alloc("reg-dummy");
-+	if (!dummy_vdev) {
- 		pr_err("Failed to allocate dummy regulator device\n");
- 		return;
- 	}
- 
--	ret = platform_device_add(dummy_pdev);
-+	ret = virtual_device_add(dummy_vdev);
- 	if (ret != 0) {
- 		pr_err("Failed to register dummy regulator device: %d\n", ret);
--		platform_device_put(dummy_pdev);
-+		virtual_device_put(dummy_vdev);
- 		return;
- 	}
- 
--	ret = platform_driver_register(&dummy_regulator_driver);
-+	ret = virtual_driver_register(&dummy_regulator_driver);
- 	if (ret != 0) {
- 		pr_err("Failed to register dummy regulator driver: %d\n", ret);
--		platform_device_unregister(dummy_pdev);
-+		virtual_device_unregister(dummy_vdev);
- 	}
- }
-diff --git a/include/linux/device/virtual.h b/include/linux/device/virtual.h
-new file mode 100644
-index 000000000000..b646defe4a97
---- /dev/null
-+++ b/include/linux/device/virtual.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-+ * Copyright (c) 2025 Linux Foundation
-+ */
-+#ifndef _VIRTUAL_DEVICE_H
-+#define _VIRTUAL_DEVICE_H_
-+
-+#include <linux/device.h>
-+struct virtual_device {
-+	struct device dev;
-+	const char *name;
-+
-+};
-+#define to_virtual_device(x) container_of_const((x), struct virtual_device, dev)
-+
-+struct virtual_driver {
-+	struct device_driver driver;
-+	const char *name;
-+	int (*probe)(struct virtual_device *virt_dev);
-+	void (*remove)(struct virtual_device *virt_dev);
-+};
-+#define to_virtual_driver(drv)	(container_of_const((drv), struct virtual_driver, driver))
-+
-+struct virtual_device *virtual_device_alloc(const char *name);
-+int virtual_device_add(struct virtual_device *virt_dev);
-+void virtual_device_del(struct virtual_device *virt_dev);
-+void virtual_device_put(struct virtual_device *virt_dev);
-+void virtual_device_unregister(struct virtual_device *virt_dev);
-+
-+#define virtual_driver_register(drv) __virtual_driver_register(drv, THIS_MODULE)
-+int __virtual_driver_register(struct virtual_driver *virt_drv, struct module *module);
-+void virtual_driver_unregister(struct virtual_driver *virt_drv);
-+
-+#endif /* _VIRTUAL_DEVICE_H_ */
+Yeah for virtual devices this should be possible I think. We do have plans
+for vkms to gain configfs support, and then maybe the current device
+wouldn't be needed anymore and we'd just register the configfs when
+loading the module.
+-Sima
 -- 
-2.48.1
-
-
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
