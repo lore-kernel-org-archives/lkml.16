@@ -1,27 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFDD91C5490
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:25:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD5DD1C5F2F
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738322714; cv=none; b=hA2q6Gly08gf+JQHQXlcry1+qYN9qmDH4XAw6lb49TbSwdWp4jKLKkHnZxDyu3hTkOoh2xrjwmxE/uNM4QhXoTBZwdIoP2aN5GX9Em/BNQ9LA1j0S/JZZ9CUgokRlwpVKtRyE24ua9AS7dikOcZGcl73PyDrbQNAkHWsqolxl9E=
+	t=1738322716; cv=none; b=EEZJt1ffS7JuRV6m+Uc6T5U5PtbXOW5J1y4Uyc+ax0UIIGMxnrYjUVuV4wEvz3mtIT1AQ+0zLrVzvNjoX/dTzjLWuxd2RWHVhTPMBrtRusyC1CFuzzfmZ+dDvNEiLpjFlQYD0hvL+yspQptwfHuo1gmgum6nss6mveh8HjfsmR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738322714; c=relaxed/simple;
-	bh=ouvnBny0SQGOggs23P7ihZ85I1OGF92GzaRYwdFdkdA=;
+	s=arc-20240116; t=1738322716; c=relaxed/simple;
+	bh=UyvgBew/9tfLcZTn4CJGNUBHLEV5T/tT9Fwl0cys6ss=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To; b=saTtUQfcatjWd9Qz+zQg4HNFGxdb0Aonk6j0TmSmQij1t60/XKkU7cxv2hkSK5IkwrF21t65IcNtsUYump+h9blUV6ibhARWvn/BL8dW/lxvFakkUitYDEGl4slOkTgVyhm4+72FQEcaqWASR6dfGtSsHIZewqLriZwczqk+7lU=
+	 In-Reply-To:To; b=BTxRzcHKr63MZULpm2hor0RSmlxGELyeXWS218OTt6X1YRoFtP8QCphQGnGY6lEBf5t8pWD0qLWi9XYHnsV3MIXcZsAOLqBVgIkS0yQ4Rx93kySV4pWDMhOtu41WZq4OUUquYcaWpYrRmW5nNKwyT7eim+sov1AT2xNzgP2tex8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7ABD497;
-	Fri, 31 Jan 2025 03:25:37 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3C3FFEC;
+	Fri, 31 Jan 2025 03:25:39 -0800 (PST)
 Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2F463F63F;
-	Fri, 31 Jan 2025 03:25:11 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF05F3F63F;
+	Fri, 31 Jan 2025 03:25:13 -0800 (PST)
 From: Sudeep Holla <sudeep.holla@arm.com>
-Date: Fri, 31 Jan 2025 11:24:06 +0000
-Subject: [PATCH v2 06/18] firmware: arm_ffa: Refactor addition of partition
- information into XArray
+Date: Fri, 31 Jan 2025 11:24:08 +0000
+Subject: [PATCH v2 08/18] firmware: arm_ffa: Unregister the FF-A devices
+ when cleaning up the partitions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,119 +30,113 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250131-ffa_updates-v2-6-544ba4e35387@arm.com>
+Message-Id: <20250131-ffa_updates-v2-8-544ba4e35387@arm.com>
 References: <20250131-ffa_updates-v2-0-544ba4e35387@arm.com>
 In-Reply-To: <20250131-ffa_updates-v2-0-544ba4e35387@arm.com>
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
  Sudeep Holla <sudeep.holla@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2741; i=sudeep.holla@arm.com;
- h=from:subject:message-id; bh=nhubqO1qEmc8fhsAz3PI0VU0iirPJL57lKmAlJbAdIM=;
- b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBnnLMQMImWsaOOj6QlbeWqTk6hdTAkKzs79VXh5
- ffUESKoX1CJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ5yzEAAKCRAAQbq8MX7i
- mN3/D/4iY7ODMH0FWbCMqW9yhcba9bnW+pM4y51fofubRlEBD0wl+NV8fbKV9THg618PuAcCuZx
- SjFc/8M+sPpTGkxjyxwz442jGSV7gcyqFgmkIS+t9wmEifZy2cmZ5F2xAkGTrTTrDDl6gUxhKm5
- nCdtDI9O6nEqkpFrWBwV+GQm9TtcBbqxAjk45r3/sMZeWGHN47AkpeCYHdTVU/iEUrYHD8dH9ht
- Q8yj2FwDZMU+uIR6140Dujw3paLj0XbouGtvhWKn/fPHMm7A+t5Xta7rQzagraonuGBOV5Uv5WV
- m74NJRnbMewlmoBk3Jp8ao+TLK+bD2o3ZrslEE4M9WLbjchGWA0wBdfDRZgpDtNFJcXCvwPMpEg
- 30evia28Fqsu4Xq0y/PP10sOUhaH648zm8d2uOvKYNGMLNwpKKJ2wjMl1aNOmQSKg6Jb/CIoeTg
- WDcF8cK3H6qzMqt+YL6+84rSFrRVorxwYfkpbu2oNCed86e2ATX/XW1d0za1s+2euyX/sZ4Y/P9
- sJ1ZmFuzj3iLB1h0E3IgFZX7B62ci0cc49oGsTd8uxEbMYwV8gT8T+HUPnfnHPkhJQXPX4Kuh9L
- t8FFKhYOSPTh9nwzFWXFDXCcS8Ef7pXkAm+uMwB9H/Zp209UUEviSsgQAW2nfixhHVqwRWdAbXN
- q7Zl0xvCyeP11WQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3364; i=sudeep.holla@arm.com;
+ h=from:subject:message-id; bh=UyvgBew/9tfLcZTn4CJGNUBHLEV5T/tT9Fwl0cys6ss=;
+ b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBnnLMQqaN7Qz/8kQqhg3bwymtxpJ4DdZKymS/ur
+ Pi9HREHP2eJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ5yzEAAKCRAAQbq8MX7i
+ mH9oD/sFu8KvmYaFZMVNEp29ZDpfdQ0JBLAKchZ3shUPhvssBGWtHRIx4r19b687HlskCqk5tSR
+ UIlNF8yoxe9G2fWwC2jzo1HoCv4DWfUV7m6l5eewG2eX/ocG3TyPjSYW3wbKEgn12sByyDuTKcu
+ KMFGBVWApYmLKcvjRvzl69kI8537oWPh+vgNx++fklElrklytUUn4mFan4n4jQyVmkSlXTZkVsu
+ S9bbRmCV4cB0iVijF3ccOtbBMSrYn6sI7Afmsn3Bb9zgsmJb1gij/dXeqvYXDA/Mj1gq7ECZqax
+ TbTwRxnIYPA0kMK7KceHgwgHQ7XaiwNhXCCgjKlRAv14dbDHvdZ1E0Av/7x9OMV1lKcykIiSIvr
+ gx/qQcPKn4CI/oOxzlIgKX7aHgGehj1eedhpeGtoh7m8HPIdzMsgPeTs8zeW2eaJFojfyxrQDxD
+ mhJ43qrYVZjQtvrsxxRMWtbTqBLK2yu2+c2ya25fQfrv2Bo0rJr0v2oqu5rKi+2/YCeEERoXjLl
+ hLBK5tMkyF0yJ7neDJyku737wkaAdfzI0IteFDkrcAOEyoGXOKSUHEl5UWyUYbtvYn7YiYYiTrs
+ 3wd/u/mgQz+iYK1+Yv2WU1wg3lSALjVbWCprvhmdjjB7Y1WmL1ZSBS/yy9QEgjFoqXYS6ps9/Qu
+ 75K+EWIzwqCn5Pg==
 X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
  fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+Both the FF-A core and the bus were in a single module before the
+commit 18c250bd7ed0 ("firmware: arm_ffa: Split bus and driver into distinct modules").
 
-Move the common code handling addition of the FF-A partition information
-into the XArray as a new routine. No functional change.
+The arm_ffa_bus_exit() takes care of unregistering all the FF-A devices.
+Now that there are 2 distinct modules, if the core driver is unloaded and
+reloaded, it will end up adding duplicate FF-A devices as the previously
+registered devices weren't unregistered when we cleaned up the modules.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Fix the same by unregistering all the FF-A devices on the FF-A bus during
+the cleaning up of the partitions and hence the cleanup of the module.
+
+Fixes: 18c250bd7ed0 ("firmware: arm_ffa: Split bus and driver into distinct modules")
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_ffa/driver.c | 48 +++++++++++++++++++--------------------
- 1 file changed, 23 insertions(+), 25 deletions(-)
+ drivers/firmware/arm_ffa/bus.c    | 3 ++-
+ drivers/firmware/arm_ffa/driver.c | 7 ++++---
+ include/linux/arm_ffa.h           | 3 +++
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/firmware/arm_ffa/bus.c b/drivers/firmware/arm_ffa/bus.c
+index a90e2faa990219574ff20b8f573dbb7ca76137d9..98118823cf84969480fc25c937881f9b773a38c2 100644
+--- a/drivers/firmware/arm_ffa/bus.c
++++ b/drivers/firmware/arm_ffa/bus.c
+@@ -160,11 +160,12 @@ static int __ffa_devices_unregister(struct device *dev, void *data)
+ 	return 0;
+ }
+ 
+-static void ffa_devices_unregister(void)
++void ffa_devices_unregister(void)
+ {
+ 	bus_for_each_dev(&ffa_bus_type, NULL, NULL,
+ 			 __ffa_devices_unregister);
+ }
++EXPORT_SYMBOL_GPL(ffa_devices_unregister);
+ 
+ bool ffa_device_is_valid(struct ffa_device *ffa_dev)
+ {
 diff --git a/drivers/firmware/arm_ffa/driver.c b/drivers/firmware/arm_ffa/driver.c
-index 87e106c728b89f3ce7c11219cf7cad9cc166dda2..67d5be261d83633805c81dd84fdfc2b5c702f3ca 100644
+index 54777055d54f5bf2dba1128e6a91bd1c0ece04fc..1df1c28978a5e70c31d5136e43033635c515e261 100644
 --- a/drivers/firmware/arm_ffa/driver.c
 +++ b/drivers/firmware/arm_ffa/driver.c
-@@ -1423,11 +1423,30 @@ static struct notifier_block ffa_bus_nb = {
- 	.notifier_call = ffa_bus_notifier,
- };
- 
-+static int ffa_xa_add_partition_info(int vm_id)
-+{
-+	struct ffa_dev_part_info *info;
-+	int ret;
-+
-+	info = kzalloc(sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	rwlock_init(&info->rw_lock);
-+	ret = xa_insert(&drv_info->partition_info, vm_id, info, GFP_KERNEL);
-+	if (ret) {
-+		pr_err("%s: failed to save partition ID 0x%x - ret:%d. Abort.\n",
-+		       __func__, vm_id, ret);
-+		kfree(info);
-+	}
-+
-+	return ret;
-+}
-+
- static int ffa_setup_partitions(void)
- {
- 	int count, idx, ret;
- 	struct ffa_device *ffa_dev;
--	struct ffa_dev_part_info *info;
- 	struct ffa_partition_info *pbuf, *tpbuf;
- 
- 	if (drv_info->version == FFA_VERSION_1_0) {
-@@ -1461,39 +1480,18 @@ static int ffa_setup_partitions(void)
- 		    !(tpbuf->properties & FFA_PARTITION_AARCH64_EXEC))
- 			ffa_mode_32bit_set(ffa_dev);
- 
--		info = kzalloc(sizeof(*info), GFP_KERNEL);
--		if (!info) {
-+		if (ffa_xa_add_partition_info(ffa_dev->vm_id)) {
- 			ffa_device_unregister(ffa_dev);
- 			continue;
- 		}
--		rwlock_init(&info->rw_lock);
--		ret = xa_insert(&drv_info->partition_info, tpbuf->id,
--				info, GFP_KERNEL);
--		if (ret) {
--			pr_err("%s: failed to save partition ID 0x%x - ret:%d\n",
--			       __func__, tpbuf->id, ret);
--			ffa_device_unregister(ffa_dev);
--			kfree(info);
--		}
-+
- 	}
- 
- 	kfree(pbuf);
+@@ -1495,10 +1495,8 @@ static int ffa_setup_partitions(void)
  
  	/* Allocate for the host */
--	info = kzalloc(sizeof(*info), GFP_KERNEL);
--	if (!info) {
+ 	ret = ffa_xa_add_partition_info(drv_info->vm_id);
+-	if (ret) {
 -		/* Already registered devices are freed on bus_exit */
--		ffa_partitions_cleanup();
--		return -ENOMEM;
--	}
--
--	rwlock_init(&info->rw_lock);
--	ret = xa_insert(&drv_info->partition_info, drv_info->vm_id,
--			info, GFP_KERNEL);
-+	ret = ffa_xa_add_partition_info(drv_info->vm_id);
- 	if (ret) {
--		pr_err("%s: failed to save Host partition ID 0x%x - ret:%d. Abort.\n",
--		       __func__, drv_info->vm_id, ret);
--		kfree(info);
- 		/* Already registered devices are freed on bus_exit */
++	if (ret)
  		ffa_partitions_cleanup();
- 	}
+-	}
+ 
+ 	return ret;
+ }
+@@ -1508,6 +1506,9 @@ static void ffa_partitions_cleanup(void)
+ 	struct ffa_dev_part_info *info;
+ 	unsigned long idx;
+ 
++	/* Clean up/free all registered devices */
++	ffa_devices_unregister();
++
+ 	xa_for_each(&drv_info->partition_info, idx, info) {
+ 		xa_erase(&drv_info->partition_info, idx);
+ 		kfree(info);
+diff --git a/include/linux/arm_ffa.h b/include/linux/arm_ffa.h
+index e8b8ae8b192ab11d5550c16fd33fa9d192b07f67..ca2ad5b0ac4309052d55dcf546d29423bbd40a67 100644
+--- a/include/linux/arm_ffa.h
++++ b/include/linux/arm_ffa.h
+@@ -176,6 +176,7 @@ void ffa_device_unregister(struct ffa_device *ffa_dev);
+ int ffa_driver_register(struct ffa_driver *driver, struct module *owner,
+ 			const char *mod_name);
+ void ffa_driver_unregister(struct ffa_driver *driver);
++void ffa_devices_unregister(void);
+ bool ffa_device_is_valid(struct ffa_device *ffa_dev);
+ 
+ #else
+@@ -188,6 +189,8 @@ ffa_device_register(const struct ffa_partition_info *part_info,
+ 
+ static inline void ffa_device_unregister(struct ffa_device *dev) {}
+ 
++static inline void ffa_devices_unregister(void) {}
++
+ static inline int
+ ffa_driver_register(struct ffa_driver *driver, struct module *owner,
+ 		    const char *mod_name)
 
 -- 
 2.34.1
