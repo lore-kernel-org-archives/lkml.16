@@ -1,139 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6342E1B415A;
-	Fri, 31 Jan 2025 10:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF36171092
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 10:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738318672; cv=none; b=NF2+CpEVIDKipUHM/dDIQ72rhauRzlSrmv6Y1r3Cu0ejccY96xDRK1ZHYVfPXI/zlO6EqNQkdx7frIlBRrpx32JqZnvdNF2/sSzpJc1THuNBZF0a0sbZL4SRln8OL2KeSDCpOsvnQrQlOrmjOntbinpMpJSc+FsdCTiKwa9IhTg=
+	t=1738318775; cv=none; b=AEkV8yyDXlyCyjW5imribVQbM1ZyOm3t3HtZNaf5pzXWxJAlulE9F/J0Tq2wdVAE23B1klhKI4Mfmaj61a9OFTYdRY3xOvWdk4Mfm6jK6J+HrMqZTLdTEEqvF9sH/gvh2OIwZGcKOMwZTrRgV/w/yuXgCkLe0guf04BvKjpxmig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738318672; c=relaxed/simple;
-	bh=T5wOj3s71piKUatOmbSbPqAr7wZL43qmiavckBOkNE8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SQyZd1L9C/ZP/Hnw1Mq8a/I7fZGNI3I0GAB0JbGn0B1KWXyCzCLixv1k9wnUGoy8/kfXlahb5iN9/Fy3nCm84Zn44OBys6hJXr6J2CdFs0soqCfEJQzsqIzu1+u5jbblDApxIbugTxYN/kdabX7Km0xWIO/pyzBjy+ducFQx6lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GbuOONEo; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738318775; c=relaxed/simple;
+	bh=BDOj4kHKdt+SAl6ePoV/E/5kNx2w0slU847QKaIlf9M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oq65QWBlfyd9LnU2FdHVrzlCTo4MHQ+APiWXI95CvCB3167tOci04CaKTdBDyozTPH0JmYmVXoyLhaepMIi+yHqxb/vkzt/LeqKX0HZUTM8Kcd45o0OKeUGeJsmcLvc8A0Bu/6bf2bbr017xOCyxlJd26fkwl10mVrGxam12Vok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sedlak.dev; spf=none smtp.mailfrom=sedlak.dev; dkim=pass (2048-bit key) header.d=sedlak-dev.20230601.gappssmtp.com header.i=@sedlak-dev.20230601.gappssmtp.com header.b=XTrHYb+7; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sedlak.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=sedlak.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GbuOONEo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738318670; x=1769854670;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=T5wOj3s71piKUatOmbSbPqAr7wZL43qmiavckBOkNE8=;
-  b=GbuOONEoTVU1X4A01tudV9FJnTYpFL+5NAPJBqpX0OgtxeHVguV4gcmJ
-   ASudc2G3tUzxhwgVzzdN76+GWE8rce+eHJKmAyDcnessnIsyIUGilgqiz
-   PjptqiofV2Hg4ia6UfZvguuE2VJsDvMij3QgUYzr7dBDNcl4gsQWK2YsK
-   Vrbzv+Xy1YFWajmaT3guDesTt8kGnEaLTFUipoUdCuo/5oRE/zurT26F5
-   iTBviNMiqTNln9V8nN+75nEh4MpZW9vxBZdHfssUNNbzpwC3w2ZA3g4BL
-   Z0qSrVCdkuJjI840JZZiPlB5wroH4tGmVuTyEGpd7FDTLoYJkcpvO9Vda
-   A==;
-X-CSE-ConnectionGUID: df2oKtOKRrmWvK9Q1L9s9Q==
-X-CSE-MsgGUID: S2gAEILqRsOjHBLBzzVuYQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="38777242"
-X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
-   d="scan'208";a="38777242"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 02:17:50 -0800
-X-CSE-ConnectionGUID: fIveUyynQvCZgPl1LTxW1g==
-X-CSE-MsgGUID: OT2bVGWzSf2jGK9mdV8hsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
-   d="scan'208";a="114596205"
-Received: from apgcp0c531115.png.altera.com ([10.244.76.209])
-  by fmviesa004.fm.intel.com with ESMTP; 31 Jan 2025 02:17:46 -0800
-From: Mahesh Rao <mahesh.rao@intel.com>
-Date: Fri, 31 Jan 2025 18:17:26 +0800
-Subject: [PATCH v2 3/3] firmware: stratix10-svc: Add
- of_platform_default_populate()
+	dkim=pass (2048-bit key) header.d=sedlak-dev.20230601.gappssmtp.com header.i=@sedlak-dev.20230601.gappssmtp.com header.b="XTrHYb+7"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38637614567so826346f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 02:19:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sedlak-dev.20230601.gappssmtp.com; s=20230601; t=1738318772; x=1738923572; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=f6K/3eYyv7Aa2aF5hOoKz5SNDtn3TKmBVLDHIqPgDlA=;
+        b=XTrHYb+7SQDk/O4lcibWRYFmRx7ppgT74EQ6pmUyhf+O9idnGbjFKG11o+ZnUKPtys
+         tYsKTA97YLzhJNdk4ZCiukiSc6zHSNDxRFZGWV9GwWqyeko2muTleQOc/vJSdQR+srrw
+         pBIHcT2urlcG0E2q1BnVMvK6FuLW24oOgb3Jv/evWpaAuXudXmy47LtqxFrQFwRQy5QD
+         /o5rmqJJYLaFasTOXtAch1PjCOG2FfxKU/sy6QesZsWye6Hxd0Y9sV4Tq5T3/ljtRa/Q
+         ouCDxJ9UDj20uVntnDAnVOGEBz/EfVAD2+nFAB5w9IWg7L/u4KTHcHCzLbL/zmfEcYrT
+         rrAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738318772; x=1738923572;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f6K/3eYyv7Aa2aF5hOoKz5SNDtn3TKmBVLDHIqPgDlA=;
+        b=NX2l2Eusl+WCoiCKFoBCYusmo/EElefm1HfgNy8kRUFBs8z0K85EIdGaD5xLit4imU
+         6r78JTS1jJv2Ef63lH0cJi73AmYhXM5Zjv8Oq+sOPtnWvS2xIEQQfoLfkcPPH2R65kBS
+         THQI4gPvAgfmLNKR5LxiJCTk4RLe3vxO4JacjdqkTHC2/g6xUUqzZioh/++upr2j9apP
+         WRpKM9mu3KvO4ZjrVBv+xH9XoL/Cfg/dojD3jYI1l43+pqC3Cp3WbThQf1pC1yEWV2/p
+         Mjl2siUFHE40xtHD4ZgiD2as4T3SOjrXMOP5fQS4iEYK6HMFHgq/yts4cRY03rwtl+Lz
+         uylg==
+X-Forwarded-Encrypted: i=1; AJvYcCX4pRjMdQy/gOPTeBf8+TVvRq63bRs/W58+igMbbQytSPN9QPtqcbF4xz0Y1UkYnw/cqOK31c0peb3QioI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkE6qe81NsePRh2Q6jlnZheDBXSNPjCtYWk4a9n9nsI7ulwTjL
+	XiXYapSof7eUc05CLQKWXBeqrsga0OaXEKHwYSAlJ9vnn5ugfdNv3E9xjfOvfn8=
+X-Gm-Gg: ASbGncu6j7FqmaiK3V8MP83tbUL5lsRdclcc4ojp38jOZxLUXreOFG0iamyYTEr4SqA
+	jKysgsbhnA3S4NgyowiPdtka8VAm5g375SJi9JO72dbvzfEVBioljC4AuIwdVjVaoVyk81cw940
+	4U3ESsiYHOxrecqWTt0XQ01O0a/m1QX6ytNVo7Dj6w8QeyaolPVumpPWT8GHOPpg6IVD4IWeWHN
+	QHsoqrB9QqQiLOB8u5f20ajgNYj7Zn01dUeCo+nGpH+duqM7qUUL5b/u49hZFlb3xll3dxApEk5
+	UOHCKHWMZcZyT8zV
+X-Google-Smtp-Source: AGHT+IFQNSgXP9aUx2oT4/Irni/kObbVuJn4/biEnOhya8E86087jnrRKG9MLhmScv+rmzyrlWy/qw==
+X-Received: by 2002:a5d:4aca:0:b0:38c:3fd1:6162 with SMTP id ffacd0b85a97d-38c520af863mr7059992f8f.50.1738318771657;
+        Fri, 31 Jan 2025 02:19:31 -0800 (PST)
+Received: from [192.168.88.249] ([95.85.217.110])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b4e99sm4280246f8f.74.2025.01.31.02.19.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 02:19:31 -0800 (PST)
+Message-ID: <4518f68e-c6cb-4c97-957e-b8988e2b309b@sedlak.dev>
+Date: Fri, 31 Jan 2025 11:19:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/3] rust: platform: allow ioremap of platform
+ resources
+To: Daniel Almeida <daniel.almeida@collabora.com>, ojeda@kernel.org,
+ alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+ bjorn3_gh@protonmail.mco, benno.lossin@proton.me, a.hindborg@kernel.org,
+ aliceryhl@google.com, tmgross@umich.edu, gregkh@linuxfoundation.org,
+ rafael@kernel.org, dakr@kernel.org, boris.brezillon@collabora.com,
+ robh@kernel.org
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250130220529.665896-1-daniel.almeida@collabora.com>
+ <20250130220529.665896-4-daniel.almeida@collabora.com>
+Content-Language: en-US
+From: Daniel Sedlak <daniel@sedlak.dev>
+In-Reply-To: <20250130220529.665896-4-daniel.almeida@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250131-socfpga_sip_svc_misc-v2-3-eeed4ebc35f9@intel.com>
-References: <20250131-socfpga_sip_svc_misc-v2-0-eeed4ebc35f9@intel.com>
-In-Reply-To: <20250131-socfpga_sip_svc_misc-v2-0-eeed4ebc35f9@intel.com>
-To: Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, 
- Tom Rix <trix@redhat.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Wu Hao <hao.wu@intel.com>, Ho Yin <adrian.ho.yin.ng@altera.com>, 
- Niravkumar L Rabara <nirav.rabara@altera.com>
-Cc: linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Mahesh Rao <mahesh.rao@altera.com>, 
- Mahesh Rao <mahesh.rao@intel.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738318654; l=1978;
- i=mahesh.rao@intel.com; s=20250107; h=from:subject:message-id;
- bh=T5wOj3s71piKUatOmbSbPqAr7wZL43qmiavckBOkNE8=;
- b=ZbR8Hn4nMA33JLcFsfEMZY7CrsWIgH++5jix9TNCqxlrPDNM0oDwTmYkFRvKq0ofWwr+DDg+a
- YQmunFT0KH6CJ9Ls3nHeuSc+U4jvC4AEKqfpWQD0O8axGGAImWm124R
-X-Developer-Key: i=mahesh.rao@intel.com; a=ed25519;
- pk=tQiFUzoKxHrQLDtWeEeaeTeJTl/UfclUHWZy1fjSiyg=
 
-Add of_platform_default_populate() to stratix10-svc
-driver as the firmware/svc node was moved out of soc.
-This fixes the failed probing of child drivers of
-svc node.
+Hi,
 
-Fixes: 23c3ebed382a ("arm64: dts: socfpga: agilex: move firmware out of soc node")
-Signed-off-by: Mahesh Rao <mahesh.rao@intel.com>
----
- drivers/firmware/stratix10-svc.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+On 1/30/25 11:05 PM, Daniel Almeida wrote:
+> +
+> +    /// Same as [`Self::ioremap_resource`] but with exclusive access to the underlying
+> +    /// region.
+> +    pub fn ioremap_resource_exclusive(
+> +        &self,
+> +        resource: &Resource,
+> +    ) -> Result<Devres<ExclusiveIoMem<0>>> {
+> +        self.ioremap_resource_exclusive_sized::<0>(resource)
+> +    }
+> +
+> +    /// Returns the resource at `index`, if any.
+> +    pub fn resource(&self, index: u32) -> Option<&Resource> {
 
-diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-index c5c78b869561b0c1e9602823ad1f501e98e3ce51..6a0419197c9ed2f2ccfc4643baba70340d0934f2 100644
---- a/drivers/firmware/stratix10-svc.c
-+++ b/drivers/firmware/stratix10-svc.c
-@@ -1227,22 +1227,28 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
- 	if (!svc->intel_svc_fcs) {
- 		dev_err(dev, "failed to allocate %s device\n", INTEL_FCS);
- 		ret = -ENOMEM;
--		goto err_unregister_dev;
-+		goto err_unregister_rsu_dev;
- 	}
- 
- 	ret = platform_device_add(svc->intel_svc_fcs);
- 	if (ret) {
- 		platform_device_put(svc->intel_svc_fcs);
--		goto err_unregister_dev;
-+		goto err_unregister_rsu_dev;
- 	}
- 
-+	ret = of_platform_default_populate(dev_of_node(dev), NULL, dev);
-+	if (ret)
-+		goto err_unregister_fcs_dev;
-+
- 	dev_set_drvdata(dev, svc);
- 
- 	pr_info("Intel Service Layer Driver Initialized\n");
- 
- 	return 0;
- 
--err_unregister_dev:
-+err_unregister_fcs_dev:
-+	platform_device_unregister(svc->intel_svc_fcs);
-+err_unregister_rsu_dev:
- 	platform_device_unregister(svc->stratix10_svc_rsu);
- err_free_kfifo:
- 	kfifo_free(&controller->svc_fifo);
-@@ -1256,6 +1262,8 @@ static void stratix10_svc_drv_remove(struct platform_device *pdev)
- 	struct stratix10_svc *svc = dev_get_drvdata(&pdev->dev);
- 	struct stratix10_svc_controller *ctrl = platform_get_drvdata(pdev);
- 
-+	of_platform_depopulate(ctrl->dev);
-+
- 	platform_device_unregister(svc->intel_svc_fcs);
- 	platform_device_unregister(svc->stratix10_svc_rsu);
- 
+Maybe we could utilize the Index [1] trait to make the API more rust~ish?
+Or at least name it `resource_by_index` to keep consistency with 
+`resource_by_name`?
 
--- 
-2.35.3
+Link: https://doc.rust-lang.org/core/ops/trait.Index.html [1]
+
+> +        // SAFETY: `self.as_raw()` returns a valid pointer to a `struct platform_device`.
+> +        let resource = unsafe {
+> +            bindings::platform_get_resource(self.as_raw(), bindings::IORESOURCE_MEM, index)
+> +        };
+> +
+> +        if resource.is_null() {
+> +            return None;
+> +        }
+> +
+> +        // SAFETY: `resource` is a valid pointer to a `struct resource` as
+> +        // returned by `platform_get_resource`.
+> +        Some(unsafe { Resource::from_ptr(resource) })
+> +    }
+> +
+> +    /// Returns the resource with a given `name`, if any.
+> +    pub fn resource_by_name(&self, name: &CStr) -> Option<&Resource> {
+> +        // SAFETY: `self.as_raw()` returns a valid pointer to a `struct
+> +        // platform_device` and `name` points to a valid C string.
+> +        let resource = unsafe {
+> +            bindings::platform_get_resource_byname(
+> +                self.as_raw(),
+> +                bindings::IORESOURCE_MEM,
+> +                name.as_char_ptr(),
+> +            )
+> +        };
+> +
+> +        if resource.is_null() {
+> +            return None;
+> +        }
+> +
+> +        // SAFETY: `resource` is a valid pointer to a `struct resource` as
+> +        // returned by `platform_get_resource`.
+> +        Some(unsafe { Resource::from_ptr(resource) })
+> +    }
+>   }
+>   
+>   impl AsRef<device::Device> for Device {
+	Daniel
 
