@@ -1,149 +1,121 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D26E1F238E;
-	Fri, 31 Jan 2025 20:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EBD1EEA4B
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738354907; cv=none; b=AmfLgPpzsRSDgJ/BZZeQB1MrZ4Qag6QFRd1/3tDqOb+Pdwu05ZpBADPTFVcId8UOqDtCc//WwdYAV9mLz//kQWUlAULuSt9mM7wl+xulS3aVyKF/qUVGM2O5FtYbMFTaHZIhSQc15dsU4OJMT/HQ27ynjnoAr/IHXwTo5n/tbFk=
+	t=1738354944; cv=none; b=g0nbhjGtCvUm/3093Y11PqtWGdCTwr90+S3dQr1GlErJevtcmGH3GZfyuTbMBY8v3lz+0T/uTm/Wm9+dYqXLbNIVChlPhKISNIU36onL5fIzbLyjvCxdSJO38xrocMF+IpedfbM83LaFIyTyU9Y1boJlDAcuKaom0wn05/2a9Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738354907; c=relaxed/simple;
-	bh=hTXjfUYY5jkGWVr3mwx6N3NFTy2eiwGjxT5HEGQnA0I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iubfmshvvFwN03TCK9T1WBlt8XRtgI76Aiq6mKJ+H/txp4MxWrGSa7447ENbv1Zf5K50SigslUi4mGsTnfR9Nhv28WFS0xP1IIQA4K7301Th1s8MCBUqtEndiLhsSEmDlLCMWw8cRSIqkP1lKK+sVpVVa4ch7HgnBCJBCaMe7ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=n1m0IEqc; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1738354944; c=relaxed/simple;
+	bh=NxIYu09MV5sZTvScgMAK3mSJi4wIG1e8jOwfyrjHOdI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tT2o8fzYmXEFhyvwQEWvQam6U9VF7CB+q6zFJon4yCA5Cj3dTrqqGNwOoUGDoGTcOqmat5XM5i/2se1ZRunMhgngkpNLuPxwUiGkYPK27mDKeC8O1upZ/0llU9aLxdmksXBhNPMo5FPNVsJg5A9IkBWXssfLvuZ1B7G6E5/aO6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KkuhVC5C; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="n1m0IEqc"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50VDHdad013031;
-	Fri, 31 Jan 2025 14:21:07 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=ZHHnYJ0H+qOjkw25
-	Mfu1e2Mk+Cj3/9kmu6Acd5OIRLc=; b=n1m0IEqceOeup1+RXBBMO3Tp5DjhSJbC
-	6lj8mg8uZm2tggiLcNpTKE9DkV5YfilLbiTs7Ow82Yc9Fm4ksX9SaoQfOJfbY5kZ
-	HMDfMMlNx/Y7EBkWYmjN7ALzlUdFRTK1hc1B8uOtCspNeFm3n3/xsdnNJe/Y1kjY
-	qSuVitqflyybHxtcWvME6IL9ARrB+qsRo9YlojdONTQLyi0+WNfiKBYYss6iRL8M
-	Lj/O+oZICFG7oMm4xEvKzwf8LcClel4s7g3UoRnM5d+uKibpT/gzTtow8iJFZa/H
-	1dayoXJP0a3PsIt27th5BXy2Q7MSVI0AYcwseZGpaswkD3EjU4xGLw==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44gf8n168d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 14:21:06 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 31 Jan
- 2025 20:21:05 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Fri, 31 Jan 2025 20:21:05 +0000
-Received: from ftrev.crystal.cirrus.com (ftrev.ad.cirrus.com [141.131.145.81])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id D664482026C;
-	Fri, 31 Jan 2025 20:21:00 +0000 (UTC)
-From: Fred Treven <ftreven@opensource.cirrus.com>
-To: James Ogletree <jogletre@opensource.cirrus.com>,
-        Dmitry Torokhov
-	<dmitry.torokhov@gmail.com>,
-        Ben Bright <ben.bright@cirrus.com>, <simont@opensource.cirrus.com>,
-        Charles Keepax
-	<ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald
-	<rf@opensource.cirrus.com>,
-        Lee Jones <lee@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
-	<broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>,
-        David Rhodes <david.rhodes@cirrus.com>, Jack Yu
-	<jack.yu@realtek.com>,
-        Igor Prusov <ivprusov@salutedevices.com>,
-        Weidong Wang
-	<wangweidong.a@awinic.com>,
-        Binbin Zhou <zhoubinbin@loongson.cn>,
-        "Luca
- Ceresoli" <luca.ceresoli@bootlin.com>,
-        Prasad Kumpatla
-	<quic_pkumpatl@quicinc.com>,
-        Paul Handrigan <paulha@opensource.cirrus.com>,
-        Masahiro Yamada <masahiroy@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
-        "Karel
- Balej" <balejk@matfyz.cz>, Heiko Stuebner <heiko@sntech.de>,
-        Jeff LaBundy
-	<jeff@labundy.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-        Fred Treven
-	<ftreven@opensource.cirrus.com>
-Subject: [PATCH 0/7] Initial Support for CS40L26
-Date: Fri, 31 Jan 2025 14:20:56 -0600
-Message-ID: <20250131202057.1786324-1-ftreven@opensource.cirrus.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KkuhVC5C"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6d8edad9932so17570846d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:22:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738354941; x=1738959741; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zEWTa2rARz73z6oAOpI1Z1+YlZ1v+PzEj1VSqxBWsxU=;
+        b=KkuhVC5CCdncENZqEkRt66WoIPiGPIlRDCRoJIJJjN8vyBPyKQd8IGrvVxWfKlEKMg
+         QMB9kuvzl9yGAWjtHCm2v7/Z6mxktwY85+AzAdgmZaTDrjT0Fm4ontjyjhq+oMtuYaZd
+         XG/I9CsfbjF4/VDuWSQxILn9xurle1QGSrO0sXRy1deq/0D6LHG9cSQTEqGSkmbGPi+a
+         RKHs7hcjL61zrWg+bgSpJILogGwUqBe1X3UcKmHotitBZA9fyMhu2VaT6a6y873THu0W
+         liZEu/0vab7Z88i06Bz5RIGLaI21dYteDzS/r7doPitSVmv0luCrPyiO/6CGzaO7llyn
+         QsuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738354941; x=1738959741;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zEWTa2rARz73z6oAOpI1Z1+YlZ1v+PzEj1VSqxBWsxU=;
+        b=qikqUEm0X3sejXfQYf2tqR4rCul3c1qOQFTixQEDAk5YXYD+6l53XKTEih5WFyLCOO
+         K/E2CGCGpIyBGcy//JEuMtiYnLQlqYp0cVwp86HxKh1/+tIFa2Z398TmUBhZoJXRwZzC
+         XsxEpeEFe+jKPMJNmXjCzYp04biN2SlbCfk1EJBUD+hA5s1zB+2XUewTJG2QYfJ/l+xn
+         Os443Jbb7IOeCLEeEXdMlGFcJIAUAp719dHOwnVD5gpH8EzOVnl3vAD7xqPgyRm3Bu/9
+         yGZeC8eugTviBgOGFLORKQP2NYig8kTNibRBOTeH2vUHTLqIsf+2rbW0Q4VbjJI74S4Q
+         x1jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVF4XCe+J+E5CmiGobJ9hIH7iAppawBWBzi6JiqdBndjFUYbh1p7jOR2glzxWinp9ryO9ih6xDwQxeAaSU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwovjyvB6tXRYxK3YlAhxKWPJRB7HPZdBP3k7KAevVXxW7z0t2A
+	uNZcrr1a9MkBMG4R4IxD24pBF3yy53sd5G9gmS5NUic7aij7zPiG52I+cPNB/sGuIA5EGVsX4pz
+	HVnPFD+PXJp8vGy/CJYZlPLn4Yhvh5dfr9Tc1
+X-Gm-Gg: ASbGncvZhE8vmpqRdYGePscB/vNui8X7cZWtB4gxc8vhZaxYj/7c2xQzjOKFDi1dOBx
+	nbIEK7PU33Kf+4LggEXgBV0cAz2HC4WEgg17/rX1d8TD1qdaNE/kpVKMzWItCmY8/iXgJ0YbH4P
+	QiEePaqXp9YO8OJ5tKsHWDhdyiaB3pnaU=
+X-Google-Smtp-Source: AGHT+IH0IVs76Zy9+y8ZTxXDsMBZzpwf+3WKYgDJuETdDYbsxeRTaskKa9TmZKVJXJjwPK9WU5khgI12zA+UTI4Y0vY=
+X-Received: by 2002:a05:6214:430a:b0:6d8:aeda:dd93 with SMTP id
+ 6a1803df08f44-6e243c8fe49mr197426366d6.39.1738354940984; Fri, 31 Jan 2025
+ 12:22:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: HUzqT7mBuyL30WS1jJMSP0uapPcn3gke
-X-Authority-Analysis: v=2.4 cv=YOxlyQGx c=1 sm=1 tr=0 ts=679d30b2 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=VdSt8ZQiCzkA:10 a=78G1mFUK9uwQN7RrU40A:9
-X-Proofpoint-ORIG-GUID: HUzqT7mBuyL30WS1jJMSP0uapPcn3gke
-X-Proofpoint-Spam-Reason: safe
+References: <20250122024452.50289-1-royluo@google.com> <20250128014400.7jx4segwn53vjnb5@synopsys.com>
+In-Reply-To: <20250128014400.7jx4segwn53vjnb5@synopsys.com>
+From: Roy Luo <royluo@google.com>
+Date: Fri, 31 Jan 2025 12:21:44 -0800
+X-Gm-Features: AWEUYZnoCcCDrQPX9ozA0nR6a5vxAjkn_j0SqNIF_aCUeBSY1sdE3ksoVrg15Ss
+Message-ID: <CA+zupgwLfzDvVF+5psdbuUgZb_mCNqXtxS5=b1RtTAjQKq6AuA@mail.gmail.com>
+Subject: Re: [PATCH v1] usb: dwc3: gadget: fix gadget workqueue use-after-free
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"andre.draszik@linaro.org" <andre.draszik@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Introduce driver for Cirrus Logic Device CS40L26:
-A boosted haptics driver with integrated DSP and
-waveform memory with advanced closed loop algorithms
-and LRA protection.
+On Mon, Jan 27, 2025 at 5:44=E2=80=AFPM Thinh Nguyen <Thinh.Nguyen@synopsys=
+.com> wrote:
+>
+> On Wed, Jan 22, 2025, Roy Luo wrote:
+> > `dwc3_gadget_soft_disconnect` function, called as part of
+>
+> The dwc3_gadget_soft_disconnect() isn't directly part of
+> device_del(&gadget->dev). It should be part of disconnect.
+>
+> Can you provide the full sequence of events so I can have more context?
+> The handling of the flushing of gadget->work should not be part of the
+> dwc3.
 
-The core CS40L26 driver is in MFD and touches the
-Input Force Feedback subsystem for haptics and
-the ASoC subsystem for audio to haptics streaming.
 
-This patchset includes changes to the CS DSP firmware
-driver which fixes two bugs and introduces support for
-multiple coefficient files.
+Yes, it's a part of disconnect, and disconnect is a part of gadget unbind.
+Let me try my best to explain. Here's the call stack for usb_del_gadget:
+-> usb_del_gadget
+    -> flush_work(&gadget->work)
+    -> device_del
+        -> bus_remove_device
+        -> device_release_driver
+        -> gadget_unbind_driver
+        -> usb_gadget_disconnect_locked
+        -> dwc3_gadget_pullup
+        -> dwc3_gadget_soft_disconnect
+        -> usb_gadget_set_state
+        -> schedule_work(&gadget->work)
 
-Fred Treven (7):
-  firmware: cs_dsp: Fix error checking in wseq_write()
-  firmware: cs_dsp: Check for valid num_regs in
-    cs_dsp_wseq_multi_write()
-  firmware: cs_dsp: Add ability to load multiple coefficient files
-  dt-bindings: mfd: cirrus,cs40l26: Support for CS40L26
-  mfd: cs40l26: Add support for CS40L26 core driver
-  ASoC: cs40l26: Support I2S streaming to CS40L26
-  Input: cs40l26 - Add support for CS40L26 haptic driver
+Then when usb_put_gadget is called, gadget could be freed before
+gadget->work is executed.
+-> usb_put_gadget
+-> put_device
+-> kobject_put
+-> device_release
+-> dwc_gadget_release
+-> kfree(gadget)
 
- .../bindings/mfd/cirrus,cs40l26.yaml          |   81 +
- MAINTAINERS                                   |    4 +-
- drivers/firmware/cirrus/cs_dsp.c              |   70 +-
- drivers/input/misc/Kconfig                    |   10 +
- drivers/input/misc/Makefile                   |    1 +
- drivers/input/misc/cs40l26-vibra.c            |  669 ++++++++
- drivers/mfd/Kconfig                           |   29 +
- drivers/mfd/Makefile                          |    4 +
- drivers/mfd/cs40l26-core.c                    | 1412 +++++++++++++++++
- drivers/mfd/cs40l26-i2c.c                     |   63 +
- drivers/mfd/cs40l26-spi.c                     |   63 +
- include/linux/firmware/cirrus/cs_dsp.h        |   14 +
- include/linux/mfd/cs40l26.h                   |  341 ++++
- sound/soc/codecs/Kconfig                      |   12 +
- sound/soc/codecs/Makefile                     |    2 +
- sound/soc/codecs/cs40l26-codec.c              |  523 ++++++
- 16 files changed, 3281 insertions(+), 17 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/cirrus,cs40l26.yaml
- create mode 100644 drivers/input/misc/cs40l26-vibra.c
- create mode 100644 drivers/mfd/cs40l26-core.c
- create mode 100644 drivers/mfd/cs40l26-i2c.c
- create mode 100644 drivers/mfd/cs40l26-spi.c
- create mode 100644 include/linux/mfd/cs40l26.h
- create mode 100644 sound/soc/codecs/cs40l26-codec.c
+>
+> Since the patch above is now in the mainline, may need to add a stable
+> tag.
 
--- 
-2.34.1
+Ack, will cc stable in the next revision.
 
+Regards,
+Roy Luo
