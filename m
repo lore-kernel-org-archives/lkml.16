@@ -1,130 +1,123 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA0249620
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4A545BE3
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738285606; cv=none; b=Fjjtx0dsOzVRP+5EGPnT6T4+wjyBkclun+SD+G6sv/aUfxREH2hHEBKBzKub0jT/JombW5EEieVCYGHyO6rEGz1grHj9DAUtyEFZNKLadYSUtw008b2u5h1T9tR8gOZ1KTMMRM0MGF4V6Q5jZ3QIo55y+7JemdRRIJpbcljqkSk=
+	t=1738285646; cv=none; b=DmsgtacbYVVA853EgJa6LAQuXVQQbFZrAPMc7Qu1bEkdVs6aJiohMB+ezBzBKW+wkxhnZKiaLQUhIxbGBcmMPzK8GmTkUWIyQe1yBCZzWaISmR+altKlsvWt7eZFfhTw8zDhsmZCINfVcJ09Rl8xMfVd63U/utjD27zadw7k/JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738285606; c=relaxed/simple;
-	bh=llWgEmUm0MfKWLzatNT3tW9v2W7HOdvboys9fFGzUqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b+9oUeSQTr767mUWl2ywdrPav41TSyh8t8KuADuLJjWnraEFAapx6cQc28BnA0cF5VQP9QrNPRE4bqlOEQle5JcyA2iWO8dCpnID1DT6LlJGUZK3DqXUS5ARAWmM5rOn0O/EHVIb3DaTCtsos4i7DF61BkXeLjLeGqoAUBIc/r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RTG1alsl; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738285646; c=relaxed/simple;
+	bh=+7IdRtAgvETSYKgiufYxprCEuNa1bqjk/oCFp9BzVJc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AP31p47928pb8/aa4ZLmFYhlvk0TRWaEMoSwhn4KJ2190rDb+nTv5hreE6RO7OwQzm3ZMADTvb/hOySy/uxbBDw7A59uIm7IVfcluBb7mlLi6ztRVpgx15cEx6lCjvQqHJKkmAs+++yi8YrDzmyvT3CSSBY+0S2eg1tAX5XbXFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kR5py71y; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RTG1alsl"
-Date: Thu, 30 Jan 2025 20:06:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738285601;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XIIpTB72Yll8nCHH7rurXHugZD6Z4U2oOU17E7ajD2g=;
-	b=RTG1alsl5aQ1FjLxWnlJl0A3Lyt7+hXs6ym/ZE/sHn15oXdtMcqkbKFvAn/CVoOH/DXuep
-	2vn7Wgq93+o6Y8X1MThejTholXrpjG6pbmDGkadFS2zJmr06xm+Dl1m27XN14wfXn9ppsl
-	OMYVRdS+dFcv7Pu39lfzAy24+MPJD/4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Ted Ts'o <tytso@mit.edu>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, 
-	almaz.alexandrovich@paragon-software.com, ntfs3@lists.linux.dev, miklos@szeredi.hu, 
-	linux-bcachefs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	linux-btrfs@vger.kernel.org, dhowells@redhat.com, jlayton@kernel.org, netfs@lists.linux.dev
-Subject: Re: [PATCH 0/7] Move prefaulting into write slow paths
-Message-ID: <ncewetc7vpijallpvplti4ham7m3dmver6jkymabdedid4iedb@muodfjq2io3m>
-References: <20250129181749.C229F6F3@davehans-spike.ostc.intel.com>
- <qpeao3ezywdn5ojpcvchaza7gd6qeb57kvvgbxt2j4qsk4qoey@vrf4oy2icixd>
- <f35aa9a2-edac-4ada-b10b-8a560460d358@intel.com>
- <Z5vw3SBNkD-CTuVE@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kR5py71y"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef6ef9ba3fso2843838a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:07:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738285645; x=1738890445; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fy7bg8EETE392HuVNTlpZ3+nQUkioeYxYXPabwBQMYo=;
+        b=kR5py71y8IJijHLh1FnbeF80JGdz0s/J3cq+foE0+p3cXQ76bkRV/NzSo/Xt99ZkLt
+         GXMLbpfxDvkzLAJ7WvoLgeZ1tMkRvz80qwFMwv9IgykgCLqrzojVYMR6u7eXr725BmSH
+         MZV75Tp+wcAw+ze/9rbyqAJVihz4UKn10CiXBwhVurcd+X9D30R3u9AM9WGqCnufAyO4
+         ZFlBTblvRmIHcb5+NiSUawezzYXG690Ce5HEa3gXGoGcPWJF8HK9QQdMvocqoPRNN6LU
+         1XbUS1nD+P0ER1hNhulGmmTATZsh/cQNIBuGIvI5MSbXwx1QS2KS3AeiI+yhFZn6Ci3V
+         juGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738285645; x=1738890445;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fy7bg8EETE392HuVNTlpZ3+nQUkioeYxYXPabwBQMYo=;
+        b=rcNVZfQryH5bvQ84JS9zQh57dk3Tr9GBnRHwDHe+ITRu7HlABPg3uKFfpNDkfcJpzO
+         h00FUzo7uk4reUFfNDJFF1hBr+lL14F3rFSQJ/bRybsD6RRfX5/UErqncnYxeL0ZP43J
+         c8vPhu1EysBM6gGHqgMrW18s/8D2NV7HdGe/O0Y8GIy6+EsPxQDzW77PErvGtVleHCiN
+         ZMv8WJrFMV26zpH6cc+PEbAoped/3Mz/M0CrhwR8oUzcK4xn+ykU5dungbpwR9zTzyNn
+         YgbBmRQkw2+5TyvLxQI1JPLCRMI+TS5+W/ImUqtuATXilTM0Fz0cqv1cCiSGJqoI3Cw1
+         IngA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYSZPKAk7xuRjJpuqw0N1DlWRygwhShJu42I7uZY9cAgURJoXSsXGeb4j4vrn1H9HiAwldgIuNDXIx5uY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEitp1c4VptNf3X7aCn3bG1eFTjc6a1pBgDf6r510kkbGk59Ao
+	fFgTXxyb5fHx6cHDMu+dys9DGVv8QCJq3BuN5+zgHk9E7jDiJQ9us+FgSHf7x2/ZflwKH8zbyoY
+	ijQ==
+X-Google-Smtp-Source: AGHT+IF1BNjYxjRBdic3EsMUw3LnVZh5PgBgpydEPWZ4u388Z/jGMXftglmcQ1LhMQO6p4J62ZYaHJzh7no=
+X-Received: from pfam19.prod.google.com ([2002:aa7:8a13:0:b0:72f:cbb1:275d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4f8c:b0:728:927b:7de2
+ with SMTP id d2e1a72fcca58-72fd0be829amr15451790b3a.8.1738285644816; Thu, 30
+ Jan 2025 17:07:24 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Thu, 30 Jan 2025 17:07:21 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z5vw3SBNkD-CTuVE@dread.disaster.area>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250131010721.470503-1-seanjc@google.com>
+Subject: [PATCH] perf/x86/intel: Ensure LBRs are disabled when a CPU is starting
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Sean Christopherson <seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 31, 2025 at 08:36:29AM +1100, Dave Chinner wrote:
-> On Thu, Jan 30, 2025 at 08:04:49AM -0800, Dave Hansen wrote:
-> > On 1/29/25 23:44, Kent Overstreet wrote:
-> > > On Wed, Jan 29, 2025 at 10:17:49AM -0800, Dave Hansen wrote:
-> > >> tl;dr: The VFS and several filesystems have some suspect prefaulting
-> > >> code. It is unnecessarily slow for the common case where a write's
-> > >> source buffer is resident and does not need to be faulted in.
-> > >>
-> > >> Move these "prefaulting" operations to slow paths where they ensure
-> > >> forward progress but they do not slow down the fast paths. This
-> > >> optimizes the fast path to touch userspace once instead of twice.
-> > >>
-> > >> Also update somewhat dubious comments about the need for prefaulting.
-> > >>
-> > >> This has been very lightly tested. I have not tested any of the fs/
-> > >> code explicitly.
-> > > 
-> > > Q: what is preventing us from posting code to the list that's been
-> > > properly tested?
-> > > 
-> > > I just got another bcachefs patch series that blew up immediately when I
-> > > threw it at my CI.
-> > > 
-> > > This is getting _utterly ridiculous_.
-> 
-> That's a bit of an over-reaction, Kent.
-> 
-> IMO, the developers and/or maintainers of each filesystem have some
-> responsibility to test changes like this themselves as part of their
-> review process.
-> 
-> That's what you have just done, Kent. Good work!
-> 
-> However, it is not OK to rant about how the proposed change failed
-> because it was not exhaustively tested on every filesytem before it
-> was posted.
+Explicitly clear DEBUGCTL.LBR when a CPU is starting, prior to purging the
+LBR MSRs themselves, as at least one system has been found to transfer
+control to the kernel with LBRs enabled (it's unclear whether it's a BIOS
+flaw or a CPU goof).  Because the kernel preserves the original DEBUGCTL,
+even when toggling LBRs, leaving DEBUGCTL.LBR as is results in running
+with LBRs enabled at all times.
 
-This is just tone policing.
+Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
+Closes: https://lore.kernel.org/all/c9d8269bff69f6359731d758e3b1135dedd7cc61.camel@redhat.com
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/events/intel/core.c     | 5 ++++-
+ arch/x86/include/asm/msr-index.h | 3 ++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-> I agree with Dave - it is difficult for someone to test widepsread
-> changes in code outside their specific expertise. In many cases, the
-> test infrastructure just doesn't exist or, if it does, requires
-> specialised knowledge and tools to run.
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index e76e892f44cd..efd069bc9c28 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -5038,8 +5038,11 @@ static void intel_pmu_cpu_starting(int cpu)
+ 
+ 	init_debug_store_on_cpu(cpu);
+ 	/*
+-	 * Deal with CPUs that don't clear their LBRs on power-up.
++	 * Deal with CPUs that don't clear their LBRs on power-up, and that may
++	 * even boot with LBRs enabled.
+ 	 */
++	if (!static_cpu_has(X86_FEATURE_ARCH_LBR) && x86_pmu.lbr_nr)
++		msr_clear_bit(MSR_IA32_DEBUGCTLMSR, DEBUGCTLMSR_LBR_BIT);
+ 	intel_pmu_lbr_reset();
+ 
+ 	cpuc->lbr_sel = NULL;
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 3ae84c3b8e6d..61e991507353 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -395,7 +395,8 @@
+ #define MSR_IA32_PASID_VALID		BIT_ULL(31)
+ 
+ /* DEBUGCTLMSR bits (others vary by model): */
+-#define DEBUGCTLMSR_LBR			(1UL <<  0) /* last branch recording */
++#define DEBUGCTLMSR_LBR_BIT		0	     /* last branch recording */
++#define DEBUGCTLMSR_LBR			(1UL <<  DEBUGCTLMSR_LBR_BIT)
+ #define DEBUGCTLMSR_BTF_SHIFT		1
+ #define DEBUGCTLMSR_BTF			(1UL <<  1) /* single-step on branches */
+ #define DEBUGCTLMSR_BUS_LOCK_DETECT	(1UL <<  2)
 
-No, it exists - I built it.
+base-commit: b709eb872e19a19607bbb6d2975bc264d59735cf
+-- 
+2.48.1.362.g079036d154-goog
 
-> In such cases, we have to acknowledge that best effort testing is
-> about as good as we can do without overly burdening the author of
-> such a change. In these cases, it is best left to the maintainer of
-> that subsystem to exhaustively test the change to their
-> subsystem....
-
-I keep having the same conversations in code review:
-"Did you test this?"
-"No really, did you test this?"
-"See that error path you modified, that our automated tests definitely
-don't cover? You need to test that manually".
-
-Developers don't think enough about testing - and if the excuse is that
-the tools suck, then we need to address that. I'm not going to babysit
-and do a bunch of manual work - I spend quite enough of my day staring
-at test dashboards already, thank you very much.
-
-> > For bcachefs specifically, how should we move forward? If you're happy
-> > with the concept, would you prefer that I do some manual bcachefs
-> > testing? Or leave a branch sitting there for a week and pray the robots
-> > test it?
-> 
-> The public automated test robots are horribly unreliable with their
-> coverage of proposed changes. Hence my comment above about the
-> subsystem maintainers bearing some responsibility to test the code
-> as part of their review process....
-
-AFAIK the public test robots don't run xfstests at all.
