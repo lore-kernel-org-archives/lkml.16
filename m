@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F531369BB;
-	Fri, 31 Jan 2025 19:41:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094651F2C22;
+	Fri, 31 Jan 2025 19:41:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738352518; cv=none; b=C5S6a2emB5vU+4cRIwhXrhCG6WYdgp7W7xsfpvhX5ir8IF3DMN6tyx0WK2o9PJmF4/aVFSFTiSeTlONpnE3cBrLoaGU+DNINlTunr4pF64g1Qk7+13OSx7rN+MYJZGKgm2vqFIeyu22vnpbgfOJO8uhWJ4e5PsvgIlDo9xxrxIA=
+	t=1738352520; cv=none; b=o1OJej17Iz1XUizBCNzAe0Q0TIvGzgjFL0RIzX1znVzNQfldEjELVfiElkb6NZK0LCMEbDbcdZLHnzmNtXulp2b9MharPQmZN+KhUTqw3qkSsRDg2wYzeQIjA1+Q3WbSuznPLxDnSBkJBdypX0DuGOuBTT6GwhMUnUO3IHY+OH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738352518; c=relaxed/simple;
-	bh=XWzFnKPzYR4DVPFYN8XLbs3QmiWQpk5rnJJzQjkDw2I=;
+	s=arc-20240116; t=1738352520; c=relaxed/simple;
+	bh=1xU/Je09gCwCuPzB0Q1Mj+G9AQti/vFGzb82p88OmVs=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=EWnaZNSbDrZ+W+UvlLsJbCm160k5AaJ0RQWMHygRt2y7ct/cZGM/kVSAnbyoBAFO9nLxDGjZABfCy6K6Efe3IU6pbBeV5T6V6iWbTz+69+ld6saNeKDiVlbCwR6U0hW7pmlSrJypm6x2CNrCLTL8M7BUYcrZd6nfUN+r2ika2FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plWHxWEb; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=Sg9NIY6bIekZSkcM0eOoULbMZasTpOpZL+XG+VmcZn8OqU4xhTZZm2krAkXRH4zaIJbFMOXqDkN/lTjQeH4k3+nIBC8YT1ljxVyG+gfCDw2L0yIF+aOK7S+HnXqORURVc5Sbb2lFpiH1jXfIoEBs2frqXk/VLVJbFc9hCQI37Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2hCWztk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plWHxWEb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B833BC4CED1;
-	Fri, 31 Jan 2025 19:41:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2hCWztk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D837C4CEDF;
+	Fri, 31 Jan 2025 19:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738352518;
-	bh=XWzFnKPzYR4DVPFYN8XLbs3QmiWQpk5rnJJzQjkDw2I=;
+	s=k20201202; t=1738352519;
+	bh=1xU/Je09gCwCuPzB0Q1Mj+G9AQti/vFGzb82p88OmVs=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=plWHxWEbMJC1F4ABC8O3Gl2FOnbL/u4d9cUPGSpuFfwQ/fJ2Kr2SaZplBJPsOrnsd
-	 BAFbx0QofgJQ0XU9Fp7s0FpsXvx5AZOsk585hZ1O/tQH4gs+kzjC5a0RNxYlRI4Etw
-	 H6V8T5/auDeMMmErrm3vRjbb3OiVola9vy4QJjgE2i4LOavG/TKJ5HWyY7VGJsisTr
-	 C7uTf505KGrR3m7n3O4jAFSe6d6uEc8ovXVae2mDANozhRgkHzQYGjJdBdDH0WIZg5
-	 WXXA/Qqo0V3nufyEDeqofdp0ZhTB2+PZx3gOeIVGkKSI7XlhQE/W2p2dDvwkNHej9Z
-	 ZI5xjqzd4uuYw==
-Date: Fri, 31 Jan 2025 13:41:56 -0600
+	b=l2hCWztkzTUo1PSkezz6W8LPyv2kjgso2CHrb0j/EVht9In4VMrHrvsOmn1VWS23Y
+	 NxZLxcPByzvG39pSQL6A62V6y8GnKMGvIU8RPrgXzRv+CKNYb2xiHZGgJ5HhpvPMqa
+	 y+I3leTPlDOwBy8LekQhDeGGOlDREzi96PnX1tlyEhIS9u6HiJWvDkjo04c3H5tTp5
+	 9Yt7K4hRUx53ID8tjffqjMkG3UUFQmzqgCaSQV6yCVS0QkHe8KZn0A2tmeN7eI/ikA
+	 P4cqqVgF6ikwzEcLaL48prqNNL0yc6XK7RWwP93s6aPUSWdtE9mY7yFxHOeiYDnUov
+	 Ps88USTzo49gA==
+Date: Fri, 31 Jan 2025 13:41:58 -0600
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,38 +36,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, 
- devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, 
- ~postmarketos/upstreaming@lists.sr.ht, Mark Brown <broonie@kernel.org>, 
- Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Stanislav Jakubek <stano.jakubek@gmail.com>
-To: Artur Weber <aweber.kernel@gmail.com>
-In-Reply-To: <20250131-bcm59054-v3-2-bbac52a84787@gmail.com>
-References: <20250131-bcm59054-v3-0-bbac52a84787@gmail.com>
- <20250131-bcm59054-v3-2-bbac52a84787@gmail.com>
-Message-Id: <173835251253.3936353.15748613970933991457.robh@kernel.org>
-Subject: Re: [PATCH v3 2/7] dt-bindings: mfd: brcm,bcm59056: Add compatible
- for BCM59054
+Cc: krzk+dt@kernel.org, quic_kamalw@quicinc.com, daniel.lezcano@linaro.org, 
+ quic_skakitap@quicinc.com, rafael@kernel.org, lars@metafoo.de, 
+ cros-qcom-dts-watchers@chromium.org, anjelique.melendez@oss.qualcomm.com, 
+ jic23@kernel.org, agross@kernel.org, dmitry.baryshkov@linaro.org, 
+ lee@kernel.org, konradybcio@kernel.org, amitk@kernel.org, 
+ linux-iio@vger.kernel.org, neil.armstrong@linaro.org, sboyd@kernel.org, 
+ andersson@kernel.org, david.collins@oss.qualcomm.com, 
+ thara.gopinath@gmail.com, devicetree@vger.kernel.org, 
+ linux-pm@vger.kernel.org, rui.zhang@intel.com, 
+ linux-arm-msm@vger.kernel.org, subbaraman.narayanamurthy@oss.qualcomm.com, 
+ linux-kernel@vger.kernel.org, lukasz.luba@arm.com, conor+dt@kernel.org
+To: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+In-Reply-To: <20250131183242.3653595-2-jishnu.prakash@oss.qualcomm.com>
+References: <20250131183242.3653595-1-jishnu.prakash@oss.qualcomm.com>
+ <20250131183242.3653595-2-jishnu.prakash@oss.qualcomm.com>
+Message-Id: <173835251464.3936394.5738804093745596757.robh@kernel.org>
+Subject: Re: [PATCH V5 1/5] dt-bindings: iio/adc: Move QCOM ADC bindings to
+ iio/adc folder
 
 
-On Fri, 31 Jan 2025 19:13:50 +0100, Artur Weber wrote:
-> The BCM59054 MFD is fairly similar to the BCM59056, and will use
-> the same driver. Add compatible and specify the allowed regulator
-> nodes.
+On Sat, 01 Feb 2025 00:02:38 +0530, Jishnu Prakash wrote:
+> There are several files containing QCOM ADC macros for channel names
+> right now in the include/dt-bindings/iio folder. Since all of these
+> are specifically for adc, move the files to the
+> include/dt-bindings/iio/adc folder.
 > 
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+> Also update all affected devicetree and driver files to fix compilation
+> errors seen with this move and update documentation files to fix
+> dtbinding check errors for the same.
+> 
+> Acked-by: Lee Jones <lee@kernel.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
 > ---
-> Changes in v3:
-> - Split regulator node into separate file
-> - Removed quotes around compatible
-> ---
->  .../devicetree/bindings/mfd/brcm,bcm59056.yaml     | 26 +++++++++-
->  .../bindings/regulator/brcm,bcm59054.yaml          | 55 ++++++++++++++++++++++
->  2 files changed, 79 insertions(+), 2 deletions(-)
+> Changes since v4:
+> - Updated some more devicetree files requiring this change.
+> 
+> Changes since v3:
+> - Updated files affected by adc file path change in /arch/arm, which
+>   were missed earlier. Updated some more new devicetree files requiring
+>   this change in /arch/arm64.
+> 
+> Changes since v2:
+> - Updated some more new devicetree files requiring this change.
+> 
+>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml       | 8 ++++----
+>  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 2 +-
+>  .../devicetree/bindings/thermal/qcom-spmi-adc-tm-hc.yaml  | 2 +-
+>  .../devicetree/bindings/thermal/qcom-spmi-adc-tm5.yaml    | 6 +++---
+>  arch/arm/boot/dts/qcom/pm8226.dtsi                        | 2 +-
+>  arch/arm/boot/dts/qcom/pm8941.dtsi                        | 2 +-
+>  arch/arm/boot/dts/qcom/pma8084.dtsi                       | 2 +-
+>  arch/arm/boot/dts/qcom/pmx55.dtsi                         | 2 +-
+>  arch/arm64/boot/dts/qcom/pm4125.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/pm6125.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/pm6150.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/pm6150l.dtsi                     | 2 +-
+>  arch/arm64/boot/dts/qcom/pm660.dtsi                       | 2 +-
+>  arch/arm64/boot/dts/qcom/pm660l.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/pm7250b.dtsi                     | 2 +-
+>  arch/arm64/boot/dts/qcom/pm8150.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/pm8150b.dtsi                     | 2 +-
+>  arch/arm64/boot/dts/qcom/pm8150l.dtsi                     | 2 +-
+>  arch/arm64/boot/dts/qcom/pm8916.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/pm8937.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/pm8950.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/pm8953.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/pm8994.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/pm8998.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/pmi632.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/pmi8950.dtsi                     | 2 +-
+>  arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi                 | 2 +-
+>  arch/arm64/boot/dts/qcom/pmp8074.dtsi                     | 2 +-
+>  arch/arm64/boot/dts/qcom/pms405.dtsi                      | 2 +-
+>  arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts        | 4 ++--
+>  arch/arm64/boot/dts/qcom/qcm6490-shift-otter.dts          | 4 ++--
+>  arch/arm64/boot/dts/qcom/sc7280-idp.dts                   | 2 +-
+>  arch/arm64/boot/dts/qcom/sc7280-idp.dtsi                  | 2 +-
+>  arch/arm64/boot/dts/qcom/sc7280-qcard.dtsi                | 4 ++--
+>  arch/arm64/boot/dts/qcom/sc8180x-pmics.dtsi               | 2 +-
+>  arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts      | 2 +-
+>  .../arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts | 2 +-
+>  arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dts | 2 +-
+>  arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi              | 6 +++---
+>  arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts         | 2 +-
+>  arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dts      | 6 +++---
+>  arch/arm64/boot/dts/qcom/sm8450-hdk.dts                   | 8 ++++----
+>  drivers/iio/adc/qcom-spmi-adc5.c                          | 2 +-
+>  drivers/iio/adc/qcom-spmi-vadc.c                          | 2 +-
+>  include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pm7325.h | 2 +-
+>  include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pm8350.h | 2 +-
+>  .../dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pm8350b.h    | 2 +-
+>  .../dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pmk8350.h    | 2 +-
+>  .../dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pmr735a.h    | 2 +-
+>  .../dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pmr735b.h    | 2 +-
+>  .../dt-bindings/iio/{ => adc}/qcom,spmi-adc7-smb139x.h    | 2 +-
+>  include/dt-bindings/iio/{ => adc}/qcom,spmi-vadc.h        | 0
+>  52 files changed, 66 insertions(+), 66 deletions(-)
+>  rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pm7325.h (98%)
+>  rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pm8350.h (98%)
+>  rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pm8350b.h (99%)
+>  rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pmk8350.h (97%)
+>  rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pmr735a.h (95%)
+>  rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pmr735b.h (95%)
+>  rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-smb139x.h (93%)
+>  rename include/dt-bindings/iio/{ => adc}/qcom,spmi-vadc.h (100%)
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
@@ -75,23 +149,19 @@ My bot found errors running 'make dt_binding_check' on your patch:
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/brcm,bcm59054.yaml: ^(cam|sim|mmc)ldo[1-2]$: Missing additionalProperties/unevaluatedProperties constraint
-
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/brcm,bcm59054.yaml: ^(rf|sd|sdx|aud|mic|usb|vib|tcx)ldo$: Missing additionalProperties/unevaluatedProperties constraint
-
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/brcm,bcm59054.yaml: ^(c|mm|v)sr$: Missing additionalProperties/unevaluatedProperties constraint
-
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/brcm,bcm59054.yaml: ^(io|sd)sr[1-2]$: Missing additionalProperties/unevaluatedProperties constraint
-
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/brcm,bcm59054.yaml: ^gpldo[1-3]$: Missing additionalProperties/unevaluatedProperties constraint
-
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/brcm,bcm59054.yaml: ^lvldo[1-2]$: Missing additionalProperties/unevaluatedProperties constraint
-
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/brcm,bcm59054.yaml: vbus: Missing additionalProperties/unevaluatedProperties constraint
+In file included from Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dts:80:
+./scripts/dtc/include-prefixes/dt-bindings/iio/adc/qcom,spmi-adc7-pmk8350.h:13:10: fatal error: dt-bindings/iio/adc/qcom,spmi-vadc.h: No such file or directory
+   13 | #include <dt-bindings/iio/adc/qcom,spmi-vadc.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1506: dt_binding_check] Error 2
+make: *** [Makefile:251: __sub-make] Error 2
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250131-bcm59054-v3-2-bbac52a84787@gmail.com
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250131183242.3653595-2-jishnu.prakash@oss.qualcomm.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
