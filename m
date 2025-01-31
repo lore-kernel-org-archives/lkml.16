@@ -1,110 +1,65 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2520715B546
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326E014EC4B
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738307407; cv=none; b=FS1jNmmV+OBYA/baxNUQ3+eKIGl6rgsV/9g+QJc3/VQ0DnkQB2ZBpWUQ58jrYgkFf+LG459O2TKvzkok9Rt9Ele5FboiqUbV650/4Phul0kJQPgFbGIGMVFFLgxzpnLVu6Nzy32LVM1IzW/b3DuKi147c/b3l9sFuhQzd0ZiT70=
+	t=1738307409; cv=none; b=fpcCw1zrq8j1GxrtKsII+60Qu7RAM4HODqu+Qfsz/YdyFlBUPnWsPR6PEKDWd7HppJbF6ArNVG87QG0KqvWdAxhCpaaAgCvPFSqSS2r+ERy+P3nA6MdQQJnlYluEUuaY9wsUqRh7dLzf/9MpYPR1Hj2lvaYMTFAehJ2pdw4AatE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738307407; c=relaxed/simple;
-	bh=c1Il5sS3fT3lVg9aTCV1w+wu5xAvQXF+dUafJxi9yvY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kTfWq50+3MhkFD3x48u6R9CqBKirAIYozE4BOpLz9uu8RV9uZXG6jjVRSMX6/+xaBgQrnhtLpjUDNomTDTNSPovoLxnrBKrct/VrHYaTolba6GnegRFEdoqlCAYwXLj1mzVIciJ4R4km3i4fK4SUhaUmDzfsx/99RQrwl2iARTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=C6fTr8O+; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1738307409; c=relaxed/simple;
+	bh=Z0JqpIJcM6VT183+ZlPPB+dIkXk+EqicX8onkU0JBmk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LSoWew7NvVRzcpqFf2sUtxbY04zxNWTB9yo/kuQahW/DFD5H50JPWnwcwXNjW5f9ipNoiBwxs3ziAeVcfJYuKjJWYZk6fdeML9tGV5vfECyQGZ4NSN5ewBaeSCa2cvOvnTXmrAavSJyJrsmk4qN6Nz0I9CpC/CMK/RLivOb7GT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pVOThwwm; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="C6fTr8O+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Ynq2LvCTfrKNO0aYPqmVtw2j6T8KCcEwVFZ3rO6djNY=; b=C6fTr8O+MvS331Ah+3j3neyvxf
-	g1qVkjo+8kH1rWZD7FjLdU4rLNP0ilGZipfTBnzQZjyZoBrb64WSOy8PofUF4qKcjuMJANERLHLe4
-	t66RxSMVoVvTSTrvH6EQGB5S4M5IGUK0kDCeXgjhzSsI3SY1nI/7LZHTYGfT7b+GwdCqLfMDTNPas
-	P1y1pCij2bfAYHVImEDF38GCdjV1f90BE3McSsD4CoynVVRd87mswEROoHlcA5sOqH/WlOeo6r2LM
-	4b+dy+PIaQLrF1S8I3f0zbfOd5PHIQz6fyL1B4+ajX8IpuNMDm6929Ca2QlZ4c0UpzC6GfV3wbpUz
-	ZX/2PZ5A==;
-Received: from [58.29.143.236] (helo=localhost)
-	by fanzine2.igalia.com with utf8esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tdlA2-001KYq-BU; Fri, 31 Jan 2025 08:10:00 +0100
-From: Changwoo Min <changwoo@igalia.com>
-To: tj@kernel.org,
-	void@manifault.com,
-	arighi@nvidia.com
-Cc: kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org,
-	Changwoo Min <changwoo@igalia.com>
-Subject: [PATCH v3 03/11] sched_ext: Add an event, SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE
-Date: Fri, 31 Jan 2025 16:09:30 +0900
-Message-ID: <20250131070938.95551-4-changwoo@igalia.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250131070938.95551-1-changwoo@igalia.com>
-References: <20250131070938.95551-1-changwoo@igalia.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pVOThwwm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Gnn9O5bhwCUoZ2vwLg43aIO2C1sCiVIi/g5nxmb2czc=; b=pVOThwwmjvZXsFr9BMGV8UxkSZ
+	T5jyWkdlHJtIINV5cREf438q20VcCAn6k/j3ije99Id45nD2c/dK6ispDDTj9N3cKY9KPzhMynVlM
+	0Bbv6WiZYnNFcaMige5UvjemEiVwtSYihRhWdrWNPZ3D1nS4qkBbvVvAgcgApT7P9PEBtpkL6yGvy
+	JC6XsHRCzfPU+RUJH5kDvM76AjqSgZrCxi1Xn6vluJ3dLt5H0CUC05bA4EW0g/S5O9TjTsL+pwcsr
+	v2x0cvViqD8HXnKzxX4J6ecfrcSqqX7Jdzz8PsbeHrbQqq16+/FgKykqRhJZFMDS4z8dcp3v4Dj9E
+	TGet5l8w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tdlAF-0000000A5Wz-2jWd;
+	Fri, 31 Jan 2025 07:10:07 +0000
+Date: Thu, 30 Jan 2025 23:10:07 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, hch@infradead.org, urezki@gmail.com,
+	intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH 0/2] vmalloc: Introduce vmap_file()
+Message-ID: <Z5x3TwhAWadIV8oJ@infradead.org>
+References: <20250131001806.92349-1-vishal.moola@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131001806.92349-1-vishal.moola@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Add a core event, SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE, which represents how
-many times a BPF scheduler tries to dispatch to an offlined local DSQ.
+On Thu, Jan 30, 2025 at 04:18:04PM -0800, Vishal Moola (Oracle) wrote:
+> Currently, users have to call vmap() or vmap_pfn() to map pages to
+> kernel virtual space. vmap() requires the page references, and
+> vmap_pfn() requires page pfns. If we have a file but no page references,
+> we have to do extra work to map them.
+> 
+> Create a function, vmap_file(), to map a specified range of a given
+> file to kernel virtual space. Also convert a user that benefits from
+> vmap_file().
 
-__scx_add_event() is used since the caller holds an rq lock,
-so the preemption has already been disabled.
-
-Signed-off-by: Changwoo Min <changwoo@igalia.com>
----
- kernel/sched/ext.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 4d3b32aca48d..041b0af3551a 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -1449,6 +1449,12 @@ struct scx_event_stats {
- 	 * the core scheduler code silently picks a fallback CPU.
- 	 */
- 	u64		SCX_EV_SELECT_CPU_FALLBACK;
-+
-+	/*
-+	 * When dispatching to a local DSQ, the CPU may have gone offline in
-+	 * the meantime. In this case, the task is bounced to the global DSQ.
-+	 */
-+	u64		SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE;
- };
- 
- /*
-@@ -2644,6 +2650,7 @@ static void dispatch_to_local_dsq(struct rq *rq, struct scx_dispatch_q *dst_dsq,
- 	if (unlikely(!task_can_run_on_remote_rq(p, dst_rq, true))) {
- 		dispatch_enqueue(find_global_dsq(p), p,
- 				 enq_flags | SCX_ENQ_CLEAR_OPSS);
-+		__scx_add_event(SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE, 1);
- 		return;
- 	}
- 
-@@ -4970,6 +4977,7 @@ static void scx_dump_state(struct scx_exit_info *ei, size_t dump_len)
- 
- 	scx_bpf_events(&events, sizeof(events));
- 	scx_dump_event(s, &events, SCX_EV_SELECT_CPU_FALLBACK);
-+	scx_dump_event(s, &events, SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE);
- 
- 	if (seq_buf_has_overflowed(&s) && dump_len >= sizeof(trunc_marker))
- 		memcpy(ei->dump + dump_len - sizeof(trunc_marker),
-@@ -7104,6 +7112,7 @@ __bpf_kfunc void scx_bpf_events(struct scx_event_stats *events,
- 	for_each_possible_cpu(cpu) {
- 		e_cpu = per_cpu_ptr(&event_stats_cpu, cpu);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_SELECT_CPU_FALLBACK);
-+		scx_agg_event(&e_sys, e_cpu, SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE);
- 	}
- 
- 	/*
--- 
-2.48.1
+As far as I can tell there is exatly one user that maps file pages
+into vmalloc space.  It's a pretty odd thing to do, so figuring out
+a way to get rid of that might be a better use of time.
 
