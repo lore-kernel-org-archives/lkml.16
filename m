@@ -1,58 +1,82 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E6F1E0E0A;
-	Fri, 31 Jan 2025 15:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF3213D66;
+	Fri, 31 Jan 2025 15:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738335606; cv=none; b=ezN9nNT37nMXYmx6xyd/Uu8M4Y7Q+HDQxhpMzuzi5HmGKSJQsSf1unK+UXQ+qL2iIP+3ARqtm84JzZU02pGUXjnFy8Ay09nqbPKxvMk8SPZToAW69kQIeQOvZmQBEX/7qe341y3ZncrWYrs8WLca/GcC/LSz+WMto6eDKZgqqUw=
+	t=1738335799; cv=none; b=m4g2TT0tTpuylXPF9BR8sIbSvM7O3A0drSgHNfReq6DJmkTRQ3gt/vLKUicm8JauEHLz+m6W0Bc8fOydaMfP1nMkdU7cAOulbOoX9Sw9LDoGEBCEh6UNZxYXMtHqTjdtfp3O3QS3PB6pHgJWOvmgrSH4NnQsjnxKXFG6Tkc9h0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738335606; c=relaxed/simple;
-	bh=vpg3/dF5xuLIeH18bNykFPejhDfSG6gCZL//JzJ1HpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=h+fwT+ASD+jNNC3B0lvNExtAEJztUsqvZ1wHsbpe+HWoQmoWdKhgBl7DT1M1sLeAVUGDDGUNYOj62fpjT5wKko3cgNNPDMQ1kuFxM1G75BHuBSZ2XZ2fpggLzBciDgbNoYM665F8beTL9aYyPOm0wtci+jIdjYzcWF0FVfqEi+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=IpltKufi; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="IpltKufi"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4YkzZf1Zd1z9tHm;
-	Fri, 31 Jan 2025 15:59:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1738335594; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type; bh=vpg3/dF5xuLIeH18bNykFPejhDfSG6gCZL//JzJ1HpE=;
-	b=IpltKufi33LiMBKxj5FZwJCNChXSe6vQe++7H71thSVjBXdBc2YxWNJDTOxwRwoiogOb1N
-	pJMM+qozmjyfsyOx/vJlwDQp6sUHwPs1YEH5uqhvP4+rsN+gAWJnCeetQB9awaa9Kk9ILk
-	Gm6fxTLg4pKbZhRLJwDviY5PmhMMmeVITiha/xMUIHeV/h/XYkUl/00hK1xmEUoPiyTJ+H
-	WtOADJex97+zUYM0RMD7+5hGpOPV1lWTuIVrk/Bb9FrZcJsLSKJJkZZPI6G80bbI8ENIhi
-	Ns73njU019/hBEWhAKsCvcnURxoKKHMnFgk1DbI6h3nJc59X7QubjMAW8lwcKg==
-Date: Fri, 31 Jan 2025 09:59:50 -0500
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-To: marian.flor@posteo.net
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	dmitry.torokhov@gmail.com
-Subject: [PATCH 1/1] gpio_keys.c: Send also event when EV_ABS axis button is
- released.
-Message-ID: <xny5a7np63v2kuylk52wfvg2aqjzii37j6h7yte4xg6ebuhbr2@e7r4giykyp5c>
-Reply-To: 10ae4572-bfc4-4ead-8563-99a26285d29e@posteo.net
+	s=arc-20240116; t=1738335799; c=relaxed/simple;
+	bh=y8udIcxdrbNjwq612CEizD0X1c7DqRt6OGB3wweQYr8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UNIyFJdYkQ1xNh6WWrjmpIiGf8RUna6bulLLc1m9usTtQC2rQ51kRiu5CAD1WBB0SUR1K+LzfvrXxT4MFZWBO2i8stOO2AF85qQ6wGm4vREnxvn90bzRCDq54CUsgwrQPUZOGWqnVcvu62ts+48dF6a/cRm/K1Wa05oaTNc1buI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E983497;
+	Fri, 31 Jan 2025 07:03:42 -0800 (PST)
+Received: from [10.1.32.52] (e122027.cambridge.arm.com [10.1.32.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 996973F694;
+	Fri, 31 Jan 2025 07:03:13 -0800 (PST)
+Message-ID: <d6265f8e-51bc-4556-9ecb-bfb73f86260d@arm.com>
+Date: Fri, 31 Jan 2025 15:03:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Rspamd-Queue-Id: 4YkzZf1Zd1z9tHm
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v4 3/3] net: stmmac: Specify hardware capability value
+ when FIFO size isn't specified
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Yanteng Si <si.yanteng@linux.dev>,
+ Furong Xu <0x1207@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>,
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250127013820.2941044-1-hayashi.kunihiko@socionext.com>
+ <20250127013820.2941044-4-hayashi.kunihiko@socionext.com>
+ <07af1102-0fa7-45ad-bcbc-aef0295ceb63@arm.com>
+ <fc08926d-b9af-428f-8811-4bfe08acc5b7@lunn.ch>
+ <f343c126-fed9-4209-a18d-61a4e604db2f@arm.com>
+ <a4e31542-3534-4856-a90f-e47960ed0907@lunn.ch>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <a4e31542-3534-4856-a90f-e47960ed0907@lunn.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Why is this needed? your subject is good, but add a commit description.
-Any empty one doesn't tell us anything about what your code does or why
-it is needed. What value does it bring to the users?
+On 31/01/2025 14:47, Andrew Lunn wrote:
+>>> I'm guessing, but in your setup, i assume the value is never written
+>>> to a register, hence 0 is O.K. e.g. dwmac1000_dma_operation_mode_rx(),
+>>> the fifosz value is used to determine if flow control can be used, but
+>>> is otherwise ignored.
+>>
+>> I haven't traced the code, but that fits my assumptions too.
+> 
+> I could probably figure it out using code review, but do you know
+> which set of DMA operations your hardware uses? A quick look at
+> dwmac-rk.c i see:
+> 
+>         /* If the stmmac is not already selected as gmac4,
+>          * then make sure we fallback to gmac.
+>          */
+>         if (!plat_dat->has_gmac4)
+>                 plat_dat->has_gmac = true;
 
-Thanks,
-Ethan
+has_gmac4 is false on this board, so has_gmac will be set to true here.
+
+The DT compatible is rockchip,rk3288-gmac
+
+Steve
+
+> Which suggests there are two variants of the RockChip MAC.
+> 
+> 	Andrew
+
