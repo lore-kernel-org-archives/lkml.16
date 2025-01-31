@@ -1,221 +1,152 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1BA1C5D63;
-	Fri, 31 Jan 2025 16:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3CB1898F2;
+	Fri, 31 Jan 2025 16:53:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738342374; cv=none; b=BdaG4+2o/fIWy53ChJAUzsKS0r3pvfKizwpi4VDLAwUNJUY475Rfr3ge9X+sdZHEdCRIvIew3JNxcRjvrUkkVcy/5auLB48I7O7Y4P2WOcGb43HC5pf/9Ufx68E4KsKkbeIjQHShpu1pUBZobzm7oZHuz2Tl9oLLoFx0W6cQPhU=
+	t=1738342423; cv=none; b=sZI4WAeo4NE2xHh00NuSrjCEs8DIGPgoM8knFDE1NNkGj3/e8KU6KRC6lCH15Ud7aCxTJhZrdQmoNypNWV1GrJCgO280rHosKrlpBdF92qkKvqbqaRHJ1WZHlfZQmaiwNV7EPz5dVcaJ28rVi16mm8hivUpEd6MuWaUVbLb0vVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738342374; c=relaxed/simple;
-	bh=0GT4/+LlBqIUtZ7pp3RVNcFmSCoL/LN3iyCtSxaQQRA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Qj+xKI+PlfrZt4XOuJcVR5HhK2fkvcLsIbXF1dNhXWa8GWhcW8HuZZD37T3SvkJ+rQLr53o63FUs2586xx6Gj5emE5jk/fHK1pjtC2tQaVb+JzW7EGZXvX+TGMxKlf/eLtKH8G3oKjmD5wE3c4YPXKAD8LgjcEoQv3oVwXmgQGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KBpSDWRb; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738342423; c=relaxed/simple;
+	bh=GfPTCIyEX3fVDi9I9BIqRlm84MEenHyEpADd5wVZavc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FsysAsC6TFRP+4Mlw/DHum0XrEkBjP/bPJPw6RdCX5QlFFn4avhADM1tRhrCh4PRT/Cr8V8hm8H47VIz4SJ6JAFEZSke0ZV6FNI2IxK/9+nBTbtB8WichhPdPoa9QvKyCB6DKnSFe8T3/LeZASfUK4L5uZ5/GQENzjewLVUUkiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IYEPy8N+; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KBpSDWRb"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50VGii85010526;
-	Fri, 31 Jan 2025 16:52:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=laejTw
-	/J93FIpv8zpyFVltvFqqr8hmZZuzZLCRPS94Y=; b=KBpSDWRb34HwLPFamsc/dm
-	8qVij7dR2ANkYM0mmnmBmHquHxyVR8nSia+qbwesKcH5aQGJS0uEQwftUXV0YICe
-	WYYFEU+ghy1JHyzk1TMqjDP8Jb2bRoXltpel32CqdLhd5StQGtwT6qcS/Maizj/f
-	EaKKMnn/QSVjdB858NMjPKvdc4RF272+7zAUm3RKIsH6SLk/udVLfh+vuijn3fEg
-	SOq5v/idgt2QAweAL7yuVI/Z5AOHcDE6V8qV/QHPde+TD4TtTjGL2PGhjMUUusYL
-	I6l+hSYLXmfX97CCjTYuNxrQb5PJBEHOKe/wIyNxQnBLw54PHSfe02g6w5Dd6szg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gt7nachj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 16:52:22 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50VGmbT1002833;
-	Fri, 31 Jan 2025 16:52:21 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gt7nachf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 16:52:21 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50VGSqNi024524;
-	Fri, 31 Jan 2025 16:52:20 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44gf914fyw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 16:52:20 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VGqKqG19136812
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 16:52:20 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 02B1258062;
-	Fri, 31 Jan 2025 16:52:20 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1E49F58059;
-	Fri, 31 Jan 2025 16:52:19 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.73.176])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 31 Jan 2025 16:52:19 +0000 (GMT)
-Message-ID: <574ab3058a019c0536c29f54516c48fdae82af12.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 5/6] ima: Defer fixing security.ima to __fput()
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>, corbet@lwn.net,
-        viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-        dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Roberto Sassu
- <roberto.sassu@huawei.com>
-Date: Fri, 31 Jan 2025 11:52:18 -0500
-In-Reply-To: <20250122172432.3074180-6-roberto.sassu@huaweicloud.com>
-References: <20250122172432.3074180-1-roberto.sassu@huaweicloud.com>
-	 <20250122172432.3074180-6-roberto.sassu@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYEPy8N+"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43634b570c1so16670805e9.0;
+        Fri, 31 Jan 2025 08:53:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738342418; x=1738947218; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YXuudxqXFyd2ufToANT9YRFIa9qwUxwKQHhEaI7Gs+g=;
+        b=IYEPy8N+46oQMDWiJ/AH70iAdhPJ0LmE2CtH/lqx5jAxzG6jgfcdQ3PiD4s0yX1sO7
+         JrS7MDyodDnxUYUsShxQq0w07A/Cq5vIP5EY9tVb5+LgMJ1CD69Lik5N7zvqauWYVWNu
+         cXx4qtF9nUU2p8Hyjon3FkVNfKnR8bErAmdpHpV2lOlyqvcHWJ3CRSlGHTfI7UJt48fG
+         NecK+a/mTvQ4VQSaS02/xtPmZHpFli5O5ZRwfoqsREd+93OCwyfIzBdquh4DIlq/204M
+         QsSLbZJ3BX4caYN4BMiMYeWv1V9BSNqZTq7NFaKob7fNqk++aXXCOFCvqiDmdx5kJ7ni
+         8A5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738342418; x=1738947218;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YXuudxqXFyd2ufToANT9YRFIa9qwUxwKQHhEaI7Gs+g=;
+        b=heFIUBnTqJpk1t4pN0GlOTfDHApk/ULg4ZfTJtBNoQJlfQE0AtqZkYjuImm8/FCT79
+         ELDwf4RiQ7iH6RgEFY/+KlBe6eSYIg3HtyWww7jsHqn7jkr9PMiS6onmrP7KUcQg4Qei
+         +co378WvREWj2Gc0JkmTQDrLbXkCBRQqDcliF+POP9HtNeS0mPJ9bToEksbJGemzqnA6
+         4eGOYDkVqNMkbh6EScAork/YWJOwElz21dtRjD+5StEmTeIlAO5GlPPX23BlWMJZXeKw
+         IQCVbkw33lc9M0HR7GEBb0q3hhyLe9dSM0SnFR6530yx/ky0WSw2bsHUX9j6Kbw9IOqv
+         pXJA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+uiQl9DgvcFAnk2h2VTclkX02eBZUsyZDG+z+bVtvPUxlh/KUcnh58Biqwnu1bpacZmSN6aizY7S8mtPY@vger.kernel.org, AJvYcCXvmDPHJfFYU5pFbvTx9zFQ2K07yEsqMPdTwm/gsdgJf1r6hYayt9bSe8L80WYWBcPseGO2Xhce6C4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yye/T1Kz7mLqbvtG7yGfGrI7wZ5zyOex0PkkeK4pT1n/Zc3Na0C
+	WbTFdn5F1KOwxQpdr9xV6m5/HZxozZARBJ9hHmgj1dAlDBYU4teg
+X-Gm-Gg: ASbGncuriI9kUw/U1RRGgrtN4t/OGdKxkI+Q1xNSLuOBiPVIPLV7r1Poo+BqdDKfgfJ
+	OqKWcWQE/lf1CkY37es4nTG2VEcOqIOABedtaxjYby3yTxNIxjG7wTtr1lZLE6HcaflYzYZNztu
+	h2sBOiveT8XV9SGV85U7ZjGuQ4vAEORgwdnEjsh8pWMqgUySykjfFTXxB3vtI74dlTE/Z1ssNef
+	P/A6YMPFbvwm8Mn+nRWA0NfQL1oegKyzRwelcm9Js3TwwURHbfIWwisQwvXVBckkEMbgtOa2/ER
+	1tSsv7GjkQinLQ==
+X-Google-Smtp-Source: AGHT+IEDMPcLKLxTsK429xwikfWJydkdpUp8S6fPh9gbuoI7xNoBf2p2vOuUzRbf4VSVoFtOdv6iqA==
+X-Received: by 2002:a5d:59a6:0:b0:38b:f3f4:57ae with SMTP id ffacd0b85a97d-38c51949b97mr11501948f8f.10.1738342418101;
+        Fri, 31 Jan 2025 08:53:38 -0800 (PST)
+Received: from fedora ([94.73.37.161])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b61f1sm5205377f8f.68.2025.01.31.08.53.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 08:53:37 -0800 (PST)
+Date: Fri, 31 Jan 2025 17:53:35 +0100
+From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: airlied@gmail.com, arthurgrillo@riseup.net, corbet@lwn.net,
+	dri-devel@lists.freedesktop.org, hamohammed.sa@gmail.com,
+	jeremie.dautheribes@bootlin.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+	mairacanal@riseup.net, marcheu@google.com, melissa.srw@gmail.com,
+	miquel.raynal@bootlin.com, mripard@kernel.org,
+	nicolejadeyee@google.com, pekka.paalanen@haloniitty.fi,
+	rdunlap@infradead.org, rodrigosiqueiramelo@gmail.com,
+	seanpaul@google.com, simona.vetter@ffwll.ch, simona@ffwll.ch,
+	thomas.petazzoni@bootlin.com, tzimmermann@suse.de
+Subject: Re: [PATCH v16 3/7] drm/vkms: Drop YUV formats TODO
+Message-ID: <Z50AD91RnzK2lWSd@fedora>
+References: <20250121-yuv-v16-3-a61f95a99432@bootlin.com>
+ <20250131084045.2874-1-jose.exposito89@gmail.com>
+ <Z5zJ1h91AINbQRVF@louis-chauvet-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yGtW4jrvmsBMwDt-hPQYRRevwsyhlf-B
-X-Proofpoint-ORIG-GUID: mn4jY_xc0QbmeTeMxX8t1_qZEjLIKbti
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-31_05,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
- clxscore=1015 mlxscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2501310127
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z5zJ1h91AINbQRVF@louis-chauvet-laptop>
 
-On Wed, 2025-01-22 at 18:24 +0100, Roberto Sassu wrote:
-> From: Roberto Sassu <roberto.sassu@huawei.com>
->=20
-> IMA-Appraisal implements a fix mode, selectable from the kernel command
-> line by specifying ima_appraise=3Dfix.
->=20
-> The fix mode is meant to be used in a TOFU (trust on first use) model,
-> where systems are supposed to work under controlled conditions before the
-> real enforcement starts.
->=20
-> Since the systems are under controlled conditions, it is assumed that the
-> files are not corrupted, and thus their current data digest can be truste=
-d,
-> and written to security.ima.
->=20
-> When IMA-Appraisal is switched to enforcing mode, the security.ima value
-> collected during the fix mode is used as a reference value, and a mismatc=
-h
-> with the current value cause the access request to be denied.
->=20
-> However, since fixing security.ima is placed in ima_appraise_measurement(=
-)
-> during the integrity check, it requires the inode lock to be taken in
-> process_measurement(), in addition to ima_update_xattr() invoked at file
-> close.
->=20
-> Postpone the security.ima update to ima_check_last_writer(), by setting t=
-he
-> new atomic flag IMA_UPDATE_XATTR_FIX in the inode integrity metadata, in
-> ima_appraise_measurement(), if security.ima needs to be fixed. In this wa=
-y,
-> the inode lock can be removed from process_measurement(). Also, set the
-> cause appropriately for the fix operation and for allowing access to new
-> and empty signed files.
->=20
-> Finally, update security.ima when IMA_UPDATE_XATTR_FIX is set, and when
-> there wasn't a previous security.ima update, which occurs if the process
-> closing the file descriptor is the last writer.
->=20
-> Deferring fixing security.ima has a side effect: metadata of files with a=
-n
-> invalid EVM HMAC cannot be updated until the file is close. In alternativ=
-e
-> to waiting, it is also recommended to add 'evm=3Dfix' in the kernel comma=
-nd
-> line to handle this case (recommendation added to kernel-parameters.txt a=
-s
-> well).
->=20
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> ---
+On Fri, Jan 31, 2025 at 02:02:14PM +0100, Louis Chauvet wrote:
+> On 31/01/25 - 09:40, José Expósito wrote:
+> > Hi Louis,
+> > 
+> > Thanks a lot for the patches.
+> > 
+> > I'm not well versed in YUV color formats, so I did my best reading the kernel
+> > documentation before reviewing this series... But I'll most likely ask some
+> > basic/dump questions.
+> > 
+> > > From: Arthur Grillo <arthurgrillo@riseup.net>
+> > > 
+> > > VKMS has support for YUV formats now. Remove the task from the TODO
+> > > list.
+> > > 
+> > > Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
+> > > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> > > ---
+> > >  Documentation/gpu/vkms.rst | 3 +--
+> > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > 
+> > > diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
+> > > index ba04ac7c2167a9d484c54c69a09a2fb8f2d9c0aa..13b866c3617cd44043406252d3caa912c931772f 100644
+> > > --- a/Documentation/gpu/vkms.rst
+> > > +++ b/Documentation/gpu/vkms.rst
+> > > @@ -122,8 +122,7 @@ There's lots of plane features we could add support for:
+> > >  
+> > >  - Scaling.
+> > >  
+> > > -- Additional buffer formats, especially YUV formats for video like NV12.
+> > > -  Low/high bpp RGB formats would also be interesting.
+> > > +- Additional buffer formats. Low/high bpp RGB formats would be interesting.
+> > 
+> > I see that you implemented support for 6 DRM_FORMAT_NV* formats, but
+> > DRM_FORMAT_NV15, DRM_FORMAT_NV20 and DRM_FORMAT_NV30 are not implemented.
+> > 
+> > The same applies to DRM_FORMAT_Y210 or DRM_FORMAT_YUV410 among others.
+> > 
+> > Could it be useful to implement all of them in the future? If so, should we add
+> > it to the ToDo list?
+> 
+> I don't think we need "all of them" (there are ≈100 + all the modifiers), 
+> but definitly all the commonly used ones (I have some of the "common" one 
+> ready here [1], I just wait for the YUV series to be accepted to avoid 
+> conflicts).
 
-[ ... ]
+Good to know, thanks for the clarification. I think we are good with this
+to-do item as it is. There's plenty of work that can be done :)
 
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -158,13 +158,16 @@ static void ima_check_last_writer(struct ima_iint_c=
-ache
-> *iint,
-> =C2=A0				=C2=A0 struct inode *inode, struct file *file)
-> =C2=A0{
-> =C2=A0	fmode_t mode =3D file->f_mode;
-> -	bool update;
-> +	bool update =3D false, update_fix;
-> =C2=A0
-> -	if (!(mode & FMODE_WRITE))
-> +	update_fix =3D test_and_clear_bit(IMA_UPDATE_XATTR_FIX,
-> +					&iint->atomic_flags);
-> +
-> +	if (!(mode & FMODE_WRITE) && !update_fix)
-> =C2=A0		return;
-> =C2=A0
-> =C2=A0	ima_iint_lock(inode);
-> -	if (atomic_read(&inode->i_writecount) =3D=3D 1) {
-> +	if ((mode & FMODE_WRITE) && atomic_read(&inode->i_writecount) =3D=3D 1)=
- {
-> =C2=A0		struct kstat stat;
-> =C2=A0
-> =C2=A0		update =3D test_and_clear_bit(IMA_UPDATE_XATTR,
-> @@ -181,6 +184,10 @@ static void ima_check_last_writer(struct ima_iint_ca=
-che *iint,
-> =C2=A0				ima_update_xattr(iint, file);
-> =C2=A0		}
-> =C2=A0	}
-> +
-> +	if (!update && update_fix)
-> +		ima_update_xattr(iint, file);
-> +
-> =C2=A0	ima_iint_unlock(inode);
-> =C2=A0}
-> =C2=A0
-> @@ -378,13 +385,10 @@ static int process_measurement(struct file *file, c=
-onst
-> struct cred *cred,
-> =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 template_desc);
-> =C2=A0	if (rc =3D=3D 0 && (action & IMA_APPRAISE_SUBMASK)) {
-> =C2=A0		rc =3D ima_check_blacklist(iint, modsig, pcr);
-> -		if (rc !=3D -EPERM) {
-> -			inode_lock(inode);
-> +		if (rc !=3D -EPERM)
-> =C2=A0			rc =3D ima_appraise_measurement(func, iint, file,
-> =C2=A0						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pathname, xattr_value,
-> =C2=A0						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xattr_len, modsig);
-> -			inode_unlock(inode);
-> -		}
-> =C2=A0		if (!rc)
-> =C2=A0			rc =3D mmap_violation_check(func, file, &pathbuf,
-> =C2=A0						=C2=A0 &pathname, filename);
+Jose
 
-In ima_appraise_measurement() IMA calls EVM to verify the file metadata
-(evm_verifyxattr). One would think that since IMA is not "fixing" security.=
-ima, EVM
-would not require the inode lock to be taken by IMA.  However, in addition =
-to
-verifying the file metdata, EVM converts the original file metadata signatu=
-re to an
-HMAC.  This does require the inode lock. Perhaps the EVM conversion from a =
-signature
-to an HMAC needs to be deferred as well.
-
-Mimi
-
+> > It might be a great task to get started in kernel development, as there are
+> > already similar examples and tests.
+> 
+> I don't think we need to specify which format are missing, the point 
+> "Additionnal buffer formats. [...]" seems sufficient. If you think this is 
+> relevant, I can add "Easy task" so beginners will find it easier?
+>  
+> [1]:https://lore.kernel.org/all/20241122-b4-new-color-formats-v3-0-23f7776197c9@bootlin.com/
+> 
+> > >  
+> > >  - Async updates (currently only possible on cursor plane using the legacy
+> > >    cursor api).
+> > > 
