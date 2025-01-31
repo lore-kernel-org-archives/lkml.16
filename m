@@ -1,91 +1,154 @@
-Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9F01BE238
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A7738DC0;
+	Fri, 31 Jan 2025 13:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738329200; cv=none; b=dLgslBPtia2bP8g5hUHysbuoXOrHUwjAPxbEjgPy5m1GskWXSebS01mDXfIlvI76vIYygFpvxKkMoEiTB/7ce3bHOFpfisONtNCezgMHclgWsg2pOIPYv9rm8auSBOe8odYyowtwqGspYWjxIZ5MrkvgdYo0zG9laWDEEqM70oI=
+	t=1738329508; cv=none; b=X1QC6QLyZuiex80H8m9yBF5oJYjDQgL6UvHDEOdTi7D0MVT9zn14TYRW107n91lCJq1iNwlUHPVYTeBWmV5VRm9zvTLyGJLf1U3APRoXq58HPU267ZgPX02rfUIVFMkocxi+HMi5rVylG8hLRHXl+q0ZXQ3gPlSw8TPLszGaPu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738329200; c=relaxed/simple;
-	bh=k5RkkXzF13rZXSL9io3ekPgEPUw+PXfJpxELXTQUpY4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jSpL89e2apB+gl2RgKMfS/8wL3OLHcBqOVfrUU+m7fhHsZros4zQHiVFjaN3wtym8A9OyFLONzf4ZlSMaIXob34k4/Tbwg+mCWfqZWWg6N8ubUuacQAnL3NVf3rFsRc4ZyAlaRTmcvjkuREkk/w9pJXqBCOOfe08krell5h+L3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b=XWS5uL4R; arc=none smtp.client-ip=185.136.64.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1738329508; c=relaxed/simple;
+	bh=SHmchvTzp5ErkaanwpgmmNEFXq4VUAYvrF9mLrCeNBQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=CLAN9zRN1Pz4c/aSNmGBWNnYbr/n/OycnPwtr7kywxQHq3NBP2JvEtYUJRx3rGK2RdcGV19ZTfoBA4uai/oFgJZNpeHUqzeg+7f74RxjAiXycPoZvwt+I0z31LMvmqVVvVpnxEpNdhwfyVW/GdVRvZOEdphdvK9jcxT+21Hq3l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DErOa52J; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Z4wPVc4I; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DErOa52J; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Z4wPVc4I; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b="XWS5uL4R"
-Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 20250131131309b2d1dd287ff9731c76
-        for <linux-kernel@vger.kernel.org>;
-        Fri, 31 Jan 2025 14:13:10 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
- d=siemens.com; i=florian.bezdeka@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=7ddmw+MSH+bE+lpmVD4Wnv3gYJ4CsT3P6TUawXH7hJk=;
- b=XWS5uL4RZBFQEOgbrkoinobFHaphy8O+5E+P3yGXLd7XDgQnHjyupzHw/nFjHHjoFdTGf8
- mvcNlRBNYG8wW8IswCiNjHTMgAeNTd32AjpAXjStl8fyMt6y0rmFi/Yztz3oayTTUZiOqW3a
- sQaxSTerPXPAzJLqFHYAVUGkM8zHd3MPwWKw6SUnzJqfKdUeo9bHmdirmf4oOL/0OiGPXbER
- LJi8XzNCm80kQsfkobrEsJKbXnCXlQOD0N9Au9jkV92M0qC6kNZQPoxrc11wtPjGcoN+mHl5
- 8Erb2wyxszaDR5KHq87NIv6bd1IyNXl4K6+BYuiaKdarLvOVMgfCkBEw==;
-Message-ID: <f86bc94c97d6e91b3564d3df6f91722318c8d24f.camel@siemens.com>
-Subject: Re: [PATCH] igc: Fix HW RX timestamp when passed by ZC XDP
-From: Florian Bezdeka <florian.bezdeka@siemens.com>
-To: Zdenek Bouska <zdenek.bouska@siemens.com>, Tony Nguyen	
- <anthony.l.nguyen@intel.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>,  Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet	
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni	
- <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann	
- <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
- Fastabend <john.fastabend@gmail.com>, Vinicius Costa Gomes
- <vinicius.gomes@intel.com>, Song Yoong Siang <yoong.siang.song@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, Jan Kiszka
-	 <jan.kiszka@siemens.com>
-Date: Fri, 31 Jan 2025 14:13:08 +0100
-In-Reply-To: <20250128-igc-fix-hw-rx-timestamp-when-passed-by-zc-xdp-v1-1-b765d3e972de@siemens.com>
-References: 
-	<20250128-igc-fix-hw-rx-timestamp-when-passed-by-zc-xdp-v1-1-b765d3e972de@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DErOa52J";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Z4wPVc4I";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DErOa52J";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Z4wPVc4I"
+Received: from pobox.suse.cz (unknown [10.100.2.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8A3752116B;
+	Fri, 31 Jan 2025 13:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738329504; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7goyXTtkfKbdujajWMQAcFSGLzmABxiGYAPZ/poldkM=;
+	b=DErOa52JfiG1mii1hnBucroI7hWw54DW+p9RRLOMX0BUlUTFfvPIaD8nJmu+SsTsCHdbt6
+	5KVdIzUHjGzmkqyaJu+O8+416CYI+kTug6YkpaoWgy72IGibZR6Uy5V8McrjzmS771oqDi
+	WdhcT9IMUGLbNjoHY+cRlvoOtnEcOhw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738329504;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7goyXTtkfKbdujajWMQAcFSGLzmABxiGYAPZ/poldkM=;
+	b=Z4wPVc4IJzNgDX5d1Jktkb7pgmtJMYLgf2HlZIirtHZ4YSWtsOnk7E0ybMXbAnY3zSCBvA
+	z2RniRLSfB2DEJCQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738329504; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7goyXTtkfKbdujajWMQAcFSGLzmABxiGYAPZ/poldkM=;
+	b=DErOa52JfiG1mii1hnBucroI7hWw54DW+p9RRLOMX0BUlUTFfvPIaD8nJmu+SsTsCHdbt6
+	5KVdIzUHjGzmkqyaJu+O8+416CYI+kTug6YkpaoWgy72IGibZR6Uy5V8McrjzmS771oqDi
+	WdhcT9IMUGLbNjoHY+cRlvoOtnEcOhw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738329504;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7goyXTtkfKbdujajWMQAcFSGLzmABxiGYAPZ/poldkM=;
+	b=Z4wPVc4IJzNgDX5d1Jktkb7pgmtJMYLgf2HlZIirtHZ4YSWtsOnk7E0ybMXbAnY3zSCBvA
+	z2RniRLSfB2DEJCQ==
+Date: Fri, 31 Jan 2025 14:18:24 +0100 (CET)
+From: Miroslav Benes <mbenes@suse.cz>
+To: Yafang Shao <laoar.shao@gmail.com>
+cc: Petr Mladek <pmladek@suse.com>, jpoimboe@kernel.org, jikos@kernel.org, 
+    joe.lawrence@redhat.com, live-patching@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
+In-Reply-To: <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
+Message-ID: <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz>
+References: <20250127063526.76687-1-laoar.shao@gmail.com> <Z5eOIQ4tDJr8N4UR@pathway.suse.cz> <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-68982:519-21489:flowmailer
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	TAGGED_RCPT(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-On Tue, 2025-01-28 at 13:26 +0100, Zdenek Bouska wrote:
-> Fixes HW RX timestamp in the following scenario:
-> - AF_PACKET socket with enabled HW RX timestamps is created
-> - AF_XDP socket with enabled zero copy is created
-> - frame is forwarded to the BPF program, where the timestamp should
->   still be readable (extracted by igc_xdp_rx_timestamp(), kfunc
->   behind bpf_xdp_metadata_rx_timestamp())
-> - the frame got XDP_PASS from BPF program, redirecting to the stack
-> - AF_PACKET socket receives the frame with HW RX timestamp
->=20
-> Moves the skb timestamp setting from igc_dispatch_skb_zc() to
-> igc_construct_skb_zc() so that igc_construct_skb_zc() is similar to
-> igc_construct_skb().
->=20
-> This issue can also be reproduced by running:
->  # tools/testing/selftests/bpf/xdp_hw_metadata enp1s0
-> When a frame with the wrong port 9092 (instead of 9091) is used:
->  # echo -n xdp | nc -u -q1 192.168.10.9 9092
-> then the RX timestamp is missing and xdp_hw_metadata prints:
->  skb hwtstamp is not found!
->=20
-> With this fix or when copy mode is used:
->  # tools/testing/selftests/bpf/xdp_hw_metadata -c enp1s0
-> then RX timestamp is found and xdp_hw_metadata prints:
->  found skb hwtstamp =3D 1736509937.852786132
->=20
-> Fixes: 069b142f5819 ("igc: Add support for PTP .getcyclesx64()")
-> Signed-off-by: Zdenek Bouska <zdenek.bouska@siemens.com>
-> ---
+> >
+> >   + What exactly is meant by frequent replacements (busy loop?, once a minute?)
+> 
+> The script:
+> 
+> #!/bin/bash
+> while true; do
+>         yum install -y ./kernel-livepatch-6.1.12-0.x86_64.rpm
+>         ./apply_livepatch_61.sh # it will sleep 5s
+>         yum erase -y kernel-livepatch-6.1.12-0.x86_64
+>         yum install -y ./kernel-livepatch-6.1.6-0.x86_64.rpm
+>         ./apply_livepatch_61.sh  # it will sleep 5s
+> done
+ 
+A live patch application is a slowpath. It is expected not to run 
+frequently (in a relative sense). If you stress it like this, it is quite 
+expected that it will have an impact. Especially on a large busy system.
 
-Reviewed-by: Florian Bezdeka <florian.bezdeka@siemens.com>
+> >
+> > > Other potential risks may also arise
+> > >   due to inconsistencies or race conditions during transitions.
+> >
+> > What inconsistencies and race conditions you have in mind, please?
+> 
+> I have explained it at
+> https://lore.kernel.org/live-patching/Z5DHQG4geRsuIflc@pathway.suse.cz/T/#m5058583fa64d95ef7ac9525a6a8af8ca865bf354
+> 
+>  klp_ftrace_handler
+>       if (unlikely(func->transition)) {
+>           WARN_ON_ONCE(patch_state == KLP_UNDEFINED);
+>   }
+> 
+> Why is WARN_ON_ONCE() placed here? What issues have we encountered in the past
+> that led to the decision to add this warning?
+
+A safety measure for something which really should not happen.
+
+> > The main advantage of the atomic replace is simplify the maintenance
+> > and debugging.
+> 
+> Is it worth the high overhead on production servers?
+
+Yes, because the overhead once a live patch is applied is negligible.
+
+> Can you provide examples of companies that use atomic replacement at
+> scale in their production environments?
+
+At least SUSE uses it as a solution for its customers. No many problems 
+have been reported since we started ~10 years ago.
+
+Regards,
+Miroslav
