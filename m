@@ -1,193 +1,127 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3AE1E9B38
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0255638DF9
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738343164; cv=none; b=lzRrrak1Hqy7UhzqanDLa5E/LyFgQzAbWG4gof5cQS1vweBAtSPoi6oe5EvtN7PF6ciiigaqq+WRPKl7CnbKZNxRTWem8++l80nER4nG3/0hKe9gcCsaZhJLSbqVRrPwMg3zTMcyC7siHtpwLLCNaev+mYCk5ZHQaNPSKB80X2o=
+	t=1738343286; cv=none; b=cFR/1UlTMSuUY7xev/IQSNv272I6hjtm5lPYozuTm614cMfFnxYSmoT8CJkvS99FslICpPHUlZfB6p3QhqG+No+oSzoSAbe0A+HqSeYvYGLCwxMyxMn9xA3Oose/zIPsXsfFAKPpt+wIlE4kWn7emPBCHb6xompF7i26pKdZFaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738343164; c=relaxed/simple;
-	bh=eVYz0IAaPzlS9RjP5Ytk3MNZyadk1DKbSwYK1N+sVWI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AufueTjxZ2zZw5aoJJLgP/m5abJgOit2F90ye778WT5PUhUN1VfjHv2obhizH5ergLo5/V2DiDHC7d5yL9qDTM6eBotQHWBCK9mWaCJpRJwtzlPmPakhX8/Ck5YxBLg3VNzcGhKkJBPlE0+8hTim3DW9lmdtIgrOYYO4h4LQLDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=XKmSuL+q; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1738343286; c=relaxed/simple;
+	bh=YbPI8JZe9g/zD7JIgPUE9bTsUj4WBL6vQADV9p5w3ew=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OpnZsIT40AGbwMBFTsqJZE8ZVlsEs8VANY/TIxtnkhZ3gUQ2HVMI3KCdN8kb4DcEBdFq9p3Dx0p5sIYrTPfdNxBbjxwqDdE3tBX1VffSCjmkvPT1tNV0GXBWaj9HTgByGl2KCtznS74rgiq0CG22nIYdbFDhzAa5D22nGHxBdTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lOO/IOHG; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XKmSuL+q"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4363dc916ceso21804135e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:06:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lOO/IOHG"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-305d843d925so18101141fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:08:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1738343161; x=1738947961; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G+G4waO4iWi5ppsP27MVzR5EHmBlY2mxPNF1CuedbFM=;
-        b=XKmSuL+qms2JniBDZOBCpTcsUQ28XCqYHNEGDSOb1dwm40H4slaWxiRyys+mD4N2oT
-         Olh/CVhy8RbSOVK/YTIt+ZzWaC9ZnDZTZVBkGr2bl/k38Rn9NSl01KYcQJTugnmWmodz
-         NQ2jPoKa/APZ/UzFdgsWdtGEGu293+rXHsrbo=
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738343282; x=1738948082; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YbPI8JZe9g/zD7JIgPUE9bTsUj4WBL6vQADV9p5w3ew=;
+        b=lOO/IOHGpu6Z8Qy4WORkZ4iCyYA9gbP6htorYutU7EPkIeVEKtG4VoEi+73/bQkbJz
+         Hw4jjfRRVo1MOdsin5uRu9AjtMdfawpBbQFfY3sgBIhM5LLbHYqIraxtdKEVOCybfndv
+         AXv8wlC5DKGV6QH2v08v2tCng6PW9i39UdMmtyFNq9+HOwmORNIRoFk6LP31i+Pk1Gal
+         1+IDXIiz4BAHwaBnDgDxSgMHqhzcK0G/XFhPvrmzsEvH5Dhvdq141BQCX4lAaUM9BSZp
+         oO27BhDNAC49obCJYno6Wq9udshlrij27pdkh9LKYNCev1Pc9heaWhiy0FY42OU85xmW
+         yzpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738343161; x=1738947961;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G+G4waO4iWi5ppsP27MVzR5EHmBlY2mxPNF1CuedbFM=;
-        b=hh0TuGOIlS4kVhwrb6b9hXLTE3H3QEhlRMxABWpHAFcIsARcSxkBRqO2lzcd2k7lsY
-         nGKg5LjbeVXhyprT5TddywQ4HbWjjB/6/j22lLiv/Co65RnIvbQz/uWUnc9UcYLy+3A7
-         7FdEQqg5GbuTt6hQrKwO/ymC2V4VaXrEARhsWvNDs63t9KWM2AH7JBN94SyBTifCTOpq
-         eTUwh1YkpSJKKlxm8/CuuqK5gxH9w05OUdMU8JEcJXJZ8eXRGbbLcO0UW7YVy/G3P2SQ
-         KtL/jA/4BadRtQT0dXur5/4E/Vat60MdB+4BH5H0lvyr3X/hhndJwxBxLEmVoSj16PFl
-         tAow==
-X-Forwarded-Encrypted: i=1; AJvYcCWaicHXM7ZQeE/ZqeuBqcjrSyptshDNiBZqXSAzx8eNxoYzj1szYBUChkAC+5vindI1kjnSSmE4RIncyWA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOoqXlyWV0U0u0N0Tof6eE7lRI5auP5dNzFjiJq4pIs6Hv2AmT
-	J4GK8NY79sdMdFej1l3ZBlYeVMxCO/rHDWIKfJ7bPZEM/ED7MheMNbdXFwuyDnk=
-X-Gm-Gg: ASbGncvTk3XhttHaL4+P67PQPrMg9lFb6wzCM8YtsnMrzc8XKLlcwAgeCSa5b+aRvlA
-	xgKG1LzVBtTyhhSb3APsKxvcuwLb+nCBsIE33gKwSRZM84dg7yulvYUGyYk+/u4c02v+bJhXEi/
-	RtcGOR+TSXv8y106gfoSwuswAahr8jlh9NNVi4SC2Liu6oxiLU4XRgjdaTPGTOQyFtOmV7NabgT
-	Jr5BUERbkCsjg53TAOcsde3dmzpBmwqSOllNknZxT8rknROFBpFQqS3GEWvyAcXWTeDZFy/EFPQ
-	hvsV9laxoocDu+DzQGCfRvP5anw=
-X-Google-Smtp-Source: AGHT+IHqJ7SXWObwA7TE2hNt8h99Mz+Rh4lA4VBEyCv4JI/V7wPQqHQuFCcfla/1mLYWhuuiSze4/A==
-X-Received: by 2002:a05:600c:83c6:b0:434:f2af:6e74 with SMTP id 5b1f17b1804b1-438e170e7b5mr73728995e9.15.1738343161267;
-        Fri, 31 Jan 2025 09:06:01 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23e5e53sm60120095e9.17.2025.01.31.09.05.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 09:06:00 -0800 (PST)
-Date: Fri, 31 Jan 2025 18:05:58 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: David Hildenbrand <david@redhat.com>
-Cc: Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v1 05/12] mm/memory: detect writability in
- restore_exclusive_pte() through can_change_pte_writable()
-Message-ID: <Z50C9tyZC_wQS6Ux@phenom.ffwll.local>
-Mail-Followup-To: David Hildenbrand <david@redhat.com>,
-	Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
-References: <20250129115411.2077152-1-david@redhat.com>
- <20250129115411.2077152-6-david@redhat.com>
- <Z5tLmYOQaZrdWQHN@phenom.ffwll.local>
- <2670f65f-e973-483e-aed6-526d00125ad7@redhat.com>
- <Z5t4rrkRiOsRY2jH@phenom.ffwll.local>
- <z7s7xb2ftv5hqg3uzjqkou6enguleazwwehxbi5zulbkar2aej@zlbdh2kdewdn>
- <d552cc03-b7af-44be-bcaf-13da720a2226@redhat.com>
+        d=1e100.net; s=20230601; t=1738343282; x=1738948082;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YbPI8JZe9g/zD7JIgPUE9bTsUj4WBL6vQADV9p5w3ew=;
+        b=lhUtX3WFqN9A3xg6b5iJwaeXl/3zODbCcef1nztZdcjj79yxZUe8M+EWaw+bJGHhZX
+         Zb3D9gqlkehnZKGPKQfJL1xzihVA7fp80zPSp1CuCb6Zr2Bl3UjwFqZqBSLXiZbKW6ZL
+         HnlL9yyJV+rD54Pxhlj6GQ8HwIrTe2Upi7QbYi5ACAPbS0UNrt7yQf8H/EWejzlpR6Ui
+         PXfPHqkFGg+0bHhBHLi8zpVt+xwtQvclCSf8Ia4npvrLCvp5nuVJfxrjeqzTuecP4StB
+         11hhloLkvz706MrXPu90HN8kMuNewN9yNlryHpvEwts13fzX85ncBO+Nj/Ap8+wlGfzq
+         0tgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjFgvQcKJWVcuYSC3LSH7Hv5fI5tGWd/RSKznwwFJJTwQWLde0In72zEV8y6/vc2onVnmCFIVu0pdagic=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1bv7kK25Sgg3QIr26FP4oEXpk8uGoPOaFFm1L6AFhYjQFHVAL
+	XxXRRn8LBqq+HosPWa9cVkf0lc1LBvWHHqOlo71WQJhw49WfIl5WDLVvBZH5oodXRTXQenAbiub
+	i4rcB6W10/Fe+mZg30ydIUiXewHD4mBadvPpEjUlrFKX+KRO7UzY=
+X-Gm-Gg: ASbGncsJLUlDkaU8ScEDr32lVfLoO4DBd50XUxpa07tSqoVSPrFCGU0LhOchKgwdXKI
+	Y0W2Lnc32swuHR2M0RZPUUR93TlO4UyRy8+quNiks7L+KggBcJqII6tKTJ2VE3cdghNcJRSQ=
+X-Google-Smtp-Source: AGHT+IFBFlzCF/3konHaqIqI9CK1xWNyw3X90IbPuYfx7dRCuzvgqC0d/zqkP3bOBjxwlKot4y/ptAzDn4fM9VfIHmk=
+X-Received: by 2002:a2e:bd05:0:b0:302:3d74:a1af with SMTP id
+ 38308e7fff4ca-3079685761amr46280801fa.20.1738343281879; Fri, 31 Jan 2025
+ 09:08:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d552cc03-b7af-44be-bcaf-13da720a2226@redhat.com>
-X-Operating-System: Linux phenom 6.12.11-amd64 
+References: <20250129155525.663780-1-koichiro.den@canonical.com>
+ <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com>
+ <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
+ <CAMRc=Mc3qBXaATpYRAXeHne0+mBjErivjvUe4rBEj2ksansatQ@mail.gmail.com>
+ <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com> <CAFGk_a0U=jSQD85UKC1e=pSWr8W9y_MMAFyPVFOcE-fUZry7-Q@mail.gmail.com>
+In-Reply-To: <CAFGk_a0U=jSQD85UKC1e=pSWr8W9y_MMAFyPVFOcE-fUZry7-Q@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 31 Jan 2025 18:07:50 +0100
+X-Gm-Features: AWEUYZlvRg98a9oJdVcNuXVOzrkvtFgK-r_h-N8R-DciwqWu7dIkrkJ06iQZopY
+Message-ID: <CAMRc=MfmMhZ0CS=e-YNHdH49rZ=Qgr8rQKd4aYCfS3jh8qKLdg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for gpio-aggregator
+To: =?UTF-8?Q?Maciej_Borz=C4=99cki?= <maciej.borzecki@canonical.com>
+Cc: Koichiro Den <koichiro.den@canonical.com>, linux-gpio@vger.kernel.org, 
+	geert+renesas@glider.be, linus.walleij@linaro.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 31, 2025 at 11:55:55AM +0100, David Hildenbrand wrote:
-> On 31.01.25 00:06, Alistair Popple wrote:
-> > On Thu, Jan 30, 2025 at 02:03:42PM +0100, Simona Vetter wrote:
-> > > On Thu, Jan 30, 2025 at 10:58:51AM +0100, David Hildenbrand wrote:
-> > > > On 30.01.25 10:51, Simona Vetter wrote:
-> > > > > On Wed, Jan 29, 2025 at 12:54:03PM +0100, David Hildenbrand wrote:
-> > > > > > Let's do it just like mprotect write-upgrade or during NUMA-hinting
-> > > > > > faults on PROT_NONE PTEs: detect if the PTE can be writable by using
-> > > > > > can_change_pte_writable().
-> > > > > > 
-> > > > > > Set the PTE only dirty if the folio is dirty: we might not
-> > > > > > necessarily have a write access, and setting the PTE writable doesn't
-> > > > > > require setting the PTE dirty.
-> > > > > 
-> > > > > Not sure whether there's much difference in practice, since a device
-> > > > > exclusive access means a write, so the folio better be dirty (unless we
-> > > > > aborted halfway through). But then I couldn't find the code in nouveau to
-> > > > > do that, so now I'm confused.
-> > > > 
-> > > > That confused me as well. Requiring the PTE to be writable does not imply
-> > > > that it is dirty.
-> > > > 
-> > > > So something must either set the PTE or the folio dirty.
-> > > 
-> > > Yeah I'm not finding that something.
-> > > 
-> > > > ( In practice, most anonymous folios are dirty most of the time ... )
-> > > 
-> > > And yup that's why I think it hasn't blown up yet.
-> > > 
-> > > > If we assume that "device-exclusive entries" are always dirty, then it
-> > > > doesn't make sense to set the folio dirty when creating device-exclusive
-> > > > entries. We'd always have to set the PTE dirty when restoring the exclusive
-> > > > pte.
-> > > 
-> > > I do agree with your change, I think it's correct to put this
-> > > responsibility onto drivers. It's just that nouveau seems to not be
-> > > entirely correct.
-> > 
-> > Yeah, agree it should be a driver responsibility but also can't see how nouveau
-> > is correct there either. I might see if I can get it to blow up...
-> 
-> (in context of the rmap walkers) The question is, how do we consider
-> device-exclusive entries:
-> 
-> (1) dirty? Not from a CPU perspective.
-> (2) referenced? Not from a CPU perspective.
-> 
-> If the answer is always "no" to all questions, then memory notifiers must
-> handle it, because we'd be answering the question from the CPU point of
-> view.
-> 
-> If the answer is always "yes", there is a problem: we can only make it
-> clean/young by converting it to an ordinary PTE first (requiring MMU
-> notifiers etc.), which makes it quite nasty.
-> 
-> Mixed answers are not possible, because we don't know just from staring at
-> the entry.
+On Fri, Jan 31, 2025 at 8:26=E2=80=AFAM Maciej Borz=C4=99cki
+<maciej.borzecki@canonical.com> wrote:
+>
+> On Thu, 30 Jan 2025 at 21:48, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > On Thu, Jan 30, 2025 at 7:40=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote:
+> > >
+> > > While at it: there's no reason to impose a
+> > > naming convention of lineX, lineY etc., the names don't matter for th=
+e
+> > > aggregator setup (unlike gpio-sim where they indicate the offset of
+> > > the line they concern).
+> > >
+> >
+> > Scratch that part. There's a good reason for that - the ordering of
+> > lines within the aggregator. I'm just not sure whether we should
+> > impose a strict naming where - for an aggregator of 3 lines total - we
+> > expect there to exist groups named line0, line1 and line2 or if we
+> > should be more lenient and possibly sort whatever names the user
+> > provides alphabetically?
+>
+> If I may jump in quickly (I provided some initial feedback on the
+> configfs interfaces
+> for the first internal patches). I think it's preferable to have
+> strict and explicit, even
+> If more verbose, line ordering in the aggregator.The motivator for
+> this is that whoever
+> sets up a new device through the aggregator does not have to second guess=
+ what
+> the driver will do. Implicit ordering could perhaps be fine if the
+> consumers were to
+> impose some set of rules themselves, but I fear there would still be
+> some ambiguity
+> left if free form names were for e.g. [1, 02, 10]. In the end they
+> would probably settle
+> on some mechanism which would mimic what we could already do in the
+> driver itself
+> and avoid any further confusion for the user.
+>
+> Cheers,
+> Maciej
 
-I think it's the gpu's (or whatever is using it) responsibility to update
-folio state while it has ptes pointing at memory. Whether that's
-device-exclusive system memory or device-private migrated memory. Anything
-else doesn't make sense to me conceptually.
+Fair enough, I was thinking that just sorting the entries
+alphabetically would both allow the lineX scheme AND leave some leeway
+for non-standard naming but it may indeed end up being confusing with
+no apparent advantage.
 
-And I don't think we can just blindly assume even for device-exclusive
-mappings that they will be dirty when we convert them back to a real pte,
-because we might have raced trying to set up the gpu mapping and restarted
-before we even put the pte into place. Or maybe someone was real quick at
-writing it back after the gpu already dropped it's pte.
-
-I guess maybe some clear documentation in all these functions
-(make_device_exclusive, hmm_range_fault, migration helpers) that it's the
-drivers job to dirty pages correctly would help?
-
-But nouveau definitely does not look very correct here, pretty sure on
-that.
-
-Cheers, Sima
--- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Bart
