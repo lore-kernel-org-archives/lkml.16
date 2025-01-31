@@ -1,33 +1,33 @@
-Received: from smtp-190d.mail.infomaniak.ch (smtp-190d.mail.infomaniak.ch [185.125.25.13])
+Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE69D1F1526
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C658C1F193D
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738341157; cv=none; b=mH60YNaI4WwERnnjIB8hrdn3yMzlK4DiYr2RXFN7QDTaWHfs5bR3rBXPpqKD5mBc4P8mQCEg7NSq/Ff6q9dw3Ge+xD9Lj0gFCYuxkFPjy8vaou1q1OoBFeATe8fk2yeTOodoEHq11T1f6i9kX9bcXbmmrRfqOwo20wqKVDYK8HQ=
+	t=1738341158; cv=none; b=oCMGE1QswD9hkjA4VX8Y1VUB9G6rgP18qtDQD8QvqLqkteSuZUG6xZMKDv1ghUm6TTw9RczgFqch3MtwKn2B89PAGXBI9XlkrO1zlNboyRxlZsfSpBpUodP0TP9ngkHA2P5zTornN6l9PxVzubN4pWXHhe+3+zb9P8DiHgKD40o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738341157; c=relaxed/simple;
-	bh=hLNB+XJF7sBjW62/cnxy26rdc5Fe4GTi618ha0GMCZg=;
+	s=arc-20240116; t=1738341158; c=relaxed/simple;
+	bh=rq5DmakL4CjwVhjz51aa+Mi9Ypeg6gGkFxw/znSRb9A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hdT6iauWvL9kMce9RC95cpm7esj7vaFQ85EjgjYchdz/fBmWsj1boZLMw7kTHt2ZFYN7nSoFK4gOOZhLWoBxTn0gpcagdQrO9dqx4GL3YCVPicZKvYguw3zW/kviF/ISZuUDl8zg5uULEUDzszrJeNy3QTzjpoZptongnd7CrEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=oKa9H4yu; arc=none smtp.client-ip=185.125.25.13
+	 MIME-Version:Content-Type; b=oG04mcSF70RcF54Frsv/6BTd/4m4MDOOpIafT61kwlWeceKf8aNdD+WlVY8CIkxLyZga0ckromAyuvI8GrPC4GKGnaEuTO7QxgMpH5pdvjsqdhZBXLC8VKDG50shOkS4VAszHstKFfiwTFUIEpie79mQdcHwgaoDS78lIxQKpog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=KC69H+rK; arc=none smtp.client-ip=84.16.66.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="oKa9H4yu"
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:1])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Yl1dX0Tbbz98y;
-	Fri, 31 Jan 2025 17:32:32 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="KC69H+rK"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Yl1dR0VpBzTrl;
+	Fri, 31 Jan 2025 17:32:27 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1738341151;
-	bh=9msOSoxFbyZ3mUvBdgiO8zt+wCcGQl76yI0cP5soln8=;
+	s=20191114; t=1738341146;
+	bh=ByE1DDNSpuJ6a6hd6d5J/2nBuGXzn9R4KcVGoWos0wY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oKa9H4yuVEFcSLEUtN4vyMcjix8PCdN3KMcpzKYnOVbowfBlIATPeZ7MtwH8xImaG
-	 WfkmwjMaXC3EBkEgmTJ04yeT0o/Qv7E7mttVyqGcJ+fP3UAWZImu4Oz7GdNF4mC+1y
-	 qoGSo215x33nc+to0qoPVqjbBJpCOMxQw4zA+mmA=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Yl1dV62gHzjVF;
-	Fri, 31 Jan 2025 17:32:30 +0100 (CET)
+	b=KC69H+rKV5RAgm7p6R0YiDuHJgSiqUdMzl1rtlvXNu+hf9C3ygDYfZOICT6ARDvhV
+	 ZHxM3d/2y9F+tK647V8F0WuS2Dd2cM+C1Ou2cV0CI5TWArg60aIYmW7RvlJGpBIoRd
+	 mDQTHeGc9Y6KgzE2SLYDLh5xumpTPQth/jZkbToQ=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Yl1dP4sQHzfdn;
+	Fri, 31 Jan 2025 17:32:25 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Eric Paris <eparis@redhat.com>,
 	Paul Moore <paul@paul-moore.com>,
@@ -57,9 +57,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-security-module@vger.kernel.org
-Subject: [PATCH v5 24/24] landlock: Add audit documentation
-Date: Fri, 31 Jan 2025 17:30:59 +0100
-Message-ID: <20250131163059.1139617-25-mic@digikod.net>
+Subject: [PATCH v5 22/24] selftests/landlock: Test audit with restrict flags
+Date: Fri, 31 Jan 2025 17:30:57 +0100
+Message-ID: <20250131163059.1139617-23-mic@digikod.net>
 In-Reply-To: <20250131163059.1139617-1-mic@digikod.net>
 References: <20250131163059.1139617-1-mic@digikod.net>
 Precedence: bulk
@@ -72,251 +72,444 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Because audit is dedicated to the system administrator, create a new
-entry in Documentation/admin-guide/LSM .
+Add audit_exec tests to filter Landlock denials according to
+cross-execution or muted subdomains.
 
-Extend other Landlock documentation's pages with this new one.
+Add a wait-pipe-sandbox.c test program to sandbox itself and send a
+(denied) signals to its parent.
 
 Cc: Günther Noack <gnoack@google.com>
 Cc: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20250131163059.1139617-25-mic@digikod.net
+Link: https://lore.kernel.org/r/20250131163059.1139617-23-mic@digikod.net
 ---
 
 Changes since v4:
+- Revamp to test the Landlock syscall flags instead of the audit rules.
+- Copy wait-pipe.c to wait-pipe-sandbox.c and extend it.
+- Fix regex.
+
+Changes since v3:
 - New patch.
 ---
- Documentation/admin-guide/LSM/index.rst    |   1 +
- Documentation/admin-guide/LSM/landlock.rst | 157 +++++++++++++++++++++
- Documentation/security/landlock.rst        |   7 +
- Documentation/userspace-api/landlock.rst   |   7 +
- MAINTAINERS                                |   1 +
- 5 files changed, 173 insertions(+)
- create mode 100644 Documentation/admin-guide/LSM/landlock.rst
+ tools/testing/selftests/landlock/Makefile     |   6 +-
+ tools/testing/selftests/landlock/audit_test.c | 221 ++++++++++++++++++
+ tools/testing/selftests/landlock/common.h     |   1 +
+ .../selftests/landlock/wait-pipe-sandbox.c    | 131 +++++++++++
+ 4 files changed, 358 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/landlock/wait-pipe-sandbox.c
 
-diff --git a/Documentation/admin-guide/LSM/index.rst b/Documentation/admin-guide/LSM/index.rst
-index ce63be6d64ad..b44ef68f6e4d 100644
---- a/Documentation/admin-guide/LSM/index.rst
-+++ b/Documentation/admin-guide/LSM/index.rst
-@@ -48,3 +48,4 @@ subdirectories.
-    Yama
-    SafeSetID
-    ipe
-+   landlock
-diff --git a/Documentation/admin-guide/LSM/landlock.rst b/Documentation/admin-guide/LSM/landlock.rst
+diff --git a/tools/testing/selftests/landlock/Makefile b/tools/testing/selftests/landlock/Makefile
+index 5cb0828f0514..a3f449914bf9 100644
+--- a/tools/testing/selftests/landlock/Makefile
++++ b/tools/testing/selftests/landlock/Makefile
+@@ -10,7 +10,11 @@ src_test := $(wildcard *_test.c)
+ 
+ TEST_GEN_PROGS := $(src_test:.c=)
+ 
+-TEST_GEN_PROGS_EXTENDED := true sandbox-and-launch wait-pipe
++TEST_GEN_PROGS_EXTENDED := \
++	true \
++	sandbox-and-launch \
++	wait-pipe \
++	wait-pipe-sandbox
+ 
+ # Short targets:
+ $(TEST_GEN_PROGS): LDLIBS += -lcap -lpthread
+diff --git a/tools/testing/selftests/landlock/audit_test.c b/tools/testing/selftests/landlock/audit_test.c
+index 44131fb6e3d3..d270a618120c 100644
+--- a/tools/testing/selftests/landlock/audit_test.c
++++ b/tools/testing/selftests/landlock/audit_test.c
+@@ -7,7 +7,9 @@
+ 
+ #define _GNU_SOURCE
+ #include <errno.h>
++#include <limits.h>
+ #include <linux/landlock.h>
++#include <stdlib.h>
+ #include <sys/mount.h>
+ #include <sys/prctl.h>
+ #include <sys/types.h>
+@@ -60,6 +62,15 @@ static int matches_log_signal(struct __test_metadata *const _metadata,
+ 	return audit_match_record(audit_fd, AUDIT_LANDLOCK_ACCESS, log_match);
+ }
+ 
++static int matches_log_fs_read_root(struct __test_metadata *const _metadata,
++				    int audit_fd)
++{
++	return audit_match_record(
++		audit_fd, AUDIT_LANDLOCK_ACCESS,
++		REGEX_LANDLOCK_PREFIX
++		" blockers=fs\\.read_dir path=\"/\" dev=\"[^\"]\\+\" ino=[0-9]\\+$");
++}
++
+ FIXTURE(audit_fork)
+ {
+ 	struct audit_filter audit_filter;
+@@ -201,4 +212,214 @@ TEST_F(audit_fork, flags)
+ 	}
+ }
+ 
++FIXTURE(audit_exec)
++{
++	struct audit_filter audit_filter;
++	int audit_fd;
++};
++
++FIXTURE_VARIANT(audit_exec)
++{
++	const int restrict_flags;
++};
++
++/* clang-format off */
++FIXTURE_VARIANT_ADD(audit_exec, default) {
++	/* clang-format on */
++	.restrict_flags = 0,
++};
++
++/* clang-format off */
++FIXTURE_VARIANT_ADD(audit_exec, quiet) {
++	/* clang-format on */
++	.restrict_flags = LANDLOCK_RESTRICT_SELF_QUIET,
++};
++
++/* clang-format off */
++FIXTURE_VARIANT_ADD(audit_exec, quiet_subdomains) {
++	/* clang-format on */
++	.restrict_flags = LANDLOCK_RESTRICT_SELF_QUIET_SUBDOMAINS,
++};
++
++/* clang-format off */
++FIXTURE_VARIANT_ADD(audit_exec, log_cross_exec) {
++	/* clang-format on */
++	.restrict_flags = LANDLOCK_RESTRICT_SELF_LOG_CROSS_EXEC,
++};
++
++/* clang-format off */
++FIXTURE_VARIANT_ADD(audit_exec, quiet_subdomains_and_log_cross_exec) {
++	/* clang-format on */
++	.restrict_flags = LANDLOCK_RESTRICT_SELF_QUIET_SUBDOMAINS |
++			  LANDLOCK_RESTRICT_SELF_LOG_CROSS_EXEC,
++};
++
++FIXTURE_SETUP(audit_exec)
++{
++	disable_caps(_metadata);
++	set_cap(_metadata, CAP_AUDIT_CONTROL);
++
++	self->audit_fd = audit_init();
++	EXPECT_LE(0, self->audit_fd)
++	{
++		const char *error_msg;
++
++		/* kill "$(auditctl -s | sed -ne 's/^pid \([0-9]\+\)$/\1/p')" */
++		if (self->audit_fd == -EEXIST)
++			error_msg = "socket already in use (e.g. auditd)";
++		else
++			error_msg = strerror(-self->audit_fd);
++		TH_LOG("Failed to initialize audit: %s", error_msg);
++	}
++
++	/* Applies test filter for the bin_wait_pipe_sandbox program. */
++	EXPECT_EQ(0, audit_init_filter_exe(&self->audit_filter,
++					   bin_wait_pipe_sandbox));
++	EXPECT_EQ(0, audit_filter_exe(self->audit_fd, &self->audit_filter,
++				      AUDIT_ADD_RULE));
++
++	clear_cap(_metadata, CAP_AUDIT_CONTROL);
++}
++
++FIXTURE_TEARDOWN(audit_exec)
++{
++	set_cap(_metadata, CAP_AUDIT_CONTROL);
++	EXPECT_EQ(0, audit_filter_exe(self->audit_fd, &self->audit_filter,
++				      AUDIT_DEL_RULE));
++	clear_cap(_metadata, CAP_AUDIT_CONTROL);
++	EXPECT_EQ(0, close(self->audit_fd));
++}
++
++TEST_F(audit_exec, flags)
++{
++	struct audit_records records;
++	int pipe_child[2], pipe_parent[2];
++	char buf_parent;
++	pid_t child;
++	int status;
++
++	ASSERT_EQ(0, pipe2(pipe_child, 0));
++	ASSERT_EQ(0, pipe2(pipe_parent, 0));
++
++	child = fork();
++	ASSERT_LE(0, child);
++	if (child == 0) {
++		const struct landlock_ruleset_attr layer1 = {
++			.scoped = LANDLOCK_SCOPE_SIGNAL,
++		};
++		char pipe_child_str[12], pipe_parent_str[12];
++		char *const argv[] = { (char *)bin_wait_pipe_sandbox,
++				       pipe_child_str, pipe_parent_str, NULL };
++		int ruleset_fd;
++
++		/* Passes the pipe FDs to the executed binary. */
++		EXPECT_EQ(0, close(pipe_child[0]));
++		EXPECT_EQ(0, close(pipe_parent[1]));
++		snprintf(pipe_child_str, sizeof(pipe_child_str), "%d",
++			 pipe_child[1]);
++		snprintf(pipe_parent_str, sizeof(pipe_parent_str), "%d",
++			 pipe_parent[0]);
++
++		ruleset_fd =
++			landlock_create_ruleset(&layer1, sizeof(layer1), 0);
++		if (ruleset_fd < 0) {
++			perror("Failed to create a ruleset");
++			_exit(1);
++		}
++		prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
++		if (landlock_restrict_self(ruleset_fd,
++					   variant->restrict_flags)) {
++			perror("Failed to restrict self");
++			_exit(1);
++		}
++		close(ruleset_fd);
++
++		ASSERT_EQ(0, execve(argv[0], argv, NULL))
++		{
++			TH_LOG("Failed to execute \"%s\": %s", argv[0],
++			       strerror(errno));
++		};
++		_exit(1);
++		return;
++	}
++
++	EXPECT_EQ(0, close(pipe_child[1]));
++	EXPECT_EQ(0, close(pipe_parent[0]));
++
++	/* Waits for the child. */
++	EXPECT_EQ(1, read(pipe_child[0], &buf_parent, 1));
++
++	/* Tests that there was no denial until now. */
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(0, records.domain);
++
++	/*
++	 * Wait for the child to do a first denied action by layer1 and
++	 * sandbox itself with layer2.
++	 */
++	EXPECT_EQ(1, write(pipe_parent[1], ".", 1));
++	EXPECT_EQ(1, read(pipe_child[0], &buf_parent, 1));
++
++	/* Tests that the audit record only matches the child. */
++	if (variant->restrict_flags & LANDLOCK_RESTRICT_SELF_LOG_CROSS_EXEC) {
++		/* Matches the current domain. */
++		EXPECT_EQ(0, matches_log_signal(_metadata, self->audit_fd,
++						getpid()));
++	}
++
++	/* Checks that we didn't miss anything. */
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++
++	/*
++	 * Wait for the child to do a second denied action by layer1 and
++	 * layer2, and sandbox itself with layer3.
++	 */
++	EXPECT_EQ(1, write(pipe_parent[1], ".", 1));
++	EXPECT_EQ(1, read(pipe_child[0], &buf_parent, 1));
++
++	/* Tests that the audit record only matches the child. */
++	if (variant->restrict_flags & LANDLOCK_RESTRICT_SELF_LOG_CROSS_EXEC) {
++		/* Matches the current domain. */
++		EXPECT_EQ(0, matches_log_signal(_metadata, self->audit_fd,
++						getpid()));
++	}
++
++	if (!(variant->restrict_flags &
++	      LANDLOCK_RESTRICT_SELF_QUIET_SUBDOMAINS)) {
++		/* Matches the child domain. */
++		EXPECT_EQ(0,
++			  matches_log_fs_read_root(_metadata, self->audit_fd));
++	}
++
++	/* Checks that we didn't miss anything. */
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++
++	/* Waits for the child to terminate. */
++	EXPECT_EQ(1, write(pipe_parent[1], ".", 1));
++	ASSERT_EQ(child, waitpid(child, &status, 0));
++	ASSERT_EQ(1, WIFEXITED(status));
++	ASSERT_EQ(0, WEXITSTATUS(status));
++
++	/* Tests that the audit record only matches the child. */
++	if (!(variant->restrict_flags &
++	      LANDLOCK_RESTRICT_SELF_QUIET_SUBDOMAINS)) {
++		/*
++		 * Matches the child domains, which tests that the
++		 * llcred->domain_exec bitmask is correctly updated with a new
++		 * domain.
++		 */
++		EXPECT_EQ(0,
++			  matches_log_fs_read_root(_metadata, self->audit_fd));
++		EXPECT_EQ(0, matches_log_signal(_metadata, self->audit_fd,
++						getpid()));
++	}
++
++	/* Checks that we didn't miss anything. */
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++}
++
+ TEST_HARNESS_MAIN
+diff --git a/tools/testing/selftests/landlock/common.h b/tools/testing/selftests/landlock/common.h
+index ea7c4f9638b0..6628ef9f05ed 100644
+--- a/tools/testing/selftests/landlock/common.h
++++ b/tools/testing/selftests/landlock/common.h
+@@ -31,6 +31,7 @@
+ 
+ static const char bin_sandbox_and_launch[] = "./sandbox-and-launch";
+ static const char bin_wait_pipe[] = "./wait-pipe";
++static const char bin_wait_pipe_sandbox[] = "./wait-pipe-sandbox";
+ 
+ static void _init_caps(struct __test_metadata *const _metadata, bool drop_all)
+ {
+diff --git a/tools/testing/selftests/landlock/wait-pipe-sandbox.c b/tools/testing/selftests/landlock/wait-pipe-sandbox.c
 new file mode 100644
-index 000000000000..d69245ee236a
+index 000000000000..87dbc9164430
 --- /dev/null
-+++ b/Documentation/admin-guide/LSM/landlock.rst
-@@ -0,0 +1,157 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+.. Copyright © 2025 Microsoft Corporation
++++ b/tools/testing/selftests/landlock/wait-pipe-sandbox.c
+@@ -0,0 +1,131 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Write in a pipe, wait, sandbox itself, test sandboxing, and wait again.
++ *
++ * Used by audit_exec.flags from audit_test.c
++ *
++ * Copyright © 2024-2025 Microsoft Corporation
++ */
 +
-+================================
-+Landlock: system-wide management
-+================================
++#define _GNU_SOURCE
++#include <fcntl.h>
++#include <linux/landlock.h>
++#include <linux/prctl.h>
++#include <signal.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/prctl.h>
++#include <unistd.h>
 +
-+:Author: Mickaël Salaün
-+:Date: January 2025
++#include "wrappers.h"
 +
-+Landlock can leverage the audit framework to log events.
++static int sync_with(int pipe_child, int pipe_parent)
++{
++	char buf;
 +
-+User space documentation can be found here:
-+Documentation/userspace-api/landlock.rst.
++	/* Signals that we are waiting. */
++	if (write(pipe_child, ".", 1) != 1) {
++		perror("Failed to write to first argument");
++		return 1;
++	}
 +
-+Audit
-+=====
++	/* Waits for the parent do its test. */
++	if (read(pipe_parent, &buf, 1) != 1) {
++		perror("Failed to write to the second argument");
++		return 1;
++	}
 +
-+Denied access requests are logged by default if `audit` is enabled.  Programs
-+may opt-out with the ``LANDLOCK_RESTRICT_SELF_QUIET`` flag (cf.
-+Documentation/userspace-api/landlock.rst).  Landlock logs can also be masked
-+thanks to audit rules.  Landlock can generate 2 audit record types.
++	return 0;
++}
 +
-+Record types
-+------------
++int main(int argc, char *argv[])
++{
++	const struct landlock_ruleset_attr layer2 = {
++		.handled_access_fs = LANDLOCK_ACCESS_FS_READ_DIR,
++	};
++	const struct landlock_ruleset_attr layer3 = {
++		.scoped = LANDLOCK_SCOPE_SIGNAL,
++	};
++	int err, pipe_child, pipe_parent, ruleset_fd;
 +
-+AUDIT_LANDLOCK_ACCESS
-+    This record type identifies a denied access request to a kernel resource.
-+    The ``domain`` field indicates the ID of the domain which blocked the
-+    request.  The ``blockers`` field indicates the cause(s) of this denial
-+    (separated by a comma), and the following fields identify the kernel object
-+    (similar to SELinux).  There may be more than one of this record type per
-+    audit event.
++	/* The first argument must be the file descriptor number of a pipe. */
++	if (argc != 3) {
++		fprintf(stderr, "Wrong number of arguments (not two)\n");
++		return 1;
++	}
 +
-+    Example with a file link request generating two records in the same event::
++	pipe_child = atoi(argv[1]);
++	pipe_parent = atoi(argv[2]);
++	/* PR_SET_NO_NEW_PRIVS already set by parent. */
 +
-+        domain=195ba459b blockers=fs.refer path="/usr/bin" dev="vda2" ino=351
-+        domain=195ba459b blockers=fs.make_reg,fs.refer path="/usr/local" dev="vda2" ino=365
++	/* First step to test parent's layer1. */
++	err = sync_with(pipe_child, pipe_parent);
++	if (err)
++		return err;
 +
-+AUDIT_LANDLOCK_DOMAIN
-+    This record type describes the status of a Landlock domain.  The ``status``
-+    field can be either ``allocated`` or ``deallocated``.
++	/* Tries to send a signal, denied by layer1. */
++	if (!kill(getppid(), 0)) {
++		fprintf(stderr, "Successfully sent a signal to the parent");
++		return 1;
++	}
 +
-+    The ``allocated`` status is part of the same audit event and follows
-+    the first logged ``AUDIT_LANDLOCK_ACCESS`` record of a domain.  It identifies
-+    Landlock domain information at the time of the sys_landlock_restrict_self()
-+    call with the following fields:
++	/* Second step to test parent's layer1 and our layer2. */
++	err = sync_with(pipe_child, pipe_parent);
++	if (err)
++		return err;
 +
-+    - the ``domain`` ID
-+    - the enforcement ``mode``
-+    - the domain creator's ``pid``
-+    - the domain creator's ``uid``
-+    - the domain creator's executable path (``exe``)
-+    - the domain creator's command line (``comm``)
++	ruleset_fd = landlock_create_ruleset(&layer2, sizeof(layer2), 0);
++	if (ruleset_fd < 0) {
++		perror("Failed to create the layer2 ruleset");
++		return 1;
++	}
 +
-+    Example::
++	if (landlock_restrict_self(ruleset_fd, 0)) {
++		perror("Failed to restrict self");
++		return 1;
++	}
++	close(ruleset_fd);
 +
-+        domain=195ba459b status=allocated mode=enforcing pid=300 uid=0 exe="/root/sandboxer" comm="sandboxer"
++	/* Tries to send a signal, denied by layer1. */
++	if (!kill(getppid(), 0)) {
++		fprintf(stderr, "Successfully sent a signal to the parent");
++		return 1;
++	}
 +
-+    The ``deallocated`` status is an event on its own and it identifies a
-+    Landlock domain release.  After such event, it is guarantee that the
-+    related domain ID will never be reused during the lifetime of the system.
-+    The ``domain`` field indicates the ID of the domain which is released, and
-+    the ``denials`` field indicates the total number of denied access request,
-+    which might not have been logged according to the audit rules and
-+    sys_landlock_restrict_self()'s flags.
++	/* Tries to open ., denied by layer2. */
++	if (open("/", O_RDONLY | O_DIRECTORY | O_CLOEXEC) >= 0) {
++		fprintf(stderr, "Successfully opened /");
++		return 1;
++	}
 +
-+    Example::
++	/* Third step to test our layer2 and layer3. */
++	err = sync_with(pipe_child, pipe_parent);
++	if (err)
++		return err;
 +
-+        domain=195ba459b status=deallocated denials=3
++	ruleset_fd = landlock_create_ruleset(&layer3, sizeof(layer3), 0);
++	if (ruleset_fd < 0) {
++		perror("Failed to create the layer3 ruleset");
++		return 1;
++	}
 +
++	if (landlock_restrict_self(ruleset_fd, 0)) {
++		perror("Failed to restrict self");
++		return 1;
++	}
++	close(ruleset_fd);
 +
-+Event samples
-+--------------
++	/* Tries to open ., denied by layer2. */
++	if (open("/", O_RDONLY | O_DIRECTORY | O_CLOEXEC) >= 0) {
++		fprintf(stderr, "Successfully opened /");
++		return 1;
++	}
 +
-+Here are two examples of log events (see serial numbers).
++	/* Tries to send a signal, denied by layer3. */
++	if (!kill(getppid(), 0)) {
++		fprintf(stderr, "Successfully sent a signal to the parent");
++		return 1;
++	}
 +
-+In this example a sandboxed program (``kill``) tries to send a signal to the
-+init process, which is denied because of the signal scoping restriction
-+(``LL_SCOPED=s``)::
-+
-+  $ LL_FS_RO=/ LL_FS_RW=/ LL_SCOPED=s LL_FORCE_LOG=1 ./sandboxer kill 1
-+
-+This command generates two events, each identified with a unique serial
-+number following a timestamp (``msg=audit(1729738800.268:30)``).  The first
-+event (serial ``30``) contains 4 records.  The first record
-+(``type=LANDLOCK_ACCESS``) shows an access denied by the domain `1a6fdc66f`.
-+The cause of this denial is signal scopping restriction
-+(``blockers=scope.signal``).  The process that would have receive this signal
-+is the init process (``opid=1 ocomm="systemd"``).
-+
-+The second record (``type=LANDLOCK_DOMAIN``) describes (``status=allocated``)
-+domain `1a6fdc66f`.  This domain was created by process ``286`` executing the
-+``/root/sandboxer`` program launched by the root user.
-+
-+The third record (``type=SYSCALL``) describes the syscall, its provided
-+arguments, its result (``success=no exit=-1``), and the process that called it.
-+
-+The fourth record (``type=PROCTITLE``) shows the command's name as an
-+hexadecimal value.  This can be translated with ``python -c
-+'print(bytes.fromhex("6B696C6C0031"))'``.
-+
-+Finally, the last record (``type=LANDLOCK_DOMAIN``) is also the only one from
-+the second event (serial ``31``).  It is not tied to a direct user space action
-+but an asynchronous one to free resources tied to a Landlock domain
-+(``status=deallocated``).  This can be useful to know that the following logs
-+will not concern the domain ``1a6fdc66f`` anymore.  This record also summarize
-+the number of requests this domain denied (``denials=1``), whether they were
-+logged or not.
-+
-+.. code-block::
-+
-+  type=LANDLOCK_ACCESS msg=audit(1729738800.268:30): domain=1a6fdc66f blockers=scope.signal opid=1 ocomm="systemd"
-+  type=LANDLOCK_DOMAIN msg=audit(1729738800.268:30): domain=1a6fdc66f status=allocated mode=enforcing pid=286 uid=0 exe="/root/sandboxer" comm="sandboxer"
-+  type=SYSCALL msg=audit(1729738800.268:30): arch=c000003e syscall=62 success=no exit=-1 [..] ppid=272 pid=286 auid=0 uid=0 gid=0 [...] comm="kill" [...]
-+  type=PROCTITLE msg=audit(1729738800.268:30): proctitle=6B696C6C0031
-+  type=LANDLOCK_DOMAIN msg=audit(1729738800.324:31): domain=1a6fdc66f status=deallocated denials=1
-+
-+Here is another example showcasing filesystem access control::
-+
-+  $ LL_FS_RO=/ LL_FS_RW=/tmp LL_FORCE_LOG=1 ./sandboxer sh -c "echo > /etc/passwd"
-+
-+The related audit logs contains 8 records from 3 different events (serials 33,
-+34 and 35) created by the same domain `1a6fdc679`::
-+
-+  type=LANDLOCK_ACCESS msg=audit(1729738800.221:33): domain=1a6fdc679 blockers=fs.write_file path="/dev/tty" dev="devtmpfs" ino=9
-+  type=LANDLOCK_DOMAIN msg=audit(1729738800.221:33): domain=1a6fdc679 status=allocated mode=enforcing pid=289 uid=0 exe="/root/sandboxer" comm="sandboxer"
-+  type=SYSCALL msg=audit(1729738800.221:33): arch=c000003e syscall=257 success=no exit=-13 [...] ppid=272 pid=289 auid=0 uid=0 gid=0 [...] comm="sh" [...]
-+  type=PROCTITLE msg=audit(1729738800.221:33): proctitle=7368002D63006563686F203E202F6574632F706173737764
-+  type=LANDLOCK_ACCESS msg=audit(1729738800.221:34): domain=1a6fdc679 blockers=fs.write_file path="/etc/passwd" dev="vda2" ino=143821
-+  type=SYSCALL msg=audit(1729738800.221:34): arch=c000003e syscall=257 success=no exit=-13 [...] ppid=272 pid=289 auid=0 uid=0 gid=0 [...] comm="sh" [...]
-+  type=PROCTITLE msg=audit(1729738800.221:34): proctitle=7368002D63006563686F203E202F6574632F706173737764
-+  type=LANDLOCK_DOMAIN msg=audit(1729738800.261:35): domain=1a6fdc679 status=deallocated denials=2
-+
-+
-+Event filtering
-+---------------
-+
-+If you get spammed with audit logs related to Landlock, this is either an
-+attack attempt or a bug in the security policy.  We can put in place some
-+filters to limit noise with two complementary ways:
-+
-+- with sys_landlock_restrict_self()'s flags if we can fix the sandboxed
-+  programs,
-+- or with audit rules (see :manpage:`auditctl(8)`).
-+
-+Additional documentation
-+========================
-+
-+* `Linux Audit Documentation`_
-+* Documentation/userspace-api/landlock.rst
-+* Documentation/security/landlock.rst
-+* https://landlock.io
-+
-+.. Links
-+.. _Linux Audit Documentation:
-+   https://github.com/linux-audit/audit-documentation/wiki
-diff --git a/Documentation/security/landlock.rst b/Documentation/security/landlock.rst
-index 59ecdb1c0d4d..fe04c1b4d9d8 100644
---- a/Documentation/security/landlock.rst
-+++ b/Documentation/security/landlock.rst
-@@ -124,6 +124,13 @@ makes the reasoning much easier and helps avoid pitfalls.
- .. kernel-doc:: security/landlock/ruleset.h
-     :identifiers:
- 
-+Additional documentation
-+========================
-+
-+* Documentation/userspace-api/landlock.rst
-+* Documentation/admin-guide/LSM/landlock.rst
-+* https://landlock.io
-+
- .. Links
- .. _tools/testing/selftests/landlock/:
-    https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/landlock/
-diff --git a/Documentation/userspace-api/landlock.rst b/Documentation/userspace-api/landlock.rst
-index a7c1ebef2c79..4009179665c9 100644
---- a/Documentation/userspace-api/landlock.rst
-+++ b/Documentation/userspace-api/landlock.rst
-@@ -683,9 +683,16 @@ fine-grained restrictions).  Moreover, their complexity can lead to security
- issues, especially when untrusted processes can manipulate them (cf.
- `Controlling access to user namespaces <https://lwn.net/Articles/673597/>`_).
- 
-+How to disable Landlock audit records?
-+--------------------------------------
-+
-+You might want to put in place filters as explained here:
-+Documentation/admin-guide/LSM/landlock.rst
-+
- Additional documentation
- ========================
- 
-+* Documentation/admin-guide/LSM/landlock.rst
- * Documentation/security/landlock.rst
- * https://landlock.io
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d1086e53a317..70712e823d4c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13066,6 +13066,7 @@ L:	linux-security-module@vger.kernel.org
- S:	Supported
- W:	https://landlock.io
- T:	git https://git.kernel.org/pub/scm/linux/kernel/git/mic/linux.git
-+F:	Documentation/admin-guide/LSM/landlock.rst
- F:	Documentation/security/landlock.rst
- F:	Documentation/userspace-api/landlock.rst
- F:	fs/ioctl.c
++	return 0;
++}
 -- 
 2.48.1
 
