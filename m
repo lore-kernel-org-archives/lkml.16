@@ -1,149 +1,172 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2096.outbound.protection.outlook.com [40.107.21.96])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFF714B08A
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738316024; cv=none; b=TaYd7+6ICGEKCox0Ww92McWYyHS8la3/l2kFW+JyPZ6RXU0uD+4YVFgnGdGh+JB+kGJ83YPwBiFuy64CFq/EUYsVLMH5qgplq1f7nOOB43CUf4ym37KAbeJ26SKY9hUOMvlTl+rFSQfVUgkMcqPskZwVgPK59339O1ttO8DiXnE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738316024; c=relaxed/simple;
-	bh=9psyarGdV+Rf6x2zMJJATLHTqIUxMK5PgiUYtLsiP3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b8wh3jO+GmP3W3h5daBguSVUkt1ifk7PqVB6qUNE2i6XaY1y02BpdfsnalgRSs0b1gAceXVi2kSauJJ1VHVk/tLdyFa26Jtau1WDY4kNCw0aX7exd4KNzjA5ACF2vY//Iv6UajrCdeck1M2ZUM3DgAeg0TsvVgWg3jAVlfjD9zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ENU7Qlu8; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3BB85947;
+	Fri, 31 Jan 2025 09:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.96
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738316154; cv=fail; b=O+lcZUCUdGuRfLREhg7tUF3LzYnoWwL3QEihGvuJSrKZlchdgdJcXfj52c6ovZeMcLB46b+b+bCxHCBglvjOidCGL05wMf9oBw1QYIcxANoXhlfKDJQMpFCvSI8U0fKhneitrxaDc363DifW9VztyIamsk1zKTKH/HddpT7eCrI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738316154; c=relaxed/simple;
+	bh=M/F2rNfIGQst0+LWk45C2L3p8dXyVnnM+BnxpIJTS/c=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Un7tfd12/fCVJhpppc9uAgxh1MSNxdkB79NfPBHWgPBXxhm6JkkgQfcFM1lDTAObdw1b2jxADq1FD+Fx8go81YAt5VZoW4b553J7a/euJkkLEIJHd5R7pL4uGNE0incejG3S1XZBMBJrHuRHMqwgb0HpZEiCUnsZy9gs/UQOiEY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=g0Saj6f6; arc=fail smtp.client-ip=40.107.21.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ENU7Qlu8"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4363ae65100so19504325e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:33:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738316020; x=1738920820; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4jVAND7Ai4ETwfLpYMCrer3/CF37TNvowAyVGMzEzZ0=;
-        b=ENU7Qlu8HPw5RPo6IR0rCRMab4aX6e1as5ErR5GbOwT8vrdQkFCdU1wEYLPWs+Dlyp
-         4nQzfw8M8r6HEAjEmDSCycEk2VILJ2ULZP+Y4H+VbuJSToKPKjCZBu4SB42EWECPlZM7
-         6O3jaDwYBwlAQwxKKDc2TmjUQ6L61zDBpggCiATfJrLC53mrBZ07h+tFI4ZlS64jn1PF
-         fK4DY0WxJB2WBsF80D18wXgZNN7Tn7hK49L+gmzlErlwk1+ge3gjgHHjuTUnmVIbvGSH
-         tnY05rMJ+nG9wLhZRtllHd0/k1LpyUeAY6Mc/ujx1P0vdWSXT1xKSLeJGVMLC/ib99g7
-         vkjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738316020; x=1738920820;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4jVAND7Ai4ETwfLpYMCrer3/CF37TNvowAyVGMzEzZ0=;
-        b=pzRAQSs2X1NRCUuNONMD2J2zavh8qBWSmfxAODytbKHmNJYKTvsRgd2g3BbDk+ro+y
-         /rMH29TnbXqnlvu0xtfopnDa4s3Ace5jqKqdK1+OkvZBiqUgrADx7NCykK+0qOy/T6Lx
-         xOfovFiSNXFokAx3O+df1Ld4vsbWOCbuOPq5YxkZe21ynl4U5Lr/gNuFAujrzKCBdY+F
-         jXpo9YHHcgTYg4j+vzrnHm69Qo6WrUDZ/3Sfcy5DnkmwL+0sendU73t9+Glhg5f0dqK3
-         a9kng2o55rphyHug+uvbc0D3qpCMgjvr5J9/CwxIwXYOzAawpCqwv2P6g7Lt0LFNFj1x
-         s2pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUibqR+hx06jgfBCoO8si8pSjhP25wUXrNnF+btwtYUdJPA1rMHo5C4DcbfTBmfTDZkXxdXE3lNBXN35qk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPWNrv9hxCkRmDo7Di+wrq4VPaPyQj14DYfk6meh4kqFOyVTTD
-	j1n1jlrmVtFlz6njsJwEHdthc7RtjtjhlO6PO0b8pR3EyP69zsqnCsM+SE2MNix5pcDcL0SsFmS
-	L
-X-Gm-Gg: ASbGncv6AOhiuEcVDE1pnKlmqIL5jgTjKhPqlmTvzCt6aiJUcgSAoNQcqMFQEn+8IFK
-	yEgwV67Sct3HTx4i8v3siLVhvCbwxT5X02O0iroF0zhzGpnTD2moC8Hb+APh1m8M6GPfVCnXf2g
-	En3Z900pV1WFd/n+941Uq+DwEVlJKMPB7wEcZIBeC3kVsYte3vbvTcA0Dpx/LkehsGbkWcpSCAk
-	kLh8+/tAwbP+HQCFd+ovArSdZv6tuh4/BMleLisF5J8WWCUWUlcAYiJ2wssdx4mQicsLDn7XdGl
-	2rwWjHEOWuhBX+LY2g==
-X-Google-Smtp-Source: AGHT+IEcJnDN7OyY4JFBguUKcLFVGFjVNtkB7wXSfnIUxmCyBN3PrLsgzDawFD8pqHavqueW1oz+Kw==
-X-Received: by 2002:a5d:5f4d:0:b0:386:256c:8e59 with SMTP id ffacd0b85a97d-38c519378damr9845345f8f.3.1738316020544;
-        Fri, 31 Jan 2025 01:33:40 -0800 (PST)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b576csm4227208f8f.63.2025.01.31.01.33.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 01:33:40 -0800 (PST)
-Date: Fri, 31 Jan 2025 10:33:38 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Christian Brauner <brauner@kernel.org>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] cgroup: fix race between fork and cgroup.kill
-Message-ID: <nsh73lyuoctjbeudj7o35jrkcygnfehhwj5dbf4u3hdvawx54v@nz6l2v5q2iin>
-References: <20250131000542.1394856-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="g0Saj6f6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yeNhqnucpsNYCUe9OctGEdEfVNeGDvbjYtwEoBtKR8f7DySGVDwd4PCzpPutm5bZtAtLBwkG2TydI4rjnX7gnutRYkrT4oLCyQos/OnxS0uVGwr9XPgeikKRkvsX/rLsJBoolZYjr8cURco4tV1qjLjGzQSXzm2twN+lVG78S+0YJTaLQiXxRkVAvpfLb5mFAkTUNYnN8m3HlbKAO8jnVIngq51X101X+cr3MgnKQU8BJjR6gqCFLEQixPr9dOamepUgmexT9m6uBF4UQmyPfA171wcPlEbOAQsgP7/a6vfobq2+rGusB+bAj0vKhYaY0qpQXzgX955uSmx/thfGiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=si6mym3g7jhVIB8CmdS2U7Ka2MFi9bM3MvXvEmd4r3Q=;
+ b=m6GFEjN0JB2OMLL5azg38JRb4avfr6pV7louowwRIX/gQDxhKEMJwfqcSzrvJovus0ETf4sDzB7tHrjiPiaqvfwV+CdLxjvoJRZ0y7stOdH+1XMnjk7V0xyD4RR1advxmEqasC0aSPslkn/3dFkqXfMxY5VPLdSV0PTjn4vnB/mTqSfz7ctYfMsfUyBbt73kRCW/I94aoSY6eZbG9/TcRtCF6ZshPDOBhS9L6vZ+HZLxPU3tbXZV7ySNdZJugXSVFxi8XNGEGhLC/yXMUSS9+tglpxDpR7pZnxqwEsQNuaEayydSaMkpTfV7IQD/oK2paMS3ub5M3xsrsv67y/RAgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 91.26.50.189) smtp.rcpttodomain=ti.com smtp.mailfrom=phytec.de; dmarc=fail
+ (p=quarantine sp=quarantine pct=100) action=quarantine header.from=phytec.de;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=si6mym3g7jhVIB8CmdS2U7Ka2MFi9bM3MvXvEmd4r3Q=;
+ b=g0Saj6f6uOo3DEBN9ndWzjGWAhGVv71eprz4DCo/AZ2ItUFE83XrMwzfLmVhCFLVpoCLc6NeM+wlBBizlmuxnwVfXZz9o+HOArMHbVqLJrEWT79W1D0NbSaLuylSIewd1KAWBKTgQYZ0mXFjUWMODxu5i1FI11VI5GA9gW92gVv84HHf3iPo4KcOuy72nmtWW0OUKLknBW/6R0cu08UnVrY/BbU6LiwqBh+A//ZF1xic+DA99nCTic5VxjjjBEWte8w/wo7VvDUIfPXkA3qwVzi6MCMqh+JFwYFMx8ODVIBsSIRKUP4fs1vuwgXP5xMMjZ8COGf1kkZ24hUO8xHymw==
+Received: from DUZPR01CA0004.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:3c3::20) by DU0P195MB1982.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:10:3e6::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Fri, 31 Jan
+ 2025 09:35:46 +0000
+Received: from DU6PEPF0000B61C.eurprd02.prod.outlook.com
+ (2603:10a6:10:3c3:cafe::d5) by DUZPR01CA0004.outlook.office365.com
+ (2603:10a6:10:3c3::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.20 via Frontend Transport; Fri,
+ 31 Jan 2025 09:35:51 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is 91.26.50.189)
+ smtp.mailfrom=phytec.de; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=phytec.de;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ phytec.de discourages use of 91.26.50.189 as permitted sender)
+Received: from Diagnostix.phytec.de (91.26.50.189) by
+ DU6PEPF0000B61C.mail.protection.outlook.com (10.167.8.135) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8398.14 via Frontend Transport; Fri, 31 Jan 2025 09:35:45 +0000
+Received: from Berlix.phytec.de (172.25.0.12) by Diagnostix.phytec.de
+ (172.25.0.14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 31 Jan
+ 2025 10:35:43 +0100
+Received: from augenblix2.phytec.de (172.25.0.11) by Berlix.phytec.de
+ (172.25.0.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 31 Jan
+ 2025 10:35:43 +0100
+From: Wadim Egorov <w.egorov@phytec.de>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <kees@kernel.org>,
+	<tony.luck@intel.com>, <gpiccoli@igalia.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <upstream@lists.phytec.de>
+Subject: [PATCH 2/2] arm64: dts: ti: k3-am62-phycore-som: Reserve RTOS IPC memory
+Date: Fri, 31 Jan 2025 10:35:31 +0100
+Message-ID: <20250131093531.1054924-2-w.egorov@phytec.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250131093531.1054924-1-w.egorov@phytec.de>
+References: <20250131093531.1054924-1-w.egorov@phytec.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jtbw32lzcqctsvga"
-Content-Disposition: inline
-In-Reply-To: <20250131000542.1394856-1-shakeel.butt@linux.dev>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Berlix.phytec.de (172.25.0.12) To Berlix.phytec.de
+ (172.25.0.12)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU6PEPF0000B61C:EE_|DU0P195MB1982:EE_
+X-MS-Office365-Filtering-Correlation-Id: 53a03839-e2df-463c-3df7-08dd41daa35d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qKF+qceWEij3nWx5+F22LJbo6ZNlSKviKywdMd3EvdV2FAXVZST29xyxSIOH?=
+ =?us-ascii?Q?XQqF3L9RafiwwteNEPT9VmPvMb1G4ZjXLx3AEuIGxiK1p1Fu2ptlW26eOjCD?=
+ =?us-ascii?Q?B2Prnh5QYEYo2Nr1sVOo7mL52plFiGNKUwmtmHf2ibJ5V8GtNRpQY8KcxIM4?=
+ =?us-ascii?Q?VEmMMOPU1joVvXTMMyKxAGUZywbUrXwRlWJ4CUPTT8zQtyTcKKHXvnM2Atqo?=
+ =?us-ascii?Q?IAyPmSPQPP44yppKM0podEqMFWSe2k7CBumQ89TKsdeKzhpbt9GRmWHd0Wu5?=
+ =?us-ascii?Q?hwc5VoDst/0hhUNmDkeO2uBmloykX8Q4h9uzlDDErKApKIrxMybhsfi92DZO?=
+ =?us-ascii?Q?i2ZFguBILiEp4KDPSo3Ur2K5JebVGwOBEQim1FSaLLtHodoz19SrsfxP5qXp?=
+ =?us-ascii?Q?87uczu1kEl2ax8xqqLDhGgVZ9LQto/JmkAkIXS7KzPjjkOnPFFCAvqq040le?=
+ =?us-ascii?Q?ZU5dz+fUAIIQPWlrTe6EmQUFaMKF7HHdkxpLHHl3Ykn4+WEORjkW0Fg8c7z5?=
+ =?us-ascii?Q?+K5EvueAC45WdacMvGUhEWhCC7kFNtzL4Ng421OnwM1yzAAJnwKMyIU1ZJ5U?=
+ =?us-ascii?Q?PhXhUpwyxNOENzQwxe/wl8WnEqli5jpj6xvEh0DajC/nKbAaJmadMkv0q2BC?=
+ =?us-ascii?Q?7fCz8F4q2DAdNqZ5Ddp0sqMMvUm2Kq4pjxKD+4AsEYBy+ibY+Yk4rJhl2nMU?=
+ =?us-ascii?Q?x4jMbtz79HCayGxV40ayGKOKGy6SuuA/lwv2F0l47eRcK2OypT71fe9EN2VJ?=
+ =?us-ascii?Q?YvUPExC46flMduRPuBrUKfCcHct7FpTs87B9hXunIQB6pMoTgp57MqRO8P9o?=
+ =?us-ascii?Q?w0wO3mSC8iYObYhkOOQiD4knYIAoG5DNcWdnnJi4Ztk7j4aiwYsMFh1UIpv6?=
+ =?us-ascii?Q?J1KIDtaG71grhRN60zLG65rlcRIAuX1tWQ5osIFQlKWSIIPJKzpQKphg9n4S?=
+ =?us-ascii?Q?b5DEg1OhpskZwlbUpPvxhxBOv9iSXL4BBBSEe4bs6bdreIm6/5fRc2XSPZiY?=
+ =?us-ascii?Q?3rmiW+2raiQ1IQ0whYuRZoI4/DXMsqahclEWfEBCF1sTdJNaoDRW4K2Wv3jx?=
+ =?us-ascii?Q?iLqqe9nRvLXCAQoeO8SnrdmhOQJCh+jP1XYoGgLaNQ6Th7kIWFFUrZc3CAUK?=
+ =?us-ascii?Q?UwS6B3E9QcxLO/70Jqft1I9rEWacOTsmb+uVM2LqfZxQVfa2941Q0oMoboSz?=
+ =?us-ascii?Q?2AOmcv0vljC08Ha+qyH21vG86b+DZOiWPWntFDSu7dz8uPY+tnjiRFYBo2ie?=
+ =?us-ascii?Q?j/24wuMm91Cd9RB0MkdeXOxDUKM9YVVEbqHpHCjgp94D/GRgxdAHP0I5nx7t?=
+ =?us-ascii?Q?IyHjj1ap9Gd2unHgK10OmYokTYeyvOivJUmWgR3VvW5IlPpR+3pH1hIHOtzv?=
+ =?us-ascii?Q?IjACegKQyrCLXpFQiWU6n/fVpQ7v4CqGby6W7j2y4KHA+Ffu9YnM7u5cdNy0?=
+ =?us-ascii?Q?QYhnzsGpmiU7eLJkCgb0EIHmOr5kgY/eTZEDGsnoINjEWx4MrbqpMQav7Fjp?=
+ =?us-ascii?Q?nsslGdlysB+yF3k=3D?=
+X-Forefront-Antispam-Report:
+	CIP:91.26.50.189;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:Diagnostix.phytec.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: phytec.de
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 09:35:45.5326
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53a03839-e2df-463c-3df7-08dd41daa35d
+X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e609157c-80e2-446d-9be3-9c99c2399d29;Ip=[91.26.50.189];Helo=[Diagnostix.phytec.de]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU6PEPF0000B61C.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0P195MB1982
 
+Reserve a portion of memory for inter-processor communication between
+all remote processors running RTOS or baremetal firmware.
+Move ramoops to lower region so the IPC fits to the correct address.
 
---jtbw32lzcqctsvga
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] cgroup: fix race between fork and cgroup.kill
-MIME-Version: 1.0
+Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
+---
+ arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-On Thu, Jan 30, 2025 at 04:05:42PM -0800, Shakeel Butt <shakeel.butt@linux.=
-dev> wrote:
-> @@ -6668,6 +6668,7 @@ void cgroup_post_fork(struct task_struct *child,
->  		      struct kernel_clone_args *kargs)
->  	__releases(&cgroup_threadgroup_rwsem) __releases(&cgroup_mutex)
->  {
-> +	unsigned int cgrp_kill_seq =3D 0;
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
+index 2ef4cbaec789..4bffa8ce0410 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
+@@ -36,15 +36,21 @@ reserved_memory: reserved-memory {
+ 		#size-cells = <2>;
+ 		ranges;
+ 
+-		ramoops@9ca00000 {
++		ramoops@9c700000 {
+ 			compatible = "ramoops";
+-			reg = <0x00 0x9ca00000 0x00 0x00100000>;
++			reg = <0x00 0x9c700000 0x00 0x00100000>;
+ 			record-size = <0x8000>;
+ 			console-size = <0x8000>;
+ 			ftrace-size = <0x00>;
+ 			pmsg-size = <0x8000>;
+ 		};
+ 
++		rtos_ipc_memory_region: ipc-memories@9c800000 {
++			compatible = "shared-dma-pool";
++			reg = <0x00 0x9c800000 0x00 0x00300000>;
++			no-map;
++		};
++
+ 		mcu_m4fss_dma_memory_region: m4f-dma-memory@9cb00000 {
+ 			compatible = "shared-dma-pool";
+ 			reg = <0x00 0x9cb00000 0x00 0x100000>;
+-- 
+2.34.1
 
-This initialization is only needed for the extra "init tasks" branch
-(the value should equal to whatever init_css_set.dfl_cgroup has, i.e.
-0).
-
->  	unsigned long cgrp_flags =3D 0;
->  	bool kill =3D false;
->  	struct cgroup_subsys *ss;
-> @@ -6681,10 +6682,13 @@ void cgroup_post_fork(struct task_struct *child,
-> =20
->  	/* init tasks are special, only link regular threads */
->  	if (likely(child->pid)) {
-> -		if (kargs->cgrp)
-> +		if (kargs->cgrp) {
->  			cgrp_flags =3D kargs->cgrp->flags;
-> -		else
-> +			cgrp_kill_seq =3D kargs->cgrp->kill_seq;
-> +		} else {
-
-This should not be strictly necessary thanks to cgroup_mutex during
-cgroup_kill and CLONE_INTO_CGROUP.
-
->  			cgrp_flags =3D cset->dfl_cgrp->flags;
-> +			cgrp_kill_seq =3D cset->dfl_cgrp->kill_seq;
-> +		}
-> =20
->  		WARN_ON_ONCE(!list_empty(&child->cg_list));
->  		cset->nr_tasks++;
-> @@ -6719,7 +6723,7 @@ void cgroup_post_fork(struct task_struct *child,
->  		 * child down right after we finished preparing it for
->  		 * userspace.
->  		 */
-> -		kill =3D test_bit(CGRP_KILL, &cgrp_flags);
-> +		kill =3D kargs->kill_seq !=3D cgrp_kill_seq;
->  	}
-> =20
->  	spin_unlock_irq(&css_set_lock);
-
-The above are only notes for better understanding, I don't think the fix
-needs changes in that regard. Thanks
-
-Reviewed-by: Michal Koutn=FD <mkoutny@suse.com>
-
---jtbw32lzcqctsvga
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ5yY8AAKCRAt3Wney77B
-SQxPAQC1JHFXydeDfUZtGe+DtusOXERhm1syeRw5oNET0yL2XAD+Nf/iWTkBn4wg
-b3rL3A7T9sHALkkSEQ1pjPSeNQRmrgY=
-=Wonb
------END PGP SIGNATURE-----
-
---jtbw32lzcqctsvga--
