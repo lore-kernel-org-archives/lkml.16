@@ -1,361 +1,203 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013016.outbound.protection.outlook.com [40.107.159.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B981E9918
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738341187; cv=none; b=eh7hiKgXpheWI84d+2ofHNvnmx0F8oZlw5SrV53WgBPQIeRUfMCYIBRzGrVxMhWreC6ZXSjIGAXXwxtTMn8bkuzO1AQ05ptb4EeLjKBFwcSfWf+276ulAJABjMRyfSRDkRbKRfQiMjPZh4cIKY4yLGG9kqGO8oB5iiGGyGzASJw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738341187; c=relaxed/simple;
-	bh=tjspVQq8om2BA6jhnVUF8cRfoahJyy48H8fEM0u1PXE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D/LIedup6Liu1w7f2sbvrk2bBpo4oZPJAnWl6h6PnMy53NU7Cx19yc5ybP54FulkmX0tlMq4PrVmvaX9YPfL5U/eJDYpEiE0mMkwazpQZUqgr+/kr1wnMtLExcKxwTr7FyXMo0CC2XqdiwKRUZtz5INpSPE8ta+xG+/H7YjWwUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bvAKeIOk; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2938B1EE03C;
+	Fri, 31 Jan 2025 16:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738341271; cv=fail; b=GX2JC/QQtpQwcvEhQHyFJCP3vS6Y248T5fvWtus1J5EJN70cRSmJmuht9Re9G+u1gV3yEn1NJixLcSItwasU8CFwRSQgaBXm3yuFk+1hSnLBpvqfV215zFLlFIQr7TIw/J02rw+3iQwEEjEMjqv2yEhZ4jyvNm4KWH2vFIOwrK0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738341271; c=relaxed/simple;
+	bh=JGMiLOPliWJYCOJ/oSKwmppPItKLP7OAecIbXnUpgNI=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=EiuApIpQzEQBgfE9TDuTAT/YNTk41LeUpyXK59B4MQHjHUsf4BD/T2nMq7woaXEEgdfdwKYs3ngRMghZLx2smsk/cILoCTDARWuUPC3KonVFTtjrQvCRe/hLkV1tzzCtvaCdr8DF2BnHMSW8gNCzBwKVWyWkliUKCk92SWj+2yI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=XY+9tFBy; arc=fail smtp.client-ip=40.107.159.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bvAKeIOk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738341183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qbPvxv+SJlJsHXlpjSxo+uQOUl1d7qOYXt+GAFt8ziw=;
-	b=bvAKeIOkZzesXX5DCzf/SjdC/T28496orwOK9XQYZsixXszhk2Hd6wItmNS3sq/m4XzyAc
-	Go95COZKzwdndGWVoJ3oQWbtJgZ59f5pET1A88bKuNzoERcS1cq5lBEm6xnjCmK9fQ/+wK
-	trX+Lp3RNebp69RElZcY9QSPLNNFsns=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-444-HaELLgx6MfWppNxMb1EwAw-1; Fri, 31 Jan 2025 11:33:02 -0500
-X-MC-Unique: HaELLgx6MfWppNxMb1EwAw-1
-X-Mimecast-MFC-AGG-ID: HaELLgx6MfWppNxMb1EwAw
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43651b1ba8aso16157285e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 08:33:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738341181; x=1738945981;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qbPvxv+SJlJsHXlpjSxo+uQOUl1d7qOYXt+GAFt8ziw=;
-        b=Qv/q5wAWAIvhFiFBLmMHY+D6tWEe7VKC1vTWnabHUpX934xgHY9NWJKx1ljS0rJTZX
-         4VTeti2lTgYSf+tQbk/BwuhInQECo4alGCXlRPZt9AL/fq+j/mY5Cm2MXsLomk7+xjhG
-         tBlQMBS2KaAXi5yzfdi+EFm07LX5CknrFBEaSVu4To0BP7zQNo3byGT7HJ5n2QY0ytqJ
-         T77Fi1/np4SO7Yad9FFQyG3sEn8xGQjlhdDSyj2fKe1IN6Ia4z1sGnzAoZVRLzfdKsvz
-         xH6RE654lz6frAlL4VQTzfuLX033OQRA3HXVjBekFyno3S5Vd1wGvXN9uZNsiWR245lt
-         FE8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUwWZCYXW5qSohJrVFeDt5YklzLfvz7H1AzTzQKSwLIY3KeNF6st9K8yJSQIIYpC6H3OGx92JztbDEUVcg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yztkat3RDL7KuziNQVprBZqhc4a95WS8EDWvjU/Vx4wCQhu+gWh
-	UQCLU3mleBsxQGT3aoM/UOo/e8UP8usBfw1ar6QcQXFUtiJpD6tH3nS6Hhd14xs6tIWqPYkkMh5
-	Czhfj+/VquHXkIIkqJAC2Q497kmzBvbfsNxDM/XsnPbAhpjekYtR9EcOaDWi7Tg==
-X-Gm-Gg: ASbGncsYL5FZAJb6VdI8tWa2FmO1GZ0SC+gk5cDtCYXhzaa8teh6qb4kM5w1ZZOeR44
-	FIiWLecLC5hNJfUWcSUQ937prTEq3XuvKGF6CYfSJvoleFZC/1F+HTTuoLAyufmljM9UawEDOVR
-	S/4G1IxUfbi/34u81zjjlzfJw4nPNvd1aA56VoD2ID2fzGJfKv5KzCE48gjuGvNocOX4+PgQPGG
-	JSM9cIay2MGjBZVS0nImYBUmr3IVs51V/j/5xdXyUvkA4fb3cf0C1zafkWShufkwF9J0Ol8N0eD
-	eBizaPeDa0/PQEBM/v4QcDqdyZv6hUPrFNoIyyAvrlY+tkbJeTAc
-X-Received: by 2002:a05:600c:3d9b:b0:436:e8b4:36e7 with SMTP id 5b1f17b1804b1-438dc3c38admr112271765e9.8.1738341180849;
-        Fri, 31 Jan 2025 08:33:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEcOFxsjUhU9CdddNzvHKzuADNZc07txN0oT/OjZdAi60VQ/jXqydMTXzb7vPmV+145bHw/CA==
-X-Received: by 2002:a05:600c:3d9b:b0:436:e8b4:36e7 with SMTP id 5b1f17b1804b1-438dc3c38admr112270925e9.8.1738341179214;
-        Fri, 31 Jan 2025 08:32:59 -0800 (PST)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b61f1sm5162786f8f.68.2025.01.31.08.32.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 08:32:58 -0800 (PST)
-Date: Fri, 31 Jan 2025 17:32:57 +0100
-From: Igor Mammedov <imammedo@redhat.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
- qemu-arm@nongnu.org, qemu-devel@nongnu.org, Ani Sinha
- <anisinha@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 12/13] tests/acpi: virt: add a HEST table to aarch64
- virt and update DSDT
-Message-ID: <20250131173257.3b0f7df0@imammedo.users.ipa.redhat.com>
-In-Reply-To: <20250131164919.7955a110@foz.lan>
-References: <cover.1738137123.git.mchehab+huawei@kernel.org>
-	<7036f18f9c25852aeae6526d424e259211a0c9cd.1738137123.git.mchehab+huawei@kernel.org>
-	<20250129162953.5c525555@imammedo.users.ipa.redhat.com>
-	<20250131164919.7955a110@foz.lan>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="XY+9tFBy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jgCUbMn6fuBqIpBC7YcZYXfsY33iLkcWclpcWu1PZ4zHHSUROywuuxzy7L7B/qTK8z019GTOXJP6qv7UAR1ohuavdqslmZEw8HRWLBdZ/Dqg11dsw5dhppS/AndV+AN5soHLdnieUD8RWdabVrRn+yLcIQ7rWbN/GnmSCpVVZfxBbJbd1lcK39LHKADbKB4+hGOFTgyq9IbkqohyBLPKfoBKQtu647xf7RvQ8PbiSVK4i87+tBocK2XYjXpUifwd3UCR0rkWZLP88rLPuQBlS/Wby/v97yu/N6dh74U0yxbfUmJGjFlFuW0QatpLyVGzu9QoaIG1MImaLaxP/gej/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0qn/3wXg5+hOb6JQc8b09u4aVJDQBmKYi9pOk2UgKa8=;
+ b=NVR0MZEX0dyQSwTUKIxtOm+/So/YI3JCgXgqk7YhLKAQrwcDVWgbKLHNiKnovLsRL2Y3N44W/8fZjiL92cKJQvh+9EmMEVQbHgCg3U+upwsz9V+gwccRO2E8cqf0DKtT0jothZYWHsJPF98/IdRDCQteIZRiGTkXTMSSqTWgVXYS2otmH+WwY5/5NJj1vkPLjKcWo6pfLFqqhQlTPL68xkqM+6ni44pjD7C+aQRGCRin+aNK5+0sbYwQoimkdloNHHfd0shSr8i3gGi77iXfqRKiyp+zpof4bXUF6aL0R5VPVtro2iS6gCKpRXaCGYUdLIfeyd1Q3af4KV/5Q7BRuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0qn/3wXg5+hOb6JQc8b09u4aVJDQBmKYi9pOk2UgKa8=;
+ b=XY+9tFByEYdsryYscqH1Sp/N7ns4sSkdRezmYlfVVF6syoV8ISfw4EwyDalS44zDtV1u3WKW372NUMfsNRQVmG4TQWo/q+/OwLCI/+nLVo+04ft6UyAib1gsXtqE/MR6JPlxX47dXwWmZ4xYOFEpAmZBCfFUeffHvEYbfAI8s/9D98htD0k37b5EmAgfc8LBnChYbtmo73nTnXVprpvQbZ7EUpQZhmDi/cvzk8z1SwGs5V9SFCQ/2KFtIMBwXpB3QBYyjURG+nQJvLutp/K04vN+xl9dqCwXxP+NvGRLZJBl8QSqCWfkYjEuurAsb3SOG5uVHTHfMSDKJFGEcCqMjQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from AS4PR04MB9576.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::12)
+ by AS8PR04MB8529.eurprd04.prod.outlook.com (2603:10a6:20b:420::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.20; Fri, 31 Jan
+ 2025 16:34:25 +0000
+Received: from AS4PR04MB9576.eurprd04.prod.outlook.com
+ ([fe80::9cf2:8eae:c3d1:2f30]) by AS4PR04MB9576.eurprd04.prod.outlook.com
+ ([fe80::9cf2:8eae:c3d1:2f30%6]) with mapi id 15.20.8398.017; Fri, 31 Jan 2025
+ 16:34:25 +0000
+From: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+	devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Subject: [RFC 00/12] staging: media: max96712: Add support for streams and multiple sensors
+Date: Fri, 31 Jan 2025 18:33:54 +0200
+Message-Id: <20250131163408.2019144-1-laurentiu.palcu@oss.nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AS4P189CA0002.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5d7::11) To AS4PR04MB9576.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4fe::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9576:EE_|AS8PR04MB8529:EE_
+X-MS-Office365-Filtering-Correlation-Id: bd6ee848-56f1-417a-48a2-08dd42151fd4
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?xL3R6dNgsIhwOfyJWT+pAxaU1DEYKQGxz4OPxP6Nu5qK5EkU2pOakJ9BlST+?=
+ =?us-ascii?Q?nEAEPbLloGRK2JqyS2mGDQc9PPrM+CEqEzko3cndBnIBY6dY9kRZEO42OO67?=
+ =?us-ascii?Q?4ngpzfpSfOpBMSjCbvBy6XlxWGd4lJetgU6W9k9dq3xhTBS3K6A5srK43Ul0?=
+ =?us-ascii?Q?Ly1T9r6OeGlui3w367FiTY7guTeXa+Eg3+kkfpove3dKkuFEEnbJMwe810Ha?=
+ =?us-ascii?Q?0ANT673YiQrvGGCSOKL+/YHRpEsxh+K7ZC9vm2e+YOoWfJOruDWFhbIXyz++?=
+ =?us-ascii?Q?flnzeaqKucp67tP8p8o8hyBaowMQbD2jinTpEnSqZCNyudUz38g8E8ZFsfYt?=
+ =?us-ascii?Q?kljP0pGB25FQa78P0aGKUNwX4CVQtpx27QHpiTnjo6raTeO4AMuN+yPIUy1e?=
+ =?us-ascii?Q?xjAxebfj4GC7ZufI56M93bfhU/YzuD3NbMs3OU7uAJiKiThCR7lYqQc1zDsJ?=
+ =?us-ascii?Q?DoIKPyISl2g2lUy3ckflbbL6nu98OJ+dlsGNDDzHAUS7SEOIdqBOUJ1Qd2D3?=
+ =?us-ascii?Q?sCsw3O4pV11QjH5fGFbCJwG2zHM8Dv1spxsq1gwgnalW5lNsd4n6aDWkwLHq?=
+ =?us-ascii?Q?5UlKUoCkGaG+RY+fg6MZmD1I7J02IYmNCmNxpqgOIZQQJ8iBNKskf4INnOsY?=
+ =?us-ascii?Q?6V7IranrrBEgtS1dyQ3JJhTkOX+KELaTSOPbWI/xNGb+L1HA87akXyvRqrMt?=
+ =?us-ascii?Q?dFUPTVTmABoM/625G2p7+pTYBifQV4HBQAUL2yHENB6WTdnQ3ygdE8Uz5JFg?=
+ =?us-ascii?Q?sVHDybgErlBYMbL1XAB6l0QMUeTb9JxpmRoQ3wIjs6EMAb31FnNpKCSsRAUd?=
+ =?us-ascii?Q?BteULJ3i4hq+8oCimUTrOylhQWkiYol2LhmqYboKtDOhppYoLPjIUE0DeWTI?=
+ =?us-ascii?Q?UFfOc3rseO66UjgUz17Ypa5jDhW2bf0TqOiKrF66lEXuS5xHw1vmKLSwsAzr?=
+ =?us-ascii?Q?wp6KBvUnMmMxmBwtaOAHjVVf4QE2JD0w1qHBz9jrfS9sWGhIAAu+6t9vjUd6?=
+ =?us-ascii?Q?YCtw2DdptDAWqyI9OQbbxOWseGJlijeVd9LvL4IEHWlp8dk3TYmjv2/IlO12?=
+ =?us-ascii?Q?hmjH3komg19Bho4zwQoQrW9AfnBwtvJ8cnJeBPzfgvAwhCPJx3QDB5f/FF7b?=
+ =?us-ascii?Q?BvHd3tvPzPTJdBKqKCbKqjZLCWL+aGwKzS+4yoRzsMR5DJK05FMZlQuJeFKE?=
+ =?us-ascii?Q?gt9/83jzYk7xF6ZZdQQZ//04vaH3mKpYya0BNNuJmUaZHAY4PJSs2h5+forW?=
+ =?us-ascii?Q?V86lQwD5VwwoXar/ZWi2Id5uDVyea4oEHVHumbJpzB5hj7XAIfg2qE6Mi1EG?=
+ =?us-ascii?Q?+74/Me2sDamxD5yxYEg2xuwaz0x8wOuRQwzmatSmaoIgmBXZ1FkiI0Kw2cig?=
+ =?us-ascii?Q?eTq5syZ983/P2j0eK9MYO1Q4duBZ?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9576.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?yY/WnYlyeNCnHxTh37VReqWEcHiPE9pJ5sey/h1qbzo3Qsl1J8JOV161wNDy?=
+ =?us-ascii?Q?F6H2zuOt2gOkq8tL1q/V3pzNIvbB69/hKSVUdRTjXyb1REXpozQLBSe/9SU6?=
+ =?us-ascii?Q?gCC4zd72DD7mJmylBiwcNFPzQXvzPMBXb8qK57KzPTJlJAISprwBvosLzCAr?=
+ =?us-ascii?Q?TaChGSvHvTz4USjqc9oAkGf7k8d0HM4KE0OAkNvUDiZbCLdMQyGTKlZlpREC?=
+ =?us-ascii?Q?lZAVufdlSZBWt7G8ky58cDwtvLBkADM3gqlI04neiR7L1sjUbbbiZZuXGcoz?=
+ =?us-ascii?Q?Phyd1Pqrr5/2WwklMKM0t4LzdGIV2tpknqfAdmo0vPxJz9iz6fdbdOMD9SYC?=
+ =?us-ascii?Q?nvY81FPeH5Aw+XeOjzeYhDSynqoouewGJmpLff5d6/AuFJWXKwSRcKXC9KaX?=
+ =?us-ascii?Q?MZXbSFWnAdYV+Z87zpqzWgytFMnt0nPmUVDSQT4VoauG0p1efhp9DrAM/16M?=
+ =?us-ascii?Q?1vw0hcnTCCVDAS38w+SuSHw7zSy5s8RY8T/PEYSqnyiAt8rReXAQtkp1oXMx?=
+ =?us-ascii?Q?oQHCbDhPHV0K9jJTxZDlrP2UxMJoApMShoHOVluEI4k8HXcDrQQlhk6UUD9c?=
+ =?us-ascii?Q?5lUeXowrJXrYsECWDJ7IDkYp0zSHgp8YzDZRsEqbYIVeYCGicRzfnlPBM05K?=
+ =?us-ascii?Q?LhjTe5gFDML0bgmeXj3ONScS62yfcnv2JMJKAK5e8TVNaon8Ad/tCkZyT0vS?=
+ =?us-ascii?Q?todAeIXCCrq4aZvYF5i/joqDsWTHSaRW0aKTBQKnPm2gOqdfL3fCP1tWd6+p?=
+ =?us-ascii?Q?btHhrCPmboP8y62CdgB2utPm3KNIqS4DJX8WSrszA0LrajXC8KJhs05ufTL+?=
+ =?us-ascii?Q?63n4IYFFUzGls9g25MnFd1oGCUxLd0ieK4ILFjfVN7fQmJ4oWoOUHU3q6j4F?=
+ =?us-ascii?Q?Fwv7eSAsGFw5cGMm6trD5OruGRjfpHmPrNXBFZiQtJNdoeOBsY7cMPseocWc?=
+ =?us-ascii?Q?eq8F3S6aN6OP9yIRFt5XHvMKEUUKNBgo6uU4rJxa9AHEQar3hKM56Xvx6xu5?=
+ =?us-ascii?Q?hg8xBIoO8SEtUt+vb+PQhvD8VKAj/gvV629A3Hot6bRxkLjLANAygCxKoIES?=
+ =?us-ascii?Q?7wAmUVUVYEd6R4yrhRfp1GbRA0SZCSeVfCD49Ut1z/0AFPjh9XRl6WEl/GKq?=
+ =?us-ascii?Q?TuBqounkSNgVuJchfwmjRnNE0FhzkKs+qPgcUkLobXwYYl4jxsj0NRCEgQye?=
+ =?us-ascii?Q?GUeiWPL/+VYWnUmUQO1uPLbJm9ByCky6uTfc3lHeLStCmRnWUuLNaL1Z9RBA?=
+ =?us-ascii?Q?NCMtlzuQXE7OwLoXYIX31fHj/hKULF0080hzbp8QtwxnGxYJ1jhXJDcHgB+P?=
+ =?us-ascii?Q?fzIfPCdnJflX0KhadKVB9ZpuXj7ajvE27X1Fj7r89R1oWHq/60XPIFoVGls7?=
+ =?us-ascii?Q?8wgLvMMNhI4F2exF2jCauFjQwvhvrnaxMiw8j6sny+3px6rTcVNCAKOnKdQX?=
+ =?us-ascii?Q?4DSLQEQOwqusAMjTX3WAgpcpKykPnL6ZRHkQBDrNN/vMXERsxfmEwle8VLBY?=
+ =?us-ascii?Q?U2MW9+uTv5guipFrX9FjA4dAonQwMdZUKbZtdFDmncD17hjzJD5xINQ/a7uT?=
+ =?us-ascii?Q?VM6erv/TdhFtik8DAFfdaJC2T6xKTn2LpS8JMjBk1mSD6cVrbgW55/TU0MjD?=
+ =?us-ascii?Q?ug=3D=3D?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd6ee848-56f1-417a-48a2-08dd42151fd4
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9576.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 16:34:25.3813
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /rKKTJHugETBgOCZDY4tefbLoHCviAFNiu7YrzRsd/58ZI+e4+phg202SirGS7MC2B+QlyU9N0BxwAi4hjAeFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8529
 
-On Fri, 31 Jan 2025 16:49:19 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+Hi,
 
-> Em Wed, 29 Jan 2025 16:29:53 +0100
-> Igor Mammedov <imammedo@redhat.com> escreveu:
-> 
-> > On Wed, 29 Jan 2025 09:04:18 +0100
-> > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> >   
-> > > DSDT has gained a GED device to notify errors:
-> > > 
-> > > --- a/DSDT.dsl        2025-01-28 09:38:15.155347858 +0100
-> > > +++ b/DSDT.dsl        2025-01-28 09:39:01.684836954 +0100
-> > > @@ -9,9 +9,9 @@
-> > >   *
-> > >   * Original Table Header:
-> > >   *     Signature        "DSDT"
-> > > - *     Length           0x00001516 (5398)
-> > > + *     Length           0x00001542 (5442)
-> > >   *     Revision         0x02
-> > > - *     Checksum         0x0F
-> > > + *     Checksum         0xE9
-> > >   *     OEM ID           "BOCHS "
-> > >   *     OEM Table ID     "BXPC    "
-> > >   *     OEM Revision     0x00000001 (1)
-> > > @@ -1931,6 +1931,11 @@
-> > >                  {
-> > >                      Notify (PWRB, 0x80) // Status Change
-> > >                  }
-> > > +
-> > > +                If (((Local0 & 0x10) == 0x10))
-> > > +                {
-> > > +                    Notify (GEDD, 0x80) // Status Change
-> > > +                }
-> > >              }
-> > >          }
-> > > 
-> > > @@ -1939,6 +1944,12 @@
-> > >              Name (_HID, "PNP0C0C" /* Power Button Device */)  // _HID: Hardware ID
-> > >              Name (_UID, Zero)  // _UID: Unique ID
-> > >          }
-> > > +
-> > > +        Device (GEDD)
-> > > +        {
-> > > +            Name (_HID, "PNP0C33" /* Error Device */)  // _HID: Hardware ID
-> > > +            Name (_UID, Zero)  // _UID: Unique ID
-> > > +        }
-> > >      }
-> > >  }
-> > > 
-> > > New HEST table:    
-> > 
-> > diff might be a better here,
-> > you can have it during make check when expected tables haven't been update yet.
-> > prereq for that is to have 'iasl' installed (usually part of acpica-tools package)
-> > and adding V=1 to env vars, something like this:
-> > 
-> >  V=1 QTEST_QEMU_BINARY=./qemu-system-aarch64 ./tests/qtest/bios-tables-test  
-> 
-> Hmm... didn't produce any diff here. I added a diff generated by
-> hand (calling iasl before/after the GED wire up patch and manually
-> running diff).
+This series adds more functionality to the existing max96712 staging
+driver allowing multiple sensors to be connected through other
+compatible serializers. I tried to split the changes in smaller logical
+changes to make them easier to review while not altering the existing
+VPG functionality but I could squash all of them together if needed.
 
-that can happen due to stale files which rebuild-expected-aml.sh creates
-(I'd check 'git status' output).
-And well, rerun configure after iasl has been installed.
+The series only supports tunneling mode and uses the first MIPI-CSI
+port. Support for more functionality can be added later, if needed.
 
+I sent the set as a RFC because it depends on Sakari's pending internal
+pads patch which is needed if we want to have an elegant solution for
+allowing the user to switch between streaming from sensors or just
+video pattern generation.
 
-> Anyway, as HEST table is not checked, I dropped it file from the tests[1],
-> and placed on patch 12/13 just the DSDT diff.
+Also, the set depends on my previous series which was not yet merged:
+https://patchwork.linuxtv.org/project/linux-media/list/?series=14255
 
-if it's not checked, then it would be better to add it before changes,
-and then update here (with new layout)
-> 
-> [1] tests/data/acpi/aarch64/virt/HEST
-> 
-> >   
-> > > 
-> > > /*
-> > >  * Intel ACPI Component Architecture
-> > >  * AML/ASL+ Disassembler version 20240927 (64-bit version)
-> > >  * Copyright (c) 2000 - 2023 Intel Corporation
-> > >  *
-> > >  * Disassembly of hest.dat
-> > >  *
-> > >  * ACPI Data Table [HEST]
-> > >  *
-> > >  * Format: [HexOffset DecimalOffset ByteLength]  FieldName : FieldValue (in hex)
-> > >  */
-> > > 
-> > > [000h 0000 004h]                   Signature : "HEST"    [Hardware Error Source Table]
-> > > [004h 0004 004h]                Table Length : 000000E0
-> > > [008h 0008 001h]                    Revision : 01
-> > > [009h 0009 001h]                    Checksum : 68
-> > > [00Ah 0010 006h]                      Oem ID : "BOCHS "
-> > > [010h 0016 008h]                Oem Table ID : "BXPC    "
-> > > [018h 0024 004h]                Oem Revision : 00000001
-> > > [01Ch 0028 004h]             Asl Compiler ID : "BXPC"
-> > > [020h 0032 004h]       Asl Compiler Revision : 00000001
-> > > 
-> > > [024h 0036 004h]          Error Source Count : 00000002
-> > > 
-> > > [028h 0040 002h]               Subtable Type : 000A [Generic Hardware Error Source V2]
-> > > [02Ah 0042 002h]                   Source Id : 0000
-> > > [02Ch 0044 002h]           Related Source Id : FFFF
-> > > [02Eh 0046 001h]                    Reserved : 00
-> > > [02Fh 0047 001h]                     Enabled : 01
-> > > [030h 0048 004h]      Records To Preallocate : 00000001
-> > > [034h 0052 004h]     Max Sections Per Record : 00000001
-> > > [038h 0056 004h]         Max Raw Data Length : 00000400
-> > > 
-> > > [03Ch 0060 00Ch]        Error Status Address : [Generic Address Structure]
-> > > [03Ch 0060 001h]                    Space ID : 00 [SystemMemory]
-> > > [03Dh 0061 001h]                   Bit Width : 40
-> > > [03Eh 0062 001h]                  Bit Offset : 00
-> > > [03Fh 0063 001h]        Encoded Access Width : 04 [QWord Access:64]
-> > > [040h 0064 008h]                     Address : 0000000139E40000
-> > > 
-> > > [048h 0072 01Ch]                      Notify : [Hardware Error Notification Structure]
-> > > [048h 0072 001h]                 Notify Type : 08 [SEA]
-> > > [049h 0073 001h]               Notify Length : 1C
-> > > [04Ah 0074 002h]  Configuration Write Enable : 0000
-> > > [04Ch 0076 004h]                PollInterval : 00000000
-> > > [050h 0080 004h]                      Vector : 00000000
-> > > [054h 0084 004h]     Polling Threshold Value : 00000000
-> > > [058h 0088 004h]    Polling Threshold Window : 00000000
-> > > [05Ch 0092 004h]       Error Threshold Value : 00000000
-> > > [060h 0096 004h]      Error Threshold Window : 00000000
-> > > 
-> > > [064h 0100 004h]   Error Status Block Length : 00000400
-> > > [068h 0104 00Ch]           Read Ack Register : [Generic Address Structure]
-> > > [068h 0104 001h]                    Space ID : 00 [SystemMemory]
-> > > [069h 0105 001h]                   Bit Width : 40
-> > > [06Ah 0106 001h]                  Bit Offset : 00
-> > > [06Bh 0107 001h]        Encoded Access Width : 04 [QWord Access:64]
-> > > [06Ch 0108 008h]                     Address : 0000000139E40010
-> > > 
-> > > [074h 0116 008h]           Read Ack Preserve : FFFFFFFFFFFFFFFE
-> > > [07Ch 0124 008h]              Read Ack Write : 0000000000000001
-> > > 
-> > > [084h 0132 002h]               Subtable Type : 000A [Generic Hardware Error Source V2]
-> > > [086h 0134 002h]                   Source Id : 0001
-> > > [088h 0136 002h]           Related Source Id : FFFF
-> > > [08Ah 0138 001h]                    Reserved : 00
-> > > [08Bh 0139 001h]                     Enabled : 01
-> > > [08Ch 0140 004h]      Records To Preallocate : 00000001
-> > > [090h 0144 004h]     Max Sections Per Record : 00000001
-> > > [094h 0148 004h]         Max Raw Data Length : 00000400
-> > > 
-> > > [098h 0152 00Ch]        Error Status Address : [Generic Address Structure]
-> > > [098h 0152 001h]                    Space ID : 00 [SystemMemory]
-> > > [099h 0153 001h]                   Bit Width : 40
-> > > [09Ah 0154 001h]                  Bit Offset : 00
-> > > [09Bh 0155 001h]        Encoded Access Width : 04 [QWord Access:64]
-> > > [09Ch 0156 008h]                     Address : 0000000139E40008
-> > > 
-> > > [0A4h 0164 01Ch]                      Notify : [Hardware Error Notification Structure]
-> > > [0A4h 0164 001h]                 Notify Type : 07 [GPIO]
-> > > [0A5h 0165 001h]               Notify Length : 1C
-> > > [0A6h 0166 002h]  Configuration Write Enable : 0000
-> > > [0A8h 0168 004h]                PollInterval : 00000000
-> > > [0ACh 0172 004h]                      Vector : 00000000
-> > > [0B0h 0176 004h]     Polling Threshold Value : 00000000
-> > > [0B4h 0180 004h]    Polling Threshold Window : 00000000
-> > > [0B8h 0184 004h]       Error Threshold Value : 00000000
-> > > [0BCh 0188 004h]      Error Threshold Window : 00000000
-> > > 
-> > > [0C0h 0192 004h]   Error Status Block Length : 00000400
-> > > [0C4h 0196 00Ch]           Read Ack Register : [Generic Address Structure]
-> > > [0C4h 0196 001h]                    Space ID : 00 [SystemMemory]
-> > > [0C5h 0197 001h]                   Bit Width : 40
-> > > [0C6h 0198 001h]                  Bit Offset : 00
-> > > [0C7h 0199 001h]        Encoded Access Width : 04 [QWord Access:64]
-> > > [0C8h 0200 008h]                     Address : 0000000139E40018
-> > > 
-> > > [0D0h 0208 008h]           Read Ack Preserve : FFFFFFFFFFFFFFFE
-> > > [0D8h 0216 008h]              Read Ack Write : 0000000000000001
-> > > 
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > > ---
-> > >  tests/data/acpi/aarch64/virt/DSDT             | Bin 5196 -> 5240 bytes
-> > >  .../data/acpi/aarch64/virt/DSDT.acpihmatvirt  | Bin 5282 -> 5326 bytes
-> > >  tests/data/acpi/aarch64/virt/DSDT.memhp       | Bin 6557 -> 6601 bytes
-> > >  tests/data/acpi/aarch64/virt/DSDT.pxb         | Bin 7679 -> 7723 bytes
-> > >  tests/data/acpi/aarch64/virt/DSDT.topology    | Bin 5398 -> 5442 bytes
-> > >  tests/data/acpi/aarch64/virt/HEST             | Bin 0 -> 224 bytes
-> > >  tests/qtest/bios-tables-test-allowed-diff.h   |   2 --
-> > >  7 files changed, 2 deletions(-)
-> > > 
-> > > diff --git a/tests/data/acpi/aarch64/virt/DSDT b/tests/data/acpi/aarch64/virt/DSDT
-> > > index 36d3e5d5a5e47359b6dcb3706f98b4f225677591..a182bd9d7182dccdf63c650d048c58f18505d001 100644
-> > > GIT binary patch
-> > > delta 109
-> > > zcmX@3@k4{lCD<jTLWF^ViDe>}G*h$dM)euOOwJsW4+;nC=*7E+g>V+Q2D|zsED)Gn
-> > > zoxsJ!z{S)S5FX^j)c_F?VBivHb9Z%dnXE4&D;?b=31V}^dw9C=2KWUSI2#)?aKwjt
-> > > Hx-b9$X;vI^
-> > > 
-> > > delta 64
-> > > zcmeyNaYlp7CD<jzM}&caNqQoeG*i3NM)euOOit{R4+;lM%f`Egg>V+Q2D|zsED)Gn
-> > > UoxsJ!z{S)S5FX?-*+E1W06%jPR{#J2
-> > > 
-> > > diff --git a/tests/data/acpi/aarch64/virt/DSDT.acpihmatvirt b/tests/data/acpi/aarch64/virt/DSDT.acpihmatvirt
-> > > index e6154d0355f84fdcc51387b4db8f9ee63acae4e9..af1f2b0eb0b77a80c5bd74f201d24f71e486627f 100644
-> > > GIT binary patch
-> > > delta 110
-> > > zcmZ3ac}|ndCD<k8oCpI0)4_>c(oCIR8`a+lGdXii78eO-)SH|wBICY5U~+W=mjDBo
-> > > yK%2X(iwjpnbdzL2c#soEyoaX?Z-8HbfwO@#14n$Qrwc=LlO#wDl9aJAR0;r(tsHj%
-> > > 
-> > > delta 66
-> > > zcmX@7xk!`CCD<iokq83=(~XH-(oDVX8`a+lGdZzO78eO-l%1R{A|oB$BpDDM<irv0
-> > > W;pxH~;1^)vY~akm5g+R5!T<noi4jWx
-> > > 
-> > > diff --git a/tests/data/acpi/aarch64/virt/DSDT.memhp b/tests/data/acpi/aarch64/virt/DSDT.memhp
-> > > index 33f011d6b635035a04c0b39ce9b4e219f7ae74b7..10436ec87c4859fb84b3ecb7bba5788f38112e59 100644
-> > > GIT binary patch
-> > > delta 88
-> > > zcmbPheA1Z9CD<k8q$C3algUIbX{MH08`WnBGdXcjJ}4Z_<jXo)OvH<SfxzVI1TFyv
-> > > qE`c_8R~MJfaU%At($P(lAPz^oho=i~fM0-tv#~J)M|`NK3j+W#;TF9B
-> > > 
-> > > delta 44
-> > > zcmX?UJlB}ZCD<iot|S8klg&gfX{L_p8`WnBGdXfiJ}4Z_<ij#qOvGz*p@=Oj039?8
-> > > AE&u=k
-> > > 
-> > > diff --git a/tests/data/acpi/aarch64/virt/DSDT.pxb b/tests/data/acpi/aarch64/virt/DSDT.pxb
-> > > index c0fdc6e9c1396cc2259dc4bc665ba023adcf4c9b..0524b3cbe00bfe552de824dd1090bd00a208c527 100644
-> > > GIT binary patch
-> > > delta 110
-> > > zcmexwz1oJ$CD<iITaJN&sbC_PG*jDyjq2XAOwJsWOJsu?^(LQ?m2qDnFu6K`OMrn(
-> > > ypv~RY#f7UOx=Au1JjjV7-ow*{H^48zz}di=fg?WD(}f|rNfM+6Ny^w5Dg^+WYaFrw
-> > > 
-> > > delta 66
-> > > zcmZ2&^WU1wCD<k8zbpd-Q^!OuX{N5b8`ZsKnVi@sm&gV)%1%BZD<d7<BpDDM<irv0
-> > > W;pxH~;1^)vY~akm5g+R5!T<oNArgiF
-> > > 
-> > > diff --git a/tests/data/acpi/aarch64/virt/DSDT.topology b/tests/data/acpi/aarch64/virt/DSDT.topology
-> > > index 029d03eecc4efddc001e5377e85ac8e831294362..8c0423fe62d6950f9098983d86bfee256d7d003a 100644
-> > > GIT binary patch
-> > > delta 86
-> > > zcmbQHbx4cLCD<jzNtA(s>E%Q&X{O%5jp|7vOwJsWyG4Q-^(NmJk>Ot;Fu6K`OMrn(
-> > > opv~RY#bxqO5n1WzCP@&RBi_T)g*U)2z`)tqn1Lfc)YF9l01l28<p2Nx
-> > > 
-> > > delta 42
-> > > ycmX@4HBF1lCD<iIOq79viGL!OG*hGhM)f2SCMWjE-6Fw^vXk$N$V}!Dl?DLb(h64q
-> > > 
-> > > diff --git a/tests/data/acpi/aarch64/virt/HEST b/tests/data/acpi/aarch64/virt/HEST
-> > > index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..8b0cf87700fa1799c0f8e48610ce4b7ff751dd1f 100644
-> > > GIT binary patch
-> > > literal 224
-> > > zcmeZp4Gww0z`($m;pFe^5v<@85#X$#prF9Wz`y`vgJ>oO1_mw$28RFt85lu)5N2Ru    
-> > > tU|?_nkxwi^d=43qAPxXkD*#pd?>_{9%>kRuh}CQksCsrH%$C4mHUOJBAprmY      
-> > > 
-> > > literal 0
-> > > HcmV?d00001
-> > > 
-> > > diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
-> > > index 46298e38e7b8..dfb8523c8bf4 100644
-> > > --- a/tests/qtest/bios-tables-test-allowed-diff.h
-> > > +++ b/tests/qtest/bios-tables-test-allowed-diff.h
-> > > @@ -1,3 +1 @@
-> > >  /* List of comma-separated changed AML files to ignore */
-> > > -"tests/data/acpi/aarch64/virt/HEST",
-> > > -"tests/data/acpi/aarch64/virt/DSDT",    
-> >   
-> 
-> 
-> 
-> Thanks,
-> Mauro
-> 
+Thanks,
+Laurentiu
+
+Laurentiu Palcu (11):
+  dt-bindings: i2c: maxim,max96712: add a couple of new properties
+  staging: media: max96712: convert to using CCI register access helpers
+  staging: media: max96712: change DT parsing routine
+  staging: media: max96712: add link frequency V4L2 control
+  staging: media: max96712: add I2C mux support
+  staging: media: max96712: add support for streams
+  staging: media: max96712: allow enumerating MBUS codes
+  staging: media: max96712: add set_fmt routine
+  staging: media: max96712: add gpiochip functionality
+  staging: media: max96712: add fsync support
+  staging: media: max96712: allow streaming from connected sensors
+
+Sakari Ailus (1):
+  media: mc: Add INTERNAL pad flag
+
+ .../bindings/media/i2c/maxim,max96712.yaml    |   45 +
+ .../media/mediactl/media-types.rst            |    8 +
+ drivers/media/mc/mc-entity.c                  |   10 +-
+ drivers/staging/media/max96712/max96712.c     | 1406 +++++++++++++++--
+ include/uapi/linux/media.h                    |    1 +
+ 5 files changed, 1352 insertions(+), 118 deletions(-)
+
+-- 
+2.44.1
 
