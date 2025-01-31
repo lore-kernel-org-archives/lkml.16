@@ -1,112 +1,100 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827D48467;
-	Fri, 31 Jan 2025 16:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAC21E0E0A
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738340455; cv=none; b=phN76cC+WaoMFCPOTPz9Z2DWxN+YpH/WOsxqlwPuZ90AgS29XhQAe24Xzn+g5tfnLTNlOHZBI8W3lopOsYrF74XZych7F849XQwotH/a4SdS1DpoFVq7x/ATxWAX7iqgr9jaQDzybNuilEFaFrhYIPdGBE1nf5IEiOPupWuhE00=
+	t=1738340601; cv=none; b=oHCOLUpr4q9i9egOh+UUTtW+J5nKBcsCnV8ZzS2GwVaCEc/yvjK2uF0/YP5bikC0liN5LCrzElvt5jYVNA69G+6H4cb9p/DFgxoFcaTY749iQC0SLuBF12Ys15uJsLcsFCUEQ2W3Rod1puxE5/qA+DJlsqCn0FwKgXh4ijg46wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738340455; c=relaxed/simple;
-	bh=kgUszXNuPV3P2dEQXPR7dcCCYPhIwE5WI4vBqCxuFbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QVGpe8ei+jNwAdGwBMQnIyld9vq7hjkUrQXaKyI/HJv6fcSC00OMso96wHKN/liynEz4e3qSpu4R6h6rhpOx/Ffy/Fk+5Inc7Wy7Rc7prl/sw5N4xAW4i5ktm3JapWkzOP2Z3RKCtWm6sIj1k1x3aSvr1ymtYfFmNo5R6Pfny3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ADxjwj/f; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738340601; c=relaxed/simple;
+	bh=XR5lx6T2OZX3TvgFfUCQ2wqoocF1737mUfcufcBWu3Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ixIfFtoc7lpbjfr5zO+YwEJTiO6XzKaHYqfEDT6gCrF/gIdEW9fluNDtD+hVpE0ZtLesbdtR5X4LUf/lZh8miOXV0tgeP4eymnF1Hvs2n41G3AGkIUWYPdLuFfZ7g253NE2h7pSkjIARLFIDphm4PrroOOgJaFKyaz+VSAxrKQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vxxKAnKH; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADxjwj/f"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2165cb60719so41890885ad.0;
-        Fri, 31 Jan 2025 08:20:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vxxKAnKH"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3862d16b4f5so1387543f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 08:23:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738340454; x=1738945254; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FVl+sJnuan5pQ1hwFbGyv6FG241l0l+oyyTc+hhZg08=;
-        b=ADxjwj/fK2N3US56OwZUOoBQ4kavsGEQXsqIZRTDKx7Gkf9Iezben32ThmhoN7mdea
-         97aJHazw7fg+BtJnoFDJZhWFgYlGy+bQM/bs6+9kJ8qgzvAXb/ojFuXvok+pBU7vpA//
-         nId0qf95b08BZdjDy2jC0jSbRHpJG0xOjBJ2UUf8Hhg5nvZzSpY5rhqL+lsjuyknD7No
-         1O+ssFDfwG4ju3ln62tZuJ61biospJxtioDS6lun9ceU52sw6RFMIqdtMKhNykdWiY8q
-         r9RQ7wyJvfOsB7IUUU46/2yq+N52OuQANDdVA31blvA68OrVD2oo1fszY908LQ+C/xLw
-         k8iQ==
+        d=linaro.org; s=google; t=1738340597; x=1738945397; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ccsQCvgWKqv3yygq/7Q/nlBWnWSWfZGyLmBYGuzRwP0=;
+        b=vxxKAnKHC7G4bKKCD04ERw4VFCG+qDpfzIw8T5IhExw0kBfT5A3ksQ+YcPVtnAfgFK
+         5Q69tOkwHXS0BQGfLl5++vpUDVqRb0vGoHxGdnSKA9yOpbhFfQer3qVAlwO91UiN68ez
+         lYgOCvkiTAz0mnKl2/jWuRRyYmlnLU4o9orCRm4aPq8hq819x0SREQm8p9P4TiTEeyAv
+         kvuhbnh/n/KLMIeXQPOuzb33Ub4r8RVNi7Jrf3pfn39D/nVDODSdTecNYKI3wd+C2M7x
+         UuUQR+8s9T+DcTVOrJzlVTcOaYPpwyALmZA6oi9orncB2ZLwp9bPbsU/npJXJJgHYb9v
+         hr4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738340454; x=1738945254;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FVl+sJnuan5pQ1hwFbGyv6FG241l0l+oyyTc+hhZg08=;
-        b=tzroR99iGgINVbhXZWmXX5h1iknRcslBM42I1XR/6lbHWVkDQcuIEFjWrbFPU/IwZY
-         5cjQVNAPt3Pl31XxPfrwiYA6cF3n0gGt2YQggLH0O+ebffqFNjPsEKjE/g/rT1nDDD+r
-         x2vRNIM2zUSkBT6bK+Ey6Wn8yMu0otWwYNAGBkNWs8zaBlQ9M/CkDrOW2vWjkMBD3kR/
-         ZB9LM0s1MnYcGzffhBZe6sSDI5D9qFJXTM2WpDxiRYlSzT5fzfvecKtwCfVMikp5CxqR
-         ooM3dczy20woGRUsc5niOlro2zSce10h5VbEvFe121fs3Q/SFVywx1PQuG3FHLDSOto2
-         F6/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUmjaduZ0s/9qr7l9roXWDTut5iXbYVdDopWwy55WRibF4I6i1KM35jN9kbf+duy0UBHxeR4z8VzCr2QpU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKI1ykQHVZ0CF+ltxTmJTSTj+O+NYV43ftKG1AeBXIWWiM6VTq
-	iLTxnPrB8jg9JCygv5rYsrpdLa/guUsJnfLCCfStZik4X5O/7E+S
-X-Gm-Gg: ASbGncuEwDwzmMSHfOH7Y2ISk4roBkndKUfiBkTzcGR41b31BUCyPkQMa6IFazhoB+N
-	a/4KF3rAcxE/STkIcUh0ed5EOf8KffjI0b3+X9kN6enlakTcWjjE85yOPrznWLF0OU6smVElrgt
-	noNjZkhiWq15gtYagSAqDrAr4v8Y07V0EqG4YExnWbTIeqzfX4Xdv1C5yUqjUJxixt6pJPz7M/U
-	hcrZpisgvaQJKyQW+iYmZX65WK6mF7rjFMVrbbRME/I7h1h2OxHyaFGb5unOY/3CHvoEE4EKx4s
-	N5xmYch5+GZ3Ee/9ZdvrQ6YPom3gwVuGzJCNnsnu
-X-Google-Smtp-Source: AGHT+IHJOknGi5P2ZoKkfst72xmfzs5tqIejPQp8L5pIi2p64vBY4hS5CrI9s7HD6/Wak138Gxngdw==
-X-Received: by 2002:a05:6a21:78c:b0:1ea:df1a:f8db with SMTP id adf61e73a8af0-1ed7a6236bdmr18845044637.37.1738340453645;
-        Fri, 31 Jan 2025 08:20:53 -0800 (PST)
-Received: from localhost.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acec0477aa8sm3253678a12.49.2025.01.31.08.20.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 08:20:53 -0800 (PST)
-From: Jeongjun Park <aha310510@gmail.com>
-To: kent.overstreet@linux.dev
-Cc: linux-bcachefs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jeongjun Park <aha310510@gmail.com>
-Subject: [PATCH] bcachefs: fix incorrect pointer check in __bch2_subvolume_delete()
-Date: Sat,  1 Feb 2025 01:20:31 +0900
-Message-ID: <20250131162031.190424-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1738340597; x=1738945397;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ccsQCvgWKqv3yygq/7Q/nlBWnWSWfZGyLmBYGuzRwP0=;
+        b=R7foOaAzgcvCRyfVZ0FF7PN53sDcr1WeBdzrSWGxC88NHOBgzdafOtyB6VfIpRo2H6
+         U2XW0fPiw24Z6sEUkjsIIxzuz93fOQphW/I9MmEk7XgV0lrM9/EiP6X3xXPED8lYxN2G
+         WCIipA+ZxPMmD79YQXRGVf87ZCbDUfOxOQTCOLFFt+7QpwO4TMa8hvfWxx3hxS315jMv
+         sCxrG0czEqXCkdQmlLyCP5vQAddcEx2VPfN1kPeWqzCC/utTZ4daeHHkweGFtyS1yTvH
+         eKUoH1LQA8MsMNAJQ5ifuaYwI9fFHfQrjBEP666OjNYMwHKw1g58vDMCw+2qQDSj6tJC
+         /q8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXElTruWc+UEt8zkvo++uqK0B/CkIk0L73I9mHijugDNjTViZmwiQWEhUPj004mdptAjrt3b3xu/Tlug04=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqsF98+qfYhV/uJ9631hKLoG2SdvfcmszS+fCtmgsMIx4pH4Vh
+	zHzr3tpOWdECB0kmREQ/ANoEXsBrLBApYET1movfjZP7IiDCjIuuNRgAcm8cbC0=
+X-Gm-Gg: ASbGncsRDn8qb4uUuFtF+JiBxORID4GdUUDi0No2t3D73AX+YYaXbYE/8XJ51DEv80N
+	I3Iu+mTIH5jDuWHM5CNj73AqZJL9PO+36J4WpPrNaK/gsSZP7ypcy1aYDdOOPbL86BOWvrJVGrY
+	N6VqBexAMUe/RYYxf0/jLaN+ljRO/kY0vaWuScQKvfPxzxC9sk8r7iZVLIGqgwK4Wjjzuo1dKMR
+	TENHzO3Bmt/AT9evlLIPKNNq+HQhN26GAgWa2aYxibPsW7gCd3ts71qhBet4My9UwurNOehXECo
+	QJPEOPOeh1SrfHVN24tps6AuQw==
+X-Google-Smtp-Source: AGHT+IHjR1HpSI+OxXVo1rJx/d3HvscdknUv4GZNTW8wQmSNUAcS/oELkxUcnST2xhCMAatVE56veA==
+X-Received: by 2002:a5d:59a9:0:b0:386:4244:15c7 with SMTP id ffacd0b85a97d-38c60f7788amr3570705f8f.25.1738340596916;
+        Fri, 31 Jan 2025 08:23:16 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.107])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b576csm5113346f8f.63.2025.01.31.08.22.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 08:22:44 -0800 (PST)
+Message-ID: <0ee49250-47e9-4719-898e-644b30ef8585@linaro.org>
+Date: Fri, 31 Jan 2025 16:22:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2 v3] perf test: perf record tests (114) changes
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+ hca@linux.ibm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+ linux-s390@vger.kernel.org
+References: <20250131102756.4185235-1-tmricht@linux.ibm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250131102756.4185235-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-For some unknown reason, checks on struct bkey_s_c_snapshot and struct
-bkey_s_c_snapshot_tree pointers are missing.
 
-Therefore, I think it would be appropriate to fix the incorrect pointer checking
-through this patch.
 
-Fixes: 4bd06f07bcb5 ("bcachefs: Fixes for snapshot_tree.master_subvol")
-Signed-off-by: Jeongjun Park <aha310510@gmail.com>
----
- fs/bcachefs/subvolume.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+On 31/01/2025 10:27 am, Thomas Richter wrote:
+> Change event intructions to cycles for subtests
+>   - precise_max attribute
+>   - Basic leader sampling
+> as event instructions can not be used for sampling on s390.
+> 
+> Thomas Richter (2):
+>    perf test: Fix perf test 114 perf record test subtest precise_max
+>    perf test: Change event in perf test 114 perf record test subtest
+>      test_leader_sampling
+> 
+>   tools/perf/tests/shell/record.sh | 53 ++++++++++++++++++++------------
+>   1 file changed, 34 insertions(+), 19 deletions(-)
+> 
 
-diff --git a/fs/bcachefs/subvolume.c b/fs/bcachefs/subvolume.c
-index e3d0475232e5..b7b96283c316 100644
---- a/fs/bcachefs/subvolume.c
-+++ b/fs/bcachefs/subvolume.c
-@@ -428,7 +428,7 @@ static int __bch2_subvolume_delete(struct btree_trans *trans, u32 subvolid)
- 		bch2_bkey_get_iter_typed(trans, &snapshot_iter,
- 				BTREE_ID_snapshots, POS(0, snapid),
- 				0, snapshot);
--	ret = bkey_err(subvol);
-+	ret = bkey_err(snapshot);
- 	bch2_fs_inconsistent_on(bch2_err_matches(ret, ENOENT), trans->c,
- 				"missing snapshot %u", snapid);
- 	if (ret)
-@@ -440,6 +440,11 @@ static int __bch2_subvolume_delete(struct btree_trans *trans, u32 subvolid)
- 		bch2_bkey_get_iter_typed(trans, &snapshot_tree_iter,
- 				BTREE_ID_snapshot_trees, POS(0, treeid),
- 				0, snapshot_tree);
-+	ret = bkey_err(snapshot_tree);
-+	bch2_fs_inconsistent_on(bch2_err_matches(ret, ENOENT), trans->c,
-+				"missing snapshot tree %u", treeid);
-+	if (ret)
-+		goto err;
- 
- 	if (le32_to_cpu(snapshot_tree.v->master_subvol) == subvolid) {
- 		struct bkey_i_snapshot_tree *snapshot_tree_mut =
---
+LGTM
+
