@@ -1,244 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ksmg01.maxima.ru (ksmg01.maxima.ru [81.200.124.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0020F1E5726;
-	Fri, 31 Jan 2025 15:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1882B1DE4E5;
+	Fri, 31 Jan 2025 15:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738337198; cv=none; b=lgFWRS84FNZgkZrGHrjiV7lGyj5s11bdmpy4g3fY9jHBYby1722GHyLobNvzCic0tu0IA9iwUKivbrTBOcjTPs5sAwHNRSKksA3ukaU13MtR7JwMORGWQOwvNMw66FgtTji/rDzB4v3iDmTR69Sw0DYKDmVZXKFdHBmFfEYiUpg=
+	t=1738337292; cv=none; b=NZNo4S1cAThaGjzR19ST5NYuQAQwYE6cvoez3hkaSSw7mmMMAi2dZt6TDiGueH7VlSSuavnLa/mMDF0JwlHStwhXkPhWdjdwWblz/QMrl+g1gHD0Lp4Zmktagn1cQQ/UV+ICcrp/UqefQb9rRtiu05HSHCmq4J7DUF9t2oIyt0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738337198; c=relaxed/simple;
-	bh=2ULc8BQm7YXjgGqlZjsV9DB9CeqZcoDXnGE2In5vW8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dnou3waagGbDmSIvH7f+VFIxlzcdurTliQaikcRKN8brL3/+e0uzr7gygwqFjyP8aMmdb7ZItWlQizD3VZqKoaqM29mf1SwO4elejX8oKmj4fejcrZBCsVmrEYqsyedXo7vZ6jj2EFlAV+ujksnaPSRZincFpKfnDRR/Ugha1aY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCkLUV0C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738337292; c=relaxed/simple;
+	bh=54STAwR00ASCZCVJI5Yh67MWr1elOz6OEnFK+SgG8lE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q888X68oGJWMprMGGMV3WJ9wR7q7oGs5ItVJXykUbA/8BIMp09H5zfX6Kcg7iv4a29y+gpME4kQO8GdgkfJj12fIY3+m/F+wgAxy6eY6nOSS+y69TB+mqeUMBIp6eLeIrtw9m0uWDQbtWSYcihQsXBnMuJbDLI/cLsHpe4rm1f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=AfriKALW; arc=none smtp.client-ip=81.200.124.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCkLUV0C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22F83C4CED1;
-	Fri, 31 Jan 2025 15:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738337197;
-	bh=2ULc8BQm7YXjgGqlZjsV9DB9CeqZcoDXnGE2In5vW8Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kCkLUV0CAuTQQxKl8ODLqJGj0vdDlwr8WZoM5FlP8aCtVGSWsRVh7dprcddJe6qeP
-	 r0ST2yxkOx1tHjnjcTaiOzp8UgCKZCDquNy003DM0gYSEURdLXQtlpeMxGBWQBxEQ2
-	 sFbc9sqGtmkJQjSwFqVVEq6j5OBw2IzqpMcyQ/3U5whp/KyHOs5Z/cBFe+Doa9OSpg
-	 0mE7A9znT6OLiO3nQopvgk2Xdv95IxRs8kAeSg/RKDvsn8H5l+QkcNcpxASZ8fM/9J
-	 NLYO6mSt0WVcTytQCSHV0CL3XfO66ZTBHVBnVS9vYuu0kaSlakNKfjy7BHXxyoF+OH
-	 GWKpFpl/Cor7A==
-Date: Fri, 31 Jan 2025 09:26:36 -0600
-From: Rob Herring <robh@kernel.org>
-To: Mahesh Rao <mahesh.rao@intel.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-	Tom Rix <trix@redhat.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Wu Hao <hao.wu@intel.com>, Ho Yin <adrian.ho.yin.ng@altera.com>,
-	Niravkumar L Rabara <nirav.rabara@altera.com>,
-	linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Mahesh Rao <mahesh.rao@altera.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: firmware: stratix10: Convert to
- json-schema
-Message-ID: <20250131152636.GA3454395-robh@kernel.org>
-References: <20250131-socfpga_sip_svc_misc-v2-0-eeed4ebc35f9@intel.com>
- <20250131-socfpga_sip_svc_misc-v2-2-eeed4ebc35f9@intel.com>
+	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="AfriKALW"
+Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
+	by ksmg01.maxima.ru (Postfix) with ESMTP id 87766C0003;
+	Fri, 31 Jan 2025 18:27:56 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru 87766C0003
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
+	s=sl; t=1738337276; bh=rW23PiXK22C21obbkHYRPKanoYKTVhrnKD7lXE0kx14=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=AfriKALW6ufLeyw7rbLZLjiIQj61DNMRNbAB+ia8zI6aznLqL/+W1eW/gX5gKhEYy
+	 MfWrF0pzfwZKTOOidEM1Efnvtd0CZkXZWinIUFtmZ+Rv2Xak5LQI3JXPZn6JvZCKEe
+	 xt8ru3yQMpBEr7fwL5Ad+LY7cGkaRdcZrjvvxQVGkvXUZn4ypRLp24NUZEdTV8yZjV
+	 RCjIfGF8m0gqmE6UrxFmLiT76ZLswQ13ad1AG8WrixvQWoxQ0D8r5rW1G2aV+sHrEv
+	 srJmUvFqJcXXFU+5DryFVevBuFhl8avS8yN9tiaOuGGKAJ/Sjmpy6YtGF3895fn1eg
+	 nLIxBkNReI9pw==
+Received: from ksmg01.maxima.ru (mail.maxima.ru [81.200.124.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
+	by ksmg01.maxima.ru (Postfix) with ESMTPS;
+	Fri, 31 Jan 2025 18:27:56 +0300 (MSK)
+Received: from localhost.maximatelecom.ru (5.1.51.69) by mmail-p-exch01.mt.ru
+ (81.200.124.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1544.4; Fri, 31 Jan
+ 2025 18:27:54 +0300
+From: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
+To: Johannes Berg <johannes@sipsolutions.net>
+CC: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>, Michael Wu
+	<flamingice@sourmilk.net>, "John W. Linville" <linville@tuxdriver.com>,
+	<linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>,
+	<syzbot+2e5c1e55b9e5c28a3da7@syzkaller.appspotmail.com>
+Subject: [PATCH v2] wifi: nl80211: reject cooked mode if it is set along with other flags
+Date: Fri, 31 Jan 2025 20:26:55 +0500
+Message-ID: <20250131152657.5606-1-v.shevtsov@mt-integration.ru>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131-socfpga_sip_svc_misc-v2-2-eeed4ebc35f9@intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: mt-exch-01.mt.ru (91.220.120.210) To mmail-p-exch01.mt.ru
+ (81.200.124.61)
+X-KSMG-AntiPhishing: NotDetected, bases: 2025/01/31 14:37:00
+X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
+X-KSMG-AntiSpam-Envelope-From: v.shevtsov@mt-integration.ru
+X-KSMG-AntiSpam-Info: LuaCore: 50 0.3.50 df4aeb250ed63fd3baa80a493fa6caee5dd9e10f, {rep_avail}, {Tracking_one_url, url3}, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, 81.200.124.61:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;ksmg01.maxima.ru:7.1.1;mt-integration.ru:7.1.1;syzkaller.appspot.com:5.0.1,7.1.1, FromAlignment: s, ApMailHostAddress: 81.200.124.61
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 190721 [Jan 31 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.7
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/01/31 13:26:00 #27170191
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected, bases: 2025/01/31 14:37:00
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 7
 
-On Fri, Jan 31, 2025 at 06:17:25PM +0800, Mahesh Rao wrote:
-> Convert intel,stratix10-svc service layer devicetree
-> binding file from freeform format to json-schema.
-> 
-> Also added DT binding for optional stratix10-soc
-> FPGA manager child node.
-> 
-> Signed-off-by: Mahesh Rao <mahesh.rao@intel.com>
-> ---
->  .../bindings/firmware/intel,stratix10-svc.txt      | 57 -------------
->  .../bindings/firmware/intel,stratix10-svc.yaml     | 94 ++++++++++++++++++++++
->  2 files changed, 94 insertions(+), 57 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt b/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
-> deleted file mode 100644
-> index 6eff1afd8daf91714d6a18859667d2607e707da7..0000000000000000000000000000000000000000
-> --- a/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
-> +++ /dev/null
-> @@ -1,57 +0,0 @@
-> -Intel Service Layer Driver for Stratix10 SoC
-> -============================================
-> -Intel Stratix10 SoC is composed of a 64 bit quad-core ARM Cortex A53 hard
-> -processor system (HPS) and Secure Device Manager (SDM). When the FPGA is
-> -configured from HPS, there needs to be a way for HPS to notify SDM the
-> -location and size of the configuration data. Then SDM will get the
-> -configuration data from that location and perform the FPGA configuration.
-> -
-> -To meet the whole system security needs and support virtual machine requesting
-> -communication with SDM, only the secure world of software (EL3, Exception
-> -Layer 3) can interface with SDM. All software entities running on other
-> -exception layers must channel through the EL3 software whenever it needs
-> -service from SDM.
-> -
-> -Intel Stratix10 service layer driver, running at privileged exception level
-> -(EL1, Exception Layer 1), interfaces with the service providers and provides
-> -the services for FPGA configuration, QSPI, Crypto and warm reset. Service layer
-> -driver also manages secure monitor call (SMC) to communicate with secure monitor
-> -code running in EL3.
-> -
-> -Required properties:
-> --------------------
-> -The svc node has the following mandatory properties, must be located under
-> -the firmware node.
-> -
-> -- compatible: "intel,stratix10-svc" or "intel,agilex-svc"
-> -- method: smc or hvc
-> -        smc - Secure Monitor Call
-> -        hvc - Hypervisor Call
-> -- memory-region:
-> -	phandle to the reserved memory node. See
-> -	Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> -	for details
-> -
-> -Example:
-> --------
-> -
-> -	reserved-memory {
-> -                #address-cells = <2>;
-> -                #size-cells = <2>;
-> -                ranges;
-> -
-> -                service_reserved: svcbuffer@0 {
-> -                        compatible = "shared-dma-pool";
-> -                        reg = <0x0 0x0 0x0 0x1000000>;
-> -                        alignment = <0x1000>;
-> -                        no-map;
-> -                };
-> -        };
-> -
-> -	firmware {
-> -		svc {
-> -			compatible = "intel,stratix10-svc";
-> -			method = "smc";
-> -			memory-region = <&service_reserved>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.yaml b/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..e30e79d4c3150f90993e728320e9ef90d484a10d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.yaml
-> @@ -0,0 +1,94 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/firmware/intel,stratix10-svc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel Service Layer Driver for Stratix10 SoC
-> +
-> +maintainers:
-> +  - Dinh Nguyen <dinguyen@kernel.org>
-> +  - Mahesh Rao <mahesh.rao@altera.com>
-> +
-> +description:
+It is possible to set both MONITOR_FLAG_COOK_FRAMES and MONITOR_FLAG_ACTIVE
+flags simultaneously on the same monitor interface from the userspace. This
+causes a sub-interface to be created with no IEEE80211_SDATA_IN_DRIVER bit
+set because the monitor interface is in the cooked state and it takes
+precedence over all other states. When the interface is then being deleted
+the kernel calls WARN_ONCE() from check_sdata_in_driver() because of missing
+that bit.
 
-You need '>' on the end to preserve paragraphs.
+Fix this by rejecting MONITOR_FLAG_COOK_FRAMES if it is set along with
+other flags.
 
-> +  Intel Stratix10 SoC is composed of a 64 bit quad-core ARM Cortex A53 hard
-> +  processor system (HPS) and Secure Device Manager (SDM). When the FPGA is
-> +  configured from HPS, there needs to be a way for HPS to notify SDM the
-> +  location and size of the configuration data. Then SDM will get the
-> +  configuration data from that location and perform the FPGA configuration.
-> +
-> +  To meet the whole system security needs and support virtual machine requesting
-> +  communication with SDM, only the secure world of software (EL3, Exception
-> +  Layer 3) can interface with SDM. All software entities running on other
-> +  exception layers must channel through the EL3 software whenever it needs
-> +  service from SDM.
-> +
-> +  Intel Stratix10 service layer driver, running at privileged exception level
-> +  (EL1, Exception Layer 1), interfaces with the service providers and provides
-> +  the services for FPGA configuration, QSPI, Crypto and warm reset. Service layer
-> +  driver also manages secure monitor call (SMC) to communicate with secure monitor
-> +  code running in EL3.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - intel,stratix10-svc
-> +      - intel,agilex-svc
-> +
-> +  method:
-> +    description: |
-> +                 Supervisory call method to be used to communicate with the
-> +                 secure service layer.
-> +                 Permitted values are:
-> +                 - "smc" : SMC #0, following the SMCCC
-> +                 - "hvc" : HVC #0, following the SMCCC
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 
-Indent by 2 more than 'description'.
+Fixes: 66f7ac50ed7c ("nl80211: Add monitor interface configuration flags")
+Reported-by: syzbot+2e5c1e55b9e5c28a3da7@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=2e5c1e55b9e5c28a3da7
+Signed-off-by: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
+---
+v2: update patch name and description,
+    reject cooked mode if the one is set along with other flags.
 
-> +
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +    enum:
-> +      - smc
-> +      - hvc
-> +
-> +  memory-region:
-> +    maxItems: 1
-> +    description:
-> +      phandle to a reserved memory region for the service layer driver to
-> +      communicate with the secure device manager. For more details see
-> +      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt.
+ net/wireless/nl80211.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Please read what that file says.
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index d7d3da0f6833..fdb2aac951d1 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -4220,6 +4220,11 @@ static int parse_monitor_flags(struct nlattr *nla, u32 *mntrflags)
+ 		if (flags[flag])
+ 			*mntrflags |= (1<<flag);
+ 
++	/* cooked monitor mode is incompatible with other modes */
++	if (*mntrflags & MONITOR_FLAG_COOK_FRAMES &&
++	    *mntrflags != MONITOR_FLAG_COOK_FRAMES)
++		return -EOPNOTSUPP;
++
+ 	*mntrflags |= MONITOR_FLAG_CHANGED;
+ 
+ 	return 0;
+-- 
+2.48.1
 
-> +
-> +  fpga-mgr:
-> +    $ref: /schemas/fpga/intel,stratix10-soc-fpga-mgr.yaml
-> +    description: Optional child node for fpga manager to perform fabric configuration.
-> +
-> +required:
-> +  - compatible
-> +  - method
-> +  - memory-region
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    reserved-memory {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +
-> +      service_reserved: svcbuffer@0 {
-> +              compatible = "shared-dma-pool";
-> +              reg = <0x0 0x0 0x0 0x1000000>;
-> +              alignment = <0x1000>;
-> +              no-map;
-> +      };
-> +    };
-> +
-> +    firmware {
-> +      svc {
-> +        compatible = "intel,stratix10-svc";
-> +        method = "smc";
-> +        memory-region = <&service_reserved>;
-> +
-> +        fpga-mgr {
-> +          compatible = "intel,stratix10-soc-fpga-mgr";
-> +        };
-> +      };
-> +    };
-> +
-> 
-> -- 
-> 2.35.3
-> 
