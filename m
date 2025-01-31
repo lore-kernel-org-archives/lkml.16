@@ -1,96 +1,111 @@
-Received: from c64.rulez.org (c64.rulez.org [79.139.58.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E116F1DFF0;
-	Fri, 31 Jan 2025 18:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.139.58.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033F41C174E;
+	Fri, 31 Jan 2025 18:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738346503; cv=none; b=OvGJTKf8wYnd6kAQ64m9Uo7hlirpzeEC1CYefx6zaBDxBnH2fQ56enNiHKt/kjCjqMNoSvCGnd23RgHh4YCM7kLldY7ltIBSB7iZ0pgfm+Xas3AkAgoQX/9MRI5kGJz2dQyQ7m4pb7L0mgl4rSOHKx8HxUoOsj2yqNz6OSB801Y=
+	t=1738346624; cv=none; b=dIA0uYp/CwPNZIOb5KJ6KZwUkW0nVTisr5VANQ5YafZnprQR1KbX/QZFLTxdhqauqgamhtvBTydUhYy5rBsF8WlWkUGTygJIk+sQvTR8m9kFlNFoCty0N+VDcd0OQm5BMdoBPKzhgPbKBYZut17TuLTzjhy1/a2R4XfLeEq4/Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738346503; c=relaxed/simple;
-	bh=QTyDNMCjrFGdVtjYWu+iLS/pUesUHhGWor50ShaSIxY=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
-	 In-Reply-To:Content-Type; b=JpEsspSr+nBmoQRB/MOZG9w2jTH4HBCbEMP9eR7irF7ehZXigloc/Tk67aIcfkA0afSvedT+YrxWXjWwOgZtmxTQO705tEo1d7aCw0KzDbLYgNMQ817rCsGp1g4YJSniLLPzeokPFCkFkGV+ibKD7aFlW+2to+UWEQnFGTskEfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c64.rulez.org; spf=pass smtp.mailfrom=c64.rulez.org; arc=none smtp.client-ip=79.139.58.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c64.rulez.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c64.rulez.org
-Received: from [192.168.0.73] (unknown [89.134.11.203])
-	by c64.rulez.org (Postfix) with ESMTPSA id 06B44100F6;
-	Fri, 31 Jan 2025 19:01:34 +0100 (CET)
-Message-ID: <b9db8b64-0671-ac9d-bf6f-8489d59fa0e9@c64.rulez.org>
-Date: Fri, 31 Jan 2025 19:01:34 +0100
+	s=arc-20240116; t=1738346624; c=relaxed/simple;
+	bh=6SHGPNnD+6Hd94JCDS4hKGOqSS6VX3tMan2zraCxxLc=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=uF/7tzNl7Jn1EUHx40Ghsld3Jr6TMjHyfFXULOtS5NAcchsEB/3F6ViMaVX46ILCjeC9XPS9X210JBhUzJAq5yaMfCYFV5VGWuDBcxj9lbdbxlFcceBPXfdoff9CaBwp9vRFOX9dtUb9WVArGTJx7uKnzHAmXnvy98K7TnA+tFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kl9iSp+d; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kl9iSp+d"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6d8edad9932so16542766d6.0;
+        Fri, 31 Jan 2025 10:03:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738346621; x=1738951421; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tpMrr6tTcxUny5yGhg2pM7dvzKt66D5ST/0RRfO4vVk=;
+        b=kl9iSp+dCF8PnCn8UBWsBBcjGRUv5Y6guxvQ6E6Qh5uZCPRMsTG9Ma023aHpqp5pig
+         jR7rkMc5FgPg5wHquqOWNwRgFv/eBLzBqLfA9zFhN7ixnlvomb+wSanRUyvgl9DS0E3d
+         PHkqMNQSvR+8e8WfJmcoLvXd5q9L1NvKQyz9PzUehPhl8G5h2HG2OcPtpmzOJiL+E785
+         cW+jWF1FoUGSRr5rQOv6XF1B2tazCAphKvCeFo0uzZaI/xvI3TREIkic74bZeqPKiUKG
+         +U2MiO+pjH5HCq/8e9N5TQQPvgvtD7aG96DrprpH0tKhcnmp7SqvMxV5d7tD69aQWEgo
+         YU0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738346621; x=1738951421;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tpMrr6tTcxUny5yGhg2pM7dvzKt66D5ST/0RRfO4vVk=;
+        b=Ovy5CYaEqLgXajF0QucfR9MxtyReRf3vJj+1wEuB0gFYFe1H4rV8E/QNpCYTv1mGxc
+         pZCtJ0r0osz3jDbWMloHAVJdSt3ZZBY3cp15VGy+wfJJRxz0XDh0sHRUFIbvEAuH24hZ
+         uIuKQb+yQkryThdd/mwaarYhuWQDaBKNXWk8zq/oUD642ephaOyQdPu9UZSGxna4PqhX
+         d5xK2L88EQNvU8Dv0qbgILQI1oX4Wjs+4oseG+xrNXKQHauprC77ddud9Cj0l6ol2KtU
+         D6qB+WH6MX0YrkX14PMhZUKZGma7+zij2EuX9pWiwDBUWHMahkPM1mHsqrIT8IWIFVbo
+         iYdw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/w/n9o8dxy1QvoA7LEQ4ZqAOdPOXBqLhflbrvKZcxJSgUGKBtOuqDtvl4UvbhF09810qETjFr@vger.kernel.org, AJvYcCUJNyaywp1dR3cJCOwjb5tVp+kd3XfexFVCRopKDj3Gx6LBwkLIjikQuajjfNMeo9TQgk/92++MS6NFZziMEPzh@vger.kernel.org, AJvYcCXX83kA1hA1obBG0bRrf7iT+OJwAv4SHX14WJMRNlM3Lpg4R4phtrWj+6oX5BHeTVa/ft2Q4zkjfHJI9qY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxWyFDDk8Fux5aBXhNrR6Qim5/VhwZULMqkggRzK74Ue/33RC5
+	6U/IyWotO3LP7yxdPewvxMZcHKPP/2JTNS3UqPFqeDyxCHOQdQUR
+X-Gm-Gg: ASbGncurdBnXfCBMlOmtq8ACkQnZoN8nZYhFwx2pW48HhL5kqRQtbThyTTeGnT4zCXN
+	FQ3p8CfTdfGW+9JppR3JN8zzQ62im3lWfnApFB4jb1wqqdUSox8997P1DhkSZGoKp2T2jSG/6Oq
+	ykJdHXCsoYTcQSxS2nrmIEbWX16oiN2uK7ZRbgpWt/l6nHThTOCbdd1XGCAkPsvLAGGdQ8mtqy9
+	zgyGkkdNMNPTB7z9cD1SmXf/g+vdoKbMH+OxhJ+RP7yV2vvC7DLGY0VWdbw8oXXYiHZ9og4zgj8
+	BSAlscmWKIT8D7vUlVcIRWf6D+FKX/8sHl2VeTMz7sQUK+SbHs0Ebjx0IdeFacA=
+X-Google-Smtp-Source: AGHT+IF2NPh4aSX34R9VXcpivvt/FXmGXLUSxgcDOoxuyD4bDxVnP01OCVr3tTRXEza8746zaDnHug==
+X-Received: by 2002:a05:6214:2c05:b0:6d8:8d16:7cec with SMTP id 6a1803df08f44-6e243c8ff23mr217332476d6.37.1738346620730;
+        Fri, 31 Jan 2025 10:03:40 -0800 (PST)
+Received: from localhost (15.60.86.34.bc.googleusercontent.com. [34.86.60.15])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254814029sm20454326d6.29.2025.01.31.10.03.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 10:03:39 -0800 (PST)
+Date: Fri, 31 Jan 2025 13:03:39 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Yan Zhai <yan@cloudflare.com>, 
+ netdev@vger.kernel.org
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ David Ahern <dsahern@kernel.org>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, 
+ Shuah Khan <shuah@kernel.org>, 
+ Josh Hunt <johunt@akamai.com>, 
+ Alexander Duyck <alexander.h.duyck@linux.intel.com>, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ kernel-team@cloudflare.com
+Message-ID: <679d107b78924_2741f92949a@willemb.c.googlers.com.notmuch>
+In-Reply-To: <Z5yKa7gz72+JEOXr@debian.debian>
+References: <Z5yKa7gz72+JEOXr@debian.debian>
+Subject: Re: [PATCH v3 net] udp: gso: do not drop small packets when PMTU
+ reduces
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Content-Language: en-GB
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Jaya Kumar <jayakumar.lkml@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>
-References: <cover.1736809898.git.lorenzo.stoakes@oracle.com>
- <091e47e4-1d8b-4b9c-8e1c-2f748c3bff8a@lucifer.local>
-From: =?UTF-8?Q?Kajt=c3=a1r_Zsolt?= <soci@c64.rulez.org>
-Subject: Re: [RFC PATCH v2 0/3] expose mapping wrprotect, fix fb_defio use
-In-Reply-To: <091e47e4-1d8b-4b9c-8e1c-2f748c3bff8a@lucifer.local>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------ZNY00lgD277lN900ocl01OpD"
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------ZNY00lgD277lN900ocl01OpD
-Content-Type: multipart/mixed; boundary="------------DBpai003ltingbzHns0OOmA8";
- protected-headers="v1"
-From: =?UTF-8?Q?Kajt=c3=a1r_Zsolt?= <soci@c64.rulez.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Jaya Kumar <jayakumar.lkml@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>
-Message-ID: <b9db8b64-0671-ac9d-bf6f-8489d59fa0e9@c64.rulez.org>
-Subject: Re: [RFC PATCH v2 0/3] expose mapping wrprotect, fix fb_defio use
-References: <cover.1736809898.git.lorenzo.stoakes@oracle.com>
- <091e47e4-1d8b-4b9c-8e1c-2f748c3bff8a@lucifer.local>
-In-Reply-To: <091e47e4-1d8b-4b9c-8e1c-2f748c3bff8a@lucifer.local>
+Yan Zhai wrote:
+> Commit 4094871db1d6 ("udp: only do GSO if # of segs > 1") avoided GSO
+> for small packets. But the kernel currently dismisses GSO requests only
+> after checking MTU/PMTU on gso_size. This means any packets, regardless
+> of their payload sizes, could be dropped when PMTU becomes smaller than
+> requested gso_size. We encountered this issue in production and it
+> caused a reliability problem that new QUIC connection cannot be
+> established before PMTU cache expired, while non GSO sockets still
+> worked fine at the same time.
+> 
+> Ideally, do not check any GSO related constraints when payload size is
+> smaller than requested gso_size, and return EMSGSIZE instead of EINVAL
+> on MTU/PMTU check failure to be more specific on the error cause.
+> 
+> Fixes: 4094871db1d6 ("udp: only do GSO if # of segs > 1")
+> Signed-off-by: Yan Zhai <yan@cloudflare.com>
+> Suggested-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
 
---------------DBpai003ltingbzHns0OOmA8
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-> +cc Kajtar, who has kindly smoke tested this series on real hardware an=
-d
-> confirmed things are working ostensibly the same as before.
->=20
-> On this basis I will be un-RFC'ing this and, if Kajtar can reply to
-> confirm, will add a Tested-by tag to patch 3/3.
-
-No problem, I'm glad I could help. Using defio is required for higher
-resolution modes anyway so I just had to code that part a bit earlier
-than planned.
-
---------------DBpai003ltingbzHns0OOmA8--
-
---------------ZNY00lgD277lN900ocl01OpD
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEE8WlaH4v4aHNT2Bn0WOeEu4KftGsFAmedD/4FAwAAAAAACgkQWOeEu4KftGvH
-SQgAmTscsXtGZWTBDKrl0ASsFmKSpdOgGhTKGhYTKAdhjz/+EFhumh/ZtdUw4YmxpIoXG8/hjmyo
-k1WEEgGxuFbQPBHoqZEYJ/V0tZpT9re7Kh4voE0LGKTMbXehhgNFK12kV4IPQ1BrEln/PyqpqAHU
-H5mKSBJA1gBHvMGB7trHXtGvTZZE1B8UaEdpbCDNmOnTPYYC5hpcZvImmQtaRaXlJDjcKKe6+eZo
-iFsVATK3OozHZivfHAGqC86AdU3s6b6j3K2NC0MyWJKPWy1t0fOn5J6krKO+wQL70I3zqM9Hglo1
-6Am+X7mXibkbthRHxo3VHHJkYOvmlDSF2HGL6BHaBA==
-=ywva
------END PGP SIGNATURE-----
-
---------------ZNY00lgD277lN900ocl01OpD--
+Reviewed-by: Willem de Bruijn <willemb@google.com>
