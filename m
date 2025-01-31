@@ -1,111 +1,98 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18F485947
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 08:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790521FAA
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 08:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738311520; cv=none; b=PIuqszDzgkD15dUk/walEDKH6uqaNiMQkO0PpqiTr5BoL11W+XJxyhft5vmEF9l/nZ6ep32ZwTDK7XW6e3nj9n39gzD+0V9g+/6ZhD3Tw3VKwturGIWQkikIerLLUQ6bKV2dR6grsBi4VbHGZ6Umkrpnl1XBG+7+R1bbnVgylFE=
+	t=1738311692; cv=none; b=WKvEquQobUl3Psc3S4qoSWinnIN6VKAAVEJJX5+DlaCwGehtiwaQC02PYTGtrsEaMaRvOT0wGKTiw39pK9Z8OcKXpHs+bMmD79UkdHMax8y6+r8z5pUImLyust9i6cm7GCErt4+LlthRnPWNAwuoZ5fWyZScr0ZcBZupyG9hdpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738311520; c=relaxed/simple;
-	bh=XQAyDEsftPjo4BUnpRrzUo4hXISSwy4f0FYmQpPlKmc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R+b6cXCHZMqiSfyQPCaAfcESQUz4cpGKyzT/0q3CWuQClfeami2IJJ/f51gHw9UpocPOfxxRfefPcTMxpC+QgK7gTVkMaSSOaTLa5wRqT/cY2k8fBYoc8ChsPKEsFwJMiNMzqHGhNLJIw7ovUhp/hevnyOuNyNhO6kK1ebkBjFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1738311692; c=relaxed/simple;
+	bh=cpzl1xvMzp42qcFOFeAmy2JSr394EShKizuRKhtrkIM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ezPMHyLyJ54NxI4LC+hUMTcyp9uVs5A6q9Rm7ZQeSD3LgrETAdFAOoCxE2GkiB9Hz9ZhdSqkOazm99meE2diBhANsJEYMNNfV4oJAFlxMRRSvbvjVEDs1xkvZ9t+y5C1TDHC3CYWazvCOB4OAMLUBE2m9oq4yv2rdXtjqEegSVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BgQopwsr; arc=none smtp.client-ip=209.85.128.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-518a861612eso1382618e0c.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 00:18:38 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BgQopwsr"
+Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-6f6cc13d103so5345037b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 00:21:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738311690; x=1738916490; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Jp0wXF2sas8vt3EGEw919osYfv9qaBNlPRlLJ8lWv8A=;
+        b=BgQopwsr0lFU6E9CXRBAIksI53wKz89LnLB9W36NOrZm0q1FFayVL9E2zLODJXjDQ7
+         xMNrmNFPJmJKh2Q2uL/q7ntg3bukoThhrCp8u1ldQZslQ6HxusnRQw66Zx5iT5L9bQkI
+         1scPjZnBOvvMPT4i7yG5A0PjVCCnzn0KQQLe8ZKT+lvyTBrEeQ07HMv3kYuFzLB2t47p
+         966Bs18PULRnrb8lc2cHOTZ9nDCW1xFmHHHA7crJ+aHgC1esRXo/gAk6aADxmp89Kapw
+         0ClYywrZekCyHX7ECFB57OyMXvKngTWIilJiJZaa8TUvNOyKZCl0wq+775z6X6ktR+WB
+         nGwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738311517; x=1738916317;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O7YJgHULp2WAjtiPEkDFTcvV/zsoNwPARiiJx2ktMxk=;
-        b=jjz5BWKCZXjoycygqOr/v4lrop5nUzDPIqiZzALOdymgLr1GGl0QeyHzeHytkVQjki
-         c5n3ybK1uTdFgsw/Fpe1bpF/I2p+ZLLP4eC2Y+iKdaYDWt2M28QUyaXUPFO5euAmiHfm
-         38Zymulxk5QjKchPGt1NxRdBvF6HCI0U0LY4bhVKwtS14n7pBr4VpR8TUc6sseEzFE/M
-         DSkjpY5YX17LxqJx91UWrl5bkhdVWSwtaYHTOLF3l7x16ezuQBPBAHBwaXmi4KkTgFDF
-         NAPhelpBtiP3Sg/yMb6JvmuAVlf1yypeD5/p4X0DE6bL73Z135M+k2+EvPnOHXrEqnG1
-         B0GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVw2nsTAUVB525rgBaGt5ukxskH6PVUX1heq95R2WUPjNqeslDyT4ei5VZgk1lEOLFsF0pxEsWsIExSJbQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBk0hjM6/sYwC5yoas7gxcyiHF1YKFntzNIhslW1A475BQu4Zc
-	STD87zWP1geNE7Btm6p+NTz8sDxsAQgvbeGm8IyJbjn7s8NzlW/AGFpOeeOMhtM=
-X-Gm-Gg: ASbGncts39SH3nXVTmmjjZEWO7AkDzsjnREXXU2sq4RAfWfN0LtH5yT03WtVZqu9NGH
-	bwnKeTy6PRmHUtewBJTY1rFmpmL2UJrAtoKQIW78JVgL5Dz8DrTw3JKEn1uztFT59fNcrfr2KMk
-	4rVJjjti4A4W3EYzptv6kVHPv1E5Cx9912tUmOXGuyKPW927b8j1BNV7jS48JK5F5JD320oVskf
-	gHIvcMgX/r37kgLIg4u7o7N6isGtZeFTjScpHv53oxqCDPmHjGtTdFp9jBslMiBRI6VN7zP9/tm
-	V3NeaOvm5UoRHzFiUS1Falq6xEt0IC3ESo9QqZu505vQzhTReVMiwgayQA==
-X-Google-Smtp-Source: AGHT+IEAkmPxg6j9dUQ5+kw6purEnrtMEPvcb5lOW63S7aKt73SPl8neKDDc/lzwpy4kxAP87E5gBg==
-X-Received: by 2002:a05:6122:11a7:b0:516:1e32:f8c7 with SMTP id 71dfb90a1353d-51ebe3d2a6emr1563874e0c.0.1738311517090;
-        Fri, 31 Jan 2025 00:18:37 -0800 (PST)
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com. [209.85.221.176])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1d8adbbsm447671e0c.39.2025.01.31.00.18.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 00:18:36 -0800 (PST)
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-51873e55d27so1017177e0c.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 00:18:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU6JrkQ07iu7aV8pJAv5ok1QYzYLBCySCRARJUuv64XSLegTcvVkQ08+7gjKcwQsXs1ykZXCkqEYettdKg=@vger.kernel.org
-X-Received: by 2002:a05:6122:459a:b0:516:dc0f:c925 with SMTP id
- 71dfb90a1353d-51ebe666828mr1912542e0c.6.1738311516552; Fri, 31 Jan 2025
- 00:18:36 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738311690; x=1738916490;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Jp0wXF2sas8vt3EGEw919osYfv9qaBNlPRlLJ8lWv8A=;
+        b=gP47ycPYeJZ8T/iSSGY0zKuLKU6PY7OdDdgmb5GJSI8oOBEyaJFW+mbbltKqOXnmMf
+         AiXyg4673QtPqZUMZaAVK4j/WcdSvN1cWim3otPgLkiXjegYFtGs7s2J1h5snFwR7upx
+         CUKvXEJmdcugrS419VcDLWc1zVHzaqoGXpgjNcKwp3EeGqty6Kh9MlRGqXz0VdTURpYr
+         tf6GrijPyMa78+FV9323b4ylL2QKRXp1Hdvo4wyFK3mHVVPC8XGwMa30psL0iVx4QVG8
+         JANUDtyKe/Qyc27bQ7mNF3CLQWekwBTucs4yEPeDCrQxfIgGoRKnzs5+OjkcE5i/c3F2
+         u6Ng==
+X-Gm-Message-State: AOJu0YwAhQ//knA6o5S5m+57r9zXt+2HMa7clKMqSp5rkQIUKqBfWgCs
+	HcaFhNF1l3BQyR+WMRTL/lPi/HOUN8/fVFGPmg+rLwTIuAe6i3tUuodF8lRQGM/jp1QI13gqMZG
+	ArYHwkcDuIYNFGZKWOOozYwAJ05hgVXWepkE=
+X-Gm-Gg: ASbGncvwGvvZHtWd71cRFD2VRtjlNc38Xk9UFWuE7V3ix0+7mZzVRkVPrzusd5O8LjN
+	FMosFtVZAp3jaxoZ+LwrpVpyz2PLA/RJIaNCpWjONqlW1lAEP2tJnN1jk4a1mHoXs12xRUR7uu0
+	nbd7tSpSbS3C2tqDozyN0EJDizeUWqR2U=
+X-Google-Smtp-Source: AGHT+IE85pFHaXmhOQJQpvPpW1d9RqHo3VFfhQk14HbLylpK4PjfOuNA5bMmda8YGSZouVAIsqE85CaHPXd2gMd9aHE=
+X-Received: by 2002:a05:690c:e08:b0:6ef:c4e3:1837 with SMTP id
+ 00721157ae682-6f7a8388147mr92142197b3.20.1738311690231; Fri, 31 Jan 2025
+ 00:21:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202501310132.oGDmspPN-lkp@intel.com>
-In-Reply-To: <202501310132.oGDmspPN-lkp@intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 31 Jan 2025 09:18:25 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX9=KRJ7jhzrMdnjCiTpBhqJT6fC5ZR=HKUVPzdygKBsw@mail.gmail.com>
-X-Gm-Features: AWEUYZkLT5ckFgNiGcY41nm9el4Hb73i2R4W479F_ewOJKXPN37hxSWvlqWURJA
-Message-ID: <CAMuHMdX9=KRJ7jhzrMdnjCiTpBhqJT6fC5ZR=HKUVPzdygKBsw@mail.gmail.com>
-Subject: Re: net/ipv4/ip_gre.c:141:22: warning: variable 'data_len' set but
- not used
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	mptcp@lists.linux.dev, matthieu.baerts@tessares.net, 
-	Jakub Kicinski <kuba@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
+From: Amit <amitchoudhary0523@gmail.com>
+Date: Fri, 31 Jan 2025 13:51:19 +0530
+X-Gm-Features: AWEUYZmHSAizCjI0bjOfUpTCFlcPqB1MRUnl2kyY5uwL6U2UvzgBENkIdodiZD0
+Message-ID: <CAFf+5zgU2A4PmOm06Ca654UgLErJbfMTK5XhnR5X2D0Jz2J-SA@mail.gmail.com>
+Subject: Advantages of crashing if someone is freeing NULL pointer.
+To: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Kernel Test Roboty,
+Hi,
 
-On Thu, 30 Jan 2025 at 18:55, kernel test robot <lkp@intel.com> wrote:
-> FYI, the error/warning still remains.
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   72deda0abee6e705ae71a93f69f55e33be5bca5c
-> commit: 010b430d5df556d5d232e3751ac691ba9e88c041 mptcp: MPTCP_IPV6 should depend on IPV6 instead of selecting it
-> date:   4 years, 3 months ago
-> config: csky-randconfig-p001-20220406 (https://download.01.org/0day-ci/archive/20250131/202501310132.oGDmspPN-lkp@intel.com/config)
-> compiler: csky-linux-gcc (GCC) 12.4.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250131/202501310132.oGDmspPN-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202501310132.oGDmspPN-lkp@intel.com/
->
-> All warnings (new ones prefixed by >>):
->
->    net/ipv4/ip_gre.c: In function 'ipgre_err':
-> >> net/ipv4/ip_gre.c:141:22: warning: variable 'data_len' set but not used [-Wunused-but-set-variable]
->      141 |         unsigned int data_len = 0;
->          |                      ^~~~~~~~
+kfree(NULL) doesn't crash. If kfree(NULL) crashes then we can get few
+advantages.
 
-https://lore.kernel.org/all/67956320a8ee663f2582cc75f0e8047d69da5f6a.1737371364.git.geert@linux-m68k.org/#t
-Waiting for the merge window to close to repost...
+Let's say that we do the following:
 
-Gr{oetje,eeting}s,
+kfree(x);
+x = NULL;
 
-                        Geert
+Now, if someone uses 'x' again then it will crash. Also, if someone
+does double free of 'x' again then also the kernel will crash. So, we
+can solve two problems in one shot.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+The side-effect is that the code now will become:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+if (x) {
+  kfree(x);
+  x = NULL;
+}
+
+This will introduce a few more instructions, probably 10 instructions
+but 10 extra instructions per kfree() should not slow down the kernel.
+I don't think we are calling kfree() very frequently.
+
+If people agree with me then I can make the necessary changes and send a patch.
+
+If people here agree with me then I will also try to get free(NULL) to
+crash in the C library - I will talk to them and send a patch if they
+agree. But first, I wanted to see if people here agree with me or not.
+
+Regards,
+Amit
