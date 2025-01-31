@@ -1,78 +1,145 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3817628373;
-	Fri, 31 Jan 2025 20:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609E225760
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738355944; cv=none; b=iliPuKmWn2u9H5rApMnGZ8Iqd39Ud/u0jLZWwHxuOaGp/tpfIrLIAAl4KPoPeX314HMMm8FRZmOVfUAxdrDcistKTpVTMuR7566iZh8E7wJrjCytV1O831JUnzJuDWiVMT6UGjV0AIkMPj/esSclwubdJSwaJX3H5Kvom/MZlRw=
+	t=1738356066; cv=none; b=drIk5buUi8RR4reKUydkgBRWr5DMmVPu18LWBoGC5yv/rTLi9mpmsfUAEfqN5evgucPqGS/pCK3Q4poEkzmiKeNqjAwhPqCehPwEOia28UAvDv2jf8jjKcdkiuFk0tMe/hfH+xof0nDYsrRN042jHP1jKX5z0X4wZ58jEL7ijlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738355944; c=relaxed/simple;
-	bh=VOY0AbvZkqnjVylMwtc1MHt106RYXOqav72vqgpLqbI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bajopIiOX/dqkhKCuYA+1WmzJF0tf+eZ1JUfAGpifREYDSAVbYlgb5dcPv/UuE22yWnvhWRMZB9R2IYbjY65S+vLmMPbD4xtbBj26hbQgnE8fvy96IICLKW8CJ+LoH9zZnXD/pCR/sa9yF7dXNuPAaOYpTVLsci6OZZYTvn+izw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=AG755MjY; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1738356066; c=relaxed/simple;
+	bh=syc1sIgEYukNEqJa8DChTmRlkTkcWqFoIiEqdImom5k=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cekzgQsKqllc76FI6YP2KBeejsbHvFyFFKzn9efHXKr1G9EXqLTVECkGH9wt7vLnW4awRta/0MuJuUc6GOrL5uZyvkh3i7+FdB/RJRDp/0HWt6qRWf3LkQ3zm2KqJ5dvcWTROcVPeo3bIixmLZ6D3zI157TU5YqcJCbnwSshi9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Tuo2kscC; arc=none smtp.client-ip=188.165.51.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="AG755MjY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=cgL3NKviGdB138rSSsjmgIvLkOIRibYWLDiNqxqW/F8=; b=AG755MjY4mg2FTUx65Ao05wE2n
-	Sa1lyWCNA5hc5DunYeFWOkmyG3qdO28f46KmBDZIzRFRT9LP5Inis5du3Zmey0rodjuJhWcnG+PUk
-	Y7wWqWl9NRk0ryQseD+LmjQWbQNSqEoKzNQe7bVq+Qat46TIvUL1bwRsPso3Jqyzvyto=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tdxmc-009nLR-Uk; Fri, 31 Jan 2025 21:38:34 +0100
-Date: Fri, 31 Jan 2025 21:38:34 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 00/13] gpiolib: add gpiods_set_array_value_cansleep
-Message-ID: <4ad45123-134a-4544-ad0a-24371105d96f@lunn.ch>
-References: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Tuo2kscC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1738356048; x=1738615248;
+	bh=Yi3JIUM6xwq3zGVkOrxOqLB0T0cu4+4SGhnD3OuiQYU=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=Tuo2kscCycnFyLEJBFT7SltaKsLYC76K1zubFu/LdOzD9BI9SuFaZI13js8o4a5m8
+	 67F8dMo9+XJgoaMLqFycUIMBC+sQGPG3jgUY03Yy16qFvHZz4gT5RQ5Mdnp4tGwxU7
+	 +rifCb31lcXwh/NvMbjFgiyN2PDO+0flLE2B4x9vU4Z2vcU6qU2F4/rK+mwn/vJE54
+	 Q4q97i1WXjLKuFbY38MZQrmjqvcyMyDQRLEWQjCS7oEyrdq0fYD8xc3gKNz8xeAvH5
+	 lp3TfhvGJILnR3zaepAIe4OR+rkoxVWLBbUMKoMcsJpp5hjnlLdg2KDeUX8AMrXRnM
+	 UxntfMJXN447A==
+Date: Fri, 31 Jan 2025 20:40:40 +0000
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+From: Sybil Isabel Dorsett <sybdorsett@proton.me>
+Cc: Hans de Goede <hdegoede@redhat.com>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Sybil Isabel Dorsett <sybdorsett@proton.me>
+Subject: [PATCH] Fix invalid fan speed on ThinkPad X120e
+Message-ID: <20250131203854.6608-1-sybdorsett@proton.me>
+Feedback-ID: 131381098:user:proton
+X-Pm-Message-ID: 654a71d66ed105459ecb1103c6d9ea69b8661d1b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-> So I'm proposing that we add a gpiods_set_array_value_cansleep()
-> function that is a wrapper around gpiod_set_array_value_cansleep()
-> that has struct gpio_descs as the first parameter to make it a bit
-> easier to read the code and avoid the hard-coding temptation.
- 
-This looks reasonable.
+Fix fan speed reported in ticks per revolution on ThinkPad X120e
+by converting the reported value to RPM based on a 22.5 KHz clock.
 
-How do you plan to get it merged, since you cross a lot of subsystems
-here.
+Based on the information on
+https://www.thinkwiki.org/wiki/How_to_control_fan_speed,
+the same problem is highly likely to be relevant to at least Edge11,
+but Edge11 is not addressed in this patch.
 
-	Andrew
+Signed-off-by: Sybil Isabel Dorsett <sybdorsett@proton.me>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/th=
+inkpad_acpi.c
+index 1fcb0f996..147a70af3 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -7885,6 +7885,7 @@ static struct ibm_struct volume_driver_data =3D {
+=20
+ #define FAN_NS_CTRL_STATUS=09BIT(2)=09=09/* Bit which determines control i=
+s enabled or not */
+ #define FAN_NS_CTRL=09=09BIT(4)=09=09/* Bit which determines control is by=
+ host or EC */
++#define FAN_CLOCK_TPM=09=09(22500*60)=09/* Ticks per minute for a 22.5 KHz=
+ clock */
+=20
+ enum {=09=09=09=09=09/* Fan control constants */
+ =09fan_status_offset =3D 0x2f,=09/* EC register 0x2f */
+@@ -7940,6 +7941,7 @@ static int fan_watchdog_maxinterval;
+=20
+ static bool fan_with_ns_addr;
+ static bool ecfw_with_fan_dec_rpm;
++static bool fan_speed_requires_conversion;
+=20
+ static struct mutex fan_mutex;
+=20
+@@ -8142,8 +8144,11 @@ static int fan_get_speed(unsigned int *speed)
+ =09=09=09     !acpi_ec_read(fan_rpm_offset + 1, &hi)))
+ =09=09=09return -EIO;
+=20
+-=09=09if (likely(speed))
++=09=09if (likely(speed)) {
+ =09=09=09*speed =3D (hi << 8) | lo;
++=09=09=09if (fan_speed_requires_conversion && *speed !=3D 0)
++=09=09=09=09*speed =3D FAN_CLOCK_TPM / *speed;
++=09=09}
+ =09=09break;
+ =09case TPACPI_FAN_RD_TPEC_NS:
+ =09=09if (!acpi_ec_read(fan_rpm_status_ns, &lo))
+@@ -8176,8 +8181,11 @@ static int fan2_get_speed(unsigned int *speed)
+ =09=09if (rc)
+ =09=09=09return -EIO;
+=20
+-=09=09if (likely(speed))
++=09=09if (likely(speed)) {
+ =09=09=09*speed =3D (hi << 8) | lo;
++=09=09=09if (fan_speed_requires_conversion && *speed !=3D 0)
++=09=09=09=09*speed =3D FAN_CLOCK_TPM / *speed;
++=09=09}
+ =09=09break;
+=20
+ =09case TPACPI_FAN_RD_TPEC_NS:
+@@ -8788,6 +8796,7 @@ static const struct attribute_group fan_driver_attr_g=
+roup =3D {
+ #define TPACPI_FAN_NOFAN=090x0008=09=09/* no fan available */
+ #define TPACPI_FAN_NS=09=090x0010=09=09/* For EC with non-Standard registe=
+r addresses */
+ #define TPACPI_FAN_DECRPM=090x0020=09=09/* For ECFW's with RPM in register=
+ as decimal */
++#define TPACPI_FAN_TPR=09=090x0040=09=09/* Fan speed is in Ticks Per Revol=
+ution */
+=20
+ static const struct tpacpi_quirk fan_quirk_table[] __initconst =3D {
+ =09TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+@@ -8817,6 +8826,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __=
+initconst =3D {
+ =09TPACPI_Q_LNV3('R', '0', 'V', TPACPI_FAN_NS),=09/* 11e Gen5 KL-Y */
+ =09TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),=09/* X1 Tablet (2nd gen=
+) */
+ =09TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
++=09TPACPI_Q_LNV('8', 'F', TPACPI_FAN_TPR),=09=09/* ThinkPad x120e */
+ };
+=20
+ static int __init fan_init(struct ibm_init_struct *iibm)
+@@ -8887,6 +8897,8 @@ static int __init fan_init(struct ibm_init_struct *ii=
+bm)
+=20
+ =09=09=09if (quirks & TPACPI_FAN_Q1)
+ =09=09=09=09fan_quirk1_setup();
++=09=09=09if (quirks & TPACPI_FAN_TPR)
++=09=09=09=09fan_speed_requires_conversion =3D true;
+ =09=09=09/* Try and probe the 2nd fan */
+ =09=09=09tp_features.second_fan =3D 1; /* needed for get_speed to work */
+ =09=09=09res =3D fan2_get_speed(&speed);
+--=20
+2.39.5
+
+
