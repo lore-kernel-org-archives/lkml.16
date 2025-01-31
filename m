@@ -1,151 +1,119 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE08214885B;
-	Fri, 31 Jan 2025 07:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C3224B28;
+	Fri, 31 Jan 2025 07:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738306814; cv=none; b=nEb2RU62+E+WocnWGDcYRwUyT5Z5PQ75aavdoj71Sji8BMpaJgii7A/uf3tXrY2rFvExwIX4kBxYsCDawepV+ey8qkBSS1mrtAN7cbrVswFT20JPft4ZZwwKB1zvvoWHmCbb6pKXhL+eb5r/Y8jWery7PA3AuLvyb653/hMDCuo=
+	t=1738307108; cv=none; b=CV0WyBqM2lAmeq2da1NZql7K2Kc5ezusOMASb8rvGtJ2BLU1O4Fwg6aXqEK0JuALk6XS+fwcYKZpcr7Qq97yv63KAAmYzgE1SB2rwSEvIX8pBKZdlsQ+L5TkwrwNhxXrcuQkjxMbwQT2Gk1quasHsWBHvzYx0OXt4XgDYG4TnOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738306814; c=relaxed/simple;
-	bh=UVM+F0b39UD/id5lC4ozCJ/wtWd6poX6H5neKCRmBjU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QX3PKnK/bGaytWQFCPEWmE4E43jXEkKGvY1c9Tz7R4vw1jWv4wffOYmd/YOA8QBlRo96QzWxwiEWXQRPTRro/Kvixm4AGXBZeMI5PuFLt7Fj9CdNcG7/3rzDTDeoL5zW5AKhkCBw6R4n2Ax1pYU8UJxwYCEUa9lZ5FFjY1C1yI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1tdkd8-000000002Cy-1baG;
-	Fri, 31 Jan 2025 06:35:54 +0000
-Date: Fri, 31 Jan 2025 06:35:50 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: lee@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	tsbogend@alpha.franken.de, hkallweit1@gmail.com,
-	linux@armlinux.org.uk, sander@svanheule.net,
-	markus.stockhausen@gmx.de, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-mips@vger.kernel.org
-Subject: Re: [PATCH v5 2/4] dt-bindings: mfd: Add MDIO interface to
- rtl9301-switch
-Message-ID: <Z5xvRlKQiQ5cm0gl@makrotopia.org>
-References: <20250131010151.2527688-1-chris.packham@alliedtelesis.co.nz>
- <20250131010151.2527688-3-chris.packham@alliedtelesis.co.nz>
+	s=arc-20240116; t=1738307108; c=relaxed/simple;
+	bh=sxfWLESsu5aceeyh6/go/k3g8l2jIPt/e3jCHyQ5LwU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K1fl6bPHNRHz7tOVaZoCQYPmLtaqf1JGvTXlhINNnE2/qVKS8MQasaVSRXKlFMFd4p3o4pyPHQ8oh4M8qu/rWy0NfkK/2QPPKEQxz5kDBHq/0ueh0WTipN4myQ4zZParXz9IhDLQiuLwHmW3on/WT9meV6vYMFww5gRk0wkRAJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NvqX8ALJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NvqX8ALJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 264DCC4CED1;
+	Fri, 31 Jan 2025 07:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738307107;
+	bh=sxfWLESsu5aceeyh6/go/k3g8l2jIPt/e3jCHyQ5LwU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NvqX8ALJOyS/y3OZKwMlBvKpmcZRaibKs7W4ce/cXMdL9nltqhHuKMzPnUAWmvUwG
+	 o/jsWlax8jrRRX47MZKUheMMmOsxYcmx+VVgKIjQJ4nnwQ4MzkyfSjM5z3bjkil5J1
+	 qxjnNhHi9f6EF9tGCHd9Mq9TItA3s3+XPmGucLbxV6OHSsvFVDAJhr9PbLZjCsZZ9F
+	 bWEOUtuGDB2I5ECri7HDsxMXAtgdZT3/zI+Ke8Jw+CXhgrSWCS0lfcLl5qoO144a8z
+	 kcBOAZTfhXaZctUehnDDmGytGKbUsjXq65JyRMSh0Mh5HanURX75sUE3xJBYNv/JR4
+	 IkSNiP3Flw74w==
+Message-ID: <9ae171e2-1a36-4fe1-8a9f-b2b776e427a0@kernel.org>
+Date: Fri, 31 Jan 2025 08:05:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131010151.2527688-3-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] jiffies: Cast to unsigned long for secs_to_jiffies()
+ conversion
+To: David Laight <david.laight.linux@gmail.com>,
+ Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+ Miguel Ojeda <ojeda@kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ kernel test robot <lkp@intel.com>
+References: <20250130184320.69553-1-eahariha@linux.microsoft.com>
+ <20250130201417.32b0a86f@pumpkin>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250130201417.32b0a86f@pumpkin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Chris,
-
-afaik net-next is still closed right now, but lets discuss the series as RFC
-in the meantime maybe, right?
-
-On Fri, Jan 31, 2025 at 02:01:49PM +1300, Chris Packham wrote:
-> The MDIO controller is part of the switch on the RTL9300 family of
-> devices. Add a $ref to the mfd binding for these devices.
+On 30. 01. 25, 21:14, David Laight wrote:
+> On Thu, 30 Jan 2025 18:43:17 +0000
+> Easwar Hariharan <eahariha@linux.microsoft.com> wrote:
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
+>> While converting users of msecs_to_jiffies(), lkp reported that some
+>> range checks would always be true because of the mismatch between the
+>> implied int value of secs_to_jiffies() vs the unsigned long
+>> return value of the msecs_to_jiffies() calls it was replacing. Fix this
+>> by casting secs_to_jiffies() values as unsigned long.
 > 
-> Notes:
->     This patch is dependent on "dt-bindings: net: Add Realtek MDIO
->     controller" which adds the realtek,rtl9301-mdio.yaml binding.
->     
->     Changes in v5:
->     - Note dependency on realtek,rtl9301-mdio.yaml patch
->     - Add back reg property to the mdio-controller node.
->     Changes in v4:
->     - There is a single MDIO controller that has MDIO buses as children
->     Changes in v3:
->     - None
->     Changes in v2:
->     - None
-> 
->  .../bindings/mfd/realtek,rtl9301-switch.yaml  | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/realtek,rtl9301-switch.yaml b/Documentation/devicetree/bindings/mfd/realtek,rtl9301-switch.yaml
-> index f053303ab1e6..89e10213a4ee 100644
-> --- a/Documentation/devicetree/bindings/mfd/realtek,rtl9301-switch.yaml
-> +++ b/Documentation/devicetree/bindings/mfd/realtek,rtl9301-switch.yaml
-> @@ -28,6 +28,9 @@ properties:
->    reg:
->      maxItems: 1
->  
-> +  mdio-controller:
-> +    $ref: /schemas/net/realtek,rtl9301-mdio.yaml#
-> +
->    '#address-cells':
->      const: 1
->  
-> @@ -41,6 +44,10 @@ patternProperties:
->    'i2c@[0-9a-f]+$':
->      $ref: /schemas/i2c/realtek,rtl9301-i2c.yaml#
->  
-> +  'mdio-controller@[0-9a-f]+$':
-> +    $ref: /schemas/net/realtek,rtl9301-mdio.yaml#
-> +
-> +
->  required:
->    - compatible
->    - reg
-> @@ -110,5 +117,27 @@ examples:
->            };
->          };
->        };
-> +
-> +      mdio-controller@ca00 {
-> +        compatible = "realtek,rtl9301-mdio";
-> +        reg = <0xca00 0x200>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        mdio-bus@0 {
-> +          reg = <0>;
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          ethernet-phy@0 {
-> +            reg = <0>;
-> +            realtek,port = <1>;
+> Surely 'unsigned long' can't be the right type ?
+> It changes between 32bit and 64bit systems.
+> Either it is allowed to wrap - so should be 32bit on both,
+> or wrapping is unexpected and it needs to be 64bit on both.
 
-Aren't all those PHYs referenced as phandles by DSA switch ports?
+But jiffies are really ulong.
 
-Imho it would be better to not introduce a new property but instead
-let the driver of the mdio-controller parse the DSA switch description
-and follow the existing 'phy-handle' properties in order to infer the
-mapping of all ports to all PHYs, and by that then be able to also
-know the reverse mapping.
-You could reference the switch node in the mdio-controller node.
+-- 
+js
+suse labs
 
-That would avoid redundant information in the device tree, as we
-would then only have one mapping instead of having it two times
-(once by the usual 'phy-handle' property of the DSA user port and
-another time reverse using your newly introduce 'realtek,port'
-property of each ethernet-phy).
-
-
-> +          };
-> +          ethernet-phy@1 {
-> +            reg = <1>;
-> +            realtek,port = <0>;
-> +          };
-> +        };
-> +      };
->      };
->  
-> -- 
-> 2.48.1
-> 
-> 
