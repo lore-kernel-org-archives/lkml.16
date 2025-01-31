@@ -1,91 +1,121 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636661E5701
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE6E1E2847;
+	Fri, 31 Jan 2025 16:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738339605; cv=none; b=lwT06eLrsois5v2fhx9t28sd+DewPWrHTUd7J+nWSS/ZdFcCireIe1qCCauli+Yea4ZGMBNMQy0UqGaZoscvT2KgOiVRPDk+eum0F/9lRkchl8rEUOKCnmC6KRG4X9DqaocA9A3aCRyp2AKtJ4wQpCaUja28vDeUgk2yEgKp8oE=
+	t=1738339645; cv=none; b=kP172NoF9Fp5My4kBSck2jQwzCnHxScXceMyGvEukzuhawZrXoRTwmqIyTMSHYoq6FOSX8PDHzNowjcnMchXpQwlwEQOIfz7lSVziAZrdwPmiyawk4VJSnk8KwQ+Cp5tWh7dWC/5ZQrLdB9jVE2GPBkwW8V4gAPs3MuF4k0M27I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738339605; c=relaxed/simple;
-	bh=hRIVp+cL4XxW29ZAqFMnln2+nVpYtoyLwER1QQhq2is=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kbPACGstTpYc0KFV/pr7iLSf+XKTBdMbXuxhWkrscv2bNpvR2UWW7T9waoFRGzdhbdRU3syrE9mXbQYPsedZNRqSKbSu6ltDB35LImAsWAOMPxKJwp54KmJ0mmu9O79osGyXuuonyzffUm9sJAR35EcTs6y8Rd8r4JAIgaG032I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xq4GmroH; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738339645; c=relaxed/simple;
+	bh=Agxx7aTPK9tNy81pnewxjXm5kCdedECEfgERsYeOsf0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RI8HsdGUrPSIL2UgnMlCD460lXtfx/ADJmRyP5vnBsHoeFjbPEfg6B0z/boJEJn4nxNIS9QTIWedom6HkoFwGfUvP98F3ky2d6ccnXsNYGHs6OqroSuzCreNwF5J1+wCrwSMh9IDIPKNcFbNsa9GVtnmc0SQYlOMumrIf8NHDWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=s3gWnpoK; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xq4GmroH"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dc149e14fcso3914153a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 08:06:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738339602; x=1738944402; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1YgyzgrEYtRzCWvWQhTVXumGCprp707y7h1uWIUD4EY=;
-        b=Xq4GmroHENxJnsel2wI3PjO0dm7oZkWKPyqqPR7Fks5vctFDXL8btJ3xsK478C5X3w
-         WgYRL1PQAZz+d+avAjGUMQILTx/MfAuC2nwRKu1Qatkk3/uBFBMR+mEbGPDMPLg5ABq7
-         TG/2oNgwsZ/GZInOdhGTAZ9Fon0B7s2QSWMmcSTZxQn3W0+VFoEshlNF9ytFhW2cGDdF
-         8xiRU0WBarkcCNj3zOK/4igwoowPFi7xD9W5sl+S20CJB2CmL3ilK/cBJrNbWg0nFPkj
-         jL0s7tD0Gz/HyTlvn/CTUMQfZdRhJrOLOle/4L+BbZYXjLur81GGmH7VpYpX/vnCz5Rl
-         k0uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738339602; x=1738944402;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1YgyzgrEYtRzCWvWQhTVXumGCprp707y7h1uWIUD4EY=;
-        b=U9Q8JcOj2Q+SMOCSNKZKYx+uCmy5h7tZuHdv1icyoaAi07Qb8P8rY73MAiMb5+2F4Q
-         Z1camJlZDVdQ8b8etmEENAeiIn+f3mrZHQILd5vDGdVOn1BaEubeQY5a1Lcb6xB0xz78
-         GR8Zozu0NbqGGJrZx7DgclgEUY3qaMDgL9AafZACRVjJ1nJJxfQxv8jDwCTPF5I6biiq
-         XukFUCbHW+a+QDATDEwORdEwZ0o8BPCvorTa9xyULC5eNUFcZ4nSHrBApkNGzDR/8EdH
-         u0nOB/5i4AcZ5K0PjEF+7N85uTVnK4cYLNP3CkLWVO5vtkZRCjURWwe4wbZbsooDCGIS
-         eL5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWWGy4fx8bbe3jrX5tVBpn2dtRunXrrmQI89pBjdZ76W386LkWIM4ttSQnj4I48+oaXmKKRUFTdposKNtg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwDBVWZdBjDNfk1nwOms1Kn+cusMdv0w3KIQ9pnCh5Sy0BV5dm
-	9uBkElC1aHl2dwNn3Q3SzCH19I/u9d+wb2nH5YqFpiuvr7Er0eaf
-X-Gm-Gg: ASbGncva1uWUHNkxRkxez3FeVpD+DHntktlwCaQGC9dLQLlfqVJdTQ0dEK0clfAsAZO
-	XP4PG1ThQkwLHuuo+luEnAYIfHwqac7X7S4NulPsFFjWFZtxtkAuCxekuqwwk/X4hpUjCvAo3PE
-	nUZedv+kGMUtJtau4Ns33z6IrxYlAYgoK01hBUpgC7gDPTFYyHxlwo5JxHjSuYDa5hPJ3X0CkmV
-	eitsG3qs4bTiUP0+uZUUxi4mqEAF3xRTZU81bGXDuEWLjuiuqbH8D8TwGcuCZjd6yhDMW8tMhVK
-	jlxQJqhc7Qkx5Y8RX7SHzkcoG+lUe1/tSttq0Lk11AhJLNpx
-X-Google-Smtp-Source: AGHT+IEIpvwUl+CGjLcC8gL1VCnuxjD8zNu+Qqw+nzfZmMYLVsKhbKVmI5H1Me1LZHabUDWILgXn5Q==
-X-Received: by 2002:a17:907:7b89:b0:ab6:c4e0:2d18 with SMTP id a640c23a62f3a-ab6cfcc9f9amr1161848266b.16.1738339600869;
-        Fri, 31 Jan 2025 08:06:40 -0800 (PST)
-Received: from ?IPV6:2620:10d:c096:325:77fd:1068:74c8:af87? ([2620:10d:c092:600::1:7071])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47f205bsm317611366b.86.2025.01.31.08.06.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 08:06:40 -0800 (PST)
-Message-ID: <94e650e0-fad7-4929-877a-560700cd12ce@gmail.com>
-Date: Fri, 31 Jan 2025 16:06:55 +0000
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="s3gWnpoK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=IuPlZa6y6J6gXS+P+dgZflnpDfa3pb9jp5g4ifalhAs=; b=s3gWnpoKWyIy/LAY9j0YXccsrB
+	nJop06eJ56UHTRDBbXnSKI9+n25Dc/THTlUb4KuDvFCAxRJc+GOCIkT3qNj3EGkZDi3vrgFS6taIw
+	Iau7Spx5Sd3qnzRpzRTYl0rptVhktWP66qxNzP3ncc4awdmIM3QoKzilfZmkZ6m6KpWw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tdtXp-009jaZ-NK; Fri, 31 Jan 2025 17:07:01 +0100
+Date: Fri, 31 Jan 2025 17:07:01 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Steven Price <steven.price@arm.com>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Yanteng Si <si.yanteng@linux.dev>, Furong Xu <0x1207@gmail.com>,
+	Joao Pinto <Joao.Pinto@synopsys.com>, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v4 3/3] net: stmmac: Specify hardware capability
+ value when FIFO size isn't specified
+Message-ID: <80cc9950-9f62-4369-be87-c022d55a2b6f@lunn.ch>
+References: <20250127013820.2941044-1-hayashi.kunihiko@socionext.com>
+ <20250127013820.2941044-4-hayashi.kunihiko@socionext.com>
+ <07af1102-0fa7-45ad-bcbc-aef0295ceb63@arm.com>
+ <fc08926d-b9af-428f-8811-4bfe08acc5b7@lunn.ch>
+ <f343c126-fed9-4209-a18d-61a4e604db2f@arm.com>
+ <a4e31542-3534-4856-a90f-e47960ed0907@lunn.ch>
+ <d6265f8e-51bc-4556-9ecb-bfb73f86260d@arm.com>
+ <2ed9e7c7-e760-409e-a431-823bc3f21cb7@lunn.ch>
+ <915713e1-b67f-4eae-82c6-8dceae8f97a7@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] lib/iov_iter: fix import_iovec_ubuf iovec management
-To: Alexander Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org
-Cc: Christian Brauner <brauner@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <378ae26923ffc20fd5e41b4360d673bf47b1775b.1738332461.git.asml.silence@gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <378ae26923ffc20fd5e41b4360d673bf47b1775b.1738332461.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <915713e1-b67f-4eae-82c6-8dceae8f97a7@arm.com>
 
-On 1/31/25 14:13, Pavel Begunkov wrote:
-> import_iovec() says that it should always be fine to kfree the iovec
-> returned in @iovp regardless of the error code. __import_iovec_ubuf()
-> never reallocates it and thus should clear the pointer even in cases
-> when copy_iovec_*() fail.
+On Fri, Jan 31, 2025 at 03:54:16PM +0000, Steven Price wrote:
+> On 31/01/2025 15:29, Andrew Lunn wrote:
+> > On Fri, Jan 31, 2025 at 03:03:11PM +0000, Steven Price wrote:
+> >> On 31/01/2025 14:47, Andrew Lunn wrote:
+> >>>>> I'm guessing, but in your setup, i assume the value is never written
+> >>>>> to a register, hence 0 is O.K. e.g. dwmac1000_dma_operation_mode_rx(),
+> >>>>> the fifosz value is used to determine if flow control can be used, but
+> >>>>> is otherwise ignored.
+> >>>>
+> >>>> I haven't traced the code, but that fits my assumptions too.
+> >>>
+> >>> I could probably figure it out using code review, but do you know
+> >>> which set of DMA operations your hardware uses? A quick look at
+> >>> dwmac-rk.c i see:
+> >>>
+> >>>         /* If the stmmac is not already selected as gmac4,
+> >>>          * then make sure we fallback to gmac.
+> >>>          */
+> >>>         if (!plat_dat->has_gmac4)
+> >>>                 plat_dat->has_gmac = true;
+> >>
+> >> has_gmac4 is false on this board, so has_gmac will be set to true here.
+> > 
+> > Thanks. Looking in hwif.c, that means dwmac1000_dma_ops are used.
+> > 
+> > dwmac1000_dma_operation_mode_rx() just does a check:
+> > 
+> > 	if (rxfifosz < 4096) {
+> > 		csr6 &= ~DMA_CONTROL_EFC;
+> > 
+> > but otherwise does not use the value.
+> > 
+> > dwmac1000_dma_operation_mode_tx() appears to completely ignore fifosz.
+> > 
+> > So i would say all zero is valid for has_gmac == true, but you might
+> > gain flow control if a value was passed.
+> > 
+> > A quick look at dwmac100_dma_operation_mode_tx() suggests fifosz is
+> > also ignored, and dwmac100_dma_operation_mode_rx() does not exist. So
+> > all 0 is also valid for gmac == false, gmac4 == false, and xgmac ==
+> > false.
+> > 
+> > dwmac4_dma_rx_chan_op_mode() does use the value to determine mtl_rx_op
+> > which gets written to a register. So gmac4 == true looks to need
+> > values. dwxgmac2_dma_rx_mode() is the same, so xgmac = true also need
+> > valid values.
+> > 
+> > Could you cook up a fix based on this?
+> 
+> The below works for me, I haven't got the hardware to actually test the 
+> gmac4/xgmac paths:
 
-To be fair, all callers I checked don't look at the returned iovec
-if import_iovec*() fails, but I didn't track down all of them.
+This looks sensible. Hopefully Kunihiko can test on more platforms.
 
--- 
-Pavel Begunkov
-
+	Andrew
