@@ -1,121 +1,153 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EBD1EEA4B
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501FB1C3BE9
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738354944; cv=none; b=g0nbhjGtCvUm/3093Y11PqtWGdCTwr90+S3dQr1GlErJevtcmGH3GZfyuTbMBY8v3lz+0T/uTm/Wm9+dYqXLbNIVChlPhKISNIU36onL5fIzbLyjvCxdSJO38xrocMF+IpedfbM83LaFIyTyU9Y1boJlDAcuKaom0wn05/2a9Pk=
+	t=1738355088; cv=none; b=nHTXb2xO2L4ftn//0qlZ7hovhLCQclqkCmtCqWuj1KXbxX3lFnXzYttBRPsfeVfVRKrYX7QFtCBSuJQXXmI+Fvv0ti/CQRrDrMA50iA6PN1JSzFD/h7y5vOeuszWEAcJXO0wUbRdKZoOK++DlCS1pEddVrdJ/NnpLGZrR9gZGHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738354944; c=relaxed/simple;
-	bh=NxIYu09MV5sZTvScgMAK3mSJi4wIG1e8jOwfyrjHOdI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tT2o8fzYmXEFhyvwQEWvQam6U9VF7CB+q6zFJon4yCA5Cj3dTrqqGNwOoUGDoGTcOqmat5XM5i/2se1ZRunMhgngkpNLuPxwUiGkYPK27mDKeC8O1upZ/0llU9aLxdmksXBhNPMo5FPNVsJg5A9IkBWXssfLvuZ1B7G6E5/aO6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KkuhVC5C; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738355088; c=relaxed/simple;
+	bh=a4ev7NI00M+pqHz/c63lKpZN/tT3RLqqfUA5HRJSMsg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=q4YmshYUHRdxd7MIyqjbI/847c8xfz/fbQXBV7AJbXFFZq5+SbO3pXNKC4YkKGgI5zGtIOnPNnus87uvOmbyEtakrmQOkuLkcv41wPv9BE1mD3HAPuL/knpxU5/iUdud8/d+paqzA05c6tSBCD+RLHU+Xr6/bpYwWiWnlgJ0228=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ShBjLv2U; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KkuhVC5C"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6d8edad9932so17570846d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:22:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ShBjLv2U"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-29fe83208a4so1201705fac.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:24:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738354941; x=1738959741; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zEWTa2rARz73z6oAOpI1Z1+YlZ1v+PzEj1VSqxBWsxU=;
-        b=KkuhVC5CCdncENZqEkRt66WoIPiGPIlRDCRoJIJJjN8vyBPyKQd8IGrvVxWfKlEKMg
-         QMB9kuvzl9yGAWjtHCm2v7/Z6mxktwY85+AzAdgmZaTDrjT0Fm4ontjyjhq+oMtuYaZd
-         XG/I9CsfbjF4/VDuWSQxILn9xurle1QGSrO0sXRy1deq/0D6LHG9cSQTEqGSkmbGPi+a
-         RKHs7hcjL61zrWg+bgSpJILogGwUqBe1X3UcKmHotitBZA9fyMhu2VaT6a6y873THu0W
-         liZEu/0vab7Z88i06Bz5RIGLaI21dYteDzS/r7doPitSVmv0luCrPyiO/6CGzaO7llyn
-         QsuA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738355085; x=1738959885; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jn/Ny7UFv/UH6iRtjr6jsBabEKLnDl2l7pEqvfjMtFM=;
+        b=ShBjLv2U1w+5zymjIFhU7poftN9OhcetisFQnk0H3B/pvg/7UdFSNU0zrwqwuqtNdA
+         nsFDff8ZM5KVXkXnc8UpScWb89BwAuyXMKVtsCOJstyRg2PC849jMkHfoCMS0leb8Gyz
+         fvxO4R7AG6gGp5b9COON2kYqJu2ZeP5sBPzS7zaFz/1jpuluYh/4xx9yPbLjX/Qn+z89
+         AmQeZdxZxlt/15AIidokGNHek0k2zF7zFflb0NdXF5uOLh06aZ5OBhf3oD3JiK0wtQFG
+         /yVyddYaQtIQKN5Cs1SZaxEAcf69u4iUJH9QTyWqP3aTZ/qc2kJA+J6kqXsdTyLmDf+f
+         DDnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738354941; x=1738959741;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zEWTa2rARz73z6oAOpI1Z1+YlZ1v+PzEj1VSqxBWsxU=;
-        b=qikqUEm0X3sejXfQYf2tqR4rCul3c1qOQFTixQEDAk5YXYD+6l53XKTEih5WFyLCOO
-         K/E2CGCGpIyBGcy//JEuMtiYnLQlqYp0cVwp86HxKh1/+tIFa2Z398TmUBhZoJXRwZzC
-         XsxEpeEFe+jKPMJNmXjCzYp04biN2SlbCfk1EJBUD+hA5s1zB+2XUewTJG2QYfJ/l+xn
-         Os443Jbb7IOeCLEeEXdMlGFcJIAUAp719dHOwnVD5gpH8EzOVnl3vAD7xqPgyRm3Bu/9
-         yGZeC8eugTviBgOGFLORKQP2NYig8kTNibRBOTeH2vUHTLqIsf+2rbW0Q4VbjJI74S4Q
-         x1jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVF4XCe+J+E5CmiGobJ9hIH7iAppawBWBzi6JiqdBndjFUYbh1p7jOR2glzxWinp9ryO9ih6xDwQxeAaSU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwovjyvB6tXRYxK3YlAhxKWPJRB7HPZdBP3k7KAevVXxW7z0t2A
-	uNZcrr1a9MkBMG4R4IxD24pBF3yy53sd5G9gmS5NUic7aij7zPiG52I+cPNB/sGuIA5EGVsX4pz
-	HVnPFD+PXJp8vGy/CJYZlPLn4Yhvh5dfr9Tc1
-X-Gm-Gg: ASbGncvZhE8vmpqRdYGePscB/vNui8X7cZWtB4gxc8vhZaxYj/7c2xQzjOKFDi1dOBx
-	nbIEK7PU33Kf+4LggEXgBV0cAz2HC4WEgg17/rX1d8TD1qdaNE/kpVKMzWItCmY8/iXgJ0YbH4P
-	QiEePaqXp9YO8OJ5tKsHWDhdyiaB3pnaU=
-X-Google-Smtp-Source: AGHT+IH0IVs76Zy9+y8ZTxXDsMBZzpwf+3WKYgDJuETdDYbsxeRTaskKa9TmZKVJXJjwPK9WU5khgI12zA+UTI4Y0vY=
-X-Received: by 2002:a05:6214:430a:b0:6d8:aeda:dd93 with SMTP id
- 6a1803df08f44-6e243c8fe49mr197426366d6.39.1738354940984; Fri, 31 Jan 2025
- 12:22:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738355085; x=1738959885;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Jn/Ny7UFv/UH6iRtjr6jsBabEKLnDl2l7pEqvfjMtFM=;
+        b=Pw9aQB1SWl/XcKfo3c53tLunO2t8NfqKa89sehOhpKsDo9xnp/By9/U8xavwfFmx5K
+         6keb9sMw/O9fh4ZKUGsChyjxO9zBIofPDD1P2hMRj/5OCra4AhtoPmzqy7ChLv64jrA9
+         MswRBYDIZeDuwllLltaPuE5UoQNNs1AWDdtsB0UAKI+2mMptqF4JcLMnpDdZtQsOAMSm
+         LD8JjkFc2OipDK1UBGRb6mgJZRFB9t6Z8wpUc/+/NoNmR9bSshvsYSm7a/X1Kk94dSad
+         roWPHmbyaXiL05kxYnNYSlDEvhvm2gx1njCcA7WsFcBZrXEI13o8gVNy6RaH0E0weWxL
+         /+sA==
+X-Forwarded-Encrypted: i=1; AJvYcCVEUynCAwuZnWMQVBBKS0iJxMGQpPTWVMeGIvuoX6tl9zurZPQU6raBHei7VwO0Td2vU8X+UPHJmS3JVf4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRMcuvC7EEh5sd4uFTrEYCouv6yXzZm1WcmB2QdUZGA8THPWAR
+	UFvUKHNHR/tjT3NVHb1TCJpTorFJZpep8oQdtG4myHuOwD+mQGMmvTZSG4F9nBQ=
+X-Gm-Gg: ASbGncsfcSPkadzjlXO3ajS4lFB2lFbIuqlzi2b6F8f2Ivh399olhSrj0N4rEO39RKY
+	bdL+0UtvBoBPFhkV5M38RRo49l/KQYzdWtVOD8+EW/KRtyS/VkskapTo8cum/PJlfNFUPqdvOTD
+	SYP/YFV0OWRCYzXOGcSfUcOS33mo1n2UNBnEQMtm4xtCHFAdJlKJfIYkVAXwHP0r3Be5ltQtV+9
+	wkLZcoWEtnRL7WkXIM3hhJiOunfxLbtiTY30I3pV6ifmQCjK1aERZx6OMD6zCxljA4EPdvPnwHW
+	WqIt1uFUDkkRR6xi4FvTS15whRV3NFxTOKGowBjm6VV300M=
+X-Google-Smtp-Source: AGHT+IEA6MI3/eVAdqj25y/O52sPRoTGczW1O2gqmD31jZVU/w0qKc/rISzimaZq3KsB0lB7wfNBfQ==
+X-Received: by 2002:a05:6871:a581:b0:2b3:8c07:6461 with SMTP id 586e51a60fabf-2b38c07814dmr1466360fac.19.1738355085268;
+        Fri, 31 Jan 2025 12:24:45 -0800 (PST)
+Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b35623d2ffsm1403157fac.22.2025.01.31.12.24.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 12:24:44 -0800 (PST)
+From: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH 00/13] gpiolib: add gpiods_set_array_value_cansleep
+Date: Fri, 31 Jan 2025 14:24:40 -0600
+Message-Id: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122024452.50289-1-royluo@google.com> <20250128014400.7jx4segwn53vjnb5@synopsys.com>
-In-Reply-To: <20250128014400.7jx4segwn53vjnb5@synopsys.com>
-From: Roy Luo <royluo@google.com>
-Date: Fri, 31 Jan 2025 12:21:44 -0800
-X-Gm-Features: AWEUYZnoCcCDrQPX9ozA0nR6a5vxAjkn_j0SqNIF_aCUeBSY1sdE3ksoVrg15Ss
-Message-ID: <CA+zupgwLfzDvVF+5psdbuUgZb_mCNqXtxS5=b1RtTAjQKq6AuA@mail.gmail.com>
-Subject: Re: [PATCH v1] usb: dwc3: gadget: fix gadget workqueue use-after-free
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"andre.draszik@linaro.org" <andre.draszik@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIgxnWcC/x3M3QpAQBBA4VfRXJvaHyKvIhfLjjUltlmJ5N1tL
+ r+Lcx5IJEwJuuIBoZMT71uGLguYFrcFQvbZYJSplbYaQ+QdEx3oRNyNC62RBEdfOWta2yhvIbd
+ RaObr//bD+35rVoI+ZwAAAA==
+X-Change-ID: 20250131-gpio-set-array-helper-bd4a328370d3
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+ Geert Uytterhoeven <geert@linux-m68k.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-sound@vger.kernel.org, David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
 
-On Mon, Jan 27, 2025 at 5:44=E2=80=AFPM Thinh Nguyen <Thinh.Nguyen@synopsys=
-.com> wrote:
->
-> On Wed, Jan 22, 2025, Roy Luo wrote:
-> > `dwc3_gadget_soft_disconnect` function, called as part of
->
-> The dwc3_gadget_soft_disconnect() isn't directly part of
-> device_del(&gadget->dev). It should be part of disconnect.
->
-> Can you provide the full sequence of events so I can have more context?
-> The handling of the flushing of gadget->work should not be part of the
-> dwc3.
+This series was inspired by some minor annoyance I have experienced a
+few times in recent reviews.
 
+Calling gpiod_set_array_value_cansleep() can be quite verbose due to
+having so many parameters. In most cases, we already have a struct
+gpio_descs that contains the first 3 parameters so we end up with 3 (or
+often even 6) pointer indirections at each call site. Also, people have
+a tendency to want to hard-code the first argument instead of using
+struct gpio_descs.ndescs, often without checking that ndescs >= the
+hard-coded value.
 
-Yes, it's a part of disconnect, and disconnect is a part of gadget unbind.
-Let me try my best to explain. Here's the call stack for usb_del_gadget:
--> usb_del_gadget
-    -> flush_work(&gadget->work)
-    -> device_del
-        -> bus_remove_device
-        -> device_release_driver
-        -> gadget_unbind_driver
-        -> usb_gadget_disconnect_locked
-        -> dwc3_gadget_pullup
-        -> dwc3_gadget_soft_disconnect
-        -> usb_gadget_set_state
-        -> schedule_work(&gadget->work)
+So I'm proposing that we add a gpiods_set_array_value_cansleep()
+function that is a wrapper around gpiod_set_array_value_cansleep()
+that has struct gpio_descs as the first parameter to make it a bit
+easier to read the code and avoid the hard-coding temptation.
 
-Then when usb_put_gadget is called, gadget could be freed before
-gadget->work is executed.
--> usb_put_gadget
--> put_device
--> kobject_put
--> device_release
--> dwc_gadget_release
--> kfree(gadget)
+I've just done gpiods_set_array_value_cansleep() for now since there
+were over 10 callers of this one. There aren't as many callers of
+the get and atomic variants, but we can add those too if this seems
+like a useful thing to do.
 
->
-> Since the patch above is now in the mainline, may need to add a stable
-> tag.
+---
+David Lechner (13):
+      gpiolib: add gpiods_set_array_value_cansleep()
+      auxdisplay: seg-led-gpio: use gpiods_set_array_value_cansleep
+      bus: ts-nbus: validate ts,data-gpios array size
+      bus: ts-nbus: use gpiods_set_array_value_cansleep
+      gpio: max3191x: use gpiods_set_array_value_cansleep
+      iio: adc: ad7606: use gpiods_set_array_value_cansleep
+      iio: amplifiers: hmc425a: use gpiods_set_array_value_cansleep
+      iio: resolver: ad2s1210: use gpiods_set_array_value_cansleep
+      mmc: pwrseq_simple: use gpiods_set_array_value_cansleep
+      mux: gpio: use gpiods_set_array_value_cansleep
+      net: mdio: mux-gpio: use gpiods_set_array_value_cansleep
+      phy: mapphone-mdm6600: use gpiods_set_array_value_cansleep
+      ASoC: adau1701: use gpiods_set_array_value_cansleep
 
-Ack, will cc stable in the next revision.
+ drivers/auxdisplay/seg-led-gpio.c           |  3 +--
+ drivers/bus/ts-nbus.c                       | 10 ++++++----
+ drivers/gpio/gpio-max3191x.c                | 18 +++++++-----------
+ drivers/iio/adc/ad7606.c                    |  3 +--
+ drivers/iio/adc/ad7606_spi.c                |  3 +--
+ drivers/iio/amplifiers/hmc425a.c            |  3 +--
+ drivers/iio/resolver/ad2s1210.c             |  8 ++------
+ drivers/mmc/core/pwrseq_simple.c            |  3 +--
+ drivers/mux/gpio.c                          |  4 +---
+ drivers/net/mdio/mdio-mux-gpio.c            |  3 +--
+ drivers/phy/motorola/phy-mapphone-mdm6600.c |  4 +---
+ include/linux/gpio/consumer.h               |  7 +++++++
+ sound/soc/codecs/adau1701.c                 |  4 +---
+ 13 files changed, 31 insertions(+), 42 deletions(-)
+---
+base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
+change-id: 20250131-gpio-set-array-helper-bd4a328370d3
 
-Regards,
-Roy Luo
+Best regards,
+-- 
+David Lechner <dlechner@baylibre.com>
+
