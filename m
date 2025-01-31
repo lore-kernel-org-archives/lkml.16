@@ -1,111 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F3F1B85F6;
-	Fri, 31 Jan 2025 15:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D718467;
+	Fri, 31 Jan 2025 15:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738337364; cv=none; b=cYldKiq+ueFIJxQIpjiW7YeCP26FYq0ZDQ7w/JgYRcnwod7rrlPTIE1qh2+OGRmKFDMlmLD9nTWDxPBn2D5rJiqx5yoduWYqD0nKTDS3zstviarT4RSRJAZ/wY2n7JIcs6fzy5/N4pXYBEmzVZqkPjKIgAKxj7dC2igqzinQ27E=
+	t=1738337422; cv=none; b=FICJxMqo2GAAIOVifrwaWX3RrNdXfnynZ4RzAR77aHhVxUq456vBuzbdC7N3kfqGiaBz1FoV+p6eQhhWB403bR03s4GiVMNDfuspffOdI8WEq6jow2SHnVWDTc7g0zwjaN6qrNebA/BUbevarfG/F86xUiVbO2Xvrwj9YrK57oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738337364; c=relaxed/simple;
-	bh=keN7CJ39AxoBR7CYBQVhQEcNv6r+vbPbpuhW79zq0pg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=XKM2DZJXZ4JaGLLaEh4KfucPPpXn2tKWPWgW9BtqFpfLbCJZx9X9bhqx1YqqkWd2l42MnHWRKq8yUhiB6sZh+Ekhff+X8Cg//mEsMlcs/GraCP6WFLRHwo6etIi2Rih8ai/d1Ed0a7bS8K2TgRcZYlUoca1dwp9JsQR/BpUaNIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xs6RikSF; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738337422; c=relaxed/simple;
+	bh=BJkAqQqySuQeiWwU8uJ1H711SOFSLwM8M/BynHk7CDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HDlLiLxC9mv5qPdwkLfSaz+Kh87aSnDKZN41VHpgbvOey8GJ/mOvZXsh8kRYJfCJ0EmefV0gjXS0ArtqoAJ2FoC6dVHYSOnuu3ahBGdf5yTOr8dmY/NDyTVwPJ65Q3YLkmUJ6Swa6rDxAswzWm6Flgb8Ji+voW5Ma5zoY/ofqY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=TY4DQdnn; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xs6RikSF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738337362; x=1769873362;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=keN7CJ39AxoBR7CYBQVhQEcNv6r+vbPbpuhW79zq0pg=;
-  b=Xs6RikSFmQzMkIAYFBpl4Tc/uuSQLMJZ78+TRROAz9amufLKE+GVk2yC
-   JMZJ4s4LCtk2C9OlyItQrr2r+yxm2nqdza4S2PlkGYWDTrffClWf869LT
-   D6nrpyAs6sr3hASUe/lnUJ1fhRiGccYHJboy0P8Yr2Ej8b3bwwRpodhka
-   DF11CGeON6cTEVdV0zfwcFNH65phTeZvK2MYw6oseNZU4276V5zc+C1rQ
-   jQNXrX9k/IFwOpCB5CIZDZfwXsJvmehGEY3AL055nRqEXun/tArIV1Duu
-   g4wGrWzkFwXXtZ1/9db7v5zqgve4FnmddibnlecEiOm73bGaYDJeEB3w5
-   A==;
-X-CSE-ConnectionGUID: V19HB69PQni1O3oEVYMp0w==
-X-CSE-MsgGUID: Asot4E/mTTyKj2AxQnAwMQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="38612003"
-X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
-   d="scan'208";a="38612003"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 07:29:21 -0800
-X-CSE-ConnectionGUID: Wmi0KgTWSUK8G67oDyZYfw==
-X-CSE-MsgGUID: mQGcqElSQjSHhekv1yeqbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="110108370"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.55])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 07:29:20 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Jian-Hong Pan <jhp@endlessos.org>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	=?UTF-8?q?Nikl=C4=81vs=20Ko=C4=BCes=C5=86ikovs?= <pinkflames.linux@gmail.com>
-Subject: [PATCH 1/1] PCI/ASPM: Fix L1SS saving
-Date: Fri, 31 Jan 2025 17:29:13 +0200
-Message-Id: <20250131152913.2507-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TY4DQdnn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=N1KV8cAYAeUsEmP5FSI2GVwcvfBNoyMVKI/OP/TsMh8=; b=TY4DQdnn8BJ2u6ngBxO25+KLaf
+	4ykBv2v07Rolai551D/VQOGqrl0WPBg22TEkQkLdU2Sq+v2SRcl4lw6gy7GmKkHb6m+zZ38Acm0xr
+	MgipqQvRFSlPvkH9ArY3g43N1Tn32o2gIS0mScTeVUg7WTI+8cqUGfJB7Ncq0gN3RReE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tdsxz-009j7y-Au; Fri, 31 Jan 2025 16:29:59 +0100
+Date: Fri, 31 Jan 2025 16:29:59 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Steven Price <steven.price@arm.com>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Yanteng Si <si.yanteng@linux.dev>, Furong Xu <0x1207@gmail.com>,
+	Joao Pinto <Joao.Pinto@synopsys.com>, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v4 3/3] net: stmmac: Specify hardware capability
+ value when FIFO size isn't specified
+Message-ID: <2ed9e7c7-e760-409e-a431-823bc3f21cb7@lunn.ch>
+References: <20250127013820.2941044-1-hayashi.kunihiko@socionext.com>
+ <20250127013820.2941044-4-hayashi.kunihiko@socionext.com>
+ <07af1102-0fa7-45ad-bcbc-aef0295ceb63@arm.com>
+ <fc08926d-b9af-428f-8811-4bfe08acc5b7@lunn.ch>
+ <f343c126-fed9-4209-a18d-61a4e604db2f@arm.com>
+ <a4e31542-3534-4856-a90f-e47960ed0907@lunn.ch>
+ <d6265f8e-51bc-4556-9ecb-bfb73f86260d@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d6265f8e-51bc-4556-9ecb-bfb73f86260d@arm.com>
 
-The commit 1db806ec06b7 ("PCI/ASPM: Save parent L1SS config in
-pci_save_aspm_l1ss_state()") aimed to perform L1SS config save for both
-the Upstream Port and its upstream bridge when handling an Upstream
-Port, which matches what the L1SS restore side does. However,
-parent->state_saved can be set true at an earlier time when the
-upstream bridge saved other parts of its state. Then later when
-attempting to save the L1SS config while handling the Upstream Port,
-parent->state_saved is true in pci_save_aspm_l1ss_state() resulting in
-early return and skipping saving bridge's L1SS config because it is
-assumed to be already saved. Later on restore, junk is written into
-L1SS config which causes issues with some devices.
+On Fri, Jan 31, 2025 at 03:03:11PM +0000, Steven Price wrote:
+> On 31/01/2025 14:47, Andrew Lunn wrote:
+> >>> I'm guessing, but in your setup, i assume the value is never written
+> >>> to a register, hence 0 is O.K. e.g. dwmac1000_dma_operation_mode_rx(),
+> >>> the fifosz value is used to determine if flow control can be used, but
+> >>> is otherwise ignored.
+> >>
+> >> I haven't traced the code, but that fits my assumptions too.
+> > 
+> > I could probably figure it out using code review, but do you know
+> > which set of DMA operations your hardware uses? A quick look at
+> > dwmac-rk.c i see:
+> > 
+> >         /* If the stmmac is not already selected as gmac4,
+> >          * then make sure we fallback to gmac.
+> >          */
+> >         if (!plat_dat->has_gmac4)
+> >                 plat_dat->has_gmac = true;
+> 
+> has_gmac4 is false on this board, so has_gmac will be set to true here.
 
-Remove parent->state_saved check and unconditionally save L1SS config
-also for the upstream bridge from an Upstream Port which ought to be
-harmless from correctness point of view. With the Upstream Port check
-now present, saving the L1SS config more than once for the bridge is no
-longer a problem (unlike when the parent->state_saved check got
-introduced into the fix during its development).
+Thanks. Looking in hwif.c, that means dwmac1000_dma_ops are used.
 
-Fixes: 1db806ec06b7 ("PCI/ASPM: Save parent L1SS config in pci_save_aspm_l1ss_state()")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219731
-Reported-by: Niklāvs Koļesņikovs <pinkflames.linux@gmail.com>
-Tested-by: Niklāvs Koļesņikovs <pinkflames.linux@gmail.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/pcie/aspm.c | 3 ---
- 1 file changed, 3 deletions(-)
+dwmac1000_dma_operation_mode_rx() just does a check:
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index e0bc90597dca..da3e7edcf49d 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -108,9 +108,6 @@ void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
- 	pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CTL2, cap++);
- 	pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CTL1, cap++);
- 
--	if (parent->state_saved)
--		return;
--
- 	/*
- 	 * Save parent's L1 substate configuration so we have it for
- 	 * pci_restore_aspm_l1ss_state(pdev) to restore.
+	if (rxfifosz < 4096) {
+		csr6 &= ~DMA_CONTROL_EFC;
 
-base-commit: 72deda0abee6e705ae71a93f69f55e33be5bca5c
--- 
-2.39.5
+but otherwise does not use the value.
 
+dwmac1000_dma_operation_mode_tx() appears to completely ignore fifosz.
+
+So i would say all zero is valid for has_gmac == true, but you might
+gain flow control if a value was passed.
+
+A quick look at dwmac100_dma_operation_mode_tx() suggests fifosz is
+also ignored, and dwmac100_dma_operation_mode_rx() does not exist. So
+all 0 is also valid for gmac == false, gmac4 == false, and xgmac ==
+false.
+
+dwmac4_dma_rx_chan_op_mode() does use the value to determine mtl_rx_op
+which gets written to a register. So gmac4 == true looks to need
+values. dwxgmac2_dma_rx_mode() is the same, so xgmac = true also need
+valid values.
+
+Could you cook up a fix based on this?
+
+	Andrew
