@@ -1,121 +1,84 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE6E1E2847;
-	Fri, 31 Jan 2025 16:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B2C720318;
+	Fri, 31 Jan 2025 16:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738339645; cv=none; b=kP172NoF9Fp5My4kBSck2jQwzCnHxScXceMyGvEukzuhawZrXoRTwmqIyTMSHYoq6FOSX8PDHzNowjcnMchXpQwlwEQOIfz7lSVziAZrdwPmiyawk4VJSnk8KwQ+Cp5tWh7dWC/5ZQrLdB9jVE2GPBkwW8V4gAPs3MuF4k0M27I=
+	t=1738339733; cv=none; b=gUBKZp4o71L5Q+7UfQ+h2hL19F6K4b2p2GOWGQro9v5OuFv9hwH9dM37kFGb8Or40xhOFJ8GqkTR7cKOaFdN+5bg8XK+pnLepG/x3Qg4d3R2QTu0nEYoMU+gw1gGoOoFL6EAQNm4hXnMk5Sf8oNByix+6GiZtJqE+37SfJs1cTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738339645; c=relaxed/simple;
-	bh=Agxx7aTPK9tNy81pnewxjXm5kCdedECEfgERsYeOsf0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RI8HsdGUrPSIL2UgnMlCD460lXtfx/ADJmRyP5vnBsHoeFjbPEfg6B0z/boJEJn4nxNIS9QTIWedom6HkoFwGfUvP98F3ky2d6ccnXsNYGHs6OqroSuzCreNwF5J1+wCrwSMh9IDIPKNcFbNsa9GVtnmc0SQYlOMumrIf8NHDWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=s3gWnpoK; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1738339733; c=relaxed/simple;
+	bh=IQL7s3lbKnKcTKB9pEi0zzCn3XcNQtutTRmxglLPsAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bmPyC0V/+8DLpizJ94th0pLyUidZGpdaW3imgnOXi3SLZso+BxUr3MaeCJ1lJiIXV4VdLzq+H0JLFpfWPwxowp4yaI+oiCuKnoAWPs88qiuTNO/9yP/6SOgs3uUwbbLFa/N+16taQVbjB4/RaRcqUgu4GQr8HxcXx2WadomDqkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=G2VTov39; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="s3gWnpoK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=IuPlZa6y6J6gXS+P+dgZflnpDfa3pb9jp5g4ifalhAs=; b=s3gWnpoKWyIy/LAY9j0YXccsrB
-	nJop06eJ56UHTRDBbXnSKI9+n25Dc/THTlUb4KuDvFCAxRJc+GOCIkT3qNj3EGkZDi3vrgFS6taIw
-	Iau7Spx5Sd3qnzRpzRTYl0rptVhktWP66qxNzP3ncc4awdmIM3QoKzilfZmkZ6m6KpWw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tdtXp-009jaZ-NK; Fri, 31 Jan 2025 17:07:01 +0100
-Date: Fri, 31 Jan 2025 17:07:01 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Steven Price <steven.price@arm.com>
-Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Yanteng Si <si.yanteng@linux.dev>, Furong Xu <0x1207@gmail.com>,
-	Joao Pinto <Joao.Pinto@synopsys.com>, netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v4 3/3] net: stmmac: Specify hardware capability
- value when FIFO size isn't specified
-Message-ID: <80cc9950-9f62-4369-be87-c022d55a2b6f@lunn.ch>
-References: <20250127013820.2941044-1-hayashi.kunihiko@socionext.com>
- <20250127013820.2941044-4-hayashi.kunihiko@socionext.com>
- <07af1102-0fa7-45ad-bcbc-aef0295ceb63@arm.com>
- <fc08926d-b9af-428f-8811-4bfe08acc5b7@lunn.ch>
- <f343c126-fed9-4209-a18d-61a4e604db2f@arm.com>
- <a4e31542-3534-4856-a90f-e47960ed0907@lunn.ch>
- <d6265f8e-51bc-4556-9ecb-bfb73f86260d@arm.com>
- <2ed9e7c7-e760-409e-a431-823bc3f21cb7@lunn.ch>
- <915713e1-b67f-4eae-82c6-8dceae8f97a7@arm.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="G2VTov39"
+Received: from [100.79.217.67] (unknown [4.194.122.170])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D324D210C321;
+	Fri, 31 Jan 2025 08:08:48 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D324D210C321
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738339732;
+	bh=c3gnIl846SAu9tfnQfOzMciM9PIb15NdkYL4iUYcpms=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=G2VTov39rrmYBiWMyE9yWrSILfGhZxzr06F8JH2GqHFzuspx00BCSmiWBbsDjUsyp
+	 oXVBU8KH8BrukMrKGOrPvvDtGBseuczir06TjCxMZyTdSIbN5Ei8FguLKbk8PKHD5J
+	 NC1IKKeAL6q/duree0ur7zHHvgb38S+jlVktLiVs=
+Message-ID: <ceabc7b5-a9b8-4f3b-9a73-5cc2af4e9af9@linux.microsoft.com>
+Date: Fri, 31 Jan 2025 21:38:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <915713e1-b67f-4eae-82c6-8dceae8f97a7@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 8/8] arm64: Enable livepatch for ARM64
+To: Weinan Liu <wnliu@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Indu Bhagat <indu.bhagat@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev,
+ Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-toolchains@vger.kernel.org, linux-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org, joe.lawrence@redhat.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250127213310.2496133-1-wnliu@google.com>
+ <20250127213310.2496133-9-wnliu@google.com>
+Content-Language: en-US
+From: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
+In-Reply-To: <20250127213310.2496133-9-wnliu@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 31, 2025 at 03:54:16PM +0000, Steven Price wrote:
-> On 31/01/2025 15:29, Andrew Lunn wrote:
-> > On Fri, Jan 31, 2025 at 03:03:11PM +0000, Steven Price wrote:
-> >> On 31/01/2025 14:47, Andrew Lunn wrote:
-> >>>>> I'm guessing, but in your setup, i assume the value is never written
-> >>>>> to a register, hence 0 is O.K. e.g. dwmac1000_dma_operation_mode_rx(),
-> >>>>> the fifosz value is used to determine if flow control can be used, but
-> >>>>> is otherwise ignored.
-> >>>>
-> >>>> I haven't traced the code, but that fits my assumptions too.
-> >>>
-> >>> I could probably figure it out using code review, but do you know
-> >>> which set of DMA operations your hardware uses? A quick look at
-> >>> dwmac-rk.c i see:
-> >>>
-> >>>         /* If the stmmac is not already selected as gmac4,
-> >>>          * then make sure we fallback to gmac.
-> >>>          */
-> >>>         if (!plat_dat->has_gmac4)
-> >>>                 plat_dat->has_gmac = true;
-> >>
-> >> has_gmac4 is false on this board, so has_gmac will be set to true here.
-> > 
-> > Thanks. Looking in hwif.c, that means dwmac1000_dma_ops are used.
-> > 
-> > dwmac1000_dma_operation_mode_rx() just does a check:
-> > 
-> > 	if (rxfifosz < 4096) {
-> > 		csr6 &= ~DMA_CONTROL_EFC;
-> > 
-> > but otherwise does not use the value.
-> > 
-> > dwmac1000_dma_operation_mode_tx() appears to completely ignore fifosz.
-> > 
-> > So i would say all zero is valid for has_gmac == true, but you might
-> > gain flow control if a value was passed.
-> > 
-> > A quick look at dwmac100_dma_operation_mode_tx() suggests fifosz is
-> > also ignored, and dwmac100_dma_operation_mode_rx() does not exist. So
-> > all 0 is also valid for gmac == false, gmac4 == false, and xgmac ==
-> > false.
-> > 
-> > dwmac4_dma_rx_chan_op_mode() does use the value to determine mtl_rx_op
-> > which gets written to a register. So gmac4 == true looks to need
-> > values. dwxgmac2_dma_rx_mode() is the same, so xgmac = true also need
-> > valid values.
-> > 
-> > Could you cook up a fix based on this?
-> 
-> The below works for me, I haven't got the hardware to actually test the 
-> gmac4/xgmac paths:
 
-This looks sensible. Hopefully Kunihiko can test on more platforms.
+On 28-01-2025 03:03, Weinan Liu wrote:
+> Since SFrame is considered as reliable stacktrace, enable livepatch in
+> arch/arm64/Kconfig
+>
+> Signed-off-by: Weinan Liu <wnliu@google.com>
+> ---
+>   arch/arm64/Kconfig | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 100570a048c5..c292bc73b65c 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -271,6 +271,8 @@ config ARM64
+>   	select HAVE_SOFTIRQ_ON_OWN_STACK
+>   	select USER_STACKTRACE_SUPPORT
+>   	select VDSO_GETRANDOM
+> +	select HAVE_RELIABLE_STACKTRACE if SFRAME_UNWINDER
+> +	select HAVE_LIVEPATCH		if HAVE_DYNAMIC_FTRACE_WITH_ARGS && HAVE_RELIABLE_STACKTRACE
+>   	help
+>   	  ARM 64-bit (AArch64) Linux support.
+>   
+> @@ -2498,3 +2500,4 @@ source "drivers/acpi/Kconfig"
+>   
+>   source "arch/arm64/kvm/Kconfig"
+>   
+> +source "kernel/livepatch/Kconfig"
 
-	Andrew
+Will this work for ftrace'd (kprobe'd) function as well?
+
