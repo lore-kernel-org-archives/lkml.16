@@ -1,122 +1,267 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165A4139E;
-	Fri, 31 Jan 2025 21:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A625D139E
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 21:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738358458; cv=none; b=IaLIYcniIB4kRteIgVT9srGs9VOAw3+Ds73wlqsMF74o7GtS0IKp2bQiBZqzowPVANLImoUSf1iKwOACwB+8Fsb/mdq81/1NvoRHbmiHpSazIqXk6c1t3B4MBAoj2IUvB1qySP737kewSYC7qu8KjquSN/7wEyw0Kvsa9wVV3Ak=
+	t=1738358589; cv=none; b=kpggeu3cT7ymqmofO72VLtOtSBf69Bzvei2Zh7BIZxdfEV+JEZo9WqPnb+yi3MYIZEJO5Ub62JL+LvDbwMkBHTq5a2TY/xAv59Lqh8ILUjM8/Gs/TCw9aBDmJLrW8mzADSOtfrkIFJJMS5vpUc+hBdfnPNYXQpQtxBVJ3Qj/Q+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738358458; c=relaxed/simple;
-	bh=tNv/VPiXdMNnDJUXI1YEFGfxy4fPeU/bg99THsTfA/k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OafmNLMQdPV10Q+RVXXjaMeHGQtVtL6PB5JY/Sj9fxsMJ2b7S9oneTBtRrJWVRTuDmq5J0EK0J8MpB+stYwW7BZWK1XsaZ9pcCoWQRz1U+vMTg6kl/Z/0pbHdtEngMS4Jr6OMKOpZPAwmwiWcdv1mn5mPjOfzMoF7maIQEiaopE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIPp4FA5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738358589; c=relaxed/simple;
+	bh=cAgcRCHIoXW6gNZyv8mep46BFnxnQM1FyOezVRtFFDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QbNXay4kwkmtV+eZhNpOuZa3fDXt/YiDY3HiMPnOkECBxY5KZ2DOHu6pKVsfHneR+8SuSrI+rS5EMlDk+BRSZIF5ex2sjWVQZrBHNMvYuQUnYoVJmrwDcInAAiPFdVgZ/deQUDDBbEo7svuHAIZ5PaDXrtsj5emQs5LBbPfLBO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=f0v+5ToN; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIPp4FA5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE2B8C4CED1;
-	Fri, 31 Jan 2025 21:20:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738358457;
-	bh=tNv/VPiXdMNnDJUXI1YEFGfxy4fPeU/bg99THsTfA/k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rIPp4FA57oHcCqItKND1wp9QdcvekUIf5cJHwp9p2z/fob2sNEPGcZwsazEB/WxGt
-	 MGarS/gRgs/B422r8YMo/PuBUnVWz99WMIMUcbgIEQWdy7UqvRFvMrtWxp+6eA1u8l
-	 U3bTtcUiJU+WHguX0DhhwZY5Gsw/TGb1ILRO+llkebBnShHzd0bVSZoxxSGicJ3fom
-	 gkpWF/IMZte1JWMm7ZtTi5FFbtF9GQ18Xiqljom9ZLWiyaDsLhNjIGuZm8CVbs8WrS
-	 fELoPrAaL7VYnKwX/h8qT/4GJ/uiDbRj00+Qx0sC70n4CISMFgms9sXsMLg8KXrIgt
-	 syNxt1MQp576Q==
-Message-ID: <33f8a68f-46d8-472f-8061-52800e5bd014@kernel.org>
-Date: Fri, 31 Jan 2025 22:20:51 +0100
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="f0v+5ToN"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2161eb95317so43989095ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:23:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738358587; x=1738963387; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RmxkcSFmr3z7bCHHmaNbUyAfDn1/vDB3FZnNFx07Z1k=;
+        b=f0v+5ToN82w5K+UlvwGRguKQDTok5nFbVgiwPlEIT/OY3LuBG9PB7Yzn3s0qwH68Zv
+         JsWrRdLzIrkFP6hGRO7pbqx2P30lmIKxHHZ/ryJt0HOgGADRA4CFYXWFgYH+7yqIwkoN
+         W2PuUHNE04P7vM95tWo+3FY1VNhOFV6x/PCz15BzWMD1Pk754U49Cc9ZFSSQ48gP6Ogg
+         V+lsKIyjnfDKhdDNmHRi1WwckB85OCNo1ttAVRJxVM4GQDEz8kw3zSzCPijA7Cr37hgj
+         sIVx8OfY+gTO+DYxVqLu0FC1kbOOzOY3nzN2SwVHAVbJ7KtQXReYvyW6b55BARVM8rXm
+         jztw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738358587; x=1738963387;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RmxkcSFmr3z7bCHHmaNbUyAfDn1/vDB3FZnNFx07Z1k=;
+        b=Eqg20x+WLb6M6em8BANg034UZ3v2XyuzkGChZKFrbFQ3btrpXa40v6uDuT/Wfb3s/v
+         hAuUp11AEMKQp1KVdrxiTJCjYz9U1NhuVngGarx3YjAFcKfzkQfaSNZgdUTWqf24bZFN
+         mcFFXsFe56bLccakcjYdDV2VPwkcYhy28k5PsYy81It25lDDv2qW9cPliss8s7bRbw9s
+         3M0cri/Pj5fJ2jAQdVAIENn/LCl6zqxdevUUUKplN0h+LfpRf5hLk4s0aN+PyOQOeTaI
+         fhUUb3pvc4x9yYtfZYCrzMMrdiNqKcvmzufMarQ2ZTilAYNyFvdU6LHVXdVhwA6pWZSV
+         Q2VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3E8mbm1T70A/FrhtwHFDPLlwXS+zwN5Q51EbosRgnNnoy/UCKfi394MfrRa6u7TmDaH+Vrp6AXaJrXW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxZVwYl2FXCrpdYg/ePXiUTN3ULdgTKdyYjUp1bkUiVgqOYxUp
+	kQEtS21bgENIdoD8SWnEsOEzr14faCKnj3eJRqqFRWtQEOcKshTJPgwl4xfjTn6Hs8DJ1dFUXf2
+	HzuDMLSon
+X-Gm-Gg: ASbGncti4YE6HMhHKl+L1ej6kU6b5NGS+ef9+zX2Jjddb2XODrdOMO0AKbjSPLwYmzb
+	NKsbTKjKgVTB1kIlT45zvl2seURqWHV2ybDUexXmMs7ZZ2rlUtWmUBjWFzlo8XFu5IRjhhJqkQm
+	NggDjDYV8E7K/9Q8ZblM5AqplJlM7f0tUPazgQ65T8lsoV0h43jpK6JFZEauBIx1iubnJGSKUly
+	vxnfRA+ZYI7aVMx0Fhl0IuEgXs9L3Khay15BP/lJ2a1SFn8AADqebk/BmNi1uq39gSobwoazB/M
+	OzeGnM0r3A==
+X-Google-Smtp-Source: AGHT+IHoAJHJmwdnqQn+ngdCzehp27BBh7mbd1t47saQAFMmleUTSGAfcl7vki69eEPKVt+KvIquPg==
+X-Received: by 2002:a17:902:dac6:b0:215:ae3d:1dd7 with SMTP id d9443c01a7336-21dd7d80afcmr200579215ad.19.1738358585296;
+        Fri, 31 Jan 2025 13:23:05 -0800 (PST)
+Received: from ghost ([2001:428:6405:1e0:b67e:25c1:3d0b:392b])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bd09cb1sm6488071a91.21.2025.01.31.13.23.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 13:23:04 -0800 (PST)
+Date: Fri, 31 Jan 2025 13:23:02 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Pasha Bouzarjomehri <pasha@rivosinc.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] riscv: Add runtime constant support
+Message-ID: <Z50_NsMX731u5JBh@ghost>
+References: <20250128-runtime_const_riscv-v3-1-11922989e2d3@rivosinc.com>
+ <CAJM55Z-J9EUotSW_Q0ERF=Vd0nEEhTv4SRHm96uNNxG1r6EsMQ@mail.gmail.com>
+ <Z5wHgRG6eZKFevUQ@ghost>
+ <CAJM55Z-9-WHY+31=6j-wAiaZdaPv_aH_=P6LEi16twgYH0FL6g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v6 0/3] platform: arm64: Huawei Matebook E Go
- embedded controller
-To: Pengyu Luo <mitltlatltl@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=83=C2=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-hwmon@vger.kernel.org
-References: <20250131092139.6065-1-mitltlatltl@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250131092139.6065-1-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJM55Z-9-WHY+31=6j-wAiaZdaPv_aH_=P6LEi16twgYH0FL6g@mail.gmail.com>
 
-On 31/01/2025 10:21, Pengyu Luo wrote:
-> This adds binding, drivers and the DT support for the Huawei Matebook E Go
-> (sc8280xp-based) Embedded Controller which is also found in Huawei Matebook
-> E Go LTE (sc8180x-based), but I don't have the sc8180x one to perform
-> tests, so this series enable support for sc8280xp variant only, this series
-> provides the following features:
+On Fri, Jan 31, 2025 at 06:46:23AM -0800, Emil Renner Berthing wrote:
+> Charlie Jenkins wrote:
+> > On Wed, Jan 29, 2025 at 04:30:49AM -0500, Emil Renner Berthing wrote:
+> > > Charlie Jenkins wrote:
+> > > > Implement the runtime constant infrastructure for riscv. Use this
+> > > > infrastructure to generate constants to be used by the d_hash()
+> > > > function.
+> > > >
+> > > > This is the riscv variant of commit 94a2bc0f611c ("arm64: add 'runtime
+> > > > constant' support") and commit e3c92e81711d ("runtime constants: add
+> > > > x86 architecture support").
+> > > >
+> > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > > ---
+> > > > Ard brought this to my attention in this patch [1].
+> > > >
+> > > > [1] https://lore.kernel.org/lkml/CAMj1kXE4DJnwFejNWQu784GvyJO=aGNrzuLjSxiowX_e7nW8QA@mail.gmail.com/
+> > > > ---
+> > > > Changes in v3:
+> > > > - Leverage "pack" instruction for runtime_const_ptr() to reduce hot path
+> > > >   by 3 instructions if Zbkb is supported. Suggested by Pasha Bouzarjomehri (pasha@rivosinc.com)
+> > > > - Link to v2: https://lore.kernel.org/r/20250127-runtime_const_riscv-v2-1-95ae7cf97a39@rivosinc.com
+> > > >
+> > > > Changes in v2:
+> > > > - Treat instructions as __le32 and do proper conversions (Ben)
+> > > > - Link to v1: https://lore.kernel.org/r/20250127-runtime_const_riscv-v1-1-795b023ea20b@rivosinc.com
+> > > > ---
+> > > >  arch/riscv/include/asm/runtime-const.h | 194 +++++++++++++++++++++++++++++++++
+> > > >  arch/riscv/kernel/vmlinux.lds.S        |   3 +
+> > > >  2 files changed, 197 insertions(+)
+> > > >
+> > > > diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
+> > > > new file mode 100644
+> > > > index 0000000000000000000000000000000000000000..0ecbe6967013900781b0b1048d4622f676b64076
+> > > > --- /dev/null
+> > > > +++ b/arch/riscv/include/asm/runtime-const.h
+> > > > @@ -0,0 +1,194 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > +#ifndef _ASM_RISCV_RUNTIME_CONST_H
+> > > > +#define _ASM_RISCV_RUNTIME_CONST_H
+> > > > +
+> > > > +#include <asm/alternative.h>
+> > > > +#include <asm/cacheflush.h>
+> > > > +#include <asm/text-patching.h>
+> > > > +#include <linux/uaccess.h>
+> > > > +
+> > > > +#ifdef CONFIG_32BIT
+> > > > +#define runtime_const_ptr(sym)					\
+> > > > +({								\
+> > > > +	typeof(sym) __ret, __tmp;				\
+> > > > +	asm_inline("1:\t"					\
+> > > > +		".option push"					\
+> > > > +		".option norvc"					\
+> > > > +		"lui	%[__ret],0x89abd\n\t"			\
+> > > > +		"addi	%[__ret],-0x211\n\t"			\
+> > > > +		".option pop"					\
+> > > > +		".pushsection runtime_ptr_" #sym ",\"a\"\n\t"	\
+> > > > +		".long 1b - .\n\t"				\
+> > > > +		".popsection"					\
+> > > > +		: [__ret] "=r" (__ret));			\
+> > > > +	__ret;							\
+> > > > +})
+> > > > +#else
+> > > > +/*
+> > > > + * Loading 64-bit constants into a register from immediates is a non-trivial
+> > > > + * task on riscv64. To get it somewhat performant, load 32 bits into two
+> > > > + * different registers and then combine the results.
+> > > > + *
+> > > > + * If the processor supports the Zbkb extension, we can combine the final
+> > > > + * "slli,slli,srli,add" into the single "pack" instruction. If the processor
+> > > > + * doesn't support Zbkb but does support the Zbb extension, we can
+> > > > + * combine the final "slli,srli,add" into one instruction "add.uw".
+> > > > + */
+> > > > +#define runtime_const_ptr(sym)						\
+> > > > +({									\
+> > > > +	typeof(sym) __ret, __tmp;					\
+> > > > +	asm_inline("1:\t"						\
+> > > > +		".option push\n\t"					\
+> > > > +		".option norvc\n\t"					\
+> > > > +		"lui	%[__ret],0x89abd\n\t"				\
+> > > > +		"lui	%[__tmp],0x1234\n\t"				\
+> > > > +		"addiw	%[__ret],%[__ret],-0x211\n\t"			\
+> > > > +		"addiw	%[__tmp],%[__tmp],0x567\n\t"			\
+> > > > +		ALTERNATIVE_2(						\
+> > > > +			"slli	%[__tmp],%[__tmp],32\n\t"		\
+> > > > +			"slli	%[__ret],%[__ret],32\n\t"		\
+> > > > +			"srli	%[__ret],%[__ret],32\n\t"		\
+> > > > +			"add	%[__ret],%[__ret],%[__tmp]\n\t",	\
+> > > > +			".option push\n\t"				\
+> > > > +			".option arch,+zba\n\t"				\
+> > > > +			"slli	%[__tmp],%[__tmp],32\n\t"		\
+> > > > +			"add.uw %[__ret],%[__ret],%[__tmp]\n\t"		\
+> > > > +			"nop\n\t"					\
+> > > > +			"nop\n\t"					\
+> > > > +			".option pop\n\t",				\
+> > > > +			0, RISCV_ISA_EXT_ZBA, 1,			\
+> > > > +			".option push\n\t"				\
+> > > > +			".option arch,+zbkb\n\t"			\
+> > > > +			"pack	%[__ret],%[__ret],%[__tmp]\n\t"		\
+> > > > +			"nop\n\t"					\
+> > > > +			"nop\n\t"					\
+> > > > +			"nop\n\t"					\
+> > > > +			".option pop\n\t",				\
+> > > > +			0, RISCV_ISA_EXT_ZBKB, 1			\
+> > > > +		)							\
+> > > > +		".option pop\n\t"					\
+> > > > +		".pushsection runtime_ptr_" #sym ",\"a\"\n\t"		\
+> > > > +		".long 1b - .\n\t"					\
+> > > > +		".popsection"						\
+> > > > +		: [__ret] "=r" (__ret), [__tmp] "=r" (__tmp));		\
+> > > > +	__ret;								\
+> > > > +})
+> > > > +#endif
+> > > > +
+> > > > +#ifdef CONFIG_32BIT
+> > > > +#define SRLI "srli "
+> > > > +#else
+> > > > +#define SRLI "srliw "
+> > > > +#endif
+> > > > +
+> > > > +#define runtime_const_shift_right_32(val, sym)			\
+> > > > +({								\
+> > > > +	u32 __ret;						\
+> > > > +	asm_inline("1:\t"					\
+> > > > +		".option push\n\t"				\
+> > > > +		".option norvc\n\t"				\
+> > > > +		SRLI "%[__ret],%[__val],12\n\t"			\
+> > > > +		".option pop\n\t"				\
+> > > > +		".pushsection runtime_shift_" #sym ",\"a\"\n\t"	\
+> > > > +		".long 1b - .\n\t"				\
+> > > > +		".popsection"					\
+> > > > +		: [__ret] "=r" (__ret)				\
+> > > > +		: [__val] "r" (val));				\
+> > > > +	__ret;							\
+> > > > +})
+> > > > +
+> > > > +#define runtime_const_init(type, sym) do {			\
+> > > > +	extern s32 __start_runtime_##type##_##sym[];		\
+> > > > +	extern s32 __stop_runtime_##type##_##sym[];		\
+> > > > +								\
+> > > > +	runtime_const_fixup(__runtime_fixup_##type,		\
+> > > > +			    (unsigned long)(sym),		\
+> > > > +			    __start_runtime_##type##_##sym,	\
+> > > > +			    __stop_runtime_##type##_##sym);	\
+> > > > +} while (0)
+> > > > +
+> > > > +static inline void __runtime_fixup_caches(void *where, unsigned int insns)
+> > > > +{
+> > > > +	/* On riscv there are currently only cache-wide flushes so va is ignored. */
+> > > > +	__always_unused uintptr_t va = (uintptr_t)where;
+> > > > +
+> > > > +	flush_icache_range(va, va + 4*insns);
+> > > > +}
+> > > > +
+> > > > +/*
+> > > > + * The 32-bit immediate is stored in a lui+addi pairing.
+> > > > + * lui holds the upper 20 bits of the immediate in the first 20 bits of the instruction.
+> > > > + * addi holds the lower 12 bits of the immediate in the first 12 bits of the instruction.
+> > > > + */
+> > > > +static inline void __runtime_fixup_32(u32 *lui, u32 *addi, unsigned int val)
+> > > > +{
+> > > > +	unsigned int lower_immediate, upper_immediate;
+> > > > +	u32 lui_insn = le32_to_cpu(*lui);
+> > > > +	u32 addi_insn = le32_to_cpu(*addi);
+> > >
+> > > Because of the compressed extensions RISC-V instructions are only aligned on
+> > > 16bit boundaries, so is there another reason you know that these two
+> > > instructions are 32bit aligned? Otherwise you're adding unaligned accesses
+> > > here.
+> >
+> > Great point, thank you. I will add a ".align 4" to the beginning of
+> > these instructions to force the alignment.
 > 
-> - battery and charger information report
-> - charging thresholds control
-> - FN lock (An alternative method)
-> - LID switch detection
-> - Temperature sensors
-> - USB Type-C altmode
-> - USB Type-C PD(high power)
+> Unless there is a specific reason to do the alignment in this case, I'd much
+> rather we just do two 16bit reads like riscv/kernel/module.c already does.
+
+I have no strong preference here. That does seem like a better solution
+though.
+
+- Charlie
+
 > 
-
-Why are you resending?
-
-Previous version was only week ago and minimal time is two weeks. Plus
-its merge window, so this resend is unjustified.
-
-Best regards,
-Krzysztof
+> /Emil
