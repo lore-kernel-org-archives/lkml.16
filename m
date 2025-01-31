@@ -1,249 +1,155 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBB21C174E;
-	Fri, 31 Jan 2025 18:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D881C174E;
+	Fri, 31 Jan 2025 18:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738347179; cv=none; b=CDyUpd/Mj2Pe0dcFFqVU5oTZRTIMVGUUKkj6N1Ph4jrW+sd2etjKNxVFkP2I3gqpiyYkw7RkPpciM8oKk4CcDMO4KjDwqCQHraEaT2XE9lPgVfmrtpY7UJCJr9ycHLvRqso2llnvvsYvpOlycxz/jhJcSSiEhvODK+B4CATNSf0=
+	t=1738347238; cv=none; b=OQtsQPxSwJJ19GVcIhCl9Nnnar2lthOXvfrWgN2Jxe9/cDwoK7r3SlgeIUH5ADoqql8CSrEbwj1oFKES15YpkIfU+nghQglBCpc4ekccr8fZYU/zfcyiYVDUbEP/hbPSJnKbRZDaLcoGBC2KOoUjT+SqEY3IV+2ilVSindfaxvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738347179; c=relaxed/simple;
-	bh=hTfkhCSorZs3b2PtCt1LvffA30B8ElSrebOBChO7JQg=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=IOcxar9h2CD+d9UNzd8EX/HymMEGLM1+STbMugBpdEfp5cMePJBTzwRKfYWRrCcIy2+cAQUyeMpOSYwJD40ERuaESMkFfN2mlp/mN1EFc4XfY2kHQaEtVTlqsTcZW7mNjG3TkHdmJ/YG9y8eluiWtBh6TZ3dwTU/bW+klpCcwsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SfaB442t; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1738347238; c=relaxed/simple;
+	bh=TZW2cM+0eXm4cJxjHahhQNsg/hpuj/YgRHBS74BfIpY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=c6euCNCy6qKGr/J72IuN9Rbmuwjk7MbVw1veP3gcsU9UIXYif/xJ1Lb/k1kbszdPgdr2+/K1CNgEGijD86PG03K8l2pIcTN8S0RshM4gK/p3+214G8531ucf4Wg1pTiHmXotLrvukQJQtJ7f3iiNBT5TzgLc6OxU3IWxl7UknmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l1hP2KL6; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SfaB442t"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21636268e43so51702825ad.2;
-        Fri, 31 Jan 2025 10:12:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1hP2KL6"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5d3e6274015so3794343a12.0;
+        Fri, 31 Jan 2025 10:13:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738347177; x=1738951977; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z5MzkVzIpaLC+Yjf9Sv5e9gOmWcmltNqG5MWfZ8w2J8=;
-        b=SfaB442tHF5ZmRJWLfHMYe80dLOK89tZTXdfgZz4kDw5HQu845QOJK4NJtyUwK+hhd
-         HYPF1yK74lTmZF5/JWN8GOGf3F4gXXfZDbihuSoUJfbZyg9C1op+SQBE3H3tPDJAL/zj
-         FnYtUmgu6o3HtjMeFcDWYzCV9425+Ln2rD+0pcK8+BzmxKXWyFVo+MyxEQVAhsJI9Mr0
-         bOju6T8/RbvKuQ7vfpPXoOePgqNJWFwxSaYtrp714zCdFKqZfh4AHGZsIMdagNMgq0gT
-         sOnHvrmJFzlM7+Z3fqAyP5JWLpS0hR0mQYEcT/2/Cq/qHeS+DMZ4EJk5D1bUlXe23KFm
-         Lb2g==
+        d=gmail.com; s=20230601; t=1738347234; x=1738952034; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SDioANdvXwNuTfGfbnchsEWp0ZwSPM1Eio8Fai3fOQc=;
+        b=l1hP2KL6kNxVTZJQnBBCh5EkBYva/xvlEaPZ1mmLgY65u8c8AUXcpRbDzFnqLTO18l
+         WbiBQxdHGt9FPHZnIem+6Ye8iguQ1NPkWA2pS2rQtRnWLuarwCG1Mb4vCdjW45ICCP/1
+         vvUaVjADURqj65mUjBa6qfxgjZLnoQ2IgDOxurMLjAxhisMGn2wkeXM7SJ4+CFbkEXF4
+         jFa6/njCbpwWDDy+KHq3LOi7xWgcFde6ok2viABgSJuvAlO85NNpuESpL0h9H1si02LJ
+         U/oNqI54PpK4rANPYB5v1dDlUdqqUOu4sxuJiuDr1adJ00vw/98ykJONbWBYEneXwGf0
+         gmuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738347177; x=1738951977;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z5MzkVzIpaLC+Yjf9Sv5e9gOmWcmltNqG5MWfZ8w2J8=;
-        b=oS/gelYyBQIUSu2IvnnPBtjm4VEXvn5BT1sC0SPQQcQp32GFUqvdLTpIOJ+Xgi0sQm
-         dY2QcuzET+6o2fHkjYCcT/JTMnnn+7TmO7/n5zSWtUixBkniplCsSgTiIJgGPzO9zY/Y
-         naLV4Lxbin0qs+D9iva+NmOlaHBUUqsq9rOXSFKA5g/G+y002RTEEBPlZW7sxmp7WQ61
-         SCz2SQSILq2kQWUEVn9ydcr+JD2pXcQtH3ZhA3YHW68+tJYjzX4bS5/qOmUhaX3yATG/
-         4r3dNjENtev+vLmAqDkyL/LeYThSZmwmyNgXE9AE0hXptB5sjCnCGiIhg8+saJWr+0U3
-         6Oag==
-X-Forwarded-Encrypted: i=1; AJvYcCUgMr1kY3WokiIDUbWtL5UKLLfFFOhONGRg2HJ8pO7fdp6rFl5eGFb5uGdcyNVYhRCFX7g7txqtMVlH4VRnKQ==@vger.kernel.org, AJvYcCW1Em+I862VLzMgtXFUV4oM11DHWJpoz1h7x2XY9fAj68OZsn/hwwsYLRzUXbYAOIMVirLpU4b97ie14T6o@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHm5snrFoE8sKfJ+gWk5l19IIoHt9dIHTar0COVsdf/9TEb9bs
-	j0dMqD+YJXSF1goexH+INIhfow6AE3vAX93vYJ1zY9g+J3vRH5h1
-X-Gm-Gg: ASbGncsFiJ4ZagV6eMX6NNKhzIVveZNUw6DG1Rqzp7X+jPdThBr7Mi0Ed1n4uBiElk6
-	RsaIecrg/kPjv37HCEbX+3rEL9uNu8g+Hzyqo6ZMOeCyLJhmI+gbGGjA2fcQeNQqeBQMEMN53WE
-	9U4VR8YYsWAl7z5JwiUzWD6qOvsmKrtmZ+i2JcgDccU4UK51vWMiZtlL8B8qsXd5jsiEbz933cy
-	cGU9/Jq9q4sz8EclrfwUPwmRUGKIINXIuvqwSGpi+ar1Te7QUoyADwocLFwFSM1FWLoeyr87GQ=
-X-Google-Smtp-Source: AGHT+IElfKZw+KJ090MMfWu1M/fOPGzTMOpq8Iw/DAl94dv9qGFaRd4KZDJTGtu9oBDHMw/yOs75ZQ==
-X-Received: by 2002:a17:902:d2c4:b0:216:2d42:2e05 with SMTP id d9443c01a7336-21dd7d72e78mr215904165ad.22.1738347177170;
-        Fri, 31 Jan 2025 10:12:57 -0800 (PST)
-Received: from smtpclient.apple ([2402:d0c0:11:86::1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f5f4esm33613965ad.69.2025.01.31.10.12.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 Jan 2025 10:12:56 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+        d=1e100.net; s=20230601; t=1738347234; x=1738952034;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SDioANdvXwNuTfGfbnchsEWp0ZwSPM1Eio8Fai3fOQc=;
+        b=QUcqnNlmszoDMxkpM6+BrtFNTP9wQx8UvRyiHhTalf4ONc8fJ6yQiO0Lc2285kNWPE
+         T473hVPHdK9vGpLteSTbQKQC5TXMPyg611xIcGstZGz8HI0WIBfmZUVIInyr4cPOufbW
+         w/fGjslviJdC1bA/+fmeAbiDh0LVbilJFDVI2Glo2Xx7AsAiiVWMY6eHUE7glU56MSK9
+         1m0vNtKUo8LXsdVOPy1CszdrAY2ISzBZqXnKuOx/f8BzWZJXyUn90z9IrGgUKeI/KQ7u
+         zon/fbPoiIFD7hOsRJb04LtYxSQ3Rsl2c+cnUSNhDDZVfMq8bPREy/bQWIOXdRGNrBp5
+         zPRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlu7Dauq8M6bVZVR0PkkyJupPB7rs6VE3GIiaVsCuj6uDVgPE46S+xvPMBKEzZ0VuNh32GhK3WOckD@vger.kernel.org, AJvYcCVwFVmajpza/59xthI3wxabQ8+5D7WiyBBUSgW4RdUJrpRGwMhqdcnAgZfC6xCbOhFu6loSe1SxsZoURjkv@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGNm274SzGzSNtdDFDQOFc4Urj9iMV37f4CsTnkwM1lAWu8p7N
+	sk4IaOGebgORrvdyOL0QL0DFQ7SOJwO/Ft/o4Az8WfU8Wo0OR7WWOyMdTA==
+X-Gm-Gg: ASbGncsAotmwpl2K1Lf0/TNZ8cjWzYmN01Bhy+CQnn6tAlRrVJIrNrKYOa9LtA0KP2R
+	q+RbJe3OsEbSnAklm/7U/XzXC+9yA0JuxZxe/+nx+UJoWTXa1kwx1ImWQegSo9LPSCk6LXPlBYM
+	0IwvY4Bb9+MjAKAfb2aHHAOc14DfYYkEBMZBp6Ma8VcYocqC54s93rIxMayXHvWSSXVMxxFrp1n
+	oKZ7bYKkIm9RfSooEWzdbn+4e35S6vnhCDxPBLUy6a7r5hGOgcTDcLe9s2UQKjUkwC1mTftOLlq
+	aEPLeQBqRrtpTeKYR12tcDb3qK4cX3FyCEhxIS83g5weocae6/yn1ujxWjpaiw==
+X-Google-Smtp-Source: AGHT+IEQmEocMbJNJ0PdRJ15kLtw8dvQ5rNV2cOSKYrkS79S6czxp1b7N9XtcxDPTx1C2ptq7qG3jQ==
+X-Received: by 2002:a05:6402:34c5:b0:5dc:89e0:8eb3 with SMTP id 4fb4d7f45d1cf-5dc89e0919emr1967310a12.11.1738347233986;
+        Fri, 31 Jan 2025 10:13:53 -0800 (PST)
+Received: from hex.my.domain (83.11.225.21.ipv4.supernova.orange.pl. [83.11.225.21])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc723cff67sm3223744a12.16.2025.01.31.10.13.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 10:13:53 -0800 (PST)
+From: Artur Weber <aweber.kernel@gmail.com>
+Subject: [PATCH v3 0/7] mfd: bcm590xx: Add support for BCM59054
+Date: Fri, 31 Jan 2025 19:13:48 +0100
+Message-Id: <20250131-bcm59054-v3-0-bbac52a84787@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [PATCH v2] bcachefs: fix deadlock in journal_entry_open()
-From: Alan Huang <mmpgouride@gmail.com>
-In-Reply-To: <20250131124751.172123-1-aha310510@gmail.com>
-Date: Sat, 1 Feb 2025 02:12:37 +0800
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
- linux-bcachefs@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D73FB067-2AC0-4175-AFF1-A9C1365EBBCD@gmail.com>
-References: <20250131124751.172123-1-aha310510@gmail.com>
-To: Jeongjun Park <aha310510@gmail.com>
-X-Mailer: Apple Mail (2.3776.700.51)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANwSnWcC/3WMyw6CMBBFf8V0bc1MH1hc+R/GxVAHaCJgWtNoC
+ P9uYaMbl+fmnjOLxDFwEqfdLCLnkMI0FtD7nfA9jR3LcCssFCgDDivZ+MHWYI0k56CqLRtkJ8r
+ 9EbkNry11uRbuQ3pO8b2VM67rGtEIGr6RjBKktnhsawceWZ+7gcL94KdBrJGs/omqiLYlA4hEt
+ qFfcVmWDxRrf+/ZAAAA
+X-Change-ID: 20240816-bcm59054-a880695e41e8
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: Stanislav Jakubek <stano.jakubek@gmail.com>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ Artur Weber <aweber.kernel@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738347232; l=2641;
+ i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
+ bh=TZW2cM+0eXm4cJxjHahhQNsg/hpuj/YgRHBS74BfIpY=;
+ b=A6Dbj+uAl53ukznQEtczQco43P/7cmTdK83+oAxA2Dl66TarI//ANev9LtzSEhPVkwzuUftBQ
+ hbAr3C4jA0aC/iS2wisQkDi2uLI5YpW4xWNoqzWZk/suZhxiSlZCHP+
+X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
+ pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-On Jan 31, 2025, at 20:47, Jeongjun Park <aha310510@gmail.com> wrote:
->=20
-> In the previous commit b3d82c2f2761, code was added to prevent journal =
-sequence
-> overflow. Among them, the code added to journal_entry_open() uses the
-> bch2_fs_fatal_err_on() function to handle errors.
+Add support for the BCM59054 MFD to the bcm590xx driver and fix a
+couple of small bugs in it that also affected the already supported
+BCM59056.
 
-At least, bch2_journal_halt could invoke bch2_journal_halt_locked.
+While we're at it - convert the devicetree bindings to YAML format
+and drop the bcm59056 DTS in favor of describing the PMU in users'
+DTS files, as is done for most other MFDs.
 
-Is it possible to release the lock before bch2_fs_fatal_err_on() ? Not =
-familiar with journal code yet.
+The BCM59054 is fairly similar to the BCM59056, with the primary
+difference being the different number and layout of regulators.
+It is primarily used in devices using the BCM21664 and BCM23550
+chipsets.
 
->=20
-> However, __journal_res_get() , which calls journal_entry_open() , =
-calls
-> journal_entry_open() while holding journal->lock , but =
-bch2_fs_fatal_err_on()
-> internally tries to acquire journal->lock , which results in a =
-deadlock.
->=20
-> Therefore, we need to add bch2_fs_fatal_err_on_locked() to handle =
-fatal errors
-> even when journal->lock is held.
->=20
-> Fixes: b3d82c2f2761 ("bcachefs: Guard against journal seq overflow")
-> Signed-off-by: Jeongjun Park <aha310510@gmail.com>
-> ---
-> fs/bcachefs/error.c   |  6 ++++++
-> fs/bcachefs/error.h   | 16 ++++++++++++++++
-> fs/bcachefs/journal.c | 10 +++++++++-
-> fs/bcachefs/journal.h |  1 +
-> fs/bcachefs/super.c   | 11 +++++++++++
-> fs/bcachefs/super.h   |  1 +
-> 6 files changed, 44 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/bcachefs/error.c b/fs/bcachefs/error.c
-> index 038da6a61f6b..25f51dec732d 100644
-> --- a/fs/bcachefs/error.c
-> +++ b/fs/bcachefs/error.c
-> @@ -50,6 +50,12 @@ void bch2_fatal_error(struct bch_fs *c)
-> bch_err(c, "fatal error - emergency read only");
-> }
->=20
-> +void bch2_fatal_error_locked(struct bch_fs *c)
-> +{
-> + if (bch2_fs_emergency_read_only_locked(c))
-> + bch_err(c, "fatal error - emergency read only");
-> +}
-> +
-> void bch2_io_error_work(struct work_struct *work)
-> {
-> struct bch_dev *ca =3D container_of(work, struct bch_dev, =
-io_error_work);
-> diff --git a/fs/bcachefs/error.h b/fs/bcachefs/error.h
-> index 7acf2a27ca28..760623c07e67 100644
-> --- a/fs/bcachefs/error.h
-> +++ b/fs/bcachefs/error.h
-> @@ -189,6 +189,7 @@ do { \
->  */
->=20
-> void bch2_fatal_error(struct bch_fs *);
-> +void bch2_fatal_error_locked(struct bch_fs *);
->=20
-> #define bch2_fs_fatal_error(c, _msg, ...) \
-> do { \
-> @@ -205,6 +206,21 @@ do { \
-> _ret; \
-> })
->=20
-> +#define bch2_fs_fatal_error_locked(c, _msg, ...) \
-> +do { \
-> + bch_err(c, "%s(): fatal error " _msg, __func__, ##__VA_ARGS__); \
-> + bch2_fatal_error_locked(c); \
-> +} while (0)
-> +
-> +#define bch2_fs_fatal_err_on_locked(cond, c, ...) \
-> +({ \
-> + bool _ret =3D unlikely(!!(cond)); \
-> + \
-> + if (_ret) \
-> + bch2_fs_fatal_error_locked(c, __VA_ARGS__); \
-> + _ret; \
-> +})
-> +
-> /*
->  * IO errors: either recoverable metadata IO (because we have =
-replicas), or data
->  * IO - we need to log it and print out a message, but we don't =
-(necessarily)
-> diff --git a/fs/bcachefs/journal.c b/fs/bcachefs/journal.c
-> index 2cd20114b74b..12e3b4024494 100644
-> --- a/fs/bcachefs/journal.c
-> +++ b/fs/bcachefs/journal.c
-> @@ -320,6 +320,14 @@ void bch2_journal_halt(struct journal *j)
-> spin_unlock(&j->lock);
-> }
->=20
-> +void bch2_journal_halt_locked(struct journal *j)
-> +{
-> + __journal_entry_close(j, JOURNAL_ENTRY_ERROR_VAL, true);
-> + if (!j->err_seq)
-> + j->err_seq =3D journal_cur_seq(j);
-> + journal_wake(j);
-> +}
-> +
-> static bool journal_entry_want_write(struct journal *j)
-> {
-> bool ret =3D !journal_entry_is_open(j) ||
-> @@ -382,7 +390,7 @@ static int journal_entry_open(struct journal *j)
-> if (nr_unwritten_journal_entries(j) =3D=3D ARRAY_SIZE(j->buf))
-> return JOURNAL_ERR_max_in_flight;
->=20
-> - if (bch2_fs_fatal_err_on(journal_cur_seq(j) >=3D JOURNAL_SEQ_MAX,
-> + if (bch2_fs_fatal_err_on_locked(journal_cur_seq(j) >=3D =
-JOURNAL_SEQ_MAX,
-> c, "cannot start: journal seq overflow"))
-> return JOURNAL_ERR_insufficient_devices; /* -EROFS */
->=20
-> diff --git a/fs/bcachefs/journal.h b/fs/bcachefs/journal.h
-> index cb0df0663946..416fbed447de 100644
-> --- a/fs/bcachefs/journal.h
-> +++ b/fs/bcachefs/journal.h
-> @@ -408,6 +408,7 @@ bool bch2_journal_noflush_seq(struct journal *, =
-u64, u64);
-> int bch2_journal_meta(struct journal *);
->=20
-> void bch2_journal_halt(struct journal *);
-> +void bch2_journal_halt_locked(struct journal *);
->=20
-> static inline int bch2_journal_error(struct journal *j)
-> {
-> diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
-> index d97ea7bd1171..6d97d412fed9 100644
-> --- a/fs/bcachefs/super.c
-> +++ b/fs/bcachefs/super.c
-> @@ -411,6 +411,17 @@ bool bch2_fs_emergency_read_only(struct bch_fs =
-*c)
-> return ret;
-> }
->=20
-> +bool bch2_fs_emergency_read_only_locked(struct bch_fs *c)
-> +{
-> + bool ret =3D !test_and_set_bit(BCH_FS_emergency_ro, &c->flags);
-> +
-> + bch2_journal_halt_locked(&c->journal);
-> + bch2_fs_read_only_async(c);
-> +
-> + wake_up(&bch2_read_only_wait);
-> + return ret;
-> +}
-> +
-> static int bch2_fs_read_write_late(struct bch_fs *c)
-> {
-> int ret;
-> diff --git a/fs/bcachefs/super.h b/fs/bcachefs/super.h
-> index fa6d52216510..04f8287eff5c 100644
-> --- a/fs/bcachefs/super.h
-> +++ b/fs/bcachefs/super.h
-> @@ -29,6 +29,7 @@ int bch2_dev_resize(struct bch_fs *, struct bch_dev =
-*, u64);
-> struct bch_dev *bch2_dev_lookup(struct bch_fs *, const char *);
->=20
-> bool bch2_fs_emergency_read_only(struct bch_fs *);
-> +bool bch2_fs_emergency_read_only_locked(struct bch_fs *);
-> void bch2_fs_read_only(struct bch_fs *);
->=20
-> int bch2_fs_read_write(struct bch_fs *);
-> --
->=20
+This patchset has been tested on a Samsung Galaxy Grand Neo
+(baffinlite rev02; DTS not in mainline yet) with a BCM59054 PMIC.
+Testing on a BCM59056 would be appreciated.
+
+Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+---
+Changes in v3:
+- Split out regulator DT bindings into separate YAML
+- Use tables of regulator info instead of get_XXX_register, reg_is_XXX
+  functions
+- Drop "regulator: bcm590xx: Add proper handling for PMMODE registers";
+  it adds unnecessary noise to the series and will be submitted separately
+- Link to v2: https://lore.kernel.org/r/20231030-bcm59054-v2-0-5fa4011aa5ba@gmail.com
+
+Changes in v2:
+- Fixed BCM59054 ID being passed to BCM59056 function in the
+  regulator driver
+- Dropped linux-rpi-kernel from the CC list
+- Link to v1: https://lore.kernel.org/r/20231030-bcm59054-v1-0-3517f980c1e3@gmail.com
+
+---
+Artur Weber (7):
+      dt-bindings: mfd: brcm,bcm59056: Convert to YAML
+      dt-bindings: mfd: brcm,bcm59056: Add compatible for BCM59054
+      ARM: dts: Drop DTS for BCM59056 PMIC
+      mfd: bcm590xx: Add compatible for BCM59054
+      regulator: bcm590xx: Store regulator descriptions in table
+      regulator: bcm590xx: Rename BCM59056-specific data as such
+      regulator: bcm590xx: Add support for BCM59054 regulators
+
+ .../devicetree/bindings/mfd/brcm,bcm59056.txt      |   39 -
+ .../devicetree/bindings/mfd/brcm,bcm59056.yaml     |   76 ++
+ .../bindings/regulator/brcm,bcm59054.yaml          |   55 ++
+ .../bindings/regulator/brcm,bcm59056.yaml          |   58 ++
+ arch/arm/boot/dts/broadcom/bcm28155-ap.dts         |   68 +-
+ arch/arm/boot/dts/broadcom/bcm59056.dtsi           |   91 --
+ drivers/mfd/bcm590xx.c                             |    6 +-
+ drivers/regulator/bcm590xx-regulator.c             | 1029 +++++++++++++++-----
+ include/linux/mfd/bcm590xx.h                       |    7 +
+ 9 files changed, 1028 insertions(+), 401 deletions(-)
+---
+base-commit: 0c3836482481200ead7b416ca80c68a29cfdaabd
+change-id: 20240816-bcm59054-a880695e41e8
+
+Best regards,
+-- 
+Artur Weber <aweber.kernel@gmail.com>
 
