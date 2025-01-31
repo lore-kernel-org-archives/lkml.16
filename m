@@ -1,215 +1,178 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48FC1AAC4
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738339520; cv=fail; b=POK51OKkssn4G+UkR1+pxd73vXU9wYWSeZ0OYgaP++P8LHjmIjcbCtGdvCiTiSSXV7L5bHE4IN2JvWQWuF9+csYX5XCAAplU5QW3mt1GZaGWszJF4SlaNRtaEGDg1Hx8+Z459Oo1pVqTCbLXIa2vaZsKMLrwuPtjO0QJMb9q/uM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738339520; c=relaxed/simple;
-	bh=ft7Do9EEZutPpSqqqsaeKpiPMKcnWsdyONuSxBDIUD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=CeZ/pa27xp6Hcx8PBZQjq7c1mq/S5Xt5dxpcaCEW4m/CQ2I1seDy4aPq9PNoGIQS02whIfiMX7wBga6o2186VrAJPLfgrEk7Gb7wn+qoSJDNSCqqU5Zx5Jr5i0qROGujG0OLTLqb3O7T2EscqVlkZI7Xv39ucJb4IOTZRaJaVZQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=PFC3CYvc; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=nLlQYlJD; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43821AAC4;
+	Fri, 31 Jan 2025 16:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738339529; cv=none; b=GAVc8v55MMsz18KKE8bZ/6I2KDGolcpuFgNEv4ZVJgsA3e9fQEm3EykgKZejVhWWkjC83YHF6S2qmqEu21NEKOxX1w48+sfu2x5S/m1X3xrQwUcrD8n3L/GKFp9GYVmli+LMdMW5G1xrmFhiVmKYy/2fnbhCMOSaWy9xPNy0BC4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738339529; c=relaxed/simple;
+	bh=gX4ag1AlV9dTSBogEeBHGkTAgAH/pVoq+dkZLcj3U0c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cyGeWBfsDH2j88OozG+ZFS9BxoxyVkcs6RUv8xayZ2NPE8dFSSq9BiaVJ14m9IXuhZO2jZ6GEdKEt7NiD6O2px6DGnNCOTOLv070tXDi4ql3R9xP0FETe9G7IxKmoZ1SamQNAW60/uMJgD9gAsJQ9axNLioSs+z99h+c53gJRIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nZe9s3P0; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PFC3CYvc";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="nLlQYlJD"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50VFvE1N020699;
-	Fri, 31 Jan 2025 16:04:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=NIs/odvOdbryOC67GI
-	eplLSP67Gaq5IiK9OHmxvdHNs=; b=PFC3CYvccDQjQz8aABz8PJMVtHoegVSqng
-	PAxkbvBX9AAVOd0UAYczNVEwgw+pT+NwqBxBr4pYE/gvSu5jn/kMk4YnKLkC0e5i
-	/Mfa1DQL5WKAsDDruoiXIXSfAKL/fe8YEiqhhnfPq7SAx8w1WSvykOd+NIikXKPx
-	L+oJwUXWSVSU9vLUrmnkFpDj84ho1AExk2cTZavfV0jVFyC2nrS/GGpkbreVx1qp
-	qzho1vXgMQBN+SuoevFiRtwg4Vavy3c0U+th7kSmswQdV4O0VN+T4jcfzwuaGQZA
-	gA4VMTE+lKlqg8o0otWXcI32YZAqjmnHbw39igczvO/x2FCaNcXg==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44h1kx00mp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 16:04:57 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50VEvmrX022605;
-	Fri, 31 Jan 2025 16:04:56 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2172.outbound.protection.outlook.com [104.47.59.172])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44gf93b6hy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 16:04:56 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ocP7kEqHKo4K1nNsuC60t/elx98wGaBVJ5KC1gt+/2EP4rxxF9BTvQbj6LfF4HSWSm9AB4OwtCszEpy5N5UA1Akjw20MFi0n7ANYBhai6buSNfLmEKOmEe/3/VaXZyb6PhE89Q4MtB7RVgYp/A3d+RyJM0bEFdGcZaFFrDU4gW7M7q2pefL3XwUdTD8jm37u5PWcy12gmKC374mwTTwxVLRksWJ++ZsrUdWfPtQpdi6yGeWDfMS1Ej6s+db8BBme+xVMJGyRXSrLZ2SH/qcNGI8S2tRNLQqXtwauM9S/KiT1HlNMeiH0cd9kfKPU4/sThSNMDbJgICapbBUHxB1jjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NIs/odvOdbryOC67GIeplLSP67Gaq5IiK9OHmxvdHNs=;
- b=imZlnd8UlTeNJWwT6G2eMIaJ2UwhwkC36Vg2v6GN0dToJB1YjcqBc+lq2WFMQRKm0M8IhyBJE7ApBCRMBih6e+yfHpk6BISL6/EUqw72IkkVZSdZxHHbAxKro9TyFptRxyvcFr72FhvLtyvXOMupfU9LY6y3s5OBFlC/BcZKP7d8n4o9i1EK7YrwFOfLrgoVUvMk+uZyLpoB3hASsEo6kFfC0bKydz2JDC+czhRFnjNTKpkTp0beGTm/rNJtrpbzvQGvR2o1nEeqscrvYNgd0BI97W13k1LeQ4ON+m8TOw0bP+zYy6epAP3StO/tZi6zzxcOW26Wc4xSEc9x7sPm5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZe9s3P0"
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-518954032b2so636131e0c.0;
+        Fri, 31 Jan 2025 08:05:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NIs/odvOdbryOC67GIeplLSP67Gaq5IiK9OHmxvdHNs=;
- b=nLlQYlJD+TBCfz1lbGnoGrxflFMwa68qr1X0jZLCC4znukbla4DpHTQlXgnGKh12A2IlTCE8NrdE/ga7dpXbautivF2Ki5CeWpEwRYPPOjoyBrw0WiuDBjAxneaoYcN+mOUYVIS6Dva/pKBnggUwvhd9pY27aGMSSaG48AWJXgk=
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
- by IA3PR10MB7995.namprd10.prod.outlook.com (2603:10b6:208:50d::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Fri, 31 Jan
- 2025 16:04:54 +0000
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c]) by PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c%4]) with mapi id 15.20.8398.018; Fri, 31 Jan 2025
- 16:04:54 +0000
-Date: Fri, 31 Jan 2025 11:04:51 -0500
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-        Shakeel Butt <shakeel.butt@linux.dev>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 0/4] mm/madvise: remove redundant mmap_lock
- operations from process_madvise()
-Message-ID: <yp26taqjxput2k5w6jekhnexbp2isqdksckrv2jjxomxswjh6g@f57mxzd62fyt>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	SeongJae Park <sj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
-References: <20250117013058.1843-1-sj@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250117013058.1843-1-sj@kernel.org>
-User-Agent: NeoMutt/20240425
-X-ClientProxiedBy: YT4PR01CA0161.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:ac::11) To PH0PR10MB5777.namprd10.prod.outlook.com
- (2603:10b6:510:128::16)
+        d=gmail.com; s=20230601; t=1738339526; x=1738944326; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yinOq3BvFm8pbS0HIBonp/WO0nQAo4BYehd8oFIVqaA=;
+        b=nZe9s3P0Cpc0anllRk8SkWHEpImBoTC8fwprmxJC16eEStO7AH2/q+JlP+BhcdE3SC
+         rjds7buD3Ns6/JFCtuqlLELfu096rKYLTo6xyA5nSVylew+spgICd5yBnk8dZKMQSD7l
+         pemgZH2Jh85seuG1S9AlH+/0Ndcvyym7IzTRc7BXbef9IEMF69pQ58J17brRMD2BpstZ
+         lz2zQhCig3xa/oPmRoA9fkg+IH/89SdBdNXdu7UFjiX5oxSPq/avb8v1vZncXdT8rgyk
+         SvMYSKuq9dAKcY5Eb33QaHcZzxdBqHKx3SRPaoeChSrw3pWSszRpdiJHERXz4Ka7NyXX
+         2YPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738339526; x=1738944326;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yinOq3BvFm8pbS0HIBonp/WO0nQAo4BYehd8oFIVqaA=;
+        b=ATd9e+lrb9DJAjJQ+w1MghVq0MpV+1b63HXDtYN+mif2CuW1mHMo+MLKv5sd2b4cx8
+         HfOzsfueytGAjQ30N0SOnWdTakzxi46a01m5Uh0te6QbxNx7KNm5c1vAS9+PZTPJ6V/v
+         ha/jDQ4fwwUGt8GFsWXxxfkgKCdlBkzVpsoXrh7RNVO+DQ5C2lEFUvbfm+iJnWMDeb3V
+         GGOuQoNq2wkZxzgYmh4oKv1saNo2XpqcuEFIcjxOs3Zn7brIfTTY9jvsac5gAAROWz4w
+         AgwYGsNJPBKG/XswHKOUwAfcvFaHMo1wIKjy20lUnBAa2jN/dleWYVPPblytu+4S2af0
+         MMdA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPZ6bSd9C9PNYM6QEu6k6v1Y3GooQhosAsVKKbLYiIuD6dj4BQSRowWYio3DR4C2ckbzf4yRPZ0WpW@vger.kernel.org, AJvYcCXpiqLKgOexQkiVBC5hukjyEPV4bhO9tcw4wFDiMZNJ1ycuLCdoi922Td0Rgm2OuCYpZftHeAAgLW+Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGYBk/0H7FddKFp3Abgpu/280SG2hl4XhOPKe4gYlixfVmgoIW
+	6JOuBBOpu2BpU0GH7zy84m9K0SHZuV2nGkjIjH76Ydd6pjjTcBjPFFd7G2Jm72ARUb8VFy4yAaW
+	8dZSrrYoC7AOA9CNPAlMltTf2dR0=
+X-Gm-Gg: ASbGncsI5J1vMossPzQCnFP05FdciUgasi46QY0UsteXKaVe7m/EgQ8NUbnF8VJiPHM
+	QIZpejXnYQJa/62Kx0mypwz5v2PkxBF7aABY+/GluaC3o7vT3DtX1J2Ajq/NfBG6AEtfr1NBf2w
+	==
+X-Google-Smtp-Source: AGHT+IEp7MtYTu6aLHmfoRZMuQIhdDIIlMcvFCUzckw2uCT/3cjD28n2Uuo9tiMWgYBKq7vRQxgRKyFa2i4Ck0/Q8yw=
+X-Received: by 2002:a05:6122:1826:b0:515:daa7:ed07 with SMTP id
+ 71dfb90a1353d-51e9e28a51amr9180667e0c.0.1738339526468; Fri, 31 Jan 2025
+ 08:05:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5777:EE_|IA3PR10MB7995:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2bb7a4ab-d362-4955-37c5-08dd4211002c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?fnu3ieNyOaB8g2uxrpImhsK1a+P2ysTYk2SHNTb3mP+rcaciMQCHZtrlIzjA?=
- =?us-ascii?Q?bNAEF2nO9Oilk4X1xuNNUX0q0zYFwiA5nm5fQnAIyrP0Xw6SwV0fe4HRigRP?=
- =?us-ascii?Q?cd3ev0oMCWVqVln45Rzupt26wlhhAZty2hgKXpx6U2JbjTLS8p7jD8esYD0y?=
- =?us-ascii?Q?ySK6VN0vtCt0u/jmtM2vb4HGYZxrGCEVETo/qGOjCxH79Of+VG9BOTUrpnRw?=
- =?us-ascii?Q?10vwkdwH1bElJu0UlZFUYugpjTD7aYIwJr+u93HCtqW32I6zGfSRhi02KAbT?=
- =?us-ascii?Q?FEHIi/JTbHAd0JX4tJe0AiU6jnX3T5LTYCK4NwybYHLR7rzFxiGfW7MLmnMx?=
- =?us-ascii?Q?sEi5f+63X0xexEyYQ8Dq7ektW2eoPvXFdJTwmj8vqbIrKcS9gdBw63R7eobP?=
- =?us-ascii?Q?RMmsj1tWOW95M1AvE86rO8WNtlBEoKkxqEQINEGKBpxz6ZAkfHB+Q+aotYUK?=
- =?us-ascii?Q?6NTrJNooXQ4bWxwjW1A2oEOKq7sjnc4HBJq47idAB9g6sWSfcRACaJU2r68k?=
- =?us-ascii?Q?1ErqKRgN/QqaDgjX9WUCxtK+XgaTNxaGQQ1B1D+vbGGRq9ALrul6kiGiWthQ?=
- =?us-ascii?Q?HweZdBK4DGGVARZWrmVRXrqyFu+i4XrSgWtxyBe0eVv3P3PrRq6tcEOeBKRw?=
- =?us-ascii?Q?LPx18/AzJZKg1Xqxep0z3SbOFQx5037APn7jhFcgEfAFpqzyZU4L3CNWeaUW?=
- =?us-ascii?Q?0vqZjiNv/nHG3xaPWGXYe36jz9CTA1fAdugsEzeKR+06335cXW10NJ8kN9z4?=
- =?us-ascii?Q?Cn3MRPbMffMV1PCERcMGLSPitRjHlo8ZTvG60tdT92IZP4i4qAXvrmQL+l9y?=
- =?us-ascii?Q?WcVTxS+9MOfhzl5WDMi6/c+ejok30wt+kOGrnJC+2OixdwPR7VMl22KguXjk?=
- =?us-ascii?Q?IlYsd6A1D/kllP28Zs0Q5iD6YXTX/2cThyaaas0KJ5RbpMbn1ZFyHkQAIGBe?=
- =?us-ascii?Q?8yLVn6e4Ss2BbnNj14r6XLLdsqS1di74jR9JRdDPXgk4rCMYsnhQRU1fJOmI?=
- =?us-ascii?Q?uNXnH6B5T4/BwHd0DF3GS5QzOeIezrpKyylGBqh+k5ob5qvhz4Pcn8npeqT7?=
- =?us-ascii?Q?34f6++wKxYHUWgpcCI4vLgy5upcAcO0wWZBgKcq1a/R7S2MqnvR91SE5bYIU?=
- =?us-ascii?Q?zovs/gHTS0aDC5zrg44yQI3FGECHuSulNSqDGYA91zqjdK/GlqJmsEOaHYMS?=
- =?us-ascii?Q?BniTyH8CVZzjG5DcBREKSvAkZvzmag3jSel9gCPNpl+oMXlIY10bzVS2AaCn?=
- =?us-ascii?Q?Eodi60F6Sbsh1TIIkz1UCtZaDyBAQxzBXpZ163T8lG80gg5bSCOPwTxFc/4E?=
- =?us-ascii?Q?wS45DkHRu0hE8aBWXSnPU3ytCqGlzYZrCSizvUuUwA0/Ayf/fExzq23zMovR?=
- =?us-ascii?Q?2yCpw7xS5qUHSfmRfJtRzRcrYhf6?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5777.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qIlT+prxkGGzUHjeqB0/tzPeAP587zBKIBI00irqUypRq82971OIfnwWSW20?=
- =?us-ascii?Q?vRBtPUL+SYz95IZv9NZjXmrPjt4IzOY7humPWwkV7Tyb18/Rt4uJVrXRwlcC?=
- =?us-ascii?Q?Sq5g40sapYnSmNaVV56r7cTIH4ytDdgx7rJbyPyKR5Y8INl/s2VhLyjdWYYe?=
- =?us-ascii?Q?gVSpSoorQC+sf2doEe/Qk08USEZnzRSAKiofImuRlO7z+ZBeTfAa7vLvJpdh?=
- =?us-ascii?Q?Br4tS9vMU7v0Wz5oDjZktzaNCDp2fqmBYJCXi40+PafTKhI+49kV//Ep5o8o?=
- =?us-ascii?Q?dMkGk7eoTsvGxDRcmoACLTWwUY/+1KIMORoT53f49sKmJCMdnV72pyQulwBu?=
- =?us-ascii?Q?zEE4PmwgG+fxBb29ERI2vGcJ7znoMmEQOa0y8NwMfVBtbInRGHUMb38odzJh?=
- =?us-ascii?Q?tq7FYUYOjjvnWQdUaWdmNJKBA+8TBSHRSuacrjtZPYbhsrYbnHKOFax1s9h6?=
- =?us-ascii?Q?OzGbK9n+xf4a9DV9BJBNDWla9iP1dUsgwN5VzOQp+Qi0ZnzFRiCHBNe1KVMD?=
- =?us-ascii?Q?q3vmAK/R8aoCQDL/hKhpYoQ24lgJI/pqlGR44152sfITabmOLinQgjOguqq/?=
- =?us-ascii?Q?iR8g0UdXq7aVskz+/+77iWDqYn9Iry41DYjxIdYLA1lt1NWynoExJ51HDmvg?=
- =?us-ascii?Q?sBSmMy1fnLRqr9RiUyikwQsbPFhPBQo0bTJTgGv1ePd5LHYniwLMfuhnw9HG?=
- =?us-ascii?Q?yswq0nCMVJlqn8vGujniMewwIXC8JHjPUvF6UKyEhORHHzdNp3G5kBfOURgn?=
- =?us-ascii?Q?RIIZJYXRyMSXVwEUnuwZ20/j8iMQy5GaG/meFpU9dhY/mcC0REAJe5uuWrza?=
- =?us-ascii?Q?TaqbvoquFrmtieg2gEiYeNxv/U2jEBxQzrym0tOnkj8HFOaSrfu1/olKPole?=
- =?us-ascii?Q?ljAfdp4v2qouwCtpnowRoE/uz0SAQAP9++tQVxV6Nx77OLVGFlrsmzWHZXm4?=
- =?us-ascii?Q?HmK1exvvd1KvpQDOutrSDWc4JW59UXbs3xgLwHLw05s875qYXJ7jUJHtvRKd?=
- =?us-ascii?Q?5teItwadeiPFUOeV2zd4X0oHUtrwJ1epTdIc7LJ+t3qGUccEwI79foiEQSMw?=
- =?us-ascii?Q?51TvdONovV4rUJQlaTCvsFii6f4/CWH+2z0YrcXIjAOLroh1oaOSZTgNbhHD?=
- =?us-ascii?Q?FFG5QB/IUhn5+/twxym3QGaUFXu8bua1SeLsIse6qIQUTEvNS4nbkAy+K0LY?=
- =?us-ascii?Q?zFfYxFK0hKQB7COSQWzpMHdx4m9Pk0PeEz6W92EFuNtNq67wVE4Kz0bB7uuE?=
- =?us-ascii?Q?lAvfb0ZC1RgrqA1d2hb/KFCPCEgWRepczCQPUVtlGljO+zjoiq6fTjRXg16a?=
- =?us-ascii?Q?8FJfngFcKjHre+aSBGN9c6RqE8B0z7PlmM2CUTtv1COaOuCSAtzAfatb5wLB?=
- =?us-ascii?Q?m/F0baJSRiG/qz9WLV2wxF9/o1AwE1nJACY3ELfxCus2Zu2H02huhIeHD+Pm?=
- =?us-ascii?Q?vvxrio+ETXt34lFhr/aMOS6VprTSyjHgiFSJWG2bMjv+D6LVP9/OTlHxAjOJ?=
- =?us-ascii?Q?P6SOaQgaVoAUEjUH1Me4zVe/vJEW9P43mx9EtBJVaKvSs1+/m58z2O6xlTQs?=
- =?us-ascii?Q?Hnf82sXF9RQueQ83S9HMMVBtN75cJ6YAHuV8ow5q?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	uZvTw6jZ5NHCcPfHql+bwifA7MnBXaSQBapSSxioyod+a4C+4Ym5VwNpVZ9pkl1JnqRAy108rS3eM5sEV3X58nwznWCEf2pQEeUz22vBY4z6UKarTqfQmQdqW3NjJSS7vHX1OgHc6zTl7GJ0yweq+c+umGqdzX9BPsq9TBjtmMd6hXVBs8aNG75sB9XaR1WSRSx3B1HW57BR+Mtw46tATSMgpz0NzDpBQz4kWzxES4/1mOSoi8o1ogIp9R64mPq/anOi1pTAh5KN7pc1CFwO3t6YzJA0IAXFhjl+r6FY+kWGw/0x3qskyyC4weqgh+gcfg0aDe4BxuAj+Md5B3BUyHfIJbPA4cg6onAQ837d7PIBiU0h37ojK+f2qdLkAYSVomYEjPVV76xaiHlbwN9V4tORLH+u4i6jWIix4Dn6vLPQPqJ22GJdCBXu2TgpWjUSBggxfYIzTZMWbaQry9ey4PVqBW9ihSRTKi/I4lCAMBZZ82DVd22KUTCN8Pb+EyAYtf2fpgn7tJkHMCIRMpD7E50zC/bldjWudxiyIIuu62/H9y72QqYT+9Hm6LNoFj8agARnsBon8geOs7prpOVHYWw3yE+wqTyJorLgRFy4CsA=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bb7a4ab-d362-4955-37c5-08dd4211002c
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5777.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 16:04:54.2947
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: M1dyWSWPNMPT+5NMuWHqJLofblPrISPNHOjVwoQfve5Q5PBJkOwUQ+hvXV7ZlXewm2PsdRXkFCup5KtX3NnlfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR10MB7995
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-31_05,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=786 bulkscore=0
- adultscore=0 malwarescore=0 suspectscore=0 phishscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2501170000 definitions=main-2501310123
-X-Proofpoint-GUID: 7-98epRuuzvxJUd6KezoWIm1ah1iKeZX
-X-Proofpoint-ORIG-GUID: 7-98epRuuzvxJUd6KezoWIm1ah1iKeZX
+References: <20250120130119.671119-1-svarbanov@suse.de> <20250120130119.671119-7-svarbanov@suse.de>
+In-Reply-To: <20250120130119.671119-7-svarbanov@suse.de>
+From: Jim Quinlan <jim2101024@gmail.com>
+Date: Fri, 31 Jan 2025 11:05:14 -0500
+X-Gm-Features: AWEUYZlLglIi2jugpqje-hAPwOESpNgNxOWzCPUmbm1viKS3V0vfFHVWucL5CCE
+Message-ID: <CANCKTBtG14B7mqW3vjv557kHLfYkJtJiL+xu8f2siZ9_BuWPHg@mail.gmail.com>
+Subject: Re: [PATCH v5 -next 06/11] PCI: brcmstb: Add bcm2712 support
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Andrea della Porta <andrea.porta@suse.com>, 
+	Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>, 
+	Dave Stevenson <dave.stevenson@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-* SeongJae Park <sj@kernel.org> [250116 20:31]:
-> process_madvise() calls do_madvise() for each address range.  Then, each
-> do_madvise() invocation holds and releases same mmap_lock.  Optimize the
-> redundant lock operations by splitting do_madvise() internal logics
-> including the mmap_lock operations, and calling the small logics
-> directly from process_madvise() in a sequence that removes the redundant
-> locking.
-> 
-> Changes from RFC v1 (20250111004618.1566-1-sj@kernel.org)
-> - Split out do_madvise() and use those from vector_madvise(), instead of
->   adding a flag to do_madvise() (Liam R. Howlett)
-
-I was waiting for a non-RFC to re-examine the series.  It looks like a
-good clean up.
-
-Do you think you'll send out a non-RFC version soon?
-
-> 
-> SeongJae Park (4):
->   mm/madvise: split out mmap locking operations for madvise()
->   mm/madvise: split out madvise input validity check
->   mm/madvise: split out madvise() behavior execution
->   mm/madvise: remove redundant mmap_lock operations from
->     process_madvise()
-> 
->  mm/madvise.c | 150 +++++++++++++++++++++++++++++++++++----------------
->  1 file changed, 103 insertions(+), 47 deletions(-)
-> 
-> 
-> base-commit: b43ba6938d01ad4487028592109d4116a28b7afa
-> -- 
-> 2.39.5
+On Mon, Jan 20, 2025 at 8:01=E2=80=AFAM Stanimir Varbanov <svarbanov@suse.d=
+e> wrote:
+>
+> Add bare minimum amount of changes in order to support PCIe RC hardware
+> IP found on RPi5. The PCIe controller on bcm2712 is based on bcm7712 and
+> as such it inherits register offsets, perst, bridge_reset ops and inbound
+> windows count.
+> Although, the implementation for bcm2712 needs a workaround related to th=
+e
+> control of the bridge_reset where turning off of the root port must not
+> shutdown the bridge_reset and this must be avoided. To implement this
+> workaround a quirks field is introduced in pcie_cfg_data struct.
+>
+> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> ---
+> v4 -> v5:
+>  - No changes.
+>
+>  drivers/pci/controller/pcie-brcmstb.c | 25 +++++++++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controll=
+er/pcie-brcmstb.c
+> index 59190d8be0fb..50607df34a66 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -234,10 +234,20 @@ struct inbound_win {
+>         u64 cpu_addr;
+>  };
+>
+> +/*
+> + * The RESCAL block is tied to PCIe controller #1, regardless of the num=
+ber of
+> + * controllers, and turning off PCIe controller #1 prevents access to th=
+e RESCAL
+> + * register blocks, therefore no other controller can access this regist=
+er
+> + * space, and depending upon the bus fabric we may get a timeout (UBUS/G=
+ISB),
+> + * or a hang (AXI).
+> + */
+> +#define CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN                BIT(0)
+> +
+>  struct pcie_cfg_data {
+>         const int *offsets;
+>         const enum pcie_soc_base soc_base;
+>         const bool has_phy;
+> +       const u32 quirks;
+>         u8 num_inbound_wins;
+>         int (*perst_set)(struct brcm_pcie *pcie, u32 val);
+>         int (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
+> @@ -1488,8 +1498,9 @@ static int brcm_pcie_turn_off(struct brcm_pcie *pci=
+e)
+>         u32p_replace_bits(&tmp, 1, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_=
+IDDQ_MASK);
+>         writel(tmp, base + HARD_DEBUG(pcie));
+>
+> -       /* Shutdown PCIe bridge */
+> -       ret =3D pcie->bridge_sw_init_set(pcie, 1);
+> +       if (!(pcie->cfg->quirks & CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN))
+> +               /* Shutdown PCIe bridge */
+> +               ret =3D pcie->cfg->bridge_sw_init_set(pcie, 1);
+>
+>         return ret;
+>  }
+> @@ -1699,6 +1710,15 @@ static const struct pcie_cfg_data bcm2711_cfg =3D =
+{
+>         .num_inbound_wins =3D 3,
+>  };
+>
+> +static const struct pcie_cfg_data bcm2712_cfg =3D {
+> +       .offsets        =3D pcie_offsets_bcm7712,
+> +       .soc_base       =3D BCM7712,
+> +       .perst_set      =3D brcm_pcie_perst_set_7278,
+> +       .bridge_sw_init_set =3D brcm_pcie_bridge_sw_init_set_generic,
+> +       .quirks         =3D CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN,
+> +       .num_inbound_wins =3D 10,
+> +};
+> +
+>  static const struct pcie_cfg_data bcm4908_cfg =3D {
+>         .offsets        =3D pcie_offsets,
+>         .soc_base       =3D BCM4908,
+> @@ -1750,6 +1770,7 @@ static const struct pcie_cfg_data bcm7712_cfg =3D {
+>
+>  static const struct of_device_id brcm_pcie_match[] =3D {
+>         { .compatible =3D "brcm,bcm2711-pcie", .data =3D &bcm2711_cfg },
+> +       { .compatible =3D "brcm,bcm2712-pcie", .data =3D &bcm2712_cfg },
+>         { .compatible =3D "brcm,bcm4908-pcie", .data =3D &bcm4908_cfg },
+>         { .compatible =3D "brcm,bcm7211-pcie", .data =3D &generic_cfg },
+>         { .compatible =3D "brcm,bcm7216-pcie", .data =3D &bcm7216_cfg },
+Reviewed-by: Jim Quinlan <james.quinlan@broadcom.com>
+> --
+> 2.47.0
+>
