@@ -1,328 +1,235 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2071.outbound.protection.outlook.com [40.107.243.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D620520318;
-	Fri, 31 Jan 2025 01:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738285907; cv=none; b=Ent8XMc0gCqAxjjofmnePvQ7XLtcs2GCFftU1FpaWjDX/2/XVLxonYlALC9s85UB5X49hHMmS1qebbPBbM3ksg5qb0KZ4uRcDqQ7Oi8j+4vRZNFexNFgCGZNTILB+bfvMcuAsvsUvvJWDGIC/JU3gorOfA7OOLJEThBMAvalX3s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738285907; c=relaxed/simple;
-	bh=XjzSXkraxSwy8UjglFIK4wJQ+SKs6TIvw59tKH2tt48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t5/ZUCwXqmNOz8L7d62dPfYqejST9wy/iIoI02Mva7128eI77NgrPckDUyn5QpwAVEQvBzrddMp0IZXnE3r85V6qfpOJPvG2L7DnePnyedlS9x5kjZbCNb31sDZMnrEZVVKz6AXHXzACDAJKVpD9g7RaZiFgXsawDlFTlhagxe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gMtm12gB; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8460F1DFE1;
+	Fri, 31 Jan 2025 01:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738285917; cv=fail; b=Mc3sZ7nyHZAmY128mnc9A1wuDdRRxK9frCB2407iVDjumMB9RJnAbc7lE5Eu1Xy5zPbpxiavFHo+Ku/XD6/0xp0PDFolNAqP/Zmnr101Msvd5KKy0+81YDz60g7mGqUm6b/0duLXqJMZFTjXRKDq9ExAKkueOg3IyXV9pZ/F0T4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738285917; c=relaxed/simple;
+	bh=H/nBg4Zc1nh3nPUAIQXGEA7kS5QyrvbPY8pOE0UvBLI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fFeLMi9IXarkdKuLpns3MbUYthLPSJnmprnXtR/L8B8g5Sq1lccCnFR3K0dmqhr3hS+2EYsrxx/B44WZmkIcFn3cCVIEAKvxd368hhKCATLKn73VusAHiE9bwE4QK4u0uW8UQkZaXHCihdmQZ7XUwP4pOrLpUQNExSzGeXTcgWw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0dF19iJY; arc=fail smtp.client-ip=40.107.243.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMtm12gB"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2162c0f6a39so46538455ad.0;
-        Thu, 30 Jan 2025 17:11:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738285905; x=1738890705; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=MtChoqjOFgGNn4NofE//947FRmDIp0ClcKYH040Uq9Q=;
-        b=gMtm12gBXP3or0jDJjcf9OiU8Z43v4wIfpZQ9+HolgFYcIQTIOKiMvHpu4t0szEjKS
-         iPtFbQ1Ies1uSDQBy436S1NctmhyCcpddnIXuoPjjfYgxrpYVXGE2uslLM8bT5jXq+K+
-         +u3NmMubd2YYiXMn/FqNoQzTSsmrID87S3HcU0K2MPDPeAIet3kkKDcE9uO55xyjy76Z
-         geNfaiNwBlc0LqWejzxohsX8eT47drqzl+vPjWOeAGW+J/9hHONlPAPEmQPHmqkAwhX0
-         F11aDF+Ch2/MjhJpvn8dnJ6ZOImnN2MW5txIVnKGH4XujxnQROaNGjSdb4kJX+8Gqd03
-         RKTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738285905; x=1738890705;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MtChoqjOFgGNn4NofE//947FRmDIp0ClcKYH040Uq9Q=;
-        b=CbY+h8FRO7Lf62/7DkCjIEfPCPJki4ettWVkzVcpKBlVqwJN+4IQDzW3UQQplmkJBi
-         xtG5ClpxK/JXLHQGbaHDK4M8TEEiKaw+itk1Juny7fACGIPLe3ad+e8UlgD0QkPzxiyC
-         QjM/4l6NCqfcDfeX00vdGVQRxnX1NDwOp41Sn3WQXXBuR0P/n0rOR2EcFOAt+xG7ioOf
-         5uubsp3ZqMiWqpejg2HTTCBO6LhTwEe3LyAqTaJCT6uSFYoz4Vz622uKXejbehTb4kKP
-         kjQ/1gA8IkJi3pBJIkwJztlWkBHxaeXPZ6QIKI8aSYLhVyt2WfK/k+eBoDIc4uzVgyZ5
-         cemA==
-X-Forwarded-Encrypted: i=1; AJvYcCUb4s3cn8YDlbM/bt2rVizKVYwjXbVWpZAeLX/0c1rZECQ6L7g6dLTZmOmpI102Roq3xP/rRe5ftQ7h0HE=@vger.kernel.org, AJvYcCVjRstH6sPs7HfTNVF5DPuu1qnjwitxiHkKSn29/gEXcWAuQhVpL3i21q6k6JZQcU8rDoFRonkeyqWd@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWT8k0TNPnRnSa6AFQKh2tV7MlRnxdt4R/NjQFxUqwrTIB8SAz
-	cohMHZHT0Jz/mHmFZoj4sYbI8h01qu+BNlPs4FdfvcPKUw4jXLog
-X-Gm-Gg: ASbGncs+yKYb1+5ry6ot7eUa3HUlCd+mDMxCaEM/JtygeIQCuWEXiOFmBcgGNwagZOW
-	7KiwmUo4LkMFedlT/0Sqo+F/jnf0zDHweIIDNxVD09rH1EoHDD4N6yOM4SAM7GZBSba6XDYIvmd
-	b8PGy/c/L51bu0+t55o9vlQeL2sFu+aPW00v12/z239Rsqh/fWDT2/7Ua4qoSfVKdd3gTKpUFF2
-	yFccEiFiv/BN6xDEBWsojTABG4Cxn1eJSeLT3QmpUO14e8MTzQXlzf1E+FY2owxLeyi0Q6tiSqc
-	BOFpf29UXALy4Q==
-X-Google-Smtp-Source: AGHT+IHkmEYNh8vrNk9CC40ONQrdF/kevyJaIxtyqRaqmApIazbV4RVCnAt+SaPgBH2bM9xosaiadg==
-X-Received: by 2002:a05:6a00:2918:b0:725:4915:c0f with SMTP id d2e1a72fcca58-72fe2d5e058mr7545712b3a.11.1738285904895;
-        Thu, 30 Jan 2025 17:11:44 -0800 (PST)
-Received: from ubuntu ([175.141.178.229])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631bf8esm2106622b3a.28.2025.01.30.17.11.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 17:11:44 -0800 (PST)
-Date: Fri, 31 Jan 2025 01:11:40 +0000
-From: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: andreas.noever@gmail.com, michael.jamet@intel.com, 
-	YehezkelShB@gmail.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] thunderbolt: Disable Gen 4 Recovery on Asymmetric
- Transitions
-Message-ID: <rbpvuczeeo4rmmsyj76g3dkx76jhuondyj22x7y6vozihriyvr@zuafqxw27l3l>
-References: <20250130095704.10779-1-rahimi.mhmmd@gmail.com>
- <20250130095704.10779-4-rahimi.mhmmd@gmail.com>
- <20250130124716.GW3713119@black.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0dF19iJY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=n8wC1FVg4kteBeO8ciaUbF7EeV28aND8tFhFxesXs+egEPtbPuOZ6Y7JvBse81b+dbjuh5cb77iCZNsKgzUFdbcLXpZeAPBdMGz36QDjx37JOMpcb3DMYfDf/ASyVEzMxTvxBus60nSHhoYCmE7SPv+r1QcxYb8RdpYkAu8SPT+1HNlWp+3SfvUVbq8QcaY+333ATf4qy7EDBi/B/TEDvBVDZCWzINYqkxFrbc2CwIu88hc5vg5vsXJJ1OQSrjxn5ma/+/AlYszWDoRd6L7RH4Onb8XMxPimIx6w73fjPYOxP+eRzEyUCHd557ROSf/fXDMCTvPcz9xfqP022KCygg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=imxMxzQd+WdWw2I5byQVY4Qx0TKjDCCfijUXYFK5VnA=;
+ b=O2oCarTBgyxveR6qrISYNnpMDoWqNjbO5Qx/oUY3YQqDHIQ3E1UIzOijMP0/hXKrfVsiwIbeC9B1RD98l84U2Vd6jRBd+DznLTbM/GosbB9ElwapM91Zmd0DZ+869Acj/V5oQl5vMiDfr+2nqnU6U7cZTs0078AqZM7BgSQe6Wkve+3HNmjH/7p5bdQUaHOSa6JCUCAlGt8QaLA0+8jF5SQGoD4VO2LyFOJZp/+D8bexMtsvCwgm+9z6bdTJWAIk0LngnmnTpr4etmsu+7R1MYOySmXPLxR+/11QXc6kMC6ca0CvhbfAHrbD8wFhSOEc9BYBiZfA5Q0x6ry/5gVaAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=imxMxzQd+WdWw2I5byQVY4Qx0TKjDCCfijUXYFK5VnA=;
+ b=0dF19iJY+upZ2EuRBIlJIq5psJVUNnZLVVlynNvZ7YHGTNBfx+nq8GmjIB1HlYZLqSOZ5oQCXPR1lbDhlgulZWGPxQQRDARsglxWyNLfP0mvHkJ47p7niaZW64H+19jl05tjz++jRlZQwhTJ7kdxs7EAruaksx6IwF5d1ln8Caw=
+Received: from BY3PR05CA0002.namprd05.prod.outlook.com (2603:10b6:a03:254::7)
+ by CYYPR12MB8964.namprd12.prod.outlook.com (2603:10b6:930:bc::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.20; Fri, 31 Jan
+ 2025 01:11:52 +0000
+Received: from SJ5PEPF000001C9.namprd05.prod.outlook.com
+ (2603:10b6:a03:254:cafe::43) by BY3PR05CA0002.outlook.office365.com
+ (2603:10b6:a03:254::7) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.16 via Frontend Transport; Fri,
+ 31 Jan 2025 01:11:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001C9.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8398.14 via Frontend Transport; Fri, 31 Jan 2025 01:11:51 +0000
+Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 30 Jan
+ 2025 19:11:50 -0600
+From: Ashish Kalra <Ashish.Kalra@amd.com>
+To: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <thomas.lendacky@amd.com>,
+	<john.allen@amd.com>, <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+	<joro@8bytes.org>, <suravee.suthikulpanit@amd.com>, <will@kernel.org>,
+	<robin.murphy@arm.com>
+CC: <michael.roth@amd.com>, <dionnaglaze@google.com>, <nikunj@amd.com>,
+	<ardb@kernel.org>, <kevinloughlin@google.com>, <Neeraj.Upadhyay@amd.com>,
+	<kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-crypto@vger.kernel.org>, <linux-coco@lists.linux.dev>,
+	<iommu@lists.linux.dev>
+Subject: [PATCH v2 4/4] iommu/amd: Enable Host SNP support after enabling IOMMU SNP support
+Date: Fri, 31 Jan 2025 01:11:41 +0000
+Message-ID: <afc1fb55dfcb1bccd8ee6730282b78a7e2f77a46.1738274758.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1738274758.git.ashish.kalra@amd.com>
+References: <cover.1738274758.git.ashish.kalra@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250130124716.GW3713119@black.fi.intel.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001C9:EE_|CYYPR12MB8964:EE_
+X-MS-Office365-Filtering-Correlation-Id: c358e58c-580f-49cb-9ac7-08dd41943e8a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|7416014|376014|1800799024|82310400026|7053199007|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?0MgtX+qq6sr/OB/suRpT1eytIDHv7rUtu/NU9c9rSTIjk/wIsX4+/FlF0uJA?=
+ =?us-ascii?Q?Zf54F7NyQA19tDpgtPca7oNC7fBKvVsbIvRZHvC6tGTtKjLgZGXp2AnzQft1?=
+ =?us-ascii?Q?ICBw1UFu5sa7/aWBOweVX7XKODMuOL+WhYrSs3tg+vVmRJj/22o9MOOtNJdO?=
+ =?us-ascii?Q?Kbs4RbcNaPrH+7nlaj2H3pxCy1JwzqWxZvFG3lZPkDbnl2qaWBzg25E96HFC?=
+ =?us-ascii?Q?ftlGI7srBygTfpLQ8Xp6Z2AZAFQpGkF7uE3uNOlX2LA6aCug9h29uyPhlUBk?=
+ =?us-ascii?Q?knagCUA0U9+1Q4PfsFN+rg5rxbSyBJiGNWOUlP8cvzzzl+vdXJRsFlsP+Pu7?=
+ =?us-ascii?Q?kPawg3a5VSyCjxaZjVZxWR/qyBTELw8ozpt1lMi+8YphUk0VE6vup+jyMi6E?=
+ =?us-ascii?Q?R0SpGzmdqU8YJblBNQCRRjdHXXaZVs/IoVJhCbdGpchYlH0O2olS99K4l7Z0?=
+ =?us-ascii?Q?gPDaDnLUOSPgd6fQEcKv7HrkzVSvkhpSon3C2f3tawDWHB0Q9yTtyGscCNcn?=
+ =?us-ascii?Q?aIrdwLuLtzSlHwaTDs+AuUPNDTc8Vlf7lyQ1/Rv9FxY0uxDDEYN1JvRGcSBN?=
+ =?us-ascii?Q?Q9nCyLIrdvOSw9DawJjJ2K8b1Qti6qy8QucKIUHxJXGbI6uv3fYt4+3SyTyk?=
+ =?us-ascii?Q?rg5AcGJ8hWBEnxs+R2/+XjmtSgyhEAgv1TM4sNC8VIFqMNTM3288/aMdmdqM?=
+ =?us-ascii?Q?UVdudyDrjNklhp3KT99bMp6Z4pUWGsNvdlKDSrLyKpcdxD9+zMCCCZma/P1N?=
+ =?us-ascii?Q?MEqBmT1jlOcx8zNOlfxnL316nTFdkw+Ij0LszQ8tIFgE3AZZAR4KIcBZ/If2?=
+ =?us-ascii?Q?O15EEO+nhYtCm+xjk1VSO5sdBEz823/jKMPcpmN+7cNbTRSNMd5ECHeUeff9?=
+ =?us-ascii?Q?Cm4q3SoAVL1Ov0DMynwqIl6Fc94QzBUT+xiDtEolbEtSM7FfZSDEwxuEtagF?=
+ =?us-ascii?Q?jKsqdiWEBPF3lVxzS63ztEkozY8CIkmI97zNMkq3GA4ywZ31z/HgKf6nR4xj?=
+ =?us-ascii?Q?2JsXlYtk65b8EdX6CHIhibFURRIq5SNWjaa/lD+Dl2GwVVDthDCkWThsxJOW?=
+ =?us-ascii?Q?1MQmKtacxNv6SnFoBkbgcbioBFu4MUaMrLj1okgu2c5PS98FoFL+enob0u14?=
+ =?us-ascii?Q?5ddjymYzzUJLGSxFBfW0Om2nQewVYjL3tKSpH+kM8BHUoi3yTHuW6hZNbDOP?=
+ =?us-ascii?Q?HTDCOsqeQK3kC0QSDIdfIH2b5YrWepDYb9EuszdsbzDE1y9ujbNIJgIfIYHi?=
+ =?us-ascii?Q?gTH0kmiOMYZ8cIFtGjXXpor1rYMICP1n20J//qZ/p7Qd7BG0q8ZGQ9umeMHK?=
+ =?us-ascii?Q?L0wrmZ61WTnyGiqJ3Ptyr67oRRUUsESponRT47JeziD6rFdeuWreXyFG2ZE0?=
+ =?us-ascii?Q?KF0gogNgoMV6q37jlHbcVZjkPcuqRt+DhA8SQw3yGvRL0EUnKPDcP2k80caK?=
+ =?us-ascii?Q?6pv3uowZ831jLJobgRTZbwWOLK9b1353+3JKBmDSpkMFJSNj8JJt9bLiUT2F?=
+ =?us-ascii?Q?E9G548+hhzGVmAY2kgFZuUKWkvnnpChgXd/q?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(1800799024)(82310400026)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 01:11:51.5152
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c358e58c-580f-49cb-9ac7-08dd41943e8a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001C9.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8964
 
-Hello again, and thank you. I have three comments below:
+From: Sean Christopherson <seanjc@google.com>
 
-On Thu, Jan 30, 2025 at 02:47:16PM GMT, Mika Westerberg wrote:
-> Hi,
-> 
-> On Thu, Jan 30, 2025 at 09:51:09AM +0000, Mohammad Rahimi wrote:
-> > Updates the Connection Manager to disable the Gen 4 Link Recovery
-> > flow before transitioning from a Symmetric Link to an Asymmetric
-> > Link, as specified in recent changes to the USB4 v2 specification.
-> > 
-> > According to the "USB4 2.0 ENGINEERING CHANGE NOTICE FORM"
-> > published in September 2024, the rationale for this change is:
-> > 
-> >   "Since the default value of the Target Asymmetric Link might be
-> >   different than Symmetric Link and Gen 4 Link Recovery flow checks
-> >   this field to make sure it matched the actual Negotiated Link Width,
-> >   we’re removing the condition for a Disconnect in the Gen 4 Link
-> >   Recovery flow when Target Asymmetric Link doesn’t match the actual
-> >   Link width and adding a Connection Manager note to Disable Gen 4 Link
-> >   Recovery flow before doing Asymmetric Transitions."
-> 
-> Looks good in general few comments still see below.
-> 
-> > Signed-off-by: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
-> > ---
-> >  drivers/thunderbolt/tb.c      | 28 +++++++++++++++++--
-> >  drivers/thunderbolt/tb.h      |  3 ++
-> >  drivers/thunderbolt/tb_regs.h |  1 +
-> >  drivers/thunderbolt/usb4.c    | 52 +++++++++++++++++++++++++++++++++++
-> >  4 files changed, 81 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-> > index a7c6919fbf97..31a8269a5156 100644
-> > --- a/drivers/thunderbolt/tb.c
-> > +++ b/drivers/thunderbolt/tb.c
-> > @@ -1013,6 +1013,7 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
-> >  			     struct tb_port *dst_port, int requested_up,
-> >  			     int requested_down)
-> >  {
-> > +	bool link_recovery_up = false, link_recovery_down = false;
-> >  	bool clx = false, clx_disabled = false, downstream;
-> >  	struct tb_switch *sw;
-> >  	struct tb_port *up;
-> > @@ -1075,15 +1076,29 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
-> >  			continue;
-> >  
-> >  		/*
-> > -		 * Disable CL states before doing any transitions. We
-> > -		 * delayed it until now that we know there is a real
-> > -		 * transition taking place.
-> > +		 * Disable CL states and Link Recovery flow before doing any
-> > +		 * transitions. We delayed it until now that we know there is
-> > +		 * a real transition taking place.
-> >  		 */
-> >  		if (!clx_disabled) {
-> >  			clx = tb_disable_clx(sw);
-> >  			clx_disabled = true;
-> >  		}
-> >  
-> > +		ret = usb4_port_link_recovery_disable(up);
-> > +		if (ret < 0) {
-> > +			tb_port_warn(up, "failed to disable the link recovery\n");
-> 
-> failed to disable link recovery
-> 
-> also should we still continue? How catastrophic this actually is? I mean
-> this now prevents the user from using her new UHBR monitor even though it
-> probably works just fine even if we don't do this step.
-> 
+This patch fixes the current SNP host enabling code and effectively SNP
+which is broken with respect to the KVM module being built-in.
 
-I followed your suggestion and here is my analysis:
+SNP check on IOMMU is done during IOMMU PCI init (IOMMU_PCI_INIT stage).
+And for that reason snp_rmptable_init() is currently invoked via
+device_initcall() and cannot be invoked via subsys_initcall() as core
+IOMMU subsystem gets initialized via subsys_initcall().
 
-Before this change, if an event occurred during the transition from
-Symmetric to Asymmetric mode with ELR set, the link would enter the
-Disconnect flow. According to section 4.4.5.2, the Router must then
-reset the Target Link Width and Target Asymmetric Link to their
-default values, effectively restarting the transition process.
+Essentially SNP host enabling code should be invoked before KVM
+initialization, which is currently not the case when KVM is built-in
+as SNP host support is enabled via device_initcall() which is
+required as SNP check on IOMMU is done during IOMMU PCI init.
 
-This reset happens only if, during the transition, one of the conditions
-for Link Recovery is met. Regardless of whether the link goes through
-Link Recovery or the Disconnect flow, it will eventually resume normal operation.
+Hence, call snp_rmptable_init() early and directly from
+iommu_snp_enable() (after checking and enabling IOMMU SNP support)
+which enables SNP host support before KVM initialization with
+kvm_amd module built-in.
 
-The only problematic scenario I see is a device that consistently triggers
-Link Recovery during the transition from Symmetric to Asymmetric, potentially
-causing the LLSM (section 4.2) to enter an infinite loop. Such a condition
-should have been caught during compliance testing.
+Add additional handling for `iommu=off` or `amd_iommu=off` options.
 
-To address this, I followed your suggestion and made errors from disabling
-Link Recovery non-fatal during the transition.
+If IOMMU initialization fails and iommu_snp_enable() is never reached,
+CC_ATTR_HOST_SEV_SNP will be left set but that will cause PSP driver's
+SNP_INIT to fail as IOMMU SNP sanity checks in SNP firmware will fail
+as below:
 
-> > +			break;
-> > +		}
-> > +		link_recovery_up = ret > 0;
-> > +
-> > +		ret = usb4_port_link_recovery_disable(down);
-> > +		if (ret < 0) {
-> > +			tb_port_warn(down, "failed to disable the link recovery\n");
-> 
-> failed to disable link recovery
-> 
-> and actually you can move this message into the function itself and drop
-> these messages here.
-> 
-> > +			break;
-> > +		}
-> > +		link_recovery_down = ret > 0;
-> > +
-> >  		tb_sw_dbg(up->sw, "configuring asymmetric link\n");
-> >  
-> >  		/*
-> > @@ -1091,6 +1106,13 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
-> >  		 * transtion the link into asymmetric now.
-> >  		 */
-> >  		ret = tb_switch_set_link_width(up->sw, width_up);
-> > +
-> > +		/* Re-enable Link Recovery flow if they were previosly enabled */
-> 
-> previously
-> 
+[    9.723114] ccp 0000:23:00.1: sev enabled
+[    9.727602] ccp 0000:23:00.1: psp enabled
+[    9.732527] ccp 0000:a2:00.1: enabling device (0000 -> 0002)
+[    9.739098] ccp 0000:a2:00.1: no command queues available
+[    9.745167] ccp 0000:a2:00.1: psp enabled
+[    9.805337] ccp 0000:23:00.1: SEV-SNP: failed to INIT rc -5, error 0x3
+[    9.866426] ccp 0000:23:00.1: SEV API:1.53 build:5
+...
+and that will cause CC_ATTR_HOST_SEV_SNP flag to be cleared.
 
-Thanks for catching that.
+Fixes: 04d65a9dbb33 ("iommu/amd: Don't rely on external callers to enable IOMMU SNP support")
+Co-developed-by: Vasant Hegde <vasant.hegde@amd.com>
+Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+---
+ drivers/iommu/amd/init.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-> > +		if (link_recovery_up)
-> > +			usb4_port_link_recovery_enable(up);
-> > +		if (link_recovery_down)
-> > +			usb4_port_link_recovery_enable(down);
-> > +
-> >  		if (ret) {
-> >  			tb_sw_warn(up->sw, "failed to set link width\n");
-> >  			break;
-> > diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-> > index ddbf0cd78377..d37d778082fc 100644
-> > --- a/drivers/thunderbolt/tb.h
-> > +++ b/drivers/thunderbolt/tb.h
-> > @@ -1332,6 +1332,9 @@ int usb4_port_router_online(struct tb_port *port);
-> >  int usb4_port_enumerate_retimers(struct tb_port *port);
-> >  bool usb4_port_clx_supported(struct tb_port *port);
-> >  
-> > +int usb4_port_link_recovery_enable(struct tb_port *port);
-> > +int usb4_port_link_recovery_disable(struct tb_port *port);
-> > +
-> >  bool usb4_port_asym_supported(struct tb_port *port);
-> >  int usb4_port_asym_set_link_width(struct tb_port *port, enum tb_link_width width);
-> >  int usb4_port_asym_start(struct tb_port *port);
-> > diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
-> > index 4e43b47f9f11..085139e1a958 100644
-> > --- a/drivers/thunderbolt/tb_regs.h
-> > +++ b/drivers/thunderbolt/tb_regs.h
-> > @@ -398,6 +398,7 @@ struct tb_regs_port_header {
-> >  #define PORT_CS_19_WOD				BIT(17)
-> >  #define PORT_CS_19_WOU4				BIT(18)
-> >  #define PORT_CS_19_START_ASYM			BIT(24)
-> > +#define PORT_CS_19_ELR				BIT(31)
-> >  
-> >  /* Display Port adapter registers */
-> >  #define ADP_DP_CS_0				0x00
-> > diff --git a/drivers/thunderbolt/usb4.c b/drivers/thunderbolt/usb4.c
-> > index e51d01671d8e..99fd6aa1704e 100644
-> > --- a/drivers/thunderbolt/usb4.c
-> > +++ b/drivers/thunderbolt/usb4.c
-> > @@ -10,6 +10,7 @@
-> >  #include <linux/delay.h>
-> >  #include <linux/ktime.h>
-> >  #include <linux/units.h>
-> > +#include <linux/string_helpers.h>
-> >  
-> >  #include "sb_regs.h"
-> >  #include "tb.h"
-> > @@ -1518,6 +1519,57 @@ bool usb4_port_clx_supported(struct tb_port *port)
-> >  	return !!(val & PORT_CS_18_CPS);
-> >  }
-> >  
-> > +static int __usb4_port_link_recovery_enable(struct tb_port *port, bool enable)
-> > +{
-> > +	bool was_enable;
-> > +	int ret;
-> > +	u32 val;
-> 
-> I think you should check here
-> 
-> 	if (!port->cap_usb4)
-> 		return -EINVAL;
-> 
-> > +
-> > +	ret = tb_port_read(port, &val, TB_CFG_PORT,
-> > +			   port->cap_usb4 + PORT_CS_19, 1);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	was_enable = !!(val & PORT_CS_19_ELR);
-> > +
-> > +	if (enable)
-> > +		val |= PORT_CS_19_ELR;
-> > +	else
-> > +		val &= ~PORT_CS_19_ELR;
-> > +
-> > +	ret = tb_port_write(port, &val, TB_CFG_PORT,
-> > +			    port->cap_usb4 + PORT_CS_19, 1);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	tb_port_dbg(port, "link recovery %s\n", str_enabled_disabled(enable));
-> > +	return was_enable ? 1 : 0;
-> > +}
-> > +
-> > +/**
-> > + * usb4_port_link_recovery_enable() - Enable the Link Recovery
-> > + * @port: USB4 port
-> > + *
-> > + * Enables the Link Recovery for @port.
-> > + * Returns -ERRNO on failure, otherwise the previous state of the Link Recovery.
-> 
-> Returns errno on failure..
-> 
-> or you can also specify which errors but then use %-EINVAL and so on.
-> 
-> Ditto to the other function.
-> 
+diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+index c5cd92edada0..ee887aa4442f 100644
+--- a/drivers/iommu/amd/init.c
++++ b/drivers/iommu/amd/init.c
+@@ -3194,7 +3194,7 @@ static bool __init detect_ivrs(void)
+ 	return true;
+ }
+ 
+-static void iommu_snp_enable(void)
++static __init void iommu_snp_enable(void)
+ {
+ #ifdef CONFIG_KVM_AMD_SEV
+ 	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
+@@ -3219,6 +3219,11 @@ static void iommu_snp_enable(void)
+ 		goto disable_snp;
+ 	}
+ 
++	if (snp_rmptable_init()) {
++		pr_warn("SNP: RMP initialization failed, SNP cannot be supported.\n");
++		goto disable_snp;
++	}
++
+ 	pr_info("IOMMU SNP support enabled.\n");
+ 	return;
+ 
+@@ -3426,18 +3431,23 @@ void __init amd_iommu_detect(void)
+ 	int ret;
+ 
+ 	if (no_iommu || (iommu_detected && !gart_iommu_aperture))
+-		return;
++		goto disable_snp;
+ 
+ 	if (!amd_iommu_sme_check())
+-		return;
++		goto disable_snp;
+ 
+ 	ret = iommu_go_to_state(IOMMU_IVRS_DETECTED);
+ 	if (ret)
+-		return;
++		goto disable_snp;
+ 
+ 	amd_iommu_detected = true;
+ 	iommu_detected = 1;
+ 	x86_init.iommu.iommu_init = amd_iommu_init;
++	return;
++
++disable_snp:
++	if (cc_platform_has(CC_ATTR_HOST_SEV_SNP))
++		cc_platform_clear(CC_ATTR_HOST_SEV_SNP);
+ }
+ 
+ /****************************************************************************
+-- 
+2.34.1
 
-I traced all the function calls and identified the following three error numbers:
--EINVAL
--ENODEV
--ETIMEDOUT
-
-> > + */
-> > +int usb4_port_link_recovery_enable(struct tb_port *port)
-> > +{
-> > +	return __usb4_port_link_recovery_enable(port, true);
-> > +}
-> > +
-> > +/**
-> > + * usb4_port_link_recovery_disable() - Disable the Link Recovery
-> > + * @port: USB4 port
-> > + *
-> > + * Disables the Link Recovery for @port.
-> > + * Returns -ERRNO on failure, otherwise the previous state of the Link Recovery.
-> > + */
-> > +int usb4_port_link_recovery_disable(struct tb_port *port)
-> > +{
-> > +	return __usb4_port_link_recovery_enable(port, false);
-> > +}
-> > +
-> >  /**
-> >   * usb4_port_asym_supported() - If the port supports asymmetric link
-> >   * @port: USB4 port
-> > -- 
-> > 2.45.2
