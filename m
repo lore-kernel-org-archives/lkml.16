@@ -1,114 +1,312 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from riemann.telenet-ops.be (riemann.telenet-ops.be [195.130.137.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C69A1BE238
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB621C3BF9
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738331530; cv=none; b=HXbxs/D3DXBPIVwGtJwOLwwdzZEyVVmZRCtqa0N4EIEOgPCiv+aU5TjinJ21E3BVLg0k4XufrNLdFpqF9gIVsiQ11ONuuOnLjha8tSyKCHGdf8ubC6zHDUxaz6nLHc5VkkYEtzICCuUjgzqR7VnO6wqvmMraWs6F6izfVAoyG64=
+	t=1738331641; cv=none; b=Dl8bVTLPkykO+nMdID+WuZF/98qa0jjkS86YsDBZwkzWK1HdrFwP5wOPe6iQcLS8yRTAQJKROii2IRb9UsevHQUkXiRL9NEGx2N0fbDM8oQGDEvezmPLYi/bHd/ds4vr16P0rObTrReg+cIPIll3+1pzx58AFhHR4nATlv/pnRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738331530; c=relaxed/simple;
-	bh=3yG6vF3BhAGzPGU/excw3Et8DTba1mIHbAF880jDHtc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RKLWNqlFXzunwHtfYHVggDg15p13xN+rf7C7zIxwDJeHk7a2NVsW4DhEurxhVgsTgnzEgBQMfWsTA2Q/nM0MDR1twGJZDovobknzBrwwuvpzavOeKKrvaSDG2Ieb31PhOjl3Tv6Hul+u4AiEE+sYUxsW29LHR5wXGlGOP/+At5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=nHxwJKs5; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="nHxwJKs5"
-Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
-	by cmsmtp with ESMTPS
-	id dmGHtk44tAfjwdrRHtQRbt; Fri, 31 Jan 2025 13:52:07 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id drRHtd5st3770drRHtkgil; Fri, 31 Jan 2025 13:52:07 +0000
-X-Authority-Analysis: v=2.4 cv=WYoKaVhX c=1 sm=1 tr=0 ts=679cd587
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=VdSt8ZQiCzkA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=gyRQ9LoAd9Ap2MThexAA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=u4ji1XhLeH5/mG0e96444tmc79AQZ0/wdJHGHUCYjDo=; b=nHxwJKs56LWuSMbXbSMLyhWpBH
-	+2OzxmfgQKZwpmFzk9939mYNmn7scqc9FY7sBL77gIKxq2Cs2+G30x2Y5CMD4fPtKEML65hh8xwpU
-	LwSncBf7SZfAIPMqr0Hb0/9BokkQaX5CIhhEw7glSLnO9wYtFN9PWnCFGnt7XBQO5yyJU9IRBwKSP
-	SqTrAxzW2h+ruUb3t3MMRkyuCudBosIhq/7KW87mbOJfdLG72mWG0a6Zm0TmdwmIjxyVy/K5xPqP+
-	Kv2Thg1LgqOPFnl28tRPZ0Pr9HTHBf8irigOfTPBo7F5ODlnl/AWBfV6AqfIJpPXaEvCPxu8lZ6ry
-	RdqSf6+g==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:45612 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1tdrRG-0014XI-0z;
-	Fri, 31 Jan 2025 06:52:06 -0700
-Message-ID: <d47bf7ff-e870-4e12-b6c4-c47817e5da5c@w6rz.net>
-Date: Fri, 31 Jan 2025 05:52:04 -0800
+	s=arc-20240116; t=1738331641; c=relaxed/simple;
+	bh=ZyIeyj8p150WqvNw9FQz8qSzdIzpboqEjOszWkDs8aw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GBDKh3FSgPD2XHnHQArDxP/CPF/2HFgW207URjmpHzKGEjVoieQ8Sdpl6vy3ko69rKfUileSp60/5WQ3OIF+TbeqAfgSypvNBq4guhXNMJuNavn+ppsKmVXIgHCMEnP3hLgxPj0VHXE9yJt/pl0I3qceGF6xcp1O6waCM3tM9js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+	by riemann.telenet-ops.be (Postfix) with ESMTPS id 4Ykxz10MZxz4x4FV
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 14:47:25 +0100 (CET)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:a916:3147:9f19:c260])
+	by baptiste.telenet-ops.be with cmsmtp
+	id 7pmw2E00X0naHe801pmwxJ; Fri, 31 Jan 2025 14:47:24 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tdrM6-0000000FHxs-1tvt;
+	Fri, 31 Jan 2025 14:46:56 +0100
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tdrMG-0000000DFVQ-1qJR;
+	Fri, 31 Jan 2025 14:46:56 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Crt Mori <cmo@melexis.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Alex Elder <elder@ieee.org>
+Cc: linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	qat-linux@intel.com,
+	linux-gpio@vger.kernel.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-iio@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH treewide v2 1/3] bitfield: Add non-constant field_{prep,get}() helpers
+Date: Fri, 31 Jan 2025 14:46:51 +0100
+Message-ID: <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1738329458.git.geert+renesas@glider.be>
+References: <cover.1738329458.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 00/43] 6.6.75-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250130133458.903274626@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250130133458.903274626@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1tdrRG-0014XI-0z
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:45612
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 54
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCqj8pu2Y2PULSM3jF3C/32U21bQICEVwrs65nre4RNubCjSaa/W/Fup94y2NMtVXQ1rrGUkF7vWm86Ye5pzGsTaDYnP3gJuc6ox2ze/897RSoasCtRi
- Rfby+5CIs5QNxnjF/JdnH6Lbkid/yvYzUAkXjU1+PtU9W0KEni6QwPgAujA18LQXZMAE7JbdBwoP+1Dm7jDta/+eNqegtIfsYQM=
+Content-Transfer-Encoding: 8bit
 
-On 1/30/25 05:59, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.75 release.
-> There are 43 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 01 Feb 2025 13:34:42 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.75-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+The existing FIELD_{GET,PREP}() macros are limited to compile-time
+constants.  However, it is very common to prepare or extract bitfield
+elements where the bitfield mask is not a compile-time constant.
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+To avoid this limitation, the AT91 clock driver and several other
+drivers already have their own non-const field_{prep,get}() macros.
+Make them available for general use by consolidating them in
+<linux/bitfield.h>, and improve them slightly:
+  1. Avoid evaluating macro parameters more than once,
+  2. Replace "ffs() - 1" by "__ffs()",
+  3. Support 64-bit use on 32-bit architectures.
 
-Tested-by: Ron Economos <re@w6rz.net>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Cast val resp. reg to the mask type,
+  - Fix 64-bit use on 32-bit architectures,
+  - Convert new upstream users:
+      - drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c
+      - drivers/gpio/gpio-aspeed.c
+      - drivers/iio/temperature/mlx90614.c
+      - drivers/pinctrl/nuvoton/pinctrl-ma35.c
+      - sound/usb/mixer_quirks.c
+  - Convert new user queued in renesas-devel for v6.15:
+      - drivers/soc/renesas/rz-sysc.c
+---
+ drivers/clk/at91/clk-peripheral.c             |  1 +
+ drivers/clk/at91/pmc.h                        |  3 --
+ .../qat/qat_common/adf_gen4_pm_debugfs.c      |  8 +----
+ drivers/gpio/gpio-aspeed.c                    |  5 +--
+ drivers/iio/temperature/mlx90614.c            |  5 +--
+ drivers/pinctrl/nuvoton/pinctrl-ma35.c        |  4 ---
+ drivers/soc/renesas/rz-sysc.c                 |  3 +-
+ include/linux/bitfield.h                      | 34 +++++++++++++++++++
+ sound/usb/mixer_quirks.c                      |  4 ---
+ 9 files changed, 39 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/clk/at91/clk-peripheral.c b/drivers/clk/at91/clk-peripheral.c
+index c173a44c800aa8cc..60208bdc3fe4797e 100644
+--- a/drivers/clk/at91/clk-peripheral.c
++++ b/drivers/clk/at91/clk-peripheral.c
+@@ -3,6 +3,7 @@
+  *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/bitops.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clkdev.h>
+diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+index 4fb29ca111f7d427..3838e4f7df2d4a70 100644
+--- a/drivers/clk/at91/pmc.h
++++ b/drivers/clk/at91/pmc.h
+@@ -116,9 +116,6 @@ struct at91_clk_pms {
+ 	unsigned int parent;
+ };
+ 
+-#define field_get(_mask, _reg) (((_reg) & (_mask)) >> (ffs(_mask) - 1))
+-#define field_prep(_mask, _val) (((_val) << (ffs(_mask) - 1)) & (_mask))
+-
+ #define ndck(a, s) (a[s - 1].id + 1)
+ #define nck(a) (a[ARRAY_SIZE(a) - 1].id + 1)
+ 
+diff --git a/drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c b/drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c
+index 2e4095c4c12c94f9..ebaa59e934178309 100644
+--- a/drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c
++++ b/drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2023 Intel Corporation */
++#include <linux/bitfield.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/kernel.h>
+ #include <linux/string_helpers.h>
+@@ -11,13 +12,6 @@
+ #include "adf_gen4_pm.h"
+ #include "icp_qat_fw_init_admin.h"
+ 
+-/*
+- * This is needed because a variable is used to index the mask at
+- * pm_scnprint_table(), making it not compile time constant, so the compile
+- * asserts from FIELD_GET() or u32_get_bits() won't be fulfilled.
+- */
+-#define field_get(_mask, _reg) (((_reg) & (_mask)) >> (ffs(_mask) - 1))
+-
+ #define PM_INFO_MEMBER_OFF(member)	\
+ 	(offsetof(struct icp_qat_fw_init_admin_pm_info, member) / sizeof(u32))
+ 
+diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+index 40c1bd80f8b0434d..b45e4dd8d8e4f00a 100644
+--- a/drivers/gpio/gpio-aspeed.c
++++ b/drivers/gpio/gpio-aspeed.c
+@@ -5,6 +5,7 @@
+  * Joel Stanley <joel@jms.id.au>
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/gpio/aspeed.h>
+ #include <linux/gpio/driver.h>
+@@ -30,10 +31,6 @@
+ #include <linux/gpio/consumer.h>
+ #include "gpiolib.h"
+ 
+-/* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
+-#define field_get(_mask, _reg)	(((_reg) & (_mask)) >> (ffs(_mask) - 1))
+-#define field_prep(_mask, _val)	(((_val) << (ffs(_mask) - 1)) & (_mask))
+-
+ #define GPIO_G7_IRQ_STS_BASE 0x100
+ #define GPIO_G7_IRQ_STS_OFFSET(x) (GPIO_G7_IRQ_STS_BASE + (x) * 0x4)
+ #define GPIO_G7_CTRL_REG_BASE 0x180
+diff --git a/drivers/iio/temperature/mlx90614.c b/drivers/iio/temperature/mlx90614.c
+index 740018d4b3dfb35e..c58dc59d4f570831 100644
+--- a/drivers/iio/temperature/mlx90614.c
++++ b/drivers/iio/temperature/mlx90614.c
+@@ -22,6 +22,7 @@
+  * the "wakeup" GPIO is not given, power management will be disabled.
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/gpio/consumer.h>
+@@ -68,10 +69,6 @@
+ #define MLX90614_CONST_SCALE 20 /* Scale in milliKelvin (0.02 * 1000) */
+ #define MLX90614_CONST_FIR 0x7 /* Fixed value for FIR part of low pass filter */
+ 
+-/* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
+-#define field_get(_mask, _reg)	(((_reg) & (_mask)) >> (ffs(_mask) - 1))
+-#define field_prep(_mask, _val)	(((_val) << (ffs(_mask) - 1)) & (_mask))
+-
+ struct mlx_chip_info {
+ 	/* EEPROM offsets with 16-bit data, MSB first */
+ 	/* emissivity correction coefficient */
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-ma35.c b/drivers/pinctrl/nuvoton/pinctrl-ma35.c
+index 59c4e7c6cddea127..3ba28faa8e1418a9 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-ma35.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-ma35.c
+@@ -81,10 +81,6 @@
+ #define MVOLT_1800			0
+ #define MVOLT_3300			1
+ 
+-/* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
+-#define field_get(_mask, _reg)	(((_reg) & (_mask)) >> (ffs(_mask) - 1))
+-#define field_prep(_mask, _val)	(((_val) << (ffs(_mask) - 1)) & (_mask))
+-
+ static const char * const gpio_group_name[] = {
+ 	"gpioa", "gpiob", "gpioc", "gpiod", "gpioe", "gpiof", "gpiog",
+ 	"gpioh", "gpioi", "gpioj", "gpiok", "gpiol", "gpiom", "gpion",
+diff --git a/drivers/soc/renesas/rz-sysc.c b/drivers/soc/renesas/rz-sysc.c
+index 1c98da37b7d18745..917a029d849585cd 100644
+--- a/drivers/soc/renesas/rz-sysc.c
++++ b/drivers/soc/renesas/rz-sysc.c
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2024 Renesas Electronics Corp.
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+@@ -12,8 +13,6 @@
+ 
+ #include "rz-sysc.h"
+ 
+-#define field_get(_mask, _reg) (((_reg) & (_mask)) >> (ffs(_mask) - 1))
+-
+ /**
+  * struct rz_sysc - RZ SYSC private data structure
+  * @base: SYSC base address
+diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+index 63928f1732230700..c62324a9fcc81241 100644
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -203,4 +203,38 @@ __MAKE_OP(64)
+ #undef __MAKE_OP
+ #undef ____MAKE_OP
+ 
++/**
++ * field_prep() - prepare a bitfield element
++ * @_mask: shifted mask defining the field's length and position
++ * @_val:  value to put in the field
++ *
++ * field_prep() masks and shifts up the value.  The result should be
++ * combined with other fields of the bitfield using logical OR.
++ * Unlike FIELD_PREP(), @_mask is not limited to a compile-time constant.
++ */
++#define field_prep(_mask, _val)						\
++	({								\
++		typeof(_mask) __mask = (_mask);				\
++		unsigned int __shift = sizeof(_mask) <= 4 ?		\
++				       __ffs(__mask) : __ffs64(__mask);	\
++		(((typeof(_mask))(_val) << __shift) & (__mask));	\
++	})
++
++/**
++ * field_get() - extract a bitfield element
++ * @_mask: shifted mask defining the field's length and position
++ * @_reg:  value of entire bitfield
++ *
++ * field_get() extracts the field specified by @_mask from the
++ * bitfield passed in as @_reg by masking and shifting it down.
++ * Unlike FIELD_GET(), @_mask is not limited to a compile-time constant.
++ */
++#define field_get(_mask, _reg)						\
++	({								\
++		typeof(_mask) __mask = _mask;				\
++		unsigned int __shift = sizeof(_mask) <= 4 ?		\
++				       __ffs(__mask) : __ffs64(__mask);	\
++		(typeof(_mask))(((_reg) & (__mask)) >> __shift);	\
++	})
++
+ #endif
+diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
+index 23fcd680167d0298..00ab811e4b11a573 100644
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -3109,10 +3109,6 @@ static int snd_bbfpro_controls_create(struct usb_mixer_interface *mixer)
+ #define RME_DIGIFACE_REGISTER(reg, mask) (((reg) << 16) | (mask))
+ #define RME_DIGIFACE_INVERT BIT(31)
+ 
+-/* Nonconst helpers */
+-#define field_get(_mask, _reg) (((_reg) & (_mask)) >> (ffs(_mask) - 1))
+-#define field_prep(_mask, _val) (((_val) << (ffs(_mask) - 1)) & (_mask))
+-
+ static int snd_rme_digiface_write_reg(struct snd_kcontrol *kcontrol, int item, u16 mask, u16 val)
+ {
+ 	struct usb_mixer_elem_list *list = snd_kcontrol_chip(kcontrol);
+-- 
+2.43.0
 
