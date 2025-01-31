@@ -1,340 +1,215 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52DD1991CD;
-	Fri, 31 Jan 2025 09:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9B9187554
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738315339; cv=none; b=u5sucQTiaATxdWl1c3VXHW7JE8yXLSxdHxC2Is3WGjL1RdQhfmNGrdbUecnxzrNe8KQRw6ol1Xq5DCF1yFP/xscRKuSV55+RYw5xGzJsKLP3/GT+13gQF0FpGvPFGFM/vQVvIzapgdp732hq3X8zJ1OFtVFLvIsD815oOmryKWI=
+	t=1738315815; cv=none; b=WZt8yPfEfJ0bPdSHYPoXmTOXsdqshjyykX8orvA8NSwbz5z2Y1yU9768DO6udfxtX2QQGugiOUyJ76eiTTFgHOqt9KVUmolSqPDCh+u6Kv1Uacf5MQfGb7GfPewzEHGXesEQZ4K0XxBmucLvhroUZ7/Ia6OdZl5o+g7tMAywl/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738315339; c=relaxed/simple;
-	bh=MTePTFZO0fJY5+8Rwq04Zyp4iZ/qTd/L+xe/WvK/kzw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WVy9A0Wazwk/Cd2jT8ub9XzUUZi4xnaugy02Gl4m+FNS0NfGsG77taF6Wr0KCbOwr3KpLST7pCG1gegxOoil3uhTaK4F8mhWi6OrLeQaSKlCQnHxmr3kzxseM6JU+C4DI5bOvlP1sFZGiI0mbOeHolfVw60YiNVJlBnBejP/Mfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RTErgEUN; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738315815; c=relaxed/simple;
+	bh=UCJ/INg8+RHJAz7XOwagZpG6QZHJNkaCpVFFvpY7sZ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uPC8OYwNbfayEdpxljRxVPlCEkV6BPCbc07qiFFcZgf2lWsl8YpM3/1wWANL8EJ+8RmdZFACpwcJRDt258/jZkntsHL++dnv3HHdMqlrc5XSsP1fQBS+qvEuALFyN9VPjL+j4fcJd/8KiubeFpt1uD7NAcWRtQEYaxgoj1Whr0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IXMndzm0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RTErgEUN"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2156e078563so25000055ad.2;
-        Fri, 31 Jan 2025 01:22:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738315337; x=1738920137; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U6kosElOaSMZSNtX69a/Hsyj1tzL+5G6ZJzdXAObE/E=;
-        b=RTErgEUNinzmXF71IRalxjSZr4mjorhGH4d9VNmtYaU/4niXC+X0/+kFO9geuQQQcR
-         tJrP65LT40seJSzrtQhgshf5R0XB0IP6XCqnCCdww1nwrnBeMdUhwEu09GzdhO2Voqrv
-         IbUj4EXQfw13RpBsaniTWNKIl5n45xSvjHUTc854zGXEJYyvU03BBtlHLyFKn+JCe0Sh
-         rHzQd25tdvdRi+o+uZlX8kb8660TNFcTpRhS2OCkQE7RHpVhAF9ocDkbu7M+MxiXp3G+
-         s3vtOZIbEiax+ZjuUD8Xlx8257nj9FLrLSahSz1CWwLLX9ZYM7OQQoK4QuZzwydCiNeq
-         VhWg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IXMndzm0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738315813;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=6JX/RWwIhNXl3m6w98kdtL5L38gt1l8nq6fffLr0F0g=;
+	b=IXMndzm0stz3lph4j5NsphtstOp6VhI4UDD/RadLTWM1gGGo+PXoddzSHIjkQjrIuuOgwL
+	rJ15V+tN//I8JuJtgY6n0KNKG9k0kwgKSzsogVO/bDjPoYvQyKq3fDp/CSYSUEhWc9g3Tl
+	uAJn9NlHHn8b8qE5qI8RSJUR3hcnLSw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-403-xJ6YrdKoOKmlEKczHRCQnw-1; Fri, 31 Jan 2025 04:30:11 -0500
+X-MC-Unique: xJ6YrdKoOKmlEKczHRCQnw-1
+X-Mimecast-MFC-AGG-ID: xJ6YrdKoOKmlEKczHRCQnw
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38c5d9530ebso1012894f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:30:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738315337; x=1738920137;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U6kosElOaSMZSNtX69a/Hsyj1tzL+5G6ZJzdXAObE/E=;
-        b=w1o4EqQc3A0vUQBScZj5w/W4a9DJME0ZmVEL9LtwCMxtzmfaTf+GNPFYBg69gF+LMx
-         DoZ/HTJa32saVtEieg1rlJBafGyy0f3SF7qQEeDZRJhdH85pFSDtafL/jESRhxBRW8Ss
-         ZWxeIKe9ycBAViPmR9mPItt3IF57gkYDyXlBzRGjjG1vSzDbMICy6PKx87ViU0G95UwG
-         9pzME5USHAf7kRha30no2H2RUrYOGxgGX0koaBgBsyw92Q7jf3JwwyvKPpjgxw8MRqES
-         M8zOZxjWSgdo7nWMyrf3t0TeE8C4Pb1ZDIW6ngJDw4cGIKHYD7LPCDudPHX5olawUh1n
-         ZxpA==
-X-Forwarded-Encrypted: i=1; AJvYcCV06P4RXEqF5UIT1z4i5akH9YIM5lD45gCmc7Cm5eWw0B85kGvJQjMNNL6JEpzNMtYc2kdyLa5Uq65o/8wE@vger.kernel.org, AJvYcCWc0aW1si1xMNtpIEBOXtpWsyE2Gb9OUbeZB4lAKbbc05taKP5/GvfUVKdugkisUxR0DEdUUR/tPtolkSg=@vger.kernel.org, AJvYcCX+IIuBNDQShVGbxBawoPA+zX7dXum1PvwSFqgcwap8EXI7GLB3UoWfb178MZ7dvOZzmha1AuEONWTIrSXJWwRJydd2cg==@vger.kernel.org, AJvYcCXzQI2R0+0ti+USgwa/rGSMnckfXfOUOHrWZ8i9pfyYU3ODqiDbXQElP36n4o3vAFeOhTNdOKu9NOMxS88V@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkdafyDgSg4H9JGxDEPknukgFp4+kwExbaYVn+eJLjdnu/M6Y5
-	GxhKy8SaPuYoIq2zJrTLCCPgMlE8N1BpRQN9wlL085hx1v0KbsPj
-X-Gm-Gg: ASbGnctSs2fqTapGrUARgbOzICHd9UvjH7DzdGqtNHCV6SH7T79Miu7hdUmpf1k1ae2
-	nJ6CHunjTBDA8UBYgeezTrngx47ruwtgihxR8QmLdvYa4dLSVwO2Klu1iCgwGpDMD0zkg38oDgS
-	w/Sr6Yx6Jfq4ZW3h55dG+5kwCK4T44pj4BGYT6AoVMyqz5YUDQfEHPajnZQY5caOGqgA0RXP/LX
-	vad+e9HOigY2O9dJ9AgtJqYQEAUGO/0BVyhlf+8ujMSRO2o0RQcn3QE0Hc97vz8DwfpULV4BTgH
-	pU0fszIFLlqeygEV
-X-Google-Smtp-Source: AGHT+IFRiqNQj7MxLr4NO504ORq8PNY5pGBppS/wd9xq7E5Gec4ceQ4SYgJmZodMRIS6ANJgN1z9jQ==
-X-Received: by 2002:a17:902:d488:b0:215:5bd8:9f92 with SMTP id d9443c01a7336-21dd7c46302mr169334755ad.5.1738315336989;
-        Fri, 31 Jan 2025 01:22:16 -0800 (PST)
-Received: from SC8280XP.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bf93ef3sm5366629a91.30.2025.01.31.01.22.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 01:22:16 -0800 (PST)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=83=C2=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	Pengyu Luo <mitltlatltl@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH RESEND v6 3/3] arm64: dts: qcom: gaokun3: Add Embedded Controller node
-Date: Fri, 31 Jan 2025 17:21:39 +0800
-Message-ID: <20250131092139.6065-4-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250131092139.6065-1-mitltlatltl@gmail.com>
-References: <20250131092139.6065-1-mitltlatltl@gmail.com>
+        d=1e100.net; s=20230601; t=1738315810; x=1738920610;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6JX/RWwIhNXl3m6w98kdtL5L38gt1l8nq6fffLr0F0g=;
+        b=VDE2kR94Jt23yrvb9zO4/MpmEEkFQwxUKvAxKZ1mdUxaaRu3nNLx/VX8Et65PiMOeW
+         nPpZS2UNJh1tUMFoB7HrHPk3sTFGtvx+20UnDvC8s5t7Q0x2lf3sdNzVd1Mcddbx9g5Y
+         fPKtbQ4/kzdoU8Wql9BlcCO0LeARyqyNR3TosZyxhLSpK9XnQW5OuO2XX31zHzlJTNyK
+         VddDrvtmfNRatKzeqBUQgsVLczIeEgorDUnIjSBpKhmVxknvVsmHLIuBnl6++Vp/fPRo
+         R6dsmpC6ssmKrmnol6u/m46vaqF0TkuNBMajGhjDbkyvKa8dS+Ih7dVy9uyV7YGSuldk
+         8PLg==
+X-Gm-Message-State: AOJu0YwacsC6buu0KtTnzhEvTzx/tsmdbT6SOM9QbTWYVMtFHoDYzV0i
+	//ljG39QH4/oM8tPBSv0gVK0CkYSQRUuwdFkDnxj5rwMcVqvDxY1dUz1nnAiTQvFbVE7it0tJ5M
+	8YdbPKk5oDeh4vF1sckhvpBFaD/9RpR31VCKhUAsnvNkmeUhm6GqDU1/hHM3fGgKTIRMObA+Cmd
+	A=
+X-Gm-Gg: ASbGncuJQmYkEDR4aQqfo+Cts9iAHAUMThJ7+a1JAzx5sFKRyHipTvRZ/hbzlpbbNjU
+	gzO5SWVxi4y58eqiy10F1DQRo9z2ur4EbUWWacCzD+TM0p2Cvsm52XATvDHfmBPpBbRkAWYa8/Y
+	joOFaBtsLCBw66CaFiHtUb0FapW8nnL+/oFXOgxMadKZ9A6fiQPPCyMtlgrksa/rd++kJCiCR8w
+	iaGWCV5iyegHaeipR8wW1cI66KV3rjxuCw32BQggU/xYJXqEDkxdUqwpVBJFzgZOakc0DjSuIhT
+	AoY7DrviEezGVXAQBYBRjZgVYlq3+OeJ
+X-Received: by 2002:a5d:5f93:0:b0:386:3213:5b9b with SMTP id ffacd0b85a97d-38c51e8e12fmr9404946f8f.43.1738315810034;
+        Fri, 31 Jan 2025 01:30:10 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF/lPrwSVroidbMiKYfbD1/nXp46l+US2HSio5xTQO5OhxfVSCZ2fT04LU5R2PHsMKzzXSdnQ==
+X-Received: by 2002:a5d:5f93:0:b0:386:3213:5b9b with SMTP id ffacd0b85a97d-38c51e8e12fmr9404919f8f.43.1738315809686;
+        Fri, 31 Jan 2025 01:30:09 -0800 (PST)
+Received: from [192.168.3.141] (p5b0c6e05.dip0.t-ipconnect.de. [91.12.110.5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23e5e53sm48600365e9.17.2025.01.31.01.29.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 01:29:58 -0800 (PST)
+Message-ID: <2985fbe9-8af8-44c9-bb9e-b3ab3131981a@redhat.com>
+Date: Fri, 31 Jan 2025 10:29:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 03/12] mm/rmap: convert make_device_exclusive_range()
+ to make_device_exclusive()
+To: Alistair Popple <apopple@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+ nouveau@lists.freedesktop.org, Andrew Morton <akpm@linux-foundation.org>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+ Yanteng Si <si.yanteng@linux.dev>, Karol Herbst <kherbst@redhat.com>,
+ Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
+ Jason Gunthorpe <jgg@nvidia.com>
+References: <20250129115411.2077152-1-david@redhat.com>
+ <20250129115411.2077152-4-david@redhat.com>
+ <b3stuhf2s6236zawaa6zt6x3fg6oamrtj3pwajlyoxlaxdmdtf@arqxcoemsjfg>
+ <dibd7n5uhmpjvy2welm2lrxnrpxd3h2qkzgboca4xq634ib5dl@oojnkmmi7frl>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <dibd7n5uhmpjvy2welm2lrxnrpxd3h2qkzgboca4xq634ib5dl@oojnkmmi7frl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The Embedded Controller in the Huawei Matebook E Go is accessible on &i2c15
-and provides battery and adapter status, port orientation status, as well
-as HPD event notifications for two USB Type-C port, etc.
+On 31.01.25 01:28, Alistair Popple wrote:
+> On Thu, Jan 30, 2025 at 04:57:39PM +1100, Alistair Popple wrote:
+>> On Wed, Jan 29, 2025 at 12:54:01PM +0100, David Hildenbrand wrote:
+> 
+> [...]
+> 
+>>> -int make_device_exclusive_range(struct mm_struct *mm, unsigned long start,
+>>> -				unsigned long end, struct page **pages,
+>>> -				void *owner)
+>>> +struct page *make_device_exclusive(struct mm_struct *mm, unsigned long addr,
+>>> +		void *owner, struct folio **foliop)
+>>>   {
+>>> -	long npages = (end - start) >> PAGE_SHIFT;
+>>> -	long i;
+>>> +	struct folio *folio;
+>>> +	struct page *page;
+>>> +	long npages;
+>>> +
+>>> +	mmap_assert_locked(mm);
+>>>   
+>>> -	npages = get_user_pages_remote(mm, start, npages,
+>>> +	/*
+>>> +	 * Fault in the page writable and try to lock it; note that if the
+>>> +	 * address would already be marked for exclusive use by the device,
+>>> +	 * the GUP call would undo that first by triggering a fault.
+>>> +	 */
+>>> +	npages = get_user_pages_remote(mm, addr, 1,
+>>>   				       FOLL_GET | FOLL_WRITE | FOLL_SPLIT_PMD,
+>>> -				       pages, NULL);
+>>> -	if (npages < 0)
+>>> -		return npages;
+>>> -
+>>> -	for (i = 0; i < npages; i++, start += PAGE_SIZE) {
+>>> -		struct folio *folio = page_folio(pages[i]);
+>>> -		if (PageTail(pages[i]) || !folio_trylock(folio)) {
+>>> -			folio_put(folio);
+>>> -			pages[i] = NULL;
+>>> -			continue;
+>>> -		}
+>>> +				       &page, NULL);
+>>> +	if (npages != 1)
+>>> +		return ERR_PTR(npages);
+>>> +	folio = page_folio(page);
+>>>   
+>>> -		if (!folio_make_device_exclusive(folio, mm, start, owner)) {
+>>> -			folio_unlock(folio);
+>>> -			folio_put(folio);
+>>> -			pages[i] = NULL;
+>>> -		}
+>>> +	if (!folio_test_anon(folio) || folio_test_hugetlb(folio)) {
+>>> +		folio_put(folio);
+>>> +		return ERR_PTR(-EOPNOTSUPP);
+>>> +	}
+>>> +
+>>> +	if (!folio_trylock(folio)) {
+> 
+> Actually I think we can make this folio_lock(folio) now. The only reason for
+> the trylock was to avoid deadlock between other threads looping over a range
+> of folios while holding folio locks which is something the migration code also
+> does.
 
-Add the EC to the device tree and describe the relationship among
-the type-c connectors, role switches, orientation switches and the QMP
-combo PHY.
+Okay, let me do that in a separate patch. Thanks!
 
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts | 163 ++++++++++++++++++
- 1 file changed, 163 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts b/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-index 09b95f89e..1667c7157 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-@@ -28,6 +28,7 @@ / {
- 
- 	aliases {
- 		i2c4 = &i2c4;
-+		i2c15 = &i2c15;
- 		serial1 = &uart2;
- 	};
- 
-@@ -216,6 +217,40 @@ map1 {
- 		};
- 	};
- 
-+	usb0-sbu-mux {
-+		compatible = "pericom,pi3usb102", "gpio-sbu-mux";
-+
-+		select-gpios = <&tlmm 164 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-0 = <&usb0_sbu_default>;
-+		pinctrl-names = "default";
-+
-+		orientation-switch;
-+
-+		port {
-+			usb0_sbu_mux: endpoint {
-+				remote-endpoint = <&ucsi0_sbu>;
-+			};
-+		};
-+	};
-+
-+	usb1-sbu-mux {
-+		compatible = "pericom,pi3usb102", "gpio-sbu-mux";
-+
-+		select-gpios = <&tlmm 47 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-0 = <&usb1_sbu_default>;
-+		pinctrl-names = "default";
-+
-+		orientation-switch;
-+
-+		port {
-+			usb1_sbu_mux: endpoint {
-+				remote-endpoint = <&ucsi1_sbu>;
-+			};
-+		};
-+	};
-+
- 	wcn6855-pmu {
- 		compatible = "qcom,wcn6855-pmu";
- 
-@@ -584,6 +619,97 @@ touchscreen@4f {
- 
- };
- 
-+&i2c15 {
-+	clock-frequency = <400000>;
-+
-+	pinctrl-0 = <&i2c15_default>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	embedded-controller@38 {
-+		compatible = "huawei,gaokun3-ec";
-+		reg = <0x38>;
-+
-+		interrupts-extended = <&tlmm 107 IRQ_TYPE_LEVEL_LOW>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		connector@0 {
-+			compatible = "usb-c-connector";
-+			reg = <0>;
-+			power-role = "dual";
-+			data-role = "dual";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					ucsi0_hs_in: endpoint {
-+						remote-endpoint = <&usb_0_dwc3_hs>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					ucsi0_ss_in: endpoint {
-+						remote-endpoint = <&usb_0_qmpphy_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					ucsi0_sbu: endpoint {
-+						remote-endpoint = <&usb0_sbu_mux>;
-+					};
-+				};
-+			};
-+		};
-+
-+		connector@1 {
-+			compatible = "usb-c-connector";
-+			reg = <1>;
-+			power-role = "dual";
-+			data-role = "dual";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					ucsi1_hs_in: endpoint {
-+						remote-endpoint = <&usb_1_dwc3_hs>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					ucsi1_ss_in: endpoint {
-+						remote-endpoint = <&usb_1_qmpphy_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					ucsi1_sbu: endpoint {
-+						remote-endpoint = <&usb1_sbu_mux>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &mdss0 {
- 	status = "okay";
- };
-@@ -1004,6 +1130,10 @@ &usb_0_dwc3 {
- 	dr_mode = "host";
- };
- 
-+&usb_0_dwc3_hs {
-+	remote-endpoint = <&ucsi0_hs_in>;
-+};
-+
- &usb_0_hsphy {
- 	vdda-pll-supply = <&vreg_l9d>;
- 	vdda18-supply = <&vreg_l1c>;
-@@ -1025,6 +1155,10 @@ &usb_0_qmpphy_dp_in {
- 	remote-endpoint = <&mdss0_dp0_out>;
- };
- 
-+&usb_0_qmpphy_out {
-+	remote-endpoint = <&ucsi0_ss_in>;
-+};
-+
- &usb_1 {
- 	status = "okay";
- };
-@@ -1033,6 +1167,10 @@ &usb_1_dwc3 {
- 	dr_mode = "host";
- };
- 
-+&usb_1_dwc3_hs {
-+	remote-endpoint = <&ucsi1_hs_in>;
-+};
-+
- &usb_1_hsphy {
- 	vdda-pll-supply = <&vreg_l4b>;
- 	vdda18-supply = <&vreg_l1c>;
-@@ -1054,6 +1192,10 @@ &usb_1_qmpphy_dp_in {
- 	remote-endpoint = <&mdss0_dp1_out>;
- };
- 
-+&usb_1_qmpphy_out {
-+	remote-endpoint = <&ucsi1_ss_in>;
-+};
-+
- &usb_2 {
- 	status = "okay";
- };
-@@ -1177,6 +1319,13 @@ i2c4_default: i2c4-default-state {
- 		bias-disable;
- 	};
- 
-+	i2c15_default: i2c15-default-state {
-+		pins = "gpio36", "gpio37";
-+		function = "qup15";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+
- 	mode_pin_active: mode-pin-state {
- 		pins = "gpio26";
- 		function = "gpio";
-@@ -1301,6 +1450,20 @@ tx-pins {
- 		};
- 	};
- 
-+	usb0_sbu_default: usb0-sbu-state {
-+		pins = "gpio164";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+
-+	usb1_sbu_default: usb1-sbu-state {
-+		pins = "gpio47";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+
- 	wcd_default: wcd-default-state {
- 		reset-pins {
- 			pins = "gpio106";
 -- 
-2.47.1
+Cheers,
+
+David / dhildenb
 
