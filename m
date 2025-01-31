@@ -1,99 +1,201 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1D01B87D0;
-	Fri, 31 Jan 2025 12:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68B94A24
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738328249; cv=none; b=BxaFIWlxQqWkGrP6qYzcNRiW3IW4Lh0XpsqOnXURZzGMpQnyh8az6lBuWRQS9KGoyhBz8rVejRz7sWcnhgij5wApvtGXh8aIZIg3nD/tKC+kSBL6HoLdQPKMFAfFMzMEPa+sMkJtWoPYBhGcr6zpjgDKf7kJz/U6zttF3UFwQGc=
+	t=1738328541; cv=none; b=e2KsMLhOuthl/ImR9SdPMRuwbDKsL8v/LY8/bAKTJ2xIWFRxB56r+RO4+nRal3mLWwg7vyj4O1+61tw6jcc4jfVlIIfu1NN03evBYNlGQ5CLcxmu8YvDCncC1Y1Uem/02ChXNfks5ShPM+g2QPZ1cFGtxz2E6GGUsNKAEVziPjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738328249; c=relaxed/simple;
-	bh=MWTOPnl3X0L9s26UuNZ2IT1yaSFBGFMGpeah3n4oGTU=;
+	s=arc-20240116; t=1738328541; c=relaxed/simple;
+	bh=jLkEP+c248Firx3pZ3XgM6+coOatgGRCIeC8+ny5f+U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=No3Z9pWsSp+wXqDHXuc0DpyrgtAL4zbd0E8hc1KuPcbm18Nb02pAjPCElZJSAUkYnR7NydqZ5DCQBOdJVCyFfOByFeYthPeTYHDoixsfs3TuoC1nF+U/OcNKF2UakgBMfqMsddz89LS47BMMwLN2SO28gu8QY65JjmnMtXvWWZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=OiLmHbsZ; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=DqCE8AKFlbIdUdcaIvT3HyDnPYXbu0E1gGW9d+i+pkpMbs2RhtNBQHLHHgNuQvthc8L7g37Hx15Leu44dNnIJNmRxbV3LeZhZ93qE6e4ga8TJU58rEzFWRV0Ir8jUFaxhtT2gy3p7wz66I/+pQM6zU+QSbIKr+yrmsfx4l9spWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nH3v5WYM; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="OiLmHbsZ"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BA28F10382D08;
-	Fri, 31 Jan 2025 13:57:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1738328245;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nH3v5WYM"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D86F144315;
+	Fri, 31 Jan 2025 13:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738328536;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PK0Mz0MEhUHvpJqzb6RF2PW2DlrRtcfGTBmOhZQAc58=;
-	b=OiLmHbsZXs78XwsxAum2p0e7pOqahRfqx5BbamxMAI0im7pNHiAne9ui1krP7XmwhxoFsd
-	4FVChTTPNk+9ZBAQleIojvXolSFnUOVlVYOI5c/kveC+t3XPS0VQrGvMgF/1lg1mKHWDIx
-	kCpwE16lEY7AEkbLAMh0PFn67Nr0/3XbXLu8Fmam50drilhxOaXpW8mUOwtIN2WPqB+Vxw
-	fSqwIAq44tP+M9K+5FUNhuf3LuxDIg5taTSkEcyIL6AwpavcARvyxeEqrhhz/YjZbkK4gY
-	HbJKEOjuCxWS5GUVuUrL1PhYgNIEJN3T3ECBVuJn8tnBPzTEGj7i0Y6rogJSiw==
-Date: Fri, 31 Jan 2025 13:57:19 +0100
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.1 00/49] 6.1.128-rc1 review
-Message-ID: <Z5zIrxIpEuMMNcNk@duo.ucw.cz>
-References: <20250130140133.825446496@linuxfoundation.org>
+	bh=XJwSHV11kphzeXrWnjeXrkif/bqrggQ85lvkHsuBw6I=;
+	b=nH3v5WYMhcZfITGnkH86Y6hheRWa1SEIvz7KB6HBphbq37u+6tWJYS1e7+QLOYc9POfX7X
+	msU711aBHV7+Hogs8aTslUvpU/SZ7LSn0uHlw8z+Emwcf/7YFWdX657OQLV4ErqkU0iZQi
+	I07zWn5sXK6OzvwNfaKOUpgzolb5gBLltg+kn1GB1HHMx+Gjz+RhV2JVQOZA+iyDzMsLjt
+	0mjn8bXFYhZORBqNnSNV7y2aYGn8BJxJUuIamzcRQQgfdqQoWr73JeD9fYDu+GlBQ2p5oZ
+	cDZL2jKR/KRiWbcPtQlcI/eRRaOkn3vfHY6XT1Y/pFwW6wL9O9Sap7pU/3Dt6w==
+Date: Fri, 31 Jan 2025 14:02:14 +0100
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
+Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/13] drm/vkms: Allow to configure device
+Message-ID: <Z5zJ1rEZyBEgd7DN@louis-chauvet-laptop>
+Mail-Followup-To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
+	hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250129110059.12199-1-jose.exposito89@gmail.com>
+ <Z5uDGr445jEfdt5L@louis-chauvet-laptop>
+ <Z5yYVov9_z6CDU46@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ia/kAMmuGVx1omxw"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250130140133.825446496@linuxfoundation.org>
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z5yYVov9_z6CDU46@fedora>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekkeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeffeduuddujeevueffkeekhffhkeethefggeeitdduieffhfffkedtfeeggfdvueenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhouhhishdqtghhrghuvhgvthdqlhgrphhtohhppdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhhoshgvrdgvgihpohhsihhtohekleesghhmrghilhdrtghomhdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmp
+ dhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
+On 31/01/25 - 10:31, José Expósito wrote:
+> On Thu, Jan 30, 2025 at 02:48:10PM +0100, Louis Chauvet wrote:
+> > On 29/01/25 - 12:00, José Expósito wrote:
+> > > Hi everyone,
+> > > 
+> > > In preparation for ConfigFS support, a flexible way to configure VKMS device(s)
+> > > is required.
+> > > This series adds the required APIs to create a configuration, the code changes
+> > > required to apply it and KUnit test validating the changes.
+> > 
+> > Hi José,
+> 
+> Hi Louis,
+> 
+> Thanks a lot for the quick review!
+> 
+> > Thanks a lot!
+> > 
+> > This series is amazing and better than mine on many points. I have few 
+> > comments:
+> > - a "strange" naming pair: add/destroy (I expect add/remove or 
+> >   create/destroy like other function in DRM)
+> 
+> I used "add" because the function creates and adds a display pipeline
+> items and "destroy" because the opposite function removes it and frees
+> its memory, so I wanted to emphasize that the action was destructive.
+> 
+> However, I don't have a strong preference about the naming. If you
+> prefer another pair of verbs, I'll be happy to change the function
+> names.
 
---ia/kAMmuGVx1omxw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So, I think create/destroy is a bit better: `create` with the 
+`vkms_config` parameter is enough to tell "it allocates stuff in 
+`vkms_config`". 
+ 
+> > - usage of "complex" list accessors, can't we just create iterators?
+> 
+> Yes, on the first iteration, I used the underlying structure: list
+> iterators for planes/CRTCs/encoders/connectors and xa_for_each for
+> the possible_* items.
+> 
+> However, I found 2 main issues that made me rewrite this code:
+> 
+> The first one is that, if in the future, we change the internal data
+> type, we'll have to change all the code using it. On this way, like
+> I did with all the other vkms_config_*_get_*() functions, the data is
+> encapsulated.
 
-Hi!
+In one of my comment I proposed a macro to help on this point. I think 
+this is sufficient to hide internals. (see patch 7/13)
+ 
+> The second one is vkms_config_get_connectors(). Unlike the other
+> functions, this one filters by connector enabled status. If we let the
+> caller do the filtering, we'll duplicate that logic.
 
-> This is the start of the stable review cycle for the 6.1.128 release.
-> There are 49 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+That something I missed, and a very good point.
 
-CIP testing did not find any problems here:
-                                                                           =
-           =20
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.1.y      =20
-                                                                           =
-           =20
-Tested-by: Pavel Machek (CIP) <pavel@denx.de>                              =
-           =20
-                                                                           =
-           =20
-Best regards,                                                              =
-           =20
-                                                                Pavel      =
-           =20
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+I will try to create a macro that do the filtered iteration, if I succeed 
+and you agree on the previous point, I think it does not worth it to have 
+those huge amount of code just to iterate over a list.
 
---ia/kAMmuGVx1omxw
-Content-Type: application/pgp-signature; name="signature.asc"
+> Because of these two reasons, I decided to add a getter for lists.
+> 
+> > - should we use pr_err in vkms_config_valid?
+> 
+> I think it is great to show to the user a reason why their device couldn't
+> be enabled in dmesg... But I'm not sure if there is a better way to do it.
 
------BEGIN PGP SIGNATURE-----
+I was not clear: I agree we want some logs, but pr_err is too 
+agressive (see patch 8/13).
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ5zIrwAKCRAw5/Bqldv6
-8mfrAKC9PuY6YXvBjMZCUhBqwdOv7dK7ogCgoZt3kgndSEULr3qt2ey8qVEo90s=
-=6XtO
------END PGP SIGNATURE-----
+> > > Louis Chauvet and I are working on ConfigFS support. In this series I tried to
+> > > merge his changes [1] with mine [2].
+> > > I kept his Signed-off-by to reflect that, even if I show up as the author of
+> > > some/most of the patches, this was a joint effort.
+> > 
+> > To avoid confusion, you should add the Co-developped-by tag, so it will be 
+> > clear that we worked together on this.
+> 
+> Good point, I'll change it.
+> 
+> > > I'm still polishing the ConfigFS code [3] and its IGT tests [4] (connector
+> > > hot-add/remove bugs) but the IGT tests also exercise this series and can be used
+> > > for additional test coverage.
+> > 
+> > I will take a look at those series. For the connector hot-add/remove, do 
+> > you have any example of usage in the kernel? I did not found anything in 
+> > the documentation explaining they are hot-addable.
+> 
+> I pushed a couple of WIP commits to the kernel and IGT so you can see/test
+> the crashes and hopefully share some ideas.
+> 
+> About the documentation: I didn't find much information other than a few
+> mentions to hot-add/remove. However, in one of my rebases, two new functions, 
+> drm_connector_dynamic_init() and drm_connector_dynamic_register(), were added:
+> https://patchwork.freedesktop.org/patch/628418/
 
---ia/kAMmuGVx1omxw--
+Ho! This is exactly one issue I had when developping IGT tests, sometimes 
+you fetch the connector list, and when querying info about a specific 
+connector you get nothing!
+
+> I'm still trying to make them work, but I think they are what we need.
+
+After reading the patch "https://patchwork.freedesktop.org/patch/628418/", 
+I don't think we really need to support "dynamic connector creation" right 
+now:
+- None of the existing driver do it (except MST, but MST need a lot of 
+  stuff to works)
+- If we want to support it later, just create a "useless" 
+  /configfs/vkms/DEV/connectors/CON/enable that you must write 1 before 
+  the device initialization to make the connector working. This way we 
+  will not have to break the UAPI (the file is already there, disabled by 
+  default)
+ 
+> Part of the crashes happen on the cleanup of drm_client_setup(). Adding a
+> connector adds modes in the DRM client, but removing the connector doesn't
+> remove them and, on cleanup, I get a NULL pointer.
+>
+> I'm a bit stuck, so help or tips are very welcome :)
+
+I will look at it next week (same repo/branch?).
+
+Have a nice weekend,
+Louis Chauvet
+
+> 
+> > Thanks again for this series,
+> > Louis Chauvet
+> 
+> I'll look with more time into your comments in the other patches next week.
+> 
+> Thanks,
+> Jose
+> 
+
+[...]
