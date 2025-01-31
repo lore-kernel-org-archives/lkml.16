@@ -1,64 +1,50 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C698023A9
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3DE28377;
+	Fri, 31 Jan 2025 01:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738287106; cv=none; b=Ggf3GrfR/DXLzRrthGRJJL3shTrxzWUn1Idb/EVnbRoljYzjG5l7EzH3+dcS1vBNhwY4mFDRMZq6woaQY54rBtsoNkLrUuhg96FJj39vY5Q2s2fBolRxmDC6WfDM6Us8ID/Jfniqj8PCZcdapXxX/3W1BEu4/PjN9QDB/mvkt4M=
+	t=1738287260; cv=none; b=aElXmQNON5xQpspbOXuyLU85x/fvIILm3NL5fp5b2TG5kUiFSLHKiF8hHrtbMKN8Hhcim00AbmSf9uAO9OR7WGo4MzRBakLVM70ISMdxbdG+S8A8+AHR2ouxCDUMmRSTqKlQvte9x1/2TWGNptcMzAXRdRZbEVZ9LNYJYkdgAWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738287106; c=relaxed/simple;
-	bh=1tLoSinO89mGQ5F24iVcL3OaxVWIwWTzqzxlZjUonqQ=;
+	s=arc-20240116; t=1738287260; c=relaxed/simple;
+	bh=aVGXiC4y4nMQNLzoXl1Kn6ix+nBLlrDRS2onLeXP7cg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y8PtrbsSb4Ut+jB5y7ksJJvoiL/pnMpPMPXAxgvgQAgqJZiI4ILkhODw5qYl8djgjotf5u5SEYtyf/RAv/ISu2X7SLI8IwhgD1aeQ6WAIB+8HHjv1o5/Rwc0M2YQHrbjQLhOgWME7m3BuC7GuHXhIchdBetQjgzUGZxZCwZNWW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=J7BqHWc6; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
+	 In-Reply-To:Content-Type; b=DcD5hsdRlio40UQpC3MIGzxoZIytQqOLnNB7xrO+OwedGgrHSyBNE/JtJYrMOUCsPf4LjXDq2sY298cTOOzCqD8TYX/74QXLYjyp5dVHQd0DfwfqZW/4trlX6MiGlZQEckNL24DKNFQEdGsZHGGgtE0pqp+hCmSLQfHYouAbqtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IGNZKdvb; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="J7BqHWc6"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2163dc5155fso26155795ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:31:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tenstorrent.com; s=google; t=1738287104; x=1738891904; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MG19W4SOPIaZi7OCinPeczwbesfkNxF5n0JVFRzeQlA=;
-        b=J7BqHWc6CV/K3sjDGsvMDY+w+feEescR1xLeu4FPufwF8LubbSWXL/va7OuhV+07Hu
-         y3oZhEVt2AEbzKxkzswOrbMjopgywfv4WJ4i1+rVxrtgk5YiJnjFwEEXeImz3ZkOfC6S
-         6BNoNbRBz7g+eRKnv4u7u8xaKo/DI+CliMoAnJSPQ73FRetzj67d7QjlrXNjqhsaPvCC
-         E0yri1nj8hupPVQK3arLvaDlCRNElq2fiRT2HeNQpoiGWoUc93Jc7s3j5NrrQek8iO3I
-         o5c5ZW6W072Bl74+R4aBa/GUrvSBjlej4WcEW06z5yLhBMPk3PyEp09dwr4U4vdwS8jq
-         DdjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738287104; x=1738891904;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MG19W4SOPIaZi7OCinPeczwbesfkNxF5n0JVFRzeQlA=;
-        b=lkpkMPu2emC8FsSzQp7GRF9uiew1uGVwpafCsABEGYzb8w1HynZpmIqvE4w6gbwPpb
-         ZnpGtllA6Z8S77koT/ybI+UYLZ3jw37myAutT1hfxTZtQ1eYQoT/Jk20ZEIYA0qFXWu4
-         lvLGWpoVFJ1/tX3Mgt/FQyZ/fwQdVRyn7fXkrAVsOnUaT58h6eZi4tv3YVJxzoU+JkZ6
-         jd4AJbA7Tufdzq13adJeUXAXfMeu2oOrBZPDnShNtprYHIyyOEeHAnpO1+RZbHvHL/B+
-         hsFv9bfkkxRx1PHeomYRFJ4vJu6zh4UBDmWbAuv30rWG4B8hIwbpmnK3nyfZWIYZyiUq
-         1VqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbG5J4v2SE5IRFOxp6LrKRF8x1F/m4hQGwBJuz66KPS4BkGb6mKwzS73AWSX2B7DHrLJkk5AKDszoReV0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuRlyFFTiQc+iHG5PqPqilrwOzdHqJj9APWMU9b3fNC0hXDFYS
-	dmICCj9Xlr1ZX8NhKX/dxtEJYsDcu+Sqpwy+ozbN1osslgo4I50GzCzHNrpkYQ==
-X-Gm-Gg: ASbGncuFpW4RnFcPbDmoEloW8z23YpykOB0A2I6tMTBlLX88n3i1CCN4OKbVq2vspA0
-	n9ckIAcyEcjctY66hv5fOh1H+xk8vudPWy0FMp3WmW7yUKh65gfVGSzTB4w2HLXizdb4EKUZs5D
-	JvpdQJWV2UqzROZ8v97ldEFP20QfGgZRW6miZ1ZElHXCS9SCzvKcE7soUuM3aINJSZQixM+wv+9
-	7cVvoMb1L5Ui69swWzpLhGSZ+0z0oiJrGUgsMEfXD/JR4qT+eyhafGiwkjKJGZbCgLsV0RQbPaK
-	cbopqdQI8oyJPlYN7cvv2JqRa4sP5bN+EQ==
-X-Google-Smtp-Source: AGHT+IF4Q8nENVfklGPnhiKtH5eyOQErysoSYV+Lhn5dkRBbuxx/QIH4nFvnyXq4lmP1dfXh+avEog==
-X-Received: by 2002:a17:903:22c4:b0:216:1cfa:2bbf with SMTP id d9443c01a7336-21dd7dd87famr149812315ad.35.1738287103992;
-        Thu, 30 Jan 2025 17:31:43 -0800 (PST)
-Received: from [192.168.50.113] ([27.96.222.7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bc97e7csm5137597a91.9.2025.01.30.17.31.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 17:31:43 -0800 (PST)
-Message-ID: <f1218075-94a5-429a-ab35-f47d3e79e80e@tenstorrent.com>
-Date: Fri, 31 Jan 2025 12:31:38 +1100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IGNZKdvb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738287257; x=1769823257;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=aVGXiC4y4nMQNLzoXl1Kn6ix+nBLlrDRS2onLeXP7cg=;
+  b=IGNZKdvbJMCVhFDLo1s5yVu/sS9U3oFv172yYFdIVJCeaMSQ/i8FNF6h
+   tWGGdSRwRHrE5QFYmhpyPEDc37m35Y7/+cVkzROHHhEUvliOlWUjvfKwT
+   kQhK7jocXcUsPyYpjSkkPSogAJ8UIcxTkq2DG2KIEwKhzC69v2qWh0C5r
+   uwEWcAsA0karPnU22WkUxqnyc/TDdAriXYirgwpB+FP1ZBjj0reAduwRb
+   62qk/tw3GTn3fo2VuhUE7j1Wf1EG7lCHDFDGcre145EDZEjbMu1felgsu
+   KopoVReNIzvo0oLZACAlaf6tCQ4SE+3uMdR5BDshunULKKcnw8dP5yu7F
+   w==;
+X-CSE-ConnectionGUID: 1Ec0InDzQ76NcD4vL/VPhQ==
+X-CSE-MsgGUID: aAnsZTUYTbuaBfV9LzdGfg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="61326561"
+X-IronPort-AV: E=Sophos;i="6.13,247,1732608000"; 
+   d="scan'208";a="61326561"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 17:34:16 -0800
+X-CSE-ConnectionGUID: pT6CSxBYT3aZyZhH5ZtypA==
+X-CSE-MsgGUID: bP5fE04RTLuh87xyvRLPCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="146682500"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.108.230]) ([10.125.108.230])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 17:34:16 -0800
+Message-ID: <562e4bdc-d0f3-4a4d-8443-174c716daaa0@intel.com>
+Date: Thu, 30 Jan 2025 17:34:18 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,117 +52,135 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] riscv: uaccess: use input constraints for ptr of
- __put_user
-To: Jessica Clarke <jrtc27@jrtc27.com>, charlie@rivosinc.com
-Cc: palmer@dabbelt.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Jisheng Zhang <jszhang@kernel.org>
-References: <20241118230112.2872978-1-cyrilbur@tenstorrent.com>
- <20241118230112.2872978-3-cyrilbur@tenstorrent.com>
- <EA2CB85E-E210-402E-B891-2F4420E55CDB@jrtc27.com>
+Subject: Re: [PATCH 0/7] Move prefaulting into write slow paths
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>, Ted Ts'o <tytso@mit.edu>,
+ Christian Brauner <brauner@kernel.org>, "Darrick J. Wong"
+ <djwong@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+ Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+ almaz.alexandrovich@paragon-software.com, ntfs3@lists.linux.dev,
+ miklos@szeredi.hu, linux-bcachefs@vger.kernel.org, clm@fb.com,
+ josef@toxicpanda.com, dsterba@suse.com, linux-btrfs@vger.kernel.org,
+ dhowells@redhat.com, jlayton@kernel.org, netfs@lists.linux.dev
+References: <20250129181749.C229F6F3@davehans-spike.ostc.intel.com>
+ <qpeao3ezywdn5ojpcvchaza7gd6qeb57kvvgbxt2j4qsk4qoey@vrf4oy2icixd>
+ <f35aa9a2-edac-4ada-b10b-8a560460d358@intel.com>
+ <t7rjw6a462k5sm2tdviyd7sq6n44uxb3haai566m4hm7dvvlpi@btt3blanouck>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-From: Cyril Bur <cyrilbur@tenstorrent.com>
-In-Reply-To: <EA2CB85E-E210-402E-B891-2F4420E55CDB@jrtc27.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <t7rjw6a462k5sm2tdviyd7sq6n44uxb3haai566m4hm7dvvlpi@btt3blanouck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On 18/1/2025 9:34 am, Jessica Clarke wrote:
-> On 18 Nov 2024, at 23:01, Cyril Bur <cyrilbur@tenstorrent.com> wrote:
->>
->> From: Jisheng Zhang <jszhang@kernel.org>
->>
->> I believe the output constraints "=m" is not necessary, because
->> the instruction itself is "write", we don't need the compiler
->> to "write" for us. So tell compiler we read from memory instead
->> of writing.
+On 1/30/25 16:56, Kent Overstreet wrote:
+> On Thu, Jan 30, 2025 at 08:04:49AM -0800, Dave Hansen wrote:...
+>> Any suggestions for fully describing the situation? I tried to sprinkle
+>> comments liberally but I'm also painfully aware that I'm not doing a
+>> perfect job of talking about the fs code.
 > 
-> That’s not what =m does. =m tells the compiler “this assembly will be
-> writing to this memory location, and needs the address of the location
-> for that operand”. If you move it from an output to an input then you
-> get the same assembly generated, but the compiler believes you are
-> *reading* from that memory, not *writing* to it, and so does not
-> believe the memory may be clobbered.
-> 
-> Now, it may well be that, by virtue of this being userspace memory that
-> is only ever accessed via assembly, and any inline assembly being
-> marked volatile, this in effect doesn’t matter. But it is still
-> technically wrong to model it that way, and you cannot use the
-> justification you are using, because it is false, and demonstrates a
-> lack of understanding for how inline assembly works. It has to be
-> correctly justified.
-> 
-> (I do note that neither x86 nor arm64 seems to model this as an output)
-> 
-> Jess
+> The critical thing to cover is the fact that mmap means that page faults
+> can recurse into arbitrary filesystem code, thus blowing a hole in all
+> our carefully crafted lock ordering if we allow that while holding
+> locks - you didn't mention that at all.
 
-Good points, I agree. I am happy to respin this patch move the =m to 
-output constraint.
+What I've got today is this:
 
-@Charlie Please let me know if you would like me to keep your tags on 
-the tweaked version.
+              /*
+               * This needs to be atomic because actually handling page
+               * faults on 'i' can deadlock if the copy targets a
+               * userspace mapping of 'folio'.
+               */
+	      copied = copy_folio_from_iter_atomic(...);
 
-Thanks,
+Are you saying you'd prefer that this be something more like:
 
-Cyril
+		/*
+		 * Faults here on mmap()s can recurse into arbitrary
+		 * filesystem code. Lots of locks are held that can
+		 * deadlock. Use an atomic copy to avoid deadlocking
+		 * in page fault handling.
+		 */
+
+?
+
+>>> I do agree on moving it to the slowpath - I think we can expect the case
+>>> where the process's immediate workingset is faulted out while it's
+>>> running to be vanishingly small.
+>>
+>> Great! I'm glad we're on the same page there.
+>>
+>> For bcachefs specifically, how should we move forward? If you're happy
+>> with the concept, would you prefer that I do some manual bcachefs
+>> testing? Or leave a branch sitting there for a week and pray the robots
+>> test it?
 > 
->> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
->> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
->> ---
->> arch/riscv/include/asm/uaccess.h | 18 +++++++++---------
->> 1 file changed, 9 insertions(+), 9 deletions(-)
->>
->> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
->> index 09d4ca37522c..84b084e388a7 100644
->> --- a/arch/riscv/include/asm/uaccess.h
->> +++ b/arch/riscv/include/asm/uaccess.h
->> @@ -186,11 +186,11 @@ do { \
->> __typeof__(*(ptr)) __x = x; \
->> __asm__ __volatile__ ( \
->> "1:\n" \
->> - " " insn " %z2, %1\n" \
->> + " " insn " %z1, %2\n" \
->> "2:\n" \
->> _ASM_EXTABLE_UACCESS_ERR(1b, 2b, %0) \
->> - : "+r" (err), "=m" (*(ptr)) \
->> - : "rJ" (__x)); \
->> + : "+r" (err) \
->> + : "rJ" (__x), "m"(*(ptr))); \
->> } while (0)
->>
->> #ifdef CONFIG_64BIT
->> @@ -203,16 +203,16 @@ do { \
->> u64 __x = (__typeof__((x)-(x)))(x); \
->> __asm__ __volatile__ ( \
->> "1:\n" \
->> - " sw %z3, %1\n" \
->> + " sw %z1, %3\n" \
->> "2:\n" \
->> - " sw %z4, %2\n" \
->> + " sw %z2, %4\n" \
->> "3:\n" \
->> _ASM_EXTABLE_UACCESS_ERR(1b, 3b, %0) \
->> _ASM_EXTABLE_UACCESS_ERR(2b, 3b, %0) \
->> - : "+r" (err), \
->> - "=m" (__ptr[__LSW]), \
->> - "=m" (__ptr[__MSW]) \
->> - : "rJ" (__x), "rJ" (__x >> 32)); \
->> + : "+r" (err) \
->> + : "rJ" (__x), "rJ" (__x >> 32), \
->> + "m" (__ptr[__LSW]), \
->> + "m" (__ptr[__MSW])); \
->> } while (0)
->> #endif /* CONFIG_64BIT */
->>
->> -- 
->> 2.34.1
->>
->>
->> _______________________________________________
->> linux-riscv mailing list
->> linux-riscv@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> No to the sit and pray. If I see one more "testing? that's something
+> other people do" conversation I'll blow another gasket.
 > 
+> xfstests supports bcachefs, and if you need a really easy way to run it
+> locally on all the various filesystems, I have a solution for that:
+> 
+> https://evilpiepirate.org/git/ktest.git/
+> 
+> If you want access to my CI that runs all that in parallel across 120
+> VMs with the nice dashboard - shoot me an email and I'll outline server
+> costs and we can work something out.
 
+That _sounds_ a bit heavyweight to me for this patch:
+
+ b/fs/bcachefs/fs-io-buffered.c |   30 ++++++++++--------------------
+ 1 file changed, 10 insertions(+), 20 deletions(-)
+
+Is that the the kind of testing (120 VMs) that is needed to get a patch
+into bcachefs?
+
+Or are you saying that running xfstests on bcachefs with this patch
+applied would be sufficient?
+
+On the x86 side, I'm usually pretty happy to know that someone has
+compiled a patch and at least executed the code at runtime a time or
+two. So this process is a bit unfamiliar to me.
