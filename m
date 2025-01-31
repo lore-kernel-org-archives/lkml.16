@@ -1,150 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B21D16EB7C;
-	Fri, 31 Jan 2025 10:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3859517B50A;
+	Fri, 31 Jan 2025 10:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738318625; cv=none; b=pgr7DOlDSlJ2EkCbrGf1STqyLhKwjV0rO/g1Da9Ql0grw7DIqo6Q/MhxAp+oG4fKv9dlRA/lY6STcwTD7AqBue2ZuYOGS9ayxRt67TlGP/4sRziZrREjPwMpzW8oF1vy+xg/cElV/0t8i/vMd5hHMJ3NjVA3yiIuWxepGwWIRz4=
+	t=1738318661; cv=none; b=Cbcdw3uMZzCHYizRpbOqVc3GOluoND7FfO68IJc3jGLM7/PiSZ1D8OQC3VGpzYoOryWDOI6wZdpHtGBuMZnE8IO6xRucX4vbUYU6q201uUVtRMQD+rRHUfNjrr06JJPlbfXem6FDjYwogqu4JgaIX65+7xrwjtWt0AYRSmuTa0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738318625; c=relaxed/simple;
-	bh=kJJvbQKt6Q32DAbri1MCULy5VGGdWlsbktPaKMFFtmM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LKA0HBtateaKAZARLpKwBzcer8veRBYsWkiDKeWagSC9z12F0rQpL5cTfN/cewa0+N7kTexXBp/wdDH/ZCabXF77gfU4OM8rMVmiA5dC9F2hQmcBXUpgcY6aodIPkIUeKD6D+0nT1fQpm1CEbYlYcZ33JmbuQpRjVl+MWKUVLdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QzXmk3LU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738318661; c=relaxed/simple;
+	bh=A9/mYfP+OD/0j0zfraXjknqg/Xt/IbJ7KyXe9WJnOOg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GXQdYpWSFjoGWxPwXaJ89XgkgXPhOcHkqGA3PvIgW59QtdS/8hSJVlJ7YVnHF6sWBNTkAALyojRUB/CJwBIT9WZoQCT8RfLJq/yr7e3xBKHN4cp1L3XtS8W3BixgenU/r9UWhZzlfQDPq9X0jCHC7sgh/rH1XjIqH+Uxu/IoyOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h1si7qW+; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QzXmk3LU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78128C4CED1;
-	Fri, 31 Jan 2025 10:17:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738318624;
-	bh=kJJvbQKt6Q32DAbri1MCULy5VGGdWlsbktPaKMFFtmM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QzXmk3LUH+cputlgRzi3JRLQYNaPoh6m1HGH0fkRdhR8YJRpNW/N/dT5iu81Dbni0
-	 P0NI+Je3GHtPx9zYIvcaQzokWzADha5ns4xp16UDxhYWMSpJiSsPpEc0PSUjKSNuF0
-	 7yZLzIrJ4C8/Ckoz3gtsNlla/FyxTCABtHjkz+fkI3GnOoHhe4xfi2nstQZiY0yqRM
-	 verTCrRJpwRpRKAhCI6DNa3UKh/6FDksP994mXgBQiP8viK2tOvWTpWy4CsNMjpv7C
-	 6BtDbBHcZP/1jmPFLXFsSWUrQckHdCmPMSg2Lk3CxZut1DIBoWX2pV4E7zTM0bnt5a
-	 e7d5JYK0wBiCA==
-Message-ID: <3a0f3d55-3828-43c9-b2d2-291f767c50e0@kernel.org>
-Date: Fri, 31 Jan 2025 11:16:59 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h1si7qW+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738318659; x=1769854659;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=A9/mYfP+OD/0j0zfraXjknqg/Xt/IbJ7KyXe9WJnOOg=;
+  b=h1si7qW+8o0J6SAPMjbqynoEAgfFVwCPVKT8yAMVKSuaTiW1KvhKoRfQ
+   91y0Nee8PyM9e8HfJwmRRVqgekjxtYRNplW3cZrFa9XCwXtvJnfspFkZs
+   mwMVeQQ25/xA7Qf0HSJuXfLCZYRODQ7kV5VSOEZ1LZIXLYAxzvVLctSeX
+   PUvyBnnWacnDz1fPbOjuadpUhdfvjhdF/StiywfePnoRODRx1UBZR4rbd
+   wALIIer60DQ4LXiyDmKUHRsnR0LGxaW0JqQnxoAiAJr+z1CN6I6H9oxUc
+   q0y9EDx2Q9eFuAOYTmH//T1ArhscCCKoTd5jnbB2KRoIkkOLKUxLibbZ2
+   A==;
+X-CSE-ConnectionGUID: YMY9hY7VTAG7+nvuuhMCDw==
+X-CSE-MsgGUID: hi7zRDr7THKpUnao723muQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="38777207"
+X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
+   d="scan'208";a="38777207"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 02:17:38 -0800
+X-CSE-ConnectionGUID: Ik9Mj5lLQ5SycvG65zzElw==
+X-CSE-MsgGUID: GRLBwycgRvqs9fmyICpi8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
+   d="scan'208";a="114596173"
+Received: from apgcp0c531115.png.altera.com ([10.244.76.209])
+  by fmviesa004.fm.intel.com with ESMTP; 31 Jan 2025 02:17:35 -0800
+From: Mahesh Rao <mahesh.rao@intel.com>
+Subject: [PATCH v2 0/3] stratix10: miscellaneous changes and fix for child
+ driver probing
+Date: Fri, 31 Jan 2025 18:17:23 +0800
+Message-Id: <20250131-socfpga_sip_svc_misc-v2-0-eeed4ebc35f9@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/7] arm64: dts: rockchip: Add rng node to RK3588
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Olivia Mackall <olivia@selenic.com>, Herbert Xu
- <herbert@gondor.apana.org.au>, Daniel Golle <daniel@makrotopia.org>,
- Aurelien Jarno <aurelien@aurel32.net>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-crypto@vger.kernel.org
-References: <20250130-rk3588-trng-submission-v1-0-97ff76568e49@collabora.com>
- <20250130-rk3588-trng-submission-v1-6-97ff76568e49@collabora.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250130-rk3588-trng-submission-v1-6-97ff76568e49@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADOjnGcC/22NywqDMBBFf0Vm3ZQxWvpY9T+KSDKJOlCNZCS0i
+ P/eVLrs8hy4564gPrIXuBUrRJ9YOEwZ9KEAGszUe8UuM2jUJyzxqiRQN/emFZ5bSdSOLKSsJdf
+ Zs0HUF8jTOfqOX3v20WQeWJYQ3/tLKr/2F9T6fzCVChVZRw6r2viqvvO0+OeRwgjNtm0fEQ49D
+ bgAAAA=
+X-Change-ID: 20250109-socfpga_sip_svc_misc-bbcdfb7a0028
+To: Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, 
+ Tom Rix <trix@redhat.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Wu Hao <hao.wu@intel.com>, Ho Yin <adrian.ho.yin.ng@altera.com>, 
+ Niravkumar L Rabara <nirav.rabara@altera.com>
+Cc: linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Mahesh Rao <mahesh.rao@altera.com>, 
+ Mahesh Rao <mahesh.rao@intel.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738318654; l=1582;
+ i=mahesh.rao@intel.com; s=20250107; h=from:subject:message-id;
+ bh=A9/mYfP+OD/0j0zfraXjknqg/Xt/IbJ7KyXe9WJnOOg=;
+ b=t4qytP/UpuSFd6rfZU7WuUJqJ0qJXcX2m+x6VSjFqpjAZ5hYZuIfs8zw/yb24D9xNLRdExing
+ Z9/3VpVxR5MCxFj+xRw/zdUgtdt6uTc5f4IG3K6WweezbvgQwlQPQ4c
+X-Developer-Key: i=mahesh.rao@intel.com; a=ed25519;
+ pk=tQiFUzoKxHrQLDtWeEeaeTeJTl/UfclUHWZy1fjSiyg=
 
-On 30/01/2025 17:31, Nicolas Frattaroli wrote:
-> Add the RK3588's standalone hardware random number generator node to its
-> device tree, and enable it on the one board I've tested it on and can
-> verify it produces good output, the Rock 5B.
-> 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3588-base.dtsi   | 9 +++++++++
->  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 4 ++++
->  2 files changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-> index 8cfa30837ce72581d0b513a8274ab0177eb5ae15..1c72922bcbe1afd7c49beac771f8b7c6e5cc6e05 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-> @@ -1921,6 +1921,15 @@ sdhci: mmc@fe2e0000 {
->  		status = "disabled";
->  	};
->  
-> +	rng: rng@fe378000 {
-> +		compatible = "rockchip,rk3588-rng";
-> +		reg = <0x0 0xfe378000 0x0 0x200>;
-> +		interrupts = <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		clocks = <&scmi_clk SCMI_HCLK_SECURE_NS>;
-> +		resets = <&scmi_reset SCMI_SRST_H_TRNG_NS>;
-> +		status = "disabled";
+The patch set includes the following changes:
 
-Why? What resources are missing?
+- Conversion of the devicetree binding file to JSON-schema for the Stratix10
+  SVC driver and its child stratix10 fpga manager driver.
+- Addition of support for probing the child driver. This fixes the failure
+  of child driver probing as the SVC driver node has been moved out of the
+  SoC node.
 
-> +	};
-> +
->  	i2s0_8ch: i2s@fe470000 {
->  		compatible = "rockchip,rk3588-i2s-tdm";
->  		reg = <0x0 0xfe470000 0x0 0x1000>;
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> index d597112f1d5b8ee0b6a4fa17086c8671a5102583..00a915cf266202e26b274cab962f7bf6bcf76fc1 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> @@ -430,6 +430,10 @@ &pwm1 {
->  	status = "okay";
->  };
->  
-> +&rng {
-> +	status = "okay";
+Signed-off-by: Mahesh Rao <mahesh.rao@intel.com>
+---
+Changes in v2:
+  * Added brief description on stratix10 soc fpga manager
+    in the binding files.
+  * method property in stratix10-svc binding file was
+    changed to array of strings.
+  * Updated/fixed the usage of of_platform_depopulate()
+    in the stratix10-svc driver.
 
-I don't see how RNG is board related.
+- Link to v1: https://lore.kernel.org/r/20250122-socfpga_sip_svc_misc-v1-0-cbdcd034ae34@intel.com
 
+---
+Mahesh Rao (3):
+      dt-bindings: fpga: stratix10: Convert to json-schema
+      dt-bindings: firmware: stratix10: Convert to json-schema
+      firmware: stratix10-svc: Add of_platform_default_populate()
+
+ .../bindings/firmware/intel,stratix10-svc.txt      | 57 -------------
+ .../bindings/firmware/intel,stratix10-svc.yaml     | 94 ++++++++++++++++++++++
+ .../fpga/intel,stratix10-soc-fpga-mgr.yaml         | 36 +++++++++
+ .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt | 18 -----
+ drivers/firmware/stratix10-svc.c                   | 14 +++-
+ 5 files changed, 141 insertions(+), 78 deletions(-)
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20250109-socfpga_sip_svc_misc-bbcdfb7a0028
 
 Best regards,
-Krzysztof
+-- 
+Mahesh Rao <mahesh.rao@intel.com>
+
