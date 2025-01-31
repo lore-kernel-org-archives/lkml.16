@@ -1,44 +1,48 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9451E15575D;
-	Fri, 31 Jan 2025 07:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464AD145A18;
+	Fri, 31 Jan 2025 07:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738310280; cv=none; b=uo8H9BCICuExAXuGjERXNM6eQ8yduaLjibvS/ol4/Luqzp8YPlZP6xnUP07jUGpZRTQ7aKI9DWZILLj8eTiE/zmmHAVWdMj7Vxk9JcE4h7Y3ZkRDBNMbnv4sH75tWXRDZNbpxlJ35Wu0WVnPIAXN8QxIxVOojFm2kVnaf3KrCgY=
+	t=1738310379; cv=none; b=CKetBeC7gjW1YPTjE4O5m1Kuc4uu0AhIfSSUe2/j48PROcwknFF+F++D8WzPQptjA4mMK2l4D52om6UIYOxKKkiOlMK10Ep1ucW0n7xBLszrgvRj28XcyW1qBAFQ+zYoS7RXcbaRpRnu1lN8S1/pRtfD37B6Y7aP8L5ROhw9SR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738310280; c=relaxed/simple;
-	bh=Kjq8y6HvSNYk7y3ysI830QvgE7bPZ4g3vNr9rSG4MAY=;
+	s=arc-20240116; t=1738310379; c=relaxed/simple;
+	bh=MrTBDtvw+yVeInA7FGcxYd/BxkKv8pwHHiPDKC2IECg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FbM9cOr0n0B8LZSPNu2My04oL2LzY1uf1lnqYjIdBwnmrMlSS0jOvoG9sZ3u6LA13FVH7QcHvDXH3izeoKqv/1TKCJAts14C7PM3CSletX5FCjoobEj49fGwNftE2dK4jkYCOwFl3m7GOkCQkLaMnpUmKD2BmUMtvchLHq1dXrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 6B4C668B05; Fri, 31 Jan 2025 08:57:52 +0100 (CET)
-Date: Fri, 31 Jan 2025 08:57:51 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Greg KH <gregkh@linuxfoundation.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=SWpdMTzoTKN9+DDXn8r0etpwXedyuRHWJyuENGM0VdJiCGoVZYpsNJThrdQutwXpjAhKY9bZdLMmwq4EGtne/E6MInjMVsVQ80BjztHwNpRWUnnsmqwVoOCSkKJQYskd24HlVKV2g+hKXWFUb10PoqqEwp/AYQBSmnVfWQure0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=3OP7HRyy; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3OP7HRyy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=toTwADMrft/0k8kMqiV7tZPS1yw7Gy/Mce8djcNqk4E=; b=3OP7HRyy+2U8LtuAjoR7Ymr8wL
+	utuh2gmDf+9jJFVqBjd85uW7x5JPJSe9ejd0sWAL/K6y1YZ6TsAcWqoCADek3e6F/PL8zwRPNj5TW
+	41vePPYOZfJdLqp2nbsYPqtHGjQR6KT+gJ8+HiOMsa+7K5q+c/YA6V3cRyHxfKp37Emdb/eMNzrdL
+	3IkuyJYHxRf43O4Uz2gXFZHQk/gIPR4sbTabbvJUNEQhBTi7nCmv9xB0jO5LQ0tRVRDhdanuAqUTi
+	KYAeSITNjjmzxq7caGO1t9VckBMlTr5KANtAAwWFwNUhDbxSQMESGLQJyvozxtxfQUV2Zw4ufLh94
+	kaJDdWlQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tdlw8-0000000A9QU-1Kns;
+	Fri, 31 Jan 2025 07:59:36 +0000
+Date: Thu, 30 Jan 2025 23:59:36 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org,
 	Linus Torvalds <torvalds@linux-foundation.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	daniel.almeida@collabora.com, aliceryhl@google.com,
-	robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
-Message-ID: <20250131075751.GA16720@lst.de>
-References: <CANiq72=R2N+QiCiHZQu-6YJ9aYpn_bik3BW3U=nAW3jL7unzLw@mail.gmail.com> <20250108151858.GB24499@lst.de> <Z36X_ZnCmBQBMoZ6@pollux> <20250109080812.GA20431@lst.de> <Z3-NqwAG_96yq8VD@pollux> <20250110083955.GA5395@lst.de> <Z4D5a5NYrAbNxUL6@pollux> <Z4kG5AcVeQKegLnb@pollux> <20250128092334.GA28548@lst.de> <Z5qeoqRZKjiR1YAD@pollux>
+	Ted Ts'o <tytso@mit.edu>, Christian Brauner <brauner@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/7] iomap: Move prefaulting out of hot write path
+Message-ID: <Z5yC6EIUslDmsn9r@infradead.org>
+References: <20250129181749.C229F6F3@davehans-spike.ostc.intel.com>
+ <20250129181753.3927F212@davehans-spike.ostc.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,22 +51,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z5qeoqRZKjiR1YAD@pollux>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20250129181753.3927F212@davehans-spike.ostc.intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Jan 29, 2025 at 10:33:22PM +0100, Danilo Krummrich wrote:
-> I accept that you don't want to be involved with Rust in the kernel, which is
-> why we offered to maintain the Rust abstraction layer for the DMA coherent
-> allocator as a separate component (which it would be anyways) ourselves.
-
-Which doesn't help me a bit.  Every additional bit that the another
-language creeps in drastically reduces the maintainability of the kernel
-as an integrated project.  The only reason Linux managed to survive so
-long is by not having internal boundaries, and adding another language
-complely breaks this.  You might not like my answer, but I will do
-everything I can do to stop this.  This is NOT because I hate Rust.
-While not my favourite language it's definitively one of the best new
-ones and I encourage people to use it for new projects where it fits.
-I do not want it anywhere near a huge C code base that I need to
-maintain.
-
+Only this patch out of 7 made it to linux-xfs.  I have no way to
+review the patch without the proper context.  Please make sure you
+always Cc all patches to all recipients.
