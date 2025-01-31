@@ -1,74 +1,66 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19158632;
-	Fri, 31 Jan 2025 08:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B38632;
+	Fri, 31 Jan 2025 08:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738311882; cv=none; b=oQwlrhz6ylAkwWf0RrfNovrQ94Ef3oNREkJWz7N38IPyLywyL/nefSYSpwMpuqUo4RN1SADivAste3GXs2oJYyNeINUt6k86pILzmI04fSGNEYHVp4faZPqaeD/8nwJSYKJKzOv6gV8uFMMCcNTESQWVardIOKv32rjVMI5tP1I=
+	t=1738312080; cv=none; b=XN4zT58r5MYJtyDIwrC/xPpi/OtYMr7NWZXVWZMwplcxYl/IT5yqliLcrPPaSF+5yzR3E/4MzGwHpUG1C4h9Q4yszhuZiNRU80IlC6+MhVSuG5S/q2ZzrVoZqNHRR/2qnDNQ2LMhDI9W9ozIA66cwiHr8D/JXCAt+n/zWmuA894=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738311882; c=relaxed/simple;
-	bh=0jINTffwp3wlAAmtPei/UpSuvbGNllu4KSmk9I8rEso=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=XiTvY3zDy1YHsogo5B1VlDqB0l5e6NwjLBlHVln5h0Bx40eRPVI4t9cV/xFbQlVWxYUQYzZOf+BjNvHHj7Zn2jJDUW5Vfc8tQ1Ie/uU8yDHgCMOmd5GU4/QLvGW2yZPnjTv/qvRNAVYT/Sp2SP4mQ7JahUB9QE0XxU3Jsz2AgfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=N15vyaVE; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1738312080; c=relaxed/simple;
+	bh=+lQ88HgYihnZe8QsK+4BdBsUiUilDPdJ3jiVQhGb30I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s990DB6nwZEhDIZZvx8/NCWegbdOnRdyJNZARMzRjw1+NvaoFOjkGz48NW88qMfzG+aYfYT98k6aY8Nn0X+gyT0V9xKtUHRMgov3PaqEPNzNkzpzeSb5GEEfZQdjPec6sYYY58QbyMcNqMG07njvSYtZLYjFCda12FzZX+wk1QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=GkXwtZor; arc=none smtp.client-ip=95.143.211.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="N15vyaVE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:Content-Type:MIME-Version:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=PghRV3G2nYG3tltp0NImxhGt1QpkqEf7Rsmzl10Sh1w=; b=N15vyaVEYAZg+XXMp1kQkgdguF
-	TpPpkVA5ex5aFQbLkBPf0w/M2uhPvnkIPtmxrxn51YWJiTcMwqrDQ2tD/VvUazmCJCXbQJyvI7QKE
-	FSOv4yF/Ys8f872UGThwDH0PB1G/0PW2dDj4AKmyAZPu26Nrjj/M/KGyO3t6nzu2o61GAqeiFaM7z
-	Pnap+fuNP73lWvAhDefnQUHADFzThIL137/kpZBVsg2ZBv+ukp++DZJuHNUYYBD+y7JeYGC1DcTPU
-	iemXsADNSDrvDyINpANQKZl60cdA3LM1raD7zcZ1MRPiaXwr8Jf1cEI+Jj+rJsBrlEH9CXNSTy8K0
-	pHyRvPBA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tdmKL-0000000Gloi-32BI;
-	Fri, 31 Jan 2025 08:24:37 +0000
-Date: Fri, 31 Jan 2025 08:24:37 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [git pull] hostfs fix
-Message-ID: <20250131082437.GW1977892@ZenIV>
+	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="GkXwtZor"
+From: Denis Arefev <arefev@swemel.ru>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
+	t=1738312067;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+lQ88HgYihnZe8QsK+4BdBsUiUilDPdJ3jiVQhGb30I=;
+	b=GkXwtZorWGYMmFiZuQcW9e80jh4ByTO/BpgMtWWZZ3sRlTy+ibu6KAAdARJ95IhgdJnaoq
+	VzQTcdSVTYVJlgfdRvOFQ2jTTr9MW3wzgemRwqIjA9/dCvBppeXRm7zIQ2/7bn7CoSRXog
+	vcryloj5Bau0wVDYlRIfAOUIZX3OP+Q=
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Willem de Bruijn <willemb@google.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	virtualization@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH 5.10 0/5] net: Backport fix for CVE-2024-43817
+Date: Fri, 31 Jan 2025 11:27:36 +0300
+Message-ID: <20250131082747.4101-1-arefev@swemel.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-The following changes since commit 40384c840ea1944d7c5a392e8975ed088ecf0b37:
+Link: https://nvd.nist.gov/vuln/detail/cve-2024-43817
 
-  Linux 6.13-rc1 (2024-12-01 14:28:56 -0800)
+[PATCH 5.10 1/5] net: more strict VIRTIO_NET_HDR_GSO_UDP_L4 validation
+[PATCH 5.10 2/5] net: drop bad gso csum_start and offset in virtio_net_hdr
+[PATCH 5.10 3/5] net: tighten bad gso csum offset check in virtio_net_hdr
+[PATCH 5.10 4/5] net: add more sanity check in virtio_net_hdr_to_skb()
+[PATCH 5.10 5/5] net: test for not too small csum_start in
 
-are available in the Git repository at:
+The bug has been fixed "silently" in upstream with the following series
+of 5 commits.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git tags/pull-fixes
-
-for you to fetch changes up to 60a6002432448bb3f291d80768ae98d62efc9c77:
-
-  hostfs: fix string handling in __dentry_name() (2025-01-11 01:37:44 -0500)
-
-----------------------------------------------------------------
-hostfs __dentry_name() fix
-
-use of strcpy() with overlapping source and destination is a UB;
-original loop hadn't been.  More to the point, the whole thing
-is much easier done with memcpy() + memmove().
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-
-----------------------------------------------------------------
-Al Viro (1):
-      hostfs: fix string handling in __dentry_name()
-
- fs/hostfs/hostfs_kern.c | 27 ++++++---------------------
- 1 file changed, 6 insertions(+), 21 deletions(-)
+49d14b54a527 net: test for not too small csum_start in virtio_net_hdr_to_skb()
+6513eb3d3191 net: tighten bad gso csum offset check in virtio_net_hdr
+89add40066f9 net: drop bad gso csum_start and offset in virtio_net_hdr
+9181d6f8a2bb net: add more sanity check in virtio_net_hdr_to_skb()
+fc8b2a619469 net: more strict VIRTIO_NET_HDR_GSO_UDP_L4 validation
