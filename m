@@ -1,135 +1,198 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9431547E4;
-	Fri, 31 Jan 2025 22:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C502A1547E4;
+	Fri, 31 Jan 2025 22:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738362387; cv=none; b=AWH8FibDEdjM5fonL5eVPMWN2/mi4+3IQgdQ7OD1hROD8viFUvLRJMv1TcCUQoeXNPOYjgCqX4eOcZ3wQEeEYUxyaWjCnAJLh512bKsZAKY1aE+mOfmIhg6pvFhNsUMc/veSpmLYfmbfQgRTAKkjDk5ig1RTEAqm9Z1XBt89YSU=
+	t=1738362483; cv=none; b=PwFWeyG/Yzpo8HFLZ6UYZov575GfMpYAk1Mk2XaNok1j4DKJQrjHT3IKlD0x1vX8p4W3+XUTIm4gftVm73eltJfE8pOTcGOoiO0qUvEcbLG6wv4F4y5HENeN+u1EtmmCKKHm37UqofBDUEEyZ4pHlG7BxB1TA06zRcKTh2wswiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738362387; c=relaxed/simple;
-	bh=OgUXJrUeJvprERmitSRLxVjTBBH8BrCM72OrWSR20Cw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SAqbftsRjVReAG0SMXPT0D+S7er1Ni2TZFMzHILd38gxLtdnPNtB3200xQ6Q7DvA5J/M5EZDakLLOEsAnkKP0ebFOgusreo+cCrMqRf/ul6A0DsNT5p7i8x5Itmt1OkRoyDm1tRax8T+Hf34EuQeQUHuMdjOpqvNxVzIvqVCINI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YnsPl0A4; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738362483; c=relaxed/simple;
+	bh=i7+bLb+rCCdd+YKdkCnY41uP05Vh5IhTSwJdJW0hLgc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K0oGf/xuufSQR+bXJilD3Qy1fN1xgyObVGcrZbyMlICqj6FOp4Y3yULe+0b0HJI26aRRKIGg/70Wgoha+qzNAjqRbQhHwABMcWgGKpcrRQx6ljqWRhzIxszQuXEmlPM2NlGQ6POfhoPV99QyJQwCCWqcOsCxapTNsx+2fpOGuQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zp4lt9zU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YnsPl0A4"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ef72924e53so4411540a91.3;
-        Fri, 31 Jan 2025 14:26:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738362385; x=1738967185; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=O1N8qF8wxkIaqT7isLgj59NRHAsf5z/eWOihNCvPQVc=;
-        b=YnsPl0A4N8WaPEcB8gTKdfiRpYYIZ5MsoU0Mumur1OvxsHrPLddm+XeMyG9Zype/mR
-         v8h+Zslqy6nkpNud7YM7LO2y8raLtc4jDvic6vyy3lD1Csjc62Lvpe/Vz/Oo65GALo8B
-         porEva+MNpmcewARD2k2M25MuR5P8Yu64m+DyDhL08ZhrfA53BYjuRw/ha8UTK0QuDMh
-         vlg/UQ/jd6xBhjqeqJ9QubHFR1p9qgL7msjdF4v8sLbtrolrjkWqiwrYUBuD7894tHnI
-         RF6mAEeIbBbFTyM7iCl+XwobSxFGXbCXDOynicCHhQuiLlI3PMpqKctZ8m+vQhaV7tl1
-         4Lyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738362385; x=1738967185;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O1N8qF8wxkIaqT7isLgj59NRHAsf5z/eWOihNCvPQVc=;
-        b=iul3WtOoy7woodHrCI8hGogqiF8/6rHyCapXC1dJ5CknkSrNeivI/B2BHNNCAHc2WM
-         gr4CncXA2Eka0i4IeVObkYuM6ykmde0sJIO9xnvrm/S6gu9kg6wR5T5NAHCjbPUmxblH
-         /Nqdxr9HqAkzNmZ0JGRAeEuVBe9gN+cMPj2WADSF0DzyhK+Vy2EdSY3wHyg2epAjSTY/
-         rZY/O1+mZmeKoQ98TzYQauCND0vHCPbxrwRb9N+/pqLFQTJcVzjJA5jz/bXpWlfwZUDc
-         AN7S/i/7VwL+xAABVwy47BXgY1jr0baOFwu9UYmkO+3NGwVAmosq6m2mrgFGyyigmoBM
-         xHKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnCa3wubnysk3hzplkH5H8VhpzrPRJxTbdGannEfeBfkx8qMX8sCGUzKD7ozXLYAOU/NS0Wv08EYnd/tNXImM=@vger.kernel.org, AJvYcCWXe5ftwgTvbtpbNorF24Y88+jSeKhAskjb06s+zgDXRk1NuZpFXxHtFUKtgRHLN+9TgQ3k6o/Asc4mBlY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHwxqXTUqbPgc4XjjmItRsP4xSyuRxLphvdQpt1/+MQrI0i+y9
-	ZdvXYR3QMBfbbXrUUcxYS50cdF8BtkOzVYIAduqJ+J3367zYnIak
-X-Gm-Gg: ASbGncuvrz+TGDvrk0lIH9+mlUDhcFME45yVS7dFoC3QZaHK6h0e/+68Wj87TJCtxFb
-	Svdru+dUAZ3/O/NoDfNOV5FcAZk+7hkaQF1nEGIerkD4NALGoyxwhMduqv5XpMMtduYBXL2/6RL
-	9wzHiigjhHOshvAD0YbJwYUDe5POWAEkAFWimNbaqQ/oyAq5Sm946H6O8eB5ZPFf9qbhtkW3JFv
-	4YDuhcbWhyNCLExwQELesKhgGe6yFBFWJjnNeBanYYoK0jm6u8n9j/bRVqHE3jg9qZfgOe/wA4o
-	AJiw50SwzgmfX6EDgVAS1Y8DVy3cMAdL7KwsPjWnDDkY3/JS13AqdviPjYDJ2H3e
-X-Google-Smtp-Source: AGHT+IG6AF++SREIZSC2RLDhfXHnVTBwaMMNaCH/iC0yaaOu4MhGVZIijPhNO2xWzvyzhoOQB5f5pw==
-X-Received: by 2002:a17:90b:5688:b0:2ea:5054:6c49 with SMTP id 98e67ed59e1d1-2f83aa8279dmr24002782a91.0.1738362385132;
-        Fri, 31 Jan 2025 14:26:25 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bfdb81bsm6407936a91.49.2025.01.31.14.26.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 14:26:24 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <28754bd6-aa1e-4f48-8f48-e7d54a9d282b@roeck-us.net>
-Date: Fri, 31 Jan 2025 14:26:22 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zp4lt9zU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D05A7C4CED1;
+	Fri, 31 Jan 2025 22:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738362483;
+	bh=i7+bLb+rCCdd+YKdkCnY41uP05Vh5IhTSwJdJW0hLgc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zp4lt9zUoqnrBEraF8mA6/1azCHnS/4nOJYF+ME/EHzK6WgAWnaBQoR4SHE0itkl6
+	 WrZ6ciKI7j9cTR7rXXhjROtCi2JxfSgoCVC2p/G4ONPko2zvy9TXSiFlP+CU8eIkbE
+	 bs49RDvztblmdtPDEjGYHaazoyel4z2BZ/pVNOft41cfLVMdi9/qNT2/6wbYyBM03b
+	 AO/g8Tb6SkwT6TzOKYbrqOi6Pv8r6wLjXnTPQk9bBAjRb+HrCRTe477ynSuU6Vzc1R
+	 XL8kaxnpp5nZKiZE37Gvtq1XF6L57vI2MCEwKukLBxOttteRq+wSl3J45N20ImcNaX
+	 cXYQOnfK4xZvA==
+Date: Fri, 31 Jan 2025 14:28:01 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>,
+	Atish Patra <atishp@rivosinc.com>, Leo Yan <leo.yan@arm.com>,
+	Beeman Strong <beeman@rivosinc.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+Message-ID: <Z51OcYYDuZLw1Yqo@google.com>
+References: <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
+ <Z4WNT_UX9eMD_txf@google.com>
+ <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
+ <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
+ <Z4f3fDXemAMpBNMS@google.com>
+ <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
+ <Z5qjwRG5jX9zAGtf@google.com>
+ <CAP-5=fV4Q-J+Coybk5Uw=Xpx9sm5MG=2b-fvRLX14K+ZJcmz5Q@mail.gmail.com>
+ <Z5sLIiU7D6GwpWY1@google.com>
+ <CAP-5=fXHuR37Q-1qhZx_wLeSTh6k-T1DrV0EquDuLEpwnHa21A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] watchdog: lenovo_se30_wdt: Watchdog driver for Lenovo
- SE30 platform
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: dober@lenovo.com, wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <mpearson-lenovo@squebb.ca>
- <20250131204855.1827-1-mpearson-lenovo@squebb.ca>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250131204855.1827-1-mpearson-lenovo@squebb.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXHuR37Q-1qhZx_wLeSTh6k-T1DrV0EquDuLEpwnHa21A@mail.gmail.com>
 
-On 1/31/25 12:48, Mark Pearson wrote:
-> Watchdog driver implementation for Lenovo SE30 platform.
+On Wed, Jan 29, 2025 at 10:03:03PM -0800, Ian Rogers wrote:
+> On Wed, Jan 29, 2025 at 9:16 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Wed, Jan 29, 2025 at 05:16:58PM -0800, Ian Rogers wrote:
+> > > On Wed, Jan 29, 2025 at 1:55 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > On Wed, Jan 15, 2025 at 01:20:32PM -0800, Ian Rogers wrote:
+> > > > > On Wed, Jan 15, 2025 at 9:59 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > > I think the behavior should be:
+> > > > > >
+> > > > > >   cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > > > >   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > > > >   cpu_cycles -> no legacy -> sysfs or json
+> > > > > >   cpu/cycles/ -> sysfs or json
+> > > > > >   cpu/cpu-cycles/ -> sysfs or json
+> > > > >
+> > > > > So I disagree as if you add a PMU to an event name the encoding
+> > > > > shouldn't change:
+> > > > > 1) This historically was perf's behavior.
+> > > >
+> > > > Well.. I'm not sure about the history.  I believe the logic I said above
+> > > > is the historic and (I think) right behavior.
+> > >
+> > > You're wrong as you are describing the behavior post:
+> > > https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
+> > > commit a24d9d9dc096fc0d0bd85302c9a4fe4fe3b1107b from Nov 2022, but
+> > > somehow without legacy event fall backs which Intel added with a PMU
+> > > for hybrid.
+> > >
+> > > The behavior in this patch series is best for RISC-V, presumably ARM
+> > > (particularly for Apple M? CPUs), carries ARM and Intel's tags,
+> > > implements the behavior Arnaldo asked for, and solves the
+> > > inconsistency that I think is fundamentally wrong in the tool that PMU
+> > > names shouldn't matter on an event name (an inconsistency my past
+> > > fixes introduced). It is also part of solving other problems:
+> > > https://lore.kernel.org/linux-perf-users/20250127-counter_delegation-v3-0-64894d7e16d5@rivosinc.com/
+> >
+> > So you think the below behavior is preferred, right?
+> >
+> >   cycles -> cpu/cycles/ (or whatever PMU name) -> sysfs or json
+> >
+> > And there's no way to use legacy event encodings anymore?
 > 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
+> This is absolutely the right thing to do! If sysfs/json knows better
+> than to allow a legacy event named cycles, advertises it, then perf
+> should select it. Not doing this was the cause of the ARM Apple M?
+> breakage - because their PMUs looked uncore before hybrid fixes and so
+> weren't known previously to accept legacy events and always used the
+> sysfs/json encodings in preference. Why would or not having the PMU in
+> the event name imply a different and sometimes known broken encoding?
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Because I think 'event' and 'pmu/event/' are different and it's natural
+that 'event' (w/o PMU) to use the legacy encoding.  Maybe ARM Apple M?
+has broken implementation, but then they should fix it.
 
+IIRC what they wanted was to pick sysfs encoding when they use the
+'pmu/event/' format.  And that's perfectly fine.
+
+
+> And then in the perf stat uniquification we can rename the event to be
+> the version with a different encoding. It is madness to me.
+
+Right, so it should use full 'pmu/event/' format.
+
+> 
+> If a user wants to force a legacy event, even though most typically
+> the driver is saying it knows better, they can use a raw event
+> encoding or in the case of cycles its alias cpu-cycles. If there
+> really is a use-case for using legacy encodings, we could introduce
+> new legacy-cpu and legacy-cache PMUs that advertise the events, but
+> then the wildcard behavior would be weird.
+
+I don't think raw event accepts legacy encoding.  Also I don't want the
+additional legacy-* PMUs.  Maybe what I want is to remove surprises -
+it'd be confusing if I have two events (w/o PMU) and one is using legacy
+encoding and the other is using sysfs because (core?) PMU has an alias.
+
+> 
+> To be clear, I do not know of a single use-case where the legacy
+> encodings are actually wanted when sysfs/json have an encoding. The
+> opposite is very much true, that legacy encodings are not wanted -
+> hence wanting the lowering of their priority everywhere originally by
+> ARM to fix Apple M? and then by RISC-V.
+
+Is Apple M* currently broken?  I'm not sure if we won't ever want the
+legacy encoding.
+
+> 
+> > >
+> > > You've not pointed at anything wrong in the scheme that these patches
+> > > introduce, and are supported by vendors, except that it is a behavior
+> > > change. I can, and have, pointed at many issues with your proposal
+> > > above and the current behavior. The behavior change came about to work
+> > > around PMU bugs over 2 years ago but only partially did so. It makes
+> > > sense to remedy this and for the clean, consistent behavior this
+> > > series achieves. It is unfortunate that it is a behavior change, but
+> > > the first step for that was made 2 years ago. I think it also makes
+> > > sense that something self described as legacy is a lower priority and
+> > > of the past (wrt event naming moving forward).
+> >
+> > I want to clarify the event parsing behavior and to find the right way
+> > to deal with various cases.  I haven't followed the activities in this
+> > area closely so I missed some changes in the past.  Maybe the problem
+> > is that the behavior is complex and not clarified.  Hopefully we can
+> > write it down in a doc.
+> 
+> I think what is typical in the kernel is the source is the best
+> documentation. By simplifying event parsing, for example,
+> parse-events.y has been reduced from 952 lines (in v5.10) to 762 lines
+> - so we're about 25% simpler whilst being more correct (I've fixed all
+> the memory leaks, etc.) and avoiding expensive start-up costs, lazy
+> initialization, etc.
+
+That's great!
+
+> 
+> Having a single priority for which events are preferred, legacy vs
+> sysfs/json with or without PMU, will further make the code base
+> simpler and easy to understand.
+
+I cannot agree.  I think 'event' and 'pmu/event/' are different.  And we
+need to clarify how to handle 'event' case correctly.  And I hope we can
+disable the wildcard behavior.
+
+Thanks,
+Namhyung
 
