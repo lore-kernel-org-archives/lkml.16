@@ -1,86 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B4D1898FB;
-	Thu, 30 Jan 2025 23:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97424182
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 00:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738281070; cv=none; b=pe7PyjdELXKG5TIG4pCD0/njQmv0MxiBDKGjmW7nuj9LOA0yQzkyHjiH3zQFNdxvYzooS0HC9vwJC5eDgAfC8iRcLmfgn/bL+5mhcy2Tpbt7CVeTZ+PojNpCw4II2PcgDa95QGc2cifwTIIu6H5KjnETcTc9XyfwlUZIFeX4f2Y=
+	t=1738281972; cv=none; b=SSzAwbAGD+FrTxJqyiDTDhf2UwYV4vTOP0YegVegKYDEM3XU3qU8jni+i3/REIFYaU5NcB7qks8KBDYc5qWHHOsJnSJf3KaD3i2lPcru1ocb85Bq4gaeaz0fX2Cr0uu5owj20E6kXfqR2Zj5wz2+noIoUH6/T5E+t/LArqVIYcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738281070; c=relaxed/simple;
-	bh=CXkPOjcny3vetfrWYsxwyCNypUJvo8NXQtKAtso3d9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iVSXT0Ke60NexJiXX0fBJ0A3XCqkslx/4BUhDuSPV8RSNqIypZ05Q22DGZPUug4NjOqHK+4cgIoHHVxM3+eR4FrzkjEiat/HwtmfF6UhLN8Q6cVNT4bFuRMnP3RTkVehUFy59T70Tlf/4HpJBHLWUsr5dr4+1XyEGO0JmcGQ38s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpRyInyd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738281972; c=relaxed/simple;
+	bh=PIoUnJHk89m7IKL8EjscmZ658K/xqTtmuSHmmC2MlSc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q25KXmEgr6ZVM+rI6u+FyhIDhZZChjGcZL3lsMlD6ooPXWbT66UTdJsxKR1UWt6j+vjdgRjUbSAZpnkLdb483D5KQzVJWQZcI4e+xKXgcfjTJ58DtT8Js/SABrGTKwkD6EW2eUxbMc6Of8KPfwL+f8FI8dAi5cfbXHDNtHNn9cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hKvFsPh/; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpRyInyd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 047F6C4CED2;
-	Thu, 30 Jan 2025 23:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738281069;
-	bh=CXkPOjcny3vetfrWYsxwyCNypUJvo8NXQtKAtso3d9Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gpRyInydaL6BItpyZo9f6LIndF0jEQC1eBbQoOhqQQ6YCIwhO+FNm+BpTrt2IWoeA
-	 kmp7qtIV8V5HCHbJ+VthUU21TTnymeXdqqd8DKpFA/G78Lm8h+AEc5dOgcdD3U+k3P
-	 ji36Kr4aM6eEX4EGTiTH7Ajskja5LK3zJwirY7rJDDhyEVqGfp+Bdmy4QGVv2opYBk
-	 SEgkzTy5YvU1TgqujPhYhd87eiElDS1q1DWH4adVhDBwr+DdWgoBupDB0JIsRkhTvo
-	 fjfSp5riCTismgJXk5dUAblbU9E3YI0JY3Y55xJP/i+iuaxGw11M4Ag1EzNgPqqUue
-	 TN22vbc2Z7GqQ==
-Date: Thu, 30 Jan 2025 17:51:08 -0600
-From: Rob Herring <robh@kernel.org>
-To: Ryan.Wanner@microchip.com
-Cc: lee@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	claudiu.beznea@tuxon.dev, sre@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	p.zabel@pengutronix.de, linux@armlinux.org.uk,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rtc@vger.kernel.org
-Subject: Re: [PATCH 08/16] dt-bindings: at91rm9260-rtt: add
- microchip,sama7d65-rtt
-Message-ID: <20250130235108.GA1889615-robh@kernel.org>
-References: <cover.1738257860.git.Ryan.Wanner@microchip.com>
- <f5642fad5d7a97772ae22c76840c5c51ee79ec0f.1738257860.git.Ryan.Wanner@microchip.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hKvFsPh/"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738281963;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Fy6PSBjEhWO5F6baEThGkls7hDcROVyek5p6WWL2O3w=;
+	b=hKvFsPh/q0QhDOek+LULFnkeWJl0+8VDESr9m2TKzUT03KPJO5wCqefdQTiKkDM2V18NW9
+	n0WDbEDm6P1qhU8e+s0j5wWk8POAe0KhvzCNOb7UTRnS5XIziTkv2g8ohi+S95Pn33vip3
+	HjS/Tg8/RTbVfbVIv7/VdLIQpkZBxTo=
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: [PATCH] cgroup: fix race between fork and cgroup.kill
+Date: Thu, 30 Jan 2025 16:05:42 -0800
+Message-ID: <20250131000542.1394856-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f5642fad5d7a97772ae22c76840c5c51ee79ec0f.1738257860.git.Ryan.Wanner@microchip.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jan 30, 2025 at 10:33:48AM -0700, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
-> 
-> Add SAMA7D65 RTT compatible to DT bindings documentation.
-> 
-> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
-> ---
->  .../devicetree/bindings/rtc/atmel,at91sam9260-rtt.yaml       | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91sam9260-rtt.yaml b/Documentation/devicetree/bindings/rtc/atmel,at91sam9260-rtt.yaml
-> index a7f6c1d1a08ab..078b753f453b4 100644
-> --- a/Documentation/devicetree/bindings/rtc/atmel,at91sam9260-rtt.yaml
-> +++ b/Documentation/devicetree/bindings/rtc/atmel,at91sam9260-rtt.yaml
-> @@ -23,6 +23,11 @@ properties:
->                - microchip,sam9x60-rtt
->                - microchip,sam9x7-rtt
->            - const: atmel,at91sam9260-rtt
-> +      - items:
-> +          - enum:
-> +              - microchip,sama7d65-rtt
-> +          - const: microchip,sama7g5-rtt
-> +          - const: atmel,at91sam9260-rtt
+Tejun reported the following race between fork() and cgroup.kill at [1].
 
-Does being compatible with 7g5 provide something over 9260? If not, 
-probably better to just have 9260 as the only fallback.
+Tejun:
+  I was looking at cgroup.kill implementation and wondering whether there
+  could be a race window. So, __cgroup_kill() does the following:
 
->        - items:
->            - const: microchip,sama7g5-rtt
->            - const: microchip,sam9x60-rtt
-> -- 
-> 2.43.0
-> 
+   k1. Set CGRP_KILL.
+   k2. Iterate tasks and deliver SIGKILL.
+   k3. Clear CGRP_KILL.
+
+  The copy_process() does the following:
+
+   c1. Copy a bunch of stuff.
+   c2. Grab siglock.
+   c3. Check fatal_signal_pending().
+   c4. Commit to forking.
+   c5. Release siglock.
+   c6. Call cgroup_post_fork() which puts the task on the css_set and tests
+       CGRP_KILL.
+
+  The intention seems to be that either a forking task gets SIGKILL and
+  terminates on c3 or it sees CGRP_KILL on c6 and kills the child. However, I
+  don't see what guarantees that k3 can't happen before c6. ie. After a
+  forking task passes c5, k2 can take place and then before the forking task
+  reaches c6, k3 can happen. Then, nobody would send SIGKILL to the child.
+  What am I missing?
+
+This is indeed a race. One way to fix this race is by taking
+cgroup_threadgroup_rwsem in write mode in __cgroup_kill() as the fork()
+side takes cgroup_threadgroup_rwsem in read mode from cgroup_can_fork()
+to cgroup_post_fork(). However that would be heavy handed as this adds
+one more potential stall scenario for cgroup.kill which is usually
+called under extreme situation like memory pressure.
+
+To fix this race, let's maintain a sequence number per cgroup which gets
+incremented on __cgroup_kill() call. On the fork() side, the
+cgroup_can_fork() will cache the sequence number locally and recheck it
+against the cgroup's sequence number at cgroup_post_fork() site. If the
+sequence numbers mismatch, it means __cgroup_kill() can been called and
+we should send SIGKILL to the newly created task.
+
+Reported-by: Tejun Heo <tj@kernel.org>
+Closes: https://lore.kernel.org/all/Z5QHE2Qn-QZ6M-KW@slm.duckdns.org/ [1]
+Fixes: 661ee6280931 ("cgroup: introduce cgroup.kill")
+Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+---
+ include/linux/cgroup-defs.h |  6 +++---
+ include/linux/sched/task.h  |  1 +
+ kernel/cgroup/cgroup.c      | 20 ++++++++++++--------
+ 3 files changed, 16 insertions(+), 11 deletions(-)
+
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index 1b20d2d8ef7c..17960a1e858d 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -71,9 +71,6 @@ enum {
+ 
+ 	/* Cgroup is frozen. */
+ 	CGRP_FROZEN,
+-
+-	/* Control group has to be killed. */
+-	CGRP_KILL,
+ };
+ 
+ /* cgroup_root->flags */
+@@ -461,6 +458,9 @@ struct cgroup {
+ 
+ 	int nr_threaded_children;	/* # of live threaded child cgroups */
+ 
++	/* sequence number for cgroup.kill, serialized by css_set_lock. */
++	unsigned int kill_seq;
++
+ 	struct kernfs_node *kn;		/* cgroup kernfs entry */
+ 	struct cgroup_file procs_file;	/* handle for "cgroup.procs" */
+ 	struct cgroup_file events_file;	/* handle for "cgroup.events" */
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 0f2aeb37bbb0..ca1db4b92c32 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -43,6 +43,7 @@ struct kernel_clone_args {
+ 	void *fn_arg;
+ 	struct cgroup *cgrp;
+ 	struct css_set *cset;
++	unsigned int kill_seq;
+ };
+ 
+ /*
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index d9061bd55436..afc665b7b1fe 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4013,7 +4013,7 @@ static void __cgroup_kill(struct cgroup *cgrp)
+ 	lockdep_assert_held(&cgroup_mutex);
+ 
+ 	spin_lock_irq(&css_set_lock);
+-	set_bit(CGRP_KILL, &cgrp->flags);
++	cgrp->kill_seq++;
+ 	spin_unlock_irq(&css_set_lock);
+ 
+ 	css_task_iter_start(&cgrp->self, CSS_TASK_ITER_PROCS | CSS_TASK_ITER_THREADED, &it);
+@@ -4029,10 +4029,6 @@ static void __cgroup_kill(struct cgroup *cgrp)
+ 		send_sig(SIGKILL, task, 0);
+ 	}
+ 	css_task_iter_end(&it);
+-
+-	spin_lock_irq(&css_set_lock);
+-	clear_bit(CGRP_KILL, &cgrp->flags);
+-	spin_unlock_irq(&css_set_lock);
+ }
+ 
+ static void cgroup_kill(struct cgroup *cgrp)
+@@ -6488,6 +6484,10 @@ static int cgroup_css_set_fork(struct kernel_clone_args *kargs)
+ 	spin_lock_irq(&css_set_lock);
+ 	cset = task_css_set(current);
+ 	get_css_set(cset);
++	if (kargs->cgrp)
++		kargs->kill_seq = kargs->cgrp->kill_seq;
++	else
++		kargs->kill_seq = cset->dfl_cgrp->kill_seq;
+ 	spin_unlock_irq(&css_set_lock);
+ 
+ 	if (!(kargs->flags & CLONE_INTO_CGROUP)) {
+@@ -6668,6 +6668,7 @@ void cgroup_post_fork(struct task_struct *child,
+ 		      struct kernel_clone_args *kargs)
+ 	__releases(&cgroup_threadgroup_rwsem) __releases(&cgroup_mutex)
+ {
++	unsigned int cgrp_kill_seq = 0;
+ 	unsigned long cgrp_flags = 0;
+ 	bool kill = false;
+ 	struct cgroup_subsys *ss;
+@@ -6681,10 +6682,13 @@ void cgroup_post_fork(struct task_struct *child,
+ 
+ 	/* init tasks are special, only link regular threads */
+ 	if (likely(child->pid)) {
+-		if (kargs->cgrp)
++		if (kargs->cgrp) {
+ 			cgrp_flags = kargs->cgrp->flags;
+-		else
++			cgrp_kill_seq = kargs->cgrp->kill_seq;
++		} else {
+ 			cgrp_flags = cset->dfl_cgrp->flags;
++			cgrp_kill_seq = cset->dfl_cgrp->kill_seq;
++		}
+ 
+ 		WARN_ON_ONCE(!list_empty(&child->cg_list));
+ 		cset->nr_tasks++;
+@@ -6719,7 +6723,7 @@ void cgroup_post_fork(struct task_struct *child,
+ 		 * child down right after we finished preparing it for
+ 		 * userspace.
+ 		 */
+-		kill = test_bit(CGRP_KILL, &cgrp_flags);
++		kill = kargs->kill_seq != cgrp_kill_seq;
+ 	}
+ 
+ 	spin_unlock_irq(&css_set_lock);
+-- 
+2.43.5
+
