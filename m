@@ -1,63 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BEB1F4706;
-	Fri, 31 Jan 2025 20:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7E4482EB
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738355220; cv=none; b=OM/D9IR6cAxSEiJJA7HK120SLZH4hezAB8oPLd+ANR2/q+JazobCGYw74g+LZvL6a438less9Dq5a/8+DXRodginQgiq+HYZOi0Z0+UnBk8yZ3dO8gUDQ9lmAbc/us4pGVswyda4YrrjCqGx/s855yX/vqI3exw15azUTyX6uVg=
+	t=1738355273; cv=none; b=ZtnGd3GCqQe1BP6xWSxMye59x6+LF1U5wM2bS7ayzDfKsIyagMqH8bLKlTlo92jPvQXd6+e9V6WHNQ4y2HkhEBLIPhFFJML6Jgg9/uGUG+tqSsep6gfTrg+CXo2HVc9nd/cFDl5FhThXwEc5Blaomnbs/mC2FYU5Q87Jgyq/KJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738355220; c=relaxed/simple;
-	bh=UWBwnZyAQeVr9/fBdPaIaXb5flEix//Ihiq2RtbiUCs=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=sBpi/9nYJY9wsUQVpsp2sbsA9iEuAIOvolB67yT2ZH169aWgZBaFU6A/ZhwS84P5c2f9/WsbmL5KRn9KSAdlF6kijcO8ZGPeab5vomqf2CtcZqskz0ID91ldJbDNdsol3HmAVhX096wEcPRzmERJFaa9gBZd8Ipi1Rvu761RPGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EavGf45T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738355273; c=relaxed/simple;
+	bh=8rgLxrw9qVMEYsbd46Aj4ZL+ZxD1p+A1WFzSXZgVMbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k/xM7oSORkfOzSMbBJVzQJwFSqSQNaIAskshEDvyvfrBffFSIdYoffuvFGE4WL62jsIkisp5MxjSvG4NNe703QrC50OL3bqVD3vkOwgUHoq2nJVPrTpjrhmTfyjPgtXFUNKnW9ozwBKfzo8c+Ra6be7OrrR5OYqb35qktFgeWEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lrsblSRz; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EavGf45T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F41EC4CED1;
-	Fri, 31 Jan 2025 20:27:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738355220;
-	bh=UWBwnZyAQeVr9/fBdPaIaXb5flEix//Ihiq2RtbiUCs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=EavGf45TgHNEruqvEhEaRe7BUOLeVEh+d38dlPA1M5Ism9BQSB2x6VgMgfi6DrzSg
-	 a6GyDjNprMgCOFx346Dlu9kZYeOt9kKw4QkekZo0dggWoduhVohm5MuXBkwEYWumOd
-	 1R3cWGA+jm07H5VN+T2tXRho9yXLsGwRUHnMELr+ypTGYhJ8cyKJd/9XXqzD3Q1GEm
-	 R5ugtpRaDddaqjt7F60HPt3g1mhusLZwA4X2JTp0zbGUnRqzury3yNW1XsWKA3vk3j
-	 0+UbhADgBW8w2LjhoEJDVbTYiSkiYbtGamjltvjmfTFos8o1F/LhxnNsh1ktUBS5RN
-	 y4tJnwgvEGNpQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAF0D380AA7D;
-	Fri, 31 Jan 2025 20:27:27 +0000 (UTC)
-Subject: Re: [GIT PULL] Ceph fixes for 6.14-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250131181425.3962976-1-idryomov@gmail.com>
-References: <20250131181425.3962976-1-idryomov@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250131181425.3962976-1-idryomov@gmail.com>
-X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git tags/ceph-for-6.14-rc1
-X-PR-Tracked-Commit-Id: 3981be13ec1baf811bfb93ed6a98bafc85cdeab1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 626d1a1e99583f846e44d6eefdc9d1c8b82c372d
-Message-Id: <173835524656.1719808.2903667915229670938.pr-tracker-bot@kernel.org>
-Date: Fri, 31 Jan 2025 20:27:26 +0000
-To: Ilya Dryomov <idryomov@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lrsblSRz"
+Date: Fri, 31 Jan 2025 12:27:40 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738355268;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7BhC7vLoh7VtzfmXLESUsTqxQbrPIF6WzzF0QtgvNjc=;
+	b=lrsblSRzlb3U+VBSguFAbcREpGVVQMrtG0UN6409a/fosRBCk4L0jLE6FhAQypEB2fAOSm
+	N2A2tLZnVmRItxbwLORJuWRgDvy7Gkv2CDnNDSNBFBiBFJxyAqrUf95g9+GCYJkAmPEa8U
+	BHDzzwIL0WWDQKyoESpoRnvF5jGA2nk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+	Vlastimil Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 02/11] drm/i915/gem: Convert __shmem_writeback() to
+ folios
+Message-ID: <gtknttjvbestmrulqy2w5afqzcdetnrrgcgcfz4fwqb5zg2p4e@pow2uwawcjt4>
+References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
+ <20250130100050.1868208-3-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250130100050.1868208-3-kirill.shutemov@linux.intel.com>
+X-Migadu-Flow: FLOW_OUT
 
-The pull request you sent on Fri, 31 Jan 2025 19:14:22 +0100:
+On Thu, Jan 30, 2025 at 12:00:40PM +0200, Kirill A. Shutemov wrote:
+> Use folios instead of pages.
+> 
+> This is preparation for removing PG_reclaim.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/gpu/drm/i915/gem/i915_gem_shmem.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+> index fe69f2c8527d..9016832b20fc 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+> @@ -320,25 +320,25 @@ void __shmem_writeback(size_t size, struct address_space *mapping)
+>  
+>  	/* Begin writeback on each dirty page */
+>  	for (i = 0; i < size >> PAGE_SHIFT; i++) {
 
-> https://github.com/ceph/ceph-client.git tags/ceph-for-6.14-rc1
+With folio conversion, should the iteration step be folio_nr_pages()
+instead of 1?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/626d1a1e99583f846e44d6eefdc9d1c8b82c372d
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> -		struct page *page;
+> +		struct folio *folio;
+>  
+> -		page = find_lock_page(mapping, i);
+> -		if (!page)
+> +		folio = filemap_lock_folio(mapping, i);
+> +		if (!folio)
+>  			continue;
+>  
+> -		if (!page_mapped(page) && clear_page_dirty_for_io(page)) {
+> +		if (!folio_mapped(folio) && folio_clear_dirty_for_io(folio)) {
+>  			int ret;
+>  
+> -			SetPageReclaim(page);
+> -			ret = mapping->a_ops->writepage(page, &wbc);
+> +			folio_set_reclaim(folio);
+> +			ret = mapping->a_ops->writepage(&folio->page, &wbc);
+>  			if (!PageWriteback(page))
+> -				ClearPageReclaim(page);
+> +				folio_clear_reclaim(folio);
+>  			if (!ret)
+>  				goto put;
+>  		}
+> -		unlock_page(page);
+> +		folio_unlock(folio);
+>  put:
+> -		put_page(page);
+> +		folio_put(folio);
+>  	}
+>  }
+>  
+> -- 
+> 2.47.2
+> 
