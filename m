@@ -1,85 +1,85 @@
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD5F1B87FB
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:32:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782111BBBFE
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738326737; cv=fail; b=VTpalDR9vYOVT37jJ0aaKY6mHIBNWZyKsT/scU/NJwFO67KNeIWbkINJTALj5YFHquMqcqzeUikUqPCYlKvxhJPR4Lv42vp4P9Q1Srn4eW2TprWZX0VS1XZqxzOP78odi3r2YRROK1quN6Qvr5mDaPuQ4VWff49aQMhM4y6bYps=
+	t=1738326746; cv=fail; b=QqMcBYazDjwpgMdgVsUnZm0Jw0AMJKi/L5wpiPsqN7qOzJvrOzaqXY1QYzxIjAYkmEyejnH67mpofvpoFD9QhnFUwE8Fs2wAXNrROyCt+qCD/PcPPv4Hax/p/VQmXB0w8evUd2TwJEoQmOG6B42doEbFFgXYvp8JGseCMmNH8yg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738326737; c=relaxed/simple;
-	bh=gZdQF0GLmZS8HpRkcztsKnV5Bz5FZWab1n37eSRyU6M=;
+	s=arc-20240116; t=1738326746; c=relaxed/simple;
+	bh=AN4FoqyKo8kxPJh73Eol2pbuY1u0B3Am/J/oN0B2Ah4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=udW3jPufYhVYuyLrC7uglwDEwV64FlbcbTAHkaBUCzhJireffuGAfL7Wa0k0P+bssCwaSRJ4BONVkIpqaI/NnBU7OEzfSk568866cN5rM2Moc28MtMBH+8q9UQRDyUoDmCKL6cuQe6wTFqhS5xQG2Gmr8Am9qKas9tdBi5q+474=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=EkIutl2X; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=GurES7oR; arc=fail smtp.client-ip=205.220.177.32
+	 Content-Type:MIME-Version; b=WWnz/hjujvGsHoIH2W67Sw8XYpD0Fm0GCUiAqamnfOM64VZmGT31e9vKuObRqCfglC9DqENfkTZcQPyr37s/tYqIslbuW9g2ULffFchraMW4VUCNPWkoLrxYGD5gMj4PvBFRYwXyR8VU6U7dyyXRu/Zxq/V9VGx1tWfC8Hn+ABo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Jk/NDmEm; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=xqpBypQW; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EkIutl2X";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="GurES7oR"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50VBQrbb003991;
-	Fri, 31 Jan 2025 12:32:07 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Jk/NDmEm";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="xqpBypQW"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50VCLtMc018007;
+	Fri, 31 Jan 2025 12:32:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=DilCm9XBnp8XWMupCy+6NTrWjbHp0vBZ4/BrXG1qvEo=; b=
-	EkIutl2XDrvFU+zwmheWg/VLK428esqWLhiRStskmIHUgcfxMgCD3YYFwWsscrBn
-	Tcx/T3krvQswxzEyqspeJmsMuq1iTbj/fK0k5UWkgeDcGottLY2Pdj3kkGWluxAS
-	7kqx6mflxgO6Jj2eJIIZH3JI+FLJmSYKxB5YH64UA72Vi1L+agewlBHXyvY46DbD
-	wby9rlPPkKSPQHYCPJR+TxxhhgEk2f8RgfKXxkCpnDO4UBhh8Kqn1LY0hYETusmR
-	hfxhdV8ztFEuo3sN8k+VWM18wZ03SUOT5v9QyoI+YzdZ4oPfwPfBJ47usAXuvDZQ
-	jDiRoGImaM+JahWZKTq6fw==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44gwn8r2x7-1
+	corp-2023-11-20; bh=/pm97kA0QTHF1nI3s5oQ5v8v869bmuA/oC9oHoS2dr8=; b=
+	Jk/NDmEmp6fDWu+nHpjSNHr2iEFJiKFJqFq9xjKnh/R5GiBy9xadh2ucRMYPb/jn
+	6/x8qyv3k54Lif5f5Ti7Ha3l/SeU7eQ0KzU7gV6R699pGOlCUXaq1sr/3ngvjL4l
+	QXN5xrD139uETdGzW7Hw31ofvVJufH+ot82+gvhdi/yrLBwK1kaVKHXihu9IRL2w
+	iDxqtsCaZrkwWsObllYxywSVnPxhj3XTrjnt7iaonJDNKlSWcz0tlo5BDQmHtOUs
+	oGVvHyFBUfgYvT+W8YxENzmk6rEY/rYvoPsqTFPbFMQb2Jkv0aPo08umNomiPQnb
+	1BYu2tBMA0w60JGD7YXStg==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44gxf2r0hs-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 12:32:07 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50VAXwDJ032234;
-	Fri, 31 Jan 2025 12:32:06 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2173.outbound.protection.outlook.com [104.47.57.173])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44gf93vak2-1
+	Fri, 31 Jan 2025 12:32:15 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50VAUN0i009100;
+	Fri, 31 Jan 2025 12:32:14 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44gg1gauup-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 12:32:06 +0000
+	Fri, 31 Jan 2025 12:32:14 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F/NAwZ+PQ8CVoBqdmF9Ew9QKAqMdeKmdEdgYIpPBQH6geUNkWeDE6nqITVR3jfdXbI2ffEB09riJ7Qm2j1fGkb4ZoLmgz956nASdwxgkzhCtxPyNwGvb/b+OSJLQu0CeR4jys/P/RUtEWB8APqITNEGM+rEYfmUCJFaWlIxui/l3Dq1ANL/L2uPntyKo8UATfNyky0LtkACAOfxaaGgWBq4F+VDwMJLWZJM6UHymKuxPdfLyhadeSlt1cRf9ZLi58Ye9pxdl0TEVVL/XeKjkzPOZVcgyVrXpAk5ESzf4VC3vhcFnwVQTUItD4odDn9kyZP5Oiuj1pbBHu9vdwnPlNw==
+ b=xvXk6IMYRZOskaNRK0CyP3+sUJDhJz6FnQYYb+3wcWSkSIm5wQV4eLZm4ZkUyqJiKpSOrT3hFSdwb93UAp+6MJvaxF/UWkla4KO2iZXxQ464YMxNQoBs04F+IwUQ/AzRlOEYyfyKsn56CyhxVk2jA3yF4bPhVVj2KLTZAiYs/bRb0NFBboajR/Q9Tj2LLym/osesTCPiChaXvnNWshka5hhZoZeRLT+1LlD63dxPOY9c5KSk4IyOmrEawoG+MTjzH8Y6l/t0KAL9OoJARv38/UnW4TQRD0PBoZcIuo+FpNCH/SqrSukH10ULPtA72Kt1l10R14zuJmrFUhfZTfb9bA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DilCm9XBnp8XWMupCy+6NTrWjbHp0vBZ4/BrXG1qvEo=;
- b=gTVLqo5mMsS9jdyMkVBXTvRhoYfPIt63e7fqpS3XWu+X6jbchQ7zq2CxYHADW1ePp6eHXgvox9uVCh5IbFghf9VM3gNhm2BA5z0qOOxL/xHrKhVkiZchU/zSwXMSOjhrPg/l/AUXTPbdVLeeyyrdotq0SNWrfAe+zCf6s0Kf0QxOKLgE8OuCQXax6mG8/iFcxiesn3bXIx4oIiGVCu6r/feICEBGgP8sd2BZxCVjjVyXcviTWnhGifDqGn8UIsiJw6ffGPvgpcA1U56TucgjN9xQ4NgSM0eRpJl7sUjKE+4gz3fWNb0F6fqO2Au4AimSTlJKuTA+Ofx+3D8dJvtXEg==
+ bh=/pm97kA0QTHF1nI3s5oQ5v8v869bmuA/oC9oHoS2dr8=;
+ b=IxA86FKGi7SE1u5TTv9xXf/oPTvMgckdFTzfElw7L9paDlmbluJqkHgZN6dVHOZKc3pF2wXon96s2vFTZsF236iym+kMIK5hTPxKGc6RH5gE5Ol2Jj/zEBHXYrrcmsFTQ0eUKDQlUOqX0FNAMIf7BJcLq4M8zHLY9IaTKmSDNEmvV1nUIODXFkfQlPxyNAliz8/wwEZ+63/YsXjIUtE0VUcAGmigV3PgsKivssb6ArvtLxnGEEidffUQcNZf6xFKRLDVdzgzmo7uBvYTh7cruHXYkmbH/iwuCF2zgkPvzmKmgjp/NTOZZBBtaXeRQD6clQjJlZO59rzJNW6OIRiaNw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DilCm9XBnp8XWMupCy+6NTrWjbHp0vBZ4/BrXG1qvEo=;
- b=GurES7oRjENTSAnxXdejqMR8+KXxh9gt6ljTAo02Bq2qZ/mEh0moH/hC21tr4qc63rynOXXNEcBhTe+gv080Vq6m0GnQL/NT7ly7H20rMTw8/JQ+ff3S+98EmISbe7qdB3t2qr4wtkBh0NCXi7YKhLR1PRXKfs/wsLY2KZgOP3g=
+ bh=/pm97kA0QTHF1nI3s5oQ5v8v869bmuA/oC9oHoS2dr8=;
+ b=xqpBypQWZvad+PNJQozuAkQJaHigb3xKYhXlWOerfmo9GCWx+I7rEz8VmarDrqUcZbNa6ZreDqH7NtgKmlArmQoouyCWwHKW4VALiHy7W5+GwNzPNQN25yAVzd4s4kix8khsCa4BDwVrCdCoZ9ewj1tMibW486PJaW0bVXmJNmI=
 Received: from BYAPR10MB3366.namprd10.prod.outlook.com (2603:10b6:a03:14f::25)
  by CH3PR10MB7741.namprd10.prod.outlook.com (2603:10b6:610:1bc::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.20; Fri, 31 Jan
- 2025 12:32:04 +0000
+ 2025 12:32:13 +0000
 Received: from BYAPR10MB3366.namprd10.prod.outlook.com
  ([fe80::baf2:dff1:d471:1c9]) by BYAPR10MB3366.namprd10.prod.outlook.com
  ([fe80::baf2:dff1:d471:1c9%6]) with mapi id 15.20.8398.020; Fri, 31 Jan 2025
- 12:32:03 +0000
+ 12:32:13 +0000
 From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
         Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/5] mm: simplify vma merge structure and expand comments
-Date: Fri, 31 Jan 2025 12:31:49 +0000
-Message-ID: <4dfe60f1419d55e5d0516f56349695d73a57184c.1738326519.git.lorenzo.stoakes@oracle.com>
+Subject: [PATCH v3 4/5] mm: make vmg->target consistent and further simplify commit_merge()
+Date: Fri, 31 Jan 2025 12:31:52 +0000
+Message-ID: <50f96e31ab1980eaaf1006e34a4f6e6dad9320b8.1738326519.git.lorenzo.stoakes@oracle.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1738326519.git.lorenzo.stoakes@oracle.com>
 References: <cover.1738326519.git.lorenzo.stoakes@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: LO2P265CA0162.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9::30) To BYAPR10MB3366.namprd10.prod.outlook.com
+X-ClientProxiedBy: LO4P123CA0487.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1ab::6) To BYAPR10MB3366.namprd10.prod.outlook.com
  (2603:10b6:a03:14f::25)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -89,906 +89,361 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BYAPR10MB3366:EE_|CH3PR10MB7741:EE_
-X-MS-Office365-Filtering-Correlation-Id: a98daeb2-6312-486a-2fe2-08dd41f34461
+X-MS-Office365-Filtering-Correlation-Id: b597ff04-1452-45e3-5bce-08dd41f349d5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QxV04QCbiaEz+iDG4WmCAXnzjpmDWRT0gZWIiGCJS1wTjRJ/9mi0J5NEa9n1?=
- =?us-ascii?Q?VQflteJI7EzJjVlD0+Djzou0vwkl7CeQHKLYPqjh/mqpt86qw1xLYjf5qXr3?=
- =?us-ascii?Q?LVc+IyqYXPwaMf50r4+jNnZrR7KGtKZ8etE0MDjVuuL55Zw+YCgViHHo3Sr9?=
- =?us-ascii?Q?IxqNVb+pnuP3lVQqdM2hv9mNXCYZ7Alt4ULpb5FuSif04F+GaBRHZye2T6tu?=
- =?us-ascii?Q?LMyEuq5M3r6NVCkYWY20PIZp8lGSQm0FDqoYMlSoZf1ws8Bm2n8pFxY9BDWi?=
- =?us-ascii?Q?cuNgaXLEVr2NmhALKyVrsOF3h1QudI7Ng04MDmAicZxk1FEV104jtLuPhqJ7?=
- =?us-ascii?Q?s/YS7Y1nDu7cG+CG03VrLU1bM+IZPbpZq2nIBjVIGyrmRCInOeWMDK/Q70Zi?=
- =?us-ascii?Q?CrYw/pyUUVyflnC/SqqTErx2AAxlj/YczFs+sCZPm4Nw7y4v/g08QN9EwqBs?=
- =?us-ascii?Q?dUU3QjYGRPvpLcPodugHYbB2XL58kaFXY5XjbJisZdhiYW4J/AdiP07JopwR?=
- =?us-ascii?Q?U40Jzxh7T66P5NgJ1CHAk5Ma49QUAruOWvwT12JXdRMeALCWjOMs32inuyQL?=
- =?us-ascii?Q?Me4QfgOLqBDdVJsMRQszC9Ai+jLFXN67W2L0yyTU7nw8zUxKiETALN0j2bId?=
- =?us-ascii?Q?ngjmbKF1v+0e5fWp0ug6/QD1+NrbVsLUalaufKy1mqDiWJ/4R/XxEDSkSU0h?=
- =?us-ascii?Q?mOAllWHPtEebgB6Qg/YTYesu8VMMttlLS+3L0Am5yOrj/XRppsP1fTc7ILF9?=
- =?us-ascii?Q?xdx8SeWMgMj6t16HKdYpoACoxqAAxtgsIrlrXxsqSe+3/pl4cTyZT3J22N86?=
- =?us-ascii?Q?J8sxmPuzfUFJ9di9VGKiRxgseCQsD/ugcXuj515IatKn4zyE6XCNw2u3eomf?=
- =?us-ascii?Q?owqbZwIGFtvFTR8Xezp/fuW1d/DmzCrCIMb07PIRZ/B6ueJnAR6xGNLoSCuL?=
- =?us-ascii?Q?LVIxfHAofFBaf+wJwFT300CsRp2rL4+AKXfbhWK95X9VhfBBzfQeE2fod47f?=
- =?us-ascii?Q?QqdheTkxoyHWbne2DiI5Bd581EaqosqmLyzKsc2/xvG/VzDf9JcGS1jnGy6e?=
- =?us-ascii?Q?o97AhWWFE1s/K6e2DGsiw8RZ6VWM6fClfu6sJgZcNw9cQ7j7I4IqPfGRlKKe?=
- =?us-ascii?Q?3WHUbCoRSrBgxg2IgCHh1TZUCcXul7t8458D/qt+wRf98TK30RPGQQ43/qGJ?=
- =?us-ascii?Q?oMOeS0BhkPVhxuWkCSDUzGTGfeohSEQQQSy/70RoqKV10eG2UjE8MtyRurfb?=
- =?us-ascii?Q?+VDV4khUuGxJiizOzNPRD4N29KgaajMwVreSPEcAYcXkuhme4R3pOI4FUqAD?=
- =?us-ascii?Q?KRd4mzScD23yVm2qEorFxPe0bMRO3xQtl919l2E699Sk1XsBxWYsxVdesbhJ?=
- =?us-ascii?Q?jFb0PplUxhuj/zSwD9l+2suwOZrm?=
+	=?us-ascii?Q?MlSgoOepTR9HDduHq5ADx59rx+NgyigLECx88RwNa9Hk8aalBaWCHg3xg7r1?=
+ =?us-ascii?Q?nL49hs/74rEc3rR0LsDcIPs5PPrq0I6KsYwwICyOGZcUr3bTp8XfxAwZ17eh?=
+ =?us-ascii?Q?kCIGko+pwn0WvSEpoSwQVIqZ39YcmSSg/7ccrIy2m4I9JqxDLL7BTP8NM+QC?=
+ =?us-ascii?Q?2Vusw3C+7Rzk7gPdfh1h7rkxw25zTcPYW14/TrwRERwglyxm4P/kJfen+x7g?=
+ =?us-ascii?Q?cEqK5jvFINyzMgRNLKr/wmTejtSRtyCFTtOmM+D2mxuEnJR6iR7yWmMteEHX?=
+ =?us-ascii?Q?DkmymcCWL0AZDinAoFGlACUMjvynGjgSJy9xewd9KNPByNiCaZfW04rK/8AG?=
+ =?us-ascii?Q?yr1cvgPhbRIBDIL6AwsWWQuE5F7sV5snf0hIouhAe6s6v9K9pji7CbK6VFYi?=
+ =?us-ascii?Q?6Q3B96hekURnVFqGD80TZxE5kmgRURD2UrTFV77r9Feul3jy1TvNapQ/yXeH?=
+ =?us-ascii?Q?eLAIiySyNfFtXtAp4BwWxsa2Ks/DI7DxaqD2QzF8cn3Ub+cu2+LRRtx2N5oc?=
+ =?us-ascii?Q?tmeANoPh/cdoAn86sQCoQvZaC7nzbHPr6+10q9u6ncUOXHlZE1wngidzg+38?=
+ =?us-ascii?Q?xk6wvdO00xIsdU1FXp+/0bheY7/ac5uIWu80O99KdArW7Ab7IfWk6PQRWTuO?=
+ =?us-ascii?Q?SpjzFaDuSuEt7S97aRWvISIvL0VaNU5YshTliwVnfnokt3Hfgdo35FCULLU/?=
+ =?us-ascii?Q?HyTTEyh5m/hdmxxp8Pio3ThrZq+AopXJkw95GQVvIEK3eV+7cFNt7bpIdf4Z?=
+ =?us-ascii?Q?f8pbl28aJGm5+VKI7BAVz5DiCh2Hq/Btk4hi14twJl24qz2gecBIGhjKdIf6?=
+ =?us-ascii?Q?5q64FzhMzIIz+PdmKDPs+XcBSaaae3RSKm6ahAdja4ZwXhEk5s0Z/ApgxfpI?=
+ =?us-ascii?Q?t4H5ios10RIWrAednHs0XxR3EnSeEF4iKdv/O1jfxzH+Ff52xUdO+esYEPcT?=
+ =?us-ascii?Q?pyHrdZMfE8tSWNZCeF2ZOd1lp1BeCswrHIjKpopU2i8O8e0ChL0fXpgsJgMt?=
+ =?us-ascii?Q?ZWEbZFNRBrQAjn8Cbtel4fg4Y6+RHmXaWYz7IVRlaxxkNc4MHdCNDKEazL3I?=
+ =?us-ascii?Q?Ar3Hoqbs+BRoVvoIWddSP0uERuKykSZVmORg7aiSzNz8erLNYZjHWoVnK3Ww?=
+ =?us-ascii?Q?cIQNt6Cc7Sb/OQ0AId2051rGUVBhh+rmLh9ARpjXFm6QqdrBTCs8oEZHZcI9?=
+ =?us-ascii?Q?nfL9Qp+a9jgWGZP+//UG/veys0wZEoED4xjdvoJs+jAsteVhtdyb2TgD9K65?=
+ =?us-ascii?Q?5v9I3ltdeQK5oUatIQyQjw+9rSJFtEnA+6WO/WkrkoftCwA3QB+wufMdpuQ4?=
+ =?us-ascii?Q?BxhEp1j86Fl7tS1qQXCqHhRhjM6ReIZUhetEuF4KY8ry3aNLCvrvsIK0Qa0s?=
+ =?us-ascii?Q?LpRxbO/6Ah40k3DTPHs0AuKGtJQ5?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB3366.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?geOHrmLFEKb+oc2Z2ixvHUm9HbB4ovGE+fCA9lJynvyMLorXfP8IPWqeBJfm?=
- =?us-ascii?Q?5yXvKrquxAaqfGWUTbkXMP7SHLzME/j942mY0pMEAbWxVOTPvk5dgZ7sABEG?=
- =?us-ascii?Q?i09liW6tMelrB3dcVTLEwf3f/b3O3Xh+pglL/3n3c2HL4eZj8gJbVrn22kSZ?=
- =?us-ascii?Q?UfxChRYpaq6yMV2Ta/qBi33Z8+HQa1rCnY5JAKJHvPiy6ZVphnIAwoOMoVlx?=
- =?us-ascii?Q?+rUoe3hmcs3xrzvXKQRipP9+0oS4ZN5uG6nqCJ0NPd9T6K6hgBwBzc93uecD?=
- =?us-ascii?Q?DPH0bPOIJuqgxJNjDA49qIKre/Q8QCkhB22mrXhTGeG3H60XXyz/YUiZ6VFj?=
- =?us-ascii?Q?MTfeFbrB6Hx6s24eDKoAJ8Ez0lQepIwBhD51zpV5AAgIEidhwWUEACcNA+U3?=
- =?us-ascii?Q?PsSbvlvc8WFy3fFXe7sjZqlxHY6s4Zc/MMZxFwAjXJzq2zDRFgNrBj3OW35P?=
- =?us-ascii?Q?abc/MoDF/5lAGQWbEka9/RRp5lLjErgc4yCvJuORLYEQgRejKqIBaLOuFQbo?=
- =?us-ascii?Q?iqLPHUNx/MxkqFUdmLtsbdzZvf1vSyeq1kKatycRaJkAw4LWmLOJax+DOFqJ?=
- =?us-ascii?Q?85LPY8GSbL5wEmH1QdaYyHSPmIojAwgYg1Qa1Oeb2elnUmtCf7fWkaeIBdWK?=
- =?us-ascii?Q?0ifuekH7a631HKLUBU021qgpBjlSjt65s4nJTLrTDIOd3el34l8JdHbWW88b?=
- =?us-ascii?Q?mUotkM1tNSTXdPXuhGxNLBUrlb1ts5yrf/gAH+ADPtmnyBKTh6ncx5eyfMLg?=
- =?us-ascii?Q?AyR5OS5xpueRokPNnr6rzOc2Skj65JRsdlzSCnWvNPWmYFp3ukwR9Y+OvPIv?=
- =?us-ascii?Q?SbNgPtZPyFn8MplOjpj+2Y57bal54fMicHbDURFp3oU0LQpcGB+711tUfCcp?=
- =?us-ascii?Q?ES0xRRVMfRTlq09PS4zIQ07Fw8TlRWmWzR2/i0G6NzTR3oreshYlSv8zxqdk?=
- =?us-ascii?Q?NPTWugf46wl6QP85PXBHH+aPM7z26WL/zOEZ7tCUcZSpEX2BL5Wmal/K9Osg?=
- =?us-ascii?Q?qQZa5ys01IbEzbiRvi1BqruC8AJxTexNWZwe4YYVolIPiS8f2k13GSlCU3Ch?=
- =?us-ascii?Q?lgn+VwT9KbGLj+0Urpv4xB/xSAE4e0GyPdNgVOXTwP/Ycf7p9eEpY2p+2gqD?=
- =?us-ascii?Q?WUmZKQ/T2a1b2i/XkeIhkHH2sO2O35YopQfiW/wHEBL+uvkdTFa7apUrBL9Z?=
- =?us-ascii?Q?EU56I/1ilpiHgP8CFSS3M/II/y5T6G8D/ZkcpzB6iF/29RJ5RnCCbRZTyy9p?=
- =?us-ascii?Q?6V4rwbrj/P2S5/HrgAVzRc/VVPrvgyzo4kIPPhpAtrQ4CamCk2JOpBhBtHs9?=
- =?us-ascii?Q?hZATytUS9ogiJ7EtI0P0f4AWrkgu28x9L1zosupCsrLX1SoitDVP6PcMxyXj?=
- =?us-ascii?Q?s2LmiNprqAJQR9Wkbu2z1AqZi3K+qmprsFjJIgrqSZSifZXm6offSPge9BKl?=
- =?us-ascii?Q?7XlQefIaqyYwI8vR4Lga43v4gK193nYQZm1eAqAGX2Ovin13hrZu0lkQyEop?=
- =?us-ascii?Q?ImVqrk5mzWVlIKh+/I5e4weMEmaSt51zEPEN1j0QkYOewgDLlk2D5q3I8xbt?=
- =?us-ascii?Q?2aHsPNFehL5lNg3FWVmVpOHZ8MgLxZjDKLxHLP+DeFrNmsG9ND3n+Zr8hxkT?=
- =?us-ascii?Q?Tw=3D=3D?=
+	=?us-ascii?Q?dY6s/1jhWZpdQWtxDn8QejP1d8MD545JOdmLXCGYZioH2LZ5lUJJmV2t9HNW?=
+ =?us-ascii?Q?Livwf/7Jr0ranNEKzVONQK6j5zblrtQ3qWyY62hBBoBEMlPALMB/Cv/KHrGH?=
+ =?us-ascii?Q?TGU0VkO37fh71Hjg+Nnn0dQgpiDUNrpZ6+u/fX4nHpIktLetCGK9mbk/Ju7e?=
+ =?us-ascii?Q?hrDk+01I0NFJcwAxKhT6aIqbihlBMdWuASwjeoqT4bylRezz4bxC57Jso4LN?=
+ =?us-ascii?Q?I5s+RRnqtCpvZzgrNfbJLD8nGF79IMAu+t8/EJMmvFMXrmmFR1tQpiu7onsx?=
+ =?us-ascii?Q?7ibVf3dLTHwpEex9TC2araMjHHXyLX4vODDEDkQyFejE/w9Dq3+ptXSqIFO+?=
+ =?us-ascii?Q?/MDgA+pQ7Sckk0ntPixzZeC0UmlfMnE5Mdehu8yJqSBkC4+ToBY8biIUMOQz?=
+ =?us-ascii?Q?fe5CllzLVudJabl2hikoYSvVcCVb3ad5gsMpZgws9teJE5LdWmWIoXBC4r0j?=
+ =?us-ascii?Q?IC3VOAqmDToYiwOCxlw771lV/z+3yZDeqmDN4hvdgYfzezkbefkdRTG/SCUO?=
+ =?us-ascii?Q?ZVOUvFhXgWBCJbMh8wc0gMsT2fXF/yODs1ogIEcrztha6Rcnp2SUXxQSlt7D?=
+ =?us-ascii?Q?Rx0jRW4dLVk/nrQBa3sqN96XP1ezUhQWBi1Se7go/vnK2oJp3oEdU1MQtGW3?=
+ =?us-ascii?Q?leh/bn5RP/GG/8dTc4g8uwZ0DI9q+YxFxliuhGtBNktLblGzy/n7zE+fjAqs?=
+ =?us-ascii?Q?HFdrXHPE08b5bM4HwvvHU4dmoEVPo11z4oHBlDTpfOfLwmz8QRXDK0OiQFfU?=
+ =?us-ascii?Q?X8MpiGnU1PvwXIi4QqwoI6d2AJvmrv0S22Cex2V4R0yyBm6jtB9EJtIpzE9K?=
+ =?us-ascii?Q?cZsRZpSb9a13IVp8lXIgdktN3G1lorSINcPet3ICFEMMW7EsHOSZ5PaCkULz?=
+ =?us-ascii?Q?SAVJRsXeOa+1LvxfLh8BZZG+eGG1V9CDIKO6c5NSorUwj9Av5Q4dUhgOycYS?=
+ =?us-ascii?Q?j4VDX2uHK5TGt8U5d2K/dUHJRdDYizXp0VcEnDwMXKJOe6qeyGfnJx/GRoBm?=
+ =?us-ascii?Q?mtazE4gaw16BfB2Xj4qseZvGGaQCOafPTAR9X04YPEoyNJLPKJsUlxkKyZDt?=
+ =?us-ascii?Q?8kQYrz3JK5FA4oEJ6U9qD1yra3t/Gl8dnR5iHPyNmKDaPpeP7d08JW9hl2GH?=
+ =?us-ascii?Q?Y+MYf9yCmsmW9J46K7OIPl6qfu28eJ6cwmFYljFWpUPrwUcCUAIkXbr9Ywdg?=
+ =?us-ascii?Q?IbMQY2TQZCzOgZthWT23Ql9jM+FLhP6l+DQ0sHDix2YE8GInAjE4ObioPe/j?=
+ =?us-ascii?Q?XCL3qZmzkExvfxiq/c4wTk8ycukmCuRu7xFLTv5QTu3U3PyZ4ezT/fEsaYGV?=
+ =?us-ascii?Q?sXq5KHdB+1tYNdk6Nkwqr9rWr4dZZMF9HZjj89X0fOuodi9+idXe8r5+rUdX?=
+ =?us-ascii?Q?dLAkWpzGbYXB9ZNvrqZyqFo5DsPh2Z5j/qGWLQvSMhoVQPSo9Nr3D7o7jmc1?=
+ =?us-ascii?Q?7+oE62QqmfnUdSwrbAQB2KZm1opV/qVjdhmkKE+VDwWStMyL746FLX6wEhHx?=
+ =?us-ascii?Q?vVSH0Vqxs4cyqt5kKVm0R5NWgwq2pZH1cwPPvM7OpW5NmMNAqExxZa8OWD84?=
+ =?us-ascii?Q?57vcBuEnDV+tjkyUC5I24cP4icvgWuvPhjLgqlD9vy1bu/f5Wi70uA84T6Uh?=
+ =?us-ascii?Q?HA=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	9oXlt/8IZnHGBPV/S13hc5PmqhYZv+CY3D8WTTyoe6gsJehd4GbCfNj+Uo8lFqvCNDFwueeyD1TrhTVWzoX9fHzkaGSQDj6GXOygGztn13BzSiXhiO93h5AXKueC7gj+7YeF1utSLn7/Zw6qOO0OmLa9pXUC7YtVuRpj2w1v8PnbDSTrAdt9rKZOvdRdla9h/CUuKayvzm7l6DesdJ1LbOvphLU+fQGhnrmQELjA2zpobUy7f8PmTOq2+kxKb97fWNCUeHMRluMGZcLvnoJqOAzQuv5IhKnOJAqnGpcbDhxBK/zpPmcTJT9IZMFHarwe1PmvIdTQFPBia67IkdeKWBHRbe0JVCEUOS1amtU3X9Iuepa84DJaDLthp9pPlEUZVKeDWqmm0Rc4bK+KGRje66vBrAOO8XZT3ZyQStycGWYNc+lLHVdKm3umuN8r+VB2/DqTjQFSr1GSCrhkvr72AVVcTTfbMfX/7o+KB+Wd4xtg33qbxqbOn0Qv+mytZbiIkiPjGWIj2SSTAPk4UickPea2FuiSozPqkgwRtnpgls7zvYsfbQz88SeymB1/+21NInH9ObpWPx2A0zFfOFc03/Jv/9gD9niPeNncnbcQdpI=
+	q0GVbOZT++8RpaKHlrMbhyC284EJcJwQbz2pU/IbZtb1ZLMRcotm/qnnM4YoTSEUBf9aNUNvKAYsANJeiEld+3hN3mJSKfv+xbTQIDB0IK7sWcurbZ9NlMEtCPrOjWfda3qEiuwpEbgLlQz5n3Au6eRFldvxGzliSPdUFSgERvweTsOpqRfZP7zrZCG0NiJb8Sa/DXQTIYjP/baRKHx8p32Tjc5UIBLPzCQJQYLLgjJfILuSw+SbMqLTS1D/rftxUhUwpt8QgC2VwZUX1SBFpJsI6y83UA9nHfQq8BELdIFfYUbsszTwBuQFK5tpHdwhvdxhScPJWqJSuG5viHyswAyISqwhZMJYS0g2CORk+OpwfBVw87OkUlGZ1b2RT9sB3O8L3v04Ubf+42lcSlw34xc3FF0L7Rp5vDb/NWEKmusJG7ql5unVcY+KIQppwbplw6DBMlFf+hkbLkHSDfRKvTqh8FCR6KD62weGj3PTV098reERfG2UaaREyox5wu/ZDUdXZWOl2nz340digOMrq5gAmC17Hixh7DCiRCY2CbMu/F3T3gk9rx7iMRmQxhr3gxUS4P4ZnsyZkztaxqkEMrBBHwAwqU4ArTBGhwuE3HQ=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a98daeb2-6312-486a-2fe2-08dd41f34461
+X-MS-Exchange-CrossTenant-Network-Message-Id: b597ff04-1452-45e3-5bce-08dd41f349d5
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB3366.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 12:32:03.9105
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 12:32:13.0399
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KMmTVvRfCmdPGo0QzghNBpBJY3dBIOiWNpdIg78m91Cl4RUxwVnXFaAEGKcO8f44xb/vZZWEqyXDMKsaA099ve7deHROPvXpQmu52+PbDdA=
+X-MS-Exchange-CrossTenant-UserPrincipalName: TdvOcc3fEeE7a0SzI+pr5/AZ5kl25GH4Mj8la9WB9s+dSuTotuMu2gFr1gvZKxgoNHqyZK2ULCHc2sWG1cgJX19cBp2hAFI14GE7BJyyhX4=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7741
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-31_04,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0 mlxscore=0
- suspectscore=0 spamscore=0 phishscore=0 malwarescore=0 bulkscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 bulkscore=0
+ suspectscore=0 adultscore=0 malwarescore=0 phishscore=0 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2501170000
  definitions=main-2501310095
-X-Proofpoint-ORIG-GUID: -yQI3j6Th6V0p6AnlsaaGOE67YH4UWA_
-X-Proofpoint-GUID: -yQI3j6Th6V0p6AnlsaaGOE67YH4UWA_
+X-Proofpoint-GUID: 0N_ymrSwrlji62OdRkqp6Q1RSkuV1TyS
+X-Proofpoint-ORIG-GUID: 0N_ymrSwrlji62OdRkqp6Q1RSkuV1TyS
 
-The merge code, while much improved, still has a number of points of
-confusion. As part of a broader series cleaning this up to make this more
-maintainable, we start by addressing some confusion around vma_merge_struct
-fields.
+It is confusing for vmg->target to sometimes be the target merged VMA and
+in one case not.
 
-So far, the caller either provides no vmg->vma (a new VMA) or supplies the
-existing VMA which is being altered, setting vmg->start,end,pgoff to the
-proposed VMA dimensions.
+Fix this by having commit_merge() use its awareness of the
+vmg->_adjust_next_start case to know that it is manipulating a separate
+vma, abstracted in the 'vma' local variable.
 
-vmg->vma is then updated, as are vmg->start,end,pgoff as the merge process
-proceeds and the appropriate merge strategy is determined.
+Place removal and adjust VMA determination logic into
+init_multi_vma_prep(), as the flags give us enough information to do so,
+and since this is the function that sets up the vma_prepare struct it makes
+sense to do so here.
 
-This is rather confusing, as vmg->vma starts off as the 'middle' VMA
-between vmg->prev,next, but becomes the 'target' VMA, except in one
-specific edge case (merge next, shrink middle).
+Doing this significantly simplifies commit_merge(), allowing us to
+eliminate the 'merge_target' handling, initialise the VMA iterator in a
+more sensible place and simply return vmg->target consistently.
 
-Int his patch we introduce vmg->middle to describe the VMA that is between
-vmg->prev and vmg->next, and does NOT change during the merge operation.
+This also allows us to simplify setting vmg->target in
+vma_merge_existing_range() since we are then left only with two cases -
+merge left (or both) where the target is vmg->prev or merge right in which
+the target is vmg->next.
 
-We replace vmg->vma with vmg->target, and use this only during the merge
-operation itself.
-
-Aside from the merge right, shrink middle case, this becomes the VMA that
-forms the basis of the VMA that is returned. This edge case can be
-addressed in a future commit.
-
-We also add a number of comments to explain what is going on.
-
-Finally, we adjust the ASCII diagrams showing each merge case in
-vma_merge_existing_range() to be clearer - the arrow range previously
-showed the vmg->start, end spanned area, but it is clearer to change this
-to show the final merged VMA.
+This makes it easy for somebody reading the code to know what VMA will
+actually be the one returned and merged into and removes a great deal of
+the confusing 'adjust' nonsense.
 
 This patch has no change in functional behaviour.
 
 Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- mm/debug.c              |  18 ++---
- mm/mmap.c               |   2 +-
- mm/vma.c                | 166 +++++++++++++++++++++-------------------
- mm/vma.h                |  42 ++++++++--
- tools/testing/vma/vma.c |  52 ++++++-------
- 5 files changed, 159 insertions(+), 121 deletions(-)
+ mm/vma.c | 119 ++++++++++++++++++++++++++++---------------------------
+ mm/vma.h |   6 +--
+ 2 files changed, 62 insertions(+), 63 deletions(-)
 
-diff --git a/mm/debug.c b/mm/debug.c
-index 8d2acf432385..c9e07651677b 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -261,7 +261,7 @@ void dump_vmg(const struct vma_merge_struct *vmg, const char *reason)
- 
- 	pr_warn("vmg %px state: mm %px pgoff %lx\n"
- 		"vmi %px [%lx,%lx)\n"
--		"prev %px next %px vma %px\n"
-+		"prev %px middle %px next %px target %px\n"
- 		"start %lx end %lx flags %lx\n"
- 		"file %px anon_vma %px policy %px\n"
- 		"uffd_ctx %px\n"
-@@ -270,7 +270,7 @@ void dump_vmg(const struct vma_merge_struct *vmg, const char *reason)
- 		vmg, vmg->mm, vmg->pgoff,
- 		vmg->vmi, vmg->vmi ? vma_iter_addr(vmg->vmi) : 0,
- 		vmg->vmi ? vma_iter_end(vmg->vmi) : 0,
--		vmg->prev, vmg->next, vmg->vma,
-+		vmg->prev, vmg->middle, vmg->next, vmg->target,
- 		vmg->start, vmg->end, vmg->flags,
- 		vmg->file, vmg->anon_vma, vmg->policy,
- #ifdef CONFIG_USERFAULTFD
-@@ -288,13 +288,6 @@ void dump_vmg(const struct vma_merge_struct *vmg, const char *reason)
- 		pr_warn("vmg %px mm: (NULL)\n", vmg);
- 	}
- 
--	if (vmg->vma) {
--		pr_warn("vmg %px vma:\n", vmg);
--		dump_vma(vmg->vma);
--	} else {
--		pr_warn("vmg %px vma: (NULL)\n", vmg);
--	}
--
- 	if (vmg->prev) {
- 		pr_warn("vmg %px prev:\n", vmg);
- 		dump_vma(vmg->prev);
-@@ -302,6 +295,13 @@ void dump_vmg(const struct vma_merge_struct *vmg, const char *reason)
- 		pr_warn("vmg %px prev: (NULL)\n", vmg);
- 	}
- 
-+	if (vmg->middle) {
-+		pr_warn("vmg %px middle:\n", vmg);
-+		dump_vma(vmg->middle);
-+	} else {
-+		pr_warn("vmg %px middle: (NULL)\n", vmg);
-+	}
-+
- 	if (vmg->next) {
- 		pr_warn("vmg %px next:\n", vmg);
- 		dump_vma(vmg->next);
-diff --git a/mm/mmap.c b/mm/mmap.c
-index cda01071c7b1..6401a1d73f4a 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1707,7 +1707,7 @@ int relocate_vma_down(struct vm_area_struct *vma, unsigned long shift)
- 	/*
- 	 * cover the whole range: [new_start, old_end)
- 	 */
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	if (vma_expand(&vmg))
- 		return -ENOMEM;
- 
 diff --git a/mm/vma.c b/mm/vma.c
-index af1d549b179c..68a301a76297 100644
+index 3fe264200b79..75bbe82b2e65 100644
 --- a/mm/vma.c
 +++ b/mm/vma.c
-@@ -52,7 +52,7 @@ struct mmap_state {
- 		.pgoff = (map_)->pgoff,					\
- 		.file = (map_)->file,					\
- 		.prev = (map_)->prev,					\
--		.vma = vma_,						\
-+		.middle = vma_,						\
- 		.next = (vma_) ? NULL : (map_)->next,			\
- 		.state = VMA_MERGE_START,				\
- 		.merge_flags = VMG_FLAG_DEFAULT,			\
-@@ -639,7 +639,7 @@ static int commit_merge(struct vma_merge_struct *vmg,
+@@ -106,24 +106,40 @@ static inline bool are_anon_vmas_compatible(struct vm_area_struct *vma1,
+  * init_multi_vma_prep() - Initializer for struct vma_prepare
+  * @vp: The vma_prepare struct
+  * @vma: The vma that will be altered once locked
+- * @next: The next vma if it is to be adjusted
+- * @remove: The first vma to be removed
+- * @remove2: The second vma to be removed
++ * @vmg: The merge state that will be used to determine adjustment and VMA
++ *       removal.
+  */
+ static void init_multi_vma_prep(struct vma_prepare *vp,
+ 				struct vm_area_struct *vma,
+-				struct vm_area_struct *next,
+-				struct vm_area_struct *remove,
+-				struct vm_area_struct *remove2)
++				struct vma_merge_struct *vmg)
  {
++	struct vm_area_struct *adjust;
++	struct vm_area_struct **remove = &vp->remove;
++
+ 	memset(vp, 0, sizeof(struct vma_prepare));
+ 	vp->vma = vma;
+ 	vp->anon_vma = vma->anon_vma;
+-	vp->remove = remove ? remove : remove2;
+-	vp->remove2 = remove ? remove2 : NULL;
+-	vp->adj_next = next;
+-	if (!vp->anon_vma && next)
+-		vp->anon_vma = next->anon_vma;
++
++	if (vmg && vmg->__remove_middle) {
++		*remove = vmg->middle;
++		remove = &vp->remove2;
++	}
++	if (vmg && vmg->__remove_next)
++		*remove = vmg->next;
++
++	if (vmg && vmg->__adjust_middle_start)
++		adjust = vmg->middle;
++	else if (vmg && vmg->__adjust_next_start)
++		adjust = vmg->next;
++	else
++		adjust = NULL;
++
++	vp->adj_next = adjust;
++	if (!vp->anon_vma && adjust)
++		vp->anon_vma = adjust->anon_vma;
++
++	VM_WARN_ON(vp->anon_vma && adjust && adjust->anon_vma &&
++		   vp->anon_vma != adjust->anon_vma);
+ 
+ 	vp->file = vma->vm_file;
+ 	if (vp->file)
+@@ -360,7 +376,7 @@ static void vma_complete(struct vma_prepare *vp, struct vma_iterator *vmi,
+  */
+ static void init_vma_prep(struct vma_prepare *vp, struct vm_area_struct *vma)
+ {
+-	init_multi_vma_prep(vp, vma, NULL, NULL, NULL);
++	init_multi_vma_prep(vp, vma, NULL);
+ }
+ 
+ /*
+@@ -634,76 +650,63 @@ void validate_mm(struct mm_struct *mm)
+  */
+ static struct vm_area_struct *commit_merge(struct vma_merge_struct *vmg)
+ {
+-	struct vm_area_struct *remove = NULL;
+-	struct vm_area_struct *remove2 = NULL;
++	struct vm_area_struct *vma;
  	struct vma_prepare vp;
+-	struct vm_area_struct *adjust = NULL;
++	struct vm_area_struct *adjust;
+ 	long adj_start;
+-	bool merge_target;
  
--	init_multi_vma_prep(&vp, vmg->vma, adjust, remove, remove2);
-+	init_multi_vma_prep(&vp, vmg->target, adjust, remove, remove2);
+ 	/*
+ 	 * If modifying an existing VMA and we don't remove vmg->middle, then we
+ 	 * shrink the adjacent VMA.
+ 	 */
+ 	if (vmg->__adjust_middle_start) {
++		vma = vmg->target;
+ 		adjust = vmg->middle;
+ 		/* The POSITIVE value by which we offset vmg->middle->vm_start. */
+ 		adj_start = vmg->end - vmg->middle->vm_start;
+-		merge_target = true;
++
++		 /* Note: vma iterator must be pointing to 'start'. */
++		vma_iter_config(vmg->vmi, vmg->start, vmg->end);
+ 	} else if (vmg->__adjust_next_start) {
++		/*
++		 * In this case alone, the VMA we manipulate is vmg->middle, but
++		 * we ultimately return vmg->next.
++		 */
++		vma = vmg->middle;
+ 		adjust = vmg->next;
+ 		/* The NEGATIVE value by which we offset vmg->next->vm_start. */
+ 		adj_start = -(vmg->middle->vm_end - vmg->end);
+-		/*
+-		 * In all cases but this - merge right, shrink next - we write
+-		 * vmg->target to the maple tree and return this as the merged VMA.
+-		 */
+-		merge_target = false;
++
++		vma_iter_config(vmg->vmi, vmg->next->vm_start + adj_start,
++				vmg->next->vm_end);
+ 	} else {
++		vma = vmg->target;
+ 		adjust = NULL;
+ 		adj_start = 0;
+-		merge_target = true;
+-	}
+-
+-	if (vmg->__remove_middle)
+-		remove = vmg->middle;
+-	if (vmg->__remove_next)
+-		remove2 = vmg->next;
+-
+-	init_multi_vma_prep(&vp, vmg->target, adjust, remove, remove2);
  
- 	VM_WARN_ON(vp.anon_vma && adjust && adjust->anon_vma &&
- 		   vp.anon_vma != adjust->anon_vma);
-@@ -652,15 +652,15 @@ static int commit_merge(struct vma_merge_struct *vmg,
- 				adjust->vm_end);
+-	VM_WARN_ON(vp.anon_vma && adjust && adjust->anon_vma &&
+-		   vp.anon_vma != adjust->anon_vma);
+-
+-	if (merge_target) {
+-		/* Note: vma iterator must be pointing to 'start'. */
++		 /* Note: vma iterator must be pointing to 'start'. */
+ 		vma_iter_config(vmg->vmi, vmg->start, vmg->end);
+-	} else {
+-		vma_iter_config(vmg->vmi, adjust->vm_start + adj_start,
+-				adjust->vm_end);
  	}
  
--	if (vma_iter_prealloc(vmg->vmi, vmg->vma))
-+	if (vma_iter_prealloc(vmg->vmi, vmg->target))
- 		return -ENOMEM;
+-	if (vma_iter_prealloc(vmg->vmi, vmg->target))
++	init_multi_vma_prep(&vp, vma, vmg);
++
++	if (vma_iter_prealloc(vmg->vmi, vma))
+ 		return NULL;
  
  	vma_prepare(&vp);
--	vma_adjust_trans_huge(vmg->vma, vmg->start, vmg->end, adj_start);
--	vma_set_range(vmg->vma, vmg->start, vmg->end, vmg->pgoff);
-+	vma_adjust_trans_huge(vmg->target, vmg->start, vmg->end, adj_start);
-+	vma_set_range(vmg->target, vmg->start, vmg->end, vmg->pgoff);
- 
- 	if (expanded)
--		vma_iter_store(vmg->vmi, vmg->vma);
-+		vma_iter_store(vmg->vmi, vmg->target);
+-	vma_adjust_trans_huge(vmg->target, vmg->start, vmg->end, adj_start);
+-	vma_set_range(vmg->target, vmg->start, vmg->end, vmg->pgoff);
+-
+-	if (merge_target)
+-		vma_iter_store(vmg->vmi, vmg->target);
++	vma_adjust_trans_huge(vma, vmg->start, vmg->end, adj_start);
++	vma_set_range(vma, vmg->start, vmg->end, vmg->pgoff);
  
  	if (adj_start) {
  		adjust->vm_start += adj_start;
-@@ -671,7 +671,7 @@ static int commit_merge(struct vma_merge_struct *vmg,
- 		}
+ 		adjust->vm_pgoff += PHYS_PFN(adj_start);
+-
+-		if (!merge_target)
+-			vma_iter_store(vmg->vmi, adjust);
  	}
  
--	vma_complete(&vp, vmg->vmi, vmg->vma->vm_mm);
-+	vma_complete(&vp, vmg->vmi, vmg->target->vm_mm);
+-	vma_complete(&vp, vmg->vmi, vmg->target->vm_mm);
++	vma_iter_store(vmg->vmi, vmg->target);
++
++	vma_complete(&vp, vmg->vmi, vma->vm_mm);
  
- 	return 0;
+-	return merge_target ? vmg->target : vmg->next;
++	return vmg->target;
  }
-@@ -694,8 +694,9 @@ static bool can_merge_remove_vma(struct vm_area_struct *vma)
-  * identical properties.
-  *
-  * This function checks for the existence of any such mergeable VMAs and updates
-- * the maple tree describing the @vmg->vma->vm_mm address space to account for
-- * this, as well as any VMAs shrunk/expanded/deleted as a result of this merge.
-+ * the maple tree describing the @vmg->middle->vm_mm address space to account
-+ * for this, as well as any VMAs shrunk/expanded/deleted as a result of this
-+ * merge.
-  *
-  * As part of this operation, if a merge occurs, the @vmg object will have its
-  * vma, start, end, and pgoff fields modified to execute the merge. Subsequent
-@@ -704,45 +705,47 @@ static bool can_merge_remove_vma(struct vm_area_struct *vma)
-  * Returns: The merged VMA if merge succeeds, or NULL otherwise.
-  *
-  * ASSUMPTIONS:
-- * - The caller must assign the VMA to be modifed to @vmg->vma.
-+ * - The caller must assign the VMA to be modifed to @vmg->middle.
-  * - The caller must have set @vmg->prev to the previous VMA, if there is one.
-  * - The caller must not set @vmg->next, as we determine this.
-  * - The caller must hold a WRITE lock on the mm_struct->mmap_lock.
-- * - vmi must be positioned within [@vmg->vma->vm_start, @vmg->vma->vm_end).
-+ * - vmi must be positioned within [@vmg->middle->vm_start, @vmg->middle->vm_end).
-  */
- static __must_check struct vm_area_struct *vma_merge_existing_range(
- 		struct vma_merge_struct *vmg)
- {
--	struct vm_area_struct *vma = vmg->vma;
-+	struct vm_area_struct *middle = vmg->middle;
- 	struct vm_area_struct *prev = vmg->prev;
- 	struct vm_area_struct *next, *res;
- 	struct vm_area_struct *anon_dup = NULL;
- 	struct vm_area_struct *adjust = NULL;
- 	unsigned long start = vmg->start;
- 	unsigned long end = vmg->end;
--	bool left_side = vma && start == vma->vm_start;
--	bool right_side = vma && end == vma->vm_end;
-+	bool left_side = middle && start == middle->vm_start;
-+	bool right_side = middle && end == middle->vm_end;
- 	int err = 0;
- 	long adj_start = 0;
--	bool merge_will_delete_vma, merge_will_delete_next;
-+	bool merge_will_delete_middle, merge_will_delete_next;
- 	bool merge_left, merge_right, merge_both;
- 	bool expanded;
  
- 	mmap_assert_write_locked(vmg->mm);
--	VM_WARN_ON_VMG(!vma, vmg); /* We are modifying a VMA, so caller must specify. */
-+	VM_WARN_ON_VMG(!middle, vmg); /* We are modifying a VMA, so caller must specify. */
- 	VM_WARN_ON_VMG(vmg->next, vmg); /* We set this. */
- 	VM_WARN_ON_VMG(prev && start <= prev->vm_start, vmg);
- 	VM_WARN_ON_VMG(start >= end, vmg);
+ /* We can only remove VMAs when merging if they do not have a close hook. */
+@@ -833,11 +836,15 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
+ 	/* No matter what happens, we will be adjusting middle. */
+ 	vma_start_write(middle);
  
- 	/*
--	 * If vma == prev, then we are offset into a VMA. Otherwise, if we are
-+	 * If middle == prev, then we are offset into a VMA. Otherwise, if we are
- 	 * not, we must span a portion of the VMA.
- 	 */
--	VM_WARN_ON_VMG(vma && ((vma != prev && vmg->start != vma->vm_start) ||
--			       vmg->end > vma->vm_end), vmg);
--	/* The vmi must be positioned within vmg->vma. */
--	VM_WARN_ON_VMG(vma && !(vma_iter_addr(vmg->vmi) >= vma->vm_start &&
--				vma_iter_addr(vmg->vmi) < vma->vm_end), vmg);
-+	VM_WARN_ON_VMG(middle &&
-+		       ((middle != prev && vmg->start != middle->vm_start) ||
-+			vmg->end > middle->vm_end), vmg);
-+	/* The vmi must be positioned within vmg->middle. */
-+	VM_WARN_ON_VMG(middle &&
-+		       !(vma_iter_addr(vmg->vmi) >= middle->vm_start &&
-+			 vma_iter_addr(vmg->vmi) < middle->vm_end), vmg);
- 
- 	vmg->state = VMA_MERGE_NOMERGE;
- 
-@@ -776,13 +779,13 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
- 
- 	merge_both = merge_left && merge_right;
- 	/* If we span the entire VMA, a merge implies it will be deleted. */
--	merge_will_delete_vma = left_side && right_side;
-+	merge_will_delete_middle = left_side && right_side;
- 
- 	/*
--	 * If we need to remove vma in its entirety but are unable to do so,
-+	 * If we need to remove middle in its entirety but are unable to do so,
- 	 * we have no sensible recourse but to abort the merge.
- 	 */
--	if (merge_will_delete_vma && !can_merge_remove_vma(vma))
-+	if (merge_will_delete_middle && !can_merge_remove_vma(middle))
- 		return NULL;
- 
- 	/*
-@@ -793,7 +796,7 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
- 
- 	/*
- 	 * If we cannot delete next, then we can reduce the operation to merging
--	 * prev and vma (thereby deleting vma).
-+	 * prev and middle (thereby deleting middle).
- 	 */
- 	if (merge_will_delete_next && !can_merge_remove_vma(next)) {
- 		merge_will_delete_next = false;
-@@ -801,8 +804,8 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
- 		merge_both = false;
- 	}
- 
--	/* No matter what happens, we will be adjusting vma. */
--	vma_start_write(vma);
-+	/* No matter what happens, we will be adjusting middle. */
-+	vma_start_write(middle);
- 
- 	if (merge_left)
- 		vma_start_write(prev);
-@@ -812,13 +815,13 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
+-	if (merge_left)
+-		vma_start_write(prev);
+-
+-	if (merge_right)
++	if (merge_right) {
+ 		vma_start_write(next);
++		vmg->target = next;
++	}
++
++	if (merge_left) {
++		vma_start_write(prev);
++		vmg->target = prev;
++	}
  
  	if (merge_both) {
  		/*
--		 *         |<----->|
--		 * |-------*********-------|
--		 *   prev     vma     next
--		 *  extend   delete  delete
-+		 * |<-------------------->|
-+		 * |-------********-------|
-+		 *   prev   middle   next
-+		 *  extend  delete  delete
+@@ -847,7 +854,6 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
+ 		 *  extend  delete  delete
  		 */
  
--		vmg->vma = prev;
-+		vmg->target = prev;
+-		vmg->target = prev;
  		vmg->start = prev->vm_start;
  		vmg->end = next->vm_end;
  		vmg->pgoff = prev->vm_pgoff;
-@@ -826,78 +829,79 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
- 		/*
- 		 * We already ensured anon_vma compatibility above, so now it's
- 		 * simply a case of, if prev has no anon_vma object, which of
--		 * next or vma contains the anon_vma we must duplicate.
-+		 * next or middle contains the anon_vma we must duplicate.
- 		 */
--		err = dup_anon_vma(prev, next->anon_vma ? next : vma, &anon_dup);
-+		err = dup_anon_vma(prev, next->anon_vma ? next : middle,
-+				   &anon_dup);
- 	} else if (merge_left) {
- 		/*
--		 *         |<----->| OR
--		 *         |<--------->|
-+		 * |<------------>|      OR
-+		 * |<----------------->|
- 		 * |-------*************
--		 *   prev       vma
-+		 *   prev     middle
+@@ -868,7 +874,6 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
  		 *  extend shrink/delete
  		 */
  
--		vmg->vma = prev;
-+		vmg->target = prev;
+-		vmg->target = prev;
  		vmg->start = prev->vm_start;
  		vmg->pgoff = prev->vm_pgoff;
  
--		if (!merge_will_delete_vma) {
--			adjust = vma;
--			adj_start = vmg->end - vma->vm_start;
-+		if (!merge_will_delete_middle) {
-+			adjust = middle;
-+			adj_start = vmg->end - middle->vm_start;
- 		}
+@@ -892,7 +897,6 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
+ 		VM_WARN_ON_VMG(vmg->start > middle->vm_start && prev && middle != prev, vmg);
  
--		err = dup_anon_vma(prev, vma, &anon_dup);
-+		err = dup_anon_vma(prev, middle, &anon_dup);
- 	} else { /* merge_right */
- 		/*
--		 *     |<----->| OR
--		 * |<--------->|
-+		 *     |<------------->| OR
-+		 * |<----------------->|
- 		 * *************-------|
--		 *      vma       next
-+		 *    middle     next
- 		 * shrink/delete extend
- 		 */
- 
- 		pgoff_t pglen = PHYS_PFN(vmg->end - vmg->start);
- 
- 		VM_WARN_ON_VMG(!merge_right, vmg);
--		/* If we are offset into a VMA, then prev must be vma. */
--		VM_WARN_ON_VMG(vmg->start > vma->vm_start && prev && vma != prev, vmg);
-+		/* If we are offset into a VMA, then prev must be middle. */
-+		VM_WARN_ON_VMG(vmg->start > middle->vm_start && prev && middle != prev, vmg);
- 
--		if (merge_will_delete_vma) {
--			vmg->vma = next;
-+		if (merge_will_delete_middle) {
-+			vmg->target = next;
+ 		if (vmg->__remove_middle) {
+-			vmg->target = next;
  			vmg->end = next->vm_end;
  			vmg->pgoff = next->vm_pgoff - pglen;
  		} else {
- 			/*
--			 * We shrink vma and expand next.
-+			 * We shrink middle and expand next.
- 			 *
- 			 * IMPORTANT: This is the ONLY case where the final
--			 * merged VMA is NOT vmg->vma, but rather vmg->next.
-+			 * merged VMA is NOT vmg->target, but rather vmg->next.
+@@ -903,7 +907,6 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
+ 			 * merged VMA is NOT vmg->target, but rather vmg->next.
  			 */
--
--			vmg->start = vma->vm_start;
-+			vmg->target = middle;
-+			vmg->start = middle->vm_start;
+ 			vmg->__adjust_next_start = true;
+-			vmg->target = middle;
+ 			vmg->start = middle->vm_start;
  			vmg->end = start;
--			vmg->pgoff = vma->vm_pgoff;
-+			vmg->pgoff = middle->vm_pgoff;
- 
- 			adjust = next;
--			adj_start = -(vma->vm_end - start);
-+			adj_start = -(middle->vm_end - start);
- 		}
- 
--		err = dup_anon_vma(next, vma, &anon_dup);
-+		err = dup_anon_vma(next, middle, &anon_dup);
- 	}
- 
- 	if (err)
- 		goto abort;
- 
- 	/*
--	 * In nearly all cases, we expand vmg->vma. There is one exception -
-+	 * In nearly all cases, we expand vmg->middle. There is one exception -
- 	 * merge_right where we partially span the VMA. In this case we shrink
--	 * the end of vmg->vma and adjust the start of vmg->next accordingly.
-+	 * the end of vmg->middle and adjust the start of vmg->next accordingly.
- 	 */
--	expanded = !merge_right || merge_will_delete_vma;
-+	expanded = !merge_right || merge_will_delete_middle;
- 
- 	if (commit_merge(vmg, adjust,
--			 merge_will_delete_vma ? vma : NULL,
-+			 merge_will_delete_middle ? middle : NULL,
- 			 merge_will_delete_next ? next : NULL,
- 			 adj_start, expanded)) {
- 		if (anon_dup)
-@@ -973,7 +977,7 @@ struct vm_area_struct *vma_merge_new_range(struct vma_merge_struct *vmg)
- 	bool just_expand = vmg->merge_flags & VMG_FLAG_JUST_EXPAND;
- 
- 	mmap_assert_write_locked(vmg->mm);
--	VM_WARN_ON_VMG(vmg->vma, vmg);
-+	VM_WARN_ON_VMG(vmg->middle, vmg);
- 	/* vmi must point at or before the gap. */
- 	VM_WARN_ON_VMG(vma_iter_addr(vmg->vmi) > end, vmg);
- 
-@@ -989,13 +993,13 @@ struct vm_area_struct *vma_merge_new_range(struct vma_merge_struct *vmg)
- 	/* If we can merge with the next VMA, adjust vmg accordingly. */
- 	if (can_merge_right) {
- 		vmg->end = next->vm_end;
--		vmg->vma = next;
-+		vmg->middle = next;
- 	}
- 
- 	/* If we can merge with the previous VMA, adjust vmg accordingly. */
- 	if (can_merge_left) {
- 		vmg->start = prev->vm_start;
--		vmg->vma = prev;
-+		vmg->middle = prev;
- 		vmg->pgoff = prev->vm_pgoff;
- 
- 		/*
-@@ -1017,10 +1021,10 @@ struct vm_area_struct *vma_merge_new_range(struct vma_merge_struct *vmg)
- 	 * Now try to expand adjacent VMA(s). This takes care of removing the
- 	 * following VMA if we have VMAs on both sides.
- 	 */
--	if (vmg->vma && !vma_expand(vmg)) {
--		khugepaged_enter_vma(vmg->vma, vmg->flags);
-+	if (vmg->middle && !vma_expand(vmg)) {
-+		khugepaged_enter_vma(vmg->middle, vmg->flags);
- 		vmg->state = VMA_MERGE_SUCCESS;
--		return vmg->vma;
-+		return vmg->middle;
- 	}
- 
- 	return NULL;
-@@ -1032,44 +1036,46 @@ struct vm_area_struct *vma_merge_new_range(struct vma_merge_struct *vmg)
-  * @vmg: Describes a VMA expansion operation.
-  *
-  * Expand @vma to vmg->start and vmg->end.  Can expand off the start and end.
-- * Will expand over vmg->next if it's different from vmg->vma and vmg->end ==
-- * vmg->next->vm_end.  Checking if the vmg->vma can expand and merge with
-+ * Will expand over vmg->next if it's different from vmg->middle and vmg->end ==
-+ * vmg->next->vm_end.  Checking if the vmg->middle can expand and merge with
-  * vmg->next needs to be handled by the caller.
-  *
-  * Returns: 0 on success.
-  *
-  * ASSUMPTIONS:
-- * - The caller must hold a WRITE lock on vmg->vma->mm->mmap_lock.
-- * - The caller must have set @vmg->vma and @vmg->next.
-+ * - The caller must hold a WRITE lock on vmg->middle->mm->mmap_lock.
-+ * - The caller must have set @vmg->middle and @vmg->next.
-  */
- int vma_expand(struct vma_merge_struct *vmg)
- {
- 	struct vm_area_struct *anon_dup = NULL;
- 	bool remove_next = false;
--	struct vm_area_struct *vma = vmg->vma;
-+	struct vm_area_struct *middle = vmg->middle;
- 	struct vm_area_struct *next = vmg->next;
- 
- 	mmap_assert_write_locked(vmg->mm);
- 
--	vma_start_write(vma);
--	if (next && (vma != next) && (vmg->end == next->vm_end)) {
-+	vma_start_write(middle);
-+	if (next && (middle != next) && (vmg->end == next->vm_end)) {
- 		int ret;
- 
- 		remove_next = true;
- 		/* This should already have been checked by this point. */
- 		VM_WARN_ON_VMG(!can_merge_remove_vma(next), vmg);
- 		vma_start_write(next);
--		ret = dup_anon_vma(vma, next, &anon_dup);
-+		ret = dup_anon_vma(middle, next, &anon_dup);
- 		if (ret)
- 			return ret;
- 	}
- 
- 	/* Not merging but overwriting any part of next is not handled. */
- 	VM_WARN_ON_VMG(next && !remove_next &&
--		       next != vma && vmg->end > next->vm_start, vmg);
-+		       next != middle && vmg->end > next->vm_start, vmg);
- 	/* Only handles expanding */
--	VM_WARN_ON_VMG(vma->vm_start < vmg->start || vma->vm_end > vmg->end, vmg);
-+	VM_WARN_ON_VMG(middle->vm_start < vmg->start ||
-+		       middle->vm_end > vmg->end, vmg);
- 
-+	vmg->target = middle;
- 	if (commit_merge(vmg, NULL, remove_next ? next : NULL, NULL, 0, true))
- 		goto nomem;
- 
-@@ -1508,7 +1514,7 @@ int do_vmi_munmap(struct vma_iterator *vmi, struct mm_struct *mm,
-  */
- static struct vm_area_struct *vma_modify(struct vma_merge_struct *vmg)
- {
--	struct vm_area_struct *vma = vmg->vma;
-+	struct vm_area_struct *vma = vmg->middle;
- 	struct vm_area_struct *merged;
- 
- 	/* First, try to merge. */
-@@ -1605,7 +1611,7 @@ struct vm_area_struct *vma_merge_extend(struct vma_iterator *vmi,
- 	VMG_VMA_STATE(vmg, vmi, vma, vma, vma->vm_end, vma->vm_end + delta);
- 
- 	vmg.next = vma_iter_next_rewind(vmi, NULL);
--	vmg.vma = NULL; /* We use the VMA to populate VMG fields only. */
-+	vmg.middle = NULL; /* We use the VMA to populate VMG fields only. */
- 
- 	return vma_merge_new_range(&vmg);
- }
-@@ -1726,7 +1732,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
- 	if (new_vma && new_vma->vm_start < addr + len)
- 		return NULL;	/* should never get here */
- 
--	vmg.vma = NULL; /* New VMA range. */
-+	vmg.middle = NULL; /* New VMA range. */
- 	vmg.pgoff = pgoff;
- 	vmg.next = vma_iter_next_rewind(&vmi, NULL);
- 	new_vma = vma_merge_new_range(&vmg);
+ 			vmg->pgoff = middle->vm_pgoff;
 diff --git a/mm/vma.h b/mm/vma.h
-index a2e8710b8c47..5b5dd07e478c 100644
+index e18487797fa4..e55e68abfbe3 100644
 --- a/mm/vma.h
 +++ b/mm/vma.h
-@@ -69,16 +69,48 @@ enum vma_merge_flags {
- 	VMG_FLAG_JUST_EXPAND = 1 << 0,
- };
- 
--/* Represents a VMA merge operation. */
-+/*
-+ * Describes a VMA merge operation and is threaded throughout it.
-+ *
-+ * Any of the fields may be mutated by the merge operation, so no guarantees are
-+ * made to the contents of this structure after a merge operation has completed.
-+ */
- struct vma_merge_struct {
- 	struct mm_struct *mm;
- 	struct vma_iterator *vmi;
--	pgoff_t pgoff;
-+	/*
-+	 * Adjacent VMAs, any of which may be NULL if not present:
-+	 *
-+	 * |------|--------|------|
-+	 * | prev | middle | next |
-+	 * |------|--------|------|
-+	 *
-+	 * middle may not yet exist in the case of a proposed new VMA being
-+	 * merged, or it may be an existing VMA.
-+	 *
-+	 * next may be assigned by the caller.
-+	 */
+@@ -82,11 +82,7 @@ struct vma_merge_struct {
  	struct vm_area_struct *prev;
--	struct vm_area_struct *next; /* Modified by vma_merge(). */
--	struct vm_area_struct *vma; /* Either a new VMA or the one being modified. */
-+	struct vm_area_struct *middle;
-+	struct vm_area_struct *next;
-+	/*
-+	 * This is the VMA we ultimately target to become the merged VMA, except
-+	 * for the one exception of merge right, shrink next (for details of
-+	 * this scenario see vma_merge_existing_range()).
-+	 */
-+	struct vm_area_struct *target;
-+	/*
-+	 * Initially, the start, end, pgoff fields are provided by the caller
-+	 * and describe the proposed new VMA range, whether modifying an
-+	 * existing VMA (which will be 'middle'), or adding a new one.
-+	 *
-+	 * During the merge process these fields are updated to describe the new
-+	 * range _including those VMAs which will be merged_.
-+	 */
- 	unsigned long start;
- 	unsigned long end;
-+	pgoff_t pgoff;
-+
- 	unsigned long flags;
- 	struct file *file;
- 	struct anon_vma *anon_vma;
-@@ -118,8 +150,8 @@ static inline pgoff_t vma_pgoff_offset(struct vm_area_struct *vma,
- 		.mm = vma_->vm_mm,				\
- 		.vmi = vmi_,					\
- 		.prev = prev_,					\
-+		.middle = vma_,					\
- 		.next = NULL,					\
--		.vma = vma_,					\
- 		.start = start_,				\
- 		.end = end_,					\
- 		.flags = vma_->vm_flags,			\
-diff --git a/tools/testing/vma/vma.c b/tools/testing/vma/vma.c
-index 04ab45e27fb8..3c0572120e94 100644
---- a/tools/testing/vma/vma.c
-+++ b/tools/testing/vma/vma.c
-@@ -147,8 +147,8 @@ static void vmg_set_range(struct vma_merge_struct *vmg, unsigned long start,
- 	vma_iter_set(vmg->vmi, start);
- 
- 	vmg->prev = NULL;
-+	vmg->middle = NULL;
- 	vmg->next = NULL;
--	vmg->vma = NULL;
- 
- 	vmg->start = start;
- 	vmg->end = end;
-@@ -338,7 +338,7 @@ static bool test_simple_expand(void)
- 	VMA_ITERATOR(vmi, &mm, 0);
- 	struct vma_merge_struct vmg = {
- 		.vmi = &vmi,
--		.vma = vma,
-+		.middle = vma,
- 		.start = 0,
- 		.end = 0x3000,
- 		.pgoff = 0,
-@@ -631,7 +631,7 @@ static bool test_vma_merge_special_flags(void)
- 	 */
- 	vma = alloc_and_link_vma(&mm, 0x3000, 0x4000, 3, flags);
- 	ASSERT_NE(vma, NULL);
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 
- 	for (i = 0; i < ARRAY_SIZE(special_flags); i++) {
- 		vm_flags_t special_flag = special_flags[i];
-@@ -760,7 +760,7 @@ static bool test_vma_merge_with_close(void)
- 
- 	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
- 	vmg.prev = vma_prev;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 
+ 	struct vm_area_struct *middle;
+ 	struct vm_area_struct *next;
+-	/*
+-	 * This is the VMA we ultimately target to become the merged VMA, except
+-	 * for the one exception of merge right, shrink next (for details of
+-	 * this scenario see vma_merge_existing_range()).
+-	 */
++	/* This is the VMA we ultimately target to become the merged VMA. */
+ 	struct vm_area_struct *target;
  	/*
- 	 * The VMA being modified in a way that would otherwise merge should
-@@ -787,7 +787,7 @@ static bool test_vma_merge_with_close(void)
- 	vma->vm_ops = &vm_ops;
- 
- 	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	ASSERT_EQ(merge_existing(&vmg), NULL);
- 	/*
- 	 * Initially this is misapprehended as an out of memory report, as the
-@@ -817,7 +817,7 @@ static bool test_vma_merge_with_close(void)
- 
- 	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
- 	vmg.prev = vma_prev;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 
- 	ASSERT_EQ(merge_existing(&vmg), NULL);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_NOMERGE);
-@@ -843,7 +843,7 @@ static bool test_vma_merge_with_close(void)
- 
- 	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
- 	vmg.prev = vma_prev;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 
- 	ASSERT_EQ(merge_existing(&vmg), vma_prev);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
-@@ -940,7 +940,7 @@ static bool test_merge_existing(void)
- 	vma_next = alloc_and_link_vma(&mm, 0x6000, 0x9000, 6, flags);
- 	vma_next->vm_ops = &vm_ops; /* This should have no impact. */
- 	vmg_set_range(&vmg, 0x3000, 0x6000, 3, flags);
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	vmg.prev = vma;
- 	vma->anon_vma = &dummy_anon_vma;
- 	ASSERT_EQ(merge_existing(&vmg), vma_next);
-@@ -973,7 +973,7 @@ static bool test_merge_existing(void)
- 	vma_next = alloc_and_link_vma(&mm, 0x6000, 0x9000, 6, flags);
- 	vma_next->vm_ops = &vm_ops; /* This should have no impact. */
- 	vmg_set_range(&vmg, 0x2000, 0x6000, 2, flags);
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	vma->anon_vma = &dummy_anon_vma;
- 	ASSERT_EQ(merge_existing(&vmg), vma_next);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
-@@ -1003,7 +1003,7 @@ static bool test_merge_existing(void)
- 	vma->vm_ops = &vm_ops; /* This should have no impact. */
- 	vmg_set_range(&vmg, 0x3000, 0x6000, 3, flags);
- 	vmg.prev = vma_prev;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	vma->anon_vma = &dummy_anon_vma;
- 
- 	ASSERT_EQ(merge_existing(&vmg), vma_prev);
-@@ -1037,7 +1037,7 @@ static bool test_merge_existing(void)
- 	vma = alloc_and_link_vma(&mm, 0x3000, 0x7000, 3, flags);
- 	vmg_set_range(&vmg, 0x3000, 0x7000, 3, flags);
- 	vmg.prev = vma_prev;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	vma->anon_vma = &dummy_anon_vma;
- 	ASSERT_EQ(merge_existing(&vmg), vma_prev);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
-@@ -1067,7 +1067,7 @@ static bool test_merge_existing(void)
- 	vma_next = alloc_and_link_vma(&mm, 0x7000, 0x9000, 7, flags);
- 	vmg_set_range(&vmg, 0x3000, 0x7000, 3, flags);
- 	vmg.prev = vma_prev;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	vma->anon_vma = &dummy_anon_vma;
- 	ASSERT_EQ(merge_existing(&vmg), vma_prev);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
-@@ -1102,37 +1102,37 @@ static bool test_merge_existing(void)
- 
- 	vmg_set_range(&vmg, 0x4000, 0x5000, 4, flags);
- 	vmg.prev = vma;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	ASSERT_EQ(merge_existing(&vmg), NULL);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_NOMERGE);
- 
- 	vmg_set_range(&vmg, 0x5000, 0x6000, 5, flags);
- 	vmg.prev = vma;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	ASSERT_EQ(merge_existing(&vmg), NULL);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_NOMERGE);
- 
- 	vmg_set_range(&vmg, 0x6000, 0x7000, 6, flags);
- 	vmg.prev = vma;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	ASSERT_EQ(merge_existing(&vmg), NULL);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_NOMERGE);
- 
- 	vmg_set_range(&vmg, 0x4000, 0x7000, 4, flags);
- 	vmg.prev = vma;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	ASSERT_EQ(merge_existing(&vmg), NULL);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_NOMERGE);
- 
- 	vmg_set_range(&vmg, 0x4000, 0x6000, 4, flags);
- 	vmg.prev = vma;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	ASSERT_EQ(merge_existing(&vmg), NULL);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_NOMERGE);
- 
- 	vmg_set_range(&vmg, 0x5000, 0x6000, 5, flags);
- 	vmg.prev = vma;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 	ASSERT_EQ(merge_existing(&vmg), NULL);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_NOMERGE);
- 
-@@ -1197,7 +1197,7 @@ static bool test_anon_vma_non_mergeable(void)
- 
- 	vmg_set_range(&vmg, 0x3000, 0x7000, 3, flags);
- 	vmg.prev = vma_prev;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 
- 	ASSERT_EQ(merge_existing(&vmg), vma_prev);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
-@@ -1277,7 +1277,7 @@ static bool test_dup_anon_vma(void)
- 	vma_next->anon_vma = &dummy_anon_vma;
- 
- 	vmg_set_range(&vmg, 0, 0x5000, 0, flags);
--	vmg.vma = vma_prev;
-+	vmg.middle = vma_prev;
- 	vmg.next = vma_next;
- 
- 	ASSERT_EQ(expand_existing(&vmg), 0);
-@@ -1309,7 +1309,7 @@ static bool test_dup_anon_vma(void)
- 	vma_next->anon_vma = &dummy_anon_vma;
- 	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
- 	vmg.prev = vma_prev;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 
- 	ASSERT_EQ(merge_existing(&vmg), vma_prev);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
-@@ -1338,7 +1338,7 @@ static bool test_dup_anon_vma(void)
- 	vma->anon_vma = &dummy_anon_vma;
- 	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
- 	vmg.prev = vma_prev;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 
- 	ASSERT_EQ(merge_existing(&vmg), vma_prev);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
-@@ -1366,7 +1366,7 @@ static bool test_dup_anon_vma(void)
- 	vma->anon_vma = &dummy_anon_vma;
- 	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
- 	vmg.prev = vma_prev;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 
- 	ASSERT_EQ(merge_existing(&vmg), vma_prev);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
-@@ -1394,7 +1394,7 @@ static bool test_dup_anon_vma(void)
- 	vma->anon_vma = &dummy_anon_vma;
- 	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
- 	vmg.prev = vma;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 
- 	ASSERT_EQ(merge_existing(&vmg), vma_next);
- 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
-@@ -1432,7 +1432,7 @@ static bool test_vmi_prealloc_fail(void)
- 
- 	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
- 	vmg.prev = vma_prev;
--	vmg.vma = vma;
-+	vmg.middle = vma;
- 
- 	fail_prealloc = true;
- 
-@@ -1458,7 +1458,7 @@ static bool test_vmi_prealloc_fail(void)
- 	vma->anon_vma = &dummy_anon_vma;
- 
- 	vmg_set_range(&vmg, 0, 0x5000, 3, flags);
--	vmg.vma = vma_prev;
-+	vmg.middle = vma_prev;
- 	vmg.next = vma;
- 
- 	fail_prealloc = true;
+ 	 * Initially, the start, end, pgoff fields are provided by the caller
 -- 
 2.48.1
 
