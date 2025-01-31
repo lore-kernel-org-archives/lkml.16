@@ -1,97 +1,69 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38752EAC6;
-	Fri, 31 Jan 2025 14:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16131CAA92
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 14:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738333306; cv=none; b=k1DvFfCEFPIgUkTHcFbW6TGASlNoJqGTECiv+Aqu0Uj1iVPTGExmDBvZSBJFSp4quXDUZERuh3kdviOF551lTTyA6xgRqGq4On6bt5qD8JHqQ5U9fNAi8FxxCpqtyk2LxRUI+jZANv11e3CdQOedco8KMdraj7+LAeLLNmAVWh0=
+	t=1738333324; cv=none; b=JbIQ5GaMMLLfQ90uKdz+5RCzMVN9rUUi/V9/Vpr2FGVjz/Kwlj+gLClm1VLn1SRhMsS+3SBAMLlcJV1AGv4SSiG59PgHM0wS3+xHxv/XZtTbrt+0lpJZZEzxZe1MQCeZQHlYDyXRol/s81p4xvmYM/N1Ur5aCmI7jA4X6B57uno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738333306; c=relaxed/simple;
-	bh=f24bChgj7REtNaoNkH2tAqocNhxOhtVih4QvozTv6m0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jQoI+E1D9iMCf+kU0rwR4iGPN/U7Ix9RjkdtkBlkESPUbbCmbKq5j4/Q4+hfJTlRYKjx9H2iECUiDKQgFwNrGnBXkJ9ZfA8oMepkQweBSe1PgYUaDh+FEcWOnUTsSi1XAudKIb/Bs0gXT8CKefq1CMuuJ8+FN+4gNw9BRTHY9Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GcI+YDUi; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738333324; c=relaxed/simple;
+	bh=bzzeJyc1McWtYgPd3tXvrw7qizKSI2Hhp91PJMNNx44=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=GQDIa1Q+iIxN69sZ4VXJco+fAtjZ7LppT73ouezFpLliA6c0e/D0+ohJ2fj+bAaodp2AojdrqbCL02N8zot0ghd762xBf1AfXk2A7+ZPijCvCsWoAjKkutneNCQXjdghfWxQnWppj2nrE5L7yK8rfazV6+oYGrWlMnZ5ov425LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=FTYccVfa; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GcI+YDUi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gn6ROdhimfH2SlxaFG9S9wImJavIsJGvPsiITl9Tyxg=; b=GcI+YDUi42q8wWLAaliLPMiJCL
-	jC3vbx12pAXO2Q4jttDBHLad6PFrI8gKFC3UGsAmD9CGyvTct74eea7pwBUi30YOPI6ohMHsELXRa
-	WTkZKm4FPDerhWo7QwIC3sY8fg06rYWHQ+C/HxXpwV2FZ1kAuXRRCAg1UfEL2sqGk4RbLj6BuD2qa
-	NQw6KWjJxuVhMY3rwD/NiDfpZcCBes6Wo+8nK9PgbM5Tqg7/Fr0zPXey2d2H8QVOORFMWSgoJTKjk
-	/JriUdLVUEli8ufJKmilaBRGPP2FpKCWfAuKk2Ubz4QxzjU62JGSWjoLnj8bempgYL3036hFSGCmw
-	xa5KYQwA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tdrtX-0000000EmeT-34tM;
-	Fri, 31 Jan 2025 14:21:19 +0000
-Date: Fri, 31 Jan 2025 14:21:19 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Christian Brauner <brauner@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	David Airlie <airlied@gmail.com>,
-	David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Ran Xiaokai <ran.xiaokai@zte.com.cn>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 02/11] drm/i915/gem: Convert __shmem_writeback() to
- folios
-Message-ID: <Z5zcXyYfXSI0PYBY@casper.infradead.org>
-References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
- <20250130100050.1868208-3-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="FTYccVfa"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 2964B240101
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 15:22:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738333321; bh=bzzeJyc1McWtYgPd3tXvrw7qizKSI2Hhp91PJMNNx44=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=FTYccVfaDBPPlOmRadK/Zy2gXv/XO1Pn+qO+Q48nkamajXXrRIKRUtbdlGdg13PSt
+	 Xd5JCWm1mL9S+zFDDKEXZldHdM1H6iKd6fqSlVJeKjKyFdp25fQyvNUJ+4ebmnVA6/
+	 9zMzh/EfXw6PyzAacdzgKSUhwkKv3K1ZjvLgiu0JkjKjPmoaZHQBFgHbrOOPEttC61
+	 EI2KvIJPGwAQ5eGW2L+yufHb2YxRxgW3Umi1DakHTLViPDK2UUi/p+BS5UvPCEX6ey
+	 sw5UhBmMpSUGSF9px3It3IMeWTj9o7rYJvD8EDfYdm3B3x1L+4vOWElxXuNKXdnRjD
+	 fSxuT110z1BOQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Ykykw0TPRz9rxD;
+	Fri, 31 Jan 2025 15:22:00 +0100 (CET)
+Message-ID: <0eb8db5a-5ec1-49fe-9fc8-6c1e296473a6@posteo.net>
+Date: Fri, 31 Jan 2025 14:21:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130100050.1868208-3-kirill.shutemov@linux.intel.com>
+From: Marian Flor <marian.flor@posteo.net>
+Subject: [PATCH 0/1] GPIO Keys, fix to emit EV_ABS event also on axis release
+Content-Language: en-US
+To: dmitry.torokhov@gmail.com
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 30, 2025 at 12:00:40PM +0200, Kirill A. Shutemov wrote:
-> Use folios instead of pages.
-> 
-> This is preparation for removing PG_reclaim.
+Hi
 
-Well, this is a horrid little function.  Rather than iterating just the
-dirty folios, it iterates all folios, then locks them before checking
-whether they're dirty.
+I noticed when using the gpio-keys module that an axis button is stuck
+upon release of the axis. However, the docs at "linux,input-value:" 
+in devicetree/bindings/input/gpio-keys.yaml notes that it should
+create an event of 0 when released, but it does not as I found out.
+This patch aligns the implementation with the documentation.
 
-I don't know whether the comments are correct or the code is correct.
-This comment doesn't match with setting PageReclaim:
+kr,
+Marian
 
-         * Leave mmapings intact (GTT will have been revoked on unbinding,
-         * leaving only CPU mmapings around) and add those pages to the LRU
-         * instead of invoking writeback so they are aged and paged out
-         * as normal.
+Marian Flor (1):
+  gpio_keys.c: Send also event when EV_ABS axis button is released.
 
-so I wonder if Chris was confused about what PageReclaim actually does.
-Let's find out if he still remembers what he thought it did!
+ drivers/input/keyboard/gpio_keys.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+-- 
+2.39.5
+
