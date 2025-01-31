@@ -1,33 +1,33 @@
-Received: from smtp-8fa8.mail.infomaniak.ch (smtp-8fa8.mail.infomaniak.ch [83.166.143.168])
+Received: from smtp-42ae.mail.infomaniak.ch (smtp-42ae.mail.infomaniak.ch [84.16.66.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8591EE7D9
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76421F03FE
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738341085; cv=none; b=DEZPS7sqj5o9lmC9l5uTFu99DGJbJzZhJsvcKcSZ5eiOGlBLoeiccgkcy4Pq/eK334mJ+TVWeH4dUB/fhRwzMilfAOyo6GA1EUacrwOP8VpOPjcqflWSUTDyd/0oMvU/K+xXPtREgwB5+vxgg0jLtKOzvYr7E0Z04vOE/S2+pPc=
+	t=1738341088; cv=none; b=gUn1fa/eIz1lt6gAEaWugAQ+bE2sBRjwUgceph5SNf7e0q8QsGdrB06Y2r5rJiUlLJN3R+RiDdmZ/Y0xHU2/Mzth+6qQdIFju2x9X4kOTSPOr40hvjT53JTK3sTJRZ8l9z+GtatM4d258HtcdPBVpuDd5xmdkr7aBb4YZKtbFsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738341085; c=relaxed/simple;
-	bh=CWtakTwZyXHQafiz0C337/hADs9ZiKEKJMLWmN8W7tM=;
+	s=arc-20240116; t=1738341088; c=relaxed/simple;
+	bh=KMpH/NJNOz9ThL7c4pzbjdA5+jaSG54exRDPiCJSrkE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HvU94rIEj8kAsyHUVYx/Hm44pSWkAXtAD0+nHMNtwGOF36xu0nqzUbQ8MzXC6nvcx/zYhSdv6X+3kXWg7Xo44FK9MsUxYL1gHS9W2wq8B/tEfB857bMQE81pSI4WZoM/l1zcQyVHOT7tn/zWe+Lw9wgX5nYhL4LV7DXgRPu3uRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ancQOelZ; arc=none smtp.client-ip=83.166.143.168
+	 MIME-Version:Content-Type; b=efwTCRnBJAWkCYuPu0KqTAKCOrkOsCkstH+/EqSJ4aIfITVIxCByEQHqP+Dk9AlUEmPzDbWInl55WhTV0ijqL1GbZk9OH1v0oajeK7OMH5vn403b4uXle3lfWSN9UNUsWUMgGc1LoOBN3LFsNG+izzao1Y5tbbDVhJQh45ei1lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=AHO3Bwv1; arc=none smtp.client-ip=84.16.66.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ancQOelZ"
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Yl1c20nNVzVYy;
-	Fri, 31 Jan 2025 17:31:14 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="AHO3Bwv1"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Yl1c63PlxzVy9;
+	Fri, 31 Jan 2025 17:31:18 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1738341074;
-	bh=Fr2fjcJEr5wg484u712ypsWI93gDcN01iygSsJ63A24=;
+	s=20191114; t=1738341078;
+	bh=86jZ21QuyMT8e/PHJRezkyPLXF2IV9Tk9QVERSALFNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ancQOelZvcRKx9siVuPaWTRIVYOrSY4+1Cr8rGukoipAU+2HlF7XAYD37lQIPw9EZ
-	 K+oeZKH20fPfT5fjjYCcHPR1Wizy0R5Mps7D5zzwriB85ukwNigpB9kKMOfiYZDShc
-	 rr5lCJaKppMdQ6KwB4zOKfEf5H87iUwv0viwG9W8=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Yl1c06fZNzfBw;
-	Fri, 31 Jan 2025 17:31:12 +0100 (CET)
+	b=AHO3Bwv1iJjK20mNnIxOgkzpTKnBdZL6rj3+cb90CuqTHBjCDsR9PeHT23VC8vTJz
+	 UqpkX2SzdLpOfvzB0w/Q4GsF/Gb8RgXU3Xf2DHyafgJBhs9xR1GGuVUHqlEJ+T2Eqt
+	 OBh7wzxL2HrJeQvz7Dmw1rrsWTyPgFBnNMtUTABE=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Yl1c55B3wzdgN;
+	Fri, 31 Jan 2025 17:31:17 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Eric Paris <eparis@redhat.com>,
 	Paul Moore <paul@paul-moore.com>,
@@ -57,9 +57,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-security-module@vger.kernel.org
-Subject: [PATCH v5 02/24] landlock: Add unique ID generator
-Date: Fri, 31 Jan 2025 17:30:37 +0100
-Message-ID: <20250131163059.1139617-3-mic@digikod.net>
+Subject: [PATCH v5 04/24] landlock: Prepare to use credential instead of domain for filesystem
+Date: Fri, 31 Jan 2025 17:30:39 +0100
+Message-ID: <20250131163059.1139617-5-mic@digikod.net>
 In-Reply-To: <20250131163059.1139617-1-mic@digikod.net>
 References: <20250131163059.1139617-1-mic@digikod.net>
 Precedence: bulk
@@ -72,408 +72,246 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Landlock IDs can be generated to uniquely identify Landlock objects.
-For now, only Landlock domains get an ID at creation time.  These IDs
-map to immutable domain hierarchies.
+This cosmetic change that is needed for audit support, specifically to
+be able to filter according to cross-execution boundaries.
 
-Landlock IDs have important properties:
-- They are unique during the lifetime of the running system thanks to
-  the 64-bit values: at worse, 2^60 - 2*2^32 useful IDs.
-- They are always greater than 2^32 and must then be stored in 64-bit
-  integer types.
-- The initial ID (at boot time) is randomly picked between 2^32 and
-  2^33, which limits collisions in logs between different boots.
-- IDs are sequential, which enables users to order them.
-- IDs may not be consecutive but increase with a random 2^4 step, which
-  limits side channels.
+Add landlock_get_applicable_subject(), mainly a copy of
+landlock_get_applicable_domain(), and which will fully replace it in a
+following commit.
 
-Such IDs can be exposed to unprivileged processes, even if it is not the
-case with this audit patch series.  The domain IDs will be useful for
-user space to identify sandboxes and get their properties.
+Optimize current_check_access_path() to only handle the access request.
 
-These Landlock IDs are more robust that other absolute kernel IDs such
-as pipe's inodes which rely on a shared global counter.
+Partially replace get_current_fs_domain() with explicit calls to
+landlock_get_applicable_subject().  The remaining ones will follow with
+more changes.
 
-For checkpoint/restore features (i.e. CRIU), we could easily implement a
-privileged interface (e.g. sysfs) to set the next ID counter.
-
-IDR/IDA are not used because we only need a bijection from Landlock
-objects to Landlock IDs, and we must not recycle IDs.  This enables us
-to identify all Landlock objects during the lifetime of the system (e.g.
-in logs), but not to access an object from an ID nor know if an ID is
-assigned.   Using a counter is simpler, it scales (i.e. avoids growing
-memory footprint), and it does not require locking.  We'll use proper
-file descriptors (with IDs used as inode numbers) to access Landlock
-objects.
+Remove explicit domain->num_layers check which is now part of the
+landlock_get_applicable_subject() call.
 
 Cc: Günther Noack <gnoack@google.com>
-Cc: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20250131163059.1139617-3-mic@digikod.net
+Link: https://lore.kernel.org/r/20250131163059.1139617-5-mic@digikod.net
 ---
 
-Changes since v3:
-- Rename landlock_get_id_range() helper to reflect the "range" of IDs.
-- Add docstring for landlock_get_id_range().
-
-Changes since v2:
-- Extend commit message.
-- Rename global_counter to next_id.
-- Fix KUnit's test __init types, spotted by kernel test robot.
-
-Changes since v1:
+Changes since v4:
 - New patch.
 ---
- security/landlock/.kunitconfig               |   2 +
- security/landlock/Makefile                   |   2 +
- security/landlock/id.c                       | 249 +++++++++++++++++++
- security/landlock/id.h                       |  25 ++
- security/landlock/setup.c                    |   2 +
- tools/testing/kunit/configs/all_tests.config |   2 +
- 6 files changed, 282 insertions(+)
- create mode 100644 security/landlock/id.c
- create mode 100644 security/landlock/id.h
+ security/landlock/cred.h | 50 +++++++++++++++++++++++++++++++
+ security/landlock/fs.c   | 65 +++++++++++++++++++++++-----------------
+ 2 files changed, 88 insertions(+), 27 deletions(-)
 
-diff --git a/security/landlock/.kunitconfig b/security/landlock/.kunitconfig
-index 03e119466604..f9423f01ac5b 100644
---- a/security/landlock/.kunitconfig
-+++ b/security/landlock/.kunitconfig
-@@ -1,4 +1,6 @@
-+CONFIG_AUDIT=y
- CONFIG_KUNIT=y
-+CONFIG_NET=y
- CONFIG_SECURITY=y
- CONFIG_SECURITY_LANDLOCK=y
- CONFIG_SECURITY_LANDLOCK_KUNIT_TEST=y
-diff --git a/security/landlock/Makefile b/security/landlock/Makefile
-index b4538b7cf7d2..e1777abbc413 100644
---- a/security/landlock/Makefile
-+++ b/security/landlock/Makefile
-@@ -4,3 +4,5 @@ landlock-y := setup.o syscalls.o object.o ruleset.o \
- 	cred.o task.o fs.o
- 
- landlock-$(CONFIG_INET) += net.o
-+
-+landlock-$(CONFIG_AUDIT) += id.o
-diff --git a/security/landlock/id.c b/security/landlock/id.c
-new file mode 100644
-index 000000000000..b3c353d6e0cd
---- /dev/null
-+++ b/security/landlock/id.c
-@@ -0,0 +1,249 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Landlock LSM - Unique identification number generator
-+ *
-+ * Copyright © 2024-2025 Microsoft Corporation
-+ */
-+
-+#include <kunit/test.h>
-+#include <linux/atomic.h>
-+#include <linux/random.h>
-+#include <linux/spinlock.h>
-+
-+#include "common.h"
-+#include "id.h"
-+
-+#define COUNTER_PRE_INIT 0
-+
-+static atomic64_t next_id = ATOMIC64_INIT(COUNTER_PRE_INIT);
-+
-+static void __init init_id(atomic64_t *const counter, const u32 random_32bits)
-+{
-+	u64 init;
-+
-+	/*
-+	 * Ensures sure 64-bit values are always used by user space (or may
-+	 * fail with -EOVERFLOW), and makes this testable.
-+	 */
-+	init = 1ULL << 32;
-+
-+	/*
-+	 * Makes a large (2^32) boot-time value to limit ID collision in logs
-+	 * from different boots, and to limit info leak about the number of
-+	 * initially (relative to the reader) created elements (e.g. domains).
-+	 */
-+	init += random_32bits;
-+
-+	/* Sets first or ignores.  This will be the first ID. */
-+	atomic64_cmpxchg(counter, COUNTER_PRE_INIT, init);
-+}
-+
-+#ifdef CONFIG_SECURITY_LANDLOCK_KUNIT_TEST
-+
-+static void __init test_init_min(struct kunit *const test)
-+{
-+	atomic64_t counter = ATOMIC64_INIT(COUNTER_PRE_INIT);
-+
-+	init_id(&counter, 0);
-+	KUNIT_EXPECT_EQ(test, atomic64_read(&counter), 1ULL + U32_MAX);
-+}
-+
-+static void __init test_init_max(struct kunit *const test)
-+{
-+	atomic64_t counter = ATOMIC64_INIT(COUNTER_PRE_INIT);
-+
-+	init_id(&counter, ~0);
-+	KUNIT_EXPECT_EQ(test, atomic64_read(&counter), 1 + (2ULL * U32_MAX));
-+}
-+
-+static void __init test_init_once(struct kunit *const test)
-+{
-+	const u64 first_init = 1ULL + U32_MAX;
-+	atomic64_t counter = ATOMIC64_INIT(COUNTER_PRE_INIT);
-+
-+	init_id(&counter, 0);
-+	KUNIT_EXPECT_EQ(test, atomic64_read(&counter), first_init);
-+
-+	init_id(&counter, ~0);
-+	KUNIT_EXPECT_EQ(test, atomic64_read(&counter), first_init);
-+}
-+
-+#endif /* CONFIG_SECURITY_LANDLOCK_KUNIT_TEST */
-+
-+void __init landlock_init_id(void)
-+{
-+	return init_id(&next_id, get_random_u32());
-+}
-+
-+/*
-+ * It's not worth it to try to hide the monotonic counter because it can still
-+ * be inferred (with N counter ranges), and if we are allowed to read the inode
-+ * number we should also be allowed to read the time creation anyway, and it
-+ * can be handy to store and sort domain IDs for user space.
-+ *
-+ * Returns the value of next_id and increment it to let some space for the next
-+ * one.
-+ */
-+static u64 get_id_range(size_t number_of_ids, atomic64_t *const counter,
-+			u8 random_4bits)
-+{
-+	u64 id, step;
-+
-+	/*
-+	 * We should return at least 1 ID, and we may need a set of consecutive
-+	 * ones (e.g. to generate a set of inodes).
-+	 */
-+	if (WARN_ON_ONCE(number_of_ids <= 0))
-+		number_of_ids = 1;
-+
-+	/*
-+	 * Blurs the next ID guess with 1/16 ratio.  We get 2^(64 - 4) -
-+	 * (2 * 2^32), so a bit less than 2^60 available IDs, which should be
-+	 * much more than enough considering the number of CPU cycles required
-+	 * to get a new ID (e.g. a full landlock_restrict_self() call), and the
-+	 * cost of draining all available IDs during the system's uptime.
-+	 */
-+	random_4bits = random_4bits % (1 << 4);
-+	step = number_of_ids + random_4bits;
-+
-+	/* It is safe to cast a signed atomic to an unsigned value. */
-+	id = atomic64_fetch_add(step, counter);
-+
-+	/* Warns if landlock_init_id() was not called. */
-+	WARN_ON_ONCE(id == COUNTER_PRE_INIT);
-+	return id;
-+}
-+
-+#ifdef CONFIG_SECURITY_LANDLOCK_KUNIT_TEST
-+
-+static void test_range1_rand0(struct kunit *const test)
-+{
-+	atomic64_t counter;
-+	u64 init;
-+
-+	init = get_random_u32();
-+	atomic64_set(&counter, init);
-+	KUNIT_EXPECT_EQ(test, get_id_range(1, &counter, 0), init);
-+	KUNIT_EXPECT_EQ(
-+		test, get_id_range(get_random_u8(), &counter, get_random_u8()),
-+		init + 1);
-+}
-+
-+static void test_range1_rand1(struct kunit *const test)
-+{
-+	atomic64_t counter;
-+	u64 init;
-+
-+	init = get_random_u32();
-+	atomic64_set(&counter, init);
-+	KUNIT_EXPECT_EQ(test, get_id_range(1, &counter, 1), init);
-+	KUNIT_EXPECT_EQ(
-+		test, get_id_range(get_random_u8(), &counter, get_random_u8()),
-+		init + 2);
-+}
-+
-+static void test_range1_rand16(struct kunit *const test)
-+{
-+	atomic64_t counter;
-+	u64 init;
-+
-+	init = get_random_u32();
-+	atomic64_set(&counter, init);
-+	KUNIT_EXPECT_EQ(test, get_id_range(1, &counter, 16), init);
-+	KUNIT_EXPECT_EQ(
-+		test, get_id_range(get_random_u8(), &counter, get_random_u8()),
-+		init + 1);
-+}
-+
-+static void test_range2_rand0(struct kunit *const test)
-+{
-+	atomic64_t counter;
-+	u64 init;
-+
-+	init = get_random_u32();
-+	atomic64_set(&counter, init);
-+	KUNIT_EXPECT_EQ(test, get_id_range(2, &counter, 0), init);
-+	KUNIT_EXPECT_EQ(
-+		test, get_id_range(get_random_u8(), &counter, get_random_u8()),
-+		init + 2);
-+}
-+
-+static void test_range2_rand1(struct kunit *const test)
-+{
-+	atomic64_t counter;
-+	u64 init;
-+
-+	init = get_random_u32();
-+	atomic64_set(&counter, init);
-+	KUNIT_EXPECT_EQ(test, get_id_range(2, &counter, 1), init);
-+	KUNIT_EXPECT_EQ(
-+		test, get_id_range(get_random_u8(), &counter, get_random_u8()),
-+		init + 3);
-+}
-+
-+static void test_range2_rand2(struct kunit *const test)
-+{
-+	atomic64_t counter;
-+	u64 init;
-+
-+	init = get_random_u32();
-+	atomic64_set(&counter, init);
-+	KUNIT_EXPECT_EQ(test, get_id_range(2, &counter, 2), init);
-+	KUNIT_EXPECT_EQ(
-+		test, get_id_range(get_random_u8(), &counter, get_random_u8()),
-+		init + 4);
-+}
-+
-+static void test_range2_rand16(struct kunit *const test)
-+{
-+	atomic64_t counter;
-+	u64 init;
-+
-+	init = get_random_u32();
-+	atomic64_set(&counter, init);
-+	KUNIT_EXPECT_EQ(test, get_id_range(2, &counter, 16), init);
-+	KUNIT_EXPECT_EQ(
-+		test, get_id_range(get_random_u8(), &counter, get_random_u8()),
-+		init + 2);
-+}
-+
-+#endif /* CONFIG_SECURITY_LANDLOCK_KUNIT_TEST */
-+
-+/**
-+ * landlock_get_id_range - Get a range of unique IDs
-+ *
-+ * @number_of_ids: Number of IDs to hold.  Must be greater than one.
-+ *
-+ * Returns: The first ID in the range.
-+ */
-+u64 landlock_get_id_range(size_t number_of_ids)
-+{
-+	return get_id_range(number_of_ids, &next_id, get_random_u8());
-+}
-+
-+#ifdef CONFIG_SECURITY_LANDLOCK_KUNIT_TEST
-+
-+static struct kunit_case __refdata test_cases[] = {
-+	/* clang-format off */
-+	KUNIT_CASE(test_init_min),
-+	KUNIT_CASE(test_init_max),
-+	KUNIT_CASE(test_init_once),
-+	KUNIT_CASE(test_range1_rand0),
-+	KUNIT_CASE(test_range1_rand1),
-+	KUNIT_CASE(test_range1_rand16),
-+	KUNIT_CASE(test_range2_rand0),
-+	KUNIT_CASE(test_range2_rand1),
-+	KUNIT_CASE(test_range2_rand2),
-+	KUNIT_CASE(test_range2_rand16),
-+	{}
-+	/* clang-format on */
-+};
-+
-+static struct kunit_suite test_suite = {
-+	.name = "landlock_id",
-+	.test_cases = test_cases,
-+};
-+
-+kunit_test_init_section_suite(test_suite);
-+
-+#endif /* CONFIG_SECURITY_LANDLOCK_KUNIT_TEST */
-diff --git a/security/landlock/id.h b/security/landlock/id.h
-new file mode 100644
-index 000000000000..99f596123c19
---- /dev/null
-+++ b/security/landlock/id.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Landlock LSM - Unique identification number generator
-+ *
-+ * Copyright © 2024-2025 Microsoft Corporation
-+ */
-+
-+#ifndef _SECURITY_LANDLOCK_ID_H
-+#define _SECURITY_LANDLOCK_ID_H
-+
-+#ifdef CONFIG_AUDIT
-+
-+void __init landlock_init_id(void);
-+
-+u64 landlock_get_id_range(size_t number_of_ids);
-+
-+#else /* CONFIG_AUDIT */
-+
-+static inline void __init landlock_init_id(void)
-+{
-+}
-+
-+#endif /* CONFIG_AUDIT */
-+
-+#endif /* _SECURITY_LANDLOCK_ID_H */
-diff --git a/security/landlock/setup.c b/security/landlock/setup.c
-index 28519a45b11f..d297083efcb1 100644
---- a/security/landlock/setup.c
-+++ b/security/landlock/setup.c
+diff --git a/security/landlock/cred.h b/security/landlock/cred.h
+index bf755459838a..fdbbaf66d151 100644
+--- a/security/landlock/cred.h
++++ b/security/landlock/cred.h
 @@ -13,6 +13,7 @@
- #include "common.h"
- #include "cred.h"
- #include "fs.h"
-+#include "id.h"
- #include "net.h"
+ #include <linux/init.h>
+ #include <linux/rcupdate.h>
+ 
++#include "access.h"
+ #include "ruleset.h"
  #include "setup.h"
- #include "task.h"
-@@ -33,6 +34,7 @@ const struct lsm_id landlock_lsmid = {
  
- static int __init landlock_init(void)
- {
-+	landlock_init_id();
- 	landlock_add_cred_hooks();
- 	landlock_add_task_hooks();
- 	landlock_add_fs_hooks();
-diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing/kunit/configs/all_tests.config
-index b0049be00c70..cdd9782f9646 100644
---- a/tools/testing/kunit/configs/all_tests.config
-+++ b/tools/testing/kunit/configs/all_tests.config
-@@ -41,6 +41,8 @@ CONFIG_DAMON_PADDR=y
+@@ -53,6 +54,55 @@ static inline bool landlocked(const struct task_struct *const task)
+ 	return has_dom;
+ }
  
- CONFIG_REGMAP_BUILD=y
- 
-+CONFIG_AUDIT=y
++/**
++ * landlock_get_applicable_subject - Return the subject's Landlock credential
++ *                                   if its enforced domain applies to (i.e.
++ *                                   handles) at least one of the access rights
++ *                                   specified in @masks
++ *
++ * @cred: credential
++ * @masks: access masks
++ * @handle_layer: returned youngest layer handling a subset of @masks.  Not set
++ *                if the function returns NULL.
++ *
++ * Returns: landlock_cred(@cred) if any access rights specified in @masks is
++ * handled, or NULL otherwise.
++ */
++static inline const struct landlock_cred_security *
++landlock_get_applicable_subject(const struct cred *const cred,
++				const struct access_masks masks,
++				size_t *const handle_layer)
++{
++	const union access_masks_all masks_all = {
++		.masks = masks,
++	};
++	const struct landlock_ruleset *domain;
++	ssize_t layer_level;
 +
- CONFIG_SECURITY=y
- CONFIG_SECURITY_APPARMOR=y
- CONFIG_SECURITY_LANDLOCK=y
++	if (!cred)
++		return NULL;
++
++	domain = landlock_cred(cred)->domain;
++	if (!domain)
++		return NULL;
++
++	for (layer_level = domain->num_layers - 1; layer_level >= 0;
++	     layer_level--) {
++		union access_masks_all layer = {
++			.masks = domain->access_masks[layer_level],
++		};
++
++		if (layer.all & masks_all.all) {
++			if (handle_layer)
++				*handle_layer = layer_level;
++
++			return landlock_cred(cred);
++		}
++	}
++
++	return NULL;
++}
++
+ __init void landlock_add_cred_hooks(void);
+ 
+ #endif /* _SECURITY_LANDLOCK_CRED_H */
+diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+index 71b9dc331aae..d5b153d29fcb 100644
+--- a/security/landlock/fs.c
++++ b/security/landlock/fs.c
+@@ -771,11 +771,14 @@ static bool is_access_to_paths_allowed(
+ 
+ 	if (!access_request_parent1 && !access_request_parent2)
+ 		return true;
+-	if (WARN_ON_ONCE(!domain || !path))
++
++	if (WARN_ON_ONCE(!path))
+ 		return true;
++
+ 	if (is_nouser_or_private(path->dentry))
+ 		return true;
+-	if (WARN_ON_ONCE(domain->num_layers < 1 || !layer_masks_parent1))
++
++	if (WARN_ON_ONCE(!layer_masks_parent1))
+ 		return false;
+ 
+ 	allowed_parent1 = is_layer_masks_allowed(layer_masks_parent1);
+@@ -926,16 +929,21 @@ static bool is_access_to_paths_allowed(
+ static int current_check_access_path(const struct path *const path,
+ 				     access_mask_t access_request)
+ {
+-	const struct landlock_ruleset *const dom = get_current_fs_domain();
++	const struct access_masks masks = {
++		.fs = access_request,
++	};
++	const struct landlock_cred_security *const subject =
++		landlock_get_applicable_subject(current_cred(), masks, NULL);
+ 	layer_mask_t layer_masks[LANDLOCK_NUM_ACCESS_FS] = {};
+ 
+-	if (!dom)
++	if (!subject)
+ 		return 0;
+ 
+-	access_request = landlock_init_layer_masks(
+-		dom, access_request, &layer_masks, LANDLOCK_KEY_INODE);
+-	if (is_access_to_paths_allowed(dom, path, access_request, &layer_masks,
+-				       NULL, 0, NULL, NULL))
++	access_request = landlock_init_layer_masks(subject->domain,
++						   access_request, &layer_masks,
++						   LANDLOCK_KEY_INODE);
++	if (is_access_to_paths_allowed(subject->domain, path, access_request,
++				       &layer_masks, NULL, 0, NULL, NULL))
+ 		return 0;
+ 
+ 	return -EACCES;
+@@ -1098,7 +1106,8 @@ static int current_check_refer_path(struct dentry *const old_dentry,
+ 				    struct dentry *const new_dentry,
+ 				    const bool removable, const bool exchange)
+ {
+-	const struct landlock_ruleset *const dom = get_current_fs_domain();
++	const struct landlock_cred_security *const subject =
++		landlock_get_applicable_subject(current_cred(), any_fs, NULL);
+ 	bool allow_parent1, allow_parent2;
+ 	access_mask_t access_request_parent1, access_request_parent2;
+ 	struct path mnt_dir;
+@@ -1106,10 +1115,9 @@ static int current_check_refer_path(struct dentry *const old_dentry,
+ 	layer_mask_t layer_masks_parent1[LANDLOCK_NUM_ACCESS_FS] = {},
+ 		     layer_masks_parent2[LANDLOCK_NUM_ACCESS_FS] = {};
+ 
+-	if (!dom)
++	if (!subject)
+ 		return 0;
+-	if (WARN_ON_ONCE(dom->num_layers < 1))
+-		return -EACCES;
++
+ 	if (unlikely(d_is_negative(old_dentry)))
+ 		return -ENOENT;
+ 	if (exchange) {
+@@ -1134,10 +1142,11 @@ static int current_check_refer_path(struct dentry *const old_dentry,
+ 		 * for same-directory referer (i.e. no reparenting).
+ 		 */
+ 		access_request_parent1 = landlock_init_layer_masks(
+-			dom, access_request_parent1 | access_request_parent2,
++			subject->domain,
++			access_request_parent1 | access_request_parent2,
+ 			&layer_masks_parent1, LANDLOCK_KEY_INODE);
+ 		if (is_access_to_paths_allowed(
+-			    dom, new_dir, access_request_parent1,
++			    subject->domain, new_dir, access_request_parent1,
+ 			    &layer_masks_parent1, NULL, 0, NULL, NULL))
+ 			return 0;
+ 		return -EACCES;
+@@ -1160,10 +1169,12 @@ static int current_check_refer_path(struct dentry *const old_dentry,
+ 						      old_dentry->d_parent;
+ 
+ 	/* new_dir->dentry is equal to new_dentry->d_parent */
+-	allow_parent1 = collect_domain_accesses(dom, mnt_dir.dentry, old_parent,
++	allow_parent1 = collect_domain_accesses(subject->domain, mnt_dir.dentry,
++						old_parent,
+ 						&layer_masks_parent1);
+-	allow_parent2 = collect_domain_accesses(
+-		dom, mnt_dir.dentry, new_dir->dentry, &layer_masks_parent2);
++	allow_parent2 = collect_domain_accesses(subject->domain, mnt_dir.dentry,
++						new_dir->dentry,
++						&layer_masks_parent2);
+ 
+ 	if (allow_parent1 && allow_parent2)
+ 		return 0;
+@@ -1175,9 +1186,9 @@ static int current_check_refer_path(struct dentry *const old_dentry,
+ 	 * destination parent access rights.
+ 	 */
+ 	if (is_access_to_paths_allowed(
+-		    dom, &mnt_dir, access_request_parent1, &layer_masks_parent1,
+-		    old_dentry, access_request_parent2, &layer_masks_parent2,
+-		    exchange ? new_dentry : NULL))
++		    subject->domain, &mnt_dir, access_request_parent1,
++		    &layer_masks_parent1, old_dentry, access_request_parent2,
++		    &layer_masks_parent2, exchange ? new_dentry : NULL))
+ 		return 0;
+ 
+ 	/*
+@@ -1504,11 +1515,10 @@ static int hook_file_open(struct file *const file)
+ 	layer_mask_t layer_masks[LANDLOCK_NUM_ACCESS_FS] = {};
+ 	access_mask_t open_access_request, full_access_request, allowed_access,
+ 		optional_access;
+-	const struct landlock_ruleset *const dom =
+-		landlock_get_applicable_domain(
+-			landlock_cred(file->f_cred)->domain, any_fs);
++	const struct landlock_cred_security *const subject =
++		landlock_get_applicable_subject(file->f_cred, any_fs, NULL);
+ 
+-	if (!dom)
++	if (!subject)
+ 		return 0;
+ 
+ 	/*
+@@ -1529,9 +1539,10 @@ static int hook_file_open(struct file *const file)
+ 	full_access_request = open_access_request | optional_access;
+ 
+ 	if (is_access_to_paths_allowed(
+-		    dom, &file->f_path,
+-		    landlock_init_layer_masks(dom, full_access_request,
+-					      &layer_masks, LANDLOCK_KEY_INODE),
++		    subject->domain, &file->f_path,
++		    landlock_init_layer_masks(subject->domain,
++					      full_access_request, &layer_masks,
++					      LANDLOCK_KEY_INODE),
+ 		    &layer_masks, NULL, 0, NULL, NULL)) {
+ 		allowed_access = full_access_request;
+ 	} else {
 -- 
 2.48.1
 
