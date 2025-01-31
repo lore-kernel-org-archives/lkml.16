@@ -1,241 +1,110 @@
-Received: from minute.unseen.parts (minute.unseen.parts [139.162.151.61])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3457F1A08A8;
-	Fri, 31 Jan 2025 10:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.162.151.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F5E1779B8;
+	Fri, 31 Jan 2025 10:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738320107; cv=none; b=RNNNeOfEHtcK9+YOSXdC8KivIN0kHNWEAOVTZSwkdENY6KpVV6M7pVaoGxcgmjWAgd7RZKColW802QVs5z8RZxCBJH+UxcSbauiaOk/VzSEYrevAEs4+7ggOXiSOyL9t6G+uzoNlo1ucALO7z9JcWFnvR0DC70hVoxPJUhoicaI=
+	t=1738320204; cv=none; b=XlrwWA51Hca+gKnvz+QIpcstrVmKuNGo89cIhhQNuL53MHJlP0oPPmjWtd4KA813ghOnN7R6U5pWZ7hUczhECL67YYmVXkk0FevtG3Y7tIEtXA2HpaVtWlZD+74NwJDJAEGy+4oCK65MnyrreowzIho2lei8+HN+OzewSPuuSOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738320107; c=relaxed/simple;
-	bh=FvUcElkzZxWemXu8o2v6yzMjy18Dz06KV1AZW2e9Wwg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n1BhOTvJNPZXQVetC5i9RjjPqjEYj2PBEMBLiHPBtyvYKVw47CKAds5BmqHzjr2jF8qxSHf3p0XbPhwBQvXQEuA1ypcogfNj0i5YX9qJKc9xFDAvWMHqHPbVObjPLoQnmeos5ihfhw9i2em6oyZHJhUgj+cs1GvgMOudDJA+luQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unseen.parts; spf=pass smtp.mailfrom=unseen.parts; dkim=pass (2048-bit key) header.d=unseen.parts header.i=@unseen.parts header.b=Y+/onOgT; arc=none smtp.client-ip=139.162.151.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unseen.parts
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unseen.parts
+	s=arc-20240116; t=1738320204; c=relaxed/simple;
+	bh=ZWG0gtq9Ld/u0lq9c4WKxP1tC7iM89FIhVVtWYEbjGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IhW74ISqW08uaRP28Oc3aG9j0ALlMvY6w7SjNNEB0y4s9Rl6T8pYjxffY59/mndlXuw7x1ukNfgKgSIoHXBZ/m2mxOueqVXIZI3XfXkw1kNhQqskq8wIP5ujWjcF+jHuSWyo81nddMiW93iFmERHPeyGDZmGO8ORNerxOaCI9Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WApixKRD; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=unseen.parts header.i=@unseen.parts header.b="Y+/onOgT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=unseen.parts; s=sig; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=x70ymYXNjFz5gwuDFcplwidgQVEhIt9St3oi8cLdKS0=; b=Y+/onOgTePPnhq0d1ZoX7xg49r
-	BmWhJVU0LlAs8CztfnHrBhnenCVVhCqYUGk8se899njn4d9i7V31kNpeQYtQjuKO/wPR9DgtL5u9h
-	8tXatmafHh7RBtI2cF8a1OZJ9c0J4msowp8IQWkOSvF9SlEt0YJdhsusF8KeT5pMAwgsGSjT+ch9Q
-	mLjSgbC6WaS7lFgbSdt7Qt7iT9XDKX/eWRCn5FsVIErPMM04XrXyETmkBZu3ebHCMn7FFz5kpJuaK
-	orNwqWdtvE1vj1PiA/LqED9jtMoClJPA4Uwx0cK/p1K1KNctkkKzPvx3L/4SM6bZBvA9mathxRm0h
-	U93Mybgg==;
-Received: from ink by minute.unseen.parts with local (Exim 4.96)
-	(envelope-from <ink@unseen.parts>)
-	id 1tdoSo-0002sT-01;
-	Fri, 31 Jan 2025 11:41:30 +0100
-From: Ivan Kokshaysky <ink@unseen.parts>
-To: Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2 1/4] alpha/uapi: do not expose kernel-only stack frame structures
-Date: Fri, 31 Jan 2025 11:41:26 +0100
-Message-Id: <20250131104129.11052-2-ink@unseen.parts>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250131104129.11052-1-ink@unseen.parts>
-References: <20250131104129.11052-1-ink@unseen.parts>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WApixKRD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738320204; x=1769856204;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZWG0gtq9Ld/u0lq9c4WKxP1tC7iM89FIhVVtWYEbjGo=;
+  b=WApixKRDda0jOVIjQopahOWbh+/VwX3HXq+ma0Ioa6XBVSHlAEQUQh+1
+   psu0vg+3d0kTUhycI7pxy5FeFqLaXIJJCB/9yTAlZBw9HjOx76qPA3TEj
+   j5qPeFApr8zlfAW1bxt6duGCCwJfNXXp7cXdOJz48usdAtfKhO65nKzah
+   Fi4MqFbFqcZihfki/yxw19EcoMufyvnzN1gih89jOX1BKNIlEqe70l1NJ
+   TpWboqTljdz6KkuD0uBOQkNKkYjk0r3OnEYQDXAlXUN9U/QGM6DodC6CU
+   Mx7KaDFjnbGOOYbJqcRlmQRCcQwV5jOgkvQzd/P6R8uRofrStmTsxjoUC
+   A==;
+X-CSE-ConnectionGUID: +kk2ZOh4T3OPPQUTR7tk8Q==
+X-CSE-MsgGUID: 5PHwBFk3QOWyJCD6KJCT9w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="42637334"
+X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
+   d="scan'208";a="42637334"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 02:43:23 -0800
+X-CSE-ConnectionGUID: pyLhMJXUSO+Mm0U9Y0on5Q==
+X-CSE-MsgGUID: dAP8UAtLSMedtqjIOcR2bg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="114592164"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 02:43:19 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tdoUW-00000006wRn-0QEo;
+	Fri, 31 Jan 2025 12:43:16 +0200
+Date: Fri, 31 Jan 2025 12:43:15 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Lyude Paul <lyude@redhat.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] WIP: drivers/base: Add virtual_device_create()
+Message-ID: <Z5ypQ3VdJw_pLKBr@smile.fi.intel.com>
+References: <Z5Nw8kaieLueWyUu@pollux>
+ <20250130212843.659437-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250130212843.659437-1-lyude@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Parts of asm/ptrace.h went into UAPI with commit 96433f6ee490
-("UAPI: (Scripted) Disintegrate arch/alpha/include/asm") back in 2012.
-At first glance it looked correct, as many other architectures expose
-'struct pt_regs' for ptrace(2) PTRACE_GETREGS/PTRACE_SETREGS requests
-and bpf(2) BPF_PROG_TYPE_KPROBE/BPF_PROG_TYPE_PERF_EVENT program
-types.
+On Thu, Jan 30, 2025 at 04:28:26PM -0500, Lyude Paul wrote:
+> As Greg KH pointed out, we have a nice /sys/devices/virtual directory free
+> for the taking - but the vast majority of device drivers concerned with
+> virtual devices do not use this and instead misuse the platform device API.
+> 
+> To fix this, let's start by adding a simple function that can be used for
+> creating virtual devices - virtual_device_create().
+> 
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> 
+> ---
+> 
+> So, WIP obviously because I wrote this up in a few minutes - but this goes
+> off the idea that Danilo suggested to me off-list of coming up with a
+> simple API for handling virtual devices that's a little more obvious to
+> use. I wanted to get people's feedback and if we're happy with this idea,
+> I'm willing to go through and add some pointers to this function in various
+> platform API docs - along with porting over the C version of VKMS over to
+> this API.
 
-On Alpha, however, these requests have never been implemented;
-'struct pt_regs' describes internal kernel stack frame which has
-nothing to do with userspace. Same applies to 'struct switch_stack',
-as PTRACE_GETFPREG/PTRACE_SETFPREG are not implemented either.
+So, if it goes anywhere, please be sure that:
+1) it's implemented in a separate *.c and *.h;
+2) it won't abuse header inclusions and add into dependency hell;
+3) it's documented.
 
-Move this stuff back into internal asm, where we can ajust it
-without causing a lot of confusion about possible UAPI breakage.
+Additionally would be nice to have one user to be converted to see how it may
+be done in practice.
 
-Cc: stable@vger.kernel.org
-Fixes: 96433f6ee490 ("UAPI: (Scripted) Disintegrate arch/alpha/include/asm")
-Signed-off-by: Ivan Kokshaysky <ink@unseen.parts>
----
- arch/alpha/include/asm/ptrace.h      | 62 +++++++++++++++++++++++++-
- arch/alpha/include/uapi/asm/ptrace.h | 65 ++--------------------------
- 2 files changed, 64 insertions(+), 63 deletions(-)
-
-diff --git a/arch/alpha/include/asm/ptrace.h b/arch/alpha/include/asm/ptrace.h
-index 3557ce64ed21..693d4c5b4dc7 100644
---- a/arch/alpha/include/asm/ptrace.h
-+++ b/arch/alpha/include/asm/ptrace.h
-@@ -2,8 +2,68 @@
- #ifndef _ASMAXP_PTRACE_H
- #define _ASMAXP_PTRACE_H
- 
--#include <uapi/asm/ptrace.h>
-+/*
-+ * This struct defines the way the registers are stored on the
-+ * kernel stack during a system call or other kernel entry
-+ *
-+ * NOTE! I want to minimize the overhead of system calls, so this
-+ * struct has as little information as possible. It does not have
-+ *
-+ *  - floating point regs: the kernel doesn't change those
-+ *  - r9-15: saved by the C compiler
-+ *
-+ * This makes "fork()" and "exec()" a bit more complex, but should
-+ * give us low system call latency.
-+ */
- 
-+struct pt_regs {
-+	unsigned long r0;
-+	unsigned long r1;
-+	unsigned long r2;
-+	unsigned long r3;
-+	unsigned long r4;
-+	unsigned long r5;
-+	unsigned long r6;
-+	unsigned long r7;
-+	unsigned long r8;
-+	unsigned long r19;
-+	unsigned long r20;
-+	unsigned long r21;
-+	unsigned long r22;
-+	unsigned long r23;
-+	unsigned long r24;
-+	unsigned long r25;
-+	unsigned long r26;
-+	unsigned long r27;
-+	unsigned long r28;
-+	unsigned long hae;
-+/* JRP - These are the values provided to a0-a2 by PALcode */
-+	unsigned long trap_a0;
-+	unsigned long trap_a1;
-+	unsigned long trap_a2;
-+/* These are saved by PAL-code: */
-+	unsigned long ps;
-+	unsigned long pc;
-+	unsigned long gp;
-+	unsigned long r16;
-+	unsigned long r17;
-+	unsigned long r18;
-+};
-+
-+/*
-+ * This is the extended stack used by signal handlers and the context
-+ * switcher: it's pushed after the normal "struct pt_regs".
-+ */
-+struct switch_stack {
-+	unsigned long r9;
-+	unsigned long r10;
-+	unsigned long r11;
-+	unsigned long r12;
-+	unsigned long r13;
-+	unsigned long r14;
-+	unsigned long r15;
-+	unsigned long r26;
-+};
- 
- #define arch_has_single_step()		(1)
- #define user_mode(regs) (((regs)->ps & 8) != 0)
-diff --git a/arch/alpha/include/uapi/asm/ptrace.h b/arch/alpha/include/uapi/asm/ptrace.h
-index 5ca45934fcbb..ad55dc283d8d 100644
---- a/arch/alpha/include/uapi/asm/ptrace.h
-+++ b/arch/alpha/include/uapi/asm/ptrace.h
-@@ -2,72 +2,13 @@
- #ifndef _UAPI_ASMAXP_PTRACE_H
- #define _UAPI_ASMAXP_PTRACE_H
- 
--
- /*
-- * This struct defines the way the registers are stored on the
-- * kernel stack during a system call or other kernel entry
-- *
-- * NOTE! I want to minimize the overhead of system calls, so this
-- * struct has as little information as possible. It does not have
-- *
-- *  - floating point regs: the kernel doesn't change those
-- *  - r9-15: saved by the C compiler
-+ * We don't HAVE_REGS_AND_STACK_ACCESS_API.
-  *
-- * This makes "fork()" and "exec()" a bit more complex, but should
-- * give us low system call latency.
-+ * Provide empty pt_regs structure for libbpf and the likes
-+ * to avoid breaking the compilation.
-  */
--
- struct pt_regs {
--	unsigned long r0;
--	unsigned long r1;
--	unsigned long r2;
--	unsigned long r3;
--	unsigned long r4;
--	unsigned long r5;
--	unsigned long r6;
--	unsigned long r7;
--	unsigned long r8;
--	unsigned long r19;
--	unsigned long r20;
--	unsigned long r21;
--	unsigned long r22;
--	unsigned long r23;
--	unsigned long r24;
--	unsigned long r25;
--	unsigned long r26;
--	unsigned long r27;
--	unsigned long r28;
--	unsigned long hae;
--/* JRP - These are the values provided to a0-a2 by PALcode */
--	unsigned long trap_a0;
--	unsigned long trap_a1;
--	unsigned long trap_a2;
--/* These are saved by PAL-code: */
--	unsigned long ps;
--	unsigned long pc;
--	unsigned long gp;
--	unsigned long r16;
--	unsigned long r17;
--	unsigned long r18;
- };
- 
--/*
-- * This is the extended stack used by signal handlers and the context
-- * switcher: it's pushed after the normal "struct pt_regs".
-- */
--struct switch_stack {
--	unsigned long r9;
--	unsigned long r10;
--	unsigned long r11;
--	unsigned long r12;
--	unsigned long r13;
--	unsigned long r14;
--	unsigned long r15;
--	unsigned long r26;
--#ifndef __KERNEL__
--	unsigned long fp[32];	/* fp[31] is fpcr */
--#endif
--};
--
--
- #endif /* _UAPI_ASMAXP_PTRACE_H */
 -- 
-2.39.5
+With Best Regards,
+Andy Shevchenko
+
 
