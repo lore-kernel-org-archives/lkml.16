@@ -1,105 +1,111 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808711F238B;
-	Fri, 31 Jan 2025 18:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7251C1386C9;
+	Fri, 31 Jan 2025 18:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738347289; cv=none; b=TK6WFnO60G33OyGKIZ989tFM23ClDE2DrrF+OyS0+5pNo/GGvGpr3h1nb4sj7qTC48E7FCkqlsb9/Hwj2RPm7mdsKQftZHuQYQWT+DQHlP6Rxi2fXb3FMGKnHHTDF2VMSa6lx95AF2l59c5QLI+gxrP4xMuUS4KjXLP/Lqjw7Uc=
+	t=1738347535; cv=none; b=HpoTRg66WgrAlA7KX01yragiRXNA1AskDrYDYoGBCUEZdRbX/CoMQCa/IIQFKiWokztZt0miTLJGglGSrrhXudlU2nfl7CHH5cX2SZ75oRM7oFMpy2kEdIsSKvjaJEidNcoDPjO95UctrNx9bmAGtofyF91yiGmSKF/3H5LeM+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738347289; c=relaxed/simple;
-	bh=anQJSzUxW8U+cVQKhUOthp3ugwYG38yHlIVcGOOgMog=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IEpBrdSshpGp1foiVURCsxIoHbNEHuJE0Zo3Gn36IdvpmLEMQaehAT1fxvrlNQq40UaClfCuaUwnpdRFmFWzIErqMPqmM4m5Y+lbvJ8+W0N/a9Jy0za3W4mWRAZaDXQR9UgtppbzEpGctYPCv1H5mQoZRknVqqWEGMp7LVfPq/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OAgRtX8l; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAgRtX8l"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43618283dedso23525565e9.3;
-        Fri, 31 Jan 2025 10:14:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738347286; x=1738952086; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=twg6JYyOJOvZqkdJ76pZB54ODqpgYmfn5BjcDhAkADY=;
-        b=OAgRtX8l8HIAu3YBn277919OkFAM34h8QS6FNVTEA3I0gIpKFMSH8Ztgofp9xj7t0w
-         zZKIJZen6C4jo0zWr6cCd2LKUFEPY0yRFm6EFZ7Zz4hGpPtEqSsaZ1JhaSMD3hn3oTZO
-         bo/W04uLL4YfBcmAzCsMN3witSV5XMraPIxgJHHgbpRvlUo1eSpZ1J3PXDZDSOJTzP0k
-         hvgfm2CUzYC/BYWacAk8g6licCoPOCyXcWUQfLEyMCxRsu97ixyVHYMgal9hh3hGJAS8
-         5BI930pHqhiEpagCJ1g25BXB8LmQkXDdnojN8NwEmRrzGJyz/XIpzDJwEU5R9bjcgbxn
-         v/8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738347286; x=1738952086;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=twg6JYyOJOvZqkdJ76pZB54ODqpgYmfn5BjcDhAkADY=;
-        b=Ro5X2j714MZjrOb/c0jm4UnIJedDnDPCoci8YYVKyGltgwaY2vSavvjvSLqsVuJ8Q2
-         p1oaJnDrPjJqDgR6e2NknIUeGWE9ynlAL7NwPFM0/FeOa83zg+2xJhS0rQRDB/s9FSVa
-         H61semKdfYXyDqh8Q5bMSz4v9S4lb32RYP2AcgYJ2D+jcJb8disB36a4sL7rkvRVFAa4
-         TXvPeGam4/Orl6KoIR2AUGATlZADw0Ybc1pL/7aKHRxeZpZXy06A829r99hKYe32IcWB
-         xqjTDCiVtIvzhbXPggqQ69RRjAtFwmJ6pW9evntDtCbIZnS6PubVgOdESHvIJt8GyNR+
-         JYcA==
-X-Forwarded-Encrypted: i=1; AJvYcCVljZLEux9BJz76i855OoMWy1vNJBalW1obaz7DGhJ1+HZ1Ys+UFGtAMNMTU2cURrMpdYpnFXa9rftrzHQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9VhTZuEPzugKG/axvL9FKRGDU1sjo3rfHUngEviVpelckjz/S
-	+8iHCPT5c55h7aE+LYFzXZZuVOfPDSPLeUnZhIl5s7uGU7Uvtq9jKPvBGA==
-X-Gm-Gg: ASbGncvMJ80okyCcJFyNkZHLyezCg9znTRk20nJqZxwYo0sBD6tF82SknQzlPpn3SRf
-	NQ+4Y4/y3UICZVWffrsDhNi/LAmxSl56nfqdDbcNaoyyfuzqzWJ5m/N5VWGqlesHjrNgSg5S9NJ
-	Jg4/AoSYP8nqscoIcZEmT8KTtzPESXUEiwJULW4Z4+j/RIKgdtUin+L1asyuPdshPbals6w4rdg
-	+ck/+zEfAnvqcLJQMeNml9dRq/LJQgDX3XaCCbkNnWyf+FXnaerfPJ3LTZxsYqC0bIxyYBK3Spl
-	sGEA2RDoWfuTs/tEszLTlfN7ag==
-X-Google-Smtp-Source: AGHT+IEw+rB47H+JGUnXWRHPlt11RrbhPObbqox/RfcPbzWKlRuSASebdO/RGrFLq8bDubxgz4Oweg==
-X-Received: by 2002:a05:600c:ccc:b0:435:14d:f61a with SMTP id 5b1f17b1804b1-438dc420083mr95909595e9.25.1738347285415;
-        Fri, 31 Jan 2025 10:14:45 -0800 (PST)
-Received: from localhost.localdomain ([94.112.167.15])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc265c0sm97911025e9.10.2025.01.31.10.14.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 10:14:44 -0800 (PST)
-From: Ilya Dryomov <idryomov@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: ceph-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph fixes for 6.14-rc1
-Date: Fri, 31 Jan 2025 19:14:22 +0100
-Message-ID: <20250131181425.3962976-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.46.1
+	s=arc-20240116; t=1738347535; c=relaxed/simple;
+	bh=dskuolPKupTwvryUFCMQnFh6VVqyxehDH0iWHT5oTuo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kTkbYwl21BEvxqYE0TZFkTbuNIZ5OfaK8wY6er2zJsonHPCowhLbwIWFMe2BWGuDwU+52Vo1JRoKGhd+n2z+atrbPIWF7IlXkPu43z/BEgoEPg0ldIYwzDFXaG6ou/4aV1XfkC47DpWLht42PBmmW58Gm0Tnn72gF548YjtTxos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yl3zN4NWmz6K8L9;
+	Sat,  1 Feb 2025 02:18:08 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id CCE1C140520;
+	Sat,  1 Feb 2025 02:18:50 +0800 (CST)
+Received: from localhost (10.195.244.178) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 31 Jan
+ 2025 19:18:50 +0100
+Date: Fri, 31 Jan 2025 18:18:48 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Esteban Blanc <eblanc@baylibre.com>
+CC: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+	<Michael.Hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
+	<nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v3 3/6] iio: adc: ad4030: add averaging support
+Message-ID: <20250131181848.00003c67@huawei.com>
+In-Reply-To: <20250130-eblanc-ad4630_v1-v3-3-052e8c2d897d@baylibre.com>
+References: <20250130-eblanc-ad4630_v1-v3-0-052e8c2d897d@baylibre.com>
+	<20250130-eblanc-ad4630_v1-v3-3-052e8c2d897d@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi Linus,
+On Thu, 30 Jan 2025 12:08:27 +0100
+Esteban Blanc <eblanc@baylibre.com> wrote:
 
-The following changes since commit 5bc55a333a2f7316b58edc7573e8e893f7acb532:
+> This add support for the averaging mode of AD4030 using oversampling IIO
+> attribute
+> 
+> Signed-off-by: Esteban Blanc <eblanc@baylibre.com>
+A couple of comments inline. The one about the gpio wiggling
+is just me venting at silly hardware, so feel free to ignore that!
+Other one is a trivial 'nice to have' for formatting.
 
-  Linux 6.13-rc7 (2025-01-12 14:37:56 -0800)
+Jonathan
 
-are available in the Git repository at:
+>  
+> +static const int ad4030_average_modes[] = {
+> +	1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384,
+> +	32768, 65536
+> +};
+Groups of 8 often best option for lists like this. Make it easy to see how
+many there are.
 
-  https://github.com/ceph/ceph-client.git tags/ceph-for-6.14-rc1
+> @@ -498,9 +538,11 @@ static int ad4030_set_mode(struct iio_dev *indio_dev, unsigned long mask)
+>  static int ad4030_conversion(struct iio_dev *indio_dev)
+>  {
+>  	struct ad4030_state *st = iio_priv(indio_dev);
+> -	const struct iio_scan_type scan_type = indio_dev->channels->scan_type;
+> -	unsigned char diff_realbytes = BITS_TO_BYTES(scan_type.realbits);
+> +	unsigned char diff_realbytes =
+> +		BITS_TO_BYTES(st->current_scan_type->realbits);
+>  	unsigned int bytes_to_read;
+> +	unsigned long cnv_nb = BIT(st->avg_log2);
+> +	unsigned int i;
+>  	int ret;
+>  
+>  	/* Number of bytes for one differential channel */
+> @@ -511,10 +553,12 @@ static int ad4030_conversion(struct iio_dev *indio_dev)
+>  	/* Mulitiply by the number of hardware channels */
+>  	bytes_to_read *= st->chip->num_voltage_inputs;
+>  
+> -	gpiod_set_value_cansleep(st->cnv_gpio, 1);
+> -	ndelay(AD4030_TCNVH_NS);
+> -	gpiod_set_value_cansleep(st->cnv_gpio, 0);
+> -	ndelay(st->chip->tcyc_ns);
+> +	for (i = 0; i < cnv_nb; i++) {
+> +		gpiod_set_value_cansleep(st->cnv_gpio, 1);
+> +		ndelay(AD4030_TCNVH_NS);
+> +		gpiod_set_value_cansleep(st->cnv_gpio, 0);
+> +		ndelay(st->chip->tcyc_ns);
+Hmm. This is a bit nasty. To actually use this in anger
+and get decent performance I guess a PWM with appropriate
+functionality to do the right length pull train is the
+way to go.
 
-for you to fetch changes up to 3981be13ec1baf811bfb93ed6a98bafc85cdeab1:
+oh well, nothing wrong with this as a solution beyond it
+likely taking much longer than needed!
 
-  ceph: exchange hardcoded value on NAME_MAX (2025-01-27 16:07:42 +0100)
+> +	}
 
-----------------------------------------------------------------
-A fix for a memory leak from Antoine (marked for stable) and two
-cleanups from Liang and Slava, all in CephFS.
-
-----------------------------------------------------------------
-Antoine Viallon (1):
-      ceph: fix memory leak in ceph_mds_auth_match()
-
-Liang Jie (1):
-      ceph: streamline request head structures in MDS client
-
-Viacheslav Dubeyko (1):
-      ceph: exchange hardcoded value on NAME_MAX
-
- fs/ceph/debugfs.c            |  2 +-
- fs/ceph/mds_client.c         | 32 ++++++++++++++++----------------
- include/linux/ceph/ceph_fs.h | 14 --------------
- 3 files changed, 17 insertions(+), 31 deletions(-)
