@@ -1,62 +1,88 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD1C158862
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D26E1F238E;
+	Fri, 31 Jan 2025 20:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738354905; cv=none; b=VGaQm/CHjQf0uhsR7BYmhwD/1EULdVQy9xmPTjxk0blyqjJ7zxo3k3WWzkPVUNUDyeZfpl98RcF7Ju/g1NY6+EOId8xbfGnTJ9Zu/4dgHkc2kNRs/4of3k/5FsZd7/ilk89Oul0pl+0bH6LITnLW4yJoSm2dIMoLfPiObW0A1TU=
+	t=1738354907; cv=none; b=AmfLgPpzsRSDgJ/BZZeQB1MrZ4Qag6QFRd1/3tDqOb+Pdwu05ZpBADPTFVcId8UOqDtCc//WwdYAV9mLz//kQWUlAULuSt9mM7wl+xulS3aVyKF/qUVGM2O5FtYbMFTaHZIhSQc15dsU4OJMT/HQ27ynjnoAr/IHXwTo5n/tbFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738354905; c=relaxed/simple;
-	bh=1Ndbk2BaIajsSq6LVjOKCXHTVo6NfBh3Ifl5W7zU9q4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u5Hl9HGkenLrebh/Rzj0e9Pvno95KVRFEAGtUk0F4RboNeBlffnqMUPoK8V1dlmWcZdKm3Yw6CEGf7hmNhDXPeLcpItqHQHlyaWz+Vws55Kpc9IzEyIj3L6W9ARwbI3LwQfhMes8SoQ+PW4pAGwGoKMs5eGu+rqO+sbrcJHFMqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=p4OGzqLt; arc=none smtp.client-ip=67.231.149.25
+	s=arc-20240116; t=1738354907; c=relaxed/simple;
+	bh=hTXjfUYY5jkGWVr3mwx6N3NFTy2eiwGjxT5HEGQnA0I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iubfmshvvFwN03TCK9T1WBlt8XRtgI76Aiq6mKJ+H/txp4MxWrGSa7447ENbv1Zf5K50SigslUi4mGsTnfR9Nhv28WFS0xP1IIQA4K7301Th1s8MCBUqtEndiLhsSEmDlLCMWw8cRSIqkP1lKK+sVpVVa4ch7HgnBCJBCaMe7ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=n1m0IEqc; arc=none smtp.client-ip=67.231.152.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="p4OGzqLt"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50VCdoac009961
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 14:01:14 -0600
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="n1m0IEqc"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50VDHdad013031;
+	Fri, 31 Jan 2025 14:21:07 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=4rk84s04nJmPDhNfVK0qQcCyoF1+d6Q1J1vzsSv4K4c=; b=
-	p4OGzqLtXG8OrzliOzvzpTXZRhDeT3RGDDBMZY9EFoPTbIUJUyAOLSkJDdAPttFq
-	6GapgCKLu98W9eJbwawhKWcESUloo6dGouGMD+mYeRW88gyNNxJr0iw+m2a0Jdve
-	BbiDjyJK++CnaVcvcPJfsFGRGe0SsO5QviYxMThLVy/IRbhuDV0DHfluT1+CxjN0
-	VMsEr70J3Mh0WWIKhWJ/VDPnv0/eJSvc5H6r2Die4ncKPXmd3J+dIamQLkhsMLqt
-	opCzaiMN67RYZCqtomT28t6d0RWuQQiiIJ6pKvFNfF378SZ+UDu9jk+N64nzkxZT
-	xNceCnz65VxnS7pBRNdZ3Q==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 44gf921579-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 14:01:13 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PODMain02222019; bh=ZHHnYJ0H+qOjkw25
+	Mfu1e2Mk+Cj3/9kmu6Acd5OIRLc=; b=n1m0IEqceOeup1+RXBBMO3Tp5DjhSJbC
+	6lj8mg8uZm2tggiLcNpTKE9DkV5YfilLbiTs7Ow82Yc9Fm4ksX9SaoQfOJfbY5kZ
+	HMDfMMlNx/Y7EBkWYmjN7ALzlUdFRTK1hc1B8uOtCspNeFm3n3/xsdnNJe/Y1kjY
+	qSuVitqflyybHxtcWvME6IL9ARrB+qsRo9YlojdONTQLyi0+WNfiKBYYss6iRL8M
+	Lj/O+oZICFG7oMm4xEvKzwf8LcClel4s7g3UoRnM5d+uKibpT/gzTtow8iJFZa/H
+	1dayoXJP0a3PsIt27th5BXy2Q7MSVI0AYcwseZGpaswkD3EjU4xGLw==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44gf8n168d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 14:21:06 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 31 Jan
- 2025 20:01:10 +0000
+ 2025 20:21:05 +0000
 Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
  anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Fri, 31 Jan 2025 20:01:10 +0000
+ 15.2.1544.14 via Frontend Transport; Fri, 31 Jan 2025 20:21:05 +0000
 Received: from ftrev.crystal.cirrus.com (ftrev.ad.cirrus.com [141.131.145.81])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id BB86782026C;
-	Fri, 31 Jan 2025 20:01:09 +0000 (UTC)
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id D664482026C;
+	Fri, 31 Jan 2025 20:21:00 +0000 (UTC)
 From: Fred Treven <ftreven@opensource.cirrus.com>
-To: Simon Trimmer <simont@opensource.cirrus.com>,
+To: James Ogletree <jogletre@opensource.cirrus.com>,
+        Dmitry Torokhov
+	<dmitry.torokhov@gmail.com>,
+        Ben Bright <ben.bright@cirrus.com>, <simont@opensource.cirrus.com>,
         Charles Keepax
 	<ckeepax@opensource.cirrus.com>,
         Richard Fitzgerald
-	<rf@opensource.cirrus.com>
-CC: Fred Treven <ftreven@opensource.cirrus.com>,
-        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/7] firmware: cs_dsp: Check for valid num_regs in cs_dsp_wseq_multi_write()
-Date: Fri, 31 Jan 2025 13:56:33 -0600
-Message-ID: <20250131195639.1784933-3-ftreven@opensource.cirrus.com>
+	<rf@opensource.cirrus.com>,
+        Lee Jones <lee@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+	<broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
+	<tiwai@suse.com>,
+        David Rhodes <david.rhodes@cirrus.com>, Jack Yu
+	<jack.yu@realtek.com>,
+        Igor Prusov <ivprusov@salutedevices.com>,
+        Weidong Wang
+	<wangweidong.a@awinic.com>,
+        Binbin Zhou <zhoubinbin@loongson.cn>,
+        "Luca
+ Ceresoli" <luca.ceresoli@bootlin.com>,
+        Prasad Kumpatla
+	<quic_pkumpatl@quicinc.com>,
+        Paul Handrigan <paulha@opensource.cirrus.com>,
+        Masahiro Yamada <masahiroy@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
+        "Karel
+ Balej" <balejk@matfyz.cz>, Heiko Stuebner <heiko@sntech.de>,
+        Jeff LaBundy
+	<jeff@labundy.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+        Fred Treven
+	<ftreven@opensource.cirrus.com>
+Subject: [PATCH 0/7] Initial Support for CS40L26
+Date: Fri, 31 Jan 2025 14:20:56 -0600
+Message-ID: <20250131202057.1786324-1-ftreven@opensource.cirrus.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250131195639.1784933-1-ftreven@opensource.cirrus.com>
-References: <20250131195639.1784933-1-ftreven@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,38 +91,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: 6WRU9mbZzylRjBSYv62vo09N1j7PDP3-
-X-Authority-Analysis: v=2.4 cv=JPXBs9Kb c=1 sm=1 tr=0 ts=679d2c09 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=VdSt8ZQiCzkA:10 a=w1d2syhTAAAA:8 a=pYzt1GAZzx6qoJfKPqoA:9 a=zZCYzV9kfG8A:10 a=YXXWInSmI4Sqt1AkVdoW:22
-X-Proofpoint-ORIG-GUID: 6WRU9mbZzylRjBSYv62vo09N1j7PDP3-
+X-Proofpoint-GUID: HUzqT7mBuyL30WS1jJMSP0uapPcn3gke
+X-Authority-Analysis: v=2.4 cv=YOxlyQGx c=1 sm=1 tr=0 ts=679d30b2 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=VdSt8ZQiCzkA:10 a=78G1mFUK9uwQN7RrU40A:9
+X-Proofpoint-ORIG-GUID: HUzqT7mBuyL30WS1jJMSP0uapPcn3gke
 X-Proofpoint-Spam-Reason: safe
 
-If a value of 0 or below is passed into cs_dsp_wseq_multi_write()
-the function will never enter its for loop.
+Introduce driver for Cirrus Logic Device CS40L26:
+A boosted haptics driver with integrated DSP and
+waveform memory with advanced closed loop algorithms
+and LRA protection.
 
-Verify that num_regs passed into the function is valid
-and throw a user-visible error if not.
+The core CS40L26 driver is in MFD and touches the
+Input Force Feedback subsystem for haptics and
+the ASoC subsystem for audio to haptics streaming.
 
-Signed-off-by: Fred Treven <ftreven@opensource.cirrus.com>
----
- drivers/firmware/cirrus/cs_dsp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+This patchset includes changes to the CS DSP firmware
+driver which fixes two bugs and introduces support for
+multiple coefficient files.
 
-diff --git a/drivers/firmware/cirrus/cs_dsp.c b/drivers/firmware/cirrus/cs_dsp.c
-index 56315b0b5583..aacf6960d1ea 100644
---- a/drivers/firmware/cirrus/cs_dsp.c
-+++ b/drivers/firmware/cirrus/cs_dsp.c
-@@ -3743,6 +3743,11 @@ int cs_dsp_wseq_multi_write(struct cs_dsp *dsp, struct cs_dsp_wseq *wseq,
- {
- 	int i, ret;
- 
-+	if (num_regs <= 0) {
-+		cs_dsp_err(dsp, "Invalid number of regs: %d\n", num_regs);
-+		return -EINVAL;
-+	}
-+
- 	for (i = 0; i < num_regs; i++) {
- 		ret = cs_dsp_wseq_write(dsp, wseq, reg_seq[i].reg,
- 					reg_seq[i].def, op_code, update);
+Fred Treven (7):
+  firmware: cs_dsp: Fix error checking in wseq_write()
+  firmware: cs_dsp: Check for valid num_regs in
+    cs_dsp_wseq_multi_write()
+  firmware: cs_dsp: Add ability to load multiple coefficient files
+  dt-bindings: mfd: cirrus,cs40l26: Support for CS40L26
+  mfd: cs40l26: Add support for CS40L26 core driver
+  ASoC: cs40l26: Support I2S streaming to CS40L26
+  Input: cs40l26 - Add support for CS40L26 haptic driver
+
+ .../bindings/mfd/cirrus,cs40l26.yaml          |   81 +
+ MAINTAINERS                                   |    4 +-
+ drivers/firmware/cirrus/cs_dsp.c              |   70 +-
+ drivers/input/misc/Kconfig                    |   10 +
+ drivers/input/misc/Makefile                   |    1 +
+ drivers/input/misc/cs40l26-vibra.c            |  669 ++++++++
+ drivers/mfd/Kconfig                           |   29 +
+ drivers/mfd/Makefile                          |    4 +
+ drivers/mfd/cs40l26-core.c                    | 1412 +++++++++++++++++
+ drivers/mfd/cs40l26-i2c.c                     |   63 +
+ drivers/mfd/cs40l26-spi.c                     |   63 +
+ include/linux/firmware/cirrus/cs_dsp.h        |   14 +
+ include/linux/mfd/cs40l26.h                   |  341 ++++
+ sound/soc/codecs/Kconfig                      |   12 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/cs40l26-codec.c              |  523 ++++++
+ 16 files changed, 3281 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/cirrus,cs40l26.yaml
+ create mode 100644 drivers/input/misc/cs40l26-vibra.c
+ create mode 100644 drivers/mfd/cs40l26-core.c
+ create mode 100644 drivers/mfd/cs40l26-i2c.c
+ create mode 100644 drivers/mfd/cs40l26-spi.c
+ create mode 100644 include/linux/mfd/cs40l26.h
+ create mode 100644 sound/soc/codecs/cs40l26-codec.c
+
 -- 
 2.34.1
 
