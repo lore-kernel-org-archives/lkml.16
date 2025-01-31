@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E601F3FFD;
-	Fri, 31 Jan 2025 21:08:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCAD1F4297;
+	Fri, 31 Jan 2025 21:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738357732; cv=none; b=gpPnjDvcKH3ynJ0s4Q/mXMRgfgQLtTik8z1Ry7LfPlq54mySlE/531C6OaHbuW9YsiitNLze3FkPA5UzhiJCdpJIbxESmoYvojuVP722p2pKJtrZImiVRtj7rThkQfHe29Ug+euoPdxINyXO2nIRrjtwnv4CV3Ns9usDkvZEwr8=
+	t=1738357734; cv=none; b=mDQpCWzO3HXLEfvBWRJnCUJuiYHrxeHi4MBzNiFaLE/H7ywtSkmnZJBV58mUVPd59FpL9KTRNYSopGglVUVTPCgLM5KXZAnNQITFIKOkYaGd6YDEHqWl9z/tmyZ27miRyGfV83dH/s03s96EXV3bvWYq7NaJGkEUl6g+CyXCD50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738357732; c=relaxed/simple;
-	bh=pA+myvP/+kW1tdoHHa/+v6g0X2wfWCQZqyzpEqfgcMc=;
+	s=arc-20240116; t=1738357734; c=relaxed/simple;
+	bh=RJ05aPYqi6Of4mqMNLTsRwytI7XXfUy6aHeMa00xhm0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MkQ4a3Zi6sWuc03bSudE7B9As73FBRB+89IYX1PgNOKkBCGV1+rWOq0YM+ljQi0jKAyId/U4Mk59f8cJhzo+zuMfCK86IzgKhxgf10PC4Yr+u+gk3TOmtvYk1GVLz7raqUng/mdxB8n5csmw1ZY4OM0FqfHVzxQPRxArBkmtmV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohvzy+Ta; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=dNAgesNAHFw0BgRbl8b2py6MfRQjtdCl8NSb+bOXG7MRpnx47IWCDgifHPCn2cgZwjg+C7gnu1KQI5eOJfM6oF2BvMU/FLsHjDp4XTjTPchaSIRtU4Too03ca6nXiRJ9pQ0a54hcJgXTUFR4ZhPOKEtV6dERerDaaKOFJsrdR04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/v/u9OU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohvzy+Ta"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C86CC4CEE8;
-	Fri, 31 Jan 2025 21:08:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/v/u9OU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9378CC4CEE7;
+	Fri, 31 Jan 2025 21:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738357732;
-	bh=pA+myvP/+kW1tdoHHa/+v6g0X2wfWCQZqyzpEqfgcMc=;
+	s=k20201202; t=1738357733;
+	bh=RJ05aPYqi6Of4mqMNLTsRwytI7XXfUy6aHeMa00xhm0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ohvzy+TabFrY6iS6xeJZEo4sxmIOz0CCgw/N9/H4opjDL8Mg+x+jq2Iw5bRy6wCD7
-	 T84n0CStOA1aHBbZvKmg4wngVDvh9rmnkk6KOlPSkZzXiZZ2VCX+mUrL8upYQ/coaB
-	 ZkQLBBBSH35F8G7qlXYTwR/hCIos52dcyyxa6jReOcq9HVC7Vro91wDLym1MFVEoqx
-	 xG3isCLOYOmvJQGG3qwAu/oVtc69k/cuOhdk6VR+sbGSQmUKLod2hKdTMTYu9QBDyS
-	 SYKqVexA/e5CqaWqo0GPhkXmNZbIE+XD7tZbQUYN/nehrD2rxX82nOej3+RSY4g3aW
-	 GazuWSp/T2ZPw==
+	b=V/v/u9OULjLBlZAbG9SfvhJWjqvHfxKpgA5GPv0nwU0mHTR9VjASNL/XIkUjyF0iE
+	 IfWOHjp8IA+BZyPEGxr17rvbGNTGpLoMKxRKyUcFBMgH35stA4dwL8OCC2WQAGsDNV
+	 utBnLlomkRAf7JHR8dKlv+2dxUDe3Jqp5U07YciF+HrPGhRdowJGIHCqmsSHwIXGDE
+	 V/dqA3WUe8bJ302e+raJpmcKspc8rKkTbzkzYfEE4SatrqRUMI9Y5CVKpaKUuXxEKN
+	 wsCPAOaROnaPucrSQraCQP+BL56s+RkmpN/ZOY9CzyWWxM2sp4AHjnOYBRcMWVqdOv
+	 Tl+Fm2cQJrTOg==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Fri, 31 Jan 2025 15:08:26 -0600
-Subject: [PATCH 2/6] dt-bindings: marvell: armada-7k-8k: Move Armada 8KPlus
- to schema
+Date: Fri, 31 Jan 2025 15:08:27 -0600
+Subject: [PATCH 3/6] dt-bindings: marvell: armada-7k-8k: Add missing 7040
+ and 8040 board compatibles
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250131-dt-marvell-fixes-v1-2-55f9f6acd4b1@kernel.org>
+Message-Id: <20250131-dt-marvell-fixes-v1-3-55f9f6acd4b1@kernel.org>
 References: <20250131-dt-marvell-fixes-v1-0-55f9f6acd4b1@kernel.org>
 In-Reply-To: <20250131-dt-marvell-fixes-v1-0-55f9f6acd4b1@kernel.org>
 To: Andrew Lunn <andrew@lunn.ch>, 
@@ -50,55 +50,51 @@ Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 X-Mailer: b4 0.15-dev
 
-Move the text binding for the Armada 8KPlus to the existing DT schema
-for Marvell 7k and 8k SoCs.
+There's a number of board compatibles already in use, but not
+documented. Add them to the schema. These are added to the existing
+entries which are missing any board specific compatible. Entries with
+only SoC compatibles should not have been allowed in the first place.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/marvell/armada-7k-8k.yaml     |  8 ++++++++
- .../devicetree/bindings/arm/marvell/armada-8kp.txt        | 15 ---------------
- 2 files changed, 8 insertions(+), 15 deletions(-)
+ .../devicetree/bindings/arm/marvell/armada-7k-8k.yaml   | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-7k-8k.yaml b/Documentation/devicetree/bindings/arm/marvell/armada-7k-8k.yaml
-index 538d91be8857..f1a7e6576306 100644
+index f1a7e6576306..4bc7454a5d3a 100644
 --- a/Documentation/devicetree/bindings/arm/marvell/armada-7k-8k.yaml
 +++ b/Documentation/devicetree/bindings/arm/marvell/armada-7k-8k.yaml
-@@ -39,6 +39,14 @@ properties:
+@@ -23,6 +23,9 @@ properties:
+ 
+       - description: Armada 7040 SoC
+         items:
++          - enum:
++              - globalscale,mochabin
++              - marvell,armada7040-db
+           - const: marvell,armada7040
            - const: marvell,armada-ap806-quad
            - const: marvell,armada-ap806
+@@ -35,6 +38,20 @@ properties:
  
-+      - description: Armada 8080 SoC
+       - description: Armada 8040 SoC
+         items:
++          - enum:
++              - iei,puzzle-m801
++              - marvell,armada8040-db
++              - solidrun,clearfog-gt-8k
++          - const: marvell,armada8040
++          - const: marvell,armada-ap806-quad
++          - const: marvell,armada-ap806
++
++      - description: Armada 8040 SoC MACCHIATOBin Boards
 +        items:
 +          - enum:
-+              - marvell,armada-8080-db
-+          - const: marvell,armada-8080
-+          - const: marvell,armada-ap810-octa
-+          - const: marvell,armada-ap810
-+
-       - description: Armada CN9130 SoC with no external CP
-         items:
-           - const: marvell,cn9130
-diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-8kp.txt b/Documentation/devicetree/bindings/arm/marvell/armada-8kp.txt
-deleted file mode 100644
-index f3e9624534c6..000000000000
---- a/Documentation/devicetree/bindings/arm/marvell/armada-8kp.txt
-+++ /dev/null
-@@ -1,15 +0,0 @@
--Marvell Armada 8KPlus Platforms Device Tree Bindings
------------------------------------------------------
--
--Boards using a SoC of the Marvell Armada 8KP families must carry
--the following root node property:
--
-- - compatible, with one of the following values:
--
--   - "marvell,armada-8080", "marvell,armada-ap810-octa", "marvell,armada-ap810"
--     when the SoC being used is the Armada 8080
--
--Example:
--
--compatible = "marvell,armada-8080-db", "marvell,armada-8080",
--	     "marvell,armada-ap810-octa", "marvell,armada-ap810"
++              - marvell,armada8040-mcbin-doubleshot
++              - marvell,armada8040-mcbin-singleshot
++          - const: marvell,armada8040-mcbin
+           - const: marvell,armada8040
+           - const: marvell,armada-ap806-quad
+           - const: marvell,armada-ap806
 
 -- 
 2.47.2
