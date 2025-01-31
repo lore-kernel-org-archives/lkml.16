@@ -1,123 +1,132 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17D04683
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC38155C88;
+	Fri, 31 Jan 2025 07:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738308368; cv=none; b=cXUxqUz68EtdrZLr65QzsZaHKJbYw7z9TO+oAi7F5an5VbV4iy88QnnodKiow2BKnUM/pTtOrbEzz8WdL2ifqPrfOWVdR+gW/e0N2A0QzFHAcW46znBMwkGBOmu5WjtLea9MUmkanVR6drZN4OASaxYmyCecmhYtP7QCLot9Qts=
+	t=1738308411; cv=none; b=G+tw3sI40WuoIX159zr4eJDTZkHXSu9SxSRAjF4lBSF+CNncR0RzljMEBiKFIbRiKv6vhy/pZaMVSk//Iji4fIYJrkjDw3eRGixvCb88znr1SvvpLLcOBA97xkXIzrHvLwENlpWa5O+PjYDQxyufDdU2xVsBOrKRmPwDFpRJHYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738308368; c=relaxed/simple;
-	bh=Tr3ksmV2pNqejIWqja5XZ8mPSPBwaqrs3w/kzLOqLi8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l398C0BBwH6tTB38iobm6VuW6n+y8+6hhVE271SRCx5TFlYQ6uZ3jwAVnOjhzDYE1/OOrpC1SV0RRH+VgfPnM0xCTA5xghw+412VEHOe4AtTPUIkaj86pN4j4KT3lQ9LetSxkPo6pPl0ftSI78O7P5dOFz7P6aJLAASzQQ0u1dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=V2LS5b0Z; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1738308411; c=relaxed/simple;
+	bh=Q2e7UALnZghKuCGZEzriVZeAWWaFg32d8OizcQKQJh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lcCUguxvPvlqonRXtWQfhiV+ZCcvqJZ5PJUjUjyhYo9uZVoEEFGQ6H3uNIStt3IpdvwQI6ba4EdvZjVPHBthth5+b/xBUyPbsj05f6r4cBQM/Anl85qAfV8tMzOJnYTJKeR2pK6L+2b+ef9gWlxhlFkVI+Cb26oMtUcHpu8giXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hajy3JfK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="V2LS5b0Z"
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 2D6F43F516
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738308364;
-	bh=Tr3ksmV2pNqejIWqja5XZ8mPSPBwaqrs3w/kzLOqLi8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=V2LS5b0ZOru10wBsoh0CMSfBXa6C1E6rPgJUbHUPTZOashpsMSs/gqEPmTxZpYHcV
-	 Dc+OT69juZEZ1lCVLTAyD1MkjcpyxGS+Rtwu5nxf/DnalQbI2LCccwXmNDTmIQRT8C
-	 NpPP9HA/HNCBcBoen1ImNMus9WdcFWO75olGBMrt1CiPSyKzWkfbgvr2MLQqCVoxe5
-	 +4PrKbcp/A3AArUKVoREI8jnnDBlPaxkganicilcAKkNUYl5jQaiBsrwuM5FWXhBXs
-	 WvxF2PnA0qK+1oP00BEiMSCCWvV+2sNZdhCgnXB0AO9lczw3GTwCzjYTngcw73muN8
-	 fIN//vQZrz/NA==
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5da03762497so1576438a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 23:26:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738308363; x=1738913163;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tr3ksmV2pNqejIWqja5XZ8mPSPBwaqrs3w/kzLOqLi8=;
-        b=DyCcKOnb5XqUCbqKlIl8F7oi4e59oERJfhoSGJR0VkJcBvBaBfxSYSFP+D8i2yYlCs
-         qkoWOH8dLHlF0VO5hZTs/2NqBG+ip+UPVP13pOHwBYZ6wlack9Mo11mTgP4nresahVMK
-         4SE2B9b6T7rgjzZai7860dyB0L7S6fMKEQFnK6IzDyOQf18L6VE2PmtAuzXS/MalYw1R
-         baLsK59xFmBRNZwsyn8LADxiIrMzUDBfBEntukCZ9yLCWt0IeidXJq4V/brNi+jMgdwB
-         TzilvmXl5lcbuLrpwnhQ34WjyQKsNcOKtuv+WIlNiMcXZmw0DXk85+fBsXiYgbf80YZ6
-         78oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2M2U5cIRUGmwxMVfTbIyBORGICDmKknzcHTGJa3mI0YV9URngTUJB+p3LTmNoq+vINEjsC2sA/UmNCQE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyThE1EEIB82++lJ93lo5oZscJFmtqjliq8JZfYGuc91669U94H
-	aC5LrLRYaiIVA4qhB1zMAeIONb2z81EaH2r3WDOX+rByUuAjdzJIMj3hqVfdoU3WmL6PZhAS3m/
-	51r17/rTyiV5AViqVJ6tJ4hdxc5DKq8eJvniP1WO5Igfl4rPEOw0wGVXHB3strHlZih+Gr+1UtI
-	iJGL6mHd135BwOSp1sfMV3qo/yXEwJYxfhpR0g5aat3sJ0swX0fLiE
-X-Gm-Gg: ASbGncvhud3I8PY86PIC81ifMNlhkatQCif6gixQE5RECNTmu1arlmw6mCKy2vsPtBl
-	d40m7EsV+7ENzqgPI3kd8qPScffe8k8GsG4cT4CS3tpsUKUxqC8T+nR4W/0NxIw==
-X-Received: by 2002:a05:6402:5215:b0:5d0:e9a8:4c96 with SMTP id 4fb4d7f45d1cf-5dc6f5d1319mr5750213a12.9.1738308362867;
-        Thu, 30 Jan 2025 23:26:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHo4YZqyV5ZOEg9+j+noeoGbHn2LUCzKjoiwvK9ssgYbSRCXOD0oMtLMDCHvPeCMnQfqRAl5WKzXsjCA7hTx6c=
-X-Received: by 2002:a05:6402:5215:b0:5d0:e9a8:4c96 with SMTP id
- 4fb4d7f45d1cf-5dc6f5d1319mr5750191a12.9.1738308362546; Thu, 30 Jan 2025
- 23:26:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hajy3JfK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B62F5C4CED1;
+	Fri, 31 Jan 2025 07:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738308410;
+	bh=Q2e7UALnZghKuCGZEzriVZeAWWaFg32d8OizcQKQJh0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Hajy3JfKR7x9BURH9yzp3wI29pfSM8ktf5VzU73hgiA+MiQ/TBigT+jT6AG3kIlnX
+	 bvdysWvyp1wxcp49pQIfhiva0KLf8MlabSUgPjDfOo4Sw+eac6qGg00aik53VHkeed
+	 qLMslTRJMm+Xw+6ZzVl0JL6Syo2JuLsyTJYWfbLq3gs7OmUDfx6wzUEJ/XPnyEjVd4
+	 a8BDD6rKgDElsxltFeJ+Kh0/X3BBWUo8HIotbADc3I/lFRK0RKvseWbgw05p4Npqou
+	 u9aIbKbSwNZOVu489THEMc2KeSqf4dyvph2funwT2/FL1HUivxAfkss6jlP9VRkP0d
+	 mn3jk1jrcjDcQ==
+Message-ID: <3e020ca6-025e-4a88-9aaa-a432d8aa668d@kernel.org>
+Date: Fri, 31 Jan 2025 08:26:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129155525.663780-1-koichiro.den@canonical.com>
- <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com>
- <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
- <CAMRc=Mc3qBXaATpYRAXeHne0+mBjErivjvUe4rBEj2ksansatQ@mail.gmail.com> <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com>
-In-Reply-To: <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com>
-From: =?UTF-8?Q?Maciej_Borz=C4=99cki?= <maciej.borzecki@canonical.com>
-Date: Fri, 31 Jan 2025 08:25:51 +0100
-X-Gm-Features: AWEUYZnqd6nFifeeXMsgHpAgXINp0XindBDZvZmEHwOqyGGNlqREVOFH2WdDmfE
-Message-ID: <CAFGk_a0U=jSQD85UKC1e=pSWr8W9y_MMAFyPVFOcE-fUZry7-Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for gpio-aggregator
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Koichiro Den <koichiro.den@canonical.com>, linux-gpio@vger.kernel.org, 
-	geert+renesas@glider.be, linus.walleij@linaro.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/4] dt-bindings: mfd: Add MDIO interface to
+ rtl9301-switch
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc: "lee@kernel.org" <lee@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "tsbogend@alpha.franken.de"
+ <tsbogend@alpha.franken.de>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+ "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+ "sander@svanheule.net" <sander@svanheule.net>,
+ "markus.stockhausen@gmx.de" <markus.stockhausen@gmx.de>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+References: <20250120040214.2538839-1-chris.packham@alliedtelesis.co.nz>
+ <20250120040214.2538839-3-chris.packham@alliedtelesis.co.nz>
+ <20250122-macho-flat-sawfly-7ca93d@krzk-bin>
+ <db76d5ab-3eda-439d-8b92-c0423d1e39c8@alliedtelesis.co.nz>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <db76d5ab-3eda-439d-8b92-c0423d1e39c8@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 30 Jan 2025 at 21:48, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Thu, Jan 30, 2025 at 7:40=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
-> >
-> > While at it: there's no reason to impose a
-> > naming convention of lineX, lineY etc., the names don't matter for the
-> > aggregator setup (unlike gpio-sim where they indicate the offset of
-> > the line they concern).
-> >
->
-> Scratch that part. There's a good reason for that - the ordering of
-> lines within the aggregator. I'm just not sure whether we should
-> impose a strict naming where - for an aggregator of 3 lines total - we
-> expect there to exist groups named line0, line1 and line2 or if we
-> should be more lenient and possibly sort whatever names the user
-> provides alphabetically?
+On 22/01/2025 21:53, Chris Packham wrote:
+>>>         };
+>>> +
+>>> +      mdio-controller {
+>> No, no resources here, no unit address. Look at other nodes - they have
+>> the resource, the address. Mixing such nodes is clear indication this is
+>> not correct hardware description and you do this only for Linux.
+>>
+>> Fold child device into parent.
+> 
+> In this particular case all the mdio stuff is actually contained to a 
+> range starting at offset 0xca00. I dropped it because it was simpler in 
+> the driver to use the full 16-bit address rather than trying to use 
+> offsets from the base address that didn't correspond to the datasheet. 
+> As you've highlighted that's making the dt-binding impose driver 
+> specifics so would adding back `mdio-controller@ca00` and `reg = <0xca00 
+> 0x200>;` be OK even if the driver doesn't actually use them?
 
-If I may jump in quickly (I provided some initial feedback on the
-configfs interfaces
-for the first internal patches). I think it's preferable to have
-strict and explicit, even
-If more verbose, line ordering in the aggregator.The motivator for
-this is that whoever
-sets up a new device through the aggregator does not have to second guess w=
-hat
-the driver will do. Implicit ordering could perhaps be fine if the
-consumers were to
-impose some set of rules themselves, but I fear there would still be
-some ambiguity
-left if free form names were for e.g. [1, 02, 10]. In the end they
-would probably settle
-on some mechanism which would mimic what we could already do in the
-driver itself
-and avoid any further confusion for the user.
 
-Cheers,
-Maciej
+If this matches the hardware, then yes.
+
+Best regards,
+Krzysztof
