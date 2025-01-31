@@ -1,90 +1,102 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2CA1E885;
-	Fri, 31 Jan 2025 09:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546CF1494D9
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738315214; cv=none; b=VcHwgsEIP4WineT5QHwiUma9NzYTWaY1LECCHvVypNQjaeI1+eKlp8hDxfGVV7TeEOYQg9ZKre6a5PBSYXd/20o52s2OPNLjOX7Y/w4mIwEXYJVjuObDovLPN0AqHL61gsDGQmbf13jVcjZa5bjhfAalCCy84mhLBEKu19SwpAw=
+	t=1738315314; cv=none; b=B0iBMRVebq42G5LczkOIrz9/w6H+1luNXF7/mcorZC3D13nUoxddCFNn+ZOFpqsENdf1Ge7H8Hh+59/V7E4tGkaPgbfN0gTeT9G5Dy2bnEq3XurmjrUtEK1HSESelH05sHVMVPNe4DQODaA+a7/pemQfCSx0JqMK5Lja8O0ec0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738315214; c=relaxed/simple;
-	bh=uBO58v9Hrbhb+JQu8iwnHsYbOYM25bye45XXGOQWJfM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T8gHCRXirSqiF+6GI2zAp+wG6rrqK8HNBzdj0Pk+j5Jni33uqILT2Lj8D2VMaoXNvmf1K1aOArinvkchrRx1s6Y+pyfU7+/DYBnc76/oZtWltsjzrnFWDa0l2zkNRYB6EwCWL7eyISgHB7VGuCs6fI9eFPe4kp+DbnT0a560jy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=fO5N0AY6; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1738315314; c=relaxed/simple;
+	bh=PYJBSP5qzxlLC8smDMxenYtbRdsfru950/4gPxU/fNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rfjEjMuYoegzjLeOUR13KebWMWbcR/FwDdXhNorDs2+h3Dky3o5IGZmiLdkBdPM/NO3VYQMmPoytKHuasxeIBNyuBIiZhoq+dYJoCFXrE627DwALX7c2nZCjA//17mTjH6LjU0WxTwOBWI8lZuESUYpFSOgM7ynY+U7GZeImUOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vR3Z5Avk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="fO5N0AY6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=0B7vxdS52txOQYr8MAUjOPGxnkb0yKArb/TqnTim/JE=; b=fO5N0AY6e9Fe7eGia4ydGVl/AS
-	U5f/5AQpGP2olKzC34QoHN1a2he0xkIe1t39UyugTbsuF0DaAMy4hwn9jxFduUIRVRtEYQXipSgjL
-	lcrYQ0CM0Lzx2V8ORCRr7JriJ4M5AMdoUpMjOpPQoM5w4cmWy/TxbvOArken6/B4lGgYrduzcJM7Q
-	SaXdPbZZjhVhyUnYfmmHnCvW/azD18jKc3IiupUbz/JuKTLqXZ+3T55naGCHmLvoIj2QxpluMUx5c
-	U0TBimeFUZaZSLUxwj6rHskipMgsQRG5sfccRnUvxhennAWMQi6skyE3UQ+eCLWDA8xpmqUwS2nT7
-	UPT5HCaQ==;
-Received: from [212.111.254.164] (helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tdnC4-0006Gx-0H; Fri, 31 Jan 2025 10:20:08 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Olivier Benjamin <olivier.benjamin@bootlin.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Olivier Benjamin <olivier.benjamin@bootlin.com>,
- Dragan Simic <dsimic@manjaro.org>, Ondrej Jirman <megi@xff.cz>
-Subject: Re: [PATCH 0/2] Describe the cameras in the PinePhone Pro dts
-Date: Fri, 31 Jan 2025 10:20:06 +0100
-Message-ID: <5127541.31r3eYUQgx@phil>
-In-Reply-To: <20250119-camera-v1-0-320be4f0dc2b@bootlin.com>
-References: <20250119-camera-v1-0-320be4f0dc2b@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vR3Z5Avk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A658C4CED1;
+	Fri, 31 Jan 2025 09:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738315313;
+	bh=PYJBSP5qzxlLC8smDMxenYtbRdsfru950/4gPxU/fNE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=vR3Z5AvkBtrJDFEalMo0Z+E33XVbz3Sad4PWi61wWVMX4eum6RT62x2awqBrBdM25
+	 SzKk7ApV98ZumOVK4AVmSI+s8p666SWwKWsVopNFLfOvwJqwNqZ2wU8mITNOdBXiXP
+	 HLzsnUWFtid66f/dji6JII0dUF8JuBry+ZYHtsPTGDgEJJiojWMM/RJRWl3Bs/ZHC9
+	 F/uu3yaY1Yb+tFaRFlXjPOnIUUrbLWpjxPwIdpfyeG/6seYzQyG/y9CYa3K7ay3mbt
+	 PcfqtlQtjEMlGu3JrcLI3MTFPdDocvULJzCA/HQFDcVP7aYA4EjpxeJCqyVe8mWzP5
+	 P50YjYOpAfAwQ==
+Date: Fri, 31 Jan 2025 10:21:43 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, the arch/x86 maintainers <x86@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rik van Riel <riel@surriel.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/mm changes for v6.14
+Message-ID: <Z5yWJyDkAjuuJT5p@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Linus,
 
-Am Sonntag, 19. Januar 2025, 23:56:58 MEZ schrieb Olivier Benjamin:
-> This series adds support for the Pine64 PinePhone Pro's rear and front
-> cameras in Device Tree.
-> This is based on some of Ondrej Jirman's patches hosted in his tree at
-> https://codeberg.org/megi/linux, but I have also fully reviewed and
-> re-written the code from the RK3399 datasheet, the PinePhone Pro
-> schematic, and the IMX258-0AQH5 software reference manual.
-> 
-> I have tested these changes on my PinePhone Pro and am able to take
-> photos from both cameras using libcamera's cam.
-> 
-> Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
-> ---
-> Olivier Benjamin (2):
->       arm64: dts: PinePhone Pro: describe I2c Bus 1 and IMX258 world camera
->       arm64: dts: PinePhone Pro: describe the OV8858 user camera
+Please pull the latest x86/mm Git tree from:
 
-Patch subject should be
-"arm64: dts: rockchip: describe the OV8858 user camera on PinePhone Pro"
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-mm-2025-01-31
 
-patches need an update to accomodate
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5c96e63301978f4657c9082c55a066763c8db7b1
+   # HEAD: aa135d1d0902c49ed45bec98c61c1b4022652b7e x86/mm: Remove unnecessary include of <linux/extable.h>
 
-And please name the new regulator nodes similarly
-(regulator-foo)
+x86/mm changes for v6.14:
 
-Thanks a lot
-Heiko
+ - The biggest changes are the TLB flushing scalability optimizations,
+   to update the mm_cpumask lazily and related changes. This feature
+   has both a track record and a continued risk of performance regressions,
+   so it was already delayed by a cycle - but it's all 100% perfect now™.
+   (Rik van Riel)
+
+ - Also miscellaneous fixes and cleanups. (Gautam Somani,
+   Kirill A. Shutemov, Sebastian Andrzej Siewior)
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Gautam Somani (1):
+      x86/mm/selftests: Fix typo in lam.c
+
+Kirill A. Shutemov (1):
+      x86/mtrr: Rename mtrr_overwrite_state() to guest_force_mtrr_state()
+
+Rik van Riel (4):
+      x86/mm/tlb: Update mm_cpumask lazily
+      x86/mm/tlb: Add tracepoint for TLB flush IPI to stale CPU
+      x86/mm/tlb: Also remove local CPU from mm_cpumask if stale
+      x86/mm/tlb: Only trim the mm_cpumask once a second
+
+Sebastian Andrzej Siewior (1):
+      x86/mm: Remove unnecessary include of <linux/extable.h>
 
 
+ arch/x86/hyperv/ivm.c              |  2 +-
+ arch/x86/include/asm/mmu.h         |  2 ++
+ arch/x86/include/asm/mmu_context.h |  1 +
+ arch/x86/include/asm/mtrr.h        | 10 +++----
+ arch/x86/include/asm/tlbflush.h    |  1 +
+ arch/x86/kernel/alternative.c      | 10 +++++--
+ arch/x86/kernel/cpu/mtrr/generic.c |  6 ++--
+ arch/x86/kernel/cpu/mtrr/mtrr.c    |  2 +-
+ arch/x86/kernel/kvm.c              |  2 +-
+ arch/x86/mm/fault.c                |  1 -
+ arch/x86/mm/tlb.c                  | 59 ++++++++++++++++++++++++++++----------
+ arch/x86/xen/enlighten_pv.c        |  4 +--
+ include/linux/mm_types.h           |  1 +
+ tools/testing/selftests/x86/lam.c  |  2 +-
+ 14 files changed, 70 insertions(+), 33 deletions(-)
