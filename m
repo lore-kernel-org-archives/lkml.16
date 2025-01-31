@@ -1,156 +1,121 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39311C245C
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2926A1B87D0;
+	Fri, 31 Jan 2025 13:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738328952; cv=none; b=Yw3tQNDeHdFtYkDc1KaprcIbrGd05Ziv8Fhr4wie6wMLHoMiKKQ1oVccpEliMyz0qzG+uWDL/522EUSJIzzmc4Fe/GL40xQVwowbpgDmFS05uQvTrbs0QoNnSUvmrJLnTEh7GzriLJxSInQ5BjeSUnlt/4unPSjhnuhJKa+tkc0=
+	t=1738329121; cv=none; b=IKkEoT05UWYkfSKoAjuvuwinkQYuVwAS5AqSnNvlkSV2zTiOsz/25ac8or2Vpz6EOEJuIBlEcafqySr5ym/wls53uCJqj2/4cpmq+huKN1eBR/RSErFNz4zqF+bymxLp/9FaywnRSOtJc3jtin7S7f9qL4ISvhuTncoUe23Bw/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738328952; c=relaxed/simple;
-	bh=t4zcKHE90KfWeNDwXqb5TfI7Z9zckUGM6AekiBPuMTE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j2iJetyiUyHAPD/5Vu2aK1n2Tl2HKhx/lg5Eo8MwcdxzXDjqmTVEIJbnCSOcXVKdsFI/8Mrq6xGqueMZlD7ljmW4qwonLQrp5r/oOb6Zp6Qyc9XPmikj1+ULp89fbMMu8+9aucPbpnueKonD2jEMgXGldHAkSTjrIQgmLRHDtTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ykx4L0QbVz6M4Pp;
-	Fri, 31 Jan 2025 21:06:58 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 68CE6140517;
-	Fri, 31 Jan 2025 21:09:06 +0800 (CST)
-Received: from localhost (10.195.244.178) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 31 Jan
- 2025 14:09:03 +0100
-Date: Fri, 31 Jan 2025 13:09:01 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Raghavendra K T <raghavendra.kt@amd.com>
-CC: <linux-mm@kvack.org>, <akpm@linux-foundation.org>,
-	<lsf-pc@lists.linux-foundation.org>, <bharata@amd.com>, <gourry@gourry.net>,
-	<nehagholkar@meta.com>, <abhishekd@meta.com>, <ying.huang@linux.alibaba.com>,
-	<nphamcs@gmail.com>, <hannes@cmpxchg.org>, <feng.tang@intel.com>,
-	<kbusch@meta.com>, <Hasan.Maruf@amd.com>, <sj@kernel.org>,
-	<david@redhat.com>, <willy@infradead.org>, <k.shutemov@gmail.com>,
-	<mgorman@techsingularity.net>, <vbabka@suse.cz>, <hughd@google.com>,
-	<rientjes@google.com>, <shy828301@gmail.com>, <liam.howlett@oracle.com>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <nadav.amit@gmail.com>,
-	<shivankg@amd.com>, <ziy@nvidia.com>, <jhubbard@nvidia.com>,
-	<AneeshKumar.KizhakeVeetil@arm.com>, <linux-kernel@vger.kernel.org>,
-	<jon.grimm@amd.com>, <santosh.shukla@amd.com>, <Michael.Day@amd.com>,
-	<riel@surriel.com>, <weixugc@google.com>, <leesuyeon0506@gmail.com>,
-	<honggyu.kim@sk.com>, <leillc@google.com>, <kmanaouil.dev@gmail.com>,
-	<rppt@kernel.org>, <dave.hansen@intel.com>
-Subject: [LSF/MM/BPF TOPIC] Unifying sources of page temperature information
- - what info is actually wanted?
-Message-ID: <20250131130901.00000dd1@huawei.com>
-In-Reply-To: <20250131122803.000031aa@huawei.com>
-References: <20250123105721.424117-1-raghavendra.kt@amd.com>
-	<20250131122803.000031aa@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738329121; c=relaxed/simple;
+	bh=xgo8PliiTUsBZHIM+9deV9cbjLW5yzO0IUD4f4VXMZc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GdeXgWmSQedA2GsS97XedLaJae9UDHBSbyi6SZSoyt1DT0ixN2bJL9WTas18Q9Ym8FEHgwCa971tTRcQhSCWvNIHWvF1fMhqMP76ajUoNaIyXAKZpdWVcPeKrDFAqQetJ4dp4JLlK29Rlq7VmOX673ZnVyLqppmG8pJcaQM54FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ab651f1dd36so388801366b.0;
+        Fri, 31 Jan 2025 05:11:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738329118; x=1738933918;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7a3Lglc6G9+kWxrhuoSHDLCbGQc4HDAJpuK5OBARqFI=;
+        b=F3BysSV1e5Y5z7vxUnZuWTlv9m3Z9H0ni/Wn6DXblNFwm2SKJx0kP8IF8W/D2GOjZN
+         LgyszgVWDTyFOmRLq0erF89nNRZYmeQ0krRzH0PRKpMgy8A1Ei795R8ZoE5GpAfGjhnX
+         G7Rr3+I1DRbSx0IkNIm52OJ5/QYa/UqBXjFsNL5slOa3eruzDjlQSOiuWQy8429Euqkh
+         Y23MEJqRWdjJJl8ykJruD38N44ViPf5bA2fEOPx5Y5bUBsTAK0AkzW62kXg/lCQ3g97P
+         jpDTRyqNdSklggGzguIFq4S+arCfOJvOZfPiLzyMAuX3CsK+wibPXSzCcDIF8dZPuzGi
+         ge/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUNWTpEFAQgfqRTjP/PW9jFFijIc/eJfspG90bKKPOJZkh7i9XLRb5Uyep/9ufHzIepUEKtVK1f@vger.kernel.org, AJvYcCUn35YwLAN+373x/cLz5eepWyvKR8RDHUjWzx4X8PlBGfQXTyR3KnH3lgvV2Kjxc7JhMuwmDHZ2+RdsMx5zk4pC@vger.kernel.org, AJvYcCX8zFBlZH/dJ/9y+rv/ZpV9vO9rVVQ8aUD862G44q5VjD9IxMZ4Zwqvy/tod19A8YVjoqXTdNxQCQRDGvQe@vger.kernel.org, AJvYcCXcCa1hSdwkm1u186MAprKPLFm2V0OQGi80iwb1CW2TJHB3323u7TwY15hllhkuD6HyOWKO0dpBef0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOR4EJK2edkfgvPL4iyfoW3FbHqDiIWYqfMurJ0l1yUh+/YUpL
+	r3nntCld/Oeen4PsnbLVPwoG7X7uEmaQiFB+xxw2MmVFcTLDu2P+
+X-Gm-Gg: ASbGncuVacFttu/Xi9Qc20pGfErBY+3BobN4Ct50GVRcjtgXaNNAQFN14M8pVg9u+L6
+	21492Q3EsCkuunRn6tlukQ+4UycpiqOsoZsHn9E/o9t/eyLWtvJkFJ6CJ7/FyfCKTdiFIQZw4sK
+	H1ptSaP22ng8hoHUTfL2GUNEQ4DQRAIkQyHvCC+n2n1hOvBmimRI6Xu+xt1K3V2IAriM2D/sLwi
+	SWCvWM012KwXtkVvUJ/A0W7zV+y2MZumcxVW79O1CVdOcCvLKk/iNaihPDujv/JYmBLX9DSDZkN
+	1+Jeww==
+X-Google-Smtp-Source: AGHT+IE7NkGUn2eaFUsNhIHou71Z8vK19KiczHWR1s+D15ErLXPyOdYS+OHPOvcCD1KAV+imm/5xvQ==
+X-Received: by 2002:a17:907:7f13:b0:aa6:7c8e:8087 with SMTP id a640c23a62f3a-ab6cfc87b15mr1160656066b.12.1738329118020;
+        Fri, 31 Jan 2025 05:11:58 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:6::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc724055e5sm2891330a12.45.2025.01.31.05.11.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 05:11:56 -0800 (PST)
+Date: Fri, 31 Jan 2025 05:11:54 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Simon Horman <horms@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	rdunlap@infradead.org, kernel-team@meta.com
+Subject: Re: [PATCH RFC net-next v3 1/8] netconsole: consolidate send buffers
+ into netconsole_target struct
+Message-ID: <20250131-stalwart-lively-caracal-4e2063@leitao>
+References: <20250124-netcon_cpu-v3-0-12a0d286ba1d@debian.org>
+ <20250124-netcon_cpu-v3-1-12a0d286ba1d@debian.org>
+ <20250128161128.GB277827@kernel.org>
+ <20250130103544.GE113107@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250130103544.GE113107@kernel.org>
 
-On Fri, 31 Jan 2025 12:28:03 +0000
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+Hello Simon,
 
-> > Here is the list of potential discussion points:  
-> ...
+On Thu, Jan 30, 2025 at 10:35:44AM +0000, Simon Horman wrote:
+> On Tue, Jan 28, 2025 at 04:11:28PM +0000, Simon Horman wrote:
+> > On Fri, Jan 24, 2025 at 07:16:40AM -0800, Breno Leitao wrote:
+> > > Move the static buffers from send_msg_no_fragmentation() and
+> > > send_msg_fragmented() into the netconsole_target structure. This
+> > > simplifies the code by:
+> > > - Eliminating redundant static buffers
+> > > - Centralizing buffer management in the target structure
+> > > - Reducing memory usage by 1KB (one buffer instead of two)
+> > > 
+> > > The buffer in netconsole_target is protected by target_list_lock,
+> > > maintaining the same synchronization semantics as the original code.
+> > > 
+> > > Suggested-by: Jakub Kicinski <kuba@kernel.org>
+> > > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > > ---
+> > >  drivers/net/netconsole.c | 29 +++++++++++++++--------------
+> > >  1 file changed, 15 insertions(+), 14 deletions(-)
+> > > 
+> > > diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
+> > > index 86ab4a42769a49eebe5dd6f01dafafc6c86ec54f..1a78704681184673f5c1ba8ae665e46751384293 100644
+> > > --- a/drivers/net/netconsole.c
+> > > +++ b/drivers/net/netconsole.c
+> > > @@ -137,6 +137,8 @@ struct netconsole_target {
+> > >  	bool			extended;
+> > >  	bool			release;
+> > >  	struct netpoll		np;
+> > > +	/* protected by target_list_lock */
+> > > +	char			buf[MAX_PRINT_CHUNK];
+> > 
+> > nit: buf should also be added to the Kernel doc for this structure.
+> > 
+> > ...
 > 
-> > 2. Possibility of maintaining single source of truth for page hotness that would
-> > maintain hot page information from multiple sources and let other sub-systems
-> > use that info.  
-> Hi,
+> Hi Breno,
 > 
-> I was thinking of proposing a separate topic on a single source of hotness,
-> but this question covers it so I'll add some thoughts here instead.
-> I think we are very early, but sharing some experience and thoughts in a
-> session may be useful.
+> With that fixed feel free to add:
+> 
+> Reviewed-by: Simon Horman <horms@kernel.org>
 
-Thinking more on this over lunch, I think it is worth calling this out as a
-potential session topic in it's own right rather than trying to find
-time within other sessions.  Hence the title change.
+Thanks again for the review.
 
-I think a session would start with a brief listing of the temperature sources
-we have and those on the horizon to motivate what we are unifying, then
-discussion to focus on need for such a unification + requirements 
-(maybe with a straw man).
+I will update according to your suggestion, and send the new version
+after the merge window is opened.
 
-> 
-> What do the other subsystems that want to use a single source of page hotness
-> want to be able to find out? (subject to filters like memory range, process etc)
-> 
-> A) How hot is page X?  
-> - Is this useful, or too much data? What would use it?
->   * Application optimization maybe. Very handy for developing algorithms
->     to do the rest of the options here as an Oracle!
-> - Provides both the cold and hot end of the scale, but maybe measurement
->   techniques vary and can not be easily combined. Hard in general to combine
->   multiple sources of truth if aiming for an absolute number.
-> 
-> B) Which pages are super hot?
-> - Probably these that make the most difference if they are in a slower memory tier.
-> 
-> C) Some pages are hot enough to consider moving?
-> - This may be good enough to get the key data into the fast memory over time.
-> - Can combine sources of info as being able to compare precise numbers doesn't matter.
-> 
-> D) Which pages are fairly cold?
-> - Likewise maybe good enough over time.
-> 
-> E) Which pages are very cold?
-> - Ideal case for tiering. Swap these with the super hot ones.
-> - Maybe extra signal for swap / zswap etc
-> 
-> F) Did these hot pages remain hot (and same for cold)
-> - This is needed to know when to back off doing things as we have unstable
->   hotness (two phase applications are a pain for this), sampling a few
->   pages may be fine.
-> 
-> Messy corners:
-> 
-> Temporal aspects.
-> - If only providing lists of hottest / coldest in last second, very hard
->   to find those that are of a stable temperature. We end up moving
->   very hot data (which is disruptive) and it doesn't stay hot.
-> - Can reduce that affect by long sampling windows on some measurement approaches
->   (on hardware trackers that can trash accuracy due to resource exhaustion
->    and other subtle effects).
-> - bistable / phase based applications are a pain but perhaps up to higher
->   levels to back off.
-> 
-> My main interest is migrating in tiered systems but good to look at what
-> else would use a common layer.
-> 
-> Mostly I want to know something that is useful to move, and assume convergence
-> over the long term with the best things to move so to me the ideal layer has
-> following interface (strawman so shoot holes in it!):
-> 
-> 1) Give me up to X hotish pages from a slow tier (greater than a specific measure
-> of temperature)
-> 2) Give me X coldish pages a faster tier.
-> 3) I expect to ask again in X seconds so please have some info ready for me!
-> 4) (a path to get an idea of 'unhelpful moves' from earlier iterations - this
->     is bleeding the tiering application into a shared interface though).
-> 
-> If we have multiple subsystems using the data we will need to resolve their
-> conflicting demands to generate good enough data with appropriate overhead.
-> 
-> I'd also like a virtualized solution for case of hardware PA trackers (what
-> I have with CXL Hotness Monitoring Units) and classic memory pool / stranding
-> avoidance case where the VM is the right entity to make migration decisions.
-> Making that interface convey what the kernel is going to use would be an
-> efficient option. I'd like to hide how the sausage was made from the VM.
-> 
-> Jonathan
-> 
-
+--breno
