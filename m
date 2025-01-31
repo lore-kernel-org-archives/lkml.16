@@ -1,253 +1,149 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87171898F2
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 10:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601F21CA81
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 10:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738318203; cv=none; b=PPNgx1ftnsPgd8Od9z/0qZ2tLseQKhC8VpAcVmzjQq2HOEeijb3B1aV9RyVbCdtJ/1xZ85tv3EwAd2yiaCYPtgOBpxr4yFMWl/iWExTS2jbie+sVkrr7HdL2WD1R4y2PQ62My/qfOJmlnDdGhwMC3zlGXsoeC79pIJNi69R4ZpM=
+	t=1738318307; cv=none; b=RkPufszb+rHAuqaUCVeZMnPhsxS0pRuQ0hF6MWysY7Zhm4m8KhmFfouruhVQ8bwGRudd/ZS6mwKlsd53eRRGef6m0AT0GPgSQPjbcbZJVlwSXTfkcdZDfEZu3ibiknhvO/bmLYTNr9ySo7hctpQ30vq4+lVDWM4crhPT9/O2jio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738318203; c=relaxed/simple;
-	bh=v/iqv3fJvlKUt6qdrfpU+6Y8Tx4lsqcAcwbADBY/fWw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ggIayMi9HR/37lgpJZtOEQ+TTfPw5y2V5fbnls+x1bRlXaUdTDhaLUxEdbIwyYfyzACMX/fJ50Dm3jtGPps/YMrvX13dr9VFGWPCMP8xesP0xFCUhTGhWs7K0wy60MReSkjatxF4xz2Agg+KIr1yzX38B49hleield8tQxcpjQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sedlak.dev; spf=none smtp.mailfrom=sedlak.dev; dkim=pass (2048-bit key) header.d=sedlak-dev.20230601.gappssmtp.com header.i=@sedlak-dev.20230601.gappssmtp.com header.b=dSdnHOR2; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sedlak.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=sedlak.dev
+	s=arc-20240116; t=1738318307; c=relaxed/simple;
+	bh=TOpTfUj4QcmOfbWajuCLJSzlivd9P5SjC2vU9aSgC5o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=A6Loso7x5uwYwKkT+ituHl8wrHQb1fud783Gjx+hEv4FjtRjXXRwHLmOrz/RjIoMdb21o/Vh78GY7i476esF5qo6p9ftBT1WmJmUP7U42C5CXuPOkp9PcBhssaCvYGtnCMFzbI5DRYoCHCaibnowcTGcPjT4K1FytvZ5YWGp0Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=q5OGCUID; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sedlak-dev.20230601.gappssmtp.com header.i=@sedlak-dev.20230601.gappssmtp.com header.b="dSdnHOR2"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso12466835e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 02:10:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="q5OGCUID"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2efb17478adso2984132a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 02:11:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sedlak-dev.20230601.gappssmtp.com; s=20230601; t=1738318200; x=1738923000; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pBPk86uZmfcTkGurL1WDJzw8BH/2k/njCft7aLxhOMQ=;
-        b=dSdnHOR2s9BljaQKCuVwCJnAv//GzgAVFluO12Eutrxzg3cjZsuqTCd0RVPR4JBVC2
-         oG4yX+GQ7fiwdOHnxKPHQTMRYYIek2GB2zRGPqGS/StM/hLeCgR9KpNgwdmlqkVT8JUL
-         TlMfEyc2qVIiBJp/+qJFPDf2mE0jafzlyTjML7uSD32dV2pVwFkxhoYuX6cHCyeYHhpe
-         wL0dcEBuVQbc0AOUBTX602bzr1BeJeT9zkZ/EIXr7Qnq6KsV1Sc8c4A9HfgL1QSEAg8S
-         BkVHoqyuxOSCgr/gwCTB67W33m0UWKhthB3rVN3i3iPB3fuJUCRZYVaZx3Fn0phNO93g
-         qT4A==
+        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1738318304; x=1738923104; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ujZdT65JgU6NvF/G9jRMjszw2mjGT5YQT3bs1UnrWcA=;
+        b=q5OGCUIDJyCR0LNhkq0H5r2VQXUAHdp4tcdX5lxoZEJmOypguDG9DRaOWHpcAGG9v7
+         IERH+zJAtCVp4buNyFko/5OgjiJZUNlH/3NV8gOxJA93qAuGkbS4Nm2Ad6WXo/mgTDRv
+         JWrpAvMe+DXixXLAo6/U620fzU8H7H5YPbGCxrBQavoVC1lWFTHX/54fK+Ga7DcAAwYy
+         L5TJmMUFT5Z3XVkDZAKHkSWdiMtGgwxfx/9o132MdzqtpXGD1K8OFeyEreGRUOGGIR4A
+         0rl/S2A3yNH9bMQTVWsHrez3EYxrFu3UDKwRVuFVezCDNwY7HElJNooWb/7yAm029kUo
+         aqmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738318200; x=1738923000;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pBPk86uZmfcTkGurL1WDJzw8BH/2k/njCft7aLxhOMQ=;
-        b=vbtMpLfSY3BZBfIhKnhjQ1HXXAiWYmmjnKrwfn/PytQrjvxDdXjgo4ARzjky0NCKX1
-         AhwWsl3pwdikab8A9bAKfNRMYrEHp68Nfso7EXFKU4xtpuLPpH4awcttqglEPmYNJZEa
-         1AAfgpAhNhKS+74qTIK7s9T26uY2zvGFy4nGgkDyF/2dDZNVrR7SsKA++AR0bq9pu3ho
-         FASuaiLT4WZ6g07y8kIJEH/TXUdDbwMBKeGJO4tT6VOr91qMJnb7pdFXDBxOGraUpmay
-         DFT9WfmeNYaP2BUoRWH4CtjuNKVFpOorSVPUZ2rSlOlZL5Mvg4a0Gi8HRfe0SVFGOS7h
-         rMcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOSaedR9AyaDDKsjh+88CK39LCNu5sbp5M82dLEHd8IQ/ffcOogjjSPGk7oKhT4nIvw7Hxaz3e0PujBN0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTlF6qDSkxseIXs4p/iEVfRM8/PQTPOsls6xy5Bbq6ITbFzCJB
-	vSq2U9EMcr5wX/QdRcuMIwQeVLWxJVoPdDQn9odyfaCXt2ZkoFdks6Bt8YLeiXE=
-X-Gm-Gg: ASbGncuEAjCK6ijhgBTjwOgN7NuDdsqpmFn6/sw0+NfrCcT1klYJ5dVvdjtqguxvnND
-	4KwaPEdrvJRzz02ainWgWCvFA7bUv+NiKkGcYkK301w9X1BuMdlj7ltJgJRxDJBIRzHCmQWLtfS
-	jeYkkTdRaKDzwr8JA7DJRXCjQR8CjuMSCaj9nhOahaC4ppj84BzTRL+6WcRWEm1ncBZb9GFaeC5
-	9tq3zAmg3El8LCqwidM76NRNrnymXzREYnwURWaT2vBn6DV577lpLQi95JvPTy9dXmz4WCOhkFe
-	klFUTOKFaC1tS/5A
-X-Google-Smtp-Source: AGHT+IG4w9PGW6x290JACvG6usdJ33ACoHALnMSvc5iVVZ/OSZs2xydGAkK9maY6DgMqQJZW2uo+Xw==
-X-Received: by 2002:a05:600c:68c4:b0:438:e231:d35e with SMTP id 5b1f17b1804b1-438e231d655mr61602485e9.0.1738318199783;
-        Fri, 31 Jan 2025 02:09:59 -0800 (PST)
-Received: from [192.168.88.249] ([95.85.217.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23deedfsm50680095e9.16.2025.01.31.02.09.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 02:09:59 -0800 (PST)
-Message-ID: <09d0c81a-1a46-4864-995b-731d980edd92@sedlak.dev>
-Date: Fri, 31 Jan 2025 11:09:58 +0100
+        d=1e100.net; s=20230601; t=1738318304; x=1738923104;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ujZdT65JgU6NvF/G9jRMjszw2mjGT5YQT3bs1UnrWcA=;
+        b=PaP5RJolsdGwTM8lEJ2lexB3n9FP3+heYxVLFQtkUy/bcaweQU0Pa2qbOSwlBt+M9M
+         4I9cyla7DFlFlQI+Uh8OP56z0G6hoYPHrxwSHujCUJQLUW4+Pu+/zqeLoyptYfRVbHnU
+         lS5MMgtRE/40kceTG4sEbr9Pvdo4G13yokiOJLFqKBXvuZAqwOHajjg1OliGNrNb5gbU
+         6UUogbVlunZzdIkvSOe3wagiHoNrMn5iGLxSV2J/PF8Wj0fIuKkUGbcGMKYi4GWz4LGo
+         wYnYf0knrjfVqQU0CW+zbI/7BC0ZQbj02ln/tz3zz9eoYxhjsw0VW49nexM1lMLrLiyy
+         eiGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQYfG//ar08Q8+J33Xh4ckj2tghLwdMj8Sm51E4w9QAEt/FrEFj7XelIOqfAKJl557iHWrbSYZQISCrJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBDDDluvvuH7hGmkWgaBkxLfMayKuvKlst3Klp4/2iMKraa62m
+	yQBCBOIE9TIRxrrSFURh27BIWkhvD46LA9eLTWDHGbXNNbOWRqnZjsTwX1kIVg==
+X-Gm-Gg: ASbGncuhCf60nFHN4KeQzbrsDTME4wp3kYH+27ssntLmYj2t/AsQHSprhAyJ5MS//iK
+	mLTya9PFY6XXdqBT1l4G5G7blgUkrDgDRt2MC6PUlSeZq92cmHawchreb4mMg55EJxSgIuvOEtw
+	AOBpCv/2ZzVXRLm9gtzPQn2TouOQLboQTf3THrn6PoGlnFbnexCe0VVXQEhRhpB+gQWXZWEabIg
+	psLh8Tn0FKjaRwU5IegH6J2NL1hYSCdM5LR9POoO10PYfqkYCbhKvLWT6BdZO0sjzxcDzawkeEl
+	k519vBoUj9xlHWRz7fIDG/I=
+X-Google-Smtp-Source: AGHT+IEfxj4SBp1Oe2MZX7KsD9D/+jkJVHcr5vCM3jpYYXxEkDvoWJB97EEeppveLHhHQDQ0D03Azw==
+X-Received: by 2002:a17:90b:53c8:b0:2ee:8430:b847 with SMTP id 98e67ed59e1d1-2f83abb34f2mr15086370a91.6.1738318304559;
+        Fri, 31 Jan 2025 02:11:44 -0800 (PST)
+Received: from [172.16.119.211] ([103.15.228.94])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bcd0fbasm5551977a91.16.2025.01.31.02.11.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 02:11:43 -0800 (PST)
+From: Ayush Singh <ayush@beagleboard.org>
+Date: Fri, 31 Jan 2025 15:41:33 +0530
+Subject: [PATCH v3] arm64: defconfig: Enable gb_beagleplay
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/3] rust: io: mem: add a generic iomem abstraction
-To: Daniel Almeida <daniel.almeida@collabora.com>, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.mco, benno.lossin@proton.me, a.hindborg@kernel.org,
- aliceryhl@google.com, tmgross@umich.edu, gregkh@linuxfoundation.org,
- rafael@kernel.org, dakr@kernel.org, boris.brezillon@collabora.com,
- robh@kernel.org
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250130220529.665896-1-daniel.almeida@collabora.com>
- <20250130220529.665896-3-daniel.almeida@collabora.com>
-Content-Language: en-US
-From: Daniel Sedlak <daniel@sedlak.dev>
-In-Reply-To: <20250130220529.665896-3-daniel.almeida@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250131-defconfig-beagleplay-v3-1-f556b851ff96@beagleboard.org>
+X-B4-Tracking: v=1; b=H4sIANShnGcC/4XNQQ7CIBAF0Ks0rMXAUJS68h7GBZQpJWlKA4bYN
+ L27tG5caFz+P/lvFpIwekzkUi0kYvbJh7EEcahI2+vRIfW2ZAIMJONwpha7Noydd9SgdgNOg55
+ LWUspjBFKASnTKWLnnzt7u5fc+/QIcd6/ZL61f8DMKacA+sSYkii4uL6PJuhojyE6srEZPqnmB
+ wWFklo1rKmFBfhCrev6AqTYWlIJAQAA
+X-Change-ID: 20250127-defconfig-beagleplay-de4553bb3882
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, d-gole@ti.com, lorforlinux@beagleboard.org, 
+ jkridner@beagleboard.org, robertcnelson@beagleboard.org, 
+ Nishanth Menon <nm@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Ayush Singh <ayush@beagleboard.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1692; i=ayush@beagleboard.org;
+ h=from:subject:message-id; bh=TOpTfUj4QcmOfbWajuCLJSzlivd9P5SjC2vU9aSgC5o=;
+ b=owEBbQKS/ZANAwAIAQXO9ceJ5Vp0AcsmYgBnnKHbwZVB+mJgzK6b/fOc7tfoWTD5FhXBGeElc
+ cH2iLgf9kGJAjMEAAEIAB0WIQTfzBMe8k8tZW+lBNYFzvXHieVadAUCZ5yh2wAKCRAFzvXHieVa
+ dF12EACzMtsatvuCRyTm/BqzXFVGMr3+L/pvRJdX+Y/8xpDVYAO85+U0axJohgsCoW6dPvrEjbq
+ 1DfTD/x1JQvsyjL+vDY4yA24CmWhoOjMcmAcUAJj+6EftzVEUUp3lZWdcrd2ZRA/fLaq9an6lht
+ NhMUQklLihSw1XsDdk//WxoTryyU5nQWtSQzVe6hb2IKhe7ezVlwAUUokjUZGs2W5uyhxnBlWjM
+ FH9bolUONCnPr09OkIkCSG4Kv8jsqa2VHfzApU7OCQjqnGgzoNw79LRF/6z+jwVSr55h9os55y1
+ c8AJTdtW8GtxmRqJpsL77r28/KdSZ7u9Sx9F1MxEUtzQnQdAOuZgNZQk/y3WPrIj+hVwnb4P5zd
+ V/ii1CvKu1HkqHdy/A9VYRKJfrVk5cU4YIJhq9tsBZgwSRpE7Cv9k4aBNgL4Ah6enZO6h3MQDVB
+ OQGmNIDqv+ufkeZ8UblY7iKOBWCNCN4Zhw2wx/pdHkpOwhMZoU2/e01yKWY/wccNuMZt0KaAWIZ
+ 5qwM1MzMwKj4i5/fz/hUPigYc7kHKRIFZdmg/8DMNcYOe46bKEIJA2/1oAf7d/Inj139T636ksf
+ WVPFpNQ8BwVSuNtmdQtV3OLRKy8CCjdyRMpQirLc34uz8YogL5+0BbThc1pon4RLV6NW2baUSUs
+ F46w0tC3lcECehg==
+X-Developer-Key: i=ayush@beagleboard.org; a=openpgp;
+ fpr=DFCC131EF24F2D656FA504D605CEF5C789E55A74
 
-Hi,
+Enable greybus driver used by TI K3 AM625 BeaglePlay.
 
-On 1/30/25 11:05 PM, Daniel Almeida wrote:
-> Add a generic iomem abstraction to safely read and write ioremapped
-> regions.
-> 
-> The reads and writes are done through IoRaw, and are thus checked either
-> at compile-time, if the size of the region is known at that point, or at
-> runtime otherwise.
-> 
-> Non-exclusive access to the underlying memory region is made possible to
-> cater to cases where overlapped regions are unavoidable.
-> 
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
-> ---
->   rust/kernel/io.rs     |   1 +
->   rust/kernel/io/mem.rs | 125 ++++++++++++++++++++++++++++++++++++++++++
->   2 files changed, 126 insertions(+)
->   create mode 100644 rust/kernel/io/mem.rs
-> 
-> diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-> index 566d8b177e01..9ce3482b5ecd 100644
-> --- a/rust/kernel/io.rs
-> +++ b/rust/kernel/io.rs
-> @@ -7,6 +7,7 @@
->   use crate::error::{code::EINVAL, Result};
->   use crate::{bindings, build_assert};
->   
-> +pub mod mem;
->   pub mod resource;
->   
->   /// Raw representation of an MMIO region.
-> diff --git a/rust/kernel/io/mem.rs b/rust/kernel/io/mem.rs
-> new file mode 100644
-> index 000000000000..f87433ed858e
-> --- /dev/null
-> +++ b/rust/kernel/io/mem.rs
-> @@ -0,0 +1,125 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Generic memory-mapped IO.
-> +
-> +use core::ops::Deref;
-> +
-> +use crate::device::Device;
-> +use crate::devres::Devres;
-> +use crate::io::resource::Region;
-> +use crate::io::resource::Resource;
-> +use crate::io::Io;
-> +use crate::io::IoRaw;
-> +use crate::prelude::*;
-> +
-> +/// An exclusive memory-mapped IO region.
-> +///
-> +/// # Invariants
-> +///
-> +/// - ExclusiveIoMem has exclusive access to the underlying `iomem`.
+The driver communicates with TI CC1352P7 co-processor which acts as
+Greybus SVC. Additionally, it also provides firmware upload API support
+for TI CC1352P7 over UART.
 
-formatting: ExclusiveIoMem -> [`ExclusiveIoMem`]?
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Signed-off-by: Ayush Singh <ayush@beagleboard.org>
+---
+Enable greybus driver for TI CC1352P5 over UART used in TI K3 AM625
+BeaglePlay [0].
 
-> +pub struct ExclusiveIoMem<const SIZE: usize> {
-> +    /// The region abstraction. This represents exclusive access to the
-> +    /// range represented by the underlying `iomem`.
-> +    ///
-> +    /// It's placed first to ensure that the region is released before it is
-> +    /// unmapped as a result of the drop order.
-> +    #[allow(dead_code)]
-> +    region: Region,
-> +    /// The underlying `IoMem` instance.
-> +    iomem: IoMem<SIZE>,
-> +}
-> +
-> +impl<const SIZE: usize> ExclusiveIoMem<SIZE> {
-> +    /// Creates a new `ExclusiveIoMem` instance.
-> +    pub(crate) fn ioremap(resource: &Resource) -> Result<Self> {
-> +        let iomem = IoMem::ioremap(resource)?;
-> +
-> +        let start = resource.start();
-> +        let size = resource.size();
-> +        let name = resource.name();
-> +
-> +        let region = resource
-> +            .request_mem_region(start, size, name)
-> +            .ok_or(EBUSY)?;
-> +
-> +        let iomem = ExclusiveIoMem { iomem, region };
-> +
-> +        Ok(iomem)
-> +    }
-> +
-> +    pub(crate) fn new(resource: &Resource, device: &Device) -> Result<Devres<Self>> {
-> +        let iomem = Self::ioremap(resource)?;
-> +        let devres = Devres::new(device, iomem, GFP_KERNEL)?;
-> +
-> +        Ok(devres)
-> +    }
-> +}
-> +
-> +impl<const SIZE: usize> Deref for ExclusiveIoMem<SIZE> {
-> +    type Target = Io<SIZE>;
-> +
-> +    fn deref(&self) -> &Self::Target {
-> +        &*self.iomem
-> +    }
-> +}
-> +
-> +/// A generic memory-mapped IO region.
-> +///
-> +/// Accesses to the underlying region is checked either at compile time, if the
-> +/// region's size is known at that point, or at runtime otherwise.
-> +///
-> +/// # Invariants
-> +///
-> +/// `IoMem` always holds an `IoRaw` inststance that holds a valid pointer to the
+[0]: https://elixir.bootlin.com/linux/v6.13/source/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+---
+Changes in v3:
+- s/Ti/TI
+- K3/AM625 to K3 AM625
+- Link to v2: https://lore.kernel.org/r/20250129-defconfig-beagleplay-v2-1-5a890943d223@beagleboard.org
 
-typo: inststance -> instance
-> +/// start of the I/O memory mapped region.
-> +pub struct IoMem<const SIZE: usize = 0> {
-> +    io: IoRaw<SIZE>,
-> +}
-> +
-> +impl<const SIZE: usize> IoMem<SIZE> {
-> +    fn ioremap(resource: &Resource) -> Result<Self> {
-> +        let size = resource.size();
-> +        if size == 0 {
-> +            return Err(EINVAL);
-> +        }
-> +
-> +        let res_start = resource.start();
-> +
-> +        // SAFETY:
-> +        // - `res_start` and `size` are read from a presumably valid `struct resource`.
-> +        // - `size` is known not to be zero at this point.
-> +        let addr = unsafe { bindings::ioremap(res_start, size as kernel::ffi::c_ulong) };
-> +        if addr.is_null() {
-> +            return Err(ENOMEM);
-> +        }
-> +
-> +        let io = IoRaw::new(addr as usize, size as usize)?;
-> +        let io = IoMem { io };
-> +
-> +        Ok(io)
-> +    }
-> +
-> +    /// Creates a new `IoMem` instance.
-> +    pub(crate) fn new(resource: &Resource, device: &Device) -> Result<Devres<Self>> {
-> +        let io = Self::ioremap(resource)?;
-> +        let devres = Devres::new(device, io, GFP_KERNEL)?;
-> +
-> +        Ok(devres)
-> +    }
-> +}
-> +
-> +impl<const SIZE: usize> Drop for IoMem<SIZE> {
-> +    fn drop(&mut self) {
-> +        // SAFETY: Safe as by the invariant of `Io`.
-> +        unsafe { bindings::iounmap(self.io.addr() as *mut core::ffi::c_void) }
-> +    }
-> +}
-> +
-> +impl<const SIZE: usize> Deref for IoMem<SIZE> {
-> +    type Target = Io<SIZE>;
-> +
-> +    fn deref(&self) -> &Self::Target {
-> +        // SAFETY: Safe as by the invariant of `IoMem`.
-> +        unsafe { Io::from_raw(&self.io) }
-> +    }
-> +}
-	Daniel
+Changes in v2:
+- Add hardware name to commit message.
+- Use savedefconfig option to update config.
+- Link to v1: https://lore.kernel.org/r/20250127-defconfig-beagleplay-v1-1-22a60085e313@beagleboard.org
+---
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index cb7da44155999b59aff95966f4cdc9107f2af46a..62309fd2482ab35e917aea2e63780c45a4347f43 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1270,6 +1270,8 @@ CONFIG_VIRTIO_BALLOON=y
+ CONFIG_VIRTIO_MMIO=y
+ CONFIG_XEN_GNTDEV=y
+ CONFIG_XEN_GRANT_DEV_ALLOC=y
++CONFIG_GREYBUS=m
++CONFIG_GREYBUS_BEAGLEPLAY=m
+ CONFIG_STAGING=y
+ CONFIG_STAGING_MEDIA=y
+ CONFIG_VIDEO_MAX96712=m
+
+---
+base-commit: 5ffa57f6eecefababb8cbe327222ef171943b183
+change-id: 20250127-defconfig-beagleplay-de4553bb3882
+
+Best regards,
+-- 
+Ayush Singh <ayush@beagleboard.org>
+
