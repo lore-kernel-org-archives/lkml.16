@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD0E1C8FD6;
-	Fri, 31 Jan 2025 14:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F3B1B87E9;
+	Fri, 31 Jan 2025 14:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738332384; cv=none; b=tNDRbpkO0OroWmjFQ9+ZczTdV18exHAoS0o3ZiYhjzFahpZL2Njm0TLhOTfNuYCsp9UvXyOx5b+FZlptH8UPLpt09ehKSfi+CYNRG5ffQ1sEUcz4kPrJoAOQZt5DCNFFzTgHqBXWHKoSVGmT8d/hjrwHK9zGljk06TWrMKDL8L8=
+	t=1738332476; cv=none; b=ZiQipWDhCAOvCuC1sLXoOHoYZ3RBfv0sUfBTWHD0P3YnsCS5A/178EOO1k139uisx5SSwYubnS9t/oAApSsSy4Dx+4XG4p02KVpMrkM1Qu1B55gV8biKpKCps3hLhrVn/jo8B6frpCgTiSkmq0sMfL9/7EVHeU6XWqF5a3VkVuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738332384; c=relaxed/simple;
-	bh=ZVhc9GGXKoDQwUkZU4ee1bEKLANnQbGOQhzv7lz5wAw=;
+	s=arc-20240116; t=1738332476; c=relaxed/simple;
+	bh=91PRDFTScaL13tOsC+DeQ4JyN56p/kP/RLQ4/vRE+hM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QW7s2QGgxhFRsQgQu/QGB8odqRmw6OGDEnnAVC8nlnbACfnnFHBTBIgU6mCnMTHtsfgsBOOUbcDFF7tiYg7glItCwHYgelTT2C3fk7HZ22YXHWMM3TdfrikcySBlAzfQZoiYua8gTCkZKERegoXen3gG6SNroADJQURjOxsWz54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HKGYPxDn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=NeRAb38XkR0Z4jKUWCIzXPb/73ldKaTAZYH2fb2TugET4cx5IoWf1rFswdHRFNlHX8j8b/hc1WPvbUKAnTVrJOtF9QLdukR+bRyQa3XCZTAzc6xl9kGwNcJP6654wwUKa4cxWqM6DnoWat+EVonMvt+AgL1+HL+Qfvm6d6+EIao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uLvqD7AD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HKGYPxDn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EF7C4CED3;
-	Fri, 31 Jan 2025 14:06:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uLvqD7AD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E25DC4CED1;
+	Fri, 31 Jan 2025 14:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738332383;
-	bh=ZVhc9GGXKoDQwUkZU4ee1bEKLANnQbGOQhzv7lz5wAw=;
+	s=k20201202; t=1738332475;
+	bh=91PRDFTScaL13tOsC+DeQ4JyN56p/kP/RLQ4/vRE+hM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HKGYPxDnXDLJPJPZZ9C8p84dtk6AYNrIFH2W3cTj/UU4yIdeyTM2uOE+Kfj/BzEI9
-	 LIqGNecyXLlRc+agKNwUuiiZyqcCaSEkRjHyzpsDI6BiQ6PyVAd54sgfsJfHtkGMhB
-	 nRdJxv0yguLjaLTQIabbtXt3h4x1nXr6Q9/k/lWxT/0/sNzICvAqReKIYyR/DqCLa4
-	 xBsl76QO+/soPSKBNWluf9bSq0IPMeoQmXZGlQo9zR5a4wYbD/YpoheVDaZ2se72we
-	 oTSuEyFyoOOAi0A2YDxTeBVQj0Gl0iapItSlzB/JsftkZYRr2PHRrBBSQmb70mCl1F
-	 df/4dHplOiZxA==
-Message-ID: <cc03cfcc-dc00-490c-857a-5da0ae0de811@kernel.org>
-Date: Fri, 31 Jan 2025 15:06:16 +0100
+	b=uLvqD7ADPflx7G9ZdYBxWd9Gi0DHJPdYftD7xQoKDUWmZqgdLEMSIxeVi42F8ZthV
+	 t67IjHYeN4lXLMxSEvPdEpg1ECqz+WlcBU7t8IlItq0u+ulNsHx0zQXbcdLi1JTMrc
+	 DhLj8m1rawvSeU/OM4hRD5fevNduumDy4ZwFuOqzlnMMznMYyIELl/awrq0E8Nqhmg
+	 j/wPyOr/zY5mvTNbOmHK2rpTyx06DOjE54JeKYzlWUm5arHtrmru3RXueAgfXZRdde
+	 RhiPC9fvoDPAmxynjzxAJewmEV8HPe6lEwg2N8uIIdLF111BU7DAdnDsmqX2QLXuZD
+	 EswvWAFKq//0A==
+Message-ID: <77e5166f-37f6-4931-b071-1c926cfe707c@kernel.org>
+Date: Fri, 31 Jan 2025 15:07:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,17 +35,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/2] dt-bindings: rtc: max31335: Add max31331 support
-To: pavithra.u@analog.com, Antoniu Miclaus <antoniu.miclaus@analog.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Subject: Re: [PATCH 3/4] nvmem: imx-ocotp: Support accessing controller for
+ i.MX8M Nano
+To: Alexander Stein <alexander.stein@ew.tq-group.com>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <noname.nuno@gmail.com>
-Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-References: <20250131-add_support_max31331_fix_7-v1-0-d29d5de3d562@analog.com>
- <20250131-add_support_max31331_fix_7-v1-1-d29d5de3d562@analog.com>
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250130130101.1040824-1-alexander.stein@ew.tq-group.com>
+ <20250130130101.1040824-4-alexander.stein@ew.tq-group.com>
+ <deef6dcd-27a0-4109-9788-a755fd390f55@kernel.org>
+ <4989387.31r3eYUQgx@steina-w>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -91,25 +95,35 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250131-add_support_max31331_fix_7-v1-1-d29d5de3d562@analog.com>
+In-Reply-To: <4989387.31r3eYUQgx@steina-w>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 31/01/2025 12:52, PavithraUdayakumar-adi via B4 Relay wrote:
-> From: PavithraUdayakumar-adi <pavithra.u@analog.com>
+On 31/01/2025 14:50, Alexander Stein wrote:
+>>> +
+>>> +		while (!of_parse_phandle_with_args(child, "access-controllers",
+>>> +						   "#access-controller-cells",
+>>> +						   idx++, &args)) {
+>>> +			of_node_put(args.np);
+>>> +			if (args.np != dev->of_node)
+>>
+>> You are using args.np after dropping the reference.
 > 
-> Added DT compatible string for MAX31331.
-
-
-In the future, instead of just removing details, correct them, so say
-that these are not compatible because of this and that.
-
+> Indeed, but is it really a problem? The args.np pointer is still the same.
+> So the comparison is unaffected.
 > 
-> Signed-off-by: PavithraUdayakumar-adi <pavithra.u@analog.com>
-> ---
+> Both branches need to drop the reference, no?
 
+Ah, indeed, you do not use the reference except pointer comparison. It's
+fine, maybe a bit less usual, but as you mentioned other alternative
+also does not look good, so fine for me.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
+> But the following looks awefull as well.
+>> if (args.np != dev->of_node) {
+>> 	of_node_put(args.np);
+>> 	continue;
+>> }
+>> of_node_put(args.np);
+> 
 Best regards,
 Krzysztof
