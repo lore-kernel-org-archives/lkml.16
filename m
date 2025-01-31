@@ -1,30 +1,32 @@
-Received: from michel.telenet-ops.be (michel.telenet-ops.be [195.130.137.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gauss.telenet-ops.be (gauss.telenet-ops.be [195.130.132.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5731C2317
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E4F1C54A6
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738331256; cv=none; b=P7xmdmQVXZ829xcjikoPe58OfhYSQA5JWMue7Ss5+qEdJixxijyz64d6Sh19+TvxOqWVJRMe/VRwX4cOLoAy6d9IlqWMyegxEwDNp+rLgU/771KI85bu6qJdcFczWMagOuzYMjgfaphzEJqoEHNS/lkPGgx0Mw7gfj93AcoqdEI=
+	t=1738331257; cv=none; b=fcfp9lXRQNbNZuF9s0RDmXsmDqHEkRYcQiQFcSSFYcKw9b5x77xLZXIGWi5Gzb21EjRdpCqvJgd3Q28VwpJb1BfLJQbluvCSBLfigqe/QRwj6cvI/kLqHq1ub/3E3q6Q5UVow5AX8AVvLzS4gCRqava8uXkgvIVlLW254PPB7W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738331256; c=relaxed/simple;
-	bh=RUzAHuSg5kb0I8eWtHDvCtXlRyFitEVUQddmb7BMrlk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DRr2CB2ypuocHXJVdsV2Jh+LnC8k/4LMSvboAXjW12rqHI9jxKfeEsLxAjyIKv1nXRbTurAltLM3MeW3XSn56AlodqGfQNyRlG/nwoV930joxjU/Ipo06OA3lQkvSoDQwCDI8q4yRPiPESv9WNvfR6EILoVwwcOwkJ8ykZIj7GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.88
+	s=arc-20240116; t=1738331257; c=relaxed/simple;
+	bh=xc3M33C0iwXkHtkGreXFYtXp9BYNda0pGb+ISZTOV/A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uVHq+cFlRZ4MnhfYFdl6Aq0h/mcI8EowLQcOGFBE/tbCVUc0VFli/vmk0K1QesSIxTNkkNgssQyCTIgLQRL4hOBPfIBZyFrF5X2AUleajCNB9cdVCWeAOij3E17X8pL1swk+LQXVu1IkaZObdtm468p+gYAkhC9cKArXjvboOww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+	by gauss.telenet-ops.be (Postfix) with ESMTPS id 4Ykxz84YhHz4x1PP
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 14:47:32 +0100 (CET)
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:a916:3147:9f19:c260])
-	by michel.telenet-ops.be with cmsmtp
-	id 7pmw2E00F0naHe806pmw9p; Fri, 31 Jan 2025 14:47:24 +0100
+	by baptiste.telenet-ops.be with cmsmtp
+	id 7pmw2E00W0naHe801pmwxH; Fri, 31 Jan 2025 14:47:24 +0100
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.97)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1tdrM6-0000000FHy2-2GRm;
+	id 1tdrM6-0000000FHxr-1qQW;
 	Fri, 31 Jan 2025 14:46:56 +0100
 Received: from geert by rox.of.borg with local (Exim 4.97)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1tdrMG-0000000DFVY-2Fc9;
+	id 1tdrMG-0000000DFVN-1Vog;
 	Fri, 31 Jan 2025 14:46:56 +0100
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 To: Michael Turquette <mturquette@baylibre.com>,
@@ -62,12 +64,10 @@ Cc: linux-clk@vger.kernel.org,
 	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/3] soc: renesas: Use bitfield helpers
-Date: Fri, 31 Jan 2025 14:46:53 +0100
-Message-ID: <cbec042a7e7fd12673b2d20cca325b096421fc83.1738329459.git.geert+renesas@glider.be>
+Subject: [PATCH v2 0/3] Non-const bitfield helpers
+Date: Fri, 31 Jan 2025 14:46:50 +0100
+Message-ID: <cover.1738329458.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1738329458.git.geert+renesas@glider.be>
-References: <cover.1738329458.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,38 +76,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use the field_get() helper, instead of open-coding the same operation.
+	Hi all,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Drop RFC, as a dependency was applied.
----
- drivers/soc/renesas/renesas-soc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This is an updated subset of a patch series I sent more than 3 years
+ago[1].
 
-diff --git a/drivers/soc/renesas/renesas-soc.c b/drivers/soc/renesas/renesas-soc.c
-index df2b38417b8042fc..8030b9a62ec46668 100644
---- a/drivers/soc/renesas/renesas-soc.c
-+++ b/drivers/soc/renesas/renesas-soc.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2014-2016 Glider bvba
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-@@ -512,8 +513,7 @@ static int __init renesas_soc_init(void)
- 							   eshi, eslo);
- 		}
- 
--		if (soc->id &&
--		    ((product & id->mask) >> __ffs(id->mask)) != soc->id) {
-+		if (soc->id && field_get(id->mask, product) != soc->id) {
- 			pr_warn("SoC mismatch (product = 0x%x)\n", product);
- 			ret = -ENODEV;
- 			goto free_soc_dev_attr;
+<linux/bitfield.h> contains various helpers for accessing bitfields, as
+typically used in hardware registers for memory-mapped I/O blocks.
+These helpers ensure type safety, and deduce automatically shift values
+from mask values, avoiding mistakes due to inconsistent shifts and
+masks, and leading to a reduction in source code size.
+
+The existing FIELD_{GET,PREP}() macros are limited to compile-time
+constants.  However, it is very common to prepare or extract bitfield
+elements where the bitfield mask is not a compile-time constant.
+To avoid this limitation, the AT91 clock driver introduced its own
+field_{prep,get}() macros.  Hence my v1 series aimed to make them
+available for general use, and convert several drivers to the existing
+FIELD_{GET,PREP}() and the new field_{get,prep}() helpers.
+
+Due to some pushback (mostly centered around using the typed
+{u*,be*,le*,...}_get_bits() macros instead, which of course would
+require making them work with non-constant masks first, too), this
+series was never applied, and became buried deep in my TODO haystack...
+However, several people still liked the idea: since v1, multiple copies
+of the field_{prep,get}() macros appeared upstream, and one more is
+queued for v6.15.
+
+Hence I think it's time to revive and consolidate...
+
+Changes compared to v1:
+  - Cast val resp. reg to the mask type,
+  - Fix 64-bit use on 32-bit architectures,
+  - Convert new upstream users:
+      - drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c
+      - drivers/gpio/gpio-aspeed.c
+      - drivers/iio/temperature/mlx90614.c
+      - drivers/pinctrl/nuvoton/pinctrl-ma35.c
+      - sound/usb/mixer_quirks.c
+  - Convert new user queued in renesas-devel for v6.15:
+      - drivers/soc/renesas/rz-sysc.c
+  - Drop the last 14 RFC patches.
+    They can be updated/resubmitted/applied later.
+
+I can take all three patches through the Renesas tree, and provide an
+immutable branch with the first patch for ther interested parties.
+
+Thanks for your comments!
+
+[1] "[PATCH 00/17] Non-const bitfield helper conversions"
+    https://lore.kernel.org/all/cover.1637592133.git.geert+renesas@glider.be
+
+Geert Uytterhoeven (3):
+  bitfield: Add non-constant field_{prep,get}() helpers
+  clk: renesas: Use bitfield helpers
+  soc: renesas: Use bitfield helpers
+
+ drivers/clk/at91/clk-peripheral.c             |  1 +
+ drivers/clk/at91/pmc.h                        |  3 --
+ drivers/clk/renesas/clk-div6.c                |  6 ++--
+ drivers/clk/renesas/rcar-gen3-cpg.c           | 15 +++-----
+ drivers/clk/renesas/rcar-gen4-cpg.c           |  9 ++---
+ .../qat/qat_common/adf_gen4_pm_debugfs.c      |  8 +----
+ drivers/gpio/gpio-aspeed.c                    |  5 +--
+ drivers/iio/temperature/mlx90614.c            |  5 +--
+ drivers/pinctrl/nuvoton/pinctrl-ma35.c        |  4 ---
+ drivers/soc/renesas/renesas-soc.c             |  4 +--
+ drivers/soc/renesas/rz-sysc.c                 |  3 +-
+ include/linux/bitfield.h                      | 34 +++++++++++++++++++
+ sound/usb/mixer_quirks.c                      |  4 ---
+ 13 files changed, 52 insertions(+), 49 deletions(-)
+
 -- 
 2.43.0
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
