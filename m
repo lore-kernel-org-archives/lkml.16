@@ -1,122 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411031A8419;
-	Fri, 31 Jan 2025 18:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1291F03F5;
+	Fri, 31 Jan 2025 18:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738349553; cv=none; b=D5BaFoMDJKYiUT765AhaoqsIdOgKzo9hjssJdbQqKQJscNYm5QGNFIQQdqy0NlcJy6FHpYzYjpiKGKow/7lrvIucVy6VeypVZ4EjEVqBniOfNlV22bkW9Tnlg4XUdDIFXrBOivR7tB5qP9hcVMxr2X8uN8iJ+IpBWHZZweQ45C4=
+	t=1738349908; cv=none; b=bMLHqQ03VODaM9Yd6Ooh7VBgOisVc4dGgsIB6UJCmu7RaP4XQzw5Jt0c3Ee4xPPycdF9IhHxJuJTor76KP698h8rpyq1DK8waAkYEAu++vzssb/JNx5aCf8YfHR4qgf9tnBrbdNi5KeF7cWj7otLRIBYnJaGcuyLSXj+67JFcXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738349553; c=relaxed/simple;
-	bh=s+wpQoOyI92VhWLuokk7zdNI55QPdHLYueG28IcaY48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kbo+iqGmDWHUEasA4FwMZWMYnw/DUq8yQPo0iXc1POhY9FCL8uM4qZHZRv2Bbn4mzkclrTL9KZDxL+leEnNdLhU2C9ya8dzsiHQ+ct75mD9CzkYxWoO1c25ZkaxnldeDevsrql3NJ2f5chUi+ycOT97rMUCwEqEE3BQvIKHxB88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VK9IhEJO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738349908; c=relaxed/simple;
+	bh=8T0Fu4jQpJW1MEbplsGTq5WDKApJUV829RbJsPGKt/s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UGygGtomQ28lD4p7IAEL/runAj+MRT6ueHBXOACuGik/Wkvdwj7apSHXetOTfKI0wk78Bdz2VuskccUv3DblZqEyQeLPjQmEVolMcC72j0r7ciLRqO4lJJ58vuWMF9a5a1IRFUOIMCXKZRQ/YZgQ5+E8SlXRGK9WCCPtjszhkPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l23MIy99; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VK9IhEJO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FC4CC4CED1;
-	Fri, 31 Jan 2025 18:52:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l23MIy99"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9A75C4CEE3;
+	Fri, 31 Jan 2025 18:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738349552;
-	bh=s+wpQoOyI92VhWLuokk7zdNI55QPdHLYueG28IcaY48=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=VK9IhEJOGTOYm2N7oSOLAD1vKNJxsbtqfIMq226CUMLqW0aIsQtaFv83gKF4vWKLH
-	 xcBImQ4NAH4Uu1JehEmROxqG5C5XF54unKoR8N1rdRtYU8z/3Svkua07y+XDXOpOXh
-	 X53VdN/WvzF+SIJGeO+b35WJlNH/3zLjNTAxKpyQO+A1ril+eR+cLAKsOzWOhhP1Ei
-	 0qWx5nzouEjaJ/Pq5S6RI9byQ7z3GPKzQPMphDCv3qj64/hmvgwSRq9/9abaFGVGxK
-	 aAx7s7d681osPF57m+yMDEtE9l/5M7HZcLdimPAgrFFwkP/yKQJpPZOT5HswwgirnW
-	 NTPxVqLr3JMug==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 37900CE3805; Fri, 31 Jan 2025 10:52:32 -0800 (PST)
-Date: Fri, 31 Jan 2025 10:52:32 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Waiman Long <longman@redhat.com>
-Cc: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>, Feng Tang <feng.tang@intel.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH v4 2/2] clocksource: Use migrate_disable() to avoid
- calling get_random_u32() in atomic context
-Message-ID: <a747efb7-2b1a-4570-b379-d8a3bce606a7@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250131173323.891943-1-longman@redhat.com>
- <20250131173323.891943-2-longman@redhat.com>
+	s=k20201202; t=1738349907;
+	bh=8T0Fu4jQpJW1MEbplsGTq5WDKApJUV829RbJsPGKt/s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=l23MIy99HW5a9m3DvfScOln9zW8EzMu1cRwASe7mZxXRTCm4snVO5V2rU7LfQuHCS
+	 w+on12Z5SQKZZM1FYy+Hzt5/Vre/yBt1amIwV0Z5onYot4NM66oNPkAusr/tKB9Dqc
+	 TQrDHCXLtVX7CkfIERNeTSZ/PLQZJqz979bUAwn4duukwkPRxdT78L0ZRLfMy0F8kH
+	 +w1zGFc3Kr1hdcqBVhrLyxzV/09BcFDtJskYJTmwgqYPfa+MX6T65xW5vJxm0E9ev4
+	 9tyiBO/TND+LqWl28fLUCFtdKyE+9uM/vdhG4PTMJdwP6Ve8TGX5uCYVditfSDVNDV
+	 3wyFpOsX8zzgQ==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5439a6179a7so2311707e87.1;
+        Fri, 31 Jan 2025 10:58:27 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVUx2LFQYsPCdkaadZ2JnlSrCM+sND1Wee/S6msYW3R45AMeq9m9SD2vYatjRF8VzGU9BziaOP3yuhV9A==@vger.kernel.org, AJvYcCVrFkbpNJHXqWthb72O86wXSwQxBT4aoI++DSIbZpBzlR9igBprJcHu3wG1cl2t00S7TCGrLDJAh28mSgY=@vger.kernel.org, AJvYcCXxJ8j8yqAsfolgc1iIpmIBl/VXCDt8E9jJ43uyV08152vM6r9wKWoZEffWj+4+pRSQ6Zzmwb5pxTCQRXxf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy28alkp8vqTk5VYjG4efWJo2kXsTn/UIyjCI7E7vMR2NKTdpcH
+	fqRU2xgbO4QEhqz9oqaagbwk5Eg6V0fjiguNCm+1HhP+o6D45Gsb2SrohHl/PACOPBJULC4CWPB
+	2J+jGy97zCSeBae76tgmTyWdmPRY=
+X-Google-Smtp-Source: AGHT+IFIPqTfnhk6FPxdV3GH4AYquqbLfOA6DSr10iylUvN2fvjV5sJM9a8I5o6+bw9IwkO+BVvQcj4Si0UGBbntnaM=
+X-Received: by 2002:a05:6512:3e09:b0:543:9b0d:d388 with SMTP id
+ 2adb3069b0e04-543f0f25369mr1674159e87.19.1738349906418; Fri, 31 Jan 2025
+ 10:58:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131173323.891943-2-longman@redhat.com>
+References: <20250113155306.1922992-2-ardb+git@google.com> <CAK7LNARmPcM2RTBOfpep7puY8hSJ4rz6mOrw+5EuFHh6iQ0_iA@mail.gmail.com>
+ <CAMj1kXHuyJ548mkPNcmU=+oj2mfeNk-4igTHXxo0oDbvz9f8wA@mail.gmail.com>
+In-Reply-To: <CAMj1kXHuyJ548mkPNcmU=+oj2mfeNk-4igTHXxo0oDbvz9f8wA@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 1 Feb 2025 03:57:49 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQA+VhDf3ZGLmTjLm1JCEvKYPu2jnAUghxMKoCn+BEQ=Q@mail.gmail.com>
+X-Gm-Features: AWEUYZnXEnzSkyH22Y1Hiq-WeTYacue4wQNixNlwBXfwAecfzlc0IVNBozaxrGM
+Message-ID: <CAK7LNAQA+VhDf3ZGLmTjLm1JCEvKYPu2jnAUghxMKoCn+BEQ=Q@mail.gmail.com>
+Subject: Re: [PATCH v3] kbuild: Strip runtime const RELA sections correctly
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	Ron Economos <re@w6rz.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 31, 2025 at 12:33:23PM -0500, Waiman Long wrote:
-> The following bug report happened with a PREEMPT_RT kernel.
-> 
-> [   30.957705] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
-> [   30.957711] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 2012, name: kwatchdog
-> [   30.962673] preempt_count: 1, expected: 0
-> [   30.962676] RCU nest depth: 0, expected: 0
-> 
-> It is due to the fact that clocksource_verify_choose_cpus() is invoked
-> with preemption disabled.  This function invokes get_random_u32()
-> to obtain random numbers for choosing CPUs.  The batched_entropy_32
-> local lock and/or the base_crng.lock spinlock in driver/char/random.c
-> will be acquired during the call. In PREEMPT_RT kernel, they are both
-> sleeping locks and so cannot be acquired in atomic context.
-> 
-> Fix this problem by using migrate_disable() to allow
-> smp_processor_id() to be reliably used without introducing atomic
-> context. The preempt_disable() function is then called after
-> clocksource_verify_choose_cpus() but before the clocksource measurement
-> is being run to avoid introducing unexpected latency.
-> 
-> Fixes: 7560c02bdffb ("clocksource: Check per-CPU clock synchronization when marked unstable")
-> Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Waiman Long <longman@redhat.com>
+On Sat, Feb 1, 2025 at 3:40=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> wro=
+te:
+>
+> On Fri, 31 Jan 2025 at 19:35, Masahiro Yamada <masahiroy@kernel.org> wrot=
+e:
+> >
+> > On Tue, Jan 14, 2025 at 12:53=E2=80=AFAM Ard Biesheuvel <ardb+git@googl=
+e.com> wrote:
+> > >
+> > > From: Ard Biesheuvel <ardb@kernel.org>
+> > >
+> > > Due to the fact that runtime const ELF sections are named without a
+> > > leading period or double underscore, the RSTRIP logic that removes th=
+e
+> > > static RELA sections from vmlinux fails to identify them.
+> >
+> >
+> > Dumb question - why can't you rename the section 'runtime*' to '.runtim=
+e*' ?
+> >
+> > .rel* matches to sections that just happen to start with '.rel',
+> > which may not be REL or RELA.
+> >
+>
+> That is what I proposed originally [0] but it was shot down by Linus.
+>
+> [0] https://lore.kernel.org/all/20241014125703.2287936-4-ardb+git@google.=
+com/T/#u
 
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 
-> ---
->  kernel/time/clocksource.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-> index 77d9566d3aa6..2a7802ec480c 100644
-> --- a/kernel/time/clocksource.c
-> +++ b/kernel/time/clocksource.c
-> @@ -373,10 +373,10 @@ void clocksource_verify_percpu(struct clocksource *cs)
->  	cpumask_clear(&cpus_ahead);
->  	cpumask_clear(&cpus_behind);
->  	cpus_read_lock();
-> -	preempt_disable();
-> +	migrate_disable();
->  	clocksource_verify_choose_cpus();
->  	if (cpumask_empty(&cpus_chosen)) {
-> -		preempt_enable();
-> +		migrate_enable();
->  		cpus_read_unlock();
->  		pr_warn("Not enough CPUs to check clocksource '%s'.\n", cs->name);
->  		return;
-> @@ -384,6 +384,7 @@ void clocksource_verify_percpu(struct clocksource *cs)
->  	testcpu = smp_processor_id();
->  	pr_info("Checking clocksource %s synchronization from CPU %d to CPUs %*pbl.\n",
->  		cs->name, testcpu, cpumask_pr_args(&cpus_chosen));
-> +	preempt_disable();
->  	for_each_cpu(cpu, &cpus_chosen) {
->  		if (cpu == testcpu)
->  			continue;
-> @@ -403,6 +404,7 @@ void clocksource_verify_percpu(struct clocksource *cs)
->  			cs_nsec_min = cs_nsec;
->  	}
->  	preempt_enable();
-> +	migrate_enable();
->  	cpus_read_unlock();
->  	if (!cpumask_empty(&cpus_ahead))
->  		pr_warn("        CPUs %*pbl ahead of CPU %d for clocksource %s.\n",
-> -- 
-> 2.48.1
-> 
+Does this work ?
+
+$(OBJCOPY) --remove-relocations=3D'*' $@
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
