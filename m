@@ -1,100 +1,163 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C6C2F36;
-	Fri, 31 Jan 2025 00:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3477DBA4B
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 00:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738284165; cv=none; b=p/hhpvWRuKpRCK5P8nfQgCkj8Q0Dd4gQ5S/n6ATlPMsTTDh5NaCWKdry1h9UgE5JWbuHiZsrNMoYiSR+PyKrhQ3T+4l8IOOSK78vvSrpMrzDwXt0tv+F4UwadtzJUaQJAxDrnXKRvMdGhg+8aq3dH7AC0RlfnTKreP0Bnz6QOhw=
+	t=1738284197; cv=none; b=Qyh9BkwSyluf9zCHuSG/kp6OyjxpQLxO/MfN/upup2oMt6TVoICiqKeimBEMoG6GIOyt1PCc6KUxFay8Va0T1xqUC3ymCZIpwmoJ+PpFNdSCk6mchW65Dml6y75TYhJh5b34eOQL323FyKAdw55ID9WT9f1ZFFWG2nZ8WyPsfHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738284165; c=relaxed/simple;
-	bh=BgKDfUO/vM1I1wx09yerNTXYxGqiZSG5+x6ZKBpRNvU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=A2GsE6niib8ihJrEkogxup4qVbXfvxOHf7W6CIxcJsPsfutx50d62Sbl1dIHKAMx2fFqV3zqOtdJWi06FeqSDGidYMG9xXXXD+/n4qRzvxEgnUUWDBLiikpEQ8zra10xuHpxNKVWEUPBT7aiQt/WYMMHy4MobFraP9km76KD9Fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=uGTQOUXR; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1738284197; c=relaxed/simple;
+	bh=osraKWffuRHi5+Fhgf1LBp5HE5wFaVm6SYw/LayD9sQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hPc8Huf4PVd7Gx0pAFd45wVW40jEiZQy3sLrAxPsKD6QCUAtF30osLcO/JgW9UUg9GiHB6Ti5ks0PHXN2zQICxm50blp9NPUehI1MMv1XT+XGVV1Fh1jB90hnwXP4YnuWhFKBVH1v3/NBJFP0CHVh916gGKJpZM6NmVqcid964I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jP2AQrKj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uGTQOUXR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1738284151;
-	bh=1+UCL/Pff+aWTsIdXx7PWQTvBm1DARowJgf14aUeCc0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=uGTQOUXR1DHqxiC9GYzeenG0zmAzyI+4o3EDaCAzVc++YeRhQEtfIjhhEkM90rod+
-	 RQ5E84RaTKCYE2XkhZmGA3T3GrS5bEGLOUFFQq/M2P4OoSd2QFRHMd272+5Yf41plZ
-	 yJ+EQlnRFp3jdYQFqEa32Eh4y2/F61apR+uwHXHEbMEgYYIeifPiSnhWs+Q7GLWfRK
-	 nIfaSB0Z74T5+GJAsfitiaSVWZI8QKgE8LpnGFOHveCuoNl8L1+TL/sFYvF/Zwx0ve
-	 3IrDKVUBey464ExUpqAwG787Pkw0yL4ftDUOwddqh0UepUq0nCn/wmj/EghNh9mTD2
-	 xpRsS8oSaZU6Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YkcYL6mPmz4x5k;
-	Fri, 31 Jan 2025 11:42:30 +1100 (AEDT)
-Date: Fri, 31 Jan 2025 11:42:39 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul@pwsan.com>
-Cc: Charlie Jenkins <charlie@rivosinc.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Palmer Dabbelt <palmer@rivosinc.com>,
- Yong-Xuan Wang <yongxuan.wang@sifive.com>
-Subject: linux-next: manual merge of the risc-v tree with Linus' tree
-Message-ID: <20250131114239.12bd7221@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jP2AQrKj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4DFFC4CED2;
+	Fri, 31 Jan 2025 00:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738284196;
+	bh=osraKWffuRHi5+Fhgf1LBp5HE5wFaVm6SYw/LayD9sQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jP2AQrKj6JoQ+QiZt4GZH8uInvOkEkg9jcocIfDTt+/9FLrG4JPI1USmF7qLYjb1K
+	 68GGOzKwtKzBC9yusZjLtcDt3fWF4yioMk6TlL/tFJO4Zo/X4wY8CTVpF+K7ytz/I7
+	 IMkYyrD+72HNyMg3esuosSBrf3wMbGSZE9CzhriFYxVcawtBr8PLCzZlA76lhsIXMu
+	 c8zTwSd+/ZEllWdPFRjxHIvoUd7NWluRdUgEfRISLcVoZ6exTTIkDmFr+NESdMrSa+
+	 NKr5NnuzE3iuTHjCjdYWtX2nJ2xhgqw16qgsfb8jnlvkTKDF5V2/jbUhUdSrCzywqy
+	 /l57sIdJzg0AQ==
+Date: Fri, 31 Jan 2025 00:43:12 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Aleksandar Rikalo <arikalo@gmail.com>, linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Christoph =?iso-8859-1?Q?M=FCllner?= <christoph.muellner@vrull.eu>,
+	linux-kernel@vger.kernel.org,
+	Djordje Todorovic <djordje.todorovic@htecgroup.com>
+Subject: Re: [PATCH v3] riscv: Fix the PAUSE Opcode for MIPS P8700.
+Message-ID: <20250131-unknotted-yoga-bccacad0c6d3@spud>
+References: <20250129131703.733098-1-arikalo@gmail.com>
+ <20250129-museum-slider-3bb634d124de@spud>
+ <Z5wEKS9q8-nYPO7h@ghost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7CRoYpoJ95Ft9nr+hKlg/5l";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="AWGKnN15am8RC/Ax"
+Content-Disposition: inline
+In-Reply-To: <Z5wEKS9q8-nYPO7h@ghost>
 
---Sig_/7CRoYpoJ95Ft9nr+hKlg/5l
-Content-Type: text/plain; charset=US-ASCII
+
+--AWGKnN15am8RC/Ax
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Thu, Jan 30, 2025 at 02:58:49PM -0800, Charlie Jenkins wrote:
+> On Wed, Jan 29, 2025 at 04:19:58PM +0000, Conor Dooley wrote:
+> > On Wed, Jan 29, 2025 at 02:17:03PM +0100, Aleksandar Rikalo wrote:
+> > > From: Djordje Todorovic <djordje.todorovic@htecgroup.com>
+> > >=20
+> > > The riscv MIPS P8700 uses a different opcode for PAUSE.
+> > > It is a =E2=80=98hint=E2=80=99 encoding of the SLLI instruction, with=
+ rd=3D0, rs1=3D0 and
+> > > imm=3D5. It will behave as a NOP instruction if no additional behavior
+> > > beyond that of SLLI is implemented.
+> >=20
+> > You say p8700, but the erratum will be applied on all systems that are
+> > identified as using a mips cpu. Why's that?
+> >=20
+> > > +void mips_errata_patch_func(struct alt_entry *begin,
+> > > +					     struct alt_entry *end,
+> > > +					     unsigned long archid,
+> > > +					     unsigned long impid,
+> > > +					     unsigned int stage)
+> > > +{
+> > > +	struct alt_entry *alt;
+> > > +
+> > > +	BUILD_BUG_ON(ERRATA_MIPS_NUMBER >=3D RISCV_VENDOR_EXT_ALTERNATIVES_=
+BASE);
+> > > +
+> > > +	if (stage =3D=3D RISCV_ALTERNATIVES_EARLY_BOOT)
+> > > +		return;
+> > > +
+> > > +	for (alt =3D begin; alt < end; alt++) {
+> > > +		if (alt->vendor_id !=3D MIPS_VENDOR_ID)
+> > > +			continue;
+> > > +
+> > > +		if (alt->patch_id >=3D ERRATA_MIPS_NUMBER) {
+> > > +			WARN(1, "MIPS errata id:%d not in kernel errata list\n",
+> > > +			     alt->patch_id);
+> > > +			continue;
+> > > +		}
+> > > +
+> > > +		mutex_lock(&text_mutex);
+> > > +		patch_text_nosync(ALT_OLD_PTR(alt), ALT_ALT_PTR(alt), alt->alt_len=
+);
+> > > +		mutex_unlock(&text_mutex);
+> > > +	}
+> > > +}
+> >=20
+> > > diff --git a/tools/arch/riscv/include/asm/vdso/processor.h b/tools/ar=
+ch/riscv/include/asm/vdso/processor.h
+> > > index 662aca039848..880f26a24f69 100644
+> > > --- a/tools/arch/riscv/include/asm/vdso/processor.h
+> > > +++ b/tools/arch/riscv/include/asm/vdso/processor.h
+> > > @@ -14,7 +14,10 @@ static inline void cpu_relax(void)
+> > >  	__asm__ __volatile__ ("div %0, %0, zero" : "=3Dr" (dummy));
+> > >  #endif
+> > > =20
+> > > -#ifdef CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE
+> > > +#ifdef CONFIG_ERRATA_MIPS_P8700_PAUSE_OPCODE
+> > > +    /* MIPS P8700 pause opcode */
+> > > +    __asm__ __volatile__ (".4byte 0x00501013");
+> > > +#elif CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE
+> > >  	/*
+> > >  	 * Reduce instruction retirement.
+> > >  	 * This assumes the PC changes.
+> >=20
+> > What about when the erratum is enabled and the toolchain supports
+> > Zihintpause?
+>=20
+> So the other way to do this is having an hwprobe call to check if the
+> currently running processor is effected by this. However I was concerned
+> about the performance penalty of calling hwprobe here in the previous
+> version so I had suggested to use a flag instead so there is not the
+> penalty on other architectures. This does make it invalid to enable
+> this errata in the defconfig. This is a precedent for how we want to
+> handle errata in tools.
 
-Today's linux-next merge of the risc-v tree got a conflict in:
+Gonna have to be marked non-portable then, if enabling it results in
+tools that might malfunction on other platforms.
 
-  tools/testing/selftests/riscv/vector/v_initval_nolibc.c
+> > Why don't you use the same implementation as the !tools
+> > copy of the header? (I'm not sure why they're different in the first
+> > place).
+>=20
+> It is different because the headers in tools are userspace so it doesn't
+> make sense to have alternatives.
 
-between commit:
+I assume that's an answer to the first part, and not the bit in
+brackets since the "first place" difference is about using the .4byte
+versus having an ifdef/else and you're talking about alternatives.
+That looks to have been some sort of sync issue or oversight in
+6da111574baff, no?
 
-  503465d4dc40 ("tools: selftests: riscv: Add pass message for v_initval_no=
-libc")
-
-from Linus' tree and commit:
-
-  57d7713af93e ("selftests: riscv: Fix vector tests")
-
-from the risc-v tree.
-
-I fixed it up (I deleted the file) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/7CRoYpoJ95Ft9nr+hKlg/5l
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--AWGKnN15am8RC/Ax
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmecHH8ACgkQAVBC80lX
-0GwVSggAoWlUk/tz/ZiwoUa3Qwuf9pgxigqDpsgNxU7uDWN8U7+Muk7ELv9H9pYW
-RUiEBcXWiyWP//V2V954T/Kin5SpG0ye75X0G2IlQodUe4XjG5UAaEWnoDsrpg7f
-DJlz7QZAdPmEYfV/iN66CGOz5ntUv9PbUobI4L/oYpYn0o7hEG8L3pu2OhiQOxjQ
-bhS7dL+LssFDEgcMBxE0v6oNMbO2V6YLMUMt4C+IweMj7dKT9YiNQLtalhCXej7U
-FYcHXdRpUHqkcsbn2OmfzpXr0M0JwdaU3SsmcDYhe0LmV2qzjxdv3C8D2RnGioti
-hg+NVFf8ehUUhD9N/NJUPLsp+PHU9A==
-=RCIj
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ5wcoAAKCRB4tDGHoIJi
+0kGxAP9gLiRmKNud2bm4Gduu7MiGiDBQE0OTEQ+uFliEN11tFwEA4ORbhIgElazM
+/i2u5edP/3BVuE3y6mhHA1KLijH4Ewg=
+=et18
 -----END PGP SIGNATURE-----
 
---Sig_/7CRoYpoJ95Ft9nr+hKlg/5l--
+--AWGKnN15am8RC/Ax--
