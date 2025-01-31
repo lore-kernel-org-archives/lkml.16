@@ -1,27 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC9601BD9FF
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:25:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24F321F0E24
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738322726; cv=none; b=GRPwuPInPya+owWJhrC6tVATijgKVx4EvdzLJIxZXPN9M0QkNFZYJL+BW/O3GsZKu2Fc6XmvqR8qdvzCH/pTCOYW/Lus5MWvN66UReFN7LxahsKvQ8MS2nxuWDeSezeKfUPbKLW6kKSbf4wzjEtk4WTiO3BN/YSTk1KEpMFfOQs=
+	t=1738322726; cv=none; b=ltXk/tl9NqK1sYt/XSv56NuF4roDlaMwkz6mLwgjeKl8AByBycZJ/Ex8awmmjIPtm+kgAIajgvHc4ncHbGR9Ocgjc4VkYT4GShVUyQrIC3aAvGfTsebxeaPq3oTRdR0ZxB2HL12zFakNug+RJ1ymuAAxIg+lbuN7GGBftEQkXRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738322726; c=relaxed/simple;
-	bh=tKQtXeBcDSeq+ploR2WzRap4P0UUs9Qp+htINEVCR1o=;
+	bh=DhLeAPsZXmTLsWlQfRK5k/9Vj553i3U944841job/Ac=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To; b=oDZVMfrxOFrWb6f6zxT+XdBpfVSBCKPb6t6Va7/JAtsXuxpsX3VkdVZSIV8TOpBFtMMaud4O0YEq7U/AADhtGioagJlr2ehmCqNFZ49wUuyaDdamxroa3YYwre4WibMW0Mgza4CTHPXpnetb/xkE8BZiDsfIL6tkqplY9cOViuM=
+	 In-Reply-To:To; b=VuhK6s8vgV2Zd8wk9CouLtuEZjXXF9KQppakFEflssr7GsZFm4aWBBfnfMtvLCM0xUGBd2r4nJ9li0zr33C3Jv0d27Pmzokf4zyHhBAgoYWKryFSXK3FZsH2nPVpv9f02PHQtijqshkSb922ZIoQ1vil82tE4fSIV+NU5ajDGi0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36FCFFEC;
-	Fri, 31 Jan 2025 03:25:49 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D274497;
+	Fri, 31 Jan 2025 03:25:50 -0800 (PST)
 Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 124173F63F;
-	Fri, 31 Jan 2025 03:25:22 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 188DB3F63F;
+	Fri, 31 Jan 2025 03:25:23 -0800 (PST)
 From: Sudeep Holla <sudeep.holla@arm.com>
-Date: Fri, 31 Jan 2025 11:24:17 +0000
-Subject: [PATCH v2 17/18] firmware: arm_ffa: Add support for handling
- framework notifications
+Date: Fri, 31 Jan 2025 11:24:18 +0000
+Subject: [PATCH v2 18/18] firmware: arm_ffa: Allow multiple UUIDs per
+ partition to register SRI callback
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,138 +29,307 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250131-ffa_updates-v2-17-544ba4e35387@arm.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250131-ffa_updates-v2-18-544ba4e35387@arm.com>
 References: <20250131-ffa_updates-v2-0-544ba4e35387@arm.com>
 In-Reply-To: <20250131-ffa_updates-v2-0-544ba4e35387@arm.com>
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
  Sudeep Holla <sudeep.holla@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3890; i=sudeep.holla@arm.com;
- h=from:subject:message-id; bh=tKQtXeBcDSeq+ploR2WzRap4P0UUs9Qp+htINEVCR1o=;
- b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBnnLMRaBLHl9ojapsEGCM6b2KTz+ItevgFDZIDQ
- g1S8E9JRRGJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ5yzEQAKCRAAQbq8MX7i
- mErdEACJ1il05A/YjFwK7OClKWTbrQKJfoMoYp/6nGQ4xmdevFT9uEaHdcSOnw8OfpvPO7Pq3Fl
- NX2H4NJUsvf++KeU7RdXwJASw6ZvOrnab/N/u85tTJWYN9nlaOStrtFx9lDxACy/xQ7oGWeNLA0
- 59N8lMfKkCf8hF3E/KX4iDftiAeCqWgAk3X0JSUktyTkd02+WI0D4RvTcazRvuqEu9O4+GBZ0C6
- lQ4yFSxe2bgNPyWNqVl/+RlLBaaq+/8ubge8bnRsv50gGCCcksD+PfXarBoQlmJWFt0/JTv1KO7
- 5rdEbM70DS3QzjOwDIXP9s6ckkphFfl3U0nKWck04htjSLtRCqLCOz8/UxeQh4Xw+EfwzcgZtLI
- BKE460F5Dp/cxjCpDKg9TZxKqI1Z3wudPW/wLacFGuGnV1eSE5rRWqophcA79u0HpQKawO/Aijc
- 35X9DKkP8WZPP6zVjw2yJbIMzypmF7RebfQEwCqvwPjVOwZ93ZpMqMiZ1DPeAgLswqdu8oGzjUc
- oyxPmdZKeHl8/51VskArCJtlULpjus8r+assS8viiFd+H3TV8RhT5tNs/NUXxR3MVq3QmE1Dzid
- /aiM1EchQm0hI0d28y9Jsj16B0ESOxhaxVdIODlPavUuALVqSqfGvBQm2CWUa32t1FMPl3WiMGr
- Mg5Yg0oj8cjwPYQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8199; i=sudeep.holla@arm.com;
+ h=from:subject:message-id; bh=DhLeAPsZXmTLsWlQfRK5k/9Vj553i3U944841job/Ac=;
+ b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBnnLMR4nDFKrZ1L7cAhNYpD5SLshn8MwGEZmMw7
+ opryuiluZGJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ5yzEQAKCRAAQbq8MX7i
+ mA0rD/sFc/Jpprn1nw3Nk+1Y7K89S4Hb8c5bGnT4boiSq4ayK38jXfQ37kKDbrmP+UKMsgBRMo1
+ IiNhjPDKllip9Mfi2x9LoPu6/NmFeqgKQIg0qxXwKx7Irfu9uf7eS/qsScWMF3PmOWG8FpLucEf
+ kfAfCceAeK2Q2mZ2isgkRuas4TctOsGXd6F4V/Y0CrTeSZ7P/MK1xOsWj2bb+FYkc4FlxTbXsqj
+ 1XyU8gem4c5ssmxC6DO7NWvrRjsJ3CJCs2BS05nxW8vGr5uTCwcUBHmjQm2IXqp2dh0S5q6cTNd
+ 1BzMUKuXIoVv9Ip3NGzIjVoY/H5g9iEAuQCg5CfudTUBf299K4449cXIH83j2TcLP9kdQB4aSe/
+ vxnGP4X06I+54jR/uhKgcWFx0GAhNWB9r0yiOYjdGl5sbQdvMG34AGS4c+hVEljJ5BWaOPaHU2t
+ WgrBBoGUHZeDp6joL03a71W9c9rNmEsi5voAJpqDNi6Md3Sl6yOsjiVZFjesW27jsSpUVWWxFx5
+ K3qEc+q9poyBoqd4f6mQV1z/10z5ejy7VsvcT2loe+mWxW9vM7plCkrvlgbWRkQ3uX6I0X3oaxq
+ l89Iw+7P0SCKo5M75+VYN+L9yUIf5RHUKDpoXfmlmqxuQRYlifxx/GlrQPIBEW1YjZ0haijx4Kb
+ KWEAMa1PVCzeo/Q==
 X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
  fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
 
-Currently FF-A specification defines only one framework notification:
-RX buffer full notification. This notification is signaled by the
-partition manager during transmission of a partition message through
-indirect messaging to,
+A partition can implement multiple UUIDs and currently we successfully
+register each UUID service as a FF-A device. However when adding the
+same partition info to the XArray which tracks the SRI callbacks more
+than once, it fails.
 
-1. Notify an endpoint that it has a pending message in its Rx buffer.
-2. Inform the message receiver’s scheduler via the schedule receiver
-   interrupt that the receiver must be run.
+In order to allow multiple UUIDs per partition to register SRI callbacks
+the partition information stored in the XArray needs to be extended to
+a listed list.
 
-In response to an FFA_MSG_SEND2 invocation by a sender endpoint, the
-framework performs the following actions after the message is copied
-from the Tx buffer of the sender to the Rx buffer of the receiver:
-
-1. The notification is pended in the framework notification bitmap of
-   the receiver.
-2. The partition manager of the endpoint that contains receiver’s
-   scheduler pends the schedule receiver interrupt for this endpoint.
-
-The receiver receives the notification and copies out the message from
-its Rx buffer.
+A function to remove the list of partition information in the XArray
+is not added as there are no users at the time. All the partitions are
+added at probe/initialisation and removed at cleanup stage.
 
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_ffa/driver.c | 50 +++++++++++++++++++++++++++++++++------
- 1 file changed, 43 insertions(+), 7 deletions(-)
+ drivers/firmware/arm_ffa/driver.c | 157 ++++++++++++++++++++++++++++----------
+ 1 file changed, 116 insertions(+), 41 deletions(-)
 
 diff --git a/drivers/firmware/arm_ffa/driver.c b/drivers/firmware/arm_ffa/driver.c
-index f0e853584b51645cd7f590e4cb8d01ca1e7914dc..ab50836adc75ab4bdab3c2da7e23ec5d11826e8b 100644
+index ab50836adc75ab4bdab3c2da7e23ec5d11826e8b..3c49ab3fe11861f5704ad92655705591bf0d2ee1 100644
 --- a/drivers/firmware/arm_ffa/driver.c
 +++ b/drivers/firmware/arm_ffa/driver.c
-@@ -848,6 +848,7 @@ enum notify_type {
+@@ -925,27 +925,32 @@ struct ffa_dev_part_info {
+ 	ffa_sched_recv_cb callback;
+ 	void *cb_data;
+ 	rwlock_t rw_lock;
++	struct ffa_device *dev;
++	struct list_head node;
+ };
  
- #define SPM_FRAMEWORK_BITMAP(x)			NOTIFICATION_BITMAP_LOW(x)
- #define NS_HYP_FRAMEWORK_BITMAP(x)		NOTIFICATION_BITMAP_HIGH(x)
-+#define FRAMEWORK_NOTIFY_RX_BUFFER_FULL		BIT(0)
- 
- static int ffa_notification_bind_common(u16 dst_id, u64 bitmap,
- 					u32 flags, bool is_bind)
-@@ -1373,9 +1374,6 @@ static void handle_notif_callbacks(u64 bitmap, enum notify_type type)
- 	int notify_id;
- 	struct notifier_cb_info *cb_info = NULL;
- 
--	if (type == SPM_FRAMEWORK || type == NS_HYP_FRAMEWORK)
--		return;
--
- 	for (notify_id = 0; notify_id <= FFA_MAX_NOTIFICATIONS && bitmap;
- 	     notify_id++, bitmap >>= 1) {
- 		if (!(bitmap & 1))
-@@ -1390,6 +1388,46 @@ static void handle_notif_callbacks(u64 bitmap, enum notify_type type)
- 	}
- }
- 
-+static void handle_fwk_notif_callbacks(u32 bitmap)
-+{
-+	void *buf;
-+	uuid_t uuid;
-+	int notify_id = 0, target;
-+	struct ffa_indirect_msg_hdr *msg;
-+	struct notifier_cb_info *cb_info = NULL;
-+
-+	/* Only one framework notification defined and supported for now */
-+	if (!(bitmap & FRAMEWORK_NOTIFY_RX_BUFFER_FULL))
-+		return;
-+
-+	mutex_lock(&drv_info->rx_lock);
-+
-+	msg = drv_info->rx_buffer;
-+	buf = kmalloc(msg->size, GFP_KERNEL);
-+	if (!buf) {
-+		mutex_unlock(&drv_info->rx_lock);
-+		return;
-+	}
-+	memcpy(buf, (void *)msg + msg->offset, msg->size);
-+	target = SENDER_ID(msg->send_recv_id);
-+	if (msg->offset >= sizeof(*msg))
-+		uuid_copy(&uuid, &msg->uuid);
-+	else
-+		uuid_copy(&uuid, &uuid_null);
-+
-+	mutex_unlock(&drv_info->rx_lock);
-+
-+	ffa_rx_release();
-+
-+	mutex_lock(&drv_info->notify_lock);
-+	cb_info = notifier_hnode_get_by_vmid_uuid(notify_id, target, &uuid);
-+	mutex_unlock(&drv_info->notify_lock);
-+
-+	if (cb_info && cb_info->fwk_cb)
-+		cb_info->fwk_cb(notify_id, cb_info->cb_data, buf);
-+	kfree(buf);
-+}
-+
- static void notif_get_and_handle(void *unused)
+ static void __do_sched_recv_cb(u16 part_id, u16 vcpu, bool is_per_vcpu)
  {
- 	int rc;
-@@ -1401,10 +1439,8 @@ static void notif_get_and_handle(void *unused)
+-	struct ffa_dev_part_info *partition;
++	struct ffa_dev_part_info *partition = NULL, *tmp;
+ 	ffa_sched_recv_cb callback;
++	struct list_head *phead;
+ 	void *cb_data;
+ 
+-	partition = xa_load(&drv_info->partition_info, part_id);
+-	if (!partition) {
++	phead = xa_load(&drv_info->partition_info, part_id);
++	if (!phead) {
+ 		pr_err("%s: Invalid partition ID 0x%x\n", __func__, part_id);
  		return;
  	}
  
--	handle_notif_callbacks(SPM_FRAMEWORK_BITMAP(bitmaps.arch_map),
--			       SPM_FRAMEWORK);
--	handle_notif_callbacks(NS_HYP_FRAMEWORK_BITMAP(bitmaps.arch_map),
--			       NS_HYP_FRAMEWORK);
-+	handle_fwk_notif_callbacks(SPM_FRAMEWORK_BITMAP(bitmaps.arch_map));
-+	handle_fwk_notif_callbacks(NS_HYP_FRAMEWORK_BITMAP(bitmaps.arch_map));
- 	handle_notif_callbacks(bitmaps.vm_map, NON_SECURE_VM);
- 	handle_notif_callbacks(bitmaps.sp_map, SECURE_PARTITION);
+-	read_lock(&partition->rw_lock);
+-	callback = partition->callback;
+-	cb_data = partition->cb_data;
+-	read_unlock(&partition->rw_lock);
++	list_for_each_entry_safe(partition, tmp, phead, node) {
++		read_lock(&partition->rw_lock);
++		callback = partition->callback;
++		cb_data = partition->cb_data;
++		read_unlock(&partition->rw_lock);
+ 
+-	if (callback)
+-		callback(vcpu, is_per_vcpu, cb_data);
++		if (callback)
++			callback(vcpu, is_per_vcpu, cb_data);
++	}
  }
+ 
+ static void ffa_notification_info_get(void)
+@@ -1123,18 +1128,29 @@ struct notifier_cb_info {
+ 	void *cb_data;
+ };
+ 
+-static int ffa_sched_recv_cb_update(u16 part_id, ffa_sched_recv_cb callback,
+-				    void *cb_data, bool is_registration)
++static int
++ffa_sched_recv_cb_update(struct ffa_device *dev, ffa_sched_recv_cb callback,
++			 void *cb_data, bool is_registration)
+ {
+-	struct ffa_dev_part_info *partition;
++	struct ffa_dev_part_info *partition = NULL, *tmp;
++	struct list_head *phead;
+ 	bool cb_valid;
+ 
+ 	if (ffa_notifications_disabled())
+ 		return -EOPNOTSUPP;
+ 
+-	partition = xa_load(&drv_info->partition_info, part_id);
++	phead = xa_load(&drv_info->partition_info, dev->vm_id);
++	if (!phead) {
++		pr_err("%s: Invalid partition ID 0x%x\n", __func__, dev->vm_id);
++		return -EINVAL;
++	}
++
++	list_for_each_entry_safe(partition, tmp, phead, node)
++		if (partition->dev == dev)
++			break;
++
+ 	if (!partition) {
+-		pr_err("%s: Invalid partition ID 0x%x\n", __func__, part_id);
++		pr_err("%s: No such partition ID 0x%x\n", __func__, dev->vm_id);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -1156,12 +1172,12 @@ static int ffa_sched_recv_cb_update(u16 part_id, ffa_sched_recv_cb callback,
+ static int ffa_sched_recv_cb_register(struct ffa_device *dev,
+ 				      ffa_sched_recv_cb cb, void *cb_data)
+ {
+-	return ffa_sched_recv_cb_update(dev->vm_id, cb, cb_data, true);
++	return ffa_sched_recv_cb_update(dev, cb, cb_data, true);
+ }
+ 
+ static int ffa_sched_recv_cb_unregister(struct ffa_device *dev)
+ {
+-	return ffa_sched_recv_cb_update(dev->vm_id, NULL, NULL, false);
++	return ffa_sched_recv_cb_update(dev, NULL, NULL, false);
+ }
+ 
+ static int ffa_notification_bind(u16 dst_id, u64 bitmap, u32 flags)
+@@ -1548,37 +1564,101 @@ static struct notifier_block ffa_bus_nb = {
+ 	.notifier_call = ffa_bus_notifier,
+ };
+ 
+-static int ffa_xa_add_partition_info(int vm_id)
++static int ffa_xa_add_partition_info(struct ffa_device *dev)
+ {
+ 	struct ffa_dev_part_info *info;
+-	int ret;
++	struct list_head *head, *phead;
++	int ret = -ENOMEM;
++
++	phead = xa_load(&drv_info->partition_info, dev->vm_id);
++	if (phead) {
++		head = phead;
++		list_for_each_entry(info, head, node) {
++			if (info->dev == dev) {
++				pr_err("%s: duplicate dev %p part ID 0x%x\n",
++				       __func__, dev, dev->vm_id);
++				return -EEXIST;
++			}
++		}
++	}
+ 
+ 	info = kzalloc(sizeof(*info), GFP_KERNEL);
+ 	if (!info)
+-		return -ENOMEM;
++		return ret;
+ 
+ 	rwlock_init(&info->rw_lock);
+-	ret = xa_insert(&drv_info->partition_info, vm_id, info, GFP_KERNEL);
+-	if (ret) {
+-		pr_err("%s: failed to save partition ID 0x%x - ret:%d. Abort.\n",
+-		       __func__, vm_id, ret);
+-		kfree(info);
++	info->dev = dev;
++
++	if (!phead) {
++		phead = kzalloc(sizeof(*phead), GFP_KERNEL);
++		if (!phead)
++			goto free_out;
++
++		INIT_LIST_HEAD(phead);
++
++		ret = xa_insert(&drv_info->partition_info, dev->vm_id, phead,
++				GFP_KERNEL);
++		if (ret) {
++			pr_err("%s: failed to save part ID 0x%x Ret:%d\n",
++			       __func__, dev->vm_id, ret);
++			goto free_out;
++		}
++	}
++	list_add(&info->node, phead);
++	return 0;
++
++free_out:
++	kfree(phead);
++	kfree(info);
++	return ret;
++}
++
++static int ffa_setup_host_partition(int vm_id)
++{
++	struct ffa_partition_info buf = { 0 };
++	struct ffa_device *ffa_dev;
++	int ret;
++
++	buf.id = vm_id;
++	ffa_dev = ffa_device_register(&buf, &ffa_drv_ops);
++	if (!ffa_dev) {
++		pr_err("%s: failed to register host partition ID 0x%x\n",
++		       __func__, vm_id);
++		return -EINVAL;
+ 	}
+ 
++	ret = ffa_xa_add_partition_info(ffa_dev);
++	if (ret)
++		return ret;
++
++	if (ffa_notifications_disabled())
++		return 0;
++
++	ret = ffa_sched_recv_cb_update(ffa_dev, ffa_self_notif_handle,
++				       drv_info, true);
++	if (ret)
++		pr_info("Failed to register driver sched callback %d\n", ret);
++
+ 	return ret;
+ }
+ 
+ static void ffa_partitions_cleanup(void)
+ {
+-	struct ffa_dev_part_info *info;
++	struct ffa_dev_part_info *info, *tmp;
+ 	unsigned long idx;
+ 
+ 	/* Clean up/free all registered devices */
+ 	ffa_devices_unregister();
+ 
+ 	xa_for_each(&drv_info->partition_info, idx, info) {
++		struct list_head *phead = (struct list_head *)idx;
++
+ 		xa_erase(&drv_info->partition_info, idx);
+-		kfree(info);
++		list_for_each_entry_safe(info, tmp, phead, node) {
++			list_del(&info->node);
++			kfree(info);
++		}
++		kfree(phead);
+ 	}
+ 
+ 	xa_destroy(&drv_info->partition_info);
+@@ -1621,7 +1701,7 @@ static int ffa_setup_partitions(void)
+ 		    !(tpbuf->properties & FFA_PARTITION_AARCH64_EXEC))
+ 			ffa_mode_32bit_set(ffa_dev);
+ 
+-		if (ffa_xa_add_partition_info(ffa_dev->vm_id)) {
++		if (ffa_xa_add_partition_info(ffa_dev)) {
+ 			ffa_device_unregister(ffa_dev);
+ 			continue;
+ 		}
+@@ -1630,12 +1710,16 @@ static int ffa_setup_partitions(void)
+ 
+ 	kfree(pbuf);
+ 
+-	/* Check if the host is already added as part of partition info */
++	/*
++	 * Check if the host is already added as part of partition info
++	 * No multiple UUID possible for the host, so just checking if
++	 * there is an entry will suffice
++	 */
+ 	if (xa_load(&drv_info->partition_info, drv_info->vm_id))
+ 		return 0;
+ 
+ 	/* Allocate for the host */
+-	ret = ffa_xa_add_partition_info(drv_info->vm_id);
++	ret = ffa_setup_host_partition(drv_info->vm_id);
+ 	if (ret)
+ 		ffa_partitions_cleanup();
+ 
+@@ -1944,19 +2028,10 @@ static int __init ffa_init(void)
+ 	ffa_notifications_setup();
+ 
+ 	ret = ffa_setup_partitions();
+-	if (ret) {
+-		pr_err("failed to setup partitions\n");
+-		goto cleanup_notifs;
+-	}
+-
+-	ret = ffa_sched_recv_cb_update(drv_info->vm_id, ffa_self_notif_handle,
+-				       drv_info, true);
+-	if (ret)
+-		pr_info("Failed to register driver sched callback %d\n", ret);
+-
+-	return 0;
++	if (!ret)
++		return ret;
+ 
+-cleanup_notifs:
++	pr_err("failed to setup partitions\n");
+ 	ffa_notifications_cleanup();
+ free_pages:
+ 	if (drv_info->tx_buffer)
 
 -- 
 2.34.1
