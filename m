@@ -1,229 +1,231 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC271F0E46
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F2E1F2C47;
+	Fri, 31 Jan 2025 20:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738354124; cv=none; b=uPhA0AeqkW0a5lerID6iZo5BeeUiXYQZAO29hY3dhpvTjyBxAEp8k2bHQ6ya74tMYcLVdUI9XitdcWeK6cZFgwUnfs9TguF9Lg5933k+Zp/GSAj6Z6qxSRDrqEceDOBxdWzVOMUWuG6b8LTg5eyu/7GWZa2qgnA9zqCUrUitfWY=
+	t=1738354377; cv=none; b=dz74HG6/JDCBrPrqiuZ4Xdi6aPY6F8wBIXlDHKcttAdhX4kQBB7auaKSkpgaZhufaCMdCtBCwDdQ5uccmmkuh4Y3aT5Hn+7RMzzZhuiZWqzj0YrpIr5a07pvas0hBDj0z+JyRk1+3KQSYYgR9HNCYRIKUsqrMz8ttnRCMBwbEEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738354124; c=relaxed/simple;
-	bh=fKS/+T4Yblhgtj5gjMSlva47t0SDdv/kmftNd3dioe0=;
-	h=Date:Subject:CC:From:To:Message-ID; b=px2v2iZKsmVqid4cpFQ2JwqJ4xDCSbALXgmE1+giXT2KY5tbq2UrRsdsxcyaghLKex0kLfG/243d3lrXmBURcI7WObWSFVmuZ5d+uccA4SkIv6tNsRwgeljzmkidycN2sdD8P7d72w9Lgck3OumObCgqkeyoIOiMEnVkUSF25t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=H2HuDdjE; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738354377; c=relaxed/simple;
+	bh=vg/+jgyh0IRUSzgzqkliZ3s1/U6jUBUON10aCM43Ny0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ckp/AztJx+ISnGUizbYHdmkEXuTwyc3WDQ2JhpbeSpf0N+OtqsUerkMudVCfPIbmhpdWcipk2lqzQbEaEsnjS5JdZjcue7LrNtKo2izsHUYgUJvQ8fChVhnU4dFsc1Ax6MLzvsaEhs6SHDKCKOCMithgVYIpih6yG4QUOmviWVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aPjvJgg8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="H2HuDdjE"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2163b0c09afso42970125ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:08:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738354121; x=1738958921; darn=vger.kernel.org;
-        h=message-id:to:from:cc:subject:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cBul5ysGPZTyDg4qnqAU/ekNzSdW9pjkuURf85NPIBY=;
-        b=H2HuDdjE6Qsp2E/gD/hacZyix+eqSBtsvguA9+chbP/WXY4al1LKZiilBZYSpx8eXm
-         9ISHeUsfrRl3BZKzaRPGiGIIxHbCmQfWl1ZL/dM4CXKbTg0d+Wah79AYwHSMQ+rizzXZ
-         pALeHcMOVHoMO7ZiXUCF6VEhqMqxpoohGOfaLp0Z4myOm3ngvFXkOFIvdRL6z1bOxD0l
-         qeWtfJb1ANYqbZebcf/DNbeetStfn5Fgrw85Pl3dSD17MkWzKM96iJo6JSWSQ14HA5x3
-         Nl10VdeUX/TJnQgYiuQ1XT4L/eArnp7Hcnqa5zV5jfMVHpHYn5wsfccw1REMmYHUhPa9
-         b6iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738354121; x=1738958921;
-        h=message-id:to:from:cc:subject:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cBul5ysGPZTyDg4qnqAU/ekNzSdW9pjkuURf85NPIBY=;
-        b=ul77aV8ssAlO5f+Pl6sodRS6gBnBg+rceIvmftQSELJraQdFJ/CpkkCHCGroEUIgAD
-         WrgNg8CKGDRnjc6GE6v/g50LuqKqln4YZ90TlOihM3rJ6j1bAsFbdnLpdHQqDZFdyLus
-         BrknibUTtOQaAaetFxw9bQm3Cw7JahRWDglUy5NNAtbJW+ZL2UWl+cnNEt3sUNInfgNa
-         obnLe80MDdDBwW+4S+A0wS7y4NOAI2YoiGxSgtH2vLvjGKqbzF3BAdHhlaX0LYlKJ4hV
-         HDBEgwbTKXSpSQWr+CXv9qAxEhvAenJCdeYUHAuDLd9+S3Nj8Gpiud6MribhFHpXSPBx
-         +m6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWBSyLFeWa5YR3E5s7mXLKULHu7KPwK9vkLYKUDRCkwZBbnu3hE01lWSohp8BoPxbkpOpL/0ZzvUXWzr2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjsNNFL2Ih7P90XZZPNb/YtM+mpxqCVmJ6LUtejXb6dJjEjluQ
-	GBfYO0B+lI4eqcLcd0Ea0cw+7Recpd9gqG9o68j0kaOiWMA2BVxY892RwdQPV00Aho3tuqLw4sy
-	s
-X-Gm-Gg: ASbGncsCeQafxyLmS0ukDKGH5Avx1MJNBh6BzQziS5fiYduLaJE9cNZYDCLNFLvI6wV
-	9Ya+ytQG/7B74ytoSps7mn0IMwPKq3+hwPWWJYuRjAIUmR76gYyF0ILn5XER18sl0JGUaTFKNWY
-	C3Z/lKajhYIGAkmVwzg9egI8XssS3GiVD0PusZkOgNm/aGGyMhoZkvNHTGAxVXVrhiT/NtlfVZX
-	hunxAl6awStSfXYlvM6u8w+oBqdFxyZazDjvQGYfnEJcfA9oBPeBU4qkkhsBv28SkmzbINWm6eB
-	LpA51LGXJYQoEg==
-X-Google-Smtp-Source: AGHT+IGrMDfDUwByc0j7gn0ck3Oam/oLJvP4Nzd1Pw9CtpK5Ytij8uVVdjOi9PeMkBtoMSrpkyzWMQ==
-X-Received: by 2002:a17:902:db02:b0:216:69ca:7714 with SMTP id d9443c01a7336-21dd7c46297mr184198085ad.11.1738354121173;
-        Fri, 31 Jan 2025 12:08:41 -0800 (PST)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31fcdd0sm34501885ad.103.2025.01.31.12.08.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 12:08:40 -0800 (PST)
-Date: Fri, 31 Jan 2025 12:08:40 -0800 (PST)
-X-Google-Original-Date: Fri, 31 Jan 2025 12:08:28 PST (-0800)
-Subject: [GIT PULL] RISC-V Patches for the 6.14 Merge Window, Part 1
-CC:         linux-riscv@lists.infradead.org,        linux-kernel@vger.kernel.org
-From: Palmer Dabbelt <palmer@rivosinc.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <mhng-5051a418-807c-4539-91b2-255492eae79f@palmer-ri-x1c9>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aPjvJgg8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE04DC4CED1;
+	Fri, 31 Jan 2025 20:12:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738354376;
+	bh=vg/+jgyh0IRUSzgzqkliZ3s1/U6jUBUON10aCM43Ny0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aPjvJgg824gCc0kSN+GlX5Dpiy38UxR3gJgZjjj5ncm8Q++AU2ucBbsVw/s5wux3l
+	 Toq21AkU3/EwcM38tMsJrm7Tba/vCH/4/kAGe0I4Ib6DsnCbpCwi7lCAWMb85G6keN
+	 j32ZMFHCajK5eWy88W4we0y1vqBxLy8EXCRjwOMJw7TGhV97Bh9JoNOgpSlRhswBRr
+	 DFxVEm+Rdc3kbq/0y9LQ9YiR6QmKfJm/YFONVcxGqviDH3q3c62fToIzAFuF5Bhf9M
+	 HQ34yWIslw7TY9n8M80PMjhyZ0URLmmm7RQkpmAcvSbSt5LygBhHBj2QHEpUkCjMtk
+	 q93MrlW6U4tPA==
+Date: Fri, 31 Jan 2025 12:12:53 -0800
+From: Kees Cook <kees@kernel.org>
+To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Cc: Jiri Kosina <jikos@kernel.org>, Alan Stern <stern@rowland.harvard.edu>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Terry Junge <linuxhid@cosmicgizmosystems.com>,
+	linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	syzbot <syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com>,
+	syzkaller-bugs@googlegroups.com, lvc-project@linuxtesting.org
+Subject: Re: [PATCH v2] HID: usbhid: fix recurrent out-of-bounds bug in
+ usbhid_parse()
+Message-ID: <202501311205.DB75F95@keescook>
+References: <20250131151600.410242-1-n.zhandarovich@fintech.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131151600.410242-1-n.zhandarovich@fintech.ru>
 
-The following changes since commit fac04efc5c793dccbd07e2d59af9f90b7fc0dca4:
+On Fri, Jan 31, 2025 at 06:15:58PM +0300, Nikita Zhandarovich wrote:
+> Syzbot reports [1] a reemerging out-of-bounds bug regarding hid
+> descriptors supposedly having unpredictable bNumDescriptors values in
+> usbhid_parse().
+> 
+> The issue stems from the fact that hid_class_descriptor is supposed
+> to be a flexible array, however it was sized as desc[1], using only
+> one element. Therefore, going beyond 1 element, courtesy of
+> bNumDescriptors, may lead to an error.
+> 
+> Modify struct hid_descriptor by employing __counted_by macro, tying
+> together struct hid_class_descriptor desc[] and number of descriptors
+> bNumDescriptors. Also, fix places where this change affects work with
+> newly updated struct.
+> 
+> [1] Syzbot report:
+> 
+> UBSAN: array-index-out-of-bounds in drivers/hid/usbhid/hid-core.c:1024:7
+> index 1 is out of range for type 'struct hid_class_descriptor[1]'
+> ...
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:88 [inline]
+>  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+>  ubsan_epilogue lib/ubsan.c:231 [inline]
+>  __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:429
+>  usbhid_parse+0x5a7/0xc80 drivers/hid/usbhid/hid-core.c:1024
+>  hid_add_device+0x132/0x520 drivers/hid/hid-core.c:2790
+>  usbhid_probe+0xb38/0xea0 drivers/hid/usbhid/hid-core.c:1429
+>  usb_probe_interface+0x645/0xbb0 drivers/usb/core/driver.c:399
+>  really_probe+0x2b8/0xad0 drivers/base/dd.c:656
+>  __driver_probe_device+0x1a2/0x390 drivers/base/dd.c:798
+>  driver_probe_device+0x50/0x430 drivers/base/dd.c:828
+>  __device_attach_driver+0x2d6/0x530 drivers/base/dd.c:956
+>  bus_for_each_drv+0x24e/0x2e0 drivers/base/bus.c:457
+>  __device_attach+0x333/0x520 drivers/base/dd.c:1028
+>  bus_probe_device+0x189/0x260 drivers/base/bus.c:532
+>  device_add+0x8ff/0xca0 drivers/base/core.c:3720
+>  usb_set_configuration+0x1976/0x1fb0 drivers/usb/core/message.c:2210
+>  usb_generic_driver_probe+0x88/0x140 drivers/usb/core/generic.c:254
+>  usb_probe_device+0x1b8/0x380 drivers/usb/core/driver.c:294
+> 
+> Reported-by: syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=c52569baf0c843f35495
+> Fixes: f043bfc98c19 ("HID: usbhid: fix out-of-bounds bug")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+> ---
+> v1: https://lore.kernel.org/all/20240524120112.28076-1-n.zhandarovich@fintech.ru/
+> 
+> v2: Instead of essentially forcing usbhid_parse() to only check
+> the first descriptor, modify hid_descriptor struct to anticipate
+> multiple hid_class_descriptor in desc[] by utilizing __counted_by
+> macro. This change, in turn, requires several other ones wherever
+> that struct is used. Adjust commit description accordingly.
+> 
+> P.S. Since syzbot currently breaks trying to reproduce the issue,
+> with or without this patch, I only managed to test it locally with
+> syz repros. Would greatly appreciate other people's effort to test
+> it as well.
+> 
+> P.P.S. Terry Junge <linuxhid@cosmicgizmosystems.com> suggested a
+> different approach to this issue, see:
+> Link: https://lore.kernel.org/all/f7963a1d-e069-4ec9-82a1-e17fd324a44f@cosmicgizmosystems.com/
+> 
+>  drivers/hid/usbhid/hid-core.c       |  2 +-
+>  drivers/usb/gadget/function/f_fs.c  |  3 ++-
+>  drivers/usb/gadget/function/f_hid.c | 22 ++++++++++++++--------
+>  include/linux/hid.h                 |  2 +-
+>  4 files changed, 18 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+> index a6eb6fe6130d..eb4807785d6d 100644
+> --- a/drivers/hid/usbhid/hid-core.c
+> +++ b/drivers/hid/usbhid/hid-core.c
+> @@ -1010,7 +1010,7 @@ static int usbhid_parse(struct hid_device *hid)
+>  		return -ENODEV;
+>  	}
+>  
+> -	if (hdesc->bLength < sizeof(struct hid_descriptor)) {
+> +	if (hdesc->bLength < struct_size(hdesc, desc, hdesc->bNumDescriptors)) {
+>  		dbg_hid("hid descriptor is too short\n");
+>  		return -EINVAL;
+>  	}
 
-  Linux 6.13-rc2 (2024-12-08 14:03:39 -0800)
+I don't think you want this hunk in the patch. The existing logic will
+correctly adapt num_descriptors to a size that fits within
+hdesc->bLength. In theory, the above change could break a weird but
+working device that reported too high bNumDescriptors but still worked
+with what num_descriptors walks.
 
-are available in the Git repository at:
+> diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+> index 2dea9e42a0f8..a4b6d7cbf56d 100644
+> --- a/drivers/usb/gadget/function/f_fs.c
+> +++ b/drivers/usb/gadget/function/f_fs.c
+> @@ -2550,7 +2550,8 @@ static int __must_check ffs_do_single_desc(char *data, unsigned len,
+>  	case USB_TYPE_CLASS | 0x01:
+>  		if (*current_class == USB_INTERFACE_CLASS_HID) {
+>  			pr_vdebug("hid descriptor\n");
+> -			if (length != sizeof(struct hid_descriptor))
+> +			if (length < sizeof(struct hid_descriptor) +
+> +				     sizeof(struct hid_class_descriptor))
+>  				goto inv_length;
+>  			break;
+>  		} else if (*current_class == USB_INTERFACE_CLASS_CCID) {
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.14-mw1
+Same here, I think? This isn't needed unless I'm misunderstanding
+something about the fix.
 
-for you to fetch changes up to 101971298be2aa4706c8602bd81066a0f6f2ced5:
+> diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
+> index 740311c4fa24..ec8c2e2d6812 100644
+> --- a/drivers/usb/gadget/function/f_hid.c
+> +++ b/drivers/usb/gadget/function/f_hid.c
+> @@ -139,13 +139,17 @@ static struct usb_interface_descriptor hidg_interface_desc = {
+>  };
+>  
+>  static struct hid_descriptor hidg_desc = {
+> -	.bLength			= sizeof hidg_desc,
+> +	.bLength			= struct_size(&hidg_desc, desc, 1),
+>  	.bDescriptorType		= HID_DT_HID,
+>  	.bcdHID				= cpu_to_le16(0x0101),
+>  	.bCountryCode			= 0x00,
+>  	.bNumDescriptors		= 0x1,
+> -	/*.desc[0].bDescriptorType	= DYNAMIC */
+> -	/*.desc[0].wDescriptorLenght	= DYNAMIC */
+> +	.desc				= {
+> +		{
+> +			.bDescriptorType	= 0, /* DYNAMIC */
+> +			.wDescriptorLength	= 0, /* DYNAMIC */
+> +		}
+> +	}
+>  };
+>  
+>  /* Super-Speed Support */
+> @@ -936,16 +940,18 @@ static int hidg_setup(struct usb_function *f,
+>  		switch (value >> 8) {
+>  		case HID_DT_HID:
+>  		{
+> -			struct hid_descriptor hidg_desc_copy = hidg_desc;
+> +			DEFINE_FLEX(struct hid_descriptor, hidg_desc_copy,
+> +				desc, bNumDescriptors, 1);
+> +			*hidg_desc_copy = hidg_desc;
+>  
+>  			VDBG(cdev, "USB_REQ_GET_DESCRIPTOR: HID\n");
+> -			hidg_desc_copy.desc[0].bDescriptorType = HID_DT_REPORT;
+> -			hidg_desc_copy.desc[0].wDescriptorLength =
+> +			hidg_desc_copy->desc[0].bDescriptorType = HID_DT_REPORT;
+> +			hidg_desc_copy->desc[0].wDescriptorLength =
+>  				cpu_to_le16(hidg->report_desc_length);
+>  
+>  			length = min_t(unsigned short, length,
+> -						   hidg_desc_copy.bLength);
+> -			memcpy(req->buf, &hidg_desc_copy, length);
+> +						   hidg_desc_copy->bLength);
+> +			memcpy(req->buf, hidg_desc_copy, length);
+>  			goto respond;
+>  			break;
+>  		}
+> diff --git a/include/linux/hid.h b/include/linux/hid.h
+> index cdc0dc13c87f..85a58ae2c4a0 100644
+> --- a/include/linux/hid.h
+> +++ b/include/linux/hid.h
+> @@ -739,7 +739,7 @@ struct hid_descriptor {
+>  	__u8  bCountryCode;
+>  	__u8  bNumDescriptors;
+>  
+> -	struct hid_class_descriptor desc[1];
+> +	struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
+>  } __attribute__ ((packed));
+>  
+>  #define HID_DEVICE(b, g, ven, prod)					\
 
-  riscv: add a warning when physical memory address overflows (2025-01-29 18:36:09 -0800)
+Otherwise, this looks correct to me.
 
-----------------------------------------------------------------
-RISC-V Patches for the 6.14 Merge Window, Part 1
-
-* The PH1520 pinctrl and dwmac drivers are enabeled in defconfig.
-* A redundant AQRL barrier has been removed from the futex cmpxchg
-  implementation.
-* Support for the T-Head vector extensions, which includes exposing
-  these extensions to userspace on systems that implement them.
-* Some more page table information is now printed on die() and systems
-  that cause PA overflows.
-
-----------------------------------------------------------------
-I don't have a second PR planned, I've been pretty sick lately so every if
-something does blow up I'm probably going to be too out of it to notice this
-weekend.  That means this also hasn't gotten as much love as usual, but
-hopefully that's just resulted in this being small and not buggy.
-
-There's a pair of conflicts.  The v_initval_nolibc.c changes also landed in the
-new v_exec_initval_nolibc.c, so just removing it looks good to me.  The
-vstate_prctl test had an in-flight fixup/rewrite.  Not sure if I'm just slow
-today, but I'm having trouble trying to get a pre-merge `git diff` to show me
-anything so here's my `git show --diff-merges=remerge`, hopefully that helps
-
-diff --git a/tools/testing/selftests/riscv/vector/vstate_prctl.c b/tools/testing/selftests/riscv/vector/vstate_prctl.c
-remerge CONFLICT (content): Merge conflict in tools/testing/selftests/riscv/vector/vstate_prctl.c
-index 340ca64ccc2b..62fbb17a0556 100644
---- a/tools/testing/selftests/riscv/vector/vstate_prctl.c
-+++ b/tools/testing/selftests/riscv/vector/vstate_prctl.c
-@@ -36,19 +36,8 @@ TEST(get_control_no_v)
- {
-        long rc;
-
--<<<<<<< 101971298be2 (riscv: add a warning when physical memory address overflows)
-        if (is_vector_supported() || is_xtheadvector_supported())
-                SKIP(return, "Test expects vector to be not supported");
--=======
--       ksft_set_plan(1);
--
--       pair.key = RISCV_HWPROBE_KEY_IMA_EXT_0;
--       rc = riscv_hwprobe(&pair, 1, 0, NULL, 0);
--       if (rc < 0) {
--               ksft_test_result_fail("hwprobe() failed with %ld\n", rc);
--               return -1;
--       }
-->>>>>>> 69b8923f5003 (Merge tag 'for-linus-6.14-ofs4' of git://git.kernel.org/pub/scm/linux/kernel/git/hubcap/linux)
-
-        rc = prctl(PR_RISCV_V_GET_CONTROL);
-        EXPECT_EQ(-1, rc)
-
-----------------------------------------------------------------
-Celeste Liu (1):
-      riscv: defconfig: drop RT_GROUP_SCHED=y
-
-Charlie Jenkins (13):
-      dt-bindings: riscv: Add xtheadvector ISA extension description
-      dt-bindings: cpus: add a thead vlen register length property
-      riscv: dts: allwinner: Add xtheadvector to the D1/D1s devicetree
-      riscv: Add thead and xtheadvector as a vendor extension
-      riscv: vector: Use vlenb from DT for thead
-      riscv: csr: Add CSR encodings for CSR_VXRM/CSR_VXSAT
-      riscv: Add xtheadvector instruction definitions
-      riscv: vector: Support xtheadvector save/restore
-      riscv: hwprobe: Add thead vendor extension probing
-      riscv: hwprobe: Document thead vendor extensions and xtheadvector extension
-      selftests: riscv: Fix vector tests
-      selftests: riscv: Support xtheadvector in vector tests
-      riscv: Add ghostwrite vulnerability
-
-Davidlohr Bueso (1):
-      riscv/futex: Optimize atomic cmpxchg
-
-Drew Fustini (1):
-      riscv: defconfig: enable pinctrl and dwmac support for TH1520
-
-Heiko Stuebner (1):
-      RISC-V: define the elements of the VCSR vector CSR
-
-Palmer Dabbelt (2):
-      RISC-V: Mark riscv_v_init() as __init
-      Merge patch series "riscv: Add support for xtheadvector"
-
-Yunhui Cui (2):
-      riscv/mm/fault: add show_pte() before die()
-      riscv: add a warning when physical memory address overflows
-
- Documentation/arch/riscv/hwprobe.rst               |  10 +
- Documentation/devicetree/bindings/riscv/cpus.yaml  |  19 ++
- .../devicetree/bindings/riscv/extensions.yaml      |  10 +
- arch/riscv/Kconfig.errata                          |  11 +
- arch/riscv/Kconfig.vendor                          |  26 ++
- arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi      |   3 +-
- arch/riscv/configs/defconfig                       |   3 +-
- arch/riscv/errata/thead/errata.c                   |  28 ++
- arch/riscv/include/asm/bugs.h                      |  22 ++
- arch/riscv/include/asm/cpufeature.h                |   2 +
- arch/riscv/include/asm/csr.h                       |  15 +
- arch/riscv/include/asm/errata_list.h               |   3 +-
- arch/riscv/include/asm/futex.h                     |   2 +-
- arch/riscv/include/asm/hwprobe.h                   |   5 +-
- arch/riscv/include/asm/switch_to.h                 |   2 +-
- arch/riscv/include/asm/vector.h                    | 222 +++++++++++----
- arch/riscv/include/asm/vendor_extensions/thead.h   |  47 ++++
- .../include/asm/vendor_extensions/thead_hwprobe.h  |  19 ++
- .../include/asm/vendor_extensions/vendor_hwprobe.h |  37 +++
- arch/riscv/include/uapi/asm/hwprobe.h              |   3 +-
- arch/riscv/include/uapi/asm/vendor/thead.h         |   3 +
- arch/riscv/kernel/Makefile                         |   2 +
- arch/riscv/kernel/bugs.c                           |  60 ++++
- arch/riscv/kernel/cpufeature.c                     |  59 +++-
- arch/riscv/kernel/kernel_mode_vector.c             |   8 +-
- arch/riscv/kernel/process.c                        |   4 +-
- arch/riscv/kernel/signal.c                         |   6 +-
- arch/riscv/kernel/sys_hwprobe.c                    |   5 +
- arch/riscv/kernel/vector.c                         |  26 +-
- arch/riscv/kernel/vendor_extensions.c              |  10 +
- arch/riscv/kernel/vendor_extensions/Makefile       |   2 +
- arch/riscv/kernel/vendor_extensions/thead.c        |  29 ++
- .../riscv/kernel/vendor_extensions/thead_hwprobe.c |  19 ++
- arch/riscv/mm/fault.c                              |  52 ++++
- arch/riscv/mm/init.c                               |   8 +-
- drivers/base/cpu.c                                 |   3 +
- include/linux/cpu.h                                |   1 +
- scripts/selinux/genheaders/genheaders              | Bin 0 -> 90112 bytes
- tools/testing/selftests/riscv/vector/.gitignore    |   3 +-
- tools/testing/selftests/riscv/vector/Makefile      |  17 +-
- .../selftests/riscv/vector/v_exec_initval_nolibc.c |  94 +++++++
- tools/testing/selftests/riscv/vector/v_helpers.c   |  68 +++++
- tools/testing/selftests/riscv/vector/v_helpers.h   |   8 +
- tools/testing/selftests/riscv/vector/v_initval.c   |  22 ++
- .../selftests/riscv/vector/v_initval_nolibc.c      |  68 -----
- .../selftests/riscv/vector/vstate_exec_nolibc.c    |  20 +-
- .../testing/selftests/riscv/vector/vstate_prctl.c  | 305 +++++++++++++--------
- 47 files changed, 1114 insertions(+), 277 deletions(-)
- create mode 100644 arch/riscv/include/asm/bugs.h
- create mode 100644 arch/riscv/include/asm/vendor_extensions/thead.h
- create mode 100644 arch/riscv/include/asm/vendor_extensions/thead_hwprobe.h
- create mode 100644 arch/riscv/include/asm/vendor_extensions/vendor_hwprobe.h
- create mode 100644 arch/riscv/include/uapi/asm/vendor/thead.h
- create mode 100644 arch/riscv/kernel/bugs.c
- create mode 100644 arch/riscv/kernel/vendor_extensions/thead.c
- create mode 100644 arch/riscv/kernel/vendor_extensions/thead_hwprobe.c
- create mode 100755 scripts/selinux/genheaders/genheaders
- create mode 100644 tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
- create mode 100644 tools/testing/selftests/riscv/vector/v_helpers.c
- create mode 100644 tools/testing/selftests/riscv/vector/v_helpers.h
- create mode 100644 tools/testing/selftests/riscv/vector/v_initval.c
- delete mode 100644 tools/testing/selftests/riscv/vector/v_initval_nolibc.c
+-- 
+Kees Cook
