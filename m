@@ -1,81 +1,103 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72412136351
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7791EE7C4;
+	Fri, 31 Jan 2025 17:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738343794; cv=none; b=hM5EM3vDELg+WNF4DdV3XckaoXDyetpoDQ3yh2gWf126cdQTN80gEeuijnWjBrtl9eKpnOzgrMG3mwgPG3BBJFzG61hmHn8qoHOBnmNklqvQfBjhcvPqMkD2dmBhg1MwYADpLPdxRmLCI518QXfr6jZ5gJbvhOZKIHv/76jPPGg=
+	t=1738343866; cv=none; b=SZRVzCQRTKI0XZyhiNsW87jN5Sd08KZrNyySzgCuMGn1zBw0xUt+yjRab1pps5XvzqEJ6GPWSfLYMCLpd5UnMnfr9/wE48Q4f/35lrL+SZlcU6M0N2RU3QP9cCCzkzQy8K0cp4Zwui6nHD5NfhjahA7c5aMCDbG4dtmK/olWckg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738343794; c=relaxed/simple;
-	bh=IJpXKd7iwRYoZffANHjuO9WmlQvJWizra56J/pdegfA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=osZ+3ycPYfZXRyiKh/72hR6ZY7Vvf5h32AXsonbU94+YWe35/KZNDLMa0Ku4cUoRqisOvxNa5NlnUsKJAY0KNByBLlRd0liLaYfVGjLAxvP3PhHf1kCMvZupWMa3amg0M6xECeshP0XW1deqF6TKeyy6jyI0u2PwTpz4qHDcHS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Vt4jj7fU; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Vt4jj7fU"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaeec07b705so367173966b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:16:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1738343791; x=1738948591; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kqSRqdRuMVUS0hR3bXfCSvdzWeHIS96mx4dwh5De168=;
-        b=Vt4jj7fUBJFyOLCUAOxOfXiwNgXuFY6Q0+0QTv81LcG8cTFIqNrdA3c1ZrI2WUjgYC
-         hgipZhXShaTH9CzqvPAOlko6JWk3hdwWhJuPSDgQ82X0XVB+dQAV/yGaxF5PTSszLoZb
-         gZW8e2Nd3To8gCqeaRHdoXBwmelP7wj7rPYnAZc+SJIl3H6o5TCVfh5YACEohsO3mWX2
-         665MBzMXP6VStOKIIQO/zR1bSm3N8h+pMgKDQYpbtNrBkxKfwzBx7uXec8c0e9FKTS3Q
-         r2umxkGhv0kTE61CmmqKmzJKcbAFpa0FWPBRcpVxehhjwOC3gcFGQFO+Ljixn9e5i3L/
-         UNHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738343791; x=1738948591;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kqSRqdRuMVUS0hR3bXfCSvdzWeHIS96mx4dwh5De168=;
-        b=LBNbWwsiX+9Ay4a8qOWPuRDzFLRegUCJTzQVihaywrMk614lEDXa/6rDnu0lv0kxr5
-         NISnZq6vudV+sbDoEtQsedPArYLnuiLLRT/VvlOj7BJ2Jz8On9+q5vkSdEv6Yq+evahJ
-         4VoHSBuqKujyv0DmaF2vWeBR9WOJMlJA9aZEXeugfH2EoQffAsVwJ7hJQ9Ln/rZshbww
-         jWOpNryCStZzIV+lgsDfu4NBMBOF4BYG7oCFY71oRn4PVNKVaDSKfNxNm+7c8Qmk1Nh/
-         6i25URy7D/QoFHi+EXmDbsS4iJ75e1EXx/czZj+SfWixgo6XvmOxEIvRIWEGeTX6plJB
-         7uMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSIgNC9f+PZya0emY4TMKVSJiEaXCfHqRnermIqykpwvZKC3qsPFD1cwqBI8wMjw5R+EQniYKEHs8fNsM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrnUS75qBfwS128VdwwVxS08t85tDsiQmsCsOxayepF2EXrJZn
-	1fjrkfiDmn+YxlFnwHgyLxMGUp114hqF6qCz9TC4bQY+9RlZHQI7k3/OYKlfC3HG+n/GQ6IH2z0
-	gZEV0K1PW3/maE7r/gcGS+GMn4fQvLkudFm+gyw==
-X-Gm-Gg: ASbGncuvB5tH/8l3s/oQ3Hjqm/OiVIRoUbKESub1LYzpA5zqGPmaK98h0JILYhqMwGT
-	ZnoY+E3dTuQc2E6inzvGmxJKQFjZ5V+HetL9ExjH6i5O6GYrHa7eJo7UGZeyo0awZGtLfP3aSm4
-	Bt+IJQV8kbw7vL0LboZsyYE240Zw==
-X-Google-Smtp-Source: AGHT+IFrg/3LHjJ/lnlIA5OZd/lPJwrUoD7pnmT/wTf5Yed08bwxEvL1yRpJsQHHZdHQcPsit+hXF79AJUi6y8BFTXI=
-X-Received: by 2002:a17:907:728c:b0:ab3:64dd:bc89 with SMTP id
- a640c23a62f3a-ab6cfce265fmr1329620366b.20.1738343790697; Fri, 31 Jan 2025
- 09:16:30 -0800 (PST)
+	s=arc-20240116; t=1738343866; c=relaxed/simple;
+	bh=r9CRj9uKB4ij1nf+1B29ONBvdTTVyuZzSsFzAtiGXhQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f+XtHo89D184fcb8Ikq65FHLBX31N5JVVG45Nvgmlu0gneAOjLfXFE2StCGYQua8U3f4qk57gC+ohTlzu8DZ3XDK4qZAB+s+jAPcRsH0YsMVBZVm4YUoNX3riG6AiSRum8xaIj+ZS+RMLJzAl1xHp3RIBRPRVa0r6Qi/+JE1aPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from localhost.localdomain (ip5f5aef17.dynamic.kabel-deutschland.de [95.90.239.23])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 431E761E6479F;
+	Fri, 31 Jan 2025 18:16:55 +0100 (CET)
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: Sathya Prakash <sathya.prakash@broadcom.com>,
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
+	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: Tomas Henzl <thenzl@redhat.com>,
+	MPT-FusionLinux.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: [PATCH] scsi: mpt3sas: Reduce log level of `set ignore_delay_remove for handle(0x%04x)` to info
+Date: Fri, 31 Jan 2025 18:16:40 +0100
+Message-ID: <20250131171640.30721-1-pmenzel@molgen.mpg.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250128133927.3989681-1-max.kellermann@ionos.com>
- <20250128133927.3989681-9-max.kellermann@ionos.com> <794043b6-4008-448e-b241-1390aa91d2ab@gmail.com>
-In-Reply-To: <794043b6-4008-448e-b241-1390aa91d2ab@gmail.com>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Fri, 31 Jan 2025 18:16:19 +0100
-X-Gm-Features: AWEUYZngMvc8L7CbnAKSWZY60DE5_wFqVJVZxAc2vuwSHc9kVxszNfA2g1obggI
-Message-ID: <CAKPOu+-SYVHAWbLgrih338E_wCyOqEqA3cBHXf3qa-Xbx43hgg@mail.gmail.com>
-Subject: Re: [PATCH 8/8] io_uring: skip redundant poll wakeups
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: axboe@kernel.dk, io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 31, 2025 at 2:54=E2=80=AFPM Pavel Begunkov <asml.silence@gmail.=
-com> wrote:
->                                  |     // it's still 0, wake up is lost
+On several systems with Dell HBA controller Linux prints the warning below:
 
-I think I misunderstood how these polling functions in the kernel work
-- thanks for the explanation, Pavel. This one patch is indeed flawed,
-and I'll try to come up with something better.
+    $ dmesg | grep -e "Linux version" -e "DMI: Dell"  -e "ignore_delay_remove"
+    [    0.000000] Linux version 6.12.11.mx64.479 (root@lucy.molgen.mpg.de) (gcc (GCC) 12.3.0, GNU ld (GNU Binutils) 2.41) #1 SMP PREEMPT_DYNAMIC Fri Jan 24 13:30:47 CET 2025
+    [    0.000000] DMI: Dell Inc. PowerEdge R7625/0M7YXP, BIOS 1.10.6 12/06/2024
+    [    9.386551] scsi 0:0:4:0: set ignore_delay_remove for handle(0x0012)
+
+A user does not know, what to do about it, and everything seems to work as
+expected. Therefore, remove the log level from warning to info.
+
+Device information:
+
+    $ dmesg | grep -e 0:4:0 -e '12)'
+    [    8.857606] mpt3sas_cm0: config page(0x00000000db0e4179) - dma(0xfd5f6000): size(512)
+    [    9.133856] scsi 0:0:0:0: SATA: handle(0x0017), sas_addr(0x3c0470e0d40cc20c), phy(12), device_name(0x5000039db8d2284b)
+    [    9.366341] mpt3sas_cm0: handle(0x12) sas_address(0x3c0570e0d40cc208) port_type(0x0)
+    [    9.378867] scsi 0:0:4:0: Enclosure         DP       BP_PSV           7.10 PQ: 0 ANSI: 7
+    [    9.386551] scsi 0:0:4:0: set ignore_delay_remove for handle(0x0012)
+    [    9.387465] scsi 0:0:4:0: SES: handle(0x0012), sas_addr(0x3c0570e0d40cc208), phy(17), device_name(0x3c0570e0d40cc208)
+    [    9.387465] scsi 0:0:4:0: enclosure logical id (0x3c0470e0d4092108), slot(8)
+    [    9.387465] scsi 0:0:4:0: enclosure level(0x0001), connector name( C0  )
+    [    9.390495] scsi 0:0:4:0: qdepth(1), tagged(0), scsi_level(8), cmd_que(0)
+    [    9.401700]  end_device-0:4: add: handle(0x0012), sas_addr(0x3c0570e0d40cc208)
+    [    9.471916] ses 0:0:4:0: Attached Enclosure device
+    [    9.480088] ses 0:0:4:0: Attached scsi generic sg4 type 13
+    $ lspci -nn -k -s 41:
+    41:00.0 Serial Attached SCSI controller [0107]: Broadcom / LSI Fusion-MPT 12GSAS/PCIe Secure SAS38xx [1000:00e6]
+    	DeviceName: SL3 NonRAID
+    	Subsystem: Dell HBA355i Front [1028:200c]
+    	Kernel driver in use: mpt3sas
+
+Fixes: 30158dc9bbc9 ("mpt3sas: Never block the Enclosure device")
+Cc: Tomas Henzl <thenzl@redhat.com>
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+---
+If a more knowledgable person can also improve the log message to be more
+useful for the user, that’d be much appreciated.
+
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+index a456e5ec74d8..9c2d3178f384 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -2703,7 +2703,7 @@ scsih_sdev_configure(struct scsi_device *sdev, struct queue_limits *lim)
+ 		ssp_target = 1;
+ 		if (sas_device->device_info &
+ 				MPI2_SAS_DEVICE_INFO_SEP) {
+-			sdev_printk(KERN_WARNING, sdev,
++			sdev_printk(KERN_INFO, sdev,
+ 			"set ignore_delay_remove for handle(0x%04x)\n",
+ 			sas_device_priv_data->sas_target->handle);
+ 			sas_device_priv_data->ignore_delay_remove = 1;
+-- 
+2.47.2
+
