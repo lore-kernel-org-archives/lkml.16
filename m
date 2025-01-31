@@ -1,64 +1,33 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B14E1B6D14;
-	Fri, 31 Jan 2025 14:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD0E1C8FD6;
+	Fri, 31 Jan 2025 14:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738332361; cv=none; b=DnDFQKUIqc4qeYSbHLCSJff6nCxPfoDKP2NhdLwvBeW0W1/gtIDhTO3GG8jMxHl2QfA1ui8qtyofvU1V8bpB/GuJ7SbgKr1vyTx326lSr7MhGlSq7H1vmHUIgNf/xEXt+vgD5T+vNfR7dpxRLe1MoFi8gDu0qZBe9b3fcqpykak=
+	t=1738332384; cv=none; b=tNDRbpkO0OroWmjFQ9+ZczTdV18exHAoS0o3ZiYhjzFahpZL2Njm0TLhOTfNuYCsp9UvXyOx5b+FZlptH8UPLpt09ehKSfi+CYNRG5ffQ1sEUcz4kPrJoAOQZt5DCNFFzTgHqBXWHKoSVGmT8d/hjrwHK9zGljk06TWrMKDL8L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738332361; c=relaxed/simple;
-	bh=AKhJcbhz9IeNHSLT4dpDp7insuh1ayTEsj8qNLzp5Rc=;
+	s=arc-20240116; t=1738332384; c=relaxed/simple;
+	bh=ZVhc9GGXKoDQwUkZU4ee1bEKLANnQbGOQhzv7lz5wAw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MEnlexMUjLu6wmhu32D7uWVVsuOhw7kQYWXrFe7uL8ldIesIMqBAO3M48iltGzBU3Da+/yMree4lhl6/hrqX6+/Akg7TzLE7lyLDzqsz+LCbgUbch7YhnoBlWazRHdWcwAULjjEnCIlmSbzE25rl9wgWHDUdVNWkKpCbtkRHESI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a8l3nyy+; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=QW7s2QGgxhFRsQgQu/QGB8odqRmw6OGDEnnAVC8nlnbACfnnFHBTBIgU6mCnMTHtsfgsBOOUbcDFF7tiYg7glItCwHYgelTT2C3fk7HZ22YXHWMM3TdfrikcySBlAzfQZoiYua8gTCkZKERegoXen3gG6SNroADJQURjOxsWz54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HKGYPxDn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8l3nyy+"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aa679ad4265so557597366b.0;
-        Fri, 31 Jan 2025 06:05:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738332358; x=1738937158; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z64d2y4NHdd0vk7o+MMO6lu7NEou/L8WkeEtJSuSlfs=;
-        b=a8l3nyy+B9RVn5GD/9UNooUh9wrpEs9SL1p7Jz7eIVYAkpnl3OZ0O2oqZ9a6Afwvmt
-         0e911jKh60FbTvQufjaGL5Lb2gVb5evTyqp7MfEHeSJRHYq4ImrJ5ZA7M8QmS5JjqeFd
-         JI5MR9+QtrvDK1EFccL6+ui57JIohJ1NfGk7Y6ptLmKRFln5XTd7P7rfm7kckS0ZPr6+
-         To5yATl3tZs7V0rNaeh+bavls5ex3BkAj7ghrBjyTtDO7Ungu+orvD/qr+e6dG+qQVDw
-         CU1jdd3shiqriX9JAMIOnVpBf/kLjji0m9ThwJ1Rgerlv0n4rHp+mKpuiRjzWt3xuFY8
-         qWaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738332358; x=1738937158;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z64d2y4NHdd0vk7o+MMO6lu7NEou/L8WkeEtJSuSlfs=;
-        b=ICw0tatFfur/+ghbnbDpdY/be4pIwUndmpITQdgnJxIfrixPaF8tsmXyuj+hDDsPCd
-         P+j3GzgoxN13pePJ9RP6VC4VXv8RS8YpM2uo4lFh07T0RppgW7qrIJHjgViQhTXjCyNY
-         2geNVFMG39UwSMiv0iK6vF7e3EmmL8O8gmSV8PjmGjeHVmirtk8z0CnRoDGXYRySBFth
-         LIqLbPOmkWFNxcm0h8WPsDMFOjLC7UyuTZeWtQjs137n2/VnRljOOr9DCKwCnnDhMVKP
-         94EKT1wPT4R/OamBR8qBQSMs+628septMvOfVD3hxcvzdty2QXgepDba1Xi5OM/rSvZP
-         pfMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWNul5HDTyin4hoSzd/aSh8e4VaGdWK8F49+JqCUiVPMt7QyrDnxS74Iob+U8Ni6DX3Lozqfztxt8SGLEs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4MBIKX/T6kt+EacKdWyaiuU4ELP0AVOD1JGxjrzWiAtBc20xU
-	bYIiz/sfcae0AmU1C8jhyNvHdBhLQ52ergoMzVCKm+r5YaX9sKue
-X-Gm-Gg: ASbGncsoFHmZKl2utJONaZcDupGzbUqV7dEgirurKuUGkEJ5Kk7KK9zPQTC1sOqxtch
-	VtAIgwudUaV1GH+yCXDsSIiXe1Ql/HPwpvlQbUOc8ABUG146FCsRBGz1MgB0aY9Btx49lUaA4uD
-	yVQAEckFicwWu2aVudPvoGvf0Q1eJh8JkEOz/5cw+ngTVTIgF6gn0uo2ZKVSyelilBIPStsi6ov
-	X22cgsxabfrRix4+IZIWrssBdCRFymA+hUGaIR3cy2kdmaXCifT0gzOhsOst/KD40A4tNy+g2u+
-	bMTJl73lyCH1du+OVG2DsK7ociQu058MwFOkOZx61l8M/z2y
-X-Google-Smtp-Source: AGHT+IGg/fxiAcoXZfZsEb9rL7dSaI71QWP8I8UBj92ldxrklztvC0JjhsHk2Yenwl45sS5zpiiUDg==
-X-Received: by 2002:a17:907:9729:b0:ab6:d575:3c4a with SMTP id a640c23a62f3a-ab6e0c2fcb2mr674035466b.9.1738332357767;
-        Fri, 31 Jan 2025 06:05:57 -0800 (PST)
-Received: from ?IPV6:2620:10d:c096:325:77fd:1068:74c8:af87? ([2620:10d:c092:600::1:7071])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a59862sm302799966b.178.2025.01.31.06.05.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 06:05:57 -0800 (PST)
-Message-ID: <274320d4-3031-4ef6-bb57-b45659acf58e@gmail.com>
-Date: Fri, 31 Jan 2025 14:06:12 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HKGYPxDn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EF7C4CED3;
+	Fri, 31 Jan 2025 14:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738332383;
+	bh=ZVhc9GGXKoDQwUkZU4ee1bEKLANnQbGOQhzv7lz5wAw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HKGYPxDnXDLJPJPZZ9C8p84dtk6AYNrIFH2W3cTj/UU4yIdeyTM2uOE+Kfj/BzEI9
+	 LIqGNecyXLlRc+agKNwUuiiZyqcCaSEkRjHyzpsDI6BiQ6PyVAd54sgfsJfHtkGMhB
+	 nRdJxv0yguLjaLTQIabbtXt3h4x1nXr6Q9/k/lWxT/0/sNzICvAqReKIYyR/DqCLa4
+	 xBsl76QO+/soPSKBNWluf9bSq0IPMeoQmXZGlQo9zR5a4wYbD/YpoheVDaZ2se72we
+	 oTSuEyFyoOOAi0A2YDxTeBVQj0Gl0iapItSlzB/JsftkZYRr2PHRrBBSQmb70mCl1F
+	 df/4dHplOiZxA==
+Message-ID: <cc03cfcc-dc00-490c-857a-5da0ae0de811@kernel.org>
+Date: Fri, 31 Jan 2025 15:06:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,58 +35,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/8] io_uring/io-wq: cache work->flags in variable
-To: Jens Axboe <axboe@kernel.dk>, Max Kellermann <max.kellermann@ionos.com>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250128133927.3989681-1-max.kellermann@ionos.com>
- <20250128133927.3989681-5-max.kellermann@ionos.com>
- <856ed55d-b07b-499c-b340-2efa70c73f7a@gmail.com>
- <CAKPOu+-Mfx9q79nin7tGi1Rr4qGGY=y-2OhuP80U=7EtRpfBdg@mail.gmail.com>
- <19750632-1f9d-4075-ac5c-f44fab3690a6@gmail.com>
- <CAKPOu+8_Tivtyh0oj7UEuWPmdw-P96k3qRLvte1F1C9XivjS7A@mail.gmail.com>
- <6fa97ace-362c-425e-a721-5e2a9921fe5c@kernel.dk>
+Subject: Re: [PATCH v5 1/2] dt-bindings: rtc: max31335: Add max31331 support
+To: pavithra.u@analog.com, Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <noname.nuno@gmail.com>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+References: <20250131-add_support_max31331_fix_7-v1-0-d29d5de3d562@analog.com>
+ <20250131-add_support_max31331_fix_7-v1-1-d29d5de3d562@analog.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <6fa97ace-362c-425e-a721-5e2a9921fe5c@kernel.dk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250131-add_support_max31331_fix_7-v1-1-d29d5de3d562@analog.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 1/30/25 14:57, Jens Axboe wrote:
-> On 1/29/25 10:36 PM, Max Kellermann wrote:
->> On Thu, Jan 30, 2025 at 12:41?AM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>> Ok, then it's an architectural problem and needs more serious
->>> reengineering, e.g. of how work items are stored and grabbed
->>
->> Rough unpolished idea: I was thinking about having multiple work
->> lists, each with its own spinlock (separate cache line), and each
->> io-wq thread only uses one of them, while the submitter round-robins
->> through the lists.
+On 31/01/2025 12:52, PavithraUdayakumar-adi via B4 Relay wrote:
+> From: PavithraUdayakumar-adi <pavithra.u@analog.com>
 > 
-> Pending work would certainly need better spreading than just the two
-> classes we have now.
+> Added DT compatible string for MAX31331.
+
+
+In the future, instead of just removing details, correct them, so say
+that these are not compatible because of this and that.
+
 > 
-> One thing to keep in mind is that the design of io-wq is such that it's
-> quite possible to have N work items pending and just a single thread
-> serving all of them. If the io-wq thread doesn't go to sleep, it will
-> keep processing work units. This is done for efficiency reasons, and to
+> Signed-off-by: PavithraUdayakumar-adi <pavithra.u@analog.com>
+> ---
 
-Looking at people complaining about too many iowq tasks, we should be
-limiting the number of them even more aggressively, and maybe scaling
-them down faster if that's a problem.
 
-> avoid a proliferation of io-wq threads when it's not going to be
-> beneficial. This means than when you queue a work item, it's not easy to
-> pick an appropriate io-wq thread upfront, and generally the io-wq thread
-> itself will pick its next work item at the perfect time - when it
-> doesn't have anything else to do, or finished the existing work.
-> 
-> This should be kept in mind for making io-wq scale better.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-People are saying that work stealing is working well with thread
-pools, that might be an option, even though there are some
-differences from userspace thread pools. I also remember Hao was
-trying to do something for iowq a couple of years ago.
-
--- 
-Pavel Begunkov
-
+Best regards,
+Krzysztof
