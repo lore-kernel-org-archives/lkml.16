@@ -1,265 +1,105 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5281F2376;
-	Fri, 31 Jan 2025 18:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808711F238B;
+	Fri, 31 Jan 2025 18:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738347286; cv=none; b=p9VoeVGVw+b/ZIYkRRmUP9X4jc1/FbsnXLheZbPOzp1XVrQw/9C4uiGBHd+FtGVEi1wnTgVZGqtcm3vAOJNfjfttKzY46S1Q54Eg/vXk3v/mzTuqkymI/VJ518eFoE7rRbHPXAlHkVwPic9BAYST5yYHLINjuDulev9lQ2nDGR4=
+	t=1738347289; cv=none; b=TK6WFnO60G33OyGKIZ989tFM23ClDE2DrrF+OyS0+5pNo/GGvGpr3h1nb4sj7qTC48E7FCkqlsb9/Hwj2RPm7mdsKQftZHuQYQWT+DQHlP6Rxi2fXb3FMGKnHHTDF2VMSa6lx95AF2l59c5QLI+gxrP4xMuUS4KjXLP/Lqjw7Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738347286; c=relaxed/simple;
-	bh=eZ1jTHEPx8NJyvwfJFYUNGRG/eF3CWuUwh25NoVujG8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tVHHtoJK4gTgY0fB1XIMhMfb5bphN50AXeDhaxSIEuThHOUJcxder+B60ywGr9OSDRjMhKihUuB1k8S7TGRy9dUNdif77+FrQtON1zAe5taIhMtJJdSjhcnSA/1Sdt9EeuG1V7oy4lz1kt/2zXiwoAf4zg4D+tNQHypfeujbUfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yl3tY5lsXz6K5rB;
-	Sat,  1 Feb 2025 02:13:57 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 10875140520;
-	Sat,  1 Feb 2025 02:14:40 +0800 (CST)
-Received: from localhost (10.195.244.178) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 31 Jan
- 2025 19:14:38 +0100
-Date: Fri, 31 Jan 2025 18:14:37 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Esteban Blanc <eblanc@baylibre.com>
-CC: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
-	<Michael.Hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
-	<nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v3 2/6] iio: adc: ad4030: add driver for ad4030-24
-Message-ID: <20250131181437.00000097@huawei.com>
-In-Reply-To: <20250130-eblanc-ad4630_v1-v3-2-052e8c2d897d@baylibre.com>
-References: <20250130-eblanc-ad4630_v1-v3-0-052e8c2d897d@baylibre.com>
-	<20250130-eblanc-ad4630_v1-v3-2-052e8c2d897d@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738347289; c=relaxed/simple;
+	bh=anQJSzUxW8U+cVQKhUOthp3ugwYG38yHlIVcGOOgMog=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IEpBrdSshpGp1foiVURCsxIoHbNEHuJE0Zo3Gn36IdvpmLEMQaehAT1fxvrlNQq40UaClfCuaUwnpdRFmFWzIErqMPqmM4m5Y+lbvJ8+W0N/a9Jy0za3W4mWRAZaDXQR9UgtppbzEpGctYPCv1H5mQoZRknVqqWEGMp7LVfPq/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OAgRtX8l; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAgRtX8l"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43618283dedso23525565e9.3;
+        Fri, 31 Jan 2025 10:14:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738347286; x=1738952086; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=twg6JYyOJOvZqkdJ76pZB54ODqpgYmfn5BjcDhAkADY=;
+        b=OAgRtX8l8HIAu3YBn277919OkFAM34h8QS6FNVTEA3I0gIpKFMSH8Ztgofp9xj7t0w
+         zZKIJZen6C4jo0zWr6cCd2LKUFEPY0yRFm6EFZ7Zz4hGpPtEqSsaZ1JhaSMD3hn3oTZO
+         bo/W04uLL4YfBcmAzCsMN3witSV5XMraPIxgJHHgbpRvlUo1eSpZ1J3PXDZDSOJTzP0k
+         hvgfm2CUzYC/BYWacAk8g6licCoPOCyXcWUQfLEyMCxRsu97ixyVHYMgal9hh3hGJAS8
+         5BI930pHqhiEpagCJ1g25BXB8LmQkXDdnojN8NwEmRrzGJyz/XIpzDJwEU5R9bjcgbxn
+         v/8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738347286; x=1738952086;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=twg6JYyOJOvZqkdJ76pZB54ODqpgYmfn5BjcDhAkADY=;
+        b=Ro5X2j714MZjrOb/c0jm4UnIJedDnDPCoci8YYVKyGltgwaY2vSavvjvSLqsVuJ8Q2
+         p1oaJnDrPjJqDgR6e2NknIUeGWE9ynlAL7NwPFM0/FeOa83zg+2xJhS0rQRDB/s9FSVa
+         H61semKdfYXyDqh8Q5bMSz4v9S4lb32RYP2AcgYJ2D+jcJb8disB36a4sL7rkvRVFAa4
+         TXvPeGam4/Orl6KoIR2AUGATlZADw0Ybc1pL/7aKHRxeZpZXy06A829r99hKYe32IcWB
+         xqjTDCiVtIvzhbXPggqQ69RRjAtFwmJ6pW9evntDtCbIZnS6PubVgOdESHvIJt8GyNR+
+         JYcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVljZLEux9BJz76i855OoMWy1vNJBalW1obaz7DGhJ1+HZ1Ys+UFGtAMNMTU2cURrMpdYpnFXa9rftrzHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9VhTZuEPzugKG/axvL9FKRGDU1sjo3rfHUngEviVpelckjz/S
+	+8iHCPT5c55h7aE+LYFzXZZuVOfPDSPLeUnZhIl5s7uGU7Uvtq9jKPvBGA==
+X-Gm-Gg: ASbGncvMJ80okyCcJFyNkZHLyezCg9znTRk20nJqZxwYo0sBD6tF82SknQzlPpn3SRf
+	NQ+4Y4/y3UICZVWffrsDhNi/LAmxSl56nfqdDbcNaoyyfuzqzWJ5m/N5VWGqlesHjrNgSg5S9NJ
+	Jg4/AoSYP8nqscoIcZEmT8KTtzPESXUEiwJULW4Z4+j/RIKgdtUin+L1asyuPdshPbals6w4rdg
+	+ck/+zEfAnvqcLJQMeNml9dRq/LJQgDX3XaCCbkNnWyf+FXnaerfPJ3LTZxsYqC0bIxyYBK3Spl
+	sGEA2RDoWfuTs/tEszLTlfN7ag==
+X-Google-Smtp-Source: AGHT+IEw+rB47H+JGUnXWRHPlt11RrbhPObbqox/RfcPbzWKlRuSASebdO/RGrFLq8bDubxgz4Oweg==
+X-Received: by 2002:a05:600c:ccc:b0:435:14d:f61a with SMTP id 5b1f17b1804b1-438dc420083mr95909595e9.25.1738347285415;
+        Fri, 31 Jan 2025 10:14:45 -0800 (PST)
+Received: from localhost.localdomain ([94.112.167.15])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc265c0sm97911025e9.10.2025.01.31.10.14.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 10:14:44 -0800 (PST)
+From: Ilya Dryomov <idryomov@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: ceph-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Ceph fixes for 6.14-rc1
+Date: Fri, 31 Jan 2025 19:14:22 +0100
+Message-ID: <20250131181425.3962976-1-idryomov@gmail.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Thu, 30 Jan 2025 12:08:26 +0100
-Esteban Blanc <eblanc@baylibre.com> wrote:
+Hi Linus,
 
-> This adds a new driver for the Analog Devices INC. AD4030-24 ADC.
-> 
-> The driver implements basic support for the AD4030-24 1 channel
-> differential ADC with hardware gain and offset control.
-> 
-> Signed-off-by: Esteban Blanc <eblanc@baylibre.com>
-Hi Esteban,
+The following changes since commit 5bc55a333a2f7316b58edc7573e8e893f7acb532:
 
-Just one thing in here that actually matters. Question about scaling of
-the common channel.  The others I could tidy up whilst applying if
-nothing much else comes up.
+  Linux 6.13-rc7 (2025-01-12 14:37:56 -0800)
 
-Jonathan
+are available in the Git repository at:
 
+  https://github.com/ceph/ceph-client.git tags/ceph-for-6.14-rc1
 
-> diff --git a/drivers/iio/adc/ad4030.c b/drivers/iio/adc/ad4030.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..e06424b7f2590d28a57943949b070cd7e185fbb7
-> --- /dev/null
+for you to fetch changes up to 3981be13ec1baf811bfb93ed6a98bafc85cdeab1:
 
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/iio/triggered_buffer.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/unaligned.h>
-> +#include <linux/units.h>
-> +
-> +#define AD4030_REG_INTERFACE_CONFIG_A			0x00
-> +#define     AD4030_REG_INTERFACE_CONFIG_A_SW_RESET	(BIT(0) | BIT(7))
-> +#define AD4030_REG_INTERFACE_CONFIG_B			0x01
-> +#define AD4030_REG_DEVICE_CONFIG			0x02
-> +#define AD4030_REG_CHIP_TYPE				0x03
-> +#define AD4030_REG_PRODUCT_ID_L				0x04
-> +#define AD4030_REG_PRODUCT_ID_H				0x05
-> +#define AD4030_REG_CHIP_GRADE				0x06
-> +#define     AD4030_REG_CHIP_GRADE_AD4030_24_GRADE	0x10
-> +#define     AD4030_REG_CHIP_GRADE_MASK_CHIP_GRADE	GENMASK(7, 3)
-> +#define AD4030_REG_SCRATCH_PAD			0x0A
-> +#define AD4030_REG_SPI_REVISION			0x0B
-> +#define AD4030_REG_VENDOR_L			0x0C
-> +#define AD4030_REG_VENDOR_H			0x0D
-> +#define AD4030_REG_STREAM_MODE			0x0E
-> +#define AD4030_REG_INTERFACE_CONFIG_C		0x10
-> +#define AD4030_REG_INTERFACE_STATUS_A		0x11
-> +#define AD4030_REG_EXIT_CFG_MODE		0x14
-> +#define     AD4030_REG_EXIT_CFG_MODE_EXIT_MSK	BIT(0)
-> +#define AD4030_REG_AVG				0x15
-> +#define     AD4030_REG_AVG_MASK_AVG_SYNC	BIT(7)
-> +#define     AD4030_REG_AVG_MASK_AVG_VAL		GENMASK(4, 0)
-> +#define AD4030_REG_OFFSET_X0_0			0x16
-> +#define AD4030_REG_OFFSET_X0_1			0x17
-> +#define AD4030_REG_OFFSET_X0_2			0x18
-> +#define AD4030_REG_OFFSET_X1_0			0x19
-> +#define AD4030_REG_OFFSET_X1_1			0x1A
-> +#define AD4030_REG_OFFSET_X1_2			0x1B
-> +#define     AD4030_REG_OFFSET_BYTES_NB		3
-> +#define     AD4030_REG_OFFSET_CHAN(ch)		(AD4030_REG_OFFSET_X0_2 + \
-> +						(AD4030_REG_OFFSET_BYTES_NB * \
-> +						(ch)))
-Similar to below. I'd put the implementation on a new linle.
+  ceph: exchange hardcoded value on NAME_MAX (2025-01-27 16:07:42 +0100)
 
-> +#define AD4030_REG_GAIN_X0_LSB			0x1C
-> +#define AD4030_REG_GAIN_X0_MSB			0x1D
-> +#define AD4030_REG_GAIN_X1_LSB			0x1E
-> +#define AD4030_REG_GAIN_X1_MSB			0x1F
-> +#define     AD4030_REG_GAIN_MAX_GAIN		1999970
-> +#define     AD4030_REG_GAIN_BYTES_NB		2
-> +#define     AD4030_REG_GAIN_CHAN(ch)		(AD4030_REG_GAIN_X0_MSB + \
-> +						(AD4030_REG_GAIN_BYTES_NB * \
-> +						(ch)))
-#define     AD4030_REG_GAIN_CHAN(ch)		\
-	(AD4030_REG_GAIN_X0_MSB + (AD4030_REG_GAIN_BYTES_NB * (ch)))
+----------------------------------------------------------------
+A fix for a memory leak from Antoine (marked for stable) and two
+cleanups from Liang and Slava, all in CephFS.
 
-Is perhaps more readable?
+----------------------------------------------------------------
+Antoine Viallon (1):
+      ceph: fix memory leak in ceph_mds_auth_match()
 
+Liang Jie (1):
+      ceph: streamline request head structures in MDS client
 
-> +enum ad4030_out_mode {
-> +	AD4030_OUT_DATA_MD_DIFF,
-> +	AD4030_OUT_DATA_MD_16_DIFF_8_COM,
-> +	AD4030_OUT_DATA_MD_24_DIFF_8_COM,
-> +	AD4030_OUT_DATA_MD_30_AVERAGED_DIFF,
-> +	AD4030_OUT_DATA_MD_32_PATTERN
+Viacheslav Dubeyko (1):
+      ceph: exchange hardcoded value on NAME_MAX
 
-Trivial but add a trailing comma.   It's not obviously a terminating
-entry so even though we know there won't be other values convention is
-to have the comma.
-
-> +};
->
-> +
-> +static int ad4030_get_chan_scale(struct iio_dev *indio_dev,
-> +				 struct iio_chan_spec const *chan,
-> +				 int *val,
-> +				 int *val2)
-> +{
-> +	struct ad4030_state *st = iio_priv(indio_dev);
-> +
-> +	if (chan->differential) {
-> +		*val = (st->vref_uv * 2) / MILLI;
-> +		*val2 = st->chip->precision_bits;
-> +		return IIO_VAL_FRACTIONAL_LOG2;
-> +	}
-> +
-> +	*val = st->vref_uv / 256;
-
-This is a bit non obvious.
-A comment on this scaling might be good to have.
-Particularly the lack of / MILLI
-(I think that's a bug?)
-
-> +	return IIO_VAL_INT;
-> +}
-
-
-
-
-> +static int ad4030_buffer_preenable(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4030_state *st = iio_priv(indio_dev);
-
-0-day noticed this is not used.
-
-> +	int ret;
-
-This doesn't do anything useful either.
-
-> +
-> +	ret = ad4030_set_mode(indio_dev, *indio_dev->active_scan_mask);
-> +	if (ret)
-> +		return ret;
-
-	return ad4030_set_mode();
-
-> +
-> +	return 0;
-> +}
-
-> +
-> +static int ad4030_regulators_get(struct ad4030_state *st)
-> +{
-> +	struct device *dev = &st->spi->dev;
-> +	static const char * const ids[] = { "vdd-5v", "vdd-1v8" };
-> +	int ret;
-> +
-> +	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(ids), ids);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to enable regulators\n");
-> +
-> +	st->vio_uv = devm_regulator_get_enable_read_voltage(dev, "vio");
-> +	if (st->vio_uv < 0)
-> +		return dev_err_probe(dev, st->vio_uv,
-> +				     "Failed to enable and read vio voltage\n");
-> +
-> +	st->vref_uv = devm_regulator_get_enable_read_voltage(dev, "ref");
-> +	if (st->vref_uv < 0) {
-> +		if (st->vref_uv != -ENODEV)
-> +			return dev_err_probe(dev, st->vref_uv,
-> +					     "Failed to read ref voltage\n");
-> +
-> +		/* if not using optional REF, the internal REFIN must be used */
-> +		st->vref_uv = devm_regulator_get_enable_read_voltage(dev,
-> +								     "refin");
-
-If refin is internal. How are we reading it's voltage?
-
-Ah. It's not. It's just buffered.  Drop 'internal' above and this is fine.
-
-
-> +		if (st->vref_uv < 0)
-> +			return dev_err_probe(dev, st->vref_uv,
-> +					     "Failed to read refin voltage\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad4030_reset(struct ad4030_state *st)
-> +{
-> +	struct device *dev = &st->spi->dev;
-> +	struct gpio_desc *reset;
-> +	int ret;
-> +
-> +	reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(reset))
-> +		return dev_err_probe(dev, PTR_ERR(reset),
-> +				     "Failed to get reset GPIO\n");
-> +
-> +	if (reset) {
-> +		ndelay(50);
-> +		gpiod_set_value_cansleep(reset, 0);
-Could make trivial change to
-		return 0;
-	}
-
-	return regmap_write()
-
-> +	} else {
-> +		ret = regmap_write(st->regmap, AD4030_REG_INTERFACE_CONFIG_A,
-> +				   AD4030_REG_INTERFACE_CONFIG_A_SW_RESET);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
+ fs/ceph/debugfs.c            |  2 +-
+ fs/ceph/mds_client.c         | 32 ++++++++++++++++----------------
+ include/linux/ceph/ceph_fs.h | 14 --------------
+ 3 files changed, 17 insertions(+), 31 deletions(-)
