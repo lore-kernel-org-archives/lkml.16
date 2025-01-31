@@ -1,229 +1,84 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570F71A4F0A
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 22:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE894EED8;
+	Fri, 31 Jan 2025 22:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738363822; cv=none; b=Sznbz8KcLEr0MD2bGALtswVTphORk92jJQq4C34rb94ePPpkVmaTrzg/8TYxsMsc0p3oBweQ9wS+rIE9Uhcse8MD55WhGKieu5X/Rbi79yrW2jeFZfQ6SFTtVTwXXr+OT/SHw0N9VPEYgz67JFooTytAUUTOcDRCRcHMQykTynU=
+	t=1738363880; cv=none; b=eqwNB1hR7djLCAGResVNPf7QNmokmvxQ0NjrR41yAMZbM7GajKn7KWtJNvwAFkpx0k6zLKNtAKeH/NWUeGtZW+Vvs3K9Pb4W8Jfp3mRxh5WEJbpozV5jh23joTmpWzJWjGXd5/wk6aDoOVs+F20EU6Sr80hqQ7LOjyNLec06Tns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738363822; c=relaxed/simple;
-	bh=aeAIsLBBZ8s5g2/D072rZCgg2rjpiehI/S1+NknrUS4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PMQy7S2uAE44O4jDyTLaDypL+QecedA2c4j+Z89iD84/OHdfj332zfl5+pcddrEDH4KYFt4ykbyc1vi/pq1Zd9DkqBa5Wt8WMglT16MwuqSi6itpzNIqE+q1ku/MBij1ZVeg1QmZl1LS8AxoegD8cf2XjO/gpT4PjmV924YjqsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3cffc8affa1so15578515ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 14:50:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738363819; x=1738968619;
-        h=content-transfer-encoding:to:from:subject:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gsqHjDjVi6C1YGxz/YdXtxrZCgAyQICEPHDU7pf+lds=;
-        b=rD11KjEekmHbddET2x6ptqgjjZpiz+gXTgbFhIh4XGwmeREExK9nx33wXq279a6nwR
-         i2ttsbmftsI6tUUWezxGXNyOcJqA6vIgzgDSwPbJp24qLJIdnJjvJ4nOhDs4nDlhz4yz
-         cpIMgYt8NdqTH15mLggZol0dglU8kMIMnXMos9292dtoNsypPyIoL0/YA1q2FcyGokMQ
-         Xdy4k2ShL2qLQqRgN1jZf+pe4Yol7JRsfmXD7sGZGnvqQJb79PRaJMGdgdrmlFheIGiR
-         p5RDUPSjnyKYee9ByesIN5yZICkFU+cYItaR3XIHChxLgfwy0WcKs/O4TWs0DzCtTwKz
-         Pd1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXM/6l+JhX0zOQeje/0VgaxEBttrV5rSK59flqxT8sSumG4BOFMPc12FDi9zo1CwybUJk0VfVh1FKecmOk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDz/RwK8gMu5na3FiJ+x3w5Y6BtVeCVS43nsb15b0NBaLVoAg+
-	pgLyLFmaXnhOK94ELOM/DgfsZkfkHHu7E0PF7U0Y6eohfIoFr2v04nuskSeb7fQdDlqy5eQ+J2E
-	PFqK31pp+fsyJIZLkDfEP+ZPbmSeNc5huWS0UtbvNSunvOcxduMVX3wU=
-X-Google-Smtp-Source: AGHT+IHKEkpHD4WJFMxu/E9qd/wERDt9ZnPEBM88yjdbiJ2W4dXkvf/4/gvgBidOoam+irlu/FdZ007ELWBno5V5mZ/khOWYg0LF
+	s=arc-20240116; t=1738363880; c=relaxed/simple;
+	bh=jOa95FFfZufHLOW8WJbM+fip1bYLf0qW6B7+kDD67no=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OpzMl8T8MXGAeEkPD3ZcjX/Q/CpbZAp++9y9orlQ6LKAQ4sVI/Y82fjfx1v/9JWH9cp1NKbqN3iMsb/baf2Qn6WRYlmDlVmMAqtWfIVblKjrNlmbXCsVdHyl5R7LiXNLv+LgNpyRjl00monWTER5YVEoret1h0N5ejLfhzdMVrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iZZ33WyO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZZ33WyO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB85AC4CED1;
+	Fri, 31 Jan 2025 22:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738363880;
+	bh=jOa95FFfZufHLOW8WJbM+fip1bYLf0qW6B7+kDD67no=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iZZ33WyOAZqpaeYP1D15OzwWQpAErvGZJ/nqGfRhxvwn8/um93D62FhYlghB0WB/j
+	 2OG0TSnqgMyKeqMBmFVdl4EjpM/jUwqNEDUQu+k2ZTq+PZFPxCwidGZiuvYKQ/9PkT
+	 N0MrEz8OihYE7OPEMN2Mx46ndW80LflPIyY6nIJqmtfaCKj+OqS+TXajOhLBl0VoCP
+	 Vt4+7cDvKL0OP2B1iR9FlGk2uk9ZC0BJHA4qco06W1fUnvxDw3L0hDK6FtcEmQiGke
+	 NfMJMTDO2cDiPZhjPROisL3Mrwj9gUcaiaInenNAli+LHts5cLQVveHrizq7XoJnv4
+	 TecgnBtkx+vCA==
+Date: Fri, 31 Jan 2025 14:51:18 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] Tracing contention lock owner call stack
+Message-ID: <Z51T5tNkGGbiXZCi@google.com>
+References: <20250130052510.860318-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:338a:b0:3cf:fbe8:aa1a with SMTP id
- e9e14a558f8ab-3cffe3a6878mr121573425ab.7.1738363819424; Fri, 31 Jan 2025
- 14:50:19 -0800 (PST)
-Date: Fri, 31 Jan 2025 14:50:19 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <679d53ab.050a0220.163cdc.0012.GAE@google.com>
-Subject: [syzbot] [wireless?] WARNING in ADDR
-From: syzbot <syzbot+652bceddc8ff90c594ad@syzkaller.appspotmail.com>
-To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250130052510.860318-1-ctshao@google.com>
 
 Hello,
 
-syzbot found the following issue on:
+On Wed, Jan 29, 2025 at 09:21:34PM -0800, Chun-Tse Shao wrote:
+> 
+> v4: Edit based on Namhyung's review.
+> 
+> v3: Edit based on Namhyung's review.
+> 
+> v2: Fix logic deficit in patch 2/4.
 
-HEAD commit:    805ba04cb7cc Merge tag 'mips_6.14' of git://git.kernel.org.=
-.
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D102805f8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3D2ae8afe424ee551=
-e
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D652bceddc8ff90c59=
-4ad
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Deb=
-ian) 2.40
+This change log doesn't give any meaningful info.  You'd better say what
+exactly you changed.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Thanks,
+Namhyung
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7fe=
-b34a89c2a/non_bootable_disk-805ba04c.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f9b9a1354470/vmlinux-=
-805ba04c.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6c77f51f864a/bzI=
-mage-805ba04c.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit=
-:
-Reported-by: syzbot+652bceddc8ff90c594ad@syzkaller.appspotmail.com
-
-Jan 27 22:47:14 syzkaller kern.notice kernel: [   71.133063][   T39] audit:=
- type=3D1400 audit(1738018034.313:3483): avc:  denied  { read } for  pid=3D=
-5336 comm=3D"syslogd" name=3D"log" dev=3D"sda1" ino=3D1915 scontext=3Dsyste=
-m_u:system_r:syslogd_t tcontext=3Dsystem_u:object_r:var_t tclas[   71.51912=
-8][    C2] ------------[ cut here ]------------
-s=3D[   71.521211][    C2] WARNING: CPU: 2 PID: 1418 at net/mac80211/tx.c:5=
-040 __ieee80211_beacon_update_cntdwn net/mac80211/tx.c:5040 [inline]
-s=3D[   71.521211][    C2] WARNING: CPU: 2 PID: 1418 at net/mac80211/tx.c:5=
-040 __ieee80211_beacon_update_cntdwn net/mac80211/tx.c:5035 [inline]
-s=3D[   71.521211][    C2] WARNING: CPU: 2 PID: 1418 at net/mac80211/tx.c:5=
-040 __ieee80211_beacon_get+0x14ac/0x16b0 net/mac80211/tx.c:5469
-
-Jan 27 22:47:14 [   71.555288][    C2] FS:  0000000000000000(0000) GS:ffff8=
-8806a800000(0000) knlGS:0000000000000000
-syzkaller kern.n[   71.558416][    C2] CS:  0010 DS: 0000 ES: 0000 CR0: 000=
-0000080050033
-otice kernel: [ [   71.560778][    C2] CR2: 00007f188c918f98 CR3: 000000000=
-df80000 CR4: 0000000000352ef0
-  71.183083][   [   71.563537][    C2] DR0: 0000000000000000 DR1: 000000000=
-0000000 DR2: 0000000000000000
-T39] audit: type[   71.566318][    C2] DR3: 0000000000000000 DR6: 00000000f=
-ffe0ff0 DR7: 0000000000000400
-=3D1400 audit(1738[   71.569117][    C2] Call Trace:
-018034.323:3484)[   71.570531][    C2]  <IRQ>
-: avc:  denied  [   71.571844][    C2]  ? __warn+0xea/0x3c0 kernel/panic.c:=
-746
-{ create } for  [   71.573494][    C2]  ? __ieee80211_beacon_update_cntdwn =
-net/mac80211/tx.c:5040 [inline]
-{ create } for  [   71.573494][    C2]  ? __ieee80211_beacon_update_cntdwn =
-net/mac80211/tx.c:5035 [inline]
-{ create } for  [   71.573494][    C2]  ? __ieee80211_beacon_get+0x14ac/0x1=
-6b0 net/mac80211/tx.c:5469
-pid=3D7155 comm=3D"s[   71.575627][    C2]  ? __report_bug lib/bug.c:199 [i=
-nline]
-pid=3D7155 comm=3D"s[   71.575627][    C2]  ? report_bug+0x3c0/0x580 lib/bu=
-g.c:219
-yz.0.427" sconte[   71.577454][    C2]  ? handle_bug+0x54/0xa0 arch/x86/ker=
-nel/traps.c:285
-xt=3Droot:sysadm_r[   71.579210][    C2]  ? exc_invalid_op+0x17/0x50 arch/x=
-86/kernel/traps.c:309
-:sysadm_t tconte[   71.581290][    C2]  ? asm_exc_invalid_op+0x1a/0x20 arch=
-/x86/include/asm/idtentry.h:621
-xt=3Droot:sysadm_r[   71.583223][    C2]  ? __ieee80211_beacon_update_cntdw=
-n net/mac80211/tx.c:5040 [inline]
-xt=3Droot:sysadm_r[   71.583223][    C2]  ? __ieee80211_beacon_get+0xb32/0x=
-16b0 net/mac80211/tx.c:5469
-:sysadm_t tclass[   71.585319][    C2]  ? __ieee80211_beacon_update_cntdwn =
-net/mac80211/tx.c:5040 [inline]
-:sysadm_t tclass[   71.585319][    C2]  ? __ieee80211_beacon_update_cntdwn =
-net/mac80211/tx.c:5035 [inline]
-:sysadm_t tclass[   71.585319][    C2]  ? __ieee80211_beacon_get+0x14ab/0x1=
-6b0 net/mac80211/tx.c:5469
-=3Dnetlink_netfilt[   71.587451][    C2]  ? __ieee80211_beacon_update_cntdw=
-n net/mac80211/tx.c:5040 [inline]
-=3Dnetlink_netfilt[   71.587451][    C2]  ? __ieee80211_beacon_update_cntdw=
-n net/mac80211/tx.c:5035 [inline]
-=3Dnetlink_netfilt[   71.587451][    C2]  ? __ieee80211_beacon_get+0x14ac/0=
-x16b0 net/mac80211/tx.c:5469
-er_socket permis[   71.589588][    C2]  ? __ieee80211_beacon_update_cntdwn =
-net/mac80211/tx.c:5040 [inline]
-er_socket permis[   71.589588][    C2]  ? __ieee80211_beacon_update_cntdwn =
-net/mac80211/tx.c:5035 [inline]
-er_socket permis[   71.589588][    C2]  ? __ieee80211_beacon_get+0x14ab/0x1=
-6b0 net/mac80211/tx.c:5469
-si[   71.591735][    C2]  ieee80211_beacon_get_tim+0xa7/0x280 net/mac80211/=
-tx.c:5596
-
-Jan 27 22:47:14 [   71.614223][    C2]  ? __pfx___hrtimer_run_queues+0x10/0=
-x10 include/trace/events/timer.h:222
-syzkaller kern.n[   71.619260][    C2]  handle_softirqs+0x213/0x8f0 kernel/=
-softirq.c:561
-otice kernel: [ [   71.621158][    C2]  ? __pfx_handle_softirqs+0x10/0x10 i=
-nclude/trace/events/irq.h:156
-  71.206999][   [   71.623160][    C2]  ? rcu_lock_release include/linux/rc=
-update.h:347 [inline]
-  71.206999][   [   71.623160][    C2]  ? rcu_read_unlock_bh include/linux/=
-rcupdate.h:917 [inline]
-  71.206999][   [   71.623160][    C2]  ? __dev_queue_xmit+0x89b/0x43e0 net=
-/core/dev.c:4611
-T39] audit: type[   71.625157][    C2]  do_softirq kernel/softirq.c:462 [in=
-line]
-T39] audit: type[   71.625157][    C2]  do_softirq+0xb2/0xf0 kernel/softirq=
-.c:449
-=3D1400 audit(1738[   71.626849][    C2]  </IRQ>
-018034.323:3485)[   71.628241][    C2]  <TASK>
-: avc:  denied  [   71.629591][    C2]  __local_bh_enable_ip+0x100/0x120 ke=
-rnel/softirq.c:389
-{ read } for  pi[   71.631612][    C2]  ? rcu_lock_release include/linux/rc=
-update.h:347 [inline]
-{ read } for  pi[   71.631612][    C2]  ? rcu_read_unlock_bh include/linux/=
-rcupdate.h:917 [inline]
-{ read } for  pi[   71.631612][    C2]  ? __dev_queue_xmit+0x89b/0x43e0 net=
-/core/dev.c:4611
-d=3D5336 comm=3D"sys[   71.633591][    C2]  local_bh_enable include/linux/b=
-ottom_half.h:33 [inline]
-d=3D5336 comm=3D"sys[   71.633591][    C2]  rcu_read_unlock_bh include/linu=
-x/rcupdate.h:919 [inline]
-d=3D5336 comm=3D"sys[   71.633591][    C2]  __dev_queue_xmit+0x8b0/0x43e0 n=
-et/core/dev.c:4611
-logd" name=3D"log"[   71.635522][    C2]  ? __pfx___dev_queue_xmit+0x10/0x1=
-0 include/linux/netdevice.h:3825
- dev=3D"sda1" ino=3D[   71.637626][    C2]  ? __pfx___lock_acquire+0x10/0x1=
-0 kernel/locking/lockdep.c:4389
-1915 scontext=3Dsy[   71.639638][    C2]  ? __pfx___lock_acquire+0x10/0x10 =
-kernel/locking/lockdep.c:4389
-stem_u:system_r:[   71.641634][    C2]  ? lock_acquire.part.0+0x11b/0x380 k=
-ernel/locking/lockdep.c:5851
-syslogd_t tconte[   71.643650][    C2]  ? find_held_lock+0x2d/0x110 kernel/=
-locking/lockdep.c:5341
-xt=3Dsystem_u:obje[   71.645540][    C2]  ? find_held_lock+0x2d/0x110 kerne=
-l/locking/lockdep.c:5341
-ct_r:var_t tclas[   71.647398][    C2]  ? spin_unlock_irq include/linux/spi=
-nlock.h:401 [inline]
-ct_r:var_t tclas[   71.647398][    C2]  ? tx+0xa8/0x190 drivers/block/aoe/a=
-oenet.c:60
-s=3D
-Jan 27 22:47:14 [   71.658874][    C2]  ? __pfx_kthread+0x10/0x10 arch/x86/=
-include/asm/bitops.h:206
-syzkaller kern.n[   71.669505][    C2]  ? __pfx_kthread+0x10/0x10 arch/x86/=
-include/asm/bitops.h:206
-otice kernel: [ [   71.671354][    C2]  ret_from_fork_asm+0x1a/0x30 arch/x8=
-6/entry/entry_64.S:244
-  71.238225][   [   71.673261][    C2]  </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> 
+> Chun-Tse Shao (5):
+>   perf lock: Add bpf maps for owner stack tracing
+>   perf lock: Retrieve owner callstack in bpf program
+>   perf lock: Make rb_tree helper functions generic
+>   perf lock: Report owner stack in usermode
+>   perf lock: Update documentation for -o option in contention mode
+> 
+>  tools/perf/builtin-lock.c                     |  59 +++-
+>  tools/perf/util/bpf_lock_contention.c         |  68 ++++-
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  | 281 +++++++++++++++++-
+>  tools/perf/util/bpf_skel/lock_data.h          |   7 +
+>  tools/perf/util/lock-contention.h             |   7 +
+>  5 files changed, 405 insertions(+), 17 deletions(-)
+> 
+> --
+> 2.48.1.362.g079036d154-goog
+> 
