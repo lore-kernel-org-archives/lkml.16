@@ -1,68 +1,68 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CABA18CC1D
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C25192B66
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738314458; cv=none; b=DUcgCxI++hIl+QBKnv7PRN49vOA+iOFd5EnegrA5pNq43tbdY6Zcd5m32WWcmAdkdUYOnIXJNaKQx7BJ2W2uW8huVZDr62u1a+hj9kJO7jZ0c8qw3+ehW2peeEQG2SyfxfTpdj9+xEP89pbhdsEtvgeRaS+aetl7oaT63s7AH0g=
+	t=1738314464; cv=none; b=k6kBb4ZEOUgChTrMZa8bREcMmhiUpmlJjh77pRGGrPhuixHUXNHBcZ3tUWS1xiINnN9QK5R0HP6aJZI0pLlHQpvuLNJWhZEJjFg5Grx/CMBa+/y08W8xz0/TpF1D/Lgz9o3OZ3RaB96RoQ+NR8BPtp06e2/WBGdnrRwpty+iIxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738314458; c=relaxed/simple;
-	bh=eYElRTtxdEwu20akPtpsJLzQq/4V058HHKoMVhHbTXs=;
+	s=arc-20240116; t=1738314464; c=relaxed/simple;
+	bh=7ZGwiL1tXOX3hLxvsu4O7FCgVEDZyaXHlMHsK+0BEyU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qPVEAqWin8s2vprXiJrhgOYXjSri55RV4IA0SG3IWvQOEeqRXxzjXEpK3PpXdPAe5bPTB8hYZfZhukkIHJkBl+/ylkhe46w3xZ7TRVXwJy6dAecg0OS8R6HKVOhtKC/9JK6JZEUH1tGSvcRnYL3Z1krykPk0YvPCFe3ge9gr/F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PTQnPOlq; arc=none smtp.client-ip=209.85.214.180
+	 MIME-Version; b=BrRt3QF+DD3/kJq8ZqfTsGWKDh1PWUNa3ncVfenJnL8h9eBnX5sNWgRV36wlfu5W/D+6Ej2A7wG7tUM1LWwxDYzhoMv6fFhEkUxy4dvBaT9O9+7E//iwh2FmCPeVqONdm1awvtQnsBGtzCuRwtKKt2V77y1gPux3Z5AvveGC4Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HljfGqT5; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PTQnPOlq"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-216728b1836so30036365ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:07:36 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HljfGqT5"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ee397a82f6so2987389a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:07:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738314456; x=1738919256; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1738314461; x=1738919261; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oU99tlqEx3VP4Fr6vsoC6pVJUm4rK42GNNjPkPWz9Uo=;
-        b=PTQnPOlqcWCNfBZv51PKRvkCzMlxlWHY6N4F8+NMBHlbBwjGxyaoD5GClzy4XQF+1Z
-         AzWkOrKfQ8SuSTHb+0ixKmIYZ+LzBuPnyg2tv16ae90CjPrLtK1vwb8/1bcOaisoK6o7
-         4RI02xKaeQupOQJuBNGMVBaVmtsLc7gGFqs6Q=
+        bh=i68glYQZ+E+noE0wy+Y9J0JFMp7tHf3uQmMwsu8iKww=;
+        b=HljfGqT5fzaLszMgCsh75lva2gI5nxQnvLyZYY2NIP6wleqxZGrxqPfmZ4JjOBnZY0
+         wShkjQy0m8F8mtXu/BBkDl63pHQRe14gu3SsJd97SsJhKrvxfB+qINyMJxWFR0TWLb7w
+         SyPyjwz+VAVFHGDcpk57UnV5m7s+j2Kl3lh6s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738314456; x=1738919256;
+        d=1e100.net; s=20230601; t=1738314461; x=1738919261;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oU99tlqEx3VP4Fr6vsoC6pVJUm4rK42GNNjPkPWz9Uo=;
-        b=N4jdKliq/MgUxo+kaefTUZ30RS6oRCep0DQ0HYmM4sAN/ivvh9ZcXpPDVDzqUW/o7L
-         A0zac4wYJYnoYagi2OSbMi03686GUrgc/jVnpnLJ5Ff9QMnv8py4g4RCEVjBmOGAH27h
-         vyy33pEUF2Wrc8QZ9husoPvuvjh+5LWVjeYPWvSJmza6GdW2boxJfK17PnP51zcy8AcK
-         0trqTzuiGl6F57uC7m58zueKXONlJuVK3im+CmW3ohRM0t+PukVZ1vy8bgmCoKawwIOB
-         fyaGWgDR/gYmFcVkHS3xNKvvCYH3EtB33QcNYg4E4YACn4tUIZFCpQgk5yJ5FKqP9RP6
-         E0Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCXxkzxMrToFlBU21ZKCuCUNV2fm6797AaSJm8oBjh6yO1tsTCGE6zQOfjPAbGLS35MwE16w9wg3KZ1mgEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE4FFexM5h5yd8ZgyLI9cTEQtvq7JzGEez96gND8Y++Gh75Rs6
-	dQDQ8hVg+gt1Bmu7RYRzrf6hFFgfyn5dIqOrFCJdzr13wtl8Ejm/mDpCOvaoxQ==
-X-Gm-Gg: ASbGnctVoK2IofbUXdN6AKhBRS3kSzaL31SH4/wf5vbq3wgU6YAm3ySrsz50SynTYr1
-	KqanYSN2h1OkdY2ZOjhmbbl286i/kA0UUDMmDks+Bl9INUnclPXowRm0LVTvZn9Iz+Pvv21au1k
-	jzkisdkwRuVEfOACqWr8cH9QPUv3e7Qu94OZxH9zDQLgZRpGtYSk7D+HwZO8nSUFSXC0ItZRFzj
-	oRMuyUBc2tJU4zYkUt/hmYNxdBEec3BB6NxiPuU8eWzezSxLXDAOdz0RxQFsTN0WrdLDInoaGLx
-	S064kMCc5O9X7rHNcQ==
-X-Google-Smtp-Source: AGHT+IGQyeOJINoq+3olFAJs8BwSF3tpMesiAuDGnBGSVFEb9/qgBFf2sNzJkKESZdssbJAVfH6Lfg==
-X-Received: by 2002:a05:6a21:33a8:b0:1db:915b:ab11 with SMTP id adf61e73a8af0-1ed7a640d42mr17388523637.24.1738314456497;
-        Fri, 31 Jan 2025 01:07:36 -0800 (PST)
+        bh=i68glYQZ+E+noE0wy+Y9J0JFMp7tHf3uQmMwsu8iKww=;
+        b=cUPadZUiSZel16rdILt1g9vHwmwp2GSmF2xo5DIb2dHG2GPe3zlO0Fjp+NKJJiSCzq
+         XFvDspeuhSJ9+a0bnsnW/YtBh/jICdWB0Wdhzu8wqgAd340vBh8OGUMfBm6pNCyPSCHb
+         UIIoVvLxh7ob0RaJrTvtbIVte35ZA4LBe02sWUzO5fQPA/r4xvQzof1QKDhTnAEaAKAw
+         ca7Q5fv6HJkEM1wrX9EVWXjYMxFdrfrB+LAcRGAMWhq4A7++IcpllRDnK71DSTY4Kyxt
+         7S4jWNAdLuwCZF6r8PqCUMGAlHJx9vuBNY8wkSdrTDre5ys+kjj7zYDfARP4+ONNB2Pr
+         LIhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVrnQN6M+Fms4X4L37hFIKvdLdb0Ir0KBzBGpOwAi2NfZ54R0qJhSoGgXsgYbHyFIV4DEse9RGS9j+ZTr0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGrSgS7Jw8UBf2SCTnjI6RhRPhvF3pO/7asCEidotQ94HUd/Yl
+	4N6hQrHXM/5+WNgidMSmZyEBPvTvDM1k/rAasCLDFm+USq6KqLzqCB/eAzR38Q==
+X-Gm-Gg: ASbGnctZAttAX9npQi4NvC5MwoUpHEasigCtluWTgDFwuyo5raEBcJKKYDGQ4PsGQ2l
+	tP3StlmVT88hBb/+WYfbZq0O7QxmxVQZOnnfrj3WILizaYNeBG4n4LJi4YEqtqIMsnroILMyqhS
+	jn2vgpF2tPvIDgEda/sBvqjZ9kGGgQHXU7ZYp7zAFqFlQWwyX79HiPmrfceKTapB4fIf8/GOyRz
+	PczcIfRbx5j0WqCl4VF9ChD29JmBLKs0HLPG9w4Smo4JJCdhb5AD8RWPhxCwJ3PqBR+hv4BZorC
+	gZmW6qCu/it3HsZ4/w==
+X-Google-Smtp-Source: AGHT+IEm5A+dR0l39EGWgA22kpqEPsUgTOFh4GGf32kwJ92J5tCR45G0PnUGYdzf2axpCJd9jEM3rw==
+X-Received: by 2002:a17:90b:2702:b0:2f4:4003:f3ea with SMTP id 98e67ed59e1d1-2f83ac84706mr17607671a91.33.1738314461307;
+        Fri, 31 Jan 2025 01:07:41 -0800 (PST)
 Received: from localhost ([2401:fa00:8f:203:c752:be9d:3368:16fa])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-72fe6a1a74esm2745081b3a.159.2025.01.31.01.07.34
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2f84897a504sm3109092a91.7.2025.01.31.01.07.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 01:07:36 -0800 (PST)
+        Fri, 31 Jan 2025 01:07:40 -0800 (PST)
 From: Sergey Senozhatsky <senozhatsky@chromium.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Minchan Kim <minchan@kernel.org>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv4 08/17] zram: remove writestall zram_stats member
-Date: Fri, 31 Jan 2025 18:06:07 +0900
-Message-ID: <20250131090658.3386285-9-senozhatsky@chromium.org>
+Subject: [PATCHv4 09/17] zram: limit max recompress prio to num_active_comps
+Date: Fri, 31 Jan 2025 18:06:08 +0900
+Message-ID: <20250131090658.3386285-10-senozhatsky@chromium.org>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
 In-Reply-To: <20250131090658.3386285-1-senozhatsky@chromium.org>
 References: <20250131090658.3386285-1-senozhatsky@chromium.org>
@@ -74,43 +74,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is no zsmalloc handle allocation slow path now and
-writestall is not possible any longer.  Remove it from
-zram_stats.
+Use the actual number of algorithms zram was configure with
+instead of theoretical limit of ZRAM_MAX_COMPS.
+
+Also make sure that min prio is not above max prio.
 
 Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- drivers/block/zram/zram_drv.c | 3 +--
- drivers/block/zram/zram_drv.h | 1 -
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/block/zram/zram_drv.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 33a7bfa53861..35fca4c468a7 100644
+index 35fca4c468a7..c500ace0d02f 100644
 --- a/drivers/block/zram/zram_drv.c
 +++ b/drivers/block/zram/zram_drv.c
-@@ -1430,9 +1430,8 @@ static ssize_t debug_stat_show(struct device *dev,
+@@ -2009,16 +2009,19 @@ static ssize_t recompress_store(struct device *dev,
+ 				struct device_attribute *attr,
+ 				const char *buf, size_t len)
+ {
+-	u32 prio = ZRAM_SECONDARY_COMP, prio_max = ZRAM_MAX_COMPS;
+ 	struct zram *zram = dev_to_zram(dev);
+ 	char *args, *param, *val, *algo = NULL;
+ 	u64 num_recomp_pages = ULLONG_MAX;
+ 	struct zram_pp_ctl *ctl = NULL;
+ 	struct zram_pp_slot *pps;
+ 	u32 mode = 0, threshold = 0;
++	u32 prio, prio_max;
+ 	struct page *page;
+ 	ssize_t ret;
  
- 	down_read(&zram->init_lock);
- 	ret = scnprintf(buf, PAGE_SIZE,
--			"version: %d\n%8llu %8llu\n",
-+			"version: %d\n0 %8llu\n",
- 			version,
--			(u64)atomic64_read(&zram->stats.writestall),
- 			(u64)atomic64_read(&zram->stats.miss_free));
- 	up_read(&zram->init_lock);
++	prio = ZRAM_SECONDARY_COMP;
++	prio_max = zram->num_active_comps;
++
+ 	args = skip_spaces(buf);
+ 	while (*args) {
+ 		args = next_arg(args, &param, &val);
+@@ -2071,7 +2074,7 @@ static ssize_t recompress_store(struct device *dev,
+ 			if (prio == ZRAM_PRIMARY_COMP)
+ 				prio = ZRAM_SECONDARY_COMP;
  
-diff --git a/drivers/block/zram/zram_drv.h b/drivers/block/zram/zram_drv.h
-index 3ae2988090b3..219d405fc26e 100644
---- a/drivers/block/zram/zram_drv.h
-+++ b/drivers/block/zram/zram_drv.h
-@@ -79,7 +79,6 @@ struct zram_stats {
- 	atomic64_t huge_pages_since;	/* no. of huge pages since zram set up */
- 	atomic64_t pages_stored;	/* no. of pages currently stored */
- 	atomic_long_t max_used_pages;	/* no. of maximum pages stored */
--	atomic64_t writestall;		/* no. of write slow paths */
- 	atomic64_t miss_free;		/* no. of missed free */
- #ifdef	CONFIG_ZRAM_WRITEBACK
- 	atomic64_t bd_count;		/* no. of pages in backing device */
+-			prio_max = min(prio + 1, ZRAM_MAX_COMPS);
++			prio_max = prio + 1;
+ 			continue;
+ 		}
+ 	}
+@@ -2099,7 +2102,7 @@ static ssize_t recompress_store(struct device *dev,
+ 				continue;
+ 
+ 			if (!strcmp(zram->comp_algs[prio], algo)) {
+-				prio_max = min(prio + 1, ZRAM_MAX_COMPS);
++				prio_max = prio + 1;
+ 				found = true;
+ 				break;
+ 			}
+@@ -2111,6 +2114,12 @@ static ssize_t recompress_store(struct device *dev,
+ 		}
+ 	}
+ 
++	prio_max = min(prio_max, (u32)zram->num_active_comps);
++	if (prio >= prio_max) {
++		ret = -EINVAL;
++		goto release_init_lock;
++	}
++
+ 	page = alloc_page(GFP_KERNEL);
+ 	if (!page) {
+ 		ret = -ENOMEM;
 -- 
 2.48.1.362.g079036d154-goog
 
