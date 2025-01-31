@@ -1,223 +1,224 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B46E14F9F9;
-	Fri, 31 Jan 2025 15:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3B81E570A
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 15:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738338597; cv=none; b=VNUBB1MbFzhUxhIWiQnkgtG/c+KNMdtjBOsXfgm+Wml9MSLNnSjMttoyYORn7TXiO5cLG3Q+SgNrSvs6lio6H5K96ORik7fG5GWRQiTknIjO3D0594bBoF4vKIhu5/N+fE/zPXY5UKpTilUsZLENtIfluk10r0KdWCBwiBW1PO0=
+	t=1738338599; cv=none; b=jxOGaUQKd7ECC3abhy7pYhle8LUtzpzc2/X/jU1i/lfhKrX/rSuXMW0lhckNzcD30sQgjCb2lPv4kKe1PaViBmt+LWrtsBMOh62C3VD++Yo20jR41ZAPnD/wOvz8A0kj6BvnudLaBHlFgWt4uAL4P6Fo6RLTz0gnzqS89XlIssw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738338597; c=relaxed/simple;
-	bh=C/DVSGSxQVDX1sYfb54kbgi2Bhpn+X68IRQ1SpGOlxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NJ7gpD0U2hu67K8JtAeFKw5va67hzs5526qiNwBFWxWKmYDiCQCcGlAFbrdEV9w8qzZqnQpTchhrCo6sRKCTMX6aa6chGktXrAQHcHuU3vBMCgXd5fq7iuhxEp2SMxFswEhguyfNh7EaHMPmvV84/WhyEdk8taTAZbSpTIXGDv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=H/2W58Ej; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1738338599; c=relaxed/simple;
+	bh=o2eVme6LWBzp3TARLj8ZVEg5e8/pMmtAadvIJSWcjeo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JTueb7bx60ZEyBI0azxoz4bNO9DHdkEHS2Br9dC8gYEw+PLi8XXnhZqAdSIDCDKLyxdV8vL0w5KZ86mlbf1VvW+ud3v6VThG5gran1Ju9FjZHmybEUi6DYyvW38FJP5+4kih7/L4/BJOIrtyieA31Qp39Trn0o7VJhKE6IZhNeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n+WGp4Qc; arc=none smtp.client-ip=209.85.217.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="H/2W58Ej"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=e/F9u+3cF2iLaOijLqsTbANw2pbfWuTYD44j+N6FGSw=; b=H/2W58Ejnvc7E+8MtzbZQNcaWd
-	DIlslICtX5edxLWnOOTaCcHdDDWiIg3yim0Kiky8KclgvBIWZwigWkVF5P7Bp+NzQMExnIW643v/e
-	1feCUH2eeT3fZBiw4Gh6DhQ+dws/8YmHp1mahPtys+T5eU86+4ql2nZiA5+Dh9/cwFhVSCkOJVL70
-	RUUGweNl2cWRdIESdY8QXSTSHlYvtm20t90K5nOohzwxU6tRc77tshWe9M+X5L89t7RbemeKpY3Tl
-	pX4LdlEfDX2x5Qap6Gjo42qFwCJRDAIPiSVq7PSbXVIBwM31xoqWECKDixd7F1uApXfDGQnB1nqm8
-	6dVf+K+Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40162)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tdtGx-0007VU-2U;
-	Fri, 31 Jan 2025 15:49:37 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tdtGt-0005uV-1Y;
-	Fri, 31 Jan 2025 15:49:31 +0000
-Date: Fri, 31 Jan 2025 15:49:31 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: "Tristram.Ha@microchip.com" <Tristram.Ha@microchip.com>
-Cc: Vladimir Oltean <olteanv@gmail.com>,
-	"Woojung.Huh@microchip.com" <Woojung.Huh@microchip.com>,
-	"andrew@lunn.ch" <andrew@lunn.ch>,
-	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	"maxime.chevallier@bootlin.com" <maxime.chevallier@bootlin.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Sadhan Rudresh <Sadhan.Rudresh@synopsys.com>,
-	Siddhant Kumar <Siddhant.Kumar@synopsys.com>
-Subject: Re: [WARNING: ATTACHMENT UNSCANNED]Re: [PATCH RFC net-next 1/2] net:
- pcs: xpcs: Add special code to operate in Microchip KSZ9477 switch
-Message-ID: <Z5zxC3hwk4C0s456@shell.armlinux.org.uk>
-References: <Z5jOhzmQAGkv9Jlw@shell.armlinux.org.uk>
- <20250128152324.3p2ccnxoz5xta7ct@skbuf>
- <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
- <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
- <20250129211226.cfrhv4nn3jomooxc@skbuf>
- <Z5qmIEc6xEaeY6ys@shell.armlinux.org.uk>
- <DM3PR11MB873652D36F1FC20999F45772ECE92@DM3PR11MB8736.namprd11.prod.outlook.com>
- <20250130100227.isffoveezoqk5jpw@skbuf>
- <Z5tcKFLRPcBkaw58@shell.armlinux.org.uk>
- <DM4PR12MB5088BA650B164D5CEC33CA08D3E82@DM4PR12MB5088.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n+WGp4Qc"
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4b2c0a7ef74so1241106137.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:49:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738338597; x=1738943397; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VWixQrVCIAlgNIcS80jNJtJK73gPxHWL9wIx8DKe7MA=;
+        b=n+WGp4QchKTP6avem8Qd1pgafJsWegPVFcBJp97TvIIga/3QzY/JYL4FWzShjUh2M+
+         zkbKYL92zNVV5TGJKZuOF/OM3VZBDxgNLProTkOaUCn7Wit+ApeOO1hxlLZv7LXTEiu+
+         CDIbvfh2oWtiYzHm4mF88tLhI1YbAjbi8pjOXO1opPDWHCD/zj0yyidsJQzCEh5LCVfg
+         ySGusWIYsRYBe8jzfl9zPMFiv4hhiYgvLzQuDHoK1e+jkpiMi8YjUaIyau+gFSUGuEEN
+         LQ8QyPYxjWLPXLcoA2oZRoqGvn9v2VH5vfhMWXMqYxZ7k9haYD3pNcFDx/oyx+ihhhku
+         GQRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738338597; x=1738943397;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VWixQrVCIAlgNIcS80jNJtJK73gPxHWL9wIx8DKe7MA=;
+        b=EZ4u6naYUG76ctkc8QVrjcaU87NVKc6NBLkXL9WE0TQhDeOttjTNTztx9reXV//CHM
+         /twJizydXEGtKUeojATXNAsNKiKEjtnkuvI6a/Xau20nxhXvXwKx3sW+p6fH6KbZfiD3
+         Mm00uMwigFM06ZnKXzcA+siLHorhEXF1u9P5bjTTStbDKzcnKgX3ZjW1tOrhSpOjW0eo
+         RLCUflpyw8+05rimEFLq1ROoZktR1EeyLwCfe+vHaPOi4Uba3cj1hxDjq/Pa2AP3JpzM
+         sCDI7Otk89BFjbfXQMk2Xxjxjjsuxypn8rb7w/bPZ3wtEzgLZdNgzhauHj76+G1x/x3G
+         BhxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOFOHsITiImjXhWdrabRyqWY/6ImOCAj1yFtHsUdOiefb5Xrf6omLP5Lx+VPuaLusveFnynyHnphyJxd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOcdWU6rtKnU+zKGZWqAuC4u0bIMDNmQxUwmTT6hUV6lsRSv9s
+	bhud2Q3FZtGx3mJOOPO5yWhp2fEYSvph4h6wIbLAmUk74iDYB4mYz7y+U2DuxIY42mfoGjRlmTS
+	QhLBYb77u47N/PNyW8XYFQng+D/omgwmf8ujTqQ==
+X-Gm-Gg: ASbGncs4/epVUIpw7mDnKgAXG+coB4yT0w9S0SHKVgApx3WUb+mfAEOunp3BZqyVSpP
+	JbkYDRslvmaDivkyX01eOvITUYZzWTCJ7fV61OxjG4OutIShCGzW5GcGUI+4weqsYTtHjfCnJg5
+	NKGThj9TRm46wNlEQckUf49cGWWBL+MA==
+X-Google-Smtp-Source: AGHT+IEmU+ide+wPljEknjlPcnDS70VvV4gNHBQPkhRPBxsv4r+mkc3GijgB/cew2sz29EmYjuvDKwtPUTAI7Moscco=
+X-Received: by 2002:a05:6102:510d:b0:4b9:bc4a:bf48 with SMTP id
+ ada2fe7eead31-4b9bc4ac3b0mr5004678137.21.1738338595383; Fri, 31 Jan 2025
+ 07:49:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="Pf0Rs55r4xv0C6MY"
-Content-Disposition: inline
-In-Reply-To: <DM4PR12MB5088BA650B164D5CEC33CA08D3E82@DM4PR12MB5088.namprd12.prod.outlook.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20250130133456.914329400@linuxfoundation.org>
+In-Reply-To: <20250130133456.914329400@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 31 Jan 2025 21:19:43 +0530
+X-Gm-Features: AWEUYZmgHq21FJCqLUpH2YZWV0iYRhsBr_y3qwk_JndElOm_h0vSyasAEF7Z5l4
+Message-ID: <CA+G9fYtJjEoVvJtg=DMXZGOaAXhiwYzGRu0JFkWpDpBSZhDmjA@mail.gmail.com>
+Subject: Re: [PATCH 6.13 00/25] 6.13.1-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, 30 Jan 2025 at 19:29, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.13.1 release.
+> There are 25 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 01 Feb 2025 13:34:42 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.13.1-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.13.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
 
---Pf0Rs55r4xv0C6MY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-On Fri, Jan 31, 2025 at 02:36:49PM +0000, Jose Abreu wrote:
-> From: Russell King (Oracle) <linux@armlinux.org.uk>
-> Date: Thu, Jan 30, 2025 at 11:02:00
-> 
-> > Would it be safe to set these two bits with newer XPCS hardware when
-> > programming it for 1000base-X mode, even though documentation e.g.
-> > for SJA1105 suggests that these bits do not apply when operating in
-> > 1000base-X mode?
-> 
-> It's hard to provide a clear answer because our products can all be modified
-> by final customer. I hope this snippet below can help:
-> 
-> "Nothing has changed in "AN control register" ever since at least for a decade.
-> Having said that, bit[4] and bit[3] are valid for SGMII mode and not valid
-> for 1000BASE-X mode (I don't know why customer says 'serdes' mode.
-> There is no such mode in ethernet standard). So, customer shall
-> leave this bits at default value of 0.  Even if they set to 1, there is no
-> impact (as those bits are not used in 1000BASE-X mode)."
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Thanks for the reply Jose, that's useful.
+## Build
+* kernel: 6.13.1-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 65a3016a79e2da6e613c74c51e580ff1b3ad1225
+* git describe: v6.13-26-g65a3016a79e2
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.13.y/build/v6.13=
+-26-g65a3016a79e2
 
-Tristram, I think you need to talk to your hardware people to find out
-where this requirement to set these two bits comes from as it seems it
-isn't a property that comes from Synopsys' IP (I suppose unless your
-IP is older than ten years.)
+## Test Regressions (compared to v6.13)
 
-That said, Jose's response indicates that we can set these two bits
-with impunity provided another of Synopsys's customers hasn't modified
-their integration of XPCS to require these bits to be set to zero. So,
-while I think we can do that unconditionally (as per the patch
-attached) I think we need a clearer comment to state why it's being
-done (and I probably need to now modify the commit message - this was
-created before Jose's reply.)
+## Metric Regressions (compared to v6.13)
 
-So, I think given the last two patches I've sent, I believe I've
-covered both of the issues that you have with XPCS:
+## Test Fixes (compared to v6.13)
 
-1) the need to set bits 4 and 3 in AN control for 1000base-X in KSZ9477
-   (subject to a better commit message and code comment, which will be
-    dependent on your research as to where this requirement has come
-    from.)
+## Metric Fixes (compared to v6.13)
 
-2) the lack of MAC_AUTO_SW support in KSZ9477 which can be enabled by
-   writing DW_XPCS_SGMII_MODE_MAC_MANUAL to xpcs->sgmii_mode.
+## Test result summary
+total: 142397, pass: 92519, fail: 31182, skip: 18696, xfail: 0
 
-We now need to work out a way to identify this older IP. I think for
-(2) we could potentially do something like (error handling omitted for
-clarity):
+## Build Summary
+* arc: 6 total, 5 passed, 1 failed
+* arm: 143 total, 132 passed, 11 failed
+* arm64: 58 total, 56 passed, 2 failed
+* i386: 22 total, 19 passed, 3 failed
+* mips: 38 total, 33 passed, 5 failed
+* parisc: 5 total, 3 passed, 2 failed
+* powerpc: 44 total, 41 passed, 3 failed
+* riscv: 27 total, 24 passed, 3 failed
+* s390: 26 total, 23 passed, 3 failed
+* sh: 6 total, 5 passed, 1 failed
+* sparc: 5 total, 3 passed, 2 failed
+* x86_64: 50 total, 49 passed, 1 failed
 
-	if (xpcs->sgmii_mode == DW_XPCS_SGMII_MODE_MAC_AUTO) {
-		xpcs_modify(xpcs, MDIO_MMD_VEND2, DW_VR_MII_AN_CTRL,
-			    DW_VR_MII_DIG_CTRL1_MAC_AUTO_SW,
-			    DW_VR_MII_DIG_CTRL1_MAC_AUTO_SW);
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-rust
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-filecaps
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-np[
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
 
-		ret = xpcs_read(xpcs, MDIO_MMD_VEND2, DW_VR_MII_AN_CTRL);
-
-		/* If MAC_AUTO_SW doesn't retain the MAC_AUTO_SW bit, then the
-		 * XPCS implementation does not support this feature, and we
-		 * have to manually configure the BMCR for the link parameters.
-		 */
-		if (ret >= 0 && !(ret & DW_VR_MII_DIG_CTRL1_MAC_AUTO_SW))
-			xpcs->sgmii_mode = DW_XPCS_SGMII_MODE_MAC_MANUAL;
-	}
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
-
---Pf0Rs55r4xv0C6MY
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-net-xpcs-allow-1000BASE-X-to-work-with-older-XPCS-IP.patch"
-
-From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH net-next] net: xpcs: allow 1000BASE-X to work with older XPCS
- IP
-
-Older XPCS IP requires SGMII_LINK and PHY_SIDE_SGMII to be set when
-operating in 1000BASE-X mode even though the XPCS is not configured for
-SGMII. An example of a device with older XPCS IP is KSZ9477.
-
-We already don't clear these bits if we switch from SGMII to 1000BASE-X
-on TXGBE - which would result in 1000BASE-X with the PHY_SIDE_SGMII bit
-left set.
-
-It is currently believed to be safe to set both bits on newer IP
-without side-effects.
-
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
----
- drivers/net/pcs/pcs-xpcs.c | 13 +++++++++++--
- drivers/net/pcs/pcs-xpcs.h |  1 +
- 2 files changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/pcs/pcs-xpcs.c b/drivers/net/pcs/pcs-xpcs.c
-index 29269d5c5f3a..cbd2bdd0fd55 100644
---- a/drivers/net/pcs/pcs-xpcs.c
-+++ b/drivers/net/pcs/pcs-xpcs.c
-@@ -745,9 +745,18 @@ static int xpcs_config_aneg_c37_1000basex(struct dw_xpcs *xpcs,
- 			return ret;
- 	}
- 
--	mask = DW_VR_MII_PCS_MODE_MASK;
-+	/* Older XPCS IP requires PHY_MODE (bit 3) and SGMII_LINK (but 4) to
-+	 * be set when operating in 1000BASE-X mode. See page 233
-+	 * https://ww1.microchip.com/downloads/aemDocuments/documents/OTH/ProductDocuments/DataSheets/KSZ9477S-Data-Sheet-DS00002392C.pdf
-+	 * "5.5.9 SGMII AUTO-NEGOTIATION CONTROL REGISTER"
-+	 */
-+	mask = DW_VR_MII_PCS_MODE_MASK | DW_VR_MII_AN_CTRL_SGMII_LINK |
-+	       DW_VR_MII_TX_CONFIG_MASK;
- 	val = FIELD_PREP(DW_VR_MII_PCS_MODE_MASK,
--			 DW_VR_MII_PCS_MODE_C37_1000BASEX);
-+			 DW_VR_MII_PCS_MODE_C37_1000BASEX) |
-+	      FIELD_PREP(DW_VR_MII_TX_CONFIG_MASK,
-+			 DW_VR_MII_TX_CONFIG_PHY_SIDE_SGMII) |
-+	      DW_VR_MII_AN_CTRL_SGMII_LINK;
- 
- 	if (!xpcs->pcs.poll) {
- 		mask |= DW_VR_MII_AN_INTR_EN;
-diff --git a/drivers/net/pcs/pcs-xpcs.h b/drivers/net/pcs/pcs-xpcs.h
-index be8fab40b012..082933d1d485 100644
---- a/drivers/net/pcs/pcs-xpcs.h
-+++ b/drivers/net/pcs/pcs-xpcs.h
-@@ -61,6 +61,7 @@
- 
- #define DW_VR_MII_AN_CTRL		0x8001
- #define DW_VR_MII_AN_CTRL_8BIT			BIT(8)
-+#define DW_VR_MII_AN_CTRL_SGMII_LINK		BIT(4
- #define DW_VR_MII_TX_CONFIG_MASK		BIT(3)
- #define DW_VR_MII_TX_CONFIG_PHY_SIDE_SGMII	0x1
- #define DW_VR_MII_TX_CONFIG_MAC_SIDE_SGMII	0x0
--- 
-2.30.2
-
-
---Pf0Rs55r4xv0C6MY--
+--
+Linaro LKFT
+https://lkft.linaro.org
