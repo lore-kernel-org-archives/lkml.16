@@ -1,222 +1,167 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2073.outbound.protection.outlook.com [40.107.93.73])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9391BEF79;
-	Fri, 31 Jan 2025 11:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738321564; cv=fail; b=qU647tvFV7sjCg3QCCMZlqyX3XkvH+hFTf6vHTIG4Vh1KR+Y6GSTkEbBrjjRgZBCmq/SU47z7VfEb2spscllAqciFDah783MiYIanPv02Xv6EzvYuryDvpe2Tb/jvPtFm4EhHLBpiXiwjYASVGKhWFvW3VFZxAibKE7tX16QUvM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738321564; c=relaxed/simple;
-	bh=zl8Q9rDW+YVAfKAAUl5Gdzm8js0hN7tUXjLqcg5bWfM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VsL48l/z46Ul1A/nIJppVq/Ei8bdylGebL/efXU1vs/ECqk7VT1jXOD/0pTouaVt8pJv6H1IqcRCG/GDEXf0zhiVPWnPkWO7RAyz9j+VwPzb0j5HFVxaf5xnBZ/pRrFMCcZgcNRsoTnalkMsk93blsA4zNvsTHFwrwyWwm7Xz/o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HZf9+cg6; arc=fail smtp.client-ip=40.107.93.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5197716D9C2
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738321611; cv=none; b=mrg/pESpWP0buSaDASVXLvGPqwzErPoCig1bW/HozvzI8CsnVP08/khn/bT5KqCuKEmdKAb+BVzpyntBiYHaUfR+oRlxyofUodrdRhQhSjcfwS3K33/iWO1UHnaAr6FrsMv2HkF+ieqLPZgf/Z4telGAglD/FlEcLdW7YPJS8co=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738321611; c=relaxed/simple;
+	bh=EhKxccw+KrNEmwKAZl5iYNarDJa/NhZHorApl4nCTKA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pzjOsBxpj6JFAO7eBr0O5sOgnbSHVQVgsDfKjPhxwOh6zOFWWAlRZv12ahaJuS5wuWZE9uAoE9y1PHb11MFOvM1M4ZVly4WnCe4UGwiCWp9b+HakhODKY0mirVC26OIQOkfZaQpW0k8WYC1Xw5CfvV+aJ9tnpjeWo0mcaKzKRo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UjiXCco3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HZf9+cg6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uDPzhwQky0U62Rl+1Z/wv4LROxQUeBkqutiPKxLy26ZLBI6wMYYssg3xUWTT7NzB1js9OCJUAE6EocNjomskCPWEbPPbq3in+beKvcpFWAnJkbYOAgBOgDxk26RyeSovEl1Oqac4fFfOl9MtDqgWHulGICDHF0b21Rh+40gW1tLhQt71nEn3L/G3j7cSxXUtYcp/fI6pSvBAoqgck118yS2yzAy4YOlPUDVBhMBAisyYXucIFGjiDSEgSYsr+1Sc+cA47Hx1VHQ96v6qBQyzu4rjhx2vVF3l58AQ1Mr9Gs0xPI5a2LrOqtyxtqjuQ8OQoRZTHmeuENjTI8qIYerh8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=n6MDbT8v+gxmhoDMeriaMSYFjzzdTqJvYlcSWdv+Uy8=;
- b=smeGTNTZHWlr7u7y2hAUDbpojHTdL4RKq7wss20TsifrGHrbZMvoRvjMJw05e79y1IhPd6D8cNbUSZmsE7YBZceeYZEa1/itFERYBrDxWfv/2QZKU4bdewGhRKly0bWwtNfj1LkhFUgNfXMNgFVifZ4spGXJLSX54ICy2O9VT+cdfhiohRYZEoKs2GAE7tNEVHmgAfheN0IIHIj+7f06TxIZCOWAcnYVflrLQLhAbt46XYsUTyB2CLtrVLn8QHSzoIm6vtU/aEQqybqnsj7+GI7S58ehhnm2yFkWCiWWngNVI3UvhZ3GSwIo+sEqeap92oaTBTZ7uhwuBJXkz3/ajA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n6MDbT8v+gxmhoDMeriaMSYFjzzdTqJvYlcSWdv+Uy8=;
- b=HZf9+cg64wGLpQXzYUNmREaZDjRDUjYrAK7g6pKf5P1GRZgwmAr3Kh5kMigN9LYuSg/tEM9qHQ09kS9cC3fqKDqLvQt2wQ7IXBwSGFKvXx0jc5fjbgkz+tkq5CREyzh8qkTHh3Kog8vW7fomYOIpv9i+rf6+S0H+ubCtVqzzxgY=
-Received: from MW3PR05CA0013.namprd05.prod.outlook.com (2603:10b6:303:2b::18)
- by PH7PR12MB9127.namprd12.prod.outlook.com (2603:10b6:510:2f6::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.21; Fri, 31 Jan
- 2025 11:06:00 +0000
-Received: from CO1PEPF000044F1.namprd05.prod.outlook.com
- (2603:10b6:303:2b:cafe::83) by MW3PR05CA0013.outlook.office365.com
- (2603:10b6:303:2b::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.18 via Frontend Transport; Fri,
- 31 Jan 2025 11:06:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044F1.mail.protection.outlook.com (10.167.241.71) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Fri, 31 Jan 2025 11:05:59 +0000
-Received: from patedamande.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 31 Jan
- 2025 05:05:54 -0600
-From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-To: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, "Jonathan
- Corbet" <corbet@lwn.net>, Luben Tuikov <ltuikov89@gmail.com>, Matthew Brost
-	<matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>, "Philipp
- Stanner" <pstanner@redhat.com>, Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-CC: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>, "Lucas
- Stach" <l.stach@pengutronix.de>, =?UTF-8?q?Ma=C3=ADra=20Canal?=
-	<mcanal@igalia.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-media@vger.kernel.org>, <linaro-mm-sig@lists.linaro.org>
-Subject: [PATCH v7 7/7] drm/doc: document some tracepoints as uAPI
-Date: Fri, 31 Jan 2025 12:03:05 +0100
-Message-ID: <20250131110328.706695-8-pierre-eric.pelloux-prayer@amd.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250131110328.706695-1-pierre-eric.pelloux-prayer@amd.com>
-References: <20250131110328.706695-1-pierre-eric.pelloux-prayer@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UjiXCco3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738321609;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ptBTE/j9Ief471JDveY+5Ixgr7ekpcVIWvNqXG+KHaU=;
+	b=UjiXCco3lIkYZMANt/kP86DxjvjaSfPJit+43bJAzyCszruV3eFoHWhC0KuC9GoirhWhTn
+	wcN31bxL4gzx0XIy7cX+8awYRJebKuwwwGsD8hOYqKXBElYiPhMUJ2BqQb+4rwwDJLZUwo
+	MKSVd15aUVIV4eUHRnNjB5oDghM0R3I=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-245-CojMeg5lPy62Lfpj1FfY4A-1; Fri, 31 Jan 2025 06:06:47 -0500
+X-MC-Unique: CojMeg5lPy62Lfpj1FfY4A-1
+X-Mimecast-MFC-AGG-ID: CojMeg5lPy62Lfpj1FfY4A
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4388eee7073so13218875e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 03:06:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738321606; x=1738926406;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ptBTE/j9Ief471JDveY+5Ixgr7ekpcVIWvNqXG+KHaU=;
+        b=qLX0usF+GuqMyfD86Lf7QSicf/E6uCPjE9de3UnoSmQl8POk7Si6i/XW+5GDt8JVFQ
+         E3gEymY/0IayqCgy1LpzxauFNZ6itexl7JHVTaHbgRjrWYX1ETBrrRV9eqdgPdnurUoq
+         II0dY2Bh4iQ+QiUFp40qs/TXa3qh+x3jW4r/ZrGtMvkaL7eMP2vLHfzCVCDSUh3csqWP
+         tUpKkY5Ud4aWzrqMoBv1UpkFQ9GJnu7oUBRvxfsK+wZo2D1fYcgNO8i1kr7s8txNp8+E
+         dpImA8B7WwCTH2ht96WQNaBHS8s44VtRD3FAWpUaePpX1xwb7Z/VnUQodam32kjfGlpn
+         cDzA==
+X-Gm-Message-State: AOJu0YykeoYIsUcntMpbfmU+l+SFlqyLu1c2c03fAGHq9MvpSIgkOelk
+	nOz9MPYgVOdnqooMMK2nKx1Q/F//6Z/KR31G7DIQHrlntHoAMCL13ZcJvaN0G4pRoZjBQqZGMBz
+	ECbPSSMlUwUtzkL3QDWGyVoz1GhsUzFYxGIyZt2apoozeKK9wBoMT5y7iMQzOuQ==
+X-Gm-Gg: ASbGnctPHkf21wwY09hff+uc+mg7lxWQxk4rJ4vxinLQXO7k6Lu1OdSBRVfPUdSlZX4
+	xMX4ZmTQJR0TMKmqKtI8lsoZx7sFL+y5ojxVCWdvnzh+uecV2xSicCnEbTZbW4p9RAR/0MUABSn
+	aJ0G6mSPV+8RmpyU1A1SoizTEd3XVg138QK1235mVVFazvTdL0qtMm+oew9c8SdPR9n+M/Efxbq
+	nCEzwE6SLA0Bp66aYZn2dL12G4xQtRmITyvNjPgBmUOz8FCjMsr5Wa9+UFKlQh4UimaTjQNqG5j
+	YVnbHfp2u8kweHobmWQ77a6l9vASQ8OGKnwnUG4GLo5/TqmrghfGzHfggVxyjmXx58IpK6zg1eL
+	xcaFDB5RqsEDJYSr5EsmRonK1BX5tqPm4
+X-Received: by 2002:a05:600c:1c9b:b0:434:fc5d:179c with SMTP id 5b1f17b1804b1-438e1705f38mr61309855e9.13.1738321606661;
+        Fri, 31 Jan 2025 03:06:46 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHvI25JKGadHoBsKNpaNligj01qj4xJdVU/Z3aCpJkv3iDtFRRerBqry12mhnck6BMQkG+OlA==
+X-Received: by 2002:a05:600c:1c9b:b0:434:fc5d:179c with SMTP id 5b1f17b1804b1-438e1705f38mr61309445e9.13.1738321606312;
+        Fri, 31 Jan 2025 03:06:46 -0800 (PST)
+Received: from ?IPV6:2003:cb:c70a:1c00:b8d4:bc62:e7ed:ec0e? (p200300cbc70a1c00b8d4bc62e7edec0e.dip0.t-ipconnect.de. [2003:cb:c70a:1c00:b8d4:bc62:e7ed:ec0e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438d7b5eaecsm59983415e9.3.2025.01.31.03.06.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 03:06:44 -0800 (PST)
+Message-ID: <cab05891-cfce-4d64-a05f-b90038d5ee9f@redhat.com>
+Date: Fri, 31 Jan 2025 12:06:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F1:EE_|PH7PR12MB9127:EE_
-X-MS-Office365-Filtering-Correlation-Id: 112b4828-5dfa-4ec4-7537-08dd41e73e85
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|7416014|376014|82310400026|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Ukx4S2RTZ2kwUE55R2ZTZzZnMUMvcXFma1A5cEQ4S2phSURuSTgwTWlUbUht?=
- =?utf-8?B?NGNiWUJYdElLeXZsWkpDZExpc2U1MDY4ZDdwU0c1VVk0RGhZYkcxSTdWRUY1?=
- =?utf-8?B?SHhGN291QmMyYTBDeXZyYzdYNU5taWlsSU1lUEIrNzdNUWZ4ZDY1L1hkWGZ3?=
- =?utf-8?B?VEVBY0lHMDlVU2NJdVRMTk51eldsMlNSSWVoem0xSjV6dUVCZ1FsRFVJa3JE?=
- =?utf-8?B?Y0I2NExoOGw1YktPVmVaTTBrVGs0M1hjZ00xeVpOSTV2ZE5pVWRnekVWejc3?=
- =?utf-8?B?WG1pWktVajR0Ti9aWkI2NTFGSFRjUkdCVk5XZ0g4eG5ESCs4MXlBb2haVnpt?=
- =?utf-8?B?K0hKTGV2cVRodmNjQW9ROUFrMlR2a3ZXelBlQmdSL3hrUkpaM2pvUFV0VzFW?=
- =?utf-8?B?UEtzbnNPT2tiTHVjaXdwRmpNSnVQMjZ4VlZvUTlHQWZXQXhNTVVpODVNWS9R?=
- =?utf-8?B?ZFFnK2NPOGhLaGw2L3NLeGZObGVmNkJjdUFiN1hKWHY0Sy9mTmNxelV5Rldj?=
- =?utf-8?B?dFQybVF0UnBiU1Q2Z3JFR2FtSFVKTkYwazBCMmpBMm5BM0F4M3dZdk5qb0JK?=
- =?utf-8?B?eExxeFlmSU91Tm9EUExEU1VEVnJpaG82SHI1OXRVR1orNXhYWllVaXk1aHo5?=
- =?utf-8?B?OEJySVF2L2pzWDlFRTBzU2RIVEcwT1V0OWdEVFJmanJ1M1h0OTFKVE1SQ3Va?=
- =?utf-8?B?OFEwR00zdk5nWkdPaEQ5SWRIZk5WRkN0ME82NzJhZkZjajBjQTZSdVJxL2pF?=
- =?utf-8?B?ejl4eVJMZkVramVjeUxFZllYbHRGUTEyWmV5L1IyZ01wT2VaVVFvYzNzby9m?=
- =?utf-8?B?aVJMVXJGKzNBUVJPOENGc25aTjBjQ1ZzYXgzK2g5bUNzQjJYU2FnR3N1L2F0?=
- =?utf-8?B?dGxlSVFlRjFsVm9va0xIeWh6a1ZiRGVqR0g1ZHBQR1lPRTdrT3BEZDBCbGU0?=
- =?utf-8?B?RlNablpqaFBBSUF0NmxuTTdkeS9wRWNWY2U0Y3drVERrdUhaOFU0MXRueG1M?=
- =?utf-8?B?WXVlbTZza0p0TnZlN0ZwakI1cWhLVzZCcC9Cc2QvMFEwcGRuZlhPZ0VIa1Zq?=
- =?utf-8?B?TUEwRk9zcDdua3YyUUR0Vk1lMXRRdXhuV2VlWitHNXdVQXFMdHg1eGp5RUda?=
- =?utf-8?B?NEhLYkVseEpVd0dMYmxJdng5TWF5cjlyTUVFR1hRVW10emFjbjM3TlJnVWZq?=
- =?utf-8?B?bTU4YzlOaUtvYUFIVmt1Z3FEdW5uMVdwL2YrdUVGc0V6blJiT2lqYzBIWkZo?=
- =?utf-8?B?cjA0VEdkNmNaN0xnWlhzQXU1NkpWdFN5aTU3THl4SVBrYzhrRmZVYVc5cEUv?=
- =?utf-8?B?czU2SHNOd3IvRmRYM0ZvYVUrdUl5SWlEaEk2UHAzY0VTelkxQzJMZjdxT1FB?=
- =?utf-8?B?ZHFTb3V5aUxacEpLcG5LRGRQTE9KTy9YQlNucitROGZNb3hKNml3cW9rWFF4?=
- =?utf-8?B?OUtOb21tQkQrK1EyVmdJSlV5YTFYWkFjd29abmlTeHJTZ2FDMUpFS0FRVmpZ?=
- =?utf-8?B?ekhuY0w2UDJuSVRzWE9SVnhVZmV2eURuUUZnUkFPZGlZRmNtVytjWFlyZHFM?=
- =?utf-8?B?eXhINXQyd0E5WERnUzE2UENwUW9samhxUiswdDNQQ0lZTXhvZlFsZzRRM3Vl?=
- =?utf-8?B?YUNmOTgyTkdxZnRHR1BvMTRFR0xqU3FleUNtaERtcEg1UENmbDJ6V082MVBL?=
- =?utf-8?B?MnFxc2FXcklWOC8wdENLdlNJa2ZnZ2xDc2FWSkI0SklTNUVEcUN1Zlp5aUpR?=
- =?utf-8?B?STdnenNiZUkwaXJJNFZleUtXeDhMbVlwb09CQm1KQjNyMVBmVjB5VkdoOG1z?=
- =?utf-8?B?UkZqVlpCQ1JKeWxZYS9CWVB2NkhEQUhGS1BVZ05aZVFOU1dtNkFuOGRSWFNH?=
- =?utf-8?B?bnpQUGNRK1JRR2RNUHNIM2gvWDFxOWV4UjlKNFR4a1F5ZzJOOGVGR2o4aUYv?=
- =?utf-8?B?QklabFFRdkdJR3kxb1cxeXV6NldRTGR4Z0J3QTF4VTR4QU1xZkxrM0lFL0ty?=
- =?utf-8?B?eWNMWlNOTXEzR2wyN0s1RDBWMzJzMmNUTlJhdUFvTVBpL05WTklqbEJiUjRV?=
- =?utf-8?Q?yS/AVK?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(7416014)(376014)(82310400026)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 11:05:59.7100
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 112b4828-5dfa-4ec4-7537-08dd41e73e85
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F1.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9127
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 07/12] mm/page_vma_mapped: device-private entries are
+ not migration entries
+To: Alistair Popple <apopple@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+ nouveau@lists.freedesktop.org, Andrew Morton <akpm@linux-foundation.org>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+ Yanteng Si <si.yanteng@linux.dev>, Karol Herbst <kherbst@redhat.com>,
+ Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
+ Jason Gunthorpe <jgg@nvidia.com>
+References: <20250129115411.2077152-1-david@redhat.com>
+ <20250129115411.2077152-8-david@redhat.com>
+ <baraw2czilsofpedok3jtxxshfaxjrmef6u42pitibtcst6mel@scoukpiwnvvc>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <baraw2czilsofpedok3jtxxshfaxjrmef6u42pitibtcst6mel@scoukpiwnvvc>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This commit adds a document section in drm-uapi.rst about tracepoints,
-and mark the events gpu_scheduler_trace.h as stable uAPI.
+On 31.01.25 00:36, Alistair Popple wrote:
+> On Wed, Jan 29, 2025 at 12:54:05PM +0100, David Hildenbrand wrote:
+>> It's unclear why they would be considered migration entries; they are
+>> not.
+> 
+> Yeah, I agree that doesn't seem right. I suspect I was initially modelling
+> device exclusive entries similar to migration entries but obviously went too
+> far. So thanks for fixing:
+> 
+> Reviewed-by: Alistair Popple <apopple@nvidia.com>
 
-The goal is to explicitly state that tools can rely on the fields,
-formats and semantics of these events.
+Thanks ... fixing all the wrong use of "device-private" in the 
+subject+description ... not sure what my mind was doing there.
 
-Acked-by: Lucas Stach <l.stach@pengutronix.de>
-Acked-by: Maíra Canal <mcanal@igalia.com>
-Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
----
- Documentation/gpu/drm-uapi.rst                | 19 ++++++++++++++++
- .../gpu/drm/scheduler/gpu_scheduler_trace.h   | 22 +++++++++++++++++++
- 2 files changed, 41 insertions(+)
+It's all about "device-exclusive" of course.
 
-diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
-index b75cc9a70d1f..9603ac0f4c09 100644
---- a/Documentation/gpu/drm-uapi.rst
-+++ b/Documentation/gpu/drm-uapi.rst
-@@ -583,3 +583,22 @@ dma-buf interoperability
- 
- Please see Documentation/userspace-api/dma-buf-alloc-exchange.rst for
- information on how dma-buf is integrated and exposed within DRM.
-+
-+
-+Trace events
-+============
-+
-+See Documentation/trace/tracepoints.rst for information about using
-+Linux Kernel Tracepoints.
-+In the DRM subsystem, some events are considered stable uAPI to avoid
-+breaking tools (e.g.: GPUVis, umr) relying on them. Stable means that fields
-+cannot be removed, nor their formatting updated. Adding new fields is
-+possible, under the normal uAPI requirements.
-+
-+Stable uAPI events
-+------------------
-+
-+From ``drivers/gpu/drm/scheduler/gpu_scheduler_trace.h``
-+
-+.. kernel-doc::  drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-+   :doc: uAPI trace events
-\ No newline at end of file
-diff --git a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-index 5c740cb80037..85d547f3fadd 100644
---- a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-+++ b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-@@ -33,6 +33,28 @@
- #define TRACE_SYSTEM gpu_scheduler
- #define TRACE_INCLUDE_FILE gpu_scheduler_trace
- 
-+
-+/**
-+ * DOC: uAPI trace events
-+ *
-+ * ``drm_sched_job``, ``drm_run_job``, ``drm_sched_process_job``,
-+ * and ``drm_sched_job_wait_dep`` are considered stable uAPI.
-+ *
-+ * Common trace events attributes:
-+ *
-+ * * ``id``    - this is &drm_sched_job->id. It uniquely idenfies a job
-+ *   inside a &struct drm_gpu_scheduler.
-+ *
-+ * * ``dev``   - the dev_name() of the device running the job.
-+ *
-+ * * ``ring``  - the hardware ring running the job. Together with ``dev`` it
-+ *   uniquely identifies where the job is going to be executed.
-+ *
-+ * * ``fence`` - the &dma_fence.context and the &dma_fence.seqno of
-+ *   &drm_sched_fence.finished
-+ *
-+ */
-+
- #ifndef __TRACE_EVENT_GPU_SCHEDULER_PRINT_FN
- #define __TRACE_EVENT_GPU_SCHEDULER_PRINT_FN
- /* Similar to trace_print_array_seq but for fences. */
 -- 
-2.47.1
+Cheers,
+
+David / dhildenb
 
