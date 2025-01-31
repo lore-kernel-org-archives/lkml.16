@@ -1,82 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669A8A935;
-	Fri, 31 Jan 2025 17:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123D6A935
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738344741; cv=none; b=Bmoi+A6jXMbs4E50+Y57IDhXAL/W6UMVdUgcllIqUd+SYtwVx9Ll5LO7IcC0j/UY0aXHDQHidWnj3SfqUQ1r5DsMBReYhpEPZFzHWjfz2yD9AjHwIzLYCskLi7HBah25/2XFVzYrwH7DWg799z2DWBNlH5zYNl2EQfBY8enisz0=
+	t=1738344827; cv=none; b=JpNAL9rpQCbGmh36Sj9Q5yOAoJRQbu7rHR2KOavdOzC/9aZMGg/c/MNQzGW0LvMvaPE6Dyrzox7FTQgXN6qwLdJ2m1LQAY++eTQfjNAELytORonHHkA8unU1LLiwT4aJL+nbvab4QwsRj8NX2Yo5w7vIeo05jZkgZnz+AwSs6X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738344741; c=relaxed/simple;
-	bh=LJfAASzw1F9WZrfzU1gbocaygFc+yPedOgcmle/zr+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qtWA3Q0rORXAdTMfH1hQw3tmw+B4JMkEZlVgyOb0b4Hd2fZslvbNLcsRbNGp4sYq30rlOLtahGIy0R30rGEM06i6I2wS7/mJa/xsYQIn069UdnPlC3Zf0/VHvQ9Ia31gyZTqipuL3RrEY8lWRnTMnaNFnmx9CgZuURA3ddOPqh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYx1C99Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738344827; c=relaxed/simple;
+	bh=oUJb07A52tsrpG/JK+FieRrwc6i0gXkF8BET/+0PiZE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gq9Wpc9MIRq8Ss85V94HLynRiVjGWfGH8wz9/hRXPywMCctKxU3Nq0/PdtOQqDCvejNy6lqLPpHSb+QILv2g+0ZKDvL9meXSubHruVdpe3Eo7CPHNrV9MmjsxlzJWFWKdRZ13aPLPQO97KnnW8p33IC6GZJzHZS3bHNUM03/SOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gd6p8OKB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYx1C99Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5299AC4CED1;
-	Fri, 31 Jan 2025 17:32:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738344739;
-	bh=LJfAASzw1F9WZrfzU1gbocaygFc+yPedOgcmle/zr+E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OYx1C99ZK3KRs2KBYBPKMYG11LE8/660x6/qa2qk4+V05YgKMh46syyNL2W+a2GB8
-	 rCZsXFERBW5AttinI0VFBsL6EGRDyYnXmxpeesXDo5T73BTM2ifrWTgZ/3lMBKQR3h
-	 nD+3auRVhUfbaO/20nFJlVDgLeNh+deVscsj5IH+15sOL//pvtt3PGkqXzdkdFbqA9
-	 drdswDeFPgbUGKoNxuzI5/v+EaMJ0fs5ZuEJg2GLG6hg7kROYhJpznZbe/QY+et5Bz
-	 BitLjjHAxCaLLFnyPN4QG4cGkQ3MebWxwZM6ynJTzOzzwjzkoyHV6qhwuny7iwSy4g
-	 7xdGhEWpCAtqw==
-Date: Fri, 31 Jan 2025 17:32:16 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 5.10 000/136] 5.10.234-rc2 review
-Message-ID: <Z50JIMXD3yCWxgGw@finisterre.sirena.org.uk>
-References: <20250131112129.273288063@linuxfoundation.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gd6p8OKB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738344823;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=eGet5P79WJbeo14N/m9+PUTDsM5yE9PlCoJZtOceAjQ=;
+	b=Gd6p8OKBMNzwaUhgiiYb+tXYpVNy7NeyvhMLBJoiLl8MFLA88WFNBoI3o/pHIr1rspb18+
+	VXqI/b+TY2sWkWd/SdxzcBlkE7KDDorGSJzhqiBrsfmCWIk6WUB1H9fC96yNvFda8d8G3H
+	05QqqEQ1HU535tZJ+LAF2g5g0chn8lw=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-96-i56GtnjKON6QsDhNiLpRZQ-1; Fri,
+ 31 Jan 2025 12:33:41 -0500
+X-MC-Unique: i56GtnjKON6QsDhNiLpRZQ-1
+X-Mimecast-MFC-AGG-ID: i56GtnjKON6QsDhNiLpRZQ
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 57F4B1800360;
+	Fri, 31 Jan 2025 17:33:39 +0000 (UTC)
+Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.80.150])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 35BF519560AA;
+	Fri, 31 Jan 2025 17:33:36 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Feng Tang <feng.tang@intel.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH v4 1/2] clocksource: Use pr_info() for "Checking clocksource synchronization" message
+Date: Fri, 31 Jan 2025 12:33:22 -0500
+Message-ID: <20250131173323.891943-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pk/g7n2SWzfSWykW"
-Content-Disposition: inline
-In-Reply-To: <20250131112129.273288063@linuxfoundation.org>
-X-Cookie: Editing is a rewording activity.
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+The "Checking clocksource synchronization" message is normally printed
+when clocksource_verify_percpu() is called for a given clocksource if
+both the CLOCK_SOURCE_UNSTABLE and CLOCK_SOURCE_VERIFY_PERCPU flags
+are set. It is an informational message and so pr_info() should be used
+instead of pr_warn().
 
---pk/g7n2SWzfSWykW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: John Stultz <jstultz@google.com>
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kernel/time/clocksource.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On Fri, Jan 31, 2025 at 12:21:46PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.10.234 release.
-> There are 136 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index 7304d7cf47f2..77d9566d3aa6 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -382,7 +382,8 @@ void clocksource_verify_percpu(struct clocksource *cs)
+ 		return;
+ 	}
+ 	testcpu = smp_processor_id();
+-	pr_warn("Checking clocksource %s synchronization from CPU %d to CPUs %*pbl.\n", cs->name, testcpu, cpumask_pr_args(&cpus_chosen));
++	pr_info("Checking clocksource %s synchronization from CPU %d to CPUs %*pbl.\n",
++		cs->name, testcpu, cpumask_pr_args(&cpus_chosen));
+ 	for_each_cpu(cpu, &cpus_chosen) {
+ 		if (cpu == testcpu)
+ 			continue;
+-- 
+2.48.1
 
-Tested-by: Mark Brown <broonie@kernel.org>
-
---pk/g7n2SWzfSWykW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmedCR0ACgkQJNaLcl1U
-h9BbWAf+KP+nLIF39wKB0t4BKimS5ISizwomyBVRSDltY4vuSx0yANL9fxSS0FXV
-4ClYnkX/9Ze8Axnjw6QV28o8bHv6EE2IDNn1IdQcbts4QDg7rcZ2Z1YZDgdei440
-Br552e2IYqJu5aavED8h94Oo3vwUwz9JM61/XyZmyvAkygaxUebdtPB2FDB2eg6n
-vaAwe5A1Rx9ehMsOgZrUgkISwPFnrhLpToCVfxv0nSLCBCT0c2Qi7fS8f9TxiG2l
-ayfk4XzsS6qbjkR4ELd1y2MCwaYZONguA+5ejQvPuZE9/uySb4bTh7hcZib7sla8
-YfBevpZLhrkuIgsrJnZdCqdpjMdKng==
-=Jij9
------END PGP SIGNATURE-----
-
---pk/g7n2SWzfSWykW--
