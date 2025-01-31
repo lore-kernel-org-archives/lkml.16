@@ -1,255 +1,151 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A4A14F70
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 06:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE08214885B;
+	Fri, 31 Jan 2025 07:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738306496; cv=none; b=ax7GqS/D1nbOxRdBTO8yH6cS+jiB57MA6j0yde9+Cwt3hrZwvB9PXrWGvRcOp8DJ/DS9f3b51udh6PtLaPk1z/d1gNJI7FFWtrveKtDgZnJDhU/NrMLzQqnfKNdd6qDAyJu1MhX4xzG4OhoDOG3XL2AdmeM7OtJAuc9WKuMyDfQ=
+	t=1738306814; cv=none; b=nEb2RU62+E+WocnWGDcYRwUyT5Z5PQ75aavdoj71Sji8BMpaJgii7A/uf3tXrY2rFvExwIX4kBxYsCDawepV+ey8qkBSS1mrtAN7cbrVswFT20JPft4ZZwwKB1zvvoWHmCbb6pKXhL+eb5r/Y8jWery7PA3AuLvyb653/hMDCuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738306496; c=relaxed/simple;
-	bh=nHf+Meg6V0HkhbmSYtBB9hu8TTxZvUvQcO9AmYQPUWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wjfa4Gpen8q1g2N3dVSw3Vkr+Umm4nmzINJ3lsapAdiYeekZyaucafdrWnZeJPBlBHjv1Z3WsOt60Z9yHpegegQLGe9vAzvOVZGJv8B6/6KYURFniIQ6aiaSm9YaxZ2d7idPnzcWAK1yBlC9iyVEIJzO98NalQXLG7GWmEgTnEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ASm5xZBC; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ASm5xZBC"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50V5NoTT013241;
-	Fri, 31 Jan 2025 06:54:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=pdT6BW
-	uty8tFs7wtb0wObYnkLDYoD1Aszv9GuAcjP0I=; b=ASm5xZBClDDEXXguDOe2tH
-	d7GQEw2tlLeCk8jGO3rmCfrGML9PKK5aig9lgbGRFvZDDxxOJgcQkNE4TMBoBYwj
-	06J3V0TpaQ7R6/CxmsX/e6GQHoBSiu8Yliv+UaZuMj5n5i8XHVweAargM/m7KLPy
-	I2PK43d9Lu0Kvzl237xKHC9IEV6HnzngpbRVMczFFbHVOmd8W9+6dSgfnJetDL1k
-	uG9FoqmXWieBNS1b3qDVUFWfUHRS9DrFtmen9xmQRk8EsGFTyPJvdX2AR/jjQ6xd
-	Ys4Um0k8sfLrC2FIZ4uYId7Akf8MmAIJn/aBUxb81NGZLnvgm/eyxcs7Iadg6luw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44grb7898t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 06:54:37 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50V6sbUl002694;
-	Fri, 31 Jan 2025 06:54:37 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44grb7898r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 06:54:36 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50V3faCQ024517;
-	Fri, 31 Jan 2025 06:54:35 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44gf912bx4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 06:54:35 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50V6sXNb16515536
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 06:54:33 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B414F200D3;
-	Fri, 31 Jan 2025 06:54:33 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2BA7B200D1;
-	Fri, 31 Jan 2025 06:54:32 +0000 (GMT)
-Received: from [9.124.214.179] (unknown [9.124.214.179])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 31 Jan 2025 06:54:31 +0000 (GMT)
-Message-ID: <5c47950a-0102-4555-b056-e85f2abc2011@linux.ibm.com>
-Date: Fri, 31 Jan 2025 12:24:31 +0530
+	s=arc-20240116; t=1738306814; c=relaxed/simple;
+	bh=UVM+F0b39UD/id5lC4ozCJ/wtWd6poX6H5neKCRmBjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QX3PKnK/bGaytWQFCPEWmE4E43jXEkKGvY1c9Tz7R4vw1jWv4wffOYmd/YOA8QBlRo96QzWxwiEWXQRPTRro/Kvixm4AGXBZeMI5PuFLt7Fj9CdNcG7/3rzDTDeoL5zW5AKhkCBw6R4n2Ax1pYU8UJxwYCEUa9lZ5FFjY1C1yI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1tdkd8-000000002Cy-1baG;
+	Fri, 31 Jan 2025 06:35:54 +0000
+Date: Fri, 31 Jan 2025 06:35:50 +0000
+From: Daniel Golle <daniel@makrotopia.org>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: lee@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	tsbogend@alpha.franken.de, hkallweit1@gmail.com,
+	linux@armlinux.org.uk, sander@svanheule.net,
+	markus.stockhausen@gmx.de, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-mips@vger.kernel.org
+Subject: Re: [PATCH v5 2/4] dt-bindings: mfd: Add MDIO interface to
+ rtl9301-switch
+Message-ID: <Z5xvRlKQiQ5cm0gl@makrotopia.org>
+References: <20250131010151.2527688-1-chris.packham@alliedtelesis.co.nz>
+ <20250131010151.2527688-3-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] powerpc: Enable dynamic preemption
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: mpe@ellerman.id.au, maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        npiggin@gmail.com, linux-kernel@vger.kernel.org
-References: <20250106051919.55020-1-sshegde@linux.ibm.com>
- <20250106051919.55020-2-sshegde@linux.ibm.com>
- <20250130145409.D_so_mR1@linutronix.de>
- <b73b5143-1a7f-4032-ac06-43db3bf4abea@linux.ibm.com>
- <20250130202634.eeb9TfkW@linutronix.de>
- <01bc9e5c-fd47-4c26-8af3-59f10f3b9c76@csgroup.eu>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <01bc9e5c-fd47-4c26-8af3-59f10f3b9c76@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Cwn0zcJz5QuZgr2YkEjkhu31-Jb-mGvY
-X-Proofpoint-ORIG-GUID: 12JBoN9nPZsP7JSMdhEY3--Tq7KDkLFs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-31_02,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2501310047
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131010151.2527688-3-chris.packham@alliedtelesis.co.nz>
+
+Hi Chris,
+
+afaik net-next is still closed right now, but lets discuss the series as RFC
+in the meantime maybe, right?
+
+On Fri, Jan 31, 2025 at 02:01:49PM +1300, Chris Packham wrote:
+> The MDIO controller is part of the switch on the RTL9300 family of
+> devices. Add a $ref to the mfd binding for these devices.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+> 
+> Notes:
+>     This patch is dependent on "dt-bindings: net: Add Realtek MDIO
+>     controller" which adds the realtek,rtl9301-mdio.yaml binding.
+>     
+>     Changes in v5:
+>     - Note dependency on realtek,rtl9301-mdio.yaml patch
+>     - Add back reg property to the mdio-controller node.
+>     Changes in v4:
+>     - There is a single MDIO controller that has MDIO buses as children
+>     Changes in v3:
+>     - None
+>     Changes in v2:
+>     - None
+> 
+>  .../bindings/mfd/realtek,rtl9301-switch.yaml  | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/realtek,rtl9301-switch.yaml b/Documentation/devicetree/bindings/mfd/realtek,rtl9301-switch.yaml
+> index f053303ab1e6..89e10213a4ee 100644
+> --- a/Documentation/devicetree/bindings/mfd/realtek,rtl9301-switch.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/realtek,rtl9301-switch.yaml
+> @@ -28,6 +28,9 @@ properties:
+>    reg:
+>      maxItems: 1
+>  
+> +  mdio-controller:
+> +    $ref: /schemas/net/realtek,rtl9301-mdio.yaml#
+> +
+>    '#address-cells':
+>      const: 1
+>  
+> @@ -41,6 +44,10 @@ patternProperties:
+>    'i2c@[0-9a-f]+$':
+>      $ref: /schemas/i2c/realtek,rtl9301-i2c.yaml#
+>  
+> +  'mdio-controller@[0-9a-f]+$':
+> +    $ref: /schemas/net/realtek,rtl9301-mdio.yaml#
+> +
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -110,5 +117,27 @@ examples:
+>            };
+>          };
+>        };
+> +
+> +      mdio-controller@ca00 {
+> +        compatible = "realtek,rtl9301-mdio";
+> +        reg = <0xca00 0x200>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        mdio-bus@0 {
+> +          reg = <0>;
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          ethernet-phy@0 {
+> +            reg = <0>;
+> +            realtek,port = <1>;
+
+Aren't all those PHYs referenced as phandles by DSA switch ports?
+
+Imho it would be better to not introduce a new property but instead
+let the driver of the mdio-controller parse the DSA switch description
+and follow the existing 'phy-handle' properties in order to infer the
+mapping of all ports to all PHYs, and by that then be able to also
+know the reverse mapping.
+You could reference the switch node in the mdio-controller node.
+
+That would avoid redundant information in the device tree, as we
+would then only have one mapping instead of having it two times
+(once by the usual 'phy-handle' property of the DSA user port and
+another time reverse using your newly introduce 'realtek,port'
+property of each ethernet-phy).
 
 
-
-On 1/31/25 11:39, Christophe Leroy wrote:
+> +          };
+> +          ethernet-phy@1 {
+> +            reg = <1>;
+> +            realtek,port = <0>;
+> +          };
+> +        };
+> +      };
+>      };
+>  
+> -- 
+> 2.48.1
 > 
 > 
-> Le 30/01/2025 à 21:26, Sebastian Andrzej Siewior a écrit :
->> On 2025-01-30 22:27:07 [+0530], Shrikanth Hegde wrote:
->>>> | #DEFINE need_irq_preemption() \
->>>> |          
->>>> (static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
->>>> |
->>>> |     if (need_irq_preemption()) {
->>>>
->>>> be a bit smaller/ quicker? This could be a fast path ;)
->>>
->>> I am okay with either way. I did try both[1], there wasn't any 
->>> significant difference,
->>> hence chose a simpler one. May be system size, workload pattern might 
->>> matter.
->>>
->>> Let me do some more testing to see which one wins.
->>> Is there any specific benchmark which might help here?
->>
->> No idea. As per bean counting: preempt_model_preemptible() should
->> resolve in two function calls + conditional in the dynamic case. This
->> should be more expensive compared to a nop/ branch ;)
-> 
-> I did a build comparison on pmac32_defconfig + dynamic preemption, the 
-> static branch looks definitely more optimal:
-> 
-> Without static branch:
-> 
-> ...
->   294:    7c 08 02 a6     mflr    r0
->   298:    90 01 00 24     stw     r0,36(r1)
->   29c:    48 00 00 01     bl      29c <interrupt_exit_kernel_prepare+0x50>
->              29c: R_PPC_REL24    preempt_model_full
->   2a0:    2c 03 00 00     cmpwi   r3,0
->   2a4:    41 82 00 a4     beq     348 <interrupt_exit_kernel_prepare+0xfc>
-> ...
->   2a8:    81 22 00 4c     lwz     r9,76(r2)
->   2ac:    71 29 00 04     andi.   r9,r9,4
->   2b0:    40 82 00 d4     bne     384 <interrupt_exit_kernel_prepare+0x138>
-> ...
->   2b4:    7d 20 00 a6     mfmsr   r9
->   2b8:    55 29 07 fa     rlwinm  r9,r9,0,31,29
-> ...
->   348:    48 00 00 01     bl      348 <interrupt_exit_kernel_prepare+0xfc>
->              348: R_PPC_REL24    preempt_model_lazy
->   34c:    2c 03 00 00     cmpwi   r3,0
->   350:    40 a2 ff 58     bne     2a8 <interrupt_exit_kernel_prepare+0x5c>
->   354:    4b ff ff 60     b       2b4 <interrupt_exit_kernel_prepare+0x68>
-> 
-> With the static branch:
-> 
-> ...
->   294:    48 00 00 58     b       2ec <interrupt_exit_kernel_prepare+0xa0>
-> ...
->   298:    7d 20 00 a6     mfmsr   r9
->   29c:    55 29 07 fa     rlwinm  r9,r9,0,31,29
-> ...
->   2ec:    81 22 00 4c     lwz     r9,76(r2)
->   2f0:    71 29 00 04     andi.   r9,r9,4
->   2f4:    41 82 ff a4     beq     298 <interrupt_exit_kernel_prepare+0x4c>
-> ...
-> 
-> With the static branch it is just an unconditional branch being later 
-> replaced by a NOP. It must be more efficient.
-> 
-> So in first case we need to get and save LR, call preempt_model_full(), 
-> compare with 0, call preempt_model_lazy() and compare again, and at some 
-> point read and restore LR.
-> 
-> And the preempt_model_() functions are not tiny functions:
-> 
-> 00003620 <preempt_model_full>:
->      3620:    3d 20 00 00     lis     r9,0
->              3622: R_PPC_ADDR16_HA    preempt_dynamic_mode
->      3624:    94 21 ff f0     stwu    r1,-16(r1)
->      3628:    80 69 00 00     lwz     r3,0(r9)
->              362a: R_PPC_ADDR16_LO    preempt_dynamic_mode
->      362c:    2c 03 ff ff     cmpwi   r3,-1
->      3630:    41 82 00 18     beq     3648 <preempt_model_full+0x28>
->      3634:    68 63 00 02     xori    r3,r3,2
->      3638:    38 21 00 10     addi    r1,r1,16
->      363c:    7c 63 00 34     cntlzw  r3,r3
->      3640:    54 63 d9 7e     srwi    r3,r3,5
->      3644:    4e 80 00 20     blr
-> ...
->      3648:    0f e0 00 00     twui    r0,0
->      364c:    68 63 00 02     xori    r3,r3,2
->      3650:    38 21 00 10     addi    r1,r1,16
->      3654:    7c 63 00 34     cntlzw  r3,r3
->      3658:    54 63 d9 7e     srwi    r3,r3,5
->      365c:    4e 80 00 20     blr
-> 
-> 00003660 <preempt_model_lazy>:
->      3660:    3d 20 00 00     lis     r9,0
->              3662: R_PPC_ADDR16_HA    preempt_dynamic_mode
->      3664:    94 21 ff f0     stwu    r1,-16(r1)
->      3668:    80 69 00 00     lwz     r3,0(r9)
->              366a: R_PPC_ADDR16_LO    preempt_dynamic_mode
->      366c:    2c 03 ff ff     cmpwi   r3,-1
->      3670:    41 82 00 18     beq     3688 <preempt_model_lazy+0x28>
->      3674:    68 63 00 03     xori    r3,r3,3
->      3678:    38 21 00 10     addi    r1,r1,16
->      367c:    7c 63 00 34     cntlzw  r3,r3
->      3680:    54 63 d9 7e     srwi    r3,r3,5
->      3684:    4e 80 00 20     blr
-> ...
->      3688:    0f e0 00 00     twui    r0,0
->      368c:    68 63 00 03     xori    r3,r3,3
->      3690:    38 21 00 10     addi    r1,r1,16
->      3694:    7c 63 00 34     cntlzw  r3,r3
->      3698:    54 63 d9 7e     srwi    r3,r3,5
->      369c:    4e 80 00 20     blr
-> 
-> 
-> 
-
-That's convincing. Thanks for the pointers. I will move it into static 
-branch method.
-
-That makes the code same for arm64/powerpc. Maybe its worth moving it 
-into sched/core. Let me try that as well.
-
-PS: on leave next week, so will be sending the patches after i get back.
-
->> But you would still need preempt_model_preemptible() for the !DYN case.
->>
->>>>> +           preempt_model_voluntary() ? "voluntary" :
->>>>> +           preempt_model_full()      ? "full" :
->>>>> +           preempt_model_lazy()      ? "lazy" :
->>>>> +           "",
->>>>
->>>> So intend to rework this part. I have patches stashed at
->>>>     https://eur01.safelinks.protection.outlook.com/? 
->>>> url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fbigeasy%2Fstaging.git%2Flog%2F%3Fh%3Dpreemption_string&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C553a8f640a9c4514597d08dd416c6534%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638738655988556429%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=ZfVQi1iRYaVCTrZ5vIhOQ7yAKaDnOwFi0NRjycfrI5A%3D&reserved=0
->>>>
->>>> which I didn't sent yet due to the merge window. Just a heads up ;)
->>>
->>> Makes sense. I had seen at-least two places where this code was 
->>> there, ftrace/powerpc.
->>> There were way more places..
->>>
->>> You want me to remove this part?
->>
->> No, just be aware.
->> I don't know how this will be routed I guess we merge the sched pieces
->> first and then I submit the other pieces via the relevant maintainer
->> tree. In that case please be aware that all parts get removed/ replaced
->> properly.
->>
->> Sebastian
-> 
-
