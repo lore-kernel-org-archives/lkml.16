@@ -1,224 +1,131 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA03D1C1F29
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 15:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D1C1C1F29;
+	Fri, 31 Jan 2025 15:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738337044; cv=none; b=l6haircQGDO6quY1Iq464L2PkywDqo8fAywE57Nok3/y1YPvv9UtYr07Q05+yZgQELjd+/0NfN+fr77MI38e74Z5ee43NE3BXD5ZS1NKwsfgYF6Vthx+HXOKJG6lk3ITCdwiXkazCsyzEq40N638Tvc0D6JIntu5skY3zM4zE40=
+	t=1738337155; cv=none; b=iwOI1N5x6bv8+YfyC/xatpokYyWpUVeXIgUlmCTFiIDTP3hw41u1u6wr5sS2U5rsps78M+Q819J53hrhf+J9/00nDX2mD6ba57cdSVp3WgQLth5zpxcxuP9CBZgAHd+tGbTAhhQJnzuYAjAW61KiHfFidn2S0mK3yyXVUNf6JFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738337044; c=relaxed/simple;
-	bh=TgBVuZbqmONVp2cBCwO+GazV6gt3oAzqH+Qi4bWhabc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mu2KX/hccj+Xv4zsGIyonMNBfTFJfQxDX6/6Jew0uV5X+Fln3SSODCcOh45v2xb0z3PSbjghdkA/pf+D5v09QLgQHtdGGw+LIOvaNCpqYwK023jB14w3nDFqZOpvD1aa9vuTJpD2E4/of4gYQ4QoYKwuic9Yx+kti8RCCNiGEuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ggMOjec8; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738337155; c=relaxed/simple;
+	bh=Ht4nh+ceSywYcLNTQL84iEYXYJ0KQEw+LSoMn7rFgDk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oeg/zXH4N6rMFwiwdjqMDhE4Csmawyj/bMxQY1UpOeBd5vVahCzvHE7hWDFXcyz6Fw4rxD5R9FXXX9ccJAfZtCCsqocz7DWrBerRxhCkEcQuJ2sw6ZfKvukGzV6SWMHQWhEwgjUMJyBTLvE+14OfvnYOoSA3isIhGicw742CE7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LZ3GUwoW; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ggMOjec8"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-518ae5060d4so675269e0c.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:24:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738337041; x=1738941841; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5MmB80dNlZ/Z5Y29wc6E85ls0e6J9rncIwWF25L4zaU=;
-        b=ggMOjec8QemDBXmsU1cxmhRgWsRkluDKuQIUjjeYCiPhJo/hAQG1/rNb+E7DwpBHBO
-         EWZUfmA60uE0UkRPoz+k4nY9Mbeb3bFCL5Oh2saoIrapYN0pIQ0SeTjtqfdymGZ+yF6e
-         Bj3XacQ9yCSKGXrBkwNAiJVNng87Pcu9xT8Vwa/Z3IiQH5iaZ0CTFBGZZBj6pShmzgCA
-         CfCPvARLZow0mSvxTl05ZBfxLu3Gql/hcJUFrYaJwq5q9iwXf4u5ABtLEj0OhVCPKvEh
-         VhHLcZ16Tw2pwbiVSR4QHxA1yTESSlSr8DFxhDWls8F6tqVT1VkuP6hqYnLDle3bp134
-         br7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738337041; x=1738941841;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5MmB80dNlZ/Z5Y29wc6E85ls0e6J9rncIwWF25L4zaU=;
-        b=Uadu2y7742WKUAoujCDglLeoCF3Dtghr0koXR+VhHZpcrPPODPt3rznGfdjTzwrPc8
-         M8lLD/3on4Dnbsc4ohtIc/L8WWbE3VPFiK3/BZil90CX9de60mJ+2OlTTLxGKZ+KKg4G
-         AuI0LX+RuSXUk5HB0fqA/jJxBqmkl4seqyZm6D9gTfYxorRlK9/7J9Qw4kRixeCJa7mx
-         BzHBp/yAGOLnvid0A/N9AIMuFTpOi+S67NT9aGWbTkyv2Opu9DxiMp5Cr+y7iRJdx9xL
-         8aPzfWGbeUfc44yGCd84XONBRv5wOREVStFVmfyUif5JEMpbgEPIZflj2zjj2Kj9cskQ
-         TGXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUG+vyZtNNQx3EfMjILCXPT6OYCxrjvopdbQSS4CsFTBe3TvaJ2DwYhqbauyS9UACNSMM56z+3RXLpKZhc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDSmSZKvAc7n3DgUcvVWqQe/e6S26YU62ph9O1YRGDz1cuA43F
-	0qgs/stxZDAZkzBm4+lm1i74bxjvgMzCESHaoPYv153HJFQAFwuyOma2S7qB62Icanl8R3bJ/Qt
-	fWjvDKtG0A2+0PwxYzoAaJfjknaFXpoj8lD5Vlw==
-X-Gm-Gg: ASbGncsp50LX2z2NwodYQe0AFTHOErNqir9tXUZx24Gf73J4kLePIJsKgkuOtIRk+hX
-	V6/KkCFfb5i20D1AmoK/tUaM5biEul8WLlMRfTCS2VD3fhwHdXc6SqG/G6f36/C/DpMWC/ZDPdv
-	VK+X1lfsmcFF085CzQn1+QXoq28efXeA==
-X-Google-Smtp-Source: AGHT+IF7h0wUp9yKsdp71mMvKTkAx8g2V0RVMq3BeCI0OtZi8JKdX/kz++4pwR/QvuGJZGjFqCuH08TtA+D2g9xEv+4=
-X-Received: by 2002:a05:6122:8c2:b0:518:965c:34a with SMTP id
- 71dfb90a1353d-51e9e3d2831mr10218805e0c.2.1738337041648; Fri, 31 Jan 2025
- 07:24:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LZ3GUwoW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1738337150;
+	bh=Ht4nh+ceSywYcLNTQL84iEYXYJ0KQEw+LSoMn7rFgDk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LZ3GUwoWr3kPW2fA3CTP18cETdwgHVjVbQ3dl65LVWAiiaKPcprqRAcWHvYMgUM9v
+	 D0b7w1Ky4cnhIP9ez8d4aD33p7l+4xRwXcV6GyJCljc0y+yL64QzGmLT9k2uck/wRO
+	 ddAbV2kRvsUWxy3Zpztpl+I24kgqHQvqbWPsAnIWL3cbPFVIN/QNp+O7MGv7C3j1i+
+	 gYw5N/Az0Iki5+r0PTy4ndjLrynji+Qj/eBawF3KNMdG91WB8d+f8TBesIoH+z8B0h
+	 GGGIvNCPOEcvoQNnrFtbqkmmNo/Aun7oCh70U35BntBcfwOBEsrBlS7OaaNA38kYAT
+	 5jeoyUej1biwA==
+Received: from trenzalore.hitronhub.home (unknown [23.233.251.139])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: detlev)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3402917E0E99;
+	Fri, 31 Jan 2025 16:25:46 +0100 (CET)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Alexey Charkov <alchark@gmail.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Jianfeng Liu <liujianfeng1994@gmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Johan Jonker <jbx6244@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Sugar Zhang <sugar.zhang@rock-chips.com>,
+	Algea Cao <algea.cao@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	kernel@collabora.com
+Subject: [PATCH v4 0/2] Add HDMI audio on the Radxa ROCK 5B
+Date: Fri, 31 Jan 2025 10:23:20 -0500
+Message-ID: <20250131152438.2891507-1-detlev.casanova@collabora.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130140127.295114276@linuxfoundation.org>
-In-Reply-To: <20250130140127.295114276@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 31 Jan 2025 20:53:50 +0530
-X-Gm-Features: AWEUYZmodaflHy0FpLJdmZ8d6jjAWwVYtcU0AZZUKH1TGmHeKkGEWQYQ4fvFlbU
-Message-ID: <CA+G9fYsi1EFDWOM-7Si5PV2HOi7ShcPtyM218jiWFkL64uZyJg@mail.gmail.com>
-Subject: Re: [PATCH 5.15 00/24] 5.15.178-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, 30 Jan 2025 at 19:58, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.15.178 release.
-> There are 24 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 01 Feb 2025 14:01:15 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.15.178-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+To support HDMI audio on the rk3588 based devices, the generic HDMI
+Codec framework is used in the dw-hdmi-qp DRM bridge driver.
 
+The implementation is mainly based on the downstream driver, ported to the
+generic HDMI Codec framework [1] recently merged in the master branch.
+The parameters computation has been kept as is and the data stored in the
+dw_hdmi_qp struct as been cleaned up.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+The table for the N values has been edited to reflect N recommended values
+as well as CTS recommended values.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+The downstream kernel also implements a machine driver for HDMI audio but
+it is doing exactly what the simple-audio-card driver does, so use that
+instead in the ROCK 5B device tree.
 
-## Build
-* kernel: 5.15.178-rc1
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: cd260dae49a375098c2120ff1618e6bdf874791d
-* git describe: v5.15.177-25-gcd260dae49a3
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15=
-.177-25-gcd260dae49a3
+Based on Linus' master branch.
 
-## Test Regressions (compared to v5.15.174-52-g11de5dde6ebe)
+[1]: https://lore.kernel.org/all/20241224-drm-bridge-hdmi-connector-v10-0-dc89577cd438@linaro.org/
 
-## Metric Regressions (compared to v5.15.174-52-g11de5dde6ebe)
+Changes since v3:
+ - Renamed function to start with dw_hdmi_qp
 
-## Test Fixes (compared to v5.15.174-52-g11de5dde6ebe)
+Changes since v2:
+ - Also clear the audio infoframe
+ - Write AUDI_CONTENTS0 to its default value in case it gets overwritten.
+ - Store tmds_char_rate in the dw_hdmi_qp struct in atomic_enable
+ - Clear tmds_char_rate in atomic_disable and only write registers when
+   tmds_char_rate is not 0.
+ - Do not use connector_state duplicates
 
-## Metric Fixes (compared to v5.15.174-52-g11de5dde6ebe)
+Changes since v1:
+ - Remove useless audio_mutex (was used downstream for multiple drivers access
+   to audio functions)
+ - Let hdmi_codec build and setup audio infoframes
+ - Only access audio registers when connector is connected
+ - Rebased on master branch
 
-## Test result summary
-total: 61427, pass: 41406, fail: 6650, skip: 12892, xfail: 479
+Detlev Casanova (1):
+  arm64: dts: rockchip: Add HDMI0 audio output on rock-5b
 
-## Build Summary
-* arc: 6 total, 5 passed, 1 failed
-* arm: 105 total, 105 passed, 0 failed
-* arm64: 32 total, 32 passed, 0 failed
-* i386: 25 total, 24 passed, 1 failed
-* mips: 25 total, 22 passed, 3 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 25 total, 24 passed, 1 failed
-* riscv: 10 total, 10 passed, 0 failed
-* s390: 12 total, 11 passed, 1 failed
-* sh: 12 total, 10 passed, 2 failed
-* sparc: 8 total, 7 passed, 1 failed
-* x86_64: 28 total, 28 passed, 0 failed
+Sugar Zhang (1):
+  drm/bridge: synopsys: Add audio support for dw-hdmi-qp
 
-## Test suites summary
-* boot
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi |   1 +
+ .../boot/dts/rockchip/rk3588-rock-5b.dts      |  19 +
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c  | 497 ++++++++++++++++++
+ 3 files changed, 517 insertions(+)
 
---
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+2.48.1
+
