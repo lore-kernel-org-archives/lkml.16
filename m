@@ -1,99 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102B91EE7B6;
-	Fri, 31 Jan 2025 19:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0151EE7B6
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 19:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738350140; cv=none; b=LTb9JWqa6uA/4pGEYAMSijXckRLmWPpNbdWjf+oFW9nSym/qSGQiCDunpXyTQIwa++0lgSLwEDa/Ih0hOrBToBSPjpP9UH4sx7wL7eNJNI/GGMjAM8ZneqCL/uINkiT/wcfqWUZ5ryXJoBs7Ql1EEVIvNOAjn/+xnZWYUVkB1Uk=
+	t=1738350182; cv=none; b=nenmuzrqZmVZKt+mmX+hTAKPSKoUtc0slTSADT9gX6bkFcP4P4KqrTA/Ae7YLlaQNUAawSrfe6pGmt2RCQeESZSu5X1EmnaMXDLZW26B/iNBpMgkC2MfA5DyAIg49/w/detaUPk1AqV2TaMnjU7RdthX3xAgQd4k/JfCE0ehUQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738350140; c=relaxed/simple;
-	bh=6AVpoP/2O64gR7R9RqSs9Cdk8c5iQpPg8cARe9RGlP8=;
+	s=arc-20240116; t=1738350182; c=relaxed/simple;
+	bh=KYUdDDp7B+41NEBevjLT8AokSqULN4fTewr/DdTNftA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DJ29IWHN4s0AR44A39Z+PhLM5A0hRvaYx9Gsg03BDz6oN390+lYO5GL/gJ6sW0Pv5H4ShI1gGt9zzn8Jl+8iratFny3e8MJrDNcNEb+n0T7hMjw737TxDZzu6glsOpOJLRf+5DizvevdKoAX9igj0FyzXTIj2LJOA5ewsWBYtqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1CT09mU; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=gGnzAgvnx0WjiT/ohZSSxE8K8UaAzOoQAbtCUXZE3yEwYeqo91rj2ys+gMjtZ8Qr6EAvVRjUEMHSfEesGtvmepsYf9csZLDdx0zas5vXT/qorHitxtI3xaA9dDO+WDF7OWaAXtpukgPEEYejDs5xGtgzXntYL0q/vVvY9KehhlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Jzx2aTg1; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1CT09mU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E39AC4CEE3;
-	Fri, 31 Jan 2025 19:02:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738350139;
-	bh=6AVpoP/2O64gR7R9RqSs9Cdk8c5iQpPg8cARe9RGlP8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=D1CT09mUJEf8McFk33sHFibQKDqHllP9XYFGOf4EWp8f5MfRpHLLfBEcP3MCQkdwY
-	 I9/HMBtAR8eZB9s2Xcns7npwH7WdeJ1GyTMSGKxv2j7dcDT0DdYF+wyRkBdFNqyFDh
-	 5PSv66+xD2lYqFjsAByY45E+wKRkDgaWFlTTkysUpPsPmEBJOd8myIV2AI0f/z02UN
-	 iYiPIxiRc08n9iuw21DbigQy2Er8DB8m6ufBeT26z7hqwpp2MAZ+kcJD9Zu/2RTVe7
-	 Za7PAl/caLvdVPz5a1VAki86NoE1XNmmzo8Bx7MK3QfsnphmitfS7pxqDWqXAV1pK/
-	 rir2yli1OFSXQ==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54287a3ba3cso3154093e87.0;
-        Fri, 31 Jan 2025 11:02:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUHk3QOiWMoH9xD4Gl9cJA25W+FMwwaYMInaz9Hx7SmLmmtHUKBVyTXxcuglCvw67iaQ29hLj76HXs0jrg=@vger.kernel.org, AJvYcCXCHx1oGAbA2GudhBKRDIB+mkU60BAjVpKf+xi2jNtKrnmdADXaAzF2JhyyGKYWVXqaxaaREnod/gJYPN01@vger.kernel.org, AJvYcCXCs3IzCHm8JuNyoXJKn8NHYC9udb2CQeQ6QWo26oNlVnW27W6Io/wgQRBV3u5Prg7tMeJdOL+HigAq+Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTdBpauY0icXnX0QZ+V/fekjDmjIhBMhiTAS/GFkXFc/UZDA0l
-	6T6BCzQZUn/zpGkaKn9/MopgEHf5x2ns/GkK8EDdbV/jOEDZlUEHd5ilEm219PpHIWJ0stELatp
-	kcvblskXmyPM3BzJrJ8jYd9/cABI=
-X-Google-Smtp-Source: AGHT+IHaNiLPZ0x1/qDe4DXPLTcobvQaN1iClH+Dzh4E1ofSiwuHsKBCOpyx9EK2FpIQJy+A5/aMr0wXo3PrtTM4YzQ=
-X-Received: by 2002:a05:6512:ba4:b0:543:e485:815 with SMTP id
- 2adb3069b0e04-543f0ef31fbmr1553901e87.10.1738350137687; Fri, 31 Jan 2025
- 11:02:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Jzx2aTg1"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6f8c58229f1so12741167b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:03:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1738350180; x=1738954980; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VoIGWtRqEVyajH3f896IzB04/manMNgSXSEcwi7G77E=;
+        b=Jzx2aTg1SJ8ueGrtDQ1lMtdPRlv+v8c5XHHWziD7rkIuCTXZeH6n1QNFqpAuRBBZ70
+         VYZipf197fywlnoAEAhKv6FVzlP94OiKkqA1Au7TMy8logxgu8tmVrwrWPrvPNsl0YVy
+         Y2sOCzY4dqYkZ9kc49sme5BnywtXMPtRN7kcZaf1LYSdcYIVJN2G8h7NlJwvWHFGa+78
+         Y7Xklfj46gEU7P629aThuuARsQbud4IXG4XBz15tKQ9T8zGMhU4/CRV9IXQJ4zKNG6cP
+         IHQvSGFY8rANL+/6LkBH2jX+DSEOGZJVoyzD2IFdLeYDcFvLhG+hh50b7sJATsgiGUpY
+         htZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738350180; x=1738954980;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VoIGWtRqEVyajH3f896IzB04/manMNgSXSEcwi7G77E=;
+        b=JfNSKPcVrGHf0hHoXZyiqfw/opT7eqTRD2iZaYWzPn7f+MBuMvz3EGDOFIKgeyfUiF
+         opttzR4D9y3NxaKTXVa+EsvV2vhegKmma3jGCgZT1aCOEo6boeWtTv+T3/4bNtcmbi9f
+         /sudsekSSsK+zZ9mG/FV8fZPZXZkZ+Aw7i7fxVaBwFyxv6elZiIPqbmVEUk6Hj55i7Ti
+         CW1QhFSyDH5bxYW2PaCSOi3mDJXO/YwdfJpC6gIyZEUupMVBCGUYqS0Vpa40QGyEW1ww
+         51dkPQX6aTJc7u1eIZ+gONxmIVi/qlcsIG1QM0zMttKcrsTDjmxf8+b/v1oqEVkiutBA
+         48Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCVrRxmpJujvO8IGZ7KXttjIU9aBoKgYMNsUj9C36+X6VWSyokOl8Ps5LIKWCNAytxwr9DTy3r7C/h1gbp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys4FIYZZpASTa/E9tU2Yo3gtitMlXzdHq1LLZphr27tf215PmC
+	Etbw+o7zhJmPdmpz35UJzAzlLIv0qm8dwG995IERUtD9p0ui+juMvwGnbdGNLZtS+wGO27QQjUC
+	15GjCsEXHJEh73h5yh8QqcCfX3zbymFTPswfw
+X-Gm-Gg: ASbGncsm5/7LMJumKAEd6Qxxm7fQIwFnYQ34i4GZjboHi7lOMyGv8UBdTYY/TFaujDO
+	f3mR4Oj77HCt4fxHCFEIf3sF2iQs22lreeXF0M4lqSoemZgxL0+OfosNDkJ2cNtJaLUXLd8k=
+X-Google-Smtp-Source: AGHT+IE7GEaXmmXiIFe8GxBwPy/s3HOncT3YGCvQL+c/XKAg8Vmw0EZTzAO1gE1HEcsIMlSZ8M2sv6qQS1XKJQ1fBIk=
+X-Received: by 2002:a05:690c:630c:b0:6ee:4855:45de with SMTP id
+ 00721157ae682-6f8cf78bf6amr39511667b3.9.1738350179711; Fri, 31 Jan 2025
+ 11:02:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113155306.1922992-2-ardb+git@google.com> <CAK7LNARmPcM2RTBOfpep7puY8hSJ4rz6mOrw+5EuFHh6iQ0_iA@mail.gmail.com>
- <CAMj1kXHuyJ548mkPNcmU=+oj2mfeNk-4igTHXxo0oDbvz9f8wA@mail.gmail.com> <CAK7LNAQA+VhDf3ZGLmTjLm1JCEvKYPu2jnAUghxMKoCn+BEQ=Q@mail.gmail.com>
-In-Reply-To: <CAK7LNAQA+VhDf3ZGLmTjLm1JCEvKYPu2jnAUghxMKoCn+BEQ=Q@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 31 Jan 2025 20:02:06 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHeSnGcWRs1=kvJrqrUxgfsFDKPTAqQne6Le7pmComtYA@mail.gmail.com>
-X-Gm-Features: AWEUYZkzScnFkN4gfKp8BOqJS510B4DuLEBHcSAhfZCajq1YQZEhaJs1ZcqtkMc
-Message-ID: <CAMj1kXHeSnGcWRs1=kvJrqrUxgfsFDKPTAqQne6Le7pmComtYA@mail.gmail.com>
-Subject: Re: [PATCH v3] kbuild: Strip runtime const RELA sections correctly
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	Ron Economos <re@w6rz.net>
+References: <20250131163447.1140564-1-mic@digikod.net> <20250131163447.1140564-3-mic@digikod.net>
+In-Reply-To: <20250131163447.1140564-3-mic@digikod.net>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 31 Jan 2025 14:02:49 -0500
+X-Gm-Features: AWEUYZlDZc48KHvWERwbMa-E2dllbHHqaA9ZtvhM-icKEMVlKsL0AzDCCJFAC_g
+Message-ID: <CAHC9VhS=mMH9s2KUc2kSK7pW1yG8RB58hyJjW5oWsCK=i-1PdA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 2/3] pidfd: Extend PIDFD_GET_INFO with PIDFD_INFO_LANDLOCK_*_DOMAIN
+To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc: Christian Brauner <brauner@kernel.org>, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Charles Zaffery <czaffery@roblox.com>, Daniel Burgener <dburgener@linux.microsoft.com>, 
+	Francis Laniel <flaniel@linux.microsoft.com>, James Morris <jmorris@namei.org>, 
+	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, Kees Cook <kees@kernel.org>, 
+	Luca Boccassi <luca.boccassi@gmail.com>, 
+	Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
+	Praveen K Paladugu <prapal@linux.microsoft.com>, Robert Salvet <robert.salvet@roblox.com>, 
+	Shervin Oloumi <enlightened@google.com>, Tyler Hicks <code@tyhicks.com>, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 31 Jan 2025 at 19:58, Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Fri, Jan 31, 2025 at 11:43=E2=80=AFAM Micka=C3=ABl Sala=C3=BCn <mic@digi=
+kod.net> wrote:
 >
-> On Sat, Feb 1, 2025 at 3:40=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> w=
-rote:
-> >
-> > On Fri, 31 Jan 2025 at 19:35, Masahiro Yamada <masahiroy@kernel.org> wr=
-ote:
-> > >
-> > > On Tue, Jan 14, 2025 at 12:53=E2=80=AFAM Ard Biesheuvel <ardb+git@goo=
-gle.com> wrote:
-> > > >
-> > > > From: Ard Biesheuvel <ardb@kernel.org>
-> > > >
-> > > > Due to the fact that runtime const ELF sections are named without a
-> > > > leading period or double underscore, the RSTRIP logic that removes =
-the
-> > > > static RELA sections from vmlinux fails to identify them.
-> > >
-> > >
-> > > Dumb question - why can't you rename the section 'runtime*' to '.runt=
-ime*' ?
-> > >
-> > > .rel* matches to sections that just happen to start with '.rel',
-> > > which may not be REL or RELA.
-> > >
-> >
-> > That is what I proposed originally [0] but it was shot down by Linus.
-> >
-> > [0] https://lore.kernel.org/all/20241014125703.2287936-4-ardb+git@googl=
-e.com/T/#u
+> Because Landlock enables users to create nested sandboxes (i.e.
+> domains), we might need to identify the domain with all restrictions
+> (latest), or the domain we created (i.e. closest domain).  Indeed,
+> because any process can create its own domain, the latest domain may not
+> be known by the requester.
 >
+> The PIDFD_INFO_LANDLOCK_LAST_DOMAIN flag enables user space to get the
+> latest (i.e. most nested) Landlock domain ID related to a sandboxed
+> task, if any.  The domain ID is set in the pidfd_info's
+> landlock_last_domain field according to the related mask.
 >
-> Does this work ?
+> The PIDFD_INFO_LANDLOCK_FIRST_DOMAIN flag enables user space to get the
+> closest (i.e. first hierarchy relative to the pidfd's credentials)
+> Landlock domain ID related to a sandboxed task, if any.  The domain ID
+> is set in the pidfd_info's landlock_first_domain field according to the
+> related mask.
 >
-> $(OBJCOPY) --remove-relocations=3D'*' $@
+> It is only allowed to get information about a Landlock domain if the
+> task's domain that created the pidfd is a parent of the PID's domain.
+> Following the object-capability model, the pidfd's credentials are used
+> instead of the caller's credentials.  This makes this command
+> idenmpotent wrt the referenced process's state.
 >
+> If Landlock is not supported or if access to this information is denied,
+> then the IOCTL does not set the PIDFD_INFO_LANDLOCK_*_DOMAIN flag in the
+> returned mask.
+>
+> If PIDFD_INFO_LANDLOCK_LAST_DOMAIN or PIDFD_INFO_LANDLOCK_FIRST_DOMAIN
+> is specified but the provided struct pidfd_info is not large enough to
+> contain the related field, then -EINVAL is returned.
+>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: G=C3=BCnther Noack <gnoack@google.com>
+> Cc: Luca Boccassi <luca.boccassi@gmail.com>
+> Cc: Praveen K Paladugu <prapal@linux.microsoft.com>
+> Closes: https://github.com/landlock-lsm/linux/issues/26
+> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+> Link: https://lore.kernel.org/r/20250131163447.1140564-3-mic@digikod.net
+> ---
+>  fs/pidfs.c                 | 24 ++++++++++++++++++++++--
+>  include/uapi/linux/pidfd.h |  4 ++++
+>  2 files changed, 26 insertions(+), 2 deletions(-)
 
-Only with binutils, not with llvm-objcopy
+While there are exceptions, mostly for legacy things, we try very hard
+to avoid having the kernel call directly into a specific LSM,
+preferring to use LSM interfaces, both so that all LSMs can benefit
+from the change and also so that we can avoid having a lot of very
+similar, but LSM-specific, calls in various parts in the kernel.
+
+There is an effort, albeit a slowly moving effort due to interrupts,
+to add LSM support via a PIDFS_GET_SECURITY API:
+
+https://lore.kernel.org/linux-security-module/CAHC9VhRV3KcNGRw6_c-97G6w=3DH=
+KNuEQoUGrfKhsQdWywzDDnBQ@mail.gmail.com/
+
+I don't see any reason why we couldn't support Landlock's domain info
+as part of that, the lsm_ctx struct was created to support various
+different LSM contexts/attributes.  You could either add multiple
+lsm_ctx array entries for Landlock, one for each of the domain IDs, or
+you could place all of the domain IDs in an expanded lsm_ctx.
+Remember the lsm_ctx->ctx field can hold binary blobs and/or you can
+expand past the end of lsm_ctx->ctx so long as lsm_ctx->{len,ctx_len}
+are set accordingly.
+
+If you want to work on the PIDFS_GET_SECURITY patch(set) as a means to
+add Landlock domain ID support, I think that would be great.  Luca
+provided a basic skeleton in the link above, and I expect you would
+have no issue adding the missing LSM bits.
+
+--=20
+paul-moore.com
