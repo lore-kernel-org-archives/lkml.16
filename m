@@ -1,61 +1,50 @@
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9063213A3ED;
-	Fri, 31 Jan 2025 07:29:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19342146A72;
+	Fri, 31 Jan 2025 07:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738308596; cv=none; b=tEKMHjmChYXAZ7XZRMsaKR60uoSodzH1EgzLHt4FrYKl2Gb2EhBko48hifkXq1e2r8yIW+UH0tfltX3fUMy62paCLFtkoPv0AHHakJEhWdv2ky7KF/O0Y/l1EG/ha0epb62t4aVZyT48WWwcGdiJG6rU2fFh5nW4fRwOTV0G3xM=
+	t=1738308629; cv=none; b=R7kqDrKiAM6CsmsspwJnV4SULWyqhUhjKFS+Xce/NPa2yqkkuX5jmGMDxzLCcaPu8Y8gky4cXb4VtkH6235rnjvW0CGal3nqfdeLZOLXHO3dbpRklTCdJkq4Y9RsgdEBtJm8Pt0AOF7XPbw+pTQSnI2mc/Bh5DmfvpgH7kv3kw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738308596; c=relaxed/simple;
-	bh=5uu/bb9+cmSh28wdRtBdVhiFq95GFW7KguaApgrYugI=;
+	s=arc-20240116; t=1738308629; c=relaxed/simple;
+	bh=qNuDO0SHM2AgU5bKZ20/13qIKAE79jtfoLUxSzMM8Y4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gqWe0oZE3qaRPED9pskfT/FMN2RXarYPsaB+99NdSBTJd07z5CSxxx3Ftao0wbx70nohTtMu2x6SRKnj/O2ziw0tpSzo/6pts3GfDnoaAMTVYB2OJ/VD2nDJYpIlBXEh2mJXBf/ecPQvkp+Yap40QbLM2JV6Dp77dgO7Z/yFpIM=
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kx/ph8fNyjIANXmkZf1HgedFz7mBFAZ7Xb28yJCzT53rRJJ/AEefpvlO26zjrQ0E5TptTVD9qpdyrk/81bMSE/gwRnG+imS4BMRDq6Wq+kBXzg2fzhd6Us7p1blc1CRBixwv0sqoo171TCmAABOwsJ5wsLJljR1lxpB64EqU3pY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 0F3BF68C4E; Fri, 31 Jan 2025 08:29:48 +0100 (CET)
-Date: Fri, 31 Jan 2025 08:29:47 +0100
+	id 55D8468C4E; Fri, 31 Jan 2025 08:30:24 +0100 (CET)
+Date: Fri, 31 Jan 2025 08:30:23 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: Daniel Wagner <dwagner@suse.de>
-Cc: Christoph Hellwig <hch@lst.de>, Daniel Wagner <wagi@kernel.org>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Sagi Grimberg <sagi@grimberg.me>, Ming Lei <ming.lei@redhat.com>,
-	James Smart <james.smart@broadcom.com>,
-	Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH 1/3] nvme-tcp: rate limit error message in send path
-Message-ID: <20250131072947.GB16012@lst.de>
-References: <20250128-nvme-misc-fixes-v1-0-40c586581171@kernel.org> <20250128-nvme-misc-fixes-v1-1-40c586581171@kernel.org> <20250129060534.GA29266@lst.de> <216ab5ef-1c8b-4f3e-8a1a-f11e28994620@flourine.local>
+To: Andreas Gruenbacher <agruenba@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>,
+	gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] lockref: remove count argument of lockref_init
+Message-ID: <20250131073023.GC16012@lst.de>
+References: <20250129143353.1892423-1-agruenba@redhat.com> <20250129143353.1892423-4-agruenba@redhat.com> <20250129154413.GD7369@lst.de> <CAHc6FU47ToGhxxO1MzcdyL=Mcqrf-E+Wh3dwMiuL365pXSfKsg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <216ab5ef-1c8b-4f3e-8a1a-f11e28994620@flourine.local>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHc6FU47ToGhxxO1MzcdyL=Mcqrf-E+Wh3dwMiuL365pXSfKsg@mail.gmail.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Jan 30, 2025 at 04:25:35PM +0100, Daniel Wagner wrote:
-> On Wed, Jan 29, 2025 at 07:05:34AM +0100, Christoph Hellwig wrote:
-> > On Tue, Jan 28, 2025 at 05:34:46PM +0100, Daniel Wagner wrote:
-> > > If a lot of request are in the queue, this message is spamming the logs,
-> > > thus rate limit it.
-> > 
-> > Are in the queue when what happens?  Not that I'm against this,
-> > but if we have a known condition where this error is printed a lot
-> > we should probably skip it entirely for that?
+On Wed, Jan 29, 2025 at 06:19:39PM +0100, Andreas Gruenbacher wrote:
+> On Wed, Jan 29, 2025 at 4:44 PM Christoph Hellwig <hch@lst.de> wrote:
+> > Maybe the lockref_init kerneldoc now needs to say that it's initialized
+> > to a hold count of 1?
 > 
-> The condition is that all the elements in the queue->send_list could fail as a
-> batch. I had a bug in my patches which re-queued all the failed command
-> immediately and semd them out again, thus spamming the log.
-> 
-> This behavior doesn't exist in upstream. I just thought it might make
-> sense to rate limit as precaution. I don't know if it is worth the code
-> churn.
+> I always feel a bit guilty when adding a comment like "Initializes
+> @lockref->count to 1" and five lines further down in the code, it says
+> 'lockref->count = 1'. But okay.
 
-I'm fine with the rate limiting.  I was just wondering if there is
-a case where we'd easily hit it and could do even better.
+It reads a bit odd, but kerneldoc comments aren't just for the reader
+of the code - they also get extraced into rendered documentation.
