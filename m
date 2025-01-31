@@ -1,121 +1,127 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D40335C7;
-	Fri, 31 Jan 2025 16:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738342316; cv=pass; b=dVPmCyzO1C3okr2MWRpVzEvzsgRI32GDnLdyC0EkXQdL3qWKFkll5fWlUdIc5QNN8iOym2lk9iEYYMCQJsoQIGeq2PscKeP0LC9JMo6VkYBV+sDIgJqEsP6icQ8zHZ27ErTsGYKEeLC6sSxxOEz6lG5jIFRkrygtGdi+84ZclJU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738342316; c=relaxed/simple;
-	bh=x1iGMUUcu6wW19i38W2Ur4xL3NEUn11Mon/ruDx06w4=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=adUGl8+faGcISP1LAFUvW6y9pm/Sqg9udF3O4yQ6iOds2TMPVPPvJrHgN0koSqi+IudbXA4OXjpz+ejPJj1cRuHRRgscGPsA9d9ahT6iJJ4cbRyDWPoTLGvOL19pTsqsxrr3SVdPotIH6EdHsws66Qpxcp1Di7NtdGx47hj7F0o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=JdVYhf/b; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6181C5D63;
+	Fri, 31 Jan 2025 16:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738342350; cv=none; b=avjiY5CylJ5KRjZENX4i/aBHT+9m3XpaGkwXXF4TgK55qBWPgVj2wINHEE8o+RzZKOE/aaBc2A+/FQKmxFpukGDLEuF2VW5xBy/txFw2rPrJNYorg/mMhiEUnsodc1kO6Vinvql188baK0o6Yk90bJc9taGKKidTzOsAPcIEYyw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738342350; c=relaxed/simple;
+	bh=6Xp4ueQdFl8WmbQ0ueOgHxXi/KSsNywtWaKc8axdKss=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bQwC6o0VXW8XZRP3hqtOk9LMhzjf1i5vrMf4SBHg4vcHJbVEBHIMQsuR2ll07oY8QJTWIV6WEEJnrj4Siz5BNFbtUPJCWwsmBMpu8+kXoF60NY7C6ILeSlxeKclMGOnSdL5DmtuAGeFdLCpQws7oNggOBWGfAQ7pyBt2sqlge+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fEa2aLJa; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="JdVYhf/b"
-ARC-Seal: i=1; a=rsa-sha256; t=1738342281; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UKyPXxorTljd50l3LPX8kNLdeMYZ96RAImkSFORSFwI+AkJd2aWJgYY8nHi44zRA9Oj9at5JVF43dkm8Q812+bU4ujqqzml889LVbi5t2o968Rbxq/djpJ1i3WCJt9MlRzwNoKLSlwi6gnQ06U4OWb9Wk5SIhAwVUk0D2LPCE/o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738342281; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=AkBxWUIcT550OcxCFzVpvE5imOg6AQ2vl9Nfme++Cjs=; 
-	b=KOpave80XJxye8HUI/YBzj1IBFYvO5n/LK+eGiq0qi1RXd2r7X4RNf/OPRqCukwEF6rwdsXZsHQgMRkZV9xqKDiigmKv0nsG+3UOFp26F+XVfTrFO+nU9UiD9x/JW0VYsKOquv/jEt3XyCFSOc4OYW/SAiz0ojf47EuyEZo5ZRQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
-	dmarc=pass header.from=<Usama.Anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738342281;
-	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=AkBxWUIcT550OcxCFzVpvE5imOg6AQ2vl9Nfme++Cjs=;
-	b=JdVYhf/b2uwkeydaEbsvLMGaFS+sXiidlRg5T2Dy7bGBUcq6XNpBjhCTVX/G4GmB
-	fCvmR6tUmnFwo4rcYRGGXT3Wr65aMJ65UP2SQhfnhw8HGGLCmleJ1SsBrw5yutxNW5S
-	dOhoPebMZ75U/OB2rbedhZvhwDD/t4PqmMqoxN6Q=
-Received: by mx.zohomail.com with SMTPS id 1738342249812409.59874149103837;
-	Fri, 31 Jan 2025 08:50:49 -0800 (PST)
-Message-ID: <c9a01789-278b-4590-853f-9012a33541b2@collabora.com>
-Date: Fri, 31 Jan 2025 21:51:05 +0500
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fEa2aLJa"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50VF1PMV012998;
+	Fri, 31 Jan 2025 16:52:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=7uKq2R
+	Xg8AsGUgQND13tWgTLMrt+YZuxi3vOWeNbpvQ=; b=fEa2aLJaEbdhGEUE1GN48E
+	GjyFRIlqCrSoYJcxtjBjaly589uSPrygnYIdeMVCeRTpu7VonhoMSubAvg6k0Ao3
+	9exIrKBbXIL2p/5XhXIFYf9VbHqoMWCZqR02vDUiSNVHZ9T53eMLADUuuuj6oR1k
+	7qd6pm6Oorpjd9faT06cUJqLyhxyI8YNfU1e7sCBBW7/CxAk8x1SGXPwjnC4XGR8
+	1FJLlQwmbHcFcTvJqSlqjRdoNqJhuxHoHVhDy8H/ps+fqhn2AMbdbIqh5pq877TK
+	+rsboAgrN3+RcFzCOmkrC8ieg1ZZTaxDdB7hwqY/bdSktYKxyOD3onsQd17kb5Bg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44h0t00hss-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 16:52:00 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50VGnMRM019574;
+	Fri, 31 Jan 2025 16:52:00 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44h0t00hsm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 16:51:59 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50VGhLwA010192;
+	Fri, 31 Jan 2025 16:51:58 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44gfa0mfcn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 16:51:58 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VGpvsj31392436
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 31 Jan 2025 16:51:57 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4274A5805D;
+	Fri, 31 Jan 2025 16:51:58 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C093F5805C;
+	Fri, 31 Jan 2025 16:51:56 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.73.176])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 31 Jan 2025 16:51:56 +0000 (GMT)
+Message-ID: <910cb84836f8366a566bae7dbe92f0e649d1715c.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 3/6] ima: Detect if lock is held when iint pointer is
+ set in inode security blob
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>, corbet@lwn.net,
+        viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+        dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Roberto Sassu
+ <roberto.sassu@huawei.com>
+Date: Fri, 31 Jan 2025 11:51:56 -0500
+In-Reply-To: <20250122172432.3074180-4-roberto.sassu@huaweicloud.com>
+References: <20250122172432.3074180-1-roberto.sassu@huaweicloud.com>
+	 <20250122172432.3074180-4-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Usama.Anjum@collabora.com, patches@lists.linux.dev,
- linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
- akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
- patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
- jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
- srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
- hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.6 00/43] 6.6.75-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-References: <20250130133458.903274626@linuxfoundation.org>
-Content-Language: en-US
-From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
-In-Reply-To: <20250130133458.903274626@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: t-iBCn-6cVlDFpiJP4zIMTMVPEpbVSAB
+X-Proofpoint-ORIG-GUID: 9DFpJgQh-UceYTkhgy6J5n4OhGVWXLc2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-31_05,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ priorityscore=1501 mlxscore=0 malwarescore=0 mlxlogscore=822
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 spamscore=0 phishscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2501310123
 
-On 1/30/25 6:59 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.75 release.
-> There are 43 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 01 Feb 2025 13:34:42 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.75-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-OVERVIEW
+On Wed, 2025-01-22 at 18:24 +0100, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+>=20
+> IMA stores a pointer of the ima_iint_cache structure, containing integrit=
+y
+> metadata, in the inode security blob. However, check and assignment of th=
+is
+> pointer is not atomic, and it might happen that two tasks both see that t=
+he
+> iint pointer is NULL and try to set it, causing a memory leak.
+>=20
+> Detect if the iint check and assignment is guarded by the iint_lock mutex=
+,
+> by adding a lockdep assertion in ima_inode_get().
+>=20
+> Consequently, guard the remaining ima_inode_get() calls, in
+> ima_post_create_tmpfile() and ima_post_path_mknod(), to avoid the lockdep
+> warnings.
+>=20
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 
-        Builds: 40 passed, 0 failed
+Thank you for updating the patch description.  You might also want to menti=
+on that
+CONFIG_LOCKDEP_DEBUG is required to see the warnings.
 
-    Boot tests: 625 passed, 1 failed
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
-    CI systems: broonie, maestro
-
-REVISION
-
-    Commit
-        name: v6.6.74-44-g2c44b59139a8
-        hash: 2c44b59139a8bd89a50d82ca7f695ca18d867362
-    Checked out from
-        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-
-
-BUILDS
-
-    No build failures found
-
-BOOT TESTS
-
-    Failures
-
-      i386:(defconfig)
-      -hp-14b-na0052xx-zork
-	https://kcidb.kernelci.org/d/test/test?var-datasource=edquppk2ghfcwc&var-origin=$__all&var-build_architecture=$__all&var-build_config_name=$__all&var-id=maestro:679b96be65fae3351e30f0f9&from=now-100y&to=now&timezone=browser&var-test_path=&var-issue_presence=$__all
-      CI system: maestro
-
-See complete and up-to-date report at:
-
-    https://kcidb.kernelci.org/d/revision/revision?orgId=1&var-git_commit_hash=2c44b59139a8bd89a50d82ca7f695ca18d867362&var-patchset_hash=
-
-
-Tested-by: kernelci.org bot <bot@kernelci.org>
-
-Thanks,
-KernelCI team
