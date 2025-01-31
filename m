@@ -1,111 +1,170 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6801E3DD6
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BC931E8823;
+	Fri, 31 Jan 2025 16:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738340671; cv=none; b=C/DYE4WM5X4aYXDHNCpXn0UALCjpJIBqgsPVEK6gGaErB3FX4cq21bkZXVxzNeqXCAcpUo22yrVkFZ7uVorUdg04cSKj8Vc4iDgzsGGNL7WmQLXDTYaXu76ovNICJ5P0c5zBC0PauVbF4S+LSbjmaxGT+mcvYgMZVmDTqBqbDPk=
+	t=1738340701; cv=none; b=G5Ph+/J2XH6EhfP88loLJK2hBpo3gnp4X5h0bx1iZc0m0Zzy4aV96P4Bf94IgXX6Ljw9SUrLgUkb2RGVfZA7YhzzobhT03OxB62cGvxSEFT/moWA0Ytd+lPJ/E1w7zfCmvTHElgB4cdzG5bLsSkz5YGX9Awftf9gNKQNOWTiAR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738340671; c=relaxed/simple;
-	bh=EZ4ZH45qNXzKCS3lBhUz6baQ7yOTm+vianG7o2TOPnU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T7BXd143K6lCMC4sYoj/1PKZ2vTWbFG+oWjvwcQvSSi4O70LGTwjQWOY1GCcSr3Fkpld15YQWeGEQ1XciDOYyyjt9V6t8xrrKw/i4L2slrx7Cf7rAG27jgpaXUFf+VtdwvrZsFRXRpz+jKA2Wa+HJxQzIQF0/2Sk0JQ2g+AnjK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MiMBmQ36; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MiMBmQ36"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3061f1e534bso21900551fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 08:24:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738340668; x=1738945468; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l1OPRB6njxlUcUlHqiK6tXyv78044AchgI/F8gIyGgQ=;
-        b=MiMBmQ361YU7CblNVu3W7F2ehHnkfp93RCB3dSjqgvZu9i+rQwsJPZ/XyY4F+B6OT2
-         veDLrkRn7gjlum7lkI1oMDX9YuCyU+D/lANyu6ioWPiGvSBXAMZ+ruruAJ80Y2k3F58I
-         nmqY7WshsESg6Hk1k74t8a22E2e4afaKRjAbs/Ms9VsAQ01ps6ZUZd/0J5R63uLXdpPP
-         kOIw7Lvuec7L9d3om42D021XZh+tMOe04wF0UDttVvNjnTLO4bRtT0AYhYfUMBXpBWPK
-         2055lp0OgMGSohWdXJKkJ5vn4rEWuvYuc9iz6O2xH/X2YloL+Pjf5wqCZ18XWeajvmK+
-         CwIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738340668; x=1738945468;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l1OPRB6njxlUcUlHqiK6tXyv78044AchgI/F8gIyGgQ=;
-        b=v4nUUFXLlcvm+JrwXDGgSHLGuvv/VSrrbBeIgsebwFvTqA3RkxJS6b8OfCkHekvoJI
-         tEFais+Zb1AvlRFj98QFSo1pmRPPeVKPfLMz01AiYCEkV2rkbHmtFNghaIy5D82d/PxR
-         nqUjubYCaunhxQ6dwR3GCoYfy/K7FMFvt9wvzGYujrRlWqXVfMcR0g7L5e6nYdWldeCZ
-         1Z1WLtWexlvPbljbeBqp0reuMYIJXR8Flxr0EYrxZ6jkeaLHFMr1NXm7+reOskAviYKe
-         IrBKne8GLuWHaANbQwE15gPviVtisCdSgh6Q3IrB/6U02m2O1SLjgrEL1594cJVWPz+r
-         VwNA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqyAZmOaI85YmbPmspp8CUfVM6TqBLC+6BJuLhSUSG1z43fpBBq1vvrC7H1Y4M18RzJh7OyLm7MGEz+DY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFOSouhAnqSvDxsvtUHV3jAJvfkmeqHTVwfGwT43V1jfWlOOxv
-	KdFgweFVTNyS93Ineoc3sE/dRn3xhYeuQFJbrbzMTxomhhQLaMj0x99Ksu8uqgY=
-X-Gm-Gg: ASbGnctM367hwW8B6tBDfQFO20zlixiXEBRF/0pY55qfjGWvPSdLTqOE/SkYo3Ti1wp
-	sAl8xkPbpUzm8T8K5Kml7AwbfL+pdbP17Wf+9QvwCa3QkzJgedXN4XioJqG4stoRcLCW8oDvxSG
-	fu7Xv5f13W6BvQ8iUp47cASqZGvNzIqWdxYXAnNpV+HwPz0sFYf6aONMxedUkxJAqbSayp/hKKH
-	/q5zzEkWkI6FsALdKcS008aHwG1QYnbrJbcyfduO+kGh5AYk4aK+p7lCZISxfur3s8Vj5aF/32c
-	mX5VV/VkAXHl0tkEFzNDevjLkwVGeWXmWfVofKt+AgcVj/kM+NOCbJ9siHp0nBQKMaxyyHg=
-X-Google-Smtp-Source: AGHT+IET6Ip7seInrKN40IUQ5plgR5Wbm/yFknTx/GqkNshb2c2sHr/YKBS3/IVjV6dDw1EBZWuIdA==
-X-Received: by 2002:a05:651c:2214:b0:302:25ef:813e with SMTP id 38308e7fff4ca-307968fa2acmr43084751fa.32.1738340667875;
-        Fri, 31 Jan 2025 08:24:27 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a34282a5sm6090751fa.102.2025.01.31.08.24.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 08:24:26 -0800 (PST)
-Date: Fri, 31 Jan 2025 18:24:25 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] drm/msm/dsi/phy: Improvements around concurrent
- PHY_CMN_CLK_CFG[01]
-Message-ID: <gyslnttjsuav5dsbmglroujpwrqazokfnj65uhbegja3w27yxc@iamitbbg2e7e>
-References: <20250131-drm-msm-phy-pll-cfg-reg-v1-0-3b99efeb2e8d@linaro.org>
+	s=arc-20240116; t=1738340701; c=relaxed/simple;
+	bh=t5vlalJQkpRyc1A0mgyXobueuE89PWKmTu4O8JqLhwE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=J1rZo3PxMKEAK92DQidumN1gND+XcJb2cjLK7MO+wgTcOrFTK3uGIM8sGfjmrUb/mrgspwKgOQ1uMd6WKcnMbYY1/kd4z0cOutZze2rCIRiG2LsBM/SfSGnwf75ww8UWfJCl/v89H3cnLFpUhcnybSC7QawbXmxrb+9lm243zdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5E42497;
+	Fri, 31 Jan 2025 08:25:23 -0800 (PST)
+Received: from e125905.cambridge.arm.com (e125905.cambridge.arm.com [10.1.194.73])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 43BBB3F694;
+	Fri, 31 Jan 2025 08:24:55 -0800 (PST)
+From: Beata Michalska <beata.michalska@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pm@vger.kernel.org,
+	ionela.voinescu@arm.com,
+	sudeep.holla@arm.com,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	rafael@kernel.org,
+	viresh.kumar@linaro.org
+Cc: sumitg@nvidia.com,
+	yang@os.amperecomputing.com,
+	vanshikonda@os.amperecomputing.com,
+	lihuisong@huawei.com,
+	zhanjie9@hisilicon.com,
+	ptsm@linux.microsoft.com,
+	Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Phil Auld <pauld@redhat.com>,
+	x86@kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v10 0/4] Add support for AArch64 AMUv1-based average freq
+Date: Fri, 31 Jan 2025 16:24:35 +0000
+Message-Id: <20250131162439.3843071-1-beata.michalska@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131-drm-msm-phy-pll-cfg-reg-v1-0-3b99efeb2e8d@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 31, 2025 at 04:02:49PM +0100, Krzysztof Kozlowski wrote:
-> Calling these improvements, not fixes, because I don't think we ever hit
-> actual concurrency issue.  Although if we ever hit it, it would be very
-> tricky to debug and find the cause.
+Hi All,
 
-All of the patches miss Fixes: tags.  Could you please provide those.
+This series adds support for obtaining an average CPU frequency based on
+a hardware provided feedback. The average frequency is being exposed via
+dedicated yet optional cpufreq sysfs attribute - cpuinfo_avg_freq.
+The architecture specific bits are being provided for AArch64, caching on
+existing implementation for FIE and AMUv1 support: the frequency scale
+factor, updated on each sched tick, serving as a base for retrieving
+the frequency for a given CPU, representing an average frequency
+reported between the ticks.
 
-> 
-> Best regards,
-> Krzysztof
-> 
-> ---
-> Krzysztof Kozlowski (3):
->       drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG0 updated from driver side
->       drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG1 against clock driver
->       drm/msm/dsi/phy: Do not overwite PHY_CMN_CLK_CFG1 when choosing bitclk source
-> 
->  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 50 ++++++++++++++++++++-----------
->  1 file changed, 33 insertions(+), 17 deletions(-)
-> ---
-> base-commit: 375ef7b3d85d8b0fa72092642582ca5b95a64e67
-> change-id: 20250131-drm-msm-phy-pll-cfg-reg-7e5bf5aa9df6
-> 
-> Best regards,
-> -- 
-> Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
+The changes have been rather lightly (due to some limitations) tested on
+an FVP model.
+
+Note that, this series depends on [6] and [7] !
+
+Relevant discussions:
+[1] https://lore.kernel.org/all/20240229162520.970986-1-vanshikonda@os.amperecomputing.com/
+[2] https://lore.kernel.org/all/7eozim2xnepacnnkzxlbx34hib4otycnbn4dqymfziqou5lw5u@5xzpv3t7sxo3/
+[3] https://lore.kernel.org/all/20231212072617.14756-1-lihuisong@huawei.com/
+[4] https://lore.kernel.org/lkml/ZIHpd6unkOtYVEqP@e120325.cambridge.arm.com/T/#m4e74cb5a0aaa353c60fedc6cfb95ab7a6e381e3c
+[5] https://lore.kernel.org/all/20240603081331.3829278-1-beata.michalska@arm.com/
+
+[6] https://lore.kernel.org/all/20240827154818.1195849-1-ionela.voinescu@arm.com/
+[7] https://lore.kernel.org/all/20250131155842.3839098-1-beata.michalska@arm.com/
+
+v10:
+- Assume '0' is still somewhat a valid frequency value (as per discussion)
+  and that gets applied for show_cpuinfo for x86
+- Excluded patch:
+	"arm64: amu: Delay allocating cpumask for AMU FIE support"
+  which has been sent out as a separate change at [7]
+- Added info on EAGAIN error within the docs
+- Switched to while loop instead of goto statement for arch_freq_get_on_cpu
+  implementation
+
+v9:
+- Moved changes to arch_freq_get_on_cpu to a separate patch
+
+v8:
+- Drop introducing new function and reuse arch_freq_get_on_cpu, guarding its use
+  in scaling_cur_freq sysfs handler with dedicated config for x86
+
+v7:
+- Dropping 'arch_topology: init capacity_freq_ref to 0' patch from the series
+  as this one has been sent separately as an independent change
+  [https://lore.kernel.org/all/20240827154818.1195849-1-ionela.voinescu@arm.com/]
+- Including in the series change that introduces new sysfs entry [PATCH 1/4]
+- Consequently modifying previously arch_freq_get_on_cpu to match reqs for new
+  sysfs attribute
+- Dropping an idea of considering a CPU that has been idle for a while as a
+  valid source of information for obtaining an AMU-counter based frequency
+- Some minor cosmetic changes
+
+v6:
+ - delay allocating cpumask for AMU FIE support instead of invalidating the mask
+   upon failure to register cpufreq policy notifications
+ - drop the change to cpufreq core (for cpuinfo_cur_freq) as this one will be
+   sent as a separate change
+
+v5:
+ - Fix invalid access to cpumask
+ - Reworked finding reference cpu when getting the freq
+
+v4:
+- dropping seqcount
+- fixing identifying active cpu within given policy
+- skipping full dynticks cpus when retrieving the freq
+- bringing back plugging in arch_freq_get_on_cpu into cpuinfo_cur_freq
+
+v3:
+- dropping changes to cpufreq_verify_current_freq
+- pulling in changes from Ionela initializing capacity_freq_ref to 0
+  (thanks for that!)  and applying suggestions made by her during last review:
+	- switching to arch_scale_freq_capacity and arch_scale_freq_ref when
+	  reversing freq scale factor computation
+	- swapping shift with multiplication
+- adding time limit for considering last scale update as valid
+- updating frequency scale factor upon entering idle
+
+v2:
+- Splitting the patches
+- Adding comment for full dyntick mode
+- Plugging arch_freq_get_on_cpu into cpufreq_verify_current_freq instead
+  of in show_cpuinfo_cur_freq to allow the framework to stay more in sync
+  with potential freq changes
+
+CC: Jonathan Corbet <corbet@lwn.net>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Borislav Petkov <bp@alien8.de>
+CC: Dave Hansen <dave.hansen@linux.intel.com>
+CC: H. Peter Anvin <hpa@zytor.com>
+CC: Phil Auld <pauld@redhat.com>
+CC: x86@kernel.org
+CC: linux-doc@vger.kernel.org
+
+Beata Michalska (4):
+  cpufreq: Allow arch_freq_get_on_cpu to return an error
+  cpufreq: Introduce an optional cpuinfo_avg_freq sysfs entry
+  arm64: Provide an AMU-based version of arch_freq_get_on_cpu
+  arm64: Update AMU-based freq scale factor on entering idle
+
+ Documentation/admin-guide/pm/cpufreq.rst |  17 ++-
+ arch/arm64/kernel/topology.c             | 125 +++++++++++++++++++++--
+ arch/x86/kernel/cpu/aperfmperf.c         |   2 +-
+ arch/x86/kernel/cpu/proc.c               |   7 +-
+ drivers/cpufreq/Kconfig.x86              |  12 +++
+ drivers/cpufreq/cpufreq.c                |  38 ++++++-
+ include/linux/cpufreq.h                  |   2 +-
+ 7 files changed, 183 insertions(+), 20 deletions(-)
 
 -- 
-With best wishes
-Dmitry
+2.25.1
+
