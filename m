@@ -1,173 +1,102 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73700323D;
-	Fri, 31 Jan 2025 13:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49272744E;
+	Fri, 31 Jan 2025 13:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738330506; cv=none; b=JRA04ksqGKerFnfvokuar3YLOigppx1pKeHoc+U7hsSU+HTyofefoLEJo0t7hSv3kzBdjtTJ2EX8xRh81ICoIbanjFLy+49Ji5QrMMn2R0XpfeLwa/QQp5f8pOkpRocKqlkCraRfODUGNhMu3XDEWxAG+yKTJS9B2UzDG3L935w=
+	t=1738330518; cv=none; b=cVz00IYttFRgqq+lTv82uUh/Hh72UL9Pfww7LXuqYqtRwgEo/8TElM1MBuxi0npf9lioKqxnAkBuYNzAgiCLjIxXxwci8Y4Mq4+Gvl6gUa+cnfc7Lnl+dyvbOHSKEGp70qE/92IMNWH02iwv6r3DlY7FbU4tokMAqt9S7ktSoU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738330506; c=relaxed/simple;
-	bh=Xz8VjKejfbpPZ5ZbbgK5hu/UqkF3eVN8GGa71ni45u0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Z8xCtFS4kkkEFF92olrthnF6sxLAAWbLmICAEC463yLbxIHbBvbj5zXG9Vkj72SGSFIse1lYmLSI59OxdKS7bLD70Qzr1RDdGZKIXtTxZ0knLWkOP04tcuFuEK9wu0Xl+ZSUhzIw3NS3a+FEUM57/y/qb3Wuz/15kDZiIGsaVMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PJlskc7a; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738330518; c=relaxed/simple;
+	bh=sBx6Lp3Z3vX6guoh2rGM1YOzdzROZMt9Ny+YeM0r1LQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hKSglHsZ5Eskv3X9JdO4nOyK/Y1gH6b1wvLi6gsTaxhmYyQD/V3Z7s/h9VhMpwrY3TFoZUWmc3mdNKYnedry8nMjQK36mzzhd1ljcEEKWX3UwIsys0t35YJDFJf10C5RzgLSP1ZyoagWWK8+Z8qNIwQdAYQAJWNYQuHNKABeUGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=jW5JgLtj; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJlskc7a"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5401ab97206so1918957e87.3;
-        Fri, 31 Jan 2025 05:35:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738330502; x=1738935302; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Eu+Y8hwetlGIoMj6j81yHuOb5xgouesg8mpKJnw8jVA=;
-        b=PJlskc7aQE72XR43o6u8nHs1vb6Q5zZJ7hWGYzbqBhy3GpMmyV4pWJcz1UJvpXJCZP
-         X6bcPuqGEgDfzHnVljjvYy7olZajIzNQEykObFvx6rMkAylS3DbA4Eju5zSwxB6aRGiU
-         xiiOIKaX2o8nuaZu4/L4gIL6VorspI4UxclEmkSHVhHlrm/r1c8jnxiIt/JS6Hinbs2E
-         ZqzJrCls0ZfJ9sIacOP2SK4cguFUzgIkwv1Tr3Hnh1wY3zXEPPMdZTRCXSl9dtR/gnBx
-         baBVjOPmLU55sG/0naEiAXYzko4yCfDkKSsXdwH7rlygK3joM/3XkNZxDi5QHi7xwEPx
-         RyUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738330502; x=1738935302;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Eu+Y8hwetlGIoMj6j81yHuOb5xgouesg8mpKJnw8jVA=;
-        b=iZvT4KstnR+X2WXY5/IIp/R0ZGE26G4/JEFSj3oNl0JTNmdSWYFPCoBnrQs/zsxXvc
-         UdpQBWEONvZqqzfQ0M/yh38NYpYGO7d0VTlX7Z50383Dyj23hoUS8tkXCH8JgFZMou2o
-         xpIaJEQ13DIJQbv/pxmixUUJIUfPRuw1Si2BcDvKFen6wjZY7eCyrpwvTPiqmvTqDXA5
-         9pa4r4G0SYa9tCn2hB9Co2K8Pg16UlXtRqysZ715bp6SWdRJENAUJHFCLt558/WNWCzH
-         fiamIZ0IrRWKP01VJ/mJ5KYF8od+PX9PGfUXuEaDZCbq2pXmWtfwOKDnX3b/SDcW3C8j
-         fwpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbgOqVMuZBGp/Vfc9SA4BnQN2+vtz3goUADSKBz8qSNYFghJztC6ZuEKa9JY3n+i47UHdLxjJVSkx7@vger.kernel.org, AJvYcCWWmF8LYYOQpdOns3rbaVbL+r74TyaQVWedmJBuXoljCmTKaB1MqawSZqU9YAhyGYQdFMU9RDWWUZk/@vger.kernel.org, AJvYcCXcEz2XmoCX0qNNnXDZjKfa2rp2ilAe3F44CP3UsG1e7FeLkA+xodL4srinACE8YmwFs2eqogQ0DJQIA64z@vger.kernel.org, AJvYcCXzQzuv/Jm2nNdjW2wA4JOA5HfZZXCVjkpkIfGgwCDYg23CSDBw1G1nNNUtKos9XoQ2WjrDNu1Zl0n/Ew==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxq1rWwBu1ghAemZZnQw79g06pu8q4Aiqh5P9O7oRIMOm9nIXBT
-	TdFeGe44Alv8Dr2tayBZPZqnXkAJ9ysGNIqD8epaEEwrSADVwDzE
-X-Gm-Gg: ASbGncuU2032UbUODnsi4VOIP/AesrmvyFaAHfYMynL4GNlltaxR1X9yEQXycaoiBgZ
-	ojoZceUo1rDNyhseKEz7Qbn7b3XgoscYLJGOvUBglGpnlMDBRpD0Y2Y1yVv5xiuPcBii01etMl9
-	rmSBBQAcoJLBXPm7ZHahuPL6k1Z+YX80VsErg5G4n0GViJ8TTlAtLgE3cXXl8YOGlQhfPhj1JRF
-	Hd18reJzEJ+5uHCrFLlI5ji9+Y3RIXZqvK4oc+4LxfVntZnmWJnWapblU4oNzbW0ZjArLjgP0FF
-	w8R3cjeh/2so3c/vyO8AiH5XjcA5y00YOEGTuEwtSnas3W0=
-X-Google-Smtp-Source: AGHT+IHs1oVh4GLAYU8vC+tcDofEQq+9y0jY+lRpK5r5psyIMy3xlfB9XvH3oDlFxONwU8Y6qIEgAQ==
-X-Received: by 2002:ac2:4e01:0:b0:540:1e17:10d2 with SMTP id 2adb3069b0e04-543e4c3c39cmr4025101e87.49.1738330502155;
-        Fri, 31 Jan 2025 05:35:02 -0800 (PST)
-Received: from mva-rohm (85-23-190-22.bb.dnainternet.fi. [85.23.190.22])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a3428055sm5590001fa.98.2025.01.31.05.35.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 05:35:01 -0800 (PST)
-Date: Fri, 31 Jan 2025 15:34:43 +0200
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Nuno Sa <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>,
-	Matteo Martelli <matteomartelli3@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [RFC PATCH 0/5] Support ROHM BD79124 ADC/GPO
-Message-ID: <cover.1738328714.git.mazziesaccount@gmail.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jW5JgLtj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=PxZj02JGvJPKVIuRsnn0LpE6ElYq5muFkD78aLQpUK4=; b=jW5JgLtjrGN8PwSgm6lOA1EPcW
+	WOrjgwzt2a/Wv3mHIPU/OxPCVlPT+gSudVsiOPslty20FGpbisCzUCTLM4v3tAWt5k0tQm/NjaihX
+	jMCSWovzMzvAnEtFDXB4Kc40ZGNAH4yXFXcYFw1zHf6l1eRO/f1M+8EVkX+JWM2qeZX8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tdrAl-009hi9-6M; Fri, 31 Jan 2025 14:35:03 +0100
+Date: Fri, 31 Jan 2025 14:35:03 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Tristram.Ha@microchip.com
+Cc: linux@armlinux.org.uk, olteanv@gmail.com, Woojung.Huh@microchip.com,
+	hkallweit1@gmail.com, maxime.chevallier@bootlin.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, UNGLinuxDriver@microchip.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [WARNING: ATTACHMENT UNSCANNED]Re: [PATCH RFC net-next 1/2] net:
+ pcs: xpcs: Add special code to operate in Microchip KSZ9477 switch
+Message-ID: <8866e9ba-642c-4b09-a6da-e352936956c5@lunn.ch>
+References: <20250128102128.z3pwym6kdgz4yjw4@skbuf>
+ <Z5jOhzmQAGkv9Jlw@shell.armlinux.org.uk>
+ <20250128152324.3p2ccnxoz5xta7ct@skbuf>
+ <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <20250129211226.cfrhv4nn3jomooxc@skbuf>
+ <Z5qmIEc6xEaeY6ys@shell.armlinux.org.uk>
+ <DM3PR11MB873652D36F1FC20999F45772ECE92@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <Z5tRM5TYuMeCPXb-@shell.armlinux.org.uk>
+ <DM3PR11MB8736A58E065BF24C2CEA5808ECE82@DM3PR11MB8736.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="daWK6XH5vuFu49SL"
-Content-Disposition: inline
-
-
---daWK6XH5vuFu49SL
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <DM3PR11MB8736A58E065BF24C2CEA5808ECE82@DM3PR11MB8736.namprd11.prod.outlook.com>
 
-Support ROHM BD79124 ADC.
+> > So I'm going to say it clearly: never operate the link with dis-similar
+> > negotiation protocols. Don't operate the link with 1000base-X at one end
+> > and Cisco SGMII at the other end. It's wrong. It's incorrect. The
+> > configuration words are different formats. The interpretation of the
+> > configuration words are different. Don't do it. Am I clear?
+> 
+> I do not quite follow this.  The link partner is out of control.  The
+> cable is a regular Ethernet cable.  It can be plugged into another PHY, a
+> 100Mbit switch, and so on.  Currently using 1000Base-T SFP running in
+> 1000BASEX mode and 10/100/1000Base-T SFP running in Cisco SGMII mode
+> works in establishing network communication.
 
-Quite usual stuff. 12-bit, 8-channel ADC with threshold monitoring.
+Russell is talking about PCS to PHY, the signalling over the SERDES
+bus. You are talking PHY-to-PHY signalling over the media, 4 pairs of
+copper. These are different signalling protocols, code words in the
+in-band signalling of the SERDES data stream, and pulses on the
+copper.
 
-Except that:
- - each ADC input pin can be configured as a general purpose output.
- - manually starting an ADC conversion and reading the result would
-   require the I2C _master_ to do clock stretching(!) for the duration
-   of the conversion... Let's just say this is not well supported.
- - IC supports 'autonomous measurement mode' and storing latest results
-   to the result registers. This mode is used by the driver due to the
-   "peculiar" I2C when doing manual reads.
+Russell is saying you should not mix a Cisco SGMII and 1000Base-X
+between the PCS and the PHY. The code words are different format,
+which might appear to work in some conditions, but in general is
+broken. This is why phylink will try to talk to the PHY within the
+SFP, and set is host side interface to Cisco SGMII, and configure the
+PCS to Cisco SGMII.
 
-I sent this as an RFC because I implemented the pin purposing (GPO/ADC)
-using pinmux - which I've never done for upstream stuff before. Hence
-it's better to ask if this makes sense, or if there is better way to go.
-Anyways, resulted drivers spread to 3 subsystems (MFD, pinctrl and IIO).
+> > If it's still that 1000base-X mode to another 1000base-X partner doesn't
+> > generate a link-down interrupt, then you will have no option but to use
+> > phylink's polling mode for all protocols with this version of XPCS.
+> 
+> It is always that case when running in 1000BASEX mode using fiber SFP or
+> 1000Base-T copper SFP.
 
-Furthermore, the GPO functionality has not been (properly) tested. I'll
-do more testing for v2 if this pinmux approach is appropriate.
+So in general, you would not use 1000BaseX between the PCS and the PHY
+in the SFP. It gets tricky doing 10/100Mbps. Since 1000BaseX is hard
+coded to 1G, there is no in-band signalling to say to the MAC to only
+send at 10/100. So the PHY generally has back to back MACs, the host
+side running at 1000, and the line side at 10/100, with a packet
+buffer in the middle. As the buffer fills up, the host side MAC
+generates pause frames to slow down the MAC to stop the buffer
+overflowing.
 
-Furthermore, because the ADC uses this continuous autonomous measuring,
-and because the IC keeps producing new 'out of window' IRQs if
-measurements are out of window - the driver disables the event when
-sending one. This prevents generating storm of events, but it also
-requires users to reconfigure / re-enable an event if they wish to
-continue monitoring after receiving one. Again I am not sure if this is
-the best way to handle such HW - so better to ask for an opinion than a
-nose bleed, right? Maybe the next version will no longer be a RFC :)
-
----
-
-Matti Vaittinen (5):
-  dt-bindings: ROHM BD79124 ADC/GPO
-  mfd: Add ROHM BD79124 ADC/GPO
-  iio: adc: Support ROHM BD79124 ADC
-  pinctrl: Support ROHM BD79124 pinmux / GPO
-  MAINTAINERS: Add ROHM BD79124 ADC/GPO
-
- .../devicetree/bindings/mfd/rohm,bd79124.yaml | 111 +++
- MAINTAINERS                                   |   8 +
- drivers/iio/adc/Kconfig                       |  10 +
- drivers/iio/adc/Makefile                      |   1 +
- drivers/iio/adc/rohm-bd79124-adc.c            | 890 ++++++++++++++++++
- drivers/mfd/Kconfig                           |  12 +
- drivers/mfd/Makefile                          |   1 +
- drivers/mfd/rohm-bd79124.c                    | 165 ++++
- drivers/pinctrl/Kconfig                       |  11 +
- drivers/pinctrl/Makefile                      |   1 +
- drivers/pinctrl/pinctrl-bd79124.c             | 276 ++++++
- include/linux/mfd/rohm-bd79124.h              |  32 +
- 12 files changed, 1518 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd79124.yaml
- create mode 100644 drivers/iio/adc/rohm-bd79124-adc.c
- create mode 100644 drivers/mfd/rohm-bd79124.c
- create mode 100644 drivers/pinctrl/pinctrl-bd79124.c
- create mode 100644 include/linux/mfd/rohm-bd79124.h
-
-
-base-commit: 5bc55a333a2f7316b58edc7573e8e893f7acb532
---=20
-2.48.1
-
-
---daWK6XH5vuFu49SL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmec0WsACgkQeFA3/03a
-ocWxwwgAm4eAzcDyXSJ+HL2AMGU0v0RQQMilaqZDrdqzDyTvxd9AxePvb8c0xnjL
-SWD7Af8dQF0S/XqNVn+71b7hEiURF5FY5kCd5HuvzxM9/O2xjQy9mA8KD03SIBGL
-TuHYjGCsXfRg38lpKfUM+uws/1pvzl3IKjhLrh3gxtoZt++f6JZgBh/YBe1Vpmyr
-0c+QGgz0dMMAdV/r70zV5KY0KQMSXZEqEpiSTemJH8XvxkoW6tuWmc6G7sVNoJgJ
-JQN5LXmRcfkVl6wSYTSgqk3GPIizmjrxTcqCGqRwYyo6yM6jT7uZ1/SZguoeZUDh
-GLFBGJgML2UIpbI1SCRdeO2nhUzVnQ==
-=tXv2
------END PGP SIGNATURE-----
-
---daWK6XH5vuFu49SL--
+	Andrew
