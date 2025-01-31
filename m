@@ -1,22 +1,22 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351C51B87D0;
-	Fri, 31 Jan 2025 13:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7381C174A;
+	Fri, 31 Jan 2025 13:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738328542; cv=none; b=h9uD4dxoAH8VeNfyegA83e3Rvo7foqqlwNqNAdkp4UuxR+C8hlWjOqf4xSXt6IlZMwaTWEJ7Cg6eOnBaIjgE5IQdZp2FRdMT0UPOTHh8C2bbwTQts8HKbUn65Gm8FUXg+vmoNa2nx4KZm6L8Rb8E7r5AoNeCclp0fNvBHvJ4bYo=
+	t=1738328548; cv=none; b=dA3gP26BkPXUlv2zAVBSlCjGAdQ3fcTimF67MZfpvty7A09FigsVEkbnzYg3rWOPcDwcCShq974GO/Ep3uK4LAljq6iaKblNbGuPYjq47NiOLoUcUB8d2oHJwblD1sjNH9A7uQBK8bW3BsBwb+/a9UBvCRechVqZDaTQ4D7jkcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738328542; c=relaxed/simple;
-	bh=U5dK1s2mEy743eLmLd9QQoxaUO47/aada/fIGdOPpeI=;
+	s=arc-20240116; t=1738328548; c=relaxed/simple;
+	bh=ha3GA1YeJrWZZXOHK2YRUHj1Zw4fHBWjpmXy5ZEJcNc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uyncGmuN2c/DNZZxO47ZFKCHcos15Euw4ZZ6qQ8DOYawSHFA9+gB1YiFA9K/kYoL0LweP+t1HIhspnHCjOqc10Nwn1OMx4Undh0woJ0RgioH1KYdkM30e+EFzyEGRn0rofnJL39Do45YCIBjzcPyb3DMVLtq+7zkgQdnqrWG9eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cdms/jwB; arc=none smtp.client-ip=217.70.183.193
+	 Content-Type:Content-Disposition:In-Reply-To; b=HA34l3IMxNjAlG7yta9CNcOSKluZOP0spJJYdqM1uPx8i+FS1ZBxVyEeBcLHwOMDi7I/RJamIPPI3y5sHj+0dLfL06y9ErR5IxCBhuk39tUPlVX/AZsieqygKzUySTqlVtVix/4D8BNkHyW90vDNHZpHHaspXg4L35VLAjodQfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Y4KKhUGL; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cdms/jwB"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7F00A44310;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Y4KKhUGL"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B82E14426E;
 	Fri, 31 Jan 2025 13:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
 	t=1738328538;
@@ -24,12 +24,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lb/K/SCohDoUCh3f9yyufOMMbrIywrLyezp4JOZkI7g=;
-	b=cdms/jwBoySKOD2dUfuAAo/vIHMeeEqQw7PSK9TfVn+DXbQyW+d1JyNX0lhVwrWjeMUpPf
-	s531FqzuyVVanajnVBtZfRFU23LNEXwnHr/rsP6rS0mjUi6QkFxevT43qpRjQws8ibzmvb
-	C7EQJ5cgyORf876q2yjVx34gICIbrKRIpmqkvajlPIYD8SQluQ8jxZbZJuzfsmwXHmlIIy
-	JN9hLbraLNS/EzOmL7jUv4tqGE/tCuFOc2ruGyHYElqszyNhC6+JUVGKT1aQiTSwPPaTzc
-	ZWuqYS/s4nz/eO+PovLimb/KgCP5+buT7D4EOwfBXPVUuJl8KrjAxIoengsj2g==
+	bh=+kwLBBAKHwJScVqX5D1od3kUCloHeVAnZHLlm04sT2g=;
+	b=Y4KKhUGLCwXU0ABQLBZThvOq6BCwbcDbX4a0O/V4To90dJCzQgQ9SaGSSeEGjx39cyM9xu
+	PWRi/uehJD9C7NzKqBMLblppKa1Dvge82TN4RUHzQcLeHkWChKHM/DSvrQ8ey8tuw0jK6j
+	fuXXgqtE73uIsQRK8gSWkjyPJcAQUtgGjoEjfWNthklzS3mxp5B5ADzEB/Lmhi43hARbnE
+	Jk/vsYSl+h2khKTWeJLOPxkC29Kuqz/AwdsZdX+D2hDKue1r25W4BX8quLyLoB1MPUYPqx
+	hpHR4iQEtmuiHJ1h9scyWtXKFhXie2uDqMzu+fjir1LLIBV2CZ/C76/QTEMgZA==
 Date: Fri, 31 Jan 2025 14:02:14 +0100
 From: Louis Chauvet <louis.chauvet@bootlin.com>
 To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
@@ -39,13 +39,12 @@ Cc: airlied@gmail.com, arthurgrillo@riseup.net, corbet@lwn.net,
 	linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
 	mairacanal@riseup.net, marcheu@google.com, melissa.srw@gmail.com,
 	miquel.raynal@bootlin.com, mripard@kernel.org,
-	nicolejadeyee@google.com, pekka.paalanen@collabora.com,
-	pekka.paalanen@haloniitty.fi, rdunlap@infradead.org,
-	rodrigosiqueiramelo@gmail.com, seanpaul@google.com,
-	simona.vetter@ffwll.ch, simona@ffwll.ch,
+	nicolejadeyee@google.com, pekka.paalanen@haloniitty.fi,
+	rdunlap@infradead.org, rodrigosiqueiramelo@gmail.com,
+	seanpaul@google.com, simona.vetter@ffwll.ch, simona@ffwll.ch,
 	thomas.petazzoni@bootlin.com, tzimmermann@suse.de
-Subject: Re: [PATCH v16 5/7] drm/vkms: Create KUnit tests for YUV conversions
-Message-ID: <Z5zJ1pEk3v-1V5Uu@louis-chauvet-laptop>
+Subject: Re: [PATCH v16 3/7] drm/vkms: Drop YUV formats TODO
+Message-ID: <Z5zJ1h91AINbQRVF@louis-chauvet-laptop>
 Mail-Followup-To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
 	airlied@gmail.com, arthurgrillo@riseup.net, corbet@lwn.net,
 	dri-devel@lists.freedesktop.org, hamohammed.sa@gmail.com,
@@ -53,169 +52,83 @@ Mail-Followup-To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
 	linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
 	mairacanal@riseup.net, marcheu@google.com, melissa.srw@gmail.com,
 	miquel.raynal@bootlin.com, mripard@kernel.org,
-	nicolejadeyee@google.com, pekka.paalanen@collabora.com,
-	pekka.paalanen@haloniitty.fi, rdunlap@infradead.org,
-	rodrigosiqueiramelo@gmail.com, seanpaul@google.com,
-	simona.vetter@ffwll.ch, simona@ffwll.ch,
+	nicolejadeyee@google.com, pekka.paalanen@haloniitty.fi,
+	rdunlap@infradead.org, rodrigosiqueiramelo@gmail.com,
+	seanpaul@google.com, simona.vetter@ffwll.ch, simona@ffwll.ch,
 	thomas.petazzoni@bootlin.com, tzimmermann@suse.de
-References: <20250121-yuv-v16-5-a61f95a99432@bootlin.com>
- <20250131084111.2903-1-jose.exposito89@gmail.com>
+References: <20250121-yuv-v16-3-a61f95a99432@bootlin.com>
+ <20250131084045.2874-1-jose.exposito89@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250131084111.2903-1-jose.exposito89@gmail.com>
+In-Reply-To: <20250131084045.2874-1-jose.exposito89@gmail.com>
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekkeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefgjeevteekvdelteduuedugeefjeehueejfeekgfdtuefgteefuedtveeikedvkeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhouhhishdqtghhrghuvhgvthdqlhgrphhtohhppdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdehpdhrtghpthhtohepjhhoshgvrdgvgihpohhsihhtohekleesghhmrghilhdrtghomhdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghrthhhuhhrghhrihhllhhosehrihhsvghuphdrnhgvthdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguv
- ghskhhtohhprdhorhhgpdhrtghpthhtohephhgrmhhohhgrmhhmvggurdhsrgesghhmrghilhdrtghomhdprhgtphhtthhopehjvghrvghmihgvrdgurghuthhhvghrihgsvghssegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqughotgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekkeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedufeehgfefieeileeukeetfeduvdeiffeuhfdvleevfeefveelueduleeftdejteenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohhuihhsqdgthhgruhhvvghtqdhlrghpthhophdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvgedprhgtphhtthhopehjohhsvgdrvgigphhoshhithhokeelsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopegrrhhthhhurhhgrhhilhhlohesrhhishgvuhhprdhnvghtpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepughri
+ hdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhgvrhgvmhhivgdruggruhhthhgvrhhisggvshessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-On 31/01/25 - 09:41, José Expósito wrote:
+On 31/01/25 - 09:40, JosÃ© ExpÃ³sito wrote:
 > Hi Louis,
+> 
+> Thanks a lot for the patches.
+> 
+> I'm not well versed in YUV color formats, so I did my best reading the kernel
+> documentation before reviewing this series... But I'll most likely ask some
+> basic/dump questions.
 > 
 > > From: Arthur Grillo <arthurgrillo@riseup.net>
 > > 
-> > Create KUnit tests to test the conversion between YUV and RGB. Test each
-> > conversion and range combination with some common colors.
-> > 
-> > The code used to compute the expected result can be found in comment.
-> >
-> > [Louis Chauvet:
-> > - fix minor formating issues (whitespace, double line)
-> > - change expected alpha from 0x0000 to 0xffff
-> > - adapt to the new get_conversion_matrix usage
-> > - apply the changes from Arthur
-> > - move struct pixel_yuv_u8 to the test itself]
+> > VKMS has support for YUV formats now. Remove the task from the TODO
+> > list.
 > > 
 > > Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
-> > Acked-by: Pekka Paalanen <pekka.paalanen@collabora.com>
 > > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 > > ---
-
-[...]
-
-> > +	/*
-> > +	 * colour.RGB_to_YCbCr(<rgb color in 16 bit form>,
-> > +	 *                     K=colour.WEIGHTS_YCBCR["ITU-R BT.709"],
-> > +	 *                     in_bits = 16,
-> > +	 *                     in_legal = False,
-> > +	 *                     in_int = True,
-> > +	 *                     out_bits = 8,
-> > +	 *                     out_legal = False,
-> > +	 *                     out_int = True)
-> > +	 * Test cases for conversion between YUV BT709 full range and RGB
-> > +	 * using the ITU-R BT.709 weights.
-> > +	 */
-> > +	{
-> > +		.encoding = DRM_COLOR_YCBCR_BT709,
-> > +		.range = DRM_COLOR_YCBCR_FULL_RANGE,
-> > +		.n_colors = 4,
+> >  Documentation/gpu/vkms.rst | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
+> > index ba04ac7c2167a9d484c54c69a09a2fb8f2d9c0aa..13b866c3617cd44043406252d3caa912c931772f 100644
+> > --- a/Documentation/gpu/vkms.rst
+> > +++ b/Documentation/gpu/vkms.rst
+> > @@ -122,8 +122,7 @@ There's lots of plane features we could add support for:
+> >  
+> >  - Scaling.
+> >  
+> > -- Additional buffer formats, especially YUV formats for video like NV12.
+> > -  Low/high bpp RGB formats would also be interesting.
+> > +- Additional buffer formats. Low/high bpp RGB formats would be interesting.
 > 
-> If I understood correctly, "n_colors" here indicates the number of items in
-> "colors", but there is a mismatch between both lengths.
+> I see that you implemented support for 6 DRM_FORMAT_NV* formats, but
+> DRM_FORMAT_NV15, DRM_FORMAT_NV20 and DRM_FORMAT_NV30 are not implemented.
 > 
-> It also applies to the other test cases where "n_colors = 4".
+> The same applies to DRM_FORMAT_Y210 or DRM_FORMAT_YUV410 among others.
+> 
+> Could it be useful to implement all of them in the future? If so, should we add
+> it to the ToDo list?
 
-I don't know how I miss it, I am 100% sure I did the exact same comment to 
-Arthur few mounth ago, thanks!
+I don't think we need "all of them" (there are â‰ˆ100 + all the modifiers), 
+but definitly all the commonly used ones (I have some of the "common" one 
+ready here [1], I just wait for the YUV series to be accepted to avoid 
+conflicts).
+
+> It might be a great task to get started in kernel development, as there are
+> already similar examples and tests.
+
+I don't think we need to specify which format are missing, the point 
+"Additionnal buffer formats. [...]" seems sufficient. If you think this is 
+relevant, I can add "Easy task" so beginners will find it easier?
  
-> > +		.colors = {
-> > +			{ "white", { 0xff, 0x80, 0x80 }, { 0xffff, 0xffff, 0xffff, 0xffff }},
-> > +			{ "gray",  { 0x80, 0x80, 0x80 }, { 0xffff, 0x8080, 0x8080, 0x8080 }},
-> > +			{ "black", { 0x00, 0x80, 0x80 }, { 0xffff, 0x0000, 0x0000, 0x0000 }},
-> > +			{ "red",   { 0x36, 0x63, 0xff }, { 0xffff, 0xffff, 0x0000, 0x0000 }},
-> > +			{ "green", { 0xb6, 0x1e, 0x0c }, { 0xffff, 0x0000, 0xffff, 0x0000 }},
-> > +			{ "blue",  { 0x12, 0xff, 0x74 }, { 0xffff, 0x0000, 0x0000, 0xffff }},
-> > +		},
-> > +	},
-> > +	/*
+[1]:https://lore.kernel.org/all/20241122-b4-new-color-formats-v3-0-23f7776197c9@bootlin.com/
 
-[...]
-
-> > +/*
-> > + * vkms_format_test_yuv_u8_to_argb_u16 - Testing the conversion between YUV
-> > + * colors to ARGB colors in VKMS
-> > + *
-> > + * This test will use the functions get_conversion_matrix_to_argb_u16 and
-> > + * argb_u16_from_yuv888 to convert YUV colors (stored in
-> > + * yuv_u8_to_argb_u16_cases) into ARGB colors.
-> > + *
-> > + * The conversion between YUV and RGB is not totally reversible, so there may be
-> > + * some difference between the expected value and the result.
-> > + * In addition, there may be some rounding error as the input color is 8 bits
-> > + * and output color is 16 bits.
-> > + */
-> > +static void vkms_format_test_yuv_u8_to_argb_u16(struct kunit *test)
-> > +{
-> > +	const struct yuv_u8_to_argb_u16_case *param = test->param_value;
-> > +	struct pixel_argb_u16 argb;
-> > +
-> > +	for (size_t i = 0; i < param->n_colors; i++) {
-> > +		const struct format_pair *color = &param->colors[i];
-> > +		struct conversion_matrix matrix;
-> > +
-> > +		get_conversion_matrix_to_argb_u16
-> > +			(DRM_FORMAT_NV12, param->encoding, param->range, &matrix);
-> > +
-> > +		argb = argb_u16_from_yuv888(color->yuv.y, color->yuv.u, color->yuv.v, &matrix);
-> 
-> Running the test on ppc64 (big endian) doesn't fail. For reference:
-> 
->   $ sudo dnf install powerpc64-linux-gnu-gcc
->   $ sudo dnf install qemu-system-ppc64
->   $ ./tools/testing/kunit/kunit.py run \
->      --kunitconfig=drivers/gpu/drm/vkms/tests \
->      --arch=powerpc --cross_compile=powerpc64-linux-gnu- \
->      --make_options CF=-D__CHECK_ENDIAN__ \
->      --kconfig_add CONFIG_KASAN=y \
->      --kconfig_add CONFIG_KASAN_VMALLOC=y
-> 
-> However, I wonder if endianness is correctly handled. I always find endianness
-> difficult to reason about, but I'll try my best to explain it.
-> 
-> On a big endian architecture, color->yuv is stored in big endian. This might not
-> be an issue, because its components (y, u and v) are u8.
-> However, I think that the return value of argb_u16_from_yuv888(), which is the
-> result of argb_u16_from_u16161616(), is returned in big endian while it should
-> be little endian.
-
-The goal of `struct argb_u16` is to hide machine-specific issues. We want 
-to be able to do addition, multiplication... without 
-`le_from_cpu`/`cpu_to_le` everywhere.
-
-If you look at the rest of the vkms driver, we never do bit manipulation 
-on `struct argb_u16`, only mathematical operations. 
-
-> Since you are comparing argb.a (big endian) with color->argb.a (big endian) the
-> test succedess, but in this case it should fail because, if I remember
-> correctly, colors must be stored in little endian and therefore, the color
-> returned by argb_u16_from_yuv888() should be little endian.
-
-The colors are stored in a specific endian only in framebuffers, but in 
-our case, this is not a framebuffer. For the `argb_u16_to_ARGB16161616`, 
-you can see we use `cpu_to_le16` to store the data in the proper order.
- 
-> If you replace this 4 KUNIT_EXPECT_LE_MSG() with KUNIT_EXPECT_MEMEQ(), all test
-> will fail, but you'll notice that the buffers printed in the error log are
-> different depending on the endianness (x86_64 vs ppc64).
-> 
-> What do you think? Did I overlook the conversion?
-
-I think yes, but thanks to make me think about it, I will steal your 
-command line to test on powerPC :)
-
-> Have a look to the tests present in drm_format_helper_test.c. They use different
-> functions (cpubuf_to_le32, le32buf_to_cpu, etc) to make sure that colors are
-> represented in little endian and that comparing the expected and actual results
-> happens in the same endian.
-
-Those tests are testing conversion "buffer to buffer", so yes, there is 
-some endian-dependant issues.
-
-[...]
+> >  
+> >  - Async updates (currently only possible on cursor plane using the legacy
+> >    cursor api).
+> > 
