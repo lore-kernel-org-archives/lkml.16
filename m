@@ -1,134 +1,196 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C141E45BEC;
-	Fri, 31 Jan 2025 06:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0902614A639
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 06:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738305868; cv=none; b=AIFEVGD3/98qkiFk/uhkRNXIYlWYXcz5loXXT224tsD7ERRllSsPKAh50ll42HYL6eMt6hkrRxNi8DPAWq+rnU/8ixCwx3EjqIZZdlCUgHiBTaqT7RcLGTw34as7M9FAd4UsrMubi/Xi0oxBtmwdMurqD+VmLa6RwKaLVrzRNR0=
+	t=1738305872; cv=none; b=iO2D+6XvOw21WLIL58mnNnht9V9sVl6iskopNexG12adHdEEUlsWn1nZU6vZsTaxAPVqxH4oVjcEB9sZLNa+Qdi1uWVbIe39MOpL9eBoDTiVsAxz0KvU2RIL5j3NkXTd0EoSiN6zBDBwLW+Rma6RAAfJjg9SrrPmJOTXHSR8uVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738305868; c=relaxed/simple;
-	bh=JqUUVtSONE0JJxPAWygXBPBc8OiSlotJiLHJOl2xsQQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DbqFkE+/9Lqaq11YHx4Uu8wopsjNdj9pmU8JytwvtGZZvMg2ZL5TO7d4q8czOoApxFYNUpVdzDo4jtRX5JuDHcg39HQ1aaroperchsr2JkcxDhTWC0/VKZ2sf0DKPHcndXFxXhpQDc+Ae22F1mOhsp3Bq/rs++XGaDMT7ftLTT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EdnqSe04; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738305872; c=relaxed/simple;
+	bh=teQlFhgZ1fHacBUYUtGVuB5nuqA3XQeBDjjbGzx+lgE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=eTVRG3wGlkfJlDxmVcdr4hQNItU3g/Lti8FNeHaiTc0VsC48kYgcvOi8CF6dgtAbgjxeXA+ra1tIjTh02E6dX2qEqYEO4zYeYDquzBkvemWer11Qh/+F2pBdO3LS6DoG4AcExlyTZDJd0a/G/+d6zbP+Wkwm5m+l5FawBi0JL2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nk7VEqPe; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdnqSe04"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ee397a82f6so2833296a91.2;
-        Thu, 30 Jan 2025 22:44:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738305866; x=1738910666; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=a8wLuo6Y8PuSoWmYGpdb9OZTpSpfN0loU20jIS3gbiQ=;
-        b=EdnqSe04n/EQkguUvhNPO3YxLHJvCBoJARtNySeYuEPbzpd6E4SkANk9IuA6L3m/E/
-         mdVmLG1QqPQUVFhs5ay7czW7anCJuaiHJFdqDperNQi0MCujr9Cr2C9Bvle6iPIOITpp
-         6IB+2TY2sq7HRWgro1FwyYVPYWG3dDjstsxBdJoyjUswaQ2haULydXFtq5KaQCyUOuEU
-         IX9JjXZYH3KaZn+bxo91Ae1LViKL50gVrzaiKX+YTyEY9hSVoxiLkKnF/LMGYe1m463A
-         wyifk7ZWGij+NuzLTLmVuVSkPggOCouB+tGAiQs75WXTJ06RyeKHBq2bTprjg7xgn3/q
-         Namw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738305866; x=1738910666;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a8wLuo6Y8PuSoWmYGpdb9OZTpSpfN0loU20jIS3gbiQ=;
-        b=FosTpJXDVpd6lLBgo/4UQjNnQLXaohtx1QndR0j9eA2sY+y6lWJLWKLuDSLB7eL91x
-         tmesld6rj1PUNR2ZgVhZF3M/pjJtnF0WbRy09se1///H7yhH1G9dgAuSWr4YuSfbEvtT
-         NbPQq2jws1cj0h3a2VGGodKKW9bdNoawbF8eVJfQSCPwRm2pAp+74k2jDHoK35Z5gEsb
-         NrAYIkd9JOct5ir1oGu/GeNPIOiHmR5EG3pdEZPSfh8F6zCv8Kj5JrGpoBmqADtxv9uw
-         +/Fxa9VEms5r+A5d3nNLZksy34c3xPS+DveK7cjMswtt0agiF/1RUeWTWaiGCOIS9lHp
-         Sf7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXN8z5KYLB5oqu0dkkz68afAz7YjqyjOb7EJsUChqIare/IuFKNlHeCCEv52XNtCH0AjivQo6ZHSzFu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4v5HLS3GzJk/3rvoZ9JKLXnXcIzZgqH36Y5wSolBzyLQxVHAp
-	7x7OpD/qlJKNK27/Qx5HoYK2Kz4+A3xL9g2p+nQbKU8HdJ3Wm5HzJQV6P6WX
-X-Gm-Gg: ASbGncukcFibJmcClKnL+CdhGxgjNtiA+DIgzCkflk3OkAikp+PJCatCMHa66uTh4BO
-	72cpVTCy92ypN7mi8dwcB4RcwmeQbkFh0d4gwG/HiXAcoLVcpm2pel0mV9N7s97FSTZgEru2g74
-	p9K6CTw/nwrOd9ajBofVUq5FPgAhFDouK/4Hl93AboCD0bh6TzkLgXGmlL5I7mAIHW2tcMRrq+5
-	TcEIK0isC8SVufPXwbuVHmTFnGd9Pjta6H+D2urWdMZpsAqUaYXnOf41Qm1tqqANqcUa3COs22V
-	WxfE5RcT8rhcvOrqh9UAhxxSdpM=
-X-Google-Smtp-Source: AGHT+IHz6VGpOU7Q2P2FSU44mu0Jwe+DIUCfoPCztH6MLZjXZrB1gVjhllou8+ScJgH3BIUqDlne6g==
-X-Received: by 2002:a17:90b:2f06:b0:2ea:83a0:47a5 with SMTP id 98e67ed59e1d1-2f83abab52cmr14551878a91.4.1738305865882;
-        Thu, 30 Jan 2025 22:44:25 -0800 (PST)
-Received: from noel.flets-west.jp ([2405:6586:4480:a10:167:9818:d778:5c14])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bfc0ddbsm5098947a91.45.2025.01.30.22.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 22:44:25 -0800 (PST)
-From: Hironori KIKUCHI <kikuchan98@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Hironori KIKUCHI <kikuchan98@gmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH 0/2] drm: panel: Add Generic MIPI Panel Driver
-Date: Fri, 31 Jan 2025 15:43:52 +0900
-Message-ID: <20250131064354.4163579-1-kikuchan98@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nk7VEqPe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738305869; x=1769841869;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=teQlFhgZ1fHacBUYUtGVuB5nuqA3XQeBDjjbGzx+lgE=;
+  b=nk7VEqPeDBCSKbT2dZprhOdq7NQH5F46nokcZawxLK5VO6OK1kRU4DDM
+   OHh5lrfmZJJe1mDrwpDZZtIWNn3+Ln+Ng7vt2mNIgMLIKVdDNaehSiUSL
+   Yg1tt3KN4aZZ8lnxmm78SRM3VJCVJ1kjcPgR42gkxky/UCBw5D9hgkbl3
+   igJNvg/282NxaN5Wr+RcOQv4VqQg50XBQTBD8r1UcRE9bPm9Vm7jvuKzm
+   LvxkidOORSQ+5jFm37W1K2oRK6La4uUMKqQJLd70aDuZHPlHMSGFl2XGs
+   okPtzvbCdMGOb7fxnujkZy3zZcUlbwnldtm8t/dlrejPjBT8uoq82K833
+   Q==;
+X-CSE-ConnectionGUID: UXX9XA6aQRWb8W5vMqmAHg==
+X-CSE-MsgGUID: M+/SE1txQMCvuy43gge2Pw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="38577073"
+X-IronPort-AV: E=Sophos;i="6.13,247,1732608000"; 
+   d="scan'208";a="38577073"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 22:44:28 -0800
+X-CSE-ConnectionGUID: Am8MDMYBTt+qXH+2EN5Gxw==
+X-CSE-MsgGUID: lllX/4IIRjeH8MB5hw1ltg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,247,1732608000"; 
+   d="scan'208";a="109393822"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 30 Jan 2025 22:44:26 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tdklM-000m6Y-15;
+	Fri, 31 Jan 2025 06:44:24 +0000
+Date: Fri, 31 Jan 2025 14:44:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Timur Tabi <ttabi@nvidia.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:2112: warning: cannot
+ understand function prototype: 'struct rpc_ucode_libos_print_v1e_08 '
+Message-ID: <202501311431.Od7RxfB4-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This is a Generic MIPI-DSI / DPI(+SPI) dual stack panel driver.
+Hi Timur,
 
-Although the MIPI specifications define how to communicate with a panel
-to display an image, some panels still require a panel-specific
-initialization sequence to be sent.
+FYI, the error/warning still remains.
 
-While there are many dedicated drivers for such panels, they are very
-similar to each other, except for the configuration parameters, including
-the initialization sequence for each panel.
-Since there are numerous panels in the wild, adding parameters to
-the driver for each panel every time is a pain.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   69e858e0b8b2ea07759e995aa383e8780d9d140c
+commit: 214c9539cf2f5a0116051dc8e2a36b0577383a5e drm/nouveau: expose GSP-RM logging buffers via debugfs
+date:   8 weeks ago
+config: alpha-randconfig-r026-20211101 (https://download.01.org/0day-ci/archive/20250131/202501311431.Od7RxfB4-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250131/202501311431.Od7RxfB4-lkp@intel.com/reproduce)
 
-Instead, this driver offers more generic and convenient method.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501311431.Od7RxfB4-lkp@intel.com/
 
-Its fundamental approach is similar to the `panel-mipi-dbi` driver,
-which sends an initialization sequence stored in a firmware file.
+All warnings (new ones prefixed by >>):
 
-Moreover, this driver allows display modes, timings, and panel
-configuration parameters to be stored in the same file or in DT.
+   drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1136: warning: cannot understand function prototype: 'struct registry_list_entry '
+   drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1340: warning: cannot understand function prototype: 'const struct nv_gsp_registry_entries r535_registry_entries[] = '
+>> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:2112: warning: cannot understand function prototype: 'struct rpc_ucode_libos_print_v1e_08 '
+>> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:2174: warning: expecting prototype for create_debufgs(). Prototype was for create_debugfs() instead
+>> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:2800: warning: Function parameter or struct member 'parent' not described in 'r535_gsp_copy_log'
+>> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:2800: warning: Function parameter or struct member 'name' not described in 'r535_gsp_copy_log'
+>> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:2800: warning: Function parameter or struct member 's' not described in 'r535_gsp_copy_log'
+>> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:2800: warning: Function parameter or struct member 't' not described in 'r535_gsp_copy_log'
+--
+>> drivers/gpu/drm/nouveau/nouveau_drm.c:129: warning: Function parameter or struct member 'gsp_logs' not described in 'NVIF_LOGS_DECLARE'
+>> drivers/gpu/drm/nouveau/nouveau_drm.c:129: warning: expecting prototype for gsp_logs(). Prototype was for NVIF_LOGS_DECLARE() instead
 
-I've also come up with a firmware generator:
-https://kikuchan.github.io/panel-firmware-generator/
-It helps to create and configure the panel parameters on the web.
 
-As a reference, similar generic drivers currently exist:
-  * drivers/gpu/drm/panel/panel-simple.c
-    - Supports wide variety of panels, but no init-sequence support
-  * drivers/gpu/drm/tiny/panel-mipi-dbi.c
-    - Supports init-sequence, but only supports DBI panels
-  * drivers/gpu/drm/panel/panel-dsi-cm.c
-    - Supports DSI Command Mode, but no init-sequence support
+vim +2112 drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
 
-Regards,
-kikuchan.
-
-Hironori KIKUCHI (2):
-  dt-bindings: display: panel: Add generic MIPI-DSI/DPI panels
-  drm: panel: Add a driver for Generic MIPI-DSI/DPI(+SPI) panels
-
- .../bindings/display/panel/panel-mipi.yaml    |  244 +++
- drivers/gpu/drm/panel/Kconfig                 |   10 +
- drivers/gpu/drm/panel/Makefile                |    1 +
- drivers/gpu/drm/panel/panel-mipi.c            | 1355 +++++++++++++++++
- 4 files changed, 1610 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/panel-mipi.yaml
- create mode 100644 drivers/gpu/drm/panel/panel-mipi.c
+  2102	
+  2103	/**
+  2104	 * rpc_ucode_libos_print_v1E_08 - RPC payload for libos print buffers
+  2105	 * @ucode_eng_desc: the engine descriptor
+  2106	 * @libos_print_buf_size: the size of the libos_print_buf[]
+  2107	 * @libos_print_buf: the actual buffer
+  2108	 *
+  2109	 * The engine descriptor is divided into 31:8 "class ID" and 7:0 "instance
+  2110	 * ID". We only care about messages from PMU.
+  2111	 */
+> 2112	struct rpc_ucode_libos_print_v1e_08 {
+  2113		u32 ucode_eng_desc;
+  2114		u32 libos_print_buf_size;
+  2115		u8 libos_print_buf[];
+  2116	};
+  2117	
+  2118	/**
+  2119	 * r535_gsp_msg_libos_print - capture log message from the PMU
+  2120	 * @priv: gsp pointer
+  2121	 * @fn: function number (ignored)
+  2122	 * @repv: pointer to libos print RPC
+  2123	 * @repc: message size
+  2124	 *
+  2125	 * Called when we receive a UCODE_LIBOS_PRINT event RPC from GSP-RM. This RPC
+  2126	 * contains the contents of the libos print buffer from PMU. It is typically
+  2127	 * only written to when PMU encounters an error.
+  2128	 *
+  2129	 * Technically this RPC can be used to pass print buffers from any number of
+  2130	 * GSP-RM engines, but we only expect to receive them for the PMU.
+  2131	 *
+  2132	 * For the PMU, the buffer is 4K in size and the RPC always contains the full
+  2133	 * contents.
+  2134	 */
+  2135	static int
+  2136	r535_gsp_msg_libos_print(void *priv, u32 fn, void *repv, u32 repc)
+  2137	{
+  2138		struct nvkm_gsp *gsp = priv;
+  2139		struct nvkm_subdev *subdev = &gsp->subdev;
+  2140		struct rpc_ucode_libos_print_v1e_08 *rpc = repv;
+  2141		unsigned int class = rpc->ucode_eng_desc >> 8;
+  2142	
+  2143		nvkm_debug(subdev, "received libos print from class 0x%x for %u bytes\n",
+  2144			   class, rpc->libos_print_buf_size);
+  2145	
+  2146		if (class != NV_GSP_MSG_EVENT_UCODE_LIBOS_CLASS_PMU) {
+  2147			nvkm_warn(subdev,
+  2148				  "received libos print from unknown class 0x%x\n",
+  2149				  class);
+  2150			return -ENOMSG;
+  2151		}
+  2152	
+  2153		if (rpc->libos_print_buf_size > GSP_PAGE_SIZE) {
+  2154			nvkm_error(subdev, "libos print is too large (%u bytes)\n",
+  2155				   rpc->libos_print_buf_size);
+  2156			return -E2BIG;
+  2157		}
+  2158	
+  2159		memcpy(gsp->blob_pmu.data, rpc->libos_print_buf, rpc->libos_print_buf_size);
+  2160	
+  2161		return 0;
+  2162	}
+  2163	
+  2164	/**
+  2165	 * create_debufgs - create a blob debugfs entry
+  2166	 * @gsp: gsp pointer
+  2167	 * @name: name of this dentry
+  2168	 * @blob: blob wrapper
+  2169	 *
+  2170	 * Creates a debugfs entry for a logging buffer with the name 'name'.
+  2171	 */
+  2172	static struct dentry *create_debugfs(struct nvkm_gsp *gsp, const char *name,
+  2173					     struct debugfs_blob_wrapper *blob)
+> 2174	{
+  2175		struct dentry *dent;
+  2176	
+  2177		dent = debugfs_create_blob(name, 0444, gsp->debugfs.parent, blob);
+  2178		if (IS_ERR(dent)) {
+  2179			nvkm_error(&gsp->subdev,
+  2180				   "failed to create %s debugfs entry\n", name);
+  2181			return NULL;
+  2182		}
+  2183	
+  2184		/*
+  2185		 * For some reason, debugfs_create_blob doesn't set the size of the
+  2186		 * dentry, so do that here.  See [1]
+  2187		 *
+  2188		 * [1] https://lore.kernel.org/r/linux-fsdevel/20240207200619.3354549-1-ttabi@nvidia.com/
+  2189		 */
+  2190		i_size_write(d_inode(dent), blob->size);
+  2191	
+  2192		return dent;
+  2193	}
+  2194	
 
 -- 
-2.48.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
