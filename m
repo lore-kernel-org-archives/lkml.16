@@ -1,117 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAD21C07C4
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0DC1B86F7
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738322940; cv=none; b=G1DdyxJO68xJ2k0qkNs2/GJpTXHgARYRxyZefhpQsuK/dFRFPWRlFjJKvQ6gi9TC+iH9o6wRwtmQokgRDj+YVHnOYVtEsVVRs7hxk4wKP0r6NfTQf2mW4/sC3zQoCK3AHx+HdgBGvzV1La+ivKAxe4kiXsd/ldaUWaCf8q7JiCg=
+	t=1738323205; cv=none; b=J52QBeLfiUJ+rGP8m0Q6cHgwG6jdr+RJtQ7tmh1vsOrzdeEf7jyROo1klOG/wJxemOEx0t+MR6Cb2VI6sjqlTCftiEgJD0vnFvgGZFLnxM/2LzmoKN4ZZj5pFiCRN+ygRJOdqGwqGozPZEZy8QIUKsJnAB20vU+yfsnvMuQPwFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738322940; c=relaxed/simple;
-	bh=P85MS6I410RWpO0QVeQvCMuySsQE7THqWuvFBr3Fx8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=obh62juzE5iD9M93UHQccFsYm8/sxoFiPOsbmilqpmOXXnOG5A+i4xyCfRcQ3Lqs135DCv6chKSdUUnlOfA8wnw7UhWMKJO5oM9NWIP1SUlQnqu85brvM0g4YTjZeni2Z/h/dx/90D4qj1hTiVsoqpeg2HFi2QfXt/8Hze7m6LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PZNAQPDv; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738323205; c=relaxed/simple;
+	bh=N/l/YOZ7YasWbku84WJiOPIQUhlmC6anStFROdBe0H4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=h7cjtamkW+4yT/Ky+PpvUhc+qsQet4TyoSubvdC6C3pxvwFbQtwSU/yrUmb3VicgeAVh6eY7Mad7htSE87Q2CUHxBx+Nv6Nw2hpq3mI0ZSIwYjRgbMfFWQKgVIak62dxLclli2Fd/pp8FJe3mBQEPFkiFBA24vnUlbvgiRY0kaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=XTdqilAI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iGk2BR36; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PZNAQPDv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738322939; x=1769858939;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=P85MS6I410RWpO0QVeQvCMuySsQE7THqWuvFBr3Fx8c=;
-  b=PZNAQPDvP2HWUyiO3JkJ3D/K0fL4QGgKJqQPaidPrl9084Y1+PC/Ez7r
-   XQb+zocyCz3I9msObMoBiuUnomhs3xxCkntVb9OH4Sy5mPkieDhnX/61M
-   hiHVj9fRf2Amx0B4pfHubAvj5VTEeaXOwu6NvqDVwQzXiuadKtCaUkDpT
-   B9OZrx5fIbynA5ez0eaoy/ieeVOZhPO1yZSb17/UuZ7Mx2L7YJGy3tZBk
-   wO9GD/Aky6YhartUzk7nV2XUF3HRqTE7ylyX2blaotm4Ev0aoLoWd+C7o
-   hqgMZtFssRWcwcLbKnwQwrCoKm+G4BYz8nsdas6H7CQzgkNsGByR7ExCc
-   g==;
-X-CSE-ConnectionGUID: yyCTPnCyQyGKSZcPN/b/Zw==
-X-CSE-MsgGUID: Od7P2RWJRC6TCAkZNvARvw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="39048491"
-X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
-   d="scan'208";a="39048491"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 03:28:58 -0800
-X-CSE-ConnectionGUID: bc8gGKLQTRKwLHGDKMGR6A==
-X-CSE-MsgGUID: zaaohGfGTfyKX/Q8jknCXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
-   d="scan'208";a="110190966"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 31 Jan 2025 03:28:57 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tdpCh-000mJ5-08;
-	Fri, 31 Jan 2025 11:28:55 +0000
-Date: Fri, 31 Jan 2025 19:28:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: George Lander <lander@jagmn.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>,
-	Marcus Cooper <codekipper@gmail.com>
-Subject: sound/soc/sunxi/sun4i-spdif.c:180: warning: Function parameter or
- struct member 'mclk_multiplier' not described in 'sun4i_spdif_quirks'
-Message-ID: <202501311953.0Ox9CW5w-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="XTdqilAI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iGk2BR36"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.phl.internal (Postfix) with ESMTP id 9968B1380120;
+	Fri, 31 Jan 2025 06:33:21 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Fri, 31 Jan 2025 06:33:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738323201;
+	 x=1738409601; bh=t83pxTVoc+bxWv+k8uOmCii5XJa6SN5D5kCtdcorOSw=; b=
+	XTdqilAICmG/HpnUbiXCWhoHVUUWUeJYnnpx77yOeb36W2snZ0ejqfWT1avZgrwe
+	DU4yxCxz9+aGKHrtFwhXgz5AqRMkOQ+A3T8CTHecleNdhaGxl8nqEBuJPlwUWTPB
+	OJv3JqjObCjeI8GvUuFzuhV82viLAJfwZRRQd3Cv5Ifag9sba/KF1Q9BLMDKuJeq
+	R9Go5tOEKlWYu2aCwcXPYxMezDeVpAk6Q+Nr4HNmFxYEaPC65arrsZqwwKU7wZ+0
+	uTo1mG/5bd/2xmyQiGDs+aywhOUSQ9u9t7ts1KXtbGJxAgvAFTrSmVuSabq6di1y
+	TzV4NJFtl+GI1QfeDLU1Mg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738323201; x=
+	1738409601; bh=t83pxTVoc+bxWv+k8uOmCii5XJa6SN5D5kCtdcorOSw=; b=i
+	Gk2BR36hHD17JZ4AkEToDOnHfiqGKDISwQecHqBrAwxEfUMcX3R+W51eH+/KpTcx
+	/+1F1KkAky/tJXMtZYjFD/iT0N/wJFMGmv0qA4Ng+Z/ixNWys/9dqoLQkL0Hs4pB
+	RQzXdxwoe5rzDGf2DYhIqYBhINieQxR8PUsn3PLaNRwl2rrcN64/a0govD37aUbg
+	hVkxH0F4N1LPbLshV/+GcIAM7wY/UnXe9+hlK71BeEyLkwNOb7QzuhUqBzpXhYbA
+	W9iTE//6xEBBdeAz4SFCvIOwCs8m/De2BkaTA61KU9cpmpMUJ9xSVKSpXhaV5UaS
+	aR1u5OsRrjn9wtk9IOrYg==
+X-ME-Sender: <xms:AbWcZ0tNRc2ghAGm_kdVUcNxf2BPEy9YE-xLaN_S9E0cWVVr8ZXUfA>
+    <xme:AbWcZxdnDT3IkPg9DTn4BdB29UDuMp50vrKbepnAmceIO9VeX4OCB_eaKs642a3d4
+    tQODAFSL9rRqFecmTs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekieeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
+    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohephedp
+    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhgvnhhsrdifihhklhgrnhguvghrse
+    hlihhnrghrohdrohhrghdprhgtphhtthhopehjvghrohhmvgdrfhhorhhishhsihgvrhes
+    lhhinhgrrhhordhorhhgpdhrtghpthhtohepshhumhhithdrghgrrhhgsehlihhnrghroh
+    drohhrghdprhgtphhtthhopehophdqthgvvgeslhhishhtshdrthhruhhsthgvughfihhr
+    mhifrghrvgdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrd
+    hkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:AbWcZ_zm5_u_FB2d812hfqUn5bLJi2fAh-08UflBVNI-92-3XGxpgg>
+    <xmx:AbWcZ3Mtd1gDv7pfPxXBsO733lpGHLgrCCWi2QKzADoTtB_ImPZNkw>
+    <xmx:AbWcZ09w25mzpkhpGmd7EeweWOM6dUvgYAtw7z6Fp87b4G2UAYhM1A>
+    <xmx:AbWcZ_VnEDXeXDVwttx59Kf6_bF4XYyEYSPud7CqHLqLTu8-B5PsJg>
+    <xmx:AbWcZ4ZlMiIf7tvGDe8M60J3RBXkja-FSDd3rVpMvjkqyDroqzdlDjx->
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3DD192220072; Fri, 31 Jan 2025 06:33:21 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Date: Fri, 31 Jan 2025 12:32:59 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Sumit Garg" <sumit.garg@linaro.org>,
+ "Jens Wiklander" <jens.wiklander@linaro.org>
+Cc: op-tee@lists.trustedfirmware.org,
+ "Jerome Forissier" <jerome.forissier@linaro.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <11d19be4-85a2-40dd-b3c6-07bbdd794df0@app.fastmail.com>
+In-Reply-To: 
+ <CAFA6WYNj0aWnV+jxoxHU7OOg8oWC2-AboUMztxaPCDQuO+c8gg@mail.gmail.com>
+References: <20241213111453.367031-1-sumit.garg@linaro.org>
+ <CAFA6WYO+T2pZcB2VBhP=ut2w9HtkeCvYkqoM85LZnJ9iF+gvNw@mail.gmail.com>
+ <CAHUa44EE6XL5zgf0VNeqPkUukFGz5BgiHz=0yAVdd=tEzLEq6Q@mail.gmail.com>
+ <CAFA6WYNRD-CGTHufafFLX4SjvpH6fBKwqCac8JE2oLepqqsNOw@mail.gmail.com>
+ <CAHUa44F76AqB4ijQHBfoNXveiyxeBLOLh6ULT+pc+va3y0qBdg@mail.gmail.com>
+ <CAFA6WYO1aXiUozs8WiawSbok5hCmV8bXz9cRgEJ0r+LAwL9J9A@mail.gmail.com>
+ <CAHUa44GdxO3TCLyOQdCHbdVGKpSHpnxBp_JAfAhpVgXuWYOVhw@mail.gmail.com>
+ <c3c782f8-fb48-4d3e-95b0-d0707f57acff@app.fastmail.com>
+ <CAHUa44H4yLvkU6ATvk0KOzVDa2TOgS9EBsU+BKR2piZbX26kLQ@mail.gmail.com>
+ <CAFA6WYNj0aWnV+jxoxHU7OOg8oWC2-AboUMztxaPCDQuO+c8gg@mail.gmail.com>
+Subject: Re: [PATCH] tee: optee: Add support for supplicant timeout
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi George,
+On Fri, Jan 31, 2025, at 12:06, Sumit Garg wrote:
+> On Tue, 28 Jan 2025 at 13:49, Jens Wiklander <jens.wiklander@linaro.org> wrote:
+>> >
+>> > As far as I can tell, even that DEFAULT_HUNG_TASK_TIMEOUT
+>> > limit is only for tasks that are in an unkillable state for more
+>> > than two minutes, but the supplicant not providing results
+>> > to the kernel could also happen when it waits in a killable
+>> > or interruptible state, or when it does multiple I/Os in a
+>> > row that each block for a time under 120 seconds.
+>
+> The supplicant itself can be in a killable state but the client
+> application which will be waiting for it in the kernel is in
+> unkillable state. So if a shutdown/reboot is issued at that point
+> which has to kill the client application first and then the
+> tee-supplicant, it will just cause the system to hang up. That is a
+> real problem that I am trying to address here.
 
-FYI, the error/warning still remains.
+Is the client the one waiting in optee_supp_thrd_req(), or
+is that the supplicant?
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   69e858e0b8b2ea07759e995aa383e8780d9d140c
-commit: 0a2319308de88b9e819c0b43d0fccd857123eb31 ASoC: sun4i-spdif: Add clock multiplier settings
-date:   8 weeks ago
-config: mips-randconfig-r024-20220830 (https://download.01.org/0day-ci/archive/20250131/202501311953.0Ox9CW5w-lkp@intel.com/config)
-compiler: mips-linux-gcc (GCC) 12.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250131/202501311953.0Ox9CW5w-lkp@intel.com/reproduce)
+If the problem is the client being unkillable at the moment,
+could you address that by using wait_even_killable() or
+mutex_lock_killable() and just bail out safely? I assume
+at the point the system is rebooting, there is no need to
+wait for the supplicant to complete, other than making sure
+the function can return without running into undefined state
+of the kernel.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501311953.0Ox9CW5w-lkp@intel.com/
+>> > A single sector write to an eMMC can easily take multiple
+>> > seconds by itself when nothing is going on and the device is
+>> > in need of garbage collection. If the system is already in
+>> > low memory or there are other tasks writing to the file system,
+>> > you can have many such I/O operations queued up in the device
+>> > when it adds another I/O to the back of the queue.
+>>
+>> Adding a timeout means we must somehow handle them to avoid spurious errors.
+>>
+>
+> The timeout I am proposing here as default being 2 minutes is just for
+> a single tee-supplicant RPC request. I suppose that should be
+> sufficient to avoid any spurious errors.
 
-All warnings (new ones prefixed by >>):
+It won't guarantee that, but if there is a 2 minute delay, that
+likely means that the system has become quite unusable from being
+slow, even if it hasn't otherwise misbehaved to that point.
 
->> sound/soc/sunxi/sun4i-spdif.c:180: warning: Function parameter or struct member 'mclk_multiplier' not described in 'sun4i_spdif_quirks'
-
-
-vim +180 sound/soc/sunxi/sun4i-spdif.c
-
-f8260afa444b67 Marcus Cooper 2016-02-08  167  
-ae9cccc30f6c08 Clément Péron 2019-05-27  168  /**
-ae9cccc30f6c08 Clément Péron 2019-05-27  169   * struct sun4i_spdif_quirks - Differences between SoC variants.
-ae9cccc30f6c08 Clément Péron 2019-05-27  170   *
-c7202a19cf838d Lee Jones     2020-07-09  171   * @reg_dac_txdata: TX FIFO offset for DMA config.
-ae9cccc30f6c08 Clément Péron 2019-05-27  172   * @has_reset: SoC needs reset deasserted.
-f6a86b436b2658 Clément Péron 2019-05-27  173   * @val_fctl_ftx: TX FIFO flush bitmask.
-ae9cccc30f6c08 Clément Péron 2019-05-27  174   */
-ae9cccc30f6c08 Clément Péron 2019-05-27  175  struct sun4i_spdif_quirks {
-ae9cccc30f6c08 Clément Péron 2019-05-27  176  	unsigned int reg_dac_txdata;
-ae9cccc30f6c08 Clément Péron 2019-05-27  177  	bool has_reset;
-f6a86b436b2658 Clément Péron 2019-05-27  178  	unsigned int val_fctl_ftx;
-0a2319308de88b George Lander 2024-11-11  179  	unsigned int mclk_multiplier;
-ae9cccc30f6c08 Clément Péron 2019-05-27 @180  };
-ae9cccc30f6c08 Clément Péron 2019-05-27  181  
-
-:::::: The code at line 180 was first introduced by commit
-:::::: ae9cccc30f6c088dd6ead63e990407e37cd9437b ASoC: sun4i-spdif: Move quirks to the top
-
-:::::: TO: Clément Péron <peron.clem@gmail.com>
-:::::: CC: Mark Brown <broonie@kernel.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+     Arnd
