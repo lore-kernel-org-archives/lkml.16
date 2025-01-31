@@ -1,115 +1,83 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A70E136A;
-	Fri, 31 Jan 2025 10:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7473E1CA81
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 10:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738318025; cv=none; b=kMcGtdSfHaODhmuPS0j3vPsmVPBBUqLIriesuP6AnHA954KQukEdJ5tmpkv0CF3aLzIq6GT5EROiUp+mShjK+DhaMr6WRQCVntboeLmTO31P50sjf+RX31UaT3dE4vrdq1BrgH2ctWaGCr+2QOo0hSfnxVCe7F03esk7dm3ltu4=
+	t=1738318048; cv=none; b=FW7RpYHGSeEO+yL/B8M3cuPMTc6Uh+TiVlExhPUa9Aeu2/LKziw4D7WlKXZiK0Sn1rzsno1oDYO5TynAoz2FYAFudT49w7D0Ypi5d7nN9Qg0zAqdyKTtfh5p1Kdx6JWoT7GME1YCnmixAxAzgnFbJDx7LNdq+tCt4SXKPhUCXmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738318025; c=relaxed/simple;
-	bh=Hl1526HVV8YIoo9EGdA+ETaUvPASA+86SqkC0Sp0pAs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HS/buJgXcmzredYdx6mnC3Vz/g1DVuZb3mHcpCOHT8EuWOLBcS9eA3H7ASXelCbZARuktlcCzOQpF4cBfA2RDeUG8W/dvF9yNUB1j20wjzal5Kmkpo2yrpao6vXkPXblvolWu1hdus5l3ePKmvCLdMs/qCud5mSRjLvlkGLSTzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.38])
-	by gateway (Coremail) with SMTP id _____8BxeeHEoJxnVcdqAA--.17462S3;
-	Fri, 31 Jan 2025 18:07:00 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.38])
-	by front1 (Coremail) with SMTP id qMiowMCxG8XBoJxngtMyAA--.15397S2;
-	Fri, 31 Jan 2025 18:07:00 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Baoqi Zhang <zhangbaoqi@loongson.cn>
-Subject: [PATCH] USB: pci-quirks: Fix HCCPARAMS register error for LS7A EHCI
-Date: Fri, 31 Jan 2025 18:06:51 +0800
-Message-ID: <20250131100651.343015-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1738318048; c=relaxed/simple;
+	bh=DXG8pKlNLgjPS3BPFcbodfMnoXMpVjHszsc4cTN2uV8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hzDtIzFw4uW6KMU8VfqDPt/RifAdv8qBlXLV80mKTYpkNDY8t4QU+AZlKZFpVYy3z3quTc7Cp19YYOO+WZXVs7KlsVPPy0l9Fg8Hen9kgrZ1CYf/WgEEY4INnJS7RZg+hTntUPDzhbWZAqbYxA93i9Us+RxnbPyeaHXzJDO0Hgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-8521d7980beso118567039f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 02:07:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738318045; x=1738922845;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XwUorlrZ8ktt05OjgOA/eExZcbhdaaXaK8Q7w1Q0dRg=;
+        b=wz1TwFVzb7nCUnMX22H3oPvKLXDJ+JJ3zKxlsau7q6AwEQ0d+Uzk/JcJ0imYgQnhfR
+         fGQKSzZj1+gZyJUSOR7jafF6NNK4gl7i2OKADwSxng0wztW9atjoFR34PvXfqNme0JDU
+         Szm1e1od+im0QG+Anl5p8XAPmj0eDIqqGiIRmk6SDqL3r4DCWnnv5nVoRKFoo6Y6bXag
+         Gi0t9Ve9hH8QX6arQu3fMfGFoM0gReSDuP576MLM+uF7VrI89+9BVH0g6MGlYdOLkZ8s
+         w7uTCzpoBiTUP34FIFfj3ydzd/eHlrffcbJjNtkU+DJSfekMAf1ooVnSxloHXA/43ZIV
+         x4iQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWHUuboCk7J5IyIbW4V2FcpZlIRta+hlW1iKMoWaDniZ3vLzRYiOCLSLX4Bccon9SwTG6yE8bwmRR1HQE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2Sudk21EMttKzSn+GMhBgbHbxCyyjFscwq6iWbheRwqAznSnQ
+	2cVuKJ64VJvi6YBw7CmzOszf+4YHsjqWR7YZJzLS7wnSd+YnjbA4Z7snT5JhPuc3do+f6IQVmyx
+	lRoX6RY/lVYacnJYpcF03AGOrQdAMm5Ey2KVDsd9QyGR7ZNjIkVcr6gI=
+X-Google-Smtp-Source: AGHT+IE5uylcSF75NfSvd2alp7HamPcRT8jxqnE7umuCkCCmzpZrlh6L7IFse9KZr2KSfdwFYKggofD3eo9mSZ1eVDBctyFzPItA
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxG8XBoJxngtMyAA--.15397S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7urWrJF1DZrW7Wr47GrWrCrX_yoW8uFWDp3
-	WDA3srGFWfJr4Ivw4DK3W5uFy5AF1DCa47Aa47K345XFsxWa18JryDZr43Cry3tFs3uF4j
-	vr42k3yxKFnrJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU90b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
-	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x07j5xhLUUUUU=
+X-Received: by 2002:a92:c269:0:b0:3d0:137a:8c9d with SMTP id
+ e9e14a558f8ab-3d0137a8ddcmr22150745ab.8.1738318045564; Fri, 31 Jan 2025
+ 02:07:25 -0800 (PST)
+Date: Fri, 31 Jan 2025 02:07:25 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <679ca0dd.050a0220.d7c5a.0041.GAE@google.com>
+Subject: [syzbot] Monthly nilfs report (Jan 2025)
+From: syzbot <syzbot+list7e775aa95a724108e231@syzkaller.appspotmail.com>
+To: konishi.ryusuke@gmail.com, linux-kernel@vger.kernel.org, 
+	linux-nilfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-LS7A EHCI controller doesn't have extended capabilities, so the EECP
-(EHCI Extended Capabilities Pointer) field of HCCPARAMS register should
-be 0x0, but it reads as 0xa0 now. This is a hardware flaw and will be
-fixed in future, now just clear the EECP field to avoid error messages
-on boot:
+Hello nilfs maintainers/developers,
 
-......
-[    0.581675] pci 0000:00:04.1: EHCI: unrecognized capability ff
-[    0.581699] pci 0000:00:04.1: EHCI: unrecognized capability ff
-[    0.581716] pci 0000:00:04.1: EHCI: unrecognized capability ff
-[    0.581851] pci 0000:00:04.1: EHCI: unrecognized capability ff
-......
-[    0.581916] pci 0000:00:05.1: EHCI: unrecognized capability ff
-[    0.581951] pci 0000:00:05.1: EHCI: unrecognized capability ff
-[    0.582704] pci 0000:00:05.1: EHCI: unrecognized capability ff
-[    0.582799] pci 0000:00:05.1: EHCI: unrecognized capability ff
-......
+This is a 31-day syzbot report for the nilfs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/nilfs
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+During the period, 2 new issues were detected and 3 were fixed.
+In total, 5 issues are still open and 60 have already been fixed.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 4       Yes   WARNING in nilfs_btree_assign (3)
+                  https://syzkaller.appspot.com/bug?extid=158be45e4d99232e1900
+<2> 4       No    WARNING in nilfs_rename
+                  https://syzkaller.appspot.com/bug?extid=de6c4b3beb823e112ead
+<3> 2       Yes   INFO: task hung in find_inode (2)
+                  https://syzkaller.appspot.com/bug?extid=6646318bbcf419411bc5
+
 ---
- drivers/usb/host/pci-quirks.c | 4 ++++
- include/linux/pci_ids.h       | 1 +
- 2 files changed, 5 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-index 1f9c1b1435d8..7e3151400a5e 100644
---- a/drivers/usb/host/pci-quirks.c
-+++ b/drivers/usb/host/pci-quirks.c
-@@ -958,6 +958,10 @@ static void quirk_usb_disable_ehci(struct pci_dev *pdev)
- 	 * booting from USB disk or using a usb keyboard
- 	 */
- 	hcc_params = readl(base + EHCI_HCC_PARAMS);
-+	if (pdev->vendor == PCI_VENDOR_ID_LOONGSON &&
-+	    pdev->device == PCI_DEVICE_ID_LOONGSON_EHCI)
-+		hcc_params &= ~(0xffL << 8);
-+
- 	offset = (hcc_params >> 8) & 0xff;
- 	while (offset && --count) {
- 		pci_read_config_dword(pdev, offset, &cap);
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index de5deb1a0118..74a84834d9eb 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -162,6 +162,7 @@
- 
- #define PCI_VENDOR_ID_LOONGSON		0x0014
- 
-+#define PCI_DEVICE_ID_LOONGSON_EHCI     0x7a14
- #define PCI_DEVICE_ID_LOONGSON_HDA      0x7a07
- #define PCI_DEVICE_ID_LOONGSON_HDMI     0x7a37
- 
--- 
-2.47.1
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
