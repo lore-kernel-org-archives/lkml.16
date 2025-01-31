@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21AF19AD89;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AB71F3D4D;
 	Fri, 31 Jan 2025 22:59:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738364354; cv=none; b=nrMOn/lzny37Q+leJCXre6zSR5/RUtbEVS46DospijG1PfN7QBA6o8ffrJX3hjYi9xu+PmV42/9Sc3qAQMYPxL2xrZfRDoschT341kxhEDcETGqJoN7OCdeqpECNTdV5ZNBTw/D8tawaXjUuywIAIpg8Yir9UF7/jVlVizu/RmU=
+	t=1738364354; cv=none; b=iF99fSMWITpBFMOXYse6Mf+hKMx/9iln8sYWd1Eaxj0ETQBP6OzvYmc1/4yGQWDu/6LM2Gk494ykvHSs7AUZ2+bbvPiweBtxKbJie2Ng8yr/VA7003lW5IJ3b2uLGXh2tNgUttrRnpYxziXQJkJRyfnwRefpnfBDWZqxwbqRFSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738364354; c=relaxed/simple;
-	bh=HeKKrSjPO37kaYaoIpprwh9Zc7PGQ4l50BHykndVcJM=;
+	bh=q9W3Lullw5b5N1EmJUz6xwLa09U+84wt5yQ35aM0t4Q=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=gpiwc0TFfD1caH8laYqKzy4XRWFzvevrrqLI4IcO19KR89HTYhonpurAOxHFdo6i7vjm5dkoHVercKQvZPER1A2fEMmlE64U1kSK0+VZ461aw0E0/6FfWDmevb9ab/mWmdpPNmGDN9fmHVvYb9lLfPKK5IP+Z1tdjZNId90mpro=
+	 Content-Type; b=O/R2jQxT8OgNvrf98toWCGndgFg14rAbay54CNBk5inQ2UILhRdFzD/YXoKMp3FPucQCdQiKKE59l5JvcI99bvrKxqwVgWSzvbPxHdzjhfvWMCvyG+FS1NquSQg5RaeS1gx1YnJ9PEfqhndwtwII2FaoHWzH3vcMUmREafU/nYo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30440C4CEE1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F52C4CEE6;
 	Fri, 31 Jan 2025 22:59:14 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tdzzC-00000003vSy-29MX;
+	id 1tdzzC-00000003vTU-2rcw;
 	Fri, 31 Jan 2025 17:59:42 -0500
-Message-ID: <20250131225942.365475324@goodmis.org>
+Message-ID: <20250131225942.535211818@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 31 Jan 2025 17:58:38 -0500
+Date: Fri, 31 Jan 2025 17:58:39 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -56,7 +56,7 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
  daniel.wagner@suse.com,
  joseph.salisbury@oracle.com,
  broonie@gmail.com
-Subject: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Subject: [RFC][PATCH 2/2] sched: Shorten time that tasks can extend their time slice for
 References: <20250131225837.972218232@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -66,199 +66,300 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-This is to improve user space implemented spin locks or any critical
-section. It may also be extended for VMs and their guest spin locks as
-well, but that will come later.
+If a task sets its rseq bit to notify the kernel that it is in a critical
+section, the kernel currently gives it a full time slice to get out of
+that section. But that could be anywhere from 1ms to 10ms depending on the
+CONFIG_HZ value, and this can cause unwanted latency in other
+applications.
 
-This adds a new field in the struct rseq called cr_counter. This is a 32 bit
-field where bit zero is a flag reserved for the kernel, and the other 31
-bits can be used as a counter (although the kernel doesn't care how they
-are used, as any bit set means the same).
+Limit the extra time to 50us, which should be long enough for tasks to
+get out of their critical sections. If a task has a critical section
+longer than 50us, then it should be using futexes anyway. That is, system
+calls should not be a bottle neck for critical sections longer than 50us.
 
-This works in tandem with PREEMPT_LAZY, where a task can tell the kernel
-via the rseq structure that it is in a critical section (like holding a
-spin lock) that it will be leaving very shortly, and to ask the kernel to
-not preempt it at the moment.
+This makes the code rely not only on CONFIG_RSEQ but also CONFIG_SCHED_HRTICK
+as it relies on a timer that can be set 50us into the future.
 
-The way this works is before going into a critical section, the user space
-thread will increment the cr_counter by 2 (skipping bit zero that is
-reserved for the kernel). If the tasks time runs out and NEED_RESCHED_LAZY
-is set, on the way back out to user space, instead of calling schedule,
-the kernel will allow user space to continue to run. For the moment, it
-lets it run for one more tick (which will be changed later). When the
-kernel lets the thread have some extended time, it will set bit zero of
-the rseq cr_counter, to inform the user thread that it was granted extended
-time and that it should call a system call immediately after it leaves its
-critical section.
+The flag rseq_sched_delay is added to the task struct.
 
-When the user thread leaves the critical section, it decrements the
-counter by 2 and if the counter equals 1, then it knows that the kernel
-extended its time slice and it then will call a system call to allow the
-kernel to schedule it.
+The exit_to_user_mode_loop() will return the _TIF_NEED_RESCHED_LAZY flag
+if it granted the task an extended time slice.
 
-If NEED_RESCHED is set, then the rseq is ignored and the kernel will
+After interrupts are disabled and the code path is on its way to user
+space, a new function rseq_delay_resched_fini() is called with the return
+value of exit_to_user_mode_loop() (ti_work).
+
+If the _TIF_NEED_RESCHED_LAZY is set in the ti_work, then it will check to
+see if the task's rseq_sched_delay is already set (in case the task came
+into user space for some other reason), and if it is not set, then it will
+enable the schedule timer to trigger again in 50us and set the
+rseq_sched_delay flag.
+
+If that timer goes off, and the current task has the rseq_sched_delay flag
+set, it will then force a schedule, and also clear the rseq cr_counter
+flag stating that it had extended time, as user space no longer needs to
 schedule.
 
-Note, the incrementing and decrementing the counter by 2 is just one
-implementation that user space can use. As stated, any bit set in the
-cr_counter from bit 1 to 31 will cause the kernel to try and grant extra
-time.
+sys_yield() has been modified to check to see if it was called and does a
+trace_printk() if it has. This is for testing purposes and will likely be
+removed in later versions of this patch.
+
+This is based on Peter Ziljstra's code:
+
+  https://lore.kernel.org/all/20231030132949.GA38123@noisy.programming.kicks-ass.net/
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/sched.h     | 10 ++++++++++
- include/uapi/linux/rseq.h | 24 ++++++++++++++++++++++++
- kernel/entry/common.c     | 14 +++++++++++++-
- kernel/rseq.c             | 30 ++++++++++++++++++++++++++++++
- 4 files changed, 77 insertions(+), 1 deletion(-)
+ include/linux/entry-common.h |  2 +
+ include/linux/sched.h        | 11 +++++-
+ kernel/entry/common.c        |  2 +-
+ kernel/rseq.c                | 76 +++++++++++++++++++++++++++++++++---
+ kernel/sched/core.c          | 16 ++++++++
+ kernel/sched/syscalls.c      |  6 +++
+ 6 files changed, 106 insertions(+), 7 deletions(-)
 
+diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
+index fc61d0205c97..1e0970276726 100644
+--- a/include/linux/entry-common.h
++++ b/include/linux/entry-common.h
+@@ -330,6 +330,8 @@ static __always_inline void exit_to_user_mode_prepare(struct pt_regs *regs)
+ 
+ 	arch_exit_to_user_mode_prepare(regs, ti_work);
+ 
++	rseq_delay_resched_fini(ti_work);
++
+ 	/* Ensure that kernel state is sane for a return to userspace */
+ 	kmap_assert_nomap();
+ 	lockdep_assert_irqs_disabled();
 diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 64934e0830af..8e983d8cf72d 100644
+index 8e983d8cf72d..3c9d3ca9c5ad 100644
 --- a/include/linux/sched.h
 +++ b/include/linux/sched.h
-@@ -2206,6 +2206,16 @@ static inline bool owner_on_cpu(struct task_struct *owner)
+@@ -967,6 +967,9 @@ struct task_struct {
+ #ifdef CONFIG_RT_MUTEXES
+ 	unsigned			sched_rt_mutex:1;
+ #endif
++#if defined(CONFIG_RSEQ) && defined(CONFIG_SCHED_HRTICK)
++	unsigned			rseq_sched_delay:1;
++#endif
+ 
+ 	/* Bit to tell TOMOYO we're in execve(): */
+ 	unsigned			in_execve:1;
+@@ -2206,16 +2209,22 @@ static inline bool owner_on_cpu(struct task_struct *owner)
  unsigned long sched_cpu_util(int cpu);
  #endif /* CONFIG_SMP */
  
-+#ifdef CONFIG_RSEQ
-+
-+extern bool rseq_delay_resched(void);
-+
-+#else
-+
-+static inline bool rseq_delay_resched(void) { return false; }
-+
-+#endif
+-#ifdef CONFIG_RSEQ
++#if defined(CONFIG_RSEQ) && defined(CONFIG_SCHED_HRTICK)
+ 
+ extern bool rseq_delay_resched(void);
++extern void rseq_delay_resched_fini(unsigned long ti_work);
++extern void rseq_delay_resched_tick(void);
+ 
+ #else
+ 
+ static inline bool rseq_delay_resched(void) { return false; }
++extern inline void rseq_delay_resched_fini(unsigned long ti_work) {  }
++static inline void rseq_delay_resched_tick(void) { }
+ 
+ #endif
+ 
++extern void hrtick_local_start(u64 delay);
 +
  #ifdef CONFIG_SCHED_CORE
  extern void sched_core_free(struct task_struct *tsk);
  extern void sched_core_fork(struct task_struct *p);
-diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
-index c233aae5eac9..185fe9826ff9 100644
---- a/include/uapi/linux/rseq.h
-+++ b/include/uapi/linux/rseq.h
-@@ -37,6 +37,18 @@ enum rseq_cs_flags {
- 		(1U << RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT),
- };
- 
-+enum rseq_cr_flags_bit {
-+	RSEQ_CR_FLAG_KERNEL_REQUEST_SCHED_BIT	= 0,
-+};
-+
-+enum rseq_cr_flags {
-+	RSEQ_CR_FLAG_KERNEL_REQUEST_SCHED	=
-+	(1U << RSEQ_CR_FLAG_KERNEL_REQUEST_SCHED_BIT),
-+};
-+
-+#define RSEQ_CR_FLAG_IN_CRITICAL_SECTION_MASK	\
-+	(~RSEQ_CR_FLAG_KERNEL_REQUEST_SCHED)
-+
- /*
-  * struct rseq_cs is aligned on 4 * 8 bytes to ensure it is always
-  * contained within a single cache-line. It is usually declared as
-@@ -148,6 +160,18 @@ struct rseq {
- 	 */
- 	__u32 mm_cid;
- 
-+	/*
-+	 * The cr_counter is a way for user space to inform the kernel that
-+	 * it is in a critical section. If bits 1-31 are set, then the
-+	 * kernel may grant the thread a bit more time (but there is no
-+	 * guarantee of how much time or if it is granted at all). If the
-+	 * kernel does grant the thread extra time, it will set bit 0 to
-+	 * inform user space that it has granted the thread more time and that
-+	 * user space should call yield() as soon as it leaves its critical
-+	 * section.
-+	 */
-+	__u32 cr_counter;
-+
- 	/*
- 	 * Flexible array member at end of structure, after last feature field.
- 	 */
 diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-index e33691d5adf7..50e35f153bf8 100644
+index 50e35f153bf8..349f274d7185 100644
 --- a/kernel/entry/common.c
 +++ b/kernel/entry/common.c
-@@ -90,6 +90,8 @@ void __weak arch_do_signal_or_restart(struct pt_regs *regs) { }
- __always_inline unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
- 						     unsigned long ti_work)
- {
-+	unsigned long ignore_mask = 0;
-+
- 	/*
- 	 * Before returning to user space ensure that all pending work
- 	 * items have been completed.
-@@ -98,9 +100,18 @@ __always_inline unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
- 
- 		local_irq_enable_exit_to_user(ti_work);
- 
--		if (ti_work & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY))
-+		if (ti_work & _TIF_NEED_RESCHED) {
- 			schedule();
- 
-+		} else if (ti_work & _TIF_NEED_RESCHED_LAZY) {
-+			/* Allow to leave with NEED_RESCHED_LAZY still set */
-+			if (rseq_delay_resched()) {
-+				trace_printk("Avoid scheduling\n");
-+				ignore_mask |= _TIF_NEED_RESCHED_LAZY;
-+			} else
-+				schedule();
-+		}
-+
- 		if (ti_work & _TIF_UPROBE)
- 			uprobe_notify_resume(regs);
- 
-@@ -127,6 +138,7 @@ __always_inline unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
- 		tick_nohz_user_enter_prepare();
- 
- 		ti_work = read_thread_flags();
-+		ti_work &= ~ignore_mask;
+@@ -142,7 +142,7 @@ __always_inline unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
  	}
  
  	/* Return the latest work state for arch_exit_to_user_mode() */
+-	return ti_work;
++	return ti_work | ignore_mask;
+ }
+ 
+ /*
 diff --git a/kernel/rseq.c b/kernel/rseq.c
-index 9de6e35fe679..b792e36a3550 100644
+index b792e36a3550..701c4801a111 100644
 --- a/kernel/rseq.c
 +++ b/kernel/rseq.c
-@@ -339,6 +339,36 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+@@ -339,35 +339,101 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
  	force_sigsegv(sig);
  }
  
-+bool rseq_delay_resched(void)
++#ifdef CONFIG_SCHED_HRTICK
++void rseq_delay_resched_fini(unsigned long ti_work)
 +{
++	extern void hrtick_local_start(u64 delay);
 +	struct task_struct *t = current;
-+	u32 flags;
 +
 +	if (!t->rseq)
-+		return false;
++		return;
 +
-+	/* Make sure the cr_counter exists */
-+	if (current->rseq_len <= offsetof(struct rseq, cr_counter))
-+		return false;
-+
-+	/* If this were to fault, it would likely cause a schedule anyway */
-+	if (copy_from_user_nofault(&flags, &t->rseq->cr_counter, sizeof(flags)))
-+		return false;
-+
-+	if (!(flags & RSEQ_CR_FLAG_IN_CRITICAL_SECTION_MASK))
-+		return false;
-+
-+	trace_printk("Extend time slice\n");
-+	flags |= RSEQ_CR_FLAG_KERNEL_REQUEST_SCHED;
-+
-+	if (copy_to_user_nofault(&t->rseq->cr_counter, &flags, sizeof(flags))) {
-+		trace_printk("Faulted writing rseq\n");
-+		return false;
++	if (!(ti_work & _TIF_NEED_RESCHED_LAZY)) {
++		/* Clear any previous setting of rseq_sched_delay */
++		t->rseq_sched_delay = 0;
++		return;
 +	}
 +
-+	return true;
++	/* No need to start the timer if it is already started */
++	if (t->rseq_sched_delay)
++		return;
++
++	/*
++	 * IRQs off, guaranteed to return to userspace, start timer on this CPU
++	 * to limit the resched-overdraft.
++	 *
++	 * If your critical section is longer than 50 us you get to keep the
++	 * pieces.
++	 */
++
++	t->rseq_sched_delay = 1;
++	hrtick_local_start(50 * NSEC_PER_USEC);
 +}
 +
+ bool rseq_delay_resched(void)
+ {
+ 	struct task_struct *t = current;
+ 	u32 flags;
+ 
+ 	if (!t->rseq)
+-		return false;
++		goto nodelay;
+ 
+ 	/* Make sure the cr_counter exists */
+ 	if (current->rseq_len <= offsetof(struct rseq, cr_counter))
+-		return false;
++		goto nodelay;
+ 
+ 	/* If this were to fault, it would likely cause a schedule anyway */
+ 	if (copy_from_user_nofault(&flags, &t->rseq->cr_counter, sizeof(flags)))
+-		return false;
++		goto nodelay;
+ 
+ 	if (!(flags & RSEQ_CR_FLAG_IN_CRITICAL_SECTION_MASK))
+-		return false;
++		goto nodelay;
+ 
+ 	trace_printk("Extend time slice\n");
+ 	flags |= RSEQ_CR_FLAG_KERNEL_REQUEST_SCHED;
+ 
+ 	if (copy_to_user_nofault(&t->rseq->cr_counter, &flags, sizeof(flags))) {
+ 		trace_printk("Faulted writing rseq\n");
+-		return false;
++		goto nodelay;
+ 	}
+ 
+ 	return true;
++
++nodelay:
++	t->rseq_sched_delay = 0;
++	return false;
++}
++
++void rseq_delay_resched_tick(void)
++{
++	struct task_struct *t = current;
++
++	if (t->rseq_sched_delay) {
++		u32 flags;
++
++		set_tsk_need_resched(t);
++		t->rseq_sched_delay = 0;
++		trace_printk("timeout -- force resched\n");
++
++		/*
++		 * Now remove the that it was extended, as this will
++		 * force a schedule and user space no longer needs to.
++		 */
++
++		/* Just in case user space unregistered its rseq */
++		if (!t->rseq)
++			return;
++
++		if (copy_from_user_nofault(&flags, &t->rseq->cr_counter, sizeof(flags)))
++			return;
++
++		flags &= ~RSEQ_CR_FLAG_KERNEL_REQUEST_SCHED;
++
++		if (copy_to_user_nofault(&t->rseq->cr_counter, &flags, sizeof(flags)))
++			return;
++	}
+ }
++#endif /* CONFIG_SCHED_HRTICK */
+ 
  #ifdef CONFIG_DEBUG_RSEQ
  
- /*
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 3e5a6bf587f9..77d671dcd161 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -815,6 +815,7 @@ void update_rq_clock(struct rq *rq)
+ 
+ static void hrtick_clear(struct rq *rq)
+ {
++	rseq_delay_resched_tick();
+ 	if (hrtimer_active(&rq->hrtick_timer))
+ 		hrtimer_cancel(&rq->hrtick_timer);
+ }
+@@ -830,6 +831,8 @@ static enum hrtimer_restart hrtick(struct hrtimer *timer)
+ 
+ 	WARN_ON_ONCE(cpu_of(rq) != smp_processor_id());
+ 
++	rseq_delay_resched_tick();
++
+ 	rq_lock(rq, &rf);
+ 	update_rq_clock(rq);
+ 	rq->donor->sched_class->task_tick(rq, rq->curr, 1);
+@@ -903,6 +906,16 @@ void hrtick_start(struct rq *rq, u64 delay)
+ 
+ #endif /* CONFIG_SMP */
+ 
++void hrtick_local_start(u64 delay)
++{
++	struct rq *rq = this_rq();
++	struct rq_flags rf;
++
++	rq_lock(rq, &rf);
++	hrtick_start(rq, delay);
++	rq_unlock(rq, &rf);
++}
++
+ static void hrtick_rq_init(struct rq *rq)
+ {
+ #ifdef CONFIG_SMP
+@@ -6711,6 +6724,9 @@ static void __sched notrace __schedule(int sched_mode)
+ picked:
+ 	clear_tsk_need_resched(prev);
+ 	clear_preempt_need_resched();
++#ifdef CONFIG_RSEQ
++	prev->rseq_sched_delay = 0;
++#endif
+ #ifdef CONFIG_SCHED_DEBUG
+ 	rq->last_seen_need_resched_ns = 0;
+ #endif
+diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+index ff0e5ab4e37c..1d981599e890 100644
+--- a/kernel/sched/syscalls.c
++++ b/kernel/sched/syscalls.c
+@@ -1379,6 +1379,12 @@ static void do_sched_yield(void)
+  */
+ SYSCALL_DEFINE0(sched_yield)
+ {
++	if (current->rseq_sched_delay) {
++		trace_printk("yield -- made it\n");
++		schedule();
++		return 0;
++	}
++
+ 	do_sched_yield();
+ 	return 0;
+ }
 -- 
 2.45.2
 
