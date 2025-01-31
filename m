@@ -1,34 +1,46 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF5285260;
-	Fri, 31 Jan 2025 08:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4B5158874;
+	Fri, 31 Jan 2025 08:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738313649; cv=none; b=ZYx3lym58+XhiUt8RGv54MUqbB4taOjWCY4smjef9T2yFz68Ab+Dzd5xofk9LsAn5efMIOK7ZIkMulAF1ZxtHKU0z2KCGBSPnPrwkLGgv0exy65eRPMgYC+3WWbrJSPrTk3mxuwLFwT8NxsOvFrNeloFoiSS3tgrhFZyWKa/C8k=
+	t=1738313839; cv=none; b=geNRsLDnszQNfTxoxkORdgj6GKEDslYefwoLLv4WvIRzTy85TWMxDlMdeyqCmx3/p7FXQn+tC9ajja/7JcLS3cSMsEMhqvaYCqEUQjCsT46Jk5Ibfoc0l9c44LSZFUgzVikUH+12dCQRjr+Z4sGdX0NmBqQATAFAXhuLDMVXki4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738313649; c=relaxed/simple;
-	bh=QqG4CxDWBvBBn3RpBg4y57WRbrobiMNRXA59zwyxECA=;
+	s=arc-20240116; t=1738313839; c=relaxed/simple;
+	bh=luxWJ7FXt6+ana01izRsfu/WQ61S8W7NLfjrWuVweKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OhLu/uInze7FkVpQ3AWemrLBXiPeqeviLu94CFM5dcKPTDGFiGkQk6K7kmrFsHUPtCZvfpA1DSV3w6dG95YXbYFA5g3Q8e5nJxR6Gi8JgO4e5mltfX5UoGJsnNh5upggjniV8Q0/BMaXnlhoP9A6CybaM1GQQL479cP+D0Tgpnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id C83E568B05; Fri, 31 Jan 2025 09:54:01 +0100 (CET)
-Date: Fri, 31 Jan 2025 09:54:01 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Daniel Wagner <dwagner@suse.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>, Daniel Wagner <wagi@kernel.org>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-	James Smart <james.smart@broadcom.com>,
-	Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH 3/3] blk-mq: fix wait condition for tagset wait
- completed check
-Message-ID: <20250131085401.GA17935@lst.de>
-References: <20250128-nvme-misc-fixes-v1-0-40c586581171@kernel.org> <20250128-nvme-misc-fixes-v1-3-40c586581171@kernel.org> <b53dad99-6a8e-402e-9330-597289ecd8fd@grimberg.me> <04ca03dd-d240-458a-a049-8cf0ea7f9dcc@flourine.local>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mnh48VRV6coRGQVx1KLuq0svGLhDYe2g9LsVV+LNQLhjQY+VonoXsoTd0XE6ZZI6ToUnbN7KPdjPKJZTT1ZjColpRR2eVuxdiE55rcfKIk2lYopAq0PWIbdChd+NqGdljlAcu9GJQpzbHNrjnrr1GoLD2XEemwHCwClxTEZlv3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=meSxrvHJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="meSxrvHJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A12C4CED1;
+	Fri, 31 Jan 2025 08:57:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738313838;
+	bh=luxWJ7FXt6+ana01izRsfu/WQ61S8W7NLfjrWuVweKg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=meSxrvHJm1rwLKAuREvnPTC6yJ3+99pcJL7daMTkvL7sKNHttO1JJ3ZHClhAhMBtX
+	 Z/CRDGjtHIYy0488EtAdpySy5aCsbkep+MlgXxz/+cGPwaAccL4kV52o0cqn10B5TU
+	 Fzfr8CljuPUmj797Knd+58MXBux4xGarPOE0xScQ=
+Date: Fri, 31 Jan 2025 09:57:15 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH 5.4 00/91] 5.4.290-rc1 review
+Message-ID: <2025013151-culture-sharpie-f779@gregkh>
+References: <20250130140133.662535583@linuxfoundation.org>
+ <CA+G9fYsiw4GSjL7Sf51OaGM_-uWAQYaLCb14L_RC81nwoZJJzA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,14 +49,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <04ca03dd-d240-458a-a049-8cf0ea7f9dcc@flourine.local>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CA+G9fYsiw4GSjL7Sf51OaGM_-uWAQYaLCb14L_RC81nwoZJJzA@mail.gmail.com>
 
-On Fri, Jan 31, 2025 at 09:46:46AM +0100, Daniel Wagner wrote:
-> The problem I am running into with my wip tp4129 patchset is that
-> requests are pending an newly introduce requeue_list queue and never get
-> canceled because these requests stay in the COMPLETE state at the
-> moment. This blocked the shutdown path.
+On Fri, Jan 31, 2025 at 01:05:40AM +0530, Naresh Kamboju wrote:
+> On Thu, 30 Jan 2025 at 19:47, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.4.290 release.
+> > There are 91 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sat, 01 Feb 2025 14:01:13 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.290-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> 
+> The following build regressions were noticed and reported last time
+> on 5.15 and found here again on arc, arm, mips, parisc, powerpc with
+> gcc and clang toolchains on 5.4.290-rc1 and 5.10.234-rc1.
+> 
+> Build regression: arc, arm, mips, parisc, powerpc,
+> drivers/usb/core/port.c struct usb_device has no member named
+> port_is_suspended
 
-I'd recomend to not bother impemebting 4129 as it's a fucked up mess.
+Ick, missed that again.  I'll go fix this up for both branches and push
+out -rc2 releases soon.
 
+thanks,
+
+greg k-h
