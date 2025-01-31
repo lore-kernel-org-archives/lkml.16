@@ -1,78 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDA0143723;
-	Fri, 31 Jan 2025 08:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1462211C;
+	Fri, 31 Jan 2025 08:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738310444; cv=none; b=kXrq0CddKUFoZ89KNGBQ6HocR3uJqkIGyAxR7tEfN8HvLuKT9cvr/0KRajySZX1F4roqUGKHuehU65xsxfhgbCBMa5DUaAkPoUCDThhhVMlgXjOJeaMMiXFnII0DDRpdzqiTet5rxHyj+plJOWoRdKpRubLNcvPAjQRSgpfqOSw=
+	t=1738310475; cv=none; b=IW7IaIMvyTzWfyZCkjHTB6iBX1gmZtdsvkvqawnEWgjlYm2boRGtcMfBijTDCc/vc3S0GSMRqNpr/h6gvyJSH44UFCTCesgFOBxdbzAhdpnMumCNJWtD22xVopnkRpRo9KE+91cl+cHYhURPJGytrx8HYe9MNS6UraMEa5HQ5Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738310444; c=relaxed/simple;
-	bh=udesyE0697+EA9cQPPOlWNe/XbzT1OhHht2eojgSG58=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y0kJdtHbPOKDYz85SfaAGHDuwHUfhRQONpnSP38xfN5s8SiuJFDtRL8aSUAWKTkkrnFnEL5i1IwWJXb4IqbbwDVD4bLZvvQ4oUQV5QQNQP4wnMxKULGPlAQMgB+kx0lrSoTiqj36VxiyIhnA1Yn7DoyoZjOMR00uDrPyXd9omIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=is0EeApJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738310475; c=relaxed/simple;
+	bh=hcg/k9+PWPYHKHwEuqdo5k2rAK+EDi00z4R+d4PLmD8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EdqS3wfMdShcdKf1uFE5lSSzxVqgY6rVCGxlGwkooIuLpZNjaWKOpI25Xd8RT+ljailzVXaPtXFOoI/XmODubaMhty+RvDQluMve32EpISkZDqeRbmLpZpr4C81738X/7LGYjwwgRfV4u+aazr6Wl9YlYuYQbAyvUesDajsH8n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=V66Pmoxa; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ieb4/CiB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=V66Pmoxa; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ieb4/CiB; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="is0EeApJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DF48C4CED1;
-	Fri, 31 Jan 2025 08:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738310434;
-	bh=udesyE0697+EA9cQPPOlWNe/XbzT1OhHht2eojgSG58=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=is0EeApJHjJTpjRaatXI6inqMW+tElwRg6lvvWy58KYCJxUq2su9HO7qdDvqXuDVL
-	 e/Sft/FSdaYbVSB3njbBMqdGh89WnNEOdQuv05efY4Ki1DVyYJbq42hOYDwXP0L1/r
-	 +eaoG96iM6iKc/1vi3/DGQl/1SsJooEn3vbKdhRo=
-Date: Fri, 31 Jan 2025 09:00:32 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Lyude Paul <lyude@redhat.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] WIP: drivers/base: Add virtual_device_create()
-Message-ID: <2025013159-shabby-professor-515b@gregkh>
-References: <Z5Nw8kaieLueWyUu@pollux>
- <20250130212843.659437-1-lyude@redhat.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="V66Pmoxa";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ieb4/CiB";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="V66Pmoxa";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ieb4/CiB"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 963881F38E;
+	Fri, 31 Jan 2025 08:01:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738310471; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aZMFGGkGBzRdZDlaRSV4HeKOOsY3L5kamaHpfXEmfQ8=;
+	b=V66Pmoxa/NWGShmrOtZYzgMgoMTc64J0NmRfgeXdgLTzbkE0wLzaP3oZqQYRfFk0UKcqOP
+	FuE72HOGG9ZqgJSFmF1rAnW66Q2bqGYqT2Yw+SmBUIGs8KL6KafMo9EGHL+7n5F5iaCLhx
+	cbNjHfUUVJciU/bZO3ggb7HNvirETOE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738310471;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aZMFGGkGBzRdZDlaRSV4HeKOOsY3L5kamaHpfXEmfQ8=;
+	b=Ieb4/CiBEHQlM2QL67wdfzqYQMQ4oeGcT7S+rHzgENaPhOj6O+dmO+xxIeh5I+Q7olU3gI
+	9hi2aqS/LdniNWAw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738310471; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aZMFGGkGBzRdZDlaRSV4HeKOOsY3L5kamaHpfXEmfQ8=;
+	b=V66Pmoxa/NWGShmrOtZYzgMgoMTc64J0NmRfgeXdgLTzbkE0wLzaP3oZqQYRfFk0UKcqOP
+	FuE72HOGG9ZqgJSFmF1rAnW66Q2bqGYqT2Yw+SmBUIGs8KL6KafMo9EGHL+7n5F5iaCLhx
+	cbNjHfUUVJciU/bZO3ggb7HNvirETOE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738310471;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aZMFGGkGBzRdZDlaRSV4HeKOOsY3L5kamaHpfXEmfQ8=;
+	b=Ieb4/CiBEHQlM2QL67wdfzqYQMQ4oeGcT7S+rHzgENaPhOj6O+dmO+xxIeh5I+Q7olU3gI
+	9hi2aqS/LdniNWAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 34831133A6;
+	Fri, 31 Jan 2025 08:01:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id iYJSCkeDnGcqAwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 31 Jan 2025 08:01:11 +0000
+Date: Fri, 31 Jan 2025 09:01:10 +0100
+Message-ID: <87tt9f4dkp.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: John Keeping <jkeeping@inmusicbrands.com>
+Cc: linux-usb@vger.kernel.org,
+	Takashi Iwai <tiwai@suse.de>,
+	stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kees Cook <kees@kernel.org>,
+	Abdul Rahim <abdul.rahim@myyahoo.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	Daniel Mack <zonque@gmail.com>,
+	Felipe Balbi <balbi@ti.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: gadget: f_midi: fix MIDI Streaming descriptor lengths
+In-Reply-To: <20250130195035.3883857-1-jkeeping@inmusicbrands.com>
+References: <20250130195035.3883857-1-jkeeping@inmusicbrands.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130212843.659437-1-lyude@redhat.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,suse.de,linuxfoundation.org,kernel.org,myyahoo.com,quicinc.com,pengutronix.de,gmail.com,ti.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Thu, Jan 30, 2025 at 04:28:26PM -0500, Lyude Paul wrote:
-> As Greg KH pointed out, we have a nice /sys/devices/virtual directory free
-> for the taking - but the vast majority of device drivers concerned with
-> virtual devices do not use this and instead misuse the platform device API.
+On Thu, 30 Jan 2025 20:50:34 +0100,
+John Keeping wrote:
 > 
-> To fix this, let's start by adding a simple function that can be used for
-> creating virtual devices - virtual_device_create().
+> While the MIDI jacks are configured correctly, and the MIDIStreaming
+> endpoint descriptors are filled with the correct information,
+> bNumEmbMIDIJack and bLength are set incorrectly in these descriptors.
 > 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> This does not matter when the numbers of in and out ports are equal, but
+> when they differ the host will receive broken descriptors with
+> uninitialized stack memory leaking into the descriptor for whichever
+> value is smaller.
 > 
-> ---
+> The precise meaning of "in" and "out" in the port counts is not clearly
+> defined and can be confusing.  But elsewhere the driver consistently
+> uses this to match the USB meaning of IN and OUT viewed from the host,
+> so that "in" ports send data to the host and "out" ports receive data
+> from it.
 > 
-> So, WIP obviously because I wrote this up in a few minutes - but this goes
-> off the idea that Danilo suggested to me off-list of coming up with a
-> simple API for handling virtual devices that's a little more obvious to
-> use. I wanted to get people's feedback and if we're happy with this idea,
-> I'm willing to go through and add some pointers to this function in various
-> platform API docs - along with porting over the C version of VKMS over to
-> this API.
+> Cc: stable@vger.kernel.org
+> Fixes: c8933c3f79568 ("USB: gadget: f_midi: allow a dynamic number of input and output ports")
+> Signed-off-by: John Keeping <jkeeping@inmusicbrands.com>
 
-This is a big better, but not quite.  Let me carve out some time today
-to knock something a bit nicer together...
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
 
-thanks,
 
-greg k-h
+Thanks!
+
+Takashi
