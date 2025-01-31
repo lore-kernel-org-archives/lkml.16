@@ -1,212 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E261B6CE9
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 10:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F17E91B6CE9;
+	Fri, 31 Jan 2025 10:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738320971; cv=none; b=D7ClLmSjECVqSrIUNV7Xt9lcA0Xe7lclUdBv9ec+/MRRCYHX96BxBwWdP+gRf5Oh5W1wDYYELGAs2+5B7qEDFXPR5ddMKraVKNuprYB7dYnwVt0zvTAfKGkXJ1TUkPxTPQ75HO74hCCchQzU0e92fr5zFLRi/ZRZ+pBGj5blGwI=
+	t=1738321024; cv=none; b=Oq1ikV7Dne44GsIN2sVTVJPcNbyGjPGJQP9XK7w4JskQLy8vUBQUx2Tec7CF6j1UrKMeF8NQGSPTWTQ2AOG5Oz6K6RziS+IABgn11oXZV67y+4wLF+3K3ZcowQANlum697jjCrvFc1xNI5r+Rr8SqiG1Axgc926lysNwDiLz6ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738320971; c=relaxed/simple;
-	bh=ccsBtqqIC3L6dLUiqQA+w/n/Hdkk7VIposblQzQvNks=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=lfFF4BAi9c2jJom6rhiCxaGBTeh0CaYcGw1zzgYl3F5Cr42ZCvO6e31glLhbEsqAFEu6OPl4EmtRMTm6f3If0eUCmL4SwHSYoqacrtYFEGeC/jV3iSLb7MbA1hiXXjDzG34FgFuGoZRZEQ9rM0khxk00pb4o2ni02mwdtnANJrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SsH01pe0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SsH01pe0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738320969;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Q3RpfUrdZBCMnrOyM0k8HuSUcAta7Y636lLqMrYrWx8=;
-	b=SsH01pe0MxZrQQJDVXTOY7/itGqNZ24qhWI2Xt63e9OrFkxxjSGN6dIEJ7tXlZXWN3Pu10
-	nNGngeCtGyxOlZSnfHLd8i6xSH6HX2kb27GsKQ22jWtk49R018NUeYU3A6bZB4WQ8J33QM
-	xQKmiDC2BrCRD5bIA0X0m9czMScTDOg=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-355-2CxYdFRkOzifE3wkNnx80Q-1; Fri, 31 Jan 2025 05:56:07 -0500
-X-MC-Unique: 2CxYdFRkOzifE3wkNnx80Q-1
-X-Mimecast-MFC-AGG-ID: 2CxYdFRkOzifE3wkNnx80Q
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3862e986d17so702322f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 02:56:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738320966; x=1738925766;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q3RpfUrdZBCMnrOyM0k8HuSUcAta7Y636lLqMrYrWx8=;
-        b=rW1j1rtsN9Md3cNcSFlfDzJhOVSsacsAaHOTNot8OB0onsveM/Wg3FnkUw0HUKaZ5m
-         hSUiQ/ayQG+v3NDTUM7NFgvoqZnJSSa2ehMFBmwe30VPSenAIvkNxaSbvPhzl1ebOHd4
-         in46nnLxFIms6K1vwFMptvla6NlBz4Zxz430QVnByVHkdbwny27QptOfRL1lboYIeJ2V
-         SD9XV+C8CC3LK+U0y0x5w2JUFUnYZ/ad46aKe2xCupAd1K6wUom8SmEEoh18N7Isa+f2
-         K2JgQB1HYB23mf9qClR/hdDVVVXf9Wc24dghtDtKckL24tG3wMPt8tUxEC5LXAcInSPr
-         Sv+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWsFacc7jrwN04KojTAWhmG2X5R1LUJROmhxGvSV+Hc/6AyXBHABPe84Zno8m+KeAh2ljIOm2BvmVkDwuY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzb4/pHxp0sT7cEI0VKXrGR+TcXjNtzYK+lSXs3aHQoipDmrF/a
-	9g+bGUReicrTwJGUXBxxXGljaTommmJkn9BM7pqMIOWtciH2HXpy++cD1IcmtAkfpjGfQNieaZt
-	IrK0sef4/fUesaRGMxhcvzzX315BIKh2CMHZ6ECt6AsH5jEpaWl1Pjq/eECGijQ==
-X-Gm-Gg: ASbGncs5y4EyBQvi7h6qrUKiqb+SwiTFRk7Sl2H+GLLUy8XpbgSqPoUbTl7oq3rYUY2
-	iAC+gpq8lTP8oyLCrEx+nmKOdRfSy2KPhcKlENInRGcdE7FvQpCTO5GNGw75OAkuryEvcPEkWCS
-	F0fLYhZpLVZqWRx0BlUs+wsPuysYlIJszn0/djMpRy7lny2Reehd/mwVIXswm8jGDRhksVMXz2K
-	9Cwyh79M6wB033HXDMjzIBnqQGqwzo++rmzEKWTqJSKF1cUCPE6/x3VFUxqtLcrkPyowt/BwPUo
-	7yGoPXpIbU5kcpLGzZAAuwODUwRRJXRUnNN6KEBRf5OYrNZJFKeea27Mu6HYH3d7+sgkl6UJRiG
-	s0sTNeHLQ/Rx/LREwVLQvA6WQC1MPSnNC
-X-Received: by 2002:a05:6000:1a8b:b0:385:f47b:1501 with SMTP id ffacd0b85a97d-38c5195fd82mr8250985f8f.32.1738320965943;
-        Fri, 31 Jan 2025 02:56:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH+I+ynCeZEHXX+6WrhMhXHSL94RRp5D9nLI6LDBxYzej6H/Ex/I2OwQyT0gbWRqDVNDvdr0w==
-X-Received: by 2002:a05:6000:1a8b:b0:385:f47b:1501 with SMTP id ffacd0b85a97d-38c5195fd82mr8250948f8f.32.1738320965490;
-        Fri, 31 Jan 2025 02:56:05 -0800 (PST)
-Received: from ?IPV6:2003:cb:c70a:1c00:b8d4:bc62:e7ed:ec0e? (p200300cbc70a1c00b8d4bc62e7edec0e.dip0.t-ipconnect.de. [2003:cb:c70a:1c00:b8d4:bc62:e7ed:ec0e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c102fcasm4451251f8f.38.2025.01.31.02.55.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 02:55:58 -0800 (PST)
-Message-ID: <d552cc03-b7af-44be-bcaf-13da720a2226@redhat.com>
-Date: Fri, 31 Jan 2025 11:55:55 +0100
+	s=arc-20240116; t=1738321024; c=relaxed/simple;
+	bh=Ju62Gi05ZY1w2Y4MQ+7vJS2qhOAzNeduVZhHxWSdkoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fgULTJ9HUFj+wDEt2gGEzxZS1a2N3vJTk/zvFgrRd3cNpiKENn4o8rYKOucNsYl+sTLxdsBbZHKKnkgsRjsnedkAD1tWywWFFMpyUSrYNbbEmqqQNDhdJKHIGUSlTvcW6joqN23QbZAM35k9jOVUERKYhQdmewl444Cosm8LyBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EEE1497;
+	Fri, 31 Jan 2025 02:57:26 -0800 (PST)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B79BC3F63F;
+	Fri, 31 Jan 2025 02:56:58 -0800 (PST)
+Date: Fri, 31 Jan 2025 10:56:56 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Joey Gouly <joey.gouly@arm.com>, James Morse <james.morse@arm.com>,
+	stable@vger.kernel.org, Moritz Fischer <moritzf@google.com>,
+	Pedro Martelletto <martelletto@google.com>,
+	Jon Masters <jonmasters@google.com>
+Subject: Re: [PATCH] arm64: Move storage of idreg overrides into mmuoff
+ section
+Message-ID: <Z5yseC1kCyTcwlMy@J2N7QTR9R3>
+References: <20250130204614.64621-1-oliver.upton@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 05/12] mm/memory: detect writability in
- restore_exclusive_pte() through can_change_pte_writable()
-To: Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-mm@kvack.org, nouveau@lists.freedesktop.org,
- Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
- <jglisse@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
- Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
- Jason Gunthorpe <jgg@nvidia.com>
-References: <20250129115411.2077152-1-david@redhat.com>
- <20250129115411.2077152-6-david@redhat.com>
- <Z5tLmYOQaZrdWQHN@phenom.ffwll.local>
- <2670f65f-e973-483e-aed6-526d00125ad7@redhat.com>
- <Z5t4rrkRiOsRY2jH@phenom.ffwll.local>
- <z7s7xb2ftv5hqg3uzjqkou6enguleazwwehxbi5zulbkar2aej@zlbdh2kdewdn>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <z7s7xb2ftv5hqg3uzjqkou6enguleazwwehxbi5zulbkar2aej@zlbdh2kdewdn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250130204614.64621-1-oliver.upton@linux.dev>
 
-On 31.01.25 00:06, Alistair Popple wrote:
-> On Thu, Jan 30, 2025 at 02:03:42PM +0100, Simona Vetter wrote:
->> On Thu, Jan 30, 2025 at 10:58:51AM +0100, David Hildenbrand wrote:
->>> On 30.01.25 10:51, Simona Vetter wrote:
->>>> On Wed, Jan 29, 2025 at 12:54:03PM +0100, David Hildenbrand wrote:
->>>>> Let's do it just like mprotect write-upgrade or during NUMA-hinting
->>>>> faults on PROT_NONE PTEs: detect if the PTE can be writable by using
->>>>> can_change_pte_writable().
->>>>>
->>>>> Set the PTE only dirty if the folio is dirty: we might not
->>>>> necessarily have a write access, and setting the PTE writable doesn't
->>>>> require setting the PTE dirty.
->>>>
->>>> Not sure whether there's much difference in practice, since a device
->>>> exclusive access means a write, so the folio better be dirty (unless we
->>>> aborted halfway through). But then I couldn't find the code in nouveau to
->>>> do that, so now I'm confused.
->>>
->>> That confused me as well. Requiring the PTE to be writable does not imply
->>> that it is dirty.
->>>
->>> So something must either set the PTE or the folio dirty.
->>
->> Yeah I'm not finding that something.
->>
->>> ( In practice, most anonymous folios are dirty most of the time ... )
->>
->> And yup that's why I think it hasn't blown up yet.
->>
->>> If we assume that "device-exclusive entries" are always dirty, then it
->>> doesn't make sense to set the folio dirty when creating device-exclusive
->>> entries. We'd always have to set the PTE dirty when restoring the exclusive
->>> pte.
->>
->> I do agree with your change, I think it's correct to put this
->> responsibility onto drivers. It's just that nouveau seems to not be
->> entirely correct.
+Hi Oliver,
+
+On Thu, Jan 30, 2025 at 12:46:15PM -0800, Oliver Upton wrote:
+> There are a few places where the idreg overrides are read w/ the MMU
+> off, for example the VHE and hVHE checks in __finalise_el2. And while
+> the infrastructure gets this _mostly_ right (i.e. does the appropriate
+> cache maintenance), the placement of the data itself is problematic and
+> could share a cache line with something else.
 > 
-> Yeah, agree it should be a driver responsibility but also can't see how nouveau
-> is correct there either. I might see if I can get it to blow up...
+> Depending on how unforgiving an implementation's handling of mismatched
+> attributes is, this could lead to data corruption. In one observed case,
+> the system_cpucaps shared a line with arm64_sw_feature_override and the
+> cpucaps got nuked after entering the hyp stub...
 
-(in context of the rmap walkers) The question is, how do we consider 
-device-exclusive entries:
+This doesn't sound right. Non-cacheable/Device reads should not lead to
+corruption of a cached copy regardless of whether that cached copy is
+clean or dirty.
 
-(1) dirty? Not from a CPU perspective.
-(2) referenced? Not from a CPU perspective.
+The corruption suggests that either we're performing a *write* with
+mismatched attributes (in which case the use of .mmuoff.data.read below
+isn't quite right), or we have a plan invalidate somewhere without a
+clean (and e.g. something else might need to be moved into
+.mmuoff.data.write).
 
-If the answer is always "no" to all questions, then memory notifiers 
-must handle it, because we'd be answering the question from the CPU 
-point of view.
+Seconding Ard's point, I think we need to understand this scenario
+better.
 
-If the answer is always "yes", there is a problem: we can only make it 
-clean/young by converting it to an ordinary PTE first (requiring MMU 
-notifiers etc.), which makes it quite nasty.
+To be clear, I think moving all the overrides into .mmuoff.data.read
+makes sense, but it doesn't explain the problem above, and it seems like
+there must be a latent issue (which this might only mask rather than
+solve).
 
-Mixed answers are not possible, because we don't know just from staring 
-at the entry.
+Mark.
 
--- 
-Cheers,
-
-David / dhildenb
-
+> Even though only a few overrides are read without the MMU on, just throw
+> the whole lot into the mmuoff section and be done with it.
+> 
+> Cc: stable@vger.kernel.org # v5.15+
+> Tested-by: Moritz Fischer <moritzf@google.com>
+> Tested-by: Pedro Martelletto <martelletto@google.com>
+> Reported-by: Jon Masters <jonmasters@google.com>
+> Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+> ---
+>  arch/arm64/kernel/cpufeature.c | 25 ++++++++++++++-----------
+>  1 file changed, 14 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index d41128e37701..92506d9f90db 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -755,17 +755,20 @@ static const struct arm64_ftr_bits ftr_raz[] = {
+>  #define ARM64_FTR_REG(id, table)		\
+>  	__ARM64_FTR_REG_OVERRIDE(#id, id, table, &no_override)
+>  
+> -struct arm64_ftr_override id_aa64mmfr0_override;
+> -struct arm64_ftr_override id_aa64mmfr1_override;
+> -struct arm64_ftr_override id_aa64mmfr2_override;
+> -struct arm64_ftr_override id_aa64pfr0_override;
+> -struct arm64_ftr_override id_aa64pfr1_override;
+> -struct arm64_ftr_override id_aa64zfr0_override;
+> -struct arm64_ftr_override id_aa64smfr0_override;
+> -struct arm64_ftr_override id_aa64isar1_override;
+> -struct arm64_ftr_override id_aa64isar2_override;
+> -
+> -struct arm64_ftr_override arm64_sw_feature_override;
+> +#define DEFINE_FTR_OVERRIDE(name)					\
+> +	struct arm64_ftr_override __section(".mmuoff.data.read") name
+> +
+> +DEFINE_FTR_OVERRIDE(id_aa64mmfr0_override);
+> +DEFINE_FTR_OVERRIDE(id_aa64mmfr1_override);
+> +DEFINE_FTR_OVERRIDE(id_aa64mmfr2_override);
+> +DEFINE_FTR_OVERRIDE(id_aa64pfr0_override);
+> +DEFINE_FTR_OVERRIDE(id_aa64pfr1_override);
+> +DEFINE_FTR_OVERRIDE(id_aa64zfr0_override);
+> +DEFINE_FTR_OVERRIDE(id_aa64smfr0_override);
+> +DEFINE_FTR_OVERRIDE(id_aa64isar1_override);
+> +DEFINE_FTR_OVERRIDE(id_aa64isar2_override);
+> +
+> +DEFINE_FTR_OVERRIDE(arm64_sw_feature_override);
+>  
+>  static const struct __ftr_reg_entry {
+>  	u32			sys_id;
+> 
+> base-commit: 1dd3393696efba1598aa7692939bba99d0cffae3
+> -- 
+> 2.39.5
+> 
+> 
