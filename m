@@ -1,132 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC38155C88;
-	Fri, 31 Jan 2025 07:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624A79463;
+	Fri, 31 Jan 2025 07:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738308411; cv=none; b=G+tw3sI40WuoIX159zr4eJDTZkHXSu9SxSRAjF4lBSF+CNncR0RzljMEBiKFIbRiKv6vhy/pZaMVSk//Iji4fIYJrkjDw3eRGixvCb88znr1SvvpLLcOBA97xkXIzrHvLwENlpWa5O+PjYDQxyufDdU2xVsBOrKRmPwDFpRJHYU=
+	t=1738308548; cv=none; b=U4eLdkux8DjqhmpJC2ol8ippUFAQzpmYmAOvXTjgnqZ6dNGtLuHrYH+P8lGWIHrNM6YeCvssQ/KPiwhhuQAw71Vr1UT2BImWVoAOU4dzlVB6xcSIhceNnEp0GwlfZ75gPvzIa8rOq2Gd1doIpWGtlEiVOvUrSxZ7VKv7kUNPRh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738308411; c=relaxed/simple;
-	bh=Q2e7UALnZghKuCGZEzriVZeAWWaFg32d8OizcQKQJh0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lcCUguxvPvlqonRXtWQfhiV+ZCcvqJZ5PJUjUjyhYo9uZVoEEFGQ6H3uNIStt3IpdvwQI6ba4EdvZjVPHBthth5+b/xBUyPbsj05f6r4cBQM/Anl85qAfV8tMzOJnYTJKeR2pK6L+2b+ef9gWlxhlFkVI+Cb26oMtUcHpu8giXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hajy3JfK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738308548; c=relaxed/simple;
+	bh=n1e0P8AWdOYfLOZrT8Fuz1IQgDTJjovT6OSuGagtroU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Zax057F02BIDZFwO3Mec1UvilIMA04KJCI9m6tSmq3NXpztLSCNsO7WI5EaClAtqRlGIMSA6awoQqUg9lKrZY/udWF1seX+P0Bre5S3UCpLFX4fYOtaQfC2nVT5ZCW/XTB/ZuzFaSDoAk6htV6Qf/GI1Qhu+e3y8FWiiZ5QgAyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Vxqz71MV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=zGjsRWJY; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hajy3JfK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B62F5C4CED1;
-	Fri, 31 Jan 2025 07:26:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738308410;
-	bh=Q2e7UALnZghKuCGZEzriVZeAWWaFg32d8OizcQKQJh0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Hajy3JfKR7x9BURH9yzp3wI29pfSM8ktf5VzU73hgiA+MiQ/TBigT+jT6AG3kIlnX
-	 bvdysWvyp1wxcp49pQIfhiva0KLf8MlabSUgPjDfOo4Sw+eac6qGg00aik53VHkeed
-	 qLMslTRJMm+Xw+6ZzVl0JL6Syo2JuLsyTJYWfbLq3gs7OmUDfx6wzUEJ/XPnyEjVd4
-	 a8BDD6rKgDElsxltFeJ+Kh0/X3BBWUo8HIotbADc3I/lFRK0RKvseWbgw05p4Npqou
-	 u9aIbKbSwNZOVu489THEMc2KeSqf4dyvph2funwT2/FL1HUivxAfkss6jlP9VRkP0d
-	 mn3jk1jrcjDcQ==
-Message-ID: <3e020ca6-025e-4a88-9aaa-a432d8aa668d@kernel.org>
-Date: Fri, 31 Jan 2025 08:26:41 +0100
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Vxqz71MV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zGjsRWJY"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 67F7811401B7;
+	Fri, 31 Jan 2025 02:29:05 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Fri, 31 Jan 2025 02:29:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738308545;
+	 x=1738394945; bh=H6OFu2gyiy12pYSxQBaXN//26LfwCcvIWXXGaq2MhNA=; b=
+	Vxqz71MV9C/pofJNczthGOKhdj1IH5NPxjUNJ3jO3vNkaDscjsiqEYqHXZBaE/9l
+	a3uEItjZZB2qpeap99MMtVrL2wxXsvOxPdf+C1btefCfc+qade0BzdJPqR7TfZCY
+	tJhXJOu2VlkshqVjTw+CgkbsPibtK41ZUdtvl5mVmTECJRDlTUSeo5UDu6okNVBv
+	ik1ZMXwF34axm/d/o50Yk0X4IRZ1zhrsEfws9LteJ1OW77Tq5uX8lHOTqGT7ddrA
+	oQ7sJAwalJZ3M3A7WJwN1BCV3SaMBjw/9BI8yMA0bnVoIWhFjqsDohygrkB4AImF
+	WF23TeRMTDCc4MMnTxruCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738308545; x=
+	1738394945; bh=H6OFu2gyiy12pYSxQBaXN//26LfwCcvIWXXGaq2MhNA=; b=z
+	GjsRWJY8Vgg93NmMU/4mfYcQsw5BNx8XT+oxWbTsOKnEMnEe858eBgJnO5IE29NY
+	e5k7XU8loUM8GgzSusqNRrhDb3NwTd7mpxFC81dZBshR6Ur984lxwk0/KI8j+3Pe
+	QNxOBwJ+baYxqddycNCmSGSl6Zu1SCLCqtAQNCj0LbMFRIWxrWdLSAqofRqTtXhE
+	n+8fruPxBEl0s9i2xWMfCSDnqUMeT4UDiYCS54OPRvrdWiyfcl0hr3mxjKB3riB/
+	NFPV5d+ozQSe2Bf8YHPhHigh2clyKdNplLG0pQNXt6XNQVzw9eLc5snaaQhSJzDW
+	fbLu3NrYwisrDYU+wVkcQ==
+X-ME-Sender: <xms:t3ucZ-PMr7ydazt0rmfJfw2ELUz7LTSiyUVLB2gLNMSaB45Gz9PyFw>
+    <xme:t3ucZ89KKEyHQHsG94B-jtLXEyrAyi8o5L7zu-cPKuIjhGc0m4t28sgQXskO0vRSC
+    pA_B-DLZQR9R51hPvI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
+    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohephedp
+    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggvlhhlvghrsehgmhigrdguvgdprh
+    gtphhtthhopehjrghmvghsrdgsohhtthhomhhlvgihsehhrghnshgvnhhprghrthhnvghr
+    shhhihhprdgtohhmpdhrtghpthhtohepjhhulhhirghnsehouhhtvghrqdhlihhmihhtsh
+    drohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehlihhnuhigqdhprghrihhstgesvhhgvghrrdhkvghrnh
+    gvlhdrohhrgh
+X-ME-Proxy: <xmx:t3ucZ1QskhCosPDBr4GPBAez-Awm6kNNoQ-VKUMahZdvvVTLJ3nMVQ>
+    <xmx:t3ucZ-vDY1wTSHGA53xPo-OutVL2Ke61SInuTHPOqyxUUBBbWD_qGQ>
+    <xmx:t3ucZ2dRZ5ssJ4-28hDuCJ5ngrvuP795K5cwQTALUHbfERI23cJEnw>
+    <xmx:t3ucZy3P-ts9Z0i4ZjO7T26656k7_a-74dKhgYsb5MfA11vvO45PIQ>
+    <xmx:wXucZ6FB2UA0xJUQasmrfaTgQ26ARAt4vEq0cKzmNgEnFtvjkgi7w577>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2512F2220072; Fri, 31 Jan 2025 02:28:55 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] dt-bindings: mfd: Add MDIO interface to
- rtl9301-switch
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: "lee@kernel.org" <lee@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "edumazet@google.com" <edumazet@google.com>,
- "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
- <pabeni@redhat.com>, "tsbogend@alpha.franken.de"
- <tsbogend@alpha.franken.de>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
- "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
- "sander@svanheule.net" <sander@svanheule.net>,
- "markus.stockhausen@gmx.de" <markus.stockhausen@gmx.de>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-References: <20250120040214.2538839-1-chris.packham@alliedtelesis.co.nz>
- <20250120040214.2538839-3-chris.packham@alliedtelesis.co.nz>
- <20250122-macho-flat-sawfly-7ca93d@krzk-bin>
- <db76d5ab-3eda-439d-8b92-c0423d1e39c8@alliedtelesis.co.nz>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <db76d5ab-3eda-439d-8b92-c0423d1e39c8@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=UTF-8
+Date: Fri, 31 Jan 2025 08:28:33 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Julian Vetter" <julian@outer-limits.org>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Helge Deller" <deller@gmx.de>
+Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <543bd0f6-b25d-48b4-8039-496b8ddd10ce@app.fastmail.com>
+In-Reply-To: <20250130134825.2646380-1-julian@outer-limits.org>
+References: <20250130134825.2646380-1-julian@outer-limits.org>
+Subject: Re: [PATCH] parisc: Remove memcpy_fromio
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On 22/01/2025 21:53, Chris Packham wrote:
->>>         };
->>> +
->>> +      mdio-controller {
->> No, no resources here, no unit address. Look at other nodes - they have
->> the resource, the address. Mixing such nodes is clear indication this is
->> not correct hardware description and you do this only for Linux.
->>
->> Fold child device into parent.
-> 
-> In this particular case all the mdio stuff is actually contained to a 
-> range starting at offset 0xca00. I dropped it because it was simpler in 
-> the driver to use the full 16-bit address rather than trying to use 
-> offsets from the base address that didn't correspond to the datasheet. 
-> As you've highlighted that's making the dt-binding impose driver 
-> specifics so would adding back `mdio-controller@ca00` and `reg = <0xca00 
-> 0x200>;` be OK even if the driver doesn't actually use them?
+On Thu, Jan 30, 2025, at 14:48, Julian Vetter wrote:
+> Fully migrate parisc to the IO functions from lib/iomem_copy.c. In a
+> recent patch the functions memset_io and memcpy_toio were removed, but
+> the memcpy_fromio was kept, because for very short sequences it does
+> half word accesses, whereas the functions in lib/iomem_copy.c do byte
+> accesses until the memory is naturally aligned and then do machine word
+> accesses. But I don't think the single half-word access merits keeping
+> the arch specific implementation, so, remove it as well.
+>
+> Signed-off-by: Julian Vetter <julian@outer-limits.org>
 
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-If this matches the hardware, then yes.
+This one looks fairly obvious. It might be nice to also
+clean up the {in,out}s{b,w,l} helper functions in the same
+file, but I don't understand why those are special
+in the first place.
 
-Best regards,
-Krzysztof
+Those functions have been unchanged since before the git
+history and there are some comments that I don't find helpful.
+One thing they do is to deal with unaligned memory buffers,
+which the generic ones don't, but that could be easily added
+using get_unaligned/put_unaligned, expecting the compiler
+to optimize the memory side of the transfer.
+
+     Arnd
