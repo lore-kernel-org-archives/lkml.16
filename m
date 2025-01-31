@@ -1,119 +1,119 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from panther.cherry.relay.mailchannels.net (panther.cherry.relay.mailchannels.net [23.83.223.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B93E18E25;
-	Fri, 31 Jan 2025 19:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738353284; cv=none; b=TOZ3wI8HxxX4zsmsBB3qEiLiEZxtN09VpzbyaUm6CFTpQlWvu+GGD9WEvM6kgsXzxOmIyWFciUtcHg1sakUfQe/4rtvr+5Dp3AlwD8GfwFaBGIaoxyVbOG8jXCyELfdrVV75vCcVMSy38y1CknQRLJR0lhlJlgQB9eZvkuTnVcs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738353284; c=relaxed/simple;
-	bh=yRgg57v8l6Bf6W7iDdpaDqKUC+hTrmYP1cTKHibmrZk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VMrQhs+1pyt9wEIhxilKaLNaJl7YsdoY0UVKHJivvieH2+bkPgaIGbR+ahU/pPkP1qJPQCQsLmh0IsNqzV1KFugVEezG6TMNKqDHgn/wS9655WUnDr72ABxNfPmYCsjKXozdlRJBH0k0yOG6fmPJ0EY0EsPJc4k/RP0Xn4jcBck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ivoWdRjr; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBEC918E25
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 19:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.141
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738353375; cv=pass; b=Z/b2C5y0K1vkKZjqHDrYrETxno1HSgbbLlB2VDZxLMnoVDZjr1oIt3XsCXX/JRd5S5luY9xAU3pGUxQXC0IyemmCd34TY6X96v7n5of54mWjGMkf+YhSD3fqdpbNQ2VHtlDb4zEWmJYm6qnF22/1sOmZjaGoiVvNaBfPDZfiR5Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738353375; c=relaxed/simple;
+	bh=P8Ib5meronWJ5pog44MU33YDWBXPL1+27DT2hv4W32U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R0JtoMvEveey7IOzQqMAU1HIy2+EoOM4DSXsbMXhYh2AsHyRFgTh7Lo4jNpxmzG+iSvAajkhWuTmEQdVN93OimlxWc50kDnya+SuoK3ameB3rEWCiFR74iYoWKt/MSREIOICVhUIY7fiqySnw6tKuSMkz5/HampF2ijdp1Qrti4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ltawTiyp; arc=pass smtp.client-ip=23.83.223.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ivoWdRjr"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7be49f6b331so223460185a.1;
-        Fri, 31 Jan 2025 11:54:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738353281; x=1738958081; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wQBsWorX0cIsExRPNC9YIpNNziNST6PMZ9AVDEQARfI=;
-        b=ivoWdRjrD+OaUtvDXdUE6rWAAOEnC1zxILU3I280+yDr5ETiHhapHUAL3wBiDFB9g7
-         11jPLbgM8yKI2nuactmYeLxxWXX6n/Y4sSzec8IoRLSSxDQbt4X6vu7/MdAvvAJk3gZS
-         wthsfWn4wsOk0BX2G4UwnMwSf89TbcS/0iyW0lxVupCUwEi39BZxmdOMGj79zZuQol9h
-         b/glhJlsYQtbNFpeqSsTZJmbLIeQL2l9PcLrdjZRVXhoMAWOqtuXvOByD91IsybnTG8Y
-         nZcH9dMk+7B1vTfMEko/VbXiGogl+FygN4ha0C2vCOuIzTj02Izmg01TR+V5SalirYsp
-         H0Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738353281; x=1738958081;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wQBsWorX0cIsExRPNC9YIpNNziNST6PMZ9AVDEQARfI=;
-        b=GPmos+YtRm3uzC6BlWxMEVhhqAnI+nXxFTIW2WdSYGAGmdVjRjPxywzMqN5FJ+QYbn
-         EV1xkvd1kKGSHzkUwDthgWDWuAVMpaUPkwxQ8upRHiutxWL1w/4KRfEhMsR4XCxLUp2N
-         ODSO52yMs2EZAFYLu+EZOwrKf8iiD3ZCLauUtZZQKTfqrG/7+HYssCDTGR6JJDBJzxfF
-         IUdOUT3p3zOI8+K/a4CxGkhVthDYSVmnFcm34OQ6RzvFklcH0cy0L0uyEOEMLiZlcp9q
-         WgVUotVeWE4Q5iyP2FsV1Ne0yMa+TBWe4Zm88VLPyrt2VHPEf2nkVVczjkwuQZGhHECQ
-         o7IQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVwQcsLVW6hYVg9Bz7lb03kAS+X6tK9aIeP4+CSMdKfCLetEzfNuLYPru6eZlh3S74bj32GGfUa2e3A+LY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyqzL2XxNf5gHSecbIS6SWYyEd1mpeAnB6moQMp7gZ/4GN9CC4
-	ev6WPQONhNfeFwShS/hQIzWWskeEJFYPRGKM+D9/1xQAA6pPb4kC9P3xFw==
-X-Gm-Gg: ASbGncvwxDjpjU4SpZ/VV5h+KtsMbGLYYM6ZbwEDi9s2ke6m+HRw/6uxMYAcAk7Q4gQ
-	1GVhPs38mV/H0+0crYGztXbhRMRnP6UZppLkySj3xthIbly61PgKwLW6joRHwwhlLc6FMuY3t55
-	EnyYk7fvhjR4b0GKuhFzEoeeijW5HE6zx5B7wKvWlomabrIgCjud05hFQWmwEfa4IeuFZHV43a/
-	rRqmoNZRSgEkiInK9qk/OQBYbJ/A4n95dZVQeAJrEWv5B0hEyP9EqXrWxXB0GO76dtK3rkUvRw2
-	Ps2f3IxVskM+zwWrkR8jV/2u5p9YKbUR2Ly+ww==
-X-Google-Smtp-Source: AGHT+IGFOZXEoHEo/HtWdhJv1TBReYdVOEpsyJUisgm/UkZu+7swupwpa9xpt1Fqbtj/zToH1/Sldw==
-X-Received: by 2002:a05:620a:2694:b0:7bc:db11:495c with SMTP id af79cd13be357-7bffcd9d416mr1908112085a.51.1738353281334;
-        Fri, 31 Jan 2025 11:54:41 -0800 (PST)
-Received: from newman.cs.purdue.edu ([128.10.127.250])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8bb957sm224423785a.14.2025.01.31.11.54.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 11:54:41 -0800 (PST)
-From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-To: skashyap@marvell.com,
-	jhasan@marvell.com,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com,
-	manish.rangankar@cavium.com,
-	nilesh.javali@cavium.com,
-	arun.easi@cavium.com
-Cc: linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Subject: [PATCH] scsi: qedf: Use kzalloc() and add check for bdt_info
-Date: Fri, 31 Jan 2025 19:54:38 +0000
-Message-Id: <20250131195438.44964-1-jiashengjiangcool@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ltawTiyp"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id B0EA5903F34;
+	Fri, 31 Jan 2025 19:19:42 +0000 (UTC)
+Received: from pdx1-sub0-mail-a241.dreamhost.com (100-119-10-57.trex-nlb.outbound.svc.cluster.local [100.119.10.57])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 2CD46903DF8;
+	Fri, 31 Jan 2025 19:19:42 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738351182; a=rsa-sha256;
+	cv=none;
+	b=bUbuSoMs2jRkRrJdBI4NQjRTTQIROwtNqeGLKFgKkXA1OLYPzWIq4Tx9Hel/6KMLQp5rp7
+	9pd8RWa0VWRlBVN99OMM8PFDFNA2GIDNhLGJkqYbEo6zp3522nQ6PBgChVI2d2t11OpLYd
+	q5hYRsemKvI05SYRvE7r0S+Mjw/W1a7pBgdqnGiZACGdWLDGI19umpjc4foc/eVl65pmBh
+	8imVTZyc6ecG1iaMXTKs64Dc9XoILPcTjMg4I/BeKUmD7mgUlCLFpUUprQCXNY0YNzRpJg
+	3P14o64Gj9O+tZsGs3TuDmDtlhrJq0HqU4Gm/5PMT9bQinYVgW/Xpparc8kY4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1738351182;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=P8Ib5meronWJ5pog44MU33YDWBXPL1+27DT2hv4W32U=;
+	b=QTMJOSzcf8rBGI1IyIejhnfzuxmZan4zBp3CzmJsRSzx7NZHM8d20kbEIk/a1UbUYc4ihB
+	GXaObZJx0Q7rK6MNavX9OLnfrdvubAHG8xKnqrpXtTqDZskVWEDxqy11JMpry1LUnNcI7M
+	RfyoQcISCIpDmnduK0/6DPmFtPaRzoJLfq508z+qHLrYvqC3Lt8YVHaFP6knMVzeUot/1J
+	pSrmYOaDLDXfXcQgJixiNRb8EDWbyKbcwFoHsH0MDRg03qBCS2kO0bvAQlv0+bD2TI3nfy
+	W9Dl/zBuYyu5hOqL4ffm+6yQXeINFgZWs8+VdmAIil5mMzqTbXpGC5VfhEKBaw==
+ARC-Authentication-Results: i=1;
+	rspamd-854f7f575d-7zwqq;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Share-Spill: 7a72042d720477ed_1738351182479_1353240969
+X-MC-Loop-Signature: 1738351182479:4072642448
+X-MC-Ingress-Time: 1738351182478
+Received: from pdx1-sub0-mail-a241.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.119.10.57 (trex/7.0.2);
+	Fri, 31 Jan 2025 19:19:42 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a241.dreamhost.com (Postfix) with ESMTPSA id 4Yl5LP3KpKz8T;
+	Fri, 31 Jan 2025 11:19:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1738351182;
+	bh=P8Ib5meronWJ5pog44MU33YDWBXPL1+27DT2hv4W32U=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=ltawTiyp/SiXgRtujF1aHUZgWTsL3Q6NQwBVt9VjvDLIFysQT3P1K8fMJCKkU7Vs7
+	 /w4WvBbcksm5fkG4L5c2kqIDHLySVSJ6CPCvy2sTdr0tJ9GLmCoj1HO1CUJ70UC85t
+	 /x1fNkoOZH/AWi5P1OOPVOnU7tahRS1UAG9MlO2InbTqgZv4q0fQenh45tgwx8tpS3
+	 ASEgU4BpLa0TCv1bzhZVAXeroos2roNaqBHbzb2N0UhRCfzSZJArfDONNyf3YjuTaA
+	 HAkfn+creV1dWiAONWTaBMyhqtwU2Te+uadbkEB9rggI43/wUnrD1uUAZUjbkwWTYp
+	 W7qctgBDBRXTw==
+Date: Fri, 31 Jan 2025 11:19:38 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: SeongJae Park <sj@kernel.org>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 2/4] mm/madvise: split out madvise input validity
+ check
+Message-ID: <20250131191938.o7d3vkatodryi65e@offworld>
+Mail-Followup-To: SeongJae Park <sj@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+References: <20250117013058.1843-1-sj@kernel.org>
+ <20250117013058.1843-3-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250117013058.1843-3-sj@kernel.org>
+User-Agent: NeoMutt/20220429
 
-Replace kmalloc_array() with kzalloc() to avoid old (dirty) data being
-used/freed.
-Moreover, add a check for "bdt_info". Otherwise, if one of the allocations
-for cmgr->io_bdt_pool[i] fails, "bdt_info->bd_tbl" will cause a NULL
-pointer dereference.
+On Thu, 16 Jan 2025, SeongJae Park wrote:
 
-Fixes: 61d8658b4a43 ("scsi: qedf: Add QLogic FastLinQ offload FCoE driver framework.")
-Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
----
- drivers/scsi/qedf/qedf_io.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+>Split out the madvise parameters validation logic from do_madvise(), for
+>easy reuse of the logic from a future change.
+>
+>Signed-off-by: SeongJae Park <sj@kernel.org>
 
-diff --git a/drivers/scsi/qedf/qedf_io.c b/drivers/scsi/qedf/qedf_io.c
-index fcfc3bed02c6..a5970fee6851 100644
---- a/drivers/scsi/qedf/qedf_io.c
-+++ b/drivers/scsi/qedf/qedf_io.c
-@@ -125,7 +125,7 @@ void qedf_cmd_mgr_free(struct qedf_cmd_mgr *cmgr)
- 	bd_tbl_sz = QEDF_MAX_BDS_PER_CMD * sizeof(struct scsi_sge);
- 	for (i = 0; i < num_ios; i++) {
- 		bdt_info = cmgr->io_bdt_pool[i];
--		if (bdt_info->bd_tbl) {
-+		if (bdt_info && bdt_info->bd_tbl) {
- 			dma_free_coherent(&qedf->pdev->dev, bd_tbl_sz,
- 			    bdt_info->bd_tbl, bdt_info->bd_tbl_dma);
- 			bdt_info->bd_tbl = NULL;
-@@ -254,8 +254,7 @@ struct qedf_cmd_mgr *qedf_cmd_mgr_alloc(struct qedf_ctx *qedf)
- 	}
- 
- 	/* Allocate pool of io_bdts - one for each qedf_ioreq */
--	cmgr->io_bdt_pool = kmalloc_array(num_ios, sizeof(struct io_bdt *),
--	    GFP_KERNEL);
-+	cmgr->io_bdt_pool = kzalloc(num_ios * sizeof(struct io_bdt *), GFP_KERNEL);
- 
- 	if (!cmgr->io_bdt_pool) {
- 		QEDF_WARN(&(qedf->dbg_ctx), "Failed to alloc io_bdt_pool.\n");
--- 
-2.25.1
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
