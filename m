@@ -1,121 +1,186 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1341EE7D9
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738343867; cv=none; b=RfjKCgbNUeExRVWHkMrCZJEOc+5HsIxfFhatnaNRvGH7KBg3JoLUuQQWNSOsvQQfNa1oFEfysfvqrEYjVRqbjgJM3y7kBTQiQVXWp62g1SZAQyP0AHwK/8WsuQek8nGbMJwJyAjmT7uSG2HL5yiFlKVtohgN1ffoGZ2mmagZ5Kc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738343867; c=relaxed/simple;
-	bh=09kNXWhZHABetOB9h3rHP1FXl8owoT53i+dqjuQBYNE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD12953368;
+	Fri, 31 Jan 2025 17:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738343984; cv=pass; b=H58ZPWAvowC6vlEaLVtUFegAtPa76/SwlWpI6c39jr00ezij9IQzlj2GsL0AjyoHM92Q8eyulmOhfDpptA1OM/qoHlFiWy9AYDMlYb+sjUo8buxNiGb2g5D3i7R44ffFYhgwh7GgnwNJJ9MwIwigrj21XZMfx97KEvKFHjxUMOg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738343984; c=relaxed/simple;
+	bh=rRsMibEo2mJYge4wiIcI4H/kHMBdX7g9FLSSXwSvB9g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GQ9hs+9IH41HxpDN6cvcC4p7yLlA3iYMSts530uWYu1Uvvc+lt3G0huNuO+Ppd/ErRgDQ58DLtvXfa5AutcXNc05BHNrJIt8O/IFZL6ARIc82+LttGGKm27TfPsaqIbY1E4hjQ99nMW3CoNZVcOr5A+SQFukMWk7xJ/qV7JsQ7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=I7VjqlPr; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+	 MIME-Version:Content-Type; b=tIi7E0O/YouMHSyDWIBeIUYGDLcs+cmnRhTZ3BQgn6uW2RSY5bC5hJ5Hegedg+1rMLYLZybXe1eAFUn2rTP+vM3LoU+OnOYOYvhiIHD6hJn84qqtwmOJOCZ45wFW9fio67QtinsW58M15ypvFd7VyITPs8ex72FVpbBtwKVlizU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=eF7K20Vp; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="I7VjqlPr"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5dc7425ec5fso4069824a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:17:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1738343864; x=1738948664; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CL0BxI02OVOAaESH4fyNi8OWq4uuKna8aSMt4xy8CE0=;
-        b=I7VjqlPr2NpRg3nJlXLfj6J9r08m6rcFxylJ7qLdTWHLMd/qQtgon1InD7ss4XsucB
-         sLeMX/AJ+eJihM+A9DXzs+PLI1kN/gonmduGpXB2RgeRbId8nbtGUpao0hfHjhert8I2
-         piDJDcF2hDIGPQrN85Bk0VnUGH2v8UduNBKPY0297BOu6qxXHnooe9fzL38zHM6vAooq
-         b5Q6lgIb5X4zy+hCRj72hbkZy2JTXzbc4po5+YQNC+h9sN/IycnEThXujnI5JoJzTDs5
-         DImqbNf/Qy/Q8nhY5upU+L8BomDibzZbThBZZmvGZo4GETRyC70+N2W85q4Cx4nClDzr
-         dttw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738343864; x=1738948664;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CL0BxI02OVOAaESH4fyNi8OWq4uuKna8aSMt4xy8CE0=;
-        b=pzsJMA82xm425fv/MqK3vLglQ2DSnalfRyzYFazmR6sAGLjwHC1dowQlfM27xtBmHz
-         C9x29ZVAbr7nKTiS8ZxQHVRWBfKgsczZY+lyjhVJ15psiSkKDP0LVzpy6dPVhBu276qO
-         8jELzec71grqVhPnad8Zn9HhMrJcZofgBybenveGPe3k/sUS6D0Gf+ScN/yRVik6ICyK
-         HHOjn/qFLdaSF4IRztlsgjmrs9wCVMd7gQyzGhDymw++wvr1G1IJtbVZwEVnYCiDQfOj
-         uavBvJGRz7eIzF4vynMazAjI3CviwClLN3IadfZsd0+LLztrrua7mFTkIKx91C2Zkqad
-         yORQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWa1hwqkZyoZCaNSRZ07H1f6+IThx2Tgrrl/kVGnPwgah1iUHqcHlyHiFsst8iT1GPyw37fPBwvcqLpPck=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiaPY++xQV1CSIYNuRbOMq9WSRqzW7E3f4SfdKgDz21SSF7BJ4
-	DUUMErsJ/jeNDOu8xp5tLP2MQHDsSppVpFMAd8b4b6wvkWN+MK6cu7fUygyv880=
-X-Gm-Gg: ASbGnctLxV+UOwdls45Nkrx0RQoxlSgiPbJ7akybqIvWVjuGHmnqJI9CQNc3JfHybl9
-	AJd5jQ7ua4GauM9fMNlRrLbZtb9xpX6yZZC0VITcHLe8YLovwwKwzXgKG26yZFPEZf4iuXSUNFP
-	ZFHLkzEnB4EcPQDX6cQEAr6fUXjCqxXV0uVE08uG194YaAFSuD9IY1NplEERRnHFfeqwKadj0vE
-	7lQ0iqcCZ0B5oIIrM+AWg3iLvvURFCvroIC+vK69cTAAKVfjHYLZZWg4S2pBK/zF/K8AfqCaVKq
-	4/05Gc5KJfE77soQWf7R40bfqi5D21ZIpDF/aQk+gvSiWCJGVQYVmw==
-X-Google-Smtp-Source: AGHT+IEDlONj5YvPq5c9lS9S2mmrtJaZ7pkc214uLF9lHWbxVzsLWKeCtK6iBKu7knG0EUXmxhqoWA==
-X-Received: by 2002:a05:6402:5250:b0:5dc:63d:b0c1 with SMTP id 4fb4d7f45d1cf-5dc5effb039mr12390136a12.29.1738343864160;
-        Fri, 31 Jan 2025 09:17:44 -0800 (PST)
-Received: from fedora.. (cpe-188-129-44-249.dynamic.amis.hr. [188.129.44.249])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5dc723e4b6dsm3142413a12.24.2025.01.31.09.17.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 09:17:43 -0800 (PST)
-From: Robert Marko <robert.marko@sartura.hr>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	lee@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	arnd@arndb.de
-Cc: luka.perkov@sartura.hr,
-	daniel.machon@microchip.com,
-	Robert Marko <robert.marko@sartura.hr>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH v5 2/2] mfd: at91-usart: make it selectable for ARCH_LAN969X
-Date: Fri, 31 Jan 2025 18:14:10 +0100
-Message-ID: <20250131171739.1044701-2-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250131171739.1044701-1-robert.marko@sartura.hr>
-References: <20250131171739.1044701-1-robert.marko@sartura.hr>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="eF7K20Vp"
+ARC-Seal: i=1; a=rsa-sha256; t=1738343913; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=f/iY1x4utYyIJED6fcvaaas089qhpFaxupg+RoEoMQeB+BTvtDqhYcOFQGdubiFfRuu84pFe08958yXNfTH9uHNIac2N8eBs1B+5fCbX7Hb1NXt+XHPPkAt/CXCw6PwVwzZkx0EHHi2oYdKbecHIpmdrujZBSFG3/S1jdlIawrc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738343913; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=KxrVvNWFsLdjUGWz01VmAu7gb3IK9lnKuIig2vYIG3M=; 
+	b=aJZJy3fNsdSZ/j+Zi+T3eeHc0pOZqnKJPjdWRZKsWg6BnUXfeRrdr9h+BC0T+EZOBGLJ+CqYojzHJhepG9AZ9iy3YlFzTP+IhDZv/8PLxieD+p6HM3/4PLNlASm+7X16N0tpInXWdfHgxiAAl3pV4TXOfWNJyVzhEIHnjjRFHCk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
+	dmarc=pass header.from=<detlev.casanova@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738343913;
+	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=KxrVvNWFsLdjUGWz01VmAu7gb3IK9lnKuIig2vYIG3M=;
+	b=eF7K20VpljQSTO45wK2hF3MA4A4e8+K7HQHEdei9dYVEu/VvFe36L9NjbJN5mSQ2
+	bN0MzTRmOaLuDdvsAVNf0ZljnKCKNn0WRyQfdh1d1zPpSyl78ht8ukpizB64YLhKyTK
+	bob/pDfCQQekFArnBL0P3dMu+HAX9UmZRxW+9h7A=
+Received: by mx.zohomail.com with SMTPS id 1738343906427960.6186911597109;
+	Fri, 31 Jan 2025 09:18:26 -0800 (PST)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@cherry.de>
+Cc: Algea Cao <algea.cao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ dri-devel@lists.freedesktop.org,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, kernel@collabora.com,
+ David Airlie <airlied@gmail.com>, Dragan Simic <dsimic@manjaro.org>,
+ Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>,
+ Robert Foss <rfoss@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Sugar Zhang <sugar.zhang@rock-chips.com>, linux-rockchip@lists.infradead.org,
+ Alexey Charkov <alchark@gmail.com>, devicetree@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Johan Jonker <jbx6244@gmail.com>, FUKAUMI Naoki <naoki@radxa.com>,
+ linux-arm-kernel@lists.infradead.org,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Jianfeng Liu <liujianfeng1994@gmail.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject:
+ Re: [PATCH v3 2/2] arm64: dts: rockchip: Add HDMI0 audio output on rock-5b
+Date: Fri, 31 Jan 2025 12:18:23 -0500
+Message-ID: <3668702.iIbC2pHGDl@trenzalore>
+In-Reply-To: <8ad30e14-e785-4e3a-ba92-644e7fb07759@cherry.de>
+References:
+ <20250130165126.2292107-1-detlev.casanova@collabora.com>
+ <20250130165126.2292107-3-detlev.casanova@collabora.com>
+ <8ad30e14-e785-4e3a-ba92-644e7fb07759@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-ZohoMailClient: External
 
-LAN969x uses the AT91 USART IP so make it selectable for ARCH_LAN969X.
+Hi Quentin,
 
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Acked-by: Lee Jones <lee@kernel.org>
----
-Changes in v5:
-* Rebase on top of next-20250131
+On Friday, 31 January 2025 11:38:34 EST Quentin Schulz wrote:
+> Hi Detlev,
+> 
+> On 1/30/25 5:45 PM, Detlev Casanova wrote:
+> > Use the simple-audio-card driver with the hdmi0 QP node as CODEC and
+> > the i2s5 device as CPU.
+> > 
+> > The simple-audio-card,mclk-fs value is set to 128 as it is done in
+> > the downstream driver.
+> > 
+> > The #sound-dai-cells value is set to 0 in the hdmi0 node so that it can be
+> > used as an audio codec node.
+> > 
+> > Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+> > ---
+> > 
+> >   arch/arm64/boot/dts/rockchip/rk3588-base.dtsi |  1 +
+> >   .../boot/dts/rockchip/rk3588-rock-5b.dts      | 19 +++++++++++++++++++
+> >   2 files changed, 20 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+> > b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi index
+> > 8cfa30837ce72..790c1c25a3e41 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+> > @@ -1394,6 +1394,7 @@ hdmi0: hdmi@fde80000 {
+> > 
+> >   		reset-names = "ref", "hdp";
+> >   		rockchip,grf = <&sys_grf>;
+> >   		rockchip,vo-grf = <&vo1_grf>;
+> > 
+> > +		#sound-dai-cells = <0>;
+> > 
+> >   		status = "disabled";
+> >   		
+> >   		ports {
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts index
+> > d597112f1d5b8..1909078538367 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > @@ -49,6 +49,21 @@ hdmi0_con_in: endpoint {
+> > 
+> >   		};
+> >   	
+> >   	};
+> > 
+> > +	hdmi0-sound {
+> > +		compatible = "simple-audio-card";
+> > +		simple-audio-card,format = "i2s";
+> > +		simple-audio-card,mclk-fs = <128>;
+> > +		simple-audio-card,name = "hdmi0";
+> > +
+> > +		simple-audio-card,codec {
+> > +			sound-dai = <&hdmi0>;
+> > +		};
+> > +
+> > +		simple-audio-card,cpu {
+> > +			sound-dai = <&i2s5_8ch>;
+> > +		};
+> > +	};
+> > +
+> 
+> This is SoC specific and not board specific I believe. I2S5 is not
+> usable anywhere else but with HDMI0 controller if I've read the TRM
+> properly.
+> 
+> Therefore, I would suggest to move this to rk3588-base.dtsi (with
+> status=disabled; and when hdmi1-sound comes up, to rk3588-extra.dtsi),
+> the same way we've done for RK3399 for example.
 
-Changes in v4:
-* Add the missing whitespace before COMPILE_TEST
+Indeed, I only could test on a Rock 5B, but I think it can be moved to the SoC 
+DTS.
 
-Changes in v3:
-* Pickup Acked-by from Lee
+> The only hesitation I have is that HDMI0 can use either I2S or SPDIF for
+> audio, both audio controllers internal exclusive to HDMI0/1 controller.
+> But the user could anyway define their own simple audio card for spdif
+> or modify this one if they wanted to.
 
-Changes in v2:
-* Pickup Acked-by from Nicolas
+So some boards will use I2S and some SPDIF ? Or any board can be used with one 
+or the other ?
+The disabled status makes sense as hdmi is disabled in the SoC tree as well. 
+So if a user wants to use SPDIF instead, they could keep hdmi0-sound disabled 
+and add their own simple-audio-card compatible node.
 
- drivers/mfd/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> I've tested with my suggested change and same changes than for Rock 5B
+> DTS on RK3588 Tiger Haikou with speaker-test -c 2 -t wav, left is left,
+> right is right :)
+> 
+> I'm not giving my Tb here as the commit title is specifically about Rock
+> 5B and I haven't tested this series on it. If you had a separate patch
+> for the hdmi sound node and enabling it on Rock 5b, I would have given
+> my Tb on the former and not the latter.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 6b0682af6e32..d44c69bb3dfd 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -138,7 +138,7 @@ config MFD_AAT2870_CORE
- config MFD_AT91_USART
- 	tristate "AT91 USART Driver"
- 	select MFD_CORE
--	depends on ARCH_AT91 || COMPILE_TEST
-+	depends on ARCH_AT91 || ARCH_LAN969X || COMPILE_TEST
- 	help
- 	  Select this to get support for AT91 USART IP. This is a wrapper
- 	  over at91-usart-serial driver and usart-spi-driver. Only one function
--- 
-2.48.1
+Thank you for testing anyway ! I will move the node and enable it in all board 
+dts that already enable hdmi0.
+
+
+Detlev.
+
+
 
