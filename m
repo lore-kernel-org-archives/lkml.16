@@ -1,184 +1,117 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0832F1F37B9;
-	Fri, 31 Jan 2025 20:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E948D1F2379
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738356087; cv=none; b=oOBstEcHuSwVg65zZG1KHhueqZ4AvAzm6CVrRBHBhipVbF4IvFWX6CWzPQug+n8iuZpfSfOQ5gcHbF6MxJTh47wQTwquLmn4GmLjdbpinuUk9phHxjW5PF/ZQG5dEHxjEYNgcNV9fvJbz4IvhmGc1aafmdt3sIQcWt8+hz6rAFc=
+	t=1738356298; cv=none; b=Xs6ZMYL0+JDKG+Bhq8IMtMPuA9jqZBBcLKCo7GazUw6P7JlBifrYgBQdFQ2NErcXpISW+ItMA6fYmtLFNOfQhWBQne3ikwNuqMJMG/kmCxZeh4wXy7GX1KEosEaDeyj7gCcTgwJCxTAQioIaJAUExoso2a7ohAwrtZoWSsr8VOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738356087; c=relaxed/simple;
-	bh=T56hHME+s4l3JGPnRkWuFu5+rVZe4vwr68GJHupz4Ic=;
+	s=arc-20240116; t=1738356298; c=relaxed/simple;
+	bh=kmGcO3rBaawol/b6SR3fihaZJAoM8MXJCY9Js0kH7eA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GsPCyccPAUEqprpXMCuh2cRxq8jOS4t42oAz/l48bDPTqqleSiWZiueMjrVzhpi10smT9N7L7BvxQNLXRQWytT/WCCg/LBlCThZEimm1uM4goGaVoNbxnF4uWhg4b750Ul6OfzudSj4ds4Zwc+4Jt1JAzuDH+4cdoKUUpIG6qx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dVWwHYz9; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=uXt+IgRXli1CjUHctlf7wMj/laTnQe90IcoSyypViPJn0T6rtnunU7c54d55AP32dmQbIrDdYRVJsY64XhQP+dqjapPxlb+ea75C21tBoMkTs5De53ls+DEUr7/AatmlSVMXR7pMG0/SdyBSUM0S8U/X7koIG8cZfNff2EnQ9QU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y1tD7o5n; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dVWwHYz9"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6f6cc13d103so10346897b3.0;
-        Fri, 31 Jan 2025 12:41:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y1tD7o5n"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-438a3216fc2so24073765e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:44:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738356085; x=1738960885; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738356295; x=1738961095; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fZDmQ9DZ4bDsxoBK6DzuqHEe8zHAyvfJAig+1wU30fk=;
-        b=dVWwHYz91dSIkcUNx8dZXS8LaT4OhEV1mmItdcrnYI57G1FLU6I7TY6tb7fYLr839X
-         Ty+UeSBxrLd2kQNO6hgi4tOXaVnqYRNjwPzzqnpSDVuGZFTdGeKkFIifD3WM+381ZWsi
-         v5tEnCpbCkUeBwtRnKECZeWRvF1/KklBNWHDsqskP6UrYWeFFDQcs3P4QNPetNc+cEOs
-         2Soi+pTUKWW0q0JpG1Qt3+KvNRdsPPbZeUUilxNUa1QPF/2WttQw9nkHSAIAi9xuZumn
-         BRvSm2AL7AJsP0rrp+HXW21KBDYwa5V3PnX6hsHjHGPiDqx0dKwgY+adcSb0vXyktGYk
-         TGjg==
+        bh=UHhu4iCJ3WIIO9T/hKc1Qtpxvgcc/nvTbvi3YsM5x4w=;
+        b=y1tD7o5nUlKDmYzIg+kSY1f4REvqcXTTEGBvVoEJTPA9je6KN0PAgY6wCylKG0qcTk
+         aNQLqE6w+oHWdhoVJMB9SXZyF9I/BQ5oG4zXLaoJ19E45STM3fp7o/VSqYpCwfmlO/Ke
+         F7W6Mn4T3R613zCuKxCUrHK96Tny+fIcO+n0TM7gjYwBrsHZ0TAzZdARMKn+IAdyOm+d
+         /8CGD+Vv3x6TGCvRdO8W5vzJPlpMpLPu3TyLxksrBEdIH2I9zyCjb1Q6waPLDecF4b9j
+         z1w600vWBRsaii95lpW0vGh9NVlfKrWMvddkz/5Mhvs4pfW9wIGXDODKFGxF71PqCtmn
+         h3hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738356085; x=1738960885;
+        d=1e100.net; s=20230601; t=1738356295; x=1738961095;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fZDmQ9DZ4bDsxoBK6DzuqHEe8zHAyvfJAig+1wU30fk=;
-        b=svmE2Q3vCk2443zKRjR884hy+7ZZxhmIrIKbq4nXXz7motO5GGiirslK6m1KD5DCWB
-         VuuEYwtNKjoXr6OqBc3ciu8tj9df2FtZl/pjhOGhyl5g4c6Ht79/wosPnSa5xau/fHZl
-         OHUENsZYf0PjDMUuzWy6lnkIweh+Dpt00jBddSV9fk7A2ANTci/uwqMvDOOhKFdcVGt4
-         JdFtHOxWN6TyDFW58eLIX248A4GMqxAG8+5nw8NTyIHjKNRjtXwkvYH97wdCnhdkypBZ
-         ryzNoOner+05Li03Dn/WNvQ2dqG0Dyo85jKolVVCCGEHlFXl4PCPn3GBIBh1aTebAMLB
-         A6wg==
-X-Forwarded-Encrypted: i=1; AJvYcCUBXHRZ49RjQ6Vv5LWw5O9CVUoPDgHDYHfbzydwIIUzTEDBLPP/f7BsVMSPrbxr9t22sBFR6cz6qsdInLQ=@vger.kernel.org, AJvYcCXEb1ELHlh+ETDw97jdTOe9b8GG3OCPQnVxR7kRHHC3AxJUBYVgB2AJqpQClumiVoyf0T0n0sE57n9iSASJO949/Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG3c86RJcJaGGY4I9xBvBRd0D/sOa/3zxm+gTyqdjgep3x6PIM
-	Es695nlSxP8IEcRY4d70w4vIunS9N+iAFxd5MfAZTQFlVnN9rCrpDCA2qS/lkPJHpif2HgvjqV7
-	U9C8USiENlG/Ku6xPtwH8OoTIxo4=
-X-Gm-Gg: ASbGncv+vmfeX7f91QcaxuuyzncDnhpyAuw/icHxSIeSZ10PDLHHX/h3buBIkoNF2Jx
-	XeQyfX+abjYmDN8s2PILd8rk7tO8YzlgkpCzMs2szZObpBDWTAKVYgqslO0D7yABrGQUTBp8=
-X-Google-Smtp-Source: AGHT+IFoR9WyU52W4rsctDI7diSPf9JMY0U9tWkrumaFvznREZgah7y87+RlZLPQZU4NxtXD+v46+YLn+iFzDKvLsV4=
-X-Received: by 2002:a05:690c:6185:b0:6f6:d149:d64a with SMTP id
- 00721157ae682-6f7a84246f5mr112470567b3.27.1738356084787; Fri, 31 Jan 2025
- 12:41:24 -0800 (PST)
+        bh=UHhu4iCJ3WIIO9T/hKc1Qtpxvgcc/nvTbvi3YsM5x4w=;
+        b=PhOwnI2yRMMQeebvx49hbHUfskhWo7J1+HGRxDNZCrHmNQR3J93Il7VJM6EnnKaI6Z
+         BtRZ51H7sOo9bNIEGkewcTR9tWAJ0tR5V2bNQrhYuZPTHr476eTgcjhx+xh5gc276NQr
+         psin/Su0HQyCFnb8qxn5FlTBC0DX1AzXKCWhWftqR8/gZIJyk7dXygYsRkN9snXIKlt0
+         M2IaZYf8tcUJcLe/nAL3AX8k4+3+0b0eXUAI+vX/JxaRWZAu1KERHSIDeq37A7uD0s5e
+         otO6FwZ/zbJCpbBcnDKuHj3d57v469MChQdgA1G/HXD8lccIwp0SYptWmovo1KEwKGPJ
+         ro/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVOKzCJPfh9Ten/K/IXmj0dQMEVDu+8wR5WC3ePRpCeUKGYUROpJNDnytKPrRGKGPXSsTM3X3jfXNSwUKE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPfvYvsmPfjxt7ghiJAn9+xJORa7mcKG/pWXDC+VQGZtGqnv+0
+	mu+qd3SxlYVNj6/MI3vfdsY1ti/cbIIB0AGBAwYcTEqtJC2iLn8i0EjVmXCRRLKkxiBRdMUBBal
+	Z2J6k+qAG0DEzXdZT58VF5/tTowFICHnWpPac
+X-Gm-Gg: ASbGnctPxzZQhK7GmEG7Vn55bJvpdMbZjXAweSxyBFT6L9IQw1JhDZ92NWS577QUPYn
+	PZSitmF2As3b0z1VWhscPVyrtPrASueXVbTI0GiNvYQV7pW4nmCwx2S57gj1hnw5cfm7AgrK0KQ
+	==
+X-Google-Smtp-Source: AGHT+IFoXLepO6ai4wKh7pRj/x+leDovy+r204BaF7X2TV/MA/xp/VuhUEHDrcfP84h/YEZC8zwopadBUeVx5OtHJ2I=
+X-Received: by 2002:a05:600c:4f43:b0:434:a94f:f8a9 with SMTP id
+ 5b1f17b1804b1-438dc41db32mr93389005e9.28.1738356295210; Fri, 31 Jan 2025
+ 12:44:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130030525.1482498-1-namhyung@kernel.org>
-In-Reply-To: <20250130030525.1482498-1-namhyung@kernel.org>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 31 Jan 2025 12:41:14 -0800
-X-Gm-Features: AWEUYZmmfiq-aWtkAxFDdX_X0s2IAIAjTjfIRovcOkOOQtexwyV-Z2876FWAcjw
-Message-ID: <CAH0uvog9WWvBeMgnkdrr0=rP8y5Ea1P=a-TqbLEYYKSS25+wqA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] perf trace: Add --summary-mode option
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
+References: <20250131-cursor-between-v6-0-603bdc7d4449@google.com> <20250131-cursor-between-v6-2-603bdc7d4449@google.com>
+In-Reply-To: <20250131-cursor-between-v6-2-603bdc7d4449@google.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 31 Jan 2025 21:44:43 +0100
+X-Gm-Features: AWEUYZnmGqsipiwBCw9u8Y6GopjTGIS_5UiiOrHI0tjSI9cslkqFtYGA5wHztgI
+Message-ID: <CAH5fLgi3bXB3=rjkP=pHEuzsdOuLHPcNQW-+Krc8vj56KJSUDw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] rust: list: make the cursor point between elements
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Namhyung,
+On Fri, Jan 31, 2025 at 9:16=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> I've been using the linked list cursor for a few different things, and I
+> find it inconvenient to use because all of the functions have signatures
+> along the lines of `Self -> Option<Self>`. The root cause of these
+> signatures is that the cursor points *at* an element, rather than
+> *between* two elements.
+>
+> Thus, change the cursor API to point between two elements. This is
+> inspired by the stdlib linked list (well, really by this guy [1]), which
+> also uses cursors that point between elements.
+>
+> The `peek_next` method returns a helper that lets you look at and
+> optionally remove the element, as one common use-case of cursors is to
+> iterate a list to look for an element, then remove that element.
+>
+> For many of the methods, this will reduce how many we need since they
+> now just need a prev/next method, instead of the current state where you
+> may end up needing all of curr/prev/next. Also, if we decide to add a
+> function for splitting a list into two lists at the cursor, then a
+> cursor that points between elements is exactly what makes the most
+> sense.
+>
+> Another advantage is that this means you can now have a cursor into an
+> empty list.
+>
+> Link: https://rust-unofficial.github.io/too-many-lists/sixth-cursors-intr=
+o.html [1]
+> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hello,
->
-> I've realized that perf trace shows system call summary at the end for
-> each thread.  But sometimes users want to see the global whole system
-> summary or statistics instead.
->
-> So I've added --summary-mode option like below:
->
->     $ sudo ./perf trace -as --summary-mode=3Dtotal sleep 1
->
->      Summary of events:
->
->      total, 21580 events
->
->        syscall            calls  errors  total       min       avg       =
-max       stddev
->                                          (msec)    (msec)    (msec)    (m=
-sec)        (%)
->        --------------- --------  ------ -------- --------- --------- ----=
------     ------
->        epoll_wait          1305      0 14716.712     0.000    11.277   55=
-1.529      8.87%
->        futex               1256     89 13331.197     0.000    10.614   73=
-3.722     15.49%
->        poll                 669      0  6806.618     0.000    10.174   45=
-9.316     11.77%
->        ppoll                220      0  3968.797     0.000    18.040   51=
-6.775     25.35%
->        clock_nanosleep        1      0  1000.027  1000.027  1000.027  100=
-0.027      0.00%
->        epoll_pwait           21      0   592.783     0.000    28.228   52=
-2.293     88.29%
->        nanosleep             16      0    60.515     0.000     3.782    1=
-0.123     33.33%
->        ioctl                510      0     4.284     0.001     0.008     =
-0.182      8.84%
->        recvmsg             1434    775     3.497     0.001     0.002     =
-0.174      6.37%
->        write               1393      0     2.854     0.001     0.002     =
-0.017      1.79%
->        read                1063    100     2.236     0.000     0.002     =
-0.083      5.11%
->        ...
->
-> Also it changes internal data structure to hash table to track
-> statistics of syscalls.  And removes the rb_resort code.
->
-> v2 changes)
-> * Rebase to current perf-tools-next
-> * Fix some style issues  (Howard)
-> * Rename to --summary-mode  (Howard)
+> +    /// Insert an element at this cursor's location.
+> +    pub fn insert(self, item: ListArc<T, ID>) {
 
-perf $ sudo ./perf trace -s -C 0 --summary-mode=3Dtotal
-^C
- Summary of events:
+Oops this needs to be `mut self` to compile. Those last minute changes get =
+ya.
 
- total, 185 events
-
-   syscall            calls  errors  total       min       avg
-max       stddev
-                                     (msec)    (msec)    (msec)
-(msec)        (%)
-   --------------- --------  ------ -------- --------- ---------
----------     ------
-   ppoll                 29      0   188.684     0.000     6.506
-62.504     54.91%
-   read                  20      0     0.415     0.002     0.021
-0.345     82.16%
-   write                 24      0     0.085     0.001     0.004
-0.012     12.09%
-   sendmsg                4      0     0.039     0.005     0.010
-0.014     24.12%
-   recvmsg                8      0     0.034     0.003     0.004
-0.005      4.81%
-   poll                   8      0     0.020     0.002     0.003
-0.003      8.96%
-
-The new option is working as expected, thank you.
-
-Acked-by: Howard Chu <howardchu95@gmail.com>
-
-Thanks,
-Howard
->
-> Thanks,
-> Namhyung
->
->
-> Namhyung Kim (4):
->   perf trace: Allocate syscall stats only if summary is on
->   perf trace: Convert syscall_stats to hashmap
->   perf tools: Get rid of now-unused rb_resort.h
->   perf trace: Add --summary-mode option
->
->  tools/perf/Documentation/perf-trace.txt |   4 +
->  tools/perf/builtin-trace.c              | 252 +++++++++++++++++++-----
->  tools/perf/util/rb_resort.h             | 146 --------------
->  3 files changed, 208 insertions(+), 194 deletions(-)
->  delete mode 100644 tools/perf/util/rb_resort.h
->
-> --
-> 2.48.1.262.g85cc9f2d1e-goog
->
+Alice
