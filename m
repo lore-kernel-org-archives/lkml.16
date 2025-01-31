@@ -1,142 +1,227 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546531CAA99;
-	Fri, 31 Jan 2025 15:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C2C14B092
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 15:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738337654; cv=none; b=uLZ7L5A8cK2ruH3bmJCHduRg6D4TLXn7smQfuhqVtIfG35+gvZpKlIu6tH+PtRAkAM+hVZy2ZcLUmmBU81KFAfCF9bWOyJeJjg4xDqEJ94vm1MM5e3RIRB11L5wAX2RvdNtoDRaoBQ9z/xSMt4/vgWuJNkaDd1kQcYiQ8BCtko8=
+	t=1738337690; cv=none; b=lxu/4sNncaP/bx7/0oLjwFp9JWlpmhfYYWg1QjWVCdxMbgxnNZZj7YcG56Ri+PNZAYm7HgPmRQlPBRJaQF0brGHfq7dMkw7cMEZOyrJ2st/7HMJafnH59RwbnukbpsHjDlVfMw9VlJMptfviobFY1Uf6eLHy0ShoL/QiJEbNu4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738337654; c=relaxed/simple;
-	bh=re3wYPEzIKzslBfJmiyCrhALnqaCwpgJEAYE5GfLpHQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xs5kOfpDXvbRBPWRJPGNSm38KoLiBTZd0qdASRpS75zOMJgfhBaEG3FYxY0TJITaHAs+zaomwrmosWHY2FNtFAGvSO7bkeikEbGPKysL/sUWKeBStT/fnMIqa5DczALU8wPJLb7OhTAhB5hNoPxTJPeCced5iOUY/jvfV8OPgmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ifq/oeAr; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738337690; c=relaxed/simple;
+	bh=qNsYthABkFQQSgwYIQHT21jbO3CPtzOZZjoN/bl36Qc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S5n7eghM6CacCr2hZ/yoLK1umDEQHzTQGNEkU8Kei0s6reOvnHVwMmqL/O+FdLut+bs56JCgENP1G1BcjVcYCderg/NeKEu6SiT/3SknkECCM4WfJtvAhfLFWkvy0IAUOR1OGNOxwrnXaFHEB3dZbEmI64e339pnJbQOIxkQOmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Nu5eyRaO; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifq/oeAr"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3862b40a6e0so1405840f8f.0;
-        Fri, 31 Jan 2025 07:34:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nu5eyRaO"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-85bb264993cso474964241.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:34:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738337650; x=1738942450; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YlN3hvL9n56nyWua3u4fzIOe7QsEs4Hpzyubxj9K5cE=;
-        b=ifq/oeArDNmFclBhP8TqmCrbAgGZa4LUvkQMZQYbGIuE8hWXMQavRqNw6EfZvFna2m
-         4R231sFVR68rf+OtNDsSfGf5gzElHv2z6rywAm1e7K3noJ+IKnNGvZv60IItzGmoljhK
-         aEA4B3QcUMiabRNduoi8xqpj1bFnKxKfE2TB3/T90kwsGSyKL/5V0onujaeIPaRrElE7
-         AQB0xbFKoNw8wWZVEZgdynvAYY31K9YZCxXRv6Rrulkw7ZXX/puRu/yoohkYTdprtldF
-         iLG/ZoVUwB4kJicWinbfMMh6KC997chQTYJDtt/fUETRJP7qBZ0jExJHt2sBgzvcx/Nx
-         SiYg==
+        d=linaro.org; s=google; t=1738337687; x=1738942487; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=prgxnisBvFfnEWdw5tyPUtrfBlX1TpjjhLA4brULRjY=;
+        b=Nu5eyRaO7CV+l8xDgh+d2uYX35TIZYe8sc683iuhQtBrFxh1zcF2tAcgFEVpPQUb92
+         DIPu02JLBto9b3DC9qaiPfODRNMB5VGJY+5p9uLqWtulcnNZFVbgldeos1hL2nKaSYMg
+         lga22SoTSFvrRw8Y3SGeJ5k2qX1jHyjDKOPrYwBKYFD3DXbOoyOiy2MjuwWDYiCitdbS
+         8+cUACAudAAyN1xGV9QH9m4qAoDOtrS7q9x4sDg9WjYDD6GpKa+3yztp4VZ8YFq5PsHj
+         rIqIoVF8rCmK/O2VA5PdqRHEW0gDMyg3j29DNnCqdmyM8MkdMaBLZpDXJQtRe8Iscf+N
+         ZxvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738337650; x=1738942450;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YlN3hvL9n56nyWua3u4fzIOe7QsEs4Hpzyubxj9K5cE=;
-        b=OvVHqQQMaMH3e7SQ6dYNJd4V5VOtUykhB/JxrWpCTUshYWUjeBTpepo0rMpokGRysu
-         yQ4fgdjh+jEhmWHFpirRjUsJqqBIrz1zUxAidzys/BSCAAL0bKhEJgljAk6FWLOSj+2Y
-         xKAktD69j1CnzmUHlfGKTlLh6Y3AMVNyAO/Jmv8tYN9+ap4BLPJxu1ECrodorQvcu9YY
-         P/DjbTQ3CDuzEhMnrz7T2eJew1yGCgq1dm+2V1fCm5/VHJXk7OFax9bbUwhAcp7CTvH/
-         pv+mk6Xs+dEKdb+XGBQC9Q1Www1h7JvjI07TeYTzIL2UqKUBPnj56UxcQnsGrDa68Z2g
-         70tg==
-X-Forwarded-Encrypted: i=1; AJvYcCU6KggvAv2xtEIbZDsu+h3swl7UMiETLeHxl0l4jx3g1Wzjm8/cSKF3Jt7tN7/IKD6MKMD1X/E7rpg=@vger.kernel.org, AJvYcCUOZ+bGZFkYacIobAwkIkUvSbPFh4Kv3lAA9W1xejyqbYsHLIv0fv4GfqwHOF0fcOdBNZn0CMQoAKxNm6+l@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGOLFE5WRbRPe2HoBI5XiZfiTQ+nVuHe9sSgmNE1ud7skNkXYd
-	3EH1tdYlX5LALMtInZWy8uL78Bec7Akb7ZmAqoLuKVLmWHaFszW1
-X-Gm-Gg: ASbGnctIgrHbqGsR8RlqBEJqVXvx/T5z4c8eOZBs6DAaIuw4afPNU0hUYg9iZXPmFeP
-	xrYDE5ORXLuUBDUfxXojMwCA6LyXtXxb2ABwMVN+b8HnRJYtSsBKlo6Mp1HOm5N6lc5HaO9actr
-	oOxKKz8YOmy1fhG/z4Tm6cJmYcVvOXjVsafE/rhcbvoXea6CCqlVY1+zOrTnJxp63uzFphrEzaI
-	bEVwMx5Xn6wHObtVqemFc9lOhe4laLaHGiGARkOqbBNop2XYxNVU+Ng1A9vbZ7fm6alThSgbicy
-	AFDUFSaiZ7cqgWZ4TWrCr6pnzZxf
-X-Google-Smtp-Source: AGHT+IGeZg8pc1dnHI93SS1bPuVQwFVdIXopfhzkJBDwn8qHPECSHOzdEIGLge2i0w0yjCScGHxjxA==
-X-Received: by 2002:a05:6000:2ac:b0:38c:5cd0:ecd4 with SMTP id ffacd0b85a97d-38c5cd0f0f5mr5634438f8f.6.1738337650276;
-        Fri, 31 Jan 2025 07:34:10 -0800 (PST)
-Received: from ?IPV6:2001:871:22a:8634::1ad1? ([2001:871:22a:8634::1ad1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cf555sm4998186f8f.97.2025.01.31.07.34.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 07:34:10 -0800 (PST)
-Message-ID: <f8b59f05-55b5-4208-8bdf-b4be8e93bc22@gmail.com>
-Date: Fri, 31 Jan 2025 16:34:08 +0100
+        d=1e100.net; s=20230601; t=1738337687; x=1738942487;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=prgxnisBvFfnEWdw5tyPUtrfBlX1TpjjhLA4brULRjY=;
+        b=UQd7kwQiFzEsFvIK53u4zsdG/Qtg4TCDwLk85cXuiFyJN2RMgUXt3XRnciUl8LQuWS
+         k8IBG9o0Slcgg9jn4fX0Dc0yYWsarra55F1DAaKo10KNqRMOgTVAihghzDtElBGYtlJf
+         UdJi7xNEVlXHUfvK//sdOVppaslTDJ4s8Ujs1+j+gaLURo92Qm6t8jIiuNaVfCLcK8cU
+         epRjJGaZ3Te+n0BkaGxcgPwkxfGvl2Em91D/NCHeBNKOv/8VdMZlGD+hPkGAB71rfIYj
+         Yoc7rBOH/jhM04se/vUy6gQ5s3oJWd7Ej8TkOvFd/3dSEAYZxHzWDzW0cyBVL39DlbPc
+         6o/w==
+X-Forwarded-Encrypted: i=1; AJvYcCWsCbRL4Be4VltrGa9hWwIdU9nK5uXSdxcEoGqbeuRCn/SwLXICPFj8X3OAjYCjj00Ae7Byfc+4LRu7kwQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWSF36bZlRSrNJ6RF0CIWdBPX74rLaVDm63gf+9YvueFHnBPqu
+	9BqotWE1P0KCAonE2A5iaM1bVyMiy9ySasVwtScvdOmq2GHzsdrunrZlimCk0P5ghNoIijxh6fF
+	0VNsCluq2Ud4m7Qkw9dEcHDF8VGNN30IxH7Le3TeJ1lWSrZSe0aE=
+X-Gm-Gg: ASbGnctNVoAOvfUHPoL9C5eLy97VRBcoKXkYZZb2P9U9uVmDW51Pt6wDZ8m3z/def0L
+	bffPVsEDkmtdS6xF0St7XxmFwjsqkhTnaexWNwNH+AZ43y81HmP9NACFrQYpc8my2z2HM/75ezp
+	AIRIAFr7h0Dn9OTTihrf7WOcr9qyYEmg==
+X-Google-Smtp-Source: AGHT+IEcuOjLHChntviHsLyxu1HHbE+nT93cERhYpqS+zXeePjyRJ4FeC6SHl5QPHU+jGeBW7A/pjPZDIy8u0ifh0jk=
+X-Received: by 2002:a05:6122:6609:b0:515:3bfb:d421 with SMTP id
+ 71dfb90a1353d-51e9e4fe79amr11782098e0c.6.1738337687295; Fri, 31 Jan 2025
+ 07:34:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm: rust: Enable Rust support for ARMv7
-To: Arnd Bergmann <arnd@arndb.de>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Jonathan Corbet <corbet@lwn.net>,
- Russell King <linux@armlinux.org.uk>, Rudraksha Gupta <guptarud@gmail.com>,
- Ard Biesheuvel <ardb@kernel.org>, Geert Stappers <stappers@stappers.nl>,
- Andrew Lunn <andrew@lunn.ch>, Jamie Cunliffe <Jamie.Cunliffe@arm.com>,
- Sven Van Asbroeck <thesven73@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250123-rfl-arm32-v3-1-8f13623d42c5@gmail.com>
- <a83b0149-7055-411b-ba86-d227919c7c32@app.fastmail.com>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <a83b0149-7055-411b-ba86-d227919c7c32@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250130144136.126780286@linuxfoundation.org>
+In-Reply-To: <20250130144136.126780286@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 31 Jan 2025 21:04:35 +0530
+X-Gm-Features: AWEUYZna_5UTEAqDsa6Zes8ttM2Eyuaf61E3lIwkRn4YU-BA0AEgG6OZbMC_U4A
+Message-ID: <CA+G9fYuWfSwyKLugpo3WsU2gvgaBKD99i8JR1YM8oUZ8EAdm6Q@mail.gmail.com>
+Subject: Re: [PATCH 6.12 00/41] 6.12.12-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, 30 Jan 2025 at 20:12, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.12 release.
+> There are 41 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 01 Feb 2025 14:41:19 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.12.12-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
 
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-On 31.01.25 8:40 AM, Arnd Bergmann wrote:
-> On Thu, Jan 23, 2025, at 23:40, Christian Schrefl wrote:
->> This commit allows building ARMv7 kernels with Rust support.
->>
->> The rust core library expects some __eabi_... functions
->> that are not implemented in the kernel.
->> Those functions are some float operations and __aeabi_uldivmod.
->> For now those are implemented with define_panicking_intrinsics!.
-> 
-> I see you are doing this part the same as the other architectures,
-> but I don't see why it's done like this in the first place:
-> 
-> In C code, we really want to get a link failure rather than a
-> runtime error in order to catch those bugs as early as possible
-> and fix them before even trying to run the kernel. Is there a
-> reason this doesn't work in rust, or is there a plan to change
-> this later when the existing callers of those functions have
-> been fixed?
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I agree having a linker error instead of a runtime panic would
-be ideal, but it is currently impossible to build without these
-intrinsics.
+## Build
+* kernel: 6.12.12-rc2
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 4d14e2486de5514e8267e9061685a372056a2b94
+* git describe: v6.12.11-42-g4d14e2486de5
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
+.11-42-g4d14e2486de5
 
-To fix this Rust would have to provide a way to build the core
-library without float support. I don't know if there is a plan
-already to allow this.
+## Test Regressions (compared to v6.12.10-122-g0bde21f27343)
 
-> 
-> 202397be76d8037b531b34dee16c7dfcfd0124ef..3375c91e698c024f95a85682f5a91d9815c355e5 
->> 100644
->> --- a/arch/arm/Kconfig
->> +++ b/arch/arm/Kconfig
->> @@ -130,6 +130,7 @@ config ARM
->>  	select MMU_GATHER_RCU_TABLE_FREE if SMP && ARM_LPAE
->>  	select HAVE_REGS_AND_STACK_ACCESS_API
->>  	select HAVE_RSEQ
->> +	select HAVE_RUST if CPU_LITTLE_ENDIAN && CPU_32v7
-> 
-> The ARMv7 dependency makes sense, but I think it needs
-> be disabled on combined v6/v7 kernels, like (CPU_V7 && !CPU_V6 && !CPU_V6K).
+## Metric Regressions (compared to v6.12.10-122-g0bde21f27343)
 
-That might be correct, I don't know much about the build
-system for the kernel. I've tried it and it still builds
-with this change.
+## Test Fixes (compared to v6.12.10-122-g0bde21f27343)
 
-Also it should probably be relatively easy to support 
-armv6 as well.
+## Metric Fixes (compared to v6.12.10-122-g0bde21f27343)
 
-Cheers
-Christian
+## Test result summary
+total: 137811, pass: 91565, fail: 28303, skip: 17859, xfail: 84
 
+## Build Summary
+* arc: 6 total, 5 passed, 1 failed
+* arm: 143 total, 137 passed, 6 failed
+* arm64: 58 total, 56 passed, 2 failed
+* i386: 22 total, 19 passed, 3 failed
+* mips: 38 total, 33 passed, 5 failed
+* parisc: 5 total, 3 passed, 2 failed
+* powerpc: 44 total, 40 passed, 4 failed
+* riscv: 27 total, 24 passed, 3 failed
+* s390: 26 total, 22 passed, 4 failed
+* sh: 6 total, 5 passed, 1 failed
+* sparc: 5 total, 3 passed, 2 failed
+* x86_64: 50 total, 49 passed, 1 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-filesystems
+* kselftest-filesystems-binderfs
+* kselftest-filesystems-epoll
+* kselftest-firmware
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-rust
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-filecaps
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
