@@ -1,103 +1,128 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7791EE7C4;
-	Fri, 31 Jan 2025 17:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2265853368
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738343866; cv=none; b=SZRVzCQRTKI0XZyhiNsW87jN5Sd08KZrNyySzgCuMGn1zBw0xUt+yjRab1pps5XvzqEJ6GPWSfLYMCLpd5UnMnfr9/wE48Q4f/35lrL+SZlcU6M0N2RU3QP9cCCzkzQy8K0cp4Zwui6nHD5NfhjahA7c5aMCDbG4dtmK/olWckg=
+	t=1738343865; cv=none; b=fZOE9+pkyQM7ODBbGD830pUtvtwRBCUT4QPZAUlRFII/0zWI4QMl1iqJA6SRfIBet/KjQSNUE7tvMrF895RbDUbvOmyxz2EkHh1ee4jsuxyzQ3ICll6zBAC5rZS7rVBNvaWsPi+eD3CigPSQ7uTfEy12cKukFNHXI7nrnvjUBK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738343866; c=relaxed/simple;
-	bh=r9CRj9uKB4ij1nf+1B29ONBvdTTVyuZzSsFzAtiGXhQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f+XtHo89D184fcb8Ikq65FHLBX31N5JVVG45Nvgmlu0gneAOjLfXFE2StCGYQua8U3f4qk57gC+ohTlzu8DZ3XDK4qZAB+s+jAPcRsH0YsMVBZVm4YUoNX3riG6AiSRum8xaIj+ZS+RMLJzAl1xHp3RIBRPRVa0r6Qi/+JE1aPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from localhost.localdomain (ip5f5aef17.dynamic.kabel-deutschland.de [95.90.239.23])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 431E761E6479F;
-	Fri, 31 Jan 2025 18:16:55 +0100 (CET)
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: Sathya Prakash <sathya.prakash@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Tomas Henzl <thenzl@redhat.com>,
-	MPT-FusionLinux.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org,
+	s=arc-20240116; t=1738343865; c=relaxed/simple;
+	bh=o1Nb6NBvvvUzC4Nj+fUAGADD1c0p7c6r4SdqUcfysIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bxHLBRuEZu1m2lFlDRAxRc5EyO9n9O6Nh1m1Pd911gyQmuhDWpG2O+IU6nSje5/lKIBxeZkKlwWIcSOeDsb7CRnLNeIdVmam9Qp1SbdCBhB0kJAwZ5ByC8g9mkufewgI3rQzmKb4YhL3ugk9OctLcdvVp4bBffo0BsWGpfXYV2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=NebiNyVr; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="NebiNyVr"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5d414b8af7bso4336483a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:17:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura.hr; s=sartura; t=1738343862; x=1738948662; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RpXnOFSFJsdENn+F4QFZFC2yQiCx8f9L6Vgq8hk8nTs=;
+        b=NebiNyVrnQOv9+202q4ToGL0Q3sXU7uAjaakpp+TZ/EXxwAnbASyVhqUzfAv4tfHey
+         3oNiebp6Uuq5mFyMyHiYGYfMTjpMSGNMmC6IqpZu7CxmvDAJBxaPjKwYxdT7tJH15HD1
+         HVkQDoDurWnKNIloC9Q7jGYAohpIcTOUbLBLFYY1hRuXBu3SxlOkJi4V5IAJ+qrpiAIr
+         Miz3C/9+DnoQNYzwyGkR4EDOHaXiy1/Q/doI8rP6/7sVG1X6/culvxQP2RehJjE20uEl
+         pMTebjhRTIWr9Myxhs5+Xm3fSFTMTpbSHRq6fXV82AeCYUVbawxWCVsHVw8f1MqD8NrC
+         f6iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738343862; x=1738948662;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RpXnOFSFJsdENn+F4QFZFC2yQiCx8f9L6Vgq8hk8nTs=;
+        b=rgYFGIKXtBnH3K8XW4DoQUPKcuqUf8VNjCNTGEPAoBMInkLPELey2yicM03khjf5SN
+         KZbk4r8Js3WSxbqMn3eneHm0BqQ+L/JwQ/MrCtCxvGUU34A0MZxNja4QUZ21Aezudsq/
+         OinQ8ozCta8NfYEtFQfabb8wkF8rCzqwQkLrTqtdAKp2TmVZSJ3UzcLg1DSxvUqlwysn
+         bZNSAQTdS/lk9Va0gwBRoo//PK8YL/zZWcOonD8KCv6ul0x0IFTwvsWCw4XT00gnYCVB
+         XBvvplEmmdB801l8ZMxEEl5JJTBME78A5kp931/wwy79XOOH90dpYK7kZvZAUqhvNXqu
+         Pk/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVBa7xG9CSDmbJqzHNiGhVrWkK3xQBzVBMGPp0Ab632AX+UHCwtlOCUeQNEx65j2a6jz8FQ8BuqcBGBCsE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT8bNADYynvGgWMKiXGiN1hKLQW3ArjBJ7qqOtFGee1dyFo9GU
+	QQ0Xj0vM9v5E0WQWdx4denQ/tTf7vsXa6RxMYrhPTZgkEbl/Lx0XRUYC5xxl9hI=
+X-Gm-Gg: ASbGncvJMUHC1MEoo6xwpWWexNQVQrN/oI6PY7kSMOXWyWP69MrNN1RxOF3jq8mX3y2
+	ykF8u5XYSHs/16ro6HJfyvkbrJhk6o0YO7BuKQwdK1K9+EG1858+sRLoBJ/FWEypIO7Z6rnVLQJ
+	op0/fB9x+CM9VM/5+ScVxNRP5gcIOT7h2ouvKv/zc4b8Tsvb0NaobgFL2WHKzhPO+25uTaXTqxX
+	Tnrn7HQu6pT7wzi6frMnOovysynvZvbUaEXLm+YBX8xcXYR1Xecg71OVFw6qgrwqtgey00BJYjV
+	MFtvF17EXlaOFsZys1OGIEjYsbMCEoJFBA2DvtVmg2/6iwf8TKoT4g==
+X-Google-Smtp-Source: AGHT+IGXidhbVnMEkxJ9nSeFLHOKD38PsRpg8PjrysVhhJk5DRufZNR0NxcWPKP/dI3R6fpDrAizog==
+X-Received: by 2002:a05:6402:27d2:b0:5dc:8fb1:d44d with SMTP id 4fb4d7f45d1cf-5dc8fb1d71emr194616a12.31.1738343862022;
+        Fri, 31 Jan 2025 09:17:42 -0800 (PST)
+Received: from fedora.. (cpe-188-129-44-249.dynamic.amis.hr. [188.129.44.249])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5dc723e4b6dsm3142413a12.24.2025.01.31.09.17.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 09:17:41 -0800 (PST)
+From: Robert Marko <robert.marko@sartura.hr>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	lee@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: [PATCH] scsi: mpt3sas: Reduce log level of `set ignore_delay_remove for handle(0x%04x)` to info
-Date: Fri, 31 Jan 2025 18:16:40 +0100
-Message-ID: <20250131171640.30721-1-pmenzel@molgen.mpg.de>
-X-Mailer: git-send-email 2.47.2
+	arnd@arndb.de
+Cc: luka.perkov@sartura.hr,
+	daniel.machon@microchip.com,
+	Robert Marko <robert.marko@sartura.hr>
+Subject: [PATCH v5 1/2] arm64: lan969x: Add support for Microchip LAN969x SoC
+Date: Fri, 31 Jan 2025 18:14:09 +0100
+Message-ID: <20250131171739.1044701-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On several systems with Dell HBA controller Linux prints the warning below:
+This adds support for the Microchip LAN969x ARMv8-based SoC switch family.
 
-    $ dmesg | grep -e "Linux version" -e "DMI: Dell"  -e "ignore_delay_remove"
-    [    0.000000] Linux version 6.12.11.mx64.479 (root@lucy.molgen.mpg.de) (gcc (GCC) 12.3.0, GNU ld (GNU Binutils) 2.41) #1 SMP PREEMPT_DYNAMIC Fri Jan 24 13:30:47 CET 2025
-    [    0.000000] DMI: Dell Inc. PowerEdge R7625/0M7YXP, BIOS 1.10.6 12/06/2024
-    [    9.386551] scsi 0:0:4:0: set ignore_delay_remove for handle(0x0012)
-
-A user does not know, what to do about it, and everything seems to work as
-expected. Therefore, remove the log level from warning to info.
-
-Device information:
-
-    $ dmesg | grep -e 0:4:0 -e '12)'
-    [    8.857606] mpt3sas_cm0: config page(0x00000000db0e4179) - dma(0xfd5f6000): size(512)
-    [    9.133856] scsi 0:0:0:0: SATA: handle(0x0017), sas_addr(0x3c0470e0d40cc20c), phy(12), device_name(0x5000039db8d2284b)
-    [    9.366341] mpt3sas_cm0: handle(0x12) sas_address(0x3c0570e0d40cc208) port_type(0x0)
-    [    9.378867] scsi 0:0:4:0: Enclosure         DP       BP_PSV           7.10 PQ: 0 ANSI: 7
-    [    9.386551] scsi 0:0:4:0: set ignore_delay_remove for handle(0x0012)
-    [    9.387465] scsi 0:0:4:0: SES: handle(0x0012), sas_addr(0x3c0570e0d40cc208), phy(17), device_name(0x3c0570e0d40cc208)
-    [    9.387465] scsi 0:0:4:0: enclosure logical id (0x3c0470e0d4092108), slot(8)
-    [    9.387465] scsi 0:0:4:0: enclosure level(0x0001), connector name( C0  )
-    [    9.390495] scsi 0:0:4:0: qdepth(1), tagged(0), scsi_level(8), cmd_que(0)
-    [    9.401700]  end_device-0:4: add: handle(0x0012), sas_addr(0x3c0570e0d40cc208)
-    [    9.471916] ses 0:0:4:0: Attached Enclosure device
-    [    9.480088] ses 0:0:4:0: Attached scsi generic sg4 type 13
-    $ lspci -nn -k -s 41:
-    41:00.0 Serial Attached SCSI controller [0107]: Broadcom / LSI Fusion-MPT 12GSAS/PCIe Secure SAS38xx [1000:00e6]
-    	DeviceName: SL3 NonRAID
-    	Subsystem: Dell HBA355i Front [1028:200c]
-    	Kernel driver in use: mpt3sas
-
-Fixes: 30158dc9bbc9 ("mpt3sas: Never block the Enclosure device")
-Cc: Tomas Henzl <thenzl@redhat.com>
-Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Acked-by: Daniel Machon <daniel.machon@microchip.com>
 ---
-If a more knowledgable person can also improve the log message to be more
-useful for the user, that’d be much appreciated.
+Changes in v5:
+* Rebase on top of next-20250131
 
- drivers/scsi/mpt3sas/mpt3sas_scsih.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v4:
+* Rebase on top of next-20250115
+* Pickup Acked-by from Daniel
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-index a456e5ec74d8..9c2d3178f384 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-@@ -2703,7 +2703,7 @@ scsih_sdev_configure(struct scsi_device *sdev, struct queue_limits *lim)
- 		ssp_target = 1;
- 		if (sas_device->device_info &
- 				MPI2_SAS_DEVICE_INFO_SEP) {
--			sdev_printk(KERN_WARNING, sdev,
-+			sdev_printk(KERN_INFO, sdev,
- 			"set ignore_delay_remove for handle(0x%04x)\n",
- 			sas_device_priv_data->sas_target->handle);
- 			sas_device_priv_data->ignore_delay_remove = 1;
+Changes in v3:
+* Rebase on top of next-20250107
+
+Changes in v2:
+* Add forgotten LAN969x architecture support itself
+
+ arch/arm64/Kconfig.platforms | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 02f9248f7c84..247835b08c70 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -133,6 +133,20 @@ config ARCH_SPARX5
+ 	  security through TCAM-based frame processing using versatile
+ 	  content aware processor (VCAP).
+ 
++config ARCH_LAN969X
++	bool "Microchip LAN969X SoC family"
++	select PINCTRL
++	select DW_APB_TIMER_OF
++	help
++	  This enables support for the Microchip LAN969X ARMv8-based
++	  SoC family of TSN-capable gigabit switches.
++
++	  The LAN969X Ethernet switch family provides a rich set of
++	  switching features such as advanced TCAM-based VLAN and QoS
++	  processing enabling delivery of differentiated services, and
++	  security through TCAM-based frame processing using versatile
++	  content aware processor (VCAP).
++
+ config ARCH_K3
+ 	bool "Texas Instruments Inc. K3 multicore SoC architecture"
+ 	select PM_GENERIC_DOMAINS if PM
 -- 
-2.47.2
+2.48.1
 
