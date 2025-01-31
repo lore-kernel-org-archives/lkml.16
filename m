@@ -1,73 +1,116 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30522563
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738342726; cv=none; b=LSC5lS2pFJyOnJsfiTfj4JuN7UoxYrU1836MhqHYpgSTfdvtygCG4ZvffD/2GvuVYA6s7LtzDUHKdAz0/1UDSfq1BiJlyPhiq3EHAwCo5fF94yogKaFjqrb73v6b7CUgYOm6EE5hCxituYcZaOfk/1qkxVX81g7faXYLnPuJRxo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738342726; c=relaxed/simple;
-	bh=xOJb1xRsrhAC+IlZ+UD5XxQ4SDRFfH/5tAWUx5IVt9A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pawx1osRBzaCuru+BmVcmw1G0qwMRF0EDOyFeZMiVIiQATvewhZl7SsXYWpF0nptW2FSopY5wUlOm1S11+E1OAcHtXqMtD0dBXU9QdrKcMqfhANi0y9lf7gsmnYU4tL7p3kfhAhUVDjbVdyjW33oTHnwSh3dFyoVBmb68yyDQvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jDnvnTY4; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF492563;
+	Fri, 31 Jan 2025 16:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738342736; cv=pass; b=sawfrLaJdQvCsUMVPeDTt+GFTJXbo5xk+S6vLsxSaw1dMd0TeVy9aDPAIAdk+U3hE+UcbLa+aoCs8Hr+wi2MfQimv1jqPV9vpFfIpw+CYp1vXEHdpn71mUeW2n3/9mn26M0VzECeCP2iqGWtJkQWdcoA6v5m31dAfkGd2vPmBj0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738342736; c=relaxed/simple;
+	bh=Z0/uvBM1uLCruURORrh8CcBoNSWIv2Rw/zvyjTHE1XI=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=bJVH6WonTrQu+RRGX3LLqZ6Bp8Ub11lyk4O34RcuFatj5HJwG6o5xLnEbdawWIrFrJrS8Jupr9fG2F8eypJfeYYB7Txt6YD37jdxOGTNl3x12obIhQ/NY35zcifwkLHdsNuZWDIPN7SzQdzPZa8L4lD4VaPDyGgCqF7mh3kIaWo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=Zv2cqTY8; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jDnvnTY4"
-Message-ID: <f8759dae-ec1c-4f3c-a44a-dbd22d7964e4@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738342707;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xOJb1xRsrhAC+IlZ+UD5XxQ4SDRFfH/5tAWUx5IVt9A=;
-	b=jDnvnTY46CIUzdJJg/Y1TaH+JgUZpovG+TiVEW2nij2uF91ccg3wxv/M0Bi1wJWrFgm/Zi
-	IqAKmfTgZngUVUcVZm6Hx8P6oosWIiZ53dE1w0a3xHRaKX/+VmuVvivoQRtkMzeFZ+BWun
-	JO22xSkdydzNTOKqz0X3Ovbf4cc0hvM=
-Date: Fri, 31 Jan 2025 08:58:21 -0800
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="Zv2cqTY8"
+ARC-Seal: i=1; a=rsa-sha256; t=1738342701; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Bbr3DBjF0vcWguNtBN7/23NcD+MS7Q98KvssLkgDxW81EIBDZB2Oe2rkLfPv/N8D3zADBS+5XX8WQGraGcjt++l2IZ/cbnK2yU1ZL8ol4Hqw8DZJDVTXt/2JfcGLWkFJUo+IlmLQjKWLVXiLOvQoWm5tfIeWkgdeXgO3AZmUSKU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738342701; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=dXN1KgLRi3fL15qmkgMOuwcW79Xetrl527huOTLWtcI=; 
+	b=XcprMYoS0PmD/vNYYOLKqQP3FAvJpLpBMYqKd+1ZNXuZZEPxYQV5e4KtSz+3ncL9rw3YIqUD2BGv+cfqvJ9EC+QPwHbfv0sEUH1Poz/oEgU5A7qA5byd3EV5rbj2SHJyskT6CVXUw9UjcT8isSVbBTt8vqxTsGGc/qLSVv/szRE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
+	dmarc=pass header.from=<Usama.Anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738342701;
+	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=dXN1KgLRi3fL15qmkgMOuwcW79Xetrl527huOTLWtcI=;
+	b=Zv2cqTY8wsRUOlYQZouAvSU9rlPkgzeV5gG4c4H0wsudlSXcQI494P/MEhFVsjAn
+	Z35v+xRXD8nmwyBPbqyREeHEDOXLprr3EdjnpYS7YlX5DEPORQd9irsI4QCVB3yuJT3
+	SQqNuU6Zki5LVk6Xw0SZ3/QahKwrEyLlct3pBy5c=
+Received: by mx.zohomail.com with SMTPS id 173834269531525.416120751365952;
+	Fri, 31 Jan 2025 08:58:15 -0800 (PST)
+Message-ID: <d5dbdce7-20b2-4317-9d2e-bd7653c3910e@collabora.com>
+Date: Fri, 31 Jan 2025 21:58:34 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kbuild: fix Clang LTO with CONFIG_OBJTOOL=n
-Content-Language: en-GB
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, Nathan Chancellor
- <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
- Nicolas Schier <nicolas@fjasle.eu>, llvm@lists.linux.dev
-References: <20250131140407.1392008-1-masahiroy@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <20250131140407.1392008-1-masahiroy@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Cc: Usama.Anjum@collabora.com, patches@lists.linux.dev,
+ linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+ akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+ patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+ jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+ srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+ hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.1 00/49] 6.1.128-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+References: <20250130140133.825446496@linuxfoundation.org>
+Content-Language: en-US
+From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
+In-Reply-To: <20250130140133.825446496@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-ZohoMailClient: External
+
+On 1/30/25 7:01 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.128 release.
+> There are 49 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 01 Feb 2025 14:01:16 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.128-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+OVERVIEW
+
+        Builds: 40 passed, 0 failed
+
+    Boot tests: 593 passed, 0 failed
+
+    CI systems: broonie, maestro
+
+REVISION
+
+    Commit
+        name: v6.1.127-50-gda19df6ebb6c
+        hash: da19df6ebb6c09ded78f67e201f202979c1a5727
+    Checked out from
+        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
 
 
+BUILDS
+
+    No build failures found
+
+BOOT TESTS
+
+   No boot failures found
+
+See complete and up-to-date report at:
+
+    https://kcidb.kernelci.org/d/revision/revision?orgId=1&var-git_commit_hash=da19df6ebb6c09ded78f67e201f202979c1a5727&var-patchset_hash=
 
 
-On 1/31/25 6:04 AM, Masahiro Yamada wrote:
-> Since commit bede169618c6 ("kbuild: enable objtool for *.mod.o and
-> additional kernel objects"), Clang LTO builds do not perform any
-> optimizations when CONFIG_OBJTOOL is disable (e.g., for ARCH=arm64).
-> This is because every LLVM bitcode file is immediately converted to
-> ELF format before the object files are linked together.
->
-> This commit fixes the breakage.
->
-> Fixes: bede169618c6 ("kbuild: enable objtool for *.mod.o and additional kernel objects")
-> Reported-by: Yonghong Song <yonghong.song@linux.dev>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Tested-by: kernelci.org bot <bot@kernelci.org>
 
-Thanks for the fix!
-
-I tested x86_64 and arm64 for with and without lto, everything works fine. So
-
-Tested-by: Yonghong Song <yonghong.song@linux.dev>
-
+Thanks,
+KernelCI team
