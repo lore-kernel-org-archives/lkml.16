@@ -1,134 +1,198 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87801C54A6;
-	Fri, 31 Jan 2025 17:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738344180; cv=pass; b=pV8kLN/YLc6vJnhpoyw9Cgbf4v6vhxtzN7/pNxDvcHjYLnuRw0B29VF9GerZH6YCobnUSYYMByFPo0c5ikV5Eu3o0po3aWwhmRocePcvfEdCzOrzJKAYbsQOZMx8mRPhvBC6iGq/kb39uwaHFAfQzHoOvL75hvFonFavf7XuGdk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738344180; c=relaxed/simple;
-	bh=+RVNLeSaGy7ngLjRCRjVTB77T2GFWy8l3urX8ca0oCY=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=XIGFSbFMmzO4DMpBgyR1x/s+xN17ZTu43zdaZxk78gkuVen8asprqlgB5djQ8grvHXIMg+PI+dyQfoTPjBqa/TVaM1Q9g9nYZc8zAqWF0T5FOGclmPECQL3xNv24Y2YmOF/kQJ8ubGaIkaS85PePKec6jcqjLYb0339QJt5muHU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=YwjXfdiF; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519241F0E5E
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738344186; cv=none; b=JwDqre3y/eMQHsRI3dkC3CWVzwY0HrRq56SxPtpB7EaCVU5muqC9T/CrbIIjGWUjQU2TDtaKb84iSFF1jHkDLkZ0mBZdrTSSLeduHdEQJ8k7R3AFY3dzrENDgTd2nfkPFMTeDSO7K7+Patx/o1pAX6v+QYP6RbkDZmTylNTCUQE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738344186; c=relaxed/simple;
+	bh=kme+XPg+cuiUjsUHBIxrAcU2Va9lng0EAL+26Hj0OsQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T/hdG+ak2lQasLMkw1jJBECiYyFQ8rMtTO5qwMaltSPJWmpn39IyTDW7FoBQ5kknmvrcH+seIeIr+JsDa6B/1o8Avp3u8l9QYA9dKS/ybHxIvlNvCaCn6Rj5vPq8nbA7iBj7NTECbU0mEYHupAlMjwwitYu6jHY8EsIAnSrJvOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=u6pNC8m/; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="YwjXfdiF"
-ARC-Seal: i=1; a=rsa-sha256; t=1738344146; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=B0wjRH2ZbiwSmtDinrQo5RXLPrUIv5aTm6fhqAD5RUmKDA0fZhZrbuttmXPdjhOtz4mNDMsvpkphl95kF9e6H81oI4+7mKVjxnz6hBGx7imHZuJfi+wnwI8UqGZnPePp9YGeskucr4mU6aISRs7dg/70aEqYQiqCmD5oczyP+pc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738344146; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=a/jNI9kjkM05XMykt/Rvggg7cxO9ay3B0o73Afj3NXE=; 
-	b=J3TBM7Lt+qU+MjxJ7RvuZiVCb3+X5DGKtWL4ZLgPM1wC6lCBGtsVip49EXT5zxCuXql46Y1nxQdwPI7k4UTtEAXrvYg8YPxaTaFAACDsx5jErcGe+R3vHXL36KVgGcHjbQb62zz+EPc92BIVS0a941VXbcwVaYV5EYNjxt8QqxQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
-	dmarc=pass header.from=<Usama.Anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738344146;
-	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=a/jNI9kjkM05XMykt/Rvggg7cxO9ay3B0o73Afj3NXE=;
-	b=YwjXfdiFtGBv6FzB1tpsict+cfjoOnlwD8CmcrYA3vBCjrNtXo68dk/7+VG+luwT
-	76TmF/k3h9sHHqxTYQeBHZyDN6CSTDpPuY9JIuCRnZubb3xpqqnT9A9xqCarrpeuGHl
-	CWs+9YsWTz0PtqsZwv6NtdnHHGbLpk9UkGISuCS4=
-Received: by mx.zohomail.com with SMTPS id 1738344141731583.1279228105986;
-	Fri, 31 Jan 2025 09:22:21 -0800 (PST)
-Message-ID: <d4dc131a-30b0-4e20-84d6-35f27df8ece4@collabora.com>
-Date: Fri, 31 Jan 2025 22:22:38 +0500
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="u6pNC8m/"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30613802a04so21023761fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:23:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738344182; x=1738948982; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HjFe7vrxU6YEM1DATv1IgiJrIlKHUq54rhWlLDCXyk8=;
+        b=u6pNC8m/M6hWuaNsAw6iUhP4uEFln1Cj09OdSpfwnM0Qg49/9o0GvdBMSNB1lK/TZG
+         PxHSAHxFemTr0zi8bMYjreqJluHWu9x35riBOIq5mmusRS7PRCxOKhlz3SeQzBYFdKal
+         W2dqwFTFDLtHy2S9gUESrRbEHA1mAUYIcjrmE2M7NM36PQn86WwLXCedBkH7rSkBGiSH
+         +KczK7lKL2etHlK+72fIIb9DUPyzegh/CHscMd+uT7+jGRdn/Syj7QJcYRLbMKFzIlQG
+         hVe6s/WFJqkNYatZcRHzg1qs5ytgGnSaLdjW0KQKpCoaMKsmg5fs7dnG1uRm7tX/lXRz
+         GImQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738344182; x=1738948982;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HjFe7vrxU6YEM1DATv1IgiJrIlKHUq54rhWlLDCXyk8=;
+        b=b+rFICMttDwOIzvWjygoAkKVRREc/C0L3v8/wWWWredB8zEtZHDR7rvxHQnbMhbwUG
+         MJd/zrsYZUfw+Trb2+Yj6AWr2LoVACRTuf430A3yRxmACd1zp9YsuG57SID0MoI0bqIB
+         N9JaIg5s/dHhlZnInafpLcDIoyKv4cJXs/Nv9Zo0ybBfssIYPVbWx9Y99JZIVWRGgvyl
+         rkEIx8ZzI4gikgRtyTzG11O/yEno038abaQKItYsEKTaAUOXMReORzpvvLNicBivCEQy
+         ffs3bUtHC+AwUz3SnP8HCdK+hkaKDjixB8FwsPrQV+jke7eYEPRC9eHUFUJ7ArxTBakM
+         tmMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXEgKQjYRK6KyHNXeTrNpT8N5wWR2CKFdpzUBeXydIBlEMdSQLDaBDkLbd7LjLw1BJ6q7VGXvrmnwCTR4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwdbV/1/ClC/eKqFjNbCZKt0gW7Vw4gn3MctwsneD2RXXqzXKS
+	r+aJEXK9SPZ55XZrxkiJpA4/ALFYENbsZsig6whqziyYE1eeYAUQ+G4mCO1XojD+jVPyNoeEaAq
+	SNaVDYmXqZ0J6J1JexisT1mPPPFp3iWdkIvtOgw==
+X-Gm-Gg: ASbGnctk3U4bNJH4uuMsJJO2bEWEFHen11f+Ie7mtUW5X6SiDvk7O0FPPXlH5AUANlz
+	ED0zOv47v8c76VAKpbNkzdQ9op80LXX1z2DaarrY0EmuK4KYFHLLKkoo6ClFtmEzuVCpKdkk=
+X-Google-Smtp-Source: AGHT+IHxXoKtKpfWmHiyCkmDOMffgXB2luyZa9jFQPi8dZzp+nNVT/3VlAaiMixKow+4twrU3G/pSVUWwpEVrrMSCWA=
+X-Received: by 2002:a05:651c:b06:b0:300:3a15:8f22 with SMTP id
+ 38308e7fff4ca-30796872c96mr45396891fa.21.1738344182267; Fri, 31 Jan 2025
+ 09:23:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Usama.Anjum@collabora.com, patches@lists.linux.dev,
- linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
- akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
- patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
- jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
- srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
- hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 5.4 00/94] 5.4.290-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-References: <20250131112114.030356568@linuxfoundation.org>
-Content-Language: en-US
-From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
-In-Reply-To: <20250131112114.030356568@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+References: <20250129155525.663780-1-koichiro.den@canonical.com>
+ <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com>
+ <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
+ <CAMRc=Mc3qBXaATpYRAXeHne0+mBjErivjvUe4rBEj2ksansatQ@mail.gmail.com>
+ <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com> <rhdrieapetwdr3z7roguf5nex3esazhygjbjx4zklkrjzqrlsv@6vc5zmk3il5e>
+In-Reply-To: <rhdrieapetwdr3z7roguf5nex3esazhygjbjx4zklkrjzqrlsv@6vc5zmk3il5e>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 31 Jan 2025 18:22:50 +0100
+X-Gm-Features: AWEUYZljrTXtp6VdTg8U8MI4zsCzrgDx5TFvSWaWs-N0kRXVKgUx5Ql-znHgiZc
+Message-ID: <CAMRc=MeRBABW6JCScGvsRR_4+W6u5QMWJwA7yMB9gj7=uOeD0g@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for gpio-aggregator
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/31/25 4:21 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.290 release.
-> There are 94 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 02 Feb 2025 11:20:53 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.290-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-OVERVIEW
+On Fri, Jan 31, 2025 at 3:36=E2=80=AFPM Koichiro Den <koichiro.den@canonica=
+l.com> wrote:
+>
+> On Thu, Jan 30, 2025 at 09:47:47PM GMT, Bartosz Golaszewski wrote:
+> > On Thu, Jan 30, 2025 at 7:40=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote:
+> > >
+>
+> (Small reply to the previous comment:)
+> Yes, I understand your point about why you think 'num_lines' is
+> unnecessary. What I meant was more of a UX (User eXperience) consideratio=
+n.
+>
 
-        Builds: 29 passed, 5 failed
+If anything this sounds like worse user experience - having to provide
+duplicate information.
 
-    Boot tests: 452 passed, 0 failed
+> > > While at it: there's no reason to impose a
+> > > naming convention of lineX, lineY etc., the names don't matter for th=
+e
+> > > aggregator setup (unlike gpio-sim where they indicate the offset of
+> > > the line they concern).
+> > >
+> >
+> > Scratch that part. There's a good reason for that - the ordering of
+> > lines within the aggregator. [...]
+>
+> You're right, that's exactly the intention of the strict naming, 'line0',
+> 'line1', ..., 'line<Y>'.
+>
+> > [...] I'm just not sure whether we should
+> > impose a strict naming where - for an aggregator of 3 lines total - we
+> > expect there to exist groups named line0, line1 and line2 or if we
+> > should be more lenient and possibly sort whatever names the user
+> > provides alphabetically?
+>
+> As Maciej pointed out:
+>
+>   (https://lore.kernel.org/all/CAFGk_a0U=3DjSQD85UKC1e=3DpSWr8W9y_MMAFyPV=
+FOcE-fUZry7-Q@mail.gmail.com/#t)
+>   > [...] if free form names were for e.g. [1, 02, 10].
+>
+> we would need a well-defined rule to avoid ambiguity, which could
+> potentially unnecessarily impose burden on users to understand how to
+> properly use the interface.
+>
+>
+> Regardless, the point is that we need to make it clear to users which GPI=
+O
+> line a specific line<Y> of an aggregator forwards operations to. Since
+> requiring users to explicitly set the offset within the aggregator for ea=
+ch
+> virtual line (e.g. besides 'key'/'offset'/'name' attributes, by adding
+> 'idx' attribute, which users would need to set explicitly) would be
+> cumbersome, this RFC implementation instead just makes use of directory
+> naming. I believe we agree on this approach (i.e., using directory naming
+> to establish ordering). Correct me if I'm wrong.
+>
+> So, to move forward, let me outline the possible approaches we can take:
+>
+> Option (a). Drop 'num_lines' attribute and:
+>
+>   (a-1). Impose strict naming rule for line directories
+>
+>          Users can only create directories with a predefined naming
+>          convention. This could be 'line0', 'line1', ... 'line<Y>' (as in
+>          the RFC implementation), or simply '0', '1', ..., '<Y>'.
+>
+>   (a-2). Allow arbitrary naming for line directories
+>
+>          This would require a well-defined rule to avoid ambiguity. As
+>          Maciej pointed out:
+>
+>          (from https://lore.kernel.org/all/CAFGk_a0U=3DjSQD85UKC1e=3DpSWr=
+8W9y_MMAFyPVFOcE-fUZry7-Q@mail.gmail.com/#t)
+>          > if free form names were for e.g. [1, 02, 10]
+>
+>          Users would need to understand these rules, which might impose
+>          unnecessary burden on users.
+>
+> Option (b). Keep 'num_lines' attribute but:
+>
+>     (b-1). Prohibit manual creation of line directories
+>
+>            Users would no longer run 'mkdir line0', etc. Instead, writing
+>            <Y+1> (Y >=3D 0) to 'num_lines' would automatically set up the
+>            required directories.  convention. This could be 'line0',
+>            'line1', ... 'line<Y>' (as in this RFC implementation), or
+>            simply '0', '1', ..., '<Y>'.
+>
+>     (b-2). Keep manual 'mkdir' for each line, in the same manner as (a-1)
+>            (as in the RFC implementation) or (a-2). Seems that no-one is
+>            favor of this option.
+>
+>
+>     Note: (b-1) is a new idea. Considering what really needs to be
+>     configured by users, this could be the least burdensome and simplest,
+>     especially when configuring many lines. I'm including it here for
+>     broader discussion.
+>
+> Personally, now I'm inclined towards (a-1) with the simplest naming schem=
+e:
+> non-zero-padded integers ('./0', './1', './2', ..., './<Y>'). Or even (b-=
+1).
+>
 
-    CI systems: broonie, maestro
+I too think a-1 is the best option. However, I'd go for line0, line1
+etc. convention as for computers it doesn't make any difference while
+for humans it's more readable.
 
-REVISION
+Bartosz
 
-    Commit
-        name: v5.4.289-95-gb4cc7cb40189
-        hash: b4cc7cb40189a3206ae81247a0596c4a2b4a9f69
-    Checked out from
-        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-
-
-BUILDS
-
-    Failures
-      -arm64 (defconfig)
-      Build detail: https://kcidb.kernelci.org/d/build/build?orgId=1&var-id=broonie:b4cc7cb40189a3206ae81247a0596c4a2b4a9f69-arm64-defconfig
-      CI system: broonie
-
-      -i386 (i386_defconfig+allmodconfig)
-      Build detail: https://kcidb.kernelci.org/d/build/build?orgId=1&var-id=maestro:679cb54a65fae3351e33ff93
-      Build error: AR      mm/built-in.a
-      -riscv (defconfig)
-      Build detail: https://kcidb.kernelci.org/d/build/build?orgId=1&var-id=maestro:679cb55865fae3351e33ffa0
-      Build error: arch/riscv/kernel/traps.c:164:30: error: ‘handle_exception’ undeclared (first use in this function)
-      -arm64 (defconfig)
-      Build detail: https://kcidb.kernelci.org/d/build/build?orgId=1&var-id=maestro:679cb54365fae3351e33ff8d
-      Build error: ./arch/arm64/include/asm/memory.h:85:50: error: ‘KASAN_SHADOW_SCALE_SHIFT’ undeclared (first use in this function)
-      -arm64 (cros://chromeos-5.4/arm64/chromiumos-qualcomm.flavour.config)
-      Build detail: https://kcidb.kernelci.org/d/build/build?orgId=1&var-id=maestro:679cb56f65fae3351e33ffb6
-      Build error: make: *** [arch/arm64/Makefile:170: vdso_prepare] Error 2
-      CI system: maestro
-
-
-BOOT TESTS
-
-    No boot failures found
-
-See complete and up-to-date report at:
-
-    https://kcidb.kernelci.org/d/revision/revision?orgId=1&var-git_commit_hash=b4cc7cb40189a3206ae81247a0596c4a2b4a9f69&var-patchset_hash=
-
-
-Tested-by: kernelci.org bot <bot@kernelci.org>
-
-Thanks,
-KernelCI team
+> Let me know your thoughts.
+>
+> Thanks.
+>
+> -Koichiro
+>
+> >
+> > Bart
