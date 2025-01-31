@@ -1,225 +1,244 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEE71E284B
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 15:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0020F1E5726;
+	Fri, 31 Jan 2025 15:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738337194; cv=none; b=MmAP52K2K8n20w34saq1tXqqhiy8NWt3+rrPZK17MfssIj+Z9IvHf3FD+vYUvk3jwkvdG081TH+8I2GrY4sT4ltl59Psiq1qnxyT2YHXpab7PYJ22NLUh1FAzDwGRc3RkHzBmpUACp074Dl9SyvmEpTH45Vh6gXldI8BrctDqJ8=
+	t=1738337198; cv=none; b=lgFWRS84FNZgkZrGHrjiV7lGyj5s11bdmpy4g3fY9jHBYby1722GHyLobNvzCic0tu0IA9iwUKivbrTBOcjTPs5sAwHNRSKksA3ukaU13MtR7JwMORGWQOwvNMw66FgtTji/rDzB4v3iDmTR69Sw0DYKDmVZXKFdHBmFfEYiUpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738337194; c=relaxed/simple;
-	bh=3/0Z77qweBYXBX/5/H9DIfK+cyaNahHPlntmh0VmQWI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=orxifjAkZ28Wk457PRniQpaKADGwy+gO/fet8O32lPnAGL5imYa0A+Wqb/4+7a6U9zvQmh0u3pbnbFheDzlc+bQd4BJ8k4hes2PIcaX9CskIzqXwFC30J/Ahws4Tiw8uCxQ2BAbL4M7V2eHE+Hj3WCcZDmo8DP6fuUbOWLAzFFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xGlNyWcW; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738337198; c=relaxed/simple;
+	bh=2ULc8BQm7YXjgGqlZjsV9DB9CeqZcoDXnGE2In5vW8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dnou3waagGbDmSIvH7f+VFIxlzcdurTliQaikcRKN8brL3/+e0uzr7gygwqFjyP8aMmdb7ZItWlQizD3VZqKoaqM29mf1SwO4elejX8oKmj4fejcrZBCsVmrEYqsyedXo7vZ6jj2EFlAV+ujksnaPSRZincFpKfnDRR/Ugha1aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCkLUV0C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xGlNyWcW"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-5174d53437eso1286543e0c.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:26:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738337191; x=1738941991; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oP02GWgqIHMyU6iy1+uU8QTBLlREt7y8gx/+g2WeozM=;
-        b=xGlNyWcWMTqRfKtXOLP1mTg3NJX1v1ytiNfnZORjaz3wkO94xpN1DuTpv2GCdXplt7
-         vHqREv6MvQ5PY8K3vMkoxwN3ISRmypDR7/Vv/MQ/zFD0Xn7j1fvBplo/VTkij90KB/BA
-         czkxy0vNOPltEGd72tR1Q1sgTwDMdg92RPUYOIT3fVxwlWpWieJNiVxdYHkkUPwiLFUZ
-         ckjYnO7uebUvXBiFpbzJ/AMwNMYmShZmKnrB9tCNeEqBGA+uBCZaUYpz76VnsVAc6yr0
-         mYgnKqIFeNJ2Ds6/+Lvy/NdWBOqfBp83/CZcVaJ4htAvF3047rNTscHoyh3A0mH0/F2R
-         a08A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738337191; x=1738941991;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oP02GWgqIHMyU6iy1+uU8QTBLlREt7y8gx/+g2WeozM=;
-        b=M6tAaPx8D2th/n2rG7toGmvvq+cy0fBoD2h97lqQSZaIFuoFAj7pYtq+fQnlZOnQRI
-         lZLbW2pR1dzLLNOJkEgArcuzHL1FIgrvkj+OyURr4chor1QJh601iJ31RVb85/s8EI0H
-         Q+SLZReoi3pttX7yzfeLQ4yp2FLsMJ3Xa3RsWP/BxURgq3lydg+3YW2ArAVlM15eEHs8
-         iBpDkplNdBRba3ah8I+LbhzsmHS9xDhaY+77BvQfFxktCPFAW3ueU19Lff0hrHxSVwdf
-         oLp8j21ynxywtEFIzNk1pY6TBKliO01QyFBm7Z2EvaIJNPLWWhCOrvGobSWXSa+ng8nk
-         NMkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBBn5Ge4huMN5223egREUz3SzCl+skzaESnutFEVV3RH92oXiaZ9f3MRyunhJZkVQvmDEe6eqUPmYBu70=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywzi9cGgQrqxfBEchItKz4zRfY573iRYAZrzepZk+yyjUWW4+JG
-	Ayp0EDxh+2HFaKY9jyVkaMAsSlJq+qEO0SnDxV1h7qcYdWkH6tLx2jc4QuXejCa58rcNQDR57v3
-	frP2ABXyWWnGGir6wVhMsrkUw0796P08vkPW46w==
-X-Gm-Gg: ASbGncsisRqUF5nddA0Fe/l1WY2nKyDQW1st2U6wMu2XlBOVueP/yuA+CsNLAHeMeTk
-	DkxxSWs510kMroPnlaNfuulhjRYrswOBr1YYcisKVYfjjeU2lKnk+MswBH8Fgvl3K+OVfhylx6p
-	TfRvysgbsFENfBxq6E0IBHoK2wSeLG1w==
-X-Google-Smtp-Source: AGHT+IFgSGqRhIR5UDkU4uXh2hescc5V5Oe2OHITJF+o8P44rEboqOBh7//gL+OkBKaqq4UvEZ+nHMcZU6F/+DOPZa0=
-X-Received: by 2002:a05:6122:3181:b0:51b:8949:c9a7 with SMTP id
- 71dfb90a1353d-51e9e5161abmr9914263e0c.8.1738337191443; Fri, 31 Jan 2025
- 07:26:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCkLUV0C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22F83C4CED1;
+	Fri, 31 Jan 2025 15:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738337197;
+	bh=2ULc8BQm7YXjgGqlZjsV9DB9CeqZcoDXnGE2In5vW8Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kCkLUV0CAuTQQxKl8ODLqJGj0vdDlwr8WZoM5FlP8aCtVGSWsRVh7dprcddJe6qeP
+	 r0ST2yxkOx1tHjnjcTaiOzp8UgCKZCDquNy003DM0gYSEURdLXQtlpeMxGBWQBxEQ2
+	 sFbc9sqGtmkJQjSwFqVVEq6j5OBw2IzqpMcyQ/3U5whp/KyHOs5Z/cBFe+Doa9OSpg
+	 0mE7A9znT6OLiO3nQopvgk2Xdv95IxRs8kAeSg/RKDvsn8H5l+QkcNcpxASZ8fM/9J
+	 NLYO6mSt0WVcTytQCSHV0CL3XfO66ZTBHVBnVS9vYuu0kaSlakNKfjy7BHXxyoF+OH
+	 GWKpFpl/Cor7A==
+Date: Fri, 31 Jan 2025 09:26:36 -0600
+From: Rob Herring <robh@kernel.org>
+To: Mahesh Rao <mahesh.rao@intel.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Wu Hao <hao.wu@intel.com>, Ho Yin <adrian.ho.yin.ng@altera.com>,
+	Niravkumar L Rabara <nirav.rabara@altera.com>,
+	linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Mahesh Rao <mahesh.rao@altera.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: firmware: stratix10: Convert to
+ json-schema
+Message-ID: <20250131152636.GA3454395-robh@kernel.org>
+References: <20250131-socfpga_sip_svc_misc-v2-0-eeed4ebc35f9@intel.com>
+ <20250131-socfpga_sip_svc_misc-v2-2-eeed4ebc35f9@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130140133.825446496@linuxfoundation.org>
-In-Reply-To: <20250130140133.825446496@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 31 Jan 2025 20:56:20 +0530
-X-Gm-Features: AWEUYZmkQ1oz6UEbIN2VKYgUkkC8BVz0VFI7lE0Z7qDu76LAGPpLTFiEEL0CivQ
-Message-ID: <CA+G9fYtVGFBb0tZzOYSuF_V7xmij7GUZi5Sk6L_h0nOh4G7MNg@mail.gmail.com>
-Subject: Re: [PATCH 6.1 00/49] 6.1.128-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131-socfpga_sip_svc_misc-v2-2-eeed4ebc35f9@intel.com>
 
-On Thu, 30 Jan 2025 at 20:00, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.1.128 release.
-> There are 49 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 01 Feb 2025 14:01:16 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.1.128-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, Jan 31, 2025 at 06:17:25PM +0800, Mahesh Rao wrote:
+> Convert intel,stratix10-svc service layer devicetree
+> binding file from freeform format to json-schema.
+> 
+> Also added DT binding for optional stratix10-soc
+> FPGA manager child node.
+> 
+> Signed-off-by: Mahesh Rao <mahesh.rao@intel.com>
+> ---
+>  .../bindings/firmware/intel,stratix10-svc.txt      | 57 -------------
+>  .../bindings/firmware/intel,stratix10-svc.yaml     | 94 ++++++++++++++++++++++
+>  2 files changed, 94 insertions(+), 57 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt b/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+> deleted file mode 100644
+> index 6eff1afd8daf91714d6a18859667d2607e707da7..0000000000000000000000000000000000000000
+> --- a/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+> +++ /dev/null
+> @@ -1,57 +0,0 @@
+> -Intel Service Layer Driver for Stratix10 SoC
+> -============================================
+> -Intel Stratix10 SoC is composed of a 64 bit quad-core ARM Cortex A53 hard
+> -processor system (HPS) and Secure Device Manager (SDM). When the FPGA is
+> -configured from HPS, there needs to be a way for HPS to notify SDM the
+> -location and size of the configuration data. Then SDM will get the
+> -configuration data from that location and perform the FPGA configuration.
+> -
+> -To meet the whole system security needs and support virtual machine requesting
+> -communication with SDM, only the secure world of software (EL3, Exception
+> -Layer 3) can interface with SDM. All software entities running on other
+> -exception layers must channel through the EL3 software whenever it needs
+> -service from SDM.
+> -
+> -Intel Stratix10 service layer driver, running at privileged exception level
+> -(EL1, Exception Layer 1), interfaces with the service providers and provides
+> -the services for FPGA configuration, QSPI, Crypto and warm reset. Service layer
+> -driver also manages secure monitor call (SMC) to communicate with secure monitor
+> -code running in EL3.
+> -
+> -Required properties:
+> --------------------
+> -The svc node has the following mandatory properties, must be located under
+> -the firmware node.
+> -
+> -- compatible: "intel,stratix10-svc" or "intel,agilex-svc"
+> -- method: smc or hvc
+> -        smc - Secure Monitor Call
+> -        hvc - Hypervisor Call
+> -- memory-region:
+> -	phandle to the reserved memory node. See
+> -	Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> -	for details
+> -
+> -Example:
+> --------
+> -
+> -	reserved-memory {
+> -                #address-cells = <2>;
+> -                #size-cells = <2>;
+> -                ranges;
+> -
+> -                service_reserved: svcbuffer@0 {
+> -                        compatible = "shared-dma-pool";
+> -                        reg = <0x0 0x0 0x0 0x1000000>;
+> -                        alignment = <0x1000>;
+> -                        no-map;
+> -                };
+> -        };
+> -
+> -	firmware {
+> -		svc {
+> -			compatible = "intel,stratix10-svc";
+> -			method = "smc";
+> -			memory-region = <&service_reserved>;
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.yaml b/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e30e79d4c3150f90993e728320e9ef90d484a10d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.yaml
+> @@ -0,0 +1,94 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/firmware/intel,stratix10-svc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel Service Layer Driver for Stratix10 SoC
+> +
+> +maintainers:
+> +  - Dinh Nguyen <dinguyen@kernel.org>
+> +  - Mahesh Rao <mahesh.rao@altera.com>
+> +
+> +description:
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+You need '>' on the end to preserve paragraphs.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> +  Intel Stratix10 SoC is composed of a 64 bit quad-core ARM Cortex A53 hard
+> +  processor system (HPS) and Secure Device Manager (SDM). When the FPGA is
+> +  configured from HPS, there needs to be a way for HPS to notify SDM the
+> +  location and size of the configuration data. Then SDM will get the
+> +  configuration data from that location and perform the FPGA configuration.
+> +
+> +  To meet the whole system security needs and support virtual machine requesting
+> +  communication with SDM, only the secure world of software (EL3, Exception
+> +  Layer 3) can interface with SDM. All software entities running on other
+> +  exception layers must channel through the EL3 software whenever it needs
+> +  service from SDM.
+> +
+> +  Intel Stratix10 service layer driver, running at privileged exception level
+> +  (EL1, Exception Layer 1), interfaces with the service providers and provides
+> +  the services for FPGA configuration, QSPI, Crypto and warm reset. Service layer
+> +  driver also manages secure monitor call (SMC) to communicate with secure monitor
+> +  code running in EL3.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - intel,stratix10-svc
+> +      - intel,agilex-svc
+> +
+> +  method:
+> +    description: |
+> +                 Supervisory call method to be used to communicate with the
+> +                 secure service layer.
+> +                 Permitted values are:
+> +                 - "smc" : SMC #0, following the SMCCC
+> +                 - "hvc" : HVC #0, following the SMCCC
 
-## Build
-* kernel: 6.1.128-rc1
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: da19df6ebb6c09ded78f67e201f202979c1a5727
-* git describe: v6.1.127-50-gda19df6ebb6c
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.1=
-27-50-gda19df6ebb6c
+Indent by 2 more than 'description'.
 
-## Test Regressions (compared to v6.1.126-65-gad6747190c53)
+> +
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+> +    enum:
+> +      - smc
+> +      - hvc
+> +
+> +  memory-region:
+> +    maxItems: 1
+> +    description:
+> +      phandle to a reserved memory region for the service layer driver to
+> +      communicate with the secure device manager. For more details see
+> +      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt.
 
-## Metric Regressions (compared to v6.1.126-65-gad6747190c53)
+Please read what that file says.
 
-## Test Fixes (compared to v6.1.126-65-gad6747190c53)
-
-## Metric Fixes (compared to v6.1.126-65-gad6747190c53)
-
-## Test result summary
-total: 108475, pass: 71884, fail: 19274, skip: 16867, xfail: 450
-
-## Build Summary
-* arc: 6 total, 5 passed, 1 failed
-* arm: 139 total, 139 passed, 0 failed
-* arm64: 46 total, 44 passed, 2 failed
-* i386: 31 total, 27 passed, 4 failed
-* mips: 30 total, 25 passed, 5 failed
-* parisc: 5 total, 5 passed, 0 failed
-* powerpc: 36 total, 33 passed, 3 failed
-* riscv: 14 total, 13 passed, 1 failed
-* s390: 18 total, 17 passed, 1 failed
-* sh: 12 total, 10 passed, 2 failed
-* sparc: 9 total, 8 passed, 1 failed
-* x86_64: 38 total, 38 passed, 0 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
+> +
+> +  fpga-mgr:
+> +    $ref: /schemas/fpga/intel,stratix10-soc-fpga-mgr.yaml
+> +    description: Optional child node for fpga manager to perform fabric configuration.
+> +
+> +required:
+> +  - compatible
+> +  - method
+> +  - memory-region
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    reserved-memory {
+> +      #address-cells = <2>;
+> +      #size-cells = <2>;
+> +
+> +      service_reserved: svcbuffer@0 {
+> +              compatible = "shared-dma-pool";
+> +              reg = <0x0 0x0 0x0 0x1000000>;
+> +              alignment = <0x1000>;
+> +              no-map;
+> +      };
+> +    };
+> +
+> +    firmware {
+> +      svc {
+> +        compatible = "intel,stratix10-svc";
+> +        method = "smc";
+> +        memory-region = <&service_reserved>;
+> +
+> +        fpga-mgr {
+> +          compatible = "intel,stratix10-soc-fpga-mgr";
+> +        };
+> +      };
+> +    };
+> +
+> 
+> -- 
+> 2.35.3
+> 
