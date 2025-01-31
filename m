@@ -1,93 +1,156 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDC21474B8;
-	Fri, 31 Jan 2025 08:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6F42563;
+	Fri, 31 Jan 2025 08:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738312220; cv=none; b=W5If0aNC91OpUTYkKB6InWNSGYXtDIzqiWfiamf/wTWCNqtpw26Rt75Pv0kIYU7WOTSNP8qOQP21KL/909oTATNI9/kikibAdoJls5JdhALEF9JKmHZOMawBsgnauU9tt5MMGYvc0Yvx3lq7vAnZQexbvR0E4hMJ7VQ6rcb5jJ8=
+	t=1738312236; cv=none; b=Jtzgiy+s4X/I1g5T3+1oEpnYeD+DXpKQUfGGeK7/f7smrBCNeIRAnt0SY3ZJgcBgGrpX8dnSP3qyKs+SWobfq+QmgbFOYFwKCi/08pZj6/YMVmxsAEvRI56JN/RqnJI5Jzk7Z8VgvFTgQKsJOycMxwGsjWTPupAhiMBEn21UVss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738312220; c=relaxed/simple;
-	bh=ui75wqL4zDVbPE5FxT1AXpwQNdWuDQ/ZISq1ZmLU7mQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fYDXCrpi9jGyZBe75nQWBfECptcdWl+OTqsDspe63vcOMU3JaHLfHAKik0PQX8lWfilaLR5NCUm+iuafFBRd9ZrBcN+WCIMpUMA+GZ4gcCoL3BZ1Ghe6P+bWUfTocJzWEozkmJocZpL4V9Vlm92zc72XIQAsjsipI2eftz9Y2BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rzOBqs4R; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3401tN6X; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738312236; c=relaxed/simple;
+	bh=AtfBBDRe/v3005YeMC67dhp3He0uuAnKjvaGt1r4Do4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uIRAOb/5/jJuzcQMVym0kSE6lN7LPnaOWvpHUCrJQ5gFkiHjPQNm6YQIb4fsCSC6ls3wxZE+z965qlxWrOy0mZZHYFXvXCx4XeEOcPFxjphUFZiaEs2i4lHt9qjsrNDrg9FT3aSyXzu0JLxPsFitbHbj5qunq1v2ZJbtuG3LTIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PE+y/FN4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rzOBqs4R";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3401tN6X"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738312217;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dh72hoG7r8uFDHYLjclyvn98U7Cc7oqExPBc9lcIw2s=;
-	b=rzOBqs4RLEwwMW86Q+H+/0p+VDCoqNzm5Bd8/soMuZV4vESW6ugEFM2Npj1oqO96C7oJ/E
-	QdDNYiBCxcA5lL/YDMmBIRPB/HzEcN1Nh+oFN8DdlLNKjo8IdtJSacOw67+7/eNMcbJaUk
-	nh5Vnq9zFAKpl54+NnZ3cGS4/q73HKiLGYudYlwiaByWeFA9JoMKLh+3okTb/t8WS4k4GZ
-	+DZuj26iaNJz5fM6zbiASinDKO9j/HwhREUG75o5KHCjwCQ/TXfV77pA8IfUW1w8EJU3k4
-	r3G900TesW2sDTV1Jw7xSEb957NirxY5iQ/lr0f/oQpE3vqJ2jlwKem3H/F/8Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738312217;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dh72hoG7r8uFDHYLjclyvn98U7Cc7oqExPBc9lcIw2s=;
-	b=3401tN6XErrwGzKOQCPasoiRkJcYVX/Cs90mroIDWiD00wseDJmcsMiYSJwLnd2m2d8jgj
-	FO9qeBOriFzLgUAg==
-To: Jiri Slaby <jirislaby@kernel.org>, Easwar Hariharan
- <eahariha@linux.microsoft.com>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>,
- Luiz Augusto von Dentz <luiz.von.dentz@intel.com>, Miguel Ojeda
- <ojeda@kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2] jiffies: Cast to unsigned long for secs_to_jiffies()
- conversion
-In-Reply-To: <3c99f58e-bd42-4021-ba36-039eeee9110b@kernel.org>
-References: <20250130192701.99626-1-eahariha@linux.microsoft.com>
- <3c99f58e-bd42-4021-ba36-039eeee9110b@kernel.org>
-Date: Fri, 31 Jan 2025 09:30:16 +0100
-Message-ID: <87bjvnpeqv.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PE+y/FN4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D6AFC4CED1;
+	Fri, 31 Jan 2025 08:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738312235;
+	bh=AtfBBDRe/v3005YeMC67dhp3He0uuAnKjvaGt1r4Do4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PE+y/FN4y0l9nZnq29GNlQLNlbXrGpThMRU6p3o2rAMkkdn34doJYFABmB3N/nn2W
+	 IR8lItojDilpRouSjXW12hPTTaaHWdSVbR/mfXPSHQQW7C26ef/N3aoZInp1io6t12
+	 NHgDMFmsioWh2b4iCaKlIt7LVs4rqCauAhvxjl+uFqk1rQ4rBleyOwNVDDtdCrjHoG
+	 fquxgc2mcDnpsIOHma2QRoTszKRscKnU7XRSOfUxJvFCy3kfhv4rLSIqqPZ8gMsxkI
+	 nwO7m70Z6AmMNTnLfdXbrUF3LQBVjiZBiq5v/e89Wa6LXItv+xeMBnwjpX8JbKCJtn
+	 t4V9N6XJAXzjg==
+Date: Fri, 31 Jan 2025 08:29:28 +0000
+From: Simon Horman <horms@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	David Ahern <dsahern@kernel.org>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, sdf@fomichev.me,
+	asml.silence@gmail.com, dw@davidwei.uk,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Victor Nogueira <victor@mojatatu.com>,
+	Pedro Tammela <pctammela@mojatatu.com>
+Subject: Re: [PATCH RFC net-next v2 4/6] net: devmem: TCP tx netlink api
+Message-ID: <20250131082928.GA24105@kernel.org>
+References: <20250130211539.428952-1-almasrymina@google.com>
+ <20250130211539.428952-5-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250130211539.428952-5-almasrymina@google.com>
 
-On Fri, Jan 31 2025 at 08:06, Jiri Slaby wrote:
-> On 30. 01. 25, 20:26, Easwar Hariharan wrote:
->> While converting users of msecs_to_jiffies(), lkp reported that some
->> range checks would always be true because of the mismatch between the
->> implied int value of secs_to_jiffies() vs the unsigned long
->> return value of the msecs_to_jiffies() calls it was replacing. Fix this
->> by casting secs_to_jiffies() values as unsigned long.
->> 
->> Fixes: b35108a51cf7ba ("jiffies: Define secs_to_jiffies()")
->> CC: stable@vger.kernel.org # 6.13+
->> CC: Andrew Morton <akpm@linux-foundation.org>
->> Reported-by: kernel test robot <lkp@intel.com>
->> Closes: https://lore.kernel.org/oe-kbuild-all/202501301334.NB6NszQR-lkp@intel.com/
->> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
->> ---
->>   include/linux/jiffies.h | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
->> index ed945f42e064..0ea8c9887429 100644
->> --- a/include/linux/jiffies.h
->> +++ b/include/linux/jiffies.h
->> @@ -537,7 +537,7 @@ static __always_inline unsigned long msecs_to_jiffies(const unsigned int m)
->>    *
->>    * Return: jiffies value
->>    */
->> -#define secs_to_jiffies(_secs) ((_secs) * HZ)
->> +#define secs_to_jiffies(_secs) (unsigned long)((_secs) * HZ)
->
-> Could you just switch the fun to an inline instead?
+On Thu, Jan 30, 2025 at 09:15:37PM +0000, Mina Almasry wrote:
+> From: Stanislav Fomichev <sdf@fomichev.me>
+> 
+> Add bind-tx netlink call to attach dmabuf for TX; queue is not
+> required, only ifindex and dmabuf fd for attachment.
+> 
+> Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
 
-It's a macro so it can be used in static initializers.
+Hi Mina,
+
+I noticed minor issue relating to generated code.
+
+...
+
+> diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/netlink/specs/netdev.yaml
+> index cbb544bd6c84..93f4333e7bc6 100644
+> --- a/Documentation/netlink/specs/netdev.yaml
+> +++ b/Documentation/netlink/specs/netdev.yaml
+
+The lines preceding the hunk below are:
+
+      name: napi-set
+      doc: Set configurable NAPI instance settings.
+      attribute-set: napi
+      flags: [ admin-perm ]
+      do:
+        request:
+          attributes:
+            - id
+
+> @@ -711,6 +711,18 @@ operations:
+>              - defer-hard-irqs
+>              - gro-flush-timeout
+>              - irq-suspend-timeout
+> +    -
+> +      name: bind-tx
+> +      doc: Bind dmabuf to netdev for TX
+> +      attribute-set: dmabuf
+
+Unlike the entry for napi-set there is no "flags: [ admin-perm ]" fpr
+bind-tx...
+
+> +      do:
+> +        request:
+> +          attributes:
+> +            - ifindex
+> +            - fd
+> +        reply:
+> +          attributes:
+> +            - id
+>  
+>  kernel-family:
+>    headers: [ "linux/list.h"]
+
+...
+
+> diff --git a/net/core/netdev-genl-gen.c b/net/core/netdev-genl-gen.c
+
+...
+
+> @@ -190,6 +196,13 @@ static const struct genl_split_ops netdev_nl_ops[] = {
+
+The lines preceding this hunk are:
+
+	{
+		.cmd		= NETDEV_CMD_NAPI_SET,
+		.doit		= netdev_nl_napi_set_doit,
+		.policy		= netdev_napi_set_nl_policy,
+
+>  		.maxattr	= NETDEV_A_NAPI_IRQ_SUSPEND_TIMEOUT,
+>  		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+>  	},
+> +	{
+> +		.cmd		= NETDEV_CMD_BIND_TX,
+> +		.doit		= netdev_nl_bind_tx_doit,
+> +		.policy		= netdev_bind_tx_nl_policy,
+> +		.maxattr	= NETDEV_A_DMABUF_FD,
+> +		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+
+... so I don't think GENL_ADMIN_PERM should be here.
+
+Flagged by running tools/net/ynl/ynl-regen.sh -f && git diff
+
+> +	},
+>  };
+>  
+>  static const struct genl_multicast_group netdev_nl_mcgrps[] = {
+
+...
