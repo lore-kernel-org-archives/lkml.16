@@ -1,137 +1,208 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AB71C1F29
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 15:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C511CB9F0;
+	Fri, 31 Jan 2025 15:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738336573; cv=none; b=g9zLUdksPJMtbm/Tblsu/uKCaU8lpZQgOEwexJxwNeEH/XN6PHRmoMrjahO6lM7EdyguJ1gPUYhBh6sFL7tXYxwWeDaxrF/i8l1Zu5ZNleq220K73Y6xmMckB1vjYO/BuEcyIWe2QsDB04Y2ChutBXnvmMk8N6uUYH1Om4/CrAA=
+	t=1738336580; cv=none; b=WmVs8SRR0igqJPxUThs4C5Ccc5/u843NbxseOPcGKGihMenD+apJWqksxKusrB7BxciFVOLwna+p4JcsFdMy4Nqk1BGZE+brwJiq+xU/mXA0Uk/xbgzLa6Fbry061Yq2+WA2ZKJ6VZRo7mvUHecm1Y94gRP6FPnJx/yOfQPF9wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738336573; c=relaxed/simple;
-	bh=Ig107Ky/TMZJdiRV1W150SfNydtSmr8TmL8soenjx+g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j57gtSAC1cMXjcJMPIEh8aVyRuiIyaq8S0p/rTxZeJJvooCyyZxSkUQFP3udjZ6KN7ZnF9plyKywC8i3BI3lESoLLb61Cgn6AyzxmuplUPmP+demWGRo1dklr87OPZVnhv6ZOF9c77/ogJ3tmmDgFe+RTqkQXkJ5+ct6sodH3mM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KJJahlfr; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJJahlfr"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-307325f2436so21460941fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:16:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738336570; x=1738941370; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6Z8jud5I+88j8c5FBdjvwkGiXPpGClS+9lFq2AsRnkI=;
-        b=KJJahlfr92Eo5j0Br0x1FVoYPsWQagAUJzjmXliDoolR1hKIuJJmkUHe/vgdAmc2DR
-         yqe80Yy9CTzec3Ss+tF/EDAQRQhWjLtd+p3L7+JdpNkYCS61W5kUciKHK5eQ4VNdpFM2
-         ciNMGWNJeMInSS4YDQgL5IsVIfVW4iOAy+ZwXzENpP1pwrxWwJ3DQqgaunaWXTUrcL9p
-         73TSvhV95dERf2E2YoTjwnDfpMmWcR7gXEVwbEd8FFFtDxnA/vPzYrOAw+rNKM0jeQ+V
-         20dYld6kppAG5D+jp4Qffeh3GjAFogepiXGsXSRMXzOQqlosixvANgX2Xr8KuvFfwArL
-         N3xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738336570; x=1738941370;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6Z8jud5I+88j8c5FBdjvwkGiXPpGClS+9lFq2AsRnkI=;
-        b=Takn5ENezYe49+8g3+nRt9bsYm2RSY7S7rJL1eTgQP1nCOoNs1tfFlQrlperP1kETm
-         onQGrgZxerMTXHRYAuo3F9kk/k8u1dUGFyaM4Woi5zIWjGEBuyEBlhoyKh9ucOoPIAgj
-         EX9QD1YGEhJl15HZ++C5cXtolV0x8tGeemA5MDpgqqTw6kcazIilqZTkyluw8xODxkxb
-         gRRqxVLJBTPk1QIW/3glmIR6tMos268Rd3OeVCa0MBZiSmgWa1AVhcxi2/w/dG6xR6RR
-         sQqCn1974cfmFkpPGwJKAmMwQCfLJeuLbMaYaTlj6fgwhGzO1OHmLj7ng5sIgTs6pRaa
-         9dmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUUQWeEisOEH6y7JE/+pnw4kSvqXpauQ5Du41xd87vSTCr3Rh8ibxG09M1qMytd2IXTIDqz8ffO07fj6fI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjBdIqVoZdDdWg/iT9RA6Lu2Nbnm2AoCLHzA0l+XvKVFixPK7m
-	10L1YfVo0NChzRb2n4DeumprwxAeSBHY4eEAyEwUGrTP4LQRCAsW/lrKH8iyUWHaKnLSULFh2fR
-	A1a3arD9q1USC7/ca/VeRjRFq74I=
-X-Gm-Gg: ASbGnctq4RF0RyefD1QS5xmfKb9tdoRywUf3eNTm5+EiXn7e+GTKQxFirJD70sgW50v
-	1Yod+t/elvsGzuY2p597MeM2S5bRsv6AsdBGpTaybzZUokNDQ9aO2w/2WR1y5LQXc0ivQS9eY
-X-Google-Smtp-Source: AGHT+IF/9oeVXgyvyPWRBuHUk5ryjuppXBeuxgnBh8ZZE4dQhtSLnH96GX9gu120E8cEmZ45dNBBmuQkyE4IRUZd0aw=
-X-Received: by 2002:a2e:a987:0:b0:302:17e7:e16d with SMTP id
- 38308e7fff4ca-30796811ed5mr30919231fa.3.1738336569794; Fri, 31 Jan 2025
- 07:16:09 -0800 (PST)
+	s=arc-20240116; t=1738336580; c=relaxed/simple;
+	bh=XLMer+s9oHPsR+PkULh9oJsGpfaaW03RrZ34iF/YTqs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JVSgK/JUyFdOrcfl4OHJeXVJc1+boBhXzQome32qdBprSHM4tBhVQO1S+w7Vg/wWe5hYpqNbo7cE9P/Ro2y7TiCGd3nB78MJCAGp9vg/XVSCpVsuE5QUqkKx+HITzNUyr02yCegCiVSYeoLyiJhDwtS20PvO587KlHZujqtvaGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Fri, 31 Jan
+ 2025 18:16:01 +0300
+Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Fri, 31 Jan
+ 2025 18:16:01 +0300
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+To: Jiri Kosina <jikos@kernel.org>, Alan Stern <stern@rowland.harvard.edu>,
+	Kees Cook <kees@kernel.org>
+CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>, Benjamin Tissoires
+	<bentiss@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Terry Junge
+	<linuxhid@cosmicgizmosystems.com>, <linux-usb@vger.kernel.org>,
+	<linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, syzbot
+	<syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com>,
+	<syzkaller-bugs@googlegroups.com>, <lvc-project@linuxtesting.org>
+Subject: [PATCH v2] HID: usbhid: fix recurrent out-of-bounds bug in usbhid_parse()
+Date: Fri, 31 Jan 2025 18:15:58 +0300
+Message-ID: <20250131151600.410242-1-n.zhandarovich@fintech.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129154920.6773-1-ubizjak@gmail.com> <20250129154920.6773-2-ubizjak@gmail.com>
-In-Reply-To: <20250129154920.6773-2-ubizjak@gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Fri, 31 Jan 2025 16:15:58 +0100
-X-Gm-Features: AWEUYZmiJKIrRvrb0PdIINkYWhcfXp4rLhPq2uHmp-c4ZoM9_9yPUwj1N9jd0FI
-Message-ID: <CAFULd4YZeCZ4vuZyb-ViXYELS0FXDNX9jUNUbQEnqEf+N=uD8A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] x86/bootflag: Use __builtin_parity() when available
-To: x86@kernel.org, linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-On Wed, Jan 29, 2025 at 4:49=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> wro=
-te:
->
-> Compilers (GCC and clang) provide optimized __builtin_parity() function
-> that returns the parity of X, i.e. the number of 1-bits in X modulo 2.
->
-> Use __builtin_parity() built-in function to optimize parity(). This
-> improves generated parity code to just:
->
->   57:   84 db                   test   %bl,%bl
->   59:   7a 5c                   jp     b7 <sbf_init+0xa7>
->
-> where TEST instruction sets parity flag (PF) in EFLAGS, exercised by the
-> follow-up jump instruction.
+Syzbot reports [1] a reemerging out-of-bounds bug regarding hid
+descriptors supposedly having unpredictable bNumDescriptors values in
+usbhid_parse().
 
-Unfortunately, this approach won't fly. As said by Pedro elsewhere:
+The issue stems from the fact that hid_class_descriptor is supposed
+to be a flexible array, however it was sized as desc[1], using only
+one element. Therefore, going beyond 1 element, courtesy of
+bNumDescriptors, may lead to an error.
 
-__builtin functions aren't strictly required to be inlined and can
-generate a library call if the compiler so chooses (how often this
-happens depends on the optimization level and architecture). e.g:
-https://godbolt.org/z/zKPb9hbaM
+Modify struct hid_descriptor by employing __counted_by macro, tying
+together struct hid_class_descriptor desc[] and number of descriptors
+bNumDescriptors. Also, fix places where this change affects work with
+newly updated struct.
 
-Patch is retracted.
+[1] Syzbot report:
 
-Uros.
+UBSAN: array-index-out-of-bounds in drivers/hid/usbhid/hid-core.c:1024:7
+index 1 is out of range for type 'struct hid_class_descriptor[1]'
+...
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ ubsan_epilogue lib/ubsan.c:231 [inline]
+ __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:429
+ usbhid_parse+0x5a7/0xc80 drivers/hid/usbhid/hid-core.c:1024
+ hid_add_device+0x132/0x520 drivers/hid/hid-core.c:2790
+ usbhid_probe+0xb38/0xea0 drivers/hid/usbhid/hid-core.c:1429
+ usb_probe_interface+0x645/0xbb0 drivers/usb/core/driver.c:399
+ really_probe+0x2b8/0xad0 drivers/base/dd.c:656
+ __driver_probe_device+0x1a2/0x390 drivers/base/dd.c:798
+ driver_probe_device+0x50/0x430 drivers/base/dd.c:828
+ __device_attach_driver+0x2d6/0x530 drivers/base/dd.c:956
+ bus_for_each_drv+0x24e/0x2e0 drivers/base/bus.c:457
+ __device_attach+0x333/0x520 drivers/base/dd.c:1028
+ bus_probe_device+0x189/0x260 drivers/base/bus.c:532
+ device_add+0x8ff/0xca0 drivers/base/core.c:3720
+ usb_set_configuration+0x1976/0x1fb0 drivers/usb/core/message.c:2210
+ usb_generic_driver_probe+0x88/0x140 drivers/usb/core/generic.c:254
+ usb_probe_device+0x1b8/0x380 drivers/usb/core/driver.c:294
 
->
-> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> ---
->  arch/x86/kernel/bootflag.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kernel/bootflag.c b/arch/x86/kernel/bootflag.c
-> index 4d89a2d80d0f..d63247d7abd4 100644
-> --- a/arch/x86/kernel/bootflag.c
-> +++ b/arch/x86/kernel/bootflag.c
-> @@ -22,6 +22,9 @@ int sbf_port __initdata =3D -1; /* set via acpi_boot_in=
-it() */
->
->  static bool __init parity(u8 v)
->  {
-> +#if __has_builtin(__builtin_parity)
-> +       int x =3D __builtin_parity(v);
-> +#else
->         int x =3D 0;
->         int i;
->
-> @@ -29,7 +32,7 @@ static bool __init parity(u8 v)
->                 x ^=3D (v & 1);
->                 v >>=3D 1;
->         }
-> -
-> +#endif
->         return !!x;
->  }
->
-> --
-> 2.42.0
->
+Reported-by: syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=c52569baf0c843f35495
+Fixes: f043bfc98c19 ("HID: usbhid: fix out-of-bounds bug")
+Cc: stable@vger.kernel.org
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+---
+v1: https://lore.kernel.org/all/20240524120112.28076-1-n.zhandarovich@fintech.ru/
+
+v2: Instead of essentially forcing usbhid_parse() to only check
+the first descriptor, modify hid_descriptor struct to anticipate
+multiple hid_class_descriptor in desc[] by utilizing __counted_by
+macro. This change, in turn, requires several other ones wherever
+that struct is used. Adjust commit description accordingly.
+
+P.S. Since syzbot currently breaks trying to reproduce the issue,
+with or without this patch, I only managed to test it locally with
+syz repros. Would greatly appreciate other people's effort to test
+it as well.
+
+P.P.S. Terry Junge <linuxhid@cosmicgizmosystems.com> suggested a
+different approach to this issue, see:
+Link: https://lore.kernel.org/all/f7963a1d-e069-4ec9-82a1-e17fd324a44f@cosmicgizmosystems.com/
+
+ drivers/hid/usbhid/hid-core.c       |  2 +-
+ drivers/usb/gadget/function/f_fs.c  |  3 ++-
+ drivers/usb/gadget/function/f_hid.c | 22 ++++++++++++++--------
+ include/linux/hid.h                 |  2 +-
+ 4 files changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+index a6eb6fe6130d..eb4807785d6d 100644
+--- a/drivers/hid/usbhid/hid-core.c
++++ b/drivers/hid/usbhid/hid-core.c
+@@ -1010,7 +1010,7 @@ static int usbhid_parse(struct hid_device *hid)
+ 		return -ENODEV;
+ 	}
+ 
+-	if (hdesc->bLength < sizeof(struct hid_descriptor)) {
++	if (hdesc->bLength < struct_size(hdesc, desc, hdesc->bNumDescriptors)) {
+ 		dbg_hid("hid descriptor is too short\n");
+ 		return -EINVAL;
+ 	}
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 2dea9e42a0f8..a4b6d7cbf56d 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -2550,7 +2550,8 @@ static int __must_check ffs_do_single_desc(char *data, unsigned len,
+ 	case USB_TYPE_CLASS | 0x01:
+ 		if (*current_class == USB_INTERFACE_CLASS_HID) {
+ 			pr_vdebug("hid descriptor\n");
+-			if (length != sizeof(struct hid_descriptor))
++			if (length < sizeof(struct hid_descriptor) +
++				     sizeof(struct hid_class_descriptor))
+ 				goto inv_length;
+ 			break;
+ 		} else if (*current_class == USB_INTERFACE_CLASS_CCID) {
+diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
+index 740311c4fa24..ec8c2e2d6812 100644
+--- a/drivers/usb/gadget/function/f_hid.c
++++ b/drivers/usb/gadget/function/f_hid.c
+@@ -139,13 +139,17 @@ static struct usb_interface_descriptor hidg_interface_desc = {
+ };
+ 
+ static struct hid_descriptor hidg_desc = {
+-	.bLength			= sizeof hidg_desc,
++	.bLength			= struct_size(&hidg_desc, desc, 1),
+ 	.bDescriptorType		= HID_DT_HID,
+ 	.bcdHID				= cpu_to_le16(0x0101),
+ 	.bCountryCode			= 0x00,
+ 	.bNumDescriptors		= 0x1,
+-	/*.desc[0].bDescriptorType	= DYNAMIC */
+-	/*.desc[0].wDescriptorLenght	= DYNAMIC */
++	.desc				= {
++		{
++			.bDescriptorType	= 0, /* DYNAMIC */
++			.wDescriptorLength	= 0, /* DYNAMIC */
++		}
++	}
+ };
+ 
+ /* Super-Speed Support */
+@@ -936,16 +940,18 @@ static int hidg_setup(struct usb_function *f,
+ 		switch (value >> 8) {
+ 		case HID_DT_HID:
+ 		{
+-			struct hid_descriptor hidg_desc_copy = hidg_desc;
++			DEFINE_FLEX(struct hid_descriptor, hidg_desc_copy,
++				desc, bNumDescriptors, 1);
++			*hidg_desc_copy = hidg_desc;
+ 
+ 			VDBG(cdev, "USB_REQ_GET_DESCRIPTOR: HID\n");
+-			hidg_desc_copy.desc[0].bDescriptorType = HID_DT_REPORT;
+-			hidg_desc_copy.desc[0].wDescriptorLength =
++			hidg_desc_copy->desc[0].bDescriptorType = HID_DT_REPORT;
++			hidg_desc_copy->desc[0].wDescriptorLength =
+ 				cpu_to_le16(hidg->report_desc_length);
+ 
+ 			length = min_t(unsigned short, length,
+-						   hidg_desc_copy.bLength);
+-			memcpy(req->buf, &hidg_desc_copy, length);
++						   hidg_desc_copy->bLength);
++			memcpy(req->buf, hidg_desc_copy, length);
+ 			goto respond;
+ 			break;
+ 		}
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index cdc0dc13c87f..85a58ae2c4a0 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -739,7 +739,7 @@ struct hid_descriptor {
+ 	__u8  bCountryCode;
+ 	__u8  bNumDescriptors;
+ 
+-	struct hid_class_descriptor desc[1];
++	struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
+ } __attribute__ ((packed));
+ 
+ #define HID_DEVICE(b, g, ven, prod)					\
