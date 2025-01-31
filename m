@@ -1,133 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F17E91B6CE9;
-	Fri, 31 Jan 2025 10:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738321024; cv=none; b=Oq1ikV7Dne44GsIN2sVTVJPcNbyGjPGJQP9XK7w4JskQLy8vUBQUx2Tec7CF6j1UrKMeF8NQGSPTWTQ2AOG5Oz6K6RziS+IABgn11oXZV67y+4wLF+3K3ZcowQANlum697jjCrvFc1xNI5r+Rr8SqiG1Axgc926lysNwDiLz6ZI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738321024; c=relaxed/simple;
-	bh=Ju62Gi05ZY1w2Y4MQ+7vJS2qhOAzNeduVZhHxWSdkoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fgULTJ9HUFj+wDEt2gGEzxZS1a2N3vJTk/zvFgrRd3cNpiKENn4o8rYKOucNsYl+sTLxdsBbZHKKnkgsRjsnedkAD1tWywWFFMpyUSrYNbbEmqqQNDhdJKHIGUSlTvcW6joqN23QbZAM35k9jOVUERKYhQdmewl444Cosm8LyBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EEE1497;
-	Fri, 31 Jan 2025 02:57:26 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B79BC3F63F;
-	Fri, 31 Jan 2025 02:56:58 -0800 (PST)
-Date: Fri, 31 Jan 2025 10:56:56 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>, James Morse <james.morse@arm.com>,
-	stable@vger.kernel.org, Moritz Fischer <moritzf@google.com>,
-	Pedro Martelletto <martelletto@google.com>,
-	Jon Masters <jonmasters@google.com>
-Subject: Re: [PATCH] arm64: Move storage of idreg overrides into mmuoff
- section
-Message-ID: <Z5yseC1kCyTcwlMy@J2N7QTR9R3>
-References: <20250130204614.64621-1-oliver.upton@linux.dev>
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B6F322E;
+	Fri, 31 Jan 2025 11:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738321379; cv=pass; b=mWf+rX+ybMwlBcM2ZggjfQvvbxDxOQ1UWDNwyXb6SL5KedJylgdFJ6dIfRYM18mQZrNB6AcJrh3Ly3/citYqWFBM9JhZbmJUfA7YvJISG1MmqHr2XsVxNpXKxR/H25lQCXq8Drs+6gBegbQj85Lt8VLSuNxqZ6ZKJw0SKZp+1pk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738321379; c=relaxed/simple;
+	bh=ezAMBD29GkkB4e4t8a/2A1rSsnKm9LPumN4NESuMnWY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ovoLeXED2X7b7qgwcXL2v9FDI1fM+qlmf28AbwZvzEMg+YR+1HUz7Ag1dTXUbM4NPhwhzxP7d72o7TayOryF0hvJvkE9cz21GlwCVe9O3mRCEeuxC7MThT2Jcpuv8RtT2lmrm+enxu8UMoCCuxaWfTpxov+81TBX3bntWIpLNMo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b=AsPyoanP; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b="AsPyoanP"
+ARC-Seal: i=1; a=rsa-sha256; t=1738321347; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Hkql+bgGsvPgUJbPyMiWHR3VvDrgD3/F2Fvco6ZqedgPxoNDct9nPoroK/UOC1kg8fiKi2MwL6CgzCAE9/gzg+T1Mk/Ly2GWJSHMUtmWzSIMwqycUrHJHMLwwhLw8iJbxWJN72z1lyC0zLymeHrPlQTegGctm93eEpsF9ka2wBY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738321347; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ezAMBD29GkkB4e4t8a/2A1rSsnKm9LPumN4NESuMnWY=; 
+	b=WSkZ36BG4IYlZYIZSpBtsHGTfoBKrNrVDfaB0tSwC/7NfiFt6NlFho0ZcVElMwuh8Caup6iLzQ6Bd7JCBaCb5ufANpTjllZt+UWXOMFZ64xw9t7MYOmuL0aykqsGXOSd/1DClH6fhba/X4oX+gjFxdkVLeDDFRdnrXWke6jCCFk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=louisalexis.eyraud@collabora.com;
+	dmarc=pass header.from=<louisalexis.eyraud@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738321347;
+	s=zohomail; d=collabora.com; i=louisalexis.eyraud@collabora.com;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=ezAMBD29GkkB4e4t8a/2A1rSsnKm9LPumN4NESuMnWY=;
+	b=AsPyoanPmBfmqtoZVvtj7k2FLUm21bkSi7HNPPMp6hR2oKm2q94Lfi7d+mr4lpz/
+	dMn9S51J90ADF/Qj45pmfVL4/k7kCTjMGoR9DwKrOHHKj4EVM7qXoaT0Wnf13hXiPYZ
+	wZ0BSVaw5ZheIl4LueSw73Y7ZVpWXx0WqFE+H7VU=
+Received: by mx.zohomail.com with SMTPS id 1738321342354706.4067778296129;
+	Fri, 31 Jan 2025 03:02:22 -0800 (PST)
+Message-ID: <8b924147e03693d04e1800b19a65ac773b699365.camel@collabora.com>
+Subject: Re: [PATCH 2/3] drm/panfrost: Add support for Mali on the MT8370 SoC
+From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard	
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	 <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring	
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Boris
+ Brezillon <boris.brezillon@collabora.com>, Steven Price	
+ <steven.price@arm.com>, kernel <kernel@collabora.com>, dri-devel	
+ <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>,
+  linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>,  linux-mediatek
+ <linux-mediatek@lists.infradead.org>
+Date: Fri, 31 Jan 2025 12:01:51 +0100
+In-Reply-To: <1003b393-770a-4e2b-b5ed-054f1f9072b4@kernel.org>
+References: <20250116-mt8370-enable-gpu-v1-0-0a6b78e925c8@collabora.com>
+	 <20250116-mt8370-enable-gpu-v1-2-0a6b78e925c8@collabora.com>
+	 <20250118-meticulous-black-caracal-ec7f0d@krzk-bin>
+	 <194b7237128.10f9923a41656565.5574753983898665940@collabora.com>
+	 <1003b393-770a-4e2b-b5ed-054f1f9072b4@kernel.org>
+Organization: Collabora Ltd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130204614.64621-1-oliver.upton@linux.dev>
+X-ZohoMailClient: External
 
-Hi Oliver,
+On Thu, 2025-01-30 at 14:21 +0100, Krzysztof Kozlowski wrote:
+> On 30/01/2025 13:15, Louis-Alexis Eyraud wrote:
+> > Hello,
+> >=20
+> > sorry for the delay,
+>=20
+> You gave yourself 12 days to respond, which is fine. But to me, you
+> gave
+> 15 minutes and immediately sent v2.
+>=20
+> So now your v2 will be still rejected.
+>=20
+> Best regards,
+> Krzysztof
 
-On Thu, Jan 30, 2025 at 12:46:15PM -0800, Oliver Upton wrote:
-> There are a few places where the idreg overrides are read w/ the MMU
-> off, for example the VHE and hVHE checks in __finalise_el2. And while
-> the infrastructure gets this _mostly_ right (i.e. does the appropriate
-> cache maintenance), the placement of the data itself is problematic and
-> could share a cache line with something else.
-> 
-> Depending on how unforgiving an implementation's handling of mismatched
-> attributes is, this could lead to data corruption. In one observed case,
-> the system_cpucaps shared a line with arm64_sw_feature_override and the
-> cpucaps got nuked after entering the hyp stub...
+Hello Krzysztof,
 
-This doesn't sound right. Non-cacheable/Device reads should not lead to
-corruption of a cached copy regardless of whether that cached copy is
-clean or dirty.
+my apologies if you felt offended I sent my v2 patchset too early after
+replying on the mailing list.
+I meant well.
 
-The corruption suggests that either we're performing a *write* with
-mismatched attributes (in which case the use of .mmuoff.data.read below
-isn't quite right), or we have a plan invalidate somewhere without a
-clean (and e.g. something else might need to be moved into
-.mmuoff.data.write).
+As I felt your first remarks were appropriate and precise enough to me,
+I've submitted a second version so that the modifications to review
+could be available shortly after my reply.=20
 
-Seconding Ard's point, I think we need to understand this scenario
-better.
+I'll be more cautious next time.
 
-To be clear, I think moving all the overrides into .mmuoff.data.read
-makes sense, but it doesn't explain the problem above, and it seems like
-there must be a latent issue (which this might only mask rather than
-solve).
-
-Mark.
-
-> Even though only a few overrides are read without the MMU on, just throw
-> the whole lot into the mmuoff section and be done with it.
-> 
-> Cc: stable@vger.kernel.org # v5.15+
-> Tested-by: Moritz Fischer <moritzf@google.com>
-> Tested-by: Pedro Martelletto <martelletto@google.com>
-> Reported-by: Jon Masters <jonmasters@google.com>
-> Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
-> ---
->  arch/arm64/kernel/cpufeature.c | 25 ++++++++++++++-----------
->  1 file changed, 14 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index d41128e37701..92506d9f90db 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -755,17 +755,20 @@ static const struct arm64_ftr_bits ftr_raz[] = {
->  #define ARM64_FTR_REG(id, table)		\
->  	__ARM64_FTR_REG_OVERRIDE(#id, id, table, &no_override)
->  
-> -struct arm64_ftr_override id_aa64mmfr0_override;
-> -struct arm64_ftr_override id_aa64mmfr1_override;
-> -struct arm64_ftr_override id_aa64mmfr2_override;
-> -struct arm64_ftr_override id_aa64pfr0_override;
-> -struct arm64_ftr_override id_aa64pfr1_override;
-> -struct arm64_ftr_override id_aa64zfr0_override;
-> -struct arm64_ftr_override id_aa64smfr0_override;
-> -struct arm64_ftr_override id_aa64isar1_override;
-> -struct arm64_ftr_override id_aa64isar2_override;
-> -
-> -struct arm64_ftr_override arm64_sw_feature_override;
-> +#define DEFINE_FTR_OVERRIDE(name)					\
-> +	struct arm64_ftr_override __section(".mmuoff.data.read") name
-> +
-> +DEFINE_FTR_OVERRIDE(id_aa64mmfr0_override);
-> +DEFINE_FTR_OVERRIDE(id_aa64mmfr1_override);
-> +DEFINE_FTR_OVERRIDE(id_aa64mmfr2_override);
-> +DEFINE_FTR_OVERRIDE(id_aa64pfr0_override);
-> +DEFINE_FTR_OVERRIDE(id_aa64pfr1_override);
-> +DEFINE_FTR_OVERRIDE(id_aa64zfr0_override);
-> +DEFINE_FTR_OVERRIDE(id_aa64smfr0_override);
-> +DEFINE_FTR_OVERRIDE(id_aa64isar1_override);
-> +DEFINE_FTR_OVERRIDE(id_aa64isar2_override);
-> +
-> +DEFINE_FTR_OVERRIDE(arm64_sw_feature_override);
->  
->  static const struct __ftr_reg_entry {
->  	u32			sys_id;
-> 
-> base-commit: 1dd3393696efba1598aa7692939bba99d0cffae3
-> -- 
-> 2.39.5
-> 
-> 
+Regards,
+Louis-Alexis
