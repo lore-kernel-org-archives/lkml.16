@@ -1,111 +1,79 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7251C1386C9;
-	Fri, 31 Jan 2025 18:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEE91386C9;
+	Fri, 31 Jan 2025 18:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738347535; cv=none; b=HpoTRg66WgrAlA7KX01yragiRXNA1AskDrYDYoGBCUEZdRbX/CoMQCa/IIQFKiWokztZt0miTLJGglGSrrhXudlU2nfl7CHH5cX2SZ75oRM7oFMpy2kEdIsSKvjaJEidNcoDPjO95UctrNx9bmAGtofyF91yiGmSKF/3H5LeM+s=
+	t=1738347941; cv=none; b=ltXkFt0ESUPTKAA8Tqlg14RJ1F3Ex2YsIuwmCRbtmSmaykFSIZrVuPtbHofUvGdX8Ba4o0w+ln8ck+VKov3i3eOSPXVVxjq7UJh3UzrzrmI3jJ4fLACDRlWC+VX+dPW71vwKafY/af7PYzXSgP56LvvAkktlAq1H19y21eI/1v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738347535; c=relaxed/simple;
-	bh=dskuolPKupTwvryUFCMQnFh6VVqyxehDH0iWHT5oTuo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kTkbYwl21BEvxqYE0TZFkTbuNIZ5OfaK8wY6er2zJsonHPCowhLbwIWFMe2BWGuDwU+52Vo1JRoKGhd+n2z+atrbPIWF7IlXkPu43z/BEgoEPg0ldIYwzDFXaG6ou/4aV1XfkC47DpWLht42PBmmW58Gm0Tnn72gF548YjtTxos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yl3zN4NWmz6K8L9;
-	Sat,  1 Feb 2025 02:18:08 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CCE1C140520;
-	Sat,  1 Feb 2025 02:18:50 +0800 (CST)
-Received: from localhost (10.195.244.178) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 31 Jan
- 2025 19:18:50 +0100
-Date: Fri, 31 Jan 2025 18:18:48 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Esteban Blanc <eblanc@baylibre.com>
-CC: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
-	<Michael.Hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
-	<nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v3 3/6] iio: adc: ad4030: add averaging support
-Message-ID: <20250131181848.00003c67@huawei.com>
-In-Reply-To: <20250130-eblanc-ad4630_v1-v3-3-052e8c2d897d@baylibre.com>
-References: <20250130-eblanc-ad4630_v1-v3-0-052e8c2d897d@baylibre.com>
-	<20250130-eblanc-ad4630_v1-v3-3-052e8c2d897d@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738347941; c=relaxed/simple;
+	bh=14PapOF9arm0Mp99KahmVzvCTHwjpcSVGSyFXtbT/YI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OTfgn5z91lwL/U7KRQj0iB8oGH3Dk9XOK3/FKkHUWDCxU6K8ELemhGnIYtmA0si8QzWwSDrcMiPiUW2vTmMU4miFm8fqjs93TnBatwmBbc0w628Q/0d7QS1R8PPqoRIzqO4yLI+W6QMLZFSyTUy7Y5KpiwqFffZy4r0Fg+lv2mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=p8X2cw2n; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="p8X2cw2n"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=DeK+E3UWXmeeQSfCZOJZEGlV6yQ1IUdoPqkRbHcneDM=; b=p8X2cw2ns3zjZjtrsxUeo9nQoD
+	83vokCjh7SElQcKs8UCOP/eQWs6bqwKgDNqvb6yVijFxP70eFHRLeGvaA0SRW8WQaoU6Joaj0pOy8
+	o5SirEuImqSVObFtolyc7TPjxMJFiIkn6E0dzdIe8pKrfcQBE2+dur7dLm1JQ+hDgjD6CKuoQCDvK
+	PdChZXnjMfKgHMUJAWg26EPJPmIUC+8Y+QNqHtj/ripyneN78T1L4X/rXUFl7s8tkjLISRaY+ouVM
+	C5nfn//sOeNx9KXt1htxesH8IzwE6LrKxZB/PKRAkrdvwI9oZLl3FieQ/nyrkOZ4bVuIQALNxt+ko
+	h0znrdaQ==;
+Received: from [86.39.10.178] (helo=phil.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tdvhq-0001qj-9l; Fri, 31 Jan 2025 19:25:30 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: vkoul@kernel.org, kishon@kernel.org
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ quentin.schulz@cherry.de, sebastian.reichel@collabora.com,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, dse@thaumatec.com
+Subject: Re: [PATCH v5 0/2] MIPI DSI phy for rk3588
+Date: Fri, 31 Jan 2025 19:25:28 +0100
+Message-ID: <2498993.ElGaqSPkdT@phil>
+In-Reply-To: <20241203164934.1500616-1-heiko@sntech.de>
+References: <20241203164934.1500616-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, 30 Jan 2025 12:08:27 +0100
-Esteban Blanc <eblanc@baylibre.com> wrote:
+Hi phy-maintainers,
 
-> This add support for the averaging mode of AD4030 using oversampling IIO
-> attribute
+Am Dienstag, 3. Dezember 2024, 17:49:30 MEZ schrieb Heiko Stuebner:
+> This adds the phy driver need for DSI output on rk3588.
 > 
-> Signed-off-by: Esteban Blanc <eblanc@baylibre.com>
-A couple of comments inline. The one about the gpio wiggling
-is just me venting at silly hardware, so feel free to ignore that!
-Other one is a trivial 'nice to have' for formatting.
+> The phy itself is used for both DSI output and CSI input, though the
+> CSI part for the whole chain needs a lot more work, so is left out for
+> now and only the DSI part implemented.
+> 
+> This allows the rk3588 with its current VOP support to drive a DSI display
+> using the DSI2 controller driver I'll submit in a next step.
+> 
+> Only generic phy interfaces are used, so the DSI part is pretty straight
+> forward.
 
-Jonathan
+a tiny little ping :-)
 
->  
-> +static const int ad4030_average_modes[] = {
-> +	1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384,
-> +	32768, 65536
-> +};
-Groups of 8 often best option for lists like this. Make it easy to see how
-many there are.
+Is this still in a queue, or did it fall through the cracks during xmas?
 
-> @@ -498,9 +538,11 @@ static int ad4030_set_mode(struct iio_dev *indio_dev, unsigned long mask)
->  static int ad4030_conversion(struct iio_dev *indio_dev)
->  {
->  	struct ad4030_state *st = iio_priv(indio_dev);
-> -	const struct iio_scan_type scan_type = indio_dev->channels->scan_type;
-> -	unsigned char diff_realbytes = BITS_TO_BYTES(scan_type.realbits);
-> +	unsigned char diff_realbytes =
-> +		BITS_TO_BYTES(st->current_scan_type->realbits);
->  	unsigned int bytes_to_read;
-> +	unsigned long cnv_nb = BIT(st->avg_log2);
-> +	unsigned int i;
->  	int ret;
->  
->  	/* Number of bytes for one differential channel */
-> @@ -511,10 +553,12 @@ static int ad4030_conversion(struct iio_dev *indio_dev)
->  	/* Mulitiply by the number of hardware channels */
->  	bytes_to_read *= st->chip->num_voltage_inputs;
->  
-> -	gpiod_set_value_cansleep(st->cnv_gpio, 1);
-> -	ndelay(AD4030_TCNVH_NS);
-> -	gpiod_set_value_cansleep(st->cnv_gpio, 0);
-> -	ndelay(st->chip->tcyc_ns);
-> +	for (i = 0; i < cnv_nb; i++) {
-> +		gpiod_set_value_cansleep(st->cnv_gpio, 1);
-> +		ndelay(AD4030_TCNVH_NS);
-> +		gpiod_set_value_cansleep(st->cnv_gpio, 0);
-> +		ndelay(st->chip->tcyc_ns);
-Hmm. This is a bit nasty. To actually use this in anger
-and get decent performance I guess a PWM with appropriate
-functionality to do the right length pull train is the
-way to go.
+Thanks a lot
+Heiko
 
-oh well, nothing wrong with this as a solution beyond it
-likely taking much longer than needed!
-
-> +	}
 
