@@ -1,123 +1,137 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4871F5604;
-	Fri, 31 Jan 2025 21:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B2D18E764
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 21:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738359992; cv=none; b=j3UkOP67P30VPOXR/x0TwYWDHYXZehp18BvqT8o/teN/WOrRFXxi65weAs4mKbK8ShfHdEh4Dow/lcTdfvGKL/kMJzrD/W3GOlzykhPay+KaeEFYeGbr+IR//G54FRYQS5K5qWLt7ZRhXKwvdBr9r8lkBjbBQmqenpfN3GqWSmw=
+	t=1738360034; cv=none; b=ucZ2YrisuYziJYdBz7oLeZqVp01OMrNxfgUMVaSyDXb/sVPx7hBJmODkN69T7t/tLQp8HeM0j7kMn4bMTk3F2zBdxc9Mgruo5TmfLcfB4K8wV5cSvEFA5UZ+0cVat4CieSy65Zd4JQJiOmlGc85XoDUZ0x968S6V62CbtrPGpSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738359992; c=relaxed/simple;
-	bh=9cac8FnO4nhbDRL2rPDTPfGcl+eVGVmuhpIT9qmmiPo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hXGRLKv3d9EX4qNMfSCXJ/RhA0pMlzmr8reb2Vql6GZpmugU14j00l+44Zvi+LHz8w0G31sdqdquMD/L9JkrRNiKi6cznmu/iVPkvaDeoD86VwGmablEtDV3n7xmWonDfh3DUR71l93fXC1EVCsNQtXWyDe9n+Hxk8nXXfNHFks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uMHg+y8Z; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738360034; c=relaxed/simple;
+	bh=TdioR9l6OB/5FZYYq0Y2pfhMgBfw74inkF+2LN9RksU=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=qzmW6nPp8mMKnNo5mcqBniU2mdOmepN3ABA8pcF3Mr0VYFiS4GaYK3FkMC6daYM+9s5pT/3JPyCnLUXNqhKDtdW3AeoITbl3VM8vA91l+GIKiXx0Tupm0+0b8/wRBRGsagsk/85uri+XQ1j31E9EjgiT+HI7uuifjA7DeFLgBc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MdLszAOl; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uMHg+y8Z"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 50VLkC8N1779739
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 31 Jan 2025 15:46:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738359972;
-	bh=A7c/NkHmHtqpwbkPM1skSj+DNOKS57ZJqLoCdkOwbrE=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=uMHg+y8ZCMOc2L9Dwi74OcNf7ZLjhFyvwozqXSTUw+L+mDwi3fXnS01aer8g9T+yh
-	 Q24Fggqn07LNfQJIhR5AwNDjx1k0UTKsklrbtc0gDqZULFm74j4Q0CxsMHh/es63be
-	 SgnjMTfFONBtV35eIpZQovuHpKfakmYDYlPm5otI=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 50VLkCIp108361;
-	Fri, 31 Jan 2025 15:46:12 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 31
- Jan 2025 15:46:11 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 31 Jan 2025 15:46:11 -0600
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 50VLkBD0082734;
-	Fri, 31 Jan 2025 15:46:11 -0600
-From: Judith Mendez <jm@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Davis
-	<afd@ti.com>,
-        Hari Nagalla <hnagalla@ti.com>, Judith Mendez <jm@ti.com>
-Subject: [PATCH v2 3/9] arm64: dts: ti: k3-am62a-wakeup: Add R5F device node
-Date: Fri, 31 Jan 2025 15:46:05 -0600
-Message-ID: <20250131214611.3288742-4-jm@ti.com>
-X-Mailer: git-send-email 2.48.0
-In-Reply-To: <20250131214611.3288742-1-jm@ti.com>
-References: <20250131214611.3288742-1-jm@ti.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MdLszAOl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738360031;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uAN6v3BNpuQVpPwS8NbavOxkp0zp31YDjnQkNM/zvWU=;
+	b=MdLszAOlLOO1kKLaApNgKo9JtauX0e7krfce8nC16PT9FCq2FeGphajpaS/TkjcsArGjj8
+	OArpXxQ/0AjYh3l5tlMP+I1Mm25tzsx1NB/nffs0n6/YXX7NFdjtWsUIiRfKFrQNg4DWK3
+	GYtq7nqbCJ+JZ6Voa4/d2YlXIQcpl+Y=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-154-aF-va-0rPMG9Sl_Rt-acLw-1; Fri, 31 Jan 2025 16:47:08 -0500
+X-MC-Unique: aF-va-0rPMG9Sl_Rt-acLw-1
+X-Mimecast-MFC-AGG-ID: aF-va-0rPMG9Sl_Rt-acLw
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-46fa764f79cso43405921cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:47:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738360028; x=1738964828;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uAN6v3BNpuQVpPwS8NbavOxkp0zp31YDjnQkNM/zvWU=;
+        b=kkNgc42ZtwmLIkBna3jP1bODA9aHzkk6ZViD93cqOvM1sJWyTSIieQt4oCQi//2ofQ
+         s42BWWT6gd5WXj/e7mxwy75xRWOOhV9jvbP4843mHE4rybqKPVPXRCk5VvsP3XUzrTmM
+         43Q1Bjb5k0XHb7FGFpi+20m1ehmgvXiV56zXyuM4yhQ8NfBH5phAFRUvxrHjsSH24r1f
+         sdXjd/BbXtlVym3TzG6akHdcaqpEGtbVpbeQLM5rSNAumNSov9QtligYAJp+iVPMJwvc
+         fpaPaO4Aw36XdvxtPRCbJ7iwRCcv4DcnSL7qwk9/zHie+QRMakHRNr5vWK5hR0T/FXa7
+         iXrw==
+X-Gm-Message-State: AOJu0YxLdLQY3hzTa+DMt+2Zq0bcPlypooPf4gBHQGGdeBekZ84qEREu
+	o7LpL5SzRc968CdjoBdwK+YqWmIp6puslw4YpgXpq5r5LxaFYeb9GO3JVsA2NMzFaPUdKN+OmJi
+	078n1QpAP7ObvHLdg0ClQ4/kALlhPalEJ6WPz6fQl6IJXZdTaZBjDSy3wNyzUZA==
+X-Gm-Gg: ASbGncu3z6z+xtWhdjjwpQVu+2Dn7vVEkSe5AcXcBGYJtBwoiCCMqZYhYRFrktlhEZj
+	iSzwFa4V0l8gBnqFGHlcax153h5UfIrpLCNGsiXyxndSeDKJsXwKUmm813v6rUVyTnv0Z5iZ1Jy
+	cOmQbxg57dns1RU2MYe0YKZhIL1UakMjzPbAAYCsTpXmPWLPxYWC0ziSvtq2H5Dhz2r8fbGr2yD
+	Y7Lag/HHM6gjonJUsXZOE55rwetVS/rO/VantEigoMb9GB8vE+wmNEtwTkxsWybhSN/3p+6QSBc
+	dQModcbjqC8qsPFA8W7vTnGH7UWArmcWNStVk+zLhmXd1NGloXU=
+X-Received: by 2002:ac8:6f0f:0:b0:467:6c18:9857 with SMTP id d75a77b69052e-46fd0b6f998mr208109191cf.37.1738360028414;
+        Fri, 31 Jan 2025 13:47:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF+AfguvmY5vGMQD9Z5QpI0sdjPyDZrCDWPzOIiArJYxXMcoqDFbFHB4+sG5dXzhD2VFuePqA==
+X-Received: by 2002:ac8:6f0f:0:b0:467:6c18:9857 with SMTP id d75a77b69052e-46fd0b6f998mr208108971cf.37.1738360028151;
+        Fri, 31 Jan 2025 13:47:08 -0800 (PST)
+Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0e312asm22428501cf.43.2025.01.31.13.47.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 13:47:07 -0800 (PST)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <14eb5880-7df1-4717-8f6e-e667328c369d@redhat.com>
+Date: Fri, 31 Jan 2025 16:47:06 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] locking/lockdep: Disable KASAN instrumentation of
+ lockdep.c
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will.deacon@arm.com>, Boqun Feng <boqun.feng@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+References: <20250131165020.878944-1-longman@redhat.com>
+Content-Language: en-US
+In-Reply-To: <20250131165020.878944-1-longman@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Devarsh Thakkar <devarsht@ti.com>
+On 1/31/25 11:50 AM, Waiman Long wrote:
+> Both KASAN and LOCKDEP are commonly enabled in building a debug kernel.
+> Each of them can significantly slow down the speed of a debug kernel.
+> Enabling KASAN instrumentation of the LOCKDEP code will further slow
+> thing down.
+>
+> Since LOCKDEP is a high overhead debugging tool, it will never get
+> enabled in a production kernel. The LOCKDEP code is also pretty mature
+> and is unlikely to get major changes. There is also a possibility of
+> recursion similar to KCSAN. As the small advantage of enabling KASAN
+> instrumentation to catch potential memory access error is probably
+> not worth the drawback of further slowing down a debug kernel, disable
+> KASAN instrumentation to enable a debug kernel to gain a little bit of
+> speed back.
+>
+> With a debug kernel with both LOCKDEP and KASAN enabled running on a
+> 2-socket 144-thread system, the time to do a "make -j144" kernel build
+> was 18m40.641s. After applying this patch, the parallel kernel build
+> time was reduced to 17m35.136s. This is a reduction of about 66s (5.8%).
+>
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>   kernel/locking/Makefile | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
+> index 0db4093d17b8..8a588b0227b1 100644
+> --- a/kernel/locking/Makefile
+> +++ b/kernel/locking/Makefile
+> @@ -6,6 +6,7 @@ KCOV_INSTRUMENT		:= n
+>   obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
+>   
+>   # Avoid recursion lockdep -> sanitizer -> ... -> lockdep.
+> +KASAN_SANITIZE_lockdep.o := n
+>   KCSAN_SANITIZE_lockdep.o := n
+>   
+>   ifdef CONFIG_FUNCTION_TRACER
 
-AM62A SoCs have a single R5F core in wakeup domain. This core is
-also used as a device manager for the SoC.
+The rationale behind this patch is due to the fact that a similar 
+configured PREEMPT_RT debug kernel is found to be about 3 times slower 
+than the non-RT debug kernel. For the test same system, the parallel 
+build runtime is 59m56.722s. After applying this patch, it is reduced to 
+38m3.348s. Its more than 1/3 reduction is more than I would have 
+expected. So the lockdep code is much more heavily used in a PREEMPT_RT 
+debug kernel.
 
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-Signed-off-by: Judith Mendez <jm@ti.com>
----
-Changes since v1:
-- disable each device node in the voltage domain files and
-  enable at the board level file
-- fix firmware names
----
- arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi | 25 +++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Cheers,
+Longman
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
-index b2c8f53517438..059ef1918898e 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
-@@ -103,6 +103,31 @@ wkup_rti0: watchdog@2b000000 {
- 		status = "reserved";
- 	};
- 
-+	wkup_r5fss0: r5fss@78000000 {
-+		compatible = "ti,am62-r5fss";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x78000000 0x00 0x78000000 0x8000>,
-+			 <0x78100000 0x00 0x78100000 0x8000>;
-+		power-domains = <&k3_pds 119 TI_SCI_PD_EXCLUSIVE>;
-+		status = "disabled";
-+
-+		wkup_r5fss0_core0: r5f@78000000 {
-+			compatible = "ti,am62-r5f";
-+			reg = <0x78000000 0x00008000>,
-+				<0x78100000 0x00008000>;
-+			reg-names = "atcm", "btcm";
-+			ti,sci = <&dmsc>;
-+			ti,sci-dev-id = <121>;
-+			ti,sci-proc-ids = <0x01 0xff>;
-+			resets = <&k3_reset 121 1>;
-+			firmware-name = "am62a-wkup-r5f0_0-fw";
-+			ti,atcm-enable = <1>;
-+			ti,btcm-enable = <1>;
-+			ti,loczrama = <1>;
-+		};
-+	};
-+
- 	wkup_vtm0: temperature-sensor@b00000 {
- 		compatible = "ti,j7200-vtm";
- 		reg = <0x00 0xb00000 0x00 0x400>,
--- 
-2.48.0
 
