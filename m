@@ -1,98 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D0CC8EB;
-	Fri, 31 Jan 2025 06:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84558136353
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 06:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738304490; cv=none; b=FCsfaSvcAwdTYFKo5Hg1EqbuJUHdNmz6mrkg90Y8CPcoJ5px4aU9tPSy0fQdMI2ayJgmdI61GMEi/4KRS48WMHqMp5bBF8kQ3cnlTIeldsHnSYiFdewQJftrfNjxhpLOPD2KrLRdPrk50DnMJHWZKrD7sy8Gsxz5LDErq3RDTtY=
+	t=1738304572; cv=none; b=lJssIboA1BUBdncKlng7Z8vhvsvakxRZax5DzX+nVTaGluullE0skUNxQJeQ4UNBFmb9UY7W3Y8Q661U4IW9MqOdWvqNdvnE8q2TtONvsgkj2RNMP3F4/4mfbIpb0vrqWu3bY8KnWp48ONWlPYOLZMA4El0oFNzIurWy8mVJm8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738304490; c=relaxed/simple;
-	bh=4457f3QO7jxAij1w8K8qI9z2zpN0Sb/yTbSaXGKXzAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=br9unCWde18V07l7eyuzwUWBQ81PhLZh9vIY3+9Q+u5BI4iHTjp4wjHX60lqw3yldmF96yKZs7WX/GaSf0dOQtyhVNfnSwksOCZqUaKNEumt9fFn2lYUrHTLGp5JH6WRJ987hk41Zrq0itDruR0Gevg92v6BgCW8u98c7OCGFQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BjzaAp7R; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738304572; c=relaxed/simple;
+	bh=txktSzkB8qp+h7B6PL4XI68VaK515PGsGP9PT1XlBzs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aJQLf6e7KwbqO8kHtR6LspsD+TpBGyi0NvbqRaQXqDTTX227U+qT2E7c5C0GAfHNB8GHB2qFVH8wOokZwC9v5rATUdg5htWeXK9zbOiojd1XCbYccbSPlvuCZEWh7BR3gg75+erCogvUGHbwmC+OaQGO6zx179bryQvMyGz4yAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZmNxUlJY; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BjzaAp7R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738304488; x=1769840488;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4457f3QO7jxAij1w8K8qI9z2zpN0Sb/yTbSaXGKXzAQ=;
-  b=BjzaAp7RuWCGEq2EGRmZmq376vgWvNLwp72iFMljd4h2P0qxod4EtIL+
-   rXRVzYR20/VZtOchotBT3inaLXy2nfDDA0pSRegvwQORcQkyTeDTKvw1n
-   s58tu5q3eOSh7y3Iec2DTZz701tYk/rnbeq+uidubgsN6vobtXivWZd/I
-   0DAHYxR8P1Lk04TdKNvO3gO7zhTjOvGy1ivdsrrJuzu/tK/8TzbWetPfj
-   gP8x10G4OLfOxhyHuq93ss+SdWBThWEa4UHPtiAHi+kTXRm9kEqQTHXzH
-   GH2QhRgUxysQjX3cJ7czeXIuP+UDQCet2lem/SWoXryGXXz4zQAt4P6+0
-   A==;
-X-CSE-ConnectionGUID: EZiD/ztZROeXaQyGj+m6lQ==
-X-CSE-MsgGUID: aDeXSpepS1acpB0xgdmJnA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="38898451"
-X-IronPort-AV: E=Sophos;i="6.13,247,1732608000"; 
-   d="scan'208";a="38898451"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 22:21:28 -0800
-X-CSE-ConnectionGUID: 8/BkORJtSKaC4/WFwBOUug==
-X-CSE-MsgGUID: 4dYWIjDlRoyHMpYHStLWJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,247,1732608000"; 
-   d="scan'208";a="110122754"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 22:21:24 -0800
-Date: Fri, 31 Jan 2025 07:17:54 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Cc: anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	wojciech.drewek@intel.com, piotr.raczynski@intel.com,
-	mateusz.polchlopek@intel.com, pawel.kaminski@intel.com,
-	michal.wilczynski@intel.com, intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ice: Add check for devm_kzalloc()
-Message-ID: <Z5xrEtiFC4PtSFp6@mev-dev.igk.intel.com>
-References: <20250131013832.24805-1-jiashengjiangcool@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZmNxUlJY"
+Message-ID: <16e32444-61b0-44f0-9466-b4041dc57267@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738304558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=txktSzkB8qp+h7B6PL4XI68VaK515PGsGP9PT1XlBzs=;
+	b=ZmNxUlJYHMZ1rhYSA3hiwxINUeEVAOjZWa0GMnN21OpVCny8XY6jQn674Z4yvwi3j1UDI4
+	ReWLms9BGaWp+hW997jA/MO/WGIw4jAqKbZuk/UTEYdGwK9J4paf77ayVWMrAAhwZeO7Pk
+	silrX2nMGFP8LBtkt6JQbSMsliaLIl8=
+Date: Thu, 30 Jan 2025 22:22:28 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131013832.24805-1-jiashengjiangcool@gmail.com>
+Subject: Re: [PATCH] selftests: bpf: Support dynamic linking LLVM if static
+ not available
+Content-Language: en-GB
+To: Daniel Xu <dxu@dxuuu.xyz>, shuah@kernel.org, andrii@kernel.org,
+ eddyz87@gmail.com, ast@kernel.org, nathan@kernel.org, daniel@iogearbox.net
+Cc: martin.lau@linux.dev, song@kernel.org, john.fastabend@gmail.com,
+ kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ mykolal@fb.com, ndesaulniers@google.com, morbo@google.com,
+ justinstitt@google.com, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <872b64e93de9a6cd6a7a10e6a5c5e7893704f743.1738276344.git.dxu@dxuuu.xyz>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <872b64e93de9a6cd6a7a10e6a5c5e7893704f743.1738276344.git.dxu@dxuuu.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Jan 31, 2025 at 01:38:32AM +0000, Jiasheng Jiang wrote:
-> Add check for the return value of devm_kzalloc() to guarantee the success
-> of allocation.
-> 
-> Fixes: 42c2eb6b1f43 ("ice: Implement devlink-rate API")
-> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-> ---
->  drivers/net/ethernet/intel/ice/devlink/devlink.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/intel/ice/devlink/devlink.c b/drivers/net/ethernet/intel/ice/devlink/devlink.c
-> index d116e2b10bce..dbdb83567364 100644
-> --- a/drivers/net/ethernet/intel/ice/devlink/devlink.c
-> +++ b/drivers/net/ethernet/intel/ice/devlink/devlink.c
-> @@ -981,6 +981,9 @@ static int ice_devlink_rate_node_new(struct devlink_rate *rate_node, void **priv
->  
->  	/* preallocate memory for ice_sched_node */
->  	node = devm_kzalloc(ice_hw_to_dev(pi->hw), sizeof(*node), GFP_KERNEL);
-> +	if (!node)
-> +		return -ENOMEM;
-> +
 
-Thanks for fixing:
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
->  	*priv = node;
->  
->  	return 0;
-> -- 
-> 2.25.1
+
+On 1/30/25 2:33 PM, Daniel Xu wrote:
+> Since 67ab80a01886 ("selftests/bpf: Prefer static linking for LLVM
+> libraries"), only statically linking test_progs is supported. However,
+> some distros only provide a dynamically linkable LLVM.
+>
+> This commit adds a fallback for dynamically linking LLVM if static
+> linking is not available. If both options are available, static linking
+> is chosen.
+>
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+
+LGTM.
+
+Acked-by: Yonghong Song <yonghong.song@linux.dev>
+
