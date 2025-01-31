@@ -1,173 +1,116 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C896738DF9
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738342855; cv=none; b=OJC3YLWARAgwIu/tw5/gNVjVO5XviWb7ndQEZ8h2dSU7/mG0exJ682RD0L57UevoQwkTHe0z0bfW7TOCtAJX6b3r49ECR6+fsUiqbFmAM23YeeNYpqea+FGFEJo48Hkc5qNyPSRGAvq1y2H3VS7KS96QUvrd3oFCCvbh93KV6tg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738342855; c=relaxed/simple;
-	bh=33CYvlXyLQ2UR1KgBYThMz6vWB5tTnXp7QyRqipXyZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YWwVCOOxHKUTfsP+X/1ObEReKAo2lrlOjaYa2CU6LWcJWbnT3IQ8XwwOpihonXEixIAlcRsDK979SyZl07nNxNzCX1avLYnl422rAfEEaikUb76aowjRj2de2HXzWXkym4udYwDMYJULQuOFiwvw/cQnQ8OEoAzFp2+x6EY5mj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=CeTRMtVs; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1159738DF9;
+	Fri, 31 Jan 2025 17:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738342945; cv=pass; b=Ps1S6CR4s9S4HyGRVI30m0ld5yAH2RoUbpcKZoK8mHxCDv3KUp7Fsd6cxoarrMd4ZoVJxolhBD0YAjEo7L84ST/5hWq1bt5Es6wm15G+jQ4zGVT/rKtCXbSNlCYjqi3QH5kSR9VaI9CuknPfaag1dBwGImku4UkiocaV/3Npf3A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738342945; c=relaxed/simple;
+	bh=sG5mfcVthc9gOdpPw21g5qphP5vG0ERBT10/finU0eE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qFKuXeSiTb3NEi+FPbwMOb2FWdhydGnyy46pJW1uqQb/yKRuZj8ihxZohBlaaz7iJ7+TGpAGb7ZYqS77+QhP/I9x322ooA2Ke1L4flNh+gvms4W5lDB3IZZ/K6Jj7Yt0rrM8/KCNXvEemCxZQvaPAmNz687zHdOxrB1xr37N3gU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=RDMHu4uf; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CeTRMtVs"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-385de9f789cso1718474f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:00:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1738342852; x=1738947652; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aNin4moK4eUBxK3vPAgTMhDUk/P6pM+fAX5RqvxKF3I=;
-        b=CeTRMtVs8Nb9ul4crK2BC10t3pdRpFfzS8+TkNZ6IGOHGNt6PGnLXUWV/rPQrASk2R
-         m2nrV5tzNfsv1VV/luEgpVDRRm/WUnQNSjIk0B5wibs/hitRYqGkw7+r8tcDfvbHDJ4m
-         DByNjifVEhntcRqTSruHSHOqyzwVmQH2F7hwE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738342852; x=1738947652;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aNin4moK4eUBxK3vPAgTMhDUk/P6pM+fAX5RqvxKF3I=;
-        b=d/QsaWF/QP2eXXDV6fIr2BqOd/58wiadB3T4iHgg6jB+iO8sPpwb0UTBKkRJZz2Fiy
-         di1H+SFOPZZAVrB26M+AEwcbt9v4D5q32RMDXctRddmwZpSTPxD1rfTtAk2gHOy2FCmm
-         Q5aS/GPCl9PpT6Yv+szA6pEMWe6EkugcRv1jObHlau5qiltayosuFqm3G2ghI03Yuwy8
-         eyxsp+Y/QwOGHSx1P85Jetwi3DBXm9KbLNVLUJHyyn8BAGffOafWI/jMbknxUM1f7hsC
-         0DkdJfJifDmmhpmP33i/zDgdyVWiDnQ7OK+rfMw3pf6R5myUDo40ao3XbH6FnVS3XyoA
-         DRQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWb+Wh2o3gTYeSgERbY6UXEoyA7SIwj0uIHOaFjGJRESee9IcQSaAtwd8KSPgL+Lbdsts/WiA4vjOcc62k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxL3u4NYs6SYyQ6ZLuRyJAXsCcKeqMYUOBuRY3PM5NVXfdQF9XX
-	W1vFTlMvS5PTdfD/G6YJvWrsCt8mAnIJa7u5/nZ6W5Nl/NuBFxIgG+Op3fHqJGroUgxptcwFSP9
-	d
-X-Gm-Gg: ASbGncvbdqc2rnrt2FRaglwv+mOXWNF28xBnApG2SDyTVaaHNz0GPhJXnmyPkRCS2DP
-	hfyVIQtUKe+2lhfHPJfU+y7Bf3zdTDxIX874+srhvCrcnAjexMPGq3FqN1XD0cOJFQFOT25BBh3
-	iT7jaANZfNh/zyfu284WMWaAmC+Y+xRs+EZfNQtQ3AYlWDt8tyjV/kS8DfMQOWjMSL1o2kjTfBj
-	w4E+C/HNVLxtOwo6kTCXrI81KFTXypteEciAVIYxSVPDfX4Ng/OgPt8we2/fLrmW+5ZmUZkFK74
-	nsUbl/SHC9zXDOi/0tOJMugv4UU=
-X-Google-Smtp-Source: AGHT+IG+wK8v3ltoU+dMOZ5Egg+X1fduaSB/k0+6guPHhIiHiZusmikjMEVA/Y4fTi33o54vzPLBkg==
-X-Received: by 2002:a05:6000:400b:b0:386:42a6:21f2 with SMTP id ffacd0b85a97d-38c5192f4afmr10830620f8f.10.1738342851857;
-        Fri, 31 Jan 2025 09:00:51 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0eca02sm5194639f8f.12.2025.01.31.09.00.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 09:00:51 -0800 (PST)
-Date: Fri, 31 Jan 2025 18:00:49 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: David Hildenbrand <david@redhat.com>
-Cc: Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v1 04/12] mm/rmap: implement make_device_exclusive()
- using folio_walk instead of rmap walk
-Message-ID: <Z50BwZSh1rT4LDJS@phenom.ffwll.local>
-Mail-Followup-To: David Hildenbrand <david@redhat.com>,
-	Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
-References: <20250129115411.2077152-1-david@redhat.com>
- <20250129115411.2077152-5-david@redhat.com>
- <7tzcpx23vufmp5cxutnzhjgdj7kwqrw5drwochpv5ern7zknhj@h2s6y2qjbr3f>
- <Z5tI-cOSyzdLjoe_@phenom.ffwll.local>
- <54a55ff7-38c8-42c2-886f-d6d1985072a9@redhat.com>
- <Z5t34-0K9FJKVQe6@phenom.ffwll.local>
- <9f59b475-232f-41d4-bd6f-7f84111062ac@redhat.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="RDMHu4uf"
+ARC-Seal: i=1; a=rsa-sha256; t=1738342912; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=KfbiA+00YsgXssuNZ8eFA67aZhYQYzQ1vTZY1CHCrQYlE2x8GIMRP/PiM3xS7Yoh8ox/5jM9urdpXDd28gssSZoRv/av+dDyqWgb1EW3xQkl5+BuXMx0jAjD9noezEBkVeviIPO42oSttL8PtEmkZItj5GJg97BrA6sq+ZKNW4M=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738342912; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=cUhGgH4bVKTkw+BW7j/8NFx7IAsRMdwRX7WkaEGJABM=; 
+	b=RY3d4lbsQXqUW/uXmi2xLhxgRO9uAHgn3mmDmsW6xwG0pPiQl+zXIrHQBN0cZmvQUOPiSoDEYASQp7PhrT5SL0aB8gSBuiEgoc4iBiLfscB8nMwGzEE++GxdXOm66Owy4RMlza/uZnfOwjvl3BGqjaxiipJ/PAoJaMbm7yji1PU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
+	dmarc=pass header.from=<Usama.Anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738342912;
+	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=cUhGgH4bVKTkw+BW7j/8NFx7IAsRMdwRX7WkaEGJABM=;
+	b=RDMHu4uf6Xxv7afaiy+eMgHgkQV6gGwH0nVY+FIi+5IUJWP9WUfhjFPtA1co19fR
+	r1TeEEiJdhdr+8o0eeSLBTVml3vUCkBMrAH2egEGZRwHdljZ08VP62q015CQNnIuCwB
+	qpZV4SXPzqC3DXEhz4NIKKEZWJnueHtgGMk12mEY=
+Received: by mx.zohomail.com with SMTPS id 1738342895036751.560842885864;
+	Fri, 31 Jan 2025 09:01:35 -0800 (PST)
+Message-ID: <a049e298-6f07-44c1-a3ac-d2676ed0f0bf@collabora.com>
+Date: Fri, 31 Jan 2025 22:01:52 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9f59b475-232f-41d4-bd6f-7f84111062ac@redhat.com>
-X-Operating-System: Linux phenom 6.12.11-amd64 
+User-Agent: Mozilla Thunderbird
+Cc: Usama.Anjum@collabora.com, patches@lists.linux.dev,
+ linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+ akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+ patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+ jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+ srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+ hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 5.15 00/24] 5.15.178-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+References: <20250130140127.295114276@linuxfoundation.org>
+Content-Language: en-US
+From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
+In-Reply-To: <20250130140127.295114276@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On Thu, Jan 30, 2025 at 04:59:16PM +0100, David Hildenbrand wrote:
-> > > > > > Note that the PTE is
-> > > > > > always writable, and we can always create a writable-device-exclusive
-> > > > > > entry.
-> > > > > > 
-> > > > > > With this change, device-exclusive is fully compatible with THPs /
-> > > > > > large folios. We still require PMD-sized THPs to get PTE-mapped, and
-> > > > > > supporting PMD-mapped THP (without the PTE-remapping) is a different
-> > > > > > endeavour that might not be worth it at this point.
-> > > > 
-> > > > I'm not sure we actually want hugepages for device exclusive, since it has
-> > > > an impact on what's allowed and what not. If we only ever do 4k entries
-> > > > then userspace can assume that as long atomics are separated by a 4k page
-> > > > there's no issue when both the gpu and cpu hammer on them. If we try to
-> > > > keep thp entries then suddenly a workload that worked before will result
-> > > > in endless ping-pong between gpu and cpu because the separate atomic
-> > > > counters (or whatever) now all sit in the same 2m page.
-> > > 
-> > > Agreed. And the conversion + mapping into the device gets trickier.
-> > > 
-> > > > 
-> > > > So going with thp might result in userspace having to spread out atomics
-> > > > even more, which is just wasting memory and not saving any tlb entries
-> > > > since often you don't need that many.
-> > > > 
-> > > > tldr; I think not supporting thp entries for device exclusive is a
-> > > > feature, not a bug.
-> > > 
-> > > So, you agree with my "different endeavour that might not be worth it"
-> > > statement?
-> > 
-> > Yes.
-> > 
-> > Well I think we should go further and clearly document that we
-> > intentionally return split pages. Because it's part of the uapi contract
-> > with users of all this.
+On 1/30/25 7:01 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.178 release.
+> There are 24 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Yes, see my reply to patch #3/
-
-Ack.
-
-> > And if someone needs pmd entries for performance or whatever, we need two
-> > things:
-> > 
-> > a) userspace must mmap that memory as hugepage memory, to clearly signal
-> > the promise that atomics are split up on hugepage sizes and not just page
-> > size
-> > 
-> > b) we need to extend make_device_exclusive and drivers to handle the
-> > hugetlb folio case
-> > 
-> > I think thp is simply not going to work here, it's impossible (without
-> > potentially causing fault storms) to figure out what userspace might want.
+> Responses should be made by Sat, 01 Feb 2025 14:01:15 +0000.
+> Anything received after that time might be too late.
 > 
-> Right, I added a link to this discussion in the patch.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.178-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+OVERVIEW
 
-Thanks, Sima
--- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+        Builds: 38 passed, 0 failed
+
+    Boot tests: 498 passed, 0 failed
+
+    CI systems: broonie, maestro
+
+REVISION
+
+    Commit
+        name: v5.15.177-25-gcd260dae49a3
+        hash: cd260dae49a375098c2120ff1618e6bdf874791d
+    Checked out from
+        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+
+
+BUILDS
+
+    No build failures found
+
+BOOT TESTS
+
+   No boot failures found
+
+See complete and up-to-date report at:
+
+    https://kcidb.kernelci.org/d/revision/revision?orgId=1&var-git_commit_hash=cd260dae49a375098c2120ff1618e6bdf874791d&var-patchset_hash=
+
+
+Tested-by: kernelci.org bot <bot@kernelci.org>
+
+Thanks,
+KernelCI team
