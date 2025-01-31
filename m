@@ -1,149 +1,123 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA451C5F30;
-	Fri, 31 Jan 2025 16:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E2E1AAC4;
+	Fri, 31 Jan 2025 16:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738339366; cv=none; b=r9rRU6bEzgBswkBozn5e2XVEOwFicDiW/IESXb+/75rVMulqGDiZ64ceC7YvU7RcSQqnwq7Ls/SzsiIWFB73Yy/Wf7bbqBGUITrK+RQP1ZgzIsFCpIGuiKKGZd4biveHzaUH+EnsXRmmCjE0M2tqwjJkoiV4TzxSzyHMxBkofeo=
+	t=1738339437; cv=none; b=dwgnDqerSygF+M6VNLjwXMM7+Kr/vhGYxJN5X+ojClL+liIZ4BymfAS7qQ0KY8VJ+7EZUSlgqXQNqQhQsIOWhJ8k7xaw/XbHfv5NUZq9n11Et+7LigUZyzAF+LzhcBcuuJDblyrfdoYEpJacXdWuoN7F7MWZtuHwyiTmhrlDZTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738339366; c=relaxed/simple;
-	bh=LItYn27Gn5fx1t2g2Jk5KXuGL57fUlUGMyamQKK3fw4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cKkJkMlV3tQd22nTw8prnrvrFGe4bts3jHHBYIFShy4P/ZUJYD+ehBfC5L70viviV9JBrCrKi87M+LjsyqnTIVzDvXLev2u2/97UJ5KB2cF6zQD6EbL+qKn9tsYi8s4aH+4bhAvpasPYNVBY7SZ/v5GSYuHlABpPrqMcf+PrbCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=isllp7Uk; arc=none smtp.client-ip=209.85.214.174
+	s=arc-20240116; t=1738339437; c=relaxed/simple;
+	bh=ux+gB73rSCKrfeyxBw+k1sCb4qCht1gOxxonKumtdYs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hygkqj7g9+beE1NpC5xQhg8jFVsoJ1Ud7WBpTF9J/bzZrzRePR8GRy146kxe6dCchfGmI7rhUbR6VFu/zT1UNPQ2irJvEGayJcqQ5WQsEk1WoEyWH1Ynlc/gF3xZMPzHQEPUPTx7VqXfq6+cEy4fK9t/QumJQbuvRFegzxzhHBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SqC03omq; arc=none smtp.client-ip=209.85.222.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isllp7Uk"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-219f8263ae0so41344815ad.0;
-        Fri, 31 Jan 2025 08:02:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqC03omq"
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-860f0e91121so1717515241.0;
+        Fri, 31 Jan 2025 08:03:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738339364; x=1738944164; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738339435; x=1738944235; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MgyuVqNeNif0jzGK4cEWcGwaVaukvqMPkaGDhwWTlMc=;
-        b=isllp7Uk9OMYpwvFwHLj3OeTXXGYc/kH3B5ucXfVQz65dgr5/ndP2+mSuIHRv18MqJ
-         jtqzxBeVN61OJaiD7kz0K76v7ygmMoBfc0JU8AmI/mSmawf/Cg1l2Njz8xK4TbI1R11r
-         1RJwJlhGrE7I2deUyYhf1DV6mgU4UXwv1cTw2dNtbWK6G0Ffk0jzLzhouYAKpr7VCF+j
-         GNGKQnkqS2EHgSqI0UdKXIveSQCVCmjgiephLSWELhsOZy3VDUX2QcKQXYmGalrQSMa3
-         THUVGUrSwA+DMnO/xHT+FrdCxHhMBSHzyrw/Xdh3JIIY/iYRtLJS1UBc5IXXeFJH6hBj
-         9zPQ==
+        bh=gAyBmC8BK8RqSQxjO0l92eUElKo+PkN36EJuLz3uhtk=;
+        b=SqC03omqCcCupy7eFTkYjRyuW9Zs8I01zUCI/mjlg0uzql4e2OQrTnAsCQdmWX7p5l
+         G2yCpcCK8CXhWI+RtoeRMe/S5rNK7uP/EBoDWbyp2SRRb+oaJmJtB1Az3/DlXQcFIqtE
+         TEHdQj/CT/0SkZ7OjmphualYEuUxJsaQZBZXU+zHkrD3azm4Onjp3Y2EsTqVndVtpW2c
+         2ARuJWmcoHCw3PjhVLjrg6yWMg6vPAB95GeTdQC/clhDRVZv3qb9Eexl/sdFnhBM7e18
+         FoBszL/ymQ46KIQu45OBnkkIvIagN2tILdn0X5uIyiGKjX8cqXCBp/D/0gPTUY1znfV7
+         +h4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738339364; x=1738944164;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1738339435; x=1738944235;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MgyuVqNeNif0jzGK4cEWcGwaVaukvqMPkaGDhwWTlMc=;
-        b=Amzoi2oPEvOeNnGQp6jOZQLwQgjm5sRi9rn0dSfXcVO9tNPJ4hY6ZAZhxXGygvy2Tr
-         tUN1MGdN9Hq8JVIu5M0t/CeCdV8MArPW/gZeXVZyterFUfcf8zPAFRHtgCi+0milTt+7
-         34XL/yz7PgY8s4Nt8KX1m2FyjFxCvTHV+UkumgbSJe4yMHCmBSbCapdQ7wtuPkOO9z9V
-         P/enOKmC6DEoh+LDcSIWDgULEjvKBgozSjd61QRj1gjYNYEPxPRtctChNIkGc+qR7eiB
-         /ns7g5pR5p3uBoE+piNvFI4dnrcaZZdek2glHQgjYJSKeBwje4nWmShcrdKbT2p3lSxH
-         3WLA==
-X-Forwarded-Encrypted: i=1; AJvYcCUyKUwH637vlZZP2vBp/hotLIFi76x+NFq3/cYAuVs9h30HdKTeULAxEAAeswxy2j2T8dwjBWkhkAbnnGQ=@vger.kernel.org, AJvYcCXr/ulJo3FknRugVh2l3zDRQkPwRABi8dFXQg6fHOv65H3h5+woUvVWrmWU82pb9OmDEjEUQUvHU1tnNnVrA/8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvoLyjwL6OdFG/3OG0z8d0QUzQMIebompxZzmuXW1Zv4qEzCer
-	VvibpwNiwm9eSKDJUDtGeoAkTwfWYfoxGVf3hmLKK2RT4rfYrfmM
-X-Gm-Gg: ASbGnct5OJoWU+OeyAgV76Pe9Pc9gsSugO4l3q8B4rIVMDiVeW354FoP7XnLDCe3f3q
-	vYvEkbQoItv13g1o23MbfNoGDLNe0A1xMyJi+JCikvDjbD2LZ+wBoEsW2gKIOaVOPth9QCAVGUD
-	zZCWBTx1omLxUG8xS+M7XEivJU0RpGymk52UoGmjpberK5QSBKqltnAQMN9uXleFLUYSeSQURKU
-	r6lCEwppYiccBu+fXllL3iKgFkjCMmMOP7V2c+aGYRWfcHiIa3uqb8gaZ/7CeheORB707JuyQaU
-	cPiRX6BOnsFUSEHiwxj+N1LW
-X-Google-Smtp-Source: AGHT+IEuoqwi98xpQFdlqgVQHussREEh0sVSmumXnnfCrHun85rth16LhQvg3maNZqDd4uUMiGcWfg==
-X-Received: by 2002:a17:902:ce8f:b0:215:9d29:9724 with SMTP id d9443c01a7336-21dd7ddfdc9mr182585155ad.38.1738339363722;
-        Fri, 31 Jan 2025 08:02:43 -0800 (PST)
-Received: from linuxsimoes.. ([187.120.154.251])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21ee2bae0a5sm5656905ad.19.2025.01.31.08.02.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 08:02:43 -0800 (PST)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: boqun.feng@gmail.com
-Cc: a.hindborg@kernel.org,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com,
-	gary@garyguo.net,
-	linux-kernel@vger.kernel.org,
-	longman@redhat.com,
-	mingo@redhat.com,
-	ojeda@kernel.org,
-	peterz@infradead.org,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu,
-	trintaeoitogc@gmail.com,
-	will@kernel.org
-Subject: Re: [PATCH] rust: sync: create the `get_mut()` function
-Date: Fri, 31 Jan 2025 13:02:35 -0300
-Message-Id: <20250131160235.305557-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <Z5vrhpp9Idc3tiUy@boqun-archlinux>
-References: <Z5vrhpp9Idc3tiUy@boqun-archlinux>
+        bh=gAyBmC8BK8RqSQxjO0l92eUElKo+PkN36EJuLz3uhtk=;
+        b=pVN6quRKiuj68UxVvpwM7iqYUbCohlhsC2jYbht63YGMIqnzz02IOW/S04SfSST969
+         +3/fPeCk+V05Ip1GwEAwX11gUuA19dghbzeXq9WQZM0/947mfmHo+P3i2V5v1DB4ne74
+         0BvvYCPJVdDc2IEDXT7mTsSNY2e0zHuc8sy+0nXnFPFwCxrz7MUwGx+ucFT60yw/uqTq
+         iIzG/Sp548RULfK8JXRhNOJCzmMQR5UzhU+S+VFuS96Cx5otebEmgt4evNJUvZHOSlX+
+         uxdcvqNB1RYBbD3KiHnGf4IeQruB622ADVpMDqRAFVmO1t+6hblD5mnyYspOUxcFL477
+         uihg==
+X-Forwarded-Encrypted: i=1; AJvYcCUEzAAa8JU7MrPYdYxMOgBJDTg2ExXfAHn5JJCJzl5ZfWpOMCqAAImSfjMVdT/i7/ZEvQqVrBFZDed+@vger.kernel.org, AJvYcCVEKoscJ+5utV9OENw+TsVEsx+yV7K8/iriYT2wAZGIBjmKwR3LkLFbO2Qh8GcoNodV35mtqFrVVapI@vger.kernel.org
+X-Gm-Message-State: AOJu0YxW4xAxyfCvEbwOUq4E4S3lqKvKuis0UAToWCf30sITIiv83fYA
+	OdK11oHViNAgTXze3VxcUUfWfK1nNxDKnO2/H2DEjIBUQ6mG1QS0OnWgUpOYi+6pjwNOUvEKoaa
+	o5bTvU8dmBI7uOdMytr8nsRG52Rw=
+X-Gm-Gg: ASbGnct5yzcVcgZ5g/nDLj8bihBCWPpAsZfdctzZDIZkXl3KIb6hum8F/e83iQMK8sX
+	fhnOyWM7jw+4hMT0u4kknEP+A8gtm/956G7HKgaQfgDQflJ+81Kq4Gq+w/jHPC4bJQ6SHGM/rxQ
+	==
+X-Google-Smtp-Source: AGHT+IGVYpJEqeRGvHRVFOu+mqGM1cy9fp5OorflsRPh0dKlcs/2Fk1DjrNBh82WBXeKvz6ZGvvqQhpFan+we0SyLFI=
+X-Received: by 2002:a05:6122:2bd2:b0:517:e7b7:d04b with SMTP id
+ 71dfb90a1353d-51ebe66645fmr1897860e0c.5.1738339434912; Fri, 31 Jan 2025
+ 08:03:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250120130119.671119-1-svarbanov@suse.de> <20250120130119.671119-6-svarbanov@suse.de>
+In-Reply-To: <20250120130119.671119-6-svarbanov@suse.de>
+From: Jim Quinlan <jim2101024@gmail.com>
+Date: Fri, 31 Jan 2025 11:03:43 -0500
+X-Gm-Features: AWEUYZli7pQbCxCkE2FzhKEzWWUvoQ8-B0Rzl4WvtuTu72KdBjpfuztyPC_Spuo
+Message-ID: <CANCKTBvy=eqEbBjGTB9_=1J1dv3LP1pr48cTA3e=x4p_DTnVOQ@mail.gmail.com>
+Subject: Re: [PATCH v5 -next 05/11] PCI: brcmstb: Expand inbound window size
+ up to 64GB
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Andrea della Porta <andrea.porta@suse.com>, 
+	Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>, 
+	Dave Stevenson <dave.stevenson@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Boqun Feng <boqun.feng@gmail.com> wrotes:
-> Hi Guilherme,
-> 
-> Thanks for the patch. First I would prefer the title being:
-> 
-> 	rust: sync: lock: Add Lock::get_mut()
-> 
-> "create" is not a good word to use here, and the parentheses after
-> "get_mut" already says it's a function.
-> 
-> On Thu, Jan 30, 2025 at 03:51:38PM -0300, Guilherme Giacomo Simoes wrote:
-> > Create a `get_mut()` function that receive a mutable instance of Lock,
-> > and return a mutable reference to data because if the instance is
-> > mutable, the rust compiler guarantee the access control.
-> > 
-> 
-> This commit log doesn't include "why we need this", so please add the
-> reason or the usage of this function, maybe you or someone need it
-> because of some initialization/setup code after creating a lock
-> protected object? Moreover...
-> 
-> > Suggested-by: Björn Roy Baron <bjorn3_gh@protonmail.com>
-> > Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-> > ---
-> >  rust/kernel/sync/lock.rs | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
-> > index eb80048e0110..3f9d78bcb37c 100644
-> > --- a/rust/kernel/sync/lock.rs
-> > +++ b/rust/kernel/sync/lock.rs
-> > @@ -140,6 +140,12 @@ pub fn new(t: T, name: &'static CStr, key: &'static LockClassKey) -> impl PinIni
-> >              }),
-> >          })
-> >      }
-> > +
-> > +    /// Get a mutable reference to data
-> 
-> ... please provide an example of the usage in the doc.
-> 
-> > +    pub fn get_mut(&mut self) -> &mut T {
-> > +        // SAFETY: the caller must guarantee that the instance is only used in one place
-> 
-> SAFETY comments should explain why it's safe, here it's phrased like a
-> requirement, maybe something like:
-> 
->     // SAFETY: `&mut self` guarantees the exclusive access to the
->     // underlying data, therefore it's safe to reborrow the inner data.
-> 
-> Regards,
-> Boqun
+On Mon, Jan 20, 2025 at 8:01=E2=80=AFAM Stanimir Varbanov <svarbanov@suse.d=
+e> wrote:
+>
+> BCM2712 memory map can support up to 64GB of system memory, thus expand
+> the inbound window size in calculation helper function.
+>
+> The change is save for the currently supported SoCs that has smaller
+> inbound window sizes.
+>
+> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: Jim Quinlan <james.quinlan@broadcom.com>
 
-Ok, I make this changes and sent a new patch:
-
-https://lore.kernel.org/all/20250131155940.305403-1-trintaeoitogc@gmail.com
-
-Thanks,
-Guilherme
+> ---
+> v4 -> v5:
+>  - No changes.
+>
+>  drivers/pci/controller/pcie-brcmstb.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controll=
+er/pcie-brcmstb.c
+> index 48b2747d8c98..59190d8be0fb 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -304,8 +304,8 @@ static int brcm_pcie_encode_ibar_size(u64 size)
+>         if (log2_in >=3D 12 && log2_in <=3D 15)
+>                 /* Covers 4KB to 32KB (inclusive) */
+>                 return (log2_in - 12) + 0x1c;
+> -       else if (log2_in >=3D 16 && log2_in <=3D 35)
+> -               /* Covers 64KB to 32GB, (inclusive) */
+> +       else if (log2_in >=3D 16 && log2_in <=3D 36)
+> +               /* Covers 64KB to 64GB, (inclusive) */
+>                 return log2_in - 15;
+>         /* Something is awry so disable */
+>         return 0;
+> --
+> 2.47.0
+>
