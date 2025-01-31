@@ -1,277 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE6A28EC
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D7A28EC
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 09:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738316268; cv=none; b=quHgcgckdYcQyEz06f6e7mhZclwxeB2C139AjGzMmJnBZDIEM5+QcaD3J6ZVbbdsfHpO53oZPC8ZGVWpOtaVLYoDcSWc+ed03iO4hz/YAhZb7yuI9G9tNoqW1D9yCywZDyWKc1rjgqEAD1/HnojmF+VeMROj5LZFhkb2hXXlHQY=
+	t=1738316318; cv=none; b=M4cDBN11suH+9G5ZoBH/mDAe9ICUkTbE7sVNG2fVTvCVOUwopnYgbb0RlL7rFFsZU0x6O8drzKDQGE2JQpnX5FQ4VL1s5S1s9kQ5mIHFZtjAzkyLAD50frinc+mpVi7igWTq1GWPcsmD0Aa6xi1B6hRVxHdymXGUk43KpVBifOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738316268; c=relaxed/simple;
-	bh=zQF/9gWcDewL4xodBFxpipFIAVU3Lib5r8Dh1jVSBas=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Em1x9B5UjO/UXdv2CckR2w20rRxM9wI188iIG6jwA457irDBRkayqqWFLhT4GMV6NNBKyFL2QBb5T7un7JKxnZYBzgxII4ONGFh4GVXvS4YKTJEntgz2pec+Jc/g8XmQE/cKv5TYjGamqhClPRGhd1QbO4GA15Te6oJxoGZxAT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PpGtZ3u1; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738316318; c=relaxed/simple;
+	bh=CuzzDmNyJ2wp5kDzaqAUxzlefGcbKNqsOdAi699Net4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=VobKvpCfbQyPiczxmgX0RQIHlNNZGKy9SQfOObMZ2mhpNi9MpM5g3szjjF4UavRhONOFLxi2jjjxn/CThYaUBnWAWCdte8N9hr3qAr1xTzRqzovzSbbQnhMbzQv9MCfXEVT0hZWgqwo9IxjvWvAy9XBJVuKs0cSI9ADZVNewYO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=vTf6XdCS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=amKbH8fd; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PpGtZ3u1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738316266; x=1769852266;
-  h=date:from:to:cc:subject:message-id;
-  bh=zQF/9gWcDewL4xodBFxpipFIAVU3Lib5r8Dh1jVSBas=;
-  b=PpGtZ3u1+hGmHP/pdQp4r5Y344IX8H/NZ20/ZyOPMM07n07xpHPSY5Lu
-   iP2DrZ/cqHcM+UzwoXWypB1bwtcbQ02JLK48JmXxo9BcdpXKUOwNz174K
-   +17j/habbRmE99n1PY2QsxO/QGOEmmYW99r8Ct8FuVeJk3549c2qeUVSC
-   8UdyrqhEWAlTDbbJycgNFhaGjUPP13Un7kZNslFnE+5EgxP/kpAczFoXW
-   rfrIs+faYlTCg2sfVXG0kWkAga7UUTdJU2NlndngL5g6oJGPZy+hQegEa
-   Z86G4dcLL4Trv5MD5jVsDdBgui23DsYTNoHc56CGI1Y7necgoglEPK73K
-   g==;
-X-CSE-ConnectionGUID: 1C/+CUdQTzmFILegBWS0dA==
-X-CSE-MsgGUID: 4slLoBfxSjqOeRlJzH+1KA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="26488342"
-X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
-   d="scan'208";a="26488342"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 01:37:45 -0800
-X-CSE-ConnectionGUID: CwwBzWqdS8Wwublbbt58+w==
-X-CSE-MsgGUID: agxZb9nVTwe2X3RWTMwUrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
-   d="scan'208";a="110169769"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 31 Jan 2025 01:37:45 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tdnT4-000mEJ-1k;
-	Fri, 31 Jan 2025 09:37:42 +0000
-Date: Fri, 31 Jan 2025 17:36:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:lazypreempt.2025.01.30a] BUILD SUCCESS
- d28b5f192e9a31e434ea01fb780114ab8d30c000
-Message-ID: <202501311746.KebxObn4-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="vTf6XdCS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="amKbH8fd"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 5517C1140141;
+	Fri, 31 Jan 2025 04:38:35 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Fri, 31 Jan 2025 04:38:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738316315;
+	 x=1738402715; bh=SUreHfhb4SIjGUASIEXntyv2VIisTLVIPpk5iuMJPRw=; b=
+	vTf6XdCS8iXwj7m1lOtrvo81BnIdi/FkjOiyj+JpMvsXboMUNuMYO2Dlv4Rnk/4J
+	8/3L/f4DoxjYlLjV1rfmkApD+KXIjF23bEpEfWCTFFrAA4RPlyJcXy4guZd0KmZh
+	MdzYnQC1PIdBMkhJgJz3EoHFmMVynwkNtIVPJTA50FPAzdnc2myrIZFmRpiLqP+v
+	7vuMNSJihAvcjlc8kGxQwtnMg/cVPuzxVdtxS4uoD/96ZbeUESICFSOxFXQtgWhI
+	pGirDxWRq6e65fatxGNKmacG/LsnWn5iSn/Uvo/d4ih/ngP33PZURMLVEgKCNIsg
+	HnAISAjv1tFOlZQfWCcbVA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738316315; x=
+	1738402715; bh=SUreHfhb4SIjGUASIEXntyv2VIisTLVIPpk5iuMJPRw=; b=a
+	mKbH8fdPC3Lbp+nU/U5W4KfoRD6qYCvjATdqfNUxIqKnhfDM0oNXANsA91avHwi3
+	cqJYvFlkeBjrtuwq3udTdQbve4IBi/RcAFEcgm5+Y5twzzTQfCFzY5Gyn98db/Ch
+	EqaWjl9e0vjYPaCt4Hh5749CEk8/mvB8Ti/G14fwI20ekShhdDSXUuse0pBWtUMM
+	fRTS04hazaUYfNtpsW4cTZLItFCJ7GWRiIsMnCJJEN5Yp130WqJ6j38F/R4ohSZr
+	a2rLzjWiujdHR7ONwIdxNtfF+tlg+DMWcjsHLx3czUmsIkaIbZE87/cp2WWKwwM7
+	U1GCCQbY761H4T4hOgR1A==
+X-ME-Sender: <xms:GZqcZ03RcnkFfhcSAGfz8WGjDNWLquBf893o-AeVRUqHso2Tav0pKQ>
+    <xme:GZqcZ_Fn4N5YSnvqNmjL6Y0kzAzY0NcAmuIcWRW8IEwMopta0LG0C0TZN1f9e2DVn
+    e8wYggMl9YPxIgB9TA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
+    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepledp
+    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheptghhrhhishhtohhphhgvrdhlvghroh
+    ihsegtshhgrhhouhhprdgvuhdprhgtphhtthhopehmphgvsegvlhhlvghrmhgrnhdrihgu
+    rdgruhdprhgtphhtthhopehnphhighhgihhnsehgmhgrihhlrdgtohhmpdhrtghpthhtoh
+    epshgvghhhvghrsehkvghrnhgvlhdrtghrrghshhhinhhgrdhorhhgpdhrtghpthhtohep
+    nhgrvhgvvghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrgguugihsehlihhnuh
+    igrdhisghmrdgtohhmpdhrtghpthhtoheplhhinhhugihpphgtqdguvghvsehlihhsthhs
+    rdhoiihlrggsshdrohhrghdprhgtphhtthhopehjuhhlihgrnhesohhuthgvrhdqlhhimh
+    hithhsrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgv
+    rhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:GZqcZ84fe0qQPbXth6ga6sK7Q3dzQPpM6SF0ltUTKZ1owHbgpIiwpw>
+    <xmx:GZqcZ90Ky4_FX9qgZBIKoiKPaVYlULTQYzGeOO9gEaaJIzIh5Y2RJQ>
+    <xmx:GZqcZ3HyNYsgHm4LcV6mk4876zpVck1ugCIcYnFsMORNw9F7iU8bUw>
+    <xmx:GZqcZ29c3Lxdf0JiUdZHRIF9vlhPomwlsHHSr9OQ1pvpIBapYDYagw>
+    <xmx:G5qcZ9aXicAKPpueTzkCG6T3EtKSsgWK07wi-FEKOZx51a8hPHgsrUR2>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A2B5B2220072; Fri, 31 Jan 2025 04:38:33 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Date: Fri, 31 Jan 2025 10:37:55 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Segher Boessenkool" <segher@kernel.crashing.org>,
+ "Julian Vetter" <julian@outer-limits.org>
+Cc: "Madhavan Srinivasan" <maddy@linux.ibm.com>,
+ "Michael Ellerman" <mpe@ellerman.id.au>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+ "Naveen N Rao" <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <83b60736-3856-4804-b25d-d0c8cbf9b185@app.fastmail.com>
+In-Reply-To: <20250129111406.GW20626@gate.crashing.org>
+References: <20250129094510.2038339-1-julian@outer-limits.org>
+ <20250129111406.GW20626@gate.crashing.org>
+Subject: Re: [PATCH v2] powerpc: Remove eieio() in PowerPC IO functions
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git lazypreempt.2025.01.30a
-branch HEAD: d28b5f192e9a31e434ea01fb780114ab8d30c000  rcutorture: Make scenario TREE07 build CONFIG_PREEMPT_LAZY=y
+On Wed, Jan 29, 2025, at 12:14, Segher Boessenkool wrote:
+> On Wed, Jan 29, 2025 at 10:45:10AM +0100, Julian Vetter wrote:
+>> Remove the eieio() calls in IO functions for PowerPC. While other
+>> architectures permit prefetching, combining, and reordering, the eieio()
+>> calls on PowerPC prevent such optimizations.
+>
+> Yes, and it is crucial to prevent combining, it is part of the semantics
+> of these functions.  This is a much bigger problem on PowerPC than on
+> architectures which optimise memory accesses much less.  So most other
+> archs can get away with it much easier (but it is still completely wrong
+> there).
 
-elapsed time: 895m
+Unfortunately it's not well documented what the actual behavior is
+supposed to be across architectures, so part of the work that Julian
+is doing is to make them behave consistently. My impression is that
+we actually do want combining (and reordering) here in memcpy_fromio,
+unless there are specific drivers that depend on the non-combining
+behavior. My earlier observations towards this are:
 
-configs tested: 200
-configs skipped: 5
+- memcpy_fromio() is almost always used on RAM behind a bus, not MMIO
+  registers.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+- there has been a push towards using instruction sequences on arm64
+  make sure we get the most (write) combining for the I/O string functions
+  to get better performance
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    clang-18
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    clang-18
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                   randconfig-001-20250131    gcc-13.2.0
-arc                   randconfig-002-20250131    gcc-13.2.0
-arm                              allmodconfig    clang-18
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    clang-18
-arm                              allyesconfig    gcc-14.2.0
-arm                                 defconfig    gcc-14.2.0
-arm                          gemini_defconfig    gcc-14.2.0
-arm                          ixp4xx_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250131    clang-17
-arm                   randconfig-002-20250131    clang-15
-arm                   randconfig-003-20250131    gcc-14.2.0
-arm                   randconfig-004-20250131    gcc-14.2.0
-arm                           tegra_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250131    clang-15
-arm64                 randconfig-002-20250131    gcc-14.2.0
-arm64                 randconfig-003-20250131    clang-21
-arm64                 randconfig-004-20250131    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250131    clang-21
-csky                  randconfig-001-20250131    gcc-14.2.0
-csky                  randconfig-002-20250131    clang-21
-csky                  randconfig-002-20250131    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                             defconfig    gcc-14.2.0
-hexagon               randconfig-001-20250131    clang-21
-hexagon               randconfig-002-20250131    clang-21
-i386                             allmodconfig    clang-19
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-19
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-19
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250131    clang-19
-i386        buildonly-randconfig-002-20250131    clang-19
-i386        buildonly-randconfig-003-20250131    gcc-12
-i386        buildonly-randconfig-004-20250131    gcc-12
-i386        buildonly-randconfig-005-20250131    clang-19
-i386        buildonly-randconfig-006-20250131    gcc-12
-i386                                defconfig    clang-19
-i386                  randconfig-001-20250131    clang-19
-i386                  randconfig-002-20250131    clang-19
-i386                  randconfig-003-20250131    clang-19
-i386                  randconfig-004-20250131    clang-19
-i386                  randconfig-005-20250131    clang-19
-i386                  randconfig-006-20250131    clang-19
-i386                  randconfig-007-20250131    clang-19
-i386                  randconfig-011-20250131    gcc-12
-i386                  randconfig-012-20250131    gcc-12
-i386                  randconfig-013-20250131    gcc-12
-i386                  randconfig-014-20250131    gcc-12
-i386                  randconfig-015-20250131    gcc-12
-i386                  randconfig-016-20250131    gcc-12
-i386                  randconfig-017-20250131    gcc-12
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250131    clang-21
-loongarch             randconfig-001-20250131    gcc-14.2.0
-loongarch             randconfig-002-20250131    clang-21
-loongarch             randconfig-002-20250131    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                         amcore_defconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                        bcm63xx_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250131    clang-21
-nios2                 randconfig-001-20250131    gcc-14.2.0
-nios2                 randconfig-002-20250131    clang-21
-nios2                 randconfig-002-20250131    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20250131    clang-21
-parisc                randconfig-001-20250131    gcc-14.2.0
-parisc                randconfig-002-20250131    clang-21
-parisc                randconfig-002-20250131    gcc-14.2.0
-parisc64                            defconfig    gcc-14.2.0
-powerpc                    adder875_defconfig    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                        icon_defconfig    gcc-14.2.0
-powerpc                      mgcoge_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250131    clang-21
-powerpc               randconfig-001-20250131    gcc-14.2.0
-powerpc               randconfig-002-20250131    clang-15
-powerpc               randconfig-002-20250131    clang-21
-powerpc               randconfig-003-20250131    clang-21
-powerpc                    socrates_defconfig    gcc-14.2.0
-powerpc                        warp_defconfig    gcc-14.2.0
-powerpc                 xes_mpc85xx_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250131    clang-15
-powerpc64             randconfig-001-20250131    clang-21
-powerpc64             randconfig-002-20250131    clang-17
-powerpc64             randconfig-002-20250131    clang-21
-powerpc64             randconfig-003-20250131    clang-15
-powerpc64             randconfig-003-20250131    clang-21
-riscv                            alldefconfig    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250131    gcc-14.2.0
-riscv                 randconfig-002-20250131    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250131    gcc-14.2.0
-s390                  randconfig-002-20250131    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-12
-sh                    randconfig-001-20250131    gcc-14.2.0
-sh                    randconfig-002-20250131    gcc-14.2.0
-sh                           se7619_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250131    gcc-14.2.0
-sparc                 randconfig-002-20250131    gcc-14.2.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250131    gcc-14.2.0
-sparc64               randconfig-002-20250131    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250131    gcc-14.2.0
-um                    randconfig-002-20250131    gcc-14.2.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250131    gcc-11
-x86_64      buildonly-randconfig-002-20250131    clang-19
-x86_64      buildonly-randconfig-003-20250131    gcc-12
-x86_64      buildonly-randconfig-004-20250131    gcc-12
-x86_64      buildonly-randconfig-005-20250131    clang-19
-x86_64      buildonly-randconfig-006-20250131    clang-19
-x86_64                              defconfig    clang-19
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-19
-x86_64                randconfig-001-20250131    clang-19
-x86_64                randconfig-002-20250131    clang-19
-x86_64                randconfig-003-20250131    clang-19
-x86_64                randconfig-004-20250131    clang-19
-x86_64                randconfig-005-20250131    clang-19
-x86_64                randconfig-006-20250131    clang-19
-x86_64                randconfig-007-20250131    clang-19
-x86_64                randconfig-008-20250131    clang-19
-x86_64                randconfig-071-20250131    clang-19
-x86_64                randconfig-072-20250131    clang-19
-x86_64                randconfig-073-20250131    clang-19
-x86_64                randconfig-074-20250131    clang-19
-x86_64                randconfig-075-20250131    clang-19
-x86_64                randconfig-076-20250131    clang-19
-x86_64                randconfig-077-20250131    clang-19
-x86_64                randconfig-078-20250131    clang-19
-x86_64                               rhel-9.4    clang-19
-x86_64                           rhel-9.4-bpf    clang-19
-x86_64                         rhel-9.4-kunit    clang-19
-x86_64                           rhel-9.4-ltp    clang-19
-x86_64                          rhel-9.4-rust    clang-19
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250131    gcc-14.2.0
-xtensa                randconfig-002-20250131    gcc-14.2.0
-xtensa                         virt_defconfig    gcc-14.2.0
+- There is only an eieio in powerpc memcpy_fromio() but no barrier
+  inside the memcpy_toio() or memset_io() loops. If it was necessary
+  to prevent combining, this would likely be for both load and store
+  loops here.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- I tried to trace the history of memcpy_fromio() and found that
+  it was originally just a loop around readl(), which at the time
+  was eieio() and a pointer dereference and byteswap. The readl()
+  definition has changed many times after that, but memcpy_fromio()
+  never changed again, which makes it most likely that this was
+  just forgotten in the conversion rather than intentional.
+
+If you can think of callers of memcpy_fromio() that depend on the
+eieio(), we probably need to fix other architectures as well and
+go back to Julian's original idea of adding a new barrier into the
+common code and have an architecture specific definition for that
+barrier.
+
+For the insb()/insw()/insl() case, I think you are correct that
+the eieio is required on powerpc and likely others as well, since
+the CPU combining multiple reads on a single address into a single
+one would clearly break the concept.
+On Arm and other architectures that prevent combining of MMIO
+reads based on page table flags, we don't need a barrier here,
+but there is a good chance that these barriers are in fact
+missing on some alpha and some mips implementations of
+readsl() etc: The alpha ioread32_rep() and insl() have barriers
+inside, but it also uses the generic readsl() which does not.
+
+> You are keeping the trap;isync things, which a) have a way bigger
+> performance impact, and b) are merely a debugging aid (if some i/o
+> access kills the system, it will be clear where that came from).  And
+> that isn't even the biggest thing of course, there is a heavyweight
+> sync in there as well.
+
+The barriers around memcpy_toio()/memcpy_fromio() are a separate
+question that we should address as well. I somehow thought that
+other architectures had the same barriers as readl/writel around
+the string functions, but it does seem like it's only powerpc
+at this point.
+
+Intuitively I would have expected that a memcpy_toio() etc
+has the same barriers as a writel() around it for consistency, on
+the other hand it's only powerpc that has these, and if the
+functions are indeed only meant to work on RAM behind MMIO,
+they would not not have to serialize against DMA the same way
+that writel does because there are no side-effects.
+
+I'm still looking for more insights on that, but if we can
+agree that memcpy_{from,to}io don't need the outer barriers,
+it seems best to address this at the same time as the internal
+eieio() in memcpy_fromio(), provided we agree on removing
+those as well.
+
+      Arnd
