@@ -1,111 +1,182 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6354C9F;
-	Fri, 31 Jan 2025 01:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C698023A9
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738286916; cv=none; b=pEeWFqZAKUC9dEGy1R4fL1aRjrzt0b1U0q3s6IhDXbC9EWXnfsLSQTMsOoa2IGvQHRBt1G3DpjWOvnCwn5yXHe44XvQTu3IHrKjZPFjjeRPN/r5MjI3iL2xE8U1YKG5/A2Y0cNryHCSfrjOIC8JFSpVjMy0/CmqKlw6K60dXw80=
+	t=1738287106; cv=none; b=Ggf3GrfR/DXLzRrthGRJJL3shTrxzWUn1Idb/EVnbRoljYzjG5l7EzH3+dcS1vBNhwY4mFDRMZq6woaQY54rBtsoNkLrUuhg96FJj39vY5Q2s2fBolRxmDC6WfDM6Us8ID/Jfniqj8PCZcdapXxX/3W1BEu4/PjN9QDB/mvkt4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738286916; c=relaxed/simple;
-	bh=Nz7VVWUaoEwlZrcDHuPzxHbFjFZlpUJ4kGW1Cx8wNrM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lz/+gINfZOlFO/HwE+b+iAJmqbtOZ/xhPlz5Q9EuBsZVL5q1S8hPIPvXpjQL2cSlEAAlVa5jI3Gxi3Ho/KCA9df8/Pz9ZRoMKxv5pCuU2uAyIXwJbIuvR1AYXUvW4FSyEMs07EIn+RHmtBE8h5kjFCywEX3FhWWiEtio78y5mAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H8UqbdI1; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738287106; c=relaxed/simple;
+	bh=1tLoSinO89mGQ5F24iVcL3OaxVWIwWTzqzxlZjUonqQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y8PtrbsSb4Ut+jB5y7ksJJvoiL/pnMpPMPXAxgvgQAgqJZiI4ILkhODw5qYl8djgjotf5u5SEYtyf/RAv/ISu2X7SLI8IwhgD1aeQ6WAIB+8HHjv1o5/Rwc0M2YQHrbjQLhOgWME7m3BuC7GuHXhIchdBetQjgzUGZxZCwZNWW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=J7BqHWc6; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8UqbdI1"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6d8a3e99e32so13238516d6.2;
-        Thu, 30 Jan 2025 17:28:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="J7BqHWc6"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2163dc5155fso26155795ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:31:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738286914; x=1738891714; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nsBQ15KPAbNgDIj2dwTdXPvw6ebbg9GOZ64wqvoRjZM=;
-        b=H8UqbdI1U67SoxsvMKIjuZQKOJ0E5cKCzjw+ao1em46IvMLz12U/DFOGBU/srImy4h
-         8q5u3BBQRy8STpu1n62yTiGq2c44rsRuscTsgNxSFVWfTeiX1bcs1TJvyHRa9BJJSyDn
-         EMKr6oGIqzh3JAovvOmqNCPXJ7jKwLcVN1f842YIkqHln0uvpcO1L9qWailKeKaK5ZrP
-         ipX8zt5hhdiB1ZzmhBYnAFLPkL10Gv0M8eUBaBXn8QWpVGyO4glrDeob+4u1nnmtefQz
-         G1vHwEYCgh2pSMf75bcux35sVyvsL1HRDOhQQhF1RVt6JUa+4l+V5hu2DS8hJzpDnouF
-         X8kw==
+        d=tenstorrent.com; s=google; t=1738287104; x=1738891904; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MG19W4SOPIaZi7OCinPeczwbesfkNxF5n0JVFRzeQlA=;
+        b=J7BqHWc6CV/K3sjDGsvMDY+w+feEescR1xLeu4FPufwF8LubbSWXL/va7OuhV+07Hu
+         y3oZhEVt2AEbzKxkzswOrbMjopgywfv4WJ4i1+rVxrtgk5YiJnjFwEEXeImz3ZkOfC6S
+         6BNoNbRBz7g+eRKnv4u7u8xaKo/DI+CliMoAnJSPQ73FRetzj67d7QjlrXNjqhsaPvCC
+         E0yri1nj8hupPVQK3arLvaDlCRNElq2fiRT2HeNQpoiGWoUc93Jc7s3j5NrrQek8iO3I
+         o5c5ZW6W072Bl74+R4aBa/GUrvSBjlej4WcEW06z5yLhBMPk3PyEp09dwr4U4vdwS8jq
+         DdjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738286914; x=1738891714;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nsBQ15KPAbNgDIj2dwTdXPvw6ebbg9GOZ64wqvoRjZM=;
-        b=pfz0rnoHy22zqlBMLoGljlRcu6FGAoQjGIqVapEvt+SeC4hiA1UreZOXLZktcnBW0K
-         AuOeFrXlHMpUZrAsL5ljNeBU00AByAfM/HoxnrTFTLeTgUCOVIIbZCzcudteGcVOqj5Q
-         0LpXPI4aCWkDUdOhtN01i1fGLLiWaGIDhvWFCwY0tCbSw35l0Oc6eB+lhV4vCLkLTI2X
-         FZpnaG0yfe/wQzbh6Gjiujwa3azp+Fbisrh050R5ecMmNhiM4CKPMO1tkccwDMnEBger
-         8Q3yN3sYlNmsa2/ODIbjA5dLboSdDt8HBKiIT/D4HiuVgKuU1rNxXyMeJh2HuLq7mH6y
-         dBJw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjzG5fiaZ5gqxab6WmmYG71Rml8zmQE7vskh6xzIy+psPHQKsbeBWpdqbTviNZ8STmVrdbrjlHIO69Ld8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0SPRyOivhxUOcYGgWk1yvef/AxdPlyyf1osO8GeswO2UH9yZF
-	WRU/v6PvIG6iQqE80ppE8fqEVdCUcTTyZfJfuVGeWxrIog4zag0B
-X-Gm-Gg: ASbGncv770K6KrBr+1y2thyfuOwhkA9xSH6B7yamOS2cFAeKIyODn0o6GZbwdPLRf99
-	NxzdUI0ix9FbSOeE2XsZeCSno7+okYyBPxsM7YLI30bj77+aG8hmINOCQozPaf7HgbcW2j5UzSj
-	jiw06+8T7gbR+aSxOpcSADCstTXAUlEpN6RKyDNPnKJ8KxyFudblGpMkMyNxTXhm7Sib4IZaTDJ
-	QoESUI7EX2CHdLhaQB7owiFBMe9MJNWUWGypaPhrD8SosYn+HSboHs+PCd2R31p8/NEzTRwdkLY
-	JHmGPuT9/Znp/bwsFlKc+cP+N3UrX+r9wrgWTw==
-X-Google-Smtp-Source: AGHT+IEDTGGykK3VT3IFwkV7jiAPCUT4mQR5DWO7oY08yzO1EcFsGxxZjoFcYEQky+5HouyGEl7YYQ==
-X-Received: by 2002:a05:6214:430a:b0:6d8:aeda:dd93 with SMTP id 6a1803df08f44-6e243c8fe49mr147890246d6.39.1738286913646;
-        Thu, 30 Jan 2025 17:28:33 -0800 (PST)
-Received: from newman.cs.purdue.edu ([128.10.127.250])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254818bb7sm12366476d6.47.2025.01.30.17.28.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 17:28:33 -0800 (PST)
-From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-To: tiffany.lin@mediatek.com,
-	andrew-ct.chen@mediatek.com,
-	yunfei.dong@mediatek.com,
-	mchehab@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	fullwaywang@outlook.com
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Subject: [PATCH] media: mediatek: vcodec: Add scp_put() to free the scp
-Date: Fri, 31 Jan 2025 01:28:30 +0000
-Message-Id: <20250131012830.22394-1-jiashengjiangcool@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1738287104; x=1738891904;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MG19W4SOPIaZi7OCinPeczwbesfkNxF5n0JVFRzeQlA=;
+        b=lkpkMPu2emC8FsSzQp7GRF9uiew1uGVwpafCsABEGYzb8w1HynZpmIqvE4w6gbwPpb
+         ZnpGtllA6Z8S77koT/ybI+UYLZ3jw37myAutT1hfxTZtQ1eYQoT/Jk20ZEIYA0qFXWu4
+         lvLGWpoVFJ1/tX3Mgt/FQyZ/fwQdVRyn7fXkrAVsOnUaT58h6eZi4tv3YVJxzoU+JkZ6
+         jd4AJbA7Tufdzq13adJeUXAXfMeu2oOrBZPDnShNtprYHIyyOEeHAnpO1+RZbHvHL/B+
+         hsFv9bfkkxRx1PHeomYRFJ4vJu6zh4UBDmWbAuv30rWG4B8hIwbpmnK3nyfZWIYZyiUq
+         1VqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWbG5J4v2SE5IRFOxp6LrKRF8x1F/m4hQGwBJuz66KPS4BkGb6mKwzS73AWSX2B7DHrLJkk5AKDszoReV0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuRlyFFTiQc+iHG5PqPqilrwOzdHqJj9APWMU9b3fNC0hXDFYS
+	dmICCj9Xlr1ZX8NhKX/dxtEJYsDcu+Sqpwy+ozbN1osslgo4I50GzCzHNrpkYQ==
+X-Gm-Gg: ASbGncuFpW4RnFcPbDmoEloW8z23YpykOB0A2I6tMTBlLX88n3i1CCN4OKbVq2vspA0
+	n9ckIAcyEcjctY66hv5fOh1H+xk8vudPWy0FMp3WmW7yUKh65gfVGSzTB4w2HLXizdb4EKUZs5D
+	JvpdQJWV2UqzROZ8v97ldEFP20QfGgZRW6miZ1ZElHXCS9SCzvKcE7soUuM3aINJSZQixM+wv+9
+	7cVvoMb1L5Ui69swWzpLhGSZ+0z0oiJrGUgsMEfXD/JR4qT+eyhafGiwkjKJGZbCgLsV0RQbPaK
+	cbopqdQI8oyJPlYN7cvv2JqRa4sP5bN+EQ==
+X-Google-Smtp-Source: AGHT+IF4Q8nENVfklGPnhiKtH5eyOQErysoSYV+Lhn5dkRBbuxx/QIH4nFvnyXq4lmP1dfXh+avEog==
+X-Received: by 2002:a17:903:22c4:b0:216:1cfa:2bbf with SMTP id d9443c01a7336-21dd7dd87famr149812315ad.35.1738287103992;
+        Thu, 30 Jan 2025 17:31:43 -0800 (PST)
+Received: from [192.168.50.113] ([27.96.222.7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bc97e7csm5137597a91.9.2025.01.30.17.31.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 17:31:43 -0800 (PST)
+Message-ID: <f1218075-94a5-429a-ab35-f47d3e79e80e@tenstorrent.com>
+Date: Fri, 31 Jan 2025 12:31:38 +1100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] riscv: uaccess: use input constraints for ptr of
+ __put_user
+To: Jessica Clarke <jrtc27@jrtc27.com>, charlie@rivosinc.com
+Cc: palmer@dabbelt.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Jisheng Zhang <jszhang@kernel.org>
+References: <20241118230112.2872978-1-cyrilbur@tenstorrent.com>
+ <20241118230112.2872978-3-cyrilbur@tenstorrent.com>
+ <EA2CB85E-E210-402E-B891-2F4420E55CDB@jrtc27.com>
+Content-Language: en-US
+From: Cyril Bur <cyrilbur@tenstorrent.com>
+In-Reply-To: <EA2CB85E-E210-402E-B891-2F4420E55CDB@jrtc27.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add scp_put() to free the scp if devm_kzalloc() fails to avoid memory
-leak.
 
-Fixes: 53dbe0850444 ("media: mtk-vcodec: potential null pointer deference in SCP")
-Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
----
- .../platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c      | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
-index ff23b225db70..1b0bc47355c0 100644
---- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
-+++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
-@@ -79,8 +79,11 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_scp_init(void *priv, enum mtk_vcodec_fw_use
- 	}
- 
- 	fw = devm_kzalloc(&plat_dev->dev, sizeof(*fw), GFP_KERNEL);
--	if (!fw)
-+	if (!fw) {
-+		scp_put(scp);
- 		return ERR_PTR(-ENOMEM);
-+	}
-+
- 	fw->type = SCP;
- 	fw->ops = &mtk_vcodec_rproc_msg;
- 	fw->scp = scp;
--- 
-2.25.1
+On 18/1/2025 9:34 am, Jessica Clarke wrote:
+> On 18 Nov 2024, at 23:01, Cyril Bur <cyrilbur@tenstorrent.com> wrote:
+>>
+>> From: Jisheng Zhang <jszhang@kernel.org>
+>>
+>> I believe the output constraints "=m" is not necessary, because
+>> the instruction itself is "write", we don't need the compiler
+>> to "write" for us. So tell compiler we read from memory instead
+>> of writing.
+> 
+> That’s not what =m does. =m tells the compiler “this assembly will be
+> writing to this memory location, and needs the address of the location
+> for that operand”. If you move it from an output to an input then you
+> get the same assembly generated, but the compiler believes you are
+> *reading* from that memory, not *writing* to it, and so does not
+> believe the memory may be clobbered.
+> 
+> Now, it may well be that, by virtue of this being userspace memory that
+> is only ever accessed via assembly, and any inline assembly being
+> marked volatile, this in effect doesn’t matter. But it is still
+> technically wrong to model it that way, and you cannot use the
+> justification you are using, because it is false, and demonstrates a
+> lack of understanding for how inline assembly works. It has to be
+> correctly justified.
+> 
+> (I do note that neither x86 nor arm64 seems to model this as an output)
+> 
+> Jess
+
+Good points, I agree. I am happy to respin this patch move the =m to 
+output constraint.
+
+@Charlie Please let me know if you would like me to keep your tags on 
+the tweaked version.
+
+Thanks,
+
+Cyril
+> 
+>> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+>> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
+>> ---
+>> arch/riscv/include/asm/uaccess.h | 18 +++++++++---------
+>> 1 file changed, 9 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+>> index 09d4ca37522c..84b084e388a7 100644
+>> --- a/arch/riscv/include/asm/uaccess.h
+>> +++ b/arch/riscv/include/asm/uaccess.h
+>> @@ -186,11 +186,11 @@ do { \
+>> __typeof__(*(ptr)) __x = x; \
+>> __asm__ __volatile__ ( \
+>> "1:\n" \
+>> - " " insn " %z2, %1\n" \
+>> + " " insn " %z1, %2\n" \
+>> "2:\n" \
+>> _ASM_EXTABLE_UACCESS_ERR(1b, 2b, %0) \
+>> - : "+r" (err), "=m" (*(ptr)) \
+>> - : "rJ" (__x)); \
+>> + : "+r" (err) \
+>> + : "rJ" (__x), "m"(*(ptr))); \
+>> } while (0)
+>>
+>> #ifdef CONFIG_64BIT
+>> @@ -203,16 +203,16 @@ do { \
+>> u64 __x = (__typeof__((x)-(x)))(x); \
+>> __asm__ __volatile__ ( \
+>> "1:\n" \
+>> - " sw %z3, %1\n" \
+>> + " sw %z1, %3\n" \
+>> "2:\n" \
+>> - " sw %z4, %2\n" \
+>> + " sw %z2, %4\n" \
+>> "3:\n" \
+>> _ASM_EXTABLE_UACCESS_ERR(1b, 3b, %0) \
+>> _ASM_EXTABLE_UACCESS_ERR(2b, 3b, %0) \
+>> - : "+r" (err), \
+>> - "=m" (__ptr[__LSW]), \
+>> - "=m" (__ptr[__MSW]) \
+>> - : "rJ" (__x), "rJ" (__x >> 32)); \
+>> + : "+r" (err) \
+>> + : "rJ" (__x), "rJ" (__x >> 32), \
+>> + "m" (__ptr[__LSW]), \
+>> + "m" (__ptr[__MSW])); \
+>> } while (0)
+>> #endif /* CONFIG_64BIT */
+>>
+>> -- 
+>> 2.34.1
+>>
+>>
+>> _______________________________________________
+>> linux-riscv mailing list
+>> linux-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
 
