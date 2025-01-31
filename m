@@ -1,643 +1,296 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9605A1BD9C1;
-	Fri, 31 Jan 2025 11:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1501581EE;
+	Fri, 31 Jan 2025 11:24:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738322520; cv=none; b=BkdclknohPFKysPxncY4aZoyUh3ZzN62XZ8T/Prfhf6morNMiP1t+dltItUOx7luHv7tMRlv51xQlh9rqxaGcamARDaD4kjZ6zYd72xKwlLPLG/7HI6KHYQCd7DWMal0NRCJAnm9yRQN2CDzzSxAvZYnaegcQDLzRslccn0rKDk=
+	t=1738322665; cv=none; b=uMmTX2XbzEmrKhNe6sqxR2XF/1QOBzjVsmu7jdceM4VdMMXm+TYIVDeC3PyyXyxQYiEa7VSK5hLnuHZFuwIJPDxEhJNay/lZUmowWPK5jpBLa6katRKmISuIXCajuWLfWIbDV/r25F53Q+o0wJPZMyejjKzj5AyT0f92JDo6hVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738322520; c=relaxed/simple;
-	bh=2OIhAncQSsSur1iGhm/B7xoQKGhHNQXrwRU5j+kBFYg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ahm3mphiX7ERK2/2J217su0OmmFMeuWLnQS1OARbNjuPrMbdlcbA8N547CYJgjRaMg5DKhgNAD59JjxKcwN4VmTELm5TTde4LcDKgWt9SZByP0FP4EUqQUZqfkqXK9n/QbcZMShWjVXBsu52ztyGep5MK9Wgb1x7RHmOchEp79I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zHjheGq1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738322665; c=relaxed/simple;
+	bh=Iaerg3+8AqywBAEG/lTnaM1Incy9T2wnxZu5PIc97OU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=okTvFen6BIkJ7a7aGxDChLyBuuuZ9lnr41T6iVNRcViLMaPMwpLlqqev3rCvFaG0RvoCivX2agns0C/DRhyBsGaegnlUfOKOhi/wqEFzTlLPEKv40qht+CxOKqesJXw2rXWIuVTWjkBPWv0eF5vy0odPgNqxfqnfa7oroIr4A2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ffgQtixe; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zHjheGq1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE40C4CED1;
-	Fri, 31 Jan 2025 11:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738322520;
-	bh=2OIhAncQSsSur1iGhm/B7xoQKGhHNQXrwRU5j+kBFYg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=zHjheGq1CoxgONOm6oNAF6638e43fqceV36jNGw2HohJK/VBFt7RhX33VbR/yNF3K
-	 TOV8EbtGXVEz4Zn2gRpDPW/DbrzQZpEOF3VnvToLRGYZDBELqnxxM1wZBOXeq+GCVZ
-	 oFL7D1J/SKJtwBftVnCQL4j1ag55VbO2xfekiStY=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	hargar@microsoft.com,
-	broonie@kernel.org
-Subject: [PATCH 5.10 000/136] 5.10.234-rc2 review
-Date: Fri, 31 Jan 2025 12:21:46 +0100
-Message-ID: <20250131112129.273288063@linuxfoundation.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ffgQtixe"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50V2OEm5021886;
+	Fri, 31 Jan 2025 11:24:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=YKonbqfAFfY7D++WK16sg2VVxpRaEGjOFyqVTb3N6
+	zE=; b=ffgQtixeyVrwsAEPVJ5PjlarEp1hE18SJ4VNtAU2JIOxoQCclRfrOo+En
+	H64p2MT1CanAxUtAGBXeJ31C/15/shqMCimdAUJ3gXwIrDhHL1nTCRX/gs6Q6dQE
+	4hStrTG37DAadT+XRi8pBwZLlG3Gtdx/FTtSzfpG4dDC7IZHmQx4D3iOcswhZo/+
+	xYcptYCxpJ0jc5zmi2/5q0u8fvjegvb6hK4Qok1qDiqBk0vX+ID0PtpeHhc/QPMf
+	U6YOiDicmDxQ0MPO+wV2rbGLR1UUQuF+GFrZSpEvwKamS0P2gcOFtoJOZDLNJiJx
+	kkAXK96ag+GFAz3NGxMPgRAAyhl8Q==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gnby9wvv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 11:24:19 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50VBDOmA032750;
+	Fri, 31 Jan 2025 11:24:18 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gnby9wvu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 11:24:18 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50V8CARs013878;
+	Fri, 31 Jan 2025 11:24:18 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44gf93b9c3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 11:24:17 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VBOEQo53870880
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 31 Jan 2025 11:24:14 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6A5F620098;
+	Fri, 31 Jan 2025 11:24:14 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 35A5B20097;
+	Fri, 31 Jan 2025 11:24:14 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 31 Jan 2025 11:24:14 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        irogers@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: Fix perf test 11 hwmon endianess issue
+Date: Fri, 31 Jan 2025 12:24:00 +0100
+Message-ID: <20250131112400.568975-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.234-rc2.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.10.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.10.234-rc2
-X-KernelTest-Deadline: 2025-02-02T11:21+00:00
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-
-This is the start of the stable review cycle for the 5.10.234 release.
-There are 136 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Sun, 02 Feb 2025 11:21:01 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.234-rc2.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.10.234-rc2
-
-Ron Economos <re@w6rz.net>
-    Partial revert of xhci: use pm_ptr() instead #ifdef for CONFIG_PM conditionals
-
-Arnd Bergmann <arnd@arndb.de>
-    xhci: use pm_ptr() instead of #ifdef for CONFIG_PM conditionals
-
-Maíra Canal <mcanal@igalia.com>
-    drm/v3d: Assign job pointer to NULL before signaling the fence
-
-Jack Greiner <jack@emoss.org>
-    Input: xpad - add support for wooting two he (arm)
-
-Nilton Perim Neto <niltonperimneto@gmail.com>
-    Input: xpad - add unofficial Xbox 360 wireless receiver clone
-
-Mark Pearson <mpearson-lenovo@squebb.ca>
-    Input: atkbd - map F23 key to support default copilot shortcut
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "usb: gadget: u_serial: Disable ep before setting port to null to fix the crash caused by port being null"
-
-Qasim Ijaz <qasdev00@gmail.com>
-    USB: serial: quatech2: fix null-ptr-deref in qt2_process_read_urb()
-
-Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>
-    wifi: iwlwifi: add a few rate index validity checks
-
-Ido Schimmel <idosch@nvidia.com>
-    ipv4: ip_tunnel: Fix suspicious RCU usage warning in ip_tunnel_find()
-
-Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-    Bluetooth: RFCOMM: Fix not validating setsockopt user input
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio/platform: check the bounds of read/write syscalls
-
-Eric W. Biederman <ebiederm@xmission.com>
-    signal/m68k: Use force_sigsegv(SIGSEGV) in fpsp040_die
-
-Al Viro <viro@zeniv.linux.org.uk>
-    m68k: Update ->thread.esp0 before calling syscall_trace() in ret_from_signal
-
-Jamal Hadi Salim <jhs@mojatatu.com>
-    net: sched: fix ets qdisc OOB Indexing
-
-Andreas Gruenbacher <agruenba@redhat.com>
-    gfs2: Truncate address space when flipping GFS2_DIF_JDATA flag
-
-Charles Keepax <ckeepax@opensource.cirrus.com>
-    ASoC: samsung: Add missing depends on I2C
-
-Philippe Simons <simons.philippe@gmail.com>
-    irqchip/sunxi-nmi: Add missing SKIP_WAKE flag
-
-Xiang Zhang <hawkxiang.cpp@gmail.com>
-    scsi: iscsi: Fix redundant response for ISCSI_UEVENT_GET_HOST_STATS request
-
-Linus Walleij <linus.walleij@linaro.org>
-    seccomp: Stub for !CONFIG_SECCOMP
-
-Charles Keepax <ckeepax@opensource.cirrus.com>
-    ASoC: samsung: Add missing selects for MFD_WM8994
-
-Charles Keepax <ckeepax@opensource.cirrus.com>
-    ASoC: wm8994: Add depends on MFD core
-
-Wang Liang <wangliang74@huawei.com>
-    net: fix data-races around sk->sk_forward_alloc
-
-Suraj Sonawane <surajsonawane0215@gmail.com>
-    scsi: sg: Fix slab-use-after-free read in sg_release()
-
-Juergen Gross <jgross@suse.com>
-    x86/xen: fix SLS mitigation in xen_hypercall_iret()
-
-Stefano Garzarella <sgarzare@redhat.com>
-    vsock: prevent null-ptr-deref in vsock_*[has_data|has_space]
-
-Stefano Garzarella <sgarzare@redhat.com>
-    vsock/virtio: discard packets if the transport changes
-
-Willem de Bruijn <willemb@google.com>
-    fou: remove warn in gue_gro_receive on unsupported protocol
-
-Youzhong Yang <youzhong@gmail.com>
-    nfsd: add list_head nf_gc to struct nfsd_file
-
-Eric Dumazet <edumazet@google.com>
-    ipv6: avoid possible NULL deref in rt6_uncached_list_flush_dev()
-
-Tejun Heo <tj@kernel.org>
-    blk-cgroup: Fix UAF in blkcg_unpin_online()
-
-Chengchang Tang <tangchengchang@huawei.com>
-    RDMA/hns: Fix deadlock on SRQ async events.
-
-Matthew Wilcox (Oracle) <willy@infradead.org>
-    vmalloc: fix accounting with i915
-
-Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-    drm/radeon: check bo_va->bo is non-NULL before using it
-
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
-    iio: adc: rockchip_saradc: fix information leak in triggered buffer
-
-Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-    iio: imu: inv_icm42600: fix timestamps after suspend if sensor is on
-
-Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-    iio: imu: inv_icm42600: fix spi burst write not supported
-
-Terry Tritton <terry.tritton@linaro.org>
-    Revert "PCI: Use preserve_config in place of pci_flags"
-
-Koichiro Den <koichiro.den@canonical.com>
-    hrtimers: Handle CPU state correctly on hotplug
-
-Yogesh Lal <quic_ylal@quicinc.com>
-    irqchip/gic-v3: Handle CPU_PM_ENTER_FAILED correctly
-
-Zhongqiu Han <quic_zhonhan@quicinc.com>
-    gpiolib: cdev: Fix use after free in lineinfo_changed_notify
-
-Rik van Riel <riel@surriel.com>
-    fs/proc: fix softlockup in __read_vmcore (part 2)
-
-Stefano Garzarella <sgarzare@redhat.com>
-    vsock: reset socket state when de-assigning the transport
-
-Stefano Garzarella <sgarzare@redhat.com>
-    vsock/virtio: cancel close work in the destructor
-
-Heiner Kallweit <hkallweit1@gmail.com>
-    net: ethernet: xgbe: re-add aneg to supported features in PHY quirks
-
-Juergen Gross <jgross@suse.com>
-    x86/asm: Make serialize() always_inline
-
-Luis Chamberlain <mcgrof@kernel.org>
-    nvmet: propagate npwg topology
-
-Oleg Nesterov <oleg@redhat.com>
-    poll_wait: add mb() to fix theoretical race between waitqueue_active() and .poll()
-
-David Howells <dhowells@redhat.com>
-    kheaders: Ignore silly-rename files
-
-Zhang Kunbo <zhangkunbo@huawei.com>
-    fs: fix missing declaration of init_files
-
-Leo Stone <leocstone@gmail.com>
-    hfs: Sanity check the root record
-
-Lizhi Xu <lizhi.xu@windriver.com>
-    mac802154: check local interfaces before deleting sdata list
-
-Wolfram Sang <wsa+renesas@sang-engineering.com>
-    i2c: rcar: fix NACK handling when being a target
-
-Wolfram Sang <wsa+renesas@sang-engineering.com>
-    i2c: mux: demux-pinctrl: check initial mux selection, too
-
-Maíra Canal <mcanal@igalia.com>
-    drm/v3d: Ensure job pointer is set to NULL after job completion
-
-Patrisious Haddad <phaddad@nvidia.com>
-    net/mlx5: Fix RDMA TX steering prio
-
-Maor Gottlieb <maorg@nvidia.com>
-    net/mlx5: Refactor mlx5_get_flow_namespace
-
-Aharon Landau <aharonl@nvidia.com>
-    net/mlx5: Add priorities for counters in RDMA namespaces
-
-Dan Carpenter <dan.carpenter@linaro.org>
-    nfp: bpf: prevent integer overflow in nfp_bpf_event_output()
-
-Kuniyuki Iwashima <kuniyu@amazon.com>
-    gtp: Destroy device along with udp socket's netns dismantle.
-
-Kuniyuki Iwashima <kuniyu@amazon.com>
-    gtp: Use for_each_netdev_rcu() in gtp_genl_dump_pdp().
-
-Eric Dumazet <edumazet@google.com>
-    gtp: use exit_batch_rtnl() method
-
-Eric Dumazet <edumazet@google.com>
-    net: add exit_batch_rtnl() method
-
-Yajun Deng <yajun.deng@linux.dev>
-    net: net_namespace: Optimize the code
-
-Michal Luczaj <mhal@rbox.co>
-    bpf: Fix bpf_sk_select_reuseport() memory leak
-
-Sudheer Kumar Doredla <s-doredla@ti.com>
-    net: ethernet: ti: cpsw_ale: Fix cpsw_ale_get_field()
-
-Justin Chen <justinpopo6@gmail.com>
-    phy: usb: Fix clock imbalance for suspend/resume
-
-Justin Chen <justinpopo6@gmail.com>
-    phy: usb: Use slow clock for wake enabled suspend
-
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
-    sctp: sysctl: rto_min/max: avoid using current->nsproxy
-
-Biju Das <biju.das.jz@bp.renesas.com>
-    drm: adv7511: Fix use-after-free in adv7533_attach_dsi()
-
-Ahmad Fatoum <a.fatoum@pengutronix.de>
-    drm: bridge: adv7511: use dev_err_probe in probe function
-
-Alvin Šipraga <alsi@bang-olufsen.dk>
-    drm: bridge: adv7511: unregister cec i2c device after cec adapter
-
-Maxime Ripard <maxime@cerno.tech>
-    drm/bridge: adv7533: Switch to devm MIPI-DSI helpers
-
-Maxime Ripard <maxime@cerno.tech>
-    drm/mipi-dsi: Create devm device attachment
-
-Maxime Ripard <maxime@cerno.tech>
-    drm/mipi-dsi: Create devm device registration
-
-Xu Wang <vulab@iscas.ac.cn>
-    drm: bridge: adv7511: Remove redundant null check before clk_disable_unprepare
-
-Dennis Lam <dennis.lamerice@gmail.com>
-    ocfs2: fix slab-use-after-free due to dangling pointer dqi_priv
-
-Joseph Qi <joseph.qi@linux.alibaba.com>
-    ocfs2: correct return value of ocfs2_local_free_info()
-
-Justin Chen <justin.chen@broadcom.com>
-    phy: usb: Toggle the PHY power during init
-
-Al Cooper <alcooperx@gmail.com>
-    phy: usb: Add "wake on" functionality for newer Synopsis XHCI controllers
-
-Christoph Hellwig <hch@lst.de>
-    block: remove the update_bdev parameter to set_capacity_revalidate_and_notify
-
-Christoph Hellwig <hch@lst.de>
-    sd: update the bdev size in sd_revalidate_disk
-
-Christoph Hellwig <hch@lst.de>
-    nvme: let set_capacity_revalidate_and_notify update the bdev size
-
-Christoph Hellwig <hch@lst.de>
-    loop: let set_capacity_revalidate_and_notify update the bdev size
-
-Peter Geis <pgwipeout@gmail.com>
-    arm64: dts: rockchip: add hevc power domain clock to rk3328
-
-Johan Jonker <jbx6244@gmail.com>
-    arm64: dts: rockchip: add #power-domain-cells to power domain nodes
-
-Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
-    iio: inkern: call iio_device_put() only on mapped devices
-
-Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
-    iio: adc: at91: call input_free_device() on allocated iio_dev
-
-Fabio Estevam <festevam@gmail.com>
-    iio: adc: ti-ads124s08: Use gpiod_set_value_cansleep()
-
-Carlos Song <carlos.song@nxp.com>
-    iio: gyro: fxas21002c: Fix missing data update in trigger handler
-
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
-    iio: adc: ti-ads8688: fix information leak in triggered buffer
-
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
-    iio: imu: kmx61: fix information leak in triggered buffer
-
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
-    iio: light: vcnl4035: fix information leak in triggered buffer
-
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
-    iio: dummy: iio_simply_dummy_buffer: fix information leak in triggered buffer
-
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
-    iio: pressure: zpa2326: fix information leak in triggered buffer
-
-Akash M <akash.m5@samsung.com>
-    usb: gadget: f_fs: Remove WARN_ON in functionfs_bind
-
-Ma Ke <make_ruc2021@163.com>
-    usb: fix reference leak in usb_new_device()
-
-Kai-Heng Feng <kaihengf@nvidia.com>
-    USB: core: Disable LPM only for non-suspended ports
-
-Jun Yan <jerrysteve1101@gmail.com>
-    USB: usblp: return error when setting unsupported protocol
-
-Lianqin Hu <hulianqin@vivo.com>
-    usb: gadget: u_serial: Disable ep before setting port to null to fix the crash caused by port being null
-
-André Draszik <andre.draszik@linaro.org>
-    usb: dwc3: gadget: fix writing NYET threshold
-
-Johan Hovold <johan@kernel.org>
-    USB: serial: cp210x: add Phoenix Contact UPS Device
-
-Lubomir Rintel <lrintel@redhat.com>
-    usb-storage: Add max sectors quirk for Nokia 208
-
-Zicheng Qu <quzicheng@huawei.com>
-    staging: iio: ad9832: Correct phase range check
-
-Zicheng Qu <quzicheng@huawei.com>
-    staging: iio: ad9834: Correct phase range check
-
-Michal Hrusecky <michal.hrusecky@turris.com>
-    USB: serial: option: add Neoway N723-EA support
-
-Chukun Pan <amadeus@jmu.edu.cn>
-    USB: serial: option: add MeiG Smart SRM815
-
-Gui-Dong Han <2045gemini@gmail.com>
-    md/raid5: fix atomicity violation in raid5_cache_count
-
-Kuan-Wei Chiu <visitorckw@gmail.com>
-    scripts/sorttable: fix orc_sort_cmp() to maintain symmetry and transitivity
-
-Melissa Wen <mwen@igalia.com>
-    drm/amd/display: increase MAX_SURFACES to the value supported by hw
-
-Hans de Goede <hdegoede@redhat.com>
-    ACPI: resource: Add Asus Vivobook X1504VAP to irq1_level_low_skip_override[]
-
-Hans de Goede <hdegoede@redhat.com>
-    ACPI: resource: Add TongFang GM5HG0A to irq1_edge_low_force_override[]
-
-Nam Cao <namcao@linutronix.de>
-    riscv: Fix sleeping in invalid context in die()
-
-Roman Li <Roman.Li@amd.com>
-    drm/amd/display: Add check for granularity in dml ceil/floor helpers
-
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
-    sctp: sysctl: auth_enable: avoid using current->nsproxy
-
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
-    sctp: sysctl: cookie_hmac_alg: avoid using current->nsproxy
-
-Mikulas Patocka <mpatocka@redhat.com>
-    dm-ebs: don't set the flag DM_TARGET_PASSES_INTEGRITY
-
-Krister Johansen <kjlx@templeofstupid.com>
-    dm thin: make get_first_thin use rcu-safe list first function
-
-David Howells <dhowells@redhat.com>
-    afs: Fix the maximum cell name length
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: conntrack: clamp maximum hashtable size to INT_MAX
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: imbalance in flowtable binding
-
-Benjamin Coddington <bcodding@redhat.com>
-    tls: Fix tls_sw_sendmsg error handling
-
-Anumula Murali Mohan Reddy <anumula@chelsio.com>
-    cxgb4: Avoid removal of uninserted tid
-
-Eric Dumazet <edumazet@google.com>
-    net_sched: cls_flow: validate TCA_FLOW_RSHIFT attribute
-
-Zhongqiu Duan <dzq.aishenghu0@gmail.com>
-    tcp/dccp: allow a connection when sk_max_ack_backlog is zero
-
-Jason Xing <kernelxing@tencent.com>
-    tcp/dccp: complete lockless accesses to sk->sk_max_ack_backlog
-
-Antonio Pastor <antonio.pastor@gmail.com>
-    net: 802: LLC+SNAP OID:PID lookup on start of skb data
-
-Keisuke Nishimura <keisuke.nishimura@inria.fr>
-    ieee802154: ca8210: Add missing check for kfifo_alloc() in ca8210_probe()
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nft_dynset: honor stateful expressions in set definition
-
-Chen-Yu Tsai <wenst@chromium.org>
-    ASoC: mediatek: disable buffer pre-allocation
-
-Yuezhang Mo <Yuezhang.Mo@sony.com>
-    exfat: fix the infinite loop in exfat_readdir()
-
-Ming-Hung Tsai <mtsai@redhat.com>
-    dm array: fix cursor index when skipping across block boundaries
-
-Ming-Hung Tsai <mtsai@redhat.com>
-    dm array: fix unreleased btree blocks on closing a faulty array cursor
-
-Ming-Hung Tsai <mtsai@redhat.com>
-    dm array: fix releasing a faulty array block twice in dm_array_cursor_end
-
-Zhang Yi <yi.zhang@huawei.com>
-    jbd2: flush filesystem device before updating tail sequence
-
-Max Kellermann <max.kellermann@ionos.com>
-    ceph: give up on paths longer than PATH_MAX
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +-
- arch/arm64/boot/dts/rockchip/px30.dtsi             |  8 ++
- arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  4 +
- arch/arm64/boot/dts/rockchip/rk3399.dtsi           | 20 +++++
- arch/m68k/fpsp040/skeleton.S                       |  3 +-
- arch/m68k/kernel/entry.S                           |  2 +
- arch/m68k/kernel/traps.c                           |  2 +-
- arch/riscv/kernel/traps.c                          |  6 +-
- arch/x86/include/asm/special_insns.h               |  2 +-
- arch/x86/xen/xen-asm.S                             |  2 +-
- block/genhd.c                                      | 13 ++-
- drivers/acpi/resource.c                            | 18 ++++
- drivers/block/loop.c                               |  8 +-
- drivers/block/virtio_blk.c                         |  2 +-
- drivers/block/xen-blkfront.c                       |  2 +-
- drivers/gpio/gpiolib-cdev.c                        |  2 +-
- drivers/gpu/drm/amd/display/dc/dc.h                |  2 +-
- .../gpu/drm/amd/display/dc/dml/dml_inline_defs.h   |  8 ++
- drivers/gpu/drm/bridge/adv7511/adv7511.h           |  1 -
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c       | 17 ++--
- drivers/gpu/drm/bridge/adv7511/adv7533.c           | 38 +++------
- drivers/gpu/drm/drm_mipi_dsi.c                     | 81 ++++++++++++++++++
- drivers/gpu/drm/radeon/radeon_gem.c                |  2 +-
- drivers/gpu/drm/v3d/v3d_irq.c                      | 12 +++
- drivers/i2c/busses/i2c-rcar.c                      | 20 +++--
- drivers/i2c/muxes/i2c-demux-pinctrl.c              |  4 +-
- drivers/iio/adc/at91_adc.c                         |  2 +-
- drivers/iio/adc/rockchip_saradc.c                  |  2 +
- drivers/iio/adc/ti-ads124s08.c                     |  4 +-
- drivers/iio/adc/ti-ads8688.c                       |  2 +-
- drivers/iio/dummy/iio_simple_dummy_buffer.c        |  2 +-
- drivers/iio/gyro/fxas21002c_core.c                 | 11 ++-
- drivers/iio/imu/inv_icm42600/inv_icm42600.h        |  1 +
- drivers/iio/imu/inv_icm42600/inv_icm42600_core.c   | 18 +++-
- drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c    |  3 +-
- drivers/iio/imu/kmx61.c                            |  2 +-
- drivers/iio/inkern.c                               |  2 +-
- drivers/iio/light/vcnl4035.c                       |  2 +-
- drivers/iio/pressure/zpa2326.c                     |  2 +
- drivers/infiniband/hw/hns/hns_roce_main.c          |  1 +
- drivers/infiniband/hw/hns/hns_roce_srq.c           |  6 +-
- drivers/input/joystick/xpad.c                      |  2 +
- drivers/input/keyboard/atkbd.c                     |  2 +-
- drivers/irqchip/irq-gic-v3.c                       |  2 +-
- drivers/irqchip/irq-sunxi-nmi.c                    |  3 +-
- drivers/md/dm-ebs-target.c                         |  2 +-
- drivers/md/dm-thin.c                               |  5 +-
- drivers/md/persistent-data/dm-array.c              | 19 +++--
- drivers/md/raid5.c                                 | 14 ++--
- drivers/net/ethernet/amd/xgbe/xgbe-phy-v2.c        | 19 +----
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c    |  5 +-
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c  | 95 ++++++++++++++++++----
- drivers/net/ethernet/netronome/nfp/bpf/offload.c   |  3 +-
- drivers/net/ethernet/ti/cpsw_ale.c                 | 14 ++--
- drivers/net/gtp.c                                  | 42 ++++++----
- drivers/net/ieee802154/ca8210.c                    |  6 +-
- drivers/net/wireless/intel/iwlwifi/dvm/rs.c        |  7 +-
- drivers/net/wireless/intel/iwlwifi/mvm/rs.c        |  9 +-
- drivers/nvme/host/core.c                           |  5 +-
- drivers/nvme/target/io-cmd-bdev.c                  |  2 +-
- drivers/pci/controller/pci-host-common.c           |  4 +
- drivers/pci/probe.c                                | 20 +++--
- drivers/phy/broadcom/phy-brcm-usb-init-synopsys.c  | 53 +++++++++---
- drivers/phy/broadcom/phy-brcm-usb-init.h           |  1 -
- drivers/phy/broadcom/phy-brcm-usb.c                |  8 +-
- drivers/scsi/scsi_transport_iscsi.c                |  4 +-
- drivers/scsi/sd.c                                  |  9 +-
- drivers/scsi/sg.c                                  |  2 +-
- drivers/staging/iio/frequency/ad9832.c             |  2 +-
- drivers/staging/iio/frequency/ad9834.c             |  2 +-
- drivers/usb/class/usblp.c                          |  7 +-
- drivers/usb/core/hub.c                             |  6 +-
- drivers/usb/core/port.c                            |  7 +-
- drivers/usb/dwc3/core.h                            |  1 +
- drivers/usb/dwc3/gadget.c                          |  4 +-
- drivers/usb/gadget/function/f_fs.c                 |  2 +-
- drivers/usb/host/xhci-pci.c                        |  4 +-
- drivers/usb/serial/cp210x.c                        |  1 +
- drivers/usb/serial/option.c                        |  4 +-
- drivers/usb/serial/quatech2.c                      |  2 +-
- drivers/usb/storage/unusual_devs.h                 |  7 ++
- drivers/vfio/platform/vfio_platform_common.c       | 10 +++
- fs/afs/afs.h                                       |  2 +-
- fs/afs/afs_vl.h                                    |  1 +
- fs/afs/vl_alias.c                                  |  8 +-
- fs/afs/vlclient.c                                  |  2 +-
- fs/ceph/mds_client.c                               |  9 +-
- fs/exfat/dir.c                                     |  3 +-
- fs/file.c                                          |  1 +
- fs/gfs2/file.c                                     |  1 +
- fs/hfs/super.c                                     |  4 +-
- fs/jbd2/commit.c                                   |  4 +-
- fs/nfsd/filecache.c                                | 18 ++--
- fs/nfsd/filecache.h                                |  1 +
- fs/ocfs2/quota_global.c                            |  2 +-
- fs/ocfs2/quota_local.c                             | 10 +--
- fs/proc/vmcore.c                                   |  2 +
- include/drm/drm_mipi_dsi.h                         |  4 +
- include/linux/blk-cgroup.h                         |  6 +-
- include/linux/genhd.h                              |  3 +-
- include/linux/hrtimer.h                            |  1 +
- include/linux/mlx5/device.h                        |  2 +
- include/linux/mlx5/fs.h                            |  2 +
- include/linux/poll.h                               | 10 ++-
- include/linux/seccomp.h                            |  2 +-
- include/linux/usb.h                                |  3 +-
- include/linux/usb/hcd.h                            |  2 -
- include/net/inet_connection_sock.h                 |  2 +-
- include/net/net_namespace.h                        |  3 +
- include/net/netfilter/nf_tables.h                  |  2 +
- kernel/cpu.c                                       |  2 +-
- kernel/gen_kheaders.sh                             |  1 +
- kernel/time/hrtimer.c                              | 11 ++-
- mm/vmalloc.c                                       |  3 +-
- net/802/psnap.c                                    |  4 +-
- net/bluetooth/rfcomm/sock.c                        | 14 ++--
- net/core/filter.c                                  | 30 ++++---
- net/core/net_namespace.c                           | 83 ++++++++++++-------
- net/dccp/ipv6.c                                    |  2 +-
- net/ipv4/fou.c                                     |  2 +-
- net/ipv4/ip_tunnel.c                               |  2 +-
- net/ipv6/route.c                                   |  2 +-
- net/ipv6/tcp_ipv6.c                                |  4 +-
- net/mac802154/iface.c                              |  4 +
- net/netfilter/nf_conntrack_core.c                  |  5 +-
- net/netfilter/nf_tables_api.c                      | 38 ++++++++-
- net/netfilter/nft_dynset.c                         |  7 +-
- net/sched/cls_flow.c                               |  3 +-
- net/sched/sch_ets.c                                |  2 +
- net/sctp/sysctl.c                                  |  9 +-
- net/tls/tls_sw.c                                   |  2 +-
- net/vmw_vsock/af_vsock.c                           | 15 ++++
- net/vmw_vsock/virtio_transport_common.c            | 38 ++++++---
- scripts/sorttable.h                                | 10 ++-
- sound/soc/codecs/Kconfig                           |  1 +
- .../soc/mediatek/common/mtk-afe-platform-driver.c  |  4 +-
- sound/soc/samsung/Kconfig                          |  6 +-
- 137 files changed, 816 insertions(+), 357 deletions(-)
-
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: IDtSwy56-IGCMBjimdl43szoBURNTuYo
+X-Proofpoint-GUID: 1hBudgDVj2TlOtdukJ4Tpwz7dElzPNZJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-31_04,2025-01-31_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 mlxlogscore=999 clxscore=1015
+ bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2501310083
+
+perf test 11 hwmon fails on s390 with this error
+
+ # ./perf test -Fv 11
+ --- start ---
+ ---- end ----
+ 11.1: Basic parsing test             : Ok
+ --- start ---
+ Testing 'temp_test_hwmon_event1'
+ Using CPUID IBM,3931,704,A01,3.7,002f
+ temp_test_hwmon_event1 -> hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/
+ FAILED tests/hwmon_pmu.c:189 Unexpected config for
+    'temp_test_hwmon_event1', 292470092988416 != 655361
+ ---- end ----
+ 11.2: Parsing without PMU name       : FAILED!
+ --- start ---
+ Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
+ FAILED tests/hwmon_pmu.c:189 Unexpected config for
+    'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/',
+    292470092988416 != 655361
+ ---- end ----
+ 11.3: Parsing with PMU name          : FAILED!
+ #
+
+The root cause is in member test_event::config which is initialized
+to 0xA0001 or 655361. During event parsing a long list event parsing
+functions are called and end up with this gdb call stack:
+
+ #0  hwmon_pmu__config_term (hwm=0x168dfd0, attr=0x3ffffff5ee8,
+	term=0x168db60, err=0x3ffffff81c8) at util/hwmon_pmu.c:623
+ #1  hwmon_pmu__config_terms (pmu=0x168dfd0, attr=0x3ffffff5ee8,
+	terms=0x3ffffff5ea8, err=0x3ffffff81c8) at util/hwmon_pmu.c:662
+ #2  0x00000000012f870c in perf_pmu__config_terms (pmu=0x168dfd0,
+	attr=0x3ffffff5ee8, terms=0x3ffffff5ea8, zero=false,
+	apply_hardcoded=false, err=0x3ffffff81c8) at util/pmu.c:1519
+ #3  0x00000000012f88a4 in perf_pmu__config (pmu=0x168dfd0, attr=0x3ffffff5ee8,
+	head_terms=0x3ffffff5ea8, apply_hardcoded=false, err=0x3ffffff81c8)
+	at util/pmu.c:1545
+ #4  0x00000000012680c4 in parse_events_add_pmu (parse_state=0x3ffffff7fb8,
+	list=0x168dc00, pmu=0x168dfd0, const_parsed_terms=0x3ffffff6090,
+	auto_merge_stats=true, alternate_hw_config=10)
+	at util/parse-events.c:1508
+ #5  0x00000000012684c6 in parse_events_multi_pmu_add (parse_state=0x3ffffff7fb8,
+	event_name=0x168ec10 "temp_test_hwmon_event1", hw_config=10,
+	const_parsed_terms=0x0, listp=0x3ffffff6230, loc_=0x3ffffff70e0)
+	at util/parse-events.c:1592
+ #6  0x00000000012f0e4e in parse_events_parse (_parse_state=0x3ffffff7fb8,
+	scanner=0x16878c0) at util/parse-events.y:293
+ #7  0x00000000012695a0 in parse_events__scanner (str=0x3ffffff81d8
+	"temp_test_hwmon_event1", input=0x0, parse_state=0x3ffffff7fb8)
+	at util/parse-events.c:1867
+ #8  0x000000000126a1e8 in __parse_events (evlist=0x168b580,
+	str=0x3ffffff81d8 "temp_test_hwmon_event1", pmu_filter=0x0,
+	err=0x3ffffff81c8, fake_pmu=false, warn_if_reordered=true,
+	fake_tp=false) at util/parse-events.c:2136
+ #9  0x00000000011e36aa in parse_events (evlist=0x168b580,
+	str=0x3ffffff81d8 "temp_test_hwmon_event1", err=0x3ffffff81c8)
+	at /root/linux/tools/perf/util/parse-events.h:41
+ #10 0x00000000011e3e64 in do_test (i=0, with_pmu=false, with_alias=false)
+	at tests/hwmon_pmu.c:164
+ #11 0x00000000011e422c in test__hwmon_pmu (with_pmu=false)
+	at tests/hwmon_pmu.c:219
+ #12 0x00000000011e431c in test__hwmon_pmu_without_pmu (test=0x1610368
+	<suite.hwmon_pmu>, subtest=1) at tests/hwmon_pmu.c:23
+
+where the attr::config is set to value 292470092988416 or 0x10a0000000000
+in line 625 of file ./util/hwmon_pmu.c:
+
+   attr->config = key.type_and_num;
+
+However member key::type_and_num is defined as union and bit field:
+
+   union hwmon_pmu_event_key {
+        long type_and_num;
+        struct {
+                int num :16;
+                enum hwmon_type type :8;
+        };
+   };
+
+s390 is big endian and Intel is little endian architecture.
+The events for the hwmon dummy pmu have num = 1 or num = 2 and
+type is set to HWMON_TYPE_TEMP (which is 10).
+On s390 this assignes member key::type_and_num the value of
+0x10a0000000000 (which is 292470092988416) as shown in above
+trace output.
+
+Fix this and export the structure/union hwmon_pmu_event_key
+so the test shares the same implementation as the event parsing
+functions for union and bit fields. This should avoid
+endianess issues on all platforms.
+
+Output after:
+ # ./perf test -F 11
+ 11.1: Basic parsing test         : Ok
+ 11.2: Parsing without PMU name   : Ok
+ 11.3: Parsing with PMU name      : Ok
+ #
+
+Fixes: 531ee0fd4836 ("perf test: Add hwmon "PMU" test")
+Cc: Ian Rogers <irogers@google.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/hwmon_pmu.c | 16 +++++++++++-----
+ tools/perf/util/hwmon_pmu.c  | 14 --------------
+ tools/perf/util/hwmon_pmu.h  | 16 ++++++++++++++++
+ 3 files changed, 27 insertions(+), 19 deletions(-)
+
+diff --git a/tools/perf/tests/hwmon_pmu.c b/tools/perf/tests/hwmon_pmu.c
+index d2b066a2b557..0837aca1cdfa 100644
+--- a/tools/perf/tests/hwmon_pmu.c
++++ b/tools/perf/tests/hwmon_pmu.c
+@@ -13,17 +13,23 @@
+ static const struct test_event {
+ 	const char *name;
+ 	const char *alias;
+-	long config;
++	union hwmon_pmu_event_key key;
+ } test_events[] = {
+ 	{
+ 		"temp_test_hwmon_event1",
+ 		"temp1",
+-		0xA0001,
++		.key = {
++			.num = 1,
++			.type = 10
++		},
+ 	},
+ 	{
+ 		"temp_test_hwmon_event2",
+ 		"temp2",
+-		0xA0002,
++		.key = {
++			.num = 2,
++			.type = 10
++		},
+ 	},
+ };
+ 
+@@ -183,11 +189,11 @@ static int do_test(size_t i, bool with_pmu, bool with_alias)
+ 		    strcmp(evsel->pmu->name, "hwmon_a_test_hwmon_pmu"))
+ 			continue;
+ 
+-		if (evsel->core.attr.config != (u64)test_events[i].config) {
++		if (evsel->core.attr.config != (u64)test_events[i].key.type_and_num) {
+ 			pr_debug("FAILED %s:%d Unexpected config for '%s', %lld != %ld\n",
+ 				__FILE__, __LINE__, str,
+ 				evsel->core.attr.config,
+-				test_events[i].config);
++				test_events[i].key.type_and_num);
+ 			ret = TEST_FAIL;
+ 			goto out;
+ 		}
+diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+index 4acb9bb19b84..acd889b2462f 100644
+--- a/tools/perf/util/hwmon_pmu.c
++++ b/tools/perf/util/hwmon_pmu.c
+@@ -107,20 +107,6 @@ struct hwmon_pmu {
+ 	int hwmon_dir_fd;
+ };
+ 
+-/**
+- * union hwmon_pmu_event_key: Key for hwmon_pmu->events as such each key
+- * represents an event.
+- *
+- * Related hwmon files start <type><number> that this key represents.
+- */
+-union hwmon_pmu_event_key {
+-	long type_and_num;
+-	struct {
+-		int num :16;
+-		enum hwmon_type type :8;
+-	};
+-};
+-
+ /**
+  * struct hwmon_pmu_event_value: Value in hwmon_pmu->events.
+  *
+diff --git a/tools/perf/util/hwmon_pmu.h b/tools/perf/util/hwmon_pmu.h
+index 882566846df4..b3329774d2b2 100644
+--- a/tools/perf/util/hwmon_pmu.h
++++ b/tools/perf/util/hwmon_pmu.h
+@@ -91,6 +91,22 @@ enum hwmon_item {
+ 	HWMON_ITEM__MAX,
+ };
+ 
++/**
++ * union hwmon_pmu_event_key: Key for hwmon_pmu->events as such each key
++ * represents an event.
++ * union is exposed for testing to ensure problems are avoided on big
++ * endian machines.
++ *
++ * Related hwmon files start <type><number> that this key represents.
++ */
++union hwmon_pmu_event_key {
++	long type_and_num;
++	struct {
++		int num :16;
++		enum hwmon_type type :8;
++	};
++};
++
+ bool perf_pmu__is_hwmon(const struct perf_pmu *pmu);
+ bool evsel__is_hwmon(const struct evsel *evsel);
+ 
+-- 
+2.48.1
 
