@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B58C1F12F9
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:43:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777381F12F3;
+	Fri, 31 Jan 2025 17:43:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738345390; cv=none; b=pKOsg+cDEbBC3zBrbK+tZpZa5JnyaYedPVJ4THCI7L70mmXjb4Fga19sJlvhGyojZyczorioKTEPQ/s+uwLi4pbO+0ByWLACZnr0o4f72d+6cZ5BnHTKtwVsSeEMB1HCjToYmoMi/UhR3eOAfixAIyWPsRbdbfNgSP2YE63/3xI=
+	t=1738345390; cv=none; b=CQP8nP4S6Hnb3hAOLYFqrhYZLBmymQ5tG8kBkuDExKihJGln6NCX9Ky6iEIJrXfv8EmJd3pziiHbw4AWxPSRZAi7eauVXjzFC6gNYPb1RjGnl8hk3idxiwuDcZXl/FefFUq987q6W5+gZeguge0uGL+bR8a7daJruKU8WA8Bf38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738345390; c=relaxed/simple;
-	bh=XENotCdGmZHmdRBOHvzeRiRUv0/vDcIt48yE/zmU/b4=;
+	bh=t9q0oEXRbJ7tm/s5As65xyXV/wKXVY5Tl0pgv5u5V5g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Usozp3D2TdU4BQ0WkPhtU4kWOcNnBoAehxQGZfYYBjgPk8yunh0vqJCOJy0vx96DqCORBiWRo0osaLan88a2UUYJpTX3u0MRV55ZJ3CJKe8N9oBhQetlhUJEBC0/s6ZfET/egecsLN/BT0gTw1atGzN1rnVsBTmLEbLy1Hcz2cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sFiELI3q; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IQworml8fYzLU17QkY0Lw81t2L2xOIq1mDSYhbieX+021+1qM3C10xvQd3ryakBPp7yKvJhAJtJEcks4qqbEZUf/aDlHZxeTYcnK7CiiWmK/8QAkMh8nchR4ZLEPph/UEDdna7CL0hK4TZJZjiE7NfegP2jrUynGaGPafeRwpmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oomsz9oE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sFiELI3q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7FD7C4AF0E;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oomsz9oE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DFD6C4CED3;
 	Fri, 31 Jan 2025 17:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1738345389;
-	bh=XENotCdGmZHmdRBOHvzeRiRUv0/vDcIt48yE/zmU/b4=;
+	bh=t9q0oEXRbJ7tm/s5As65xyXV/wKXVY5Tl0pgv5u5V5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sFiELI3qTNpO50W/XXgPpUGUssiQGZYuHFSB93+DW2KioYFP/BY0gsRL2tgQMywKU
-	 n+SWTaXYryuihuQWCIKNyrGg1I6maBYY+CFuTn7pbEy2AVuGcrS4GDWvKNievwzukI
-	 X2FsCXUETCGhLR/t+vCozK0hGq7A6thi/yggZaNKqI9L13/FiKpsHY421vO+NLKNfc
-	 0dkbZ7nokRn8+YlMymoWi9mjONUXPRalI3pT/MKc6rjfRbj60KrAe0zsZMZ6ZPOiM5
-	 OcK1to9s97U6s8UJRKhih6Sp1BkLNdiuPPczRLQGamPoEsPlek6kPdm5j3pMB7Cfbj
-	 IiRasjum+5+Ig==
+	b=Oomsz9oEs6oEZuLYHWv34lpZV9IZQYggwTRvIT8P7RbZAzAOsrhVFRJB9e3Ajxa+Z
+	 D+iDmGOX1rlt0kxN/XP++W+UoRUhRIuHbqQijZNUykcDFsh8ye7Adl/XjwEeslJn7s
+	 DkOqfZrLBUE3a/nU0VcU2YzE/Q9tPzaOGbwBmLNHtTImaB2dLEgIxSkmxM51kU0TKk
+	 qtYRKmgUZhSgJG4rR57NlfAwj4RM1m5xCDo7M64PTruLLLmHM1rgMA5io4PQJ0HjbM
+	 TcH5EcoA7MyGsJ0XqqpfuvGZa9s4B1wA/870i4ec955LOqp89XKRZ3gee80oefQoLe
+	 uXcotVk0asRhQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tdv2p-00000006ghQ-1Mcg;
+	id 1tdv2p-00000006ghA-0tYc;
 	Fri, 31 Jan 2025 18:43:07 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
@@ -39,10 +39,14 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	qemu-devel@nongnu.org,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Ani Sinha <anisinha@redhat.com>,
+	Dongjiu Geng <gengdongjiu1@gmail.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 12/14] tests/acpi: virt: add a HEST table to aarch64 virt and update DSDT
-Date: Fri, 31 Jan 2025 18:42:53 +0100
-Message-ID: <343a2a84c1cf4a3998d40a188658bd42bc689602.1738345063.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 08/14] acpi/ghes: Cleanup the code which gets ghes ged state
+Date: Fri, 31 Jan 2025 18:42:49 +0100
+Message-ID: <46ef959f50967b6e65310f81b795c60e6ff97be3.1738345063.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1738345063.git.mchehab+huawei@kernel.org>
 References: <cover.1738345063.git.mchehab+huawei@kernel.org>
@@ -55,122 +59,212 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
---- a/DSDT.dsl        2025-01-28 09:38:15.155347858 +0100
-+++ b/DSDT.dsl        2025-01-28 09:39:01.684836954 +0100
-@@ -9,9 +9,9 @@
-  *
-  * Original Table Header:
-  *     Signature        "DSDT"
-- *     Length           0x00001516 (5398)
-+ *     Length           0x00001542 (5442)
-  *     Revision         0x02
-- *     Checksum         0x0F
-+ *     Checksum         0xE9
-  *     OEM ID           "BOCHS "
-  *     OEM Table ID     "BXPC    "
-  *     OEM Revision     0x00000001 (1)
-@@ -1931,6 +1931,11 @@
-                 {
-                     Notify (PWRB, 0x80) // Status Change
-                 }
-+
-+                If (((Local0 & 0x10) == 0x10))
-+                {
-+                    Notify (GEDD, 0x80) // Status Change
-+                }
-             }
-         }
-
-@@ -1939,6 +1944,12 @@
-             Name (_HID, "PNP0C0C" /* Power Button Device */)  // _HID: Hardware ID
-             Name (_UID, Zero)  // _UID: Unique ID
-         }
-+
-+        Device (GEDD)
-+        {
-+            Name (_HID, "PNP0C33" /* Error Device */)  // _HID: Hardware ID
-+            Name (_UID, Zero)  // _UID: Unique ID
-+        }
-     }
- }
+Move the check logic into a common function and simplify the
+code which checks if GHES is enabled and was properly setup.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by:  Igor Mammedov <imammedo@redhat.com>
 ---
- tests/data/acpi/aarch64/virt/DSDT             | Bin 5196 -> 5240 bytes
- .../data/acpi/aarch64/virt/DSDT.acpihmatvirt  | Bin 5282 -> 5326 bytes
- tests/data/acpi/aarch64/virt/DSDT.memhp       | Bin 6557 -> 6601 bytes
- tests/data/acpi/aarch64/virt/DSDT.pxb         | Bin 7679 -> 7723 bytes
- tests/data/acpi/aarch64/virt/DSDT.topology    | Bin 5398 -> 5442 bytes
- tests/data/acpi/aarch64/virt/HEST             |   0
- tests/qtest/bios-tables-test-allowed-diff.h   |   1 -
- 7 files changed, 1 deletion(-)
- delete mode 100644 tests/data/acpi/aarch64/virt/HEST
+ hw/acpi/ghes-stub.c    |  7 ++++---
+ hw/acpi/ghes.c         | 40 ++++++++++++----------------------------
+ include/hw/acpi/ghes.h | 15 ++++++++-------
+ target/arm/kvm.c       |  7 +++++--
+ 4 files changed, 29 insertions(+), 40 deletions(-)
 
-diff --git a/tests/data/acpi/aarch64/virt/DSDT b/tests/data/acpi/aarch64/virt/DSDT
-index 36d3e5d5a5e47359b6dcb3706f98b4f225677591..a182bd9d7182dccdf63c650d048c58f18505d001 100644
-GIT binary patch
-delta 109
-zcmX@3@k4{lCD<jTLWF^ViDe>}G*h$dM)euOOwJsW4+;nC=*7E+g>V+Q2D|zsED)Gn
-zoxsJ!z{S)S5FX^j)c_F?VBivHb9Z%dnXE4&D;?b=31V}^dw9C=2KWUSI2#)?aKwjt
-Hx-b9$X;vI^
-
-delta 64
-zcmeyNaYlp7CD<jzM}&caNqQoeG*i3NM)euOOit{R4+;lM%f`Egg>V+Q2D|zsED)Gn
-UoxsJ!z{S)S5FX?-*+E1W06%jPR{#J2
-
-diff --git a/tests/data/acpi/aarch64/virt/DSDT.acpihmatvirt b/tests/data/acpi/aarch64/virt/DSDT.acpihmatvirt
-index e6154d0355f84fdcc51387b4db8f9ee63acae4e9..af1f2b0eb0b77a80c5bd74f201d24f71e486627f 100644
-GIT binary patch
-delta 110
-zcmZ3ac}|ndCD<k8oCpI0)4_>c(oCIR8`a+lGdXii78eO-)SH|wBICY5U~+W=mjDBo
-yK%2X(iwjpnbdzL2c#soEyoaX?Z-8HbfwO@#14n$Qrwc=LlO#wDl9aJAR0;r(tsHj%
-
-delta 66
-zcmX@7xk!`CCD<iokq83=(~XH-(oDVX8`a+lGdZzO78eO-l%1R{A|oB$BpDDM<irv0
-W;pxH~;1^)vY~akm5g+R5!T<noi4jWx
-
-diff --git a/tests/data/acpi/aarch64/virt/DSDT.memhp b/tests/data/acpi/aarch64/virt/DSDT.memhp
-index 33f011d6b635035a04c0b39ce9b4e219f7ae74b7..10436ec87c4859fb84b3ecb7bba5788f38112e59 100644
-GIT binary patch
-delta 88
-zcmbPheA1Z9CD<k8q$C3algUIbX{MH08`WnBGdXcjJ}4Z_<jXo)OvH<SfxzVI1TFyv
-qE`c_8R~MJfaU%At($P(lAPz^oho=i~fM0-tv#~J)M|`NK3j+W#;TF9B
-
-delta 44
-zcmX?UJlB}ZCD<iot|S8klg&gfX{L_p8`WnBGdXfiJ}4Z_<ij#qOvGz*p@=Oj039?8
-AE&u=k
-
-diff --git a/tests/data/acpi/aarch64/virt/DSDT.pxb b/tests/data/acpi/aarch64/virt/DSDT.pxb
-index c0fdc6e9c1396cc2259dc4bc665ba023adcf4c9b..0524b3cbe00bfe552de824dd1090bd00a208c527 100644
-GIT binary patch
-delta 110
-zcmexwz1oJ$CD<iITaJN&sbC_PG*jDyjq2XAOwJsWOJsu?^(LQ?m2qDnFu6K`OMrn(
-ypv~RY#f7UOx=Au1JjjV7-ow*{H^48zz}di=fg?WD(}f|rNfM+6Ny^w5Dg^+WYaFrw
-
-delta 66
-zcmZ2&^WU1wCD<k8zbpd-Q^!OuX{N5b8`ZsKnVi@sm&gV)%1%BZD<d7<BpDDM<irv0
-W;pxH~;1^)vY~akm5g+R5!T<oNArgiF
-
-diff --git a/tests/data/acpi/aarch64/virt/DSDT.topology b/tests/data/acpi/aarch64/virt/DSDT.topology
-index 029d03eecc4efddc001e5377e85ac8e831294362..8c0423fe62d6950f9098983d86bfee256d7d003a 100644
-GIT binary patch
-delta 86
-zcmbQHbx4cLCD<jzNtA(s>E%Q&X{O%5jp|7vOwJsWyG4Q-^(NmJk>Ot;Fu6K`OMrn(
-opv~RY#bxqO5n1WzCP@&RBi_T)g*U)2z`)tqn1Lfc)YF9l01l28<p2Nx
-
-delta 42
-ycmX@4HBF1lCD<iIOq79viGL!OG*hGhM)f2SCMWjE-6Fw^vXk$N$V}!Dl?DLb(h64q
-
-diff --git a/tests/data/acpi/aarch64/virt/HEST b/tests/data/acpi/aarch64/virt/HEST
-deleted file mode 100644
-index e69de29bb2d1..000000000000
-diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
-index 1a4c2277bd5a..dfb8523c8bf4 100644
---- a/tests/qtest/bios-tables-test-allowed-diff.h
-+++ b/tests/qtest/bios-tables-test-allowed-diff.h
-@@ -1,2 +1 @@
- /* List of comma-separated changed AML files to ignore */
--"tests/data/acpi/aarch64/virt/DSDT",
+diff --git a/hw/acpi/ghes-stub.c b/hw/acpi/ghes-stub.c
+index 7cec1812dad9..40f660c246fe 100644
+--- a/hw/acpi/ghes-stub.c
++++ b/hw/acpi/ghes-stub.c
+@@ -11,12 +11,13 @@
+ #include "qemu/osdep.h"
+ #include "hw/acpi/ghes.h"
+ 
+-int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
++int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
++                            uint64_t physical_address)
+ {
+     return -1;
+ }
+ 
+-bool acpi_ghes_present(void)
++AcpiGhesState *acpi_ghes_get_state(void)
+ {
+-    return false;
++    return NULL;
+ }
+diff --git a/hw/acpi/ghes.c b/hw/acpi/ghes.c
+index dd93f0fc93fd..b25e61537c87 100644
+--- a/hw/acpi/ghes.c
++++ b/hw/acpi/ghes.c
+@@ -414,18 +414,12 @@ void acpi_ghes_add_fw_cfg(AcpiGhesState *ags, FWCfgState *s,
+         fw_cfg_add_file_callback(s, ACPI_HW_ERROR_ADDR_FW_CFG_FILE, NULL, NULL,
+             NULL, &(ags->hw_error_le), sizeof(ags->hw_error_le), false);
+     }
+-
+-    ags->present = true;
+ }
+ 
+ static void get_hw_error_offsets(uint64_t ghes_addr,
+                                  uint64_t *cper_addr,
+                                  uint64_t *read_ack_register_addr)
+ {
+-    if (!ghes_addr) {
+-        return;
+-    }
+-
+     /*
+      * non-HEST version supports only one source, so no need to change
+      * the start offset based on the source ID. Also, we can't validate
+@@ -519,27 +513,17 @@ static void get_ghes_source_offsets(uint16_t source_id,
+ NotifierList acpi_generic_error_notifiers =
+     NOTIFIER_LIST_INITIALIZER(error_device_notifiers);
+ 
+-void ghes_record_cper_errors(const void *cper, size_t len,
++void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
+                              uint16_t source_id, Error **errp)
+ {
+     uint64_t cper_addr = 0, read_ack_register_addr = 0, read_ack_register;
+-    AcpiGedState *acpi_ged_state;
+-    AcpiGhesState *ags;
+ 
+     if (len > ACPI_GHES_MAX_RAW_DATA_LENGTH) {
+         error_setg(errp, "GHES CPER record is too big: %zd", len);
+         return;
+     }
+ 
+-    acpi_ged_state = ACPI_GED(object_resolve_path_type("", TYPE_ACPI_GED,
+-                                                       NULL));
+-    if (!acpi_ged_state) {
+-        error_setg(errp, "Can't find ACPI_GED object");
+-        return;
+-    }
+-    ags = &acpi_ged_state->ghes_state;
+-
+-    if (!ags->hest_addr_le) {
++    if (!ags->use_hest_addr) {
+         get_hw_error_offsets(le64_to_cpu(ags->hw_error_le),
+                              &cper_addr, &read_ack_register_addr);
+     } else {
+@@ -547,11 +531,6 @@ void ghes_record_cper_errors(const void *cper, size_t len,
+                                 &cper_addr, &read_ack_register_addr, errp);
+     }
+ 
+-    if (!cper_addr) {
+-        error_setg(errp, "can not find Generic Error Status Block");
+-        return;
+-    }
+-
+     cpu_physical_memory_read(read_ack_register_addr,
+                              &read_ack_register, sizeof(read_ack_register));
+ 
+@@ -577,7 +556,8 @@ void ghes_record_cper_errors(const void *cper, size_t len,
+     notifier_list_notify(&acpi_generic_error_notifiers, NULL);
+ }
+ 
+-int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
++int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
++                            uint64_t physical_address)
+ {
+     /* Memory Error Section Type */
+     const uint8_t guid[] =
+@@ -603,7 +583,7 @@ int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
+     acpi_ghes_build_append_mem_cper(block, physical_address);
+ 
+     /* Report the error */
+-    ghes_record_cper_errors(block->data, block->len, source_id, &errp);
++    ghes_record_cper_errors(ags, block->data, block->len, source_id, &errp);
+ 
+     g_array_free(block, true);
+ 
+@@ -615,7 +595,7 @@ int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
+     return 0;
+ }
+ 
+-bool acpi_ghes_present(void)
++AcpiGhesState *acpi_ghes_get_state(void)
+ {
+     AcpiGedState *acpi_ged_state;
+     AcpiGhesState *ags;
+@@ -624,8 +604,12 @@ bool acpi_ghes_present(void)
+                                                        NULL));
+ 
+     if (!acpi_ged_state) {
+-        return false;
++        return NULL;
+     }
+     ags = &acpi_ged_state->ghes_state;
+-    return ags->present;
++
++    if (!ags->hw_error_le && !ags->hest_addr_le) {
++        return NULL;
++    }
++    return ags;
+ }
+diff --git a/include/hw/acpi/ghes.h b/include/hw/acpi/ghes.h
+index 80a0c3fcfaca..e1b66141d01c 100644
+--- a/include/hw/acpi/ghes.h
++++ b/include/hw/acpi/ghes.h
+@@ -63,7 +63,6 @@ enum AcpiGhesNotifyType {
+ typedef struct AcpiGhesState {
+     uint64_t hest_addr_le;
+     uint64_t hw_error_le;
+-    bool present; /* True if GHES is present at all on this board */
+     bool use_hest_addr; /* True if HEST address is present */
+ } AcpiGhesState;
+ 
+@@ -87,15 +86,17 @@ void acpi_build_hest(AcpiGhesState *ags, GArray *table_data,
+                      const char *oem_id, const char *oem_table_id);
+ void acpi_ghes_add_fw_cfg(AcpiGhesState *vms, FWCfgState *s,
+                           GArray *hardware_errors);
+-int acpi_ghes_memory_errors(uint16_t source_id, uint64_t error_physical_addr);
+-void ghes_record_cper_errors(const void *cper, size_t len,
++int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
++                            uint64_t error_physical_addr);
++void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
+                              uint16_t source_id, Error **errp);
+ 
+ /**
+- * acpi_ghes_present: Report whether ACPI GHES table is present
++ * acpi_ghes_get_state: Get a pointer for ACPI ghes state
+  *
+- * Returns: true if the system has an ACPI GHES table and it is
+- * safe to call acpi_ghes_memory_errors() to record a memory error.
++ * Returns: a pointer to ghes state if the system has an ACPI GHES table,
++ * it is enabled and it is safe to call acpi_ghes_memory_errors() to record
++ * a memory error. Returns false, otherwise.
+  */
+-bool acpi_ghes_present(void);
++AcpiGhesState *acpi_ghes_get_state(void);
+ #endif
+diff --git a/target/arm/kvm.c b/target/arm/kvm.c
+index da30bdbb2349..80ca7779797b 100644
+--- a/target/arm/kvm.c
++++ b/target/arm/kvm.c
+@@ -2366,10 +2366,12 @@ void kvm_arch_on_sigbus_vcpu(CPUState *c, int code, void *addr)
+ {
+     ram_addr_t ram_addr;
+     hwaddr paddr;
++    AcpiGhesState *ags;
+ 
+     assert(code == BUS_MCEERR_AR || code == BUS_MCEERR_AO);
+ 
+-    if (acpi_ghes_present() && addr) {
++    ags = acpi_ghes_get_state();
++    if (ags && addr) {
+         ram_addr = qemu_ram_addr_from_host(addr);
+         if (ram_addr != RAM_ADDR_INVALID &&
+             kvm_physical_memory_addr_from_host(c->kvm_state, addr, &paddr)) {
+@@ -2387,7 +2389,8 @@ void kvm_arch_on_sigbus_vcpu(CPUState *c, int code, void *addr)
+              */
+             if (code == BUS_MCEERR_AR) {
+                 kvm_cpu_synchronize_state(c);
+-                if (!acpi_ghes_memory_errors(ACPI_HEST_SRC_ID_SEA, paddr)) {
++                if (!acpi_ghes_memory_errors(ags, ACPI_HEST_SRC_ID_SEA,
++                                             paddr)) {
+                     kvm_inject_arm_sea(c);
+                 } else {
+                     error_report("failed to record the error");
 -- 
 2.48.1
 
