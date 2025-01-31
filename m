@@ -1,398 +1,273 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5B91C2DB0
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738326806; cv=fail; b=Zcjn7iYFJWDDvmKopenrZficzi9CAEjgA1SVtbXaZir2ts1iLR8KpB3pWJlp3hMmcwPeDLeDXGrqtgixs7XetfzDQ6P5NDzL6s+6Qyb6lVLbzIijlqkKlNGs/ofYLRcEJTfQef4UA39UW0DApGRTOK3t13fYXXSeYNxxAe09WLY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738326806; c=relaxed/simple;
-	bh=m15AGyjdxdwqHGuiJ2hzJC4RmUa5g1LnLrtutUiGeLY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hqqonXp2Yqb4TVcE/pldNINiaRbSdTLfWXAeWFseeDoex8MylDdUkOui+yaehjsKJ6aIoRAAdEkvY0MK6Y1i1SgPpivwz0R8nwncHICcGm6q4n9RnOWOvwVA+iG1Kya89BMuCQf/1WbCYAvanx1fbwVULWQkaHJTbLi1PXe/Vb8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=mBpgyeIV; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=X5Ah4Akk; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mBpgyeIV";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="X5Ah4Akk"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50VCLx3P018069;
-	Fri, 31 Jan 2025 12:33:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=z+S1cLR+rykprtF2ipqo24V542W7qoTANuajrfG6dMg=; b=
-	mBpgyeIVeJvPHAj5MHcCCcoJO1ZhGxYOjIuGmfsATyQiKGC7o930YXWRbgWgrnqV
-	Lo/QfVA9pOLjBC9rP5CGKh7ZkI9rq36ZSENTLf0/T8dxU5OPp2WfNAzt5/HWcD/M
-	/DJVxRuqt7ysf+MFX3VpZUpXeAXeJvxmY0WiYyskqL6C9Ee8lWn6ICLJgzsIJ9a0
-	3rfHXM3OV8LgLOlp8RXP/TS35kmsEdsM03XVc0ZaV5K0M4mLnJSbQQemHNSKQ5In
-	OtrtnObn6mfKDCs4U7ZXDYyjQ61vEEM/rkb2K8vOL0oPQzjO4cARvmicX2XyiO1o
-	5pbvg7JMk/ax/SoE3ArxVQ==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44gxf2r0k2-6
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 12:33:17 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50VAGYwR004118;
-	Fri, 31 Jan 2025 12:32:12 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2177.outbound.protection.outlook.com [104.47.56.177])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44gfe4vqy7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 12:32:12 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AdK5II6KBytX9TO8LPuNrL4ymDNZ5pFb9yZC8h3Ptdm8c1XdWqPmFzmBjD9W4NnvCV21jZ/PW6mJMSrigAOSLqggYTKybrULlUWz6W+WRntdkgRJGH7l1Ter3b9Iuw3ZpA8SVQEUu8Kdkps0A1HaqunZdJoje0SMhc0ynq6a59bM3k67/RzI58gzgGgNf/8qoG2aRgjgiTlZmESTV95i8LjoHS0LAV7RVJDCftFqz514hGbAEEs3zudlB2zN42G5gs4OBfqY17KjzC+eYlyL7oWrJ/3wFMV4AKJlEm+u1f5E4E7adiRLi9kXMmATczkd/NUxvLVR/tSJWELwUtydgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z+S1cLR+rykprtF2ipqo24V542W7qoTANuajrfG6dMg=;
- b=F7P+dZfnwQFDju+J7bq6mGEN6bsGhtoCrKTvQ+JHfXMNW4c11OhrZY2Ds0Qf+G1ZCSqFnZngd8zEFnIHX7ETs4XLDLdCuX2d8pEeI392/1paHnLeq4Z2xd9hvDRdZgiyNgnRkigi74vMYQyRRNM9uTFVWBGXLEdVqGiPjXLuHqKwL8E2NGiKDwUPW8RPwyIohgbP44mmUYNuOqgecq4QuveUfcnitoOsdf6SN+X3zKSOUDfWGv7RTn/S9CV6+Jt8koKSpt5Gb5AHYA7gaChV+H7eeNODG6GioLMTAl92dLMPYGWK2YuWchMci/6eNEU/pg1Qne9a79Y6eZH7/jmFXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z+S1cLR+rykprtF2ipqo24V542W7qoTANuajrfG6dMg=;
- b=X5Ah4Akk3PnIkPoZqKqgprK3yStl4ojGShgZzkZH3DEHQzyqiQrOL4FjZjgybfck2vd5zMwcy39bP+kIdQoY9+jfcMjeZc1EGib+8oYCbyhCCgeg3+TyUv3Jkg4Gevy+8BNt7xbivuuiJRlazg9/PGtJlQnLPOXCcfW/wTfLuRA=
-Received: from BYAPR10MB3366.namprd10.prod.outlook.com (2603:10b6:a03:14f::25)
- by CH3PR10MB7741.namprd10.prod.outlook.com (2603:10b6:610:1bc::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.20; Fri, 31 Jan
- 2025 12:32:10 +0000
-Received: from BYAPR10MB3366.namprd10.prod.outlook.com
- ([fe80::baf2:dff1:d471:1c9]) by BYAPR10MB3366.namprd10.prod.outlook.com
- ([fe80::baf2:dff1:d471:1c9%6]) with mapi id 15.20.8398.020; Fri, 31 Jan 2025
- 12:32:10 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/5] mm: eliminate adj_start parameter from commit_merge()
-Date: Fri, 31 Jan 2025 12:31:51 +0000
-Message-ID: <bcec0cd980b373a5eb02236cb033034ce1effe42.1738326519.git.lorenzo.stoakes@oracle.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1738326519.git.lorenzo.stoakes@oracle.com>
-References: <cover.1738326519.git.lorenzo.stoakes@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LNXP123CA0018.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:d2::30) To BYAPR10MB3366.namprd10.prod.outlook.com
- (2603:10b6:a03:14f::25)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E138C4C7C;
+	Fri, 31 Jan 2025 12:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738327195; cv=none; b=sh62HrbQXqj6GxLNORojtoKcwtC+Hrtl4tN2HIuBpIxk/H3AnBLmjZSS0PHqjon/pIVoK3zjub/5QNWl8YzsuqIueE+IuvFuCpSUlU5UXO7wpm64CoxizaSMt/hPuPG+vvg6eLiS0Nibto2pPCWJrnPIjsPRvJM86VfzXdg0EN0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738327195; c=relaxed/simple;
+	bh=WurhRTUteD8sGKFQNuEJYBz6ShWRfiWUQLthuX+tlXM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NN91WNJlT4A9Jerr9vN+a2N/Sr0fwLHFCOMxpcJtE9RbcVb5DVl6VaQ0YUs57/leNty3bVZnL4G1PsYKZI16IR7MQEKmc94BD+prlLQSQ2X+0r8idXbKsiMW3CY/8aAxeFB6H6tTvT/F8i8gRk7gTAPrTzjxFE2gOvG19eFSERw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a9e44654ae3so317049166b.1;
+        Fri, 31 Jan 2025 04:39:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738327191; x=1738931991;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gG0BXuRRCC+KYWnxXLITESshYQ/auauU0ULNTK06oOg=;
+        b=HqAARnd9Xz5GpVwejqgdrlNejI1yY7tHUCZMBYF1vZFxW9TNuaCgwvAMsMyQ3qPnFM
+         +s44fAOGBReGK6pPfdtlS/4GP9kmp6ETRgLrcIbgzbNWGAQFaw6NoKxJqVc7m8i9GWl1
+         K3iChCeC9FybYFSLGKjd8vd6kH99oLu1QD6Duv9eQ9DfpL0CL6qM5Ihbj02yWWPhbW+5
+         FYC2zU2JRfUV0ONFSu5hE65NUICTvFe1ReeOMVSSAX7Mn4w876IXnAVVGfKlSpDi5irL
+         JHF9QY5S/+3/r1RKEqOObkZOMSAXNiy7qz9Y0l+9ULiKP/Vrjo9lxplnhcemNgIF3wm8
+         VTZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUO72bWCWLEEokO5dQtWKWUoXM73fDfAeHBPu7PkgDuSvO1ujmkzQYLiLXDj1Y+WpXKFVpbB9ol7q8LKlkEuQI=@vger.kernel.org, AJvYcCUbdH9AvhDVboGmW+T2oS5vCP38vNqNQQwZA/3F0ehaXraE1z29nANyoShJfPjheTxO/rk2FcjL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfNZgjNij+B+Pk+8eJLZy5xUiA/ZeKCeiySuRRluBRRXuUiGgJ
+	Gqq1c29UPNySWG03Vb3JgFkjBN0Uqn3iJh8KbAXW1Tp3dru5aHsr
+X-Gm-Gg: ASbGncvgTXqWlRc1LgYiOv+X4b+xBh7JvMJp49r5iq8dmOiHtvxphvvz7ocMc22l1+P
+	0sRxNFNt1ng7LTHnvNOMeM8PiHxXLQDRoMhXycJVZO+afml+rLqNg09yUm4aAliDlfxfqN3/6KV
+	4VpmGiEvHQvJDOLypabpj9rcgRA0mpClSb3e55VYy4Lqhc8uQx1vofW6cLCyQgSTpuT8shiTWWv
+	cf2htjet8iOWjRgASvPwr0scs+wsqtzPHi37zvS85BBLGLhQm+jlW0ugzMC5bhSNWlibg+GkqFg
+	gMBF/A==
+X-Google-Smtp-Source: AGHT+IG+AMrHha429VFBPA+KD07+eUfMRNFPyA8voaBZVSFHnmadCc6/o3oi7PkP3uyOqgG3avYifQ==
+X-Received: by 2002:a17:907:7f8d:b0:ab3:4b0c:ea44 with SMTP id a640c23a62f3a-ab6cfcb428emr1151623766b.9.1738327190726;
+        Fri, 31 Jan 2025 04:39:50 -0800 (PST)
+Received: from localhost ([2a03:2880:30ff:4::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47cf48esm290881466b.50.2025.01.31.04.39.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 04:39:49 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+Date: Fri, 31 Jan 2025 04:39:38 -0800
+Subject: [PATCH RFC net-next] netconsole: selftest: Add test for fragmented
+ messages
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR10MB3366:EE_|CH3PR10MB7741:EE_
-X-MS-Office365-Filtering-Correlation-Id: 483d057b-1e74-4503-a93b-08dd41f34819
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?b5GZdexUSvRt24kUE6o2ER6UUp4GD6ie04Ahp6G4Ad3UDjb6fVPhHKcHmTMr?=
- =?us-ascii?Q?LGRWW+obtk+XEDNIKSACYVOxvZtTR8e1ZpJDWJIr0C9h76y2xu/XblJ+Cpun?=
- =?us-ascii?Q?+wv0XiLKlD8Ml0hPJMleHeEWAJGNkYsmKe/0P8ZdxQMGfJUmVBcd8loC7yoK?=
- =?us-ascii?Q?3r3rENpkHEGmfyVqfb1aPy5K+C296ZcqgOVfrPmfVxCT/MFjdyYo3ceqPSL1?=
- =?us-ascii?Q?r4/3JBIB/L8ImXnXsV1TPNqy7CjRHA2Htj5oLIBuOEN7vjMSs6r0PhUWOXgH?=
- =?us-ascii?Q?44NygeRHrEYRoPOHMUHM7baPI8XX4wjjHGUjfS8D4WuQMozZwMPt/uLFz5lp?=
- =?us-ascii?Q?lgLkG0KzLZ8mPZish4Tx4bwYjEceeCl03Pg2Tt6IL2V688V+FT3itlGMDQJb?=
- =?us-ascii?Q?zYZGXI1AQJLYmNyis/hgoETos1qY9xRXmhNJMorafhRCT2rRD0hUMN2WpWUD?=
- =?us-ascii?Q?ajUVUvtClwv77+u1iNtfUDLosZj7GjWgp/n7Zx1iLYPbSXU7zwpYtRn4j4bD?=
- =?us-ascii?Q?MWFQfFNDu2vLlR7H7ytuWc2vVOo5ZSAeBvxXlaXChuf11hPOapU4QCY8DRbZ?=
- =?us-ascii?Q?EJwjNeTaanHypyv2PBta0ONFnHlz/zufanO32FVApfB0W7dZgDLdMIq61Nzc?=
- =?us-ascii?Q?q6tbszGbwTXOzpn1Y5tjjzmf5klN/0YvdTMhhrVC3nIhlfXrfifqdFXwHA9b?=
- =?us-ascii?Q?HNsrQfioQ/c80mmqVRBWwJMVUCE1hVzZcBfD+vcsJYY9Y7yPZ7LH4HoK2Rie?=
- =?us-ascii?Q?hSx/UOu55fZzx0j0iVfupUcnbUv92OGTOxm0Sj9YmX/X4/mj5/JUBvTrXTad?=
- =?us-ascii?Q?wc4Umph7S2DHvBCdO0YCmNzdZ12hAxDVLwU6cSw3+7A3F0xQIunBExswgQaN?=
- =?us-ascii?Q?3t0LNgFZzNR8wlSam6Uhq1oSre+s0hm04LXgNIbOd6AO1YzdasTY6DG6wQDi?=
- =?us-ascii?Q?pZuQjHvA8j4x+zuZdRWM9R78Kl9891HuE2JA+jHf+UD0AOGNEcFykpbzEZ7h?=
- =?us-ascii?Q?VZzbrwNQ0YHVO9Ohls2C+e8NJ/yTtnSyCi0WJxzvvb4TKaA+dJnpeBt5tFtl?=
- =?us-ascii?Q?ma6DHHreSUH99oNotvQGAcfUsBAZXZGvsroZIIWPEB7PYMSNC3Pp3AaFu9ZL?=
- =?us-ascii?Q?giV4DsMWD6MrjgeiApug8s9oKIbU/md9CZePFaivy4/0WsZqROas6Np/ginL?=
- =?us-ascii?Q?Qb+WUjr+DAWCY1Xcks7SY3PRKTmgqhYSMQKVq4SpV7ZkGJXllHXjVM1Bh5HC?=
- =?us-ascii?Q?9ix2H3b42T4ePhD+qc1z4Ive2vS1Aa24Hd5OxeqXvSLoY0ewRCH+g4pGXjhB?=
- =?us-ascii?Q?Xy2D35p4PBXQYTtQ5YJVvN7Q9Mw63Z2FZWJ/ESQZa2jQoy/o2NMo9NGHppB3?=
- =?us-ascii?Q?drSHrV8RNcNd6s6wiHAYPWp5TZ7c?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB3366.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?YqpjoQH3kNRdlSR/vCTYTvSIlr1JKSag/9lZ5d1KeYIIL8ZZTy1n1MZlJ7ZF?=
- =?us-ascii?Q?rqJGIvPrxyG3ifeZuyMGg1jeDtu8V1qHFlUbffe49A+g0GzJsoKuSwIHyu/9?=
- =?us-ascii?Q?jpNEFrSh3j+Vlk23zEC7Ba45wXd0PA49cxns2j07X9cU32UvjGrCSgnCBas7?=
- =?us-ascii?Q?kGYKpp5SJ45O+dydOChKBDhThjiF22CqiZ33/vcIVPgfaB2+KSTXLlxIK8lX?=
- =?us-ascii?Q?SJcLBH9/IkFUC9aIwW9h7I2uSyn4CZToNDKvZxkLDoKSNAA7hp+EB+3AxdUZ?=
- =?us-ascii?Q?7uVqkUhZqyQ4rHuE2kHnXCPwfrA0MnjIa0uVoPZ/nawSiew93Bvf7+0/+YmE?=
- =?us-ascii?Q?AAV2J9GJuJxsW84SrFjlfEC/vLc5MYVffEaDbAn9LI++vgPYiBaJoJAZDhzv?=
- =?us-ascii?Q?lKOa7uRkQvMRPTnJge4PDhJ6enfergZZJvTALQUW6KAgHoJDgxoJCwKigFwe?=
- =?us-ascii?Q?ElL7ZxY6iyC79kbwFi9j/OOEVXAXy6raS6Moay1tDP/3AsxN47Ld7R9lRJFA?=
- =?us-ascii?Q?CZ4kq6sPeXpAjCZirsHVd/TXI3hfrM1chi+S/GBbCw5dl9zk+bqcJxgwvEDA?=
- =?us-ascii?Q?0De9bw1Ny+bJjrs6zRxnh/R1rdb9096NK8U1jYNp0EgkNkBykAiEJXfOpk/O?=
- =?us-ascii?Q?vYkKmMggn29G0USrY7jSvGSG1oq2jqgINmotWqt5rHOeEANbFVWTs35EaA3G?=
- =?us-ascii?Q?yWzS1125ry2/QcHlZ57QUXIdqegBH3KZx9kdbmiOenoyg2ly+6QLiJqDU12b?=
- =?us-ascii?Q?TuPQD4wqCxydJFe4RqvsnIgWFc71XEirDE7bN+nBkDkycTN+Lo0jfgYSsTzz?=
- =?us-ascii?Q?MYAwME5i2b6nu7uyuvllYH+OZvdqYgXFU5KbTvyKsbMofvTh7B2JdR5txWBG?=
- =?us-ascii?Q?LGnOuSjkjODOs8ecL3dBhlT0Ts7JtInzL06eccnXhtZj6tV4eGsLnMbP8uo5?=
- =?us-ascii?Q?QBwYfm9U7ZEXGkTyiDOMUEeF+yv1ZuAT2CDmxochv06rTj8rbtz3y+vnN2V2?=
- =?us-ascii?Q?x7xruVkN/UzHgjlZWdxcd6FhlQXuBH7pcridTi7cxZVFNXKDo1a5S/Y2nbZs?=
- =?us-ascii?Q?qqheljtuLHnsLYtNCMcQ0ckfQSeQU/4m8s4txZ8K/L+2N0MUtjmsfcMfNTJO?=
- =?us-ascii?Q?r8tObi6ST2o34ip1u3nrvJLK9+6dwu5Ofq3hZMNttziQidzuesG9kCbx08sp?=
- =?us-ascii?Q?2vVfaEIwOcQRAO0DWVbUuJ5Zrdm0xT8dDQBcM6yAiq87VCgVWI5FPrrG0Zk9?=
- =?us-ascii?Q?20zG/FhR/9xu2c4V6KdTGH6DXh49k4d2OpoLpudP7xCIrI7yMz6FrYzA4LvM?=
- =?us-ascii?Q?/5yxEOmi0VG+TdG7jJsnZ+RPbUIG9A25NvQiagN7IyzIwl94eKt9r9J3gehV?=
- =?us-ascii?Q?ZHO4cKjsvRdCtdp92Hpu/ydR18stqjUqxGkrE+K4xO758gkCRHrgjorAWtJx?=
- =?us-ascii?Q?zKQQKkOjysInJzOh9t9xtUz0KmbTVxvn6LcgVHS3pdmV4Y0NA77JGlzCxVZX?=
- =?us-ascii?Q?iBbvuejsHDez3nyGk9U94Qu6heRUcNZnna4xpk2p+RixdDlbLGQTCsaIDM2E?=
- =?us-ascii?Q?4yh6r8Klx784AnamS+IwkX0HrFYpHPUycWmly6w3czzt2NtSS4SGKoll+3nO?=
- =?us-ascii?Q?vw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	EskvSMMsP8hPoX/qgIPH6sem9BRcmLi+YA63+d/3K4oq+ChHwhkgD4kqLtcWTe/LVgNs4BBrKi0PxcAANN+HFj5eq0lx/7POqUIhR4rWY7leHxSDdGRcmmMGk2l/1vZVmYit7G0C07S+RkFX1SH06gVRVTKInQOqa6YHVSIhVK4qTdWuSmg53i9/ghSzuBbcQaIsWcA/3RuL0qt1D3j0M34ESeeQPLupy1SPPsDWmsrd9k2Ktytzdcvplc0cPnwGqtm4ckIZGoZCitRYQQvobUTPccm2s4VxT2rOgkAb3r326FnvLtVZuOmIrG+nc/ByH3WqmNPf/Yz1aZo0M8+Bb+4xZd4sY3x23bqHLmBeVA0MoYT8gRVDzDMvX5bRvUtV3+PK35QvoxF6TaXL/zWp+9n17pw93KW28F2YeC/yITojoz2HAZbxhapOmYiCoo9jxFTwxwmkWJjlVpjvKP+qAP0DC7tZlCgyB0pIT4evaQTrhfcjmTG/SdvBZ5zdQDB7bQ2MKsO8TkIas9u8VbEunzHjiW7pRqFHV8B2tZRui9WS+gaTiaXIM1qn4Ep6RZa5nL3He+F4u1QE/VavUAxKJAENgyhQxUXJ2IJbPf70JUA=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 483d057b-1e74-4503-a93b-08dd41f34819
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB3366.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 12:32:10.0422
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NhzeqBOO2HQIP3QQsFtbrpAgEU1GVkLINRsM2O+hB3KesJuh/+lGeNxQE6UJ2raUvz8Sg090Y2Z8ZLISO4X7fkHF+ZmSHcWIQKKAdCDMJiM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7741
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-31_04,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
- phishscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2501170000
- definitions=main-2501310095
-X-Proofpoint-GUID: U3_Wapqv64IokQm-sV8xIWLp98NMyN1C
-X-Proofpoint-ORIG-GUID: U3_Wapqv64IokQm-sV8xIWLp98NMyN1C
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250131-netcons_frag_msgs-v1-1-0de83bf2a7e6@debian.org>
+X-B4-Tracking: v=1; b=H4sIAInEnGcC/x3MQQqDMBAF0KuEvzaQpEQw20IP0K0UEZ2ks+hYM
+ qEI4t1Lu32Ld0CpMimSOVDpw8qbIBnfGSzPWQpZXpEMggvR+TBYobZsolOuc5leWtQOPrp+9Zc
+ +R4fO4F0p8/4/R9xv158JNSu0NzzO8wvE4Et0dAAAAA==
+X-Change-ID: 20250129-netcons_frag_msgs-91506d136f50
+To: Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>, horms@kernel.org
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, matttbe@kernel.org, 
+ Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8109; i=leitao@debian.org;
+ h=from:subject:message-id; bh=WurhRTUteD8sGKFQNuEJYBz6ShWRfiWUQLthuX+tlXM=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBnnMSU5QPHRRYwPvL1ncIl6viFFx9/IlMzmDYBc
+ gWizlVqBSSJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ5zElAAKCRA1o5Of/Hh3
+ bUxnD/41AScj9X3utthKYI34D4s14u6KecKm3tbIXFlWPn/fs+mbN3do9BktHbg8thqM6uRHdF2
+ pX1aoJradKqfqxlUkOhL0bqOLvLnTi9FxXhqvFlAeN4EhbWWrTFbqW+rvNJFP/z5N4vv00e6kWy
+ vH9VwgPZ12cAiihB7+jiKv0poDDD2GxPdSSlAfWz3SfVXP2LiVmUqjIruY95CjEQ7RfxfX4sbfc
+ YhNnpDxaoDr9Rw1gf4/hgeE8TgLWuQYLyqtgEL2XiMwB8yCsvw7gnxpCvcxi+naCXqf9mxtCAwr
+ kM99MhOnbd9pNHE8cekIH4RjEvcvf2+0D9eXxfPJ25g1lFTPDmmAbpomKob5IURxpHL7dK9apRN
+ Qnlm5DpEmMuByprbW2maFXy71KnTvanv14yTlxUJnc6Mk4I8pltXQkXMm3tmG0uWPKy3LjoHPui
+ WjXCBcbKbxvPCOxtzWzoPVnj+/VBbjqalmTs8X0YGzom/Hedp7bfmVjNB1pn4Ie5b4KgANURdAk
+ NpQ96e2y+q1gZyP6c2vfSSsuRJUsy0KZ/DrM2+U9VBfd1tXMaattmf6vV3ziH9hWKsv2PMxgxed
+ SmtlIWcqGu89I47juFGQhbjTgnSHeSXWdD029QubgMoZ1zGCRLMqPMIfZbByTYoPDTLGhLmidWz
+ 5RzLxlEU+oJuOow==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-Introduce internal vmg->__adjust_middle_start and vmg->__adjust_next_start
-merge flags, enabling us to indicate to commit_merge() that we are
-performing a merge which either spans only part of vmg->middle, or part of
-vmg->next respectively.
+Add a new selftest to verify netconsole's handling of messages that
+exceed the packet size limit and require fragmentation. The test sends
+messages with varying sizes and userdata, validating that:
 
-In the former instance, we change the start of vmg->middle to match the
-attributes of vmg->prev, without spanning all of vmg->middle.
+1. Large messages are correctly fragmented and reassembled
+2. Userdata fields are properly preserved across fragments
+3. Messages work correctly with and without kernel release version
+   appending
 
-This implies that vmg->prev->vm_end and vmg->middle->vm_start are both
-increased to form the new merged VMA (vmg->prev) and the new subsequent VMA
-(vmg->middle).
+The test creates a networking environment using netdevsim, sends
+messages through /dev/kmsg, and verifies the received fragments maintain
+message integrity.
 
-In the latter case, we change the end of vmg->middle to match the
-attributes of vmg->next, without spanning all of vmg->next.
-
-This implies that vmg->middle->vm_end and vmg->next->vm_start are both
-decreased to form the new merged VMA (vmg->next) and the new prior VMA
-(vmg->middle).
-
-Since we now have a stable set of prev, middle, next VMAs threaded through
-vmg and with these flags set know what is happening, we can perform
-the calculation in commit_merge() instead.
-
-This allows us to drop the confusing adj_start parameter and instead pass
-semantic information to commit_merge().
-
-In the latter case the -(middle->vm_end - start) calculation becomes
--(middle->vm-end - vmg->end), however this is correct as vmg->end is set to
-the start parameter.
-
-This is because in this case (rather confusingly), we manipulate
-vmg->middle, but ultimately return vmg->next, whose range will be correctly
-specified. At this point vmg->start, end is the new range for the prior VMA
-rather than the merged one.
-
-This patch has no change in functional behaviour.
-
-Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
- mm/debug.c              |  8 +++++--
- mm/vma.c                | 50 ++++++++++++++++++++++++-----------------
- mm/vma.h                | 10 +++++++++
- tools/testing/vma/vma.c |  2 ++
- 4 files changed, 48 insertions(+), 22 deletions(-)
+ tools/testing/selftests/drivers/net/Makefile       |   1 +
+ .../selftests/drivers/net/lib/sh/lib_netcons.sh    |   7 ++
+ .../drivers/net/netcons_fragmented_msg.sh          | 122 +++++++++++++++++++++
+ 3 files changed, 130 insertions(+)
 
-diff --git a/mm/debug.c b/mm/debug.c
-index 60c6f1134383..e1282b85a877 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -267,7 +267,9 @@ void dump_vmg(const struct vma_merge_struct *vmg, const char *reason)
- 		"uffd_ctx %px\n"
- 		"anon_name %px\n"
- 		"state %x\n"
--		"just_expand %d __remove_middle %d __remove_next %d\n",
-+		"just_expand %d\n"
-+		"__adjust_middle_start %d __adjust_next_start %d\n"
-+		"__remove_middle %d __remove_next %d\n",
- 		vmg, vmg->mm, vmg->pgoff,
- 		vmg->vmi, vmg->vmi ? vma_iter_addr(vmg->vmi) : 0,
- 		vmg->vmi ? vma_iter_end(vmg->vmi) : 0,
-@@ -281,7 +283,9 @@ void dump_vmg(const struct vma_merge_struct *vmg, const char *reason)
- #endif
- 		vmg->anon_name,
- 		(int)vmg->state,
--		vmg->just_expand, vmg->__remove_middle, vmg->__remove_next);
-+		vmg->just_expand,
-+		vmg->__adjust_middle_start, vmg->__adjust_next_start,
-+		vmg->__remove_middle, vmg->__remove_next);
+diff --git a/tools/testing/selftests/drivers/net/Makefile b/tools/testing/selftests/drivers/net/Makefile
+index 137470bdee0c7fd2517bd1baafc12d575de4b4ac..c7f1c443f2af091aa13f67dd1df9ae05d7a43f40 100644
+--- a/tools/testing/selftests/drivers/net/Makefile
++++ b/tools/testing/selftests/drivers/net/Makefile
+@@ -7,6 +7,7 @@ TEST_INCLUDES := $(wildcard lib/py/*.py) \
  
- 	if (vmg->mm) {
- 		pr_warn("vmg %px mm:\n", vmg);
-diff --git a/mm/vma.c b/mm/vma.c
-index 206e3523cf38..3fe264200b79 100644
---- a/mm/vma.c
-+++ b/mm/vma.c
-@@ -632,29 +632,44 @@ void validate_mm(struct mm_struct *mm)
-  *
-  * On success, returns the merged VMA. Otherwise returns NULL.
-  */
--static struct vm_area_struct *commit_merge(struct vma_merge_struct *vmg,
--		long adj_start)
-+static struct vm_area_struct *commit_merge(struct vma_merge_struct *vmg)
- {
--	struct vma_prepare vp;
- 	struct vm_area_struct *remove = NULL;
- 	struct vm_area_struct *remove2 = NULL;
-+	struct vma_prepare vp;
- 	struct vm_area_struct *adjust = NULL;
-+	long adj_start;
-+	bool merge_target;
-+
- 	/*
--	 * In all cases but that of merge right, shrink next, we write
--	 * vmg->target to the maple tree and return this as the merged VMA.
-+	 * If modifying an existing VMA and we don't remove vmg->middle, then we
-+	 * shrink the adjacent VMA.
- 	 */
--	bool merge_target = adj_start >= 0;
-+	if (vmg->__adjust_middle_start) {
-+		adjust = vmg->middle;
-+		/* The POSITIVE value by which we offset vmg->middle->vm_start. */
-+		adj_start = vmg->end - vmg->middle->vm_start;
-+		merge_target = true;
-+	} else if (vmg->__adjust_next_start) {
-+		adjust = vmg->next;
-+		/* The NEGATIVE value by which we offset vmg->next->vm_start. */
-+		adj_start = -(vmg->middle->vm_end - vmg->end);
-+		/*
-+		 * In all cases but this - merge right, shrink next - we write
-+		 * vmg->target to the maple tree and return this as the merged VMA.
-+		 */
-+		merge_target = false;
-+	} else {
-+		adjust = NULL;
-+		adj_start = 0;
-+		merge_target = true;
-+	}
- 
- 	if (vmg->__remove_middle)
- 		remove = vmg->middle;
- 	if (vmg->__remove_next)
- 		remove2 = vmg->next;
- 
--	if (adj_start > 0)
--		adjust = vmg->middle;
--	else if (adj_start < 0)
--		adjust = vmg->next;
--
- 	init_multi_vma_prep(&vp, vmg->target, adjust, remove, remove2);
- 
- 	VM_WARN_ON(vp.anon_vma && adjust && adjust->anon_vma &&
-@@ -738,7 +753,6 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
- 	bool left_side = middle && start == middle->vm_start;
- 	bool right_side = middle && end == middle->vm_end;
- 	int err = 0;
--	long adj_start = 0;
- 	bool merge_left, merge_right, merge_both;
- 
- 	mmap_assert_write_locked(vmg->mm);
-@@ -858,11 +872,8 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
- 		vmg->start = prev->vm_start;
- 		vmg->pgoff = prev->vm_pgoff;
- 
--		/*
--		 * We both expand prev and shrink middle.
--		 */
- 		if (!vmg->__remove_middle)
--			adj_start = vmg->end - middle->vm_start;
-+			vmg->__adjust_middle_start = true;
- 
- 		err = dup_anon_vma(prev, middle, &anon_dup);
- 	} else { /* merge_right */
-@@ -891,12 +902,11 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
- 			 * IMPORTANT: This is the ONLY case where the final
- 			 * merged VMA is NOT vmg->target, but rather vmg->next.
- 			 */
-+			vmg->__adjust_next_start = true;
- 			vmg->target = middle;
- 			vmg->start = middle->vm_start;
- 			vmg->end = start;
- 			vmg->pgoff = middle->vm_pgoff;
--
--			adj_start = -(middle->vm_end - start);
- 		}
- 
- 		err = dup_anon_vma(next, middle, &anon_dup);
-@@ -905,7 +915,7 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
- 	if (err)
- 		goto abort;
- 
--	res = commit_merge(vmg, adj_start);
-+	res = commit_merge(vmg);
- 	if (!res) {
- 		if (anon_dup)
- 			unlink_anon_vmas(anon_dup);
-@@ -1079,7 +1089,7 @@ int vma_expand(struct vma_merge_struct *vmg)
- 	if (remove_next)
- 		vmg->__remove_next = true;
- 
--	if (!commit_merge(vmg, 0))
-+	if (!commit_merge(vmg))
- 		goto nomem;
- 
- 	return 0;
-diff --git a/mm/vma.h b/mm/vma.h
-index 7935681a2db8..e18487797fa4 100644
---- a/mm/vma.h
-+++ b/mm/vma.h
-@@ -120,6 +120,16 @@ struct vma_merge_struct {
- 
- 	/* Internal flags set during merge process: */
- 
-+	/*
-+	 * Internal flag indicating the merge increases vmg->middle->vm_start
-+	 * (and thereby, vmg->prev->vm_end).
-+	 */
-+	bool __adjust_middle_start :1;
-+	/*
-+	 * Internal flag indicating the merge decreases vmg->next->vm_start
-+	 * (and thereby, vmg->middle->vm_end).
-+	 */
-+	bool __adjust_next_start :1;
- 	/*
- 	 * Internal flag used during the merge operation to indicate we will
- 	 * remove vmg->middle.
-diff --git a/tools/testing/vma/vma.c b/tools/testing/vma/vma.c
-index 7728498b2f7e..c7ffa71841ca 100644
---- a/tools/testing/vma/vma.c
-+++ b/tools/testing/vma/vma.c
-@@ -159,6 +159,8 @@ static void vmg_set_range(struct vma_merge_struct *vmg, unsigned long start,
- 	vmg->just_expand = false;
- 	vmg->__remove_middle = false;
- 	vmg->__remove_next = false;
-+	vmg->__adjust_middle_start = false;
-+	vmg->__adjust_next_start = false;
+ TEST_PROGS := \
+ 	netcons_basic.sh \
++	netcons_fragmented_msg.sh \
+ 	netcons_overflow.sh \
+ 	ping.py \
+ 	queues.py \
+diff --git a/tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh b/tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh
+index 3acaba41ac7b21aa2fd8457ed640a5ac8a41bc12..0c262b123fdd3082c40b2bd899ec626d223226ed 100644
+--- a/tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh
++++ b/tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh
+@@ -110,6 +110,13 @@ function create_dynamic_target() {
+ 	echo 1 > "${NETCONS_PATH}"/enabled
  }
  
- /*
++# Do not append the release to the header of the message
++function disable_release_append() {
++	echo 0 > "${NETCONS_PATH}"/enabled
++	echo 0 > "${NETCONS_PATH}"/release
++	echo 1 > "${NETCONS_PATH}"/enabled
++}
++
+ function cleanup() {
+ 	local NSIM_DEV_SYS_DEL="/sys/bus/netdevsim/del_device"
+ 
+diff --git a/tools/testing/selftests/drivers/net/netcons_fragmented_msg.sh b/tools/testing/selftests/drivers/net/netcons_fragmented_msg.sh
+new file mode 100755
+index 0000000000000000000000000000000000000000..d175d5b9db662ab9a6ee203794569cc620801a4f
+--- /dev/null
++++ b/tools/testing/selftests/drivers/net/netcons_fragmented_msg.sh
+@@ -0,0 +1,122 @@
++#!/usr/bin/env bash
++# SPDX-License-Identifier: GPL-2.0
++
++# Test netconsole's message fragmentation functionality.
++#
++# When a message exceeds the maximum packet size, netconsole splits it into
++# multiple fragments for transmission. This test verifies:
++#  - Correct fragmentation of large messages
++#  - Proper reassembly of fragments at the receiver
++#  - Preservation of userdata across fragments
++#  - Behavior with and without kernel release version appending
++#
++# Author: Breno Leitao <leitao@debian.org>
++
++set -euo pipefail
++
++SCRIPTDIR=$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")
++
++source "${SCRIPTDIR}"/lib/sh/lib_netcons.sh
++
++modprobe netdevsim 2> /dev/null || true
++modprobe netconsole 2> /dev/null || true
++
++# The content of kmsg will be save to the following file
++OUTPUT_FILE="/tmp/${TARGET}"
++
++# set userdata to a long value. In this case, it is "1-2-3-4...50-"
++USERDATA_VALUE=$(printf -- '%.2s-' {1..60})
++
++# Convert the header string in a regexp, so, we can remove
++# the second header as well.
++# A header looks like "13,468,514729715,-,ncfrag=0/1135;". If
++# release is appended, you might find something like:L
++# "6.13.0-04048-g4f561a87745a,13,468,514729715,-,ncfrag=0/1135;"
++function header_to_regex() {
++	# header is everything before ;
++	local HEADER="${1}"
++	REGEX=$(echo "${HEADER}" | cut -d'=' -f1)
++	echo "${REGEX}=[0-9]*\/[0-9]*;"
++}
++
++# We have two headers in the message. Remove both to get the full message,
++# and extract the full message.
++function extract_msg() {
++	local MSGFILE="${1}"
++	# Extract the header, which is the very first thing that arrives in the
++	# first list.
++	HEADER=$(sed -n '1p' "${MSGFILE}" | cut -d';' -f1)
++	HEADER_REGEX=$(header_to_regex "${HEADER}")
++
++	# Remove the two headers from the received message
++	# This will return the message without any header, similarly to what
++	# was sent.
++	sed "s/""${HEADER_REGEX}""//g" "${MSGFILE}"
++}
++
++# Validate the message, which has two messages glued together.
++# unwrap them to make sure all the characters were transmitted.
++# File will look like the following:
++#   13,468,514729715,-,ncfrag=0/1135;MSG1=MSG2=MSG3=MSG4=MSG5=MSG6=MSG7=MSG8=MSG9=MSG10=MSG11=MSG12=MSG13=MSG14=MSG15=MSG16=MSG17=MSG18=MSG19=MSG20=MSG21=MSG22=MSG23=MSG24=MSG25=MSG26=MSG27=MSG28=MSG29=MSG30=MSG31=MSG32=MSG33=MSG34=MSG35=MSG36=MSG37=MSG38=MSG39=MSG40=MSG41=MSG42=MSG43=MSG44=MSG45=MSG46=MSG47=MSG48=MSG49=MSG50=MSG51=MSG52=MSG53=MSG54=MSG55=MSG56=MSG57=MSG58=MSG59=MSG60=MSG61=MSG62=MSG63=MSG64=MSG65=MSG66=MSG67=MSG68=MSG69=MSG70=MSG71=MSG72=MSG73=MSG74=MSG75=MSG76=MSG77=MSG78=MSG79=MSG80=MSG81=MSG82=MSG83=MSG84=MSG85=MSG86=MSG87=MSG88=MSG89=MSG90=MSG91=MSG92=MSG93=MSG94=MSG95=MSG96=MSG97=MSG98=MSG99=MSG100=MSG101=MSG102=MSG103=MSG104=MSG105=MSG106=MSG107=MSG108=MSG109=MSG110=MSG111=MSG112=MSG113=MSG114=MSG115=MSG116=MSG117=MSG118=MSG119=MSG120=MSG121=MSG122=MSG123=MSG124=MSG125=MSG126=MSG127=MSG128=MSG129=MSG130=MSG131=MSG132=MSG133=MSG134=MSG135=MSG136=MSG137=MSG138=MSG139=MSG140=MSG141=MSG142=MSG143=MSG144=MSG145=MSG146=MSG147=MSG148=MSG149=MSG150=: netcons_nzmJQ
++#    key=1-2-13,468,514729715,-,ncfrag=967/1135;3-4-5-6-7-8-9-10-11-12-13-14-15-16-17-18-19-20-21-22-23-24-25-26-27-28-29-30-31-32-33-34-35-36-37-38-39-40-41-42-43-44-45-46-47-48-49-50-51-52-53-54-55-56-57-58-59-60-
++function validate_fragmented_result() {
++	# Discard the netconsole headers, and assemble the full message
++	RCVMSG=$(extract_msg "${1}")
++
++	# check for the main message
++	if ! echo "${RCVMSG}" | grep -q "${MSG}"; then
++		echo "Message body doesn't match." >&2
++		echo "msg received=" "${RCVMSG}" >&2
++		exit "${ksft_fail}"
++	fi
++
++	# check userdata
++	if ! echo "${RCVMSG}" | grep -q "${USERDATA_VALUE}"; then
++		echo "message userdata doesn't match" >&2
++		echo "msg received=" "${RCVMSG}" >&2
++		exit "${ksft_fail}"
++	fi
++	# test passed. hooray
++}
++
++# Check for basic system dependency and exit if not found
++check_for_dependencies
++# Set current loglevel to KERN_INFO(6), and default to KERN_NOTICE(5)
++echo "6 5" > /proc/sys/kernel/printk
++# Remove the namespace, interfaces and netconsole target on exit
++trap cleanup EXIT
++# Create one namespace and two interfaces
++set_network
++# Create a dynamic target for netconsole
++create_dynamic_target
++# Set userdata "key" with the "value" value
++set_user_data
++
++
++# TEST 1: Send message and userdata. They will fragment
++# =======
++MSG=$(printf -- 'MSG%.3s=' {1..150})
++
++# Listen for netconsole port inside the namespace and destination interface
++listen_port_and_save_to "${OUTPUT_FILE}" &
++# Wait for socat to start and listen to the port.
++wait_local_port_listen "${NAMESPACE}" "${PORT}" udp
++# Send the message
++echo "${MSG}: ${TARGET}" > /dev/kmsg
++# Wait until socat saves the file to disk
++busywait "${BUSYWAIT_TIMEOUT}" test -s "${OUTPUT_FILE}"
++# Check if the message was not corrupted
++validate_fragmented_result "${OUTPUT_FILE}"
++
++# TEST 2: Test with smaller message, and without release appended
++# =======
++MSG=$(printf -- 'FOOBAR%.3s=' {1..100})
++# Let's disable release and test again.
++disable_release_append
++
++listen_port_and_save_to "${OUTPUT_FILE}" &
++wait_local_port_listen "${NAMESPACE}" "${PORT}" udp
++echo "${MSG}: ${TARGET}" > /dev/kmsg
++busywait "${BUSYWAIT_TIMEOUT}" test -s "${OUTPUT_FILE}"
++validate_fragmented_result "${OUTPUT_FILE}"
++exit "${ksft_pass}"
+
+---
+base-commit: 0ad9617c78acbc71373fb341a6f75d4012b01d69
+change-id: 20250129-netcons_frag_msgs-91506d136f50
+
+Best regards,
 -- 
-2.48.1
+Breno Leitao <leitao@debian.org>
 
