@@ -1,205 +1,133 @@
-Received: from weierstrass.telenet-ops.be (weierstrass.telenet-ops.be [195.130.137.81])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C524F1C5D61
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1318B1BE238;
+	Fri, 31 Jan 2025 13:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738331257; cv=none; b=cXl6DhYKpYTvtSo7G4GNSnCpuU0HRhEfui5GE8eAoXm+V4rtU90Z4m1A9MA+RzP7PdTSs0l6FYw82f5Y6vBRNMN74lzmBaQdP7/tpkrqXrvxkwYokmaxAxw82gdukMXxU588wjXL9jl59OAACVtQgABB6e3BphCXliPya4Tb3KY=
+	t=1738331464; cv=none; b=Eq/8v+BfV0lY+aWjceQGPPPA87q3aCXuphk4NsQKGrU2OYmP5/8fegcx4YiIrmpAcFVyEdxvWKjOw8R9jlfOn7DncLkoiOUOwtTt1xAgf6ZIcVjsD28Kn8iBkNBCTxqW8dYnjJ7vzB7xwHsldDk4TYCpcf0DR84yHooEZY9b88M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738331257; c=relaxed/simple;
-	bh=Mr0ggs2ve+GGAE47i+Rr2QR3iUPGOMF+Hj1/2dLq/Ww=;
+	s=arc-20240116; t=1738331464; c=relaxed/simple;
+	bh=i5/PxM6BpFp735zXjwSxAuyz/3OjYTl5AW4EX03icco=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HHHxWmhOuYwDO+0ihXfeKaeQzNmqzaT+GWmxf9IjX+FaKzbXtZw57wXg29VnOple/X5HdMj771Y7AU7+I1KaplWmcAPNW64VUQ9pZPAKI1Iy+zGjs0895Z04FwJcs36/+dhwPUOKKD20h5ybXbTanz8QHP1oTSYze0ZaYtRDo7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-	by weierstrass.telenet-ops.be (Postfix) with ESMTPS id 4Ykxz84brpz4x4jw
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 14:47:32 +0100 (CET)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:a916:3147:9f19:c260])
-	by baptiste.telenet-ops.be with cmsmtp
-	id 7pmw2E00V0naHe801pmwxG; Fri, 31 Jan 2025 14:47:24 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tdrM6-0000000FHxv-23Wi;
-	Fri, 31 Jan 2025 14:46:56 +0100
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tdrMG-0000000DFVT-1zgZ;
-	Fri, 31 Jan 2025 14:46:56 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S . Miller" <davem@davemloft.net>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Crt Mori <cmo@melexis.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Alex Elder <elder@ieee.org>
-Cc: linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	qat-linux@intel.com,
-	linux-gpio@vger.kernel.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-iio@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 2/3] clk: renesas: Use bitfield helpers
-Date: Fri, 31 Jan 2025 14:46:52 +0100
-Message-ID: <a407704e1efc9239e8b65cc66b16efbcb8ea8882.1738329459.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1738329458.git.geert+renesas@glider.be>
-References: <cover.1738329458.git.geert+renesas@glider.be>
+	 MIME-Version:Content-Type; b=hjksGvak49wGUzQlOajjBWWTevzI6soQNB4q21w7QofcMYWJ217MKV3hNxvXBvbGwPUKpAB57wFGTc43JIxiOrx3mQpRiaBng1A6eT9DmiTlo/1EVP6BTEp39is6OoHOzL8AuT20GddR9R+DxEId8b/xdx3cBtgM6AwBTc2duDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=PpKh1Iy4; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=EVsc4krd reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="PpKh1Iy4";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="EVsc4krd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1738331461; x=1769867461;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=pGPC/hW5rIZq2gK7yDJbioksTlO1e7DjzYy5/dkDYdU=;
+  b=PpKh1Iy4IQN4VknncQulU2msWHaUxjqfg6n/2eg/MUJfPlLrKNOGdCT6
+   w5jeCRKGhJ/I4IX/GDSPbjwoi1pwsVNVzBKWXKs6Zjmc1fQMjbMsm6PfY
+   Wx9KtAk2gQPoaehZ1AmEwA+A8hgV9p2U7SBRpZ2MgjRjZs2sebvkqvqdF
+   eXrt7nQA9vOOywanF19wqxslDLVRb72eb/UKacVnMVtNXZ6iiiPbaqaky
+   RCIpAh5UvC7jce8z9mqoMxKEVX/X4lT3N4shGEBv2JZ+oc5Rxq3kKWVZl
+   2waMpn6fxRiFk/yRWq+6ODaN8tSH1WSS+A2OWZSJixGXd5s86h0qZQCjn
+   A==;
+X-CSE-ConnectionGUID: VPJl4Oi8QxuRrbOgBPYfKw==
+X-CSE-MsgGUID: OkSFhy6DTdGm4UslsPUvag==
+X-IronPort-AV: E=Sophos;i="6.13,248,1732575600"; 
+   d="scan'208";a="41406883"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 31 Jan 2025 14:50:52 +0100
+X-CheckPoint: {679CD53C-1A-9B2B6168-EB6F31C5}
+X-MAIL-CPID: 34B68224B8FC38765AC27969C122FFD7_5
+X-Control-Analysis: str=0001.0A682F21.679CD53C.0098,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6628516B72B;
+	Fri, 31 Jan 2025 14:50:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1738331448;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pGPC/hW5rIZq2gK7yDJbioksTlO1e7DjzYy5/dkDYdU=;
+	b=EVsc4krdjIMtoDa0hRHx1mKilyp25g9YTglPKr9VfffkrxA40Ccm8NQuxhWl30vKnRXuoP
+	ab3NHzUAB0LkHuMtwjOlh1Sxg+tDPDoJ4gjOkXA7LGRilx59MNf59ropLqwcI4VRR+qvll
+	Cjj7llTIJrf7cwoz5FX3+Ca9fmeqGT0IuUoZAPi0o/nbeoAJbhNYgl0mnStE2vA/FGSl4x
+	sDrURZAkbblN0ctVutb8j+wUsHWjDQw0c3zxLSk0GIXFwxZ0hylHWxN3Ou36bQg4f5w1Hf
+	jH5ZfcYh4HBqw52MAFH4UN2vh6qxs3R46gzXyQH6d6BxvgYtQ/C/vNJS3WtHpQ==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] nvmem: imx-ocotp: Support accessing controller for i.MX8M Nano
+Date: Fri, 31 Jan 2025 14:50:46 +0100
+Message-ID: <4989387.31r3eYUQgx@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <deef6dcd-27a0-4109-9788-a755fd390f55@kernel.org>
+References: <20250130130101.1040824-1-alexander.stein@ew.tq-group.com> <20250130130101.1040824-4-alexander.stein@ew.tq-group.com> <deef6dcd-27a0-4109-9788-a755fd390f55@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-Use the FIELD_{GET,PREP}() and field_{get,prep}() helpers for const
-respective non-const bitfields, instead of open-coding the same
-operations.
+Hi,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Rebase on top of commit 470e3f0d0b1529ab ("clk: renesas: rcar-gen4:
-    Introduce R-Car Gen4 CPG driver").
----
- drivers/clk/renesas/clk-div6.c      |  6 +++---
- drivers/clk/renesas/rcar-gen3-cpg.c | 15 +++++----------
- drivers/clk/renesas/rcar-gen4-cpg.c |  9 +++------
- 3 files changed, 11 insertions(+), 19 deletions(-)
+Am Freitag, 31. Januar 2025, 08:20:40 CET schrieb Krzysztof Kozlowski:
+> On 30/01/2025 14:01, Alexander Stein wrote:
+> > +
+> > +static int imx_ocotp_grant_access(struct ocotp_priv *priv, struct devi=
+ce_node *parent)
+> > +{
+> > +	struct device *dev =3D priv->dev;
+> > +
+> > +	for_each_available_child_of_node_scoped(parent, child) {
+> > +		struct of_phandle_args args;
+> > +		u32 id, idx =3D 0;
+> > +
+> > +		while (!of_parse_phandle_with_args(child, "access-controllers",
+> > +						   "#access-controller-cells",
+> > +						   idx++, &args)) {
+> > +			of_node_put(args.np);
+> > +			if (args.np !=3D dev->of_node)
+>=20
+> You are using args.np after dropping the reference.
 
-diff --git a/drivers/clk/renesas/clk-div6.c b/drivers/clk/renesas/clk-div6.c
-index 3abd6e5400aded6a..f7b827b5e9b2dd32 100644
---- a/drivers/clk/renesas/clk-div6.c
-+++ b/drivers/clk/renesas/clk-div6.c
-@@ -7,6 +7,7 @@
-  * Contact: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clk-provider.h>
- #include <linux/init.h>
- #include <linux/io.h>
-@@ -171,8 +172,7 @@ static u8 cpg_div6_clock_get_parent(struct clk_hw *hw)
- 	if (clock->src_mask == 0)
- 		return 0;
- 
--	hw_index = (readl(clock->reg) & clock->src_mask) >>
--		   __ffs(clock->src_mask);
-+	hw_index = field_get(clock->src_mask, readl(clock->reg));
- 	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
- 		if (clock->parents[i] == hw_index)
- 			return i;
-@@ -191,7 +191,7 @@ static int cpg_div6_clock_set_parent(struct clk_hw *hw, u8 index)
- 	if (index >= clk_hw_get_num_parents(hw))
- 		return -EINVAL;
- 
--	src = clock->parents[index] << __ffs(clock->src_mask);
-+	src = field_prep(clock->src_mask, clock->parents[index]);
- 	writel((readl(clock->reg) & ~clock->src_mask) | src, clock->reg);
- 	return 0;
- }
-diff --git a/drivers/clk/renesas/rcar-gen3-cpg.c b/drivers/clk/renesas/rcar-gen3-cpg.c
-index 027100e84ee4c429..ca8f6a68771628fb 100644
---- a/drivers/clk/renesas/rcar-gen3-cpg.c
-+++ b/drivers/clk/renesas/rcar-gen3-cpg.c
-@@ -54,10 +54,8 @@ static unsigned long cpg_pll_clk_recalc_rate(struct clk_hw *hw,
- {
- 	struct cpg_pll_clk *pll_clk = to_pll_clk(hw);
- 	unsigned int mult;
--	u32 val;
- 
--	val = readl(pll_clk->pllcr_reg) & CPG_PLLnCR_STC_MASK;
--	mult = (val >> __ffs(CPG_PLLnCR_STC_MASK)) + 1;
-+	mult = FIELD_GET(CPG_PLLnCR_STC_MASK, readl(pll_clk->pllcr_reg)) + 1;
- 
- 	return parent_rate * mult * pll_clk->fixed_mult;
- }
-@@ -94,7 +92,7 @@ static int cpg_pll_clk_set_rate(struct clk_hw *hw, unsigned long rate,
- 
- 	val = readl(pll_clk->pllcr_reg);
- 	val &= ~CPG_PLLnCR_STC_MASK;
--	val |= (mult - 1) << __ffs(CPG_PLLnCR_STC_MASK);
-+	val |= FIELD_PREP(CPG_PLLnCR_STC_MASK, mult - 1);
- 	writel(val, pll_clk->pllcr_reg);
- 
- 	for (i = 1000; i; i--) {
-@@ -176,11 +174,7 @@ static unsigned long cpg_z_clk_recalc_rate(struct clk_hw *hw,
- 					   unsigned long parent_rate)
- {
- 	struct cpg_z_clk *zclk = to_z_clk(hw);
--	unsigned int mult;
--	u32 val;
--
--	val = readl(zclk->reg) & zclk->mask;
--	mult = 32 - (val >> __ffs(zclk->mask));
-+	unsigned int mult = 32 - field_get(zclk->mask, readl(zclk->reg));
- 
- 	return DIV_ROUND_CLOSEST_ULL((u64)parent_rate * mult,
- 				     32 * zclk->fixed_div);
-@@ -231,7 +225,8 @@ static int cpg_z_clk_set_rate(struct clk_hw *hw, unsigned long rate,
- 	if (readl(zclk->kick_reg) & CPG_FRQCRB_KICK)
- 		return -EBUSY;
- 
--	cpg_reg_modify(zclk->reg, zclk->mask, (32 - mult) << __ffs(zclk->mask));
-+	cpg_reg_modify(zclk->reg, zclk->mask,
-+		       field_prep(zclk->mask, 32 - mult));
- 
- 	/*
- 	 * Set KICK bit in FRQCRB to update hardware setting and wait for
-diff --git a/drivers/clk/renesas/rcar-gen4-cpg.c b/drivers/clk/renesas/rcar-gen4-cpg.c
-index 31aa790fd003d45e..a63114a1d431968f 100644
---- a/drivers/clk/renesas/rcar-gen4-cpg.c
-+++ b/drivers/clk/renesas/rcar-gen4-cpg.c
-@@ -279,11 +279,7 @@ static unsigned long cpg_z_clk_recalc_rate(struct clk_hw *hw,
- 					   unsigned long parent_rate)
- {
- 	struct cpg_z_clk *zclk = to_z_clk(hw);
--	unsigned int mult;
--	u32 val;
--
--	val = readl(zclk->reg) & zclk->mask;
--	mult = 32 - (val >> __ffs(zclk->mask));
-+	unsigned int mult = 32 - field_get(zclk->mask, readl(zclk->reg));
- 
- 	return DIV_ROUND_CLOSEST_ULL((u64)parent_rate * mult,
- 				     32 * zclk->fixed_div);
-@@ -334,7 +330,8 @@ static int cpg_z_clk_set_rate(struct clk_hw *hw, unsigned long rate,
- 	if (readl(zclk->kick_reg) & CPG_FRQCRB_KICK)
- 		return -EBUSY;
- 
--	cpg_reg_modify(zclk->reg, zclk->mask, (32 - mult) << __ffs(zclk->mask));
-+	cpg_reg_modify(zclk->reg, zclk->mask,
-+		       field_prep(zclk->mask, 32 - mult));
- 
- 	/*
- 	 * Set KICK bit in FRQCRB to update hardware setting and wait for
--- 
-2.43.0
+Indeed, but is it really a problem? The args.np pointer is still the same.
+So the comparison is unaffected.
+
+Both branches need to drop the reference, no?
+But the following looks awefull as well.
+> if (args.np !=3D dev->of_node) {
+> 	of_node_put(args.np);
+> 	continue;
+> }
+> of_node_put(args.np);
+
+Best regards,
+Alexander
+
+>=20
+> > +				continue;
+> > +
+> > +			/* Only support one cell */
+> > +			if (args.args_count !=3D 1) {
+> > +				dev_err(dev, "wrong args count\n");
+> > +				continue;
+> > +			}
+> > +
+>=20
+>=20
+> Best regards,
+> Krzysztof
+>=20
+
+
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
 
