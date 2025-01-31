@@ -1,170 +1,229 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB07155C88;
-	Fri, 31 Jan 2025 20:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC271F0E46
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738354090; cv=none; b=Cm0iRQlAAft+2GDNbzjGi7fjJYIa2G/uMWT4kDvwSyVjc+0yeT7eNoYicXmp8oXx+l10n0Flzb4LSbUrotSFZhqXMb2AHaBq1hZ9WVoSw9cRFnq7r0Dfem5kOZdkPZ5XkTmeI290zPFVl5PZV86puxIV120+wkdATCnrRy4oLdE=
+	t=1738354124; cv=none; b=uPhA0AeqkW0a5lerID6iZo5BeeUiXYQZAO29hY3dhpvTjyBxAEp8k2bHQ6ya74tMYcLVdUI9XitdcWeK6cZFgwUnfs9TguF9Lg5933k+Zp/GSAj6Z6qxSRDrqEceDOBxdWzVOMUWuG6b8LTg5eyu/7GWZa2qgnA9zqCUrUitfWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738354090; c=relaxed/simple;
-	bh=COXth9vzC9L4DLry/6VVSSD8GXZn+nuLwV2IJYzQEqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ds3/R01Z3/jaDpLYHkitihVfZHjCilQJ9StT1SK3LzPhPCfBwnvzBWM1PtSqUSgUP4O/YZf0F3IBAvHoRva3AoRhYzwna+ywGZJJTwlLmmzNz+WTE4c8kM8Xv8rIHaDxng6HSPdQb8aggEkyfEgosDqX/GX4KXkLzXX4L55nVkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l0XR6LBg; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738354124; c=relaxed/simple;
+	bh=fKS/+T4Yblhgtj5gjMSlva47t0SDdv/kmftNd3dioe0=;
+	h=Date:Subject:CC:From:To:Message-ID; b=px2v2iZKsmVqid4cpFQ2JwqJ4xDCSbALXgmE1+giXT2KY5tbq2UrRsdsxcyaghLKex0kLfG/243d3lrXmBURcI7WObWSFVmuZ5d+uccA4SkIv6tNsRwgeljzmkidycN2sdD8P7d72w9Lgck3OumObCgqkeyoIOiMEnVkUSF25t8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=H2HuDdjE; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l0XR6LBg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738354088; x=1769890088;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=COXth9vzC9L4DLry/6VVSSD8GXZn+nuLwV2IJYzQEqY=;
-  b=l0XR6LBgA9yOp/GxMcF0BLCdUMbGXMF2KQAWDL/GCsZHH3y8oxoJirH+
-   IU1NlIt4PW8IBGWAIdt3SP0qma4PAQKm3x0B+1aI8/YzsVZr77YthADBN
-   AaRxoRCNQaLXptxubWenhp7fv+aYUfnEtsZwptJ4Fz4k/itGJ4DmGWnus
-   yQ1MnLgvDFDIdJIXtus8emyTJuJBg61JcKdeTsfXF6A1EK5o+jJD9uHpO
-   98zViztUHLetMl2VuGY+rK16i9xM3zQQyNociiYQKdRCNBcMks8B2IEst
-   iHQfYhfhBEtByFnM8c0ieCNaYT4NmY6DOsRwphDvExd3JEt/HCxWDi7Dq
-   A==;
-X-CSE-ConnectionGUID: 2Y6NpFr/RiGI7pRPy9GyCg==
-X-CSE-MsgGUID: qLNJIE9uTy6XsIPl8ed78w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="50316415"
-X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="50316415"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 12:08:08 -0800
-X-CSE-ConnectionGUID: h5yofnzcQ4u8Trpgo7S3FQ==
-X-CSE-MsgGUID: PxFX4g1OS/GH68anfo97Hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="109655773"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 31 Jan 2025 12:08:04 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tdxJ3-000n3L-1P;
-	Fri, 31 Jan 2025 20:08:01 +0000
-Date: Sat, 1 Feb 2025 04:07:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pengyu Luo <mitltlatltl@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	Pengyu Luo <mitltlatltl@gmail.com>
-Subject: Re: [PATCH RESEND v6 2/3] platform: arm64: add Huawei Matebook E Go
- EC driver
-Message-ID: <202502010344.KWDBQUG9-lkp@intel.com>
-References: <20250131092139.6065-3-mitltlatltl@gmail.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="H2HuDdjE"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2163b0c09afso42970125ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:08:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738354121; x=1738958921; darn=vger.kernel.org;
+        h=message-id:to:from:cc:subject:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cBul5ysGPZTyDg4qnqAU/ekNzSdW9pjkuURf85NPIBY=;
+        b=H2HuDdjE6Qsp2E/gD/hacZyix+eqSBtsvguA9+chbP/WXY4al1LKZiilBZYSpx8eXm
+         9ISHeUsfrRl3BZKzaRPGiGIIxHbCmQfWl1ZL/dM4CXKbTg0d+Wah79AYwHSMQ+rizzXZ
+         pALeHcMOVHoMO7ZiXUCF6VEhqMqxpoohGOfaLp0Z4myOm3ngvFXkOFIvdRL6z1bOxD0l
+         qeWtfJb1ANYqbZebcf/DNbeetStfn5Fgrw85Pl3dSD17MkWzKM96iJo6JSWSQ14HA5x3
+         Nl10VdeUX/TJnQgYiuQ1XT4L/eArnp7Hcnqa5zV5jfMVHpHYn5wsfccw1REMmYHUhPa9
+         b6iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738354121; x=1738958921;
+        h=message-id:to:from:cc:subject:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cBul5ysGPZTyDg4qnqAU/ekNzSdW9pjkuURf85NPIBY=;
+        b=ul77aV8ssAlO5f+Pl6sodRS6gBnBg+rceIvmftQSELJraQdFJ/CpkkCHCGroEUIgAD
+         WrgNg8CKGDRnjc6GE6v/g50LuqKqln4YZ90TlOihM3rJ6j1bAsFbdnLpdHQqDZFdyLus
+         BrknibUTtOQaAaetFxw9bQm3Cw7JahRWDglUy5NNAtbJW+ZL2UWl+cnNEt3sUNInfgNa
+         obnLe80MDdDBwW+4S+A0wS7y4NOAI2YoiGxSgtH2vLvjGKqbzF3BAdHhlaX0LYlKJ4hV
+         HDBEgwbTKXSpSQWr+CXv9qAxEhvAenJCdeYUHAuDLd9+S3Nj8Gpiud6MribhFHpXSPBx
+         +m6w==
+X-Forwarded-Encrypted: i=1; AJvYcCWBSyLFeWa5YR3E5s7mXLKULHu7KPwK9vkLYKUDRCkwZBbnu3hE01lWSohp8BoPxbkpOpL/0ZzvUXWzr2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjsNNFL2Ih7P90XZZPNb/YtM+mpxqCVmJ6LUtejXb6dJjEjluQ
+	GBfYO0B+lI4eqcLcd0Ea0cw+7Recpd9gqG9o68j0kaOiWMA2BVxY892RwdQPV00Aho3tuqLw4sy
+	s
+X-Gm-Gg: ASbGncsCeQafxyLmS0ukDKGH5Avx1MJNBh6BzQziS5fiYduLaJE9cNZYDCLNFLvI6wV
+	9Ya+ytQG/7B74ytoSps7mn0IMwPKq3+hwPWWJYuRjAIUmR76gYyF0ILn5XER18sl0JGUaTFKNWY
+	C3Z/lKajhYIGAkmVwzg9egI8XssS3GiVD0PusZkOgNm/aGGyMhoZkvNHTGAxVXVrhiT/NtlfVZX
+	hunxAl6awStSfXYlvM6u8w+oBqdFxyZazDjvQGYfnEJcfA9oBPeBU4qkkhsBv28SkmzbINWm6eB
+	LpA51LGXJYQoEg==
+X-Google-Smtp-Source: AGHT+IGrMDfDUwByc0j7gn0ck3Oam/oLJvP4Nzd1Pw9CtpK5Ytij8uVVdjOi9PeMkBtoMSrpkyzWMQ==
+X-Received: by 2002:a17:902:db02:b0:216:69ca:7714 with SMTP id d9443c01a7336-21dd7c46297mr184198085ad.11.1738354121173;
+        Fri, 31 Jan 2025 12:08:41 -0800 (PST)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31fcdd0sm34501885ad.103.2025.01.31.12.08.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 12:08:40 -0800 (PST)
+Date: Fri, 31 Jan 2025 12:08:40 -0800 (PST)
+X-Google-Original-Date: Fri, 31 Jan 2025 12:08:28 PST (-0800)
+Subject: [GIT PULL] RISC-V Patches for the 6.14 Merge Window, Part 1
+CC:         linux-riscv@lists.infradead.org,        linux-kernel@vger.kernel.org
+From: Palmer Dabbelt <palmer@rivosinc.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <mhng-5051a418-807c-4539-91b2-255492eae79f@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131092139.6065-3-mitltlatltl@gmail.com>
 
-Hi Pengyu,
+The following changes since commit fac04efc5c793dccbd07e2d59af9f90b7fc0dca4:
 
-kernel test robot noticed the following build errors:
+  Linux 6.13-rc2 (2024-12-08 14:03:39 -0800)
 
-[auto build test ERROR on 853d1f41ba73e78d22e7075d9a95670aab187eba]
+are available in the Git repository at:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pengyu-Luo/dt-bindings-platform-Add-Huawei-Matebook-E-Go-EC/20250131-172427
-base:   853d1f41ba73e78d22e7075d9a95670aab187eba
-patch link:    https://lore.kernel.org/r/20250131092139.6065-3-mitltlatltl%40gmail.com
-patch subject: [PATCH RESEND v6 2/3] platform: arm64: add Huawei Matebook E Go EC driver
-config: powerpc64-randconfig-003-20250201 (https://download.01.org/0day-ci/archive/20250201/202502010344.KWDBQUG9-lkp@intel.com/config)
-compiler: powerpc64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250201/202502010344.KWDBQUG9-lkp@intel.com/reproduce)
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.14-mw1
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502010344.KWDBQUG9-lkp@intel.com/
+for you to fetch changes up to 101971298be2aa4706c8602bd81066a0f6f2ced5:
 
-All errors (new ones prefixed by >>):
+  riscv: add a warning when physical memory address overflows (2025-01-29 18:36:09 -0800)
 
-   powerpc64-linux-ld: warning: discarding dynamic section .glink
-   powerpc64-linux-ld: warning: discarding dynamic section .plt
-   powerpc64-linux-ld: linkage table error against `devm_hwmon_device_register_with_info'
-   powerpc64-linux-ld: stubs don't match calculated size
-   powerpc64-linux-ld: can not build stubs: bad value
-   powerpc64-linux-ld: drivers/platform/arm64/huawei-gaokun-ec.o: in function `gaokun_ec_probe':
->> drivers/platform/arm64/huawei-gaokun-ec.c:786:(.text+0x16ac): undefined reference to `devm_hwmon_device_register_with_info'
+----------------------------------------------------------------
+RISC-V Patches for the 6.14 Merge Window, Part 1
 
+* The PH1520 pinctrl and dwmac drivers are enabeled in defconfig.
+* A redundant AQRL barrier has been removed from the futex cmpxchg
+  implementation.
+* Support for the T-Head vector extensions, which includes exposing
+  these extensions to userspace on systems that implement them.
+* Some more page table information is now printed on die() and systems
+  that cause PA overflows.
 
-vim +786 drivers/platform/arm64/huawei-gaokun-ec.c
+----------------------------------------------------------------
+I don't have a second PR planned, I've been pretty sick lately so every if
+something does blow up I'm probably going to be too out of it to notice this
+weekend.  That means this also hasn't gotten as much love as usual, but
+hopefully that's just resulted in this being small and not buggy.
 
-   740	
-   741	static int gaokun_ec_probe(struct i2c_client *client)
-   742	{
-   743		struct device *dev = &client->dev;
-   744		struct gaokun_ec *ec;
-   745		int ret;
-   746	
-   747		ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
-   748		if (!ec)
-   749			return -ENOMEM;
-   750	
-   751		ret = devm_mutex_init(dev, &ec->lock);
-   752		if (ret)
-   753			return ret;
-   754	
-   755		ec->client = client;
-   756		i2c_set_clientdata(client, ec);
-   757		BLOCKING_INIT_NOTIFIER_HEAD(&ec->notifier_list);
-   758	
-   759		/* Lid switch */
-   760		ec->idev = devm_input_allocate_device(dev);
-   761		if (!ec->idev)
-   762			return -ENOMEM;
-   763	
-   764		ec->idev->name = "LID";
-   765		ec->idev->phys = "gaokun-ec/input0";
-   766		input_set_capability(ec->idev, EV_SW, SW_LID);
-   767	
-   768		ret = input_register_device(ec->idev);
-   769		if (ret)
-   770			return dev_err_probe(dev, ret, "Failed to register input device\n");
-   771	
-   772		ret = gaokun_aux_init(dev, GAOKUN_DEV_PSY, ec);
-   773		if (ret)
-   774			return ret;
-   775	
-   776		ret = gaokun_aux_init(dev, GAOKUN_DEV_UCSI, ec);
-   777		if (ret)
-   778			return ret;
-   779	
-   780		ret = devm_request_threaded_irq(dev, client->irq, NULL,
-   781						gaokun_ec_irq_handler, IRQF_ONESHOT,
-   782						dev_name(dev), ec);
-   783		if (ret)
-   784			return dev_err_probe(dev, ret, "Failed to request IRQ\n");
-   785	
- > 786		ec->hwmon_dev = devm_hwmon_device_register_with_info(dev, "gaokun_ec_hwmon",
-   787								     ec, &gaokun_ec_hwmon_chip_info, NULL);
-   788		if (IS_ERR(ec->hwmon_dev))
-   789			return dev_err_probe(dev, PTR_ERR(ec->hwmon_dev),
-   790					     "Failed to register hwmon device\n");
-   791	
-   792		return 0;
-   793	}
-   794	
+There's a pair of conflicts.  The v_initval_nolibc.c changes also landed in the
+new v_exec_initval_nolibc.c, so just removing it looks good to me.  The
+vstate_prctl test had an in-flight fixup/rewrite.  Not sure if I'm just slow
+today, but I'm having trouble trying to get a pre-merge `git diff` to show me
+anything so here's my `git show --diff-merges=remerge`, hopefully that helps
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/tools/testing/selftests/riscv/vector/vstate_prctl.c b/tools/testing/selftests/riscv/vector/vstate_prctl.c
+remerge CONFLICT (content): Merge conflict in tools/testing/selftests/riscv/vector/vstate_prctl.c
+index 340ca64ccc2b..62fbb17a0556 100644
+--- a/tools/testing/selftests/riscv/vector/vstate_prctl.c
++++ b/tools/testing/selftests/riscv/vector/vstate_prctl.c
+@@ -36,19 +36,8 @@ TEST(get_control_no_v)
+ {
+        long rc;
+
+-<<<<<<< 101971298be2 (riscv: add a warning when physical memory address overflows)
+        if (is_vector_supported() || is_xtheadvector_supported())
+                SKIP(return, "Test expects vector to be not supported");
+-=======
+-       ksft_set_plan(1);
+-
+-       pair.key = RISCV_HWPROBE_KEY_IMA_EXT_0;
+-       rc = riscv_hwprobe(&pair, 1, 0, NULL, 0);
+-       if (rc < 0) {
+-               ksft_test_result_fail("hwprobe() failed with %ld\n", rc);
+-               return -1;
+-       }
+->>>>>>> 69b8923f5003 (Merge tag 'for-linus-6.14-ofs4' of git://git.kernel.org/pub/scm/linux/kernel/git/hubcap/linux)
+
+        rc = prctl(PR_RISCV_V_GET_CONTROL);
+        EXPECT_EQ(-1, rc)
+
+----------------------------------------------------------------
+Celeste Liu (1):
+      riscv: defconfig: drop RT_GROUP_SCHED=y
+
+Charlie Jenkins (13):
+      dt-bindings: riscv: Add xtheadvector ISA extension description
+      dt-bindings: cpus: add a thead vlen register length property
+      riscv: dts: allwinner: Add xtheadvector to the D1/D1s devicetree
+      riscv: Add thead and xtheadvector as a vendor extension
+      riscv: vector: Use vlenb from DT for thead
+      riscv: csr: Add CSR encodings for CSR_VXRM/CSR_VXSAT
+      riscv: Add xtheadvector instruction definitions
+      riscv: vector: Support xtheadvector save/restore
+      riscv: hwprobe: Add thead vendor extension probing
+      riscv: hwprobe: Document thead vendor extensions and xtheadvector extension
+      selftests: riscv: Fix vector tests
+      selftests: riscv: Support xtheadvector in vector tests
+      riscv: Add ghostwrite vulnerability
+
+Davidlohr Bueso (1):
+      riscv/futex: Optimize atomic cmpxchg
+
+Drew Fustini (1):
+      riscv: defconfig: enable pinctrl and dwmac support for TH1520
+
+Heiko Stuebner (1):
+      RISC-V: define the elements of the VCSR vector CSR
+
+Palmer Dabbelt (2):
+      RISC-V: Mark riscv_v_init() as __init
+      Merge patch series "riscv: Add support for xtheadvector"
+
+Yunhui Cui (2):
+      riscv/mm/fault: add show_pte() before die()
+      riscv: add a warning when physical memory address overflows
+
+ Documentation/arch/riscv/hwprobe.rst               |  10 +
+ Documentation/devicetree/bindings/riscv/cpus.yaml  |  19 ++
+ .../devicetree/bindings/riscv/extensions.yaml      |  10 +
+ arch/riscv/Kconfig.errata                          |  11 +
+ arch/riscv/Kconfig.vendor                          |  26 ++
+ arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi      |   3 +-
+ arch/riscv/configs/defconfig                       |   3 +-
+ arch/riscv/errata/thead/errata.c                   |  28 ++
+ arch/riscv/include/asm/bugs.h                      |  22 ++
+ arch/riscv/include/asm/cpufeature.h                |   2 +
+ arch/riscv/include/asm/csr.h                       |  15 +
+ arch/riscv/include/asm/errata_list.h               |   3 +-
+ arch/riscv/include/asm/futex.h                     |   2 +-
+ arch/riscv/include/asm/hwprobe.h                   |   5 +-
+ arch/riscv/include/asm/switch_to.h                 |   2 +-
+ arch/riscv/include/asm/vector.h                    | 222 +++++++++++----
+ arch/riscv/include/asm/vendor_extensions/thead.h   |  47 ++++
+ .../include/asm/vendor_extensions/thead_hwprobe.h  |  19 ++
+ .../include/asm/vendor_extensions/vendor_hwprobe.h |  37 +++
+ arch/riscv/include/uapi/asm/hwprobe.h              |   3 +-
+ arch/riscv/include/uapi/asm/vendor/thead.h         |   3 +
+ arch/riscv/kernel/Makefile                         |   2 +
+ arch/riscv/kernel/bugs.c                           |  60 ++++
+ arch/riscv/kernel/cpufeature.c                     |  59 +++-
+ arch/riscv/kernel/kernel_mode_vector.c             |   8 +-
+ arch/riscv/kernel/process.c                        |   4 +-
+ arch/riscv/kernel/signal.c                         |   6 +-
+ arch/riscv/kernel/sys_hwprobe.c                    |   5 +
+ arch/riscv/kernel/vector.c                         |  26 +-
+ arch/riscv/kernel/vendor_extensions.c              |  10 +
+ arch/riscv/kernel/vendor_extensions/Makefile       |   2 +
+ arch/riscv/kernel/vendor_extensions/thead.c        |  29 ++
+ .../riscv/kernel/vendor_extensions/thead_hwprobe.c |  19 ++
+ arch/riscv/mm/fault.c                              |  52 ++++
+ arch/riscv/mm/init.c                               |   8 +-
+ drivers/base/cpu.c                                 |   3 +
+ include/linux/cpu.h                                |   1 +
+ scripts/selinux/genheaders/genheaders              | Bin 0 -> 90112 bytes
+ tools/testing/selftests/riscv/vector/.gitignore    |   3 +-
+ tools/testing/selftests/riscv/vector/Makefile      |  17 +-
+ .../selftests/riscv/vector/v_exec_initval_nolibc.c |  94 +++++++
+ tools/testing/selftests/riscv/vector/v_helpers.c   |  68 +++++
+ tools/testing/selftests/riscv/vector/v_helpers.h   |   8 +
+ tools/testing/selftests/riscv/vector/v_initval.c   |  22 ++
+ .../selftests/riscv/vector/v_initval_nolibc.c      |  68 -----
+ .../selftests/riscv/vector/vstate_exec_nolibc.c    |  20 +-
+ .../testing/selftests/riscv/vector/vstate_prctl.c  | 305 +++++++++++++--------
+ 47 files changed, 1114 insertions(+), 277 deletions(-)
+ create mode 100644 arch/riscv/include/asm/bugs.h
+ create mode 100644 arch/riscv/include/asm/vendor_extensions/thead.h
+ create mode 100644 arch/riscv/include/asm/vendor_extensions/thead_hwprobe.h
+ create mode 100644 arch/riscv/include/asm/vendor_extensions/vendor_hwprobe.h
+ create mode 100644 arch/riscv/include/uapi/asm/vendor/thead.h
+ create mode 100644 arch/riscv/kernel/bugs.c
+ create mode 100644 arch/riscv/kernel/vendor_extensions/thead.c
+ create mode 100644 arch/riscv/kernel/vendor_extensions/thead_hwprobe.c
+ create mode 100755 scripts/selinux/genheaders/genheaders
+ create mode 100644 tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
+ create mode 100644 tools/testing/selftests/riscv/vector/v_helpers.c
+ create mode 100644 tools/testing/selftests/riscv/vector/v_helpers.h
+ create mode 100644 tools/testing/selftests/riscv/vector/v_initval.c
+ delete mode 100644 tools/testing/selftests/riscv/vector/v_initval_nolibc.c
