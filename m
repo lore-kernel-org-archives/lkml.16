@@ -1,119 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6528467
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69078467;
+	Fri, 31 Jan 2025 16:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738340297; cv=none; b=l+HYWs/oZnfFtqWx6+1VQbcdxDrs3R36vwxd0znFpdX15QjUGpXUoaEZTeeZnIOowAXGyD01kktHwBJKwlfKgme6VZdJhtXbW787+Y3FJm0QE0ARTQK7+lrIF5JIti1PlQbVZFqBhzGQZU//cOGb4iRuh5Li77nEpKzka28kGIQ=
+	t=1738340348; cv=none; b=Wgx95GhK68nidwpncN96m7Xe6TT3HzonHGEf3BszrVcLdBepgT3fdiJq+TvTpn37HPV5JZ2l5TY6Nm1JLQKAjrxeP5d8wxdYOKo4heByfecxEplxIoeq8TAAH/m5fGY7B28uNLtMZ0jMcU7eSeJ9RiG26odqTzMCqegPYwTJdw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738340297; c=relaxed/simple;
-	bh=+DKv5p5gtr/qhVvWh4VwKvw+q8ap1xODp8LMl0FjSLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RU6kilr+BUwXn5wincYGrO+UKrEKGiIj2eesjuvcUSxRqoIEYNiL4cldoh1j5r2HpVoERj9GYbZbVKSqC0IsvB8BejJ6O5LTJWlaf80SJ5Dm8WiYyVWdLfrkqHD2H4DQ81WAYMVFHjEAgPkbEC0jjDomClHB2cNda41ok/OxWs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnLB8DrX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738340348; c=relaxed/simple;
+	bh=PThD2MabR8Y87tmcYynBi2ukMbhhXgysRS52Ag0sKlg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ugOpnzoKZV5bDuQPfvTx6tLEvsC0aXlim6IJZb0xvGwZVn+SCCtslvk5f4AXg1z8Kupp6QWctRawh/IzpzDnKG1eOf0zFRXVvuXrkdf3Xr0+M+fkWN3JCFWzeMoTgsGHASVNFbfTR86mS1uWuIBgK1cHg5bQrLYCYMqbd3iygR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EL9yU285; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+JZEpd0q; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EL9yU285; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+JZEpd0q; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnLB8DrX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 597E5C4CED1;
-	Fri, 31 Jan 2025 16:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738340297;
-	bh=+DKv5p5gtr/qhVvWh4VwKvw+q8ap1xODp8LMl0FjSLA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lnLB8DrXKJwyzfLcdlDTYUyTZB+XsYmVs1/BWFMCFkQCBUaYmMTPG3LorYW97DY8q
-	 x9VtBYrXOMeVPxAs/U/lkP268bqg6WFUr79FymjuCk0u6k79iPxxWeuPakJ7CeBFmt
-	 MXhuSMmI5/WpddygbxZlEoqKO0xyiTRb0UZ9fFY4Khz2ubCwGYe7w6yMMDN+WQCXb7
-	 uMbx13/O6F9Zs+g7SUV1Spsu3kuxBmbZ5ofnscv0hXADi0wFkPfppa0CgHFiVVz+IL
-	 HtefOVT1j9EM49Ee9UAkLdVM/H9BcCfC+l7GN5yft12vwYoyjQYV2B6qW21ktzkM7G
-	 0THzba+BGbLoA==
-Date: Fri, 31 Jan 2025 17:18:12 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Igor Mammedov <imammedo@redhat.com>
-Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
- qemu-arm@nongnu.org, qemu-devel@nongnu.org, Ani Sinha
- <anisinha@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/13] tests/acpi: virt: allow acpi table changes for
- a new table: HEST
-Message-ID: <20250131171812.2ad9b1fd@foz.lan>
-In-Reply-To: <20250130153830.2e4e081d@imammedo.users.ipa.redhat.com>
-References: <cover.1738137123.git.mchehab+huawei@kernel.org>
-	<1390b46682f2bac3587239d03a0ba22d18a9a044.1738137123.git.mchehab+huawei@kernel.org>
-	<20250129160328.2f66584c@imammedo.users.ipa.redhat.com>
-	<20250130140324.06cdd4bf@foz.lan>
-	<20250130153830.2e4e081d@imammedo.users.ipa.redhat.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EL9yU285";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+JZEpd0q";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EL9yU285";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+JZEpd0q"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BE5F32116C;
+	Fri, 31 Jan 2025 16:19:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738340343; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=8Q/Dw7GxWnqeqKY03nODnkWqA6O7L7VulYndOELNcTE=;
+	b=EL9yU285OqLvfaLCrLIQWmifOYlWP1RWhhAbz0uQEtcseQqDF6I63luidH63LrbyJUzTmR
+	WSVdaATplzzsH2bloJA+npV6zgVnvPImGo4mT5J8OYq7xkPzrGNxwwoLfAW5P6lVB9dV0Z
+	aZCxykd+vETK+0VjjHEhW0t2FpegUM8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738340343;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=8Q/Dw7GxWnqeqKY03nODnkWqA6O7L7VulYndOELNcTE=;
+	b=+JZEpd0qyHnML/UKYuCDc7kXsYhE0NeQG+cNHbCUV0Zkjaz27ma9vvX0SW2izYaanqST2A
+	gbGS8R8AHfNLbeBg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=EL9yU285;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=+JZEpd0q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738340343; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=8Q/Dw7GxWnqeqKY03nODnkWqA6O7L7VulYndOELNcTE=;
+	b=EL9yU285OqLvfaLCrLIQWmifOYlWP1RWhhAbz0uQEtcseQqDF6I63luidH63LrbyJUzTmR
+	WSVdaATplzzsH2bloJA+npV6zgVnvPImGo4mT5J8OYq7xkPzrGNxwwoLfAW5P6lVB9dV0Z
+	aZCxykd+vETK+0VjjHEhW0t2FpegUM8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738340343;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=8Q/Dw7GxWnqeqKY03nODnkWqA6O7L7VulYndOELNcTE=;
+	b=+JZEpd0qyHnML/UKYuCDc7kXsYhE0NeQG+cNHbCUV0Zkjaz27ma9vvX0SW2izYaanqST2A
+	gbGS8R8AHfNLbeBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 85309133A6;
+	Fri, 31 Jan 2025 16:19:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id lktIH/f3nGcUHQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 31 Jan 2025 16:19:03 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: tsbogend@alpha.franken.de
+Cc: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH] mips: sni: Do not include <linux/fb.h>
+Date: Fri, 31 Jan 2025 17:18:47 +0100
+Message-ID: <20250131161859.399573-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: BE5F32116C
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCPT_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Em Thu, 30 Jan 2025 15:38:30 +0100
-Igor Mammedov <imammedo@redhat.com> escreveu:
+The MIPS architecture's source files do not require <linux/fb.h>.
+Remove the include statement.
 
-> On Thu, 30 Jan 2025 14:03:24 +0100
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> 
-> > Em Wed, 29 Jan 2025 16:03:28 +0100
-> > Igor Mammedov <imammedo@redhat.com> escreveu:
-> >   
-> > > On Wed, 29 Jan 2025 09:04:08 +0100
-> > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> > >     
-> > > > The DSDT table will also be affected by such change.
-> > > > 
-> > > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>      
-> > > 
-> > > move it right before the patch that would actually make changes to tables (10/13)    
-> > 
-> > Table changes happens on two patches:
-> > 
-> > - patch 03/13: acpi/ghes: add a firmware file with HEST address  
-> 
-> this one shouldn't affect bios tables test as it only checks ACPI and SMBIOS tables,
-> and hest addr file is not either.
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+---
+ arch/mips/sni/setup.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Heh, true.
+diff --git a/arch/mips/sni/setup.c b/arch/mips/sni/setup.c
+index 42fdb939c88d8..03cb699372580 100644
+--- a/arch/mips/sni/setup.c
++++ b/arch/mips/sni/setup.c
+@@ -12,7 +12,6 @@
+ #include <linux/init.h>
+ #include <linux/export.h>
+ #include <linux/console.h>
+-#include <linux/fb.h>
+ #include <linux/screen_info.h>
+ 
+ #ifdef CONFIG_FW_ARC
+-- 
+2.48.1
 
-> Do you really see test failing on this patch?
-
-No. I just misunderstood the instructions, as it was not clear to me there 
-that I shouldn't be adding there the HEST table.
-
-> > 	HEST table was added here
-> > 
-> > - patch 10/13: arm/virt: Wire up a GED error device for ACPI / GHES 
-> > 
-> > 	DSDT changes happen here.
-> > 
-> > If the idea is to avoid make check to fail between those two patches,
-> > we need either to split them on 4 patches (one before/one after each
-> > change) or do like I did on this series: whitelist before patch 3,
-> > update after patch 10.  
-> 
-> It would be better to group patches that should change ACPI tables
-> close together so that a pair of whitelist/update could cover it.
-> However it depends on how many changes are there, i.e. acpi diff
-> should be digestible for a reader. So there is no hard border here,
-> just use common sense.
-> 
-> However when the whitelist is covers all series where only few patches
-> actually result in tables change, that miss-leads the reader since
-> whitelist patch basically tells 'watch out for changes since this moment'
-> and 'update' patch declares no more changes should happen.
-> The same applies to bisection, where closer the gap between
-> whitelist/update the better if the test case is the trigger.
-> No need to be fanatical and do it around each patch,
-> just make it observable (i.e. some small range of commits). 
-
-Got it. Yeah, there was just one patch affecting DSDT table: the one
-adding an AML representation for the GED notification device.
-
-I fixed it for the next (hopefully the final) version.
-
-Thanks,
-Mauro
