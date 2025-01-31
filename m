@@ -1,178 +1,76 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43821AAC4;
-	Fri, 31 Jan 2025 16:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9831EBA02;
+	Fri, 31 Jan 2025 16:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738339529; cv=none; b=GAVc8v55MMsz18KKE8bZ/6I2KDGolcpuFgNEv4ZVJgsA3e9fQEm3EykgKZejVhWWkjC83YHF6S2qmqEu21NEKOxX1w48+sfu2x5S/m1X3xrQwUcrD8n3L/GKFp9GYVmli+LMdMW5G1xrmFhiVmKYy/2fnbhCMOSaWy9xPNy0BC4=
+	t=1738339534; cv=none; b=ElPfmU2gA/3h8Prf1pQPQP0R8WhPNsQz/DoxNjdjap6b/p5SiW6TWCpCI4nAM2jrRGez2WPvng/5vAYZcVzcwvNEYUvPxH1K/I8bXMS9aejjiZaCgtGL+GSrN0ZwWhtLI48LQMRRiXNRm/TpPFou8kOuiGAN4JvhDiQD8MlNjOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738339529; c=relaxed/simple;
-	bh=gX4ag1AlV9dTSBogEeBHGkTAgAH/pVoq+dkZLcj3U0c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cyGeWBfsDH2j88OozG+ZFS9BxoxyVkcs6RUv8xayZ2NPE8dFSSq9BiaVJ14m9IXuhZO2jZ6GEdKEt7NiD6O2px6DGnNCOTOLv070tXDi4ql3R9xP0FETe9G7IxKmoZ1SamQNAW60/uMJgD9gAsJQ9axNLioSs+z99h+c53gJRIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nZe9s3P0; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738339534; c=relaxed/simple;
+	bh=1omhRQmvSB/Qil1fK+3eh4SCjNKBsj0EYIu0AGn7V7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X2u6f1TLqHPaXVdfw1cDzONoEPgU29dovY5ndo72d4HuJ6zhIL6msN3dM795v3Xcf+kUmhy1y6ZW/tHkbjIlFqN1lkrcLeSIa9BLwOrCyn4CnFN7XQLdnq4eoeb/0WMhW1g/bGf6Y+hIPdX2DPJHI0XPO1j4HPZjd91byL0sVLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=1MYRElUg; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZe9s3P0"
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-518954032b2so636131e0c.0;
-        Fri, 31 Jan 2025 08:05:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738339526; x=1738944326; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yinOq3BvFm8pbS0HIBonp/WO0nQAo4BYehd8oFIVqaA=;
-        b=nZe9s3P0Cpc0anllRk8SkWHEpImBoTC8fwprmxJC16eEStO7AH2/q+JlP+BhcdE3SC
-         rjds7buD3Ns6/JFCtuqlLELfu096rKYLTo6xyA5nSVylew+spgICd5yBnk8dZKMQSD7l
-         pemgZH2Jh85seuG1S9AlH+/0Ndcvyym7IzTRc7BXbef9IEMF69pQ58J17brRMD2BpstZ
-         lz2zQhCig3xa/oPmRoA9fkg+IH/89SdBdNXdu7UFjiX5oxSPq/avb8v1vZncXdT8rgyk
-         SvMYSKuq9dAKcY5Eb33QaHcZzxdBqHKx3SRPaoeChSrw3pWSszRpdiJHERXz4Ka7NyXX
-         2YPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738339526; x=1738944326;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yinOq3BvFm8pbS0HIBonp/WO0nQAo4BYehd8oFIVqaA=;
-        b=ATd9e+lrb9DJAjJQ+w1MghVq0MpV+1b63HXDtYN+mif2CuW1mHMo+MLKv5sd2b4cx8
-         HfOzsfueytGAjQ30N0SOnWdTakzxi46a01m5Uh0te6QbxNx7KNm5c1vAS9+PZTPJ6V/v
-         ha/jDQ4fwwUGt8GFsWXxxfkgKCdlBkzVpsoXrh7RNVO+DQ5C2lEFUvbfm+iJnWMDeb3V
-         GGOuQoNq2wkZxzgYmh4oKv1saNo2XpqcuEFIcjxOs3Zn7brIfTTY9jvsac5gAAROWz4w
-         AgwYGsNJPBKG/XswHKOUwAfcvFaHMo1wIKjy20lUnBAa2jN/dleWYVPPblytu+4S2af0
-         MMdA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPZ6bSd9C9PNYM6QEu6k6v1Y3GooQhosAsVKKbLYiIuD6dj4BQSRowWYio3DR4C2ckbzf4yRPZ0WpW@vger.kernel.org, AJvYcCXpiqLKgOexQkiVBC5hukjyEPV4bhO9tcw4wFDiMZNJ1ycuLCdoi922Td0Rgm2OuCYpZftHeAAgLW+Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGYBk/0H7FddKFp3Abgpu/280SG2hl4XhOPKe4gYlixfVmgoIW
-	6JOuBBOpu2BpU0GH7zy84m9K0SHZuV2nGkjIjH76Ydd6pjjTcBjPFFd7G2Jm72ARUb8VFy4yAaW
-	8dZSrrYoC7AOA9CNPAlMltTf2dR0=
-X-Gm-Gg: ASbGncsI5J1vMossPzQCnFP05FdciUgasi46QY0UsteXKaVe7m/EgQ8NUbnF8VJiPHM
-	QIZpejXnYQJa/62Kx0mypwz5v2PkxBF7aABY+/GluaC3o7vT3DtX1J2Ajq/NfBG6AEtfr1NBf2w
-	==
-X-Google-Smtp-Source: AGHT+IEp7MtYTu6aLHmfoRZMuQIhdDIIlMcvFCUzckw2uCT/3cjD28n2Uuo9tiMWgYBKq7vRQxgRKyFa2i4Ck0/Q8yw=
-X-Received: by 2002:a05:6122:1826:b0:515:daa7:ed07 with SMTP id
- 71dfb90a1353d-51e9e28a51amr9180667e0c.0.1738339526468; Fri, 31 Jan 2025
- 08:05:26 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1MYRElUg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=oiBjie/3ciEURIkZ+iLsXyNmqPRpB2PMG1wBn3Ax9Sg=; b=1MYRElUgqBxjWkVDqUZZxZcr+8
+	ONv5FvkVLHES1aKsbjZX2Pd8KJ1igu+ZChE//zmIzI6E/JJkxufl/3qydIO3GW+s2+WuTOOYnInRi
+	gkcKLlHtiYE/pzVQaPZwXFtqUrpiJ7jKe7FEyyQZS7tr4nWqoZecl617/SEkPEaJIOQM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tdtVv-009jXz-O6; Fri, 31 Jan 2025 17:05:03 +0100
+Date: Fri, 31 Jan 2025 17:05:03 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Russell King <linux@armlinux.org.uk>,
+	Rudraksha Gupta <guptarud@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Geert Stappers <stappers@stappers.nl>,
+	Jamie Cunliffe <Jamie.Cunliffe@arm.com>,
+	Sven Van Asbroeck <thesven73@gmail.com>,
+	rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] arm: rust: Enable Rust support for ARMv7
+Message-ID: <65da77f7-bbd4-4cbe-a06c-75f10a6ec4ce@lunn.ch>
+References: <20250123-rfl-arm32-v3-1-8f13623d42c5@gmail.com>
+ <a83b0149-7055-411b-ba86-d227919c7c32@app.fastmail.com>
+ <f8b59f05-55b5-4208-8bdf-b4be8e93bc22@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250120130119.671119-1-svarbanov@suse.de> <20250120130119.671119-7-svarbanov@suse.de>
-In-Reply-To: <20250120130119.671119-7-svarbanov@suse.de>
-From: Jim Quinlan <jim2101024@gmail.com>
-Date: Fri, 31 Jan 2025 11:05:14 -0500
-X-Gm-Features: AWEUYZlLglIi2jugpqje-hAPwOESpNgNxOWzCPUmbm1viKS3V0vfFHVWucL5CCE
-Message-ID: <CANCKTBtG14B7mqW3vjv557kHLfYkJtJiL+xu8f2siZ9_BuWPHg@mail.gmail.com>
-Subject: Re: [PATCH v5 -next 06/11] PCI: brcmstb: Add bcm2712 support
-To: Stanimir Varbanov <svarbanov@suse.de>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Andrea della Porta <andrea.porta@suse.com>, 
-	Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>, 
-	Dave Stevenson <dave.stevenson@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f8b59f05-55b5-4208-8bdf-b4be8e93bc22@gmail.com>
 
-On Mon, Jan 20, 2025 at 8:01=E2=80=AFAM Stanimir Varbanov <svarbanov@suse.d=
-e> wrote:
->
-> Add bare minimum amount of changes in order to support PCIe RC hardware
-> IP found on RPi5. The PCIe controller on bcm2712 is based on bcm7712 and
-> as such it inherits register offsets, perst, bridge_reset ops and inbound
-> windows count.
-> Although, the implementation for bcm2712 needs a workaround related to th=
-e
-> control of the bridge_reset where turning off of the root port must not
-> shutdown the bridge_reset and this must be avoided. To implement this
-> workaround a quirks field is introduced in pcie_cfg_data struct.
->
-> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
-> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> ---
-> v4 -> v5:
->  - No changes.
->
->  drivers/pci/controller/pcie-brcmstb.c | 25 +++++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controll=
-er/pcie-brcmstb.c
-> index 59190d8be0fb..50607df34a66 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -234,10 +234,20 @@ struct inbound_win {
->         u64 cpu_addr;
->  };
->
-> +/*
-> + * The RESCAL block is tied to PCIe controller #1, regardless of the num=
-ber of
-> + * controllers, and turning off PCIe controller #1 prevents access to th=
-e RESCAL
-> + * register blocks, therefore no other controller can access this regist=
-er
-> + * space, and depending upon the bus fabric we may get a timeout (UBUS/G=
-ISB),
-> + * or a hang (AXI).
-> + */
-> +#define CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN                BIT(0)
-> +
->  struct pcie_cfg_data {
->         const int *offsets;
->         const enum pcie_soc_base soc_base;
->         const bool has_phy;
-> +       const u32 quirks;
->         u8 num_inbound_wins;
->         int (*perst_set)(struct brcm_pcie *pcie, u32 val);
->         int (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
-> @@ -1488,8 +1498,9 @@ static int brcm_pcie_turn_off(struct brcm_pcie *pci=
-e)
->         u32p_replace_bits(&tmp, 1, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_=
-IDDQ_MASK);
->         writel(tmp, base + HARD_DEBUG(pcie));
->
-> -       /* Shutdown PCIe bridge */
-> -       ret =3D pcie->bridge_sw_init_set(pcie, 1);
-> +       if (!(pcie->cfg->quirks & CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN))
-> +               /* Shutdown PCIe bridge */
-> +               ret =3D pcie->cfg->bridge_sw_init_set(pcie, 1);
->
->         return ret;
->  }
-> @@ -1699,6 +1710,15 @@ static const struct pcie_cfg_data bcm2711_cfg =3D =
-{
->         .num_inbound_wins =3D 3,
->  };
->
-> +static const struct pcie_cfg_data bcm2712_cfg =3D {
-> +       .offsets        =3D pcie_offsets_bcm7712,
-> +       .soc_base       =3D BCM7712,
-> +       .perst_set      =3D brcm_pcie_perst_set_7278,
-> +       .bridge_sw_init_set =3D brcm_pcie_bridge_sw_init_set_generic,
-> +       .quirks         =3D CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN,
-> +       .num_inbound_wins =3D 10,
-> +};
-> +
->  static const struct pcie_cfg_data bcm4908_cfg =3D {
->         .offsets        =3D pcie_offsets,
->         .soc_base       =3D BCM4908,
-> @@ -1750,6 +1770,7 @@ static const struct pcie_cfg_data bcm7712_cfg =3D {
->
->  static const struct of_device_id brcm_pcie_match[] =3D {
->         { .compatible =3D "brcm,bcm2711-pcie", .data =3D &bcm2711_cfg },
-> +       { .compatible =3D "brcm,bcm2712-pcie", .data =3D &bcm2712_cfg },
->         { .compatible =3D "brcm,bcm4908-pcie", .data =3D &bcm4908_cfg },
->         { .compatible =3D "brcm,bcm7211-pcie", .data =3D &generic_cfg },
->         { .compatible =3D "brcm,bcm7216-pcie", .data =3D &bcm7216_cfg },
-Reviewed-by: Jim Quinlan <james.quinlan@broadcom.com>
-> --
-> 2.47.0
->
+> To fix this Rust would have to provide a way to build the core
+> library without float support. I don't know if there is a plan
+> already to allow this.
+
+Floating point is banned within the kernel, except for in very narrow
+conditions, because the floating point registers are lazy saved on
+context switch. If the kernel uses the floating point registers, you
+can break user space in bad ways.
+
+I expect this has been discussed, since it is well known kernel
+restriction. Maybe go see what happened to that discussion within RfL?
+
+	Andrew
