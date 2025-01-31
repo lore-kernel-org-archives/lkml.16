@@ -1,112 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55945154420;
-	Fri, 31 Jan 2025 20:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4360154420
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738356806; cv=none; b=U1GRgFBi/jG9ip98PZ9vWfcZHGgRW6riadz26O+BFKiqkPZhqDIY6SxYq3oBhw15K+IwN+hGlQzOBzdCYxf76g0VJJML38eH+7uusM5r8ndB/XrkQNatC4ONaFGNm10FRQYFfSQhqvI6V8AjRP7rxSDRNMlzFAP8hSfAtQXNvWE=
+	t=1738356920; cv=none; b=Csa2zjstm9jT9OTc6ZM/8lxa2zEce7/R7gltFJZZtB/gAhDfrFYeuHJXhyQWTj07okoDyCH/JQ8NR/wmwgiTkg7Qe+RCr2YQ1ezE0GjVFmzMK3B9C3gxepi9Ny3xfJUwKxUrEAGXGWXs/78ybH9L8iI35ZR/wFN3tSEHl5STE00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738356806; c=relaxed/simple;
-	bh=Ns9lG2XTLzvQyVHvzY6bvCcio7FqmkJo3OkAMj8JrDw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ro+OW7WUzV8s3RTNMpD5T+aSTlnyS9SqtLbW53xJMNOdLffAyvcc2muWD/4myP7S2Hb/2WKhI7P+ZzJuQgnzg7uTUZw0ohKQnz8Ccgt/FMgjT6QHd8SNfethmiEFtYFbsuW1Qv/zf6jdta3qUU0zXG+GhQQZcZsv34lZnhYKCiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PE4CbnBO; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PE4CbnBO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738356804; x=1769892804;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Ns9lG2XTLzvQyVHvzY6bvCcio7FqmkJo3OkAMj8JrDw=;
-  b=PE4CbnBOnqLgY2esv/42UmLtUtLHPsV0mJpV89wNQHoCvEFCOfz9dX+R
-   munCHM9w3unMWODr3COwdhyEPS2Ft4+tJEJZfMsq6+vph+fUbMuNSyavy
-   eKbK9LJAtv26C0pK7ij5Wuqs/U1fN3ufHDsb0br8jeWyUHpWa2oudrFPF
-   lgEA8rFnsiSt7JXpXWceUKoY8TMU+I1AkDIXVBxTPQW4j2nYr/2em9biW
-   CFmgDGotDrCq7r+yM9VtmMkdJMnp92Ey9TXwYrnB5YrbAXnoXTRIhxryr
-   PQgwdJDtfEX/9ipT+RiGq41izgFCdqiH1wOynRv3FkZ3HA6G08rnL9vcn
-   w==;
-X-CSE-ConnectionGUID: VatS3Z7CTpiT4wndgw008w==
-X-CSE-MsgGUID: bpXeocwIQWuh48cSbL8ohw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="61405012"
-X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="61405012"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 12:53:24 -0800
-X-CSE-ConnectionGUID: +bceC6AYSUyUvjfb1/benQ==
-X-CSE-MsgGUID: pCjUY2VGSaix27Nsn+U76g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="109558363"
-Received: from jithudellxeon.sc.intel.com ([172.25.103.66])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 12:53:23 -0800
-From: Jithu Joseph <jithu.joseph@intel.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	jithu.joseph@intel.com,
-	tony.luck@intel.com,
-	ashok.raj.linux@gmail.com,
-	anisse@astier.eu
-Subject: [PATCH] platform/x86/intel/ifs: Update documentation with image download path
-Date: Fri, 31 Jan 2025 12:53:15 -0800
-Message-Id: <20250131205315.1585663-1-jithu.joseph@intel.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1738356920; c=relaxed/simple;
+	bh=Yv5gmhbsXPbLXOWvZRPDkMa4ffP0MNtv1qSAV1/CbHw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=oPXVWdY9TSTrmSfMa2udgcB/qD5vGaJBZ7JuR59QliidRe2lVU1qbUfYFnVHH+7ZSr26xh4sSRajPHM9WkIUVfVg+NHqIOyb/iKVBU3/JQiEE2MQl5962fOnheQ73n2zndWtLzGKP48MpJV0uKPXyuOqS7mpyk04Y/dfEzOpimc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ce7a0ec1easo17190185ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:55:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738356918; x=1738961718;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yzsgNdgIYd9HcrjFHxY90O435o+c5Mzw+Ck+s9qz+Lk=;
+        b=ENekXORhKoQcRxK40LJkxSRQNO0hf2/lDln/0CarCj43HC2vPoSmc4WMX/w0tRg/MI
+         U7fTDHUcUy+G3RED5RsfwE3vjQrvDzpjiEHGYE2J+84hvntGW9RayYtMsBBStxDOfFol
+         irlUsGHB+2AmlUCrQOztnD/Hsp4BfssAeQza01Kw6N+KYg9bxrnqjssT0r793dK1lr1b
+         nGG9Y+bqAGX2gni9f5+xEh0yLsCwUD51yziDykUkwL0WBJlyyZpWTiogc1Uuu62iAHg8
+         cimoZt7brdsYgft2tl2Hea/cKu1NADcGxC6yKQ+8jEoe1xxT0P5DBL/DV3yRzkE/09AR
+         GrSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXpuWYf1Gp6AWDngMi9FOuu+neb8bFsHXmLa2pKOeSTK8/GAHVEuwBOEIQiaMk5WuSIN6t37gANfupLbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG6dcVW+7X/9FDF2kkw51xmO/tMkJVV11x/hZ7W201TbSBKRvY
+	QTrcaNaoVjS0VROwv94JES/EO4Pp8DPf3o4E3BlC7ffrbV3PEze2AezCTqjfeYpV4aTRuqIs0Ww
+	BxEZbEq0eBW5sXdYx0su1TtHzEBk1FefrnCE+k59vyY0AIgDq7ko9rfQ=
+X-Google-Smtp-Source: AGHT+IE7Oda+EIafkSrsWkrxHNl1hLhXlZNpdflSBASYTbkoHFGaeIoJLJJSgjAALtV2jJAP05e8dqMwvoR0aJDKFB/jgS91OY2M
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1a4c:b0:3cf:cd3c:bdfd with SMTP id
+ e9e14a558f8ab-3cffe4478e9mr121503305ab.12.1738356918019; Fri, 31 Jan 2025
+ 12:55:18 -0800 (PST)
+Date: Fri, 31 Jan 2025 12:55:18 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <679d38b6.050a0220.d7c5a.0053.GAE@google.com>
+Subject: [syzbot] [ocfs2?] BUG: unable to handle kernel paging request in folio_unlock
+From: syzbot <syzbot+2d57a8e099fe62bd60f0@syzkaller.appspotmail.com>
+To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
+	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The documentation previously listed the path to download In Field Scan
-(IFS) test images as "TBD".
+Hello,
 
-Update the documentation to include the correct image download location.
-Also move the download link to the appropriate section within the doc.
+syzbot found the following issue on:
 
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+HEAD commit:    b4b0881156fb Merge tag 'docs-6.14-2' of git://git.lwn.net/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10139ddf980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
+dashboard link: https://syzkaller.appspot.com/bug?extid=2d57a8e099fe62bd60f0
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-b4b08811.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3efac40869da/vmlinux-b4b08811.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9e9697356805/bzImage-b4b08811.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2d57a8e099fe62bd60f0@syzkaller.appspotmail.com
+
+loop0: detected capacity change from 0 to 32768
+=======================================================
+WARNING: The mand mount option has been deprecated and
+         and is ignored by this kernel. Remove the mand
+         option from the mount to silence this warning.
+=======================================================
+ocfs2: Mounting device (7,0) on (node local, slot 0) with writeback data mode.
+FAULT_INJECTION: forcing a failure.
+name fail_page_alloc, interval 1, probability 0, space 0, times 1
+CPU: 0 UID: 0 PID: 5324 Comm: syz.0.0 Not tainted 6.13.0-syzkaller-09585-gb4b0881156fb #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ fail_dump lib/fault-inject.c:73 [inline]
+ should_fail_ex+0x40a/0x550 lib/fault-inject.c:174
+ prepare_alloc_pages+0x1da/0x5b0 mm/page_alloc.c:4514
+ __alloc_frozen_pages_noprof+0x16f/0x710 mm/page_alloc.c:4728
+ alloc_pages_mpol+0x311/0x660 mm/mempolicy.c:2270
+ alloc_frozen_pages_noprof mm/mempolicy.c:2341 [inline]
+ alloc_pages_noprof+0x121/0x190 mm/mempolicy.c:2361
+ folio_alloc_noprof+0x1e/0x30 mm/mempolicy.c:2371
+ filemap_alloc_folio_noprof+0xe1/0x540 mm/filemap.c:1019
+ __filemap_get_folio+0x438/0xae0 mm/filemap.c:1970
+ ocfs2_grab_folios_for_write+0x562/0xda0 fs/ocfs2/aops.c:1075
+ ocfs2_write_begin_nolock+0x3476/0x4e40 fs/ocfs2/aops.c:1783
+ ocfs2_write_begin+0x205/0x3a0 fs/ocfs2/aops.c:1889
+ generic_perform_write+0x346/0x990 mm/filemap.c:4189
+ __generic_file_write_iter+0x1b5/0x230 mm/filemap.c:4287
+ ocfs2_file_write_iter+0x19af/0x2180 fs/ocfs2/file.c:2469
+ aio_write+0x56b/0x7c0 fs/aio.c:1633
+ io_submit_one+0x8a7/0x18a0 fs/aio.c:2052
+ __do_sys_io_submit fs/aio.c:2111 [inline]
+ __se_sys_io_submit+0x171/0x2e0 fs/aio.c:2081
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fdec0b8cda9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fdec1acd038 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
+RAX: ffffffffffffffda RBX: 00007fdec0da5fa0 RCX: 00007fdec0b8cda9
+RDX: 0000000020000540 RSI: 000000000000003b RDI: 00007fdec1a83000
+RBP: 00007fdec1acd090 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
+R13: 0000000000000000 R14: 00007fdec0da5fa0 R15: 00007fff1ee8e6b8
+ </TASK>
+(syz.0.0,5324,0):ocfs2_grab_folios_for_write:1080 ERROR: status = -12
+(syz.0.0,5324,0):ocfs2_write_begin_nolock:1798 ERROR: status = -12
+BUG: unable to handle page fault for address: fffffffffffffffc
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD e73c067 P4D e73c067 PUD e73e067 PMD 0 
+Oops: Oops: 0000 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5324 Comm: syz.0.0 Not tainted 6.13.0-syzkaller-09585-gb4b0881156fb #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:const_folio_flags include/linux/page-flags.h:310 [inline]
+RIP: 0010:folio_test_locked include/linux/page-flags.h:510 [inline]
+RIP: 0010:folio_unlock+0x3b/0x170 mm/filemap.c:1499
+Code: 49 bf 00 00 00 00 00 fc ff df e8 b0 56 c7 ff 4d 8d 66 08 4d 89 e5 49 c1 ed 03 43 80 7c 3d 00 00 74 08 4c 89 e7 e8 95 eb 2d 00 <49> 8b 1c 24 48 89 de 48 83 e6 01 31 ff e8 63 5b c7 ff 48 83 e3 01
+RSP: 0018:ffffc9000d286e68 EFLAGS: 00010246
+RAX: ffffffff81f815e0 RBX: 1ffff1100a540006 RCX: ffff88801d06a440
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: fffffffffffffff4
+RBP: ffff888052a00030 R08: ffffffff83ad8522 R09: 1ffffffff20367ee
+R10: dffffc0000000000 R11: fffffbfff20367ef R12: fffffffffffffffc
+R13: 1fffffffffffffff R14: fffffffffffffff4 R15: dffffc0000000000
+FS:  00007fdec1acd6c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffffffffffc CR3: 0000000043fb0000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ ocfs2_unlock_and_free_folios+0x71/0x1a0 fs/ocfs2/aops.c:772
+ ocfs2_free_write_ctxt fs/ocfs2/aops.c:820 [inline]
+ ocfs2_write_begin_nolock+0x3908/0x4e40 fs/ocfs2/aops.c:1837
+ ocfs2_write_begin+0x205/0x3a0 fs/ocfs2/aops.c:1889
+ generic_perform_write+0x346/0x990 mm/filemap.c:4189
+ __generic_file_write_iter+0x1b5/0x230 mm/filemap.c:4287
+ ocfs2_file_write_iter+0x19af/0x2180 fs/ocfs2/file.c:2469
+ aio_write+0x56b/0x7c0 fs/aio.c:1633
+ io_submit_one+0x8a7/0x18a0 fs/aio.c:2052
+ __do_sys_io_submit fs/aio.c:2111 [inline]
+ __se_sys_io_submit+0x171/0x2e0 fs/aio.c:2081
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fdec0b8cda9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fdec1acd038 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
+RAX: ffffffffffffffda RBX: 00007fdec0da5fa0 RCX: 00007fdec0b8cda9
+RDX: 0000000020000540 RSI: 000000000000003b RDI: 00007fdec1a83000
+RBP: 00007fdec1acd090 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
+R13: 0000000000000000 R14: 00007fdec0da5fa0 R15: 00007fff1ee8e6b8
+ </TASK>
+Modules linked in:
+CR2: fffffffffffffffc
+---[ end trace 0000000000000000 ]---
+RIP: 0010:const_folio_flags include/linux/page-flags.h:310 [inline]
+RIP: 0010:folio_test_locked include/linux/page-flags.h:510 [inline]
+RIP: 0010:folio_unlock+0x3b/0x170 mm/filemap.c:1499
+Code: 49 bf 00 00 00 00 00 fc ff df e8 b0 56 c7 ff 4d 8d 66 08 4d 89 e5 49 c1 ed 03 43 80 7c 3d 00 00 74 08 4c 89 e7 e8 95 eb 2d 00 <49> 8b 1c 24 48 89 de 48 83 e6 01 31 ff e8 63 5b c7 ff 48 83 e3 01
+RSP: 0018:ffffc9000d286e68 EFLAGS: 00010246
+RAX: ffffffff81f815e0 RBX: 1ffff1100a540006 RCX: ffff88801d06a440
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: fffffffffffffff4
+RBP: ffff888052a00030 R08: ffffffff83ad8522 R09: 1ffffffff20367ee
+R10: dffffc0000000000 R11: fffffbfff20367ef R12: fffffffffffffffc
+R13: 1fffffffffffffff R14: fffffffffffffff4 R15: dffffc0000000000
+FS:  00007fdec1acd6c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffffffffffc CR3: 0000000043fb0000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	49 bf 00 00 00 00 00 	movabs $0xdffffc0000000000,%r15
+   7:	fc ff df
+   a:	e8 b0 56 c7 ff       	call   0xffc756bf
+   f:	4d 8d 66 08          	lea    0x8(%r14),%r12
+  13:	4d 89 e5             	mov    %r12,%r13
+  16:	49 c1 ed 03          	shr    $0x3,%r13
+  1a:	43 80 7c 3d 00 00    	cmpb   $0x0,0x0(%r13,%r15,1)
+  20:	74 08                	je     0x2a
+  22:	4c 89 e7             	mov    %r12,%rdi
+  25:	e8 95 eb 2d 00       	call   0x2debbf
+* 2a:	49 8b 1c 24          	mov    (%r12),%rbx <-- trapping instruction
+  2e:	48 89 de             	mov    %rbx,%rsi
+  31:	48 83 e6 01          	and    $0x1,%rsi
+  35:	31 ff                	xor    %edi,%edi
+  37:	e8 63 5b c7 ff       	call   0xffc75b9f
+  3c:	48 83 e3 01          	and    $0x1,%rbx
+
+
 ---
- drivers/platform/x86/intel/ifs/ifs.h | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index 5c3c0dfa1bf8..41fc21e7ef14 100644
---- a/drivers/platform/x86/intel/ifs/ifs.h
-+++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -23,12 +23,14 @@
-  * IFS Image
-  * ---------
-  *
-- * Intel provides a firmware file containing the scan tests via
-- * github [#f1]_.  Similar to microcode there is a separate file for each
-+ * Intel provides firmware files containing the scan tests via the webpage [#f1]_.
-+ * Look under "In-Field Scan Test Images Download" section towards the
-+ * end of the page. Similar to microcode there are separate files for each
-  * family-model-stepping. IFS Images are not applicable for some test types.
-  * Wherever applicable the sysfs directory would provide a "current_batch" file
-  * (see below) for loading the image.
-  *
-+ * .. [#f1] https://intel.com/InFieldScan
-  *
-  * IFS Image Loading
-  * -----------------
-@@ -125,9 +127,6 @@
-  * 2) Hardware allows for some number of cores to be tested in parallel.
-  * The driver does not make use of this, it only tests one core at a time.
-  *
-- * .. [#f1] https://github.com/intel/TBD
-- *
-- *
-  * Structural Based Functional Test at Field (SBAF):
-  * -------------------------------------------------
-  *
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
--- 
-2.34.1
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
