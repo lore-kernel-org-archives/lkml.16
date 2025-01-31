@@ -1,28 +1,33 @@
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56DD9EED8;
-	Fri, 31 Jan 2025 10:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B21D16EB7C;
+	Fri, 31 Jan 2025 10:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738318625; cv=none; b=jyMI1AL8ck4QVhnJHnHC7n4daNoPDFDgLQlFzp3Sadj88UCOVeBs86y8X6iP0rVZm6fial8G7PBES/+SGcplP7uZpThY7Ye4j9FyiyHeeLroThDXYAt3gmnoxzZI1xsH8j4IhEyOcH4O+8cX5rj2hQXFwY5qyMBnRiaTsm+69iM=
+	t=1738318625; cv=none; b=pgr7DOlDSlJ2EkCbrGf1STqyLhKwjV0rO/g1Da9Ql0grw7DIqo6Q/MhxAp+oG4fKv9dlRA/lY6STcwTD7AqBue2ZuYOGS9ayxRt67TlGP/4sRziZrREjPwMpzW8oF1vy+xg/cElV/0t8i/vMd5hHMJ3NjVA3yiIuWxepGwWIRz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738318625; c=relaxed/simple;
-	bh=HW5NlCZ6hpmmzwD/UeYkcnBJqeWue6YDR/Pb1Fco2yw=;
+	bh=kJJvbQKt6Q32DAbri1MCULy5VGGdWlsbktPaKMFFtmM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W4fsMZigmDz/frUJhS00aiXS/TY12mgkJX2XCK8M5Cd9ZnPLRu8vJrqx3XfeXvnT38kpgJPnr3D3fr1lEZWdG7Isnb2WI5FH50h5T4Ct2GOxdP76/JHccLjS6oCVLVleZexzvduL6uFXwzpG6JqXtkqGhJroaQEfiTy1Swf147Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 31 Jan 2025 19:16:55 +0900
-Received: from mail.mfilter.local (mail-arc01.css.socionext.com [10.213.46.36])
-	by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 5D64F20090BC;
-	Fri, 31 Jan 2025 19:16:55 +0900 (JST)
-Received: from iyokan2.css.socionext.com ([172.31.9.53]) by m-FILTER with ESMTP; Fri, 31 Jan 2025 19:16:55 +0900
-Received: from [10.212.246.222] (unknown [10.212.246.222])
-	by iyokan2.css.socionext.com (Postfix) with ESMTP id 9C7C4AB186;
-	Fri, 31 Jan 2025 19:16:54 +0900 (JST)
-Message-ID: <fe8c2233-fa2a-4356-8005-6cbabf6a0e96@socionext.com>
-Date: Fri, 31 Jan 2025 19:16:54 +0900
+	 In-Reply-To:Content-Type; b=LKA0HBtateaKAZARLpKwBzcer8veRBYsWkiDKeWagSC9z12F0rQpL5cTfN/cewa0+N7kTexXBp/wdDH/ZCabXF77gfU4OM8rMVmiA5dC9F2hQmcBXUpgcY6aodIPkIUeKD6D+0nT1fQpm1CEbYlYcZ33JmbuQpRjVl+MWKUVLdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QzXmk3LU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QzXmk3LU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78128C4CED1;
+	Fri, 31 Jan 2025 10:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738318624;
+	bh=kJJvbQKt6Q32DAbri1MCULy5VGGdWlsbktPaKMFFtmM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QzXmk3LUH+cputlgRzi3JRLQYNaPoh6m1HGH0fkRdhR8YJRpNW/N/dT5iu81Dbni0
+	 P0NI+Je3GHtPx9zYIvcaQzokWzADha5ns4xp16UDxhYWMSpJiSsPpEc0PSUjKSNuF0
+	 7yZLzIrJ4C8/Ckoz3gtsNlla/FyxTCABtHjkz+fkI3GnOoHhe4xfi2nstQZiY0yqRM
+	 verTCrRJpwRpRKAhCI6DNa3UKh/6FDksP994mXgBQiP8viK2tOvWTpWy4CsNMjpv7C
+	 6BtDbBHcZP/1jmPFLXFsSWUrQckHdCmPMSg2Lk3CxZut1DIBoWX2pV4E7zTM0bnt5a
+	 e7d5JYK0wBiCA==
+Message-ID: <3a0f3d55-3828-43c9-b2d2-291f767c50e0@kernel.org>
+Date: Fri, 31 Jan 2025 11:16:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,129 +35,116 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] misc: pci_endpoint_test: Fix irq_type to convey
- the correct type
-To: Niklas Cassel <cassel@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
- Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
- <20250122022446.2898248-4-hayashi.kunihiko@socionext.com>
- <20250128143231.ondpjpugft37qwo5@thinkpad> <Z5oX5Fe5FY2Pym0u@ryzen>
+Subject: Re: [PATCH 6/7] arm64: dts: rockchip: Add rng node to RK3588
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Olivia Mackall <olivia@selenic.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Daniel Golle <daniel@makrotopia.org>,
+ Aurelien Jarno <aurelien@aurel32.net>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org
+References: <20250130-rk3588-trng-submission-v1-0-97ff76568e49@collabora.com>
+ <20250130-rk3588-trng-submission-v1-6-97ff76568e49@collabora.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-In-Reply-To: <Z5oX5Fe5FY2Pym0u@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250130-rk3588-trng-submission-v1-6-97ff76568e49@collabora.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Niklas,
+On 30/01/2025 17:31, Nicolas Frattaroli wrote:
+> Add the RK3588's standalone hardware random number generator node to its
+> device tree, and enable it on the one board I've tested it on and can
+> verify it produces good output, the Rock 5B.
+> 
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3588-base.dtsi   | 9 +++++++++
+>  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 4 ++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+> index 8cfa30837ce72581d0b513a8274ab0177eb5ae15..1c72922bcbe1afd7c49beac771f8b7c6e5cc6e05 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+> @@ -1921,6 +1921,15 @@ sdhci: mmc@fe2e0000 {
+>  		status = "disabled";
+>  	};
+>  
+> +	rng: rng@fe378000 {
+> +		compatible = "rockchip,rk3588-rng";
+> +		reg = <0x0 0xfe378000 0x0 0x200>;
+> +		interrupts = <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		clocks = <&scmi_clk SCMI_HCLK_SECURE_NS>;
+> +		resets = <&scmi_reset SCMI_SRST_H_TRNG_NS>;
+> +		status = "disabled";
 
-On 2025/01/29 20:58, Niklas Cassel wrote:
-> On Tue, Jan 28, 2025 at 08:02:31PM +0530, Manivannan Sadhasivam wrote:
->> On Wed, Jan 22, 2025 at 11:24:46AM +0900, Kunihiko Hayashi wrote:
->>> There are two variables that indicate the interrupt type to be used
->>> in the next test execution, "irq_type" as global and test->irq_type.
->>>
->>> The global is referenced from pci_endpoint_test_get_irq() to preserve
->>> the current type for ioctl(PCITEST_GET_IRQTYPE).
->>>
->>> The type set in this function isn't reflected in the global "irq_type",
->>> so ioctl(PCITEST_GET_IRQTYPE) returns the previous type.
->>> As a result, the wrong type will be displayed in "pcitest" as follows:
->>>
->>>      # pcitest -i 0
->>>      SET IRQ TYPE TO LEGACY:         OKAY
->>>      # pcitest -I
->>>      GET IRQ TYPE:           MSI
->>>
->>> Fix this issue by propagating the current type to the global "irq_type".
->>>
->>
->> This is becoming a nuisance. I think we should get rid of the global
->> 'irq_type'
->> and just stick to the one that is configurable using IOCTL command. Even
->> if the
->> user has configured the global 'irq_type' it is bound to change with IOCTL
->> command.
-> 
-> +1
+Why? What resources are missing?
 
-After fixing the issue described in this patch,
-we can replace with a new member of 'struct pci_endpoint_test' instead.
+> +	};
+> +
+>  	i2s0_8ch: i2s@fe470000 {
+>  		compatible = "rockchip,rk3588-i2s-tdm";
+>  		reg = <0x0 0xfe470000 0x0 0x1000>;
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> index d597112f1d5b8ee0b6a4fa17086c8671a5102583..00a915cf266202e26b274cab962f7bf6bcf76fc1 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> @@ -430,6 +430,10 @@ &pwm1 {
+>  	status = "okay";
+>  };
+>  
+> +&rng {
+> +	status = "okay";
 
-> But I also don't like how since we migrated to selftests:
-> READ_TEST / WRITE_TEST / COPY_TEST unconditionally call
-> ioctl(PCITEST_SET_IRQTYPE, MSI) before doing their thing.
+I don't see how RNG is board related.
 
-I think that it's better to prepare new patch series.
 
-> Will this cause the test case to fail for platforms that only support MSI-X?
-> (See e.g. dwc/pci-layerscape-ep.c where this could be the case.)
-> 
-> 
-> Sure, before, in pcitest.sh, we would do:
-> 
-> 
-> pcitest -i 2
->          pcitest -x $msix
-> 
-> 
-> pcitest -i 1
-> 
-> pcitest -r -s 1
-> pcitest -r -s 1024
-> pcitest -r -s 1025
-> pcitest -r -s 1024000
-> pcitest -r -s 1024001
-> 
-> 
-> Which would probably print an error if:
-> pcitest -i 1
-> failed.
-> 
-> but the READ_TEST / WRITE_TEST / COPY_TEST tests themselves
-> would not fail.
-> 
-> 
-> Perhaps we should rethink this, and introduce a new
-> PCITEST_SET_IRQTYPE, AUTO
-> 
-> I would be fine if
-> READ_TEST / WRITE_TEST / COPY_TEST
-> called PCITEST_SET_IRQTYPE, AUTO
-> before doing their thing.
-> 
-> 
-> 
-> How I suggest PCITEST_SET_IRQTYPE, AUTO
-> would work:
-> 
-> Since we now have capabilties merged:
-> https://lore.kernel.org/linux-pci/20241203063851.695733-4-cassel@kernel.org/
-> 
-> Add epc_features->msi_capable and epc->features->msix_capable
-> as two new bits in the PCI_ENDPOINT_TEST_CAPS register.
-> 
-> If PCITEST_SET_IRQTYPE, AUTO:
-> if EP CAP has msi_capable set: set IRQ type MSI
-> else if EP CAP has msix_capable set: set IRQ type MSI-X
-> else: set legacy/INTx
-
-There is something ambiguous about the behavior for me.
-
-The test->irq_type has a state "UNDEFINED".
-After issueing "Clear IRQ", test->irq_type becomes "UNDEFINED" currently,
-and all tests with IRQs will fail until new test->irq_type is set.
-
-If SET_IRQTYPE is AUTO, how will test->irq_type be set?
-
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
+Best regards,
+Krzysztof
