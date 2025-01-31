@@ -1,152 +1,202 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2066.outbound.protection.outlook.com [40.107.220.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F602F22
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 00:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738281998; cv=none; b=uXXiOTFO2AWsgxEkw3oI41EHtAsZ76MSwJ13BX25FGh/5OTXbdbq9ta9Ets2FC+XTJtKEdxTVtgGQ+2uyqpDoTJAgzLqVTzzvKbLIWujGeCnjiomzynQSeCtkH07NfnnWsN9BiUTFB0NNCr6Hkh4njf38EevT7og0Cjcq6qv9FM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738281998; c=relaxed/simple;
-	bh=sCVAFlQmW5dOKVDuZPqegFwIeIK3UsLLFMfeU0AC5do=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=XcEaVnWbgKoitAkJhGXivin1170BjQKSf3MTaGo5H3AG8lw7aArTnrZRxMwJASdtYAA/8s/BzNwKKsdBFxcyeyouz6L4OVcR4Ss+cuLMHXR9zKPyLGM2PMzQS/MMr2ILGo8ntDcq173rmqKlQhHTkDvzyjJs5dn9elI/Q6JUVxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LyhSwsWH; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E56ECF;
+	Fri, 31 Jan 2025 00:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738282455; cv=fail; b=HueI0OLMFSvpqVaM3TQSp4S8UYf3qKqDh5C4iqDkBGdF3ZIoLHpVxfnP2gs9L1u6ZZR6ICtCxvrNLO/Z6B5q+rY3rH9kLl/y1wdHPs2ByI+u5AEN75su2/IocUFJJ56ns9NZjiEa+HOzgQ+K+8MrD3riiaGDpX5V5j04FOgGOB4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738282455; c=relaxed/simple;
+	bh=3zavP893nO7zOxQLVFpktCX97lXvJjOANBulpE2gsaw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Gs3qzCIhZsA7H89luMlVg+uzrxd80H4X3PCHrMt/teCBG1Uz++YJaK29bLatPFyhra+j5cRFishYySzcxlHBll+M1iVMkWd6+C6qWZyNgRznCPRC0DbVJPZdlIw01cxHsAyM7a4M7freV7xTszGNTFRJyn+3m+pXcE6/n7UVshI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YL1Tx9re; arc=fail smtp.client-ip=40.107.220.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LyhSwsWH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738281997; x=1769817997;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=sCVAFlQmW5dOKVDuZPqegFwIeIK3UsLLFMfeU0AC5do=;
-  b=LyhSwsWHsJbkI/UcE2TSSLuTOBblY8vN/iKR5gIc7A5145r1nf+S/53d
-   D5bDjrqBgFCLP7ovSbzA2OChfpGkBXWM8sDYVR6KbJIMRfaZH4FQ6Buhj
-   5KwmIPb9Fano1sK+NlGtacU3MeTiWbhvNb8rOUmMgd7Tx0YiQl8vhWovv
-   Te9q3jIH/qiNPIRhkhjdSOpyNHCFiFvka6un1TZ2mIFoo7Z9S7vyEdfc+
-   A6VoFNHPPW+0Ky1SnejyXdIQ5hXX7KF6XExTjNmOovIi2/JemSl2bDwUg
-   0Zfuyv5gM2UIPAzAF81S0+yBqYwYxAofWYgBZc8UA+jxWWqLd1u/xMmN8
-   w==;
-X-CSE-ConnectionGUID: v83wPpRtTFiXg4cDgtlhEQ==
-X-CSE-MsgGUID: CPgyze9gT9KaXX81Aa7WAA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="38956159"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="38956159"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 16:06:36 -0800
-X-CSE-ConnectionGUID: W1CNy6YWRCG1n4yKIWlKoQ==
-X-CSE-MsgGUID: L+UYFf9pTVm48LfY7d9c4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="109933043"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 30 Jan 2025 16:06:34 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tdeYJ-000lQl-38;
-	Fri, 31 Jan 2025 00:06:31 +0000
-Date: Fri, 31 Jan 2025 08:05:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: drivers/auxdisplay/panel.c:1454:2: error: call to
- __compiletime_assert_309 declared with 'error' attribute: BUILD_BUG_ON
- failed: !__builtin_constant_p(_dest_len) || _dest_len == (size_t)-1
-Message-ID: <202501310832.kiAeOt2z-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YL1Tx9re"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=u1ZyAQOzACdF/9e23rD/uVgmRfHmdLn0TzMvQx5BQbLSZ0tJiQopMeLAhKbptOXDeFEJU6h0GKMoEQ6SUwHx0qThvkTf2Vas/X3FFR+ILVeOCEzeumA/0irhARjSDgnjPcYKmabIiCnvp87PkPw/eU2MoEBiJtfInG7tghyCBTWy/64PCz/foL085Ypsl8cDFqlcbJsf3Y/FTo3D6Jj893778KEVJQ6rgbz4cow8QOPwd2U9IkCC2lIwvgQuM3Wv9uCjk+6FJMKygJ8DYMEPXDtFb4B0rD+6s3x7SuTT5WlLa9FN98WimeIovXW6xI/mIEfsr8IIssGgWCfgGA+RxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0H9XqPoeWghVWbr6WyBez6/QTKW/JC424R/4Da4sPsI=;
+ b=T8gq60cBPisr+d8ckMJ1a18PnME+wYTgDBGoQmnenn6y7T89jEjTVQemg34Ima1/UjR57UM7/sLQkdorEyhcpJybO6qhvOeDCKvuvVU/fHCBNA93B6S6e3Cs5V6Zii+39IwQA/WTH5fFZj81d3OU1hlYUl3E0/e63Fp+CMmrFSACYd4Dc/As4Pb3WD29wx1Uw9/dtooP7cW5qrTsJFqM4xoPPM4qAukMm6mt47Wh+AS3yG1fMLAyakf/EeSPweDJ7vvIq6+TS92FdkcMJR4uJutsNC1n+4ilvIfFYQj7EQInDLP13A0IlLzDksUwyBcO+vS7Fp44OkYy9xg2E1Qq6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0H9XqPoeWghVWbr6WyBez6/QTKW/JC424R/4Da4sPsI=;
+ b=YL1Tx9re7jr1/hkQOnSfU7jSQTrKjilX7pJslkQqfq3V2o4OMNe5K9b+wb/6moR3UPzYoQMX2PhE8HeBq6glhqZmLPcMTc0gu9GQuWxLMNM44qoPnD0PBeGBgQLvwuTbHJ/tio8cDbs4dtDKIr6oecvvh5sZIBBuNA1+wZW+2my6pGsG0GWomZW3kDcNuhzBdVFLN+Ss2ioV9g/t5LOPstt8ILIMbAeT3fNsZ83xsi2gnZCmq4bLNit4y6D8p291rQi2aWSAoxS5mwshZZ11TryvYisNTFWAquRfN+15zAVTYBsp1+t0b+HdE8UbgMYg0I7ypHQE6brS67zFP+crvA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ DS7PR12MB6144.namprd12.prod.outlook.com (2603:10b6:8:98::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8398.18; Fri, 31 Jan 2025 00:14:11 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8398.017; Fri, 31 Jan 2025
+ 00:14:11 +0000
+Date: Fri, 31 Jan 2025 11:14:06 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-mm@kvack.org, nouveau@lists.freedesktop.org, 
+	Andrew Morton <akpm@linux-foundation.org>, =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
+	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v1 4/4] mm/memory: document restore_exclusive_pte()
+Message-ID: <upvlv4b2zly56trmoaocs5gl34ykd7tjz2grzqtwkfy45gbm7l@uxsmqdjgyo5n>
+References: <20250129115803.2084769-1-david@redhat.com>
+ <20250129115803.2084769-5-david@redhat.com>
+ <7vejbjs7btkof4iguvn3nqvozxqpnzbymxbumd7pant4zi4ac4@3ozuzfzsm5tp>
+ <cfc4f8ac-80c4-472f-85fc-36ffcd212441@redhat.com>
+ <Z5t_RebEx6Mj-KlT@phenom.ffwll.local>
+ <d27c35d5-918f-4550-9975-eb7ba59ac9be@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d27c35d5-918f-4550-9975-eb7ba59ac9be@redhat.com>
+X-ClientProxiedBy: SYYP282CA0005.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:b4::15) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|DS7PR12MB6144:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9c3f5606-4761-45a7-fbdd-08dd418c2fb0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?6WdmNBnEGOH1D7FefbO+MLQ5/7Q958P7OIgrLT4zmamZJdtrf0OXVO4ElBPt?=
+ =?us-ascii?Q?/ay90ELX1xuTZ2BR36H5+wOmPZ6r1qdJ6x+5rQM6nyQ7fkX+s0qgl9d02ECZ?=
+ =?us-ascii?Q?g21eQ+kHq1+cRqnepYWq7UoVpdIAdpNPJzGF3ReraiZhWsDAPdwau/3YE2+L?=
+ =?us-ascii?Q?2MqauLTH1z5Si66Ag7pP3JNbpSudV4Y5fJoxxF96DUQ82QVSaK2Z0UBaM1oy?=
+ =?us-ascii?Q?WsFu92Q5ysLjpXORjpXTz1wFhLpWvJWmEx5O2TT/y3nIAdoRiSTJKkqIoxJJ?=
+ =?us-ascii?Q?cN1XsEhVLqvbHYRm+lXjZ5wJsqOiabjzDnUs4mri+xlmVphY1FoxuviVmmja?=
+ =?us-ascii?Q?t+sx7U/EHVCiy9YB8sd1kjmQdvyTvlJ3Y6mec7vtV4fgV5OJRguwahwAwKXh?=
+ =?us-ascii?Q?f8UdnlYq4xyxtp70/meuLTj2/QD+hw2ECDsS7eNamoURGu5b53Z+vslbMVFM?=
+ =?us-ascii?Q?uA7uC0TGDbkQOumc4Z022hyrNjRvEM/vOwLvolRE7u/+OCmNcuAB+qaHANw3?=
+ =?us-ascii?Q?6haB9NmswyGJXHFch+RjwgKn/zfwl7/0JMjtph0bIRaRnMHcwyXXUlPNvH6s?=
+ =?us-ascii?Q?YZk3p+Q+fkU8l+54PVsmbCQj8ijNAmWkY36bqeypSbHp/FK3ekH7p//oMP+u?=
+ =?us-ascii?Q?kiagvYo+f9ZWs3VnzchhTc+hQdNww1TFW6711bU7kCPOwMk7qU4BaOPPhhHo?=
+ =?us-ascii?Q?xlRNE/uUlmiHdxfokQFA1HjyE5AaEFbw0Ko/BZ176fHXRt1IsG6xWN1XhsJ7?=
+ =?us-ascii?Q?ibLvWbBg5727Its0lHNYzFJKS/LE/entkWBSXDcimzWVYf1KwO2XBJgxGqZg?=
+ =?us-ascii?Q?2alhPGGV/iTc2CZcyAa11Du5boMwEdXfZAYk2IgpKVdTHfsX5H5Upqsod0AB?=
+ =?us-ascii?Q?EUbBOPvQCIBX0qntQ6LyPHX4hXW6Z/GIRh+xtwYLxdd0Pm2qGfb8uJdOqbdp?=
+ =?us-ascii?Q?Pn3kRQx9CSiWSWO3za3Nr2oAgJToRb/+Yh2Dq9sljX+/hudVRa7lKH0Gw1nw?=
+ =?us-ascii?Q?3Rn08rLMBGNmDw75GbatHBX68GH1teOktw52X+z324s1r0+IOPfuL93ufq7D?=
+ =?us-ascii?Q?zRSXhjNPXJGx92/vqSMKOhJf8fBCrVSjM4jlJbjzuxbgT4M0XwCVBnXz+0Md?=
+ =?us-ascii?Q?VxZy7ngKJQjBXiNRV6r3eHnhF0pp5XBT513Lx6//Pw1u3l/GyaLhzMD/pcqo?=
+ =?us-ascii?Q?tTVo1KaQ1FLgstkq5EVN9R+J56syzusNNTdAl8AJSSzPqxyptbP8ITblZizr?=
+ =?us-ascii?Q?9oU/i7yoBmc+YMIPAaQrY8QiSSdKBPW35r4ImwP9XV4aG2cF1Kt/Ny7xTQrZ?=
+ =?us-ascii?Q?InqGrM0Urqj6xBLEY8+6rFoqzIsp+cF4hk7gU8mzlAUCRrgG95+K44/uTH12?=
+ =?us-ascii?Q?tqRlus7yT04Qea48qdZtorZ2smPs?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?OE6dtCC/VBGV8J4iMHBYoOjSJ1QY4tMJY4bO2vCqRXqSbotlv+RUcw3ep9aj?=
+ =?us-ascii?Q?/YEWqoMUVnT2n0Hgi28yK0/+dRr5+3JSAhmtQz11B8Y429s7TB1nygrkp8K4?=
+ =?us-ascii?Q?MnIPNWJxu87ZR8l8QN41x315qvPpktZ5aFfDEGjso7SmOU9NL9QqEeN/nrzB?=
+ =?us-ascii?Q?RFdxx706oSyxEvZz3EHUyGfQfv0DNhLGTddwwE/kWUdxisJg+J75EF/HBQBb?=
+ =?us-ascii?Q?/o5hTJR2269QfoN6dNmkjrIRCmRMlHq/iQC7A+Fh2w2I9IHjr/iLOoRPni8s?=
+ =?us-ascii?Q?n4EX51bIAJVbtyfAVtURVzyfZXHEqqKNyPMyAccdph+PNs+7YW6NjIPrNQoM?=
+ =?us-ascii?Q?1Y5HBmIQJ1qsEwvjczC33mml8ucMQ+pKdQIR98jD6aFDPhLfMhI5suTeTxqM?=
+ =?us-ascii?Q?LPgS94DFu++aRmmUUUpCaBzzviPja5IEJi+WoOL6HfU2qWShNjsZs9EsaEmP?=
+ =?us-ascii?Q?0zb0iOt1Pwb2pGEpH4Nc6kzkmeSuNxhfm26HUD9LoC/LruMtWHBdYie7wHA1?=
+ =?us-ascii?Q?7ovPreb1U61e07hOjund2cRKiY4JipWk75vggMudeHP5XWBV+FbEi1vJs1MS?=
+ =?us-ascii?Q?11FCRQcUG9kbVMTIr8a38vxz/bVvBeg1E3LWPBye482dbHTxNpXIF8LTel4J?=
+ =?us-ascii?Q?0sX4UZ6zVVBxF1wEOQSNfcauMbHGGjFydjUYCwh20+JhvHiTiwvNtbpo09Ei?=
+ =?us-ascii?Q?QyNmG4m6ieh3MpQqC1YMU9qZg4SUP21LEBWf+8uTfXQhqzzeZwANuI/epGig?=
+ =?us-ascii?Q?51HCI7JGv9OqsnvBLcR5YtuW0TN6pauMWy5a7h8m4qIadNa9FeS358Up7zE8?=
+ =?us-ascii?Q?vFQR2d3UV4C8/SPeq/T5z9bcJhviEG8Y1aHomwofh84h3K2/VOAoajh5yoP1?=
+ =?us-ascii?Q?6ad9J3/J0vrke2HjdEt4v5S2zKX3SaqXZ8gwOh/dwtl59jPYxIVivr9fpFo8?=
+ =?us-ascii?Q?oITi4jN0ZJSo9xzZ4niw7l1PzugJW2IDgoBZSP8kBNOmk1R5IzUlPM1Qi6G6?=
+ =?us-ascii?Q?hBh7/myO5SvwA3v53PjTMmywpeqeogLYuJ6fVz0PIYQhturVdlpfUk9GPEC6?=
+ =?us-ascii?Q?dBYzI9C3ze4U6fyYOCuf1WVe46IbkXzQ9WwTFLHWKg0+Ln5oJesNZtUMY1gb?=
+ =?us-ascii?Q?RGVIxwQPTws25vBvxa3BEeZQ57rAlQP1VNDLc4AXPSz1yX9RX34pCcQLfI4k?=
+ =?us-ascii?Q?Jc3atTnm5lI+gEH/qqIGTCWDVkuBj/0QHFdAYlCaodieWDQ3ugOtpXthr31D?=
+ =?us-ascii?Q?3Lq8AACYXV8VXYRzy1RtQlYGVHzNhsHwYV9MHOV3AWH2JlyCwBtDsQUYMw9H?=
+ =?us-ascii?Q?aXLVm0oHVza3Fcn9HGcrH990riUiJj9kzuqhQpAqIO3+3/n6QrlQuXRcVa69?=
+ =?us-ascii?Q?t9WIt0+vHKWEK+xzHgRXL3Ws3Otuye3C6JShQcSe6UJWYGn1Uw5eNmqbFEtL?=
+ =?us-ascii?Q?snIi8rym+BL8SIT8ouw5ZgBkMGXImHWuTB+m08Q4tpCTfUUPF1mJMvdqA6xR?=
+ =?us-ascii?Q?wZJIZlpV+4jWH2He3evbz2Qmlrbm5KGl+UUMkGHSMVtpuPgWqChbfUYg5WLi?=
+ =?us-ascii?Q?S5I4ts9EIxo+AVBlsT+tbmDOzVOFpb3PNbOIyPU2?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c3f5606-4761-45a7-fbdd-08dd418c2fb0
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 00:14:11.1232
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wHi1LxoZ3o57ZHrHTUas86KSZQOHh5B7ZN4EaQzR3yfIJ7ncHFyU2JHpphr49WbMNaxTimQPi70ArC91nMAMew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6144
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   b4b0881156fb8209bf5ef6cb63211bb0ad6e1a6b
-commit: 07438779313caafe52ac1a1a6958d735a5938988 alloc_tag: avoid current->alloc_tag manipulations when profiling is disabled
-date:   5 days ago
-config: hexagon-randconfig-r133-20250131 (https://download.01.org/0day-ci/archive/20250131/202501310832.kiAeOt2z-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce: (https://download.01.org/0day-ci/archive/20250131/202501310832.kiAeOt2z-lkp@intel.com/reproduce)
+On Thu, Jan 30, 2025 at 04:29:33PM +0100, David Hildenbrand wrote:
+> On 30.01.25 14:31, Simona Vetter wrote:
+> > On Thu, Jan 30, 2025 at 10:37:06AM +0100, David Hildenbrand wrote:
+> > > On 30.01.25 01:27, Alistair Popple wrote:
+> > > > On Wed, Jan 29, 2025 at 12:58:02PM +0100, David Hildenbrand wrote:
+> > > > > Let's document how this function is to be used, and why the requirement
+> > > > > for the folio lock might maybe be dropped in the future.
+> > > > 
+> > > > Sorry, only just catching up on your other thread. The folio lock was to ensure
+> > > > the GPU got a chance to make forward progress by mapping the page. Without it
+> > > > the CPU could immediately invalidate the entry before the GPU had a chance to
+> > > > retry the fault.
+> > > > > Obviously performance wise having such thrashing is terrible, so should
+> > > > really be avoided by userspace, but the lock at least allowed such programs
+> > > > to complete.
+> > > 
+> > > Thanks for the clarification. So it's relevant that the MMU notifier in
+> > > remove_device_exclusive_entry() is sent after taking the folio lock.
+> > > 
+> > > However, as soon as we drop the folio lock, remove_device_exclusive_entry()
+> > > will become active, lock the folio and trigger the MMU notifier.
+> > > 
+> > > So the time it is actually mapped into the device is rather
+> 
+> I meant to say "rather short." :)
+> 
+> > 
+> > Looks like you cut off a bit here (or mail transport did that somewhere),
+> > but see my other reply I don't think this is a legit use-case. So we don't
+> > have to worry.
+> 
+> In that case, we would need the folio lock in the future.
+> 
+> > Well beyond documenting that if userspace concurrently thrashes
+> > the same page with both device atomics and cpu access it will stall real
+> > bad.
+> 
+> I'm curious, is locking between device-cpu or device-device something that
+> can happen frequently? In that case, you would get that trashing naturally?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501310832.kiAeOt2z-lkp@intel.com/
+It results in terrible performance so in practice it isn't something that I've
+seen except when stress testing the driver. Those stress tests were useful for
+exposing a range of kernel/driver bugs/issues though, and despite the short time
+it is mapped the lock was sufficient to allow atomic thrashing tests to complete
+vs. having the device fault endlessly.
 
-All errors (new ones prefixed by >>):
+So unless it's making things more difficult I'd rather keep the lock.
 
->> drivers/auxdisplay/panel.c:1454:2: error: call to __compiletime_assert_309 declared with 'error' attribute: BUILD_BUG_ON failed: !__builtin_constant_p(_dest_len) || _dest_len == (size_t)-1
-           strtomem_pad(key->u.kbd.release_str, release, '\0');
-           ^
-   include/linux/string.h:417:2: note: expanded from macro 'strtomem_pad'
-           BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||                \
-           ^
-   include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
-           BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-           ^
-   include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
-   #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                       ^
-   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   include/linux/compiler_types.h:530:2: note: expanded from macro '_compiletime_assert'
-           __compiletime_assert(condition, msg, prefix, suffix)
-           ^
-   include/linux/compiler_types.h:523:4: note: expanded from macro '__compiletime_assert'
-                           prefix ## suffix();                             \
-                           ^
-   <scratch space>:127:1: note: expanded from here
-   __compiletime_assert_309
-   ^
-   1 error generated.
-
-
-vim +/error +1454 drivers/auxdisplay/panel.c
-
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1426  
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1427  /* tries to bind a key to the signal name <name>. The key will send the
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1428   * strings <press>, <repeat>, <release> for these respective events.
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1429   * Returns the pointer to the new key if ok, NULL if the key could not be bound.
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1430   */
-36d2041a3d57b9 drivers/staging/panel/panel.c Peter Huewe              2013-02-15  1431  static struct logical_input *panel_bind_key(const char *name, const char *press,
-36d2041a3d57b9 drivers/staging/panel/panel.c Peter Huewe              2013-02-15  1432  					    const char *repeat,
-36d2041a3d57b9 drivers/staging/panel/panel.c Peter Huewe              2013-02-15  1433  					    const char *release)
-698b1515f03914 drivers/staging/panel/panel.c Willy Tarreau            2008-11-22  1434  {
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1435  	struct logical_input *key;
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1436  
-fdf4a4948ca8a1 drivers/staging/panel/panel.c Dominique van den Broeck 2014-05-21  1437  	key = kzalloc(sizeof(*key), GFP_KERNEL);
-eb073a9bf2b6ed drivers/staging/panel/panel.c Toshiaki Yamane          2012-07-12  1438  	if (!key)
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1439  		return NULL;
-eb073a9bf2b6ed drivers/staging/panel/panel.c Toshiaki Yamane          2012-07-12  1440  
-698b1515f03914 drivers/staging/panel/panel.c Willy Tarreau            2008-11-22  1441  	if (!input_name2mask(name, &key->mask, &key->value, &scan_mask_i,
-cb46f472cbb08c drivers/staging/panel/panel.c Kulikov Vasiliy          2010-07-12  1442  			     &scan_mask_o)) {
-cb46f472cbb08c drivers/staging/panel/panel.c Kulikov Vasiliy          2010-07-12  1443  		kfree(key);
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1444  		return NULL;
-cb46f472cbb08c drivers/staging/panel/panel.c Kulikov Vasiliy          2010-07-12  1445  	}
-698b1515f03914 drivers/staging/panel/panel.c Willy Tarreau            2008-11-22  1446  
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1447  	key->type = INPUT_TYPE_KBD;
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1448  	key->state = INPUT_ST_LOW;
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1449  	key->rise_time = 1;
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1450  	key->fall_time = 1;
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1451  
-a952abcdaa2211 drivers/auxdisplay/panel.c    Justin Stitt             2023-09-11  1452  	strtomem_pad(key->u.kbd.press_str, press, '\0');
-a952abcdaa2211 drivers/auxdisplay/panel.c    Justin Stitt             2023-09-11  1453  	strtomem_pad(key->u.kbd.repeat_str, repeat, '\0');
-a952abcdaa2211 drivers/auxdisplay/panel.c    Justin Stitt             2023-09-11 @1454  	strtomem_pad(key->u.kbd.release_str, release, '\0');
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1455  	list_add(&key->list, &logical_inputs);
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1456  	return key;
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1457  }
-7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau            2008-11-13  1458  
-
-:::::: The code at line 1454 was first introduced by commit
-:::::: a952abcdaa22116d940ca9cb9253caad1622ae93 auxdisplay: panel: Replace deprecated strncpy() with strtomem_pad()
-
-:::::: TO: Justin Stitt <justinstitt@google.com>
-:::::: CC: Kees Cook <keescook@chromium.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
