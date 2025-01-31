@@ -1,62 +1,62 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE3DEED8;
-	Fri, 31 Jan 2025 08:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C1F16D9AF;
+	Fri, 31 Jan 2025 08:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738312851; cv=none; b=agkf/srZnGKPDxJnrh2/kAvdv5MpMz/HcCDx4JwG3JZwLvq3qlkhr6Y0/YOd1L61we4J2vaUQmLVEo6QTUqbsP5eyytGodzoZMhKCP2x53pL680pfjTQYeWJ8DCxCLblrvbKxqGXnltxUP8ZrVAULu00XnFcqqQ74NiXo5YHBf8=
+	t=1738312865; cv=none; b=CAEHmeg/qphxS5EABDzBBKTYfJlKGDBJkmWUYcfjangtJPnS6G+0gH64imu5a2VotLccltbXFHut7yjQ2Z74oDcctLJkhzpbrqvtOZdjIM0yn5Rqv/Mfh86f8ZtEnGAxxYK+KiBToe9R+r1PFNALNb9bsQvlKxxgKrC+2FquUMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738312851; c=relaxed/simple;
-	bh=nOqr9hwPo8yt7LUEGZprvueIA1IFMhddBYLqtpUV2ns=;
+	s=arc-20240116; t=1738312865; c=relaxed/simple;
+	bh=9OvmeAP/yaxb5aAyztika1t5CYmLDNwvuwmGkZshUpw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K00sf2nSN16Y060iz2CM5jPinqFvMb6bvK/cqga1QssxuijrEv2/gbRPCqYCXvlFSoGW8ysskqFsLP0zqqelgGX3KADtR/UMsXR06Y+HTu/DY5UMjh/1SobqMuo2Il/lzbMIY55kKGVUA2qi7m6TKmzlPlI23XYFxoai08lTJt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dRVNNjFb; arc=none smtp.client-ip=209.85.221.43
+	 MIME-Version:Content-Type; b=baXXzlnuBCc7VNvgope25iYiAxe9lM9mocXmf5FFvGpSImpH/6gokobSc5cvU8gy1ngcyZ6uEKfFAM0iiZZEHXyk0ilX0iVuJ1dWVGhvsw/Lupj8WRHXXdJFMsv3gRh2qlOVCGQiaWthIUMOEhn8vYR0eRtHnVL57T3oNCr1ygI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bRykA1nm; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRVNNjFb"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-385d7b4da2bso1431502f8f.1;
-        Fri, 31 Jan 2025 00:40:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bRykA1nm"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-385e27c75f4so1446608f8f.2;
+        Fri, 31 Jan 2025 00:41:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738312847; x=1738917647; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738312862; x=1738917662; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TW/Jk6AHRJuQHT82twXaYQqc4zjBEepsqdONtoOlsw4=;
-        b=dRVNNjFbqSTkxp0Ze243OLABB6krlk4Yy1PRi6FrY0ssNzygrmJW/vQzWchUGeyqgM
-         mbnDWv5gimkDazbfW8hhauVj5Jy+YjTdtbJNwqlkmNbjCmshiuyzdD72ZVulJ7jQutV6
-         PU6hQynKJe3cjmwmb/PEkvguxCJUP2W2iE7d6e8IiJXbXT/AfzIwZDo4+OJL8qyPx5BD
-         WZQusciplBVKhx92N8W/OlBj2n8T21sc/+mOstJ4xbW5E/+UIl13fRR8bp8zzZ+dSnXg
-         piBZW/+SXbz0GcoZABEljh91ReJICjV/Ok7PYiDF0DsUv4uJ1AqKMzu9s/c3VwWPBxFl
-         iL2A==
+        bh=nFCMfZy+LRqyqtC/JDVJZId3JJ+MKq0oFH9I3MWAyHI=;
+        b=bRykA1nmJuZnZZqFYZsCt5XIJfAlFSnZX2OHWEB1ZgJ5DaeF2mtGAM1UcEk/+m4WXu
+         9hYO+4QmM9O2wgdOMPMtoM8ePrVBJAZud56aPCxZlT300PgrCArak8/qKipbU7H6QTN4
+         WhQceN7usjX72y821da2m4GY2LYABBzDmqIsKBd+wbN7W9e6ApOpyNkq5zQjdPLHAB+Q
+         pQJonqi6NHEtqR9S8Kz+w8f/k7HnkoQ56ZOWR49sWMqjpe7MQhD4GWQzDcrx2KD9K+oA
+         UOfhYyVawFSP2LGkAK79NX4hhtDSojfLpMGgS8l6BASi3SsPmf00fWx6O9GoC3ob01RW
+         TJaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738312847; x=1738917647;
+        d=1e100.net; s=20230601; t=1738312862; x=1738917662;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TW/Jk6AHRJuQHT82twXaYQqc4zjBEepsqdONtoOlsw4=;
-        b=Uwgqcfh8HmpEQTHybk/7XMxWpMkYwo2PKKKSgSZfTR5Avvzqv8FjwYpGVAhmYn4+k+
-         6zlgCRDVzafkYkOIzmLRyfnqsBd9lGPtaJNgKSjucbMPUSD3ScKGwlNxTQzCVgAodr7f
-         cQbjTKUPFV85ZRy0MAGSWk6nRuisjOMn20h3bAjQoYkGxrERTH5m3jQHAnLmMo3cO3Nh
-         hDreAXuC9chG+b6CT28GDfc+sJLHkLYAq4JLyuWQdVFqWSduOd+ErI0Cw6JCikHFl/Wn
-         ckAUYfUf6IBGz3TSPMdHfrh0iVJ37sarRV4Gd6r1Fquv0Jx4+m0DI9joYuTpNQ4tOU1F
-         h3Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2ozir8+NMG+Zhc8Ora/pyC9FEwhw9+xRNrrF2unzNvVMJ0rC3iq+Jze+5/10mtussbNARnJXN3tQ8MBne@vger.kernel.org, AJvYcCXC4mQbAVwjWTw1cSkGKV03nkbrojCD1pC7lHJVUCRe8nr80vVUi0KfwD5/OI+IHnIiri/ciO80lsY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXaEH3KefN0g3LB8VRSVPuKFceFqRIOc50KE1SvQIqK73uEfTw
-	F2sm1y7/ELGVijKvMZHJKOtcRlzTbNc//BBmV/+ghKszUpNId/id
-X-Gm-Gg: ASbGncuQzu5bcf7S5IaiMwl5/OtIpjJcq8mLP8IhiWY0E2e2B3FfrJmbPzA3w5RmIo+
-	q2Hsw7+PyCHFO9o7bCGbD0zvPz6qnPXGE9HULXptmTmHvMao/wji+6hDDnzqzvVPq+7WQoGxR4T
-	6n0andzx8pCFTiI1t257J/79E7V56o/e0MlJvbsaH4fVa6ilElnFSrv0bCneyIdZ9je7WfxhSvn
-	AH57zcgDJCF0/JVe2giAibnc9IqixCbzMeWML3r4xN6cxNI9HJ0NYY79kqBMO+GvG35sR6UfW/u
-	27apReCYwsDAwnBt
-X-Google-Smtp-Source: AGHT+IGLZ7dclEPxy7l0oMnBB+13a8iscVbSdcuAWf67ZXDM9KAY5KRxxtRghjO34bfzpqVLfXp54A==
-X-Received: by 2002:a5d:6d88:0:b0:38a:418e:1179 with SMTP id ffacd0b85a97d-38c519380afmr10198224f8f.2.1738312847155;
-        Fri, 31 Jan 2025 00:40:47 -0800 (PST)
+        bh=nFCMfZy+LRqyqtC/JDVJZId3JJ+MKq0oFH9I3MWAyHI=;
+        b=v/xHU27eee32GfduAUH+FqwnCTYHez9yxLVKLGVmg7/lhAo8mO4tdIf7I3MmWshJeR
+         tvz/YPNa2zjwI3km7jiFa72MXXLgBFKmCLMTd4xLhag8at+/pTV4pkxN8E1ofhTsglYU
+         Gw5xqjqSbHS6rXkxLavqXuy0CcrceQwNa3LBPp/dMeWnRNKODnFnELCSowEx5I7ojR8G
+         pRMQjNH5hkTFKgd3wo8lyBR4V/pzWNezy/aWx8CYjYbyGJSQw845IbWql0IjP5HtXwHE
+         886vLSvHy/ykui5t9HJDjUIPLoJkfgMTP3Y7ifrJOpSscjjmYbsxURP7aHkJOwiZsZ5X
+         e7qA==
+X-Forwarded-Encrypted: i=1; AJvYcCVMPNUI4HAYGZG9fG3D0JGE2jCc4g7OEw2UG3F4d+mEahK8kSZeJI/dEyCu+tleckEJ8RkPn3rETLw=@vger.kernel.org, AJvYcCXLNptvEE4kWNUOzDn7tyikK1EwYs1KMuWFZS7A71xcg2Hwe0LUAxIUAa2crPs/N65LWY8H0cMCYjIdSfrN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdjpWbm0Y4hM1qytRwdFYdo6GzuAke/05lGorbmDzSZETz9knb
+	saZSiYkMB+ptrUBX/CdxqWmiJLUFnwrJstEwRh6nQdymI2Hp18oH
+X-Gm-Gg: ASbGnct8PtoiBS0FI9JqYnqhRGQaUj51p58b6lCm0kfLtqkqm64Pmypb/89xwlWuUyL
+	9mmBs9DXl9xMsdNBI7dvxHdCurHzf0dPoH2/y8GEihghQ3noLO32n/qAvYlIJ69AYEv1kfT9Fwx
+	XpW9VHv8lcAC3I2iQdV1doxwOwGoIWhKnyO5Wo1m5vw81jzBf/QMNRDuiGXIomS1cVRkeaZDKoT
+	d8pFpeQoTtWj4TYrFo6l0lA0V4CnH84Gi1K2Rh6tGZe2TuTR/kLajqxn2aqHaNeucrDrQ/XV198
+	amokh7pue8eskawA
+X-Google-Smtp-Source: AGHT+IHza/p5nBamqbZvAahq9OiWU9HSheTWC1m4yiDjCZM7Eo+JyoR3cTHvjgCNhCUoDSwuWUl8qQ==
+X-Received: by 2002:a05:6000:1842:b0:38c:5e03:5d9 with SMTP id ffacd0b85a97d-38c5e0309bcmr3870061f8f.16.1738312861839;
+        Fri, 31 Jan 2025 00:41:01 -0800 (PST)
 Received: from fedora.. ([94.73.37.161])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c102ac9sm3990757f8f.29.2025.01.31.00.40.46
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c101599sm3991904f8f.23.2025.01.31.00.41.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 00:40:46 -0800 (PST)
+        Fri, 31 Jan 2025 00:41:01 -0800 (PST)
 From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
 To: louis.chauvet@bootlin.com
 Cc: airlied@gmail.com,
@@ -81,63 +81,63 @@ Cc: airlied@gmail.com,
 	simona.vetter@ffwll.ch,
 	simona@ffwll.ch,
 	thomas.petazzoni@bootlin.com,
-	tzimmermann@suse.de
-Subject: [PATCH v16 3/7] drm/vkms: Drop YUV formats TODO
-Date: Fri, 31 Jan 2025 09:40:45 +0100
-Message-ID: <20250131084045.2874-1-jose.exposito89@gmail.com>
+	tzimmermann@suse.de,
+	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+Subject: [PATCH v16 4/7] drm: Export symbols to use in tests
+Date: Fri, 31 Jan 2025 09:40:55 +0100
+Message-ID: <20250131084056.2889-1-jose.exposito89@gmail.com>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250121-yuv-v16-3-a61f95a99432@bootlin.com>
-References: <20250121-yuv-v16-3-a61f95a99432@bootlin.com>
+In-Reply-To: <20250121-yuv-v16-4-a61f95a99432@bootlin.com>
+References: <20250121-yuv-v16-4-a61f95a99432@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Louis,
-
-Thanks a lot for the patches.
-
-I'm not well versed in YUV color formats, so I did my best reading the kernel
-documentation before reviewing this series... But I'll most likely ask some
-basic/dump questions.
-
-> From: Arthur Grillo <arthurgrillo@riseup.net>
+> The functions drm_get_color_encoding_name and drm_get_color_range_name
+> are useful for clarifying test results. Therefore, export them so they
+> can be used in tests built as modules.
 > 
-> VKMS has support for YUV formats now. Remove the task from the TODO
-> list.
-> 
-> Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
 > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+
+Nice and simple, in the next version:
+
+Reviewed-by: José Expósito <jose.exposito89@gmail.com>
+
 > ---
->  Documentation/gpu/vkms.rst | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/gpu/drm/drm_color_mgmt.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
-> index ba04ac7c2167a9d484c54c69a09a2fb8f2d9c0aa..13b866c3617cd44043406252d3caa912c931772f 100644
-> --- a/Documentation/gpu/vkms.rst
-> +++ b/Documentation/gpu/vkms.rst
-> @@ -122,8 +122,7 @@ There's lots of plane features we could add support for:
+> diff --git a/drivers/gpu/drm/drm_color_mgmt.c b/drivers/gpu/drm/drm_color_mgmt.c
+> index 3969dc548cff605cbdd3d56dceafb2ca00a5c886..b73a998352d175a26c69e0878da28a6288cfc8b7 100644
+> --- a/drivers/gpu/drm/drm_color_mgmt.c
+> +++ b/drivers/gpu/drm/drm_color_mgmt.c
+> @@ -28,6 +28,7 @@
+>  #include <drm/drm_device.h>
+>  #include <drm/drm_drv.h>
+>  #include <drm/drm_print.h>
+> +#include <kunit/visibility.h>
 >  
->  - Scaling.
+>  #include "drm_crtc_internal.h"
 >  
-> -- Additional buffer formats, especially YUV formats for video like NV12.
-> -  Low/high bpp RGB formats would also be interesting.
-> +- Additional buffer formats. Low/high bpp RGB formats would be interesting.
-
-I see that you implemented support for 6 DRM_FORMAT_NV* formats, but
-DRM_FORMAT_NV15, DRM_FORMAT_NV20 and DRM_FORMAT_NV30 are not implemented.
-
-The same applies to DRM_FORMAT_Y210 or DRM_FORMAT_YUV410 among others.
-
-Could it be useful to implement all of them in the future? If so, should we add
-it to the ToDo list?
-It might be a great task to get started in kernel development, as there are
-already similar examples and tests.
-
+> @@ -494,6 +495,7 @@ const char *drm_get_color_encoding_name(enum drm_color_encoding encoding)
 >  
->  - Async updates (currently only possible on cursor plane using the legacy
->    cursor api).
+>  	return color_encoding_name[encoding];
+>  }
+> +EXPORT_SYMBOL_IF_KUNIT(drm_get_color_encoding_name);
+>  
+>  /**
+>   * drm_get_color_range_name - return a string for color range
+> @@ -509,6 +511,7 @@ const char *drm_get_color_range_name(enum drm_color_range range)
+>  
+>  	return color_range_name[range];
+>  }
+> +EXPORT_SYMBOL_IF_KUNIT(drm_get_color_range_name);
+>  
+>  /**
+>   * drm_plane_create_color_properties - color encoding related plane properties
 > 
