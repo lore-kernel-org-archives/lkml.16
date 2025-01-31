@@ -1,134 +1,249 @@
-Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D745C4315A
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 18:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.248
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738346757; cv=pass; b=GARHaa+f2FASys8/sQggCEjVc9JhuGZVUBE3DfWrundjY0HKllU+1Qu80xipD2STlYaFu0sBu5A5zM1nuZipE0Z8uIYGtNTvqyt11P+5LcUJKRHkFIXxMJ7nn5H7pB50ha3Mkmf99D9oBqscPfB/Np3LSGqEN5+smbeNDw3cMMU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738346757; c=relaxed/simple;
-	bh=Xj7nAF1HokwYhi8a8kaMtwzRSfvG3L4b/uXwqS9N5Cs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lgjfe9C89zfmiVfARYEX6mRX9avCpZJrxArXWx4h+xVB7TqoQeXTC0ngL93G6ruGovZWoi5V0hfiNj5uf82EeO5ZaNeTrVmsAEa6jy5m4yA/c6NfySAJGGgE8fnLdvnOgVIeU1/sB9h37f95kSifaqLi9uSUqSaXpRnx3yJ2L4s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=lNpF1Ute; arc=pass smtp.client-ip=23.83.218.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBB21C174E;
+	Fri, 31 Jan 2025 18:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738347179; cv=none; b=CDyUpd/Mj2Pe0dcFFqVU5oTZRTIMVGUUKkj6N1Ph4jrW+sd2etjKNxVFkP2I3gqpiyYkw7RkPpciM8oKk4CcDMO4KjDwqCQHraEaT2XE9lPgVfmrtpY7UJCJr9ycHLvRqso2llnvvsYvpOlycxz/jhJcSSiEhvODK+B4CATNSf0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738347179; c=relaxed/simple;
+	bh=hTfkhCSorZs3b2PtCt1LvffA30B8ElSrebOBChO7JQg=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=IOcxar9h2CD+d9UNzd8EX/HymMEGLM1+STbMugBpdEfp5cMePJBTzwRKfYWRrCcIy2+cAQUyeMpOSYwJD40ERuaESMkFfN2mlp/mN1EFc4XfY2kHQaEtVTlqsTcZW7mNjG3TkHdmJ/YG9y8eluiWtBh6TZ3dwTU/bW+klpCcwsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SfaB442t; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="lNpF1Ute"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id EC05C8A51DA;
-	Fri, 31 Jan 2025 17:58:15 +0000 (UTC)
-Received: from pdx1-sub0-mail-a215.dreamhost.com (trex-4.trex.outbound.svc.cluster.local [100.116.71.144])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 5D0238A5202;
-	Fri, 31 Jan 2025 17:58:15 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738346295; a=rsa-sha256;
-	cv=none;
-	b=3EmE0PCDiiZoC4JBu0MtSfrbz+6+rT6FKFt/Jv8zoLnfFMIF/fD5uJatzJI1g4OwtCuNMa
-	NydLN2jvDMTHUi4imHCGficb8IR4m9ZjGDVzI6o+nEV8Up+MAf2UXT7/dGjwlWrkV754er
-	KB6H7UAE6ATS3vaIrvmfDHDZceC2yRTN9xqd4/NozkAyTHtLsbcXAe5PudDy+eHgNbCBO1
-	FV7pqkP+2Kdlc3h0LZ4Lw7L+SEjeDgztehWCaeL8a/ZUW7SRPR22E39Ffm1ohCQvZHfp27
-	gYpl2kOWd4GU8dUXJfqyjbXzxIGvvAUxWma/ja2NND1Vcx20qYFksX245g5Asw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1738346295;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=Xj7nAF1HokwYhi8a8kaMtwzRSfvG3L4b/uXwqS9N5Cs=;
-	b=GF0y7DUSrJhvQPPWIpzeQUiKm+UMM2Ln7HBEY+XyPZQc2XamuFrQSXV8B+bBfOCKyEy1Gq
-	ToQTWofjAlo8bMniOvvj+4ggPOnxGYso5j0BZdEqIpdvzNm90+iTDuM1dhwxGN6IqY91/C
-	Aq+mpJwHvJScJ1dLkTHuizKcPsoeH3zwrhVOkFHOW8v7RCMlqYkgKqnNziGADZ/j9AgL4A
-	Hj6tXUaPRHGDzAC6gwfBLkqaxX6TYc0HYEZx20vuDAxqi4aswIMnEc5g88O+vqC3zPJAD5
-	cWaOwBTTWjF4AtYPlEb8LgwMYFitDZa3Yq6pwsX5q3qdkYJwvZ2wyns8neg3Dw==
-ARC-Authentication-Results: i=1;
-	rspamd-8586946c78-5m7bq;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Juvenile-Continue: 52beb83522fde22f_1738346295649_334098669
-X-MC-Loop-Signature: 1738346295649:3239223652
-X-MC-Ingress-Time: 1738346295649
-Received: from pdx1-sub0-mail-a215.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.116.71.144 (trex/7.0.2);
-	Fri, 31 Jan 2025 17:58:15 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a215.dreamhost.com (Postfix) with ESMTPSA id 4Yl3XQ4lDSzL6;
-	Fri, 31 Jan 2025 09:58:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1738346295;
-	bh=Xj7nAF1HokwYhi8a8kaMtwzRSfvG3L4b/uXwqS9N5Cs=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=lNpF1UtePnKosIswfrACFOtjekaSXQFRR8a0tVIFi76znsk9WgCBMTAkzJ8t2smOf
-	 XEwSe3KR9JPfyydx5aUlUPfY/pDUtDI1zOxn7HdMs6+qRSLyN1HmXHJqbB89PW8sMb
-	 aLQ6TA2CR9lE8YlPZAUX5kpTrlnpQVkswmmqmRw21wOtv+tdmORf9cD71XeoQtmWq8
-	 +nkJaXGTgNc0LTeQSjmJcjn2ytRYLWeeLjmAHq34WYty06jqfsd9qfhZ+o6v+tiohd
-	 sMgnVSjE5LsRhTHaT3mBI857OGrvTqNXAmEFqigoJBRY4f/v1+QsIuiBhX2DCaXjpX
-	 Gn46mlRM7gfYA==
-Date: Fri, 31 Jan 2025 09:58:11 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 4/4] mm/madvise: remove redundant mmap_lock
- operations from process_madvise()
-Message-ID: <20250131175811.37fcmoevcdpeoaj6@offworld>
-Mail-Followup-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-References: <20250117013058.1843-1-sj@kernel.org>
- <20250117013058.1843-5-sj@kernel.org>
- <aeeac6f3-f828-4bee-966f-c8df41df30bc@lucifer.local>
- <20250131173132.uqjwrzj7e5vx2sbv@offworld>
- <7k2gs6xmx2q7la6kle5xpn2p2f6bccbiv5lrdowp5hnecxpijx@rzwxdhcl6mc2>
- <5fc4e100-70d3-44c1-99f7-f8a5a6a0ba65@lucifer.local>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SfaB442t"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21636268e43so51702825ad.2;
+        Fri, 31 Jan 2025 10:12:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738347177; x=1738951977; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z5MzkVzIpaLC+Yjf9Sv5e9gOmWcmltNqG5MWfZ8w2J8=;
+        b=SfaB442tHF5ZmRJWLfHMYe80dLOK89tZTXdfgZz4kDw5HQu845QOJK4NJtyUwK+hhd
+         HYPF1yK74lTmZF5/JWN8GOGf3F4gXXfZDbihuSoUJfbZyg9C1op+SQBE3H3tPDJAL/zj
+         FnYtUmgu6o3HtjMeFcDWYzCV9425+Ln2rD+0pcK8+BzmxKXWyFVo+MyxEQVAhsJI9Mr0
+         bOju6T8/RbvKuQ7vfpPXoOePgqNJWFwxSaYtrp714zCdFKqZfh4AHGZsIMdagNMgq0gT
+         sOnHvrmJFzlM7+Z3fqAyP5JWLpS0hR0mQYEcT/2/Cq/qHeS+DMZ4EJk5D1bUlXe23KFm
+         Lb2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738347177; x=1738951977;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z5MzkVzIpaLC+Yjf9Sv5e9gOmWcmltNqG5MWfZ8w2J8=;
+        b=oS/gelYyBQIUSu2IvnnPBtjm4VEXvn5BT1sC0SPQQcQp32GFUqvdLTpIOJ+Xgi0sQm
+         dY2QcuzET+6o2fHkjYCcT/JTMnnn+7TmO7/n5zSWtUixBkniplCsSgTiIJgGPzO9zY/Y
+         naLV4Lxbin0qs+D9iva+NmOlaHBUUqsq9rOXSFKA5g/G+y002RTEEBPlZW7sxmp7WQ61
+         SCz2SQSILq2kQWUEVn9ydcr+JD2pXcQtH3ZhA3YHW68+tJYjzX4bS5/qOmUhaX3yATG/
+         4r3dNjENtev+vLmAqDkyL/LeYThSZmwmyNgXE9AE0hXptB5sjCnCGiIhg8+saJWr+0U3
+         6Oag==
+X-Forwarded-Encrypted: i=1; AJvYcCUgMr1kY3WokiIDUbWtL5UKLLfFFOhONGRg2HJ8pO7fdp6rFl5eGFb5uGdcyNVYhRCFX7g7txqtMVlH4VRnKQ==@vger.kernel.org, AJvYcCW1Em+I862VLzMgtXFUV4oM11DHWJpoz1h7x2XY9fAj68OZsn/hwwsYLRzUXbYAOIMVirLpU4b97ie14T6o@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHm5snrFoE8sKfJ+gWk5l19IIoHt9dIHTar0COVsdf/9TEb9bs
+	j0dMqD+YJXSF1goexH+INIhfow6AE3vAX93vYJ1zY9g+J3vRH5h1
+X-Gm-Gg: ASbGncsFiJ4ZagV6eMX6NNKhzIVveZNUw6DG1Rqzp7X+jPdThBr7Mi0Ed1n4uBiElk6
+	RsaIecrg/kPjv37HCEbX+3rEL9uNu8g+Hzyqo6ZMOeCyLJhmI+gbGGjA2fcQeNQqeBQMEMN53WE
+	9U4VR8YYsWAl7z5JwiUzWD6qOvsmKrtmZ+i2JcgDccU4UK51vWMiZtlL8B8qsXd5jsiEbz933cy
+	cGU9/Jq9q4sz8EclrfwUPwmRUGKIINXIuvqwSGpi+ar1Te7QUoyADwocLFwFSM1FWLoeyr87GQ=
+X-Google-Smtp-Source: AGHT+IElfKZw+KJ090MMfWu1M/fOPGzTMOpq8Iw/DAl94dv9qGFaRd4KZDJTGtu9oBDHMw/yOs75ZQ==
+X-Received: by 2002:a17:902:d2c4:b0:216:2d42:2e05 with SMTP id d9443c01a7336-21dd7d72e78mr215904165ad.22.1738347177170;
+        Fri, 31 Jan 2025 10:12:57 -0800 (PST)
+Received: from smtpclient.apple ([2402:d0c0:11:86::1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f5f4esm33613965ad.69.2025.01.31.10.12.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 Jan 2025 10:12:56 -0800 (PST)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5fc4e100-70d3-44c1-99f7-f8a5a6a0ba65@lucifer.local>
-User-Agent: NeoMutt/20220429
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: [PATCH v2] bcachefs: fix deadlock in journal_entry_open()
+From: Alan Huang <mmpgouride@gmail.com>
+In-Reply-To: <20250131124751.172123-1-aha310510@gmail.com>
+Date: Sat, 1 Feb 2025 02:12:37 +0800
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+ linux-bcachefs@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D73FB067-2AC0-4175-AFF1-A9C1365EBBCD@gmail.com>
+References: <20250131124751.172123-1-aha310510@gmail.com>
+To: Jeongjun Park <aha310510@gmail.com>
+X-Mailer: Apple Mail (2.3776.700.51)
 
-On Fri, 31 Jan 2025, Lorenzo Stoakes wrote:
+On Jan 31, 2025, at 20:47, Jeongjun Park <aha310510@gmail.com> wrote:
+>=20
+> In the previous commit b3d82c2f2761, code was added to prevent journal =
+sequence
+> overflow. Among them, the code added to journal_entry_open() uses the
+> bch2_fs_fatal_err_on() function to handle errors.
 
->Keep in mind process_madvise() is not limited by IOV_MAX, which can be rather
->high, but rather UIO_FASTIOV, which is limited to 8 entries.
->
->(Some have been surprised by this limitation...!)
+At least, bch2_journal_halt could invoke bch2_journal_halt_locked.
 
-Ah if that is the case then I'm fine with this patch as is.
+Is it possible to release the lock before bch2_fs_fatal_err_on() ? Not =
+familiar with journal code yet.
 
->
->So I think at this point scaling isn't a huge issue, I raise it because in
->future we may want to increase this limit, at which point we should think about
->it, which is why I sort of hand-waved it away a bit.
+>=20
+> However, __journal_res_get() , which calls journal_entry_open() , =
+calls
+> journal_entry_open() while holding journal->lock , but =
+bch2_fs_fatal_err_on()
+> internally tries to acquire journal->lock , which results in a =
+deadlock.
+>=20
+> Therefore, we need to add bch2_fs_fatal_err_on_locked() to handle =
+fatal errors
+> even when journal->lock is held.
+>=20
+> Fixes: b3d82c2f2761 ("bcachefs: Guard against journal seq overflow")
+> Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+> ---
+> fs/bcachefs/error.c   |  6 ++++++
+> fs/bcachefs/error.h   | 16 ++++++++++++++++
+> fs/bcachefs/journal.c | 10 +++++++++-
+> fs/bcachefs/journal.h |  1 +
+> fs/bcachefs/super.c   | 11 +++++++++++
+> fs/bcachefs/super.h   |  1 +
+> 6 files changed, 44 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/bcachefs/error.c b/fs/bcachefs/error.c
+> index 038da6a61f6b..25f51dec732d 100644
+> --- a/fs/bcachefs/error.c
+> +++ b/fs/bcachefs/error.c
+> @@ -50,6 +50,12 @@ void bch2_fatal_error(struct bch_fs *c)
+> bch_err(c, "fatal error - emergency read only");
+> }
+>=20
+> +void bch2_fatal_error_locked(struct bch_fs *c)
+> +{
+> + if (bch2_fs_emergency_read_only_locked(c))
+> + bch_err(c, "fatal error - emergency read only");
+> +}
+> +
+> void bch2_io_error_work(struct work_struct *work)
+> {
+> struct bch_dev *ca =3D container_of(work, struct bch_dev, =
+io_error_work);
+> diff --git a/fs/bcachefs/error.h b/fs/bcachefs/error.h
+> index 7acf2a27ca28..760623c07e67 100644
+> --- a/fs/bcachefs/error.h
+> +++ b/fs/bcachefs/error.h
+> @@ -189,6 +189,7 @@ do { \
+>  */
+>=20
+> void bch2_fatal_error(struct bch_fs *);
+> +void bch2_fatal_error_locked(struct bch_fs *);
+>=20
+> #define bch2_fs_fatal_error(c, _msg, ...) \
+> do { \
+> @@ -205,6 +206,21 @@ do { \
+> _ret; \
+> })
+>=20
+> +#define bch2_fs_fatal_error_locked(c, _msg, ...) \
+> +do { \
+> + bch_err(c, "%s(): fatal error " _msg, __func__, ##__VA_ARGS__); \
+> + bch2_fatal_error_locked(c); \
+> +} while (0)
+> +
+> +#define bch2_fs_fatal_err_on_locked(cond, c, ...) \
+> +({ \
+> + bool _ret =3D unlikely(!!(cond)); \
+> + \
+> + if (_ret) \
+> + bch2_fs_fatal_error_locked(c, __VA_ARGS__); \
+> + _ret; \
+> +})
+> +
+> /*
+>  * IO errors: either recoverable metadata IO (because we have =
+replicas), or data
+>  * IO - we need to log it and print out a message, but we don't =
+(necessarily)
+> diff --git a/fs/bcachefs/journal.c b/fs/bcachefs/journal.c
+> index 2cd20114b74b..12e3b4024494 100644
+> --- a/fs/bcachefs/journal.c
+> +++ b/fs/bcachefs/journal.c
+> @@ -320,6 +320,14 @@ void bch2_journal_halt(struct journal *j)
+> spin_unlock(&j->lock);
+> }
+>=20
+> +void bch2_journal_halt_locked(struct journal *j)
+> +{
+> + __journal_entry_close(j, JOURNAL_ENTRY_ERROR_VAL, true);
+> + if (!j->err_seq)
+> + j->err_seq =3D journal_cur_seq(j);
+> + journal_wake(j);
+> +}
+> +
+> static bool journal_entry_want_write(struct journal *j)
+> {
+> bool ret =3D !journal_entry_is_open(j) ||
+> @@ -382,7 +390,7 @@ static int journal_entry_open(struct journal *j)
+> if (nr_unwritten_journal_entries(j) =3D=3D ARRAY_SIZE(j->buf))
+> return JOURNAL_ERR_max_in_flight;
+>=20
+> - if (bch2_fs_fatal_err_on(journal_cur_seq(j) >=3D JOURNAL_SEQ_MAX,
+> + if (bch2_fs_fatal_err_on_locked(journal_cur_seq(j) >=3D =
+JOURNAL_SEQ_MAX,
+> c, "cannot start: journal seq overflow"))
+> return JOURNAL_ERR_insufficient_devices; /* -EROFS */
+>=20
+> diff --git a/fs/bcachefs/journal.h b/fs/bcachefs/journal.h
+> index cb0df0663946..416fbed447de 100644
+> --- a/fs/bcachefs/journal.h
+> +++ b/fs/bcachefs/journal.h
+> @@ -408,6 +408,7 @@ bool bch2_journal_noflush_seq(struct journal *, =
+u64, u64);
+> int bch2_journal_meta(struct journal *);
+>=20
+> void bch2_journal_halt(struct journal *);
+> +void bch2_journal_halt_locked(struct journal *);
+>=20
+> static inline int bch2_journal_error(struct journal *j)
+> {
+> diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
+> index d97ea7bd1171..6d97d412fed9 100644
+> --- a/fs/bcachefs/super.c
+> +++ b/fs/bcachefs/super.c
+> @@ -411,6 +411,17 @@ bool bch2_fs_emergency_read_only(struct bch_fs =
+*c)
+> return ret;
+> }
+>=20
+> +bool bch2_fs_emergency_read_only_locked(struct bch_fs *c)
+> +{
+> + bool ret =3D !test_and_set_bit(BCH_FS_emergency_ro, &c->flags);
+> +
+> + bch2_journal_halt_locked(&c->journal);
+> + bch2_fs_read_only_async(c);
+> +
+> + wake_up(&bch2_read_only_wait);
+> + return ret;
+> +}
+> +
+> static int bch2_fs_read_write_late(struct bch_fs *c)
+> {
+> int ret;
+> diff --git a/fs/bcachefs/super.h b/fs/bcachefs/super.h
+> index fa6d52216510..04f8287eff5c 100644
+> --- a/fs/bcachefs/super.h
+> +++ b/fs/bcachefs/super.h
+> @@ -29,6 +29,7 @@ int bch2_dev_resize(struct bch_fs *, struct bch_dev =
+*, u64);
+> struct bch_dev *bch2_dev_lookup(struct bch_fs *, const char *);
+>=20
+> bool bch2_fs_emergency_read_only(struct bch_fs *);
+> +bool bch2_fs_emergency_read_only_locked(struct bch_fs *);
+> void bch2_fs_read_only(struct bch_fs *);
+>=20
+> int bch2_fs_read_write(struct bch_fs *);
+> --
+>=20
 
-Agreed.
-
-SJ, feel free to add my:
-
-Acked-by: Davidlohr Bueso <dave@stgolabs.net>
