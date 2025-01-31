@@ -1,87 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9811CD215;
-	Fri, 31 Jan 2025 17:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812CF1F0E5E
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738344950; cv=none; b=klcrrabvm3Hx92SZ7AxvXV6s2TtotXvM8I0XXr+dN4NEmSiRgKwfIJTavwNm/KuczgJFP9p03w9AnYvk+ggztc8vHpwrp7DRG5jfN+al8iMzPmzZMu/3yBP3S5y4dr8GBTjKFtwcQ0xbCcnxmyVv3TFZ7YyQeYpHexHHM8yS6iM=
+	t=1738344959; cv=none; b=CWeS95F/jR6c6ITeA5BovqINE3253TJ+7kHcRkE8RuaNWvc7GW4VJguGr3aun36D44gm+AkIs333kzfbFGLQua/gO/5vTaO4l17rFH0lPZcAUt4rfKQfzWhklc4/l7HzMtBT7Nu8gEJrOioGPPqL8QD0IqB2OKRCYcbYBKl3woU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738344950; c=relaxed/simple;
-	bh=2Fsuwa5QOlgJIafMqhYpIuJVbNq69kCZGsHiteVNHmc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d9BxcS7plKTzRuBHYPDXaKcGtMtU5wFagi3hE2+VlGx1IrdlRFlAdcQCCX7L+xY5UVvR68wTcfjXWkXuqrJ8XhFbVcs8Jww5rS9FGtisl5dpcrOg+bNBwBjLC0XZIrKwAlg0zYcIdGFja7eptTtuFWvd4NPIHz9acjd96zlQ+K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lITZKn+W; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738344959; c=relaxed/simple;
+	bh=7tFMd94XrNV2Cv0ba9mt04yYUrLg9TaClHoJK93oO2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EExSHuVlCgaBeaSyYa+kAx36O6k27hUIS7//p9CQi2/MNMcBoRFgPKrNHiw60uBxca97nMrX3QoS+7k47Zu8RpaKH7va8IuFWNiVPaRKBw/zfPzAYN5Mqa0yDot6cAJO7FkrX1zG4znbYlAC4+XX3gWGVIAuNd4aDg75ZhT6Pcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=sd3WfeB7; arc=none smtp.client-ip=185.125.25.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lITZKn+W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738344949; x=1769880949;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2Fsuwa5QOlgJIafMqhYpIuJVbNq69kCZGsHiteVNHmc=;
-  b=lITZKn+WQS4t336CbmNscNH7K2C6/2UjTnNCQpoOnSFodMI37jKcCVMu
-   X377QxkJqsJJm6kK+FQRLu/ABK3j4Z4i0tSygBbeO7SH37aPD30ZFFOjE
-   UZekjZMyKxn14pi2CU9Alie2VXomvgp2aruTxdZ1aokkJTujOp3SLvz1s
-   N8z3tUCif6rr2U7qdobAaAb1YkQGTlXGxLDNoEskxwbGgXtKyVkT6s4Bj
-   I4CzTMRMflnM5XeZTt3nFGnmE3qbJ3E+8SqgeJTGd2iKehenAuIboIRs0
-   WI8v2fwNVMbFrizfbsY8xhG9FQ1smPA+q27XJSDMWfiMNpAm5dgtibU5b
-   A==;
-X-CSE-ConnectionGUID: u/x9QEHrTM2uwExKed+tFA==
-X-CSE-MsgGUID: NG0OySZDQLasFD6IP35jkA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="49912300"
-X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="49912300"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 09:35:48 -0800
-X-CSE-ConnectionGUID: B0eAb5NoQ9myTitEHpdwIQ==
-X-CSE-MsgGUID: ENh2DwcHTjS1U0um05ZMEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="114675187"
-Received: from fyu1.sc.intel.com ([172.25.103.126])
-  by orviesa003.jf.intel.com with ESMTP; 31 Jan 2025 09:35:47 -0800
-From: Fenghua Yu <fenghua.yu@intel.com>
-To: "Vinod Koul" <vkoul@kernel.org>,
-	"Dave Jiang" <dave.jiang@intel.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc: dmaengine@vger.kernel.org,
-	"linux-kernel" <linux-kernel@vger.kernel.org>,
-	Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH] MAINTAINERS: Change maintainer for IDXD
-Date: Fri, 31 Jan 2025 09:35:51 -0800
-Message-Id: <20250131173551.3979408-1-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.37.1
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="sd3WfeB7"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Yl32d2k5Qzrj4;
+	Fri, 31 Jan 2025 18:35:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1738344953;
+	bh=JQNxKR9dbJjG5bam5n/mwVoP3e4BSTQ5f1tiApN5rcs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sd3WfeB7FkxYwSUsLyqF80fmYo23XXoWRTEyKyWwSnRlODArcXk9VwRI1pWstO7x2
+	 TvtAzY2cFSZ5e9VgTAypRbTdjJtfQZF01kGaYawHIP9fh18ipHGrrVMEJcapjqMMSk
+	 C45FtTyK0elHkFt6vtxhUSbMfAa04ZYzjXHVW+/A=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Yl32b73zqzHLJ;
+	Fri, 31 Jan 2025 18:35:51 +0100 (CET)
+Date: Fri, 31 Jan 2025 18:35:49 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Christian Brauner <brauner@kernel.org>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
+Cc: Charles Zaffery <czaffery@roblox.com>, 
+	Daniel Burgener <dburgener@linux.microsoft.com>, Francis Laniel <flaniel@linux.microsoft.com>, 
+	James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, 
+	Kees Cook <kees@kernel.org>, Luca Boccassi <luca.boccassi@gmail.com>, 
+	Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, Praveen K Paladugu <prapal@linux.microsoft.com>, 
+	Robert Salvet <robert.salvet@roblox.com>, Shervin Oloumi <enlightened@google.com>, 
+	Tyler Hicks <code@tyhicks.com>, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-fsdevel@vger.kernel.org, containers@lists.linux.dev
+Subject: Re: [RFC PATCH v1 0/3] Expose Landlock domain IDs via pidfd
+Message-ID: <20250131.baePeenoo2ik@digikod.net>
+References: <20250131163447.1140564-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250131163447.1140564-1-mic@digikod.net>
+X-Infomaniak-Routing: alpha
 
-Due to job transition, I am stepping down as IDXD maintainer.
-Vinicius will take over maintainership responsibilities moving forward.
+On Fri, Jan 31, 2025 at 05:34:44PM +0100, Mickaël Salaün wrote:
+> Hi,
+> 
+> Landlock enables users to create unprivileged nested security sandboxes
+> (i.e. domains).  Each of these domains get a unique ID, which is used to
+> identify and compare different domains.  With the audit support, these
+> IDs will be used in logs, but users also need a way to map these IDs to
+> processes and directly read domain IDs of arbitrary tasks.
+> 
+> pidfd is a reference to a task that enables users to interact with it
+> and read some of its properties with the PIDFD_GET_INFO IOCTL.  This
+> patch series extend this interface with two new properties:
+> PIDFD_INFO_LANDLOCK_LAST_DOMAIN and PIDFD_INFO_LANDLOCK_FIRST_DOMAIN.
+> 
+> Being able to read tasks' domain IDs is useful for telemetry, debugging, and
+> tests.  It enables users:
+> - to know if a task is well sandboxed;
+> - to know which tasks are part of the same sandbox;
+> - to map Landlock audit logs to running processes.
+> 
+> Furthermore, thanks to recvmsg(2)'s SCM_PIDFD, it is also possible to reliably
+> identify a peer's sandbox.
+> 
+> This patch series is based on the audit support patch series v5:
+> https://lore.kernel.org/all/20250108154338.1129069-1-mic@digikod.net/
 
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That was the v4, here is the v5:
+https://lore.kernel.org/all/20250131163059.1139617-1-mic@digikod.net/
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d1086e53a317..08ce00b6c1f3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11677,7 +11677,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git
- F:	drivers/idle/intel_idle.c
- 
- INTEL IDXD DRIVER
--M:	Fenghua Yu <fenghua.yu@intel.com>
-+M:	Vinicius Costa Gomes <vinicius.gomes@intel.com>
- R:	Dave Jiang <dave.jiang@intel.com>
- L:	dmaengine@vger.kernel.org
- S:	Supported
--- 
-2.37.1
-
+> 
+> I'll talk about this feature at FOSDEM:
+> https://fosdem.org/2025/schedule/event/fosdem-2025-6071-sandbox-ids-with-landlock/
+> 
+> Regards,
+> 
+> Mickaël Salaün (3):
+>   landlock: Add landlock_read_domain_id()
+>   pidfd: Extend PIDFD_GET_INFO with PIDFD_INFO_LANDLOCK_*_DOMAIN
+>   samples/landlock: Print domain ID
+> 
+>  fs/pidfs.c                   | 24 +++++++++++-
+>  include/linux/landlock.h     | 26 +++++++++++++
+>  include/uapi/linux/pidfd.h   |  4 ++
+>  samples/landlock/sandboxer.c | 29 +++++++++++++-
+>  security/landlock/Makefile   | 12 ++++--
+>  security/landlock/domain.c   |  2 -
+>  security/landlock/domain.h   |  8 ++--
+>  security/landlock/ruleset.c  |  2 +
+>  security/landlock/syscalls.c | 75 ++++++++++++++++++++++++++++++++++++
+>  9 files changed, 169 insertions(+), 13 deletions(-)
+>  create mode 100644 include/linux/landlock.h
+> 
+> 
+> base-commit: a4b76d5e6800121372b88c85628a7867a5fdc707
+> -- 
+> 2.48.1
+> 
+> 
