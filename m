@@ -1,268 +1,148 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2058.outbound.protection.outlook.com [40.107.102.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59A120EB;
-	Fri, 31 Jan 2025 03:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738293498; cv=fail; b=GjCddjfqsvUuHNK/a/sFhUja8ssHHY1j9oqnJG29tSqQ3vXvYX/2F1l6ngDntUPlCOQqxHjmA1/xJzBVaKoFSlBYn/cVVyM1xaq/fmG6hAbCXq4lDys89Sd1KDo2noXHauLuzfEBZevutNP7JnEcW6KSstmZL3qa7yqXQsUX6Gw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738293498; c=relaxed/simple;
-	bh=oV+FFKYYAfa0mGOeoRV/xVSlXHPOiLslpZRIlyeI+x4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=o+Wyscd5ckGWr8vwaBxixMtuZhLf6s436Cwv1GIZ+edou31fGZA7NWhobwCe6VTitRd5HeQAFe1w9GPdD1SHaME/H6H7m+15GGIz1xU3JeoOEpKKzm5bySs+WaaaPQQX1ODcPBnDtcGY6cDdvUsd2zEMAVMGZ2ATp3+ns0W2Kf4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=W8f51PRN; arc=fail smtp.client-ip=40.107.102.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7B4139E
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 03:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738294495; cv=none; b=aZjFB4Ze/xYjEpKAyElI521f4WEY44GHFe+nfETh+VJzot1Qrd6MCGSXPQcAi49i8ZPfbfBz9upM0V48vwiJvFr3mwVGhC4N6Thr+AmmPBgQMDcau5X3fTJf9hGRZ21Pyl0agcryKD3vaR9Cp/KWsEnXTnPR7lB6fSBWe11zSCU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738294495; c=relaxed/simple;
+	bh=N0sx+iPMuAqNEclN+D3TjbfcoEASQMbbhnntoORpJ8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FsjTez0XaLfXOwLILLIlJJIQ0zKW9/c6dHupn3ssHW/SsIHEhbDXxZ+Yq2Rll5UZihzjyGHs/GBqZLLzllFhKD0wYgdVa12F2wiiqAKc21trYiAT8LqxWABA9EQPkwHJpc6bysH8odth0EDwyz20yYApK2Fv3eEs3rXIVdsZHxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AlYL5tHV; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="W8f51PRN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YY28BOY+EEeYsf6aLpY6v4xxtGU+miS/pgd74iHlj9mAmiAjW9NXVbgrQkoPzl5Uvp+EUlDqNlya7iKyVy3yXnqFa8/p+Xtyx/27zYmdCOxXRsBEBZHgMDj4tMk1/zZiZ57iOooMFhkSmD+/vtMf3T3wOym5EUSnweD03h/LAC9wsTU7NS2MjKz7eJHaHCsbAsbagS9Sr5DL1+zuw6nYvGgFOpCLrs08S3NUcZExQG6BrO4vOAgfoIJFyBuRnk4n+ZukwUK/aV0yjNcMhRBBqB3i7EQaNuUN9cijiqhLjwf5UR6GDBtohKe8nN3XQFuA4HO/BCvefHABmL3vTRedww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wVTGbioiwEqERBIgfy7WwbEHTd+DQ1dV6qdAVZe4iYg=;
- b=qHnE3B4zBmbqIIil+d4xMfOQSk9qBukyZMnLfJZ+J4G90T7uj+f9/A/zZOWXUCgxHm8EXOhWFsE1qmsXXVFySMZSzOAjguO0CwgqoS8T19gLcPsoH3blBJogtKfI+80ssLLzz2GrBxD6fr7lvUi1oekicS9pNPHuq+oJx2TYqdG3bhOE2xqYMnBWGkrIotiK50+IxwYw504uvn76PrMXuRQYoFQ28FWTRNY9UUzqRygLtLfz4nCH0AY3XEYQqVRRp4Vpp83JFVNwBborA/rPE802kKo79bm9W1pSpBLVXg0LmsB4u63z6v1fM2odauG5VmAcGtbfHSleqgrMrhNQYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wVTGbioiwEqERBIgfy7WwbEHTd+DQ1dV6qdAVZe4iYg=;
- b=W8f51PRNiIRNVpBgv14Ez7wZOMHr3REfJYTvLD+XKrkFLMnulJtXqZ9mhskTh2GOl3DTOyqG4+w6NtSIIE2eXQSC0KXkWeet0/n1KFn/02o22M8Jc6WyxBmz8EIQShdPR7xVo9fxzl6zYuNyT9SKQGydAio+k34If7FF46DXBv0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL3PR12MB9049.namprd12.prod.outlook.com (2603:10b6:208:3b8::21)
- by DM4PR12MB6614.namprd12.prod.outlook.com (2603:10b6:8:bb::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Fri, 31 Jan
- 2025 03:18:11 +0000
-Received: from BL3PR12MB9049.namprd12.prod.outlook.com
- ([fe80::c170:6906:9ef3:ecef]) by BL3PR12MB9049.namprd12.prod.outlook.com
- ([fe80::c170:6906:9ef3:ecef%3]) with mapi id 15.20.8398.017; Fri, 31 Jan 2025
- 03:18:11 +0000
-Message-ID: <93e8a84a-d4cc-4dbc-a593-99995b000947@amd.com>
-Date: Thu, 30 Jan 2025 21:18:08 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] x86/sev: Fix broken SNP support with KVM module
- built-in
-To: Sean Christopherson <seanjc@google.com>
-Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- thomas.lendacky@amd.com, john.allen@amd.com, herbert@gondor.apana.org.au,
- davem@davemloft.net, joro@8bytes.org, suravee.suthikulpanit@amd.com,
- will@kernel.org, robin.murphy@arm.com, michael.roth@amd.com,
- dionnaglaze@google.com, nikunj@amd.com, ardb@kernel.org,
- kevinloughlin@google.com, Neeraj.Upadhyay@amd.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-coco@lists.linux.dev, iommu@lists.linux.dev
-References: <cover.1738274758.git.ashish.kalra@amd.com>
- <8f73fc5a68f6713ba7ae1cbdbb7418145c4bd190.1738274758.git.ashish.kalra@amd.com>
- <Z5wqN5WSCpJ3OB0A@google.com>
-Content-Language: en-US
-From: "Kalra, Ashish" <ashish.kalra@amd.com>
-In-Reply-To: <Z5wqN5WSCpJ3OB0A@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR11CA0028.namprd11.prod.outlook.com
- (2603:10b6:806:d3::33) To BL3PR12MB9049.namprd12.prod.outlook.com
- (2603:10b6:208:3b8::21)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AlYL5tHV"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2166f1e589cso37238145ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 19:34:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738294493; x=1738899293; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=32D3HUGqP+ZFdFEF3wCZMSpfCGFHL5f2rNBX8ncFDZw=;
+        b=AlYL5tHVgK+Xj3CixKhz1frlle2lgQmvTq7o2JkpVic3bPQKvsLVx4zmw14vmDLok9
+         EqESX2ibtogbfGLqVmB7SFXiTCFoyXh9kRvBXb+BY8UgEJnxXrcolN5lHZJxrxjHlKzk
+         BERuJ2rTWJGkePrfWgdSW0CPESJHiOymfQ0JQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738294493; x=1738899293;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=32D3HUGqP+ZFdFEF3wCZMSpfCGFHL5f2rNBX8ncFDZw=;
+        b=gKYMhozc1S0qSoKtNGg3veAs2mIELz2WV5/Npv5mAMQPp9qLIRmGD621TQP0tKbDMn
+         N9MLYOzaoDJORCvM2r5eWpGqM4/V9IZRsZXKx7dF70ORJSr2TiSU7vEswLT3jsleWljE
+         ebrnwbkm7qPeQev7RcCq3DbHF6hz/5iKV9zOBS7MXIG6Aj9Xprxg4QwTlFDxD6yrXmN9
+         ra6NQVaQPDQnSTfGRaxWhNEfMvc5jit3s9V5Ujj04O4FA0zdpNdaUnoMuU8qKQQM4EjA
+         RQxkbzbl6QaUz7Z3NJ4JyBGTdvUDoO+njiztkMLupJzHJz28DKGOY3oEnyh0YcvtkDhj
+         hN3g==
+X-Forwarded-Encrypted: i=1; AJvYcCV2QiEp70eY43VXr3O9s7yUJpS3KAM2flekgoDCiIyBFKuqY8zJdqESuS592EQxgfieXUxwrirgsVxlE3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6GVPkTDTgi26F/blliXuy6xnQz7XY7r7f0z1dbYQc/j78b0pr
+	dVliQCHabv7UtQt/CUgtsCEfqshvRyJ4V6ZkBbnS0eL4A6X1Boa1/x5mdUF0oQ==
+X-Gm-Gg: ASbGncu1cD/ztwCJSYl+OmizqGmzjCzk5gucnXVe60ymgYWtXRJr9+87OuLaxd+x2kl
+	pR+ePvWIYEo5sIxSl6bGU5Iv9WVPhzIpg07i2/+1kC7Qs/JFx6xOEtR9TFjbKxbZ/Ekmyfsqn+R
+	E88E7tbVq/RZ9qVseK8Pt8eJ/mcuttFXkut4Cojq16OFurBTDnfodBTfacG7PZmhimTWz0ert82
+	9pS9tJX3k3zaoUmsfuppqO79xQkVLrVzccoS6so+eysZDpmp8c6kZeE+UpkZEOtMENC6ANKmrYX
+	ZWMGH3UV+HLyO3rN7Q==
+X-Google-Smtp-Source: AGHT+IEsFmLz+qIkj1EMr+GV0ijOaTbWPrqW3Z9zAfyz97XMlXwIn3rQRlPiOINIpfAoYRkCaZtcHQ==
+X-Received: by 2002:a05:6a21:78c:b0:1e1:9f77:da92 with SMTP id adf61e73a8af0-1ed7a5ee31emr14721480637.33.1738294493029;
+        Thu, 30 Jan 2025 19:34:53 -0800 (PST)
+Received: from google.com ([2401:fa00:8f:203:d4ce:e744:f46b:4fb])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6a1a75bsm2224113b3a.167.2025.01.30.19.34.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 19:34:52 -0800 (PST)
+Date: Fri, 31 Jan 2025 12:34:47 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv1 1/6] zsmalloc: factor out pool locking helpers
+Message-ID: <qazrxmu2bdvsned3dp2fnoyagdsv4ueh57pghhjz5q7fmv5pz4@vzlp5kmcw354>
+References: <20250129064853.2210753-1-senozhatsky@chromium.org>
+ <20250129064853.2210753-2-senozhatsky@chromium.org>
+ <Z5pec33BWqdH_rCN@google.com>
+ <blqetdedmmvheg4qri2o4gxbtiq7lz5ufcpacrrw7yvej7rcnp@i46mdzf7gqhk>
+ <Z5un85j5P2Z7B9sg@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL3PR12MB9049:EE_|DM4PR12MB6614:EE_
-X-MS-Office365-Filtering-Correlation-Id: d4fee458-047a-43aa-3dbc-08dd41a5e445
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NExBNlFycTdvU05OMzdJU1U0Zm40MkdjaHA0SkpsQWJIMDV3NnNBSEIxQkZy?=
- =?utf-8?B?cFhkbHl6ZzRDbU0rYWYwanlDUG1TL1JLclRCeWNWbHhpVU5qNXplb0RTVHlO?=
- =?utf-8?B?WjZwcXM4cWRweC9NS1RrMU1YQ1VlNlBrcEZIRGIxT2s5M3NQZURUQmlHVVJq?=
- =?utf-8?B?QUwwN3R0dWxHOHFrOWJWMHlrL1hkbUR3Zms3M095T1RFL3lRcUE3Z3duRHlK?=
- =?utf-8?B?UzUzdnJ1dzFqdG9EOW1XcFhLT2dYa1VSV1BYTXJkMHNlK1ZrdjlTaFBhb0tl?=
- =?utf-8?B?QXJnRjE4MFZQRE9ONWtZZlhhUkliNkg1REhRNGxqczd5UlZBa0RGVDJYSjc1?=
- =?utf-8?B?cUIyTlFURVpVYzJLVE9PRThjYjE3YTdKM1FVamFCZW5maHVnT3JSdGFhZ2Uy?=
- =?utf-8?B?NWxvRE5MbHROcHpGK3RkdDFOczBOczFXUmVkZ3kzU3RKWWtrdGZYYVZOVUN3?=
- =?utf-8?B?SW9FUnpuT3hWcUpYanNxdGVnNkUxZmFPYVI1cU9TZFBobVdPVDExaFBBeVpY?=
- =?utf-8?B?Y1BKTDFTVXg2c0hvMzFaSGFFTGUyWEJoYnNtcWJaaDFtZ0txOHZCaytMUGE0?=
- =?utf-8?B?aWlNVU1qK3FYMkRJazdGNTBGd0VsejJRRGJGTFZVbWZvRElmMUlINzVXa1Bm?=
- =?utf-8?B?YkFUNW1mUzlsREJJcWtHZmZKaWRLNzNCQXNzcHJUemNtZHNhUkFrUExLTytx?=
- =?utf-8?B?N1BXY1kveXRqRjFWdzJwZVp6QVc0dmNOV1I5WnZUak5LMmh1ZTRkRklaUWt6?=
- =?utf-8?B?WWZiNDBwZG9pMi9oRWljRXJCTm9JMGFYZHp6OHo1bEluMU5Ob0l5M25Ta0V4?=
- =?utf-8?B?SGlaSkYrNys3VERVSnYvSHU1YmlERlR1dWFGWDlnTjRueTkzUTZhc0JXK1Y1?=
- =?utf-8?B?UHkreXBjL3FIenh1ZE1tazMrSEdTYXNBUjFUM0xvOW01eC9aYjZ1RVBVbEVR?=
- =?utf-8?B?bDBDTGhhVmRUZTh1YW1uU2FvQ3hDMGZ2c0ZmUlVjT1NQM2V1ZVhFblUyeVk3?=
- =?utf-8?B?dGJVMk8rK0VITWFOVGdTdmZJM2VQdFEySnF5NmZJcXFnc2ErN1ZzWnJxMU5a?=
- =?utf-8?B?YkVWQXM4RTB5d3A1L2d0c2VFU1U5all1dTZrdm1EK3JLck5WVG85Z1U2S0cw?=
- =?utf-8?B?UTRaaTlXMzdoTDNXajNjYzdoRGMwMVRObkhMZlpMd1dpMlRSRDc4YkFiMHhk?=
- =?utf-8?B?d1A2WTFhUTl5cUdIZ0s1dEJ3OWt4UjZRTEZOQ0NPRXVNTG54NzRxNEpYbXIy?=
- =?utf-8?B?Qy9Edjh5bkNxM2dNOFFmL2VvdlQ4YlRLUUM2VVhPOUpnUit5djA5VzMyZmEv?=
- =?utf-8?B?UW5nNnFuQTlFdlMydENOM3VoVWk0aVBNVlB3cnBQOWQ3MVRFeWxIa09tN1Uy?=
- =?utf-8?B?MVNOQkc2UFlhRnh6K2h6WnJZVkNRNkpUT1A4S0drMkdVL2Z3cjVDSzdpaTB4?=
- =?utf-8?B?UTdvcndKbFk1QzFhUWJGK2J0RElLTlVGZGpJTWNmR0lyaG1XemxjdWF3YkNw?=
- =?utf-8?B?RFRqNWVNQnc1dVB0WXpmN1ZhNm9jUDY1UFYrVmhEbzFxVmxVYlV5amdwN2dP?=
- =?utf-8?B?Y3IwSTRmdDFRaFVQdVlQMlEvR1AwRVFtWllOUWNVZVg4U0lYRmFNc3VZcGJW?=
- =?utf-8?B?MXY0WjdnMUlmMzlzcWNGZUVVZWVoN3BJNERod3JTN0lzUFUvVElxWDZtVmpH?=
- =?utf-8?B?TGV6ZXZsNzdvalZtbjUveDU0cThPZzlFZ2xMcHZZaTN3VURaajdFSVNtMHZQ?=
- =?utf-8?B?cHpYbGRucUFuU25saDVvTGpPVFRMM1RrUk9jdVg1Y2VaUGZQOUI3aHRUb2lT?=
- =?utf-8?B?NCtYd0hpWDN2N0gvWGRzVC9mNldGSGd4Z1VRb2xkMDlqN0h2ekFlNHpad2tO?=
- =?utf-8?Q?B8Q5uDCSNUVqg?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB9049.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aHI0ZnN4T3J6UzBWb2wvT3hWYW9VTWlUVml0Y0wvZVFjeWlTaFpHSGpZUWFG?=
- =?utf-8?B?VDNEaWVxeUF0QUp3NXEvREpzY3ZmbzJ4RC81UGJYK3J3R3hVWEx3TEg3TDhy?=
- =?utf-8?B?cHZKK0NDdU01d1hLLyt2cmFFeThnTzBZODUycmFETUQ2dk5nU3dtc21BU3pl?=
- =?utf-8?B?bmhJWFpxckJsbkJBZkpCby9ZVDlzc0RVQTNjTURvV2VLbldrTS9USnBnc2NJ?=
- =?utf-8?B?aVlNKytPOXhOOUNyYk16MXZiYldEcWt4eEkxTEorMTRLK2NFVC9LdEpZaWVy?=
- =?utf-8?B?UGN4bUd6aFdzSG1hLzdZWVFNcVdqSnM4Skk1QmNDUU0xZ1pSNE93cEp6bGQ2?=
- =?utf-8?B?RWorT05UVmNTSWtpL3czVWJETnhzOG9GTjBXTXBBMnBKdHBhcTE3Zk9Gb1Rj?=
- =?utf-8?B?bEVwQ0tOYVBUS21RU3lIT3czYkw0Mk5kZGdURVJSNTRiMDdNVGpGV3lUTEtB?=
- =?utf-8?B?R1p2UFFZQTBOckJEK0N0TFZNVm5TazIvSDBDNUVnaVBHeHp3Qk1GOURNNVRD?=
- =?utf-8?B?UXl3WEtYaFloM1NHRW5yOFNkZVVYN2JocUpWeE51eGFVMHp2K2k3dm1XeUE2?=
- =?utf-8?B?MVBWTVVUUlNqRlFGYlExbG1hSjlhV3JUWE5DelR1VmhxWHZzRFp5UDJwSXpT?=
- =?utf-8?B?bVI2d2VGamo5eUpWWHpjNVVsR0lXWWIvbElmUmJURHE5M2RLTm95ZGthRk12?=
- =?utf-8?B?WS95cGs1dmtXZjV3aUNYTjBaOVBQVGx6eWw3TkNKbkNaR3dHVm9ia1poRE4r?=
- =?utf-8?B?S0VQdDdVSjFBN2VRQTlPRGdST1BjaWR1TFE3Ykl0SytobjdEWGtmTDFBb3Ey?=
- =?utf-8?B?YXdKYkl3YzR6dk8wVzhBd3hFdkhha2FRWmpFRythYnUxY1JhdFpoQnhxUXBm?=
- =?utf-8?B?TW1sb3d5ZnNKdHVYM3M1S1lJWkR2ejc1dTh1ZjhBdUlLSnl1VGoydHBKT2d5?=
- =?utf-8?B?Rkg5NldrYy92azB3T1dhdnlYYXZiVy9qTlB3QzBqRkc0QkxpQkFTVmU2S3Vh?=
- =?utf-8?B?bXRhbnluVzNxbXpwQlk4NTl5Zm1iNnN0SXRzcmJybHQrSVFPdWNiMDdIZ3Bq?=
- =?utf-8?B?TnlrUUlaaktjSmlJQ1M0YjFNeGdJQUtFMkZtbXdVaHpUdHZ0WU9qQzZVSFpm?=
- =?utf-8?B?SGxuRFZ0Nmk4cXFhZGNjcTl6SUpNZElVTlJyMnZYZ0k0VDg1YktLTHoyTTF1?=
- =?utf-8?B?REtuNmFRSEZ2UDRMa3lhb0h3NUxBajdFdzdqZlk1dzA2YlNjSzVYNDB5Wmlz?=
- =?utf-8?B?UFMzSzdtUHVvYm5odWtadytISklSZzU0Vk5aWGpMWnNHR3B5V1k4eXBNUFAr?=
- =?utf-8?B?K05hQ3VuQy9LeHBPVHpKZmdlSVd3WkIzQ0E4K0pFODY2RnpuSTMzWEw0UEFC?=
- =?utf-8?B?K2hCbWxteTVRdXFIZDJpTzUzbWFrd2RVV2RLQS9SU1J2YnFTbFZFc085c0JJ?=
- =?utf-8?B?QUN5QUY4Ui9HVWZHMXNwdkJkVWMzMlMrcWtyV2xrcFVudUVnbms4TkVHR0Zm?=
- =?utf-8?B?TExTKzA0TG5oU0VpQm1oeFAwNlpxckhVUk5tU25CNlRJK2YrZmkzTFQ4dE10?=
- =?utf-8?B?WEhxRHNlZlhGQm4zNXkydWdFdldTSnlUdlpROFVONlZubjRFeERMSkFkaitv?=
- =?utf-8?B?bzZpTGdsZlRVNFFnYVRiUHFPcGZJdkpKSEQ1RHZxTFVlOE1LdDJxNVBnZndp?=
- =?utf-8?B?NlBwSGthdWQ3M2RUWGZRdEJoam9hQWMxTnFjQ0UvYzcwV21qQkQ2bDhibVRJ?=
- =?utf-8?B?SXUvU0hWRHNsNnNMcDVEWlpLY0FhR2szVHlsY0VEK2ZCWlAvNG0xQk5hT0Jw?=
- =?utf-8?B?TUdrS3NPb2c1MW1nZEVuLzhEVmQ0OS9wdzVJRDIxZzFrdUNEWjRuRjl5WXhR?=
- =?utf-8?B?NitvMFllbTFzZXFpSzd0UU1nVmQvMk1zelA5bTJmdlhDMmo3N0k4TzAzSndZ?=
- =?utf-8?B?S21BWFhSK3ZwUnJKejhwd2M5QmFYT3lzY2pSTmFUU2VqYXdmYytoSlJ5RStX?=
- =?utf-8?B?L3pjNEdCcmR2b2htNGFXZmxLUVdNQ3ptSUF1dEZHeEl5UWNZb05ZZnUxRjZj?=
- =?utf-8?B?QVNmOUswdGVyVTQzTkpUWVQ3TXF6dVYwb3JTUFB4Y1NVTE11clNRM3JjdlRa?=
- =?utf-8?Q?6ABZg/A+ZoR0efw4LdxAL5B8U?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4fee458-047a-43aa-3dbc-08dd41a5e445
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB9049.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2025 03:18:11.3736
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BAfH4F1iDXradGvc3sTNKtxcQdWZo5jSiN4qULtyCbFjZqgVM7RGXt2txPSA9PSnj+diySeYrnByp+jqGltAAA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6614
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5un85j5P2Z7B9sg@google.com>
 
-Hello Sean,
-
-On 1/30/2025 7:41 PM, Sean Christopherson wrote:
-> On Fri, Jan 31, 2025, Ashish Kalra wrote:
->> From: Ashish Kalra <ashish.kalra@amd.com>
->>
->> This patch fixes issues with enabling SNP host support and effectively
->   ^^^^^^^^^^
+On (25/01/30 16:25), Yosry Ahmed wrote:
+> On Thu, Jan 30, 2025 at 01:01:15PM +0900, Sergey Senozhatsky wrote:
+> > On (25/01/29 16:59), Yosry Ahmed wrote:
+> > > On Wed, Jan 29, 2025 at 03:43:47PM +0900, Sergey Senozhatsky wrote:
+> > > > We currently have a mix of migrate_{read,write}_lock() helpers
+> > > > that lock zspages, but it's zs_pool that actually has a ->migrate_lock
+> > > > access to which is opene-coded.  Factor out pool migrate locking
+> > > > into helpers, zspage migration locking API will be renamed to
+> > > > reduce confusion.
+> > > 
+> > > But why did we remove "migrate" from the helpers' names if this is the
+> > > real migrate lock? It seems like the real problem is how the zspage lock
+> > > helpers are named, which is addressed later.
+> > 
+> > So this is deliberately.  I guess, just like with page-faults in
+> > zs_map_object(), this naming comes from the time when we had fewer
+> > locks and less functionality.  These days we have 3 zsmalloc locks that
+> > can "prevent migration" at different points.  Even size class spin-lock.
+> > But it's not only about migration anymore.  We also now have compaction
+> > (defragmentation) that these locks synchronize.  So I want to have a
+> > reader-write naming scheme.
 > 
->> ---
->>  arch/x86/include/asm/sev.h |  2 ++
->>  arch/x86/virt/svm/sev.c    | 23 +++++++----------------
->>  2 files changed, 9 insertions(+), 16 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
->> index 5d9685f92e5c..1581246491b5 100644
->> --- a/arch/x86/include/asm/sev.h
->> +++ b/arch/x86/include/asm/sev.h
->> @@ -531,6 +531,7 @@ static inline void __init snp_secure_tsc_init(void) { }
->>  
->>  #ifdef CONFIG_KVM_AMD_SEV
->>  bool snp_probe_rmptable_info(void);
->> +int snp_rmptable_init(void);
->>  int snp_lookup_rmpentry(u64 pfn, bool *assigned, int *level);
->>  void snp_dump_hva_rmpentry(unsigned long address);
->>  int psmash(u64 pfn);
->> @@ -541,6 +542,7 @@ void kdump_sev_callback(void);
->>  void snp_fixup_e820_tables(void);
->>  #else
->>  static inline bool snp_probe_rmptable_info(void) { return false; }
->> +static inline int snp_rmptable_init(void) { return -ENOSYS; }
->>  static inline int snp_lookup_rmpentry(u64 pfn, bool *assigned, int *level) { return -ENODEV; }
->>  static inline void snp_dump_hva_rmpentry(unsigned long address) {}
->>  static inline int psmash(u64 pfn) { return -ENODEV; }
->> diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
->> index 1dcc027ec77e..42e74a5a7d78 100644
->> --- a/arch/x86/virt/svm/sev.c
->> +++ b/arch/x86/virt/svm/sev.c
->> @@ -505,19 +505,19 @@ static bool __init setup_rmptable(void)
->>   * described in the SNP_INIT_EX firmware command description in the SNP
->>   * firmware ABI spec.
->>   */
->> -static int __init snp_rmptable_init(void)
->> +int __init snp_rmptable_init(void)
->>  {
->>  	unsigned int i;
->>  	u64 val;
->>  
->> -	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
->> -		return 0;
->> +	if (WARN_ON_ONCE(!cc_platform_has(CC_ATTR_HOST_SEV_SNP)))
->> +		return -ENOSYS;
->>  
->> -	if (!amd_iommu_snp_en)
->> -		goto nosnp;
->> +	if (WARN_ON_ONCE(!amd_iommu_snp_en))
->> +		return -ENOSYS;
->>  
->>  	if (!setup_rmptable())
->> -		goto nosnp;
->> +		return -ENOSYS;
->>  
->>  	/*
->>  	 * Check if SEV-SNP is already enabled, this can happen in case of
->> @@ -530,7 +530,7 @@ static int __init snp_rmptable_init(void)
->>  	/* Zero out the RMP bookkeeping area */
->>  	if (!clear_rmptable_bookkeeping()) {
->>  		free_rmp_segment_table();
->> -		goto nosnp;
->> +		return -ENOSYS;
->>  	}
->>  
->>  	/* Zero out the RMP entries */
->> @@ -562,17 +562,8 @@ static int __init snp_rmptable_init(void)
->>  	crash_kexec_post_notifiers = true;
->>  
->>  	return 0;
->> -
->> -nosnp:
->> -	cc_platform_clear(CC_ATTR_HOST_SEV_SNP);
->> -	return -ENOSYS;
->>  }
->>  
->> -/*
->> - * This must be called after the IOMMU has been initialized.
->> - */
->> -device_initcall(snp_rmptable_init);
+> In this case shouldn't we also rename the lock itself?
+
+Yeah, I guess, I thought about that for a second but figured that on
+the grand scheme of things it wasn't all that important.  I'm going to
+resend the series (after merge with zram series) so I'll rename it, to
+pool->lock maybe.
+
+[..]
+> > > I am generally scared to move hot members around unnecessarily
+> > > due to cache-line sharing problems -- although I don't know if
+> > > these are really hot.
+> > 
+> > Size classes are basically static - once we init the array it
+> > becomes RO.  Having migrate_lock at the bottom forces us to
+> > jump over a big RO zs_pool region, besides we never use ->name
+> > (unlike migrate_lock) so having it at offset 0 is unnecessary.
 > 
-> There's the wee little problem that snp_rmptable_init() is never called as of
-> this patch.  Dropping the device_initcall() needs to happen in the same patch
-> that wires up the IOMMU code to invoke snp_rmptable_init().
+> What's special about offset 0 though?
+> 
+> My understanding is that we want to put RW-mostly and RO-mostly members
+> apart to land in different cachelines to avoid unnecessary bouncing.
+> Also we want the elements that are usually accessed together next to one
+> another.
+> 
+> Placing the RW lock right next to the RO size classes seems like it will
+> result in unnecessary cacheline bouncing. For example, if a CPU holds
+> the lock and dirties the cacheline then all other CPUs have to drop it
+> and fetch it again when accessing the size classes.
 
-The issue with that is the IOMMU and x86 maintainers are different, so i believe that we will
-need to split the dropping of device_initcall() in platform code and the code to wire up the
-IOMMU driver to invoke snp_rmptable_init(), to get the patch merged in different trees ?
-  
->At a glance, I don't see anything in this patch that can reasonably go in before the IOMMU change.
-This patch prepares snp_rmptable_init() to be called via iommu_snp_enable(), so i assume this
-is a pre-patch before the IOMMU change.
+So the idea was that offset 0 is located very close to low size classes,
+which are a) not accessed that often and b) some of them are not accessed
+at all.  I don't think I've ever seen size-class-32 (the first size-class)
+being used.  I think for some algorithms compressing PAGE_SIZE below 32 bytes
+is practically impossible, because of all the internal data that the
+algorithms puts into compression output (checksums, flags, version numbers,
+etc. etc.).
 
-Thanks,
-Ashish
+> > zs_pool_stats and compaction_in_progress are modified only
+> > during compaction, which we do not run in parallel (only one
+> > CPU can do compaction at a time), so we can do something like
+> 
+> But other CPUs can read compaction_in_progress, even if they don't
+> modify it.
+
+Yes, well, that's the nature of that flag.
+
+I'll drop patch, I guess.  It's not worth our time.
