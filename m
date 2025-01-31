@@ -1,345 +1,156 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC8F219FC
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 15:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E42820318;
+	Fri, 31 Jan 2025 15:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738338725; cv=none; b=mxTOIKJZgvgbnHg7JNCjVe9WhKuXj7VFcNfByfM8QxM3WMOmCukIDl8iiDZzLYp0b52I8gzbPidU7mn9HSsUuZiISk6VPZdg+qpZ5MM3cZqB88h2O0aiOa5KGft/djOeDV2RDgzgz06ng/1yL2dhAkViPSDRFDE7MSJF66/eCYM=
+	t=1738338866; cv=none; b=tAjEyuYZuOmV7uFzOkmlHzJ4I0HxeIwncT6e1E9BFa5tFxZNFldJN3vLxLcc5fbGd+KgX7RI4Z21FbMXKSn0vVT1Hd5UFGyCD05m2Pw+jtVA7jnUwYaaQLe7t2plNHRd7k+PXhMdb6NzhjNJGbaYQvS8u4B76EF1vIe36GPcfvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738338725; c=relaxed/simple;
-	bh=XeeX2wmzVrbVPJBKo5lklUUpxT2sRW0xx4BhmDy19FQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WaviW8s984kRY3DlZk8vgUmDKeVDINkUPfDnAk6NkZbiexbF3vcTyaSEoVO8/Zk2PSqJS7IQW7nsKyVHT1aNpr/CAvi6KDd5BGbN7FgEXj6IOGEEf4XDhHNhDXt0PwWXo2s5elw0WDV5EGqqvGhF5brvSdL5g8hj5PuF5+b8jDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oGqCunZj; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oGqCunZj"
-Date: Fri, 31 Jan 2025 15:51:49 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738338713;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lHB8uzDrTPnYyzcg4gpR62ufqms8WCo1ubd09TYKHcw=;
-	b=oGqCunZjUcI5dQjKKMoez7rHCCD3zlq/lEJNhDHsZ7IzoyK4RT57/DQA1gDEKHl1aB2x1H
-	zY7MZS9X+Pa3WAyo9pkoq22Y/OeZ4p+lWeCPhs5Asmktk83kSOqYan6fPxN/P1q47rJ7zL
-	zv/Yys7+nJ6Le6HKGc/AKgzCecr8R98=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 14/17] zsmalloc: make zspage lock preemptible
-Message-ID: <Z5zxlRkdseEJntFk@google.com>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
- <20250131090658.3386285-15-senozhatsky@chromium.org>
+	s=arc-20240116; t=1738338866; c=relaxed/simple;
+	bh=BrN/3vTouMXuRIgIxwpHq2xTQPauqam0lRf3eS1eyLQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RDeR9G/QMBD2yLw5s1dpkoQN8tFuNUp5v6YmW9pU+vwDAg5yW2jewQjmv4lDRSaEzk3qg4i0kQ1I1hcZs5PiFzRx20Ry0MVWa6NUWyfVMXs8LSaHoD0l9N8nyCdo4RZJeiWcKSanxSfAlbBS8kTTvds0/STeQYDZso0EM6j15Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DA5B497;
+	Fri, 31 Jan 2025 07:54:47 -0800 (PST)
+Received: from [10.1.32.52] (e122027.cambridge.arm.com [10.1.32.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A175E3F694;
+	Fri, 31 Jan 2025 07:54:18 -0800 (PST)
+Message-ID: <915713e1-b67f-4eae-82c6-8dceae8f97a7@arm.com>
+Date: Fri, 31 Jan 2025 15:54:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131090658.3386285-15-senozhatsky@chromium.org>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v4 3/3] net: stmmac: Specify hardware capability value
+ when FIFO size isn't specified
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Yanteng Si <si.yanteng@linux.dev>,
+ Furong Xu <0x1207@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>,
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250127013820.2941044-1-hayashi.kunihiko@socionext.com>
+ <20250127013820.2941044-4-hayashi.kunihiko@socionext.com>
+ <07af1102-0fa7-45ad-bcbc-aef0295ceb63@arm.com>
+ <fc08926d-b9af-428f-8811-4bfe08acc5b7@lunn.ch>
+ <f343c126-fed9-4209-a18d-61a4e604db2f@arm.com>
+ <a4e31542-3534-4856-a90f-e47960ed0907@lunn.ch>
+ <d6265f8e-51bc-4556-9ecb-bfb73f86260d@arm.com>
+ <2ed9e7c7-e760-409e-a431-823bc3f21cb7@lunn.ch>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <2ed9e7c7-e760-409e-a431-823bc3f21cb7@lunn.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 31, 2025 at 06:06:13PM +0900, Sergey Senozhatsky wrote:
-> Switch over from rwlock_t to a atomic_t variable that takes negative
-> value when the page is under migration, or positive values when the
-> page is used by zsmalloc users (object map, etc.)   Using a rwsem
-> per-zspage is a little too memory heavy, a simple atomic_t should
-> suffice.
+On 31/01/2025 15:29, Andrew Lunn wrote:
+> On Fri, Jan 31, 2025 at 03:03:11PM +0000, Steven Price wrote:
+>> On 31/01/2025 14:47, Andrew Lunn wrote:
+>>>>> I'm guessing, but in your setup, i assume the value is never written
+>>>>> to a register, hence 0 is O.K. e.g. dwmac1000_dma_operation_mode_rx(),
+>>>>> the fifosz value is used to determine if flow control can be used, but
+>>>>> is otherwise ignored.
+>>>>
+>>>> I haven't traced the code, but that fits my assumptions too.
+>>>
+>>> I could probably figure it out using code review, but do you know
+>>> which set of DMA operations your hardware uses? A quick look at
+>>> dwmac-rk.c i see:
+>>>
+>>>         /* If the stmmac is not already selected as gmac4,
+>>>          * then make sure we fallback to gmac.
+>>>          */
+>>>         if (!plat_dat->has_gmac4)
+>>>                 plat_dat->has_gmac = true;
+>>
+>> has_gmac4 is false on this board, so has_gmac will be set to true here.
 > 
-> zspage lock is a leaf lock for zs_map_object(), where it's read-acquired.
-> Since this lock now permits preemption extra care needs to be taken when
-> it is write-acquired - all writers grab it in atomic context, so they
-> cannot spin and wait for (potentially preempted) reader to unlock zspage.
-> There are only two writers at this moment - migration and compaction.  In
-> both cases we use write-try-lock and bail out if zspage is read locked.
-> Writers, on the other hand, never get preempted, so readers can spin
-> waiting for the writer to unlock zspage.
+> Thanks. Looking in hwif.c, that means dwmac1000_dma_ops are used.
 > 
-> With this we can implement a preemptible object mapping.
+> dwmac1000_dma_operation_mode_rx() just does a check:
 > 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Cc: Yosry Ahmed <yosry.ahmed@linux.dev>
-> ---
->  mm/zsmalloc.c | 135 +++++++++++++++++++++++++++++++-------------------
->  1 file changed, 83 insertions(+), 52 deletions(-)
+> 	if (rxfifosz < 4096) {
+> 		csr6 &= ~DMA_CONTROL_EFC;
 > 
-> diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-> index 4b4c77bc08f9..f5b5fe732e50 100644
-> --- a/mm/zsmalloc.c
-> +++ b/mm/zsmalloc.c
-> @@ -292,6 +292,9 @@ static inline void free_zpdesc(struct zpdesc *zpdesc)
->  	__free_page(page);
->  }
->  
-> +#define ZS_PAGE_UNLOCKED	0
-> +#define ZS_PAGE_WRLOCKED	-1
-> +
->  struct zspage {
->  	struct {
->  		unsigned int huge:HUGE_BITS;
-> @@ -304,7 +307,7 @@ struct zspage {
->  	struct zpdesc *first_zpdesc;
->  	struct list_head list; /* fullness list */
->  	struct zs_pool *pool;
-> -	rwlock_t lock;
-> +	atomic_t lock;
->  };
->  
->  struct mapping_area {
-> @@ -314,6 +317,59 @@ struct mapping_area {
->  	enum zs_mapmode vm_mm; /* mapping mode */
->  };
->  
-> +static void zspage_lock_init(struct zspage *zspage)
-> +{
-> +	atomic_set(&zspage->lock, ZS_PAGE_UNLOCKED);
-> +}
-> +
-> +/*
-> + * zspage lock permits preemption on the reader-side (there can be multiple
-> + * readers).  Writers (exclusive zspage ownership), on the other hand, are
-> + * always run in atomic context and cannot spin waiting for a (potentially
-> + * preempted) reader to unlock zspage.  This, basically, means that writers
-> + * can only call write-try-lock and must bail out if it didn't succeed.
-> + *
-> + * At the same time, writers cannot reschedule under zspage write-lock,
-> + * so readers can spin waiting for the writer to unlock zspage.
-> + */
-> +static void zspage_read_lock(struct zspage *zspage)
-> +{
-> +	atomic_t *lock = &zspage->lock;
-> +	int old = atomic_read(lock);
-> +
-> +	do {
-> +		if (old == ZS_PAGE_WRLOCKED) {
-> +			cpu_relax();
-> +			old = atomic_read(lock);
-> +			continue;
-> +		}
-> +	} while (!atomic_try_cmpxchg(lock, &old, old + 1));
-> +}
-> +
-> +static void zspage_read_unlock(struct zspage *zspage)
-> +{
-> +	atomic_dec(&zspage->lock);
-> +}
-> +
-> +static bool zspage_try_write_lock(struct zspage *zspage)
-> +{
-> +	atomic_t *lock = &zspage->lock;
-> +	int old = ZS_PAGE_UNLOCKED;
-> +
-> +	preempt_disable();
-> +	if (atomic_try_cmpxchg(lock, &old, ZS_PAGE_WRLOCKED))
+> but otherwise does not use the value.
+> 
+> dwmac1000_dma_operation_mode_tx() appears to completely ignore fifosz.
+> 
+> So i would say all zero is valid for has_gmac == true, but you might
+> gain flow control if a value was passed.
+> 
+> A quick look at dwmac100_dma_operation_mode_tx() suggests fifosz is
+> also ignored, and dwmac100_dma_operation_mode_rx() does not exist. So
+> all 0 is also valid for gmac == false, gmac4 == false, and xgmac ==
+> false.
+> 
+> dwmac4_dma_rx_chan_op_mode() does use the value to determine mtl_rx_op
+> which gets written to a register. So gmac4 == true looks to need
+> values. dwxgmac2_dma_rx_mode() is the same, so xgmac = true also need
+> valid values.
+> 
+> Could you cook up a fix based on this?
 
-FWIW, I am usually afraid to manually implement locking like this. For
-example, queued_spin_trylock() uses atomic_try_cmpxchg_acquire() not
-atomic_try_cmpxchg(), and I am not quite sure what could happen without
-ACQUIRE semantics here on some architectures.
+The below works for me, I haven't got the hardware to actually test the 
+gmac4/xgmac paths:
 
-We also lose some debugging capabilities as Hilf pointed out in another
-patch.
+----8<----
+From 1ff2f1d5c35d95b38cdec02a283b039befdff0a4 Mon Sep 17 00:00:00 2001
+From: Steven Price <steven.price@arm.com>
+Date: Fri, 31 Jan 2025 15:45:50 +0000
+Subject: [PATCH] net: stmmac: Allow zero for [tr]x_fifo_size
 
-Just my 2c.
+Commit 8865d22656b4 ("net: stmmac: Specify hardware capability value
+when FIFO size isn't specified") modified the behaviour to bail out if
+both the FIFO size and the hardware capability were both set to zero.
+However devices where has_gmac4 and has_xgmac are both false don't use
+the fifo size and that commit breaks platforms for which these values
+were zero.
 
-> +		return true;
-> +
-> +	preempt_enable();
-> +	return false;
-> +}
-> +
-> +static void zspage_write_unlock(struct zspage *zspage)
-> +{
-> +	atomic_set(&zspage->lock, ZS_PAGE_UNLOCKED);
-> +	preempt_enable();
-> +}
-> +
->  /* huge object: pages_per_zspage == 1 && maxobj_per_zspage == 1 */
->  static void SetZsHugePage(struct zspage *zspage)
->  {
-> @@ -325,12 +381,6 @@ static bool ZsHugePage(struct zspage *zspage)
->  	return zspage->huge;
->  }
->  
-> -static void lock_init(struct zspage *zspage);
-> -static void migrate_read_lock(struct zspage *zspage);
-> -static void migrate_read_unlock(struct zspage *zspage);
-> -static void migrate_write_lock(struct zspage *zspage);
-> -static void migrate_write_unlock(struct zspage *zspage);
-> -
->  #ifdef CONFIG_COMPACTION
->  static void kick_deferred_free(struct zs_pool *pool);
->  static void init_deferred_free(struct zs_pool *pool);
-> @@ -1026,7 +1076,7 @@ static struct zspage *alloc_zspage(struct zs_pool *pool,
->  		return NULL;
->  
->  	zspage->magic = ZSPAGE_MAGIC;
-> -	lock_init(zspage);
-> +	zspage_lock_init(zspage);
->  
->  	for (i = 0; i < class->pages_per_zspage; i++) {
->  		struct zpdesc *zpdesc;
-> @@ -1251,7 +1301,7 @@ void *zs_map_object(struct zs_pool *pool, unsigned long handle,
->  	 * zs_unmap_object API so delegate the locking from class to zspage
->  	 * which is smaller granularity.
->  	 */
-> -	migrate_read_lock(zspage);
-> +	zspage_read_lock(zspage);
->  	pool_read_unlock(pool);
->  
->  	class = zspage_class(pool, zspage);
-> @@ -1311,7 +1361,7 @@ void zs_unmap_object(struct zs_pool *pool, unsigned long handle)
->  	}
->  	local_unlock(&zs_map_area.lock);
->  
-> -	migrate_read_unlock(zspage);
-> +	zspage_read_unlock(zspage);
->  }
->  EXPORT_SYMBOL_GPL(zs_unmap_object);
->  
-> @@ -1705,18 +1755,18 @@ static void lock_zspage(struct zspage *zspage)
->  	/*
->  	 * Pages we haven't locked yet can be migrated off the list while we're
->  	 * trying to lock them, so we need to be careful and only attempt to
-> -	 * lock each page under migrate_read_lock(). Otherwise, the page we lock
-> +	 * lock each page under zspage_read_lock(). Otherwise, the page we lock
->  	 * may no longer belong to the zspage. This means that we may wait for
->  	 * the wrong page to unlock, so we must take a reference to the page
-> -	 * prior to waiting for it to unlock outside migrate_read_lock().
-> +	 * prior to waiting for it to unlock outside zspage_read_lock().
->  	 */
->  	while (1) {
-> -		migrate_read_lock(zspage);
-> +		zspage_read_lock(zspage);
->  		zpdesc = get_first_zpdesc(zspage);
->  		if (zpdesc_trylock(zpdesc))
->  			break;
->  		zpdesc_get(zpdesc);
-> -		migrate_read_unlock(zspage);
-> +		zspage_read_unlock(zspage);
->  		zpdesc_wait_locked(zpdesc);
->  		zpdesc_put(zpdesc);
->  	}
-> @@ -1727,41 +1777,16 @@ static void lock_zspage(struct zspage *zspage)
->  			curr_zpdesc = zpdesc;
->  		} else {
->  			zpdesc_get(zpdesc);
-> -			migrate_read_unlock(zspage);
-> +			zspage_read_unlock(zspage);
->  			zpdesc_wait_locked(zpdesc);
->  			zpdesc_put(zpdesc);
-> -			migrate_read_lock(zspage);
-> +			zspage_read_lock(zspage);
->  		}
->  	}
-> -	migrate_read_unlock(zspage);
-> +	zspage_read_unlock(zspage);
->  }
->  #endif /* CONFIG_COMPACTION */
->  
-> -static void lock_init(struct zspage *zspage)
-> -{
-> -	rwlock_init(&zspage->lock);
-> -}
-> -
-> -static void migrate_read_lock(struct zspage *zspage) __acquires(&zspage->lock)
-> -{
-> -	read_lock(&zspage->lock);
-> -}
-> -
-> -static void migrate_read_unlock(struct zspage *zspage) __releases(&zspage->lock)
-> -{
-> -	read_unlock(&zspage->lock);
-> -}
-> -
-> -static void migrate_write_lock(struct zspage *zspage)
-> -{
-> -	write_lock(&zspage->lock);
-> -}
-> -
-> -static void migrate_write_unlock(struct zspage *zspage)
-> -{
-> -	write_unlock(&zspage->lock);
-> -}
-> -
->  #ifdef CONFIG_COMPACTION
->  
->  static const struct movable_operations zsmalloc_mops;
-> @@ -1803,7 +1828,7 @@ static bool zs_page_isolate(struct page *page, isolate_mode_t mode)
->  }
->  
->  static int zs_page_migrate(struct page *newpage, struct page *page,
-> -		enum migrate_mode mode)
-> +			   enum migrate_mode mode)
->  {
->  	struct zs_pool *pool;
->  	struct size_class *class;
-> @@ -1819,15 +1844,12 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
->  
->  	VM_BUG_ON_PAGE(!zpdesc_is_isolated(zpdesc), zpdesc_page(zpdesc));
->  
-> -	/* We're committed, tell the world that this is a Zsmalloc page. */
-> -	__zpdesc_set_zsmalloc(newzpdesc);
-> -
->  	/* The page is locked, so this pointer must remain valid */
->  	zspage = get_zspage(zpdesc);
->  	pool = zspage->pool;
->  
->  	/*
-> -	 * The pool lock protects the race between zpage migration
-> +	 * The pool->lock protects the race between zpage migration
->  	 * and zs_free.
->  	 */
->  	pool_write_lock(pool);
-> @@ -1837,8 +1859,15 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
->  	 * the class lock protects zpage alloc/free in the zspage.
->  	 */
->  	size_class_lock(class);
-> -	/* the migrate_write_lock protects zpage access via zs_map_object */
-> -	migrate_write_lock(zspage);
-> +	/* the zspage write_lock protects zpage access via zs_map_object */
-> +	if (!zspage_try_write_lock(zspage)) {
-> +		size_class_unlock(class);
-> +		pool_write_unlock(pool);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* We're committed, tell the world that this is a Zsmalloc page. */
-> +	__zpdesc_set_zsmalloc(newzpdesc);
->  
->  	offset = get_first_obj_offset(zpdesc);
->  	s_addr = kmap_local_zpdesc(zpdesc);
-> @@ -1869,7 +1898,7 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
->  	 */
->  	pool_write_unlock(pool);
->  	size_class_unlock(class);
-> -	migrate_write_unlock(zspage);
-> +	zspage_write_unlock(zspage);
->  
->  	zpdesc_get(newzpdesc);
->  	if (zpdesc_zone(newzpdesc) != zpdesc_zone(zpdesc)) {
-> @@ -2005,9 +2034,11 @@ static unsigned long __zs_compact(struct zs_pool *pool,
->  		if (!src_zspage)
->  			break;
->  
-> -		migrate_write_lock(src_zspage);
-> +		if (!zspage_try_write_lock(src_zspage))
-> +			break;
-> +
->  		migrate_zspage(pool, src_zspage, dst_zspage);
-> -		migrate_write_unlock(src_zspage);
-> +		zspage_write_unlock(src_zspage);
->  
->  		fg = putback_zspage(class, src_zspage);
->  		if (fg == ZS_INUSE_RATIO_0) {
-> -- 
-> 2.48.1.362.g079036d154-goog
-> 
+Only warn and error out when (has_gmac4 || has_xgmac) where the values
+are used and zero would cause problems, otherwise continue with the zero
+values.
+
+Fixes: 8865d22656b4 ("net: stmmac: Specify hardware capability value when FIFO size isn't specified")
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index d04543e5697b..821404beb629 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -7222,7 +7222,7 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
+ 	if (!priv->plat->rx_fifo_size) {
+ 		if (priv->dma_cap.rx_fifo_size) {
+ 			priv->plat->rx_fifo_size = priv->dma_cap.rx_fifo_size;
+-		} else {
++		} else if (priv->plat->has_gmac4 || priv->plat->has_xgmac) {
+ 			dev_err(priv->device, "Can't specify Rx FIFO size\n");
+ 			return -ENODEV;
+ 		}
+@@ -7236,7 +7236,7 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
+ 	if (!priv->plat->tx_fifo_size) {
+ 		if (priv->dma_cap.tx_fifo_size) {
+ 			priv->plat->tx_fifo_size = priv->dma_cap.tx_fifo_size;
+-		} else {
++		} else if (priv->plat->has_gmac4 || priv->plat->has_xgmac) {
+ 			dev_err(priv->device, "Can't specify Tx FIFO size\n");
+ 			return -ENODEV;
+ 		}
+-- 
+2.39.5
+
+
