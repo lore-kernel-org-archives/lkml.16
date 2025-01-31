@@ -1,45 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123D6A935
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68961EE7D8
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738344827; cv=none; b=JpNAL9rpQCbGmh36Sj9Q5yOAoJRQbu7rHR2KOavdOzC/9aZMGg/c/MNQzGW0LvMvaPE6Dyrzox7FTQgXN6qwLdJ2m1LQAY++eTQfjNAELytORonHHkA8unU1LLiwT4aJL+nbvab4QwsRj8NX2Yo5w7vIeo05jZkgZnz+AwSs6X8=
+	t=1738344830; cv=none; b=RWGJJH1An88wWtsFD8/M8Orm/hhMB/F0WwZScXsBXxsW9nox+9SvcS44w72Uiqb6lC3lTUSVpBTI8ni7A5bTM90SuJKJWq9IzohttYImLryyAENJK9wJ2YMtL+U/M1LcLxuWH8J2GhDCvBw6nOEKr5GU419HNe+COKi/QEjXMh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738344827; c=relaxed/simple;
-	bh=oUJb07A52tsrpG/JK+FieRrwc6i0gXkF8BET/+0PiZE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gq9Wpc9MIRq8Ss85V94HLynRiVjGWfGH8wz9/hRXPywMCctKxU3Nq0/PdtOQqDCvejNy6lqLPpHSb+QILv2g+0ZKDvL9meXSubHruVdpe3Eo7CPHNrV9MmjsxlzJWFWKdRZ13aPLPQO97KnnW8p33IC6GZJzHZS3bHNUM03/SOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gd6p8OKB; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1738344830; c=relaxed/simple;
+	bh=EcrfTjo6O9M92qG+uVJobyUj4TzCoeItH05F87bcC5c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=X7ni4UZrEIPGp4UtLdEnhFOze9p/3GiBXReB/cf2XyFc3LeDD3Rwt6ouU5NgAsgrexxLnZrYOro4jpGoRNWXN/S/1QP2V9WalXoeP/s1UcVvifxoWfM94VHRDrhiCQoCMzSkXFL96QeItZIYkgJXQehLzCVnJvWmyUzJEp4FU18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gn5fzbnw; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gd6p8OKB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gn5fzbnw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738344823;
+	s=mimecast20190719; t=1738344827;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=eGet5P79WJbeo14N/m9+PUTDsM5yE9PlCoJZtOceAjQ=;
-	b=Gd6p8OKBMNzwaUhgiiYb+tXYpVNy7NeyvhMLBJoiLl8MFLA88WFNBoI3o/pHIr1rspb18+
-	VXqI/b+TY2sWkWd/SdxzcBlkE7KDDorGSJzhqiBrsfmCWIk6WUB1H9fC96yNvFda8d8G3H
-	05QqqEQ1HU535tZJ+LAF2g5g0chn8lw=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Sh7rZo29LbcUqiWG3szHfB7+fwxZgId2aXRpEeI0+wg=;
+	b=Gn5fzbnwR4k8abO1HBmexCmECLCCU0mragiZIoI2rXDnL7lBNSQ956Mc2bsSbSjRDqcdIM
+	oyvxyKBEHs0wPLwjecNkAH9aHDh7jqcQFEpIZ0o9f6sRmUoQC//B0QnXbZWjueHy+xGbmE
+	AKyvjzbrYEYei5ProxsPmbffxuUUstY=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-96-i56GtnjKON6QsDhNiLpRZQ-1; Fri,
- 31 Jan 2025 12:33:41 -0500
-X-MC-Unique: i56GtnjKON6QsDhNiLpRZQ-1
-X-Mimecast-MFC-AGG-ID: i56GtnjKON6QsDhNiLpRZQ
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-657-Q-Znd0zmO9yJqjjJJHuExQ-1; Fri,
+ 31 Jan 2025 12:33:44 -0500
+X-MC-Unique: Q-Znd0zmO9yJqjjJJHuExQ-1
+X-Mimecast-MFC-AGG-ID: Q-Znd0zmO9yJqjjJJHuExQ
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 57F4B1800360;
-	Fri, 31 Jan 2025 17:33:39 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E5D31955DE0;
+	Fri, 31 Jan 2025 17:33:42 +0000 (UTC)
 Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.80.150])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 35BF519560AA;
-	Fri, 31 Jan 2025 17:33:36 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A9B191955F3B;
+	Fri, 31 Jan 2025 17:33:39 +0000 (UTC)
 From: Waiman Long <longman@redhat.com>
 To: John Stultz <jstultz@google.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -52,9 +54,11 @@ To: John Stultz <jstultz@google.com>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-rt-devel@lists.linux.dev,
 	Waiman Long <longman@redhat.com>
-Subject: [PATCH v4 1/2] clocksource: Use pr_info() for "Checking clocksource synchronization" message
-Date: Fri, 31 Jan 2025 12:33:22 -0500
-Message-ID: <20250131173323.891943-1-longman@redhat.com>
+Subject: [PATCH v4 2/2] clocksource: Use migrate_disable() to avoid calling get_random_u32() in atomic context
+Date: Fri, 31 Jan 2025 12:33:23 -0500
+Message-ID: <20250131173323.891943-2-longman@redhat.com>
+In-Reply-To: <20250131173323.891943-1-longman@redhat.com>
+References: <20250131173323.891943-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,34 +68,66 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-The "Checking clocksource synchronization" message is normally printed
-when clocksource_verify_percpu() is called for a given clocksource if
-both the CLOCK_SOURCE_UNSTABLE and CLOCK_SOURCE_VERIFY_PERCPU flags
-are set. It is an informational message and so pr_info() should be used
-instead of pr_warn().
+The following bug report happened with a PREEMPT_RT kernel.
 
+[   30.957705] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
+[   30.957711] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 2012, name: kwatchdog
+[   30.962673] preempt_count: 1, expected: 0
+[   30.962676] RCU nest depth: 0, expected: 0
+
+It is due to the fact that clocksource_verify_choose_cpus() is invoked
+with preemption disabled.  This function invokes get_random_u32()
+to obtain random numbers for choosing CPUs.  The batched_entropy_32
+local lock and/or the base_crng.lock spinlock in driver/char/random.c
+will be acquired during the call. In PREEMPT_RT kernel, they are both
+sleeping locks and so cannot be acquired in atomic context.
+
+Fix this problem by using migrate_disable() to allow
+smp_processor_id() to be reliably used without introducing atomic
+context. The preempt_disable() function is then called after
+clocksource_verify_choose_cpus() but before the clocksource measurement
+is being run to avoid introducing unexpected latency.
+
+Fixes: 7560c02bdffb ("clocksource: Check per-CPU clock synchronization when marked unstable")
+Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Waiman Long <longman@redhat.com>
-Acked-by: John Stultz <jstultz@google.com>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- kernel/time/clocksource.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/time/clocksource.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index 7304d7cf47f2..77d9566d3aa6 100644
+index 77d9566d3aa6..2a7802ec480c 100644
 --- a/kernel/time/clocksource.c
 +++ b/kernel/time/clocksource.c
-@@ -382,7 +382,8 @@ void clocksource_verify_percpu(struct clocksource *cs)
+@@ -373,10 +373,10 @@ void clocksource_verify_percpu(struct clocksource *cs)
+ 	cpumask_clear(&cpus_ahead);
+ 	cpumask_clear(&cpus_behind);
+ 	cpus_read_lock();
+-	preempt_disable();
++	migrate_disable();
+ 	clocksource_verify_choose_cpus();
+ 	if (cpumask_empty(&cpus_chosen)) {
+-		preempt_enable();
++		migrate_enable();
+ 		cpus_read_unlock();
+ 		pr_warn("Not enough CPUs to check clocksource '%s'.\n", cs->name);
  		return;
- 	}
+@@ -384,6 +384,7 @@ void clocksource_verify_percpu(struct clocksource *cs)
  	testcpu = smp_processor_id();
--	pr_warn("Checking clocksource %s synchronization from CPU %d to CPUs %*pbl.\n", cs->name, testcpu, cpumask_pr_args(&cpus_chosen));
-+	pr_info("Checking clocksource %s synchronization from CPU %d to CPUs %*pbl.\n",
-+		cs->name, testcpu, cpumask_pr_args(&cpus_chosen));
+ 	pr_info("Checking clocksource %s synchronization from CPU %d to CPUs %*pbl.\n",
+ 		cs->name, testcpu, cpumask_pr_args(&cpus_chosen));
++	preempt_disable();
  	for_each_cpu(cpu, &cpus_chosen) {
  		if (cpu == testcpu)
  			continue;
+@@ -403,6 +404,7 @@ void clocksource_verify_percpu(struct clocksource *cs)
+ 			cs_nsec_min = cs_nsec;
+ 	}
+ 	preempt_enable();
++	migrate_enable();
+ 	cpus_read_unlock();
+ 	if (!cpumask_empty(&cpus_ahead))
+ 		pr_warn("        CPUs %*pbl ahead of CPU %d for clocksource %s.\n",
 -- 
 2.48.1
 
