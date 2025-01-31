@@ -1,299 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A337B1DFF0;
-	Fri, 31 Jan 2025 13:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9F01BE238
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738329190; cv=none; b=lUEc7rI03nALnuQBbv/LP5ygi6u0wBV/7plT8Sm9X3aNbqQkwOc5SFhtNajhbCdFrSZiIiBGFsRTQH+gnSSSnz/VkyuwbVc/bbxc38gGf93jh2D941rMWYm8unynomilIROiQhvEbGU7LLDbekr54MjGpvoC/vtzJhrmi0oxTR8=
+	t=1738329200; cv=none; b=dLgslBPtia2bP8g5hUHysbuoXOrHUwjAPxbEjgPy5m1GskWXSebS01mDXfIlvI76vIYygFpvxKkMoEiTB/7ce3bHOFpfisONtNCezgMHclgWsg2pOIPYv9rm8auSBOe8odYyowtwqGspYWjxIZ5MrkvgdYo0zG9laWDEEqM70oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738329190; c=relaxed/simple;
-	bh=/MUniiE0dGVEQ0M5rByOa3nWbgHI7zpjqSXKU9kQKe0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=crQU9BkNyDY4JmfExKPgTakSWoNYc2F1P9Zw6TVm8pmmF7RmDKqSUdhYRBX4BOZ2db+xraGZpDatb29UlZhZTMVVzyJXDK4SPXu4scYUc1OJDNi6PrxioBGIk5K+av9/Y7NBi2mWHSqu0yRbOoOoVllD4cMt9qyukd7EyZGyXnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcvm43wf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738329200; c=relaxed/simple;
+	bh=k5RkkXzF13rZXSL9io3ekPgEPUw+PXfJpxELXTQUpY4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jSpL89e2apB+gl2RgKMfS/8wL3OLHcBqOVfrUU+m7fhHsZros4zQHiVFjaN3wtym8A9OyFLONzf4ZlSMaIXob34k4/Tbwg+mCWfqZWWg6N8ubUuacQAnL3NVf3rFsRc4ZyAlaRTmcvjkuREkk/w9pJXqBCOOfe08krell5h+L3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b=XWS5uL4R; arc=none smtp.client-ip=185.136.64.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcvm43wf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBC6CC4CED1;
-	Fri, 31 Jan 2025 13:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738329190;
-	bh=/MUniiE0dGVEQ0M5rByOa3nWbgHI7zpjqSXKU9kQKe0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hcvm43wf/U7ZRKf61BsOtETmytr+LoysnswBRuoQAECPYXmJOZbW6PGiWEoMH6WJB
-	 veZdYeQH0uebiH/DCxK9fx0tNXpemsa7I5rAYg8V+H8Tir8DAfi+uNzeNn3ejkQtrI
-	 7fdhSSjYx+ufOYCAxWRqoeTPfJenab9qUJIMmSyyTjrQbEW/TLSzOgF0LVWAFFlQTo
-	 qtVOHgxTJ49HehuMtNUCxWoRr+uM61Z0mmb1nLZLR10lI0qZ4PfXn175RnkKSflgEu
-	 ZpXSoSQ8umoml+88lrVRcYHw2zcvdR9yT4VaQzTgthoOvSW1her312rWnr7gR1CYjT
-	 P9aB2Z5EA/KXA==
-Date: Fri, 31 Jan 2025 14:13:05 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] misc: pci_endpoint_test: Fix irq_type to convey
- the correct type
-Message-ID: <Z5zMYQAduf58ZXPJ@ryzen>
-References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
- <20250122022446.2898248-4-hayashi.kunihiko@socionext.com>
- <20250128143231.ondpjpugft37qwo5@thinkpad>
- <Z5oX5Fe5FY2Pym0u@ryzen>
- <fe8c2233-fa2a-4356-8005-6cbabf6a0e96@socionext.com>
- <Z5y9zpFGkBnY2TG1@ryzen>
- <Z5zAFhEJzwOQUccM@ryzen>
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b="XWS5uL4R"
+Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 20250131131309b2d1dd287ff9731c76
+        for <linux-kernel@vger.kernel.org>;
+        Fri, 31 Jan 2025 14:13:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=florian.bezdeka@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=7ddmw+MSH+bE+lpmVD4Wnv3gYJ4CsT3P6TUawXH7hJk=;
+ b=XWS5uL4RZBFQEOgbrkoinobFHaphy8O+5E+P3yGXLd7XDgQnHjyupzHw/nFjHHjoFdTGf8
+ mvcNlRBNYG8wW8IswCiNjHTMgAeNTd32AjpAXjStl8fyMt6y0rmFi/Yztz3oayTTUZiOqW3a
+ sQaxSTerPXPAzJLqFHYAVUGkM8zHd3MPwWKw6SUnzJqfKdUeo9bHmdirmf4oOL/0OiGPXbER
+ LJi8XzNCm80kQsfkobrEsJKbXnCXlQOD0N9Au9jkV92M0qC6kNZQPoxrc11wtPjGcoN+mHl5
+ 8Erb2wyxszaDR5KHq87NIv6bd1IyNXl4K6+BYuiaKdarLvOVMgfCkBEw==;
+Message-ID: <f86bc94c97d6e91b3564d3df6f91722318c8d24f.camel@siemens.com>
+Subject: Re: [PATCH] igc: Fix HW RX timestamp when passed by ZC XDP
+From: Florian Bezdeka <florian.bezdeka@siemens.com>
+To: Zdenek Bouska <zdenek.bouska@siemens.com>, Tony Nguyen	
+ <anthony.l.nguyen@intel.com>, Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>,  Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet	
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni	
+ <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann	
+ <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
+ Fastabend <john.fastabend@gmail.com>, Vinicius Costa Gomes
+ <vinicius.gomes@intel.com>, Song Yoong Siang <yoong.siang.song@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, Jan Kiszka
+	 <jan.kiszka@siemens.com>
+Date: Fri, 31 Jan 2025 14:13:08 +0100
+In-Reply-To: <20250128-igc-fix-hw-rx-timestamp-when-passed-by-zc-xdp-v1-1-b765d3e972de@siemens.com>
+References: 
+	<20250128-igc-fix-hw-rx-timestamp-when-passed-by-zc-xdp-v1-1-b765d3e972de@siemens.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0zbjT5a9d7kNHMUA"
-Content-Disposition: inline
-In-Reply-To: <Z5zAFhEJzwOQUccM@ryzen>
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-68982:519-21489:flowmailer
 
+On Tue, 2025-01-28 at 13:26 +0100, Zdenek Bouska wrote:
+> Fixes HW RX timestamp in the following scenario:
+> - AF_PACKET socket with enabled HW RX timestamps is created
+> - AF_XDP socket with enabled zero copy is created
+> - frame is forwarded to the BPF program, where the timestamp should
+>   still be readable (extracted by igc_xdp_rx_timestamp(), kfunc
+>   behind bpf_xdp_metadata_rx_timestamp())
+> - the frame got XDP_PASS from BPF program, redirecting to the stack
+> - AF_PACKET socket receives the frame with HW RX timestamp
+>=20
+> Moves the skb timestamp setting from igc_dispatch_skb_zc() to
+> igc_construct_skb_zc() so that igc_construct_skb_zc() is similar to
+> igc_construct_skb().
+>=20
+> This issue can also be reproduced by running:
+>  # tools/testing/selftests/bpf/xdp_hw_metadata enp1s0
+> When a frame with the wrong port 9092 (instead of 9091) is used:
+>  # echo -n xdp | nc -u -q1 192.168.10.9 9092
+> then the RX timestamp is missing and xdp_hw_metadata prints:
+>  skb hwtstamp is not found!
+>=20
+> With this fix or when copy mode is used:
+>  # tools/testing/selftests/bpf/xdp_hw_metadata -c enp1s0
+> then RX timestamp is found and xdp_hw_metadata prints:
+>  found skb hwtstamp =3D 1736509937.852786132
+>=20
+> Fixes: 069b142f5819 ("igc: Add support for PTP .getcyclesx64()")
+> Signed-off-by: Zdenek Bouska <zdenek.bouska@siemens.com>
+> ---
 
---0zbjT5a9d7kNHMUA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jan 31, 2025 at 01:20:38PM +0100, Niklas Cassel wrote:
-> On Fri, Jan 31, 2025 at 01:10:54PM +0100, Niklas Cassel wrote:
-> > > 
-> > > If SET_IRQTYPE is AUTO, how will test->irq_type be set?
-> > 
-> > I was thinking something like this:
-> > 
-> > pci_endpoint_test_set_irq()
-> > {
-> > 	u32 caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
-> > 
-> > 	...
-> > 
-> > 	if (req_irq_type == IRQ_TYPE_AUTO) {
-> > 		if (caps & MSI_CAPABLE)
-> > 			test->irq_type = IRQ_TYPE_MSI;
-> > 		else if (caps & MSIX_CAPABLE)
-> > 			test->irq_type = IRQ_TYPE_MSIX;
-> > 		else
-> > 			test->irq_type = IRQ_TYPE_INTX;
-> > 
-> > 	}
-> > 
-> > 	...
-> > }
-> 
-> 
-> Or even simpler (since it requires less changes to
-> pci_endpoint_test_set_irq()):
-> 
-> 	if (req_irq_type == IRQ_TYPE_AUTO) {
-> 		if (caps & MSI_CAPABLE)
-> 			req_irq_type = IRQ_TYPE_MSI;
-> 		else if (caps & MSIX_CAPABLE)
-> 			req_irq_type = IRQ_TYPE_MSIX;
-> 		else
-> 			req_irq_type = IRQ_TYPE_INTX;
-> 
-> 	}
-> 
-> 	...
-> 
-> 	/* Sets test->irq_type = req_irq_type; on success */
-> 	pci_endpoint_test_alloc_irq_vectors();
-
-
-See attached patch.
-
-Mani, removing the global irq_type would go on top of this.
-
-
-Kind regards,
-Niklas
-
---0zbjT5a9d7kNHMUA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="auto_irq.patch"
-
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index d5ac71a49386..5e42930124e2 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -32,6 +32,7 @@
- #define IRQ_TYPE_INTX				0
- #define IRQ_TYPE_MSI				1
- #define IRQ_TYPE_MSIX				2
-+#define IRQ_TYPE_AUTO				3
- 
- #define PCI_ENDPOINT_TEST_MAGIC			0x0
- 
-@@ -71,6 +72,8 @@
- 
- #define PCI_ENDPOINT_TEST_CAPS			0x30
- #define CAP_UNALIGNED_ACCESS			BIT(0)
-+#define CAP_MSI					BIT(1)
-+#define CAP_MSIX				BIT(2)
- 
- #define PCI_DEVICE_ID_TI_AM654			0xb00c
- #define PCI_DEVICE_ID_TI_J7200			0xb00f
-@@ -126,6 +129,7 @@ struct pci_endpoint_test {
- 	struct miscdevice miscdev;
- 	enum pci_barno test_reg_bar;
- 	size_t alignment;
-+	u32 ep_caps;
- 	const char *name;
- };
- 
-@@ -805,11 +809,20 @@ static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
- 	struct device *dev = &pdev->dev;
- 	int ret;
- 
--	if (req_irq_type < IRQ_TYPE_INTX || req_irq_type > IRQ_TYPE_MSIX) {
-+	if (req_irq_type < IRQ_TYPE_INTX || req_irq_type > IRQ_TYPE_AUTO) {
- 		dev_err(dev, "Invalid IRQ type option\n");
- 		return -EINVAL;
- 	}
- 
-+	if (req_irq_type == IRQ_TYPE_AUTO) {
-+		if (test->ep_caps & CAP_MSI)
-+			req_irq_type = IRQ_TYPE_MSI;
-+		else if (test->ep_caps & CAP_MSIX)
-+			req_irq_type = IRQ_TYPE_MSIX;
-+		else
-+			req_irq_type = IRQ_TYPE_INTX;
-+	}
-+
- 	if (test->irq_type == req_irq_type)
- 		return 0;
- 
-@@ -895,13 +908,12 @@ static void pci_endpoint_test_get_capabilities(struct pci_endpoint_test *test)
- {
- 	struct pci_dev *pdev = test->pdev;
- 	struct device *dev = &pdev->dev;
--	u32 caps;
- 
--	caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
--	dev_dbg(dev, "PCI_ENDPOINT_TEST_CAPS: %#x\n", caps);
-+	test->ep_caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
-+	dev_dbg(dev, "PCI_ENDPOINT_TEST_CAPS: %#x\n", test->ep_caps);
- 
- 	/* CAP_UNALIGNED_ACCESS is set if the EP can do unaligned access */
--	if (caps & CAP_UNALIGNED_ACCESS)
-+	if (test->ep_caps & CAP_UNALIGNED_ACCESS)
- 		test->alignment = 0;
- }
- 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index b94e205ae10b..8917f7c6c741 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -45,6 +45,8 @@
- #define TIMER_RESOLUTION		1
- 
- #define CAP_UNALIGNED_ACCESS		BIT(0)
-+#define CAP_MSI				BIT(1)
-+#define CAP_MSIX			BIT(2)
- 
- static struct workqueue_struct *kpcitest_workqueue;
- 
-@@ -753,6 +755,12 @@ static void pci_epf_test_set_capabilities(struct pci_epf *epf)
- 	if (epc->ops->align_addr)
- 		caps |= CAP_UNALIGNED_ACCESS;
- 
-+	if (epf_test->epc_features->msi_capable)
-+		caps |= CAP_MSI;
-+
-+	if (epf_test->epc_features->msix_capable)
-+		caps |= CAP_MSIX;
-+
- 	reg->caps = cpu_to_le32(caps);
- }
- 
-diff --git a/include/uapi/linux/pcitest.h b/include/uapi/linux/pcitest.h
-index acd261f49866..1edbd4357470 100644
---- a/include/uapi/linux/pcitest.h
-+++ b/include/uapi/linux/pcitest.h
-@@ -23,6 +23,11 @@
- #define PCITEST_BARS		_IO('P', 0xa)
- #define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
- 
-+#define PCITEST_IRQ_TYPE_INTX	0
-+#define PCITEST_IRQ_TYPE_MSI	1
-+#define PCITEST_IRQ_TYPE_MSIX	2
-+#define PCITEST_IRQ_TYPE_AUTO	3
-+
- #define PCITEST_FLAGS_USE_DMA	0x00000001
- 
- struct pci_endpoint_test_xfer_param {
-diff --git a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-index c267b822c108..c820a67e6437 100644
---- a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-+++ b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-@@ -97,7 +97,7 @@ TEST_F(pci_ep_basic, LEGACY_IRQ_TEST)
- {
- 	int ret;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 0);
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_INTX);
- 	ASSERT_EQ(0, ret) TH_LOG("Can't set Legacy IRQ type");
- 
- 	pci_ep_ioctl(PCITEST_LEGACY_IRQ, 0);
-@@ -108,7 +108,7 @@ TEST_F(pci_ep_basic, MSI_TEST)
- {
- 	int ret, i;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSI);
- 	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
- 
- 	for (i = 1; i <= 32; i++) {
-@@ -121,7 +121,7 @@ TEST_F(pci_ep_basic, MSIX_TEST)
- {
- 	int ret, i;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 2);
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSIX);
- 	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI-X IRQ type");
- 
- 	for (i = 1; i <= 2048; i++) {
-@@ -170,8 +170,8 @@ TEST_F(pci_ep_data_transfer, READ_TEST)
- 	if (variant->use_dma)
- 		param.flags = PCITEST_FLAGS_USE_DMA;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
--	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_AUTO);
-+	ASSERT_EQ(0, ret) TH_LOG("Can't set AUTO IRQ type");
- 
- 	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
- 		param.size = test_size[i];
-@@ -189,8 +189,8 @@ TEST_F(pci_ep_data_transfer, WRITE_TEST)
- 	if (variant->use_dma)
- 		param.flags = PCITEST_FLAGS_USE_DMA;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
--	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_AUTO);
-+	ASSERT_EQ(0, ret) TH_LOG("Can't set AUTO IRQ type");
- 
- 	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
- 		param.size = test_size[i];
-@@ -208,8 +208,8 @@ TEST_F(pci_ep_data_transfer, COPY_TEST)
- 	if (variant->use_dma)
- 		param.flags = PCITEST_FLAGS_USE_DMA;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
--	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_AUTO);
-+	ASSERT_EQ(0, ret) TH_LOG("Can't set AUTO IRQ type");
- 
- 	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
- 		param.size = test_size[i];
-
---0zbjT5a9d7kNHMUA--
+Reviewed-by: Florian Bezdeka <florian.bezdeka@siemens.com>
