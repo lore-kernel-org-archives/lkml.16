@@ -1,175 +1,137 @@
-Received: from mail-ua1-f65.google.com (mail-ua1-f65.google.com [209.85.222.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329301487E1
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 07:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51EE74C9F;
+	Fri, 31 Jan 2025 07:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738309211; cv=none; b=D1WOArFSqS0Z47NI8hXQ1I3Mqejsm3HD8+z6+DsEMSKdmMhaxV2qwra2rA7hsUg1OnORFgDsi8PihKMdVm3SezgonaG/0kpK+BNKQ0ycmYw5uCR+Z2UvXkTP4bBSicBlTvjUyg/eL3zwCxY446pOYfbEuNapv4f1Yrm8YqmSGQs=
+	t=1738309270; cv=none; b=Paaxa2Wuvdpta+IF64bb7iECil6AhFQzUkzjY0jsEfHX9ARXWoG/chguy5WJKaF4jkIj6Wy2EEUDBpuxXk6o4zCtt8qh6DhO0LZSfcv1hOHLywR8e9TV88DUVqtkGKcjKCvNLIs/qlotX+BCyPiw1zFU+7RNJt6ZdEUlfXwm0KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738309211; c=relaxed/simple;
-	bh=eBBg1iptajengVqdm0pmKZfYXz/Bu4Dc0woU7WS/8QQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=Q2VbyRErA3xnRhwqLSCAZwFSYwTtrjl19C/rH/Vbwf/FCp6Wt3I506JF9y3K5eCfcLqEIivaEbsVVFSMHyZ677I3xikqC4+0B6uEUQ7KheGot1iTjFZCgpEiQIyc3uW/pnNasRrksioFHl67BWeoykMRrYWaGYIwiXSGkXouyIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f65.google.com with SMTP id a1e0cc1a2514c-85b95896cefso393901241.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 23:40:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738309207; x=1738914007;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8kQmZAAK+6ewvnmsf4szqYR99Nu9ojx8MPSG+efC0JQ=;
-        b=P+qqYUDSWCPbm1yuU6YIQVeO5BiViIjB4TjL1dqJdA54q1bqWOplsrKK3Igrh9YOdL
-         sX1hMDlKhqjrnQ3Wfx9OkAQGAXdQO3/e4bS9rJcLL76csSu7CkoPRyYWro4nhYB+XZFi
-         FDVORO3Mo6MUxwMwWeGmHnvp4GwH4JRm4bcSHbSESiCgTVNSex7A+eEHfSiQ3TGhdhs0
-         jgDKMzDfc6ldZ7B8RRWX79y07s5fwgPAdQ/BCVsRLrHYmEamaypi3Lw+zZM0U6Nh0LJJ
-         0vBqiFLAUVdL8amce3PpPlDaPMmCDj1BuQcpsnAkIcpekZzMA+r6zLOx+JJqKfJPF6cz
-         KvIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVPrboVrbvKuO4/RPAZg7nfCAzMefKKk4WsyP41l5NNbMNjOrYI5ESLTqeDEmgosoy0glm7CM9Aj+fW2P8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUI9Bp30XZRcO04tNlnwTUsDu4eZRC1XHg2YI8E0zj0so4mnv1
-	rJb42cykCZMIAOO3c8Mjix2Dy7MJeKJmHDlXR5evRt9dUEdJIcOp5E13eo6goHymjA==
-X-Gm-Gg: ASbGncsMbbS383UUnXE+wZbnIh16uBwVprjDW+pJzA8xukTqOnCMzi1obMqWBzNQtxs
-	hd/2GUdY4bJSsQwqe1k987v+KoSqf9SUxRRJxvGaEG1UE4NJ3n9aKr1W/yKG2ucJIxzf/I+dQTH
-	iIw4xwC8JqysW6corE9LU2QDh1/BSDo6u5V2PumAQNVHHxeFtUftFT+j0L93tYg42QksMF02F4r
-	HERfekmmfk687ZEAm9K9vkyS08sUvLf70J+LXKiPvWTISklVKO7mq0stJGhRj3AvoyMoYe1xE1D
-	bXAxAbJXqHqsK2ZDyIYiWHNzixQFjGDqYlDKFZE6WIEKSOmed3ddqQ==
-X-Google-Smtp-Source: AGHT+IGculx/a6au4shJ7Wu1o51sBFbRHAKo7cMruX+uu/2sJwIZmpgqEOe46+l3mi6TAUSs9HmVZg==
-X-Received: by 2002:a05:6102:3747:b0:4b4:3a28:6491 with SMTP id ada2fe7eead31-4b9a5279c21mr7815454137.25.1738309206883;
-        Thu, 30 Jan 2025 23:40:06 -0800 (PST)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b9baa8e4cfsm542132137.11.2025.01.30.23.40.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 23:40:06 -0800 (PST)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-85c61388e68so359661241.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 23:40:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVPJLFourcoTyF6RAMysxOVN97q/zvjlSjM+SvKUxTDa9TjB82aK127qZlb0HWvmaic9AFtZ1wlktDDVuc=@vger.kernel.org
-X-Received: by 2002:a05:6122:d87:b0:518:81aa:899b with SMTP id
- 71dfb90a1353d-51e9e4e2f3cmr8999970e0c.6.1738309205451; Thu, 30 Jan 2025
- 23:40:05 -0800 (PST)
+	s=arc-20240116; t=1738309270; c=relaxed/simple;
+	bh=AJU5kc1jwXswkRrqutIC90v5z/tfYHqNu1pAiYvrggs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Jm+qwr7Gz+J+X8NQAuLDru1LLYO3MkEGBm7W0DB3vHaOQUsvllNqwo2vhQSewzVWgB2gxeEBK2SQbCiaZVmQ3EknQLjbZiwT335DteW7PvGDPCY8TcZEYxBRx9FqlEQhNtAQbf8p2bTLWPciWoLA0G3bR942Zh6HcV1HU6vLFhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=p+EsdHEW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=y8oIAD6Y; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="p+EsdHEW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="y8oIAD6Y"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 35A0F11401A8;
+	Fri, 31 Jan 2025 02:41:07 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Fri, 31 Jan 2025 02:41:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738309267;
+	 x=1738395667; bh=a015or5h7JL8tqNC7E1K5CmxYio91AFRJMKPQrlypmY=; b=
+	p+EsdHEWP3ACTepGzvls4c/0QwGbxx3xvN3QEaZZHaoYBy36hl5JS782NvbP+5gx
+	FQy/BYFtAl1h4TuHKji+nemnFcmbzGGFGFhZ8bgg/MW+KK3QkRbq/Lq4hQFRvUKN
+	Ad/fYhn2iVQD7GsuGgLgfgDYB6Qh2IJrVRKWhZhun5+G2BWg2f0kik7ZEvZrhaM2
+	yAMgzFhY9ctaQNkrsXc0wzGNr3w4n2YzGTPvxqoLjBt7iCL0LIbsvHJ2l+sFYHbz
+	inWU2TgAO8ygzAKmUX1r+n9qpoqeBfYBwAntKortX9vuwgB+8CV0y/lMmMZbf3hg
+	sP2dPlegAFnwCwir8+xhjg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738309267; x=
+	1738395667; bh=a015or5h7JL8tqNC7E1K5CmxYio91AFRJMKPQrlypmY=; b=y
+	8oIAD6YrPt6RaDC4iEXqaoPMZ+rLP2Ot1ta/e7SAdgMQykevbTxws2acg6axZF2N
+	DMEfncziUV1jLpm45YwpKL0dsQx3tJM/Ksn2p4S9pH5okoFuGYMi1HlBHkfrVodA
+	CKFecCatC+ukmvC4b+BeZpQwWFrfFmKYdscVV2EmW1k/Q7xl2yx0CHyY+RaeSOsk
+	XQTbASk1e4Xc+Z8Kss0q5GUv7oaFzHPATdYNv7JDdWf+RTegBe0Gn3VHCJ4rLOSZ
+	n3ZBhaNp6/f1qXRjhqK8W4FL80s7obekgu8EsWZQ/U84cxTq5JkdGIvhvA7l3ZhR
+	r6663SOfOHtlkdI++0ncQ==
+X-ME-Sender: <xms:kX6cZ21fjPiVWWY0DiU5VCer0YajY4PqS6DzSHKQr8qhWdUrtlPyvA>
+    <xme:kX6cZ5Gr8rcee_p03TnsWmCC2csbc2lBp9zhfTvpPga803EWw6SG7XJuOrNS9jcCT
+    DJuWHIFDcyeUKinqfE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekudekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
+    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepvddv
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjrghmihgvrdgtuhhnlhhifhhfvg
+    esrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdr
+    uhhkpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoheprg
+    hlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopegsohhquhhnrdhf
+    vghnghesghhmrghilhdrtghomhdprhgtphhtthhopegthhhrihhsihdrshgthhhrvghflh
+    esghhmrghilhdrtghomhdprhgtphhtthhopehguhhpthgrrhhuugesghhmrghilhdrtgho
+    mhdprhgtphhtthhopehthhgvshhvvghnjeefsehgmhgrihhlrdgtohhmpdhrtghpthhtoh
+    eprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:kX6cZ-6qgze7ifRuQzdyUrUdU56UridTMZY33I91Py7f0jAzwicdWQ>
+    <xmx:kX6cZ30H7SoCBveuIx8sGPVZItlQ62zfZN4Ma5ndKMsqfGE6J30dUw>
+    <xmx:kX6cZ5FCJsXZ0-VxPQ3rqhxBgyXcq7QujXzSqjdIH398l68MRkdQpA>
+    <xmx:kX6cZw86q-3LudYSqNIvo75vywydI1TG6lMKvsmXr9H6WDc0P8YTfg>
+    <xmx:k36cZ5NRFc_rKWh0VOeaglgwkSnb_mnbkvBBtgJGtBxgt_RkhDENHa5O>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 67C552220072; Fri, 31 Jan 2025 02:41:05 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241205-xarray-kunit-port-v1-1-ee44bc7aa201@gmail.com>
- <07cf896e-adf8-414f-a629-a808fc26014a@oracle.com> <qdq4k6323orqifgzo7pbg5vakezr3gptfdehghxsyfrhc4kwvb@d4fxbwcl4gjm>
- <CAJ-ks9=U4PZv4NgyH8B7SbHkecGLy+M=G639hSTv-hnPySqk6w@mail.gmail.com>
- <xf3445vgszstqfwycf5wc5owhnifxb3mny5xjjaihghqgnozmd@3h7hnifir4vu>
- <CAMuHMdVcuhzO57Qn-kcUJDM=HmkSwuheyNJPF1tx+gxRKnKZXA@mail.gmail.com>
- <mp6lnt3stfnfd74rwaza5xffh2ya5gylqnxotgrnqaqo3eh2zl@5g257jeiugfn>
- <CAMuHMdWDRLi8AE0PgfAnXundbS0hyTyovUH7yScrY7GtmYYPOQ@mail.gmail.com>
- <zlcagbwyskb4nkl4usbq4foc4vjcau3exp42zpfsl5b4tabr7u@o42mpfcsfygr>
- <CAMuHMdVUZQTgLpa9L9R117s39nEqxdGy=CJLyLQaTv_16EDhZg@mail.gmail.com> <ihl4bxs65uphmepoyw4xoa26mr4f3gci2mgtoq4osrzeyh3mup@hww2utbkxkfn>
-In-Reply-To: <ihl4bxs65uphmepoyw4xoa26mr4f3gci2mgtoq4osrzeyh3mup@hww2utbkxkfn>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 31 Jan 2025 08:39:53 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVUrCfL+UheG56tEtT6K7vm++dNHDmcaL3cWWHyzAaZnw@mail.gmail.com>
-X-Gm-Features: AWEUYZkH_w9tBM_pRW6Ohl7HsK0YqaRuQD-fO1ItmvH8HD9xdtZANpKrFhiastY
-Message-ID: <CAMuHMdVUrCfL+UheG56tEtT6K7vm++dNHDmcaL3cWWHyzAaZnw@mail.gmail.com>
-Subject: Re: [PATCH] xarray: port tests to kunit
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Sidhartha Kumar <sidhartha.kumar@oracle.com>, akpm@linux-foundation.org, 
-	christophe.leroy@csgroup.eu, justinstitt@google.com, 
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
-	linuxppc-dev@lists.ozlabs.org, llvm@lists.linux.dev, maddy@linux.ibm.com, 
-	morbo@google.com, mpe@ellerman.id.au, nathan@kernel.org, naveen@kernel.org, 
-	ndesaulniers@google.com, npiggin@gmail.com, 
-	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Fri, 31 Jan 2025 08:40:45 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Christian Schrefl" <chrisi.schrefl@gmail.com>,
+ "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
+ "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Russell King" <linux@armlinux.org.uk>,
+ "Rudraksha Gupta" <guptarud@gmail.com>, "Ard Biesheuvel" <ardb@kernel.org>,
+ "Geert Stappers" <stappers@stappers.nl>, "Andrew Lunn" <andrew@lunn.ch>,
+ "Jamie Cunliffe" <Jamie.Cunliffe@arm.com>,
+ "Sven Van Asbroeck" <thesven73@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Message-Id: <a83b0149-7055-411b-ba86-d227919c7c32@app.fastmail.com>
+In-Reply-To: <20250123-rfl-arm32-v3-1-8f13623d42c5@gmail.com>
+References: <20250123-rfl-arm32-v3-1-8f13623d42c5@gmail.com>
+Subject: Re: [PATCH v3] arm: rust: Enable Rust support for ARMv7
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Liam,
-
-On Thu, 30 Jan 2025 at 16:17, Liam R. Howlett <Liam.Howlett@oracle.com> wro=
-te:
-> * Geert Uytterhoeven <geert@linux-m68k.org> [250130 09:25]:
-> > On Thu, 30 Jan 2025 at 15:06, Liam R. Howlett <Liam.Howlett@oracle.com>=
- wrote:
-> > > > > it is to get m68k to build, you should probably know how to read =
-a
-> > > > > makefile.
-> > > >
-> > > > Like all other kernel cross-compilation? Usually you don't even hav=
-e
-> > > > to know where your cross-compiler is living:
-> > > >
-> > > >     make ARCH=3Dm68k
-> > >
-> > > Ignoring that I had to make a config - which asked challenging
-> > > questions...
-> >
-> > make ARCH=3Dm68k defconfig
+On Thu, Jan 23, 2025, at 23:40, Christian Schrefl wrote:
+> This commit allows building ARMv7 kernels with Rust support.
 >
-> That also prompts, defoldconfig did not.
+> The rust core library expects some __eabi_... functions
+> that are not implemented in the kernel.
+> Those functions are some float operations and __aeabi_uldivmod.
+> For now those are implemented with define_panicking_intrinsics!.
 
-Hmm, using a defconfig should never ask for questions.
-Perhaps this might happen if it has an option enabled that depends on
-specific compiler support?
+I see you are doing this part the same as the other architectures,
+but I don't see why it's done like this in the first place:
 
-> > > And ignoring the steps to get m68k compiler...
-> >
-> > apt install gcc-m68k-linux-gnu?
->
-> There are a few compilers, multilib or such?  I've had issues with
-> getting all the archs working for cross compile on the same machine
-> (arm, arm64, riscv, m68k, ppc, ppc64, parisc).
+In C code, we really want to get a link failure rather than a
+runtime error in order to catch those bugs as early as possible
+and fix them before even trying to run the kernel. Is there a
+reason this doesn't work in rust, or is there a plan to change
+this later when the existing callers of those functions have
+been fixed?
 
-I have installed all of the above (and more) from Ubuntu
-(except for parisc, as Ubuntu does not have it), and more
-from https://www.kernel.org/pub/tools/crosstool/.
-All of them should work fine (for building kernels).
+202397be76d8037b531b34dee16c7dfcfd0124ef..3375c91e698c024f95a85682f5a91d9815c355e5 
+> 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -130,6 +130,7 @@ config ARM
+>  	select MMU_GATHER_RCU_TABLE_FREE if SMP && ARM_LPAE
+>  	select HAVE_REGS_AND_STACK_ACCESS_API
+>  	select HAVE_RSEQ
+> +	select HAVE_RUST if CPU_LITTLE_ENDIAN && CPU_32v7
 
-> > > > > > When trying the above, and ignoring failures due to missing pac=
-kages
-> > > > > > on my host:
-> > > > > >   - there are several weird build errors,
-> > > > > >   - this doesn't play well with O=3D,
-> > > > > >   - lots of scary warnings when building for 32-bit,
-> > > > > >   - ...
-> > > > > >
-> > >
-> > > In file included from ./include/linux/sched.h:12,
-> > >                  from arch/m68k/kernel/asm-offsets.c:15:
-> > > ./arch/m68k/include/asm/current.h:7:30: error: invalid register name =
-for =E2=80=98current=E2=80=99
-> > >     7 | register struct task_struct *current __asm__("%a2");
-> >
-> > Which compiler are you using?
->
-> I've had a hard time getting m68k to boot in qemu because of the lack of
-> userspace.  I use m68k for nommu testing, but have a hard time getting
-> the buildroot to work correctly to build what I need.
+The ARMv7 dependency makes sense, but I think it needs
+be disabled on combined v6/v7 kernels, like (CPU_V7 && !CPU_V6 && !CPU_V6K).
 
-I only do m68k with MMU, and use Debian (ports) userland.
-Perhaps https://landley.net/toybox/ might give you a nommu userland.
-
-> More importantly, I think I get your point, you think that the testing
-> should be integrated and complain if it's broken - at least by bots.  I
-> don't think this is practical in all cases, unfortunately.
-
-Exactly:
-  - (cross)building kernel module tests is easy, and included in a
-     kernel build, so build failures are detected early.
-  - (cross)building the userland testing tools is cumbersome.
-So there's an opportunity for improvement...
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+      ARnd
