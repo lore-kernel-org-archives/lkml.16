@@ -1,81 +1,80 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452291F37D5
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811DF1F3D36
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738354567; cv=none; b=FYG8ZeGjQ84e5Xr4HxadgUqz/GhQykyw5JaPzP+CBz0VQGf1IgSVF86doJTPZHmMypjmW3QnWT7xC3/cPnLtx8sdhydZFRUaB5T3lu+VOFseznjkfuPeWjAD2tSdRWkovaEhPZYqAC7ORBKJrrqaLFFSDdqqywQD9jgAQwbp+9M=
+	t=1738354569; cv=none; b=EF4DGT18lDBkt2GiSIS6K/PaEs6GedWuesz9iI5CgkM0xDs8ji9xm4JdSWwOdd2clnpIW2Ez4fzPPWNDgrR6iYrsdNUVZ0aIhnl2FF2Gy7T8aRjiguyRgLs6uRP8p9v4Asuz6s3oiK92iudP1wsJq1sKHMvXLygg7hIfY1+x9fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738354567; c=relaxed/simple;
-	bh=tIJDx3MGb8/u8yuG0YkbXmNQifDGVxb6LKspQe9uvXM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nUn5UAsWHn09mMzB7cckw3+xJD9qTuuUCx/zfuNKMcKGr3M6y8cUXUOWCCYrcC1wbIIu/6Nw4Q2O00FZ3qZOF6Ww/4XjjGPhcs7gfwPZ3sUKy2f5wfTCyfOry4CpYvwE1uTD4a8fscimBFo98rlHpkDD1jaGcM49YFPlKSuxqcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tjSha3Yv; arc=none smtp.client-ip=209.85.221.73
+	s=arc-20240116; t=1738354569; c=relaxed/simple;
+	bh=QbeuZzZYzaAjA7Y9SDXeoGE0V6d2lMZNZ4ojTWaKdVU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=TCFatHIKtGJSpk6/zJkS0JZszz4uy1mhhqsUP0RI4IFbEJz7fux1s81WAuIvFDCyCY61Rsn9RvDQSZkUnvwWBXF7lomp1oVcKvC9VUX2VXwD2E2sbaQujm06IsOhJGjvnhLlHc7AvyTApB/Au+ml4ynGWNADX7loBJfWZFIB3ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ksOqpHoH; arc=none smtp.client-ip=209.85.221.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tjSha3Yv"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3862c67763dso991829f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:16:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ksOqpHoH"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-38639b4f19cso1444023f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 12:16:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738354563; x=1738959363; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wE6V39i40d6NuTUP/8PV2tcJv+y8Kf5+SgzZFsCF0pc=;
-        b=tjSha3YvJTfdhaUn5NI2LYluOmxUj3+OgcJmwJfkT3Deeqis05mKg3qxqY4CLQ0oW6
-         yvhRb/PJzi0ee44v8+ZRS8P8nWLMuGCvb0dU5lhHAmmaU4H3eKylCu86biYRw6EuxBJG
-         ArJEcpsUtan1ciiTAik1TKi02wGKpqCnFZDlYjRS8r4CEYvawL5ADoNNcqLImwYtmgaA
-         TcJHG/BIGQyvfhnem/YuViH6VqCwTSJC4dS7Q/T4qA0Jc46OFyRJwnKJfupsZH9p1tZb
-         Z+QSe87Pt69QyGMWER/o+CuvQJO4nrbjNInwpl8wmQVE28yxYQ443GOWqWt10g7j+huR
-         7SFw==
+        d=google.com; s=20230601; t=1738354566; x=1738959366; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VW71bQwjKl2HIpecZg8wq011m/Z0vS1XawvYTWLchIY=;
+        b=ksOqpHoHvj9Euga2RzaQ82PsSOmKYvK1VqWhFAMVFzwJlRiLYgbDvSw79x4mscQXUA
+         0NWARajPch5xbdjA2xJZGDnV0L2J8Th8D7Asob34NJatoZmyRUDLiADl2frGDNmhgVpL
+         VnKbrraNbXS3iX2dI07jk5AaU8LblHn+ah3C0229Kkl/wzfF4KJf+bVbr4OWmQzLMWfE
+         IZmamxqk6uYe2N8AWL4V1H0jMa/iQG/0YR+RSC+REciyq2Y60RQ7onZ3ypFUOyPD9D0+
+         SqovOmtn25njUI2XlzlVNKSg1e5kjFG/dyFDJFnZ8McGSao7aa/e8BJswSmvV+nsPagU
+         ZqpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738354563; x=1738959363;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wE6V39i40d6NuTUP/8PV2tcJv+y8Kf5+SgzZFsCF0pc=;
-        b=ViKRV4Jprhi1PYyCFDs+9FPN7mQq85lT/XFsjN0OfFBhtIQLANdj6PtbK0yI/zv6La
-         nH1zG4tKi+/YjBwnwO/IAQL8U6j/0bOlZdsjTa5gAiL9TG5l05VlxzlJN5Z6gpJlP9ne
-         cYiX8J94rQ3wwoNNurupyYyEAlDxiv2RdIUGaG58mNglS1RRanD40ZEB0v4loe9fiDnD
-         ncfL07fGJgrA2mbVGbWim4zL4qukGOIJwiMQr20aEITDM3w0NVWkY8uT7kxudAj65B6Q
-         ctjib8lWSmJdHCe29AalJOdr1tdq1brgeb7bLibHlJjZWRzEozPPv4lOh60VQXhIm5Zs
-         B0Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCUR/0pY66Qg1jBoxszddB8ucHsNoHUUIElPBoYpx/MolX4kpOt6+hyu2Ut5DINpUmry5Yeh6wkqFKyWCMQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrRZY/Sq4xBpzstG6CLs0mZgx03i/De7UClccTgHianhKV5/YU
-	Ujye/c/Jawfu4lT75E8K9y5VsGl7/qN3uetnvghPE3jaGHirarjdWOKrkx/dVDbj6RJKLGMwzvy
-	RQa+YJDguoXsFYA==
-X-Google-Smtp-Source: AGHT+IHdZRSPnylky1cQaVOLb3uHYm9KoKlk1DX0c8hbcjLUvGhulR+Xs+vVmbcnVpig7x/2iQC1+PRt4CV+/aE=
-X-Received: from wmbbd20.prod.google.com ([2002:a05:600c:1f14:b0:436:e748:58a3])
+        d=1e100.net; s=20230601; t=1738354566; x=1738959366;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VW71bQwjKl2HIpecZg8wq011m/Z0vS1XawvYTWLchIY=;
+        b=RUvvRNROcYuT3LqmldNNJ/4gYiU/JVmDEOGnzkL1KdWiNBURd9aaLF8zxGnjLiFjI8
+         /heGFQ84sf5KQMEK8RcKI7eZ+fnZovqXvNZgGJIjcDguRyd8VdwpP6rmfbY8Kw2+pTFk
+         4HVAwaOweN7E6fOXOIfueabpWP6i69irC59V+Lloqc5wrdut8YZYmVPe8KGUAeetTUnd
+         xDB+CgQPUtGgyIAi0QEALpUde/L4jNrC8dIQSC2pwh7lTkYYCqjZcO408hR4QHfVir2k
+         NGh45BK6GDWAn10hiJR2mGOwfejjArOcaVjRh1bioSYWNoCXf85P078X5o6K/V586VzA
+         8kCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWc9ur24WC3DGkYjtYX1oktvxYE6jmvRgTaG0tPUXaCV+T8hvK4JZKPGr7l6sFw+pDYRQR/y+eKhY1XNDg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyryf9iPLw82gS7ynZZin05GcmZbQ5oTegAXiZ6yuft7BMpMOuy
+	eyCP3paVNN7AOBxQepnFI4CZH2cpbcw0n1UDvba9PIspY6y39L1QmrftvmiSIoNLmhqDSfUlu73
+	XCXXWi7gRlg4ZSw==
+X-Google-Smtp-Source: AGHT+IGBd1o+FUP4LT+phF1aV8/Ej8Md0JgOxyv83FeTv1wHQxFpfkB3hsMAjyV31AGxmqh+TRC+nUDoQZMYopc=
+X-Received: from wruq12.prod.google.com ([2002:a5d:658c:0:b0:38b:da0a:5fe3])
  (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a5d:4348:0:b0:385:f1f2:13ee with SMTP id ffacd0b85a97d-38c520b5646mr8375424f8f.46.1738354563744;
- Fri, 31 Jan 2025 12:16:03 -0800 (PST)
-Date: Fri, 31 Jan 2025 20:15:49 +0000
+ 2002:a5d:598c:0:b0:38a:50f7:24fa with SMTP id ffacd0b85a97d-38c520a682bmr13501477f8f.54.1738354565780;
+ Fri, 31 Jan 2025 12:16:05 -0800 (PST)
+Date: Fri, 31 Jan 2025 20:15:50 +0000
+In-Reply-To: <20250131-cursor-between-v6-0-603bdc7d4449@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAHUvnWcC/2XMy07DMBCF4VepvMbIM76GFe9RsfBlklqCGDklB
- VV5d9wKpICX50jff2UL1UwLezpcWaU1L7nMbZiHA4snP0/Ec2qboUAFAgyPH3UplQc6X4hmDlo
- FSk4PhJY19F5pzJ/34PGl7VNezqV+3fsr3N6fFOr/qRU4cOEGkBaU96Sfp1KmV3qM5Y3dWiv+e
- i0AofPIBYeAKiZprQHXebn32HnZvPd+DMn5EVTqvNp72XnVfAzCmMGlMKjYeb33tvO6+dFG6Vx EaRT+8du2fQPFjJ8MrQEAAA==
+References: <20250131-cursor-between-v6-0-603bdc7d4449@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1887; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=tIJDx3MGb8/u8yuG0YkbXmNQifDGVxb6LKspQe9uvXM=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnnS93qDya932/5lX79+rSAq3zqOZrEQ+tQlTBp
- L5AUbF0WTSJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ50vdwAKCRAEWL7uWMY5
- Rn0UD/94CFTNdK9ET1r40OvEqWVfd4fKxLmRbdI7Maja7esva9fOCPxToCFY2Qonc/5aR09qe8D
- E6M4vd5GNDSr8Uwn8T/0kj022fEyHsScH1BAcOnmYwBdTgmgQEnV5Ya1dRAr2CQ/lXth8fyxeef
- 94VvO//OU006MsDP+cEl9bTKnKbV2/QeLlagHLLNncMxaYfDfbTJDk7Y+9+xl024fRdZkwvoRIY
- idMcLIwc7/AzNOBpeL2BToA2Vhb2DAGddq/stVTqSYGfBoHdW/m+esg/hLxzzHUFuULJwjUSasF
- TRY1vaJxdq9j9nnd39kJ+Egb3btG+J7N/BqG1oAT2CO2+tDFBl9FlXvQ7rvHqq5eev85NgR6IcG
- 4I6FOrMn7jpNnEkRTNDt9WPZSK+g7hDYCbSJcGQVL3xEm2aFpsGJHiakxULHBJLw26m491DGOds
- CL7NGaMLFYgLg2ohyDUNMgM4pDuswYFi/22O6C0yatg5H+Hec2h3fOyGOFdU1sQSKAMBnjvzq2p
- 5vVwhhcqVXD0+9/dg0M0uo9rooDlPoaEVHtUArKOSaLm05EI2qkMYc4KquX7ojoF0ke+VbZWrmR
- HRjbVLsjvuurzR+fyJLuJAUW4tU4hYBkry7IDEV2IFfej4ye0fiUK7z7t4mAUtxl+px/reSc5LO A0stcKtjvKicmAg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5247; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=QbeuZzZYzaAjA7Y9SDXeoGE0V6d2lMZNZ4ojTWaKdVU=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnnS+A0q5Ot6ctE6cwwV03E/1CIoRlG1UUnK/nT
+ iijIz7ZkzuJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ50vgAAKCRAEWL7uWMY5
+ RowtEACsjSIktsZqM4Bst//5krkI014uMAgTc0zZ4mdnbzjf8/WfIQSLYvTHJ6JfXsF/KQ7DNey
+ qyNOjQKx8xPEoWV+iL8n0hBGdykbEqenEmApROlKT0CRiUiKpooO35cz5BmJcCD0kBHKN4Ndlv0
+ LqzxdXWWWLhAR1E+tJkOxMd2lL+cWLKJDze+ovpC4rmwUPQJ/BC2E8WruLKkZTJnyIP0QNKnAPE
+ x5V6walH56VArIAt7TNQylqeV8y0HZW8DfIBzKy0e9QEpClGujY6dno6ppQtH3Uo2ZA0sZ0yzy1
+ doYAOje9rorDKTr3gq7ndKAVQjeRjqAq2c4PoM5wdy9fp2qK0Dx6V3ona6CIrW54nN+lkKGM26U
+ ZDFkiJa/Oo9ZHv4ysRASUeEP6G32kHP/y8KW7Zpr6finq7ekNgKCAAo8AP55qp/nTvbhQX/JKgT
+ UH8fOFMzjrCBaQTknIgGuIQoe9kSGjTZBfMxZNNa21fa9tYUW+kQoCugk31YkesParTN4x1oI5k
+ ivRYuunfURBt8x9wgARpOxixsDVnrnR077lr6eSX1HUktRDdkdjl95uX3Gn/n0sclH7/fur17n8
+ B9MfHs2VzII8wkKMMDIH6jShx4Vvj/tgxFSwpFuIMe2ZG44fibbmXDo3nMyInZDOZza1LMQdmKN uxmlNdI46aT1neg==
 X-Mailer: b4 0.13.0
-Message-ID: <20250131-cursor-between-v6-0-603bdc7d4449@google.com>
-Subject: [PATCH v6 0/2] Make the Rust linked list cursor point between elements
+Message-ID: <20250131-cursor-between-v6-1-603bdc7d4449@google.com>
+Subject: [PATCH v6 1/2] rust: list: extract common code for insertion
 From: Alice Ryhl <aliceryhl@google.com>
 To: Miguel Ojeda <ojeda@kernel.org>
 Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
@@ -86,54 +85,128 @@ Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
 	Alice Ryhl <aliceryhl@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Please see the commit message of the last patch for more details and
-motivation.
+To prepare for a new cursor API that has the ability to insert elements
+into the list, extract the common code needed for this operation into a
+new `insert_inner` method.
 
-I was testing an application using this list and discovered a bug, so
-I'm sending a new version with a fix. I also added a new method to make
-code using the cursor less confusing in a certain case.
+Both `push_back` and `push_front` are updated to use the new function.
 
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
-Changes in v6:
-- Fix bug where Cursor::insert_inner does not update `self.list.first`
-  when inserting elements at the head of the list.
-- Add a new `Cursor::insert` method. See its implementation for
-  justification.
-- Link to v5: https://lore.kernel.org/r/20250127-cursor-between-v5-0-f7c388c23642@google.com
+ rust/kernel/list.rs | 70 ++++++++++++++++++++++++-----------------------------
+ 1 file changed, 32 insertions(+), 38 deletions(-)
 
-Changes in v5:
-- Fix list / list2 in example.
-- Add remove_last function to example.
-- Link to v4: https://lore.kernel.org/r/20250123-cursor-between-v4-0-cb06698db94c@google.com
+diff --git a/rust/kernel/list.rs b/rust/kernel/list.rs
+index fb93330f4af4..97b3599b7207 100644
+--- a/rust/kernel/list.rs
++++ b/rust/kernel/list.rs
+@@ -245,8 +245,20 @@ pub fn is_empty(&self) -> bool {
+         self.first.is_null()
+     }
+ 
+-    /// Add the provided item to the back of the list.
+-    pub fn push_back(&mut self, item: ListArc<T, ID>) {
++    /// Inserts `item` before `next` in the cycle.
++    ///
++    /// Returns a pointer to the newly inserted element. Never changes `self.first` unless the list
++    /// is empty.
++    ///
++    /// # Safety
++    ///
++    /// * `next` must be an element in this list or null.
++    /// * if `next` is null, then the list must be empty.
++    unsafe fn insert_inner(
++        &mut self,
++        item: ListArc<T, ID>,
++        next: *mut ListLinksFields,
++    ) -> *mut ListLinksFields {
+         let raw_item = ListArc::into_raw(item);
+         // SAFETY:
+         // * We just got `raw_item` from a `ListArc`, so it's in an `Arc`.
+@@ -259,16 +271,16 @@ pub fn push_back(&mut self, item: ListArc<T, ID>) {
+         // SAFETY: We have not yet called `post_remove`, so `list_links` is still valid.
+         let item = unsafe { ListLinks::fields(list_links) };
+ 
+-        if self.first.is_null() {
+-            self.first = item;
++        // Check if the list is empty.
++        if next.is_null() {
+             // SAFETY: The caller just gave us ownership of these fields.
+             // INVARIANT: A linked list with one item should be cyclic.
+             unsafe {
+                 (*item).next = item;
+                 (*item).prev = item;
+             }
++            self.first = item;
+         } else {
+-            let next = self.first;
+             // SAFETY: By the type invariant, this pointer is valid or null. We just checked that
+             // it's not null, so it must be valid.
+             let prev = unsafe { (*next).prev };
+@@ -282,45 +294,27 @@ pub fn push_back(&mut self, item: ListArc<T, ID>) {
+                 (*next).prev = item;
+             }
+         }
++
++        item
++    }
++
++    /// Add the provided item to the back of the list.
++    pub fn push_back(&mut self, item: ListArc<T, ID>) {
++        // SAFETY:
++        // * `self.first` is null or in the list.
++        // * `self.first` is only null if the list is empty.
++        unsafe { self.insert_inner(item, self.first) };
+     }
+ 
+     /// Add the provided item to the front of the list.
+     pub fn push_front(&mut self, item: ListArc<T, ID>) {
+-        let raw_item = ListArc::into_raw(item);
+         // SAFETY:
+-        // * We just got `raw_item` from a `ListArc`, so it's in an `Arc`.
+-        // * If this requirement is violated, then the previous caller of `prepare_to_insert`
+-        //   violated the safety requirement that they can't give up ownership of the `ListArc`
+-        //   until they call `post_remove`.
+-        // * We own the `ListArc`.
+-        // * Removing items] from this list is always done using `remove_internal_inner`, which
+-        //   calls `post_remove` before giving up ownership.
+-        let list_links = unsafe { T::prepare_to_insert(raw_item) };
+-        // SAFETY: We have not yet called `post_remove`, so `list_links` is still valid.
+-        let item = unsafe { ListLinks::fields(list_links) };
++        // * `self.first` is null or in the list.
++        // * `self.first` is only null if the list is empty.
++        let new_elem = unsafe { self.insert_inner(item, self.first) };
+ 
+-        if self.first.is_null() {
+-            // SAFETY: The caller just gave us ownership of these fields.
+-            // INVARIANT: A linked list with one item should be cyclic.
+-            unsafe {
+-                (*item).next = item;
+-                (*item).prev = item;
+-            }
+-        } else {
+-            let next = self.first;
+-            // SAFETY: We just checked that `next` is non-null.
+-            let prev = unsafe { (*next).prev };
+-            // SAFETY: Pointers in a linked list are never dangling, and the caller just gave us
+-            // ownership of the fields on `item`.
+-            // INVARIANT: This correctly inserts `item` between `prev` and `next`.
+-            unsafe {
+-                (*item).next = next;
+-                (*item).prev = prev;
+-                (*prev).next = item;
+-                (*next).prev = item;
+-            }
+-        }
+-        self.first = item;
++        // INVARIANT: `new_elem` is in the list because we just inserted it.
++        self.first = new_elem;
+     }
+ 
+     /// Removes the last item from this list.
 
-Changes in v4:
-- Actually call the example functions.
-- Link to v3: https://lore.kernel.org/r/20250122-cursor-between-v3-0-aaafbd8af14d@google.com
-
-Changes in v3:
-- Fix `CursorPeek::deref` to use `self.ptr`.
-- Reword comment on `ArcBorrow` in `impl Deref for CursorPeek`.
-- Link to v2: https://lore.kernel.org/r/20250121-cursor-between-v2-0-1b24cd377618@google.com
-
-Changes in v2:
-- Extract insert_inner refactor to separate patch.
-- Make move_next/move_prev not wrap around.
-- Add some examples.
-- Link to v1: https://lore.kernel.org/r/20241025-cursor-between-v1-1-08913714aae5@google.com
-
----
-Alice Ryhl (2):
-      rust: list: extract common code for insertion
-      rust: list: make the cursor point between elements
-
- rust/kernel/list.rs | 471 ++++++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 379 insertions(+), 92 deletions(-)
----
-base-commit: ceff0757f5dafb5be5205988171809c877b1d3e3
-change-id: 20241016-cursor-between-154bed859e27
-
-Best regards,
 -- 
-Alice Ryhl <aliceryhl@google.com>
+2.48.1.362.g079036d154-goog
 
