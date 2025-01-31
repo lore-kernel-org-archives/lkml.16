@@ -1,228 +1,130 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360BAEACD
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA0249620
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 01:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738285566; cv=none; b=iaKQ545R7SMt331gCOoVcd54L5ClgxwayLZEPeSrK4oRwjp26bWwM2LtkZKuY/maBQW+0Dh7N3neg41B/BlJlp+G5S13UvGLxoR3lgIpSss/vDs2qiHcPu1M8ZwQt57dGYH5TwLswBKBWzs57RrLz1p6H1qCrZUCOEHuUFaPF8A=
+	t=1738285606; cv=none; b=Fjjtx0dsOzVRP+5EGPnT6T4+wjyBkclun+SD+G6sv/aUfxREH2hHEBKBzKub0jT/JombW5EEieVCYGHyO6rEGz1grHj9DAUtyEFZNKLadYSUtw008b2u5h1T9tR8gOZ1KTMMRM0MGF4V6Q5jZ3QIo55y+7JemdRRIJpbcljqkSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738285566; c=relaxed/simple;
-	bh=9jf/1nf6tAlLaTCV6LJ7jR9g3FGayPJbCfATcf783SU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rpEpZfXvDrBNlPXAP2jfaVKitalMCe8/+Cnr+paYsn3lraQDYLPnyo4B2kdUnyEzCa+3LyaAImvmCuYKiySSqZnI1hsin99hT7TAS7DC5nNGMJ6BKdHgtUe7Jy6hMCEP5P5XEP/wfRDSITKtg6E+Qxl9okCPLp6Yxv+8PWWGOd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TLbjc7d8; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1738285606; c=relaxed/simple;
+	bh=llWgEmUm0MfKWLzatNT3tW9v2W7HOdvboys9fFGzUqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b+9oUeSQTr767mUWl2ywdrPav41TSyh8t8KuADuLJjWnraEFAapx6cQc28BnA0cF5VQP9QrNPRE4bqlOEQle5JcyA2iWO8dCpnID1DT6LlJGUZK3DqXUS5ARAWmM5rOn0O/EHVIb3DaTCtsos4i7DF61BkXeLjLeGqoAUBIc/r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RTG1alsl; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TLbjc7d8"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ee5616e986so3945068a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:06:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738285564; x=1738890364; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bTNYs099yFFyqnxNpuPISqHSrCDzZ6WUqK+9MhF5wbs=;
-        b=TLbjc7d87TeLS6RlN3HkAbeLlWBHyd0sIYW+HXVWqZDMeUxmHMbKiAkDT2OWtCZyXz
-         YFV/me68MZM5JkmpaedwWVDhDtASP+o6U1kTQEJn/1exclJmC5G0y7AigX5h7qchv1kp
-         RSFiy7fSldiH18zbkRxXdHQWWYiJkFriTuySUcFrHP1bd87PvVKD4QYMn0BR0U2Ykse6
-         pPO/mtEOK+yaGdzUbsy4igm8GtakIRaGXX8ivc0w1sJTW6R+PPN0HKQKJ+KIfFgf6JKu
-         na2C9ahYfV4rEcPBb3sFeacy5KnKKJ45BVUL7Q9b8E+B2pdku6PzvNY1Ks1e5WQ9jOdY
-         +WWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738285564; x=1738890364;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bTNYs099yFFyqnxNpuPISqHSrCDzZ6WUqK+9MhF5wbs=;
-        b=DDkT52fGJ7SXudub9xi3L3uwpS0a3Hi9WRGWBfR/HFB6Rb0aQRiscDBxnsQU6vHFc5
-         H9BacLyhhhoKWuATjYAewkvwvrMU3xDLhECTLB8taPi/KPyQxr9QTVZRydia1+qevCaF
-         c2l5VFuPzSmSWKaEkno1Q3OfHZ1Xqqu5/enPpAQDYlP8V8/XTyRA0OhpgrbjsG8MVT4L
-         YNzbUEIzuh/ip9DGnQDbWDatzSo05ngTszu9IgVmvD7TDPuxbfyo31pJbWWZBWd3kAhG
-         Wjgb7RHGNdMj2vu9fQbDS+PaQXXPifSaweomjbRPq8mAeMjTnD+STJEuHeG6qAxUdPkl
-         rIPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmg1SzF05NyAD9U146OWFjhoX7y0jx94dlM9Zq0fhvONV+JKQCLzNHqeY6AN3RLzuqN/Du+LXRzdvQxpo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPw8KQJBvjDMcEWsFRWelF2vEXufWAKdCuPErlYOs5Sr/qWDCN
-	SoUB3dGg7uliC+nHCiiXCJTnBQ95zW0c1h9anTTueim01D494nwkkuKalY8jeSaFOb0mpqqEnOc
-	cOQ==
-X-Google-Smtp-Source: AGHT+IGxiC3tKYAQHqYSiS3fnl5uGLVJ5CIUzG+4EgbzBj0T2X1p5kopc3CLdqk/XuszZgPILyjkbC2F5Vo=
-X-Received: from pgbcr6.prod.google.com ([2002:a05:6a02:4106:b0:7fd:5164:d918])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6f8f:b0:1eb:34a6:593e
- with SMTP id adf61e73a8af0-1ed7a5c4575mr14718423637.1.1738285564440; Thu, 30
- Jan 2025 17:06:04 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 30 Jan 2025 17:06:01 -0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RTG1alsl"
+Date: Thu, 30 Jan 2025 20:06:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738285601;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XIIpTB72Yll8nCHH7rurXHugZD6Z4U2oOU17E7ajD2g=;
+	b=RTG1alsl5aQ1FjLxWnlJl0A3Lyt7+hXs6ym/ZE/sHn15oXdtMcqkbKFvAn/CVoOH/DXuep
+	2vn7Wgq93+o6Y8X1MThejTholXrpjG6pbmDGkadFS2zJmr06xm+Dl1m27XN14wfXn9ppsl
+	OMYVRdS+dFcv7Pu39lfzAy24+MPJD/4=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Ted Ts'o <tytso@mit.edu>, Christian Brauner <brauner@kernel.org>, 
+	"Darrick J. Wong" <djwong@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, 
+	almaz.alexandrovich@paragon-software.com, ntfs3@lists.linux.dev, miklos@szeredi.hu, 
+	linux-bcachefs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
+	linux-btrfs@vger.kernel.org, dhowells@redhat.com, jlayton@kernel.org, netfs@lists.linux.dev
+Subject: Re: [PATCH 0/7] Move prefaulting into write slow paths
+Message-ID: <ncewetc7vpijallpvplti4ham7m3dmver6jkymabdedid4iedb@muodfjq2io3m>
+References: <20250129181749.C229F6F3@davehans-spike.ostc.intel.com>
+ <qpeao3ezywdn5ojpcvchaza7gd6qeb57kvvgbxt2j4qsk4qoey@vrf4oy2icixd>
+ <f35aa9a2-edac-4ada-b10b-8a560460d358@intel.com>
+ <Z5vw3SBNkD-CTuVE@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250131010601.469904-1-seanjc@google.com>
-Subject: [PATCH] KVM: nSVM: Never use L0's PAUSE loop exiting while L2 is running
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Maxim Levitsky <mlevitsk@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5vw3SBNkD-CTuVE@dread.disaster.area>
+X-Migadu-Flow: FLOW_OUT
 
-Never use L0's (KVM's) PAUSE loop exiting controls while L2 is running,
-and instead always configure vmcb02 according to L1's exact capabilities
-and desires.
+On Fri, Jan 31, 2025 at 08:36:29AM +1100, Dave Chinner wrote:
+> On Thu, Jan 30, 2025 at 08:04:49AM -0800, Dave Hansen wrote:
+> > On 1/29/25 23:44, Kent Overstreet wrote:
+> > > On Wed, Jan 29, 2025 at 10:17:49AM -0800, Dave Hansen wrote:
+> > >> tl;dr: The VFS and several filesystems have some suspect prefaulting
+> > >> code. It is unnecessarily slow for the common case where a write's
+> > >> source buffer is resident and does not need to be faulted in.
+> > >>
+> > >> Move these "prefaulting" operations to slow paths where they ensure
+> > >> forward progress but they do not slow down the fast paths. This
+> > >> optimizes the fast path to touch userspace once instead of twice.
+> > >>
+> > >> Also update somewhat dubious comments about the need for prefaulting.
+> > >>
+> > >> This has been very lightly tested. I have not tested any of the fs/
+> > >> code explicitly.
+> > > 
+> > > Q: what is preventing us from posting code to the list that's been
+> > > properly tested?
+> > > 
+> > > I just got another bcachefs patch series that blew up immediately when I
+> > > threw it at my CI.
+> > > 
+> > > This is getting _utterly ridiculous_.
+> 
+> That's a bit of an over-reaction, Kent.
+> 
+> IMO, the developers and/or maintainers of each filesystem have some
+> responsibility to test changes like this themselves as part of their
+> review process.
+> 
+> That's what you have just done, Kent. Good work!
+> 
+> However, it is not OK to rant about how the proposed change failed
+> because it was not exhaustively tested on every filesytem before it
+> was posted.
 
-The purpose of intercepting PAUSE after N attempts is to detect when the
-vCPU may be stuck waiting on a lock, so that KVM can schedule in a
-different vCPU that may be holding said lock.  Barring a very interesting
-setup, L1 and L2 do not share locks, and it's extremely unlikely that an
-L1 vCPU would hold a spinlock while running L2.  I.e. having a vCPU
-executing in L1 yield to a vCPU running in L2 will not allow the L1 vCPU
-to make forward progress, and vice versa.
+This is just tone policing.
 
-While teaching KVM's "on spin" logic to only yield to other vCPUs in L2 is
-doable, in all likelihood it would do more harm than good for most setups.
-KVM has limited visibility into which L2 "vCPUs" belong to the same VM,
-and thus share a locking domain.  And even if L2 vCPUs are in the same
-VM, KVM has no visilibity into L2 vCPU's that are scheduled out by the
-L1 hypervisor.
+> I agree with Dave - it is difficult for someone to test widepsread
+> changes in code outside their specific expertise. In many cases, the
+> test infrastructure just doesn't exist or, if it does, requires
+> specialised knowledge and tools to run.
 
-Furthermore, KVM doesn't actually steal PAUSE exits from L1. If L1 is
-intercepting PAUSE, KVM will route PAUSE exits to L1, not L0, as
-nested_svm_intercept() gives priority to the vmcb12 intercept.  As such,
-overriding the count/threshold fields in vmcb02 with vmcb01's values is
-nonsensical, as doing so clobbers all the training/learning that has been
-done in L1.
+No, it exists - I built it.
 
-Even worse, if L1 is not intercepting PAUSE, i.e. KVM is handling PAUSE
-exits, then KVM will adjust the PLE knobs based on L2 behavior, which could
-very well be detrimental to L1, e.g. due to essentially poisoning L1 PLE
-training with bad data.
+> In such cases, we have to acknowledge that best effort testing is
+> about as good as we can do without overly burdening the author of
+> such a change. In these cases, it is best left to the maintainer of
+> that subsystem to exhaustively test the change to their
+> subsystem....
 
-And copying the count from vmcb02 to vmcb01 on a nested VM-Exit makes even
-less sense, because again, the purpose of PLE is to detect spinning vCPUs.
-Whether or not a vCPU is spinning in L2 at the time of a nested VM-Exit
-has no relevance as to the behavior of the vCPU when it executes in L1.
+I keep having the same conversations in code review:
+"Did you test this?"
+"No really, did you test this?"
+"See that error path you modified, that our automated tests definitely
+don't cover? You need to test that manually".
 
-The only scenarios where any of this actually works is if at least one
-of KVM or L1 is NOT intercepting PAUSE for the guest.  Per the original
-changelog, those were the only scenarios considered to be supported.
-Disabling KVM's use of PLE makes it so the VM is always in a "supported"
-mode.
+Developers don't think enough about testing - and if the excuse is that
+the tools suck, then we need to address that. I'm not going to babysit
+and do a bunch of manual work - I spend quite enough of my day staring
+at test dashboards already, thank you very much.
 
-Last, but certainly not least, using KVM's count/threshold instead of the
-values provided by L1 is a blatant violation of the SVM architecture.
+> > For bcachefs specifically, how should we move forward? If you're happy
+> > with the concept, would you prefer that I do some manual bcachefs
+> > testing? Or leave a branch sitting there for a week and pray the robots
+> > test it?
+> 
+> The public automated test robots are horribly unreliable with their
+> coverage of proposed changes. Hence my comment above about the
+> subsystem maintainers bearing some responsibility to test the code
+> as part of their review process....
 
-Fixes: 74fd41ed16fd ("KVM: x86: nSVM: support PAUSE filtering when L0 doesn't intercept PAUSE")
-Cc: Maxim Levitsky <mlevitsk@redhat.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/svm/nested.c | 44 +++++++++++++--------------------------
- arch/x86/kvm/svm/svm.c    |  6 ------
- 2 files changed, 14 insertions(+), 36 deletions(-)
-
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index d77b094d9a4d..9330c15de6b7 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -171,6 +171,16 @@ void recalc_intercepts(struct vcpu_svm *svm)
- 	if (!intercept_smi)
- 		vmcb_clr_intercept(c, INTERCEPT_SMI);
- 
-+	/*
-+	 * Intercept PAUSE if and only if L1 wants to.  KVM intercepts PAUSE so
-+	 * that a vCPU that may be spinning waiting for a lock can be scheduled
-+	 * out in favor of the vCPU that holds said lock.  KVM doesn't support
-+	 * yielding across L2 vCPUs, as KVM has limited visilibity into which
-+	 * L2 vCPUs are in the same L2 VM, i.e. may be contending for locks.
-+	 */
-+	if (!vmcb12_is_intercept(&svm->nested.ctl, INTERCEPT_PAUSE))
-+		vmcb_clr_intercept(c, INTERCEPT_PAUSE);
-+
- 	if (nested_vmcb_needs_vls_intercept(svm)) {
- 		/*
- 		 * If the virtual VMLOAD/VMSAVE is not enabled for the L2,
-@@ -643,8 +653,6 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
- 	struct kvm_vcpu *vcpu = &svm->vcpu;
- 	struct vmcb *vmcb01 = svm->vmcb01.ptr;
- 	struct vmcb *vmcb02 = svm->nested.vmcb02.ptr;
--	u32 pause_count12;
--	u32 pause_thresh12;
- 
- 	/*
- 	 * Filled at exit: exit_code, exit_code_hi, exit_info_1, exit_info_2,
-@@ -736,31 +744,13 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
- 		vmcb02->control.virt_ext |= VIRTUAL_VMLOAD_VMSAVE_ENABLE_MASK;
- 
- 	if (guest_cpu_cap_has(vcpu, X86_FEATURE_PAUSEFILTER))
--		pause_count12 = svm->nested.ctl.pause_filter_count;
-+		vmcb02->control.pause_filter_count = svm->nested.ctl.pause_filter_count;
- 	else
--		pause_count12 = 0;
-+		vmcb02->control.pause_filter_count = 0;
- 	if (guest_cpu_cap_has(vcpu, X86_FEATURE_PFTHRESHOLD))
--		pause_thresh12 = svm->nested.ctl.pause_filter_thresh;
-+		vmcb02->control.pause_filter_thresh = svm->nested.ctl.pause_filter_thresh;
- 	else
--		pause_thresh12 = 0;
--	if (kvm_pause_in_guest(svm->vcpu.kvm)) {
--		/* use guest values since host doesn't intercept PAUSE */
--		vmcb02->control.pause_filter_count = pause_count12;
--		vmcb02->control.pause_filter_thresh = pause_thresh12;
--
--	} else {
--		/* start from host values otherwise */
--		vmcb02->control.pause_filter_count = vmcb01->control.pause_filter_count;
--		vmcb02->control.pause_filter_thresh = vmcb01->control.pause_filter_thresh;
--
--		/* ... but ensure filtering is disabled if so requested.  */
--		if (vmcb12_is_intercept(&svm->nested.ctl, INTERCEPT_PAUSE)) {
--			if (!pause_count12)
--				vmcb02->control.pause_filter_count = 0;
--			if (!pause_thresh12)
--				vmcb02->control.pause_filter_thresh = 0;
--		}
--	}
-+		vmcb02->control.pause_filter_thresh = 0;
- 
- 	nested_svm_transition_tlb_flush(vcpu);
- 
-@@ -1033,12 +1023,6 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
- 	vmcb12->control.event_inj         = svm->nested.ctl.event_inj;
- 	vmcb12->control.event_inj_err     = svm->nested.ctl.event_inj_err;
- 
--	if (!kvm_pause_in_guest(vcpu->kvm)) {
--		vmcb01->control.pause_filter_count = vmcb02->control.pause_filter_count;
--		vmcb_mark_dirty(vmcb01, VMCB_INTERCEPTS);
--
--	}
--
- 	nested_svm_copy_common_state(svm->nested.vmcb02.ptr, svm->vmcb01.ptr);
- 
- 	svm_switch_vmcb(svm, &svm->vmcb01);
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 7640a84e554a..ad5accc29db8 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1079,9 +1079,6 @@ static void grow_ple_window(struct kvm_vcpu *vcpu)
- 	struct vmcb_control_area *control = &svm->vmcb->control;
- 	int old = control->pause_filter_count;
- 
--	if (kvm_pause_in_guest(vcpu->kvm))
--		return;
--
- 	control->pause_filter_count = __grow_ple_window(old,
- 							pause_filter_count,
- 							pause_filter_count_grow,
-@@ -1100,9 +1097,6 @@ static void shrink_ple_window(struct kvm_vcpu *vcpu)
- 	struct vmcb_control_area *control = &svm->vmcb->control;
- 	int old = control->pause_filter_count;
- 
--	if (kvm_pause_in_guest(vcpu->kvm))
--		return;
--
- 	control->pause_filter_count =
- 				__shrink_ple_window(old,
- 						    pause_filter_count,
-
-base-commit: eb723766b1030a23c38adf2348b7c3d1409d11f0
--- 
-2.48.1.362.g079036d154-goog
-
+AFAIK the public test robots don't run xfstests at all.
