@@ -1,138 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8B822615
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 19:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602C722615;
+	Fri, 31 Jan 2025 19:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738353425; cv=none; b=gvtftAyTJ9akGqJfWKCMDFkRBS2ilOw1a+fSakzZmhOxb6VHTirY9ricFKHjUStftqvwal6xDaqKb0maw0ptEp1d4afC2QqIQFjJMVRYD7tJTdoImTmnyTNh72NDEwQTAaNS4zNPFnm9o59kr7Eh97pX3vgyY63A/BcrPYqTJNU=
+	t=1738353575; cv=none; b=AWMKpH+ktDIVuYm4z8dDXFu7Yzw3hA58Q2+2zAqFo/7gUjoDFfdIxQkJ6eQcmasiHkfGz/u8T4Ec9e1CAddNCXLKu6hzaL3/Ce1sga+2coLGbzTGDOUGw2Q/YsiCwsU/8t6o9vhsj8QQwanicP6comSPKteNkGdLsmv63sZtLr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738353425; c=relaxed/simple;
-	bh=fiDfEGaU1Vapg3o0jwWSplNk095bU6l6RVzzUvIHGuY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=k0RAhCpeKEkeuNfanpDwglXH3iYiAfbZBRNnPuT930k1rVCkLvOITv9ScHXHvD3eBvuoHyCwROrBt7HcygzxUKZMIg99/bFaimyfmUDwgUg+9MaDtGZl/MrsE1pVoYdzRtUP7RVbaQlyRSiklno0mIHX+4o/WRK710aFcnguB4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c8D6BnkC; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738353575; c=relaxed/simple;
+	bh=1sbfVQ+x0qVwv6oC5r6SvSSaZ46HHoEo8cAdmmwoKQE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EjEs7ipagcDNqPgypA9LYVMbGn8ZXNFj20OtC61dK9e9ru9qlJXvknnrmsg01E1HVehaxsoXwZt//JUdiQhxnIiOUUg39DhV18lEdnTn9p6rzSEVQ4Lkc8KUkUUw4jxECYdkU3coePngQWTXqpZbOERugK1TKxZHKWJ7uP9JdQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K5VVbcKI; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c8D6BnkC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738353424; x=1769889424;
-  h=date:from:to:cc:subject:message-id;
-  bh=fiDfEGaU1Vapg3o0jwWSplNk095bU6l6RVzzUvIHGuY=;
-  b=c8D6BnkCcLrmdHR6RsO9o9HSvZmLi0/t7lNBZpF/pXMGV7k3hL0RbeSC
-   lcdRkLMb1q2kJll6fUPcMkzoShqowEFYWjUa7culNK/xSAYBZ79h3wzbi
-   aL62n9YRretU6GHnZLF+ES9kFTNCPtFYBvJBqp66622GkqS156tPs0hnG
-   8rXNbas+h3FTf08KJa6LwOeAEjqkyOojIlDmcbvtiTZYOOwnA+1ihwACG
-   0oRll6Wx9ceJHd8QmKXz9c2pJ/mwLWcGZXPBMdZMu6O6jm6ASdJ+IQAUK
-   EdHmPnzqOdiESBrduwBF9FQiuGG09VF3kVmMWEvcHMJ8bjxGvqxRRjqcM
-   w==;
-X-CSE-ConnectionGUID: BV6b40qjT6WuOsZeXoEpdA==
-X-CSE-MsgGUID: OcxKieY9RxSMR6CuzxqVrQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="38635197"
-X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="38635197"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 11:57:04 -0800
-X-CSE-ConnectionGUID: JqssN8cERl6pnb/p6uVn0Q==
-X-CSE-MsgGUID: KAcCualnQbSK7PGx0BU8aw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="140603053"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 31 Jan 2025 11:57:02 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tdx8O-000n2h-1R;
-	Fri, 31 Jan 2025 19:57:00 +0000
-Date: Sat, 01 Feb 2025 03:56:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:dev] BUILD SUCCESS
- 9d8db12ec685c379534ce6b049c5c94feb9a8e20
-Message-ID: <202502010311.EgAjiyB0-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5VVbcKI"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30761be8fa7so22841051fa.2;
+        Fri, 31 Jan 2025 11:59:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738353571; x=1738958371; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1sbfVQ+x0qVwv6oC5r6SvSSaZ46HHoEo8cAdmmwoKQE=;
+        b=K5VVbcKIgbQ6QCcy2x3bMAn4FiQHhxcvw2wwlKHzG2f+lUVHgPIkjQOPaFuqg5xiNF
+         Z8fOavDYnVHtzCl7ScBW+rWlIjZ1eG0yHfS7wOvz/NlEHINzDnFu1uoHgVRNMcNRpBf9
+         5ZfBiYxaoz3gmnqPQKi/WrjtDATxkR6uluimyVMrrI4XZ28762UTjGtlb2ySSErVBFRe
+         k6Xe2nirT+1lzo4Mm3YQVt9wl3c9ztR4yeERUyO1EsrySJ17a3lZ8xuV6ovKL+GQCRHh
+         5JwHjmeqWtmy2TIE7GYlbjaCpEAxyhd751NxeYGAZucMksTLgZuByvXyLvRKiKBgKjqs
+         cdSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738353571; x=1738958371;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1sbfVQ+x0qVwv6oC5r6SvSSaZ46HHoEo8cAdmmwoKQE=;
+        b=nNX0sHd7E4X/lRZWiPpdaybPrlMdClVChyP7qBeqc5M+JZGjs1LUGONGjsePNXdxqp
+         yEp5nfiIopvec5j34ffQalegFfqqalutge9hcQrR7QCjUg8IujTQEz1WCybw8Kkpt7mu
+         lHEQTbRm8mjtJRF7Chm4x35aog4uxotg9oJ4C53vPrQ+ItnmPUdAKW7tHkfF8042CIyO
+         pLBJnlXkOA1/T6aRvw6IS4Wd1ZHJ/WiZbWhNf1WcV9s7qIrVrudplLNMxqM+zCM33SHv
+         SS5yJPfq++VgrgWcT5iDc/KsTslLr3+RsBqfc7Ea8GCWplivcuG6LJOJPZ9Uy9Ooc4i6
+         ZKhA==
+X-Forwarded-Encrypted: i=1; AJvYcCUu98gi1SyRQ2lsvNHlhqbW5IHiEKHez6RRo02m+VPHwTh1sNg3vUu5Tz9jF9ILRz0bog+XQUkXdj3OnUg=@vger.kernel.org, AJvYcCV59ImU5EB1XaXf+mn57KDokOmic2yeSnFspkzaT+MYMtFb7v27Lg4eMjb5Gl8TFV11OiJ+rqojoQIQHBQ0Grcb@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBN1TTA44EY401PTG3wvP3VK9dcjhKywKKv2l9lA2Eh4XQRtkP
+	ZwnwMg4mkIbnbCmnOQNOlNpqazCD3iCBbh6raL1aIG4sNCLXwIo3GxVScUODx7+gBYn+yjysboH
+	2kbXSdwxsqgePz17Iku3/SpfMPHI=
+X-Gm-Gg: ASbGncs/xH0QVMfn4lTQ6TiaCaqosUanvo+QXABgwtU8NelZ2ZHHULLm/7PaQK831nW
+	PE71JJWT+UCwCOfYBSEYIrRj7WF+E6y5H0DHXumSiAex4cRDKJeph7UM2ZZBbGT35c7CHoQmxf9
+	b3mpKaaQTO3NEXGNwu1qXGVb6NF8hId+8=
+X-Google-Smtp-Source: AGHT+IHihmgT4fkqEcjkcj3dceSxGz7ryZwu2CA1i6Q03wQwHzngEqRjlF5cg0AuosE0ekcpQRFcldW8m/tMeIfztOU=
+X-Received: by 2002:a2e:b8cd:0:b0:300:2a48:fb65 with SMTP id
+ 38308e7fff4ca-307968eb492mr47666541fa.18.1738353570945; Fri, 31 Jan 2025
+ 11:59:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250131-scanf-kunit-convert-v1-1-0976524f0eba@gmail.com>
+ <Z50EM7gxqyV0Eois@smile.fi.intel.com> <CAJ-ks9mMgkdNEHHKELa=5gNz+CzUNno08ZKJwwQDVEb5WvN32A@mail.gmail.com>
+ <Z50NVYKv7JBn10hj@smile.fi.intel.com> <CAJ-ks9=wFZhmTE3kmVF=Ujn9xWgGoFrSnsihHmRoW1eD_3Cdww@mail.gmail.com>
+In-Reply-To: <CAJ-ks9=wFZhmTE3kmVF=Ujn9xWgGoFrSnsihHmRoW1eD_3Cdww@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Fri, 31 Jan 2025 14:58:54 -0500
+X-Gm-Features: AWEUYZmxZPafM5miX9PW7lXq-Ab8ebB8-qsVoiaPprEjgbhreJA1Pq6drb4xBL0
+Message-ID: <CAJ-ks9ke8XeOimhMM4tkYgjUoLCx9nU6Sk=ypvEh4Eg=tjCpPw@mail.gmail.com>
+Subject: Re: [PATCH] scanf: convert self-test to KUnit
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
-branch HEAD: 9d8db12ec685c379534ce6b049c5c94feb9a8e20  EXP x86/asm: Make serialize __always_inline
+On Fri, Jan 31, 2025 at 12:58=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
+> wrote:
+>
+> On Fri, Jan 31, 2025 at 12:50=E2=80=AFPM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Fri, Jan 31, 2025 at 12:22:39PM -0500, Tamir Duberstein wrote:
+> > > On Fri, Jan 31, 2025 at 12:11=E2=80=AFPM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Fri, Jan 31, 2025 at 10:47:49AM -0500, Tamir Duberstein wrote:
+>
+> [...]
+>
+> > There are other options like CONFIG_TEST_PRINTF or so in defconfig file=
+s.
+> > Why are they there to begin with? The answer to this Q will affect the =
+change
+> > you have done in this patch.
+>
+> CONFIG_TEST_PRINTF still exists; that test has not been converted to kuni=
+t.
 
-elapsed time: 1442m
-
-configs tested: 61
-configs skipped: 0
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-arc                             allmodconfig    gcc-13.2.0
-arc                             allyesconfig    gcc-13.2.0
-arc                  randconfig-001-20250131    gcc-13.2.0
-arc                  randconfig-002-20250131    gcc-13.2.0
-arm                             allmodconfig    gcc-14.2.0
-arm                             allyesconfig    gcc-14.2.0
-arm                  randconfig-001-20250131    clang-17
-arm                  randconfig-002-20250131    clang-15
-arm                  randconfig-003-20250131    gcc-14.2.0
-arm                  randconfig-004-20250131    gcc-14.2.0
-arm64                           allmodconfig    clang-18
-arm64                randconfig-001-20250131    clang-15
-arm64                randconfig-002-20250131    gcc-14.2.0
-arm64                randconfig-003-20250131    clang-21
-arm64                randconfig-004-20250131    gcc-14.2.0
-csky                 randconfig-001-20250131    gcc-14.2.0
-csky                 randconfig-002-20250131    gcc-14.2.0
-hexagon              randconfig-001-20250131    clang-21
-hexagon              randconfig-002-20250131    clang-21
-i386                            allmodconfig    gcc-12
-i386                             allnoconfig    gcc-12
-i386                            allyesconfig    gcc-12
-i386       buildonly-randconfig-001-20250131    clang-19
-i386       buildonly-randconfig-002-20250131    clang-19
-i386       buildonly-randconfig-003-20250131    gcc-12
-i386       buildonly-randconfig-004-20250131    gcc-12
-i386       buildonly-randconfig-005-20250131    clang-19
-i386       buildonly-randconfig-006-20250131    gcc-12
-i386                               defconfig    clang-19
-loongarch            randconfig-001-20250131    gcc-14.2.0
-loongarch            randconfig-002-20250131    gcc-14.2.0
-nios2                randconfig-001-20250131    gcc-14.2.0
-nios2                randconfig-002-20250131    gcc-14.2.0
-openrisc                         allnoconfig    gcc-14.2.0
-parisc                           allnoconfig    gcc-14.2.0
-parisc               randconfig-001-20250131    gcc-14.2.0
-parisc               randconfig-002-20250131    gcc-14.2.0
-powerpc                          allnoconfig    gcc-14.2.0
-powerpc              randconfig-001-20250131    gcc-14.2.0
-powerpc              randconfig-002-20250131    clang-15
-powerpc              randconfig-003-20250131    clang-21
-powerpc64            randconfig-001-20250131    clang-15
-powerpc64            randconfig-002-20250131    clang-17
-powerpc64            randconfig-003-20250131    clang-15
-riscv                            allnoconfig    gcc-14.2.0
-s390                            allmodconfig    clang-19
-s390                             allnoconfig    clang-21
-s390                            allyesconfig    gcc-14.2.0
-sh                              allmodconfig    gcc-14.2.0
-sh                              allyesconfig    gcc-14.2.0
-sparc                           allmodconfig    gcc-14.2.0
-um                               allnoconfig    clang-18
-x86_64                           allnoconfig    clang-19
-x86_64                          allyesconfig    clang-19
-x86_64     buildonly-randconfig-001-20250131    gcc-11
-x86_64     buildonly-randconfig-002-20250131    clang-19
-x86_64     buildonly-randconfig-003-20250131    gcc-12
-x86_64     buildonly-randconfig-004-20250131    gcc-12
-x86_64     buildonly-randconfig-005-20250131    clang-19
-x86_64     buildonly-randconfig-006-20250131    clang-19
-x86_64                             defconfig    gcc-11
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Ah, sorry, I had misunderstood your question. These were there to
+enable those tests; when the tests are ported to KUnit this is no
+longer necessary because of the presence of CONFIG_KUNIT_ALL_TESTS.
