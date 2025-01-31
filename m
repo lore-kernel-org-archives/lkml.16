@@ -1,104 +1,117 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A996187876
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 21:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3D8153838
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 21:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738359084; cv=none; b=D86AgLZCaqjXOvyLqwsZbwqLtOtEifC/qYCPZo5aM4y6++WnL7Th2k5Nh4iT+lCDuKrFlNM3ok+UIvPz1xyh16QgJ5qMU7maI/oi485uN71PuoGy2r5F5V93ruYBNvbXpX3BHs+glcNkI+vdTN7EbkKV5VUFu7xIkc3qm0SJiuw=
+	t=1738359198; cv=none; b=mFLAR9/ngygHsJ5Otfrl//z2S9WQmbDn2yz8s+CbH53Qbugf1pi9YzmovQKxoVhYS7APFMKbe3TbD7Vivw86ybJu3NwLTrJX7HVbLXgns6q0+ha3Y4bHKxzJjoGxcd7BOeDbWrrLZg7X9BPedWhqYZtx+hb0xPG3mjpNrYitfCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738359084; c=relaxed/simple;
-	bh=ftu7pmvGV2qr+jK4JxkhWrw+cRjCunxZf5kwDUQrlbc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HoUD0AxhJZkI1DOAGN28mxYun5q0ftsa5xp0X+zuLyQqoivpRZgjd4ZfAyltrfTOckdsMCJb488VYbvCLAxZEC0woUEZiNc6SO7nRARKJ02Xget8NM0Yvogah260AwZ4lPIumo5Fy6OV9NeTFI9jDc7WVP/OvT0gaGm5P9Fu6oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=sZjwYpSj; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1738359198; c=relaxed/simple;
+	bh=s6IiBELlRbJ9m5KhNZGC7jqONMebFZXJz0DSonG69f0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JxyhMU9/h7j6mqEt4kF8sOqMHTiuvIsLglfmcg+IZzaUZGzuF9VbiHDiFmrwxwNtKpOxmSuVGECinLJ1b2by9pOPu+n7t33XMSpq4fyZ+5lJx75Lb+qRIGh94kYZMin2dk+WsfTHGi0EukKcLeA78RiX54NPZu4myyipg7AeQso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jyD9gPXS; arc=none smtp.client-ip=95.215.58.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="sZjwYpSj"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3eb972dd8e5so1305207b6e.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 13:31:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738359081; x=1738963881; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jDvnP9HNi8abDAufTXVzuVdU4XUJ2r6pu6gJGv0aC7A=;
-        b=sZjwYpSj624x16hqUYRvl0jZxfCo+u3ddY+Jp6rOrkw8hilEtnKKaJGtYakV4g4Ma6
-         jSKYcVBB1dNMUYAnE9o4JXUGSdbLh+hWNTAnaWEGlRDHxBHdSJpyjAfCYj3d4vJT89gS
-         lxypHg3HkRll+qtM4E7fUmoCYg0+8YFoA7ZVAZR8LvPvrMYrsUX80wHhdZXIz8HP2rw/
-         oPxAwlOE1nVpSALCPbW4wJc7bGAK8lPSVnhAQLpvNX5WH8BE8/LsQIvK/BiZeJX0azys
-         K2UV7N06Fn7faUutooPJu/QGzfYScbWke0nXOXdFZy8l6bU7tuZM0Ela7AUZCU9mtahk
-         r6sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738359081; x=1738963881;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jDvnP9HNi8abDAufTXVzuVdU4XUJ2r6pu6gJGv0aC7A=;
-        b=r+FFaUG3AnnEuJLVVMgrk3FaI0U9eF3Ywui1zMqeWiVT/WlhNbVP7L8j1DX/4A+K+B
-         oy8ZmwVQ0NmBUXy4X1VlrJvCredwFoMr00V0BseKEwoRgDZGyoh4XAD3cDJ6IEYD09Cr
-         ENRv2CpkyqpNg35oCq6EQCqCbTbTE6L+LO4xnhxG+gIsQW4A17st6VL8ew4VuJPHhqTO
-         oWso66a2/F27wjs5DOeP6YfTBRl1bPgAUVq07kUHOoQFdRjoTgKk+G2IEWaXnyJamF87
-         nCTGO3DQ80dxIQ+TCjMQEbp4wKiKrVU3QgA01/C7GEBqzV0vvWKi6OcgMk4ciq4spNy+
-         G3zQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpJ1YPqE2tdLAE09xd0E3CdKV1EbEjJqfAKX32PWofKyznQzlbM0KIE3gqv0X0u0ICd/gi01IC7SVDk1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyImQSrTtiN8jADGb/Hpk82JL0fz8zv4pZBj4SZdLyDR67rxMs1
-	tCRYKai2BE/d7s2q0KEMZVJboYerU1/wI9z2tcbsgn2dxR6eDgZzhMCT9ZVLz/Z2ytem5htq2JM
-	B
-X-Gm-Gg: ASbGncuESUeUTkWn2DnCg6TNruGxpRlI91X5nDmsvo+Ju1zBYY1dT3Qy8YjCpOsmVtA
-	mzc0Su+XKAmh84XUjR15AmyegRLlXjV0WQ/aXyNnuIfRf/f+XrgAW1x62nov562dUx/+/WK5JXQ
-	SNp3FBbCmyxcpXx5y8KZYvYcwv+EZrJshEunywB5+lk6eVOOY2Xb5ceyMIh9FfAiI+Fa1HWd8Al
-	voBC93c7S+5NSMKztKbJrHyQMD1O0OFbbtdH7owrQ5tu9EBdnu3zapxZEVhpidkXYsDcQNnRed+
-	V7JyBIypKspGbouboPb+x3UnEOxnHLb0R6ww9CDQpzvZ1MkXBT0Q
-X-Google-Smtp-Source: AGHT+IHD853czjvUWSx2EKQmtEracV4UoohrB2SBmjKc282qQiCd0uVnsaL5aEELB96obJY4/Zxf8A==
-X-Received: by 2002:a05:6808:2214:b0:3eb:3bcc:a9e7 with SMTP id 5614622812f47-3f323b74ce1mr9851115b6e.34.1738359081365;
-        Fri, 31 Jan 2025 13:31:21 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc104e29b7sm1073975eaf.17.2025.01.31.13.31.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 13:31:20 -0800 (PST)
-Message-ID: <2f604280-f4dd-494f-9f54-83e8f613b64f@baylibre.com>
-Date: Fri, 31 Jan 2025 15:31:18 -0600
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jyD9gPXS"
+Date: Fri, 31 Jan 2025 13:32:56 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738359184;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FKADDN/gzLU5ps4Oe+ymmjbVA+yTOl27darYW9+bIr0=;
+	b=jyD9gPXS1WTaul95TpeSAfE5cKe6GAm6eOkWb/GiX7s5qiCfSRB8BaOinWtNL/E622IZjh
+	0QScNYaKTFt28s6IqWK1DsqmrG5njsWa/Py97/n3byOUomQBe9xiy4XrKkYlPSzhlhYxVK
+	kdV1A0T7T9VIc3IRqV+q4ufc53+aXuY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+	Vlastimil Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 06/11] mm/vmscan: Use PG_dropbehind instead of
+ PG_reclaim
+Message-ID: <lpptopwuxbfixeigoxs44rrpg6sm5mviai3uy7sxvvng3twyer@xpul6sjcvvjj>
+References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
+ <20250130100050.1868208-7-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 08/10] iio: adc: ad7606: change r/w_register signature
-To: Angelo Dureghello <adureghello@baylibre.com>,
- Michael Hennerich <michael.hennerich@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Alexandru Ardelean <aardelean@baylibre.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Guillaume Stols <gstols@baylibre.com>
-References: <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-0-c3aec77c0ab7@baylibre.com>
- <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-8-c3aec77c0ab7@baylibre.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-8-c3aec77c0ab7@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250130100050.1868208-7-kirill.shutemov@linux.intel.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 1/29/25 5:03 AM, Angelo Dureghello wrote:
-> From: Guillaume Stols <gstols@baylibre.com>
+On Thu, Jan 30, 2025 at 12:00:44PM +0200, Kirill A. Shutemov wrote:
+> The recently introduced PG_dropbehind allows for freeing folios
+> immediately after writeback. Unlike PG_reclaim, it does not need vmscan
+> to be involved to get the folio freed.
 > 
-> The register read/write with IIO backend will require to claim the
-> direct mode, and doing so requires passing the corresponding iio_dev
-> structure.
-> So we need to modify the function signature to pass the iio_dev
-> structure.
+> Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
+> pageout().
 > 
-> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+> It is safe to leave PG_dropbehind on the folio if, for some reason
+> (bug?), the folio is not in a writeback state after ->writepage().
+> In these cases, the kernel had to clear PG_reclaim as it shared a page
+> flag bit with PG_readahead.
+
+Is it correct to say that leaving PG_dropbehind on folios which doesn't
+have writeback state after ->writepage() (i.e. store to zswap) is fine
+because PG_dropbehind is not in PAGE_FLAGS_CHECK_AT_FREE?
+
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
 > ---
-I don't think calling iio_device_claim_direct_mode() inside there reg_read/write
-functions is the right place to do that. It should be done at a higher level (in
-case we need to combine multiple reads/writes in an atomic operation). So I
-think we should drop this patch.
-
+>  mm/vmscan.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index bc1826020159..c97adb0fdaa4 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -692,19 +692,16 @@ static pageout_t pageout(struct folio *folio, struct address_space *mapping,
+>  		if (shmem_mapping(mapping) && folio_test_large(folio))
+>  			wbc.list = folio_list;
+>  
+> -		folio_set_reclaim(folio);
+> +		folio_set_dropbehind(folio);
+> +
+>  		res = mapping->a_ops->writepage(&folio->page, &wbc);
+>  		if (res < 0)
+>  			handle_write_error(mapping, folio, res);
+>  		if (res == AOP_WRITEPAGE_ACTIVATE) {
+> -			folio_clear_reclaim(folio);
+> +			folio_clear_dropbehind(folio);
+>  			return PAGE_ACTIVATE;
+>  		}
+>  
+> -		if (!folio_test_writeback(folio)) {
+> -			/* synchronous write or broken a_ops? */
+> -			folio_clear_reclaim(folio);
+> -		}
+>  		trace_mm_vmscan_write_folio(folio);
+>  		node_stat_add_folio(folio, NR_VMSCAN_WRITE);
+>  		return PAGE_SUCCESS;
+> -- 
+> 2.47.2
+> 
