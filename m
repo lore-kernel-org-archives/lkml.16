@@ -1,110 +1,134 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86CD1C07DB
-	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B9210E0
+	for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 11:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738323397; cv=none; b=Hdq4Ob3C/PqdHC6ah5AETpC85yvEuyFYXd14Czl3UPG2GZOvWoTTLIG4ceSiymJ5iz8NgUfp/kLI8oQ3IWTQDS6hxZXUVCYuIVoS2EpyQeiTqJJHqI8AbMdC6vuz4gNjdn9Lc+VFy3aQjqQwhSEKBuhjg6ZyIxsBEzvopM9S2DA=
+	t=1738323551; cv=none; b=r++DrbZmzinOQGqljQgP2Dj83Pv5zeIT8G7lXYwyXOOZUAohEukIO8Bs8UF3BdLNqsYEFXA6QrYA3/8292scfiH/qTtf2N654T0NPjBVPFiG6vXGTGlih4K0e90Y3CiCgDNMJOmjExPxbzz1WqYACG+ft2bfgJnka+Uq6aOZwig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738323397; c=relaxed/simple;
-	bh=BQ3PtgVwtTEF/h2ArOXr9xcoaHTj1o/+iFcvWi794Ns=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=casbrD54lfH+2PtIYAenQ8D80gPO5HkKETW4i8/8+NkI/UeWrRuUpZN2TcXswbNzOTpvo4jZXPRvP767FRiHKQcTdaWfkvl/jfkRl9xRgJYPf9WvsG+vWBj4jL55y5OHJdgrEKd5fWFlQxR7S+wl32ojAy77pGeyECYraNCIBgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DsL/dhqq; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738323551; c=relaxed/simple;
+	bh=wP5g3NiGo8Hv8hpLCk2ZBYlXTjLKcA3/A/mMRm0Jgwo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aeIIzCUIASIkIJM6G+RF0lewiwbItlOP2o7LDgrXp2TftDYTHvh1tzN38VtLf9E2Cd+U1KRW/hzNAIsJt8W+IMKv3kUc5lGJ8s2Y0PFILxJRIGNgSo8m6U67SJzf7c9DAcCp03GMyt8B8cYAYvRJm8aK9W18WQ7ogPYPa547wo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SF2XRTvB; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DsL/dhqq"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3862a921123so1320300f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 03:36:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738323394; x=1738928194; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4SR7zm6aWfdAv+CDJx4pa3ob/BdGYMCgycDy3MUU93g=;
-        b=DsL/dhqqCDAA424wue1+zPwaUfBNK3xc2n8l8tKrRYqrEh9rmGt5OweXlxLHLQIgKJ
-         yjpQwS/vHx0Nk6wAdBIV2MeQa62YKPmKtBlz9jyKp2Www1Lrv7XJI6ZWzSHspILFQF0/
-         h50VAPU2SucABFVd6Qc/hVcVe3iFvY2gob++DJfQThcO0OdNBqBaPN+kTdPSyVJQy4w/
-         VlOnapYlRTt/1OfIn2vtaxlQoNN31toxdTRBcWkkYsjixNYol2xtAxff20oOSBESwJ9o
-         rvRk77njVonXJoNDk0KNvkIFabq3OGwlALIemc8iAyQnpcVYjvvXhkaPg4DHl9Lj/QYD
-         UTmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738323394; x=1738928194;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4SR7zm6aWfdAv+CDJx4pa3ob/BdGYMCgycDy3MUU93g=;
-        b=WOm3xwwyJhEf8JPwCXGsP7/JJw2TzWmUnywGijOsn/Ddjx87VffiA7nqoaIvp4GjFS
-         HMV+/PTFUaygjob39rPs7ACEEtzbA12Lm+CwRIS1is2gWOXFzbN4VzqdC50RpXqmduHz
-         dcDg0q6A/QeIl5Sy4P5plWFAGvgKQQ8WVSvb5Zu1pExaKaHw6AJWWggn0e8xUxNqMRZ8
-         dUKHVqGBvZt5KAZ4B/gNGR6Ypzbo+jEzBqp4bNgLRUzCxFXY+H8rmRdsUvlHB5UH6Wzk
-         ZfTtzsHW2dY0SXTGywlmKCZnkj8Y3kAoAEXNnj9/r+rnK02CkCosyCEijFjgI6LM2ydK
-         fTOg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMH/hHO+HmgbxNVZKgOfwp1+d7uJdpjqQXY6Fd++17AIT8D5Www+tuw7iioZbBL2xKSW6SK56YPUSsLU8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4zzJoe2j66/JxUBxv+H2cXyoTAmuUa8hIY6hRU9s//HzT54nd
-	IfVgf8gpJ3nkaew/8SWryM7F7eYiiStpGPtuy2uhQzJpG26wCCeUHu1+9QryEvP5iyW/38dQ+Uc
-	3XGZobqrB8xhlHQSUaNQ5yHwjIZ6b9wh18Er8
-X-Gm-Gg: ASbGncvAlhn5p9R4egm7zeyXdzXXU+0GrMW0cqNhBOfd9oP8uV7Hl08VBEXYvVO4qaI
-	EkmWu2Fbr55+w5GKJ27BK5xqIsIaP4sDbXUJBkS3uQ4A/CtignQTbk0U3G/wSbX+ip/riuGF8vB
-	KdAK9m0caaRAF5+A/yJa3JO6edXjQ=
-X-Google-Smtp-Source: AGHT+IHRFoJje0XBfarURrX/WAI1h146aSMoYdSVlrd84+vg7Nzi1IUkjjsFrXIj4yq92bkDJ1yKtwkjwlbbL0fKzpo=
-X-Received: by 2002:a5d:59ae:0:b0:38c:3eca:b30 with SMTP id
- ffacd0b85a97d-38c5194a7e3mr9796494f8f.14.1738323393804; Fri, 31 Jan 2025
- 03:36:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SF2XRTvB"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50V2OZ3j030769;
+	Fri, 31 Jan 2025 11:38:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=sRPw8EikbB6hNm82K
+	wvptzvv0MyQS1J/WqpM4E2FbYQ=; b=SF2XRTvBQrACH84/+sKr9pjKsxR4gWyeW
+	JRavQ1iLeDVaFSIEgerJpVToqSfyiirlJqw+3f0Xj6iSR2NbLPcaWA6dH5nYdwvF
+	xReUPV6iO8sKwpIL6nzvCRxWdp9jhjYarKJV4IYR+mIYInBoMeFz1xnqoXFgxNEQ
+	kX8UGKmY/5O/+pTeHYKewdMAymAFTp5n1dr2Z5SvaywnZ+U5E+CvlKQz5nnlDCB7
+	Z4tEvAs9QM+gcjyq96xGm7WeizBolrWl9eky6zvQbnzwTLe820U0oLzPahTMItO2
+	4Peo3nWgOpr8MgTsSkXzDPufGqXSZvPjsmnI3fio13sm+kX/7MFaQ==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gfn5ba8v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 11:38:51 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50V8Ejtn013896;
+	Fri, 31 Jan 2025 11:38:50 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44gf93bb2v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Jan 2025 11:38:50 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VBckI960424624
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 31 Jan 2025 11:38:47 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D4B80200FD;
+	Fri, 31 Jan 2025 11:38:46 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 38C50200F9;
+	Fri, 31 Jan 2025 11:38:43 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.16.21])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 31 Jan 2025 11:38:42 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.ibm.com>,
+        Baoquan He <bhe@redhat.com>
+Subject: [PATCH v3 1/7] kexec: Initialize ELF lowest address to ULONG_MAX
+Date: Fri, 31 Jan 2025 17:08:24 +0530
+Message-ID: <20250131113830.925179-2-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250131113830.925179-1-sourabhjain@linux.ibm.com>
+References: <20250131113830.925179-1-sourabhjain@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130220529.665896-1-daniel.almeida@collabora.com>
- <20250130220529.665896-4-daniel.almeida@collabora.com> <4518f68e-c6cb-4c97-957e-b8988e2b309b@sedlak.dev>
-In-Reply-To: <4518f68e-c6cb-4c97-957e-b8988e2b309b@sedlak.dev>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 31 Jan 2025 12:36:22 +0100
-X-Gm-Features: AWEUYZkpECKwFj2XE5cPc1r9KfvYcg1mII4V9PMbxHJsXk8rVDlWR9LASjOizDo
-Message-ID: <CAH5fLggUvcERo2+xwSkFcv-ds++4sy+Q5JoxCCjrx-R41KfDiA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] rust: platform: allow ioremap of platform resources
-To: Daniel Sedlak <daniel@sedlak.dev>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.mco, 
-	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu, 
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, 
-	boris.brezillon@collabora.com, robh@kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: ieB63_zMsBoY1bOPmlpBdsX9Y-n-S2AS
+X-Proofpoint-GUID: ieB63_zMsBoY1bOPmlpBdsX9Y-n-S2AS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-31_04,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
+ adultscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2501310087
 
-On Fri, Jan 31, 2025 at 11:19=E2=80=AFAM Daniel Sedlak <daniel@sedlak.dev> =
-wrote:
->
-> Hi,
->
-> On 1/30/25 11:05 PM, Daniel Almeida wrote:
-> > +
-> > +    /// Same as [`Self::ioremap_resource`] but with exclusive access t=
-o the underlying
-> > +    /// region.
-> > +    pub fn ioremap_resource_exclusive(
-> > +        &self,
-> > +        resource: &Resource,
-> > +    ) -> Result<Devres<ExclusiveIoMem<0>>> {
-> > +        self.ioremap_resource_exclusive_sized::<0>(resource)
-> > +    }
-> > +
-> > +    /// Returns the resource at `index`, if any.
-> > +    pub fn resource(&self, index: u32) -> Option<&Resource> {
->
-> Maybe we could utilize the Index [1] trait to make the API more rust~ish?
-> Or at least name it `resource_by_index` to keep consistency with
-> `resource_by_name`?
->
-> Link: https://doc.rust-lang.org/core/ops/trait.Index.html [1]
+kexec_elf_load() loads an ELF executable and sets the address of the
+lowest PT_LOAD section to the address held by the lowest_load_addr
+function argument.
 
-Using the index trait would result in syntax like device[7] to get the
-resource at index 7. I think that would be unclear because it's not
-obvious that devices should behave like an array of resources.
+To determine the lowest PT_LOAD address, a local variable lowest_addr
+(type unsigned long) is initialized to UINT_MAX. After loading each
+PT_LOAD, its address is compared to lowest_addr. If a loaded PT_LOAD
+address is lower, lowest_addr is updated. However, setting lowest_addr
+to UINT_MAX won't work when the kernel image is loaded above 4G, as the
+returned lowest PT_LOAD address would be invalid. This is resolved by
+initializing lowest_addr to ULONG_MAX instead.
 
-Alice
+This issue was discovered while implementing crashkernel high/low
+reservation on the PowerPC architecture.
+
+Fixes: a0458284f062 ("powerpc: Add support code for kexec_file_load()")
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: kexec@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Hari Bathini <hbathini@linux.ibm.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ kernel/kexec_elf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
+index d3689632e8b9..3a5c25b2adc9 100644
+--- a/kernel/kexec_elf.c
++++ b/kernel/kexec_elf.c
+@@ -390,7 +390,7 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+ 			 struct kexec_buf *kbuf,
+ 			 unsigned long *lowest_load_addr)
+ {
+-	unsigned long lowest_addr = UINT_MAX;
++	unsigned long lowest_addr = ULONG_MAX;
+ 	int ret;
+ 	size_t i;
+ 
+-- 
+2.48.1
+
