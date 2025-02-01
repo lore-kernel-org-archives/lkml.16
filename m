@@ -1,194 +1,266 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6992AD27;
-	Sat,  1 Feb 2025 17:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5889208A9;
+	Sat,  1 Feb 2025 17:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738430080; cv=none; b=ohyhuRVt5AuUq6rALJ376cJUCJq/gzi7th3+OOyx96I3aQEEitk3eZGtLiWNDD6yAco0NGTTsDyseZIbTPmeOV8tidZUNsyV39rHWXPb+EyolFaBGPFHBw+KfPyeLPvnM/nkeDbEd44L3c7Cz0JeaGUGDzgAd5q+Trk6synIjQ0=
+	t=1738430161; cv=none; b=dPXOUZlShr7NFrir8KfyX8UZS7XN/TaNg2FLosXBsjQvt4AaCqf1hFYdjzWzvXl8eCRWuEY9ewGZbUNobk3tt8KnHAu7Ll6AY93UVQBAdj0umWRzoacFKlSlWDPVqstZnlJhOqhuA3D28gY126iIgmp7VUtkjcHrivETrzI8xPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738430080; c=relaxed/simple;
-	bh=glOtacSOb3VnoErJh85L1EdXaOEGDMJnZ1hdbr1EEAU=;
+	s=arc-20240116; t=1738430161; c=relaxed/simple;
+	bh=bgrXXXcGjP/WRJpUP2Ix1RjH9C2C4mzFNjDc81oneAk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MldQa6NodAlqKros6xRlm6000fsQdKaz0gtTfJOj7QqwnIw2MOJWxKhd+W+wcIk7J2hM4QW94RGAD2n6XIaNfwnABHseAx/kkkauzy8QDUcJEH+bmtjv0pI9aoRT79XrKFQ2Yy+USTpj6eDZMWSj2Z7ec+/MluDJit0ghhXE7VY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NN8ldEmK; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version:Content-Type; b=BeXkTEr8TQlLBk3XXTAZPgg9RY2jfMzDe6YjGz3+wtN9ADP2BTJkqHys3t9R3U9upxolqCIIOMB4TvJ81kdNTw62NS7MKE89596yHPXXz6R/tLoniKYTy7xYQFjUvWPSl/8th1Gxb6lJHT44DS47FAz7RFQkFclsVB+TF1Kde+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MxYKYMet; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NN8ldEmK"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38a8b35e168so1837810f8f.1;
-        Sat, 01 Feb 2025 09:14:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738430077; x=1739034877; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cFDG2a+7NOaOAduK0oLgqFYoY3nO38dnC6e3BKi6gjQ=;
-        b=NN8ldEmKS4fr6xi/co0EXvmAegT69wDD8UGyVcOaI1At7Iwd1NdWD4REWmIAH12rt1
-         JkjWoZI4dXgxTRpKq53X9hpHVaPnTBA2Ce7Jgob+5IMps9ZmWfLIBfy1bklXyz1AUaw5
-         fJROvBZGDh4A10RB2uQxwwIIXuV90FQ9VQNGxBR4urAqISjFFG575bobQUpKZ7SCKG08
-         MJHkAFuC/rqgvj/O+GOgeyUeIuuMuowqEd9/mUyIyJ40T4D+nhj5C1l2cDQ1rmhRGTPy
-         4JETceOUGIO0Gj2DOXf5vHCZR9z0/6w62IoDIvVkCHW1Cx07jqVIyqZZ9K/NhtdJJ+PQ
-         1umA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738430077; x=1739034877;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cFDG2a+7NOaOAduK0oLgqFYoY3nO38dnC6e3BKi6gjQ=;
-        b=SscRzqQC8taLkXF6UXNgBCAq151OVMUXYNOUfDnIctZsO/sTRtBp8b+M2jZs+RxKKt
-         F68Dgd4Nkz9SFrAhZFKgN0jgrd6F2UbWWo9rxpxSTC9LieOic6UU9AWF/uLYGqcZHa+p
-         rkqq0XvxkgZc7cQzCmWXSCPNLsjAHgRzq3Mi2WqdKX8juQSZxlzc8Cwpz0/ytQvvBcwj
-         jhTTW/q+3QRse4f6qpCybfZ2LBaoz973cwy0oGOz24Z07X6JPQaJ5ZfhIi4eB5wYFX0w
-         wdABk9XDxAzFwbVU+rR6ZMfVyXMGCKLSW6266jKT6N2PzVlTvPoecZxM1DhyYHu5EC0m
-         gUfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOKqOTiXhSntAzRIkLex3RXky2jazAyOtnNwcxv884QbHp1WCmQ12eun4NSWXwgZ9+eqhZP1+TyPl//NE=@vger.kernel.org, AJvYcCX4cYt1hYwnun+hGnJTy2wSYDE/e2Oi0u6xTZZCFAb2p3A3tPPQibs8nHuxep0DdelWyiIF7CQuIGf0q+R7VBbBhg==@vger.kernel.org, AJvYcCXGbKQpez+UrdW78Zsf7d9/g2lJ4BeBBuUFevhza6f5pQoZHjIormulykMs1IFLR22FtmD46GMaGsNq3g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhNnohFuVpTOygc7maXxHzuGISswux2SePOtLCFsCyidSNRT7/
-	s4KpsWG4JnTGjOvpEfltaRuUTPQEU8t+vlGzT1PPjXBSqjWZBRUc
-X-Gm-Gg: ASbGncvXqGfyIeGU+b68PMf2nl+QnKIyKNv8mrN6F9OhNIzMvAWeaRJGoiYN+IFf6Tk
-	2XJDECoyzYUn6xG9bTiaHtrqiOHss7CoIK4vCM+ItuQVDeHiqrL0hIbMdueG2N0BtsOsQiHgi3A
-	n2ZTKHaSTrkLxoGLFL7iaN/onkQBBU0k5Hl6YXVF0GrW1EO0tc8pJPxpP6+qvPriZMFcazkfwTG
-	CmEN/HnbTeDdj7VCEtv6c16wNUH3hiGCqkbWc0O7jdjniWGGJ0g4ocNreM4iv5uM2ZuiJyqZGLQ
-	qkVxror0k2wgchKHkRNq0ERnCh6IoZ8/OWFEoWPQeRdujVqKN88NNg==
-X-Google-Smtp-Source: AGHT+IFml2u8VO39+rOpPFsV/O/FRYe/qEKkgnI/HW7TtT8WSQvnZ9AFbS5x1DZFbvPNsu8FUAiDdg==
-X-Received: by 2002:a5d:64ec:0:b0:385:df17:2148 with SMTP id ffacd0b85a97d-38c60f657admr6836427f8f.20.1738430076954;
-        Sat, 01 Feb 2025 09:14:36 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cf53asm7592627f8f.87.2025.02.01.09.14.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 09:14:36 -0800 (PST)
-Date: Sat, 1 Feb 2025 17:14:35 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
- acme@kernel.org, namhyung@kernel.org, agordeev@linux.ibm.com,
- gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH] perf test: Fix perf test 11 hwmon endianess issue
-Message-ID: <20250201171435.4bd5578e@pumpkin>
-In-Reply-To: <CAP-5=fUOS6ZmfVdzwNL6+5VfUr9fms0zE4FXW6vsRqSfS9F7sA@mail.gmail.com>
-References: <20250131112400.568975-1-tmricht@linux.ibm.com>
-	<20250201113406.4312a601@pumpkin>
-	<CAP-5=fUOS6ZmfVdzwNL6+5VfUr9fms0zE4FXW6vsRqSfS9F7sA@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MxYKYMet"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7064C4CED3;
+	Sat,  1 Feb 2025 17:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738430161;
+	bh=bgrXXXcGjP/WRJpUP2Ix1RjH9C2C4mzFNjDc81oneAk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MxYKYMethFy2xKIfJMOOUWJzcjf/FpvNxzWkfdVQJM6vboC9uqiT/atkujiBtO3ps
+	 /mbSu4TpRZOcFmjjv7lboY2wlYfsDq8rPdQkaWYa/dXf4HuEeMACtBqAJuR1Roy9NS
+	 5aC/oGB4clttJiodJtvoXkuPCT2+dQWGvycKaSsyevKS5yzJNF6YBcB82xl46clSan
+	 3kLtrwJMok0OAkxKsTAEKwH/AsLjJWGDUgliqGaKaQO/MxInnuMwS6dUnzQ1q3e1n7
+	 dOLWvgt6EmHhcCOBN+2WA/fB31EvnfuQXR4D/1LEk72XmqgTZL2kQhIeSCAQo61j/V
+	 1pkSyiEJ/B+jQ==
+Date: Sat, 1 Feb 2025 17:15:55 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v1 08/12] iio: accel: adxl345: add double tap feature
+Message-ID: <20250201171555.186136c1@jic23-huawei>
+In-Reply-To: <20250128120100.205523-9-l.rubusch@gmail.com>
+References: <20250128120100.205523-1-l.rubusch@gmail.com>
+	<20250128120100.205523-9-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, 1 Feb 2025 08:12:38 -0800
-Ian Rogers <irogers@google.com> wrote:
+On Tue, 28 Jan 2025 12:00:56 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-> On Sat, Feb 1, 2025 at 3:34=E2=80=AFAM David Laight
-> <david.laight.linux@gmail.com> wrote:
-> >
-> > On Fri, 31 Jan 2025 12:24:00 +0100
-> > Thomas Richter <tmricht@linux.ibm.com> wrote:
-> > =20
-> > > perf test 11 hwmon fails on s390 with this error
-> > >
-> > >  # ./perf test -Fv 11
-> > >  --- start ---
-> > >  ---- end ----
-> > >  11.1: Basic parsing test             : Ok
-> > >  --- start ---
-> > >  Testing 'temp_test_hwmon_event1'
-> > >  Using CPUID IBM,3931,704,A01,3.7,002f
-> > >  temp_test_hwmon_event1 -> hwmon_a_test_hwmon_pmu/temp_test_hwmon_eve=
-nt1/
-> > >  FAILED tests/hwmon_pmu.c:189 Unexpected config for
-> > >     'temp_test_hwmon_event1', 292470092988416 !=3D 655361
-> > >  ---- end ----
-> > >  11.2: Parsing without PMU name       : FAILED!
-> > >  --- start ---
-> > >  Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
-> > >  FAILED tests/hwmon_pmu.c:189 Unexpected config for
-> > >     'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/',
-> > >     292470092988416 !=3D 655361
-> > >  ---- end ----
-> > >  11.3: Parsing with PMU name          : FAILED!
-> > >  #
-> > >
-> > > The root cause is in member test_event::config which is initialized
-> > > to 0xA0001 or 655361. During event parsing a long list event parsing
-> > > functions are called and end up with this gdb call stack: =20
-> > ... =20
-> > > However member key::type_and_num is defined as union and bit field:
-> > >
-> > >    union hwmon_pmu_event_key {
-> > >         long type_and_num;
-> > >         struct {
-> > >                 int num :16;
-> > >                 enum hwmon_type type :8;
-> > >         };
-> > >    }; =20
-> >
-> > That is entirely horrid. =20
->=20
-> It also has the side-effect that if you initialize the struct bits in
-> the type_and_num will be undefined and sanitizers will try to trip you
-> up.
->=20
-> > I'm surprised this even compiles:
-> > static size_t hwmon_pmu__event_hashmap_hash(long key, void *ctx __maybe=
-_unused)
-> > {
-> >         return ((union hwmon_pmu_event_key)key).type_and_num;
-> > }
-> > It has to be just 'return key', but I'm not sure what the hashmap code =
-is doing.
-> >
-> > AFAICT the code is just trying to generate a value for the hashmap to h=
-ash on?
-> > Why not just use (type << 16 | num) instead of 'trying to be clever' wi=
-th a union? =20
->=20
-> The purpose wasn't so much to be 'clever' as you say. Perf event
-> configs, which is where type_and_num lives in the events, have their
-> bitfields described either by convention or by files in
-> /sys/devices/<pmu>/format. On an Intel laptop:
-> ```
-> $ cat /sys/devices/cpu/format/inv
-> config:23
-> ```
-> So I can go:
-> ```
-> $ perf stat -e 'inst_retired.any/inv=3D1/' true
->=20
-> Performance counter stats for 'true':
->=20
->         1,069,756      inst_retired.any/inv=3D1/
->=20
->       0.001539265 seconds time elapsed
->=20
->       0.001719000 seconds user
->       0.000000000 seconds sys
-> ```
-> and the configuration of my inst_retired.any event now has bit 23 in
-> the config set. Just as the format files try to break down what the
-> bitfields within a config u64 are doing, the union was trying to do
-> similar. Making an attempt to have the value be intention revealing
-> which the shift and masking may lose, for example, by making it look
-> like bits in the num could overlap with and modify the type.
+> Add the double tap feature of the sensor. The interrupt handler needs
+> to catch and forwared the event to the IIO channel. The single tap
+> implementation now is extended to deal with double tap as well.
+As with earlier patch, new ABI must be documented.  Also we need
+a strong argument why the existing ABI is not suitable.
 
-Except that is really doesn't work for big-endian at all.
-The 'fix' doesn't even really paper over the cracks properly.
+Tap detection algorithms are annoyingly specific to manufacturers
+but we did make an effort to come up with a general description a
+while back so I'd hope perhaps we can map to that.
 
-I'm not even sure the hashing works on 64bit BE.
-(assuming the int:n are also BE - but that is a different ABI option.)
-The 'num' and 'type' will be in the high 24 bits of the 64bit 'long'.
-If we assume the rest of the union is actually initialised the other
-bits are all zero.
-And I guess that the hash function is masking with 2^n-1 - so always gets z=
-ero.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> ---
+>  drivers/iio/accel/adxl345_core.c | 139 ++++++++++++++++++++++++++++---
+>  1 file changed, 127 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
+> index 7831ec511941..f9e5f47ba303 100644
+> --- a/drivers/iio/accel/adxl345_core.c
+> +++ b/drivers/iio/accel/adxl345_core.c
+> @@ -129,6 +129,29 @@ enum adxl345_axis {
+>  	ADXL345_TAP_SUPPRESS = BIT(3),
+>  };
+>  
+> +/* single/double tap */
+> +enum adxl345_tap_type {
+> +	ADXL345_SINGLE_TAP,
+> +	ADXL345_DOUBLE_TAP
+trailing comma. Maybe there will be a triple tap sometime.
+Anyhow, other than 'terminating' entries we should always have trailing commas.
 
-	David
+> +};
+> +
+> +static const unsigned int adxl345_tap_int_reg[2] = {
+> +	[ADXL345_SINGLE_TAP] = ADXL345_INT_SINGLE_TAP,
+> +	[ADXL345_DOUBLE_TAP] = ADXL345_INT_DOUBLE_TAP,
+> +};
+> +
+> +enum adxl345_tap_time_type {
+> +	ADXL345_TAP_TIME_LATENT,
+> +	ADXL345_TAP_TIME_WINDOW,
+> +	ADXL345_TAP_TIME_DUR
+Comma.
 
->=20
-> Thanks,
-> Ian
+> +};
+> +
+> +static const unsigned int adxl345_tap_time_reg[3] = {
+> +	[ADXL345_TAP_TIME_LATENT] = ADXL345_REG_LATENT,
+> +	[ADXL345_TAP_TIME_WINDOW] = ADXL345_REG_WINDOW,
+> +	[ADXL345_TAP_TIME_DUR] = ADXL345_REG_DUR,
+> +};
+> +
+>  struct adxl345_state {
+>  	const struct adxl345_chip_info *info;
+>  	struct regmap *regmap;
+> @@ -142,6 +165,8 @@ struct adxl345_state {
+>  	u32 tap_axis_ctrl;
+>  	u8 tap_threshold;
+>  	u32 tap_duration_us;
+> +	u32 tap_latent_us;
+> +	u32 tap_window_us;
+>  
+>  	__le16 fifo_buf[ADXL345_DIRS * ADXL345_FIFO_SIZE + 1] __aligned(IIO_DMA_MINALIGN);
+>  };
+> @@ -154,6 +179,12 @@ static struct iio_event_spec adxl345_events[] = {
+>  		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+>  		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE),
+>  	},
+> +	{
+> +		/* double tap */
+> +		.type = IIO_EV_TYPE_GESTURE,
+> +		.dir = IIO_EV_DIR_DOUBLETAP,
+> +		.mask_shared_by_type = BIT(IIO_EV_INFO_ENABLE),
+> +	},
+>  };
+>  
+>  #define ADXL345_CHANNEL(index, reg, axis) {					\
+> @@ -250,10 +281,12 @@ static int adxl345_write_tap_axis(struct adxl345_state *st,
+>  					     st->tap_axis_ctrl));
+>  }
+>  
+
+> -static int adxl345_is_tap_en(struct adxl345_state *st, bool *en)
+> +static int adxl345_is_tap_en(struct adxl345_state *st,
+> +			     enum adxl345_tap_type type, bool *en)
+>  {
+>  	int ret;
+>  	unsigned int regval;
+> @@ -280,7 +323,8 @@ static int adxl345_is_tap_en(struct adxl345_state *st, bool *en)
+>  	if (ret)
+>  		return ret;
+>  
+> -	*en = FIELD_GET(ADXL345_INT_SINGLE_TAP, regval) > 0;
+> +	// TODO FIELD_GET() seems not possible here due to construct 'not const', any ideas?
+
+There is a new function to solve this proposed on list, but not upstream yet.
+For now roll your own as you have done.
+
+
+> +	*en = (adxl345_tap_int_reg[type] & regval) > 0;
+>  
+>  	return 0;
+>  }
+> @@ -294,7 +338,12 @@ static int adxl345_set_singletap_en(struct adxl345_state *st,
+>  	if (ret)
+>  		return ret;
+>  
+> -	return _adxl345_set_tap_int(st, en);
+> +	return _adxl345_set_tap_int(st, ADXL345_SINGLE_TAP, en);
+> +}
+> +
+> +static int adxl345_set_doubletap_en(struct adxl345_state *st, bool en)
+> +{
+> +	return _adxl345_set_tap_int(st, ADXL345_DOUBLE_TAP, en);
+>  }
+>  
+>  static int adxl345_set_tap_value(struct adxl345_state *st, u8 val)
+> @@ -304,19 +353,33 @@ static int adxl345_set_tap_value(struct adxl345_state *st, u8 val)
+>  	return regmap_write(st->regmap, ADXL345_REG_THRESH_TAP, min(val, 0xFF));
+>  }
+>  
+> -static int _adxl345_set_tap_time(struct adxl345_state *st, u32 val_us)
+> +static int _adxl345_set_tap_time(struct adxl345_state *st,
+> +				 enum adxl345_tap_time_type type, u32 val_us)
+>  {
+>  	unsigned int regval;
+>  
+> -	st->tap_duration_us = val_us;
+> +	switch (type) {
+> +	case ADXL345_TAP_TIME_WINDOW:
+> +		st->tap_window_us = val_us;
+> +		break;
+> +	case ADXL345_TAP_TIME_LATENT:
+> +		st->tap_latent_us = val_us;
+> +		break;
+> +	case ADXL345_TAP_TIME_DUR:
+> +		st->tap_duration_us = val_us;
+> +		break;
+> +	}
+>  
+>  	/*
+>  	 * The scale factor is 1250us / LSB for tap_window_us and tap_latent_us.
+>  	 * For tap_duration_us the scale factor is 625us / LSB.
+>  	 */
+> -	regval = DIV_ROUND_CLOSEST(val_us, 625);
+> +	if (type == ADXL345_TAP_TIME_DUR)
+> +		regval = DIV_ROUND_CLOSEST(val_us, 625);
+> +	else
+> +		regval = DIV_ROUND_CLOSEST(val_us, 1250);
+>  
+> -	return regmap_write(st->regmap, ADXL345_REG_DUR, regval);
+> +	return regmap_write(st->regmap, adxl345_tap_time_reg[type], regval);
+Use this in the earlier patch, even though it would only have one entry at that point.
+There is little point in introducing infrastructure that rewrites a patch
+just after that patch.  Just put it in the first one with a note
+saying it is useful shortly.
+
+>  }
+>  
+>  static int adxl345_set_tap_duration(struct adxl345_state *st, u32 val_int,
+> @@ -330,7 +393,35 @@ static int adxl345_set_tap_duration(struct adxl345_state *st, u32 val_int,
+>  	if (val_int || val_fract_us > 159375)
+>  		return -EINVAL;
+>  
+> -	return _adxl345_set_tap_time(st, val_fract_us);
+> +	return _adxl345_set_tap_time(st, ADXL345_TAP_TIME_DUR, val_fract_us);
+> +}
+
+> @@ -637,9 +735,13 @@ static int adxl345_write_raw_get_fmt(struct iio_dev *indio_dev,
+>  	static IIO_DEVICE_ATTR_RW(in_accel_##A##_##C##_##E, 0)
+>  
+>  ADXL345_generate_iio_dev_attr_FRACTIONAL(gesture_singletap, tap, duration, MICRO, us);
+> +ADXL345_generate_iio_dev_attr_FRACTIONAL(gesture_doubletap, tap, window, MICRO, us);
+> +ADXL345_generate_iio_dev_attr_FRACTIONAL(gesture_doubletap, tap, latent, MICRO, us);
+>  
+>  static struct attribute *adxl345_event_attrs[] = {
+>  	&iio_dev_attr_in_accel_gesture_singletap_duration_us.dev_attr.attr,
+> +	&iio_dev_attr_in_accel_gesture_doubletap_latent_us.dev_attr.attr,
+> +	&iio_dev_attr_in_accel_gesture_doubletap_window_us.dev_attr.attr,
+
+As above.  ABI docs missing and times in IIO are all seconds.  us to seconds is easy
+given you just use the formatting functions and pass val == 0.
+
+>  	NULL
+>  };
+>  
+> @@ -861,6 +963,17 @@ static int adxl345_push_event(struct iio_dev *indio_dev, int int_stat,
+>  			return ret;
+>  	}
+>  
+> +	if (FIELD_GET(ADXL345_INT_DOUBLE_TAP, int_stat)) {
+> +		ret = iio_push_event(indio_dev,
+> +				     IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
+> +							act_tap_dir,
+> +							IIO_EV_TYPE_GESTURE,
+> +							IIO_EV_DIR_DOUBLETAP),
+> +				     ts);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	return -ENOENT;
+>  }
+>  
+> @@ -965,6 +1078,8 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+>  	/* Init with reasonable values */
+>  	st->tap_threshold = 35;			/*   35 [0x23]            */
+>  	st->tap_duration_us = 3;		/*    3 [0x03] -> .001875 */
+> +	st->tap_window_us = 20;			/*   20 [0x14] -> .025    */
+> +	st->tap_latent_us = 20;			/*   20 [0x14] -> .025    */
+>  
+>  	indio_dev->name = st->info->name;
+>  	indio_dev->info = &adxl345_info;
 
