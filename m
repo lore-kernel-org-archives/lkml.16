@@ -1,101 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazolkn19012049.outbound.protection.outlook.com [52.103.37.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C7210E0;
-	Sat,  1 Feb 2025 12:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738414658; cv=none; b=UxeFX1Tmkc5h5mNdk2FSP2dyXtsYS/BQcvjqDcdZrw4GIl0bpvOcASksQzHmuLcxKqPjXRXfscwkE/j8s4azp14h129pGXt3jQ0H5DLqCLavjW21kxtrMkOBlMZQxdN11ejsCixxopH6jtiAKr+SxQoh9bBrHUegpnc+GqTip4M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738414658; c=relaxed/simple;
-	bh=qulMGWEaxKDR3NmNZoY7QPtBJBUJqndbnaNhe/PRuJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JlNK4vBBrJqLvJUiENpNvrLsLA8HmXWHxcY6FknD8WLeZyln8nTdmdEF1DFM4xSSF0avM2N/GZ2hK5ndEi/AQmKPTpvk+AWZ2HQ/7OdR/jCMs+FE3v6y665uo1oyl8j0QTdEG18KwRnuouqV1j+rGswPwRgy69H2k/cYk4OOIno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijJ6IcKH; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21132C9A;
+	Sat,  1 Feb 2025 13:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.37.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738414847; cv=fail; b=o7dEmmZO0phVqyE/BwzvBulbfN8nfHaZu11/BcVqlWtI/PJtQdahrFeQ3fNwzMGom5pcMeys/p1XWySomlBs6Vs4YsJ1QLSN8i2B/+KO0jLm7IDLa3xrR1CC6W/FSQId5xs1OEkM1t40kVPnNLzGDIjdanxOCPnaJSkRuRQAMw4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738414847; c=relaxed/simple;
+	bh=DsBWfZxryo/Qnz+YVsDU0vCSaVESGWLOtFRkUo5TogY=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=WSGkWlewkobwErvcov/jp4lChRHra+RDCGS4SB3dFJwWW41GoLS+OmYTlGRGQ1xV0bNVtvKfdVAlxEKnWigrKUt0eRWdfLRhsb/Tymu7hDdRp8G3DXQDokh2+Yt7d+fhTJyUGD+zzii4T1aTZbhh2H82lGcelstzsd2SX5GCYrI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kXpKr8Pr; arc=fail smtp.client-ip=52.103.37.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijJ6IcKH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4E73C4CED3;
-	Sat,  1 Feb 2025 12:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738414657;
-	bh=qulMGWEaxKDR3NmNZoY7QPtBJBUJqndbnaNhe/PRuJ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ijJ6IcKHHMeGeSk7qpqsyV7mwD87joxKXaUuLunMKugg8kfcet3BF2Yzc8z2bJwvu
-	 FOwKuFyVY4S6U136az91EOHDK6BKjWHHZd7ehRawF+uzISbfRI4jnrm4h3YQDXoqFS
-	 DKNTzSdeFLCOfBNlPenevLhBaHOOnDCe+TI3YtF8f4ssOyB21NS5s3S6PVtANc8sFj
-	 hedAoVxF4vAJHR3jabiS42xbb2P1HrJlewhM4xL5Q7nmsXgcsdxRj+imNL8uNBsyGz
-	 pDdNHiRSf+F7V49muiLoWwoPuW/oJe2d4khTMLTtISXoRslHRL1xyFo6d8La23h0i4
-	 F7P9s/tQzs54A==
-Date: Sat, 1 Feb 2025 12:57:30 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Alexandru
- Ardelean <aardelean@baylibre.com>, David Lechner <dlechner@baylibre.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Guillaume Stols
- <gstols@baylibre.com>
-Subject: Re: [PATCH v3 03/10] iio: adc: ad7606: fix wrong scale available
-Message-ID: <20250201125730.1794a852@jic23-huawei>
-In-Reply-To: <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-3-c3aec77c0ab7@baylibre.com>
-References: <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-0-c3aec77c0ab7@baylibre.com>
-	<20250129-wip-bl-ad7606_add_backend_sw_mode-v3-3-c3aec77c0ab7@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kXpKr8Pr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=S/PjOZqdIM3PKwSAxO8m8o/3YfVaeiSH7Obc9wiZTSM2Oem5THaqwyhs+cucBgGGFyelpAFeqvHCNhGbKFhLAVpAixajjw2WvX+GJfXHGEQcV1Al/eMaDZXHiut8C4sLx+iRnJ0t2THPfoV5msd29bQwcP7meGVi4g+l/46uywS5ENbHIyVmn4Ycx8z22si0a+3mXZYF0k7K6H+e4QkjdzBynDYRB9lLlB6+pGCBzm1m5fklzoHnZQdLBzmLoLzx8l5G/Pnp3ya/hB5JjZiXNrCr6kDRZgb2f2h+2s9niU28pUH9UxqSkRH5LnRvodcp3UlRTwRwljWumXZsFtFZOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P9dovlF/EzDM+jTODYAhp1/uPMXBQ2jRGV1Ftf2jVxg=;
+ b=OJqDBBMZQ4ZFx9y+0CbYSdgNmvJAf5uwIdAwVmwA3nNJCbj4an2p60GqLdsznh0xRFIxjXX+6g4L0AGRjFXjNv7P+sA5meqo9Fr+1zXg6TMqSahKVmiwEiB9d3Izzs6AMF9I9HDoAKDUVwekSnx1OqEylMH7DbSCEtiMkV+PzXetYlZcwnATA8SsF1PpHKStTKnGSD4gOqbW8/iIW2mCd1ISMj7U3Tqi/PfsWQ32Gbgt8mpJd+oe1Do8VOS9YOhcKkU0Akd9L0V1JpghvmPwblOmo5Q8hkuSNz+k+r43bZ/KtNdfp3JHffzYjlqaXXU1kZxoohjCv+haIlbr7jWtUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P9dovlF/EzDM+jTODYAhp1/uPMXBQ2jRGV1Ftf2jVxg=;
+ b=kXpKr8PrqB6rBWzWKsY/pwTwDBvFCgcmZAeNqXZ7RAS7BhU+QlcVgWgh0hnW2d33VRkH9Vo91pe3Y0O2HVmxJYQ5Y18n3i7ujBeaYD3O8d3ZC8EvewtlYyrAbCk54YS118r0yYpvPe3bfYA8VkuRpPAhlnNiqXKp5tWg/2H+2GJQZ5Kd/KPAZK2GFbb5dUdkgXs7DGPVfAv/zEBI84YLXSzim3eA3Um5QjlR/zPiV2X+Po2jqcvH6uk3NeNgvrgAb26zO8GPteVI4+ZVmxuJqvcFYq0wfHrwXXOrwMtMOtqXLr3ibXgsR+/dpSd5F9P5amx/ydAkK5AfEKLZ8zn1vw==
+Received: from CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:160::13)
+ by LOYP123MB2704.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:f2::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Sat, 1 Feb
+ 2025 13:00:42 +0000
+Received: from CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::c0fe:9ff5:51fd:3fdb]) by CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::c0fe:9ff5:51fd:3fdb%4]) with mapi id 15.20.8398.021; Sat, 1 Feb 2025
+ 13:00:42 +0000
+From: Manuel Fombuena <fombuena@outlook.com>
+To: pavel@ucw.cz,
+	lee@kernel.org,
+	corbet@lwn.net,
+	linux-leds@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND 0/5] LED1202 / leds-st1202 fixes and improvements
+Date: Sat,  1 Feb 2025 13:00:40 +0000
+Message-ID:
+ <CWLP123MB5473933B9B97137828ACC6A6C5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.48.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AS8PR07CA0049.eurprd07.prod.outlook.com
+ (2603:10a6:20b:459::30) To CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:160::13)
+X-Microsoft-Original-Message-ID:
+ <20250201130040.1670772-1-fombuena@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB5473:EE_|LOYP123MB2704:EE_
+X-MS-Office365-Filtering-Correlation-Id: fc6743f3-e5fe-4a0a-ed1b-08dd42c06ed4
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|7092599003|8060799006|19110799003|5072599009|461199028|15080799006|440099028|3412199025;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?NDxn2wRErhDcM1qBFm+dJuhAwyJfDcvIBcPINEuvfG8kx15HubrmPHP8KPfJ?=
+ =?us-ascii?Q?+cnzPu31OLCMSU64WXMbFOs8MPvqzFIxMBbImZ0qUs0m1JbDr9bdjvXPNWe7?=
+ =?us-ascii?Q?dWhK9Wfq60j8kMKDR5d6f+h7nQs/ufidYmO9kuZ4vFH8PhYCgshAWtwmy2iu?=
+ =?us-ascii?Q?/+FA7/T6UikCiKfnhjT1dAVTSWTgfGM8MSyEldmu+CmxqzT1sDMBgsTkngWG?=
+ =?us-ascii?Q?zBO68Al7v+p0Om8px1e2/AxbHVL+hRWIm+WziGGOHPAxiqEjbefOWpnBx6dQ?=
+ =?us-ascii?Q?sRKmr1BWCuLDfjrVEk9nRiUmfXCxYOebmtMQhBs6xcfUqWAr+Rl7cPwMwcO6?=
+ =?us-ascii?Q?+TFHioPyjzvGwbEuAgQvEpw5gsGlz/upZkgfSJTN4Xi6pyLsOnGVez/pjhKu?=
+ =?us-ascii?Q?6Ji8Z1meLLZJNSF6XA8Pm2D7BoajolbqBtNmrxCRrJjBcTHjtPpXfMdFBduS?=
+ =?us-ascii?Q?GO2fzjECeotAZzOQ7I2X2M3t17jJvJmiTEoaLmVtZqRNJ8Cw5kDGCT1Vm2OF?=
+ =?us-ascii?Q?8E9h9ymomA8AWaaN7Vn+fI1DxfpoP82dq8miEnKF8N8QNTZu9EyrVVngpW7s?=
+ =?us-ascii?Q?pwGWH3oP8GqUolHEHCyxS49hCPNPKHeAyOa6GC2u/fYBohFnfMRdabu6drz7?=
+ =?us-ascii?Q?jTM3KEQPmvWCz1kwY8SFX/DqoT4VK45GK4fE4yXrm1+ls/ULQD1ZVexpMAj2?=
+ =?us-ascii?Q?4AZPnfphTgy+h8aikdUGF6g9h9Ikpw2DTCZzQW6XP6xpXpYAV3L+o5KhnV78?=
+ =?us-ascii?Q?GYCG9f/DzlN7ge6k8kixp4xYtDGJqzG5M4wr0Aarn8GTAsYdokZfPFUOULB1?=
+ =?us-ascii?Q?dnr7kNv+cyei7X6Xq2MyrBurCj0V4EGP61mWsVDQS0YFnn4m9Mh8cSNJRm78?=
+ =?us-ascii?Q?62xDc+du5TteU31IGCLcMRDcB41B1oIve+YrS5jWROA8FTLngvO8O6UgYI1J?=
+ =?us-ascii?Q?rFU3lZ8EtjGy6KxY6eaq685BxJv2C5DGclIwaVYfP4L5ry4CBgoZs+ZfWekS?=
+ =?us-ascii?Q?yGjQIrD9JqTo6lDEcHqe9201p19f2VAK6yg1AtwboDdbv4YicREjpSakxty4?=
+ =?us-ascii?Q?ugke0FOW456P0796yl0AKoYv8NNTRQ=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jaV1dQjrooqS05WlwoTRQ+BVfEaBCAr/Dmc3KYOtSRyE11V4ygiDo1TQlsAj?=
+ =?us-ascii?Q?mouMVUUGRpkK8n36p9oYFPdKIaOqKoihujLHKU+p/HZ4Rl4Q5Y2hlNuRoMUf?=
+ =?us-ascii?Q?o5rF9Z10hFGZKyCICujFXqstgNxtQMN4FkpUPNdFw5OtEsAtSYfnBydjadtn?=
+ =?us-ascii?Q?AOUtAPHq7K/L2HQ1M7jmhwZ9C9aQ9YeGRg7j0MPsLegOvnpsRWCfAmJDpUUn?=
+ =?us-ascii?Q?7RAkX7FELf3JcNcdNPQWhkCm4O16g7nxuQ0B7MqAWEEuDTSx4RXmOuFenuZ0?=
+ =?us-ascii?Q?KUUmrCsGQ3UjJUTYEbKKMzYLn9pe2YkbXZW090fD/T7SK6l/r5tAqlcq2l5C?=
+ =?us-ascii?Q?OaJWMVpKcKuBBu1lVkYbrYFw4krKVzJbMCv2UtvDHRfrlnK7Dt6LS4L7F6PT?=
+ =?us-ascii?Q?uK+/3PNBZsGz9D8toF5ZoFLKqUdoTgmXyhMGvqyWuKPfDlWzI6nZHZi319W1?=
+ =?us-ascii?Q?kBRun/QNwlnnsRvQe6JcAFs3GuRTIHndBcwRuwe1bQq64DGiSvn6fRzpk8Gr?=
+ =?us-ascii?Q?FPQ+payn6xy1AGdivSXp0foe9sSR5VMOWRCANsd8ChoLTnS/6TG4GMFlJclS?=
+ =?us-ascii?Q?swN7P/R6ncxFt5Np8BSYjShGuJTfTUpfORistWydRhkSpTJn9BlunD/Y9THI?=
+ =?us-ascii?Q?ziycMiPTI0MpqCsIwxsNb73eC+GUgz9/Hq1lGyesaZBl+Lw2Lgeexw2HRs5q?=
+ =?us-ascii?Q?7Ul1xonRBM0T41QYs+kP4GyDw5Ii2F67L/S8izaTXmjEPHZd/sPFu2wkLvt/?=
+ =?us-ascii?Q?1zzp9CwetE0YZ4nDfj2/WNO0M2RlmtRZA1ARvDgTVsYgZPGkgXjt0/fHf34k?=
+ =?us-ascii?Q?1yVYMTiSmKjLszCtprJ/m0Nnrw90PsOfIQeoFJqDZPW355JLLGblwLA/a90B?=
+ =?us-ascii?Q?uH6HgEz9C/3K9w0E6DmKxLJF0bXzooHJS3Lx36ddU9aO3ZA9BAYwXYuvWnh1?=
+ =?us-ascii?Q?iOVLvykWhdQBNioKQZUmwL0xChmPOu6GXQc97L8OPifPV0ehJRgyri2QLzfL?=
+ =?us-ascii?Q?AeKlv+Zp4R4IgovVTCf/LF6ZW9l0llJgU2EdIfuHdoX33qkWeH9eylGuQe/P?=
+ =?us-ascii?Q?GYcCY7Ng5XtLGKR8iZTDZmxsIHp/UQoNfkIrgdst3ZL3KSAwd36+DBB7XErY?=
+ =?us-ascii?Q?fQ2iYasEeiS4f1PlOxDr24xVgvcV4WTFAruqVDJVsUYwwPu2MAPesNZJjasx?=
+ =?us-ascii?Q?hB9UusdZJCUNbiOzgjNjBODMFesSBRm+0ExwccORrPQeEGhAJjsGTEsDsNDw?=
+ =?us-ascii?Q?iRgzBiSt1R1lQkr7e4tO7zQLaROk9SNLScCAg3yI9o5R+kZ5dOxhpfEsTTwD?=
+ =?us-ascii?Q?hbM=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc6743f3-e5fe-4a0a-ed1b-08dd42c06ed4
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2025 13:00:42.2099
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOYP123MB2704
 
-On Wed, 29 Jan 2025 12:03:04 +0100
-Angelo Dureghello <adureghello@baylibre.com> wrote:
+Collection of patches for the recently added leds-st1202 driver. It is the
+same patchset sent on 2025-01-17. The cover letter wasn't properly threaded
+with the patches that time, so apologies for that.
 
-> From: Angelo Dureghello <adureghello@baylibre.com>
-> 
-> Fix wrong scale available list since only one value is returned:
-> 
-> ...
-> iio:device1: ad7606b (buffer capable)
->     8 channels found:
->            voltage0:  (input, index: 0, format: le:S16/16>>0)
->            2 channel-specific attributes found:
->                  attr  0: scale value: 0.305176
->                  attr  1: scale_available value: 0.076293
-> Fix as:
->            voltage0:  (input, index: 0, format: le:S16/16>>0)
->            2 channel-specific attributes found:
->                  attr  0: scale value: 0.305176
->                  attr  1: scale_available value: 0.076293 0.152588 0.305176
-> 
-> Fixes: 97c6d857041d ("iio: adc: ad7606: rework scale-available to be static")
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-Applied to the fixes-togreg branch of iio.git
+Obvious from the individual descriptions, but as a summary:
 
-Thanks,
+- 0001: fix a NULL pointer access error that occurs when LEDs are
+registered but the LED driver is not fully initialized
+- 0002: initialize the LED driver before any DT LED initialization is done
+- 0003: some spacing and typo edits
+- 0004: include the appropriate select in Kconfig to make sure the
+required Pattern trigger driver is available.
+- 0005: remove .rst extension on Documentation/leds/index.rst
 
-Jonathan
+Manuel Fombuena (5):
+  leds: leds-st1202: fix NULL pointer access on race condition
+  leds: leds-st1202: initialize hardware before DT node child operations
+  leds: leds-st1202: spacing and proofreading editing
+  leds: Kconfig: leds-st1202: add select for required
+    LEDS_TRIGGER_PATTERN
+  Documentation: leds: remove .rst extension for leds-st1202 on index
 
-> ---
->  drivers/iio/adc/ad7606.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> index d8e3c7a43678..d39354afd539 100644
-> --- a/drivers/iio/adc/ad7606.c
-> +++ b/drivers/iio/adc/ad7606.c
-> @@ -1047,7 +1047,7 @@ static int ad7606_read_avail(struct iio_dev *indio_dev,
->  
->  		cs = &st->chan_scales[ch];
->  		*vals = (int *)cs->scale_avail;
-> -		*length = cs->num_scales;
-> +		*length = cs->num_scales * 2;
->  		*type = IIO_VAL_INT_PLUS_MICRO;
->  
->  		return IIO_AVAIL_LIST;
-> 
+ Documentation/leds/index.rst |  2 +-
+ drivers/leds/Kconfig         |  1 +
+ drivers/leds/leds-st1202.c   | 73 ++++++++++++++++++------------------
+ 3 files changed, 38 insertions(+), 38 deletions(-)
+
+-- 
+2.48.1
 
