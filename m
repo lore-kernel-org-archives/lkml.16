@@ -1,88 +1,113 @@
-Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131C21BD9C7
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 18:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080D01ADC7D
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 18:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738433530; cv=none; b=qNL0Ev//ixxXWE0bDlw787mJ+uYflVL1pDtkRZzpOEPc63QAlkI5tVCKOlbYtHwQwhfgeFe+fs9VBqlyd96x+Ff1VbEdYPsgux08wW3dYnAU2aHMInQ7knevChw5PIH8xgu9gDgyGXE+7T7Rg/DFSCgt9vl8c4qEgnHRfmnEchY=
+	t=1738433979; cv=none; b=TwBF+sPVyosA1pv75br3Cu9XxX7h8a7vonkWpXHXeWvcZf3vSioAlQf/RDmcjbtMtEUBT+oqm8FomK4iSZyA6hChQYUEVrCfu6grm06H8QpxImGN8cZF41z7y3Zt//EsEbhfzalr7cYqraBrj63IQ2tfg3U6zoED/xgt9RiEMAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738433530; c=relaxed/simple;
-	bh=ylqTndbw25jst/aS8kQCVWfhdSaLl90V6zx+IzRHeUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WsRVcKcVtVZKmtovQli3GqsStDT1h+rylVcay6L9UjjYzVfSN635fjeEq+ElM3HG8hGy3ToRoa++3NGbUv572r/0yq+t4QkKyoPPD5goum/fXA6a2jQAKPWIkNEk9b1gI3sVHGsT6w7pMV/dZRVQDbe0La7xjp7tPmW/4C18/sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JIaL3Jb6; arc=none smtp.client-ip=91.218.175.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738433979; c=relaxed/simple;
+	bh=c4zQCo6RGtqnJCpf7ugjtSUqvmgfuFV18WaiB1+qGew=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GXkqEN4s8VxYKgLk14vu1xhNoqUjClwS3HauYowlXXi/12xxQKExuiWQpU5kgoXE4I6XZmvmgeNmIdYHGQLUcthl0uATLdUuRaF4tE5D7m2EqRvpwjVt5SK88TkqT+SWDDlBaRQehZC7G5uCyAihtHhhdhAKNF6fCb19BD4PfjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ijm2OYZI; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JIaL3Jb6"
-Date: Sat, 1 Feb 2025 13:11:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738433520;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=371ne/J4qS9JYHOniy+YfT78E4/+g2hn88puecYgas4=;
-	b=JIaL3Jb6BZ4JuOj/wsMWk7ZveVCGwqY/a4OIH38TxVoGBUSuqOZVBK/NdI5gqipglsvQFc
-	vc2Pkv+D9m9PYnHjOuG9m8cBhno7PlrP+FH/8JX4Py1IPHGd/1qWbtoLpha4haMmQtpFKt
-	dcP0QDgJ5zWmJdn1d2QAfmQb22AGJ3w=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Jeongjun Park <aha310510@gmail.com>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bcachefs: fix incorrect pointer check in
- __bch2_subvolume_delete()
-Message-ID: <klnddztvbokwdp2wfdl4rgwn6vl5evihm4dmracio54jgarxib@bp4rkii6kiqq>
-References: <20250131162031.190424-1-aha310510@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijm2OYZI"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-436a03197b2so20935075e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 10:19:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738433976; x=1739038776; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SxnKuQKrMFisnjQoJYcahdpfPfugvdcfaFsvhS5tvMY=;
+        b=ijm2OYZINmlqa0ickZGuOwOCxfnuaNYDVoKWK/VWKNQqgw3PQyd77+iLBmBPtogeML
+         WmumM8wItMMvZ4GYBZxtgtZw3DXhqgW/FGPFVtjFbhQYKyZUanwXegd6geeG/6kcloF6
+         R39wcW8NV4ISShIeahSdCtZ7uNsm8XHifTtYQYZD/Sq7+Yaebo4/lInIPyJjzpEOrqYY
+         /1WNul6S9K5XGgqzqxBY+VX14ob8XmSB7cbdzwZs3FAW5U581buW6GJTjMR9Dr/GFH+Z
+         SmKd9PiztzcTHospz7J2AUtqGi4z26robI5OVxqv/KIN2CAZD45XQw+T0hOo/OAyaraM
+         TCQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738433976; x=1739038776;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SxnKuQKrMFisnjQoJYcahdpfPfugvdcfaFsvhS5tvMY=;
+        b=dsDv2em/J9Ube6y+GQutcU68PvKK318ylxCE8W9OYlC0ugmkMRRV5zizMgq2ztN1p1
+         Z+Mb2+t02cLAX9Cay7QaeQgV5Jhc2sL9cAXBBYjaVxqQ1v/jNnbJkuGzSAJtMbrPWXNs
+         HMkWuE8szqQbF2tiHA6Mi7ut84zaFiFPaef6G5/vTN5iaQnJRrnJUEFt6hyIcMG9SGH+
+         mbvtH1F8JkT/Ka/l4yZeQOu9bEz/vVuX9jbRZxoQvN8cWFnE1ntgj3FAYjlPENqu7JfN
+         ece24xB03HXUh+VG/KkeGHJi15UXSz9xSdIYiAIwsVTIqiS8/1sawu43QJzQ0LNmxMrD
+         W3Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCWo0++bXqFMtmtSsgOFB725B5bAvlgd3ydMUREKTPknIvYnye3xzzAsU3Ar1ClyItonxfyvIFsisdDuV0c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsK9j05V3YE4lc798D3+x0uxeX/iCIk8K78sHogeBMumXcAJWI
+	kn3y7vWs+Y4LX2ilNiZfy/gkw4HKeGWHGdqeWRMxgvVFS0i04fup
+X-Gm-Gg: ASbGnct7ssS7ZnQhJEEVFSxnFCcx0k7DRB+Xn/T3QIK3XnVoYMxjzAtGGiLdMlH9k55
+	YrJzywfLSmMX/q6yEi+mpu2IgGNbai71CJYKNkFjvtI2A99VY8N9DzPEyRnRbr7kViOmp1Sx0wJ
+	l4bBkSO0KFGO5thPh6C8xDB6YMJjPL86lNFMaEqlZ306NHi9RJHKOaPs3WqVUxuBNA1mgdgqHQB
+	jpfHwLmgaJHrkBqrRyvErVQ3JxittdBA1GDoBv2UvvvXlVbDqkMSioLRuD8Mbh9HdSrWV38+B/w
+	Nq+d9QXsT77GUKb6Up0+LwsO42F7Nug60WQJqM/iWGHYdDfxNye68w==
+X-Google-Smtp-Source: AGHT+IFF67KlYecUL0WmxKFTDoupCkyQsPEKSCULBGUTcLaEj+DN0Nn3mH6LnycLqR9SDA9Hwk/z8g==
+X-Received: by 2002:a05:600c:524a:b0:42a:a6d2:3270 with SMTP id 5b1f17b1804b1-438dc410c08mr125944455e9.21.1738433975969;
+        Sat, 01 Feb 2025 10:19:35 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23de016sm95980555e9.9.2025.02.01.10.19.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 10:19:35 -0800 (PST)
+Date: Sat, 1 Feb 2025 18:19:33 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: ebiederm@xmission.com, oleg@redhat.com, brauner@kernel.org,
+ akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] pid: drop irq disablement around pidmap_lock
+Message-ID: <20250201181933.07a3e7e2@pumpkin>
+In-Reply-To: <20250201163106.28912-7-mjguzik@gmail.com>
+References: <20250201163106.28912-1-mjguzik@gmail.com>
+	<20250201163106.28912-7-mjguzik@gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131162031.190424-1-aha310510@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 01, 2025 at 01:20:31AM +0900, Jeongjun Park wrote:
-> For some unknown reason, checks on struct bkey_s_c_snapshot and struct
-> bkey_s_c_snapshot_tree pointers are missing.
-> 
-> Therefore, I think it would be appropriate to fix the incorrect pointer checking
-> through this patch.
-> 
-> Fixes: 4bd06f07bcb5 ("bcachefs: Fixes for snapshot_tree.master_subvol")
-> Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+On Sat,  1 Feb 2025 17:31:06 +0100
+Mateusz Guzik <mjguzik@gmail.com> wrote:
 
-Thanks! Applied
-> ---
->  fs/bcachefs/subvolume.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/bcachefs/subvolume.c b/fs/bcachefs/subvolume.c
-> index e3d0475232e5..b7b96283c316 100644
-> --- a/fs/bcachefs/subvolume.c
-> +++ b/fs/bcachefs/subvolume.c
-> @@ -428,7 +428,7 @@ static int __bch2_subvolume_delete(struct btree_trans *trans, u32 subvolid)
->  		bch2_bkey_get_iter_typed(trans, &snapshot_iter,
->  				BTREE_ID_snapshots, POS(0, snapid),
->  				0, snapshot);
-> -	ret = bkey_err(subvol);
-> +	ret = bkey_err(snapshot);
->  	bch2_fs_inconsistent_on(bch2_err_matches(ret, ENOENT), trans->c,
->  				"missing snapshot %u", snapid);
->  	if (ret)
-> @@ -440,6 +440,11 @@ static int __bch2_subvolume_delete(struct btree_trans *trans, u32 subvolid)
->  		bch2_bkey_get_iter_typed(trans, &snapshot_tree_iter,
->  				BTREE_ID_snapshot_trees, POS(0, treeid),
->  				0, snapshot_tree);
-> +	ret = bkey_err(snapshot_tree);
-> +	bch2_fs_inconsistent_on(bch2_err_matches(ret, ENOENT), trans->c,
-> +				"missing snapshot tree %u", treeid);
-> +	if (ret)
-> +		goto err;
->  
->  	if (le32_to_cpu(snapshot_tree.v->master_subvol) == subvolid) {
->  		struct bkey_i_snapshot_tree *snapshot_tree_mut =
-> --
+> It no longer serves any purpose now that the tasklist_lock ->
+> pidmap_lock ordering got eliminated.
+
+Not disabling interrupts may make thing worse.
+It is a trade off between 'interrupt latency' and 'lock hold time'.
+
+If interrupts are disabled then (clearly) they can get delayed because
+the lock is held.
+Provided the lock is only held for a short time it probably doesn't matter.
+Indeed, unless it is the worst one, it probably doesn't matter at all.
+After all spin locks shouldn't really be held for significant periods.
+
+OTOH if the lock doesn't disable interrupts then an interrupt will
+increase the length of time a lock is held for.
+This can be significant - and I mean upwards of 1ms.
+Network interrupts can tale a while - and then the work that is deferred
+to 'softint' context happens as well (I don't think a spinlock stops
+the softint code).
+
+I've a feeling that unless a spin lock is held for 'far longer than one
+should ever be held for' then you really want to disable interrupts.
+
+In this case if you get a network interrupt + softint while the pidmap_lock
+is held then all other cpu won't be able to acquire the lock until the
+network code finishes.
+
+The same issue makes futex pretty much useless in anything trying to do
+audio processing.
+
+	David
+ 
