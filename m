@@ -1,97 +1,147 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A8B2B9A9;
-	Sat,  1 Feb 2025 09:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9086A2B9A9;
+	Sat,  1 Feb 2025 09:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738403148; cv=none; b=TarQ/fOg6nMQ7TGAOALNL1xpqQ+pJfGD/k8d7eoEU0AFy/U5OtuE/2fEVTKUhulcjMeCF565LGIFBv/VWWxMRxJXQuXAiQICfjHwyCvG0Oizqy1sgFC+6XEG4Ein+hl5IwYaEE+CIuzm4n/1o3SQy7XqItRKxqn+CJxPbHO6Qvo=
+	t=1738403220; cv=none; b=kp2qXb3IA/oIrfwKnHxOxyheo5tBG1zWPGDgzJiJ9ZLQkfIbkEkOTSj4Rc4bZWMh0qCmIOf84lejqOCJu7f9sKR0QJKJ6+ZsjXaaEtEjmKIq6Cbx/FT4NJyVKMUzUim/qO0Ysrc7Tzw4zBFrpaJwMOi83PxIsh/3jTUCzk8G5Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738403148; c=relaxed/simple;
-	bh=tLQ3X3o50sazcQ3riz1XRy19lYX43XwNdMTldntMfNk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rjXq9iiPCbnegs5bD7upL/R3Mhm1YKsh97ytuIEy7n1syQtmZucvScA3g/hVfXdxTqye8MA4JTZCEDgDLfvk83IdY6sclq+eZSZqoSKHcOXwxTeZcP/ALmSRRPwqxQ0mmr/rpDecs4LLVxH+913pQ7PAFYLRhkFN+VDZq8ePfno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLdG0ST/; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738403220; c=relaxed/simple;
+	bh=wfax+lSmFiE6bZtjfNXjyj28adDok+Vk7tISnKd5ys4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jftbT24HkjxqdZtQzixxyNplTn/zD/JEIYorDqH0SvzQ198obMmR3gVi9M44+/yJng++tiZ7l4aYeHv1/UBLZwhbLTrjUungKwK1N8sFbQ8JwK2gPiRwQqKBEq44oPkMyD6FZVwlW8l3I3lYY3py/pKABUoX2rpRb4ETYMZdTbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=abSGzcQq; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLdG0ST/"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-21654fdd5daso49676515ad.1;
-        Sat, 01 Feb 2025 01:45:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738403145; x=1739007945; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AVRO+nMq3HdXxZo9GoEu318QQbe4p2iwPYY59ogFdgA=;
-        b=dLdG0ST/VEv6fdGR2SdxZLPA866HZu/ogX4lUrfOLpX9yoe6hbX01NoE4+M6SEiZJj
-         B8YL/WRx7zlKupLAG0e7d6hHW54hSmmb0I44zx874by8jqWOLLX7KKTBJIsUjutFKWh6
-         OS16KntaEe+L0CcLp2CRkUWjeXeRA4I83JqOWPj4z48LFQHvG0gB2cppbqdR47csAsnh
-         PoggsgEzk/SanCyhd0BDeiN8YAk4e49tbeSvnBHa97p9AWedODyVkYV3ZTja//Zj9dA7
-         8nOCoaRPlxcqaBaDy1cbJhUwcwoyV9zZe47I20YfBNBZefquQ/l5ybsQJEOOsWWQU05l
-         y41g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738403145; x=1739007945;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AVRO+nMq3HdXxZo9GoEu318QQbe4p2iwPYY59ogFdgA=;
-        b=eb9mE1NEEBxLAGc/O/Xd8cnnJeWpjcoGBqbKlng7ttNUzU31TMm47olHsfqtJ0eF/K
-         K1N2RSWT5xG1izUgKCxFZATstu0INEPAngx4rlkeKI2bGbI+LBery+KW5Dx+kZ6QFeyl
-         sB5py8FDvE+Q16XIBt4w3di3E1KGubw9zeN3ovOgpDOPHg21yEEsXoeZJWGv65Q9IkRe
-         eEIyKAeVyHpFgt/1COuPbXP9UvNo4eGU9upfzWszfqGuizahBq8IpOrkMH5RcDoLQ84u
-         rRUP2K2aGAE5fyzbkKMlRMPYEB1NDuJ2Go1VEhOyFFCOsQM7cis9abtmwb3HhdM0QuQg
-         lVug==
-X-Forwarded-Encrypted: i=1; AJvYcCVs26q3aMFXqtnDtGMhI1d6EGDJ4HCxqf4w0QkIqAKLwFhXxUznA8AjWHqTnT+oO6RXSmj2heC46i18/5RJ@vger.kernel.org, AJvYcCWz8WjDSat/9oL04gSNffFiIQ8Ilvw/PkmkbKzOdPWN3JGwjMserPyfzzjH99p6EgrEsX+B8Xn/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+GCRXlMvooZVy1HN3TUOKOH+IGtq7gYxlu/rnu+qFDh6CrcW2
-	MnQVblUUPqBJBZvrXK196QSATlEnXOe5ByGooaAgjbLj/OxW8jM8
-X-Gm-Gg: ASbGncv2wOpF4vECHuK3I1Fq1lcF0RfDS+DRSTbdxYKI7jP1YcamYKODV2J2NW0+xPI
-	4ENPaLzQesw+vqwkZh5OMfJyUiqXfiEDfoL/xB8yHaXS1/Rv0Oc1LlpYKyLZ5pt2mxGQ7Y7oADC
-	sXkKB6TkqGUSKpTsYaMDNq5NKU5hVDAgVs2vM5vpkbm3qHc4XXg2Pe3QXZrCx+buSuLh8rXoWVB
-	nSbue+LTRIhtgAZJcNVk1PVR+3dplQJwUWtSjRl37bK8JHpkSC3FcyMurOI0QXWZ98nlxqRPmWH
-	0GBZkJF1twl9NvUQzABFgD4ty0H66rB3mxZGvY1CmJj6vg2UubDx25s4eYekl1myP5zq/Q2UyDB
-	fgieNiD/J4yoS
-X-Google-Smtp-Source: AGHT+IE5X0DTIrkfK1LUMBwobedDoDXV1ZeOu3cfQ9HscDpKjTiSIcD035WjaH0YixcQwwFGkPBhpQ==
-X-Received: by 2002:a17:90b:2c84:b0:2ee:b2e6:4275 with SMTP id 98e67ed59e1d1-2f83ac65958mr18136804a91.26.1738403145079;
-        Sat, 01 Feb 2025 01:45:45 -0800 (PST)
-Received: from codespaces-4a2804.mimvmn1ww3huhhjmzljqefhnig.rx.internal.cloudapp.net ([4.240.39.194])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3320edfsm42597175ad.229.2025.02.01.01.45.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 01:45:44 -0800 (PST)
-From: Umar Pathan <cynexium@gmail.com>
-X-Google-Original-From: Umar Pathan <cynexium@proton.me>
-To: tj@kernel.org
-Cc: lizefan.x@bytedance.com,
-	hannes@cmpxchg.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Umar Pathan <cynexium@proton.me>
-Subject: [PATCH cgroup] Update freezer.c
-Date: Sat,  1 Feb 2025 09:45:39 +0000
-Message-ID: <20250201094539.29429-1-cynexium@proton.me>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="abSGzcQq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=HJfXHZ/A+sz+crqL6J+AkJgO1M7+g8HZDeac0KQl+5w=; t=1738403216; x=1739008016; 
+	b=abSGzcQqVNUyih8GSyQphGJE7149RiSJhrR+peK3ezcdcv9dchLQ6jI2cxs1wFdQ2jdrnBeccOr
+	q97hn6AjFv65heKKnG/YqQ8FIVVU8l7v3Kbn5u7cDzLT+SDrY2vMwpmk6KQ6wbawkRPcm99cLT/Sn
+	Jpo3tOEDEyUb9eTFkg+udWBMSnMIv2JTOlcnDH4wkjxAvnXlB93aYJPcbf1aOGSdyCzzvMLDScatO
+	DRLOfgVQOT8I3cc+TOToYb1SIPsg+dxRVujxNBxROh/IgGHNRZSRZ8nz6O5YzEe7mkQC/OmETi9UZ
+	0lbPyBTkSt5K2vBwuWcMWRqconYY3QoBmR4A==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1teA5N-00000003lAb-0Pcg; Sat, 01 Feb 2025 10:46:45 +0100
+Received: from [164.15.244.49] (helo=[10.93.216.17])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1teA5M-00000000ews-3fpJ; Sat, 01 Feb 2025 10:46:45 +0100
+Message-ID: <6cb712c1c338d3ce5313e05a054ea9de21025ff0.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v2 0/4] alpha: stack fixes
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Ivan Kokshaysky <ink@unseen.parts>, Richard Henderson	
+ <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, Oleg
+ Nesterov	 <oleg@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>, Arnd
+ Bergmann	 <arnd@arndb.de>, "Paul E. McKenney" <paulmck@kernel.org>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Magnus Lindholm
+ <linmag7@gmail.com>, 	linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	stable@vger.kernel.org
+Date: Sat, 01 Feb 2025 10:46:43 +0100
+In-Reply-To: <20250131104129.11052-1-ink@unseen.parts>
+References: <20250131104129.11052-1-ink@unseen.parts>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
----
- kernel/cgroup/freezer.c | 1 +
- 1 file changed, 1 insertion(+)
+Hi Ivan,
 
-diff --git a/kernel/cgroup/freezer.c b/kernel/cgroup/freezer.c
-index e9c15fbe5d9b..d384df2f53c2 100644
---- a/kernel/cgroup/freezer.c
-+++ b/kernel/cgroup/freezer.c
-@@ -304,6 +304,7 @@ void cgroup_freeze(struct cgroup *cgrp, bool freeze)
- 			 */
- 			if (dsct->freezer.e_freeze > 0)
- 				continue;
-+			
- 			WARN_ON_ONCE(dsct->freezer.e_freeze < 0);
- 		}
- 
--- 
-2.47.1
+On Fri, 2025-01-31 at 11:41 +0100, Ivan Kokshaysky wrote:
+> This series fixes oopses on Alpha/SMP observed since kernel v6.9. [1]
+> Thanks to Magnus Lindholm for identifying that remarkably longstanding
+> bug.
+>=20
+> The problem is that GCC expects 16-byte alignment of the incoming stack
+> since early 2004, as Maciej found out [2]:
+>   Having actually dug speculatively I can see that the psABI was changed =
+in
+>  GCC 3.5 with commit e5e10fb4a350 ("re PR target/14539 (128-bit long doub=
+le
+>  improperly aligned)") back in Mar 2004, when the stack pointer alignment
+>  was increased from 8 bytes to 16 bytes, and arch/alpha/kernel/entry.S ha=
+s
+>  various suspicious stack pointer adjustments, starting with SP_OFF which
+>  is not a whole multiple of 16.
+>=20
+> Also, as Magnus noted, "ALPHA Calling Standard" [3] required the same:
+>  D.3.1 Stack Alignment
+>   This standard requires that stacks be octaword aligned at the time a
+>   new procedure is invoked.
+>=20
+> However:
+> - the "normal" kernel stack is always misaligned by 8 bytes, thanks to
+>   the odd number of 64-bit words in 'struct pt_regs', which is the very
+>   first thing pushed onto the kernel thread stack;
+> - syscall, fault, interrupt etc. handlers may, or may not, receive aligne=
+d
+>   stack depending on numerous factors.
+>=20
+> Somehow we got away with it until recently, when we ended up with
+> a stack corruption in kernel/smp.c:smp_call_function_single() due to
+> its use of 32-byte aligned local data and the compiler doing clever
+> things allocating it on the stack.
+>=20
+> Patches 1-2 are preparatory; 3 - the main fix; 4 - fixes remaining
+> special cases.
+>=20
+> Ivan.
+>=20
+> [1] https://lore.kernel.org/rcu/CA+=3DFv5R9NG+1SHU9QV9hjmavycHKpnNyerQ=3D=
+Ei90G98ukRcRJA@mail.gmail.com/#r
+> [2] https://lore.kernel.org/rcu/alpine.DEB.2.21.2501130248010.18889@angie=
+.orcam.me.uk/
+> [3] https://bitsavers.org/pdf/dec/alpha/Alpha_Calling_Standard_Rev_2.0_19=
+900427.pdf
+> ---
+> Changes in v2:
+> - patch #1: provide empty 'struct pt_regs' to fix compile failure in libb=
+pf,
+>   reported by John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>;
+>   update comment and commit message accordingly;
+> - cc'ed <stable@vger.kernel.org> as older kernels ought to be fixed as we=
+ll.
+> ---
+> Ivan Kokshaysky (4):
+>   alpha/uapi: do not expose kernel-only stack frame structures
+>   alpha: replace hardcoded stack offsets with autogenerated ones
+>   alpha: make stack 16-byte aligned (most cases)
+>   alpha: align stack for page fault and user unaligned trap handlers
+>=20
+>  arch/alpha/include/asm/ptrace.h      | 64 ++++++++++++++++++++++++++-
+>  arch/alpha/include/uapi/asm/ptrace.h | 65 ++--------------------------
+>  arch/alpha/kernel/asm-offsets.c      |  4 ++
+>  arch/alpha/kernel/entry.S            | 24 +++++-----
+>  arch/alpha/kernel/traps.c            |  2 +-
+>  arch/alpha/mm/fault.c                |  4 +-
+>  6 files changed, 83 insertions(+), 80 deletions(-)
 
+Thanks, I'm testing the v2 series of the patches now.
+
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
