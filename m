@@ -1,112 +1,70 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31593F9C5;
-	Sat,  1 Feb 2025 09:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CFC425761;
+	Sat,  1 Feb 2025 10:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738403514; cv=none; b=bfka6NSvgF1pz2twZlddzTI1TjLmZDBh33osmISdUWH/7g0kO3rIB9/Fl2KmUwMCd7HaQKzfvJkQ7cIBRaKBZN3MhBDTExH3NpYzGL6svo9R7/lzNUHEZTBdt5q+FJkl8EpffmiKJaP2iwHUtRdbPslzutM5SCRlrpsl37v6RUY=
+	t=1738404246; cv=none; b=ZRkEohOac5R2vL69KV90X5lMBsHdcBKyqhd7AZAp3v1bO7nClsSiyc2aBFUc5UzEH44Wh1x93hDmVuo8yWdlUJZSrKhF4Hu/zN8MQg6gW6fALKH+sr6W+XnPxwEPDD8Ni3NxHP4xdU1ht7CA3tKsIV6cT6aOa7FGUYPK7hX8k9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738403514; c=relaxed/simple;
-	bh=XNPLmTu7g4O7Xoii4IS+RkrJZtMGwJWVOcITAXYVbRY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ajxqf/Uym7SYrv9FOgnvbVruhOi5W4061VeDXku+8C6E9bhfBfha/fABHf96J4ww9pBfD0q4EvFN2HvPF3yeGEyCejiSJpJFmB/2Fd3kiP/M4iuh84qjFXOeziLV95NKj1Q1qMgIw53I0trRp9hEkRuZsEM9g0Niox4vFaUngVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rh9bUMs/; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rh9bUMs/"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2161eb95317so49147415ad.1;
-        Sat, 01 Feb 2025 01:51:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738403512; x=1739008312; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eEKIgvJzCHrLU/eHOSQhidalsv93ZokbwHbTteKHLMg=;
-        b=Rh9bUMs/nROR06NWIus4Kuu324PobPEiDmvyLsNLjkA9gcpZClrhYcOT00nLy3MQER
-         o3XAoqaUNgJiYuhCCreqoT6xwDAom/TVdQ5Ovy5JzJuNkorpKeYf88nYLJUoK8qptfeg
-         G+UkxkQ8p0zEFuvd/I1quiHUq4lb0V0NtB+DJQdy3fLbXeAwVIgphMYME4SLthVgjSeZ
-         3NendCkdCgOuE5ChmiasV53yG7Jc4zDzKGFTSrNv1ofcchUW0pD7iGv7QtFwzEzMYHaT
-         jEoJLnx+V3JarQ64YYjDlk6NrcQJBqd87+AIs9cyNnxJv9GGNyxeE1jBXlRSCwnJ3EwK
-         Ri5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738403512; x=1739008312;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eEKIgvJzCHrLU/eHOSQhidalsv93ZokbwHbTteKHLMg=;
-        b=Z5YyVXrribhGDc9a3hSCES2LvSYjku8VgI4gkf/FoyQW6Tvx4Cwveux5h65294uLgk
-         5d8oQ/dLhg1qF2Ut2bpV9G2YyMVd7uJCvcXNFKD6uTiSnQL+1gbCvgZ0AsxDLDTGYVEe
-         HwO4zdcKHNv+XyluW5v6xXH8AwkyvrQfTDLtuuXtTeB6FB0m3DMm02VKp/xTc/ewXRHs
-         y62XMvRcnfk04+255nAxE/bD9DWyXfKAy2089f9Cvv+T9nfRdwUgHBzCwdxlgmEc6cfy
-         toDNgOBolnG3+881jS7yikEoaqT4rBIq+rFaIWJhG72IBEoUH9YGwatwwfl7MXNm4CHp
-         09oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVOPMI5VSkhuW4Z+rT1kQ/szfIXeNUMhbKKS11qa2DSj0QZ77J7Ei3ooch88Xu7ZyoYQWwp2gv6@vger.kernel.org, AJvYcCWggyiLvm2owB4OyPEHQdTVZM300tgc3WZcso/3NzjDrq8XivIfvJzFmNI+K6bNBCZ5HeCCCYoaSkxZMk2d@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVDisB0aL0AmI0ONO7TkQM7JeqOS5Q3zouVi17FhWZhKETbhOh
-	ud6/4MtfvtxLzDBHwnytGa+OImU/tiUDirR9wFwluhHF1wUbMBOT
-X-Gm-Gg: ASbGnctllOQ+xa39CUNXSwzTkO9EV63tf0B4grE7BZBESQLDTLxwX+JeptMH0toQxUd
-	V2jfd6fJ8A6f4r1rtszytHz0W58BWza8lyKfgMHLtilIMFUqTIS68IfpUEhEb1peP1Hwj1qjleI
-	+d9c147jkQe+BXV3MQTCmE8YO8jeEB1JNsBa2VrIkPHTcYmeVcO+YQT/mGa6XmooUwqHgCvyVSR
-	rF+FTXw+toCynSoL/am2LSz6jmnN76fsj2+klPrNQZVCE572SO7Plzu6m8FYHuH9+2AmPg2tXmE
-	P8S1DeesTldPO1w10pNMHRlUkIAVHYySKIRY89vy348XPtS8fRMpgECJmlo5xEi8USk0sbU79qj
-	03NGUSrRrdJcY
-X-Google-Smtp-Source: AGHT+IFyrGJ/ADpSmNfnEEsU7Da1mkjiYBmUMieib7j1Ywzt5OocKc3/8aEY8su8diHKTdby5N41oA==
-X-Received: by 2002:a05:6a21:68e:b0:1e0:c3bf:7909 with SMTP id adf61e73a8af0-1ed7a61d02cmr26205417637.41.1738403512055;
-        Sat, 01 Feb 2025 01:51:52 -0800 (PST)
-Received: from codespaces-4a2804.mimvmn1ww3huhhjmzljqefhnig.rx.internal.cloudapp.net ([4.240.39.194])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6424facsm4702635b3a.39.2025.02.01.01.51.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 01:51:51 -0800 (PST)
-From: Umar Pathan <cynexium@gmail.com>
-X-Google-Original-From: Umar Pathan <cynexium@proton.me>
-To: tj@kernel.org
-Cc: lizefan.x@bytedance.com,
-	hannes@cmpxchg.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Umar Pathan <cynexium@proton.me>
-Subject: [PATCH cgroup] https://github.com/raspberrypi/linux/issues/6631
-Date: Sat,  1 Feb 2025 09:51:45 +0000
-Message-ID: <20250201095145.32300-1-cynexium@proton.me>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1738404246; c=relaxed/simple;
+	bh=P8rs2CA/Um4iKZuxR479kyWFRvJoBzjiUdjh7wnFCcE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ARDbdjIVTHsbjkMABmnUuKwvGPUg86by3JnRPIHVS5mrN1dBvH/KX5iMpAwTPIFgbn6z2s4aslBoXIbyPlq5IIBdkruMQoOGEyC7Ppb4Jl78Ieo3GEd6jQnEh2L5mfYAxxMlR6cjfU8ajhhYBkuXveoH01FafjqbrhBd3A/lHDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 511A3h49006005;
+	Sat, 1 Feb 2025 11:03:43 +0100
+Date: Sat, 1 Feb 2025 11:03:43 +0100
+From: Willy Tarreau <w@1wt.eu>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] selftests/nolibc: drop call to prepare target
+Message-ID: <20250201100343.GA5849@1wt.eu>
+References: <20250123-nolibc-config-v2-0-5701c35995d6@weissschuh.net>
+ <20250123-nolibc-config-v2-2-5701c35995d6@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250123-nolibc-config-v2-2-5701c35995d6@weissschuh.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-The existing freezer propagation logic improperly reduces
-nr_frozen_descendants by an increasing 'desc' counter during unfreeze,
-leading to:
-- Premature parent cgroup unfreezing
-- Negative descendant counts
-- Broken hierarchy state consistency
+On Thu, Jan 23, 2025 at 08:37:38AM +0100, Thomas Weiﬂschuh wrote:
+> The "prepare" target does not need to be run manually.
+> kbuild knows when to use it on its own and the target is not even
+> documented.
+> 
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> ---
+>  tools/testing/selftests/nolibc/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/nolibc/Makefile b/tools/testing/selftests/nolibc/Makefile
+> index ba044c8a042ce345ff90bdd35569de4b5acd117d..464165e3d9175d283ec0ed14765df29427b6de38 100644
+> --- a/tools/testing/selftests/nolibc/Makefile
+> +++ b/tools/testing/selftests/nolibc/Makefile
+> @@ -261,7 +261,7 @@ initramfs: nolibc-test
+>  	$(Q)cp nolibc-test initramfs/init
+>  
+>  defconfig:
+> -	$(Q)$(MAKE) -C $(srctree) ARCH=$(ARCH) CC=$(CC) CROSS_COMPILE=$(CROSS_COMPILE) mrproper $(DEFCONFIG) prepare
+> +	$(Q)$(MAKE) -C $(srctree) ARCH=$(ARCH) CC=$(CC) CROSS_COMPILE=$(CROSS_COMPILE) mrproper $(DEFCONFIG)
 
-Scenario demonstrating the bug:
-1. Create hierarchy A->B->C
-2. Freeze C (A/B freeze via propagation)
-3. Freeze A->D (separate branch)
-4. Unfreeze C -> A incorrectly unfreezes despite frozen D
+I'm pretty sure that in the past I had to manually do it for certain
+rebuilds (out of the nolibc-test context), but I cannot say for sure
+when, but I did definitely discover it when trying to fix some build
+issues. It's very possible that the issues that it used to fix have
+long been fixed and that it remained in fingers memory, so I'm fine
+with dropping it and we'll see. If we ever discover we need to bring
+it back, at least we'll explain why in a commit message this time.
 
-Fixes: 711f763 ("freezer,cgroup: add freezer.stats subsystem")
-Signed-off-by: Umar cynexium@gmail.com
----
- kernel/cgroup/freezer.c | 1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Willy Tarreau <w@1wt.eu>
 
-diff --git a/kernel/cgroup/freezer.c b/kernel/cgroup/freezer.c
-index e9c15fbe5d9b..d384df2f53c2 100644
---- a/kernel/cgroup/freezer.c
-+++ b/kernel/cgroup/freezer.c
-@@ -304,6 +304,7 @@ void cgroup_freeze(struct cgroup *cgrp, bool freeze)
- 			 */
- 			if (dsct->freezer.e_freeze > 0)
- 				continue;
-+			
- 			WARN_ON_ONCE(dsct->freezer.e_freeze < 0);
- 		}
- 
--- 
-2.47.1
-
+Willy
