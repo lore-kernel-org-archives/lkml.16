@@ -1,141 +1,188 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AE11BEF8A
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 17:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3681CAA68;
+	Sat,  1 Feb 2025 18:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738432738; cv=none; b=lj90RLvG6/4RRq+eJUKK9B5M2+yrZJg37heUHhkXm7CKFZrji5ggSbn9NDWzlGxjS5NiIfR6dEJUr8P8u4Q2ltS4pgRIWvH7wbrx/B8kmaI8B6sq/WIc2yjBga1N2u5YZMac2bEitH9fXzPwsP3jWSDPgYz4CqzTVm8TGcZTDBc=
+	t=1738433242; cv=none; b=stfRkkKC0DVClLpRti2QdiXMCPcI6Fu5wLD3hdU9Ybv+se2baO6lPWllU0a3p/CEfdO09cXuOhlnfmowP+lM2K9NBdmWjOj/KQ1w/F5lQkgQ8q4i946ZYawZ9ClpV/gWeUfZSIHnmPLXh5nl4QdkrqrdrCAp37r5nisI0StsJoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738432738; c=relaxed/simple;
-	bh=QEanhHjmGPxKCVSP1f0d92Od/Xl4SxoMICBSAMYJAr4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W6qjlkyk7AUSl+OKeiK88oaALD+8e7Z0CziSXxfQvhKq/CrsMDHrRI0jMIojxXkeQCVDeJA8T9IWP/DUmHJGNuo0R54Pzt3UV23xkkekTY7OjVe9aHu8tHEfTiKVqIpV8PW3BHW7uoEdnZR0u16YBCZCG44DMs9g2e8r8a+WBPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sxdzRIEt; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738433242; c=relaxed/simple;
+	bh=QNjg3ckstEEe8MylKQY/66Zc4nhJCM5qeaytIXE5Ikw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=cRA4MSf38jiE67rrwEMx0mtTmdmM3iRB4ZcC3FCaOUXH5WE7ktucHwu/S6dcvaO/0QA/CxlND+wL6Hoi49M+OBvSzgfWmDwNnx31MfaAIakSdODP2Cprie/ehqfHEHApPKtnT420QdKrqj9Nc11nycnUyn3Xg0+F4ZGLznUvjBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZMe2V8sB; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sxdzRIEt"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738432730;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HkIr39KDpZ6NakWJJimSPaackvHlLSjkIRgMP8fQyoU=;
-	b=sxdzRIEt6DCMeD8JJ3XqWV19N2c8cNvECwn7GZKXI4gGPYo0A7twQzJyBHv71CAc0gPkIX
-	sHV0wpK0/wt1o0eGoCbQFrQ/Gva7gYKRwG3HAGJ2uv1Av3nPMPcROfyXODmX4oJDYG/vy9
-	GN8vJxnpuxn0dMI/CfNw6QxZovYTBD0=
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: linux-bcachefs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Subject: [PATCH] bcachefs docs: SubmittingPatches.rst
-Date: Sat,  1 Feb 2025 12:58:34 -0500
-Message-ID: <20250201175834.686165-1-kent.overstreet@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZMe2V8sB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738433241; x=1769969241;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=QNjg3ckstEEe8MylKQY/66Zc4nhJCM5qeaytIXE5Ikw=;
+  b=ZMe2V8sB/4Xxxv/RH1rk5UUyJ9qLOnJ1bx5TaLemL4yzsFeHqx9oNOmc
+   kHnvTPU2WK9hGn+nfH5GId1JegSYm5nxcCgZQ+CIKrbaakcmfRfz2MbO9
+   L8Pf9gxvMPqP5iBtbinyg5+wRsuE+2+P6f1PwqK715lGZ9S/lAsx/Qa9m
+   65Bb8DSQWb0F0iJWhhlsckqKQarbceTnZkdySb6LbrAtWbaKUyEIh4dUv
+   OAp3Y9OXSfC+NAtyho5zIxsMyoUWG6QcYXIXAGFtjcPOkahkX/pZpiT9x
+   UAR0rcanBexTNf/IqtxHQvX0PdzSg8xNcR2ABvOcPywo7AIr/5k5HDcbd
+   w==;
+X-CSE-ConnectionGUID: OOttOwsmTn2E5p3KXiu68w==
+X-CSE-MsgGUID: 82O3ECdVTk+L+2UM+SdisQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11333"; a="61450125"
+X-IronPort-AV: E=Sophos;i="6.13,252,1732608000"; 
+   d="scan'208";a="61450125"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2025 10:07:20 -0800
+X-CSE-ConnectionGUID: m2JodxUcQdu2VuJbrdAcFA==
+X-CSE-MsgGUID: KV7B0kQXT4+nYjN0w365YA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="133160352"
+Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2025 10:07:20 -0800
+Date: Sat, 1 Feb 2025 10:07:19 -0800 (PST)
+From: matthew.gerlach@linux.intel.com
+To: Frank Li <Frank.li@nxp.com>
+cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
+    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
+    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
+    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
+    peter.colberg@altera.com
+Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
+In-Reply-To: <Z5qS1NKSRn8pSqg1@lizhi-Precision-Tower-5810>
+Message-ID: <41edda71-de9d-e4e0-ef62-83e98f753e@linux.intel.com>
+References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com> <20250127173550.1222427-4-matthew.gerlach@linux.intel.com> <Z5qS1NKSRn8pSqg1@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Add an (initial?) patch submission checklist, focusing mainly on
-testing.
 
-Yes, all patches must be tested, and that starts (but does not end) with
-the patch author.
 
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
----
- .../bcachefs/SubmittingPatches.rst            | 76 +++++++++++++++++++
- 1 file changed, 76 insertions(+)
- create mode 100644 Documentation/filesystems/bcachefs/SubmittingPatches.rst
+On Wed, 29 Jan 2025, Frank Li wrote:
 
-diff --git a/Documentation/filesystems/bcachefs/SubmittingPatches.rst b/Documentation/filesystems/bcachefs/SubmittingPatches.rst
-new file mode 100644
-index 000000000000..5e4615620c4a
---- /dev/null
-+++ b/Documentation/filesystems/bcachefs/SubmittingPatches.rst
-@@ -0,0 +1,76 @@
-+Submitting patches to bcachefs:
-+===============================
-+
-+Patches must be tested before being submitted, either with the xfstests suite
-+[0], or the full bcachefs test suite in ktest [1], depending on what's being
-+touched. Note that ktest wraps xfstests and will be an easier method to running
-+it for most users; it includes single-command wrappers for all the mainstream
-+in-kernel local filesystems.
-+
-+Patches will undergo more testing after being merged (including
-+lockdep/kasan/preempt/etc. variants), these are not generally required to be
-+run by the submitter - but do put some thought into what you're changing and
-+which tests might be relevant, e.g. are you dealing with tricky memory layout
-+work? kasan, are you doing locking work? then lockdep; and ktest includes
-+single-command variants for the debug build types you'll most likely need.
-+
-+The exception to this rule is incomplete WIP/RFC patches: if you're working on
-+something nontrivial, it's encouraged to send out a WIP patch to let people
-+know what you're doing and make sure you're on the right track. Just make sure
-+it includes a brief note as to what's done and what's incomplete, to avoid
-+confusion.
-+
-+Rigorous checkpatch.pl adherence is not required (many of its warnings are
-+considered out of date), but try not to deviate too much without reason.
-+
-+Focus on writing code that reads well and is organized well; code should be
-+aesthetically pleasing.
-+
-+CI:
-+===
-+
-+Instead of running your tests locally, when running the full test suite it's
-+prefereable to let a server farm do it in parallel, and then have the results
-+in a nice test dashboard (which can tell you which failures are new, and
-+presents results in a git log view, avoiding the need for most bisecting).
-+
-+That exists [2], and community members may request an account. If you work for
-+a big tech company, you'll need to help out with server costs to get access -
-+but the CI is not restricted to running bcachefs tests: it runs any ktest test
-+(which generally makes it easy to wrap other tests that can run in qemu).
-+
-+Other things to think about:
-+============================
-+
-+- How will we debug this code? Is there sufficient introspection to diagnose
-+  when something starts acting wonky on a user machine?
-+
-+- Does it make the codebase more or less of a mess? Can we also try to do some
-+  organizing, too?
-+
-+- Do new tests need to be written? New assertions? How do we know and verify
-+  that the code is correct, and what happens if something goes wrong?
-+
-+- Does it need to be performance tested? Should we add new peformance counters?
-+
-+- If it's a new on disk format feature - have upgrades and downgrades been
-+  tested? (Automated tests exists but aren't in the CI, due to the hassle of
-+  disk image management; coordinate to have them run.)
-+
-+Mailing list, IRC:
-+==================
-+
-+Patches should hit the list [3], but much discussion and code review happens on
-+IRC as well [4]; many people appreciate the more conversational approach and
-+quicker feedback.
-+
-+Additionally, we have a lively user community doing excellent QA work, which
-+exists primarily on IRC. Please make use of that resource; user feedback is
-+important for any nontrivial feature, and documenting it in commit messages
-+would be a good idea.
-+
-+[0]: git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
-+[1]: https://evilpiepirate.org/git/ktest.git/
-+[2]: https://evilpiepirate.org/~testdashboard/ci/
-+[3]: linux-bcachefs@vger.kernel.org
-+[4]: irc.oftc.net#bcache, #bcachefs-dev
--- 
-2.45.2
+> On Mon, Jan 27, 2025 at 11:35:48AM -0600, Matthew Gerlach wrote:
+>> Add the base device tree for support of the PCIe Root Port
+>> for the Agilex family of chips.
+>>
+>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>> ---
+>> v3:
+>>  - Remove accepted patches from patch set.
+>>
+>> v2:
+>>  - Rename node to fix schema check error.
+>> ---
+>>  .../intel/socfpga_agilex_pcie_root_port.dtsi  | 55 +++++++++++++++++++
+>>  1 file changed, 55 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+>> new file mode 100644
+>> index 000000000000..50f131f5791b
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+>> @@ -0,0 +1,55 @@
+>> +// SPDX-License-Identifier:     GPL-2.0
+>> +/*
+>> + * Copyright (C) 2024, Intel Corporation
+>> + */
+>> +&soc0 {
+>> +	aglx_hps_bridges: fpga-bus@80000000 {
+>> +		compatible = "simple-bus";
+>> +		reg = <0x80000000 0x20200000>,
+>> +		      <0xf9000000 0x00100000>;
+>> +		reg-names = "axi_h2f", "axi_h2f_lw";
+>> +		#address-cells = <0x2>;
+>> +		#size-cells = <0x1>;
+>> +		ranges = <0x00000000 0x00000000 0x80000000 0x00040000>,
+>> +			 <0x00000000 0x10000000 0x90100000 0x0ff00000>,
+>> +			 <0x00000000 0x20000000 0xa0000000 0x00200000>,
+>> +			 <0x00000001 0x00010000 0xf9010000 0x00008000>,
+>> +			 <0x00000001 0x00018000 0xf9018000 0x00000080>,
+>> +			 <0x00000001 0x00018080 0xf9018080 0x00000010>;
+>> +
+>> +		pcie_0_pcie_aglx: pcie@200000000 {
+>> +			reg = <0x00000000 0x10000000 0x10000000>,
+>> +			      <0x00000001 0x00010000 0x00008000>,
+>> +			      <0x00000000 0x20000000 0x00200000>;
+>> +			reg-names = "Txs", "Cra", "Hip";
+>> +			interrupt-parent = <&intc>;
+>> +			interrupts = <GIC_SPI 0x14 IRQ_TYPE_LEVEL_HIGH>;
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <0x1>;
+>> +			device_type = "pci";
+>> +			bus-range = <0x0000000 0x000000ff>;
+>> +			ranges = <0x82000000 0x00000000 0x00100000 0x00000000 0x10000000 0x00000000 0x0ff00000>;
+>
+> This convert to pci address 0x0010_0000..0x1000_0000 from parent bus address
+> 0x1000_0000..0x1ff0_0000
+>
+> aglx_hps_bridges bridge convert 0x90100000..0xa000_0000 (cpu address) to
+> 0x1000_0000..0x1ff0_0000 according to ranges[1](second entry).
+>
+> Just want to confirm that "0x1000_0000..0x1ff0_0000" is actually reflect
+> hardware behavior.
 
+As far as I know, these conversions reflect the actual hardware behavior, 
+but I will investigate further to confirm.
+
+>
+> On going a thread
+> https://lore.kernel.org/linux-pci/Z5pfiJyXB3NtGSfe@lizhi-Precision-Tower-5810/T/#t
+>
+> Try to clean up all cpu_addr_fixup() or similar fixup() in pci root complex
+> drivers, but which require dtsi reflect the real hardware behavior.
+>
+> In most current pci driver, even "0x1000_0000..0x1ff0_0000" is wrong, it
+> still work by drivers' fixup. If dts correct descript hardware, these
+> fixup can be removed.
+
+The current driver, drivers/pci/controller/pcie-altera.c, does not have 
+any cpu_addr_fix(); so I think the dts is properly describing the 
+hardware, but I will continue to investigate and follow the thread
+to clean the fixups.
+
+>
+> best regards
+> Frank
+
+Thanks for the feedback,
+Matthew Gerlach
+
+>
+>> +			msi-parent = <&pcie_0_msi_irq>;
+>> +			#address-cells = <0x3>;
+>> +			#size-cells = <0x2>;
+>> +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+>> +			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_0_pcie_aglx 0 0 0 0x1>,
+>> +					<0x0 0x0 0x0 0x2 &pcie_0_pcie_aglx 0 0 0 0x2>,
+>> +					<0x0 0x0 0x0 0x3 &pcie_0_pcie_aglx 0 0 0 0x3>,
+>> +					<0x0 0x0 0x0 0x4 &pcie_0_pcie_aglx 0 0 0 0x4>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		pcie_0_msi_irq: msi@10008080 {
+>> +			compatible = "altr,msi-1.0";
+>> +			reg = <0x00000001 0x00018080 0x00000010>,
+>> +			      <0x00000001 0x00018000 0x00000080>;
+>> +			reg-names = "csr", "vector_slave";
+>> +			interrupt-parent = <&intc>;
+>> +			interrupts = <GIC_SPI 0x13 IRQ_TYPE_LEVEL_HIGH>;
+>> +			msi-controller;
+>> +			num-vectors = <0x20>;
+>> +			status = "disabled";
+>> +		};
+>> +	};
+>> +};
+>> --
+>> 2.34.1
+>>
+>
