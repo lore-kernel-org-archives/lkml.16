@@ -1,57 +1,57 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DF415746B
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:55:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B70A170A2C
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:55:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738374937; cv=none; b=E2eGfWgLZft1tT+NeWh9fBJ2f2lAZnTfJhAFoOBXzxzBb/2DT7xZKEgrSPRWyHrrXwJgrtLfbTNmDSl6KYOeTxjRPXCaQWuiZeYr2gzp+umTYx4mV/yIZ7Gg34XYEpR4KEbzUfZyOZfydGRj7TZ+d40DkxhiD3oJJkEWrsWV4mk=
+	t=1738374938; cv=none; b=XJDPocROY6/3nkLLW63eP32gA1WrXAOc0+l5ytMWju03xirx6slYU1fxp0SmKdzk2YgnI/OeBWPMx4ct/j2/tYY1C/f45YRCj1OAuDviCi8szBn5OMh8ztZe9dj90r2nhzlC+Py3KkJz3KUjmSVn8Yo1PZ5BfxFyqzwBWJAxOwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738374937; c=relaxed/simple;
-	bh=9iTUooTz+GzVh7vu6TOu+J68+KiYzSjVIC9jQQLaLOA=;
+	s=arc-20240116; t=1738374938; c=relaxed/simple;
+	bh=fM1n6FDclVKHXlvkcF8mqpqAtx9unY5xnqToGnbHTSI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HfM16FTHRObVtJxKgnCGBFjBykc9thIdlj6qAKbJoamCJk60xygQnJfhJdd+MK8jkVSXtIQJZj5XNCpKMLG6Wn2cFHei1Fz6l3/ejhWMWNMGZL1Lb7U19asb60smNa89YMcs5TfI9BCXOI8ADmM2D9i8BqP1y3UNVQUW9epp71Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GkxcYgxu; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=HykbCDXjanwjbTjiGgTrRGIAKuN369KEuDEhLDfja182e2wGydXqLUxoIYRziEUPRgK9zF0YL1LOve8hP5CgVxidiRX9cVOHnkVsJR8jEyB2sgwjmD7v17xONIrG+FnQ+XVqImO9lmvIFBy6i3DU2n9MMoZeXRJTxggfgzmccvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WZC8sR7k; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GkxcYgxu"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef6ef86607so7000054a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:55:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WZC8sR7k"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef114d8346so5067772a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:55:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738374935; x=1738979735; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738374936; x=1738979736; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=3XvAvsURv6o+VBrJhyeGBkEYBU2JVuvbJ6IwloO/TZA=;
-        b=GkxcYgxu0vHUVBHp9OhoP7jzzjcnUoodKe9oW04kojqnxnyVLvpMRB0CzTr6V70GN5
-         G+K/mKCruldubRQGcOZzIBNkpB8CBULmyHPJ6yMKUvFdR4uvf2ceZjBVL50WGQZL3d97
-         9w7VQcNJLnOa1RippEhRgNAJoDmKJ1ThW7AhzDcDVkGipMrbNUWzWBRg+B/vqCPlmMNb
-         Dt3axv0NOgefFiZ+fp9H+nFMg/y9/Sz0eURfmCwgyK3gpHF1N8VQHvmFSwxrRfYtvuTm
-         8zt4obe9/8TrUaGjrAb71tlb3xKz5vzVFtGrpjoUpPrySEHvt7dCObV8jwQUZhqHhosf
-         WB1g==
+        bh=3rffIwZzBf9w84td9LkYxb8GhDME9X7gCVMSc0UnAfs=;
+        b=WZC8sR7k5BetvDrfTeU1Q4m0g6YPFGcOY/l+Hnzl6Vqr0Q0wLiUltxdw5n4TONAreX
+         11hcStpGpCR9A9jBIIuaFomY9BfYoUUX/WlK47R994X4D0sL72xD12a39+/Ir1ts4lmN
+         YoxJu7AFkkpmKq00QT1i3gf5HAJAjZvFLx1DZJc7Sa2f4hpqZOpVqJVvFBcBFisb6fqn
+         Vxv1qwY4mFH6WbLr5rDRGj8cv8k2Sr6wU9dIqyPw0N4K8Hvzog1raXGDfE5IktH4VOsF
+         Oj92rxUfHQPSFitYYgXVuXzQMvbnouLM5gta9S8oh2VR6J/7hctiFbV0d5uUXx4BvRWK
+         VY2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738374935; x=1738979735;
+        d=1e100.net; s=20230601; t=1738374936; x=1738979736;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3XvAvsURv6o+VBrJhyeGBkEYBU2JVuvbJ6IwloO/TZA=;
-        b=kiGJBgCXo7RlA+RWz7OljdqiePTodKmzpK/ot5xBWknkQEbSVzDGMvBIjUQl5ASNFr
-         bgjQcXUKFU+vZbvnGgc715vbn0MHN0XRqncz0pQZV5ByYNLz5uojqWf++ut7uuL1om4F
-         A+e485X+CcT1ekrHb+BR3UUazrJD4X/gR9FOMt+SMKQH5jTgv8WRAVWVaRtNEbatfqYL
-         +2W7RTAeCR0JhuUsfWTIxO+qvMv54ETo06RYtfYFVUbFdRGLlTLNeIpD8ouLVUqmxmiG
-         Z9f0HqI4rqenoumKhsxGjUVbnfggti6tnBcedcZIWklkl9mYP1pjwRWXeYgNImi35fFY
-         2qHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVucpRZ9CJ98a+rZVbLYT8jG2iQ07kN5J19edmJDfWw8ga4btAJMek/QY65bE0ejDJV/KBO9ExbWe7Vw0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl4C0nYzyAxPL7LNnCtx5CvlpLG8nBD/AiuWWt6K+tZvWvYnUx
-	4rq4kE+CWbqPa7gGOwcppeUobKW6W2uiiLO0A1R2En7JQ5l4rp5uR1uqLGkIp+SMRXFrwcjahr/
-	51Q==
-X-Google-Smtp-Source: AGHT+IGOzvDdQI0HEUYlP00LQniZPDx482XdAtwcGW/8CaLpA5IH2YAm75ndxRKBH6ny5DWYhQDp8G6wGwM=
-X-Received: from pjbeu13.prod.google.com ([2002:a17:90a:f94d:b0:2ef:85ba:108f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:568f:b0:2ea:8aac:6ac1
- with SMTP id 98e67ed59e1d1-2f8464056b9mr14855857a91.15.1738374934730; Fri, 31
- Jan 2025 17:55:34 -0800 (PST)
+        bh=3rffIwZzBf9w84td9LkYxb8GhDME9X7gCVMSc0UnAfs=;
+        b=TNH9PC2ZDST43O+bO2RABHu08R0jYZ8DdyyzoAz1bHnOLmSDGWT89HQBDntyjQgpOt
+         J2dPSeepEqZVYO3SdXkUKoN/NxGtnMEaawFy6srS9FbIyGc18DFehXYQVRiBIGkV+kOf
+         peNYYt502i7Z6NuGTv/1bC2vJ9WnnmcHoTXXznZO9wwnW7c5MfOK833GVuz0/fZjQKoo
+         46QV2HdFBJuhNlqLaaZCF2JR11Or+TAL4sC2P+8Rx1ktUNXyqamT+TkLhQXSzBiaPQxz
+         4hGQ1hgxYbTLHcaZZhd/dYRl33q5epnUVjWYxbD6+z1Olx7HjpSC02hgrsUW77W+tZuF
+         tZpw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbAQU9jIgtIo1UW6vpkyszo5cWI6Y5vW1Bn4MzRCez7xXLO0CUbenqW7cVVHOzl9oK2RasGUTtx8kqSFY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3hSuy3Lx8O5dCgJx3WuXJTx9OBR5c09iikgTTYiGATXNGoNRc
+	2H8ZeL41xUqNq22gHsIofO776+fDlOw2n+GvKsZaD5axP7MHgz0jYrj1BqLdxIOa9NRN5LP4AG3
+	i8w==
+X-Google-Smtp-Source: AGHT+IGBrZrpg8PhfwimecksOm2WshEEHhnGVFTAyj8Gg4iqO42wRkXAmfH9Cuj7cPTKzFEH7NV75D/W+ME=
+X-Received: from pjbqi9.prod.google.com ([2002:a17:90b:2749:b0:2ee:4679:4a6b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2709:b0:2ee:693e:ed7c
+ with SMTP id 98e67ed59e1d1-2f83acb10c6mr22641043a91.33.1738374936503; Fri, 31
+ Jan 2025 17:55:36 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 31 Jan 2025 17:55:16 -0800
+Date: Fri, 31 Jan 2025 17:55:17 -0800
 In-Reply-To: <20250201015518.689704-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,107 +61,165 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250201015518.689704-1-seanjc@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250201015518.689704-10-seanjc@google.com>
-Subject: [PATCH v2 09/11] KVM: nVMX: Allow the caller to provide instruction
- length on nested VM-Exit
+Message-ID: <20250201015518.689704-11-seanjc@google.com>
+Subject: [PATCH v2 10/11] KVM: nVMX: Synthesize nested VM-Exit for supported
+ emulation intercepts
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Rework the nested VM-Exit helper to take the instruction length as a
-parameter, and convert nested_vmx_vmexit() into a "default" wrapper that
-grabs the length from vmcs02 as appropriate.  This will allow KVM to set
-the correct instruction length when synthesizing a nested VM-Exit when
-emulating an instruction that L1 wants to intercept.
+When emulating an instruction on behalf of L2 that L1 wants to intercept,
+generate a nested VM-Exit instead of injecting a #UD into L2.  Now that
+(most of) the necessary information is available, synthesizing a VM-Exit
+isn't terribly difficult.
 
-No functional change intended, as the path to prepare_vmcs12()'s reading
-of vmcs02.VM_EXIT_INSTRUCTION_LEN is gated on the same set of conditions
-as the VMREAD in the new nested_vmx_vmexit().
+Punt on decoding the ModR/M for descriptor table exits for now.  There is
+no evidence that any hypervisor intercepts descriptor table accesses *and*
+uses the EXIT_QUALIFICATION to expedite emulation, i.e. it's not worth
+delaying basic support for.
+
+To avoid doing more harm than good, e.g. by putting L2 into an infinite
+or effectively corrupting its code stream, inject #UD if the instruction
+length is nonsensical.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/vmx/nested.c | 12 +++++++-----
- arch/x86/kvm/vmx/nested.h | 22 ++++++++++++++++++++--
- 2 files changed, 27 insertions(+), 7 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 70 +++++++++++++++++++++++++++++++++---------
+ 1 file changed, 56 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index fb4fd96ce0f8..791e00d467df 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4618,7 +4618,7 @@ static void sync_vmcs02_to_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
-  */
- static void prepare_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
- 			   u32 vm_exit_reason, u32 exit_intr_info,
--			   unsigned long exit_qualification)
-+			   unsigned long exit_qualification, u32 exit_insn_len)
- {
- 	/* update exit information fields: */
- 	vmcs12->vm_exit_reason = vm_exit_reason;
-@@ -4646,7 +4646,7 @@ static void prepare_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
- 					  vm_exit_reason, exit_intr_info);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index dba22536eea3..7b2a6921f156 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -8008,20 +8008,13 @@ static __init void vmx_set_cpu_caps(void)
+ }
  
- 		vmcs12->vm_exit_intr_info = exit_intr_info;
--		vmcs12->vm_exit_instruction_len = vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
-+		vmcs12->vm_exit_instruction_len = exit_insn_len;
- 		vmcs12->vmx_instruction_info = vmcs_read32(VMX_INSTRUCTION_INFO);
- 
- 		/*
-@@ -4930,8 +4930,9 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
-  * and modify vmcs12 to make it see what it would expect to see there if
-  * L2 was its real guest. Must only be called when in L2 (is_guest_mode())
-  */
--void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
--		       u32 exit_intr_info, unsigned long exit_qualification)
-+void __nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
-+			 u32 exit_intr_info, unsigned long exit_qualification,
-+			 u32 exit_insn_len)
+ static bool vmx_is_io_intercepted(struct kvm_vcpu *vcpu,
+-				  struct x86_instruction_info *info)
++				  struct x86_instruction_info *info,
++				  unsigned long *exit_qualification)
  {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
  	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-@@ -4981,7 +4982,8 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
+ 	unsigned short port;
+ 	int size;
+-
+-	if (info->intercept == x86_intercept_in ||
+-	    info->intercept == x86_intercept_ins) {
+-		port = info->src_val;
+-		size = info->dst_bytes;
+-	} else {
+-		port = info->dst_val;
+-		size = info->src_bytes;
+-	}
++	bool imm;
  
- 		if (vm_exit_reason != -1)
- 			prepare_vmcs12(vcpu, vmcs12, vm_exit_reason,
--				       exit_intr_info, exit_qualification);
-+				       exit_intr_info, exit_qualification,
-+				       exit_insn_len);
+ 	/*
+ 	 * If the 'use IO bitmaps' VM-execution control is 0, IO instruction
+@@ -8033,6 +8026,30 @@ static bool vmx_is_io_intercepted(struct kvm_vcpu *vcpu,
+ 	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
+ 		return nested_cpu_has(vmcs12, CPU_BASED_UNCOND_IO_EXITING);
  
- 		/*
- 		 * Must happen outside of sync_vmcs02_to_vmcs12() as it will
-diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-index 2c296b6abb8c..6eedcfc91070 100644
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -26,8 +26,26 @@ void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
- enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
- 						     bool from_vmentry);
- bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu);
--void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
--		       u32 exit_intr_info, unsigned long exit_qualification);
-+void __nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
-+			 u32 exit_intr_info, unsigned long exit_qualification,
-+			 u32 exit_insn_len);
++	if (info->intercept == x86_intercept_in ||
++	    info->intercept == x86_intercept_ins) {
++		port = info->src_val;
++		size = info->dst_bytes;
++		imm  = info->src_type == OP_IMM;
++	} else {
++		port = info->dst_val;
++		size = info->src_bytes;
++		imm  = info->dst_type == OP_IMM;
++	}
 +
-+static inline void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
-+				     u32 exit_intr_info,
-+				     unsigned long exit_qualification)
-+{
-+	u32 exit_insn_len;
 +
-+	if (to_vmx(vcpu)->fail || vm_exit_reason == -1 ||
-+	    (vm_exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
-+		exit_insn_len = 0;
-+	else
-+		exit_insn_len = vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
++	*exit_qualification = ((unsigned long)port << 16) | (size - 1);
 +
-+	__nested_vmx_vmexit(vcpu, vm_exit_reason, exit_intr_info,
-+			    exit_qualification, exit_insn_len);
-+}
++	if (info->intercept == x86_intercept_ins ||
++	    info->intercept == x86_intercept_outs)
++		*exit_qualification |= BIT(4);
 +
- void nested_sync_vmcs12_to_shadow(struct kvm_vcpu *vcpu);
- int vmx_set_vmx_msr(struct kvm_vcpu *vcpu, u32 msr_index, u64 data);
- int vmx_get_vmx_msr(struct nested_vmx_msrs *msrs, u32 msr_index, u64 *pdata);
++	if (info->rep_prefix)
++		*exit_qualification |= BIT(5);
++
++	if (imm)
++		*exit_qualification |= BIT(6);
++
+ 	return nested_vmx_check_io_bitmaps(vcpu, port, size);
+ }
+ 
+@@ -8042,6 +8059,9 @@ int vmx_check_intercept(struct kvm_vcpu *vcpu,
+ 			struct x86_exception *exception)
+ {
+ 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
++	unsigned long exit_qualification = 0;
++	u32 vm_exit_reason;
++	u64 exit_insn_len;
+ 
+ 	switch (info->intercept) {
+ 	case x86_intercept_rdpid:
+@@ -8062,8 +8082,10 @@ int vmx_check_intercept(struct kvm_vcpu *vcpu,
+ 	case x86_intercept_ins:
+ 	case x86_intercept_out:
+ 	case x86_intercept_outs:
+-		if (!vmx_is_io_intercepted(vcpu, info))
++		if (!vmx_is_io_intercepted(vcpu, info, &exit_qualification))
+ 			return X86EMUL_CONTINUE;
++
++		vm_exit_reason = EXIT_REASON_IO_INSTRUCTION;
+ 		break;
+ 
+ 	case x86_intercept_lgdt:
+@@ -8076,11 +8098,25 @@ int vmx_check_intercept(struct kvm_vcpu *vcpu,
+ 	case x86_intercept_str:
+ 		if (!nested_cpu_has2(vmcs12, SECONDARY_EXEC_DESC))
+ 			return X86EMUL_CONTINUE;
++
++		if (info->intercept == x86_intercept_lldt ||
++		    info->intercept == x86_intercept_ltr ||
++		    info->intercept == x86_intercept_sldt ||
++		    info->intercept == x86_intercept_str)
++			vm_exit_reason = EXIT_REASON_LDTR_TR;
++		else
++			vm_exit_reason = EXIT_REASON_GDTR_IDTR;
++		/*
++		 * FIXME: Decode the ModR/M to generate the correct exit
++		 *        qualification for memory operands.
++		 */
+ 		break;
+ 
+ 	case x86_intercept_hlt:
+ 		if (!nested_cpu_has(vmcs12, CPU_BASED_HLT_EXITING))
+ 			return X86EMUL_CONTINUE;
++
++		vm_exit_reason = EXIT_REASON_HLT;
+ 		break;
+ 
+ 	case x86_intercept_pause:
+@@ -8096,15 +8132,21 @@ int vmx_check_intercept(struct kvm_vcpu *vcpu,
+ 		    !nested_cpu_has(vmcs12, CPU_BASED_PAUSE_EXITING))
+ 			return X86EMUL_CONTINUE;
+ 
++		vm_exit_reason = EXIT_REASON_PAUSE_INSTRUCTION;
+ 		break;
+ 
+ 	/* TODO: check more intercepts... */
+ 	default:
+-		break;
++		return X86EMUL_UNHANDLEABLE;
+ 	}
+ 
+-	/* FIXME: produce nested vmexit and return X86EMUL_INTERCEPTED.  */
+-	return X86EMUL_UNHANDLEABLE;
++	exit_insn_len = abs_diff((s64)info->next_rip, (s64)info->rip);
++	if (!exit_insn_len || exit_insn_len > X86_MAX_INSTRUCTION_LENGTH)
++		return X86EMUL_UNHANDLEABLE;
++
++	__nested_vmx_vmexit(vcpu, vm_exit_reason, 0, exit_qualification,
++			    exit_insn_len);
++	return X86EMUL_INTERCEPTED;
+ }
+ 
+ #ifdef CONFIG_X86_64
 -- 
 2.48.1.362.g079036d154-goog
 
