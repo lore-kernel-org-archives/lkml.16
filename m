@@ -1,350 +1,459 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB02412B73;
-	Sat,  1 Feb 2025 07:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E505C6F06B
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 07:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738394606; cv=none; b=eX55ch9Qxee3+rDobwaY/x55WwR1Tn9VphxQbV9fJyv/vDSX6eKeOYUvnlqu68Z2ywBFHYfgvKpXV+a1R7ivN0Okl2UQB1/Diu0zTm1uxelVJhAa9YhaPuF6L8vwCad1gBfj9eKdb2F4lQypwyt7VMdjE9L7BaVt4PeCmsai3xg=
+	t=1738394776; cv=none; b=ZKEDelOWCwJNro+w86ZtSvsBtm+1fdtqANuDoe+Q+jD08Eud8Pwr+bWGfkX0/S1PeMHEDekolfc9+UAgN7SagOjjl9Uvkzx22MlAPnWD9dRZ2JmbQyDylgAn8eCp+P3S7+4bB5NcCkVYa12yONf87UE1QC2uJpdS016HX1QctJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738394606; c=relaxed/simple;
-	bh=XbYLYhL+p+a93lrvGvcF5wj9z6ODld0rstcGiOfbXM4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KnaY26XhjXxtd69xg6s/CRyWk121aY5nu841e5GLmUF0t9X7xeO8wUBlcOH+ogkh9EcMCfyys7SESvYZ+2bKd72MhYD0HHOZP0deBYDBtVC2qnNzOcP1s2Rf5AAtZ5pnulHx6Tq/xJdAE2JKBLY2BtFCCjOIu6gqXQSC2S++BNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLdlva7Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738394776; c=relaxed/simple;
+	bh=OzRFvH6dX3ZDYOR1kCoI/27ihgInrvKzLfxTrSJtCJQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tT7+nvlYepk6cn93GG25FkIxsoTg7IBHQpS0CoYnY9ECoyjoV6WBB6Fm4ReqvZQhF1nWZUhmQDuyUQjDfqPdEVCPFWJYMfV91Jte0qND7B7JCsT6Gt9CZnJ31PIYfz6DwUPJRqBSJW/9Xaj65RTL0k/noKZ8KygVQlUSkHrxRpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qbnb1/ar; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLdlva7Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C938C4CEE0;
-	Sat,  1 Feb 2025 07:23:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738394605;
-	bh=XbYLYhL+p+a93lrvGvcF5wj9z6ODld0rstcGiOfbXM4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KLdlva7YfycBM/PNWSdy7EvfZgjDPoCkPjTTh6C9nrTE/2GI+0EYiO+7HkOnq55RR
-	 zTtXN/7MPEXMWsLyRPZAkZ0tiB8NCQHAJKFOjUg0NGJhRE0xVE8uuTgTCq4oTs4NbT
-	 iLbQps3cOpBNbsxO8z9VEErBZsqGZqoBV6pbj8UTbO/AZ4J+SlKVzb9ajRssGBgoYV
-	 iM+ggti8G/MV/RKTBdxTwIPavh53+gRhORccmx6gRPrmFqa10AbtCvQgj5LjoOyR+l
-	 TPHukuYmN3o8+TaYzpnG4BA4g83/mztd71wSTQIEqUpqD6UMDEh0cV7QSf8wZHXVJX
-	 BwV2FrBfZ9Z2Q==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-modules@vger.kernel.org
-Subject: [PATCH v2 2/2] tracing: Add relative-stacktrace option
-Date: Sat,  1 Feb 2025 16:23:20 +0900
-Message-ID: <173839460073.2009498.15281500159677989414.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <173839458022.2009498.14495253908367838065.stgit@devnote2>
-References: <173839458022.2009498.14495253908367838065.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qbnb1/ar"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a814c54742so86315ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 23:26:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738394774; x=1738999574; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rux43aa/DTem+yepz3mKs1gCKlwGfSPEvQiGocgr7AQ=;
+        b=qbnb1/arXE4XrDonIZNxqvSMPDF4hUUQUrbkp/YzYvIJdNSR5bvT6KAMX5gWEZpGnX
+         lSPZLHrim92rDHdLStISptStXLVblniE0efyl01RBpa8lXfImqU7ToftzLmWSHO87OYs
+         +FhCEEFi3bczQx5JfuTV/r2/oQwpOhsEYHIYfpx7XYDsTJo+fGcuLz+ro2/UpzyYtq/U
+         GwW3zl4AADoCiEpGgEck3OUbSGalvqdh4mJUv92rNiD663iUBagTH9gYHqIWd+nZj/0U
+         M05N1jvoo63rDqW51B9coYgCc3eppDmvJHPYWumjc/fwlvgozhE21eiETKdOnbvNPZLA
+         8JIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738394774; x=1738999574;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rux43aa/DTem+yepz3mKs1gCKlwGfSPEvQiGocgr7AQ=;
+        b=UwmAC5njFlqYS3jfs57tZ2NakP29/xvB9BahXq+9OE3JE8Ttj6BN7Kc2tMw59XngF2
+         ImPe0dwO+hq3rR7maZEf8Vi4C8bGFzH822/fd4SG5WsgLpVMMiyO/ZK68lxOcGsWtlgm
+         egv9q0Xzs/PMxCZR0unGom2nxtP09v8Ul0ofub9yWB228E1NEN1201vimMW2b+Tsh76c
+         zy00P/XSrW6ab9pn3+rku7/iU3kgfzBmqWZL4xyz7G/oOnRB66/4opd/AswpElddbydq
+         xD47cgFg07mOowTVB+GZN1Y6NIQdNi8kWFa/t6H7Knpih/k4zYFQCmeXISXrnXMdtCLM
+         9b+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWsqP+LTnpy6Yhbj9A1kvm88HQV5b2VKJrslgwGoTI+mv6HHPPTysBUDAuO5w8cfQP8POTKqsNrtmBequk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjkNjc6V17XtsBquCbTNOfzmv3++J6Al0PQrQJL5ZgbsjwUobF
+	6WTRCxON0rsS5MVrhw6YhFaQYgnOy6JkGizrXNJmLbwuRftc1xzHX58Ir+pFcl+27DfoGl5eDCK
+	AabHkDLUneZCNa2g+NCyiyGXDHKLF+Z82tXdV
+X-Gm-Gg: ASbGncumywBnRZKJKI8teermqsD8CDV0YGkAmHJdsgC93YHKeUOHb5VAhAtsTe5cPAU
+	NnwX1MQbLtJROuW3LstBnLT9mRNMgRWMbxNK1cUZP1graAPKbM1wxsfBz8QS6AqSe5Fe7DJM9jg
+	==
+X-Google-Smtp-Source: AGHT+IEDBdollJUgNSeH4FxdqnN1fjXQBSz3pqxWx9cxWDQky66sKbdbOod/UoGCyNvBa3LCKGHDSRxtLRW2F5dhnFw=
+X-Received: by 2002:a05:6e02:1a48:b0:3a7:c962:95d1 with SMTP id
+ e9e14a558f8ab-3d021f92aa0mr1290945ab.5.1738394773697; Fri, 31 Jan 2025
+ 23:26:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250123074659.698123-1-irogers@google.com> <20250123074659.698123-3-irogers@google.com>
+ <2763b783-c316-46e8-b4db-469d1ba55ac4@linux.intel.com>
+In-Reply-To: <2763b783-c316-46e8-b4db-469d1ba55ac4@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 31 Jan 2025 23:26:02 -0800
+X-Gm-Features: AWEUYZl1JQd9Z9f4tlbIeVkd3Oa4u1Fq8jhNEUf7qYUss8N5aYCbd1-RZYmEE8c
+Message-ID: <CAP-5=fU2sGSS+OsKmn8C+Y7Msm-5qUFpotRc2rfgprhGpsroew@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] perf pmus: Restructure pmu_read_sysfs to scan
+ fewer PMUs
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Thu, Jan 30, 2025 at 11:24=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
+com> wrote:
+>
+>
+>
+> On 2025-01-23 2:46 a.m., Ian Rogers wrote:
+> > Rather than scanning core or all PMUs, allow pmu_read_sysfs to read
+> > some combination of core, other, hwmon and tool PMUs. The PMUs that
+> > should be read and are already read are held as bitmaps. It is known
+> > that a "hwmon_" prefix is necessary for a hwmon PMU's name, similarly
+> > with "tool", so only scan those PMUs in situations the PMU name or the
+> > PMU's type number make sense to.
+> >
+> > The number of openat system calls reduces from 276 to 98 for a hwmon
+> > event. The number of openats for regular perf events isn't changed.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/pmu.h  |   2 +
+> >  tools/perf/util/pmus.c | 144 ++++++++++++++++++++++++++---------------
+> >  2 files changed, 95 insertions(+), 51 deletions(-)
+> >
+> > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> > index dbed6c243a5e..edd36c20aedc 100644
+> > --- a/tools/perf/util/pmu.h
+> > +++ b/tools/perf/util/pmu.h
+> > @@ -37,6 +37,8 @@ struct perf_pmu_caps {
+> >  };
+> >
+> >  enum {
+> > +     PERF_PMU_TYPE_PE_START    =3D 0,
+> > +     PERF_PMU_TYPE_PE_END      =3D 0xFFFEFFFF,
+> >       PERF_PMU_TYPE_HWMON_START =3D 0xFFFF0000,
+> >       PERF_PMU_TYPE_HWMON_END   =3D 0xFFFFFFFD,
+> >       PERF_PMU_TYPE_TOOL =3D 0xFFFFFFFE,
+> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > index b493da0d22ef..3e3ffafcad71 100644
+> > --- a/tools/perf/util/pmus.c
+> > +++ b/tools/perf/util/pmus.c
+> > @@ -37,10 +37,23 @@
+> >   */
+> >  static LIST_HEAD(core_pmus);
+> >  static LIST_HEAD(other_pmus);
+> > -static bool read_sysfs_core_pmus;
+> > -static bool read_sysfs_all_pmus;
+> > +enum perf_tool_pmu_type {
+> > +     PERF_TOOL_PMU_TYPE_PE_CORE,
+> > +#define PERF_TOOL_PMU_TYPE_PE_CORE_MASK (1 << PERF_TOOL_PMU_TYPE_PE_CO=
+RE)
+> > +     PERF_TOOL_PMU_TYPE_PE_OTHER,
+>
+> What is the PE short for?
 
-Add "relative-stacktrace" option to save the stacktrace entries
-as offset from the _stext or module's text section. For the
-module address, each entry also saves the first 4bytes of the
-build_id of the module so that it can find the appropriate
-symbol from the offset.
+Perf event, rather than type numbers being used for things like the fake PM=
+U.
 
-By using this build_id, we can also easily find the corresponding
-modules off-line. Thus this stacktrace data is in the persistent
-ring buffer, the kernel can find appropriate modules after reboot
-without saving previous live information.
+> The terminology "other" confused me at first glance.
 
-This feature also shows the module name after the symbol as below.
+Agreed. It corresponds to the other list immediately above this code.
 
-   event-sample-1622    [005] ...1.  2112.978105: <stack trace>
- => event_triggers_post_call
- => trace_event_raw_event_foo_bar [trace_events_sample]
- => do_simple_thread_func [trace_events_sample]
- => simple_thread [trace_events_sample]
- => kthread
- => ret_from_fork
- => ret_from_fork_asm
+> I think the PE_OTHER means the PMUs not core, hwmon or tool.
+> There is a "other_pmus" nearby, which means the PMUs not core, but
+> include hwmon and tool.
+>
+> Please add some comments to explain the scope of the TYPE_PE_OTHER.
 
-The downside is the cost of time and memory (on 32bit arch). This
-needs to find the module if the address in the module, and save
-both of 32bit offset and 32bit hash for each entry, this may consume
-twice memory on 32bit arch. On 64bit arch, the amount of consuming
-memory is the same.
+This is already this immediately above:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/pmus.c?h=3Dperf-tools-next#n31
+```
+ * other_pmus: All other PMUs which are not part of core_pmus list. It does=
+n't
+*             matter whether PMU is present per SMT-thread or outside of th=
+e
+*             core in the hw. For e.g., an instance of AMD ibs_fetch// and
+*             ibs_op// PMUs is present in each hw SMT thread, however they
+*             are captured under other_pmus. PMUs belonging to other_pmus
+*             must have pmu->is_core=3D0 but pmu->is_uncore could be 0 or 1=
+.
+```
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- include/linux/trace.h        |    5 +++
- kernel/trace/Kconfig         |    1 +
- kernel/trace/trace.c         |   50 ++++++++++++++++++++++++++++++----
- kernel/trace/trace.h         |    3 ++
- kernel/trace/trace_entries.h |   18 ++++++++++++
- kernel/trace/trace_output.c  |   62 ++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 133 insertions(+), 6 deletions(-)
+> > +#define PERF_TOOL_PMU_TYPE_PE_OTHER_MASK (1 << PERF_TOOL_PMU_TYPE_PE_O=
+THER)
+> > +     PERF_TOOL_PMU_TYPE_TOOL,
+> > +#define PERF_TOOL_PMU_TYPE_TOOL_MASK (1 << PERF_TOOL_PMU_TYPE_TOOL)
+> > +     PERF_TOOL_PMU_TYPE_HWMON,
+> > +#define PERF_TOOL_PMU_TYPE_HWMON_MASK (1 << PERF_TOOL_PMU_TYPE_HWMON)
+> > +#define PERF_TOOL_PMU_TYPE_ALL_MASK (PERF_TOOL_PMU_TYPE_PE_CORE_MASK |=
+       \
+> > +                                     PERF_TOOL_PMU_TYPE_PE_OTHER_MASK =
+| \
+> > +                                     PERF_TOOL_PMU_TYPE_TOOL_MASK |  \
+> > +                                     PERF_TOOL_PMU_TYPE_HWMON_MASK)
+> > +};
+>
+> Nit: Maybe it's better to split the enum perf_tool_pmu_type and #define.
+> It's a little bit hard for me to locate how many types there are at
+> first glance.
 
-diff --git a/include/linux/trace.h b/include/linux/trace.h
-index fdcd76b7be83..4b4f008a2fa9 100644
---- a/include/linux/trace.h
-+++ b/include/linux/trace.h
-@@ -26,6 +26,11 @@ struct trace_export {
- 	int flags;
- };
- 
-+struct ftrace_rel_caller {
-+	int		offset;
-+	unsigned int	build_id32;
-+} __packed;
-+
- struct trace_array;
- 
- #ifdef CONFIG_TRACING
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index d570b8b9c0a9..b4bd186732fe 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -169,6 +169,7 @@ config TRACING
- 	bool
- 	select RING_BUFFER
- 	select STACKTRACE if STACKTRACE_SUPPORT
-+	select MODULE_BUILD_ID if STACKTRACE_SUPPORT
- 	select TRACEPOINTS
- 	select NOP_TRACER
- 	select BINARY_PRINTF
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 1496a5ac33ae..ca17d9db37e8 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2916,16 +2916,41 @@ struct ftrace_stacks {
- static DEFINE_PER_CPU(struct ftrace_stacks, ftrace_stacks);
- static DEFINE_PER_CPU(int, ftrace_stack_reserve);
- 
-+static void record_as_offset(struct ftrace_rel_caller *caller, unsigned long addr)
-+{
-+	if (likely(core_kernel_text(addr))) {
-+		caller->build_id32 = 0;
-+		caller->offset = addr - (unsigned long)_stext;
-+	} else if (addr == FTRACE_TRAMPOLINE_MARKER) {
-+		caller->build_id32 = 0;
-+		caller->offset = (int)FTRACE_TRAMPOLINE_MARKER;
-+	} else {
-+		struct module *mod = __module_text_address(addr);
-+
-+		if (mod) {
-+			unsigned long base = (unsigned long)mod->mem[MOD_TEXT].base;
-+
-+			caller->offset = addr - base;
-+			caller->build_id32 = *(unsigned int *)mod->build_id;
-+		} else {
-+			caller->build_id32 = 0;
-+			caller->offset = addr - (unsigned long)_stext;
-+		}
-+	}
-+}
-+
- static void __ftrace_trace_stack(struct trace_array *tr,
- 				 struct trace_buffer *buffer,
- 				 unsigned int trace_ctx,
- 				 int skip, struct pt_regs *regs)
- {
-+	struct rel_stack_entry *rel_entry;
- 	struct ring_buffer_event *event;
- 	unsigned int size, nr_entries;
- 	struct ftrace_stack *fstack;
- 	struct stack_entry *entry;
- 	int stackidx;
-+	int type;
- 
- 	/*
- 	 * Add one, for this function and the call to save_stack_trace()
-@@ -2937,6 +2962,7 @@ static void __ftrace_trace_stack(struct trace_array *tr,
- #endif
- 
- 	preempt_disable_notrace();
-+	type = (tr->trace_flags & TRACE_ITER_REL_STACK) ? TRACE_REL_STACK : TRACE_STACK;
- 
- 	stackidx = __this_cpu_inc_return(ftrace_stack_reserve) - 1;
- 
-@@ -2977,16 +3003,28 @@ static void __ftrace_trace_stack(struct trace_array *tr,
- 	}
- #endif
- 
--	event = __trace_buffer_lock_reserve(buffer, TRACE_STACK,
--				    struct_size(entry, caller, nr_entries),
-+	if (type == TRACE_REL_STACK)
-+		size = struct_size(rel_entry, caller, nr_entries);
-+	else
-+		size = struct_size(entry, caller, nr_entries);
-+
-+	event = __trace_buffer_lock_reserve(buffer, type, size,
- 				    trace_ctx);
- 	if (!event)
- 		goto out;
--	entry = ring_buffer_event_data(event);
- 
--	entry->size = nr_entries;
--	memcpy(&entry->caller, fstack->calls,
--	       flex_array_size(entry, caller, nr_entries));
-+	if (type == TRACE_REL_STACK) {
-+		rel_entry = ring_buffer_event_data(event);
-+		rel_entry->size = nr_entries;
-+		for (int i = 0; i < nr_entries; i++)
-+			record_as_offset((struct ftrace_rel_caller *)&rel_entry->caller[i],
-+					fstack->calls[i]);
-+	} else {
-+		entry = ring_buffer_event_data(event);
-+		entry->size = nr_entries;
-+		memcpy(&entry->caller, fstack->calls,
-+		       flex_array_size(entry, caller, nr_entries));
-+	}
- 
- 	__buffer_unlock_commit(buffer, event);
- 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 9c21ba45b7af..b27533456865 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -55,6 +55,7 @@ enum trace_type {
- 	TRACE_TIMERLAT,
- 	TRACE_RAW_DATA,
- 	TRACE_FUNC_REPEATS,
-+	TRACE_REL_STACK,
- 
- 	__TRACE_LAST_TYPE,
- };
-@@ -511,6 +512,7 @@ extern void __ftrace_bad_type(void);
- 		IF_ASSIGN(var, ent, struct ftrace_entry, TRACE_FN);	\
- 		IF_ASSIGN(var, ent, struct ctx_switch_entry, 0);	\
- 		IF_ASSIGN(var, ent, struct stack_entry, TRACE_STACK);	\
-+		IF_ASSIGN(var, ent, struct rel_stack_entry, TRACE_REL_STACK);\
- 		IF_ASSIGN(var, ent, struct userstack_entry, TRACE_USER_STACK);\
- 		IF_ASSIGN(var, ent, struct print_entry, TRACE_PRINT);	\
- 		IF_ASSIGN(var, ent, struct bprint_entry, TRACE_BPRINT);	\
-@@ -1350,6 +1352,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		C(TRACE_PRINTK,		"trace_printk_dest"),	\
- 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
- 		C(HASH_PTR,		"hash-ptr"),	/* Print hashed pointer */ \
-+		C(REL_STACK,		"relative-stacktrace"),	\
- 		FUNCTION_FLAGS					\
- 		FGRAPH_FLAGS					\
- 		STACK_FLAGS					\
-diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
-index fbfb396905a6..46a770e57287 100644
---- a/kernel/trace/trace_entries.h
-+++ b/kernel/trace/trace_entries.h
-@@ -229,6 +229,24 @@ FTRACE_ENTRY(kernel_stack, stack_entry,
- 		 (void *)__entry->caller[6], (void *)__entry->caller[7])
- );
- 
-+FTRACE_ENTRY(kernel_rel_stack, rel_stack_entry,
-+
-+	TRACE_REL_STACK,
-+
-+	F_STRUCT(
-+		__field(	int,		size	)
-+		__stack_array(	u64,	caller,	FTRACE_STACK_ENTRIES, size)
-+	),
-+
-+	F_printk("\t=> %ps\n\t=> %ps\n\t=> %ps\n"
-+		 "\t=> %ps\n\t=> %ps\n\t=> %ps\n"
-+		 "\t=> %ps\n\t=> %ps\n",
-+		 (void *)__entry->caller[0], (void *)__entry->caller[1],
-+		 (void *)__entry->caller[2], (void *)__entry->caller[3],
-+		 (void *)__entry->caller[4], (void *)__entry->caller[5],
-+		 (void *)__entry->caller[6], (void *)__entry->caller[7])
-+);
-+
- FTRACE_ENTRY(user_stack, userstack_entry,
- 
- 	TRACE_USER_STACK,
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 03d56f711ad1..b3748a5f5843 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1281,6 +1281,67 @@ static struct trace_event trace_stack_event = {
- 	.funcs		= &trace_stack_funcs,
- };
- 
-+/* TRACE_REL_STACK */
-+
-+static enum print_line_t trace_rel_stack_print(struct trace_iterator *iter,
-+					   int flags, struct trace_event *event)
-+{
-+	struct ftrace_rel_caller *p;
-+	struct rel_stack_entry *field;
-+	struct trace_seq *s = &iter->seq;
-+	unsigned long base;
-+	struct module *mod;
-+
-+	trace_assign_type(field, iter->ent);
-+
-+	trace_seq_puts(s, "<stack trace>\n");
-+
-+	for (int i = 0; i < field->size; i++) {
-+		p = (struct ftrace_rel_caller *)&field->caller[i];
-+
-+		if (trace_seq_has_overflowed(s))
-+			break;
-+
-+		trace_seq_puts(s, " => ");
-+		if (p->offset == FTRACE_TRAMPOLINE_MARKER) {
-+			trace_seq_puts(s, "[FTRACE TRAMPOLINE]\n");
-+			continue;
-+		}
-+		if (p->build_id32) {
-+			unsigned char build_id32[4];
-+
-+			guard(rcu)();
-+			*(unsigned int *)build_id32 = p->build_id32;
-+			mod = __module_build_id(build_id32, 4);
-+			if (!mod) {
-+				trace_seq_printf(s, "%x [MODULE %02x%02x%02x%02x]\n",
-+						p->offset, build_id32[0], build_id32[1],
-+						build_id32[2], build_id32[3]);
-+				continue;
-+			}
-+			base = (unsigned long)mod->mem[MOD_TEXT].base;
-+		} else {
-+			mod = NULL;
-+			base = (unsigned long)_stext;
-+		}
-+		seq_print_ip_sym(s, base + p->offset, flags);
-+		if (mod)
-+			trace_seq_printf(s, " [%s]", mod->name);
-+		trace_seq_putc(s, '\n');
-+	}
-+
-+	return trace_handle_return(s);
-+}
-+
-+static struct trace_event_functions trace_rel_stack_funcs = {
-+	.trace		= trace_rel_stack_print,
-+};
-+
-+static struct trace_event trace_rel_stack_event = {
-+	.type		= TRACE_REL_STACK,
-+	.funcs		= &trace_rel_stack_funcs,
-+};
-+
- /* TRACE_USER_STACK */
- static enum print_line_t trace_user_stack_print(struct trace_iterator *iter,
- 						int flags, struct trace_event *event)
-@@ -1724,6 +1785,7 @@ static struct trace_event *events[] __initdata = {
- 	&trace_ctx_event,
- 	&trace_wake_event,
- 	&trace_stack_event,
-+	&trace_rel_stack_event,
- 	&trace_user_stack_event,
- 	&trace_bputs_event,
- 	&trace_bprint_event,
+Ok, will do in v3.
 
+> > +static unsigned int read_pmu_types;
+> >
+> > -static void pmu_read_sysfs(bool core_only);
+> > +static void pmu_read_sysfs(unsigned int to_read_pmus);
+> >
+> >  size_t pmu_name_len_no_suffix(const char *str)
+> >  {
+> > @@ -102,8 +115,7 @@ void perf_pmus__destroy(void)
+> >
+> >               perf_pmu__delete(pmu);
+> >       }
+> > -     read_sysfs_core_pmus =3D false;
+> > -     read_sysfs_all_pmus =3D false;
+> > +     read_pmu_types =3D 0;
+> >  }
+> >
+> >  static struct perf_pmu *pmu_find(const char *name)
+> > @@ -129,6 +141,7 @@ struct perf_pmu *perf_pmus__find(const char *name)
+> >       struct perf_pmu *pmu;
+> >       int dirfd;
+> >       bool core_pmu;
+> > +     unsigned int to_read_pmus =3D 0;
+> >
+> >       /*
+> >        * Once PMU is loaded it stays in the list,
+> > @@ -139,11 +152,11 @@ struct perf_pmu *perf_pmus__find(const char *name=
+)
+> >       if (pmu)
+> >               return pmu;
+> >
+> > -     if (read_sysfs_all_pmus)
+> > +     if (read_pmu_types =3D=3D PERF_TOOL_PMU_TYPE_ALL_MASK)
+> >               return NULL;
+> >
+> >       core_pmu =3D is_pmu_core(name);
+> > -     if (core_pmu && read_sysfs_core_pmus)
+> > +     if (core_pmu && (read_pmu_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK=
+))
+> >               return NULL;
+> >
+> >       dirfd =3D perf_pmu__event_source_devices_fd();
+> > @@ -151,15 +164,27 @@ struct perf_pmu *perf_pmus__find(const char *name=
+)
+> >                              /*eager_load=3D*/false);
+> >       close(dirfd);
+> >
+> > -     if (!pmu) {
+> > -             /*
+> > -              * Looking up an inidividual PMU failed. This may mean na=
+me is
+> > -              * an alias, so read the PMUs from sysfs and try to find =
+again.
+> > -              */
+> > -             pmu_read_sysfs(core_pmu);
+> > +     if (pmu)
+> > +             return pmu;
+> > +
+> > +     /* Looking up an individual perf event PMU failed, check if a too=
+l PMU should be read. */
+> > +     if (!strncmp(name, "hwmon_", 6))
+> > +             to_read_pmus |=3D PERF_TOOL_PMU_TYPE_HWMON_MASK;
+> > +     else if (!strcmp(name, "tool"))
+> > +             to_read_pmus |=3D PERF_TOOL_PMU_TYPE_TOOL_MASK;
+> > +
+> > +     if (to_read_pmus) {
+> > +             pmu_read_sysfs(to_read_pmus);
+> >               pmu =3D pmu_find(name);
+> > +             if (pmu)
+> > +                     return pmu;
+> >       }
+> > -     return pmu;
+> > +     /* Read all necessary PMUs from sysfs and see if the PMU is found=
+. */
+> > +     to_read_pmus =3D PERF_TOOL_PMU_TYPE_PE_CORE_MASK;
+> > +     if (!core_pmu)
+> > +             to_read_pmus |=3D PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
+> > +     pmu_read_sysfs(to_read_pmus);
+> > +     return pmu_find(name);
+> >  }
+> >
+> >  static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
+> > @@ -176,11 +201,11 @@ static struct perf_pmu *perf_pmu__find2(int dirfd=
+, const char *name)
+> >       if (pmu)
+> >               return pmu;
+> >
+> > -     if (read_sysfs_all_pmus)
+> > +     if (read_pmu_types =3D=3D PERF_TOOL_PMU_TYPE_ALL_MASK)
+> >               return NULL;
+> >
+> >       core_pmu =3D is_pmu_core(name);
+> > -     if (core_pmu && read_sysfs_core_pmus)
+> > +     if (core_pmu && (read_pmu_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK=
+))
+> >               return NULL;
+> >
+> >       return perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirf=
+d, name,
+> > @@ -197,52 +222,60 @@ static int pmus_cmp(void *priv __maybe_unused,
+> >  }
+> >
+> >  /* Add all pmus in sysfs to pmu list: */
+> > -static void pmu_read_sysfs(bool core_only)
+> > +static void pmu_read_sysfs(unsigned int to_read_types)
+> >  {
+> > -     int fd;
+> > -     DIR *dir;
+> > -     struct dirent *dent;
+> >       struct perf_pmu *tool_pmu;
+> >
+> > -     if (read_sysfs_all_pmus || (core_only && read_sysfs_core_pmus))
+> > +     if ((read_pmu_types & to_read_types) =3D=3D to_read_types) {
+> > +             /* All requested PMU types have been read. */
+> >               return;
+> > +     }
+> >
+> > -     fd =3D perf_pmu__event_source_devices_fd();
+> > -     if (fd < 0)
+> > -             return;
+> > +     if (to_read_types & (PERF_TOOL_PMU_TYPE_PE_CORE_MASK | PERF_TOOL_=
+PMU_TYPE_PE_OTHER_MASK)) {
+> > +             int fd =3D perf_pmu__event_source_devices_fd();
+> > +             DIR *dir;
+> > +             struct dirent *dent;
+> > +             bool core_only =3D (to_read_types & PERF_TOOL_PMU_TYPE_PE=
+_OTHER_MASK) =3D=3D 0;
+> >
+> > -     dir =3D fdopendir(fd);
+> > -     if (!dir) {
+> > -             close(fd);
+> > -             return;
+> > -     }
+> > +             if (fd < 0)
+> > +                     goto skip_pe_pmus;
+> >
+> > -     while ((dent =3D readdir(dir))) {
+> > -             if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, "=
+.."))
+> > -                     continue;
+> > -             if (core_only && !is_pmu_core(dent->d_name))
+> > -                     continue;
+> > -             /* add to static LIST_HEAD(core_pmus) or LIST_HEAD(other_=
+pmus): */
+> > -             perf_pmu__find2(fd, dent->d_name);
+> > -     }
+> > +             dir =3D fdopendir(fd);
+> > +             if (!dir) {
+> > +                     close(fd);
+> > +                     goto skip_pe_pmus;
+> > +             }
+> >
+> > -     closedir(dir);
+> > -     if (list_empty(&core_pmus)) {
+> > +             while ((dent =3D readdir(dir))) {
+> > +                     if (!strcmp(dent->d_name, ".") || !strcmp(dent->d=
+_name, ".."))
+> > +                             continue;
+> > +                     if (core_only && !is_pmu_core(dent->d_name))
+> > +                             continue;
+> > +                     /* add to static LIST_HEAD(core_pmus) or LIST_HEA=
+D(other_pmus): */
+> > +                     perf_pmu__find2(fd, dent->d_name);
+> > +             }
+> > +
+> > +             closedir(dir);
+> > +     }
+> > +skip_pe_pmus:
+> > +     if ((to_read_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK) && list_emp=
+ty(&core_pmus)) {
+> >               if (!perf_pmu__create_placeholder_core_pmu(&core_pmus))
+> >                       pr_err("Failure to set up any core PMUs\n");
+> >       }
+> >       list_sort(NULL, &core_pmus, pmus_cmp);
+> > -     if (!core_only) {
+> > +
+> > +     if ((to_read_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) !=3D 0 &&
+> > +         (read_pmu_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) =3D=3D 0) {
+>
+> Nit: Maybe
+>
+>         if ((to_read_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) &&
+>             !(read_pmu_types & PERF_TOOL_PMU_TYPE_TOOL_MASK))
+
+Thanks. I'm not convinced on the readability, which was why I was
+being a bit more verbose in what I wrote. I worrited the & reads like
+an && and the ! is hard to miss.
+
+Thanks,
+Ian
+
+> >               tool_pmu =3D perf_pmus__tool_pmu();
+> >               list_add_tail(&tool_pmu->list, &other_pmus);
+> > -             perf_pmus__read_hwmon_pmus(&other_pmus);
+> >       }
+> > +     if ((to_read_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) !=3D 0 &&
+> > +         (read_pmu_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) =3D=3D 0)
+>
+> ditto
+>
+> Thanks,
+> Kan
+> > +             perf_pmus__read_hwmon_pmus(&other_pmus);
+> > +
+> >       list_sort(NULL, &other_pmus, pmus_cmp);
+> > -     if (!list_empty(&core_pmus)) {
+> > -             read_sysfs_core_pmus =3D true;
+> > -             if (!core_only)
+> > -                     read_sysfs_all_pmus =3D true;
+> > -     }
+> > +
+> > +     read_pmu_types |=3D to_read_types;
+> >  }
+> >
+> >  static struct perf_pmu *__perf_pmus__find_by_type(unsigned int type)
+> > @@ -263,12 +296,21 @@ static struct perf_pmu *__perf_pmus__find_by_type=
+(unsigned int type)
+> >
+> >  struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
+> >  {
+> > +     unsigned int to_read_pmus;
+> >       struct perf_pmu *pmu =3D __perf_pmus__find_by_type(type);
+> >
+> > -     if (pmu || read_sysfs_all_pmus)
+> > +     if (pmu || (read_pmu_types =3D=3D PERF_TOOL_PMU_TYPE_ALL_MASK))
+> >               return pmu;
+> >
+> > -     pmu_read_sysfs(/*core_only=3D*/false);
+> > +     if (type >=3D PERF_PMU_TYPE_PE_START && type <=3D PERF_PMU_TYPE_P=
+E_END) {
+> > +             to_read_pmus =3D PERF_TOOL_PMU_TYPE_PE_CORE_MASK |
+> > +                     PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
+> > +     } else if (type >=3D PERF_PMU_TYPE_HWMON_START && type <=3D PERF_=
+PMU_TYPE_HWMON_END) {
+> > +             to_read_pmus =3D PERF_TOOL_PMU_TYPE_HWMON_MASK;
+> > +     } else {
+> > +             to_read_pmus =3D PERF_TOOL_PMU_TYPE_TOOL_MASK;
+> > +     }
+> > +     pmu_read_sysfs(to_read_pmus);
+> >       pmu =3D __perf_pmus__find_by_type(type);
+> >       return pmu;
+> >  }
+> > @@ -282,7 +324,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *p=
+mu)
+> >       bool use_core_pmus =3D !pmu || pmu->is_core;
+> >
+> >       if (!pmu) {
+> > -             pmu_read_sysfs(/*core_only=3D*/false);
+> > +             pmu_read_sysfs(PERF_TOOL_PMU_TYPE_ALL_MASK);
+> >               pmu =3D list_prepare_entry(pmu, &core_pmus, list);
+> >       }
+> >       if (use_core_pmus) {
+> > @@ -300,7 +342,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *p=
+mu)
+> >  struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
+> >  {
+> >       if (!pmu) {
+> > -             pmu_read_sysfs(/*core_only=3D*/true);
+> > +             pmu_read_sysfs(PERF_TOOL_PMU_TYPE_PE_CORE_MASK);
+> >               return list_first_entry_or_null(&core_pmus, typeof(*pmu),=
+ list);
+> >       }
+> >       list_for_each_entry_continue(pmu, &core_pmus, list)
+> > @@ -316,7 +358,7 @@ static struct perf_pmu *perf_pmus__scan_skip_duplic=
+ates(struct perf_pmu *pmu)
+> >       const char *last_pmu_name =3D (pmu && pmu->name) ? pmu->name : ""=
+;
+> >
+> >       if (!pmu) {
+> > -             pmu_read_sysfs(/*core_only=3D*/false);
+> > +             pmu_read_sysfs(PERF_TOOL_PMU_TYPE_ALL_MASK);
+> >               pmu =3D list_prepare_entry(pmu, &core_pmus, list);
+> >       } else
+> >               last_pmu_name_len =3D pmu_name_len_no_suffix(pmu->name ?:=
+ "");
+>
