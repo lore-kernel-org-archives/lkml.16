@@ -1,227 +1,159 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1429716B3B7
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 09:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C905BA34;
+	Sat,  1 Feb 2025 09:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738401516; cv=none; b=LWr7FEE9+f66p5l9/dwEcUBnvZpHIciYBYj9TMUXhFbrkM9hTtz+ZwrQyYtd4ni9jgz0iLtfRvr860Ts4DVc2gRDv1GpcFnn7Z0ojU7Ph38T4C98tqo6g7DsefOfEvTAIUQwN+OeiLtQXQUlYHK3AfsUEGBIxtqJAEELBYm9xyU=
+	t=1738401634; cv=none; b=hMadfFGLax/GS8WOdIsbpA6ZJz2rdVLRvXAOpiSNizH4KfD2T1dWdlnxgiv68l7vSGdnh9XzFRs2ykJiyx62YXIkWdHRHYyBlMgvKMIhrAf2W70XKs7ut0NiJj78jbZ7zmeeF+5iFh6PD+P6ozo3sWddj3gWdIoG1GZY0h/jr3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738401516; c=relaxed/simple;
-	bh=HZSRmLC0Y3vRBFov52uSE72iZIw43GshJDEASCPg0Lc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oGlJfUy29zdbuBsjbTg2ArWSlq41yZevyedgIFAwsxtu52r//H9A1toLZzwuJUIZ4OlgWCHPpQv0RDxAK1EkFy9gTQqlKkAqso0Vx5ehSxNlqkJP9bYxhzLzIEysypwnmMHrQKp4aKPvJlKx8g0lqU82Ti+5AyYVvztQtwQMP48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tSJViwnK; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738401634; c=relaxed/simple;
+	bh=88QZCiJ/E5yVGj+dInL7M8Qo9HGF0txNSyN+I3eGtUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nAniIORyl1T37AZCXX4q5+ygTNBfzPjn+1sFc7XlP40evjW7m32c22U5Vb5qrLBQoOmg0o0BInRVoO3OoejUrsd6wE/lZqAhDAq5zqslZqCvioVKHYeKmKs0Wxm1oSMpAej3PZHUxqKRmHwAfSSvLpxfrfkiiG+Mtm++RQ1PBGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=hDjcR9JJ; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tSJViwnK"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5401e6efffcso2967360e87.3
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 01:18:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738401512; x=1739006312; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DE3tyRugtbBbwb5/qBds84HRv3FrHZrDnoYQR1RwwhU=;
-        b=tSJViwnKCrf12EVAxSrllB0ttG9bLGf7hCdf34Ns/D3XlJQN3/xYoKedEuy3iqYaoE
-         1eoDWzhBqAbrc2zDJZClismsv/Zu0vAC/LO3CjokPr1rwX17G+tooHV0Tx5RuM+rYXp8
-         sixWrq8YiJ8aVxCom9HgkWu5QhFe8ZZezMsGhZOJ/s35tVo24nkCbHgqHslKezZNGpsz
-         7AUOlyIcdlxTxXBUT9dNzJgrvgt4WK9IRwBjAKKU7kRys0e2wWvYJBQK8UKY1h3S7f9G
-         gzAdefusVgZ7LypWQmBC7DowJG7mQ4gwPGDEJDiSuG4XGH9My76Qkh3BRejydppRWOV0
-         E6hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738401512; x=1739006312;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DE3tyRugtbBbwb5/qBds84HRv3FrHZrDnoYQR1RwwhU=;
-        b=OKPm4zz8UKYuDz8ybMykgYcHEoHxLspsG91skPtTOt+DE9v8GXuD/VQJ9WHSZOMVX+
-         UeVpLrTaXs/wzLfFahB7EpFZySzMPAAWARYkjjJ63ZeupraYXC4t6jJVt78tUT+TNbiE
-         q15rM1Edz3BLBT3cO4rWrSNSr6MonBAs7ajp69NKiousqN9sgCjziEvyu0THz+4Z4xxR
-         tmbVMZXV8G0haxBLaQoIIPWiq85bNlFS90BgcKcpP6sV+TFOcOx9uIlCQBZhE52OaCQX
-         ZNblR3rQGRs1/7HuZCEaJeG7+PkycZ49Eh8HNC0B3Sh1ht85delZ6g1M95TDGJSSQIGn
-         QFAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzghx+jLTyOBJ2lCLRJ8Uo9+UiMpHPExqlMwYIYjJzmw85bZCJUiVPOoeZmjwrmdJWSDTWwkDp32tlWjE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxKcWRj3P3JAKr1BOWD8TgqwvuJq6eHO38dUOH62T76pZvjTDy
-	sJO7KkqJtrdqwbmhtQzOvvzWHFOTeReVYqxeD2nEV/DwLwTMfUAjfGD4zN2wJa0+GEKpZWfoBl4
-	X9HqeH3XH
-X-Gm-Gg: ASbGncs5yHIyz8pvMT8I5KaU6qJHzriLpdO2cs0xd1g0/v4X3VUUq/SgsWXltyfKhgu
-	rJSLYrNiqn43SMkwWd47QMw2LAzYo/1Uj4VlVZEJaNUPnrUsgajVwvbUBWbwfuX+m265Yik4JN7
-	6EJcophwGEvEcHOnxdMmIDljdcJJkTk0ROiA6WtLkeKpr+N5RcR7aSm+/h+JJ/PwFgbLJVSnlGZ
-	z/gsGTPP8aTkiKMUstDrBgZkD26JaA0ojX07ihaMMOEPnHJPy1TUa7aMIYQR2RvMpSQpopaLnq7
-	SBhLoJrLGkNe4s+55PIkYCA=
-X-Google-Smtp-Source: AGHT+IFe21U1IlPS4x+T4yASJ7xTnVn3osFOXoCkAT13PTPtSXL7mLE5yALNh9bOA7uW6MRuRMxFNw==
-X-Received: by 2002:ac2:4155:0:b0:542:2166:44cb with SMTP id 2adb3069b0e04-543e4c372d3mr4045479e87.35.1738401511938;
-        Sat, 01 Feb 2025 01:18:31 -0800 (PST)
-Received: from umbar.lan ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebe0ff47sm711234e87.93.2025.02.01.01.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 01:18:30 -0800 (PST)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sat, 01 Feb 2025 11:18:15 +0200
-Subject: [PATCH 4/4] arm64: dts: qcom: qrb2210-rb1: add Bluetooth support
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hDjcR9JJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=NABKLZ3cQMbB3qNj2fTiRb+22S35Pg3r8c3gmdy5sdY=; b=hDjcR9JJx2Dck7oYyjMYofG4Jd
+	FYGGCR2dQqlsOFEq+7ZigpBfSp78O7TCYbXnCZWDZLQYldwZ1nT75F8Y1xDDnSTr6zvNMeRRCBHkx
+	rtGnLDdAIFr8fcU+2bRlBHfx+oplhluh4ANNCA1/1Ahc8Zw882R2rcXE2FAZqaJDtPIEZMFXWqBgJ
+	Rka8PjgTQYjkJSNEKtHgkshbQww8FJ0jkkyNfEEKsUtdZQpDL6oP9ZH+sHi4/QOCTd2GOrQQLikhG
+	1K4LfNi86bZoM3cxDMfAOccSVhqjYvbT3LTZm4lZISBR9SJKeQbXkRVRL1K9Sc0im2y5VVbGB5kVt
+	cwogsK0A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55052)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1te9fj-0001WT-0V;
+	Sat, 01 Feb 2025 09:20:15 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1te9fe-0006j5-0R;
+	Sat, 01 Feb 2025 09:20:10 +0000
+Date: Sat, 1 Feb 2025 09:20:09 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Tristram.Ha@microchip.com
+Cc: olteanv@gmail.com, Woojung.Huh@microchip.com, andrew@lunn.ch,
+	hkallweit1@gmail.com, Jose.Abreu@synopsys.com,
+	maxime.chevallier@bootlin.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Sadhan.Rudresh@synopsys.com,
+	Siddhant.Kumar@synopsys.com
+Subject: Re: [WARNING: ATTACHMENT UNSCANNED]Re: [WARNING: ATTACHMENT
+ UNSCANNED]Re: [PATCH RFC net-next 1/2] net: pcs: xpcs: Add special code to
+ operate in Microchip KSZ9477 switch
+Message-ID: <Z53nSexf2BaUQiCY@shell.armlinux.org.uk>
+References: <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <DM3PR11MB8736F7C3A021CAE9AB92F84EECEE2@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <20250129211226.cfrhv4nn3jomooxc@skbuf>
+ <Z5qmIEc6xEaeY6ys@shell.armlinux.org.uk>
+ <DM3PR11MB873652D36F1FC20999F45772ECE92@DM3PR11MB8736.namprd11.prod.outlook.com>
+ <20250130100227.isffoveezoqk5jpw@skbuf>
+ <Z5tcKFLRPcBkaw58@shell.armlinux.org.uk>
+ <DM4PR12MB5088BA650B164D5CEC33CA08D3E82@DM4PR12MB5088.namprd12.prod.outlook.com>
+ <Z5zxC3hwk4C0s456@shell.armlinux.org.uk>
+ <DM3PR11MB87369DE499570C4D4A6E3C9FECEB2@DM3PR11MB8736.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250201-rb1-bt-v1-4-ae896c4923d8@linaro.org>
-References: <20250201-rb1-bt-v1-0-ae896c4923d8@linaro.org>
-In-Reply-To: <20250201-rb1-bt-v1-0-ae896c4923d8@linaro.org>
-To: Marcel Holtmann <marcel@holtmann.org>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, 
- Rocky Liao <quic_rjliao@quicinc.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3063;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=HZSRmLC0Y3vRBFov52uSE72iZIw43GshJDEASCPg0Lc=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnnebckokAP8uTlRjuuGQS1EydPg05UnSfhdcBK
- h/ymwhC8mSJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ53m3AAKCRCLPIo+Aiko
- 1QDHB/9/g8L/8xi9FbapXjniU6lHAcvCdTF8lKitUp1rPCd20TzISTNzSWNmTZwffhmFuhFaOmS
- CwH/eCnFBNEes2nLsYMw7j6X3SXMpDRMIyvA9iHLr5tLMAq4dHOiWKX1QF7rVFBVrL6I60huEoz
- noauOfgqwe+OYMibAgsYKvZonpW0TwScpeaugF3j0k2ydB5fhvVJNQupE53dg+dDn7n8iMxP9Nl
- uoXW1l5u9AvNKM8G7PrpBge1CGxNzLXpBgTb64po65XZU2iM24CffrVOi1+fegIqEsuUsN1w7cp
- t1P2MBapIJ9GmiPeKh8LxNCL65uHnE5QfrEAiZpMeDvuu5Vx
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM3PR11MB87369DE499570C4D4A6E3C9FECEB2@DM3PR11MB8736.namprd11.prod.outlook.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Add support for the onboard WCN3950 BT/WiFi chip. Corresponding firmware
-has been merged to linux-firmware and should be available in the next
-release.
+On Sat, Feb 01, 2025 at 01:12:00AM +0000, Tristram.Ha@microchip.com wrote:
+> > On Fri, Jan 31, 2025 at 02:36:49PM +0000, Jose Abreu wrote:
+> > > From: Russell King (Oracle) <linux@armlinux.org.uk>
+> > > Date: Thu, Jan 30, 2025 at 11:02:00
+> > >
+> > > > Would it be safe to set these two bits with newer XPCS hardware when
+> > > > programming it for 1000base-X mode, even though documentation e.g.
+> > > > for SJA1105 suggests that these bits do not apply when operating in
+> > > > 1000base-X mode?
+> > >
+> > > It's hard to provide a clear answer because our products can all be modified
+> > > by final customer. I hope this snippet below can help:
+> > >
+> > > "Nothing has changed in "AN control register" ever since at least for a decade.
+> > > Having said that, bit[4] and bit[3] are valid for SGMII mode and not valid
+> > > for 1000BASE-X mode (I don't know why customer says 'serdes' mode.
+> > > There is no such mode in ethernet standard). So, customer shall
+> > > leave this bits at default value of 0.  Even if they set to 1, there is no
+> > > impact (as those bits are not used in 1000BASE-X mode)."
+> > 
+> > Thanks for the reply Jose, that's useful.
+> > 
+> > Tristram, I think you need to talk to your hardware people to find out
+> > where this requirement to set these two bits comes from as it seems it
+> > isn't a property that comes from Synopsys' IP (I suppose unless your
+> > IP is older than ten years.)
+> > 
+> > That said, Jose's response indicates that we can set these two bits
+> > with impunity provided another of Synopsys's customers hasn't modified
+> > their integration of XPCS to require these bits to be set to zero. So,
+> > while I think we can do that unconditionally (as per the patch
+> > attached) I think we need a clearer comment to state why it's being
+> > done (and I probably need to now modify the commit message - this was
+> > created before Jose's reply.)
+> > 
+> > So, I think given the last two patches I've sent, I believe I've
+> > covered both of the issues that you have with XPCS:
+> > 
+> > 1) the need to set bits 4 and 3 in AN control for 1000base-X in KSZ9477
+> >    (subject to a better commit message and code comment, which will be
+> >     dependent on your research as to where this requirement has come
+> >     from.)
+> > 
+> > 2) the lack of MAC_AUTO_SW support in KSZ9477 which can be enabled by
+> >    writing DW_XPCS_SGMII_MODE_MAC_MANUAL to xpcs->sgmii_mode.
+> > 
+> > We now need to work out a way to identify this older IP. I think for
+> > (2) we could potentially do something like (error handling omitted for
+> > clarity):
+> > 
+> >         if (xpcs->sgmii_mode == DW_XPCS_SGMII_MODE_MAC_AUTO) {
+> >                 xpcs_modify(xpcs, MDIO_MMD_VEND2, DW_VR_MII_AN_CTRL,
+> >                             DW_VR_MII_DIG_CTRL1_MAC_AUTO_SW,
+> >                             DW_VR_MII_DIG_CTRL1_MAC_AUTO_SW);
+> > 
+> >                 ret = xpcs_read(xpcs, MDIO_MMD_VEND2, DW_VR_MII_AN_CTRL);
+> > 
+> >                 /* If MAC_AUTO_SW doesn't retain the MAC_AUTO_SW bit, then the
+> >                  * XPCS implementation does not support this feature, and we
+> >                  * have to manually configure the BMCR for the link parameters.
+> >                  */
+> >                 if (ret >= 0 && !(ret & DW_VR_MII_DIG_CTRL1_MAC_AUTO_SW))
+> >                         xpcs->sgmii_mode = DW_XPCS_SGMII_MODE_MAC_MANUAL;
+> >         }
+> 
+> The IP document says version 3.10a and has date August 2013.
+> 
+> Indeed it does not make sense to use SGMII_LINK_STS and
+> TX_CONFIG_PHY_SIDE_SGMII in 1000BASEX mode.
+> 
+> My thinking is there may be a hardware bug to prevent 1000BASEX mode to
+> work when auto-negotiation is enabled.  And somehow setting those bits
+> workaround that, and those bits have different meanings.
+> 
+> In order not to use those bits auto-negotiation needs to be disabled.  Is
+> there a way to do that in normal driver activation?
 
-Bluetooth: hci0: setting up wcn399x
-Bluetooth: hci0: QCA Product ID   :0x0000000f
-Bluetooth: hci0: QCA SOC Version  :0x40070120
-Bluetooth: hci0: QCA ROM Version  :0x00000102
-Bluetooth: hci0: QCA Patch Version:0x00000001
-Bluetooth: hci0: QCA controller version 0x01200102
-Bluetooth: hci0: QCA Downloading qca/cmbtfw12.tlv
-Bluetooth: hci0: QCA Downloading qca/cmnv12.bin
-Bluetooth: hci0: QCA setup on UART is completed
-
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- arch/arm64/boot/dts/qcom/qrb2210-rb1.dts | 81 ++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts b/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
-index 7a789b41c2f1887f0c41ae24da2e2fe8915ab13c..9bb2254d3198b18908bb6ba201602aa809592dcb 100644
---- a/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
-+++ b/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
-@@ -15,6 +15,7 @@ / {
- 
- 	aliases {
- 		serial0 = &uart4;
-+		serial1 = &uart3;
- 		sdhc1 = &sdhc_1;
- 		sdhc2 = &sdhc_2;
- 	};
-@@ -549,6 +550,66 @@ can@0 {
- };
- 
- &tlmm {
-+	uart3_default: uart3-default-state {
-+		cts-pins {
-+			pins = "gpio8";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-bus-hold;
-+		};
-+
-+		rts-pins {
-+			pins = "gpio9";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+
-+		tx-pins {
-+			pins = "gpio10";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+
-+		rx-pins {
-+			pins = "gpio11";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	uart3_sleep: uart3-sleep-state {
-+		cts-pins {
-+			pins = "gpio8";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-bus-hold;
-+		};
-+
-+		rts-pins {
-+			pins = "gpio9";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+
-+		tx-pins {
-+			pins = "gpio10";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+
-+		rx-pins {
-+			pins = "gpio11";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	lt9611_rst_pin: lt9611-rst-state {
- 		pins = "gpio41";
- 		function = "gpio";
-@@ -584,6 +645,26 @@ key_volp_n: key-volp-n-state {
- 	};
- };
- 
-+&uart3 {
-+	interrupts-extended = <&intc GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+			      <&tlmm 11 IRQ_TYPE_LEVEL_HIGH>;
-+	pinctrl-0 = <&uart3_default>;
-+	pinctrl-1 = <&uart3_sleep>;
-+	pinctrl-names = "default", "sleep";
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3950-bt";
-+
-+		vddio-supply = <&pm4125_l15>;
-+		vddxo-supply = <&pm4125_l13>;
-+		vddrf-supply = <&pm4125_l10>;
-+		vddch0-supply = <&pm4125_l22>;
-+		enable-gpios = <&tlmm 87 GPIO_ACTIVE_HIGH>;
-+		max-speed = <3200000>;
-+	};
-+};
-+
- /* UART connected to the Micro-USB port via a FTDI chip */
- &uart4 {
- 	compatible = "qcom,geni-debug-uart";
+You do not want to do that. While you may negotiate with a PHY using
+1000base-X that has "bypass" mode enabled, anything that doesn't have
+a "bypass" mode or has it disabled won't work.
 
 -- 
-2.39.5
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
