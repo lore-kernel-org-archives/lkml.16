@@ -1,123 +1,145 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956621C1F1F
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411C31C1F1F;
+	Sat,  1 Feb 2025 16:26:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738427102; cv=none; b=KumFGB9RLtxVJsliOnJaJLikAYPNZg3M3LecezBHTcCv0T/fddUbDqLSgCkCdcrHKouR4EVMnTYEKu8v674ukwiSrSwXoWNiluYU32j/quMEdUQfLnBUEh/6+PMjD7Z5486yO96dFYvcfYBXtybR44e60AOdBlTPCEMe/32UZzM=
+	t=1738427204; cv=none; b=SNVEvHi24zwzehOXmr6GcFz9K5RDnSea6K0xmDNl+mnpWkg5hjjsJPMglRXgECYp0mTvAS1xFPFwDcWrOIlDOpc2ZMW7qTN8DLqfSU46b05TzeqKE29YZNbrVysWF2QPztwjFYc7j5WNs2+wI55000L7k3961Gbu5wLcKTNxZ3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738427102; c=relaxed/simple;
-	bh=TdK6/Jxn4qrb3BiXRzJDWokL5OeYhkjCuo7aLnFVdbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LcxrvjDu5kh2GXdteVjjM4mkFjY3z03DJyJDI7McdELE0VGL55SrRufg5ZKFTmSSl8yQw2yhJK7z3uM3iP6PtP4S4N0DQq8yrFcZNxQAvuAg+2jhN1Fw1NgEHUNyZLHR0S2Ds6gEewrPuu01vwueRRO//VNHBhnXZUX8RAG5S74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RAjn8LFe; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738427204; c=relaxed/simple;
+	bh=GrQn/vAlhRLico+evNaO6oFN5ihzECkatA5KFLG8epU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y5bmonTfeOlBJBcHlt2VXexceWMBeYmJfQGkeCmv6TYgRrgDeS+CHgVVtR3iQ4D3yjYphHLk4G6PNMDa3wP2dyuDOjtdej2TDUSduRenjdOy9wk3QoP8VKlXCEubhR84Zs6eHXyUQj9dTXi/J1JvQjGOEXHp5QDdWZb36kTR44U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HV3YMCpE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RAjn8LFe"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21680814d42so49403385ad.2
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:25:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738427100; x=1739031900; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7g3+xRMv7I8hoM/mUnFLrYDh9mXx+uu/SX2/MPa2/K4=;
-        b=RAjn8LFedcNG6NIE5o/fVMV4wnJgowxJFLp9RE1SN/E9MIIWhXYCqu5nlRrKbSUJGo
-         zohWp4l1qCVaMVGLFc9ZLgPmfJTczslRkkv5cI+1pPoQCORqyH8rl+kwk5/nIeiOP0/f
-         PoxvMw48TUT0pm5IcSc6VsmZxRHYwERdP7oWnEljdxAPoBaTc8p+a2uhcn4fZmIMNCmq
-         9mv/FfvSaF9EiTXG9bbyoM1O+cbkrkjnSzvsTHtmlQki8oirWO8GppaS3DLJfOdFb8kG
-         yTxb24x0YLxGGeZt8MfzZanHE0Q9UrYiaaBHOEaYdhXxLAKGOFF4dGU1wIsoC5K1OBWH
-         f+Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738427100; x=1739031900;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7g3+xRMv7I8hoM/mUnFLrYDh9mXx+uu/SX2/MPa2/K4=;
-        b=lAzn6XedhQtxD7ChQ7JMObcB1qdMoBXzOTvti3M225tCMQkkXO1+uZlyAu6wVuXqbf
-         g5vOxmYhWbkKrQ214gFIuBd6rnucZJ23Gs9VJQ4lSKNPUcYlzGo2YtnU4Z4Iee9qiOdY
-         Fa+eCLAKeQAx4+hAkqsb+D28l2mR+l2dhJ+Ysd9H3h3OdOxRSValr7YnOempTBox0txp
-         angLRfhOSmMwam+KESINEdiI3+l5iZl/DvkuP2u/ISV24aTs/78lpEWLdamg5CcGkhsk
-         m34DGg1sCFdPrvqmFKlutKGH8RziDBcYmme/yysB/8MsXv/dNDqqhQ07myDIdZpRGeb6
-         eMeA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWSUxFNrVNrJQrZNMqpm972/c8AGj+helhI7TioOa7DtzcbXeP3W1npN0YkSnI6DvSXBMZGX9e3glr/rg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeGUsV3jM+hP8RAP/qtV9b8J5C1tT+vJ+QrbDcm/wTayCjj0HM
-	Cmu2gm/bmPX3SHfN6qQfLHKuMuWD4JEeWvk4Df8jfXFB+eVbpA5msQxuqjSgwPymOG4Q2SBXiQk
-	=
-X-Gm-Gg: ASbGncuZ1UxxU6wDp+sMBQbfNkoeGN0WINhwLc+HGT6XkNGLKU7ZUz9KWs9y260zJq8
-	H45flpFEfYYs6c0tBq/8b0T3d59JMz3UjOEjyad4SdbzAprapAaJfTJ9POA6nx/C6DeBky/NEdm
-	KlAmfhM1FjMmjGuJW46T6N5QeneZqnSufkl4hQepW9bNiX7Lamf/WxaWibSNo5gAHDGJJqEthp3
-	Ae58aeyupjvG06Ei9eq3KpzxYNK+D5ZAC/sPO2pfSt8Zl5KkgvBz8Fuu8OQKvsnkfCI18dKCfAg
-	btiBxkwrsd7NDEr3fum3/HYW9DI=
-X-Google-Smtp-Source: AGHT+IGTWHq/F06CpcrmFryngFoTcdvCxiBh6JdgpfJOZKD+GgbyyI6EvDWMGbH+eGJ1NmIPO9v+cA==
-X-Received: by 2002:a17:902:f690:b0:216:501e:e314 with SMTP id d9443c01a7336-21dd7d74aedmr224666875ad.20.1738427099834;
-        Sat, 01 Feb 2025 08:24:59 -0800 (PST)
-Received: from thinkpad ([120.56.202.249])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f848976d1fsm6324512a91.3.2025.02.01.08.24.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 08:24:59 -0800 (PST)
-Date: Sat, 1 Feb 2025 21:54:53 +0530
-From: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-To: Jianjun Wang =?utf-8?B?KOeOi+W7uuWGmyk=?= <Jianjun.Wang@mediatek.com>
-Cc: "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Ryder Lee <Ryder.Lee@mediatek.com>
-Subject: Re: [PATCH] PCI: mediatek: Remove the usage of virt_to_phys
-Message-ID: <20250201162453.rwnd7igaiwnngdlb@thinkpad>
-References: <20250107052108.8643-1-jianjun.wang@mediatek.com>
- <20250115173156.a73ntoyyn3xy52ze@thinkpad>
- <9e629b1779c2cb9c6fa34347ac16f9b4e2241430.camel@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HV3YMCpE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73EBBC4CED3;
+	Sat,  1 Feb 2025 16:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738427203;
+	bh=GrQn/vAlhRLico+evNaO6oFN5ihzECkatA5KFLG8epU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HV3YMCpE0fMsqjf8JOo6uBiUl/hLYUT2UK7xHIh/quoXBmLxDhdAlCvSJ7/VngWUm
+	 wfi6eCv/X4YMj4fnF3ASioL4EHzw21SaW/NEcEDOGLzNwAfBCkqMy7wUVqaPWvCG8o
+	 6KMkbk9+Gon4xhivbE6NlCydzbuwGDhbSgZ9+rB9NGvQ6rN8wzznF0P6gKg5zYk9+u
+	 d/ZKs46jep5fZ/3yfrMH/nCvqCyQtaQU9WYZb3v0pi86Gg2SAyMuvMPoQrqaavUe6z
+	 89mxzLm2Qf7A032mg11iy/2U1FdZm9tO0GT3jss2NnDxRffVrkKFXt/7D1mb737rNl
+	 1zyGf4iwbJN1A==
+Date: Sat, 1 Feb 2025 16:26:31 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Matti Vaittinen
+ <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Linus
+ Walleij <linus.walleij@linaro.org>, Nuno Sa <nuno.sa@analog.com>, David
+ Lechner <dlechner@baylibre.com>, Dumitru Ceclan <mitrutzceclan@gmail.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>, Matteo Martelli
+ <matteomartelli3@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Re: [RFC PATCH 3/5] iio: adc: Support ROHM BD79124 ADC
+Message-ID: <20250201162631.2eab9a9a@jic23-huawei>
+In-Reply-To: <566f15dc-8901-4377-8407-8eac8a54bfe4@gmail.com>
+References: <cover.1738328714.git.mazziesaccount@gmail.com>
+	<e44851669ce7e91d1295ab7352535c93b89d35bf.1738328714.git.mazziesaccount@gmail.com>
+	<20250131174118.0000209a@huawei.com>
+	<566f15dc-8901-4377-8407-8eac8a54bfe4@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9e629b1779c2cb9c6fa34347ac16f9b4e2241430.camel@mediatek.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 23, 2025 at 08:11:19AM +0000, Jianjun Wang (王建军) wrote:
-> On Wed, 2025-01-15 at 23:01 +0530, Manivannan Sadhasivam wrote:
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
+On Sat, 1 Feb 2025 17:38:20 +0200
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+
+> On 31/01/2025 19:41, Jonathan Cameron wrote:
+> > On Fri, 31 Jan 2025 15:37:48 +0200
+> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> >   
+> >> The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The ADC supports
+> >> an automatic measurement mode, with an alarm interrupt for out-of-window
+> >> measurements. The window is configurable for each channel.
+> >>
+> >> The I2C protocol for manual start of the measurement and data reading is
+> >> somewhat peculiar. It requires the master to do clock stretching after
+> >> sending the I2C slave-address until the slave has captured the data.
+> >> Needless to say this is not well suopported by the I2C controllers.  
 > > 
+> >  From what I recall that is in the I2C spec, so in theory should be supported.
+> > Ah well.  
+> 
+> Could be I am mistaken then. Or, maybe I just misused the term "master 
+> to do clock stretching".
+> 
+> I know that it is not rare the slave device is keeping the clock down 
+> for extended period (in this case so that the measurement would be 
+> completed) - but at least I am not aware of any APIs which could be used 
+> to cause the _master_ side to keep the SCL low for an extended period 
+> after receiving the ACK (after sending the slave address). In this case 
+> it would require this driver to be able to set a time for how long the 
+> master would keep SCL low after sensing the slave address, before 
+> sending the "command" bytes.
+> 
+> |S|ADDRESS+R|a|STRETCH|8-bit-i2c-frame|A|8-bit-i2c-frame|A|STRETCH|8-bit-i2c...
+> 
+> Above denotes this "master stretching". CAPITALs are initiated by 
+> master, lowercase by slave. S, is start, a is ack and R is read-bit.
+
+Ah. That is indeed more unusual. You were correct that i was thinking
+of the client side doing the stretching!
+
+> 
+> If there is a standard way to implement this in Linux side, then I might 
+> consider using it as it'd allowed much higher capture rates.
+Not that I'm aware of. 
+
+Wolfram, have you seen anything like this?
+
+> 
+> >> It is worth noting that the ADC input pins can be also configured as
+> >> general purpose outputs. The pin mode should be configured using pincmux
+> >> driver.  
 > > 
-> > On Tue, Jan 07, 2025 at 01:20:58PM +0800, Jianjun Wang wrote:
-> > > Remove the usage of virt_to_phys, as it will cause sparse warnings
-> > > when
-> > > building on some platforms.
-> > > 
-> > 
-> > Strange. What are those warnings and platforms?
+> > We shouldn't be presenting channels that are configure for GPIOs as
+> > ADC channels.  It is very rare that there is a usecase for any
+> > dynamic switching.  
 > 
-> There are some warning messages when building tests with different
-> configs on different platforms (e.g., allmodconfig.arm,
-> allmodconfig.i386, allmodconfig.mips, etc.):
+> Thanks :) If the dynamic switching is rare, then you're definitely 
+> right. I need to see if using the pinmux still makes sense, and if we 
+> can implement this while using (separate) pinmux driver.
 > 
-> pcie-mediatek.c:399:40: sparse: warning: incorrect type in argument 1
-> (different address spaces)
-> pcie-mediatek.c:399:40: sparse:    expected void const volatile *x
-> pcie-mediatek.c:399:40: sparse:    got void [noderef] __iomem *
-> pcie-mediatek.c:515:44: sparse: warning: incorrect type in argument 1
-> (different address spaces)
-> pcie-mediatek.c:515:44: sparse:    expected void const volatile *x
-> pcie-mediatek.c:515:44: sparse:    got void [noderef] __iomem *
+> > Normally it's a case of what is wired and
+> > so static.  
 > 
+> I should implement a device which can be controlled via it's analog 
+> output line :) If nothing else then a device shutting down when it's 
+> output is pulled low ;)
+> 
+> ...Well, I have no real use-case for dynamic config either.
+> 
+> >  Hence build the iio_chan_spec array for just the
+> > channels you want, not the the lot.  Channel sub nodes in the
+> > DT are how we most commonly specify what is wired.  
+> 
+> Hmm. That'd mean the ADC channels _must_ be defined in DT in order to be 
+> usable(?) Well, if this is the usual way, then it should be well known 
+> by users. Thanks.
 
-This need to be added to the patch description.
+Yes. We basically have two types of binding wrt to channels.
+1) Always there - no explicit binding, but also no way to describe
+   anything specific about the channels.
+2) Subnode per channel with stuff from adc.yaml and anything device
+   specific.  Only channels that that have a node are enabled.
 
-- Mani
+There are a few drivers that for historical reasons support both
+options with 'no channels' meaning 'all channels'.
 
--- 
-மணிவண்ணன் சதாசிவம்
+J
