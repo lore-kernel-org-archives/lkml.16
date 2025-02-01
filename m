@@ -1,114 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0569208A9;
-	Sat,  1 Feb 2025 16:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B6A1C7B62
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738428772; cv=none; b=AOS7KiTYQfH6OEHEhrfwCMvm85Ry7A+Uul04PNQG4xqPHrptt8T+Uf5o4fDkd+FBUDAN0leSpBdbWQlPjzbyebQ8ohVzHoz3X85Bfjcf3gGORrE33e1vhRVj2sAo9Ire8ilwZw2jAxdr+FCMWaUZhUxPcAXWVzGMitOfvnpLHWo=
+	t=1738428843; cv=none; b=HCN2t3V4UpsWEgMGo5OYLV89oViSf9Fg62PTKas7U1O2q34jx2z3lM91OmoMH46jhufmWIOi3ZnMIAf6Y90sTWFKotFiS3E/gHM3ord3kaK87ymN5Abq093PTjEg14KtvQ/LvUTjLG0zoXomXaDoEb1QEMtoSCAg2bm0BW+lLYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738428772; c=relaxed/simple;
-	bh=MGMbXg/l4cT2mVq5Z460kZHZEWj1jubCnLtTj3OH4lk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rTrf6lnH7Wcjj3Zx4sZ7wnBlT9R+CdRuOLoE/g9Px23Yy9+20nF840nYULCcDW2g0V9dphC1r31VhCqUt2WuoXU3Hg0JuFcSh5a/K8MftgI7PBpWoxtbi0hY9HP+NQl3/jFU0cQCtC/CEiOqTl/ZmzL92bYg3GUptXdGGzYjUBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9fdFv2g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738428843; c=relaxed/simple;
+	bh=xa+25ur344OEW7t7BkDF9Du5L+MmLYguJNQOy0Mq0xI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C4RmlwxC8J96WjmjiITAvX+ONLgGVHytA5dSmOHPKXDWG7jvz/5WqyM5pt+vazdNpgCI/UY7v6B1UuYfSK9cmgut/m7WntjDNLgr9vMSF4Yr3gIqLMbjTyXHTSHEZDldvMKescO9zv46TigoPPAbd+XT1VN/sdh+FZdd8NIMTSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=h1tg8ie5; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9fdFv2g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6FC8C4CED3;
-	Sat,  1 Feb 2025 16:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738428772;
-	bh=MGMbXg/l4cT2mVq5Z460kZHZEWj1jubCnLtTj3OH4lk=;
-	h=From:Date:Subject:To:Cc:From;
-	b=m9fdFv2gFykxrh2G726bUQ4w+w4Y1F94Sqsa2Sikna95GnEKLB2P7OIK9W6B6tfBr
-	 kOvURrHYNFcoXJHCaoXvHQ49rBsfsP2oYEC7nFX1n13uW2rcb7X2zDbp1M9YtylJ1J
-	 tQ5qZdk8RvWpUWeL7BFkWmhvYGN0eus2flE2twVZ8Bw2kN3Q6x525P+a1H5XJ7ctJH
-	 LEVZB54cjvO5jN225b4yDzTy8KfPQaqBzTzn4pUyozoVW91YMmXLog7mgjLmt6fkAH
-	 xrrzZrPHx/IYcrCPWs5alJet4EcW5ytQX1aRp47gZ9r6gNxjl4YvGgzplAq8PavXMF
-	 FcJaYqbTjQZGQ==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Sat, 01 Feb 2025 17:52:30 +0100
-Subject: [PATCH] clk: Warn (and therefore taint the kernel) on
- clk_ignore_unused
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="h1tg8ie5"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7b6f19a6c04so287673285a.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:54:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1738428841; x=1739033641; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KmDNfJVAoqWOWRyDOjqr6PMbGbgV/Gx/qMdbUArjGps=;
+        b=h1tg8ie5GOPeKhbdbln8/Fof6Ix9EXyK2NAD9Ak42BsM25N7bLN8twjyIJMNGmIdSq
+         ulbKF0tR8l204wh94VVpKo8qg3WOW3KKcM12wv+XhtfKrAALFuNqkKDceH3R8E0Kd4zV
+         S9X8YQnUz8vTi1GkF3YnNrIm7bT57sJKaiyipSB9KcyV/JdetziV8v3T7pGe4aBeBJFg
+         fvWBsrby9lFf9qr7rV/b3gW7+JN4FVflrc/F/Mn3GUv0ODBGyoLNTakwrkETXUiaZS1E
+         f44BTGy1KmBqar7XCU6EYNp5v2sDIbHt9nZHqRTIBvbD3Ri/634BkWAmuvg1EEORBby4
+         RxwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738428841; x=1739033641;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KmDNfJVAoqWOWRyDOjqr6PMbGbgV/Gx/qMdbUArjGps=;
+        b=g1mtNfqegmRI1RjRPhtogPjL825cY6a+5voDevIWK1lZsbs1E3lMf45xu84krdMjWz
+         AGr1nQF6TQ2U28wGfzEOAgyTNZ/6AY+pn17aMpOVFP92RzbryXXXNkJvsM832piZ1BxS
+         XbiU3+qmIAZn5FaYB8Bg8EJHSeWz7/N7PkWO9Rceeqi7CNfwgKf+8xW+DbXwABsHFTsH
+         +jYOfaVG7eCV/FV8AbyloeUX6ChgqPhf2YpfSsT2w8E2vibcnhaKkb9fUV/trlIH4SHl
+         0UJEbshMlWh7urPEqNMMtMK6HjyCbdO4Z0VIlptQua50MELGXUBiGb2OO9f5ehDhwsWW
+         qqZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1+/iY9RYOyx1Rpgtytc6FyoUvwj5A6mdVx4P8fCoy0cta8MbPT8YHc56jfvsANRGlSnsd/XXPEOlcEwk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb1W5GPLanL2/m/Qh/Abw0VWf/kS0E/RvQ2iE8Ir08qv+xjEOq
+	LxMsNCFWwUE9P9fXi/6AEDLiMAU/oKbOlo5kECxMPPAEYRDoX67qJG6rzafuTaM=
+X-Gm-Gg: ASbGncv9ND/xpQVQAqtB75E3psacDMNwjxwh7NhEhvE9Sw0WBpPscAEQDRrSQzcGtjg
+	p/mnqtZQ6U22MHM56Vqs0ySPZUHz7c7DM/GRuH5waoQFcrpnlS/CCZ1dAlrOuWSQ4mCrZNV1gZx
+	odIb5L38aW4eogyhLiCsXZ5EHJt3YNEyMT9At6tqZRunc0eU7B+7vAoPfQszUMWgFImcvaZ7TE6
+	c2hXaYfiuCCutHE7Qmh4n3j4uoKVdRd6lBMTJrVmpdGpUH/Igf2E3ODN+dvfWX0DHoMADdCtNls
+	O205Echd5Kbxxb4ogFO4EEM7ZUCBwSrPgmggd8F4jNjy26ObWhta5ADuDMTVzzs9t/KATdl84Q=
+	=
+X-Google-Smtp-Source: AGHT+IFFKkIsNUNoiTwwsvCnG0Xbc68Ad9IQzTVMCnnPigzL5AQ+CvWJflgv+MLDJU2UCeqLYNwvWQ==
+X-Received: by 2002:a05:620a:471e:b0:7b6:d8aa:7ef8 with SMTP id af79cd13be357-7bffcd8cdd2mr2315439585a.37.1738428840845;
+        Sat, 01 Feb 2025 08:54:00 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a90cbe0sm314316485a.102.2025.02.01.08.53.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 08:54:00 -0800 (PST)
+Date: Sat, 1 Feb 2025 11:53:57 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Honggyu Kim <honggyu.km@gmail.com>
+Cc: Joshua Hahn <joshua.hahnjy@gmail.com>, ying.huang@linux.alibaba.com,
+	rafael@kernel.org, lenb@kernel.org, gregkh@linuxfoundation.org,
+	akpm@linux-foundation.org, honggyu.kim@sk.com, rakie.kim@sk.com,
+	dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com, horen.chuang@linux.dev, hannes@cmpxchg.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org, kernel-team@meta.com, kernel_team@skhynix.com,
+	42.hyeyoo@gmail.com
+Subject: Re: [PATCH v4] Weighted Interleave Auto-tuning
+Message-ID: <Z55RpQgsma5wrpfh@gourry-fedora-PF4VCD3F>
+References: <20250128222332.3835931-1-joshua.hahnjy@gmail.com>
+ <41ab5a11-f8d3-403c-9d68-33eb15aef8fa@gmail.com>
+ <Z55QmybX5IkuLv6Q@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250201-topic-ignore_unused_warn-v1-1-f29db78cea3a@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAE1RnmcC/x3MSwqAMAwA0atI1hZq0IpeRUSKRs0mldQfiHe3u
- HyLmQciKVOENntA6eTIQRKKPINx9bKQ4SkZ0GJl0RZmDxuPhhcJSsMhR6RpuLyKwar0jXOzw9p
- Dyjelme9/3fXv+wEJPDFoagAAAA==
-X-Change-ID: 20250201-topic-ignore_unused_warn-254a966f627a
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738428769; l=1975;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=RUMTNPwf39+R3he/xz33fiHQcMU6Lh+Bmch14er4pSY=;
- b=F95J3OADT0N/lGBf0V6M8IOA7T0LxEemcA0qlcgZVs4t+jVd5i9ILtKjNpi+4tkLwZm89oJqR
- 5PUlX8niPURCcL/TZBr+VWXPLBJD3nN+izTK/0zWTRRTtyUT2CMWQk6
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z55QmybX5IkuLv6Q@gourry-fedora-PF4VCD3F>
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Sat, Feb 01, 2025 at 11:49:31AM -0500, Gregory Price wrote:
+> >   1. the auto mode set the weights as 10:5:1 for node{0-2}.
+> >   2. node2 is offlined, then recalculation makes it as 2:1 for node{0,1}.
 
-If any sort of ignore_unused is in place, it means one of:
+Point of clarification here:  a hot-unplug event won't cause
+recalculation.
 
-* power is going to waste
-* the platform description is incomplete (missing consumer-provider
-  relationships)
-* the platform description is just broken
+What actually causes re-weight is hot-plug reporting new capacity.
 
-Many people will happily declare their job done when a platform
-magically happens to work as they make use of bootloader-enabled
-resources, which then leads to double or triple the amount of work
-of another person, as they attempt to reduce the unnecessary power
-drainage and/or ensure stabiility throughout a suspend-resume cycle.
+So in this scenario, the weight will remain the same for node2.
 
-Issue a good ol' warning (and taint the kernel) to make such cases
-obvious and hopefully draw more attention to it. This way, it'll be
-easier to avoid effectively untested code or DT description getting
-merged into the kernel, or worse, going into production.
-
-The clock subsystem plays a crucial part in this quest, as even if
-the clock controllers themselves don't draw a lot of power when on
-(comparatively), improper description of clock requirements has been
-the #1 cause of incomplete/incorrect devicetree bindings in my
-experience.
-
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- drivers/clk/clk.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index cf7720b9172ff223d86227aad144e15375ddfd86..9e2e240efc31f02e4880542370ba773037b733a0 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -1527,7 +1527,8 @@ static int __init clk_disable_unused(void)
- 	struct clk_core *core;
- 	int ret;
- 
--	if (clk_ignore_unused) {
-+	/* If you need ignore_unused, your platform description is broken / incomplete */
-+	if (WARN_ON(clk_ignore_unused)) {
- 		pr_warn("clk: Not disabling unused clocks\n");
- 		return 0;
- 	}
-
----
-base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
-change-id: 20250201-topic-ignore_unused_warn-254a966f627a
-
-Best regards,
--- 
-Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
+> >   3. the auto sysfs interface is set to 0 to make it manual mode.
