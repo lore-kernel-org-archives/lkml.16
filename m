@@ -1,63 +1,66 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A66136671
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 07:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0F013E3F5
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 07:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738395806; cv=none; b=BDGh5y/U3BlsYfVqHrbySJ5rsRCnwsbFXo083qcinm2DmApKx2UkXspAXSQII8JGrCGem83Htd0U9Vfod12Xs+0f1oce89j7ni6Ari3PRgcKWk6n39t4QzG5j0/PGwtT5V8qYg6rIGwoHBM+F7YJFOfxQNISnPtefqPQPz8iBWg=
+	t=1738395808; cv=none; b=Ws2cCY7woEUBT0cXf8hd/AJaECYjlxVlUxSNw98+4+2q4Z1QNgQreZI0GX7XpO2VqbRzjF/Wi7t6ABWnGq0KyOXLhxCuY0Gx9g4qnZ3PjVTlvZgw5BoDY+JQjITMf8VDBmHg4qi40p8eyP6uVjXZtdoQH3zZTbPtArGkXwAU2Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738395806; c=relaxed/simple;
-	bh=9k2M4+erGEhCQ+ZNEbepukp9n10RgfHeWLxV4CelytA=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=RIIAUovFX3umcSnSiq/5R4bNKFsmbBtLcmYWLb4VJ0qNyXihMEh/EDv5LtJBbP2YcInbeDezPL0uyFv4N8XMIidz6iAZSt9TazHPMfmB2GkEah2GV90S64EXpkUOhw8hCnHNcr7Ah1mUHcSORKQpI13PkjmFAW0Zkl2g88zJ8E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q+9UqwA4; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1738395808; c=relaxed/simple;
+	bh=UBYXKIGypZj9VqksZhRL9+jdxZThDY6tClK/zdZW/5g=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=OQNuNK71M5HJn/sr7HXQW4NEfnSmx/G/DiUqPhr5L87D2HxkV31XdajWtSj6S4u4Gm+TdGH63GmRFY+zEUZ0xsX2WSxO8e64SY2gwsA7SIPGdMOVzjTD2XpQzFR9WAR+uEuRZqfF+fZ/Iy39zTPXVSsJcbRXNZzw+YUidAkg40U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R829D2y6; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q+9UqwA4"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e572cd106f7so5013803276.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 23:43:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R829D2y6"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f788a1de55so19488867b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 23:43:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738395804; x=1739000604; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=O3+/E+TgZZGMv/gtL7KYzyxWyAV4KsI6xSgcExMsoWQ=;
-        b=q+9UqwA4YgkvjBNgW+kwbxXD8LS+gNset3+/Vj0HTPNEl0ynbKpcEAI2Rh1vThbBYb
-         vqMuDxnAlBRZiTzUHY2OdC4yNvyiIkr9WJuBLdXbNcqMK0lrbrLDKN7OUjYTakbeDppN
-         oFkkW1qknQzZQK+SsCcGc7aeMS6T9Sbpqgm4L+yWUtQ2z5MgrFaT4bmuY1yVGuUnuVww
-         724CXWMt+5fODcb+EKO0svF887jwvmk3WzuhPEl26xHGswuDdCmG8zreZZrFXQGSxESV
-         3yU6SDeAAlzmUpU1AFka0/GiI00QEbcPG8bb4yqd0N/XUv2V7/f6Hp+xfZDuPTDahrxa
-         DEsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738395804; x=1739000604;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1738395806; x=1739000606; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=O3+/E+TgZZGMv/gtL7KYzyxWyAV4KsI6xSgcExMsoWQ=;
-        b=iL3ECqN14Z6MnMMVXRyS7OaD+9iXHf7cLoxhpsoWmmhsuLSSiUvkpFtiMuyzDT5Fbp
-         eYE3PI8AICcWRfP9/yoRn+D819IzciQIUlwAmeYRt8GAOhczlwEEBuoF6AoBm4Dt3aas
-         EqgtFQEXWAeQQMhqj+O5wSpFcHbXiPXxcVpmgMyUtWrdmLfnqeDh9lBvlHxM4qtPJaYU
-         tz1zrQeWwA31EoISYCXkY1TpuZpy86rltLBGEIzFTf/jdoSCbMn0OEY60o5eQcQrgq1v
-         cGO+gYLuEHQNw6IS5nx+1c28bRLNtATjrnWI52l+/bxH7VKHiojBUDO8qGrPh7cod148
-         H6Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzjtIGuLSnPlpqewAoIUuTO3StMf88sJZH7YBXis7CFjOdLTpP7Ku1O5dMdQ9eXMa2gUk6pNrr3fY4Flw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8kZ1yr8WrE1igmrgIxJXr5ou3OmKcbKhQJcVllPGCPg2Rlyfr
-	324TaLDAw/ui99pf398Gi7J7H9gV4Dc5qyokteZ6HLFoVRnIIKgNaPDle0F8zlI0p6hDZw5L1a4
-	DFqcINQ==
-X-Google-Smtp-Source: AGHT+IGA4ATIsK1jhK9IHYmMcUSHwoEb9uRlp8EU9tSYg7SiOsaqSVffyzPoCZ1/CdDctJsmRSLKh5KhSJCu
+        bh=AZvGhsd2oozVKIlbhhwRMg1QUNqaRs44ZEP4nrkktmU=;
+        b=R829D2y6UrryzcP+uUb9sbNyeRznnnW+fXKMT0D3/jL+CyzYQZzHVlwqqS/c3nC1cf
+         F25lvfug2NPgUgGuUgELLuE9AQi9qrNWwweG4IzJ4w7hi47V/YtcfP+FzrYtYCi0uRJq
+         zIXXm5FNvwZbaOocK1L4ZJcQmvIenH1ycM0DKM9Ls4kQshYpUQV8odk8+H/T20ppTfma
+         WqABN97zCZ+Exz5TYu/1M2F/MTGpfSH35yRuOw9tnRe6BH5b4EzVJOHrZ+BWbF3JLUoX
+         cCx6uaKykbK1Zog4kfuJjPlij1um8jSnJ8+wMp0nnJ3Qkx5+aW2flkTf/xBaLcrSNi2B
+         vzZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738395806; x=1739000606;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AZvGhsd2oozVKIlbhhwRMg1QUNqaRs44ZEP4nrkktmU=;
+        b=fHDg6bgg/N/NqNkgyW4ryR611uybZGWaH7ihekrzGrVYUUqJ6M9rTqSuj1ylyojtiA
+         be9Zge9Q8d9bsdK222E4Hg9MKSBIhfOrzPANCb/2g+YxYMbNrynZoxdKSm/LfuMdZDMG
+         mthWTk2N1prFLrqaRK5k8sZJayhO6GSQUSb7yEy8+Rj8FS6XsKv7jQcw8IbvaySEInmT
+         0oWQeZufCEA1IpVQALFuB+Cv6pOaS00tqzz876acX9BIZ9X6SIiG9VKhEVqLZ/DnVC7a
+         2MQfzS1Bs33pFw0KahwODejBJwvqil7/L1pqmXTlAMMEju07tML2h+5my4LPMIJdN05V
+         3giQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUsnHPiyZM6aM6FY8uljS50kTYuPY7p6Nve9lTX6KWVSH/wn5bsWSEv3S+XXjhE4VA6GmKTl23MGNu8+Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBDegOgU17+rSEJIb8HOTyxrdj711iWfXpck89n6/fynyMhm8e
+	cZYJEZOXLAGfQCO1WUxDq7eYHyCPjELJ69I+H2+7DExm6KsyL/U39B2gWyQB8gPmBwCwZ6oKZSh
+	1V+fHag==
+X-Google-Smtp-Source: AGHT+IG5RTcIIXxZpW/Ba46+cz83cBGqX9d83Ja1q5DUVm27EKh6cq4cxXgqfkkd4ac2K7KPedVSbpxIceRV
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:de26:87db:e4d0:62b6])
- (user=irogers job=sendgmr) by 2002:a05:6902:1741:b0:e57:f577:5564 with SMTP
- id 3f1490d57ef6-e58a4bfd0dbmr32246276.8.1738395803837; Fri, 31 Jan 2025
- 23:43:23 -0800 (PST)
-Date: Fri, 31 Jan 2025 23:43:15 -0800
-Message-Id: <20250201074320.746259-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:b551:0:b0:6ef:4be2:ee09 with SMTP id
+ 00721157ae682-6f7a83fd155mr315467b3.3.1738395806029; Fri, 31 Jan 2025
+ 23:43:26 -0800 (PST)
+Date: Fri, 31 Jan 2025 23:43:16 -0800
+In-Reply-To: <20250201074320.746259-1-irogers@google.com>
+Message-Id: <20250201074320.746259-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250201074320.746259-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Subject: [PATCH v3 0/5] perf hwmon related improvements
+Subject: [PATCH v3 1/5] perf evsel: Reduce scanning core PMUs in is_hybrid
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,37 +74,34 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Try to do less scanning of files/directories with or without hwmon
-PMUs. Don't merge all events with the same name, only merge those on
-the same PMU ignoring suffix. Tidy PMU name matching to distinguish no
-suffix or wildcard matching. Refactor uniquification so the evsels
-with the same name as other evsels in the evlist are uniquified.
+evsel__is_hybrid returns true if there are multiple core PMUs and the
+evsel is for a core PMU. Determining the number of core PMUs can
+require loading/scanning PMUs. There's no point doing the scanning if
+evsel for the is_hybrid test isn't core so reorder the tests to reduce
+PMU scanning.
 
-v3: Address potential segv and styling nits from Kan Liang.
-v2: Rename ignore suffix PMU name matching that is really a
-    wildcard/prefix match. Use a proper ignore suffix when not merging
-    counters purely on name.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/evsel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Ian Rogers (5):
-  perf evsel: Reduce scanning core PMUs in is_hybrid
-  perf pmus: Restructure pmu_read_sysfs to scan fewer PMUs
-  perf pmu: Rename name matching for no suffix or wildcard variants
-  perf stat: Don't merge counters purely on name
-  perf stat: Changes to event name uniquification
-
- tools/perf/pmu-events/empty-pmu-events.c |   8 +-
- tools/perf/pmu-events/jevents.py         |   8 +-
- tools/perf/tests/pmu.c                   |  85 ++++----
- tools/perf/util/evsel.c                  |   4 +-
- tools/perf/util/evsel.h                  |   1 +
- tools/perf/util/parse-events.c           |   2 +-
- tools/perf/util/pmu.c                    | 256 ++++++++++++++++-------
- tools/perf/util/pmu.h                    |   7 +-
- tools/perf/util/pmus.c                   | 146 ++++++++-----
- tools/perf/util/stat-display.c           | 111 +++++++---
- tools/perf/util/stat.c                   |  13 +-
- 11 files changed, 424 insertions(+), 217 deletions(-)
-
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 026cf9a9893c..4009f7d58415 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3866,10 +3866,10 @@ void evsel__zero_per_pkg(struct evsel *evsel)
+  */
+ bool evsel__is_hybrid(const struct evsel *evsel)
+ {
+-	if (perf_pmus__num_core_pmus() == 1)
++	if (!evsel->core.is_pmu_core)
+ 		return false;
+ 
+-	return evsel->core.is_pmu_core;
++	return perf_pmus__num_core_pmus() > 1;
+ }
+ 
+ struct evsel *evsel__leader(const struct evsel *evsel)
 -- 
 2.48.1.362.g079036d154-goog
 
