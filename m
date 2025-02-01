@@ -1,97 +1,135 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6094C7DA84
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 20:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656941C548A;
+	Sat,  1 Feb 2025 20:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738440622; cv=none; b=nq7X7UmJglHUJx9JRlshZpPK2RCVHxCSw6uMiByKLGnrsmzP0+uZCr+0EFgOiJ0PV52jD9D1otPopB43NygnyV3bK7C+EALIlAqrMJ1sxsgPgU0xU841riTMLfC7NaK4rVsf4Ni0pDxnMsw56AWsOmbEPQbxhcMpYAJLWfkNzEY=
+	t=1738440717; cv=none; b=ncNpGaIMgavDYc9kIc4DjmfchKb/KObfq8dqjzsGYfBiZZyNxsQHigMzqkyOgFZ3woMjw2AuBij56hHJ66T0YPlTG/IWXI1aYiNW5I1smMjuxnk9GaDXVBn/Rrazc3bjsg08j8915ogOV+v/fcQPmyQf8IcNEV6FaM0A/w6GJDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738440622; c=relaxed/simple;
-	bh=dwKZ9e6C8H5YVBM0MWljIbNoLbFovSt/j2W45tqojAY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MaD7CUnAbpyG/1PkAkjH3GZ5AzB07Hoq7moZwshJuJQrqT8FJYASeMoyMalBd44qWfJ9bYoVbWDdq6K7Hv/QnMzL2Bl2Np7ScB2rSLXmJlgnQfWY2PWJ14menbVJYyZ9u2CBleEw8YoRwzwxfkhUI97GyZCv2KPzVU9ktJ6acE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=eJeqYeMB; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1738440717; c=relaxed/simple;
+	bh=Q5mCq6shSkFpq9lHWiWAJMGvKLBJ8p/R9QS98UXq0vM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B6FCN9tzV2xdfQ6K+SHjYJHpgqtAkPeiw5Jx5BxUG4cCeo6fOXpR/e3W25Ukku6BWPS23RLPQnjop+gBn+dMw7IFpsDmbbZPWNOz8J9V0PzpCNHmJoHZoxkzM4H4szc+7DB1eU65sGwERe4RtXxhuy2h3Id62geEbq9sXO05F+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=fqSBHOzA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KAxYG7OO; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="eJeqYeMB"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aafc9d75f8bso649365666b.2
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 12:10:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1738440618; x=1739045418; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=m7/IZGOLu+lbC+EOSNvACW6MUOzlKWZfo7umiRgi7s4=;
-        b=eJeqYeMB14Z7Wm4KMdi76qshfnQAciRQ8pLyBry5mXobsg4YhIhYqihLWAG/7MAR+v
-         z8G1iz8aEp/sKF4Bx4Nhy1VR4xGlkQZaSdjWXrIhIysQlt1cokKsa949yAa12y7TxySM
-         4MTfPu//iBwEHTt4RA2LsM8Vi2p4lODoWpw60=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738440618; x=1739045418;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m7/IZGOLu+lbC+EOSNvACW6MUOzlKWZfo7umiRgi7s4=;
-        b=QESQZRuywL0EgS9XvM13iP1J97ifMywjVu8/NHP+GfS1zMcok2pHSpdWU0xzcySnhP
-         d6qnzaRCGcVNLoMIvqVWGpzTRSDuIQgMvh+SQimbk8qpA7oIyLLHYfqaLGSPqtzrzs3t
-         Dyr85nqGWJmmQRcasZJix9nQDtDwu6f5UrckfTHI+QsI4f6F3qbCcXyrgOJgDKYD7GCq
-         SEW4E1uklJ3ED6DusxNhBPcN3zKFBXeNgovlFO8QxHs66t01QlMmjb7xWpCtS7T76DYK
-         SITWfi4+giXdzdmXPYY79J6Wq+70GlP63Dja8fUVKdnKGJH/raBkCk6q+TUll5wJO4cv
-         QSDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVB2wj9dUkjnVVylvpO90f+AgmU+eG+8W246quZV+Y03qXdQr1x8C9d/4Z9vXQzrY/Svzz4aKTgla0QKUM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjaeIQtjuxSvv0hvXLrKosHTiBttMF6cJh7qx22VJVCJ8XqcXY
-	za+Xz4htVCVSLQh/0/939USTYN/49yHXDRvMGjiV+AqSuJQDmlSpgWAVc/EVIrQV2mjVFl/cJR4
-	vgrE=
-X-Gm-Gg: ASbGncvJBHwWuHO6Fb9qHEpqHkCEUd6UaHlM3PUo/FD74HvO4BNFCaZEsPaDE1nGv66
-	sVHtKi7w1FCI/u7RVn/3znFVOUc1wbyoZoWoLfdO1iG6eGl2dUsx1yu3h99H0xpPdALxe3SyQmW
-	CVfhIFsroTnHN+rIsM9Il6OTS9qm+mwK7CGx/O2KL+Le+gVlWrOc0hdXFJzqaxbmnti9OUcDCiW
-	2cn2SVJRA0nSF4sr8WQ0Z3vkcAXwmxpF5RQXtsdRnaEMQIjm5b6mgoTb05PJ1RsPfjKSOpYQl8p
-	C6EvGRyLqMUqJVN2kYklgIafyaAQRqZ2qq6cjCDjTFTj1q0XKq1h+aYce2SUdiPo1g==
-X-Google-Smtp-Source: AGHT+IGHPKPH001b7Yu3cYgvUXshoqG364QXOqUD722bW2p0gXPuh1cWq2iacCOr1A9laNyIyb3vyw==
-X-Received: by 2002:a17:907:940f:b0:ab7:b7d:62b with SMTP id a640c23a62f3a-ab70b7d06b9mr459815166b.6.1738440618405;
-        Sat, 01 Feb 2025 12:10:18 -0800 (PST)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e45ccd6dsm478407966b.0.2025.02.01.12.10.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2025 12:10:17 -0800 (PST)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5dc149e14fcso5774495a12.2
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 12:10:17 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU2aPqXuhAqxXhV5DkeuI1YCPt5lid+r4X7bjm/E1JQduuLP9afUPRt0PyIXiggMQ0VnbVW3TJOz91SU5c=@vger.kernel.org
-X-Received: by 2002:a05:6402:270a:b0:5db:d9ac:b302 with SMTP id
- 4fb4d7f45d1cf-5dc5effb6c9mr16000184a12.32.1738440616999; Sat, 01 Feb 2025
- 12:10:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="fqSBHOzA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KAxYG7OO"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 5AA8C2540085;
+	Sat,  1 Feb 2025 15:11:54 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Sat, 01 Feb 2025 15:11:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1738440714; x=1738527114; bh=/OkNhKrEHdGBSK5Yl02y0
+	WheMNO2aueSwMxSLHTsoTs=; b=fqSBHOzAWu9J4ppBcbBLvH2eEik7WEDcAm5sz
+	ELZ205rzhGGVRO+liNJxxDn8ergBnOyedOocv75BuDXfZ8vfOliATblLEq9JyXzE
+	Bh3x25PLvhrtAdhmaQX0RocdusAkiWR6xZDS80Khf8gk2X8MzgGBETC6vOjgbmRn
+	dt0FIxrkWtNWtR0IwBWBQecNprTVAjRE1sKyNv5mKXNy8znpY7RsGHIqcDqq/8k4
+	S60wlEDTTBgLnsOjzB1Z6T9euPLAnzK2zPYTuGDz0QkhxH06uwsrx6Nf+pWQAySx
+	q5avybuS8MpI+TCfCNicnph729ivnTrcV4jnH3dvrDhpuiPSw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1738440714; x=1738527114; bh=/OkNhKrEHdGBSK5Yl02y0WheMNO2aueSwMx
+	SLHTsoTs=; b=KAxYG7OO1FW10eY6lfCTneBYvOsbATOu4h8+QQeYufi7P3KrzCO
+	lfzfH7+S5Qt+qjRocn5DxzGsGMKDFNoKP4Y4iDuUHqxPLBoV+J6k1MfSPKVHTKAn
+	a2JlOeXt+T05/99/uLkGctSNqDhjAAbtRYKOzfQxgHAybXHs/reOR44oyoEChfs4
+	LipKAE3XK/k2bXGijRhqljqwxG/nzqDuBtBQYW7qJ20SdDfrkkYEiBN3ceeo2E89
+	XPJYsKFhaMHnkeS8BOEvYI3fNef7TKypip6GzcMdeDOIrw6xS5tSOMl8ZRAdJc8l
+	ZootbK8f+OjDDa9TZCaN1w4whNmbgeaDuMw==
+X-ME-Sender: <xms:CYCeZ4A4vc9NsFXqCtZQCizuYa5FHw0HymYPrSmZZJrwhZssNeUoVg>
+    <xme:CYCeZ6gqStIb90kr3gpQJkoksyOCuPI4MRDep6hOQNkkanpHjd6AQm9KAff6JX98Q
+    B9xph3VDLbS8R2kDA>
+X-ME-Received: <xmr:CYCeZ7lxJyaPFp3a7Awio_-CMJUJx79Gydv197ft4ef-1NAhWN-vTrmub9bmfGj_lAHCBENq2g5bGksLejERsoxl-ffuxUjsC24n22GESXCpepZWIcq4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdeiiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculd
+    ejtddmnecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepffgr
+    nhhivghlucgiuhcuoegugihusegugihuuhhurdighiiiqeenucggtffrrghtthgvrhhnpe
+    dvgefgtefgleehhfeufeekuddvgfeuvdfhgeeljeduudfffffgteeuudeiieekjeenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugi
+    huuhhurdighiiipdhnsggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopehlihhnuhigqdhksghuihhlugesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopegsphhfsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjh
+    holhhsrgeskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:CoCeZ-wNZzho4StStjA0HFUKwjQIxbVPgsEVDdjQc1q6HKvGgIs3XA>
+    <xmx:CoCeZ9S5NlQ0lB3oKLhXF5alrDoVZ7zZ6ybCz1p3x1Su2DBMAznaiA>
+    <xmx:CoCeZ5YzmK6bhS6Wt5uNwFQ01zJV3semZBLT6qcAkSqT7lLUeHM2Gg>
+    <xmx:CoCeZ2RMDCqGSRh5X1EKqnCqKx7mJTK20Av0IRyM1UkYkNTIblCeGw>
+    <xmx:CoCeZ7ODbYq4lR9dN8OvmVV1NailnhESaGys3tiMkPdBcmn2ysYahdPU>
+Feedback-ID: i6a694271:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 1 Feb 2025 15:11:53 -0500 (EST)
+From: Daniel Xu <dxu@dxuuu.xyz>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	jolsa@kernel.org
+Subject: [PATCH] tools/build: Skip jobserver flgas in -s detection
+Date: Sat,  1 Feb 2025 13:11:40 -0700
+Message-ID: <40ab531dfb491020ae1cc07d68dd03b0fb1d1fc8.1738440683.git.dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201185143.1745708-1-masahiroy@kernel.org>
-In-Reply-To: <20250201185143.1745708-1-masahiroy@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 1 Feb 2025 12:10:00 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiWTPjGk5BDUu-49LeTAr21qurcv9BnjmrYi=ZqbFfufg@mail.gmail.com>
-X-Gm-Features: AWEUYZlBdDHAj8QtpERwR2LQThxWjeLDU2DywKdmKDGbnm9LYxABBIuPfrICgqA
-Message-ID: <CAHk-=wiWTPjGk5BDUu-49LeTAr21qurcv9BnjmrYi=ZqbFfufg@mail.gmail.com>
-Subject: Re: [PATCH v3] kbuild: keep symbols for symbol_get() even with CONFIG_TRIM_UNUSED_KSYMS
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, Daniel Gomez <da.gomez@samsung.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, linux-arch@vger.kernel.org, 
-	linux-modules@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, 1 Feb 2025 at 10:51, Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> This commit addresses the issue by leveraging modpost. Symbol names
-> passed to symbol_get() are recorded in the special .no_trim_symbol
-> section, which is then parsed by modpost to forcibly keep such symbols.
-> The .no_trim_symbol section is discarded by the linker scripts, so there
-> is no impact on the size of the final vmlinux or modules.
+Currently there is unnecessarily verbose output:
 
-LGTM. And I still assume that I'll just get it in some future kbuild fixes pull.
+    $ make -j8 bzImage
+    mkdir -p /home/dlxu/dev/linux/tools/objtool && make
+      O=/home/dlxu/dev/linux subdir=tools/objtool --no-print-directory -C
+      objtool
+    mkdir -p /home/dlxu/dev/linux/tools/bpf/resolve_btfids && make
+      O=/home/dlxu/dev/linux subdir=tools/bpf/resolve_btfids
+      --no-print-directory -C bpf/resolve_btfids
+      INSTALL libsubcmd_headers
+      INSTALL libsubcmd_headers
+      UPD     include/config/kernel.release
 
-          Linus
+The reason this happens is that it seems that make is internally adding
+the following flag to $(MAKEFLAGS):
+
+    ---jobserver-auth=fifo:/tmp/GMfifo1880691
+
+This breaks -s detection which searches for 's' in $(short-opts), as any
+this entire long flag is treated as a short flag and the presence of any
+'s' triggers silent=1.
+
+Fix by filtering out such flags so it's still correct to do a substring
+search for 's'.
+
+Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+---
+ tools/scripts/Makefile.include | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+index 0aa4005017c7..a413f73a7856 100644
+--- a/tools/scripts/Makefile.include
++++ b/tools/scripts/Makefile.include
+@@ -139,9 +139,9 @@ endif
+ # If the user is running make -s (silent mode), suppress echoing of commands
+ # make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
+ ifeq ($(filter 3.%,$(MAKE_VERSION)),)
+-short-opts := $(firstword -$(MAKEFLAGS))
++short-opts := $(filter-out ---%,$(firstword -$(MAKEFLAGS)))
+ else
+-short-opts := $(filter-out --%,$(MAKEFLAGS))
++short-opts := $(filter-out --% ---%,$(MAKEFLAGS))
+ endif
+ 
+ ifneq ($(findstring s,$(short-opts)),)
+-- 
+2.47.1
+
