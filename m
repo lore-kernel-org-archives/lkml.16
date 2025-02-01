@@ -1,234 +1,146 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205101CCEF6
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 21:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72981CCEF6
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 21:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738445087; cv=none; b=iSXtl+RjcvTFJN6daHYcWOUYugaHLyDTRxTTPeebT7IzOIzAr8sUAkCXH6WuxClhyX4INZlJhU/OLoorcPsOiEzTfIJ05/XOoku5gdVwKLpwCPTtrk2L1ufmyoicogHoY3ycuN2jdsAEFRuK5Vpsnz5dh0eX/lAVQ0/Mco+pNhw=
+	t=1738445183; cv=none; b=OCtKKZR4l/ivhfTSoIo/LJUFfeA+J6S3Xym8RmgFSowRgnr+P/p6QYaZ0JnoiT0HcnTE8t/IQEDxAceiOJGbbi0ZB9nFhTfI7R8IA6FvoLJxz1sFXkpqD99d+F57F161ofOkxgYG8JxnA5iC+MiBj4odduaGNR9Cb/nusqdHH+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738445087; c=relaxed/simple;
-	bh=yYK8f7I1aNapofg60l0ZtEixnSH17Y6dm5OMnzJR/pk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LVtgAVx6Ik4o2z1uJvf/1atfWkrdLBYCcxOgD6CCVv7BlNddRjmu3QDf0hAV1oYD7dXbtqst8GNy8RZ6o3udFzy56r67xej1amh98ai1ApPNQvVDKNCXLdQ1WoGnxaTU5m3JUhTvGRKT0Ij99BXaEM0Pp5jMQwdFg2mYTGQCf80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Drne/UPP; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Drne/UPP"
-Date: Sat, 1 Feb 2025 16:24:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738445081;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KvU32ei2vVgo2pDt9gpN5Ou+WbFmSMgZqQnjh2Nxa+8=;
-	b=Drne/UPPVQtbAZ60EwZrSowhrra+QTlbStpS4brS4LyEsAEhIvjw5c2b9f3cTWzbD28pHn
-	GaIA8cMqzfjxOtyWxaH6q7/nJONxYj1X+zDyioOmCh3aFWagBgLiIMKxwFu/Si1hmTN9xd
-	JUg1bhcP/23nBeQ+ChoCdXAoJ0zmhLA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Jeongjun Park <aha310510@gmail.com>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] bcachefs: fix deadlock in journal_entry_open()
-Message-ID: <2iainwxojhulyf7oyga5xboufhiztz4boiqaofppopeduicwjt@pxj756ofltru>
-References: <20250201195044.28007-1-aha310510@gmail.com>
+	s=arc-20240116; t=1738445183; c=relaxed/simple;
+	bh=vzv62sbR1e9BETUQNTu1DJkjXVjg/9YBLDPja/syxtc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZWrngsTdZDFaQN24bOrVR5uDuRKH4gmhFp6Yx7VnI4foHUshMCacKMRb2LhzV3hX97HmubvbcArWi7TLDFB2kOB2VHukeT7Y0ee4AnYfOlF9F1auUYxjaaSFu1XVJU2q10Ewtsq6jDpsCFWaey2NRVxsi3QCP4wLMnQUbz77l0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d0246e4c2dso11410085ab.3
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 13:26:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738445181; x=1739049981;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GeUGSkFBm2yZhWw++6r8guat9DiS4wxbj9f33pBQ+yo=;
+        b=Nw4vmS7m+VRHgdb2fMz/AoELV0RPjEMEfobm9g76GgOwSQ5l8o8MLzYMbTMJ29Su7d
+         2EBRVNdEzW/2hjtBlwDr1zTPW36lqr3S7R6G3meREY0C/mG6zCIAjJYM8+gllfd4gtrp
+         4/hxcqHMwiyj220MSipv1s6rVQjz8nS5aMwvTTVIUbsHU9Tprlw72nRET5CytJvtYW2F
+         bR0btkmnArlcd1ya6t/yaZeoHtEtLQgqQw9o8Y6r8Gb3ws59QXytnQsRx6xzf6bkBuTi
+         s2vToJttEuwIPrQjD3Inqphw86OGNXRat8cHEO53l2ViGI71yJyt8QTdvlOfV3WJPNM3
+         598Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWq2Wif9EI5juJUNBcgJ14nFyFvHo+QSbYQDaY5N3W2/J//tyQqRusW8wOgRXlziCHjtNwatP+bTsFFndU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8fI45u06r+ZgUvY5R3043FRtZUBHzWnXuU9chYk1JLuBNq3bW
+	KFf5uwUojCWdBzsUFeLgCZKz8w8cwX1k7WxlCE5nEMsPkfwlfEGIhnSNmkdfgBzPThi6S/JL0nB
+	YZ5QxnaX/h7be190mobcKyURaCpu5oYYbJmbb1vka3VS7iLHuVA8G/Jg=
+X-Google-Smtp-Source: AGHT+IE8UkTNI4V1mnUvd8NLLJ3xYmFwH6nMTW5TNFly9joHMnTD0mj1NdzJM0cndNyPEyy/9jmN7kKpnGE+/cGmJmShpjgtkGLl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250201195044.28007-1-aha310510@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+X-Received: by 2002:a05:6e02:1f8a:b0:3cf:bb11:a3a4 with SMTP id
+ e9e14a558f8ab-3cffe44792emr158781375ab.15.1738445180801; Sat, 01 Feb 2025
+ 13:26:20 -0800 (PST)
+Date: Sat, 01 Feb 2025 13:26:20 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <679e917c.050a0220.d7c5a.0061.GAE@google.com>
+Subject: [syzbot] [kernel?] upstream test error: BUG: corrupted list in worker_enter_idle
+From: syzbot <syzbot+418416ca0fea920ad5c0@syzkaller.appspotmail.com>
+To: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	linux-kernel@vger.kernel.org, mingo@redhat.com, 
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Feb 02, 2025 at 04:50:44AM +0900, Jeongjun Park wrote:
-> In the previous commit b3d82c2f2761, code was added to prevent journal sequence
-> overflow. Among them, the code added to journal_entry_open() uses the
-> bch2_fs_fatal_err_on() function to handle errors.
-> 
-> However, __journal_res_get() , which calls journal_entry_open() , calls
-> journal_entry_open() while holding journal->lock , but bch2_fs_fatal_err_on()
-> internally tries to acquire journal->lock , which results in a deadlock.
-> 
-> So we need to add a locked helper like bch2_journal_halt_locked() to handle
-> fatal errors even when the journal->lock is held.
-> 
-> Fixes: b3d82c2f2761 ("bcachefs: Guard against journal seq overflow")
-> Signed-off-by: Jeongjun Park <aha310510@gmail.com>
-> ---
->  fs/bcachefs/error.c    |  6 +++---
->  fs/bcachefs/fs-ioctl.c |  4 ++--
->  fs/bcachefs/journal.c  | 22 +++++++++++++++++-----
->  fs/bcachefs/journal.h  |  3 ++-
->  fs/bcachefs/recovery.c |  2 +-
->  fs/bcachefs/super.c    |  4 ++--
->  fs/bcachefs/super.h    |  2 +-
->  7 files changed, 28 insertions(+), 15 deletions(-)
-> 
-> diff --git a/fs/bcachefs/error.c b/fs/bcachefs/error.c
-> index 038da6a61f6b..2482eb33b1ec 100644
-> --- a/fs/bcachefs/error.c
-> +++ b/fs/bcachefs/error.c
-> @@ -20,7 +20,7 @@ bool bch2_inconsistent_error(struct bch_fs *c)
->  		return false;
->  	case BCH_ON_ERROR_fix_safe:
->  	case BCH_ON_ERROR_ro:
-> -		if (bch2_fs_emergency_read_only(c))
-> +		if (bch2_fs_emergency_read_only(c, false))
+Hello,
 
-No, don't add a bool parameter. It'll be a lot less churny, and clearer
-reading, if you add a separate
+syzbot found the following issue on:
 
-bch2_fs_emergency_read_only_locked()
-helper
+HEAD commit:    cd45f362fc1f Merge tag 'bootconfig-fixes-v6.13' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=171245f8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ccb9b8c423893ece
+dashboard link: https://syzkaller.appspot.com/bug?extid=418416ca0fea920ad5c0
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: i386
 
->  			bch_err(c, "inconsistency detected - emergency read only at journal seq %llu",
->  				journal_cur_seq(&c->journal));
->  		return true;
-> @@ -46,7 +46,7 @@ int bch2_topology_error(struct bch_fs *c)
->  
->  void bch2_fatal_error(struct bch_fs *c)
->  {
-> -	if (bch2_fs_emergency_read_only(c))
-> +	if (bch2_fs_emergency_read_only(c, false))
->  		bch_err(c, "fatal error - emergency read only");
->  }
->  
-> @@ -62,7 +62,7 @@ void bch2_io_error_work(struct work_struct *work)
->  	if (dev
->  	    ? __bch2_dev_set_state(c, ca, BCH_MEMBER_STATE_ro,
->  				  BCH_FORCE_IF_DEGRADED)
-> -	    : bch2_fs_emergency_read_only(c))
-> +	    : bch2_fs_emergency_read_only(c, false))
->  		bch_err(ca,
->  			"too many IO errors, setting %s RO",
->  			dev ? "device" : "filesystem");
-> diff --git a/fs/bcachefs/fs-ioctl.c b/fs/bcachefs/fs-ioctl.c
-> index 15725b4ce393..92becb6ae5aa 100644
-> --- a/fs/bcachefs/fs-ioctl.c
-> +++ b/fs/bcachefs/fs-ioctl.c
-> @@ -354,14 +354,14 @@ static int bch2_ioc_goingdown(struct bch_fs *c, u32 __user *arg)
->  		if (ret)
->  			break;
->  		bch2_journal_flush(&c->journal);
-> -		bch2_fs_emergency_read_only(c);
-> +		bch2_fs_emergency_read_only(c, false);
->  		bdev_thaw(c->vfs_sb->s_bdev);
->  		break;
->  	case FSOP_GOING_FLAGS_LOGFLUSH:
->  		bch2_journal_flush(&c->journal);
->  		fallthrough;
->  	case FSOP_GOING_FLAGS_NOLOGFLUSH:
-> -		bch2_fs_emergency_read_only(c);
-> +		bch2_fs_emergency_read_only(c, false);
->  		break;
->  	default:
->  		ret = -EINVAL;
-> diff --git a/fs/bcachefs/journal.c b/fs/bcachefs/journal.c
-> index 2cd20114b74b..4b3bdbfd7782 100644
-> --- a/fs/bcachefs/journal.c
-> +++ b/fs/bcachefs/journal.c
-> @@ -310,14 +310,23 @@ static void __journal_entry_close(struct journal *j, unsigned closed_val, bool t
->  	__bch2_journal_buf_put(j, old.idx, le64_to_cpu(buf->data->seq));
->  }
->  
-> -void bch2_journal_halt(struct journal *j)
-> +void bch2_journal_halt_locked(struct journal *j)
->  {
-> -	spin_lock(&j->lock);
-> +	lockdep_assert_held(&j->lock);
-> +
->  	__journal_entry_close(j, JOURNAL_ENTRY_ERROR_VAL, true);
->  	if (!j->err_seq)
->  		j->err_seq = journal_cur_seq(j);
->  	journal_wake(j);
-> -	spin_unlock(&j->lock);
-> +}
-> +
-> +void bch2_journal_halt(struct journal *j, bool locked)
-> +{
-> +	if (!locked)
-> +		spin_lock(&j->lock);
-> +	bch2_journal_halt_locked(j);
-> +	if (!locked)
-> +		spin_unlock(&j->lock);
->  }
->  
->  static bool journal_entry_want_write(struct journal *j)
-> @@ -382,9 +391,12 @@ static int journal_entry_open(struct journal *j)
->  	if (nr_unwritten_journal_entries(j) == ARRAY_SIZE(j->buf))
->  		return JOURNAL_ERR_max_in_flight;
->  
-> -	if (bch2_fs_fatal_err_on(journal_cur_seq(j) >= JOURNAL_SEQ_MAX,
-> -				 c, "cannot start: journal seq overflow"))
-> +	if (journal_cur_seq(j) >= JOURNAL_SEQ_MAX) {
-> +		bch_err(c, "cannot start: journal seq overflow");
-> +		if (bch2_fs_emergency_read_only(c, true))
-> +			bch_err(c, "fatal error - emergency read only");
->  		return JOURNAL_ERR_insufficient_devices; /* -EROFS */
-> +	}
->  
->  	BUG_ON(!j->cur_entry_sectors);
->  
-> diff --git a/fs/bcachefs/journal.h b/fs/bcachefs/journal.h
-> index cb0df0663946..23f5fd970b7d 100644
-> --- a/fs/bcachefs/journal.h
-> +++ b/fs/bcachefs/journal.h
-> @@ -407,7 +407,8 @@ int bch2_journal_flush(struct journal *);
->  bool bch2_journal_noflush_seq(struct journal *, u64, u64);
->  int bch2_journal_meta(struct journal *);
->  
-> -void bch2_journal_halt(struct journal *);
-> +void bch2_journal_halt(struct journal *, bool);
-> +void bch2_journal_halt_locked(struct journal *);
->  
->  static inline int bch2_journal_error(struct journal *j)
->  {
-> diff --git a/fs/bcachefs/recovery.c b/fs/bcachefs/recovery.c
-> index 98825437381c..31549181888c 100644
-> --- a/fs/bcachefs/recovery.c
-> +++ b/fs/bcachefs/recovery.c
-> @@ -1076,7 +1076,7 @@ int bch2_fs_recovery(struct bch_fs *c)
->  	return ret;
->  err:
->  fsck_err:
-> -	bch2_fs_emergency_read_only(c);
-> +	bch2_fs_emergency_read_only(c, false);
->  	goto out;
->  }
->  
-> diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
-> index d97ea7bd1171..d3d11fb39632 100644
-> --- a/fs/bcachefs/super.c
-> +++ b/fs/bcachefs/super.c
-> @@ -400,11 +400,11 @@ static void bch2_fs_read_only_async(struct bch_fs *c)
->  	queue_work(system_long_wq, &c->read_only_work);
->  }
->  
-> -bool bch2_fs_emergency_read_only(struct bch_fs *c)
-> +bool bch2_fs_emergency_read_only(struct bch_fs *c, bool locked)
->  {
->  	bool ret = !test_and_set_bit(BCH_FS_emergency_ro, &c->flags);
->  
-> -	bch2_journal_halt(&c->journal);
-> +	bch2_journal_halt(&c->journal, locked);
->  	bch2_fs_read_only_async(c);
->  
->  	wake_up(&bch2_read_only_wait);
-> diff --git a/fs/bcachefs/super.h b/fs/bcachefs/super.h
-> index fa6d52216510..e9ff83e06ca2 100644
-> --- a/fs/bcachefs/super.h
-> +++ b/fs/bcachefs/super.h
-> @@ -28,7 +28,7 @@ int bch2_dev_offline(struct bch_fs *, struct bch_dev *, int);
->  int bch2_dev_resize(struct bch_fs *, struct bch_dev *, u64);
->  struct bch_dev *bch2_dev_lookup(struct bch_fs *, const char *);
->  
-> -bool bch2_fs_emergency_read_only(struct bch_fs *);
-> +bool bch2_fs_emergency_read_only(struct bch_fs *, bool);
->  void bch2_fs_read_only(struct bch_fs *);
->  
->  int bch2_fs_read_write(struct bch_fs *);
-> --
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/96de592686f9/disk-cd45f362.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/29b0ccfb6fff/vmlinux-cd45f362.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a5dd22f0f711/bzImage-cd45f362.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+418416ca0fea920ad5c0@syzkaller.appspotmail.com
+
+Bluetooth: hci0: unexpected cc 0x1001 length: 249 > 9
+Bluetooth: hci0: unexpected cc 0x0c23 length: 249 > 4
+Bluetooth: hci0: unexpected cc 0x0c25 length: 249 > 3
+Bluetooth: hci0: unexpected cc 0x0c38 length: 249 > 2
+ slab kmalloc-192 start ffff88811a55b180 pointer offset 0 size 192
+list_add corruption. next->prev should be prev (ffff88810315c040), but was 0000000000000000. (next=ffff88811a55b180).
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:31!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP PTI
+CPU: 1 UID: 0 PID: 6062 Comm: kworker/u9:2 Not tainted 6.13.0-syzkaller-09196-gcd45f362fc1f #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Workqueue:  0x0 (hci0)
+RIP: 0010:__list_add_valid_or_report+0x211/0x2a0 lib/list_debug.c:29
+Code: c7 83 20 03 00 00 00 00 00 00 4d 85 db 74 05 e8 35 46 51 01 48 c7 c7 0d 2a 39 91 4c 89 ee 4c 89 e2 4c 89 f1 e8 10 90 fc ff 90 <0f> 0b 4c 89 ef e8 d5 de 1a 01 4d 8b 7d 00 4c 89 ef e8 d9 3a 51 01
+RSP: 0018:ffff888012477c78 EFLAGS: 00010086
+RAX: 0000000000000075 RBX: ffff88812f4dccc8 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffff888012477ce8 R08: ffffffff81a6e036 R09: 0000000000000000
+R10: ffff88823fc64a90 R11: 0000000000000004 R12: 0000000000000000
+R13: ffff88810315c040 R14: ffff88811a55b180 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff88813fd00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000ff846b34 CR3: 000000012f796000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __list_add_valid include/linux/list.h:88 [inline]
+ __list_add include/linux/list.h:150 [inline]
+ list_add include/linux/list.h:169 [inline]
+ worker_enter_idle+0x5d3/0x870 kernel/workqueue.c:1047
+ worker_thread+0x1261/0x14f0 kernel/workqueue.c:3410
+ kthread+0x6b9/0xef0 kernel/kthread.c:464
+ ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__list_add_valid_or_report+0x211/0x2a0 lib/list_debug.c:29
+Code: c7 83 20 03 00 00 00 00 00 00 4d 85 db 74 05 e8 35 46 51 01 48 c7 c7 0d 2a 39 91 4c 89 ee 4c 89 e2 4c 89 f1 e8 10 90 fc ff 90 <0f> 0b 4c 89 ef e8 d5 de 1a 01 4d 8b 7d 00 4c 89 ef e8 d9 3a 51 01
+RSP: 0018:ffff888012477c78 EFLAGS: 00010086
+RAX: 0000000000000075 RBX: ffff88812f4dccc8 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffff888012477ce8 R08: ffffffff81a6e036 R09: 0000000000000000
+R10: ffff88823fc64a90 R11: 0000000000000004 R12: 0000000000000000
+R13: ffff88810315c040 R14: ffff88811a55b180 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff88813fd00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000ff846b34 CR3: 000000012f796000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
