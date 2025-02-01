@@ -1,192 +1,137 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44961BC9FB;
-	Sat,  1 Feb 2025 17:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011BF1CAA90;
+	Sat,  1 Feb 2025 17:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738432100; cv=none; b=gol6bPGOIlbXTGaaMhT2OV2pR/nXwsCn7kROp/NoyinvDScVF9S8PtoG9gV5piiza6y3BEL0aOCJnXMUSCRMKkJYr8jykpEibwA13SKN6iYW5hgjZ7co8F4ldwBHwx2LhAo3V+USqucOYaMuPZoqhqlkstyd6AH7vDL1Fc06ZT8=
+	t=1738432105; cv=none; b=Md0G2Wz6+j2vEXR8iCFLfPPCJ34EjLHvF1sFnBrVQXktPI3A8CgKdNfolEO3bbdGOcV6VyBVDpAYyRVzLevc5Dfkhxh9pBsjt+m9A+M1C3dz98HgnT0EGBpJDPuY2qYFVKqZiUrjrRtF7bdbEd+QXmpmbnSVdPMhJ7QVnlIxvKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738432100; c=relaxed/simple;
-	bh=/Aki87UBMnfogFuSIAq4F8RCWeqdXEEThctnE+tHSdo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K3XiOcb3tDXCMsXH0pOLcHn7EZbmfZ3KDja8MoDxqqqc6j4739bN8bQaw3ETNNwa3jZc9wlfIGrmR4igMOGKpHj8JdYSpQjfStNv0oCBVkxpb7QVZnLqyQWjPcfVRr42/KiEO/FREIqG+wDv/hgkcmCq60NanknWcq7cbg6y7/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=lHgJ34Ws; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1738432105; c=relaxed/simple;
+	bh=n1RAwqaYRrnkFmDK9cSfZdSN66zxHHIu0i2aujOBA0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A9J/s3qfE+EQabufR2GGq3ZgxQoTdwclJ/cJEj6iCdqskSDxi6VRpZiO1bjNLOCFrE2Lj/0s5PR9KNNvhGCzqXdi0v0UM7iDWrRAxqY8jn+9CHdWC5cW205zXDg7BI+UuxD+pMK5Vn+cCDvvBOoGfTOtHsAPRjxZJfJlcyfShhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSA3CSeb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="lHgJ34Ws"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=1AaliKzqS6YE6Kv8D/0AWFat4Y9z0mg+EEQEmJJmlTU=; b=lHgJ34Ws1oSfKF6O
-	KM+va9ur8XPtre+IxXaWi9nwyAuzw+fAkAHyE5jP41qpVxnTlOR0h2gYe4P38QOo2RfL36yM4vdSn
-	xuYzFOm8GjxwtuHrw2bPmaj7ZwKdabJED2wOvFfoUoOYC142xFeBE1pRT4k1b/DYFi6YTpublNpUR
-	slY3oxS6akgjeO6iU4kMXJrZkhYvJ9TFLIp77TQFi99j51VdL48/rphDCQr/75McZMOtGAtjDbzcK
-	6B/IOtsVHzf0+XfU6ga0YKL3+mZxYv6K14YPsme9mZoBTn/7fbWsCYTSMzZgK0uM2Axc5S3h3/+XJ
-	8CAxz63qz1ezSJKyYA==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1teHbG-00D4oE-1G;
-	Sat, 01 Feb 2025 17:48:10 +0000
-Date: Sat, 1 Feb 2025 17:48:10 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bus: mhi: Remove unused functions
-Message-ID: <Z55eWunU1NRkV2QP@gallifrey>
-References: <20250127215859.261105-1-linux@treblig.org>
- <20250201160721.bgfyi3cwilvibl74@thinkpad>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSA3CSeb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B95A4C4CEE0;
+	Sat,  1 Feb 2025 17:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738432104;
+	bh=n1RAwqaYRrnkFmDK9cSfZdSN66zxHHIu0i2aujOBA0I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kSA3CSebN3fhoYcuLZ2+Qy1r4swiS5GaLI6VWZwWrCxmfJCW463IeNdZVHA0ycTZe
+	 9IUSBt1k6+/a/4KihG5i1mmHxdkiKJh59VOnZpKTk3vugU+pBT9H1utMW3+EVxyt73
+	 kPpbMUMy/MTQfQZeY65iiQZHN4SgSejxNP/sagOLxl6Yo7dVYd3LkLKw6nExx7N0z1
+	 xyKbkUgyYfF34vuyltpEzlu8I84HpyfxqhHUMi6MxMwzvnvxnLTH+ybZIyKkL4S25K
+	 g+swRCn06DNEB4ULTj/mFQcOAq0NC5I2GZ6vUMu4RFXPjwleQPLgCK8z8lA0efIE1L
+	 XfjdfH0cdbLKQ==
+Date: Sat, 1 Feb 2025 17:48:18 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v1 00/12] iio: accel: adxl345: add interrupt based
+ sensor events
+Message-ID: <20250201174818.26dcc646@jic23-huawei>
+In-Reply-To: <20250128120100.205523-1-l.rubusch@gmail.com>
+References: <20250128120100.205523-1-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250201160721.bgfyi3cwilvibl74@thinkpad>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 17:47:43 up 269 days,  5:01,  1 user,  load average: 0.07, 0.03,
- 0.01
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-* Manivannan Sadhasivam (manivannan.sadhasivam@linaro.org) wrote:
-> On Mon, Jan 27, 2025 at 09:58:59PM +0000, linux@treblig.org wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> 
-> Subject prefix should be:
-> 
-> 'bus: mhi: host:"
+On Tue, 28 Jan 2025 12:00:48 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Ah, do you need me to post a v2 for that?
+> Add several interrupt based sensor detection events:
+> - single tap
+> - double tap
+> - free fall
+> - activity
+> - inactivity
 > 
-> > mhi_device_get() and mhi_queue_dma() haven't been used since 2020's
-> > commit 189ff97cca53 ("bus: mhi: core: Add support for data transfer")
-> > added them.
-> > 
-> > Remove them.
-> > 
-> > Note that mhi_queue_dma_sync() is used and has been left.
-> > 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> All the needed parameters for each and methods of adjusting them, and
+> forward a resulting IIO event for each to the IIO channel.
 
-Thanks,
+So my main feedback here is to be much more reluctant to add new ABI.
+Anything you add is unused by all existing code and if it is unique
+to a driver probably never going to be used by anyone other than you.
 
-Dave
+We have a bunch of accelerometers in tree and as they go wrt to events
+this one isn't even particularly complex.  The existing ABI covers
+their events reasonably well so take a look at how they do it.  Often
+it's a case of mapping names for the application of an event (free fall
+detection, activity detection etc) to what what they are actually detecting.
+Those generalize a lot better across different sensor types.  It's almost
+always a threshold of some type. The tap / double tap are more complex
+but we put quite a lot of effort into coming up with a general
+description a year or so back.  There may new things but most of the
+ABI is already there.
 
-> - Mani
 > 
-> > ---
-> >  drivers/bus/mhi/host/main.c | 19 -------------------
-> >  drivers/bus/mhi/host/pm.c   | 14 --------------
-> >  include/linux/mhi.h         | 18 ------------------
-> >  3 files changed, 51 deletions(-)
-> > 
-> > diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
-> > index 4de75674f193..4c91ffd6ed0e 100644
-> > --- a/drivers/bus/mhi/host/main.c
-> > +++ b/drivers/bus/mhi/host/main.c
-> > @@ -1181,25 +1181,6 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
-> >  }
-> >  EXPORT_SYMBOL_GPL(mhi_queue_skb);
-> >  
-> > -int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
-> > -		  struct mhi_buf *mhi_buf, size_t len, enum mhi_flags mflags)
-> > -{
-> > -	struct mhi_chan *mhi_chan = (dir == DMA_TO_DEVICE) ? mhi_dev->ul_chan :
-> > -							     mhi_dev->dl_chan;
-> > -	struct mhi_buf_info buf_info = { };
-> > -
-> > -	buf_info.p_addr = mhi_buf->dma_addr;
-> > -	buf_info.cb_buf = mhi_buf;
-> > -	buf_info.pre_mapped = true;
-> > -	buf_info.len = len;
-> > -
-> > -	if (unlikely(mhi_chan->pre_alloc))
-> > -		return -EINVAL;
-> > -
-> > -	return mhi_queue(mhi_dev, &buf_info, dir, mflags);
-> > -}
-> > -EXPORT_SYMBOL_GPL(mhi_queue_dma);
-> > -
-> >  int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
-> >  			struct mhi_buf_info *info, enum mhi_flags flags)
-> >  {
-> > diff --git a/drivers/bus/mhi/host/pm.c b/drivers/bus/mhi/host/pm.c
-> > index 11c0e751f223..2fb27e6f8f88 100644
-> > --- a/drivers/bus/mhi/host/pm.c
-> > +++ b/drivers/bus/mhi/host/pm.c
-> > @@ -1296,20 +1296,6 @@ int mhi_force_rddm_mode(struct mhi_controller *mhi_cntrl)
-> >  }
-> >  EXPORT_SYMBOL_GPL(mhi_force_rddm_mode);
-> >  
-> > -void mhi_device_get(struct mhi_device *mhi_dev)
-> > -{
-> > -	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-> > -
-> > -	mhi_dev->dev_wake++;
-> > -	read_lock_bh(&mhi_cntrl->pm_lock);
-> > -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-> > -		mhi_trigger_resume(mhi_cntrl);
-> > -
-> > -	mhi_cntrl->wake_get(mhi_cntrl, true);
-> > -	read_unlock_bh(&mhi_cntrl->pm_lock);
-> > -}
-> > -EXPORT_SYMBOL_GPL(mhi_device_get);
-> > -
-> >  int mhi_device_get_sync(struct mhi_device *mhi_dev)
-> >  {
-> >  	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-> > diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-> > index 059dc94d20bb..dd372b0123a6 100644
-> > --- a/include/linux/mhi.h
-> > +++ b/include/linux/mhi.h
-> > @@ -720,12 +720,6 @@ enum mhi_state mhi_get_mhi_state(struct mhi_controller *mhi_cntrl);
-> >   */
-> >  void mhi_soc_reset(struct mhi_controller *mhi_cntrl);
-> >  
-> > -/**
-> > - * mhi_device_get - Disable device low power mode
-> > - * @mhi_dev: Device associated with the channel
-> > - */
-> > -void mhi_device_get(struct mhi_device *mhi_dev);
-> > -
-> >  /**
-> >   * mhi_device_get_sync - Disable device low power mode. Synchronously
-> >   *                       take the controller out of suspended state
-> > @@ -776,18 +770,6 @@ int mhi_prepare_for_transfer_autoqueue(struct mhi_device *mhi_dev);
-> >   */
-> >  void mhi_unprepare_from_transfer(struct mhi_device *mhi_dev);
-> >  
-> > -/**
-> > - * mhi_queue_dma - Send or receive DMA mapped buffers from client device
-> > - *                 over MHI channel
-> > - * @mhi_dev: Device associated with the channels
-> > - * @dir: DMA direction for the channel
-> > - * @mhi_buf: Buffer for holding the DMA mapped data
-> > - * @len: Buffer length
-> > - * @mflags: MHI transfer flags used for the transfer
-> > - */
-> > -int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
-> > -		  struct mhi_buf *mhi_buf, size_t len, enum mhi_flags mflags);
-> > -
-> >  /**
-> >   * mhi_queue_buf - Send or receive raw buffers from client device over MHI
-> >   *                 channel
-> > -- 
-> > 2.48.1
-> > 
+> The sensor has further features still not covered:
+> - g-ranges scaled by different ODRs, especially for activity / inactivity
+>   threshold is not covered so far. There seems to be a particularity with
+>   the ADXL345 as annotated on some analog FAQ.
 > 
-> -- 
-> மணிவண்ணன் சதாசிவம்
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+> - Various thinks like low power, sleep mode, etc. are (still) not covered
+>   here, others (ACDC bit, selftest, etc.) currently are hard coded or not
+>   covered.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> ---
+> Questions:
+> - Do I need a mutex/lock protection as this is the case e.g. in the ADXL367
+>   or the ADXL380?
+>   Actually, I understand those cases as protecting access to the state
+>   object by different channels, temperature and accelerometer. I'm unsure
+>   if this is a correct understanding, where for the ADXL345 there should
+>   not be any issue. At most, a currently displayed value on sysfs is
+>   (still) not updated. So, IMHO I can rely on the internal protections in
+>   regmap no further mutex is needed. Please, can you give me a feedback
+>   here?
+
+If you have an read modify write actions triggered by sysfs writes they
+can race (not serialization between different file writes).
+That's why you tend to need the mutex.
+
+> 
+> - FIELD_PREP/FIELD_GET: I'd like to use arrays of enum indexed elements
+>   to allow for more generic function implementation passing just a "type"
+>   field, e.g. at single tap/double tap or activity/inactivity handling.
+>   When it comes to filtering out bits using FIELD_GET/FIELD_PREP, it says
+>   that this enum array element is not "const enough". Is there a
+>   work-around?
+I don't have it to hand but there is a patch set trying to add non
+const versions of these that went to my other email.
+
+For now just carry a local version as we don't want to end up waiting
+for that patch to merge.
+
+> 
+> Lothar Rubusch (12):
+>   iio: accel: adxl345: migrate constants to core
+>   iio: accel: adxl345: reorganize measurement enable
+>   iio: accel: adxl345: add debug register access
+>   iio: accel: adxl345: reorganize irq handler
+>   iio: accel: adxl345: improve access to the interrupt enable register
+>   iio: accel: adxl345: add single tap feature
+>   iio: accel: adxl345: show tap status and direction
+>   iio: accel: adxl345: add double tap feature
+>   iio: accel: adxl345: add double tap suppress bit
+>   iio: accel: adxl345: add freefall feature
+>   iio: accel: adxl345: add activity feature
+>   iio: accel: adxl345: add inactivity feature
+> 
+>  drivers/iio/accel/adxl345.h      |   86 ---
+>  drivers/iio/accel/adxl345_core.c | 1150 ++++++++++++++++++++++++++++--
+>  2 files changed, 1099 insertions(+), 137 deletions(-)
+> 
+
