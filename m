@@ -1,72 +1,162 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6085FAD2C
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 02:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED94F4690
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 03:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738378086; cv=none; b=f99chuykCqKp9DyRUxEoPaHGQpI4KozWvQ+j2xwvlSAfpGEHi6JmmmA3QOmYMq/c5finjBVYWeyzoPX31Y986AykVUZYjDOtOw9tyq6I8AU2wWGZt6FdfKl77QX9cnKuJBWG/qCVxEqXilMAnk5TaEminfVPHjNCfHkwWRQiZvY=
+	t=1738380444; cv=none; b=H5c/a57zdOhM4KNfawSweVNrUJ0u4BdzNhhtMptmJbKUjqD0p2znheXpVP+4eaunBwCtJqC7LCDDRX0v9+D9MfWA8jKVJVTOFC8MlWyE+njTKeh5tS+f/mS78gJLaekkFZpDdZHkNQawy1m7LYk4+0bQsXUwsP3/MTeFB46o2QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738378086; c=relaxed/simple;
-	bh=RnpiyWOXN5wWv1l0EnAlBZxIDdgU2mOg8xTAGsZelCs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=WxxOp6N20LV8nFoPSidY+xFW5eLWX2pECptaByqewC+CYb2itl4U/s4xz9DYTEyUHS7iVmbxzs9iNdzGmiTf2PfPHV18/IHyd9YHdHRkMoDoBe3Dbbr7o/Uz2YJS8lcuZClnLY9fnSybCCqDNfNmCocX+vShZJBWZrgK0W5126o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3cfc08132adso37961645ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 18:48:05 -0800 (PST)
+	s=arc-20240116; t=1738380444; c=relaxed/simple;
+	bh=PF2Yl1TqoXLr0NeE8+DQsBl5UrmwjXRSIckiNT0UUh0=;
+	h=Message-ID:Date:MIME-Version:Cc:From:Subject:To:Content-Type; b=KSvp1xkTvyPbKhNhWEQxk8avtgGf7FHSVrBVF4eDLkBf7ulCvNrSvYEuG+1E8wmL1sK8d22wyEcKeNX/CIikWL/6rAvhf2L/gmtLIVbQDw6twXxKBA5OwSU/FneE5C+FFpH7ezpcJBFibKTKPzKF/L2LHa4CZVTAbePZC/J+LWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QcNsMTxK; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QcNsMTxK"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 511302Qa024619
+	for <linux-kernel@vger.kernel.org>; Sat, 1 Feb 2025 03:27:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=ngm+J1bv5blPhxkqLYNt5X
+	iWRJ/xudmR6tBXP3+PxHI=; b=QcNsMTxKGovxWyyujJ/EIGJyJ103f0Ytesa/tq
+	Na9QutVf3sBfB3GACaPcwjUYLIYwB2sSYljwAysx311TtQ4QnuBQpbxNVi4bBLh8
+	Po5Gl2OB9Mq+bL96AKK/AfqiW1Wc1g3PJBQW0MO2rcZCgq8ghRM2nplrxo2PBIuw
+	VnqbZB+h8zQBXrvtt7N3PRggn49BTXku3DsJw8N2uXUui6yhBIa1cxU0xBJP10r0
+	nlui2dvaO0eChL/0WIVc1rgmOFa2sSy3wVlWJlczj69sFq2hLmsxo6z9zcctyvAi
+	eEMskDj7kbvIy3XsZWwFBtg0kfEhOjtOMorQcj3QoZxfxUkQ==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44haxfg1xr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 03:27:21 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-467b645935fso48651941cf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 19:27:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738378084; x=1738982884;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DxuUE0T58b6YpVbsSM0dHdoaMpqgLm/gI4zijFogwUI=;
-        b=V6Den9b87uL1pvx9EndjJ6z8JNaTxOoSn2sLfeQUqzehiS0QFEEqzV02IqS3o8CXJN
-         5FpyLB9mbEwnh3Ov2SN0mbsTx2w3v11x0gTc/JtoB1wPTOIY4o1FuGwG/R8ZRhMSdv9m
-         iydEDypeo8oWcrxueHpFcRUlDE034ZJuUMXB/09vN6d0jABxBy3JJr4Peu/ibESXw1s4
-         xGB+bw51l08EPWDGUjTSTSDrLFIy4VrQx8ViuCMACnKr7o+ytfjnGBkeXR/ULOfVWj12
-         qcKix07/f1/dh2qQml9XUeGxfMftkr9y1jeDUKMuhSiVC4bkt4fU7WfEjQH5zaurOajY
-         LUGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvqGypQ/OA0j3c+u9x5pM9GOlMswa+10kCdIZGuHgocFt0uKFyAM//0YclL+ddBhwsnq1pst7grh53uFI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCon6xgULWZJjtxH9W4AoqksUBZO2lw570eKh1cnkNr9mMR3V1
-	V9ZXdGz1oYa4WTyXR/vMOirdnPmgSAMezZpK98b2QbEQ3kJ44xua9jv2tnxjAaHdaSs6cFzDcDW
-	uIVbBxdCt/sT46jYzXTGLdMN79N7cuT6L48MwziUVmokcwTqlIcyiqy8=
-X-Google-Smtp-Source: AGHT+IFK/n1PaMAty3kDWfuhSdFVHM9cmjMskpq81cvD8n9tMvNa1pCYgGPMNkE0gqF7LRdIUAoXYjfrZ6vro84MyNak95sex2dt
+        d=1e100.net; s=20230601; t=1738380441; x=1738985241;
+        h=content-transfer-encoding:to:subject:from:cc:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ngm+J1bv5blPhxkqLYNt5XiWRJ/xudmR6tBXP3+PxHI=;
+        b=g2IufM1S2J34T7iuuKYr2KyrDoG3+5S4s6211P0q2FqhjSjl31tWG/4OscRD5/xhCT
+         LuvuXS/VFXNj+fzQ2qgc9FipaWtk7vlLNauqd0bvydbbu1lcGQhX07WdbbRH/A8+x9/w
+         rjPhUqU6tHq6yYIgRRfESWGncKnwmfK5xVr5sLN2cpbAbNNQnhvqgyh/P7oiFKpEBmmN
+         Kkcm920w03Qg9x3KrgpiKyYPndnZ4nirKP0tRrLfDe/QcL/z175f+P44obw+22Yos2ug
+         cqBqTe7NCEhUsHqqvcqizp8ALTZQ4Im+rVPVcj8JoGCzsfWjsCf4QQxoZFvzUbXOlucU
+         R3zw==
+X-Forwarded-Encrypted: i=1; AJvYcCWeHFzx3UzaDrIYBrcAlLVfMiafLg4GPecas/kd6rP1yebd+j1LG7vu5L8uAvN+1FOo8ETVeduTLQpGisg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBGtPtCmyfF34kDweHqxQCm2aialZ8gv7DR83PCo6mCyL+wsdP
+	Mm4OoKnHKKOTLyGVr06fC1nu2Opi5CY7MmmFT1DEqiGx1rOER9UAIqyjXAwvh9kQKMwGeeaoWvd
+	YnxHqRvs1mThh1nTbVHyKuq/BHcG7K3ACUC4JgC83ioYNRtkaccdnoHftpDVwQSY=
+X-Gm-Gg: ASbGnctxzFhhGCcvrfgAzZPcVoOdFBlwjlUdjqpjCj7WQRwpxZxAkASwEU3glNjGwxV
+	CzE9sO9mHTTGN7zc6AfcARIqnVNEfW/PzZFNrCx11OlbQbFME09rrgiqQXCMb1AYU6UzzKqJ8AL
+	+z+M01OszozKMbKstpxNk5OzRcA428I6f2wklcVFxHPrTa3KCyFDlJ+26vbFEhSphIK1IXtoGAs
+	Rtm7uyrXjT5ymzl/x+JJqMvQta1BjeYca7vUqwaXeRcjVfmTaCi+q85qECdp60GpN6LktZz3Asc
+	QXFJOMg4aK+h7hBwnX1yPUZP0DL0d/nd/0evLZOu6aWGobZu/11g9XIuUsDZ7rouD6KuA1g98tR
+	b0IH3Ow==
+X-Received: by 2002:a05:622a:4d88:b0:46c:716f:d76 with SMTP id d75a77b69052e-46fd0a64856mr201942701cf.12.1738380440778;
+        Fri, 31 Jan 2025 19:27:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF7nersnCv1Rs7slOFSULjuyyLKsgIxH/oH4djXhl1UKj2C2IF4Um8Ukrb2kEhT+WjO/hAF1g==
+X-Received: by 2002:a05:622a:4d88:b0:46c:716f:d76 with SMTP id d75a77b69052e-46fd0a64856mr201942581cf.12.1738380440459;
+        Fri, 31 Jan 2025 19:27:20 -0800 (PST)
+Received: from [192.168.1.157] (104-54-226-75.lightspeed.austtx.sbcglobal.net. [104.54.226.75])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0a75c0sm24002221cf.9.2025.01.31.19.27.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 19:27:20 -0800 (PST)
+Message-ID: <971d297c-cc66-4947-9bf7-33aa7fc12673@oss.qualcomm.com>
+Date: Fri, 31 Jan 2025 21:27:18 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12e7:b0:3cf:cb93:de02 with SMTP id
- e9e14a558f8ab-3cffe3d1ab1mr99938165ab.3.1738378084551; Fri, 31 Jan 2025
- 18:48:04 -0800 (PST)
-Date: Fri, 31 Jan 2025 18:48:04 -0800
-In-Reply-To: <tencent_8284967C36CA4BBA7491771966AC3D993609@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <679d8b64.050a0220.d7c5a.0059.GAE@google.com>
-Subject: Re: [syzbot] [fs?] WARNING: bad unlock balance in seq_read_iter
-From: syzbot <syzbot+c041985778e4069e1ce3@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+Cc: "sidneym@quicinc.com" <sidneym@quicinc.com>,
+        Matheus Tavares Bernardino <quic_mathbern@quicinc.com>,
+        "quic_mliebel@quicinc.com" <quic_mliebel@quicinc.com>
+From: Brian Cain <brian.cain@oss.qualcomm.com>
+Subject: [GIT PULL] hexagon changes for v6.14-rc1
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-hexagon <linux-hexagon@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: 3VTkR50zunX1e-5ak88Jv0oXoYF-A1gf
+X-Proofpoint-GUID: 3VTkR50zunX1e-5ak88Jv0oXoYF-A1gf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-01_01,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ suspectscore=0 impostorscore=0 mlxlogscore=830 spamscore=0
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502010027
 
-Hello,
+Linus,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Please pull the following changes for hexagon.  Among the changes is a 
+change to my email address.  The public key containing this new uid 
+should be available on keys.openpgp.com and keyserver.ubuntu.com -- 
+hopefully one of those is satisfactory.
 
-Reported-by: syzbot+c041985778e4069e1ce3@syzkaller.appspotmail.com
-Tested-by: syzbot+c041985778e4069e1ce3@syzkaller.appspotmail.com
+Thanks,
 
-Tested on:
+-Brian
 
-commit:         768b1f5e tracing: dbg seq stop
-git tree:       https://github.com/ea1davis/linux ftr/syz
-console output: https://syzkaller.appspot.com/x/log.txt?x=13549bf0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7acebde734703260
-dashboard link: https://syzkaller.appspot.com/bug?extid=c041985778e4069e1ce3
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+====
 
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+The following changes since commit cd45f362fc1f2d81fa69a19e7f8eca058db3e320:
+
+   Merge tag 'bootconfig-fixes-v6.13' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace 
+(2025-01-28 10:11:33 -0800)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/bcain/linux 
+tags/for-linus-hexagon-6.14-rc1
+
+for you to fetch changes up to 84d78214b4f187da7e029f5dad344203511a04d7:
+
+   MAINTAINERS: Update my email address (2025-01-30 18:55:25 -0800)
+
+----------------------------------------------------------------
+hexagon updates for 6.14-rc1
+
+* Move kernel prototypes to internal header
+* Fix to address an unbalanced spinlock
+* Miscellaneous patches to fix static checks
+* Update bcain@quicinc.com->brian.cain@oss.qualcomm.com
+
+----------------------------------------------------------------
+Brian Cain (1):
+       MAINTAINERS: Update my email address
+
+Hardevsinh Palaniya (1):
+       hexagon: time: Remove redundant null check for resource
+
+Lin Yujun (1):
+       hexagon: Fix unbalanced spinlock in die()
+
+Thomas Huth (1):
+       hexagon: Move kernel prototypes out of uapi/asm/setup.h header
+
+Willem de Bruijn (1):
+       hexagon: fix using plain integer as NULL pointer warning in cmpxchg
+
+Yang Li (1):
+       hexagon: Fix warning comparing pointer to 0
+
+  .mailmap                              |  2 ++
+  MAINTAINERS                           |  2 +-
+  arch/hexagon/include/asm/cmpxchg.h    |  2 +-
+  arch/hexagon/include/asm/setup.h      | 20 ++++++++++++++++++++
+  arch/hexagon/include/uapi/asm/setup.h | 14 ++------------
+  arch/hexagon/kernel/time.c            |  3 +--
+  arch/hexagon/kernel/traps.c           |  6 ++++--
+  7 files changed, 31 insertions(+), 18 deletions(-)
+  create mode 100644 arch/hexagon/include/asm/setup.h
+
