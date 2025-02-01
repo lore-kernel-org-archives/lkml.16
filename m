@@ -1,156 +1,64 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009F117557
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 02:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE4B4A3E
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 02:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738377140; cv=none; b=DWzFZdVjA0mG1N3aii3Ra1mdBZO//d+ghrRIFLpHBGfYZCLXwXeISPOfThht9DwqEm8jFxwjtpVmU5Rom1MvDzzk2Q8zThFBebIqmL8+G2Sb1RyWhuOSNlc7bwnrsZL0lBP5b+gD01BXQLeymGXcP9iGs3nZiBwZCiycZ6ypU8k=
+	t=1738377227; cv=none; b=FxjxFjYiSLLVTrg0XUeyf7sBqDjQQnpsSWYJGY8gf//Yr+PF/E8s9olvOQbcytFuuBHP1yBzDTfIhmSD99hk2EGg2AHdL1Y16eTHv1ZF/v8QoFmabLzPwcVEYVhbNKJNXjnUsV6s35BdX9OhWMrPUviAymAkK4PHUilu8OZkx9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738377140; c=relaxed/simple;
-	bh=YvUJr1IlpMallDUUXqLZIE2yKMx495vfCWgRkrRQMXg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QocwFT5eii3nL3nZYvTjyU6vRTE0h5jLvZCE9+4Yxw/QZCP9jyo0BpFjF86ha1W4apXfdPnmzH5aKuC3nZXuUa6aIUkr6UA+ZYrdSTEb3vExGTfQj1hz2cyjZ1rl7ZYVdhI5nBImwK2jYVsqDKz7oyZEs8Siqma380fLtT0C3yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4H574ytS; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738377227; c=relaxed/simple;
+	bh=5NUV/Smhhra6PvizOc/P+HW4QM+0UoWI8pclAapHqJQ=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=ZiEH2/wQbDlxrH7X8sNam0fu3MeU1oL1tlLs0CkBXy2MUtzVxzBfvmYH00B1reoPCPCKR+lC1EY+h2akRZj92DiT6gFqkyguNmb8uxdXCavKOT8lDfb+clPmQ9vo0/XKvnjoQ7vJdbtxnbJH4niXsZ2P2rp5wX43R3zp4dWZjsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ihyUKAi5; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4H574ytS"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53e3a2264e1so2975e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 18:32:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738377136; x=1738981936; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pG4VfCSV2vZRH8VFu+tXkb/1AcO1THW/axuTYVw/Lrc=;
-        b=4H574ytSsuT3cVotvtpy1/OQWQM25WHhDwfjFjpY0Uznz7wdG0b0/XXqVHs6y556A2
-         zxJLHVcGvehKVdAw2nRGnWl0tcsjiYYYLfIIUXQsgaLoP63+Pol4tDUjaZuRlczNZCcT
-         vMPumzgbPI33a7sQbCq31gTA6wGF4OAqc51hmjyMzfz3Mg4BKhMZcyZr1/pJfEbWXK/K
-         mSt+ZaNT5MKaaaQJAAM0vmA7/DBxbYziu+1XC3Z4bdzBDPb1hat8whW+C8sZigsrLmpL
-         QOx3y6/H7oLoilfAx7snKpSxtG2ZtXnqggqooQ1BADtrwLZQd+Q1jsMvf7biY/7WZHL3
-         bWdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738377136; x=1738981936;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pG4VfCSV2vZRH8VFu+tXkb/1AcO1THW/axuTYVw/Lrc=;
-        b=UfvUnMbxJKUaMLTWJFebM/W0vexh63oZEsee77dEra/3jNiiP0bayXoIQP9ZJcJxhD
-         isinAv8DCXx9wWCrGs9Zh2NQI0Qc3jPZYSRWwGbxI6s+tk/T+ZkYs/sfcrSOTTuDNou3
-         CX9enzJ9uO8hhz3Fulje5CiQBOTZOrfk9jTLcKaaGIwJzJnEuLnzgtEqtV02aso7SOj0
-         DgXT5HNLhd16/prYRvCIYe0FCcm1UDu0S59r3IRFPv2nJsPY/RHxAuj1XcA92OCPOdEm
-         zTUrY8Gt8L1DFpzwzM0h0jZIU3cB4H97U2QCSDdktc2Sv8CF3U+KctSFyQmmRQLLgatS
-         6pmg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOMmFzce4xEd4MtBxbaqQmSHjhh6WWUi59MqxkNLVippngRSA2mRIQXPUG4QSNWeHPrXT5kZOXl9zMC/E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPw1jNBUCyTU+hp3/7KBMwtZ9w5uZtg1UNhtBJgxGFCeEMm0dL
-	Ddi3ke9gcZieXuG4aFdz3XReVOF31FQVFSPooqbcW67JjH5bOWS7qeW2onICpQhzJbbklUnbyv0
-	ZIkfSe8ECEQve/Bs4OaO972yc9GPBjAiX+zbf
-X-Gm-Gg: ASbGncuV9nMB8ltw7rmWiP+CgV9JrH3jnuOW6rISmSbfib2/+o4SGdttlUnW6wQfTff
-	jZLd5vlhq+kq1Z+sW+ZK3qnalylQN2c9c6qgYraGtoPaTtWbSlFWgC9aE2YCmrVyUpCM1xrCoJa
-	VdlaBOkgk6HdApBPdvbpv57w==
-X-Google-Smtp-Source: AGHT+IGDm9JPvGLHbtjFN5gsiaTc6QnwCtkwno/1ZV6/IPpxaNeuuM5xrnBDIsxDQcK/xH+cQ2IfrP7ilTJxIVl7kD8=
-X-Received: by 2002:a05:6512:220a:b0:53d:dcde:395a with SMTP id
- 2adb3069b0e04-543f6160274mr132911e87.2.1738377135702; Fri, 31 Jan 2025
- 18:32:15 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ihyUKAi5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1738377218; bh=5NUV/Smhhra6PvizOc/P+HW4QM+0UoWI8pclAapHqJQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=ihyUKAi5BnRh+FpXJBa6x7XKjZD6rNv5ML5FNrogpSSOpxCmluQHDL+PWqt9L0OXr
+	 kPjOjmhrmJLLd/InO7MAbv+GxRhQTVX+9WnMn/03fx6FP3J8blYHYzHJIhXTm4Rmw4
+	 v6tO8Ex2WisVif98yioLtPJ/73vRyqUgbLo4SVyA=
+Received: from pek-lxu-l1.wrs.com ([2408:8435:9930:6b25:8cb3:3b5b:faa2:1ccb])
+	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
+	id 6DA2024B; Sat, 01 Feb 2025 10:27:26 +0800
+X-QQ-mid: xmsmtpt1738376846t6bkklchs
+Message-ID: <tencent_8284967C36CA4BBA7491771966AC3D993609@qq.com>
+X-QQ-XMAILINFO: Mg/0DM1Zd+nHsASQO/FUBv//PP9Q49On+jsXF7AhKKtmnbNIh9ep0MHq4WBRXI
+	 CTgvyqzOfqnGdxuMHC9VKkQv77pzAqqLjWbJJI1dTzEz0H3xeG1FwkCgoCM6kgwec3XqzYRfdx1W
+	 /PGYGUOkjM3Cmuzy2J51Bs9fyCXqcU9vBEoM3N4F4g6XWr57CjMhhaYohes42b0JMVPdCcAZ3Cmf
+	 +9U/Qd/lOoAFmEx+f+eQfsuAjiFbU5+KTbbf+j7vggjw9oDy+kobhnlGr3oHs8buAgt2yxHM/Rzi
+	 QPUIMiPF6Yxms4mbkW6r63hLWYmGB7fBO8pJGcgVXfYVETjJlu5sg5QC4lJpJAHy0JKN5zFRT1M8
+	 sCrLSPo/3G/9gg5RKi6gzvtnjazDI1/h2S1iAoBFGNRCexCbMAh07hsPwZe8HhPKzQa7t+hlBzjG
+	 e25XqzdOjb+BsFcv5VQDruaGprsLKrWHE+eC7BtiiGb3BCpMzy5/IH6jsj/O40H7YO8FHBfbktuj
+	 Dg6Va38YWwWXhgVGWCOh+nYa3yj2mBETUjjU+PCod7Q2j3GeewwoM/Sa/HTdeZ8t7+Jue/KsEu7L
+	 hFbUXjMonYPvpAZ4GJ/Ew7sLvxV/8XakC1gbvXx/+N3jj+xlCRpyluABtKmytqDJ5lnOw7trC36v
+	 Zm1dsndiIkv0QWGv2L5dQNIZWx4w4KtC+gXE+1CW9RDIuRvdYhEDiNJBVS9KHcZLsBaycBL61OCL
+	 q9G7iIHHUUB3iyz578rUtLgM1kFO5TXyfdiIumHj2lMdouHhod/fVG4YPJ3iOOtoFfrZkfTBG2sK
+	 h5DD9+7ZqYI9YXd09JYmhrfstnTuZZfusdjgdGf38wR4WQxjcDMN8jWg2bn5pLui/8WY+ujAgMBB
+	 Dk92vE0td5arrSgOTuNcwa1kCKXl7hsI4Pnn2QFHSUg+H3v63+S+X50FNGD/p/Dp9MbeR5B0/q0w
+	 q69aFKuvgrBF0JE5xp6pxk+FJpxiWPACNZaz8bfEQ=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+c041985778e4069e1ce3@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [fs?] WARNING: bad unlock balance in seq_read_iter
+Date: Sat,  1 Feb 2025 10:27:26 +0800
+X-OQ-MSGID: <20250201022725.782771-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <679d36da.050a0220.163cdc.0010.GAE@google.com>
+References: <679d36da.050a0220.163cdc.0010.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129232525.3519586-1-vannapurve@google.com>
- <p6sbwtdmvwcbr55a4fmiirabkvp3f542nawdgxoyq22cdhnu33@ffbmyh2zuj2z>
- <CAGtprH8pJ3Zj_umygzxp8=4sJTdwY5v2bFDhoBdX=-3KQaDnCw@mail.gmail.com>
- <wmdg54v56uizuifhaufllnjtecmvhllv35jyrvdilf4ty4pfs5@y4zppjm2sthr>
- <CAGtprH82OjizyORJ91d6f6VAn_E9LY7WptN-DsoxwLT4VwOccg@mail.gmail.com> <2wooixyr7ekw3ebi4oytuolk5wtyi2gqhsiveshfcfixlz3kuq@d5h6gniewqzk>
-In-Reply-To: <2wooixyr7ekw3ebi4oytuolk5wtyi2gqhsiveshfcfixlz3kuq@d5h6gniewqzk>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Fri, 31 Jan 2025 18:32:04 -0800
-X-Gm-Features: AWEUYZmeERapyJbLH5q17LnS9dbTKeBXAlIs3Ezuwk-Df4kRvcx2vhlD0t9pkOs
-Message-ID: <CAGtprH-n=cfH_BJAmiNMoRbqq0XdGCf3RE67TYW8z7RARnsCiQ@mail.gmail.com>
-Subject: Re: [PATCH V2 1/1] x86/tdx: Route safe halt execution via tdx_safe_halt()
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
-	seanjc@google.com, erdemaktas@google.com, ackerleytng@google.com, 
-	jxgao@google.com, sagis@google.com, oupton@google.com, pgonda@google.com, 
-	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, 
-	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 31, 2025 at 12:13=E2=80=AFAM Kirill A. Shutemov
-<kirill@shutemov.name> wrote:
->
-> On Thu, Jan 30, 2025 at 11:45:01AM -0800, Vishal Annapurve wrote:
-> > On Thu, Jan 30, 2025 at 10:48=E2=80=AFAM Kirill A. Shutemov
-> > <kirill@shutemov.name> wrote:
-> > > ...
-> > > > >
-> > > > > I think it is worth to putting this into a separate patch and not
-> > > > > backport. The rest of the patch is bugfix and this doesn't belong=
-.
-> > > > >
-> > > > > Otherwise, looks good to me:
-> > > > >
-> > > > > Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>=
-@linux.intel.com>
-> > > > >
-> > > > > --
-> > > > >   Kiryl Shutsemau / Kirill A. Shutemov
-> > > >
-> > > > Thanks Kirill for the review.
-> > > >
-> > > > Thinking more about this fix, now I am wondering why the efforts [1=
-]
-> > > > to move halt/safe_halt under CONFIG_PARAVIRT were abandoned. Curren=
-tly
-> > > > proposed fix is incomplete as it would not handle scenarios where
-> > > > CONFIG_PARAVIRT_XXL is disabled. I am tilting towards reviving [1] =
-and
-> > > > requiring CONFIG_PARAVIRT for TDX VMs. WDYT?
-> > > >
-> > > > [1] https://lore.kernel.org/lkml/20210517235008.257241-1-sathyanara=
-yanan.kuppuswamy@linux.intel.com/
-> > >
-> > > Many people dislike paravirt callbacks. We tried to avoid relying on =
-them
-> > > for core TDX enabling.
-> > >
-> > > Can you explain the issue you see with CONFIG_PARAVIRT_XXL being disa=
-bled?
-> > > I don't think I follow.
-> >
-> > Relevant callers of *_safe_halt() are:
-> > 1) kvm_wait() -> safe_halt() -> raw_safe_halt() -> arch_safe_halt()
->
-> Okay, I didn't realized that CONFIG_PARAVIRT_SPINLOCKS doesn't depend on
-> CONFIG_PARAVIRT_XXL.
->
-> It would be interesting to check if paravirtualized spinlocks make sense
-> for TDX given the cost of TD exit.
->
-> Maybe we should avoid advertising KVM_FEATURE_PV_UNHALT to the TDX guests=
-?
->
+#syz test: https://github.com/ea1davis/linux ftr/syz
 
-Are you hinting towards a model where TDX guest prohibits such call
-sites from being configured? I am not sure if it's a sustainable model
-if we just rely on the host not advertising these features as the
-guest kernel can still add new paths that are not controlled by the
-host that lead to *_safe_halt().
-
-> > 2) acpi_safe_halt() -> safe_halt() -> raw_safe_halt() -> arch_safe_halt=
-()
->
-> Have you checked why you get there? I don't see a reason for TDX guest to
-> get into ACPI idle stuff. We don't have C-states to manage.
-
-Apparently userspace VMM is advertising pblock_address through SSDT
-tables in my configuration which causes guests to enable ACPI cpuidle
-drivers. Do you know if future generations of TDX hardware will not
-support different c-states for TDX VMs?
-
->
-> --
->   Kiryl Shutsemau / Kirill A. Shutemov
