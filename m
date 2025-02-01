@@ -1,170 +1,116 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B441C3F00
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A88A1BBBD4
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738426373; cv=none; b=C7Zi2/uk27yFM+/ooZXCrJpelrfGllQPZF4y8YbVyc3crBJi1UTuS/tCrZaqvcX9+WbOLnB+JgjWx8CsXFW7B+A6q/xAdxgQ9C4KT/WyRBg3J2+tCBzXXNQMN1kLo07VJo4LkG+s6hgJHM/j1U6uErHD7LlYjzwTKApXlfhbCa4=
+	t=1738426462; cv=none; b=YNAoBNFYA7ErYq6AXJVcEgC1MIqze/u2/Z0ypdqNjnCco2mG1C/YGPjG64JQsRCgDDcJyvGq6EFSi/bp/FxryLrlNfhTbx6lyU71xE+XYxEqwqhOqv+rIdN1MiyespANjGH6lWibHRIFsVf1z8LPXYB3H29ncqMtOxC6lzCNRR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738426373; c=relaxed/simple;
-	bh=pWDy+G/FLFskjOChqfF5xxOtF+kpej0KMJdyHy1d2pY=;
+	s=arc-20240116; t=1738426462; c=relaxed/simple;
+	bh=xNz1P4fn6SHLp6Se+/Xd8y5hZ3fQaq8gKIv1BgEs6ZU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c2nwsMNqOlp4f/ZVZeHUQ/Zl5h5PgVt0Gu51hE6uXrd0CsEcJRsPnZqEFLHRcLcQ2uRXhgeZhRw7gp93a8Pz8ItFgX887LbshgbFBMUkuONdjnAdTF/W0fRuOvoz6o2Ma10O02cW24m5pTJ+dMofCCqAAOw0EcD5j47VcjN2zlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qPxU10qp; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=Vc3ocOyqNZvxY8Z1d3xie6s5/4riuuQjvMCPCgMY7blcs5YUeZ0Vz2yOHYNi0dNgRcG9MUSvvzGUSe8X1DgzhPnU7sYmaziXRBaYQzmtUULKKScUVYxqos1YWm5W7YlRrREPcw+FkZdsKWH0mLqz0I3GiuXM1a81pprMeMpRS10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=M7ogcfy7; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qPxU10qp"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3a814c54742so119725ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:12:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="M7ogcfy7"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-304d757a9c1so29173711fa.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:14:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738426371; x=1739031171; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738426458; x=1739031258; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OQaWCOfcTD7adap/jkek4EJcOFfU4JZ7fPFMN3rMGUQ=;
-        b=qPxU10qpZBTjdNJaV/n0WcNk6q6RfHgsNr9U1kcYSeHrXi7eLSLoQWWd1VIOipwoVx
-         JX9fhpjZa2nm+Dwd4sL0wJZnoQUZTyzxGSSJeZ60EGwRanWEKpOxovgn4RXMXWqHBi/W
-         p10H+cnf3w+B6cUSz1HzmoZ6tGSY7eoypXCZXzJa4DjaxX8+Ii7FofZkYMrMO++vtfAn
-         rloHcgZA67cZuIO5DrbGp1S0bdQUx8Yz2rrl7gNwUP5aWKzw3BO2C1nOj+ys3ke3Fsl8
-         xiMOODGosRZY4QSNkt5j6Jd1j7kJxhfRa5d5Eg89Y2bloLOfxLRRwf5MwBx5ujLM3Elx
-         ZTGQ==
+        bh=xNz1P4fn6SHLp6Se+/Xd8y5hZ3fQaq8gKIv1BgEs6ZU=;
+        b=M7ogcfy7Z1oXYS2ppduYeeuUVINP11wL+/CJeSYxlg+W+QrNeY+i7GG70556ju4vVA
+         ZQC9m+V+4+4+pM20RZJjNtrkHotAXYGFu4Z/rB1CLnef9gV907turt+nFH7SC55Gaevk
+         Z5sKYzgWOEKEcW1nDV4V5SPyAtnlriJv4HxPKE/VzLoMhasiQiIbANQ96ijO1UbyJlhM
+         zhIfZUCJbkHEYTlLD/j1/JCZRyMcuImT2nrcBq7Vlm/kctxpfyFqw2bbGPQwBA5vJrRg
+         zaZla9ca+rEBl5jNvbEZUeXWETv498KwE10lyuUrs0Gt1c6EraiLx53KW4ArYeyAf2Xc
+         326A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738426371; x=1739031171;
+        d=1e100.net; s=20230601; t=1738426458; x=1739031258;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OQaWCOfcTD7adap/jkek4EJcOFfU4JZ7fPFMN3rMGUQ=;
-        b=h0EbeqZibloGt+iefzOcf31pKEkzQLjHmYFKstdQkMkvWhfwhA16eSBHybp4N5Bweb
-         X7KNlLpce4RPgY5fhPDAJ7D9r/462yP9A30boMDJkUITChhW4x0f37tVX/OMvtzgQ82+
-         zQK4TBARCSSynfZ0QSi5AFr+/RgEWbhbWX0IEOTeJF2aySgoGY2QT6l78NeyCCYbIs57
-         oPm4PpWue3LqTLXdgG1TASH0ndBR3UbpwGjpC3om/CzVPhppvPGAov8l0mtVz+cSliV2
-         vBYCHR3PbYE/rh06WSWm2dfhugwzUdRo6eFukSXS/lu/DtALezyQTavdpN2DK2UdY2GG
-         yRzw==
-X-Forwarded-Encrypted: i=1; AJvYcCViP+D3xSJ4a2HghEanLK9sF+4hcR9oT8mp9HuDNC+xqROVFESCa7OpakXpMTjBnAA9yVpBfl7nFPd1CeI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyH9/Y/PEQqa/clLfEKXJs4NddNrM8jexlF6bW/YzOG9//eQd/8
-	qADuLUhoS9elFdonCF8WL32a4A7nQ0Tfd+JQd9oSWSL8UG/YaiXZrnFjc3glpmK3zkT+IO9P8vn
-	0fh/AyWH7QCV8fISxgG/Brdihtp3+R93JlzqXutN/uY+jo/MRFWN6T0w=
-X-Gm-Gg: ASbGncvpwxSnjIFah+tnr/gak2s8wO5tam+iRPQ1RFFzSDPFKAxDB/FPT5gcYdvb6bN
-	E5sc0RQK3JqJ4mQbfoNrskG5v8bTJ06ETdR5V4jWoh38hvAuPxQzNYVUE7fdVGFRoqg744rtSYQ
-	==
-X-Google-Smtp-Source: AGHT+IF69bDr95smn4mmnZECR1b515k/xT3KInxWdsf6LEn1q52wgteTdkisoJ0CBgqKIxsr5onZsHFEdOuEee/fhVA=
-X-Received: by 2002:a05:6e02:152f:b0:3ce:2f93:a02b with SMTP id
- e9e14a558f8ab-3d020178852mr2330315ab.12.1738426371027; Sat, 01 Feb 2025
- 08:12:51 -0800 (PST)
+        bh=xNz1P4fn6SHLp6Se+/Xd8y5hZ3fQaq8gKIv1BgEs6ZU=;
+        b=t4im6yDGJ2kbMdUvB9/9pkN2XVNDa3UOLlhvdeExcDN6WzynKfz3Xj0k27kEbO/TMX
+         StJaFWyFNmSsnRPAOrW3IBrCeGCvUoxxBOUmZrMRccUILeBc/SXBzUwfoVRB/x+a5Wfh
+         cD6wwFj2hRki0afMGm7iR694MNVhMEbjJdWg/ywPBV5M1Pq+VpZjdaWYI0MDr+2NgiJR
+         66lzuQgYZe8QsQO+o1WHl8uCN3/lCPtVSEun0O2waHfqbUz/T0nrU/8h/0wxQBP7gW5u
+         dbV7pktQ81e00E/GUtYJkIISptVLY0yHNAedZmoFMz8heQgpS7fxmJK4v4nJAnnX3SFU
+         R3MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLOyh3cSkGPGkD0dlEKuYrwxAbiaU9HRove9NTeiHreRzfbI7IyK5dc6GcOt0k47DXla2Q4U2FnUzrzS0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6kxOtV1qDsY64uv5b+NDa0XRSU5CqGXd/thp3rEaQUZQeMcEn
+	9TPsM1cISPy7eupjlrtSxhSbeqKJ6h9aK4+dKyoiXX456+E5G8glVbanecEaNptjKwBbOnCc2BY
+	MUvheJixXl8FRTH2A3yVTixaS2+U2Aqi2AxIq3A==
+X-Gm-Gg: ASbGncveYD9+mhY9L0cOPCmtMoUneCPwX5uQqxIQMyrFr7kqPAGyZW2EsgY4mmbjoV0
+	/fxL+tYAAjZqahttrhLZFE0z01OXRX1ea5sqY0Xz+jkMY3jguq2XjVwCY8cKrDsv51e+Y7YGy
+X-Google-Smtp-Source: AGHT+IGlv2R3jtX2X1VFHTPpZpLbOQdApeKMA2CRHsCTqn123m8l/Z4mj83w+N6PPjEJM/2MUw/JdE1JvqkdgQxw2Mg=
+X-Received: by 2002:a2e:a986:0:b0:2ff:5d45:883d with SMTP id
+ 38308e7fff4ca-307a1126c46mr32671401fa.13.1738426458577; Sat, 01 Feb 2025
+ 08:14:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131112400.568975-1-tmricht@linux.ibm.com> <20250201113406.4312a601@pumpkin>
-In-Reply-To: <20250201113406.4312a601@pumpkin>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 1 Feb 2025 08:12:38 -0800
-X-Gm-Features: AWEUYZlyxxB7qS1nrQjz_09CTMxeBkAZdRVUEc3B_GIHgRt9jOtoTPNp3J6x-Zg
-Message-ID: <CAP-5=fUOS6ZmfVdzwNL6+5VfUr9fms0zE4FXW6vsRqSfS9F7sA@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Fix perf test 11 hwmon endianess issue
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, 
-	namhyung@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com, 
-	sumanthk@linux.ibm.com, hca@linux.ibm.com
+References: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
+ <CAMRc=MdwQL8dWU5zF5fp+KUbC2RA2Q264by8HGXMg2k1rxhsTA@mail.gmail.com> <9931433b-5cde-4819-ac96-eea4f1f0f1f2@baylibre.com>
+In-Reply-To: <9931433b-5cde-4819-ac96-eea4f1f0f1f2@baylibre.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Sat, 1 Feb 2025 17:14:07 +0100
+X-Gm-Features: AWEUYZnn5tAerJ98yOvgMfMy8eGRnDAVRVuV8JcXFwp2t0YOLgaRfMmHkesJgpU
+Message-ID: <CAMRc=McEdcDs01BAKN5vg9POg_xxJBY1k8bfgiDN60C1-e_jow@mail.gmail.com>
+Subject: Re: [PATCH 00/13] gpiolib: add gpiods_set_array_value_cansleep
+To: David Lechner <dlechner@baylibre.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 1, 2025 at 3:34=E2=80=AFAM David Laight
-<david.laight.linux@gmail.com> wrote:
+On Sat, Feb 1, 2025 at 5:09=E2=80=AFPM David Lechner <dlechner@baylibre.com=
+> wrote:
 >
-> On Fri, 31 Jan 2025 12:24:00 +0100
-> Thomas Richter <tmricht@linux.ibm.com> wrote:
->
-> > perf test 11 hwmon fails on s390 with this error
+> On 2/1/25 4:36 AM, Bartosz Golaszewski wrote:
 > >
-> >  # ./perf test -Fv 11
-> >  --- start ---
-> >  ---- end ----
-> >  11.1: Basic parsing test             : Ok
-> >  --- start ---
-> >  Testing 'temp_test_hwmon_event1'
-> >  Using CPUID IBM,3931,704,A01,3.7,002f
-> >  temp_test_hwmon_event1 -> hwmon_a_test_hwmon_pmu/temp_test_hwmon_event=
-1/
-> >  FAILED tests/hwmon_pmu.c:189 Unexpected config for
-> >     'temp_test_hwmon_event1', 292470092988416 !=3D 655361
-> >  ---- end ----
-> >  11.2: Parsing without PMU name       : FAILED!
-> >  --- start ---
-> >  Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
-> >  FAILED tests/hwmon_pmu.c:189 Unexpected config for
-> >     'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/',
-> >     292470092988416 !=3D 655361
-> >  ---- end ----
-> >  11.3: Parsing with PMU name          : FAILED!
-> >  #
+> > This looks good to me except for one thing: the function prefix. I woul=
+d
+> > really appreciate it if we could stay within the existing gpiod_ namesp=
+ace and
+> > not add a new one in the form of gpiods_.
 > >
-> > The root cause is in member test_event::config which is initialized
-> > to 0xA0001 or 655361. During event parsing a long list event parsing
-> > functions are called and end up with this gdb call stack:
-> ...
-> > However member key::type_and_num is defined as union and bit field:
+> > Maybe: gpiod_multiple_set_ or gpiod_collected_set...?
 > >
-> >    union hwmon_pmu_event_key {
-> >         long type_and_num;
-> >         struct {
-> >                 int num :16;
-> >                 enum hwmon_type type :8;
-> >         };
-> >    };
+> > Bartosz
 >
-> That is entirely horrid.
-
-It also has the side-effect that if you initialize the struct bits in
-the type_and_num will be undefined and sanitizers will try to trip you
-up.
-
-> I'm surprised this even compiles:
-> static size_t hwmon_pmu__event_hashmap_hash(long key, void *ctx __maybe_u=
-nused)
-> {
->         return ((union hwmon_pmu_event_key)key).type_and_num;
-> }
-> It has to be just 'return key', but I'm not sure what the hashmap code is=
- doing.
+> I was waiting for someone to complain about the naming. ;-)
 >
-> AFAICT the code is just trying to generate a value for the hashmap to has=
-h on?
-> Why not just use (type << 16 | num) instead of 'trying to be clever' with=
- a union?
+> I was going for as short as possible, but OK, the most obvious prefix to =
+me
+> would be `gpio_descs_...` (to match the first parameter). Any objections =
+to
+> that?
+>
 
-The purpose wasn't so much to be 'clever' as you say. Perf event
-configs, which is where type_and_num lives in the events, have their
-bitfields described either by convention or by files in
-/sys/devices/<pmu>/format. On an Intel laptop:
-```
-$ cat /sys/devices/cpu/format/inv
-config:23
-```
-So I can go:
-```
-$ perf stat -e 'inst_retired.any/inv=3D1/' true
+Yes, objection! As far as any exported interfaces go: in my book
+"gpio_" is the prefix for legacy symbols we want to go away and
+"gpiod_" is the prefix for current, descriptor-based API. Anything
+else is a no-go. I prefer a longer name that starts with gpiod_ over
+anything that's shorter but doesn't.
 
-Performance counter stats for 'true':
-
-        1,069,756      inst_retired.any/inv=3D1/
-
-      0.001539265 seconds time elapsed
-
-      0.001719000 seconds user
-      0.000000000 seconds sys
-```
-and the configuration of my inst_retired.any event now has bit 23 in
-the config set. Just as the format files try to break down what the
-bitfields within a config u64 are doing, the union was trying to do
-similar. Making an attempt to have the value be intention revealing
-which the shift and masking may lose, for example, by making it look
-like bits in the num could overlap with and modify the type.
-
-Thanks,
-Ian
+Bartosz
