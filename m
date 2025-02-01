@@ -1,65 +1,72 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F9C4A3E;
-	Sat,  1 Feb 2025 02:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738377827; cv=pass; b=oSKizHumFc3QSviOhA7Q46oWeyVa+orylwKzdtSYBJC8dXWben3Ib1Thsyv4ZPz5oJUTC0pT7oOTxyhzV1PvXpfbOkT5bil0rrIXaR/ghxNthrfmi/LegT9krW6FycN0UygRWh/S6hm/R88wGnvR6tvqnSfDa1PwZFMYfps6hQs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738377827; c=relaxed/simple;
-	bh=GMODuOBsrY8WRZETQm+HiDn/En2Bjw4oMn91H/iV5Ps=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FaWZ9OrsmH3+Z2dtDOOUvo5BsMhwmk1YdMkBMMuC6Fkp5zPCUrtzuExLoC6KGMUmC5Sx0Lti17beg4FcsTiCCkQYvxLOuH5ST0NnDJCBC9ZBn6YKyVHWv4ociObCi8TfprFbb932Ipt2swbncK9h+owDwZBmoARMv2NqQ7kO6QE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b=B0Lf1TXS; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b="B0Lf1TXS"
-ARC-Seal: i=1; a=rsa-sha256; t=1738377811; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=b5haWb3rfP9MtHsZDsxCRhmY0rmME6UspJZw5yL0xBdS3ozwIURxuexg1RUNnM0ysq6B14w2th4lZgC9EodMAptqoxw1XowhMjlYX5mzjwTymThCj5xDuPJpR4GdO1fGkEYiGcviYcrT8AAQTQ2OsbzpirWcrQMX6tENpPB6gmE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738377811; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=GMODuOBsrY8WRZETQm+HiDn/En2Bjw4oMn91H/iV5Ps=; 
-	b=d8Q+2ukXLNwhoU+m3jc9qeS40sU5NaVO3cSHK5Mt+W8jhrY70g15dXKO3tStKl4PxMi1K5qkRXP8uR/AUY0+dg7+zS884CZknQZQj4gcKBP3i+QRWnbn2/ZJNIUVY05n62WBeyIyr8BP5qQU9xuXe+p4kXvut63EbDBQ5PRyk9k=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
-	dmarc=pass header.from=<safinaskar@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738377811;
-	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=GMODuOBsrY8WRZETQm+HiDn/En2Bjw4oMn91H/iV5Ps=;
-	b=B0Lf1TXSr1ZGr2OsQnfUutgdKUFqrxjLovaVdJGHMQjojea5yIVkVM16EIl3YW59
-	wmnJtwE3ZLErKD4ZvPVCu6J3617ziiLWdjOJBidsbKdvJLMviCHEa0xe51q4JBpwuOi
-	yOyPT6mW4fWEYiboYFhEwX1itl/V7g87XxstGeHQ=
-Received: by mx.zohomail.com with SMTPS id 1738377807804961.3242472563459;
-	Fri, 31 Jan 2025 18:43:27 -0800 (PST)
-From: Askar Safin <safinaskar@zohomail.com>
-To: dhowells@redhat.com
-Cc: christian.brauner@ubuntu.com,
-	linux-api@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-man@vger.kernel.org,
-	viro@zeniv.linux.org.uk
-Subject: Re: [PATCH 1/5] Add manpage for open_tree(2)
-Date: Sat,  1 Feb 2025 05:43:22 +0300
-Message-Id: <20250201024322.2625842-1-safinaskar@zohomail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <159680892602.29015.6551860260436544999.stgit@warthog.procyon.org.uk>
-References: <159680892602.29015.6551860260436544999.stgit@warthog.procyon.org.uk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6085FAD2C
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 02:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738378086; cv=none; b=f99chuykCqKp9DyRUxEoPaHGQpI4KozWvQ+j2xwvlSAfpGEHi6JmmmA3QOmYMq/c5finjBVYWeyzoPX31Y986AykVUZYjDOtOw9tyq6I8AU2wWGZt6FdfKl77QX9cnKuJBWG/qCVxEqXilMAnk5TaEminfVPHjNCfHkwWRQiZvY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738378086; c=relaxed/simple;
+	bh=RnpiyWOXN5wWv1l0EnAlBZxIDdgU2mOg8xTAGsZelCs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=WxxOp6N20LV8nFoPSidY+xFW5eLWX2pECptaByqewC+CYb2itl4U/s4xz9DYTEyUHS7iVmbxzs9iNdzGmiTf2PfPHV18/IHyd9YHdHRkMoDoBe3Dbbr7o/Uz2YJS8lcuZClnLY9fnSybCCqDNfNmCocX+vShZJBWZrgK0W5126o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3cfc08132adso37961645ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 18:48:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738378084; x=1738982884;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DxuUE0T58b6YpVbsSM0dHdoaMpqgLm/gI4zijFogwUI=;
+        b=V6Den9b87uL1pvx9EndjJ6z8JNaTxOoSn2sLfeQUqzehiS0QFEEqzV02IqS3o8CXJN
+         5FpyLB9mbEwnh3Ov2SN0mbsTx2w3v11x0gTc/JtoB1wPTOIY4o1FuGwG/R8ZRhMSdv9m
+         iydEDypeo8oWcrxueHpFcRUlDE034ZJuUMXB/09vN6d0jABxBy3JJr4Peu/ibESXw1s4
+         xGB+bw51l08EPWDGUjTSTSDrLFIy4VrQx8ViuCMACnKr7o+ytfjnGBkeXR/ULOfVWj12
+         qcKix07/f1/dh2qQml9XUeGxfMftkr9y1jeDUKMuhSiVC4bkt4fU7WfEjQH5zaurOajY
+         LUGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXvqGypQ/OA0j3c+u9x5pM9GOlMswa+10kCdIZGuHgocFt0uKFyAM//0YclL+ddBhwsnq1pst7grh53uFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCon6xgULWZJjtxH9W4AoqksUBZO2lw570eKh1cnkNr9mMR3V1
+	V9ZXdGz1oYa4WTyXR/vMOirdnPmgSAMezZpK98b2QbEQ3kJ44xua9jv2tnxjAaHdaSs6cFzDcDW
+	uIVbBxdCt/sT46jYzXTGLdMN79N7cuT6L48MwziUVmokcwTqlIcyiqy8=
+X-Google-Smtp-Source: AGHT+IFK/n1PaMAty3kDWfuhSdFVHM9cmjMskpq81cvD8n9tMvNa1pCYgGPMNkE0gqF7LRdIUAoXYjfrZ6vro84MyNak95sex2dt
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122cdfcf9964647958ede0c52b01000061f855f066d959016a5a9aeb8d8ac2b562924eac93f82f7b468f258658b7:zu08011227011cd5f454f9342e9cc22f83000071cfc7e82987801c0e0d46333920226891152fe82319cbf0e8:rf0801122cc48feaafdeec6066e041face0000a5192a6b5cad411612f1c958ba862b41a8b386fa55172d65916ee7856e38:ZohoMail
-X-ZohoMailClient: External
+X-Received: by 2002:a05:6e02:12e7:b0:3cf:cb93:de02 with SMTP id
+ e9e14a558f8ab-3cffe3d1ab1mr99938165ab.3.1738378084551; Fri, 31 Jan 2025
+ 18:48:04 -0800 (PST)
+Date: Fri, 31 Jan 2025 18:48:04 -0800
+In-Reply-To: <tencent_8284967C36CA4BBA7491771966AC3D993609@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <679d8b64.050a0220.d7c5a.0059.GAE@google.com>
+Subject: Re: [syzbot] [fs?] WARNING: bad unlock balance in seq_read_iter
+From: syzbot <syzbot+c041985778e4069e1ce3@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-David Howells, ping! You still didn't add all these manpages.
+Hello,
 
-https://lore.kernel.org/linux-man/159680892602.29015.6551860260436544999.stgit@warthog.procyon.org.uk/
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+
+Reported-by: syzbot+c041985778e4069e1ce3@syzkaller.appspotmail.com
+Tested-by: syzbot+c041985778e4069e1ce3@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         768b1f5e tracing: dbg seq stop
+git tree:       https://github.com/ea1davis/linux ftr/syz
+console output: https://syzkaller.appspot.com/x/log.txt?x=13549bf0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7acebde734703260
+dashboard link: https://syzkaller.appspot.com/bug?extid=c041985778e4069e1ce3
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
