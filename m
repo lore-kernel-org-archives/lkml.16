@@ -1,170 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.pissmail.com (mail.pissmail.com [173.249.47.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0167F130A73
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 06:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483611A270
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 06:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.47.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738478515; cv=none; b=TBlrK8p5LrfcFWWJGN+j3tZVNU12YytGkXn9lBBq4S2Hl6RQBeXx3TvltT7i4QDBLDkYbUSy+BdiiPq2HJgCkXGQe+7vbIjhUM5ffQZjNljrD0RwiplTgVQtCCifC9p6MY7on7c5wlzLXKelP/BSrVgYrvv+53QV2jHLR6wV4wM=
+	t=1738478692; cv=none; b=uCXeaR8MYba15ZbFi9bTZRMh4DrRyvucRYCrdr2+zIQys1mjowyd73jtHP8aMkUAx4OXiQPiThQ2FbJTHxBF4If7FXaOIzpxDbqgY48mJYX5Xhr3vDP9hQ8pMyJa+6oVR3Ifd3B7dIbdGQCSaHohl9Gh35qjN6sQzb3EIiEcHAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738478515; c=relaxed/simple;
-	bh=wSTLzGhMLffhO/v6hJYaRpeR5d/1GKbHdC9MlbN+LvE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QePLd5Rd7oXd9q7FN3yuEzgbPf8KvxcbtRvcDhazOWHx24H5sUeE8k5rzyvtS9j7FjnF5hJKgmi89gTBCTIM0NWbKABXnRBeIhM1VPi04MQkmP6jryC0zCCou7TMWs8kC6ttoneHXfHnH7lXaAnIXzQgMLnL1jEeKPXvsZhnRqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lxlnv7W1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738478692; c=relaxed/simple;
+	bh=f5DS6xRxGYftTXI7YUz+QrL5pHVSCTf56TiUu9awbEE=;
+	h=MIME-Version:Date:From:To:Subject:Message-ID:Content-Type; b=DBatrytbnYIh43HgFfMeJIdNJfdc6jr5nfqHZDFxhwoN6jWtdh8iCeNo053F3Ywv80TxtDIRaP2e8nucsIIMTQNuPtpQdX0JTd4CXvKCgq+tKTgnKdbvC6QO4qS5T1dKqn342I6lkJBr0RKyOkQVbDMhhjspDxvaZIJr85R5XJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pissmail.com; spf=pass smtp.mailfrom=pissmail.com; dkim=pass (2048-bit key) header.d=pissmail.com header.i=@pissmail.com header.b=gts6I+aN; arc=none smtp.client-ip=173.249.47.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pissmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pissmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lxlnv7W1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738478512;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O9bc7QlURY2KqxOqSdcgXWV1nxuIWVaexteEdP17afs=;
-	b=Lxlnv7W1BfVzrZFUOtFpK4BkYpsBVoj4t4wJbj7VkpyTIEzxavaOwB0ajS/UnxDg5vI3ZV
-	ofRAQRghMyEIqN7ASiLhMVpO4VR/B6RbPD5tcSDgDlB6gG0fcUUwvHwzv87JkYIxNRKIf7
-	2yrg7xHbZlETkDugZ0sZlqokXbrSIe8=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-670-XqxspKXCPZqDir785RJYTg-1; Sun, 02 Feb 2025 01:41:51 -0500
-X-MC-Unique: XqxspKXCPZqDir785RJYTg-1
-X-Mimecast-MFC-AGG-ID: XqxspKXCPZqDir785RJYTg
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2166855029eso65653505ad.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 22:41:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738478510; x=1739083310;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O9bc7QlURY2KqxOqSdcgXWV1nxuIWVaexteEdP17afs=;
-        b=rhIDSO7wLjpg8exgNzF7NJ8XSfSIvW1UyPmDFYH74bSgNjxNY9igZMi12TpEwL09K4
-         fWbcJuqMBygTC2b0MaqMobDjB0lrjdaSLCH4ZGxFI3JeEBAdAklYqJarjmdDwRP4Bv+B
-         MnfrCw9jf0HvK5bFjqg6strcTeNodHN7g0MtaprPCGka2TPwgOKmf9yMU7TIAwY+bTjP
-         H458xvTuRhM7LD/UELC3CDDJWa1166P9uHlA42PLPGZRyrSO/rQs0LGtG3FsHsmDbspu
-         /6Tq8F/OS8LoLMB6yL4VF/B0gHxlk4tMS9h1ly0DgPZBTlB7SrzuUI90TjAIi4/uSBP+
-         VzMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVlvwf4rce58sY71mygx+1bRSA+rIRhEu3CMiH+EUF3A8M2bxAK6QxP32L16bsT7HS+uB57Nwb5aOIy+mY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMJoBeQtkM04PkaWLnTEFuL62UednN5rEZaiWJXuAxTPry+vF6
-	96piEeYOjy/xzbpvez1uIWW228yoZAm5HvHXFCOclfyX6PVrnegmmItj+uYvBBxQVj6asbL5wEz
-	/MvDACGWZpbq5kSG2YKDjfzJ0DCqdzIH8BTV73DlX41UESEUR5vtsIYUsRMlbFg==
-X-Gm-Gg: ASbGnctH7HTUqK1iKj/SBpd0Yqe2YCs+s+oSVAH9o9j3sJzLxkmpXNJ430NeMxtFgVn
-	Yyn3ZZM2KK76nI1Txq0q47FTJ+HUPMV1Vq7gk39i0Q4FMEWJIQysnOoSGWXEFHXGgAk6wijGHO4
-	lsiPy74xzQ/zSsZs1C7TrJhcX/xNtuD4ltAerHNC3Vz7g/pyQSdjuoiOTTo6KNANcEo7KH0U5UA
-	bQXzAsh0Ue4y1b7jeOUCrRPvtGyaeHtaUgmG2UT0DP629lNqpMUdkes0bKoFZZ3oRCwiKCmafKE
-	LGHR2Q==
-X-Received: by 2002:a17:902:e742:b0:215:a97a:c6bb with SMTP id d9443c01a7336-21dd7c65891mr279349185ad.12.1738478509967;
-        Sat, 01 Feb 2025 22:41:49 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEgiNqSMRe7eOLK7UU7yfr7SRk/XUpHiWVSGyN9DA4ZXFp8THxJ4DGREQDo0HNpjoMWa/PKyw==
-X-Received: by 2002:a17:902:e742:b0:215:a97a:c6bb with SMTP id d9443c01a7336-21dd7c65891mr279349065ad.12.1738478509619;
-        Sat, 01 Feb 2025 22:41:49 -0800 (PST)
-Received: from [192.168.68.55] ([180.233.125.64])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32efa0csm53772495ad.116.2025.02.01.22.41.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2025 22:41:49 -0800 (PST)
-Message-ID: <69a424e0-1350-484c-9ce7-b40c4fcacd8e@redhat.com>
-Date: Sun, 2 Feb 2025 16:41:40 +1000
+	dkim=pass (2048-bit key) header.d=pissmail.com header.i=@pissmail.com header.b="gts6I+aN"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 27/43] arm64: rme: support RSI_HOST_CALL
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Joey Gouly <joey.gouly@arm.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20241212155610.76522-1-steven.price@arm.com>
- <20241212155610.76522-28-steven.price@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20241212155610.76522-28-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pissmail.com;
+	s=dkim; t=1738396187;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EKIl41mysEtb8SifkvoXTvCM29anATIsLrImsxTqT3g=;
+	b=gts6I+aN4taUgk7tzDkoSyoE5fXQ73bEPv8C1E55hSveet7OCHWxCaxa2hV2iNbEut6fMw
+	eHtuQsB/4kawFqwQPWQFkSwkY5XNeJj8OZZd9lSsGu/cf3GQS3GygI2MY1U5jWjwJSNIoR
+	qd3k9Y4X2eSjoytOJTGbSxfdK1r5x6Psmi44gtAE6J6vLojKjYa3FXCx1MUX7f4NpBY1CX
+	3PAPhq9JsfXSql7NZBjrBJERACdMyd346Ye6D6ljZJMSNKsNbQ2PkHaJO2CWtPUTLzLnol
+	bJ0ftyq0MHucNvBn+tynZ+qTamdbXAqNR/aIcnh+6iR3IF0HcJc6XTAx140+2Q==
+Date: Sat, 01 Feb 2025 07:49:47 +0000
+From: mortodinoite@pissmail.com
+To: linux-kernel@vger.kernel.org, corbet@lwn.net
+Subject: Rename GTK+ to GTK
+Message-ID: <fd3be9e6b898bde7b8c9a6b7e51e2b4b@pissmail.com>
+X-Sender: mortodinoite@pissmail.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+X-Spamd-Bar: /
+Authentication-Results: mail.pissmail.com;
+	auth=pass smtp.mailfrom=mortodinoite@pissmail.com
 
-On 12/13/24 1:55 AM, Steven Price wrote:
-> From: Joey Gouly <joey.gouly@arm.com>
-> 
-> Forward RSI_HOST_CALLS to KVM's HVC handler.
-> 
-> Signed-off-by: Joey Gouly <joey.gouly@arm.com>
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> Changes since v4:
->   * Setting GPRS is now done by kvm_rec_enter() rather than
->     rec_exit_host_call() (see previous patch - arm64: RME: Handle realm
->     enter/exit). This fixes a bug where the registers set by user space
->     were being ignored.
-> ---
->   arch/arm64/kvm/rme-exit.c | 22 ++++++++++++++++++++++
->   1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm64/kvm/rme-exit.c b/arch/arm64/kvm/rme-exit.c
-> index 8f0f9ab57f28..b2a367474d74 100644
-> --- a/arch/arm64/kvm/rme-exit.c
-> +++ b/arch/arm64/kvm/rme-exit.c
-> @@ -103,6 +103,26 @@ static int rec_exit_ripas_change(struct kvm_vcpu *vcpu)
->   	return 0;
->   }
->   
-> +static int rec_exit_host_call(struct kvm_vcpu *vcpu)
-> +{
-> +	int ret, i;
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +
-> +	vcpu->stat.hvc_exit_stat++;
-> +
-> +	for (i = 0; i < REC_RUN_GPRS; i++)
-> +		vcpu_set_reg(vcpu, i, rec->run->exit.gprs[i]);
-> +
-> +	ret = kvm_smccc_call_handler(vcpu);
-> +
-> +	if (ret < 0) {
-> +		vcpu_set_reg(vcpu, 0, ~0UL);
-> +		ret = 1;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
+Hi,
 
-It seems that the return value from kvm_smccc_call() won't be negative. Besides,
-the host call requests are currently handled by kvm_psci_call(), which isn't
-what we want. So I think a new helper is needed and called in kvm_smccc_call_handler().
-The new helper simply push the error (NOT_SUPPORTED) to x0. Otherwise, a unexpected
-return value will be seen by guest.
+I would like to suggest replacing GTK+ with "GTK" here: [1] [2] [3]
 
-handle_rec_exit
-   rec_exit_host_call
-     kvm_smccc_call_handler
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/README.rst#n168
+[2] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/translations/zh_CN/admin-guide/README.rst#n149
+[3] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/translations/zh_TW/admin-guide/README.rst
 
->   static void update_arch_timer_irq_lines(struct kvm_vcpu *vcpu)
->   {
->   	struct realm_rec *rec = &vcpu->arch.rec;
-> @@ -164,6 +184,8 @@ int handle_rec_exit(struct kvm_vcpu *vcpu, int rec_run_ret)
->   		return rec_exit_psci(vcpu);
->   	case RMI_EXIT_RIPAS_CHANGE:
->   		return rec_exit_ripas_change(vcpu);
-> +	case RMI_EXIT_HOST_CALL:
-> +		return rec_exit_host_call(vcpu);
->   	}
->   
->   	kvm_pr_unimpl("Unsupported exit reason: %u\n",
-
-Thanks,
-Gavin
-
+Upstream calls it "GTK" nowadays: 
+https://mail.gnome.org/archives/gtk-devel-list/2019-February/msg00000.html
