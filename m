@@ -1,117 +1,111 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9699461;
-	Sat,  1 Feb 2025 00:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03263625
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 00:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738371035; cv=none; b=KtETC7/R+DLv3RBvXzZyYoHtoBnZPzP7k2stR4I430g7MCKF+OkmdVXGE1+2Y7fJyGJgNkCW2KR4uKpS+F6/Lz0ut/oBapGmULVRX9auU0FrhiPwzJ665shpSstq7JJhNEJQMMAtwEpYEOamreYiuX5ykAU234r8KkvipwULZdc=
+	t=1738371052; cv=none; b=cFLzMBZ6G38ZKGdKcWm11jZygCf+ea/249ASMbSxyNf/NI/F6Zg3IJ3Yhu5Fx8HQAfm/DHth46RYidudwSbq5z07nwAHY67K+DrxEi3LTRQ+7dT15I3U1i/vb+ykzd3rUYwMdw2BXk/fBFOLV5cWAscSxOnSelD+AcqRfUaOSa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738371035; c=relaxed/simple;
-	bh=EGWr5fWgxUPJFS9FxvM4TAqLqvXd4TuJn5bJ/7OmLPQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KKbj7sLSm8OPYOXx15rPSuYLJZTrqesK9asetSPTUUbKKqGfe5lVevKgyHtiBzE9vLxI1bJHUbejQlOxEZCOC2GRRVv25MBLD2F5No/kVbtjjRcXfAjZSXWkzeMls+76FlhzpHRbH44COdoqYgC5VeVoq2CH274eHEijUxU8/JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=HUJcy39l; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1738371052; c=relaxed/simple;
+	bh=fXRZwu+oXpcxVteww5iwBUgpDb7cO5xtmRxaTTNiJW8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=LNIPx+14OdT+mTukJHonyc2dqwmvTLuaiTfjHFiPwqdlOzKWqEc5DP7lcP/ecQtnU7OkZ+2vmGBUs1LiU+5ImFZCw5aELwL86Q0NZjNLuzOD4xAqpoPrcEfT4IAnT4tZFk6+ICBr9Vgio/Qfxi9pogbx9t66cYSYjElazvvxAq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FNJYn3M4; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="HUJcy39l"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=yUp8gIamITNTXKVgHV8c7KipsP99RyQ4CH6ynQ6dYic=; b=HUJcy39lMxUXStXz
-	6bUsXiUrd/32C/YFSorb+y7RKX6GZoMOhHg+GA5l4mbVhRYm6CK5gcj0UvwR7OSeuJmM9Q6DfzUpK
-	XjSrJdpwrBOezf2U939lpIkEUkIeRACZWYKl7/Jd0jIHPI4Av/hKgFFxti4eILQlFTbYhRj49vl2q
-	ygCL0ae+9L/9NfkDnuREx6JUU5surcQViAllbpnYIUSQjioDVCR6OiUkzFAwtWDWKkfN9eBd7pHy4
-	0TzTnE1KkwMo9yxXaNgxnLEudxkk32i/mPKWpfBOIuS0HCT/mVn9IorxULM4ScLYysprtHXUjovYR
-	rssdPKVQjOHqiAod6g==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1te1iH-00D1GY-2d;
-	Sat, 01 Feb 2025 00:50:21 +0000
-From: linux@treblig.org
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com
-Cc: linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] ASoC: mediatek: Remove unused mtk_memif_set_rate
-Date: Sat,  1 Feb 2025 00:50:21 +0000
-Message-ID: <20250201005021.447726-1-linux@treblig.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FNJYn3M4"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2efa0eb9dacso4982882a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:50:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738371050; x=1738975850; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rxeqp0iUagZtsoZjwTJV6Mkmpp79QeV032AbydK9elA=;
+        b=FNJYn3M4uqMPoL7qMNhOR1bpAjnj76dOC4PJ+RvT9cEIfIOVxfUEQuHo1fyykMfpYq
+         5A/xGa4Cv2wTbhTxJ46iba5YoWxTBgAhW16MgXPx4FoXdVwFdIMW/VmTn8bjkqklCvNR
+         GP5y2jL1jKzvR3R6v71d7arcc2DfZw2Hz/WFXPrTYqjcBAiHqAg3hqAt2HEa7q9E04eK
+         29RuhhkfNDtV4LKaqtmRRe21BiVEsbco6BNJ2PdTSsV0HPmqxwR9bZbhHOPpQ/VHnLpP
+         LY9uv2DE78N6p8pzq7RlkXRqmrlFl1YxdWayxlMnRBrmlNmAAGoMicflHpTSt21kOZUN
+         oT0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738371050; x=1738975850;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rxeqp0iUagZtsoZjwTJV6Mkmpp79QeV032AbydK9elA=;
+        b=j0bpwVBEESDU43D4tiaJoCtdPo/qOkMAO6M1dV9xfOGIblaNao+LhFNUSEfRPLg4w+
+         NfcDZM/vkas3LWXWKsQFW7Vw60rX4y5pRqTTlQQOejee88p6x4tu65m7c4rpyXAQ3cbu
+         RKAuIS4xcZLJOTgksOf8eGvtQV3M4n9Mf7bBmuBpDujsFfzAbUO0GXIJ8V/9yCD4AzlA
+         6hETKhAVuxrzN1VCJVjlluIXHW1nvNHMLr7Zif3PzLkKU/z5tQC88TaPxhDNmlLELYE0
+         UEgUEVuf16CzIOIDZ258PF/rqKAo7ZpLZO7PF566k7OBNbE1CbnqZbw+hKR448OjvazF
+         zTrg==
+X-Gm-Message-State: AOJu0YwQbmTC2CjJaPLFjbLEQi7zJEHdSX+H5N7c5H3ARHMSyJ1MTuMf
+	PpQ/BoCf808Xuzunlbk9UDUvcCefsDTPvfRu60KnnPdBYZ4J8KflTQKmHekmvoY4eeMbq+H5D8s
+	eAA==
+X-Google-Smtp-Source: AGHT+IGiNBcI+RlVevJWnt6K4utvGgac0CfWKiu+g4D6W3FFH7J/4bdp2RMxOyd7HL6C4CLLNsBdRkjRihE=
+X-Received: from pjbqb8.prod.google.com ([2002:a17:90b:2808:b0:2ea:6b84:3849])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2742:b0:2ee:f076:20f1
+ with SMTP id 98e67ed59e1d1-2f83aa85095mr23559697a91.0.1738371050295; Fri, 31
+ Jan 2025 16:50:50 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri, 31 Jan 2025 16:50:46 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250201005048.657470-1-seanjc@google.com>
+Subject: [PATCH 0/2] x86/kvm: Force legacy PCI hole as WB under SNP/TDX
+From: Sean Christopherson <seanjc@google.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Sean Christopherson <seanjc@google.com>, Dionna Glaze <dionnaglaze@google.com>, 
+	Peter Gonda <pgonda@google.com>, "=?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?=" <jgross@suse.com>, 
+	Kirill Shutemov <kirill.shutemov@linux.intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Binbin Wu <binbin.wu@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+Attempt to hack around the SNP/TDX guest MTRR disaster by hijacking
+x86_platform.is_untracked_pat_range() to force the legacy PCI hole, i.e.
+memory from TOLUD => 4GiB, as unconditionally writeback.
 
-mtk_memif_set_rate() has been unused since it was added in the 2019
-commit 9cdf85a19b3a ("ASoC: mediatek: common: add some helpers to control
-mtk_memif")
+TDX in particular has created an impossible situation with MTRRs.  Because
+TDX disallows toggling CR0.CD, TDX enabling decided the easiest solution
+was to ignore MTRRs entirely (because omitting CR0.CD write is obviously
+too simple).
 
-Remove it.
+Unfortunately, under KVM at least, the kernel subtly relies on MTRRs to
+make ACPI play nice with device drivers.  ACPI tries to map ranges it finds
+as WB, which in turn prevents device drivers from mapping device memory as
+WC/UC-.
 
-(The _substream version is used, and is left in)
+For the record, I hate this hack.  But it's the safest approach I can come
+up with.  E.g. forcing ioremap() to always use WB scares me because it's
+possible, however unlikely, that the kernel could try to map non-emulated
+memory (that is presented as MMIO to the guest) as WC/UC-, and silently
+forcing those mappings to WB could do weird things.
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- sound/soc/mediatek/common/mtk-afe-fe-dai.c | 20 --------------------
- sound/soc/mediatek/common/mtk-afe-fe-dai.h |  2 --
- 2 files changed, 22 deletions(-)
+My initial thought was to effectively revert the offending commit and
+skip the cache disabling/enabling, i.e. the problematic CR0.CD toggling,
+but unfortunately OVMF/EDKII has also added code to skip MTRR setup. :-(
 
-diff --git a/sound/soc/mediatek/common/mtk-afe-fe-dai.c b/sound/soc/mediatek/common/mtk-afe-fe-dai.c
-index 3044d9ab3d4d..3809068f5620 100644
---- a/sound/soc/mediatek/common/mtk-afe-fe-dai.c
-+++ b/sound/soc/mediatek/common/mtk-afe-fe-dai.c
-@@ -500,26 +500,6 @@ static int mtk_memif_set_rate_fs(struct mtk_base_afe *afe,
- 	return 0;
- }
- 
--int mtk_memif_set_rate(struct mtk_base_afe *afe,
--		       int id, unsigned int rate)
--{
--	int fs = 0;
--
--	if (!afe->get_dai_fs) {
--		dev_err(afe->dev, "%s(), error, afe->get_dai_fs == NULL\n",
--			__func__);
--		return -EINVAL;
--	}
--
--	fs = afe->get_dai_fs(afe, id, rate);
--
--	if (fs < 0)
--		return -EINVAL;
--
--	return mtk_memif_set_rate_fs(afe, id, fs);
--}
--EXPORT_SYMBOL_GPL(mtk_memif_set_rate);
--
- int mtk_memif_set_rate_substream(struct snd_pcm_substream *substream,
- 				 int id, unsigned int rate)
- {
-diff --git a/sound/soc/mediatek/common/mtk-afe-fe-dai.h b/sound/soc/mediatek/common/mtk-afe-fe-dai.h
-index 8cec90671827..b6d0f2b27e86 100644
---- a/sound/soc/mediatek/common/mtk-afe-fe-dai.h
-+++ b/sound/soc/mediatek/common/mtk-afe-fe-dai.h
-@@ -42,8 +42,6 @@ int mtk_memif_set_addr(struct mtk_base_afe *afe, int id,
- 		       size_t dma_bytes);
- int mtk_memif_set_channel(struct mtk_base_afe *afe,
- 			  int id, unsigned int channel);
--int mtk_memif_set_rate(struct mtk_base_afe *afe,
--		       int id, unsigned int rate);
- int mtk_memif_set_rate_substream(struct snd_pcm_substream *substream,
- 				 int id, unsigned int rate);
- int mtk_memif_set_format(struct mtk_base_afe *afe,
+Sean Christopherson (2):
+  x86/mtrr: Return success vs. "failure" from guest_force_mtrr_state()
+  x86/kvm: Override low memory above TOLUD to WB when MTRRs are forced
+    WB
+
+ arch/x86/include/asm/mtrr.h        |  5 +++--
+ arch/x86/kernel/cpu/mtrr/generic.c | 11 +++++++----
+ arch/x86/kernel/kvm.c              | 31 ++++++++++++++++++++++++++++--
+ 3 files changed, 39 insertions(+), 8 deletions(-)
+
+
+base-commit: fd8c09ad0d87783b9b6a27900d66293be45b7bad
 -- 
-2.48.1
+2.48.1.362.g079036d154-goog
 
