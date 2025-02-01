@@ -1,135 +1,101 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656941C548A;
-	Sat,  1 Feb 2025 20:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A190557C93;
+	Sat,  1 Feb 2025 20:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738440717; cv=none; b=ncNpGaIMgavDYc9kIc4DjmfchKb/KObfq8dqjzsGYfBiZZyNxsQHigMzqkyOgFZ3woMjw2AuBij56hHJ66T0YPlTG/IWXI1aYiNW5I1smMjuxnk9GaDXVBn/Rrazc3bjsg08j8915ogOV+v/fcQPmyQf8IcNEV6FaM0A/w6GJDs=
+	t=1738441137; cv=none; b=Oxjr9effwESZe4bTi6yuJ2FoE5d3MS1IFFA62n/voeQOGwMdH1rvqhILjvXzpkemXHKtE3oyhgshtvrzsh0LEYCL6SWj14r94Hep1iIrX5Flf472acc+CTe5eeEXrNuKEYJ68ymw9xjcWFM9JYMIHR0gEJGttOzjdLGvh6SYdGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738440717; c=relaxed/simple;
-	bh=Q5mCq6shSkFpq9lHWiWAJMGvKLBJ8p/R9QS98UXq0vM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B6FCN9tzV2xdfQ6K+SHjYJHpgqtAkPeiw5Jx5BxUG4cCeo6fOXpR/e3W25Ukku6BWPS23RLPQnjop+gBn+dMw7IFpsDmbbZPWNOz8J9V0PzpCNHmJoHZoxkzM4H4szc+7DB1eU65sGwERe4RtXxhuy2h3Id62geEbq9sXO05F+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=fqSBHOzA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KAxYG7OO; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
+	s=arc-20240116; t=1738441137; c=relaxed/simple;
+	bh=jQ2C1OnHFQeRr8iuhNwG7Wmt3VisSFpx7/8o7DxopKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaqnh7IvphBhbi1flX4ThKMawspQl4wxanYW0sXjQMBRReTWzGlf+j9lJksLike+Ft3j8YVe6ShWEHJBKnVo1cfnEXFt8x9vtZjf/kXB3OTuoI+b3yPDCSBIB+9xtKY7hyZ0XeYONQk1y/JT+Qc3UoRgthnjjfL65OvUlWhaxps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WKqrgy52; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="fqSBHOzA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KAxYG7OO"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 5AA8C2540085;
-	Sat,  1 Feb 2025 15:11:54 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Sat, 01 Feb 2025 15:11:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm2; t=1738440714; x=1738527114; bh=/OkNhKrEHdGBSK5Yl02y0
-	WheMNO2aueSwMxSLHTsoTs=; b=fqSBHOzAWu9J4ppBcbBLvH2eEik7WEDcAm5sz
-	ELZ205rzhGGVRO+liNJxxDn8ergBnOyedOocv75BuDXfZ8vfOliATblLEq9JyXzE
-	Bh3x25PLvhrtAdhmaQX0RocdusAkiWR6xZDS80Khf8gk2X8MzgGBETC6vOjgbmRn
-	dt0FIxrkWtNWtR0IwBWBQecNprTVAjRE1sKyNv5mKXNy8znpY7RsGHIqcDqq/8k4
-	S60wlEDTTBgLnsOjzB1Z6T9euPLAnzK2zPYTuGDz0QkhxH06uwsrx6Nf+pWQAySx
-	q5avybuS8MpI+TCfCNicnph729ivnTrcV4jnH3dvrDhpuiPSw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738440714; x=1738527114; bh=/OkNhKrEHdGBSK5Yl02y0WheMNO2aueSwMx
-	SLHTsoTs=; b=KAxYG7OO1FW10eY6lfCTneBYvOsbATOu4h8+QQeYufi7P3KrzCO
-	lfzfH7+S5Qt+qjRocn5DxzGsGMKDFNoKP4Y4iDuUHqxPLBoV+J6k1MfSPKVHTKAn
-	a2JlOeXt+T05/99/uLkGctSNqDhjAAbtRYKOzfQxgHAybXHs/reOR44oyoEChfs4
-	LipKAE3XK/k2bXGijRhqljqwxG/nzqDuBtBQYW7qJ20SdDfrkkYEiBN3ceeo2E89
-	XPJYsKFhaMHnkeS8BOEvYI3fNef7TKypip6GzcMdeDOIrw6xS5tSOMl8ZRAdJc8l
-	ZootbK8f+OjDDa9TZCaN1w4whNmbgeaDuMw==
-X-ME-Sender: <xms:CYCeZ4A4vc9NsFXqCtZQCizuYa5FHw0HymYPrSmZZJrwhZssNeUoVg>
-    <xme:CYCeZ6gqStIb90kr3gpQJkoksyOCuPI4MRDep6hOQNkkanpHjd6AQm9KAff6JX98Q
-    B9xph3VDLbS8R2kDA>
-X-ME-Received: <xmr:CYCeZ7lxJyaPFp3a7Awio_-CMJUJx79Gydv197ft4ef-1NAhWN-vTrmub9bmfGj_lAHCBENq2g5bGksLejERsoxl-ffuxUjsC24n22GESXCpepZWIcq4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdeiiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculd
-    ejtddmnecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepffgr
-    nhhivghlucgiuhcuoegugihusegugihuuhhurdighiiiqeenucggtffrrghtthgvrhhnpe
-    dvgefgtefgleehhfeufeekuddvgfeuvdfhgeeljeduudfffffgteeuudeiieekjeenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugi
-    huuhhurdighiiipdhnsggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehlihhnuhigqdhksghuihhlugesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopegsphhfsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjh
-    holhhsrgeskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:CoCeZ-wNZzho4StStjA0HFUKwjQIxbVPgsEVDdjQc1q6HKvGgIs3XA>
-    <xmx:CoCeZ9S5NlQ0lB3oKLhXF5alrDoVZ7zZ6ybCz1p3x1Su2DBMAznaiA>
-    <xmx:CoCeZ5YzmK6bhS6Wt5uNwFQ01zJV3semZBLT6qcAkSqT7lLUeHM2Gg>
-    <xmx:CoCeZ2RMDCqGSRh5X1EKqnCqKx7mJTK20Av0IRyM1UkYkNTIblCeGw>
-    <xmx:CoCeZ7ODbYq4lR9dN8OvmVV1NailnhESaGys3tiMkPdBcmn2ysYahdPU>
-Feedback-ID: i6a694271:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 1 Feb 2025 15:11:53 -0500 (EST)
-From: Daniel Xu <dxu@dxuuu.xyz>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	jolsa@kernel.org
-Subject: [PATCH] tools/build: Skip jobserver flgas in -s detection
-Date: Sat,  1 Feb 2025 13:11:40 -0700
-Message-ID: <40ab531dfb491020ae1cc07d68dd03b0fb1d1fc8.1738440683.git.dxu@dxuuu.xyz>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WKqrgy52"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74416C4CED3;
+	Sat,  1 Feb 2025 20:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738441137;
+	bh=jQ2C1OnHFQeRr8iuhNwG7Wmt3VisSFpx7/8o7DxopKY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WKqrgy52ia10F++gj8edPZZjc0GU7lSu8Xq9LSuevEhacrji8MQTlW5/wLaiu2mYp
+	 kO7iNBvJofq1JxswWkfU+2gZ0uDvxJG5XPYZX0gRkCcHzCKLO599XAWR2B1f2wqy7q
+	 d7/GJzOsaqOC9aOXZ5OI4Hx1dWo5yqM/dbDUUZT02JfIyhPRwQSlXBtxdEhk2pXcuU
+	 dDQ4UL/QvipFMsG3OJc82tbVUXIgubSWdSxZU0DWYwPCn4gjzGtvKl9Y6u9ced+TLG
+	 rqw/2HA5UTGgOjTSBN4QPNL1mfzuIGA4lewahXLu3xIGHszENswz4gWS3ii/EFzEiy
+	 AWVkkalGviN5Q==
+Date: Sat, 1 Feb 2025 21:18:51 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: alloc: satisfy `aligned_alloc` requirements
+Message-ID: <Z56Bq94kPaN9UX5H@cassiopeiae>
+References: <20250201-aligned-alloc-v1-1-c99a73f3cbd4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250201-aligned-alloc-v1-1-c99a73f3cbd4@gmail.com>
 
-Currently there is unnecessarily verbose output:
+Hi Tamir,
 
-    $ make -j8 bzImage
-    mkdir -p /home/dlxu/dev/linux/tools/objtool && make
-      O=/home/dlxu/dev/linux subdir=tools/objtool --no-print-directory -C
-      objtool
-    mkdir -p /home/dlxu/dev/linux/tools/bpf/resolve_btfids && make
-      O=/home/dlxu/dev/linux subdir=tools/bpf/resolve_btfids
-      --no-print-directory -C bpf/resolve_btfids
-      INSTALL libsubcmd_headers
-      INSTALL libsubcmd_headers
-      UPD     include/config/kernel.release
+On Sat, Feb 01, 2025 at 01:58:10PM -0500, Tamir Duberstein wrote:
+> The implementation added in commit dd09538fb409 ("rust: alloc: implement
+> `Cmalloc` in module allocator_test") did not honor the documented
+> requirements of `aligned_alloc`. These requirements may not be enforced
+> on all system, but they are on macOS. Ensure that alignment is at least
+> `sizeof(void *)` and round size up to the nearest multiple of that
+> value.
 
-The reason this happens is that it seems that make is internally adding
-the following flag to $(MAKEFLAGS):
+Good catch!
 
-    ---jobserver-auth=fifo:/tmp/GMfifo1880691
+> 
+> Fixes: dd09538fb409 ("rust: alloc: implement `Cmalloc` in module allocator_test")
+> 
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  rust/kernel/alloc/allocator_test.rs | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/rust/kernel/alloc/allocator_test.rs b/rust/kernel/alloc/allocator_test.rs
+> index e3240d16040b..f360fc2e20f2 100644
+> --- a/rust/kernel/alloc/allocator_test.rs
+> +++ b/rust/kernel/alloc/allocator_test.rs
+> @@ -62,9 +62,22 @@ unsafe fn realloc(
+>              ));
+>          }
+>  
+> +        // According to `man aligned_alloc`:
+> +        //
+> +        // aligned_alloc() returns a NULL pointer and sets errno to EINVAL if size is not an
+> +        // integral multiple of alignment, or if alignment is not a power of 2 at least as large as
+> +        // sizeof(void *).
+> +        let alignment = layout.align();
+> +        let minimum_alignment = core::mem::size_of::<*const crate::ffi::c_void>();
+> +        let (alignment, size) = if alignment < minimum_alignment {
+> +            (minimum_alignment, layout.size().div_ceil(minimum_alignment) * minimum_alignment)
+> +        } else {
+> +            (alignment, layout.size())
+> +        };
+> +
 
-This breaks -s detection which searches for 's' in $(short-opts), as any
-this entire long flag is treated as a short flag and the presence of any
-'s' triggers silent=1.
+I think I prefer this to be slightly more compact:
 
-Fix by filtering out such flags so it's still correct to do a substring
-search for 's'.
-
-Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
----
- tools/scripts/Makefile.include | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index 0aa4005017c7..a413f73a7856 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -139,9 +139,9 @@ endif
- # If the user is running make -s (silent mode), suppress echoing of commands
- # make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
- ifeq ($(filter 3.%,$(MAKE_VERSION)),)
--short-opts := $(firstword -$(MAKEFLAGS))
-+short-opts := $(filter-out ---%,$(firstword -$(MAKEFLAGS)))
- else
--short-opts := $(filter-out --%,$(MAKEFLAGS))
-+short-opts := $(filter-out --% ---%,$(MAKEFLAGS))
- endif
- 
- ifneq ($(findstring s,$(short-opts)),)
--- 
-2.47.1
-
+   let min_align = core::mem::size_of::<*const crate::ffi::c_void>();
+   let (align, size) = if layout.align() < min_align {
+       (min_align, layout.size().div_ceil(min_align) * min_align)
+   } else {
+       (layout.align(), layout.size())
+   };
