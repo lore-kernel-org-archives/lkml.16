@@ -1,112 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAEA35953;
-	Sat,  1 Feb 2025 15:31:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B111BDA8C;
+	Sat,  1 Feb 2025 15:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738423873; cv=none; b=k1taJC7GgFc2InHYBPHWmDtwplxh99s6/TdUWMuNuqtNQS7gaqQ15s9i8sNoWk4hY/9GYM7n3MsodhNuipl33L2/5pfRMIQGt3HZKTySqNgWJ50RXBUFtUmEDK0AEOK72zR1fUXWGOO/BeL1g9uXI7f4EIO66hksxr00HBcGzOQ=
+	t=1738423898; cv=none; b=fLByKcHfXZjYBTOZ4qcWQjwi4nMqA95Uzt3zYkrQ+0Gf5Z8K5JwnaOZadOdj8sepDSzIFXnZxJtVsIykFPzakT7RTUVSYVKawz68IFu9ex2iPPLl1lkQAcK2ylzlThlSAnOCzaGqnDPcI4L/RvgAnTsI93f4n3eYTdaUt6fGYj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738423873; c=relaxed/simple;
-	bh=JM1R5GXAIPeeM+wmnjkuKRUft4TvRcPdYI90F09ZX0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NvrPo0qHV+pqsLJ5abumNduhgW/7kOIAHuNtPODd+HtWw4O8K7cp84U0w9//o/NYe0yNpdhu8T/RrJvW6q15eVmF5pR4RU89bpIdtKBVG6I706HRlTWbz2PkPVKySjZAOhiOIsim09kYPBkn0aI45pNrhWa90YXJL/nMfOBae60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AzMa4qda; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738423898; c=relaxed/simple;
+	bh=BCfoSKNCnyed4pGlqcdaf/sT4JZcLQJ9eWwjsd1k3T0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SUDWE+oNJnrsCtpCN0MOMo5mGjK2zLJNQVIldIH4D7QreWpken7XjebhwWkLHSWyt4gl1FsqNr36MfHoBXi4x/0ZFbXElP3ca2vuDuN+0BE8RlUEP8LXIo8ipfSTmKuOyOFyvBq2QCsatGni1GtMDr7UKi607wQ6ay5DvvuKOUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EJCX1Mk8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AzMa4qda"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F862C4CED3;
-	Sat,  1 Feb 2025 15:31:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738423873;
-	bh=JM1R5GXAIPeeM+wmnjkuKRUft4TvRcPdYI90F09ZX0U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AzMa4qdaI9140Ib97pX9gwGolBKMoxZyFST/LcIhVx8nKu0bAw1ODzHV19UBxELyA
-	 CaUri6iFjOXg3UYWcIZBeWzV2zhyWN6u/cNNA5+SNG7gLLcOvzKg+8gis6/Gtssu2T
-	 NTJzeTe7JjyyCUKmBvNLSQaVq7xgROIJ5sbMGM9T51VS+YFPkrQQ7w4GRobpNQG8cx
-	 hFp2FBY6DEnIydjjWXLK+kL2EbMu7dp9RIiNDFKjFK85R4nMELnmnxR4cZsBRHZJag
-	 Lcem7V5AveZYIROjroo4hWcYtzHBjQy18RCBwqE9xnuJYeDn7NztWgwt+lbfstBx8F
-	 AoyNeFcTXlyGQ==
-Date: Sat, 1 Feb 2025 15:31:03 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <lars@metafoo.de>,
- <Michael.Hennerich@analog.com>, <marcelo.schmitt@analog.com>,
- <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
- <jonath4nns@gmail.com>, <marcelo.schmitt1@gmail.com>
-Subject: Re: [PATCH v2 06/16] iio: adc: ad7768-1: set MOSI idle state to
- prevent accidental reset
-Message-ID: <20250201153103.60675555@jic23-huawei>
-In-Reply-To: <b99ec75a9f8a47df72a0e8cf126d7e9312ce59c1.1737985435.git.Jonathan.Santos@analog.com>
-References: <cover.1737985435.git.Jonathan.Santos@analog.com>
-	<b99ec75a9f8a47df72a0e8cf126d7e9312ce59c1.1737985435.git.Jonathan.Santos@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EJCX1Mk8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F2E4C4CED3;
+	Sat,  1 Feb 2025 15:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738423898;
+	bh=BCfoSKNCnyed4pGlqcdaf/sT4JZcLQJ9eWwjsd1k3T0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EJCX1Mk8Dmq3aAPY4D3MLsUfCbOAuj9/BvP9obN70pVWwM2hP4YWJT5GdnL1yqzIf
+	 +JqQapEUi7XJMu2D6/JKuAkjwJZt4Xc0h1SypS2W0gMHdnwGXCzPPcWchY5M7FK3wr
+	 vrNfYgwSmRTLDS8HR3fd/72TByCC1aIeSHDGlWPU=
+Date: Sat, 1 Feb 2025 16:31:34 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: airlied@gmail.com, simona@ffwll.ch, corbet@lwn.net,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, ajanulgu@redhat.com, lyude@redhat.com,
+	pstanner@redhat.com, zhiw@nvidia.com, cjia@nvidia.com,
+	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 1/2] gpu: nova-core: add initial driver stub
+Message-ID: <2025020115-siesta-regress-96ef@gregkh>
+References: <20250131220432.17717-1-dakr@kernel.org>
+ <2025020151-leverage-unadorned-fb05@gregkh>
+ <Z54PsyY-fNRBwJQ4@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z54PsyY-fNRBwJQ4@cassiopeiae>
 
-On Mon, 27 Jan 2025 12:12:29 -0300
-Jonathan Santos <Jonathan.Santos@analog.com> wrote:
-
-> Datasheet recommends Setting the MOSI idle state to high in order to
-> prevent accidental reset of the device when SCLK is free running.
-> This happens when the controller clocks out a 1 followed by 63 zeros
-> while the CS is held low.
+On Sat, Feb 01, 2025 at 01:12:35PM +0100, Danilo Krummrich wrote:
+> On Sat, Feb 01, 2025 at 09:33:28AM +0100, Greg KH wrote:
+> > On Fri, Jan 31, 2025 at 11:04:24PM +0100, Danilo Krummrich wrote:
+> > > +impl Gpu {
+> > > +    pub(crate) fn new(pdev: &pci::Device, bar: Devres<Bar0>) -> Result<impl PinInit<Self>> {
+> > > +        let spec = GpuSpec::new(&bar)?;
+> > > +        let fw = Firmware::new(pdev.as_ref(), &spec, "535.113.01")?;
+> > > +
+> > > +        dev_info!(
+> > > +            pdev.as_ref(),
+> > > +            "NVIDIA {:?} ({:#x})",
+> > > +            spec.chipset,
+> > > +            spec.boot0
+> > > +        );
+> > 
+> > When drivers work properly, they should be quiet, so can you move this
+> > to dev_dbg()?
 > 
-> Check if SPI controller supports SPI_MOSI_IDLE_HIGH flag and set it.
+> Sure, the only reason I made this dev_info!() is because, as an initial
+> skeleton, the driver isn't doing anything else for now. So, I thought it would
+> be nice to have some sign of life.
 > 
-> Fixes: a5f8c7da3dbe ("iio: adc: Add AD7768-1 ADC basic support")
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> Of course, the intention was to remove this, once there's any other sign of
+> life.
 
-Ideally drag fix to start of patch set to make it obvious it can be
-picked up without the rest.  I'm not grabbing it yet as doesn't
-feel like it has enough review yet.
-
-> ---
-> v2 Changes:
-> * Only setup SPI_MOSI_IDLE_HIGH flag if the controller supports it, otherwise the driver
->   continues the same. I realized that using bits_per_word does not avoid the problem that
->   MOSI idle state is trying to solve. If the controller drives the MOSI low between bytes
->   during a transfer, nothing happens.
-> ---
->  drivers/iio/adc/ad7768-1.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> index c3cf04311c40..95ba89435652 100644
-> --- a/drivers/iio/adc/ad7768-1.c
-> +++ b/drivers/iio/adc/ad7768-1.c
-> @@ -574,6 +574,22 @@ static int ad7768_probe(struct spi_device *spi)
->  		return -ENOMEM;
->  
->  	st = iio_priv(indio_dev);
-> +	/*
-> +	 * Datasheet recommends SDI line to be kept high when
-> +	 * data is not being clocked out of the controller
-
-Very short line wrap.  Go up to 80 chars.  If this picks up
-some review, I can fix that whilst applying. If not do it for
-your v3.
-
-> +	 * and the spi clock is free running, to prevent
-> +	 * accidental reset.
-> +	 * Since many controllers do not support the
-> +	 * SPI_MOSI_IDLE_HIGH flag yet, only request the MOSI
-> +	 * idle state to enable if the controller supports it.
-> +	 */
-> +	if (spi->controller->mode_bits & SPI_MOSI_IDLE_HIGH) {
-> +		spi->mode |= SPI_MOSI_IDLE_HIGH;
-> +		ret = spi_setup(spi);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
->  	st->spi = spi;
->  
->  	st->vref = devm_regulator_get(&spi->dev, "vref");
-
+Ok, that's fine, just a constant reminder I send everyone for new
+drivers when I see this happen :)
