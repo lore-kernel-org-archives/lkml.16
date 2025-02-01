@@ -1,59 +1,27 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2C9126F1E;
-	Sat,  1 Feb 2025 21:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8552139D1E;
+	Sat,  1 Feb 2025 21:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738443837; cv=none; b=SazbrFm0z7BbSdpu60N65ihftMh3TcoF3PRkKqnObn6uDevfCd7Xpq1nx+S1Xe9IzTKKJLgcXXBVkm4iB8XLSzUIVqWUDgSw8LTlw2rY16EeMqdmHicdLnampXCADQMG1ZptcVbBMd81GnyGb8W2+/7LfgyKa2eHNKFXzbURPcQ=
+	t=1738444798; cv=none; b=KB6mc7sscDmI4cPRKJDrBEffwbLhKpl+mgFlO7BFUbIeskpZ7tx7vRTSg1qZKL3s7stUjinJZqgN/Vb0682g5D/KFuvBRgDWRPMLE5wtEVUSU+CIhMOyX3dOkM4m//iYhPdMU4TRwoRRQZwOdJlQsLjsKczYVZQa2stFxCaHheI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738443837; c=relaxed/simple;
-	bh=odUsKlGwkfUbfxfaxYHZz3lD6um/dDkZCnsMc4cwX3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B84Ftt/VTMmGV8oELxsKxEi0/TWWoISY2OM5+LR17s3jxihENU3DlVvSh6BWMfKT7RUw4GhqyXHyVQ/8o5ui8U52wu0dim5bQDqpQzu0bxHiGrsVNXqSWGizXyuy9f0vv6dZQXnFz4tt0wGluioqmu5TiHP+7nxqzR5cwoqkcpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=T9C2WzKg; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="T9C2WzKg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=FweREbWAF9D7Gp3jju3lmGOpsOLx/UZjW8DSTl3nrjw=; b=T9C2WzKg/K7gDXNBxmchjGGIka
-	zDVCITjbBZ980TWBMymYMMrK/tnqpRbJr/2bOn9jHgO1cl0uIkIUY9VpFnBDV7j39q2B/8hSOQOy0
-	OuQIAgHUdvpYDGjOgxx0ASb2AhMLAIpygoPSw1ZZoV6O1Y2vEqvlmxOVL1v7Vu+1W80M=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1teKeG-00A41v-On; Sat, 01 Feb 2025 22:03:28 +0100
-Date: Sat, 1 Feb 2025 22:03:28 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Steven Price <steven.price@arm.com>
-Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Yanteng Si <si.yanteng@linux.dev>, Furong Xu <0x1207@gmail.com>,
-	Joao Pinto <Joao.Pinto@synopsys.com>, netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v4 3/3] net: stmmac: Specify hardware capability
- value when FIFO size isn't specified
-Message-ID: <f92e21c5-106c-4a65-8fc5-06a0d281729b@lunn.ch>
-References: <20250127013820.2941044-1-hayashi.kunihiko@socionext.com>
- <20250127013820.2941044-4-hayashi.kunihiko@socionext.com>
- <07af1102-0fa7-45ad-bcbc-aef0295ceb63@arm.com>
- <fc08926d-b9af-428f-8811-4bfe08acc5b7@lunn.ch>
- <f343c126-fed9-4209-a18d-61a4e604db2f@arm.com>
- <a4e31542-3534-4856-a90f-e47960ed0907@lunn.ch>
- <d6265f8e-51bc-4556-9ecb-bfb73f86260d@arm.com>
- <2ed9e7c7-e760-409e-a431-823bc3f21cb7@lunn.ch>
- <915713e1-b67f-4eae-82c6-8dceae8f97a7@arm.com>
+	s=arc-20240116; t=1738444798; c=relaxed/simple;
+	bh=CCOSm0p/j/Xt4GDe3UZLlfY+jwVs30JiOGDTenrQFwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=M0rtsDVCoYSXYY2q2FPpyhqECqMWYOIac0e6LsIvccY3PDGJmqZ3loQqOwfASj4uPOwCsBS59O364423Ur7D8SdJWndoQjd12sKqjMC7zyCKSXoaljP6VHaZ02f0YvorQsO9ouGtB9Gz8FOdN0ECPVWb6t9z0KMQFyJL2F5R+RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1teKtt-0000dw-00; Sat, 01 Feb 2025 22:19:37 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 7425CC013E; Sat,  1 Feb 2025 22:19:23 +0100 (CET)
+Date: Sat, 1 Feb 2025 22:19:23 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: torvalds@linux-foundation.org
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] MIPS fixes for v6.14
+Message-ID: <Z56P2zOAU8Sjm1a9@alpha.franken.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,15 +30,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <915713e1-b67f-4eae-82c6-8dceae8f97a7@arm.com>
 
-> The below works for me, I haven't got the hardware to actually test the 
-> gmac4/xgmac paths:
+The following changes since commit df1b8d6e89db0edd572a1e375f5d3dd5575b9a9b:
 
-Hi Steven
+  MIPS: pci-legacy: Override pci_address_to_pio (2025-01-20 20:39:23 +0100)
 
-I think we have enough testing done, please could you officially
-submit this patch.
+are available in the Git repository at:
 
-Thanks
-	Andrew
+  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/ tags/mips_6.14_1
+
+for you to fetch changes up to ec918a11e63856999b31705e81226dd7dc043e20:
+
+  Revert "mips: fix shmctl/semctl/msgctl syscall for o32" (2025-01-31 09:28:38 +0100)
+
+----------------------------------------------------------------
+Revert commit breaking sysv ipc for o32 ABI
+
+----------------------------------------------------------------
+Thomas Bogendoerfer (1):
+      Revert "mips: fix shmctl/semctl/msgctl syscall for o32"
+
+ arch/mips/kernel/syscalls/syscall_o32.tbl | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
