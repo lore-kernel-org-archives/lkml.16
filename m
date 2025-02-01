@@ -1,143 +1,112 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693233F9C5
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 09:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31593F9C5;
+	Sat,  1 Feb 2025 09:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738403497; cv=none; b=nO9qGmJQJKmW1qXmGgezzP4vbbJ1DTnOdZIRE+F0fruH24pG4qT8mmCmY8bAqNIOjdUhXZ4dfr58iISPInCNv2pvzaxkXPxoV3HxO3nG+oZ0amAUO8UnqC3bJlh7sKdxln2uC43Gg3kSmLu1WPbQWQsfs5DyLz2R7ZE3dldvULM=
+	t=1738403514; cv=none; b=bfka6NSvgF1pz2twZlddzTI1TjLmZDBh33osmISdUWH/7g0kO3rIB9/Fl2KmUwMCd7HaQKzfvJkQ7cIBRaKBZN3MhBDTExH3NpYzGL6svo9R7/lzNUHEZTBdt5q+FJkl8EpffmiKJaP2iwHUtRdbPslzutM5SCRlrpsl37v6RUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738403497; c=relaxed/simple;
-	bh=/Lc2YIVYZMDWtzJOASQ91vr/NwUHANkE56YZql48Cvs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iApKPOsUIK2q2/SRC+gkC63Jp2+Ev0FK1UT4letxQejul9w01Ro3u6HxUQwYDAE0HJDlKxYIrnf4E2gRh12ASNzeJENP80wlw11fRCI3e0CV9XUoFlizmWNUpuL41j91/nChr0fP1LxWynQnDsXZezVFM4ZIR8IpbL3M+CXQkNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=aSuHUaOF; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1738403514; c=relaxed/simple;
+	bh=XNPLmTu7g4O7Xoii4IS+RkrJZtMGwJWVOcITAXYVbRY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ajxqf/Uym7SYrv9FOgnvbVruhOi5W4061VeDXku+8C6E9bhfBfha/fABHf96J4ww9pBfD0q4EvFN2HvPF3yeGEyCejiSJpJFmB/2Fd3kiP/M4iuh84qjFXOeziLV95NKj1Q1qMgIw53I0trRp9hEkRuZsEM9g0Niox4vFaUngVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rh9bUMs/; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="aSuHUaOF"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5f2e31139d9so1318778eaf.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 01:51:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rh9bUMs/"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2161eb95317so49147415ad.1;
+        Sat, 01 Feb 2025 01:51:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1738403494; x=1739008294; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L+AAdkcmZc4lSXsMOcapYBhFqOepj7d/gBINmIU6crc=;
-        b=aSuHUaOFXwEysvdBDhkbIgOaX3w9jq2YJXpGwp5NDFUGaJdHGwmegwYf2Le7mriryp
-         yJ1mFWUsbATOmqc2hhqOqBXr/UuA/+5AL6eoUdS3bNAAmMJ6Ivr4iZVvvNkpLlEKCoob
-         sEu6WXMU4SX14crbAaRlabpcIuZHHL6+W5L8CftEwH0iCfx745vigOr47KzUaLlTUMSX
-         bdZUcRVEt3Xg3j7o0QgiLgyrCsj4YhosbCCzAvULQKSgatXOfNyFbG3G3DftTsDTJMAd
-         Yg5Osq1CavgDheMIz52+7Egyqo/4jZ4MBxnulDi6bcEX5iVJkfYNq2cz7YtvfS6Ww3ib
-         dSCA==
+        d=gmail.com; s=20230601; t=1738403512; x=1739008312; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eEKIgvJzCHrLU/eHOSQhidalsv93ZokbwHbTteKHLMg=;
+        b=Rh9bUMs/nROR06NWIus4Kuu324PobPEiDmvyLsNLjkA9gcpZClrhYcOT00nLy3MQER
+         o3XAoqaUNgJiYuhCCreqoT6xwDAom/TVdQ5Ovy5JzJuNkorpKeYf88nYLJUoK8qptfeg
+         G+UkxkQ8p0zEFuvd/I1quiHUq4lb0V0NtB+DJQdy3fLbXeAwVIgphMYME4SLthVgjSeZ
+         3NendCkdCgOuE5ChmiasV53yG7Jc4zDzKGFTSrNv1ofcchUW0pD7iGv7QtFwzEzMYHaT
+         jEoJLnx+V3JarQ64YYjDlk6NrcQJBqd87+AIs9cyNnxJv9GGNyxeE1jBXlRSCwnJ3EwK
+         Ri5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738403494; x=1739008294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L+AAdkcmZc4lSXsMOcapYBhFqOepj7d/gBINmIU6crc=;
-        b=oNO3C5TH4wEm9Q0cW0CzGlYUP+Wxry6zLaq6Z1czPDyoIDR0V7slloNzg9MxIBLuSh
-         wU0R4KcF3iAJg6jqpJBbcLmX1N1WdWrpeiRnlrhfOyrfVDSKtyz98gOSyTLkXnMyjqN7
-         a1uP2zdzUe4OIJwQW9lZ6ddGRNooOoKTA7SwgGhdL4t9C75remdQlIrY1ap96vG8Zeoo
-         GE3/F2uNm++nqW0RcBJB9PHMzrYkHBETW6XNWPLghGBJgPMPVEkOy2JezZ2b3N2a7SJV
-         UeyyZnCaA7+0rVH3CwUFeoUuKIlEXwDgKXWDZgyhSc4t8Wn8DkiQiLldD9A8gP6MzJ3J
-         v47w==
-X-Forwarded-Encrypted: i=1; AJvYcCWts2fa6DGNsCG0/9KWgVuNa1eIoAGw70m1c1loyLClWRexw+khlihdwdSSO2w0SdtTYWY/Ar8tPSTDJtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUeokxhhXhGAGiIUSaK+i0fZ52slc232fF/2W5LED6rIZKJAKj
-	ORDxdkapfwfcNVs49J/s69HjoK/s1D5lKSaY24ibUoNZuADfB77GzCu7UEesxVrqHvxlu6E1/hW
-	wXFRSSO4ErHlCAqs+KHvhSKyfkf+AYHQCZcfq8g==
-X-Gm-Gg: ASbGncvpLq8KFixp6PFG3EYT2LI/de2My1DyOOVIiym68jPHWlf2IzKreXgY52V84Ce
-	uiMkju8uS82GJ6yty3ylyxY9WBbxwxS9c54b/EbHOpvn4HGaRkI7mhf4OdhZkswbI4Pmg/GNufw
-	4=
-X-Google-Smtp-Source: AGHT+IEIIfBdNVn8LDpeA6rFY2D9do+Hyc1wDJ+qpODyAMtmiFvSiXtuvbFiuEmS1fHjZJ/7xlgvm9YLi2f51OwMYUg=
-X-Received: by 2002:a05:6871:8802:b0:29e:563c:2dbf with SMTP id
- 586e51a60fabf-2b32f286144mr9462267fac.26.1738403494288; Sat, 01 Feb 2025
- 01:51:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738403512; x=1739008312;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eEKIgvJzCHrLU/eHOSQhidalsv93ZokbwHbTteKHLMg=;
+        b=Z5YyVXrribhGDc9a3hSCES2LvSYjku8VgI4gkf/FoyQW6Tvx4Cwveux5h65294uLgk
+         5d8oQ/dLhg1qF2Ut2bpV9G2YyMVd7uJCvcXNFKD6uTiSnQL+1gbCvgZ0AsxDLDTGYVEe
+         HwO4zdcKHNv+XyluW5v6xXH8AwkyvrQfTDLtuuXtTeB6FB0m3DMm02VKp/xTc/ewXRHs
+         y62XMvRcnfk04+255nAxE/bD9DWyXfKAy2089f9Cvv+T9nfRdwUgHBzCwdxlgmEc6cfy
+         toDNgOBolnG3+881jS7yikEoaqT4rBIq+rFaIWJhG72IBEoUH9YGwatwwfl7MXNm4CHp
+         09oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOPMI5VSkhuW4Z+rT1kQ/szfIXeNUMhbKKS11qa2DSj0QZ77J7Ei3ooch88Xu7ZyoYQWwp2gv6@vger.kernel.org, AJvYcCWggyiLvm2owB4OyPEHQdTVZM300tgc3WZcso/3NzjDrq8XivIfvJzFmNI+K6bNBCZ5HeCCCYoaSkxZMk2d@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVDisB0aL0AmI0ONO7TkQM7JeqOS5Q3zouVi17FhWZhKETbhOh
+	ud6/4MtfvtxLzDBHwnytGa+OImU/tiUDirR9wFwluhHF1wUbMBOT
+X-Gm-Gg: ASbGnctllOQ+xa39CUNXSwzTkO9EV63tf0B4grE7BZBESQLDTLxwX+JeptMH0toQxUd
+	V2jfd6fJ8A6f4r1rtszytHz0W58BWza8lyKfgMHLtilIMFUqTIS68IfpUEhEb1peP1Hwj1qjleI
+	+d9c147jkQe+BXV3MQTCmE8YO8jeEB1JNsBa2VrIkPHTcYmeVcO+YQT/mGa6XmooUwqHgCvyVSR
+	rF+FTXw+toCynSoL/am2LSz6jmnN76fsj2+klPrNQZVCE572SO7Plzu6m8FYHuH9+2AmPg2tXmE
+	P8S1DeesTldPO1w10pNMHRlUkIAVHYySKIRY89vy348XPtS8fRMpgECJmlo5xEi8USk0sbU79qj
+	03NGUSrRrdJcY
+X-Google-Smtp-Source: AGHT+IFyrGJ/ADpSmNfnEEsU7Da1mkjiYBmUMieib7j1Ywzt5OocKc3/8aEY8su8diHKTdby5N41oA==
+X-Received: by 2002:a05:6a21:68e:b0:1e0:c3bf:7909 with SMTP id adf61e73a8af0-1ed7a61d02cmr26205417637.41.1738403512055;
+        Sat, 01 Feb 2025 01:51:52 -0800 (PST)
+Received: from codespaces-4a2804.mimvmn1ww3huhhjmzljqefhnig.rx.internal.cloudapp.net ([4.240.39.194])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6424facsm4702635b3a.39.2025.02.01.01.51.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 01:51:51 -0800 (PST)
+From: Umar Pathan <cynexium@gmail.com>
+X-Google-Original-From: Umar Pathan <cynexium@proton.me>
+To: tj@kernel.org
+Cc: lizefan.x@bytedance.com,
+	hannes@cmpxchg.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Umar Pathan <cynexium@proton.me>
+Subject: [PATCH cgroup] https://github.com/raspberrypi/linux/issues/6631
+Date: Sat,  1 Feb 2025 09:51:45 +0000
+Message-ID: <20250201095145.32300-1-cynexium@proton.me>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250123074830.90923-1-cuiyunhui@bytedance.com>
- <344c53cd-d856-4c03-9deb-743b65acd8aa@linux.alibaba.com> <CAEEQ3wmDej9bbPUmkx-ZrD4FG9Z7gTHMeCrVszx64g90O0RyiQ@mail.gmail.com>
- <31e00081-8695-4ca6-a1ef-af5a007a7565@linux.alibaba.com> <CAEEQ3wm+f_SM7evwL=YrGy8gPLS5YdJm=qhJNT8bbMH7QBOzEA@mail.gmail.com>
- <20250124122952.GB23438@willie-the-truck> <CAEEQ3wnTMfWSZRhTax3N60W=m3a=zxnJF6dOfiGnqJzBQs8WEg@mail.gmail.com>
- <20250127165156.GE25757@willie-the-truck>
-In-Reply-To: <20250127165156.GE25757@willie-the-truck>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Sat, 1 Feb 2025 17:51:21 +0800
-X-Gm-Features: AWEUYZmAdXUmi37d66_VLF0H-K_x7oGaiWsf00mIojMN1X-oiLjeCpkGsMu0T7E
-Message-ID: <CAEEQ3wkj=6WPNFpet=A9JppiO52agw6HZArwhfWsWS9JOY6Dng@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] perf/dwc_pcie: fix duplicate pci_dev devices
-To: Will Deacon <will@kernel.org>
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>, renyu.zj@linux.alibaba.com, 
-	mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Will,
+The existing freezer propagation logic improperly reduces
+nr_frozen_descendants by an increasing 'desc' counter during unfreeze,
+leading to:
+- Premature parent cgroup unfreezing
+- Negative descendant counts
+- Broken hierarchy state consistency
 
-On Tue, Jan 28, 2025 at 12:52=E2=80=AFAM Will Deacon <will@kernel.org> wrot=
-e:
->
-> On Sun, Jan 26, 2025 at 09:54:35AM +0800, yunhui cui wrote:
-> > Hi Will,
-> >
-> > On Fri, Jan 24, 2025 at 8:30=E2=80=AFPM Will Deacon <will@kernel.org> w=
-rote:
-> > >
-> > > On Fri, Jan 24, 2025 at 05:11:05PM +0800, yunhui cui wrote:
-> > > > > >>>        vsec =3D dwc_pcie_des_cap(pdev);
-> > > > > >>>        if (!vsec)
-> > > > > >>>                return -ENODEV;
-> > > > > >>>
-> > > > > >>>        sbdf =3D plat_dev->id;
-> > > > > >>> -     name =3D devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dw=
-c_rootport_%x", sbdf);
-> > > > > >>> +     name =3D devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dw=
-c_rootport_%d_pmu", sbdf);
-> > > > > >>
-> > > > > >> A new name will break previous user tools.
-> > > > > > This name isn't suitable. It can't clearly show which is the PM=
-U
-> > > > > > device. Userspace tools don't have binding relationships, like =
-perf.
-> > > > > > Tools must traverse PMU devices before use.
-> > > > >
-> > > > > The device is under /sys/bus/event_source/ which indates it is PM=
-U device.
-> > > > > As far as I know, most of PMU devices do not endup with a '_pmu' =
-prefix.
-> > > >
-> > > > The point is the name "dwc_rootport_" is misleading, suggesting an
-> > > > extra PCIE RP in the system. Best to change the name to intuitive
-> > > > "xx_pmu".
-> > >
-> > > As pointed out above, changing the name will break userspace. So it's
-> > > simply not an option, sorry.
-> >
-> > Could you specify what in the userspace is broken and give an example?
->
-> Can't I just take the documented example from dwc_pcie_pmu.rst:
->
-> $# perf stat -a -e dwc_rootport_13018/Rx_PCIe_TLP_Data_Payload/
->
-> If I have a script that uses that command on a machine today, then
-> applying your kernel patch will break the script, no?
+Scenario demonstrating the bug:
+1. Create hierarchy A->B->C
+2. Freeze C (A/B freeze via propagation)
+3. Freeze A->D (separate branch)
+4. Unfreeze C -> A incorrectly unfreezes despite frozen D
 
-Well, this is just a usage guide for the PCIe PMU and has no binding
-with perf. In user space, the existing PCIe PMUs in the system should
-be traversed first, and then perf stat/record ... can be executed.
+Fixes: 711f763 ("freezer,cgroup: add freezer.stats subsystem")
+Signed-off-by: Umar cynexium@gmail.com
+---
+ kernel/cgroup/freezer.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-It's okay not to change the name, but it's better to change
-dwc_rootport_%x to dwc_rootport_%d to correspond with
-platform_device_register_data(NULL, "dwc_pcie_pmu", ...). It'll be
-more intuitive. What do you think?
+diff --git a/kernel/cgroup/freezer.c b/kernel/cgroup/freezer.c
+index e9c15fbe5d9b..d384df2f53c2 100644
+--- a/kernel/cgroup/freezer.c
++++ b/kernel/cgroup/freezer.c
+@@ -304,6 +304,7 @@ void cgroup_freeze(struct cgroup *cgrp, bool freeze)
+ 			 */
+ 			if (dsct->freezer.e_freeze > 0)
+ 				continue;
++			
+ 			WARN_ON_ONCE(dsct->freezer.e_freeze < 0);
+ 		}
+ 
+-- 
+2.47.1
 
->
-> Will
-
-Thanks,
-Yunhui
