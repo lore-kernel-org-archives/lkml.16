@@ -1,139 +1,133 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C561586C8;
-	Sat,  1 Feb 2025 14:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B841552ED
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 14:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738418941; cv=none; b=daaFGGY+kewiOr14pD2hiGJlsDjJBDnuZTofX2OOaoUmJQFEIlCA8lUoQAzK7305BI0xL65oQu6cYgp16Top5DQ9UliXbhqvQiMEsp29miEPY0IrZD4OWsuTBVQ9HIQ+Z4JCJ0odnacJSr9Y/XCATpDCpIvOpanFsFgOtfIhe94=
+	t=1738419949; cv=none; b=JbsD14QLBBf63IuM/hc6bWQd9fKXqoqmhfDcM5ZKT+nuoxTw3p108qwbm6C/m3VLUJeFlb43g35xX9wSb1uFOWyfyhA/+i6iNFpOlzVeLmbScKS1Pcu+xKeC8jovjxojhRy75C3Vmr2MsV/XBf/nnRkwgczJ5FZPLIFU4XqJv5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738418941; c=relaxed/simple;
-	bh=60iSH3xkgzYLu5tNPSL6p85EuOS24Vc5RQZXS9zkAkI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pvy0fW4R2G5nz/7Ojpz63tvIUAk4QEMGvX/V31gaWdHhmjuiWQqdcjCLcZLJTobxFFEyhE3FCVpMJenjZN+8bfINyN+iS6Y/hnFnrKd2wXBsi4lIDWBgJZkqJWO+mVcY2UlqVasZvqZS1x5gR0wOHa0rdK3ivo5/A1vram9btyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidreaver.com; spf=pass smtp.mailfrom=davidreaver.com; dkim=pass (2048-bit key) header.d=davidreaver.com header.i=@davidreaver.com header.b=Ti5fjUya; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VJ6BBRPw; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidreaver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidreaver.com
+	s=arc-20240116; t=1738419949; c=relaxed/simple;
+	bh=b/ilQBMD/ctDxdLGch35HEyD5tj1iFoV6HojCaZANsg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rGKQX+hMsSqKbkJchd+hTM6cD5DuM5c04iC9rPxWW5I5sa1+cyv4W/nauAvbRlsTjUSmwxoRqNLd6nB8ftY43msSQddaF720+EXLnWNMDMl6kpRJbt0LB0zSFI3mxWkilrkFUzKCS+60azbKwJoXiAY2BH6xnUaS5NBG67mVY38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4jX8igxL; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidreaver.com header.i=@davidreaver.com header.b="Ti5fjUya";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VJ6BBRPw"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id A96BF11400F6;
-	Sat,  1 Feb 2025 09:08:58 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Sat, 01 Feb 2025 09:08:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=davidreaver.com;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1738418938; x=
-	1738505338; bh=uhCrR4gpWxcjRPhfgaQgwAxhoK1eIO+GJqfVxvXMHEU=; b=T
-	i5fjUyav12jpsKOSiohw6VInxbucj5+NwrACDLl4mSIF7up0wG1qnPQpkHcABDc5
-	8cmfRSQbe+SjYwSjBRU04mMvIFHAreV8cpywqv0AnMD/paNRkVG5rCktdrxP80GH
-	wDtYAVyBoE+gy+3mvVgVrIjy45qWdJAFVdSVPYexn9i0S51kinKyENSNG1LFC986
-	IB4L7cHEg4xF8J7T1Sk7rZEUpYlywqU818k1hUZFOp/frcJm/dnVDxBz8XyL59ik
-	tZgSlCIQyMa/5VFMtEU1H7Z/GDkAr9c8zSXyYE6d8xvViENkPsVkAzT1pjPRzpKX
-	JkmQYtR96J1DVMoBp+8Vg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738418938; x=1738505338; bh=uhCrR4gpWxcjRPhfgaQgwAxhoK1eIO+GJqf
-	VxvXMHEU=; b=VJ6BBRPwS+jpQg3kr4Zh0vT9UoMM1MpvWdalAZRuPUHYYp//rfV
-	SThysL/nZXX3AND5+sP+DkDrmdNTiqxIdVIz8M81i9YY2E3DgH6LvZDUgQXOacNE
-	8Ce/mzm98LhR298fwirQrMVMXr/Q0sFTGnUTU68Nw1fjw3+KqTcVCqnn62+KYfym
-	CTvm2ejdrvX61BU8yNykav62rMT89ArxbIvzvjy5VXSvXcmafw8PMl+hI8F04Gkw
-	NU0ExRyoRuqG5cp258wgCJ17/u2zbbV/70cJBJoWGC9zK2HOej1f+bqVjNXtTtrP
-	MCHCIaZlV2UxlgZ1eZsvAszqOGhLcgTIjFw==
-X-ME-Sender: <xms:-SqeZ-xI_3gOfckwUnvrypoI8Q_RgC6jTHAZ-nTvASJtBHS-Bskmqw>
-    <xme:-SqeZ6QwvAkcCtGVupqXyokP5QgjWMbPcJa0xvjgzOOU-X7s9jdKBPgomaYDhY0a_
-    i2f0W54VZ0fucCx9ss>
-X-ME-Received: <xmr:-SqeZwVmZD94GQ1OTVhpe4Q75yfyPJtsT8Bj3n7tC6ssFb1O5qYSOEJRXY5ssfFq6lRTMap-iwJ-xhKFkQHTSGWYiTV0fg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudelvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvve
-    fujghffgffkfggtgesthdtredttdertdenucfhrhhomhepffgrvhhiugcutfgvrghvvghr
-    uceomhgvsegurghvihgurhgvrghvvghrrdgtohhmqeenucggtffrrghtthgvrhhnpeduje
-    fguddtueetgfegfeegueetkeetgfffieelvefhudetuedulefggeetgeffleenucffohhm
-    rghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepmhgvsegurghvihgurhgvrghvvghrrdgtohhmpdhnsggprhgt
-    phhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegthihnvgigihhumh
-    esphhrohhtohhnrdhmvgdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghr
-    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegtghhrohhuphhssehvghgvrhdrkhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtohephhgrnhhnvghssegtmhhpgigthhhgrdhorhhgpdhr
-    tghpthhtoheplhhiiigvfhgrnhdrgiessgihthgvuggrnhgtvgdrtghomhdprhgtphhtth
-    hopehtjheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptgihnhgvgihiuhhmsehgmhgr
-    ihhlrdgtohhm
-X-ME-Proxy: <xmx:-SqeZ0ha59j2dMjHpf-PTGl9hE3sXeBbs6rfPMftFXt1ci6W4cORig>
-    <xmx:-SqeZwDlQRznpw5aMW0WbJ6dRn8wfR_Mw4-7XlreOrF1VSSmvnmwQg>
-    <xmx:-SqeZ1Ids9img0SFAKTYRnxL_Z5l6HSoOvpuVvyIXzpRgTT4ttajIg>
-    <xmx:-SqeZ3C50MausHHSdFCZvf-x9DlQhAQ7LI7QtT37Cu5yakJTAzQ3HA>
-    <xmx:-iqeZ-Ar421iA7Bhwda0MaVn7tOekk4XNtHfYjl9sI0uL9D2NVztTNUZ>
-Feedback-ID: i67e946c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 1 Feb 2025 09:08:56 -0500 (EST)
-From: David Reaver <me@davidreaver.com>
-To: Umar Pathan <cynexium@gmail.com>
-Cc: tj@kernel.org,  lizefan.x@bytedance.com,  hannes@cmpxchg.org,
-  cgroups@vger.kernel.org,  linux-kernel@vger.kernel.org,  Umar Pathan
- <cynexium@proton.me>
-Subject: Re: [PATCH cgroup] https://github.com/raspberrypi/linux/issues/6631
-In-Reply-To: <20250201095145.32300-1-cynexium@proton.me> (Umar Pathan's
-	message of "Sat, 1 Feb 2025 09:51:45 +0000")
-References: <20250201095145.32300-1-cynexium@proton.me>
-User-Agent: mu4e 1.12.8; emacs 29.4
-Date: Sat, 01 Feb 2025 06:08:55 -0800
-Message-ID: <86cyg1bvuw.fsf@davidreaver.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4jX8igxL"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ab6ed8a3f6aso419772466b.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 06:25:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738419946; x=1739024746; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eZ0vZqIXBEKqFKncFREQpwOePkAbHQPGhvJcFWtumXA=;
+        b=4jX8igxLLOudGDF8Wq5KPLJKLoNPb/xNqzb3540hd4aB0S7vdAGcCmD9yNFC8Te7sZ
+         tKiVUpcoo0mX110ZqkyHQJfpRieniV6TvH7YOQK0xkgggg7GGSbV31buVE3RSEcfhhux
+         Abf0rF128n/gbDFwhcx6ikYIgu1kHcmhGylDEEjEdklRGNB4PjfZ+y5MwkgElv3NLLjF
+         OVrUnQLCGVKR0wcMwTa1izQGqiYxfW9ZYLKc1ocCuLjsaUf+ElRZWFgZuTK+nS2lamkl
+         HL+05hiV+6S97Act1LMoME/YBJZz9f9D+yQusH+uc59vkYjJ7GHtKRoX2hn2VRmp8B8r
+         t6mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738419946; x=1739024746;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eZ0vZqIXBEKqFKncFREQpwOePkAbHQPGhvJcFWtumXA=;
+        b=a80k5mXqicOqxCghfMsssLabopR9W1Ha4nf5iO3bQh79HfN4gqLc3V1LdRpe5Fx77q
+         x2RfKA7CIyHGaFKVFBWeKDdfR2DXlK6yQnXnatesn+h+cqWKfN0ctDIy44Z9CtYkFs1a
+         lViFIINmDzycx4R14VdVKsKIuPgX8coVH4nfZy0uJF33fB2JCS+WroMCJgiEBoFfNRZw
+         kkXfmZV1u2VF9Lkr3ff98kXZDnGf7rfVpz+umrKlOx7l/IBLCqPgxgwKa5dMArWWHI5D
+         eJi7jYS8YnbwWxqN56vG9ORroaZm6LeOL/9rJHkVbMp7oWmac2viEgPsFmDv51GOsRrW
+         rZxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXyplNCXKzSQV+NC9uxrLAZESOnwTtZWb6OKvhFec5GOZ/9D79u43cZUkM6cqD+mp2xgT69apHuStlw5z4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxsFpWF5FIb2U9XJfuSM/ixU/mLiVDc+NAKyN+d1bYcL26vIFV
+	Y1WAyBL8zj2avbYH1SzvvnLVENtFlYTR5Ym3hR4z8cxEWWyScZZI8A9AOSiVMXvE8G6GEWpsU9/
+	M5UXrXTBtsEkVckZjoWtRhMiv7YMxyS3dCHp2
+X-Gm-Gg: ASbGncuRFqmfeJqm1BpyRG0/PBrVCmLkKCe5GDO+gT7Zv/zKBz94gWMtA1P5QlHTrn3
+	ldXt69oc5548h0EA80I6TdHFEF1ghgZnCnzyqJsZCXy2IPRiKUywyvEx23QNLg8ez2MXW4IA=
+X-Google-Smtp-Source: AGHT+IFNU50KGJzZgl7w7V83IWbYIOCrmGxy1Ru5bXtuLQdKA+rEmK/FcWEISxLcAC0MiPZn9JdBhR9NVHupPkR+kk0=
+X-Received: by 2002:a17:907:2cc5:b0:aae:85b4:a07 with SMTP id
+ a640c23a62f3a-ab6cfcb35b1mr1635306066b.8.1738419945558; Sat, 01 Feb 2025
+ 06:25:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250201005048.657470-1-seanjc@google.com>
+In-Reply-To: <20250201005048.657470-1-seanjc@google.com>
+From: Dionna Amalie Glaze <dionnaglaze@google.com>
+Date: Sat, 1 Feb 2025 06:25:34 -0800
+X-Gm-Features: AWEUYZmHzRH4TAEFvkpdJYgx_73GLI504WWZIIxFen1KKjX6D7kitSz8ByVCMlo
+Message-ID: <CAAH4kHY-Gt_6=cGL1VNsgow+XX_3wr_GxRE9hWbHomu+CaAgpw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] x86/kvm: Force legacy PCI hole as WB under SNP/TDX
+To: Sean Christopherson <seanjc@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Peter Gonda <pgonda@google.com>, =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, 
+	Kirill Shutemov <kirill.shutemov@linux.intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Binbin Wu <binbin.wu@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"Xiang, Qinglan" <qinglan.xiang@intel.com>, "Xu, Min M" <min.m.xu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Umar Pathan <cynexium@gmail.com> writes:
-
-> The existing freezer propagation logic improperly reduces
-> nr_frozen_descendants by an increasing 'desc' counter during unfreeze,
-> leading to:
-> - Premature parent cgroup unfreezing
-> - Negative descendant counts
-> - Broken hierarchy state consistency
+On Fri, Jan 31, 2025 at 4:50=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
 >
-> Scenario demonstrating the bug:
-> 1. Create hierarchy A->B->C
-> 2. Freeze C (A/B freeze via propagation)
-> 3. Freeze A->D (separate branch)
-> 4. Unfreeze C -> A incorrectly unfreezes despite frozen D
+> Attempt to hack around the SNP/TDX guest MTRR disaster by hijacking
+> x86_platform.is_untracked_pat_range() to force the legacy PCI hole, i.e.
+> memory from TOLUD =3D> 4GiB, as unconditionally writeback.
 >
-> Fixes: 711f763 ("freezer,cgroup: add freezer.stats subsystem")
-> Signed-off-by: Umar cynexium@gmail.com
-> ---
->  kernel/cgroup/freezer.c | 1 +
->  1 file changed, 1 insertion(+)
+> TDX in particular has created an impossible situation with MTRRs.  Becaus=
+e
+> TDX disallows toggling CR0.CD, TDX enabling decided the easiest solution
+> was to ignore MTRRs entirely (because omitting CR0.CD write is obviously
+> too simple).
 >
-> diff --git a/kernel/cgroup/freezer.c b/kernel/cgroup/freezer.c
-> index e9c15fbe5d9b..d384df2f53c2 100644
-> --- a/kernel/cgroup/freezer.c
-> +++ b/kernel/cgroup/freezer.c
-> @@ -304,6 +304,7 @@ void cgroup_freeze(struct cgroup *cgrp, bool freeze)
->  			 */
->  			if (dsct->freezer.e_freeze > 0)
->  				continue;
-> +
->  			WARN_ON_ONCE(dsct->freezer.e_freeze < 0);
->  		}
+> Unfortunately, under KVM at least, the kernel subtly relies on MTRRs to
+> make ACPI play nice with device drivers.  ACPI tries to map ranges it fin=
+ds
+> as WB, which in turn prevents device drivers from mapping device memory a=
+s
+> WC/UC-.
+>
+> For the record, I hate this hack.  But it's the safest approach I can com=
+e
+> up with.  E.g. forcing ioremap() to always use WB scares me because it's
+> possible, however unlikely, that the kernel could try to map non-emulated
+> memory (that is presented as MMIO to the guest) as WC/UC-, and silently
+> forcing those mappings to WB could do weird things.
+>
+> My initial thought was to effectively revert the offending commit and
+> skip the cache disabling/enabling, i.e. the problematic CR0.CD toggling,
+> but unfortunately OVMF/EDKII has also added code to skip MTRR setup. :-(
+>
 
-Hey Umar,
+EDK2 has a bug tracker. Maybe this is still fixable on Intel's end.
+Adding Qinglan, Isaku, and Min to comment.
 
-I dug around Github and I think I found the patch you intended to submit
-https://github.com/raspberrypi/linux/pull/6632/commits/711f76376ae7e11f48a1c22a4a04828a24d6a87a
+> Sean Christopherson (2):
+>   x86/mtrr: Return success vs. "failure" from guest_force_mtrr_state()
+>   x86/kvm: Override low memory above TOLUD to WB when MTRRs are forced
+>     WB
+>
+>  arch/x86/include/asm/mtrr.h        |  5 +++--
+>  arch/x86/kernel/cpu/mtrr/generic.c | 11 +++++++----
+>  arch/x86/kernel/kvm.c              | 31 ++++++++++++++++++++++++++++--
+>  3 files changed, 39 insertions(+), 8 deletions(-)
+>
+>
+> base-commit: fd8c09ad0d87783b9b6a27900d66293be45b7bad
+> --
+> 2.48.1.362.g079036d154-goog
+>
 
-Unfortunately, your email only contains the inverse of your PR's
-whitespace change removing a line in freezer.c, not the rest of the
-patch. Did you perhaps revert that whitespace change in a new commit and
-accidentally only submit that commit instead of the whole change?
 
-Thanks,
-David Reaver
+--=20
+-Dionna Glaze, PhD, CISSP, CCSP (she/her)
