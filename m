@@ -1,57 +1,57 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3130F14375D
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 07:43:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2C81494BF
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 07:43:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738395817; cv=none; b=qBLeDg6Fu/NN2iFkkCBIpm0wtLUNArxJQnuceRLYdBgJIM3UokDBgYXJh13k+lZS2POeNyL/LHE/OJvES/dlxsE+Rez53ZiTEPkB1DRLxurKwb1//eSJjMBK4GT0rT3iWapdYsoTqFnpDB+fIQNiMHlEUdkFJR+eA5P+dBYD3UQ=
+	t=1738395814; cv=none; b=GSoccp2gwM4Jn11JOE2KB6xNsg/kkwMamZH4r1ZorQyL69BskZRgg9bmY7o/FPVBoqiVHosgFSVEBsgiW/npGUUXTIlxdQrmJFFj94BgiNwxdSHURYBDu7aKzL8/r7BEB226QubVnhA6wZIzHKJtMWgYMhdUejg3BWoK1uFWVsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738395817; c=relaxed/simple;
-	bh=RseWtrW6YqihRx+zeSELljPhbWz4e7HhEQDllupFe3c=;
+	s=arc-20240116; t=1738395814; c=relaxed/simple;
+	bh=qRaFZTYFr59Obl55uqT38tSTw2eQnm7emqbE+on1bq8=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=ZYBnwOBQ/FHdQAh3KTh40Gxa5TcDc2AldNfQpNnb0wYeEf+exh2tSB7Iw6LsNsb/Iqe5Te3JMdXMmpdkTit1RMvLHB3pC6JZDaIdwy8dbp7b4UVEauoAyCLOb3n8CDtMQp0vsA7TU5I5d13TLQcuyEthL7eXSsES9u4oRUSSOOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iZGjXkAs; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=CDNfqKMqxVIMNMJ/v6LeOJWYdNdwHveKNaUFLnU3DXIl6xLCpvh+i64zKt0y68WOKaMwhCgOzgvikPL+1mLcy7yA+7Sq0GQxTHYD41vwMb1NqZs8fIPwfkuajiX6mDsgiYLIk4WCvIo7z745EzTTMxnxEjPaVKaE9QMwUxdTFJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B8HJLQtl; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iZGjXkAs"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ef85037f3bso20978417b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 23:43:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B8HJLQtl"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6f2793679ebso21418347b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 23:43:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738395815; x=1739000615; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738395811; x=1739000611; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=WurBRvDnGyHSSQ6Q0kdWu3ZKA7LBB5POS8oXLnCfa+Q=;
-        b=iZGjXkAsQ8DAYOfZWXm9Pvg5Dfp+hTWw1tFJmpEGfuqnef3EUkEfIhaEscioYeso/B
-         SRyVXVIx0LsjcT/N/MEvYF2jR8gkrSekCgsZt5eMM9ZQRUTZCVfp82Y1C13i8fy0yBfe
-         tjIXJKKtaxTs4SSAdyXzKPONtE92GN8i/K9iDgvtzbVWGFTf/oAMn/oupxd6Xwwaq6p/
-         S/peCpe2KIcZ8tOfLMcBAnqURpxkmcUDO8xCKiZrswImca3blc6IA4bEYXwtEzysoOc+
-         NbG5ND0yRD4EKC3W0dyX8YnbQ3I4fVgPB3GW+DfyLiMw2+oTlptTc1IY09s5QuNKl46W
-         /ZEg==
+        bh=v6X5iq1R4BBF0cDFJrrFYYmXTfSw/VVZ97tKfuVRWjg=;
+        b=B8HJLQtlqvChHPvQhjXCus+ApoG6pWcAMEJcyAAsODQodeDkfWoe6M89bTzW9lNqUn
+         sE6DGa+RBlXx2vK4ssUEr1k2/9rT/W91kxcFglUd716kiPldmMxANEjuLNDy6dPjmL8B
+         UY8osq4wCTtQS7LiwRofBg6DdlyTrm7NFsJoj7SsmVeJNjhzgIL5t2ESHg0CPtLdsn0b
+         JWVuh5NcX68VdD6kkLEc6cWV4X3PJtufrrUiKkx3QZNZSuYx/dO3qDDLo6147qEcTGgx
+         8X6+D3TXoKM6YoP28Xk1PnJt/0ESAn+xEnEgqjHSmb+mGOLYAupIW6iq54zRY03DTp6Z
+         6TRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738395815; x=1739000615;
+        d=1e100.net; s=20230601; t=1738395811; x=1739000611;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WurBRvDnGyHSSQ6Q0kdWu3ZKA7LBB5POS8oXLnCfa+Q=;
-        b=kna6hPMemdg44tolTMmeUJ5k5kWInwbYLJUhoqezf/J7GA3n0OwId+j49y8clcR2h7
-         3YhufwWHkJ+pLY68Jacyq0KKmLU1zo+KKkIdMylvwOEHjbAJ+SxZKExc5itH4MAScA0d
-         K5XxwjbFLcBNxr6fajhICEnM+Y7rY5yY9KPq0CRLLhqnm30h7q8se82aAebKnro526GQ
-         HzMnj5m8jE65pcnE7y321EO95afG6NJmo3itatCDSnuTdaURerpQoQw5Bo8rk0UvrEqW
-         YgP6vT2zqTiaAOtkXfLQTRYfzMIdU1zuxbCLiKVYMlG6kCzgLneygPbUzKZD2QjxZ8EX
-         DVgA==
-X-Forwarded-Encrypted: i=1; AJvYcCXE8jMZ1Zp5cmUr3KciL84erozkL/d4otZfgMv1oTYyW6OS2loMZIjmhxv84oy6zOQ+u9N8xKioLQLQOqs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBswDAATvnZRiCc4uqlIjPX70CLmUCF6T//uWN3Vd3JlB3ueDY
-	D0fT3s1GK2Nuv0pLHOOue/+Z/cvuNoEzuyZH5ZARnRmy9Bo6IocbWHwq+dnNsJdpYoE/zZlW6Gd
-	QcgMjeg==
-X-Google-Smtp-Source: AGHT+IHbG86rtBAsooTyabtcnbDhXSsOBm/aJku1DwLxPxkhIFWdnInE1Z/qgMp5bvx7Xbobm/51YzwEmnQu
+        bh=v6X5iq1R4BBF0cDFJrrFYYmXTfSw/VVZ97tKfuVRWjg=;
+        b=F831Aq8HPLrpPmNwfYHrZgZxVbPmYvmFZ3naD7Fs+YbYp8wornEjSN6iJZ1uTZrQiV
+         Z0RpUdyqxrHhczJiZakZj0y7xRlFKf5Wxi34pOUVn4zz4yNOzUvwzpRWHqCFvu18BkY4
+         dnb55PFR1NWJ2x++gB+eZCUCxxXS+SI9mxflIfLUug5YMhjd54vl2gGHPgpHe+gNgPGt
+         g9q3zRnEGlhuK2MydNuDVKlqOoxBahwWITREm7MbkW97gRQENxXgYfzEznF4ipzb8/XZ
+         8ohwKIKd9xYW2sVgeDeGKRM2GG/5iwWK43CwTP/kU4crUjQniVgcVIZu49Pi/V8WnCly
+         pshA==
+X-Forwarded-Encrypted: i=1; AJvYcCWXDPelfoSd7SQ+gAjvm9RWtE8+xCKX8eFOYeihf+6YzD6cPCiFGHDz5Ftoyq/UztrrAhhTPAIN6t3c2u0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH+8T04Cq2S/5AeGGFHFqOkyHUUyn1OXWtz1R/IpsEx8Ki+pdD
+	jh+xd7KsWgTrIEaFuA4zsQ1ot3dYwTZ+po43W6Bysl3rX7vPMg3I4UCmE7/7v/8KMpsIfYP+LK6
+	P/mpMSg==
+X-Google-Smtp-Source: AGHT+IFXDcAq9tn07/GDjI81BMRqpfOukkBuGY6eUxo9rXnS+XcqFWfZx66RcwdNH8jAhwsnyAU28KtKFAwd
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:de26:87db:e4d0:62b6])
- (user=irogers job=sendgmr) by 2002:a25:6b46:0:b0:e39:7035:60ba with SMTP id
- 3f1490d57ef6-e5ac891aab0mr35525276.4.1738395815164; Fri, 31 Jan 2025 23:43:35
- -0800 (PST)
-Date: Fri, 31 Jan 2025 23:43:20 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:b9c:b0:6eb:ac7:b4bc with SMTP id
+ 00721157ae682-6f7a831edb8mr432717b3.2.1738395810991; Fri, 31 Jan 2025
+ 23:43:30 -0800 (PST)
+Date: Fri, 31 Jan 2025 23:43:18 -0800
 In-Reply-To: <20250201074320.746259-1-irogers@google.com>
-Message-Id: <20250201074320.746259-6-irogers@google.com>
+Message-Id: <20250201074320.746259-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250201074320.746259-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Subject: [PATCH v3 5/5] perf stat: Changes to event name uniquification
+Subject: [PATCH v3 3/5] perf pmu: Rename name matching for no suffix or
+ wildcard variants
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,215 +75,598 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The existing logic would disable uniquification on an evlist or enable
-it per evsel, this is unfortunate as uniquification is most needed
-when events have the same name and so the whole evlist must be
-considered.  Change the initial disable uniquify on an evlist
-processing to also set a needs_uniquify flag, for cases like the
-matching event names. This must be done as an initial pass as
-uniquification of an event name will change the behavior of the
-check. Keep the per counter uniquification but now only uniquify event
-names when the needs_uniquify flag is set.
-
-Before this change a hwmon like temp1 wouldn't be uniquified and
-afterwards it will (ie the PMU is added to the temp1 event's name).
+Wildcard PMU naming will match a name like pmu_1 to a PMU name like
+pmu_10 but not to a PMU name like pmu_2 as the suffix forms part of
+the match. No suffix matching will match pmu_10 to either pmu_1 or
+pmu_2. Add or rename matching functions on PMU to make it clearer what
+kind of matching is being performed.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.h        |   1 +
- tools/perf/util/stat-display.c | 111 +++++++++++++++++++++++----------
- 2 files changed, 79 insertions(+), 33 deletions(-)
+ tools/perf/pmu-events/empty-pmu-events.c |   8 +-
+ tools/perf/pmu-events/jevents.py         |   8 +-
+ tools/perf/tests/pmu.c                   |  85 ++++----
+ tools/perf/util/parse-events.c           |   2 +-
+ tools/perf/util/pmu.c                    | 256 ++++++++++++++++-------
+ tools/perf/util/pmu.h                    |   5 +-
+ 6 files changed, 235 insertions(+), 129 deletions(-)
 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 2dd108a14b89..aae431d63d64 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -119,6 +119,7 @@ struct evsel {
- 	bool			errored;
- 	bool			needs_auxtrace_mmap;
- 	bool			default_metricgroup; /* A member of the Default metricgroup */
-+	bool			needs_uniquify;
- 	struct hashmap		*per_pkg_mask;
- 	int			err;
- 	int			script_output_type;
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index ba79f73e1cf5..e65c7e9f15d1 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -929,12 +929,16 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
- 	}
+diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
+index 1c7a2cfa321f..0cb7ba7912e8 100644
+--- a/tools/perf/pmu-events/empty-pmu-events.c
++++ b/tools/perf/pmu-events/empty-pmu-events.c
+@@ -422,7 +422,7 @@ int pmu_events_table__for_each_event(const struct pmu_events_table *table,
+                 const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+                 int ret;
+ 
+-                if (pmu && !pmu__name_match(pmu, pmu_name))
++                if (pmu && !perf_pmu__name_wildcard_match(pmu, pmu_name))
+                         continue;
+ 
+                 ret = pmu_events_table__for_each_event_pmu(table, table_pmu, fn, data);
+@@ -443,7 +443,7 @@ int pmu_events_table__find_event(const struct pmu_events_table *table,
+                 const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+                 int ret;
+ 
+-                if (!pmu__name_match(pmu, pmu_name))
++                if (!perf_pmu__name_wildcard_match(pmu, pmu_name))
+                         continue;
+ 
+                 ret = pmu_events_table__find_event_pmu(table, table_pmu, name, fn, data);
+@@ -462,7 +462,7 @@ size_t pmu_events_table__num_events(const struct pmu_events_table *table,
+                 const struct pmu_table_entry *table_pmu = &table->pmus[i];
+                 const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+ 
+-                if (pmu__name_match(pmu, pmu_name))
++                if (perf_pmu__name_wildcard_match(pmu, pmu_name))
+                         count += table_pmu->num_entries;
+         }
+         return count;
+@@ -581,7 +581,7 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
+                 const struct pmu_table_entry *table_pmu = &map->event_table.pmus[i];
+                 const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+ 
+-                if (pmu__name_match(pmu, pmu_name))
++                if (perf_pmu__name_wildcard_match(pmu, pmu_name))
+                          return &map->event_table;
+         }
+         return NULL;
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 3e204700b59a..7499a35bfadd 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -945,7 +945,7 @@ int pmu_events_table__for_each_event(const struct pmu_events_table *table,
+                 const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+                 int ret;
+ 
+-                if (pmu && !pmu__name_match(pmu, pmu_name))
++                if (pmu && !perf_pmu__name_wildcard_match(pmu, pmu_name))
+                         continue;
+ 
+                 ret = pmu_events_table__for_each_event_pmu(table, table_pmu, fn, data);
+@@ -966,7 +966,7 @@ int pmu_events_table__find_event(const struct pmu_events_table *table,
+                 const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+                 int ret;
+ 
+-                if (!pmu__name_match(pmu, pmu_name))
++                if (!perf_pmu__name_wildcard_match(pmu, pmu_name))
+                         continue;
+ 
+                 ret = pmu_events_table__find_event_pmu(table, table_pmu, name, fn, data);
+@@ -985,7 +985,7 @@ size_t pmu_events_table__num_events(const struct pmu_events_table *table,
+                 const struct pmu_table_entry *table_pmu = &table->pmus[i];
+                 const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+ 
+-                if (pmu__name_match(pmu, pmu_name))
++                if (perf_pmu__name_wildcard_match(pmu, pmu_name))
+                         count += table_pmu->num_entries;
+         }
+         return count;
+@@ -1104,7 +1104,7 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
+                 const struct pmu_table_entry *table_pmu = &map->event_table.pmus[i];
+                 const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+ 
+-                if (pmu__name_match(pmu, pmu_name))
++                if (perf_pmu__name_wildcard_match(pmu, pmu_name))
+                          return &map->event_table;
+         }
+         return NULL;
+diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
+index 6a681e3fb552..4a9f8e090cf4 100644
+--- a/tools/perf/tests/pmu.c
++++ b/tools/perf/tests/pmu.c
+@@ -452,9 +452,9 @@ static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __
  }
  
--static void uniquify_event_name(struct evsel *counter)
-+static void evsel__uniquify_counter(struct evsel *counter)
- {
- 	const char *name, *pmu_name;
- 	char *new_name, *config;
- 	int ret;
- 
-+	/* No uniquification necessary. */
-+	if (!counter->needs_uniquify)
-+		return;
-+
- 	/* The evsel was already uniquified. */
- 	if (counter->uniquified_name)
- 		return;
-@@ -942,19 +946,6 @@ static void uniquify_event_name(struct evsel *counter)
- 	/* Avoid checking to uniquify twice. */
- 	counter->uniquified_name = true;
- 
--	/* The evsel has a "name=" config term or is from libpfm. */
--	if (counter->use_config_name || counter->is_libpfm_event)
--		return;
--
--	/* Legacy no PMU event, don't uniquify. */
--	if  (!counter->pmu ||
--	     (counter->pmu->type < PERF_TYPE_MAX && counter->pmu->type != PERF_TYPE_RAW))
--		return;
--
--	/* A sysfs or json event replacing a legacy event, don't uniquify. */
--	if (counter->pmu->is_core && counter->alternate_hw_config != PERF_COUNT_HW_MAX)
--		return;
--
- 	name = evsel__name(counter);
- 	pmu_name = counter->pmu->name;
- 	/* Already prefixed by the PMU name. */
-@@ -993,17 +984,6 @@ static void uniquify_event_name(struct evsel *counter)
- 	}
- }
- 
--static bool hybrid_uniquify(struct evsel *evsel, struct perf_stat_config *config)
--{
--	return evsel__is_hybrid(evsel) && !config->hybrid_merge;
--}
--
--static void uniquify_counter(struct perf_stat_config *config, struct evsel *counter)
--{
--	if (config->aggr_mode == AGGR_NONE || hybrid_uniquify(counter, config))
--		uniquify_event_name(counter);
--}
--
  /**
-  * should_skip_zero_count() - Check if the event should print 0 values.
-  * @config: The perf stat configuration (including aggregation mode).
-@@ -1089,7 +1069,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 	if (counter->merged_stat)
- 		return;
- 
--	uniquify_counter(config, counter);
-+	evsel__uniquify_counter(counter);
- 
- 	val = aggr->counts.val;
- 	ena = aggr->counts.ena;
-@@ -1670,7 +1650,8 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
- 		print_metric_end(config, os);
- }
- 
--static void disable_uniquify(struct evlist *evlist)
-+/* Should uniquify be disabled for the evlist? */
-+static bool evlist__disable_uniquify(const struct evlist *evlist)
- {
- 	struct evsel *counter;
- 	struct perf_pmu *last_pmu = NULL;
-@@ -1679,20 +1660,84 @@ static void disable_uniquify(struct evlist *evlist)
- 	evlist__for_each_entry(evlist, counter) {
- 		/* If PMUs vary then uniquify can be useful. */
- 		if (!first && counter->pmu != last_pmu)
--			return;
-+			return false;
- 		first = false;
- 		if (counter->pmu) {
- 			/* Allow uniquify for uncore PMUs. */
- 			if (!counter->pmu->is_core)
--				return;
-+				return false;
- 			/* Keep hybrid event names uniquified for clarity. */
- 			if (perf_pmus__num_core_pmus() > 1)
--				return;
-+				return false;
-+		}
-+	}
-+	return true;
-+}
-+
-+static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_config *config)
-+{
-+	struct evsel *evsel;
-+
-+	if (counter->merged_stat) {
-+		/* Counter won't be shown. */
-+		return;
-+	}
-+
-+	if (counter->use_config_name || counter->is_libpfm_event) {
-+		/* Original name will be used. */
-+		return;
-+	}
-+
-+	if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.attr.type != PERF_TYPE_RAW) {
-+		/* Legacy event, don't uniquify. */
-+		return;
-+	}
-+
-+	if (counter->pmu && counter->pmu->is_core &&
-+	    counter->alternate_hw_config != PERF_COUNT_HW_MAX) {
-+		/* A sysfs or json event replacing a legacy event, don't uniquify. */
-+		return;
-+	}
-+
-+	if (config->aggr_mode == AGGR_NONE) {
-+		/* Always unique with no aggregation. */
-+		counter->needs_uniquify = true;
-+		return;
-+	}
-+
-+	if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
-+		/* Unique hybrid counters necessary. */
-+		counter->needs_uniquify = true;
-+		return;
-+	}
-+
-+	/*
-+	 * Do other non-merged events in the evlist have the same name? If so
-+	 * uniquify is necessary.
-+	 */
-+	evlist__for_each_entry(counter->evlist, evsel) {
-+		if (evsel == counter || evsel->merged_stat)
-+			continue;
-+
-+		if (evsel__name_is(counter, evsel__name(evsel))) {
-+			counter->needs_uniquify = true;
-+			return;
- 		}
- 	}
--	evlist__for_each_entry_continue(evlist, counter) {
--		counter->uniquified_name = true;
-+}
-+
-+static void evlist__set_needs_uniquify(struct evlist *evlist, const struct perf_stat_config *config)
-+{
-+	struct evsel *counter;
-+
-+	if (evlist__disable_uniquify(evlist)) {
-+		evlist__for_each_entry(evlist, counter)
-+			counter->uniquified_name = true;
-+		return;
- 	}
-+
-+	evlist__for_each_entry(evlist, counter)
-+		evsel__set_needs_uniquify(counter, config);
- }
- 
- void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *config,
-@@ -1706,7 +1751,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
- 		.first = true,
+- * Test perf_pmu__match() that's used to search for a PMU given a name passed
++ * Test perf_pmu__wildcard_match() that's used to search for a PMU given a name passed
+  * on the command line. The name that's passed may also be a filename type glob
+- * match. If the name does not match, perf_pmu__match() attempts to match the
++ * match. If the name does not match, perf_pmu__wildcard_match() attempts to match the
+  * alias of the PMU, if provided.
+  */
+ static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+@@ -463,41 +463,44 @@ static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest _
+ 		.name = "pmuname",
  	};
  
--	disable_uniquify(evlist);
-+	evlist__set_needs_uniquify(evlist, config);
+-	TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu, "pmuname"),	     true);
+-	TEST_ASSERT_EQUAL("Longer token", perf_pmu__match(&test_pmu, "longertoken"), false);
+-	TEST_ASSERT_EQUAL("Shorter token", perf_pmu__match(&test_pmu, "pmu"),	     false);
++#define TEST_PMU_MATCH(msg, to_match, expect)				\
++	TEST_ASSERT_EQUAL(msg, perf_pmu__wildcard_match(&test_pmu, to_match), expect)
++
++	TEST_PMU_MATCH("Exact match", "pmuname", true);
++	TEST_PMU_MATCH("Longer token", "longertoken", false);
++	TEST_PMU_MATCH("Shorter token", "pmu", false);
  
- 	if (config->iostat_run)
- 		evlist->selected = evlist__first(evlist);
+ 	test_pmu.name = "pmuname_10";
+-	TEST_ASSERT_EQUAL("Diff suffix_", perf_pmu__match(&test_pmu, "pmuname_2"),  false);
+-	TEST_ASSERT_EQUAL("Sub suffix_",  perf_pmu__match(&test_pmu, "pmuname_1"),  true);
+-	TEST_ASSERT_EQUAL("Same suffix_", perf_pmu__match(&test_pmu, "pmuname_10"), true);
+-	TEST_ASSERT_EQUAL("No suffix_",   perf_pmu__match(&test_pmu, "pmuname"),    true);
+-	TEST_ASSERT_EQUAL("Underscore_",  perf_pmu__match(&test_pmu, "pmuname_"),   true);
+-	TEST_ASSERT_EQUAL("Substring_",   perf_pmu__match(&test_pmu, "pmuna"),      false);
++	TEST_PMU_MATCH("Diff suffix_", "pmuname_2", false);
++	TEST_PMU_MATCH("Sub suffix_", "pmuname_1", true);
++	TEST_PMU_MATCH("Same suffix_", "pmuname_10", true);
++	TEST_PMU_MATCH("No suffix_", "pmuname", true);
++	TEST_PMU_MATCH("Underscore_", "pmuname_", true);
++	TEST_PMU_MATCH("Substring_", "pmuna", false);
+ 
+ 	test_pmu.name = "pmuname_ab23";
+-	TEST_ASSERT_EQUAL("Diff suffix hex_", perf_pmu__match(&test_pmu, "pmuname_2"),    false);
+-	TEST_ASSERT_EQUAL("Sub suffix hex_",  perf_pmu__match(&test_pmu, "pmuname_ab"),   true);
+-	TEST_ASSERT_EQUAL("Same suffix hex_", perf_pmu__match(&test_pmu, "pmuname_ab23"), true);
+-	TEST_ASSERT_EQUAL("No suffix hex_",   perf_pmu__match(&test_pmu, "pmuname"),      true);
+-	TEST_ASSERT_EQUAL("Underscore hex_",  perf_pmu__match(&test_pmu, "pmuname_"),     true);
+-	TEST_ASSERT_EQUAL("Substring hex_",   perf_pmu__match(&test_pmu, "pmuna"),	 false);
++	TEST_PMU_MATCH("Diff suffix hex_", "pmuname_2", false);
++	TEST_PMU_MATCH("Sub suffix hex_", "pmuname_ab", true);
++	TEST_PMU_MATCH("Same suffix hex_", "pmuname_ab23", true);
++	TEST_PMU_MATCH("No suffix hex_", "pmuname", true);
++	TEST_PMU_MATCH("Underscore hex_", "pmuname_", true);
++	TEST_PMU_MATCH("Substring hex_", "pmuna", false);
+ 
+ 	test_pmu.name = "pmuname10";
+-	TEST_ASSERT_EQUAL("Diff suffix", perf_pmu__match(&test_pmu, "pmuname2"),  false);
+-	TEST_ASSERT_EQUAL("Sub suffix",  perf_pmu__match(&test_pmu, "pmuname1"),  true);
+-	TEST_ASSERT_EQUAL("Same suffix", perf_pmu__match(&test_pmu, "pmuname10"), true);
+-	TEST_ASSERT_EQUAL("No suffix",   perf_pmu__match(&test_pmu, "pmuname"),   true);
+-	TEST_ASSERT_EQUAL("Underscore",  perf_pmu__match(&test_pmu, "pmuname_"),  false);
+-	TEST_ASSERT_EQUAL("Substring",   perf_pmu__match(&test_pmu, "pmuna"),     false);
++	TEST_PMU_MATCH("Diff suffix", "pmuname2", false);
++	TEST_PMU_MATCH("Sub suffix", "pmuname1", true);
++	TEST_PMU_MATCH("Same suffix", "pmuname10", true);
++	TEST_PMU_MATCH("No suffix", "pmuname", true);
++	TEST_PMU_MATCH("Underscore", "pmuname_", false);
++	TEST_PMU_MATCH("Substring", "pmuna", false);
+ 
+ 	test_pmu.name = "pmunameab23";
+-	TEST_ASSERT_EQUAL("Diff suffix hex", perf_pmu__match(&test_pmu, "pmuname2"),    false);
+-	TEST_ASSERT_EQUAL("Sub suffix hex",  perf_pmu__match(&test_pmu, "pmunameab"),   true);
+-	TEST_ASSERT_EQUAL("Same suffix hex", perf_pmu__match(&test_pmu, "pmunameab23"), true);
+-	TEST_ASSERT_EQUAL("No suffix hex",   perf_pmu__match(&test_pmu, "pmuname"),     true);
+-	TEST_ASSERT_EQUAL("Underscore hex",  perf_pmu__match(&test_pmu, "pmuname_"),    false);
+-	TEST_ASSERT_EQUAL("Substring hex",   perf_pmu__match(&test_pmu, "pmuna"),	false);
++	TEST_PMU_MATCH("Diff suffix hex", "pmuname2", false);
++	TEST_PMU_MATCH("Sub suffix hex", "pmunameab", true);
++	TEST_PMU_MATCH("Same suffix hex", "pmunameab23", true);
++	TEST_PMU_MATCH("No suffix hex", "pmuname", true);
++	TEST_PMU_MATCH("Underscore hex", "pmuname_", false);
++	TEST_PMU_MATCH("Substring hex",   "pmuna", false);
+ 
+ 	/*
+ 	 * 2 hex chars or less are not considered suffixes so it shouldn't be
+@@ -505,7 +508,7 @@ static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest _
+ 	 * false results here than above.
+ 	 */
+ 	test_pmu.name = "pmuname_a3";
+-	TEST_ASSERT_EQUAL("Diff suffix 2 hex_", perf_pmu__match(&test_pmu, "pmuname_2"),  false);
++	TEST_PMU_MATCH("Diff suffix 2 hex_", "pmuname_2", false);
+ 	/*
+ 	 * This one should be false, but because pmuname_a3 ends in 3 which is
+ 	 * decimal, it's not possible to determine if it's a short hex suffix or
+@@ -513,19 +516,19 @@ static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest _
+ 	 * length of decimal suffix. Run the test anyway and expect the wrong
+ 	 * result. And slightly fuzzy matching shouldn't do too much harm.
+ 	 */
+-	TEST_ASSERT_EQUAL("Sub suffix 2 hex_",  perf_pmu__match(&test_pmu, "pmuname_a"),  true);
+-	TEST_ASSERT_EQUAL("Same suffix 2 hex_", perf_pmu__match(&test_pmu, "pmuname_a3"), true);
+-	TEST_ASSERT_EQUAL("No suffix 2 hex_",   perf_pmu__match(&test_pmu, "pmuname"),    false);
+-	TEST_ASSERT_EQUAL("Underscore 2 hex_",  perf_pmu__match(&test_pmu, "pmuname_"),   false);
+-	TEST_ASSERT_EQUAL("Substring 2 hex_",   perf_pmu__match(&test_pmu, "pmuna"),	  false);
++	TEST_PMU_MATCH("Sub suffix 2 hex_", "pmuname_a", true);
++	TEST_PMU_MATCH("Same suffix 2 hex_", "pmuname_a3", true);
++	TEST_PMU_MATCH("No suffix 2 hex_", "pmuname", false);
++	TEST_PMU_MATCH("Underscore 2 hex_", "pmuname_", false);
++	TEST_PMU_MATCH("Substring 2 hex_", "pmuna", false);
+ 
+ 	test_pmu.name = "pmuname_5";
+-	TEST_ASSERT_EQUAL("Glob 1", perf_pmu__match(&test_pmu, "pmu*"),		   true);
+-	TEST_ASSERT_EQUAL("Glob 2", perf_pmu__match(&test_pmu, "nomatch*"),	   false);
+-	TEST_ASSERT_EQUAL("Seq 1",  perf_pmu__match(&test_pmu, "pmuname_[12345]"), true);
+-	TEST_ASSERT_EQUAL("Seq 2",  perf_pmu__match(&test_pmu, "pmuname_[67890]"), false);
+-	TEST_ASSERT_EQUAL("? 1",    perf_pmu__match(&test_pmu, "pmuname_?"),	   true);
+-	TEST_ASSERT_EQUAL("? 2",    perf_pmu__match(&test_pmu, "pmuname_1?"),	   false);
++	TEST_PMU_MATCH("Glob 1", "pmu*", true);
++	TEST_PMU_MATCH("Glob 2", "nomatch*", false);
++	TEST_PMU_MATCH("Seq 1", "pmuname_[12345]", true);
++	TEST_PMU_MATCH("Seq 2", "pmuname_[67890]", false);
++	TEST_PMU_MATCH("? 1", "pmuname_?", true);
++	TEST_PMU_MATCH("? 2", "pmuname_1?", false);
+ 
+ 	return TEST_OK;
+ }
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 1e23faa364b1..6c36b98875bc 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1660,7 +1660,7 @@ int parse_events_multi_pmu_add_or_add_pmu(struct parse_events_state *parse_state
+ 	/* Failed to add, try wildcard expansion of event_or_pmu as a PMU name. */
+ 	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+ 		if (!parse_events__filter_pmu(parse_state, pmu) &&
+-		    perf_pmu__match(pmu, event_or_pmu)) {
++		    perf_pmu__wildcard_match(pmu, event_or_pmu)) {
+ 			bool auto_merge_stats = perf_pmu__auto_merge_stats(pmu);
+ 
+ 			if (!parse_events_add_pmu(parse_state, *listp, pmu,
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 6206c8fe2bf9..c2a15b0259cf 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -847,21 +847,23 @@ static size_t pmu_deduped_name_len(const struct perf_pmu *pmu, const char *name,
+ }
+ 
+ /**
+- * perf_pmu__match_ignoring_suffix - Does the pmu_name match tok ignoring any
+- *                                   trailing suffix? The Suffix must be in form
+- *                                   tok_{digits}, or tok{digits}.
++ * perf_pmu__match_wildcard - Does the pmu_name start with tok and is then only
++ *                            followed by nothing or a suffix? tok may contain
++ *                            part of a suffix.
+  * @pmu_name: The pmu_name with possible suffix.
+- * @tok: The possible match to pmu_name without suffix.
++ * @tok: The wildcard argument to match.
+  */
+-static bool perf_pmu__match_ignoring_suffix(const char *pmu_name, const char *tok)
++static bool perf_pmu__match_wildcard(const char *pmu_name, const char *tok)
+ {
+ 	const char *p, *suffix;
+ 	bool has_hex = false;
++	size_t tok_len = strlen(tok);
+ 
+-	if (strncmp(pmu_name, tok, strlen(tok)))
++	/* Check start of pmu_name for equality. */
++	if (strncmp(pmu_name, tok, tok_len))
+ 		return false;
+ 
+-	suffix = p = pmu_name + strlen(tok);
++	suffix = p = pmu_name + tok_len;
+ 	if (*p == 0)
+ 		return true;
+ 
+@@ -887,60 +889,84 @@ static bool perf_pmu__match_ignoring_suffix(const char *pmu_name, const char *to
+ }
+ 
+ /**
+- * pmu_uncore_alias_match - does name match the PMU name?
+- * @pmu_name: the json struct pmu_event name. This may lack a suffix (which
++ * perf_pmu__match_ignoring_suffix_uncore - Does the pmu_name match tok ignoring
++ *                                          any trailing suffix on pmu_name and
++ *                                          tok?  The Suffix must be in form
++ *                                          tok_{digits}, or tok{digits}.
++ * @pmu_name: The pmu_name with possible suffix.
++ * @tok: The possible match to pmu_name.
++ */
++static bool perf_pmu__match_ignoring_suffix_uncore(const char *pmu_name, const char *tok)
++{
++	size_t pmu_name_len, tok_len;
++
++	/* For robustness, check for NULL. */
++	if (pmu_name == NULL)
++		return tok == NULL;
++
++	/* uncore_ prefixes are ignored. */
++	if (!strncmp(pmu_name, "uncore_", 7))
++		pmu_name += 7;
++	if (!strncmp(tok, "uncore_", 7))
++		tok += 7;
++
++	pmu_name_len = pmu_name_len_no_suffix(pmu_name);
++	tok_len = pmu_name_len_no_suffix(tok);
++	if (pmu_name_len != tok_len)
++		return false;
++
++	return strncmp(pmu_name, tok, pmu_name_len) == 0;
++}
++
++
++/**
++ * perf_pmu__match_wildcard_uncore - does to_match match the PMU's name?
++ * @pmu_name: The pmu->name or pmu->alias to match against.
++ * @to_match: the json struct pmu_event name. This may lack a suffix (which
+  *            matches) or be of the form "socket,pmuname" which will match
+  *            "socketX_pmunameY".
+- * @name: a real full PMU name as from sysfs.
+  */
+-static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
++static bool perf_pmu__match_wildcard_uncore(const char *pmu_name, const char *to_match)
+ {
+-	char *tmp = NULL, *tok, *str;
+-	bool res;
+-
+-	if (strchr(pmu_name, ',') == NULL)
+-		return perf_pmu__match_ignoring_suffix(name, pmu_name);
++	char *mutable_to_match, *tok, *tmp;
+ 
+-	str = strdup(pmu_name);
+-	if (!str)
++	if (!pmu_name)
+ 		return false;
+ 
+-	/*
+-	 * uncore alias may be from different PMU with common prefix
+-	 */
+-	tok = strtok_r(str, ",", &tmp);
+-	if (strncmp(pmu_name, tok, strlen(tok))) {
+-		res = false;
+-		goto out;
+-	}
++	/* uncore_ prefixes are ignored. */
++	if (!strncmp(pmu_name, "uncore_", 7))
++		pmu_name += 7;
++	if (!strncmp(to_match, "uncore_", 7))
++		to_match += 7;
+ 
+-	/*
+-	 * Match more complex aliases where the alias name is a comma-delimited
+-	 * list of tokens, orderly contained in the matching PMU name.
+-	 *
+-	 * Example: For alias "socket,pmuname" and PMU "socketX_pmunameY", we
+-	 *	    match "socket" in "socketX_pmunameY" and then "pmuname" in
+-	 *	    "pmunameY".
+-	 */
+-	while (1) {
+-		char *next_tok = strtok_r(NULL, ",", &tmp);
++	if (strchr(to_match, ',') == NULL)
++		return perf_pmu__match_wildcard(pmu_name, to_match);
+ 
+-		name = strstr(name, tok);
+-		if (!name ||
+-		    (!next_tok && !perf_pmu__match_ignoring_suffix(name, tok))) {
+-			res = false;
+-			goto out;
++	/* Process comma separated list of PMU name components. */
++	mutable_to_match = strdup(to_match);
++	if (!mutable_to_match)
++		return false;
++
++	tok = strtok_r(mutable_to_match, ",", &tmp);
++	while (tok) {
++		size_t tok_len = strlen(tok);
++
++		if (strncmp(pmu_name, tok, tok_len)) {
++			/* Mismatch between part of pmu_name and tok. */
++			free(mutable_to_match);
++			return false;
+ 		}
+-		if (!next_tok)
+-			break;
+-		tok = next_tok;
+-		name += strlen(tok);
++		/* Move pmu_name forward over tok and suffix. */
++		pmu_name += tok_len;
++		while (*pmu_name != '\0' && isdigit(*pmu_name))
++			pmu_name++;
++		if (*pmu_name == '_')
++			pmu_name++;
++
++		tok = strtok_r(NULL, ",", &tmp);
+ 	}
+-
+-	res = true;
+-out:
+-	free(str);
+-	return res;
++	free(mutable_to_match);
++	return *pmu_name == '\0';
+ }
+ 
+ bool pmu_uncore_identifier_match(const char *compat, const char *id)
+@@ -1003,11 +1029,19 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
+ {
+ 	struct perf_pmu *pmu = vdata;
+ 
+-	if (!pe->compat || !pe->pmu)
++	if (!pe->compat || !pe->pmu) {
++		/* No data to match. */
+ 		return 0;
++	}
++
++	if (!perf_pmu__match_wildcard_uncore(pmu->name, pe->pmu) &&
++	    !perf_pmu__match_wildcard_uncore(pmu->alias_name, pe->pmu)) {
++		/* PMU name/alias_name don't match. */
++		return 0;
++	}
+ 
+-	if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
+-	    pmu_uncore_identifier_match(pe->compat, pmu->id)) {
++	if (pmu_uncore_identifier_match(pe->compat, pmu->id)) {
++		/* Id matched. */
+ 		perf_pmu__new_alias(pmu,
+ 				pe->name,
+ 				pe->desc,
+@@ -1016,7 +1050,6 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
+ 				pe,
+ 				EVENT_SRC_SYS_JSON);
+ 	}
+-
+ 	return 0;
+ }
+ 
+@@ -1974,15 +2007,82 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+ 	return ret;
+ }
+ 
+-bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name)
++static bool perf_pmu___name_match(const struct perf_pmu *pmu, const char *to_match, bool wildcard)
+ {
+-	return !strcmp(pmu->name, pmu_name) ||
+-		(pmu->is_uncore && pmu_uncore_alias_match(pmu_name, pmu->name)) ||
++	const char *names[2] = {
++		pmu->name,
++		pmu->alias_name,
++	};
++	if (pmu->is_core) {
++		for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
++			const char *name = names[i];
++
++			if (!name)
++				continue;
++
++			if (!strcmp(name, to_match)) {
++				/* Exact name match. */
++				return true;
++			}
++		}
++		if (!strcmp(to_match, "default_core")) {
++			/*
++			 * jevents and tests use default_core as a marker for any core
++			 * PMU as the PMU name varies across architectures.
++			 */
++			return true;
++		}
++		return false;
++	}
++	if (!pmu->is_uncore) {
+ 		/*
+-		 * jevents and tests use default_core as a marker for any core
+-		 * PMU as the PMU name varies across architectures.
++		 * PMU isn't core or uncore, some kind of broken CPU mask
++		 * situation. Only match exact name.
+ 		 */
+-	        (pmu->is_core && !strcmp(pmu_name, "default_core"));
++		for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
++			const char *name = names[i];
++
++			if (!name)
++				continue;
++
++			if (!strcmp(name, to_match)) {
++				/* Exact name match. */
++				return true;
++			}
++		}
++		return false;
++	}
++	for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
++		const char *name = names[i];
++
++		if (wildcard && perf_pmu__match_wildcard_uncore(name, to_match))
++			return true;
++		if (!wildcard && perf_pmu__match_ignoring_suffix_uncore(name, to_match))
++			return true;
++	}
++	return false;
++}
++
++/**
++ * perf_pmu__name_wildcard_match - Called by the jevents generated code to see
++ *                                 if pmu matches the json to_match string.
++ * @pmu: The pmu whose name/alias to match.
++ * @to_match: The possible match to pmu_name.
++ */
++bool perf_pmu__name_wildcard_match(const struct perf_pmu *pmu, const char *to_match)
++{
++	return perf_pmu___name_match(pmu, to_match, /*wildcard=*/true);
++}
++
++/**
++ * perf_pmu__name_no_suffix_match - Does pmu's name match to_match ignoring any
++ *                                  trailing suffix on the pmu_name and/or tok?
++ * @pmu: The pmu whose name/alias to match.
++ * @to_match: The possible match to pmu_name.
++ */
++bool perf_pmu__name_no_suffix_match(const struct perf_pmu *pmu, const char *to_match)
++{
++	return perf_pmu___name_match(pmu, to_match, /*wildcard=*/false);
+ }
+ 
+ bool perf_pmu__is_software(const struct perf_pmu *pmu)
+@@ -2229,29 +2329,31 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
+ 		   name ?: "N/A", buf, config_name, config);
+ }
+ 
+-bool perf_pmu__match(const struct perf_pmu *pmu, const char *tok)
++bool perf_pmu__wildcard_match(const struct perf_pmu *pmu, const char *wildcard_to_match)
+ {
+-	const char *name = pmu->name;
+-	bool need_fnmatch = strisglob(tok);
++	const char *names[2] = {
++		pmu->name,
++		pmu->alias_name,
++	};
++	bool need_fnmatch = strisglob(wildcard_to_match);
+ 
+-	if (!strncmp(tok, "uncore_", 7))
+-		tok += 7;
+-	if (!strncmp(name, "uncore_", 7))
+-		name += 7;
++	if (!strncmp(wildcard_to_match, "uncore_", 7))
++		wildcard_to_match += 7;
+ 
+-	if (perf_pmu__match_ignoring_suffix(name, tok) ||
+-	    (need_fnmatch && !fnmatch(tok, name, 0)))
+-		return true;
++	for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
++		const char *pmu_name = names[i];
+ 
+-	name = pmu->alias_name;
+-	if (!name)
+-		return false;
++		if (!pmu_name)
++			continue;
+ 
+-	if (!strncmp(name, "uncore_", 7))
+-		name += 7;
++		if (!strncmp(pmu_name, "uncore_", 7))
++			pmu_name += 7;
+ 
+-	return perf_pmu__match_ignoring_suffix(name, tok) ||
+-		(need_fnmatch && !fnmatch(tok, name, 0));
++		if (perf_pmu__match_wildcard(pmu_name, wildcard_to_match) ||
++		    (need_fnmatch && !fnmatch(wildcard_to_match, pmu_name, 0)))
++			return true;
++	}
++	return false;
+ }
+ 
+ int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size)
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index edd36c20aedc..f5306428c03f 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -240,7 +240,8 @@ bool perf_pmu__have_event(struct perf_pmu *pmu, const char *name);
+ size_t perf_pmu__num_events(struct perf_pmu *pmu);
+ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+ 			     void *state, pmu_event_callback cb);
+-bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name);
++bool perf_pmu__name_wildcard_match(const struct perf_pmu *pmu, const char *to_match);
++bool perf_pmu__name_no_suffix_match(const struct perf_pmu *pmu, const char *to_match);
+ 
+ /**
+  * perf_pmu_is_software - is the PMU a software PMU as in it uses the
+@@ -275,7 +276,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
+ 				   const char *config_name);
+ void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu);
+ 
+-bool perf_pmu__match(const struct perf_pmu *pmu, const char *tok);
++bool perf_pmu__wildcard_match(const struct perf_pmu *pmu, const char *wildcard_to_match);
+ 
+ int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size);
+ int perf_pmu__pathname_scnprintf(char *buf, size_t size,
 -- 
 2.48.1.362.g079036d154-goog
 
