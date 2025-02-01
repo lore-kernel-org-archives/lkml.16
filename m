@@ -1,254 +1,289 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216CF182;
-	Sat,  1 Feb 2025 19:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073EB182
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 19:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738437544; cv=none; b=Spsk5W+gJwGHMC1kgU+QE4VZcf/rw3+DsWTF1ntV1lqwBjm3z/OhDzySdgu5Vd+9NKsrLV0oxk5hqnvy9AeNXrMtxHxI35flrmvh3aVngXcIMHDJHFrBTEf73NH+QhvLqksrdG2nyc4E6nlZqDdok68kp66H+km1CsT3FasyBR0=
+	t=1738437708; cv=none; b=l9ay3kDl10XuyPp5NoPJkrm+KM8iMZ/+EWWG4fGKIbUMPd4hhVLuoP/yhIzmJqFtn4JlwOz0F2XLjCow4uhBftsOORIWNGykAKuzKabYxCTmb/5s5sXLgIL6+X+4j7/99h743wtZjwYdf0VpTQg/ma1nXIF3TaIok0ZCnsQfSXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738437544; c=relaxed/simple;
-	bh=lp0QGKLKUGfNNosyKXN0Q73Mzcbu/P4DmB5Aecyw7QM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eOOHzK++hTbe+ud3jhM1YlLlq5p94Uyu88er2b7Ny/5OVZ2NvzOJG+J7PPmtS3Sh6W8RAwvODWqjCFsbglXrMko6fdUd5wiRZhThBYrGmuEVaNeSWYnuMSEo1QPIZuBek5Pkr+xo0zWT5299neCmkU1jIeA5PtCBucc6j98sVMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from ip-037-201-212-008.um10.pools.vodafone-ip.de ([37.201.212.8] helo=martin-debian-3.kaiser.cx)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <martin@kaiser.cx>)
-	id 1teIOe-002cWg-2j;
-	Sat, 01 Feb 2025 19:39:12 +0100
-From: Martin Kaiser <martin@kaiser.cx>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Kamlesh Gurudasani <kamlesh@ti.com>,
-	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH v2] hwrng: imx-rngc - add runtime pm
-Date: Sat,  1 Feb 2025 19:39:07 +0100
-Message-Id: <20250201183907.82570-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250118160701.32624-1-martin@kaiser.cx>
-References: <20250118160701.32624-1-martin@kaiser.cx>
+	s=arc-20240116; t=1738437708; c=relaxed/simple;
+	bh=KP7BAj4tnKV75Qb0cyvNolqU2y3N1iuyZnblnUzgyZc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W0G4HiMJhbKn2qkFEKZjP6sqwFupJFPaPB8trn46eWjVV53wngy2MvYcsOxhpWtXnbIbU+b4Brm6EU/tCE/x5OIc6oSweS85IgbIfLyTjUz8RAUNYg+HmD9WpHZt1qS3GsmZW+tXAnAlKVTdfWVdEbCTcSrYP5if0lnMyBOoPWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xcL19mnS; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xcL19mnS"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-467896541e1so186731cf.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 11:21:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738437706; x=1739042506; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Q4abMtFigScZcn+bs2Q2T1g/EWKhoP7a7r42KNczLk=;
+        b=xcL19mnS8qsdx3X/BH5hq6t3RDvqyONJSXjN7X/m19egqbw8FtRiBMwqG+jnQ2LyTv
+         TxuElnymxvrbpnr5VH/ef2fZQ6knvvQC/ZPuCd5EAb3qo/Fxo4ZdURI9ggj6W8Fl5Hev
+         GmtSbTpqevXglPy98VBqbaTbudiShwuSH78s1hC2Q/AU5iKMirdk8Vzl7Kh94SH2c2T3
+         2bjf9NcRgpfYnSPpTDyYiifX3K3h3fshHzivijAhlgJqliwVEWUUR41pQWS2cg4nRo3j
+         BZLsIs/YifptAxuC5z5guFnNgXUY+I+q8iZ2dPHhcMxg8OnG6tSf/oCuJ/0IHcrh3TPa
+         SWWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738437706; x=1739042506;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0Q4abMtFigScZcn+bs2Q2T1g/EWKhoP7a7r42KNczLk=;
+        b=RgXtZ7cmk8Z0hhptJ3EqqxR9Noa6M18j5YsbU04H+0NeN8+5dFcagWKdyYMJLt07U4
+         38fiAekLtrkHaJCFBTvyMpoum05MlGkuwrY9eQL+rd9qokshzxb1KtU2pFivd/oYp74b
+         pZ8Lc/INh3B1+EOoBNYjB77TKxGlx2FIsvjLE4p/1IpkCnuFIO9kCO1A4ZWIrntirRdS
+         MjF/ZqufkYG04XnWszNS5ST3PoHm6YXBpy7G/zhYlGs6Hh7UxFGDpuGP3vh3ry0c6CaM
+         Z96UDIfY61KY4JVoncADrZP94u+GUEWP0iQxoZCN+NLOKqeLCHJlRDJGIr5GIS/fvwga
+         PbBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1qmm3y6DjlaScqMxsvoDvv2jEO+oQ4QG3/TH9vHyxAYQYyEGZF+DD/3o8Dm1DhwOkWnnWhmgMU0rf67A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1TFQUTYRdZYtk/EnHJeuB+6vhDf4IC3M2sLG4kSzOc+lH1wzQ
+	tqYljpAdCMzdjtfIcaltkf2n2nawrobMQvqUSHKghOKk6h2sNqw/o/j+SSArDYSF3GgNfIKQ4Ct
+	uTBtAwHACtRPJ3QvFCG1BJfKDoBfms1BkepF8
+X-Gm-Gg: ASbGncthQmWgFVFSCfUjzl4OLPD/0fup0mjvAC6ShyJ76Wj9awbW6Z2dgwdF92036bl
+	8QCbYYCjD80c1qseEuf1rtrt5TJFAPtDoqkbT5OrFmtskyk99yN8tQA4c8N2Kz3TQ+h2aXDBz
+X-Google-Smtp-Source: AGHT+IH6iU7oK11joDMO6qr0cc+4zoE84MbudCftX0eHkm9Wab8JGiZzC5yRPPAaY3LrkBPoh9sQJsZJldHWbFL5a1g=
+X-Received: by 2002:a05:622a:6098:b0:46c:7d66:557f with SMTP id
+ d75a77b69052e-46ff8713f96mr1834641cf.8.1738437705448; Sat, 01 Feb 2025
+ 11:21:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <202501310832.kiAeOt2z-lkp@intel.com> <CAJuCfpGrtTK=reeVPrS+GQngs=WS-cZvy_YU9-JGyRgVFdofAw@mail.gmail.com>
+ <CAJuCfpF56btBuHKn6j2SzY8KRUbjQ_oHCYtj5oqP88HBBBQ_3A@mail.gmail.com>
+In-Reply-To: <CAJuCfpF56btBuHKn6j2SzY8KRUbjQ_oHCYtj5oqP88HBBBQ_3A@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Sat, 1 Feb 2025 11:21:34 -0800
+X-Gm-Features: AWEUYZnHN5eMAAaN6d5V0pKMqCk98IC6fVNOKYum3DnDnjgJPVRAT21sISprZro
+Message-ID: <CAJuCfpExBhWxWdj3G-uQXA8HA-+ES6y=sz2H4eeze4xw4snYZg@mail.gmail.com>
+Subject: Re: drivers/auxdisplay/panel.c:1454:2: error: call to
+ __compiletime_assert_309 declared with 'error' attribute: BUILD_BUG_ON
+ failed: !__builtin_constant_p(_dest_len) || _dest_len == (size_t)-1
+To: kernel test robot <lkp@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Linux Memory Management List <linux-mm@kvack.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Kees Cook <keescook@chromium.org>, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add runtime power management to the imx-rngc driver. Disable the
-peripheral clock when the rngc is idle.
+On Fri, Jan 31, 2025 at 2:51=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Fri, Jan 31, 2025 at 8:55=E2=80=AFAM Suren Baghdasaryan <surenb@google=
+.com> wrote:
+> >
+> > On Thu, Jan 30, 2025 at 4:06=E2=80=AFPM kernel test robot <lkp@intel.co=
+m> wrote:
+> > >
+> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
+x.git master
+> > > head:   b4b0881156fb8209bf5ef6cb63211bb0ad6e1a6b
+> > > commit: 07438779313caafe52ac1a1a6958d735a5938988 alloc_tag: avoid cur=
+rent->alloc_tag manipulations when profiling is disabled
+> > > date:   5 days ago
+> > > config: hexagon-randconfig-r133-20250131 (https://download.01.org/0da=
+y-ci/archive/20250131/202501310832.kiAeOt2z-lkp@intel.com/config)
+> > > compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project =
+f28c006a5895fc0e329fe15fead81e37457cb1d1)
+> > > reproduce: (https://download.01.org/0day-ci/archive/20250131/20250131=
+0832.kiAeOt2z-lkp@intel.com/reproduce)
+> >
+> > Just saw this report (was on vacation). Will try to figure out what's g=
+oing on.
+>
+> I confirmed that my change at
+> https://lore.kernel.org/all/20241226211639.1357704-1-surenb@google.com
+> indeed causes this.
+> Looks like due to the additional mem_alloc_profiling_enabled() check,
+> the compiler considers allocation size as unknown at compile time
+> (__builtin_object_size(obj) returns -1) even though both branches of
+> that condition make the same exact allocation.
+> I tried changing it to:
+>
+> #define alloc_hooks_tag(_tag, _do_alloc) \
+> ({ \
+>         typeof(_do_alloc) _res; \
+>         struct alloc_tag * __maybe_unused _old; \
+>          if (mem_alloc_profiling_enabled()) \
+>                 _old =3D alloc_tag_save(_tag); \
+>         _res =3D _do_alloc; \
+>          if (mem_alloc_profiling_enabled()) \
+>                  alloc_tag_restore(_tag, _old); \
+>         _res; \
+> })
+>
+> and that fixes the problem, however this would require two static key
+> checks... I wonder if there is a way to tell the compiler that both
+> branches cause the same result. Let me dig around.
 
-The callback functions from struct hwrng wake the rngc up when they're
-called and set it to idle on exit. Helper functions which are invoked
-from the callbacks assume that the rngc is active.
+CC'ing Nathan Chancellor, Nick Desaulniers and llvm@lists.linux.dev
 
-Device init and probe are done before runtime pm is enabled. The
-peripheral clock will be handled manually during these steps. Do not use
-devres any more to enable/disable the peripheral clock, this conflicts
-with runtime pm.
+Looks like this error happens only with clang version 14 (more
+specifically CONFIG_CLANG_VERSION=3D140006). I tested with clang-13,
+clang-15 and clang-17 and all of them build this code fine. Same thing
+for other archs (clang-14 fails, others don't). I tried hexagon, x86
+and arm64.
 
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
-v2:
- - remove unnecessary err = 0; assignment
+To fix the build I can add:
 
- drivers/char/hw_random/imx-rngc.c | 69 +++++++++++++++++++++++--------
- 1 file changed, 52 insertions(+), 17 deletions(-)
+#if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION >=3D 140000 &&
+CONFIG_CLANG_VERSION < 150000
+// do this the old way
+#else
+// do this the new way
+#endif
 
-diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
-index 5adc4946d60f..9e42571f743f 100644
---- a/drivers/char/hw_random/imx-rngc.c
-+++ b/drivers/char/hw_random/imx-rngc.c
-@@ -13,6 +13,8 @@
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/pm_runtime.h>
- #include <linux/interrupt.h>
- #include <linux/hw_random.h>
- #include <linux/completion.h>
-@@ -53,6 +55,7 @@
- 
- #define RNGC_SELFTEST_TIMEOUT 2500 /* us */
- #define RNGC_SEED_TIMEOUT      200 /* ms */
-+#define RNGC_PM_TIMEOUT        500 /* ms */
- 
- static bool self_test = true;
- module_param(self_test, bool, 0);
-@@ -123,7 +126,11 @@ static int imx_rngc_read(struct hwrng *rng, void *data, size_t max, bool wait)
- {
- 	struct imx_rngc *rngc = container_of(rng, struct imx_rngc, rng);
- 	unsigned int status;
--	int retval = 0;
-+	int err, retval = 0;
-+
-+	err = pm_runtime_resume_and_get(rngc->dev);
-+	if (err)
-+		return err;
- 
- 	while (max >= sizeof(u32)) {
- 		status = readl(rngc->base + RNGC_STATUS);
-@@ -141,6 +148,8 @@ static int imx_rngc_read(struct hwrng *rng, void *data, size_t max, bool wait)
- 			max -= sizeof(u32);
- 		}
- 	}
-+	pm_runtime_mark_last_busy(rngc->dev);
-+	pm_runtime_put(rngc->dev);
- 
- 	return retval ? retval : -EIO;
- }
-@@ -169,7 +178,11 @@ static int imx_rngc_init(struct hwrng *rng)
- {
- 	struct imx_rngc *rngc = container_of(rng, struct imx_rngc, rng);
- 	u32 cmd, ctrl;
--	int ret;
-+	int ret, err;
-+
-+	err = pm_runtime_resume_and_get(rngc->dev);
-+	if (err)
-+		return err;
- 
- 	/* clear error */
- 	cmd = readl(rngc->base + RNGC_COMMAND);
-@@ -186,15 +199,15 @@ static int imx_rngc_init(struct hwrng *rng)
- 		ret = wait_for_completion_timeout(&rngc->rng_op_done,
- 						  msecs_to_jiffies(RNGC_SEED_TIMEOUT));
- 		if (!ret) {
--			ret = -ETIMEDOUT;
--			goto err;
-+			err = -ETIMEDOUT;
-+			goto out;
- 		}
- 
- 	} while (rngc->err_reg == RNGC_ERROR_STATUS_STAT_ERR);
- 
- 	if (rngc->err_reg) {
--		ret = -EIO;
--		goto err;
-+		err = -EIO;
-+		goto out;
- 	}
- 
- 	/*
-@@ -205,23 +218,29 @@ static int imx_rngc_init(struct hwrng *rng)
- 	ctrl |= RNGC_CTRL_AUTO_SEED;
- 	writel(ctrl, rngc->base + RNGC_CONTROL);
- 
-+out:
- 	/*
- 	 * if initialisation was successful, we keep the interrupt
- 	 * unmasked until imx_rngc_cleanup is called
- 	 * we mask the interrupt ourselves if we return an error
- 	 */
--	return 0;
-+	if (err)
-+		imx_rngc_irq_mask_clear(rngc);
- 
--err:
--	imx_rngc_irq_mask_clear(rngc);
--	return ret;
-+	pm_runtime_put(rngc->dev);
-+	return err;
- }
- 
- static void imx_rngc_cleanup(struct hwrng *rng)
- {
- 	struct imx_rngc *rngc = container_of(rng, struct imx_rngc, rng);
-+	int err;
- 
--	imx_rngc_irq_mask_clear(rngc);
-+	err = pm_runtime_resume_and_get(rngc->dev);
-+	if (!err) {
-+		imx_rngc_irq_mask_clear(rngc);
-+		pm_runtime_put(rngc->dev);
-+	}
- }
- 
- static int __init imx_rngc_probe(struct platform_device *pdev)
-@@ -240,7 +259,7 @@ static int __init imx_rngc_probe(struct platform_device *pdev)
- 	if (IS_ERR(rngc->base))
- 		return PTR_ERR(rngc->base);
- 
--	rngc->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-+	rngc->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(rngc->clk))
- 		return dev_err_probe(&pdev->dev, PTR_ERR(rngc->clk), "Cannot get rng_clk\n");
- 
-@@ -248,14 +267,18 @@ static int __init imx_rngc_probe(struct platform_device *pdev)
- 	if (irq < 0)
- 		return irq;
- 
-+	clk_prepare_enable(rngc->clk);
-+
- 	ver_id = readl(rngc->base + RNGC_VER_ID);
- 	rng_type = FIELD_GET(RNG_TYPE, ver_id);
- 	/*
- 	 * This driver supports only RNGC and RNGB. (There's a different
- 	 * driver for RNGA.)
- 	 */
--	if (rng_type != RNGC_TYPE_RNGC && rng_type != RNGC_TYPE_RNGB)
-+	if (rng_type != RNGC_TYPE_RNGC && rng_type != RNGC_TYPE_RNGB) {
-+		clk_disable_unprepare(rngc->clk);
- 		return -ENODEV;
-+	}
- 
- 	init_completion(&rngc->rng_op_done);
- 
-@@ -271,15 +294,24 @@ static int __init imx_rngc_probe(struct platform_device *pdev)
- 
- 	ret = devm_request_irq(&pdev->dev,
- 			irq, imx_rngc_irq, 0, pdev->name, (void *)rngc);
--	if (ret)
-+	if (ret) {
-+		clk_disable_unprepare(rngc->clk);
- 		return dev_err_probe(&pdev->dev, ret, "Can't get interrupt working.\n");
-+	}
- 
- 	if (self_test) {
- 		ret = imx_rngc_self_test(rngc);
--		if (ret)
-+		if (ret) {
-+			clk_disable_unprepare(rngc->clk);
- 			return dev_err_probe(&pdev->dev, ret, "self test failed\n");
-+		}
- 	}
- 
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, RNGC_PM_TIMEOUT);
-+	pm_runtime_use_autosuspend(&pdev->dev);
-+	pm_runtime_set_active(&pdev->dev);
-+	devm_pm_runtime_enable(&pdev->dev);
-+
- 	ret = devm_hwrng_register(&pdev->dev, &rngc->rng);
- 	if (ret)
- 		return dev_err_probe(&pdev->dev, ret, "hwrng registration failed\n");
-@@ -309,7 +341,10 @@ static int imx_rngc_resume(struct device *dev)
- 	return 0;
- }
- 
--static DEFINE_SIMPLE_DEV_PM_OPS(imx_rngc_pm_ops, imx_rngc_suspend, imx_rngc_resume);
-+static const struct dev_pm_ops imx_rngc_pm_ops = {
-+	SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
-+	RUNTIME_PM_OPS(imx_rngc_suspend, imx_rngc_resume, NULL)
-+};
- 
- static const struct of_device_id imx_rngc_dt_ids[] = {
- 	{ .compatible = "fsl,imx25-rngb" },
-@@ -320,7 +355,7 @@ MODULE_DEVICE_TABLE(of, imx_rngc_dt_ids);
- static struct platform_driver imx_rngc_driver = {
- 	.driver = {
- 		.name = KBUILD_MODNAME,
--		.pm = pm_sleep_ptr(&imx_rngc_pm_ops),
-+		.pm = pm_ptr(&imx_rngc_pm_ops),
- 		.of_match_table = imx_rngc_dt_ids,
- 	},
- };
--- 
-2.39.5
+but I'm not sure if that's the right fix.
 
+Andrew, while compiler folks investigate this issue, I'll post the
+above fix in case we need to deal with this build error urgently.
+Thanks,
+Suren.
+
+>
+> >
+> > >
+> > > If you fix the issue in a separate patch/commit (i.e. not just a new =
+version of
+> > > the same patch/commit), kindly add following tags
+> > > | Reported-by: kernel test robot <lkp@intel.com>
+> > > | Closes: https://lore.kernel.org/oe-kbuild-all/202501310832.kiAeOt2z=
+-lkp@intel.com/
+> > >
+> > > All errors (new ones prefixed by >>):
+> > >
+> > > >> drivers/auxdisplay/panel.c:1454:2: error: call to __compiletime_as=
+sert_309 declared with 'error' attribute: BUILD_BUG_ON failed: !__builtin_c=
+onstant_p(_dest_len) || _dest_len =3D=3D (size_t)-1
+> > >            strtomem_pad(key->u.kbd.release_str, release, '\0');
+> > >            ^
+> > >    include/linux/string.h:417:2: note: expanded from macro 'strtomem_=
+pad'
+> > >            BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||          =
+      \
+> > >            ^
+> > >    include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_B=
+UG_ON'
+> > >            BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condi=
+tion)
+> > >            ^
+> > >    include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_=
+BUG_ON_MSG'
+> > >    #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), ms=
+g)
+> > >                                        ^
+> > >    note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-l=
+imit=3D0 to see all)
+> > >    include/linux/compiler_types.h:530:2: note: expanded from macro '_=
+compiletime_assert'
+> > >            __compiletime_assert(condition, msg, prefix, suffix)
+> > >            ^
+> > >    include/linux/compiler_types.h:523:4: note: expanded from macro '_=
+_compiletime_assert'
+> > >                            prefix ## suffix();                       =
+      \
+> > >                            ^
+> > >    <scratch space>:127:1: note: expanded from here
+> > >    __compiletime_assert_309
+> > >    ^
+> > >    1 error generated.
+> > >
+> > >
+> > > vim +/error +1454 drivers/auxdisplay/panel.c
+> > >
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1426
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1427  /* tries to bind a key to the signal name <name>. The ke=
+y will send the
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1428   * strings <press>, <repeat>, <release> for these respec=
+tive events.
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1429   * Returns the pointer to the new key if ok, NULL if the=
+ key could not be bound.
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1430   */
+> > > 36d2041a3d57b9 drivers/staging/panel/panel.c Peter Huewe             =
+ 2013-02-15  1431  static struct logical_input *panel_bind_key(const char *=
+name, const char *press,
+> > > 36d2041a3d57b9 drivers/staging/panel/panel.c Peter Huewe             =
+ 2013-02-15  1432                                              const char *=
+repeat,
+> > > 36d2041a3d57b9 drivers/staging/panel/panel.c Peter Huewe             =
+ 2013-02-15  1433                                              const char *=
+release)
+> > > 698b1515f03914 drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-22  1434  {
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1435          struct logical_input *key;
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1436
+> > > fdf4a4948ca8a1 drivers/staging/panel/panel.c Dominique van den Broeck=
+ 2014-05-21  1437          key =3D kzalloc(sizeof(*key), GFP_KERNEL);
+> > > eb073a9bf2b6ed drivers/staging/panel/panel.c Toshiaki Yamane         =
+ 2012-07-12  1438          if (!key)
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1439                  return NULL;
+> > > eb073a9bf2b6ed drivers/staging/panel/panel.c Toshiaki Yamane         =
+ 2012-07-12  1440
+> > > 698b1515f03914 drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-22  1441          if (!input_name2mask(name, &key->mask, &key->val=
+ue, &scan_mask_i,
+> > > cb46f472cbb08c drivers/staging/panel/panel.c Kulikov Vasiliy         =
+ 2010-07-12  1442                               &scan_mask_o)) {
+> > > cb46f472cbb08c drivers/staging/panel/panel.c Kulikov Vasiliy         =
+ 2010-07-12  1443                  kfree(key);
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1444                  return NULL;
+> > > cb46f472cbb08c drivers/staging/panel/panel.c Kulikov Vasiliy         =
+ 2010-07-12  1445          }
+> > > 698b1515f03914 drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-22  1446
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1447          key->type =3D INPUT_TYPE_KBD;
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1448          key->state =3D INPUT_ST_LOW;
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1449          key->rise_time =3D 1;
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1450          key->fall_time =3D 1;
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1451
+> > > a952abcdaa2211 drivers/auxdisplay/panel.c    Justin Stitt            =
+ 2023-09-11  1452          strtomem_pad(key->u.kbd.press_str, press, '\0');
+> > > a952abcdaa2211 drivers/auxdisplay/panel.c    Justin Stitt            =
+ 2023-09-11  1453          strtomem_pad(key->u.kbd.repeat_str, repeat, '\0'=
+);
+> > > a952abcdaa2211 drivers/auxdisplay/panel.c    Justin Stitt            =
+ 2023-09-11 @1454          strtomem_pad(key->u.kbd.release_str, release, '\=
+0');
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1455          list_add(&key->list, &logical_inputs);
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1456          return key;
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1457  }
+> > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau           =
+ 2008-11-13  1458
+> > >
+> > > :::::: The code at line 1454 was first introduced by commit
+> > > :::::: a952abcdaa22116d940ca9cb9253caad1622ae93 auxdisplay: panel: Re=
+place deprecated strncpy() with strtomem_pad()
+> > >
+> > > :::::: TO: Justin Stitt <justinstitt@google.com>
+> > > :::::: CC: Kees Cook <keescook@chromium.org>
+> > >
+> > > --
+> > > 0-DAY CI Kernel Test Service
+> > > https://github.com/intel/lkp-tests/wiki
