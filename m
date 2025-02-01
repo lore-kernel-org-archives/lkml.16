@@ -1,120 +1,154 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B21DE17BA5;
-	Sat,  1 Feb 2025 10:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A18149E1A
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 10:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738406093; cv=none; b=bb83xEEAKW1QJs3bkoOyTS3/b4eJbNN8PgdVxPlyvZV+5xc+6OU7wdY9j5BOoTuhuqCS+OhwAsXkOrNNXL4tFeMczb086UuNex8sze5FurQmvyKzQ1PeJRFI2FYruStAkKUiyFJ2YbaJMqbH/5AdKQgYW+8WGTca1gRC23bFf1s=
+	t=1738406185; cv=none; b=eg9TfyKvuqtpjhJcauGscG2HyTbutQXrssW9SG+XfVW1C3tTEmpOybfH8Hud8nZjMtBzZgXzNh5Lkxq4CBihxZzUaWkmSJQ582xnpaSQngcJSp6iiFlHnwfoLk38IooDeB0wrkvfhngtHh4khloWUeM5vg5/+cqzSCQfO6Pgr+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738406093; c=relaxed/simple;
-	bh=nckk6IREeGgepW/yKnetVDAc4LT+8v8kYncfJQzyg5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rinDV3sU229ShDZKOPRDnuarX8HI1J0JnVHQkHJSr8Pey0kUFQBw95LIjh6v5+TBaJkS6TuRuWw1X8QFvCgZYNapNrwske+1PWYFTGDXZ1fbVIMjNn1vJCixMgEl2nd9QZRLsq7a99qoI5Y0s32oYWAsNbIKGdiwRkDuEj6QBVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 511AYcgk007838;
-	Sat, 1 Feb 2025 11:34:38 +0100
-Date: Sat, 1 Feb 2025 11:34:38 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Subject: Re: [PATCH 2/2] tools/nolibc: add support for directory access
-Message-ID: <20250201103438.GH5849@1wt.eu>
-References: <20250130-nolibc-dir-v1-0-ea9950b52e29@weissschuh.net>
- <20250130-nolibc-dir-v1-2-ea9950b52e29@weissschuh.net>
+	s=arc-20240116; t=1738406185; c=relaxed/simple;
+	bh=iqw5RHSV8S70QoypLHZQ6Q5vg7hJQNF5r+oQH6qoIxU=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CVAXbdWgOcM0lKLUDXptZCcs69FdRWpBYdsxpbQqFTNfTsPjCoTGiwHHUyQ2O7+IgN2NUTy1HoA8wvDKotPxWxqGh68kTwjsWGmnzK23RQyuZYDKs/d06/HlAdSur2HA0y5xYvUHgMKeAaJJ/p0blcxYXchejFprAgpA3ZBAqE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=B3TxkcdW; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="B3TxkcdW"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-306007227d3so27933451fa.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 02:36:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738406182; x=1739010982; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oDdRJ+I4mzWc8IF8+OQqo1T57d81vrjPzSqlTDqBnks=;
+        b=B3TxkcdWKwGPBOebL9pA5bUQHLxQuAutZ9kfu1oWUILNs1QWrlQXhOyuzxUr0gh/eJ
+         SJ63Wv/UJwk1Ps/NEArGZHSuscrrZS4vKqLe1fCpUrqsnfWrXZOTxh/Dh+hxUOl86YyK
+         7ZgXgGo0ACYpgHJwUeKltsykq5LC0yK0DSO+z4y26SgYhQzgKYU8MBxVekRvZ0NImO5v
+         CghEyVL8L+nUWr9eq8FaxlbOfp9FQLnoN4hNgeVRnJC6EG/Wixrbxe37hOPAgyCMjxaH
+         TrI0p8Wgd8C0VN6xGZY+b1Ou2WNfyyS6UAhbR5narGWCYbrCFHblg0vcpe87QjXaXVHL
+         mXFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738406182; x=1739010982;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oDdRJ+I4mzWc8IF8+OQqo1T57d81vrjPzSqlTDqBnks=;
+        b=cB4dcyCM7F3epNGnFBgpFfzfPLrZi9amZQBC0ObF0MzUQdp6mSCx8inooZFSqOG2LA
+         +eWG9tK//phICPJeANaaNr69DrXcgNutxWh4KtVu80BopwunDDKOLdWYKdqhnEIH4Lrm
+         JoE7rsy6UXyyPuJjujSkdl302YRBFLTRqTD+6X6+a3+yLHf/+cRGACTSyVp5hk9fNgpt
+         Xr5Zz+7XcXV95b9/WRDQ03q4NGSxqIqF1owSbJ94pbvmk3/LGHLjfGgAEPZ/lcGPtykH
+         tBBjWfgY+gqY4KlBefflErxbUoZGNbp3QA/O41t/bfK6Q7xaFAfjtk7vmxgXiePgfUCS
+         f/uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeL16vPenOuKCrj4sCiQ50F/47TtzNSODgdtq+mkGKZyhVgjNOwvHOoQ8OUQd+32ocJKP5a2sTjgZnGq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRSwhwkrSZKW9+S8dLKVBRHiwOcFMnmVgttegwadK5PzROeYsk
+	HnX4KCoor0YPWG+n3ZTes5Xkb6bWvvRQocLwPW5wBQYXu4ZvwazfIawn6nwJ7ZCepsknO5zTpfR
+	ZsGpkgAeAahDsfJDDi1s9RMmX4Ti5PJI1mHmEIQ==
+X-Gm-Gg: ASbGnctSRipKj0iIpbwPHiHVlSIzp17mHk8O2dIVZdhcwDZ60nh76m9j0PtQenFjDuK
+	WkaWq55/sQywoK4ncdAW3g9iEhOOz9DQP8nEKzppCi7Jf0jPRGbiD8jNxqhAkhXsf6gD+2zWb
+X-Google-Smtp-Source: AGHT+IG/TVS8htf084OR17kIjfzG2VfKKdd+Zm7iyJX53veJ+z8OFO/m1mmCuR205oUFZ0hgVzWPIgYd5gwR9N1dJcc=
+X-Received: by 2002:a05:651c:2116:b0:2ff:d044:61fc with SMTP id
+ 38308e7fff4ca-3079690e02amr50683871fa.33.1738406181352; Sat, 01 Feb 2025
+ 02:36:21 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Sat, 1 Feb 2025 02:36:20 -0800
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Sat, 1 Feb 2025 02:36:20 -0800
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+In-Reply-To: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250130-nolibc-dir-v1-2-ea9950b52e29@weissschuh.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
+Date: Sat, 1 Feb 2025 02:36:20 -0800
+X-Gm-Features: AWEUYZlUDyMyvD5QqatzuRcJ92GC2-lApzNfXLMZZCZq3wVbhWt8z_DF3wi7h90
+Message-ID: <CAMRc=MdwQL8dWU5zF5fp+KUbC2RA2Q264by8HGXMg2k1rxhsTA@mail.gmail.com>
+Subject: Re: [PATCH 00/13] gpiolib: add gpiods_set_array_value_cansleep
+To: David Lechner <dlechner@baylibre.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, 
+	Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jan 30, 2025 at 08:54:03PM +0100, Thomas Weiﬂschuh wrote:
-> From: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> 
-> Add an allocation-free implementation of readdir() and related
-> functions. The implementation is modelled after the one for FILE.
-
-I think you'd need to mention/remind the two important points that
-come out of that choice, one being that DIR is a fake pointer that
-instead stores ~fd so that it can be turned back to a valid FD, and
-that subsequent readdir() calls will only work from the same file
-unit since it relies on a local static storage.
-
-Better have this visible in the commit message so that in the event
-someone faces a difficulty due to this, they can easily find that it's
-an on-purpose design choice.
-
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
-> 
+On Fri, 31 Jan 2025 21:24:40 +0100, David Lechner <dlechner@baylibre.com> said:
+> This series was inspired by some minor annoyance I have experienced a
+> few times in recent reviews.
+>
+> Calling gpiod_set_array_value_cansleep() can be quite verbose due to
+> having so many parameters. In most cases, we already have a struct
+> gpio_descs that contains the first 3 parameters so we end up with 3 (or
+> often even 6) pointer indirections at each call site. Also, people have
+> a tendency to want to hard-code the first argument instead of using
+> struct gpio_descs.ndescs, often without checking that ndescs >= the
+> hard-coded value.
+>
+> So I'm proposing that we add a gpiods_set_array_value_cansleep()
+> function that is a wrapper around gpiod_set_array_value_cansleep()
+> that has struct gpio_descs as the first parameter to make it a bit
+> easier to read the code and avoid the hard-coding temptation.
+>
+> I've just done gpiods_set_array_value_cansleep() for now since there
+> were over 10 callers of this one. There aren't as many callers of
+> the get and atomic variants, but we can add those too if this seems
+> like a useful thing to do.
+>
 > ---
-> I'm not entirely sure where to put it. It doesn't really belong into
-> stdio.h, but that's where the FILE stuff is.
-> sys.h wants alphabetical ordering, but IMO these functions should stick
-> together.
+> David Lechner (13):
+>       gpiolib: add gpiods_set_array_value_cansleep()
+>       auxdisplay: seg-led-gpio: use gpiods_set_array_value_cansleep
+>       bus: ts-nbus: validate ts,data-gpios array size
+>       bus: ts-nbus: use gpiods_set_array_value_cansleep
+>       gpio: max3191x: use gpiods_set_array_value_cansleep
+>       iio: adc: ad7606: use gpiods_set_array_value_cansleep
+>       iio: amplifiers: hmc425a: use gpiods_set_array_value_cansleep
+>       iio: resolver: ad2s1210: use gpiods_set_array_value_cansleep
+>       mmc: pwrseq_simple: use gpiods_set_array_value_cansleep
+>       mux: gpio: use gpiods_set_array_value_cansleep
+>       net: mdio: mux-gpio: use gpiods_set_array_value_cansleep
+>       phy: mapphone-mdm6600: use gpiods_set_array_value_cansleep
+>       ASoC: adau1701: use gpiods_set_array_value_cansleep
+>
+>  drivers/auxdisplay/seg-led-gpio.c           |  3 +--
+>  drivers/bus/ts-nbus.c                       | 10 ++++++----
+>  drivers/gpio/gpio-max3191x.c                | 18 +++++++-----------
+>  drivers/iio/adc/ad7606.c                    |  3 +--
+>  drivers/iio/adc/ad7606_spi.c                |  3 +--
+>  drivers/iio/amplifiers/hmc425a.c            |  3 +--
+>  drivers/iio/resolver/ad2s1210.c             |  8 ++------
+>  drivers/mmc/core/pwrseq_simple.c            |  3 +--
+>  drivers/mux/gpio.c                          |  4 +---
+>  drivers/net/mdio/mdio-mux-gpio.c            |  3 +--
+>  drivers/phy/motorola/phy-mapphone-mdm6600.c |  4 +---
+>  include/linux/gpio/consumer.h               |  7 +++++++
+>  sound/soc/codecs/adau1701.c                 |  4 +---
+>  13 files changed, 31 insertions(+), 42 deletions(-)
+> ---
+> base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
+> change-id: 20250131-gpio-set-array-helper-bd4a328370d3
+>
+> Best regards,
+> --
+> David Lechner <dlechner@baylibre.com>
+>
+>
 
-My man pages suggest that userland code will include <dirent.h>, thus
-I think it could be the moment to create it with that new code.
+This looks good to me except for one thing: the function prefix. I would
+really appreciate it if we could stay within the existing gpiod_ namespace and
+not add a new one in the form of gpiods_.
 
-> diff --git a/tools/include/nolibc/stdio.h b/tools/include/nolibc/stdio.h
-> index 3892034198dd566d21a5cc0a9f67cf097d428393..1f275a0a7b6b2c6f1c15405d027c282bb77aa618 100644
-> --- a/tools/include/nolibc/stdio.h
-> +++ b/tools/include/nolibc/stdio.h
-(...)
-> +static __attribute__((unused))
-> +struct dirent *readdir(DIR *dirp)
-> +{
-> +	static struct dirent dirent;
-> +
-> +	char buf[sizeof(struct linux_dirent64) + NAME_MAX];
+Maybe: gpiod_multiple_set_ or gpiod_collected_set...?
 
-I'm uncertain where NAME_MAX is defined, I haven't found it in the
-nolibc sources, just double-checking that it's not just in your build
-environment by accident.
-
-> +	struct linux_dirent64 *ldir = (void *)buf;
-> +	intptr_t i = (intptr_t)dirp;
-> +	int fd, ret;
-> +
-> +	if (i >= 0) {
-> +		SET_ERRNO(EBADF);
-> +		return NULL;
-> +	}
-> +
-> +	fd = ~i;
-> +
-> +	ret = getdents64(fd, ldir, sizeof(buf));
-> +	if (ret == -1 || ret == 0)
-> +		return NULL;
-> +
-> +	/*
-> +	 * getdents64() returns as many entries as fit the buffer.
-> +	 * readdir() can only return one entry at a time.
-> +	 * Make sure the non-returned ones are not skipped.
-> +	 */
-> +	ret = lseek(fd, ldir->d_off, SEEK_SET);
-> +	if (ret == -1)
-> +		return NULL;
-> +
-> +	dirent = (struct dirent) {
-> +		.d_ino = ldir->d_ino,
-> +	};
-> +	strlcpy(dirent.d_name, ldir->d_name, sizeof(dirent.d_name));
-
-Just out of curiosity, could this copy fail, and if so, should we handle
-it (e.g. NAME_MAX != 255) ? My guess here is that if it could almost never
-fail and checking it would needlessly complicate the function, let's just
-handle it with a comment for now. And if it cannot at all, let's mention
-why on top of it as well.
-
-Thanks,
-Willy
+Bartosz
