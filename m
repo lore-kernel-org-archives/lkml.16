@@ -1,142 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3AA2BAF4;
-	Sat,  1 Feb 2025 19:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0672F5E;
+	Sat,  1 Feb 2025 19:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738437174; cv=none; b=OgX+D2z01P+RZjXWGCnLy9qi0ujjOk6aP6Rw71bhL3kSgLRdVKiStyeo5tyerD7xC/UlHj6JlbXgeU29v/iaTUtYoHKNV7i44W3CaMmFZyWm2+PwzqpIh3VbGGZRuUoohb774dMg3dTTDeK2ahXS81o+M849+qyFeTuu8Y8BoW8=
+	t=1738437287; cv=none; b=cj8PVmFQAfi8gf9PzILr+m2HurZL0Yl2tWr95dZbjWhDiF946mXNSLkFdXCXgzhfH81k27+lccIObi6ZxZKCtBOdwcqMdimiOkcyJfNiG5BPVKaabGm7InkpCHJKTj35JEgMDtfL+Ds/ms+Uli/OFUUp11gAebBWlyorzfGCPFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738437174; c=relaxed/simple;
-	bh=0QBqcNKzY+SzopvrW4jWa8UfPfe7MKUSyO4YO4sZ7WA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=T6NqvY0i59QM/JIrhyymWg+pYWgUi2xppCE61mq/SpNe/Tahh/tCo7sPNBS9YWzl/ctQeO0Db+ROioa6qrL5axONEnXgJTqdZCEcYjFAkIUiPvcDhWmOFZ2qw65pemBQzgEQQZTshy02+/Vzfs9seT1Nldo2dDCN9NSCw20TY7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UR/9SWNi; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738437287; c=relaxed/simple;
+	bh=7nmnf9csByOgE/n7rGMItBPUIhS3UBG3BqNgPkhrEJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=onDdYikmmOQNkMmYAWEklvm65zrRpLFJM1V2wSKETPdamPriB7mYbYQRKHmbLBhFQKYTmavnyy8T4iKgnb0furSkn6t+ex0Jg/nDA4x4Tn75CqmdTgGMUpZcWQ5anAu42fm+kegQjwfLNjhuP4jug6cBKD7Ff3Ku79eeNpTnqBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ELRkDr7E; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UR/9SWNi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738437173; x=1769973173;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=0QBqcNKzY+SzopvrW4jWa8UfPfe7MKUSyO4YO4sZ7WA=;
-  b=UR/9SWNilDTDmzl4pIW6TyJoARnLFHbiCOe/MuPzSWYdu8jlvVENBixf
-   AFup+AWLFVddUsjCQFyB+DeyEydrNgl9LrCQDCP4KtEWkp3IUOTJsLUIR
-   371Efuvtejyibt6LS/7OOjcDZ16DgamKuixjZX5Vq/mf1q25eOaH7Miy6
-   jsHn3AV/smb1d9hHCxNDChess/hyHmBFaW0LR2ffNSVoQNVynZ58QMceV
-   UtVCSuzqZLN5x46CsQ74Kcgk7fwdezvntZjqzO5iecjhBDrTOWYo2+QBF
-   a2zEA4HNluEYCE+kXO9DnKdRrTNYQuq+4ISc1RHnTHIQWt65o1tSi0GqK
-   A==;
-X-CSE-ConnectionGUID: OFEzObQZS+Gl/ZRjtFHQEg==
-X-CSE-MsgGUID: AkquYbtOQbWpf8MU0rbNMQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11333"; a="61451874"
-X-IronPort-AV: E=Sophos;i="6.13,252,1732608000"; 
-   d="scan'208";a="61451874"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2025 11:12:52 -0800
-X-CSE-ConnectionGUID: zxXLNLOvQP+skVgiWe8S3g==
-X-CSE-MsgGUID: M9OVu734TNeiEA/md8FO/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147115919"
-Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2025 11:12:50 -0800
-Date: Sat, 1 Feb 2025 11:12:51 -0800 (PST)
-From: matthew.gerlach@linux.intel.com
-To: Krzysztof Kozlowski <krzk@kernel.org>
-cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
-    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
-    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
-    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
-    peter.colberg@altera.com
-Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
-In-Reply-To: <40a3dced-defe-412d-b5b2-efcc9619d172@kernel.org>
-Message-ID: <7c802294-97f6-3e9-4028-686484a525c5@linux.intel.com>
-References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com> <20250127173550.1222427-4-matthew.gerlach@linux.intel.com> <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org> <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
- <40a3dced-defe-412d-b5b2-efcc9619d172@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ELRkDr7E"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21634338cfdso74422515ad.2;
+        Sat, 01 Feb 2025 11:14:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738437283; x=1739042083; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XndM4SUJuOZNaJGKM3Nluez+j/ai04AIsmdbMK/OdgU=;
+        b=ELRkDr7E1nswOgATESelvx77ZopqVSHs7pCdWx0I2PW04qAd4/Lfw+yUfOaOBw2LvE
+         /A+6h2+2bK3SNzE8BoUglTpn3TsjOXrazVvQFolOwMVXwPszvcR02MtMs4ITnIY7AXwE
+         vT4XrBRgYm2y2iXwpb6Bshzx6j9kaMDnOKwyS8bqVFXqr1EcwZwQU37xrunSsqJC4Uhl
+         bEqI6BzjOFS+vOWRLQVGab8Ya2XGA/41Lk3CrxshU0iXj3o5I0DEwN5oN2CYmR9v90lP
+         wReJzoRP7rKncOR4gsSYTgpFYpd2tgDlgNka5Y5Ob2pYhi5maQ9vUrbZ4FUxT+r6kfAC
+         AhTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738437283; x=1739042083;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XndM4SUJuOZNaJGKM3Nluez+j/ai04AIsmdbMK/OdgU=;
+        b=EJNSiN5lVV9Rp+cyLVGVdVMoWIjiAvt2uo7M6HbzA8DuYX9ajIhlHkAcVUBbNE6fLF
+         7mLNOvpQNREJLruBEFiFtdK2OXRQi6RjtmCRjGa3AG41HcPctJNlmTAwS8wICPZfpacg
+         K+xysUAv7Nydt0980R6y68feKi9uMcGn53TfT//7At91SVwqLpjjS7DwwPrjf/P4Ajov
+         uFUtnqbVVsTbHtxh7aqv5nm3ildpr5CTwoKhMJ+Qk1AL2+6Pas4pFNqBp1y1G6f1ghhJ
+         tYZALtCDlxMy2Qghv5h/UBLHSMPnk+h/EmzgP4HtlyjyECniIOnTFzTrSX7TTPgfHrnS
+         FS8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWpjSierNK+JG8/kuNvL56TDP/3CTzmq64i3EY1pl8tws90y7uZnSfa3guK9cFyOmJtq7dS1wyqdRjPT1s=@vger.kernel.org, AJvYcCXloShtHtxxqaxsfgRTCkVOy2hq9taP+PJMcQyE6B2ZXZ13dmh+suwEwtImGBCfPr5P1cQOHjFl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxs913pjB4Z3bB3xaa293XCnev53pF27c3aKkJSBL9GGmh/fYM6
+	oVsbfCZz4Oq4IasbzemiYj87lfvkKvEmjjiRP5NAINzhNd8L/2Zq
+X-Gm-Gg: ASbGncuJYXesN/vInc1PTpoAOTEook/LqHnYgLjeupa87pwDXi7chdlDqhcf69diwLA
+	Z/sAs8zZzh5KECreBJ3waXaZbphceDLiDEY6I00q75yV3t03Qp+AUo9DsucGlJDxGtQg8WXvLzj
+	9HydjPOsSjT/0YN0IcgXZjs0zke+mv4paH4B+P9ooewqAsx0GUndwenkCW/Zo4ZZvv85cZYQfPq
+	J3H0XTiWbkffZRNg5YdmjciM9EqvVuYy5Uhd187PYNd5LUTzeqWflk8jVRWkkKXxGFa+cAP8kN+
+	PjBV3hNR4750f8b5NASrHRJCm0Zd
+X-Google-Smtp-Source: AGHT+IFB0fHVUPGOn0Y4YLnpgsNItVWNfXE3cnoduXNVQ8LV8KKiNZ0+PqrNHM/p1fOyunreivhv4Q==
+X-Received: by 2002:a17:902:ccc2:b0:21a:8d8c:450d with SMTP id d9443c01a7336-21dd7df960cmr277991815ad.53.1738437283444;
+        Sat, 01 Feb 2025 11:14:43 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bf93c23sm8240833a91.39.2025.02.01.11.14.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 11:14:42 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sat, 1 Feb 2025 11:14:41 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Yanteng Si <si.yanteng@linux.dev>, Furong Xu <0x1207@gmail.com>,
+	Joao Pinto <Joao.Pinto@synopsys.com>, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v4 3/3] net: stmmac: Specify hardware capability
+ value when FIFO size isn't specified
+Message-ID: <4e98f967-f636-46fb-9eca-d383b9495b86@roeck-us.net>
+References: <20250127013820.2941044-1-hayashi.kunihiko@socionext.com>
+ <20250127013820.2941044-4-hayashi.kunihiko@socionext.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250127013820.2941044-4-hayashi.kunihiko@socionext.com>
 
+Hi,
 
+On Mon, Jan 27, 2025 at 10:38:20AM +0900, Kunihiko Hayashi wrote:
+> When Tx/Rx FIFO size is not specified in advance, the driver checks if
+> the value is zero and sets the hardware capability value in functions
+> where that value is used.
+> 
+> Consolidate the check and settings into function stmmac_hw_init() and
+> remove redundant other statements.
+> 
+> If FIFO size is zero and the hardware capability also doesn't have upper
+> limit values, return with an error message.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-On Thu, 30 Jan 2025, Krzysztof Kozlowski wrote:
+This patch breaks qemu's stmmac emulation, for example for
+npcm750-evb. The error message is:
+	stmmaceth f0804000.eth: Can't specify Rx FIFO size
 
-> On 29/01/2025 20:42, matthew.gerlach@linux.intel.com wrote:
->>
->>
->> On Wed, 29 Jan 2025, Krzysztof Kozlowski wrote:
->>
->>> On 27/01/2025 18:35, Matthew Gerlach wrote:
->>>> Add the base device tree for support of the PCIe Root Port
->>>> for the Agilex family of chips.
->>>>
->>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->>>> ---
->>>> v3:
->>>>  - Remove accepted patches from patch set.
->>>>
->>>> v2:
->>>>  - Rename node to fix schema check error.
->>>> ---
->>>>  .../intel/socfpga_agilex_pcie_root_port.dtsi  | 55 +++++++++++++++++++
->>>>  1 file changed, 55 insertions(+)
->>>>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
->>>>
->>>> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
->>>> new file mode 100644
->>>> index 000000000000..50f131f5791b
->>>> --- /dev/null
->>>> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
->>>> @@ -0,0 +1,55 @@
->>>> +// SPDX-License-Identifier:     GPL-2.0
->>>
->>> Odd spaces in SPDX tag.
->>
->> Yes, there should only be one space.
->>
->>>
->>>> +/*
->>>> + * Copyright (C) 2024, Intel Corporation
->>>> + */
->>>> +&soc0 {
->>>> +	aglx_hps_bridges: fpga-bus@80000000 {
->>>> +		compatible = "simple-bus";
->>>> +		reg = <0x80000000 0x20200000>,
->>>> +		      <0xf9000000 0x00100000>;
->>>> +		reg-names = "axi_h2f", "axi_h2f_lw";
->>>
->>> Where is this binding defined?
->>
->> The bindings for these reg-names are not currently defined anywhere, but
->
-> Then you cannot use them.
->
->> they are also referenced in the following:
->>      Documentation/devicetree/bindings/soc/intel/intel,hps-copy-engine.yaml
->>      arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
->> I am not exactly sure where the right place is to define them, maybe
->> Documentation/devicetree/bindings/arm/intel,socfpga.yaml. On the other
->> hand, no code references these names; so it might make sense to just
->> remove them.
->
-> In general: nowhere, because simple bus does not have such properties.
-> It's not about reg-names only - you cannot have reg. You just did not
-> define here simple-bus.
+The setup function called for the emulated hardware is dwmac1000_setup().
+That function does not set the DMA rx or tx fifo size.
 
-I understand. I will remove reg and reg-names.
+At the same time, the rx and tx fifo size is not provided in the
+devicetree file (nuvoton-npcm750.dtsi), so the failure is obvious.
 
->
-> Best regards,
-> Krzysztof
->
+I understand that the real hardware may be based on a more recent
+version of the DWMAC IP which provides the DMA tx/rx fifo size, but
+I do wonder: Are the benefits of this patch so substantial that it
+warrants breaking the qemu emulation of this network interface ?
 
-Thanks for the review,
-Matthew Gerlach
+Thanks,
+Guenter
