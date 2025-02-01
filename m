@@ -1,72 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD121ADC70;
-	Sat,  1 Feb 2025 21:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6036A1CACF6
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 22:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738447122; cv=none; b=PYyu2xapfU5/F2bWSoaCwZizonKDMh479q9mA8vVQ3gHILrX6abfh4lFlStvAfKQNmZC37La6ApA+W1Z5Mv+VtfXjo7HUqnrEuyExWI+AAPgB4qq2pP1UVks15fOsTzeUUnQfIXquFKJlING0kITppHY50OCL4iIlxHMBfVQBqk=
+	t=1738447219; cv=none; b=I5qwWUAcCirm40OLYf5uV3t7PzSrIR8xe7ZeZFcqgs9k35eedDHGn919xMTLEHt1gB/iUEWLnBKFkhw97XcfpcEPG51aFfQRiwIsHwgAXuzgkqVW/VR4GrgCRRxrrDEogTbhQqkgCyon9OFTWUh9QvxbYz2BwbKELUocAUZ/gXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738447122; c=relaxed/simple;
-	bh=4yah1ABe3jE+Fe5JVSEIfySOMTAzN0kapjiR7MMrkGc=;
+	s=arc-20240116; t=1738447219; c=relaxed/simple;
+	bh=AXk/czfIKqloyNvPQeqAIKfR0b14p38hej1yD3pNlwo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d7RrdAcx4Dj/4w8rJBWWSNQo6+2Uk3DouNAHRWitTBnGtEReaSAYe8k7sIYYW2fCsVHLsfTVMcxBMymJtZp7hQZj39zEQzq9HQqAVwtJrNkqqyrAxasH0QUEPmzYfSS8lIFin9CcoaQhlMjkPIiwpHTazQT7O5XR2CF8HmPk8p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ioy/mTlh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=O43HtIZb2+q0wSZLYM3yh//dRYqmxrD2mahrAhrwBDUJeCHB07M7QvraTbVM8bv76mldEYbL1x1YoclIYZwu/6tp7xWiJ6lX6qEOfCYwkWAG1IaZX/cvTPx2YQXcVNw7uJqhjoD3cxSY1PezDBtRJLxdaM1u0iVOsjGj8SlLGR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fQLxUqYD; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ioy/mTlh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49859C4CED3;
-	Sat,  1 Feb 2025 21:58:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738447121;
-	bh=4yah1ABe3jE+Fe5JVSEIfySOMTAzN0kapjiR7MMrkGc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ioy/mTlhjq9m151pNAFVsf1W+L+m+A4nicWYXv7TIwJDqoGQZLoM4KpoRkwrD4psM
-	 hsBxU95ZF7BoFQ/CKqZnXRuHXyGtBONdkfQffwQCoNqZjjoF/0jLdfE/haKQcjz0uH
-	 b/UMAQtklUP6sGx3s14ReJJFgzEc/qBjZ5t3XYRIIoSF2sDOcKwa0oIijpWDQrEz6x
-	 RRSQ3M7i75tOdoRXZgLQHjsGvj+oCFWZKcKOgVTR7LJq/W2hBEiQ6S2FXGF6j6sQ3e
-	 uzo1YXFq6SyOJaPKXGzkL41RWQSWEqnYUf7t6XtjU8eZoKkSLMIC5uZF88IcLjHYAy
-	 YNOJhtLm6ssqQ==
-Date: Sat, 1 Feb 2025 22:58:36 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: alloc: satisfy `aligned_alloc` requirements
-Message-ID: <Z56ZDEM9gcJhIXxW@pollux.localdomain>
-References: <20250201-aligned-alloc-v1-1-c99a73f3cbd4@gmail.com>
- <Z56Bq94kPaN9UX5H@cassiopeiae>
- <CAJ-ks9n3KfcSqocjXY6QojF6R_aGBiRsXBuyiX8Y0rHtjm3sNw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fQLxUqYD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=yfM4WgoTdl7+Dgp4xiTrkbLt6MjiVjCph2txtENRNWg=; b=fQLxUqYDSCL3dvYeN8Wf33jxI4
+	7cYrUIkMespVEzACoHPMUOH4RKVv3n5k2BHR8ohpVsB7aS8yq4QvGrzqr75RQDClHO/PP4M0n2Wtg
+	EzdNsO+3eL9MdLSo/OlZlFsRkVIhV2xPl9e8wcPblafSwkPuZhsrAGsb66A5vFcPqA65146z5HtWC
+	+QDSVSXboNOmYIl0So80++6vDtMOiEqgQkaHyAErovkV8PwOT5Sc3spZm9GeMmDwYxsn9VQlCe24D
+	QGBURFAXFL582eeiz5+wM2j9Klq44SHyP8+KVh5M5OU288DTwrwIGBZYCfvhddtNyGG7UbLUTaAiT
+	wH7aRArg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1teLX4-0000000GRcH-2s2H;
+	Sat, 01 Feb 2025 22:00:06 +0000
+Date: Sat, 1 Feb 2025 22:00:06 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, ebiederm@xmission.com,
+	oleg@redhat.com, brauner@kernel.org, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] pid: drop irq disablement around pidmap_lock
+Message-ID: <Z56ZZpmAbRCIeI7D@casper.infradead.org>
+References: <20250201163106.28912-1-mjguzik@gmail.com>
+ <20250201163106.28912-7-mjguzik@gmail.com>
+ <20250201181933.07a3e7e2@pumpkin>
+ <CAGudoHFHzEQhkaJCB3z6qCfDtSRq+zZew3fDkAKG-AEjpMq8Nw@mail.gmail.com>
+ <20250201215105.55c0319a@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ-ks9n3KfcSqocjXY6QojF6R_aGBiRsXBuyiX8Y0rHtjm3sNw@mail.gmail.com>
+In-Reply-To: <20250201215105.55c0319a@pumpkin>
 
-On Sat, Feb 01, 2025 at 04:19:48PM -0500, Tamir Duberstein wrote:
-> Hi Danilo, thanks for the review!
-> 
-> On Sat, Feb 1, 2025 at 3:18 PM Danilo Krummrich <dakr@kernel.org> wrote:
-> >
-> > I think I prefer this to be slightly more compact:
-> >
-> >    let min_align = core::mem::size_of::<*const crate::ffi::c_void>();
-> >    let (align, size) = if layout.align() < min_align {
-> >        (min_align, layout.size().div_ceil(min_align) * min_align)
-> >    } else {
-> >        (layout.align(), layout.size())
-> >    };
-> 
-> I was trying to avoid repeated calls to either function, but I'm happy
-> to shorten the variable names. Would that suit?
+On Sat, Feb 01, 2025 at 09:51:05PM +0000, David Laight wrote:
+> I'm not sure what you mean.
+> Disabling interrupts isn't as cheap as it ought to be, but probably isn't
+> that bad.
 
-I think calling layout.align() twice is fine, no need shadow align for that.
+Time it.  You'll see.
+
+> > So while this is indeed a tradeoff, as I understand the sane default
+> > is to *not* disable interrupts unless necessary.
+> 
+> I bet to differ.
+
+You're wrong.  It is utterly standard to take spinlocks without
+disabling IRQs.  We do it all over the kernel.  If you think that needs
+to change, then make your case, don't throw a driveby review.
+
+And I don't mean by arguing.  Make a change, measure the difference.
+
