@@ -1,158 +1,135 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A636F1C5D61
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D27208A9;
+	Sat,  1 Feb 2025 16:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738427224; cv=none; b=UHltHg8ivnXWgLsfpb3mD2eYUROgOmANnIxoFEwC5f0Jr0CNIpmyZBjDC0KOi8yshEwHlUgjZgAXYJu9iyhbRzGQ3A1Qn31ine8teomZlTMzvAMY7HF9mrTBazyzGb7YUzKPgV707wV/iwZ0fjRCrzxhKaQsTFEaLqSk65GuSqA=
+	t=1738427464; cv=none; b=oUxHQ/aA+hlIXFEnr5VG4rAi0L1hMGyojoutsPf1WnS3muyVrImmS4pLYV6rBWmqunpXAZ442PZ5WqP8MiQ+Lj/XpeNnNe8FLE7N5C4VJYldCwrgj5c2vh1ZkheUeb/Q+5awE6DZvJI0/F4U5buqY9VQO1xkMhfSocLa3u+lSgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738427224; c=relaxed/simple;
-	bh=Yxhl8LZFj20FOUDFn3DFSQ8NRNktMewV2d+gewSUVqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OBm+Xaj6qO7Xb4e4ZW3b4Q0pHvMp4vPbvl+rtBUPy2nk6OfnslUf2WswInZ3PpVrCCv6GIhbx7I8Y4/X/PZnuadDxK1ZQSjkiM7m7XzkiUD1iiyrcNgwmB6uzS+r4WVJVA0QT75ypimNKha12CyVJ2/nkzRzJZQIRcg+lLe8sXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VhQ1AMM4; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738427464; c=relaxed/simple;
+	bh=MQVsCV+rKnGhM+DyLpC+tfup9Av4qyn8X8ziPTES9Vo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bkm7rdIVgM0cIFacLglPouErY6R4le1sUE7x1krpp7VDig8eQ/zVcWbZHz7EdBewHCzXv15gwEHBHtUPdfHrLJuMAABqup85sZnseXjlAGtlaFbppYAupg+JNll9e59QOmKtnFhC7XQ+JjKZY4lYodrLbNDlFOtYn+OWrKNL6Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B4FLLJxV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VhQ1AMM4"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5116Cfwt024138
-	for <linux-kernel@vger.kernel.org>; Sat, 1 Feb 2025 16:27:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	EKll0OTr+FAupnplWAio3axMf3LjnLIqeSqJawk3ocA=; b=VhQ1AMM467Pl8oY5
-	p3ZdQQMO7ryoJNf9YdmC+UGRXztIfWG93qejsXbeyw3Lt4ceUfE+KTVwgD/HG0HM
-	8ZReaItoewDJtWMWUNtqjtJyZ+Tv09cbiY8f2N8KTTtuoLj2j1DpQG1aRNbi0JVe
-	bOjHMk7uGp4wIGHEaXweZklqbNhULpMNPhTzgxj+FIdvnIT7C7axtvoptPUJpxBX
-	sRALm57UoGkoD/qgbauZuce10ofcC+ZpTJeE38J8AiuGmvqmRGMDrsbGGgtCLeJH
-	fBF3z4H0Iq6tm07wgMxOnp6OnznW1Ss14HJ/whocFpPxMT5iaxGYuB0iH1uUAngr
-	fFhWDg==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44hd6a94br-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 16:27:01 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e249d117b7so4739056d6.2
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:27:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738427221; x=1739032021;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EKll0OTr+FAupnplWAio3axMf3LjnLIqeSqJawk3ocA=;
-        b=ffyTYbLMtpkXI7O55lLtysuegD6NV2jodcw2OxYkSIvZQMdh/F23SKjNNJWczEMXkZ
-         QTVTgopAbTzq+//2XcP7GbkUL9ks/rpikY6eN999jrp85ugYJkfCdjh5djUzgJQ8PEc2
-         EpreW8L2p6q8HRuusLbzgqfpT5NSmySGJYk4/aUQMzqZw+pf6htW5rLE4qHIGr3ajHSE
-         C24JIz+pvRC/GV7qTR7X4jmSfNn2e672758sIg1qqnExOi3miFuV3UUD1W13JYSVMZVZ
-         HaiXDnT4LwigtII56yZ5jDX0O7B/vL6sQObR+BnGtGrlbgKgl/VN8Pik++S+lhzRfEY0
-         ai9w==
-X-Forwarded-Encrypted: i=1; AJvYcCV39dJmWnSQ+itpDm7UP3h4614QSKuVTlnky/Hpvi5GfeNfYXcevdiVFRkUGYZNpK0Cu+/c4xtJfJHNZ+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVhnrlp3/ZSzbbKViCa9Dbw5++fkblllYHyMsZx3NSbpJxcdL+
-	ziXgObjysP+Av7SRUfwRX601D5/uJ8GJzle6YEP1LKVQR+2qQccqychfZxywmJLYAEkqxtsF2nz
-	/QAiWEQWqE72XG9Dw5s8zJRPAAWdbI5EU7HVB0PL0+Fr0c72AyLEy3zGb4WKGtBk=
-X-Gm-Gg: ASbGnctU1DVUL3+2/SG8xSqN94SVCSjSHyj4VP0eNtIzDgSCWGFzzdMRd/tZNoQQ/ip
-	fg5A6KT55rEJmqYmghz9ak8XWrrzxoOx8M9+eFagpWZVaD5CpkaG5Dzw2jFLliEVWxlMdf/bwAw
-	591dWdknqTLSF299MkLiDivrJRh9Aio2EVbxvqcCchf/kQUwvofA99FD57bLoJFZwu6mJSMwf9v
-	ixbYFVRruML9JGQuWWmzYr3lpMsKERQqGfBCSMdTv3wK18SJVko7X3cvY977X3T/Z47gQa90qkl
-	SVNrVIvMhgy6IQpde0TTEeeIQCV/HLZn0CUL8/+1jIXDl95fwUiLjgn4tNU=
-X-Received: by 2002:a05:620a:29d2:b0:7b8:5629:5d58 with SMTP id af79cd13be357-7bffcce5683mr798967085a.4.1738427220721;
-        Sat, 01 Feb 2025 08:27:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGW5dCt57KxB3QTUkH/DtBPukVEDHPBWvCI3vtS5HPPpewERxqmhT5SNUKe1IVKv5OIuqLK2g==
-X-Received: by 2002:a05:620a:29d2:b0:7b8:5629:5d58 with SMTP id af79cd13be357-7bffcce5683mr798963885a.4.1738427220201;
-        Sat, 01 Feb 2025 08:27:00 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc7240487csm4570605a12.34.2025.02.01.08.26.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2025 08:26:59 -0800 (PST)
-Message-ID: <80ca597a-3d85-40d0-a04d-4bb8ca91b687@oss.qualcomm.com>
-Date: Sat, 1 Feb 2025 17:26:56 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B4FLLJxV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3277C4CED3;
+	Sat,  1 Feb 2025 16:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738427464;
+	bh=MQVsCV+rKnGhM+DyLpC+tfup9Av4qyn8X8ziPTES9Vo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=B4FLLJxV6wErqsmRi2JsDyRToMwuu/8jDvBLXHs4945WFGuxy4aNnf+kq6AUanR/t
+	 hUcAVePqCfn4A0gUOdoQWnN4+aAyCY5SSrEVu5osdxMQrQu6aGQrH6VIiwvtdBb6+v
+	 V1V6KL8rZrHOX4Uio78ZQXyqYnkouNREJIa0NmzUGN7AMi7r9aPAD/H8yqAXY1QIoh
+	 DKvKGSgRvzT8XvTvkWfmCLTL134kJDXWptS+VcHmrZ5mAUueMPmHaTo0SjLjkElkg7
+	 IcT3RU5MBLXG4yA0Ii9LrSoNdMphdiUpD5332p9YkqFy5K9AAKL2hwk2166CoLVtZ0
+	 /5fMYndlqAOUg==
+Date: Sat, 1 Feb 2025 16:30:51 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Matti Vaittinen
+ <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Linus
+ Walleij <linus.walleij@linaro.org>, Nuno Sa <nuno.sa@analog.com>, David
+ Lechner <dlechner@baylibre.com>, Dumitru Ceclan <mitrutzceclan@gmail.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>, Matteo Martelli
+ <matteomartelli3@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Subject: Re: [RFC PATCH 0/5] Support ROHM BD79124 ADC/GPO
+Message-ID: <20250201163051.1d54cdd7@jic23-huawei>
+In-Reply-To: <5cc01bc7-95b7-4a58-86d7-d4293e0e9966@gmail.com>
+References: <cover.1738328714.git.mazziesaccount@gmail.com>
+	<20250131170840.00002dc8@huawei.com>
+	<5cc01bc7-95b7-4a58-86d7-d4293e0e9966@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 2/2] arm64: dts: qcom:
- qcs6490-rb3gen2-vision-mezzanine: Add vision mezzanine
-To: Vikram Sharma <quic_vikramsa@quicinc.com>, rfoss@kernel.org,
-        todor.too@gmail.com, bryan.odonoghue@linaro.org, mchehab@kernel.org,
-        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-        akapatra@quicinc.com, hariramp@quicinc.com, andersson@kernel.org,
-        konradybcio@kernel.org, hverkuil-cisco@xs4all.nl,
-        cros-qcom-dts-watchers@chromium.org, catalin.marinas@arm.com,
-        will@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@quicinc.com
-References: <20250121125010.1853269-1-quic_vikramsa@quicinc.com>
- <20250121125010.1853269-3-quic_vikramsa@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250121125010.1853269-3-quic_vikramsa@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: uXSNW3xH4IGYFj3C_NTysUGYMxz2F0xC
-X-Proofpoint-GUID: uXSNW3xH4IGYFj3C_NTysUGYMxz2F0xC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-01_07,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 clxscore=1015 phishscore=0 bulkscore=0
- mlxlogscore=770 adultscore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502010142
 
-On 21.01.2025 1:50 PM, Vikram Sharma wrote:
-> The Vision Mezzanine for the RB3 ships with an imx577 camera sensor.
-> Enable the IMX577 on the vision mezzanine.
+On Sat, 1 Feb 2025 17:00:51 +0200
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+
+> Hi Jonathan,
 > 
-> An example media-ctl pipeline for the imx577 is:
+> Thanks a ton for the help! :)
 > 
-> media-ctl --reset
-> media-ctl -v -V '"imx577 '17-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
-> media-ctl -V '"msm_csiphy3":0[fmt:SRGGB10/4056x3040]'
-> media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4056x3040]'
-> media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4056x3040]'
-> media-ctl -l '"msm_csiphy3":1->"msm_csid0":0[1]'
-> media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
+> On 31/01/2025 19:08, Jonathan Cameron wrote:
+> > On Fri, 31 Jan 2025 15:34:43 +0200
+> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> >   
+> >> Support ROHM BD79124 ADC.
+> >>
+> >> Quite usual stuff. 12-bit, 8-channel ADC with threshold monitoring.
+> >>
+> >> Except that:
+> >>   - each ADC input pin can be configured as a general purpose output.
+> >>   - manually starting an ADC conversion and reading the result would
+> >>     require the I2C _master_ to do clock stretching(!) for the duration
+> >>     of the conversion... Let's just say this is not well supported.
+> >>   - IC supports 'autonomous measurement mode' and storing latest results
+> >>     to the result registers. This mode is used by the driver due to the
+> >>     "peculiar" I2C when doing manual reads.
+> >>
+> >> I sent this as an RFC because I implemented the pin purposing (GPO/ADC)
+> >> using pinmux - which I've never done for upstream stuff before. Hence
+> >> it's better to ask if this makes sense, or if there is better way to go.
+> >> Anyways, resulted drivers spread to 3 subsystems (MFD, pinctrl and IIO)  
+> > In principle nothing against pin mux for this.
+> > There are other options though if pin mux ends up being too complex.
+> > 
+> > - provide ADC channels in the binding channel@x etc.
+> > Anything else is freely available as a GPIO.
+> > Normal GPIO bindings etc for those.
+> > 
+> > The channel bit is common on SoC ADC anyway where we don't want to
+> > expose channels that aren't wired out.  
 > 
-> yavta -B capture-mplane -c -I -n 5 -f SRGGB10P -s 4056x3040 -F /dev/video0
+> Thanks for the insight on how things are usually done :)
 > 
-> Signed-off-by: Hariram Purushothaman <quic_hariramp@quicinc.com>
-> Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
-> Signed-off-by: Trishansh Bhardwaj <quic_tbhardwa@quicinc.com>
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
+> I think the only reason for having all the channels visible in IIO, 
+> could be, if there was a need to provide a runtime configuration.
+> 
+> > For combined ADC GPIO chips we normally don't bother with an MFD.
+> > Just host the gpio driver in the ADC one unless there is a strong
+> > reasons someone will put this down for GPIO usage only.  
+> 
+> I don't really know about that. I don't like arguing, yet I seem to do 
+> that all the time XD
+> 
+> I personally like using MFD and having smaller drivers in relevant 
+> subsystems, because it tends to keep the drivers leaner - and allows 
+> re-use of drivers when some of the hardware blocks are re-used. In some 
+> cases this results (much) cleaner drivers.
 
+I'm fully in agreement with MFD being useful, but for very simple
+parts of a device it can be overkill. 
+> 
+> (Let's assume they did "new" ADC, and just dropped the GPO from it. With 
+> the MFD the deal is to add new compatible, and have an MFD cell array 
+> without the pinctrl/GPO matching this new device. And lets imagine they 
+> later add this ADC to a PMIC. We add yet another MFD cell array for this 
+> new device, with a cell for the regulators, power-supply and the ADC... 
+> The same platform subdevice can be re-used to drive ADC (well, with 
+> added register offsets)).
+> 
+> Allright. I believe you have more experience on this area than I do, but 
+> I definitely think MFD has it's merits also for ADCs - they do tend to 
+> put ADCs to all kinds of devices (like in PMICs after all, although 
+> maybe not with 8 channels and less often without an accumulator).
 
-> +&tlmm {
-> +	cam2_default: cam2-default-state {
-> +		mclk-pins {
-> +			pins = "gpio67";
-> +			function = "cam_mclk";
-> +			drive-strength = <2>;
-> +			bias-disable;
-> +		};
+It's a trade off.  Sometimes we just have a little code duplication
+to the need for a more complex design.
 
-If you don't plan on adding more pins there, drop mclk-pins{} and put the
-properties directly under the cam2-default-state node, similarly below
+Enjoy the rest of Fosdem
 
-with that
-
-
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-
-Konrad
-> +	};
-> +
-> +	cam2_suspend: cam2-suspend-state {
-> +		mclk-pins {
-> +			pins = "gpio67";
-> +			function = "cam_mclk";
-> +			drive-strength = <2>;
-> +			bias-pull-down;
-> +		};
-> +	};
-> +};
+Jonathan
