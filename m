@@ -1,123 +1,125 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073143EA83
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 08:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511EFA935;
+	Sat,  1 Feb 2025 08:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738399899; cv=none; b=cD3uVzBLVGv+zCbUcv01T3m+srJEuZoLx2OgVFE5lZMboeYk98QhfB/22OH2CrEspy68fwkEjbB6r3aQ9kDLr+/M/zttG2uzVIE+dHn0cA7lsRKjny4BDxAlMz07YMf6ewWn23NFXC+l8yq/EbtRmMUaN61Lm5u9BoJQeBH6/r4=
+	t=1738400154; cv=none; b=rQj+DUJf/YyEnuocad+exk2jQGlX3qDQjqwP4YpXY7ATiiflT6UG7LtlQk/7Fc6PcejOJmcrCaaRCh0WobFpz7E9wVPioKX+5WWmFBrCWMFXgI5OnuDXR7kPNGDr5vWXxFnUM2p73Vy+cGnZzWyiQR/qgRmtfp05e9Cn2mKSEL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738399899; c=relaxed/simple;
-	bh=wHk4hM1E2Xs597sLaiQpMT4/XnQINO/xkvfZUfLDhCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=t0kgAClfj0vZTFTb6tTUC8RiJ2f2i47fZj5STQ5WCRAlt1t9xD+p64cKtFB4pQUwcWTjnFbJWYaT8/Ulht02gJ6mmssHot9ztcnTIMbjTkoQh+qaaWT5BhnqxXnzyMBc8kpEel2JA1efXzs+9QAR+mcAIjvGZDkzAO2DmmRex/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rdN/Pcu0; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738400154; c=relaxed/simple;
+	bh=sLqe1UM0fRkBMfE6INasFA8BOIgS22SSCi+w6VqaMv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e+JFl4+a+4iA6Ku23QKUOzhEbZjO0NwoZr6oMUh3y+MSLqcE9mMLv/zQnQAKzhReCqy88FWea9PQldoGVZMzR4em3q7n/yr2h26iqopBzQ17B316Hhted+JWOG9Dw2wW2r6rC3q+MuJ0aME/OcqHZ5Zm+f/ynLcrKUjFl/w4u1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=Cc6GyaHj; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rdN/Pcu0"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so86465ab.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 00:51:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738399897; x=1739004697; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OIefE9I0jaBGB4Y4mTk2FVVd4hcyxumz66eayz6AufQ=;
-        b=rdN/Pcu00aU9E+plgIOT/MizyBzdvwOpfv7OPwvW+dBe0Fxo8rD6HAD8IEW+HEetvH
-         D7CmSwYuNbDo5jNQfyS9tDiU3GlLMvilaPIxvYp3QQlf/NuCW3qTK4RfOJFGUpY4LAB/
-         3/LBBQLYLSwljUcsq3w2QCEJnNzscJ6SdSurvDQukaR3wDt7UvE0hyFMyS8unMXmvUgv
-         jngrg2InlhUN7LJHSgL75cQDECkCiCaZGZwkdmJIQBeLDcTip4PCG4EQGAvWW/bcCsge
-         Z3bA/3r2LiNEsBSRzSkgILAvmQvPm5jNDdWP+A2/ipmM9CZQ3JnHogqSumOG9oGhgklE
-         vJgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738399897; x=1739004697;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OIefE9I0jaBGB4Y4mTk2FVVd4hcyxumz66eayz6AufQ=;
-        b=QW0ra+3TJSZf3+WQ803YNkcz1/h/zTqP9Bt86Bam2pmGsZPyUEU4dn0gw1/cusY52I
-         wZQ+OS72SjNRduFEtpZewNEPOhNaMNGr6JmREkxLCDsS9H8ERLkpULvsqGJGuKSbG96+
-         kkB+Njz7d93N2l7XwI00YlTZMIzrkllxR9p9gY0e2BN/YMKJkgiTp1l51pyDqcA7ykxX
-         vSYHo1oRshcL2FmFIhLq+qeNDQ4w8N3EgUwB21MPw6y5BGiSm7fd4bLVZO/g4nllUJbi
-         S49zzvtJwRiyp4klR3TdUX5D+511a+uyA/uazGJYiACX+hE/Kiy6nm5uw2+PsJi4v9/X
-         /IXw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5NzA+pmAtFtoQAjF9Xp66OBQka/C3eXV4ltpxXYYtSGAXzMOKrJgW9Yd5Tr5YrHOeGKqYd59yUFWMPvo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz36PC3UckbeNYPPmXgoEk9vEtuuWKa03cvSwkSolQcUkoGhxC/
-	sjlT97FaazkuTehOCxC5DhLt0nHDDJBvwATxhjWVYYeicqg8WaLCkJK8C3uA0H6g1z4VXLMxS3L
-	zBLX7s8CB9f9k0dsuwo4H+u3VLyYrjlIEhvuV
-X-Gm-Gg: ASbGncuGaFuJtVcjy1LiZ/Lowt+5WZDh8oq+AbG8owjYUj3XoSPlfCS+Ynk3b9oJ1gI
-	sfbvaDe3V9ks2OgFtCzZEl86oGaI2dfg2aayTpVXHvmKF81wT/BULzz/nBg/Y4i04H5T4w7zAXA
-	==
-X-Google-Smtp-Source: AGHT+IFhoRz5P8nIkYHneDkKTVBakh7rtHG1dVw4obSdcvgjm+5z3V7T8nuKUGr47wUBBSm2PXOEjroFbF04NpvDEJE=
-X-Received: by 2002:a05:6e02:1807:b0:3cf:c8b9:8826 with SMTP id
- e9e14a558f8ab-3d020178ad0mr2457485ab.10.1738399896951; Sat, 01 Feb 2025
- 00:51:36 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="Cc6GyaHj"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id B9C5C1C01A4; Sat,  1 Feb 2025 09:48:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1738399725;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S9/h32gsK9ywKqz5Lw4yDI62fcqfLayMm/eCbggP/f4=;
+	b=Cc6GyaHjdGK5vJNZmBRJZdW6cD7JZ5/g+lRg3vUYzcbG8jlBBAWeaIwJQ4wfcxU2Rog8nW
+	TmbodGUmcppl4wDtqneQdxt+PgGjRw8EcJj6lizfx+v5JYKlpDWrBg/55HhgDV9snGysTX
+	M1H958VDKPut1DTqxg5ljm2G82rF3Xk=
+Date: Sat, 1 Feb 2025 09:48:45 +0100
+From: Pavel Machek <pavel@ucw.cz>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Werner Sembach <wse@tuxedocomputers.com>, hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, bentiss@kernel.org,
+	dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
+	lee@kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+	miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org,
+	onitake@gmail.com, cs@tuxedo.de,
+	platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v5 0/1] platform/x86/tuxedo: Add virtual LampArray for
+ TUXEDO NB04 devices
+Message-ID: <Z53f7VNIgUWWFn9l@duo.ucw.cz>
+References: <20250121225510.751444-1-wse@tuxedocomputers.com>
+ <aa91e17f-0ea8-4645-a0f9-57c016e36a9e@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201071455.718247-1-irogers@google.com>
-In-Reply-To: <20250201071455.718247-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 1 Feb 2025 00:51:25 -0800
-X-Gm-Features: AWEUYZlh_7DpL4vGIxHF0oRogbUtw7xXXY8ZKrPktMrlaINtX7JtLXsF90u6VZI
-Message-ID: <CAP-5=fVJPAEhvyV_dPHSHKJVeskCf_paFSP6V4EWmEyqACeA-w@mail.gmail.com>
-Subject: Re: [PATCH v1 0/7] perf: Support multiple system call tables in the build
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Bibo Mao <maobibo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="t+WGy4gS/jMLitDQ"
+Content-Disposition: inline
+In-Reply-To: <aa91e17f-0ea8-4645-a0f9-57c016e36a9e@gmx.de>
+
+
+--t+WGy4gS/jMLitDQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 31, 2025 at 11:15=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> This work builds on the clean up of system call tables and removal of
-> libaudit by Charlie Jenkins <charlie@rivosinc.com>.
->
-> The system call table in perf trace is used to map system call numbers
-> to names and vice versa. Prior to these changes, a single table
-> matching the perf binary's build was present. The table would be
-> incorrect if tracing say a 32-bit binary from a 64-bit version of
-> perf, the names and numbers wouldn't match.
->
-> Change the build so that a single system call file is built and the
-> potentially multiple tables are identifiable from the ELF machine type
-> of the process being examined. To determine the ELF machine type, the
-> executable's header is read from /proc/pid/exe with fallbacks to using
-> the perf's binary type when unknown.
->
-> Remove some runtime types used by the system call tables and make
-> equivalents generated at build time.
->
-> Ian Rogers (7):
->   perf syscalltble: Remove syscall_table.h
->   perf trace: Reorganize syscalls
->   perf syscalltbl: Remove struct syscalltbl
->   perf thread: Add support for reading the e_machine type for a thread
->   perf trace beauty: Add syscalltbl.sh generating all system call tables
->   perf syscalltbl: Use lookup table containing multiple architectures
->   perf build: Remove Makefile.syscalls
+Hi!
 
-If you are looking for the improvement this series achieves, patch 6
-has sample before and after output:
-https://lore.kernel.org/lkml/20250201071455.718247-7-irogers@google.com/
+> > I now got my feet a little wet with hid-bpf regarding something else, a=
+nd
+> > with that knowledge I would leave the long arrays in the beginning in t=
+he
+> > kernel code for the time being:
+> >=20
+> > sirius_16_ansii_kbl_mapping and sirius_16_iso_kbl_mapping are required
+> > during initialization so they have to exist in the kernel code anyway.
+> >=20
+> > report_descriptor will most likly not change even for future models and
+> > afaik having report_descriptors in kernel drivers is not unheard of.
+> >=20
+> > So the only things that could be meaningfully moved to a hid-bpf program
+> > are the sirius_16_*_kbl_mapping_pos_* arrays. But for these is have to =
+give
+> > out some fallback value anyway for the case where a hid-bpf file is mis=
+sing
+> > or fails to load. So why not use real world values from my test device =
+for
+> > these values?
+> >=20
+> > As soon as there is a future device that can use the same driver with j=
+ust
+> > these pos arrays different, then I would implement that change via a bpf
+> > program instead of a change to the kernel driver.
+> >=20
+> > Let me know if you too think this is a sensefull approach?
+> >=20
+> >=20
+> > Another question: Would this patch need to wait for a userspace
+> > implementation of lamp array before it can get accepted?
+>=20
+> It would be nice if you could test the LampArray implementation. But othe=
+r than that
+> userspace can catch up later.
+>=20
+> Still, i am interested in the opinion of the LED maintainers
+> regarding the fake HID interface.
 
-Thanks,
-Ian
+Comments from previous review were not addressed.
+
+Most importantly, this is not a way to do kernel interface. We want
+reasonable interface that can be documented and modified as needed. We
+want to pass /dev/input to userspace, not raw HID. This is not ok.
+
+Best regards,
+								Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--t+WGy4gS/jMLitDQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ53f7QAKCRAw5/Bqldv6
+8r1XAJ9ybQ25RhK01bbqWLJeDafym4vE7wCfcUwxRi+iQ738e+ZzEgfvabQY5NE=
+=upCv
+-----END PGP SIGNATURE-----
+
+--t+WGy4gS/jMLitDQ--
