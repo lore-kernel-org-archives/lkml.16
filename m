@@ -1,110 +1,109 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A7E180A80;
-	Sat,  1 Feb 2025 12:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC061A00F8;
+	Sat,  1 Feb 2025 12:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738412192; cv=none; b=NERvUepRVV70n2bJo576AAiO3x1ema40t1KRRN3lHx3O6JCfBbJR7qeSX8XybHsR2fNhKKQK4qwvFri1gWURh40qoM/zBec0Q5EkObFQqz2whZlPurVQpn6qInbjrNYZsIil7tPpJVzoRsOMZ8UGJ4gxZ7NkWBoT49EHvGe2Pq4=
+	t=1738412195; cv=none; b=FnPsbcUnDRhfIjZHwjiJaytjFFm4IiZLuAeKpRvYXM4dqlPZc5PMvzVTR74mIDfnB/9JgXsm+TvK7vN7YLM9+HPIyj6BTp9R7IMFZTjL6VibJ1FdXa/UdrpqB7NnTTXhZVUlsLDDwXleQteRLTbko9U6ndLNM+4g0fa6b26GCCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738412192; c=relaxed/simple;
-	bh=+CgwBaNs7f0YdCQF4Utemtm2lkPFC4UYGQ0xY49Lhxw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=s4YOcyPcibMWR14B+KDbG0ht4Vf+rro2yV72KcsqteLbqTCmhfJIO7XSdUP/mxVYI8uUaqZJJoY/vCr6VLCaaniQGdGk1s+fnPeaVyz/m5Nk7EpPp9NGfsgi5j0hOar+82l2Zv1U4JP4/VS4mq1akjlpaOFSRZJOOwMDvTRR8p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=dnIFoLKS; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1738412195; c=relaxed/simple;
+	bh=6ygYfFgJRBrBWpChngQqE9jWlxFUSeWN1NPdhi6DIwc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CllmQFNOrqOQ6S7wo4gklhlqYWrhNbr56tRD1rHEOp1zm/7kSt7T5+l70Ck4pyvDu1jstb4AbbylsJQgJj5WNkNWSWMCwoUlGGoFHqknnzc8Rf/ORAD8/JvAFH1YGWTwEU+xA2BQM/ioZMNe5olyHEhHXnnuSI4ZgwskfS5fnHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KOqBbc7o; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="dnIFoLKS"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KOqBbc7o"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=IdbN/O7TC9GJuAxDBVNthbbIDsMGAMlqaYeodM4oHJA=; t=1738412188; x=1739016988; 
-	b=dnIFoLKSHh612PnIPuD55K3nsWrY6YPrBVP1884DXbMnR/v42cKuAzP6THMlmUAEsdaZURGW2QV
-	SGEg5BMKs9ej5yXCcxfuksZsm1MY7Q4uaKyO3/3d1HbXIi8D7HU9nehRxrDIVo6HuVuBhaX4lUovL
-	3cyxhxLKXxe080sE236rUzlIoXxYJFaD3cxwgdK39cPmlvvW6r7f1PrauhiNgSzF2d8pb6hQZrVTI
-	sP/H0zWuqpUF/vTNZlnbBuVjChiCH7dZAugHOQBVsEi84eH+3faofN+4YAzaLRmu2Z/mTLprp+SzC
-	FS2mZkkRggcTjFdJMi4ZJ1pjjbv5c84fb/ew==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1teCQD-00000000HvD-3Nsl; Sat, 01 Feb 2025 13:16:25 +0100
-Received: from [164.15.244.35] (helo=[10.66.67.227])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1teCQD-000000011fm-2Byn; Sat, 01 Feb 2025 13:16:25 +0100
-Message-ID: <bebe04527833a0eb73b449068ed2f573bb95823e.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH] m68k: Do not include <linux/fb.h>
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Thomas Zimmermann <tzimmermann@suse.de>, gerg@linux-m68k.org, 
-	geert@linux-m68k.org
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Date: Sat, 01 Feb 2025 13:16:21 +0100
-In-Reply-To: <20250131144026.310672-1-tzimmermann@suse.de>
-References: <20250131144026.310672-1-tzimmermann@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dsMvg7ZCVh7m4D+6zs5L9cte2LOA+U4GyXDWvKKgXhs=; b=KOqBbc7oAX0DgppuJE6DoHHn/r
+	GBTiXN1x8ubMhszPUQbNsJU5IlSYItizXFMXEBQ6lPvpU/mhMak39Iwb07VAnxCioudJz4yQQnF6x
+	zNTMIulgJStVIHRknvsV5vcCK/GbNPQ6RJIw3FHwcDHuywJ9PlnreZH9MrWI0uYF3hM2XrA8pw2Q5
+	tzNudU4K4aAThsPubFz+7Ve6CPwHjgaRFi6/QqHkhLoBR+LaBgXKtSp/cjLBGdLT9aAs9DUB+ht/1
+	K0/5BvjV/Zv0bO8H6sPSg7wyKGlC/NhlixbgnNU2fiFt2XhG0OJvtd8cdh8BatAKC2vMJPBNUwwJ6
+	YBSW758w==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1teCQ3-0000000Fi18-1Y17;
+	Sat, 01 Feb 2025 12:16:15 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2014530050D; Sat,  1 Feb 2025 13:16:14 +0100 (CET)
+Date: Sat, 1 Feb 2025 13:16:13 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
+	tmgross@umich.edu, ojeda@kernel.org, alex.gaynor@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com,
+	anna-maria@linutronix.de, frederic@kernel.org, tglx@linutronix.de,
+	arnd@arndb.de, jstultz@google.com, sboyd@kernel.org,
+	mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com, tgunders@redhat.com
+Subject: Re: [PATCH v9 1/8] sched/core: Add __might_sleep_precision()
+Message-ID: <20250201121613.GC8256@noisy.programming.kicks-ass.net>
+References: <20250125101854.112261-1-fujita.tomonori@gmail.com>
+ <20250125101854.112261-2-fujita.tomonori@gmail.com>
+ <20250128113738.GC7145@noisy.programming.kicks-ass.net>
+ <20250130.085644.2298700991414831587.fujita.tomonori@gmail.com>
+ <Z5rSjsdwG2aonZrB@boqun-archlinux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5rSjsdwG2aonZrB@boqun-archlinux>
 
-Hi Thomas,
+On Wed, Jan 29, 2025 at 05:14:54PM -0800, Boqun Feng wrote:
+> On Thu, Jan 30, 2025 at 08:56:44AM +0900, FUJITA Tomonori wrote:
+> > On Tue, 28 Jan 2025 12:37:38 +0100
+> > Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > On Sat, Jan 25, 2025 at 07:18:46PM +0900, FUJITA Tomonori wrote:
+> > >> Add __might_sleep_precision(), Rust friendly version of
+> > >> __might_sleep(), which takes a pointer to a string with the length
+> > >> instead of a null-terminated string.
+> > >> 
+> > >> Rust's core::panic::Location::file(), which gives the file name of a
+> > >> caller, doesn't provide a null-terminated
+> > >> string. __might_sleep_precision() uses a precision specifier in the
+> > >> printk format, which specifies the length of a string; a string
+> > >> doesn't need to be a null-terminated.
+> > >> 
+> > >> Modify __might_sleep() to call __might_sleep_precision() but the
+> > >> impact should be negligible. strlen() isn't called in a normal case;
+> > >> it's called only when printing the error (sleeping function called
+> > >> from invalid context).
+> > >> 
+> > >> Note that Location::file() providing a null-terminated string for
+> > >> better C interoperability is under discussion [1].
+> > > 
+> > > Urgh :/
+> > 
+> > Yeah... so not acceptable?
 
-On Fri, 2025-01-31 at 15:40 +0100, Thomas Zimmermann wrote:
-> The m68k architecture's source files does not require <linux/fb.h>.
+Just frustrated we 'need' more ugly to deal with Rust being stupid.
 
-Minor: Replace "does" with "do".
+> I would like to see some concrete and technical reasons for why it's not
+> acceptable ;-) I'm not sure whether Peter was against this patch or just
+> not happy about Location::file() providing a null-terminated string is a
+> WIP.
 
-Adrian
+The latter.
 
-> Remove the include statements.
->=20
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> ---
->  arch/m68k/kernel/setup_no.c | 1 -
->  arch/m68k/kernel/uboot.c    | 1 -
->  2 files changed, 2 deletions(-)
->=20
-> diff --git a/arch/m68k/kernel/setup_no.c b/arch/m68k/kernel/setup_no.c
-> index c926da9d5ec28..f9872098f5ca5 100644
-> --- a/arch/m68k/kernel/setup_no.c
-> +++ b/arch/m68k/kernel/setup_no.c
-> @@ -21,7 +21,6 @@
->  #include <linux/sched.h>
->  #include <linux/delay.h>
->  #include <linux/interrupt.h>
-> -#include <linux/fb.h>
->  #include <linux/module.h>
->  #include <linux/mm.h>
->  #include <linux/console.h>
-> diff --git a/arch/m68k/kernel/uboot.c b/arch/m68k/kernel/uboot.c
-> index 8bb1cb3a7490e..5e52ea150d5cb 100644
-> --- a/arch/m68k/kernel/uboot.c
-> +++ b/arch/m68k/kernel/uboot.c
-> @@ -10,7 +10,6 @@
->  #include <linux/sched.h>
->  #include <linux/delay.h>
->  #include <linux/interrupt.h>
-> -#include <linux/fb.h>
->  #include <linux/module.h>
->  #include <linux/mm.h>
->  #include <linux/console.h>
+I just hate on Rust for being designed by a bunch of C haters, not
+wanting to acknowledge the whole frigging world runs on C and they
+*have* to deal with interoperability.
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+That got us a whole pile of ugly including this.
+
+
