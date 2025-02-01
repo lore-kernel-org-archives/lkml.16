@@ -1,78 +1,140 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EDF1C5D5D
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0311C5D68;
+	Sat,  1 Feb 2025 16:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738427865; cv=none; b=T2ZUSYYvae+Af+waD5pewZBt/7pNHN4Cv4W+EGvHmOQAbWL7r6iewJLtzCUeRoVVMppoMjR2cmh9+/z/LeYGMPc69/hO4hMOFnHdtbivlbQ+HDJJoQ3t7J1KzXohQOKe0vHfC4SoWtAEBp4X60UiV/Nhhq0UaQdTG7PXP5f435U=
+	t=1738427878; cv=none; b=u0OQ3CRR6PE47lINvNLycRajOSCjSZuEJYU5qcsNjfz9L27b5BCE5kEUQqacUiO8gEd2KmqVe7rHHXBIzYDTGV5hU6OCSFVN0PBhpq6W/5XezU5MY12Kp68ale3m5EZkO7oFiOwWFPw3+ToyNC2Kb0/3oCa9e+o64OZndRwT3jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738427865; c=relaxed/simple;
-	bh=Xsx+h7j2fm0O9kznMhuOvfwmOymLnm1uUUsgRlKvkR4=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=oW5z+VxErSbKlQy1Idm8NsFbHrqWqmr8Ckr6ZmcKqYH4hrsblX+/rZz0YQt0BApUHoz8/HZ+OTocjFrJeE771CEHOI2G6VxiD8OdehlXeCfy+WGNCwPBamGlF4oNWMSWSmUUOx2OnZW8cYZl65W0KnAUpEEkWjyUiN8tDhi3oWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ofkNjaVK; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738427878; c=relaxed/simple;
+	bh=+1uXDoqh7n4l1Ik5RnjCTzuNqrOVLeidvJ5uh8kJTk4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AyAqnl5tkLzMaPd0pLsZPUO6WaY7IxwKsWpjAlKZ7xv2+RuwfNttYm48A3OG7/m8zrESMfGK15Et7JT+mCyd9NLcL/rUgLL6TgOm68FONOOiR0JfwoG5vZw8nGInmSgfjOBJQHGU94g8ZTrJ1VY7ke/iBB/JHY3ZpEYbJil29mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OLpHOprM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ofkNjaVK"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738427859;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D5d2J9YxFE/gyu9Udpry9VU9ZuXZmhyr5X6vJaTZwsk=;
-	b=ofkNjaVKFNL8YRLeDxfcCc10Ajba5jZEUiwulw30s3g6smGyDTCb9c1enziUyvhWqr0IB2
-	c1zgQMOlfl8zNZIt2/pTXtZi3mJVsL+NVk6CsHuVeZh3jUsvC9zgE545hysDOUnpoopBPN
-	ybpW+FveVZw/HwU7hFbzQaraRkq4kqc=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLpHOprM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E172C4CED3;
+	Sat,  1 Feb 2025 16:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738427878;
+	bh=+1uXDoqh7n4l1Ik5RnjCTzuNqrOVLeidvJ5uh8kJTk4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OLpHOprMI/N4nqh5nNUM1EQmcmzRTCC71fdSSG4zqka76OcU4lHazhkFfMJUiIFCy
+	 Skl0QO21rzCKZkFUQp9RUxmp1VRcS94BQu72sAy6D6VWkuoZnzG9/TuIu5jFbZH27/
+	 9fW8xySSgObJ8ZxmjBbGJK/nrTtFQateUBJ1eg6RmPigymNEyzYvFiKAYQyBjn3j7r
+	 iLm2rd1G+ZcmYYHaRFNZ9QFNhe4vLIcBFgpg4ElEJLgcSY2G/T4PSx78ZK5/XUKg/H
+	 bbdB31Bid/195oiT9rP36gOI4opGzJNLgsb821bhgMAa4jAgLju8ZhsryayBz4LPVO
+	 CCc6esCnj9N0w==
+Date: Sat, 1 Feb 2025 16:37:53 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v1 02/12] iio: accel: adxl345: reorganize measurement
+ enable
+Message-ID: <20250201163753.24a63a06@jic23-huawei>
+In-Reply-To: <20250128120100.205523-3-l.rubusch@gmail.com>
+References: <20250128120100.205523-1-l.rubusch@gmail.com>
+	<20250128120100.205523-3-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
-Subject: Re: [PATCH] m68k: sun3: Use str_read_write() helper in
- mmu_emu_handle_fault()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <CAMuHMdXFxSSm6cOkKprFrOcFzb1wZK1t3vRfooRZqEHDtGDb4A@mail.gmail.com>
-Date: Sat, 1 Feb 2025 17:37:26 +0100
-Cc: Sam Creasey <sammy@sammy.net>,
- linux-m68k@lists.linux-m68k.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E7F49FB4-6DDF-47EA-97CA-8DFDC0D2F76C@linux.dev>
-References: <20250117120605.126941-2-thorsten.blum@linux.dev>
- <CAMuHMdXFxSSm6cOkKprFrOcFzb1wZK1t3vRfooRZqEHDtGDb4A@mail.gmail.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 20. Jan 2025, at 16:41, Geert Uytterhoeven wrote:
->> --- a/arch/m68k/sun3/mmu_emu.c
->> +++ b/arch/m68k/sun3/mmu_emu.c
->> @@ -371,7 +372,7 @@ int mmu_emu_handle_fault (unsigned long vaddr, =
-int read_flag, int kernel_fault)
->>=20
->> #ifdef DEBUG_MMU_EMU
->>        pr_info("%s: vaddr=3D%lx type=3D%s crp=3D%p\n", __func__, =
-vaddr,
->> -               read_flag ? "read" : "write", crp);
->> +               str_read_write(read_flag), crp);
->=20
-> You haven't really tested this with DEBUG_MMU_EMU enabled, have you?
-> Fix sent.
+On Tue, 28 Jan 2025 12:00:50 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Sorry, I missed this question.
+> In order to have this function generically available a position at the
+> top makes more sense. In upcomming patches for particular features the
+> function needs to be available, to turn off measuring while changing
+> settings, and turn it on again afterwards.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> ---
+>  drivers/iio/accel/adxl345_core.c | 54 ++++++++++++++++----------------
+>  1 file changed, 27 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
+> index ffdb03ed7a25..142f12117627 100644
+> --- a/drivers/iio/accel/adxl345_core.c
+> +++ b/drivers/iio/accel/adxl345_core.c
+> @@ -163,6 +163,33 @@ static const unsigned long adxl345_scan_masks[] = {
+>  	0
+>  };
+>  
+> +/**
+> + * adxl345_set_measure_en() - Enable and disable measuring.
+> + *
+> + * @st: The device data.
+> + * @en: Enable measurements, else standby mode.
+> + *
+> + * For lowest power operation, standby mode can be used. In standby mode,
+> + * current consumption is supposed to be reduced to 0.1uA (typical). In this
+> + * mode no measurements are made. Placing the device into standby mode
+> + * preserves the contents of FIFO.
+> + *
+> + * Return: Returns 0 if successful, or a negative error value.
+> + */
+> +static int adxl345_set_measure_en(struct adxl345_state *st, bool en)
+> +{
+> +	unsigned int val = en ? ADXL345_POWER_CTL_MEASURE : ADXL345_POWER_CTL_STANDBY;
+> +
+> +	return regmap_write(st->regmap, ADXL345_REG_POWER_CTL, val);
+> +}
+> +
+> +static void adxl345_powerdown(void *ptr)
+> +{
+> +	struct adxl345_state *st = ptr;
+> +
+> +	adxl345_set_measure_en(st, false);
+> +}
+Why move powerdown?  This looks to be a devm callback, if that's all it used for
+leave that down near wherever it is used.
+Moving set_measure_en makes sense, just not this user of it.
 
-I compile-tested it with DEBUG_MMU_EMU, but ignored the pr_info() error
-you fixed in [1].
+> +
+>  static int adxl345_set_interrupts(struct adxl345_state *st)
+>  {
+>  	int ret;
+> @@ -301,33 +328,6 @@ static int adxl345_write_raw_get_fmt(struct iio_dev *indio_dev,
+>  	}
+>  }
+>  
+> -/**
+> - * adxl345_set_measure_en() - Enable and disable measuring.
+> - *
+> - * @st: The device data.
+> - * @en: Enable measurements, else standby mode.
+> - *
+> - * For lowest power operation, standby mode can be used. In standby mode,
+> - * current consumption is supposed to be reduced to 0.1uA (typical). In this
+> - * mode no measurements are made. Placing the device into standby mode
+> - * preserves the contents of FIFO.
+> - *
+> - * Return: Returns 0 if successful, or a negative error value.
+> - */
+> -static int adxl345_set_measure_en(struct adxl345_state *st, bool en)
+> -{
+> -	unsigned int val = en ? ADXL345_POWER_CTL_MEASURE : ADXL345_POWER_CTL_STANDBY;
+> -
+> -	return regmap_write(st->regmap, ADXL345_REG_POWER_CTL, val);
+> -}
+> -
+> -static void adxl345_powerdown(void *ptr)
+> -{
+> -	struct adxl345_state *st = ptr;
+> -
+> -	adxl345_set_measure_en(st, false);
+> -}
+> -
+>  static IIO_CONST_ATTR_SAMP_FREQ_AVAIL(
+>  "0.09765625 0.1953125 0.390625 0.78125 1.5625 3.125 6.25 12.5 25 50 100 200 400 800 1600 3200"
+>  );
 
-Thanks,
-Thorsten
-
-[1] =
-https://lore.kernel.org/linux-kernel/b1d12a1d24b4aea9f98d905383ba932b2dc38=
-2e6.1737387419.git.geert@linux-m68k.org/=
