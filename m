@@ -1,185 +1,119 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718B71CCEE9;
-	Sat,  1 Feb 2025 19:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426307DA84
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 20:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738439910; cv=none; b=LV3pmrWzkBBKOi8131r/cVu21bh6vTmJRU9iXaEkHV1RHvCz8KZEjXRZFE/WNTIIJCU6x99PV6QClTAnV5t12btMexI8sUxgkNZBo4P+cbqOt/6JSNCnF8itBnLLgyQlZhZz7cVSNFlxPrW2jkAzc4YNfF3nq5RuKMebblSl09E=
+	t=1738440308; cv=none; b=FFJ4ac0j+fJ7jpFirm83uNQotlxwHzvE8ZySbfdghcZf0WDI3FytRq9XTWWf1iIZ/p3w8c5FYK8z5hqx8J22h+6i+KlidretojoyKWhuSY9+StjLN0aNoZ39wBeJmOzSn9yU8GuOK7Lh/lr+dVoGzIcXfETMvvwUPLZw/+iKczU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738439910; c=relaxed/simple;
-	bh=iOpBPMg0Y80kUJFtVAQ41yIvl4tFe+qff8uOgiyoK2s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VoFDO4Hvk5yd+GOzaXn60vtzcl2jb+ShP65gC84uzNo6LV7okl5tad3QT+MESHqZZejbry1obp+aKNgBvQseLpQpXUxFcyUtiYHaigQ0OIc5zqMpfpexmP1KnAe58fBgP/5l0WCjjMfBTm/Fh83K6d6K7ORKvLHGizwHUzIaKGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=u+wD2Hfp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FbQ+XNgB; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
+	s=arc-20240116; t=1738440308; c=relaxed/simple;
+	bh=c/nrBFaGLfezXQZH2euZV5a1DdCCVaNmyxXuHFBzHNo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=WhHDqmlykAcTJGQZjJinE6sWx+vtl6gqPCy0slMVb4SLlOtGKiyFPbbGyeKiA/It16TI2XUu+xhGA7ULVqK/HmwKnJw+vKM7P3VDEvULM2UxWPj1FvirnJSvrY0+qmSyjVcBXXFpII2K/hCkKl1A2LfTsBrOC5QDouUO74/xGjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mZOv4IRz; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="u+wD2Hfp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FbQ+XNgB"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 0FB4925400E7;
-	Sat,  1 Feb 2025 14:58:27 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Sat, 01 Feb 2025 14:58:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1738439906; x=
-	1738526306; bh=yiGGo8fB3LwFwVag32axPX1KZztzdGS8G2RAFe7mLJ0=; b=u
-	+wD2Hfp6eDfzb0rt19QIaqrIn2B9qOu8E5Z1QycpMNpE9KJ1sGT8sgR+Aaq8zmE5
-	AgqrKtRDdi+Z5qvPwtpVBHn9a1p/hzRHkrGHEd/enq/KUPLpCtts7KwVHCHECxRg
-	IOYO88qPW3IzzcCC5PNZlx2guIX0KyuuTaGBosYb6Cp/zJMEEGGp+QO/doXEKnBm
-	LnmiFDsQCX7M+VkdZTz10sFp1XxPckJjvGiICMwfLQORnmLNSW5yJ/BQ4q7bahwh
-	rTRNJYUTkA3E+8dzKN3OH0VRpgV/ZT6eFBqNAflCtG1utCEQUxDFFgW+kgV4P7qD
-	c0V368fOKecFUJYMHEbWg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1738439906; x=1738526306; bh=y
-	iGGo8fB3LwFwVag32axPX1KZztzdGS8G2RAFe7mLJ0=; b=FbQ+XNgBxQYTiDDha
-	fUOCQSm99d1ghx6l28cRHNjDzCXRDeE6HysE0t5KMChXxqFwEpHHU6fzM8s2UhXB
-	t3t/rDqrNVrLzEPrydlZxx3fr6Kbd9qnB01Ub2+tgkmGNXxJYyXxG083wdnAeI8z
-	ZuhZHxbq10+wILCQF+bXUYf86iOlOd3EG9ZqZR/6Ljdd4vt+11AeD5BtglnezeRd
-	IQI7ANLU/HomTeJDs8VUgHviw7iizGotGvJ4KTBLWoZJ38eoaQeaERjzKPVUumOU
-	Vr9mA2ZSOCH0enccApHS7p251S1YyDn0uClUqzzWlLE4FAuzKAPk446QhIo4IO7g
-	GOoAw==
-X-ME-Sender: <xms:4nyeZ82pBMA49rO1qwpjgLZdnpUlj9Ls-aXOJjebHsSQiMH0kbDr8g>
-    <xme:4nyeZ3GWfIlEki4t1WY0Z6do5qHZjsf3IA0n7LmkZ88vomtwLOAs7kSbrISBeFlUJ
-    -pE-2UhEqOwcXwuNQ>
-X-ME-Received: <xmr:4nyeZ07swR5z1v2DrP5CoDJE04t3qyf7jV6We20KfbSs9ow4y16Hoh56vZ5BRJIfvpjeUww9x5SbAhoF47HOFyJ0TwBAsgzRDkGQX1vagEjTteiN87EW>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdeifecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculd
-    ejtddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhep
-    ffgrnhhivghlucgiuhcuoegugihusegugihuuhhurdighiiiqeenucggtffrrghtthgvrh
-    hnpefgfefggeejhfduieekvdeuteffleeifeeuvdfhheejleejjeekgfffgefhtddtteen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihuse
-    gugihuuhhurdighiiipdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepuggrnhhivghlsehiohhgvggrrhgsohigrdhnvghtpdhrtghpthhtoh
-    eprghnughrihhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrshhtsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehjohhhnhdrfhgrshhtrggsvghnugesghhmrghilhdrtg
-    homhdprhgtphhtthhopehmrghrthhinhdrlhgruheslhhinhhugidruggvvhdprhgtphht
-    thhopegvugguhiiikeejsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhonhhgsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopeihohhnghhhohhnghdrshhonhhgsehlihhnuhig
-    rdguvghvpdhrtghpthhtohepkhhpshhinhhghheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:4nyeZ10dqxMMAb_EvvHdBDGuIE5iXpMDJZUdygTdcZODVq6cg4du5Q>
-    <xmx:4nyeZ_HSPBCmtte-DWU2nczVg9ovbFecLhlber7YY1B9Iqp12uPb1A>
-    <xmx:4nyeZ-_yfIQpoU0bq8XlFtc29Oj8ePY5FgOV-0l25i9RfqYxHEvZ2Q>
-    <xmx:4nyeZ0m7Z1Sog8mS0DDS4WyS9s35H85zuARRDiZqocd2lHImj4V0xw>
-    <xmx:4nyeZ1Xj8kMD54v-YI5pNI42QSPNAxsPM5PdZUuGROuMzDo8Lvc1lESQ>
-Feedback-ID: i6a694271:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 1 Feb 2025 14:58:24 -0500 (EST)
-From: Daniel Xu <dxu@dxuuu.xyz>
-To: daniel@iogearbox.net,
-	andrii@kernel.org,
-	ast@kernel.org
-Cc: john.fastabend@gmail.com,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mhartmay@linux.ibm.com,
-	iii@linux.ibm.com
-Subject: [PATCH bpf-next 3/3] bpf: verifier: Disambiguate get_constant_map_key() errors
-Date: Sat,  1 Feb 2025 12:58:03 -0700
-Message-ID: <91d84512b4082e5eb095b31e5536944a3d53f0eb.1738439839.git.dxu@dxuuu.xyz>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <cover.1738439839.git.dxu@dxuuu.xyz>
-References: <cover.1738439839.git.dxu@dxuuu.xyz>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mZOv4IRz"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-216405eea1fso61727925ad.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 12:05:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738440306; x=1739045106; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kOeWKowR+d0FbKqQGkN2JbIsBct6786NOgOb18KCO88=;
+        b=mZOv4IRzHI5uXt7BmIearINh3PIf6kTYUMn+yBXrFP/no+Lkn/JCehqnfLzKy8liw5
+         jS5w1sGUBnPlyNdxw05um8iBWPXfefgvD3em4TBAHhgBR9mZam2aTJoobcKeiLnsWYkj
+         +q/IX28jV2k9SABf47Zwyu2Vc4ICfdn/SetUqcpCo7WwquF7Y4stOfav/plpqdZ3Fvn/
+         0+Tn7/WADj0dmeNnL4cX/jS88upL9FSBgImyP5VqqjyDTBtrT7urxXvgOGyIoXtf4o+q
+         UocoPdrngFU0n7jHaqIRMtSxwYLytz6kRayKQtNuOTSi+0dw9o3CP2n9guvBNKZ0Dxp5
+         TJHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738440306; x=1739045106;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kOeWKowR+d0FbKqQGkN2JbIsBct6786NOgOb18KCO88=;
+        b=EySOFXEJAo116kkrBvzcypTjE8oriWEJGzd9o+9Gj3Mm9mpo+6prCLXXU+OuKCXjn8
+         rNx7pOms+2QQmmGVaiYsS0hPeoJklqGRBK9QGhzP4S7o8RaeK/sydYkhakdfC2w9pPD8
+         +ELCy5Y1CQxR5u5Vi054ewduRYZ/EjpBIYCCem8p8TSq7amCwboxP+Xrv3a66SvYMra2
+         uIxr0cekXuS2y5DH8UwBSUF/6uyqgYET7qwa92WHH+NMna7/hlFV7o5YhijENtaRkb1O
+         XuTh0vn1Ra9waOwvF6r+xtqLMdnKFd/vnKlpkNfGaIfZRJwRPcnMvfFE1ot1wbVhqL14
+         vSiw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0EOZSLG5KpbL5Q9SkByCHHglOjSkxWYSEJkaKTXyyB3biDKpVThPuWTwB270gulQ+8zsROZOjMGLgcNA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj0KQgFHfSMEMIPFoomb2Jgtn7Xq/KeuBxYtQmsrGN6fvMSsHV
+	hXicWOjLd5i1Ij2dqnuzP4Zm+6TDCKYANEeADAM80hjNwfwvfPrk3WFJirZrxdq+5OonhwLIfL4
+	0zw==
+X-Google-Smtp-Source: AGHT+IHqdKzHVyWuGyopMUEnhACkN2OmWbLgtQLpfJfqFKJyJTBYA4ztrAbi9BbJSb42pSmOE0PPXHviSTA=
+X-Received: from plog2.prod.google.com ([2002:a17:902:8682:b0:215:ac55:d3e1])
+ (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:dacb:b0:215:7dbf:f3de
+ with SMTP id d9443c01a7336-21dd7d74db1mr277906365ad.28.1738440306355; Sat, 01
+ Feb 2025 12:05:06 -0800 (PST)
+Date: Sat,  1 Feb 2025 12:05:03 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250201200503.2532357-1-surenb@google.com>
+Subject: [PATCH 1/1] alloc_tag: work around clang-14 issue with __builtin_object_size()
+From: Suren Baghdasaryan <surenb@google.com>
+To: akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, nathan@kernel.org, ndesaulniers@google.com, 
+	keescook@chromium.org, morbo@google.com, justinstitt@google.com, 
+	surenb@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Refactor get_constant_map_key() to disambiguate the constant key
-value from potential error values. In the case that the key is
-negative, it could be confused for an error.
+Additional condition in the allocation hooks causes Clang version 14
+(tested on 14.0.6) to treat the allocated object size as unknown at
+compile-time (__builtin_object_size(obj, 1) returns -1) even though
+both branches of that condition yield the same result. Other versions
+of Clang (tested with 13.0.1, 15.0.7, 16.0.6 and 17.0.6) compile the
+same code without issues. Add build-time Clang version check which
+removes this condition and effectively restores the unconditional tag
+store/restore flow when compiled with clang-14.
 
-It's not currently an issue, as the verifier seems to track s32 spills
-as u32. So even if the program wrongly uses a negative value for an
-arraymap key, the verifier just thinks it's an impossibly high value
-which gets correctly discarded.
-
-Refactor anyways to make things cleaner and prevent potential future
-issues.
-
-Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+Fixes: 07438779313c ("alloc_tag: avoid current->alloc_tag manipulations when profiling is disabled")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202501310832.kiAeOt2z-lkp@intel.com/
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 ---
- kernel/bpf/verifier.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ include/linux/alloc_tag.h | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index e9176a5ce215..98354d781678 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -9149,10 +9149,11 @@ static int check_reg_const_str(struct bpf_verifier_env *env,
- 	return 0;
- }
+diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
+index a946e0203e6d..df432c2c3483 100644
+--- a/include/linux/alloc_tag.h
++++ b/include/linux/alloc_tag.h
+@@ -222,10 +222,23 @@ static inline void alloc_tag_sub(union codetag_ref *ref, size_t bytes) {}
  
--/* Returns constant key value if possible, else negative error */
--static s64 get_constant_map_key(struct bpf_verifier_env *env,
-+/* Returns constant key value in `value` if possible, else negative error */
-+static int get_constant_map_key(struct bpf_verifier_env *env,
- 				struct bpf_reg_state *key,
--				u32 key_size)
-+				u32 key_size,
-+				s64 *value)
- {
- 	struct bpf_func_state *state = func(env, key);
- 	struct bpf_reg_state *reg;
-@@ -9179,8 +9180,10 @@ static s64 get_constant_map_key(struct bpf_verifier_env *env,
- 	/* First handle precisely tracked STACK_ZERO */
- 	for (i = off; i >= 0 && stype[i] == STACK_ZERO; i--)
- 		zero_size++;
--	if (zero_size >= key_size)
-+	if (zero_size >= key_size) {
-+		*value = 0;
- 		return 0;
-+	}
+ #endif /* CONFIG_MEM_ALLOC_PROFILING */
  
- 	/* Check that stack contains a scalar spill of expected size */
- 	if (!is_spilled_scalar_reg(&state->stack[spi]))
-@@ -9203,7 +9206,8 @@ static s64 get_constant_map_key(struct bpf_verifier_env *env,
- 	if (err < 0)
- 		return err;
- 
--	return reg->var_off.value;
-+	*value = reg->var_off.value;
-+	return 0;
- }
- 
- static bool can_elide_value_nullness(enum bpf_map_type type);
-@@ -9357,9 +9361,14 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
- 		if (err)
- 			return err;
- 		if (can_elide_value_nullness(meta->map_ptr->map_type)) {
--			meta->const_map_key = get_constant_map_key(env, reg, key_size);
--			if (meta->const_map_key < 0 && meta->const_map_key != -EOPNOTSUPP)
--				return meta->const_map_key;
-+			err = get_constant_map_key(env, reg, key_size, &meta->const_map_key);
-+			if (err < 0) {
-+				meta->const_map_key = -1;
-+				if (err == -EOPNOTSUPP)
-+					err = 0;
-+				else
-+					return err;
-+			}
- 		}
- 		break;
- 	case ARG_PTR_TO_MAP_VALUE:
++/* See https://lore.kernel.org/all/202501310832.kiAeOt2z-lkp@intel.com/ */
++#if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION >= 140000 && CONFIG_CLANG_VERSION < 150000
++static inline bool store_current_tag(void)
++{
++	return true;
++}
++#else
++static inline bool store_current_tag(void)
++{
++	return mem_alloc_profiling_enabled();
++}
++#endif
++
+ #define alloc_hooks_tag(_tag, _do_alloc)				\
+ ({									\
+ 	typeof(_do_alloc) _res;						\
+-	if (mem_alloc_profiling_enabled()) {				\
++	if (store_current_tag()) {					\
+ 		struct alloc_tag * __maybe_unused _old;			\
+ 		_old = alloc_tag_save(_tag);				\
+ 		_res = _do_alloc;					\
+
+base-commit: 60c828cf80c07394762a1edfaff63bea55cc8e45
 -- 
-2.47.1
+2.48.1.362.g079036d154-goog
 
