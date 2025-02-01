@@ -1,94 +1,234 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB691CDFB9;
-	Sat,  1 Feb 2025 21:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205101CCEF6
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 21:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738444829; cv=none; b=LsuKnZv6GtkLJo1XwFfwjk994AwXBkqSUZNFrmXdHXFxmUyifXCZcl/u+tqPX5SFn/TYCrHm5cnt9pmLXPmM7jgtjihq4yNk2HJzQbEqLYA5EcWxK2fTm7HNolTtbn7qCMIHlFKpgnfcR/0nrg50Wglh598ev8o8qRrf0Lmo/Ts=
+	t=1738445087; cv=none; b=iSXtl+RjcvTFJN6daHYcWOUYugaHLyDTRxTTPeebT7IzOIzAr8sUAkCXH6WuxClhyX4INZlJhU/OLoorcPsOiEzTfIJ05/XOoku5gdVwKLpwCPTtrk2L1ufmyoicogHoY3ycuN2jdsAEFRuK5Vpsnz5dh0eX/lAVQ0/Mco+pNhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738444829; c=relaxed/simple;
-	bh=3Y0bhcL4Eo+BfJxfzbskkAtfQAkfcvteVvoEYha/FhE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sJlyvBIjcTkEWbsGtmRmrd84HgPWllYOxMq1dDn+I+R6H2emoQHE6aU6RpR8v44vCjoFiAWDL5dFqGCI98wK8whTTVk2CshbnGo7xgpSOLShfQ8WTMeCcL5Xc9qVgMSkgyoV8vWIRVxWMft2gkpYY92jVjK5UcDFfPPH96rP42Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=My08AMyf; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738445087; c=relaxed/simple;
+	bh=yYK8f7I1aNapofg60l0ZtEixnSH17Y6dm5OMnzJR/pk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LVtgAVx6Ik4o2z1uJvf/1atfWkrdLBYCcxOgD6CCVv7BlNddRjmu3QDf0hAV1oYD7dXbtqst8GNy8RZ6o3udFzy56r67xej1amh98ai1ApPNQvVDKNCXLdQ1WoGnxaTU5m3JUhTvGRKT0Ij99BXaEM0Pp5jMQwdFg2mYTGQCf80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Drne/UPP; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="My08AMyf"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-307325f2436so31142041fa.0;
-        Sat, 01 Feb 2025 13:20:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738444825; x=1739049625; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zvecpl+HgUVTtmudTdCRFmg5hSgsGDtDvnZryEJwbwk=;
-        b=My08AMyfT21wMzZj8dDP3EHc539i9hv/rVeOR6TCReioRnRuXXUN5gv0LN/o5vI3Z2
-         bT/ojkxG9xWD/5x7XutT85L0aoTvxfS9XvkANDoerYKcdsz1mAMZMTupYV7vNV9OINn1
-         FgjXmMwEbg6gDF4axcbRH/KwPG9bitjeVlCG+SS/VYTx73VrKeyK2xggxQyuHkFLQoHy
-         DkLpHVGjO9OJsY1dLN+wzovXoQj0Tw/5A3sY7qjtXC7Y3xaMjmaE2mZbFIDSWeDbPOmO
-         VCII5w64xvd5pRz6Mz06f57Yg1Rff7ss3MI6BaHniIXDAXs30OtG7qYIYWvTUr0nzxDH
-         zX/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738444825; x=1739049625;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zvecpl+HgUVTtmudTdCRFmg5hSgsGDtDvnZryEJwbwk=;
-        b=UId/kymt+edwSW9HReAYlRAShiB6iZL/81p8z1Dg5Mh9ZwbizCqYzITOKPwniiRTh1
-         XHbpaweozruhAPU+9AebuY+Pg+UoOcHZmjBlSxn0azMA3TaZ0XT0kpiy5CPmYAIyfxTo
-         ofx2nkPA8FFZh+FNhMDrbPJwk/+S+3acMhH02jHzIMTv7YlEepTesxNdNfdzd19d7pJA
-         y38yjhMCKP0RgRr7lSBA35n1UYmvxeFDm3CzA25T4GqEo2WbaJLfm7VJiZyFW0S9BTs4
-         KH8RQo0BNnd+gJDgGAPjuj1dAHj2YMOpwvbnztxku6cV35gldxfqMxT7jJjUvsFHvToO
-         5T0A==
-X-Forwarded-Encrypted: i=1; AJvYcCU2lHFwgmRQsvqmvAsZPwpqrq8aHC03YqH5e60qVNS878Sth5K3Nwyd5Y4EqLI+G62jFf3hljMgnNmEiqzApaI=@vger.kernel.org, AJvYcCWhsOU9btYJDJg0Jm0h0BqITqNfpDTGunwx0hZYFPywOYIjmusHtPX//JhUBJ4QF9JmSUdrOEKrN3yljo0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy9t5o+BxTqiAL1E91gqHk0WRipjz8lMhq2oMKbP3jpzbrfwY0
-	4CSw0vY44P+umNmXDPXIaMOD35RqK0aa+nq16fBR9Rye5/sCfyBkpIqAWnKltDUy4K/rOkq7py/
-	BQNv67JJTLvWMa/BicaHi1upuw0w=
-X-Gm-Gg: ASbGnct2tBL6We9vcuFxogUR6BZxTpWdRS5wIWlftpvufD6ikA3/KI8tfWEqXPQa0mX
-	JHKBUMZ8ZHAtWzkWCku/ukzMgKDFMfZunQ+u213l28w1FsmOgwVupZAl6EOVBx8CMjpwN9S5LWs
-	QdAczqITSvyHz3vsDqbaouoqD036g14uU=
-X-Google-Smtp-Source: AGHT+IEKRKhKk5clOlOSo7dfDkI81Zfx64U+o6b2yi6Q5hHk6iaw5N9WQE2hYgMY6wjZXU+hvYbxa/gQsxCfmlevMY0=
-X-Received: by 2002:a2e:a5c3:0:b0:302:244a:da2c with SMTP id
- 38308e7fff4ca-307968dfd9fmr55108461fa.31.1738444825329; Sat, 01 Feb 2025
- 13:20:25 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Drne/UPP"
+Date: Sat, 1 Feb 2025 16:24:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738445081;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KvU32ei2vVgo2pDt9gpN5Ou+WbFmSMgZqQnjh2Nxa+8=;
+	b=Drne/UPPVQtbAZ60EwZrSowhrra+QTlbStpS4brS4LyEsAEhIvjw5c2b9f3cTWzbD28pHn
+	GaIA8cMqzfjxOtyWxaH6q7/nJONxYj1X+zDyioOmCh3aFWagBgLiIMKxwFu/Si1hmTN9xd
+	JUg1bhcP/23nBeQ+ChoCdXAoJ0zmhLA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] bcachefs: fix deadlock in journal_entry_open()
+Message-ID: <2iainwxojhulyf7oyga5xboufhiztz4boiqaofppopeduicwjt@pxj756ofltru>
+References: <20250201195044.28007-1-aha310510@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201-aligned-alloc-v1-1-c99a73f3cbd4@gmail.com> <Z56Bq94kPaN9UX5H@cassiopeiae>
-In-Reply-To: <Z56Bq94kPaN9UX5H@cassiopeiae>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sat, 1 Feb 2025 16:19:48 -0500
-X-Gm-Features: AWEUYZnD6rCm9Fdn0-d6Pr6hwcCau97EZ1DtguMnvAf8R-j4z6awNf08fuwp0Tw
-Message-ID: <CAJ-ks9n3KfcSqocjXY6QojF6R_aGBiRsXBuyiX8Y0rHtjm3sNw@mail.gmail.com>
-Subject: Re: [PATCH] rust: alloc: satisfy `aligned_alloc` requirements
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250201195044.28007-1-aha310510@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Danilo, thanks for the review!
+On Sun, Feb 02, 2025 at 04:50:44AM +0900, Jeongjun Park wrote:
+> In the previous commit b3d82c2f2761, code was added to prevent journal sequence
+> overflow. Among them, the code added to journal_entry_open() uses the
+> bch2_fs_fatal_err_on() function to handle errors.
+> 
+> However, __journal_res_get() , which calls journal_entry_open() , calls
+> journal_entry_open() while holding journal->lock , but bch2_fs_fatal_err_on()
+> internally tries to acquire journal->lock , which results in a deadlock.
+> 
+> So we need to add a locked helper like bch2_journal_halt_locked() to handle
+> fatal errors even when the journal->lock is held.
+> 
+> Fixes: b3d82c2f2761 ("bcachefs: Guard against journal seq overflow")
+> Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+> ---
+>  fs/bcachefs/error.c    |  6 +++---
+>  fs/bcachefs/fs-ioctl.c |  4 ++--
+>  fs/bcachefs/journal.c  | 22 +++++++++++++++++-----
+>  fs/bcachefs/journal.h  |  3 ++-
+>  fs/bcachefs/recovery.c |  2 +-
+>  fs/bcachefs/super.c    |  4 ++--
+>  fs/bcachefs/super.h    |  2 +-
+>  7 files changed, 28 insertions(+), 15 deletions(-)
+> 
+> diff --git a/fs/bcachefs/error.c b/fs/bcachefs/error.c
+> index 038da6a61f6b..2482eb33b1ec 100644
+> --- a/fs/bcachefs/error.c
+> +++ b/fs/bcachefs/error.c
+> @@ -20,7 +20,7 @@ bool bch2_inconsistent_error(struct bch_fs *c)
+>  		return false;
+>  	case BCH_ON_ERROR_fix_safe:
+>  	case BCH_ON_ERROR_ro:
+> -		if (bch2_fs_emergency_read_only(c))
+> +		if (bch2_fs_emergency_read_only(c, false))
 
-On Sat, Feb 1, 2025 at 3:18=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
-rote:
->
-> I think I prefer this to be slightly more compact:
->
->    let min_align =3D core::mem::size_of::<*const crate::ffi::c_void>();
->    let (align, size) =3D if layout.align() < min_align {
->        (min_align, layout.size().div_ceil(min_align) * min_align)
->    } else {
->        (layout.align(), layout.size())
->    };
+No, don't add a bool parameter. It'll be a lot less churny, and clearer
+reading, if you add a separate
 
-I was trying to avoid repeated calls to either function, but I'm happy
-to shorten the variable names. Would that suit?
+bch2_fs_emergency_read_only_locked()
+helper
+
+>  			bch_err(c, "inconsistency detected - emergency read only at journal seq %llu",
+>  				journal_cur_seq(&c->journal));
+>  		return true;
+> @@ -46,7 +46,7 @@ int bch2_topology_error(struct bch_fs *c)
+>  
+>  void bch2_fatal_error(struct bch_fs *c)
+>  {
+> -	if (bch2_fs_emergency_read_only(c))
+> +	if (bch2_fs_emergency_read_only(c, false))
+>  		bch_err(c, "fatal error - emergency read only");
+>  }
+>  
+> @@ -62,7 +62,7 @@ void bch2_io_error_work(struct work_struct *work)
+>  	if (dev
+>  	    ? __bch2_dev_set_state(c, ca, BCH_MEMBER_STATE_ro,
+>  				  BCH_FORCE_IF_DEGRADED)
+> -	    : bch2_fs_emergency_read_only(c))
+> +	    : bch2_fs_emergency_read_only(c, false))
+>  		bch_err(ca,
+>  			"too many IO errors, setting %s RO",
+>  			dev ? "device" : "filesystem");
+> diff --git a/fs/bcachefs/fs-ioctl.c b/fs/bcachefs/fs-ioctl.c
+> index 15725b4ce393..92becb6ae5aa 100644
+> --- a/fs/bcachefs/fs-ioctl.c
+> +++ b/fs/bcachefs/fs-ioctl.c
+> @@ -354,14 +354,14 @@ static int bch2_ioc_goingdown(struct bch_fs *c, u32 __user *arg)
+>  		if (ret)
+>  			break;
+>  		bch2_journal_flush(&c->journal);
+> -		bch2_fs_emergency_read_only(c);
+> +		bch2_fs_emergency_read_only(c, false);
+>  		bdev_thaw(c->vfs_sb->s_bdev);
+>  		break;
+>  	case FSOP_GOING_FLAGS_LOGFLUSH:
+>  		bch2_journal_flush(&c->journal);
+>  		fallthrough;
+>  	case FSOP_GOING_FLAGS_NOLOGFLUSH:
+> -		bch2_fs_emergency_read_only(c);
+> +		bch2_fs_emergency_read_only(c, false);
+>  		break;
+>  	default:
+>  		ret = -EINVAL;
+> diff --git a/fs/bcachefs/journal.c b/fs/bcachefs/journal.c
+> index 2cd20114b74b..4b3bdbfd7782 100644
+> --- a/fs/bcachefs/journal.c
+> +++ b/fs/bcachefs/journal.c
+> @@ -310,14 +310,23 @@ static void __journal_entry_close(struct journal *j, unsigned closed_val, bool t
+>  	__bch2_journal_buf_put(j, old.idx, le64_to_cpu(buf->data->seq));
+>  }
+>  
+> -void bch2_journal_halt(struct journal *j)
+> +void bch2_journal_halt_locked(struct journal *j)
+>  {
+> -	spin_lock(&j->lock);
+> +	lockdep_assert_held(&j->lock);
+> +
+>  	__journal_entry_close(j, JOURNAL_ENTRY_ERROR_VAL, true);
+>  	if (!j->err_seq)
+>  		j->err_seq = journal_cur_seq(j);
+>  	journal_wake(j);
+> -	spin_unlock(&j->lock);
+> +}
+> +
+> +void bch2_journal_halt(struct journal *j, bool locked)
+> +{
+> +	if (!locked)
+> +		spin_lock(&j->lock);
+> +	bch2_journal_halt_locked(j);
+> +	if (!locked)
+> +		spin_unlock(&j->lock);
+>  }
+>  
+>  static bool journal_entry_want_write(struct journal *j)
+> @@ -382,9 +391,12 @@ static int journal_entry_open(struct journal *j)
+>  	if (nr_unwritten_journal_entries(j) == ARRAY_SIZE(j->buf))
+>  		return JOURNAL_ERR_max_in_flight;
+>  
+> -	if (bch2_fs_fatal_err_on(journal_cur_seq(j) >= JOURNAL_SEQ_MAX,
+> -				 c, "cannot start: journal seq overflow"))
+> +	if (journal_cur_seq(j) >= JOURNAL_SEQ_MAX) {
+> +		bch_err(c, "cannot start: journal seq overflow");
+> +		if (bch2_fs_emergency_read_only(c, true))
+> +			bch_err(c, "fatal error - emergency read only");
+>  		return JOURNAL_ERR_insufficient_devices; /* -EROFS */
+> +	}
+>  
+>  	BUG_ON(!j->cur_entry_sectors);
+>  
+> diff --git a/fs/bcachefs/journal.h b/fs/bcachefs/journal.h
+> index cb0df0663946..23f5fd970b7d 100644
+> --- a/fs/bcachefs/journal.h
+> +++ b/fs/bcachefs/journal.h
+> @@ -407,7 +407,8 @@ int bch2_journal_flush(struct journal *);
+>  bool bch2_journal_noflush_seq(struct journal *, u64, u64);
+>  int bch2_journal_meta(struct journal *);
+>  
+> -void bch2_journal_halt(struct journal *);
+> +void bch2_journal_halt(struct journal *, bool);
+> +void bch2_journal_halt_locked(struct journal *);
+>  
+>  static inline int bch2_journal_error(struct journal *j)
+>  {
+> diff --git a/fs/bcachefs/recovery.c b/fs/bcachefs/recovery.c
+> index 98825437381c..31549181888c 100644
+> --- a/fs/bcachefs/recovery.c
+> +++ b/fs/bcachefs/recovery.c
+> @@ -1076,7 +1076,7 @@ int bch2_fs_recovery(struct bch_fs *c)
+>  	return ret;
+>  err:
+>  fsck_err:
+> -	bch2_fs_emergency_read_only(c);
+> +	bch2_fs_emergency_read_only(c, false);
+>  	goto out;
+>  }
+>  
+> diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
+> index d97ea7bd1171..d3d11fb39632 100644
+> --- a/fs/bcachefs/super.c
+> +++ b/fs/bcachefs/super.c
+> @@ -400,11 +400,11 @@ static void bch2_fs_read_only_async(struct bch_fs *c)
+>  	queue_work(system_long_wq, &c->read_only_work);
+>  }
+>  
+> -bool bch2_fs_emergency_read_only(struct bch_fs *c)
+> +bool bch2_fs_emergency_read_only(struct bch_fs *c, bool locked)
+>  {
+>  	bool ret = !test_and_set_bit(BCH_FS_emergency_ro, &c->flags);
+>  
+> -	bch2_journal_halt(&c->journal);
+> +	bch2_journal_halt(&c->journal, locked);
+>  	bch2_fs_read_only_async(c);
+>  
+>  	wake_up(&bch2_read_only_wait);
+> diff --git a/fs/bcachefs/super.h b/fs/bcachefs/super.h
+> index fa6d52216510..e9ff83e06ca2 100644
+> --- a/fs/bcachefs/super.h
+> +++ b/fs/bcachefs/super.h
+> @@ -28,7 +28,7 @@ int bch2_dev_offline(struct bch_fs *, struct bch_dev *, int);
+>  int bch2_dev_resize(struct bch_fs *, struct bch_dev *, u64);
+>  struct bch_dev *bch2_dev_lookup(struct bch_fs *, const char *);
+>  
+> -bool bch2_fs_emergency_read_only(struct bch_fs *);
+> +bool bch2_fs_emergency_read_only(struct bch_fs *, bool);
+>  void bch2_fs_read_only(struct bch_fs *);
+>  
+>  int bch2_fs_read_write(struct bch_fs *);
+> --
