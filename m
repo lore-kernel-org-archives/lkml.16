@@ -1,64 +1,69 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4341E182D0
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EEF15AF6
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738372445; cv=none; b=Ap5oyCAinurwYxkvkg1eGxuKvL6eql4pLX0KlraBaZs7VZ+q7kgArkAelu4fhE18ygXSm97NcxCKt8vHCJ711y4l28y6ggXTjIWmbapCRJpq8Dixrt1YYGaDPTPhiCxTOBmCFiCNHxag1VXQ1yYwUS/x3w87hNgayAp41TrTK6c=
+	t=1738372447; cv=none; b=rsWd6rmtsSMIoiSnYn2/RHmDHuRCDeyYl76i9sezn8KZzgK7r1Ah0U/k7bbViJyY/RMp9emkJSuN/KOpNLGsZFtRQMJueXaKN/uiQkmDYjL7YowBpe9oosrnY2KjcKovJTbiaXm9lbKtrx7p3B0dTDzc0LsyoCm96cLEVbQcEmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738372445; c=relaxed/simple;
-	bh=gDa1qhX91wsfWEYeXVozciwOxp3uGwMjlCxhzjYjjx8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=U+cOQJ/mgRheXNlYF3+6MhYBj0tHdOoPRq7IbdXOV6/F/3HD8RoK5dcY+F0VDrS7yVCgf+Xy7kp2gAh7S2rMd0a+vfTLCzkjoltePRXyg3QKf3SQ2lPjeg1IPExAmwojhi/vl/j27HRLAXKQA4DaKkP1LptrSnCwFitofgMqTsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rRigvXpr; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1738372447; c=relaxed/simple;
+	bh=UDiTXSTfBH0EOp+MejDSxKgfdfI3+KOE+dUN4Gwb0KE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=m6s0kMx0IfTGyS7SnIWfPBThSUTMBs3yksA3PWOMoDVyJe5xH0EI6ri2HnqS5PSVmPjS83DbMzoEKVFsnFe0za3lCK2HCssUthVxw6io1BTiwryve1wKblx4yVZJyCni032oiyDHBpv5cteF3e39QZyBMzD5kJPD/sccK5xV56g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tf82DaQi; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rRigvXpr"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ef9b9981f1so7156686a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:14:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tf82DaQi"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-216717543b7so67071705ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:14:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738372443; x=1738977243; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6IvXp6LawXcmBH5LaQWsjNSSz2+k/ZgcOemyGwVuzTI=;
-        b=rRigvXprLQr60GIRf1LjfRRStAppw7SEW2YzsuRwxYbz79VHsDMIMdubhUk3kk8uO/
-         SoPCzBH83o0BgdE9uq77tkD6rF7Mw93VwND+2DJFOanG0esqA36c4oW6XZgW3FfexJhQ
-         Xs7vLAtYOeiIlH7u5YYUZBZ8yPa6b9Z5LV7zfwmRwSxOae2d78+zGDBfL8/V1Cd9ruLM
-         82+xh3C2N8+OfVA1pgs6Irr/kkyKYYID9PgT3aKZRDwhF+GZkyEqpT4ZEvwevCnkBlQT
-         5DF9BMZzhCUYzLawVVBAdwbR+DkHEcl1b/J/1inYPxPp3d7/IfD9gRuOLcy1cwxdzt7e
-         SJ+w==
+        d=google.com; s=20230601; t=1738372445; x=1738977245; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Ic4S96V5xW2k4uiIcyvRxni7wZ7oCZzN7I2/Wa5niQ=;
+        b=Tf82DaQi6NZHjwUHyhlWWkSQGnGayAv8C0ooCyBW/ZqQLfusoEfshKxsbGhdK+wA8T
+         ewSWfwlQAj/RHSUq7xwESUT4Q8bGytN1/M6bt5PuXYtPIM+o9+CY/Y8EWVUkYLfQSKb2
+         NIj/2pc97yG1z0TvfOwpFZ2lCuakIKfHNzJtiwFokvo/TKwB5SIoy/Of3eLbQEvYtGEU
+         LK+YIXR5kYYbg9p3SvDB04RDfJ2nw5OjsJ3cly8EnbMes74xHpoKKtHp4MxeOnseMlwU
+         So6UmAkzlRRMOd8TaYEk1BJCuYA0naUdDQl8ZsZhRzhEL2n6tqF8OMLGw8fJrqkeCyuv
+         bB0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738372443; x=1738977243;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6IvXp6LawXcmBH5LaQWsjNSSz2+k/ZgcOemyGwVuzTI=;
-        b=eYiF7EEPXXfQM+H9cqph/7XSrrnsWTz/QMN60dTBDVkfl1qLKcPxlU+X41H7TJf1Y8
-         +HgRwLtk5VT2VTwf79FUAueFFDxrdqc/UEjMyQzMx4smrEzXEZDLrKbpIYnrqVpCwUCA
-         RSx5M4smTMmqI5V1af9XBiOn1h1ZjN+XvxMWvNHIV0sqwRmq36MzGiWN21R4XeeXgCC5
-         qARAuvm1w3HvDtY+iZftaXEV37Pw01XBt43xd1R8CFNAM6mpYW6GJ6KXA/JzQpbE54Yt
-         /MLDagldaD2HyiWCBSRIPAd0IRdHPYIRe5sjTHErSfEvLTwMnOU/zcxx5RPPhBNXt8er
-         B/eA==
-X-Forwarded-Encrypted: i=1; AJvYcCVsNbI5sldzVu4vIlenKQHvo2IugCLcapA3M7LBBzS+CSguINeKkK0zOO18eJlMkNQ27v3kiZdLRjaQPHg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze+D8gG4Ku/fwdrcvMpejOO/NrS3jwuCmuBZEI6bR7dlWSroOn
-	pq/SlquaQ1rISYcugOVqhAVlYuV5lT+i/jh+9MP3zjy2s6YeAbAlRccBL36leVoSoj9cZKup4vd
-	ijg==
-X-Google-Smtp-Source: AGHT+IHVh07xgKTqbFguAoF2iaYq32Ad1Ug6CwyHoemr9AcdSO0FNfC+G6UjHvQIRnw/7HgYALo+v9DC7SE=
-X-Received: from pjbpx16.prod.google.com ([2002:a17:90b:2710:b0:2ea:3a1b:f493])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f8c:b0:2ee:9d49:3ae6
- with SMTP id 98e67ed59e1d1-2f83abd7da8mr20622800a91.10.1738372443463; Fri, 31
- Jan 2025 17:14:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738372445; x=1738977245;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0Ic4S96V5xW2k4uiIcyvRxni7wZ7oCZzN7I2/Wa5niQ=;
+        b=FtTjGq2WSy7V5Utruqke64RfE8Myi29wQ43QtH8swlnvYIWW65jNgSpmEv8uYQyVdu
+         7ZvhAwpUi8ZjmduKCwQSvyTg01QXXRI1Weavu2FPEE6hwOhlCRSf4DOoeKwnoGLHQGJC
+         mabuf3IuxDnyaZ/YdoS8H2SLtH1t5ncIJhlxvUdIs6aSmGGVV4ZUoQ568+3jgRRA+oCS
+         MT9p/ER3SbE8PGB3tkhbhQbDnYxSqjFcYX/ucdKBjdo58u6PDtQHyP5rDJSmXmY28c8H
+         Ut+uDlzsVS+UcpCbp59TVRuhtTnGmsj9YatWZiRZMAh9bqR94ffFNyYdAnBp4Uf+EFf/
+         IoxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkwpo2nGo02yKgPr0Wk/UY3YjHWdevN/fRYiKU1vq+puCBQwyZoYgtzH2xk+0OTCKEpHmRqs2FFuQyGNE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSVfD/2c+UnKFXXk9zq/L8nnsqEZh0MAz+FG4tx5t3YGsLEypz
+	jXf6acgA5UY8EurX0keq6KViD+cW+Gs7KSAt36XC6SYP1FrpeQKRTYNrTQx8c2VQJyE3xsvUfo9
+	vcg==
+X-Google-Smtp-Source: AGHT+IGGOiNfAsKcc7I2Ois69n1RIN8U53iejt27njRVZnAgVIYEYR+WxCnPB5UeMYUjhcsFHlqBySEAKcY=
+X-Received: from plck17.prod.google.com ([2002:a17:902:f291:b0:21a:8476:ecc3])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d48c:b0:215:b01a:627f
+ with SMTP id d9443c01a7336-21dd7c4457emr223500625ad.4.1738372445221; Fri, 31
+ Jan 2025 17:14:05 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 31 Jan 2025 17:13:55 -0800
+Date: Fri, 31 Jan 2025 17:13:56 -0800
+In-Reply-To: <20250201011400.669483-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250201011400.669483-1-seanjc@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250201011400.669483-1-seanjc@google.com>
-Subject: [PATCH 0/5] KVM: x86/xen: Restrict hypercall MSR index
+Message-ID: <20250201011400.669483-2-seanjc@google.com>
+Subject: [PATCH 1/5] KVM: x86/xen: Restrict hypercall MSR to unofficial
+ synthetic range
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	David Woodhouse <dwmw2@infradead.org>, Paul Durrant <paul@xen.org>
@@ -67,30 +72,77 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Joao Martins <joao.m.martins@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>
 Content-Type: text/plain; charset="UTF-8"
 
-Address a syzkaller splat by restricting the Xen hypercall MSR index to
-the de facto standard synthetic range, 0x40000000 - 0x4fffffff.  This
-obviously has the potential to break userspace, but I'm fairly confident
-it'll be fine (knock wood), and doing nothing is not an option as letting
-userspace redirect any WRMSR is at best completely broken, and at worst
-could be used to exploit paths in KVM that directly write hardcoded MSRs.
+Reject userspace attempts to set the Xen hypercall page MSR to an index
+outside of the "standard" virtualization range [0x40000000, 0x4fffffff],
+as KVM is not equipped to handle collisions with real MSRs, e.g. KVM
+doesn't update MSR interception, conflicts with VMCS/VMCB fields, special
+case writes in KVM, etc.
 
-Patches 2-5 are tangentially related cleanups.
+Allowing userspace to redirect any MSR write can also be used to attack
+the kernel, as kvm_xen_write_hypercall_page() takes multiple locks and
+writes to guest memory.  E.g. if userspace sets the MSR to MSR_IA32_XSS,
+KVM's write to MSR_IA32_XSS during vCPU creation will trigger an SRCU
+violation due to writing guest memory:
 
-Sean Christopherson (5):
-  KVM: x86/xen: Restrict hypercall MSR to unofficial synthetic range
-  KVM: x86/xen: Add an #ifdef'd helper to detect writes to Xen MSR
-  KVM: x86/xen: Consult kvm_xen_enabled when checking for Xen MSR writes
-  KVM: x86/xen: Bury xen_hvm_config behind CONFIG_KVM_XEN=y
-  KVM: x86/xen: Move kvm_xen_hvm_config field into kvm_xen
+  =============================
+  WARNING: suspicious RCU usage
+  6.13.0-rc3
+  -----------------------------
+  include/linux/kvm_host.h:1046 suspicious rcu_dereference_check() usage!
 
- arch/x86/include/asm/kvm_host.h |  4 ++--
- arch/x86/kvm/x86.c              |  4 ++--
- arch/x86/kvm/xen.c              | 28 ++++++++++++++++++----------
- arch/x86/kvm/xen.h              | 17 +++++++++++++++--
- 4 files changed, 37 insertions(+), 16 deletions(-)
+  stack backtrace:
+  CPU: 6 UID: 1000 PID: 1101 Comm: repro Not tainted 6.13.0-rc3
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+  Call Trace:
+   <TASK>
+   dump_stack_lvl+0x7f/0x90
+   lockdep_rcu_suspicious+0x176/0x1c0
+   kvm_vcpu_gfn_to_memslot+0x259/0x280
+   kvm_vcpu_write_guest+0x3a/0xa0
+   kvm_xen_write_hypercall_page+0x268/0x300
+   kvm_set_msr_common+0xc44/0x1940
+   vmx_set_msr+0x9db/0x1fc0
+   kvm_vcpu_reset+0x857/0xb50
+   kvm_arch_vcpu_create+0x37e/0x4d0
+   kvm_vm_ioctl+0x669/0x2100
+   __x64_sys_ioctl+0xc1/0xf0
+   do_syscall_64+0xc5/0x210
+   entry_SYSCALL_64_after_hwframe+0x4b/0x53
+  RIP: 0033:0x7feda371b539
 
+While the MSR index isn't strictly ABI, i.e. can theoretically float to
+any value, in practice no known VMM sets the MSR index to anything other
+than 0x40000000 or 0x40000200.
 
-base-commit: eb723766b1030a23c38adf2348b7c3d1409d11f0
+Reported-by: syzbot+cdeaeec70992eca2d920@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/679258d4.050a0220.2eae65.000a.GAE@google.com
+Cc: Joao Martins <joao.m.martins@oracle.com>
+Cc: Paul Durrant <paul@xen.org>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/xen.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/x86/kvm/xen.c b/arch/x86/kvm/xen.c
+index a909b817b9c0..35ecafc410f0 100644
+--- a/arch/x86/kvm/xen.c
++++ b/arch/x86/kvm/xen.c
+@@ -1324,6 +1324,14 @@ int kvm_xen_hvm_config(struct kvm *kvm, struct kvm_xen_hvm_config *xhc)
+ 	     xhc->blob_size_32 || xhc->blob_size_64))
+ 		return -EINVAL;
+ 
++	/*
++	 * Restrict the MSR to the range that is unofficially reserved for
++	 * synthetic, virtualization-defined MSRs, e.g. to prevent confusing
++	 * KVM by colliding with a real MSR that requires special handling.
++	 */
++	if (xhc->msr && (xhc->msr < 0x40000000 || xhc->msr > 0x4fffffff))
++		return -EINVAL;
++
+ 	mutex_lock(&kvm->arch.xen.xen_lock);
+ 
+ 	if (xhc->msr && !kvm->arch.xen_hvm_config.msr)
 -- 
 2.48.1.362.g079036d154-goog
 
