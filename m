@@ -1,103 +1,244 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA7720330;
-	Sat,  1 Feb 2025 14:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09352557A;
+	Sat,  1 Feb 2025 14:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738420785; cv=none; b=B3y6+CWWY2GesB+J23bSX26xkQrHr56G2bZ8Gf0t4dGTvoAInZnegMfV32t+1Pf1wjiWQEc25oVlyt78lrcRtJLoANtzhJgkdMZsQU6ILYXPn8JTvP2i6jjnZOkYthCwQbEgY6zI4PR+AXvIeJyOj5eeH9RRC3eXtM64W2bQk8U=
+	t=1738421129; cv=none; b=VDPOjFjMZrGQGLbG1xL+Drz/T5n5kjqsDBhIxjON6TYSnNkvh3TNXEWue972GglIuaBJkAmzfgQELuMS8Ee4dcXjd3huewCPQlNEQeobelGpzCYDgqwS4oS91uiEtdytUjd2p2/B86HCL7XeMglzlGEymAcM8S6BeMBbBXJklzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738420785; c=relaxed/simple;
-	bh=wBkba/v5eoGhankCbBEeMFPQnnO6O3Aek9xKVukiObw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PAN7NnHpASWoDtgAjzsCJVuu2FeH2H89cwHsvRreE9wRc3z7WLzV+ksv/mIe31efgsiTBrBoo+Yw8Jlt66SxFl7DAj3shdgNzz89HM4xEeMg0v3Kp7jMra4LSrfxP3a8dysbIV5JwLo/2RyHO/0ADEtEgo912MN/VN5RbKi69FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xwx2w/20; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738421129; c=relaxed/simple;
+	bh=h3fZCiwYRqE+HzDA39f3dJWcnPSExT0LTqlrCDBkB58=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GQR5IsvM9RXY0AOR7pitUYJaXY1Cy/29OmKUkJIx7rvvAGh/CxBC1MWVWhcpzjdZ3N44S2Eaop612u8OidrmGFE0V+98h6q5x1HiGD416+3WiN/4v9DCGa/SNqTBr8CyiZD0k6Ps1U9nwWAcsx0klj6xO16MdnY/qZLsfuWWpUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSECrB8x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xwx2w/20"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2eec9b3a1bbso3958462a91.3;
-        Sat, 01 Feb 2025 06:39:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738420783; x=1739025583; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4IXATb3WD0Y8ZHgOSiPUXeVEOvohal0QGruJmsTw9ME=;
-        b=Xwx2w/20hi57F6g4jMA6gDC11AHfB7oX9TnofPURt7ZWqmyq0YhpqzsFIr/H6tVvA1
-         Rl/6eAj5CdBvZPy4ehG60pZ9W8Dvgv5x87m1V816HlObrGs9Nechfsjho/Q/Xgst9ScQ
-         o3vIsui52MiF3KzgSbOhesQov/WlHSdcy2qJYJPrkYHH2UV37AVBdBIa5YKig5Bwiqn9
-         bFfE/dFp7fIJNDvdCXMLtlza8b+zoVFFo+lULL7ePtznfIzxLCqAmca4/FDY1BgJwCKA
-         ypB9LJhEr0vUolvoi3BWM+MLUP2/wK4ctFlpkl+azjxPlOMLRjQkVli4wKo/xFlowYc6
-         OkwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738420783; x=1739025583;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4IXATb3WD0Y8ZHgOSiPUXeVEOvohal0QGruJmsTw9ME=;
-        b=DLAK57xCBpyZYWtdI+P7v2shO417tbAI0yhQipLho04wQ514ERkyYBDjDIw+9OmeoX
-         RzPfvLLKHpVvHudsYzFI7wO0IE2a7vTvROyinWeV7kO9drxcaIACqSS6mpXqaMchwUhC
-         cTGd8N0Gz6HxOVJYuGagVCnyE9+39TWb43RfWIId31nUq/tmHjdzmi/yJLu91iodPasP
-         RNBT4+9KciKDNqy7TtxQ7jNaFuAz4t8Qp2+VYJ1BvD1uUDuLDc2EkqbY5geH16oMISif
-         TN2kko4WEqOUw92itJ7zPvoBfCdhORMryQcDqAhcNdQ3GevG9S8AXCh6oyHweeC+D83n
-         nPuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVUph5o3t/94EBa//pi2SuWLNDwqpZQMp+X+C1jS0uEAgfeBXA/XXGbi10GYBVILOesqbLzOyu8vB2adwQ=@vger.kernel.org, AJvYcCXZwlYGtUM1HoIgpZnhQUDIx1T6LZqGIRFQoCDLcbdWpOn/aVGO/d/g/7w6YSqAsCOJualIFxJWWs+Wqpc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd3YrTF+punWMTmHP1UbCG0V6Ss6bFJJRmyP9b5X5/J4/BBN4G
-	wARNz0grX0YgfL4l5KI2+Bcw/uunKNT/2GSXmai6kkwSOfZ2yLXgSiBUAf6v
-X-Gm-Gg: ASbGnctY1mQb4BgkOnKGed0qS5nmetm4xrkJtxV6LpneDoVhjQ2F7wJ/SN1xMtqNlv4
-	FJORGgICkoFAZ6MXZUiEzrC6uHpucz6ynjDu6nLr2ElrbiLMnfsb1f+aMaU+u++gcovuFU84eAm
-	0TWnL/plt6KRf4WTthJkaeHW9993g7PBGuzfMdqCDwcnHEHcd9rPdVIZygAug7tdmn9Sn8b+aGA
-	odQMkKw32RjmKQtO9HEEAXb7sVwS22ZL1w9c1lwQxmM4y0lUFDAM+FO53l+CGnvLofGztP0PXgL
-	0tMN+65sVRMM8aheUcSWgKcfjDo2GUJDzA==
-X-Google-Smtp-Source: AGHT+IFXZFbqK2eUmc4gh4raMEoWcfL6O2X/FfhuuPctagKUb78DaN3ILVqu3SAPGctSc+tRJaYhBg==
-X-Received: by 2002:a05:6a21:9991:b0:1e6:50a0:bbc5 with SMTP id adf61e73a8af0-1ed7a538361mr22586461637.21.1738420783285;
-        Sat, 01 Feb 2025 06:39:43 -0800 (PST)
-Received: from localhost.localdomain ([187.17.229.23])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6427b95sm5150016b3a.49.2025.02.01.06.39.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 06:39:43 -0800 (PST)
-From: Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
-To: tiwai@suse.com
-Cc: perex@perex.cz,
-	kailang@realtek.com,
-	sbinding@opensource.cirrus.com,
-	simont@opensource.cirrus.com,
-	josh@joshuagrisham.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	edson.drosdeck@gmail.com
-Subject: [PATCH]  ALSA: hda/realtek: Limit mic boost on Positivo ARN50
-Date: Sat,  1 Feb 2025 11:39:30 -0300
-Message-Id: <20250201143930.25089-1-edson.drosdeck@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSECrB8x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F00BC4CED3;
+	Sat,  1 Feb 2025 14:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738421128;
+	bh=h3fZCiwYRqE+HzDA39f3dJWcnPSExT0LTqlrCDBkB58=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HSECrB8xldQtWVeQBa8kxeKXdsP5+rf3GUGm1FuQKumPFn9mgJkiiVi48gNMehOIO
+	 dtXx8RJn4Ug8DwRTS66WSQUiIhauUlXklMTHKT5amuUjVlCc42XJT0x9hI/JAm5ZJj
+	 2V9zjebOfslfNb8dyEBaSDTl8yMlMVtXTCK+cRGWhPZHOQCV5xVotg4GQSvJZ9RTeU
+	 chIkMOuIZTIe9bX4PJgU4gKO5tENSqhOan51xOaA6TxfqKtfH8XKCN2lS3JxqFBlaa
+	 Z2r4YPJKqb7ZJ3Plv8KpUrW3N0GFghAkLi9Cwjqojk5wpxedxYl2SzKEPG76aTvkGo
+	 Mt4feo6HkR8Gw==
+Date: Sat, 1 Feb 2025 14:45:17 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Robert Budai <robert.budai@analog.com>
+Cc: <lars@metafoo.de>, <Michael.Hennerich@analog.com>, <nuno.sa@analog.com>,
+ <ramona.gradinariu@analog.com>, <antoniu.miclaus@analog.com>,
+ <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+ <corbet@lwn.net>, <lanzano.alex@gmail.com>, <linux-iio@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v5 1/6] iio: imu: adis: Add custom ops struct
+Message-ID: <20250201144517.56b0e636@jic23-huawei>
+In-Reply-To: <20250129082053.19077-2-robert.budai@analog.com>
+References: <20250129082053.19077-1-robert.budai@analog.com>
+	<20250129082053.19077-2-robert.budai@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The internal mic boost on the Positivo ARN50 is too high.
-Fix this by applying the ALC269_FIXUP_LIMIT_INT_MIC_BOOST fixup to the machine
-to limit the gain.
+On Wed, 29 Jan 2025 10:20:41 +0200
+Robert Budai <robert.budai@analog.com> wrote:
 
-Signed-off-by: Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
----
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+> This patch introduces a custom ops struct letting users define
+> custom read and write functions. Some adis devices might define
+> a completely different spi protocol from the one used in the
+> default implementation.
+Wrap at 75 chars, not around 62
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 8192be394d0d..ae0beb52e7b0 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -11045,6 +11045,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1d72, 0x1945, "Redmi G", ALC256_FIXUP_ASUS_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1d72, 0x1947, "RedmiBook Air", ALC255_FIXUP_XIAOMI_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1f66, 0x0105, "Ayaneo Portable Game Player", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x2014, 0x800a, "Positivo ARN50", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
- 	SND_PCI_QUIRK(0x2782, 0x0214, "VAIO VJFE-CL", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
- 	SND_PCI_QUIRK(0x2782, 0x0228, "Infinix ZERO BOOK 13", ALC269VB_FIXUP_INFINIX_ZERO_BOOK_13),
- 	SND_PCI_QUIRK(0x2782, 0x0232, "CHUWI CoreBook XPro", ALC269VB_FIXUP_CHUWI_COREBOOK_XPRO),
--- 
-2.39.5
+Otherwise this looks fine to me.  Could have been merged
+with patch 2 as that just adds another op, but that's not important.
+
+>=20
+> Co-developed-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
+> Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
+> Co-developed-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> Signed-off-by: Robert Budai <robert.budai@analog.com>
+> ---
+>  drivers/iio/imu/adis.c       | 16 +++++++++++++---
+>  include/linux/iio/imu/adis.h | 28 +++++++++++++++++++++-------
+>  2 files changed, 34 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+> index 494171844812..54915c7a3e76 100644
+> --- a/drivers/iio/imu/adis.c
+> +++ b/drivers/iio/imu/adis.c
+> @@ -223,13 +223,13 @@ int __adis_update_bits_base(struct adis *adis, unsi=
+gned int reg, const u32 mask,
+>  	int ret;
+>  	u32 __val;
+> =20
+> -	ret =3D __adis_read_reg(adis, reg, &__val, size);
+> +	ret =3D adis->ops->read(adis, reg, &__val, size);
+>  	if (ret)
+>  		return ret;
+> =20
+>  	__val =3D (__val & ~mask) | (val & mask);
+> =20
+> -	return __adis_write_reg(adis, reg, __val, size);
+> +	return adis->ops->write(adis, reg, __val, size);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(__adis_update_bits_base, "IIO_ADISLIB");
+> =20
+> @@ -468,7 +468,7 @@ int adis_single_conversion(struct iio_dev *indio_dev,
+> =20
+>  	guard(mutex)(&adis->state_lock);
+> =20
+> -	ret =3D __adis_read_reg(adis, chan->address, &uval,
+> +	ret =3D adis->ops->read(adis, chan->address, &uval,
+>  			      chan->scan_type.storagebits / 8);
+>  	if (ret)
+>  		return ret;
+> @@ -488,6 +488,11 @@ int adis_single_conversion(struct iio_dev *indio_dev,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(adis_single_conversion, "IIO_ADISLIB");
+> =20
+> +static const struct adis_ops adis_default_ops =3D {
+> +	.read =3D __adis_read_reg,
+> +	.write =3D __adis_write_reg,
+> +};
+> +
+>  /**
+>   * adis_init() - Initialize adis device structure
+>   * @adis:	The adis device
+> @@ -517,6 +522,11 @@ int adis_init(struct adis *adis, struct iio_dev *ind=
+io_dev,
+> =20
+>  	adis->spi =3D spi;
+>  	adis->data =3D data;
+> +	if (!adis->ops->write && !adis->ops->read)
+> +		adis->ops =3D &adis_default_ops;
+> +	else if (!adis->ops->write || !adis->ops->read)
+> +		return -EINVAL;
+> +
+>  	iio_device_set_drvdata(indio_dev, adis);
+> =20
+>  	if (data->has_paging) {
+> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+> index e6a75356567a..04140b36712a 100644
+> --- a/include/linux/iio/imu/adis.h
+> +++ b/include/linux/iio/imu/adis.h
+> @@ -94,6 +94,18 @@ struct adis_data {
+>  	unsigned int burst_max_speed_hz;
+>  };
+> =20
+> +/**
+> + * struct adis_ops: Custom ops for adis devices.
+> + * @write: Custom spi write implementation.
+> + * @read: Custom spi read implementation.
+> + */
+> +struct adis_ops {
+> +	int (*write)(struct adis *adis, unsigned int reg, unsigned int value,
+> +		     unsigned int size);
+> +	int (*read)(struct adis *adis, unsigned int reg, unsigned int *value,
+> +		    unsigned int size);
+> +};
+> +
+>  /**
+>   * struct adis - ADIS device instance data
+>   * @spi: Reference to SPI device which owns this ADIS IIO device
+> @@ -102,6 +114,7 @@ struct adis_data {
+>   * @burst: ADIS burst transfer information
+>   * @burst_extra_len: Burst extra length. Should only be used by devices =
+that can
+>   *		     dynamically change their burst mode length.
+> + * @ops: ops struct for custom read and write functions
+>   * @state_lock: Lock used by the device to protect state
+>   * @msg: SPI message object
+>   * @xfer: SPI transfer objects to be used for a @msg
+> @@ -117,6 +130,7 @@ struct adis {
+> =20
+>  	const struct adis_data	*data;
+>  	unsigned int		burst_extra_len;
+> +	const struct adis_ops	*ops;
+>  	/**
+>  	 * The state_lock is meant to be used during operations that require
+>  	 * a sequence of SPI R/W in order to protect the SPI transfer
+> @@ -169,7 +183,7 @@ int __adis_read_reg(struct adis *adis, unsigned int r=
+eg,
+>  static inline int __adis_write_reg_8(struct adis *adis, unsigned int reg,
+>  				     u8 val)
+>  {
+> -	return __adis_write_reg(adis, reg, val, 1);
+> +	return adis->ops->write(adis, reg, val, 1);
+>  }
+> =20
+>  /**
+> @@ -181,7 +195,7 @@ static inline int __adis_write_reg_8(struct adis *adi=
+s, unsigned int reg,
+>  static inline int __adis_write_reg_16(struct adis *adis, unsigned int re=
+g,
+>  				      u16 val)
+>  {
+> -	return __adis_write_reg(adis, reg, val, 2);
+> +	return adis->ops->write(adis, reg, val, 2);
+>  }
+> =20
+>  /**
+> @@ -193,7 +207,7 @@ static inline int __adis_write_reg_16(struct adis *ad=
+is, unsigned int reg,
+>  static inline int __adis_write_reg_32(struct adis *adis, unsigned int re=
+g,
+>  				      u32 val)
+>  {
+> -	return __adis_write_reg(adis, reg, val, 4);
+> +	return adis->ops->write(adis, reg, val, 4);
+>  }
+> =20
+>  /**
+> @@ -208,7 +222,7 @@ static inline int __adis_read_reg_16(struct adis *adi=
+s, unsigned int reg,
+>  	unsigned int tmp;
+>  	int ret;
+> =20
+> -	ret =3D __adis_read_reg(adis, reg, &tmp, 2);
+> +	ret =3D adis->ops->read(adis, reg, &tmp, 2);
+>  	if (ret =3D=3D 0)
+>  		*val =3D tmp;
+> =20
+> @@ -227,7 +241,7 @@ static inline int __adis_read_reg_32(struct adis *adi=
+s, unsigned int reg,
+>  	unsigned int tmp;
+>  	int ret;
+> =20
+> -	ret =3D __adis_read_reg(adis, reg, &tmp, 4);
+> +	ret =3D adis->ops->read(adis, reg, &tmp, 4);
+>  	if (ret =3D=3D 0)
+>  		*val =3D tmp;
+> =20
+> @@ -245,7 +259,7 @@ static inline int adis_write_reg(struct adis *adis, u=
+nsigned int reg,
+>  				 unsigned int val, unsigned int size)
+>  {
+>  	guard(mutex)(&adis->state_lock);
+> -	return __adis_write_reg(adis, reg, val, size);
+> +	return adis->ops->write(adis, reg, val, size);
+>  }
+> =20
+>  /**
+> @@ -259,7 +273,7 @@ static int adis_read_reg(struct adis *adis, unsigned =
+int reg,
+>  			 unsigned int *val, unsigned int size)
+>  {
+>  	guard(mutex)(&adis->state_lock);
+> -	return __adis_read_reg(adis, reg, val, size);
+> +	return adis->ops->read(adis, reg, val, size);
+>  }
+> =20
+>  /**
 
