@@ -1,259 +1,119 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC451F92A
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 00:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3E719BBC
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 00:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738371056; cv=none; b=EZRVDaNSoDN2KpCOc0nVsvfiGveqFrjcmbauUSZDjTnKLtOom/NAeTF+hLAfPK4yZQYyTTqHKO27AfTAeFu8OfRpkd5sobNkVDEijf+Q0DjBG8MMY1HkmSIvsaPGUICHjtTd/KT6m3UVGdSjp/af3FHLuL6KB3XADarFkYMPfvQ=
+	t=1738371323; cv=none; b=bx40y7IITpsTKPK2HO8cWDbOjmNF5BpmQs75ykAq/KNuLpzqdoHnSeT0vaVpL7iP/ZPr72tr+vcT3D+Hym/P88ziVkit0Te/o7IRpWRGvobbRyEU+tKhzHIkGITVTwYw/2wqb517ljSR4FztOw7DDWsMi1e1+x0EdH/hpeLpGP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738371056; c=relaxed/simple;
-	bh=Q0dVAZtcWC3kGSriq20XNsob1ps+6rdAl4KBthV0lsE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eSe0iybpUQgLqLQJFVz6Yckm/PxS2yoVlktr83KUJMkopmZMkEArypWlGrBMAKY6GlCFrrQ1ngrtuHX3MaSkcDp/TYT7votD6ZZuyORxxQ9dgUbyhTg6TzQtHZW6j9TwMQqDQ8ZPqr/Es0azg6oboVzAuD4Hxv3yyLPUWzwkivI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zwRd8JYi; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1738371323; c=relaxed/simple;
+	bh=BUBqmBSIVKg5rx1sAnnhZLP/Oo7EAKUfD1TEBOq6GG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nnb0jOSy1bGKyk70Qbos9/zng6oifHFszH7fgpM4EJ0zfSx1XsqU/uVaXL2NhrvTImXGRnVDzCgZI5wpSZ6af5U2t28ho3exC64nXlpK9pxwr95Tb8oyqUyKZVFdjVQae4Q7fY7MbNgNrZZL5XWjsgNT3sKkJSe5Y6hhAD2pfpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=UKF5A6G9; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zwRd8JYi"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ef7fbd99a6so4908957a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:50:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="UKF5A6G9"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5d41848901bso4792260a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:55:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738371054; x=1738975854; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:reply-to:from:to:cc:subject:date
+        d=cloudflare.com; s=google09082023; t=1738371319; x=1738976119; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hoM9urIHNLcJgS4Dc2h2QR/XgwI2ycQ6Fgv8TpOxhpY=;
-        b=zwRd8JYi18vRFX1iXQGiCjxldWd0x9tqHkJwq12s0oXEz+AILEj5mePMp7y1kXuomY
-         TwUyfsGxptGe77MO4jSEsjaaUvaIB/YryLyXVK+Ety1N7cCfozWDdPPptwrPF7uy/WQl
-         vaW7xYyklq5sZxDmhRFLXf3FEvFT5fRWfX7zcB3QH4ijkttLLUmG0w59Iy4XkFTs7m5k
-         +YYDaQjTp+GpQwM6EJ9kWFzyA4HyKwGGQQGFByqn1vENYh0xhaEcrc860eDXr3WUvRkj
-         8qTzrxfFv8VRxY1jJtpcjUXSnoC4AARhnedNFARMPHoaDQ5WSjX00t3+bQzTwUk7pl5H
-         wvOg==
+        bh=BUBqmBSIVKg5rx1sAnnhZLP/Oo7EAKUfD1TEBOq6GG8=;
+        b=UKF5A6G9NeroP++vzQndO6gqFbVIKHGuo0kcuryQwNUPpXetw+QmvATNLfa1L2ls/j
+         q0/8VmLk6mlYJUjI9HeifPaGRcbQ8pJKWMZyv/gYas+LXQoPDo7cS0TYXOdpRJcuwUov
+         HpfyuAoZJhpoLRjjMp/rkRz78H1KXQn4teGlpWLEmBYAzzU504Cft6xUov5JfCmOxJGK
+         +ibO7AX8a/jnrWcmGQjFGImDXinPBJhgwTFJsdJyl3w1zbUQiFDI/yjnOKUf9eoKZmQI
+         hUyV4y+OzA1jr/PZ3JprGxdRiYLkn5GsJCsM4qADyiAlud97c5EF6k+G8gUA73pMHjvI
+         Yx6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738371054; x=1738975854;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:reply-to:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hoM9urIHNLcJgS4Dc2h2QR/XgwI2ycQ6Fgv8TpOxhpY=;
-        b=cRyR+RnmYf9+B3nIEXADfDUoz/pNfmZah8tL9zLckUY30Mx17aL5EJgbyR1SSexsrJ
-         ASN9s668u2DOCudnOTZEAdUr7QuIbySuw+tFwnkLQD86gZz90jJYErZfRq9XIUZ2I5qw
-         EF8PJuZnzNAG77KoIGuoNToF8W+acUpKACv57jnvsphZ5kEib6XzYD66GJESalDIPHRu
-         PdwhBDCrnECAXTPWYq9JRDKuyOZwyo/orJWaFA8KoxoW0Eyj6bOmv2gS8cv2/hfdMwH7
-         HN8EL3UIDmHU9mTKaqhA5zmD9l9MQ/D5XODj9hlI5dtD0C/qYNiBeT7mxMAUVkq75qME
-         B6rA==
-X-Gm-Message-State: AOJu0YwgRzDO/231Irvej0h8fUtb/dC3WAtiXwYPRSPjWKpwgiXlG0AI
-	eOlHWk7lFypQ9AH5LFFvQOs/hgj1cBD6Vq5VGQ4uJoKSD4eVOy0MjE04rc2rEW41KrJc3F1i0FC
-	M/w==
-X-Google-Smtp-Source: AGHT+IGI421GnSBBqUYjOcLFGbdaN53zonktkZ1lI4ZcZUJ4Es2rBGDtWBpKi7KRzlsLCpJZRLs34Ghhh2c=
-X-Received: from pjboh14.prod.google.com ([2002:a17:90b:3a4e:b0:2f5:63a:4513])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:51c6:b0:2ea:4c4f:bd20
- with SMTP id 98e67ed59e1d1-2f83ac86e65mr16933408a91.32.1738371053817; Fri, 31
- Jan 2025 16:50:53 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 31 Jan 2025 16:50:48 -0800
-In-Reply-To: <20250201005048.657470-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1738371319; x=1738976119;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BUBqmBSIVKg5rx1sAnnhZLP/Oo7EAKUfD1TEBOq6GG8=;
+        b=Ly0VOWgcCx/MGZ0XAIGmwbEhh9jpwiA8BYy/VNj/QvnOSBL6rKrWW+hu4/UCQuba3w
+         wXu9CzGDjm9Q+ymN2a3wXbp+FjDow+T8xFvrKJExmyVewSi43+TKossm4wgQXdSYTB6X
+         rq5ctpyUNFhMRutpoM1tpnbW2yaefzzmbEua8jheDSnKrhWMiywQDOUf01Rz0hSkojgx
+         H3LQPVqEIhL///zLDswlLC8IGM4YFtCVH45uTr2FqbD39mUfBzKXDaBUtkNJFbSq+tM4
+         WFLm2/HSor9jx/32KmG1UeHYDPhtusQEby5k5Ncc3xwvuXLz7MJsTeig0MJitHyq6qVR
+         kw2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXDrhWHMx4vlcaN3nKVPk1qPHzI188x4rrauKzokYD3VxeseLrBdzBgad9S2fRWv/ysdqgJTSHS1rIQ/lQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn3aAUFYNphu8CmoH3wb8bn4/oIeswgnIeJWGFQB1gDdabPLgo
+	X2mB/TzkRCBvTNIfC7SI+CrYmFAD+/OHpC+W5IUgbC/dA1mPYvWUdOw8l2koKTgKVBgT36rCI8w
+	4y3IfXm4ux/YTQhBHJ7VGpwKXsHH5dvJZwXfPFw==
+X-Gm-Gg: ASbGncvHtd5Hqshwc1RICyzVMTrkfu+5fIaypGe0o1+Z4yPQwtI9ptv08GrfTt1JL/i
+	+/VqlzkLzhLT6KO95zoqGHhzDQ4LnN7FkloMJFPyY1yRYZjUp9mW6Zyd7HrOutLCzQpwoOXJMeF
+	ijUOaHSjwX5sA=
+X-Google-Smtp-Source: AGHT+IEfN430KVGzVEIC67t7KB8Mz02piO2RrmwOf5NQLjY0z4Kp54i/0ziMFVn+Dpd/gcIikyhjz2Me5teiomW7EuQ=
+X-Received: by 2002:a05:6402:847:b0:5dc:783e:3efe with SMTP id
+ 4fb4d7f45d1cf-5dc7fbb58ebmr6065766a12.6.1738371319511; Fri, 31 Jan 2025
+ 16:55:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250201005048.657470-1-seanjc@google.com>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250201005048.657470-3-seanjc@google.com>
-Subject: [PATCH 2/2] x86/kvm: Override low memory above TOLUD to WB when MTRRs
- are forced WB
-From: Sean Christopherson <seanjc@google.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Sean Christopherson <seanjc@google.com>, Dionna Glaze <dionnaglaze@google.com>, 
-	Peter Gonda <pgonda@google.com>, "=?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?=" <jgross@suse.com>, 
-	Kirill Shutemov <kirill.shutemov@linux.intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Binbin Wu <binbin.wu@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>
+MIME-Version: 1.0
+References: <20250131232851.36345-1-kuniyu@amazon.com> <20250201002448.43472-1-kuniyu@amazon.com>
+In-Reply-To: <20250201002448.43472-1-kuniyu@amazon.com>
+From: Yan Zhai <yan@cloudflare.com>
+Date: Fri, 31 Jan 2025 18:55:08 -0600
+X-Gm-Features: AWEUYZnxrKPAr54D2ma1963U-V2YxxP27RimDdh5gFD3F1NlBRrlthhxtNDpDLM
+Message-ID: <CAO3-PboVUb=ZPVVsELrhEh_Z_0PNbwcTdMxfKhoRtbagPy2ovQ@mail.gmail.com>
+Subject: Re: Unchecked sock pointer causes panic in RAW_TP
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: bpf@vger.kernel.org, kernel-team@cloudflare.com, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-When running as an SNP or TDX guest under KVM, treat the legacy PCI hole,
-i.e. memory between Top of Lower Usable DRAM and 4GiB, as an untracked PAT
-range to workaround issues with mapping legacy devices when MTRRs are
-forced to WB.
+On Fri, Jan 31, 2025 at 6:25=E2=80=AFPM Kuniyuki Iwashima <kuniyu@amazon.co=
+m> wrote:
+>
+> From: Kuniyuki Iwashima <kuniyu@amazon.com>
+> Date: Fri, 31 Jan 2025 15:28:51 -0800
+> > From: Kuniyuki Iwashima <kuniyu@amazon.com>
+> > Date: Fri, 31 Jan 2025 14:38:38 -0800
+> > > From: Yan Zhai <yan@cloudflare.com>
+> > > Date: Fri, 31 Jan 2025 12:32:57 -0800
+> > > > Hello,
+> > > >
+> > > > We encountered a panic when tracing kfree_skb with RAW_TP. The prob=
+lematic
+> > > > argument was introduced in commit ba8de796baf4 ("net: introduce
+> > > > sk_skb_reason_drop function"). It turns out that the verifier still=
+ accepted
+> > > > the program despite it didn't test sk =3D=3D NULL. And this caused =
+kernel panic. I
+> > > > attached a small reproducer and panic trace at the end. It's stably
+> > > > reproducible when packets are dropped without a receiver (e.g. run =
+iperf2 UDP
+> > > > test toward localhost), in both 6.12.11 release and a recent bpf-ne=
+xt master
+> > > > snapshot (I was using commit c03320a6768c).
+> > > >
+> > > > As a contrast, for another tracepoint like tcp_send_reset, if sk is=
+ not checked
+> > > > before dereferencing, the verifier will complain and reject the pro=
+gram as
+> > > > expected. So this feels like some annotation is missing? Appreciate=
+ if someone
+> > > > could help me figure out.
+> > >
+> > > Maybe __nullable is missing given we annotated skb for tcp_send_reset=
+ ?
+> > > https://lore.kernel.org/netdev/20240911033719.91468-4-lulie@linux.ali=
+baba.com/
+>
+> Just for the record, I posted the fix:
+> https://lore.kernel.org/bpf/20250201001425.42377-1-kuniyu@amazon.com/T/#u
 
-In most KVM-based setups, legacy devices such as the HPET and TPM are
-enumerated via ACPI.  For unknown reasons, ACPI auto-maps such devices as
-WB, whereas the dedicated device drivers map memory as WC or UC.  In normal
-setups, the entire mess "works" as firmware configures the PCI hole (and
-other device memory) to be UC in the MTRRs.  As a result, the ACPI mappings
-end up UC, which is compatible with the drivers' requested WC/UC-.
+This fix in the other thread is working as expected, thanks for the quick p=
+atch!
 
-With WB MTRRs, the ACPI mappings get their requested WB.  If acpi_init()
-runs before the corresponding device driver is probed, ACPI's WB mapping
-will "win", and result in the driver's ioremap() failing because the
-existing WB mapping isn't compatible with the requested WC/UC-.
-
-E.g. when a TPM is emulated by the hypervisor (ignoring the security
-implications of relying on what is allegedly an untrusted entity to store
-measurements), the TPM driver will request UC and fail:
-
-  [  1.730459] ioremap error for 0xfed40000-0xfed45000, requested 0x2, got =
-0x0
-  [  1.732780] tpm_tis MSFT0101:00: probe with driver tpm_tis failed with e=
-rror -12
-
-Note, the '0x2' and '0x0' values refer to "enum page_cache_mode", not x86's
-memtypes (which frustratingly are an almost pure inversion; 2 =3D=3D WB, 0 =
-=3D=3D UC).
-
-The above trace is from a Google-VMM based VM, but the same behavior
-happens with a QEMU based VM.  E.g. tracing mapping requests for HPET under
-QEMU yields:
-
-   Mapping HPET, req_type =3D 0
-   WARNING: CPU: 5 PID: 1 at arch/x86/mm/pat/memtype.c:528 memtype_reserve+=
-0x22f/0x3f0
-   Call Trace:
-    <TASK>
-    __ioremap_caller.constprop.0+0xd6/0x330
-    acpi_os_map_iomem+0x195/0x1b0
-    acpi_ex_system_memory_space_handler+0x11c/0x2f0
-    acpi_ev_address_space_dispatch+0x168/0x3b0
-    acpi_ex_access_region+0xd7/0x280
-    acpi_ex_field_datum_io+0x73/0x210
-    acpi_ex_extract_from_field+0x267/0x2a0
-    acpi_ex_read_data_from_field+0x8e/0x220
-    acpi_ex_resolve_node_to_value+0xe2/0x2b0
-    acpi_ds_evaluate_name_path+0xa9/0x100
-    acpi_ds_exec_end_op+0x21f/0x4c0
-    acpi_ps_parse_loop+0xf4/0x670
-    acpi_ps_parse_aml+0x17b/0x3d0
-    acpi_ps_execute_method+0x137/0x260
-    acpi_ns_evaluate+0x1f0/0x2d0
-    acpi_evaluate_object+0x13d/0x2e0
-    acpi_evaluate_integer+0x50/0xe0
-    acpi_bus_get_status+0x7b/0x140
-    acpi_add_single_object+0x3f8/0x750
-    acpi_bus_check_add+0xb2/0x340
-    acpi_ns_walk_namespace+0xfe/0x200
-    acpi_walk_namespace+0xbb/0xe0
-    acpi_bus_scan+0x1b5/0x1d0
-    acpi_scan_init+0xd5/0x290
-    acpi_init+0x1fc/0x520
-    do_one_initcall+0x41/0x1d0
-    kernel_init_freeable+0x164/0x260
-    kernel_init+0x16/0x1a0
-    ret_from_fork+0x2d/0x50
-    ret_from_fork_asm+0x11/0x20
-   ---[ end trace 0000000000000000 ]---
-
-The only reason this doesn't cause problems for HPET is because HPET gets
-special treatment via x86_init.timers.timer_init(), and so gets a chance
-to create its UC- mapping before acpi_init() clobbers things.  Disabling
-the early call to hpet_time_init() yields the same behavior for HPET:
-
-  [  0.318264] ioremap error for 0xfed00000-0xfed01000, requested 0x2, got =
-0x0
-
-Hack around the mess by forcing such mappings to WB, as the memory type is
-irrevelant.  Even in a theoretical setup where such devices are passed
-through by the host, i.e. point at real MMIO memory, it is KVM's (as the
-hypervisor) responsibility to force the memory to be WC/UC, e.g. via EPT
-memtype under TDX or real hardware MTRRs under SNP.  Not doing so cannot
-work, and the hypervisor is highly motivated to do the right thing as
-letting the guest access hardware MMIO with WB would likely result in a
-variety of fatal #MCs.
-
-Limit the hack to the legacy PCI hole on the off chance that there are
-use cases that want to map virtual devices with WC/UC.  E.g. in theory, it
-would be possible to expose hardware GPU buffers to an SNP or TDX guest.
-Extending the hack, e.g. if there are use cases for memory above 4GiB that
-are affected by ACPI, is far easier than debugging memory corruption if a
-driver requests WC/UC and silently gets WB.
-
-Double down on forcing everything to WB, e.g. instead of fixing the CR0.CD
-issue and reverting to a "normal" model, as OVMF has also been taught to
-ignore MTRRs when running as a TDX guest:
-
-  3a3b12cbda ("UefiCpuPkg/MtrrLib: MtrrLibIsMtrrSupported always return FAL=
-SE in TD-Guest")
-  071d2cfab8 ("OvmfPkg/Sec: Skip setup MTRR early in TD-Guest")
-
-And running with firmware that doesn't program MTRRs would likely put the
-kernel back into the conundrum of ACPI mapping devices WB, with drivers
-wanting WC/UC-.
-
-Fixes: 8e690b817e38 ("x86/kvm: Override default caching mode for SEV-SNP an=
-d TDX")
-Cc: stable@vger.kernel.org
-Cc: Dionna Glaze <dionnaglaze@google.com>
-Cc: Peter Gonda <pgonda@google.com>
-Cc: J=C3=BCrgen Gro=C3=9F <jgross@suse.com>
-Cc: Kirill Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Binbin Wu <binbin.wu@intel.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kernel/kvm.c | 31 +++++++++++++++++++++++++++++--
- 1 file changed, 29 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 7a422a6c5983..7ae294fe99c3 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -931,6 +931,23 @@ static void kvm_sev_hc_page_enc_status(unsigned long p=
-fn, int npages, bool enc)
- 			   KVM_MAP_GPA_RANGE_ENC_STAT(enc) | KVM_MAP_GPA_RANGE_PAGE_SZ_4K);
- }
-=20
-+static u64 kvm_tolud __ro_after_init;
-+
-+static bool kvm_is_forced_wb_range(u64 start, u64 end)
-+{
-+	/*
-+	 * In addition to the standard ISA override, force all low memory above
-+	 * TOLUD to WB so that legacy devices are mapped with WB when running
-+	 * as an SNP or TDX guest.  The memtype itself is completely irrevelant
-+	 * as the devices are emulated, the override^Whack is needed purely to
-+	 * avoid failures due to ACPI mapping device memory as WB in advance of
-+	 * device drivers requesting WC or UC.  In a system with MTRRs, ACPI's
-+	 * mappings get forced to UC via MTRRs (programmed sanely by firmware).
-+	 */
-+	return is_ISA_range(start, end) ||
-+	       (start >=3D kvm_tolud && end <=3D SZ_4G);
-+}
-+
- static void __init kvm_init_platform(void)
- {
- 	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
-@@ -982,8 +999,18 @@ static void __init kvm_init_platform(void)
- 	kvmclock_init();
- 	x86_platform.apic_post_init =3D kvm_apic_init;
-=20
--	/* Set WB as the default cache mode for SEV-SNP and TDX */
--	guest_force_mtrr_state(NULL, 0, MTRR_TYPE_WRBACK);
-+	/*
-+	 * Set WB as the default cache mode for SEV-SNP and TDX.  MTRRs may be
-+	 * enumerated as supported, but neither the TDX-Module (Secure EPT) nor
-+	 * KVM (normal EPT for TDX, virtual MTRRs for NPT) actually virtualizes
-+	 * MTRR memory types.  If MTRRs are forced to writeback, register KVM's
-+	 * range-based WB override to handle cases where device drivers try to
-+	 * map an emulated device's memory as WC, and fail because it's all WB.
-+	 */
-+	if (guest_force_mtrr_state(NULL, 0, MTRR_TYPE_WRBACK)) {
-+		kvm_tolud =3D (e820__end_of_low_ram_pfn() << PAGE_SHIFT);
-+		x86_platform.is_untracked_pat_range =3D kvm_is_forced_wb_range;
-+	}
- }
-=20
- #if defined(CONFIG_AMD_MEM_ENCRYPT)
---=20
-2.48.1.362.g079036d154-goog
-
+Yan
