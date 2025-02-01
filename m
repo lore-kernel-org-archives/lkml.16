@@ -1,135 +1,163 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE261C5D73;
-	Sat,  1 Feb 2025 18:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E0D2F5E;
+	Sat,  1 Feb 2025 19:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738436299; cv=none; b=W7sJniM3fiYjA2uC3BM23cBu2wYE4cxLDbs6w5YkSzxsodeTYUoPZ0Jdt8/iN5qB65joLXU75Tgu7NOsnVlFn67olWKHNbpaGprwlc2OF3m8z1c5SiPMQBGWijPSmYAh1lByudcoeV2IhZJvdeHTZuRSAB3xPlOuhKqS4CiCAgY=
+	t=1738436638; cv=none; b=rOTiJ9A3bJ12Gzv8xZYX3FbOcQLSgom8t8itNdWa8p3ggAwrYPmhpN0pm9aKZl/w03iA0HwKWtZ+yzLBx2Mtr0LOAMOalvF9KgYQwzqwUnOCm+8F3iV2Bc6LexuAxy+bHGXrucKB87GP97E3BBZ82YqgGq7JiBWsDvQy6jCo2JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738436299; c=relaxed/simple;
-	bh=C55WBS7Kee2awZ8qltzC/EsTgLDQMBTKdm8b0uTOwMo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=j3scSYQcRy5jsY4j+GMbMZWnmQpf02knKGhmWtOuhWF454WjCzKssk9HSwCc9eylYtDuA+pOTN5wfRAOXPQgajBSTMPnYQOPsftho91xaGDcLRivFs711ZhFIc346SJL4fLCV/HqsZddjtzQxcYLzUri4Z4Qq/AobVc6bTA4l8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1vznoFp; arc=none smtp.client-ip=209.85.222.171
+	s=arc-20240116; t=1738436638; c=relaxed/simple;
+	bh=eHlHxJwtlm0tya4D7/zjG/27qydiIisVU7egrYHWfKk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=muVSLeFu7axCZWuahR9kVhTD/66MaClaAeG+/8OkXqi4oGJEYXPSx55KgAnU4/i+kLyBUmm80Bd09nYk5yACEMWSV6lYOqWOgUKw+Qt3FPhqI+2GUQtYidCXzsUJiU2sBB/U3egKyFU8FnP6IPMRCCL9cY0Sd03LKqbcloPqZ8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nya1LomB; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1vznoFp"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b6f1be1daeso297250285a.0;
-        Sat, 01 Feb 2025 10:58:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nya1LomB"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54021daa6cbso3284390e87.0;
+        Sat, 01 Feb 2025 11:03:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738436296; x=1739041096; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8YaP/wkas3zsv6gy4efd2RXf7wQ7Ky6kvXyn8lqH9lw=;
-        b=A1vznoFp1xV+yYKgjl/WFLdggYLM4fAzDPrUnnfySmwjM+6emeM6EzDRsYXaZTziBE
-         AGA2d9gd6HoixFNnU6WSW4MKnt1wKl/VNtKzxI1LTxg7lDrfOW33v2k1JCaOo0rrtnZA
-         m4sbTvnI1hLv6RGfE5AAvdrlx6qnCiGD9fb52XJ5tPzrb5p99sMNclcoHa7PyeWu9ZVg
-         ivt+WXjeDc21bIjEgRtLIOGaYCQ95OjNZd3/RqWC6m93xaRnvkh3TXHi39gXVxfd2JRh
-         Hi9IH4lUfHaPrL0Qo/AOfgh/dkEVRRALrIW9qsrhhKa4Q5c77UH8PV8jp3UfoM0aBHNZ
-         3GIg==
+        d=gmail.com; s=20230601; t=1738436634; x=1739041434; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3/GVvSI89IYVsdqmAGOoy8X8v5dJ84EUxRf0NLPPEyE=;
+        b=Nya1LomBgdJF5UvKrd4NR38EtLUF/vPBOl8rLfwNWV0lMzRtFrUvOxPPpRt8c8Fi2I
+         F1svb3dHoCddmK7ul/AXUVFWbJv79dnBSUtlgaRnI5I0mCKkAtnhOsFEaPZHhWU1g/da
+         /YJXwaLzoGSPCuus8CqOniNPx3g4/hsYAltN0k5wxyaJ8NMuOi8Z1BGWva8NITKO9R2t
+         hxn7ra/u7txJ+v7sJ0DgnNcoIIxZ3vHnLcCYA4L+kG6zs8T9Eum9ZKtiUQSqhyOypZ3F
+         6o3nJOS/5C7sgFA5YINEjGedUPMjk1XHlBTKpbDKXX+b+1P4uKr06Ss3pkx/dSZGMHra
+         ynkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738436296; x=1739041096;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1738436634; x=1739041434;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8YaP/wkas3zsv6gy4efd2RXf7wQ7Ky6kvXyn8lqH9lw=;
-        b=u8c82ZFiwJtMrZ8ZESMvxitZUlmZN8Q045YOfZD9ZqJ0uMv0s7XdIHzvgnsTlAUiPi
-         Tv7auZykSGu15sNUjbk/48PZTWtIIFDZVgB/vzTwImezTJX9/aBw/TrGfDk+sD+jmiWg
-         6ut8dJ8YHIP7+dEnSTwxW1MMXv3mPMzmuEH0c/38D2zaldqLFlGIRYKq6FblJcnrt4Uu
-         3sahuf8qvbWbw3cfcwFCYahPYwDOABLtqdJX3cQtBeqZ7PdaeuVZ5kEKda+U1mYsYMxJ
-         k9yb7OYf9JzsH+6mNV1lJoZL+whUd0WxjM+qR2tjyMFMqOVXAwnJ702OEQcnMlL6TNA5
-         sWTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXNAoTsHNYJZnJpELnSkrD5SShNfcKqSSNfwSGKaUOQKqhosPj9jEQszu4S2gN/ToE/orXTb2rSHV0Ya1Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVwsVOwwRjue8oEHr/tcNbbUyzcncJpkfIe0QKIckPScmCNduJ
-	xabS6dKCszzpKRCF1b+GQHO9hBZbMCTvjiuI1YiRWy0EuGkTbyGC
-X-Gm-Gg: ASbGnctKbHLn8XvPktxuEnstavBMXkusmCR31c3gcOa67YQg1ZsB1dkzwpPBlvhUEok
-	vF4dfV99BuNPPxufkYO5Q0cyAvMpxJdR9MGnT1RPZ+/4iPCCQI7QgnTihBaj536qNcj3DJf9fOq
-	/9hA3L40lZtGOxfqasr0e0/0Hf8qCt8P6/buSuLRLbdVQrmCEATg/iPQpMNGO0U2lHN+S9XP1bC
-	VVTT778lni5jmVXywlWrx3LL2hmF3IqFFYaTSNVGW7UWjtxsLO+dgdBxdyXsXga0t7lSLcLusI3
-	8TeFT0okwuvy4iajjcjvLYSJ/YrfaR0Gw6WiSBE=
-X-Google-Smtp-Source: AGHT+IH/cMUk7yjThUxYzJvcPVD3YoSYrB/lWrjtjKUxfXJX815A1NwM2k0r696Wnh/wlNERoD+j4Q==
-X-Received: by 2002:a05:620a:4d90:b0:7c0:174d:e350 with SMTP id af79cd13be357-7c0174de37bmr769597285a.36.1738436296508;
-        Sat, 01 Feb 2025 10:58:16 -0800 (PST)
-Received: from tamird-mac.local ([2600:4041:5be7:7c00:f07f:fb14:288d:6f1e])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8bcaf1sm326048085a.10.2025.02.01.10.58.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 10:58:15 -0800 (PST)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sat, 01 Feb 2025 13:58:10 -0500
-Subject: [PATCH] rust: alloc: satisfy `aligned_alloc` requirements
+        bh=3/GVvSI89IYVsdqmAGOoy8X8v5dJ84EUxRf0NLPPEyE=;
+        b=JpUJHDb+yyIU7gW0Da1TbuG51mjKXnbI7sZHYtmVJQKdhOVGHDsiLY0Ab8h7qJPX6j
+         Okt8SUQNjDhRqqFf8IqWfrGKfqrYnrd2QyRRDYvFjsDGQKT8tDASW7UzUvw7kALdtRq0
+         SfNeXaVn4IUzzh9QukPny++g0okKO9Fpn3GVg4GjOaGfrOGbYrH66pwuFMs5c8ipczBS
+         Q/47PJAXTzn7E/nnYeTG2zZldP+BtHIiMcoAOC4HL64PLaBiw1XHiTHkTP/JQd9MVaCF
+         fZmCbeJ1gGH2VMKUUw2edRUQAaWQtk/3OwAqe/c9wOcIIqVaigTCDoJ8nRP227XWp3Iq
+         Rf3g==
+X-Forwarded-Encrypted: i=1; AJvYcCXfTzu/giSSOdBO3INveRAw+8DYImuZiah5GxleaQEBisLNvZdvNMTXps2362cRGoEmtI6uiE4515IH@vger.kernel.org
+X-Gm-Message-State: AOJu0YxND5LuxxAWjzaCfYyEmIpzPuxuq17SPlZXvMDSTI6FXyc2ubYA
+	VW3kgQcHfj0joQkKHA5HV2hwLI/Q/oN543bHcP6Yfp0MDGBgNu+nwqczwHSbZeYfTERghARYdfl
+	7U7u5rV02ChiDImEkjdDynVWFxkDCaZZr
+X-Gm-Gg: ASbGncsMGVudcmi+wLaOkFrlAH2wsFpDAMtXH1vFwgJqGS0vNsLIU2NC5gjAOa4sdK2
+	pAcvnA/mpA+NnXyJB8oUj7VYb1vGv+b/ipfWRXdCt+Vi3yZaU+mpk1RIZjIn2FvOdGWD0aGjJCB
+	OmFjoJeZtWCBFdgCNTEOh3FFDDAWkyeVE=
+X-Google-Smtp-Source: AGHT+IEnq4AsbbhOBi2lsoAWc4GU1umYMP7etULjgutBN51MWjEk48ykMVan2TtaF0quxlpqir1f5gcRzu0LBkmOJNE=
+X-Received: by 2002:a05:6512:b97:b0:542:6f78:2ace with SMTP id
+ 2adb3069b0e04-543e4c3c33bmr5225006e87.47.1738436633711; Sat, 01 Feb 2025
+ 11:03:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250201-aligned-alloc-v1-1-c99a73f3cbd4@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAMFunmcC/x2MQQqAIBAAvxJ7TrAVIfpKdEjbbEE0FCIQ/97Sa
- ZjDTINKhanCMjQo9HDlnESmcQB/7SmQ4kMcUKPVqCe1Rw6JDmHMXjmL3qGxxs8I0tyFTn7/37r
- 1/gEzCYRrXwAAAA==
-X-Change-ID: 20250201-aligned-alloc-b52cb2353c82
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+From: Steve French <smfrench@gmail.com>
+Date: Sat, 1 Feb 2025 13:03:42 -0600
+X-Gm-Features: AWEUYZn1emVQdaX4Bz2hIanIiHakotn4UbcDd1kHUz4R67V0oz2GqHWt1ju6i18
+Message-ID: <CAH2r5mv0fCe9F3YnMT-4_hc4DPGgSp+nu7detzz8K1X-bwj9mA@mail.gmail.com>
+Subject: [GIT PULL] smb3 client fixes
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The implementation added in commit dd09538fb409 ("rust: alloc: implement
-`Cmalloc` in module allocator_test") did not honor the documented
-requirements of `aligned_alloc`. These requirements may not be enforced
-on all system, but they are on macOS. Ensure that alignment is at least
-`sizeof(void *)` and round size up to the nearest multiple of that
-value.
+Please pull the following changes since commit
+e0b1f59142746f74476a03040f745329c8355a7e:
 
-Fixes: dd09538fb409 ("rust: alloc: implement `Cmalloc` in module allocator_test")
+  Merge tag 'v6.14-rc-smb3-client-fixes-part' of
+git://git.samba.org/sfrench/cifs-2.6 (2025-01-23 17:05:45 -0800)
 
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- rust/kernel/alloc/allocator_test.rs | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+are available in the Git repository at:
 
-diff --git a/rust/kernel/alloc/allocator_test.rs b/rust/kernel/alloc/allocator_test.rs
-index e3240d16040b..f360fc2e20f2 100644
---- a/rust/kernel/alloc/allocator_test.rs
-+++ b/rust/kernel/alloc/allocator_test.rs
-@@ -62,9 +62,22 @@ unsafe fn realloc(
-             ));
-         }
- 
-+        // According to `man aligned_alloc`:
-+        //
-+        // aligned_alloc() returns a NULL pointer and sets errno to EINVAL if size is not an
-+        // integral multiple of alignment, or if alignment is not a power of 2 at least as large as
-+        // sizeof(void *).
-+        let alignment = layout.align();
-+        let minimum_alignment = core::mem::size_of::<*const crate::ffi::c_void>();
-+        let (alignment, size) = if alignment < minimum_alignment {
-+            (minimum_alignment, layout.size().div_ceil(minimum_alignment) * minimum_alignment)
-+        } else {
-+            (alignment, layout.size())
-+        };
-+
-         // SAFETY: Returns either NULL or a pointer to a memory allocation that satisfies or
-         // exceeds the given size and alignment requirements.
--        let dst = unsafe { libc_aligned_alloc(layout.align(), layout.size()) } as *mut u8;
-+        let dst = unsafe { libc_aligned_alloc(alignment, size) } as *mut u8;
-         let dst = NonNull::new(dst).ok_or(AllocError)?;
- 
-         if flags.contains(__GFP_ZERO) {
+  git://git.samba.org/sfrench/cifs-2.6.git tags/v6.14-rc-smb3-client-fixes-=
+part2
 
----
-base-commit: 89a010129b2a60185d34d7377ef8aec7fbb92e76
-change-id: 20250201-aligned-alloc-b52cb2353c82
+for you to fetch changes up to a49da4ef4b94345554923cdba1127a2d2a73d1e6:
 
-Best regards,
--- 
-Tamir Duberstein <tamird@gmail.com>
+  cifs: Fix parsing native symlinks directory/file type (2025-01-31
+12:51:44 -0600)
 
+----------------------------------------------------------------
+Twenty one cifs/smb3 client fixes, most for special file type handling
+- 15 fixes for special file handling, four of them for symlink
+handling, three cleanups,
+      two for new mount options (e.g. to allow disabling using reparse
+points for them,
+      and one to allow overriding way symlinks are saved), and fixes
+to error paths,
+      and add support for creating sockets)
+- Fix for kerberos mounts (allow IAKerb)
+- SMB1 fix for stat and for setting SACL (auditing)
+- Fix an incorrect error code mapping
+- Two cleanup
+----------------------------------------------------------------
+Pali Roh=C3=A1r (19):
+      cifs: Change translation of STATUS_NOT_A_REPARSE_POINT to -ENODATA
+      cifs: Change translation of STATUS_PRIVILEGE_NOT_HELD to -EPERM
+      cifs: Validate EAs for WSL reparse points
+      cifs: Remove intermediate object of failed create SFU call
+      cifs: Fix getting and setting SACLs over SMB1
+      cifs: Remove unicode parameter from parse_reparse_point() function
+      cifs: Remove struct reparse_posix_data from struct cifs_open_info_dat=
+a
+      cifs: Rename struct reparse_posix_data to
+reparse_nfs_data_buffer and move to common/smb2pdu.h
+      cifs: Update description about ACL permissions
+      cifs: Remove symlink member from cifs_open_info_data union
+      cifs: Simplify reparse point check in cifs_query_path_info() function
+      cifs: Fix creating and resolving absolute NT-style symlinks
+      cifs: Add mount option -o symlink=3D for choosing symlink create type
+      cifs: Add mount option -o reparse=3Dnone
+      cifs: Add support for creating native Windows sockets
+      cifs: Add support for creating NFS-style symlinks
+      cifs: Fix struct FILE_ALL_INFO
+      cifs: Add support for creating WSL-style symlinks
+      cifs: Fix parsing native symlinks directory/file type
+
+Steve French (2):
+      smb3: add support for IAKerb
+      cifs: update internal version number
+
+ fs/smb/client/asn1.c         |   2 +
+ fs/smb/client/cifs_spnego.c  |   4 +-
+ fs/smb/client/cifsacl.c      |  25 ++-
+ fs/smb/client/cifsfs.c       |   6 +
+ fs/smb/client/cifsfs.h       |   4 +-
+ fs/smb/client/cifsglob.h     |  62 +++++--
+ fs/smb/client/cifspdu.h      | 102 ++++++-----
+ fs/smb/client/cifsproto.h    |   4 +-
+ fs/smb/client/cifssmb.c      |   4 +-
+ fs/smb/client/connect.c      |   4 +
+ fs/smb/client/fs_context.c   | 104 +++++++++++
+ fs/smb/client/fs_context.h   |  21 +++
+ fs/smb/client/inode.c        |   7 +-
+ fs/smb/client/link.c         |  60 ++++--
+ fs/smb/client/netmisc.c      |  10 +-
+ fs/smb/client/nterr.c        |   1 +
+ fs/smb/client/nterr.h        |   1 +
+ fs/smb/client/reparse.c      | 517
++++++++++++++++++++++++++++++++++++++++++++++-------
+ fs/smb/client/reparse.h      |   2 +
+ fs/smb/client/sess.c         |   3 +-
+ fs/smb/client/smb1ops.c      |  30 +--
+ fs/smb/client/smb2file.c     |  52 +++++-
+ fs/smb/client/smb2inode.c    |   5 +
+ fs/smb/client/smb2maperror.c |   4 +-
+ fs/smb/client/smb2ops.c      |  23 ++-
+ fs/smb/client/smb2pdu.c      |   2 +-
+ fs/smb/client/smb2proto.h    |   3 +-
+ fs/smb/common/smb2pdu.h      |  14 +-
+ 28 files changed, 884 insertions(+), 192 deletions(-)
+
+
+
+--=20
+Thanks,
+
+Steve
