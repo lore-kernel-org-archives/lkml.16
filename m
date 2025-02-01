@@ -1,107 +1,83 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C27C10E0;
-	Sat,  1 Feb 2025 12:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E07C10E0;
+	Sat,  1 Feb 2025 12:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738414384; cv=none; b=LHe1EtrVlhfH2Qag+rcUY25hVyUUQFrBQU/sHa+/Uw2B5Baxw6h2uzd6hkoy8OlIvaM/8ZcZ/Jaux/xC63YFg87hiJEoEcaxeZM950SDEfCYhWUtaX/ZzO8XitdgFFT9e8M31VpVOsAUUzDxinS3B3XaFB9WDTvrxAf3A6VFJBA=
+	t=1738414409; cv=none; b=OimxbAAp7ususJ3hPyDmFaq/AsWmRK2H0UNOw6dvt9IgjYnf+KiozPm0q+UH94BenxiikYvn/mz9sob9izGigfxeawvckBPXIND4u8RoiPCwcOS6oUG8pVsm2/jW35M6UCYnxzLEpeceoQOq6SDgGHu8akt5IFJOeUKk5nuFEOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738414384; c=relaxed/simple;
-	bh=B0TIGEWdZpaL3Lol4tNzKJ12SBSCVyy6C3L/uyc1s+I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HICEsZg/PavcBYGu7qJkUAtdTSBwrgQA//qm5FPwLpMk32qvhrwMcitGQQ44I4PqFXnMVHhM0w/I7OQRvzpaMdKuMBkmygDOVnC4p+1QV9CLZAVHelvNLDDhwcAqm4zcJW7LCm7v3AzaTGqz9om2YUDEUvzeO3kLm/qY1tR7+5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=Z4mv9BOP; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1738414409; c=relaxed/simple;
+	bh=UlXlR9Nv9rAHTE8B8SLPx7a4dgN5Xrsk3AQ4atBfvOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oOYb6vzTLDCh0JoO25xrxu6b+G1JLYEPdq0+GI4nS1FR5WnGqK3QnSJzNRgyENH/npnol0T7DABP8ve+w7OOpRAwYCiPw99nJiPKbM7IhZqQ6yvNdgILpaSkhX5GjsOC7NswKQAm6hDgFFIYHSXDdDsTcBVszESNdw1NUI9MMQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fta73RwZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Z4mv9BOP"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4368a293339so33416715e9.3;
-        Sat, 01 Feb 2025 04:53:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1738414381; x=1739019181; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xGsxzwmsm4FqEEWuqRJ4yrtu6EGS8XgJezR8MjxJnBo=;
-        b=Z4mv9BOP+VUczQQ+BvqKcVynWtcPVRkTyGaUCDWnoAs4qXqYjfrb52tLakihavtyyk
-         OILHmzLi+LwVAQ0BqOELw4IuMMEk3j7O5PXjM2nlik/Pq8j7LlF763yRupQ/8O3ulE9R
-         7B4K/0p5wz1FQDQwZ12PYKyZdhqVPXDZEcsQsiIGYER1YnQ/mT7LqzR24TlTBPXG9PWc
-         EHHZFLLwT0NC1jxpxWamBO7c4Tg3myoz/9MZPmGZcnHOtlrd9FVxyyHZq9wBf3EvoM8n
-         3VIJR5SkRHakB0cOSYSrCpteGIfn0Uo16YEKQ+5H82Oe69YZU7k5VuSxrbbX1Mk9fArV
-         qYpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738414381; x=1739019181;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xGsxzwmsm4FqEEWuqRJ4yrtu6EGS8XgJezR8MjxJnBo=;
-        b=HaE2C5tHvu4xg9rMup1W7C1cle4/e04r4iiQVqTuaNjik3op/gakRRWaCsl4/K8ZU9
-         JnrlRZwSTQ3tfN+orDQ/GRDHuzqGMtTM73iAHj7xMB+G6Y++arconZIaICOwviUhnT6p
-         Ag3V397SYF7qaPE/Ljx3FDzr/tTD8+zZnmC8JIcmZH/KVHuzunBRL7gQMcD3WyXf3jWF
-         eIJwpxdwAaai1GeEQVojRfwBGTmg6cbwNfzCfNMxdOaYmnWGSmWwMfxzj9C2xnbrALfb
-         neZ7QWZr5ZZuUwcADcDVzeUweZ20nb1A6lxpO+ah0Iy6ANLk7wi+UVPGaW9vj9qoLXcI
-         mIVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbkP41e2bjiNLxVb/UnVohOZD+o2xQvMNZ43oh47QoezqN2CUrNx/R4XbANCA4Kjvs2vK8F/WSY2ju5TI=@vger.kernel.org, AJvYcCUmi4aSbRCEWcaQTv+h4PMQ6demsMdRoRjDbsnP9DfbB9I/5jQNzBgSb9YByiJjyzzfjVJpoTB8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzwq/JDzTlMz3OdP2vMPtgzXxEDI4LYSlB4+yVWtnXrqdDt3OmK
-	Gp1JMqMuj6gUrOrNL7oWdTKFd/RgClGg2I9aQ3e93NH3IrlL1II=
-X-Gm-Gg: ASbGnctAUW0SMUOPwPSd2LDC1CBb8L7D+ucqPVkx5RkPiQPL1JwOCLW7uTPYYi/ol+t
-	9IhzFkI9I3RhBWcGVYsbePiEKrqHAAs0fkOcz4Ma59qXX2hpGjUJgXSkuUbhQgS455536Xr8QKV
-	s6Rktt3aMFJksqzGp52pCDXAjN8i2c82kOXgp/EKgKao7zarXF5BFjvGcWmdHbl6yF7ZS1qqpOy
-	QMK5D2W7nfDQhZ1En/VQ+ebww0rlDho13D16P3LppJN/a2MARlw6ef523hdl119Mx5c1ZfDsP/I
-	coEzDlP1kaJo4IE3T/Uem8yryko2qes+H/BM0F6db9rfvMOFwnM5RG0Zc8gt45MQVOaN
-X-Google-Smtp-Source: AGHT+IGCEfyjj5b9m0JsQ34ThpMuBHu2HSDT2p4ga66c/LCQW36I9RZZqckINSMYQRGkgTGzxtY3Hg==
-X-Received: by 2002:a5d:584a:0:b0:385:f72a:a3b0 with SMTP id ffacd0b85a97d-38c5209664emr12028127f8f.55.1738414380613;
-        Sat, 01 Feb 2025 04:53:00 -0800 (PST)
-Received: from [192.168.1.3] (p5b0573ac.dip0.t-ipconnect.de. [91.5.115.172])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ecc80sm7385784f8f.16.2025.02.01.04.52.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2025 04:52:59 -0800 (PST)
-Message-ID: <b1fa39ca-be06-4f64-8595-75b6626442d3@googlemail.com>
-Date: Sat, 1 Feb 2025 13:52:58 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fta73RwZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAD69C4CED3;
+	Sat,  1 Feb 2025 12:53:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738414408;
+	bh=UlXlR9Nv9rAHTE8B8SLPx7a4dgN5Xrsk3AQ4atBfvOY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fta73RwZiDqwVCJiawPUaiHkhkUbjdzSopvXZJdGtkX68pUCSfhjXJRTvNznrkR6l
+	 EpDrxcbMwTHH+OSbKOyTBqacY5YUrgICfDJ7vdBkQo3mthfuj4ltT5Ho0NVqLNvkyJ
+	 QOL0voKc1L4wZsWHmBVuI+eSK++U2KYQ2R866w6I68tvzVrTMRjOsLixxdv4xrcoj1
+	 S0RTb8DjkZxuL88pPvxv/ffMEh1bY9LnCXCe6Do/siJjCyNKraOtI4Ios/mbB7ckMO
+	 /7Cpa+mHl4WpPeP6LJwBUs36IY+c/wKzBgyXOO+AlIVns78F7OxTyUM+59HJgGzLiF
+	 x44cRd/4z+eag==
+Date: Sat, 1 Feb 2025 12:53:17 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Angelo Dureghello <adureghello@baylibre.com>, Michael Hennerich
+ <michael.hennerich@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Alexandru Ardelean <aardelean@baylibre.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Guillaume Stols
+ <gstols@baylibre.com>
+Subject: Re: [PATCH v3 08/10] iio: adc: ad7606: change r/w_register
+ signature
+Message-ID: <20250201125317.1de8d599@jic23-huawei>
+In-Reply-To: <2f604280-f4dd-494f-9f54-83e8f613b64f@baylibre.com>
+References: <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-0-c3aec77c0ab7@baylibre.com>
+	<20250129-wip-bl-ad7606_add_backend_sw_mode-v3-8-c3aec77c0ab7@baylibre.com>
+	<2f604280-f4dd-494f-9f54-83e8f613b64f@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.6 00/43] 6.6.75-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250130133458.903274626@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250130133458.903274626@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Am 30.01.2025 um 14:59 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.6.75 release.
-> There are 43 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, 31 Jan 2025 15:31:18 -0600
+David Lechner <dlechner@baylibre.com> wrote:
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+> On 1/29/25 5:03 AM, Angelo Dureghello wrote:
+> > From: Guillaume Stols <gstols@baylibre.com>
+> > 
+> > The register read/write with IIO backend will require to claim the
+> > direct mode, and doing so requires passing the corresponding iio_dev
+> > structure.
+> > So we need to modify the function signature to pass the iio_dev
+> > structure.
+> > 
+> > Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+> > ---  
+> I don't think calling iio_device_claim_direct_mode() inside there reg_read/write
+> functions is the right place to do that. It should be done at a higher level (in
+> case we need to combine multiple reads/writes in an atomic operation). So I
+> think we should drop this patch.
+> 
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+I think this is a tricky corner if it is only needed when the backend is
+involved. Not sure what the best answer is as we probably don't want the
+higher levels having to comprehend that it is sometimes needed and sometimes
+not.  Maybe fine to add it in all cases, but that sounds like it risks an
+ABI change.
 
-
-Beste Grüße,
-Peter Schneider
-
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+Jonathan
