@@ -1,70 +1,123 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CFC425761;
-	Sat,  1 Feb 2025 10:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A359E140E38;
+	Sat,  1 Feb 2025 10:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738404246; cv=none; b=ZRkEohOac5R2vL69KV90X5lMBsHdcBKyqhd7AZAp3v1bO7nClsSiyc2aBFUc5UzEH44Wh1x93hDmVuo8yWdlUJZSrKhF4Hu/zN8MQg6gW6fALKH+sr6W+XnPxwEPDD8Ni3NxHP4xdU1ht7CA3tKsIV6cT6aOa7FGUYPK7hX8k9c=
+	t=1738404414; cv=none; b=hOBl9iJPf7mDTTsofKYMnarJ/iNYSwutCEsxBaO/vOZdQizDWdHFw64K6f7WVwB0QwNljSd5hN9Szc3ZIG2vWsY2I/1pQ1NysiC2dUAClYrtVnWJLqwEybaNtz7wv0JZpbdbAq1fG5XWzSnmIbRnqcXyGeUNa4kXycmq3p418mI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738404246; c=relaxed/simple;
-	bh=P8rs2CA/Um4iKZuxR479kyWFRvJoBzjiUdjh7wnFCcE=;
+	s=arc-20240116; t=1738404414; c=relaxed/simple;
+	bh=luDz7nI8Z256mCk8I1VhfshnLLJ2vZ3M4FOHRZSBCY0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ARDbdjIVTHsbjkMABmnUuKwvGPUg86by3JnRPIHVS5mrN1dBvH/KX5iMpAwTPIFgbn6z2s4aslBoXIbyPlq5IIBdkruMQoOGEyC7Ppb4Jl78Ieo3GEd6jQnEh2L5mfYAxxMlR6cjfU8ajhhYBkuXveoH01FafjqbrhBd3A/lHDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 511A3h49006005;
-	Sat, 1 Feb 2025 11:03:43 +0100
-Date: Sat, 1 Feb 2025 11:03:43 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] selftests/nolibc: drop call to prepare target
-Message-ID: <20250201100343.GA5849@1wt.eu>
-References: <20250123-nolibc-config-v2-0-5701c35995d6@weissschuh.net>
- <20250123-nolibc-config-v2-2-5701c35995d6@weissschuh.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fDOKdd8VP9v5d8+zq+csz/f0usK0qS6oG2RRiUTSiQ2VMqyuWC8pGDRw/Fp+Owt/m7ypAx3qwOfaFE/EUvraeeL/ecH0ppKLUZysMT63KnPASzyAEg/ysXhDUx54fX1MRfZU6FfNzM8YVTL5wKKQOehyZYmMggKMxiPNt6O44Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mWa5qUSZ; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mWa5qUSZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738404413; x=1769940413;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=luDz7nI8Z256mCk8I1VhfshnLLJ2vZ3M4FOHRZSBCY0=;
+  b=mWa5qUSZNsVZCaVJYWpS+CdXFitLHa7CfdPRHFdO1EzsfFq/zBlKXOAX
+   d7lCK0NawZSA0CVMXxmRq7bjSwNzfC+4r4f6BfqCxS88mdtgZVEQb0FWr
+   752FBHhD29ZYT2EybNHrIlGkjdhmjL/CZpO2QNyE72aLFmaqTarGbuzYA
+   gg4Ja6/KbkNIgMFdL4M3P9hWfiaWHiMC/SnMTLSLDfvvJCZV/FDz/8pkt
+   t9BTpIojR43Px2DELHJmbp4X5ySzYHkFiZ2OqAA5i9niX8v2hMINLzJ/H
+   6dHi+gEBLcq4gqsMX5r0ezWSXlWOXil7udO+GP6lTZGOl7F0nT9YpfMC7
+   Q==;
+X-CSE-ConnectionGUID: KhSR4uSSRYGoMHkL24Lhug==
+X-CSE-MsgGUID: 9obNOxFZQRWtofe4m8eh3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="50350373"
+X-IronPort-AV: E=Sophos;i="6.13,251,1732608000"; 
+   d="scan'208";a="50350373"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2025 02:06:52 -0800
+X-CSE-ConnectionGUID: z3vE1xROSnC5BDhYcDTqew==
+X-CSE-MsgGUID: 04/zztnwRc6n0ytaPWhdEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,251,1732608000"; 
+   d="scan'208";a="110415798"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 01 Feb 2025 02:06:46 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1teAOh-000nzT-1T;
+	Sat, 01 Feb 2025 10:06:43 +0000
+Date: Sat, 1 Feb 2025 18:06:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>, jic23@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	agross@kernel.org, andersson@kernel.org,
+	dmitry.baryshkov@linaro.org, konradybcio@kernel.org,
+	daniel.lezcano@linaro.org, sboyd@kernel.org, amitk@kernel.org,
+	thara.gopinath@gmail.com, lee@kernel.org, rafael@kernel.org,
+	subbaraman.narayanamurthy@oss.qualcomm.com,
+	david.collins@oss.qualcomm.com, anjelique.melendez@oss.qualcomm.com,
+	quic_kamalw@quicinc.com
+Cc: oe-kbuild-all@lists.linux.dev, rui.zhang@intel.com, lukasz.luba@arm.com,
+	lars@metafoo.de, devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	cros-qcom-dts-watchers@chromium.org,
+	jishnu.prakash@oss.qualcomm.com, quic_skakitap@quicinc.com,
+	neil.armstrong@linaro.org
+Subject: Re: [PATCH V5 4/5] iio: adc: Add support for QCOM PMIC5 Gen3 ADC
+Message-ID: <202502011915.MIBVfCtZ-lkp@intel.com>
+References: <20250131183242.3653595-5-jishnu.prakash@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250123-nolibc-config-v2-2-5701c35995d6@weissschuh.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20250131183242.3653595-5-jishnu.prakash@oss.qualcomm.com>
 
-On Thu, Jan 23, 2025 at 08:37:38AM +0100, Thomas Weiﬂschuh wrote:
-> The "prepare" target does not need to be run manually.
-> kbuild knows when to use it on its own and the target is not even
-> documented.
-> 
-> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
-> ---
->  tools/testing/selftests/nolibc/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/nolibc/Makefile b/tools/testing/selftests/nolibc/Makefile
-> index ba044c8a042ce345ff90bdd35569de4b5acd117d..464165e3d9175d283ec0ed14765df29427b6de38 100644
-> --- a/tools/testing/selftests/nolibc/Makefile
-> +++ b/tools/testing/selftests/nolibc/Makefile
-> @@ -261,7 +261,7 @@ initramfs: nolibc-test
->  	$(Q)cp nolibc-test initramfs/init
->  
->  defconfig:
-> -	$(Q)$(MAKE) -C $(srctree) ARCH=$(ARCH) CC=$(CC) CROSS_COMPILE=$(CROSS_COMPILE) mrproper $(DEFCONFIG) prepare
-> +	$(Q)$(MAKE) -C $(srctree) ARCH=$(ARCH) CC=$(CC) CROSS_COMPILE=$(CROSS_COMPILE) mrproper $(DEFCONFIG)
+Hi Jishnu,
 
-I'm pretty sure that in the past I had to manually do it for certain
-rebuilds (out of the nolibc-test context), but I cannot say for sure
-when, but I did definitely discover it when trying to fix some build
-issues. It's very possible that the issues that it used to fix have
-long been fixed and that it remained in fingers memory, so I'm fine
-with dropping it and we'll see. If we ever discover we need to bring
-it back, at least we'll explain why in a commit message this time.
+kernel test robot noticed the following build errors:
 
-Acked-by: Willy Tarreau <w@1wt.eu>
+[auto build test ERROR on 5ffa57f6eecefababb8cbe327222ef171943b183]
 
-Willy
+url:    https://github.com/intel-lab-lkp/linux/commits/Jishnu-Prakash/dt-bindings-iio-adc-Move-QCOM-ADC-bindings-to-iio-adc-folder/20250201-023723
+base:   5ffa57f6eecefababb8cbe327222ef171943b183
+patch link:    https://lore.kernel.org/r/20250131183242.3653595-5-jishnu.prakash%40oss.qualcomm.com
+patch subject: [PATCH V5 4/5] iio: adc: Add support for QCOM PMIC5 Gen3 ADC
+config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250201/202502011915.MIBVfCtZ-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250201/202502011915.MIBVfCtZ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502011915.MIBVfCtZ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/iio/adc/qcom-adc5-gen3-common.c: In function 'adc5_gen3_update_dig_param':
+>> drivers/iio/adc/qcom-adc5-gen3-common.c:72:18: error: implicit declaration of function 'FIELD_PREP' [-Wimplicit-function-declaration]
+      72 |         *data |= FIELD_PREP(ADC5_GEN3_DIG_PARAM_CAL_SEL_MASK, prop->cal_method);
+         |                  ^~~~~~~~~~
+
+
+vim +/FIELD_PREP +72 drivers/iio/adc/qcom-adc5-gen3-common.c
+
+    67	
+    68	void adc5_gen3_update_dig_param(struct adc5_channel_common_prop *prop, u8 *data)
+    69	{
+    70		/* Update calibration select and decimation ratio select */
+    71		*data &= ~(ADC5_GEN3_DIG_PARAM_CAL_SEL_MASK | ADC5_GEN3_DIG_PARAM_DEC_RATIO_SEL_MASK);
+  > 72		*data |= FIELD_PREP(ADC5_GEN3_DIG_PARAM_CAL_SEL_MASK, prop->cal_method);
+    73		*data |= FIELD_PREP(ADC5_GEN3_DIG_PARAM_DEC_RATIO_SEL_MASK, prop->decimation);
+    74	}
+    75	EXPORT_SYMBOL(adc5_gen3_update_dig_param);
+    76	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
