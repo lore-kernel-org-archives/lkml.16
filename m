@@ -1,166 +1,283 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A68217BCE;
-	Sat,  1 Feb 2025 04:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69645A926
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 05:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738384816; cv=none; b=rgtaCBDTe9CaT0KIJZCYf2MWWotm1tPtsjtGxXtX0DpQ7Qx/ohjZtrwsDbHr70Kkc2gkCELAebd+Q8FQvDOkY/lRKZUBz63YF/lup2A9US6YPhWH5QFjgsPHhAyoPaM1vNhF/ZY2qASg2EP/P0Jclu+2e29WCe7tAaPgJcsLqtA=
+	t=1738386678; cv=none; b=YRBUcpv71g+ccaNVwnzRjPZd/2zjdeezK4cToxrVrit7kDokgvtHzeok2UWNUmlkkL9GxNXdEwaimUF1m9uwnLkK6c/rXf+z83k1pm2K2DMfre4UVa1wf+iyvxsLQ/AjsvF85Z+kK0bd6IRncQrqdSvG3L5vFVN/ZTsCk5O4k5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738384816; c=relaxed/simple;
-	bh=xo7/q6vlZdNeRWEWkoAlNw1e0d6k7F8xJ30Ok5ww660=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J1oF/TfvyQYcWuupYNpfUtQoMMJco5e9Y9BVefvrqo6rvV/qE14Dcyxy5QV7PCpdvY249lOqsZq1Jm7pku1PhSAwnjfotHU86Gk976O92Okw5a4Cut9jo9XlfcXWlJOZ2Fr68HV7o9Qu6HKcQ6Dto3ln+8Y/vB8pI/Bt/0Ub+20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MQIh6QsA; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1738386678; c=relaxed/simple;
+	bh=IDjieWbDju0Tnr6e/N/9AA6R5owsaABqeozumeIoTrw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=SJdEadp/rVvio/Wp1uhfxqYZukqfzlI3CcHSZaBIX3mh3MB8jz2cqctkfU3dkgnoNYExwNXFZJcTf55T3CWxkjK7Bs/02PCF5YHaU71RqXKqR0rDOhI0JwMhQA05JiChpYO7mD1SPeXFOz3Yvn5RnZynrFGoSaBS+P+zxADHPc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e1vobhD8; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MQIh6QsA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1738384794; x=1738989594; i=w_armin@gmx.de;
-	bh=LT750kSE9bF5YLcER4OJ17oUOtS5kE1L/aK//c9KpYI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=MQIh6QsAP4n0PL5GuCxKJSQGqExqVDlX8C3QweLaIBInAPuSUu5+alz23ie5iJZX
-	 uh12nG66lz5URpJzwQoX/sOmnMRFDG4d+Nac8sQRbTA+b/kIEn0ea0Mam748kIxRZ
-	 +pOHSkrqmvoZ5wLF7TYwJ/BMnnYAsRQXA5lNDAaq/+TyiHB7HIJldx2OVkJ3LEMYH
-	 wCL8an077w8wRcAtbpGzMIcw/Q6l0rM/V9JnhMt9bwpFRi0ytl4F0ZmlTvn+321k1
-	 Ffv2PYhxHQqrNZ0Yu6S6FYebwxjrncDj5mBpeO2f3BxrFHfM4ZLPDe/gauNkCtIK7
-	 GuEfn1+/IAfFX0ks0Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([93.202.246.83]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N3bX1-1tVSRe3BeV-00w1d9; Sat, 01
- Feb 2025 05:39:54 +0100
-Message-ID: <aa91e17f-0ea8-4645-a0f9-57c016e36a9e@gmx.de>
-Date: Sat, 1 Feb 2025 05:39:50 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e1vobhD8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738386677; x=1769922677;
+  h=date:from:to:cc:subject:message-id;
+  bh=IDjieWbDju0Tnr6e/N/9AA6R5owsaABqeozumeIoTrw=;
+  b=e1vobhD8x4ihGUFfm6ZIm+XrzMCmWjcbLMaagvNXnMGJopMvRI4upG+n
+   s2GMvSOFgRnZjTwe5eSVdvI8E96JeiIGNKNHFXm3ufTeWPJFmM7mvv/04
+   26dHkhBDn3eoZxoe4Xq+bbFIpO+o90SotEi5TY+LRqH8THaWTX8c1QAug
+   SSYJ+AllcSV1fX+GLzyjlzuiN953kiUAXUhH4hxrYRi6E6p+jB2PkMwzC
+   nzQclXazlXgbAF2SyUY1svLVliM/BLi3twCifDhN2ba13vaEoDvdFX2Y3
+   3EVfMiAIV7T6s0lAP5GZBp4bggS9nMYyCGf++tLSK+/vZDY9q2aHdg8Ha
+   Q==;
+X-CSE-ConnectionGUID: ZGZiVfyrR6yi5/DehhLoZg==
+X-CSE-MsgGUID: E7Of/Y6GSmqjCC4aCxH/1w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="42876995"
+X-IronPort-AV: E=Sophos;i="6.13,250,1732608000"; 
+   d="scan'208";a="42876995"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 21:11:15 -0800
+X-CSE-ConnectionGUID: pxWvKLqYRZ6yjP4++qo0aA==
+X-CSE-MsgGUID: onvE5g6jRsGdFQt1aghrPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,250,1732608000"; 
+   d="scan'208";a="114813014"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 31 Jan 2025 21:11:13 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1te5mh-000nm7-1u;
+	Sat, 01 Feb 2025 05:11:11 +0000
+Date: Sat, 01 Feb 2025 13:10:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ c911589353d148ffc65cddd5c0b00ac4f80a5b9a
+Message-ID: <202502011344.rnouYEiF-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-To: Werner Sembach <wse@tuxedocomputers.com>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, bentiss@kernel.org
-Cc: dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
- lee@kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
- ojeda@kernel.org, onitake@gmail.com, pavel@ucw.cz, cs@tuxedo.de,
- platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org
-References: <20250121225510.751444-1-wse@tuxedocomputers.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250121225510.751444-1-wse@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:pALTMLKB7mMHQQycS43ma88A2gx+nB8dmXITJNjbom2JBMqBRwE
- yAREBGOKW1CJoi+K++E1AoG5I2TTJ3LGkOF+Q14cht0DRbV1t9GJ6+lHcIVg0oJWMYtkQLK
- BS+43+pJ+E5bHQHrjEidOHxT4AK7lzOO5Tjx7s8SGOOVZSPebrPUL9OVWSV1avdJcvo369N
- zkbXj4deyhIg2gyAkXBMA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BBsPRm+lS0Q=;NcG0FE4KxwiBnnABDwi8c+B+uPO
- /vV9XuJGHiA78dys94k6fetrooym5vY5GtRjNXq7+TS0XITAK/pINMBIsB23SNsBb5eq+Kp2V
- XMJLniMCtaCwMYJCSgYw6sSQuj9u8bLy9BOrCbo424Z1WMGeO/xSGuO9udGBzdf7XA+Yjaos9
- JEM6oPZNSsGuASq976bBWWqzG6FQ+Zxv2VVfzuin5XMqunOplk4EfhwzPZ9BFBuP1LM40zfeV
- Zf512LtToicTjtomIcdbAOdQ03I7YZ4xOF1gwpMtmCZToST3QOeAJzkrifJXKFdujkd5DOS2o
- sK/APJi3ay1jpAkbGovg1DZpIcIWH4iSRpKDi2EaawzzLi2GrxMdnZRkjMdQ7lQeDI+XaLMmo
- uud8cMSNfmGFhntp4n0HDxnCnrJJ8bRvEF5v4V6iuvavxVFrYmBcZmckhEzSTNEMqft9yorUx
- U6vMjQptJLL7ObBhVmkibA9KQEmFo/svFIpy3Hoz64ByFKwGh2zt9E10epNVeMfcRPAG8Ph16
- 44AJO1ma6eCpjIXFatkJqD9HUF0uvrZdfvLt07IXI1akqsPzQ3/CLXdZXeUdw79jsS4b80tLN
- tXL0O1rhSTiSskxiwygqmG7WRmLMkLOpnxFw03WzrlPWzE0kJWIVfSz6KGKls7InESvzVDJ+J
- X9CnCv+AUbT3M57HSAM6SxX3ipqXr5Wl6Ko+yoxcjqQ8blINi6vslVvXk+Jmy35dGDNu7nR5Y
- 2ZHaBkf4gUsZ/YgKhkGuZ0lwVHBGPi34F9MQWUoQzhopA/OFJ+4VsljX9U9OSlvZKAtU3VQpl
- d5mkaFir9d4fl1CTI5mB9KBmvQ/uS8t9gBbte+MHFB9KOfSi/xjIhh95BeiwthI9Wb6MFBgB2
- Z7C+uHaJe1G0maH1tWwIy9LniKQgjHujVlAejxnGtR6g0qEb+btqtxDEJmq4ozXMrn283ItoL
- Jyio6sANk8uhN2OcgJ1rhIvhoGdMC2DHNlPFCtO7ep8MhPzDl230tmrlyV7wdEP9kPLXmI81V
- ramRIko9M9455Vaf1gJshjEtbDj/jVNJ0UoHKNDAV+AnTY3q1Hq4cB+CFDRtjBa/Kg+4KXSRx
- s0VzBEeY6JSfR6r/HIbiSW5KYX512B4qSKG9vkpidJcWNyMdD1KL+AMmrQf3kSGp3aWydsTRQ
- /Z14IGlLtRhqw3BAuxj4kRF6tpW3xmjx1lPt/zqVZPzh2NfIRWABTseRJ5k9i5TBbkM3kVBZb
- 4e7kDj/3jBJDR7wRMRM3TUVWnCbQ8hSATAd6YTVQNCPYwXWNx2LwIamI/toVCsFZ2bMJHSqJn
- DYTRVR3puZcIR6HBKmtacjDq1RvwmTjOCrw9Zhak+9Ejn8=
 
-Am 21.01.25 um 23:31 schrieb Werner Sembach:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+branch HEAD: c911589353d148ffc65cddd5c0b00ac4f80a5b9a  Merge branch 'WIP.fixes'
 
-> Hi,
-> after some other work, picked this up again.
-> Only coding style changes vs v4.
->
->
-> I now got my feet a little wet with hid-bpf regarding something else, and
-> with that knowledge I would leave the long arrays in the beginning in the
-> kernel code for the time being:
->
-> sirius_16_ansii_kbl_mapping and sirius_16_iso_kbl_mapping are required
-> during initialization so they have to exist in the kernel code anyway.
->
-> report_descriptor will most likly not change even for future models and
-> afaik having report_descriptors in kernel drivers is not unheard of.
->
-> So the only things that could be meaningfully moved to a hid-bpf program
-> are the sirius_16_*_kbl_mapping_pos_* arrays. But for these is have to give
-> out some fallback value anyway for the case where a hid-bpf file is missing
-> or fails to load. So why not use real world values from my test device for
-> these values?
->
-> As soon as there is a future device that can use the same driver with just
-> these pos arrays different, then I would implement that change via a bpf
-> program instead of a change to the kernel driver.
->
-> Let me know if you too think this is a sensefull approach?
->
->
-> Another question: Would this patch need to wait for a userspace
-> implementation of lamp array before it can get accepted?
+elapsed time: 1098m
 
-It would be nice if you could test the LampArray implementation. But other than that
-userspace can catch up later.
+configs tested: 206
+configs skipped: 6
 
-Still, i am interested in the opinion of the LED maintainers regarding the fake HID interface.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks,
-Armin Wolf
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    clang-21
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    clang-18
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    clang-18
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250131    gcc-13.2.0
+arc                   randconfig-002-20250131    gcc-13.2.0
+arm                              allmodconfig    clang-18
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    clang-18
+arm                          gemini_defconfig    clang-21
+arm                           h3600_defconfig    gcc-14.2.0
+arm                   milbeaut_m10v_defconfig    gcc-14.2.0
+arm                          moxart_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250131    clang-17
+arm                   randconfig-002-20250131    clang-15
+arm                   randconfig-003-20250131    gcc-14.2.0
+arm                   randconfig-004-20250131    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250131    clang-15
+arm64                 randconfig-002-20250131    gcc-14.2.0
+arm64                 randconfig-003-20250131    clang-21
+arm64                 randconfig-004-20250131    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250131    gcc-14.2.0
+csky                  randconfig-001-20250201    gcc-14.2.0
+csky                  randconfig-002-20250131    gcc-14.2.0
+csky                  randconfig-002-20250201    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250131    clang-21
+hexagon               randconfig-001-20250201    gcc-14.2.0
+hexagon               randconfig-002-20250131    clang-21
+hexagon               randconfig-002-20250201    gcc-14.2.0
+i386                             allmodconfig    clang-19
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-19
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-19
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250131    clang-19
+i386        buildonly-randconfig-002-20250131    clang-19
+i386        buildonly-randconfig-003-20250131    gcc-12
+i386        buildonly-randconfig-004-20250131    gcc-12
+i386        buildonly-randconfig-005-20250131    clang-19
+i386        buildonly-randconfig-006-20250131    gcc-12
+i386                                defconfig    clang-19
+i386                  randconfig-001-20250201    clang-19
+i386                  randconfig-002-20250201    clang-19
+i386                  randconfig-003-20250201    clang-19
+i386                  randconfig-004-20250201    clang-19
+i386                  randconfig-005-20250201    clang-19
+i386                  randconfig-006-20250201    clang-19
+i386                  randconfig-007-20250201    clang-19
+i386                  randconfig-011-20250201    clang-19
+i386                  randconfig-012-20250201    clang-19
+i386                  randconfig-013-20250201    clang-19
+i386                  randconfig-014-20250201    clang-19
+i386                  randconfig-015-20250201    clang-19
+i386                  randconfig-016-20250201    clang-19
+i386                  randconfig-017-20250201    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250131    gcc-14.2.0
+loongarch             randconfig-001-20250201    gcc-14.2.0
+loongarch             randconfig-002-20250131    gcc-14.2.0
+loongarch             randconfig-002-20250201    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                        bcm47xx_defconfig    gcc-14.2.0
+mips                      bmips_stb_defconfig    clang-18
+mips                     loongson1b_defconfig    gcc-14.2.0
+mips                           mtx1_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250131    gcc-14.2.0
+nios2                 randconfig-001-20250201    gcc-14.2.0
+nios2                 randconfig-002-20250131    gcc-14.2.0
+nios2                 randconfig-002-20250201    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-12
+openrisc                    or1ksim_defconfig    gcc-14.2.0
+parisc                           alldefconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250131    gcc-14.2.0
+parisc                randconfig-001-20250201    gcc-14.2.0
+parisc                randconfig-002-20250131    gcc-14.2.0
+parisc                randconfig-002-20250201    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                          allyesconfig    gcc-14.2.0
+powerpc                      chrp32_defconfig    clang-21
+powerpc                 mpc8313_rdb_defconfig    gcc-14.2.0
+powerpc                 mpc8315_rdb_defconfig    gcc-14.2.0
+powerpc                      ppc64e_defconfig    gcc-14.2.0
+powerpc                     rainier_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250131    gcc-14.2.0
+powerpc               randconfig-001-20250201    gcc-14.2.0
+powerpc               randconfig-002-20250131    clang-15
+powerpc               randconfig-002-20250201    gcc-14.2.0
+powerpc               randconfig-003-20250131    clang-21
+powerpc               randconfig-003-20250201    gcc-14.2.0
+powerpc                     tqm8540_defconfig    gcc-14.2.0
+powerpc                     tqm8560_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250131    clang-15
+powerpc64             randconfig-001-20250201    gcc-14.2.0
+powerpc64             randconfig-002-20250131    clang-17
+powerpc64             randconfig-002-20250201    gcc-14.2.0
+powerpc64             randconfig-003-20250131    clang-15
+powerpc64             randconfig-003-20250201    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                            allmodconfig    gcc-14.2.0
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-21
+riscv                            allyesconfig    gcc-14.2.0
+riscv                               defconfig    gcc-12
+riscv                               defconfig    gcc-14.2.0
+riscv                 randconfig-001-20250201    clang-21
+riscv                 randconfig-001-20250201    gcc-14.2.0
+riscv                 randconfig-002-20250201    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250201    gcc-14.2.0
+s390                  randconfig-002-20250201    clang-21
+s390                  randconfig-002-20250201    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-12
+sh                    randconfig-001-20250201    gcc-14.2.0
+sh                    randconfig-002-20250201    gcc-14.2.0
+sh                          rsk7201_defconfig    gcc-14.2.0
+sh                          sdk7780_defconfig    gcc-14.2.0
+sh                           se7724_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250201    gcc-14.2.0
+sparc                 randconfig-002-20250201    gcc-14.2.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250201    gcc-14.2.0
+sparc64               randconfig-002-20250201    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250201    clang-18
+um                    randconfig-001-20250201    gcc-14.2.0
+um                    randconfig-002-20250201    clang-21
+um                    randconfig-002-20250201    gcc-14.2.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250131    gcc-11
+x86_64      buildonly-randconfig-002-20250131    clang-19
+x86_64      buildonly-randconfig-003-20250131    gcc-12
+x86_64      buildonly-randconfig-004-20250131    gcc-12
+x86_64      buildonly-randconfig-005-20250131    clang-19
+x86_64      buildonly-randconfig-006-20250131    clang-19
+x86_64                              defconfig    clang-19
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-19
+x86_64                randconfig-001-20250201    clang-19
+x86_64                randconfig-002-20250201    clang-19
+x86_64                randconfig-003-20250201    clang-19
+x86_64                randconfig-004-20250201    clang-19
+x86_64                randconfig-005-20250201    clang-19
+x86_64                randconfig-006-20250201    clang-19
+x86_64                randconfig-007-20250201    clang-19
+x86_64                randconfig-008-20250201    clang-19
+x86_64                randconfig-071-20250201    clang-19
+x86_64                randconfig-072-20250201    clang-19
+x86_64                randconfig-073-20250201    clang-19
+x86_64                randconfig-074-20250201    clang-19
+x86_64                randconfig-075-20250201    clang-19
+x86_64                randconfig-076-20250201    clang-19
+x86_64                randconfig-077-20250201    clang-19
+x86_64                randconfig-078-20250201    clang-19
+x86_64                               rhel-9.4    clang-19
+x86_64                           rhel-9.4-bpf    clang-19
+x86_64                         rhel-9.4-kunit    clang-19
+x86_64                           rhel-9.4-ltp    clang-19
+x86_64                          rhel-9.4-rust    clang-19
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250201    gcc-14.2.0
+xtensa                randconfig-002-20250201    gcc-14.2.0
 
->
-> The folder structure and naming scheme with nb04 is im preparation for
-> other parts of tuxedo-drivers to be upstreamed. NB04 is one of the
-> board_vendor dmi strings on TUXEDO devices that aligns with which part of
-> tuxedo-drivers implements the features of that device. They are independent
-> of each other so I plan to put them in different subfolders to reflect
-> that.
->
-> Best regards,
-> Werner Sembach
->
-> Werner Sembach (1):
->    platform/x86/tuxedo: Add virtual LampArray for TUXEDO NB04 devices
->
->   MAINTAINERS                                   |   6 +
->   drivers/platform/x86/Kconfig                  |   2 +
->   drivers/platform/x86/Makefile                 |   3 +
->   drivers/platform/x86/tuxedo/Kbuild            |   6 +
->   drivers/platform/x86/tuxedo/Kconfig           |   6 +
->   drivers/platform/x86/tuxedo/nb04/Kbuild       |   9 +
->   drivers/platform/x86/tuxedo/nb04/Kconfig      |  14 +
->   .../platform/x86/tuxedo/nb04/wmi_ab_init.c    | 103 +++
->   .../platform/x86/tuxedo/nb04/wmi_ab_init.h    |  18 +
->   .../x86/tuxedo/nb04/wmi_ab_virt_lamparray.c   | 772 ++++++++++++++++++
->   .../x86/tuxedo/nb04/wmi_ab_virt_lamparray.h   |  18 +
->   .../platform/x86/tuxedo/nb04/wmi_xx_util.c    |  97 +++
->   .../platform/x86/tuxedo/nb04/wmi_xx_util.h    | 112 +++
->   13 files changed, 1166 insertions(+)
->   create mode 100644 drivers/platform/x86/tuxedo/Kbuild
->   create mode 100644 drivers/platform/x86/tuxedo/Kconfig
->   create mode 100644 drivers/platform/x86/tuxedo/nb04/Kbuild
->   create mode 100644 drivers/platform/x86/tuxedo/nb04/Kconfig
->   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_ab_init.c
->   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_ab_init.h
->   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_ab_virt_lamparray.c
->   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_ab_virt_lamparray.h
->   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_xx_util.c
->   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_xx_util.h
->
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
