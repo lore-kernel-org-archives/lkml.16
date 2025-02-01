@@ -1,57 +1,57 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F318514A4D1
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4A535957
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738374933; cv=none; b=IpC3ECo8dbOc6FEN5Ms2CVAVTJmhA1mkbsFp/LBHjuiG91seNm/d49w9U9a4eGEABII9X+WAMKXlEy73EAWMAiDacyAF5Op6Nzjs0TVB9TX/Dez5YRY55pmEYcZZoaZWmWR/GM7ZpR8QpyhT3uR9OOIE7unsGmIHWkt0VkJeBbc=
+	t=1738374935; cv=none; b=Ybz5QdfvGiUckWrBwfJNOlK8Ck68eHRfzXkkkKLKdhohfrKJ28p45Anz92zgoejrL7fC9TWHFU2lkSEBnoT13ACWIOFXhLAUGyeRRhUn6q1a3Zhm+N7SJ/XpGgMeawp6aepTWYipzrNdN9nm5eUNxik5mU0p8Hgt0DnQ4jGYJqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738374933; c=relaxed/simple;
-	bh=vmEbPbxbMS9aUOXfyT+ZSZRy/eMxMmE8Iua31butyQA=;
+	s=arc-20240116; t=1738374935; c=relaxed/simple;
+	bh=U3aXYtXvj8rJ6en4q57EqfG8FlNrWEsTovi78JWBpUA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lbsg7mGl/03glSmQFKqkHvwjwryYypZc0ouJtl6ZIQk8Sql3eNVVCr+HYjhQEfUyJrmFQmgCoMKkLgqDqx37TMy5zOmSaMs6OhQmuXx6wVwFcebRUPVliDoPmbsv5kGXxc0/ojDV2KWBrqHtSb8OPogYLFtM7DpbLk1KeC1JDRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ixcVm+kT; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=b9Djie6nsPRwl0Mw7few7foUN9BWigKO4QrCWSanttzB8l0gMLalLUtNI1B/IcVDFR2/YkQy5bOh9tmYvwVr3qDZEmZ9RFpg7gBcyD4fR148i/C8V298RxZyBnqxCXXoar78BHkoptKoluJCrlUS8HsFwgkQ3cQGHEh3PJKbYwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0dgpIlbX; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ixcVm+kT"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2efa0eb9dacso5045276a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:55:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0dgpIlbX"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef7fbd99a6so4966842a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:55:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738374931; x=1738979731; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738374933; x=1738979733; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=SSq5rYLAYG2vKFAF70mfCTOkmocHERBtCqn9i2vcAtY=;
-        b=ixcVm+kT6Brw2ZztMSq1Qyqza4qGWq2GYtbj9GQ15xl8XlxP79inYPtXDjRukspZ8f
-         BQBwUFx+MGdJQA4lWbdCCEgjY25fvewS4POj/zc9S0w4T8THjpMDNkNa088ALea2BZ12
-         1sfHiQTshHN6rcm7Vqikk79brVhKjGDzZpDAraJc8CmfOT3bSiHFdpwpK9BG7KYX2xVU
-         npj5+6oIbaviw8k/1FZp6j9z16axRIdh5tEvZLLgEMjfvOahLknWXdYSSL2Xk1tThzDX
-         5p6rJ0+vej5A6ruM0M7xZg9nvbUEk77sVdZng49Q+g2C7Ld9vbHEXrIEg5h85OQmoRR9
-         8Ogg==
+        bh=v6o3I4DBxjxkxXVmgva/ae+3lJMpdQxl+ZvTS60XPAM=;
+        b=0dgpIlbXH/nk/f+ntCR66WCWi/dJgWHyos7+TcjRTir2R2E0YiHc8DlenTQu+1AoCr
+         uq2NOpg9P/wetKjvuO1pguoWkFXeI6G5J1GUQiEt9rDvYnfvjdMBRw0Rw0/L1tmdKXHO
+         0S3+ftzo+1Fa7H9x/zVBzzwnnXWrcKZQ34Tn2R2jWA29wj7Muu6wmphUfzV+J18S5fss
+         2Vfz13DMInf5peD8VGGJ2Z7H9C27qstEpz03YyCSX0qkbyOd6MOcq5naf5C7xhghRYaO
+         JoeHGYtVV0JanVuyD2xrFXqgsffnonm+sptkugnB0580g+q/MGblVzdJ3Mgx97JwcLU4
+         MLqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738374931; x=1738979731;
+        d=1e100.net; s=20230601; t=1738374933; x=1738979733;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SSq5rYLAYG2vKFAF70mfCTOkmocHERBtCqn9i2vcAtY=;
-        b=xQmQoUOhM6vGc0RPVlBGay2ymkPFW4NX44AesieUvJyJCTg80qoTXKoCmWwOEe8M67
-         0jrma/2yuL6ZQ84Z2rxneOM04LG+zVhrXvAH5IL+fMYOSewLBfTDQcrLL1pRTYqgp18j
-         fMtiudyPu+hz//N/U/5Oe7nhMbRuqDqSrYIjBhhSLtiY+0X2ksYzC3eEuVJtsKth5B3w
-         9k5847Ff2hkYV3tRgMkHHQM0hw9v+lWmN+VknItggtDAqB7ywXsFEfJZ0tHTGX+K4xQO
-         jnu1s72Gj9V7QjLsb0+D2CnRNaR+qVkvQ8eRDUhYAjNYN6imnzaU2ARNS3K8+NTRZ/qD
-         woZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVEy7ZqeHyGIx0Xy0QQnLtKWFb5U213tlYwbOAzlBzvlEvj3D6oWMvaZfAkOKnKOVT1g+Uyemu3hIMk4I0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzygEBTxB/zlT1IoGpc4/s6vuIsmi/jcXGG86njHG7aIm59+NnK
-	OGJzsLG5o8zbMf26rFLIbN+WpS60O4KEZFqCHeYn1PmOlXda3z33ZDW3qYR+WKaJa05uWzK4pGc
-	qPg==
-X-Google-Smtp-Source: AGHT+IEFpzfH3dkO4+Y860/dfQ4O1AiD1t9jfO7r11k85kQFFgtWqnFjO6ht6BavxIM9aAIGs8WsY8WQD2s=
-X-Received: from pjbeu6.prod.google.com ([2002:a17:90a:f946:b0:2f4:47fc:7f17])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:390c:b0:2f8:4a3f:dd37
- with SMTP id 98e67ed59e1d1-2f84a3fed3dmr12867960a91.16.1738374931514; Fri, 31
- Jan 2025 17:55:31 -0800 (PST)
+        bh=v6o3I4DBxjxkxXVmgva/ae+3lJMpdQxl+ZvTS60XPAM=;
+        b=W/QF3SEOg9mmldSYIwYAyjxGEfKzy2gyxj9LSpooUFFzW2K3Li3Zo1Q+iA+4d1hJo0
+         5PesZFPJVH/F6W4S7DGLRR4/z5x+WDHZAcSEywfYDwGsyfnYAfEOz9zvx9a15p7NyGfy
+         IUgzD3Bznx4jq8KHJ8AgKvM7980HKw8mUhX/EvBSFRR0sfnazDOEDciJoGYbqUa78uZb
+         00bPW3TH1cZwVmCm/jRh5N8WLk3eASor7wcqdu+shyaQ1h26FqWR2p4IlzmwcUl5Xyb3
+         EKPRdhdMf1SEtrRSoFEcapEbTKsFYrFH9qtyxKhC4VT9tjTyw+tbMGh6b6fGRGkZwv39
+         dSFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWN8JZjOVQl3sh7jFEKFQ5E53mhBzmMDJzsQHKKDU23Cgc5gDgiHLQVxC4tZLpeO6Gvqr+y+cgynHck7mE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywzbl+27g25R+tYPhgbUmwBGmbBAU0eVitxsCnCz76tGWASQhNZ
+	iSHTL26GSH0yrVpccInyPORZA7CEGJwAJGeO8jh2zTpqOl3Ud5vLjtp/yKVR1GG+L9GdZo6oIPZ
+	+Ow==
+X-Google-Smtp-Source: AGHT+IEJyl6b/CyC+v0x5BmLUOl5YD0/ntJw9qfYUQQK6gKPQKvDqtvewlO1PBrsM/VzRTPHCwo9rVN/4f8=
+X-Received: from pjbpx11.prod.google.com ([2002:a17:90b:270b:b0:2e9:5043:f55b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:3de4:b0:2f8:4589:a305
+ with SMTP id 98e67ed59e1d1-2f84589a325mr13600663a91.1.1738374932981; Fri, 31
+ Jan 2025 17:55:32 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 31 Jan 2025 17:55:14 -0800
+Date: Fri, 31 Jan 2025 17:55:15 -0800
 In-Reply-To: <20250201015518.689704-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,55 +61,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250201015518.689704-1-seanjc@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250201015518.689704-8-seanjc@google.com>
-Subject: [PATCH v2 07/11] KVM: x86: Plumb the emulator's starting RIP into
- nested intercept checks
+Message-ID: <20250201015518.689704-9-seanjc@google.com>
+Subject: [PATCH v2 08/11] KVM: x86: Add a #define for the architectural max
+ instruction length
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-When checking for intercept when emulating an instruction on behalf of L2,
-pass the emulator's view of the RIP of the instruction being emulated to
-vendor code.  Unlike SVM, which communicates the next RIP on VM-Exit,
-VMX communicates the length of the instruction that generated the VM-Exit,
-i.e. requires the current and next RIPs.
+Add a #define to capture x86's architecturally defined max instruction
+length instead of open coding the literal in a variety of places.
 
-Note, unless userspace modifies RIP during a userspace exit that requires
-completion, kvm_rip_read() will contain the same information.  Pass the
-emulator's view largely out of a paranoia, and because there is no
-meaningful cost in doing so.
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/emulate.c     | 1 +
- arch/x86/kvm/kvm_emulate.h | 1 +
- 2 files changed, 2 insertions(+)
+ arch/x86/kvm/kvm_emulate.h |  4 +++-
+ arch/x86/kvm/trace.h       | 14 +++++++-------
+ arch/x86/kvm/vmx/nested.c  |  2 +-
+ 3 files changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-index ca613796b5af..1349e278cd2a 100644
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -480,6 +480,7 @@ static int emulator_check_intercept(struct x86_emulate_ctxt *ctxt,
- 		.src_type   = ctxt->src.type,
- 		.dst_type   = ctxt->dst.type,
- 		.ad_bytes   = ctxt->ad_bytes,
-+		.rip	    = ctxt->eip,
- 		.next_rip   = ctxt->_eip,
- 	};
- 
 diff --git a/arch/x86/kvm/kvm_emulate.h b/arch/x86/kvm/kvm_emulate.h
-index 49ab8b060137..35029b12667f 100644
+index 35029b12667f..c1df5acfacaf 100644
 --- a/arch/x86/kvm/kvm_emulate.h
 +++ b/arch/x86/kvm/kvm_emulate.h
-@@ -47,6 +47,7 @@ struct x86_instruction_info {
- 	u8  src_type;		/* type of source operand		*/
- 	u8  dst_type;		/* type of destination operand		*/
- 	u8  ad_bytes;           /* size of src/dst address              */
-+	u64 rip;		/* rip of the instruction		*/
- 	u64 next_rip;           /* rip following the instruction        */
+@@ -275,8 +275,10 @@ struct operand {
+ 	};
  };
  
++#define X86_MAX_INSTRUCTION_LENGTH	15
++
+ struct fetch_cache {
+-	u8 data[15];
++	u8 data[X86_MAX_INSTRUCTION_LENGTH];
+ 	u8 *ptr;
+ 	u8 *end;
+ };
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index 0b844cb97978..ccda95e53f62 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -830,12 +830,12 @@ TRACE_EVENT(kvm_emulate_insn,
+ 	TP_ARGS(vcpu, failed),
+ 
+ 	TP_STRUCT__entry(
+-		__field(    __u64, rip                       )
+-		__field(    __u32, csbase                    )
+-		__field(    __u8,  len                       )
+-		__array(    __u8,  insn,    15	             )
+-		__field(    __u8,  flags       	   	     )
+-		__field(    __u8,  failed                    )
++		__field(    __u64, rip                              )
++		__field(    __u32, csbase                           )
++		__field(    __u8,  len                              )
++		__array(    __u8,  insn, X86_MAX_INSTRUCTION_LENGTH )
++		__field(    __u8,  flags       	   	            )
++		__field(    __u8,  failed                           )
+ 		),
+ 
+ 	TP_fast_assign(
+@@ -846,7 +846,7 @@ TRACE_EVENT(kvm_emulate_insn,
+ 		__entry->rip = vcpu->arch.emulate_ctxt->_eip - __entry->len;
+ 		memcpy(__entry->insn,
+ 		       vcpu->arch.emulate_ctxt->fetch.data,
+-		       15);
++		       X86_MAX_INSTRUCTION_LENGTH);
+ 		__entry->flags = kei_decode_mode(vcpu->arch.emulate_ctxt->mode);
+ 		__entry->failed = failed;
+ 		),
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 8a7af02d466e..fb4fd96ce0f8 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -2970,7 +2970,7 @@ static int nested_check_vm_entry_controls(struct kvm_vcpu *vcpu,
+ 		case INTR_TYPE_SOFT_EXCEPTION:
+ 		case INTR_TYPE_SOFT_INTR:
+ 		case INTR_TYPE_PRIV_SW_EXCEPTION:
+-			if (CC(vmcs12->vm_entry_instruction_len > 15) ||
++			if (CC(vmcs12->vm_entry_instruction_len > X86_MAX_INSTRUCTION_LENGTH) ||
+ 			    CC(vmcs12->vm_entry_instruction_len == 0 &&
+ 			    CC(!nested_cpu_has_zero_length_injection(vcpu))))
+ 				return -EINVAL;
 -- 
 2.48.1.362.g079036d154-goog
 
