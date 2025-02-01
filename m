@@ -1,102 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B989433D1;
-	Sat,  1 Feb 2025 09:31:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B69A433BE;
+	Sat,  1 Feb 2025 09:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738402281; cv=none; b=hwQXzckC2B1wOzvR1XwqYSxRvSsSJQFNDmk5aiKzMitxlH1G3M3wUfW32jblwHLxJA2PamIH79ayWGvjpWzeuYHxuMh2IuoU2eOYDGWGwl7kSm1U6ZWINsIfbOt82Ed6MoF7UcrUgKFGIVLVTfPqnlcqd/Gwdkhmv/4FREoBrrY=
+	t=1738402804; cv=none; b=mwASXbJGzJlBDvtPU7ERJKydiL5KGnZ3fh6SORI/H6y6iP5mrYJBGFtB26uk76wGJrtW78LP9mDOLifxKpIAk/JUPVGprxgOrjl/qPxbjTYRuVS1JO4zQaziG8976M0xAVoOghy1GK0VuW0+0xW+6NDoJe44luY1WZlysOiqJ/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738402281; c=relaxed/simple;
-	bh=6DiUo9G39DaWbmRy6lCYOWw+aW2k6BNakn+GWpCVmYU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RbuAX03rhXT87OSmsVHmLdTPuBSN9aS3hiaG61BO6vDhtbbo4lvw/sUCVR38aoLHkFsm9k0d47T7/vg473GMrbqRZADYRHvt0qMKWa3LhAeQwdTRPR/I0+YQuloywgZBJl2TUN7AiidpmUv1BgROSGgYdHJWGsgOjXJe653sIr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icEKna1a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738402804; c=relaxed/simple;
+	bh=aAMRfRl5ZHwn79N0tp/fQ8i+GehS66SCFBO187z07bE=;
+	h=Date:From:To:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=AkBFWDlU3OCJowLnW/L8VpZdlg1IprOprobNbFlFvpNIDL6D4WmbsB22apVCvu4Iv68Om3Yj94Gcteu0zJ7OGVBPuj5cnJIzZfBbpkF/YFNRHdL8wgNwCgXdXL9Hc7objWpcp1+P3C7rm5cP77R5JYEK65DpYKQ55eRAUE7din4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSCfX8KN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icEKna1a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06BEC4CEE2;
-	Sat,  1 Feb 2025 09:31:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSCfX8KN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 827E1C4CED3;
+	Sat,  1 Feb 2025 09:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738402281;
-	bh=6DiUo9G39DaWbmRy6lCYOWw+aW2k6BNakn+GWpCVmYU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=icEKna1ax3M+9sQ0nOXpx2qrPh0SywEn1Sq7vInQ1kK0S4/2Oc7ed3GACSDbBjn96
-	 q7Dsn2yhfforlX9dr6HKfVo7u2Uq9JZLXMxnpz865w1zGfzg3MNj1fHvxnsfNael3r
-	 4jn5URjGKXhvvmPsMLhpT4pKHw4gvpf9KTqWZRw6CoayNRPnBQUUnEuiHGsm7eoO0O
-	 tLB2DMAvyI7E1Gjbb3LckYGdDtbS38mKPQVEIFCtxM4Yd/EmYyy+gRZVVeU1uE1k6K
-	 68aFoakDdK7CFmqPtTcDaCk9ZYvr0DXHTQ4klIdDGAKdpsrnlcSYRFfpoqJwPF4LGh
-	 1Ig8ZFpctEcMQ==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-303548a933aso23509831fa.3;
-        Sat, 01 Feb 2025 01:31:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWC3M9YwJ2km358cx/RCKCDSShPKkbmirftu/8amwSWLphzQCzzklJL4c/BUpMzmwThLssvCIP8DvTjdAE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxa7JmMbk5tPJJACt/hSDcLVQvBaUo1wf4940fBzDlHd0qfEe3m
-	71XIMHqIyoKBiJSAHOOECO3v/Fk9pXImMu36tBOQ/HT2UzxT2LfoWA6vHjcrnGzfXTwtLYh+5Nb
-	+i5oraxnrlEa5hn2Pc3/GtSOtzbU=
-X-Google-Smtp-Source: AGHT+IFZ+BVnAff2qucCKMwfJKaFH6U9NoPlFG9EX15dBLth7fCztHJ+8Xt/1N2IXzize4CrVjAIfWsnTe5r1UMeecE=
-X-Received: by 2002:a2e:a54a:0:b0:302:4a61:8b85 with SMTP id
- 38308e7fff4ca-307968fcc32mr50769211fa.37.1738402279650; Sat, 01 Feb 2025
- 01:31:19 -0800 (PST)
+	s=k20201202; t=1738402803;
+	bh=aAMRfRl5ZHwn79N0tp/fQ8i+GehS66SCFBO187z07bE=;
+	h=Date:From:To:Subject:In-Reply-To:References:From;
+	b=PSCfX8KNh15ymm4kfHgnW1KsRLIzB1kmBvu8P/ZPITWkUKaBP8aAJmCDo1aWrhcS7
+	 9J6U2aHbzUf0YQ0GIKl15eCr5SimYPJW3PxE4XX/0Lqn3+pDD8VgvTIdQvJJ5eUOAi
+	 rOxvqva+v77/EA8iyoc0Vc4wQJk71yQUFokKP6mka3zq89AWRv5q8y5oaaN/n9a3z2
+	 w8g77L2qq9oFzb63YSWFLmojozL8GTBtqJmG5zBE9GAh8OUQOAZdMt8hNy9w9vTLwn
+	 PhmTwoImt5Lybw/oY+qB2ypewSuiKAm0Kwk6h9w2cAeiExi1CL9BZUYlqgA+vyRyFY
+	 PDrbycaYs4fmA==
+Date: Sat, 01 Feb 2025 01:40:00 -0800
+From: Kees Cook <kees@kernel.org>
+To: Nir Lichtman <nir@lichtman.org>, viro@zeniv.linux.org.uk, brauner@kernel.org,
+ jack@suse.cz, ebiederm@xmission.com, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] exec: remove redundant save asides of old pid/vpid
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250201083127.GA1185473@lichtman.org>
+References: <20250201083127.GA1185473@lichtman.org>
+Message-ID: <0B25310A-0907-481E-8ADF-EEFA78927BFF@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAK7LNAQeyWYm2OZ6p=vWJegs_VZMz5RN+0fze6GG=f-ZGWQ3nA@mail.gmail.com>
- <CAHk-=whzh=4XxP5mQEh9G+xYOjBLxpyV16Hk9NWMp5PszrKRWQ@mail.gmail.com>
-In-Reply-To: <CAHk-=whzh=4XxP5mQEh9G+xYOjBLxpyV16Hk9NWMp5PszrKRWQ@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 1 Feb 2025 18:30:41 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT+uTNfrRu2+=yc1qvWBcFuNK+PCDHN1_tODQ5EkgxCBg@mail.gmail.com>
-X-Gm-Features: AWEUYZke96FRhojHqLyYZ3OPw0I6v2I9aMVr3RCPCmvk4S8BO4_q35IF-Uhgslg
-Message-ID: <CAK7LNAT+uTNfrRu2+=yc1qvWBcFuNK+PCDHN1_tODQ5EkgxCBg@mail.gmail.com>
-Subject: Re: [GIT PULL] Kbuild updates for v6.14-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
-
-On Sat, Feb 1, 2025 at 5:16=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, 31 Jan 2025 at 11:45, Masahiro Yamada <masahiroy@kernel.org> wrot=
-e:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.=
-git
-> > tags/kbuild-v6.14
->
-> Hmm. I was expecting the CONFIG_TRIM_UNUSED_KSYMS fix to come in from
-> you too. IOW, this:
->
->   https://lore.kernel.org/all/20241214105726.92557-1-masahiroy@kernel.org=
-/
->
-> which fixes the "load_utf8() ->symbol_request() -> symbol_get()
-> returns NULL" case when CONFIG_TRIM_UNUSED_KSYMS is enabled.
->
-> Obviously I can apply that patch directly, but the reason I _didn't_
-> do so was that I was just expecting it to come through the normal
-> Kbuild tree... Pls advice,
-
-Sorry, I noticed a case where that patch does not work.
-
-For example, when both consumer and provider of a symbol
-are modules,v2 does not solve the issue.
-
-I need to send v3.
 
 
+On February 1, 2025 12:31:27 AM PST, Nir Lichtman <nir@lichtman=2Eorg> wro=
+te:
+>Problem: Old pid and vpid are redundantly saved aside before starting to
+>parse the binary, with the comment claiming that it is required since
+>load_binary changes it, though from inspection in the source,
+>load_binary does not change the pid and this wouldn't make sense since
+>execve does not create any new process, quote from man page of execve:
+>"there is no new process; many attributes of the calling process remain
+>unchanged (in particular, its PID)=2E"
 
+See commit bb188d7e64de ("ptrace: make former thread ID available via PTRA=
+CE_GETEVENTMSG after PTRACE_EVENT_EXEC stop")
+
+This is for making sense of a concurrent exec made by a multi threaded pro=
+cess=2E Specifically see de_thread(), where the pid *can* change:
+
+ /*
+  * At this point all other threads have exited, all we have to
+	 * do is to wait for the thread group leader to become inactive,
+	 * and to assume its PID:
+	 */
+
+The described problem in the commit hasn't changed, so this code needs to =
+stay as-is=2E Or perhaps the comment could be improved?
+
+-Kees
 
 >
->                 Linus
-
-
+>Solution: Remove the saving aside of both and later on use them directly
+>from the current object, instead of via the saved aside objects=2E
+>
+>Signed-off-by: Nir Lichtman <nir@lichtman=2Eorg>
+>---
+>
+>Side-note: Tested this solution with a defconfig x86_64 and an initramfs
+>with Busybox and confirmed to work fine=2E
+>
+> fs/exec=2Ec | 12 +++---------
+> 1 file changed, 3 insertions(+), 9 deletions(-)
+>
+>diff --git a/fs/exec=2Ec b/fs/exec=2Ec
+>index 506cd411f4ac=2E=2E6bb0a7b15f7e 100644
+>--- a/fs/exec=2Ec
+>+++ b/fs/exec=2Ec
+>@@ -1789,15 +1789,8 @@ static int search_binary_handler(struct linux_binp=
+rm *bprm)
+> /* binfmt handlers will call back into begin_new_exec() on success=2E */
+> static int exec_binprm(struct linux_binprm *bprm)
+> {
+>-	pid_t old_pid, old_vpid;
+> 	int ret, depth;
+>=20
+>-	/* Need to fetch pid before load_binary changes it */
+>-	old_pid =3D current->pid;
+>-	rcu_read_lock();
+>-	old_vpid =3D task_pid_nr_ns(current, task_active_pid_ns(current->parent=
+));
+>-	rcu_read_unlock();
+>-
+> 	/* This allows 4 levels of binfmt rewrites before failing hard=2E */
+> 	for (depth =3D 0;; depth++) {
+> 		struct file *exec;
+>@@ -1826,8 +1819,9 @@ static int exec_binprm(struct linux_binprm *bprm)
+> 	}
+>=20
+> 	audit_bprm(bprm);
+>-	trace_sched_process_exec(current, old_pid, bprm);
+>-	ptrace_event(PTRACE_EVENT_EXEC, old_vpid);
+>+	trace_sched_process_exec(current, current->pid, bprm);
+>+	ptrace_event(PTRACE_EVENT_EXEC,
+>+			task_pid_nr_ns(current, task_active_pid_ns(current->parent)));
+> 	proc_exec_connector(current);
+> 	return 0;
+> }
 
 --=20
-Best Regards
-Masahiro Yamada
+Kees Cook
