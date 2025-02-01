@@ -1,163 +1,156 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D6E1BC9F6
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 02:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009F117557
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 02:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738376278; cv=none; b=KQXYKKO2orypxWjYdZvA0jdkxHfN/VjR/QjSeOXik76YdNjmgdPQ+tI9KxDh3Szy4ODc05dwu4FQIjzNwGa+NWoqygGGgiGmcXWfM8kvdi1dFulMmt7P0IdaegcRTK8v72FWtJ6H5hpkAFnpspzhL9qtDDufDB+gBrogPWP/f8s=
+	t=1738377140; cv=none; b=DWzFZdVjA0mG1N3aii3Ra1mdBZO//d+ghrRIFLpHBGfYZCLXwXeISPOfThht9DwqEm8jFxwjtpVmU5Rom1MvDzzk2Q8zThFBebIqmL8+G2Sb1RyWhuOSNlc7bwnrsZL0lBP5b+gD01BXQLeymGXcP9iGs3nZiBwZCiycZ6ypU8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738376278; c=relaxed/simple;
-	bh=p/Vg9iE4sgVLr3/9VKFQQjtH8mkL0jM6rjwkOfa6jHY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BJUSxAvjWRV73NLy8R4XBbwVO17BO0nB3hspUHbajdMsn2Kzyy6x+NETP3HdVUpzwaJfWGsxOLrieaWxLYWTbsGMU5C32xAn0GPu+D0lsX4JtBRWlpOT5jAk63HDlwg6peKmEebBydACHuMqpLQsVu9qW/Y1bRwyg5WPHXgOc3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TTdJFo6H; arc=none smtp.client-ip=209.85.216.74
+	s=arc-20240116; t=1738377140; c=relaxed/simple;
+	bh=YvUJr1IlpMallDUUXqLZIE2yKMx495vfCWgRkrRQMXg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QocwFT5eii3nL3nZYvTjyU6vRTE0h5jLvZCE9+4Yxw/QZCP9jyo0BpFjF86ha1W4apXfdPnmzH5aKuC3nZXuUa6aIUkr6UA+ZYrdSTEb3vExGTfQj1hz2cyjZ1rl7ZYVdhI5nBImwK2jYVsqDKz7oyZEs8Siqma380fLtT0C3yU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4H574ytS; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TTdJFo6H"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef79d9c692so7142946a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 18:17:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4H574ytS"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53e3a2264e1so2975e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 18:32:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738376275; x=1738981075; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=SJJEXGT/CGEg26HmUNCtCBi/lOkkZBhLk4mR9XODbn0=;
-        b=TTdJFo6HyULXojAv3H0Yn6VjSgoycBc39w0m4rwblQ1P0OYlAecEzDKp8Qu4VJwfqY
-         3PeVvp7Snr0vKO3Zy1BKPUnShOW8GroZ284B0DbnjYCDBeA/GWfIrzbt02HbLK5IjARG
-         ofQgfWll6AFlBScGymjB5TKvVgrgOpVYSi6L6pWVlbmNPS0JkhSmTA8AJolYxp/tgUDg
-         GSzUJ7YitOEqxAwuSr72r1TrMky1PThqO95dfvPhbV14hcwpUualVKomF9IsY6zv9ezl
-         51srobwLT18I6geG2e4VcrDD5Q6/3X58lk3ygUZJ6xHb9uLB1GaH/4yOfGNwk7g66ums
-         zIOw==
+        d=google.com; s=20230601; t=1738377136; x=1738981936; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pG4VfCSV2vZRH8VFu+tXkb/1AcO1THW/axuTYVw/Lrc=;
+        b=4H574ytSsuT3cVotvtpy1/OQWQM25WHhDwfjFjpY0Uznz7wdG0b0/XXqVHs6y556A2
+         zxJLHVcGvehKVdAw2nRGnWl0tcsjiYYYLfIIUXQsgaLoP63+Pol4tDUjaZuRlczNZCcT
+         vMPumzgbPI33a7sQbCq31gTA6wGF4OAqc51hmjyMzfz3Mg4BKhMZcyZr1/pJfEbWXK/K
+         mSt+ZaNT5MKaaaQJAAM0vmA7/DBxbYziu+1XC3Z4bdzBDPb1hat8whW+C8sZigsrLmpL
+         QOx3y6/H7oLoilfAx7snKpSxtG2ZtXnqggqooQ1BADtrwLZQd+Q1jsMvf7biY/7WZHL3
+         bWdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738376275; x=1738981075;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SJJEXGT/CGEg26HmUNCtCBi/lOkkZBhLk4mR9XODbn0=;
-        b=SAWKnt0Z8Uf+2ehv+rgnpbxqBS4XnR9aEw8JUXk/8+hBvEdPmlu27aiEdUpnyBX0BM
-         LK139hVon2prCn0a8kGzIs6nBNB14d5/apD5gAKCHzaeHHyFgACLhwfD7t1o2szymj/L
-         rRdLh7rWa4vo6PbPVrdGsTCqkbRQK/h7gDOAEuCoVhnPPgs9QOZi5bJsVm5znYMvouP3
-         aLU+oryHPcerfapwm52JUst4GntoV7mYoruX8avdzDK8F7sAhqyzbgGxc+ITTyJUVs4e
-         na8MFUvOxgJhTMjrZyJ5PEngTgUhLLb6db/hIZYUnhncmtp2sTkgkp5HCyA/NuZrrf1u
-         1NAw==
-X-Gm-Message-State: AOJu0Yz2xzVt+MD0vmsru1aexcy54YW8JE2IRI1SvYNm9+C47VR6Z6LW
-	/bfMaGMjuDeqVk9mFRXV/W/1QXFMabrmTOb487UG6K09t39M+4ryGKztsWFti0Igdw8Rw/7n6fU
-	Hzw==
-X-Google-Smtp-Source: AGHT+IGR6HwuD9w+8Kze6jNqduo1hcKEvlqzGV2yi3bR0PK9E6ixYJtwZg6BVPpJ2g9E6rQRruKKBVyC7NI=
-X-Received: from pjtu8.prod.google.com ([2002:a17:90a:c888:b0:2f7:f660:cfe7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2702:b0:2f4:4003:f3d4
- with SMTP id 98e67ed59e1d1-2f83ac83632mr19746549a91.30.1738376275470; Fri, 31
- Jan 2025 18:17:55 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 31 Jan 2025 18:17:18 -0800
-In-Reply-To: <20250201021718.699411-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1738377136; x=1738981936;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pG4VfCSV2vZRH8VFu+tXkb/1AcO1THW/axuTYVw/Lrc=;
+        b=UfvUnMbxJKUaMLTWJFebM/W0vexh63oZEsee77dEra/3jNiiP0bayXoIQP9ZJcJxhD
+         isinAv8DCXx9wWCrGs9Zh2NQI0Qc3jPZYSRWwGbxI6s+tk/T+ZkYs/sfcrSOTTuDNou3
+         CX9enzJ9uO8hhz3Fulje5CiQBOTZOrfk9jTLcKaaGIwJzJnEuLnzgtEqtV02aso7SOj0
+         DgXT5HNLhd16/prYRvCIYe0FCcm1UDu0S59r3IRFPv2nJsPY/RHxAuj1XcA92OCPOdEm
+         zTUrY8Gt8L1DFpzwzM0h0jZIU3cB4H97U2QCSDdktc2Sv8CF3U+KctSFyQmmRQLLgatS
+         6pmg==
+X-Forwarded-Encrypted: i=1; AJvYcCWOMmFzce4xEd4MtBxbaqQmSHjhh6WWUi59MqxkNLVippngRSA2mRIQXPUG4QSNWeHPrXT5kZOXl9zMC/E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPw1jNBUCyTU+hp3/7KBMwtZ9w5uZtg1UNhtBJgxGFCeEMm0dL
+	Ddi3ke9gcZieXuG4aFdz3XReVOF31FQVFSPooqbcW67JjH5bOWS7qeW2onICpQhzJbbklUnbyv0
+	ZIkfSe8ECEQve/Bs4OaO972yc9GPBjAiX+zbf
+X-Gm-Gg: ASbGncuV9nMB8ltw7rmWiP+CgV9JrH3jnuOW6rISmSbfib2/+o4SGdttlUnW6wQfTff
+	jZLd5vlhq+kq1Z+sW+ZK3qnalylQN2c9c6qgYraGtoPaTtWbSlFWgC9aE2YCmrVyUpCM1xrCoJa
+	VdlaBOkgk6HdApBPdvbpv57w==
+X-Google-Smtp-Source: AGHT+IGDm9JPvGLHbtjFN5gsiaTc6QnwCtkwno/1ZV6/IPpxaNeuuM5xrnBDIsxDQcK/xH+cQ2IfrP7ilTJxIVl7kD8=
+X-Received: by 2002:a05:6512:220a:b0:53d:dcde:395a with SMTP id
+ 2adb3069b0e04-543f6160274mr132911e87.2.1738377135702; Fri, 31 Jan 2025
+ 18:32:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250201021718.699411-1-seanjc@google.com>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250201021718.699411-17-seanjc@google.com>
-Subject: [PATCH 16/16] x86/kvmclock: Use TSC for sched_clock if it's constant
- and non-stop
-From: Sean Christopherson <seanjc@google.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
-	virtualization@lists.linux.dev, linux-hyperv@vger.kernel.org, 
-	jailhouse-dev@googlegroups.com, kvm@vger.kernel.org, 
-	xen-devel@lists.xenproject.org, Sean Christopherson <seanjc@google.com>, 
-	Nikunj A Dadhania <nikunj@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
+MIME-Version: 1.0
+References: <20250129232525.3519586-1-vannapurve@google.com>
+ <p6sbwtdmvwcbr55a4fmiirabkvp3f542nawdgxoyq22cdhnu33@ffbmyh2zuj2z>
+ <CAGtprH8pJ3Zj_umygzxp8=4sJTdwY5v2bFDhoBdX=-3KQaDnCw@mail.gmail.com>
+ <wmdg54v56uizuifhaufllnjtecmvhllv35jyrvdilf4ty4pfs5@y4zppjm2sthr>
+ <CAGtprH82OjizyORJ91d6f6VAn_E9LY7WptN-DsoxwLT4VwOccg@mail.gmail.com> <2wooixyr7ekw3ebi4oytuolk5wtyi2gqhsiveshfcfixlz3kuq@d5h6gniewqzk>
+In-Reply-To: <2wooixyr7ekw3ebi4oytuolk5wtyi2gqhsiveshfcfixlz3kuq@d5h6gniewqzk>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Fri, 31 Jan 2025 18:32:04 -0800
+X-Gm-Features: AWEUYZmeERapyJbLH5q17LnS9dbTKeBXAlIs3Ezuwk-Df4kRvcx2vhlD0t9pkOs
+Message-ID: <CAGtprH-n=cfH_BJAmiNMoRbqq0XdGCf3RE67TYW8z7RARnsCiQ@mail.gmail.com>
+Subject: Re: [PATCH V2 1/1] x86/tdx: Route safe halt execution via tdx_safe_halt()
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	seanjc@google.com, erdemaktas@google.com, ackerleytng@google.com, 
+	jxgao@google.com, sagis@google.com, oupton@google.com, pgonda@google.com, 
+	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, 
+	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Prefer the TSC over kvmclock for sched_clock if the TSC is constant,
-nonstop, and not marked unstable via command line.  I.e. use the same
-criteria as tweaking the clocksource rating so that TSC is preferred over
-kvmclock.  Per the below comment from native_sched_clock(), sched_clock
-is more tolerant of slop than clocksource; using TSC for clocksource but
-not sched_clock makes little to no sense, especially now that KVM CoCo
-guests with a trusted TSC use TSC, not kvmclock.
+On Fri, Jan 31, 2025 at 12:13=E2=80=AFAM Kirill A. Shutemov
+<kirill@shutemov.name> wrote:
+>
+> On Thu, Jan 30, 2025 at 11:45:01AM -0800, Vishal Annapurve wrote:
+> > On Thu, Jan 30, 2025 at 10:48=E2=80=AFAM Kirill A. Shutemov
+> > <kirill@shutemov.name> wrote:
+> > > ...
+> > > > >
+> > > > > I think it is worth to putting this into a separate patch and not
+> > > > > backport. The rest of the patch is bugfix and this doesn't belong=
+.
+> > > > >
+> > > > > Otherwise, looks good to me:
+> > > > >
+> > > > > Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>=
+@linux.intel.com>
+> > > > >
+> > > > > --
+> > > > >   Kiryl Shutsemau / Kirill A. Shutemov
+> > > >
+> > > > Thanks Kirill for the review.
+> > > >
+> > > > Thinking more about this fix, now I am wondering why the efforts [1=
+]
+> > > > to move halt/safe_halt under CONFIG_PARAVIRT were abandoned. Curren=
+tly
+> > > > proposed fix is incomplete as it would not handle scenarios where
+> > > > CONFIG_PARAVIRT_XXL is disabled. I am tilting towards reviving [1] =
+and
+> > > > requiring CONFIG_PARAVIRT for TDX VMs. WDYT?
+> > > >
+> > > > [1] https://lore.kernel.org/lkml/20210517235008.257241-1-sathyanara=
+yanan.kuppuswamy@linux.intel.com/
+> > >
+> > > Many people dislike paravirt callbacks. We tried to avoid relying on =
+them
+> > > for core TDX enabling.
+> > >
+> > > Can you explain the issue you see with CONFIG_PARAVIRT_XXL being disa=
+bled?
+> > > I don't think I follow.
+> >
+> > Relevant callers of *_safe_halt() are:
+> > 1) kvm_wait() -> safe_halt() -> raw_safe_halt() -> arch_safe_halt()
+>
+> Okay, I didn't realized that CONFIG_PARAVIRT_SPINLOCKS doesn't depend on
+> CONFIG_PARAVIRT_XXL.
+>
+> It would be interesting to check if paravirtualized spinlocks make sense
+> for TDX given the cost of TD exit.
+>
+> Maybe we should avoid advertising KVM_FEATURE_PV_UNHALT to the TDX guests=
+?
+>
 
-        /*
-         * Fall back to jiffies if there's no TSC available:
-         * ( But note that we still use it if the TSC is marked
-         *   unstable. We do this because unlike Time Of Day,
-         *   the scheduler clock tolerates small errors and it's
-         *   very important for it to be as fast as the platform
-         *   can achieve it. )
-         */
+Are you hinting towards a model where TDX guest prohibits such call
+sites from being configured? I am not sure if it's a sustainable model
+if we just rely on the host not advertising these features as the
+guest kernel can still add new paths that are not controlled by the
+host that lead to *_safe_halt().
 
-The only advantage of using kvmclock is that doing so allows for early
-and common detection of PVCLOCK_GUEST_STOPPED, but that code has been
-broken for nearly two years with nary a complaint, i.e. it can't be
-_that_ valuable.  And as above, certain types of KVM guests are losing
-the functionality regardless, i.e. acknowledging PVCLOCK_GUEST_STOPPED
-needs to be decoupled from sched_clock() no matter what.
+> > 2) acpi_safe_halt() -> safe_halt() -> raw_safe_halt() -> arch_safe_halt=
+()
+>
+> Have you checked why you get there? I don't see a reason for TDX guest to
+> get into ACPI idle stuff. We don't have C-states to manage.
 
-Link: https://lore.kernel.org/all/Z4hDK27OV7wK572A@google.com
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kernel/kvmclock.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+Apparently userspace VMM is advertising pblock_address through SSDT
+tables in my configuration which causes guests to enable ACPI cpuidle
+drivers. Do you know if future generations of TDX hardware will not
+support different c-states for TDX VMs?
 
-diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
-index 9d05d070fe25..fb8cd8313d18 100644
---- a/arch/x86/kernel/kvmclock.c
-+++ b/arch/x86/kernel/kvmclock.c
-@@ -344,23 +344,23 @@ void __init kvmclock_init(void)
- 		pvclock_set_flags(PVCLOCK_TSC_STABLE_BIT);
- 
- 	/*
--	 * X86_FEATURE_NONSTOP_TSC is TSC runs at constant rate
--	 * with P/T states and does not stop in deep C-states.
--	 *
--	 * Invariant TSC exposed by host means kvmclock is not necessary:
--	 * can use TSC as clocksource.
--	 *
-+	 * If the TSC counts at a constant frequency across P/T states, counts
-+	 * in deep C-states, and the TSC hasn't been marked unstable, prefer
-+	 * the TSC over kvmclock for sched_clock and drop kvmclock's rating so
-+	 * that TSC is chosen as the clocksource.  Note, the TSC unstable check
-+	 * exists purely to honor the TSC being marked unstable via command
-+	 * line, any runtime detection of an unstable will happen after this.
- 	 */
- 	if (boot_cpu_has(X86_FEATURE_CONSTANT_TSC) &&
- 	    boot_cpu_has(X86_FEATURE_NONSTOP_TSC) &&
- 	    !check_tsc_unstable()) {
- 		kvm_clock.rating = 299;
- 		tsc_properties = TSC_FREQ_KNOWN_AND_RELIABLE;
-+	} else {
-+		flags = pvclock_read_flags(&hv_clock_boot[0].pvti);
-+		kvm_sched_clock_init(flags & PVCLOCK_TSC_STABLE_BIT);
- 	}
- 
--	flags = pvclock_read_flags(&hv_clock_boot[0].pvti);
--	kvm_sched_clock_init(flags & PVCLOCK_TSC_STABLE_BIT);
--
- 	tsc_register_calibration_routines(kvm_get_tsc_khz, kvm_get_cpu_khz,
- 					  tsc_properties);
- 
-@@ -369,6 +369,11 @@ void __init kvmclock_init(void)
- #ifdef CONFIG_X86_LOCAL_APIC
- 	x86_cpuinit.early_percpu_clock_init = kvm_setup_secondary_clock;
- #endif
-+	/*
-+	 * Save/restore "sched" clock state even if kvmclock isn't being used
-+	 * for sched_clock, as kvmclock is still used for wallclock and relies
-+	 * on these hooks to re-enable kvmclock after suspend+resume.
-+	 */
- 	x86_platform.save_sched_clock_state = kvm_save_sched_clock_state;
- 	x86_platform.restore_sched_clock_state = kvm_restore_sched_clock_state;
- 	kvm_get_preset_lpj();
--- 
-2.48.1.362.g079036d154-goog
-
+>
+> --
+>   Kiryl Shutsemau / Kirill A. Shutemov
