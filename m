@@ -1,81 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8552C9A;
-	Sat,  1 Feb 2025 13:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF2F2C9A
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 13:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738415274; cv=none; b=Nm4KQTyB6Mimx4Vas6A8GfymYdj3Nbmghg23wAG2pGUCSS9uyBURV3lCRxXa5CLnlY66Z51NL/ZXls+DTKtrCRvcktN6ew6Pv0ymdQ5aTzDMyBBvY2zMEPH36aAewgkz1rTi2FlYZnlVJqD4RWKmG6swqFxAjC4E2gz3WQ2QJ08=
+	t=1738415457; cv=none; b=bnJvN0D4LQQLkBZTMO7o8Ryn2aSzabbinGlnuj9U3fisV04hDK8de8x8Q7ynBF5kf3IxAKk5I26jWwsxqYqEIhEnmxQkjMVCSCGX9J/eS8/5fBNgN4jsK3p3gf2i5YZ7m8GCmRLA0dBkIHzPr7GlfwWzzolUO3aOTBAhRnSDgtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738415274; c=relaxed/simple;
-	bh=3c7EcwI17Vg+HCQNijPdYh0mZTvVumFobex0FajJWqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n1ZTVtq6m36j13i9CvVVED0tdAIBePnXluvFeDEVP+thMz2yL38wxL3INEFqoIOjbLSvwuwssI1qIBNfhZudtAoSOnoqFgdXZUHlgPYEuostacwQHFESytL9lUgnfPOBLhvk9nPzYULexoAVISA+4yFYl5wYG10fuEWJSyFRuNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VX0I9L1j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738415457; c=relaxed/simple;
+	bh=GSPMiHQFLRn1sykkExmdsR/H1Kz10nJiE0JQc3sH3Sc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DsTe/Xy9h+vFX38Ffqr0+lXmJtJrC22E+3aqKhzr+Q5vJhr9+XTXzSi3N1ZCOlRi/4HMg6hqu8ZUteZRnxscfjvA5ZEQ9FqkEXReN5vio0qSMu+DYSvrYnxQWbzz3JlHipEriKnkV5RcAviHcYMXncCQc6AHo0dG10Gydn4MgD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H1m0riW+; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VX0I9L1j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A0C9C4CED3;
-	Sat,  1 Feb 2025 13:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738415273;
-	bh=3c7EcwI17Vg+HCQNijPdYh0mZTvVumFobex0FajJWqc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VX0I9L1jxycCbH8JMonWKlTJfoTJ7saOW9Lr528nxgWl35aTa0dQA82BLOW3r5dRq
-	 OwrEFGtYXD7x9BbUulwre7SqX2mUdqkSIT4Se3QbxMm1+vgXrAGcnfl0Srw+sTeScl
-	 o565Z0dxpbDo+7cHso8ugvRhb6mInn3+P8HuUe4pHQ4UE+K2N4ozr6qKSWtuEhKj67
-	 xgiDtmUBefxUW//Jy/wVV4T5Uy7y2QVPJwTrpLhCljfmoCDvfwgRMAfpBwLdhW+JnY
-	 a9nPtcuautxLf01WOa3rM0LYWxc46hvS4VPOklEG0c+dERwuE8CJtVaX1Zngnl8C65
-	 /qepJEiUHBggA==
-Date: Sat, 1 Feb 2025 13:07:43 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Alexandru
- Ardelean <aardelean@baylibre.com>, David Lechner <dlechner@baylibre.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Guillaume Stols
- <gstols@baylibre.com>
-Subject: Re: [PATCH v3 07/10] iio: adc: adi-axi-adc: add support for AD7606
- register writing
-Message-ID: <20250201130743.5ac0b86d@jic23-huawei>
-In-Reply-To: <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-7-c3aec77c0ab7@baylibre.com>
-References: <20250129-wip-bl-ad7606_add_backend_sw_mode-v3-0-c3aec77c0ab7@baylibre.com>
-	<20250129-wip-bl-ad7606_add_backend_sw_mode-v3-7-c3aec77c0ab7@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H1m0riW+"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738415452;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=kVADjHQ66+lD5ys/3mo3OSZ7YIMndlbjWLQRpPJ33bs=;
+	b=H1m0riW++oKDVG7BT05ZJ5aO5ByYeqFi15tZ4j6sfZDLeItCDHGMPurN2SR0tNFOQIGsU8
+	0sbk1apg7E/z6yXo9o2zKrgkn7MmmuNiOYR2kUczgQu+iZ6RMb8LIos6QSk3XEtZRYpq0Q
+	NXYrtrpNt4UajSgv6jwDnn2a7TqrmfQ=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Yazen Ghannam <yazen.ghannam@amd.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] EDAC: Simplify return statement in dct_ecc_enabled()
+Date: Sat,  1 Feb 2025 14:09:54 +0100
+Message-ID: <20250201130953.1377-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+Simplify the return statement to improve the code's readability.
 
-> +static int ad7606_bus_reg_read(struct iio_backend *back, u32 reg, u32 *val)
-> +{
-> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
-> +	u32 buf;
-> +
-> +	guard(mutex)(&st->lock);
-> +
-> +	/*
-> +	 * The address is written on the highest weight byte, and the MSB set
-> +	 * at 1 indicates a read operation.
-> +	 */
-> +	buf = FIELD_PREP(ADI_AXI_REG_ADDRESS_MASK, reg) | ADI_AXI_REG_READ_BIT;
-> +	axi_adc_raw_write(back, &buf, sizeof(buf));
-> +	axi_adc_raw_read(back, val, 4);
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ drivers/edac/amd64_edac.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-sizeof(*val)
-
-> +
-> +	/* Write 0x0 on the bus to get back to ADC mode */
-> +	buf = 0;
-> +	axi_adc_raw_write(back, &buf, sizeof(buf));
-> +	return 0;
-> +}
-
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 8414ceb43e4a..1f106b4fafdf 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -3355,10 +3355,7 @@ static bool dct_ecc_enabled(struct amd64_pvt *pvt)
+ 
+ 	edac_dbg(3, "Node %d: DRAM ECC %s.\n", nid, (ecc_en ? "enabled" : "disabled"));
+ 
+-	if (!ecc_en || !nb_mce_en)
+-		return false;
+-	else
+-		return true;
++	return ecc_en && nb_mce_en;
+ }
+ 
+ static bool umc_ecc_enabled(struct amd64_pvt *pvt)
+-- 
+2.48.1
 
