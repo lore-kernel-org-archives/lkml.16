@@ -1,113 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84F81BD9C7;
-	Sat,  1 Feb 2025 18:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D7F1CAA7C;
+	Sat,  1 Feb 2025 18:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738433502; cv=none; b=czgYo79I9tBsMzbWA+Pc/rdkrDuhB0rkqe772LUqqQ5ATnx2znd1a1eNt4YNh+xHTjruZMfDbFONPLDr6ngyvrAYPyFFM7Ncwit+gybW5oi9FoDsVvyOBFRmVHnf94fGIoPLRH4RIahmhspE1aw5MyBZiO1sIkHykSMLXHdoE14=
+	t=1738433521; cv=none; b=pMgV8ZBrBg/ephq0K7oJl6BnnoOiQSa534SbZI/ujNZECkeutb34685pr8MAdHc3CuXYesnFSqVUbDFUTwFgpzlc2o1B9BJn74s1aT2R1X0RwTgPr0OTyoB1PeMbIwaV6y5Ko3XWF6o3zkAXgw/nrevg13jxaR7/+AqiEl2GoVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738433502; c=relaxed/simple;
-	bh=Lnzd8MaG1ouAXH8MntDLLOlleFitDtAqnB+917zfvpU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=dKY7Di7uGccM5er46xeFlZcPJCR/dqEzqZECvxi9XIeRBrYZFfyexUoWIDuSL21H+zy+sm3wfZPYwOSAx3ErFbGPqRWpGU1jZHEbv5qYHrYESns1c9fhoSuKmy5av45fSOOmZW8CbBt63ykJIF4ZEHUghp6GRTleT8oM56huqpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hFJrHebZ; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738433521; c=relaxed/simple;
+	bh=8WVjS1nKR1GWra/WMp/l4q+WpANRNgI0+C0UyHhV8wQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rYEpL/Seb6bIuJTbt/C55zBw8lfeKTc4HjrOBFhFVN0xyID2yZpExj9NSC5wqhG+U0W0OQlh5kx/wHAku2sYICulTfri2BxF0qerYvgmyLvEs4Qx5gVC+3w8K4wqHoU4rtEQPT+03ZuPr0u7y6ZSPKjzIF8tS1IBFDxDcXXe4OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GkxBa9u1; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hFJrHebZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738433502; x=1769969502;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Lnzd8MaG1ouAXH8MntDLLOlleFitDtAqnB+917zfvpU=;
-  b=hFJrHebZfvBTpEAHWxQeOdiqlnaXiTQQWzEmSIaJHPRNKQSuAZVQGusL
-   NmLktn6KASA6tIPpzDsVxXD0sD+S5sL/Im993dqzBjrzlJGONtufyQgTN
-   3/BRODChmjocAFVf12ZnD3bn8LPVojybBj2hAeYn2tIZv4IpdpDOKoEcd
-   wi7M7tw6n8VpxkRXykLq3LiY5sNWLt4nqmeUAyBAMA+z0WoM9GVuPOnyV
-   1ZiQa5k5Mf5FxX1j1zr4rBd6JTUY6pB1G+0a7bY9lM9q3H9QVnAoGYoah
-   eIv3QkKumEirFYIBQWOsXv4ZXJhBqeGg+wbGN4faT++bn/h4FiNtd2GU2
-   g==;
-X-CSE-ConnectionGUID: Z09k90ESRb+ZX6iKRLYQ5g==
-X-CSE-MsgGUID: yayG/K8jRQ6gXyqLgipIbg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11333"; a="42631751"
-X-IronPort-AV: E=Sophos;i="6.13,252,1732608000"; 
-   d="scan'208";a="42631751"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2025 10:11:41 -0800
-X-CSE-ConnectionGUID: xR9iPobLSrOy1o8FJIb6CA==
-X-CSE-MsgGUID: AyYf2VILTrm7gk/yVTP13g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147110368"
-Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2025 10:11:38 -0800
-Date: Sat, 1 Feb 2025 10:11:39 -0800 (PST)
-From: matthew.gerlach@linux.intel.com
-To: Krzysztof Kozlowski <krzk@kernel.org>
-cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
-    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
-    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
-    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
-    peter.colberg@altera.com
-Subject: Re: [PATCH v5 1/5] dt-bindings: PCI: altera: Add binding for
- Agilex
-In-Reply-To: <40adf7c3-7c02-4520-9e99-ea797143f454@kernel.org>
-Message-ID: <c51817d4-a971-4aea-5f24-5c3dc1401db0@linux.intel.com>
-References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com> <20250127173550.1222427-2-matthew.gerlach@linux.intel.com> <40adf7c3-7c02-4520-9e99-ea797143f454@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GkxBa9u1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=LlN8fDEAhKUNZRsMj4/4ALQP9qC4Omt7rN7TUcf2ulk=; b=GkxBa9u1m4Eqw2KXdSpvkSQ+JZ
+	4XNmsUP5uhEN1ahspih1L6Th1k2fi9/2y3hkTHXyVIjsr2evfoYAnvUdZul+rQkDn8bMGyoN38Uoa
+	X6JpfmbO+08gGHS4lzE16N8UL4DNA26FN6XTHFb0O0edNswuz2w42ipCGBozAiXVB76syUK+7oLUP
+	flummX4f9D/V2IhuMvMxxnyOyPyqDsEf87FtmvhyS7Or6tfq/mN+llwF+n1YdxoZzcUq251ZbiFPS
+	v0ysA7RI1RQsgYPoZWBqMcl7FYToKeOrCSVsr2W/r2wRkpfpwuI0KD8u0dpytC3QZqD+5HHlV7Ch+
+	MbjQi+PQ==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1teHxq-0000000FkEP-2zBU;
+	Sat, 01 Feb 2025 18:11:31 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5E78330050D; Sat,  1 Feb 2025 19:11:29 +0100 (CET)
+Date: Sat, 1 Feb 2025 19:11:29 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
+	bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
+	konrad.wilk@oracle.com, jgross@suse.com, andrew.cooper3@citrix.com,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Vineeth Pillai <vineethrp@google.com>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
+	daniel.wagner@suse.com, joseph.salisbury@oracle.com,
+	broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250201181129.GA34937@noisy.programming.kicks-ass.net>
+References: <20250131225837.972218232@goodmis.org>
+ <20250131225942.365475324@goodmis.org>
+ <20250201115906.GB8256@noisy.programming.kicks-ass.net>
+ <F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
 
+On Sat, Feb 01, 2025 at 07:47:32AM -0500, Steven Rostedt wrote:
+> 
+> 
+> On February 1, 2025 6:59:06 AM EST, Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> >I still have full hate for this approach.
+> 
+> So what approach would you prefer?
 
+The one that does not rely on the preemption method -- I think I posted
+something along those line, and someone else recently reposted something
+bsaed on it.
 
-On Thu, 30 Jan 2025, Krzysztof Kozlowski wrote:
-
-> On 27/01/2025 18:35, Matthew Gerlach wrote:
->> Add the compatible bindings for the three variants of Agilex
->> PCIe Hard IP.
->>
->> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
->> ---
->> v3:
->>  - Remove accepted patches from patch set.
->> ---
->>  .../devicetree/bindings/pci/altr,pcie-root-port.yaml     | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
->> index 52533fccc134..ca9691ec87d2 100644
->> --- a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
->> +++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
->> @@ -12,9 +12,18 @@ maintainers:
->>
->>  properties:
->>    compatible:
->> +    description: altr,pcie-root-port-1.0 is used for the Cyclone5
->> +      family of chips. The Stratix10 family of chips is supported
->> +      by altr,pcie-root-port-2.0. The Agilex family of chips has
->> +      three variants of PCIe Hard IP referred to as the f-tile, p-tile,
->> +      and r-tile.
->
->
-> Has three in the same time? Or one of three? Your board DTS said you
-> have exactly one, so this comment is confusing.
-
-I will clarify this comment to reflect that a particular instantiantion 
-will only have one of the tiles.
-
->
->
-> Best regards,
-> Krzysztof
->
-
-Thanks for the feedback,
-Matthew Gerlach
+Tying things to the preemption method is absurdly bad design -- and I've
+told you that before.
