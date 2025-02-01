@@ -1,203 +1,172 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88C71C2325
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756021C2325
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738426048; cv=none; b=uF9aS+TKdb27YsBkijI4f1VOKTEQUc4ngq48AgEMHLh6IIbLwwfSzpWT1PT6utWq5LM+gmR4JpJnT1rpSgT/y3vzpjxlXD/32dqYsikUmWo3o9rpXAx5onfBuAbb3dy4kCpQBbr11H8n3YCzfDXSIDIdO45KE1IZ7fMZrkNuWuk=
+	t=1738426160; cv=none; b=fGo63DZ3OKqEu9/mV72tCVaRN/lTGX8IH019Ue6UedX5MXT3Oa8m7PdM5C6nE/5RgkaHHHj7letOu9vE62stvG0kwFDuYDKkusLFEZ7qNMhMndSK/7xHt3Kvy/LULhMxO2NBU986i26L6MtJrJ5fmvQAk8MRZQSdnfqbd94yxaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738426048; c=relaxed/simple;
-	bh=g06AyooziM75vKiwG8D4NAwEKMYO1gOo6PVjYKxBdaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ioDqOsu3CxjprzVFGyTJ8uhCPKqlgXkaoppIE/vZZthXQUS0Df1FO7fndsveyv0fSYxKi7qyPrq28eYZm4XjEuT3EqYVhTZEgZyBPFyOSkSbhqYy6Lx/5Avdy1eMk2J8g/4PPvNX1ECauS6boOP/KeXwt92K/hLSI2A6xnk6JYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FPOQoCwH; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738426160; c=relaxed/simple;
+	bh=1D36JuSUvj+vjMHfIzJ73Ejh/BelZ12eFT5aIafgzFw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DUVZaT178hzrHChbbM/FFEIVXFGtPj0WkltdsU+vdZnfb9bRqL1ODkwzJ+dBdfkioGrPQybann/8++Iw391THrgxbjqi6KjazLRgL6d6zIpYlrkYsJClBlKQJdZJcQlB+TRqpWnuJqSVNkrquBU/j3UTTYkocIefgHbe05ec7Eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yk5gTbCM; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FPOQoCwH"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2164b1f05caso50378185ad.3
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:07:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yk5gTbCM"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3eb3c143727so1980443b6e.1
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:09:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738426046; x=1739030846; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eZ3t1aj2mFgpfj7pEzNxUv1YuWtm6+xQW/tflVh/XyA=;
-        b=FPOQoCwHGroKq+62FC7BFJ3iINNFucnQQD6mqCjAWS1H5GszDzRcL9FiKM7fH78jQe
-         RkURyARXnq+rSwjYTmG8i9oJkqC4b9ln06p91mkQqCuQRRDUdNQUQDXQDG3MRX3kOEDc
-         mFcNv0VGqjfCRpM1A3uRfaK2CkPxI6zSENzPgRyOUdsxiNzLtmtHasEHr4yptjaObISy
-         CCxw7sK/PE9KDRfI1SvIkTSDhSynw/BDkd3fsO3jI2b0RpmTrSUsk6TeMFqL7R9B8L4o
-         iPhXeRUmLEDhL9oPPTuBt2YSSIos97QyUIIQ/iM7XbvsPbD/el4Yar+CYBcgib71qPi0
-         oapg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738426156; x=1739030956; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6/HWj5hSehOUGeRp7am4uO7k2toUSpAz0X3lYENSi1c=;
+        b=yk5gTbCM1tvq/gNujNwELqWdpamk9s2eJgFLtc+wbAhCLSZamwwF1H1flxULJOmqBi
+         llvuVCh8QXOkx5CmijhXn5rF9NZmPOXQbfH/JX5TuptWJqKcmreyHnNRRhli84A0pOCD
+         Mi5TL0m/OJYSgR2XpO53jlzZc6pJn4KDiK6NHJtmNTCm/SX0JuwiGAyh88ShMzepl0XO
+         GFeoFP3kPFWIlwu8wuo4odCwi8w5lYYq4oizZ0REzz3xcGzAs5MgYgBTlMPaGx4KaFUx
+         UMRw52BKnfFeSYtbp08gxyV/YZzDy+LofX1oCncUwQdeXkaqcaL/MqK0Me7IvXTTpjyA
+         lwhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738426046; x=1739030846;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1738426156; x=1739030956;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eZ3t1aj2mFgpfj7pEzNxUv1YuWtm6+xQW/tflVh/XyA=;
-        b=Eom9IDym5/U7GQ8lKhlIUh3NdEQqoUIC1v66qViT6Y2vrWHtLgjjzroJ0sasMUkMKX
-         UgRvRvEuE/d+8xR0JF8K5AQ4jitWjKV25QOU+sosQwGQ/+TkfS7ZGrMgSph/avuERPY1
-         G3gswUZpuJ7QRf+/9Mm7LaouHUugQylpuLwWJm/euE4Riv/toKCpsrVEb8sEKySoSflH
-         D5dudoZJg2DOjcY7SeAqGYQl8R1lBrd04gGFFztipyvTtuArFPo7FPWh3xRoqVinE2Gd
-         MmG+dBIouvh242HMnh+b2ytRvii7k2mElEFN9bo+95S744CNxVapOdeYV6nCf+KYWYvA
-         nj0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVDA53SJqs/cOdDJ6o6wyWdG0h85GCHfLrIcuj46NrVU+kWTycObKQRsqEytAEKM4Oxs1w2U60hWcn4iO0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFtxXZh1rVB/rpORCUIW6XKKkZEJxXUvLsU21UGtSJd/Ve8Qoj
-	1cRSmWTAGC3CWMQwIjH0HnYPIfouG3uBSrZqL7K34ETTB1jRFiaHLCAR+wHa+g==
-X-Gm-Gg: ASbGncsHk6BMKAp2dAQj70oh4rHqk2ZSW9W+QBImb5zKn3wov/GsjIi2SU4IxtKcOLs
-	Cvq1qSnQzHZjl71pBtylZ1JL/d25Oq9uD2njuw202CEAVrlmvf3CdyDY134IEz10uU0OoZn94qL
-	SJUTY8uxgLJ/9ANS8+mG/2vkC3fcSGko5N9jHCRx/7aUrdVz/gPo+ov54WWCHG1MJFy/F/90DTn
-	oCu1KeUwPBYZuaFD4cMiS4ekzOgxtkIWNW5Fzx4nX0Lf+btNTtYUsumkfVPmkWWPn4v4Chtav8O
-	IIOmVNXLDMN36gXF4IhqyJ27tnE=
-X-Google-Smtp-Source: AGHT+IGKVXS8baXhCPTBe6sl/h9UfWPlgRpWJrmewAX1ZXLow3mZ1mzo+rt7H8F7HI7Zdq7gTkCKAg==
-X-Received: by 2002:a05:6a20:72a0:b0:1e5:a0d8:5a33 with SMTP id adf61e73a8af0-1ed7a62498amr27455365637.18.1738426045945;
-        Sat, 01 Feb 2025 08:07:25 -0800 (PST)
-Received: from thinkpad ([120.56.202.249])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69cd80esm5193344b3a.121.2025.02.01.08.07.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 08:07:25 -0800 (PST)
-Date: Sat, 1 Feb 2025 21:37:21 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: linux@treblig.org
-Cc: mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bus: mhi: Remove unused functions
-Message-ID: <20250201160721.bgfyi3cwilvibl74@thinkpad>
-References: <20250127215859.261105-1-linux@treblig.org>
+        bh=6/HWj5hSehOUGeRp7am4uO7k2toUSpAz0X3lYENSi1c=;
+        b=mNv/JXJZorGm4Fpgcn/NhEBsLkl+OE/gtMgEeR1L0tRB+ZakYDNupSpWuAUj4i45zk
+         va5P//DLeces3KgskOF1edWF5QQpomNQEDZMWoxav1iS603lhcBtWDCO3AI7aLHW2HwP
+         VWCf70tOiQYK9NrI4pcOQ5g2LR1DuJksJQWITDu+/HGVN24b52jHtYS0o3foq6okfbGK
+         cObzdJpnJx/JERTVwmRO7nNc4Eq+AK+l0ThMUuisBp34pV+Kmo2AQHXD5lde9lSH4ZUK
+         v+neJ5mBrDxxE+n+WWhXX8u659YHvcAzEW+YMve1KTLK9xoj23rJXMzWs/VfPT00Lp1m
+         RuCA==
+X-Forwarded-Encrypted: i=1; AJvYcCX20Oimg2nyXqhJ62mpibqIttjeSPaG7VK/aZCStx5+x5+kx/HmFAQJ6rVLquDcALoAxauYo+IXG42yZKA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlIWgCfMht1dw3wtW8LWRJdVZuAic1zoj+vM8qFthCud5/Ho7C
+	I7QVbCqcQI7zrs91YfeX0b9d6ssSxotWPgHwy35CLIQ/kYpkqqyBH+9OW8tfJRk=
+X-Gm-Gg: ASbGnctzU7VYDyOXc58ZIe7oBE1gCOwNDw8+pKwWM1ma8ISvfOvDv9L0JDjo0FiqZrV
+	O8FhJbamUX+XjprhZWUbYdlmRQXszc9E63VPTtnGxtte3d9ZECCM1HEqeYe6lF07AJ9TPEl5PQI
+	Q2VwIeEzhEUklmLSCVnMOCf1z4YrdKeuEvXQY8Bes/3Uhkps2WSdUMOXjWWXB/XHpDUZX/lS1JI
+	72hryhVf3pukkFQoNgg1bMgVAk2ZYsbKKnrLm30KmORkokgu2dhHM6PMYHCPyBmHxuhaLRGP2DC
+	wpnlEZwmyQvGv7Dzi9AoQI2NJB5c/Ouhkgt6B1hp/zf9Nzi44f7j
+X-Google-Smtp-Source: AGHT+IHlRVUNM84414C8bMX22/8bNBRk4Wz6BZnDGgM7+x56FCD0VuxaQe5kTozn9TxT7X99cEoMmA==
+X-Received: by 2002:a05:6808:3c85:b0:3f1:b124:59ae with SMTP id 5614622812f47-3f33c41c93bmr5106514b6e.13.1738426156387;
+        Sat, 01 Feb 2025 08:09:16 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f333523fd6sm1405864b6e.3.2025.02.01.08.09.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Feb 2025 08:09:15 -0800 (PST)
+Message-ID: <9931433b-5cde-4819-ac96-eea4f1f0f1f2@baylibre.com>
+Date: Sat, 1 Feb 2025 10:09:12 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250127215859.261105-1-linux@treblig.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/13] gpiolib: add gpiods_set_array_value_cansleep
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
+ netdev@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-sound@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+ Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+References: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
+ <CAMRc=MdwQL8dWU5zF5fp+KUbC2RA2Q264by8HGXMg2k1rxhsTA@mail.gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <CAMRc=MdwQL8dWU5zF5fp+KUbC2RA2Q264by8HGXMg2k1rxhsTA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 27, 2025 at 09:58:59PM +0000, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On 2/1/25 4:36 AM, Bartosz Golaszewski wrote:
+> On Fri, 31 Jan 2025 21:24:40 +0100, David Lechner <dlechner@baylibre.com> said:
+>> This series was inspired by some minor annoyance I have experienced a
+>> few times in recent reviews.
+>>
+>> Calling gpiod_set_array_value_cansleep() can be quite verbose due to
+>> having so many parameters. In most cases, we already have a struct
+>> gpio_descs that contains the first 3 parameters so we end up with 3 (or
+>> often even 6) pointer indirections at each call site. Also, people have
+>> a tendency to want to hard-code the first argument instead of using
+>> struct gpio_descs.ndescs, often without checking that ndescs >= the
+>> hard-coded value.
+>>
+>> So I'm proposing that we add a gpiods_set_array_value_cansleep()
+>> function that is a wrapper around gpiod_set_array_value_cansleep()
+>> that has struct gpio_descs as the first parameter to make it a bit
+>> easier to read the code and avoid the hard-coding temptation.
+>>
+>> I've just done gpiods_set_array_value_cansleep() for now since there
+>> were over 10 callers of this one. There aren't as many callers of
+>> the get and atomic variants, but we can add those too if this seems
+>> like a useful thing to do.
+>>
+>> ---
+>> David Lechner (13):
+>>       gpiolib: add gpiods_set_array_value_cansleep()
+>>       auxdisplay: seg-led-gpio: use gpiods_set_array_value_cansleep
+>>       bus: ts-nbus: validate ts,data-gpios array size
+>>       bus: ts-nbus: use gpiods_set_array_value_cansleep
+>>       gpio: max3191x: use gpiods_set_array_value_cansleep
+>>       iio: adc: ad7606: use gpiods_set_array_value_cansleep
+>>       iio: amplifiers: hmc425a: use gpiods_set_array_value_cansleep
+>>       iio: resolver: ad2s1210: use gpiods_set_array_value_cansleep
+>>       mmc: pwrseq_simple: use gpiods_set_array_value_cansleep
+>>       mux: gpio: use gpiods_set_array_value_cansleep
+>>       net: mdio: mux-gpio: use gpiods_set_array_value_cansleep
+>>       phy: mapphone-mdm6600: use gpiods_set_array_value_cansleep
+>>       ASoC: adau1701: use gpiods_set_array_value_cansleep
+>>
+>>  drivers/auxdisplay/seg-led-gpio.c           |  3 +--
+>>  drivers/bus/ts-nbus.c                       | 10 ++++++----
+>>  drivers/gpio/gpio-max3191x.c                | 18 +++++++-----------
+>>  drivers/iio/adc/ad7606.c                    |  3 +--
+>>  drivers/iio/adc/ad7606_spi.c                |  3 +--
+>>  drivers/iio/amplifiers/hmc425a.c            |  3 +--
+>>  drivers/iio/resolver/ad2s1210.c             |  8 ++------
+>>  drivers/mmc/core/pwrseq_simple.c            |  3 +--
+>>  drivers/mux/gpio.c                          |  4 +---
+>>  drivers/net/mdio/mdio-mux-gpio.c            |  3 +--
+>>  drivers/phy/motorola/phy-mapphone-mdm6600.c |  4 +---
+>>  include/linux/gpio/consumer.h               |  7 +++++++
+>>  sound/soc/codecs/adau1701.c                 |  4 +---
+>>  13 files changed, 31 insertions(+), 42 deletions(-)
+>> ---
+>> base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
+>> change-id: 20250131-gpio-set-array-helper-bd4a328370d3
+>>
+>> Best regards,
+>> --
+>> David Lechner <dlechner@baylibre.com>
+>>
+>>
 > 
-
-Subject prefix should be:
-
-'bus: mhi: host:"
-
-> mhi_device_get() and mhi_queue_dma() haven't been used since 2020's
-> commit 189ff97cca53 ("bus: mhi: core: Add support for data transfer")
-> added them.
+> This looks good to me except for one thing: the function prefix. I would
+> really appreciate it if we could stay within the existing gpiod_ namespace and
+> not add a new one in the form of gpiods_.
 > 
-> Remove them.
+> Maybe: gpiod_multiple_set_ or gpiod_collected_set...?
 > 
-> Note that mhi_queue_dma_sync() is used and has been left.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> Bartosz
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+I was waiting for someone to complain about the naming. ;-)
 
-- Mani
+I was going for as short as possible, but OK, the most obvious prefix to me
+would be `gpio_descs_...` (to match the first parameter). Any objections to
+that?
 
-> ---
->  drivers/bus/mhi/host/main.c | 19 -------------------
->  drivers/bus/mhi/host/pm.c   | 14 --------------
->  include/linux/mhi.h         | 18 ------------------
->  3 files changed, 51 deletions(-)
-> 
-> diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
-> index 4de75674f193..4c91ffd6ed0e 100644
-> --- a/drivers/bus/mhi/host/main.c
-> +++ b/drivers/bus/mhi/host/main.c
-> @@ -1181,25 +1181,6 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
->  }
->  EXPORT_SYMBOL_GPL(mhi_queue_skb);
->  
-> -int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
-> -		  struct mhi_buf *mhi_buf, size_t len, enum mhi_flags mflags)
-> -{
-> -	struct mhi_chan *mhi_chan = (dir == DMA_TO_DEVICE) ? mhi_dev->ul_chan :
-> -							     mhi_dev->dl_chan;
-> -	struct mhi_buf_info buf_info = { };
-> -
-> -	buf_info.p_addr = mhi_buf->dma_addr;
-> -	buf_info.cb_buf = mhi_buf;
-> -	buf_info.pre_mapped = true;
-> -	buf_info.len = len;
-> -
-> -	if (unlikely(mhi_chan->pre_alloc))
-> -		return -EINVAL;
-> -
-> -	return mhi_queue(mhi_dev, &buf_info, dir, mflags);
-> -}
-> -EXPORT_SYMBOL_GPL(mhi_queue_dma);
-> -
->  int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
->  			struct mhi_buf_info *info, enum mhi_flags flags)
->  {
-> diff --git a/drivers/bus/mhi/host/pm.c b/drivers/bus/mhi/host/pm.c
-> index 11c0e751f223..2fb27e6f8f88 100644
-> --- a/drivers/bus/mhi/host/pm.c
-> +++ b/drivers/bus/mhi/host/pm.c
-> @@ -1296,20 +1296,6 @@ int mhi_force_rddm_mode(struct mhi_controller *mhi_cntrl)
->  }
->  EXPORT_SYMBOL_GPL(mhi_force_rddm_mode);
->  
-> -void mhi_device_get(struct mhi_device *mhi_dev)
-> -{
-> -	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-> -
-> -	mhi_dev->dev_wake++;
-> -	read_lock_bh(&mhi_cntrl->pm_lock);
-> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-> -		mhi_trigger_resume(mhi_cntrl);
-> -
-> -	mhi_cntrl->wake_get(mhi_cntrl, true);
-> -	read_unlock_bh(&mhi_cntrl->pm_lock);
-> -}
-> -EXPORT_SYMBOL_GPL(mhi_device_get);
-> -
->  int mhi_device_get_sync(struct mhi_device *mhi_dev)
->  {
->  	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-> index 059dc94d20bb..dd372b0123a6 100644
-> --- a/include/linux/mhi.h
-> +++ b/include/linux/mhi.h
-> @@ -720,12 +720,6 @@ enum mhi_state mhi_get_mhi_state(struct mhi_controller *mhi_cntrl);
->   */
->  void mhi_soc_reset(struct mhi_controller *mhi_cntrl);
->  
-> -/**
-> - * mhi_device_get - Disable device low power mode
-> - * @mhi_dev: Device associated with the channel
-> - */
-> -void mhi_device_get(struct mhi_device *mhi_dev);
-> -
->  /**
->   * mhi_device_get_sync - Disable device low power mode. Synchronously
->   *                       take the controller out of suspended state
-> @@ -776,18 +770,6 @@ int mhi_prepare_for_transfer_autoqueue(struct mhi_device *mhi_dev);
->   */
->  void mhi_unprepare_from_transfer(struct mhi_device *mhi_dev);
->  
-> -/**
-> - * mhi_queue_dma - Send or receive DMA mapped buffers from client device
-> - *                 over MHI channel
-> - * @mhi_dev: Device associated with the channels
-> - * @dir: DMA direction for the channel
-> - * @mhi_buf: Buffer for holding the DMA mapped data
-> - * @len: Buffer length
-> - * @mflags: MHI transfer flags used for the transfer
-> - */
-> -int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
-> -		  struct mhi_buf *mhi_buf, size_t len, enum mhi_flags mflags);
-> -
->  /**
->   * mhi_queue_buf - Send or receive raw buffers from client device over MHI
->   *                 channel
-> -- 
-> 2.48.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
