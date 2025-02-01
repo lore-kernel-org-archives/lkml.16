@@ -1,103 +1,67 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 655701459FD;
-	Sat,  1 Feb 2025 10:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F33D2C9A
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 10:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738405231; cv=none; b=ZTPu2ck8n/xyDhBymoZSK9e9ISPgISb1vkxYvg6CT1Mm6t5E0D+Mz/3LYoAQ0awlXge3BVl3v9zC03s/tPsyhaTaeuFJ44LdDp80gxFL65TP2fNDx3G0chxL8QJ/fPI4cY95mWP0CtchfPA48bhmxnZ0Y1LiDfuKf5o81TYYSAA=
+	t=1738405719; cv=none; b=oCXFkmiqKIxrrep+TcoiTS+3z/rf8Pvu2gh4hl7a9vihHbylHgAGNEZQR20HwULp187PaxF+21EJxuWT4PhmtgGDFYN6XtQp4NVJqut0i34kNU8Rzx0nNMiq5E/VlfmoY32ltAQH/EDORCLZDxcpRA3TYzJMvqnYfkDdNlaJlRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738405231; c=relaxed/simple;
-	bh=tUEaZBK1Fv6jgwdMcbeELrgHTRfiKEeZV2xaBHrfsi0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K+5OJFchADyOWxau3VzMjqRLoSsnaUiGWwGmF7CbW4GS4ooBKhw9oWY43E0FaNXPkTZ/9LqkecNNtqTYh6k26eScmBqpo2+gWTKuE2Fp1y3GYYVYtqsrkkxx0vjufakK45QPLhel2oeo2S0Pxy/lpuUTJpPhM5EsN/ZfgJ/DT6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 511AKPfC006655;
-	Sat, 1 Feb 2025 11:20:25 +0100
-Date: Sat, 1 Feb 2025 11:20:25 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] selftests/nolibc: drop custom EXTRACONFIG
- functionality
-Message-ID: <20250201102025.GG5849@1wt.eu>
-References: <20250123-nolibc-config-v2-0-5701c35995d6@weissschuh.net>
- <20250123-nolibc-config-v2-1-5701c35995d6@weissschuh.net>
- <20250201101305.GD5849@1wt.eu>
- <3f06ca01-68a3-41ca-9bfb-3f37f2173951@t-8ch.de>
+	s=arc-20240116; t=1738405719; c=relaxed/simple;
+	bh=4/G5eTpUSdUVL6Q4IBjZMpSrf+PEtQl07DvsvNuifDM=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=AQ/bjnOpmcBoo2B7Exl5FILGhRjP0KURx3Xrv24NskZfvkKS0PFq0Ce9mLh8Mj/ntTVoBLSAgZfRzQMByEbLHTzBnQkMAqZogV7cLlnqmJNozKl13KZ+Tj7hEqs0CxkIK5or7aBDXpeG6KUbA33/A4IzZ03vaH60Lj4w8icggno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=WygzvVlz; arc=none smtp.client-ip=185.70.43.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="WygzvVlz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1738405715; x=1738664915;
+	bh=4/G5eTpUSdUVL6Q4IBjZMpSrf+PEtQl07DvsvNuifDM=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=WygzvVlzR4+lhFR4FAmu6qhskDDrhue2EHFusuOkNdXt1Za+RCoOF7EtCkMt0/c3b
+	 apLFL5tqCW0DavO15bc8UU/DVqVMW8Eu6cqhyJH3X37ov2vpwyCNX3tIq642dsPyrj
+	 CIGHhgDD423K6OZEkO8fNyD5WSb7iRCSkF8iXgArvJ7Pas4C1h230Aiklh7QVR92xB
+	 /vdab9eowGrNmTwIsaItAR7m2EB/JIFRc08nORvwqvcrGf7mzxyXrW7nknIl0Cq+q2
+	 gzZHcuz9Dsk7sDPiHeuaceT/h5tscz/jp0pFKmA8ubZHi+Q7t9lTeVhJhqaWAH+HUM
+	 fv5u3H36RPU6Q==
+Date: Sat, 01 Feb 2025 10:28:29 +0000
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Turritopsis Dohrnii Teo En Ming <teo.en.ming@protonmail.com>
+Cc: "ceo@teo-en-ming-corp.com" <ceo@teo-en-ming-corp.com>
+Subject: 10 Gbps network cards
+Message-ID: <28E_wHVmYsoTcA0hj769tOPDPwm7UNHOVSFkqbuOutrNyHx2-l1K0pf8VdZ4q0vU0iFnYX0avS-1cSDhHlHAWrqOfYpEnGEIlfO1AoU4i6Y=@protonmail.com>
+Feedback-ID: 39510961:user:proton
+X-Pm-Message-ID: b6838f48f0a8368f58784f0094ff0ad2d780e8ff
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3f06ca01-68a3-41ca-9bfb-3f37f2173951@t-8ch.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 01, 2025 at 11:17:28AM +0100, Thomas Weiﬂschuh wrote:
-> On 2025-02-01 11:13:05+0100, Willy Tarreau wrote:
-> > On Thu, Jan 23, 2025 at 08:37:37AM +0100, Thomas Weiﬂschuh wrote:
-> > > kbuild already contains logic to merge predefines snippets into a
-> > > defconfig file. This already works nicely with the current "defconfig"
-> > > target. Make use of the snippet and drop the custom logic.
-> > > 
-> > > Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
-> > > ---
-> > >  tools/testing/selftests/nolibc/Makefile | 9 +--------
-> > >  1 file changed, 1 insertion(+), 8 deletions(-)
-> > > 
-> > > diff --git a/tools/testing/selftests/nolibc/Makefile b/tools/testing/selftests/nolibc/Makefile
-> > > index 7d14a7c0cb62608f328b251495264517d333db2e..ba044c8a042ce345ff90bdd35569de4b5acd117d 100644
-> > > --- a/tools/testing/selftests/nolibc/Makefile
-> > > +++ b/tools/testing/selftests/nolibc/Makefile
-> > > @@ -82,7 +82,7 @@ DEFCONFIG_x86        = defconfig
-> > >  DEFCONFIG_arm64      = defconfig
-> > >  DEFCONFIG_arm        = multi_v7_defconfig
-> > >  DEFCONFIG_mips32le   = malta_defconfig
-> > > -DEFCONFIG_mips32be   = malta_defconfig
-> > > +DEFCONFIG_mips32be   = malta_defconfig generic/eb.config
-> > >  DEFCONFIG_ppc        = pmac32_defconfig
-> > >  DEFCONFIG_ppc64      = powernv_be_defconfig
-> > >  DEFCONFIG_ppc64le    = powernv_defconfig
-> > > @@ -93,9 +93,6 @@ DEFCONFIG_s390       = defconfig
-> > >  DEFCONFIG_loongarch  = defconfig
-> > >  DEFCONFIG            = $(DEFCONFIG_$(XARCH))
-> > >  
-> > > -EXTRACONFIG_mips32be = -d CONFIG_CPU_LITTLE_ENDIAN -e CONFIG_CPU_BIG_ENDIAN
-> > > -EXTRACONFIG           = $(EXTRACONFIG_$(XARCH))
-> > > -
-> > >  # optional tests to run (default = all)
-> > >  TEST =
-> > >  
-> > > @@ -265,10 +262,6 @@ initramfs: nolibc-test
-> > >  
-> > >  defconfig:
-> > >  	$(Q)$(MAKE) -C $(srctree) ARCH=$(ARCH) CC=$(CC) CROSS_COMPILE=$(CROSS_COMPILE) mrproper $(DEFCONFIG) prepare
-> > > -	$(Q)if [ -n "$(EXTRACONFIG)" ]; then \
-> > > -		$(srctree)/scripts/config --file $(objtree)/.config $(EXTRACONFIG); \
-> > > -		$(MAKE) -C $(srctree) ARCH=$(ARCH) CC=$(CC) CROSS_COMPILE=$(CROSS_COMPILE) olddefconfig < /dev/null; \
-> > > -	fi
-> > 
-> > OK it's no longer needed thanks to your change above, but to we really
-> > want to get rid of that feature allowing anyone to add their own extra
-> > config ? I'm not sure. For example maybe the current build script helps
-> > on bare metal, when trying to add support for new archs or other features
-> > not yet in defconfig ? We could leave EXTRACONFIG_* empty by default and
-> > user-defined, as I don't feel like it blocks anything to keep it.
-> 
-> Makes sense, let's keep it.
-> It's currently not possible for kbuild to pick up config snippets
-> outside of a few special locations.
+Subject: 10 Gbps network cards
 
-Yes but when facing difficulties, users can be creative (e.g. inject
-semi-colon and commands in EXTRACONFIG ;-)).
+Good day from Singapore,
 
-> I'll fix this up locally and apply the series directly.
+Does the Linux kernel have support for 10 Gbps network cards?
 
-Thank you!
-Willy
+This is because 10 Gbps broadband plans are becoming more common in Singapo=
+re.
+
+Thank you.
+
+Regards,
+
+Mr. Turritopsis Dohrnii Teo En Ming
+Targeted Individual in Singapore
+1st Feb 2025 Saturday
+
+
+
+
+
