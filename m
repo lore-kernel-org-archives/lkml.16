@@ -1,145 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411C31C1F1F;
-	Sat,  1 Feb 2025 16:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A636F1C5D61
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738427204; cv=none; b=SNVEvHi24zwzehOXmr6GcFz9K5RDnSea6K0xmDNl+mnpWkg5hjjsJPMglRXgECYp0mTvAS1xFPFwDcWrOIlDOpc2ZMW7qTN8DLqfSU46b05TzeqKE29YZNbrVysWF2QPztwjFYc7j5WNs2+wI55000L7k3961Gbu5wLcKTNxZ3U=
+	t=1738427224; cv=none; b=UHltHg8ivnXWgLsfpb3mD2eYUROgOmANnIxoFEwC5f0Jr0CNIpmyZBjDC0KOi8yshEwHlUgjZgAXYJu9iyhbRzGQ3A1Qn31ine8teomZlTMzvAMY7HF9mrTBazyzGb7YUzKPgV707wV/iwZ0fjRCrzxhKaQsTFEaLqSk65GuSqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738427204; c=relaxed/simple;
-	bh=GrQn/vAlhRLico+evNaO6oFN5ihzECkatA5KFLG8epU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y5bmonTfeOlBJBcHlt2VXexceWMBeYmJfQGkeCmv6TYgRrgDeS+CHgVVtR3iQ4D3yjYphHLk4G6PNMDa3wP2dyuDOjtdej2TDUSduRenjdOy9wk3QoP8VKlXCEubhR84Zs6eHXyUQj9dTXi/J1JvQjGOEXHp5QDdWZb36kTR44U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HV3YMCpE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738427224; c=relaxed/simple;
+	bh=Yxhl8LZFj20FOUDFn3DFSQ8NRNktMewV2d+gewSUVqw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OBm+Xaj6qO7Xb4e4ZW3b4Q0pHvMp4vPbvl+rtBUPy2nk6OfnslUf2WswInZ3PpVrCCv6GIhbx7I8Y4/X/PZnuadDxK1ZQSjkiM7m7XzkiUD1iiyrcNgwmB6uzS+r4WVJVA0QT75ypimNKha12CyVJ2/nkzRzJZQIRcg+lLe8sXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VhQ1AMM4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HV3YMCpE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73EBBC4CED3;
-	Sat,  1 Feb 2025 16:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738427203;
-	bh=GrQn/vAlhRLico+evNaO6oFN5ihzECkatA5KFLG8epU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HV3YMCpE0fMsqjf8JOo6uBiUl/hLYUT2UK7xHIh/quoXBmLxDhdAlCvSJ7/VngWUm
-	 wfi6eCv/X4YMj4fnF3ASioL4EHzw21SaW/NEcEDOGLzNwAfBCkqMy7wUVqaPWvCG8o
-	 6KMkbk9+Gon4xhivbE6NlCydzbuwGDhbSgZ9+rB9NGvQ6rN8wzznF0P6gKg5zYk9+u
-	 d/ZKs46jep5fZ/3yfrMH/nCvqCyQtaQU9WYZb3v0pi86Gg2SAyMuvMPoQrqaavUe6z
-	 89mxzLm2Qf7A032mg11iy/2U1FdZm9tO0GT3jss2NnDxRffVrkKFXt/7D1mb737rNl
-	 1zyGf4iwbJN1A==
-Date: Sat, 1 Feb 2025 16:26:31 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Matti Vaittinen
- <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Linus
- Walleij <linus.walleij@linaro.org>, Nuno Sa <nuno.sa@analog.com>, David
- Lechner <dlechner@baylibre.com>, Dumitru Ceclan <mitrutzceclan@gmail.com>,
- Trevor Gamblin <tgamblin@baylibre.com>, Matteo Martelli
- <matteomartelli3@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-gpio@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: Re: [RFC PATCH 3/5] iio: adc: Support ROHM BD79124 ADC
-Message-ID: <20250201162631.2eab9a9a@jic23-huawei>
-In-Reply-To: <566f15dc-8901-4377-8407-8eac8a54bfe4@gmail.com>
-References: <cover.1738328714.git.mazziesaccount@gmail.com>
-	<e44851669ce7e91d1295ab7352535c93b89d35bf.1738328714.git.mazziesaccount@gmail.com>
-	<20250131174118.0000209a@huawei.com>
-	<566f15dc-8901-4377-8407-8eac8a54bfe4@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VhQ1AMM4"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5116Cfwt024138
+	for <linux-kernel@vger.kernel.org>; Sat, 1 Feb 2025 16:27:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	EKll0OTr+FAupnplWAio3axMf3LjnLIqeSqJawk3ocA=; b=VhQ1AMM467Pl8oY5
+	p3ZdQQMO7ryoJNf9YdmC+UGRXztIfWG93qejsXbeyw3Lt4ceUfE+KTVwgD/HG0HM
+	8ZReaItoewDJtWMWUNtqjtJyZ+Tv09cbiY8f2N8KTTtuoLj2j1DpQG1aRNbi0JVe
+	bOjHMk7uGp4wIGHEaXweZklqbNhULpMNPhTzgxj+FIdvnIT7C7axtvoptPUJpxBX
+	sRALm57UoGkoD/qgbauZuce10ofcC+ZpTJeE38J8AiuGmvqmRGMDrsbGGgtCLeJH
+	fBF3z4H0Iq6tm07wgMxOnp6OnznW1Ss14HJ/whocFpPxMT5iaxGYuB0iH1uUAngr
+	fFhWDg==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44hd6a94br-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 16:27:01 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e249d117b7so4739056d6.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:27:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738427221; x=1739032021;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EKll0OTr+FAupnplWAio3axMf3LjnLIqeSqJawk3ocA=;
+        b=ffyTYbLMtpkXI7O55lLtysuegD6NV2jodcw2OxYkSIvZQMdh/F23SKjNNJWczEMXkZ
+         QTVTgopAbTzq+//2XcP7GbkUL9ks/rpikY6eN999jrp85ugYJkfCdjh5djUzgJQ8PEc2
+         EpreW8L2p6q8HRuusLbzgqfpT5NSmySGJYk4/aUQMzqZw+pf6htW5rLE4qHIGr3ajHSE
+         C24JIz+pvRC/GV7qTR7X4jmSfNn2e672758sIg1qqnExOi3miFuV3UUD1W13JYSVMZVZ
+         HaiXDnT4LwigtII56yZ5jDX0O7B/vL6sQObR+BnGtGrlbgKgl/VN8Pik++S+lhzRfEY0
+         ai9w==
+X-Forwarded-Encrypted: i=1; AJvYcCV39dJmWnSQ+itpDm7UP3h4614QSKuVTlnky/Hpvi5GfeNfYXcevdiVFRkUGYZNpK0Cu+/c4xtJfJHNZ+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVhnrlp3/ZSzbbKViCa9Dbw5++fkblllYHyMsZx3NSbpJxcdL+
+	ziXgObjysP+Av7SRUfwRX601D5/uJ8GJzle6YEP1LKVQR+2qQccqychfZxywmJLYAEkqxtsF2nz
+	/QAiWEQWqE72XG9Dw5s8zJRPAAWdbI5EU7HVB0PL0+Fr0c72AyLEy3zGb4WKGtBk=
+X-Gm-Gg: ASbGnctU1DVUL3+2/SG8xSqN94SVCSjSHyj4VP0eNtIzDgSCWGFzzdMRd/tZNoQQ/ip
+	fg5A6KT55rEJmqYmghz9ak8XWrrzxoOx8M9+eFagpWZVaD5CpkaG5Dzw2jFLliEVWxlMdf/bwAw
+	591dWdknqTLSF299MkLiDivrJRh9Aio2EVbxvqcCchf/kQUwvofA99FD57bLoJFZwu6mJSMwf9v
+	ixbYFVRruML9JGQuWWmzYr3lpMsKERQqGfBCSMdTv3wK18SJVko7X3cvY977X3T/Z47gQa90qkl
+	SVNrVIvMhgy6IQpde0TTEeeIQCV/HLZn0CUL8/+1jIXDl95fwUiLjgn4tNU=
+X-Received: by 2002:a05:620a:29d2:b0:7b8:5629:5d58 with SMTP id af79cd13be357-7bffcce5683mr798967085a.4.1738427220721;
+        Sat, 01 Feb 2025 08:27:00 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGW5dCt57KxB3QTUkH/DtBPukVEDHPBWvCI3vtS5HPPpewERxqmhT5SNUKe1IVKv5OIuqLK2g==
+X-Received: by 2002:a05:620a:29d2:b0:7b8:5629:5d58 with SMTP id af79cd13be357-7bffcce5683mr798963885a.4.1738427220201;
+        Sat, 01 Feb 2025 08:27:00 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc7240487csm4570605a12.34.2025.02.01.08.26.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Feb 2025 08:26:59 -0800 (PST)
+Message-ID: <80ca597a-3d85-40d0-a04d-4bb8ca91b687@oss.qualcomm.com>
+Date: Sat, 1 Feb 2025 17:26:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 2/2] arm64: dts: qcom:
+ qcs6490-rb3gen2-vision-mezzanine: Add vision mezzanine
+To: Vikram Sharma <quic_vikramsa@quicinc.com>, rfoss@kernel.org,
+        todor.too@gmail.com, bryan.odonoghue@linaro.org, mchehab@kernel.org,
+        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        akapatra@quicinc.com, hariramp@quicinc.com, andersson@kernel.org,
+        konradybcio@kernel.org, hverkuil-cisco@xs4all.nl,
+        cros-qcom-dts-watchers@chromium.org, catalin.marinas@arm.com,
+        will@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@quicinc.com
+References: <20250121125010.1853269-1-quic_vikramsa@quicinc.com>
+ <20250121125010.1853269-3-quic_vikramsa@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250121125010.1853269-3-quic_vikramsa@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: uXSNW3xH4IGYFj3C_NTysUGYMxz2F0xC
+X-Proofpoint-GUID: uXSNW3xH4IGYFj3C_NTysUGYMxz2F0xC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-01_07,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 spamscore=0 clxscore=1015 phishscore=0 bulkscore=0
+ mlxlogscore=770 adultscore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502010142
 
-On Sat, 1 Feb 2025 17:38:20 +0200
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+On 21.01.2025 1:50 PM, Vikram Sharma wrote:
+> The Vision Mezzanine for the RB3 ships with an imx577 camera sensor.
+> Enable the IMX577 on the vision mezzanine.
+> 
+> An example media-ctl pipeline for the imx577 is:
+> 
+> media-ctl --reset
+> media-ctl -v -V '"imx577 '17-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
+> media-ctl -V '"msm_csiphy3":0[fmt:SRGGB10/4056x3040]'
+> media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4056x3040]'
+> media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4056x3040]'
+> media-ctl -l '"msm_csiphy3":1->"msm_csid0":0[1]'
+> media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
+> 
+> yavta -B capture-mplane -c -I -n 5 -f SRGGB10P -s 4056x3040 -F /dev/video0
+> 
+> Signed-off-by: Hariram Purushothaman <quic_hariramp@quicinc.com>
+> Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
+> Signed-off-by: Trishansh Bhardwaj <quic_tbhardwa@quicinc.com>
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
 
-> On 31/01/2025 19:41, Jonathan Cameron wrote:
-> > On Fri, 31 Jan 2025 15:37:48 +0200
-> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> >   
-> >> The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The ADC supports
-> >> an automatic measurement mode, with an alarm interrupt for out-of-window
-> >> measurements. The window is configurable for each channel.
-> >>
-> >> The I2C protocol for manual start of the measurement and data reading is
-> >> somewhat peculiar. It requires the master to do clock stretching after
-> >> sending the I2C slave-address until the slave has captured the data.
-> >> Needless to say this is not well suopported by the I2C controllers.  
-> > 
-> >  From what I recall that is in the I2C spec, so in theory should be supported.
-> > Ah well.  
-> 
-> Could be I am mistaken then. Or, maybe I just misused the term "master 
-> to do clock stretching".
-> 
-> I know that it is not rare the slave device is keeping the clock down 
-> for extended period (in this case so that the measurement would be 
-> completed) - but at least I am not aware of any APIs which could be used 
-> to cause the _master_ side to keep the SCL low for an extended period 
-> after receiving the ACK (after sending the slave address). In this case 
-> it would require this driver to be able to set a time for how long the 
-> master would keep SCL low after sensing the slave address, before 
-> sending the "command" bytes.
-> 
-> |S|ADDRESS+R|a|STRETCH|8-bit-i2c-frame|A|8-bit-i2c-frame|A|STRETCH|8-bit-i2c...
-> 
-> Above denotes this "master stretching". CAPITALs are initiated by 
-> master, lowercase by slave. S, is start, a is ack and R is read-bit.
 
-Ah. That is indeed more unusual. You were correct that i was thinking
-of the client side doing the stretching!
+> +&tlmm {
+> +	cam2_default: cam2-default-state {
+> +		mclk-pins {
+> +			pins = "gpio67";
+> +			function = "cam_mclk";
+> +			drive-strength = <2>;
+> +			bias-disable;
+> +		};
 
-> 
-> If there is a standard way to implement this in Linux side, then I might 
-> consider using it as it'd allowed much higher capture rates.
-Not that I'm aware of. 
+If you don't plan on adding more pins there, drop mclk-pins{} and put the
+properties directly under the cam2-default-state node, similarly below
 
-Wolfram, have you seen anything like this?
+with that
 
-> 
-> >> It is worth noting that the ADC input pins can be also configured as
-> >> general purpose outputs. The pin mode should be configured using pincmux
-> >> driver.  
-> > 
-> > We shouldn't be presenting channels that are configure for GPIOs as
-> > ADC channels.  It is very rare that there is a usecase for any
-> > dynamic switching.  
-> 
-> Thanks :) If the dynamic switching is rare, then you're definitely 
-> right. I need to see if using the pinmux still makes sense, and if we 
-> can implement this while using (separate) pinmux driver.
-> 
-> > Normally it's a case of what is wired and
-> > so static.  
-> 
-> I should implement a device which can be controlled via it's analog 
-> output line :) If nothing else then a device shutting down when it's 
-> output is pulled low ;)
-> 
-> ...Well, I have no real use-case for dynamic config either.
-> 
-> >  Hence build the iio_chan_spec array for just the
-> > channels you want, not the the lot.  Channel sub nodes in the
-> > DT are how we most commonly specify what is wired.  
-> 
-> Hmm. That'd mean the ADC channels _must_ be defined in DT in order to be 
-> usable(?) Well, if this is the usual way, then it should be well known 
-> by users. Thanks.
 
-Yes. We basically have two types of binding wrt to channels.
-1) Always there - no explicit binding, but also no way to describe
-   anything specific about the channels.
-2) Subnode per channel with stuff from adc.yaml and anything device
-   specific.  Only channels that that have a node are enabled.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-There are a few drivers that for historical reasons support both
-options with 'no channels' meaning 'all channels'.
-
-J
+Konrad
+> +	};
+> +
+> +	cam2_suspend: cam2-suspend-state {
+> +		mclk-pins {
+> +			pins = "gpio67";
+> +			function = "cam_mclk";
+> +			drive-strength = <2>;
+> +			bias-pull-down;
+> +		};
+> +	};
+> +};
