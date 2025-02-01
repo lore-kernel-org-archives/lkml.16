@@ -1,127 +1,276 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375841CAA86
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 17:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCEB1C5F34;
+	Sat,  1 Feb 2025 17:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738430508; cv=none; b=RLXrhvJXAKV0hpScrX9qbSs2lKMRuOUe8Nyen+uSpJ2FEP0Gyt235xoK00Xk2CGnHRpqFSwwyQCdbrmbcCG38RivwohyeHUoM5+F2uW0uoTuvv6ESFiDWEIba4myrR/iE5lKfhPPcXBP1S4SyDB36GyzBb1jNIQr0fxUnb7f5qA=
+	t=1738430568; cv=none; b=ubhfWtuL9W9sgaMpW4QBFsKv6EILuOKZf+sHps/cWGksr8EIale1NvQO43WQGVNd9crfqU81xQ8WalxwfZZesPFVWWF4ld8mBoCJDx4psI0S8F3mG7KBt+mv/ZakvM5K+3BlE+vBDNOYDuvC92CPq94GyBVLk/CFvovnpe0ceHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738430508; c=relaxed/simple;
-	bh=w2yE63sC9zTFdtn+p5RI02eYUbqFYisRzY88vTigVQ8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DgnJbC3PHRLTwKEDTqE13ALhyGWm35bVfwsvx6S4TcuXKxQXirseEKCfZiwgi/E01TQXVENpOq4IgtBdzsYNok7NIDHWGFOp8fHssR8AoBhEvmZ85tSL+WRX21/CasU3UPZR+ZbGpZmFQNANWsipFDzVm2AMY9A7pvODULajmpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3HnG7SsI; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1738430568; c=relaxed/simple;
+	bh=Qrdd23R/NIqqOD8tLgPKyOnBoOCKeAuBEzHVsSYAEFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e1dJYJA89ttEJxtY/t7GPbEiNwy4YL9t3yfKiH+7E/+NuMLSXMfRNTQDEG8xt3YjD92eVzkR/8F6WiU/olrlE0IjKhqkE2WvFdPhxFJxHxSr3P1aWA1pRhf1IBmJCnrjev8yQAM0tS4n5tD/s3ghlDKHgT3C3BZxn+WDmLyOD7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJWJinJM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3HnG7SsI"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4362552ce62so14482255e9.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 09:21:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738430505; x=1739035305; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QKhrV4FS3BfHHv6JJTxTRxWjSBLuqt9pDuTg8aZsHJY=;
-        b=3HnG7SsIWIsRo9+jKmIuReiOuRYnWgQ/WuSOsUMI8DqP/TpCPKxzohpo8fBFFcZZlp
-         lTYg9cgvDofn6mC2W0nD39vGBKqqPIKa+hS1qAyjoQg27X47JmAp3aJtvGsqoZf7vrE4
-         gnyrUMmxZjCzl9WD8ntjiaMpLJHpCtnXYySmOrqJTa2SXqvFNd9u2z1Lp+SS4wI+2sUo
-         6jvsR1fyYcR0jUnFLANH+DKxPfdYDU4agbKderV/qiNtnkGSl/ldJGVHGWV5bmw9VkQA
-         sKu2VNVYJwGpp65v4vXNBVrBjP9y94toBDtznzYOAyQYoULzJmlC9cmEzRNZHo9T5WVk
-         uewQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738430505; x=1739035305;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QKhrV4FS3BfHHv6JJTxTRxWjSBLuqt9pDuTg8aZsHJY=;
-        b=bIM8a8Nc30fUvi008nokuRByoNFNC35chLs2SiKhtuu9hJj4njG+y2o9irjl/nt8jx
-         NZu1IAaRxaDMf2eDPe4lge0Xgd9lbTqDCUpQPNDj4LmfD46U9jF8DoHDoopwGMg2TQP5
-         MoTs8L6T04kJ9kdpbIieMNSl23titiU4ZAFwIbx0PSHrqlSS4BQtGFnTP5lAEJByA1uQ
-         A+BevkVVHeP5rHaT7Rj66orEc8BwyWDK7ykrudxqP5RlRPKP3Mj2d2pexr0wqoy1dygc
-         l5fEvz4i0wy+W/vt2ubZE+GdE3wdzeaNpnO/3bDh7NSpwv/C90A4W25RTWn/U+Hl7TCI
-         gIIQ==
-X-Gm-Message-State: AOJu0YzR2Cx6/+shpihUuUwFTSU4maOMMPEBDKb4ZFwFFKUhh5w9DqXq
-	OyLaflcrKP4e1lDnPjnXePJFAQL9ehMLBUoc+1ON1sF+mTIE9YB3/oRIT7ISn+26FCrw5w==
-X-Google-Smtp-Source: AGHT+IGl49RmvVvO8Sge+Xfhu5Xb697EHYs3pjwLnJJB9vvdkzBIhC9IKEmbhFm4+dhHZDqj4Kiz8Dwm
-X-Received: from wmqa17.prod.google.com ([2002:a05:600c:3491:b0:436:1796:9989])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:5119:b0:434:f917:2b11
- with SMTP id 5b1f17b1804b1-438dc40bd8dmr126035295e9.21.1738430505708; Sat, 01
- Feb 2025 09:21:45 -0800 (PST)
-Date: Sat,  1 Feb 2025 18:21:36 +0100
-In-Reply-To: <20250201172133.3592112-4-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJWJinJM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82C16C4CED3;
+	Sat,  1 Feb 2025 17:22:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738430568;
+	bh=Qrdd23R/NIqqOD8tLgPKyOnBoOCKeAuBEzHVsSYAEFs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XJWJinJM+3nfxhFEY7ttQzshr6yE3BLsPWJPIjhULKbBvLse0HWIfk6Dy94ChvqdF
+	 7mEOL5euYMethN9ygkM1puaCpEhXkt1ysCuBnXtSJ/3IwM0eeURYoj5PANaekLZGli
+	 0Wvlq3zVsuhru74+ax6VMG8GjxRwFXg+02achUc4SBAB13EsPJ7nNh3pD1OfhB5six
+	 J3Uh+um7YZBF5PFxgfUc9X3r27j9Gt4C/iQIkwZPDTx26wj1qqmy2B9cSDec6AF4vW
+	 xY9Uj+uajfhpGFGKOBB4bIaG1VILPXhSKN1qh2n7uNXprtG+Np4EeKDBsdNrePAaM5
+	 ISApRCF6zVycQ==
+Date: Sat, 1 Feb 2025 17:22:42 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v1 10/12] iio: accel: adxl345: add freefall feature
+Message-ID: <20250201172242.4064b436@jic23-huawei>
+In-Reply-To: <20250128120100.205523-11-l.rubusch@gmail.com>
+References: <20250128120100.205523-1-l.rubusch@gmail.com>
+	<20250128120100.205523-11-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250201172133.3592112-4-ardb+git@google.com>
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2648; i=ardb@kernel.org;
- h=from:subject; bh=ATsogwx9msMMPfBwlwd/1Ve/e6sf91DL+ruiHYM3nIk=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIX1ehGLFp8w1E/O2M52LujTDf2ON7vl3m2dttKjJlwn02
- d1yVqG0o5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEzk1BmGX0yi+V2zeVdcW1pn
- POuBeZbQ9k0dkmuWu0/JPtydySNcycvI8FeLOW1XONMtU9eGKStmzDVp+Vn7eOeHYC/mdq0uqQe HWAE=
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250201172133.3592112-6-ardb+git@google.com>
-Subject: [PATCH 2/2] efi: Use BIT_ULL() constants for memory attributes
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-efi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On Tue, 28 Jan 2025 12:00:58 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-For legibility, use the existing BIT_ULL() to generate the u64 type EFI
-memory attribute macros.
+> Add the freefall detection of the sensor together with a threshold and
+> time parameter. Add sysfs handle to enable/disable the feature and
+> introduce another sysfs macro. This is the third sysfs macro for sysfs
+> handles of this sensor. The three sysfs macros allow to cover all
+> sensor features and parameters.
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- include/linux/efi.h | 30 ++++++++++----------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+They might but they are new ABI, without docs and we have a lot of freefall
+detectors supported (pretty much all accelerometers support this)
+so needing new ABI is a surprise. Key thing as you've noted
+on the type is free fall is just detection of approximately zero magnitude
+acceleration on all axes at the same time.
 
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index db293d7de686..7d63d1d75f22 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -114,22 +114,22 @@ typedef	struct {
- #define EFI_MAX_MEMORY_TYPE		16
- 
- /* Attribute values: */
--#define EFI_MEMORY_UC		((u64)0x0000000000000001ULL)	/* uncached */
--#define EFI_MEMORY_WC		((u64)0x0000000000000002ULL)	/* write-coalescing */
--#define EFI_MEMORY_WT		((u64)0x0000000000000004ULL)	/* write-through */
--#define EFI_MEMORY_WB		((u64)0x0000000000000008ULL)	/* write-back */
--#define EFI_MEMORY_UCE		((u64)0x0000000000000010ULL)	/* uncached, exported */
--#define EFI_MEMORY_WP		((u64)0x0000000000001000ULL)	/* write-protect */
--#define EFI_MEMORY_RP		((u64)0x0000000000002000ULL)	/* read-protect */
--#define EFI_MEMORY_XP		((u64)0x0000000000004000ULL)	/* execute-protect */
--#define EFI_MEMORY_NV		((u64)0x0000000000008000ULL)	/* non-volatile */
--#define EFI_MEMORY_MORE_RELIABLE \
--				((u64)0x0000000000010000ULL)	/* higher reliability */
--#define EFI_MEMORY_RO		((u64)0x0000000000020000ULL)	/* read-only */
--#define EFI_MEMORY_SP		((u64)0x0000000000040000ULL)	/* soft reserved */
--#define EFI_MEMORY_CPU_CRYPTO	((u64)0x0000000000080000ULL)	/* supports encryption */
-+#define EFI_MEMORY_UC			BIT_ULL(0)	/* uncached */
-+#define EFI_MEMORY_WC			BIT_ULL(1)	/* write-coalescing */
-+#define EFI_MEMORY_WT			BIT_ULL(2)	/* write-through */
-+#define EFI_MEMORY_WB			BIT_ULL(3)	/* write-back */
-+#define EFI_MEMORY_UCE			BIT_ULL(4)	/* uncached, exported */
-+#define EFI_MEMORY_WP			BIT_ULL(12)	/* write-protect */
-+#define EFI_MEMORY_RP			BIT_ULL(13)	/* read-protect */
-+#define EFI_MEMORY_XP			BIT_ULL(14)	/* execute-protect */
-+#define EFI_MEMORY_NV			BIT_ULL(15)	/* non-volatile */
-+#define EFI_MEMORY_MORE_RELIABLE	BIT_ULL(16)	/* higher reliability */
-+#define EFI_MEMORY_RO			BIT_ULL(17)	/* read-only */
-+#define EFI_MEMORY_SP			BIT_ULL(18)	/* soft reserved */
-+#define EFI_MEMORY_CPU_CRYPTO		BIT_ULL(19)	/* supports encryption */
- #define EFI_MEMORY_HOT_PLUGGABLE	BIT_ULL(20)	/* supports unplugging at runtime */
--#define EFI_MEMORY_RUNTIME	((u64)0x8000000000000000ULL)	/* range requires runtime mapping */
-+#define EFI_MEMORY_RUNTIME		BIT_ULL(63)	/* range requires runtime mapping */
-+
- #define EFI_MEMORY_DESCRIPTOR_VERSION	1
- 
- #define EFI_PAGE_SHIFT		12
--- 
-2.48.1.362.g079036d154-goog
+That ABI is the way to do this, not something new.
+
+Jonathan
+
+
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> ---
+>  drivers/iio/accel/adxl345_core.c | 127 +++++++++++++++++++++++++++++++
+>  1 file changed, 127 insertions(+)
+> 
+> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
+> index ef0a12fd59be..62d75d28b6fc 100644
+> --- a/drivers/iio/accel/adxl345_core.c
+> +++ b/drivers/iio/accel/adxl345_core.c
+> @@ -170,6 +170,9 @@ struct adxl345_state {
+>  	u32 tap_window_us;
+>  	bool tap_suppressed;
+>  
+> +	u8 ff_value;
+> +	u32 ff_time_ms;
+> +
+>  	__le16 fifo_buf[ADXL345_DIRS * ADXL345_FIFO_SIZE + 1] __aligned(IIO_DMA_MINALIGN);
+>  };
+>  
+> @@ -187,6 +190,11 @@ static struct iio_event_spec adxl345_events[] = {
+>  		.dir = IIO_EV_DIR_DOUBLETAP,
+>  		.mask_shared_by_type = BIT(IIO_EV_INFO_ENABLE),
+>  	},
+> +	{
+> +		/* free fall */
+> +		.type = IIO_EV_TYPE_MAG,
+> +		.dir = IIO_EV_DIR_FALLING,
+
+This is correct, but you invent freefall attributes otherwise?
+It should just use attributes of falling magnitude threshold detection.
+Lots of existing precedence for this one.
+
+> +	},
+>  };
+>  
+>  #define ADXL345_CHANNEL(index, reg, axis) {					\
+> @@ -442,6 +450,61 @@ static int adxl345_set_tap_latent(struct adxl345_state *st, u32 val_int,
+>  	return _adxl345_set_tap_time(st, ADXL345_TAP_TIME_LATENT, val_fract_us);
+>  }
+>  
+> +/* ff */
+> +
+> +static int adxl345_is_ff_en(struct adxl345_state *st, bool *en)
+> +{
+> +	int ret;
+> +	unsigned int regval;
+> +
+> +	ret = adxl345_read_interrupts(st, &regval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*en = FIELD_GET(ADXL345_INT_FREE_FALL, st->int_map) > 0;
+> +
+> +	return 0;
+> +}
+> +
+> +static int adxl345_set_ff_en(struct adxl345_state *st, bool en)
+> +{
+> +	bool ff_en = en && st->ff_value > 0 && st->ff_time_ms > 0;
+> +
+> +	adxl345_intmap_switch_bit(st, ff_en, ADXL345_INT_FREE_FALL);
+> +
+> +	return adxl345_write_interrupts(st);
+> +}
+> +
+> +static int adxl345_set_ff_value(struct adxl345_state *st, u8 val)
+> +{
+> +	st->ff_value = val;
+> +
+> +	return regmap_write(st->regmap, ADXL345_REG_THRESH_FF, val);
+This is just a magnitude threshold. Why not use standard ABI?
+
+> +}
+> +
+> +static int adxl345_set_ff_time(struct adxl345_state *st, u32 val_int,
+> +			       u32 val_fract_us)
+I'm guessing this is time before free fall detection after falling
+below a threshold?
+
+Thats in_accel_mag_falling_period in standard ABI and IIRC is in seconds.
+
+
+> +{
+> +	unsigned int regval;
+> +	int val_ms;
+> +
+> +	/*
+> +	 * max value is 255 * 5000 us = 1.275000 seconds
+> +	 *
+> +	 * Note: the scaling is similar to the scaling in the ADXL380
+> +	 */
+> +	if (1000000 * val_int + val_fract_us > 1275000)
+> +		return -EINVAL;
+> +
+> +	val_ms = val_int * 1000 + DIV_ROUND_UP(val_fract_us, 1000);
+> +	st->ff_time_ms = val_ms;
+> +
+> +	regval = DIV_ROUND_CLOSEST(val_ms, 5);
+> +
+> +	/* Values between 100ms and 350ms (0x14 to 0x46) are recommended. */
+> +	return regmap_write(st->regmap, ADXL345_REG_TIME_FF, min(regval, 0xff));
+> +}
+> +
+>  static int adxl345_read_raw(struct iio_dev *indio_dev,
+>  			    struct iio_chan_spec const *chan,
+>  			    int *val, int *val2, long mask)
+> @@ -711,6 +774,49 @@ static int adxl345_write_raw_get_fmt(struct iio_dev *indio_dev,
+>  	}
+>  }
+>  
+> +#define ADXL345_generate_iio_dev_attr_INT(A, B, C)			\
+> +	static ssize_t in_accel_##A##_##B##_##C##_show(struct device *dev, \
+> +						       struct device_attribute *attr, \
+> +						       char *buf)	\
+> +	{								\
+> +		struct iio_dev *indio_dev = dev_to_iio_dev(dev);	\
+> +		struct adxl345_state *st = iio_priv(indio_dev);		\
+> +		int val;						\
+> +									\
+> +		val = st->B##_##C;					\
+> +									\
+> +		return iio_format_value(buf, IIO_VAL_INT, 1, &val);	\
+> +	}								\
+> +									\
+> +	static ssize_t in_accel_##A##_##B##_##C##_store(struct device *dev, \
+> +							struct device_attribute *attr, \
+> +							const char *buf, size_t len) \
+> +	{								\
+> +		struct iio_dev *indio_dev = dev_to_iio_dev(dev);	\
+> +		struct adxl345_state *st = iio_priv(indio_dev);		\
+> +		int val, ret;						\
+> +									\
+> +		ret = kstrtoint(buf, 0, &val);				\
+> +		if (ret)						\
+> +			return ret;					\
+> +									\
+> +		if (val < 0 || val > 255)				\
+> +			return -EINVAL;					\
+> +									\
+> +		ret = adxl345_set_measure_en(st, false);		\
+> +		if (ret)						\
+> +			return ret;					\
+> +									\
+> +		adxl345_set_##B##_##C(st, val);				\
+> +									\
+> +		ret = adxl345_set_measure_en(st, true);			\
+> +		if (ret)						\
+> +			return ret;					\
+> +									\
+> +		return len;						\
+> +	}								\
+> +	static IIO_DEVICE_ATTR_RW(in_accel_##A##_##B##_##C, 0)
+> +
+>  #define ADXL345_generate_iio_dev_attr_EN(A, B)				\
+>  	static ssize_t in_accel_##A##_##B##_en_show(struct device *dev, \
+>  						    struct device_attribute *attr, \
+> @@ -798,13 +904,20 @@ static int adxl345_write_raw_get_fmt(struct iio_dev *indio_dev,
+>  	}								\
+>  	static IIO_DEVICE_ATTR_RW(in_accel_##A##_##C##_##E, 0)
+>  
+> +ADXL345_generate_iio_dev_attr_INT(freefall, ff, value);
+> +
+>  ADXL345_generate_iio_dev_attr_FRACTIONAL(gesture_singletap, tap, duration, MICRO, us);
+>  ADXL345_generate_iio_dev_attr_FRACTIONAL(gesture_doubletap, tap, window, MICRO, us);
+>  ADXL345_generate_iio_dev_attr_FRACTIONAL(gesture_doubletap, tap, latent, MICRO, us);
+> +ADXL345_generate_iio_dev_attr_FRACTIONAL(freefall, ff, time, MILLI, ms);
+>  
+> +ADXL345_generate_iio_dev_attr_EN(freefall, ff);
+>  ADXL345_generate_iio_dev_attr_EN(gesture_doubletap, suppressed);
+>  
+>  static struct attribute *adxl345_event_attrs[] = {
+> +	&iio_dev_attr_in_accel_freefall_ff_en.dev_attr.attr,
+> +	&iio_dev_attr_in_accel_freefall_ff_value.dev_attr.attr,
+> +	&iio_dev_attr_in_accel_freefall_time_ms.dev_attr.attr,
+>  	&iio_dev_attr_in_accel_gesture_singletap_duration_us.dev_attr.attr,
+>  	&iio_dev_attr_in_accel_gesture_doubletap_suppressed_en.dev_attr.attr,
+>  	&iio_dev_attr_in_accel_gesture_doubletap_latent_us.dev_attr.attr,
+> @@ -1041,6 +1154,17 @@ static int adxl345_push_event(struct iio_dev *indio_dev, int int_stat,
+>  			return ret;
+>  	}
+>  
+> +	if (FIELD_GET(ADXL345_INT_FREE_FALL, int_stat)) {
+> +		ret = iio_push_event(indio_dev,
+> +				     IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
+> +							IIO_MOD_X_AND_Y_AND_Z,
+> +							IIO_EV_TYPE_MAG,
+> +							IIO_EV_DIR_FALLING),
+> +				     ts);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	return -ENOENT;
+>  }
+>  
+> @@ -1148,6 +1272,9 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+>  	st->tap_window_us = 20;			/*   20 [0x14] -> .025    */
+>  	st->tap_latent_us = 20;			/*   20 [0x14] -> .025    */
+>  
+> +	st->ff_value = 8;			/*    8 [0x08]            */
+> +	st->ff_time_ms = 32;			/*   32 [0x20] -> 0.16    */
+> +
+>  	indio_dev->name = st->info->name;
+>  	indio_dev->info = &adxl345_info;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
 
