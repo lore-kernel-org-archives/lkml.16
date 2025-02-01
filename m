@@ -1,119 +1,397 @@
-Received: from flow-b2-smtp.messagingengine.com (flow-b2-smtp.messagingengine.com [202.12.124.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CE517BA5;
-	Sat,  1 Feb 2025 08:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9A83EA83
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 08:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738398875; cv=none; b=jI53oCbpL+XuYzeKT1CwtwcPcdb3ivGAGvSHNjr2U/+H8iIYXR8qbhQg+525RbcJwTpAFNt2Ct7Qui96CPoAV8xodbwz0tWjLIyo+RwlRCSyCZ/mKEo97Prq2hgqdFUaiTDdZyGQKce5MRFghNO1YrO77ROqr3fw/rCQNNNlHl4=
+	t=1738399519; cv=none; b=nX0Mv1danxVFCIqoALhapFBmChTUcpxxsznHBMs2VqvFwyC0JqIz9PysPY6clzCKxeKhngzf0ylAZJjhzhcB0Nh/wH3xLUPqeFLIUEUVu0RDiR80wC+bCdS548N18Q6mk24gUqQIgHNVS5OKraA+SNi9xLSO4vAO9+dH/vz+fsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738398875; c=relaxed/simple;
-	bh=m4ugyGeTmJ1Hdww6iOC1KT8NE1PSpQ2Mfgq5XItdfjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KHSLIbNBm1vjnN3fLZs+ZAnB8aPeUuJUleTmFiVjnSBjPt/jC7QvhNhbne5EHCF1S0MNZDWMymBXr8/vJjdZklJ1Sq6vRXD/fDvkgZhmnCsve73WBt5bePv7K1KwoiaixLghPYwgkY30G5Z73JbaK2/KEu+ISfp47yZdxb7OpVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=i9MwJaHi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fSZZwkri; arc=none smtp.client-ip=202.12.124.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1738399519; c=relaxed/simple;
+	bh=V+k1gyWzXQ5n+Oh8v/2qvMFY9z5h7RS31lsxRYUCdXs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rQxp8d7a7ue/ExhW0YqWfdm0RoikwRkUcGw2/Mim/oqgBa55YQOgFTb5sjNUSQH+litYWg2qjtQMASKCDXf4U/n/spWfU/Je+ce2q2BKEwDZSPecyZXp1l78caP7a6KiDgDnABwfXqPuQa9tO5kjF+T2/a9+dFrIhoNrPceJ6v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QAibcVf9; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="i9MwJaHi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fSZZwkri"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailflow.stl.internal (Postfix) with ESMTP id 03BEA1D40825;
-	Sat,  1 Feb 2025 03:34:29 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Sat, 01 Feb 2025 03:34:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1738398869; x=1738406069; bh=Gr1zB5yYMG
-	S0lw6CixbzKQ92pbAY2oNwMe6gTZbPNcY=; b=i9MwJaHiU7BS8OwND65BDCuieH
-	Je4EZAznyUtwb3hROr93pSf9g7g/bIjny5Ev0iZpVCQdqIM9nWi93DxVjwsgSilw
-	Pq8GgqSJcEbJoPqvXTGtXIWcvp0ulE4Nw2r5SIzqEVHVo2zY3WPIGISUxDZ5qZzd
-	CNPWHKUUBqoGMZcZmsdPvxw5mBVzqNyuncS02X+QEoA18xIyS608uiQGSYnoGxqL
-	KlskeOXTsZb5jRB0EsRcS45X91noS3aw04Jl0Hzh3QxeNwCJ/6pj0RXha3xwVozD
-	OG/vlzCvsXr1jdCoTKIjfeLYobAluwfUTKawNY6wA+ckYY0ECfLAeNp9SrTw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738398869; x=1738406069; bh=Gr1zB5yYMGS0lw6CixbzKQ92pbAY2oNwMe6
-	gTZbPNcY=; b=fSZZwkri4RoubdcowJKUZVZZwmyYKScJkeX8j9LdwmT13tlpWzG
-	7rdd28P3o5Ajvs7zmUZ8atuyN2VjZvDHmqwEOJtTEPQESWfERZDacGQ6m+rPTpls
-	HWgw0Yz8JX5RN9zmzEHq734wzxefAU6RDzmzZsfUDC2ybSg7vlXVXgkMD89x8Adi
-	Q/ZFpZxo065p75FUG7LyLs8S6bMtNZFfYOOG8iWfPOSjbMjBrXF7N2MlOfZUF9CQ
-	CbMEYWuyfxsLKAC3feQygULogfIw8J0A9PcQQSIb3yJULzmbhz/HcGdAm1s71Mjl
-	iKJ9nZ/oN8xMEG7iBFruFgif9mep32UcAxA==
-X-ME-Sender: <xms:lNydZ_rucv1AleRp3RIuYHvTKQ6IuU6SxIEraEcRusl2KuEHtZUIlw>
-    <xme:lNydZ5p4Eo-NhN1TA2k5NixpXEtM9IpmDjrZSJXmYja9tS7F4zCgfbnbA-SxWZMvE
-    CkUL3dFGp9UCw>
-X-ME-Received: <xmr:lNydZ8MNkDTcoRxF0Uan_FsFk10WP7eieh37AvYJJga2JJUu96RnA1Un9dqgwg-rYYXLBFKggK0aXYZngH2xEA3XpBs3qw7zCoLyEg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddvhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtf
-    frrghtthgvrhhnpeehgedvvedvleejuefgtdduudfhkeeltdeihfevjeekjeeuhfdtueef
-    hffgheekteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehgrhgvgheskhhrohgrhhdrtghomhdpnhgspghrtghpthhtohepheekpdhmohguvgep
-    shhmthhpohhuthdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpth
-    htoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrges
-    fhhffihllhdrtghhpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpth
-    htohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtgho
-    mhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    htiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghjrghnuhhlghhu
-    sehrvgguhhgrthdrtghomhdprhgtphhtthhopehlhihuuggvsehrvgguhhgrthdrtghomh
-X-ME-Proxy: <xmx:lNydZy56WtzRwe-LifRB7XkftVcyAIN7XhYDMysNV6xCmdY4FXZzmA>
-    <xmx:lNydZ-4d9956HWSr2XCZlcW3Lo2vGuZ2I9VjVFb_ooxDuZbcPyzcxw>
-    <xmx:lNydZ6guanCULnn6Wm7H__JB-w1DrI4ez0jXFuJG2DJadKjLJQQMcA>
-    <xmx:lNydZw5fnmiRKQ2UGkv0s3lPZ8uFtoyKCVn5KuBsKbjjEs4zcIRAgg>
-    <xmx:ldydZxwtE5Kr-H2vdblUI6jw1Ynv8pyDRN28ZrocygcY6bOZWc-zjqs6>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 1 Feb 2025 03:34:27 -0500 (EST)
-Date: Sat, 1 Feb 2025 09:33:28 +0100
-From: Greg KH <greg@kroah.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: airlied@gmail.com, simona@ffwll.ch, corbet@lwn.net,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, ajanulgu@redhat.com, lyude@redhat.com,
-	pstanner@redhat.com, zhiw@nvidia.com, cjia@nvidia.com,
-	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 1/2] gpu: nova-core: add initial driver stub
-Message-ID: <2025020151-leverage-unadorned-fb05@gregkh>
-References: <20250131220432.17717-1-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QAibcVf9"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so105385ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 00:45:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738399516; x=1739004316; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zsA3GVEXaa9oBLCbalCfE/uXqekerRN9xSiBXHuz2tU=;
+        b=QAibcVf9j+NbYd/p/u3kd3Dl8fhOzDR0fbZzZVTjGM/bS6gTVzr4XVNgmDDP1bq7JZ
+         qKLqzKQ3WnM3xF6YaU52o/RRy90+WA4jvmTtrkX7I08Xq2xV82sV99HM/sQnWHwdjHnv
+         ei1q/E4nWnhhhOqzcsozbJueVXV/UExSIO1ysSOV7g6MJsN+OxokLwrvH4Gf1uEeEnxP
+         i60DJAHRuS4rIQO3en45egAHtAQZuC3bWJ5eTy4kRxywqa/7Id129BHZfuyWpwCLjR3H
+         Bebh1gHXOb5ljXctBTs3HdXQcG+QreBYRrq+zZVL7Yc2zy/vCmZZ9yOQd3PF/QODdgop
+         LaVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738399516; x=1739004316;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zsA3GVEXaa9oBLCbalCfE/uXqekerRN9xSiBXHuz2tU=;
+        b=EWOwceuigCnOhx2oT0Oakdv7RWSgz/b1RkfMihxSqRqxR5miA9b1iAR5OaurRKrzAX
+         iJ3Wc2t5YZclE5vDcVXzOAjUEENLaRPhLVUaBz4ZrHe+Fixd8XFqv80qVim3ZsvLEi4L
+         LMYkW6LrOqOIvBeLNvHB96Ac2oTLVlf6UtUSif2tuhnNTWTHmrExYiG9fbXhyJ/Bxdhb
+         JtxHGx3v4YlUc3XPOUXgXRdJgMETUxNNOMEXO9i6/d+P1b0tKIzHXnaXMYIDXAUoDxxx
+         MRQPTAF+aH3kUWzkFz/S3lOZ5RFp9yi90ITXr/iRq/mCR9FvvJ3OwP5CwGLgjzHEVkpu
+         cXeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW36migRug5fCO/zAUb7hEC2py0FtvT4IDtibI+uqLmCdhDjUxztCaAmGHtyKPFZRXrXIP1OeisGSyHEgI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvhvH6BmVSzFwkWSFEGhBw8x/LO0ccraEjeWaLMzmlpIJ4Nxrh
+	Slj53DVD3DyhbDbq/WVdNGJfw9RmeVZQjaPkXElqBl5L/ufsgtim/FN66avi1Eef4r1b+eRH0qy
+	uCPvDvJ1ACewaFdtCISYzcWEymfjG2u6yKAWX
+X-Gm-Gg: ASbGnctxNXwxXpH3ZX+2k/cK2oGCDWy6GBg7ZarFuOaejZ9p+zdFZwLLmcUx51MQXgg
+	cxg9ib8ZuAvq8V5O8nCsR1KROktfV0NuW1T5BjmP+Ko0y+BiCB0RKWOvr9wF9BPm+A8f5QsbknQ
+	==
+X-Google-Smtp-Source: AGHT+IFJKQYakUQN6fE62xynibpcnE2OErVv+x1hdTZ6PnMAZS6IyC+Rlnbmg868kb3Ll3hdUyrFFlh2PEVoEedJeQk=
+X-Received: by 2002:a92:ca4e:0:b0:3ce:35c8:bdf3 with SMTP id
+ e9e14a558f8ab-3d020184b99mr2302095ab.2.1738399516085; Sat, 01 Feb 2025
+ 00:45:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131220432.17717-1-dakr@kernel.org>
+References: <20250109222109.567031-5-irogers@google.com> <Z4F3qxFaYnMTtPw7@google.com>
+ <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
+ <Z4WNT_UX9eMD_txf@google.com> <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
+ <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
+ <Z4f3fDXemAMpBNMS@google.com> <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
+ <Z5qjwRG5jX9zAGtf@google.com> <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
+ <Z51RxQslsfSrW2ub@google.com>
+In-Reply-To: <Z51RxQslsfSrW2ub@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sat, 1 Feb 2025 00:45:04 -0800
+X-Gm-Features: AWEUYZme-NQY8WkyVByRY-Yk8JOt9JeBz2xNq5MsQvqT6jIQfxM3tvHieaXBHuU
+Message-ID: <CAP-5=fWzzWqNAgmrDHav63Z+HMnSP0RZJ3Q7PQpuzP7Tf_HP7g@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Atish Kumar Patra <atishp@rivosinc.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 31, 2025 at 11:04:24PM +0100, Danilo Krummrich wrote:
-> +impl Gpu {
-> +    pub(crate) fn new(pdev: &pci::Device, bar: Devres<Bar0>) -> Result<impl PinInit<Self>> {
-> +        let spec = GpuSpec::new(&bar)?;
-> +        let fw = Firmware::new(pdev.as_ref(), &spec, "535.113.01")?;
-> +
-> +        dev_info!(
-> +            pdev.as_ref(),
-> +            "NVIDIA {:?} ({:#x})",
-> +            spec.chipset,
-> +            spec.boot0
-> +        );
+On Fri, Jan 31, 2025 at 2:42=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Wed, Jan 29, 2025 at 10:12:14PM -0800, Atish Kumar Patra wrote:
+> > On Wed, Jan 29, 2025 at 1:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > On Wed, Jan 15, 2025 at 01:20:32PM -0800, Ian Rogers wrote:
+> > > > On Wed, Jan 15, 2025 at 9:59=E2=80=AFAM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > >
+> > > > > > On Mon, Jan 13, 2025 at 2:51=E2=80=AFPM Ian Rogers <irogers@goo=
+gle.com> wrote:
+> > > > > > > There was an explicit, and reviewed by Jiri and Arnaldo, inte=
+nt with
+> > > > > > > the hybrid work that using a legacy event with a hybrid PMU, =
+even
+> > > > > > > though the PMU doesn't advertise through json or sysfs the le=
+gacy
+> > > > > > > event, the perf tool supports it.
+> > > > >
+> > > > > I thought legacy events on hybrid were converted to PMU events.
+> > > >
+> > > > No, when BIG.little was created nothing changed in perf events but
+> > > > when Intel did hybrid they wanted to make the hybrid CPUs (atom and
+> > > > performance) appear as if they were one type. The PMU event encodin=
+gs
+> > > > vary a lot for this on Intel, ARM has standards for the encoding.
+> > > > Intel extended the legacy format to take a PMU type id:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/include/uapi/linux/perf_event.h?h=3Dperf-tools-next#n41
+> > > > "EEEEEEEE: PMU type ID"
+> > > > that is in the top 32-bits of the config.
+> > >
+> > > Oh right, I forgot the extended type thing.  Then we can keep the leg=
+acy
+> > > encoding with it on hybrid systems when users give well-known names (=
+w/o
+> > > PMU) for legacy event.
+> > >
+> > > >
+> > > > > > >
+> > > > > > > Making it so that events without PMUs are only legacy events =
+just
+> > > > > > > doesn't work. There are far too many existing uses of non-leg=
+acy
+> > > > > > > events without PMU, the metrics contain 100s of examples.
+> > > > >
+> > > > > That's unfortunate.  It'd be nice if metrics were written with PM=
+U
+> > > > > names.
+> > > >
+> > > > But then we'd end up with things like on Intel:
+> > > > UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD
+> > > > becoming:
+> > > > uncore_cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
+> > > > or just:
+> > > > cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
+> > > > As a user the first works for me and doesn't have any ambiguity ove=
+r
+> > > > PMUs as the event name already encodes the PMU. AMD similarly place
+> > > > the part of a pipeline into event names. Were we to break everybody=
+ by
+> > > > requiring the PMU we'd also need to explain which PMU to use. Sites
+> > > > with event lists (like https://perfmon-events.intel.com/) don't
+> > > > explain the PMU and it'd be messy as on Intel you have a CHA PMU fo=
+r
+> > > > server chips but a CBOX on client chips, etc.
+> > >
+> > > While I prefer having PMU names in the JSON events/metrics, it may no=
+t
+> > > be pratical to change them all.  Probably we can allow them without P=
+MU
+> > > and hope that they have unique prefixes.
+> > >
+> > > >
+> > > > > I have a question.  What if an event name in a metric matches to
+> > > > > multiple unrelated PMUs?
+> > > >
+> > > > The metric may break or we'd aggregate the unrelated counts togethe=
+r.
+> > >
+> > > Ok, then they should use unique names.
+> > >
+> > >
+> > > > Take a metric like IPC as "instructions/cycles", that metric should
+> > > > work on a hybrid system as they have instructions and cycles. If yo=
+u
+> > > > used an event for instructions like inst_retired.any then maybe the
+> > > > metric will fail on one kind of core that didn't have that event. N=
+ow
+> > >
+> > > The metrics is for specific CPU model then the vendor should be
+> > > responsible to provide accurate metrics using approapriate PMU/events
+> > > IMHO.
+> > >
+> > >
+> > > > if we have accelerators advertising instructions and cycles events,=
+ we
+> > > > should be able to compute the metric for the accelerator. What coul=
+d
+> > > > happen today is that the accelerator will have a cpumask of a singl=
+e
+> > > > CPU, we could aggregate the accelerator counter into the CPU event
+> > > > with the same CPU as the cpumask, we'd end up with a weird quasi CP=
+U
+> > > > and accelerator IPC metric for that CPU. What should happen is that=
+ we
+> > > > get an IPC for the accelerator and IPC for each hybrid core
+> > > > independently, but the way we handle evsels, CPUs, PMUs is not real=
+ly
+> > > > set up for that. Hopefully getting a set of PMUs into the evsel wil=
+l
+> > > > clear that up. Assuming all of that is cleared up, is it wrong if t=
+he
+> > > > IPC metric is computed for the accelerator if it was originally
+> > > > written as a CPU metric? Not really. Could there be metrics where t=
+hat
+> > > > is the case?
+> > >
+> > > Yes, I think there should be separate metrics for the accelerators.
+> > >
+> > >
+> > > > Probably, and specifying PMUs in the event names would be
+> > > > a fix. There have also been proposals that we restrict the PMUs for
+> > > > certain metrics. As event names are currently so distinct it isn't =
+a
+> > > > problem we've faced yet and it is not clear it is a problem other t=
+han
+> > > > highlighting tech debt in areas of the tool like aggregation.
+> > > >
+> > > > > > >
+> > > > > > > Prior to switching json/sysfs to being the priority when a PM=
+U is
+> > > > > > > specified, it was the case that all encodings were the same, =
+with or
+> > > > > > > without a PMU.
+> > > > > > >
+> > > > > > > I don't think there is anything natural about assuming things=
+ about
+> > > > > > > event names. Take cycles, cpu-cycles and cpu_cycles:
+> > > > > > >  - cycles on x86 is only encoded via a legacy event;
+> > > > > > >  - cpu-cycles on Intel exists as a sysfs event, but cpu-cycle=
+s is also
+> > > > > > > a legacy event name;
+> > > > > > >  - cpu_cycles exists as a sysfs event on ARM but doesn't have=
+ a
+> > > > > > > corresponding legacy event name.
+> > > > >
+> > > > > I think the behavior should be:
+> > > > >
+> > > > >   cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > > >   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > > >   cpu_cycles -> no legacy -> sysfs or json
+> > > > >   cpu/cycles/ -> sysfs or json
+> > > > >   cpu/cpu-cycles/ -> sysfs or json
+> > > >
+> > > > So I disagree as if you add a PMU to an event name the encoding
+> > > > shouldn't change:
+> > > > 1) This historically was perf's behavior.
+> > >
+> > > Well.. I'm not sure about the history.  I believe the logic I said ab=
+ove
+> > > is the historic and (I think) right behavior.
+> > >
+> > > > 2) Different event encodings can have different behaviors (broken i=
+n
+> > > > some notable cases).
+> > >
+> > > Yep, let's make it clear.
+> > >
+> > > > 3) Intuitively what wildcarding does is try to open "*/event/" wher=
+e *
+> > > > is every possible PMU name. Having different event encodings is
+> > > > breaking that intuition it could also break situations where you tr=
+y
+> > > > to assert equivalence based on type/config.
+> > >
+> > > While I don't like the wildcard matching, I think it doesn't matter a=
+s
+> > > long as we keep the above behavior.  If it can find a legacy name, th=
+en
+> > > go with it, done.  If not, try all PMUs as if it's given with PMU nam=
+e
+> > > in the event.
+> > >
+> > > > 4) The legacy encodings were (are?) broken on ARM Apple M? CPUs,
+> > > > that's why the priority was changed.
+> > >
+> > > I guess that why they use cpu_cycles.
+> > >
+> > > > 5) RISC-V would like the tool tackle the legacy to config mapping
+> > > > challenge, rather than the PMU driver, given the potential diversit=
+y
+> > > > of hardware implementations.
+> > >
+> > > I hope they can find a better solution. :)
+> > >
+> >
+> > Sorry for reposing. Gmail converted it to html for some reason.
+> >
+> > I have posted the latest support here.
+> > https://lore.kernel.org/kvm/20250127-counter_delegation-v3-12-64894d7e1=
+6d5@rivosinc.com/T/
+> >
+> > As of now, we have adopted a hybrid approach where a vendor can decide
+> > whether to encode the legacy events
+> > in the json or in the driver (if this series is merged). In absence of
+> > that, every vendor has to define it in the driver.
+> > We will deal with the fall out of the exploding driver when the
+> > situation arrives.
+>
+> I don't know how hard it'd be cause I'm not familiar with RISC-V.  But
+> basically you only need to maintain 9 legacy encodings (PERF_COUNT_HW_*)
+> and a few dozen combinations of supported cache events (PERF_COUNT_HW_
+> CACHE_*) for each vendor.  All others can go to json anyway.
+>
+> I think this is what all other archs (including x86) do.
 
-When drivers work properly, they should be quiet, so can you move this
-to dev_dbg()?
+This is well known to the people involved.
 
-thanks,
+While the PMU driver needs to encode or avoid these event names, they
+become special "legacy" names inside the perf tool. Magically a name
+like cpu_cycles will wildcard match (match on >1 PMU) whilst a name
+like cpu-cycles won't (only matching on core PMUs). This is completely
+confusing to users. It is even more confusing when you are saying the
+tool should intentionally use two different encodings.
 
-greg k-h
+The perf event enum types are limited but the tool recognizes more
+event names and then uses legacy encodings. I have yet to hear a
+sensible list of what are legacy event names, is cpu-cycles in there
+or just cycles? Why on earth would you want to keep synonyms like LLC
+meaning L2 cache?
+
+The intention with "pmu syntax" for events is that the PMU clarifies
+the type in the perf_event_attr. Previously it was assumed that the
+PMU type would be raw (4), and the x86 PMUs even use that as their
+type number. Pretending these days we don't now have hybrid core PMUs,
+10s of uncore PMUs. Doing that work had to reinvent event parsing and
+encoding.
+
+If you look at the matching as it is today:
+cpu_cycles -> tries to match on all PMUs
+*/cpu_cycles/ -> tries to match on all PMUs
+arm*/cpu_cycles/ -> tries matches on all PMUs that have arm at the start
+armv8_pmuv3/cpu_cycles/ -> matches only the armv8_pmuv3 PMU
+
+I don't see why it isn't obvious that the behavior of no PMU and the
+PMU being * is expected to be exactly the same - it really is today
+and that is what the code does, please try it. There just isn't a
+notion of not having a PMU because even for legacy events we have to
+reinvent the PMUs to inject the correct extended type information
+otherwise we'd profile just a fraction of the cores. We add PMUs when
+we display events to make the events more readable. There isn't a
+notion of these events being legacy and not, they are just assumed to
+be the same, PMU or not.
+
+As I've explained to you, I plan to transition the metric code to use
+event parsing and to union evlists rather than use strings and hash
+tables. This is to fix tracepoints appearing incorrectly to always
+have suffixes in the "metric-id" calculation. Recognizing modifiers
+properly would end up reinventing event parsing, so let's just make
+use of what we have and parse events early. It makes sense when
+unioning evsels in an evlist to do it off of the perf_event_attr, this
+will allow Intel's slots and topdown.slots to be correctly detected as
+aliases in metrics, something of a pain in formulas today. Why would
+the behavior of an event like cycles be different in non-hybrid
+metrics (where PMUs generally aren't specified) and in hybrid metrics
+(where PMUs generally are specified)? Events may not be recognized as
+aliases because ones without a PMU in the metric will get a legacy
+encoding. In your change:
+https://lore.kernel.org/r/20221018020227.85905-16-namhyung@kernel.org
+you assume all events with the same name are in fact the same event,
+but that is making wild assumptions about what is placed in the evsel
+name and I am trying to fix it in:
+https://lore.kernel.org/lkml/20250201074320.746259-1-irogers@google.com/
+You did similar with your proposal for hwmon events and I rejected it.
+The fact that the name term in an event configuration clobbers an
+evsel's name, its just the intent of the thing and the name was never
+supposed to have some sacred legacy or whatever meaning.
+
+I still see no sense in:
+perf stat -e cpu_cycles ...
+meaning:
+perf stat -e */cpu_cycles/ ...
+and:
+perf stat -e cpu-cycles ...
+trying to mean close to:
+perf stat -e cpu/cpu-cycles/ ...
+why one is implicitly a * and the other a core PMU, I mean it is the
+definition of confusing. And in the latter cpu-cycles case you want
+those two events to be encoded differently.
+
+All of this is overlooking that we have 1 event that is a problem on 1
+PMU on 1 architecture. If it weren't for that event we'd already have
+this patch landed and consistent event encodings. By not taking the
+patch it hurts Apple M, RISC-V users and my own work.
+
+Please can you explain why keeping the current encoding is good and if
+we like legacy events so much, can we revert the changes to prioritize
+sysfs/json when a PMU name is present. I'm afraid what you are
+explaining makes no sense to me, breaks existing platforms (Apple M)
+and is a blockage to future work. Saying everyone should rewrite
+everything, that's not a workable solution - not least because in some
+situations (old PMU drivers on Apple M) we lack a time machine.
+
+Thanks,
+Ian
