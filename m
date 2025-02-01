@@ -1,74 +1,52 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FB225760;
-	Sat,  1 Feb 2025 11:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4937525760;
+	Sat,  1 Feb 2025 11:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738409652; cv=none; b=Z8TE8lhCjCZXflp/J2F9zO17vwYPJZuex8qNB0CK9V/lxulhYf9tqq/ipGMKneMuZZvD61TWv4VKZXiothOAQ6iFcvzT3tShpcUeFshLxEfL3+m6jt4Kcbp6aDmJsGIb829B/D+vpl0XWS7eY235hKdvK/fMM73xOMhBGamLO3w=
+	t=1738409657; cv=none; b=EH1yDrflDDMTrVuOoZpFRd7ucfZ82hS6DQxInN9o2nf5sNWuBcQ6ooqI2zjVGy3GRCmbRxaBoU9/Zm85nN6OW/fyyN35jJuJ4ZiWMjZAyv5eYU04GCwDhqiOJ4ym1H19jCBFEEZZdWTdsG5PiJchDUz+1wkcVK7eOz+uXayTmWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738409652; c=relaxed/simple;
-	bh=2E0q54b3eypL3Ri2OP5FYkG06AqSFV2huCTuS8ngfn0=;
+	s=arc-20240116; t=1738409657; c=relaxed/simple;
+	bh=FrpZsbP2/uqqlpmV9owZx7N7u+9rg/ypvnTHzl8h6hQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AxiN/2OiCv76aJyH4MgMxzDPoqv9/av/aZSluWis7qsZvqDcTycpfucVwpuPlXilQ9EhGzb2IyBZvuzLcsRqrXdDNB2L8aCy8l8fBEPisBeW9EZ9tbcP0FtmZhgwX/3tKui+2gjwTEuxhTffY1rHZkj3XQZXmVaPdKmovELa8NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gaqgJn8S; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version:Content-Type; b=eh/MAghdT4Z2cSx+a+qZTdt+z3s4NGqcHOikIBhtJ4mhax/AJ0oKXqnTheCXF1MeXyHcJj4ShSiNaAYXck8t4KqrJAa4lv+1sErjVVwbHgiB5cdhTMvxjG7RU2ZbK9WAgEOyvjc8sWB5kUdKyqBlurRnSBo06ENvQ01125IpgqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3DNKCdl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gaqgJn8S"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-436281c8a38so20555985e9.3;
-        Sat, 01 Feb 2025 03:34:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738409647; x=1739014447; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PQomFJ4ChnU4fj4lFRCI9h/dmZzlSZdFogkPyQv5YjU=;
-        b=gaqgJn8Scloe+tZ8749PO59kUBdJNUScqXUjE1WmLFoBB5ppceXLLNg66B9R4+fAbL
-         EITRwIgjzBCGv0YR+ZDFzgddUKGXLVC+qnFU/H68ZHnJWTswPHWt1W8KeNvqpqWYDr0+
-         YJJMvSGK//+wGtrHervyzvA7lo7LMCTkUkloac5hUWzLHmlrHcbtuUEoFQT/b+AY9W+G
-         FhNUwnSTJ5FJyGFQQdbT+sYh/kWclfs+Cg1X/xUiFsIwo5fSTgj6BVQOClJk5Hql/bk2
-         Qi1bRDxFdurF4+7hlUtX/YxbfSijtbVPHH/WCnJYvxzlARKN9ekG0l9Jc4Q4oA7H+nEl
-         G3ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738409647; x=1739014447;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PQomFJ4ChnU4fj4lFRCI9h/dmZzlSZdFogkPyQv5YjU=;
-        b=fspzqWyWv0snFhkw8GzJS1xjKFUx9vBVLo+9qKf+Ei2nG3QgVWvG+2k7KJKgOT8HMu
-         PCbrCqPQ9oRNxE/hCT7kYj5uEn1oMEv3fRB1k19Z6y2hBg/Zlb6qhdINk7PB0XlIjaPG
-         lJI010VQ6luFQAUy2IGOqDK3j+lgwbjkJvSdYHilv7NcZ7JjKDAhO3GEuKu6jETzDcmx
-         htBCUEZmp+GMK70JeY3LUt/dlIdLAXN1dVNtWwgi+8H8my7Bm1w0ksOM54bc9Qv4e9vh
-         F7dMB3l6gRAGbbWYIBKyjpK/oRBSuN2y34DoHj3cVwRVJkNXFamz8iQJtNf/lr+NYQBH
-         2pVA==
-X-Forwarded-Encrypted: i=1; AJvYcCWu8xynsBUcHEZr4pQA26nv17LKh58HhddbdcO+GWMc4zBfU6ePdQXEorQuBMsiCo+6oxfcqQp183kuCcBfYuPQ@vger.kernel.org, AJvYcCX3ry8p+mbQEv1E+5Dy5DnhGTXPWxueEY/TgWev8lq4aonf2c3WgG11bxgbL0P+uPxGVV7/m5PZtTyBcQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHJvCd3Xt88bG0qOyf/XcCW99mSiyDZ+F2EhfS1Qp/qB9tYOEG
-	jGW3UqHqZ/qqostfqcz0E2bccW38JA6WdHCN5KR/6xqAo5+7ec5y
-X-Gm-Gg: ASbGncvKKXAppBRLJ2pqwHvI7X6kJCglHY+ztpD/aS+OAdopxuX5RTO2guUEd7pFmH6
-	DjML5Re5KJvaY2C9YA9EHsz0JntBaj1fPSidklmNycW+9FPR5HPvRI8jH/AZcZnDjAGp0Lxkl8S
-	sq6OO2n/WVitutsT7bV1vXMN1SY18SagIAI9R5CQPGPG1J3m1JQ9AHrgxsWoskBKu/7JXQrQ2lh
-	alejYpHnV3KT8G0Y3Z7a1q5/AiIYZDYuGfl/S37VBPuioyHPlxIRhB5oMTJcMR+XLnC5PoFOSxE
-	Vhc9RY3kSTZUF5C3OMxJj28jevKpgdA/9OeAVOvjIregrdB6MGfF4Q==
-X-Google-Smtp-Source: AGHT+IFnnAAw3xF3oDUKUQhc4FZRLZaD+TRflMNSpfR1uTA1CXslNeBfeoL7eV4BqL2DdUjlQsg+Fw==
-X-Received: by 2002:a5d:6d0c:0:b0:38a:88b8:97a9 with SMTP id ffacd0b85a97d-38c51949b38mr11350742f8f.2.1738409647375;
-        Sat, 01 Feb 2025 03:34:07 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ecc80sm7224343f8f.16.2025.02.01.03.34.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 03:34:07 -0800 (PST)
-Date: Sat, 1 Feb 2025 11:34:06 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
- irogers@google.com, agordeev@linux.ibm.com, gor@linux.ibm.com,
- sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH] perf test: Fix perf test 11 hwmon endianess issue
-Message-ID: <20250201113406.4312a601@pumpkin>
-In-Reply-To: <20250131112400.568975-1-tmricht@linux.ibm.com>
-References: <20250131112400.568975-1-tmricht@linux.ibm.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3DNKCdl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D335C4CED3;
+	Sat,  1 Feb 2025 11:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738409653;
+	bh=FrpZsbP2/uqqlpmV9owZx7N7u+9rg/ypvnTHzl8h6hQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Y3DNKCdlNWgAd+OQeVROOh8z0aqG5YvACuG3sQsbDgH13veUff6Ef0vPzbh2QEPGv
+	 RDaMYnwSo9df79sNw5OtXLorKo77MySGXGhcO9xIXJpTLoPluxc7JcwmHADw/Q6/A1
+	 LZ1Sswi2cMS51A5rbsEgEB7K+z8QCv4o1+8hR3WxQY2X0nWuqCKYRDAWQR6VvJEZ2k
+	 FSyuTqEI6RB21jgPegXY4uzVZs1yxkv5YZUZBkA3etWeEBPJD1C/agt6cjNBy89FHX
+	 Ek4vUQ+Po5LVDc4EqE9fVjweS+aqynFcHg02BAtZ5BYzHGZMxJ4bAEvr9YJI0Jbf05
+	 XTIdWmvzg8VVA==
+Date: Sat, 1 Feb 2025 11:33:58 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ agross@kernel.org, andersson@kernel.org, dmitry.baryshkov@linaro.org,
+ konradybcio@kernel.org, daniel.lezcano@linaro.org, sboyd@kernel.org,
+ amitk@kernel.org, thara.gopinath@gmail.com, lee@kernel.org,
+ rafael@kernel.org, subbaraman.narayanamurthy@oss.qualcomm.com,
+ david.collins@oss.qualcomm.com, anjelique.melendez@oss.qualcomm.com,
+ quic_kamalw@quicinc.com, rui.zhang@intel.com, lukasz.luba@arm.com,
+ lars@metafoo.de, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, cros-qcom-dts-watchers@chromium.org,
+ quic_skakitap@quicinc.com, neil.armstrong@linaro.org
+Subject: Re: [PATCH V5 3/5] dt-bindings: iio: adc: Add support for QCOM
+ PMIC5 Gen3 ADC
+Message-ID: <20250201113358.565de2e1@jic23-huawei>
+In-Reply-To: <20250131183242.3653595-4-jishnu.prakash@oss.qualcomm.com>
+References: <20250131183242.3653595-1-jishnu.prakash@oss.qualcomm.com>
+	<20250131183242.3653595-4-jishnu.prakash@oss.qualcomm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,58 +56,242 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 31 Jan 2025 12:24:00 +0100
-Thomas Richter <tmricht@linux.ibm.com> wrote:
+On Sat,  1 Feb 2025 00:02:40 +0530
+Jishnu Prakash <jishnu.prakash@oss.qualcomm.com> wrote:
 
-> perf test 11 hwmon fails on s390 with this error
+> For the PMIC5-Gen3 type PMICs, ADC peripheral is present in HW for the
+> following PMICs: PMK8550, PM8550, PM8550B and PM8550VX PMICs.
 > 
->  # ./perf test -Fv 11
->  --- start ---
->  ---- end ----
->  11.1: Basic parsing test             : Ok
->  --- start ---
->  Testing 'temp_test_hwmon_event1'
->  Using CPUID IBM,3931,704,A01,3.7,002f
->  temp_test_hwmon_event1 -> hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/
->  FAILED tests/hwmon_pmu.c:189 Unexpected config for
->     'temp_test_hwmon_event1', 292470092988416 != 655361
->  ---- end ----
->  11.2: Parsing without PMU name       : FAILED!
->  --- start ---
->  Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
->  FAILED tests/hwmon_pmu.c:189 Unexpected config for
->     'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/',
->     292470092988416 != 655361
->  ---- end ----
->  11.3: Parsing with PMU name          : FAILED!
->  #
+> It is similar to PMIC5-Gen2, with SW communication to ADCs on all PMICs
+> going through PBS(Programmable Boot Sequence) firmware through a single
+> register interface. This interface is implemented on SDAM (Shared
+> Direct Access Memory) peripherals on the master PMIC PMK8550 rather
+> than a dedicated ADC peripheral.
 > 
-> The root cause is in member test_event::config which is initialized
-> to 0xA0001 or 655361. During event parsing a long list event parsing
-> functions are called and end up with this gdb call stack:
-...
-> However member key::type_and_num is defined as union and bit field:
+> Add documentation for PMIC5 Gen3 ADC and macro definitions for ADC
+> channels and virtual channels (combination of ADC channel number and
+> PMIC SID number) per PMIC, to be used by clients of this device.
+
+A few really minor comments inline given you are going to be doing a v6
+for the build errors Rob's bot found.  I guess this is racing
+with some other changes.
+
 > 
->    union hwmon_pmu_event_key {
->         long type_and_num;
->         struct {
->                 int num :16;
->                 enum hwmon_type type :8;
->         };
->    };
+> Signed-off-by: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+> ---
+> Changes since v4:
+> - Added ADC5 Gen3 documentation in a separate new file to avoid complicating
+>   existing VADC documentation file further to accomodate this device, as
+>   suggested by reviewer.
+> 
+> Changes since v3:
+> - Added ADC5 Gen3 documentation changes in existing qcom,spmi-vadc.yaml file
+>   instead of adding separate file and updated top-level constraints in documentation
+>   file based on discussion with reviewers.
+> - Dropped default SID definitions.
+> - Addressed other reviewer comments.
+> 
+> Changes since v2:
+> - Moved ADC5 Gen3 documentation into a separate new file.
+> 
+> Changes since v1:
+> - Updated properties separately for all compatibles to clarify usage
+>   of new properties and updates in usage of old properties for ADC5 Gen3.
+> - Avoided updating 'adc7' name to 'adc5 gen2' and just left a comment
+>   mentioning this convention.
+> - Used predefined channel IDs in individual PMIC channel definitions
+>   instead of numeric IDs.
+> - Addressed other comments from reviewers.
+> 
+>  .../bindings/iio/adc/qcom,spmi-adc5-gen3.yaml | 157 ++++++++++++++++++
+>  .../iio/adc/qcom,spmi-vadc-common.yaml        |   4 +-
+>  .../bindings/iio/adc/qcom,spmi-vadc.yaml      |   2 +
+>  .../iio/adc/qcom,spmi-adc5-gen3-pm8550.h      |  46 +++++
+>  .../iio/adc/qcom,spmi-adc5-gen3-pm8550b.h     |  85 ++++++++++
+>  .../iio/adc/qcom,spmi-adc5-gen3-pm8550vx.h    |  22 +++
+>  .../iio/adc/qcom,spmi-adc5-gen3-pmk8550.h     |  52 ++++++
+>  include/dt-bindings/iio/adc/qcom,spmi-vadc.h  |  81 +++++++++
+>  8 files changed, 447 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-adc5-gen3.yaml
+>  create mode 100644 include/dt-bindings/iio/adc/qcom,spmi-adc5-gen3-pm8550.h
+>  create mode 100644 include/dt-bindings/iio/adc/qcom,spmi-adc5-gen3-pm8550b.h
+>  create mode 100644 include/dt-bindings/iio/adc/qcom,spmi-adc5-gen3-pm8550vx.h
+>  create mode 100644 include/dt-bindings/iio/adc/qcom,spmi-adc5-gen3-pmk8550.h
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-adc5-gen3.yaml b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-adc5-gen3.yaml
+> new file mode 100644
+> index 000000000000..d6f2d18623d4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-adc5-gen3.yaml
+> @@ -0,0 +1,157 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/qcom,spmi-adc5-gen3.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm's SPMI PMIC ADC5 Gen3
+> +
+> +maintainers:
+> +  - Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+> +
+> +description: |
+> +  SPMI PMIC5 Gen3 voltage ADC (ADC) provides interface to
 
-That is entirely horrid.
+Trivial but slightly short wrap. I think dt bindings use 80 chars
+as the limit.
 
-I'm surprised this even compiles:
-static size_t hwmon_pmu__event_hashmap_hash(long key, void *ctx __maybe_unused)
-{
-	return ((union hwmon_pmu_event_key)key).type_and_num;
-}
-It has to be just 'return key', but I'm not sure what the hashmap code is doing.
+> +  clients to read voltage. It is a 16-bit sigma-delta ADC.
+> +  It also performs the same thermal monitoring function as
+> +  the existing ADC_TM devices.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,spmi-adc5-gen3
+> +
+> +  reg:
+> +    items:
+> +      - description: SDAM0 base address in the SPMI PMIC register map
+> +      - description: SDAM1 base address
+> +    minItems: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  '#io-channel-cells':
+> +    const: 1
+> +
+> +  "#thermal-sensor-cells":
+> +    const: 1
+> +
+> +  interrupts:
+> +    items:
+> +      - description: SDAM0 end of conversion (EOC) interrupt
+> +      - description: SDAM1 EOC interrupt
+> +    minItems: 1
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: sdam0
+> +      - const: sdam1
+> +    minItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +  - '#io-channel-cells'
+> +  - interrupts
+> +  - interrupt-names
+> +
+> +patternProperties:
+> +  "^channel@[0-9a-f]+$":
+> +    type: object
+> +    unevaluatedProperties: false
+> +    description: |
+Doesn't look like it needs formatting. So no need for |
 
-AFAICT the code is just trying to generate a value for the hashmap to hash on?
-Why not just use (type << 16 | num) instead of 'trying to be clever' with a union?
+> +      Represents the external channels which are connected to the ADC.
 
-	David
+Maybe better to move ref before description.
+
+> +    $ref: /schemas/iio/adc/qcom,spmi-vadc-common.yaml
+> +
+> +    properties:
+> +      qcom,decimation:
+> +        enum: [ 85, 340, 1360 ]
+> +        default: 1360
+> +
+> +      qcom,hw-settle-time:
+> +        enum: [ 15, 100, 200, 300, 400, 500, 600, 700, 1000, 2000, 4000,
+> +                8000, 16000, 32000, 64000, 128000 ]
+
+Might be more readable as groups of 8. We love powers of two ;)
+
+> +        default: 15
+> +
+> +      qcom,avg-samples:
+> +        enum: [ 1, 2, 4, 8, 16 ]
+> +        default: 1
+> +
+> +      qcom,adc-tm:
+> +        description:
+> +          ADC_TM is a threshold monitoring feature in HW which can be enabled on any
+> +          ADC channel, to trigger an IRQ for threshold violation. In earlier ADC
+> +          generations, it was implemented in a separate device (documented in
+> +          Documentation/devicetree/bindings/thermal/qcom-spmi-adc-tm5.yaml.)
+> +          In Gen3, this feature can be enabled in the same ADC device for any channel
+> +          and threshold monitoring and IRQ triggering are handled in FW (PBS) instead of
+> +          another dedicated HW block.
+> +          This property indicates ADC_TM monitoring is done on this channel.
+> +        type: boolean
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/iio/adc/qcom,spmi-adc5-gen3-pmk8550.h>
+> +    #include <dt-bindings/iio/adc/qcom,spmi-adc5-gen3-pm8550.h>
+> +    #include <dt-bindings/iio/adc/qcom,spmi-adc5-gen3-pm8550b.h>
+> +    #include <dt-bindings/iio/adc/qcom,spmi-adc5-gen3-pm8550vx.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    pmic {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      adc@9000 {
+> +        compatible = "qcom,spmi-adc5-gen3";
+> +        reg = <0x9000>, <0x9100>;
+> +        interrupts = <0x0 0x90 0x1 IRQ_TYPE_EDGE_RISING>,
+> +                      <0x0 0x91 0x1 IRQ_TYPE_EDGE_RISING>;
+> +        interrupt-names = "sdam0", "sdam1";
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        #io-channel-cells = <1>;
+> +        #thermal-sensor-cells = <1>;
+> +
+> +        /* PMK8550 Channel nodes */
+> +        channel@3 {
+> +          reg = <PMK8550_ADC5_GEN3_DIE_TEMP(0)>;
+> +          label = "pmk8550_die_temp";
+> +          qcom,pre-scaling = <1 1>;
+> +        };
+> +
+> +        channel@44 {
+> +          reg = <PMK8550_ADC5_GEN3_AMUX_THM1_XO_THERM_100K_PU(0)>;
+> +          label = "pmk8550_xo_therm";
+> +          qcom,pre-scaling = <1 1>;
+> +          qcom,ratiometric;
+> +          qcom,hw-settle-time = <200>;
+> +          qcom,adc-tm;
+> +        };
+> +
+> +        /* PM8550 Channel nodes */
+> +        channel@103 {
+> +          reg = <PM8550_ADC5_GEN3_DIE_TEMP(1)>;
+> +          label = "pm8550_die_temp";
+> +          qcom,pre-scaling = <1 1>;
+> +        };
+> +
+> +        /* PM8550B Channel nodes */
+> +        channel@78f {
+> +          reg = <PM8550B_ADC5_GEN3_VBAT_SNS_QBG(7)>;
+> +          label = "pm8550b_vbat_sns_qbg";
+> +          qcom,pre-scaling = <1 3>;
+> +        };
+> +
+> +        /* PM8550VS_C Channel nodes */
+> +        channel@203 {
+> +          reg = <PM8550VS_ADC5_GEN3_DIE_TEMP(2)>;
+> +          label = "pm8550vs_c_die_temp";
+> +          qcom,pre-scaling = <1 1>;
+> +        };
+> +      };
+> +    };
 
 
