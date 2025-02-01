@@ -1,57 +1,57 @@
 Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D234126F1E
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:38:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B8713B7BE
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:38:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738373919; cv=none; b=qxmOK/g9lAkprZ+w9mMmF5DoXaOf9p2LqPV5oZEiaXYZg63XR+myZtqHpaXzBuSu1AmFF9ktoGUWxwN1It2Nth5vzOhxp8FXMQ7/8mdYn0t6UhK2dv0CrnQjgj7CJOsjqYhHmfttfR+bOCxAvWUWkhj+CoxqFYAIx6NmIKWfcjM=
+	t=1738373921; cv=none; b=XUCs6NlojYnarhusLLTO7uvK4sZV8zozWxkdYYTJWNekbBoBDUsN7lK4InLhsnlfBLWyxxqZE3Inj9z6A8AQDiz0QU4WzqQp5pd7oKjfUmc+PYmGWUlYfPSyzcn6LoTdoDGDWGvx/J4p11A5hBYG5Mh87XQWxVjxO9j54GxUrdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738373919; c=relaxed/simple;
-	bh=UUzVxW+A0LbHvQamjiSSU35WtkGq3vbu9aNxHkZpIfs=;
+	s=arc-20240116; t=1738373921; c=relaxed/simple;
+	bh=jqD6fINm58nrlJC96XXHVdF8NcVOAKSb17n1uydbzUY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ADtZg/86ogHtZrsGfHUdFmY9kSrER3luQPZiTS7aJ3Ib1DwagJivgrCmVCTMOwX5ksR+sZEZkCk0NeT9PSjo/rVVMc+xBQ1KPJZq26fn7LOVJGmldxYH7WoA/5p/NTx87KFMhMcwb8psz6pQECjKXPJ3bWC68bk39f3RlfcHhdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Kb7PG6ND; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=UVJH/CMWLYOBkMlx2Y9w9xOsXzgxNCC8GwfxSL81v1bLit94ih91rvMVtS9YORSeyN26hyUiB40gM9xmPU+sFBGiEvGiU13AH6O5b5BOsbKWT/GKvqYI/+iGLM1vKTEETKSjGaB+jKq1xIBErflYV7x4pmrOfJtZ7EV+wbCAgco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kO7w2rtT; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kb7PG6ND"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21681a2c0d5so45891015ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:38:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kO7w2rtT"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2178115051dso56902475ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:38:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738373918; x=1738978718; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738373919; x=1738978719; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=P0Rg1qN67xtOrW9/3acldXp82KHWRVyhcuyhp0qB1L0=;
-        b=Kb7PG6NDBXebuirdoki52DwwkYmWRLS5NQ8FznNZkZeXvDJZ0shaltjsow8Jqo/lGx
-         cLrVWJu+8bin4NZZZpgfpIbJag2boYx6PzYJE2eosU9pGXyhq95Kc3cuTmBohSA7BZkG
-         ogvnQ81TLMOBejkAlJu7+I3qtp4pU4GC3EEhZKFODt71LoYaj+Tfwnp+/Dy2zU97iQef
-         docm99OHbcAQ0kAcO5MeDvThYXpe8xqHnRslhBEHOknLStx/lBI5GDYPLsZ941Up5dOP
-         1cOXS4ECCdAewkWRuTBwAM1sQtEIr8I+gR9Cm0Bx8e1U901fQlHnLOciUH37gnuuSRon
-         Kuwg==
+        bh=rCMiScS+NLaVhzTpSO0M+ZWK4RHUIY21ppYPfMWENg4=;
+        b=kO7w2rtT8sS5A6RRvNVSmbzxjXWufZdjwFE5I9+laBiuJObeUES4tCFDVN7wEhBgxD
+         SbWdOELCX3DQpxzm/BA3jAlmAhIRTKEWRL7gLdq4FgVeWH75cBC+k46exbh4OCnvuFNy
+         hWTVkNaHD/dXVKjaK/STGyi5xIM0f2XqNN/xyIrCD2SaptXW0ZIXJMtTglDLG/aBEwXv
+         xNNPbQSZv6+Ko4cA+itZJMh4kgdMqMmiDhwd+Z54RuN7ipAsnqwBZ0gvB4FEW/HHroCP
+         FDEgAT979LS22wDSBRYCmu1ufpY9wYOcSmJxjPcR6whf0mqUpPaI/nQ/uOePX54acrX0
+         8j4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738373918; x=1738978718;
+        d=1e100.net; s=20230601; t=1738373919; x=1738978719;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=P0Rg1qN67xtOrW9/3acldXp82KHWRVyhcuyhp0qB1L0=;
-        b=AsK7tt9E5aNE4gTW0yfmIDGDoik3NZPxwx4GFdRCxXv9161nqkersxkMKOdV/jPGvD
-         Wgy6WrsMYQvqs9gIsJc92ugpeM3v9Q//SFC4fn+t4l4lyHDZP2nGQgnDUEQnXifiZgLf
-         iYcJbS2VCg94urz2fEI8/DXDAf0AOrhBYF11+d+y2HyRW66K/n05KoaUe8qyXpqCw7t4
-         eMczcaJwqQ4Y5IPJm8EEFxdLXx0iQzaHOe2qm2biLqb5A6sTd8k+w3vKqBnqbselqkHG
-         LCwBCO/80CBV7qj0Y/2D5sv7lv0szor7wvG6kJP9axDC7kjRxEzn2KJqzDweJ4PP+5oZ
-         yZBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVwQAf6cQ6Cu1yTmoWMKJa9ExBCnv8j/VNfeYjIHLqzsoTbGr5zg3/9KRA9Hi/eUrTjLreOgdTH3yU4B1Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBctSP4V8mRGAU/e6G0gtQvQzrAEIJp5Ysz3QuxKOE+HweAnad
-	84e/S/NLQYY2/LND9Hn8gr7EqqKK5EwtRSPJ1Qu41n5p+2ZJdzcsWEvQauvRDEnIBcxHAqQoTL9
-	agQ==
-X-Google-Smtp-Source: AGHT+IHzrvrAtIazL7DuI5S6zMGK5azT035sFwOHSFpiw0QSUrMFD83Pit1/KumxCWsWadgyJWwokGOlwp0=
-X-Received: from pgc25.prod.google.com ([2002:a05:6a02:2f99:b0:7fd:40dd:86a5])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:d049:b0:1e0:cf9a:87b1
- with SMTP id adf61e73a8af0-1ed7a49a2d8mr21514926637.6.1738373917669; Fri, 31
- Jan 2025 17:38:37 -0800 (PST)
+        bh=rCMiScS+NLaVhzTpSO0M+ZWK4RHUIY21ppYPfMWENg4=;
+        b=qcFgHCuzyHFv/MCKED1YLWfkTOliP1YsgX0duVu8/GmfdgjvqvSCBdiW/8Q/vz1qtT
+         NsPyYZvIuOq1vVFqAhmedxGtyp49eNYYMv/R0KXJUg3+1z0f+Pl6xxnaW3GpGKpuJnWU
+         dnHQ5fcnp6hHpmH/MrFAJ5M5K1Wh04JVscwnz3eyoCvGzEOe/4+iiuKFDDCXGgQxarGx
+         YZei5egAMLTsPo6SKRlxtGkuM2cw/Cas8+bgwH9NXOia4KfBYoxUBBs9Y0tMoAQ9vq1K
+         U5aCkzhxpXWdkE4Yfd0/cC6tT4N0DOTqquJqSbYO0iNnayyNmuQtFDJB2so6XYw69aaK
+         XrXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRxPcqEzb6vRK0Zgt+mkQZ9iiI5kzWvactPX0LwkTmBIv9SMIndSPllgfgUWiGvkD+2w9082zG6lqKiNQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlBZjE/dQzd0lZVgqqsXOGKT52WhRTAR4L0XkJfatHwACCcchz
+	c0YRTdsNyo24UqonRqIyuBCYsWOZo0Tf55roC+5iCw26QzcF6nJx0yuWWdxEfOETe4/Om6Omu8S
+	b9A==
+X-Google-Smtp-Source: AGHT+IF/0ykLJ+eIXWfIGrSoBCyHpla92OyK69X3dikfVCHOBJ0I+S0cqlz9orZGrS3UqUgziU9//IFySsw=
+X-Received: from pghh13.prod.google.com ([2002:a63:210d:0:b0:7ff:d6:4f0e])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3284:b0:1e8:bd15:6845
+ with SMTP id adf61e73a8af0-1ed7a5a50eamr19970517637.1.1738373919154; Fri, 31
+ Jan 2025 17:38:39 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 31 Jan 2025 17:38:20 -0800
+Date: Fri, 31 Jan 2025 17:38:21 -0800
 In-Reply-To: <20250201013827.680235-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250201013827.680235-1-seanjc@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250201013827.680235-5-seanjc@google.com>
-Subject: [PATCH v2 04/11] KVM: x86: Process "guest stopped request" once per
- guest time update
+Message-ID: <20250201013827.680235-6-seanjc@google.com>
+Subject: [PATCH v2 05/11] KVM: x86/xen: Use guest's copy of pvclock when
+ starting timer
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	David Woodhouse <dwmw2@infradead.org>, Paul Durrant <paul@xen.org>
@@ -73,63 +73,125 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Vitaly Kuznetsov <vkuznets@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Handle "guest stopped" requests once per guest time update in preparation
-of restoring KVM's historical behavior of setting PVCLOCK_GUEST_STOPPED
-for kvmclock and only kvmclock.  For now, simply move the code to minimize
-the probability of an unintentional change in functionally.
+Use the guest's copy of its pvclock when starting a Xen timer, as KVM's
+reference copy may not be up-to-date, i.e. may yield a false positive of
+sorts.  In the unlikely scenario that the guest is starting a Xen timer
+and has used a Xen pvclock in the past, but has since but turned it "off",
+then vcpu->arch.hv_clock may be stale, as KVM's reference copy is updated
+if and only if at least one pvclock is enabled.
 
-Note, in practice, all clocks are guaranteed to see the request (or not)
-even though each PV clock processes the request individual, as KVM holds
-vcpu->mutex (blocks KVM_KVMCLOCK_CTRL) and it should be impossible for
-KVM's suspend notifier to run while KVM is handling requests.  And because
-the helper updates the reference flags, all subsequent PV clock updates
-will pick up PVCLOCK_GUEST_STOPPED.
+Furthermore, vcpu->arch.hv_clock is currently used by three different
+pvclocks: kvmclock, Xen, and Xen compat.  While it's extremely unlikely a
+guest would ever enable multiple pvclocks, effectively sharing KVM's
+reference clock could yield very weird behavior.  Using the guest's active
+Xen pvclock instead of KVM's reference will allow dropping KVM's
+reference copy.
 
-Note #2, once PVCLOCK_GUEST_STOPPED is restricted to kvmclock, the
-horrific #ifdef will go away.
-
+Fixes: 451a707813ae ("KVM: x86/xen: improve accuracy of Xen timers")
 Cc: Paul Durrant <pdurrant@amazon.com>
 Cc: David Woodhouse <dwmw@amazon.co.uk>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/x86.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ arch/x86/kvm/xen.c | 65 ++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 60 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index d8ee37dd2b57..de281c328cb1 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3150,11 +3150,6 @@ static void kvm_setup_guest_pvclock(struct kvm_vcpu *v,
- 	/* retain PVCLOCK_GUEST_STOPPED if set in guest copy */
- 	vcpu->hv_clock.flags |= (guest_hv_clock->flags & PVCLOCK_GUEST_STOPPED);
+diff --git a/arch/x86/kvm/xen.c b/arch/x86/kvm/xen.c
+index a909b817b9c0..300a79f1fae5 100644
+--- a/arch/x86/kvm/xen.c
++++ b/arch/x86/kvm/xen.c
+@@ -150,11 +150,46 @@ static enum hrtimer_restart xen_timer_callback(struct hrtimer *timer)
+ 	return HRTIMER_NORESTART;
+ }
  
--	if (vcpu->pvclock_set_guest_stopped_request) {
--		vcpu->hv_clock.flags |= PVCLOCK_GUEST_STOPPED;
--		vcpu->pvclock_set_guest_stopped_request = false;
--	}
--
- 	memcpy(guest_hv_clock, &vcpu->hv_clock, sizeof(*guest_hv_clock));
- 
- 	if (force_tsc_unstable)
-@@ -3264,6 +3259,18 @@ static int kvm_guest_time_update(struct kvm_vcpu *v)
- 	if (use_master_clock)
- 		vcpu->hv_clock.flags |= PVCLOCK_TSC_STABLE_BIT;
- 
-+	if (vcpu->pv_time.active
-+#ifdef CONFIG_KVM_XEN
-+	 || vcpu->xen.vcpu_info_cache.active
-+	 || vcpu->xen.vcpu_time_info_cache.active
-+#endif
-+	    ) {
-+		if (vcpu->pvclock_set_guest_stopped_request) {
-+			vcpu->hv_clock.flags |= PVCLOCK_GUEST_STOPPED;
-+			vcpu->pvclock_set_guest_stopped_request = false;
-+		}
++static int xen_get_guest_pvclock(struct kvm_vcpu *vcpu,
++				 struct pvclock_vcpu_time_info *hv_clock,
++				 struct gfn_to_pfn_cache *gpc,
++				 unsigned int offset)
++{
++	unsigned long flags;
++	int r;
++
++	read_lock_irqsave(&gpc->lock, flags);
++	while (!kvm_gpc_check(gpc, offset + sizeof(*hv_clock))) {
++		read_unlock_irqrestore(&gpc->lock, flags);
++
++		r = kvm_gpc_refresh(gpc, offset + sizeof(*hv_clock));
++		if (r)
++			return r;
++
++		read_lock_irqsave(&gpc->lock, flags);
 +	}
 +
- 	if (vcpu->pv_time.active)
- 		kvm_setup_guest_pvclock(v, &vcpu->pv_time, 0, false);
- #ifdef CONFIG_KVM_XEN
++	memcpy(hv_clock, gpc->khva + offset, sizeof(*hv_clock));
++	read_unlock_irqrestore(&gpc->lock, flags);
++
++	/*
++	 * Sanity check TSC shift+multiplier to verify the guest's view of time
++	 * is more or less consistent.
++	 */
++	if (hv_clock->tsc_shift != vcpu->arch.hv_clock.tsc_shift ||
++	    hv_clock->tsc_to_system_mul != vcpu->arch.hv_clock.tsc_to_system_mul)
++		return -EINVAL;
++
++	return 0;
++}
++
+ static void kvm_xen_start_timer(struct kvm_vcpu *vcpu, u64 guest_abs,
+ 				bool linux_wa)
+ {
++	struct kvm_vcpu_xen *xen = &vcpu->arch.xen;
+ 	int64_t kernel_now, delta;
+ 	uint64_t guest_now;
++	int r = -EOPNOTSUPP;
+ 
+ 	/*
+ 	 * The guest provides the requested timeout in absolute nanoseconds
+@@ -173,10 +208,29 @@ static void kvm_xen_start_timer(struct kvm_vcpu *vcpu, u64 guest_abs,
+ 	 * the absolute CLOCK_MONOTONIC time at which the timer should
+ 	 * fire.
+ 	 */
+-	if (vcpu->arch.hv_clock.version && vcpu->kvm->arch.use_master_clock &&
+-	    static_cpu_has(X86_FEATURE_CONSTANT_TSC)) {
++	do {
++		struct pvclock_vcpu_time_info hv_clock;
+ 		uint64_t host_tsc, guest_tsc;
+ 
++		if (!static_cpu_has(X86_FEATURE_CONSTANT_TSC) ||
++		    !vcpu->kvm->arch.use_master_clock)
++			break;
++
++		/*
++		 * If both Xen PV clocks are active, arbitrarily try to use the
++		 * compat clock first, but also try to use the non-compat clock
++		 * if the compat clock is unusable.  The two PV clocks hold the
++		 * same information, but it's possible one (or both) is stale
++		 * and/or currently unreachable.
++		 */
++		if (xen->vcpu_info_cache.active)
++			r = xen_get_guest_pvclock(vcpu, &hv_clock, &xen->vcpu_info_cache,
++						  offsetof(struct compat_vcpu_info, time));
++		if (r && xen->vcpu_time_info_cache.active)
++			r = xen_get_guest_pvclock(vcpu, &hv_clock, &xen->vcpu_time_info_cache, 0);
++		if (r)
++			break;
++
+ 		if (!IS_ENABLED(CONFIG_64BIT) ||
+ 		    !kvm_get_monotonic_and_clockread(&kernel_now, &host_tsc)) {
+ 			/*
+@@ -197,9 +251,10 @@ static void kvm_xen_start_timer(struct kvm_vcpu *vcpu, u64 guest_abs,
+ 
+ 		/* Calculate the guest kvmclock as the guest would do it. */
+ 		guest_tsc = kvm_read_l1_tsc(vcpu, host_tsc);
+-		guest_now = __pvclock_read_cycles(&vcpu->arch.hv_clock,
+-						  guest_tsc);
+-	} else {
++		guest_now = __pvclock_read_cycles(&hv_clock, guest_tsc);
++	} while (0);
++
++	if (r) {
+ 		/*
+ 		 * Without CONSTANT_TSC, get_kvmclock_ns() is the only option.
+ 		 *
 -- 
 2.48.1.362.g079036d154-goog
 
