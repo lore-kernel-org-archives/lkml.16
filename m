@@ -1,387 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519C01BD9C8;
-	Sat,  1 Feb 2025 17:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBB31ADC69
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 17:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738431688; cv=none; b=eXj7v5t0k7G9SenHOQpXY1/9+QwiylY08I6rJrh5/PA6Bt8wG0QCMMUinHFo/hpSpyZ8H9G0rfwd7E8fnHI5jKCAIe7EUKsqiSpySbHykR+mCnaC9X8mUcrsvu3pj/ZdNsNqHKmvd3PZwhnDzj19CnHWv6KJ/p/gVsvbZZDOSEM=
+	t=1738431763; cv=none; b=TYrk4UB8Q5bPydoUEq2RxUdz3hBOKdfU43tzCpzVJiPc1CMQu1k/KQHyosfLz+BcBnNqODWIyTsL6flobbqKFXaYEw/od8WE4orBFSks9IhUh5zKtyjPT3jj9w+8X1TqrTdrvdYcMi7CUAv+QnNnRiKvla9/bbIyS7ybsrIYbME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738431688; c=relaxed/simple;
-	bh=XR5L8IT+dE8v6IzCoKRIoNKI+WAoBpzeY7E1DEE4VKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pslSey4N5x804Rp1YvIQTqHM4HqTMmocZU63znsM29RMIgHqnUK/ZzO/RS0MujREDVztw77lll98RlSQquDTMrtqJVqBMJYU0BAqcX4b6+FGrmd3G9a+1NNw4bzl7TxY05dt7VEom1lCiqi9yzYk4FmMw7Oln0rhwCBNTmd0mZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrjE7KlW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738431763; c=relaxed/simple;
+	bh=k/+ZxOEWiVevXve2lTawBGxkVGBjYWvB09mK8pCJ8Ao=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uUf3NvmmgjCHv93omxqSKP4HVF0uQJPR67sR/wraH3g9JavsV+6n3V2HYo6xmCqCs7RjRqwn92XmznGuKp6z6wqqFhOHGYx9JXJGqm/rcZSN8S8FVjHnNpxe4hbRAjFUjNzmSdf+hzvJw+gK0dUOra2m6QKuRMq7Rf6t6YNPE+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gCjPs72U; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrjE7KlW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A39CDC4CED3;
-	Sat,  1 Feb 2025 17:41:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738431687;
-	bh=XR5L8IT+dE8v6IzCoKRIoNKI+WAoBpzeY7E1DEE4VKQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RrjE7KlWofQ+dEJIBAPy39/Ye6iIuCYSJKXvN6vILB8hBrW0u9T28kYS+PIxyP5jN
-	 xd4KM9XmkOTPBGPA6jht7B7leg3cTHXFxCkYBFB8GIcWdJhsgfarpgg7oUdW7tE97M
-	 KTQg5Nsy1GxbESao5y3iQ0uC8aoSV98x71MFS9dfCXcz+fXIVYlixx42zQr6WzmqBL
-	 doopUPCywLGr7HjWMS1hiOY5+u1JxjJaBrWPnyP1T/X+RLQcT/92OqxU3I6YU1cyFJ
-	 ZAuPX3rWw8yd0hX1xDkkD1OOJ07nGc2jlfJk4SGJ6JyLCfMmJt2EKTFj2DIUOfLJ6O
-	 MWNWeUKtjR5ug==
-Date: Sat, 1 Feb 2025 17:41:22 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v1 12/12] iio: accel: adxl345: add inactivity feature
-Message-ID: <20250201174122.3002e753@jic23-huawei>
-In-Reply-To: <20250128120100.205523-13-l.rubusch@gmail.com>
-References: <20250128120100.205523-1-l.rubusch@gmail.com>
-	<20250128120100.205523-13-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCjPs72U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738431758;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U+Cvxdil9FSRRnY1aPniEAAVDp4QhwhxZqsCBBkWUiE=;
+	b=gCjPs72Uhe3TlKxY6Q3T35Hdgr4Ea/9iqLVw6dWolFWA1NX8Eb8eiWBMfR2pq9HgotpNAU
+	rtdSl3gC4FOS0wHgYXjN64DUbtEOdGPnGaGeug7Xfa6U7YiIOp2yoQwL91Ycl3Atm10Kpg
+	jcI1LwdAPiMueUnKaTA5rSRyTtOYXjQ=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-392-71nFFKxZOyahblyBDUFmsA-1; Sat,
+ 01 Feb 2025 12:42:35 -0500
+X-MC-Unique: 71nFFKxZOyahblyBDUFmsA-1
+X-Mimecast-MFC-AGG-ID: 71nFFKxZOyahblyBDUFmsA
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DDFC619560A1;
+	Sat,  1 Feb 2025 17:42:33 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.16])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 346FB19560A3;
+	Sat,  1 Feb 2025 17:42:30 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sat,  1 Feb 2025 18:42:07 +0100 (CET)
+Date: Sat, 1 Feb 2025 18:42:04 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: ebiederm@xmission.com, brauner@kernel.org, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] pid: drop irq disablement around pidmap_lock
+Message-ID: <20250201174203.GA26042@redhat.com>
+References: <20250201163106.28912-1-mjguzik@gmail.com>
+ <20250201163106.28912-7-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250201163106.28912-7-mjguzik@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, 28 Jan 2025 12:01:00 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+I'll try to review on Monday, but I see nothing obviously wrong after
+a very quick glance. Although I am not sure 4/6 is really useful, but
+I won't argue.
 
-> Add handling for inactivity events, together with threshold and timeout
-> to trigger the event. The event could be used for ODR and g range
-> reduction for power saving using low power modes or sleep modes, not
-> covered by this patch.
+However, shouldn't this patch also remove the comment which explains
+the possible lock inversion? Above put_pid(),
 
-This is a falling magnitude threshold.  The complexity you'll hit
-here is we don't support more than one on a given axis. So this clashes
-with free fall detection.
+	/*
+	 * Note: disable interrupts while the pidmap_lock is held as an
+	 * interrupt might come in and do read_lock(&tasklist_lock).
+	 *
+	 * If we don't disable interrupts there is a nasty deadlock between
+	 * detach_pid()->free_pid() and another cpu that does
+	 * spin_lock(&pidmap_lock) followed by an interrupt routine that does
+	 * read_lock(&tasklist_lock);
+	 *
+	 * After we clean up the tasklist_lock and know there are no
+	 * irq handlers that take it we can leave the interrupts enabled.
+	 * For now it is easier to be safe than to prove it can't happen.
+	 */
 
-Argument for that long ago was that it complicates the interface a lot
-and is mostly pointless as we take action of the first event.
-Whether that matters here depends on whether you can do freefall as
-all axis (which is all that makes sense as falling devices tend to flip)
-and this on a per axis basis. In which case can easily support both with
-standard ABI. Just need a magic channel for the freefall configuration
-that has only events and sets X_AND_Y_AND_Z as the direction as all
-must be below the threshold to see an interrupt.
+Oleg.
 
-For the AC / DC thing we normally support that as TYPE_MAG_REFERENCED
-which might also be a good choice.
-
+On 02/01, Mateusz Guzik wrote:
+>
+> It no longer serves any purpose now that the tasklist_lock ->
+> pidmap_lock ordering got eliminated.
 > 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 > ---
->  drivers/iio/accel/adxl345_core.c | 167 ++++++++++++++++++++++++++-----
->  1 file changed, 142 insertions(+), 25 deletions(-)
+>  kernel/pid.c | 23 +++++++++++------------
+>  1 file changed, 11 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
-> index 94c3ad818ba5..b9f42c56e8f1 100644
-> --- a/drivers/iio/accel/adxl345_core.c
-> +++ b/drivers/iio/accel/adxl345_core.c
-> @@ -123,6 +123,8 @@
->  #define ADXL345_REG_TAP_SUPPRESS_MSK	BIT(3)
->  #define ADXL345_REG_ACT_AXIS_MSK	GENMASK(6, 4)
->  #define ADXL345_REG_ACT_ACDC_MSK	BIT(7)
-> +#define ADXL345_REG_INACT_AXIS_MSK	GENMASK(2, 0)
-> +#define ADXL345_REG_INACT_ACDC_MSK	BIT(3)
->  
->  enum adxl345_axis {
->  	ADXL345_Z_EN = BIT(0),
-> @@ -155,6 +157,32 @@ static const unsigned int adxl345_tap_time_reg[3] = {
->  	[ADXL345_TAP_TIME_DUR] = ADXL345_REG_DUR,
->  };
->  
-> +/* activity/inactivity */
-> +enum adxl345_activity_type {
-> +	ADXL345_ACTIVITY,
-> +	ADXL345_INACTIVITY
-> +};
-> +
-> +static const unsigned int adxl345_act_int_reg[2] = {
-> +	[ADXL345_ACTIVITY] = ADXL345_INT_ACTIVITY,
-> +	[ADXL345_INACTIVITY] = ADXL345_INT_INACTIVITY,
-> +};
-> +
-> +static const unsigned int adxl345_act_thresh_reg[2] = {
-> +	[ADXL345_ACTIVITY] = ADXL345_REG_THRESH_ACT,
-> +	[ADXL345_INACTIVITY] = ADXL345_REG_THRESH_INACT,
-> +};
-> +
-> +static const unsigned int adxl345_act_acdc_msk[2] = {
-> +	[ADXL345_ACTIVITY] = ADXL345_REG_ACT_ACDC_MSK,
-> +	[ADXL345_INACTIVITY] = ADXL345_REG_INACT_ACDC_MSK
-> +};
-> +
-> +static const unsigned int adxl345_act_axis_msk[2] = {
-> +	[ADXL345_ACTIVITY] = ADXL345_REG_ACT_AXIS_MSK,
-> +	[ADXL345_INACTIVITY] = ADXL345_REG_INACT_AXIS_MSK
-> +};
-> +
->  struct adxl345_state {
->  	const struct adxl345_chip_info *info;
->  	struct regmap *regmap;
-> @@ -169,6 +197,11 @@ struct adxl345_state {
->  	bool act_ac;
->  	u8 act_value;
->  
-> +	u32 inact_axis_ctrl;
-> +	bool inact_ac;
-> +	u8 inact_value;
-> +	u8 inact_time_s;
-> +
->  	u32 tap_axis_ctrl;
->  	u8 tap_threshold;
->  	u32 tap_duration_us;
-> @@ -188,6 +221,11 @@ static struct iio_event_spec adxl345_events[] = {
->  		.type = IIO_EV_TYPE_THRESH,
->  		.dir = IIO_EV_DIR_RISING,
->  	},
-> +	{
-> +		/* inactivity */
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +	},
->  	{
->  		/* single tap */
->  		.type = IIO_EV_TYPE_GESTURE,
-> @@ -289,7 +327,8 @@ static inline int adxl345_write_interrupts(struct adxl345_state *st)
->  
->  /* act/inact */
->  
-> -static int adxl345_write_act_axis(struct adxl345_state *st, bool en)
-> +static int adxl345_write_act_axis(struct adxl345_state *st,
-> +				  enum adxl345_activity_type type, bool en)
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 73625f28c166..900193de4232 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -115,11 +115,10 @@ static void delayed_put_pid(struct rcu_head *rhp)
+>  void free_pid(struct pid *pid)
 >  {
->  	int ret;
+>  	int i;
+> -	unsigned long flags;
 >  
-> @@ -316,7 +355,9 @@ static int adxl345_write_act_axis(struct adxl345_state *st, bool en)
->  	 * inactive and the inactivity interrupt is triggered.
->  	 */
->  	ret = regmap_update_bits(st->regmap, ADXL345_REG_ACT_INACT_CTRL,
-> -				 ADXL345_REG_ACT_ACDC_MSK, st->act_ac);
-> +				 adxl345_act_acdc_msk[type],
-> +				 (type == ADXL345_ACTIVITY
-> +				  ? st->act_ac : st->inact_ac));
->  	if (ret)
->  		return ret;
+>  	lockdep_assert_not_held(&tasklist_lock);
 >  
-> @@ -326,32 +367,52 @@ static int adxl345_write_act_axis(struct adxl345_state *st, bool en)
->  	 * kept in sync, i.e. an axis will be generally enabled or disabled for
->  	 * both equally, activity and inactivity detection.
->  	 */
-> -	st->act_axis_ctrl = en
-> -		? st->act_axis_ctrl | ADXL345_REG_ACT_AXIS_MSK
-> -		: st->act_axis_ctrl & ~ADXL345_REG_ACT_AXIS_MSK;
-> +	if (type == ADXL345_ACTIVITY) {
-> +		st->act_axis_ctrl = en
-> +			? st->act_axis_ctrl | ADXL345_REG_ACT_AXIS_MSK
-> +			: st->act_axis_ctrl & ~ADXL345_REG_ACT_AXIS_MSK;
-> +
-> +		ret = regmap_update_bits(st->regmap, ADXL345_REG_ACT_INACT_CTRL,
-> +					 adxl345_act_axis_msk[type],
-> +					 st->act_axis_ctrl);
-> +		if (ret)
-> +			return ret;
->  
-> -	ret = regmap_update_bits(st->regmap, ADXL345_REG_ACT_INACT_CTRL,
-> -				 ADXL345_REG_ACT_AXIS_MSK,
-> -				 st->act_axis_ctrl);
-> -	if (ret)
-> -		return ret;
-> +	} else {
-> +		st->inact_axis_ctrl = en
-> +			? st->inact_axis_ctrl | ADXL345_REG_INACT_AXIS_MSK
-> +			: st->inact_axis_ctrl & ~ADXL345_REG_INACT_AXIS_MSK;
->  
-> +		ret = regmap_update_bits(st->regmap, ADXL345_REG_ACT_INACT_CTRL,
-> +					 adxl345_act_axis_msk[type],
-> +					 st->inact_axis_ctrl);
-> +		if (ret)
-> +			return ret;
-> +	}
->  	return 0;
->  }
->  
-> -static int adxl345_set_act_int(struct adxl345_state *st)
-> +static int adxl345_set_act_int(struct adxl345_state *st,
-> +			       enum adxl345_activity_type type)
->  {
->  	bool args_valid;
->  	bool axis_en;
->  
-> -	axis_en = FIELD_GET(ADXL345_REG_ACT_AXIS_MSK, st->act_axis_ctrl) > 0;
-> -	args_valid = axis_en && st->act_value > 0;
-> -	adxl345_intmap_switch_bit(st, args_valid, ADXL345_INT_ACTIVITY);
-> +	if (type == ADXL345_ACTIVITY) {
-> +		axis_en = FIELD_GET(ADXL345_REG_ACT_AXIS_MSK, st->act_axis_ctrl) > 0;
-> +		args_valid = axis_en && st->act_value > 0;
-> +	} else {
-> +		axis_en = FIELD_GET(ADXL345_REG_INACT_AXIS_MSK, st->inact_axis_ctrl) > 0;
-> +		args_valid = axis_en && st->inact_value > 0 &&
-> +			st->inact_time_s > 0;
-> +	}
-> +	adxl345_intmap_switch_bit(st, args_valid, adxl345_act_int_reg[type]);
->  
->  	return adxl345_write_interrupts(st);
->  }
->  
-> -static int _adxl345_is_act_en(struct adxl345_state *st, bool *en)
-> +static int _adxl345_is_act_en(struct adxl345_state *st,
-> +			      enum adxl345_activity_type type, bool *en)
->  {
->  	int ret;
->  	unsigned int regval;
-> @@ -360,42 +421,76 @@ static int _adxl345_is_act_en(struct adxl345_state *st, bool *en)
->  	if (ret)
->  		return ret;
->  
-> -	*en = FIELD_GET(ADXL345_INT_ACTIVITY, regval) > 0;
-> +	*en = (adxl345_act_int_reg[type] & regval) > 0;
->  
->  	return 0;
->  }
->  
-> -static int _adxl345_set_act_en(struct adxl345_state *st, bool en)
-> +static int _adxl345_set_act_en(struct adxl345_state *st,
-> +			       enum adxl345_activity_type type, bool en)
->  {
->  	int ret;
->  
-> -	ret = adxl345_write_act_axis(st, en);
-> +	ret = adxl345_write_act_axis(st, type, en);
->  	if (ret)
->  		return ret;
->  
-> -	return adxl345_set_act_int(st);
-> +	return adxl345_set_act_int(st, type);
->  }
->  
->  static int adxl345_is_act_en(struct adxl345_state *st, bool *en)
->  {
-> -	return _adxl345_is_act_en(st, en);
-> +	return _adxl345_is_act_en(st, ADXL345_ACTIVITY, en);
->  }
->  
->  static int adxl345_set_act_en(struct adxl345_state *st, bool en)
->  {
-> -	return _adxl345_set_act_en(st, en);
-> +	return _adxl345_set_act_en(st, ADXL345_ACTIVITY, en);
->  }
->  
-> -static int _adxl345_set_act_value(struct adxl345_state *st, u8 val)
-> +static int adxl345_is_inact_en(struct adxl345_state *st, bool *en)
->  {
-> -	st->act_value = val;
-> +	return _adxl345_is_act_en(st, ADXL345_INACTIVITY, en);
-> +}
->  
-> -	return regmap_write(st->regmap, ADXL345_REG_THRESH_ACT, val);
-> +static int adxl345_set_inact_en(struct adxl345_state *st, bool en)
-> +{
-> +	return _adxl345_set_act_en(st, ADXL345_INACTIVITY, en);
-> +}
-> +
-> +static int _adxl345_set_act_value(struct adxl345_state *st,
-> +				  enum adxl345_activity_type type, u8 val)
-> +{
-> +	switch (type) {
-> +	case ADXL345_ACTIVITY:
-> +		st->act_value = val;
-> +		break;
-> +	case ADXL345_INACTIVITY:
-> +		st->inact_value = val;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return regmap_write(st->regmap, adxl345_act_thresh_reg[type], val);
->  }
->  
->  static int adxl345_set_act_value(struct adxl345_state *st, u8 val)
->  {
-> -	return _adxl345_set_act_value(st, val);
-> +	return _adxl345_set_act_value(st, ADXL345_ACTIVITY, val);
-> +}
-> +
-> +static int adxl345_set_inact_value(struct adxl345_state *st, u8 val)
-> +{
-> +	return _adxl345_set_act_value(st, ADXL345_INACTIVITY, val);
-> +}
-> +
-> +static int adxl345_set_inact_time_s(struct adxl345_state *st, u32 val_s)
-> +{
-> +	st->inact_time_s = min(val_s, 0xff);
-> +
-> +	return regmap_write(st->regmap, ADXL345_REG_TIME_INACT,
-> +			    st->inact_time_s);
->  }
->  
->  /* tap */
-> @@ -1027,6 +1122,8 @@ static int adxl345_write_raw_get_fmt(struct iio_dev *indio_dev,
->  	static IIO_DEVICE_ATTR_RW(in_accel_##A##_##C##_##E, 0)
->  
->  ADXL345_generate_iio_dev_attr_INT(activity, act, value);
-> +ADXL345_generate_iio_dev_attr_INT(activity, inact, value);
-> +ADXL345_generate_iio_dev_attr_INT(activity, inact, time_s);
->  ADXL345_generate_iio_dev_attr_INT(freefall, ff, value);
->  
->  ADXL345_generate_iio_dev_attr_FRACTIONAL(gesture_singletap, tap, duration, MICRO, us);
-> @@ -1035,12 +1132,16 @@ ADXL345_generate_iio_dev_attr_FRACTIONAL(gesture_doubletap, tap, latent, MICRO,
->  ADXL345_generate_iio_dev_attr_FRACTIONAL(freefall, ff, time, MILLI, ms);
->  
->  ADXL345_generate_iio_dev_attr_EN(activity, act);
-> +ADXL345_generate_iio_dev_attr_EN(activity, inact);
->  ADXL345_generate_iio_dev_attr_EN(freefall, ff);
->  ADXL345_generate_iio_dev_attr_EN(gesture_doubletap, suppressed);
->  
->  static struct attribute *adxl345_event_attrs[] = {
->  	&iio_dev_attr_in_accel_activity_act_en.dev_attr.attr,
->  	&iio_dev_attr_in_accel_activity_act_value.dev_attr.attr,
-> +	&iio_dev_attr_in_accel_activity_inact_en.dev_attr.attr,
-> +	&iio_dev_attr_in_accel_activity_inact_value.dev_attr.attr,
-> +	&iio_dev_attr_in_accel_activity_inact_time_s.dev_attr.attr,
->  	&iio_dev_attr_in_accel_freefall_ff_en.dev_attr.attr,
->  	&iio_dev_attr_in_accel_freefall_ff_value.dev_attr.attr,
->  	&iio_dev_attr_in_accel_freefall_time_ms.dev_attr.attr,
-> @@ -1296,6 +1397,17 @@ static int adxl345_push_event(struct iio_dev *indio_dev, int int_stat,
->  			return ret;
+> -	spin_lock_irqsave(&pidmap_lock, flags);
+> +	spin_lock(&pidmap_lock);
+>  	for (i = 0; i <= pid->level; i++) {
+>  		struct upid *upid = pid->numbers + i;
+>  		struct pid_namespace *ns = upid->ns;
+> @@ -142,7 +141,7 @@ void free_pid(struct pid *pid)
+>  		idr_remove(&ns->idr, upid->nr);
 >  	}
+>  	pidfs_remove_pid(pid);
+> -	spin_unlock_irqrestore(&pidmap_lock, flags);
+> +	spin_unlock(&pidmap_lock);
 >  
-> +	if (FIELD_GET(ADXL345_INT_INACTIVITY, int_stat)) {
-> +		ret = iio_push_event(indio_dev,
-> +				     IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
-> +							IIO_MOD_X_OR_Y_OR_Z,
-> +							IIO_EV_TYPE_THRESH,
-> +							IIO_EV_DIR_FALLING),
-> +				     ts);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	if (FIELD_GET(ADXL345_INT_FREE_FALL, int_stat)) {
->  		ret = iio_push_event(indio_dev,
->  				     IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
-> @@ -1412,6 +1524,8 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
->  	 * setup.
->  	 */
->  	st->act_axis_ctrl = ADXL345_REG_ACT_AXIS_MSK;
-> +	st->inact_axis_ctrl = ADXL345_REG_INACT_AXIS_MSK;
-> +	st->inact_ac = 0;			/*    0 [dc]              */
->  	st->act_ac = 0;
->  	st->int_map = 0x00;			/* reset interrupts */
+>  	call_rcu(&pid->rcu, delayed_put_pid);
+>  }
+> @@ -210,7 +209,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>  		}
 >  
-> @@ -1422,6 +1536,9 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
->  	st->tap_latent_us = 20;			/*   20 [0x14] -> .025    */
+>  		idr_preload(GFP_KERNEL);
+> -		spin_lock_irq(&pidmap_lock);
+> +		spin_lock(&pidmap_lock);
 >  
->  	st->act_value = 6;			/*    6 [0x06]            */
-> +	st->inact_value = 4;			/*    4 [0x04]            */
-> +	st->inact_time_s = 3;			/*    3 [0x03] -> 3       */
-> +
->  	st->ff_value = 8;			/*    8 [0x08]            */
->  	st->ff_time_ms = 32;			/*   32 [0x20] -> 0.16    */
+>  		if (tid) {
+>  			nr = idr_alloc(&tmp->idr, NULL, tid,
+> @@ -237,7 +236,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>  			nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
+>  					      pid_max, GFP_ATOMIC);
+>  		}
+> -		spin_unlock_irq(&pidmap_lock);
+> +		spin_unlock(&pidmap_lock);
+>  		idr_preload_end();
 >  
+>  		if (nr < 0) {
+> @@ -271,7 +270,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>  
+>  	upid = pid->numbers + ns->level;
+>  	idr_preload(GFP_KERNEL);
+> -	spin_lock_irq(&pidmap_lock);
+> +	spin_lock(&pidmap_lock);
+>  	if (!(ns->pid_allocated & PIDNS_ADDING))
+>  		goto out_unlock;
+>  	pidfs_add_pid(pid);
+> @@ -280,18 +279,18 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>  		idr_replace(&upid->ns->idr, pid, upid->nr);
+>  		upid->ns->pid_allocated++;
+>  	}
+> -	spin_unlock_irq(&pidmap_lock);
+> +	spin_unlock(&pidmap_lock);
+>  	idr_preload_end();
+>  
+>  	return pid;
+>  
+>  out_unlock:
+> -	spin_unlock_irq(&pidmap_lock);
+> +	spin_unlock(&pidmap_lock);
+>  	idr_preload_end();
+>  	put_pid_ns(ns);
+>  
+>  out_free:
+> -	spin_lock_irq(&pidmap_lock);
+> +	spin_lock(&pidmap_lock);
+>  	while (++i <= ns->level) {
+>  		upid = pid->numbers + i;
+>  		idr_remove(&upid->ns->idr, upid->nr);
+> @@ -301,7 +300,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>  	if (ns->pid_allocated == PIDNS_ADDING)
+>  		idr_set_cursor(&ns->idr, 0);
+>  
+> -	spin_unlock_irq(&pidmap_lock);
+> +	spin_unlock(&pidmap_lock);
+>  
+>  	kmem_cache_free(ns->pid_cachep, pid);
+>  	return ERR_PTR(retval);
+> @@ -309,9 +308,9 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>  
+>  void disable_pid_allocation(struct pid_namespace *ns)
+>  {
+> -	spin_lock_irq(&pidmap_lock);
+> +	spin_lock(&pidmap_lock);
+>  	ns->pid_allocated &= ~PIDNS_ADDING;
+> -	spin_unlock_irq(&pidmap_lock);
+> +	spin_unlock(&pidmap_lock);
+>  }
+>  
+>  struct pid *find_pid_ns(int nr, struct pid_namespace *ns)
+> -- 
+> 2.43.0
+> 
 
