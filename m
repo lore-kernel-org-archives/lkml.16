@@ -1,119 +1,123 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86AB1C3C1D;
-	Sat,  1 Feb 2025 16:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956621C1F1F
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738427078; cv=none; b=KaqLRQy6ckk1UiD9kZOJX4+wanrn8Jc0It/6TmLR4UQpN03PiVGBlTObWQuWXee1OEISDn8g/F6Qj7gf14FCxubTzz5NyCyov7dqYvo8F7KycBdsKLfDIBALRCb6VYjDFDQVTa0KOFLmqCkpHdt41/wFiT1gfYtb4tgAbs+fcFQ=
+	t=1738427102; cv=none; b=KumFGB9RLtxVJsliOnJaJLikAYPNZg3M3LecezBHTcCv0T/fddUbDqLSgCkCdcrHKouR4EVMnTYEKu8v674ukwiSrSwXoWNiluYU32j/quMEdUQfLnBUEh/6+PMjD7Z5486yO96dFYvcfYBXtybR44e60AOdBlTPCEMe/32UZzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738427078; c=relaxed/simple;
-	bh=c/Gnr8zTuYCxXBcOoa/O/fFahhv9XBlXvIZzf9L+ol4=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=okJy2ArqOrCIOTDFDzS4rpM6QhX+aXiYMBcA7IaALbwozAPAYgks243TGdJdgWITlnLyG5XXv5zfUnNgsFSPd04CdyiBAq1IpdwMiwtMxdrjUFhajyjHH0d+3NcVokrlYWdOg+Z0G2WOOkcr7FVppUc8dgq/qSnfezay946GKtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GZEUfKNK; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738427102; c=relaxed/simple;
+	bh=TdK6/Jxn4qrb3BiXRzJDWokL5OeYhkjCuo7aLnFVdbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LcxrvjDu5kh2GXdteVjjM4mkFjY3z03DJyJDI7McdELE0VGL55SrRufg5ZKFTmSSl8yQw2yhJK7z3uM3iP6PtP4S4N0DQq8yrFcZNxQAvuAg+2jhN1Fw1NgEHUNyZLHR0S2Ds6gEewrPuu01vwueRRO//VNHBhnXZUX8RAG5S74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RAjn8LFe; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZEUfKNK"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-53f22fd6832so3304525e87.1;
-        Sat, 01 Feb 2025 08:24:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RAjn8LFe"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21680814d42so49403385ad.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:25:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738427075; x=1739031875; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zfa6xROmzpdH/yGe/fiT3u8Q/60K2pSupbPaueCZuSg=;
-        b=GZEUfKNKF+Hmv6evA+oom9Eq2r0o0/baWjQY5Y46Gb/srLrTjSgER7+SPvGlq8G1O8
-         kdkzb9qUvHh6WqNPIQyn8VXfo11Qk1BwPXiivLzLoburl2RFh6EkFK/Gh3T1hynYGPne
-         pBunhf/qJuYIVnPYdJDj0HJ99gvlqhfpoZjIxv4bi+D6Kf3QAQdyXrxpqCQwcpHZogxx
-         HPjNy6B2EIjpL65opWOS2l6AP1rS9g5QH+FgD+nGLT/DNAspNMalY58CyjbOiwjflo89
-         IeMYGEg2XLrKB05Z+IgrVZfXVLzQq7wytwdNkv+94D00M+tDAmWlShhZkrPpYbdRvuXp
-         7fYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738427075; x=1739031875;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+        d=linaro.org; s=google; t=1738427100; x=1739031900; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=zfa6xROmzpdH/yGe/fiT3u8Q/60K2pSupbPaueCZuSg=;
-        b=Z6F9r8Sveb6aPIz/vO9tqRFpv43PfHyDEekKjKDZVzOCLBliIWdk5OdsAWBCNZVySR
-         PjgqNVkzweOWlZMuGb0L5ML+RSMD+C+iaXiUuCMgCtKAkoTu03c+iByN2S6nLIUHP7rr
-         ouyvIzvDawE4vve7Xz1AgnX33f96lrgS19LDJ8NDlAp4lsbfyors7mJZCE0/Xc+0ExlR
-         VXSbztmpapxxZpyfpFqTaELimqXIVlKWPP1ew+ieLTPap9ohPfdFH2JAwYDMQQ63NYDI
-         uTPRtkGd49CuWNKJ00Wy6vR/wloOBPLyBohZIhJK8hw/TRF8KK0ksQ8XTB27YfqVN8f7
-         34Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+b8FRINLsv/MiQLy2sc8qafGRl7iZhxv3saqeXMYDC6rpD6eio4i7a2gwWBeIAQXftw83fmM1QPJDxuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJduuflqrBy9K4RrUYmH7I6sVNuh5P9wg5e/UkCJPxf1/Mt6jr
-	Zq4E6pXlCaZYgAr3u6LEbbj4YfPeAWqj1v99xuWA8a4Fz3b65q4LGU4L6C8ilWU=
-X-Gm-Gg: ASbGncuWba/LDgyAtsKHc0QJ/Y/1527x3Nap7qzuaBqfSDm62D/krImzk/BGlykJHWs
-	D5wHNa7EBJwLzieV9f7Y38BMx7gQvlxvbkkvI/7v1UYS+vjto4OF99mr5w57+J4P9KH8ydIOqvB
-	Vz1sdi6XtN4eCCpsfTxn3NpWqhxuPukvdlcGJVpuDyzN7NAh6DCbNTumO6bJSXubqqKvLIC5Xds
-	pNBf+lfRmiKmctNTr1GL7ja7TIf5bq5C0y9bUjBJcHqKoN6rjwmsQI3bHkSx449N/iIE5O6bRgY
-	G5GBDnAFBJzkP0bG1hvT2euZ7guoxIxdxzbM3ApU7KT90dEgWvm0OG3HBJsP
-X-Google-Smtp-Source: AGHT+IFr2GmDfYmOCC0JGSyxPP/y8D7nMDrYWY5021IoHz2IQ9dfUQDW6RuYmZ1dAXw3+9jxzGlQaQ==
-X-Received: by 2002:a05:6512:114a:b0:542:8d45:cb4f with SMTP id 2adb3069b0e04-543e4bdffbcmr4126486e87.1.1738427074616;
-        Sat, 01 Feb 2025 08:24:34 -0800 (PST)
-Received: from ?IPV6:2a00:1fa0:26b:ef8c:233a:7c35:f061:a3a5? ([2a00:1fa0:26b:ef8c:233a:7c35:f061:a3a5])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebe0fef2sm776416e87.75.2025.02.01.08.24.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2025 08:24:33 -0800 (PST)
-Message-ID: <f5ea6c5c-1904-22a4-72f2-d4050878dd26@gmail.com>
-Date: Sat, 1 Feb 2025 19:24:31 +0300
+        bh=7g3+xRMv7I8hoM/mUnFLrYDh9mXx+uu/SX2/MPa2/K4=;
+        b=RAjn8LFedcNG6NIE5o/fVMV4wnJgowxJFLp9RE1SN/E9MIIWhXYCqu5nlRrKbSUJGo
+         zohWp4l1qCVaMVGLFc9ZLgPmfJTczslRkkv5cI+1pPoQCORqyH8rl+kwk5/nIeiOP0/f
+         PoxvMw48TUT0pm5IcSc6VsmZxRHYwERdP7oWnEljdxAPoBaTc8p+a2uhcn4fZmIMNCmq
+         9mv/FfvSaF9EiTXG9bbyoM1O+cbkrkjnSzvsTHtmlQki8oirWO8GppaS3DLJfOdFb8kG
+         yTxb24x0YLxGGeZt8MfzZanHE0Q9UrYiaaBHOEaYdhXxLAKGOFF4dGU1wIsoC5K1OBWH
+         f+Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738427100; x=1739031900;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7g3+xRMv7I8hoM/mUnFLrYDh9mXx+uu/SX2/MPa2/K4=;
+        b=lAzn6XedhQtxD7ChQ7JMObcB1qdMoBXzOTvti3M225tCMQkkXO1+uZlyAu6wVuXqbf
+         g5vOxmYhWbkKrQ214gFIuBd6rnucZJ23Gs9VJQ4lSKNPUcYlzGo2YtnU4Z4Iee9qiOdY
+         Fa+eCLAKeQAx4+hAkqsb+D28l2mR+l2dhJ+Ysd9H3h3OdOxRSValr7YnOempTBox0txp
+         angLRfhOSmMwam+KESINEdiI3+l5iZl/DvkuP2u/ISV24aTs/78lpEWLdamg5CcGkhsk
+         m34DGg1sCFdPrvqmFKlutKGH8RziDBcYmme/yysB/8MsXv/dNDqqhQ07myDIdZpRGeb6
+         eMeA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWSUxFNrVNrJQrZNMqpm972/c8AGj+helhI7TioOa7DtzcbXeP3W1npN0YkSnI6DvSXBMZGX9e3glr/rg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeGUsV3jM+hP8RAP/qtV9b8J5C1tT+vJ+QrbDcm/wTayCjj0HM
+	Cmu2gm/bmPX3SHfN6qQfLHKuMuWD4JEeWvk4Df8jfXFB+eVbpA5msQxuqjSgwPymOG4Q2SBXiQk
+	=
+X-Gm-Gg: ASbGncuZ1UxxU6wDp+sMBQbfNkoeGN0WINhwLc+HGT6XkNGLKU7ZUz9KWs9y260zJq8
+	H45flpFEfYYs6c0tBq/8b0T3d59JMz3UjOEjyad4SdbzAprapAaJfTJ9POA6nx/C6DeBky/NEdm
+	KlAmfhM1FjMmjGuJW46T6N5QeneZqnSufkl4hQepW9bNiX7Lamf/WxaWibSNo5gAHDGJJqEthp3
+	Ae58aeyupjvG06Ei9eq3KpzxYNK+D5ZAC/sPO2pfSt8Zl5KkgvBz8Fuu8OQKvsnkfCI18dKCfAg
+	btiBxkwrsd7NDEr3fum3/HYW9DI=
+X-Google-Smtp-Source: AGHT+IGTWHq/F06CpcrmFryngFoTcdvCxiBh6JdgpfJOZKD+GgbyyI6EvDWMGbH+eGJ1NmIPO9v+cA==
+X-Received: by 2002:a17:902:f690:b0:216:501e:e314 with SMTP id d9443c01a7336-21dd7d74aedmr224666875ad.20.1738427099834;
+        Sat, 01 Feb 2025 08:24:59 -0800 (PST)
+Received: from thinkpad ([120.56.202.249])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f848976d1fsm6324512a91.3.2025.02.01.08.24.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 08:24:59 -0800 (PST)
+Date: Sat, 1 Feb 2025 21:54:53 +0530
+From: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
+To: Jianjun Wang =?utf-8?B?KOeOi+W7uuWGmyk=?= <Jianjun.Wang@mediatek.com>
+Cc: "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Ryder Lee <Ryder.Lee@mediatek.com>
+Subject: Re: [PATCH] PCI: mediatek: Remove the usage of virt_to_phys
+Message-ID: <20250201162453.rwnd7igaiwnngdlb@thinkpad>
+References: <20250107052108.8643-1-jianjun.wang@mediatek.com>
+ <20250115173156.a73ntoyyn3xy52ze@thinkpad>
+ <9e629b1779c2cb9c6fa34347ac16f9b4e2241430.camel@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Content-Language: en-US
-To: Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- oxffffaa@gmail.com
-From: Arseniy Krasnov <oxffffaa@gmail.com>
-Subject: [RESEND PATCH v2] Bluetooth: hci_uart: fix race during initialization
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9e629b1779c2cb9c6fa34347ac16f9b4e2241430.camel@mediatek.com>
 
-'hci_register_dev()' calls power up function, which is executed by
-kworker - 'hci_power_on()'. This function does access to bluetooth chip
-using callbacks from 'hci_ldisc.c', for example 'hci_uart_send_frame()'.
-Now 'hci_uart_send_frame()' checks 'HCI_UART_PROTO_READY' bit set, and
-if not - it fails. Problem is that 'HCI_UART_PROTO_READY' is set after
-'hci_register_dev()', and there is tiny chance that 'hci_power_on()' will
-be executed before setting this bit. In that case HCI init logic fails.
+On Thu, Jan 23, 2025 at 08:11:19AM +0000, Jianjun Wang (王建军) wrote:
+> On Wed, 2025-01-15 at 23:01 +0530, Manivannan Sadhasivam wrote:
+> > External email : Please do not click links or open attachments until
+> > you have verified the sender or the content.
+> > 
+> > 
+> > On Tue, Jan 07, 2025 at 01:20:58PM +0800, Jianjun Wang wrote:
+> > > Remove the usage of virt_to_phys, as it will cause sparse warnings
+> > > when
+> > > building on some platforms.
+> > > 
+> > 
+> > Strange. What are those warnings and platforms?
+> 
+> There are some warning messages when building tests with different
+> configs on different platforms (e.g., allmodconfig.arm,
+> allmodconfig.i386, allmodconfig.mips, etc.):
+> 
+> pcie-mediatek.c:399:40: sparse: warning: incorrect type in argument 1
+> (different address spaces)
+> pcie-mediatek.c:399:40: sparse:    expected void const volatile *x
+> pcie-mediatek.c:399:40: sparse:    got void [noderef] __iomem *
+> pcie-mediatek.c:515:44: sparse: warning: incorrect type in argument 1
+> (different address spaces)
+> pcie-mediatek.c:515:44: sparse:    expected void const volatile *x
+> pcie-mediatek.c:515:44: sparse:    got void [noderef] __iomem *
+> 
 
-Patch moves setting of 'HCI_UART_PROTO_READY' before calling function
-'hci_uart_register_dev()'.
+This need to be added to the patch description.
 
-Signed-off-by: Arseniy Krasnov <oxffffaa@gmail.com>
----
- Changelog v1->v2:
- * Move 'set_bit()' before 'hci_uart_register_dev()' instead of
-   adding new bit 'HCI_UART_PROTO_INIT'.
+- Mani
 
- drivers/bluetooth/hci_ldisc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
-index 30192bb083549..07b9aa09bbe2e 100644
---- a/drivers/bluetooth/hci_ldisc.c
-+++ b/drivers/bluetooth/hci_ldisc.c
-@@ -704,12 +704,13 @@ static int hci_uart_set_proto(struct hci_uart *hu, int id)
- 
- 	hu->proto = p;
- 
-+	set_bit(HCI_UART_PROTO_READY, &hu->flags);
-+
- 	err = hci_uart_register_dev(hu);
- 	if (err) {
- 		return err;
- 	}
- 
--	set_bit(HCI_UART_PROTO_READY, &hu->flags);
- 	return 0;
- }
- 
 -- 
-2.30.1
+மணிவண்ணன் சதாசிவம்
