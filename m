@@ -1,189 +1,135 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5974A3E;
-	Sat,  1 Feb 2025 11:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FB225760;
+	Sat,  1 Feb 2025 11:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738408864; cv=none; b=EPnIzB+hqVuAaEhOycLy/1g/L6wCky6IZVARF7Q/NkP5cqtx5RmmoRPgctd4E6UvIilEs9fYKUqlb7p71oo5QRXJfTTpno1qgB1jQymDkVH/D8RY0VTR1f50b0B8/cyEsq6tSGUTVo1MJm5q2+ARFH+wbor25mxmDZUWTn+TeyI=
+	t=1738409652; cv=none; b=Z8TE8lhCjCZXflp/J2F9zO17vwYPJZuex8qNB0CK9V/lxulhYf9tqq/ipGMKneMuZZvD61TWv4VKZXiothOAQ6iFcvzT3tShpcUeFshLxEfL3+m6jt4Kcbp6aDmJsGIb829B/D+vpl0XWS7eY235hKdvK/fMM73xOMhBGamLO3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738408864; c=relaxed/simple;
-	bh=Pkz6KNTBDbYPEp20NDDuYafiscU7CmXy27olzQlgkCY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OdDf4J650ZwfIlLKjyBGF9cmVuT7Mt6C98zFUQw1VaY+RkpOlSGomeOkgV/gMdB01AeLx6Mrg3Uzz8LGi+Ky8pkDxNVt6+cJJgHa6tU+KgxnpsbGKFwcAB8ROdEAZCchGYX6GFEFO9O303FRjiB1x09tOjaHbFBHi2Q52hDXoGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Di1263yk; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1738409652; c=relaxed/simple;
+	bh=2E0q54b3eypL3Ri2OP5FYkG06AqSFV2huCTuS8ngfn0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AxiN/2OiCv76aJyH4MgMxzDPoqv9/av/aZSluWis7qsZvqDcTycpfucVwpuPlXilQ9EhGzb2IyBZvuzLcsRqrXdDNB2L8aCy8l8fBEPisBeW9EZ9tbcP0FtmZhgwX/3tKui+2gjwTEuxhTffY1rHZkj3XQZXmVaPdKmovELa8NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gaqgJn8S; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Di1263yk"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2162c0f6a39so70820525ad.0;
-        Sat, 01 Feb 2025 03:21:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gaqgJn8S"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-436281c8a38so20555985e9.3;
+        Sat, 01 Feb 2025 03:34:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738408862; x=1739013662; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HpXB01KAhrqJhHJwN7yldMlPl2KTotioErkNMfqnalU=;
-        b=Di1263ykdIiL0BMkRN9trkwISGhwvBvMa4nTJlD1+ApLQHlM/pn2VwQP5AalsbU13I
-         hDkufmxqh4wDWKQdI324ROMF2IYyzLy+vOtnzvDntw38pX2EjRWHiYsL84iid7tTSCkA
-         rqCLH+O1SKbs/UBbW+++SzUlK26NthNF7Qdxc2PmGNqcpvPhQ/ELY9h5iiwJJ/kaOF+9
-         suKcHHbCVFdqumyO2vP4ZJGTeRi56pJBSkkcTnp1T5lLGhETY30F0XAXJQbbA6/9I8Au
-         Sm4Ic85pIKcWA/ZaBbtjL1QDWEoJNEHDv4Try1F2x0mj2uRTaLvEffinR18DVbiiO387
-         Cqbw==
+        d=gmail.com; s=20230601; t=1738409647; x=1739014447; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PQomFJ4ChnU4fj4lFRCI9h/dmZzlSZdFogkPyQv5YjU=;
+        b=gaqgJn8Scloe+tZ8749PO59kUBdJNUScqXUjE1WmLFoBB5ppceXLLNg66B9R4+fAbL
+         EITRwIgjzBCGv0YR+ZDFzgddUKGXLVC+qnFU/H68ZHnJWTswPHWt1W8KeNvqpqWYDr0+
+         YJJMvSGK//+wGtrHervyzvA7lo7LMCTkUkloac5hUWzLHmlrHcbtuUEoFQT/b+AY9W+G
+         FhNUwnSTJ5FJyGFQQdbT+sYh/kWclfs+Cg1X/xUiFsIwo5fSTgj6BVQOClJk5Hql/bk2
+         Qi1bRDxFdurF4+7hlUtX/YxbfSijtbVPHH/WCnJYvxzlARKN9ekG0l9Jc4Q4oA7H+nEl
+         G3ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738408862; x=1739013662;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HpXB01KAhrqJhHJwN7yldMlPl2KTotioErkNMfqnalU=;
-        b=Anyz70OO2n1TS1flxqYkYLsSoFLd+v6M7AtExTiZuieqF0AWjJ5U/dJT1bstWSbxSK
-         AXy6LngXPiddLkHdZeWHzvakdbuZJcjf4LTlUBNjXRJYuQIMavXSsO5Okru65+JgqoD7
-         6X7aHP0F9V2R32q2Z+QWNW4kAIYYIWJIXdR0MqnHitO3vygClIEp18Zn6QlVq3l2PUfv
-         rtw5bip1MuZVQt/vwm1yo6YhQgIps9Uu2SdeApljp7Nq/InbTiJZWWmLXGRfH6j1oVHt
-         rQnhaDgDgknY473caNTptEwom7yzI0/kJ6ElvSDhV6ZM9rPiQ7xXHNXSywVl0uidYTMp
-         zHGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPrkBBN9zvDv9Fc9dpfJKPobhIc/SfT6dd66mG/jbeZZn2CawCOT9R70py0GTYFaCAUYyU8zdoEsn22Pw=@vger.kernel.org, AJvYcCWxbMoftEzhfQTkATCF6mK9xumWhjofl22paqUI2o/nab+upkQXZ/nVfDAjrr8fS8ek+Mzvod00ANB/3UshcKor@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoGCO7K2j6T5MUyT9Qh+XVckRJAlskDntTQET5UkSeveuTD3/y
-	UKnKqbWsz6+l2MHcIFmotGhvRGW5xHXGrg2SHCZN3R5NHp9BULQkEq7/1EU1/hg=
-X-Gm-Gg: ASbGncshovH+jQpUNwKtLgI2pit9rI4SoZ2HHSVwq3Hqh9zOC+t6piiR6ClXdAIR5RW
-	ZQrqXE8mMM3apBqzQnVlIQHY6gJUmwwNo5kOk62W9q43VDoMeYpXEIkUuG5dLAIB45t5X9rDrJ3
-	Lqra27SfCl7HjZXkVEflJMY1r7cdVArcryvv8p9VNWsunE5ocDt0p7/ItJMiIqxhxKzIcM3jaaF
-	nvBaJMRCygLvQa18sJJGs0RJ0Vl+O7qlFWn7g5AjRSzvGfb9tgsXvxAixm/eD+rFJjTqP1gJ1bS
-	Nl1wXHIB0s9w/h+rdwWqrD89kYm1NVagh8IYEMlKjha91dZhlMNbdGUQXG5atmOt0ffNsw==
-X-Google-Smtp-Source: AGHT+IHN+mBNBPkLxrKNYilnN9ZM4/vcCO/uUgYYvC+5rHQngX7sQc4gsrp8y9ARjCpsSZJMYDrQZw==
-X-Received: by 2002:a05:6a00:35cd:b0:725:d64c:f122 with SMTP id d2e1a72fcca58-72ff2b48d88mr11362863b3a.2.1738408861922;
-        Sat, 01 Feb 2025 03:21:01 -0800 (PST)
-Received: from ?IPV6:2409:40c0:1035:9c47:d3e9:3f8e:7f5d:858a? ([2409:40c0:1035:9c47:d3e9:3f8e:7f5d:858a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6a1cb70sm4737608b3a.180.2025.02.01.03.20.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2025 03:21:01 -0800 (PST)
-Message-ID: <0f8eed3c-d485-4fbd-98d5-d6c4066789a6@gmail.com>
-Date: Sat, 1 Feb 2025 16:50:55 +0530
+        d=1e100.net; s=20230601; t=1738409647; x=1739014447;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PQomFJ4ChnU4fj4lFRCI9h/dmZzlSZdFogkPyQv5YjU=;
+        b=fspzqWyWv0snFhkw8GzJS1xjKFUx9vBVLo+9qKf+Ei2nG3QgVWvG+2k7KJKgOT8HMu
+         PCbrCqPQ9oRNxE/hCT7kYj5uEn1oMEv3fRB1k19Z6y2hBg/Zlb6qhdINk7PB0XlIjaPG
+         lJI010VQ6luFQAUy2IGOqDK3j+lgwbjkJvSdYHilv7NcZ7JjKDAhO3GEuKu6jETzDcmx
+         htBCUEZmp+GMK70JeY3LUt/dlIdLAXN1dVNtWwgi+8H8my7Bm1w0ksOM54bc9Qv4e9vh
+         F7dMB3l6gRAGbbWYIBKyjpK/oRBSuN2y34DoHj3cVwRVJkNXFamz8iQJtNf/lr+NYQBH
+         2pVA==
+X-Forwarded-Encrypted: i=1; AJvYcCWu8xynsBUcHEZr4pQA26nv17LKh58HhddbdcO+GWMc4zBfU6ePdQXEorQuBMsiCo+6oxfcqQp183kuCcBfYuPQ@vger.kernel.org, AJvYcCX3ry8p+mbQEv1E+5Dy5DnhGTXPWxueEY/TgWev8lq4aonf2c3WgG11bxgbL0P+uPxGVV7/m5PZtTyBcQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHJvCd3Xt88bG0qOyf/XcCW99mSiyDZ+F2EhfS1Qp/qB9tYOEG
+	jGW3UqHqZ/qqostfqcz0E2bccW38JA6WdHCN5KR/6xqAo5+7ec5y
+X-Gm-Gg: ASbGncvKKXAppBRLJ2pqwHvI7X6kJCglHY+ztpD/aS+OAdopxuX5RTO2guUEd7pFmH6
+	DjML5Re5KJvaY2C9YA9EHsz0JntBaj1fPSidklmNycW+9FPR5HPvRI8jH/AZcZnDjAGp0Lxkl8S
+	sq6OO2n/WVitutsT7bV1vXMN1SY18SagIAI9R5CQPGPG1J3m1JQ9AHrgxsWoskBKu/7JXQrQ2lh
+	alejYpHnV3KT8G0Y3Z7a1q5/AiIYZDYuGfl/S37VBPuioyHPlxIRhB5oMTJcMR+XLnC5PoFOSxE
+	Vhc9RY3kSTZUF5C3OMxJj28jevKpgdA/9OeAVOvjIregrdB6MGfF4Q==
+X-Google-Smtp-Source: AGHT+IFnnAAw3xF3oDUKUQhc4FZRLZaD+TRflMNSpfR1uTA1CXslNeBfeoL7eV4BqL2DdUjlQsg+Fw==
+X-Received: by 2002:a5d:6d0c:0:b0:38a:88b8:97a9 with SMTP id ffacd0b85a97d-38c51949b38mr11350742f8f.2.1738409647375;
+        Sat, 01 Feb 2025 03:34:07 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ecc80sm7224343f8f.16.2025.02.01.03.34.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 03:34:07 -0800 (PST)
+Date: Sat, 1 Feb 2025 11:34:06 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+ irogers@google.com, agordeev@linux.ibm.com, gor@linux.ibm.com,
+ sumanthk@linux.ibm.com, hca@linux.ibm.com
+Subject: Re: [PATCH] perf test: Fix perf test 11 hwmon endianess issue
+Message-ID: <20250201113406.4312a601@pumpkin>
+In-Reply-To: <20250131112400.568975-1-tmricht@linux.ibm.com>
+References: <20250131112400.568975-1-tmricht@linux.ibm.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/vDSO: Fix undefined CLONE_NEWTIME by including
-To: Christophe Leroy <christophe.leroy@csgroup.eu>, skhan@linuxfoundation.org
-Cc: shuah@kernel.org, Jason@zx2c4.com, liaoyu15@huawei.com,
- broonie@kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250126105932.63762-1-purvayeshi550@gmail.com>
- <d85f9c94-249a-4847-a323-2f547fe60732@csgroup.eu>
- <171e15dc-b48f-4592-8466-b220185bae78@gmail.com>
- <3150e796-9249-4ac1-a91a-7efb7ec4de16@csgroup.eu>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <3150e796-9249-4ac1-a91a-7efb7ec4de16@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 30/01/25 12:32, Christophe Leroy wrote:
-> 
-> 
-> Le 29/01/2025 à 19:17, Purva Yeshi a écrit :
->>
->> On 27/01/25 13:32, Christophe Leroy wrote:
->>>
->>>
->>> Le 26/01/2025 à 11:59, Purva Yeshi a écrit :
->>>> [Vous ne recevez pas souvent de courriers de purvayeshi550@gmail.com.
->>>> Découvrez pourquoi ceci est important à
->>>> https://aka.ms/LearnAboutSenderIdentification ]
->>>>
->>>> Fix the build failure caused by the undefined `CLONE_NEWTIME`.
->>>> Include the `linux/sched.h` header file where the function is 
->>>> defined to
->>>> ensure successful compilation of the selftests.
->>>
->>> This is supposed to be already fixed by commit 34d5b600172b ("selftests:
->>> vDSO: Explicitly include sched.h")
->>>
->>> Can you explain what is the exact problem still ? And why 
->>> linux/sched.h ?
->>
->> Yes, I noticed that sched.h is already included, but I still encountered
->> an "undeclared CLONE_NEWTIME" error during compilation.
-> 
-> Must be that your sched.h is not up-to-date I guess. On my side I have:
-> 
-> /usr/include/linux/sched.h:#define CLONE_NEWTIME    0x00000080    /* New 
-> time namespace */
-> /usr/include/bits/sched.h:#define CLONE_NEWTIME    0x00000080      /* 
-> New time namespace */
-> 
-> And
-> 
-> /usr/include/sched.h:#include <bits/sched.h>
-> 
-> 
->>
->> Error I got:
->> CC       vdso_test_getrandom
->> vdso_test_getrandom.c: In function ‘kselftest’:
->> vdso_test_getrandom.c:257:29: error: ‘CLONE_NEWTIME’ undeclared (first
->> use in this function); did you mean ‘CLONE_NEWPID’?
->>    257 |         ksft_assert(unshare(CLONE_NEWTIME) == 0);
->>        |                             ^~~~~
->> vdso_test_getrandom.c:47:20: note: in definition of macro ‘ksft_assert’
->>     47 |         do { if (!(condition)) ksft_exit_fail_msg("Assertion
->> failed: %s\n", #condition); } while (0)
->>        |                    ^~~~~
->> vdso_test_getrandom.c:257:29: note: each undeclared identifier is
->> reported only once for each function it appears in
->>    257 |         ksft_assert(unshare(CLONE_NEWTIME) == 0);
->>        |                             ^~~~~
->> vdso_test_getrandom.c:47:20: note: in definition of macro ‘ksft_assert’
->>     47 |         do { if (!(condition)) ksft_exit_fail_msg("Assertion
->> failed: %s\n", #condition); } while (0)
->>        |                    ^~~~~
->> make[1]: * [../lib.mk:222:
->> /home/purva/linux/tools/testing/selftests/vDSO/vdso_test_getrandom] 
->> Error 1
->> make[1]: Leaving directory 
->> '/home/purva/linux/tools/testing/selftests/vDSO'
->>
->> I found that CLONE_NEWTIME is declared in both sched.h and
->> linux/sched.h. Since sched.h was already included, it was surprising
->> that the error persisted. Adding linux/sched.h as a header resolved the
->> issue, and the selftests compiled successfully after that.
-> 
-> Can you recheck that the sched.h that contains CLONE_NEWTIME is really 
-> the one used by your compiler ?
+On Fri, 31 Jan 2025 12:24:00 +0100
+Thomas Richter <tmricht@linux.ibm.com> wrote:
 
-I rechecked the header files on my system and got the following output:
-
-purva@purva-IdeaPad-Gaming-3-15IHU6:~/linux$ grep -r "CLONE_NEWTIME" 
-/usr/include/linux/sched.h /usr/include/bits/sched.h /usr/include/sched.h
-/usr/include/linux/sched.h:#define CLONE_NEWTIME	0x00000080	/* New time 
-namespace */
-
-This shows that the definition of CLONE_NEWTIME exists only in 
-/usr/include/linux/sched.h
-
+> perf test 11 hwmon fails on s390 with this error
 > 
->>
->>>
->>> Did you properly build kernel headers before building selftests ?
->>
->> Yes, I ensured that I properly built the kernel headers before building
->> the selftests by following the documentation provided here
+>  # ./perf test -Fv 11
+>  --- start ---
+>  ---- end ----
+>  11.1: Basic parsing test             : Ok
+>  --- start ---
+>  Testing 'temp_test_hwmon_event1'
+>  Using CPUID IBM,3931,704,A01,3.7,002f
+>  temp_test_hwmon_event1 -> hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/
+>  FAILED tests/hwmon_pmu.c:189 Unexpected config for
+>     'temp_test_hwmon_event1', 292470092988416 != 655361
+>  ---- end ----
+>  11.2: Parsing without PMU name       : FAILED!
+>  --- start ---
+>  Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
+>  FAILED tests/hwmon_pmu.c:189 Unexpected config for
+>     'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/',
+>     292470092988416 != 655361
+>  ---- end ----
+>  11.3: Parsing with PMU name          : FAILED!
+>  #
 > 
+> The root cause is in member test_event::config which is initialized
+> to 0xA0001 or 655361. During event parsing a long list event parsing
+> functions are called and end up with this gdb call stack:
+...
+> However member key::type_and_num is defined as union and bit field:
 > 
-> At the end we should probably wonder if we want selftests to build with 
-> old libc's that do not include latest defines. If we want to, then you 
-> should probably replace sched.h by linux/sched.h . I'm not sure about 
-> what to do really.
+>    union hwmon_pmu_event_key {
+>         long type_and_num;
+>         struct {
+>                 int num :16;
+>                 enum hwmon_type type :8;
+>         };
+>    };
 
-Since sched.h from libc may not define CLONE_NEWTIME on older systems, 
-should we explicitly include linux/sched.h to ensure compatibility with 
-older libc versions?
+That is entirely horrid.
 
-Thank you for your time and feedback!
+I'm surprised this even compiles:
+static size_t hwmon_pmu__event_hashmap_hash(long key, void *ctx __maybe_unused)
+{
+	return ((union hwmon_pmu_event_key)key).type_and_num;
+}
+It has to be just 'return key', but I'm not sure what the hashmap code is doing.
 
-Best regards,
-Purva Yeshi
+AFAICT the code is just trying to generate a value for the hashmap to hash on?
+Why not just use (type << 16 | num) instead of 'trying to be clever' with a union?
+
+	David
+
 
