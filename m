@@ -1,106 +1,124 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0246FAD2C;
-	Sat,  1 Feb 2025 07:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738395139; cv=pass; b=lskdhjJ4hAeMpPSYoHAmJ4RbBJmpG7Ye++ycypT0zJIR4ao8AfTah4w+S9SBjMJbWoRwHIq+BdUgrBchGAzNwlFuzxFb4rVvbBtbWSCJPLaj8Fw+Zhgtp6gY0eSUlbPxwIVH8oqP3GAN2OjgZDhx8CilDkKRdcR1VgibZuXiYA0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738395139; c=relaxed/simple;
-	bh=BLhU4dUqbMNxZMOW/Iq+cOvSPA/jfm2hzzXIf+YVFO4=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=qYMRXWcQ12G9yuBI3JaZcSCdppN62kKoYDx3ve+XlOmJnnvg6bL1lgXoekTX764I6oWi5LiVbcbZyaFnpWURg6BnFGwv5ENafANsfN6GkWpEcODwNgMyNYe8EKAzjYjnsIIUhHn1fulH0B4gzw3KJUL+qvWN1aB+dXTpLHMm7GE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=fkMhyP05; arc=pass smtp.client-ip=136.143.184.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1EC2AD2C;
+	Sat,  1 Feb 2025 07:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738395533; cv=none; b=B0750jCADSmm0hBiQhREukO//iWSMRgar0vhPgVowFZQRfs9cSGV0rixVYLFal94H4b15xCOQmJYCutjlx5C/8/Fh5ZA4os+S3UWknMPjiIifcaz9RYz5yxB9/y1fvaVxG7II797iR3W+XaNZ2RxofMYwt42R97nLgGi4amBvzQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738395533; c=relaxed/simple;
+	bh=9xmvHIq9dsoshm+uhUroh5H2iby22JoiDwJUC4ufiTU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uYCSDC+nQd1cp4/aRuAxaMmcaYeal8kxXUJBTf3kEVhB/iZGaH0HIrJnhgxeMOZmZZ0bXQd4SmbFW6EJv3VgwtadMEFSzR2ULEj3ZJNhhPbFyQ4BOxzWH3lf3DGNI8Ox3MBOh6kHNuN60IrSEuMqh0EH/xSFQ1G2PXZhn1paPAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gy4nv8CU; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="fkMhyP05"
-ARC-Seal: i=1; a=rsa-sha256; t=1738395113; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Rfe9ZSjSkKPaFz/t1ESMbVqwfIOHPKTA8PHTBdoX2/DSOf+QqWzIlt9ns9BM9lLkeMKSSO6J8u28u0f+zy1mzKXUV0K1J0rFhTLFO77qAhVv/bKhVXxXkgWxBQSEzePKf0nEfXL898Y3fV/QsSkqXiSg39TghdffAHcjewYBSOk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738395113; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=yPIDVcDWLvCXO6qjUDSCw6w2/zuz4gmUpH3iRUBTW9Q=; 
-	b=XQ6/6DNOKlLnCf3mv8FDGhbcpBTgpdZT5ae7GHbkglsTTjNlfwPCYbauZL15W1sWiJAvYjTxic7fLOZGd4CBdywXhA97TCHI6uU9L/zUUfZStUfAir0Fs3eRSyGcI//p52ZRUfIvJsaWfCJm8rinGbVU4OgQPLSqOZdPm98CyPU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
-	dmarc=pass header.from=<Usama.Anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738395113;
-	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=yPIDVcDWLvCXO6qjUDSCw6w2/zuz4gmUpH3iRUBTW9Q=;
-	b=fkMhyP05nlECwp+8afA6ZdCnXRBEGqqOatHDveQW33cEN62Ivjo0lPQaOD66Fj7R
-	dTRof9zsUg1tbDv+sU8BRWAsZpVXVSjpsf3kOL/7NfC3LWLNjOnECJvchoCHtYIHFlN
-	loWAzalLSyl4C0nZ3tTxrZUzDiQd6IUpAmaA6Q8Q=
-Received: by mx.zohomail.com with SMTPS id 1738395109031628.7086343806136;
-	Fri, 31 Jan 2025 23:31:49 -0800 (PST)
-Message-ID: <1175024c-6ef7-4557-95ca-180dd0a3dd5b@collabora.com>
-Date: Sat, 1 Feb 2025 12:32:20 +0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gy4nv8CU"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2161eb95317so48351115ad.1;
+        Fri, 31 Jan 2025 23:38:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738395531; x=1739000331; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9xmvHIq9dsoshm+uhUroh5H2iby22JoiDwJUC4ufiTU=;
+        b=gy4nv8CU8XdDxtKiQT9BGQbldOULrx6auZ8fHmSo4Lu1FZQy/c2hUPApuCpg5irj+R
+         dzeiGgtABFCTwJIAFV0uhWLw27nZnH/gTj46QZg+WwSR6sGU44+QjBtF7Dzkc7Q6iXX1
+         h/CyUE+PIf11pXANqIAOdg0B8lx5ZiUm3CmeesRsa4myQeSyaYba9NLKHA9LQ4RQIhGW
+         z+/GqvPQ2cr2edIShefP1dUs/5XNSxFgDWh9icdhG05dJSyJTnG/4tK+fPQTL3aTmZOB
+         zwXfiZ5phOCy/KTLEw3ipuSvdR9Pe6aiZ4Hc8kyeDk0QLgGhKqsh/PVy/Rh6sdNOKfMl
+         /vNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738395531; x=1739000331;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9xmvHIq9dsoshm+uhUroh5H2iby22JoiDwJUC4ufiTU=;
+        b=iMAiwEcuIQEiympzeY8l4BT50LAhCM7Vv6XzBPUCx6BOE0PiGGdipDVBQos/vnRqxL
+         VrNJfSAZHfUUkIDdLFXS1PSBCIpas/HZKvyXLUrtGspg3QokHZYP7EcD5D8vahl9jQuI
+         aCL00/cKu7F5OWOdWfivNnHPmYDaj8mMOfzO686skmSsyQy4t5iW0vrFfAA1HeykVImC
+         YLHvc4A+t7DmgEJ5sE1nik/mBPtCuCuFzGvhEhbM5n8o5gn1MGwuIa+6jm84Vxa2JoLN
+         M5b6hkLcUDTGOeeqF66lbEKGMH5N+AsB7OKcRfxqOuPbsuRYVwf7VAjRhIMjf8BY3b/a
+         a+Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCV37Fib72Huq4iuH1BQNWgEDdSjAsKMkz4uoy/lErvHtqVAn9dWuwKk/R8pqro8IPvZ8rROOXgc+0Y3E+k=@vger.kernel.org, AJvYcCWkxL8bJzEe526KpcZA4DVrOAhU1H7Ix9BS/IoiPNeYHXAbbPUw0JhzZUG2YbSgdiNn7LlJVTYt81zn@vger.kernel.org, AJvYcCWy5t2rtFLg/ftmbKcD77mQaYBSqPGDQH7USRN7eLWdxtvsRtXO2Vv0/YhW8J3QsFhXK3cv3hU/eEU7YD88wg==@vger.kernel.org, AJvYcCWzmTeXMCI19iAa1lSG03CKqEsfi+m27JEGP4Z3I5cFDKUkwLmxJyYw9YTNrsz+4mCPrzKH6Rxlw7orOy2v@vger.kernel.org, AJvYcCXLk1AqoayVw3kMWIO7rVHBLP9S+11PRy60JDX8ouha2JuTepty4mEXlUbZvB4MgjDcX0MuTJfvkU0brPErx1io5T2S2g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiSps+IFpF4w4tIxHOpQtuOzy6dq0jKBGTTA4LWugM+LIBjvn5
+	QTo7Za9x8q1fyVxD8P87fkmtjI/0mwzeY0+aFBAxiwQN/lXPfKnw
+X-Gm-Gg: ASbGnct2h49gLJyRlQpTaXeLgpuOH30CiYeBx9q5jTLWbnyw4vUSzbW98zA4VNo7R90
+	5u7sQA0b0KPA2RYNpvH+dhf19rcR3rz3ngjt39WLkJQ9twi2GY8caxCu+BjQwekhLcE+00Dcw0w
+	JNUKMQtF23cUzOM62nYEA2piGB+emoLYe/enpareamWZF6WQOoj3UNi1jY3/zHV3Svi8gR0DGfx
+	bcWJet0/3VrsgmNaDm+WljHZt+evpO+cacwTA2YykPGzZhflGzA/b4Sovt+j85UF9CJfkmwdH+A
+	0DOwTiZ+Mkqc+k3S
+X-Google-Smtp-Source: AGHT+IEH7GLuMVenB+DGZ11031+0Z7QM64QuG4lUZJW7bAL42hdA0RgOGjpRPyREV+YjQByA00/2yQ==
+X-Received: by 2002:a17:902:d50f:b0:21a:8716:faab with SMTP id d9443c01a7336-21dd7d78cd3mr216024245ad.16.1738395530815;
+        Fri, 31 Jan 2025 23:38:50 -0800 (PST)
+Received: from SC8280XP.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31edc21sm40719225ad.42.2025.01.31.23.38.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 23:38:50 -0800 (PST)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: krzk@kernel.org
+Cc: andersson@kernel.org,
+	bryan.odonoghue@linaro.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	jdelvare@suse.com,
+	konradybcio@kernel.org,
+	krzk+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	mitltlatltl@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	robh@kernel.org
+Subject: Re: [PATCH RESEND v6 0/3] platform: arm64: Huawei Matebook E Go embedded controller
+Date: Sat,  1 Feb 2025 15:38:37 +0800
+Message-ID: <20250201073838.3278-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <33f8a68f-46d8-472f-8061-52800e5bd014@kernel.org>
+References: <33f8a68f-46d8-472f-8061-52800e5bd014@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Usama.Anjum@collabora.com, Kees Cook <kees@kernel.org>,
- Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>,
- Shuah Khan <shuah@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, kernel@collabora.com
-Subject: Re: [PATCH 01/16] selftests/mm: remove argc and argv unused
- parameters
-To: David Laight <david.laight.linux@gmail.com>
-References: <20250109173842.1142376-1-usama.anjum@collabora.com>
- <20250109173842.1142376-2-usama.anjum@collabora.com>
- <20250110190057.2294fd5a@pumpkin>
-Content-Language: en-US
-From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
-In-Reply-To: <20250110190057.2294fd5a@pumpkin>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-On 1/11/25 12:00 AM, David Laight wrote:
-> On Thu,  9 Jan 2025 22:38:27 +0500
-> Muhammad Usama Anjum <usama.anjum@collabora.com> wrote:
-> 
->> Remove the following warnings by removing unused argc and argv
->> parameters:
->> In function ‘main’:
->>   warning: unused parameter ‘argc’ [-Wunused-parameter]
->>     158 | int main(int argc, char *argv[])
->>         |          ~~~~^~~~
->>   warning: unused parameter ‘argv’ [-Wunused-parameter]
->>     158 | int main(int argc, char *argv[])
-> ...
->> diff --git a/tools/testing/selftests/mm/compaction_test.c b/tools/testing/selftests/mm/compaction_test.c
->> index 2c3a0eb6b22d3..8d23b698ce9db 100644
->> --- a/tools/testing/selftests/mm/compaction_test.c
->> +++ b/tools/testing/selftests/mm/compaction_test.c
->> @@ -194,7 +194,7 @@ int set_zero_hugepages(unsigned long *initial_nr_hugepages)
->>  	return ret;
->>  }
->>  
->> -int main(int argc, char **argv)
->> +int main(void)
-> 
-> Doesn't that generate a different warning because main() is a special function
-> and gcc knows the arguments it should have.
-No, we still get unused argument warning. 
+On Sat, Feb 1, 2025 at 5:20 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On 31/01/2025 10:21, Pengyu Luo wrote:
+> > This adds binding, drivers and the DT support for the Huawei Matebook E Go
+> > (sc8280xp-based) Embedded Controller which is also found in Huawei Matebook
+> > E Go LTE (sc8180x-based), but I don't have the sc8180x one to perform
+> > tests, so this series enable support for sc8280xp variant only, this series
+> > provides the following features:
+> >
+> > - battery and charger information report
+> > - charging thresholds control
+> > - FN lock (An alternative method)
+> > - LID switch detection
+> > - Temperature sensors
+> > - USB Type-C altmode
+> > - USB Type-C PD(high power)
+> >
+>
+> Why are you resending?
+>
+> Previous version was only week ago and minimal time is two weeks. Plus
+> its merge window, so this resend is unjustified.
 
-> 
-> Just disable -Wunused-parameter - there are far too many places where it produces
-> unwanted warnings.
-The purpose is to run static analyzer and find obvious errors to enhance quality of
-the code which is only possible if we start using these compiler flags. This is just
-my thinking.
+Sorry, I am still new to the process, I may have misunderstood something.
+I sent it because I had got at leaset one reviewed tag for every patch
+from the corresponding subsystem maintainer. Can I expect that there would
+be no reviewing? All I need to do is wait for it to be applied.
 
-Feel free to share your thoughts?
+For merge window, I noticed pr from platform-driver-x86 had been merged a
+week ago. Maybe I shouldn't assume for every subsystem.
 
--- 
-BR,
-Muhammad Usama Anjum
+Best wishes,
+Pengyu
