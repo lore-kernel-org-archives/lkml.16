@@ -1,293 +1,133 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF061CEE9B
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 23:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E991CAA84
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 23:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738451892; cv=none; b=ajrqkwcZiEAsQXAquXcV9A2TyHqCjnSAhf1J1YC/ods1Kvetc6UaxSBTEIJUFH7UEUMbIM/JYULDr+6rD06KqPkders2WVUpXErQIz6OYpNsUP95GsFfWpddzKG+BtYYZCwmaY25oaSOWKae0+TUzFzaNRwzBXlD0zRvMZr55bw=
+	t=1738451918; cv=none; b=CEsRbHpmI3l5Cki1OqDpzpJcZovmV5qdniNy8MUb2j9W4qk9g1mqTj2YrfH+/fM9EfmXNtloCRGaiNnktF6PCt/ocMtvdF8GwiUKAegZNikmjRMcitwmNxY2w4G+Ctx2Xy7P+JU15FKQ8O5TECBkQwjvcJ+8YxUgcrUkh8sRRlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738451892; c=relaxed/simple;
-	bh=mJ6SRSQshvUuU6M00pLUY5gzmNqpdba1JC8WuyNd/qE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=X4wYVP718nVNxFySQEbEJ4Ctmo37J0gjKXs0hx/KbnXqBxCWeeuA+6duOzLt25gPIWuPu3edSVj9ErGt90dpV3Pwj6L4Ntd4eielf61RSV4GTnmh7u7RX+vwZnrw/wM/XmC6ww1+h07zVSVE4V9fQrUhdGqfTEfCQ+Yid20+1b8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LCDVmjRt; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
+	s=arc-20240116; t=1738451918; c=relaxed/simple;
+	bh=px3hVcznrT6Balh2mpqYyF108IlrjUXg4nFHrLhwroE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CBe2c33imfUgzSSVcViO1BBuAg4giHODyi0EiuA4i3q49URiFcrwFbsOGrKzMfCIslutVSunQBJTgl65pHNWyomPW/uUirEL+oaFTPgaLuX7p0iBG4ds6IZwWVTKyDQk6lBgb70Wz+MQgXNw3NuMfT7J8dnRmB8ETSp4DDrXMK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KC7VXqrk; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LCDVmjRt"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f83e54432dso9000517a91.2
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 15:18:10 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KC7VXqrk"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaecf50578eso643617366b.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 15:18:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738451890; x=1739056690; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=REEyzR4VwcXBG/MiulZy61h2cqis6B2iwbKUK+/Z7ro=;
-        b=LCDVmjRtUoX3tG708KtkUVTU3c933KWKJ3JhUJ+wpXWl93hXBjyPpA3RSYzr4xAlQc
-         mW2Pt5xoE9npIjP6RwyG5x3HO2oJWbNR92AQXIOGhm/UU1A9DuB2mCUFzqo25v2a1I6T
-         BSbj113FWFaAR4NeX+tJAz2F/ocP6dGALZxj3OGUqNqgjUoJCrYP4mPrDSUUftrRn4b2
-         C4QKddG82uMA3AOP9ocH3zuvL6WFpRA7WCMEMa17coQtLkIMgsjuqhC0zlTLzxax2aPi
-         r8qdZdgykdQNHksT7BYFP9kFL48UXG1vOuY2iEu9wR5M9J/Jahe1yqi+/zo5BDR1oB0w
-         wyvw==
+        d=linux-foundation.org; s=google; t=1738451914; x=1739056714; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SZLpGznw6NX+7xYT926JUOJVSOGgi/nOeg57L4kVIH0=;
+        b=KC7VXqrkJQwbLEkirxipmDP6pDuB3J6TJL/aeZ5sEKpyO1MC2pd2C1cYJNMCAqqN++
+         wnS+z/vbOgAYSOU8uOa5Khbo5MW3h7aBDtGcT6Yrz3tGL+Fo3pv0uEO7hxjUnEpOfo9y
+         8caSF+8zmqDaF1+nN7m3N1sy43C7kkIuKjVN8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738451890; x=1739056690;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=REEyzR4VwcXBG/MiulZy61h2cqis6B2iwbKUK+/Z7ro=;
-        b=Jd0TaSqiSXrCQySXFuhy7WAxlFUjQZNPGMxTP/AjdcLlq25wIUvGNSYGgE+IEAj1kx
-         CpYFANqwgBWkPyeW9fybFUwGG6lPe18O4aPyoPWy6leLOvU09XGNuIyYWlamX6+B7Ggt
-         5yVIXMBosbOJ3uZbVOGAw3he5+P1AS6w8lygLlhiKlRdyCA0DQr9XZTlTaFdc9a9gJ/3
-         daCyvWNeK624LH1h32Gz+yNDOHsEGfvgZrpCM9u7LsrfshM/iDSqMlnjitrovZAqhYi+
-         v1/IJpu3Z7agusSdipB3BcRL5tBZnb2031CAtsHzwT7NC3FJ729sJvayVeEKIdO6QlCm
-         OnPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWg5BKtrhTd3J3nWaJ/Ty4IWQv9M7baisdvHXa8g2DwERoXt6HXyOhB4YJ4u09WepV893XIue0KhBBrf8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxpdpo1fYIf6QS9upvA1XMaUNz0QCFJ2RTpUg7FXc1TdXjTVuB/
-	k25aGtpcFPCbraHfLglMHgoy2tCbYxL46gqmnHc06Pa7v22mGFXgmznvoDIYhFQQdk7mrqFjnLF
-	aQQ==
-X-Google-Smtp-Source: AGHT+IH3XLGWaDaT1t9/Cp7o6c+RF7ry2yIsdfJHITI/fssp3IRkvyZrbgiqnj5YWj1ktwSp36mfOaC0fRY=
-X-Received: from pfwo11.prod.google.com ([2002:a05:6a00:1bcb:b0:72a:bc54:8507])
- (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:aa7:930b:0:b0:726:8366:40ca
- with SMTP id d2e1a72fcca58-72fd0bbd6dcmr22976159b3a.1.1738451889825; Sat, 01
- Feb 2025 15:18:09 -0800 (PST)
-Date: Sat,  1 Feb 2025 15:18:02 -0800
-In-Reply-To: <20250201231803.2661189-1-surenb@google.com>
+        d=1e100.net; s=20230601; t=1738451914; x=1739056714;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SZLpGznw6NX+7xYT926JUOJVSOGgi/nOeg57L4kVIH0=;
+        b=wjvzyUYErOl0df0ZuxQlUYiJMobG7cxkA26WJIvBdPSC/0prFLbsYLW495MLKwIzAR
+         ai0i3vQpFGxzsN28XXJy0FwseAmY1oPiJpz42RC8SnrXOuGMsIEfz8R1LfdZpUIgY5ll
+         OW92oDearMBg/mr/EazrT8YEJqfllAe8hJyT9b4mKZGyyKXa8bxWgAADSXpHbg66jn28
+         AzjBtUfATFjlrZ6MK/itOQPogbAF64sSTJr9jpVvqGynQW2pPM+gw8R9RVP8hgT+hpwI
+         DFrWKq5jEZV6EMQQJZuWpyC6fkpD/TRrUveN7napeRIwJXE7c324JV673t1NTjcJb+tG
+         NyHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWoXGja12SvO2f5vpSWdk2tWVZIzdOVKqQIfAIQI4OpNZRPJgm5Qv4D5IqGU9lN5VQ13v/6niamp7bzbN0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdM+0RwqkZmU7qnWJWh0YYJVo5oAlHINjnTprX3o8/vnKG8EQU
+	U4gpZMCHp2eVRsWrsSpAaY/n0krdN1TpOiAVWbLjoV1V3zf6rlbV/jI8wjEmBkmLWzzY8CWap7C
+	cGlQ=
+X-Gm-Gg: ASbGncv75GEwqzmwsr/9wXBTGRrnK1wjPIhY3vdOimBtA4vC2Foz4IXCB2T0zGfilvz
+	gAVfy2Z2OQ1Zf4uFEoK/S6g3/MbFhGHM+87x1CGgjxNdG152CYoVdkE8B1aNP1BxP0iX27+C5Iv
+	JW7KbbauCTi6N9Jf+RtDS2LFPLYF/GnxrOo8jOT6YsmL2qzKv9Zl3YAC6nXR1Fqr9wihHntEaMA
+	bqTroG8F8SZcj3735T6P0BoOctRwGM1qRg7e+TKFOp8BbwQZvVfnYrN94ul/xJbKa3tsIAcPPVV
+	itVLk8bm6YKMehdiXldatJfONtjLf5a/dTOXBhxOmc2FTvkWk3yHtFv29Q8SuIz/WA==
+X-Google-Smtp-Source: AGHT+IGZtpZF04NwvGHPpqU3mYDiQ6xEt3Ybn7RkvaC7OOXCAaCDh3jpwIELLS4o21He1tLQsKJyGg==
+X-Received: by 2002:a17:907:94c8:b0:aa6:b4b3:5925 with SMTP id a640c23a62f3a-ab6cfceaaf1mr1589520566b.14.1738451913818;
+        Sat, 01 Feb 2025 15:18:33 -0800 (PST)
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a553c6sm486972766b.165.2025.02.01.15.18.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Feb 2025 15:18:32 -0800 (PST)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5dc82e38c10so3881057a12.3
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 15:18:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVMQ5T895OszqWxVh3+BCb9P25JZItbkqP3ydI4Gj6CyNZG13UroQkqLJkQNTrW3aefXXXKCn9VRxEA+jQ=@vger.kernel.org
+X-Received: by 2002:a05:6402:3511:b0:5d3:d7b0:b834 with SMTP id
+ 4fb4d7f45d1cf-5dc5efbdc80mr17093042a12.1.1738451912012; Sat, 01 Feb 2025
+ 15:18:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250201231803.2661189-1-surenb@google.com>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250201231803.2661189-3-surenb@google.com>
-Subject: [PATCH v2 3/3] alloc_tag: uninline code gated by mem_alloc_profiling_key
- in page allocator
-From: Suren Baghdasaryan <surenb@google.com>
-To: akpm@linux-foundation.org
-Cc: kent.overstreet@linux.dev, vbabka@suse.cz, rostedt@goodmis.org, 
-	peterz@infradead.org, yuzhao@google.com, minchan@google.com, 
-	shakeel.butt@linux.dev, souravpanda@google.com, pasha.tatashin@soleen.com, 
-	00107082@163.com, quic_zhenhuah@quicinc.com, surenb@google.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20250131225837.972218232@goodmis.org> <20250131225942.365475324@goodmis.org>
+ <e83ce086-b55f-431a-a499-f83a434b70db@efficios.com> <20250201180810.1faf4906@batman.local.home>
+In-Reply-To: <20250201180810.1faf4906@batman.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 1 Feb 2025 15:18:15 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgTWVF6+dKPff-mhVwngFwBu_G9+fwOTF2Ds+YPj3xkeQ@mail.gmail.com>
+X-Gm-Features: AWEUYZmCClD8GCIsriJ_eXSqgwv6IsNbs7qWhVjH3BZVbVBbtFnqEYYSxzE1ZZ4
+Message-ID: <CAHk-=wgTWVF6+dKPff-mhVwngFwBu_G9+fwOTF2Ds+YPj3xkeQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Ankur Arora <ankur.a.arora@oracle.com>, linux-mm@kvack.org, 
+	x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de, 
+	jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com, 
+	boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com, 
+	andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>, 
+	Vineeth Pillai <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, 
+	Ingo Molnar <mingo@kernel.org>, Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de, 
+	daniel.wagner@suse.com, joseph.salisbury@oracle.com, broonie@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 
-When a sizable code section is protected by a disabled static key, that
-code gets into the instruction cache even though it's not executed and
-consumes the cache, increasing cache misses. This can be remedied by
-moving such code into a separate uninlined function.
-On a Pixel6 phone, page allocation profiling overhead measured with
-CONFIG_MEM_ALLOC_PROFILING=y and profiling disabled is:
+On Sat, 1 Feb 2025 at 15:08, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> No it doesn't need to be yield. That just seemed like the obvious
+> system call to use. But any system call would force a schedule. We
+> could just optimize yield() though.
 
-             baseline             modified
-Big core     4.93%                1.53%
-Medium core  4.39%                1.41%
-Little core  1.02%                0.36%
+No, "optimizing" yield is not on the table.
 
-This improvement comes at the expense of the configuration when profiling
-gets enabled, since there is now an additional function call. The overhead
-from this additional call on Pixel6 is:
+Why? Because it has *semantics* that people depend on because it has
+historical meaning. Things like "move the process to the end of the
+scheduling queue of that priority".
 
-Big core     0.24%
-Middle core  0.63%
-Little core  1.1%
+That may sound like a good thing, but it's ABSOLUTELY NOT what you
+should actually do unless you know *exactly* what the system behavior
+is.
 
-However this is negligible when compared with the overall overhead of the
-memory allocation profiling when it is enabled.
-On x86 this patch does not make noticeable difference because the overhead
-with mem_alloc_profiling_key disabled is much lower (under 1%) to start
-with, so any improvement is less visible and hard to distinguish from the
-noise. The overhead from additional call when profiling is enabled is also
-within noise levels.
+For example, maybe the reason the kernel set NEED_RESCHED_LAZY is that
+a higher-priority process is ready to run. You haven't used up your
+time slice yet, but something more important needs the CPU.
 
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
----
-Changes since v1 [1]:
-- Removed inline_if_mem_alloc_prof and uninlined the gated code
-unconditionally, per Steven Rostedt and Vlastimil Babka
-- Updated changelog to include overhead when profiling is enabled
+If you call "sched_yield()", sure, you'll run that higher priority
+thing. So far so good.
 
-[1] https://lore.kernel.org/all/20250126070206.381302-3-surenb@google.com/
+But you *also* are literally telling the scheduler to put you at the
+back of the queue, despite the fact that maybe you are still in line
+to be run for *your* priority level. So now your performance will
+absolutely suck, because you just told the scheduler that you are not
+important, and other processes in your priority level should get
+priority.
 
- include/linux/pgalloc_tag.h | 60 +++-------------------------
- mm/page_alloc.c             | 78 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 83 insertions(+), 55 deletions(-)
+So no. "yield()" does not mean "just reschedule". It rally means
+"yield my position in the scheduling queue".
 
-diff --git a/include/linux/pgalloc_tag.h b/include/linux/pgalloc_tag.h
-index 4a82b6b4820e..c74077977830 100644
---- a/include/linux/pgalloc_tag.h
-+++ b/include/linux/pgalloc_tag.h
-@@ -162,47 +162,13 @@ static inline void update_page_tag_ref(union pgtag_ref_handle handle, union code
- 	}
- }
- 
--static inline void clear_page_tag_ref(struct page *page)
--{
--	if (mem_alloc_profiling_enabled()) {
--		union pgtag_ref_handle handle;
--		union codetag_ref ref;
--
--		if (get_page_tag_ref(page, &ref, &handle)) {
--			set_codetag_empty(&ref);
--			update_page_tag_ref(handle, &ref);
--			put_page_tag_ref(handle);
--		}
--	}
--}
--
--static inline void pgalloc_tag_add(struct page *page, struct task_struct *task,
--				   unsigned int nr)
--{
--	if (mem_alloc_profiling_enabled()) {
--		union pgtag_ref_handle handle;
--		union codetag_ref ref;
--
--		if (get_page_tag_ref(page, &ref, &handle)) {
--			alloc_tag_add(&ref, task->alloc_tag, PAGE_SIZE * nr);
--			update_page_tag_ref(handle, &ref);
--			put_page_tag_ref(handle);
--		}
--	}
--}
-+/* Should be called only if mem_alloc_profiling_enabled() */
-+void __clear_page_tag_ref(struct page *page);
- 
--static inline void pgalloc_tag_sub(struct page *page, unsigned int nr)
-+static inline void clear_page_tag_ref(struct page *page)
- {
--	if (mem_alloc_profiling_enabled()) {
--		union pgtag_ref_handle handle;
--		union codetag_ref ref;
--
--		if (get_page_tag_ref(page, &ref, &handle)) {
--			alloc_tag_sub(&ref, PAGE_SIZE * nr);
--			update_page_tag_ref(handle, &ref);
--			put_page_tag_ref(handle);
--		}
--	}
-+	if (mem_alloc_profiling_enabled())
-+		__clear_page_tag_ref(page);
- }
- 
- /* Should be called only if mem_alloc_profiling_enabled() */
-@@ -222,18 +188,6 @@ static inline struct alloc_tag *__pgalloc_tag_get(struct page *page)
- 	return tag;
- }
- 
--static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr)
--{
--	struct alloc_tag *tag;
--
--	if (!mem_alloc_profiling_enabled())
--		return;
--
--	tag = __pgalloc_tag_get(page);
--	if (tag)
--		this_cpu_sub(tag->counters->bytes, PAGE_SIZE * nr);
--}
--
- void pgalloc_tag_split(struct folio *folio, int old_order, int new_order);
- void pgalloc_tag_swap(struct folio *new, struct folio *old);
- 
-@@ -242,10 +196,6 @@ void __init alloc_tag_sec_init(void);
- #else /* CONFIG_MEM_ALLOC_PROFILING */
- 
- static inline void clear_page_tag_ref(struct page *page) {}
--static inline void pgalloc_tag_add(struct page *page, struct task_struct *task,
--				   unsigned int nr) {}
--static inline void pgalloc_tag_sub(struct page *page, unsigned int nr) {}
--static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr) {}
- static inline void alloc_tag_sec_init(void) {}
- static inline void pgalloc_tag_split(struct folio *folio, int old_order, int new_order) {}
- static inline void pgalloc_tag_swap(struct folio *new, struct folio *old) {}
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index b7e3b45183ed..16dfcf7ade74 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1041,6 +1041,84 @@ static void kernel_init_pages(struct page *page, int numpages)
- 	kasan_enable_current();
- }
- 
-+#ifdef CONFIG_MEM_ALLOC_PROFILING
-+
-+/* Should be called only if mem_alloc_profiling_enabled() */
-+void __clear_page_tag_ref(struct page *page)
-+{
-+	union pgtag_ref_handle handle;
-+	union codetag_ref ref;
-+
-+	if (get_page_tag_ref(page, &ref, &handle)) {
-+		set_codetag_empty(&ref);
-+		update_page_tag_ref(handle, &ref);
-+		put_page_tag_ref(handle);
-+	}
-+}
-+
-+/* Should be called only if mem_alloc_profiling_enabled() */
-+static noinline
-+void __pgalloc_tag_add(struct page *page, struct task_struct *task,
-+		       unsigned int nr)
-+{
-+	union pgtag_ref_handle handle;
-+	union codetag_ref ref;
-+
-+	if (get_page_tag_ref(page, &ref, &handle)) {
-+		alloc_tag_add(&ref, task->alloc_tag, PAGE_SIZE * nr);
-+		update_page_tag_ref(handle, &ref);
-+		put_page_tag_ref(handle);
-+	}
-+}
-+
-+static inline void pgalloc_tag_add(struct page *page, struct task_struct *task,
-+				   unsigned int nr)
-+{
-+	if (mem_alloc_profiling_enabled())
-+		__pgalloc_tag_add(page, task, nr);
-+}
-+
-+/* Should be called only if mem_alloc_profiling_enabled() */
-+static noinline
-+void __pgalloc_tag_sub(struct page *page, unsigned int nr)
-+{
-+	union pgtag_ref_handle handle;
-+	union codetag_ref ref;
-+
-+	if (get_page_tag_ref(page, &ref, &handle)) {
-+		alloc_tag_sub(&ref, PAGE_SIZE * nr);
-+		update_page_tag_ref(handle, &ref);
-+		put_page_tag_ref(handle);
-+	}
-+}
-+
-+static inline void pgalloc_tag_sub(struct page *page, unsigned int nr)
-+{
-+	if (mem_alloc_profiling_enabled())
-+		__pgalloc_tag_sub(page, nr);
-+}
-+
-+static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr)
-+{
-+	struct alloc_tag *tag;
-+
-+	if (!mem_alloc_profiling_enabled())
-+		return;
-+
-+	tag = __pgalloc_tag_get(page);
-+	if (tag)
-+		this_cpu_sub(tag->counters->bytes, PAGE_SIZE * nr);
-+}
-+
-+#else /* CONFIG_MEM_ALLOC_PROFILING */
-+
-+static inline void pgalloc_tag_add(struct page *page, struct task_struct *task,
-+				   unsigned int nr) {}
-+static inline void pgalloc_tag_sub(struct page *page, unsigned int nr) {}
-+static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr) {}
-+
-+#endif /* CONFIG_MEM_ALLOC_PROFILING */
-+
- __always_inline bool free_pages_prepare(struct page *page,
- 			unsigned int order)
- {
--- 
-2.48.1.362.g079036d154-goog
+You are literally better off using absolutely *ANY* other system call.
 
+The fact that you are confused about this kind of very basic issue
+does imply that this patch should absolutely be handled by somebody
+who knows the scheduler better.
+
+               Linus
