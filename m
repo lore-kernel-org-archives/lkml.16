@@ -1,147 +1,143 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9086A2B9A9;
-	Sat,  1 Feb 2025 09:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693233F9C5
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 09:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738403220; cv=none; b=kp2qXb3IA/oIrfwKnHxOxyheo5tBG1zWPGDgzJiJ9ZLQkfIbkEkOTSj4Rc4bZWMh0qCmIOf84lejqOCJu7f9sKR0QJKJ6+ZsjXaaEtEjmKIq6Cbx/FT4NJyVKMUzUim/qO0Ysrc7Tzw4zBFrpaJwMOi83PxIsh/3jTUCzk8G5Ic=
+	t=1738403497; cv=none; b=nO9qGmJQJKmW1qXmGgezzP4vbbJ1DTnOdZIRE+F0fruH24pG4qT8mmCmY8bAqNIOjdUhXZ4dfr58iISPInCNv2pvzaxkXPxoV3HxO3nG+oZ0amAUO8UnqC3bJlh7sKdxln2uC43Gg3kSmLu1WPbQWQsfs5DyLz2R7ZE3dldvULM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738403220; c=relaxed/simple;
-	bh=wfax+lSmFiE6bZtjfNXjyj28adDok+Vk7tISnKd5ys4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jftbT24HkjxqdZtQzixxyNplTn/zD/JEIYorDqH0SvzQ198obMmR3gVi9M44+/yJng++tiZ7l4aYeHv1/UBLZwhbLTrjUungKwK1N8sFbQ8JwK2gPiRwQqKBEq44oPkMyD6FZVwlW8l3I3lYY3py/pKABUoX2rpRb4ETYMZdTbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=abSGzcQq; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1738403497; c=relaxed/simple;
+	bh=/Lc2YIVYZMDWtzJOASQ91vr/NwUHANkE56YZql48Cvs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iApKPOsUIK2q2/SRC+gkC63Jp2+Ev0FK1UT4letxQejul9w01Ro3u6HxUQwYDAE0HJDlKxYIrnf4E2gRh12ASNzeJENP80wlw11fRCI3e0CV9XUoFlizmWNUpuL41j91/nChr0fP1LxWynQnDsXZezVFM4ZIR8IpbL3M+CXQkNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=aSuHUaOF; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="abSGzcQq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=HJfXHZ/A+sz+crqL6J+AkJgO1M7+g8HZDeac0KQl+5w=; t=1738403216; x=1739008016; 
-	b=abSGzcQqVNUyih8GSyQphGJE7149RiSJhrR+peK3ezcdcv9dchLQ6jI2cxs1wFdQ2jdrnBeccOr
-	q97hn6AjFv65heKKnG/YqQ8FIVVU8l7v3Kbn5u7cDzLT+SDrY2vMwpmk6KQ6wbawkRPcm99cLT/Sn
-	Jpo3tOEDEyUb9eTFkg+udWBMSnMIv2JTOlcnDH4wkjxAvnXlB93aYJPcbf1aOGSdyCzzvMLDScatO
-	DRLOfgVQOT8I3cc+TOToYb1SIPsg+dxRVujxNBxROh/IgGHNRZSRZ8nz6O5YzEe7mkQC/OmETi9UZ
-	0lbPyBTkSt5K2vBwuWcMWRqconYY3QoBmR4A==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1teA5N-00000003lAb-0Pcg; Sat, 01 Feb 2025 10:46:45 +0100
-Received: from [164.15.244.49] (helo=[10.93.216.17])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1teA5M-00000000ews-3fpJ; Sat, 01 Feb 2025 10:46:45 +0100
-Message-ID: <6cb712c1c338d3ce5313e05a054ea9de21025ff0.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v2 0/4] alpha: stack fixes
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Ivan Kokshaysky <ink@unseen.parts>, Richard Henderson	
- <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, Oleg
- Nesterov	 <oleg@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>, Arnd
- Bergmann	 <arnd@arndb.de>, "Paul E. McKenney" <paulmck@kernel.org>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Magnus Lindholm
- <linmag7@gmail.com>, 	linux-alpha@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	stable@vger.kernel.org
-Date: Sat, 01 Feb 2025 10:46:43 +0100
-In-Reply-To: <20250131104129.11052-1-ink@unseen.parts>
-References: <20250131104129.11052-1-ink@unseen.parts>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="aSuHUaOF"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5f2e31139d9so1318778eaf.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 01:51:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1738403494; x=1739008294; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L+AAdkcmZc4lSXsMOcapYBhFqOepj7d/gBINmIU6crc=;
+        b=aSuHUaOFXwEysvdBDhkbIgOaX3w9jq2YJXpGwp5NDFUGaJdHGwmegwYf2Le7mriryp
+         yJ1mFWUsbATOmqc2hhqOqBXr/UuA/+5AL6eoUdS3bNAAmMJ6Ivr4iZVvvNkpLlEKCoob
+         sEu6WXMU4SX14crbAaRlabpcIuZHHL6+W5L8CftEwH0iCfx745vigOr47KzUaLlTUMSX
+         bdZUcRVEt3Xg3j7o0QgiLgyrCsj4YhosbCCzAvULQKSgatXOfNyFbG3G3DftTsDTJMAd
+         Yg5Osq1CavgDheMIz52+7Egyqo/4jZ4MBxnulDi6bcEX5iVJkfYNq2cz7YtvfS6Ww3ib
+         dSCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738403494; x=1739008294;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L+AAdkcmZc4lSXsMOcapYBhFqOepj7d/gBINmIU6crc=;
+        b=oNO3C5TH4wEm9Q0cW0CzGlYUP+Wxry6zLaq6Z1czPDyoIDR0V7slloNzg9MxIBLuSh
+         wU0R4KcF3iAJg6jqpJBbcLmX1N1WdWrpeiRnlrhfOyrfVDSKtyz98gOSyTLkXnMyjqN7
+         a1uP2zdzUe4OIJwQW9lZ6ddGRNooOoKTA7SwgGhdL4t9C75remdQlIrY1ap96vG8Zeoo
+         GE3/F2uNm++nqW0RcBJB9PHMzrYkHBETW6XNWPLghGBJgPMPVEkOy2JezZ2b3N2a7SJV
+         UeyyZnCaA7+0rVH3CwUFeoUuKIlEXwDgKXWDZgyhSc4t8Wn8DkiQiLldD9A8gP6MzJ3J
+         v47w==
+X-Forwarded-Encrypted: i=1; AJvYcCWts2fa6DGNsCG0/9KWgVuNa1eIoAGw70m1c1loyLClWRexw+khlihdwdSSO2w0SdtTYWY/Ar8tPSTDJtE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUeokxhhXhGAGiIUSaK+i0fZ52slc232fF/2W5LED6rIZKJAKj
+	ORDxdkapfwfcNVs49J/s69HjoK/s1D5lKSaY24ibUoNZuADfB77GzCu7UEesxVrqHvxlu6E1/hW
+	wXFRSSO4ErHlCAqs+KHvhSKyfkf+AYHQCZcfq8g==
+X-Gm-Gg: ASbGncvpLq8KFixp6PFG3EYT2LI/de2My1DyOOVIiym68jPHWlf2IzKreXgY52V84Ce
+	uiMkju8uS82GJ6yty3ylyxY9WBbxwxS9c54b/EbHOpvn4HGaRkI7mhf4OdhZkswbI4Pmg/GNufw
+	4=
+X-Google-Smtp-Source: AGHT+IEIIfBdNVn8LDpeA6rFY2D9do+Hyc1wDJ+qpODyAMtmiFvSiXtuvbFiuEmS1fHjZJ/7xlgvm9YLi2f51OwMYUg=
+X-Received: by 2002:a05:6871:8802:b0:29e:563c:2dbf with SMTP id
+ 586e51a60fabf-2b32f286144mr9462267fac.26.1738403494288; Sat, 01 Feb 2025
+ 01:51:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+References: <20250123074830.90923-1-cuiyunhui@bytedance.com>
+ <344c53cd-d856-4c03-9deb-743b65acd8aa@linux.alibaba.com> <CAEEQ3wmDej9bbPUmkx-ZrD4FG9Z7gTHMeCrVszx64g90O0RyiQ@mail.gmail.com>
+ <31e00081-8695-4ca6-a1ef-af5a007a7565@linux.alibaba.com> <CAEEQ3wm+f_SM7evwL=YrGy8gPLS5YdJm=qhJNT8bbMH7QBOzEA@mail.gmail.com>
+ <20250124122952.GB23438@willie-the-truck> <CAEEQ3wnTMfWSZRhTax3N60W=m3a=zxnJF6dOfiGnqJzBQs8WEg@mail.gmail.com>
+ <20250127165156.GE25757@willie-the-truck>
+In-Reply-To: <20250127165156.GE25757@willie-the-truck>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Sat, 1 Feb 2025 17:51:21 +0800
+X-Gm-Features: AWEUYZmAdXUmi37d66_VLF0H-K_x7oGaiWsf00mIojMN1X-oiLjeCpkGsMu0T7E
+Message-ID: <CAEEQ3wkj=6WPNFpet=A9JppiO52agw6HZArwhfWsWS9JOY6Dng@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] perf/dwc_pcie: fix duplicate pci_dev devices
+To: Will Deacon <will@kernel.org>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, renyu.zj@linux.alibaba.com, 
+	mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ivan,
+Hi Will,
 
-On Fri, 2025-01-31 at 11:41 +0100, Ivan Kokshaysky wrote:
-> This series fixes oopses on Alpha/SMP observed since kernel v6.9. [1]
-> Thanks to Magnus Lindholm for identifying that remarkably longstanding
-> bug.
->=20
-> The problem is that GCC expects 16-byte alignment of the incoming stack
-> since early 2004, as Maciej found out [2]:
->   Having actually dug speculatively I can see that the psABI was changed =
-in
->  GCC 3.5 with commit e5e10fb4a350 ("re PR target/14539 (128-bit long doub=
-le
->  improperly aligned)") back in Mar 2004, when the stack pointer alignment
->  was increased from 8 bytes to 16 bytes, and arch/alpha/kernel/entry.S ha=
-s
->  various suspicious stack pointer adjustments, starting with SP_OFF which
->  is not a whole multiple of 16.
->=20
-> Also, as Magnus noted, "ALPHA Calling Standard" [3] required the same:
->  D.3.1 Stack Alignment
->   This standard requires that stacks be octaword aligned at the time a
->   new procedure is invoked.
->=20
-> However:
-> - the "normal" kernel stack is always misaligned by 8 bytes, thanks to
->   the odd number of 64-bit words in 'struct pt_regs', which is the very
->   first thing pushed onto the kernel thread stack;
-> - syscall, fault, interrupt etc. handlers may, or may not, receive aligne=
-d
->   stack depending on numerous factors.
->=20
-> Somehow we got away with it until recently, when we ended up with
-> a stack corruption in kernel/smp.c:smp_call_function_single() due to
-> its use of 32-byte aligned local data and the compiler doing clever
-> things allocating it on the stack.
->=20
-> Patches 1-2 are preparatory; 3 - the main fix; 4 - fixes remaining
-> special cases.
->=20
-> Ivan.
->=20
-> [1] https://lore.kernel.org/rcu/CA+=3DFv5R9NG+1SHU9QV9hjmavycHKpnNyerQ=3D=
-Ei90G98ukRcRJA@mail.gmail.com/#r
-> [2] https://lore.kernel.org/rcu/alpine.DEB.2.21.2501130248010.18889@angie=
-.orcam.me.uk/
-> [3] https://bitsavers.org/pdf/dec/alpha/Alpha_Calling_Standard_Rev_2.0_19=
-900427.pdf
-> ---
-> Changes in v2:
-> - patch #1: provide empty 'struct pt_regs' to fix compile failure in libb=
-pf,
->   reported by John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>;
->   update comment and commit message accordingly;
-> - cc'ed <stable@vger.kernel.org> as older kernels ought to be fixed as we=
-ll.
-> ---
-> Ivan Kokshaysky (4):
->   alpha/uapi: do not expose kernel-only stack frame structures
->   alpha: replace hardcoded stack offsets with autogenerated ones
->   alpha: make stack 16-byte aligned (most cases)
->   alpha: align stack for page fault and user unaligned trap handlers
->=20
->  arch/alpha/include/asm/ptrace.h      | 64 ++++++++++++++++++++++++++-
->  arch/alpha/include/uapi/asm/ptrace.h | 65 ++--------------------------
->  arch/alpha/kernel/asm-offsets.c      |  4 ++
->  arch/alpha/kernel/entry.S            | 24 +++++-----
->  arch/alpha/kernel/traps.c            |  2 +-
->  arch/alpha/mm/fault.c                |  4 +-
->  6 files changed, 83 insertions(+), 80 deletions(-)
+On Tue, Jan 28, 2025 at 12:52=E2=80=AFAM Will Deacon <will@kernel.org> wrot=
+e:
+>
+> On Sun, Jan 26, 2025 at 09:54:35AM +0800, yunhui cui wrote:
+> > Hi Will,
+> >
+> > On Fri, Jan 24, 2025 at 8:30=E2=80=AFPM Will Deacon <will@kernel.org> w=
+rote:
+> > >
+> > > On Fri, Jan 24, 2025 at 05:11:05PM +0800, yunhui cui wrote:
+> > > > > >>>        vsec =3D dwc_pcie_des_cap(pdev);
+> > > > > >>>        if (!vsec)
+> > > > > >>>                return -ENODEV;
+> > > > > >>>
+> > > > > >>>        sbdf =3D plat_dev->id;
+> > > > > >>> -     name =3D devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dw=
+c_rootport_%x", sbdf);
+> > > > > >>> +     name =3D devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dw=
+c_rootport_%d_pmu", sbdf);
+> > > > > >>
+> > > > > >> A new name will break previous user tools.
+> > > > > > This name isn't suitable. It can't clearly show which is the PM=
+U
+> > > > > > device. Userspace tools don't have binding relationships, like =
+perf.
+> > > > > > Tools must traverse PMU devices before use.
+> > > > >
+> > > > > The device is under /sys/bus/event_source/ which indates it is PM=
+U device.
+> > > > > As far as I know, most of PMU devices do not endup with a '_pmu' =
+prefix.
+> > > >
+> > > > The point is the name "dwc_rootport_" is misleading, suggesting an
+> > > > extra PCIE RP in the system. Best to change the name to intuitive
+> > > > "xx_pmu".
+> > >
+> > > As pointed out above, changing the name will break userspace. So it's
+> > > simply not an option, sorry.
+> >
+> > Could you specify what in the userspace is broken and give an example?
+>
+> Can't I just take the documented example from dwc_pcie_pmu.rst:
+>
+> $# perf stat -a -e dwc_rootport_13018/Rx_PCIe_TLP_Data_Payload/
+>
+> If I have a script that uses that command on a machine today, then
+> applying your kernel patch will break the script, no?
 
-Thanks, I'm testing the v2 series of the patches now.
+Well, this is just a usage guide for the PCIe PMU and has no binding
+with perf. In user space, the existing PCIe PMUs in the system should
+be traversed first, and then perf stat/record ... can be executed.
 
-Adrian
+It's okay not to change the name, but it's better to change
+dwc_rootport_%x to dwc_rootport_%d to correspond with
+platform_device_register_data(NULL, "dwc_pcie_pmu", ...). It'll be
+more intuitive. What do you think?
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+>
+> Will
+
+Thanks,
+Yunhui
