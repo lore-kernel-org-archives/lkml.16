@@ -1,163 +1,142 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E0D2F5E;
-	Sat,  1 Feb 2025 19:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3AA2BAF4;
+	Sat,  1 Feb 2025 19:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738436638; cv=none; b=rOTiJ9A3bJ12Gzv8xZYX3FbOcQLSgom8t8itNdWa8p3ggAwrYPmhpN0pm9aKZl/w03iA0HwKWtZ+yzLBx2Mtr0LOAMOalvF9KgYQwzqwUnOCm+8F3iV2Bc6LexuAxy+bHGXrucKB87GP97E3BBZ82YqgGq7JiBWsDvQy6jCo2JE=
+	t=1738437174; cv=none; b=OgX+D2z01P+RZjXWGCnLy9qi0ujjOk6aP6Rw71bhL3kSgLRdVKiStyeo5tyerD7xC/UlHj6JlbXgeU29v/iaTUtYoHKNV7i44W3CaMmFZyWm2+PwzqpIh3VbGGZRuUoohb774dMg3dTTDeK2ahXS81o+M849+qyFeTuu8Y8BoW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738436638; c=relaxed/simple;
-	bh=eHlHxJwtlm0tya4D7/zjG/27qydiIisVU7egrYHWfKk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=muVSLeFu7axCZWuahR9kVhTD/66MaClaAeG+/8OkXqi4oGJEYXPSx55KgAnU4/i+kLyBUmm80Bd09nYk5yACEMWSV6lYOqWOgUKw+Qt3FPhqI+2GUQtYidCXzsUJiU2sBB/U3egKyFU8FnP6IPMRCCL9cY0Sd03LKqbcloPqZ8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nya1LomB; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738437174; c=relaxed/simple;
+	bh=0QBqcNKzY+SzopvrW4jWa8UfPfe7MKUSyO4YO4sZ7WA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=T6NqvY0i59QM/JIrhyymWg+pYWgUi2xppCE61mq/SpNe/Tahh/tCo7sPNBS9YWzl/ctQeO0Db+ROioa6qrL5axONEnXgJTqdZCEcYjFAkIUiPvcDhWmOFZ2qw65pemBQzgEQQZTshy02+/Vzfs9seT1Nldo2dDCN9NSCw20TY7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UR/9SWNi; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nya1LomB"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54021daa6cbso3284390e87.0;
-        Sat, 01 Feb 2025 11:03:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738436634; x=1739041434; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3/GVvSI89IYVsdqmAGOoy8X8v5dJ84EUxRf0NLPPEyE=;
-        b=Nya1LomBgdJF5UvKrd4NR38EtLUF/vPBOl8rLfwNWV0lMzRtFrUvOxPPpRt8c8Fi2I
-         F1svb3dHoCddmK7ul/AXUVFWbJv79dnBSUtlgaRnI5I0mCKkAtnhOsFEaPZHhWU1g/da
-         /YJXwaLzoGSPCuus8CqOniNPx3g4/hsYAltN0k5wxyaJ8NMuOi8Z1BGWva8NITKO9R2t
-         hxn7ra/u7txJ+v7sJ0DgnNcoIIxZ3vHnLcCYA4L+kG6zs8T9Eum9ZKtiUQSqhyOypZ3F
-         6o3nJOS/5C7sgFA5YINEjGedUPMjk1XHlBTKpbDKXX+b+1P4uKr06Ss3pkx/dSZGMHra
-         ynkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738436634; x=1739041434;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3/GVvSI89IYVsdqmAGOoy8X8v5dJ84EUxRf0NLPPEyE=;
-        b=JpUJHDb+yyIU7gW0Da1TbuG51mjKXnbI7sZHYtmVJQKdhOVGHDsiLY0Ab8h7qJPX6j
-         Okt8SUQNjDhRqqFf8IqWfrGKfqrYnrd2QyRRDYvFjsDGQKT8tDASW7UzUvw7kALdtRq0
-         SfNeXaVn4IUzzh9QukPny++g0okKO9Fpn3GVg4GjOaGfrOGbYrH66pwuFMs5c8ipczBS
-         Q/47PJAXTzn7E/nnYeTG2zZldP+BtHIiMcoAOC4HL64PLaBiw1XHiTHkTP/JQd9MVaCF
-         fZmCbeJ1gGH2VMKUUw2edRUQAaWQtk/3OwAqe/c9wOcIIqVaigTCDoJ8nRP227XWp3Iq
-         Rf3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXfTzu/giSSOdBO3INveRAw+8DYImuZiah5GxleaQEBisLNvZdvNMTXps2362cRGoEmtI6uiE4515IH@vger.kernel.org
-X-Gm-Message-State: AOJu0YxND5LuxxAWjzaCfYyEmIpzPuxuq17SPlZXvMDSTI6FXyc2ubYA
-	VW3kgQcHfj0joQkKHA5HV2hwLI/Q/oN543bHcP6Yfp0MDGBgNu+nwqczwHSbZeYfTERghARYdfl
-	7U7u5rV02ChiDImEkjdDynVWFxkDCaZZr
-X-Gm-Gg: ASbGncsMGVudcmi+wLaOkFrlAH2wsFpDAMtXH1vFwgJqGS0vNsLIU2NC5gjAOa4sdK2
-	pAcvnA/mpA+NnXyJB8oUj7VYb1vGv+b/ipfWRXdCt+Vi3yZaU+mpk1RIZjIn2FvOdGWD0aGjJCB
-	OmFjoJeZtWCBFdgCNTEOh3FFDDAWkyeVE=
-X-Google-Smtp-Source: AGHT+IEnq4AsbbhOBi2lsoAWc4GU1umYMP7etULjgutBN51MWjEk48ykMVan2TtaF0quxlpqir1f5gcRzu0LBkmOJNE=
-X-Received: by 2002:a05:6512:b97:b0:542:6f78:2ace with SMTP id
- 2adb3069b0e04-543e4c3c33bmr5225006e87.47.1738436633711; Sat, 01 Feb 2025
- 11:03:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UR/9SWNi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738437173; x=1769973173;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=0QBqcNKzY+SzopvrW4jWa8UfPfe7MKUSyO4YO4sZ7WA=;
+  b=UR/9SWNilDTDmzl4pIW6TyJoARnLFHbiCOe/MuPzSWYdu8jlvVENBixf
+   AFup+AWLFVddUsjCQFyB+DeyEydrNgl9LrCQDCP4KtEWkp3IUOTJsLUIR
+   371Efuvtejyibt6LS/7OOjcDZ16DgamKuixjZX5Vq/mf1q25eOaH7Miy6
+   jsHn3AV/smb1d9hHCxNDChess/hyHmBFaW0LR2ffNSVoQNVynZ58QMceV
+   UtVCSuzqZLN5x46CsQ74Kcgk7fwdezvntZjqzO5iecjhBDrTOWYo2+QBF
+   a2zEA4HNluEYCE+kXO9DnKdRrTNYQuq+4ISc1RHnTHIQWt65o1tSi0GqK
+   A==;
+X-CSE-ConnectionGUID: OFEzObQZS+Gl/ZRjtFHQEg==
+X-CSE-MsgGUID: AkquYbtOQbWpf8MU0rbNMQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11333"; a="61451874"
+X-IronPort-AV: E=Sophos;i="6.13,252,1732608000"; 
+   d="scan'208";a="61451874"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2025 11:12:52 -0800
+X-CSE-ConnectionGUID: zxXLNLOvQP+skVgiWe8S3g==
+X-CSE-MsgGUID: M9OVu734TNeiEA/md8FO/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="147115919"
+Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2025 11:12:50 -0800
+Date: Sat, 1 Feb 2025 11:12:51 -0800 (PST)
+From: matthew.gerlach@linux.intel.com
+To: Krzysztof Kozlowski <krzk@kernel.org>
+cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
+    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
+    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
+    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
+    peter.colberg@altera.com
+Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
+In-Reply-To: <40a3dced-defe-412d-b5b2-efcc9619d172@kernel.org>
+Message-ID: <7c802294-97f6-3e9-4028-686484a525c5@linux.intel.com>
+References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com> <20250127173550.1222427-4-matthew.gerlach@linux.intel.com> <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org> <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
+ <40a3dced-defe-412d-b5b2-efcc9619d172@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve French <smfrench@gmail.com>
-Date: Sat, 1 Feb 2025 13:03:42 -0600
-X-Gm-Features: AWEUYZn1emVQdaX4Bz2hIanIiHakotn4UbcDd1kHUz4R67V0oz2GqHWt1ju6i18
-Message-ID: <CAH2r5mv0fCe9F3YnMT-4_hc4DPGgSp+nu7detzz8K1X-bwj9mA@mail.gmail.com>
-Subject: [GIT PULL] smb3 client fixes
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Please pull the following changes since commit
-e0b1f59142746f74476a03040f745329c8355a7e:
-
-  Merge tag 'v6.14-rc-smb3-client-fixes-part' of
-git://git.samba.org/sfrench/cifs-2.6 (2025-01-23 17:05:45 -0800)
-
-are available in the Git repository at:
-
-  git://git.samba.org/sfrench/cifs-2.6.git tags/v6.14-rc-smb3-client-fixes-=
-part2
-
-for you to fetch changes up to a49da4ef4b94345554923cdba1127a2d2a73d1e6:
-
-  cifs: Fix parsing native symlinks directory/file type (2025-01-31
-12:51:44 -0600)
-
-----------------------------------------------------------------
-Twenty one cifs/smb3 client fixes, most for special file type handling
-- 15 fixes for special file handling, four of them for symlink
-handling, three cleanups,
-      two for new mount options (e.g. to allow disabling using reparse
-points for them,
-      and one to allow overriding way symlinks are saved), and fixes
-to error paths,
-      and add support for creating sockets)
-- Fix for kerberos mounts (allow IAKerb)
-- SMB1 fix for stat and for setting SACL (auditing)
-- Fix an incorrect error code mapping
-- Two cleanup
-----------------------------------------------------------------
-Pali Roh=C3=A1r (19):
-      cifs: Change translation of STATUS_NOT_A_REPARSE_POINT to -ENODATA
-      cifs: Change translation of STATUS_PRIVILEGE_NOT_HELD to -EPERM
-      cifs: Validate EAs for WSL reparse points
-      cifs: Remove intermediate object of failed create SFU call
-      cifs: Fix getting and setting SACLs over SMB1
-      cifs: Remove unicode parameter from parse_reparse_point() function
-      cifs: Remove struct reparse_posix_data from struct cifs_open_info_dat=
-a
-      cifs: Rename struct reparse_posix_data to
-reparse_nfs_data_buffer and move to common/smb2pdu.h
-      cifs: Update description about ACL permissions
-      cifs: Remove symlink member from cifs_open_info_data union
-      cifs: Simplify reparse point check in cifs_query_path_info() function
-      cifs: Fix creating and resolving absolute NT-style symlinks
-      cifs: Add mount option -o symlink=3D for choosing symlink create type
-      cifs: Add mount option -o reparse=3Dnone
-      cifs: Add support for creating native Windows sockets
-      cifs: Add support for creating NFS-style symlinks
-      cifs: Fix struct FILE_ALL_INFO
-      cifs: Add support for creating WSL-style symlinks
-      cifs: Fix parsing native symlinks directory/file type
-
-Steve French (2):
-      smb3: add support for IAKerb
-      cifs: update internal version number
-
- fs/smb/client/asn1.c         |   2 +
- fs/smb/client/cifs_spnego.c  |   4 +-
- fs/smb/client/cifsacl.c      |  25 ++-
- fs/smb/client/cifsfs.c       |   6 +
- fs/smb/client/cifsfs.h       |   4 +-
- fs/smb/client/cifsglob.h     |  62 +++++--
- fs/smb/client/cifspdu.h      | 102 ++++++-----
- fs/smb/client/cifsproto.h    |   4 +-
- fs/smb/client/cifssmb.c      |   4 +-
- fs/smb/client/connect.c      |   4 +
- fs/smb/client/fs_context.c   | 104 +++++++++++
- fs/smb/client/fs_context.h   |  21 +++
- fs/smb/client/inode.c        |   7 +-
- fs/smb/client/link.c         |  60 ++++--
- fs/smb/client/netmisc.c      |  10 +-
- fs/smb/client/nterr.c        |   1 +
- fs/smb/client/nterr.h        |   1 +
- fs/smb/client/reparse.c      | 517
-+++++++++++++++++++++++++++++++++++++++++++++-------
- fs/smb/client/reparse.h      |   2 +
- fs/smb/client/sess.c         |   3 +-
- fs/smb/client/smb1ops.c      |  30 +--
- fs/smb/client/smb2file.c     |  52 +++++-
- fs/smb/client/smb2inode.c    |   5 +
- fs/smb/client/smb2maperror.c |   4 +-
- fs/smb/client/smb2ops.c      |  23 ++-
- fs/smb/client/smb2pdu.c      |   2 +-
- fs/smb/client/smb2proto.h    |   3 +-
- fs/smb/common/smb2pdu.h      |  14 +-
- 28 files changed, 884 insertions(+), 192 deletions(-)
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 
 
---=20
-Thanks,
+On Thu, 30 Jan 2025, Krzysztof Kozlowski wrote:
 
-Steve
+> On 29/01/2025 20:42, matthew.gerlach@linux.intel.com wrote:
+>>
+>>
+>> On Wed, 29 Jan 2025, Krzysztof Kozlowski wrote:
+>>
+>>> On 27/01/2025 18:35, Matthew Gerlach wrote:
+>>>> Add the base device tree for support of the PCIe Root Port
+>>>> for the Agilex family of chips.
+>>>>
+>>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>>>> ---
+>>>> v3:
+>>>>  - Remove accepted patches from patch set.
+>>>>
+>>>> v2:
+>>>>  - Rename node to fix schema check error.
+>>>> ---
+>>>>  .../intel/socfpga_agilex_pcie_root_port.dtsi  | 55 +++++++++++++++++++
+>>>>  1 file changed, 55 insertions(+)
+>>>>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+>>>> new file mode 100644
+>>>> index 000000000000..50f131f5791b
+>>>> --- /dev/null
+>>>> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+>>>> @@ -0,0 +1,55 @@
+>>>> +// SPDX-License-Identifier:     GPL-2.0
+>>>
+>>> Odd spaces in SPDX tag.
+>>
+>> Yes, there should only be one space.
+>>
+>>>
+>>>> +/*
+>>>> + * Copyright (C) 2024, Intel Corporation
+>>>> + */
+>>>> +&soc0 {
+>>>> +	aglx_hps_bridges: fpga-bus@80000000 {
+>>>> +		compatible = "simple-bus";
+>>>> +		reg = <0x80000000 0x20200000>,
+>>>> +		      <0xf9000000 0x00100000>;
+>>>> +		reg-names = "axi_h2f", "axi_h2f_lw";
+>>>
+>>> Where is this binding defined?
+>>
+>> The bindings for these reg-names are not currently defined anywhere, but
+>
+> Then you cannot use them.
+>
+>> they are also referenced in the following:
+>>      Documentation/devicetree/bindings/soc/intel/intel,hps-copy-engine.yaml
+>>      arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
+>> I am not exactly sure where the right place is to define them, maybe
+>> Documentation/devicetree/bindings/arm/intel,socfpga.yaml. On the other
+>> hand, no code references these names; so it might make sense to just
+>> remove them.
+>
+> In general: nowhere, because simple bus does not have such properties.
+> It's not about reg-names only - you cannot have reg. You just did not
+> define here simple-bus.
+
+I understand. I will remove reg and reg-names.
+
+>
+> Best regards,
+> Krzysztof
+>
+
+Thanks for the review,
+Matthew Gerlach
