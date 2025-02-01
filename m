@@ -1,85 +1,166 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35836C2F2;
-	Sat,  1 Feb 2025 04:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A68217BCE;
+	Sat,  1 Feb 2025 04:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738384677; cv=none; b=YY1reSbOiqegR03lry+zJsEeDUCW2XyWTcffhrAbbeFYZrOk6eN1apUJN6XbxREBs+wDhu7Y8uka9YjaMsrHypOc3qUlHpRACsISmn4zHsIgXg9mNemac+jWne8qCxaX9TeCWa6jO1U3nLbmIQ1ZD9JLE01BTnqX00CbPDLHOdM=
+	t=1738384816; cv=none; b=rgtaCBDTe9CaT0KIJZCYf2MWWotm1tPtsjtGxXtX0DpQ7Qx/ohjZtrwsDbHr70Kkc2gkCELAebd+Q8FQvDOkY/lRKZUBz63YF/lup2A9US6YPhWH5QFjgsPHhAyoPaM1vNhF/ZY2qASg2EP/P0Jclu+2e29WCe7tAaPgJcsLqtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738384677; c=relaxed/simple;
-	bh=uGRk8WEnP2dxQpPeQLUz+KOsuJ2PkeHqrxzk1MCM5HA=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oI33DFhdJY6daTIXsg0/uQFgfaKjSE0ZMIkmaEr/oMp7UjfcngAOy2sgA/V9FnotKWo/+ShfokfasD8LmvIItQrt8edoGKmi4jMUbU4CqY2/JiIaCFCfnQ3XiRSeUU+g0ZUVV2COGmVnTm3VTvlLZzYavntsMM6w+wuIN4OD2g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1te5GP-0000000076H-0inf;
-	Sat, 01 Feb 2025 04:37:49 +0000
-Date: Sat, 1 Feb 2025 04:37:43 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH RESEND] arm64: dts: mediatek: mt7622: readd syscon to pciesys
- node
-Message-ID: <98bc223d174c7f544e8f6c4f0caa8fa144f2f4dc.1738384400.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1738384816; c=relaxed/simple;
+	bh=xo7/q6vlZdNeRWEWkoAlNw1e0d6k7F8xJ30Ok5ww660=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J1oF/TfvyQYcWuupYNpfUtQoMMJco5e9Y9BVefvrqo6rvV/qE14Dcyxy5QV7PCpdvY249lOqsZq1Jm7pku1PhSAwnjfotHU86Gk976O92Okw5a4Cut9jo9XlfcXWlJOZ2Fr68HV7o9Qu6HKcQ6Dto3ln+8Y/vB8pI/Bt/0Ub+20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MQIh6QsA; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MQIh6QsA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1738384794; x=1738989594; i=w_armin@gmx.de;
+	bh=LT750kSE9bF5YLcER4OJ17oUOtS5kE1L/aK//c9KpYI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=MQIh6QsAP4n0PL5GuCxKJSQGqExqVDlX8C3QweLaIBInAPuSUu5+alz23ie5iJZX
+	 uh12nG66lz5URpJzwQoX/sOmnMRFDG4d+Nac8sQRbTA+b/kIEn0ea0Mam748kIxRZ
+	 +pOHSkrqmvoZ5wLF7TYwJ/BMnnYAsRQXA5lNDAaq/+TyiHB7HIJldx2OVkJ3LEMYH
+	 wCL8an077w8wRcAtbpGzMIcw/Q6l0rM/V9JnhMt9bwpFRi0ytl4F0ZmlTvn+321k1
+	 Ffv2PYhxHQqrNZ0Yu6S6FYebwxjrncDj5mBpeO2f3BxrFHfM4ZLPDe/gauNkCtIK7
+	 GuEfn1+/IAfFX0ks0Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([93.202.246.83]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N3bX1-1tVSRe3BeV-00w1d9; Sat, 01
+ Feb 2025 05:39:54 +0100
+Message-ID: <aa91e17f-0ea8-4645-a0f9-57c016e36a9e@gmx.de>
+Date: Sat, 1 Feb 2025 05:39:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/1] platform/x86/tuxedo: Add virtual LampArray for
+ TUXEDO NB04 devices
+To: Werner Sembach <wse@tuxedocomputers.com>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, bentiss@kernel.org
+Cc: dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
+ lee@kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-leds@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
+ ojeda@kernel.org, onitake@gmail.com, pavel@ucw.cz, cs@tuxedo.de,
+ platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org
+References: <20250121225510.751444-1-wse@tuxedocomputers.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250121225510.751444-1-wse@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:pALTMLKB7mMHQQycS43ma88A2gx+nB8dmXITJNjbom2JBMqBRwE
+ yAREBGOKW1CJoi+K++E1AoG5I2TTJ3LGkOF+Q14cht0DRbV1t9GJ6+lHcIVg0oJWMYtkQLK
+ BS+43+pJ+E5bHQHrjEidOHxT4AK7lzOO5Tjx7s8SGOOVZSPebrPUL9OVWSV1avdJcvo369N
+ zkbXj4deyhIg2gyAkXBMA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:BBsPRm+lS0Q=;NcG0FE4KxwiBnnABDwi8c+B+uPO
+ /vV9XuJGHiA78dys94k6fetrooym5vY5GtRjNXq7+TS0XITAK/pINMBIsB23SNsBb5eq+Kp2V
+ XMJLniMCtaCwMYJCSgYw6sSQuj9u8bLy9BOrCbo424Z1WMGeO/xSGuO9udGBzdf7XA+Yjaos9
+ JEM6oPZNSsGuASq976bBWWqzG6FQ+Zxv2VVfzuin5XMqunOplk4EfhwzPZ9BFBuP1LM40zfeV
+ Zf512LtToicTjtomIcdbAOdQ03I7YZ4xOF1gwpMtmCZToST3QOeAJzkrifJXKFdujkd5DOS2o
+ sK/APJi3ay1jpAkbGovg1DZpIcIWH4iSRpKDi2EaawzzLi2GrxMdnZRkjMdQ7lQeDI+XaLMmo
+ uud8cMSNfmGFhntp4n0HDxnCnrJJ8bRvEF5v4V6iuvavxVFrYmBcZmckhEzSTNEMqft9yorUx
+ U6vMjQptJLL7ObBhVmkibA9KQEmFo/svFIpy3Hoz64ByFKwGh2zt9E10epNVeMfcRPAG8Ph16
+ 44AJO1ma6eCpjIXFatkJqD9HUF0uvrZdfvLt07IXI1akqsPzQ3/CLXdZXeUdw79jsS4b80tLN
+ tXL0O1rhSTiSskxiwygqmG7WRmLMkLOpnxFw03WzrlPWzE0kJWIVfSz6KGKls7InESvzVDJ+J
+ X9CnCv+AUbT3M57HSAM6SxX3ipqXr5Wl6Ko+yoxcjqQ8blINi6vslVvXk+Jmy35dGDNu7nR5Y
+ 2ZHaBkf4gUsZ/YgKhkGuZ0lwVHBGPi34F9MQWUoQzhopA/OFJ+4VsljX9U9OSlvZKAtU3VQpl
+ d5mkaFir9d4fl1CTI5mB9KBmvQ/uS8t9gBbte+MHFB9KOfSi/xjIhh95BeiwthI9Wb6MFBgB2
+ Z7C+uHaJe1G0maH1tWwIy9LniKQgjHujVlAejxnGtR6g0qEb+btqtxDEJmq4ozXMrn283ItoL
+ Jyio6sANk8uhN2OcgJ1rhIvhoGdMC2DHNlPFCtO7ep8MhPzDl230tmrlyV7wdEP9kPLXmI81V
+ ramRIko9M9455Vaf1gJshjEtbDj/jVNJ0UoHKNDAV+AnTY3q1Hq4cB+CFDRtjBa/Kg+4KXSRx
+ s0VzBEeY6JSfR6r/HIbiSW5KYX512B4qSKG9vkpidJcWNyMdD1KL+AMmrQf3kSGp3aWydsTRQ
+ /Z14IGlLtRhqw3BAuxj4kRF6tpW3xmjx1lPt/zqVZPzh2NfIRWABTseRJ5k9i5TBbkM3kVBZb
+ 4e7kDj/3jBJDR7wRMRM3TUVWnCbQ8hSATAd6YTVQNCPYwXWNx2LwIamI/toVCsFZ2bMJHSqJn
+ DYTRVR3puZcIR6HBKmtacjDq1RvwmTjOCrw9Zhak+9Ejn8=
 
-From: Christian Marangi <ansuelsmth@gmail.com>
+Am 21.01.25 um 23:31 schrieb Werner Sembach:
 
-The sata node references the pciesys with the property
-mediatek,phy-mode and that is used as a syscon to access the pciesys
-registers.
+> Hi,
+> after some other work, picked this up again.
+> Only coding style changes vs v4.
+>
+>
+> I now got my feet a little wet with hid-bpf regarding something else, and
+> with that knowledge I would leave the long arrays in the beginning in the
+> kernel code for the time being:
+>
+> sirius_16_ansii_kbl_mapping and sirius_16_iso_kbl_mapping are required
+> during initialization so they have to exist in the kernel code anyway.
+>
+> report_descriptor will most likly not change even for future models and
+> afaik having report_descriptors in kernel drivers is not unheard of.
+>
+> So the only things that could be meaningfully moved to a hid-bpf program
+> are the sirius_16_*_kbl_mapping_pos_* arrays. But for these is have to give
+> out some fallback value anyway for the case where a hid-bpf file is missing
+> or fails to load. So why not use real world values from my test device for
+> these values?
+>
+> As soon as there is a future device that can use the same driver with just
+> these pos arrays different, then I would implement that change via a bpf
+> program instead of a change to the kernel driver.
+>
+> Let me know if you too think this is a sensefull approach?
+>
+>
+> Another question: Would this patch need to wait for a userspace
+> implementation of lamp array before it can get accepted?
 
-Readd the syscon compatible to pciesys node to restore correct
-functionality of the SATA interface.
+It would be nice if you could test the LampArray implementation. But other than that
+userspace can catch up later.
 
-Cc: stable@vger.kernel.org
-Co-developed-by: Frank Wunderlich <frank-w@public-files.de>
-Fixes: 3ba5a6159434 ("arm64: dts: mediatek: mt7622: fix clock controllers")
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
----
-Note that the dt-bindings part of the original series has already been
-applied with commit 9f7809c6a882 ("dt-bindings: clock: mediatek: add
-syscon compatible for mt7622 pciesys").
+Still, i am interested in the opinion of the LED maintainers regarding the fake HID interface.
 
- arch/arm64/boot/dts/mediatek/mt7622.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Armin Wolf
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index e3421fd2c0ef..0710b8959ae8 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -790,7 +790,7 @@ u2port1: usb-phy@1a0c5000 {
- 	};
- 
- 	pciesys: clock-controller@1a100800 {
--		compatible = "mediatek,mt7622-pciesys";
-+		compatible = "mediatek,mt7622-pciesys", "syscon";
- 		reg = <0 0x1a100800 0 0x1000>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
--- 
-2.48.1
-
+>
+> The folder structure and naming scheme with nb04 is im preparation for
+> other parts of tuxedo-drivers to be upstreamed. NB04 is one of the
+> board_vendor dmi strings on TUXEDO devices that aligns with which part of
+> tuxedo-drivers implements the features of that device. They are independent
+> of each other so I plan to put them in different subfolders to reflect
+> that.
+>
+> Best regards,
+> Werner Sembach
+>
+> Werner Sembach (1):
+>    platform/x86/tuxedo: Add virtual LampArray for TUXEDO NB04 devices
+>
+>   MAINTAINERS                                   |   6 +
+>   drivers/platform/x86/Kconfig                  |   2 +
+>   drivers/platform/x86/Makefile                 |   3 +
+>   drivers/platform/x86/tuxedo/Kbuild            |   6 +
+>   drivers/platform/x86/tuxedo/Kconfig           |   6 +
+>   drivers/platform/x86/tuxedo/nb04/Kbuild       |   9 +
+>   drivers/platform/x86/tuxedo/nb04/Kconfig      |  14 +
+>   .../platform/x86/tuxedo/nb04/wmi_ab_init.c    | 103 +++
+>   .../platform/x86/tuxedo/nb04/wmi_ab_init.h    |  18 +
+>   .../x86/tuxedo/nb04/wmi_ab_virt_lamparray.c   | 772 ++++++++++++++++++
+>   .../x86/tuxedo/nb04/wmi_ab_virt_lamparray.h   |  18 +
+>   .../platform/x86/tuxedo/nb04/wmi_xx_util.c    |  97 +++
+>   .../platform/x86/tuxedo/nb04/wmi_xx_util.h    | 112 +++
+>   13 files changed, 1166 insertions(+)
+>   create mode 100644 drivers/platform/x86/tuxedo/Kbuild
+>   create mode 100644 drivers/platform/x86/tuxedo/Kconfig
+>   create mode 100644 drivers/platform/x86/tuxedo/nb04/Kbuild
+>   create mode 100644 drivers/platform/x86/tuxedo/nb04/Kconfig
+>   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_ab_init.c
+>   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_ab_init.h
+>   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_ab_virt_lamparray.c
+>   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_ab_virt_lamparray.h
+>   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_xx_util.c
+>   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_xx_util.h
+>
