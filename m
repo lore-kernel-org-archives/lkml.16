@@ -1,212 +1,315 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE0320318
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 12:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5AC220318;
+	Sat,  1 Feb 2025 12:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738412804; cv=none; b=XQXebdWKSndAl73mlpK4HrJbN+HnWSu2fTiuedohQUPN52apPeGY4RPGVolanQLSA81rMXc0Ax84bKov4UAiYFenxO+J5ovUYHz5830zhiUxffs9o54dt1Q9o8se6FM5PsplMdaLao91k50O8A2IUgfx1Q1UwjNzwA+24twJ50A=
+	t=1738412865; cv=none; b=h/5zUY7GZ/w8q4/B6HbLWmwUoEQD8O2SS0K5zA8YEMncBELkWueI6y+u2Mt8/HcruSjqCc28vs6suYRKbpfSCMpQIrDMq6lDC88K8DE5Yqy5JSXufgEElmsUTKoNIk6ui9uYHMKoA1LeV08KoTLoByXXixnTe0pNJ+q+ttSvz30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738412804; c=relaxed/simple;
-	bh=FtzY7Gm8QV7QgYgQ8P5cpXe0tSq3usp7PVPXqniVKyw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U7Uv4ugrbT2/WWOg9vsjPGzMlgsmjY14jB5Xuy8GzBH7/Jo+gz25dGorRkkCHunVWHJyBr5K5KJ5fa0XUhKCfI0zX0FtdKtrQ4UauUcX5bHZzZVQbLN2sX6gSFIq6CvSIF5P/1MlaPr6871IGjMdUyNCk+r0v5OWFHQ4nwQs7p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=mKe7F77/; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1738412865; c=relaxed/simple;
+	bh=d2gitCcfXyVjh/Va1xgB9YHhFmFeYjmw6K+s66qxC0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GgJuBNodZ0owiRWA51RT6YE1J/JyE+DK3Ln9W5dx0juRM4ouJ3rGsQ0WV+U3Y5n5gdGQh5EINjf0BkOnaoRBO6KwoMqrNyDowAzlwPwKrhJvR90HPPg03tnQt+8l9hD7XWw/aLPSO7+UnEtUUfBdUIJQ2Gv4uIPi3E+4LiUs1zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVWTgqMS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="mKe7F77/"
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 8764C3F887
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 12:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738412792;
-	bh=W+PtquVFOjzOYgh5drj3rsCsJ3SImm+T8s94d8MFmrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=mKe7F77/YVF1IujCPV+zwAE33j4P7g/XcbYZBKqyyvq+srYKbm6H/mD2hQbvqyzDb
-	 YofY3nWkCWhUanhTwFH06iQemrwjMRPQ7pOLFWT67IMf/ybkIv2piU/qtwLDm8PjD9
-	 rsegbjYXjiFw6eshB68llvOkC0yfauQ06AtbKZkX5QxJ9vDdcCuf1TC+zY1RNxJ1tP
-	 QdlxmspdJNG/6hM/8CPCMzVG2M23rGMJ8KsBcMr19oFRjune4Td9DVo4SU4mFdymsg
-	 SL+GcJFUzYQr1NXdD+pWwX3NpsC/XzxqKI6yvcK+i7lb46AEXj1klqwV0A5Hq1sxcs
-	 Dkayo6mhZK5zg==
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2164fad3792so58843595ad.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 04:26:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738412791; x=1739017591;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W+PtquVFOjzOYgh5drj3rsCsJ3SImm+T8s94d8MFmrs=;
-        b=QE9A9fsy22v3C96CLmqZNSjHp9JVOSIvME6S+I2L94m/rBbhq/o5qi/qtxykLg9auj
-         OemVwuCjACRroMPGp/sZTCZJ+RYUG5vRdGf0Nob1r8fYmO8W8bKE0CdgnDsdblUp7sQK
-         O5/qIdTNwlG2iakGK72GukHP57uLFJ68M6S9Qrww5avN9WiFy7hxMP1UGy8IPXe5QHuR
-         I4j7o1wopt3kZMyHEKxDVROU5PNrYIT7kAaLGzXQ2YeRM7GSKUs9raM9369UkGIyquj+
-         M5N69KSzSNYrG4YWfnD91jkf1l2fGgDxVNqirb6u3Cd8QBdLywi4xXjg1BMRIOu32YzI
-         SLWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWQfdVEWQiWUPcjCLqvCOI4vpMFKfYB651au2GRtu3dKlNY0lwxo3j8FjEPcpvhnp/F5LvSWyFc0a5svMQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0zDsyJXO8/6TXc9xUS7Ng5u5JeN/DFNpb5A4wi6LPfHUd6XtF
-	ketphG+Xk+P7GxNWkh54Z32zFN5ThmcT9mm/mk1W24Fbu57n5upTwYIOpxoMSejDKvx3ahBZmAX
-	egxNAmAOG6RGA5sSAvj7fEyNf2bOy3nkx16Ya8pVU5c3tCnTpXeKEWjpkKUbaDMbR+UzKoTQEB9
-	JeeA==
-X-Gm-Gg: ASbGncv7BhTEN0yweZFr+4Bhern4T0nmgB6+NK502cBiVWv/hAFhqrr8KdjFLDstor5
-	MpZvwtvP/bzg7caGC62sPxwS5gpTLSr5usvU3P0eE6Hgu4OX73/Jaq26n4XVolNvYSvtaQPQOvC
-	mnR3PtpOYOye556eotGwalfzZc9TyTMIemCbpfAd5P8UhLYoTi1XVeM1i94eQB0Q3tiqLcG5XNW
-	pncX6iwwxpwK3y4xbD136HDhqMYEMgDvMFg9O/QnYTW9GKNYLkbTH5gDLwcJatLbn6R2ZLaN7nl
-	Wao91xE=
-X-Received: by 2002:a17:902:e80a:b0:215:af12:b61a with SMTP id d9443c01a7336-21dd7e077d6mr236850135ad.50.1738412790553;
-        Sat, 01 Feb 2025 04:26:30 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF66EUYrSaHn+pVWpXjV4tbU6Bs0a3SBysXdpKPZYEmT0IPQ3ow7PTEfZPH/LwnEMITATDjWA==
-X-Received: by 2002:a17:902:e80a:b0:215:af12:b61a with SMTP id d9443c01a7336-21dd7e077d6mr236849855ad.50.1738412790154;
-        Sat, 01 Feb 2025 04:26:30 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:543e:97bf:2a6e:c9c3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31ee73asm44817965ad.36.2025.02.01.04.26.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 04:26:29 -0800 (PST)
-Date: Sat, 1 Feb 2025 21:26:27 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for
- gpio-aggregator
-Message-ID: <xrllvn5tmshdbb2mjlxvoc4rpalnefy52wwd5p6s55ehhysl4l@k4w42cd7hxkn>
-References: <20250129155525.663780-1-koichiro.den@canonical.com>
- <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com>
- <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
- <CAMRc=Mc3qBXaATpYRAXeHne0+mBjErivjvUe4rBEj2ksansatQ@mail.gmail.com>
- <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com>
- <rhdrieapetwdr3z7roguf5nex3esazhygjbjx4zklkrjzqrlsv@6vc5zmk3il5e>
- <CAMRc=MeRBABW6JCScGvsRR_4+W6u5QMWJwA7yMB9gj7=uOeD0g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVWTgqMS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE79C4CED3;
+	Sat,  1 Feb 2025 12:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738412865;
+	bh=d2gitCcfXyVjh/Va1xgB9YHhFmFeYjmw6K+s66qxC0U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gVWTgqMSgiDYD7dnYligksY2KpM+YbWeOm2AH9FKhZ+jIbzMYsY8ndmsq/EEfwbCr
+	 v28IUMuQq4Z9upLtJjpQjZYzqsZDc4Yi0j/KCyKxPvLE/edOagXcsco///zPAjjgua
+	 QObpJoLXxlzL76d6GAeoptvACc96Sar7+tIZOFKvvO4x6d0CrFeTdVXrM4a+lk1cWO
+	 0mhSGPaN+3VT5cnoLZpPqkwAjidregwMrnEEJgG/Aw8fLsqwH3vZuyqfEf7B0yBpiw
+	 tHeb5fQU0hJR7d1KeVo6t0wtbcp3zBMfpzgs3vVugS0UB8seTMr3OpXnNiveTJBdcw
+	 +ioOx8gIhyy8Q==
+Date: Sat, 1 Feb 2025 12:27:31 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ agross@kernel.org, andersson@kernel.org, dmitry.baryshkov@linaro.org,
+ konradybcio@kernel.org, daniel.lezcano@linaro.org, sboyd@kernel.org,
+ amitk@kernel.org, thara.gopinath@gmail.com, lee@kernel.org,
+ rafael@kernel.org, subbaraman.narayanamurthy@oss.qualcomm.com,
+ david.collins@oss.qualcomm.com, anjelique.melendez@oss.qualcomm.com,
+ quic_kamalw@quicinc.com, rui.zhang@intel.com, lukasz.luba@arm.com,
+ lars@metafoo.de, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, cros-qcom-dts-watchers@chromium.org,
+ quic_skakitap@quicinc.com, neil.armstrong@linaro.org
+Subject: Re: [PATCH V5 5/5] thermal: qcom: add support for PMIC5 Gen3 ADC
+ thermal monitoring
+Message-ID: <20250201122731.2762b1f8@jic23-huawei>
+In-Reply-To: <20250131183242.3653595-6-jishnu.prakash@oss.qualcomm.com>
+References: <20250131183242.3653595-1-jishnu.prakash@oss.qualcomm.com>
+	<20250131183242.3653595-6-jishnu.prakash@oss.qualcomm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MeRBABW6JCScGvsRR_4+W6u5QMWJwA7yMB9gj7=uOeD0g@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 31, 2025 at 06:22:50PM GMT, Bartosz Golaszewski wrote:
-> On Fri, Jan 31, 2025 at 3:36 PM Koichiro Den <koichiro.den@canonical.com> wrote:
-> >
-> > On Thu, Jan 30, 2025 at 09:47:47PM GMT, Bartosz Golaszewski wrote:
-> > > On Thu, Jan 30, 2025 at 7:40 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > >
-> >
-> > (Small reply to the previous comment:)
-> > Yes, I understand your point about why you think 'num_lines' is
-> > unnecessary. What I meant was more of a UX (User eXperience) consideration.
-> >
-> 
-> If anything this sounds like worse user experience - having to provide
-> duplicate information.
-> 
-> > > > While at it: there's no reason to impose a
-> > > > naming convention of lineX, lineY etc., the names don't matter for the
-> > > > aggregator setup (unlike gpio-sim where they indicate the offset of
-> > > > the line they concern).
-> > > >
-> > >
-> > > Scratch that part. There's a good reason for that - the ordering of
-> > > lines within the aggregator. [...]
-> >
-> > You're right, that's exactly the intention of the strict naming, 'line0',
-> > 'line1', ..., 'line<Y>'.
-> >
-> > > [...] I'm just not sure whether we should
-> > > impose a strict naming where - for an aggregator of 3 lines total - we
-> > > expect there to exist groups named line0, line1 and line2 or if we
-> > > should be more lenient and possibly sort whatever names the user
-> > > provides alphabetically?
-> >
-> > As Maciej pointed out:
-> >
-> >   (https://lore.kernel.org/all/CAFGk_a0U=jSQD85UKC1e=pSWr8W9y_MMAFyPVFOcE-fUZry7-Q@mail.gmail.com/#t)
-> >   > [...] if free form names were for e.g. [1, 02, 10].
-> >
-> > we would need a well-defined rule to avoid ambiguity, which could
-> > potentially unnecessarily impose burden on users to understand how to
-> > properly use the interface.
-> >
-> >
-> > Regardless, the point is that we need to make it clear to users which GPIO
-> > line a specific line<Y> of an aggregator forwards operations to. Since
-> > requiring users to explicitly set the offset within the aggregator for each
-> > virtual line (e.g. besides 'key'/'offset'/'name' attributes, by adding
-> > 'idx' attribute, which users would need to set explicitly) would be
-> > cumbersome, this RFC implementation instead just makes use of directory
-> > naming. I believe we agree on this approach (i.e., using directory naming
-> > to establish ordering). Correct me if I'm wrong.
-> >
-> > So, to move forward, let me outline the possible approaches we can take:
-> >
-> > Option (a). Drop 'num_lines' attribute and:
-> >
-> >   (a-1). Impose strict naming rule for line directories
-> >
-> >          Users can only create directories with a predefined naming
-> >          convention. This could be 'line0', 'line1', ... 'line<Y>' (as in
-> >          the RFC implementation), or simply '0', '1', ..., '<Y>'.
-> >
-> >   (a-2). Allow arbitrary naming for line directories
-> >
-> >          This would require a well-defined rule to avoid ambiguity. As
-> >          Maciej pointed out:
-> >
-> >          (from https://lore.kernel.org/all/CAFGk_a0U=jSQD85UKC1e=pSWr8W9y_MMAFyPVFOcE-fUZry7-Q@mail.gmail.com/#t)
-> >          > if free form names were for e.g. [1, 02, 10]
-> >
-> >          Users would need to understand these rules, which might impose
-> >          unnecessary burden on users.
-> >
-> > Option (b). Keep 'num_lines' attribute but:
-> >
-> >     (b-1). Prohibit manual creation of line directories
-> >
-> >            Users would no longer run 'mkdir line0', etc. Instead, writing
-> >            <Y+1> (Y >= 0) to 'num_lines' would automatically set up the
-> >            required directories.  convention. This could be 'line0',
-> >            'line1', ... 'line<Y>' (as in this RFC implementation), or
-> >            simply '0', '1', ..., '<Y>'.
-> >
-> >     (b-2). Keep manual 'mkdir' for each line, in the same manner as (a-1)
-> >            (as in the RFC implementation) or (a-2). Seems that no-one is
-> >            favor of this option.
-> >
-> >
-> >     Note: (b-1) is a new idea. Considering what really needs to be
-> >     configured by users, this could be the least burdensome and simplest,
-> >     especially when configuring many lines. I'm including it here for
-> >     broader discussion.
-> >
-> > Personally, now I'm inclined towards (a-1) with the simplest naming scheme:
-> > non-zero-padded integers ('./0', './1', './2', ..., './<Y>'). Or even (b-1).
-> >
-> 
-> I too think a-1 is the best option. However, I'd go for line0, line1
-> etc. convention as for computers it doesn't make any difference while
-> for humans it's more readable.
+On Sat,  1 Feb 2025 00:02:42 +0530
+Jishnu Prakash <jishnu.prakash@oss.qualcomm.com> wrote:
 
-Thank you for the comments. I’ll address your feedbacks and send "v2"
-later, Since we seem to agree on the overall approach, I’ll send it as
-[PATCH v1] (i.e., without the "RFC").
+> Add support for ADC_TM part of PMIC5 Gen3.
+> 
+> This is an auxiliary driver under the Gen3 ADC driver, which
+> implements the threshold setting and interrupt generating
+> functionalities of QCOM ADC_TM drivers, used to support thermal
+> trip points.
 
--Koichiro
+Very short wrap. For commit descriptions 75 chars is fine.
 
 > 
-> Bartosz
+> Signed-off-by: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+Various minor comments inline.
+
+Jonathan
+
+> ---
+> Changes since v4:
+> - Fixed a compilation error and updated dependencies in config as suggested
+>   by reviewer.
 > 
-> > Let me know your thoughts.
-> >
-> > Thanks.
-> >
-> > -Koichiro
-> >
-> > >
-> > > Bart
+>  drivers/thermal/qcom/Kconfig                  |   9 +
+>  drivers/thermal/qcom/Makefile                 |   1 +
+>  drivers/thermal/qcom/qcom-spmi-adc-tm5-gen3.c | 489 ++++++++++++++++++
+>  3 files changed, 499 insertions(+)
+>  create mode 100644 drivers/thermal/qcom/qcom-spmi-adc-tm5-gen3.c
+> 
+
+> diff --git a/drivers/thermal/qcom/qcom-spmi-adc-tm5-gen3.c b/drivers/thermal/qcom/qcom-spmi-adc-tm5-gen3.c
+> new file mode 100644
+> index 000000000000..d384d7ae2617
+> --- /dev/null
+> +++ b/drivers/thermal/qcom/qcom-spmi-adc-tm5-gen3.c
+> @@ -0,0 +1,489 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/iio/adc/qcom-adc5-gen3-common.h>
+> +#include <linux/iio/consumer.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/thermal.h>
+> +#include <linux/unaligned.h>
+> +
+> +#include "../thermal_hwmon.h"
+> +
+> +struct adc_tm5_gen3_chip;
+> +
+> +/*
+> + * @adc_tm: indicates if the channel is used for TM measurements.
+
+Doesn't match the parts of the structure.
+Make this full kernel-doc and then you can rely on automation to spot that.
+
+> + * @tm_chan_index: TM channel number used (ranging from 1-7).
+> + * @timer: time period of recurring TM measurement.
+> + * @tzd: pointer to thermal device corresponding to TM channel.
+> + * @high_thr_en: TM high threshold crossing detection enabled.
+> + * @low_thr_en: TM low threshold crossing detection enabled.
+> + * @last_temp: last temperature that caused threshold violation,
+> + *	or a thermal TM channel.
+> + * @last_temp_set: indicates if last_temp is stored.
+> + */
+> +
+> +struct adc_tm5_gen3_channel_props {
+> +	struct device			*dev;
+> +	unsigned int			timer;
+> +	unsigned int			tm_chan_index;
+> +	unsigned int			sdam_index;
+> +	struct adc5_channel_common_prop common_props;
+> +	bool			high_thr_en;
+> +	bool			low_thr_en;
+> +	bool			meas_en;
+> +	struct adc_tm5_gen3_chip	*chip;
+> +	struct thermal_zone_device *tzd;
+> +	int				last_temp;
+> +	bool				last_temp_set;
+> +};
+> +
+> +struct adc_tm5_gen3_chip {
+> +	struct adc5_device_data	*dev_data;
+> +	struct adc_tm5_gen3_channel_props	*chan_props;
+> +	unsigned int		nchannels;
+> +	struct device		*dev;
+> +	struct work_struct		tm_handler_work;
+> +};
+
+This sort of aligning for pretty printing goes wrong too often. I'd just not do it
+and use a single space only before field names.
+
+Note it's already looking odd and will only get worse if future changes need
+more space.
+
+
+> +
+> +static int _adc_tm5_gen3_disable_channel(struct adc_tm5_gen3_channel_props *prop)
+> +{
+> +	struct adc_tm5_gen3_chip *adc_tm5 = prop->chip;
+> +	int ret;
+> +	u8 val;
+> +
+> +	prop->high_thr_en = false;
+> +	prop->low_thr_en = false;
+> +
+> +	ret = adc5_gen3_poll_wait_hs(adc_tm5->dev_data, prop->sdam_index);
+> +	if (ret)
+> +		return ret;
+> +
+> +	val = BIT(prop->tm_chan_index);
+> +	ret = adc5_gen3_write(adc_tm5->dev_data, prop->sdam_index, ADC5_GEN3_TM_HIGH_STS_CLR,
+> +			      &val, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	val = MEAS_INT_DISABLE;
+> +	ret = adc5_gen3_write(adc_tm5->dev_data, prop->sdam_index, ADC5_GEN3_TIMER_SEL, &val, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* To indicate there is an actual conversion request */
+> +	val = ADC5_GEN3_CHAN_CONV_REQ | prop->tm_chan_index;
+> +	ret = adc5_gen3_write(adc_tm5->dev_data, prop->sdam_index, ADC5_GEN3_PERPH_CH, &val, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	val = ADC5_GEN3_CONV_REQ_REQ;
+> +	return adc5_gen3_write(adc_tm5->dev_data, prop->sdam_index, ADC5_GEN3_CONV_REQ, &val, 1);
+
+sizeof(val) for those 1s
+Same applies in previous patch.  This acts as documentation and makes it hard to get the sizing
+wrong.
+
+
+> +}
+
+
+> +static void adctm_event_handler(struct auxiliary_device *adev)
+> +{
+> +	struct adc_tm5_gen3_chip *adc_tm5 = auxiliary_get_drvdata(adev);
+> +
+> +	schedule_work(&adc_tm5->tm_handler_work);
+> +}
+> +
+> +static int adc_tm5_probe(struct auxiliary_device *aux_dev, const struct auxiliary_device_id *id)
+> +{
+> +	struct adc_tm5_gen3_chip *adc_tm5;
+> +	struct tm5_aux_dev_wrapper *aux_dev_wrapper;
+> +	struct device *dev = &aux_dev->dev;
+> +	int i, ret;
+> +
+> +	adc_tm5 = devm_kzalloc(&aux_dev->dev, sizeof(*adc_tm5), GFP_KERNEL);
+> +	if (!adc_tm5)
+> +		return -ENOMEM;
+> +
+> +	aux_dev_wrapper = container_of(aux_dev, struct tm5_aux_dev_wrapper, aux_dev);
+> +
+> +	adc_tm5->dev = dev;
+> +	adc_tm5->dev_data = aux_dev_wrapper->dev_data;
+> +	adc_tm5->nchannels = aux_dev_wrapper->n_tm_channels;
+> +	adc_tm5->chan_props = devm_kcalloc(adc_tm5->dev, aux_dev_wrapper->n_tm_channels,
+> +					   sizeof(*adc_tm5->chan_props), GFP_KERNEL);
+> +	if (!adc_tm5->chan_props)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < adc_tm5->nchannels; i++) {
+> +		adc_tm5->chan_props[i].common_props = aux_dev_wrapper->tm_props[i];
+> +		adc_tm5->chan_props[i].timer = MEAS_INT_1S;
+> +		adc_tm5->chan_props[i].sdam_index = (i + 1) / 8;
+> +		adc_tm5->chan_props[i].tm_chan_index = (i + 1) % 8;
+> +		adc_tm5->chan_props[i].chip = adc_tm5;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(adc_tm5->dev, adc5_gen3_disable, adc_tm5);
+> +	if (ret)
+> +		return ret;
+> +
+
+Maybe a comment on why you skip first sdam here.
+
+> +	for (i = 1; i < adc_tm5->dev_data->num_sdams; i++) {
+> +		ret = devm_request_threaded_irq(adc_tm5->dev, adc_tm5->dev_data->base[i].irq, NULL,
+> +						adctm5_gen3_isr, IRQF_ONESHOT,
+> +						adc_tm5->dev_data->base[i].irq_name, adc_tm5);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	INIT_WORK(&adc_tm5->tm_handler_work, tm_handler_work);
+
+I'd move this before the irq request.  Normally aim to have everything that might
+use ready before we even request it. That avoids any issue with spurious irqs or
+weird device state etc.
+
+> +	ret = devm_add_action(adc_tm5->dev, adc5_gen3_clear_work, adc_tm5);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = adc_tm5_register_tzd(adc_tm5);
+> +	if (ret)
+> +		return ret;
+> +
+> +	auxiliary_set_drvdata(aux_dev, adc_tm5);
+Maybe add a comment that this is only in the notifier called from outside this
+driver.  Otherwise it looks odd to register eveything and only then set
+drvdata.  I went looking for what smelled like a bug.
+
+> +	return 0;
+> +}
+> +
+> +static const struct auxiliary_device_id adctm5_auxiliary_id_table[] = {
+> +	{ .name = "qcom_spmi_adc5_gen3.adc5_tm_gen3", },
+> +	{},
+
+No trailing comma on a terminating entry like this.
+
+> +};
+> +
+> +MODULE_DEVICE_TABLE(auxiliary, adctm5_auxiliary_id_table);
+> +
+> +static struct adc_tm5_auxiliary_drv adctm5gen3_auxiliary_drv = {
+> +	.adrv = {
+> +		.id_table = adctm5_auxiliary_id_table,
+> +		.probe = adc_tm5_probe,
+> +	},
+> +	.tm_event_notify = adctm_event_handler,
+> +};
+> +
+> +static int __init adctm5_init_module(void)
+> +{
+> +	return auxiliary_driver_register(&adctm5gen3_auxiliary_drv.adrv);
+> +}
+> +
+> +static void __exit adctm5_exit_module(void)
+> +{
+> +	auxiliary_driver_unregister(&adctm5gen3_auxiliary_drv.adrv);
+> +}
+> +
+> +module_init(adctm5_init_module);
+> +module_exit(adctm5_exit_module);
+
+Can use module_auxiliary_driver() to replace this boilerplate.
+The embedded adrv shouldn't stop that working that I can see.
+
+
+> +
+> +MODULE_DESCRIPTION("SPMI PMIC Thermal Monitor ADC driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_IMPORT_NS("QCOM_SPMI_ADC5_GEN3");
+
