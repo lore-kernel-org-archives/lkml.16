@@ -1,168 +1,156 @@
-Received: from flow-a3-smtp.messagingengine.com (flow-a3-smtp.messagingengine.com [103.168.172.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7B11B960;
-	Sat,  1 Feb 2025 08:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A8A35959;
+	Sat,  1 Feb 2025 08:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738398203; cv=none; b=Um0boPOMrXDGEr10UObAZLWTcE1c+Xbfbf6QpQeOVrqfrFfrT1xBIq0CaqRLcAxOUTHgZMtpl1P9uZQXPDdp4VFL3PSENPYT87csCVFQo7As8sTP54SAouQSE0bRp6UuogljgfbnRH0S8+SWyQRmvwYHh2NEBsBmsOW5qJBNsWA=
+	t=1738398273; cv=none; b=Dihwwl30kJ1dMgcYVzV/eGgFgOun7CqJh/G6azJo6k38R0vhsix/uYuEBlW2cl8oD/ZUcwR0qo+5bKzOKdXz7ghdFI4TbeSTPv1HbMINX4JXxTkFEw9v5tZx62zUxUvbpm/nv6Ccp+Pk495TatHTWjsNLID5adCf4KmGBSaTeJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738398203; c=relaxed/simple;
-	bh=I2x1xNDIv6a2xJQAVWZ6ZI7SUQRt30VNLur5TLaNNGs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JR4uFY6C8SCz9Aw/CVQYs257eComTlwGWgdvhhqwlxKjmlFGg20TVUoA+7yKIGjYAth7hMP9iFZFUW7sOouojk8Cpvq/Pm5AljbGNZRn8MK1JFJQznLQ8TIUIgPIx5aKAjDFUNusOX088mxr4cVSeYEqNMup1ZoVl9HWkIVDc0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=hrnIrD3Z; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IlrQ3gOZ; arc=none smtp.client-ip=103.168.172.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
+	s=arc-20240116; t=1738398273; c=relaxed/simple;
+	bh=q91n5zrs7SSH8bSeo1HtbKy5vLmAZYPTrfTPVzC2oLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KzQnUuYJc5k74FnGG663cVyWRVGE7f62o0tlshcQ8iA4/AQSGazKafVYnslfLuZUOzFEMVUwyzgVC93e+lmsvMqrCxpWZNa/11sZ1Z/Ds+BuD9YucRd8onFA7BRY3yRyrUwpLFbH4EtOnPvDYE/yxSpg0DJ6JOIRBJ1J4gBItz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PNhKmjsL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="hrnIrD3Z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IlrQ3gOZ"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailflow.phl.internal (Postfix) with ESMTP id BB3482005FD;
-	Sat,  1 Feb 2025 03:23:18 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Sat, 01 Feb 2025 03:23:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1738398198; x=1738405398; bh=O1mPFwwAy2
-	XgJUG0+NNUDpAoMHPfDv8dSUIkUoZJEPg=; b=hrnIrD3ZWt+Au+iZtZx5K8KtGH
-	ug2UfjmYXUW7TzTy/LjWNqUjg1uzMTa8L5DArbC6nSg4kZA+dHt1tQCjDnxHK4iZ
-	hpMhUXR8yV5X0NmNdf+Rvcsj6OI5ckcFcp25hmwSBn4hjiPyzrF1eYEoG9zjW3xD
-	BHua/o8FUICD1DAA3jUDIjLgUgzO37ig4Z4qeAyQukZc+FLDw9lHi7IvoDDUD72p
-	kcNrXxZnIVK6vJSWIdTFyk3M3Ivv283RCpk5QlMcjq7W13cyUmRjVletdc0MNJWW
-	vnMhTYp0FVmVSpWtv8bsMqsikdhAMy83cbvaA0+fODED5RezClBby3RHmgJw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738398198; x=1738405398; bh=O1mPFwwAy2XgJUG0+NNUDpAoMHPfDv8dSUI
-	kUoZJEPg=; b=IlrQ3gOZmjZRBVeQQIrKHtIoo0LSCWjeaI03u1ryMizInRhFbui
-	962y5IVxELD37rcClNURqUcXjJgcdbmMTbPlr+JGcEFuqa9pxLD+NlTnAAKHbimX
-	jb5O2opl4yU9d0DooSzgCKgGB3PnxnglVXQ/XjomkAdPoTm+cFIClJMO45UuUkJN
-	BSg1nWjDPs3svs5zM1g+FmFL7Ki9ppjrsjcLnDcXZtU6ODocLFTYEPJGizJ0OV22
-	H5i0msVFVA6Gg5oWQzszvCSnszJB0HV4+k4CaL4dpShmcVR/M6vynKn+5iZeIjGG
-	1Z/+RZsdke4sThrZ7dSZ5bEJ83vXB4xTxEw==
-X-ME-Sender: <xms:9dmdZ79-YJjqcUktUBCa4D-70msWLiYK2-BysjvNCFleoKoWGk1y_A>
-    <xme:9dmdZ3ut_1Qcozfw8kv951LqbFVFF8uSpKPbnWuU3n3pz-n2aBG9f_QOrPtBUT3e7
-    7GmK6TRRd9vzr3o-w>
-X-ME-Received: <xmr:9dmdZ5C3fXWrsJnnCh0-wIc-5vaCaMYnK_c_pJdODxbo6CdTXb-lLZue2ki4h8qmFLRmjqXAvV9VQG2TADsVjmVyDSnHtOhl0LIOXNhSAyNG9w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddvvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenfghrlhcuvffnffculdejtddmnecujfgurhepfffhvfevuffk
-    fhggtggujgesthdtsfdttddtvdenucfhrhhomhepffgrnhhivghlucgiuhcuoegugihuse
-    gugihuuhhurdighiiiqeenucggtffrrghtthgvrhhnpedvfeekteduudefieegtdehfeff
-    keeuudekheduffduffffgfegiedttefgvdfhvdenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiipdhnsggprhgt
-    phhtthhopedvvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohephihonhhghhhonh
-    hgrdhsohhngheslhhinhhugidruggvvhdprhgtphhtthhopehshhhurghhsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpth
-    htohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopegrshhtsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtohepuggrnhhivghlsehiohhgvggrrhgsohigrdhnvghtpdhrtghpthhtohepmhgr
-    rhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepshhonhhgsehkvghrnh
-    gvlhdrohhrgh
-X-ME-Proxy: <xmx:9dmdZ3f0FVdGvftOqExcfQPNGXK_2Rpu1O-Ec6PhNbUVcxHNjYRKaA>
-    <xmx:9dmdZwPF85muZS5C5i7wn5AMOKmpgQCcJ20wskxIkAtPzVB-K9Hv4Q>
-    <xmx:9dmdZ5kwdkk2JAXWf_zcsLPZ6l0UK6hvbBRf8CJ-6XwKaW88Pc2WYQ>
-    <xmx:9dmdZ6u4pWRQs0PVeKEEjAFViA1pohBwgDKwbB84wGYirx-_95NNfQ>
-    <xmx:9tmdZxznGuhvfHFB51Ew1BhEjPiKn_KCo0QQqY5ai3aY2GfD9WZzCo-K>
-Feedback-ID: i6a694271:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 1 Feb 2025 03:23:15 -0500 (EST)
-Date: Sat, 1 Feb 2025 01:23:14 -0700
-From: Daniel Xu <dxu@dxuuu.xyz>
-To: Yonghong Song <yonghong.song@linux.dev>
-Cc: shuah@kernel.org, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
-	nathan@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, 
-	jolsa@kernel.org, mykolal@fb.com, ndesaulniers@google.com, morbo@google.com, 
-	justinstitt@google.com, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] selftests: bpf: Support dynamic linking LLVM if static
- not available
-Message-ID: <rgcdc7zokwfoars7c2pzredogea3rvolbnzkvko7q6lbgjnvfx@oeyzed5zalpb>
-References: <872b64e93de9a6cd6a7a10e6a5c5e7893704f743.1738276344.git.dxu@dxuuu.xyz>
- <2d4773f9-c3a4-4512-9c5c-92f841c326f5@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PNhKmjsL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55368C4CED3;
+	Sat,  1 Feb 2025 08:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738398273;
+	bh=q91n5zrs7SSH8bSeo1HtbKy5vLmAZYPTrfTPVzC2oLs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PNhKmjsLh7Ru22QbQ9fcfPF6v3ya/hIkPe1/wxGCMc0liPus2OXcXC5a/adiliNVW
+	 UxvJTpSJhUTdWi3HS/PyhMDv+g71SGuB9SsClaJzhcoZqjHN447i0eWNPEdTDXkfDu
+	 +4T3G95tou04LkfvOizRBE1Fv9Oi1kqquRpAKT4TctSYwrmZ+ljaEsh7uuBszN20vc
+	 CHx667LgaI/4IHYrDuKnf6VSAWWj65mhQ5gpqXe94iHji5z7Zvk8sNL20I/JsPgRO2
+	 XoDwEJv/3vEde2QS2q6UYaOAzjz8etDfylKARhVNtK4LKsv18bl77E6CxrMXp0qzwz
+	 ip5UaSR0spEyA==
+Date: Sat, 1 Feb 2025 09:24:27 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: YongSu Yoo <yongsuyoo0215@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Markus Elfring
+ <Markus.Elfring@web.de>, linux-media@vger.kernel.org, Hyunwoo Kim
+ <v4bel@theori.io>, LKML <linux-kernel@vger.kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, yongsu.yoo@lge.com
+Subject: Re: [PATCH] media: dvb_ca_en50221: Add a returing EBUSY logic into
+ CA_RESET
+Message-ID: <20250201092427.6a09c39d@foz.lan>
+In-Reply-To: <CANXPkT6wxEzX=Seyi-SctkpN17AgeTAWSPr-Yt2kRzD_isAa2g@mail.gmail.com>
+References: <20240308121338.1983-1-yongsuyoo0215@gmail.com>
+	<eda2a849-c23a-4624-85da-78a2fdef4fe9@web.de>
+	<CANXPkT5ggr8VbYdRy+uSnfHxDRES5arJJ8p+ist1CBTm-1xaUQ@mail.gmail.com>
+	<20240530203149.1fe881ed@coco.lan>
+	<CANXPkT6wxEzX=Seyi-SctkpN17AgeTAWSPr-Yt2kRzD_isAa2g@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d4773f9-c3a4-4512-9c5c-92f841c326f5@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Yonghong,
+Em Sat, 1 Feb 2025 09:44:18 +0900
+YongSu Yoo <yongsuyoo0215@gmail.com> escreveu:
 
-On Thu, Jan 30, 2025 at 10:28:11PM -0800, Yonghong Song wrote:
-> 
-> 
-> 
-> On 1/30/25 2:33 PM, Daniel Xu wrote:
-> > Since 67ab80a01886 ("selftests/bpf: Prefer static linking for LLVM
-> > libraries"), only statically linking test_progs is supported. However,
-> > some distros only provide a dynamically linkable LLVM.
-> > 
-> > This commit adds a fallback for dynamically linking LLVM if static
-> > linking is not available. If both options are available, static linking
-> > is chosen.
-> > 
-> > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-> > ---
-> >   tools/testing/selftests/bpf/Makefile | 11 ++++++++---
-> >   1 file changed, 8 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-> > index 6722080b2107..da514030a153 100644
-> > --- a/tools/testing/selftests/bpf/Makefile
-> > +++ b/tools/testing/selftests/bpf/Makefile
-> > @@ -184,9 +184,14 @@ ifeq ($(feature-llvm),1)
-> >     LLVM_CONFIG_LIB_COMPONENTS := mcdisassembler all-targets
-> >     # both llvm-config and lib.mk add -D_GNU_SOURCE, which ends up as conflict
-> >     LLVM_CFLAGS  += $(filter-out -D_GNU_SOURCE,$(shell $(LLVM_CONFIG) --cflags))
-> > -  LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-static --libs $(LLVM_CONFIG_LIB_COMPONENTS))
-> > -  LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-static --system-libs $(LLVM_CONFIG_LIB_COMPONENTS))
-> > -  LLVM_LDLIBS  += -lstdc++
-> > +  # Prefer linking statically if it's available, otherwise fallback to shared
-> > +  ifeq ($(shell $(LLVM_CONFIG) --link-static --libs &> /dev/null && echo static),static)
-> > +    LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-static --libs $(LLVM_CONFIG_LIB_COMPONENTS))
-> > +    LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-static --system-libs $(LLVM_CONFIG_LIB_COMPONENTS))
-> > +    LLVM_LDLIBS  += -lstdc++
-> > +  else
-> > +    LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-shared --libs $(LLVM_CONFIG_LIB_COMPONENTS))
-> > +  endif
-> >     LLVM_LDFLAGS += $(shell $(LLVM_CONFIG) --ldflags)
-> >   endif
-> 
-> Although your change looks good, but maybe you can look at bpftool Makefile?
-> 
->   # If LLVM is available, use it for JIT disassembly
->   CFLAGS  += -DHAVE_LLVM_SUPPORT
->   LLVM_CONFIG_LIB_COMPONENTS := mcdisassembler all-targets
->   # llvm-config always adds -D_GNU_SOURCE, however, it may already be in CFLAGS
->   # (e.g. when bpftool build is called from selftests build as selftests
->   # Makefile includes lib.mk which sets -D_GNU_SOURCE) which would cause
->   # compilation error due to redefinition. Let's filter it out here.
->   CFLAGS  += $(filter-out -D_GNU_SOURCE,$(shell $(LLVM_CONFIG) --cflags))
->   LIBS    += $(shell $(LLVM_CONFIG) --libs $(LLVM_CONFIG_LIB_COMPONENTS))
->   ifeq ($(shell $(LLVM_CONFIG) --shared-mode),static)
->     LIBS += $(shell $(LLVM_CONFIG) --system-libs $(LLVM_CONFIG_LIB_COMPONENTS))
->     LIBS += -lstdc++
->   endif
->   LDFLAGS += $(shell $(LLVM_CONFIG) --ldflags)
-> 
-> It would be great if the selftests shared library handling to be the same as bpftool's.
+> Dear Mauro Carvalho Chehab
+>=20
+> I know how to send an E-mail using "....git send-email --to .."
+> But,
+> I do not know how to reply to this E-mail loop using "....git send-email
+> --to .."
+> Can you kindly guide me ?
 
-So bpftool is both an internally consumed (from selftests) dependency as
-well as a tool packaged up by distros. For the latter case, distros
-prefer dynamic linking.
+Never used git send-email to reply, as it is mainly focused on sending
+e-mails, not being a true emailer: it just sends e-mail: it doesn't
+receive. In thesis, you could download the original e-mail using b4 or lei,=
+=20
+then manually write a reply text on it and use git send-email. This is
+easier said than done, as you'll need to take care of SMTP headers yourself.
+This would require some knowledge about SMTP RFCs.
 
-So unfortunately, I think these probably need to be defined separately.
-The code looks similar but the use cases are different.
+If I were you, I would seek for some other alternatives.
+
+Most people use mutt for Kernel work, as it is CLI. There is also alpine
+I haven't used alpine for ages, but it is a decent CLI e-mail client, using
+a very simple interface, although it has less features than mutt.
+
+I prefer instead to use claws-mail as it has a reasonable GUI, it is fast
+and it is not overbloated with features I won't use.
+
+Neither mutt, alpine or claws-mail mangle whitespaces and line breaks on
+e-mails, and they can be setup to not do top-postings.
+
+If you want something simpler, perhaps you could try notmuch[1]. I never
+tried myself, but I heard it can be used to reply to e-mails without even
+needing to subscribe to a ML.
+
+[1] https://notmuchmail.org/
+
+You may also find useful to have a SMTP relay server. Probably one of the
+simplest ones to setup is msmtp: https://marlam.de/msmtp/.
+
+I hope that helps.
+
+Regards,
+Mauro
+
+
+>=20
+> 2024=EB=85=84 5=EC=9B=94 31=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 3:31,=
+ Mauro Carvalho Chehab <mchehab@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=
+=84=B1:
+>=20
+> > Em Tue, 28 May 2024 21:14:37 +0900
+> > YongSu Yoo <yongsuyoo0215@gmail.com> escreveu:
+> > =20
+> > > Dear Markus Elfring =20
+> >
+> > Please don't top-post. Makes hard to follow the comments. =20
+> > >
+> > >
+> > > 2024=EB=85=84 5=EC=9B=94 28=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 2=
+:38, Markus Elfring <Markus.Elfring@web.de>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=
+=84=B1:
+> > > =20
+> > > >
+> > > > =E2=80=A6 =20
+> > > > > For preventing this problem from happening, we make CA_RESET ioct=
+l do
+> > > > > nothing and only return EBUSY if the ioctl is called during the
+> > > > > "transiting" states. =20
+> > > >
+> > > > Would you like to avoid any typos (in the summary phrase)? =20
+> > =20
+> > > Initially, I sent this E-mail using the below command
+> > > "....git send-email --to  mchehab@kernel.org,
+> > > linux-media@vger.kernel.org, xxxxxxxxxxx.patch. ..." =20
+> >
+> > Git send-email is a good way to send patches. You may also use
+> > a decent e-mail client that won't mangle with whitespaces. I use
+> > myself claws-mail; other develpers use emacs. Feel free to pick your
+> > poison, but if the email doesn't handle whitespaces well and/or
+> > don't allow writing the answers below the original comments (instead
+> > of top-posting), it shouldn't be used.
+> > =20
+> > > In response to what you suggested, is it OK if I use Gmail and attach
+> > > a new patch ? =20
+> >
+> > No. Never attach a patch as the mailing list will reject, and if not,
+> > patchwork.linuxtv.org won't pick it.
+> >
+> > You may use gmail, if you setup your e-mail client to use it as a
+> > SMTP server. Using webmail solutions typically won't work open source
+> > discussions, as it does lots of wrong things, like top-posting, not
+> > honoring 80 columns on emails and/or mangling tabs and white spaces.
+> >
+> > Thanks,
+> > Mauro
+> > =20
+
+
 
 Thanks,
-Daniel
+Mauro
