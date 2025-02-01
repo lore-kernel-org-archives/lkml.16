@@ -1,136 +1,115 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140B512B73
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 07:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E80A935;
+	Sat,  1 Feb 2025 07:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738394226; cv=none; b=qdy3QP7zdizeWW4KxF6Bqxgkjlf+ntgtBAyQD8upxCbsYI0tNdf9YbPDNNQmrSJtNCQEzKHJjyTiv8rEqW5uGbF2b66HFxMUzfdE5u6Y+DL/Cf6lonHaxKN2MIR9BL2o/fQvNzRHMMiH6sbyPBmGlBU325EKZDTvcTg9D7jzrQE=
+	t=1738394586; cv=none; b=MKMoQBlSryR3n/e1kVG8xBS+Kwi0HszoRHE3IKA42iVdchhgSK+KG3G6RmkeCdov4hKrcwRQQjHeHWdrHdFt8D30JxJv/cCRnscBdwXH2eaNC6aJWXJuwT+vka26urYvdPxYxBI/vuE167EzGvYXWJToeWfsSpjLJlJ8q9Bs9ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738394226; c=relaxed/simple;
-	bh=NcOAQ0YNivDZlRkPlytp7VKky1fz3WA9K9yZMf+nNxs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YDxPghqP2DkPkgQd3CcNTQBSGLLzdAZjS60n/yERVuukff2YYr/xrp6jhG81HbFGDRs65OAJqXiyi5IcHHetJqwgHXXrF+InzwkbWr8S+JZPyRUItNTueSJyOvpPp4rx8nviGsT+WKX8GYy3XgiRHqjBv8NQ4wGx5+zMsgOrt9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NGdlSk2C; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738394586; c=relaxed/simple;
+	bh=Bw6zEIvwBS1md1QcsSs+l/VCAnNG/P2sUBn8/0QbnrM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pmjJS9Q8L2O7Wv8DqL0v3gqVjOC3LhzfY/2od5FGlHorBbKpQe+8BgxS9TOt0jU232fFlexuKXh9EzUoYBlMf6wJg/nZiX2TB8GMXcEP4FW8tyGNcokZC01m1hby2Qn69XnX51M0IDeb5NEldKw/3EUTmMJSfv/6GWl10FTNPjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABlxxDWw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NGdlSk2C"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5115P2Cd023403;
-	Sat, 1 Feb 2025 07:16:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=D0TqJr
-	PFaCXJx1YuFrFi+B5yfQlPzZfk7qSonBtEN+c=; b=NGdlSk2CCbM5ZtHVxYY0su
-	oY+VLN7+m6hmEuDFS46fDLuzGlIHoLNLAtXba3nV45KEI1T8ITmUjwXxqS82ipFx
-	hAXjhzf2rNEGnCn62mnICY/PX7M8FTESnNka6ewtxJvyPJv5CqQok4RzxvHgforK
-	kXxzMwSinHjOJQxu1NdIyjYVk8g956pKcNVeCOPrn6+9jKPFUCixKt4cUNaSX3QH
-	vVfDO2JrW8jyBReVw5keuBF/4CyyfcgPEz91oDwf5K/5vvoshDYCcib9FJ6fl/Va
-	JFjnwlm1Rd37fEHSuQSqakpwJGovNIhOGz+klu6spxVjigHNxzUFeFDlw9WBfVZQ
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44hdce886b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 01 Feb 2025 07:16:48 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5115Cr40029818;
-	Sat, 1 Feb 2025 07:16:48 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44hd92rb7k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 01 Feb 2025 07:16:47 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5117GiRX37880182
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 1 Feb 2025 07:16:44 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3A73620094;
-	Sat,  1 Feb 2025 07:16:44 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5713D20092;
-	Sat,  1 Feb 2025 07:16:41 +0000 (GMT)
-Received: from [9.43.103.42] (unknown [9.43.103.42])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sat,  1 Feb 2025 07:16:41 +0000 (GMT)
-Message-ID: <e7e371cc-cb34-4ba1-8aa5-c18ec3802d9a@linux.ibm.com>
-Date: Sat, 1 Feb 2025 12:46:34 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABlxxDWw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFA57C4CED3;
+	Sat,  1 Feb 2025 07:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738394585;
+	bh=Bw6zEIvwBS1md1QcsSs+l/VCAnNG/P2sUBn8/0QbnrM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ABlxxDWwthL+zhVkSahvybhum4JPn9ELgp0/+AB6+w/bUCTTHtt0JZLAybTuQqVbv
+	 SXdd773zOhFO5EPorlAHl9Vri41+OHqBmgUVc9yEl3CZL1SfYbkTXPnw/gqw2V8F82
+	 Ib5mmQN3xxj1df/dIAWK3ZfiCGqh6z0QyHnvzL8cOFhdBJNLvcgA+XvA7x57zT3rwm
+	 4l2wFl41aMOpL9hWy+zdSkhs+OlFN4yfEdte2dPBDYC03Yy3ZhM92SYs7/fibspvvc
+	 yR0Mu+nVGWZANuFhUrqEO7RMHpexf10FkSxJyLWlNYbzjsfnlXGdkiq1polWwSJjBj
+	 FeGFHqhk4jBbw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org
+Subject: [PATCH v2 0/2] tracing: Introduce relative stacktrace
+Date: Sat,  1 Feb 2025 16:23:00 +0900
+Message-ID: <173839458022.2009498.14495253908367838065.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/7] crash: Let arch decide usable memory range in
- reserved area
-To: Baoquan he <bhe@redhat.com>
-Cc: linuxppc-dev@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20250131113830.925179-1-sourabhjain@linux.ibm.com>
- <20250131113830.925179-4-sourabhjain@linux.ibm.com> <Z52hUz5/nZhzTUb4@fedora>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <Z52hUz5/nZhzTUb4@fedora>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: IxliJALJ4rLAy8ZlFpwTVM7tGofSRKlj
-X-Proofpoint-GUID: IxliJALJ4rLAy8ZlFpwTVM7tGofSRKlj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-01_02,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- clxscore=1015 mlxscore=0 priorityscore=1501 suspectscore=0 adultscore=0
- phishscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=779
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502010059
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hello Baoquan,
+Hi,
+
+Here is the 2nd version of adding relative stacktrace for tracing.
+The previous version is here;
+
+https://lore.kernel.org/all/173807861687.1525539.15082309716909038251.stgit@mhiramat.roam.corp.google.com/
+
+In this version, I changed the idea to only use the first 32bit of
+the build_id of the modules instead of using live hash/id to identify
+the module. Also, save the offset from the .text section for each
+module instead of using the offset from the _stext for the module
+address. (For the core kernel text address, keep using the offset
+from _stext.)
+
+This brings the following benefits:
+ - Do not need to save the live module allocation information on
+   somewhere in the reserved memory.
+ - Easy to find the module offline.
+ - We can ensure there are only offsets from the base, no KASLR info.
+
+Moreover, encode/decode module build_id, we can show the module name
+with the symbols on stacktrace.
+
+Thus, this relative stacktrace is a better option for the persistent
+ring buffer with security restricted environment (e.g. no kallsyms
+access from user.)
+
+ # echo 1 > options/relative-stacktrace 
+ # modprobe trace_events_sample
+ # echo stacktrace > events/sample-trace/foo_bar/trigger 
+ # cat trace 
+    event-sample-1622    [004] ...1.   397.542659: <stack trace>
+ => event_triggers_post_call
+ => trace_event_raw_event_foo_bar [trace_events_sample]
+ => do_simple_thread_func [trace_events_sample]
+ => simple_thread [trace_events_sample]
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+
+Thank you,
+---
+
+Masami Hiramatsu (Google) (2):
+      modules: Add __module_build_id() to find module by build_id
+      tracing: Add relative-stacktrace option
 
 
-On 01/02/25 09:52, Baoquan he wrote:
-> On 01/31/25 at 05:08pm, Sourabh Jain wrote:
->> Although the crashkernel area is reserved, on architectures like
->> PowerPC, it is possible for the crashkernel reserved area to contain
->> components like RTAS, TCE, OPAL, etc. To avoid placing kexec segments
->> over these components, PowerPC has its own set of APIs to locate holes
->> in the crashkernel reserved area.
->>
->> Add an arch hook in the generic locate mem hole APIs so that
->> architectures can handle such special regions in the crashkernel area
->> while locating memory holes for kexec segments using generic APIs.
->> With this, a lot of redundant arch-specific code can be removed, as it
->> performs the exact same job as the generic APIs.
->>
->> To keep the generic and arch-specific changes separate, the changes
->> related to moving PowerPC to use the generic APIs and the removal of
->> PowerPC-specific APIs for memory hole allocation are done in a
->> subsequent patch titled "powerpc/crash: Use generic APIs to locate
->> memory hole for kdump.
->>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Baoquan he <bhe@redhat.com>
->> Cc: Hari Bathini <hbathini@linux.ibm.com>
->> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
->> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: kexec@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->> ---
->>   include/linux/kexec.h |  9 +++++++++
->>   kernel/kexec_file.c   | 12 ++++++++++++
->>   2 files changed, 21 insertions(+)
-> LGTM,
->
-> Acked-by: Baoquan He <bhe@redhat.com>
+ include/linux/module.h       |    8 +++++
+ include/linux/trace.h        |    5 +++
+ kernel/module/Kconfig        |    3 ++
+ kernel/module/kallsyms.c     |    4 +--
+ kernel/module/main.c         |   29 ++++++++++++++++++++
+ kernel/trace/Kconfig         |    1 +
+ kernel/trace/trace.c         |   50 ++++++++++++++++++++++++++++++----
+ kernel/trace/trace.h         |    3 ++
+ kernel/trace/trace_entries.h |   18 ++++++++++++
+ kernel/trace/trace_output.c  |   62 ++++++++++++++++++++++++++++++++++++++++++
+ lib/Kconfig.debug            |    1 +
+ 11 files changed, 175 insertions(+), 9 deletions(-)
 
-Thanks for the Ack!
-
-- Sourabh Jain
-
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
