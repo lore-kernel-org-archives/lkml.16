@@ -1,225 +1,150 @@
-Received: from USG02-BN3-obe.outbound.protection.office365.us (mail-bn3usg02on0075.outbound.protection.office365.us [23.103.208.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD63F5336D;
-	Sat,  1 Feb 2025 21:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=23.103.208.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738445579; cv=fail; b=Abc4lweQ0vCd1eo/hy083Lh4oeMXHQWG2MzRhGsFajr+pD2sqTcig1eLHWDf+vVKVn6EmJCNgv4KXPpeEUmuKTVOfJXw01FVu6MlVkCuOB3UUUpJzijZ0Ge2CZsAdodeXUCmGKljNrpaBCwjBCLtkdzVmzou2lptcaLUUdOmu7U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738445579; c=relaxed/simple;
-	bh=UJhzWuiz2oD0JBVERO3gVEP56l//JfpCbJRc/petMIY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=kWwnu5XNYpdLj8SPbcfl4iQs5H8YlVw6Iw6WqPiFUGN9aiRWH16h689AyiXhXzlxOy31+eBuB+EzlB6yWMSx4UQQ2F5eVVCCOiPL8jE2wDZqpVkfqmClYUGIOUg+NkjG0UkpbFnFyOMRwMGV0abqOkL473iAqrkp7RWEhnEp8Tk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=arka.org; spf=pass smtp.mailfrom=arka.org; arc=fail smtp.client-ip=23.103.208.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=arka.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arka.org
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector5401; d=microsoft.com; cv=none;
- b=x4l9cFIA0PFshB3WKpsx5WX98q1s7csZId6GEMgs063RuvmAPWgxGyzQhzYG4uwWXLJjFDESkKCGYbWQW0bcbr+jt+QFDcnpVYDCgehOU64cmYKpi2BNK/vHWbfLLDGJ9Kmc0YE9h9NJAN4Z++P64/tuWH63B9zVUW5u4fXGaKiH7c0V0oO9DW5gOt0cKfShKuvT8DidRjqHkds51boOIt9BuKJXDNJf113f6S7dHsKtijNcMsa21Ba7gu/V9XP+mldhQRnHNq2FUvIvEccbrphlA8+AjmGOnGhuSNmMW4VQOURr0dMvhBVXWQAkFF79r2u0D/3FBvwWJyC2kxRG2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector5401;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3Y8nNm1M/RXR9XvocNcwZyfP1ON0onqs8SvQtEbnDtA=;
- b=qxfFHxpFvW4TOzAM4MnzqkIfED+RXCWjJnJQsvNRRATx4gle2IJvxrFMFB6V7lduD4IzA8s+tIOJhUwoD/PcGxVQXPKs2RsxNAWjRVpbscAV4Wnq0kY4EdBH0H654DTEN2qW9l0cMZS6QQ5wdAboiBvyp23I0Uk11mtBKnwZSuE+kryfoT1G8CutG/R0YLhEIDyYQJrB1kYPt0DB6XXEQ1xZrfYdpTAxOng64ivyyCtI+p5NrztWITQjk8mhaw9of7pbxwlwLgP+zULyGaGt3FgymZLoyN8+fsCo8yWbqxJgtRv/edAEPMbEZhlWyOSKX0PZbCx9A0gxzijcGitYew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arka.org; dmarc=pass action=none header.from=arka.org;
- dkim=pass header.d=arka.org; arc=none
-Received: from SA1P110MB1069.NAMP110.PROD.OUTLOOK.COM (2001:489a:200:170::5)
- by SA1P110MB1487.NAMP110.PROD.OUTLOOK.COM (2001:489a:200:191::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.14; Sat, 1 Feb
- 2025 14:00:59 +0000
-Received: from SA1P110MB1069.NAMP110.PROD.OUTLOOK.COM
- ([fe80::fd7b:b16a:a9df:78e8]) by SA1P110MB1069.NAMP110.PROD.OUTLOOK.COM
- ([fe80::fd7b:b16a:a9df:78e8%5]) with mapi id 15.20.8398.021; Sat, 1 Feb 2025
- 14:00:59 +0000
-From: Sam Winchenbach <swinchenbach@arka.org>
-To: Jonathan Cameron <jic23@kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-	"antoniu.miclaus@analog.com" <antoniu.miclaus@analog.com>, "lars@metafoo.de"
-	<lars@metafoo.de>, "Michael.Hennerich@analog.com"
-	<Michael.Hennerich@analog.com>
-Subject: RE: Re: [PATCH v2] iio: filter: admv8818: Force initialization of SDO
-Thread-Topic: Re: [PATCH v2] iio: filter: admv8818: Force initialization of
- SDO
-Thread-Index: AQHbdLG4EF4mqu90fU+UqFnv+RaFfw==
-Date: Sat, 1 Feb 2025 14:00:58 +0000
-Message-ID:
- <SA1P110MB1069C9854F796B755E5E24C7BCEBA@SA1P110MB1069.NAMP110.PROD.OUTLOOK.COM>
-References:
- <SA1P110MB106911327A8819E9AF67E676BCE2A@SA1P110MB1069.NAMP110.PROD.OUTLOOK.COM>
- <20250201111813.6b8cbf5b@jic23-huawei>
-In-Reply-To: <20250201111813.6b8cbf5b@jic23-huawei>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arka.org;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1P110MB1069:EE_|SA1P110MB1487:EE_
-x-ms-office365-filtering-correlation-id: 7fa4a5c2-aa33-417a-49a0-08dd42c8da8d
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|41320700013|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?2U4RLEyMkmXfJ3532nVu8zoZuz5p9rje32w7PtH/0XsvP4bgbrVEeBK76dh1?=
- =?us-ascii?Q?UhUyX+z6FD8LqOjjdcFYITSIU0lQqAFSbjkSZ/ETx5mBXuo3ShMrehx67i3U?=
- =?us-ascii?Q?1KX/+4H+xzeJcGdZ020FJ7mJRMRA65vk+r99oMc7ywPiLg/JTgCBCQIdbvlo?=
- =?us-ascii?Q?aZdaZ0Yb9EvA+B7eC7W43gXq7PyAYKoUVs22AKn1+rJ1yr+fc/5CA0njsQed?=
- =?us-ascii?Q?zfN/uygYoxqz0eVvl/GHF6NsAGoXgavLnQcRrtpdlH1UT/80/i8itmsjAZqQ?=
- =?us-ascii?Q?YPlXi31y8X/uDD3OpYDipthmbslErpiSOsJcGgi5QJOCBbG1fTxttUZHiNSO?=
- =?us-ascii?Q?QcRFulWgX624PM3+O0K0OdbyNEFmtqQSA6EV0ZkRXNZ4TuOc2e6wkwv4xmLB?=
- =?us-ascii?Q?hMvN3lFU7nj3IdiF+rfpdqPBaVZnoePEjU2gCL7URBQev37mhCoAtapVg3GZ?=
- =?us-ascii?Q?dhI11jkJjn1ifzd6AgFG7ZbYV5T22Fo53qVDiXQ2rVUax4iZXYComHBASI7I?=
- =?us-ascii?Q?lJQ5FeMhkBN/S3uhjTn6tA5Z2DqmaZc5JNC52dm6Bfa8r0pRcoaQBwkqgkAH?=
- =?us-ascii?Q?GJ5gEbhPoaf+cpoUY36ubjfY2rgUsM6MsAbxJXBm3w45PeX2S38MpVV/Srns?=
- =?us-ascii?Q?CWGr9gmjaTaYaBbSj4rRLeRXeM+fL9RbiQugDb7wgWwrCMTV/QPLAhsXPHQj?=
- =?us-ascii?Q?z/Wu60A6QnhC4v5QiPndp8yZPMCqiuPgKMw6lw0zX4BIj+zqYcB6ds4nTHAm?=
- =?us-ascii?Q?2T+JfpOOHJZJ85i0O2XwW7Qf57AAbzkAq0duvhHRYLDy1VI8V7JfnmLPSQdL?=
- =?us-ascii?Q?WDGISLprEgH4TE99ylc7lFDdGLxCCw+sMh1U6bQwwbe2TxoHoPvSHU35/h/V?=
- =?us-ascii?Q?dIGqCtrVmLhIlCCtE8YXTV1EWD3nGlnP1ptDvXiQw+PePWPGn2HMDTy27x2A?=
- =?us-ascii?Q?rV4k1J338Eml4MlnZOxYDM5R2EwNDIMfrf11mEMvSX/nSY5RzgjM5Ge7M/3V?=
- =?us-ascii?Q?ouUjiOs7ZGWvXqTC+L7a+FS7kZxZQ+3QHOCJd8RqAQ/IMrO6xBSSaK2gnUlU?=
- =?us-ascii?Q?E+AAu6x/bsqbRG0vo63nL6VC99OdDrmtXwQF1Z01WLWTIhsb4idwao+CuKnm?=
- =?us-ascii?Q?423K66fhvSoMxwxX3aTxAcRg2Arlv6bMA8gAgr886izkUFnpQo+QMyo6iRVl?=
- =?us-ascii?Q?nKs+gcFU7xZOperiPbUhF9vVVCGUuiBJGl0oNBTJx91/TZLukzZg7EvWI0Rs?=
- =?us-ascii?Q?GOl5OoAOjQCDSIadss2NtEMF6hUkzQr8Yk3QMhFvT4ZQXxCukEPQG9/qTRD4?=
- =?us-ascii?Q?rLAVbPsJFgB1gS+XyXQXotdajrXsSsMOyl1n3AM9o7mAlXJlj5hWIaovAVDl?=
- =?us-ascii?Q?qHtY5S4OPSyH+wXTGMIpKKOeK0ypqgSbP+65FMvXhteb6I0wOY3csvbUVuMw?=
- =?us-ascii?Q?Wru/iwfnvdmPwVYSR9iZqltvU96pKNbG?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1P110MB1069.NAMP110.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(41320700013)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?KvTGiu14WpNIlvsLCI8WYPsee5OQ97dxTyH3q+/S1Z9ppfuOwBsGAxJinM97?=
- =?us-ascii?Q?qvdLFqVHJAVaH/MW1CYJcyAv2zv9x1YXJi7plUJx8NODZPcoi03r8SbCuuOR?=
- =?us-ascii?Q?qsSyLV9MBTmbmnqmK6seNPF2Vb+wH8zLZj/W/EgQLCWVExLm4V76QHSBcwH3?=
- =?us-ascii?Q?4A0mWDl2A7pAj6I7DHjIyU/4CXuIfC2Rtz59P6gQF3iIG4KdU0vHbCiHIOcu?=
- =?us-ascii?Q?L8uDgQ0JjwyMdo6bteYBu29PMe09pYQhnFOxUewCEROoSzXOE9Bfu0K0XIwe?=
- =?us-ascii?Q?1grM1ueL1PLE3NB0gzeYaQTxOj6f44mfyHW3VS8Qt5bP5QpreEmXUeS5OUVn?=
- =?us-ascii?Q?KKOLCclFcCSc5pKJkkV+FmzOJ+id2tVEyFUkUQYV/3kj1YLcKi3I1iVUrOEj?=
- =?us-ascii?Q?y9PXEqM5TZ6KbtGDhiAyuAVQIdPAFNe1IHCQVtaBC+ruEY53CNJFWM1EE3/n?=
- =?us-ascii?Q?2aBKauwsngp/PYZ8cUCC3y1Hkq4iyvDQnQ1FtDnsSwKleA6jrtDLyb20anIt?=
- =?us-ascii?Q?YT0sMJyTQ8a36MZ/wttgGw67dVhDbL9rdqPbngUPvQ6J9dRPM5mN9yDFtKm4?=
- =?us-ascii?Q?tTSNhEl1kGRBxahlSLX4yObpy0nvcwYXW1HRvDump+26b10Z/T0zkcJC2nkQ?=
- =?us-ascii?Q?s9ngH1K3ds2d2jtBG3H8+AHXornwNDhDyT2+dKh8xT6FVWwr0bnUTNM1uLNW?=
- =?us-ascii?Q?ZxsdoIm5EfC47UCJof3Sp8ber+7bC+68N7IXdv2KuYqVI/BIN8hAUyJ6QPNM?=
- =?us-ascii?Q?kB+jukv+teVM37nzZ3g1BYynAjUvEFS6uiRyk9E92IeIzGFasg7RM0KQgovM?=
- =?us-ascii?Q?lW8ff8PkOs98Iw2RBaa1e0n2q1/kODGJ1tch4uxV06YkkASk1RWxto0VJ7GK?=
- =?us-ascii?Q?I0PjHXIOJvkS6/yKTbKLbvHGxpoMSEABWeBxJGjIn6YGIDzjLnYyYhcm/twy?=
- =?us-ascii?Q?x6S78c4Yx2cC4Ad32u3Dt0TK4s7komTUmw5H302zy04HEaB4hgVc6L2NUl9L?=
- =?us-ascii?Q?8TOfnKtWYxxNwwjiuli4lElvlCSXrcSpesHChQOBTAA3XlnZZ7Sb4FwUM3CK?=
- =?us-ascii?Q?tXCv+hKpQaTl6Q0W1DsAMz8v4OKlPKoRxHUIIH1HLp7fcTjEnxyhOPRAxQS+?=
- =?us-ascii?Q?W8j+UrMaa3rgY+6YKGKIvKAJXneiieQCclemLwS0pN+NxIeVD0Os29z+tbvk?=
- =?us-ascii?Q?k65FtAglhNoBACYRbFIMgFFPtbDwMMYNAUgb8Rq+5ibNv2W9fmKVpfemZMTm?=
- =?us-ascii?Q?pFGwpwfrXDpISXLpyHZ6Q5Wej1GL4OyrDFo0TUXwx+12DXPwQwxU3ARdm2o9?=
- =?us-ascii?Q?0zVz2IWQlu7rONDx0mySWEq41dUNmkN6mOA+zn7WQcHWDNaTkBhMODHAJhDb?=
- =?us-ascii?Q?8Mr/5b2y6SlisnhhLuUq91xuPADq/ofzoq+vV9oH7WG9I4C17quqxVgP7lq3?=
- =?us-ascii?Q?CzT5jPlQzlTlNF84relOUjbWHKI2HDBY/5ZCUlXNyG7yJe+AZlq+ixDpsLWD?=
- =?us-ascii?Q?qXAqPDLWQt0glLbAnByfokJupyHxC2ER4gti?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039092F852
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 21:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738446671; cv=none; b=sg9lRoDoDkqeXTHDQhX8LrEzVWPoaXdSdxZ89P07z8CPP8VIC1+dhlDS2zF8WTmCNLeHLPBsdtBdorEtBGFu2FVg38YongKf7aMiVv05lKhsGuYxFsSrH6LNOs981cC/pNiH2XWq4fR8jdAEjh5wn4jCpJwt4Ew7UsK+9/aqqyU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738446671; c=relaxed/simple;
+	bh=kddqWlzvi+SnUGZ97+H+9f4pznSUeD+3hXHdyv7op5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A9utF0/ckqzu7fO+bjtpeDC+YQiKZVFeRGJbOCnlKLuGB9EammCuQENz0r8VhjIVnDpukSIpwMV89IHWniDyZU/eXtJ9s4aUChgiz/PDZFkZ0z5fFjVTaCEvgGyh/DKJg0HdVatvAxViXMuA/8SuyFv/w8DEgZTEz29S7ploclw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XN+oSP4K; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XN+oSP4K"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-385f07cd1a4so2770527f8f.1
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 13:51:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738446668; x=1739051468; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y6+6LjaugE0DyQnf73qvCDL5j+VRZNBEK4vkemWJG2c=;
+        b=XN+oSP4KcW3DZxCsVwEjCY7+wh2k5EEMBKAeQcYBwTGO+aZe0r+4NsEffln3OKvmtF
+         NAqkyN2uJqBdXAbWwUnUwPWhkt2oWOyx1iM0r7nrD4Stz5foaiNfcrvHL28yqEW608tG
+         CjbyW60PSNn+UmYCQE3frOwhK4w1n25VlTe9tcj22nGV/b+kTmWQ2CfatLWQTcZbJ3gH
+         jbQwagfPs3t4Rz3EbRhjth/+f9WrhqhO9mTIxg3FrrW4SK3eglhRaDHdC3rDNR4Twb6J
+         ka8LB0IjxH++GwesUqe8BsbuiJf8pRyUGf6zr4CJc2tXFdqlg0danYuPKBxlg9Ow4xJ1
+         p0Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738446668; x=1739051468;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y6+6LjaugE0DyQnf73qvCDL5j+VRZNBEK4vkemWJG2c=;
+        b=bwJjr5cc/HRTOyNy1yO85exoM8yGW5xsAcR2UbPxZQDFieltUWvgJTJTmrVlOxdA4Y
+         4P4/UxrVHxUCeI4Oi7lmddO07tErx/tmYYP/IHUowJ7X0bv1exZHac5SvTXrM+ruQQJV
+         s9ULARvBw6ioqIQTCrC7642+gxYNJ33P8lpEfXzQ/v+GkF5e6H8DXvmIKG2YZeBstkej
+         OhA23lKP5C/ccRkuEuXZ7s9lklOgz65ZDUznUoq7GTGQ1lmwoXX3DMYqhw1KQter3uy7
+         k2LsJ5l46CfzMHdjpsrRPewEU1dXSXP5K60JEHNuXiKblUhdDKSuni3xn6KNj5OaI8md
+         WKFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXYsM9gWHIcqYvjZv0wBzasu1DXKfIwfNMdcEJV7hrGGz4XGxu5Sa5cHFl8mkGnBGM6UuyeSeIorVzw7BE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytaSWjB/SNjAW5/WZ7nv3CLMD+KsopGOPaoK8/yEb9baABp10v
+	6IPlzemuB9MtCHNVB5y7FGdJ4x/p5TRtkEttnM8ss0AB08n8q3q3
+X-Gm-Gg: ASbGncuMDIhxRwE37diuULoaINbeU/GaTBY6dUE1Dm3j1SMVZJQkfMgzfYiBvRfZZg9
+	ocf3FLlh8xneJ/jwc+uhyIv0WMz1hBf/+ZVT/Dc6UMF8lJqkRcX8oYDPHWfxi5drLB2ZHMFtvF9
+	OAyRbSckr3OuqVwW68lL0q32akvybM05s5FR72bA1k5usfX1PGiMirShNLPBJF1aRnges4KBEE/
+	14T1S7Ffb/Hs8cLIfQ+x008n94KoZBJboFfkLp6mzVgL0MrbgNaG8cuK6940rheQN9pIt681sOI
+	q4gby9ljPxsWfbrEP7QVCZxNlDAoOybU6lnD6Vh9CxBLfNYgOyXqnQ==
+X-Google-Smtp-Source: AGHT+IHYRiLd3QDJnOn5b+AXIOzWtb3HxAVhHzU0YObH3osU8dB6+cLswxUn6gthx+zEs/IB7VYZBg==
+X-Received: by 2002:a5d:5f93:0:b0:386:3213:5b9b with SMTP id ffacd0b85a97d-38c51e8e12fmr14080788f8f.43.1738446668128;
+        Sat, 01 Feb 2025 13:51:08 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cfa3dsm8391149f8f.93.2025.02.01.13.51.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 13:51:07 -0800 (PST)
+Date: Sat, 1 Feb 2025 21:51:05 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: ebiederm@xmission.com, oleg@redhat.com, brauner@kernel.org,
+ akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] pid: drop irq disablement around pidmap_lock
+Message-ID: <20250201215105.55c0319a@pumpkin>
+In-Reply-To: <CAGudoHFHzEQhkaJCB3z6qCfDtSRq+zZew3fDkAKG-AEjpMq8Nw@mail.gmail.com>
+References: <20250201163106.28912-1-mjguzik@gmail.com>
+	<20250201163106.28912-7-mjguzik@gmail.com>
+	<20250201181933.07a3e7e2@pumpkin>
+	<CAGudoHFHzEQhkaJCB3z6qCfDtSRq+zZew3fDkAKG-AEjpMq8Nw@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: arka.org
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1P110MB1069.NAMP110.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fa4a5c2-aa33-417a-49a0-08dd42c8da8d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Feb 2025 14:00:58.3832
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 71928351-9f62-452c-b7f4-40bd09a22e1a
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1P110MB1487
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> > When a weak pull-up is present on the SDO line, regmap_update_bits=20
-> > fails to write both the SOFTRESET and SDOACTIVE bits because it=20
-> > incorrectly reads them as already set.
->=20
-> I can see this as a valid micro optimization but I'm struggling a bit on =
-how you can use the device if the pull up is weak enough that you can't rea=
-d data back from it. Does the reset in some way solve that?
->=20
-> Having asked for the fixes tag, I'm less sure on whether this is a fix.
->=20
-> Antoniu, I'd also like your input on this one!
->=20
+On Sat, 1 Feb 2025 19:42:32 +0100
+Mateusz Guzik <mjguzik@gmail.com> wrote:
 
-On power-up the device is configured without SDO enabled. This, alone, make=
-s the read-modify-write during initialization incorrect - It is not possibl=
-e to read from the device seeing it is not driving the output.
-
-If the SPI bus, like in our situation, has a weak pull-up the situation is =
-compounded. When the device initializes it reads backs all 1's as part of t=
-he read-modify-write sequence, falsely determines that the soft-reset bit i=
-s already set and skips resetting the device. The next step is to enable th=
-e SDO line. It reads back all 1's, falsely determines that the SDO is enabl=
-ed and then skips writing to enable it. This leaves the device in a non-fun=
-ctioning state.
-
-By writing directly to register it will always perform the reset, and it wi=
-ll always enable SDO regardless of the invalid values read back during init=
-ialization.
-
+> On Sat, Feb 1, 2025 at 7:19=E2=80=AFPM David Laight
+> <david.laight.linux@gmail.com> wrote:
 > >
-> > Since the soft reset disables the SDO line, performing a=20
-> > read-modify-write operation on ADI_SPI_CONFIG_A to enable the SDO line=
-=20
-> > doesn't make sense. This change directly writes to the register=20
-> > instead of using regmap_update_bits.
+> > On Sat,  1 Feb 2025 17:31:06 +0100
+> > Mateusz Guzik <mjguzik@gmail.com> wrote:
+> > =20
+> > > It no longer serves any purpose now that the tasklist_lock ->
+> > > pidmap_lock ordering got eliminated. =20
 > >
-> > Fixes: f34fe888ad05 ("iio:filter:admv8818: add support for ADMV8818")
+> > Not disabling interrupts may make thing worse.
+> > It is a trade off between 'interrupt latency' and 'lock hold time'.
 > >
+> > If interrupts are disabled then (clearly) they can get delayed because
+> > the lock is held.
+> > Provided the lock is only held for a short time it probably doesn't mat=
+ter.
+> > Indeed, unless it is the worst one, it probably doesn't matter at all.
+> > After all spin locks shouldn't really be held for significant periods.
+> >
+> > OTOH if the lock doesn't disable interrupts then an interrupt will
+> > increase the length of time a lock is held for.
+> > This can be significant - and I mean upwards of 1ms.
+> > Network interrupts can tale a while - and then the work that is deferred
+> > to 'softint' context happens as well (I don't think a spinlock stops
+> > the softint code).
+> >
+> > I've a feeling that unless a spin lock is held for 'far longer than one
+> > should ever be held for' then you really want to disable interrupts.
+> > =20
 >=20
-> No blank line here.  Fixes is part of the tags block that various scripts=
- scan.
+> Note that taking the interrupt trip increases single-threaded overhead.
 
-Is this the blank line after the fixes? I need to do some research to under=
-stand the tag block.
+I'm not sure what you mean.
+Disabling interrupts isn't as cheap as it ought to be, but probably isn't
+that bad.
 
->=20
-> > Signed-off-by: Sam Winchenbach <swinchenbach@arka.org>
-> > ---
-> >  drivers/iio/filter/admv8818.c | 14 ++++----------
-> >  1 file changed, 4 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/iio/filter/admv8818.c=20
-> > b/drivers/iio/filter/admv8818.c index 195e58bc4..9cd1eee84 100644
-> > --- a/drivers/iio/filter/admv8818.c
-> > +++ b/drivers/iio/filter/admv8818.c
-> > @@ -577,21 +577,15 @@ static int admv8818_init(struct admv8818_state *s=
-t)
-> >       struct spi_device *spi =3D st->spi;
-> >       unsigned int chip_id;
-> >
-> > -     ret =3D regmap_update_bits(st->regmap, ADMV8818_REG_SPI_CONFIG_A,
-> > -                              ADMV8818_SOFTRESET_N_MSK |
-> > -                              ADMV8818_SOFTRESET_MSK,
-> > -                              FIELD_PREP(ADMV8818_SOFTRESET_N_MSK, 1) =
-|
-> > -                              FIELD_PREP(ADMV8818_SOFTRESET_MSK, 1));
-> > +     ret =3D regmap_write(st->regmap, ADMV8818_REG_SPI_CONFIG_A,
-> > +                        ADMV8818_SOFTRESET_N_MSK |=20
-> > + ADMV8818_SOFTRESET_MSK);
-> >       if (ret) {
-> >               dev_err(&spi->dev, "ADMV8818 Soft Reset failed.\n");
-> >               return ret;
-> >       }
-> >
-> > -     ret =3D regmap_update_bits(st->regmap, ADMV8818_REG_SPI_CONFIG_A,
-> > -                              ADMV8818_SDOACTIVE_N_MSK |
-> > -                              ADMV8818_SDOACTIVE_MSK,
-> > -                              FIELD_PREP(ADMV8818_SDOACTIVE_N_MSK, 1) =
-|
-> > -                              FIELD_PREP(ADMV8818_SDOACTIVE_MSK, 1));
-> > +     ret =3D regmap_write(st->regmap, ADMV8818_REG_SPI_CONFIG_A,
-> > +                        ADMV8818_SDOACTIVE_N_MSK |=20
-> > + ADMV8818_SDOACTIVE_MSK);
-> >       if (ret) {
-> >               dev_err(&spi->dev, "ADMV8818 SDO Enable failed.\n");
-> >               return ret;
+> Per your own description, if the lock is contested and interrupts are
+> disabled, handling them also get delayed by CPUs which are busy just
+> waiting (and which would otherwise take care of them).
+
+The slow path for spin locks ought to have interrupts enabled.
+But, in any case, the interrupt is only delayed for the short time the spin
+lock is held for.
+
+> So while this is indeed a tradeoff, as I understand the sane default
+> is to *not* disable interrupts unless necessary.
+
+I bet to differ.
+
+If an interrupt is taken by a cpu that holds a spin lock then any other
+cpu that attempts to acquire the lock spins for the additional time that
+the interrupt takes.
+If interrupts are disabled then an interrupt is delayed for the time
+that the spin lock is held.
+
+The execution time of an interrupt can easily be a lot longer than
+most spin locks are held for.
+Either because of the work that an ethernet interrupt does (even before
+deferring to softint), or because even a single PCIe read (eg to an
+Altera Cyclone V fpga) can easily take 1000s of clocks.
+
+Now the execution cost of the interrupt has to happen some time.
+But you really don't want multiple cpu spinning waiting for it to finish.
+
+	David
+
