@@ -1,63 +1,137 @@
-Received: from out203-205-221-240.mail.qq.com (out203-205-221-240.mail.qq.com [203.205.221.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76B85A4D5
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 02:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340962C9A
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 02:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738375688; cv=none; b=dQ1fViWxRbvpML//fvSAtC4iIMxn2BVxpQuYnAJ7NQLhLSvj1cckBdPbZ02TWoBN9+82/OhJ62aENMTaoksKZh02JLBObvjCmkyrjZhTFqpYQlIhgExlLMjH3kyS1aqcEDpbbAV8BmbRocqZHnan25I469rUztkjIIKrwUbmvh4=
+	t=1738376250; cv=none; b=Q/VdrgS/URUn+6k7Re0iQ45AuRrJt+bu6I2fHslBgJyGrarGI5mQhSyb2wvS6pjGHnJYWsHP1TMAnqoV168/+tPLYXVZmaFRjGhYwInrNqaQotVb+Fr8hrCFdbsVBFymcDvku32vp1qcZ3Ts83SoTWiYSqYpgRJFxMRel6XxqVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738375688; c=relaxed/simple;
-	bh=5NUV/Smhhra6PvizOc/P+HW4QM+0UoWI8pclAapHqJQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=GdoBY52GCk9zR0nhGCR+IJU3Zb2ouzn+tecT4E57/Btmf0I1448PXj0KGQw4H68SUNMOO/J9MToP9UP1MlhTnB8fEltKngxmKYlCL4XJYDTtUHouei0tg+ayNBhWeWLJBSrCFUmAnNyICMb+IQJJH3I1Ygp2lvekxzWuDXSwdno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=SLXn4pVX; arc=none smtp.client-ip=203.205.221.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1738376250; c=relaxed/simple;
+	bh=czE4vHieuE0f098+c8QgKQmkSyW9XE5v2cPcm44Mx3I=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=MlfZMfYzsYwd/NU6sG2xpDmmPq55iLEJ1Hggr5u5W3+F4zVV7mjpeNfEuYVSEtl81nTO0ioY1gPO7i7WGCN1l8DgKuoUbdkmS7H12M/LzKnViW4Uvj2sRq0xNg4xX94VZJFbB8IHkd8zgFXcFdUK/+CaUl4hfDew4pUPsLLOEs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Vm8/DXOd; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="SLXn4pVX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1738375679; bh=5NUV/Smhhra6PvizOc/P+HW4QM+0UoWI8pclAapHqJQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SLXn4pVXk3YCvQURq7sCS2eUrhZypGVLiaN/sRQHqIz2WnXJBFAY7vhlyO+cAv2gX
-	 wvlldmAxqbaxUNLQV28lVkDhyW6HlWNyor+hZtU6vX2JGG/JACggKjGtp1oGLHAaTn
-	 /ObnAkq8Mt/7Ru+bl4S+vkZYAeT2/30CKLIKklyM=
-Received: from pek-lxu-l1.wrs.com ([2408:8435:9930:6b25:8cb3:3b5b:faa2:1ccb])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id 10032CDB; Sat, 01 Feb 2025 09:04:00 +0800
-X-QQ-mid: xmsmtpt1738371840timhad3n6
-Message-ID: <tencent_BAF76E66D5136BE36D896D43A7C44D576005@qq.com>
-X-QQ-XMAILINFO: NVWg0TDWOKpeKhUsGfe1O1Eh9nCB/jy1g9leUXyZ4794oqbbzpNU2uShfd6/Ho
-	 7mzThanp4MFk85r3IFT7h6DctJh+Ehqs4DbMP1FXkmszr+cO5XgRXeceHAEeLkANC0JQc4epcPhl
-	 NDdjzegp9PNWu/krn+W6/PsgPCH0CwgT95PQ/d9se5Lsjt5f2+jynBsYGbBeJR+7S91VNggDskob
-	 fUGC8XKLjSEU01VsE0GyPOBsAo1fwif5C7MLn9ldE+nAKyllxEzC0TRTYyW3EM8AGTwyCPSPWowQ
-	 HE+DucBMyIa78qplnT5BaoYmvnmHDFhGPQyIfdvf5wjpbk9P9t9g28N1skn7ShkRfaYLemqFmgeH
-	 OtKATmBODPIWEc1pTVtBylIw+495ve+t3n7VY+9999vF+JUwHYNEeO3UZzwHpEnElIeSO2EO+r+T
-	 Y3xQKetAeAwFfz7ku+XcIvy41aBXBF+bPXi0TYODkuZgDdyty12fymgDSTXG7s1g3Pz3ZhHsbWTC
-	 b3gpPyRF1ki9tbyF+WhZSUTJkQVWPgPm3JyR4Ux7rP8tj8r5PAxwZ5GLrVfh3//vULs4hGtlWtYB
-	 MglQqf5ZwEVXbLYlP9r+enEIaargef0PVRzpQBoEv5jYF2i7MsB/XRWOGJH53exiaas1L6b7VR9f
-	 SXj7iZCzrjZr7zn6U+2aKlSGYB7Cmq09PAMqjz7Sn9T3W6MwCzFPpVLHMY6c8xghBD6pldzqC19J
-	 KS6ErjLW8RzCHTUEojdpDuaRwILzY/Ab30dqKsFZkF+6deIj2fKJfk6lFcYQmEyC5+kJRStZYVhG
-	 qeSjun1tHIZUxF0r/IV3VpB36aMGHVqI/ovK9qsnlDzqPpCRrVCzRvKekLrBuzYL1aCDODmVkqo+
-	 6wDwwXz8df02TS989qILV6HClzN1V/7w==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+c041985778e4069e1ce3@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [fs?] WARNING: bad unlock balance in seq_read_iter
-Date: Sat,  1 Feb 2025 09:04:00 +0800
-X-OQ-MSGID: <20250201010359.714319-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <679d36da.050a0220.163cdc.0010.GAE@google.com>
-References: <679d36da.050a0220.163cdc.0010.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vm8/DXOd"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2efc3292021so7280883a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 18:17:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738376247; x=1738981047; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cq2j2i7xKbEmxmaKlx5ycVjsc6NUu7PBqfSVX6ZfTN4=;
+        b=Vm8/DXOdxz24+8Ko7/FCbk1zLSWOTHwsmWZ/Ll3qRjcnMh0mbQkwe8ZdXyBwfsPgsS
+         Unq0/LxfkrskfWnp5B7JJ/BOkT7DHbUZeloOXdJfRbVng37bPmVVn10ktscbna+t1VG5
+         vsVDtOiaPfbpQm5c4bOQ0cfU1gW0uxK7t2btpTy7eFp9EgMQ/9l/YnoO4wUHi6hI4rgc
+         X8TuMEyxELzMn+6+VCo1UXZKfQtINtoAv5Uqk8pUyvkiL99auZbLKYspYJ9My6xcyy0W
+         3M2WFbNcpEWK471bC8AcIm7DtChLhzn0+4hxDlN6mL5VHspVmo1XAorK+1e5ErKSBnWr
+         QTfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738376247; x=1738981047;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cq2j2i7xKbEmxmaKlx5ycVjsc6NUu7PBqfSVX6ZfTN4=;
+        b=G5UIb55Sn1Xmae7bDCHK/cQ3sB2OkbW1WNHWXEhDZh9ZdkvmMqr4DQojv7VAwC/7Ea
+         kV6HKz99oUkfhgiCftSP04d6G7woXvgvlsJH32DJpW0fbgtJPOuoZANacpNOshAknF/J
+         teK8U1NjEvbi7LwLzwodJ5+yOlYfEISz5rzOtbSCTqq0YvAjILv5pzjXyl+FgJXf42DJ
+         Ncfhtg3B00tNOaNzD7CX+EG68KuCszGMRMH86seAeGW6lvq94EbqIs4I/0bGVR2m7uZb
+         IkAcSlprsJ7Vvbeo28whCxDzW54xELtQFT6xSpKArE0UpVMZwBhAMgPxDeTQwVql5DnX
+         hwBQ==
+X-Gm-Message-State: AOJu0YyAvnZtrOVbssGwc78cqC5aWBXc/H3dFtnk7FNtetSU1J2xMFpH
+	u0w4L7VnQlZWAzxT2INlPTCZs+ECGHhuEJL2g0KHBIHKECTZC2DV+rIyvEoxSPBD5q92gTmv3Uv
+	SZw==
+X-Google-Smtp-Source: AGHT+IEXms2W7h6OPbgfhbPe+T0bjO3rPyG4kBeOBL1XLya2FJ/dryX9qDtrHv/AVlJBJdJ2J5PBFLJRbi4=
+X-Received: from pjbsw11.prod.google.com ([2002:a17:90b:2c8b:b0:2ef:a732:f48d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:258c:b0:2ee:f687:6acb
+ with SMTP id 98e67ed59e1d1-2f83abd9998mr19471173a91.13.1738376247517; Fri, 31
+ Jan 2025 18:17:27 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri, 31 Jan 2025 18:17:02 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250201021718.699411-1-seanjc@google.com>
+Subject: [PATCH 00/16] x86/tsc: Try to wrangle PV clocks vs. TSC
+From: Sean Christopherson <seanjc@google.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
+	virtualization@lists.linux.dev, linux-hyperv@vger.kernel.org, 
+	jailhouse-dev@googlegroups.com, kvm@vger.kernel.org, 
+	xen-devel@lists.xenproject.org, Sean Christopherson <seanjc@google.com>, 
+	Nikunj A Dadhania <nikunj@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-#syz test: https://github.com/ea1davis/linux ftr/syz
+Attempt to bring some amount of order to the PV clocks vs. TSC madness in
+the kernel.  The primary goal of this series is to fix flaws with SNP
+and TDX guests where a PV clock provided by the untrusted hypervisor is
+used instead of the secure/trusted TSC that is controlled by trusted
+firmware.
+
+The secondary goal (last few patches) is to draft off of the SNP and TDX
+changes to slightly modernize running under KVM.  Currently, KVM guests
+will use TSC for clocksource, but not sched_clock.  And they ignore Intel's
+CPUID-based TSC and CPU frequency enumeration, even when using the TSC
+instead of kvmclock.  And if the host provides the core crystal frequency
+in CPUID.0x15, then KVM guests can use that for the APIC timer period
+instead of manually calibrating the frequency.
+
+Lots more background: https://lore.kernel.org/all/20250106124633.1418972-13-nikunj@amd.com
+
+This is all *very* lightly tested (borderline RFC).
+
+Sean Christopherson (16):
+  x86/tsc: Add a standalone helpers for getting TSC info from CPUID.0x15
+  x86/tsc: Add standalone helper for getting CPU frequency from CPUID
+  x86/tsc: Add helper to register CPU and TSC freq calibration routines
+  x86/sev: Mark TSC as reliable when configuring Secure TSC
+  x86/sev: Move check for SNP Secure TSC support to tsc_early_init()
+  x86/tdx: Override PV calibration routines with CPUID-based calibration
+  x86/acrn: Mark TSC frequency as known when using ACRN for calibration
+  x86/tsc: Pass KNOWN_FREQ and RELIABLE as params to registration
+  x86/tsc: Rejects attempts to override TSC calibration with lesser
+    routine
+  x86/paravirt: Move handling of unstable PV clocks into
+    paravirt_set_sched_clock()
+  x86/paravirt: Don't use a PV sched_clock in CoCo guests with trusted
+    TSC
+  x86/kvmclock: Mark TSC as reliable when it's constant and nonstop
+  x86/kvmclock: Get CPU base frequency from CPUID when it's available
+  x86/kvmclock: Get TSC frequency from CPUID when its available
+  x86/kvmclock: Stuff local APIC bus period when core crystal freq comes
+    from CPUID
+  x86/kvmclock: Use TSC for sched_clock if it's constant and non-stop
+
+ arch/x86/coco/sev/core.c        |  9 ++--
+ arch/x86/coco/tdx/tdx.c         | 27 ++++++++--
+ arch/x86/include/asm/paravirt.h |  7 ++-
+ arch/x86/include/asm/tdx.h      |  2 +
+ arch/x86/include/asm/tsc.h      | 67 +++++++++++++++++++++++++
+ arch/x86/kernel/cpu/acrn.c      |  5 +-
+ arch/x86/kernel/cpu/mshyperv.c  | 11 +++--
+ arch/x86/kernel/cpu/vmware.c    |  9 ++--
+ arch/x86/kernel/jailhouse.c     |  6 +--
+ arch/x86/kernel/kvmclock.c      | 88 +++++++++++++++++++++++----------
+ arch/x86/kernel/paravirt.c      | 15 +++++-
+ arch/x86/kernel/tsc.c           | 74 ++++++++++++++++-----------
+ arch/x86/mm/mem_encrypt_amd.c   |  3 --
+ arch/x86/xen/time.c             |  4 +-
+ 14 files changed, 243 insertions(+), 84 deletions(-)
+
+
+base-commit: ebbb8be421eefbe2d47b99c2e1a6dd840d7930f9
+-- 
+2.48.1.362.g079036d154-goog
 
