@@ -1,135 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D27208A9;
-	Sat,  1 Feb 2025 16:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A671BEF81
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738427464; cv=none; b=oUxHQ/aA+hlIXFEnr5VG4rAi0L1hMGyojoutsPf1WnS3muyVrImmS4pLYV6rBWmqunpXAZ442PZ5WqP8MiQ+Lj/XpeNnNe8FLE7N5C4VJYldCwrgj5c2vh1ZkheUeb/Q+5awE6DZvJI0/F4U5buqY9VQO1xkMhfSocLa3u+lSgU=
+	t=1738427483; cv=none; b=YVr8pSVL5Fo/oZP81cmgwgc7EmZ+mVucDRXFVL6NuH5ckYdm0zzcwNnxxCdIpIHAuHJ+U1awte6JkFflt/0TY0LFNheg6zH4dHrHTL0b161+BzToqu1ToOcpJBPBwHFuGUACyFdnLZu61gubCpb3x1MlOUhvNuwk5pzyTLpvN+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738427464; c=relaxed/simple;
-	bh=MQVsCV+rKnGhM+DyLpC+tfup9Av4qyn8X8ziPTES9Vo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bkm7rdIVgM0cIFacLglPouErY6R4le1sUE7x1krpp7VDig8eQ/zVcWbZHz7EdBewHCzXv15gwEHBHtUPdfHrLJuMAABqup85sZnseXjlAGtlaFbppYAupg+JNll9e59QOmKtnFhC7XQ+JjKZY4lYodrLbNDlFOtYn+OWrKNL6Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B4FLLJxV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738427483; c=relaxed/simple;
+	bh=TbzI5X235MPiMiBmkQLOq34IBmYWJaVSPrGtXKizJGI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P+Xu8+XAyhgAp9ZweF8ZUHUJWufcKrZ6G/mHnYWetxz/1FYwGNia8RAQrpWlhD4KSm4FwzbuxgwA7HrSe5xTPpywlmf36Q4dDxV0S1iHmQN1Ez3xZtdUZJjLtHXbuUMrMWiL3r0ZLA2aNDJ61LOcXbY/eF2I0SzXjZVsMDE+nac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fHBSVntM; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B4FLLJxV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3277C4CED3;
-	Sat,  1 Feb 2025 16:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738427464;
-	bh=MQVsCV+rKnGhM+DyLpC+tfup9Av4qyn8X8ziPTES9Vo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=B4FLLJxV6wErqsmRi2JsDyRToMwuu/8jDvBLXHs4945WFGuxy4aNnf+kq6AUanR/t
-	 hUcAVePqCfn4A0gUOdoQWnN4+aAyCY5SSrEVu5osdxMQrQu6aGQrH6VIiwvtdBb6+v
-	 V1V6KL8rZrHOX4Uio78ZQXyqYnkouNREJIa0NmzUGN7AMi7r9aPAD/H8yqAXY1QIoh
-	 DKvKGSgRvzT8XvTvkWfmCLTL134kJDXWptS+VcHmrZ5mAUueMPmHaTo0SjLjkElkg7
-	 IcT3RU5MBLXG4yA0Ii9LrSoNdMphdiUpD5332p9YkqFy5K9AAKL2hwk2166CoLVtZ0
-	 /5fMYndlqAOUg==
-Date: Sat, 1 Feb 2025 16:30:51 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Matti Vaittinen
- <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Linus
- Walleij <linus.walleij@linaro.org>, Nuno Sa <nuno.sa@analog.com>, David
- Lechner <dlechner@baylibre.com>, Dumitru Ceclan <mitrutzceclan@gmail.com>,
- Trevor Gamblin <tgamblin@baylibre.com>, Matteo Martelli
- <matteomartelli3@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Subject: Re: [RFC PATCH 0/5] Support ROHM BD79124 ADC/GPO
-Message-ID: <20250201163051.1d54cdd7@jic23-huawei>
-In-Reply-To: <5cc01bc7-95b7-4a58-86d7-d4293e0e9966@gmail.com>
-References: <cover.1738328714.git.mazziesaccount@gmail.com>
-	<20250131170840.00002dc8@huawei.com>
-	<5cc01bc7-95b7-4a58-86d7-d4293e0e9966@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHBSVntM"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5d3d479b1e6so4089994a12.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:31:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738427480; x=1739032280; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3jrnKgDyAKbnWY+eGuVyIsm/8uEB+2OWbdoknaGGjkA=;
+        b=fHBSVntM+HwPUZSFsAY89yHrekpcHJCGoQuUGi4wVM7V91oscCmzr8UQjBk9osLMl+
+         0RA6aye04YErplto9CDF4snqwdJGboK/+QBEWeWHxwk6+FK8wBwm0jELGqFPcZvKRzi6
+         mMS91GVQecpMD9VQqA38u6IbMOlI0vCb6oPT0PBvm12KhQ3Jjw1jkkmpAULYquNplLIv
+         39WSB7/DtF4WVWzOxeAOy32bM23Nt226YTXCpbrTnr3+3Kl+6+LMXjQicWP6PmtQdxH6
+         Yy3pPDxCqyoUVxp3B+sdO679RazEvSdc1bP6LxQqgT7VzSi7agVUJkA/JqTISL/v1HeW
+         3zQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738427480; x=1739032280;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3jrnKgDyAKbnWY+eGuVyIsm/8uEB+2OWbdoknaGGjkA=;
+        b=wR00xLGfPjngakRQCWbmTaMr9idyDTKFkcmxuDnyFZC7c+qWiA+kJNkaB3Uuvp1Bns
+         l1kpHwxXMXi7Do5eN8R1d1TMzhRWAmU9ElM7oTw7lmHDZQywYwFR893nUGsdRKvljDIK
+         z5bfUzSHXzIjkn2PCgFOmoKr0fHDD8+gfYeLuNtgCvozbqf69hs4pR2ulAfGx/11lsyx
+         40kw1ox1EOqf4iNvMRDxSiEVcHuSAr6k03XvFCY5qF2rVDxiH5Qkx+JTcQMSgSmCzDPy
+         0pGahbJrS37alhfBinuyN01DIv5/j5jh3cfK7PHMioCsT6tuboBQwUQse2GhbY4Pb83V
+         oNPw==
+X-Forwarded-Encrypted: i=1; AJvYcCXq2occje9rr64HAMAcRJcpI/JCm40nnEhKd8jCjJMSviitWeAZc0iLG5TzaHrK2xVi4CcL3cfpCjt78X4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUtdds1WI1NLKxqE4cZAnVqOnziyY+7uceQVoEqqjzH0JDlnD8
+	gbtnabamqSxp8CuOf/7s5Daz5Gs+RBBtFshSIdhFYPK7+tJg5x/2
+X-Gm-Gg: ASbGncv0dOBUA+gC6f0w7bIbdkG3x/nrtC2KGoBSfDpVkuXA59efChe2npD8a4OaeWv
+	s70T7GgnoG4RV16DXF0pXc9NQHiINPB/TrcyZrQ4vbrs30ehEbLsWnwMMqpoMP8p2QvoeAx8NlU
+	/jB54RxBmEO4KGkSE9kPhw2m5vPxXlj0OPR4XqelC7uo+cH2EirJ/chUhMLQYTnI87jRvW1TH59
+	jvsvoOwbnyRtlF0XLwibVAZ0yqUbaFkfG+rgfuWbIo890lVwnkHQy8UVHYxjZYDsLc/jTpHH5R+
+	/fcGMLnVJhAr38D3cS6mGm1kMxFrff8NXg==
+X-Google-Smtp-Source: AGHT+IGjUXyqp/vJ3+g7LQWf+U0oyQzi7TNZUhg4i+bNx7Fgw7YdSJtVvGJ6QCfmYSZFLhiSYwgxkw==
+X-Received: by 2002:a05:6402:380e:b0:5dc:893d:6df3 with SMTP id 4fb4d7f45d1cf-5dc893d702dmr14273771a12.0.1738427479382;
+        Sat, 01 Feb 2025 08:31:19 -0800 (PST)
+Received: from f.. (cst-prg-25-223.cust.vodafone.cz. [46.135.25.223])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc723cff72sm4636959a12.15.2025.02.01.08.31.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 08:31:18 -0800 (PST)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: ebiederm@xmission.com,
+	oleg@redhat.com
+Cc: brauner@kernel.org,
+	akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH v3 0/6] reduce tasklist_lock hold time on exit and do some
+Date: Sat,  1 Feb 2025 17:31:00 +0100
+Message-ID: <20250201163106.28912-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sat, 1 Feb 2025 17:00:51 +0200
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+The clone side contends against exit side in a way which avoidably
+exacerbates the problem by the latter waiting on locks held by the
+former while holding the tasklist_lock.
 
-> Hi Jonathan,
-> 
-> Thanks a ton for the help! :)
-> 
-> On 31/01/2025 19:08, Jonathan Cameron wrote:
-> > On Fri, 31 Jan 2025 15:34:43 +0200
-> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> >   
-> >> Support ROHM BD79124 ADC.
-> >>
-> >> Quite usual stuff. 12-bit, 8-channel ADC with threshold monitoring.
-> >>
-> >> Except that:
-> >>   - each ADC input pin can be configured as a general purpose output.
-> >>   - manually starting an ADC conversion and reading the result would
-> >>     require the I2C _master_ to do clock stretching(!) for the duration
-> >>     of the conversion... Let's just say this is not well supported.
-> >>   - IC supports 'autonomous measurement mode' and storing latest results
-> >>     to the result registers. This mode is used by the driver due to the
-> >>     "peculiar" I2C when doing manual reads.
-> >>
-> >> I sent this as an RFC because I implemented the pin purposing (GPO/ADC)
-> >> using pinmux - which I've never done for upstream stuff before. Hence
-> >> it's better to ask if this makes sense, or if there is better way to go.
-> >> Anyways, resulted drivers spread to 3 subsystems (MFD, pinctrl and IIO)  
-> > In principle nothing against pin mux for this.
-> > There are other options though if pin mux ends up being too complex.
-> > 
-> > - provide ADC channels in the binding channel@x etc.
-> > Anything else is freely available as a GPIO.
-> > Normal GPIO bindings etc for those.
-> > 
-> > The channel bit is common on SoC ADC anyway where we don't want to
-> > expose channels that aren't wired out.  
-> 
-> Thanks for the insight on how things are usually done :)
-> 
-> I think the only reason for having all the channels visible in IIO, 
-> could be, if there was a need to provide a runtime configuration.
-> 
-> > For combined ADC GPIO chips we normally don't bother with an MFD.
-> > Just host the gpio driver in the ADC one unless there is a strong
-> > reasons someone will put this down for GPIO usage only.  
-> 
-> I don't really know about that. I don't like arguing, yet I seem to do 
-> that all the time XD
-> 
-> I personally like using MFD and having smaller drivers in relevant 
-> subsystems, because it tends to keep the drivers leaner - and allows 
-> re-use of drivers when some of the hardware blocks are re-used. In some 
-> cases this results (much) cleaner drivers.
+Whacking this for both add_device_randomness and pids allocation gives
+me a 15% speed up for thread creation/destruction in a 24-core vm.
 
-I'm fully in agreement with MFD being useful, but for very simple
-parts of a device it can be overkill. 
-> 
-> (Let's assume they did "new" ADC, and just dropped the GPO from it. With 
-> the MFD the deal is to add new compatible, and have an MFD cell array 
-> without the pinctrl/GPO matching this new device. And lets imagine they 
-> later add this ADC to a PMIC. We add yet another MFD cell array for this 
-> new device, with a cell for the regulators, power-supply and the ADC... 
-> The same platform subdevice can be re-used to drive ADC (well, with 
-> added register offsets)).
-> 
-> Allright. I believe you have more experience on this area than I do, but 
-> I definitely think MFD has it's merits also for ADCs - they do tend to 
-> put ADCs to all kinds of devices (like in PMICs after all, although 
-> maybe not with 8 channels and less often without an accumulator).
+The random patch is worth about 4%.
 
-It's a trade off.  Sometimes we just have a little code duplication
-to the need for a more complex design.
+nothing blew up with lockdep, lightly tested so far
 
-Enjoy the rest of Fosdem
+Bench (plop into will-it-scale):
+$ cat tests/threadspawn1.c
 
-Jonathan
+char *testcase_description = "Thread creation and teardown";
+
+static void *worker(void *arg)
+{
+	return (NULL);
+}
+
+void testcase(unsigned long long *iterations, unsigned long nr)
+{
+	pthread_t thread;
+	int error;
+
+	while (1) {
+		error = pthread_create(&thread, NULL, worker, NULL);
+		assert(error == 0);
+		error = pthread_join(thread, NULL);
+		assert(error == 0);
+		(*iterations)++;
+	}
+}
+
+
+v3:
+- keep procfs flush where it was, instead hoist get_pid outside of the
+  lock
+- make detach_pid et al accept an array argument of pids to populate
+- sprinkle asserts
+- drop irq trips around pidmap_lock
+- move tty unref outside of tasklist_lock
+
+Mateusz Guzik (6):
+  exit: perform add_device_randomness() without tasklist_lock
+  exit: hoist get_pid() in release_task() outside of tasklist_lock
+  exit: postpone tty_kref_put() until after tasklist_lock is dropped
+  pid: sprinkle tasklist_lock asserts
+  pid: perform free_pid() calls outside of tasklist_lock
+  pid: drop irq disablement around pidmap_lock
+
+ include/linux/pid.h |  7 ++--
+ kernel/exit.c       | 45 +++++++++++++++----------
+ kernel/pid.c        | 82 +++++++++++++++++++++++++--------------------
+ kernel/sys.c        | 14 +++++---
+ 4 files changed, 86 insertions(+), 62 deletions(-)
+
+-- 
+2.43.0
+
