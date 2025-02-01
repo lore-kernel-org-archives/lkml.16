@@ -1,127 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B69A433BE;
-	Sat,  1 Feb 2025 09:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A8B2B9A9;
+	Sat,  1 Feb 2025 09:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738402804; cv=none; b=mwASXbJGzJlBDvtPU7ERJKydiL5KGnZ3fh6SORI/H6y6iP5mrYJBGFtB26uk76wGJrtW78LP9mDOLifxKpIAk/JUPVGprxgOrjl/qPxbjTYRuVS1JO4zQaziG8976M0xAVoOghy1GK0VuW0+0xW+6NDoJe44luY1WZlysOiqJ/M=
+	t=1738403148; cv=none; b=TarQ/fOg6nMQ7TGAOALNL1xpqQ+pJfGD/k8d7eoEU0AFy/U5OtuE/2fEVTKUhulcjMeCF565LGIFBv/VWWxMRxJXQuXAiQICfjHwyCvG0Oizqy1sgFC+6XEG4Ein+hl5IwYaEE+CIuzm4n/1o3SQy7XqItRKxqn+CJxPbHO6Qvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738402804; c=relaxed/simple;
-	bh=aAMRfRl5ZHwn79N0tp/fQ8i+GehS66SCFBO187z07bE=;
-	h=Date:From:To:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=AkBFWDlU3OCJowLnW/L8VpZdlg1IprOprobNbFlFvpNIDL6D4WmbsB22apVCvu4Iv68Om3Yj94Gcteu0zJ7OGVBPuj5cnJIzZfBbpkF/YFNRHdL8wgNwCgXdXL9Hc7objWpcp1+P3C7rm5cP77R5JYEK65DpYKQ55eRAUE7din4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSCfX8KN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738403148; c=relaxed/simple;
+	bh=tLQ3X3o50sazcQ3riz1XRy19lYX43XwNdMTldntMfNk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rjXq9iiPCbnegs5bD7upL/R3Mhm1YKsh97ytuIEy7n1syQtmZucvScA3g/hVfXdxTqye8MA4JTZCEDgDLfvk83IdY6sclq+eZSZqoSKHcOXwxTeZcP/ALmSRRPwqxQ0mmr/rpDecs4LLVxH+913pQ7PAFYLRhkFN+VDZq8ePfno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLdG0ST/; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSCfX8KN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 827E1C4CED3;
-	Sat,  1 Feb 2025 09:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738402803;
-	bh=aAMRfRl5ZHwn79N0tp/fQ8i+GehS66SCFBO187z07bE=;
-	h=Date:From:To:Subject:In-Reply-To:References:From;
-	b=PSCfX8KNh15ymm4kfHgnW1KsRLIzB1kmBvu8P/ZPITWkUKaBP8aAJmCDo1aWrhcS7
-	 9J6U2aHbzUf0YQ0GIKl15eCr5SimYPJW3PxE4XX/0Lqn3+pDD8VgvTIdQvJJ5eUOAi
-	 rOxvqva+v77/EA8iyoc0Vc4wQJk71yQUFokKP6mka3zq89AWRv5q8y5oaaN/n9a3z2
-	 w8g77L2qq9oFzb63YSWFLmojozL8GTBtqJmG5zBE9GAh8OUQOAZdMt8hNy9w9vTLwn
-	 PhmTwoImt5Lybw/oY+qB2ypewSuiKAm0Kwk6h9w2cAeiExi1CL9BZUYlqgA+vyRyFY
-	 PDrbycaYs4fmA==
-Date: Sat, 01 Feb 2025 01:40:00 -0800
-From: Kees Cook <kees@kernel.org>
-To: Nir Lichtman <nir@lichtman.org>, viro@zeniv.linux.org.uk, brauner@kernel.org,
- jack@suse.cz, ebiederm@xmission.com, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] exec: remove redundant save asides of old pid/vpid
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250201083127.GA1185473@lichtman.org>
-References: <20250201083127.GA1185473@lichtman.org>
-Message-ID: <0B25310A-0907-481E-8ADF-EEFA78927BFF@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLdG0ST/"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-21654fdd5daso49676515ad.1;
+        Sat, 01 Feb 2025 01:45:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738403145; x=1739007945; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AVRO+nMq3HdXxZo9GoEu318QQbe4p2iwPYY59ogFdgA=;
+        b=dLdG0ST/VEv6fdGR2SdxZLPA866HZu/ogX4lUrfOLpX9yoe6hbX01NoE4+M6SEiZJj
+         B8YL/WRx7zlKupLAG0e7d6hHW54hSmmb0I44zx874by8jqWOLLX7KKTBJIsUjutFKWh6
+         OS16KntaEe+L0CcLp2CRkUWjeXeRA4I83JqOWPj4z48LFQHvG0gB2cppbqdR47csAsnh
+         PoggsgEzk/SanCyhd0BDeiN8YAk4e49tbeSvnBHa97p9AWedODyVkYV3ZTja//Zj9dA7
+         8nOCoaRPlxcqaBaDy1cbJhUwcwoyV9zZe47I20YfBNBZefquQ/l5ybsQJEOOsWWQU05l
+         y41g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738403145; x=1739007945;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AVRO+nMq3HdXxZo9GoEu318QQbe4p2iwPYY59ogFdgA=;
+        b=eb9mE1NEEBxLAGc/O/Xd8cnnJeWpjcoGBqbKlng7ttNUzU31TMm47olHsfqtJ0eF/K
+         K1N2RSWT5xG1izUgKCxFZATstu0INEPAngx4rlkeKI2bGbI+LBery+KW5Dx+kZ6QFeyl
+         sB5py8FDvE+Q16XIBt4w3di3E1KGubw9zeN3ovOgpDOPHg21yEEsXoeZJWGv65Q9IkRe
+         eEIyKAeVyHpFgt/1COuPbXP9UvNo4eGU9upfzWszfqGuizahBq8IpOrkMH5RcDoLQ84u
+         rRUP2K2aGAE5fyzbkKMlRMPYEB1NDuJ2Go1VEhOyFFCOsQM7cis9abtmwb3HhdM0QuQg
+         lVug==
+X-Forwarded-Encrypted: i=1; AJvYcCVs26q3aMFXqtnDtGMhI1d6EGDJ4HCxqf4w0QkIqAKLwFhXxUznA8AjWHqTnT+oO6RXSmj2heC46i18/5RJ@vger.kernel.org, AJvYcCWz8WjDSat/9oL04gSNffFiIQ8Ilvw/PkmkbKzOdPWN3JGwjMserPyfzzjH99p6EgrEsX+B8Xn/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+GCRXlMvooZVy1HN3TUOKOH+IGtq7gYxlu/rnu+qFDh6CrcW2
+	MnQVblUUPqBJBZvrXK196QSATlEnXOe5ByGooaAgjbLj/OxW8jM8
+X-Gm-Gg: ASbGncv2wOpF4vECHuK3I1Fq1lcF0RfDS+DRSTbdxYKI7jP1YcamYKODV2J2NW0+xPI
+	4ENPaLzQesw+vqwkZh5OMfJyUiqXfiEDfoL/xB8yHaXS1/Rv0Oc1LlpYKyLZ5pt2mxGQ7Y7oADC
+	sXkKB6TkqGUSKpTsYaMDNq5NKU5hVDAgVs2vM5vpkbm3qHc4XXg2Pe3QXZrCx+buSuLh8rXoWVB
+	nSbue+LTRIhtgAZJcNVk1PVR+3dplQJwUWtSjRl37bK8JHpkSC3FcyMurOI0QXWZ98nlxqRPmWH
+	0GBZkJF1twl9NvUQzABFgD4ty0H66rB3mxZGvY1CmJj6vg2UubDx25s4eYekl1myP5zq/Q2UyDB
+	fgieNiD/J4yoS
+X-Google-Smtp-Source: AGHT+IE5X0DTIrkfK1LUMBwobedDoDXV1ZeOu3cfQ9HscDpKjTiSIcD035WjaH0YixcQwwFGkPBhpQ==
+X-Received: by 2002:a17:90b:2c84:b0:2ee:b2e6:4275 with SMTP id 98e67ed59e1d1-2f83ac65958mr18136804a91.26.1738403145079;
+        Sat, 01 Feb 2025 01:45:45 -0800 (PST)
+Received: from codespaces-4a2804.mimvmn1ww3huhhjmzljqefhnig.rx.internal.cloudapp.net ([4.240.39.194])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3320edfsm42597175ad.229.2025.02.01.01.45.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 01:45:44 -0800 (PST)
+From: Umar Pathan <cynexium@gmail.com>
+X-Google-Original-From: Umar Pathan <cynexium@proton.me>
+To: tj@kernel.org
+Cc: lizefan.x@bytedance.com,
+	hannes@cmpxchg.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Umar Pathan <cynexium@proton.me>
+Subject: [PATCH cgroup] Update freezer.c
+Date: Sat,  1 Feb 2025 09:45:39 +0000
+Message-ID: <20250201094539.29429-1-cynexium@proton.me>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
+---
+ kernel/cgroup/freezer.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/kernel/cgroup/freezer.c b/kernel/cgroup/freezer.c
+index e9c15fbe5d9b..d384df2f53c2 100644
+--- a/kernel/cgroup/freezer.c
++++ b/kernel/cgroup/freezer.c
+@@ -304,6 +304,7 @@ void cgroup_freeze(struct cgroup *cgrp, bool freeze)
+ 			 */
+ 			if (dsct->freezer.e_freeze > 0)
+ 				continue;
++			
+ 			WARN_ON_ONCE(dsct->freezer.e_freeze < 0);
+ 		}
+ 
+-- 
+2.47.1
 
-On February 1, 2025 12:31:27 AM PST, Nir Lichtman <nir@lichtman=2Eorg> wro=
-te:
->Problem: Old pid and vpid are redundantly saved aside before starting to
->parse the binary, with the comment claiming that it is required since
->load_binary changes it, though from inspection in the source,
->load_binary does not change the pid and this wouldn't make sense since
->execve does not create any new process, quote from man page of execve:
->"there is no new process; many attributes of the calling process remain
->unchanged (in particular, its PID)=2E"
-
-See commit bb188d7e64de ("ptrace: make former thread ID available via PTRA=
-CE_GETEVENTMSG after PTRACE_EVENT_EXEC stop")
-
-This is for making sense of a concurrent exec made by a multi threaded pro=
-cess=2E Specifically see de_thread(), where the pid *can* change:
-
- /*
-  * At this point all other threads have exited, all we have to
-	 * do is to wait for the thread group leader to become inactive,
-	 * and to assume its PID:
-	 */
-
-The described problem in the commit hasn't changed, so this code needs to =
-stay as-is=2E Or perhaps the comment could be improved?
-
--Kees
-
->
->Solution: Remove the saving aside of both and later on use them directly
->from the current object, instead of via the saved aside objects=2E
->
->Signed-off-by: Nir Lichtman <nir@lichtman=2Eorg>
->---
->
->Side-note: Tested this solution with a defconfig x86_64 and an initramfs
->with Busybox and confirmed to work fine=2E
->
-> fs/exec=2Ec | 12 +++---------
-> 1 file changed, 3 insertions(+), 9 deletions(-)
->
->diff --git a/fs/exec=2Ec b/fs/exec=2Ec
->index 506cd411f4ac=2E=2E6bb0a7b15f7e 100644
->--- a/fs/exec=2Ec
->+++ b/fs/exec=2Ec
->@@ -1789,15 +1789,8 @@ static int search_binary_handler(struct linux_binp=
-rm *bprm)
-> /* binfmt handlers will call back into begin_new_exec() on success=2E */
-> static int exec_binprm(struct linux_binprm *bprm)
-> {
->-	pid_t old_pid, old_vpid;
-> 	int ret, depth;
->=20
->-	/* Need to fetch pid before load_binary changes it */
->-	old_pid =3D current->pid;
->-	rcu_read_lock();
->-	old_vpid =3D task_pid_nr_ns(current, task_active_pid_ns(current->parent=
-));
->-	rcu_read_unlock();
->-
-> 	/* This allows 4 levels of binfmt rewrites before failing hard=2E */
-> 	for (depth =3D 0;; depth++) {
-> 		struct file *exec;
->@@ -1826,8 +1819,9 @@ static int exec_binprm(struct linux_binprm *bprm)
-> 	}
->=20
-> 	audit_bprm(bprm);
->-	trace_sched_process_exec(current, old_pid, bprm);
->-	ptrace_event(PTRACE_EVENT_EXEC, old_vpid);
->+	trace_sched_process_exec(current, current->pid, bprm);
->+	ptrace_event(PTRACE_EVENT_EXEC,
->+			task_pid_nr_ns(current, task_active_pid_ns(current->parent)));
-> 	proc_exec_connector(current);
-> 	return 0;
-> }
-
---=20
-Kees Cook
