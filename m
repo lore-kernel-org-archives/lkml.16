@@ -1,156 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lichtman.org (lichtman.org [149.28.33.109])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A8A35959;
-	Sat,  1 Feb 2025 08:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723DF450EE;
+	Sat,  1 Feb 2025 08:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.33.109
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738398273; cv=none; b=Dihwwl30kJ1dMgcYVzV/eGgFgOun7CqJh/G6azJo6k38R0vhsix/uYuEBlW2cl8oD/ZUcwR0qo+5bKzOKdXz7ghdFI4TbeSTPv1HbMINX4JXxTkFEw9v5tZx62zUxUvbpm/nv6Ccp+Pk495TatHTWjsNLID5adCf4KmGBSaTeJo=
+	t=1738398696; cv=none; b=kwaosTAHHres7dJk1bRmrWo2hMRFI7ICejvC4efU3ULfocxAfCjEQLzrRBNdzeC82j02nn+JN9tCyZS5MSZuChnSHr9dlvB58lWIrlHFchOlkhs4xGKI6AJsYwVgY9DLoluv3IYP6gMwizmu3l78fSqC/cAD0CP8LzTm6RE5o7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738398273; c=relaxed/simple;
-	bh=q91n5zrs7SSH8bSeo1HtbKy5vLmAZYPTrfTPVzC2oLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KzQnUuYJc5k74FnGG663cVyWRVGE7f62o0tlshcQ8iA4/AQSGazKafVYnslfLuZUOzFEMVUwyzgVC93e+lmsvMqrCxpWZNa/11sZ1Z/Ds+BuD9YucRd8onFA7BRY3yRyrUwpLFbH4EtOnPvDYE/yxSpg0DJ6JOIRBJ1J4gBItz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PNhKmjsL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738398696; c=relaxed/simple;
+	bh=EtORstMEP5vEDoFhnNOmFLeQbb1NNqyYFa8DuPRNgYw=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Pt8E2qenjWMRMJQFBheYdxn2qleN7uJjBE8Sesm8nEkDrOLesm8w2JfLrQE1feI0in+RKo6L6zEi2p6LrVtSDiJgHt96nRmY2vzERvywl2A6/cPc+IFCLY2t8HsfXMbGpNjw5lCSaBrjL+5iDVriNcLIYQ1GaBjjyFhbFGpoghE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org; spf=pass smtp.mailfrom=lichtman.org; dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b=UzG5Bsyt; arc=none smtp.client-ip=149.28.33.109
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtman.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PNhKmjsL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55368C4CED3;
-	Sat,  1 Feb 2025 08:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738398273;
-	bh=q91n5zrs7SSH8bSeo1HtbKy5vLmAZYPTrfTPVzC2oLs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PNhKmjsLh7Ru22QbQ9fcfPF6v3ya/hIkPe1/wxGCMc0liPus2OXcXC5a/adiliNVW
-	 UxvJTpSJhUTdWi3HS/PyhMDv+g71SGuB9SsClaJzhcoZqjHN447i0eWNPEdTDXkfDu
-	 +4T3G95tou04LkfvOizRBE1Fv9Oi1kqquRpAKT4TctSYwrmZ+ljaEsh7uuBszN20vc
-	 CHx667LgaI/4IHYrDuKnf6VSAWWj65mhQ5gpqXe94iHji5z7Zvk8sNL20I/JsPgRO2
-	 XoDwEJv/3vEde2QS2q6UYaOAzjz8etDfylKARhVNtK4LKsv18bl77E6CxrMXp0qzwz
-	 ip5UaSR0spEyA==
-Date: Sat, 1 Feb 2025 09:24:27 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: YongSu Yoo <yongsuyoo0215@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Markus Elfring
- <Markus.Elfring@web.de>, linux-media@vger.kernel.org, Hyunwoo Kim
- <v4bel@theori.io>, LKML <linux-kernel@vger.kernel.org>, Dan Carpenter
- <dan.carpenter@linaro.org>, yongsu.yoo@lge.com
-Subject: Re: [PATCH] media: dvb_ca_en50221: Add a returing EBUSY logic into
- CA_RESET
-Message-ID: <20250201092427.6a09c39d@foz.lan>
-In-Reply-To: <CANXPkT6wxEzX=Seyi-SctkpN17AgeTAWSPr-Yt2kRzD_isAa2g@mail.gmail.com>
-References: <20240308121338.1983-1-yongsuyoo0215@gmail.com>
-	<eda2a849-c23a-4624-85da-78a2fdef4fe9@web.de>
-	<CANXPkT5ggr8VbYdRy+uSnfHxDRES5arJJ8p+ist1CBTm-1xaUQ@mail.gmail.com>
-	<20240530203149.1fe881ed@coco.lan>
-	<CANXPkT6wxEzX=Seyi-SctkpN17AgeTAWSPr-Yt2kRzD_isAa2g@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b="UzG5Bsyt"
+Received: by lichtman.org (Postfix, from userid 1000)
+	id 5D0731771FC; Sat,  1 Feb 2025 08:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=lichtman.org; s=mail;
+	t=1738398687; bh=EtORstMEP5vEDoFhnNOmFLeQbb1NNqyYFa8DuPRNgYw=;
+	h=Date:From:To:Subject:From;
+	b=UzG5BsytUmXG7G/2Pngkuyfo4JKYtwlyDIYVHxvrx/hLhecdW0zJc5b0i+vLGjoyz
+	 pOSuR2IR2bLw8i80onDVs0Epg8ohxX+U06hLsYzhDMCF33EF8TRwRnmjZFHOdckAK4
+	 0iA7u+VSzkKaCSvwy/wdUy4wj45LGDZxENUiJ1QyBpesO+w4sdWFcYtZvDSySiTohu
+	 vYTytAfFHUAYu7MXF+TXA5i3JJjBxHm9JvQOGRFRzHWPeBktbqjcL83dUibAsc/PMh
+	 jCWq2slRAl90b0Lb1dmbkqmNX1pJcbEk2Aejun1WHjxOyof+m958kzAcBYE3dLo3PS
+	 +xhAoNqEm9Ncw==
+Date: Sat, 1 Feb 2025 08:31:27 +0000
+From: Nir Lichtman <nir@lichtman.org>
+To: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	kees@kernel.org, ebiederm@xmission.com,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] exec: remove redundant save asides of old pid/vpid
+Message-ID: <20250201083127.GA1185473@lichtman.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Em Sat, 1 Feb 2025 09:44:18 +0900
-YongSu Yoo <yongsuyoo0215@gmail.com> escreveu:
+Problem: Old pid and vpid are redundantly saved aside before starting to
+parse the binary, with the comment claiming that it is required since
+load_binary changes it, though from inspection in the source,
+load_binary does not change the pid and this wouldn't make sense since
+execve does not create any new process, quote from man page of execve:
+"there is no new process; many attributes of the calling process remain
+unchanged (in particular, its PID)."
 
-> Dear Mauro Carvalho Chehab
->=20
-> I know how to send an E-mail using "....git send-email --to .."
-> But,
-> I do not know how to reply to this E-mail loop using "....git send-email
-> --to .."
-> Can you kindly guide me ?
+Solution: Remove the saving aside of both and later on use them directly
+from the current object, instead of via the saved aside objects.
 
-Never used git send-email to reply, as it is mainly focused on sending
-e-mails, not being a true emailer: it just sends e-mail: it doesn't
-receive. In thesis, you could download the original e-mail using b4 or lei,=
-=20
-then manually write a reply text on it and use git send-email. This is
-easier said than done, as you'll need to take care of SMTP headers yourself.
-This would require some knowledge about SMTP RFCs.
+Signed-off-by: Nir Lichtman <nir@lichtman.org>
+---
 
-If I were you, I would seek for some other alternatives.
+Side-note: Tested this solution with a defconfig x86_64 and an initramfs
+with Busybox and confirmed to work fine.
 
-Most people use mutt for Kernel work, as it is CLI. There is also alpine
-I haven't used alpine for ages, but it is a decent CLI e-mail client, using
-a very simple interface, although it has less features than mutt.
+ fs/exec.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-I prefer instead to use claws-mail as it has a reasonable GUI, it is fast
-and it is not overbloated with features I won't use.
+diff --git a/fs/exec.c b/fs/exec.c
+index 506cd411f4ac..6bb0a7b15f7e 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1789,15 +1789,8 @@ static int search_binary_handler(struct linux_binprm *bprm)
+ /* binfmt handlers will call back into begin_new_exec() on success. */
+ static int exec_binprm(struct linux_binprm *bprm)
+ {
+-	pid_t old_pid, old_vpid;
+ 	int ret, depth;
+ 
+-	/* Need to fetch pid before load_binary changes it */
+-	old_pid = current->pid;
+-	rcu_read_lock();
+-	old_vpid = task_pid_nr_ns(current, task_active_pid_ns(current->parent));
+-	rcu_read_unlock();
+-
+ 	/* This allows 4 levels of binfmt rewrites before failing hard. */
+ 	for (depth = 0;; depth++) {
+ 		struct file *exec;
+@@ -1826,8 +1819,9 @@ static int exec_binprm(struct linux_binprm *bprm)
+ 	}
+ 
+ 	audit_bprm(bprm);
+-	trace_sched_process_exec(current, old_pid, bprm);
+-	ptrace_event(PTRACE_EVENT_EXEC, old_vpid);
++	trace_sched_process_exec(current, current->pid, bprm);
++	ptrace_event(PTRACE_EVENT_EXEC,
++			task_pid_nr_ns(current, task_active_pid_ns(current->parent)));
+ 	proc_exec_connector(current);
+ 	return 0;
+ }
+-- 
+2.39.5
 
-Neither mutt, alpine or claws-mail mangle whitespaces and line breaks on
-e-mails, and they can be setup to not do top-postings.
-
-If you want something simpler, perhaps you could try notmuch[1]. I never
-tried myself, but I heard it can be used to reply to e-mails without even
-needing to subscribe to a ML.
-
-[1] https://notmuchmail.org/
-
-You may also find useful to have a SMTP relay server. Probably one of the
-simplest ones to setup is msmtp: https://marlam.de/msmtp/.
-
-I hope that helps.
-
-Regards,
-Mauro
-
-
->=20
-> 2024=EB=85=84 5=EC=9B=94 31=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 3:31,=
- Mauro Carvalho Chehab <mchehab@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=
-=84=B1:
->=20
-> > Em Tue, 28 May 2024 21:14:37 +0900
-> > YongSu Yoo <yongsuyoo0215@gmail.com> escreveu:
-> > =20
-> > > Dear Markus Elfring =20
-> >
-> > Please don't top-post. Makes hard to follow the comments. =20
-> > >
-> > >
-> > > 2024=EB=85=84 5=EC=9B=94 28=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 2=
-:38, Markus Elfring <Markus.Elfring@web.de>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=
-=84=B1:
-> > > =20
-> > > >
-> > > > =E2=80=A6 =20
-> > > > > For preventing this problem from happening, we make CA_RESET ioct=
-l do
-> > > > > nothing and only return EBUSY if the ioctl is called during the
-> > > > > "transiting" states. =20
-> > > >
-> > > > Would you like to avoid any typos (in the summary phrase)? =20
-> > =20
-> > > Initially, I sent this E-mail using the below command
-> > > "....git send-email --to  mchehab@kernel.org,
-> > > linux-media@vger.kernel.org, xxxxxxxxxxx.patch. ..." =20
-> >
-> > Git send-email is a good way to send patches. You may also use
-> > a decent e-mail client that won't mangle with whitespaces. I use
-> > myself claws-mail; other develpers use emacs. Feel free to pick your
-> > poison, but if the email doesn't handle whitespaces well and/or
-> > don't allow writing the answers below the original comments (instead
-> > of top-posting), it shouldn't be used.
-> > =20
-> > > In response to what you suggested, is it OK if I use Gmail and attach
-> > > a new patch ? =20
-> >
-> > No. Never attach a patch as the mailing list will reject, and if not,
-> > patchwork.linuxtv.org won't pick it.
-> >
-> > You may use gmail, if you setup your e-mail client to use it as a
-> > SMTP server. Using webmail solutions typically won't work open source
-> > discussions, as it does lots of wrong things, like top-posting, not
-> > honoring 80 columns on emails and/or mangling tabs and white spaces.
-> >
-> > Thanks,
-> > Mauro
-> > =20
-
-
-
-Thanks,
-Mauro
