@@ -1,298 +1,155 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69F81C5D61
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 20:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B371C548A
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 20:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738440427; cv=none; b=WqQxZXATx0VZTABekqFbQ3LyVpGzeMN2auyUi0iVHz95NaJK+LY69yqZfIkHGpMsiEEAlt9vQMRIvu0zeHPDpr+H9Te36pXoesXbtlpFWtwOgzKAyZkLow5XGCK/SwmiKwTmjnVOCSB1a4EP4vLcNk3Pkub5+R3hZNXSZtN/VSg=
+	t=1738440442; cv=none; b=WWvM24hYbXOVgDVhVvI7FKaIn56jUbQGYXgUJnr8oOn0AVtTd38DwzMN5Xa6yBmBv/76bV6Hk3mmvt/4W1f8HIYcg+YglhsVaNX9JAUWEDSYRZsLWC74ePN02EVUCzlB40mlbVfbGz9YCrCHUnj3vYd3iOOJNS6dgQXAkGksBXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738440427; c=relaxed/simple;
-	bh=eT/l/fBe1ZYNW3z6uzmd5ZUJ53hX1EqNsdPFA5Ur88I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qRpj7wwv0BNQbOudLjbE4ISlaTGLKUjKtL8spdTjsfbk+jlGvrtHH84Y6+QMXJEbZ9hNy0RLGxSkNUcne4kXNK+6158b0VwOZIJuUjNRaKieHGYBitY7vnZ9gTKzAAnGM3IqFV3hXYEQLljyRUaIWlCwlRkRjFLS3Jafhj9C9no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xwF5AwLe; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xwF5AwLe"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-467abce2ef9so197571cf.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 12:07:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738440425; x=1739045225; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6n+dd3xMQn5Y+r0NTIc5RKRpV9R1LhdDYsaSaI6Y4a0=;
-        b=xwF5AwLe/2OBJtA/sGK1lPVjDX3VBpci4X75heIe+WMSHHCJ2iaiymVF81le+2DJhR
-         1IJWsiaJHOV/YwTP6UBOdgKZuysnpK50f3pkZ/INn0k+6ZaV3FcZIjetGFTi8j8PWzOh
-         UDOoPqYCwzskTuQT/REJFPytgDs7kEIgSngQjG4dTFosZ/YtReSnkLfRAIdjcGaIBlqM
-         RshOm35pJgnq/GcpDurGf4FU7h9Gr4eLmvgvW5vyQ5DJUa34qbMQh/HVUF7GlyqlttJ5
-         NTUVxd83LFDmxsHcheFt1wK5qUTOQrfLOQzdvi8hV53Q6mXEhxDoTtDXgimYCkNryTjt
-         CEeA==
+	s=arc-20240116; t=1738440442; c=relaxed/simple;
+	bh=0TWQkdmSLts7OZYB8JmVvACAKQ+qwoQ5FA1jyXORT7M=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=R+WpmXvFf693ekOfaj7AG4hgm1zGni2akuFFMgTCpKnRkct31ecpQcYTtlzCXUWZ03/2mSt+G+BF+NqwMUfLg8Rgdpp1Q2xMwvVuZyPKECci7iwvOLem365aFBESdhEWu3qapsvDxvYkLnIIw+k73uISD2vILKTdACaZurC8Hx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d00fe9f7b3so42579665ab.3
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 12:07:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738440425; x=1739045225;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6n+dd3xMQn5Y+r0NTIc5RKRpV9R1LhdDYsaSaI6Y4a0=;
-        b=hpbr9zVZPIjG4vJdDSMiBTQSTvTiDT4svRjMUAxvRVu0tno/bgSbQMraKhrJtiUsw7
-         TveCOs3nRHHLxnCo3DKW/iW3bbvXEURU9Sj8oMouyqXYZSHoBhJxMlCfzOC/l/Bmk9zL
-         ZZlHqyMs1fZ7XcFMMSPs1sLKMF/9HJBXewfuEYrH9x9R9pzNa0+yAKgMQ7Ds+VODLIhy
-         AUDN309nC84d5wa1Cao9UAWvSoy/q93Ak0iOE8BqTzU6QMy/NU3bBD2gVltAj5wuD0jz
-         GsuoDJ+fB/7L8xyLmPt4Sk6JU5FXwolAH2+s5hcd++SgVONPaHpuKwRCb2/TyNW54MlG
-         2IPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUp5Zu0/bcWB/YphBUrrKojJx3qBnGU2qM9cnjorvzmYgp2LrZLdD/+thaMR3g5V7S5XYX2Ay5rk4TK5Gg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAaloLFsDRh00oC6zUkQ2Zt9sU2vDco8xbIaIiC8KuLLBB8QUR
-	QVA/625X730VBhtP8ZPhGCedcdQ4fQm1bA7EG8chT1P99/keT3LaWuaZOlWpQeIC1JB/5efHazN
-	NqBCM8pqHn018jRgpR47DeAg1nouP9Lp3bhWO
-X-Gm-Gg: ASbGncu01IWsPOgvjJAf8QbevGbzhTpRubZA3bseMdHDwHajMCvFdZ2jYi3jby1D+4p
-	It4q799vM0CLosYNMaoEH88idNS/gOE8WP5HOZjJnS/LqVT2KzX2GMuc0pDAPKyjtfZzIkNyojl
-	6NVheJ32zywO013RBwYVWxhVcQijo=
-X-Google-Smtp-Source: AGHT+IFGScRsZu/BSeeBdha40frViqOW3XvGsw73ciQbR25FNCf8NQtTdfM2PHZm54fHj/maOIj4GMqzJl2X2uWUDN8=
-X-Received: by 2002:a05:622a:6204:b0:467:86b4:4e92 with SMTP id
- d75a77b69052e-46ffa8e17b4mr1859991cf.29.1738440424326; Sat, 01 Feb 2025
- 12:07:04 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738440440; x=1739045240;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mmunsVXpgq26h1vcA+xik7F3qdt3ISWM15Sf3kvt1f0=;
+        b=LksgIunKYeBZ3V7JDIT3Khj8YqsQp3x272Xh7HlSuKNHNoxNtS0qjkUmywsmvBKQPk
+         g3IplhFS+GoY8xOtFjltJBKvHeJbGgTtFTukkaq8d7N/rTuaaZDbsct3gcvleb9/4W0a
+         O5S40sKfL/XADNU3mCCmo5wzq0kp2e/UexKioQn3EphGkw/a1WulvD1SK0hDgBT7A774
+         tvQaRDuWH3P0ve18IZkke5m3FtCADuU8cDT9fkWgl+9OJDM+chq0EWf1Xokgp5M2cWin
+         i/pVqssHdPckAKlz5rCx93N1gtrlMB1Vv6J2HhNeoirm5j63NA9HK1I9V8O2AUmk/M91
+         59cA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtFVMKe4owQkZVlS34ejdUuZ728q0dQGhYjpSFAClJMqiguQtzPkF8U6yRFioK3BszXNO7bExk9u88heE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHRUoDiL7BB+V+iOKWpCHpiFA+Q/vM93snC0aNnFYMor9p7m0E
+	oANHjcEA2zTqMGMQv24G1vdNH5iqxL2DWJPxsyCFbansOmPq6jFCR8wmWu4MogZIosoaKYrgKC5
+	XRWMbsF9syNkSWZBh8M7pkDbzZgIugdebQmwayZOfj5Lw2Y9Mj3j9aNM=
+X-Google-Smtp-Source: AGHT+IF7ValMb/YQnPFC8c1mTsjjphh3LXyWkH/IfsyRS5BUpAD6U2I7bt5tY/abemBu7WFEWzb0gU9jHrL6C7+h6Dv0w9YcJ4oK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202501310832.kiAeOt2z-lkp@intel.com> <CAJuCfpGrtTK=reeVPrS+GQngs=WS-cZvy_YU9-JGyRgVFdofAw@mail.gmail.com>
- <CAJuCfpF56btBuHKn6j2SzY8KRUbjQ_oHCYtj5oqP88HBBBQ_3A@mail.gmail.com> <CAJuCfpExBhWxWdj3G-uQXA8HA-+ES6y=sz2H4eeze4xw4snYZg@mail.gmail.com>
-In-Reply-To: <CAJuCfpExBhWxWdj3G-uQXA8HA-+ES6y=sz2H4eeze4xw4snYZg@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Sat, 1 Feb 2025 12:06:53 -0800
-X-Gm-Features: AWEUYZlprt5O7-6D2FTFY-_Zt2KqcyXzKkEksVKOi2hLmo6QpH2b5Im5TKCukqw
-Message-ID: <CAJuCfpECssDC2VZuNkeqEbb68MuAvoWeSt-zsV6mqouMzEeE4Q@mail.gmail.com>
-Subject: Re: drivers/auxdisplay/panel.c:1454:2: error: call to
- __compiletime_assert_309 declared with 'error' attribute: BUILD_BUG_ON
- failed: !__builtin_constant_p(_dest_len) || _dest_len == (size_t)-1
-To: kernel test robot <lkp@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Linux Memory Management List <linux-mm@kvack.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Kees Cook <keescook@chromium.org>, llvm@lists.linux.dev
+X-Received: by 2002:a05:6e02:1563:b0:3d0:1fc4:edf0 with SMTP id
+ e9e14a558f8ab-3d01fc4f0bemr39594995ab.15.1738440440105; Sat, 01 Feb 2025
+ 12:07:20 -0800 (PST)
+Date: Sat, 01 Feb 2025 12:07:20 -0800
+In-Reply-To: <6770d05c.050a0220.2f3838.04a0.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <679e7ef8.050a0220.163cdc.0025.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in full_proxy_write
+From: syzbot <syzbot+422b07c3add2219bc947@syzkaller.appspotmail.com>
+To: dakr@kernel.org, gregkh@linuxfoundation.org, 
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	luiz.dentz@gmail.com, marcel@holtmann.org, rafael@kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 1, 2025 at 11:21=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Fri, Jan 31, 2025 at 2:51=E2=80=AFPM Suren Baghdasaryan <surenb@google=
-.com> wrote:
-> >
-> > On Fri, Jan 31, 2025 at 8:55=E2=80=AFAM Suren Baghdasaryan <surenb@goog=
-le.com> wrote:
-> > >
-> > > On Thu, Jan 30, 2025 at 4:06=E2=80=AFPM kernel test robot <lkp@intel.=
-com> wrote:
-> > > >
-> > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/li=
-nux.git master
-> > > > head:   b4b0881156fb8209bf5ef6cb63211bb0ad6e1a6b
-> > > > commit: 07438779313caafe52ac1a1a6958d735a5938988 alloc_tag: avoid c=
-urrent->alloc_tag manipulations when profiling is disabled
-> > > > date:   5 days ago
-> > > > config: hexagon-randconfig-r133-20250131 (https://download.01.org/0=
-day-ci/archive/20250131/202501310832.kiAeOt2z-lkp@intel.com/config)
-> > > > compiler: clang version 14.0.6 (https://github.com/llvm/llvm-projec=
-t f28c006a5895fc0e329fe15fead81e37457cb1d1)
-> > > > reproduce: (https://download.01.org/0day-ci/archive/20250131/202501=
-310832.kiAeOt2z-lkp@intel.com/reproduce)
-> > >
-> > > Just saw this report (was on vacation). Will try to figure out what's=
- going on.
-> >
-> > I confirmed that my change at
-> > https://lore.kernel.org/all/20241226211639.1357704-1-surenb@google.com
-> > indeed causes this.
-> > Looks like due to the additional mem_alloc_profiling_enabled() check,
-> > the compiler considers allocation size as unknown at compile time
-> > (__builtin_object_size(obj) returns -1) even though both branches of
-> > that condition make the same exact allocation.
-> > I tried changing it to:
-> >
-> > #define alloc_hooks_tag(_tag, _do_alloc) \
-> > ({ \
-> >         typeof(_do_alloc) _res; \
-> >         struct alloc_tag * __maybe_unused _old; \
-> >          if (mem_alloc_profiling_enabled()) \
-> >                 _old =3D alloc_tag_save(_tag); \
-> >         _res =3D _do_alloc; \
-> >          if (mem_alloc_profiling_enabled()) \
-> >                  alloc_tag_restore(_tag, _old); \
-> >         _res; \
-> > })
-> >
-> > and that fixes the problem, however this would require two static key
-> > checks... I wonder if there is a way to tell the compiler that both
-> > branches cause the same result. Let me dig around.
->
-> CC'ing Nathan Chancellor, Nick Desaulniers and llvm@lists.linux.dev
->
-> Looks like this error happens only with clang version 14 (more
-> specifically CONFIG_CLANG_VERSION=3D140006). I tested with clang-13,
-> clang-15 and clang-17 and all of them build this code fine. Same thing
-> for other archs (clang-14 fails, others don't). I tried hexagon, x86
-> and arm64.
->
-> To fix the build I can add:
->
-> #if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION >=3D 140000 &&
-> CONFIG_CLANG_VERSION < 150000
-> // do this the old way
-> #else
-> // do this the new way
-> #endif
->
-> but I'm not sure if that's the right fix.
->
-> Andrew, while compiler folks investigate this issue, I'll post the
-> above fix in case we need to deal with this build error urgently.
+syzbot has found a reproducer for the following issue on:
 
-Workaround is posted at:
-https://lore.kernel.org/all/20250201200503.2532357-1-surenb@google.com/
+HEAD commit:    60c828cf80c0 Merge tag 'for-linus-hexagon-6.14-rc1' of git..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=147d55f8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6e51aa3d0038bbe1
+dashboard link: https://syzkaller.appspot.com/bug?extid=422b07c3add2219bc947
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16decb24580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=133f8eb0580000
 
-> Thanks,
-> Suren.
->
-> >
-> > >
-> > > >
-> > > > If you fix the issue in a separate patch/commit (i.e. not just a ne=
-w version of
-> > > > the same patch/commit), kindly add following tags
-> > > > | Reported-by: kernel test robot <lkp@intel.com>
-> > > > | Closes: https://lore.kernel.org/oe-kbuild-all/202501310832.kiAeOt=
-2z-lkp@intel.com/
-> > > >
-> > > > All errors (new ones prefixed by >>):
-> > > >
-> > > > >> drivers/auxdisplay/panel.c:1454:2: error: call to __compiletime_=
-assert_309 declared with 'error' attribute: BUILD_BUG_ON failed: !__builtin=
-_constant_p(_dest_len) || _dest_len =3D=3D (size_t)-1
-> > > >            strtomem_pad(key->u.kbd.release_str, release, '\0');
-> > > >            ^
-> > > >    include/linux/string.h:417:2: note: expanded from macro 'strtome=
-m_pad'
-> > > >            BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||        =
-        \
-> > > >            ^
-> > > >    include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD=
-_BUG_ON'
-> > > >            BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #con=
-dition)
-> > > >            ^
-> > > >    include/linux/build_bug.h:39:37: note: expanded from macro 'BUIL=
-D_BUG_ON_MSG'
-> > > >    #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), =
-msg)
-> > > >                                        ^
-> > > >    note: (skipping 1 expansions in backtrace; use -fmacro-backtrace=
--limit=3D0 to see all)
-> > > >    include/linux/compiler_types.h:530:2: note: expanded from macro =
-'_compiletime_assert'
-> > > >            __compiletime_assert(condition, msg, prefix, suffix)
-> > > >            ^
-> > > >    include/linux/compiler_types.h:523:4: note: expanded from macro =
-'__compiletime_assert'
-> > > >                            prefix ## suffix();                     =
-        \
-> > > >                            ^
-> > > >    <scratch space>:127:1: note: expanded from here
-> > > >    __compiletime_assert_309
-> > > >    ^
-> > > >    1 error generated.
-> > > >
-> > > >
-> > > > vim +/error +1454 drivers/auxdisplay/panel.c
-> > > >
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1426
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1427  /* tries to bind a key to the signal name <name>. The =
-key will send the
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1428   * strings <press>, <repeat>, <release> for these resp=
-ective events.
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1429   * Returns the pointer to the new key if ok, NULL if t=
-he key could not be bound.
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1430   */
-> > > > 36d2041a3d57b9 drivers/staging/panel/panel.c Peter Huewe           =
-   2013-02-15  1431  static struct logical_input *panel_bind_key(const char=
- *name, const char *press,
-> > > > 36d2041a3d57b9 drivers/staging/panel/panel.c Peter Huewe           =
-   2013-02-15  1432                                              const char=
- *repeat,
-> > > > 36d2041a3d57b9 drivers/staging/panel/panel.c Peter Huewe           =
-   2013-02-15  1433                                              const char=
- *release)
-> > > > 698b1515f03914 drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-22  1434  {
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1435          struct logical_input *key;
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1436
-> > > > fdf4a4948ca8a1 drivers/staging/panel/panel.c Dominique van den Broe=
-ck 2014-05-21  1437          key =3D kzalloc(sizeof(*key), GFP_KERNEL);
-> > > > eb073a9bf2b6ed drivers/staging/panel/panel.c Toshiaki Yamane       =
-   2012-07-12  1438          if (!key)
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1439                  return NULL;
-> > > > eb073a9bf2b6ed drivers/staging/panel/panel.c Toshiaki Yamane       =
-   2012-07-12  1440
-> > > > 698b1515f03914 drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-22  1441          if (!input_name2mask(name, &key->mask, &key->v=
-alue, &scan_mask_i,
-> > > > cb46f472cbb08c drivers/staging/panel/panel.c Kulikov Vasiliy       =
-   2010-07-12  1442                               &scan_mask_o)) {
-> > > > cb46f472cbb08c drivers/staging/panel/panel.c Kulikov Vasiliy       =
-   2010-07-12  1443                  kfree(key);
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1444                  return NULL;
-> > > > cb46f472cbb08c drivers/staging/panel/panel.c Kulikov Vasiliy       =
-   2010-07-12  1445          }
-> > > > 698b1515f03914 drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-22  1446
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1447          key->type =3D INPUT_TYPE_KBD;
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1448          key->state =3D INPUT_ST_LOW;
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1449          key->rise_time =3D 1;
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1450          key->fall_time =3D 1;
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1451
-> > > > a952abcdaa2211 drivers/auxdisplay/panel.c    Justin Stitt          =
-   2023-09-11  1452          strtomem_pad(key->u.kbd.press_str, press, '\0'=
-);
-> > > > a952abcdaa2211 drivers/auxdisplay/panel.c    Justin Stitt          =
-   2023-09-11  1453          strtomem_pad(key->u.kbd.repeat_str, repeat, '\=
-0');
-> > > > a952abcdaa2211 drivers/auxdisplay/panel.c    Justin Stitt          =
-   2023-09-11 @1454          strtomem_pad(key->u.kbd.release_str, release, =
-'\0');
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1455          list_add(&key->list, &logical_inputs);
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1456          return key;
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1457  }
-> > > > 7005b58458e4be drivers/staging/panel/panel.c Willy Tarreau         =
-   2008-11-13  1458
-> > > >
-> > > > :::::: The code at line 1454 was first introduced by commit
-> > > > :::::: a952abcdaa22116d940ca9cb9253caad1622ae93 auxdisplay: panel: =
-Replace deprecated strncpy() with strtomem_pad()
-> > > >
-> > > > :::::: TO: Justin Stitt <justinstitt@google.com>
-> > > > :::::: CC: Kees Cook <keescook@chromium.org>
-> > > >
-> > > > --
-> > > > 0-DAY CI Kernel Test Service
-> > > > https://github.com/intel/lkp-tests/wiki
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/409123921db5/disk-60c828cf.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a0ca4f206436/vmlinux-60c828cf.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/643b9310a68b/bzImage-60c828cf.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+422b07c3add2219bc947@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in full_proxy_write+0x101/0x3f0 fs/debugfs/file.c:394
+ full_proxy_write+0x101/0x3f0 fs/debugfs/file.c:394
+ vfs_write+0x48a/0x1540 fs/read_write.c:677
+ ksys_write+0x240/0x4b0 fs/read_write.c:731
+ __do_sys_write fs/read_write.c:742 [inline]
+ __se_sys_write fs/read_write.c:739 [inline]
+ __x64_sys_write+0x93/0xe0 fs/read_write.c:739
+ x64_sys_call+0x3161/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:2
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was stored to memory at:
+ __debugfs_file_get+0xe59/0xef0 fs/debugfs/file.c:120
+ full_proxy_open_regular+0x67/0xa00 fs/debugfs/file.c:447
+ do_dentry_open+0x1bdd/0x26b0 fs/open.c:955
+ vfs_open+0x53/0x5b0 fs/open.c:1085
+ do_open fs/namei.c:3830 [inline]
+ path_openat+0x56a1/0x6250 fs/namei.c:3989
+ do_filp_open+0x268/0x600 fs/namei.c:4016
+ do_sys_openat2+0x1bf/0x2f0 fs/open.c:1427
+ do_sys_open fs/open.c:1442 [inline]
+ __do_sys_openat fs/open.c:1458 [inline]
+ __se_sys_openat fs/open.c:1453 [inline]
+ __x64_sys_openat+0x2a1/0x310 fs/open.c:1453
+ x64_sys_call+0x36f5/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:258
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was stored to memory at:
+ __debugfs_file_get+0xdff/0xef0 fs/debugfs/file.c:118
+ full_proxy_open_regular+0x67/0xa00 fs/debugfs/file.c:447
+ do_dentry_open+0x1bdd/0x26b0 fs/open.c:955
+ vfs_open+0x53/0x5b0 fs/open.c:1085
+ do_open fs/namei.c:3830 [inline]
+ path_openat+0x56a1/0x6250 fs/namei.c:3989
+ do_filp_open+0x268/0x600 fs/namei.c:4016
+ do_sys_openat2+0x1bf/0x2f0 fs/open.c:1427
+ do_sys_open fs/open.c:1442 [inline]
+ __do_sys_openat fs/open.c:1458 [inline]
+ __se_sys_openat fs/open.c:1453 [inline]
+ __x64_sys_openat+0x2a1/0x310 fs/open.c:1453
+ x64_sys_call+0x36f5/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:258
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4121 [inline]
+ slab_alloc_node mm/slub.c:4164 [inline]
+ __kmalloc_cache_noprof+0x8e3/0xdf0 mm/slub.c:4320
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ __debugfs_file_get+0x31d/0xef0 fs/debugfs/file.c:101
+ full_proxy_open_regular+0x67/0xa00 fs/debugfs/file.c:447
+ do_dentry_open+0x1bdd/0x26b0 fs/open.c:955
+ vfs_open+0x53/0x5b0 fs/open.c:1085
+ do_open fs/namei.c:3830 [inline]
+ path_openat+0x56a1/0x6250 fs/namei.c:3989
+ do_filp_open+0x268/0x600 fs/namei.c:4016
+ do_sys_openat2+0x1bf/0x2f0 fs/open.c:1427
+ do_sys_open fs/open.c:1442 [inline]
+ __do_sys_openat fs/open.c:1458 [inline]
+ __se_sys_openat fs/open.c:1453 [inline]
+ __x64_sys_openat+0x2a1/0x310 fs/open.c:1453
+ x64_sys_call+0x36f5/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:258
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 1 UID: 0 PID: 5782 Comm: syz-executor269 Not tainted 6.13.0-syzkaller-09950-g60c828cf80c0 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+=====================================================
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
