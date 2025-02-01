@@ -1,197 +1,135 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFF31BD01D
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 18:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE261C5D73;
+	Sat,  1 Feb 2025 18:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738436100; cv=none; b=HRSMsEOkHdd/s8/TsUlt5J/ktxIFuriDaPw+hDvyqO+pWOAPVbZ9QCg1uuRj9crM476onQih+NgaIif+ghqTw8OK4dF7Yv3H6pTIjn7Zz9cNJLTI6bnEbOHeUYEzQE5etXroac7jwYd3VleMSB/z4jk3mJ8DoIvzdjXeSAX7D+4=
+	t=1738436299; cv=none; b=W7sJniM3fiYjA2uC3BM23cBu2wYE4cxLDbs6w5YkSzxsodeTYUoPZ0Jdt8/iN5qB65joLXU75Tgu7NOsnVlFn67olWKHNbpaGprwlc2OF3m8z1c5SiPMQBGWijPSmYAh1lByudcoeV2IhZJvdeHTZuRSAB3xPlOuhKqS4CiCAgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738436100; c=relaxed/simple;
-	bh=5EabESZLm/7YYeW1CkTE7Lb/7Kg1D2CzeUh5HsnGjzg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RVs8ui3uS0R/2mviDUww8vVMUwZu04X1fQkIygeN++LImC/PcAokdqz5gdRXUCY+DM+ztSckblNL/Rjv9C8nvXoadvJPiExrpT/Z5OrnKBC1r1lIKRa29qe66V2cM0Mbd/8xWQOJTz5czWrctBFDATAHTPA+VyregyDz8dSUqsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QF9I7Gl5; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1738436299; c=relaxed/simple;
+	bh=C55WBS7Kee2awZ8qltzC/EsTgLDQMBTKdm8b0uTOwMo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=j3scSYQcRy5jsY4j+GMbMZWnmQpf02knKGhmWtOuhWF454WjCzKssk9HSwCc9eylYtDuA+pOTN5wfRAOXPQgajBSTMPnYQOPsftho91xaGDcLRivFs711ZhFIc346SJL4fLCV/HqsZddjtzQxcYLzUri4Z4Qq/AobVc6bTA4l8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1vznoFp; arc=none smtp.client-ip=209.85.222.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QF9I7Gl5"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2163dc5155fso54863855ad.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 10:54:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1vznoFp"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b6f1be1daeso297250285a.0;
+        Sat, 01 Feb 2025 10:58:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738436098; x=1739040898; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ops9ELJDL1NIZCRIYwnyu3rCU1aJ/oZhPS0Iz0V8PzI=;
-        b=QF9I7Gl597IL+fpq+teiViCnrE8RgzAqrJ2ywFL7U5i7hvM8d1fCcv0ExzNX/oeift
-         J1QJFnvX2uYNwxtBIlC18fVZxJlXyvvoovGJQ3cEzk3maRBafVX5sbR4NmzqpaEzLvIS
-         6BSdhfJa0JRw1bT2vrk7R01uZCCQxlVynsGRVM8hYvnBK/nxiq3H6+rCjOic7JOxzvUS
-         fkYvc+NrZDf7tM7J3HihI3Z14B6JQoiR02uuKLxG9BgUjlRNy+ns52//p6PNFq8I1u/K
-         Mt1klKdzTI96OWdP63JPFST/Qv/FRYl6fiVPHvyX1ktWJBByJeJl9RgKaBhunQOcg/F2
-         GMFQ==
+        d=gmail.com; s=20230601; t=1738436296; x=1739041096; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8YaP/wkas3zsv6gy4efd2RXf7wQ7Ky6kvXyn8lqH9lw=;
+        b=A1vznoFp1xV+yYKgjl/WFLdggYLM4fAzDPrUnnfySmwjM+6emeM6EzDRsYXaZTziBE
+         AGA2d9gd6HoixFNnU6WSW4MKnt1wKl/VNtKzxI1LTxg7lDrfOW33v2k1JCaOo0rrtnZA
+         m4sbTvnI1hLv6RGfE5AAvdrlx6qnCiGD9fb52XJ5tPzrb5p99sMNclcoHa7PyeWu9ZVg
+         ivt+WXjeDc21bIjEgRtLIOGaYCQ95OjNZd3/RqWC6m93xaRnvkh3TXHi39gXVxfd2JRh
+         Hi9IH4lUfHaPrL0Qo/AOfgh/dkEVRRALrIW9qsrhhKa4Q5c77UH8PV8jp3UfoM0aBHNZ
+         3GIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738436098; x=1739040898;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1738436296; x=1739041096;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ops9ELJDL1NIZCRIYwnyu3rCU1aJ/oZhPS0Iz0V8PzI=;
-        b=lSJglfY/zgiQxFHMuaZCKDirFQxj2G4qVxFtLUKxd4oP7VG50izGsd6F7uKl3P5Z9J
-         /ugu/vVLX6RUNDF+88rVArFyljKszhcCcDlErnyQnsL/HbXKpn1uqralCLByAbucYyTW
-         BcZ2NlpHO7noLlEkV9Wi45kEVi4/NVpc7iL/z+dzoVn7RZmD2rgfstYbym2iJmS3WbZ2
-         kDFEjgByMAFKKt6djWnuICEYrTcXrwJTfhwHMRl802BhwUL84ATkrsjKkoDX0wlmoQ96
-         7RVe9x7VedD5s3/w6ARrTJqdZOpH+jjkzrfpLe+eZFOiR9/5OhSoPTtvUW8GhTrWRg3n
-         U+1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVUGnv8U63UsY+/vu2tFzqvcJmbqLsnWujY7Ffc1tGiXLa3pbyycHrNOY+vtk16/JJceqbuRcCHF/7quBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6Av1hWxBb5AzIB93DAVLg9sqXdI9bGnXxET6pRICZCrQqBWOy
-	fbuOOJ5+3NIkUEu4PnzOJU/8MMRvSk/wO5fTVx0t2qG2eZAJ0sE8+mY0iVJu
-X-Gm-Gg: ASbGncviU5WHErHCOLaU+bvIf2ez2OAZRV2XPt59HNUNV4NNDHrBaGVzLuc8GBMCkLV
-	KWjoQ6AGZFdBI+KgukpAS9003vC67I7wwLuM5W6L0XWvm5xfHhy6j5fVg9mluqFwX3fx6puB99P
-	XQTLfGyhWT/PvVxt6tp8InRghx2HGhZ5LiyAAQIvtnhI1BTYW3G5Zm/46BOzSVUDhQrYLFgQ369
-	cy63bzgjbDeeSqlUR2J9F1yY50oh19mXH4c1jcZTYVZ8SEW2lyJILz4cjPeALMJGDxfvfzpG0P4
-	2IZzqE/2SVGn0690FOwDazmle4fkn3pXg/mzmBAO
-X-Google-Smtp-Source: AGHT+IFhmfTPPLodizZramfbwgrc6Oz3a2e0JcZP2X32XQ8aCjkIReuDmb2qKOkikP37xdL+cFEIcg==
-X-Received: by 2002:a17:902:e84c:b0:215:ac55:fd72 with SMTP id d9443c01a7336-21dd7dd86b9mr209518615ad.37.1738436097979;
-        Sat, 01 Feb 2025 10:54:57 -0800 (PST)
-Received: from distilledx.SRMIST.EDU.IN ([2401:4900:6285:9329:d5f4:874f:7c80:132b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de4a91af6sm46942785ad.17.2025.02.01.10.54.54
+        bh=8YaP/wkas3zsv6gy4efd2RXf7wQ7Ky6kvXyn8lqH9lw=;
+        b=u8c82ZFiwJtMrZ8ZESMvxitZUlmZN8Q045YOfZD9ZqJ0uMv0s7XdIHzvgnsTlAUiPi
+         Tv7auZykSGu15sNUjbk/48PZTWtIIFDZVgB/vzTwImezTJX9/aBw/TrGfDk+sD+jmiWg
+         6ut8dJ8YHIP7+dEnSTwxW1MMXv3mPMzmuEH0c/38D2zaldqLFlGIRYKq6FblJcnrt4Uu
+         3sahuf8qvbWbw3cfcwFCYahPYwDOABLtqdJX3cQtBeqZ7PdaeuVZ5kEKda+U1mYsYMxJ
+         k9yb7OYf9JzsH+6mNV1lJoZL+whUd0WxjM+qR2tjyMFMqOVXAwnJ702OEQcnMlL6TNA5
+         sWTg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNAoTsHNYJZnJpELnSkrD5SShNfcKqSSNfwSGKaUOQKqhosPj9jEQszu4S2gN/ToE/orXTb2rSHV0Ya1Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVwsVOwwRjue8oEHr/tcNbbUyzcncJpkfIe0QKIckPScmCNduJ
+	xabS6dKCszzpKRCF1b+GQHO9hBZbMCTvjiuI1YiRWy0EuGkTbyGC
+X-Gm-Gg: ASbGnctKbHLn8XvPktxuEnstavBMXkusmCR31c3gcOa67YQg1ZsB1dkzwpPBlvhUEok
+	vF4dfV99BuNPPxufkYO5Q0cyAvMpxJdR9MGnT1RPZ+/4iPCCQI7QgnTihBaj536qNcj3DJf9fOq
+	/9hA3L40lZtGOxfqasr0e0/0Hf8qCt8P6/buSuLRLbdVQrmCEATg/iPQpMNGO0U2lHN+S9XP1bC
+	VVTT778lni5jmVXywlWrx3LL2hmF3IqFFYaTSNVGW7UWjtxsLO+dgdBxdyXsXga0t7lSLcLusI3
+	8TeFT0okwuvy4iajjcjvLYSJ/YrfaR0Gw6WiSBE=
+X-Google-Smtp-Source: AGHT+IH/cMUk7yjThUxYzJvcPVD3YoSYrB/lWrjtjKUxfXJX815A1NwM2k0r696Wnh/wlNERoD+j4Q==
+X-Received: by 2002:a05:620a:4d90:b0:7c0:174d:e350 with SMTP id af79cd13be357-7c0174de37bmr769597285a.36.1738436296508;
+        Sat, 01 Feb 2025 10:58:16 -0800 (PST)
+Received: from tamird-mac.local ([2600:4041:5be7:7c00:f07f:fb14:288d:6f1e])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8bcaf1sm326048085a.10.2025.02.01.10.58.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 10:54:57 -0800 (PST)
-From: Tejas Vipin <tejasvipin76@gmail.com>
-To: neil.armstrong@linaro.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: quic_jesszhan@quicinc.com,
-	dianders@chromium.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Tejas Vipin <tejasvipin76@gmail.com>
-Subject: [PATCH] drm/panel: sharp-ls060t1sx01: transition to mipi_dsi wrapped functions
-Date: Sun,  2 Feb 2025 00:24:39 +0530
-Message-ID: <20250201185439.157613-1-tejasvipin76@gmail.com>
-X-Mailer: git-send-email 2.48.1
+        Sat, 01 Feb 2025 10:58:15 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sat, 01 Feb 2025 13:58:10 -0500
+Subject: [PATCH] rust: alloc: satisfy `aligned_alloc` requirements
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250201-aligned-alloc-v1-1-c99a73f3cbd4@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAMFunmcC/x2MQQqAIBAAvxJ7TrAVIfpKdEjbbEE0FCIQ/97Sa
+ ZjDTINKhanCMjQo9HDlnESmcQB/7SmQ4kMcUKPVqCe1Rw6JDmHMXjmL3qGxxs8I0tyFTn7/37r
+ 1/gEzCYRrXwAAAA==
+X-Change-ID: 20250201-aligned-alloc-b52cb2353c82
+To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-Changes the sharp-ls060t1sx01 panel to use multi style functions for 
-improved error handling.
+The implementation added in commit dd09538fb409 ("rust: alloc: implement
+`Cmalloc` in module allocator_test") did not honor the documented
+requirements of `aligned_alloc`. These requirements may not be enforced
+on all system, but they are on macOS. Ensure that alignment is at least
+`sizeof(void *)` and round size up to the nearest multiple of that
+value.
 
-Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+Fixes: dd09538fb409 ("rust: alloc: implement `Cmalloc` in module allocator_test")
+
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
- .../gpu/drm/panel/panel-sharp-ls060t1sx01.c   | 59 +++++--------------
- 1 file changed, 16 insertions(+), 43 deletions(-)
+ rust/kernel/alloc/allocator_test.rs | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-sharp-ls060t1sx01.c b/drivers/gpu/drm/panel/panel-sharp-ls060t1sx01.c
-index 74c760ee0c2d..0b4e0983639b 100644
---- a/drivers/gpu/drm/panel/panel-sharp-ls060t1sx01.c
-+++ b/drivers/gpu/drm/panel/panel-sharp-ls060t1sx01.c
-@@ -44,60 +44,39 @@ static void sharp_ls060_reset(struct sharp_ls060 *ctx)
- static int sharp_ls060_on(struct sharp_ls060 *ctx)
- {
- 	struct mipi_dsi_device *dsi = ctx->dsi;
--	struct device *dev = &dsi->dev;
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+diff --git a/rust/kernel/alloc/allocator_test.rs b/rust/kernel/alloc/allocator_test.rs
+index e3240d16040b..f360fc2e20f2 100644
+--- a/rust/kernel/alloc/allocator_test.rs
++++ b/rust/kernel/alloc/allocator_test.rs
+@@ -62,9 +62,22 @@ unsafe fn realloc(
+             ));
+         }
  
- 	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
++        // According to `man aligned_alloc`:
++        //
++        // aligned_alloc() returns a NULL pointer and sets errno to EINVAL if size is not an
++        // integral multiple of alignment, or if alignment is not a power of 2 at least as large as
++        // sizeof(void *).
++        let alignment = layout.align();
++        let minimum_alignment = core::mem::size_of::<*const crate::ffi::c_void>();
++        let (alignment, size) = if alignment < minimum_alignment {
++            (minimum_alignment, layout.size().div_ceil(minimum_alignment) * minimum_alignment)
++        } else {
++            (alignment, layout.size())
++        };
++
+         // SAFETY: Returns either NULL or a pointer to a memory allocation that satisfies or
+         // exceeds the given size and alignment requirements.
+-        let dst = unsafe { libc_aligned_alloc(layout.align(), layout.size()) } as *mut u8;
++        let dst = unsafe { libc_aligned_alloc(alignment, size) } as *mut u8;
+         let dst = NonNull::new(dst).ok_or(AllocError)?;
  
--	mipi_dsi_dcs_write_seq(dsi, 0xbb, 0x13);
--	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_MEMORY_START);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xbb, 0x13);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_MEMORY_START);
- 
--	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
--		return ret;
--	}
--	msleep(120);
-+	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 120);
- 
--	ret = mipi_dsi_dcs_set_display_on(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set display on: %d\n", ret);
--		return ret;
--	}
--	msleep(50);
-+	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 50);
- 
--	return 0;
-+	return dsi_ctx.accum_err;
- }
- 
--static int sharp_ls060_off(struct sharp_ls060 *ctx)
-+static void sharp_ls060_off(struct sharp_ls060 *ctx)
- {
- 	struct mipi_dsi_device *dsi = ctx->dsi;
--	struct device *dev = &dsi->dev;
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
- 
- 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
- 
--	ret = mipi_dsi_dcs_set_display_off(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set display off: %d\n", ret);
--		return ret;
--	}
--	usleep_range(2000, 3000);
--
--	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
--		return ret;
--	}
--	msleep(121);
-+	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
-+	mipi_dsi_usleep_range(&dsi_ctx, 2000, 3000);
- 
--	return 0;
-+	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 121);
- }
- 
- static int sharp_ls060_prepare(struct drm_panel *panel)
- {
- 	struct sharp_ls060 *ctx = to_sharp_ls060(panel);
--	struct device *dev = &ctx->dsi->dev;
- 	int ret;
- 
- 	ret = regulator_enable(ctx->vddi_supply);
-@@ -125,10 +104,8 @@ static int sharp_ls060_prepare(struct drm_panel *panel)
- 	sharp_ls060_reset(ctx);
- 
- 	ret = sharp_ls060_on(ctx);
--	if (ret < 0) {
--		dev_err(dev, "Failed to initialize panel: %d\n", ret);
-+	if (ret < 0)
- 		goto err_on;
--	}
- 
- 	return 0;
- 
-@@ -154,12 +131,8 @@ static int sharp_ls060_prepare(struct drm_panel *panel)
- static int sharp_ls060_unprepare(struct drm_panel *panel)
- {
- 	struct sharp_ls060 *ctx = to_sharp_ls060(panel);
--	struct device *dev = &ctx->dsi->dev;
--	int ret;
- 
--	ret = sharp_ls060_off(ctx);
--	if (ret < 0)
--		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
-+	sharp_ls060_off(ctx);
- 
- 	regulator_disable(ctx->vddh_supply);
- 
+         if flags.contains(__GFP_ZERO) {
+
+---
+base-commit: 89a010129b2a60185d34d7377ef8aec7fbb92e76
+change-id: 20250201-aligned-alloc-b52cb2353c82
+
+Best regards,
 -- 
-2.48.1
+Tamir Duberstein <tamird@gmail.com>
 
