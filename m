@@ -1,134 +1,107 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412281494A5
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 12:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C27C10E0;
+	Sat,  1 Feb 2025 12:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738414070; cv=none; b=RSXtUlOBFKNxTiA8qHi8OqOZIYznTnxc92vzuROa7F5ERUSllmh95OUXM5WXcc4PHMk58D0wZYhM3/stCy1CiWwZ7ugojpxIdQs39Xi0ncbaxcsHIFOc23RHGjwpM2Ru5+S9TciM0k9AozWkQgLPt18UMVHItKzDZNyI05hk5Vw=
+	t=1738414384; cv=none; b=LHe1EtrVlhfH2Qag+rcUY25hVyUUQFrBQU/sHa+/Uw2B5Baxw6h2uzd6hkoy8OlIvaM/8ZcZ/Jaux/xC63YFg87hiJEoEcaxeZM950SDEfCYhWUtaX/ZzO8XitdgFFT9e8M31VpVOsAUUzDxinS3B3XaFB9WDTvrxAf3A6VFJBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738414070; c=relaxed/simple;
-	bh=4RZ7OWUNYW5slaMOvnaTZEv0LT0QnKX108Pvk3JR9fI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RGPqN/k7f2qRuyVzbVFtMx1JtAHe0zlxq+di8fHGnbNe0txOJC1c+sd51uT3ovdr4q3bO266j+VCs7DYPsiHoEqrB5vJev1cEd+T2oR1Nk1SXOAuSVTAvJjy1TBkBT2Vojs4221C5orM7vCtOiM8Ett3E6NvgBvv0JR5EgoLGiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dR9aU7Ab; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738414384; c=relaxed/simple;
+	bh=B0TIGEWdZpaL3Lol4tNzKJ12SBSCVyy6C3L/uyc1s+I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HICEsZg/PavcBYGu7qJkUAtdTSBwrgQA//qm5FPwLpMk32qvhrwMcitGQQ44I4PqFXnMVHhM0w/I7OQRvzpaMdKuMBkmygDOVnC4p+1QV9CLZAVHelvNLDDhwcAqm4zcJW7LCm7v3AzaTGqz9om2YUDEUvzeO3kLm/qY1tR7+5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=Z4mv9BOP; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dR9aU7Ab"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-53ff1f7caaeso2866305e87.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 04:47:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Z4mv9BOP"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4368a293339so33416715e9.3;
+        Sat, 01 Feb 2025 04:53:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738414065; x=1739018865; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=E7U/QY0AwysjlkyJl/K85+VbcTx0/u5THnr6ChZjWiM=;
-        b=dR9aU7AbxafwVrprWCUJ8NE/NHf8HV50uNkOdlz+V4sapnL5kQFmO6pEk87IXsE13s
-         yc82VvDgDH8wYrR7yqJxt4R0TiLadmO6TOOGspSFN/qA343nXTnLh4qVjuapTD7v8Vzl
-         vk4X7llsCDKpsYLsQQXZn68c5eqTrcUD69pa9Ul+7n0Wq7yC+oOF2wS9QV4mkIIfTp8v
-         Soe2t8Fufd62LqavaXWA+cG0jROTGxzaKv7i7kXYV82mDQ3Yl/tuwvnfWDtmiUdUb7aO
-         nu7qoWqW19JJPaJzeC6ycfLvqWW2tLO38F2sQS5j93z63vBtHQPPuvDvoMzjiII/Lpl0
-         qPDg==
+        d=googlemail.com; s=20230601; t=1738414381; x=1739019181; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xGsxzwmsm4FqEEWuqRJ4yrtu6EGS8XgJezR8MjxJnBo=;
+        b=Z4mv9BOP+VUczQQ+BvqKcVynWtcPVRkTyGaUCDWnoAs4qXqYjfrb52tLakihavtyyk
+         OILHmzLi+LwVAQ0BqOELw4IuMMEk3j7O5PXjM2nlik/Pq8j7LlF763yRupQ/8O3ulE9R
+         7B4K/0p5wz1FQDQwZ12PYKyZdhqVPXDZEcsQsiIGYER1YnQ/mT7LqzR24TlTBPXG9PWc
+         EHHZFLLwT0NC1jxpxWamBO7c4Tg3myoz/9MZPmGZcnHOtlrd9FVxyyHZq9wBf3EvoM8n
+         3VIJR5SkRHakB0cOSYSrCpteGIfn0Uo16YEKQ+5H82Oe69YZU7k5VuSxrbbX1Mk9fArV
+         qYpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738414065; x=1739018865;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1738414381; x=1739019181;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E7U/QY0AwysjlkyJl/K85+VbcTx0/u5THnr6ChZjWiM=;
-        b=cN4E64Ngl/pe5D8nS62vcq6EfWz/kpUGty+r26cCPY3edsj7IZEsuGUw9KnBrEx3os
-         ymGtnxpcq5CvnHSDA3J+Hfzer6qf6Dvnn27E99MbS3GJhn5Y/QN0ObXQUw4zQ5U8++dR
-         Gnw0Y1XoWBdJ9K4Isipt70+JZvp1SzL7STJvw2dwiyhqxcIouSMgAbNbXbfq56j7j6JJ
-         N6qwjh2GpAi4vcrheVdhE3oYzbuUgKI4O96CwhtiGvIDIomrWUl1g5Gu9OK6as4c+cnA
-         JtoVt7tMsPGeZ+jva6fhLK4v7RTNnYY5SJSZ5q2mEEVgm3+GxGoNnKtrUtahv6mxoNyr
-         1GDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXfBWqCJ5TP0Jb9crtxt4DPJFs1AoLfARa0rve7hBU6KqRm94gppGk8PbFhDy8RgOmLwdB6BNC3DLrhqf0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAsweMwbBqfzNQwBabw3uQZVT/t+vJ7YCt/gqSJNypOnS03HNh
-	cqRh/MZtsuLsQ8qzbUYEcDck3I0v6KdBmd+1NWFCjjQrvuGr1PIPi9/wDXQFpjE=
-X-Gm-Gg: ASbGnctgiddnftuGaMEvfV5gKV4j/kfW/Y7QOsY7Fjb7iV/Z4IFrN4WtIei//Mb4P73
-	RBi7VIlErtAnDM2lsjvrCmGBSnFNQbuANZNfjxuANNgYsnFeCgM6EEr2/o3seefTd1U0YoFWMYV
-	2VyEhigHPIthIQ4Y6X/oFC+oqqy4tR/TZU4fkIDXUnFYR41G2e99kiv38liemyT50c1ennSiVuP
-	i6396VYJJgeGMyShNDJnTJ1xbkTKcm42LR5tf6zsVBX1NFlzJ/rEkmcHWz0jQbUZf0zRpk3pzad
-	QT3HbSy6L1An7VlaWu79DhnuNktgPzWjCpL3zQ2Ht4hNtFvoZ5QxAmnG21N0zLKj5z+FLiw=
-X-Google-Smtp-Source: AGHT+IEy2qDiVDwdoHC9BRZ37NSRP2KIMWzIo3wkTY5DJjgfWOTjn3aNna7i19+0q/ldZYCNWbFmWw==
-X-Received: by 2002:a05:6512:234c:b0:542:29ec:d5be with SMTP id 2adb3069b0e04-543e4be0016mr4629444e87.10.1738414065247;
-        Sat, 01 Feb 2025 04:47:45 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebeb06desm741428e87.145.2025.02.01.04.47.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 04:47:43 -0800 (PST)
-Date: Sat, 1 Feb 2025 14:47:41 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, Rocky Liao <quic_rjliao@quicinc.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/4] Bluetooth: qca: add WCN3950 support
-Message-ID: <whxrzliiyqsceodr452u7xf7zlo326vygiknpiydq67vp2le7f@kggswwh4hbef>
-References: <20250201-rb1-bt-v1-0-ae896c4923d8@linaro.org>
- <20250201-rb1-bt-v1-2-ae896c4923d8@linaro.org>
- <13d5026c-3274-4b90-b941-22f08a8ebdc4@molgen.mpg.de>
+        bh=xGsxzwmsm4FqEEWuqRJ4yrtu6EGS8XgJezR8MjxJnBo=;
+        b=HaE2C5tHvu4xg9rMup1W7C1cle4/e04r4iiQVqTuaNjik3op/gakRRWaCsl4/K8ZU9
+         JnrlRZwSTQ3tfN+orDQ/GRDHuzqGMtTM73iAHj7xMB+G6Y++arconZIaICOwviUhnT6p
+         Ag3V397SYF7qaPE/Ljx3FDzr/tTD8+zZnmC8JIcmZH/KVHuzunBRL7gQMcD3WyXf3jWF
+         eIJwpxdwAaai1GeEQVojRfwBGTmg6cbwNfzCfNMxdOaYmnWGSmWwMfxzj9C2xnbrALfb
+         neZ7QWZr5ZZuUwcADcDVzeUweZ20nb1A6lxpO+ah0Iy6ANLk7wi+UVPGaW9vj9qoLXcI
+         mIVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbkP41e2bjiNLxVb/UnVohOZD+o2xQvMNZ43oh47QoezqN2CUrNx/R4XbANCA4Kjvs2vK8F/WSY2ju5TI=@vger.kernel.org, AJvYcCUmi4aSbRCEWcaQTv+h4PMQ6demsMdRoRjDbsnP9DfbB9I/5jQNzBgSb9YByiJjyzzfjVJpoTB8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzwq/JDzTlMz3OdP2vMPtgzXxEDI4LYSlB4+yVWtnXrqdDt3OmK
+	Gp1JMqMuj6gUrOrNL7oWdTKFd/RgClGg2I9aQ3e93NH3IrlL1II=
+X-Gm-Gg: ASbGnctAUW0SMUOPwPSd2LDC1CBb8L7D+ucqPVkx5RkPiQPL1JwOCLW7uTPYYi/ol+t
+	9IhzFkI9I3RhBWcGVYsbePiEKrqHAAs0fkOcz4Ma59qXX2hpGjUJgXSkuUbhQgS455536Xr8QKV
+	s6Rktt3aMFJksqzGp52pCDXAjN8i2c82kOXgp/EKgKao7zarXF5BFjvGcWmdHbl6yF7ZS1qqpOy
+	QMK5D2W7nfDQhZ1En/VQ+ebww0rlDho13D16P3LppJN/a2MARlw6ef523hdl119Mx5c1ZfDsP/I
+	coEzDlP1kaJo4IE3T/Uem8yryko2qes+H/BM0F6db9rfvMOFwnM5RG0Zc8gt45MQVOaN
+X-Google-Smtp-Source: AGHT+IGCEfyjj5b9m0JsQ34ThpMuBHu2HSDT2p4ga66c/LCQW36I9RZZqckINSMYQRGkgTGzxtY3Hg==
+X-Received: by 2002:a5d:584a:0:b0:385:f72a:a3b0 with SMTP id ffacd0b85a97d-38c5209664emr12028127f8f.55.1738414380613;
+        Sat, 01 Feb 2025 04:53:00 -0800 (PST)
+Received: from [192.168.1.3] (p5b0573ac.dip0.t-ipconnect.de. [91.5.115.172])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ecc80sm7385784f8f.16.2025.02.01.04.52.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Feb 2025 04:52:59 -0800 (PST)
+Message-ID: <b1fa39ca-be06-4f64-8595-75b6626442d3@googlemail.com>
+Date: Sat, 1 Feb 2025 13:52:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.6 00/43] 6.6.75-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250130133458.903274626@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250130133458.903274626@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <13d5026c-3274-4b90-b941-22f08a8ebdc4@molgen.mpg.de>
 
-On Sat, Feb 01, 2025 at 01:15:29PM +0100, Paul Menzel wrote:
-> Dear Dmitry,
-> 
-> 
-> Thank you for the patch.
-> 
-> Am 01.02.25 um 10:18 schrieb Dmitry Baryshkov:
-> > WCN3950 is another example of the WCN39xx BT/WiFI family of chips. It
-> > requires different firmware files and has different current
-> > requirements, so add it as a separate SoC type.
-> 
-> Is the firmware publicly available already? (In patch 4/4 you write, it is,
-> and I found it [1].) I find such information helpful in commit messages, and
-> also the firmware names:
-> 
-> •   qca/cmbtfw12.tlv
-> •   qca/cmbtfw13.tlv
-> •   qca/cmnv12.bin
-> •   qca/cmnv13.bin
+Am 30.01.2025 um 14:59 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.6.75 release.
+> There are 43 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Ack, I will add it.
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-> Do you also have a datasheet name to review the vregs?
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-I have it, but I don't think it is public.
 
-> 
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > ---
-> >   drivers/bluetooth/btqca.c   |  9 +++++++++
-> >   drivers/bluetooth/btqca.h   |  1 +
-> >   drivers/bluetooth/hci_qca.c | 25 +++++++++++++++++++++++++
-> >   3 files changed, 35 insertions(+)
-> 
-> […]
-> 
-> The rest looks good.
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/?id=421017641e6a6ef389190ac3edf67885183f3de0
+Beste Grüße,
+Peter Schneider
 
 -- 
-With best wishes
-Dmitry
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
