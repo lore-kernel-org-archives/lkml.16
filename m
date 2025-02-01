@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D526C7FBD6
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E084139D05
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738374927; cv=none; b=tzpOFtdqapJI4RKsdJUA8JtK4j0V/J68JTjjQ21eVYby09q0rIUGVG7LG/uhJUj6uFlFWKjezXxSUp4ee5rtGpvYZSbMLBQ1G9D5uUw7kZdGDgpWo6nv51IavwWt6gOaavSkrQ+fwJOb0XciGrrKXR9366aoOodWHFqm0CPiH7M=
+	t=1738374929; cv=none; b=YdlnpvbgGoBDyfZLNpUSSHcyYYn8ANbBTKCe7Lt6GNCvbHssT7ezZ2Chr1z7d74dpwbYJd3TQPBRTudxccIbf19/EW9s+dZTrVx0/xaboSEEoBxafAHXsIpzrIgIgpOAeHVeQfMHiHVbHpwHLaobG5Z+rWDfVAc09Ueigk23te0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738374927; c=relaxed/simple;
-	bh=WTPZCV619SX538Cn6Abym6cnK99EEExx7aoodOVpBsw=;
+	s=arc-20240116; t=1738374929; c=relaxed/simple;
+	bh=2L/cnO9EtXQAJOsgX3k8m5pz/6fkrIp1s4+pPXI7COU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CwepP6HYejkLLuN/kVZd+xttxqsoB5QmdSlXXLRO5PYzXYGSqaeBweGrl8nLlizh0MQWUul7aaVHciOXRmHfDSYJUgLTD7+GaYph5NuTBZqke/C961jOKZr77/x6V1H0HnlCwJL/JfYAWAupiw0bQV0yKjlViezsJELA0bvG1KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uhG4C+Js; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=EVImZGvpKWrSfSGHP8fdHUk7ueo63Ab2pU5jXqDD8DdirJUEikm5achWgE4YFYrtZ8uLTbNLe6skUdvLipzhbimvflRI1jFEcLuylLloWgdNGBOQjOGhbgIB+70NJBKuK4nox99e2ftLxIkE3Kam+DvCQ/2RiOnhhtSIUscKduI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=togLWU4P; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uhG4C+Js"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2f780a3d6e5so5196120a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:55:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="togLWU4P"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-21661949f23so77483845ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:55:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738374925; x=1738979725; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738374927; x=1738979727; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=m3XOaiGIiENgl8NnCw2lngMp/lfgzjhOH8n22r5XeXs=;
-        b=uhG4C+Jsyf7SQb5nbd/RoqDQo9efDc6yDtsZKyKZm+kR6nzG52nYL9hE1aOETaplfi
-         GbDmZsmF2/JDGIL23IU9gjFwYdXMzTvcTVrouABvrG68Xp94rzXwHMP4u+FOy4ZUk97U
-         z9Ypl9yVt5P2+3MiYy3W58DSP4XqnUqr2GuYMIMztqdDZdXfC2cNhAw2a6tflvkqcwAU
-         Z0trLM7UxfFRecZvatlz4DekyTxFcZ436V4rA1I2jxKMjZSEmO2ZzdZeZ3DwghqkTkJM
-         61PbFxtCDitM9eyFQxqVvjleKzQWwRNiUWQjJe3fwAGp6jOGrlAL4VGHmruWkf00Oow5
-         /7cA==
+        bh=POYPQ5yMJ4zL9xLSOyVPlGOIMkdLL5mZFIi+OVlxA4k=;
+        b=togLWU4PwCPHAA9d27IUou1fAo1AgBKoNtYLoN/TjCSmNc6m22heoekzY5LXtskzne
+         AXw4GyyRamuPrHc6RzvRUoMFPvuPyS2/6STU6OSATnCrHPB4E8NLwI2aW38HJJw92XpH
+         HLiikN9eT0HpvsNxpqPzBGHFJtieNu2BCHxGtXcuvLI22vYb8Wa2GNvIt4Un6/PDkjDp
+         lS5fwE4Rsgoz15nHmBpyFTsjNRGBpmlBTZDse1cUrrlC7t8HC1Q5UstHJdYIMaydLWAJ
+         UdTH6CAcH15H2F28aCj0L03uGZ5m95iJe6FzHlY6MOG1qLGvMy1lzImRB3rod/HIdmna
+         KDvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738374925; x=1738979725;
+        d=1e100.net; s=20230601; t=1738374927; x=1738979727;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=m3XOaiGIiENgl8NnCw2lngMp/lfgzjhOH8n22r5XeXs=;
-        b=WioudpRzcpUQza13LFwDtqsnpqrp4IBH5gmO+xHCLlkaU1nitxwoG7kk7dytUd/Cx0
-         jx+1HP0daNzUN+wliLV24hMVPJuvbRaL+PUHH1ueKJ1M2Fz/IuO0/1X3rc7KFeY25V4n
-         14ak+ysWD7q5JilQCNrrWcHJTa4zEIbmHV5vRuP/Rghl8cwPEtYYwIGKZrxQHpDga6OG
-         rE30k7HXnKxydRfMLiDvP8o3sIkpYVXebvloptKDe3q34CZ/747wGi35Ak0i22se6FjE
-         oWm7NYdTSN4ZoSQGKYf1I+6GS+6JepeNtylhqkzXP1Dr31MeRK7dfwRK6jjeAnyE54KN
-         /yGg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQb+3DozdyKBTG5BjJ4MEvUj9OUBmpWRmtRLNNI3IbB1Ngts+CmHQ4yA3yLCcts38R9Gv92qSbvn1cmws=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxm0yDFOIIyHg7DTtVgpNzsU8Byp92c3fwj9o69+XyQx7CMlPCP
-	HRDz/Dz/keg111F3ZozrWHBUibYoTngc8axeveniSXPbCTCtGfQVYRgoDdCPYl0uH/mjqjwpGZo
-	lKQ==
-X-Google-Smtp-Source: AGHT+IFuItppbgWp7/fYWByB+OH6h9nXO6RPKexQwfXO/X+6riuHAEF3pgKvJptYfZThPrJiMZ3r6hXCHQI=
-X-Received: from pjb14.prod.google.com ([2002:a17:90b:2f0e:b0:2e5:5ffc:1c36])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d610:b0:2ee:4513:f1d1
- with SMTP id 98e67ed59e1d1-2f83ac5e5bcmr16213901a91.23.1738374925164; Fri, 31
- Jan 2025 17:55:25 -0800 (PST)
+        bh=POYPQ5yMJ4zL9xLSOyVPlGOIMkdLL5mZFIi+OVlxA4k=;
+        b=P6OnOx/pJNoiNtyOOsnx2N1zgD9xaV3RbUov5PcE9ZUIWikGSMa6Si2yPtCxKeTdnV
+         q0O2EpRFcY2PpLY2sZ4XgIhrIhACNkhLaWK+KEnIRew2ng0eNGSbKwtWmkdw97nvOWR5
+         lw1iuuYk/8ag/o1G2SmD/r/uv/ebDyswF/wSAfklnCnzmxS90jURUPbPcy5sXVNBogzq
+         YDehv0ZEfJzRZRdcsKRn8cPdCOWpvqYr5+v3jsdnubQ0AREiLcGxyTYrnc0knU4SEMPK
+         wbN+73VWoCderUy3s/tbv17wYFd/qiBXEo7cJ92we+7mMPAT8zLjOQBIc/x1NJc3C/30
+         JjEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMM6eSdsg47EwpFZzHbUwGqdkzqWK+oXieOXTkCrSO3/EDF2Pc8+bg5nV6jbEmvSy2vn8Ydo0A0dSkjUo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVa1/v2Xxvi4sUmKhLiNCYQpdqEwUm5LdN3nLw6Zk4F9lIkson
+	jtssO78XcwzHd9cWUIPSaZzRIXBImynKX8Mf4TpVHALRV2Jnw04Nbec2ydBdknSblPy2z9S1k5T
+	9Eg==
+X-Google-Smtp-Source: AGHT+IFucuJj48dbyTnCbLgl25vShezhlevEBnCH9ynRc5KSrkn3lU4zojxv7hZQDWHfYCSBvzxzdIeNmFE=
+X-Received: from pjtu8.prod.google.com ([2002:a17:90a:c888:b0:2f7:f660:cfe7])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:7c8c:b0:216:7ee9:21ff
+ with SMTP id d9443c01a7336-21dd7df06f5mr157673425ad.49.1738374926702; Fri, 31
+ Jan 2025 17:55:26 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 31 Jan 2025 17:55:10 -0800
+Date: Fri, 31 Jan 2025 17:55:11 -0800
 In-Reply-To: <20250201015518.689704-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,57 +61,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250201015518.689704-1-seanjc@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250201015518.689704-4-seanjc@google.com>
-Subject: [PATCH v2 03/11] KVM: nVMX: Allow emulating RDPID on behalf of L2
+Message-ID: <20250201015518.689704-5-seanjc@google.com>
+Subject: [PATCH v2 04/11] KVM: nVMX: Emulate HLT in L2 if it's not intercepted
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Return X86EMUL_CONTINUE instead X86EMUL_UNHANDLEABLE when emulating RDPID
-on behalf of L2 and L1 _does_ expose RDPID/RDTSCP to L2.  When RDPID
-emulation was added by commit fb6d4d340e05 ("KVM: x86: emulate RDPID"),
-KVM incorrectly allowed emulation by default.  Commit 07721feee46b ("KVM:
-nVMX: Don't emulate instructions in guest mode") fixed that flaw, but
-missed that RDPID emulation was relying on the common return path to allow
-emulation on behalf of L2.
+Extend VMX's nested intercept logic for emulated instructions to handle
+HLT interception, primarily for testing purposes.  Failure to allow
+emulation of HLT isn't all that interesting, as emulating HLT while L2 is
+active either requires forced emulation (and no #UD intercept in L1), TLB
+games in the guest to coerce KVM into emulating the wrong instruction, or
+a bug elsewhere in KVM.
 
-Fixes: 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest mode")
+E.g. without commit 47ef3ef843c0 ("KVM: VMX: Handle event vectoring
+error in check_emulate_instruction()"), KVM can end up trying to emulate
+HLT if RIP happens to point at a HLT when a vectored event arrives with
+L2's IDT pointing at emulated MMIO.
+
+Note, vmx_check_intercept() is still broken when L1 wants to intercept an
+instruction, as KVM injects a #UD instead of synthesizing a nested VM-Exit.
+That issue extends far beyond HLT, punt on it for now.
+
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 3654c08cfa31..9773287acade 100644
+index 9773287acade..fb4e9290e6c4 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -8049,18 +8049,19 @@ int vmx_check_intercept(struct kvm_vcpu *vcpu,
- 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+@@ -8083,6 +8083,11 @@ int vmx_check_intercept(struct kvm_vcpu *vcpu,
+ 		/* FIXME: produce nested vmexit and return X86EMUL_INTERCEPTED.  */
+ 		break;
  
- 	switch (info->intercept) {
--	/*
--	 * RDPID causes #UD if disabled through secondary execution controls.
--	 * Because it is marked as EmulateOnUD, we need to intercept it here.
--	 * Note, RDPID is hidden behind ENABLE_RDTSCP.
--	 */
- 	case x86_intercept_rdpid:
-+		/*
-+		 * RDPID causes #UD if not enabled through secondary execution
-+		 * controls (ENABLE_RDTSCP).  Note, the implicit MSR access to
-+		 * TSC_AUX is NOT subject to interception, i.e. checking only
-+		 * the dedicated execution control is architecturally correct.
-+		 */
- 		if (!nested_cpu_has2(vmcs12, SECONDARY_EXEC_ENABLE_RDTSCP)) {
- 			exception->vector = UD_VECTOR;
- 			exception->error_code_valid = false;
- 			return X86EMUL_PROPAGATE_FAULT;
- 		}
--		break;
-+		return X86EMUL_CONTINUE;
- 
- 	case x86_intercept_in:
- 	case x86_intercept_ins:
++	case x86_intercept_hlt:
++		if (!nested_cpu_has(vmcs12, CPU_BASED_HLT_EXITING))
++			return X86EMUL_CONTINUE;
++		break;
++
+ 	case x86_intercept_pause:
+ 		/*
+ 		 * PAUSE is a single-byte NOP with a REPE prefix, i.e. collides
 -- 
 2.48.1.362.g079036d154-goog
 
