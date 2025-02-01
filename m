@@ -1,163 +1,114 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8FC1B414B
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0569208A9;
+	Sat,  1 Feb 2025 16:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738428747; cv=none; b=FlYXruQEIwp80qI2FyzBGEYRbsEEhM0J627tHRorMSOf93IM9DTzXoeYJdfT7Pkjmzu9mk6WzwW0mhcQ1JvD4kdrfdslodudohZ3wvX0KENUFLzOmDO6uBiCCgBHJMT6f/GXA5B5o2T5isSS2p1jBDQcFXpBqYoL0x0MU7nVetM=
+	t=1738428772; cv=none; b=AOS7KiTYQfH6OEHEhrfwCMvm85Ry7A+Uul04PNQG4xqPHrptt8T+Uf5o4fDkd+FBUDAN0leSpBdbWQlPjzbyebQ8ohVzHoz3X85Bfjcf3gGORrE33e1vhRVj2sAo9Ire8ilwZw2jAxdr+FCMWaUZhUxPcAXWVzGMitOfvnpLHWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738428747; c=relaxed/simple;
-	bh=gCtG/jFGjrcsXe7xZYLZmn1i/3qGDb3fc0Hedn2u03U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s1fC08z9eGWPsYDfCyr58cgR46hS8RoNC4dVkY2UWfKpGN+7Jd7La/Wj1AZ//GQR/riH7nm+rT4e20saqN13tLXTW5KLSrYnLlesK+1b1cdbwmk3MW6aJkoQGK5wTnrlYyH4qrPO0LbJLR2n4Zc2/yJgswVIRw5MCp1IEjnrBB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=vXI0a4ON; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1738428772; c=relaxed/simple;
+	bh=MGMbXg/l4cT2mVq5Z460kZHZEWj1jubCnLtTj3OH4lk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rTrf6lnH7Wcjj3Zx4sZ7wnBlT9R+CdRuOLoE/g9Px23Yy9+20nF840nYULCcDW2g0V9dphC1r31VhCqUt2WuoXU3Hg0JuFcSh5a/K8MftgI7PBpWoxtbi0hY9HP+NQl3/jFU0cQCtC/CEiOqTl/ZmzL92bYg3GUptXdGGzYjUBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9fdFv2g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="vXI0a4ON"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6dd15d03eacso28186966d6.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:52:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1738428744; x=1739033544; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PYpQCJZZSmC5M37Y3PqZdR3AwdY9Yn3FSt/ozL9qEEs=;
-        b=vXI0a4ONhbe8vlDK6hr+wWiVKItmVa4Gcbm3nlkrJq91XIsXG7Q2TnkeDrnwLYIeLv
-         1cL32J9QefJ7DoiIFwwLIh7EKdpiPqe533a779PcHZDPZSJ6DtAtz0lGw3xLeDb0S/ka
-         PfE/wuyNlIxk/cqH2BNwkA8yMOL0WG0Q+woV7QKbbOQkL/KJVYkY4RXJYH6c69ZPHgLw
-         mXnS3/JGCHYJRZZpup+GzB7O1VLzioN+T3LSEA655VfO9kxnhWq8cjdD+X4d8Cgusf2m
-         huX/tBDXfm5JcY7Je5FNclfmQ98I+6DrmRulC5AUF5Ht/VTJN2UFyBmQLQkT3t5JdS7T
-         GnkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738428744; x=1739033544;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PYpQCJZZSmC5M37Y3PqZdR3AwdY9Yn3FSt/ozL9qEEs=;
-        b=eH31hGJFmHLPL+P71IC/zaHWFbWXfDw4rDYcIm1AECrppLxqJAn3+Po5cO6CLkb2Rw
-         JvKugKcn0RMvsjRoS28Ia85J15WyQAto+dsUcH1Y8Vch5EwZG8Pqo/U9hXUlW+JGWdfT
-         LIsGUPheQq0FXtbzYSs9VnVBu7QLhNu3CTDDqlLEUKlMk15dvLISo+oyqBZEdgEUCYs6
-         gkZw6zpDtzHSAjjVu2Vco6TMXe9PNDEOnyhBP7JrKey5YvHM9j/rQJEjpiFwp/nAdsOy
-         3SU1X0cCFNB/c2NvqGZ+9Cm/ElbBhqvHafpLg6guckREqJG/v/gNKmDRpcLdHNAYddpu
-         ge1g==
-X-Forwarded-Encrypted: i=1; AJvYcCW8lolj24BSa9RXjXu7sB8oA/0ra+idanghdqf74i5bxJWGwi9g0zvT5ZIBThUazgGzu8Y3OmyasjMRP8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFt0e5EhSCo5NVQdtKyMVmiJgF+RiGsIaboiyv6ASQX+FkFUje
-	vW6xpkRMT81O+YMCOWmVZVNDwF1BPZFBa/EYJGM7pBwD+2b2jdX/Pk/RBgrYwQ==
-X-Gm-Gg: ASbGnctWmGsVrV9w+7GwiwM1gE3zrSjU3fjS9a7W05s3uZQn4cJ+ZHsCT0jidiS2Imw
-	CIMBcyqaJZed9fpOSZ5L7sN+kzObjxu6OuEmqIRUZ3qC3xdbAlMb83aJuv169nADjJRvWI3rYno
-	E4tFNw09tKHWLBucc32aJ2XM0rsBhXlFK9c0VhzC0bi3ms+/SJALykHRamzEOSwHNCRVbdCHFzM
-	gK7ngt7RKN0zcNHRo9AD9Z3glmt6MMkf/op2WWT3XPYMcGx1e1otpKIJ3oaK8/TfdUWLW7SVY1Z
-	iI2AyW7ndL7mF5r8
-X-Google-Smtp-Source: AGHT+IFFUz1gzgxjmm2jBci03Jh1krPotRpqPAcZQFReDIbnrUfHqEfun0tWgh7gPn+hsXp0/fWqYg==
-X-Received: by 2002:ad4:5aeb:0:b0:6d4:1613:be3e with SMTP id 6a1803df08f44-6e25b0a41dcmr103944546d6.22.1738428744006;
-        Sat, 01 Feb 2025 08:52:24 -0800 (PST)
-Received: from rowland.harvard.edu ([2601:19b:681:fd10::2aef])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254940c8bsm29777996d6.100.2025.02.01.08.52.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 08:52:23 -0800 (PST)
-Date: Sat, 1 Feb 2025 11:52:20 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: Roy Luo <royluo@google.com>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"andre.draszik@linaro.org" <andre.draszik@linaro.org>
-Subject: Re: [PATCH v1] usb: dwc3: gadget: fix gadget workqueue use-after-free
-Message-ID: <db8819b7-05d5-468d-8974-3dfae25bbb2b@rowland.harvard.edu>
-References: <20250122024452.50289-1-royluo@google.com>
- <20250128014400.7jx4segwn53vjnb5@synopsys.com>
- <CA+zupgwLfzDvVF+5psdbuUgZb_mCNqXtxS5=b1RtTAjQKq6AuA@mail.gmail.com>
- <20250131234407.fyv4iu5yadp5xeg2@synopsys.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9fdFv2g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6FC8C4CED3;
+	Sat,  1 Feb 2025 16:52:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738428772;
+	bh=MGMbXg/l4cT2mVq5Z460kZHZEWj1jubCnLtTj3OH4lk=;
+	h=From:Date:Subject:To:Cc:From;
+	b=m9fdFv2gFykxrh2G726bUQ4w+w4Y1F94Sqsa2Sikna95GnEKLB2P7OIK9W6B6tfBr
+	 kOvURrHYNFcoXJHCaoXvHQ49rBsfsP2oYEC7nFX1n13uW2rcb7X2zDbp1M9YtylJ1J
+	 tQ5qZdk8RvWpUWeL7BFkWmhvYGN0eus2flE2twVZ8Bw2kN3Q6x525P+a1H5XJ7ctJH
+	 LEVZB54cjvO5jN225b4yDzTy8KfPQaqBzTzn4pUyozoVW91YMmXLog7mgjLmt6fkAH
+	 xrrzZrPHx/IYcrCPWs5alJet4EcW5ytQX1aRp47gZ9r6gNxjl4YvGgzplAq8PavXMF
+	 FcJaYqbTjQZGQ==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Sat, 01 Feb 2025 17:52:30 +0100
+Subject: [PATCH] clk: Warn (and therefore taint the kernel) on
+ clk_ignore_unused
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250131234407.fyv4iu5yadp5xeg2@synopsys.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250201-topic-ignore_unused_warn-v1-1-f29db78cea3a@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAE1RnmcC/x3MSwqAMAwA0atI1hZq0IpeRUSKRs0mldQfiHe3u
+ HyLmQciKVOENntA6eTIQRKKPINx9bKQ4SkZ0GJl0RZmDxuPhhcJSsMhR6RpuLyKwar0jXOzw9p
+ Dyjelme9/3fXv+wEJPDFoagAAAA==
+X-Change-ID: 20250201-topic-ignore_unused_warn-254a966f627a
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738428769; l=1975;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=RUMTNPwf39+R3he/xz33fiHQcMU6Lh+Bmch14er4pSY=;
+ b=F95J3OADT0N/lGBf0V6M8IOA7T0LxEemcA0qlcgZVs4t+jVd5i9ILtKjNpi+4tkLwZm89oJqR
+ 5PUlX8niPURCcL/TZBr+VWXPLBJD3nN+izTK/0zWTRRTtyUT2CMWQk6
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-On Fri, Jan 31, 2025 at 11:44:17PM +0000, Thinh Nguyen wrote:
-> Cc Alan
-> 
-> On Fri, Jan 31, 2025, Roy Luo wrote:
-> > On Mon, Jan 27, 2025 at 5:44 PM Thinh Nguyen <Thinh.Nguyen@synopsys.com> wrote:
-> > >
-> > > On Wed, Jan 22, 2025, Roy Luo wrote:
-> > > > `dwc3_gadget_soft_disconnect` function, called as part of
-> > >
-> > > The dwc3_gadget_soft_disconnect() isn't directly part of
-> > > device_del(&gadget->dev). It should be part of disconnect.
-> > >
-> > > Can you provide the full sequence of events so I can have more context?
-> > > The handling of the flushing of gadget->work should not be part of the
-> > > dwc3.
-> > 
-> > 
-> > Yes, it's a part of disconnect, and disconnect is a part of gadget unbind.
-> > Let me try my best to explain. Here's the call stack for usb_del_gadget:
-> > -> usb_del_gadget
-> >     -> flush_work(&gadget->work)
-> >     -> device_del
-> >         -> bus_remove_device
-> >         -> device_release_driver
-> >         -> gadget_unbind_driver
-> >         -> usb_gadget_disconnect_locked
-> >         -> dwc3_gadget_pullup
-> >         -> dwc3_gadget_soft_disconnect
-> >         -> usb_gadget_set_state
-> >         -> schedule_work(&gadget->work)
-> > 
-> > Then when usb_put_gadget is called, gadget could be freed before
-> > gadget->work is executed.
-> > -> usb_put_gadget
-> > -> put_device
-> > -> kobject_put
-> > -> device_release
-> > -> dwc_gadget_release
-> > -> kfree(gadget)
-> > 
-> 
-> Thanks for the details!
-> 
-> The UDC core is initiating and handling the gadget->work, so the
-> flushing of the gadget->work should also be handled there.
-> 
-> Since the usb_gadget_disconnect_locked() may trigger a state change work
-> on unbind, the flushing of the gadget->work should to be moved to
-> gadget_unbind_driver() instead:
-> 
-> diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
-> index f8c1ef465e45..9e4abd6e40f8 100644
-> --- a/drivers/usb/gadget/udc/core.c
-> +++ b/drivers/usb/gadget/udc/core.c
-> @@ -1568,7 +1568,6 @@ void usb_del_gadget(struct usb_gadget *gadget)
->  
->         kobject_uevent(&udc->dev.kobj, KOBJ_REMOVE);
->         sysfs_remove_link(&udc->dev.kobj, "gadget");
-> -       flush_work(&gadget->work);
->         device_del(&gadget->dev);
->         ida_free(&gadget_id_numbers, gadget->id_number);
->         cancel_work_sync(&udc->vbus_work);
-> @@ -1694,6 +1693,8 @@ static void gadget_unbind_driver(struct device *dev)
->                 synchronize_irq(gadget->irq);
->         mutex_unlock(&udc->connect_lock);
->  
-> +       flush_work(&gadget->work);
-> +
->         udc->driver->unbind(gadget);
->  
->         mutex_lock(&udc->connect_lock);
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-What about instead moving the flush_work() call down just one line, 
-after the device_del(&gadget->dev) call rather than before it?
+If any sort of ignore_unused is in place, it means one of:
 
-The work queue doesn't need to be flushed every time a driver unbinds 
-from the gadget, only when the gadget is about to be deallocated.
+* power is going to waste
+* the platform description is incomplete (missing consumer-provider
+  relationships)
+* the platform description is just broken
 
-Alan Stern
+Many people will happily declare their job done when a platform
+magically happens to work as they make use of bootloader-enabled
+resources, which then leads to double or triple the amount of work
+of another person, as they attempt to reduce the unnecessary power
+drainage and/or ensure stabiility throughout a suspend-resume cycle.
+
+Issue a good ol' warning (and taint the kernel) to make such cases
+obvious and hopefully draw more attention to it. This way, it'll be
+easier to avoid effectively untested code or DT description getting
+merged into the kernel, or worse, going into production.
+
+The clock subsystem plays a crucial part in this quest, as even if
+the clock controllers themselves don't draw a lot of power when on
+(comparatively), improper description of clock requirements has been
+the #1 cause of incomplete/incorrect devicetree bindings in my
+experience.
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+ drivers/clk/clk.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index cf7720b9172ff223d86227aad144e15375ddfd86..9e2e240efc31f02e4880542370ba773037b733a0 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -1527,7 +1527,8 @@ static int __init clk_disable_unused(void)
+ 	struct clk_core *core;
+ 	int ret;
+ 
+-	if (clk_ignore_unused) {
++	/* If you need ignore_unused, your platform description is broken / incomplete */
++	if (WARN_ON(clk_ignore_unused)) {
+ 		pr_warn("clk: Not disabling unused clocks\n");
+ 		return 0;
+ 	}
+
+---
+base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
+change-id: 20250201-topic-ignore_unused_warn-254a966f627a
+
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
