@@ -1,91 +1,107 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F9E2B9A9;
-	Sat,  1 Feb 2025 07:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738395775; cv=pass; b=BsZstDZt+i7IjXMZuYNETplk88Cx0tkm/J9tYr19tH7EGekCtAET3BKrInSElFi/YN7X8/7EBUkMaZjpRgWExHT1aH8wMZBtAZpCxDMenW6lIwSC+tcBDgRpz+BaJXZLl3BBBvkY27iqAU31ty1NMvxi55yPMWP0ZNPZ8ehP6P8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738395775; c=relaxed/simple;
-	bh=PHOPVwnqYW4RAVoAd1OAGy78FLHlJaiUTin9zJkj5kI=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PTuSx5dhW/QStgTDDCIXD89kFT+ZPB3ikL4aoxa9DvaxHtJe558TFOLS1xtDNUuZY2FD1w3uE2hjvrkpaU8QiLZKlCVDy0Y+2YoIhFa8SUa6ZBfzdJOV2PNmDpi5pXjUZmxOmBzOkAQNFXc/xh6XAnomtd74idI8WDygYT5fdyU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=PjMpia/v; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A66136671
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 07:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738395806; cv=none; b=BDGh5y/U3BlsYfVqHrbySJ5rsRCnwsbFXo083qcinm2DmApKx2UkXspAXSQII8JGrCGem83Htd0U9Vfod12Xs+0f1oce89j7ni6Ari3PRgcKWk6n39t4QzG5j0/PGwtT5V8qYg6rIGwoHBM+F7YJFOfxQNISnPtefqPQPz8iBWg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738395806; c=relaxed/simple;
+	bh=9k2M4+erGEhCQ+ZNEbepukp9n10RgfHeWLxV4CelytA=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=RIIAUovFX3umcSnSiq/5R4bNKFsmbBtLcmYWLb4VJ0qNyXihMEh/EDv5LtJBbP2YcInbeDezPL0uyFv4N8XMIidz6iAZSt9TazHPMfmB2GkEah2GV90S64EXpkUOhw8hCnHNcr7Ah1mUHcSORKQpI13PkjmFAW0Zkl2g88zJ8E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q+9UqwA4; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="PjMpia/v"
-ARC-Seal: i=1; a=rsa-sha256; t=1738395755; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=fnhtczJxfrullL1L0M2O5tVnX5aYmJoqPIqGaOEc2+ngT7LN3515fbaDT/OWFdIWk8drkrjQHjimE5i8LkTEURWZlrhyWCVe4mHob7c7lonao0HpS/V40HzE6xX8b94iHW0ePXFeH6P2io0TZ4wFixJPAUksA+CFE8hYi+ReaLc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738395755; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=CLZpf6rLwx+y6XYMMSXn85igrf6sEjyPZMUtVYwyThE=; 
-	b=TkW8wXB4zHB8iObuuCAUp5TgO44xn1rpkQNPMN0AJHt2H4Xk3JoUsetatO2QXPti1KcUZpZxw2mFFqxtUXsq7oINheiR4TIrfklrfcCho1M+bPZtiXUnuVrn2zZ0VX0ffG4juXQ5q+hG5qgEddxt/VpwtcMvqfYjF7lNthhgRIw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
-	dmarc=pass header.from=<Usama.Anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738395755;
-	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=CLZpf6rLwx+y6XYMMSXn85igrf6sEjyPZMUtVYwyThE=;
-	b=PjMpia/vELd4fiEUbx1qLHup05g6ekUMhmoUqu+HnTnZBvxnhpQzYfb8XM6U0+8D
-	nWFLTDk5JWkjmufhgWBprHBR33ME6y9kjE60GksFLTHR3+o/rVu6zCyGen4IivWncl0
-	kWtUxNZWR3ID7JIwZiFRJDqGeb8m3MvpMfDI+cWs=
-Received: by mx.zohomail.com with SMTPS id 1738395751055390.58881136718696;
-	Fri, 31 Jan 2025 23:42:31 -0800 (PST)
-Message-ID: <0a769233-8cdf-4bee-ba6a-3b69767b7d43@collabora.com>
-Date: Sat, 1 Feb 2025 12:43:03 +0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q+9UqwA4"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e572cd106f7so5013803276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 23:43:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738395804; x=1739000604; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=O3+/E+TgZZGMv/gtL7KYzyxWyAV4KsI6xSgcExMsoWQ=;
+        b=q+9UqwA4YgkvjBNgW+kwbxXD8LS+gNset3+/Vj0HTPNEl0ynbKpcEAI2Rh1vThbBYb
+         vqMuDxnAlBRZiTzUHY2OdC4yNvyiIkr9WJuBLdXbNcqMK0lrbrLDKN7OUjYTakbeDppN
+         oFkkW1qknQzZQK+SsCcGc7aeMS6T9Sbpqgm4L+yWUtQ2z5MgrFaT4bmuY1yVGuUnuVww
+         724CXWMt+5fODcb+EKO0svF887jwvmk3WzuhPEl26xHGswuDdCmG8zreZZrFXQGSxESV
+         3yU6SDeAAlzmUpU1AFka0/GiI00QEbcPG8bb4yqd0N/XUv2V7/f6Hp+xfZDuPTDahrxa
+         DEsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738395804; x=1739000604;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O3+/E+TgZZGMv/gtL7KYzyxWyAV4KsI6xSgcExMsoWQ=;
+        b=iL3ECqN14Z6MnMMVXRyS7OaD+9iXHf7cLoxhpsoWmmhsuLSSiUvkpFtiMuyzDT5Fbp
+         eYE3PI8AICcWRfP9/yoRn+D819IzciQIUlwAmeYRt8GAOhczlwEEBuoF6AoBm4Dt3aas
+         EqgtFQEXWAeQQMhqj+O5wSpFcHbXiPXxcVpmgMyUtWrdmLfnqeDh9lBvlHxM4qtPJaYU
+         tz1zrQeWwA31EoISYCXkY1TpuZpy86rltLBGEIzFTf/jdoSCbMn0OEY60o5eQcQrgq1v
+         cGO+gYLuEHQNw6IS5nx+1c28bRLNtATjrnWI52l+/bxH7VKHiojBUDO8qGrPh7cod148
+         H6Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzjtIGuLSnPlpqewAoIUuTO3StMf88sJZH7YBXis7CFjOdLTpP7Ku1O5dMdQ9eXMa2gUk6pNrr3fY4Flw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8kZ1yr8WrE1igmrgIxJXr5ou3OmKcbKhQJcVllPGCPg2Rlyfr
+	324TaLDAw/ui99pf398Gi7J7H9gV4Dc5qyokteZ6HLFoVRnIIKgNaPDle0F8zlI0p6hDZw5L1a4
+	DFqcINQ==
+X-Google-Smtp-Source: AGHT+IGA4ATIsK1jhK9IHYmMcUSHwoEb9uRlp8EU9tSYg7SiOsaqSVffyzPoCZ1/CdDctJsmRSLKh5KhSJCu
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:de26:87db:e4d0:62b6])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1741:b0:e57:f577:5564 with SMTP
+ id 3f1490d57ef6-e58a4bfd0dbmr32246276.8.1738395803837; Fri, 31 Jan 2025
+ 23:43:23 -0800 (PST)
+Date: Fri, 31 Jan 2025 23:43:15 -0800
+Message-Id: <20250201074320.746259-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Usama.Anjum@collabora.com, Andy Lutomirski <luto@amacapital.net>,
- Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
- =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, kernel@collabora.com
-Subject: Re: [PATCH 01/16] selftests/mm: remove argc and argv unused
- parameters
-To: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>
-References: <20250109173842.1142376-1-usama.anjum@collabora.com>
- <20250109173842.1142376-2-usama.anjum@collabora.com>
- <202501090941.5289E7444B@keescook>
- <843bf743-4005-47bc-9e39-8ea49255b152@collabora.com>
- <202501090949.793D9A0@keescook>
- <20250109161246.f43a69773b5459e5200d3f45@linux-foundation.org>
-Content-Language: en-US
-From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
-In-Reply-To: <20250109161246.f43a69773b5459e5200d3f45@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Subject: [PATCH v3 0/5] perf hwmon related improvements
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 1/10/25 5:12 AM, Andrew Morton wrote:
-> On Thu, 9 Jan 2025 09:50:45 -0800 Kees Cook <kees@kernel.org> wrote:
-> 
->> On Thu, Jan 09, 2025 at 10:48:52PM +0500, Muhammad Usama Anjum wrote:
->>> For the all other case, why should we keep argv/argc and mark them unused
->>> as well when they aren't being used?
->>
->> I'm fine either way, but my personal code style instinct is to keep the
->> "standard" main declaration with argc/argv present. But it's mostly
->> aesthetic.
->>
->> And if you think use of kselftest.h isn't universal, then perhaps we can
->> avoid the macro, but it does seem nicer and more "normal" feeling for
->> the rest of kernel development.
->>
-> 
-> Agreed.  __attribute__((unused)) is a bit of a mouthful and isn't what
-> the kernel developer's eye expects to see.  
-In the next version, I'll add a macro and use that.
+Try to do less scanning of files/directories with or without hwmon
+PMUs. Don't merge all events with the same name, only merge those on
+the same PMU ignoring suffix. Tidy PMU name matching to distinguish no
+suffix or wildcard matching. Refactor uniquification so the evsels
+with the same name as other evsels in the evlist are uniquified.
+
+v3: Address potential segv and styling nits from Kan Liang.
+v2: Rename ignore suffix PMU name matching that is really a
+    wildcard/prefix match. Use a proper ignore suffix when not merging
+    counters purely on name.
+
+Ian Rogers (5):
+  perf evsel: Reduce scanning core PMUs in is_hybrid
+  perf pmus: Restructure pmu_read_sysfs to scan fewer PMUs
+  perf pmu: Rename name matching for no suffix or wildcard variants
+  perf stat: Don't merge counters purely on name
+  perf stat: Changes to event name uniquification
+
+ tools/perf/pmu-events/empty-pmu-events.c |   8 +-
+ tools/perf/pmu-events/jevents.py         |   8 +-
+ tools/perf/tests/pmu.c                   |  85 ++++----
+ tools/perf/util/evsel.c                  |   4 +-
+ tools/perf/util/evsel.h                  |   1 +
+ tools/perf/util/parse-events.c           |   2 +-
+ tools/perf/util/pmu.c                    | 256 ++++++++++++++++-------
+ tools/perf/util/pmu.h                    |   7 +-
+ tools/perf/util/pmus.c                   | 146 ++++++++-----
+ tools/perf/util/stat-display.c           | 111 +++++++---
+ tools/perf/util/stat.c                   |  13 +-
+ 11 files changed, 424 insertions(+), 217 deletions(-)
 
 -- 
-BR,
-Muhammad Usama Anjum
+2.48.1.362.g079036d154-goog
+
