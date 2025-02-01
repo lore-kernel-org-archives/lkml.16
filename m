@@ -1,40 +1,46 @@
-Received: from lichtman.org (lichtman.org [149.28.33.109])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723DF450EE;
-	Sat,  1 Feb 2025 08:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.33.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD3C450EE;
+	Sat,  1 Feb 2025 08:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738398696; cv=none; b=kwaosTAHHres7dJk1bRmrWo2hMRFI7ICejvC4efU3ULfocxAfCjEQLzrRBNdzeC82j02nn+JN9tCyZS5MSZuChnSHr9dlvB58lWIrlHFchOlkhs4xGKI6AJsYwVgY9DLoluv3IYP6gMwizmu3l78fSqC/cAD0CP8LzTm6RE5o7M=
+	t=1738398813; cv=none; b=B5zpEyMdKRS39C8RBXalIbUQJLBi2cMxbmTbWpJgGX2mEmHgehohInNOeysyDqwMKeK0hmlyzmeO+Vc0WFN4OmVwcf+9N0i4MN9QPusVEO/6BP4jakueQX6Wnjg/mEhc2nY5u7WaTfMzbjZqIE/jLQOs/8cWGX/tGOjlZbJPEZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738398696; c=relaxed/simple;
-	bh=EtORstMEP5vEDoFhnNOmFLeQbb1NNqyYFa8DuPRNgYw=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Pt8E2qenjWMRMJQFBheYdxn2qleN7uJjBE8Sesm8nEkDrOLesm8w2JfLrQE1feI0in+RKo6L6zEi2p6LrVtSDiJgHt96nRmY2vzERvywl2A6/cPc+IFCLY2t8HsfXMbGpNjw5lCSaBrjL+5iDVriNcLIYQ1GaBjjyFhbFGpoghE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org; spf=pass smtp.mailfrom=lichtman.org; dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b=UzG5Bsyt; arc=none smtp.client-ip=149.28.33.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtman.org
+	s=arc-20240116; t=1738398813; c=relaxed/simple;
+	bh=cY7+EsD7M8XkB6G31jK8of5Q7MCUMf+o7HuixLQ6SRQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pxaPk+kwFGfWsuoyso7pxPnlq/ASEXt8abctGr1uSfMn3m9GsUnWY1T5gu2eVXNtB/W8ZxDokltTYUKjfMouRJkA4wkKtiN/ry0qo/drxLCkw0MkjwkXXrUtcYb2sK3c9n5xCC++DWLba6WkiAxegzU4keoz5VzTXhztYjt2geY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=chxQ2Qkn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b="UzG5Bsyt"
-Received: by lichtman.org (Postfix, from userid 1000)
-	id 5D0731771FC; Sat,  1 Feb 2025 08:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=lichtman.org; s=mail;
-	t=1738398687; bh=EtORstMEP5vEDoFhnNOmFLeQbb1NNqyYFa8DuPRNgYw=;
-	h=Date:From:To:Subject:From;
-	b=UzG5BsytUmXG7G/2Pngkuyfo4JKYtwlyDIYVHxvrx/hLhecdW0zJc5b0i+vLGjoyz
-	 pOSuR2IR2bLw8i80onDVs0Epg8ohxX+U06hLsYzhDMCF33EF8TRwRnmjZFHOdckAK4
-	 0iA7u+VSzkKaCSvwy/wdUy4wj45LGDZxENUiJ1QyBpesO+w4sdWFcYtZvDSySiTohu
-	 vYTytAfFHUAYu7MXF+TXA5i3JJjBxHm9JvQOGRFRzHWPeBktbqjcL83dUibAsc/PMh
-	 jCWq2slRAl90b0Lb1dmbkqmNX1pJcbEk2Aejun1WHjxOyof+m958kzAcBYE3dLo3PS
-	 +xhAoNqEm9Ncw==
-Date: Sat, 1 Feb 2025 08:31:27 +0000
-From: Nir Lichtman <nir@lichtman.org>
-To: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	kees@kernel.org, ebiederm@xmission.com,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] exec: remove redundant save asides of old pid/vpid
-Message-ID: <20250201083127.GA1185473@lichtman.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="chxQ2Qkn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37C38C4CED3;
+	Sat,  1 Feb 2025 08:33:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738398812;
+	bh=cY7+EsD7M8XkB6G31jK8of5Q7MCUMf+o7HuixLQ6SRQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=chxQ2QknmRNGOP1Y3r9f5fZEvlqQkSuHp2IVzql0MX91NJ8vP0BNowk5GvSYAjvAJ
+	 903gqQGjPVQ5yC1s7zXRf6AqaajeywXmu5e1XsXwayEX7duSihsFIYUb4bZ/tgwSZ9
+	 zKxCTznUb011BtBsV9p5jawEDKIouEj3p+hXe5NA=
+Date: Sat, 1 Feb 2025 09:32:32 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Lyude Paul <lyude@redhat.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] WIP: drivers/base: Add virtual_device_create()
+Message-ID: <2025020130-donator-entering-54da@gregkh>
+References: <Z5Nw8kaieLueWyUu@pollux>
+ <20250130212843.659437-1-lyude@redhat.com>
+ <b0eb69eeb1cd6e1bfbbf91c12dcebf1e58673147.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,59 +49,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <b0eb69eeb1cd6e1bfbbf91c12dcebf1e58673147.camel@redhat.com>
 
-Problem: Old pid and vpid are redundantly saved aside before starting to
-parse the binary, with the comment claiming that it is required since
-load_binary changes it, though from inspection in the source,
-load_binary does not change the pid and this wouldn't make sense since
-execve does not create any new process, quote from man page of execve:
-"there is no new process; many attributes of the calling process remain
-unchanged (in particular, its PID)."
+On Thu, Jan 30, 2025 at 04:58:50PM -0500, Lyude Paul wrote:
+> (FWIW: after posting this I realized I will need to split this API up a bit
+> more anyway so that we can also do init/register in separate steps, since I
+> realized rust will need this so we can store a reference to the device like we
+> allow for normal device probes)
 
-Solution: Remove the saving aside of both and later on use them directly
-from the current object, instead of via the saved aside objects.
+Do you always need to do init/register in 2 steps in rust code?  Or can
+you do it all in a single call?  I'd prefer a single one just to make
+the interface simpler overall, but if you all can't do that, I can keep
+it in two, just seems wasteful.
 
-Signed-off-by: Nir Lichtman <nir@lichtman.org>
----
+thanks,
 
-Side-note: Tested this solution with a defconfig x86_64 and an initramfs
-with Busybox and confirmed to work fine.
-
- fs/exec.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/fs/exec.c b/fs/exec.c
-index 506cd411f4ac..6bb0a7b15f7e 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1789,15 +1789,8 @@ static int search_binary_handler(struct linux_binprm *bprm)
- /* binfmt handlers will call back into begin_new_exec() on success. */
- static int exec_binprm(struct linux_binprm *bprm)
- {
--	pid_t old_pid, old_vpid;
- 	int ret, depth;
- 
--	/* Need to fetch pid before load_binary changes it */
--	old_pid = current->pid;
--	rcu_read_lock();
--	old_vpid = task_pid_nr_ns(current, task_active_pid_ns(current->parent));
--	rcu_read_unlock();
--
- 	/* This allows 4 levels of binfmt rewrites before failing hard. */
- 	for (depth = 0;; depth++) {
- 		struct file *exec;
-@@ -1826,8 +1819,9 @@ static int exec_binprm(struct linux_binprm *bprm)
- 	}
- 
- 	audit_bprm(bprm);
--	trace_sched_process_exec(current, old_pid, bprm);
--	ptrace_event(PTRACE_EVENT_EXEC, old_vpid);
-+	trace_sched_process_exec(current, current->pid, bprm);
-+	ptrace_event(PTRACE_EVENT_EXEC,
-+			task_pid_nr_ns(current, task_active_pid_ns(current->parent)));
- 	proc_exec_connector(current);
- 	return 0;
- }
--- 
-2.39.5
-
+greg k-h
