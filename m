@@ -1,350 +1,486 @@
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A750184A30;
-	Sat,  1 Feb 2025 12:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E3013AA53
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 12:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738411479; cv=none; b=Rl4zl6RzV3MEFhAsXMX0BXfF2ocQvqXqZakgBhYYcA+dK3jjuhCPNPdOkRxD2t6Sut5/UBtSiYLcdSpz+HUofdBLzmSqSC5dP1e0b6qx4lH1j/WB5KB0jhQnVSe+9S6aalPpUef9UiTbSpigo+fYbJvxaBNEPvur4SLV+wO7QMU=
+	t=1738411480; cv=none; b=QFN28shhuqdnN6InU4r7r6NqKqHgOy6Emr3mDguJYQ8MZPHOhtbbpuyy7K0x5mcJ/uSKQb0DMdBqX2bkdtuPNapqJB3/FrbcGXlZ84qTmu/1GPFhhyOuV+ojVOuRIeyFqsBNvqaOKnKG/M4vg2eQQ1rZI8kZaZJiT7ST27t2GHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738411479; c=relaxed/simple;
-	bh=8iKncPFvFN/KqWv1IJCRHmAS1yVFc6ETLBHRNLvI8Kw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=qKr8rZipwzO5Q2oU343Bc5LOI6iBd5t3FWqACiPGyH8z1WD4xGvXRK7q73+fq9nTxCuy1WYYOluh+7P6N/VlPBqRO/86z3UOyE5yISNYDQzByeRa4Rj71LBET1FK9lVYLZAKtxM9i0MgzJEy8ghtuACPDIoZ4g1+qHwoM50vVOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=CrdinWTj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jFO81lW9; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
+	s=arc-20240116; t=1738411480; c=relaxed/simple;
+	bh=JxPtj9vkTqIh9e6FeaTJYLGefZHJP6qXGQd7CaW2ol8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EV+CpIEcHAFMj8dEgBz2fd6+avlYHLuAOvzeIeu3e/u8lkdfzxLchZxiGVl0WBit/jMoMJZP7p9opbPCzjEHkqod0OUTRQr1ekgthqliuFy/3B4A9JkdyONLMr7qrGtWgGgVLgQIUZc3/spA4Z+8UZvkdV2KzB380E7tVWHaQbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VlsR1YuI; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="CrdinWTj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jFO81lW9"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 96E0511400EE;
-	Sat,  1 Feb 2025 07:04:35 -0500 (EST)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-03.internal (MEProxy); Sat, 01 Feb 2025 07:04:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738411475;
-	 x=1738497875; bh=q94BrnE8GmmvJEToiUwE2COPlRZW+gxKKN9ufHNcoBU=; b=
-	CrdinWTj4j5pemeHmxTFUcHhyq1eVgwwCnGEBCWsKTnDsud/lCeo6RLNw5PM2HU9
-	T4GBS/ADFZkDlXkzFSiQjD2gn6M5WfeRoLuIHCzyqHiVipLlUDaqshyuQImMrUm3
-	1ATdB/7Z0QUOdjgi3Pe+xDJsPOev7O7k2cHkDPiQf4q7k/ruH7yraOdN7stKO3bR
-	Wfky5D16/eFUJUUNVXhGPgjkgBlTr2q7gjmwMIhBwZB8ZT4o++2vF+H+1+sU2SI+
-	qekES0KJaqqDXpf3UA/EmcdStGW9reSVGAFosk+X1OWL6SK/2F5ttSj3VK38pS2M
-	Gvt0L3EydwA1XzY+9TkUfQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738411475; x=
-	1738497875; bh=q94BrnE8GmmvJEToiUwE2COPlRZW+gxKKN9ufHNcoBU=; b=j
-	FO81lW99zu6h7WGYlOzMkDHp2OHlTYjdjlM/rtXJg/fm/yYlw33QG9X673KPNj/y
-	lh1Lq7Zf5mWkV5KWq+DMRFE26UwhTbaFvkaNTjqLin5JLVQZ2OvFOfikDDLbO5PI
-	Edx66nP07RDLV+zUhm8px7s7dgtfR6rhrlX9UuYTMoFXZmQm+8pdyzXLV/rw+0La
-	r961ZEjNR29+kTNR6flxxVNlgBvY+tl9d4R1cXti1oRXYwJJTwk7xYSQ6fTyU0jD
-	t35mrYX14KLGfs2cKqfFmBreZ+9FPSPYQe1QUYkYT4FSWhQhYwPMqos0XUVVsEDj
-	Xht27mdyIBoxfE4ACNL4w==
-X-ME-Sender: <xms:0Q2eZ7pp_qtJ515r8XXjlmwfTQa8qUS6_ug6Th2SX2Y0lDk6DGu5Jw>
-    <xme:0Q2eZ1o8vtkjRpaEeTY-jVZd2CYhAGZ_lga7gnch168toDUUIWQV0_zSUsMjQ-iUF
-    117wlTMKjRGNu5utA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudeijecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenfghrlhcuvffnffculdefhedmnecujfgurhepofggfffhvfev
-    kfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfffgrnhhivghlucgiuhdfuceoug
-    iguhesugiguhhuuhdrgiihiieqnecuggftrfgrthhtvghrnhepieekudevieffkeevffei
-    hefhtdfftdevteejfeeiveevffevveduteekffffleelnecuffhomhgrihhnpehgihhthh
-    husgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpegugihusegugihuuhhurdighiiipdhnsggprhgtphhtthhopeduledpmhhouggvpe
-    hsmhhtphhouhhtpdhrtghpthhtohepmhihkhholhgrlhesfhgsrdgtohhmpdhrtghpthht
-    ohepshgufhesfhhomhhitghhvghvrdhmvgdprhgtphhtthhopegvugguhiiikeejsehgmh
-    grihhlrdgtohhmpdhrtghpthhtohepjhhohhhnrdhfrghsthgrsggvnhgusehgmhgrihhl
-    rdgtohhmpdhrtghpthhtohephhgrohhluhhosehgohhoghhlvgdrtghomhdprhgtphhtth
-    hopegurghnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopegrnhgurhhi
-    iheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepjhholhhsrgeskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:0Q2eZ4PmkEZZCfRQH0QUSOYomY2tZj4k-rrRa2CBkJlYFnw_ZIMZPQ>
-    <xmx:0Q2eZ-5Dc5rPjxxcYmDOQfSAk7CPhHXqN5-p8aj97aCkayQ6if33uA>
-    <xmx:0Q2eZ66Ex5HoXENhVU1dhe8FmFOGJ5KecN45xKfIZSPefvgs50hV8A>
-    <xmx:0Q2eZ2hudgihac6f5xZl4T4NpGy4gL3Z49Sjw60FnY8c5pqs5Ok4Nw>
-    <xmx:0w2eZ3xjJH_drhm_Z-Bf3-IlczEH0nLjgB02iSCH4DCDC_Qi1SqJ9IpX>
-Feedback-ID: i6a694271:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id BFC0718A006B; Sat,  1 Feb 2025 07:04:33 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VlsR1YuI"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-467a6781bc8so23328081cf.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 04:04:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738411477; x=1739016277; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NRbYPKSBUnMk1OnyCRg92Vf3leu3blP60GgGgtpGjrQ=;
+        b=VlsR1YuI2biQH0V4mODY9a2Tnr9RNfXXEkqEvCqyl8Kb8JGSdXe0kAlppxYU/A5Mm4
+         6EZYQvL6Vql/KQWNmHrMHsJoP/7J9zyiuSiBu3/10mdckfMaCb6WQOlOnIiVKIyq9BRX
+         QD/1Uaa+H1HDpe9PGCwJf7/BGwtgLXxSWk4TC0y+YFzuURQaile7oj+97QIh+SYd6sEp
+         sCxC6Ber3ja1wDrlg459vxfuzDc0bRKHXX8U0jzqVyV+XHF0B3b/ZYsf0Fs7uUG4Xlkt
+         JnA8hVq4/J6n+n1eAs4SaEioOB7m/DC545rdgTW1ocQZM0kpsQJsdZwU+54j+lt+vI2D
+         u1+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738411477; x=1739016277;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NRbYPKSBUnMk1OnyCRg92Vf3leu3blP60GgGgtpGjrQ=;
+        b=FpgOP/lmnfDBtzAzp0P+7OhSt62/bHNs30HqJywvPYbeg2rVZarI6V45jWb9ZqcWI3
+         LeViCr2sHyQWLtyatpIHkrhHa7jzSAzEM9V331UrALoamtpnhLbILtFp5zzCCzJ8ucOQ
+         pEbL7EmMVoAWLR1f/ZemrnVwbLT9ud0q1QKS375SeCoNGUft+2aI3sMoofsSu9ZQ85QQ
+         TqdgjycS3JMBdffPxbptctTukVuaDGE37sqaOQzPqYQSDAA6LvbNL8Ty6sqYVqicvGDr
+         c3+H6Z9kJtPjqQtjTJmg0RHsrzp6QcqGkk9Udctialy49DuG664o49hvskDquzaQ9gW7
+         T+7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUbjgyHk4R3yOv4gdrjV3NlyhfqfFvcDQlF/k3GrqHVTJG8Qd0rVG53DrZB43J0WhBb6DjiunXiEPr87J0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywvs9CRGNVSi9bl8nXyIiqrGyVpHMY2otu99gKunBAzUDECW5/q
+	51BWX9gcs40SZgTnd2H+IJdbPtQmct7eUlCBONiEAzA8nMtk7gAe9617cMPKiGR1TEipqQ+MHyd
+	KKf0rDH4E7ll10lXe4TbpPvCg8nk=
+X-Gm-Gg: ASbGncsihD1YZaD7gby2tQ8Rn+y67VISjOFk6MhtmmQioYQduy4zvGOx7K15WMegfBt
+	cLFyBouk6RBFPLMMkWFa3Zn/IaMyhCooyDoXdk6jBf9BRv4XyxiP2FHkijUI27txrt3hA5tM=
+X-Google-Smtp-Source: AGHT+IFIAe7LK+bAUjERiCJWEodWTOZAPJWWhhwO+1fPF0wdNORv67zBbiyQ4V/xyArpmtKH+4CMo7rU3bfQYdR46UE=
+X-Received: by 2002:ad4:5cac:0:b0:6d8:accb:5a3d with SMTP id
+ 6a1803df08f44-6e243c745d9mr239270956d6.34.1738411477298; Sat, 01 Feb 2025
+ 04:04:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sat, 01 Feb 2025 13:04:13 +0100
-From: "Daniel Xu" <dxu@dxuuu.xyz>
-To: "Ilya Leoshkevich" <iii@linux.ibm.com>
-Cc: "Shuah Khan" <shuah@kernel.org>, "Eduard Zingerman" <eddyz87@gmail.com>,
- "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>,
- "Andrii Nakryiko" <andrii@kernel.org>,
- "John Fastabend" <john.fastabend@gmail.com>,
- "Martin KaFai Lau" <martin.lau@linux.dev>, "Song Liu" <song@kernel.org>,
- "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh" <kpsingh@kernel.org>,
- "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Mykola Lysenko" <mykolal@fb.com>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, "Marc Hartmayer" <mhartmay@linux.ibm.com>
-Message-Id: <92a6f664-01b8-46bc-8712-6e5a5ac3d851@app.fastmail.com>
-In-Reply-To: <20f56c02-688d-4f22-97dc-cc5b3800de3f@app.fastmail.com>
-References: <cover.1736886479.git.dxu@dxuuu.xyz>
- <68f3ea96ff3809a87e502a11a4bd30177fc5823e.1736886479.git.dxu@dxuuu.xyz>
- <78b2e750b4568e294b5fc5a33cf4bc8f62fae7f6.camel@linux.ibm.com>
- <hsgmutuoi4kvjkr7erm5ty2fdrhdrjpz4fpp5doe65l3pzguxv@lcbmvmjpyykq>
- <f7rhmwrp3fgx3qd7gn3pzczxeztvsg45u4vrl6ls3ylcvflapx@3yi3shfnrmb3>
- <ae5e32ff2269eb4c190aeb882b17cb1bb8e6c70d.camel@linux.ibm.com>
- <20f56c02-688d-4f22-97dc-cc5b3800de3f@app.fastmail.com>
-Subject: Re: [PATCH bpf-next v7 4/5] bpf: verifier: Support eliding map lookup nullness
-Content-Type: text/plain; charset=utf-8
+References: <20241225082412.36727-1-arikalo@gmail.com> <Z4CSpE9UKkJNM_g5@ghost>
+In-Reply-To: <Z4CSpE9UKkJNM_g5@ghost>
+From: Aleksandar Rikalo <arikalo@gmail.com>
+Date: Sat, 1 Feb 2025 13:04:25 +0100
+X-Gm-Features: AWEUYZn6RgBwKk7apC-XOIs5EnhDfdX-vkkLDQ3jEY3hzQ2HQnvtDqK2_hvR28Q
+Message-ID: <CAGQJe6oA8oiZmg0HGW7KrjdOJ7nXNK9hQFm4jdQ6n0WTG6i-vA@mail.gmail.com>
+Subject: Re: [PATCH v2] riscv: Use Zalrsc extension to implement atomic functions
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Andrea Parri <parri.andrea@gmail.com>, Leonardo Bras <leobras@redhat.com>, Guo Ren <guoren@kernel.org>, 
+	Samuel Holland <samuel.holland@sifive.com>, Eric Chan <ericchancf@google.com>, 
+	linux-kernel@vger.kernel.org, 
+	Djordje Todorovic <djordje.todorovic@htecgroup.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jan 10, 2025 at 4:23=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.c=
+om> wrote:
 
+> > From: Chao-ying Fu <cfu@mips.com>
+> >
+> > Use only LR/SC instructions to implement atomic functions.
+>
+> In the previous patch you mention that this is to support MIPS P8700. Can
+> you expand on why this change is required? The datasheet at [1] says:
+>
+> "The P8700 core is configured to support the RV64GCZba_Zbb (G =3D IMAFD)
+> Standard ISA. It includes the RV64I base ISA, Multiply (M), Atomic (A),
+> Single-Precision Floating Point (F), Double (D), Compressed (C) RISC-V
+> extensions, as well as the as well as the bit-manipulation extensions
+> (Zba) and (Zbb)"
+>
+> The "A" extension is a part of "G" which is mostly assumed to exist in
+> the kernel. Additionally, having this be a compilation flag will cause
+> traps on generic kernels. We generally try to push everything we can
+> into runtime feature detection since there are so many possible variants
+> of riscv.
+>
+> Expressing not being able to perform a feature like this is normally
+> better expressed as an errata. Then generic kernels will be able to
+> include this, and anybody who doesn't want to have the extra nops
+> introduced can disable the errata. A similar approach to what I pointed
+> out last time should work here too (but with more places to replace)
+> [2].
+>
+> [1] https://mips.com/wp-content/uploads/2024/11/P8700_Data_Sheet.pdf
+> [2] https://lore.kernel.org/lkml/Z2-UNfwcAQYZqVBU@ghost/T/
 
-On Thu, Jan 30, 2025, at 7:41 PM, Daniel Xu wrote:
-> Hi Ilya,
->
-> On Thu, Jan 30, 2025, at 2:06 AM, Ilya Leoshkevich wrote:
->> On Wed, 2025-01-29 at 10:45 -0700, Daniel Xu wrote:
->>> On Wed, Jan 29, 2025 at 09:49:12AM -0700, Daniel Xu wrote:
->>> > Hi Ilya,
->>> >=20
->>> > On Wed, Jan 29, 2025 at 03:58:54PM +0100, Ilya Leoshkevich wrote:
->>> > > On Tue, 2025-01-14 at 13:28 -0700, Daniel Xu wrote:
->>> > > > This commit allows progs to elide a null check on statically
->>> > > > known
->>> > > > map
->>> > > > lookup keys. In other words, if the verifier can statically
->>> > > > prove
->>> > > > that
->>> > > > the lookup will be in-bounds, allow the prog to drop the null
->>> > > > check.
->>> > > >=20
->>> > > > This is useful for two reasons:
->>> > > >=20
->>> > > > 1. Large numbers of nullness checks (especially when they
->>> > > > cannot
->>> > > > fail)
->>> > > > =C2=A0=C2=A0 unnecessarily pushes prog towards
->>> > > > BPF_COMPLEXITY_LIMIT_JMP_SEQ.
->>> > > > 2. It forms a tighter contract between programmer and verifier.
->>> > > >=20
->>> > > > For (1), bpftrace is starting to make heavier use of percpu
->>> > > > scratch
->>> > > > maps. As a result, for user scripts with large number of
->>> > > > unrolled
->>> > > > loops,
->>> > > > we are starting to hit jump complexity verification errors.=C2=A0
->>> > > > These
->>> > > > percpu lookups cannot fail anyways, as we only use static key
->>> > > > values.
->>> > > > Eliding nullness probably results in less work for verifier as
->>> > > > well.
->>> > > >=20
->>> > > > For (2), percpu scratch maps are often used as a larger stack,
->>> > > > as the
->>> > > > currrent stack is limited to 512 bytes. In these situations, it
->>> > > > is
->>> > > > desirable for the programmer to express: "this lookup should
->>> > > > never
->>> > > > fail,
->>> > > > and if it does, it means I messed up the code". By omitting the
->>> > > > null
->>> > > > check, the programmer can "ask" the verifier to double check
->>> > > > the
->>> > > > logic.
->>> > > >=20
->>> > > > Tests also have to be updated in sync with these changes, as
->>> > > > the
->>> > > > verifier is more efficient with this change. Notable, iters.c
->>> > > > tests
->>> > > > had
->>> > > > to be changed to use a map type that still requires null
->>> > > > checks, as
->>> > > > it's
->>> > > > exercising verifier tracking logic w.r.t iterators.
->>> > > >=20
->>> > > > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
->>> > > > ---
->>> > > > =C2=A0kernel/bpf/verifier.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 92
->>> > > > ++++++++++++++++++-
->>> > > > =C2=A0tools/testing/selftests/bpf/progs/iters.c=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 14 +--
->>> > > > =C2=A0.../selftests/bpf/progs/map_kptr_fail.c=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
->>> > > > =C2=A0.../selftests/bpf/progs/verifier_map_in_map.c |=C2=A0 2 =
-+-
->>> > > > =C2=A0.../testing/selftests/bpf/verifier/map_kptr.c |=C2=A0 2 =
-+-
->>> > > > =C2=A05 files changed, 99 insertions(+), 13 deletions(-)
->>> > >=20
->>> > > [...]
->>> > >=20
->>> > > > @@ -9158,6 +9216,7 @@ static int check_func_arg(struct
->>> > > > bpf_verifier_env *env, u32 arg,
->>> > > > =C2=A0	enum bpf_arg_type arg_type =3D fn->arg_type[arg];
->>> > > > =C2=A0	enum bpf_reg_type type =3D reg->type;
->>> > > > =C2=A0	u32 *arg_btf_id =3D NULL;
->>> > > > +	u32 key_size;
->>> > > > =C2=A0	int err =3D 0;
->>> > > > =C2=A0
->>> > > > =C2=A0	if (arg_type =3D=3D ARG_DONTCARE)
->>> > > > @@ -9291,8 +9350,13 @@ static int check_func_arg(struct
->>> > > > bpf_verifier_env *env, u32 arg,
->>> > > > =C2=A0			verbose(env, "invalid map_ptr to
->>> > > > access map-
->>> > > > > key\n");
->>> > > > =C2=A0			return -EACCES;
->>> > > > =C2=A0		}
->>> > > > -		err =3D check_helper_mem_access(env, regno,
->>> > > > meta-
->>> > > > > map_ptr->key_size,
->>> > > > -					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BPF_READ, false,
->>> > > > NULL);
->>> > > > +		key_size =3D meta->map_ptr->key_size;
->>> > > > +		err =3D check_helper_mem_access(env, regno,
->>> > > > key_size,
->>> > > > BPF_READ, false, NULL);
->>> > > > +		if (err)
->>> > > > +			return err;
->>> > > > +		meta->const_map_key =3D
->>> > > > get_constant_map_key(env, reg,
->>> > > > key_size);
->>> > > > +		if (meta->const_map_key < 0 && meta-
->>> > > > >const_map_key
->>> > > > !=3D -EOPNOTSUPP)
->>> > > > +			return meta->const_map_key;
->>> > >=20
->>> > > Mark Hartmayer reported a problem that after this commit the
->>> > > verifier
->>> > > started refusing to load libvirt's virCgroupV2DevicesLoadProg(),
->>> > > which
->>> > > contains the following snippet:
->>> > >=20
->>> > > 53: (b7) r1 =3D -1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 ; R1_w=3D-1
->>> > > 54: (7b) *(u64 *)(r10 -8) =3D r1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 ; R1_w=3D-1 R10=3Dfp0 fp-8_w=3D-1
->>> > > 55: (bf) r2 =3D r10=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 ; R2_w=3Dfp0 R10=3Dfp0
->>> > > 56: (07) r2 +=3D -8=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 ; R2_w=3Dfp-8
->>> > > 57: (18) r1 =3D 0x9553c800=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ; R1_w=3Dmap_ptr(ks=3D8,vs=3D4)
->>> > > 59: (85) call bpf_map_lookup_elem#1
->>> > >=20
->>> > > IIUC here the actual constant value is -1, which this code
->>> > > confuses
->>> > > with an error.
->>> >=20
->>> > Thanks for reporting. I think I know what the issue is - will send
->>> > a
->>> > patch shortly.
->>> >=20
->>> > Daniel
->>> >=20
->>>=20
->>> I cribbed the source from [0] and tested before and after. I think
->>> this
->>> should work. Mind giving it a try?
->>>=20
->>> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
->>> index 9971c03adfd5..e9176a5ce215 100644
->>> --- a/kernel/bpf/verifier.c
->>> +++ b/kernel/bpf/verifier.c
->>> @@ -9206,6 +9206,8 @@ static s64 get_constant_map_key(struct
->>> bpf_verifier_env *env,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return reg->var_off.value;
->>> =C2=A0}
->>>=20
->>> +static bool can_elide_value_nullness(enum bpf_map_type type);
->>> +
->>> =C2=A0static int check_func_arg(struct bpf_verifier_env *env, u32 ar=
-g,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 struct bpf_call_arg_meta *meta,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 const struct bpf_func_proto *fn,
->>> @@ -9354,9 +9356,11 @@ static int check_func_arg(struct
->>> bpf_verifier_env *env, u32 arg,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 err =3D check_helper_mem_access(env, regno, key_si=
-ze,
->>> BPF_READ, false, NULL);
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 if (err)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn err;
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 meta->const_map_key =3D get_constant_map_key(env, reg,
->>> key_size);
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 if (meta->const_map_key < 0 && meta->const_map_key !=3D
->>> -EOPNOTSUPP)
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return m=
-eta->const_map_key;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 if (can_elide_value_nullness(meta->map_ptr-
->>> >map_type)) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 meta->co=
-nst_map_key =3D
->>> get_constant_map_key(env, reg, key_size);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (meta=
-->const_map_key < 0 && meta-
->>> >const_map_key !=3D -EOPNOTSUPP)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return meta->const_map_key;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 }
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 break;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case ARG_PTR_TO_MAP_VALUE:
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 if (type_may_be_null(arg_type) &&
->>> register_is_null(reg))
->>>=20
->>> Thanks,
->>> Daniel
->>>=20
->>>=20
->>> [0]:
->>> https://github.com/libvirt/libvirt/blob/c1166be3475a0269f5164d87fec6=
-227d6cb34b47/src/util/vircgroupv2devices.c#L66-L135
->>
->> Thanks, I tried this in isolation and it fixed the issue for me.
->> I talked to Mark and he will try it with his libvirt scenario.
->
-> Thanks for testing!=20
->
->>
->> The code looks reasonable to me, but I have a small concern regarding
->> what will happen if the BPF code uses a -EOPNOTSUPP immediate with an
->> array. Unlike other immediates, IIUC this will cause check_func_arg()
->> to return 0. Is there a reason to have this special?
->
-> That's a good point. Lemme check on that.
+So far we haven't found a way to do this using errata. There's no way
+to patch one instruction with multiple ones, and we also need an extra
+(temporary) register.
 
-Seems like the verifier tracks the s32 spill as a u32.=20
+A CPU can implement the Zalrsc extension [1] instead of "complete A"
+(which P8700 does).
+From "Zaamo and Zalrsc Extensions" spec:
 
-So I couldn=E2=80=99t craft a repro for this. But it=E2=80=99ll be a
-good refactor to make anyways.=20
+"The fetch-and-op style atomic primitives provided by the A extension
+support better scaling for highly parallel systems. Simpler
+implementations that do not have such scaling requirements may
+implement the Zalrsc subset of the A extension to support atomic
+primitives."
+
+Therefore, we believe this would be a useful option for wider use.
+
+[1] https://github.com/riscv/riscv-zaamo-zalrsc/releases/download/v1.0-rc2/=
+riscv-zaamo-zalrsc.pdf
+
+> >
+> > Add config RISCV_AMO_USE_ZALRSC.
+> >
+> > Signed-off-by: Chao-ying Fu <cfu@mips.com>
+> > Signed-off-by: Aleksandar Rikalo <arikalo@gmail.com>
+> > ---
+> >  arch/riscv/Kconfig               | 11 +++++++
+> >  arch/riscv/include/asm/atomic.h  | 52 +++++++++++++++++++++++++++++++-
+> >  arch/riscv/include/asm/bitops.h  | 45 +++++++++++++++++++++++++++
+> >  arch/riscv/include/asm/cmpxchg.h | 16 ++++++++++
+> >  arch/riscv/include/asm/futex.h   | 46 ++++++++++++++++++++++++++++
+> >  5 files changed, 169 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index cc63aef41e94..9fb020b49408 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -715,6 +715,17 @@ config RISCV_ISA_ZACAS
+> >
+> >         If you don't know what to do here, say Y.
+> >
+> > +config RISCV_AMO_USE_ZALRSC
+> > +     bool "Use Zalrsc extension to implement atomic functions"
+> > +     help
+> > +        Kernel uses only LR/SC instructions to implement atomic functi=
+ons.
+> > +
+> > +        It makes sense to enable this option if your platform only
+> > +        implements the Zalrsc extension (a subset of the A extension),
+> > +        and not the complete A extension.
+> > +
+> > +        If you don't know what to do here, say N.
+> > +
+> >  config TOOLCHAIN_HAS_ZBB
+> >       bool
+> >       default y
+> > diff --git a/arch/riscv/include/asm/atomic.h b/arch/riscv/include/asm/a=
+tomic.h
+> > index 5b96c2f61adb..88f62e33a545 100644
+> > --- a/arch/riscv/include/asm/atomic.h
+> > +++ b/arch/riscv/include/asm/atomic.h
+> > @@ -50,6 +50,7 @@ static __always_inline void arch_atomic64_set(atomic6=
+4_t *v, s64 i)
+> >   * have the AQ or RL bits set.  These don't return anything, so there'=
+s only
+> >   * one version to worry about.
+> >   */
+> > +#ifndef RISCV_AMO_USE_ZALRSC
+> >  #define ATOMIC_OP(op, asm_op, I, asm_type, c_type, prefix)           \
+> >  static __always_inline                                                =
+       \
+> >  void arch_atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)     \
+> > @@ -59,7 +60,23 @@ void arch_atomic##prefix##_##op(c_type i, atomic##pr=
+efix##_t *v)   \
+> >               : "+A" (v->counter)                                     \
+> >               : "r" (I)                                               \
+> >               : "memory");                                            \
+> > -}                                                                    \
+> > +}
+> > +#else
+> > +#define ATOMIC_OP(op, asm_op, I, asm_type, c_type, prefix)           \
+> > +static __always_inline                                                =
+       \
+> > +void arch_atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)     \
+> > +{                                                                    \
+> > +     register c_type ret, temp;                                      \
+> > +     __asm__ __volatile__ (                                          \
+> > +             "1:     lr." #asm_type " %1, %0\n"                      \
+> > +             "       " #asm_op " %2, %1, %3\n"                       \
+> > +             "       sc." #asm_type " %2, %2, %0\n"                  \
+> > +             "       bnez %2, 1b\n"                                  \
+> > +             : "+A" (v->counter), "=3D&r" (ret), "=3D&r" (temp)       =
+   \
+> > +             : "r" (I)                                               \
+> > +             : "memory");                                            \
+> > +}
+> > +#endif
+> >
+> >  #ifdef CONFIG_GENERIC_ATOMIC64
+> >  #define ATOMIC_OPS(op, asm_op, I)                                    \
+> > @@ -84,6 +101,7 @@ ATOMIC_OPS(xor, xor,  i)
+> >   * There's two flavors of these: the arithmatic ops have both fetch an=
+d return
+> >   * versions, while the logical ops only have fetch versions.
+> >   */
+> > +#ifndef RISCV_AMO_USE_ZALRSC
+> >  #define ATOMIC_FETCH_OP(op, asm_op, I, asm_type, c_type, prefix)     \
+> >  static __always_inline                                                =
+       \
+> >  c_type arch_atomic##prefix##_fetch_##op##_relaxed(c_type i,          \
+> > @@ -108,6 +126,38 @@ c_type arch_atomic##prefix##_fetch_##op(c_type i, =
+atomic##prefix##_t *v) \
+> >               : "memory");                                            \
+> >       return ret;                                                     \
+> >  }
+> > +#else
+> > +#define ATOMIC_FETCH_OP(op, asm_op, I, asm_type, c_type, prefix)     \
+> > +static __always_inline                                                =
+       \
+> > +c_type arch_atomic##prefix##_fetch_##op##_relaxed(c_type i,          \
+> > +                                          atomic##prefix##_t *v)     \
+> > +{                                                                    \
+> > +     register c_type ret, temp;                                      \
+> > +     __asm__ __volatile__ (                                          \
+> > +             "1:     lr." #asm_type " %1, %0\n"                      \
+> > +             "       " #asm_op " %2, %1, %3\n"                       \
+> > +             "       sc." #asm_type " %2, %2, %0\n"                  \
+> > +             "       bnez %2, 1b\n"                                  \
+> > +             : "+A" (v->counter), "=3D&r" (ret), "=3D&r" (temp)       =
+   \
+> > +             : "r" (I)                                               \
+> > +             : "memory");                                            \
+> > +     return ret;                                                     \
+> > +}                                                                    \
+> > +static __always_inline                                                =
+       \
+> > +c_type arch_atomic##prefix##_fetch_##op(c_type i, atomic##prefix##_t *=
+v)     \
+> > +{                                                                    \
+> > +     register c_type ret, temp;                                      \
+> > +     __asm__ __volatile__ (                                          \
+> > +             "1:     lr." #asm_type ".aqrl %1, %0\n"                 \
+> > +             "       " #asm_op " %2, %1, %3\n"                       \
+> > +             "       sc." #asm_type ".aqrl %2, %2, %0\n"             \
+> > +             "       bnez %2, 1b\n"                                  \
+> > +             : "+A" (v->counter), "=3D&r" (ret), "=3D&r" (temp)       =
+   \
+> > +             : "r" (I)                                               \
+> > +             : "memory");                                            \
+> > +     return ret;                                                     \
+> > +}
+> > +#endif
+> >
+> >  #define ATOMIC_OP_RETURN(op, asm_op, c_op, I, asm_type, c_type, prefix=
+)      \
+> >  static __always_inline                                                =
+       \
+> > diff --git a/arch/riscv/include/asm/bitops.h b/arch/riscv/include/asm/b=
+itops.h
+> > index fae152ea0508..0051de1cf471 100644
+> > --- a/arch/riscv/include/asm/bitops.h
+> > +++ b/arch/riscv/include/asm/bitops.h
+> > @@ -187,12 +187,17 @@ static __always_inline int variable_fls(unsigned =
+int x)
+> >
+> >  #if (BITS_PER_LONG =3D=3D 64)
+> >  #define __AMO(op)    "amo" #op ".d"
+> > +#define __LR "lr.d"
+> > +#define __SC "sc.d"
+> >  #elif (BITS_PER_LONG =3D=3D 32)
+> >  #define __AMO(op)    "amo" #op ".w"
+> > +#define __LR "lr.w"
+> > +#define __SC "sc.w"
+> >  #else
+> >  #error "Unexpected BITS_PER_LONG"
+> >  #endif
+> >
+> > +#ifndef RISCV_AMO_USE_ZALRSC
+> >  #define __test_and_op_bit_ord(op, mod, nr, addr, ord)                \
+> >  ({                                                           \
+> >       unsigned long __res, __mask;                            \
+> > @@ -211,6 +216,33 @@ static __always_inline int variable_fls(unsigned i=
+nt x)
+> >               : "+A" (addr[BIT_WORD(nr)])                     \
+> >               : "r" (mod(BIT_MASK(nr)))                       \
+> >               : "memory");
+> > +#else
+> > +#define __test_and_op_bit_ord(op, mod, nr, addr, ord)                \
+> > +({                                                           \
+> > +     unsigned long __res, __mask, __temp;                    \
+> > +     __mask =3D BIT_MASK(nr);                                  \
+> > +     __asm__ __volatile__ (                                  \
+> > +             "1: " __LR #ord " %0, %1\n"                     \
+> > +             #op " %2, %0, %3\n"                             \
+> > +             __SC #ord " %2, %2, %1\n"                       \
+> > +             "bnez %2, 1b\n"                                 \
+> > +             : "=3D&r" (__res), "+A" (addr[BIT_WORD(nr)]), "=3D&r" (__=
+temp)      \
+> > +             : "r" (mod(__mask))                             \
+> > +             : "memory");                                    \
+> > +     ((__res & __mask) !=3D 0);                                \
+> > +})
+> > +
+> > +#define __op_bit_ord(op, mod, nr, addr, ord)                 \
+> > +     unsigned long __res, __temp;                            \
+> > +     __asm__ __volatile__ (                                  \
+> > +             "1: " __LR #ord " %0, %1\n"                     \
+> > +             #op " %2, %0, %3\n"                             \
+> > +             __SC #ord " %2, %2, %1\n"                       \
+> > +             "bnez %2, 1b\n"                                 \
+> > +             : "=3D&r" (__res), "+A" (addr[BIT_WORD(nr)]), "=3D&r" (__=
+temp)      \
+> > +             : "r" (mod(BIT_MASK(nr)))                       \
+> > +             : "memory")
+> > +#endif
+> >
+> >  #define __test_and_op_bit(op, mod, nr, addr)                         \
+> >       __test_and_op_bit_ord(op, mod, nr, addr, .aqrl)
+> > @@ -354,12 +386,25 @@ static inline void arch___clear_bit_unlock(
+> >  static inline bool arch_xor_unlock_is_negative_byte(unsigned long mask=
+,
+> >               volatile unsigned long *addr)
+> >  {
+> > +#ifndef RISCV_AMO_USE_ZALRSC
+> >       unsigned long res;
+> >       __asm__ __volatile__ (
+> >               __AMO(xor) ".rl %0, %2, %1"
+> >               : "=3Dr" (res), "+A" (*addr)
+> >               : "r" (__NOP(mask))
+> >               : "memory");
+> > +#else
+> > +     unsigned long res, temp;
+> > +
+> > +     __asm__ __volatile__ (
+> > +             "1: " __LR ".rl %0, %1\n"
+> > +             "xor %2, %0, %3\n"
+> > +             __SC ".rl %2, %2, %1\n"
+> > +             "bnez %2, 1b\n"
+> > +             : "=3D&r" (res), "+A" (*addr), "=3D&r" (temp)
+> > +             : "r" (__NOP(mask))
+> > +             : "memory");
+> > +#endif
+> >       return (res & BIT(7)) !=3D 0;
+> >  }
+> >
+> > diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/=
+cmpxchg.h
+> > index 4cadc56220fe..aba60f427060 100644
+> > --- a/arch/riscv/include/asm/cmpxchg.h
+> > +++ b/arch/riscv/include/asm/cmpxchg.h
+> > @@ -51,6 +51,7 @@
+> >       }                                                                =
+       \
+> >  })
+> >
+> > +#ifndef RISCV_AMO_USE_ZALRSC
+> >  #define __arch_xchg(sfx, prepend, append, r, p, n)                   \
+> >  ({                                                                   \
+> >       __asm__ __volatile__ (                                          \
+> > @@ -61,6 +62,21 @@
+> >               : "r" (n)                                               \
+> >               : "memory");                                            \
+> >  })
+> > +#else
+> > +#define __arch_xchg(sfx, prepend, append, r, p, n)                   \
+> > +({                                                                   \
+> > +     __typeof__(*(__ptr)) temp;                                      \
+> > +     __asm__ __volatile__ (                                          \
+> > +             prepend                                                 \
+> > +             "1:     lr" sfx " %0, %1\n"                             \
+> > +             "       sc" sfx " %2, %3, %1\n"                         \
+> > +             "       bnez %2, 1b\n"                                  \
+> > +             append                                                  \
+> > +             : "=3D&r" (r), "+A" (*(p)), "=3D&r" (temp)               =
+   \
+> > +             : "r" (n)                                               \
+> > +             : "memory");                                            \
+> > +})
+> > +#endif
+> >
+> >  #define _arch_xchg(ptr, new, sc_sfx, swap_sfx, prepend,               =
+       \
+> >                  sc_append, swap_append)                              \
+> > diff --git a/arch/riscv/include/asm/futex.h b/arch/riscv/include/asm/fu=
+tex.h
+> > index fc8130f995c1..dc63065e707e 100644
+> > --- a/arch/riscv/include/asm/futex.h
+> > +++ b/arch/riscv/include/asm/futex.h
+> > @@ -19,6 +19,7 @@
+> >  #define __disable_user_access()              do { } while (0)
+> >  #endif
+> >
+> > +#ifndef RISCV_AMO_USE_ZALRSC
+> >  #define __futex_atomic_op(insn, ret, oldval, uaddr, oparg)   \
+> >  {                                                            \
+> >       __enable_user_access();                                 \
+> > @@ -32,16 +33,39 @@
+> >       : "memory");                                            \
+> >       __disable_user_access();                                \
+> >  }
+> > +#else
+> > +#define __futex_atomic_op(insn, ret, oldval, uaddr, oparg)   \
+> > +{                                                            \
+> > +     __enable_user_access();                                 \
+> > +     __asm__ __volatile__ (                                  \
+> > +     "1:     lr.w.aqrl %[ov], %[u]\n"                        \
+> > +     "       " insn "\n"                                     \
+> > +     "       sc.w.aqrl %[t], %[t], %[u]\n"                   \
+> > +     "       bnez %[t], 1b\n"                                \
+> > +     "2:\n"                                                  \
+> > +     _ASM_EXTABLE_UACCESS_ERR(1b, 2b, %[r])                  \
+> > +     : [r] "+r" (ret), [ov] "=3D&r" (oldval),                  \
+> > +       [t] "=3D&r" (temp), [u] "+m" (*uaddr)                   \
+> > +     : [op] "Jr" (oparg)                                     \
+> > +     : "memory");                                            \
+> > +     __disable_user_access();                                \
+> > +}
+> > +#endif
+> >
+> >  static inline int
+> >  arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *=
+uaddr)
+> >  {
+> > +#ifndef RISCV_AMO_USE_ZALRSC
+> >       int oldval =3D 0, ret =3D 0;
+> > +#else
+> > +     int oldval =3D 0, ret =3D 0, temp =3D 0;
+>
+> I think it's better to define this temp variable inside of
+> __futex_atomic_op() instead of requiring it to be defined in the scope
+> where the macro is called.
+>
+> - Charlie
+>
+> > +#endif
+> >
+> >       if (!access_ok(uaddr, sizeof(u32)))
+> >               return -EFAULT;
+> >
+> >       switch (op) {
+> > +#ifndef RISCV_AMO_USE_ZALRSC
+> >       case FUTEX_OP_SET:
+> >               __futex_atomic_op("amoswap.w.aqrl %[ov],%z[op],%[u]",
+> >                                 ret, oldval, uaddr, oparg);
+> > @@ -62,6 +86,28 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *=
+oval, u32 __user *uaddr)
+> >               __futex_atomic_op("amoxor.w.aqrl %[ov],%z[op],%[u]",
+> >                                 ret, oldval, uaddr, oparg);
+> >               break;
+> > +#else
+> > +     case FUTEX_OP_SET:
+> > +             __futex_atomic_op("mv %[t], %z[op]",
+> > +                               ret, oldval, uaddr, oparg);
+> > +             break;
+> > +     case FUTEX_OP_ADD:
+> > +             __futex_atomic_op("add %[t], %[ov], %z[op]",
+> > +                               ret, oldval, uaddr, oparg);
+> > +             break;
+> > +     case FUTEX_OP_OR:
+> > +             __futex_atomic_op("or %[t], %[ov], %z[op]",
+> > +                               ret, oldval, uaddr, oparg);
+> > +             break;
+> > +     case FUTEX_OP_ANDN:
+> > +             __futex_atomic_op("and %[t], %[ov], %z[op]",
+> > +                               ret, oldval, uaddr, ~oparg);
+> > +             break;
+> > +     case FUTEX_OP_XOR:
+> > +             __futex_atomic_op("xor %[t], %[ov], %z[op]",
+> > +                               ret, oldval, uaddr, oparg);
+> > +             break;
+> > +#endif
+> >       default:
+> >               ret =3D -ENOSYS;
+> >       }
+> > --
