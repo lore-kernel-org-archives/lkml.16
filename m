@@ -1,222 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732B2208A9;
-	Sat,  1 Feb 2025 17:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A8A1C54A2
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 17:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738430867; cv=none; b=FglOwIdZouQ5Svqsl9a9D7eWcYZUPYgXXsswuxdU00hP6vYLelVjc1G8dtD75H+q0zgEE7KkP6GWpkxcO+ShSpbJFNCCH/DX4OGQEI31ip6cfga137YAiqHOID6Nn9Tc1C8P66eLlYF1Zcg641YHKG2UukYwCr2Sdoa/9wwRd9E=
+	t=1738430955; cv=none; b=PbkNC7sEiZBfkcRTMgyQc5Mg6jidVio1l6zazFoC0pt51J3rifX+NkVb7gHjMnGXS4Mi4GTSmVX8bTqW7ojyOyOgH7fjLL1TpGHcN5fFOhq43NF8F10Pv3no+IUiePWmBZ5pkD92iW8wvzXqXKXW5weWny+FMxGdbQPUBFCq1pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738430867; c=relaxed/simple;
-	bh=cvc4P5ej72EJpo0sfP1dxv4MhBNr+PKrwBD0ycWpFoI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=syGLHMvOUuznvRocYr0nhqvXt2DUGA4LVnyvrsq+cTX1J8Hoj49Id5V2r5gXaamWc5epTzxprhWwLRx0wLi9ZdD2gh6USi9VDU5M45GYt3igb6ZBTJOzhhCqsPl9lWcl6/nRUvG4jbIh0Sl1MzR2Rc8dnyZg0VvEIS0M8XMBL5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u/eQICHH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738430955; c=relaxed/simple;
+	bh=bZIfvsXbEXYqzmKSTUZGNOhLXdwKlob2BoVHyug/+5E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NlnIJH8gwIkwcOueSvOPLN4qNv8C6Do51GrAyK23MkYBuGDCVriLN0kfuyw51saZyOixlRrsNHwcUkxeyGHSQuO6pgMbbm7cVNGliZF61BJElEs/B5c1qLOWLY7DpKL3jO3cxB4SH8g5ea1h5K4QuraiEk3WmKl0QxDfDCh1SWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LFVRABjJ; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u/eQICHH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B283C4CED3;
-	Sat,  1 Feb 2025 17:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738430866;
-	bh=cvc4P5ej72EJpo0sfP1dxv4MhBNr+PKrwBD0ycWpFoI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=u/eQICHHrXXdMhSoEL676HILGhYrfzNPoYS1SNTNLq2xDoYMI8GWLPllxagAKcG5j
-	 ZOEg+f1Y1uob4tr6jcwjsSGQgn4gzvtVdnIhYZEbVfYeDiW3AuL8slW14y5P/Uz+Do
-	 nK362wVnDa9uOE1YhMCNi7HMPdIXkT0nxNJs9Cw3C2SjOJWle3+objLA5GMOJxHBAI
-	 gl9DVDR0+2xI61RdLuNyeiIIi1KFG9BW1LyosGeT9SC8yVtJLP00wG1xNqJWApACmk
-	 5wXq0s/jEQnGw7GFN3EjlcHXA7S6ZkTYi434pgVbRa+3uuBUaxoMnWvQ+ppLyXDFq+
-	 sQzZwbnDp6CVw==
-Date: Sat, 1 Feb 2025 17:27:39 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v1 11/12] iio: accel: adxl345: add activity feature
-Message-ID: <20250201172739.40d12340@jic23-huawei>
-In-Reply-To: <20250128120100.205523-12-l.rubusch@gmail.com>
-References: <20250128120100.205523-1-l.rubusch@gmail.com>
-	<20250128120100.205523-12-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LFVRABjJ"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30738a717ffso25116171fa.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 09:29:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738430952; x=1739035752; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yiAMibmCHf3AP+cOZ4VRKVm1kSHRKQ96VjG5gP5/ww0=;
+        b=LFVRABjJj9Hz+dCeedJWuS88IV8WXa7fiz7zqzxRik0JItEehQajg0FcxvkJIwMW4v
+         1QCXOxa0Ctaec+T65RVJjcaBmtbmbnXy620v6o1FWbvfr6PNHmgTkltnQ4gttWwUI9Zb
+         5a6RFrpo0O8U6VDVQihIB2ryZn2W7TkwcfrZA17NwbxOW2dqsNFya3IxLlquKVdy4n23
+         ZaZS82z+15vq0fb3FZkqBfajyYHZTTqhE/+UHnQvZKKLGl9OF1ig4WriEu1bP4Cgwbqn
+         tTwIBeGSOmAkoWkdUgOB3JTmuak6I+h4eDDY6blnHTqfjkluIV9OazaMs7Uf3dzWMtI+
+         6m7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738430952; x=1739035752;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yiAMibmCHf3AP+cOZ4VRKVm1kSHRKQ96VjG5gP5/ww0=;
+        b=KntFmODUN07LC4rRtFZ7oRmyWXhJF1MbA6xizbRHo7YBHahPHkez/ahcFhCjFIHgWz
+         lH48zrsKhnr+0Aywz/UwwoXwSDLYpxKE15xLX+UX0J31febRucZVIlLGTdpla+6NkVOf
+         F3Wzb+q/yuuEbD1HBXEYAyyyG2dY1qzehItCUcwKvyY2jGQQ5RBC3WBjT/srndIQyOs9
+         m0Va6I4iyk/HQ6m/Lnywdi7Nyuw951T++7R+iqpykUqfuLqfyXPRU9Z4B93QwReSDFjX
+         3VA3tTOS9vSUvX9iu7X90fXn44gA43DLsTNGs/HogHp37KHTJqL7wh/d3Npjzv3wj3bZ
+         qg/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV6QNHZFP0gwlWCXjAEnh5U42Z8wvQw0ztMzxmTyfEyyGLpnfYT8KkIf4yJAhP5QH/HyRwHy7Ql0s9PFpI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/hOVVTT77xiH8kLwp6dOgQp3XS5Mi/b7h0z4VTtYTKrVXt8Rw
+	uhpkcRxus0nZB7677cdEnNP0KnEZHM3aEwtC6c+7I4w2CQZWiyTxhCLqCe9a5xXnn2k8riNnY0L
+	XmIVNVQ==
+X-Gm-Gg: ASbGncubpF0lmsNjOG4vnH3sSY85QVslRPHKiHWab8wCsI94ta89UYQFDl7URSMhTv0
+	LxSvkUGva/7Rv34bg36BHwwje9FI/fT9ev69BdmyB7tT9EW6C1DO8lMfSibJonHSUpXguQUQphe
+	9/uUtq9fJgiCDL27QVUscPoxYHEnZZHjsATTnt9JH3On9Jz1iVB2WtXotnli0Zhq+ojnmaO9QpW
+	KdZFg+rVQBs1/Z+o6nimFp6z+tu16NKdue13vATUkh97Re//Dhc5E+uILS7e2rAe/TtE+91ZbsI
+	DUAr4N8UaGPDPy5cwbGnrMo=
+X-Google-Smtp-Source: AGHT+IHRHYSwVZnX9QQjEgdiq1EsFJNiZyKN0lsG/LCyM7xf+RanpO6j8YDb7KQGBcnEcXBWmWC0MA==
+X-Received: by 2002:a2e:a54a:0:b0:302:3c78:4e17 with SMTP id 38308e7fff4ca-3079694b76bmr44979531fa.29.1738430951586;
+        Sat, 01 Feb 2025 09:29:11 -0800 (PST)
+Received: from umbar.lan ([192.130.178.90])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a3099ec4sm8852161fa.48.2025.02.01.09.29.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 09:29:11 -0800 (PST)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH v2 0/6] Bluetooth: qca: add Qualcomm WCN3950 BT/WiFi chip
+ support
+Date: Sat, 01 Feb 2025 19:29:06 +0200
+Message-Id: <20250201-rb1-bt-v2-0-fd44011749bb@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAONZnmcC/2XMQQrCMBCF4auUWTuSpFUbV95DukiTsR2QRiYlK
+ CV3N3br8n88vg0SCVOCa7OBUObEcalhDg342S0TIYfaYJQ5KaM0yqhxXNGTv7hWd9bqAPX8Enr
+ we4fuQ+2Z0xrls7tZ/9Y/ImtU6Ki3Z99Z04b+9uTFSTxGmWAopXwBZSXt5p0AAAA=
+X-Change-ID: 20250201-rb1-bt-cec7a314991d
+To: Marcel Holtmann <marcel@holtmann.org>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, 
+ Rocky Liao <quic_rjliao@quicinc.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1539;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=bZIfvsXbEXYqzmKSTUZGNOhLXdwKlob2BoVHyug/+5E=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnnlnkrtNc3K2dMel8dFcEtGQARsWe03fuuJFDI
+ LZO0JMC2kyJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ55Z5AAKCRCLPIo+Aiko
+ 1bF5CACtNlWRDxOavbwPfvhT5xdLXGi0R1bx6mJShDUAIa+47UlS9kUdRSrkO+7KTG1lbj3jnbc
+ ztizE9tzen0br4qzGorx1b2mZPH2wJpqyxI4VV/1Vj+McT7kX1kMBnh3TCqZoJMEiY9qe9iLCfX
+ VadINvjcXk53cI1W4WNVRozzt72N1SLyvg3ZqGh4MGG1qdLPrXVtC+f3mrdFwWYZEZTH86mY4pS
+ /8800AyStr+se9HA9pAwO77RKrTWx2rHYo07NbQqb+WvZ0hOVCAcXcT0eg5BDuZO9/T0QNV0q+W
+ ZEhWL+NMIrGc5ok+a/7xdEWjLKGLdRX88JQAa5Asx+FB97P9
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On Tue, 28 Jan 2025 12:00:59 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+Qualcomm Robotics RB1 platform uses a new member of the WCN39xx family
+of BT/WiFi chips. Add support for this member of the family and enable
+it to be used on the RB1 board.
 
-> Add the handling of activity events, also add sysfs entries to
-> configure threshold values to trigger the event. Allow to push the
-> event over to the iio channel.
-> 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+Changes in v2:
+- Corrected QUP interconnects (Konrad)
+- Added /delete-property/ interrupts and an empty line before status
+  (Konrad)
+- Enabled downloading of different NVMs as required for v1.3 of the chip.
+- Link to v1: https://lore.kernel.org/r/20250201-rb1-bt-v1-0-ae896c4923d8@linaro.org
 
-I was going to guess these were rate of change detectors or ones
-at least slightly compensating for g, but superficially
-looks like a straight forward rising mag threshold.  Not seeing need
-for new ABI.
+---
+Dmitry Baryshkov (6):
+      dt-bindings: net: bluetooth: qualcomm: document WCN3950
+      Bluetooth: qca: simplify WCN399x NVM loading
+      Bluetooth: qca: add WCN3950 support
+      arm64: dts: qcom: qcm2290: fix (some) of QUP interconnects
+      arm64: dts: qcom: qcm2290: add UART3 device
+      arm64: dts: qcom: qrb2210-rb1: add Bluetooth support
 
-We've had those interfaces with accelerometers for a long time.
-Key is to map the pretty names in the datasheet into what is actually
-being detected. That allows for a lot better generalization across manufacturers.
+ .../bindings/net/bluetooth/qualcomm-bluetooth.yaml |  2 +
+ arch/arm64/boot/dts/qcom/qcm2290.dtsi              | 31 +++++---
+ arch/arm64/boot/dts/qcom/qrb2210-rb1.dts           | 82 ++++++++++++++++++++++
+ drivers/bluetooth/btqca.c                          | 27 +++++--
+ drivers/bluetooth/btqca.h                          |  4 ++
+ drivers/bluetooth/hci_qca.c                        | 25 +++++++
+ 6 files changed, 156 insertions(+), 15 deletions(-)
+---
+base-commit: a1d1e1f2fae5fcb5f2e43b81afa9596c606e683d
+change-id: 20250201-rb1-bt-cec7a314991d
 
-> ---
->  drivers/iio/accel/adxl345_core.c | 158 ++++++++++++++++++++++++++++++-
->  1 file changed, 154 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
-> index 62d75d28b6fc..94c3ad818ba5 100644
-> --- a/drivers/iio/accel/adxl345_core.c
-> +++ b/drivers/iio/accel/adxl345_core.c
-> @@ -121,6 +121,8 @@
->  
->  #define ADXL345_REG_TAP_AXIS_MSK	GENMASK(2, 0)
->  #define ADXL345_REG_TAP_SUPPRESS_MSK	BIT(3)
-> +#define ADXL345_REG_ACT_AXIS_MSK	GENMASK(6, 4)
-> +#define ADXL345_REG_ACT_ACDC_MSK	BIT(7)
->  
->  enum adxl345_axis {
->  	ADXL345_Z_EN = BIT(0),
-> @@ -163,6 +165,10 @@ struct adxl345_state {
->  	u8 watermark;
->  	u8 fifo_mode;
->  
-> +	u32 act_axis_ctrl;
-> +	bool act_ac;
-> +	u8 act_value;
-> +
->  	u32 tap_axis_ctrl;
->  	u8 tap_threshold;
->  	u32 tap_duration_us;
-> @@ -177,6 +183,11 @@ struct adxl345_state {
->  };
->  
->  static struct iio_event_spec adxl345_events[] = {
-> +	{
-> +		/* activity */
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_RISING,
-> +	},
->  	{
->  		/* single tap */
->  		.type = IIO_EV_TYPE_GESTURE,
-> @@ -276,6 +287,117 @@ static inline int adxl345_write_interrupts(struct adxl345_state *st)
->  	return regmap_write(st->regmap, ADXL345_REG_INT_ENABLE, st->int_map);
->  }
->  
-> +/* act/inact */
-> +
-> +static int adxl345_write_act_axis(struct adxl345_state *st, bool en)
-> +{
-> +	int ret;
-> +
-> +	/*
-> +	 * A setting of 0 selects dc-coupled operation, and a setting of 1
-> +	 * enables ac-coupled operation. In dc-coupled operation, the current
-> +	 * acceleration magnitude is compared directly with THRESH_ACT and
-> +	 * THRESH_INACT to determine whether activity or inactivity is
-> +	 * detected.
-> +	 *
-> +	 * In ac-coupled operation for activity detection, the acceleration
-> +	 * value at the start of activity detection is taken as a reference
-> +	 * value. New samples of acceleration are then compared to this
-> +	 * reference value, and if the magnitude of the difference exceeds the
-> +	 * THRESH_ACT value, the device triggers an activity interrupt.
-> +	 *
-> +	 * Similarly, in ac-coupled operation for inactivity detection, a
-> +	 * reference value is used for comparison and is updated whenever the
-> +	 * device exceeds the inactivity threshold. After the reference value
-> +	 * is selected, the device compares the magnitude of the difference
-> +	 * between the reference value and the current acceleration with
-> +	 * THRESH_INACT. If the difference is less than the value in
-> +	 * THRESH_INACT for the time in TIME_INACT, the device is  considered
-> +	 * inactive and the inactivity interrupt is triggered.
-> +	 */
-> +	ret = regmap_update_bits(st->regmap, ADXL345_REG_ACT_INACT_CTRL,
-> +				 ADXL345_REG_ACT_ACDC_MSK, st->act_ac);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * The ADXL345 allows for individually enabling/disabling axis for
-> +	 * activity and inactivity detection, respectively. Here both axis are
-> +	 * kept in sync, i.e. an axis will be generally enabled or disabled for
-> +	 * both equally, activity and inactivity detection.
-> +	 */
-> +	st->act_axis_ctrl = en
-> +		? st->act_axis_ctrl | ADXL345_REG_ACT_AXIS_MSK
-> +		: st->act_axis_ctrl & ~ADXL345_REG_ACT_AXIS_MSK;
-> +
-> +	ret = regmap_update_bits(st->regmap, ADXL345_REG_ACT_INACT_CTRL,
-> +				 ADXL345_REG_ACT_AXIS_MSK,
-> +				 st->act_axis_ctrl);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int adxl345_set_act_int(struct adxl345_state *st)
-> +{
-> +	bool args_valid;
-> +	bool axis_en;
-> +
-> +	axis_en = FIELD_GET(ADXL345_REG_ACT_AXIS_MSK, st->act_axis_ctrl) > 0;
-> +	args_valid = axis_en && st->act_value > 0;
-> +	adxl345_intmap_switch_bit(st, args_valid, ADXL345_INT_ACTIVITY);
-> +
-> +	return adxl345_write_interrupts(st);
-> +}
-> +
-> +static int _adxl345_is_act_en(struct adxl345_state *st, bool *en)
-> +{
-> +	int ret;
-> +	unsigned int regval;
-> +
-> +	ret = adxl345_read_interrupts(st, &regval);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*en = FIELD_GET(ADXL345_INT_ACTIVITY, regval) > 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int _adxl345_set_act_en(struct adxl345_state *st, bool en)
-> +{
-> +	int ret;
-> +
-> +	ret = adxl345_write_act_axis(st, en);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return adxl345_set_act_int(st);
-> +}
-> +
-> +static int adxl345_is_act_en(struct adxl345_state *st, bool *en)
-> +{
-> +	return _adxl345_is_act_en(st, en);
-> +}
-> +
-> +static int adxl345_set_act_en(struct adxl345_state *st, bool en)
-> +{
-> +	return _adxl345_set_act_en(st, en);
-> +}
-> +
-> +static int _adxl345_set_act_value(struct adxl345_state *st, u8 val)
-> +{
-> +	st->act_value = val;
-> +
-> +	return regmap_write(st->regmap, ADXL345_REG_THRESH_ACT, val);
-> +}
-> +
-> +static int adxl345_set_act_value(struct adxl345_state *st, u8 val)
-> +{
-> +	return _adxl345_set_act_value(st, val);
-> +}
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
