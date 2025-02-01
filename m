@@ -1,107 +1,212 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8A115A863;
-	Sat,  1 Feb 2025 12:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE0320318
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 12:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738412361; cv=none; b=TZBRDHdNXCZHXutpkKfWTqSjBd1pG/LiF3gwZCc/O1G5tOpDyD+/jnlehmKxes1i33UBnLgcpMpxKQPgY3ih1bEDUdbp6j2RRYPsAip/IJhXkpybzUGfVAwdB2TDJ8yGv87fD4SjL0gSdfaOzoAN4f8JJgbX9N309MXuMa6148w=
+	t=1738412804; cv=none; b=XQXebdWKSndAl73mlpK4HrJbN+HnWSu2fTiuedohQUPN52apPeGY4RPGVolanQLSA81rMXc0Ax84bKov4UAiYFenxO+J5ovUYHz5830zhiUxffs9o54dt1Q9o8se6FM5PsplMdaLao91k50O8A2IUgfx1Q1UwjNzwA+24twJ50A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738412361; c=relaxed/simple;
-	bh=Wb8pMmRQqy3Suk62MAYpZ+z15qKy2esVQmc5jfi94oQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zml1LtFtoDD2/gXpLSZnBNch8ZNWYUftWjD3p7ih+xge2tHDjKnQVxLZLG+fSOFsB+l9tNOSvrtPzBpeiOtK9mq/9gtxftkL9sP1+UCxaZVHz48/66kOboueJj19cmTL6bp+rOC3+YfA/iOsoHaxPUZ6acFb+g6CxTiLDNB3Y3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=SJeaTMC9; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1738412804; c=relaxed/simple;
+	bh=FtzY7Gm8QV7QgYgQ8P5cpXe0tSq3usp7PVPXqniVKyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U7Uv4ugrbT2/WWOg9vsjPGzMlgsmjY14jB5Xuy8GzBH7/Jo+gz25dGorRkkCHunVWHJyBr5K5KJ5fa0XUhKCfI0zX0FtdKtrQ4UauUcX5bHZzZVQbLN2sX6gSFIq6CvSIF5P/1MlaPr6871IGjMdUyNCk+r0v5OWFHQ4nwQs7p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=mKe7F77/; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SJeaTMC9"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-436345cc17bso21548265e9.0;
-        Sat, 01 Feb 2025 04:19:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1738412358; x=1739017158; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GYuh5DtsmGWHaTrLME5ClByDosbMcK1IaSFMaCKacRY=;
-        b=SJeaTMC9mKqCLP2xfIXPzBzTUCTuUlzVNzxCsrdiXLquHFzkkcH9gaLEc6uTQ/YxUW
-         C1SIJFTG+eYSxWNfoKAOSF8p6SRzLOtya8r+UiNTk0mXosZA3PzC3VMmREhCUJA+5Z0S
-         qUtTUhhKXO5mXX3W43GJIr9BC+d0fixCvlHMhhAM5q8LjW5dmIy0rFwiu/yDt+aWHmRL
-         sUej7LXalDIWnzOZNvYzvBG/S7V0r1wZ4Utq9VQe3Nscw6faYm2mHkY1qzCcWpc6Wzaq
-         TQQbbAB9JN1bqXnwOceUMUPtk3NNsQH5jb8Vus3kkBzoswhfzpSs4broQ7JpBqrSKjUw
-         KX0g==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="mKe7F77/"
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 8764C3F887
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 12:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1738412792;
+	bh=W+PtquVFOjzOYgh5drj3rsCsJ3SImm+T8s94d8MFmrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To;
+	b=mKe7F77/YVF1IujCPV+zwAE33j4P7g/XcbYZBKqyyvq+srYKbm6H/mD2hQbvqyzDb
+	 YofY3nWkCWhUanhTwFH06iQemrwjMRPQ7pOLFWT67IMf/ybkIv2piU/qtwLDm8PjD9
+	 rsegbjYXjiFw6eshB68llvOkC0yfauQ06AtbKZkX5QxJ9vDdcCuf1TC+zY1RNxJ1tP
+	 QdlxmspdJNG/6hM/8CPCMzVG2M23rGMJ8KsBcMr19oFRjune4Td9DVo4SU4mFdymsg
+	 SL+GcJFUzYQr1NXdD+pWwX3NpsC/XzxqKI6yvcK+i7lb46AEXj1klqwV0A5Hq1sxcs
+	 Dkayo6mhZK5zg==
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2164fad3792so58843595ad.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 04:26:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738412358; x=1739017158;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1738412791; x=1739017591;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GYuh5DtsmGWHaTrLME5ClByDosbMcK1IaSFMaCKacRY=;
-        b=t6iT8Nl27ZNtXiy5vEXUGaPcLz0p7aXrYGyjsISnOqCY7y/Ax4VA5EMKORTVT5nGxL
-         2+TPk46Qrd69Rq/G+uTswFMvpTfeXzCmEug0x7Eo++BhlVkcDW8bhxhYydJkF51QO5ZF
-         T3RRdm3Z9dAgWBvVQVGEVm/bJx0xETwQ2ffgreWR0s75NbWwQLUIPyQRbWEAWSaxlB8C
-         nTfQ7EO+X2f5pKfYAaVKsCCzn49K9P76hmsPAqwWjm+MOSOfL6GWHU+r2EtFzb4UJT3I
-         rantKvdz7jApSLAHprcmkkqQgx3z274zM6XEHKiS4O/5NkB71q1x5qff0+pLaG3mVmB2
-         5SGg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+36WolJehUG6b9N6fcEP6E3qi9DKHZvw0cRRpNoRIe9Uu5M82W+PTADT9G3pOFNuGenOAHBZAhCG/DBk=@vger.kernel.org, AJvYcCXQWtCu3n67bX4zzeW4F45SoCug90ygF1ag+J3IMWa4TfFK1Xk1eDcVwtUtY4ZQbY0aUPzo3aUK@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB0CZbjoxiIsC3PmL9D9per3OGIT2ESadoFi9PsJUSqhQEeal2
-	+tjQpVOIq4GkmtTXnhU+AUIWgZlnN+BJ5uj24S8bHmBcoT/AR34=
-X-Gm-Gg: ASbGncsx3UG7X/v3JKoJmt6LSLUPr6k7E95t2qp0S89AjpvmTZbDvyq8Fse7CiuMtel
-	ozuiTLp7TfVczICaRSktKrSAW79Xq1We+54rTbU2IED9JllbcCtBh1oB7ziD/q55/Lc2kJSzWGb
-	afeG5F7ontkLYaW09HEULLI/7hYqjiSPiz3rCKlo6oTSGJeoDHH0kGgHgdASFbD9icPmQzqALVh
-	0Pv8xCeZauLQsHmlgM/cgVMIBsxQcTT3myIsuc0piROmc6jQZlmL13a7L5fe5PayjfQZ0RPpWGI
-	6IorDjLvrq39lwm3CzB4BIjmkAiqsWTO84Jbcx1CHfR4x2dhBxOdodlh0872E9pT9wwW
-X-Google-Smtp-Source: AGHT+IGIJyZqDzi2Uuhe2Zq000WfiFpxr+97ES3vVgwpkpirHdfzxp2zoWICnZtajDV0P4RGwWdDYg==
-X-Received: by 2002:a05:6000:4008:b0:386:459e:655d with SMTP id ffacd0b85a97d-38c51952173mr11817346f8f.20.1738412358116;
-        Sat, 01 Feb 2025 04:19:18 -0800 (PST)
-Received: from [192.168.1.3] (p5b0573ac.dip0.t-ipconnect.de. [91.5.115.172])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1016a1sm7198078f8f.21.2025.02.01.04.19.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2025 04:19:17 -0800 (PST)
-Message-ID: <c843c84a-c158-4984-a8a6-fa7e20ec3307@googlemail.com>
-Date: Sat, 1 Feb 2025 13:19:16 +0100
+        bh=W+PtquVFOjzOYgh5drj3rsCsJ3SImm+T8s94d8MFmrs=;
+        b=QE9A9fsy22v3C96CLmqZNSjHp9JVOSIvME6S+I2L94m/rBbhq/o5qi/qtxykLg9auj
+         OemVwuCjACRroMPGp/sZTCZJ+RYUG5vRdGf0Nob1r8fYmO8W8bKE0CdgnDsdblUp7sQK
+         O5/qIdTNwlG2iakGK72GukHP57uLFJ68M6S9Qrww5avN9WiFy7hxMP1UGy8IPXe5QHuR
+         I4j7o1wopt3kZMyHEKxDVROU5PNrYIT7kAaLGzXQ2YeRM7GSKUs9raM9369UkGIyquj+
+         M5N69KSzSNYrG4YWfnD91jkf1l2fGgDxVNqirb6u3Cd8QBdLywi4xXjg1BMRIOu32YzI
+         SLWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQfdVEWQiWUPcjCLqvCOI4vpMFKfYB651au2GRtu3dKlNY0lwxo3j8FjEPcpvhnp/F5LvSWyFc0a5svMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0zDsyJXO8/6TXc9xUS7Ng5u5JeN/DFNpb5A4wi6LPfHUd6XtF
+	ketphG+Xk+P7GxNWkh54Z32zFN5ThmcT9mm/mk1W24Fbu57n5upTwYIOpxoMSejDKvx3ahBZmAX
+	egxNAmAOG6RGA5sSAvj7fEyNf2bOy3nkx16Ya8pVU5c3tCnTpXeKEWjpkKUbaDMbR+UzKoTQEB9
+	JeeA==
+X-Gm-Gg: ASbGncv7BhTEN0yweZFr+4Bhern4T0nmgB6+NK502cBiVWv/hAFhqrr8KdjFLDstor5
+	MpZvwtvP/bzg7caGC62sPxwS5gpTLSr5usvU3P0eE6Hgu4OX73/Jaq26n4XVolNvYSvtaQPQOvC
+	mnR3PtpOYOye556eotGwalfzZc9TyTMIemCbpfAd5P8UhLYoTi1XVeM1i94eQB0Q3tiqLcG5XNW
+	pncX6iwwxpwK3y4xbD136HDhqMYEMgDvMFg9O/QnYTW9GKNYLkbTH5gDLwcJatLbn6R2ZLaN7nl
+	Wao91xE=
+X-Received: by 2002:a17:902:e80a:b0:215:af12:b61a with SMTP id d9443c01a7336-21dd7e077d6mr236850135ad.50.1738412790553;
+        Sat, 01 Feb 2025 04:26:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF66EUYrSaHn+pVWpXjV4tbU6Bs0a3SBysXdpKPZYEmT0IPQ3ow7PTEfZPH/LwnEMITATDjWA==
+X-Received: by 2002:a17:902:e80a:b0:215:af12:b61a with SMTP id d9443c01a7336-21dd7e077d6mr236849855ad.50.1738412790154;
+        Sat, 01 Feb 2025 04:26:30 -0800 (PST)
+Received: from localhost ([240f:74:7be:1:543e:97bf:2a6e:c9c3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31ee73asm44817965ad.36.2025.02.01.04.26.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 04:26:29 -0800 (PST)
+Date: Sat, 1 Feb 2025 21:26:27 +0900
+From: Koichiro Den <koichiro.den@canonical.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for
+ gpio-aggregator
+Message-ID: <xrllvn5tmshdbb2mjlxvoc4rpalnefy52wwd5p6s55ehhysl4l@k4w42cd7hxkn>
+References: <20250129155525.663780-1-koichiro.den@canonical.com>
+ <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com>
+ <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
+ <CAMRc=Mc3qBXaATpYRAXeHne0+mBjErivjvUe4rBEj2ksansatQ@mail.gmail.com>
+ <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com>
+ <rhdrieapetwdr3z7roguf5nex3esazhygjbjx4zklkrjzqrlsv@6vc5zmk3il5e>
+ <CAMRc=MeRBABW6JCScGvsRR_4+W6u5QMWJwA7yMB9gj7=uOeD0g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.1 00/49] 6.1.128-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250130140133.825446496@linuxfoundation.org>
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250130140133.825446496@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeRBABW6JCScGvsRR_4+W6u5QMWJwA7yMB9gj7=uOeD0g@mail.gmail.com>
 
-Am 30.01.2025 um 15:01 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.1.128 release.
-> There are 49 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, Jan 31, 2025 at 06:22:50PM GMT, Bartosz Golaszewski wrote:
+> On Fri, Jan 31, 2025 at 3:36 PM Koichiro Den <koichiro.den@canonical.com> wrote:
+> >
+> > On Thu, Jan 30, 2025 at 09:47:47PM GMT, Bartosz Golaszewski wrote:
+> > > On Thu, Jan 30, 2025 at 7:40 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > >
+> >
+> > (Small reply to the previous comment:)
+> > Yes, I understand your point about why you think 'num_lines' is
+> > unnecessary. What I meant was more of a UX (User eXperience) consideration.
+> >
+> 
+> If anything this sounds like worse user experience - having to provide
+> duplicate information.
+> 
+> > > > While at it: there's no reason to impose a
+> > > > naming convention of lineX, lineY etc., the names don't matter for the
+> > > > aggregator setup (unlike gpio-sim where they indicate the offset of
+> > > > the line they concern).
+> > > >
+> > >
+> > > Scratch that part. There's a good reason for that - the ordering of
+> > > lines within the aggregator. [...]
+> >
+> > You're right, that's exactly the intention of the strict naming, 'line0',
+> > 'line1', ..., 'line<Y>'.
+> >
+> > > [...] I'm just not sure whether we should
+> > > impose a strict naming where - for an aggregator of 3 lines total - we
+> > > expect there to exist groups named line0, line1 and line2 or if we
+> > > should be more lenient and possibly sort whatever names the user
+> > > provides alphabetically?
+> >
+> > As Maciej pointed out:
+> >
+> >   (https://lore.kernel.org/all/CAFGk_a0U=jSQD85UKC1e=pSWr8W9y_MMAFyPVFOcE-fUZry7-Q@mail.gmail.com/#t)
+> >   > [...] if free form names were for e.g. [1, 02, 10].
+> >
+> > we would need a well-defined rule to avoid ambiguity, which could
+> > potentially unnecessarily impose burden on users to understand how to
+> > properly use the interface.
+> >
+> >
+> > Regardless, the point is that we need to make it clear to users which GPIO
+> > line a specific line<Y> of an aggregator forwards operations to. Since
+> > requiring users to explicitly set the offset within the aggregator for each
+> > virtual line (e.g. besides 'key'/'offset'/'name' attributes, by adding
+> > 'idx' attribute, which users would need to set explicitly) would be
+> > cumbersome, this RFC implementation instead just makes use of directory
+> > naming. I believe we agree on this approach (i.e., using directory naming
+> > to establish ordering). Correct me if I'm wrong.
+> >
+> > So, to move forward, let me outline the possible approaches we can take:
+> >
+> > Option (a). Drop 'num_lines' attribute and:
+> >
+> >   (a-1). Impose strict naming rule for line directories
+> >
+> >          Users can only create directories with a predefined naming
+> >          convention. This could be 'line0', 'line1', ... 'line<Y>' (as in
+> >          the RFC implementation), or simply '0', '1', ..., '<Y>'.
+> >
+> >   (a-2). Allow arbitrary naming for line directories
+> >
+> >          This would require a well-defined rule to avoid ambiguity. As
+> >          Maciej pointed out:
+> >
+> >          (from https://lore.kernel.org/all/CAFGk_a0U=jSQD85UKC1e=pSWr8W9y_MMAFyPVFOcE-fUZry7-Q@mail.gmail.com/#t)
+> >          > if free form names were for e.g. [1, 02, 10]
+> >
+> >          Users would need to understand these rules, which might impose
+> >          unnecessary burden on users.
+> >
+> > Option (b). Keep 'num_lines' attribute but:
+> >
+> >     (b-1). Prohibit manual creation of line directories
+> >
+> >            Users would no longer run 'mkdir line0', etc. Instead, writing
+> >            <Y+1> (Y >= 0) to 'num_lines' would automatically set up the
+> >            required directories.  convention. This could be 'line0',
+> >            'line1', ... 'line<Y>' (as in this RFC implementation), or
+> >            simply '0', '1', ..., '<Y>'.
+> >
+> >     (b-2). Keep manual 'mkdir' for each line, in the same manner as (a-1)
+> >            (as in the RFC implementation) or (a-2). Seems that no-one is
+> >            favor of this option.
+> >
+> >
+> >     Note: (b-1) is a new idea. Considering what really needs to be
+> >     configured by users, this could be the least burdensome and simplest,
+> >     especially when configuring many lines. I'm including it here for
+> >     broader discussion.
+> >
+> > Personally, now I'm inclined towards (a-1) with the simplest naming scheme:
+> > non-zero-padded integers ('./0', './1', './2', ..., './<Y>'). Or even (b-1).
+> >
+> 
+> I too think a-1 is the best option. However, I'd go for line0, line1
+> etc. convention as for computers it doesn't make any difference while
+> for humans it's more readable.
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+Thank you for the comments. I’ll address your feedbacks and send "v2"
+later, Since we seem to agree on the overall approach, I’ll send it as
+[PATCH v1] (i.e., without the "RFC").
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+-Koichiro
 
-
-Beste Grüße,
-Peter Schneider
-
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+> 
+> Bartosz
+> 
+> > Let me know your thoughts.
+> >
+> > Thanks.
+> >
+> > -Koichiro
+> >
+> > >
+> > > Bart
