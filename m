@@ -1,171 +1,117 @@
 Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA764180A80
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:38:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89C917741
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:55:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738373931; cv=none; b=ADGCgEtIgiW9X5Z+Daao6AViTPlR5gai6d+Efnn/jzA5iSbcyIzkDQcldz3qfTRd8EJYWCURTT8LpeUbg5rItNvLeJdM27K8sVVZRiSQy92WSkhtczhwo7NAUyYUfSIS5G16iv5HeJTYIWaEsljr0UMzbDSYA+vFC4aJK4pdWRg=
+	t=1738374922; cv=none; b=Vz1jURLnREzdoSC1VwuF9FqP6Q4fdTZTK9b1lT6S3R9qlJ6AyLg+gy9R+qjdRV9CXm2f9+9UmCDbk7Yq7gYJxnoas6rWsVljC0HVPYS27VX3jYBii6SEwbe8Wcm6RI2PjewT/mTPpFm50ATzNo+3qp2WXY3AdDiqHmMzDruRlCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738373931; c=relaxed/simple;
-	bh=k8wxsOE443NggaCrOV7dF04ykNDJ9RadB60SKgkrT5M=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=u/oLdmrKPk+yfcHQXayOG5RLzImBEAdhRFfq7mshYiWAxsjnMKe4VVsZXLGMHrDjg0TQeRHSg02stgjqqAt/1gC3cR3c2DIeP4O+iq+Rj465Q88Z33U3TjYaFpLdSDU1dqgLzBQN8F4fNC2LuoAih81xXfedzvrki55MNDKpS2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wga9SqZU; arc=none smtp.client-ip=209.85.214.202
+	s=arc-20240116; t=1738374922; c=relaxed/simple;
+	bh=YIzF9/vgPVJyN2M73AHSdTChR/mPpNSYdk8TkASs6AU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Lqm8Bm14peZA/NTqG5MbCS/3RsUzSgU0QzONx1uM4YUq4dlYeq03OCAP8qY+KrNoGigPXCZNrdeY6vhGE84zfxZYHnyXB89LNYBwPWb3mHfEdywX0E7dsfNKt7WyHgmIGwmqpZLgI94PiL/65SO3Ub5qon0N8O+ckfmknbH8dlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i1K2GDV3; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wga9SqZU"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2166855029eso52064365ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:38:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i1K2GDV3"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2162259a5dcso83714915ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:55:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738373929; x=1738978729; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=sE/Rfgm5mvZA9XECaHOz947FprssysVyUkm3w4GqLVg=;
-        b=Wga9SqZU9jHACXKmEKMYG9ZiIL35h2Mx2pn+ozdbDB1Jn4FEuiNFj7/CkR5Ffhu6ck
-         BWzmgEDRYgnUO7d7F2syKZUtLtjhV3yhKNwMgzcc6j3sI0FioBZpXm5FlwsjOztYZfbB
-         yKCaQ/6opHD2FN77tEHOKH0xDtMy/mZZDEDeqX7pWG5h4KQ2YAwInM/GJEx/6Hk6o/rh
-         wOyDPkrFIfe0zekCuWODatVmr983UTax/u2J1DrGDiFR5D9KnhbBxok4zI0zTi2HBFTU
-         3FDIcvmtUbXjILz8QPNleKwKmgICBJQXh5qe8bb/YbLgbHL82IhQN2evnGATXrgLIIYz
-         6Fow==
+        d=google.com; s=20230601; t=1738374920; x=1738979720; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kCQc2q0n8iaCKUseqDIQ7ox+aypKaYwwg2S2s/uaqm4=;
+        b=i1K2GDV3iw3gi6BtHRXlYLTQZkAPSRX8xGKC/km/R480lY9tDLlvCP30Geikig9REH
+         tNLj2M8MMFdgLtwSZ1AF5Yj945x8wLOcJCn6IsNK5BITBnUzGqs3Ux3G9j9sv6nB4SC6
+         mXEZ60iGALk+zBblK4efyrmugm6VsGmXDw8e/awxLRSvpiW/o+1xqObH191OOVMj0nZN
+         csMsyls8b6zlDp11Jb1cWWaLSIZPbi+F6ztrMrkGT7U5cDvLqN5Fl5OzGL4AkeYDGpxK
+         L0nkniUYaFQqt3UnQw0KSBAuQQ0EH5YxD0wB7gabzaBP+nyVPR/OzRatCvD++8Oed/dH
+         WKMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738373929; x=1738978729;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sE/Rfgm5mvZA9XECaHOz947FprssysVyUkm3w4GqLVg=;
-        b=FAp8nOkbJ78uduQbMHF2uxW7+waMlGhzsXLI40xFm4t8P/Zw+UI449Y325KJXHAhNO
-         dhYlgVvuuMrHjsAfpU6Ll6ZDKaWuAKE/PC6M7/zeToq/xijjelhcZZ68qCCC/LFfkDuB
-         C49IRNnrIbEn+53O7ZTdL5izUK5bJncdh3m5GYAJNzyzM8BAqGAb7WT8bAIHN1nCPXV4
-         pFrmAeFDSYihMzZG9dh5Lk6VtmwZEW7PVjxrWrePUoUvQKKbbdOnSguSqTQgHJkdeH82
-         Xi0W1GRRyEEavWteSysV7XcJBPElArF/Woig5sSTWbHyMdn5HkSonPo+0NGiy63QuPlC
-         3iLA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1EnngQS+0tBbc85ua2OPySP0Q/YA/T1+81zKff/Lu7MVfn+QYVnf6sVvgtECDwA7dl0d8nQP0K1tqrWA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr+HpFKtBjGz56nmpEnZN4ZSancGo7BK1ZVdH+kkj4OA48s417
-	3EqaSqPlQdTBkahNsTH//w27Pz9/5BwGaV/rU6bc2HPRlXm5MKpjeb31uIsJ57bXXmmwkJsc+8G
-	lMA==
-X-Google-Smtp-Source: AGHT+IHUMlCNgV3o1DxuBhC0GH3ufcaAMDOedqCRUviFnMxqgNjrYr6qtvvaw2bZC0boO+KzbUlr4m6PsiA=
-X-Received: from plbld4.prod.google.com ([2002:a17:902:fac4:b0:21c:2d63:f756])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d542:b0:216:2b14:b625
- with SMTP id d9443c01a7336-21dd7d7f818mr215027835ad.31.1738373929411; Fri, 31
- Jan 2025 17:38:49 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738374920; x=1738979720;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kCQc2q0n8iaCKUseqDIQ7ox+aypKaYwwg2S2s/uaqm4=;
+        b=a6CvWbdtBWFr3KdrwGqMjlh2wdwj03bo+VxKURfYr4KhEQwSV3RM5y1x2zW8CpaYCS
+         acojgByZuvnXME1qpAIkevW9wMJu6/E1d+rlDXhwEG5kOmY9tq9IFQSZl4kad9jyGcjb
+         nc5Gs0aWqmhlpGSvtfnaby7YB7uipJvzv/YuBBHjA70QwOUaljX0RP12A/3BQb9qpvsq
+         Yd5S2sdXe3w0aX2z/p8QocqDTQuHPkWA/BRrE/t0AQm6N6WEWLj2jDV21e8hp1IelszA
+         6Jc3srO/MxcJ/FTb6rsGkD3Fujr2X4v++cONKIiBKOiYMEj1QWTXFCMvUFQWo9UiMVXn
+         F3mA==
+X-Forwarded-Encrypted: i=1; AJvYcCXaha/l9Gs2RW/7++YUIU4JDCUZumI6QriQIae3XTD0hQGLzJcbSWf3fFJ1hhmXm5/shYiWIxw6oPWmBMg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNgK7yqrw/mnw46L0wk4+h66B76vKugu+d+VPQjXpJ7xFJusN9
+	g8t3Hh19GdufoCOwNE3/1YaAyb9NBwYEnK59m8wSN29wVtka0LqX71FGa32/O3eZjTxPDq/ZUOl
+	OYA==
+X-Google-Smtp-Source: AGHT+IGDqN6Rs+jw5khdspySFL4CJS9HjO7D386k56zEUbfyPxOceL+2AFJ49+g6jY6rA8O9kk15vSdmhIk=
+X-Received: from pgwc23.prod.google.com ([2002:a65:66d7:0:b0:7fd:5835:26d1])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:98c:b0:216:356b:2685
+ with SMTP id d9443c01a7336-21dd7c4e433mr213647605ad.11.1738374920226; Fri, 31
+ Jan 2025 17:55:20 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 31 Jan 2025 17:38:27 -0800
-In-Reply-To: <20250201013827.680235-1-seanjc@google.com>
+Date: Fri, 31 Jan 2025 17:55:07 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250201013827.680235-1-seanjc@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250201013827.680235-12-seanjc@google.com>
-Subject: [PATCH v2 11/11] KVM: x86: Override TSC_STABLE flag for Xen PV clocks
- in kvm_guest_time_update()
+Message-ID: <20250201015518.689704-1-seanjc@google.com>
+Subject: [PATCH v2 00/11] KVM: x86: Fix emulation of (some) L2 instructions
 From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	David Woodhouse <dwmw2@infradead.org>, Paul Durrant <paul@xen.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzbot+352e553a86e0d75f5120@syzkaller.appspotmail.com, 
-	Paul Durrant <pdurrant@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-When updating PV clocks, handle the Xen-specific UNSTABLE_TSC override in
-the main kvm_guest_time_update() by simply clearing PVCLOCK_TSC_STABLE_BIT
-in the flags of the reference pvclock structure.  Expand the comment to
-(hopefully) make it obvious that Xen clocks need to be processed after all
-clocks that care about the TSC_STABLE flag.
+Fix a variety of bugs related to emulating instructions on behalf of L2,
+and (finally) add support for synthesizing nested VM-Exit to L1 when L1
+wants to intercept an instruction (KVM currently injects a #UD into L2).
 
-No functional change intended.
+There's no real motivation behind this series.  I spotted the PAUSE_EXITING
+vs. BUS_LOCK_DETECTION goof when sorting out a report/question about HLT
+emulation in L2 doing weird things, and then stupidly thought "how hard can
+it be to generate a VM-Exit?".  Turns out, not that hard, but definitely
+a bit harder than I was anticipating due to the annoying RIP vs. next RIP
+flaw.
 
-Cc: Paul Durrant <pdurrant@amazon.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Reviewed-by: Paul Durrant <paul@xen.org>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/x86.c | 35 +++++++++++++++--------------------
- 1 file changed, 15 insertions(+), 20 deletions(-)
+Given that VMX has literally never done the right thing, and SVM was quite
+broken since the beginning, I doubt anyone cares about this, but we have
+the code, so why not...
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index c68e7f7ba69d..065b349a0218 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3119,8 +3119,7 @@ u64 get_kvmclock_ns(struct kvm *kvm)
- static void kvm_setup_guest_pvclock(struct pvclock_vcpu_time_info *ref_hv_clock,
- 				    struct kvm_vcpu *vcpu,
- 				    struct gfn_to_pfn_cache *gpc,
--				    unsigned int offset,
--				    bool force_tsc_unstable)
-+				    unsigned int offset)
- {
- 	struct pvclock_vcpu_time_info *guest_hv_clock;
- 	struct pvclock_vcpu_time_info hv_clock;
-@@ -3155,9 +3154,6 @@ static void kvm_setup_guest_pvclock(struct pvclock_vcpu_time_info *ref_hv_clock,
- 
- 	memcpy(guest_hv_clock, &hv_clock, sizeof(*guest_hv_clock));
- 
--	if (force_tsc_unstable)
--		guest_hv_clock->flags &= ~PVCLOCK_TSC_STABLE_BIT;
--
- 	smp_wmb();
- 
- 	guest_hv_clock->version = ++hv_clock.version;
-@@ -3178,16 +3174,6 @@ static int kvm_guest_time_update(struct kvm_vcpu *v)
- 	s64 kernel_ns;
- 	u64 tsc_timestamp, host_tsc;
- 	bool use_master_clock;
--#ifdef CONFIG_KVM_XEN
--	/*
--	 * For Xen guests we may need to override PVCLOCK_TSC_STABLE_BIT as unless
--	 * explicitly told to use TSC as its clocksource Xen will not set this bit.
--	 * This default behaviour led to bugs in some guest kernels which cause
--	 * problems if they observe PVCLOCK_TSC_STABLE_BIT in the pvclock flags.
--	 */
--	bool xen_pvclock_tsc_unstable =
--		ka->xen_hvm_config.flags & KVM_XEN_HVM_CONFIG_PVCLOCK_TSC_UNSTABLE;
--#endif
- 
- 	kernel_ns = 0;
- 	host_tsc = 0;
-@@ -3275,7 +3261,7 @@ static int kvm_guest_time_update(struct kvm_vcpu *v)
- 			hv_clock.flags |= PVCLOCK_GUEST_STOPPED;
- 			vcpu->pvclock_set_guest_stopped_request = false;
- 		}
--		kvm_setup_guest_pvclock(&hv_clock, v, &vcpu->pv_time, 0, false);
-+		kvm_setup_guest_pvclock(&hv_clock, v, &vcpu->pv_time, 0);
- 
- 		hv_clock.flags &= ~PVCLOCK_GUEST_STOPPED;
- 	}
-@@ -3283,13 +3269,22 @@ static int kvm_guest_time_update(struct kvm_vcpu *v)
- 	kvm_hv_setup_tsc_page(v->kvm, &hv_clock);
- 
- #ifdef CONFIG_KVM_XEN
-+	/*
-+	 * For Xen guests we may need to override PVCLOCK_TSC_STABLE_BIT as unless
-+	 * explicitly told to use TSC as its clocksource Xen will not set this bit.
-+	 * This default behaviour led to bugs in some guest kernels which cause
-+	 * problems if they observe PVCLOCK_TSC_STABLE_BIT in the pvclock flags.
-+	 *
-+	 * Note!  Clear TSC_STABLE only for Xen clocks, i.e. the order matters!
-+	 */
-+	if (ka->xen_hvm_config.flags & KVM_XEN_HVM_CONFIG_PVCLOCK_TSC_UNSTABLE)
-+		hv_clock.flags &= ~PVCLOCK_TSC_STABLE_BIT;
-+
- 	if (vcpu->xen.vcpu_info_cache.active)
- 		kvm_setup_guest_pvclock(&hv_clock, v, &vcpu->xen.vcpu_info_cache,
--					offsetof(struct compat_vcpu_info, time),
--					xen_pvclock_tsc_unstable);
-+					offsetof(struct compat_vcpu_info, time));
- 	if (vcpu->xen.vcpu_time_info_cache.active)
--		kvm_setup_guest_pvclock(&hv_clock, v, &vcpu->xen.vcpu_time_info_cache, 0,
--					xen_pvclock_tsc_unstable);
-+		kvm_setup_guest_pvclock(&hv_clock, v, &vcpu->xen.vcpu_time_info_cache, 0);
- #endif
- 	return 0;
- }
+Sean Christopherson (11):
+  KVM: nVMX: Check PAUSE_EXITING, not BUS_LOCK_DETECTION, on PAUSE
+    emulation
+  KVM: nSVM: Pass next RIP, not current RIP, for nested VM-Exit on
+    emulation
+  KVM: nVMX: Allow emulating RDPID on behalf of L2
+  KVM: nVMX: Emulate HLT in L2 if it's not intercepted
+  KVM: nVMX: Consolidate missing X86EMUL_INTERCEPTED logic in L2
+    emulation
+  KVM: x86: Plumb the src/dst operand types through to
+    .check_intercept()
+  KVM: x86: Plumb the emulator's starting RIP into nested intercept
+    checks
+  KVM: x86: Add a #define for the architectural max instruction length
+  KVM: nVMX: Allow the caller to provide instruction length on nested
+    VM-Exit
+  KVM: nVMX: Synthesize nested VM-Exit for supported emulation
+    intercepts
+  KVM: selftests: Add a nested (forced) emulation intercept test for x86
+
+ arch/x86/kvm/emulate.c                        |   5 +-
+ arch/x86/kvm/kvm_emulate.h                    |   7 +-
+ arch/x86/kvm/trace.h                          |  14 +-
+ arch/x86/kvm/vmx/nested.c                     |  14 +-
+ arch/x86/kvm/vmx/nested.h                     |  22 ++-
+ arch/x86/kvm/vmx/vmx.c                        | 102 ++++++++----
+ tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+ .../selftests/kvm/x86/nested_emulation_test.c | 146 ++++++++++++++++++
+ 8 files changed, 265 insertions(+), 46 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86/nested_emulation_test.c
+
+
+base-commit: eb723766b1030a23c38adf2348b7c3d1409d11f0
 -- 
 2.48.1.362.g079036d154-goog
 
