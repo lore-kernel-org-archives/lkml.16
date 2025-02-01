@@ -1,137 +1,495 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB78EEAA
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 06:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB58C125;
+	Sat,  1 Feb 2025 06:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738389893; cv=none; b=fnZB8pqUyG19N3DYOi58k8K+bBG2boD/DIpfS1wF3cFgm8MDvmt4PkE963piYMB/vYWfUcjP74VOxyzKP03AWYepASucm01i/yf9sDT1DTtRYZr4cIGYpBCpTpLF3PageC0Zi4kJja/YwXqahFE15gnQRrY5du594WrkRWD957k=
+	t=1738390116; cv=none; b=odTZlCgZs/0HJX0R/i7NamX7XTLXNrmqiz5xW/b/tsr6YybKwQ6zZAkcKoY6kdlHkQom6tMMSz4p87HjQ7qM6aUlMdRWAm2FoSJ367Z1+ag+SFEo7CmI2DuKKU2ZpF8NjO/DY3u2PRXnjA+/bSA4c1L3yj/9W6t8yDg6etFz6vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738389893; c=relaxed/simple;
-	bh=V3Fr+oD7uddCkqfLwqgDCMk5SutMY43IylFOVmt69lU=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=S0tD7GwWu48yPEvf9hTeYnz/WRJkUMLEZcWFAHK0lPPze2qgUPu29lkDmBe6gaCMBiP3D6HQHCgvlxkzU2YFFxA/Fg0gUyYnnaU/8vdvOVLZ20IwjXymh8uQebf2ZDC5W1yc5xQhhYSUmOSa0X4tYDMAdHHFPpcwyFeBqEi7ZQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=hXD+DFjz; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1738390116; c=relaxed/simple;
+	bh=pZ/zoNmZ4ED7ytCEzwIYOZLKRlOCdiLIPbBCgR1z9KQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=d0o/xyWTIVGm83MTx1s1W99BdxvBX5Orb28zhXk0ouv0SLAac9RvZifEHQ2pJ4E30/kAK7c1GMKnofvW82IofaEZhM2/AWpcryCgIvK+m1WMdc05go33OipNXOi7Cs9/W/vmERk48s9i7LlAtJDN1f2BIwotJcs0b+2icVmcsy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iBlT/YOh; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="hXD+DFjz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1738389873; bh=iioojh+LGQGulhuRme/2HbKiXRhqNg5Jnxhf9Jrx16M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hXD+DFjzEjS/5riXUD501ZiVwQj/5XcXq7SwUSweA513/zsaIsOG+hiQ5JzRF7e6s
-	 FgVZbfrGuda2istogStESgaGqlw8o4EFkEbTELxXMJ8UORenqZ6tqZ+pCu+3VEfjTG
-	 Oj7zON4l8u0WM5RbqD4OrFWkdjf81/wf+S+PmfKc=
-Received: from pek-lxu-l1.wrs.com ([2408:8435:9930:6b25:8cb3:3b5b:faa2:1ccb])
-	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
-	id CB73323C; Sat, 01 Feb 2025 13:50:55 +0800
-X-QQ-mid: xmsmtpt1738389055t0e6ab7oa
-Message-ID: <tencent_E5E3A2A44C1761976566C7D3658377C96A05@qq.com>
-X-QQ-XMAILINFO: MIAHdi1iQo+zKyQnaZy6IlhbheDprG9g47avB7dToYg1YHak3rmZgvo8ZtWKMx
-	 1q/EgVkkM7HYF+HszDNWiZzgnK51CN1jgNnlwOq3ycri422zOxyrgCwLMLBCVwUtSF7y1hdMYi95
-	 JWZMCooRYMB54QkLfD8zphuy7qEDzvvMvlysfSmPetMknotNtW0KovJ7eejq1cwLMQaa7z2abzHv
-	 +WGT5todhiPnf5ERYqHRekJJFSP1SH5ozAMno/Y3fDGhX4bOXkJ9X0N07gC7Ewp5/sf5x0TwMRyp
-	 fGiPYOyPyypR2qtRK042zw4VV04/5FHpPTDk3t+8RZOCQFUs+8+mYhMLf0C9NRk05CLhx6pN97c/
-	 Xu705Un45RrM60EHCb8cOmMBHEdNcos3Tik0CV0ufk9RrCO9VbJ+ijoQfAVSMWz8SoFdQZgmMt0W
-	 rFysfeSrpHy0KRMbhyCmbqpTGT5EaE+liCcTSFaa1Z3CBA61T/RPg+JYjGBHxE4b8DmQ89Y3hijg
-	 qxGWDcIHKG36klxEw3bD5bideXEHiXuB4r36Zt7ZN6wQ4KYOxLaHAE54xiThjXc7dViufeyobazw
-	 dWAzBVErZzjwDbARLXmPI6p4egYuzmVeMVW7CaqiGnJRV6hbLdUYeKscS1504HeJgu3uqPzSLB0J
-	 FEKEq4Qhp143hGWnLGNjLi990sIfUZfGkAl4jujUi4bQgm5fAFYE2lzTfvEMHjSJKP5ekxO0IukD
-	 tfs/OZBo4xu8T3rkplsO5rbSTY7+QQV/kC972ulPEIk6jyopX9k5glIzGx6Z8tqSajCjZN4oywxF
-	 +H3zsPPJ/jh06E48dBRff6xsFZTqFUmyWP9CpKoJj5Nmb0kKIiJP5Y2+Ubr7XBucE5jua8YyktRD
-	 4VIrW7ITybvgDUm8NWa52h+X9iU/jW0zOFAZi+suGGBRYMqbNlRwQxCrRh71aoMw==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+c041985778e4069e1ce3@syzkaller.appspotmail.com
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] tracing: keep the event lock balanced
-Date: Sat,  1 Feb 2025 13:50:55 +0800
-X-OQ-MSGID: <20250201055054.965082-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <679d36da.050a0220.163cdc.0010.GAE@google.com>
-References: <679d36da.050a0220.163cdc.0010.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iBlT/YOh"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3862f32a33eso1200739f8f.3;
+        Fri, 31 Jan 2025 22:08:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738390113; x=1738994913; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H5L29TJa6m72S7CSmyGeNFab1Ftr8bq9pTOKm5Xk3pg=;
+        b=iBlT/YOhOOT4+SnSqsiVJSzr9PD6LoRrwcaYQhREbZelWo61YsrqPY500q6L9GeDBd
+         KgY/geXbE1H2F6s4PTXHmKyqQAz+iJbAuLkatsujNLhlBwzgqnmrAuIqmwrl4HKOFswK
+         k6NB9tbvl5JYv9sqonFf+BLApH7iwA020ZXnduS+lBW+nAnajE3C7+xnqoiGCXbHW6PS
+         4zcA88YKeiWnRJ93Ej8qFL4FB37MIT8zxSbzdYoX9NUkkKCmTcuQ8yjI1oxRUkOQhk+j
+         5bPNwaWrauCdJp2UzYRfbYDRqNkBSjk0PoOdmZFzqy5mihxu9tUnkxl/GWmnnRFUOplc
+         SHAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738390113; x=1738994913;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H5L29TJa6m72S7CSmyGeNFab1Ftr8bq9pTOKm5Xk3pg=;
+        b=vjhHxDacEU/l7gq1uihx6hs804skI/WRuOy2rTb/nDx69HId7qIDQpgkn64tvLgYR0
+         QhSNEUOW5GMTWR+HF6X+p9m6OZLrTUkopFpKytxXRXAALfYJS1b/NmBHBXlCR0Z+fFr3
+         4Lub5cCKo5skbvqkGwnrflkRCfPFyW4lEvjDZmVLeIPSdlq8CPRuCN5Pvd8QkQOKldaj
+         gFoIRjctt7I/2NCzAoeJP65mlfK2p2UoveAgD702DAwT0aBg9dMGr/1mg8aKl9aLXQXc
+         VGWVZRUSFLkpTch6g+9/tCXVoDDiLWCHslPCbUCZVNSQvl8/MkoZcQhDQweKRlcngG/H
+         +lRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXSlWClehQcSl/VIL4Rupq8i7HbrJkU0YhSyr7wp4GJ+w0Ngb2/r367gMmhm7720mrVPTzcr7zJ9u/IXs5P@vger.kernel.org, AJvYcCXzMw+AdOYcu2cEPZ6ALjymU4qNPkhTWzD0geM2zHGfZTI6dlDty9Dm6MBkJXFLsGDAj73uu9s7qX5X@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj5Rq8Ny4h1LPzSGswZc6NQYj47co/CtwhNJrneTftxgnizT9p
+	AZHlmN6kzifSjDD9kFL6CX3JyW/xOZHhjRA0px89976VDyNG9V/Ls2n4FQ==
+X-Gm-Gg: ASbGnctnRe46WjSVFS2QQr8/J5bWLGUGIeyB4qFgjDN4KKMRs3olz0lzpKYVJ6AsTh3
+	0AkwAAUZhlOrPSYEFH8MxABwsjBGd5wu4FLMKMfCEh8Cbj//Pqm8JPFtQmDhy7PyopiBeNwkCJq
+	SnHrjHk3Mnv0mzvhJt/CyXPJYkyzwxyl/1iv5VO3H05CI4+Kz2CSuTu/DilVFOMTw7WY2eUq1aZ
+	bhFTRfbQqIyHDwT0O904f14QwaKOJkYIQ/Ouuzjes2GMBGO1sXN303iBU1eqY/TOm/bX0WCprUn
+	RSS8YC7X29EVVqmcBcmHEiGBRhGEbR9j5aCr/A==
+X-Google-Smtp-Source: AGHT+IEYH0pv6AduWyKxWc4Cd6i+pLbjNEsHL1oQVmGX+xC5axAa4pD6AzuvU5iIR9IRc8PkpJqOFw==
+X-Received: by 2002:a05:6000:188b:b0:385:f2a2:50df with SMTP id ffacd0b85a97d-38c5195f498mr12879535f8f.27.1738390112591;
+        Fri, 31 Jan 2025 22:08:32 -0800 (PST)
+Received: from smtpclient.apple ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23d42dfsm78311155e9.4.2025.01.31.22.08.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 Jan 2025 22:08:32 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
+Subject: Re: [PATCH 2/2] arm64: dts: amlogic: add support for
+ xiaomi-aquaman/Mi TV Stick
+From: Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <20250131200319.19996-3-funderscore@postmarketos.org>
+Date: Sat, 1 Feb 2025 10:08:17 +0400
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ linux-amlogic@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht,
+ Artur Weber <aweber.kernel@gmail.com>,
+ Karl Chan <exxxxkc@getgoogleoff.me>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5270ED13-CF9D-4ACE-A52C-EFDB0F71494E@gmail.com>
+References: <20250131200319.19996-1-funderscore@postmarketos.org>
+ <20250131200319.19996-3-funderscore@postmarketos.org>
+To: Ferass El Hafidi <funderscore@postmarketos.org>
+X-Mailer: Apple Mail (2.3826.200.121)
 
-syzbot reported a bad unlock balance in seq_read_iter(). [1]
+> On 1 Feb 2025, at 12:03=E2=80=AFam, Ferass El Hafidi =
+<funderscore@postmarketos.org> wrote:
+>=20
+> From: Ferass El Hafidi <funderscore@postmarketos.org>
+>=20
+> Xiaomi Mi TV Stick is a small Amlogic-based Android TV stick released =
+in=20
+> 2020.  It is known as `xiaomi-aquaman` internally.  Specifications:
+> * Amlogic S805Y SoC
+> * Android TV 9, upgradable to Android TV 10
+> * 8 GB eMMC
+> * 1 GB of RAM
+>=20
+> The devicetree is based on p241's DT, with some changes to better =
+match
+> the Mi TV Stick.
 
-The reproducer uses "/proc/thread-self/fail-nth" to make s_start() fail when
-applying for memory, thus exiting s_start() before acquiring event_mutex.
-This destroys the lock holding and reclaiming process in the start() and
-stop() processes in seq_read_iter().
+Explain the bits that are omitted/different (see comments below).
 
-Hold the event mutex before allocating memory in s_start() to avoid this
-problem.
+>=20
+> Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
+> ---
+> arch/arm64/boot/dts/amlogic/Makefile          |   1 +
+> .../meson-gxl-s805y-xiaomi-aquaman.dts        | 311 ++++++++++++++++++
+> 2 files changed, 312 insertions(+)
+> create mode 100644 =
+arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dts
+>=20
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile =
+b/arch/arm64/boot/dts/amlogic/Makefile
+> index 2fbda8419..0921707f1 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -49,6 +49,7 @@ dtb-$(CONFIG_ARCH_MESON) +=3D =
+meson-gxbb-wetek-hub.dtb
+> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxbb-wetek-play2.dtb
+> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxl-s805x-libretech-ac.dtb
+> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxl-s805x-p241.dtb
+> +dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxl-s805y-xiaomi-aquaman.dtb
+> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxl-s905d-libretech-pc.dtb
+> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxl-s905d-mecool-kii-pro.dtb
+> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxl-s905d-p230.dtb
+> diff --git =
+a/arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dts =
+b/arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dts
+> new file mode 100644
+> index 000000000..6b72f054a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dts
+> @@ -0,0 +1,311 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2025 Ferass El Hafidi <funderscore@postmarketos.org>
+> + * Based on meson-gxl-s805x-p241.dtb:
+> + *  - Copyright (c) 2018 BayLibre, SAS.
+> + *    Author: Neil Armstrong <narmstrong@baylibre.com>
+> + *    Author: Jerome Brunet <jbrunet@baylibre.com>
 
-[1]
-WARNING: bad unlock balance detected!
-6.13.0-syzkaller-09760-g69e858e0b8b2 #0 Not tainted
--------------------------------------
-syz-executor359/5828 is trying to release lock (event_mutex) at:
-[<ffffffff8239231f>] seq_read_iter+0x5ff/0x12b0 fs/seq_file.c:251
-but there are no more locks to release!
+If this was cloned from the p241 file I would retain the Baylibre
+Copyright and add myself as an additional author. You=E2=80=99ve =
+extended
+their work not created a new one.
 
-other info that might help us debug this:
-1 lock held by syz-executor359/5828:
- #0: ffff88802fd120a0 (&p->lock){+.+.}-{4:4}, at: seq_read_iter+0xd8/0x12b0 fs/seq_file.c:182
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/leds/common.h>
+> +#include <dt-bindings/sound/meson-aiu.h>
+> +
+> +#include "meson-gxl-s805x.dtsi"
 
-stack backtrace:
-CPU: 0 UID: 0 PID: 5828 Comm: syz-executor359 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_unlock_imbalance_bug kernel/locking/lockdep.c:5289 [inline]
- print_unlock_imbalance_bug+0x1aa/0x1f0 kernel/locking/lockdep.c:5263
- __lock_release kernel/locking/lockdep.c:5528 [inline]
- lock_release+0x525/0x6f0 kernel/locking/lockdep.c:5872
- __mutex_unlock_slowpath+0xa3/0x6a0 kernel/locking/mutex.c:891
- seq_read_iter+0x5ff/0x12b0 fs/seq_file.c:251
- seq_read+0x39f/0x4e0 fs/seq_file.c:162
- vfs_read+0x1df/0xbf0 fs/read_write.c:563
- ksys_read+0x12b/0x250 fs/read_write.c:708
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Amlogic Y variants normally omit CVBS, Ethernet, SD, and sometimes IR,
+so you could clone the s805x.dtsi and remove nodes there, then include
+an s805y.dtsi file. Perhaps not worth the effort for a single device
+at this time, but could be done as future optimisation.
 
-Fixes: b355247df104 ("tracing: Cache ":mod:" events for modules not loaded yet")
-Reported-by: syzbot+c041985778e4069e1ce3@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=c041985778e4069e1ce3
-Tested-by: syzbot+c041985778e4069e1ce3@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- kernel/trace/trace_events.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> +
+> +/ {
+> + compatible =3D "xiaomi,aquaman", "amlogic,s805x", =
+"amlogic,meson-gxl";
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 4cb275316e51..991dd17887ea 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1600,12 +1600,12 @@ static void *s_start(struct seq_file *m, loff_t *pos)
- 	struct set_event_iter *iter;
- 	loff_t l;
- 
-+	mutex_lock(&event_mutex);
-+
- 	iter = kzalloc(sizeof(*iter), GFP_KERNEL);
- 	if (!iter)
- 		return NULL;
- 
--	mutex_lock(&event_mutex);
--
- 	iter->type = SET_EVENT_FILE;
- 	iter->file = list_entry(&tr->events, struct trace_event_file, list);
- 
--- 
-2.43.0
+After updating the bindings, use =E2=80=9Camlogic,s805y=E2=80=9D here.
+
+> + model =3D "Xiaomi Mi TV Stick (S805Y)";
+
+I=E2=80=99d use =E2=80=9CXiaomi Mi TV Stick (Aquaman)=E2=80=9D so the =
+connection between the
+binding name and model name is obvious.
+
+> +
+> + aliases {
+> + serial0 =3D &uart_AO;
+> + serial1 =3D &uart_A;
+> + };
+> +
+> + au2: analog-amplifier {
+> + compatible =3D "simple-audio-amplifier";
+> + sound-name-prefix =3D "AU2";
+> + VCC-supply =3D <&vcc_5v>;
+> + enable-gpios =3D <&gpio GPIOH_5 GPIO_ACTIVE_HIGH>;
+> + };
+> +
+> + chosen {
+> + stdout-path =3D "serial0:115200n8";
+> + };
+> +
+> + cvbs-connector {
+> + /* No CVBS connector */
+> + status =3D "disabled";
+> + };
+> +
+> + emmc_pwrseq: emmc-pwrseq {
+> + compatible =3D "mmc-pwrseq-emmc";
+> + reset-gpios =3D <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
+> + };
+> +
+> + hdmi-connector {
+> + compatible =3D "hdmi-connector";
+> + type =3D "a";
+> +
+> + port {
+> + hdmi_connector_in: endpoint {
+> + remote-endpoint =3D <&hdmi_tx_tmds_out>;
+> + };
+> + };
+> + };
+> +
+> + leds {
+> + compatible =3D "gpio-leds";
+> +
+> + led-white {
+> + color =3D <LED_COLOR_ID_WHITE>;
+> + function =3D LED_FUNCTION_POWER;
+> + gpios =3D <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
+> + default-state =3D "heartbeat";
+> + panic-indicator;
+> + };
+> + };
+> +
+> + memory@0 {
+> + device_type =3D "memory";
+> + reg =3D <0x0 0x0 0x0 0x40000000>;
+> + };
+> +
+> + vddio_boot: regulator-vddio-boot {
+> + compatible =3D "regulator-fixed";
+> + regulator-name =3D "VDDIO_BOOT";
+> + regulator-min-microvolt =3D <1800000>;
+> + regulator-max-microvolt =3D <1800000>;
+> + };
+> +
+> + vddao_3v3: regulator-vddao-3v3 {
+> + compatible =3D "regulator-fixed";
+> + regulator-name =3D "VDDAO_3V3";
+> + regulator-min-microvolt =3D <3300000>;
+> + regulator-max-microvolt =3D <3300000>;
+> + };
+> +
+> + vddio_ao18: regulator-vddio-ao18 {
+> + compatible =3D "regulator-fixed";
+> + regulator-name =3D "VDDIO_AO18";
+> + regulator-min-microvolt =3D <1800000>;
+> + regulator-max-microvolt =3D <1800000>;
+> + };
+> +
+> + vcc_3v3: regulator-vcc-3v3 {
+> + compatible =3D "regulator-fixed";
+> + regulator-name =3D "VCC_3V3";
+> + regulator-min-microvolt =3D <3300000>;
+> + regulator-max-microvolt =3D <3300000>;
+> + };
+> +
+> + vcc_5v: regulator-vcc-5v {
+> + compatible =3D "regulator-fixed";
+> + regulator-name =3D "VCC_5V";
+> + regulator-min-microvolt =3D <5000000>;
+> + regulator-max-microvolt =3D <5000000>;
+> + };
+> +
+> +
+> + emmc_pwrseq: emmc-pwrseq {
+> + compatible =3D "mmc-pwrseq-emmc";
+> + reset-gpios =3D <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
+> + };
+> +
+> + wifi32k: wifi32k {
+> + compatible =3D "pwm-clock";
+> + #clock-cells =3D <0>;
+> + clock-frequency =3D <32768>;
+> + pwms =3D <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
+> + };
+> +
+> + sdio_pwrseq: sdio-pwrseq {
+> + compatible =3D "mmc-pwrseq-simple";
+> + reset-gpios =3D <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
+> + clocks =3D <&wifi32k>;
+> + clock-names =3D "ext_clock";
+> + };
+> +
+> + sound {
+> + compatible =3D "amlogic,gx-sound-card";
+> + model =3D "MI-AQUAMAN";
+
+Just =E2=80=9CAQUAMAN=E2=80=9D ?
+
+> + audio-aux-devs =3D <&au2>;
+> + audio-widgets =3D "Line", "Lineout";
+> + audio-routing =3D "AU2 INL", "ACODEC LOLN",
+> + "AU2 INR", "ACODEC LORN",
+> + "Lineout", "AU2 OUTL",
+> + "Lineout", "AU2 OUTR";
+> + clocks =3D <&clkc CLKID_MPLL0>,
+> + <&clkc CLKID_MPLL1>,
+> + <&clkc CLKID_MPLL2>;
+> +
+> + assigned-clocks =3D <&clkc CLKID_MPLL0>,
+> +  <&clkc CLKID_MPLL1>,
+> +  <&clkc CLKID_MPLL2>;
+> + assigned-clock-parents =3D <0>, <0>, <0>;
+> + assigned-clock-rates =3D <294912000>,
+> +       <270950400>,
+> +       <393216000>;
+> +
+> + dai-link-0 {
+> + sound-dai =3D <&aiu AIU_CPU CPU_I2S_FIFO>;
+> + };
+> +
+> + dai-link-1 {
+> + sound-dai =3D <&aiu AIU_CPU CPU_I2S_ENCODER>;
+> + dai-format =3D "i2s";
+> + mclk-fs =3D <256>;
+> +
+> + codec-0 {
+> + sound-dai =3D <&aiu AIU_HDMI CTRL_I2S>;
+> + };
+> +
+> + codec-1 {
+> + sound-dai =3D <&aiu AIU_ACODEC CTRL_I2S>;
+> + };
+> + };
+> +
+> + dai-link-2 {
+> + sound-dai =3D <&aiu AIU_HDMI CTRL_OUT>;
+> +
+> + codec-0 {
+> + sound-dai =3D <&hdmi_tx>;
+> + };
+> + };
+> +
+> + dai-link-3 {
+> + sound-dai =3D <&aiu AIU_ACODEC CTRL_OUT>;
+> +
+> + codec-0 {
+> + sound-dai =3D <&acodec>;
+> + };
+> + };
+> + };
+> +};
+> +
+> +&acodec {
+> + AVDD-supply =3D <&vddio_ao18>;
+> + status =3D "okay";
+> +};
+> +
+> +&aiu {
+> + status =3D "okay";
+> +};
+> +
+> +&cec_AO {
+> + status =3D "okay";
+> + pinctrl-0 =3D <&ao_cec_pins>;
+> + pinctrl-names =3D "default";
+> + hdmi-phandle =3D <&hdmi_tx>;
+> +};
+> +
+> +&ethmac {
+> + /* No Ethernet connector */
+> + status =3D "disabled";
+> +};
+> +
+> +&internal_phy {
+> + pinctrl-0 =3D <&eth_link_led_pins>, <&eth_act_led_pins>;
+> + pinctrl-names =3D "default";
+> +};
+> +
+> +&ir {
+> + /* No IR */
+> + status =3D "disabled";
+> +};
+> +
+> +&hdmi_tx {
+> + status =3D "okay";
+> + pinctrl-0 =3D <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+> + pinctrl-names =3D "default";
+> + hdmi-supply =3D <&vcc_5v>;
+> +};
+> +
+> +&hdmi_tx_tmds_port {
+> + hdmi_tx_tmds_out: endpoint {
+> + remote-endpoint =3D <&hdmi_connector_in>;
+> + };
+> +};
+> +
+> +&saradc {
+> + status =3D "okay";
+> + vref-supply =3D <&vddio_ao18>;
+> +};
+> +
+> +/* Wireless SDIO Module */
+> +&sd_emmc_a {
+> + status =3D "disabled";
+> + pinctrl-0 =3D <&sdio_pins>;
+> + pinctrl-1 =3D <&sdio_clk_gate_pins>;
+> + pinctrl-names =3D "default", "clk-gate";
+> + #address-cells =3D <1>;
+> + #size-cells =3D <0>;
+> +
+> + bus-width =3D <4>;
+> + cap-sd-highspeed;
+> + max-frequency =3D <50000000>;
+> +
+> + non-removable;
+> + disable-wp;
+> +
+> + /* WiFi firmware requires power to be kept while in suspend */
+> + keep-power-in-suspend;
+> +
+> + mmc-pwrseq =3D <&sdio_pwrseq>;
+> +
+> + vmmc-supply =3D <&vddao_3v3>;
+> + vqmmc-supply =3D <&vddio_boot>;
+
+If you add a generic SDIO node here board variants will have working
+WiFi regardless of the module used. The idea is used here:
+
+=
+https://patchwork.kernel.org/project/linux-amlogic/patch/20241127043358.37=
+99737-1-christianshewitt@gmail.com/
+
+> +};
+> +
+> +/* eMMC */
+> +&sd_emmc_c {
+> + status =3D "okay";
+> + pinctrl-0 =3D <&emmc_pins>, <&emmc_ds_pins>;
+> + pinctrl-1 =3D <&emmc_clk_gate_pins>;
+> + pinctrl-names =3D "default", "clk-gate";
+> +
+> + bus-width =3D <8>;
+> + cap-mmc-highspeed;
+> + max-frequency =3D <200000000>;
+> + non-removable;
+> + disable-wp;
+> + mmc-ddr-1_8v;
+> + mmc-hs200-1_8v;
+> +
+> + mmc-pwrseq =3D <&emmc_pwrseq>;
+> + vmmc-supply =3D <&vcc_3v3>;
+> + vqmmc-supply =3D <&vddio_boot>;
+> +};
+> +
+> +&pwm_ef {
+> + status =3D "okay";
+> + pinctrl-0 =3D <&pwm_e_pins>;
+> + pinctrl-names =3D "default";
+> + clocks =3D <&clkc CLKID_FCLK_DIV4>;
+> + clock-names =3D "clkin0";
+> +};
+> +
+> +/* This is connected to the Bluetooth module: */
+> +&uart_A {
+> + status =3D "okay";
+> + pinctrl-0 =3D <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+> + pinctrl-names =3D "default";
+> + uart-has-rtscts;
+> +};
+> +
+> +&uart_AO {
+> + status =3D "okay";
+> + pinctrl-0 =3D <&uart_ao_a_pins>;
+> + pinctrl-names =3D "default";
+> +};
+> +
+> +&usb {
+> + status =3D "okay";
+> + dr_mode =3D "host";
+> +};
+> +
+> +&usb2_phy0 {
+> + phy-supply =3D <&vcc_5v>;
+> +};
+> --=20
+> 2.47.1
+>=20
+>=20
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
 
