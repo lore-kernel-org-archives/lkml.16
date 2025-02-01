@@ -1,57 +1,57 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D621657C93
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3A07081D
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 01:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738373917; cv=none; b=cd7BRxKRm9Z995ktltsv4vTO7Or3ky4gop+WjlQpVB/PeaMtPx6yxm6gSIN9lyUpPfVD39ljwFQZpZzs6+7SvZiLRIRdAY/ePVOsmNl/MM/A7AoZgZ7BVOn0pFTPwVsxU07ByXEpYMAa6plx2Y1LwpzZxSm8MNowhh7uRuLj80E=
+	t=1738373918; cv=none; b=gWSixbQfa3K5m6wdcaJFK6mAawbVaAgvoH6PIdUiEGgTsiXB3IoFps9sYtwFj1agW+fGarJmVVEEFPZdQOYnKmL6Idx7/1bq5kIYE7e/Y45fj58sCmMaQ7mXeqXcFRiYYQe8JYwX9N9UkGCi25EN+jT/kXIIHYb/J7YuN1KaDhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738373917; c=relaxed/simple;
-	bh=EWqk4KP30hLS8qDZzToz6KVrg0V46dJzG1FJBWmksMY=;
+	s=arc-20240116; t=1738373918; c=relaxed/simple;
+	bh=BjTGMZAujz8V7PRymU0MtCLYLhiR76QtteHhEUWAMN8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iFF0ucETQFVS4T/pxHDqV3MYkgFRGcCJs0e7jK2VuPflU73I2q+bIiCGQ+zSQDGYWzLXQv4TytVB0hKuFv8gNwjJz+kWKcFU+5V3TqSGWOfYRaGIsIrQ34ldVHFOmWTywMv8IcBOIHe1CEX8px+A5EzHLgNzLQox/7V2q/vt1eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b8qLgrvb; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=r8b8LCAOF2o1tKCzoRECk3zBlJIUED4zDZaxP7pidp9P7lLD/gNEfKP2q46/1yC5Af3N65uEwFGM+5T8Sy9iK2hv3NShyvLZ98DTN7qJ7EieLzC0jugY7ycPWYNdg+WoTV6n7FWUNKvjxwj9OT95JxcVrIpmA7jUt6oGX5yMjTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JxXM7Nvc; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b8qLgrvb"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2163d9a730aso53960385ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:38:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JxXM7Nvc"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ef9864e006so7220390a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 17:38:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738373914; x=1738978714; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738373916; x=1738978716; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=kLtOSCafmeXa0Tlio6zr7dmpFxS5UvuVrLDBE53O/J8=;
-        b=b8qLgrvbOARM4CpfDjWvb+68PayA3vOVhC5+Cmta1TX7Fi9cPCPWDkXqaSAqE2h75+
-         Tu12iSy6sVENtH4zEJJigFEHAy+Zkl0orQU5jz0UQRpVo6R8FzdZNTBqLMG5HrKVZgLP
-         xIqj8QYixUtWBrlMWX/X+xdGhWQFCQ9uPl4wtLX/AojRuCjMkMXavDACIu1BX0zZDj5J
-         ILIY+KPfahFKsuoXzymLG6BXTNAMx8dax0n7SNMe2mih82No7SZ0cs7n+LJ4OXkd5PrS
-         3iUbAD/VUQjaZBQ1zSIzBnPX4uZl5NQ4aU4s9s4srr9oCYzKhXmB29r9oKFSVGSYIEkg
-         FxVQ==
+        bh=Y8ZYyjd0W1TCp6raZa192Hjs1JgLUz/3Q7DTTNkVwjg=;
+        b=JxXM7Nvcsj0TbIJgo08OkvhM5lc4edmBDdUGSsglfLVtL+mtzpDuJJjjNd2m5MpI4j
+         AkzPqIkssvzesk1TgDd5ErtAfqtZu/9G+t7vPMtC6NYGIeU7qyxqF2RLJ0cI+pfynu/Y
+         1sS8ffwF/gw/zWTWuHOQrIDncnA0DgAHD+P+uekE3gkl5Szx05rCx/KRhQezMRFwUdlz
+         cmZnnAqKFjhBN5IQYczb9SvP7FFA8vPpGVm2+QQA5uANm/JnGObxsqJBdhSROdx3T1Pf
+         o5rqh6rX5LhDU+y3liZVhNrFX53up5ub0k+K9VFdwjOfaByGXTcEzma5BYCZI34BXDWB
+         Eafg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738373914; x=1738978714;
+        d=1e100.net; s=20230601; t=1738373916; x=1738978716;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kLtOSCafmeXa0Tlio6zr7dmpFxS5UvuVrLDBE53O/J8=;
-        b=fpcd/9E+rPfUunV6roW9tGXltfRDjHIRNOVtba7AnZqX2Xl7klhYWdTLK3mWbWI8yv
-         3fv3sp4KIQRuTO39lfASLSsNgDsUi497HtU1j/9WszY7V+qL3O74idAC4y3ZKkJX9YQC
-         XXqCIemY9mfYVNXRC+kpsbvx14zgaZ6cddD1SQXQ6FXB28ol9sOfDtMzJTvgWTYarTqL
-         hUTFvPzs7KwQEcNvnMPljg+gEC4TU+58mSaMJCKDKFXvQWVjnOeebp9Yrz/ZMyY/P2+Y
-         IyplwayEVGt5iv5MlXXaUfCZbOZu6UwJP2PNAjf7WwPaOBVg0uxzt2tSh2/8IkJDZQsh
-         mqBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTCo2jEWtLhlZgCtCEtvNsfWpGhIJanz1IO32fOJlQv/2qudDrXaZKSYsJOiclQXtn6jaQ9PWKQ4WAr9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHAGMsnje5qeONIqzb8BTM1A6pF8Bm54xLt0Ya6u3QZGslbDBc
-	/am2KdT8e0GkQACFd+lofg/52cG0V1TrWDaExij/E8hh1/YfPqvdgppjZDLc0q3PVmgpCR1roa1
-	Spg==
-X-Google-Smtp-Source: AGHT+IGpxUDOtpNaOqm4HE3ykis5lIWlKBo+60yrqrJGaRiR9GaKmISfRl/sDJx5rpvI7cqJjvLYCkOtBJI=
-X-Received: from pjbsi11.prod.google.com ([2002:a17:90b:528b:b0:2ea:4139:e72d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2b06:b0:216:3440:3d21
- with SMTP id d9443c01a7336-21edd880549mr92004395ad.26.1738373914116; Fri, 31
- Jan 2025 17:38:34 -0800 (PST)
+        bh=Y8ZYyjd0W1TCp6raZa192Hjs1JgLUz/3Q7DTTNkVwjg=;
+        b=Yjj73Q9xGhOHknR1cNnYQNc88fLPYs3Zs+WuXyoWvPccdkOhduoSqjgbNh3+f/JAN0
+         yq+ip8vFhIcHOX/teUyv4x0nFXpdXDWvv3d2T57ocOQ0NinCY8aX92ni5owuIMDtAgSa
+         /NTPAGF2XKHsPgDOUv0kpglAY8I255z5rPCINUgctpHMVrSIHdJES2FHzsc3XbtzgAVH
+         6zZTIF7+OuTdI/738Tt8Uz2SRqGOods+5LUufesMBljPlHnLLfNsVaJlaam8DAvl8fza
+         4fhwBjzkqPbEVnqa2AE6B8WPIWJaIvmucWHAIuVUsqq0U8RHyWmS5lDWZdUJk0Q99YB0
+         StCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUw8cIH8s7+2I24YS9cLgY7NoTbYtTGYKHYULEDe9sptAtdTAzZLFw59vxJJNvnM4pwzuai/lXUm21aRMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySichzffRQlF43TRgA1tNUXiBJTA6koQGp/g4PV+22KV2Vfru4
+	D+PjNkEI751Cga9uDrTGVkJlF7kzkmDa1gnP+QUfRvQjp0/iTgzII+p/xMl13LGxOomHm38ZBdB
+	n4w==
+X-Google-Smtp-Source: AGHT+IEUww6H9B/218pN1bGykGPB3qoRx0Sbh+RYhN1f/Suxq4iXH/h2uszLxk4L9NNFXl1LU+sQF2Wfaho=
+X-Received: from pjbsw13.prod.google.com ([2002:a17:90b:2c8d:b0:2ef:78ff:bc3b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2250:b0:2ee:5bc9:75c3
+ with SMTP id 98e67ed59e1d1-2f83abaf3e7mr18367670a91.5.1738373915941; Fri, 31
+ Jan 2025 17:38:35 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 31 Jan 2025 17:38:18 -0800
+Date: Fri, 31 Jan 2025 17:38:19 -0800
 In-Reply-To: <20250201013827.680235-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250201013827.680235-1-seanjc@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250201013827.680235-3-seanjc@google.com>
-Subject: [PATCH v2 02/11] KVM: x86: Eliminate "handling" of impossible errors
- during SUSPEND
+Message-ID: <20250201013827.680235-4-seanjc@google.com>
+Subject: [PATCH v2 03/11] KVM: x86: Drop local pvclock_flags variable in kvm_guest_time_update()
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	David Woodhouse <dwmw2@infradead.org>, Paul Durrant <paul@xen.org>
@@ -73,51 +72,44 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Vitaly Kuznetsov <vkuznets@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Drop KVM's handling of kvm_set_guest_paused() failure when reacting to a
-SUSPEND notification, as kvm_set_guest_paused() only "fails" if the vCPU
-isn't using kvmclock, and KVM's notifier callback pre-checks that kvmclock
-is active.  I.e. barring some bizarre edge case that shouldn't be treated
-as an error in the first place, kvm_arch_suspend_notifier() can't fail.
+Drop the local pvclock_flags in kvm_guest_time_update(), the local variable
+is immediately shoved into the per-vCPU "cache", i.e. the local variable
+serves no purpose.
+
+No functional change intended.
 
 Reviewed-by: Paul Durrant <paul@xen.org>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/x86.c | 20 +++++++-------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+ arch/x86/kvm/x86.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 26e18c9b0375..ef21158ec6b2 100644
+index ef21158ec6b2..d8ee37dd2b57 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -6905,21 +6905,15 @@ static int kvm_arch_suspend_notifier(struct kvm *kvm)
- {
- 	struct kvm_vcpu *vcpu;
- 	unsigned long i;
--	int ret = 0;
+@@ -3178,7 +3178,6 @@ static int kvm_guest_time_update(struct kvm_vcpu *v)
+ 	struct kvm_arch *ka = &v->kvm->arch;
+ 	s64 kernel_ns;
+ 	u64 tsc_timestamp, host_tsc;
+-	u8 pvclock_flags;
+ 	bool use_master_clock;
+ #ifdef CONFIG_KVM_XEN
+ 	/*
+@@ -3261,11 +3260,9 @@ static int kvm_guest_time_update(struct kvm_vcpu *v)
+ 	vcpu->last_guest_tsc = tsc_timestamp;
  
--	kvm_for_each_vcpu(i, vcpu, kvm) {
--		if (!vcpu->arch.pv_time.active)
--			continue;
-+	/*
-+	 * Ignore the return, marking the guest paused only "fails" if the vCPU
-+	 * isn't using kvmclock; continuing on is correct and desirable.
-+	 */
-+	kvm_for_each_vcpu(i, vcpu, kvm)
-+		(void)kvm_set_guest_paused(vcpu);
- 
--		ret = kvm_set_guest_paused(vcpu);
--		if (ret) {
--			kvm_err("Failed to pause guest VCPU%d: %d\n",
--				vcpu->vcpu_id, ret);
--			break;
--		}
--	}
+ 	/* If the host uses TSC clocksource, then it is stable */
+-	pvclock_flags = 0;
++	vcpu->hv_clock.flags = 0;
+ 	if (use_master_clock)
+-		pvclock_flags |= PVCLOCK_TSC_STABLE_BIT;
 -
--	return ret ? NOTIFY_BAD : NOTIFY_DONE;
-+	return NOTIFY_DONE;
- }
+-	vcpu->hv_clock.flags = pvclock_flags;
++		vcpu->hv_clock.flags |= PVCLOCK_TSC_STABLE_BIT;
  
- int kvm_arch_pm_notifier(struct kvm *kvm, unsigned long state)
+ 	if (vcpu->pv_time.active)
+ 		kvm_setup_guest_pvclock(v, &vcpu->pv_time, 0, false);
 -- 
 2.48.1.362.g079036d154-goog
 
