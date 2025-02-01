@@ -1,115 +1,80 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.53])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB9FEC5;
-	Sat,  1 Feb 2025 11:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738410231; cv=pass; b=q/YH+R4XOU2GP02k8AORruM80iWvrexUdqvXMMK9gRmuSTbaUD2zmDyOPadgckp7/jniGVcg4Jw1MPoyG1NohSCPKUJc61UvaZ++jvdHkmZ+Ej+gJsT/yoKRj4npKSsXo8KDRLl4IucNhxjAgBFHAiqcKa9WnDmifbJQzxFSbWE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738410231; c=relaxed/simple;
-	bh=R5iYuhin7mnI7s+ZFLSYDefbLQC4LM90aSkkIMtochk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bDx1cCxtGXrxzOs5ON9qCXAkPsAZFqtNdG6CySC6VKRH74ZNCordKLzlwMRK+cVf5K6QSRtfLlIu6zeyBhblOR2Iv39+Rw8BuAWHm+33IfW8yjkmrl7rZVQrdQ6JYG1m2eAB0FJDew9oG6ruz2XGCewCRtH8Xn+6ZQ+cFy0NE5M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com; spf=pass smtp.mailfrom=goldelico.com; dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=SmvaAuZl; dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=aM6IE2jV; arc=pass smtp.client-ip=85.215.255.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="SmvaAuZl";
-	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="aM6IE2jV"
-ARC-Seal: i=1; a=rsa-sha256; t=1738410211; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=ESXdnj+V8KnGK/paZT8+0Zh8NV92oxIY2LJyD7rB0u1XopQeYSITA+LsfuhA9cqTsd
-    dwb5LpftI+7J2/6ru/KCStLvYCzmvf8pzA/bUGe0wLUqCZjlE5JsX3jm3t4W9DKUCrvp
-    TDVz/8E1mQm1GlNtdMbeF5GXmr/uUIeL75/xNH68nK7F6EFy87Dkxd4w8+TQtkRj45Sq
-    Rmeyn6aM1m0PKLeDn7W6v+hsGIHlY5TISQQnltt5nBafp12aytrm1YSOcWTvkYsEmPyg
-    Pkdmg3GNTY/8s6Z9VOviEtaCgpNqz6VNanwVu9RYhREu1tB044ox+WhCvR2T+GN52J9I
-    qslQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1738410211;
-    s=strato-dkim-0002; d=strato.com;
-    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=0prJYhYnQTL/LGkgoUJgytbfGVTjzoxrZKJjyjqhFCA=;
-    b=Fr9jEq+emXXNPmGdIAzsA2KVhgm/FYfGloXoKzPr7zhSZR5zsqQxZXFpvJh2KbbZL9
-    kMgUqmZDUT2wIS1n/L9jpjlXuZWWvjBcIiUhUS06g3pQQwq8NlvCtedC7A3mPbWNOndF
-    vMg1BIR4fe9tMntiuD83d9NgkElt/GeKKX1qlDs5Akx5/5QjTjvIgUXbiMOAR5RbHagj
-    X+gjVnMPi8+izAQdJWYRwrWS0E0U8IGMPAhDgOHBut5JXfoou6oA/FZ072n1LKh/3yFw
-    DyyxxubdcxFBWqwu6KIBbCxkMXoFaqOdaOSdfsLdL97azW09VlYokFUNHHhB1eFX6Yuw
-    HVHg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1738410211;
-    s=strato-dkim-0002; d=goldelico.com;
-    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=0prJYhYnQTL/LGkgoUJgytbfGVTjzoxrZKJjyjqhFCA=;
-    b=SmvaAuZll5rKZEkyoglMIRudJjAiHDALHjeuzlcj/RF5LNB4sPSkKUSU/dVf4UC6/W
-    X/EAsD7jTCulxc0zTy8b7fHyMXg1x63n5dhAhFQ515+vB5zdK0ZtSD09ShVHa0K43JBY
-    wqjYB7jaEJ2orehcXObbBjLBdbQVQcXpfk1twUJs7YhXt+BsMst/ciD+rTJ6tw3N3dXb
-    9NeF2NTw115ld42jwjKUt+WY8/n2fMRv8ad0UbodfeXxmIvmf6wg90ap4npf0lGLOul3
-    lVarI5dBU9e991M+boNYb1MniPjI7rq/NP6LZp2dgwxoOCjUenysUbQvIKb1wDn/5Aey
-    CDkw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1738410211;
-    s=strato-dkim-0003; d=goldelico.com;
-    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=0prJYhYnQTL/LGkgoUJgytbfGVTjzoxrZKJjyjqhFCA=;
-    b=aM6IE2jVaf3pey33aKRM0FaOBoCe7wLaUXEnk1M6M6nTA0k05lvqWhft6Jtl0vYZkl
-    kLMD1yLVVC85QBvHabBw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0lFzL1yfzEZ"
-Received: from localhost.localdomain
-    by smtp.strato.de (RZmta 51.2.21 DYNA|AUTH)
-    with ESMTPSA id Qeb5b1111BhUCTd
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sat, 1 Feb 2025 12:43:30 +0100 (CET)
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Marek Vasut <marex@denx.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	"H. Nikolaus Schaller" <hns@goldelico.com>,
-	Nathan Chancellor <nathan@kernel.org>
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	letux-kernel@openphoenux.org,
-	stable@vger.kernel.org
-Subject: [PATCH] Input: ads7846 - fix gpiod allocation
-Date: Sat,  1 Feb 2025 12:43:24 +0100
-Message-ID: <6e9b143f19cdfda835711a8a7a3966e5a2494cff.1738410204.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.47.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626F912A177
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 11:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738410368; cv=none; b=mARbka+H3U4rwZSEgau+hgz5NLIJZdZMSFoMWZpz7zsHKtwm4/pLkgVIuXdf3IrT/XHLly+7HbGrHt7JPHB3EAdV8ZtGjCZrkCzUR7l9m+bqk07/wjgsAO6xVzLbVBwKnTS64913lpyhWznG0YbXATQ+jrYrivcSHjdL4xwRzw0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738410368; c=relaxed/simple;
+	bh=cOdNtiTx/Mp1wAyFJr/UZjYnBL9yvifLP6FLpeE0ANk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DjrpEJPt8vn+BOiGvleGhaUKGvinofY+wolH1nzmKPdpKKstZm2oC48wyN1LX3XQOOm7+HHPrEt1/GgHbiMS8oLD9HuUXOo3FGOImibLSnW1ZARnWjz92HJgnuXZUeZ15D/J4tuBDvv59ZXv4qbFukX740B3fGpLpZWeLlZRwg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A24C4CED3;
+	Sat,  1 Feb 2025 11:46:06 +0000 (UTC)
+Message-ID: <49ae4ee5-459d-40b6-8723-5cfa91a0777a@linux-m68k.org>
+Date: Sat, 1 Feb 2025 21:46:03 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] m68k: Do not include <linux/fb.h>
+To: Thomas Zimmermann <tzimmermann@suse.de>, geert@linux-m68k.org
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+References: <20250131144026.310672-1-tzimmermann@suse.de>
+Content-Language: en-US
+From: Greg Ungerer <gerg@linux-m68k.org>
+In-Reply-To: <20250131144026.310672-1-tzimmermann@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-commit 767d83361aaa ("Input: ads7846 - Convert to use software nodes")
+Hi Thomas,
 
-has simplified the code but accidentially converted a devm_gpiod_get()
-to gpiod_get(). This leaves the gpio reserved on module remove and the
-driver can no longer be loaded again.
+On 1/2/25 00:40, Thomas Zimmermann wrote:
+> The m68k architecture's source files does not require <linux/fb.h>.
+> Remove the include statements.
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-Fixes: 767d83361aaa ("Input: ads7846 - Convert to use software nodes")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/input/touchscreen/ads7846.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looks good, thanks. I will apply to the m68knommu git tree, for-next branch,
+after the current merge window closes.
 
-diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
-index 066dc04003fa8..67264c5b49cb4 100644
---- a/drivers/input/touchscreen/ads7846.c
-+++ b/drivers/input/touchscreen/ads7846.c
-@@ -1021,7 +1021,7 @@ static int ads7846_setup_pendown(struct spi_device *spi,
- 	if (pdata->get_pendown_state) {
- 		ts->get_pendown_state = pdata->get_pendown_state;
- 	} else {
--		ts->gpio_pendown = gpiod_get(&spi->dev, "pendown", GPIOD_IN);
-+		ts->gpio_pendown = devm_gpiod_get(&spi->dev, "pendown", GPIOD_IN);
- 		if (IS_ERR(ts->gpio_pendown)) {
- 			dev_err(&spi->dev, "failed to request pendown GPIO\n");
- 			return PTR_ERR(ts->gpio_pendown);
--- 
-2.47.0
+Regards
+Greg
+
+
+> ---
+>   arch/m68k/kernel/setup_no.c | 1 -
+>   arch/m68k/kernel/uboot.c    | 1 -
+>   2 files changed, 2 deletions(-)
+> 
+> diff --git a/arch/m68k/kernel/setup_no.c b/arch/m68k/kernel/setup_no.c
+> index c926da9d5ec28..f9872098f5ca5 100644
+> --- a/arch/m68k/kernel/setup_no.c
+> +++ b/arch/m68k/kernel/setup_no.c
+> @@ -21,7 +21,6 @@
+>   #include <linux/sched.h>
+>   #include <linux/delay.h>
+>   #include <linux/interrupt.h>
+> -#include <linux/fb.h>
+>   #include <linux/module.h>
+>   #include <linux/mm.h>
+>   #include <linux/console.h>
+> diff --git a/arch/m68k/kernel/uboot.c b/arch/m68k/kernel/uboot.c
+> index 8bb1cb3a7490e..5e52ea150d5cb 100644
+> --- a/arch/m68k/kernel/uboot.c
+> +++ b/arch/m68k/kernel/uboot.c
+> @@ -10,7 +10,6 @@
+>   #include <linux/sched.h>
+>   #include <linux/delay.h>
+>   #include <linux/interrupt.h>
+> -#include <linux/fb.h>
+>   #include <linux/module.h>
+>   #include <linux/mm.h>
+>   #include <linux/console.h>
 
