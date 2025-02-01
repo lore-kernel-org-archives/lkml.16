@@ -1,158 +1,174 @@
-Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazolkn19012049.outbound.protection.outlook.com [52.103.37.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21132C9A;
-	Sat,  1 Feb 2025 13:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.37.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738414847; cv=fail; b=o7dEmmZO0phVqyE/BwzvBulbfN8nfHaZu11/BcVqlWtI/PJtQdahrFeQ3fNwzMGom5pcMeys/p1XWySomlBs6Vs4YsJ1QLSN8i2B/+KO0jLm7IDLa3xrR1CC6W/FSQId5xs1OEkM1t40kVPnNLzGDIjdanxOCPnaJSkRuRQAMw4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738414847; c=relaxed/simple;
-	bh=DsBWfZxryo/Qnz+YVsDU0vCSaVESGWLOtFRkUo5TogY=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=WSGkWlewkobwErvcov/jp4lChRHra+RDCGS4SB3dFJwWW41GoLS+OmYTlGRGQ1xV0bNVtvKfdVAlxEKnWigrKUt0eRWdfLRhsb/Tymu7hDdRp8G3DXQDokh2+Yt7d+fhTJyUGD+zzii4T1aTZbhh2H82lGcelstzsd2SX5GCYrI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kXpKr8Pr; arc=fail smtp.client-ip=52.103.37.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DC52C9A;
+	Sat,  1 Feb 2025 13:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738414917; cv=none; b=YlopLj4wiW1QaFONK4ZCpCYeHYGC+B/LHMGQ8RSjdojSSIuBGyN+zR3jNuuNHGhb1os87ha8cKe0lo0XSOiXt5eCI3ko2okIo0dq41DLoqt2VmYSUP16k30qeWG3MAtPr9KeJ3Ak5yyynwzpEzc8DQlYF8fFTFd3Zg2KXXuB8B4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738414917; c=relaxed/simple;
+	bh=a+/z8R1r76uA6EAhBK4lC2WDt7gZfGjbHIBM5xRSi9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hDN/AvW9BNZMB6F3Y9jwcfbiLqtPVGazuWYUQLnmEa+nmhGQf6SWYxYz3wMXw3kjuj12tUzCD9aFj3UADZSoFGidVwxyKGjG5adASVz4Bb5EQhqn0lEwRS0Axo/4tseu5S1tfkqnLuCMetj/7UN0BQSRgbXKmHt5HE+pkcl1s4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhH62CYF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kXpKr8Pr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=S/PjOZqdIM3PKwSAxO8m8o/3YfVaeiSH7Obc9wiZTSM2Oem5THaqwyhs+cucBgGGFyelpAFeqvHCNhGbKFhLAVpAixajjw2WvX+GJfXHGEQcV1Al/eMaDZXHiut8C4sLx+iRnJ0t2THPfoV5msd29bQwcP7meGVi4g+l/46uywS5ENbHIyVmn4Ycx8z22si0a+3mXZYF0k7K6H+e4QkjdzBynDYRB9lLlB6+pGCBzm1m5fklzoHnZQdLBzmLoLzx8l5G/Pnp3ya/hB5JjZiXNrCr6kDRZgb2f2h+2s9niU28pUH9UxqSkRH5LnRvodcp3UlRTwRwljWumXZsFtFZOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P9dovlF/EzDM+jTODYAhp1/uPMXBQ2jRGV1Ftf2jVxg=;
- b=OJqDBBMZQ4ZFx9y+0CbYSdgNmvJAf5uwIdAwVmwA3nNJCbj4an2p60GqLdsznh0xRFIxjXX+6g4L0AGRjFXjNv7P+sA5meqo9Fr+1zXg6TMqSahKVmiwEiB9d3Izzs6AMF9I9HDoAKDUVwekSnx1OqEylMH7DbSCEtiMkV+PzXetYlZcwnATA8SsF1PpHKStTKnGSD4gOqbW8/iIW2mCd1ISMj7U3Tqi/PfsWQ32Gbgt8mpJd+oe1Do8VOS9YOhcKkU0Akd9L0V1JpghvmPwblOmo5Q8hkuSNz+k+r43bZ/KtNdfp3JHffzYjlqaXXU1kZxoohjCv+haIlbr7jWtUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P9dovlF/EzDM+jTODYAhp1/uPMXBQ2jRGV1Ftf2jVxg=;
- b=kXpKr8PrqB6rBWzWKsY/pwTwDBvFCgcmZAeNqXZ7RAS7BhU+QlcVgWgh0hnW2d33VRkH9Vo91pe3Y0O2HVmxJYQ5Y18n3i7ujBeaYD3O8d3ZC8EvewtlYyrAbCk54YS118r0yYpvPe3bfYA8VkuRpPAhlnNiqXKp5tWg/2H+2GJQZ5Kd/KPAZK2GFbb5dUdkgXs7DGPVfAv/zEBI84YLXSzim3eA3Um5QjlR/zPiV2X+Po2jqcvH6uk3NeNgvrgAb26zO8GPteVI4+ZVmxuJqvcFYq0wfHrwXXOrwMtMOtqXLr3ibXgsR+/dpSd5F9P5amx/ydAkK5AfEKLZ8zn1vw==
-Received: from CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:160::13)
- by LOYP123MB2704.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:f2::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Sat, 1 Feb
- 2025 13:00:42 +0000
-Received: from CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
- ([fe80::c0fe:9ff5:51fd:3fdb]) by CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
- ([fe80::c0fe:9ff5:51fd:3fdb%4]) with mapi id 15.20.8398.021; Sat, 1 Feb 2025
- 13:00:42 +0000
-From: Manuel Fombuena <fombuena@outlook.com>
-To: pavel@ucw.cz,
-	lee@kernel.org,
-	corbet@lwn.net,
-	linux-leds@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 0/5] LED1202 / leds-st1202 fixes and improvements
-Date: Sat,  1 Feb 2025 13:00:40 +0000
-Message-ID:
- <CWLP123MB5473933B9B97137828ACC6A6C5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.48.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AS8PR07CA0049.eurprd07.prod.outlook.com
- (2603:10a6:20b:459::30) To CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:160::13)
-X-Microsoft-Original-Message-ID:
- <20250201130040.1670772-1-fombuena@outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhH62CYF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8817C4CED3;
+	Sat,  1 Feb 2025 13:01:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738414916;
+	bh=a+/z8R1r76uA6EAhBK4lC2WDt7gZfGjbHIBM5xRSi9A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XhH62CYFrazNz9SLHHYb33tjFJiegsV4VhtikRGze10qGCksGeWOL1z/XFlBI5TjQ
+	 inOeNcawpktLbi3gfaxpcHhDboFHfPrBBxfxYQqm71k+r3UVAuux4rNTftHAR5jzVw
+	 rKSViP0lZmkjZa/zLUjfKbcLZ/EHFeDGDcShmjF+l/DmYdZmitpcYCwTYQHZehDNcf
+	 Yr/PkQd4hvl/SRRFw+keU8KXQE0Ni6JVO4wV8b2FP0a1kft3Wqk8vlgm86jXAbPFI6
+	 17JwgtrkKgqLNmav7oFmMYaoXZOawb25EN745+ubfw3uB8l/fiofW5/E24Wys/7zSi
+	 62q5m+I7LFZjg==
+Date: Sat, 1 Feb 2025 14:01:52 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: YongSu Yoo <yongsuyoo0215@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Markus Elfring
+ <Markus.Elfring@web.de>, linux-media@vger.kernel.org, Hyunwoo Kim
+ <v4bel@theori.io>, LKML <linux-kernel@vger.kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, yongsu.yoo@lge.com
+Subject: Re: [PATCH] media: dvb_ca_en50221: Add a returing EBUSY logic into
+ CA_RESET
+Message-ID: <20250201140152.52109e19@foz.lan>
+In-Reply-To: <20250201092427.6a09c39d@foz.lan>
+References: <20240308121338.1983-1-yongsuyoo0215@gmail.com>
+	<eda2a849-c23a-4624-85da-78a2fdef4fe9@web.de>
+	<CANXPkT5ggr8VbYdRy+uSnfHxDRES5arJJ8p+ist1CBTm-1xaUQ@mail.gmail.com>
+	<20240530203149.1fe881ed@coco.lan>
+	<CANXPkT6wxEzX=Seyi-SctkpN17AgeTAWSPr-Yt2kRzD_isAa2g@mail.gmail.com>
+	<20250201092427.6a09c39d@foz.lan>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB5473:EE_|LOYP123MB2704:EE_
-X-MS-Office365-Filtering-Correlation-Id: fc6743f3-e5fe-4a0a-ed1b-08dd42c06ed4
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|7092599003|8060799006|19110799003|5072599009|461199028|15080799006|440099028|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NDxn2wRErhDcM1qBFm+dJuhAwyJfDcvIBcPINEuvfG8kx15HubrmPHP8KPfJ?=
- =?us-ascii?Q?+cnzPu31OLCMSU64WXMbFOs8MPvqzFIxMBbImZ0qUs0m1JbDr9bdjvXPNWe7?=
- =?us-ascii?Q?dWhK9Wfq60j8kMKDR5d6f+h7nQs/ufidYmO9kuZ4vFH8PhYCgshAWtwmy2iu?=
- =?us-ascii?Q?/+FA7/T6UikCiKfnhjT1dAVTSWTgfGM8MSyEldmu+CmxqzT1sDMBgsTkngWG?=
- =?us-ascii?Q?zBO68Al7v+p0Om8px1e2/AxbHVL+hRWIm+WziGGOHPAxiqEjbefOWpnBx6dQ?=
- =?us-ascii?Q?sRKmr1BWCuLDfjrVEk9nRiUmfXCxYOebmtMQhBs6xcfUqWAr+Rl7cPwMwcO6?=
- =?us-ascii?Q?+TFHioPyjzvGwbEuAgQvEpw5gsGlz/upZkgfSJTN4Xi6pyLsOnGVez/pjhKu?=
- =?us-ascii?Q?6Ji8Z1meLLZJNSF6XA8Pm2D7BoajolbqBtNmrxCRrJjBcTHjtPpXfMdFBduS?=
- =?us-ascii?Q?GO2fzjECeotAZzOQ7I2X2M3t17jJvJmiTEoaLmVtZqRNJ8Cw5kDGCT1Vm2OF?=
- =?us-ascii?Q?8E9h9ymomA8AWaaN7Vn+fI1DxfpoP82dq8miEnKF8N8QNTZu9EyrVVngpW7s?=
- =?us-ascii?Q?pwGWH3oP8GqUolHEHCyxS49hCPNPKHeAyOa6GC2u/fYBohFnfMRdabu6drz7?=
- =?us-ascii?Q?jTM3KEQPmvWCz1kwY8SFX/DqoT4VK45GK4fE4yXrm1+ls/ULQD1ZVexpMAj2?=
- =?us-ascii?Q?4AZPnfphTgy+h8aikdUGF6g9h9Ikpw2DTCZzQW6XP6xpXpYAV3L+o5KhnV78?=
- =?us-ascii?Q?GYCG9f/DzlN7ge6k8kixp4xYtDGJqzG5M4wr0Aarn8GTAsYdokZfPFUOULB1?=
- =?us-ascii?Q?dnr7kNv+cyei7X6Xq2MyrBurCj0V4EGP61mWsVDQS0YFnn4m9Mh8cSNJRm78?=
- =?us-ascii?Q?62xDc+du5TteU31IGCLcMRDcB41B1oIve+YrS5jWROA8FTLngvO8O6UgYI1J?=
- =?us-ascii?Q?rFU3lZ8EtjGy6KxY6eaq685BxJv2C5DGclIwaVYfP4L5ry4CBgoZs+ZfWekS?=
- =?us-ascii?Q?yGjQIrD9JqTo6lDEcHqe9201p19f2VAK6yg1AtwboDdbv4YicREjpSakxty4?=
- =?us-ascii?Q?ugke0FOW456P0796yl0AKoYv8NNTRQ=3D=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jaV1dQjrooqS05WlwoTRQ+BVfEaBCAr/Dmc3KYOtSRyE11V4ygiDo1TQlsAj?=
- =?us-ascii?Q?mouMVUUGRpkK8n36p9oYFPdKIaOqKoihujLHKU+p/HZ4Rl4Q5Y2hlNuRoMUf?=
- =?us-ascii?Q?o5rF9Z10hFGZKyCICujFXqstgNxtQMN4FkpUPNdFw5OtEsAtSYfnBydjadtn?=
- =?us-ascii?Q?AOUtAPHq7K/L2HQ1M7jmhwZ9C9aQ9YeGRg7j0MPsLegOvnpsRWCfAmJDpUUn?=
- =?us-ascii?Q?7RAkX7FELf3JcNcdNPQWhkCm4O16g7nxuQ0B7MqAWEEuDTSx4RXmOuFenuZ0?=
- =?us-ascii?Q?KUUmrCsGQ3UjJUTYEbKKMzYLn9pe2YkbXZW090fD/T7SK6l/r5tAqlcq2l5C?=
- =?us-ascii?Q?OaJWMVpKcKuBBu1lVkYbrYFw4krKVzJbMCv2UtvDHRfrlnK7Dt6LS4L7F6PT?=
- =?us-ascii?Q?uK+/3PNBZsGz9D8toF5ZoFLKqUdoTgmXyhMGvqyWuKPfDlWzI6nZHZi319W1?=
- =?us-ascii?Q?kBRun/QNwlnnsRvQe6JcAFs3GuRTIHndBcwRuwe1bQq64DGiSvn6fRzpk8Gr?=
- =?us-ascii?Q?FPQ+payn6xy1AGdivSXp0foe9sSR5VMOWRCANsd8ChoLTnS/6TG4GMFlJclS?=
- =?us-ascii?Q?swN7P/R6ncxFt5Np8BSYjShGuJTfTUpfORistWydRhkSpTJn9BlunD/Y9THI?=
- =?us-ascii?Q?ziycMiPTI0MpqCsIwxsNb73eC+GUgz9/Hq1lGyesaZBl+Lw2Lgeexw2HRs5q?=
- =?us-ascii?Q?7Ul1xonRBM0T41QYs+kP4GyDw5Ii2F67L/S8izaTXmjEPHZd/sPFu2wkLvt/?=
- =?us-ascii?Q?1zzp9CwetE0YZ4nDfj2/WNO0M2RlmtRZA1ARvDgTVsYgZPGkgXjt0/fHf34k?=
- =?us-ascii?Q?1yVYMTiSmKjLszCtprJ/m0Nnrw90PsOfIQeoFJqDZPW355JLLGblwLA/a90B?=
- =?us-ascii?Q?uH6HgEz9C/3K9w0E6DmKxLJF0bXzooHJS3Lx36ddU9aO3ZA9BAYwXYuvWnh1?=
- =?us-ascii?Q?iOVLvykWhdQBNioKQZUmwL0xChmPOu6GXQc97L8OPifPV0ehJRgyri2QLzfL?=
- =?us-ascii?Q?AeKlv+Zp4R4IgovVTCf/LF6ZW9l0llJgU2EdIfuHdoX33qkWeH9eylGuQe/P?=
- =?us-ascii?Q?GYcCY7Ng5XtLGKR8iZTDZmxsIHp/UQoNfkIrgdst3ZL3KSAwd36+DBB7XErY?=
- =?us-ascii?Q?fQ2iYasEeiS4f1PlOxDr24xVgvcV4WTFAruqVDJVsUYwwPu2MAPesNZJjasx?=
- =?us-ascii?Q?hB9UusdZJCUNbiOzgjNjBODMFesSBRm+0ExwccORrPQeEGhAJjsGTEsDsNDw?=
- =?us-ascii?Q?iRgzBiSt1R1lQkr7e4tO7zQLaROk9SNLScCAg3yI9o5R+kZ5dOxhpfEsTTwD?=
- =?us-ascii?Q?hbM=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc6743f3-e5fe-4a0a-ed1b-08dd42c06ed4
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2025 13:00:42.2099
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOYP123MB2704
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Collection of patches for the recently added leds-st1202 driver. It is the
-same patchset sent on 2025-01-17. The cover letter wasn't properly threaded
-with the patches that time, so apologies for that.
+Em Sat, 1 Feb 2025 09:24:27 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 
-Obvious from the individual descriptions, but as a summary:
+> Em Sat, 1 Feb 2025 09:44:18 +0900
+> YongSu Yoo <yongsuyoo0215@gmail.com> escreveu:
+>=20
+> > Dear Mauro Carvalho Chehab
+> >=20
+> > I know how to send an E-mail using "....git send-email --to .."
+> > But,
+> > I do not know how to reply to this E-mail loop using "....git send-email
+> > --to .."
+> > Can you kindly guide me ? =20
+>=20
+> Never used git send-email to reply, as it is mainly focused on sending
+> e-mails, not being a true emailer: it just sends e-mail: it doesn't
+> receive. In thesis, you could download the original e-mail using b4 or le=
+i,=20
+> then manually write a reply text on it and use git send-email. This is
+> easier said than done, as you'll need to take care of SMTP headers yourse=
+lf.
+> This would require some knowledge about SMTP RFCs.
+>=20
+> If I were you, I would seek for some other alternatives.
+>=20
+> Most people use mutt for Kernel work, as it is CLI. There is also alpine
+> I haven't used alpine for ages, but it is a decent CLI e-mail client, usi=
+ng
+> a very simple interface, although it has less features than mutt.
+>=20
+> I prefer instead to use claws-mail as it has a reasonable GUI, it is fast
+> and it is not overbloated with features I won't use.
+>=20
+> Neither mutt, alpine or claws-mail mangle whitespaces and line breaks on
+> e-mails, and they can be setup to not do top-postings.
+>=20
+> If you want something simpler, perhaps you could try notmuch[1]. I never
+> tried myself, but I heard it can be used to reply to e-mails without even
+> needing to subscribe to a ML.
+>=20
+> [1] https://notmuchmail.org/
+>=20
+> You may also find useful to have a SMTP relay server. Probably one of the
+> simplest ones to setup is msmtp: https://marlam.de/msmtp/.
+>=20
+> I hope that helps.
 
-- 0001: fix a NULL pointer access error that occurs when LEDs are
-registered but the LED driver is not fully initialized
-- 0002: initialize the LED driver before any DT LED initialization is done
-- 0003: some spacing and typo edits
-- 0004: include the appropriate select in Kconfig to make sure the
-required Pattern trigger driver is available.
-- 0005: remove .rst extension on Documentation/leds/index.rst
+Btw, there's a chapter at Kernel documentation related to e-mail
+clients:
 
-Manuel Fombuena (5):
-  leds: leds-st1202: fix NULL pointer access on race condition
-  leds: leds-st1202: initialize hardware before DT node child operations
-  leds: leds-st1202: spacing and proofreading editing
-  leds: Kconfig: leds-st1202: add select for required
-    LEDS_TRIGGER_PATTERN
-  Documentation: leds: remove .rst extension for leds-st1202 on index
+https://www.kernel.org/doc/html/latest/process/email-clients.html
 
- Documentation/leds/index.rst |  2 +-
- drivers/leds/Kconfig         |  1 +
- drivers/leds/leds-st1202.c   | 73 ++++++++++++++++++------------------
- 3 files changed, 38 insertions(+), 38 deletions(-)
+>=20
+> Regards,
+> Mauro
+>=20
+>=20
+> >=20
+> > 2024=EB=85=84 5=EC=9B=94 31=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 3:3=
+1, Mauro Carvalho Chehab <mchehab@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=
+=EC=84=B1:
+> >  =20
+> > > Em Tue, 28 May 2024 21:14:37 +0900
+> > > YongSu Yoo <yongsuyoo0215@gmail.com> escreveu:
+> > >   =20
+> > > > Dear Markus Elfring   =20
+> > >
+> > > Please don't top-post. Makes hard to follow the comments.   =20
+> > > >
+> > > >
+> > > > 2024=EB=85=84 5=EC=9B=94 28=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84=
+ 2:38, Markus Elfring <Markus.Elfring@web.de>=EB=8B=98=EC=9D=B4 =EC=9E=91=
+=EC=84=B1:
+> > > >   =20
+> > > > >
+> > > > > =E2=80=A6   =20
+> > > > > > For preventing this problem from happening, we make CA_RESET io=
+ctl do
+> > > > > > nothing and only return EBUSY if the ioctl is called during the
+> > > > > > "transiting" states.   =20
+> > > > >
+> > > > > Would you like to avoid any typos (in the summary phrase)?   =20
+> > >   =20
+> > > > Initially, I sent this E-mail using the below command
+> > > > "....git send-email --to  mchehab@kernel.org,
+> > > > linux-media@vger.kernel.org, xxxxxxxxxxx.patch. ..."   =20
+> > >
+> > > Git send-email is a good way to send patches. You may also use
+> > > a decent e-mail client that won't mangle with whitespaces. I use
+> > > myself claws-mail; other develpers use emacs. Feel free to pick your
+> > > poison, but if the email doesn't handle whitespaces well and/or
+> > > don't allow writing the answers below the original comments (instead
+> > > of top-posting), it shouldn't be used.
+> > >   =20
+> > > > In response to what you suggested, is it OK if I use Gmail and atta=
+ch
+> > > > a new patch ?   =20
+> > >
+> > > No. Never attach a patch as the mailing list will reject, and if not,
+> > > patchwork.linuxtv.org won't pick it.
+> > >
+> > > You may use gmail, if you setup your e-mail client to use it as a
+> > > SMTP server. Using webmail solutions typically won't work open source
+> > > discussions, as it does lots of wrong things, like top-posting, not
+> > > honoring 80 columns on emails and/or mangling tabs and white spaces.
+> > >
+> > > Thanks,
+> > > Mauro
+> > >   =20
+>=20
+>=20
+>=20
+> Thanks,
+> Mauro
 
--- 
-2.48.1
 
+
+Thanks,
+Mauro
