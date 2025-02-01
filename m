@@ -1,65 +1,72 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311F21C3BEE
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 15:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD9910E0
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 15:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738424328; cv=none; b=B+tF598WBK2QctQL7PxX8UAVDKiBIjY2Gu9QaUs+p+OhG/zuL+z0GMQ2DLl+xXLoa/f3YWMU5LeprimQ6ccFJ0x0i4dAtv7D8u8bmWtwUx1HEtOvojyG+uQwZ9B2JFgI7c+Euqw8llHtwPBiwKIaYTESuzhShc36N4MPUeatGIM=
+	t=1738424490; cv=none; b=NEbuF4E+zX2Plzr0V2Cq+LDpzQzB6VMzxicdBZD2H28iu26NM9yL9fpG1yBYuGCmBoodNaqaWPNNreokke+uigDyphHwVEFz3wVyX6+xoWuCizeGxhdKEYkvkvYGCHcLvWoxc1rrmywtRrOpb7wz6yL/PkzLEjUQYOIUNNn2+qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738424328; c=relaxed/simple;
-	bh=T3UX4pDwFWwTzgKYV6IhqbmgRXz2grhQM2xawuLAF+M=;
+	s=arc-20240116; t=1738424490; c=relaxed/simple;
+	bh=EAuWRFSzbZPoOpQmGlt+48A6Rn20tQZRvUQGrlXcIUQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xf5EX0QANpspEq5G8gHcyoIt1lCFK50cSzhhHILCO663jL73bURQytL243EGktH12SUzOXqW/6fC1X795lfJGzpBKCaH4taBztstJNMOlJrjMyhr9NJt6AP4Xh4aGiAdc2H1H/J2JIkigmnxKb7aNPUslkbStGs0EBcrzCCV0FU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=xgNGAxWs; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	 In-Reply-To:Content-Type; b=SnyX1ut5Kj2Q5mN9lDc0q8zz2bxnbyLFKqHSkDFawQklBDZF4Yx+1LpZCs9otZuVhS5hgacHL2Z/ZQLmfUYc3eyMeJpJVA4DMibuLix+wfOD3Rov8cM341Rdp7+qdSztMCyFh8YZWAXgttp75wrIrVuvefLGAyYZdZB/r4TbOws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VGZd1DJv; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="xgNGAxWs"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-844ce213af6so81319639f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 07:38:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1738424324; x=1739029124; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sK19sGcb61Rq3NH5lzGx01VpDfttDHo//maIlQCUBJ8=;
-        b=xgNGAxWs0dL0AFOiFvvsW8UDPMame7st3NJMkAqc8DYthClQvu2NG/HP1jHOqptcYE
-         5loMVVCxHheX70RpdQrhpmKKw2Fqadw+tTp5VgTSD4tcX26FqmACJvWchaCBHySDV2ZN
-         gfTIGtWRyEjMVWHau6w5iAqn3ASmkg+1Av7asfjFd1sghn6BeTE79lNrDgkE7vi/FhDM
-         mAQ9O3hphEzXFaM+iJ3B8IVRGkUi2//PHfr+73ZB701ckQK/anUxSRh1GdnG/qBPTBi0
-         Usb1yNxApWLS0NgKMp5Ushm3tbg+tLnoe+3E1nnlXkd2K/Dz2jEFqeohNzW64IIzE8qX
-         5aqg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VGZd1DJv"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 511DmXM4024227
+	for <linux-kernel@vger.kernel.org>; Sat, 1 Feb 2025 15:41:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	umkiEAbpIImGcjGndXh17mm8/qWIyQJoDQy7OHBf4jc=; b=VGZd1DJvhNGRK4ca
+	S7TiRRN57sYwgrt/Q4ihs/e+7II9DK7oNX+5qGWoDbgbB+MAXgHV4d2hwAYSBsNe
+	L2gH1MgLk45l0tGzGmWOBsgU8gIlnT3WyyRXuN9pVESbtUMpyMkEiLiT+63L1WV/
+	+Ri1kRm2rTkfgr4KvBgKpNsyXFQaUQlr8I1Im9CxVyUgdQQGzx9aPhlmZ/JbknE9
+	KA7N4DeBh62tTtihcpGYtoyGYk4XNU6dRD+xgy04klnXJh1IA/Mu9iFKAcsoiNou
+	AgrJ/K5JELyipEtBYJ7FCbHryv70cXuXd8vVfRVgtFeDRSGHBEl3ZxWtj8WpULcp
+	YJz9dA==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44hd6b138w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 15:41:27 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6dfba8de3cdso8692676d6.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 07:41:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738424324; x=1739029124;
+        d=1e100.net; s=20230601; t=1738424486; x=1739029286;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sK19sGcb61Rq3NH5lzGx01VpDfttDHo//maIlQCUBJ8=;
-        b=jFEVOaNDlbAO9BInUa7v338eThSWqsbjgcZiPRCafWUfhD+dDcp51znfs3b/1WYZfe
-         McuBkZERPMxLEq1Q5dFg4/o8N1gVPRh4Fc1gG0D/vd6EkXyv+o1zxy2okJZDgF9jWpTk
-         +ygvWRFHimOmiWT3vox8HsxMQSFh4oL8ZHlJ2Npi60Zg1xelOOrh1/FUeZ3iecbSHYPS
-         2JrDYI59nXIfo5B2YppJQ7y/r4LUQz3VfyqPo/6l8fO1+R65mqo/nTG2T09ZOuPQQPTI
-         0lAsNrqdaF2vDNZdIOrtmFhORXl+UUrDlZoQS/rZm/5fKfPsa3/Aop0fIZTYmiUFpwSc
-         /kRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUsCqGhJAGTkBYeROXFnGhyc9DojT4w8FM0JSfmwuxrm1uYYk85YIhBdhTx2IhIMN2GBKI+LpYCMp5s5AM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ0cRjIm7wSPwmGYvU2WiD2wVLL+375bOxnSJTzKwE/xI/UC4E
-	CNPWdOFeRd76WFiVjLrV49z9rRzN+jjXBgsTaXNw8LLSzt4binJc6fA1+F/Ew9K4FMcpJIZic2f
-	V
-X-Gm-Gg: ASbGncvnEbXEY6LxECQooNUDSkXHZmE7+ZK4xw9Q+fZhuA5DQBSvNHANCyLFV+qvjUn
-	cnCzhw5R4TuQonWUihr55J/x4MgIFY9tcUnRN2+2EL2PpMn58xyoZuwsvs24P2a/2eQ0hGwTy0T
-	xjylZXS2XtGcGEXSL2tzLN6Mu42EPhs+wr+rDkmgb9dZAzLQOJS2so+jxUk6fKv4HzfZdBoO70+
-	bsS5O6blP0a3zxEDh5xZv58HFlLblcs0Po6gFkYd9Ng9UURe3RHajIXjfNvVDsPM6bSJOEHkAxV
-	dcollDV8+ysN
-X-Google-Smtp-Source: AGHT+IHHxywtrROfFyXITU+1sqWmIGLfAgdKi8CY5Q4qEEsfN5PaFnwCiujdXUybGoWxyWGqiHuFmg==
-X-Received: by 2002:a05:6602:6d02:b0:832:480d:6fe1 with SMTP id ca18e2360f4ac-854006e200bmr1391491639f.0.1738424324228;
-        Sat, 01 Feb 2025 07:38:44 -0800 (PST)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-854a1619d8esm147577839f.28.2025.02.01.07.38.43
+        bh=umkiEAbpIImGcjGndXh17mm8/qWIyQJoDQy7OHBf4jc=;
+        b=WXEnF7HeRHl20ILPZC6/ZFTU/4vG9ZU6Zkib4SSuMExyi0Ud4hOlD3E53LCPak5slO
+         IoQR6Ph7E6uONMCVjBRNNIjqcPn1tBl09uPDAP3qKGeT5GTWYKWsHr2qTqJXXMsDJ49U
+         dOD1mps/+qw6idgSnsObf6jNmneHvmxjiqhEeVkH+r2Ow6ShiTAQj3URz1UOg03NoDZ4
+         tfvcdBm3FlzuWGOIH8JaEX5t05Ablx7ORgBFtDStY49WJkcqKgNObMluh9jsH5Os83ca
+         jzSC7AYAWWcRfXe+gE39PAAU/LsvNL1j87TLEh98Q53/OLD3fMW0Eii6l3bdNvesOHCq
+         iwSA==
+X-Forwarded-Encrypted: i=1; AJvYcCWvlaKBhcwMHXkFNYPdjmd3PCQNsXWqvR7cegO+oSAQn9BOqg7+i9CzJz4SfY3agBW9UHre7UA9J8cxHbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww+2goS+lvUV46psiWYGDt8ENoepTuCD+hxPfgM/LkF03RRrJo
+	YXy4sSl4LzRlpebQ5bdRjp+O0K7I9zlyil09F8Yi1vniKqXK/ZqPDsBYk9CfboiRplKvtnNqkD1
+	ikEEAqMsicT7KjD33/C1LC1ZiYtJH9ZxYWI7Wl/i3OX3x44V+rkZbf7FCwt9VIWd4Rg6supc=
+X-Gm-Gg: ASbGncvLnpPs/r3TD+p1MaVGhRfdab2FFx0ZRhcxXjoAn5XGwl6OhJ2MDZ5fJvqbcV+
+	Bie/UZTJNflzrxCSXyOA75fmEV9g/HW8vH/6JQhIC9eNWV1Lgpq3nKuP9F+EUjp6FBRJ1FoO4ks
+	POrddntHNGtlmO1jjvpqMrAhymiq5twQ/DeAosDBADmDp4ME/47lY71Azv0ihLISiessKYT6+jc
+	ZPg19jzVCqJH97qtaPzXbT5VzvOpY6+FrKhNRIlpgRmGodhvz8ditSLjORbYc2ZwzbTHoPom1CK
+	HABflaSJyY7QQTVHCl19B6Gp0hSEBAIW4ms43QMPenRmWDpctcdKIeMfLK0=
+X-Received: by 2002:a05:620a:27cf:b0:7b6:dc5c:de2 with SMTP id af79cd13be357-7c009b91905mr601834085a.13.1738424486434;
+        Sat, 01 Feb 2025 07:41:26 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEnUksznpySe3iXS6aTkOqcqTJDL3C7UtJvJBqhbC+hblm/2idTj1UbgWT0n0clixn0WjRITw==
+X-Received: by 2002:a05:620a:27cf:b0:7b6:dc5c:de2 with SMTP id af79cd13be357-7c009b91905mr601832685a.13.1738424486005;
+        Sat, 01 Feb 2025 07:41:26 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc8eaafa38sm1592278a12.76.2025.02.01.07.41.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2025 07:38:43 -0800 (PST)
-Message-ID: <7c33ba12-2ec4-4692-b388-58950d42a0a2@kernel.dk>
-Date: Sat, 1 Feb 2025 08:38:42 -0700
+        Sat, 01 Feb 2025 07:41:25 -0800 (PST)
+Message-ID: <80948a6f-1cd4-47b3-9218-f5ab0c25eb3b@oss.qualcomm.com>
+Date: Sat, 1 Feb 2025 16:41:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,46 +74,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] Various io_uring micro-optimizations (reducing lock
- contention)
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: asml.silence@gmail.com, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250128133927.3989681-1-max.kellermann@ionos.com>
- <7f046e6e-bb9d-4e72-9683-2cdfeabf51bc@kernel.dk>
- <CAKPOu+90YT8KSbadN8jsag+3OnwPKWUDABv+RUFdBgj73yzgWQ@mail.gmail.com>
- <f76158fc-7dc2-4701-9a61-246656aa4a61@kernel.dk>
- <CAKPOu+-GgXRj-O9K1vdGezTUGZS64w5vpkZg2MM-96vmwqGEnA@mail.gmail.com>
- <daaed11f-02c4-4580-9594-fcaef35a35fd@kernel.dk>
- <a6fa1317-f1bf-4179-9da4-a77f86b7523f@kernel.dk>
- <CAKPOu+8Xi3oBz3zwr1bJx+LN=6cZN5eiBsrvRLZ_vOMJuOpZ9Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] arm64: dts: qcom: sm8650: drop cpu thermal passive
+ trip points
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250129-topic-sm8650-thermal-cpu-idle-v3-0-62ab1a64098d@linaro.org>
+ <20250129-topic-sm8650-thermal-cpu-idle-v3-1-62ab1a64098d@linaro.org>
 Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CAKPOu+8Xi3oBz3zwr1bJx+LN=6cZN5eiBsrvRLZ_vOMJuOpZ9Q@mail.gmail.com>
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250129-topic-sm8650-thermal-cpu-idle-v3-1-62ab1a64098d@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: uUWc0mToE19xvI7zbcxG2VcDIiHOms6n
+X-Proofpoint-ORIG-GUID: uUWc0mToE19xvI7zbcxG2VcDIiHOms6n
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-01_07,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
+ phishscore=0 spamscore=0 malwarescore=0 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502010136
 
-On 2/1/25 8:30 AM, Max Kellermann wrote:
-> On Sat, Feb 1, 2025 at 4:26 PM Jens Axboe <axboe@kernel.dk> wrote:
->>> Not a huge fan of adding more epoll logic to io_uring, but you are right
->>> this case may indeed make sense as it allows you to integrate better
->>> that way in existing event loops. I'll take a look.
->>
->> Here's a series doing that:
->>
->> https://git.kernel.dk/cgit/linux/log/?h=io_uring-epoll-wait
->>
->> Could actually work pretty well - the last patch adds multishot support
->> as well, which means we can avoid the write lock dance for repeated
->> triggers of this epoll event. That should actually end up being more
->> efficient than regular epoll_wait(2).
+On 29.01.2025 10:43 AM, Neil Armstrong wrote:
+> On the SM8650, the dynamic clock and voltage scaling (DCVS) is done in an
+> hardware controlled loop using the LMH and EPSS blocks with constraints and
+> OPPs programmed in the board firmware.
 > 
-> Nice, thanks Jens! I will integrate this in our I/O event loop and
-> test it next week. This will eliminate the io_uring poll wakeup
-> overhead completely.
+> Since the Hardware does a better job at maintaining the CPUs temperature
+> in an acceptable range by taking in account more parameters like the die
+> characteristics or other factory fused values, it makes no sense to try
+> and reproduce a similar set of constraints with the Linux cpufreq thermal
+> core.
+> 
+> In addition, the tsens IP is responsible for monitoring the temperature
+> across the SoC and the current settings will heavily trigger the tsens
+> UP/LOW interrupts if the CPU temperatures reaches the hardware thermal
+> constraints which are currently defined in the DT. And since the CPUs
+> are not hooked in the thermal trip points, the potential interrupts and
+> calculations are a waste of system resources.
+> 
+> Drop the current passive trip points and only leave the critical trip
+> point that will trigger a software system reboot before an hardware
+> thermal shutdown in the allmost impossible case the hardware DCVS cannot
+> handle the temperature surge.
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8650.dtsi | 180 -----------------------------------
+>  1 file changed, 180 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+> index 25e47505adcb790d09f1d2726386438487255824..95509ce2713d4fcc3dbe0c5cd5827312d5681af4 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+> @@ -5751,18 +5751,6 @@ cpu2-top-thermal {
+>  			thermal-sensors = <&tsens0 5>;
+>  
+>  			trips {
+> -				trip-point0 {
+> -					temperature = <90000>;
+> -					hysteresis = <2000>;
+> -					type = "passive";
+> -				};
 
-That'd be great, let us know how it goes!
+Feel free to drop polling-delay-passive from these nodes too
 
--- 
-Jens Axboe
-
+Konrad
