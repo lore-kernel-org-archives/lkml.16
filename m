@@ -1,160 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3607E1B414B;
-	Sat,  1 Feb 2025 16:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB9B1C5F0F
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738428559; cv=none; b=uW5/EZjDHj4mDQI2pZakrASt5YMOX5sgMUCnQDpIxADFrvc6UsrFAtsYK95ISF6yALazze6JEWCBf5r9KijU6iLTCvynJbmOaoQkJat2oz1OJSauTk3LXSS7UccJuyagsOjfUyZ0O7HoiY8FmUNMaFjEg514FgPFutdJ3sdbUaE=
+	t=1738428579; cv=none; b=TItrv+ibPUdidqAaQQhKmVf6RiYD9ES1H525FmMQ8Ep1R0rOgRsOFXOz6XKwdSnIu454cd/Bj5RvbTwinQuAwGqeopel4dgogwDBCcbF2SmczgyRNWgBaexV+SXOb49uOuxPChoGRXtW55kWlxoyGntVbVHFwDekmTB3b+qRfQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738428559; c=relaxed/simple;
-	bh=ORz6sL2Z98K9p1NpgMlSIO0aBQ6VlLfvEXaik8RcMiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pwGyJ8roXvLwNEiiQAs7PrtwS1ytHYKXcqT4F0EgS5+Mc7T/TZ7pko7feiOl9vpoWUJZnMZytm1LqKuR/lElZ6DTdddGw1xP8viJALFwTRcYV0pxYERkEWHEpQrIcB+wDEtW8aQ3OlywhYe9TcDu+oDuuMX3nOuSp5b+9EtE7VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ETpBvqF+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738428579; c=relaxed/simple;
+	bh=1C1vDfhGBCWdt2CIGwRL1PaM2A6eXIXmwjWafKPpw+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oh54RCgWV61YW5qD76ClHNs1OKLOS8R33AqsyEy93cgkg679dMHUpFXmNxLPqcdYdhWwiMDfOpds8bOzj2TyrAa/HQzMlqZmH6PwabpGh4K5w7j2LKiuSZwuavy2CSO16VWbQhtchmEmILN87X1KcKQYjokErFP7h+WBjACe92U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DcLupMks; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ETpBvqF+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5712C4CED3;
-	Sat,  1 Feb 2025 16:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738428558;
-	bh=ORz6sL2Z98K9p1NpgMlSIO0aBQ6VlLfvEXaik8RcMiw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ETpBvqF+QtH8M5WfSQOGUZtmUG99ieO09VidqgqfhNIQpiZppEDL0XlOkMDjQif9l
-	 dSLHKk26zvD2mCyt7ru8DH7LIT0aEauzou7d/RcyLw/3dyCFJ8KbC4/33MeGtWnnaJ
-	 SruJMrxyaJF87kbvv0Qca45cb5lNOK82Enrl1RiFtQEyCq2ary2eTs3p8bJEaqboXR
-	 oVTwvFxBS0LM11Pg+T9RYunFvxIoZynCDvpB3ylH5eCqI783i3w4BuuX+an2g663xs
-	 d6mJhHWUDaGstMrQTR5QtBIEOnslPWqSleEQUA01Ww590aIyD53zGpG63myDSkOhGS
-	 DpLfu7GxBDbjg==
-Date: Sat, 1 Feb 2025 16:49:13 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v1 05/12] iio: accel: adxl345: improve access to the
- interrupt enable register
-Message-ID: <20250201164913.5434a749@jic23-huawei>
-In-Reply-To: <20250128120100.205523-6-l.rubusch@gmail.com>
-References: <20250128120100.205523-1-l.rubusch@gmail.com>
-	<20250128120100.205523-6-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DcLupMks"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6dcd4f1aaccso41175546d6.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:49:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1738428576; x=1739033376; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=i5hZ7n+KMI2jYGZGNxK3D06MIX9VxNA2G3c9z3NYvRk=;
+        b=DcLupMksi1+JN6Mo8seQ/fo7GEqTast3yXT1S7Xa88UnTH1CvPc7cuREZsFd+PIsDB
+         UAGczRPmsE8ggWxtWYhDkfJlUAwX+V3k5rQfZCcCfmzKqZ9EJSiHskdEXwdD20KoX3u6
+         vnz8MIT69B8Y8svSqEle4zyinMg4yvVsE4bSvXoEaNIPbXOd6nFhXm5UUipqsU/luFU/
+         dCyZlMZRTEXTcVnQWSw3UT2+qEdJ6wgz8ljvjtDpt2xigrDlkitIeEuhaTDTZKajxdix
+         NDInTF/D2tu04K8YTwZamvljBcbUnGb9GgW6aftc7cSEx3hZWv3nng2ItGNw1rOqdXa3
+         JmpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738428576; x=1739033376;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i5hZ7n+KMI2jYGZGNxK3D06MIX9VxNA2G3c9z3NYvRk=;
+        b=vxI9A/SUgswcyAHxaHwz6vOnAHZhWs5A9+v/Zz3NKkfMZtC3oedNNTPgrAz+SHC3eA
+         GN2QFe4C+6kyrPTAHvkmaLZr/8AeiEWCcFrMwri5SWb2m1LT4irNgDsB4qG/FVMVOnrW
+         Lh6eCVCLOe69oFaLt8NGJ5AFcnGxS7km+fIt4QJRWLhEsoRpGlR7hCYZg1/UUMR/75lh
+         vibOUDd6CfeR5HGVFuSZEiIQvk9BREz2ZFgrqSiTalgC0dGZWONPdfxgp8ickEIACZsK
+         T38oK5dBrcvZULYImR8xs/dvyCx9Bg6DouboICS07ZJChNsI+8xLePsnpuEXJP0EWAh/
+         qQug==
+X-Forwarded-Encrypted: i=1; AJvYcCVuqCpVhS+6iTszEO/FfyCfHWGOc5T8yZmiCuznmWIDu/MBd61hn9bf/7dIF1+6szhN1OUpXsqAeaVI8qI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytI4ssqFCXasOQh6oN21bTcMVtbwT2S7y+mupGbJpvIflXFZWI
+	nB99nNfWqwArrQ9n2BEjW4epB+CGHQNMlQIGNE20A9MEdWC6oOhXa05u4yKvHYA=
+X-Gm-Gg: ASbGncsIavZgdShykC2ms7GekfnFKLoBVPMm06Ha7nY1Lz2Rx+pKlCghR6W34n7wRyR
+	x7QnIO6KpT9qiNzMxZbAvMskAGVqlFBs9+BtS7CRe0TQg32aRDXxzi+01a9Y7r/mQ1LBkpQX5pg
+	pAwES2pMRGUTuwEtE9tdJ7O9Ex/aqza1vBaUTlsC73OdR1z4u6bsfcqz4xTMJN4WDRVbrFsbSOy
+	+u6yKnYrCNg8d34vvqfAFsneF76oRLsUWjECwB1Nz9Vu/uwzxWIZfI+3OD9vpYq82sOM9uMWMzb
+	VxiHrPWaaNbP9ApYlideJPSLi4UOTWjxmipAEpTu6dj/BUt5CzDdLyompvES9b/s2sBqzugNrQ=
+	=
+X-Google-Smtp-Source: AGHT+IGQ1+NLg4YrZ+Gf9BL0Rh9NpBsRqQq8Sh+36quBm0Fy/vRbGBngIjmOrObiKxMdofyyvxBbfg==
+X-Received: by 2002:a05:6214:238f:b0:6dd:c594:27a2 with SMTP id 6a1803df08f44-6e243c07fc9mr257417916d6.27.1738428576442;
+        Sat, 01 Feb 2025 08:49:36 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e25493ee7asm29729816d6.94.2025.02.01.08.49.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 08:49:36 -0800 (PST)
+Date: Sat, 1 Feb 2025 11:49:31 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Honggyu Kim <honggyu.km@gmail.com>
+Cc: Joshua Hahn <joshua.hahnjy@gmail.com>, ying.huang@linux.alibaba.com,
+	rafael@kernel.org, lenb@kernel.org, gregkh@linuxfoundation.org,
+	akpm@linux-foundation.org, honggyu.kim@sk.com, rakie.kim@sk.com,
+	dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com, horen.chuang@linux.dev, hannes@cmpxchg.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org, kernel-team@meta.com, kernel_team@skhynix.com,
+	42.hyeyoo@gmail.com
+Subject: Re: [PATCH v4] Weighted Interleave Auto-tuning
+Message-ID: <Z55QmybX5IkuLv6Q@gourry-fedora-PF4VCD3F>
+References: <20250128222332.3835931-1-joshua.hahnjy@gmail.com>
+ <41ab5a11-f8d3-403c-9d68-33eb15aef8fa@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <41ab5a11-f8d3-403c-9d68-33eb15aef8fa@gmail.com>
 
-On Tue, 28 Jan 2025 12:00:53 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+Hi Honggyu,
 
-> Split the current set_interrupts() functionality. Separate writing the
-> interrupt map from writing the interrupt enable register.
-Makes sense.
-
+On Fri, Jan 31, 2025 at 11:23:34PM +0900, Honggyu Kim wrote:
+> Sorry for jumping into this discussion a bit late, but IMHO, setting a
+> newly onlined node's weight to 1 can possibly make the entire weight
+> ratio unbalanced.
 > 
-> Move writing the interrupt map into the probe(). The interrupt map will
-> setup which event finally will go over the INT line. Thus, all events
-> are mapped to this interrupt line now once at the beginning.
-> 
-> On the other side the function set_interrupts() will now be focussed on
-> enabling interrupts for event features. Thus it will be renamed to
-> write_interrupts() to better distinguish from further usage of get/set
-> in the conext of the sensor features.
 
-For this, I'm not yet seeing why we need a function to do this. May
-become clear later.
+This is only the default for either:
+a) Manual Mode
+b) Auto Mode - when HMAT/CDAT data is missing
 
-> 
-> Also, add the missing initial reset of the interrupt enable register.
-> 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> ---
->  drivers/iio/accel/adxl345_core.c | 43 +++++++++++++++++---------------
->  1 file changed, 23 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
-> index 7ee50a0b23ea..b55f6774b1e9 100644
-> --- a/drivers/iio/accel/adxl345_core.c
-> +++ b/drivers/iio/accel/adxl345_core.c
-> @@ -190,25 +190,9 @@ static void adxl345_powerdown(void *ptr)
->  	adxl345_set_measure_en(st, false);
->  }
->  
-> -static int adxl345_set_interrupts(struct adxl345_state *st)
-> +static inline int adxl345_write_interrupts(struct adxl345_state *st)
->  {
-> -	int ret;
-> -	unsigned int int_enable = st->int_map;
-> -	unsigned int int_map;
-> -
-> -	/*
-> -	 * Any bits set to 0 in the INT map register send their respective
-> -	 * interrupts to the INT1 pin, whereas bits set to 1 send their respective
-> -	 * interrupts to the INT2 pin. The intio shall convert this accordingly.
-> -	 */
-> -	int_map = FIELD_GET(ADXL345_REG_INT_SOURCE_MSK,
-> -			    st->intio ? st->int_map : ~st->int_map);
-> -
-> -	ret = regmap_write(st->regmap, ADXL345_REG_INT_MAP, int_map);
-> -	if (ret)
-> -		return ret;
-> -
-> -	return regmap_write(st->regmap, ADXL345_REG_INT_ENABLE, int_enable);
-> +	return regmap_write(st->regmap, ADXL345_REG_INT_ENABLE, st->int_map);
-Not sure the function adds much.  Maybe it will later, but my gut
-feeling on what is here would be to just do the regamp_write() inline
-where this function is currently called.
->  }
->  
+In manual mode, the node weight in /sys/kernel/.../nodeN is present
+regardless of the online/offline state of the node - so it can be
+set prior to that node being hotplugged.  Since it's in manual mode,
+it's expected the administrator knows when things are coming online
+and offline, and they have a clear chance to change weights such that
+a 1 is never perceived.
 
->  
->  static const struct iio_buffer_setup_ops adxl345_buffer_ops = {
-> @@ -602,6 +586,8 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
->  		return -ENODEV;
->  	st->fifo_delay = fifo_delay_default;
->  
-> +	st->int_map = 0x00;			/* reset interrupts */
-> +
->  	indio_dev->name = st->info->name;
->  	indio_dev->info = &adxl345_info;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
-> @@ -609,6 +595,11 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
->  	indio_dev->num_channels = ARRAY_SIZE(adxl345_channels);
->  	indio_dev->available_scan_masks = adxl345_scan_masks;
->  
-> +	/* Reset interrupts at start up */
-> +	ret = adxl345_write_interrupts(st);
-> +	if (ret)
-> +		return ret;
-> +
->  	if (setup) {
->  		/* Perform optional initial bus specific configuration */
->  		ret = setup(dev, st->regmap);
-> @@ -659,6 +650,18 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
->  	}
->  
->  	if (st->intio != ADXL345_INT_NONE) {
-> +		/*
-> +		 * Any bits set to 0 in the INT map register send their respective
-> +		 * interrupts to the INT1 pin, whereas bits set to 1 send their respective
-> +		 * interrupts to the INT2 pin. The intio shall convert this accordingly.
-> +		 */
-> +		regval = st->intio ? ADXL345_REG_INT_SOURCE_MSK
-> +			: ~ADXL345_REG_INT_SOURCE_MSK;
+In auto mode, the node goes "online" after HMAT/CDAT data is reported
+so users will generally not perceive this default weight.
 
-This mask is another slightly odd one as it just means all bits in the register.
-Maybe better just using values here? 0x00 vs 0xFF
+>   1. the auto mode set the weights as 10:5:1 for node{0-2}.
+>   2. node2 is offlined, then recalculation makes it as 2:1 for node{0,1}.
+>   3. the auto sysfs interface is set to 0 to make it manual mode.
 
-> +
-> +		ret = regmap_write(st->regmap, ADXL345_REG_INT_MAP, regval);
-> +		if (ret)
-> +			return ret;
-> +
->  		/* FIFO_STREAM mode is going to be activated later */
->  		ret = devm_iio_kfifo_buffer_setup(dev, indio_dev, &adxl345_buffer_ops);
->  		if (ret)
+If the user sets manual mode, they get manual mode.  If they don't
+want to manually adjust weights, don't set manual mode.
 
+We can't stop users from doing silly things
+
+~Gregory
