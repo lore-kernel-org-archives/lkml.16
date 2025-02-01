@@ -1,150 +1,72 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039092F852
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 21:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD121ADC70;
+	Sat,  1 Feb 2025 21:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738446671; cv=none; b=sg9lRoDoDkqeXTHDQhX8LrEzVWPoaXdSdxZ89P07z8CPP8VIC1+dhlDS2zF8WTmCNLeHLPBsdtBdorEtBGFu2FVg38YongKf7aMiVv05lKhsGuYxFsSrH6LNOs981cC/pNiH2XWq4fR8jdAEjh5wn4jCpJwt4Ew7UsK+9/aqqyU=
+	t=1738447122; cv=none; b=PYyu2xapfU5/F2bWSoaCwZizonKDMh479q9mA8vVQ3gHILrX6abfh4lFlStvAfKQNmZC37La6ApA+W1Z5Mv+VtfXjo7HUqnrEuyExWI+AAPgB4qq2pP1UVks15fOsTzeUUnQfIXquFKJlING0kITppHY50OCL4iIlxHMBfVQBqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738446671; c=relaxed/simple;
-	bh=kddqWlzvi+SnUGZ97+H+9f4pznSUeD+3hXHdyv7op5s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A9utF0/ckqzu7fO+bjtpeDC+YQiKZVFeRGJbOCnlKLuGB9EammCuQENz0r8VhjIVnDpukSIpwMV89IHWniDyZU/eXtJ9s4aUChgiz/PDZFkZ0z5fFjVTaCEvgGyh/DKJg0HdVatvAxViXMuA/8SuyFv/w8DEgZTEz29S7ploclw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XN+oSP4K; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738447122; c=relaxed/simple;
+	bh=4yah1ABe3jE+Fe5JVSEIfySOMTAzN0kapjiR7MMrkGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d7RrdAcx4Dj/4w8rJBWWSNQo6+2Uk3DouNAHRWitTBnGtEReaSAYe8k7sIYYW2fCsVHLsfTVMcxBMymJtZp7hQZj39zEQzq9HQqAVwtJrNkqqyrAxasH0QUEPmzYfSS8lIFin9CcoaQhlMjkPIiwpHTazQT7O5XR2CF8HmPk8p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ioy/mTlh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XN+oSP4K"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-385f07cd1a4so2770527f8f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 13:51:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738446668; x=1739051468; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y6+6LjaugE0DyQnf73qvCDL5j+VRZNBEK4vkemWJG2c=;
-        b=XN+oSP4KcW3DZxCsVwEjCY7+wh2k5EEMBKAeQcYBwTGO+aZe0r+4NsEffln3OKvmtF
-         NAqkyN2uJqBdXAbWwUnUwPWhkt2oWOyx1iM0r7nrD4Stz5foaiNfcrvHL28yqEW608tG
-         CjbyW60PSNn+UmYCQE3frOwhK4w1n25VlTe9tcj22nGV/b+kTmWQ2CfatLWQTcZbJ3gH
-         jbQwagfPs3t4Rz3EbRhjth/+f9WrhqhO9mTIxg3FrrW4SK3eglhRaDHdC3rDNR4Twb6J
-         ka8LB0IjxH++GwesUqe8BsbuiJf8pRyUGf6zr4CJc2tXFdqlg0danYuPKBxlg9Ow4xJ1
-         p0Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738446668; x=1739051468;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y6+6LjaugE0DyQnf73qvCDL5j+VRZNBEK4vkemWJG2c=;
-        b=bwJjr5cc/HRTOyNy1yO85exoM8yGW5xsAcR2UbPxZQDFieltUWvgJTJTmrVlOxdA4Y
-         4P4/UxrVHxUCeI4Oi7lmddO07tErx/tmYYP/IHUowJ7X0bv1exZHac5SvTXrM+ruQQJV
-         s9ULARvBw6ioqIQTCrC7642+gxYNJ33P8lpEfXzQ/v+GkF5e6H8DXvmIKG2YZeBstkej
-         OhA23lKP5C/ccRkuEuXZ7s9lklOgz65ZDUznUoq7GTGQ1lmwoXX3DMYqhw1KQter3uy7
-         k2LsJ5l46CfzMHdjpsrRPewEU1dXSXP5K60JEHNuXiKblUhdDKSuni3xn6KNj5OaI8md
-         WKFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXYsM9gWHIcqYvjZv0wBzasu1DXKfIwfNMdcEJV7hrGGz4XGxu5Sa5cHFl8mkGnBGM6UuyeSeIorVzw7BE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytaSWjB/SNjAW5/WZ7nv3CLMD+KsopGOPaoK8/yEb9baABp10v
-	6IPlzemuB9MtCHNVB5y7FGdJ4x/p5TRtkEttnM8ss0AB08n8q3q3
-X-Gm-Gg: ASbGncuMDIhxRwE37diuULoaINbeU/GaTBY6dUE1Dm3j1SMVZJQkfMgzfYiBvRfZZg9
-	ocf3FLlh8xneJ/jwc+uhyIv0WMz1hBf/+ZVT/Dc6UMF8lJqkRcX8oYDPHWfxi5drLB2ZHMFtvF9
-	OAyRbSckr3OuqVwW68lL0q32akvybM05s5FR72bA1k5usfX1PGiMirShNLPBJF1aRnges4KBEE/
-	14T1S7Ffb/Hs8cLIfQ+x008n94KoZBJboFfkLp6mzVgL0MrbgNaG8cuK6940rheQN9pIt681sOI
-	q4gby9ljPxsWfbrEP7QVCZxNlDAoOybU6lnD6Vh9CxBLfNYgOyXqnQ==
-X-Google-Smtp-Source: AGHT+IHYRiLd3QDJnOn5b+AXIOzWtb3HxAVhHzU0YObH3osU8dB6+cLswxUn6gthx+zEs/IB7VYZBg==
-X-Received: by 2002:a5d:5f93:0:b0:386:3213:5b9b with SMTP id ffacd0b85a97d-38c51e8e12fmr14080788f8f.43.1738446668128;
-        Sat, 01 Feb 2025 13:51:08 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cfa3dsm8391149f8f.93.2025.02.01.13.51.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 13:51:07 -0800 (PST)
-Date: Sat, 1 Feb 2025 21:51:05 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: ebiederm@xmission.com, oleg@redhat.com, brauner@kernel.org,
- akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] pid: drop irq disablement around pidmap_lock
-Message-ID: <20250201215105.55c0319a@pumpkin>
-In-Reply-To: <CAGudoHFHzEQhkaJCB3z6qCfDtSRq+zZew3fDkAKG-AEjpMq8Nw@mail.gmail.com>
-References: <20250201163106.28912-1-mjguzik@gmail.com>
-	<20250201163106.28912-7-mjguzik@gmail.com>
-	<20250201181933.07a3e7e2@pumpkin>
-	<CAGudoHFHzEQhkaJCB3z6qCfDtSRq+zZew3fDkAKG-AEjpMq8Nw@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ioy/mTlh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49859C4CED3;
+	Sat,  1 Feb 2025 21:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738447121;
+	bh=4yah1ABe3jE+Fe5JVSEIfySOMTAzN0kapjiR7MMrkGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ioy/mTlhjq9m151pNAFVsf1W+L+m+A4nicWYXv7TIwJDqoGQZLoM4KpoRkwrD4psM
+	 hsBxU95ZF7BoFQ/CKqZnXRuHXyGtBONdkfQffwQCoNqZjjoF/0jLdfE/haKQcjz0uH
+	 b/UMAQtklUP6sGx3s14ReJJFgzEc/qBjZ5t3XYRIIoSF2sDOcKwa0oIijpWDQrEz6x
+	 RRSQ3M7i75tOdoRXZgLQHjsGvj+oCFWZKcKOgVTR7LJq/W2hBEiQ6S2FXGF6j6sQ3e
+	 uzo1YXFq6SyOJaPKXGzkL41RWQSWEqnYUf7t6XtjU8eZoKkSLMIC5uZF88IcLjHYAy
+	 YNOJhtLm6ssqQ==
+Date: Sat, 1 Feb 2025 22:58:36 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: alloc: satisfy `aligned_alloc` requirements
+Message-ID: <Z56ZDEM9gcJhIXxW@pollux.localdomain>
+References: <20250201-aligned-alloc-v1-1-c99a73f3cbd4@gmail.com>
+ <Z56Bq94kPaN9UX5H@cassiopeiae>
+ <CAJ-ks9n3KfcSqocjXY6QojF6R_aGBiRsXBuyiX8Y0rHtjm3sNw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ-ks9n3KfcSqocjXY6QojF6R_aGBiRsXBuyiX8Y0rHtjm3sNw@mail.gmail.com>
 
-On Sat, 1 Feb 2025 19:42:32 +0100
-Mateusz Guzik <mjguzik@gmail.com> wrote:
-
-> On Sat, Feb 1, 2025 at 7:19=E2=80=AFPM David Laight
-> <david.laight.linux@gmail.com> wrote:
+On Sat, Feb 01, 2025 at 04:19:48PM -0500, Tamir Duberstein wrote:
+> Hi Danilo, thanks for the review!
+> 
+> On Sat, Feb 1, 2025 at 3:18 PM Danilo Krummrich <dakr@kernel.org> wrote:
 > >
-> > On Sat,  1 Feb 2025 17:31:06 +0100
-> > Mateusz Guzik <mjguzik@gmail.com> wrote:
-> > =20
-> > > It no longer serves any purpose now that the tasklist_lock ->
-> > > pidmap_lock ordering got eliminated. =20
+> > I think I prefer this to be slightly more compact:
 > >
-> > Not disabling interrupts may make thing worse.
-> > It is a trade off between 'interrupt latency' and 'lock hold time'.
-> >
-> > If interrupts are disabled then (clearly) they can get delayed because
-> > the lock is held.
-> > Provided the lock is only held for a short time it probably doesn't mat=
-ter.
-> > Indeed, unless it is the worst one, it probably doesn't matter at all.
-> > After all spin locks shouldn't really be held for significant periods.
-> >
-> > OTOH if the lock doesn't disable interrupts then an interrupt will
-> > increase the length of time a lock is held for.
-> > This can be significant - and I mean upwards of 1ms.
-> > Network interrupts can tale a while - and then the work that is deferred
-> > to 'softint' context happens as well (I don't think a spinlock stops
-> > the softint code).
-> >
-> > I've a feeling that unless a spin lock is held for 'far longer than one
-> > should ever be held for' then you really want to disable interrupts.
-> > =20
->=20
-> Note that taking the interrupt trip increases single-threaded overhead.
+> >    let min_align = core::mem::size_of::<*const crate::ffi::c_void>();
+> >    let (align, size) = if layout.align() < min_align {
+> >        (min_align, layout.size().div_ceil(min_align) * min_align)
+> >    } else {
+> >        (layout.align(), layout.size())
+> >    };
+> 
+> I was trying to avoid repeated calls to either function, but I'm happy
+> to shorten the variable names. Would that suit?
 
-I'm not sure what you mean.
-Disabling interrupts isn't as cheap as it ought to be, but probably isn't
-that bad.
-
-> Per your own description, if the lock is contested and interrupts are
-> disabled, handling them also get delayed by CPUs which are busy just
-> waiting (and which would otherwise take care of them).
-
-The slow path for spin locks ought to have interrupts enabled.
-But, in any case, the interrupt is only delayed for the short time the spin
-lock is held for.
-
-> So while this is indeed a tradeoff, as I understand the sane default
-> is to *not* disable interrupts unless necessary.
-
-I bet to differ.
-
-If an interrupt is taken by a cpu that holds a spin lock then any other
-cpu that attempts to acquire the lock spins for the additional time that
-the interrupt takes.
-If interrupts are disabled then an interrupt is delayed for the time
-that the spin lock is held.
-
-The execution time of an interrupt can easily be a lot longer than
-most spin locks are held for.
-Either because of the work that an ethernet interrupt does (even before
-deferring to softint), or because even a single PCIe read (eg to an
-Altera Cyclone V fpga) can easily take 1000s of clocks.
-
-Now the execution cost of the interrupt has to happen some time.
-But you really don't want multiple cpu spinning waiting for it to finish.
-
-	David
-
+I think calling layout.align() twice is fine, no need shadow align for that.
