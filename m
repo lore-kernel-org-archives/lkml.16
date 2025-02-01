@@ -1,252 +1,170 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A471BBBD4
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B441C3F00
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 16:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738426346; cv=none; b=Z+8YVFVFywTbcxbqMB/fELJvI/xzLkMDKDgr9+DawRsJ1/Gb+raLzVavF1O9XTO96vU1ZMujzdtIHw/mO3Ky9zQ/AcozDJqCBa4ONxAvRMPRbuTNR9nRE2kDY8FG/u9zxxg4l/M1pg4tYJUCIJLyAZ7AXV/OBCeHrax3FQtBTkA=
+	t=1738426373; cv=none; b=C7Zi2/uk27yFM+/ooZXCrJpelrfGllQPZF4y8YbVyc3crBJi1UTuS/tCrZaqvcX9+WbOLnB+JgjWx8CsXFW7B+A6q/xAdxgQ9C4KT/WyRBg3J2+tCBzXXNQMN1kLo07VJo4LkG+s6hgJHM/j1U6uErHD7LlYjzwTKApXlfhbCa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738426346; c=relaxed/simple;
-	bh=JtZ04UNyH23V270wHtAoAJW6QpRgEi4X0u/ziEmXSbg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=eBNLTxRHd7yYprEledflKgQMYnSxAB1VnY3pZH9VEMOYGzglXuRbl7wKIkeRtup5yOolYGoX9H8jg3yd+1zZXKVhcfzMMBi74PKqAf61VOelRV31ZDLHTi6gumbtZ19zSk8tNlFi2JEqyef166ZP6QlGxLMn/3R+W78CTRTuSNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d00eac3de2so16094895ab.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:12:24 -0800 (PST)
+	s=arc-20240116; t=1738426373; c=relaxed/simple;
+	bh=pWDy+G/FLFskjOChqfF5xxOtF+kpej0KMJdyHy1d2pY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c2nwsMNqOlp4f/ZVZeHUQ/Zl5h5PgVt0Gu51hE6uXrd0CsEcJRsPnZqEFLHRcLcQ2uRXhgeZhRw7gp93a8Pz8ItFgX887LbshgbFBMUkuONdjnAdTF/W0fRuOvoz6o2Ma10O02cW24m5pTJ+dMofCCqAAOw0EcD5j47VcjN2zlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qPxU10qp; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qPxU10qp"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3a814c54742so119725ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 08:12:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738426371; x=1739031171; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OQaWCOfcTD7adap/jkek4EJcOFfU4JZ7fPFMN3rMGUQ=;
+        b=qPxU10qpZBTjdNJaV/n0WcNk6q6RfHgsNr9U1kcYSeHrXi7eLSLoQWWd1VIOipwoVx
+         JX9fhpjZa2nm+Dwd4sL0wJZnoQUZTyzxGSSJeZ60EGwRanWEKpOxovgn4RXMXWqHBi/W
+         p10H+cnf3w+B6cUSz1HzmoZ6tGSY7eoypXCZXzJa4DjaxX8+Ii7FofZkYMrMO++vtfAn
+         rloHcgZA67cZuIO5DrbGp1S0bdQUx8Yz2rrl7gNwUP5aWKzw3BO2C1nOj+ys3ke3Fsl8
+         xiMOODGosRZY4QSNkt5j6Jd1j7kJxhfRa5d5Eg89Y2bloLOfxLRRwf5MwBx5ujLM3Elx
+         ZTGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738426343; x=1739031143;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tyGD3kn0ahOYQSd5y7of5ZgUpydEeJctMr1j2Eqeg5I=;
-        b=Z9WSHP7izN0eA/ovKkLfCQ54dUNBh+OCdyxPTKyh6GjLlpsAZEnQfGDTTSRIwrfiOD
-         ayQAuAA2DN1DrNNI084ct1mdXOmup1/EzkbJrceg6bChFoUNXLRRVWXU1VbEi9wpW5vz
-         eb0KX8AO6uqgkOZWAEZy/T096wehE88YbH5oK7S9wHi4CTSu7LcCDeYQo08Ea1t5KVEi
-         2XnKj9Pj5CV89Zhb4CI8ljR76hMXxdfF2YGje1ySCp86Kp9/FnhbYE7p0QdhGxt6hVy8
-         YLutYZSBH/xJ6zT0r9B6SIbDJISFTfPBOJ86rnSIW4nXNnGzBYmsPhiWjOnHhkkSXxe5
-         Nmvg==
-X-Forwarded-Encrypted: i=1; AJvYcCU6upyhMYhoH0k3eUqLnuXMgnaEy3o7yCxla9+ERAgu+Z5/wdu+GNlBIn6xwmvp12L9Aw/463Qx5Eq7wiY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzt/cSyRfeVc283DcpkZTvp3QGql4gahG3B/dek5yX71vDhNtMX
-	1XVl9nXVoblP2O2P7k7lu1YfyMzdrdFqK94tOCmXBD09ePL3gIFxO0vApX2LP7qmgRbJKrOa1a4
-	CXlsmRkFO1j+YuE11VrkJgElFZZ8wCkaSo0xSRqDz9zrWm8J+6zROVKs=
-X-Google-Smtp-Source: AGHT+IEZeC/XfVZ5fWXRhpEada1rV5f/DE2gpaK0SLZAQFZrtNIdpPwsSEzNbwZbhcr5iAkS/zMgJ+gyIYB5xTLpQ/a/84+Gfx6X
+        d=1e100.net; s=20230601; t=1738426371; x=1739031171;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OQaWCOfcTD7adap/jkek4EJcOFfU4JZ7fPFMN3rMGUQ=;
+        b=h0EbeqZibloGt+iefzOcf31pKEkzQLjHmYFKstdQkMkvWhfwhA16eSBHybp4N5Bweb
+         X7KNlLpce4RPgY5fhPDAJ7D9r/462yP9A30boMDJkUITChhW4x0f37tVX/OMvtzgQ82+
+         zQK4TBARCSSynfZ0QSi5AFr+/RgEWbhbWX0IEOTeJF2aySgoGY2QT6l78NeyCCYbIs57
+         oPm4PpWue3LqTLXdgG1TASH0ndBR3UbpwGjpC3om/CzVPhppvPGAov8l0mtVz+cSliV2
+         vBYCHR3PbYE/rh06WSWm2dfhugwzUdRo6eFukSXS/lu/DtALezyQTavdpN2DK2UdY2GG
+         yRzw==
+X-Forwarded-Encrypted: i=1; AJvYcCViP+D3xSJ4a2HghEanLK9sF+4hcR9oT8mp9HuDNC+xqROVFESCa7OpakXpMTjBnAA9yVpBfl7nFPd1CeI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH9/Y/PEQqa/clLfEKXJs4NddNrM8jexlF6bW/YzOG9//eQd/8
+	qADuLUhoS9elFdonCF8WL32a4A7nQ0Tfd+JQd9oSWSL8UG/YaiXZrnFjc3glpmK3zkT+IO9P8vn
+	0fh/AyWH7QCV8fISxgG/Brdihtp3+R93JlzqXutN/uY+jo/MRFWN6T0w=
+X-Gm-Gg: ASbGncvpwxSnjIFah+tnr/gak2s8wO5tam+iRPQ1RFFzSDPFKAxDB/FPT5gcYdvb6bN
+	E5sc0RQK3JqJ4mQbfoNrskG5v8bTJ06ETdR5V4jWoh38hvAuPxQzNYVUE7fdVGFRoqg744rtSYQ
+	==
+X-Google-Smtp-Source: AGHT+IF69bDr95smn4mmnZECR1b515k/xT3KInxWdsf6LEn1q52wgteTdkisoJ0CBgqKIxsr5onZsHFEdOuEee/fhVA=
+X-Received: by 2002:a05:6e02:152f:b0:3ce:2f93:a02b with SMTP id
+ e9e14a558f8ab-3d020178852mr2330315ab.12.1738426371027; Sat, 01 Feb 2025
+ 08:12:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c24f:0:b0:3d0:1abc:fe03 with SMTP id
- e9e14a558f8ab-3d01abcff3emr46234015ab.15.1738426343697; Sat, 01 Feb 2025
- 08:12:23 -0800 (PST)
-Date: Sat, 01 Feb 2025 08:12:23 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <679e47e7.050a0220.d7c5a.005f.GAE@google.com>
-Subject: [syzbot] [overlayfs?] possible deadlock in ovl_create_object
-From: syzbot <syzbot+93ea1efef88821c553ad@syzkaller.appspotmail.com>
-To: amir73il@gmail.com, linux-kernel@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, miklos@szeredi.hu, 
-	syzkaller-bugs@googlegroups.com
+References: <20250131112400.568975-1-tmricht@linux.ibm.com> <20250201113406.4312a601@pumpkin>
+In-Reply-To: <20250201113406.4312a601@pumpkin>
+From: Ian Rogers <irogers@google.com>
+Date: Sat, 1 Feb 2025 08:12:38 -0800
+X-Gm-Features: AWEUYZlyxxB7qS1nrQjz_09CTMxeBkAZdRVUEc3B_GIHgRt9jOtoTPNp3J6x-Zg
+Message-ID: <CAP-5=fUOS6ZmfVdzwNL6+5VfUr9fms0zE4FXW6vsRqSfS9F7sA@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Fix perf test 11 hwmon endianess issue
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, 
+	namhyung@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com, 
+	sumanthk@linux.ibm.com, hca@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Sat, Feb 1, 2025 at 3:34=E2=80=AFAM David Laight
+<david.laight.linux@gmail.com> wrote:
+>
+> On Fri, 31 Jan 2025 12:24:00 +0100
+> Thomas Richter <tmricht@linux.ibm.com> wrote:
+>
+> > perf test 11 hwmon fails on s390 with this error
+> >
+> >  # ./perf test -Fv 11
+> >  --- start ---
+> >  ---- end ----
+> >  11.1: Basic parsing test             : Ok
+> >  --- start ---
+> >  Testing 'temp_test_hwmon_event1'
+> >  Using CPUID IBM,3931,704,A01,3.7,002f
+> >  temp_test_hwmon_event1 -> hwmon_a_test_hwmon_pmu/temp_test_hwmon_event=
+1/
+> >  FAILED tests/hwmon_pmu.c:189 Unexpected config for
+> >     'temp_test_hwmon_event1', 292470092988416 !=3D 655361
+> >  ---- end ----
+> >  11.2: Parsing without PMU name       : FAILED!
+> >  --- start ---
+> >  Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
+> >  FAILED tests/hwmon_pmu.c:189 Unexpected config for
+> >     'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/',
+> >     292470092988416 !=3D 655361
+> >  ---- end ----
+> >  11.3: Parsing with PMU name          : FAILED!
+> >  #
+> >
+> > The root cause is in member test_event::config which is initialized
+> > to 0xA0001 or 655361. During event parsing a long list event parsing
+> > functions are called and end up with this gdb call stack:
+> ...
+> > However member key::type_and_num is defined as union and bit field:
+> >
+> >    union hwmon_pmu_event_key {
+> >         long type_and_num;
+> >         struct {
+> >                 int num :16;
+> >                 enum hwmon_type type :8;
+> >         };
+> >    };
+>
+> That is entirely horrid.
 
-syzbot found the following issue on:
+It also has the side-effect that if you initialize the struct bits in
+the type_and_num will be undefined and sanitizers will try to trip you
+up.
 
-HEAD commit:    805ba04cb7cc Merge tag 'mips_6.14' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=157e6364580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2ae8afe424ee551e
-dashboard link: https://syzkaller.appspot.com/bug?extid=93ea1efef88821c553ad
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> I'm surprised this even compiles:
+> static size_t hwmon_pmu__event_hashmap_hash(long key, void *ctx __maybe_u=
+nused)
+> {
+>         return ((union hwmon_pmu_event_key)key).type_and_num;
+> }
+> It has to be just 'return key', but I'm not sure what the hashmap code is=
+ doing.
+>
+> AFAICT the code is just trying to generate a value for the hashmap to has=
+h on?
+> Why not just use (type << 16 | num) instead of 'trying to be clever' with=
+ a union?
 
-Unfortunately, I don't have any reproducer for this issue yet.
+The purpose wasn't so much to be 'clever' as you say. Perf event
+configs, which is where type_and_num lives in the events, have their
+bitfields described either by convention or by files in
+/sys/devices/<pmu>/format. On an Intel laptop:
+```
+$ cat /sys/devices/cpu/format/inv
+config:23
+```
+So I can go:
+```
+$ perf stat -e 'inst_retired.any/inv=3D1/' true
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-805ba04c.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f9b9a1354470/vmlinux-805ba04c.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6c77f51f864a/bzImage-805ba04c.xz
+Performance counter stats for 'true':
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+93ea1efef88821c553ad@syzkaller.appspotmail.com
+        1,069,756      inst_retired.any/inv=3D1/
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.13.0-syzkaller-08291-g805ba04cb7cc #0 Not tainted
-------------------------------------------------------
-syz.4.1894/11640 is trying to acquire lock:
-ffff88805ad04420 (sb_writers#6){.+.+}-{0:0}, at: ovl_create_object+0x12e/0x300 fs/overlayfs/dir.c:656
+      0.001539265 seconds time elapsed
 
-but task is already holding lock:
-ffff8880362ed258 (&ovl_i_mutex_dir_key[depth]#2){++++}-{4:4}, at: inode_lock include/linux/fs.h:865 [inline]
-ffff8880362ed258 (&ovl_i_mutex_dir_key[depth]#2){++++}-{4:4}, at: open_last_lookups fs/namei.c:3745 [inline]
-ffff8880362ed258 (&ovl_i_mutex_dir_key[depth]#2){++++}-{4:4}, at: path_openat+0x15a4/0x2d80 fs/namei.c:3984
+      0.001719000 seconds user
+      0.000000000 seconds sys
+```
+and the configuration of my inst_retired.any event now has bit 23 in
+the config set. Just as the format files try to break down what the
+bitfields within a config u64 are doing, the union was trying to do
+similar. Making an attempt to have the value be intention revealing
+which the shift and masking may lose, for example, by making it look
+like bits in the num could overlap with and modify the type.
 
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #3 (&ovl_i_mutex_dir_key[depth]#2){++++}-{4:4}:
-       down_read+0x9a/0x330 kernel/locking/rwsem.c:1524
-       inode_lock_shared include/linux/fs.h:875 [inline]
-       lookup_slow fs/namei.c:1807 [inline]
-       walk_component+0x342/0x5b0 fs/namei.c:2112
-       lookup_last fs/namei.c:2610 [inline]
-       path_lookupat+0x17f/0x770 fs/namei.c:2634
-       filename_lookup+0x221/0x5f0 fs/namei.c:2663
-       kern_path+0x35/0x50 fs/namei.c:2771
-       lookup_bdev+0xd9/0x280 block/bdev.c:1163
-       resume_store+0x1d8/0x460 kernel/power/hibernate.c:1242
-       kobj_attr_store+0x55/0x80 lib/kobject.c:840
-       sysfs_kf_write+0x117/0x170 fs/sysfs/file.c:139
-       kernfs_fop_write_iter+0x33d/0x500 fs/kernfs/file.c:334
-       new_sync_write fs/read_write.c:586 [inline]
-       vfs_write+0x5ae/0x1150 fs/read_write.c:679
-       ksys_write+0x12b/0x250 fs/read_write.c:731
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #2 (&of->mutex){+.+.}-{4:4}:
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x19b/0xb10 kernel/locking/mutex.c:730
-       kernfs_fop_write_iter+0x27b/0x500 fs/kernfs/file.c:325
-       iter_file_splice_write+0x90f/0x10b0 fs/splice.c:743
-       do_splice_from fs/splice.c:941 [inline]
-       do_splice+0x146a/0x1f70 fs/splice.c:1354
-       __do_splice+0x327/0x360 fs/splice.c:1436
-       __do_sys_splice fs/splice.c:1639 [inline]
-       __se_sys_splice fs/splice.c:1621 [inline]
-       __x64_sys_splice+0x187/0x250 fs/splice.c:1621
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (&pipe->mutex){+.+.}-{4:4}:
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x19b/0xb10 kernel/locking/mutex.c:730
-       pipe_lock fs/pipe.c:92 [inline]
-       pipe_lock+0x64/0x80 fs/pipe.c:89
-       iter_file_splice_write+0x1eb/0x10b0 fs/splice.c:687
-       do_splice_from fs/splice.c:941 [inline]
-       do_splice+0x146a/0x1f70 fs/splice.c:1354
-       __do_splice+0x327/0x360 fs/splice.c:1436
-       __do_sys_splice fs/splice.c:1639 [inline]
-       __se_sys_splice fs/splice.c:1621 [inline]
-       __x64_sys_splice+0x187/0x250 fs/splice.c:1621
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (sb_writers#6){.+.+}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3163 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
-       validate_chain kernel/locking/lockdep.c:3906 [inline]
-       __lock_acquire+0x249e/0x3c40 kernel/locking/lockdep.c:5228
-       lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5851
-       percpu_down_read include/linux/percpu-rwsem.h:51 [inline]
-       __sb_start_write include/linux/fs.h:1773 [inline]
-       sb_start_write include/linux/fs.h:1909 [inline]
-       mnt_want_write+0x6f/0x450 fs/namespace.c:547
-       ovl_create_object+0x12e/0x300 fs/overlayfs/dir.c:656
-       lookup_open.isra.0+0x11c8/0x1580 fs/namei.c:3649
-       open_last_lookups fs/namei.c:3748 [inline]
-       path_openat+0x904/0x2d80 fs/namei.c:3984
-       do_filp_open+0x20c/0x470 fs/namei.c:4014
-       do_sys_openat2+0x17a/0x1e0 fs/open.c:1427
-       do_sys_open fs/open.c:1442 [inline]
-       __do_sys_open fs/open.c:1450 [inline]
-       __se_sys_open fs/open.c:1446 [inline]
-       __x64_sys_open+0x154/0x1e0 fs/open.c:1446
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  sb_writers#6 --> &of->mutex --> &ovl_i_mutex_dir_key[depth]#2
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&ovl_i_mutex_dir_key[depth]#2);
-                               lock(&of->mutex);
-                               lock(&ovl_i_mutex_dir_key[depth]#2);
-  rlock(sb_writers#6);
-
- *** DEADLOCK ***
-
-2 locks held by syz.4.1894/11640:
- #0: ffff88805690c420 (sb_writers#20){.+.+}-{0:0}, at: open_last_lookups fs/namei.c:3737 [inline]
- #0: ffff88805690c420 (sb_writers#20){.+.+}-{0:0}, at: path_openat+0x1fab/0x2d80 fs/namei.c:3984
- #1: ffff8880362ed258 (&ovl_i_mutex_dir_key[depth]#2){++++}-{4:4}, at: inode_lock include/linux/fs.h:865 [inline]
- #1: ffff8880362ed258 (&ovl_i_mutex_dir_key[depth]#2){++++}-{4:4}, at: open_last_lookups fs/namei.c:3745 [inline]
- #1: ffff8880362ed258 (&ovl_i_mutex_dir_key[depth]#2){++++}-{4:4}, at: path_openat+0x15a4/0x2d80 fs/namei.c:3984
-
-stack backtrace:
-CPU: 3 UID: 0 PID: 11640 Comm: syz.4.1894 Not tainted 6.13.0-syzkaller-08291-g805ba04cb7cc #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_circular_bug+0x490/0x760 kernel/locking/lockdep.c:2076
- check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2208
- check_prev_add kernel/locking/lockdep.c:3163 [inline]
- check_prevs_add kernel/locking/lockdep.c:3282 [inline]
- validate_chain kernel/locking/lockdep.c:3906 [inline]
- __lock_acquire+0x249e/0x3c40 kernel/locking/lockdep.c:5228
- lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5851
- percpu_down_read include/linux/percpu-rwsem.h:51 [inline]
- __sb_start_write include/linux/fs.h:1773 [inline]
- sb_start_write include/linux/fs.h:1909 [inline]
- mnt_want_write+0x6f/0x450 fs/namespace.c:547
- ovl_create_object+0x12e/0x300 fs/overlayfs/dir.c:656
- lookup_open.isra.0+0x11c8/0x1580 fs/namei.c:3649
- open_last_lookups fs/namei.c:3748 [inline]
- path_openat+0x904/0x2d80 fs/namei.c:3984
- do_filp_open+0x20c/0x470 fs/namei.c:4014
- do_sys_openat2+0x17a/0x1e0 fs/open.c:1427
- do_sys_open fs/open.c:1442 [inline]
- __do_sys_open fs/open.c:1450 [inline]
- __se_sys_open fs/open.c:1446 [inline]
- __x64_sys_open+0x154/0x1e0 fs/open.c:1446
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fb22938cda9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fb22a1f9038 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007fb2295a5fa0 RCX: 00007fb22938cda9
-RDX: 0000000000000000 RSI: 0000000000060142 RDI: 0000000020000000
-RBP: 00007fb22940e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fb2295a5fa0 R15: 00007ffe95a187a8
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks,
+Ian
