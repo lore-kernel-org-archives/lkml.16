@@ -1,79 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A1684A30;
-	Sat,  1 Feb 2025 12:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEF910E0;
+	Sat,  1 Feb 2025 12:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738411964; cv=none; b=E9C+RvorTrqiuuWpuHwUbyAaNLAcuKv/31qoWbPAh9rDB43+hJysCZvX/EV00ULKuo84HJZughwajOKjMyHKX01ngxI/Qj34NxrjkZyb2eUBi+kWxMRTayOLfl0KriRgqdVVCfCTysYxjl23uPwRL93tfH++K/2w/aMMRjeSzJY=
+	t=1738412165; cv=none; b=i1UR9qVvnNpnam+GprcVyDkjx2SyeB6HWdOYSa9DP1uSWFaNHEclA/ajWFCxaK4zi/3ggbYhZGicWuoI62bN91A26pqKn87r+q3p+SBzXx6UQv6XXtZdvq2qG5PYMJSbfp/7dzlU+ciN45D4HeZZv/2PMGS3DQXUT1HS2L5Iydo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738411964; c=relaxed/simple;
-	bh=zqN7AakLlbtVefgeIf3wADi+hbc/wJ/4nlqzKX2S6xw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uzgH8VCMox3CGY7SUJwudzTwaWYI4undD3V2SVYmZkXEoOURLdkRw5hjw2BO+1S7MJUnZEVVd6SEee8qYyBGFQMoSXnOiCpL39Qkx6QDMMFbQkyyWPspjwRd9SZwMt0ITMaJ4rFxsX43RoF1ZAzPBdJ6MPs9TzihG3FmFGt3IlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e4YFI8tv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e4YFI8tv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10FF6C4CED3;
-	Sat,  1 Feb 2025 12:12:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738411963;
-	bh=zqN7AakLlbtVefgeIf3wADi+hbc/wJ/4nlqzKX2S6xw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e4YFI8tv35vRm6FBikSeoD+z0U2PU15duxLPkIK9EeJSbci27jlSwjE5KnnOTmmVC
-	 67vmY76tlJ1UcdOGKbybLY1VmJ+uFS2QLF1S6lltNYOh+Jw96Wkl3bshnWNlZOKUq6
-	 2mDrZnDz+PH2imYaLfPrIkI9UaOjTQ4/Aq+2KlIJyzvEeyNMG64OxqGXKCa/A8jGco
-	 CZLuw9bjSOw+NPGL3u/h8fuTdi56vb4WHQmkPwhHaQE1bze8vx53qiI3qe6nziogXw
-	 1LzJX2WnjAX8bHWaIbo3yTREe2k4fVKzZj+KKbMt+ikTE6dj9u8PNU3pH/mziZJwos
-	 Z3/Tzyqf6WS9Q==
-Date: Sat, 1 Feb 2025 13:12:35 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Greg KH <greg@kroah.com>
-Cc: airlied@gmail.com, simona@ffwll.ch, corbet@lwn.net,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, ajanulgu@redhat.com, lyude@redhat.com,
-	pstanner@redhat.com, zhiw@nvidia.com, cjia@nvidia.com,
-	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 1/2] gpu: nova-core: add initial driver stub
-Message-ID: <Z54PsyY-fNRBwJQ4@cassiopeiae>
-References: <20250131220432.17717-1-dakr@kernel.org>
- <2025020151-leverage-unadorned-fb05@gregkh>
+	s=arc-20240116; t=1738412165; c=relaxed/simple;
+	bh=b8U7QmhWk7y+Hx06WSqrwTDfcKEo/BG8sdQWG27SdjI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PDc/ZoAXif8rcSdOBRuVoynewLueUbNYzxdzMhMV4o6WV78lkIPGrlFJTROQdrfiaCyh3QcKcMQA2fj4kH+rckfPSBuB1aRv+hBbi3nyRFWYz4XXLbxbEgDaYnWAv+jsbxxjKUK0BXzAzb/taUiNMIFdPiYoK7GOiSwNFcTv6Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.10.14] (dynamic-176-000-016-040.176.0.pool.telefonica.de [176.0.16.40])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id A9CD161E647B8;
+	Sat, 01 Feb 2025 13:15:33 +0100 (CET)
+Message-ID: <13d5026c-3274-4b90-b941-22f08a8ebdc4@molgen.mpg.de>
+Date: Sat, 1 Feb 2025 13:15:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025020151-leverage-unadorned-fb05@gregkh>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] Bluetooth: qca: add WCN3950 support
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
+ Rocky Liao <quic_rjliao@quicinc.com>, Bjorn Andersson
+ <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20250201-rb1-bt-v1-0-ae896c4923d8@linaro.org>
+ <20250201-rb1-bt-v1-2-ae896c4923d8@linaro.org>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20250201-rb1-bt-v1-2-ae896c4923d8@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 01, 2025 at 09:33:28AM +0100, Greg KH wrote:
-> On Fri, Jan 31, 2025 at 11:04:24PM +0100, Danilo Krummrich wrote:
-> > +impl Gpu {
-> > +    pub(crate) fn new(pdev: &pci::Device, bar: Devres<Bar0>) -> Result<impl PinInit<Self>> {
-> > +        let spec = GpuSpec::new(&bar)?;
-> > +        let fw = Firmware::new(pdev.as_ref(), &spec, "535.113.01")?;
-> > +
-> > +        dev_info!(
-> > +            pdev.as_ref(),
-> > +            "NVIDIA {:?} ({:#x})",
-> > +            spec.chipset,
-> > +            spec.boot0
-> > +        );
-> 
-> When drivers work properly, they should be quiet, so can you move this
-> to dev_dbg()?
+Dear Dmitry,
 
-Sure, the only reason I made this dev_info!() is because, as an initial
-skeleton, the driver isn't doing anything else for now. So, I thought it would
-be nice to have some sign of life.
 
-Of course, the intention was to remove this, once there's any other sign of
-life.
+Thank you for the patch.
+
+Am 01.02.25 um 10:18 schrieb Dmitry Baryshkov:
+> WCN3950 is another example of the WCN39xx BT/WiFI family of chips. It
+> requires different firmware files and has different current
+> requirements, so add it as a separate SoC type.
+
+Is the firmware publicly available already? (In patch 4/4 you write, it 
+is, and I found it [1].) I find such information helpful in commit 
+messages, and also the firmware names:
+
+•   qca/cmbtfw12.tlv
+•   qca/cmbtfw13.tlv
+•   qca/cmnv12.bin
+•   qca/cmnv13.bin
+
+Do you also have a datasheet name to review the vregs?
+
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>   drivers/bluetooth/btqca.c   |  9 +++++++++
+>   drivers/bluetooth/btqca.h   |  1 +
+>   drivers/bluetooth/hci_qca.c | 25 +++++++++++++++++++++++++
+>   3 files changed, 35 insertions(+)
+
+[…]
+
+The rest looks good.
+
+
+Kind regards,
+
+Paul
+
+
+[1]: 
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/?id=421017641e6a6ef389190ac3edf67885183f3de0
