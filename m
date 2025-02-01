@@ -1,211 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E421BC9FB;
-	Sat,  1 Feb 2025 17:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1974F1CAA84
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 17:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738431974; cv=none; b=geyfrB9JDnay4eM23ka9tgIKI9Qlh0mpPKLUzqx0ZiQOhDpITQXdn4wdBDNpeFLdUDNpF9TOYbv8lL6qNyyD38ukmL9pGiU66d+xPfCrDlfXbieE4jN4n7S3dETaLGKCSMeBNR5ro68Gs/jTmJgGilZv7LCU5PSDAv6zvnLb0QY=
+	t=1738431982; cv=none; b=E3X9gJf9To2WjdsB1l499Fsrpoyw1Dc3m5SIWXwZ5v5ol+QHbgbTag9Ty8cwkGbI2yAxYERlzt/tBKBfxbAI5XbWGxFTi+OmKWRGhdHvJsXwAOu8xGCk/3FHPMbxezK2CguKCp61SSnhVDGtZ6fCYrftbqtLb245ZBV8PGeNWLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738431974; c=relaxed/simple;
-	bh=k3GfAHGhehFtQ+3XNZngi8W6lAbhA3kuCQtgN05zDEk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZChqDhyXV7EOXKjytFlCNul0d3oM7NmvuB0bFR/ll1TaxdV4Wk3z+198siRHcP28toqaCMDwR5wfWXku1KXOPSWZednloyugNB1LZl+sf3PC2gRPNa/1Yl1gQA9gTZ38MNcBgk9Kq03qbIGIXyA59Ah8eO92+u5tZmgzU1pMr+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KT3v9zwA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738431982; c=relaxed/simple;
+	bh=60VPXtyvSWcUIwdHYTaGCZ8APquOEp+cO+t3vu/RDjE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JSQosQZw20SPBCEh63pgrd4eK26Of3oOGz/C8Epylz7wemPa9t9Re4JAhmXcWlxV7cWsO+I7z1AU/CAFzIoX4Xkr4gurBcOy4KwxSdmZe7RqxV8B0Zk5c92MBxbieu1qTfOrqgLO8iJ9+zEYKGfmCDgoD6RfXlghNnvdgNUtw6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OqBSkujf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KT3v9zwA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4D77C4CEE0;
-	Sat,  1 Feb 2025 17:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738431974;
-	bh=k3GfAHGhehFtQ+3XNZngi8W6lAbhA3kuCQtgN05zDEk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KT3v9zwAepacQW2rxzoEt/iR9wasK3B6ZFeaQdLfNGUaod7XkHR3JDplODWcSiSsb
-	 lwFpc19FUAw55EZdMfpLcj7q9FqsQvUMwkYIA28UfSp1eOTV4p8xGsHNJ2Xa/oRKbY
-	 GQV6cLTZuq6joz/puJ/ipYRAZFDid0R0nu7ug/Eo=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	torvalds@linux-foundation.org,
-	stable@vger.kernel.org
-Cc: lwn@lwn.net,
-	jslaby@suse.cz,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 6.12.12
-Date: Sat,  1 Feb 2025 18:45:53 +0100
-Message-ID: <2025020154-tribunal-bonnet-9db4@gregkh>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OqBSkujf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738431979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Pjei15Oz8AaRbxwfkWGA5XxN54EwCFxMTNKwBCROQYo=;
+	b=OqBSkujfhOpdLjTZcYIwE0HBU/x1FctjeRhTMzrBtvDKfxR+ni7rVC1M3hf4G7s0NBk/3L
+	VbSfkZNHymq6QeUOGjJxY3kQVjkeXAW6EZMbgi4gZ616dfEMG7STgMN4H6FGPZq6RuhcHg
+	SfFyT4FrpZYzs9LCdv2AR2qDgI55BBI=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-669-wWCgrnzsMkKb4kY7vnFXRA-1; Sat,
+ 01 Feb 2025 12:46:15 -0500
+X-MC-Unique: wWCgrnzsMkKb4kY7vnFXRA-1
+X-Mimecast-MFC-AGG-ID: wWCgrnzsMkKb4kY7vnFXRA
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A592518004A9;
+	Sat,  1 Feb 2025 17:46:14 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.16])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1A148180035E;
+	Sat,  1 Feb 2025 17:46:11 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sat,  1 Feb 2025 18:45:48 +0100 (CET)
+Date: Sat, 1 Feb 2025 18:45:44 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: ebiederm@xmission.com, brauner@kernel.org, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] pid: drop irq disablement around pidmap_lock
+Message-ID: <20250201174544.GB26042@redhat.com>
+References: <20250201163106.28912-1-mjguzik@gmail.com>
+ <20250201163106.28912-7-mjguzik@gmail.com>
+ <20250201174203.GA26042@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250201174203.GA26042@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-I'm announcing the release of the 6.12.12 kernel.
+On 02/01, Oleg Nesterov wrote:
+>
+> However, shouldn't this patch also remove the comment which explains
+> the possible lock inversion? Above put_pid(),
+>
+> 	/*
+> 	 * Note: disable interrupts while the pidmap_lock is held as an
+> 	 * interrupt might come in and do read_lock(&tasklist_lock).
+> 	 *
+> 	 * If we don't disable interrupts there is a nasty deadlock between
+> 	 * detach_pid()->free_pid() and another cpu that does
+> 	 * spin_lock(&pidmap_lock) followed by an interrupt routine that does
+> 	 * read_lock(&tasklist_lock);
+> 	 *
+> 	 * After we clean up the tasklist_lock and know there are no
+> 	 * irq handlers that take it we can leave the interrupts enabled.
+> 	 * For now it is easier to be safe than to prove it can't happen.
+> 	 */
 
-All users of the 6.12 kernel series must upgrade.
+Ah, sorry, please forget, you did it in the previous patch. which probably
+needs some more discussion...
 
-The updated 6.12.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.12.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                                                                       |    2 
- drivers/gpu/drm/amd/display/dc/dce/dmub_hw_lock_mgr.c                          |    3 
- drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c |    4 
- drivers/gpu/drm/drm_connector.c                                                |    3 
- drivers/gpu/drm/v3d/v3d_irq.c                                                  |   16 
- drivers/hid/hid-ids.h                                                          |    1 
- drivers/hid/hid-multitouch.c                                                   |    8 
- drivers/hid/wacom_sys.c                                                        |   24 -
- drivers/hwmon/drivetemp.c                                                      |    2 
- drivers/input/joystick/xpad.c                                                  |    9 
- drivers/input/keyboard/atkbd.c                                                 |    2 
- drivers/irqchip/irq-sunxi-nmi.c                                                |    3 
- drivers/net/wireless/realtek/rtl8xxxu/core.c                                   |   20 +
- drivers/of/unittest-data/tests-platform.dtsi                                   |   13 
- drivers/of/unittest.c                                                          |   14 
- drivers/scsi/scsi_transport_iscsi.c                                            |    4 
- drivers/scsi/storvsc_drv.c                                                     |    8 
- drivers/usb/gadget/function/u_serial.c                                         |    8 
- drivers/usb/serial/quatech2.c                                                  |    2 
- drivers/vfio/platform/vfio_platform_common.c                                   |   10 
- fs/gfs2/file.c                                                                 |    1 
- fs/libfs.c                                                                     |  162 ++++------
- fs/smb/client/smb2inode.c                                                      |   92 ++++-
- include/linux/fs.h                                                             |    1 
- include/linux/seccomp.h                                                        |    2 
- io_uring/rsrc.c                                                                |    7 
- mm/filemap.c                                                                   |   19 +
- mm/shmem.c                                                                     |    4 
- mm/zswap.c                                                                     |   90 +++--
- net/sched/sch_ets.c                                                            |    2 
- sound/pci/hda/patch_realtek.c                                                  |    4 
- sound/soc/codecs/Kconfig                                                       |    1 
- sound/soc/codecs/cs42l43.c                                                     |    1 
- sound/soc/codecs/es8316.c                                                      |   10 
- sound/soc/samsung/Kconfig                                                      |    6 
- sound/usb/quirks.c                                                             |    2 
- 36 files changed, 379 insertions(+), 181 deletions(-)
-
-Alex Hung (1):
-      drm/amd/display: Initialize denominator defaults to 1
-
-Alex Williamson (1):
-      vfio/platform: check the bounds of read/write syscalls
-
-Andreas Gruenbacher (1):
-      gfs2: Truncate address space when flipping GFS2_DIF_JDATA flag
-
-Charles Keepax (3):
-      ASoC: wm8994: Add depends on MFD core
-      ASoC: samsung: Add missing selects for MFD_WM8994
-      ASoC: samsung: Add missing depends on I2C
-
-Chuck Lever (5):
-      libfs: Return ENOSPC when the directory offset range is exhausted
-      Revert "libfs: Add simple_offset_empty()"
-      Revert "libfs: fix infinite directory reads for offset dir"
-      libfs: Replace simple_offset end-of-directory detection
-      libfs: Use d_children list to iterate simple_offset directories
-
-Cristian Ciocaltea (1):
-      drm/connector: hdmi: Validate supported_formats matches ycbcr_420_allowed
-
-Easwar Hariharan (1):
-      scsi: storvsc: Ratelimit warning logs to prevent VM denial of service
-
-Greg Kroah-Hartman (2):
-      Revert "usb: gadget: u_serial: Disable ep before setting port to null to fix the crash caused by port being null"
-      Linux 6.12.12
-
-Hans de Goede (1):
-      wifi: rtl8xxxu: add more missing rtl8192cu USB IDs
-
-Jack Greiner (1):
-      Input: xpad - add support for wooting two he (arm)
-
-Jamal Hadi Salim (1):
-      net: sched: fix ets qdisc OOB Indexing
-
-Jann Horn (1):
-      io_uring/rsrc: require cloned buffers to share accounting contexts
-
-Jason Gerecke (1):
-      HID: wacom: Initialize brightness of LED trigger
-
-Jiri Kosina (1):
-      Revert "HID: multitouch: Add support for lenovo Y9000P Touchpad"
-
-Leonardo Brondani Schenkel (1):
-      Input: xpad - improve name of 8BitDo controller 2dc8:3106
-
-Lianqin Hu (1):
-      ALSA: usb-audio: Add delay quirk for USB Audio Device
-
-Linus Torvalds (1):
-      cachestat: fix page cache statistics permission checking
-
-Linus Walleij (1):
-      seccomp: Stub for !CONFIG_SECCOMP
-
-Maciej Strozek (1):
-      ASoC: cs42l43: Add codec force suspend/resume ops
-
-Marian Postevca (1):
-      ASoC: codecs: es8316: Fix HW rate calculation for 48Mhz MCLK
-
-Mark Pearson (1):
-      Input: atkbd - map F23 key to support default copilot shortcut
-
-Matheos Mattsson (1):
-      Input: xpad - add support for Nacon Evol-X Xbox One Controller
-
-Maíra Canal (1):
-      drm/v3d: Assign job pointer to NULL before signaling the fence
-
-Nicolas Nobelis (1):
-      Input: xpad - add support for Nacon Pro Compact
-
-Nilton Perim Neto (1):
-      Input: xpad - add unofficial Xbox 360 wireless receiver clone
-
-Paulo Alcantara (1):
-      smb: client: handle lack of EA support in smb2_query_path_info()
-
-Philippe Simons (1):
-      irqchip/sunxi-nmi: Add missing SKIP_WAKE flag
-
-Pierre-Loup A. Griffais (1):
-      Input: xpad - add QH Electronics VID/PID
-
-Qasim Ijaz (1):
-      USB: serial: quatech2: fix null-ptr-deref in qt2_process_read_urb()
-
-Rob Herring (Arm) (1):
-      of/unittest: Add test that of_address_to_resource() fails on non-translatable address
-
-Russell Harmon (1):
-      hwmon: (drivetemp) Set scsi command timeout to 10s
-
-Tom Chung (1):
-      drm/amd/display: Use HW lock mgr for PSR1
-
-Xiang Zhang (1):
-      scsi: iscsi: Fix redundant response for ISCSI_UEVENT_GET_HOST_STATS request
-
-Yage Geng (1):
-      ALSA: hda/realtek: Fix volume adjustment issue on Lenovo ThinkBook 16P Gen5
-
-Yosry Ahmed (2):
-      mm: zswap: properly synchronize freeing resources during CPU hotunplug
-      mm: zswap: move allocations during CPU init outside the lock
+Oleg.
 
