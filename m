@@ -1,219 +1,138 @@
-Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBAB3398A
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 00:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BAF186A;
+	Sat,  1 Feb 2025 00:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738368194; cv=none; b=EvoONKvPSRzGVqDuYpKt7ys62wQztuH7xJnQ+ZjZmwOSEg+oQs/IC/sssbqAHjIjzl1sXLDHYQNYc4E0UYXMSzP0CfLF7fEo7v8u+otSST53xd5evO5AMJM9e55UJjZjC9neXME+6jynKNjP13IyqR3bdwGtPAydTJvYp28Ev/c=
+	t=1738368218; cv=none; b=UipF9fezqnIE8x1UfTogLEkhPHwOodx389lvg0tTejJsx6I+iBVB7vI8rU2VhZg4bkjP9cnmKD1CdVS19yh65zKqf9Y40tesor2cAqBuQ92G7GUiN1RdgD+luhCvZRTwJQW9IL6ayhvRi8IkQgsHbGDBDWjXe3H74pXNXLYNiOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738368194; c=relaxed/simple;
-	bh=WVCQCd+O+0ASP0iAAFLRAMf6fTBEWgdOhE30uu1osm0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lL01HbvtGVfbOCb529NKcWUKFeTD+wGW5IL4oTYpf3McB+geb8bSdO6yVFSPXRbKxnFvU6Ukj2SdlNgYGLxzSpZQsdee0vVGGdwb/Ce0AaJPTo9+cEXDogWKYbZP4r2VofI6W24lJZJpSkgCrHykjUGE4+nOnAKtl20Sudswq7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kevinloughlin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JkIbT11m; arc=none smtp.client-ip=209.85.160.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kevinloughlin.bounces.google.com
+	s=arc-20240116; t=1738368218; c=relaxed/simple;
+	bh=uEtr2pGJ75x8/pn66h6Jb/4R0kwWYSKjsMngfpMVJx0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rtD2DH481K2JlVzqbfh3lyQRNEunnO2iua7xrKrBATDwC2RPVQmkPhII+C/yyDYq9g3qXXKo/t3xGm/MKH5G0p0mz2aUiDRiL1WeKLI7ttHQuubkzPseaWv/Zsdu2UhZTFgcUV65qI9aVwxgBntSq98uVEMW11duke4i+qgOgEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LPI6dw1M; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JkIbT11m"
-Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-29e5d1e537eso924565fac.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:03:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPI6dw1M"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-385f06d0c8eso1470662f8f.0;
+        Fri, 31 Jan 2025 16:03:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738368191; x=1738972991; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AWCssPTtwZhYmV2JdOyYrw5kj4Hb5Puh42WXWn/vgRM=;
-        b=JkIbT11mQ9mHRCQMT0LaHoWV1RNsczlzl7A9sOFDKWHJxEfJXI9GnmurnUEsvSfLjF
-         eoycfaVYWNjgEGLcY7vBx7Ep86P951v/VgUmAfA2A9W0IXh3CYU8GUNOB0aEBRCWw5Oc
-         KrpDDLE1CN/Y7A2bYfq0B4xcX5uVY+yexoATVFpmDivZ9DvMZYF+nOD3KVoBPxeSR9iU
-         OxOiVHAB45Nh2Fpz//sIvKJu9tSeG9ncbbLJKGW7VXhT5SkgFMIrybCEPstfXCeCTTzh
-         9mlk06HTsdMmh9T2P5HiKf9yzA6YQnENk+fQpj7mq5z+PW+7G2I1jEicM+bl5J3JCkfM
-         TXIQ==
+        d=gmail.com; s=20230601; t=1738368214; x=1738973014; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dIW5mxw1d5fGh/+9frfvuDB0rZsAyYbrsw3Hm15dSnk=;
+        b=LPI6dw1McKSUbhGnCDDn3jZheAa+qgY2EB/Woqp8a6ZDV91Xq3auaNF96PXbxzECqb
+         BKuKZ/M+VC57kvT+cGWpCvZariWmuONw3wHpq/GOo8isEAlNEYaOAy/hZuBmyl8wLv5A
+         AvwFWfjv/RP9eZeBg91m2z8zAElzHp7WLM1OQ4ex3+akCdSCzqZcubRXz6LQLaaSErjf
+         2od74jbFZi2+Fbfd3zEQAUbhGkXwwTV0IUV/yjj/WnEIRPMUCohY6jYnDbtWxrzY19CT
+         P9f5Kh/6t8Mgo/xuRL5l21Sd8r+7K/Qz9UJvgnFbq9aU/YwT/uFS7rIlWi5CAq3YysOs
+         afEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738368191; x=1738972991;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AWCssPTtwZhYmV2JdOyYrw5kj4Hb5Puh42WXWn/vgRM=;
-        b=div7ye4Gq26ADfQTLLPOgnU/YKdvRY/Ec2QKD86E8B4xVqa91NlvGD3i99gB4E+dF5
-         XDYkR+5y81RyopRjWp2a9/a2RhBirGr47UXKjhcvUc/lxhZD5YNApBbiDLksi1obHEea
-         txFCmbuTNt/0pmHCdaCVqlmhjgK8iNjtB3R0YGMKmQnBpaGtb8D7zrXzfUq3bxUyE4PD
-         +Yqq6XfSGOCQUWHg4Dna5OpXN0wzV5FrqUApU+tAgrJNILw7aUGewd63NSVSJukQKx2P
-         dfc5hjQMSA2qbGOKKES/9gP3DgfhVk62ybOXv9VQASyoGjiRbyh0XYC9wKO46RXE3zBt
-         xcoQ==
-X-Gm-Message-State: AOJu0YyqbNmLLAopiibdKXlQsEH7aPpdkxhVXa3AdXwRqlCF+Dxnb3a5
-	Tk7PmwO3FNheCV7yKGfhlaXvyy8is2I7LOc66Zqj/Qnlyf1QJHGLA6C+lJRflbtRqo/j3oHnG69
-	zif8pSddmGGggb+X3yOqXBwUH1Og6HK4op2YiCFoJaf+vy25qr6wT57ndpXobV6xvThnllIwmg8
-	ZHOk733iAPSl/A6GvYE6uydLDfM+EcrLT3lOWQrejvzSUAjnSNaS56uNbKlFZXOWJ2EEUKT909t
-	Svrcg==
-X-Google-Smtp-Source: AGHT+IEe6Cm/cr1UFpsMwadljWsRlzohbdqDYjO+KCnYJdwNZOHhW8vmBkDqLOHb98N+kkT9tbXU3XvLpLYiCABZG7va
-X-Received: from oacny5.prod.google.com ([2002:a05:6871:7505:b0:2ae:bdb:eb0])
- (user=kevinloughlin job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6870:ae87:b0:29e:4bc4:97ca with SMTP id 586e51a60fabf-2b32f12d6camr8056186fac.21.1738368190657;
- Fri, 31 Jan 2025 16:03:10 -0800 (PST)
-Date: Sat,  1 Feb 2025 00:02:59 +0000
-In-Reply-To: <20250201000259.3289143-1-kevinloughlin@google.com>
+        d=1e100.net; s=20230601; t=1738368214; x=1738973014;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dIW5mxw1d5fGh/+9frfvuDB0rZsAyYbrsw3Hm15dSnk=;
+        b=NVBsDE2YmdCOmbHXZHeG/7JIA7A0EgGGjmHxHqij+19OI5nh8EHbNYOmYHw8LnHJfW
+         K4GNdemOlGv4pX4AmHt9/qHAkgtH7AZRZ5EhY3QHTxjTFjmo1FqTwT3v9BbUDYos5g9m
+         pqQuUt0fGDa4Zr5qJEVP7eagVIGodpilopBZjWjNs15hLaVVpaFu71BMnRXQybo9rYrT
+         7Cok4I8dvndvFP3alW+CUe6qt0kJ48ClhddUuEA9odLlv4/JmuO5DypUwDV64hsZci1l
+         lNm/nXcXUyZEQB215u2cupXEc/YQ41Ph3GnJNb5tR5IpmjwmVSDjvZJOnaZmTGHiKo8j
+         YpXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWPbhTwlcNZSausqaFlQ1uMaXwFFdB/LkGd+jWYsnNlZOpX5y5ZW2TMmbvMPhFnwB+tjwIN7eOCYnU=@vger.kernel.org, AJvYcCX/ROhW4STW0LxJowBF4/bC5nFJSSs27NofEkW5tbz4v0eMNocu8xVv/7MyDnTxwLNoX5co7/8exay9BD2K@vger.kernel.org, AJvYcCXFgWJY+xZdUyrponcWm6iGm4dYuMQS/H9sBAjYk1rD+W9of6tsx878YZ0Hq7PzG79ivf5XwmsvHRp2dc86tlQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvXadWSJaNIhlWGZY7Zd8P/jaW3HiL2s7jVHOQEV/fNJUq74em
+	9ZuCOhaobNKRo/nwvtSE6cKDWK3+6xvhA46fgAYM1J3Ml7DvfXmi
+X-Gm-Gg: ASbGncvWnERznVXruD6gfseXe5l7lNUe9ExefuI0ZUsg8tL2/yOZTqmXjCDzGEg8Kr4
+	P70zqhVxptqLeUt5ZrqWxDYdxUr7UrG2y8ZcALC97DLe1tA3pbBDTYlk/+JE/Ogn8KzjuYx6Zkv
+	sCU7HL1bgpFEijhcu9buK+DJ4hByeB7nXRjLPoLt1F/NxbWOVI+yfYt003hboGHkEMo34qwXQY9
+	DnP2kvDre017cIXavFmMIu+YUn74+OJ8pG2CK88VN3UcMksWoXHKUAEbDUn1SNXw3MTaTljjMLo
+	adMdI8q6UW/Y4wtuM2wRUBFOndAP
+X-Google-Smtp-Source: AGHT+IEAmQ/3lwR59zHcY7DNEmyqeOVzzb9TWIVcnVUkllN5W5Fsd05H2UVJoIRw4vEWdM/qGbZ3jA==
+X-Received: by 2002:a5d:5384:0:b0:38a:8ed1:c5c7 with SMTP id ffacd0b85a97d-38c520bdb45mr8608136f8f.46.1738368214370;
+        Fri, 31 Jan 2025 16:03:34 -0800 (PST)
+Received: from ?IPV6:2001:871:22a:8634::1ad1? ([2001:871:22a:8634::1ad1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c125f77sm5942943f8f.56.2025.01.31.16.03.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 16:03:33 -0800 (PST)
+Message-ID: <621a5bd9-ec51-46eb-8d8e-c463085f92e2@gmail.com>
+Date: Sat, 1 Feb 2025 01:03:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250123002422.1632517-1-kevinloughlin@google.com> <20250201000259.3289143-1-kevinloughlin@google.com>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250201000259.3289143-3-kevinloughlin@google.com>
-Subject: [PATCH v6 2/2] KVM: SEV: Prefer WBNOINVD over WBINVD for cache
- maintenance efficiency
-From: Kevin Loughlin <kevinloughlin@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, seanjc@google.com, 
-	pbonzini@redhat.com, kevinloughlin@google.com, 
-	kirill.shutemov@linux.intel.com, kai.huang@intel.com, ubizjak@gmail.com, 
-	jgross@suse.com, kvm@vger.kernel.org, thomas.lendacky@amd.com, 
-	pgonda@google.com, sidtelang@google.com, mizhang@google.com, 
-	rientjes@google.com, manalinandan@google.com, szy0127@sjtu.edu.cn
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] arm: rust: Enable Rust support for ARMv7
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>, Miguel Ojeda <ojeda@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Jonathan Corbet <corbet@lwn.net>,
+ Russell King <linux@armlinux.org.uk>, Rudraksha Gupta <guptarud@gmail.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Geert Stappers <stappers@stappers.nl>,
+ Jamie Cunliffe <Jamie.Cunliffe@arm.com>,
+ Sven Van Asbroeck <thesven73@gmail.com>, rust-for-linux@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250123-rfl-arm32-v3-1-8f13623d42c5@gmail.com>
+ <a83b0149-7055-411b-ba86-d227919c7c32@app.fastmail.com>
+ <f8b59f05-55b5-4208-8bdf-b4be8e93bc22@gmail.com>
+ <65da77f7-bbd4-4cbe-a06c-75f10a6ec4ce@lunn.ch>
+ <5e8a99a5-f39c-46da-b54d-7b69307b1c66@gmail.com>
+Content-Language: en-US, de-DE
+In-Reply-To: <5e8a99a5-f39c-46da-b54d-7b69307b1c66@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-AMD CPUs currently execute WBINVD in the host when unregistering SEV
-guest memory or when deactivating SEV guests. Such cache maintenance is
-performed to prevent data corruption, wherein the encrypted (C=1)
-version of a dirty cache line might otherwise only be written back
-after the memory is written in a different context (ex: C=0), yielding
-corruption. However, WBINVD is performance-costly, especially because
-it invalidates processor caches.
+On 31.01.25 7:58 PM, Christian Schrefl wrote:
+> On 31.01.25 5:05 PM, Andrew Lunn wrote:
+>>> To fix this Rust would have to provide a way to build the core
+>>> library without float support. I don't know if there is a plan
+>>> already to allow this.
+>>
+>> Floating point is banned within the kernel, except for in very narrow
+>> conditions, because the floating point registers are lazy saved on
+>> context switch. If the kernel uses the floating point registers, you
+>> can break user space in bad ways.
+>>
+>> I expect this has been discussed, since it is well known kernel
+>> restriction. Maybe go see what happened to that discussion within RfL?
+> 
+> After checking again, it seems the float intrinsics are actually not
+> needed anymore at least for my config. Only `__aeabi_uldivmod` is still
+> required for `parse_u64_into` since [0] allows disabling float formatting.
 
-Strictly-speaking, unless the SEV ASID is being recycled (meaning the
-SNP firmware requires the use of WBINVD prior to DF_FLUSH), the cache
-invalidation triggered by WBINVD is unnecessary; only the writeback is
-needed to prevent data corruption in remaining scenarios.
+Seems like Rust 1.78 still needs at least __aeabi_fcmpeq __aeabi_fcmpun
+__aeabi_dcmpun and __aeabi_uldivmod.
 
-To improve performance in these scenarios, use WBNOINVD when available
-instead of WBINVD. WBNOINVD still writes back all dirty lines
-(preventing host data corruption by SEV guests) but does *not*
-invalidate processor caches. Note that the implementation of wbnoinvd()
-ensures fall back to WBINVD if WBNOINVD is unavailable.
-
-In anticipation of forthcoming optimizations to limit the WBNOINVD only
-to physical CPUs that have executed SEV guests, place the call to
-wbnoinvd_on_all_cpus() in a wrapper function sev_writeback_caches().
-
-Signed-off-by: Kevin Loughlin <kevinloughlin@google.com>
-Reviewed-by: Mingwei Zhang <mizhang@google.com>
----
- arch/x86/kvm/svm/sev.c | 41 +++++++++++++++++++++--------------------
- 1 file changed, 21 insertions(+), 20 deletions(-)
-
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index fe6cc763fd51..f10f1c53345e 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -116,6 +116,7 @@ static int sev_flush_asids(unsigned int min_asid, unsigned int max_asid)
- 	 */
- 	down_write(&sev_deactivate_lock);
- 
-+	/* SNP firmware requires use of WBINVD for ASID recycling. */
- 	wbinvd_on_all_cpus();
- 
- 	if (sev_snp_enabled)
-@@ -710,6 +711,16 @@ static void sev_clflush_pages(struct page *pages[], unsigned long npages)
- 	}
- }
- 
-+static inline void sev_writeback_caches(void)
-+{
-+	/*
-+	 * Ensure that all dirty guest tagged cache entries are written back
-+	 * before releasing the pages back to the system for use. CLFLUSH will
-+	 * not do this without SME_COHERENT, so issue a WBNOINVD.
-+	 */
-+	wbnoinvd_on_all_cpus();
-+}
-+
- static unsigned long get_num_contig_pages(unsigned long idx,
- 				struct page **inpages, unsigned long npages)
- {
-@@ -2773,12 +2784,7 @@ int sev_mem_enc_unregister_region(struct kvm *kvm,
- 		goto failed;
- 	}
- 
--	/*
--	 * Ensure that all guest tagged cache entries are flushed before
--	 * releasing the pages back to the system for use. CLFLUSH will
--	 * not do this, so issue a WBINVD.
--	 */
--	wbinvd_on_all_cpus();
-+	sev_writeback_caches();
- 
- 	__unregister_enc_region_locked(kvm, region);
- 
-@@ -2899,12 +2905,7 @@ void sev_vm_destroy(struct kvm *kvm)
- 		return;
- 	}
- 
--	/*
--	 * Ensure that all guest tagged cache entries are flushed before
--	 * releasing the pages back to the system for use. CLFLUSH will
--	 * not do this, so issue a WBINVD.
--	 */
--	wbinvd_on_all_cpus();
-+	sev_writeback_caches();
- 
- 	/*
- 	 * if userspace was terminated before unregistering the memory regions
-@@ -3126,16 +3127,16 @@ static void sev_flush_encrypted_page(struct kvm_vcpu *vcpu, void *va)
- 
- 	/*
- 	 * VM Page Flush takes a host virtual address and a guest ASID.  Fall
--	 * back to WBINVD if this faults so as not to make any problems worse
-+	 * back to WBNOINVD if this faults so as not to make any problems worse
- 	 * by leaving stale encrypted data in the cache.
- 	 */
- 	if (WARN_ON_ONCE(wrmsrl_safe(MSR_AMD64_VM_PAGE_FLUSH, addr | asid)))
--		goto do_wbinvd;
-+		goto do_sev_writeback_caches;
- 
- 	return;
- 
--do_wbinvd:
--	wbinvd_on_all_cpus();
-+do_sev_writeback_caches:
-+	sev_writeback_caches();
- }
- 
- void sev_guest_memory_reclaimed(struct kvm *kvm)
-@@ -3144,12 +3145,12 @@ void sev_guest_memory_reclaimed(struct kvm *kvm)
- 	 * With SNP+gmem, private/encrypted memory is unreachable via the
- 	 * hva-based mmu notifiers, so these events are only actually
- 	 * pertaining to shared pages where there is no need to perform
--	 * the WBINVD to flush associated caches.
-+	 * the WBNOINVD to flush associated caches.
- 	 */
- 	if (!sev_guest(kvm) || sev_snp_guest(kvm))
- 		return;
- 
--	wbinvd_on_all_cpus();
-+	sev_writeback_caches();
- }
- 
- void sev_free_vcpu(struct kvm_vcpu *vcpu)
-@@ -3858,7 +3859,7 @@ static int __sev_snp_update_protected_guest_state(struct kvm_vcpu *vcpu)
- 		 * guest-mapped page rather than the initial one allocated
- 		 * by KVM in svm->sev_es.vmsa. In theory, svm->sev_es.vmsa
- 		 * could be free'd and cleaned up here, but that involves
--		 * cleanups like wbinvd_on_all_cpus() which would ideally
-+		 * cleanups like sev_writeback_caches() which would ideally
- 		 * be handled during teardown rather than guest boot.
- 		 * Deferring that also allows the existing logic for SEV-ES
- 		 * VMSAs to be re-used with minimal SNP-specific changes.
-@@ -4910,7 +4911,7 @@ void sev_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end)
- 
- 		/*
- 		 * SEV-ES avoids host/guest cache coherency issues through
--		 * WBINVD hooks issued via MMU notifiers during run-time, and
-+		 * WBNOINVD hooks issued via MMU notifiers during run-time, and
- 		 * KVM's VM destroy path at shutdown. Those MMU notifier events
- 		 * don't cover gmem since there is no requirement to map pages
- 		 * to a HVA in order to use them for a running guest. While the
--- 
-2.48.1.362.g079036d154-goog
+> 
+> Link error without the `__aeabi_uldivmod` symbol defined:
+> 
+> ld.lld: error: undefined symbol: __aeabi_uldivmod
+>>>> referenced by num.rs:580 (/home/chrisi/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/fmt/num.rs:580)
+>>>>               rust/core.o:(core::fmt::num::parse_u64_into::<39>) in archive vmlinux.a
+>>>> referenced by num.rs:589 (/home/chrisi/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/fmt/num.rs:589)
+>>>>               rust/core.o:(core::fmt::num::parse_u64_into::<39>) in archive vmlinux.a
+>>>> referenced by num.rs:589 (/home/chrisi/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/fmt/num.rs:589)
+>>>>               rust/core.o:(core::fmt::num::parse_u64_into::<39>) in archive vmlinux.a
+>>>> referenced 34 more times
+>>>> did you mean: __aeabi_uidivmod
+>>>> defined in: vmlinux.a(arch/arm/lib/lib1funcs.o)
+> 
+> Not sure if we should just implement `__aeabi_uldivmod`, keep the 
+> panicking intrinsic for it or somehow fix it in upstream Rust?
+> 
+> Miguel do you know how this is best handled?
+> 
+> Link: https://github.com/rust-lang/rust/pull/86048 [0]
+> 
+> Cheers
+> Christian
 
