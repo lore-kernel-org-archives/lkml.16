@@ -1,66 +1,63 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6141EC004
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 17:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76AB1C5F1A;
+	Sat,  1 Feb 2025 17:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738430968; cv=none; b=lbJ+ZWQuN/XhVgBP5fyqH/Fxf77WaGCaDIxTshYJ8W7CcMWisvZLqAvyJUrVdHKmvMHXHgzPSEcv5EdP+gfVzp/9MyqtRC7dAuAF9Xt2GtpDcWnMFP9iyQHWyZjouqeasJFtay9HIUFG5a0193PvirzdF4sOty0qNs3ENU8bxZM=
+	t=1738431643; cv=none; b=f7OQ5LAcHJbNu79ywee6nyIN3usnCQmU5ZBJmFWYkUDZZvxAEpkBnW7GYDYxg+gFTI92tysK2giCg+eSo/q6hFm4xK+hgPt7Hl9sCTevup1OOqqj6GmT9/qRyqwopRNaSwlKsOqtc2ahJIBETgi2aJ99cSKhIqBQlKGiE9zbyYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738430968; c=relaxed/simple;
-	bh=JNFb6Y/XdVHYoGkQV0QeQUNrQN1lFqLu5lpLIO5kuFE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IBnmo6yj/XPB/cI3yqNTD2l2Cy7c6PjKIEOYQL0k/eKdF8kHSGUL9pWt0xe1ZrbZ2h3sj/1advyH1pUNROmmOJkM25E0f5nkuvGvmYcShNN0a3YGToGiqM+/htHTkN2MUUtCToT5L8HUiNbZek5BCxkfxc9oGkZSolUqe4XRHvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xt3z897L; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738431643; c=relaxed/simple;
+	bh=0e7YtVb4Rl91RO2HeDvog7TGlQEnuWZgpX3dh9FNCU0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Gw1/34qSeOW4js1yrWliuyypN9Vdr2KqynHkNwbeS02hBjNj5sOdBHbsx1KLs+lt05EkPOLY9EcXS9syjfETGHkGkuSTx1NDDjSefo9pVin4xiL9OW1mcR8qyvr9lXbLjezvnnvVbCAB6kVb5/HA24+c7esViCcb7jxIz+9vgmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gYvT6f80; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xt3z897L"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3072f8dc069so28036621fa.3
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 09:29:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYvT6f80"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4678afeb133so34845941cf.0;
+        Sat, 01 Feb 2025 09:40:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738430964; x=1739035764; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ov3UCovqBDyElf7wgQMMIsdctTosh7cq25mLIhj+V3w=;
-        b=Xt3z897LjaabPzY8ydXsVLPV9aAVS+Y0nYZJ+QvH5m76lupwowkUPjGDyxfIBGYX/k
-         ppOH3UGPliwA5Th0WRsh4XGRo/0B2MFUJLib3TSEW58iUBZOkJINQkp1sVb8nJR7wJhR
-         0UdkoAnlUuEyAZGreovvP1nyzdOLGHp3oChvs2SneuLPXP6w0cf4q0Dlof11/dBRVQKS
-         xixSTCc64M5l6revooqDe0HHS13SMV8hoTGSkns3MYivV+0Qj7EXzbm61ZvBVuMje/Ov
-         fX547j+cCo7MA9cBjnR/NcmVRZRWt9FChxtofIoF6hVdaxQeu2TbIxkV7EUuyj6nAX/T
-         sXdQ==
+        d=gmail.com; s=20230601; t=1738431641; x=1739036441; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PkaP4RKgAdA4bYOyaxeoV4k6i+xBMieE4c9zsLqurQQ=;
+        b=gYvT6f80xs57CF9IEpBlyWFv9CYHGG/7xLnc/VcSkbqbMdsJrLHMic8r2lOyvfiAqF
+         OuN9vL7thIJ0A+oXMmJ8qIICQE/dG8ukDSN/VzGyfSuiDgXD5vepTWKWK70RGZNKjBiD
+         sQEfXtdOuyNCRI9YG/X9nNYDSWPKqJWS7nCOO7WsXG2Q/Sx1X9sTRM/wSzbjJk5WuZZZ
+         ONiZjn9m3/henrYX5GRl61oD7BTd1uPIxpknfg3A6nqJS25g5uw36JzBHZbJyZZIJavZ
+         oEdZU0pMrfmLmWbXZDVyppF+1wOCfgLmcnYZAh/HROhEneKRRGgmxcjKkyel/SojVyBb
+         gsew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738430964; x=1739035764;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ov3UCovqBDyElf7wgQMMIsdctTosh7cq25mLIhj+V3w=;
-        b=PG9p/RUEaPRL8sxR7MUKnujggwJvu+4rGDobHPqmJ9XTq3e7zeC3CtEfyNCIdE/56g
-         vQcPPwVuhb4Jlq9lpz8EBOZWiS3FIpdQB3wK/JOcENibdP2TnRG5w/Zx/2naRqJFLOWS
-         XoQAcINBJwx277tQDllDyv89UB6Sd8hfR7jLwobxDj5pL6XgALJPpFuJUSu2W0dLT3/B
-         vQWTHlDZTKSCKtLzeHE6HrIES4QPUFzWZGkbcN4bMSnrm5wLhmDNJOSghmBj3R9mfFV4
-         XwV0KrC1ailwlrZnGKnLn7BiwZHDhPH2/FgOjq/dwSiHb63rAtzeCqZfFoX609AM8d/4
-         ctFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXcctSEV7BSKpHMffFe4MshiGyziaVT/aSKDKb0Gcd5TMDH/3jTgcIxcoIaDFfHW4v+nxM6TvTdClrTn2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxqk/uiuCLGrO9Pd5L70tlfTH2UqSkW1TLPjftduLHKPziev0fQ
-	iIaWl9KDJK1ro7tupR3lTZZUcmjSYt13CeK7P63gb/o2av5qcVz+I3+D7oDNIw0=
-X-Gm-Gg: ASbGncvYMfD22EFvYL/H/7rg0WuPoG6AxT8pCYBF1FOf30/bTpyLxBnOYJh/ZLUhql7
-	2qmCt87zIHPQXbgQFqscaIPx2ScibxMzm5S6Z0E+OVGwLRhywllgc6D8UfysdJw87L7zrrC5s7l
-	9msceN7AsLzQTnKELd+xJ16roJByiPNbqwFrpAnZJfGArxfEoTnfjzAx4eFD8KOCyzsKa3v7h1g
-	nSpBKe2fi3VrBtkskl1saHuFzfmupdkd1XO9ZqUZ9OMPJ3AApdLT1dPZ4keX5zHBa3wouEpFa4h
-	B1WgeIuWhEZVxCczANLNlq0=
-X-Google-Smtp-Source: AGHT+IEbRAFVDv4wTeAOfLKEfZhaMBcWT2J7LrursaaQv5WU+GnTo7mwskIzR3eETtUbLXdwcpyTng==
-X-Received: by 2002:a05:651c:198a:b0:302:48fd:6922 with SMTP id 38308e7fff4ca-30796975cb1mr53729091fa.37.1738430964458;
-        Sat, 01 Feb 2025 09:29:24 -0800 (PST)
-Received: from umbar.lan ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a3099ec4sm8852161fa.48.2025.02.01.09.29.22
+        d=1e100.net; s=20230601; t=1738431641; x=1739036441;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PkaP4RKgAdA4bYOyaxeoV4k6i+xBMieE4c9zsLqurQQ=;
+        b=iI/7GPtw2WTxt+AkLlWv3z8kxE5x14Th5gjRgiDW8orL7FsIx8Ro1wgToGpkdXVbuV
+         dsgebY99D1dQO/OJuIqqie16j0Qczs+T0nB2Sx7PcKiO/kk1gefRxx0uXgNSLdLtBrhL
+         Tqd3Kmffn5bHP6dnwGkmNSDGK/hjEeXZNqColMlmu3weZZ8Zny2Uud7vhIwfx0A2p/KD
+         +yTBfjlxzi6Cbl2+PRy4fxQ2zAG3SXi4/Pb/AGYgzPQVgt+C6snbdGYhmuLnGh7zId/X
+         MXAB1rifUyAOH3Kz/bAwbbHhU6G8fybl7rcqQ5mH3BiArIvIQ9xwzMrVbvH8cWmzHW0h
+         UKNg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIfG5SclLYGTivlz0w4nCYEm0pu+80LRgc2nUABBWuEyH/7nvz5/n9EChT6kJBWTZHpIKUhK51uJYec20=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyGUSLq4JiLq11exjf3TBGhc81CpTdj/FuWRvBlbE31aik4HNa
+	dYQbPhBKrlAV/krIc+7IXm6L+L5z1kr1W7RojH+BFpz3EqqaEDYD
+X-Gm-Gg: ASbGncse9uA3LlIJh4VT7IBlSkKaRqe0RwIhNJXSKDchJTN3jwOiDAvrrMC4KLowEE1
+	gft4GKmMCIbwNtbCHdo47OaKosm1SJ87pi0qZHrYO49elvZ/9HPNWN5c4XlIDjp/xjJrNiPEnZp
+	3XfjfQiHT41MD6LPX8teEN05LxEaQ+oRlZDIXisgEwdq/VJgSSCKy85csPrWWvcdIRa/6E6k4nc
+	aD3On0hxA7SdRdACwVzKVaSFK4UBu9XogsOQ99CV4tGAViPMsSBlLYFt11PrlIopBs8vQ48RyJ4
+	WN7B9IQ/vD436kQjTCEdji+7AY4xxylUow//U0gZxKjAwU7p0Q==
+X-Google-Smtp-Source: AGHT+IEd3EeW9ymw11V/AA0lkUzLxFUnJLyT+pSYCSPyX65E6YD3Mu/Bd+cPuZ7EHn6+H9AdQUsvrA==
+X-Received: by 2002:ad4:5fca:0:b0:6d8:9f61:de6c with SMTP id 6a1803df08f44-6e251b75b8cmr190313246d6.18.1738431640689;
+        Sat, 01 Feb 2025 09:40:40 -0800 (PST)
+Received: from Tamirs-MacBook-Pro.local ([2600:4041:5be7:7c00:f07f:fb14:288d:6f1e])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254833d3esm30313866d6.55.2025.02.01.09.40.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2025 09:29:23 -0800 (PST)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sat, 01 Feb 2025 19:29:12 +0200
-Subject: [PATCH v2 6/6] arm64: dts: qcom: qrb2210-rb1: add Bluetooth
- support
+        Sat, 01 Feb 2025 09:40:40 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sat, 01 Feb 2025 12:40:38 -0500
+Subject: [PATCH] rust: use host dylib naming in rusttestlib-kernel
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,160 +66,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250201-rb1-bt-v2-6-fd44011749bb@linaro.org>
-References: <20250201-rb1-bt-v2-0-fd44011749bb@linaro.org>
-In-Reply-To: <20250201-rb1-bt-v2-0-fd44011749bb@linaro.org>
-To: Marcel Holtmann <marcel@holtmann.org>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, 
- Rocky Liao <quic_rjliao@quicinc.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3096;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=JNFb6Y/XdVHYoGkQV0QeQUNrQN1lFqLu5lpLIO5kuFE=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnnlnl6CkypxUXZ9gNuva9FfZ1nAkgiRypC9/7h
- OQqeNg9FquJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ55Z5QAKCRCLPIo+Aiko
- 1TtvB/wKMPlfxck0+/eT+LF7golYJzAMWvXOVVT19yKb2FEW8oGVgxbEShBYDGikfO5MqXFER3q
- XYF5fiQK8uUQHWwdNnJRF9qxRvoPBxszSxhEOyI9sZicxSrT5vOyaajmlFTQd/+TkA/C8f1NVor
- w8U8CkPmtMLez1qcebKQ3D17MC2To/m7qFohl1jeJsmQBRs6z9T0PxpLwtlDgK0R0tjG+A7TmqH
- xAQTOVeXfKHY2/0a1/MHqQNgPiefsKUYF2GdgbJvOUkiwnk9dmn2b7V4e5ZUZnLur7nWuShRTLn
- SGbm9WWEpwtQUtwLltGcAOEcr8kgz/aCQk64pCVh6rm5L4Kj
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Message-Id: <20250201-fix-mac-build-again-v1-1-ca665f5d7de7@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAJVcnmcC/x2M0QpAQBAAf0X7bOvcceRX5GGdxRZHd5GSf3d5n
+ JqZByIH4Qht9kDgS6LsPkGRZ+AW8jOjjIlBK10prQqc5MaNHA6nrCPSTOLRDbYxhmypawupPAI
+ n7b92/ft+e55THmUAAAA=
+X-Change-ID: 20250201-fix-mac-build-again-cb6833a64276
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Fiona Behrens <me@kloenk.dev>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-Add support for the onboard WCN3950 BT/WiFi chip. Corresponding firmware
-has been merged to linux-firmware and should be available in the next
-release.
+There seems to have been merge skew between commit b2c261fa8629 ("rust:
+kbuild: expand rusttest target for macros") and commit 0730422bced5
+("rust: use host dylib naming convention to support macOS") ; the latter
+replaced `libmacros.so` with `$(libmacros_name)` and the former added an
+instance of `libmacros.so`. The former was not yet applied when the
+latter was sent, resulting in a stray `libmacros.so`. Replace the stray
+with `$(libmacros_name)` to allow `rusttest` to build on macOS.
 
-Bluetooth: hci0: setting up wcn399x
-Bluetooth: hci0: QCA Product ID   :0x0000000f
-Bluetooth: hci0: QCA SOC Version  :0x40070120
-Bluetooth: hci0: QCA ROM Version  :0x00000102
-Bluetooth: hci0: QCA Patch Version:0x00000001
-Bluetooth: hci0: QCA controller version 0x01200102
-Bluetooth: hci0: QCA Downloading qca/cmbtfw12.tlv
-Bluetooth: hci0: QCA Downloading qca/cmnv12.bin
-Bluetooth: hci0: QCA setup on UART is completed
-
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Fixes: 0730422bced5 ("rust: use host dylib naming convention to support macOS")
 ---
- arch/arm64/boot/dts/qcom/qrb2210-rb1.dts | 82 ++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+ rust/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts b/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
-index 7a789b41c2f1887f0c41ae24da2e2fe8915ab13c..b9248505fadd3b986e188976435b786f43975dc3 100644
---- a/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
-+++ b/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
-@@ -15,6 +15,7 @@ / {
+diff --git a/rust/Makefile b/rust/Makefile
+index 71a05a3c895a..9df46daaaf67 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -144,7 +144,7 @@ rusttestlib-kernel: private rustc_target_flags = --extern ffi \
+     --extern bindings --extern uapi
+ rusttestlib-kernel: $(src)/kernel/lib.rs \
+     rusttestlib-bindings rusttestlib-uapi rusttestlib-build_error \
+-    $(obj)/libmacros.so $(obj)/bindings.o FORCE
++    $(obj)/$(libmacros_name) $(obj)/bindings.o FORCE
+ 	+$(call if_changed,rustc_test_library)
  
- 	aliases {
- 		serial0 = &uart4;
-+		serial1 = &uart3;
- 		sdhc1 = &sdhc_1;
- 		sdhc2 = &sdhc_2;
- 	};
-@@ -549,6 +550,66 @@ can@0 {
- };
- 
- &tlmm {
-+	uart3_default: uart3-default-state {
-+		cts-pins {
-+			pins = "gpio8";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-bus-hold;
-+		};
-+
-+		rts-pins {
-+			pins = "gpio9";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+
-+		tx-pins {
-+			pins = "gpio10";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+
-+		rx-pins {
-+			pins = "gpio11";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	uart3_sleep: uart3-sleep-state {
-+		cts-pins {
-+			pins = "gpio8";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-bus-hold;
-+		};
-+
-+		rts-pins {
-+			pins = "gpio9";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+
-+		tx-pins {
-+			pins = "gpio10";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+
-+		rx-pins {
-+			pins = "gpio11";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	lt9611_rst_pin: lt9611-rst-state {
- 		pins = "gpio41";
- 		function = "gpio";
-@@ -584,6 +645,27 @@ key_volp_n: key-volp-n-state {
- 	};
- };
- 
-+&uart3 {
-+	/delete-property/ interrupts;
-+	interrupts-extended = <&intc GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+			      <&tlmm 11 IRQ_TYPE_LEVEL_HIGH>;
-+	pinctrl-0 = <&uart3_default>;
-+	pinctrl-1 = <&uart3_sleep>;
-+	pinctrl-names = "default", "sleep";
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3950-bt";
-+
-+		vddio-supply = <&pm4125_l15>;
-+		vddxo-supply = <&pm4125_l13>;
-+		vddrf-supply = <&pm4125_l10>;
-+		vddch0-supply = <&pm4125_l22>;
-+		enable-gpios = <&tlmm 87 GPIO_ACTIVE_HIGH>;
-+		max-speed = <3200000>;
-+	};
-+};
-+
- /* UART connected to the Micro-USB port via a FTDI chip */
- &uart4 {
- 	compatible = "qcom,geni-debug-uart";
+ rusttestlib-bindings: private rustc_target_flags = --extern ffi
 
+---
+base-commit: ceff0757f5dafb5be5205988171809c877b1d3e3
+change-id: 20250201-fix-mac-build-again-cb6833a64276
+
+Best regards,
 -- 
-2.39.5
+Tamir Duberstein <tamird@gmail.com>
 
