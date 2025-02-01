@@ -1,107 +1,138 @@
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B091C01;
-	Sat,  1 Feb 2025 00:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC057186A
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 00:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738368147; cv=none; b=gx5JcDssTxow5+E9BiggGcCAsRmVfulkL8iKsfADGJtK5rLLM49X379CleSq2x2LEEtQkoiCuhquX6OU3R35WgUdKIhhVH7bvmJzF9NX8z4VrRF+KnJtsiinPZLqgqtFWmIz5EcfYIM2LymX7bC7BmIf5JwgGlAAMo7A0R3AwcM=
+	t=1738368187; cv=none; b=HSAg2AtvnCJdquSTN6TWiQe2X2qh0tA8e/aGbk3gU81hzAPMv8AkwwAmEDxrPqLAG728avBJyfTi3+Du7lPcs41xQYI9rOIWLZFeKfFehRe5zolXboLoH5GgA4poD7B7wGN4t13FRjuwyFS15pIegHGqkt0/my3Dg7RyV+Xl2sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738368147; c=relaxed/simple;
-	bh=GeHRQZwWKDIDgPJbc5wVL+4rQVqxddhYyDa9I1STNvw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=UkT+bWZCPxHkF+Fwoo2LjiKV3Wjr4xP2DxmLScZFRSWNUqSHLblKLhl+Z4ljKXd1+pg3p7ODnqa58ZpO+pDBCrLj6Xh29gunBuAbF38iAdjRPdUwazPNDi7Wjg5DVUDD7Ol2zNDx8rIVjxbvYFLEgGdpriswGuLD2Z0COsU+UWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=MhebLXyG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gOPnjtEb; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1738368187; c=relaxed/simple;
+	bh=nZJVlCdmRP0lAKJJVm5PX7j7R6Vcdtc62Zz995WQx2s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=q6ftPgvKSbiaJfAImUNacZRJSyZ5YRHsXOEArtiq4ZKO8Sa3QV2/JrLMDZ6uXlx0B0Lsun+WHuzFbwWRwNm/3K/Itj/4brr77mZSRWutB3mePvdX+MXsykziAT0xogViCV4DPa9/RJ9vWQQe94g37MKJm2GmR+PwRK1Yqev2VwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kevinloughlin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dyEg4M1Z; arc=none smtp.client-ip=209.85.166.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kevinloughlin.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="MhebLXyG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gOPnjtEb"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id CF10F2540182;
-	Fri, 31 Jan 2025 19:02:23 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Fri, 31 Jan 2025 19:02:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1738368143;
-	 x=1738454543; bh=nhyb02ZzxeXtzB5J3+zdvvmG5OCBXjU58jDpxej9KJ4=; b=
-	MhebLXyG9M4GvncBjdSGFx/gDPzOiZEsrPvn//3s4SQmVzNDa35igdNrlCf6v1nT
-	meB33fvuZ9qSd3wGRrCPX2AgIHKZOt3ya0cCCAHkoVx39nPXqSEz4+bdWLKx2M9S
-	YZXStDWUpYzQCy1cYIi67bgDZmtT2WU8RMgdLHZiAkPQLYgDCIvBsFy7JJwnxF/0
-	U5WbWbo735tJb0AnX7h9u+z4WCScPz/hTatCfPniKiwFVphZNRgnwYmX4Ei2kV9U
-	lvmmlkh/se1mntOV1MKJcWGdPFwBbueSp+cJmQ3SvnVnzG0oj6F+2g/+hU1xaQtk
-	rzBL6ooVPEn/yw6Mv4Wuhg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738368143; x=
-	1738454543; bh=nhyb02ZzxeXtzB5J3+zdvvmG5OCBXjU58jDpxej9KJ4=; b=g
-	OPnjtEbROX8gIm9mVbCsvP07FGidp6So22wpJFYlCtV4FBlWgw5Iu8V7pUq+nD/3
-	CWrwSZa4VsSsNGzS2yufXRblAAz8hYXIFfZLZy5Kje6bnWY2chpXRxMlokMcFyEF
-	YA5arJW12rOx3LVsFxDRlWWrdE7pkbwIljc6rhg8hfpq5g6aiNoDDQVlnnmm2t8N
-	73CDqWsm7t8xr92Y4DhdCpmwVpoqc0xDo47Zu9rySlSjg5Qq3sAO4w2d4QIvz6ds
-	WdK7xl4FN8PmeLZetlJ0jSsi3ZAQ1vvXMtl4+PSFyg6QuzBwYdhNTtKt4nT22OtI
-	hAxW6tAVzhzQHmadkajdg==
-X-ME-Sender: <xms:j2SdZ7bJuwTYJ6CcDSjHfZihq-PbJ1dg_yoaJS9x8O1b692XJxQrRw>
-    <xme:j2SdZ6aC7Mq2v6XaSROh1n0Hr933NaiRkbsl-oFpP772SMJvkhBhhHHP0rBgdhRl-
-    VyQKgoP7yl4Q_cQnvI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutddujecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedt
-    hedtveehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
-    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepughosggvrheslhgvnhhovhhordgtohhmpdhrtghpthhtohepfihi
-    mheslhhinhhugidqfigrthgthhguohhgrdhorhhgpdhrtghpthhtoheplhhinhhugiesrh
-    hovggtkhdquhhsrdhnvghtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfigrthgthhguohhgse
-    hvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:j2SdZ98cfUA-pWWqZcZfy4hd-ssgFFUvI7vV_yWQ62v_AImIuv8egg>
-    <xmx:j2SdZxoRrSEjpYoBef65_kdRamxLud_cV4IcEC1WveSPMXJY17jPdg>
-    <xmx:j2SdZ2poSWAqaxXA4Pdg8nU-fOxsuW-LzzBX6679_5InVJXesH6V6Q>
-    <xmx:j2SdZ3RNr6FNGd7ODntLJG8_JpObsQOThsJoIUnBVDKR4kIukyjofA>
-    <xmx:j2SdZ_klMvAAAeH78O1gGUUuVOSALMnhtcPrV9MW3dl5mT1euQDCpXwG>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 323AE3C0069; Fri, 31 Jan 2025 19:02:23 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dyEg4M1Z"
+Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3a9d4ea9e0cso19376325ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2025 16:03:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738368185; x=1738972985; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=F1JcHKbseBSQb8NG0r+gxq95OxIlLZEymmmAoL2/PY4=;
+        b=dyEg4M1Z7uoTj/Daz7L0m2PsroZZg3b7NO9v0VstKqLuPJdAWqdZltn+C8E/J1/l66
+         EBaDYxn4JO2YpR3jojTkkSJhO2pHLbyLePct3/JfBTHngwuo8pS3uDor3uaWMINqSJyE
+         oa7hAzdEQfBK+83LCMmUufgUSVuIjfNKfCvTn6+m/etEI7Jex+bUzIFKpsxL/EoPQz0e
+         BAXlCjMyAV+be5uRtZpW2TXIgK7rulzfty39gx2mbCKUzLsIob0zS38rI/UpOXSLanoI
+         +AYZYH7TODDzEceX6hLYdWFRptkFVzaF+woBa4xbmceufcNcxFt4cRbewW/P0qgHvXz2
+         MVaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738368185; x=1738972985;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F1JcHKbseBSQb8NG0r+gxq95OxIlLZEymmmAoL2/PY4=;
+        b=RtxyUvoaQ1OFW9YGd7nkHQa3jeY70yKcnO0Jv5RIBVgT3g9aa3NYw5QPN3yHWXotz+
+         yoxeXPX7VZJrU6OVprClL7UMz3Ivjoazt04Tm4Xn8gL3o8Z7CKZZmyBTMyRvhzMCcnBN
+         EbGMfob3V2J1Cdz5xmOS6MzaRitwpn2rH5QxR+wozQtljUAnayYKmmpQm2ZdQ+6+I07m
+         3g4V9pDpBz2RZtREJZ4TKG+j/iDxeWHLTzb6TxUfNd+MdeK6z2MoLbD4KGmZoFOb8ZdQ
+         KEI7WguKFowyqUmtaL70LsAs/ZwQtpGuKtfRkh2k4h2DbDTyqvIh5UNaFEqCxASThVQa
+         Tr1w==
+X-Gm-Message-State: AOJu0Yy4s1f0U3g4W3j9/u0zdb6UsuWU4+twGx9WLtqB8a/+zBI7HXAP
+	ieyDDb2HePNChsurFT31lfe8IJPtOKIs9NFdzRo1E4YzBCftG0bBdqLHiY7bWZ1rgXadZ7J3JzH
+	4AiMdNvXOiyKrvGpP8EXk9MD6SW7iCTEUN+SOw2UtVdNMhXkxWiIyHnrv9DkgPlOwPn6sabWLAV
+	QKFQNCQYWy+16+KJAnQWjh7UWDjp8XTTyBfh8ydLvjJkb27HWCxA1b58VEWPfhHwoT/tnMc/3m8
+	2eSRA==
+X-Google-Smtp-Source: AGHT+IEqx3z+EHeDd3bWlItkM252Uw1JAvLH2WqXjgvlBL2XRhtrS0+yAASZ8fwiKIB88OJvaThmSDkrYspM0tlZMEwv
+X-Received: from ilbdz12-n2.prod.google.com ([2002:a05:6e02:440c:20b0:3d0:1cfb:32de])
+ (user=kevinloughlin job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6e02:1c8a:b0:3cf:cb2b:bb8d with SMTP id e9e14a558f8ab-3cffe3e5e34mr114213175ab.10.1738368184746;
+ Fri, 31 Jan 2025 16:03:04 -0800 (PST)
+Date: Sat,  1 Feb 2025 00:02:57 +0000
+In-Reply-To: <20250123002422.1632517-1-kevinloughlin@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Date: Fri, 31 Jan 2025 19:02:02 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Guenter Roeck" <linux@roeck-us.net>
-Cc: "David Ober" <dober@lenovo.com>,
- "Wim Van Sebroeck" <wim@linux-watchdog.org>, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <73d5ae60-779e-4cf6-a81f-9da9fb9e7952@app.fastmail.com>
-In-Reply-To: <28754bd6-aa1e-4f48-8f48-e7d54a9d282b@roeck-us.net>
-References: <mpearson-lenovo@squebb.ca>
- <20250131204855.1827-1-mpearson-lenovo@squebb.ca>
- <28754bd6-aa1e-4f48-8f48-e7d54a9d282b@roeck-us.net>
-Subject: Re: [PATCH v3] watchdog: lenovo_se30_wdt: Watchdog driver for Lenovo SE30
- platform
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250123002422.1632517-1-kevinloughlin@google.com>
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250201000259.3289143-1-kevinloughlin@google.com>
+Subject: [PATCH v6 0/2] KVM: SEV: Prefer WBNOINVD over WBINVD for cache
+ maintenance efficiency
+From: Kevin Loughlin <kevinloughlin@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, seanjc@google.com, 
+	pbonzini@redhat.com, kevinloughlin@google.com, 
+	kirill.shutemov@linux.intel.com, kai.huang@intel.com, ubizjak@gmail.com, 
+	jgross@suse.com, kvm@vger.kernel.org, thomas.lendacky@amd.com, 
+	pgonda@google.com, sidtelang@google.com, mizhang@google.com, 
+	rientjes@google.com, manalinandan@google.com, szy0127@sjtu.edu.cn
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 31, 2025, at 5:26 PM, Guenter Roeck wrote:
-> On 1/31/25 12:48, Mark Pearson wrote:
->> Watchdog driver implementation for Lenovo SE30 platform.
->> 
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> ---
->
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+AMD CPUs currently execute WBINVD in the host when unregistering SEV
+guest memory or when deactivating SEV guests. Such cache maintenance is
+performed to prevent data corruption, wherein the encrypted (C=1)
+version of a dirty cache line might otherwise only be written back
+after the memory is written in a different context (ex: C=0), yielding
+corruption. However, WBINVD is performance-costly, especially because
+it invalidates processor caches.
 
-Thanks for the review and the guidance.
-Mark
+Strictly-speaking, unless the SEV ASID is being recycled (meaning all
+existing cache lines with the recycled ASID must be flushed), the
+cache invalidation triggered by WBINVD is unnecessary; only the
+writeback is needed to prevent data corruption in remaining scenarios.
+
+To improve performance in these scenarios, use WBNOINVD when available
+instead of WBINVD. WBNOINVD still writes back all dirty lines
+(preventing host data corruption by SEV guests) but does *not*
+invalidate processor caches.
+
+First, provide helper functions to use WBNOINVD similar to how WBINVD
+is invoked. Second, check for WBNOINVD support and execute WBNOINVD if
+possible in lieu of WBINVD to avoid cache invalidations.
+
+Note that I have *not* rebased this series atop proposed targeted
+flushing optimizations [0], since the optimizations do not yet appear
+to be finalized. However, I'm happy to do a rebase if that would be
+helpful.
+
+[0] https://lore.kernel.org/kvm/85frlcvjyo.fsf@amd.com/T/
+
+Changelog
+---
+v6:
+- hoist WBNONINVD encoding into macro for readability; shorten comment
+v5:
+- explicitly encode wbnoinvd as 0xf3 0x0f 0x09 for binutils backwards compatibility
+v4:
+- add comments to wbnoinvd() for clarity on when to use and behavior
+v3:
+- rebase to tip @ e6609f8bea4a
+- use WBINVD in wbnoinvd() if X86_FEATURE_WBNOINVD is not present
+- provide sev_writeback_caches() wrapper function in anticipation of
+  aforementioned [0] targeted flushing optimizations
+- add Reviewed-by from Mingwei
+- reword commits/comments
+v2:
+- rebase to tip @ dffeaed35cef
+- drop unnecessary Xen changes
+- reword commits/comments
+---
+Kevin Loughlin (2):
+  x86, lib: Add WBNOINVD helper functions
+  KVM: SEV: Prefer WBNOINVD over WBINVD for cache maintenance efficiency
+
+ arch/x86/include/asm/smp.h           |  7 +++++
+ arch/x86/include/asm/special_insns.h | 19 ++++++++++++-
+ arch/x86/kvm/svm/sev.c               | 41 ++++++++++++++--------------
+ arch/x86/lib/cache-smp.c             | 12 ++++++++
+ 4 files changed, 58 insertions(+), 21 deletions(-)
+
+-- 
+2.48.1.362.g079036d154-goog
+
