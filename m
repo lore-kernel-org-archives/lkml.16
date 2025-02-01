@@ -1,72 +1,66 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD9910E0
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Feb 2025 15:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408DF1C2324;
+	Sat,  1 Feb 2025 15:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738424490; cv=none; b=NEbuF4E+zX2Plzr0V2Cq+LDpzQzB6VMzxicdBZD2H28iu26NM9yL9fpG1yBYuGCmBoodNaqaWPNNreokke+uigDyphHwVEFz3wVyX6+xoWuCizeGxhdKEYkvkvYGCHcLvWoxc1rrmywtRrOpb7wz6yL/PkzLEjUQYOIUNNn2+qw=
+	t=1738424634; cv=none; b=eqWYT9TXXYltJ3oyh7eYKrk0ma9uoLOzAw5rRaPouFK7O6+mfvKhv1MAvfviXwxgjC9F8EWSvMAkT/dzEdUZdwKsYknh5To3/gZU9VVCfXXftjWl3lPqpx/WzdA5n+sKgQqZoKVBVpqoD1iwpbWUfudZwsmsER8m4tzdOogSFeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738424490; c=relaxed/simple;
-	bh=EAuWRFSzbZPoOpQmGlt+48A6Rn20tQZRvUQGrlXcIUQ=;
+	s=arc-20240116; t=1738424634; c=relaxed/simple;
+	bh=J/pldvOV9JghaGP8XdRyjAVSySh9efWu5GyPfZqGzzY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SnyX1ut5Kj2Q5mN9lDc0q8zz2bxnbyLFKqHSkDFawQklBDZF4Yx+1LpZCs9otZuVhS5hgacHL2Z/ZQLmfUYc3eyMeJpJVA4DMibuLix+wfOD3Rov8cM341Rdp7+qdSztMCyFh8YZWAXgttp75wrIrVuvefLGAyYZdZB/r4TbOws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VGZd1DJv; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=l553G5sFhPmUScENEPRnQUssYtvLc1Kc4P62fNVKhGMgn2gD/QUv7nsnc00AuPPQIYJfCABnH5AJy+0pwh90JVRdU/w63j6VP7puaqRl+PXHoL7LZrmN18ejMDpG5jog/+YdUp/MxQSBTTd8JieHdGiFCNLqAFkSdki8aXMxu0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gjaj2Nut; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VGZd1DJv"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 511DmXM4024227
-	for <linux-kernel@vger.kernel.org>; Sat, 1 Feb 2025 15:41:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	umkiEAbpIImGcjGndXh17mm8/qWIyQJoDQy7OHBf4jc=; b=VGZd1DJvhNGRK4ca
-	S7TiRRN57sYwgrt/Q4ihs/e+7II9DK7oNX+5qGWoDbgbB+MAXgHV4d2hwAYSBsNe
-	L2gH1MgLk45l0tGzGmWOBsgU8gIlnT3WyyRXuN9pVESbtUMpyMkEiLiT+63L1WV/
-	+Ri1kRm2rTkfgr4KvBgKpNsyXFQaUQlr8I1Im9CxVyUgdQQGzx9aPhlmZ/JbknE9
-	KA7N4DeBh62tTtihcpGYtoyGYk4XNU6dRD+xgy04klnXJh1IA/Mu9iFKAcsoiNou
-	AgrJ/K5JELyipEtBYJ7FCbHryv70cXuXd8vVfRVgtFeDRSGHBEl3ZxWtj8WpULcp
-	YJz9dA==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44hd6b138w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 15:41:27 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6dfba8de3cdso8692676d6.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 07:41:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gjaj2Nut"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21680814d42so49110785ad.2;
+        Sat, 01 Feb 2025 07:43:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738424632; x=1739029432; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=8dsv4A1pH9PqJpIdBOWXlXzzoGyIBME+a9tzrwR9Oiw=;
+        b=Gjaj2Nut3prSUqJn+wUwM2W2uAY7+Xonj+tzSnmDK8eVERkiguM13eefKtgsthQP3T
+         hxrM0oclQuYzp9nJx/VL5q4Mo7vfivLYPZYHjTCRxTNj1NM2+2KH7QWv6qseTYXz6N5/
+         Ltcbc7LjTe36zNtaYrUaHXY1CDQSU1W6QQb27bKQHRmTpG7mtv3Yl4sGhSW0OHSN+IZl
+         RjQDDdNHm2g03Cl8/FHUaoZP5w8k/2Yi+7UyF89meK9xvDndQvmf8Sr7MLyPhI8+ZYJC
+         c9XRMVZs2ktM7BMhI9oywf14OZ/LT6hMsV8keQdd2+nn3XbB9a4B08lVDik9JgAC7rDK
+         K+NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738424486; x=1739029286;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=umkiEAbpIImGcjGndXh17mm8/qWIyQJoDQy7OHBf4jc=;
-        b=WXEnF7HeRHl20ILPZC6/ZFTU/4vG9ZU6Zkib4SSuMExyi0Ud4hOlD3E53LCPak5slO
-         IoQR6Ph7E6uONMCVjBRNNIjqcPn1tBl09uPDAP3qKGeT5GTWYKWsHr2qTqJXXMsDJ49U
-         dOD1mps/+qw6idgSnsObf6jNmneHvmxjiqhEeVkH+r2Ow6ShiTAQj3URz1UOg03NoDZ4
-         tfvcdBm3FlzuWGOIH8JaEX5t05Ablx7ORgBFtDStY49WJkcqKgNObMluh9jsH5Os83ca
-         jzSC7AYAWWcRfXe+gE39PAAU/LsvNL1j87TLEh98Q53/OLD3fMW0Eii6l3bdNvesOHCq
-         iwSA==
-X-Forwarded-Encrypted: i=1; AJvYcCWvlaKBhcwMHXkFNYPdjmd3PCQNsXWqvR7cegO+oSAQn9BOqg7+i9CzJz4SfY3agBW9UHre7UA9J8cxHbQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww+2goS+lvUV46psiWYGDt8ENoepTuCD+hxPfgM/LkF03RRrJo
-	YXy4sSl4LzRlpebQ5bdRjp+O0K7I9zlyil09F8Yi1vniKqXK/ZqPDsBYk9CfboiRplKvtnNqkD1
-	ikEEAqMsicT7KjD33/C1LC1ZiYtJH9ZxYWI7Wl/i3OX3x44V+rkZbf7FCwt9VIWd4Rg6supc=
-X-Gm-Gg: ASbGncvLnpPs/r3TD+p1MaVGhRfdab2FFx0ZRhcxXjoAn5XGwl6OhJ2MDZ5fJvqbcV+
-	Bie/UZTJNflzrxCSXyOA75fmEV9g/HW8vH/6JQhIC9eNWV1Lgpq3nKuP9F+EUjp6FBRJ1FoO4ks
-	POrddntHNGtlmO1jjvpqMrAhymiq5twQ/DeAosDBADmDp4ME/47lY71Azv0ihLISiessKYT6+jc
-	ZPg19jzVCqJH97qtaPzXbT5VzvOpY6+FrKhNRIlpgRmGodhvz8ditSLjORbYc2ZwzbTHoPom1CK
-	HABflaSJyY7QQTVHCl19B6Gp0hSEBAIW4ms43QMPenRmWDpctcdKIeMfLK0=
-X-Received: by 2002:a05:620a:27cf:b0:7b6:dc5c:de2 with SMTP id af79cd13be357-7c009b91905mr601834085a.13.1738424486434;
-        Sat, 01 Feb 2025 07:41:26 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEnUksznpySe3iXS6aTkOqcqTJDL3C7UtJvJBqhbC+hblm/2idTj1UbgWT0n0clixn0WjRITw==
-X-Received: by 2002:a05:620a:27cf:b0:7b6:dc5c:de2 with SMTP id af79cd13be357-7c009b91905mr601832685a.13.1738424486005;
-        Sat, 01 Feb 2025 07:41:26 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc8eaafa38sm1592278a12.76.2025.02.01.07.41.23
+        d=1e100.net; s=20230601; t=1738424632; x=1739029432;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8dsv4A1pH9PqJpIdBOWXlXzzoGyIBME+a9tzrwR9Oiw=;
+        b=DqGY7fbst0cdIoQ3MbA8gBjBEI8I5HydBWHZMQI2mdD21GeDwEUEaPA1SDbNFh7m6O
+         1yE5Ezgcjm2v5uW6eUkilAEbdNFdvgvN1l/xS22LDhrlMEK8k7HXzcOJ1HtloGlHDjIP
+         24FXg17lRu8rhstsBnvy3vYk6F1EFj4yjMH3A6zHlDUTQ+RASFmH3v18P0YKhhiExBet
+         obaKbpZQZmn2nu4LwdTiPFgIswrWxUkjdEY2FqYJinhLxsoTYP7vBbIx7h+xiMLXvgIH
+         lYHbq9MCIcS3eJDvN7r+rKKXy4i3vx48Bh+2ud9VmTuj5kDm/77NgA1Y6nqJ/AfAjf14
+         YBJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVjVVRtEXyqzPt1ObnY400VWvr3mxWnOGjeFP4AHQ+EHJiUMW1yZLWPoOr7ZKW/EFS8zBXobaLIwcYePUo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1CXgJ/uJyI1sWciiesZfW9U8XlnSPJPJpXhBw6dltRKtil5w5
+	orEaPJXxEa3l9Ga/U5I3R96nbrrP0Z9J4d7HmzGEST6Yfje3BYlb
+X-Gm-Gg: ASbGncu/sLrqsEa0ZqY6Hp2N4jhI6W5uTaiA16BhQk0UvDdAmSRPT4MWL2BFp14HkXE
+	RUGn5Q7+a9MizkwCEvmj0hyHCAZFPdOruOfDv4USJWzddgMEAXDrzk7J8JknT/XVVSgoNFBXZPG
+	rTnVG1fUj4Pw66c4e/q0jolW1zBZF9xdzOR+kIdBKBuEsNWRqKytN+yy08+R8fmDvknQNRtitVI
+	+dLr3FYOKra73zEF4lZpAL2xe8cfRB8Za3k5F2G+TjI/TvztrYJUmKj9orjAm5hCRDXWiaJcB6B
+	88ZE7P2qzXkl0F/xw5204tSY2Mm6E9IpU/UK8q/l8LIuwQn6oj5YNmKC7FvEqYGx
+X-Google-Smtp-Source: AGHT+IHNQZpXdelUXKIZFCMAsgQO9IjWUxLVpBLYD2NvzTvxsnX+UyBZxqsCbeXooorzxlE4KP2Xrg==
+X-Received: by 2002:a17:903:947:b0:212:4c82:e3d4 with SMTP id d9443c01a7336-21dd7df2d2cmr243500635ad.46.1738424632275;
+        Sat, 01 Feb 2025 07:43:52 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de331f8f5sm47535655ad.228.2025.02.01.07.43.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2025 07:41:25 -0800 (PST)
-Message-ID: <80948a6f-1cd4-47b3-9218-f5ab0c25eb3b@oss.qualcomm.com>
-Date: Sat, 1 Feb 2025 16:41:22 +0100
+        Sat, 01 Feb 2025 07:43:51 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <5d6f097d-1a69-48b3-888f-131916e3c4d8@roeck-us.net>
+Date: Sat, 1 Feb 2025 07:43:49 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,75 +68,120 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] arm64: dts: qcom: sm8650: drop cpu thermal passive
- trip points
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250129-topic-sm8650-thermal-cpu-idle-v3-0-62ab1a64098d@linaro.org>
- <20250129-topic-sm8650-thermal-cpu-idle-v3-1-62ab1a64098d@linaro.org>
+Subject: Re: [PATCH 5.4 00/94] 5.4.290-rc2 review
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+ linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+ akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250131112114.030356568@linuxfoundation.org>
+ <CA+G9fYtT36DGS=6+2u35Ki1nyo0UR2A1ee3ifUfqga6D+K2egg@mail.gmail.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250129-topic-sm8650-thermal-cpu-idle-v3-1-62ab1a64098d@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <CA+G9fYtT36DGS=6+2u35Ki1nyo0UR2A1ee3ifUfqga6D+K2egg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: uUWc0mToE19xvI7zbcxG2VcDIiHOms6n
-X-Proofpoint-ORIG-GUID: uUWc0mToE19xvI7zbcxG2VcDIiHOms6n
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-01_07,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
- phishscore=0 spamscore=0 malwarescore=0 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502010136
 
-On 29.01.2025 10:43 AM, Neil Armstrong wrote:
-> On the SM8650, the dynamic clock and voltage scaling (DCVS) is done in an
-> hardware controlled loop using the LMH and EPSS blocks with constraints and
-> OPPs programmed in the board firmware.
+On 2/1/25 07:08, Naresh Kamboju wrote:
+> On Fri, 31 Jan 2025 at 16:51, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+>>
+>> This is the start of the stable review cycle for the 5.4.290 release.
+>> There are 94 patches in this series, all will be posted as a response
+>> to this one.  If anyone has any issues with these being applied, please
+>> let me know.
+>>
+>> Responses should be made by Sun, 02 Feb 2025 11:20:53 +0000.
+>> Anything received after that time might be too late.
+>>
+>> The whole patch series can be found in one patch at:
+>>          https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.290-rc2.gz
+>> or in the git tree and branch at:
+>>          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+>> and the diffstat can be found below.
+>>
+>> thanks,
+>>
+>> greg k-h
 > 
-> Since the Hardware does a better job at maintaining the CPUs temperature
-> in an acceptable range by taking in account more parameters like the die
-> characteristics or other factory fused values, it makes no sense to try
-> and reproduce a similar set of constraints with the Linux cpufreq thermal
-> core.
+> As other reported,
+> the riscv build failed with defconfig with gcc and clang toolchain on the
+> stable-rc 5.4.290-rc1 and 5.4.290-rc2
 > 
-> In addition, the tsens IP is responsible for monitoring the temperature
-> across the SoC and the current settings will heavily trigger the tsens
-> UP/LOW interrupts if the CPU temperatures reaches the hardware thermal
-> constraints which are currently defined in the DT. And since the CPUs
-> are not hooked in the thermal trip points, the potential interrupts and
-> calculations are a waste of system resources.
+> * riscv, build
+>    - clang-19-allnoconfig
+>    - clang-19-allyesconfig
+>    - clang-19-defconfig
+>    - clang-19-tinyconfig
+>    - gcc-12-allnoconfig
+>    - gcc-12-allyesconfig
+>    - gcc-12-defconfig
+>    - gcc-12-tinyconfig
+>    - gcc-8-allnoconfig
+>    - gcc-8-allyesconfig
+>    - gcc-8-defconfig
+>    - gcc-8-tinyconfig
 > 
-> Drop the current passive trip points and only leave the critical trip
-> point that will trigger a software system reboot before an hardware
-> thermal shutdown in the allmost impossible case the hardware DCVS cannot
-> handle the temperature surge.
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Build regression: riscv kernel traps.c error: use of undeclared
+> identifier 'handle_exception'
 > 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Build error:
 > ---
->  arch/arm64/boot/dts/qcom/sm8650.dtsi | 180 -----------------------------------
->  1 file changed, 180 deletions(-)
+> arch/riscv/kernel/traps.c:164:23: error: use of undeclared identifier
+> 'handle_exception'
+>    164 |         csr_write(CSR_TVEC, &handle_exception);
+>        |                              ^
+> 1 warning and 1 error generated
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> index 25e47505adcb790d09f1d2726386438487255824..95509ce2713d4fcc3dbe0c5cd5827312d5681af4 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> @@ -5751,18 +5751,6 @@ cpu2-top-thermal {
->  			thermal-sensors = <&tsens0 5>;
->  
->  			trips {
-> -				trip-point0 {
-> -					temperature = <90000>;
-> -					hysteresis = <2000>;
-> -					type = "passive";
-> -				};
 
-Feel free to drop polling-delay-passive from these nodes too
+FWIW: Reverting the riscv patches fixes the problem.
 
-Konrad
+Guenter
+
