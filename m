@@ -1,170 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C351D63D2;
-	Sun,  2 Feb 2025 11:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0958535DC;
+	Sun,  2 Feb 2025 11:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738494701; cv=none; b=p+QfDG9tNXjeZ1EYh8uwtFnN2B196IWHNpOiBV0jNMt4kv7HMpXfeUtGYSzOLbmcpo2Q+ToFbLsBUS2cCtymdIIX70YPWPfH6/M5qKugjzRwqSkcyjaeyMy8HFHzaIfNBJx066FdchPEWAg+RHDhMabSKbURL1OSMr4Uk91jPv8=
+	t=1738495645; cv=none; b=l6jOnIr8FbdB7K9WglwAjx0QHmmM0H7kKi0Fg2nrF4nTZWbjdtgXyQg9ZeN9wUVXR2Y7Ww9IkLaylID3ndQRKgHEm8RoFt7kjLZHCGYCrz6m1904/kf2IbGMiNl69fUmkFut7eV9f5NvgLNo571lQcZJ4f3ZMidBB/IJlVVzazc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738494701; c=relaxed/simple;
-	bh=jz3MqgGH5E5HKEsnRKw2zBT4wqE3A51XYO9CnVtLyy0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r0Yq61HrkKV+CmFpfsloZHXdHxQH16+i/Bq5JBlI0tzDGlTCzyKAn+DOUOPsWuKhPE386unufE+B45jZQaDcdUnm09deZZrxy1/aP9ey97esQhiBgh+jjby3Q0VBuLwTm7PazJtr5EqVD91f/JHAIhB7cuj0+mPfQ8qakx1sOWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ug7MiW4r; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738495645; c=relaxed/simple;
+	bh=hf+IdUFrZOQeQVFus+InFVRfeR5NNqXLK663w0T7MYw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sau1sond/StN8nikK6M7O4/BXnHiKX6RufNKoe8KxLtyyI4Ns46rtMdyrLkLpXEbA/wWp7SXLGg+27XCo1Mm1+ODGX9HMPtS7Czr8rnAGhVGEURt6JrbnQNaG2J3BNAv4ZayPAdhyR908H2ur4nmYdGpTppHc914lfGUlUSgH+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cw9aeaKD; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ug7MiW4r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738494698; x=1770030698;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jz3MqgGH5E5HKEsnRKw2zBT4wqE3A51XYO9CnVtLyy0=;
-  b=Ug7MiW4r8xzqm2q1ORyarsLVyyZXhPOyeCg65vOPsm2+lRfD1njjMmp+
-   464nV4KNFwojaVUj3IakTvFT2xpuE6X8z1KPIQV7hBxH4Yj1lphZWr9Uu
-   EBZlwvwGfsJLsTnzbBUJnzKRvHJjBiBaeoByPpy/oLgC46MYGUIOVIP7c
-   faeizCO9/k4ixeLTCYxWyhCuac/f+KVV7VYoRzQfcVtbV2CTmZxZWs8/z
-   1mV3tfnraCQ2jxoLeAACQiLlmWpgzdHl8/lTxYJpThqTR6vbFaaXv76y8
-   CmBTYUwDC9FYPlgGZhkF8zucyucoclONpOqpwB+B2YX0YqPOdJ4er1wjo
-   g==;
-X-CSE-ConnectionGUID: QiSvMv8JTMWdOvU2MEjeUQ==
-X-CSE-MsgGUID: TrqME7ZRSBuOz5yIravqOg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11333"; a="49663963"
-X-IronPort-AV: E=Sophos;i="6.13,253,1732608000"; 
-   d="scan'208";a="49663963"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2025 03:11:38 -0800
-X-CSE-ConnectionGUID: AiCiN+YdRe69qT+ilPyNUQ==
-X-CSE-MsgGUID: fvqwam5BT6ORCsDBQpOHDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="110478693"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 02 Feb 2025 03:11:35 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1teXsy-000pbT-1m;
-	Sun, 02 Feb 2025 11:11:32 +0000
-Date: Sun, 2 Feb 2025 19:10:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>,
-	Kees Cook <kees@kernel.org>, Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ricardo B. Marliere" <rbm@suse.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Subject: Re: [PATCH 2/2] LoadPin: Make sysctl table const
-Message-ID: <202502021853.d0nqHvPc-lkp@intel.com>
-References: <20250123-sysctl-kees-v1-2-533359e74d66@suse.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cw9aeaKD"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6dd0d09215aso26087056d6.2;
+        Sun, 02 Feb 2025 03:27:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738495642; x=1739100442; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0/6zeTYuhLFER6O/8ziKsJwSTb7O7aOJg9sZH7UL3Kk=;
+        b=cw9aeaKDwGxydpmacy+oguDsSTosDEDM6l62jzjrzpWm9dbudHncwIFgY9nEERPIEW
+         zK1yaNnYD2PtFEn0AlCwr0qkZ6ybldpT9Wla37hRI94vYQ4qbyxlCres6/ivaz0lZLOp
+         U9YrscaKx7oSJ420mebN3irLR4sn1BURavsB9C61gjXN/aiKzbEUyMooiBe8UOPgPnXM
+         y40rqGGyxDUt6xwVdMIOe5o85xsuiibeW2D6Ns5IxLDXe+AmMVfdqX+eYT6IfF6BI1+J
+         XWLuaXP4ltZ21NBa38zTK61oc1jO4v+QLsNS3wTg1L896r2fXpbvWpp6IrSmFVs977Hy
+         hCKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738495642; x=1739100442;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0/6zeTYuhLFER6O/8ziKsJwSTb7O7aOJg9sZH7UL3Kk=;
+        b=guqOy/gTlQLLtMcNqnXQTGDYaK9c3ktNJtS0MNe07qwtbJF73pTcLmbsHc7ntaAdBY
+         nq8MwH3hH51auysKmzc5yPwNFvRAqqv+A1YTqTOyTXD0cEhpb4R+sVJ6OduvI0SOFPqe
+         Mrtu16lEy8YFJEYGN2a8mIrgu3EX6CIhxxiWFdmnXE4jtY6SN2bDKEZYlXHbG5DdRhGh
+         luvrb5QNGTAe4SJD3u6WDwluN+a+duxCi+Wc1XJ7VWnc881fDfiTTZkpx43ovHCFWV/+
+         E/WRBZm4Qob5A06dQrMNsJLhT3NDN55MJQgrvdaMBpYEKf/mQ2lpUsio5Vf3fGkwR6UR
+         s+Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCXaW6CKy7yimXwHq0XX1h6jcU5EE988RuGGJ8SrUOiQ3P8u1gj9bGEldxflEZ3LKtaa3TEQoo7dsjHPrTE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+HibhTz0TlokO/PgJrXMCfgghYfQ5E0L3pWBdx5YpOSTVjb0A
+	mtBvUtv8Owk0uPiGDgCXRMVoF68KWEGPdEXkRxWBd1cHFIi6ZNsL
+X-Gm-Gg: ASbGncvWdl+1m84/b1/DCHzIZ1TrEqKJoHEgyR64xKCaT1jgowXZVF1aIXlr4nSgOMH
+	uoX2kPodunjRbii3F0Idw8swlekZUiUgT6EwwI3py1p8ER+qEmYmzxAItSIOukOR3trlNNEq6Ia
+	TIkaI6QUD9blocj+B+Qgdwf8NZkRpUw+i/In2BqYHPPJcB/KI/8OAsJH77oipQX/8JB6D0N7Jt2
+	ayFB9thP0y2aFn9Oh3NiBnhp0Tioj8h/2EC7hzPsqZTmNQQXx+FpdheXFk9kqBXVvNVehYTnJd6
+	R1KFGElbr7zE5hfnUxTHRIsWUjTMg8Oyeh/eyd7CUd4CzGYfdbwG
+X-Google-Smtp-Source: AGHT+IHPTbUGcbI3TYP8wdW141uRzBTOQHDtibuTNsLaXahLCL3ZDpdz7xxCcTX5U1PS3xy7VE3Kgw==
+X-Received: by 2002:a05:6214:765:b0:6d8:9ead:c665 with SMTP id 6a1803df08f44-6e243bfafb5mr280251686d6.27.1738495642569;
+        Sun, 02 Feb 2025 03:27:22 -0800 (PST)
+Received: from 159.1.168.192.in-addr.arpa ([2600:4041:5be7:7c00:f07f:fb14:288d:6f1e])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8bbe58sm406388885a.2.2025.02.02.03.27.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 03:27:22 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 02 Feb 2025 06:27:16 -0500
+Subject: [PATCH v2] rust: alloc: satisfy `aligned_alloc` requirements
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250123-sysctl-kees-v1-2-533359e74d66@suse.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250202-aligned-alloc-v2-1-5af0b5fdd46f@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAJNWn2cC/3WMQQrCMBBFr1JmbSSZWLSuvId0kUzTdiBtSiJBK
+ bm7sXtXn/fhvR2Si+wS3JsdosucOKwV8NQAzWadnOChMqDEVqJUwnieVjfU9YGEbZEs6lbTDaE
+ 6W3Qjv4/es688c3qF+DnyWf3ef6WshBLUdeaqR012uDymxbA/U1igL6V8Ac9u+kyqAAAA
+X-Change-ID: 20250201-aligned-alloc-b52cb2353c82
+To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-Hi Ricardo,
+The implementation added in commit dd09538fb409 ("rust: alloc: implement
+`Cmalloc` in module allocator_test") did not honor the documented
+requirements of `aligned_alloc`. These requirements may not be enforced
+on all systems, but they are on macOS. Ensure that alignment is at least
+`sizeof(void *)` and round size up to the nearest multiple of that
+value.
 
-kernel test robot noticed the following build errors:
+Fixes: dd09538fb409 ("rust: alloc: implement `Cmalloc` in module allocator_test")
 
-[auto build test ERROR on a9a5e0bdc5a77a7c662ad4be0ad661f0b0d5e99d]
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Changes in v2:
+- Shorten some variable names. (Danilo Krummrich)
+- Replace shadowing alignment variable with a second call to
+  Layout::align. (Danilo Krummrich)
+- Link to v1: https://lore.kernel.org/r/20250201-aligned-alloc-v1-1-c99a73f3cbd4@gmail.com
+---
+ rust/kernel/alloc/allocator_test.rs | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ricardo-B-Marliere/yama-Make-sysctl-table-const/20250124-033808
-base:   a9a5e0bdc5a77a7c662ad4be0ad661f0b0d5e99d
-patch link:    https://lore.kernel.org/r/20250123-sysctl-kees-v1-2-533359e74d66%40suse.com
-patch subject: [PATCH 2/2] LoadPin: Make sysctl table const
-config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20250202/202502021853.d0nqHvPc-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250202/202502021853.d0nqHvPc-lkp@intel.com/reproduce)
+diff --git a/rust/kernel/alloc/allocator_test.rs b/rust/kernel/alloc/allocator_test.rs
+index e3240d16040b..69f79e246891 100644
+--- a/rust/kernel/alloc/allocator_test.rs
++++ b/rust/kernel/alloc/allocator_test.rs
+@@ -62,9 +62,21 @@ unsafe fn realloc(
+             ));
+         }
+ 
++        // According to `man aligned_alloc`:
++        //
++        // aligned_alloc() returns a NULL pointer and sets errno to EINVAL if size is not an
++        // integral multiple of alignment, or if alignment is not a power of 2 at least as large as
++        // sizeof(void *).
++        let min_align = core::mem::size_of::<*const crate::ffi::c_void>();
++        let (align, size) = if layout.align() < min_align {
++            (min_align, layout.size().div_ceil(min_align) * min_align)
++        } else {
++            (layout.align(), layout.size())
++        };
++
+         // SAFETY: Returns either NULL or a pointer to a memory allocation that satisfies or
+         // exceeds the given size and alignment requirements.
+-        let dst = unsafe { libc_aligned_alloc(layout.align(), layout.size()) } as *mut u8;
++        let dst = unsafe { libc_aligned_alloc(align, size) } as *mut u8;
+         let dst = NonNull::new(dst).ok_or(AllocError)?;
+ 
+         if flags.contains(__GFP_ZERO) {
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502021853.d0nqHvPc-lkp@intel.com/
+---
+base-commit: 89a010129b2a60185d34d7377ef8aec7fbb92e76
+change-id: 20250201-aligned-alloc-b52cb2353c82
 
-All errors (new ones prefixed by >>):
-
->> security/loadpin/loadpin.c:75:34: error: cannot assign to variable 'loadpin_sysctl_table' with const-qualified type 'const struct ctl_table[1]'
-      75 |                 loadpin_sysctl_table[0].extra1 = SYSCTL_ZERO;
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
-   security/loadpin/loadpin.c:56:31: note: variable 'loadpin_sysctl_table' declared const here
-      56 | static const struct ctl_table loadpin_sysctl_table[] = {
-         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
-      57 |         {
-         |         ~
-      58 |                 .procname       = "enforce",
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      59 |                 .data           = &enforce,
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      60 |                 .maxlen         = sizeof(int),
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      61 |                 .mode           = 0644,
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~
-      62 |                 .proc_handler   = proc_dointvec_minmax,
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      63 |                 .extra1         = SYSCTL_ONE,
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      64 |                 .extra2         = SYSCTL_ONE,
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      65 |         },
-         |         ~~
-      66 | };
-         | ~
-   security/loadpin/loadpin.c:77:34: error: cannot assign to variable 'loadpin_sysctl_table' with const-qualified type 'const struct ctl_table[1]'
-      77 |                 loadpin_sysctl_table[0].extra1 = SYSCTL_ONE;
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
-   security/loadpin/loadpin.c:56:31: note: variable 'loadpin_sysctl_table' declared const here
-      56 | static const struct ctl_table loadpin_sysctl_table[] = {
-         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
-      57 |         {
-         |         ~
-      58 |                 .procname       = "enforce",
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      59 |                 .data           = &enforce,
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      60 |                 .maxlen         = sizeof(int),
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      61 |                 .mode           = 0644,
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~
-      62 |                 .proc_handler   = proc_dointvec_minmax,
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      63 |                 .extra1         = SYSCTL_ONE,
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      64 |                 .extra2         = SYSCTL_ONE,
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      65 |         },
-         |         ~~
-      66 | };
-         | ~
-   2 errors generated.
-
-
-vim +75 security/loadpin/loadpin.c
-
-9b091556a073a9 Kees Cook 2016-04-20  67  
-60ba1028fc7b73 Kees Cook 2022-12-09  68  static void set_sysctl(bool is_writable)
-9b091556a073a9 Kees Cook 2016-04-20  69  {
-9b091556a073a9 Kees Cook 2016-04-20  70  	/*
-9b091556a073a9 Kees Cook 2016-04-20  71  	 * If load pinning is not enforced via a read-only block
-9b091556a073a9 Kees Cook 2016-04-20  72  	 * device, allow sysctl to change modes for testing.
-9b091556a073a9 Kees Cook 2016-04-20  73  	 */
-60ba1028fc7b73 Kees Cook 2022-12-09  74  	if (is_writable)
-60ba1028fc7b73 Kees Cook 2022-12-09 @75  		loadpin_sysctl_table[0].extra1 = SYSCTL_ZERO;
-60ba1028fc7b73 Kees Cook 2022-12-09  76  	else
-60ba1028fc7b73 Kees Cook 2022-12-09  77  		loadpin_sysctl_table[0].extra1 = SYSCTL_ONE;
-60ba1028fc7b73 Kees Cook 2022-12-09  78  }
-60ba1028fc7b73 Kees Cook 2022-12-09  79  #else
-60ba1028fc7b73 Kees Cook 2022-12-09  80  static inline void set_sysctl(bool is_writable) { }
-60ba1028fc7b73 Kees Cook 2022-12-09  81  #endif
-60ba1028fc7b73 Kees Cook 2022-12-09  82  
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Tamir Duberstein <tamird@gmail.com>
+
