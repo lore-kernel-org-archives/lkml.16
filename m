@@ -1,229 +1,203 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7B31C2DB2
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 18:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD462A1A4;
+	Sun,  2 Feb 2025 18:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738521082; cv=none; b=QZBCf6qAjDJqnT0oYVGffTlk3VcmbZ1VOMYGt0gvBgHIW6kVVLCBjiV7oh1MzPy4R30e/1GVP9wGArWd61HGJ0BtiZqwgues97wCFWWdWIKlQisoSZCyj1nrscq9Yq9XHRxTBpq9Cbq/cto7dSHJWvvSnzfdsAjor+yFYQw4iCE=
+	t=1738521504; cv=none; b=Xd6Ai8CgBofwJfdu3Y0fiKleUnxR5LNWUB5LsZyRPK+dZizmiXJlFLmK6WX6bUcQ9XjMo1+fE4jUFTf2kro8y3wO3fhKd4ITEzvxCq1VrnkFEV//NBoW4FtF0imoxaMkrXApMhlNNdHqLcVFtPd0tkmxG8JpbwiyxEqDVhuGAC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738521082; c=relaxed/simple;
-	bh=XcUb5AP0TJwdEkn87gzDSt86eEp24w6UPdxJ4r+A3fk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=msMpp7anXS6AnZKuAn4c5GQaglnTGqg4ZcYlw5g2sQFSz/kvft6E7ej6DdNpHdSNad0R+CrjzOA7sNzLIQUSvqU3pcq0MBXy/2vYTCsEFGUgkypXd9YOXxRZ0pKfHNHRpR1+sadHTx4HUvNhl3x+WZgqHKF7WY8FkqmJl+aS5qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3a9c9b37244so69852665ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 10:31:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738521079; x=1739125879;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GXhBuWoRWFoQZifx4KO+M41PHhOTwZgNBj5+jbA++/M=;
-        b=KgAqfEOdyO0fkQ0ApcEoYPj1ANZA+Z420OQNyIcI2WUwSWQTfruxMtR7/qY1YPUoGH
-         x9QR4VMkMfdrQMlfCKqK4WAi9zq7y5Lb2m452hxlDkFRypuMG/AGTLeKRa53XYhmClOx
-         oEabKkt/2uBnGxBYDG8oHXbZuGZz1JgGoaGYxIy+XwoArApw7t3yj/XKebLqJQstQK/7
-         vBp6Zsds0+W2twAVRmSetoAasWPe6sKCsgP2GVzzaRc+/TWjuF2XLAO9YgcSB3OmdwGj
-         OzlDOSadVIMNvNnXAfZFOJQSyyNOhnOdl1qDYO5PiCngHEmH7nMSuPaRiDW5gtw9/5mu
-         23og==
-X-Forwarded-Encrypted: i=1; AJvYcCVmwfH+xa9IlZb4LRPhxsiwNvKrQozYbaeMsxg3g1TuUgA2cpqcgf2ku+pgb2giFdOzbHwmcKSBSmF7h7A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx48Sm+gtz4MFYgUHDuq8MqpZRnuoIP9IcozHQ64EB9eX8dZrDB
-	OeYKN9defUVVK3G/KOBQN4TmCAOCTQFXkEWLV+ZsyTgIxUhjv6UyOLBjSN3CKmGYCgzovUyGui8
-	uLUpubKKzHijRs/lLskJK+df8APOvx+rIZ+51DESwCwrXH/lOrZuEyMI=
-X-Google-Smtp-Source: AGHT+IFF4/AZA0qkuXMtFIFZrwBV859uuWEKScN/8+KqUVSuXQ+6ad9n7MTE7h+VeiA3Fnx0UU65O+vZOB8HA0NaPkrOtZ6Uo93M
+	s=arc-20240116; t=1738521504; c=relaxed/simple;
+	bh=PJpkgskkNYqE5ktWw6CmmWj99ePEwkxlYbUu1j7z2tQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sgza5YpeXNOVeWj6Y3WNQJLndUChkGjK8Bs4jBfCEDw2LFIQYJTTQdkqKs4wDF5aki9P1At70FRFQ/QQizHOA533CoFaeNwzUwq/oAW+zBImFZ+O12jdz4wb25NC9lSSXe5LrqlYMy57MX25ls3KRBdcya8qS8hP0L5+gEG0b/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=PvRkanL+; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="PvRkanL+"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id F211924D2C;
+	Sun,  2 Feb 2025 19:38:11 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id OEy66ANLXArl; Sun,  2 Feb 2025 19:38:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1738521487; bh=PJpkgskkNYqE5ktWw6CmmWj99ePEwkxlYbUu1j7z2tQ=;
+	h=From:Subject:Date:To:Cc;
+	b=PvRkanL+THf7F0wJyRMfB4LMkH1MPC/pG9VfEO20TqFB1gTnivf3bmhWs56ZXjTuy
+	 1/DKfAcHXhDlpT7dQm452xmiL3Dp54ty6+0kg7giSIINEDGSL3NOR5yAxEt5GL1DH6
+	 SdgrDIj+G6K/4/xY6QFe3IWjCvVqnT7BsJ5Ccfm8CwPAWI+6JaoJyUSiD7G98lqWjn
+	 qsyQ2CCWkbR9M/1GzNw62FUXLt+SGgb9ptR+gHHR3LRmxC3bjWaewgB/uiFCQJ2K2/
+	 i/TZvyU1Ao9ULDNM8ff3udU0yroWs6G+AyKSBU5Aj+/ZKRjWeQ7dUDMIn/0jcZax9N
+	 boofc5bJitG+w==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH 00/33] Add support for the Exynos7870 SoC, along with three
+ devices
+Date: Mon, 03 Feb 2025 00:06:33 +0530
+Message-Id: <20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c567:0:b0:3cf:fb97:c313 with SMTP id
- e9e14a558f8ab-3cffe4679dbmr191601835ab.18.1738521079554; Sun, 02 Feb 2025
- 10:31:19 -0800 (PST)
-Date: Sun, 02 Feb 2025 10:31:19 -0800
-In-Reply-To: <67423e2b.050a0220.1cc393.001e.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <679fb9f7.050a0220.d7c5a.0075.GAE@google.com>
-Subject: Re: [syzbot] [ext4?] INFO: task hung in do_get_write_access (3)
-From: syzbot <syzbot+e7c786ece54bad9d1e43@syzkaller.appspotmail.com>
-To: jack@suse.com, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADG7n2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIwND3dSKyrz8YnMLcwNdAxNLUwvzVJMk85Q0JaCGgqLUtMwKsGHRsbW
+ 1AMsls61cAAAA
+X-Change-ID: 20250201-exynos7870-049587e4b7df
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Conor Dooley <conor@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Andi Shyti <andi.shyti@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ Jaehoon Chung <jh80.chung@samsung.com>, 
+ Vivek Gautam <gautam.vivek@samsung.com>, 
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Sergey Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+ linux-phy@lists.infradead.org, linux-usb@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org, 
+ linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738521464; l=6574;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=PJpkgskkNYqE5ktWw6CmmWj99ePEwkxlYbUu1j7z2tQ=;
+ b=OQtdK1RGc0JLdcNe0AAwrKVcWolcTpa0ZUxZtTQKZh2HI/tE+Yxg3q5N8DaCYUDzMaj8ii3Z3
+ nZlAC/KW2OeALOGfeSJkRYgLwjHwBi5N9Fw5vGYllF7W3vwwCgIL231
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-syzbot has found a reproducer for the following issue on:
+Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
+announced in 2016. The chipset was found in several popular mid-range to
+low-end Samsung phones, released within 2016 to 2019.
 
-HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=132935f8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=98d83cc1742b7377
-dashboard link: https://syzkaller.appspot.com/bug?extid=e7c786ece54bad9d1e43
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10809724580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132f03df980000
+This patch series aims to add support for Exynos 7870, starting with the
+most basic yet essential components such as CPU, GPU, clock controllers,
+PMIC, pin controllers, etc.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/3d07b0558b0e/disk-69e858e0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e5e2250eb3b1/vmlinux-69e858e0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/3e676d17effc/bzImage-69e858e0.xz
+Moreover, the series also adds support for three Exynos 7870 devices via
+devicetree. The devices are:
+ * Samsung Galaxy J7 Prime     - released 2016, codename on7xelte
+ * Samsung Galaxy J6           - released 2018, codename j6lte
+ * Samsung Galaxy A2 Core      - released 2019, codename a2corelte
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e7c786ece54bad9d1e43@syzkaller.appspotmail.com
+Additional features implemented in this series include:
+ * I2C     - touchscreen, IIO sensors, etc.
+ * UART    - bluetooth and serial debugging
+ * MMC     - eMMC, Wi-Fi SDIO, SDCard
+ * USB     - micro-USB 2.0 interface
 
-INFO: task kworker/u8:5:76 blocked for more than 143 seconds.
-      Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:kworker/u8:5    state:D stack:23760 pid:76    tgid:76    ppid:2      task_flags:0x4248060 flags:0x00004000
-Workqueue: writeback wb_workfn (flush-8:0)
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5377 [inline]
- __schedule+0xf43/0x5890 kernel/sched/core.c:6764
- __schedule_loop kernel/sched/core.c:6841 [inline]
- schedule+0xe7/0x350 kernel/sched/core.c:6856
- io_schedule+0xbf/0x130 kernel/sched/core.c:7689
- bit_wait_io+0x15/0xe0 kernel/sched/wait_bit.c:247
- __wait_on_bit+0x62/0x180 kernel/sched/wait_bit.c:49
- out_of_line_wait_on_bit+0xda/0x110 kernel/sched/wait_bit.c:64
- wait_on_bit_io include/linux/wait_bit.h:105 [inline]
- do_get_write_access+0x933/0x1270 fs/jbd2/transaction.c:1096
- jbd2_journal_get_write_access+0x1d6/0x280 fs/jbd2/transaction.c:1245
- __ext4_journal_get_write_access+0x6a/0x340 fs/ext4/ext4_jbd2.c:239
- ext4_reserve_inode_write+0x13b/0x270 fs/ext4/inode.c:5831
- __ext4_mark_inode_dirty+0x1ab/0x860 fs/ext4/inode.c:6005
- __ext4_ext_dirty+0x1a8/0x220 fs/ext4/extents.c:207
- ext4_ext_insert_extent+0x12c7/0x3e70 fs/ext4/extents.c:2190
- ext4_ext_map_blocks+0x2044/0x5ab0 fs/ext4/extents.c:4400
- ext4_map_create_blocks fs/ext4/inode.c:516 [inline]
- ext4_map_blocks+0x457/0x1370 fs/ext4/inode.c:702
- mpage_map_one_extent fs/ext4/inode.c:2219 [inline]
- mpage_map_and_submit_extent fs/ext4/inode.c:2272 [inline]
- ext4_do_writepages+0x198d/0x32d0 fs/ext4/inode.c:2735
- ext4_writepages+0x303/0x730 fs/ext4/inode.c:2824
- do_writepages+0x1b3/0x820 mm/page-writeback.c:2687
- __writeback_single_inode+0x166/0xfa0 fs/fs-writeback.c:1680
- writeback_sb_inodes+0x606/0xfa0 fs/fs-writeback.c:1976
- __writeback_inodes_wb+0xff/0x2e0 fs/fs-writeback.c:2047
- wb_writeback+0x803/0xb80 fs/fs-writeback.c:2158
- wb_check_old_data_flush fs/fs-writeback.c:2262 [inline]
- wb_do_writeback fs/fs-writeback.c:2315 [inline]
- wb_workfn+0x8c0/0xbc0 fs/fs-writeback.c:2343
- process_one_work+0x958/0x1b30 kernel/workqueue.c:3236
- process_scheduled_works kernel/workqueue.c:3317 [inline]
- worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
- kthread+0x3af/0x750 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-INFO: task jbd2/sda1-8:5171 blocked for more than 144 seconds.
-      Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:jbd2/sda1-8     state:D stack:26432 pid:5171  tgid:5171  ppid:2      task_flags:0x240040 flags:0x00004000
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5377 [inline]
- __schedule+0xf43/0x5890 kernel/sched/core.c:6764
- __schedule_loop kernel/sched/core.c:6841 [inline]
- schedule+0xe7/0x350 kernel/sched/core.c:6856
- io_schedule+0xbf/0x130 kernel/sched/core.c:7689
- bit_wait_io+0x15/0xe0 kernel/sched/wait_bit.c:247
- __wait_on_bit+0x62/0x180 kernel/sched/wait_bit.c:49
- out_of_line_wait_on_bit+0xda/0x110 kernel/sched/wait_bit.c:64
- wait_on_bit_io include/linux/wait_bit.h:105 [inline]
- __wait_on_buffer+0x64/0x70 fs/buffer.c:123
- wait_on_buffer include/linux/buffer_head.h:414 [inline]
- jbd2_journal_commit_transaction+0x3823/0x6760 fs/jbd2/commit.c:810
- kjournald2+0x1f8/0x760 fs/jbd2/journal.c:201
- kthread+0x3af/0x750 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
+The series has commits from me and Sergey, who has given me permission
+to upstream their patches with proper attribution.
 
-Showing all locks held in the system:
-1 lock held by khungtaskd/30:
- #0: ffffffff8e1bc080 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
- #0: ffffffff8e1bc080 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
- #0: ffffffff8e1bc080 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x7f/0x390 kernel/locking/lockdep.c:6746
-6 locks held by kworker/u8:5/76:
- #0: ffff88801eac1148 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work+0x12cd/0x1b30 kernel/workqueue.c:3211
- #1: ffffc9000216fd18 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0x8bb/0x1b30 kernel/workqueue.c:3212
- #2: ffff88814e6840e0 (&type->s_umount_key#31){++++}-{4:4}, at: super_trylock_shared+0x1e/0xf0 fs/super.c:562
- #3: ffff88814e686b98 (&sbi->s_writepages_rwsem){++++}-{0:0}, at: do_writepages+0x1b3/0x820 mm/page-writeback.c:2687
- #4: ffff88814e690950 (jbd2_handle){.+.+}-{0:0}, at: start_this_handle+0xf6c/0x1430 fs/jbd2/transaction.c:448
- #5: ffff888053bfef80 (&ei->i_data_sem){++++}-{4:4}, at: ext4_map_blocks+0x352/0x1370 fs/ext4/inode.c:701
-2 locks held by getty/5595:
- #0: ffff8880351f20a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x24/0x80 drivers/tty/tty_ldisc.c:243
- #1: ffffc90002fde2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0xfba/0x1480 drivers/tty/n_tty.c:2211
-2 locks held by syz-executor350/13863:
- #0: ffff8880b873ed18 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x29/0x130 kernel/sched/core.c:598
- #1: ffff8880b8728a88 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x203/0x8e0 kernel/sched/psi.c:975
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 30 Comm: khungtaskd Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x27b/0x390 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x29c/0x300 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:236 [inline]
- watchdog+0xf62/0x12b0 kernel/hung_task.c:399
- kthread+0x3af/0x750 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 13875 Comm: syz-executor350 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-RIP: 0010:file_set_fsnotify_mode+0xe/0x5d0 fs/notify/fsnotify.c:652
-Code: 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 41 57 41 56 41 55 41 54 55 53 <48> 89 fb 48 83 ec 10 e8 76 b6 76 ff 48 8d bb 88 00 00 00 48 b8 00
-RSP: 0018:ffffc900032e79c8 EFLAGS: 00000293
-RAX: 0000000000000000 RBX: ffff88802fc64c40 RCX: ffffffff822b6e68
-RDX: ffff888021b99e00 RSI: ffffffff822b6e76 RDI: ffff88802fc64c40
-RBP: ffff888077665038 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff88802fc64c88
-R13: ffff88802fc64cc8 R14: 0000000000000000 R15: ffff88802fc64c90
-FS:  0000555583826380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f6cf9a1a01d CR3: 000000002a1c8000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <NMI>
- </NMI>
- <TASK>
- do_dentry_open+0x59e/0x1c40 fs/open.c:941
- vfs_open+0x82/0x3f0 fs/open.c:1085
- do_open fs/namei.c:3830 [inline]
- path_openat+0x1e88/0x2d80 fs/namei.c:3989
- do_filp_open+0x20c/0x470 fs/namei.c:4016
- do_sys_openat2+0x17a/0x1e0 fs/open.c:1427
- do_sys_open fs/open.c:1442 [inline]
- __do_sys_openat fs/open.c:1458 [inline]
- __se_sys_openat fs/open.c:1453 [inline]
- __x64_sys_openat+0x175/0x210 fs/open.c:1453
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f6cf99d0ae1
-Code: 75 57 89 f0 25 00 00 41 00 3d 00 00 41 00 74 49 80 3d 8a 85 07 00 00 74 6d 89 da 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 0f 87 93 00 00 00 48 8b 54 24 28 64 48 2b 14 25
-RSP: 002b:00007ffd1d04c410 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 0000000000080001 RCX: 00007f6cf99d0ae1
-RDX: 0000000000080001 RSI: 00007f6cf9a1a022 RDI: 00000000ffffff9c
-RBP: 00007f6cf9a1a022 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffd1d04c4b0
-R13: 431bde82d7b634db R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 1.450 msecs
-
-
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Kaustabh Chakraborty (26):
+      dt-bindings: hwinfo: samsung,exynos-chipid: add exynos7870-chipid compatible
+      dt-bindings: clock: document exynos7870 clock driver CMU bindings
+      dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
+      dt-bindings: pinctrl: samsung: add exynos7870-pinctrl compatible
+      dt-bindings: pinctrl: samsung: add exynos7870-wakeup-eint compatible
+      dt-bindings: serial: samsung: add exynos7870-uart compatible
+      dt-bindings: mfd: samsung,s2mps11: add compatible for s2mpu05-pmic
+      regulator: dt-bindings: add documentation for s2mpu05-pmic regulators
+      dt-bindings: phy: samsung,usb3-drd-phy: add exynos7870-usbdrd-phy compatible
+      dt-bindings: usb: samsung,exynos-dwc3: add exynos7870 support
+      dt-bindings: gpu: arm,mali-midgard: add exynos7870 mali compatible
+      dt-bindings: i2c: samsung,s3c2410: add exynos7870-i2c compatible
+      dt-bindings: i2c: exynos5: add exynos7870-hsi2c compatible
+      dt-bindings: mmc: samsung,exynos-dw-mshc: add exynos7870 support
+      dt-bindings: soc: samsung,boot-mode: add boot mode definitions for exynos7870
+      dt-bindings: arm: samsung: add compatibles for exynos7870 devices
+      soc: samsung: exynos-chipid: add support for exynos7870
+      clk: samsung: add exynos7870 CLKOUT support
+      tty: serial: samsung: add support for exynos7870
+      phy: exynos5-usbdrd: fix MPLL_MULTIPLIER and SSC_REFCLKSEL masks in refclk
+      phy: exynos5-usbdrd: use GENMASK and FIELD_PREP for Exynos5 PHY registers
+      usb: dwc3: exynos: add support for exynos7870
+      arm64: dts: exynos: add initial devicetree support for exynos7870
+      arm64: dts: exynos: add initial support for Samsung Galaxy J7 Prime
+      arm64: dts: exynos: add initial support for Samsung Galaxy A2 Core
+      arm64: dts: exynos: add initial support for Samsung Galaxy J6
+
+Sergey Lisov (7):
+      dt-bindings: clock: add clock definitions for exynos7870 CMU
+      clk: samsung: add initial exynos7870 clock driver
+      pinctrl: samsung: add support for exynos7870 pinctrl
+      mfd: sec: add support for S2MPU05 PMIC
+      regulator: s2mps11: Add support for S2MPU05 regulators
+      phy: exynos5-usbdrd: add exynos7870 USBDRD support
+      mmc: dw_mmc: add exynos7870 support, with a quirk for accessing 64-bit FIFOs in two halves
+
+ .../bindings/arm/samsung/samsung-boards.yaml       |    8 +
+ .../bindings/clock/samsung,exynos7870-clock.yaml   |  246 +++
+ .../devicetree/bindings/gpu/arm,mali-midgard.yaml  |    5 +-
+ .../bindings/hwinfo/samsung,exynos-chipid.yaml     |    1 +
+ .../devicetree/bindings/i2c/i2c-exynos5.yaml       |    1 +
+ .../bindings/i2c/samsung,s3c2410-i2c.yaml          |    1 +
+ .../devicetree/bindings/mfd/samsung,s2mps11.yaml   |   13 +
+ .../bindings/mmc/samsung,exynos-dw-mshc.yaml       |    2 +
+ .../bindings/phy/samsung,usb3-drd-phy.yaml         |    2 +
+ .../pinctrl/samsung,pinctrl-wakeup-interrupt.yaml  |    2 +
+ .../bindings/pinctrl/samsung,pinctrl.yaml          |    1 +
+ .../bindings/regulator/samsung,s2mpu05.yaml        |   44 +
+ .../devicetree/bindings/serial/samsung_uart.yaml   |    2 +
+ .../bindings/soc/samsung/exynos-pmu.yaml           |    1 +
+ .../bindings/usb/samsung,exynos-dwc3.yaml          |   34 +-
+ arch/arm64/boot/dts/exynos/Makefile                |    3 +
+ .../arm64/boot/dts/exynos/exynos7870-a2corelte.dts |  624 +++++++
+ arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts    |  611 +++++++
+ arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts |  659 +++++++
+ arch/arm64/boot/dts/exynos/exynos7870-pinctrl.dtsi | 1035 +++++++++++
+ arch/arm64/boot/dts/exynos/exynos7870.dtsi         |  722 ++++++++
+ drivers/clk/samsung/Makefile                       |    1 +
+ drivers/clk/samsung/clk-exynos-clkout.c            |    3 +
+ drivers/clk/samsung/clk-exynos7870.c               | 1830 ++++++++++++++++++++
+ drivers/mfd/sec-core.c                             |   12 +
+ drivers/mfd/sec-irq.c                              |   85 +
+ drivers/mmc/host/dw_mmc-exynos.c                   |   41 +-
+ drivers/mmc/host/dw_mmc.c                          |   94 +-
+ drivers/mmc/host/dw_mmc.h                          |   27 +
+ drivers/phy/samsung/phy-exynos5-usbdrd.c           |  407 ++++-
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c     |  141 ++
+ drivers/pinctrl/samsung/pinctrl-exynos.h           |   29 +
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |    2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |    1 +
+ drivers/regulator/Kconfig                          |    4 +-
+ drivers/regulator/s2mps11.c                        |   92 +-
+ drivers/soc/samsung/exynos-chipid.c                |    1 +
+ drivers/tty/serial/samsung_tty.c                   |   13 +
+ drivers/usb/dwc3/dwc3-exynos.c                     |    9 +
+ include/dt-bindings/clock/exynos7870.h             |  324 ++++
+ include/dt-bindings/soc/samsung,boot-mode.h        |    6 +
+ include/linux/mfd/samsung/core.h                   |    1 +
+ include/linux/mfd/samsung/irq.h                    |   44 +
+ include/linux/mfd/samsung/s2mpu05.h                |  152 ++
+ include/linux/soc/samsung/exynos-regs-pmu.h        |    2 +
+ 45 files changed, 7257 insertions(+), 81 deletions(-)
+---
+base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
+change-id: 20250201-exynos7870-049587e4b7df
+
+Best regards,
+-- 
+Kaustabh Chakraborty <kauschluss@disroot.org>
+
