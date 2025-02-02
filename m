@@ -1,125 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B0C1F7096;
-	Sun,  2 Feb 2025 14:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293931DB52D
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 14:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738505239; cv=none; b=q4iPjezZ2CmaG6cNOFTGBOlGXXE84QWXnaShHKWnHUtCIr4q53/uePgT3dK61grqMWtgUC6w7rnQg9x6kR+acK8aG7QV8F1kL5FzknigKNZg5n2VuuxDkjkKTdXsBQlP+tFhorJOPFtgWcSnm7swUk8Dms2S9aorr0CF/c1GkDw=
+	t=1738505326; cv=none; b=oVSrqk4ZR2MTIz8jSybk1/a0ppq5vd2YIg7+22zdSww3QdQbBT+g2ya/8oZRm1J0fgaxlwrSln5om+zG0dWthosdMU0PqDcNBhHZJC9kE7uoj8Rh5THDujqMtC/nVP7tIiH783A9RLqx0fPKoUClzBr8aDMZQpzGsL0BS77T17w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738505239; c=relaxed/simple;
-	bh=GJkVajKf2MebNVQ3kZCZYV3DVN6cxqkD/AC+lpSOHTI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NSrLYsqwMLaXB124cqGZlVEBBWT6u5qr+m37tEM6R0U87sde/qRLfmbn8ij33p7MD8YhtN3/mFQpnHLJ5phDIe3C8Rh2s++GRUH/Bfa42UvRezoFm6WD0A9Z/rACMKxfUL1CrdnAtEx9pWv5YtNIrKeX32znYMrivCbavwpCJdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FPsNVrys; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738505326; c=relaxed/simple;
+	bh=D3su1JDDerQOMWuB5dX8o3YUbZ17HKFsnv8lV7e1I/4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:Cc:To:
+	 References:In-Reply-To; b=QgEMezdfPYp3Mzol3R/ZPC0rzSbUErOjXJppb/mvbmfVHaQcKROvJpWU/pmdOY1IEzwMJPqW3VKyXtJj5gEt7d5ExpFt++EAB8xW4bhQ4MXmaKZ/uUCZ3X/FJ37ySqlabEcc2pTuW5f9sWXEJ7V1uG/mNZgpuCna7sXji/tShik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=DOTEFVU3; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPsNVrys"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30345C4CED1;
-	Sun,  2 Feb 2025 14:07:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738505239;
-	bh=GJkVajKf2MebNVQ3kZCZYV3DVN6cxqkD/AC+lpSOHTI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FPsNVrysqAySaFJnJ8qu2nrIfqcPdSFjCQGuJ1aO6mGHONXxb1IrdiQsyDLrowzHx
-	 iswdlOEypZav6vKa/8FNFIvHvYwK1ZZnUmxd52cixRhHjUAI/BvoVrU0aiZG1wJKc5
-	 mYMlIF4QzamjPPw5AXPVpJk7KyydkpLm6eyr9LJ3pBWItQxxgBLCpBnYjD0urC8gJE
-	 LxbQzjsksKy94HQo9onzwfEfHNFDV1WB4GsxxMkgLgqGJX3WDRroNGqLyW9L8os/ic
-	 8Xn1g+puloGt6lIavO7GQ4474+2L6oUvqLTCiWm+AKa4VNDzCp58XtDs6Z53RSMqgC
-	 QcYLoAegk86Pg==
-Message-ID: <56ec442d-54b3-404a-a10b-763a00e7099e@kernel.org>
-Date: Sun, 2 Feb 2025 15:07:12 +0100
+	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="DOTEFVU3"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
+	s=key1; t=1738505309;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6YVArxw6byNXDXJF0zYPmUVcQzU6VgzWGkQuMNKnrKw=;
+	b=DOTEFVU3/BrkD1UysTSI6w8EbS6l3RPoseP0F/elW7mSuNnu88KHj0wMn1cJ0b+aSVoIhR
+	FQ1Dl5vJkfMVhQxXJ0aWsOyAro9qsAtKl/CR0rcLcd5ui38CTB2+vin5jFd0AF4UWn+pcx
+	TUw3Zo97AfMpvsuy1o2OyOkT0YRy66A+7/Hv/myR+AimYsZGYzblRt3OfskBRkmLX6W7No
+	cyPgFaRX/FKG3wF6JzlQuZs55V2218f8WG/tKOcoWIIeFP9zIoVLa1yCuCvxzwWmY6J/RC
+	nu7uoJ+wnMuUQyWEtIv+K8DMUm0CE+zmbiyjKK+n5Ss0cv8N0m9KdxA5TCtFLA==
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 02 Feb 2025 14:07:39 +0000
+Message-Id: <D7I0OILRTJG9.3O0P7Q6SEHYV3@postmarketos.org>
 Subject: Re: [PATCH v2 1/2] dt-bindings: arm: amlogic: add S805Y and Mi TV
  Stick
-To: Ferass El Hafidi <funderscore@postmarketos.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-amlogic@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
- Artur Weber <aweber.kernel@gmail.com>, Karl Chan <exxxxkc@getgoogleoff.me>,
- Christian Hewitt <christianshewitt@gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Ferass El Hafidi" <funderscore@postmarketos.org>
+Cc: "Neil Armstrong" <neil.armstrong@linaro.org>, "Kevin Hilman"
+ <khilman@baylibre.com>, "Jerome Brunet" <jbrunet@baylibre.com>, "Martin
+ Blumenstingl" <martin.blumenstingl@googlemail.com>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, <linux-amlogic@lists.infradead.org>,
+ <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <~postmarketos/upstreaming@lists.sr.ht>,
+ "Artur Weber" <aweber.kernel@gmail.com>, "Karl Chan"
+ <exxxxkc@getgoogleoff.me>, "Christian Hewitt" <christianshewitt@gmail.com>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>
 References: <20250201193044.28856-1-funderscore@postmarketos.org>
  <20250201193044.28856-2-funderscore@postmarketos.org>
  <20250202-wisteria-rook-of-intensity-6fecfa@krzk-bin>
  <D7I0F3OMXALB.1ZT1G03JTKSEZ@postmarketos.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <D7I0F3OMXALB.1ZT1G03JTKSEZ@postmarketos.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+ <56ec442d-54b3-404a-a10b-763a00e7099e@kernel.org>
+In-Reply-To: <56ec442d-54b3-404a-a10b-763a00e7099e@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On 02/02/2025 14:55, Ferass El Hafidi wrote:
-> Hi,
-> 
-> On Sun Feb 2, 2025 at 1:54 PM UTC, Krzysztof Kozlowski wrote:
->> On Sat, Feb 01, 2025 at 07:30:43PM +0000, Ferass El Hafidi wrote:
->>> From: Ferass El Hafidi <funderscore@postmarketos.org>
->>>
->>> Add support for the Amlogic S805Y SoC and the Xiaomi Mi TV Stick (aka.
->>> xiaomi-aquaman).  The S805Y is very similar to the S805X, with just a
->>> few minor differences.
->>>
->>> Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
->>
->> Please run checkpatch. You have from/SoB mismatch.
-> 
-> I don't see any mismatch.  Maybe it complains because of a spurious
-> non-breaking space?
-> 
-Could be, no clue. I copied them to editor and it also sees mismatch -
-both entries just do not match.
+On Sun Feb 2, 2025 at 2:07 PM UTC, Krzysztof Kozlowski wrote:
+> On 02/02/2025 14:55, Ferass El Hafidi wrote:
+> > Hi,
+> >=20
+> > On Sun Feb 2, 2025 at 1:54 PM UTC, Krzysztof Kozlowski wrote:
+> >> On Sat, Feb 01, 2025 at 07:30:43PM +0000, Ferass El Hafidi wrote:
+> >>> From: Ferass El=C2=A0Hafidi <funderscore@postmarketos.org>
+> >>>
+> >>> Add support for the Amlogic S805Y SoC and the Xiaomi Mi TV Stick (aka=
+.
+> >>> xiaomi-aquaman).  The S805Y is very similar to the S805X, with just a
+> >>> few minor differences.
+> >>>
+> >>> Signed-off-by: Ferass El=C2=A0Hafidi <funderscore@postmarketos.org>
+> >>
+> >> Please run checkpatch. You have from/SoB mismatch.
+> >=20
+> > I don't see any mismatch.  Maybe it complains because of a spurious
+> > non-breaking space?
+> >=20
+> Could be, no clue. I copied them to editor and it also sees mismatch -
+> both entries just do not match.
 
-Best regards,
-Krzysztof
+OK, I'll see what I can do.
+
+>
+> Best regards,
+> Krzysztof
+
+Cheers.
