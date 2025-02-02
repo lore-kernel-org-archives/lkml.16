@@ -1,444 +1,123 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA0738384;
-	Sun,  2 Feb 2025 16:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D581420DD
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 16:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738513899; cv=none; b=UOrqotrbsPK7uzfzfCAO5g1FAOvVZSbnI2Uyvumyp5eOTsVNy2J/Id/Puj7MmXpIYe8f+OK5gvqVvTUYYkg5sedDEFXowJxKBLygjSHD5mvgMWGrwzKusfO4q0dQ7CCqucD9PwgwnbrafhSv3kbsDF4hFSgtDxe1lMPdRpE/joo=
+	t=1738514239; cv=none; b=E9tBhOjnOy76MFXhENAjch7C9U0gOpLUcprJCMkXju3CjmQv0sDDdAxMbuInoKBubgSsAtV1F7+wrdaD4KZNxyVqsoDlSneOF98z/DvWZ5kPfSP/Wb3wjO6DVSwTOJHcT41G2C8NnyLmkvs2HJ86jQA+i0Ym3O6ieNOHZ8XWmMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738513899; c=relaxed/simple;
-	bh=LTtoW8t7ruaMhWR49XFSPGXQJ0qL8M0PLPSll13Kse8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SLkHt2PjhzGoRGUF7tMAE/xZmS9lWAdgkJtpJsJ2YYGXiXRUfK0pxHvaWZe30aNeFSRAs7TVrsedpbr6krwQCvnn7PH150ITf/ykCvQpO4iBilCh3AnOJnhfTjxVcw/W9Kkex+LUrOHKgvvvmA+VAtNtjIzNpc2uFw8UXFwsTyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bAJ34RwF; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738514239; c=relaxed/simple;
+	bh=/tB14NYSaijoYPS4FpgJhdnq0Z4fpHgkv9sBwwcg6Z0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=V4vB+qBqJZ+14KiK7CshM1r5VhXncEKysCaG71bvsBCeyIM0bNxAXWQ400mffd7fhV2G7dEb/075a23moOLuHeGyCfA1FbSCdgBKaqeAxPB1BsMmtlkusNcKHiZpTNZfkebHCIk7YqpO30xu32wOqq2563rihWto7HwRn4T4sBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=suQWK/lW; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bAJ34RwF"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b6f7d7e128so434212685a.1;
-        Sun, 02 Feb 2025 08:31:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="suQWK/lW"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-386329da1d9so1689495f8f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 08:37:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738513896; x=1739118696; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PsmImrWlafHaiAPIjGyqD/ERJHtpy0ANUP2YmLbPZhw=;
-        b=bAJ34RwFn0L9Uv9rtD6P/PJOy4+1Q/UFvPV+rptmHu4hHazrdVZxL+ZKudrLNpeTXW
-         +yvM+fPukYZGiufOGM8+/qAvU5iAIHWTfeiNnB+xXAu3h6EQHUoG7MGaV2iPOVPSp0Y5
-         cwIY4ZLqp0vl8auXyJA4mHlHjr/rqsgGfqTbSWqsx0iqkeO0IcBqBBU5pOacjfh7ccEl
-         dGzGPPhTLAdZ1lBHK3erK/0Jbky8upy2qf+uSCEnMHQ4nyxg1lW+IAhS4cv7MQvEWQEo
-         +S9ESaR0W/IZb2PITR4Hx30MeH6dRcVnk18LVwT1s8fuCrwkC1H4+8y+H/nIvd9FXHCq
-         tN/w==
+        d=linaro.org; s=google; t=1738514235; x=1739119035; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CBWlyemdwPgaC+YBkzTyPHD8l2slGEd6uAbpuUvQE1Q=;
+        b=suQWK/lWS8EkAUnFdu56SBgNejWkvzaQlYs5MrhRWsYNX5WlWybDjgNSG19GAwqmOJ
+         R7Q6ZrOhLVAzpANpdrp+nA2V2titmd5RXr2G0RsJfOTgJ7gW1XKNdtk6hHtCFCNcniJv
+         8rKMVSOi6LpQtZN6ys/c9LyUFCsnbkNOziMpF3daMQTTnDLnIlba9H2Ecno5zY8+oDwl
+         kauBWSkaC/O4OYTESzaAG6D3gT4FI1vCWbuvJIHc/JwVgAyGIf/adGAWo7+iPXWJsO3c
+         JHzGcKd5EN/2ycWLGRI0PzwXWhw9t5xJm4/YO+cwJ/au+bXm3Z4hLOfKNNxd1zILbWJN
+         nmRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738513896; x=1739118696;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PsmImrWlafHaiAPIjGyqD/ERJHtpy0ANUP2YmLbPZhw=;
-        b=ZlLtBsmBhEprs55YClTpVcqTVRWXwfD9onkCX1SYn949OGmJMCOu/5++Z9Lug7I7AX
-         +XM5c55iLU5UaIH97AKGaR7K3DQS4a+l2NgIEW+ynmqztaZFiRTBZ5+RL8MeziHnWzxB
-         vQSSVQa10/M/dklcAuVZmBFrCyo4dMGZCTlR8KAW5lyOqszdmb90rIPhDW/qfRZuzrN0
-         JhjXVBTeKPIl93QDNWJQiNT0x/VWQM/iGxth0CQSf3eSdNgFOLUBTsFUbfuf5KadkXVF
-         LhSqW/Z+WqslnoEoHYqAhJR3pf/80l9Un1kuZhLU7DEhKws6R4h56MSPHbXamnDOBZvL
-         ZhMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUm3BBOZSecHNDOU0xReCkSLfYFsw9uvkG24qa7RPbxbuPXzcEwcEm8MwO3ygEzflkqwmVu7PTE0KpQJXk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIMs0/ZvIpzniWagoxJvcSlkcq0gAL2dgdR33RCPUlzR/Q3EwB
-	Kd5psvBnJJFaY/13c6B/NIig9PbgX2IjK4lzzuR6670H4avrY2VIJxu33Xbwayo=
-X-Gm-Gg: ASbGncusRMPNVqs5KXBIo8lW27QBYpzkbezaXsJJyGUdPBnpWxi2tAVAQh/Ysxvh56M
-	wRzIX9p6PM1uCv2zlIK6BLePSy6XEXn3JBShdI2PM9Pm401EmzoO+2OvhGvR5tCYyJYOKRZ54cD
-	ETVIWuYzt3LzNDBWqC638rFuMpWJTASSVyjkXfhJbCroMmtRjK2hSTWz6X3xjBpSQ8QH5XiHhAd
-	7TBFdlu3TBX90NVE9BzfJtuPtWSen34yztkgreoRhm5+bTJ+VBexxkDUwkphbTGHHwxc92KY5mN
-	D99D6evZHtDzyHdSKAkMNl4SsuJkAiYn0y0Dbxc=
-X-Google-Smtp-Source: AGHT+IEfrl4Vvug7X259jX7mZnIveRxwNRAsJQ+fTMadD2aib3r062c5MP/DQ1trriRb0XjldnAGIA==
-X-Received: by 2002:a05:620a:24d1:b0:7a9:a356:a5dd with SMTP id af79cd13be357-7c0097b7d6bmr1959574585a.20.1738513895913;
-        Sun, 02 Feb 2025 08:31:35 -0800 (PST)
-Received: from tamird-mac.local ([2600:4041:5be7:7c00:f07f:fb14:288d:6f1e])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8bb957sm421307485a.14.2025.02.02.08.31.33
+        d=1e100.net; s=20230601; t=1738514235; x=1739119035;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CBWlyemdwPgaC+YBkzTyPHD8l2slGEd6uAbpuUvQE1Q=;
+        b=puak7ICA9R8ml2g50l2MxZ58RP9bQMZif0iBhEKV4IPLxqK/Zan5XiUk+QUscM9xI2
+         3D3VFSpqs33Tr1n6cSmN37FdWtTebyu61C0Y3xGv5mwtVnLEp8/b0hv844N9RT8rxE+2
+         4fL35NkqN7a1PpP+4+iFC66rirzjpbOo4kv5E3mgWyRItanmU164F2utqa8+h+QnSmUI
+         CUw8Jjn1JD5ivnMjCtfJLvyG50kwBkM3yJ2sTdX2wtv5fiz16gvMi2evoUDgh8ILX5Am
+         c1MDcHzPI2xmfnUCMXuge0ZlMU6ouwUH859yyy0+QjP/z065/FbYEnsGsSJSvPvdwV9C
+         +R8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW1C8mMegz2XZx6t2PbNSlUThEIWQFuo+hgy+zW85fyrwiwYbOnXBtlGKVNzGLfrAsx8YpssMnnVY8xQgE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFlqmCVZUSyyxtGo7QaRk1OMdutZ2OC/Me/JaitNV3/RiuWmh1
+	lmoyH68noXh1Ij8Nrv9kUkUId+O0r/+yhuQthuKYseRDqpM4IkCTD6Dax7H2nSA=
+X-Gm-Gg: ASbGncuCL2erqUlSUrPtyqxnr4UJbzxKl3F4juqE5eiBhYW30h8b7qeUFR//eQ5hutC
+	FxF0vTINfvT0BDB1LhBS5qTrbNKGjGEfasi1gt8x288D2I3gWfh5rizoa8vEiCQ6vKL/U5Obldp
+	EaQCqPiiVPGudm8cqjhXPEfJz+KVHLqDdGfZ5DyLHx9oiuvakCwRIxOTwnSHVcWR8X+3UWt+Ek0
+	ImEDXbT5huL5tX50ohZXN8pbDdSnDKrplWF1RcK/36FhravNCZwMRXXv6SRkwiIMSKvIpDuyBGR
+	S1lRonlq9v4o34SxeCbL
+X-Google-Smtp-Source: AGHT+IGuBjGwVOPU6+tME45kmJSnYYMMbOMr8+kiXx1JopFuZmaiZ2lyYW3NrXBUZr3BaYEo+CRQIQ==
+X-Received: by 2002:a05:6000:1565:b0:386:366d:5d03 with SMTP id ffacd0b85a97d-38c5195ff67mr18272464f8f.16.1738514235219;
+        Sun, 02 Feb 2025 08:37:15 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38c5c0ec7f1sm10196662f8f.9.2025.02.02.08.37.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 08:31:34 -0800 (PST)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sun, 02 Feb 2025 11:31:21 -0500
-Subject: [PATCH v7 4/4] rust: remove core::ffi::CStr reexport
+        Sun, 02 Feb 2025 08:37:14 -0800 (PST)
+Date: Sun, 2 Feb 2025 19:37:11 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Frank Rowand <frowand.list@gmail.com>
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>
+Subject: drivers/of/unittest.c:1195 of_unittest_reg() error: uninitialized
+ symbol 'addr'.
+Message-ID: <f2f5df88-a4bd-4460-bea3-0e1717e7e1bb@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250202-cstr-core-v7-4-da1802520438@gmail.com>
-References: <20250202-cstr-core-v7-0-da1802520438@gmail.com>
-In-Reply-To: <20250202-cstr-core-v7-0-da1802520438@gmail.com>
-To: Michal Rostecki <vadorovsky@protonmail.com>, 
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Clean up references to `kernel::str::CStr`.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a86bf2283d2c9769205407e2b54777c03d012939
+commit: 7b937cc243e5b1df8780a0aa743ce800df6c68d1 of: Create of_root if no dtb provided by firmware
+config: sparc64-randconfig-r073-20250202 (https://download.01.org/0day-ci/archive/20250202/202502022102.D4ESrh5e-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 14.2.0
 
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- rust/kernel/device.rs           |  3 +--
- rust/kernel/driver.rs           |  4 ++--
- rust/kernel/error.rs            |  6 ++----
- rust/kernel/firmware.rs         |  3 ++-
- rust/kernel/kunit.rs            |  6 +++---
- rust/kernel/lib.rs              |  2 +-
- rust/kernel/miscdevice.rs       |  3 +--
- rust/kernel/of.rs               |  4 ++--
- rust/kernel/pci.rs              |  3 +--
- rust/kernel/platform.rs         |  3 +--
- rust/kernel/prelude.rs          |  5 +----
- rust/kernel/str.rs              | 19 +++++++++----------
- rust/kernel/sync/condvar.rs     |  2 +-
- rust/kernel/sync/lock.rs        |  3 +--
- rust/kernel/sync/lock/global.rs |  4 ++--
- rust/kernel/sync/poll.rs        |  1 +
- rust/kernel/workqueue.rs        |  1 +
- rust/macros/module.rs           |  2 +-
- 18 files changed, 33 insertions(+), 41 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202502022102.D4ESrh5e-lkp@intel.com/
 
-diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-index 9554921368c0..7248bfcfe8f2 100644
---- a/rust/kernel/device.rs
-+++ b/rust/kernel/device.rs
-@@ -6,10 +6,9 @@
- 
- use crate::{
-     bindings,
--    str::CStr,
-     types::{ARef, Opaque},
- };
--use core::{fmt, ptr};
-+use core::{ffi::CStr, fmt, ptr};
- 
- /// A reference-counted device.
- ///
-diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-index 2a16d5e64e6c..0fbcdc226729 100644
---- a/rust/kernel/driver.rs
-+++ b/rust/kernel/driver.rs
-@@ -6,8 +6,8 @@
- //! register using the [`Registration`] class.
- 
- use crate::error::{Error, Result};
--use crate::{device, init::PinInit, of, str::CStr, try_pin_init, types::Opaque, ThisModule};
--use core::pin::Pin;
-+use crate::{device, init::PinInit, of, try_pin_init, types::Opaque, ThisModule};
-+use core::{ffi::CStr, pin::Pin};
- use macros::{pin_data, pinned_drop};
- 
- /// The [`RegistrationOps`] trait serves as generic interface for subsystems (e.g., PCI, Platform,
-diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
-index 51c5e0f0a0bc..81972a8f695d 100644
---- a/rust/kernel/error.rs
-+++ b/rust/kernel/error.rs
-@@ -4,11 +4,9 @@
- //!
- //! C header: [`include/uapi/asm-generic/errno-base.h`](srctree/include/uapi/asm-generic/errno-base.h)
- 
--use crate::{
--    alloc::{layout::LayoutError, AllocError},
--    str::CStr,
--};
-+use crate::alloc::{layout::LayoutError, AllocError};
- 
-+use core::ffi::CStr;
- use core::fmt;
- use core::num::NonZeroI32;
- use core::num::TryFromIntError;
-diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
-index 93e375e75ca0..86ed79cef211 100644
---- a/rust/kernel/firmware.rs
-+++ b/rust/kernel/firmware.rs
-@@ -4,7 +4,8 @@
- //!
- //! C header: [`include/linux/firmware.h`](srctree/include/linux/firmware.h)
- 
--use crate::{bindings, device::Device, error::Error, error::Result, str::CStr};
-+use crate::{bindings, device::Device, error::Error, error::Result};
-+use core::ffi::CStr;
- use core::ptr::NonNull;
- 
- /// # Invariants
-diff --git a/rust/kernel/kunit.rs b/rust/kernel/kunit.rs
-index 3d812edec057..f83988959257 100644
---- a/rust/kernel/kunit.rs
-+++ b/rust/kernel/kunit.rs
-@@ -56,10 +56,10 @@ macro_rules! kunit_assert {
-                 break 'out;
-             }
- 
--            static NAME: &'static $crate::str::CStr = $crate::c_str_avoid_literals!($name);
--            static FILE: &'static $crate::str::CStr = $crate::c_str_avoid_literals!($file);
-+            static NAME: &'static core::ffi::CStr = $crate::c_str_avoid_literals!($name);
-+            static FILE: &'static core::ffi::CStr = $crate::c_str_avoid_literals!($file);
-             static LINE: i32 = core::line!() as i32 - $diff;
--            static CONDITION: &'static $crate::str::CStr =
-+            static CONDITION: &'static core::ffi::CStr =
-                 $crate::c_str_avoid_literals!(stringify!($condition));
- 
-             // SAFETY: FFI call without safety requirements.
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 496ed32b0911..a129ef3292dc 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -132,7 +132,7 @@ fn init(module: &'static ThisModule) -> impl init::PinInit<Self, error::Error> {
- /// Metadata attached to a [`Module`] or [`InPlaceModule`].
- pub trait ModuleMetadata {
-     /// The name of the module as specified in the `module!` macro.
--    const NAME: &'static crate::str::CStr;
-+    const NAME: &'static core::ffi::CStr;
- }
- 
- /// Equivalent to `THIS_MODULE` in the C API.
-diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-index 65f70ff61eb3..e8c272e24bd0 100644
---- a/rust/kernel/miscdevice.rs
-+++ b/rust/kernel/miscdevice.rs
-@@ -16,10 +16,9 @@
-     fs::File,
-     prelude::*,
-     seq_file::SeqFile,
--    str::CStr,
-     types::{ForeignOwnable, Opaque},
- };
--use core::{marker::PhantomData, mem::MaybeUninit, pin::Pin};
-+use core::{ffi::CStr, marker::PhantomData, mem::MaybeUninit, pin::Pin};
- 
- /// Options for creating a misc device.
- #[derive(Copy, Clone)]
-diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
-index 12ea65df46de..04d8dc924147 100644
---- a/rust/kernel/of.rs
-+++ b/rust/kernel/of.rs
-@@ -2,7 +2,7 @@
- 
- //! Device Tree / Open Firmware abstractions.
- 
--use crate::{bindings, device_id::RawDeviceId, prelude::*};
-+use crate::{bindings, device_id::RawDeviceId};
- 
- /// IdTable type for OF drivers.
- pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<DeviceId, T>;
-@@ -28,7 +28,7 @@ fn index(&self) -> usize {
- 
- impl DeviceId {
-     /// Create a new device id from an OF 'compatible' string.
--    pub const fn new(compatible: &'static CStr) -> Self {
-+    pub const fn new(compatible: &'static core::ffi::CStr) -> Self {
-         let src = compatible.to_bytes_with_nul();
-         // Replace with `bindings::of_device_id::default()` once stabilized for `const`.
-         // SAFETY: FFI type is valid to be zero-initialized.
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index af36ddac80ff..d248b966cab4 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -13,11 +13,10 @@
-     error::{to_result, Result},
-     io::Io,
-     io::IoRaw,
--    str::CStr,
-     types::{ARef, ForeignOwnable, Opaque},
-     ThisModule,
- };
--use core::{ops::Deref, ptr::addr_of_mut};
-+use core::{ffi::CStr, ops::Deref, ptr::addr_of_mut};
- use kernel::prelude::*;
- 
- /// An adapter for the registration of PCI drivers.
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index f23a433b2273..b8aabc229442 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -9,12 +9,11 @@
-     error::{to_result, Result},
-     of,
-     prelude::*,
--    str::CStr,
-     types::{ARef, ForeignOwnable, Opaque},
-     ThisModule,
- };
- 
--use core::ptr::addr_of_mut;
-+use core::{ffi::CStr, ptr::addr_of_mut};
- 
- /// An adapter for the registration of platform drivers.
- pub struct Adapter<T: Driver>(T);
-diff --git a/rust/kernel/prelude.rs b/rust/kernel/prelude.rs
-index 96e7029c27da..21fa7b3a68c3 100644
---- a/rust/kernel/prelude.rs
-+++ b/rust/kernel/prelude.rs
-@@ -34,10 +34,7 @@
- 
- pub use super::error::{code::*, Error, Result};
- 
--pub use super::{
--    str::{CStr, CStrExt as _},
--    ThisModule,
--};
-+pub use super::{str::CStrExt as _, ThisModule};
- 
- pub use super::init::{InPlaceInit, InPlaceWrite, Init, PinInit};
- 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 27911eaede27..a68acb54f0c8 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -3,6 +3,7 @@
- //! String representations.
- 
- use crate::alloc::{flags::*, AllocError, KVec};
-+use core::ffi::CStr;
- use core::fmt::{self, Write};
- use core::ops::{Deref, DerefMut};
- 
-@@ -177,8 +178,6 @@ macro_rules! b_str {
-     }};
- }
- 
--pub use core::ffi::CStr;
--
- /// Wraps a raw C string with a safe C string wrapper.
- ///
- /// # Safety
-@@ -338,7 +337,7 @@ fn display(&self) -> Display<'_> {
- ///
- /// ```
- /// # use kernel::c_str_avoid_literals;
--/// # use kernel::str::CStr;
-+/// # use core::ffi::CStr;
- /// const MY_CSTR: &CStr = c_str_avoid_literals!(concat!(file!(), ":", line!(), ": My CStr!"));
- /// ```
- #[macro_export]
-@@ -348,13 +347,13 @@ macro_rules! c_str_avoid_literals {
-     // too limiting to macro authors, so we rely on the name as a hint instead.
-     ($str:expr) => {{
-         const S: &'static str = concat!($str, "\0");
--        const C: &'static $crate::str::CStr =
--            match $crate::str::CStr::from_bytes_with_nul(S.as_bytes()) {
--                Ok(v) => v,
--                Err(core::ffi::FromBytesWithNulError { .. }) => {
--                    panic!("string contains interior NUL")
--                }
--            };
-+        const C: &'static core::ffi::CStr = match core::ffi::CStr::from_bytes_with_nul(S.as_bytes())
-+        {
-+            Ok(v) => v,
-+            Err(core::ffi::FromBytesWithNulError { .. }) => {
-+                panic!("string contains interior NUL")
-+            }
-+        };
-         C
-     }};
- }
-diff --git a/rust/kernel/sync/condvar.rs b/rust/kernel/sync/condvar.rs
-index 7bf3df980433..3b82acdcd56c 100644
---- a/rust/kernel/sync/condvar.rs
-+++ b/rust/kernel/sync/condvar.rs
-@@ -10,11 +10,11 @@
-     ffi::{c_int, c_long},
-     init::PinInit,
-     pin_init,
--    str::CStr,
-     task::{MAX_SCHEDULE_TIMEOUT, TASK_INTERRUPTIBLE, TASK_NORMAL, TASK_UNINTERRUPTIBLE},
-     time::Jiffies,
-     types::Opaque,
- };
-+use core::ffi::CStr;
- use core::marker::PhantomPinned;
- use core::ptr;
- use macros::pin_data;
-diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
-index 5ad62d718279..7951c0ca60cb 100644
---- a/rust/kernel/sync/lock.rs
-+++ b/rust/kernel/sync/lock.rs
-@@ -9,10 +9,9 @@
- use crate::{
-     init::PinInit,
-     pin_init,
--    str::CStr,
-     types::{NotThreadSafe, Opaque, ScopeGuard},
- };
--use core::{cell::UnsafeCell, marker::PhantomPinned};
-+use core::{cell::UnsafeCell, ffi::CStr, marker::PhantomPinned};
- use macros::pin_data;
- 
- pub mod mutex;
-diff --git a/rust/kernel/sync/lock/global.rs b/rust/kernel/sync/lock/global.rs
-index 732dde45024b..ee438654eb6c 100644
---- a/rust/kernel/sync/lock/global.rs
-+++ b/rust/kernel/sync/lock/global.rs
-@@ -5,13 +5,13 @@
- //! Support for defining statics containing locks.
- 
- use crate::{
--    str::CStr,
-     sync::lock::{Backend, Guard, Lock},
-     sync::{LockClassKey, LockedBy},
-     types::Opaque,
- };
- use core::{
-     cell::UnsafeCell,
-+    ffi::CStr,
-     marker::{PhantomData, PhantomPinned},
- };
- 
-@@ -266,7 +266,7 @@ macro_rules! global_lock {
-         $pub enum $name {}
- 
-         impl $crate::sync::lock::GlobalLockBackend for $name {
--            const NAME: &'static $crate::str::CStr =
-+            const NAME: &'static core::ffi::CStr =
-                 $crate::c_str_avoid_literals!(::core::stringify!($name));
-             type Item = $valuety;
-             type Backend = $crate::global_lock_inner!(backend $kind);
-diff --git a/rust/kernel/sync/poll.rs b/rust/kernel/sync/poll.rs
-index d5f17153b424..3349f48725f2 100644
---- a/rust/kernel/sync/poll.rs
-+++ b/rust/kernel/sync/poll.rs
-@@ -11,6 +11,7 @@
-     sync::{CondVar, LockClassKey},
-     types::Opaque,
- };
-+use core::ffi::CStr;
- use core::ops::Deref;
- 
- /// Creates a [`PollCondVar`] initialiser with the given name and a newly-created lock class.
-diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
-index 1008dd2635e1..69f419bdb0e7 100644
---- a/rust/kernel/workqueue.rs
-+++ b/rust/kernel/workqueue.rs
-@@ -135,6 +135,7 @@
- 
- use crate::alloc::{AllocError, Flags};
- use crate::{prelude::*, sync::Arc, sync::LockClassKey, types::Opaque};
-+use core::ffi::CStr;
- use core::marker::PhantomData;
- 
- /// Creates a [`Work`] initialiser with the given name and a newly-created lock class.
-diff --git a/rust/macros/module.rs b/rust/macros/module.rs
-index a534fabd29d6..7f81cbbcc4ef 100644
---- a/rust/macros/module.rs
-+++ b/rust/macros/module.rs
-@@ -229,7 +229,7 @@ pub(crate) fn module(ts: TokenStream) -> TokenStream {
-             }};
- 
-             impl kernel::ModuleMetadata for {type_} {{
--                const NAME: &'static kernel::str::CStr = c\"{name}\";
-+                const NAME: &'static core::ffi::CStr = c\"{name}\";
-             }}
- 
-             // Double nested modules, since then nobody can access the public items inside.
+New smatch warnings:
+drivers/of/unittest.c:1195 of_unittest_reg() error: uninitialized symbol 'addr'.
+
+vim +/addr +1195 drivers/of/unittest.c
+
+ff61bacd77f258 Rob Herring 2023-03-28  1180  static void __init of_unittest_reg(void)
+ff61bacd77f258 Rob Herring 2023-03-28  1181  {
+ff61bacd77f258 Rob Herring 2023-03-28  1182  	struct device_node *np;
+ff61bacd77f258 Rob Herring 2023-03-28  1183  	int ret;
+ff61bacd77f258 Rob Herring 2023-03-28  1184  	u64 addr, size;
+ff61bacd77f258 Rob Herring 2023-03-28  1185  
+ff61bacd77f258 Rob Herring 2023-03-28  1186  	np = of_find_node_by_path("/testcase-data/address-tests/bus@80000000/device@1000");
+ff61bacd77f258 Rob Herring 2023-03-28  1187  	if (!np) {
+ff61bacd77f258 Rob Herring 2023-03-28  1188  		pr_err("missing testcase data\n");
+ff61bacd77f258 Rob Herring 2023-03-28  1189  		return;
+ff61bacd77f258 Rob Herring 2023-03-28  1190  	}
+ff61bacd77f258 Rob Herring 2023-03-28  1191  
+ff61bacd77f258 Rob Herring 2023-03-28  1192  	ret = of_property_read_reg(np, 0, &addr, &size);
+ff61bacd77f258 Rob Herring 2023-03-28  1193  	unittest(!ret, "of_property_read_reg(%pOF) returned error %d\n",
+ff61bacd77f258 Rob Herring 2023-03-28  1194  		np, ret);
+
+unittest() just prints pass/fail.
+
+ff61bacd77f258 Rob Herring 2023-03-28 @1195  	unittest(addr == 0x1000, "of_property_read_reg(%pOF) untranslated address (%llx) incorrect\n",
+                                                         ^^^^^^^^^^^^^^
+uninitialized but harmless
+
+ff61bacd77f258 Rob Herring 2023-03-28  1196  		np, addr);
+ff61bacd77f258 Rob Herring 2023-03-28  1197  
+ff61bacd77f258 Rob Herring 2023-03-28  1198  	of_node_put(np);
+ff61bacd77f258 Rob Herring 2023-03-28  1199  }
 
 -- 
-2.48.1
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
