@@ -1,84 +1,102 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F432557C
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 17:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738516791; cv=pass; b=tVoN9Wd5LYaafRaVNqxFJMjGuk1lSem0VokoDCzYJJoKxVBSWtlQUz8HGRiQ2dkI+tprc1GFWrmh9I1dExKEKL9fGiANZEGYDzD3Sha2a4DPzQDBoycls0CyoFC++5QFn2Y5ik26mESNUa1mGhzhWd5gGdRsMVep3dKjOC3SBlw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738516791; c=relaxed/simple;
-	bh=fGQMiCK9CrCF6TbcjORmMHlOTSvhAOG6dGnTBSK8B9I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AeJNJMOj7gfEjdWFZdLp6fkpFMz4FOvniunIdfpmoY6b0nVuio/6p8Yl4NzNg5HGpVSSU3IG2nen6fhATGija3nO7Lt9ALcqOjfeHPlGhPMTqRdniBr/McjeXJqjuCRFJijt7kxUHsobq8zeulvuadFaE2Kmk2lN+GvDjVFBZiQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=BkugCsYm; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5594A1FAC52
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 17:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738516814; cv=none; b=MOCzQUAzKW22qj7U2Jl+wdyZVJr8APqGEMODJElv/9GtmdHeUr623ETKkcUnnSjG9VHwwyUGCyW19al6I5Q9O8+OydiBrPmjZRkR9t39fmnH4N54oNlEKxr8/JYblfZQtZGZxMqpQp8/ZauMAkIyaZpzjrojw09uOJ8SWyu6KDs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738516814; c=relaxed/simple;
+	bh=/Tt5YEhlWXoD7vD9kcmicLlJPflGxHF31dTHGbnQ6s8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KkHfK6laehcZUWomI9mMMdbJtVRjwJQv8QrRz6bhfbYVGN4YwpmpZKTYFgiyGT076j3mPVoBiBZXE3/0DEt+PjfDAXESrx1MZNmtZNOwN+259mJSlWdh0CEtYFFBn++Cv025G1F+acl9TNhT0a7GkzhY1h5oFAVfed89wEDAB1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pj9HMoX/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="BkugCsYm"
-ARC-Seal: i=1; a=rsa-sha256; t=1738516774; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ZnRhLNNxgEXsgHDP2LS3+Z/zm9FX5Om4C64v5sYZZ7aqcFMID6K4Y90MfAqyaRf8UcI3RPAdJhClPd7zzaNl8YB/qGDVp7ZnvqdI/yVjqIezykV4+CnI+xWbq/43IPqI9RTeyac6aDzgmmo45u6+7cAULNY71kzEBNeu0xRUlDQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738516774; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=4H7toTV6/oya19NAiBnTrweJg3ebJuxR26HF1E8ORHw=; 
-	b=jTkGxChbP2YClbU3eK7zgwR2Dx5om7Uun9UL5hbDM7Dgz3jMsuO3HyyoPyDgeTNkFoyyIRqE4ovBTHgzHczBLoNfqy797PJp2eA+ipL2Qt4ZBlngj8/u4qzK0Akv4IlL+KZe7eZ+eBGNhMxKQO69EukvH/H3kCmX9VoJKnJQU6Q=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738516774;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=4H7toTV6/oya19NAiBnTrweJg3ebJuxR26HF1E8ORHw=;
-	b=BkugCsYmG3nqXQI0SYwsuP4Dv4MVuz5Ii+Kl+t8i9so6Yg6Q6yD/ogFd9ecnEyhW
-	FeqLuHTvCfyAH++chSnjJEeqx+nnkz/SFXxTI5DPTbmoPB+EMpwkbULl8dUTHEP9CYQ
-	nqNi+pfcdy7FoMbh10Rzo3/TlUKZORkBmhesqUFM=
-Received: by mx.zohomail.com with SMTPS id 1738516770241998.3275094604038;
-	Sun, 2 Feb 2025 09:19:30 -0800 (PST)
-Message-ID: <df650764-e9d8-487c-97f7-a7d810444dfa@collabora.com>
-Date: Sun, 2 Feb 2025 20:19:25 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pj9HMoX/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D47C4CED1;
+	Sun,  2 Feb 2025 17:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738516813;
+	bh=/Tt5YEhlWXoD7vD9kcmicLlJPflGxHF31dTHGbnQ6s8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Pj9HMoX/hdf1LmZIKtVRb368ERYAmwOq1mNavKO6oqck3FG/06TRaB9Zi0qjHNlz8
+	 /VtKEkoN2qg8fqcf2GRXVYjz/Jqsi7I2QaK2nGzMCOzxDGrUhLCGsQv0qkm5TwRJQc
+	 IUDwk2uc0UIII6wcYnJgYgNh39k26IdacYrDNk5pP9lQjtmVbdfbLaNnIxbpLOcCzw
+	 FxAx37vjWP/uqmPXgdn+hwfCrcLqjWO3r0QN+q8Xo0ovNXq9Y4O6jMwCU8fijIWfyt
+	 CFk148Ba86a3WcxHYNZ1fDG8dOPsbwZ+UagLjqgdrTB8gi4oXjE6fWnM6+A9MSMP89
+	 OuHSjgQ6FRhPQ==
+Date: Sun, 2 Feb 2025 07:20:12 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Changwoo Min <changwoo@igalia.com>
+Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 05/11] sched_ext: Add an event, SCX_EV_ENQ_SKIP_EXITING
+Message-ID: <Z5-pTOjBwsQRB0OF@slm.duckdns.org>
+References: <20250131070938.95551-1-changwoo@igalia.com>
+ <20250131070938.95551-6-changwoo@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] drm/virtio: Add drm_panic support
-To: Ryosuke Yasuoka <ryasuoka@redhat.com>, airlied@redhat.com,
- kraxel@redhat.com, gurchetansingh@chromium.org, olvaffe@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- daniel@ffwll.ch, jfalempe@redhat.com
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-References: <20250130090517.201356-1-ryasuoka@redhat.com>
-Content-Language: en-US
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-In-Reply-To: <20250130090517.201356-1-ryasuoka@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131070938.95551-6-changwoo@igalia.com>
 
-On 1/30/25 12:05, Ryosuke Yasuoka wrote:
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> index f42ca9d8ed10..44511f316851 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> @@ -126,6 +126,12 @@ struct virtio_gpu_object_array {
->  	struct drm_gem_object *objs[] __counted_by(total);
+On Fri, Jan 31, 2025 at 04:09:32PM +0900, Changwoo Min wrote:
+> Add a core event, SCX_EV_ENQ_SKIP_EXITING, which represents how many
+> times a task is enqueued to a local DSQ when exiting if
+> SCX_OPS_ENQ_EXITING is not set.
+> 
+> __scx_add_event() is used since the caller holds an rq lock,
+> so the preemption has already been disabled.
+> 
+> Signed-off-by: Changwoo Min <changwoo@igalia.com>
+> ---
+>  kernel/sched/ext.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+> index 7147f730850b..37f86a84ac5d 100644
+> --- a/kernel/sched/ext.c
+> +++ b/kernel/sched/ext.c
+> @@ -1461,6 +1461,12 @@ struct scx_event_stats {
+>  	 * continued to run because there were no other tasks on the CPU.
+>  	 */
+>  	u64		SCX_EV_DISPATCH_KEEP_LAST;
+> +
+> +	/*
+> +	 * If SCX_OPS_ENQ_EXITING is not set, the number of times that a task
+> +	 * is dispatched to a local DSQ when exiting.
+> +	 */
+> +	u64		SCX_EV_ENQ_SKIP_EXITING;
 >  };
 >  
-> +#define MAX_INLINE_CMD_SIZE   96
-> +#define MAX_INLINE_RESP_SIZE  24
-> +#define VBUFFER_SIZE	      (sizeof(struct virtio_gpu_vbuffer) \
-> +			      + MAX_INLINE_CMD_SIZE		 \
-> +			      + MAX_INLINE_RESP_SIZE)
-> +
+>  /*
+> @@ -2068,8 +2074,10 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
+>  
+>  	/* see %SCX_OPS_ENQ_EXITING */
+>  	if (!static_branch_unlikely(&scx_ops_enq_exiting) &&
+> -	    unlikely(p->flags & PF_EXITING))
+> +	    unlikely(p->flags & PF_EXITING)) {
+> +		__scx_add_event(SCX_EV_ENQ_SKIP_EXITING, 1);
+>  		goto local;
+> +	}
+>  
+>  	if (!SCX_HAS_OP(enqueue))
+>  		goto global;
+> @@ -4986,6 +4994,7 @@ static void scx_dump_state(struct scx_exit_info *ei, size_t dump_len)
+>  	scx_dump_event(s, &events, SCX_EV_SELECT_CPU_FALLBACK);
+>  	scx_dump_event(s, &events, SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE);
+>  	scx_dump_event(s, &events, SCX_EV_DISPATCH_KEEP_LAST);
+> +	scx_dump_event(s, &events, SCX_EV_ENQ_SKIP_EXITING);
+>  
+>  	if (seq_buf_has_overflowed(&s) && dump_len >= sizeof(trunc_marker))
+>  		memcpy(ei->dump + dump_len - sizeof(trunc_marker),
 
-Let's keep these definitions in the old place if it's unnecessary to
-move them.
+Missing agg call?
 
 -- 
-Best regards,
-Dmitry
+tejun
