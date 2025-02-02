@@ -1,66 +1,65 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C491D90C9
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 12:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3DC1D8DFD
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 12:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738498052; cv=none; b=P4NV4Ns5zgj865XAmW/twQCTcyPv52xoJpHcsjwlX5c5NYqoiPQdPFG5I3Ns8M1XYdmd973GhcqKgIyrYAuZVQFtwWAtwRqB71so7TZdUjG9gjV+ypWw/p6Rmy3LJtYGyeDcut78spE35z0B1GtlimaP9kL5T7K2CnQR/6VdVu4=
+	t=1738498050; cv=none; b=QTbdFPdgChsm6jQEdVMtkqJD95nGpNCm4Hz1l5S8HOPgSH8AjOGaVG6Zkx/AqT/LWvAXZ7jEbyxhNG0zF4QUG4J76oPtDpr25DGEOCHKU5g8kpvuBhSdjlba8kIdjM82+8cdPQIjHujNO8JlCCXVHfz7zAFYeBkUdLbvZS2vugs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738498052; c=relaxed/simple;
-	bh=/bwxxqot5Orp4aaO3bhvKAHJmqfOaxqag+YV2Q0Zeak=;
+	s=arc-20240116; t=1738498050; c=relaxed/simple;
+	bh=nldCClR8uvkSTfDxfd+h/QjnqO0ZS/iFq9gYjpUVHS4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=n8vS3tpaggfKgdQzbT9+XtMdmwIpkgwPlQv1QCTme3VRgHM4LocLmaCuj+MKZuWe0uxfBY0HMgzrQEnfRn0400oD8+t7OPylc0yhcOHQvWplTmgLVbxyuYvU/DExbDP51scZauAjhUi6xEly2/wNnQPYYemNdjInBOQKbw8OlPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yla92dOB; arc=none smtp.client-ip=209.85.167.41
+	 In-Reply-To:To:Cc; b=da/Tuig3hjk3RssO8AugP1rfeOI7eejs2HoZg3AdufkwMUbr7wGS5FhPWK/zFnMDEDIPLm71JLhe+RIAQCxOvsjWa0UODACOK4WwH1qWVceYXESGiVnlOeBQvrUrQjDEOA5P+rJmPVvb0vLVaw6tuNI34UKtGLFB5cqQ2db0Crw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZIsv4qlN; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yla92dOB"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5401c52000dso3540558e87.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 04:07:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZIsv4qlN"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30219437e63so46648001fa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 04:07:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738498048; x=1739102848; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1738498046; x=1739102846; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3jL3SY1S6z4Uid1XoM99vjSrcwjC3Oh5zHftbBQD0pk=;
-        b=yla92dOBhmaZupvMxyXO2QiFyXL9e3oJquKrdK0FCO1GM26GxLlGg9miIpQreEoPjS
-         va70OopGNRB4N33X/YbZBI8Yqef7LKlRlDYvtEWyoLf7FFSA/oTUiPxeN2gy8BQg7ebR
-         11jBxgBCoWl/seb9xu3/Zs/5sEbRW6X86OgktBidnaiwNsU7by8dMpJl0AdOD7WP/6Ey
-         SZTdzOhPsv4RwwT+CM7bV93mHoOByByXc9g/i8NaE1vU7OJyIvJJ07WskZGWU7p/YpIX
-         R/gh+flD2XiEBIVr325qFoGtzxGTib3LS6GbE1Sd7mcGEqeOFEBbrJ3tI5rKUOw/X1X4
-         Aa4g==
+        bh=5UTqDywGwGqwaCDORrx7GXvq6f9LFKArl+vZrtSpSjA=;
+        b=ZIsv4qlN84SZHYSYmUQf1TBZOUCg9azq8HpTooImXDQZH25DSr5LhA5Juj7IdZD90+
+         KJr3jUnf8KLeN1LgXaPj9SlwlwfDogMvIIHl7jNUJvwNhBckC6GvAHJXBLsQWS5rPQH4
+         3KT0tXqBNkOhZ+jDoxZQErIb9a1FbmnVJJUjYmoNtBLUkcai4QNvG65AptADugVhtill
+         WGJV9HLJVlz/jVgBrhFVNI8zr9CLbJ9l8L9FvewATOkAkZlyyll2vdHY+Zu0VXCRt8Nm
+         0MdoGe4buCaJIthgVQ5z2iwT689fJ2pZR8PHNL4gYMTm+pLtQvXFEoCIrW12CzO3GaWI
+         71zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738498048; x=1739102848;
+        d=1e100.net; s=20230601; t=1738498046; x=1739102846;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3jL3SY1S6z4Uid1XoM99vjSrcwjC3Oh5zHftbBQD0pk=;
-        b=G3rT2j7Vhf3c/EtbIb8gSjSgmI7cvTtLzb5jfuU2U70K1HhBitrpcwHbROEinAHwQu
-         7kd7qGSz6jheJkX+7twevb+5wPN3W7bxqh5YVERKu2fBlNJpw9DbL8awMcvuLHIQVcmh
-         tWH7bOvuKfzmYgBCxy7AEzwU4jYxOnSoY+sqsrEaZBKxzhmzoQ6QrTFYmh/MbhmRQL8c
-         zrPnjwacZvsYpWiExtNyGXtpR5ad/rBnZtKIgfXvkTdVN/vOhenOy74r1CP1m+aafcFN
-         MD0H7j4V/GxNKb/E4EICsdfdKjknvlRc8ZNzbT7k9qfdBIAyFQ5YOTTbruEqp476up2Z
-         yv/w==
-X-Forwarded-Encrypted: i=1; AJvYcCU7k2nkSWDUrvc48OzMUHjoSO8amz+PAcSRTilOjIHdbG6Ikmvggo8ZytI1Mpt7kEMBclgKHLeji5dOFyU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCBROUxJfl2ti1LreVVQecYbqGb4MHz71nt+PxBdeFWwID4hCS
-	ZaCf6cIGtSJstqUir1zAmrVY/1ZLVcFccvG+jlYCGYngax5RFz56MSBQT4TmaN4=
-X-Gm-Gg: ASbGncsNo876Mkzj9ONA2DcvwkKYQmgLNm0F2X+HmyGrkX5IxFM+DA8K1AlOtilFIKq
-	3ZNWO77vaHrLbW97asALSq7vwMpG6ORwgPOe/5TIt7ZYEmRHmOMvwFcdyePONbR+BaHY973KGDz
-	5HfII42RYkGTETQsL7/AY0AVjMfgzYVyrJP/sboPPaikOr0d1nVEu48RdbxBRbUZWYPeNEfw6oa
-	ZKT+v5GLtd0I6viG0OB3tW6GmOMFkIvhJemaUxat4JUiNX87uVS4PN++2WszGc69jREswhearhN
-	eNob3s/XZKFrdhk1SzcQcCA=
-X-Google-Smtp-Source: AGHT+IFQ2qvN181ZDuhcMPZNSJiVwciarLswp3cHLOkosjzsrof5La2FVo7LVxq/uWfUgjgWG7L/7A==
-X-Received: by 2002:a05:6512:3d21:b0:540:1fae:b355 with SMTP id 2adb3069b0e04-543e4c37a94mr5458133e87.52.1738498048159;
-        Sun, 02 Feb 2025 04:07:28 -0800 (PST)
+        bh=5UTqDywGwGqwaCDORrx7GXvq6f9LFKArl+vZrtSpSjA=;
+        b=Boaf2ZEO+lqVlVWBu2AGR4sUdcWrF5eklv51TBTjvbzsaAPPeJ1+evQkdVnhfPvEDk
+         zIs4++AxXCacjpRTfyOZgFyyjNr8DQJfhaExPl/oZxcnA8b9bYv74HoS8T8jM5+kMvPU
+         dIb+U/8U8vfCXGmNgUjAAff2obpJxf7f0y1d+rzBMVFsbk7Vd0sylBWqXuvQxr3JleH7
+         RQi0P9JdtAaBc0Di1FUnasZDGtNYqrIw1Jh0sNcIQhzYaVz/sUE3rhhcqeatc6+ufWVv
+         hCOtDeD2qrf3CVU9bwivahB2m2DPxV7l96oBZk3cE5+cBQN5doLRdio1t1/JjulCc+RW
+         W+dw==
+X-Forwarded-Encrypted: i=1; AJvYcCXpqTI8gdubZ7zI7HXficrAjlVqsh8jk76FDXIgsC2uOaQ5knxsejFfhLxI9ibFQ4qTNnBm/5kPhMLgUW0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdASuYGFvPUfa7pT8PX0L0wngDdI7sg5wiLGi5X/7KOhWANGq7
+	psZMvqYRC7y4GXKKHdU4E/cqxaZhsFx6TP3if860kj1WKxLjjaGDGNrUxu9A8B4=
+X-Gm-Gg: ASbGnctrTJkMRPXG/HdKwL0WWKex07dBjLkMDKGKzPYTu1sd1c23TnPotQzlTmM1hjH
+	uKWkaGpNSkSghnye56a9Q4eMh6MSqTNCvf6/Y0UlaD5vTxTncYgGVtZVzFq8ZXyFXEnrxIxe/F8
+	zbqFHwxSKSlwb2PNEsMYbCpoVgaVim4P3aPlY/FsKF6CLdgvs5BpNOpEH1gzHeim8zGOvISsxP0
+	dlzXFHfdutYo9cEpWuSsLZuBKmidlYrHGurF7PLv3Yn5+4JrDe8cbG+ADkJrbsc4mTH6qknZ/FB
+	i8O7SzxlfkszbflgwQqTmuw=
+X-Google-Smtp-Source: AGHT+IEv10/REWPc98BQHgdtPQ1KyOKFNyfQw6Dwajs3E1u+MMHDY0oB96++rKgrDov5//LdbeuRmA==
+X-Received: by 2002:a05:6512:2809:b0:542:8ca5:8248 with SMTP id 2adb3069b0e04-543ea3c8993mr4316169e87.8.1738498045654;
+        Sun, 02 Feb 2025 04:07:25 -0800 (PST)
 Received: from umbar.lan ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebe10678sm960695e87.101.2025.02.02.04.07.25
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebe10678sm960695e87.101.2025.02.02.04.07.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 04:07:26 -0800 (PST)
+        Sun, 02 Feb 2025 04:07:24 -0800 (PST)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sun, 02 Feb 2025 14:07:12 +0200
-Subject: [PATCH v4 05/12] drm/display: hdmi-state-helper: handle CEC
- physical address
+Date: Sun, 02 Feb 2025 14:07:11 +0200
+Subject: [PATCH v4 04/12] drm/display: add CEC helpers code
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250202-drm-hdmi-connector-cec-v4-5-a71620a54d50@linaro.org>
+Message-Id: <20250202-drm-hdmi-connector-cec-v4-4-a71620a54d50@linaro.org>
 References: <20250202-drm-hdmi-connector-cec-v4-0-a71620a54d50@linaro.org>
 In-Reply-To: <20250202-drm-hdmi-connector-cec-v4-0-a71620a54d50@linaro.org>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -84,63 +83,382 @@ To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
  Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1817;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11954;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=/bwxxqot5Orp4aaO3bhvKAHJmqfOaxqag+YV2Q0Zeak=;
- b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ/r8+Pd/VIo6maxyb8aGPtbn4tUp4Ky8ccFgXr7SvcSdv
- 6WtDEM7GY1ZGBi5GGTFFFl8ClqmxmxKDvuwY2o9zCBWJpApDFycAjARzhYOhjls1duOsutql9vs
- K94rcSku8rn9TR5tI+49u6xmvFPw8gifKsD1PWL+zpsTdZ4Y8R3YnPXO+LpnaHvpDU3DmEQ+hec
- 3wowf72A11nIzStpdsqj485aXulZ/25wj625sC7KRPy5TeW1HZp+t7Ix+hlaOl+br30x7+olxWs
- OE6QotMe9v5882LzRpKFI7bfDITF5Hc8mr+bxOTBY5aQrvy7pS7mrGmcv/tV80h99+TUa/0L7Gl
- JqkK+XSV3cq/q7QzlSX6num0/nAsXvaB+F/8wUOLZgwMUHbpr3TsPmo7qbVBtvX8v3sauvKTeH8
- WFmQaSLi0S9Qm+rYd/76FZ98EeW05wK7Xz/ZIdSmvwQA
+ bh=nldCClR8uvkSTfDxfd+h/QjnqO0ZS/iFq9gYjpUVHS4=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnn1/vt8ffZJlcyg6wBTsoFYfvslYUUSsElayef
+ a394aDm4+eJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ59f7wAKCRCLPIo+Aiko
+ 1d7/CACc1JAdFGKKYXvWGXmjft+vUPHMgJwoFZ/KL7oyN43+RPiJEOf1p2icB5ipOROI2EXAmRX
+ BRwQe6UPbz9UVZJ4/hvbMNibj31gHoPobOx+NXFcPvayIidHDidH18AzPrmexYPQwGnnJW1pcbW
+ JnX3nMLV4NaJ2/x6I8bu4f9SKXnLqiNcVyWpWfIHh6lL5xePtpEXSNKt3bXaNdyskxAEYjQFISA
+ 8lVp18W/PtuxL5fksBhcrJNMwwlr5XuORgUP89NLiraym0C8NH48HLY/OHAeonNsQIvMV8JLeaH
+ g7CizrKW3TLet6qotgzX8NyYbbTIan4JO77F7jweYc55nWWZ
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Call HDMI CEC helpers in order to update physical address of the
-adapter.
+Add generic CEC helpers to be used by HDMI drivers. Both notifier and
+and adapter are supported for registration. Once registered, the driver
+can call common set of functions to update physical address, to
+invalidate it or to unregister CEC data. Unlike drm_connector_cec_funcs
+(which provides interface common to all implementations, including, but
+not limited to the CEC adapter, CEC notifier, CEC pin-based adapter,
+etc) the struct drm_connector_hdmi_cec_adapter_ops provides callbacks
+specific to the CEC adapter implementations.
 
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/gpu/drm/display/drm_hdmi_state_helper.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/display/Kconfig               |   8 +-
+ drivers/gpu/drm/display/Makefile              |   2 +
+ drivers/gpu/drm/display/drm_hdmi_cec_helper.c | 209 ++++++++++++++++++++++++++
+ include/drm/display/drm_hdmi_cec_helper.h     |  86 +++++++++++
+ 4 files changed, 304 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/display/drm_hdmi_state_helper.c b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-index ca3c99b3805fbd78fb3162818b3877450d72b178..1e7ea9b387088d5f407b647a9a3fead7a2929a30 100644
---- a/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-+++ b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-@@ -6,6 +6,7 @@
- #include <drm/drm_print.h>
+diff --git a/drivers/gpu/drm/display/Kconfig b/drivers/gpu/drm/display/Kconfig
+index 3666e791d6d6eba58f095d7fb691de1fd0b95ed3..3b8fc8f99a3d89741d863749c52167beaf7be2e6 100644
+--- a/drivers/gpu/drm/display/Kconfig
++++ b/drivers/gpu/drm/display/Kconfig
+@@ -8,7 +8,7 @@ config DRM_DISPLAY_DP_AUX_BUS
+ config DRM_DISPLAY_HELPER
+ 	tristate
+ 	depends on DRM
+-	select CEC_CORE if DRM_DISPLAY_DP_AUX_CEC
++	select CEC_CORE if DRM_DISPLAY_DP_AUX_CEC || DRM_DISPLAY_HDMI_CEC_HELPER
+ 	help
+ 	  DRM helpers for display adapters.
  
- #include <drm/display/drm_hdmi_audio_helper.h>
+@@ -82,6 +82,12 @@ config DRM_DISPLAY_HDMI_AUDIO_HELPER
+ 	  DRM display helpers for HDMI Audio functionality (generic HDMI Codec
+ 	  implementation).
+ 
++config DRM_DISPLAY_HDMI_CEC_HELPER
++	bool
++	select CEC_NOTIFIER
++	help
++	  DRM display helpers for HDMI CEC implementation.
++
+ config DRM_DISPLAY_HDMI_HELPER
+ 	bool
+ 	help
+diff --git a/drivers/gpu/drm/display/Makefile b/drivers/gpu/drm/display/Makefile
+index b17879b957d5401721396e247fa346387cf6c48a..2cd078e2b81c1a9e6b336c4187b444bcb8a50e51 100644
+--- a/drivers/gpu/drm/display/Makefile
++++ b/drivers/gpu/drm/display/Makefile
+@@ -16,6 +16,8 @@ drm_display_helper-$(CONFIG_DRM_DISPLAY_DSC_HELPER) += \
+ drm_display_helper-$(CONFIG_DRM_DISPLAY_HDCP_HELPER) += drm_hdcp_helper.o
+ drm_display_helper-$(CONFIG_DRM_DISPLAY_HDMI_AUDIO_HELPER) += \
+ 	drm_hdmi_audio_helper.o
++drm_display_helper-$(CONFIG_DRM_DISPLAY_HDMI_CEC_HELPER) += \
++	drm_hdmi_cec_helper.o
+ drm_display_helper-$(CONFIG_DRM_DISPLAY_HDMI_HELPER) += \
+ 	drm_hdmi_helper.o \
+ 	drm_scdc_helper.o
+diff --git a/drivers/gpu/drm/display/drm_hdmi_cec_helper.c b/drivers/gpu/drm/display/drm_hdmi_cec_helper.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..a6ed5f0fc3835b013a83308f5285ea0819c5702c
+--- /dev/null
++++ b/drivers/gpu/drm/display/drm_hdmi_cec_helper.c
+@@ -0,0 +1,209 @@
++// SPDX-License-Identifier: MIT
++/*
++ * Copyright (c) 2024 Linaro Ltd
++ */
++
++#include <drm/drm_bridge.h>
++#include <drm/drm_connector.h>
 +#include <drm/display/drm_hdmi_cec_helper.h>
- #include <drm/display/drm_hdmi_helper.h>
- #include <drm/display/drm_hdmi_state_helper.h>
- 
-@@ -786,9 +787,10 @@ drm_atomic_helper_connector_hdmi_update(struct drm_connector *connector,
- 	const struct drm_edid *drm_edid;
- 
- 	if (status == connector_status_disconnected) {
--		// TODO: also handle CEC and scramber, HDMI sink disconnected.
-+		// TODO: also handle scramber, HDMI sink disconnected.
- 		drm_connector_hdmi_audio_plugged_notify(connector, false);
- 		drm_edid_connector_update(connector, NULL);
-+		drm_connector_hdmi_cec_phys_addr_invalidate(connector);
- 		return;
- 	}
- 
-@@ -802,8 +804,9 @@ drm_atomic_helper_connector_hdmi_update(struct drm_connector *connector,
- 	drm_edid_free(drm_edid);
- 
- 	if (status == connector_status_connected) {
--		// TODO: also handle CEC and scramber, HDMI sink is now connected.
-+		// TODO: also handle scramber, HDMI sink is now connected.
- 		drm_connector_hdmi_audio_plugged_notify(connector, true);
-+		drm_connector_hdmi_cec_phys_addr_set(connector);
- 	}
- }
- 
++
++#include <linux/mutex.h>
++
++#include <media/cec.h>
++#include <media/cec-notifier.h>
++
++void drm_connector_hdmi_cec_unregister(struct drm_connector *connector)
++{
++	cec_unregister_adapter(connector->cec.adapter);
++	connector->cec.adapter = NULL;
++
++	cec_notifier_conn_unregister(connector->cec.notifier);
++	connector->cec.notifier = NULL;
++
++	connector->cec.funcs = NULL;
++}
++EXPORT_SYMBOL(drm_connector_hdmi_cec_unregister);
++
++static const struct drm_connector_cec_funcs drm_connector_hdmi_cec_funcs = {
++	.unregister = drm_connector_hdmi_cec_unregister,
++};
++
++int drm_connector_hdmi_cec_notifier_register(struct drm_connector *connector,
++					     const char *port_name,
++					     struct device *dev)
++{
++	struct cec_connector_info conn_info;
++	struct cec_notifier *notifier;
++	int ret;
++
++	mutex_lock(&connector->cec.mutex);
++
++	if (connector->cec.funcs) {
++		ret = -EBUSY;
++		goto err_unlock;
++	}
++
++	cec_fill_conn_info_from_drm(&conn_info, connector);
++
++	notifier = cec_notifier_conn_register(dev, port_name, &conn_info);
++	if (!notifier) {
++		ret = -ENOMEM;
++		goto err_unlock;
++	}
++
++	connector->cec.notifier = notifier;
++	connector->cec.funcs = &drm_connector_hdmi_cec_funcs;
++
++	mutex_unlock(&connector->cec.mutex);
++
++	return 0;
++
++err_unlock:
++	mutex_unlock(&connector->cec.mutex);
++
++	return ret;
++}
++EXPORT_SYMBOL(drm_connector_hdmi_cec_notifier_register);
++
++#define to_hdmi_cec_adapter_ops(ops) \
++	container_of(ops, struct drm_connector_hdmi_cec_adapter_ops, base)
++
++static int drm_connector_hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
++{
++	struct drm_connector *connector = cec_get_drvdata(adap);
++	struct drm_connector_hdmi_cec_adapter_ops *ops =
++		to_hdmi_cec_adapter_ops(connector->cec.funcs);
++
++	return ops->enable(connector, enable);
++}
++
++static int drm_connector_hdmi_cec_adap_log_addr(struct cec_adapter *adap, u8 logical_addr)
++{
++	struct drm_connector *connector = cec_get_drvdata(adap);
++	struct drm_connector_hdmi_cec_adapter_ops *ops =
++		to_hdmi_cec_adapter_ops(connector->cec.funcs);
++
++	return ops->log_addr(connector, logical_addr);
++}
++
++static int drm_connector_hdmi_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
++						u32 signal_free_time, struct cec_msg *msg)
++{
++	struct drm_connector *connector = cec_get_drvdata(adap);
++	struct drm_connector_hdmi_cec_adapter_ops *ops =
++		to_hdmi_cec_adapter_ops(connector->cec.funcs);
++
++	return ops->transmit(connector, attempts, signal_free_time, msg);
++}
++
++static const struct cec_adap_ops drm_connector_hdmi_cec_adap_ops = {
++	.adap_enable = drm_connector_hdmi_cec_adap_enable,
++	.adap_log_addr = drm_connector_hdmi_cec_adap_log_addr,
++	.adap_transmit = drm_connector_hdmi_cec_adap_transmit,
++};
++
++int drm_connector_hdmi_cec_register(struct drm_connector *connector,
++				    const struct drm_connector_hdmi_cec_adapter_ops *ops,
++				    const char *name,
++				    u8 available_las,
++				    struct device *dev)
++{
++	struct cec_connector_info conn_info;
++	struct cec_adapter *cec_adap;
++	int ret;
++
++	if (!ops->base.unregister ||
++	    !ops->init || !ops->enable || !ops->log_addr || !ops->transmit)
++		return -EINVAL;
++
++	mutex_lock(&connector->cec.mutex);
++
++	if (connector->cec.funcs) {
++		ret = -EBUSY;
++		goto err_unlock;
++	}
++
++	cec_adap = cec_allocate_adapter(&drm_connector_hdmi_cec_adap_ops, connector, name,
++					CEC_CAP_DEFAULTS | CEC_CAP_CONNECTOR_INFO,
++					available_las ? : CEC_MAX_LOG_ADDRS);
++	ret = PTR_ERR_OR_ZERO(cec_adap);
++	if (ret < 0)
++		goto err_unlock;
++
++	cec_fill_conn_info_from_drm(&conn_info, connector);
++	cec_s_conn_info(cec_adap, &conn_info);
++
++	connector->cec.adapter = cec_adap;
++	connector->cec.funcs = &ops->base;
++
++	ret = ops->init(connector);
++	if (ret < 0)
++		goto err_delete_adapter;
++
++	ret = cec_register_adapter(cec_adap, dev);
++	if (ret < 0)
++		goto err_delete_adapter;
++
++	mutex_unlock(&connector->cec.mutex);
++
++	return 0;
++
++err_delete_adapter:
++	cec_delete_adapter(cec_adap);
++
++	connector->cec.adapter = NULL;
++
++err_unlock:
++	mutex_unlock(&connector->cec.mutex);
++
++	return ret;
++}
++EXPORT_SYMBOL(drm_connector_hdmi_cec_register);
++
++void drm_connector_hdmi_cec_received_msg(struct drm_connector *connector,
++					 struct cec_msg *msg)
++{
++	cec_received_msg(connector->cec.adapter, msg);
++}
++EXPORT_SYMBOL(drm_connector_hdmi_cec_received_msg);
++
++void drm_connector_hdmi_cec_transmit_attempt_done(struct drm_connector *connector,
++						  u8 status)
++{
++	cec_transmit_attempt_done(connector->cec.adapter, status);
++}
++EXPORT_SYMBOL(drm_connector_hdmi_cec_transmit_attempt_done);
++
++void drm_connector_hdmi_cec_transmit_done(struct drm_connector *connector,
++					  u8 status,
++					  u8 arb_lost_cnt, u8 nack_cnt,
++					  u8 low_drive_cnt, u8 error_cnt)
++{
++	cec_transmit_done(connector->cec.adapter, status,
++			  arb_lost_cnt, nack_cnt, low_drive_cnt, error_cnt);
++}
++EXPORT_SYMBOL(drm_connector_hdmi_cec_transmit_done);
++
++void drm_connector_hdmi_cec_phys_addr_invalidate(struct drm_connector *connector)
++{
++	mutex_lock(&connector->cec.mutex);
++
++	cec_phys_addr_invalidate(connector->cec.adapter);
++	cec_notifier_phys_addr_invalidate(connector->cec.notifier);
++
++	mutex_unlock(&connector->cec.mutex);
++}
++EXPORT_SYMBOL(drm_connector_hdmi_cec_phys_addr_invalidate);
++
++void drm_connector_hdmi_cec_phys_addr_set(struct drm_connector *connector)
++{
++	mutex_lock(&connector->cec.mutex);
++
++	cec_s_phys_addr(connector->cec.adapter,
++			connector->display_info.source_physical_address, false);
++	cec_notifier_set_phys_addr(connector->cec.notifier,
++				   connector->display_info.source_physical_address);
++
++	mutex_unlock(&connector->cec.mutex);
++}
++EXPORT_SYMBOL(drm_connector_hdmi_cec_phys_addr_set);
+diff --git a/include/drm/display/drm_hdmi_cec_helper.h b/include/drm/display/drm_hdmi_cec_helper.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..a9d38835c69a2939ca21a4fc921136a2a022248c
+--- /dev/null
++++ b/include/drm/display/drm_hdmi_cec_helper.h
+@@ -0,0 +1,86 @@
++/* SPDX-License-Identifier: MIT */
++
++#ifndef DRM_DISPLAY_HDMI_CEC_HELPER
++#define DRM_DISPLAY_HDMI_CEC_HELPER
++
++#include <drm/drm_connector.h>
++
++#include <linux/types.h>
++
++struct drm_connector;
++
++struct cec_msg;
++struct device;
++
++/**
++ * struct drm_connector_hdmi_cec_adapter_ops - DRM Connector CEC Adapter callbacks
++ */
++struct drm_connector_hdmi_cec_adapter_ops {
++	/**
++	 * @base: base callbacks, providing generic DRM Connector CEC interface.
++	 */
++	struct drm_connector_cec_funcs base;
++
++	/**
++	 * @init: perform hardware-specific initialization before registering the CEC adapter
++	 */
++	int (*init)(struct drm_connector *connector);
++
++	/**
++	 * @uninit: perform hardware-specific teardown for the CEC adapter
++	 */
++	void (*uninit)(struct drm_connector *connector);
++
++	/**
++	 * @enable: enable or disable CEC adapter
++	 */
++	int (*enable)(struct drm_connector *connector, bool enable);
++
++	/**
++	 * @log_addr: set adapter's logical address, can be called multiple
++	 * times if adapter supports several LAs
++	 */
++	int (*log_addr)(struct drm_connector *connector, u8 logical_addr);
++
++	/**
++	 * @transmit: start transmission of the specified CEC message
++	 */
++	int (*transmit)(struct drm_connector *connector, u8 attempts,
++			u32 signal_free_time, struct cec_msg *msg);
++};
++
++int drm_connector_hdmi_cec_register(struct drm_connector *connector,
++				    const struct drm_connector_hdmi_cec_adapter_ops *ops,
++				    const char *name,
++				    u8 available_las,
++				    struct device *dev);
++
++int drm_connector_hdmi_cec_notifier_register(struct drm_connector *connector,
++					     const char *port_name,
++					     struct device *dev);
++
++void drm_connector_hdmi_cec_unregister(struct drm_connector *connector);
++
++void drm_connector_hdmi_cec_received_msg(struct drm_connector *connector,
++					 struct cec_msg *msg);
++
++void drm_connector_hdmi_cec_transmit_done(struct drm_connector *connector,
++					  u8 status,
++					  u8 arb_lost_cnt, u8 nack_cnt,
++					  u8 low_drive_cnt, u8 error_cnt);
++
++void drm_connector_hdmi_cec_transmit_attempt_done(struct drm_connector *connector,
++						  u8 status);
++/*
++ * These functions are used by the state helper, so we end up linking to the
++ * same module. Define stubs to simplify the code.
++ */
++#ifdef CONFIG_DRM_DISPLAY_HDMI_CEC_HELPER
++void drm_connector_hdmi_cec_phys_addr_invalidate(struct drm_connector *connector);
++void drm_connector_hdmi_cec_phys_addr_set(struct drm_connector *connector);
++#else
++static inline void drm_connector_hdmi_cec_phys_addr_invalidate(struct drm_connector *connector) {}
++static inline void drm_connector_hdmi_cec_phys_addr_set(struct drm_connector *connector) {}
++#endif
++
++#endif
 
 -- 
 2.39.5
