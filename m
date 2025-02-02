@@ -1,105 +1,63 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A660F3595A
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 20:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000F83595A;
+	Sun,  2 Feb 2025 20:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738529702; cv=none; b=OzlwxJ05/xjwYzqFcJ02OOOlBl/qFKX4+GCIBiDJiVmZxq9hWSGzkCau/tPna2HoSysRH8pBkwm5J6AHhla1Be9ZnQtFlewF3vcvbUeS8wba4iG88lhDCM789mTfyV8VMZ0HBzLYbKKCG4JjKm6HzoIwu5jEm2n302yt4UnB8dY=
+	t=1738529744; cv=none; b=tJkyJrQa+FJPJIH9Sk+uDCrpDgdUOxKFVSlgv7NxVIyF6whvtwqyQezYu3h1x1/9rJ/HVhQKjG5h6f8nbuj0oRHwpUfGvryBrAAhyu/JHmxRMMshKzbCOgGv8O4YsqKHr0VPm5siI2v/pNTTihUbmFDWudgax5TpVQ2icHONf7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738529702; c=relaxed/simple;
-	bh=Z1xGyM0DJxijK+QA5KAxL8r8czfnK+MaTHcq8p2reF4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N6PBAPTDu6hSI2laiEWH2k6wBXVxYgrXbZHoRCT3t9lLlm+4vPuMKehSnPD75vL0iCadyH9oponQrIVzQlyqVteeWLazRzpVAOZ2ZQf4hc0q7KHgP6r/71GijGL3ipNkvASzZbneXXV3GwI1oZWw95rs7Epx9T93szaNzcp3Wyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c102Aflo; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738529744; c=relaxed/simple;
+	bh=iR0I3EdR0iBssTSZp7kBFnWRXLSQCQlMDJ4XwMl5rfE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=QPyOyRSuEVgt1RnwcvVhDNUAfJDkS+kBHVnoIHrLI/zt1eITAU4mMRJthQgXSOSHwzaxi/ieX+ddFTooz20Q/wlP42KkvcKtGOighTMbqJiZD8fZl3ocDePk0+/DNp2td50Ol7mRgFRP66oj1g5/byKhvgKs3w37yAeUrKOXtEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxjA21DH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c102Aflo"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7b98a2e3b3eso201134385a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 12:55:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738529699; x=1739134499; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rT2razBgYYJeyhqnDlx7RfYfw1o1xvrrpfPKnMB5vQc=;
-        b=c102Afloa9+VWSFwNumOFrb+15jWzt4dwOc+yPz0CA0o5m8xXATCgfA7QsLXEBXkFy
-         smARnFDNABzh0PjODdOa3FUJ6cggVA6Nb2SUoRjzr1jpOwHsb7XspnskqTIJ9sPnw3Eo
-         jaSSRlGGnf9BnfOgqpRoL2xyD6hlxuCBfTBp4XjRbrqQBfjLqf64n8vVoeMbCvdrkRKY
-         TAgijlEqxFvbg+SNZMsLJdJiFIy3O3D7abdWMak5HYiHMaU6zyh9qdHfVQlxkajCjHgU
-         +wrOVtd1rH+DNavfe1qI/2kGSlZRMvLiV30gGrAFUSYZdhp5sOXp/4e+q46HW8thAxRs
-         o4PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738529699; x=1739134499;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rT2razBgYYJeyhqnDlx7RfYfw1o1xvrrpfPKnMB5vQc=;
-        b=rod2FKYir0M2OtRAHjVzOwJkgymznca9K0QUPpgcRJHCU1K+siIYH7aybQYsaG/e9z
-         1vOy4kUHtl2ntUzL4kKUshCaKY2Y1jNPsHyQqO8npIS7mQxsSP+keO8yaSP/hSwhNtJr
-         G14sH5crkL8ldOs8kPx3Mxmt6Hoae6PA8cHJQpdD0+bzR/sPL3VKQFqkZqo/cnTX/dqR
-         pM/HMJ7UtELtV3c12u16NijMmCKPRCwkjjtktAxtY+im21zcmU+YnjDyzlr15XUQrVya
-         k4MO2ppwBNVO0z1vZuQCaar6+1nShaZC9AgGmDVRx/+62mrOR2C0G8Sv/RWQjVKwP7Az
-         purA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxzRfExMkHr1ntBO2ZD31HLOIkeL6QOYRTTzCXKOwrWzRvp5tJWo32GZFnn5axYmh+/ii/d8xmLsUPva0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRV6MgwsN776/JGd0ntHzSZzku43YmYPGz6RK5wtBMHe2mlRKY
-	SV+yWWUEyOtD0AAvXNEa5U5XulE6WxfFnvVC+Vyk9IJ4g9Ua8tBG
-X-Gm-Gg: ASbGncv8GOh1VsQS9Ipl/yF9gFIFM3Tx3AggwE6giJ+UrY6tqZ7ZLQT99RHmGtf/1Oe
-	UJWDJ/+qrcVvzjO7NEw5kZjrwcouc695r/0YKVhImc+Ud00fjdzwkV6OPK8xtwl7RpmB8rOmVGN
-	zaAcEbVlVyOQGg6JTgAJM4TM8PxKHl8a0khwoR1emngXDxjqx3eodoWaisRp7IoaQqyp9Rrxs/+
-	N+fRIrysfl+dSoGSSV4f0J1+dWX62hyGPFdB12nRMLYnJ/Xm2Z2acN+XMI89pCCAwZyo3NANtzY
-	3IsxNfjMcjh6Y+Ww5F9eKmEwkl+HFhgHXgl19g==
-X-Google-Smtp-Source: AGHT+IE+yEzbNvz9i5VKkbMR3ffb0vBqjbRSv2MAfyT5MWhcyo5HeDj2LIiHyPMxpTp1mvukg3bI/Q==
-X-Received: by 2002:a05:6214:4008:b0:6d4:b1e:5418 with SMTP id 6a1803df08f44-6e243c648a2mr275585646d6.33.1738529699409;
-        Sun, 02 Feb 2025 12:54:59 -0800 (PST)
-Received: from newman.cs.purdue.edu ([128.10.127.250])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e25495e76bsm42373246d6.125.2025.02.02.12.54.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 12:54:59 -0800 (PST)
-From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-To: miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com,
-	gmpy.liaowx@gmail.com,
-	kees@kernel.org
-Cc: linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Subject: [PATCH] mtd: Add check for kcalloc()
-Date: Sun,  2 Feb 2025 20:54:56 +0000
-Message-Id: <20250202205456.40790-1-jiashengjiangcool@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxjA21DH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E67C4CED1;
+	Sun,  2 Feb 2025 20:55:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738529743;
+	bh=iR0I3EdR0iBssTSZp7kBFnWRXLSQCQlMDJ4XwMl5rfE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=jxjA21DHBsO3EEkoI6U0QfRu+PfUI0QbsoGwx2NjYPe5JmjOjTHBLALQbDi2NNmTf
+	 arLPkVqcMSfPnVF34NbdiCEcj5Drc52D186XuIn753AnBjiwVTOzO9J1EWWdYUfxhB
+	 FLRT6PNF7nwalVVvfyFGOf2hji4st8+dv9ircNXNomwl4Kd7/ETK1tGk8C6R3ISr/e
+	 M+SStXqls8rtgXbB2W+1htKNhHERJC6Hs6nMoKnb/NGtty9DVYbg1fWbL20zZ+NwHU
+	 hSQx6qfFFZk8RrrgZV+fTWhZ41bhPlDl6lSlx24K1hoVQG/M64U32Y8X6MZD7j3akv
+	 ANain4Ni3tqQg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0C0380AA70;
+	Sun,  2 Feb 2025 20:56:11 +0000 (UTC)
+Subject: Re: [GIT PULL] turbostat-2025.02.02 for Linux-6.14
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAJvTdKmaGD8YJj4HKuNhE8Kkr_s5VH=DhXcc75xxHtxqcdYp0Q@mail.gmail.com>
+References: <CAJvTdKmaGD8YJj4HKuNhE8Kkr_s5VH=DhXcc75xxHtxqcdYp0Q@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-pm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJvTdKmaGD8YJj4HKuNhE8Kkr_s5VH=DhXcc75xxHtxqcdYp0Q@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git tags/turbostat-2025.02.02
+X-PR-Tracked-Commit-Id: 2c4627c8ced77855b106c7104ecab70837d53799
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d79bc8f79baacdd2549ec4af6d963ce3e69d7330
+Message-Id: <173852977057.2208626.622267848896307504.pr-tracker-bot@kernel.org>
+Date: Sun, 02 Feb 2025 20:56:10 +0000
+To: Len Brown <lenb@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM list <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Add a check for kcalloc() and print an error message if it fails.
+The pull request you sent on Sun, 2 Feb 2025 11:16:39 -0600:
 
-Fixes: 78c08247b9d3 ("mtd: Support kmsg dumper based on pstore/blk")
-Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
----
- drivers/mtd/mtdpstore.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git tags/turbostat-2025.02.02
 
-diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
-index 7ac8ac901306..368997155c07 100644
---- a/drivers/mtd/mtdpstore.c
-+++ b/drivers/mtd/mtdpstore.c
-@@ -423,6 +423,11 @@ static void mtdpstore_notify_add(struct mtd_info *mtd)
- 	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
- 	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
- 
-+	if (!cxt->rmmap || !cxt->usedmap || !cxt->badmap) {
-+		dev_err(&mtd->dev, "failed to allocate memory for map\n");
-+		return;
-+	}
-+
- 	/* just support dmesg right now */
- 	cxt->dev.flags = PSTORE_FLAGS_DMESG;
- 	cxt->dev.zone.read = mtdpstore_read;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d79bc8f79baacdd2549ec4af6d963ce3e69d7330
+
+Thank you!
+
 -- 
-2.25.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
