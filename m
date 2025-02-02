@@ -1,112 +1,93 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34D81F8F01;
-	Sun,  2 Feb 2025 14:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF8C1F8F11
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 14:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738505974; cv=none; b=NSTS7a0hI0ldc+Fy0zhikPKr7KlLiXsNNKBZ7F1w+LnwyjTIW4aDud96ePzInXX9cUfxynltF2zEwG6MctiAEWNAtjIT4M3qd9K/tW4R5/D3S9rtqFZLMB52H6eK/g1BV81AzpjtUmf85I4p6irY1wjbi9IkZ8QqxaGAQ3xL06g=
+	t=1738506025; cv=none; b=F7cBOh4R7qNF0PsF/IeyokuHEsgktyk750Ci8n9kqGEyICOUq20xodHPx9g5C+JStMHE9b0MJLlp/pXtnAeZMaghfDAuRMAM9EDtX90i6MTsDIUm3wW4X2lf4N8qsXR4ioF5AuZ2H0DRbV2wDIwrzlrLn9NLLVRtoZryGZ1Lt8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738505974; c=relaxed/simple;
-	bh=uL7NzAbejFmkhNx3EspNPXg3LKNvUhtWyK2MXcpF/Tk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hMTr2dWw30lMxGdjwBRdcPylTWwlg6Na+C4SI0z2HgysasOnmGmmVMeWTbiiGC25j/s+hZamCNXBjaRCtvxzsv/VhvugFa8jblPMYiifeCCaTAM04MOdEzlCjS9O8cSR/6JoY2a6ibPgDU7ILGkCE1tCN5k9PZOgambcBE3K5ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SlTTW+OR; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738506025; c=relaxed/simple;
+	bh=RbPhGJwF4Wwp0v+AfTksRjJ9Zp8pwdmy39xWhzS1nDw=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=K4Lrsf1PK7WJhVxgoZr9klprSHm0XHbeMM7rAWwHnVXYPQuPsHhh5j1y78kvLLriF8nBUtoQ12ltE4UuebvurWaSmvsjFt0zH9YtcUyOcnyhhB22HG6ay9j4HGPa/kxvdeDV2ZKE3J7ejGDhtf+abARXqHcjjMyVIS+AZBy2uFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=XJc3gy0x; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SlTTW+OR"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30225b2586cso43165621fa.0;
-        Sun, 02 Feb 2025 06:19:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738505971; x=1739110771; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nEb04JZ2Khs3MvlufQafhJfgSaiQiQ3sCMUN+Hr7DYo=;
-        b=SlTTW+ORZwm8RsBSVvTOGmlHDz1pwfUmRE1Q5hbZiEZ3X9Ci/jT0O2UVZAB8fpL5Cg
-         O1h98NmimHSt9aYYJHWZTSJKqvzTFfIqfBHq9mDvGftZai/mcjID7liNAbuG/MjrURk0
-         RMNm1GKQZkjbZ2muu1yAG1EfzamF2LJbK9UPyfHnSJNZiEZvnkKystRj7zDFnDS4yA7T
-         hiUccTamfjC17owhNyyhgduZ9L20+19tlQfn9oCCrOQ5dThIH4cI8Y2DbXs6AZ3SGQ+m
-         t253GGtyx44PhdYeGitfDK95QdLQq+BBP7+Jmv5mqmFMYq4cbY6J8F2KLajBq9hMptUm
-         5lJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738505971; x=1739110771;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nEb04JZ2Khs3MvlufQafhJfgSaiQiQ3sCMUN+Hr7DYo=;
-        b=QzUhcDhqyM72YLmNmooz6GqMh2Z9ugddKPe3AnIUmHE6s3piiFft0pS7GmcWD9tPGn
-         RdCtK+K0hlwnAIIclHLvdIk5ljO6PWBT4OkCTwLXYAe0kJcz/uUV+KDizNqS+1lfO3EW
-         Zjzn227slgjMerOYgqCnFJErkjve/ok4+UUjALMjkGxPHw+yZgBkvDa5kXzwKSkDztlm
-         8CBFvjElfZk+UBpC11t4qGiZ88DHcOwPI29mIOxbUHZJYTXFB/l8dBQN1Sgkw96cf2WT
-         uVQ6ZfCyE9cLqyy7qKJIqlCUh+uD/CiU8qKcM7mk8vgrYZgtq6pBlstbCMQii7GZnCLE
-         Evvg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUrUgsVYhUfdbUF72PqdZm/5w1NS+vxkt1zhrXhljygh7VMqzNMQ5rQkdnj8tENUJNwrkdLqg9jVu1dwQ=@vger.kernel.org, AJvYcCW4dT8x2qwHLS43r1hrx4zGcc8F0Po5JSOKKk0icioyNEaju/oPnN01GDvbe/rYKTXvHQQ7LxhWku7AYS7rlu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz012WJO67SvPc/OPY2jfPOdYJzL7W7Yg5IzUbDuAttIB7gg+aK
-	mjvNjZlDcKZTV7w0bglRFRLge5aIdVTjw+TF727jdw6Lbod3lBFnCmRaKydta8o+tz7trVUBFk4
-	X+9t840iqji2WTumkkCUtTuckJ58=
-X-Gm-Gg: ASbGncuTK2YMQ/mNdt8bkqL8yImrAoihJGqBj8UJLu9sb1nB4J0FSbXS9kIpw0F9TTI
-	c/t+VzTofEuhgF1A1hImTlZk+/ORRK638YfseKVJpQXlvGMCSmNmMsAMIRYdXKl9N1onqb+Dqu7
-	H3HKxItYzErxfBQx9itouxoq+Vz9mSKZs=
-X-Google-Smtp-Source: AGHT+IGKtI/HquBTzMvBPkPXd8BCwfuT4RH52VxQGZeqejUeajJPxFp6I8+M+JccQwC6RY+MwuhR5j9kHppHl6hTeZw=
-X-Received: by 2002:a2e:8749:0:b0:302:23a7:1ee8 with SMTP id
- 38308e7fff4ca-307aa37d218mr27857701fa.3.1738505970419; Sun, 02 Feb 2025
- 06:19:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="XJc3gy0x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1738506016; x=1739110816; i=markus.elfring@web.de;
+	bh=RbPhGJwF4Wwp0v+AfTksRjJ9Zp8pwdmy39xWhzS1nDw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=XJc3gy0x1oHz7xgkOPrcixE1/DjP+DBSL3v6MpeeAUrNCgZddpBvufSiZoZ2XesI
+	 oaTAa7yAWM3Y3JJ2FmsGm9IMpC2jeGBrpCsv/iE4XNoh9zfAV18TtpGqTWKmZHJ7u
+	 xBde3U3rW8Fqh+uHDtrEG9fJsScCJar9Q9hORbBbJ9HgQrEcoiUwFiqLb+p1IDscR
+	 ymhdeDx9SJIuncX6yVcA5fYN5LhHhjnuYZPeNLjglXMPJ2eHcFFMMcVdeN+3ouo9A
+	 fhMcTGW5xtploLg4kqBIurlAJTEjHraFYvh725vkZj85ctYW1ia6TURxAJJu4Ycmw
+	 kQrKKdnIw8M9BzcZ2w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.26]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MNOQy-1towig0MKg-00PzWo; Sun, 02
+ Feb 2025 15:20:16 +0100
+Message-ID: <882d065c-f225-4cab-87e5-3b31e26430da@web.de>
+Date: Sun, 2 Feb 2025 15:20:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202-cstr-core-v6-0-8469cd6d29fd@gmail.com>
- <20250202-cstr-core-v6-3-8469cd6d29fd@gmail.com> <3e2cb277-a896-4575-b23b-8d9b42c87173@gmail.com>
-In-Reply-To: <3e2cb277-a896-4575-b23b-8d9b42c87173@gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sun, 2 Feb 2025 09:18:54 -0500
-X-Gm-Features: AWEUYZkQyf7vq2XiRnN9gCJAXSPy1JtYm332MaKtik5uOndhVeFTy-yzbvTlKAI
-Message-ID: <CAJ-ks9n4XmKB+xKctMtzZSS8SXjaypSGfU3THdmSBHM9AP=-OA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] rust: replace `kernel::c_str!` with C-Strings
-To: Dirk Behme <dirk.behme@gmail.com>
-Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Kohei Enju <enjuk@amazon.com>, linux-f2fs-devel@lists.sourceforge.net,
+ Chao Yu <chao@kernel.org>, Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Kohei Enju <kohei.enju@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
+ Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+ Damien Le Moal <damien.lemoal@wdc.com>, Jens Axboe <axboe@kernel.dk>,
+ Johannes Thumshirn <johannes.thumshirn@wdc.com>
+References: <20250202043253.64389-1-enjuk@amazon.com>
+Subject: Re: [PATCH] f2fs: remove unnecessary null checking
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250202043253.64389-1-enjuk@amazon.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:FzmkixICOcVvhFg4/ubSrQK7qkxW/j3w039Ad0hBoGosCJ1WBhj
+ LG+BtswMBtPcWHd16jbk0s2gcccj7hLmin5Nbc2c4EcOemvLptDufATgMyVVk7FCRbjMkn4
+ AXXpk0NTj5PUJD1nFYAZ+O91Ow9+1gUlbh5sSnkd3ON9nVuYztUinOQzaLnmH6qXkDzVrd1
+ Qw+Ti6Epa7m0Xo+oKjfcg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:L5zLA/ikus8=;rzUB+AM7NwFxRy/JXF04ufXYdhC
+ VA9jLQb344SQcaCdTLW5IoShouyxYSeXGf+09ywauzhTIS08xeG7pmEYiMM7BM+L9uhXUXz1s
+ yeILzVwWZiP9/zBxcPm6vDP/5f6AsMJWbkZK3Dnv3Yj3hRS+VxSlBbWuSRqWj8uWNjj05AcIL
+ mw0Tj4QbXUP28Qa0Vh0h6HUVH+B4QWjRNaE+mQXjl98ILyFf3v6M4JuoEV1GtzhUvsuiJrWzb
+ VJDOQ4IMvcBIZLJOqrnmuCW0gzeQtTCs9ELVr8BO8/2iFCoq6Qch9wnQk6Tj7/DMuqu6HFTMb
+ 9UAjkBnwQJ9GLWbL9vd9/zUX6Tlw2AJPb8vFsH9EsjoPsint/WzKgqyL98+PLm4suHZMU3z3j
+ ZkVlJlCc1bZyoD0d1gHYTikp5apq1X1m2bkcYbyyHS/4vFDM7nXcDVoAMjFHp+JlrzEM+jq8J
+ o6PGsBNAQMP7dWBMDxZk/v+2KL4fMI8l3CWFMjTrIJfp8UouPbDlrzBPqeAnRDGhXjqrKtwzg
+ VK8lUxxysMhVnpnVWjChE8IHEZ/82c/a5whp+8YCkcYif0MN4ruv7PGiHIDz3lq8QkSe6rcUJ
+ rK+PZw7LAMCNIm4s8GmfgJfZOxJwzoLyRJp2kw18PvCxWy+cUbJe1ecRvNd4Dz+ufdFtSOSRB
+ kImEKYc8y2vj/AvxzSrBIfYouGEIwFq++ws36XliVK6bGeI0ySNys/YB83MNbY0i2XhZJ3joE
+ wy+2bE2Lgy9MK91AdORj6jszdrTOxxk/Uh8Il3OREYcGsx71lri5lOde+Mhd6vvLUuZieZQ+H
+ A3cVE2npTdxgA7cPiWjjgxFq3ELKy0AZvyLLaWAD2YATXQf1nrEyMOqaMmDIlYSDxhx9xWcXl
+ 7me/LRcvl1Hyn/Ea3xfYX1qfXkxQ7SS4+dueGlhr5OuZlWtroaKSY3JPlKa9g9ZVJRPVySj1k
+ iuMv5goOMCgIaDwv44bIopDEhBVvXiyIg6Yl002nQWwD432dMlPxZ3hnufvleGYriTd4EELZX
+ ZPbMPFkidi4xwD1VZtP+wyxwOpY8rbU9m88CVrep6p/0m49p1IoTawZOaC/quluue+MOt9jGx
+ luhdP+iatA0P/1Eaop2iJ+Z2gn10742BP771V30QTJuAXIvq1UQk/3B/ymafhLgDIvQ9pyeXw
+ cREevGKveYq/kKa+1rFed/2wPrL6gLNrT8JxgkCbD8YKx8O4qswtNBBzQ/enEMswxK5bHP3zM
+ jVGPlQ/Un94kI+p4WxdwSYdyqTCHEyElpYa2HW/sgn0CLTGxPVo/X3TYPEqVOWFocPc7eY1ku
+ 1/q+bzFRHsNociGGY0Ym8JRO662cGZKScrEr1tDXZYZPZL20ZHEzhn3aJzs/9GWn3MC
 
-On Sun, Feb 2, 2025 at 8:10=E2=80=AFAM Dirk Behme <dirk.behme@gmail.com> wr=
-ote:
->
-> Hi Tamir,
->
-> On 02.02.25 13:20, Tamir Duberstein wrote:
-> > C-String literals were added in Rust 1.77. Replace instances of
-> > `kernel::c_str!` with C-String literals where possible and rename
-> > `kernel::c_str!` to `c_str_avoid_literals` to clarify its intended use.
-> >
-> > Closes: https://github.com/Rust-for-Linux/linux/issues/1075
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > ---
-> >  drivers/net/phy/ax88796b_rust.rs |  7 +++----
-> >  drivers/net/phy/qt2025.rs        |  5 ++---
-> >  rust/kernel/firmware.rs          |  4 ++--
-> >  rust/kernel/kunit.rs             |  7 ++++---
-> >  rust/kernel/net/phy.rs           |  6 ++----
-> >  rust/kernel/str.rs               | 37 ++++++++++++++++++++++++--------=
------
-> >  rust/kernel/sync.rs              |  4 ++--
-> >  rust/kernel/sync/lock/global.rs  |  3 ++-
-> >  8 files changed, 41 insertions(+), 32 deletions(-)
->
->
-> Have you checked samples/rust/ [1] as well?
->
-> Best regards
->
-> Dirk
+=E2=80=A6
+> f2fs_bio_alloc() with bio_alloc_bioset(), but null checking after
+> bio_alloc_bioset() was still left.
 
-Hi Dirk, I had, but I was working on rust-next rather than on
-torvalds/master. I'll update the other samples in v7.
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.13#n94
+
+Regards,
+Markus
