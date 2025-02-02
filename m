@@ -1,299 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A481F9EAA;
-	Sun,  2 Feb 2025 14:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB71C1F9EB9
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 14:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738506462; cv=none; b=dPFyvibDc0OnO3qYC0d7SwdIGs9JUCnwOUaTYGY4vHMF9NHNA9xXtH/4c6sXUcazO170hJlSQBbnDUxJKRyvgTe7is1lJCGzfR6wqmV2h3Sz+F8xZalwvkuNnZbljNuMqUppbFGX/fPFhzEQ7dZJHtyDgznLI9+NeZD44xGDPfM=
+	t=1738506493; cv=none; b=tAb9A/uH8qURhqHcK0PIvJQr1Q524UEZnMH4kjfBiDLTKzmt9dRAIb6pk2sqHdkFT04IFSQZtTGjCnOpY60xxx6twwAH1S3EwNYhp+QJLvFqo6gjTWok0oPpzfOPENzLxQNCCbj17CR+ZOD8CZTgdL+P1RGGEz2LO6uY+sNz1kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738506462; c=relaxed/simple;
-	bh=b68pz4gOl8YlOvdM1uTxMJG3AplbVLYXqJoL5W41jic=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WGxaFFr9u+6eyPgUkLk0pX++wdhiPiuBUIbQf2RhnE5NMxmhbvOda8LnByIPb1I2SNx+ljIzMq0LDJEN3ZAEUxGC4WMW0EqHxSELH4JMyWvMRh8OeBX9NEn0ovS3zSwBdvdxAac4pUIX3jSInRMcwJtrGeIFfaUWftNN8oiZ9go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zo6JEpD0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738506493; c=relaxed/simple;
+	bh=vyjwJ0cfsI76VSZJ7zxCnm+mRZiP8T0erE8fSRPtUXk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b9WeXUR4MJVygp0dx0FpIndWHYtKB7+SUE9qnS7Lm4tx0jWkJB1VBb+6nlVEdd9Oil/jyb/r6yhBd5zDylj0T3zT6+be8yAOOYBp9OHkrOcGiIoffrlTETj1kqXCUXj0d/ym+1nOCrD+22adbxuUfmW3l2o6dR+aS/eEIzfrPHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bZKwsjEL; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zo6JEpD0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2C59C4CED1;
-	Sun,  2 Feb 2025 14:27:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738506462;
-	bh=b68pz4gOl8YlOvdM1uTxMJG3AplbVLYXqJoL5W41jic=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Zo6JEpD0sFPUIRJUsRODi1QdBFGhqw5lQZNgXYIGzNuEju0902ZTlO6nFnKQCog7x
-	 IrfsDpr0huQyfrQIppnG/M1GdQJVsNyaaYzelipiArHZdcaph3nwzYvMjsobbZahTO
-	 JsUTtY8xSN8rPHWYefYnGFeeqjf6WKizGbdEC5DF9F7qv+9GQjYxzi3b6PWAgZqhvd
-	 7SpJyNwVz9iN6622P20H2/81S2Ykcy6BDO3WS5hjvB+KalpdzrSPQe07jbrSZJU3Js
-	 tGk/nESp31lfXSZCYRHMvSNax+TQSh/BNXeqhJinXScPNod4mqnlAZzG5UjVJqcup/
-	 FMehefVIqeI5g==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5401ab97206so3388349e87.3;
-        Sun, 02 Feb 2025 06:27:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV3V17OvMywNBxMkCyQEsT/swoauBj27OZxi3UzJlNxPcsRXddHCEpDW1GQu0j5b3bc06LngXSpUvRMPA==@vger.kernel.org, AJvYcCVcooS8Yq6S7AEpiwGmSoDEXQRXY35KNRZ5EE5hiYeWhLHN33frC5IFZWaNQOmkoOyGeZNI9NVSNKANR0vp@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlHF7PqA23Bb6afYa4SKZ19iwITyqEJQNnwbWEt3Cxq3TLm1Rb
-	tb9fQlO7hWxH4C+dPkn+G9zhs7sJbBsje/P9Uh32g6xNDvOXDm8sOUXIqsQlcRDUDXOAOtvA5/D
-	N08z5+pTDZBkj+JWVkX2ymJnqdws=
-X-Google-Smtp-Source: AGHT+IGjO9BT6eyDKkjHcOj+a7ATxahcOZCz4LEUD9rXpB8Rfxf0HbUwA/T09Ey6MbiK5M+d2aYOnZ1x3EljKTxWqFw=
-X-Received: by 2002:ac2:4c30:0:b0:542:238d:d714 with SMTP id
- 2adb3069b0e04-543e4c31223mr5417185e87.32.1738506460972; Sun, 02 Feb 2025
- 06:27:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZKwsjEL"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2163b0c09afso59555575ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 06:28:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738506491; x=1739111291; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=/I6rSMAKEl7cAPHfSJ/klXATUxOewzlsZpepTuhR4cc=;
+        b=bZKwsjELuFJWZmn90AQH3Z+xUqYA5IEtOf9SqHirCAX0m6xsDq3uZg21MOzvSEZd93
+         YCNcVx9+nBirlOyQUrZ+gHqNcrvrm16BwITXOcS+k0HYUTJTtI0e/+fpKyVTf1gZT+dF
+         DcglIyZ5ynDS3XulaXOx6bE33jfvQbRWMJZE+VWAzHIsjeGfgOTU6zoprm2eub3WbJ8K
+         3iiUmYMsfjCY8HOOMYgJDO3Xv01hNbHjOnzuqRlUWhIpZegewX3D7O12FtDLNW84fye2
+         GCR0VtV72Hj1m52vPSQSUZBxXwRHjsnIkbNWRoEe2sxVQOjR9UOk6JlGaODM+UZ1SwgZ
+         +MUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738506491; x=1739111291;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/I6rSMAKEl7cAPHfSJ/klXATUxOewzlsZpepTuhR4cc=;
+        b=XRj/fTfeSQaTMdC4E5Dy3cY67ocQLt/BLsk6TEKW79dnnUdKEZnVIkO/CYbskgL8Qp
+         AUDHSufkaNALG6fL+HoeBo3OuRAwCuEbnjlzuA67mqYxRDPT+SGmN2ortpWm74TuR2P2
+         TgP/XEJQXn4BEjd3zJ/pox2/3Qk/TnZYFWug0IxHE9zuNpH/aANcuICn10CI+K45hTmw
+         WknyCzqeZKkDZP94kJ+/QhE0gqECvmVqERan1p94UN0ihOKfmrVGEhveoz7UnQA0nC6I
+         tgrYRiOQMOuYuVqEeYODVJpD1toO36BGM6WpY6FG8863YiOnfjbRGnukpyU/ECF+Y79p
+         VdmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXpnhEpoqe/2coeRpWKOLwDotLqXU+z20bqVonYJJFoL1MMo/AVEF1ubeikLwkxXNSc5fIakK+eTgopL9Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsAB8I4152z4CZliaYCXYNNfzgj04v4T6mYfQJyYhMPs1rpdLK
+	UWGtx5RtCFIMY1RXKGSPQu47x+5wsZLqAz6wSO43BAWwJPNg6bcZ
+X-Gm-Gg: ASbGncuuOgxC8CAFEPWqoLHbd1BvwpvXOm+W2q8/ba7VcHUcpR/HvYLADyYguRNyEwE
+	8f+31tBWynYF5ZufTw8UeGQOM3BBX0nlMtMKLy5pEyGr1rXj9xCdrds55ETCGcxr1qpVPV2Hrn2
+	+y5i4IDe+jHj3knoA+tB49AtI/p0DObUMYy5mSI/9Xev+l8v2a+3ZW4CgNDya5henk87n/wvp2T
+	NxpljGiEURG5G/eFvZVvLISC9lZI8536Dn6DdW6kIRdlCX9dw5x/fbuT0NS0qhOHOPcWuhYbFcE
+	90pJE2Pck/RsFh5YUJws/58zE1LfsBhi1HUw+DhWCJnAqOManGCI9SkyZGMWS6xo
+X-Google-Smtp-Source: AGHT+IHACnzm1wEujooiBkXO9oiLminIt0LT5rD6xhd8TufkGNtfudg03xLfdwCdTzGjXHR/S9DqPw==
+X-Received: by 2002:a17:902:ea12:b0:215:9a73:6c45 with SMTP id d9443c01a7336-21dd7d6e17bmr283864935ad.22.1738506490906;
+        Sun, 02 Feb 2025 06:28:10 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bd0ce4dsm9458541a91.27.2025.02.02.06.28.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Feb 2025 06:28:10 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <27c1243c-15e8-4c24-a0a4-cc433000ad38@roeck-us.net>
+Date: Sun, 2 Feb 2025 06:28:08 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130035130.180676-1-ebiggers@kernel.org> <20250130035130.180676-3-ebiggers@kernel.org>
-In-Reply-To: <20250130035130.180676-3-ebiggers@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sun, 2 Feb 2025 15:27:29 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGVRKZZ2ou0_3R09j59C+35pj9KadaeMrcn0WhuBbeE5g@mail.gmail.com>
-X-Gm-Features: AWEUYZmHANfUdWvTu7dta6n_W-QGYL747qnE_qUdGhGrSjK9pzgoQ_NS5RwbdL0
-Message-ID: <CAMj1kXGVRKZZ2ou0_3R09j59C+35pj9KadaeMrcn0WhuBbeE5g@mail.gmail.com>
-Subject: Re: [PATCH v2 02/11] crypto: crc64-rocksoft - remove from crypto API
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, x86@kernel.org, 
-	linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, 
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] drm/i915/backlight: Return immediately when scale()
+ finds invalid parameters
+To: David Laight <david.laight.linux@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20250121145203.2851237-1-linux@roeck-us.net>
+ <Z5AmlJ8stVQ4L5jS@intel.com>
+ <CAHk-=wix3Rgt+8yBHDdeb_F+c8TzL5aidtCiUEpF+TBc6SCLiQ@mail.gmail.com>
+ <20250202132709.3ab54376@pumpkin>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250202132709.3ab54376@pumpkin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 30 Jan 2025 at 04:54, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> From: Eric Biggers <ebiggers@google.com>
->
-> Remove crc64-rocksoft from the crypto API.  It has no known user now
-> that the lib is no longer built on top of it.  It was also added much
-> more recently than the longstanding crc32 and crc32c.  Unlike crc32 and
-> crc32c, crc64-rocksoft is also not mentioned in the dm-integrity
-> documentation and there are no references to it in anywhere in the
-> cryptsetup git repo, so it is unlikely to have any user there either.
->
-> Also, this CRC variant is named incorrectly; it has nothing to do with
-> Rocksoft and should be called crc64-nvme.  That is yet another reason to
-> remove it from the crypto API; we would not want anyone to start
-> depending on the current incorrect algorithm name of crc64-rocksoft.
->
-> Note that this change temporarily makes this CRC variant not be covered
-> by any tests, as previously it was relying on the crypto self-tests.
-> This will be fixed by adding this CRC variant to crc_kunit.
->
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  crypto/Kconfig                  | 11 ----
->  crypto/Makefile                 |  1 -
->  crypto/crc64_rocksoft_generic.c | 89 ---------------------------------
->  crypto/testmgr.c                |  7 ---
->  crypto/testmgr.h                | 12 -----
->  include/linux/crc64.h           |  2 -
->  6 files changed, 122 deletions(-)
->  delete mode 100644 crypto/crc64_rocksoft_generic.c
->
+On 2/2/25 05:27, David Laight wrote:
+> On Tue, 21 Jan 2025 15:15:09 -0800
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> 
+>> On Tue, 21 Jan 2025 at 14:59, Rodrigo Vivi <rodrigo.vivi@intel.com> wrote:
+>>>
+>>> I'm pushing this soon to drm-intel-next, unless Linus want to take
+>>> this one directly to his tree
+>>
+>> Let's just go through the proper channels and go through the drm tree.
+>>
+>> Unless I've issed something, I think this is only an active issue on
+>> parisc (and only with certain compiler versions at that), so it isn't
+>> some super-urgent thing that needs to be expedited.
+> 
+> It probably wants pushing into rc-2.
+> The build bot is complaining again.
+> 
 
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+The patch didn't make it into linux-next (as of next-20250131).
+I assume it either got lost or it was dropped for some reason.
 
-> diff --git a/crypto/Kconfig b/crypto/Kconfig
-> index 74ae5f52b784..9ffb59b1aac3 100644
-> --- a/crypto/Kconfig
-> +++ b/crypto/Kconfig
-> @@ -1088,21 +1088,10 @@ config CRYPTO_CRCT10DIF
->         help
->           CRC16 CRC algorithm used for the T10 (SCSI) Data Integrity Field (DIF)
->
->           CRC algorithm used by the SCSI Block Commands standard.
->
-> -config CRYPTO_CRC64_ROCKSOFT
-> -       tristate "CRC64 based on Rocksoft Model algorithm"
-> -       depends on CRC64
-> -       select CRYPTO_HASH
-> -       help
-> -         CRC64 CRC algorithm based on the Rocksoft Model CRC Algorithm
-> -
-> -         Used by the NVMe implementation of T10 DIF (BLK_DEV_INTEGRITY)
-> -
-> -         See https://zlib.net/crc_v3.txt
-> -
->  endmenu
->
->  menu "Compression"
->
->  config CRYPTO_DEFLATE
-> diff --git a/crypto/Makefile b/crypto/Makefile
-> index f67e853c4690..d3b79b8c9022 100644
-> --- a/crypto/Makefile
-> +++ b/crypto/Makefile
-> @@ -155,11 +155,10 @@ obj-$(CONFIG_CRYPTO_CRC32C) += crc32c_generic.o
->  obj-$(CONFIG_CRYPTO_CRC32) += crc32_generic.o
->  CFLAGS_crc32c_generic.o += -DARCH=$(ARCH)
->  CFLAGS_crc32_generic.o += -DARCH=$(ARCH)
->  obj-$(CONFIG_CRYPTO_CRCT10DIF) += crct10dif_generic.o
->  CFLAGS_crct10dif_generic.o += -DARCH=$(ARCH)
-> -obj-$(CONFIG_CRYPTO_CRC64_ROCKSOFT) += crc64_rocksoft_generic.o
->  obj-$(CONFIG_CRYPTO_AUTHENC) += authenc.o authencesn.o
->  obj-$(CONFIG_CRYPTO_LZO) += lzo.o lzo-rle.o
->  obj-$(CONFIG_CRYPTO_LZ4) += lz4.o
->  obj-$(CONFIG_CRYPTO_LZ4HC) += lz4hc.o
->  obj-$(CONFIG_CRYPTO_XXHASH) += xxhash_generic.o
-> diff --git a/crypto/crc64_rocksoft_generic.c b/crypto/crc64_rocksoft_generic.c
-> deleted file mode 100644
-> index ce0f3059b912..000000000000
-> --- a/crypto/crc64_rocksoft_generic.c
-> +++ /dev/null
-> @@ -1,89 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0-only
-> -
-> -#include <linux/crc64.h>
-> -#include <linux/module.h>
-> -#include <crypto/internal/hash.h>
-> -#include <linux/unaligned.h>
-> -
-> -static int chksum_init(struct shash_desc *desc)
-> -{
-> -       u64 *crc = shash_desc_ctx(desc);
-> -
-> -       *crc = 0;
-> -
-> -       return 0;
-> -}
-> -
-> -static int chksum_update(struct shash_desc *desc, const u8 *data,
-> -                        unsigned int length)
-> -{
-> -       u64 *crc = shash_desc_ctx(desc);
-> -
-> -       *crc = crc64_rocksoft_generic(*crc, data, length);
-> -
-> -       return 0;
-> -}
-> -
-> -static int chksum_final(struct shash_desc *desc, u8 *out)
-> -{
-> -       u64 *crc = shash_desc_ctx(desc);
-> -
-> -       put_unaligned_le64(*crc, out);
-> -       return 0;
-> -}
-> -
-> -static int __chksum_finup(u64 crc, const u8 *data, unsigned int len, u8 *out)
-> -{
-> -       crc = crc64_rocksoft_generic(crc, data, len);
-> -       put_unaligned_le64(crc, out);
-> -       return 0;
-> -}
-> -
-> -static int chksum_finup(struct shash_desc *desc, const u8 *data,
-> -                       unsigned int len, u8 *out)
-> -{
-> -       u64 *crc = shash_desc_ctx(desc);
-> -
-> -       return __chksum_finup(*crc, data, len, out);
-> -}
-> -
-> -static int chksum_digest(struct shash_desc *desc, const u8 *data,
-> -                        unsigned int length, u8 *out)
-> -{
-> -       return __chksum_finup(0, data, length, out);
-> -}
-> -
-> -static struct shash_alg alg = {
-> -       .digestsize     =       sizeof(u64),
-> -       .init           =       chksum_init,
-> -       .update         =       chksum_update,
-> -       .final          =       chksum_final,
-> -       .finup          =       chksum_finup,
-> -       .digest         =       chksum_digest,
-> -       .descsize       =       sizeof(u64),
-> -       .base           =       {
-> -               .cra_name               =       CRC64_ROCKSOFT_STRING,
-> -               .cra_driver_name        =       "crc64-rocksoft-generic",
-> -               .cra_priority           =       200,
-> -               .cra_blocksize          =       1,
-> -               .cra_module             =       THIS_MODULE,
-> -       }
-> -};
-> -
-> -static int __init crc64_rocksoft_init(void)
-> -{
-> -       return crypto_register_shash(&alg);
-> -}
-> -
-> -static void __exit crc64_rocksoft_exit(void)
-> -{
-> -       crypto_unregister_shash(&alg);
-> -}
-> -
-> -module_init(crc64_rocksoft_init);
-> -module_exit(crc64_rocksoft_exit);
-> -
-> -MODULE_LICENSE("GPL");
-> -MODULE_DESCRIPTION("Rocksoft model CRC64 calculation.");
-> -MODULE_ALIAS_CRYPTO("crc64-rocksoft");
-> -MODULE_ALIAS_CRYPTO("crc64-rocksoft-generic");
-> diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-> index e61490ba4095..0c1c3a6453b6 100644
-> --- a/crypto/testmgr.c
-> +++ b/crypto/testmgr.c
-> @@ -4757,17 +4757,10 @@ static const struct alg_test_desc alg_test_descs[] = {
->                 .test = alg_test_crc32c,
->                 .fips_allowed = 1,
->                 .suite = {
->                         .hash = __VECS(crc32c_tv_template)
->                 }
-> -       }, {
-> -               .alg = "crc64-rocksoft",
-> -               .test = alg_test_hash,
-> -               .fips_allowed = 1,
-> -               .suite = {
-> -                       .hash = __VECS(crc64_rocksoft_tv_template)
-> -               }
->         }, {
->                 .alg = "crct10dif",
->                 .test = alg_test_hash,
->                 .fips_allowed = 1,
->                 .suite = {
-> diff --git a/crypto/testmgr.h b/crypto/testmgr.h
-> index d754ab997186..4ab05046b734 100644
-> --- a/crypto/testmgr.h
-> +++ b/crypto/testmgr.h
-> @@ -6018,22 +6018,10 @@ static const struct hash_testvec rmd160_tv_template[] = {
->  };
->
->  static const u8 zeroes[4096] = { [0 ... 4095] = 0 };
->  static const u8 ones[4096] = { [0 ... 4095] = 0xff };
->
-> -static const struct hash_testvec crc64_rocksoft_tv_template[] = {
-> -       {
-> -               .plaintext      = zeroes,
-> -               .psize          = 4096,
-> -               .digest         = "\x4e\xb6\x22\xeb\x67\xd3\x82\x64",
-> -       }, {
-> -               .plaintext      = ones,
-> -               .psize          = 4096,
-> -               .digest         = "\xac\xa3\xec\x02\x73\xba\xdd\xc0",
-> -       }
-> -};
-> -
->  static const struct hash_testvec crct10dif_tv_template[] = {
->         {
->                 .plaintext      = "abc",
->                 .psize          = 3,
->                 .digest         = (u8 *)(u16 []){ 0x443b },
-> diff --git a/include/linux/crc64.h b/include/linux/crc64.h
-> index 0a595b272166..7880aeab69d6 100644
-> --- a/include/linux/crc64.h
-> +++ b/include/linux/crc64.h
-> @@ -5,12 +5,10 @@
->  #ifndef _LINUX_CRC64_H
->  #define _LINUX_CRC64_H
->
->  #include <linux/types.h>
->
-> -#define CRC64_ROCKSOFT_STRING "crc64-rocksoft"
-> -
->  u64 __pure crc64_be(u64 crc, const void *p, size_t len);
->  u64 __pure crc64_rocksoft_generic(u64 crc, const void *p, size_t len);
->
->  /**
->   * crc64_rocksoft_update - Calculate bitwise Rocksoft CRC64
-> --
-> 2.48.1
->
+Guenter
+
