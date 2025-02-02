@@ -1,253 +1,191 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BB8DF58;
-	Sun,  2 Feb 2025 09:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9255DF58;
+	Sun,  2 Feb 2025 09:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738490158; cv=none; b=hBGjypVCB2ywE05AxFNMy4pGgSPNRJZ35XcdjBcqKNbUhn9OkxRyA26LrDU1y4DIVHqXSaqws0RT2XVf0tgY+W7wmzSuRn0YCy/gvzlqugdXRyR/IIe65P83PZhxHrHq5TS/AJOmJCNxvUKfdrvN3z1gPuN7dNg1S9xSYb7e7Hk=
+	t=1738490182; cv=none; b=TcCcDFphAFJFYErWKXr1DUYh7JtWP/RU4lLaKezwNxc9CbLgXQLiWbo0qnXHvqTqSEg7xKnlHJLTYHEtq3eDjLVHwB0izrVuktE9ooI28aXLUIb4kk6Wo/PjKHS1mqsVVdvITXlWco5AEA47za6JXaD1fVhoPNcDbquf56x5XK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738490158; c=relaxed/simple;
-	bh=1XCb2JMptTgcj17b+YSKVYvQ7breD1kezbibJgXhQRw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NoaJ4DkGrms30woIucu2ig0CfGzdh8RB+6gqSPKkIPJSG6Fsg3leIWNG0LtTcmV/OiIWtmM1L6KP1VEpDuPRXr0K+Nvjw0RlxdZtGtTV4DAywzCl/qsRdaaO0u+ooWNsKW613ZCXG5ba5jNXGix11ZzN4j2F4i2e48TXgLveKCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Sun, 2 Feb
- 2025 12:55:43 +0300
-Received: from [192.168.211.132] (10.0.253.138) by Ex16-01.fintech.ru
- (10.0.10.18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Sun, 2 Feb 2025
- 12:55:43 +0300
-Message-ID: <27f8c5a1-6671-4e23-862f-4c5bf888684a@fintech.ru>
-Date: Sun, 2 Feb 2025 12:55:43 +0300
+	s=arc-20240116; t=1738490182; c=relaxed/simple;
+	bh=6g64UpUzwYIf7Rd36kw73lEBmTgRffCJoWWngczo0H4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mA6vTkyHOhawZaXv+sMFZ0kG82ItTH8moG9kx6V0wBwmqyFO7BTyaoRavpHGGFiB2CBflaUbQ40g9NTwAOueaYt4Ukl5Sb5ECpwxTN0KIgc6Hu4dd6Yk1D/Z3FAGxnXIA5Uk9eUkIfRCIYAmlI21Z+ixfoqxM9jH8ZZ1L+YJB/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i6jIF1J6; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6jIF1J6"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-385de9f789cso2584674f8f.2;
+        Sun, 02 Feb 2025 01:56:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738490179; x=1739094979; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ieNuIIPzVWLZMXOFdlK3olUaAK8OK9i96qegW/onpbc=;
+        b=i6jIF1J6BkcxLwukNTat+9gsjXIkZcaCX08YaRTRNXBqA2oXxUPsck28/+OUc9IBHO
+         bF3irs1woor+OydFbSY1pcMrR1fNLACwO3URSB8Ve23Y/IvRGnuXkJDQFTiddm4TETS+
+         RaDlmpIxxXaIYYDbCMf469VMO4UNFCIh7Cr20Yn3jWB74eocp/tmnDXh2jlTyFhKQU0p
+         G41kYfNEOAIg73MAtgWLKCH86aa6/qGjj/xZ6D021bXHWFlQzYVl73K5k+ei04D+e7jd
+         WCkXl9muHux+v/5Oa5jtPcrMW06DaPOI18YUIjmQ5lcBf2R1N7il+EO2RGw9vkQFQsQA
+         M4ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738490179; x=1739094979;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ieNuIIPzVWLZMXOFdlK3olUaAK8OK9i96qegW/onpbc=;
+        b=ppJX6h6dJrddGHB5wG2qyRCGd5Dn/aav8A8rh8zPxuAwHP7yV7a+H6yuhS9IlAqzG6
+         2SWI5ejYsAdASZl3FUni7NN3LxVFYpwmsgisWXP5BHqgsMHzLj0lzBvhgOx9TCI3zpDo
+         TFYSHSB1g91nOJRg/DDciL1M+ZwD6FXYYPT+m0qNnpVSw1avYe7yFlpp8Gf13ZgVJcYM
+         tFvbZTrfNDIka4Bw6ih0IL7Ne96tnqEP5HWv0xDuwZrfhxJi1riJZDZHdLpmIRxP5zDu
+         6+OKRGJtPoKQRcU+JUiNtQcXbU/651Vrt5sWTV8y9yv8xO91mfMFRR5aYsn2qJBvEv1B
+         l/tA==
+X-Forwarded-Encrypted: i=1; AJvYcCUjGFwRTiE3+HiXCBgsyQahRSss3LCrCAx7Hibwpn1oNQMckWC5aIADOsyLJPrbECWp9BCIyY/y1M9hkyh6@vger.kernel.org, AJvYcCVFsYLrD39sZblxU15LlxOJ6H8w+MjmbkJiUNMJrtaVVjls8IvqQZCBsy60GOw5/WoeJHNGQ9VnI22E@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqIWPtYQGhTPbqi0MWkFDTgZI4pqj/FxxPpnu+WwNP4Ncz0ZBV
+	Fk/NQW45+ehI77O2waI3wslsE9MNL3QUl+J7FPu/lnHHBzFxwZqNku73dw==
+X-Gm-Gg: ASbGncska1/isi1KrznhBamCp368Ahbbr2CjT0jxUfn4PXdkkLJIHfuvH3h2ZEShM6D
+	GXQEcAmLsBG3zyfHB3JTt5pbxm3Mt32iMOYF/EpXlSQxMAGGNKzeS4Urx4lE8EtIlDbR9iAirTO
+	QlGuSLBem4lVhQXAl/xMxgnSqRP6/8aoVIbAG29D6wiV4t2x/U9l6aYv2EGYww0wFDvuAEsHEj1
+	qG/b3IlsfzM71ly2GiZPGCZuiIzBXgaprp8ofwRSsRew9YWUah6Z3N/DDkOvu8cspydBnhyEGTq
+	/UcjK3eRYOOqhA1xwyg+FB/kRIhvzaaLfK8iFz4pRynoViaftPu7nas=
+X-Google-Smtp-Source: AGHT+IH2N1UXUlNgMRrYCmzawu/nQG2XG9SVLFZtSnjOQ26z/EDkDV1CClmIxuiGxX0hc4lqLvfR3w==
+X-Received: by 2002:a05:6000:1365:b0:38a:888c:a727 with SMTP id ffacd0b85a97d-38c5195dd2amr12639405f8f.25.1738490178665;
+        Sun, 02 Feb 2025 01:56:18 -0800 (PST)
+Received: from standask-GA-A55M-S2HP (lu-nat-113-247.ehs.sk. [188.123.113.247])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23e6bf8sm114132475e9.23.2025.02.02.01.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 01:56:18 -0800 (PST)
+Date: Sun, 2 Feb 2025 10:56:16 +0100
+From: Stanislav Jakubek <stano.jakubek@gmail.com>
+To: Artur Weber <aweber.kernel@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v3 1/7] dt-bindings: mfd: brcm,bcm59056: Convert to YAML
+Message-ID: <Z59BQB_cBgTDm4ie@standask-GA-A55M-S2HP>
+References: <20250131-bcm59054-v3-0-bbac52a84787@gmail.com>
+ <20250131-bcm59054-v3-1-bbac52a84787@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] HID: usbhid: fix recurrent out-of-bounds bug in
- usbhid_parse()
-To: Kees Cook <kees@kernel.org>
-CC: Jiri Kosina <jikos@kernel.org>, Alan Stern <stern@rowland.harvard.edu>,
-	Benjamin Tissoires <bentiss@kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Terry Junge <linuxhid@cosmicgizmosystems.com>, <linux-usb@vger.kernel.org>,
-	<linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>, syzbot
-	<syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com>,
-	<syzkaller-bugs@googlegroups.com>, <lvc-project@linuxtesting.org>
-References: <20250131151600.410242-1-n.zhandarovich@fintech.ru>
- <202501311205.DB75F95@keescook>
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Content-Language: en-US
-In-Reply-To: <202501311205.DB75F95@keescook>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131-bcm59054-v3-1-bbac52a84787@gmail.com>
 
-
-
-On 1/31/25 23:12, Kees Cook wrote:
-> On Fri, Jan 31, 2025 at 06:15:58PM +0300, Nikita Zhandarovich wrote:
->> Syzbot reports [1] a reemerging out-of-bounds bug regarding hid
->> descriptors supposedly having unpredictable bNumDescriptors values in
->> usbhid_parse().
->>
->> The issue stems from the fact that hid_class_descriptor is supposed
->> to be a flexible array, however it was sized as desc[1], using only
->> one element. Therefore, going beyond 1 element, courtesy of
->> bNumDescriptors, may lead to an error.
->>
->> Modify struct hid_descriptor by employing __counted_by macro, tying
->> together struct hid_class_descriptor desc[] and number of descriptors
->> bNumDescriptors. Also, fix places where this change affects work with
->> newly updated struct.
->>
->> [1] Syzbot report:
->>
->> UBSAN: array-index-out-of-bounds in drivers/hid/usbhid/hid-core.c:1024:7
->> index 1 is out of range for type 'struct hid_class_descriptor[1]'
->> ...
->> Workqueue: usb_hub_wq hub_event
->> Call Trace:
->>  <TASK>
->>  __dump_stack lib/dump_stack.c:88 [inline]
->>  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
->>  ubsan_epilogue lib/ubsan.c:231 [inline]
->>  __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:429
->>  usbhid_parse+0x5a7/0xc80 drivers/hid/usbhid/hid-core.c:1024
->>  hid_add_device+0x132/0x520 drivers/hid/hid-core.c:2790
->>  usbhid_probe+0xb38/0xea0 drivers/hid/usbhid/hid-core.c:1429
->>  usb_probe_interface+0x645/0xbb0 drivers/usb/core/driver.c:399
->>  really_probe+0x2b8/0xad0 drivers/base/dd.c:656
->>  __driver_probe_device+0x1a2/0x390 drivers/base/dd.c:798
->>  driver_probe_device+0x50/0x430 drivers/base/dd.c:828
->>  __device_attach_driver+0x2d6/0x530 drivers/base/dd.c:956
->>  bus_for_each_drv+0x24e/0x2e0 drivers/base/bus.c:457
->>  __device_attach+0x333/0x520 drivers/base/dd.c:1028
->>  bus_probe_device+0x189/0x260 drivers/base/bus.c:532
->>  device_add+0x8ff/0xca0 drivers/base/core.c:3720
->>  usb_set_configuration+0x1976/0x1fb0 drivers/usb/core/message.c:2210
->>  usb_generic_driver_probe+0x88/0x140 drivers/usb/core/generic.c:254
->>  usb_probe_device+0x1b8/0x380 drivers/usb/core/driver.c:294
->>
->> Reported-by: syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com
->> Closes: https://syzkaller.appspot.com/bug?extid=c52569baf0c843f35495
->> Fixes: f043bfc98c19 ("HID: usbhid: fix out-of-bounds bug")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
->> ---
->> v1: https://lore.kernel.org/all/20240524120112.28076-1-n.zhandarovich@fintech.ru/
->>
->> v2: Instead of essentially forcing usbhid_parse() to only check
->> the first descriptor, modify hid_descriptor struct to anticipate
->> multiple hid_class_descriptor in desc[] by utilizing __counted_by
->> macro. This change, in turn, requires several other ones wherever
->> that struct is used. Adjust commit description accordingly.
->>
->> P.S. Since syzbot currently breaks trying to reproduce the issue,
->> with or without this patch, I only managed to test it locally with
->> syz repros. Would greatly appreciate other people's effort to test
->> it as well.
->>
->> P.P.S. Terry Junge <linuxhid@cosmicgizmosystems.com> suggested a
->> different approach to this issue, see:
->> Link: https://lore.kernel.org/all/f7963a1d-e069-4ec9-82a1-e17fd324a44f@cosmicgizmosystems.com/
->>
->>  drivers/hid/usbhid/hid-core.c       |  2 +-
->>  drivers/usb/gadget/function/f_fs.c  |  3 ++-
->>  drivers/usb/gadget/function/f_hid.c | 22 ++++++++++++++--------
->>  include/linux/hid.h                 |  2 +-
->>  4 files changed, 18 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
->> index a6eb6fe6130d..eb4807785d6d 100644
->> --- a/drivers/hid/usbhid/hid-core.c
->> +++ b/drivers/hid/usbhid/hid-core.c
->> @@ -1010,7 +1010,7 @@ static int usbhid_parse(struct hid_device *hid)
->>  		return -ENODEV;
->>  	}
->>  
->> -	if (hdesc->bLength < sizeof(struct hid_descriptor)) {
->> +	if (hdesc->bLength < struct_size(hdesc, desc, hdesc->bNumDescriptors)) {
->>  		dbg_hid("hid descriptor is too short\n");
->>  		return -EINVAL;
->>  	}
+On Fri, Jan 31, 2025 at 07:13:49PM +0100, Artur Weber wrote:
+> Convert devicetree bindings for the Broadcom BCM59056 PMU MFD from
+> TXT to YAML format. This patch does not change any functionality;
+> the bindings remain the same.
 > 
-> I don't think you want this hunk in the patch. The existing logic will
-> correctly adapt num_descriptors to a size that fits within
-> hdesc->bLength. In theory, the above change could break a weird but
-> working device that reported too high bNumDescriptors but still worked
-> with what num_descriptors walks.
+> The bindings have been split into two parts: the MFD binding and
+> a separate binding for the regulator node, to simplify the addition
+> of other models later (which have different regulators).
 > 
+> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 
-Thank you for mentioning this and you are right about possibly breaking
-a working device.
+[snip]
 
-However, sizeof(struct hid_descriptor) doesn't count flex array sizes.
-So, leaving this check as is will miss cases when hdesc->bLength >=
-sizeof(struct hid_descriptor) but short enough to have a desc[0]
-element. Maybe doing struct_size(hdesc, desc, 1) is better? Then we
-make sure that at least one mandatory hid_class_desriptor is there.
+> +  regulators:
+> +    type: object
+> +    description: Container node for regulators.
+> +    $ref: ../regulator/brcm,bcm59056.yaml
 
->> diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
->> index 2dea9e42a0f8..a4b6d7cbf56d 100644
->> --- a/drivers/usb/gadget/function/f_fs.c
->> +++ b/drivers/usb/gadget/function/f_fs.c
->> @@ -2550,7 +2550,8 @@ static int __must_check ffs_do_single_desc(char *data, unsigned len,
->>  	case USB_TYPE_CLASS | 0x01:
->>  		if (*current_class == USB_INTERFACE_CLASS_HID) {
->>  			pr_vdebug("hid descriptor\n");
->> -			if (length != sizeof(struct hid_descriptor))
->> +			if (length < sizeof(struct hid_descriptor) +
->> +				     sizeof(struct hid_class_descriptor))
->>  				goto inv_length;
->>  			break;
->>  		} else if (*current_class == USB_INTERFACE_CLASS_CCID) {
-> 
-> Same here, I think? This isn't needed unless I'm misunderstanding
-> something about the fix.
+Use the full path, so /schemas/regulator/brcm,bcm59056.yaml#
+The description seems unnecessary, you can drop it.
 
-Once again, sizeof(struct hid_descriptor) will not count struct
-hid_class_descriptor desc[] __counted_by(...) so even correct and
-predictable lengths will fail the check. We need to test length against
-hid_descriptor with at least one element of its flex array.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic: bcm59056@8 {
 
-I would prefer struct_size() here as well but it's not optimal in this
-case.
-> 
->> diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
->> index 740311c4fa24..ec8c2e2d6812 100644
->> --- a/drivers/usb/gadget/function/f_hid.c
->> +++ b/drivers/usb/gadget/function/f_hid.c
->> @@ -139,13 +139,17 @@ static struct usb_interface_descriptor hidg_interface_desc = {
->>  };
->>  
->>  static struct hid_descriptor hidg_desc = {
->> -	.bLength			= sizeof hidg_desc,
->> +	.bLength			= struct_size(&hidg_desc, desc, 1),
->>  	.bDescriptorType		= HID_DT_HID,
->>  	.bcdHID				= cpu_to_le16(0x0101),
->>  	.bCountryCode			= 0x00,
->>  	.bNumDescriptors		= 0x1,
->> -	/*.desc[0].bDescriptorType	= DYNAMIC */
->> -	/*.desc[0].wDescriptorLenght	= DYNAMIC */
->> +	.desc				= {
->> +		{
->> +			.bDescriptorType	= 0, /* DYNAMIC */
->> +			.wDescriptorLength	= 0, /* DYNAMIC */
->> +		}
->> +	}
->>  };
->>  
->>  /* Super-Speed Support */
->> @@ -936,16 +940,18 @@ static int hidg_setup(struct usb_function *f,
->>  		switch (value >> 8) {
->>  		case HID_DT_HID:
->>  		{
->> -			struct hid_descriptor hidg_desc_copy = hidg_desc;
->> +			DEFINE_FLEX(struct hid_descriptor, hidg_desc_copy,
->> +				desc, bNumDescriptors, 1);
->> +			*hidg_desc_copy = hidg_desc;
->>  
->>  			VDBG(cdev, "USB_REQ_GET_DESCRIPTOR: HID\n");
->> -			hidg_desc_copy.desc[0].bDescriptorType = HID_DT_REPORT;
->> -			hidg_desc_copy.desc[0].wDescriptorLength =
->> +			hidg_desc_copy->desc[0].bDescriptorType = HID_DT_REPORT;
->> +			hidg_desc_copy->desc[0].wDescriptorLength =
->>  				cpu_to_le16(hidg->report_desc_length);
->>  
->>  			length = min_t(unsigned short, length,
->> -						   hidg_desc_copy.bLength);
->> -			memcpy(req->buf, &hidg_desc_copy, length);
->> +						   hidg_desc_copy->bLength);
->> +			memcpy(req->buf, hidg_desc_copy, length);
->>  			goto respond;
->>  			break;
->>  		}
->> diff --git a/include/linux/hid.h b/include/linux/hid.h
->> index cdc0dc13c87f..85a58ae2c4a0 100644
->> --- a/include/linux/hid.h
->> +++ b/include/linux/hid.h
->> @@ -739,7 +739,7 @@ struct hid_descriptor {
->>  	__u8  bCountryCode;
->>  	__u8  bNumDescriptors;
->>  
->> -	struct hid_class_descriptor desc[1];
->> +	struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
->>  } __attribute__ ((packed));
->>  
->>  #define HID_DEVICE(b, g, ven, prod)					\
-> 
-> Otherwise, this looks correct to me.
-> 
+Node names should be generic. And drop unused label.
+Should just look like this:
+	pmic@8 {
+
+> +            compatible = "brcm,bcm59056";
+> +            reg = <0x08>;
+> +            interrupts = <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
+
+#include <dt-bindings/interrupt-controller/irq.h> ?
+V2 seems to have it, not sure why you dropped this.
+
+> +
+> +            regulators {
+> +                rfldo_reg: rfldo {
+
+Unused label, drop.
+
+> +                    regulator-min-microvolt = <1200000>;
+> +                    regulator-max-microvolt = <3300000>;
+> +                };
+> +            };
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/regulator/brcm,bcm59056.yaml b/Documentation/devicetree/bindings/regulator/brcm,bcm59056.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..8939004d5a3f079c05d313bed4a2f07fbc473bac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/brcm,bcm59056.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/brcm,bcm59056.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Broadcom BCM59056 Power Management IC regulators
+> +
+> +description: |
+> +  This is a part of device tree bindings for the BCM590XX family of power
+> +  management ICs.
+
+This doesn't really say anything. Also AFAIK these are only part of BCM59056,
+not the entire BCM590XX family.
+Maybe say here something like:
+"The BCM59056 PMIC integrates X regulators, their valid names are
+ lorem, ipsum, etc.
+> +
+> +  See also Documentation/devicetree/bindings/mfd/brcm,bcm59056.yaml for
+> +  additional information and example.
+> +
+> +maintainers:
+> +  - Artur Weber <aweber.kernel@gmail.com>
+> +
+> +# The valid regulator node names for BCM59056 are:
+> +#   rfldo, camldo1, camldo2, simldo1, simldo2, sdldo, sdxldo,
+> +#   mmcldo1, mmcldo2, audldo, micldo, usbldo, vibldo,
+> +#   csr, iosr1, iosr2, msr, sdsr1, sdsr2, vsr,
+> +#   gpldo1, gpldo2, gpldo3, gpldo4, gpldo5, gpldo6,
+> +#   vbus
+
+This should probably be a part of the description, not just a comment.
+Could be argued to drop it since it's also described below in
+patternProperties, but this is easier to read, so IMO would be better to keep.
 
 Regards,
-Nikita
-
+Stanislav
