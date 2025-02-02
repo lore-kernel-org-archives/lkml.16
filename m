@@ -1,145 +1,270 @@
-Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C41380
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 01:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C5F23A0
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 02:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738460217; cv=none; b=kcwb7N4lSDTHnsq6Q06vYtLYC2PSBfCxloxdiOZTW3Y7uBrgzFzKkdOFBpKUM5tpGaA2ZxjJH3Xf1TTZifcdhM2ayqdsii3JEtT7Ex+mHzabBDbw3aQqp2IItBVEDI+KDeEDF/OQATuwKjmzE/hI5wzBSrjPkhlR62dkWm3QOc0=
+	t=1738462020; cv=none; b=NCokvOd8uUkjX+o5q5CXteOvZ+DIw540N11Q2CWOXzzjU6MmW5L7+DrQOoSmZ1jjnI/eiHxxXF+vFiKeakW1oA6vywet1ovFmzZ68TDh6opj1nt2E2iEOiGjyjv+LTcuO8brt+uLd4ASy0DleCDi99inzRUImvY763tNth19wAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738460217; c=relaxed/simple;
-	bh=dd17IxAivsQDy73TlOnDlseZLMlLNQOP2dWYS7p1d+o=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=GCnnpXbU79IgrZDqmMwDAlzoTj1aGfiVKHlUgQWOfsI8Xf78VqgChXLx9PSX+Yzm0rJzvZrjoaBl5MF8reaT8EuT5V1pTiTCxnCCb4lFXW8VnPBCvv/xYyxVvcYhocTtHXhBmReimCpKYxN2ScZVObfVVBCEYISX87zsUc87D8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=MYN2B7/x; arc=none smtp.client-ip=203.205.221.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1738462020; c=relaxed/simple;
+	bh=Cv+rYeVYUucgFkd9j+IahXxjPtJ2f4F7GoUBqwxuulM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nft3cy9mnbuyOm2HzFvhBfsjkfSSPvBbehKqcYOvuvvy4259J/s9nZj0OdnDpYpl9kZ3zSfxkRRWJwo3F7e9pljzaJxCZwsYZPpcUZ4tXLC+ebnfOYbEdextrebH5XtaDApW5DJoQgUy8nGtHmzEEajw32gP8RIR/JemRESp1Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Svt9dxlB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="MYN2B7/x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1738459908; bh=fd2CPv8BKKUANxv+ziAo6JglkL7l/YnDsgiHwFtQqyk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MYN2B7/xvNwgG6f2ABLyQiu5eo+4XzHRMNFEGuPkRTplDec4mmYb+SxH+mUcbWFwG
-	 Ak5Tw/zZoF9BLueC3o/88trV4ULcpOT2QKqCQoPrXXbOwd4DurnaxN1aXTmFN1iMtk
-	 bTa5nz9h9qvy/llQQT1yc5EGjT5QqcJXBtiBriU8=
-Received: from pek-lxu-l1.wrs.com ([2408:8435:9910:799c:8cb3:3b5b:faa2:1ccb])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id 7ECA36B8; Sun, 02 Feb 2025 09:31:44 +0800
-X-QQ-mid: xmsmtpt1738459904twpialj9j
-Message-ID: <tencent_B7365D9CDDA8990DCF8C0DFE25B28DB31207@qq.com>
-X-QQ-XMAILINFO: NrehM+cBVv5bJ+xUjfUNygn4bwmXFTFgJDvcMiGFXV2hm/vV7IjpJd2+b20svE
-	 Z9TACLaYKypxKw0Y9Yzm1+ztaXWeK5a77G/HdlLUnwOw3jqdSLl/KQ214ICmOtPljbAtDa2ykxhA
-	 9MnepEhh+c4fhHo9l0ZYheJFXwJxVpai2sZQb+FiUet1nY2Q0VFzDnCdL1WDQPRecEUujCCKlI8a
-	 0TyX/ZSa5pO6GYGub71jdItLt38fbsXoOuym33HJ675mSRtpA1oyD0rTmg8BXGJzdcH0soC7o0c1
-	 UJRZmgAuC6yUcFW4P37fyYdKFm1IdbdEf+zzb1VZI0IpIfCz1VsxDVRQf0Fn4hCrtYiDBWNGwYVe
-	 qQJDBvuWKbrohgios9G+LW1T8kQL9Z0z9EmC6W7rf/QuvZIhr/sj3ot3oPclMz5PXdu6ZDHZSrPY
-	 NicIlq8+mxhyLMpeBvrtxC1LbI5ljHyfTdaAKmSjnsSbjmA7hD4BxPehM8yVsLQMHaUtOGFV+sN0
-	 KAJCsAAneLwMdVnT/wTk6XxjgLIWnn4Sl5emVyB/d/rC/EK9BkLd824D4hQs3JjeyW3G6VLVMPFu
-	 UyUyr1eIzKEj7i03XsGXCm87wpHU9QCI1zSZmIQHbi0JI8yZLeOK9q6m23vOqA6I6jFfbbx/5kub
-	 H9dTDbkg1pb+oXN4JnlKjeUNd8K6dOyzNhkaRGJKiB2i+KMaX+QfBOcEpGJzZ/cUSIRrSG0FgMjF
-	 c7uM0g4XU19tO952Q+5QZVpayN/F6ma6paJHLD9yj1mSd1V3YgATTRrZeKCSZvcZupejqR76Uimr
-	 17vK4wgB8AZR/lF9uaWo6C7jnddwYO3zimfBBjL115ZCIGO38aAcn+/BIAO0I23wqnd0sKjz9vst
-	 XaWhkR+LELPnBMLkL7sxsDXpBRSDnG+mvNxqXjfymjRwpI1tU9n2M=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+074732af3fc6c528f8a0@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	miquel.raynal@bootlin.com,
-	richard@nod.at,
-	syzkaller-bugs@googlegroups.com,
-	vigneshr@ti.com
-Subject: [PATCH] mtd: capture device name setting failure when adding mtd
-Date: Sun,  2 Feb 2025 09:31:45 +0800
-X-OQ-MSGID: <20250202013144.1226593-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <679cd60e.050a0220.d7c5a.0045.GAE@google.com>
-References: <679cd60e.050a0220.d7c5a.0045.GAE@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Svt9dxlB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738462016;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sSlKml/+kejUBtq+rKq08KSBVq8nnU94jjP3M+wY8SY=;
+	b=Svt9dxlB1OTozFWZn6cwH9d2ra/FbtLYpwIgjJCv3Lie7ZGkOv98Ku77Yf6UMrrD8Eu2dj
+	QTeK1JnsFDD8Igii5zKdHM16Nz506pbiU7TYeURMDDh31G5VsN9ig7WdtChwSs6iWJmeCG
+	Ox3HeGp9Rn2c1n9f4/wj3GktwuTeByQ=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-84-ic6fjlEVMYW5Nf2PvP_t0w-1; Sat, 01 Feb 2025 21:06:55 -0500
+X-MC-Unique: ic6fjlEVMYW5Nf2PvP_t0w-1
+X-Mimecast-MFC-AGG-ID: ic6fjlEVMYW5Nf2PvP_t0w
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-216266cc0acso72916465ad.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 18:06:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738462014; x=1739066814;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sSlKml/+kejUBtq+rKq08KSBVq8nnU94jjP3M+wY8SY=;
+        b=j8NCOz4FbpRlpEgYdrDfKHjZh4iyb0KEnAwQR+dr0OmcEX32yj6V0HEF033UwQkqXL
+         TK3rsV/pVyvMESP3B5Q3zLDfvPc302cq7cKyjSLXd59lDWQzoUrLVZuujLwK9iu0gkrJ
+         nl54iRVC69wOQC+2IwnAeNYR5KewkCYJJhWAawGNK2OXV/FDrET1k5EcwEEvwYRoZXxT
+         iadyLz4fys8DWCS9spOsgizmHcwMU7RWIfJVJdhApPIemSsI17sm7orMAQKYIVd6bmYl
+         DBXKBcR4UguC60iuDOO49I073lqZzssZlFAxeXRotK+qeWMerl08K68vZHaOiBjOzLjy
+         QbAg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3AbPnf1cZh6xqaEWA68CP7rq1pq3nxgdqWmKna3ku3C1edzCFMXuejJVgSmMFqiyGUqo/GAd9t0MNTtE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlqRjHInlbsvGY2bq9bhNANPkjhNoxajUz/XrAlirMup6rIUm7
+	3Yy5zUTViyRBFvKhU4kGfZ1fXZKRKpoAoosDXss1R0xQXf/BP/us1LnWgln1hG06aJgRjewnYeI
+	n011m2TqFCtozPlk2onjWAtI/bS2zDK+uVJf60ies83xILzg36tbVjI4rTfSdyw==
+X-Gm-Gg: ASbGnctR19S5kle5O7vUq0SSKDLcL0NnUkwx37Hd16Hxd9XQnHZkD/6RxjhgJYw56/E
+	nmUgdN9WiDU3H1JkntDkpptCP+tiElxoLdNCDSO6QXK+r7aopAPjBEBXg/Y5DIoof0k5PV5PKSv
+	Ck1ovVAArgBdoDrkmx9lwOk/fiTZb34W+K+t8zNeWxb6kMvt5ibm6M+RcR46pps8JBBUBSXxLdr
+	ScXSzdU3hmQzMllELfUUYLZst3/xj9qRnqjlJN0M37D5j0KcpsDYVcnQXE7XXF3PsCHYqtL17UY
+	4jj+GQ==
+X-Received: by 2002:a05:6300:7111:b0:1ed:a4b1:9124 with SMTP id adf61e73a8af0-1eda4b195bcmr6482931637.8.1738462014128;
+        Sat, 01 Feb 2025 18:06:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEuAmakbdVZEYfdxlzFY/5lw1yKumpAmcjFfn5o/6n2SOgtQbAy8hTNJJ7loIVoDWvimSAuIQ==
+X-Received: by 2002:a05:6300:7111:b0:1ed:a4b1:9124 with SMTP id adf61e73a8af0-1eda4b195bcmr6482907637.8.1738462013708;
+        Sat, 01 Feb 2025 18:06:53 -0800 (PST)
+Received: from [192.168.68.55] ([180.233.125.64])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631bf29sm5625326b3a.20.2025.02.01.18.06.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Feb 2025 18:06:53 -0800 (PST)
+Message-ID: <489025af-a0c3-449f-a746-f898b77fc660@redhat.com>
+Date: Sun, 2 Feb 2025 12:06:44 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 23/43] KVM: arm64: Handle Realm PSCI requests
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20241212155610.76522-1-steven.price@arm.com>
+ <20241212155610.76522-24-steven.price@arm.com>
+Content-Language: en-US
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20241212155610.76522-24-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-syzbot reported a WARNING in release_mtd_partition. [1]
+On 12/13/24 1:55 AM, Steven Price wrote:
+> The RMM needs to be informed of the target REC when a PSCI call is made
+> with an MPIDR argument. Expose an ioctl to the userspace in case the PSCI
+> is handled by it.
+> 
+> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>   arch/arm64/include/asm/kvm_rme.h |  3 +++
+>   arch/arm64/kvm/arm.c             | 25 +++++++++++++++++++++++++
+>   arch/arm64/kvm/psci.c            | 29 +++++++++++++++++++++++++++++
+>   arch/arm64/kvm/rme.c             | 15 +++++++++++++++
+>   4 files changed, 72 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
+> index 158f77e24a26..90a4537ad38d 100644
+> --- a/arch/arm64/include/asm/kvm_rme.h
+> +++ b/arch/arm64/include/asm/kvm_rme.h
+> @@ -113,6 +113,9 @@ int realm_set_ipa_state(struct kvm_vcpu *vcpu,
+>   			unsigned long addr, unsigned long end,
+>   			unsigned long ripas,
+>   			unsigned long *top_ipa);
+> +int realm_psci_complete(struct kvm_vcpu *calling,
+> +			struct kvm_vcpu *target,
+> +			unsigned long status);
+>   
 
-The reproducer uses "/proc/thread-self/fail-nth" to trigger the failure
-of memory allocation when executing dev_set_name() in add_mtd_device(),
-which eventually causes device_register() to fail because the device name
-is not set, and finally triggers a warning in put_device().
+The 'calling' may be renamed to 'source', consistent to the names in arch/arm64/kvm/psci.c.
+Other nitpicks can be found below.
 
-[1]
-WARNING: CPU: 0 PID: 5826 at drivers/mtd/mtdpart.c:37 release_mtd_partition+0x71/0x90 drivers/mtd/mtdpart.c:37
-Modules linked in:
-CPU: 0 UID: 0 PID: 5826 Comm: syz-executor397 Not tainted 6.13.0-syzkaller-09734-g2a9f04bde07a #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-RIP: 0010:release_mtd_partition+0x71/0x90 drivers/mtd/mtdpart.c:37
-Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 1e 48 8b 7b 38 e8 ef 84 cd fb 48 89 df 5b 5d e9 e5 84 cd fb e8 70 4a 75 fb 90 <0f> 0b 90 eb c2 e8 a5 29 d8 fb eb db 48 89 ef e8 9b 29 d8 fb eb a5
-RSP: 0018:ffffc90003e1f828 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff88802c1d1000 RCX: ffffffff8b417995
-RDX: ffff8880310c3c00 RSI: ffffffff86439150 RDI: ffff88802c1d1000
-RBP: ffff88802c1d1648 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000000000004 R11: ffffffff81000130 R12: 0000000000000000
-R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
-FS:  000055558b9cd480(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000008 CR3: 0000000034aca000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- mtd_release+0xa0/0xd0 drivers/mtd/mtdcore.c:101
- device_release+0xa1/0x240 drivers/base/core.c:2567
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x1e4/0x5a0 lib/kobject.c:737
- put_device+0x1f/0x30 drivers/base/core.c:3773
- add_mtd_device+0xbb3/0x1700 drivers/mtd/mtdcore.c:750
- mtd_add_partition+0x300/0x650 drivers/mtd/mtdpart.c:279
- mtdchar_blkpg_ioctl+0x20d/0x250 drivers/mtd/mtdchar.c:562
- mtdchar_ioctl+0xbbe/0x2050 drivers/mtd/mtdchar.c:1216
- mtdchar_unlocked_ioctl+0xb0/0xf0 drivers/mtd/mtdchar.c:1239
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>   #define RMM_RTT_BLOCK_LEVEL	2
+>   #define RMM_RTT_MAX_LEVEL	3
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index f588b528c3f9..eff1a4ec892b 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -1745,6 +1745,22 @@ static int kvm_arm_vcpu_set_events(struct kvm_vcpu *vcpu,
+>   	return __kvm_arm_vcpu_set_events(vcpu, events);
+>   }
+>   
+> +static int kvm_arm_vcpu_rmm_psci_complete(struct kvm_vcpu *vcpu,
+> +					  struct kvm_arm_rmm_psci_complete *arg)
+> +{
+> +	struct kvm_vcpu *target = kvm_mpidr_to_vcpu(vcpu->kvm, arg->target_mpidr);
+> +
+> +	if (!target)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * RMM v1.0 only supports PSCI_RET_SUCCESS or PSCI_RET_DENIED
+> +	 * for the status. But, let us leave it to the RMM to filter
+> +	 * for making this future proof.
+> +	 */
+> +	return realm_psci_complete(vcpu, target, arg->psci_status);
+> +}
+> +
+>   long kvm_arch_vcpu_ioctl(struct file *filp,
+>   			 unsigned int ioctl, unsigned long arg)
+>   {
+> @@ -1867,6 +1883,15 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>   
+>   		return kvm_arm_vcpu_finalize(vcpu, what);
+>   	}
+> +	case KVM_ARM_VCPU_RMM_PSCI_COMPLETE: {
+> +		struct kvm_arm_rmm_psci_complete req;
+> +
+> +		if (!kvm_is_realm(vcpu->kvm))
+> +			return -EINVAL;
 
-Reported-by: syzbot+074732af3fc6c528f8a0@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=074732af3fc6c528f8a0
-Tested-by: syzbot+074732af3fc6c528f8a0@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- drivers/mtd/mtdcore.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+We probably need to check with vcpu_is_rec(). -EPERM seems more precise
+than -EINVAL.
 
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 724f917f91ba..a71cd75858e4 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -741,7 +741,8 @@ int add_mtd_device(struct mtd_info *mtd)
- 	mtd->dev.type = &mtd_devtype;
- 	mtd->dev.class = &mtd_class;
- 	mtd->dev.devt = MTD_DEVT(i);
--	dev_set_name(&mtd->dev, "mtd%d", i);
-+	if (error = dev_set_name(&mtd->dev, "mtd%d", i))
-+		goto fail_devname;
- 	dev_set_drvdata(&mtd->dev, mtd);
- 	mtd_check_of_node(mtd);
- 	of_node_get(mtd_get_of_node(mtd));
-@@ -790,6 +791,7 @@ int add_mtd_device(struct mtd_info *mtd)
- 	device_unregister(&mtd->dev);
- fail_added:
- 	of_node_put(mtd_get_of_node(mtd));
-+fail_devname:
- 	idr_remove(&mtd_idr, i);
- fail_locked:
- 	mutex_unlock(&mtd_table_mutex);
--- 
-2.43.0
+> +		if (copy_from_user(&req, argp, sizeof(req)))
+> +			return -EFAULT;
+> +		return kvm_arm_vcpu_rmm_psci_complete(vcpu, &req);
+> +	}
+>   	default:
+>   		r = -EINVAL;
+>   	}
+> diff --git a/arch/arm64/kvm/psci.c b/arch/arm64/kvm/psci.c
+> index 3b5dbe9a0a0e..9dc161abc30c 100644
+> --- a/arch/arm64/kvm/psci.c
+> +++ b/arch/arm64/kvm/psci.c
+> @@ -103,6 +103,12 @@ static unsigned long kvm_psci_vcpu_on(struct kvm_vcpu *source_vcpu)
+>   
+>   	reset_state->reset = true;
+>   	kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
+> +	/*
+> +	 * Make sure we issue PSCI_COMPLETE before the VCPU can be
+> +	 * scheduled.
+> +	 */
+> +	if (vcpu_is_rec(vcpu))
+> +		realm_psci_complete(source_vcpu, vcpu, PSCI_RET_SUCCESS);
+>   
+>   	/*
+>   	 * Make sure the reset request is observed if the RUNNABLE mp_state is
+> @@ -115,6 +121,10 @@ static unsigned long kvm_psci_vcpu_on(struct kvm_vcpu *source_vcpu)
+>   
+>   out_unlock:
+>   	spin_unlock(&vcpu->arch.mp_state_lock);
+> +	if (vcpu_is_rec(vcpu) && ret != PSCI_RET_SUCCESS)
+> +		realm_psci_complete(source_vcpu, vcpu,
+> +				    ret == PSCI_RET_ALREADY_ON ?
+> +				    PSCI_RET_SUCCESS : PSCI_RET_DENIED);
+
+{} is needed here.
+
+>   	return ret;
+>   }
+>   
+> @@ -142,6 +152,25 @@ static unsigned long kvm_psci_vcpu_affinity_info(struct kvm_vcpu *vcpu)
+>   	/* Ignore other bits of target affinity */
+>   	target_affinity &= target_affinity_mask;
+>   
+> +	if (vcpu_is_rec(vcpu)) {
+> +		struct kvm_vcpu *target_vcpu;
+> +
+> +		/* RMM supports only zero affinity level */
+> +		if (lowest_affinity_level != 0)
+> +			return PSCI_RET_INVALID_PARAMS;
+> +
+> +		target_vcpu = kvm_mpidr_to_vcpu(kvm, target_affinity);
+> +		if (!target_vcpu)
+> +			return PSCI_RET_INVALID_PARAMS;
+> +
+> +		/*
+> +		 * Provide the references of running and target RECs to the RMM
+                                              ^^^^^^^
+                                              the source
+> +		 * so that the RMM can complete the PSCI request.
+> +		 */
+> +		realm_psci_complete(vcpu, target_vcpu, PSCI_RET_SUCCESS);
+> +		return PSCI_RET_SUCCESS;
+> +	}
+> +
+>   	/*
+>   	 * If one or more VCPU matching target affinity are running
+>   	 * then ON else OFF
+> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+> index 146ef598a581..5831d379760a 100644
+> --- a/arch/arm64/kvm/rme.c
+> +++ b/arch/arm64/kvm/rme.c
+> @@ -118,6 +118,21 @@ static void free_delegated_granule(phys_addr_t phys)
+>   	free_page((unsigned long)phys_to_virt(phys));
+>   }
+>   
+> +int realm_psci_complete(struct kvm_vcpu *calling, struct kvm_vcpu *target,
+> +			unsigned long status)
+> +{
+> +	int ret;
+> +
+> +	ret = rmi_psci_complete(virt_to_phys(calling->arch.rec.rec_page),
+> +				virt_to_phys(target->arch.rec.rec_page),
+> +				status);
+> +
+         ^^^^^
+Unnecessary blank line.
+
+> +	if (ret)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+>   static int realm_rtt_create(struct realm *realm,
+>   			    unsigned long addr,
+>   			    int level,
+
+Thanks,
+Gavin
 
