@@ -1,244 +1,115 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA52F1F76CD
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 14:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F99F1F78E3;
+	Sun,  2 Feb 2025 14:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738505361; cv=none; b=C75o6R154FCJ4oT22y+E1zKI/BGeS6uonQsg4TYUZqui7TIJgU7KLb/PCHPT4nmjmLafj3G0YORh2AOGAgfffWBi11akeZm4aVblhvS4AowuEdQNLU815iQ0MyyHkUkQsPzY99RZ+wUU1HOd5wfqMdnLFjfFtoKpb98eQ033LkU=
+	t=1738505513; cv=none; b=k6y4HtRwQunZc06bLIe5F+VG3jEarzGrCCUo/vdRmVhjHoe473hAylB6AezaujXDCoWCHWEATk8as6WB+xE9uuLCyDCWtydrmkAGOqPjt9FYpunin0p4YOeZM8M12iRuw8Lm4H+GL6q+x0083W563NG0Imb7/Jq8oaYkHVlb1bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738505361; c=relaxed/simple;
-	bh=on8aON62O3WR2jXYZbvYKhrYnxupv+OAlYzHflLErME=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=RxBarMalSgJtC1z48YwNF5m+Hdq1qWo96FSmUSqMmXGS8xHpkIae824b+fYcgw1NahWuHncW29vtG6ib5pQEFV2rSDPVHBmJNpIbchBT7B14P9ovGBbtqGxzqqhyWq6o3aJT8SkszMYLtpiNEGsM4VrZiEG2H9sHiDRBY6+BKrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3cffe6b867fso50455655ab.2
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 06:09:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738505359; x=1739110159;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4z268rVCJ0WKRdRjuKqy7vB9s5VzlGVcUGLPLUoYTG4=;
-        b=p7Fgq+bjU+dopbluAcoIOB5ZXvpt+s19R+Y+pAapOOQ1pg+rsEDPVuSMCyw5zNn7tA
-         HmvgtGbkQH9GEkbhCHXl7INy+iwjZCWoAMyBZ31x65caYrIgFtrcB61kkKIopOTdxzlK
-         IfsbNRUb23RSuRDmaIvZfY/sF3aynySKAXNKZwO9EmYxX0s6Djx1pR+J7x29xxKTUHaB
-         8KVGSjdq4exCD+ZzyV7YW/vPzmGU1rmUf9KW7xTFy4cLlYkpNpLXDZiEEsH68Lq7dMLa
-         KE4bOUqDsYAHpbfyIS2QFSCLiRhFtuORPIswlAFosiSw8FHGvJeGeGpNWIemspFkDD3T
-         wA/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVHhXWxbK9y+P7L2+GhH/p8CQEdAUueWs4jTxGyochkhGhUxjNoBhvOPsrn+ReAYJxh8p3/nyABgddVm6Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSLr1HfeOkALxde1A6iwc7+CRhoBfUOwNltyM5DQSzLYVmieRJ
-	wAS6biQr1xeKi6shOECQHEvfFxMtvf7Gw5FgX1j0bW9LH289KcFIc+2sM5RBb8g1yAOzyoPe8cF
-	D7nKTt2VNfR670vhMrAvuRJAxr/egqesM6hgcq8k4NBCVB3eUKj1KTcw=
-X-Google-Smtp-Source: AGHT+IGGRO4qxitEhI0cxcsK3gf9IIf+4zvwL+S87G/tNh9cuuq3upih/O3GxgwB2xJ3+73C5GBmRwydX6zJGNPJP1LC9+kB0yYP
+	s=arc-20240116; t=1738505513; c=relaxed/simple;
+	bh=GxGKkCq152L+BGstMeNbJkHCsfMZjetej5nLZT8h520=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SUTjMckeAEg/NdhxGNlxcBU1hlChuP+ZQqFlT7pxgIILi8NIad90mA8+YZl4urvNyCpTcANyQP0edBhRATk6gkNTy1viW21hQnAbrOTsJa5Bebr+v0jq4/yk6wNrex8ukDZfa0QyXSPP+FDvmL9KOeEMa8k5hQfq8GUNYKJLdZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgLco62D; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgLco62D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EFCEC4CED1;
+	Sun,  2 Feb 2025 14:11:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738505513;
+	bh=GxGKkCq152L+BGstMeNbJkHCsfMZjetej5nLZT8h520=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GgLco62D4r1wZZOUScV62A5HDmmpwGMRm+MxK9WnnA+yUYLbgkFGYyjbDyF5+g5o7
+	 3JhgePbqmx3H75O5zu/zbAZY17+96ChGbf40VlgM6IvEUJis/NGXMLLEY4Glkank0w
+	 kVpSSTw0rfmasZNbypUcOHexFiBQ7uXe3k1uNDqbvkHTOkp0R4kVonZhMRhHq3BuOJ
+	 Mww2v8mqDd3yBglEDkFDAKOzpDCT8bTl+AEN10gJOWHsi40pCIX6wx/iwzXP3tGXT7
+	 bkm2ce3tIPCIAY8V2TiU8iMm/i0FKPoVX6xGkr77jLaRY8cNa4txcb6XNw8e7jpzQM
+	 /4d/vYL3MJjQw==
+Date: Sun, 2 Feb 2025 15:11:50 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Badhri Jagan Sridharan <badhri@google.com>
+Cc: Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, 
+	felipe.balbi@linux.intel.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	johnyoun@synopsys.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, jameswei@google.com, stable@kernel.org
+Subject: Re: [PATCH v1 1/2] dt-bindings: usb: snps,dwc3: Add property for imod
+Message-ID: <20250202-purring-ambitious-axolotl-4c6ff4@krzk-bin>
+References: <20250202035100.31235-1-badhri@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c567:0:b0:3cf:fb97:c313 with SMTP id
- e9e14a558f8ab-3cffe4679dbmr184117375ab.18.1738505358805; Sun, 02 Feb 2025
- 06:09:18 -0800 (PST)
-Date: Sun, 02 Feb 2025 06:09:18 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <679f7c8e.050a0220.163cdc.002f.GAE@google.com>
-Subject: [syzbot] [ocfs2?] possible deadlock in deactivate_super (2)
-From: syzbot <syzbot+180dd013ba371eabc162@syzkaller.appspotmail.com>
-To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
-	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250202035100.31235-1-badhri@google.com>
 
-Hello,
+On Sun, Feb 02, 2025 at 03:50:59AM +0000, Badhri Jagan Sridharan wrote:
+> This change adds `snps,device-mode-intrpt-mod-interval`
 
-syzbot found the following issue on:
+Thank you for your patch. There is something to discuss/improve.
 
-HEAD commit:    69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=13fc4eb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
-dashboard link: https://syzkaller.appspot.com/bug?extid=180dd013ba371eabc162
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17cdcb24580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132c2d18580000
+> which allows enabling interrupt moderation through
+> snps,dwc3 node.
+> 
+> `snps,device-mode-intrpt-mod-interval`specifies the
+> minimum inter-interrupt interval in 250ns increments
+> during device mode operation. A value of 0 disables
+> the interrupt throttling logic and interrupts are
+> generated immediately if event count becomes non-zero.
+> Otherwise, the interrupt is signaled when all of the
+> following conditons are met which are, EVNT_HANDLER_BUSY
+> is 0, event count is non-zero and at least 250ns increments
+> of this value has elapsed since the last time interrupt
+> was de-asserted.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ea84ac864e92/disk-69b8923f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6a465997b4e0/vmlinux-69b8923f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d72b67b2bd15/bzImage-69b8923f.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/48dd26198522/mount_0.gz
+Please wrap commit message according to Linux coding style / submission
+process (neither too early nor over the limit):
+https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
 
-Bisection is inconclusive: the first bad commit could be any of:
+> 
+> Cc: stable@kernel.org
+> Fixes: cf40b86b6ef6 ("usb: dwc3: Implement interrupt moderation")
 
-309a43165077 rcu/kvfree: Use consistent krcp when growing kfree_rcu() page cache
-021a5ff84743 rcu/kvfree: Do not run a page work if a cache is disabled
-1e237994d9c9 rcu/kvfree: Invoke debug_rcu_bhead_unqueue() after checking bnode->gp_snap
-60888b77a06e rcu/kvfree: Make fill page cache start from krcp->nr_bkv_objs
-f32276a37652 rcu/kvfree: Add debug check for GP complete for kfree_rcu_cpu list
-6b706e5603c4 rcu/kvfree: Make drain_page_cache() take early return if cache is disabled
-cdfa0f6fa6b7 rcu/kvfree: Add debug to check grace periods
-2e31da752c6d Merge branches 'doc.2023.05.10a', 'fixes.2023.05.11a', 'kvfree.2023.05.10a', 'nocb.2023.05.11a', 'rcu-tasks.2023.05.10a', 'torture.2023.05.15a' and 'rcu-urgent.2023.06.06a' into HEAD
-7e3f926bf453 rcu/kvfree: Eliminate k[v]free_rcu() single argument macro
-af96134dc856 Merge tag 'rcu.2023.06.22a' of git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11821724580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+180dd013ba371eabc162@syzkaller.appspotmail.com
-
-ocfs2: Mounting device (7,0) on (node local, slot 0) with ordered data mode.
-======================================================
-WARNING: possible circular locking dependency detected
-6.13.0-syzkaller-09793-g69b8923f5003 #0 Not tainted
-------------------------------------------------------
-syz-executor651/5821 is trying to acquire lock:
-ffff8880270c2948 ((wq_completion)ocfs2_wq){+.+.}-{0:0}, at: touch_wq_lockdep_map+0xb1/0x170 kernel/workqueue.c:3905
-
-but task is already holding lock:
-ffff88807ea340e0 (&type->s_umount_key#45){++++}-{4:4}, at: __super_lock fs/super.c:56 [inline]
-ffff88807ea340e0 (&type->s_umount_key#45){++++}-{4:4}, at: __super_lock_excl fs/super.c:71 [inline]
-ffff88807ea340e0 (&type->s_umount_key#45){++++}-{4:4}, at: deactivate_super+0xb5/0xf0 fs/super.c:505
-
-which lock already depends on the new lock.
+I don't understand what are you fixing here.  Above commit does not
+introduce that property.
 
 
-the existing dependency chain (in reverse order) is:
+> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+> ---
+>  .../devicetree/bindings/usb/snps,dwc3-common.yaml   | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
+> index c956053fd036..3957f1dac3c4 100644
+> --- a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
+> +++ b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
+> @@ -375,6 +375,19 @@ properties:
+>      items:
+>        enum: [1, 4, 8, 16, 32, 64, 128, 256]
+>  
+> +  snps,device-mode-intrpt-mod-interval:
+> +    description:
+> +      Specifies the minimum inter-interrupt interval in 250ns increments
 
--> #2 (&type->s_umount_key#45){++++}-{4:4}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       down_read+0xb1/0xa40 kernel/locking/rwsem.c:1524
-       ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
-       ocfs2_complete_recovery+0x17c1/0x25c0 fs/ocfs2/journal.c:1357
-       process_one_work kernel/workqueue.c:3236 [inline]
-       process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
-       worker_thread+0x870/0xd30 kernel/workqueue.c:3398
-       kthread+0x7a9/0x920 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+Then use proper property unit suffix.
 
--> #1 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       process_one_work kernel/workqueue.c:3212 [inline]
-       process_scheduled_works+0x994/0x1840 kernel/workqueue.c:3317
-       worker_thread+0x870/0xd30 kernel/workqueue.c:3398
-       kthread+0x7a9/0x920 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+> +      during device mode operation. A value of 0 disables the interrupt
+> +      throttling logic and interrupts are generated immediately if event
+> +      count becomes non-zero. Otherwise, the interrupt is signaled when
+> +      all of the following conditons are met which are, EVNT_HANDLER_BUSY
+> +      is 0, event count is non-zero and at least 250ns increments of this
+> +      value has elapsed since the last time interrupt was de-asserted.
 
--> #0 ((wq_completion)ocfs2_wq){+.+.}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3163 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
-       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
-       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       touch_wq_lockdep_map+0xc7/0x170 kernel/workqueue.c:3905
-       __flush_workqueue+0x14a/0x1280 kernel/workqueue.c:3947
-       ocfs2_shutdown_local_alloc+0x109/0xa90 fs/ocfs2/localalloc.c:380
-       ocfs2_dismount_volume+0x202/0x910 fs/ocfs2/super.c:1822
-       generic_shutdown_super+0x139/0x2d0 fs/super.c:642
-       kill_block_super+0x44/0x90 fs/super.c:1710
-       deactivate_locked_super+0xc4/0x130 fs/super.c:473
-       cleanup_mnt+0x41f/0x4b0 fs/namespace.c:1413
-       task_work_run+0x24f/0x310 kernel/task_work.c:227
-       exit_task_work include/linux/task_work.h:40 [inline]
-       do_exit+0xa2a/0x28e0 kernel/exit.c:938
-       do_group_exit+0x207/0x2c0 kernel/exit.c:1087
-       __do_sys_exit_group kernel/exit.c:1098 [inline]
-       __se_sys_exit_group kernel/exit.c:1096 [inline]
-       __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1096
-       x64_sys_call+0x26a8/0x26b0 arch/x86/include/generated/asm/syscalls_64.h:232
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Why is this property of a board? Why different boards would wait
+different amount of time?
 
-other info that might help us debug this:
+> +    $ref: /schemas/types.yaml#/definitions/uint16
 
-Chain exists of:
-  (wq_completion)ocfs2_wq --> (work_completion)(&journal->j_recovery_work) --> &type->s_umount_key#45
+Drop, use proper name suffix.
 
- Possible unsafe locking scenario:
+Best regards,
+Krzysztof
 
-       CPU0                    CPU1
-       ----                    ----
-  lock(&type->s_umount_key#45);
-                               lock((work_completion)(&journal->j_recovery_work));
-                               lock(&type->s_umount_key#45);
-  lock((wq_completion)ocfs2_wq);
-
- *** DEADLOCK ***
-
-1 lock held by syz-executor651/5821:
- #0: ffff88807ea340e0 (&type->s_umount_key#45){++++}-{4:4}, at: __super_lock fs/super.c:56 [inline]
- #0: ffff88807ea340e0 (&type->s_umount_key#45){++++}-{4:4}, at: __super_lock_excl fs/super.c:71 [inline]
- #0: ffff88807ea340e0 (&type->s_umount_key#45){++++}-{4:4}, at: deactivate_super+0xb5/0xf0 fs/super.c:505
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 5821 Comm: syz-executor651 Not tainted 6.13.0-syzkaller-09793-g69b8923f5003 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
- check_prev_add kernel/locking/lockdep.c:3163 [inline]
- check_prevs_add kernel/locking/lockdep.c:3282 [inline]
- validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
- __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
- touch_wq_lockdep_map+0xc7/0x170 kernel/workqueue.c:3905
- __flush_workqueue+0x14a/0x1280 kernel/workqueue.c:3947
- ocfs2_shutdown_local_alloc+0x109/0xa90 fs/ocfs2/localalloc.c:380
- ocfs2_dismount_volume+0x202/0x910 fs/ocfs2/super.c:1822
- generic_shutdown_super+0x139/0x2d0 fs/super.c:642
- kill_block_super+0x44/0x90 fs/super.c:1710
- deactivate_locked_super+0xc4/0x130 fs/super.c:473
- cleanup_mnt+0x41f/0x4b0 fs/namespace.c:1413
- task_work_run+0x24f/0x310 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0xa2a/0x28e0 kernel/exit.c:938
- do_group_exit+0x207/0x2c0 kernel/exit.c:1087
- __do_sys_exit_group kernel/exit.c:1098 [inline]
- __se_sys_exit_group kernel/exit.c:1096 [inline]
- __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1096
- x64_sys_call+0x26a8/0x26b0 arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fefe6fc9b89
-Code: Unable to access opcode bytes at 0x7fefe6fc9b5f.
-RSP: 002b:00007ffcff91e9b8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007fefe6fc9b89
-RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000001
-RBP: 00007fefe704a2b0 R08: ffffffffffffffb8 R09: 0000000000004701
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fefe704a2b0
-R13: 0000000000000000 R14: 00007fefe704b020 R15: 00007fefe6f980
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
