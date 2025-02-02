@@ -1,95 +1,90 @@
-Received: from out.smtpout.orange.fr (out-14.smtpout.orange.fr [193.252.22.14])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7A71C5F39
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 10:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30271D5CF5
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 10:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738492921; cv=none; b=uLfnu306vJBOCltED+ThqaQr6XzMsfhNjtnAR3li2F22qXF6GM8tpITqrWVZFqvFPO1kCKC5qPrCGjrNnOxncdBdSOkgWT/oXQkclPZyh5cHmEJPn1/NEG6Sce9Oqkkg2ZQUdTKp1wgPoDrl27uHX/cN5VHu4NhGc1cVG3Rvn6Q=
+	t=1738492937; cv=none; b=UwW8vAzMeJTlMWcERGnmiI43FGoVzHCfkKA6HWCAB1A0/Jp7fX4j7XS7cQgSFto3VEB2wleYU152rLQoAldIY0VgaOe7gZlL/5YHj2x5yARM5/c6WJPeSgit8dslrsHVFQGK8+2KVARXWsTrb3lQz9ZFil2nPDCyHP+q0pC4vJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738492921; c=relaxed/simple;
-	bh=SPFSk2DIP7LHxpSAFJ9zmWjQs4Pfydq84VunG5VRcKk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DjX8hkll029YMwRDyFpYjEF33yKYampMrTbyKAHOnjpuqGR4gKP+9X6MG5SmT5okmpnIcvh+UiSVII6RyY48eZS5UR0t037qXCVELkeZwQtjhe3O66u73NnUc7d2S6/Czzw05wfe7Vq3zczgzMwuExxE32tmMZqIvMMNiW9WLgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dIc9Mpnt; arc=none smtp.client-ip=193.252.22.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1738492937; c=relaxed/simple;
+	bh=zkD5IRGZ/9bPr0CC0yAMX9lXRbXYUMweItegShby6uE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uV91ocHHBKNC677ezXmGdGswJc6kP353esyfDqFl4760w8vHVee+21cd/OyLjWhuXg1Iqq9Rhi98Wn8CnQZS3y4vnpZMig4ejP42D+NCNpScdpOU31zQNEEJuXWDZ1OjHnz09/K0UIBaikaWZ599+6vpWumu6Jw10foSD2gWxos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=060c/uhO; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dIc9Mpnt"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id eXP2tVMex6yOueXP7tWCnE; Sun, 02 Feb 2025 11:40:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1738492845;
-	bh=lnYvLulxE9IhcSF1/3Dn61cRsmTg1esYKzlS2Lt+4ig=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=dIc9MpntZBYxGiq4TvJgbaSmtTXm9DRh3tE2Xj4rvYGH+qo53tyh9KJxKcsXkSIOa
-	 jJS+m9Gg2etvT5yaiREjTckVDMNd+P8nEG+YuU0YwtCrsWzO9j+u3+gtcJEZJ9uuin
-	 GCyU/H5oFew7MOijn2IHC/6suN861s9+RYFaryN0v54Dyhv3M/EaHYlx1Gt3CYFbKf
-	 ytfoilxHMaCOhUfZkQ3ZcirDM/rUsmKsMbAr5m+1tk+Eod39sIphkZIn/H4utqtN88
-	 Bi+jjVcuU/QGgKmBO6w40SbOkR5Wx8BXxE97QnxI7wEY5Urq1si7oSipUDySYR/jqF
-	 FF5De6LG/3YpA==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 02 Feb 2025 11:40:45 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <38f88be1-1d28-4dbf-b123-d9956f3b49df@wanadoo.fr>
-Date: Sun, 2 Feb 2025 19:40:35 +0900
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="060c/uhO"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2163c2f32fdso109465635ad.2
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 02:42:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738492935; x=1739097735; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zkD5IRGZ/9bPr0CC0yAMX9lXRbXYUMweItegShby6uE=;
+        b=060c/uhOWQe5m+YBtjrrvTg0GvS+5T80wFg8GPivsatUuNX7aAIdNafhJCWiC/kscN
+         vqVaPOpfL7MXIvENQAUJvuRNPAVsbd7Xc6Z+ENDWvp7UHWBfBjv8xrHagxlOAkezhZg7
+         XnAvXsabg8X3ewkqn0TiQggo7Z4711bbegY46M99RIleWnbuWNGvGfbPgZGMBi6/2fhy
+         004zWP6X4PeBFUL0eM0k7yhadAnzhKg6TwzvPoKIZE9fThnjJIzQF4c4NHLiRC4wkOOE
+         OAp3Ms+vAYj0Xgr55mwrVMYDPol9m9uF17KPjlB0D3fT2og8anadDC2nwro0Kg2AhM1a
+         x3GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738492935; x=1739097735;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zkD5IRGZ/9bPr0CC0yAMX9lXRbXYUMweItegShby6uE=;
+        b=Ill7DOstOFNqhaqxW7rc2Ph0bRRJxwpxSvBF5uuT9/zNQ9StmctgEnscy1O12zm61F
+         9XR8khz3hBNxOFims9mg8i4cAVnjAGUcYzOCVHX62Hwtgo9suwkm8os+Wv3i2KS7TpNF
+         K9P4NCBB31Z7wpjG57YbWLI2ChjQSf7BBDbxeKqVfA5Mq9uw9PA9SRWauvdHEK8g5f4z
+         xrZ0jb5pspmnS5VLhsIhyuPM95H3+mUjrWAx2MzuOFisOH6dbLABC0NKy7xJ4GPpehE4
+         8D2mJ8JgPVEVYn+6SmBt0V0sJFcqHZzJvvYADodlDIAheEwX+XAK699pOZxEgYl6cDaV
+         2MTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVN9e1RKpw9+ceiIovR5KjiBAasDujgR59Q8dp+bH+iACwxb6z9W4J+dGKF/1kU6tLa7B4g8zjt0frA05I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL9rPEeUbXz9ZKYZ5zrjulPQmLhB5r8ped6+1fzp5KPH2NSK+9
+	DuX8yUdpfVGbpgcP35QE9u4Io9gAYyDEETBNS3urKMinP6IX6z6anvvg+TRsYSD37Ah/hw==
+X-Google-Smtp-Source: AGHT+IFo+c59bClMb3w3IGnlN130wN7y6oOR1HcCzkELMUY8CVZ2GcCuOdp4NbrOfZUYhOCT0CSDVHhP
+X-Received: from pgtq4.prod.google.com ([2002:a65:6844:0:b0:a87:a3b9:db3d])
+ (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c941:b0:216:25a2:2ebe
+ with SMTP id d9443c01a7336-21dd7c65844mr278809895ad.19.1738492935252; Sun, 02
+ Feb 2025 02:42:15 -0800 (PST)
+Date: Sun,  2 Feb 2025 18:42:11 +0800
+In-Reply-To: <7hy0ysi4pf.fsf@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] Fixed-type GENMASK/BIT
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
- Yury Norov <yury.norov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Jani Nikula <jani.nikula@linux.intel.com>, intel-xe@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org
-References: <20240208074521.577076-1-lucas.demarchi@intel.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <20240208074521.577076-1-lucas.demarchi@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <7hy0ysi4pf.fsf@baylibre.com>
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250202104211.2764016-1-keyz@google.com>
+Subject: Re: [PATCH v3] cpuidle: psci: Add trace for PSCI domain idle
+From: Keita Morisaki <keyz@google.com>
+To: khilman@kernel.org
+Cc: aarontian@google.com, daniel.lezcano@linaro.org, keyz@google.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, lpieralisi@kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rafael@kernel.org, 
+	rostedt@goodmis.org, sudeep.holla@arm.com, yimingtseng@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Lucas and Yury,
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+>
+> I've been using some local trace_printk() to do exactly this, so I fully
+> support having some official tracepoints here.
+>
+> For my local hacks, I was trackin the state index as well as the state
+> value since for quick debug, I find the index to more human readable
+> than the state value, which I have to compare with the
+> arm,psci-suspend-pararm from the DT.
+>
+> Anyways, thanks for submitting this!
+>
+> Kevin
 
-On 08/02/2024 at 16:45, Lucas De Marchi wrote:
-> ove the implementation of REG_GENMASK/REG_BIT to a more appropriate
-> place to be shared by i915, xe and possibly other parts of the kernel.
-> 
-> For now this re-defines the old macros. In future we may start using the
-> new macros directly, but that's a more intrusive search-and-replace.
-> 
-> Changes from v2:
-> 
-> 	- Document both in commit message and code about the strict type
-> 	  checking and give examples how it´d break with invalid params.
-> 
-> v1: https://lore.kernel.org/intel-xe/20230509051403.2748545-1-lucas.demarchi@intel.com/
-> v2: https://lore.kernel.org/intel-xe/20240124050205.3646390-1-lucas.demarchi@intel.com
-
-What is the status on this series? I read it and I think this is great.
-So I am a bit sad to see it stalled for nearly one year.
-
-With the -next development windows opening very soon, wouldn't it be a
-good idea to revive this topic?
-
-
-Yours sincerely,
-Vincent Mailhol
-
+Thank you so much for the endorsement.
+Showing the index sounds like a good idea, although it should be done in a
+different layer (probably in the GenPD governor or cpuidle-psci driver?) because
+idx here should be the different index from the one we're looking for.
+I will keep my patch as it is just for now. Thank you for the idea!
