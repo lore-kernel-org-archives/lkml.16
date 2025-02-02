@@ -1,71 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9984720ED;
-	Sun,  2 Feb 2025 03:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D81E1F19A
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 03:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738466789; cv=none; b=M4C8aAogwm9qG+RYYTbZoCZrIGYv6yXsDUEwFpq6VEx/XvdJVHAoVG+tBLISrH8C5t17i68+Do/juUs9/YiPcEAIwZ1snbXQumg8EC4E3R5lDkqHuVMSjPQqU1udcGKsLg97zgcDmj/RciDAVUI5PTPS1CpH9rUM0AUtq7jTnV4=
+	t=1738467496; cv=none; b=NAqEkP+iKo6bduTRoiNLwnkaA+yUQGV6jwXmVBkKVT4U8rOXgtjs970IOEkYn03cn96sodim54piyXYrWVaiEOk+n6LXuFC6DrZWXceFqO/rQ0HT8VTpoCK0lcoKNHH80mVUcEmVcpMLEKsil7eaubz2mfV0UnWVa/NcAIm+KTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738466789; c=relaxed/simple;
-	bh=EL8R7+4DLL9JYXNTxNyqGEzs87ccKluFIBrQZ9V3Fxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CHdmE1hD9QyhSdA8zI/1XIDao8sgiK5IjJkI6avqbWDzNw/Nk0/YUBQDHWolSv9uJRitSppTqq9b7kIKfj/dtOngPUN5SC4uA0/vxfyQ3DKW1G2nRAXKDQ7VdMa6K8NagbOO1aHug0pz70g+qLjNOztUUMj5ZL/h1lJJwwPDsVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBDB2C4CED1;
-	Sun,  2 Feb 2025 03:26:25 +0000 (UTC)
-Date: Sat, 1 Feb 2025 22:26:24 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Ankur
- Arora <ankur.a.arora@oracle.com>, linux-mm@kvack.org, x86@kernel.org,
- akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
- jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
- boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com,
- andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>, Vineeth
- Pillai <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo
- Molnar <mingo@kernel.org>, Clark Williams <clark.williams@gmail.com>,
- bigeasy@linutronix.de, daniel.wagner@suse.com, joseph.salisbury@oracle.com,
- broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250201222624.61722cdb@batman.local.home>
-In-Reply-To: <CAHk-=whVzwPwiQj5PdmZXA8G=9ZS2T-OUPm4VrM8TKTDQW3Dmw@mail.gmail.com>
-References: <20250131225837.972218232@goodmis.org>
-	<20250131225942.365475324@goodmis.org>
-	<e83ce086-b55f-431a-a499-f83a434b70db@efficios.com>
-	<20250201180810.1faf4906@batman.local.home>
-	<CAHk-=wgTWVF6+dKPff-mhVwngFwBu_G9+fwOTF2Ds+YPj3xkeQ@mail.gmail.com>
-	<CAHk-=whVzwPwiQj5PdmZXA8G=9ZS2T-OUPm4VrM8TKTDQW3Dmw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738467496; c=relaxed/simple;
+	bh=aP4S/zXXAj2wpoGXN1yF025/pJ1uNZV9l6UTV8zmrn0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HI+A45QYZqqGjq9BJ9ZYnL9I3vdpoJu8r2oEN8iGDIxIp0CF0ihPeUUOVB2FSXRv4SWMfuETGVJXY0WlHYY/NTcchfumOHcDHhISv3HW546gj3YgYj7fAX4+Mv0eOfAPLfWsb0wUqX1tnKbs3Hwmk7kM9MQSsOxurQ113aRn4xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ZX+j8Ush; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ZX+j8Ush"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=b1MXno02i/KJT8BZpbYgS5auj92PDQQlbvpuIeHn/6Y=; b=ZX+j8Ush7Cy9m9OrnxVdjZ3Hhk
+	EtNS6h7wLRAL0o4h1tDdZirS5q1vOAUnn7gKqb+SfwoZv6Gv5set7KfYUKVfWvq8pC4qNn0HtwG4R
+	gmgYf4+LgPC5eXQVIhGMfnkiXYh1I1noK4c+xpmYwTOf/7VTw4K/a3EEA5cJor9D6OKyFnEr7Q7CP
+	zV4Bp0OWX0X3dUCerigUxJvtlIKN8Ybzybew9apxbi+IgRdgMrh8wpnZA0QnPGn1QgTGP0eudo44S
+	0u6ixzdzwEZoFx7qAvFEMozxEI9M23JYRsV4QePx0r8dbH3F5S1l6q9Y4UsuwSkDTVP44ct0X0uy6
+	9WKlUZMg==;
+Received: from [58.29.143.236] (helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1teQnv-002Fgo-9M; Sun, 02 Feb 2025 04:37:57 +0100
+From: Changwoo Min <changwoo@igalia.com>
+To: tj@kernel.org,
+	void@manifault.com,
+	arighi@nvidia.com
+Cc: kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org,
+	Changwoo Min <changwoo@igalia.com>
+Subject: [PATCH] sched_ext: Fix incorrect time delta calculation in time_delta()
+Date: Sun,  2 Feb 2025 12:37:48 +0900
+Message-ID: <20250202033748.359169-1-changwoo@igalia.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sat, 1 Feb 2025 15:35:53 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+When (s64)(after - before) > 0, the code returns the result of
+(s64)(after - before) > 0 while the intended result should be
+(s64)(after - before). That happens because the middle operand of
+the ternary operator was omitted incorrectly, returning the result of
+(s64)(after - before) > 0. Thus, add the middle operand
+-- (s64)(after - before) -- to return the correct time calculation.
 
-> I didn't actually check what current active schedulers do.  I would
-> not be in the least surprised if different schedulers end up having
-> very different behavior (particularly any RT scheduler).
+Fixes: d07be814fc71 ("sched_ext: Add time helpers for BPF schedulers")
+Signed-off-by: Changwoo Min <changwoo@igalia.com>
+---
+ tools/sched_ext/include/scx/common.bpf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The only real use of sched yield() I have ever seen in practice was in
-a RT application where all tasks were given the same RT FIFO priority,
-and the application would use the yield() system call to trigger the
-next task.
+diff --git a/tools/sched_ext/include/scx/common.bpf.h b/tools/sched_ext/include/scx/common.bpf.h
+index f254a39b86a5..d72b60a0c582 100644
+--- a/tools/sched_ext/include/scx/common.bpf.h
++++ b/tools/sched_ext/include/scx/common.bpf.h
+@@ -432,7 +432,7 @@ void bpf_rcu_read_unlock(void) __ksym;
+  */
+ static inline s64 time_delta(u64 after, u64 before)
+ {
+-	return (s64)(after - before) > 0 ? : 0;
++	return (s64)(after - before) > 0 ? (s64)(after - before) : 0;
+ }
+ 
+ /**
+-- 
+2.48.1
 
-That's also the only use case that really does have a strict defined
-behavior for yield(). In SCHED_FIFO, as the name suggests, tasks run in
-a first-in first-out order. yield() will put the task at the end of
-that queue. You can use this method to implement a strict application
-defined scheduler.
-
--- Steve.
