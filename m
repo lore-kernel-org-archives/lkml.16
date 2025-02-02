@@ -1,134 +1,138 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CD51DC985;
-	Sun,  2 Feb 2025 13:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD4A1DE4CB
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 13:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738503855; cv=none; b=P4o16jNnDvXA5/q3nxmnb1Igiq63ljeiIk8fAWMyvoSlCel/dkZrurazsFvEjJUuoWfvXrbsejPt7M6PcCBKjx63SHfNi2wvsrMy+ENsEHZ0VZS8qlmzCrPeJBIjk5MM8TpKo+L/X9tHsl58kjRYIFl/h1P2hN8gfGtl0OoCmqA=
+	t=1738503915; cv=none; b=cwv7sTZWdUaNq6IEnaw63TSGlPrar3RjIcyLXo0Qo0W/wNL5RQh77wR/EmQHR8rz2Dt953GcWNeQW2u/ylg2/AAcPAJ1Fw/PxyRuZvIkQGRQg13szyFrc61eAKDwRXnnwljkcPVSVejaRnY1a7vTEqo4iDDSn4cNS6pdF95dNvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738503855; c=relaxed/simple;
-	bh=O/LkhUAjYB7Cqep4qBvUPr2jUPzG34C/1TYkKfkxteU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pP0Wzg4xBNfXXyyVF6px2ISNewkzku1s8CJXTirFG10rSn/WutFHulbppiv6UpD+gopB3dpkJZ7vMAbxXSIFSrpzFXhwWfDwIsaOa52H5pR5yhpFqr2yx7Vs6MbgzqJ6W2TmbS//nnczZEdxl9eSQE9js9hCoQVDqNTPSs86HyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PXdkDkC/; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738503915; c=relaxed/simple;
+	bh=3AvMwJ2jULJvu6H8cVIc1G7+NuSo81Y/MeyNFbPbV8I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FaogN8cSX/4T8gh0beKUkJBMci322hNR8bRFUEP5BiyWzjv46ae5wGdmWKOWzGoe8mriY8GZY5H4R1/D4J+YnxHXpKEdT/9tQ//D9n7pWEam0ukysuSQnqiWYlUn0/k0xwoymiOK3HfnofyoajMbG6DqEMFqo6h3OPQhXRLdypM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=Ji5IC4Py; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXdkDkC/"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2efb17478adso5884004a91.1;
-        Sun, 02 Feb 2025 05:44:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738503853; x=1739108653; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yzayRBbvjFKjGTEED8m/pZVSLWexcRis3+D6NjBXPsQ=;
-        b=PXdkDkC/1IF/cDzuaiyf/4/f3q0b0JrpxWdkhUoeA+jZDnWs/vkH+sa92I9elYpmHQ
-         j6qhS8EAOZ0GyCrdlZZ5fr8r2tzlVpc9AriyPmErjQi2ysSYlPiXoXjs8S5xoNaB1bgH
-         ro5opvyGQIppGj/imZVKTHYMsujACXFQ/ngckg70IWvb7OQXlS8zvsz0IG0Q4Gu2oasw
-         X98xjfdbI9JJG/WlbtNUgyCr9dt6t2dHPvxTnfL5lxdUqd0OerR2FGNYvJI8wwFkJB89
-         MoMmkKe511SgPQdbUyTIZf5JT6261mGptIlNcG4vvMrGTe/JveWFZFTHKeOWsQU1mfqK
-         XP0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738503853; x=1739108653;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yzayRBbvjFKjGTEED8m/pZVSLWexcRis3+D6NjBXPsQ=;
-        b=QLrk+Fe1+fxcq5L2anN6hP6Lw/Z4l+f4Mhmfi5EOb8J2Zg1tne2fR8Ly+8rZsHDiDL
-         LhR34PHJiXBmFNqD3QEj5LWwXe3qDOTCxd2WyIgJcqSWBTtD8iVQPt7qgYHhSHNoU0Ef
-         q4uOoYrSubfsskPwoAstDGQluJlUf1Gqef3WIHDwyr8ZiXJatPREaD2qGVW5uMMjsrr8
-         sXnsTwm+FWiWRWfc+vPRUSgqFEfb6NpnyBuKOjfP7W5sXfhWq09+NraJeBuEQ2qr7nvd
-         qcrpxddiQbT53L18WmKoiwDEIl07SPgNZ03ny1s7H5zkJPXu0/J1Mf4geZkSuMKC4VIV
-         a3jg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLu8sw8Sd+XCz4guW1uksWk8A/P0Yabr3OsDUZNL4cKKeXOdV2bDeqkxgUAmP5g2KfU8uu/421AdGI@vger.kernel.org, AJvYcCXxP45Yf94VnEzuhMI0O450aSMoHtJMgYZXNvjXU7QI7iWbSk0FticjqhSz38Skhn7+ZB+Q1+k+W68CSHf9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9jv3GGS+9z8OMLBr+BijYfzeOVv8tPXwSxzGFiVJhsFJWsntt
-	kGPwHQYX41RWkJX3KGJwMkHDHtUJ/sylGIJYUD5ysiskNLSllMVa
-X-Gm-Gg: ASbGncvUg4SOkqNZgtx6wgqLqJZU0TfclnQHTvHqgJIq8SiDI2tawXTJp7glAE22HNT
-	tmmLX59XTBXmKxKxV+fATMtTRjtjfok7lBR6bhK3bq+iO58RXTEl+Yw4OfC/cY1hDpzWyQ1ax77
-	oDODKaREYgwrPwY3r94cgrM17xEVZwUjjoAUIBQG8eZ4JPKUnSuUAyTRlkWkJfDMR9F2r1pLo/Q
-	BVB7+HAWIEypkSt6nvPTAXmLEoVOvSx81C7SRfS6yPoo7w9oe1+7QYlyQM+ivALIz02dX81HvnM
-	/yPj2TZbJZXUc/QKA+9LOm7U
-X-Google-Smtp-Source: AGHT+IE2Fly974HNmPVReSPAvNlmMHkie4rvpmMfKb2bISi08MYI+k2dSZHMQcF2g9Ibx4ZnE2KLiQ==
-X-Received: by 2002:a17:90a:d610:b0:2ee:b26c:10a0 with SMTP id 98e67ed59e1d1-2f83ac5c2a8mr28211494a91.24.1738503852901;
-        Sun, 02 Feb 2025 05:44:12 -0800 (PST)
-Received: from [192.168.75.213] ([116.121.188.179])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32eb43asm58792795ad.156.2025.02.02.05.44.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Feb 2025 05:44:12 -0800 (PST)
-Message-ID: <9f56bec0-b35b-4ea2-a212-5c50333c00f9@gmail.com>
-Date: Sun, 2 Feb 2025 22:44:05 +0900
+	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="Ji5IC4Py"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sendonly@marcansoft.com)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 5B93B4269B;
+	Sun,  2 Feb 2025 13:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
+	s=default; t=1738503910;
+	bh=3AvMwJ2jULJvu6H8cVIc1G7+NuSo81Y/MeyNFbPbV8I=;
+	h=From:Subject:Date:To:Cc;
+	b=Ji5IC4PydnxsZxDxaqzMBdWkRSyC74+bIxQs1UCGEKyTynR95nD7ygDHzTYpmsCBr
+	 jU51iUNuu3VzDWU+uLunEBdeXUlGs/20+/BaR96jKexDIhEO2WnfVB52HDbOKcOQqM
+	 MZXy687jmGWPiW+jrxj5f/tmnvbNsHiCo1J9uXic8mtMqao5kzj8lGogI7vqunzL+U
+	 lMMYpL3CB5y2t2eyegRjnOKZ+OSqA+7sw6s8oDBfXUwAHnJKJ6wOU24QP6oDAvJtd1
+	 bFASQDpb9uhDzNVc5nBzGsqLknGti8rQARaozoodEiZoVMnRzOB7AgW8ZrprbTRMv1
+	 qfOJcwaPLJnUg==
+From: Asahi Lina <lina@asahilina.net>
+Subject: [PATCH 0/4] drm/gpuvm: Add support for single-page-filled mappings
+Date: Sun, 02 Feb 2025 22:34:49 +0900
+Message-Id: <20250202-gpuvm-single-page-v1-0-8cbd44fdcbd4@asahilina.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] Weighted Interleave Auto-tuning
-To: Gregory Price <gourry@gourry.net>
-Cc: Joshua Hahn <joshua.hahnjy@gmail.com>, ying.huang@linux.alibaba.com,
- rafael@kernel.org, lenb@kernel.org, gregkh@linuxfoundation.org,
- akpm@linux-foundation.org, honggyu.kim@sk.com, rakie.kim@sk.com,
- dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, dave.jiang@intel.com,
- horen.chuang@linux.dev, hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com,
- kernel_team@skhynix.com, 42.hyeyoo@gmail.com
-References: <20250128222332.3835931-1-joshua.hahnjy@gmail.com>
- <41ab5a11-f8d3-403c-9d68-33eb15aef8fa@gmail.com>
- <Z55QmybX5IkuLv6Q@gourry-fedora-PF4VCD3F>
-Content-Language: en-US
-From: Honggyu Kim <honggyu.km@gmail.com>
-In-Reply-To: <Z55QmybX5IkuLv6Q@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHl0n2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIKGbXlBalqtbnJmXnpOqW5AIVGBkamxsYpZobmJmbq4E1FdQlJqWWQE
+ 2Mzq2thYAixoWp2MAAAA=
+X-Change-ID: 20250202-gpuvm-single-page-253346a74677
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
+ Danilo Krummrich <dakr@kernel.org>, 
+ Boris Brezillon <boris.brezillon@collabora.com>, 
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+ Lucas De Marchi <lucas.demarchi@intel.com>, 
+ =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+ Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ nouveau@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
+ asahi@lists.linux.dev, Asahi Lina <lina@asahilina.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738503908; l=2980;
+ i=lina@asahilina.net; s=20240902; h=from:subject:message-id;
+ bh=3AvMwJ2jULJvu6H8cVIc1G7+NuSo81Y/MeyNFbPbV8I=;
+ b=N+BAOegpxo9UAn5W5vwEtkBj+YvWzILm1x1cmu8zmxtnc3lvtyTW+g9+kRg303d2e7RY12OKB
+ fJ7OLEyFGHQDqA/Bf1+k/DzKPmhK2sTSI5HbJZj+/gUYsnzLVK2HZtn
+X-Developer-Key: i=lina@asahilina.net; a=ed25519;
+ pk=tpv7cWfUnHNw5jwf6h4t0gGgglt3/xcwlfs0+A/uUu8=
 
-Hi Gregory,
+Some hardware requires dummy page mappings to efficiently implement
+Vulkan sparse features. These mappings consist of the same physical
+memory page, repeated for a large range of address space (e.g. 16GiB).
 
-On 2/2/25 01:49, Gregory Price wrote:
-> Hi Honggyu,
-> 
-> On Fri, Jan 31, 2025 at 11:23:34PM +0900, Honggyu Kim wrote:
->> Sorry for jumping into this discussion a bit late, but IMHO, setting a
->> newly onlined node's weight to 1 can possibly make the entire weight
->> ratio unbalanced.
->>
-> 
-> This is only the default for either:
-> a) Manual Mode
-> b) Auto Mode - when HMAT/CDAT data is missing
-> 
-> In manual mode, the node weight in /sys/kernel/.../nodeN is present
-> regardless of the online/offline state of the node - so it can be
-> set prior to that node being hotplugged.  Since it's in manual mode,
-> it's expected the administrator knows when things are coming online
-> and offline, and they have a clear chance to change weights such that
-> a 1 is never perceived.
+Add support for this to drm_gpuvm. Currently, drm_gpuvm expects BO
+ranges to correspond 1:1 to virtual memory ranges that are mapped, and
+does math on the BO offset accordingly. To make single page mappings
+work, we need a way to turn off that math, keeping the BO offset always
+constant and pointing to the same page (typically BO offset 0).
 
-This may be true, but system admins can hot-plug some nodes without
-considering about weighted interleaving.  If weighted interleave is not
-their major use cases, then they may not consider weight values
-seriously, but some workloads might use some weighted interleave APIs
-that use all nodes available.
+To make this work, we need to handle all the corner cases when these
+mappings intersect with regular mappings. The rules are simply to never
+mix or merge a "regular" mapping with a single page mapping.
 
-This might be my imaginary scenario so if you think it's not realistic,
-then you can just ignore.
+drm_gpuvm has support for a flags field in drm_gpuva objects. This is
+normally managed by drivers directly. We can introduce a
+DRM_GPUVA_SINGLE_PAGE flag to handle this. However, to make it work,
+sm_map and friends need to know ahead of time whether the new mapping is
+a single page mapping or not. Therefore, we need to add an argument to
+these functions so drivers can provide the flags to be filled into
+drm_gpuva.flags.
 
-Thanks,
-Honggyu
+These changes should not affect any existing drivers that use drm_gpuvm
+other than the API change:
 
-> 
-> In auto mode, the node goes "online" after HMAT/CDAT data is reported
-> so users will generally not perceive this default weight.
-> 
->>    1. the auto mode set the weights as 10:5:1 for node{0-2}.
->>    2. node2 is offlined, then recalculation makes it as 2:1 for node{0,1}.
->>    3. the auto sysfs interface is set to 0 to make it manual mode.
-> 
-> If the user sets manual mode, they get manual mode.  If they don't
-> want to manually adjust weights, don't set manual mode.
-> 
-> We can't stop users from doing silly things
-> 
-> ~Gregory
+- imagination: Does not use flags at all
+- nouveau: Only uses drm_gpuva_invalidate(), which is only called on
+  existing drm_gpuva objects (after the map steps)
+- panthor: Does not use flags at all
+- xe: Does not use drm_gpuva_init_from_op() or
+  drm_gpuva_remap()/drm_gpuva_map() (which call it). This means that the
+flags field of the gpuva object is managed by the driver only, so these
+changes cannot clobber it.
+
+Note that the way this is implemented, drm_gpuvm does not need to know
+the GPU page size. It only has to never do math on the BO offset to meet
+the requirements.
+
+I suspect that after this change there could be some cleanup possible in
+the xe driver (which right now passes flags around in various
+driver-specific ways from the map step through to drm_gpuva objects),
+but I'll leave that to the Xe folks.
+
+Signed-off-by: Asahi Lina <lina@asahilina.net>
+---
+Asahi Lina (4):
+      drm/gpuvm: Add a flags argument to drm_gpuvm_sm_map[_*]
+      drm/gpuvm: Plumb through flags into drm_gpuva_op_map
+      drm/gpuvm: Add DRM_GPUVA_SINGLE_PAGE flag and logic
+      drm/gpuvm: Plumb through flags into drm_gpuva_init
+
+ drivers/gpu/drm/drm_gpuvm.c            | 72 ++++++++++++++++++++++++++--------
+ drivers/gpu/drm/imagination/pvr_vm.c   |  3 +-
+ drivers/gpu/drm/nouveau/nouveau_uvmm.c |  3 +-
+ drivers/gpu/drm/panthor/panthor_mmu.c  |  3 +-
+ drivers/gpu/drm/xe/xe_vm.c             |  3 +-
+ include/drm/drm_gpuvm.h                | 26 +++++++++---
+ 6 files changed, 84 insertions(+), 26 deletions(-)
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20250202-gpuvm-single-page-253346a74677
+
+Cheers,
+~~ Lina
+
