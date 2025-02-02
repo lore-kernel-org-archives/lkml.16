@@ -1,82 +1,104 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094301DDC3E;
-	Sun,  2 Feb 2025 22:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17001101E6;
+	Sun,  2 Feb 2025 22:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738534298; cv=none; b=Ga+6IJoDdEGCGEu4fx4TIExmtRHJlVXe06Tbgs9z97/fyfyJCWeq74DBGB310J0eORYDEKXiEGrhDN70ViwaQpUN5cdniKnDNLX5wZUhr3OQ1JduLPyQQiSdHUk7CXPr4HW+c8y196Z0d6sktn5mMirRvmkgKZyNjtPJLZLxhA4=
+	t=1738534500; cv=none; b=iVNnL4R6jNi5LElEmR5gDmasVscnxkC53Qdq9tFp+L0FEGIK69eRouuJZ247pvv6ZJzWKBcLqXMfN3uctqnDv5DUddK0F6OdC8fbf5Cb3NKy+MiggmNsrx8V7Ojv+1Jd8RgfO6cJ7Qte4p2Oj9jn9dnVczWWamtikh+6AvTHBEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738534298; c=relaxed/simple;
-	bh=kWncMzN09JqbOCThf3B8FG7pCzH/jIkLNU8ET9Vf4TE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ktpSECcuaF7jUZ2k9WyMGHmOnDR/zU0lRAvjY2nUjfmVMFYk6IGtxn/VlvPFbHgLjrTkVKV6daUN2sHnKKqYT5uzVgUt/pVHhERkPdC/4bDctGQQumw+yLm5JhKj9FSKd9bhWSdxW9KJTxyPnd8S3JTGrDtpxUorKv5/0mVaO0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KX5ZPOEo; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738534500; c=relaxed/simple;
+	bh=t0btTXTxDYqNqNDaMQam8DdZeMc//oOetyM8hHci/9w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LRaUS9pT0dGaU0HgvmvlHdz3TfpVNuxlIQOp+uTN9ajMGQjzSlwcZKhWYQdbhzmaKZrmy8tKN7UCPQmTtpy9XWLO+Zw+15uKeeS7VmnRvIpXhLHgxc7Px0uMtKvFI4KI+qRbec7ekgegSQervUqAss1wIJ22wrMoCv1kQjus2Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m2mDIJFi; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KX5ZPOEo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=mTlTgYc6k9e1xlBVdWd6+0NDHrUmr3AONkRHg7X+qFM=; b=KX5ZPOEo6WWJ94Hkhxef0B3X2L
-	8E2+4QuC0GVx5I1RmMlP6qnZi3GSZ+wrycDwBMb0TUsyfq5i7vFRWJ2d+IK8U6R2OS1xWIEW/1Q5e
-	AvhoERVbOf2tFR/Bn3/TNkQU1VuU44uvhOCxoN4MNTTSPPOumsdU1dFf4iocQcaOn2I8YFtHJj0ER
-	XyXWuS7/wVewq8aIt/mKMY41oatnNn7qY+2/IS796sBI2yxShQOvLS+XgXsplLAFn8h6sn92bd72g
-	c147lTMjD5jnv3DfPLufnd3KOq9mmg09AhaPwzUIRsYovToOdHi2eN7+CR/S96+KqdNYSqfa8h/Rf
-	joIyKcwA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1teiBg-0000000HXyC-2g6x;
-	Sun, 02 Feb 2025 22:11:32 +0000
-Date: Sun, 2 Feb 2025 22:11:32 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: syzbot <syzbot+a0ae55e3dde11d2d790c@syzkaller.appspotmail.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, kent.overstreet@linux.dev,
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [mm?] [bcachefs?] UBSAN: shift-out-of-bounds in
- filemap_get_entry
-Message-ID: <Z5_tlJZcIfANfmnV@casper.infradead.org>
-References: <679fb148.050a0220.d7c5a.0074.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2mDIJFi"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-436202dd7f6so44555075e9.0;
+        Sun, 02 Feb 2025 14:14:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738534497; x=1739139297; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/d+6kPbWsXoeRB2D7/hAE4JuKSelsZt/eO8TnxXuCpk=;
+        b=m2mDIJFiTzf41NWqt18onB+30n0RSicWUsOA/h2zfy+IO/HB6rUMyJBDq0QUR1HIZQ
+         A2P5b8MHnqBlGzg8wNDkXxzQ48L2NmzVkmVU3aMPrUjEA0gfQ7BjxiveTx0/h/64WEn4
+         T2RlghuXuocO3FTNcUC865P/F0TxaUzDVOX1ueS+/sW8EJZMkRAc2QtMF4kwJO2zCwqf
+         +UBJJTp+XTjGZ0LpJkAmm+caw3uqxfHQ797QP7/60tnoxPHdM+v0oKUJvKXvhWTF9CrW
+         aHP7YzvG3rjjdaeiHxeX8R4j9s1iGPI3F1NABaYPDfyJnfmvKCgrnSB8LrnpssRWcBf0
+         DJTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738534497; x=1739139297;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/d+6kPbWsXoeRB2D7/hAE4JuKSelsZt/eO8TnxXuCpk=;
+        b=QoJLpyCZs5r9lkRuTDF8sgVC0IZt8tc2rLRrogANDRrr/OyDPjzjgxd/KtltcNJyLe
+         f/vLxmQ/iMZI2j7qrubZjaKncvZONBPAgHURkMsuodwQazJxXgq7R7lsBe3xntM35ZS5
+         rVxFJOXiF4KpiNmL3lqVqvv9Oh+MfWDBeTkohUufz6vng+x1brOQzkg1JrqYVK/4seKy
+         NoDFNnFgbxN6M4GV5qgcVLlwA5Sq583V+E8dHbxoi4gHT8U3BXZeTHEaPt10dt1x9APt
+         V1FRwUzXhScF9Pc54hA9o910RAm+kMWGF8yG2aJpzeM6uBA4J33weDX6TKL2q8R4k1Yl
+         tLZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVn23PmrPQwU+dSst5VoMyy6ucTeVXo6hRTWdXfkzY4DUg0tOC6i+S6xCHItKKcEeGN58srcV35YqOnuws=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKiBvfJNOQ29XaKk4KhB2Zx7GSNPw8qntoV7UrLVSVO60o1pOc
+	Z41YGgDGkE9KiYy+KpQDS1TO5BnQlfcfDt3uwLQLV8SUQCz973Li
+X-Gm-Gg: ASbGncuIatIsE5RXRZZtoPzZ80nJBMk7via3fc1IF9RVm2x91X5xaecFpAKl7JM7nok
+	3u0rp+2m+NKEFjH5fRptUlArjojeqyL3c5+zZhjlOXBNO0OjjK+bn3HJXgYxWja2LOmsXC+CTBJ
+	vp4IHGxWWpfVwdclWcFk/WftcmxmI75yvdDO9secdJByeKjUcAgdKRDer+4WjKoPR3gu4Ah2sRE
+	hzI9G4fIFU/g5uBHP/EiBEvgOB6cCVpeP2B0rF/4gAczxclV1r5KVnxKGvbb50DmC2sErOhsSVo
+	aLamPdxEKv7kT7JD
+X-Google-Smtp-Source: AGHT+IHplxqjgEP0dFwLXvJfrL/A1CbJGFKEyQ9oY6WjTEsVIqOplrcFOwDsR1meWL5D4TeYkh8bkg==
+X-Received: by 2002:a05:600c:3306:b0:435:294:f1c8 with SMTP id 5b1f17b1804b1-438e018288dmr124323665e9.28.1738534496966;
+        Sun, 02 Feb 2025 14:14:56 -0800 (PST)
+Received: from localhost ([194.120.133.72])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38c5c1b51e1sm10974566f8f.77.2025.02.02.14.14.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 14:14:56 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/i915/selftest: Fix spelling mistake "ofset" -> "offset"
+Date: Sun,  2 Feb 2025 22:14:31 +0000
+Message-ID: <20250202221431.199802-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <679fb148.050a0220.d7c5a.0074.GAE@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 02, 2025 at 09:54:16AM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
-> 
-> ------------[ cut here ]------------
-> UBSAN: shift-out-of-bounds in lib/xarray.c:147:16
-> shift exponent 192 is too large for 64-bit type 'unsigned long'
-> CPU: 0 UID: 0 PID: 2666 Comm: kworker/u4:9 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> Workqueue: loop0 loop_rootcg_workfn
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:94 [inline]
->  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
->  ubsan_epilogue lib/ubsan.c:231 [inline]
->  __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:468
->  get_offset lib/xarray.c:147 [inline]
->  xas_descend lib/xarray.c:207 [inline]
->  xas_load+0x583/0x5c0 lib/xarray.c:246
->  filemap_get_entry+0x1f0/0x3b0 mm/filemap.c:1860
+There is a spelling mistake in an error message. Fix it.
 
-This is an xarray issue.  I suspect it's a race condition, although it
-could be somebody doing a misplaced DMA or something.  How easy is it to
-reproduce?
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/gpu/drm/i915/selftests/i915_gem_gtt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-(nb: I am on holiday for the next week, so I'm not going to be focused
-on this, I just don't want other people wasting their time looking for a
-bug somewhere that it isn't)
+diff --git a/drivers/gpu/drm/i915/selftests/i915_gem_gtt.c b/drivers/gpu/drm/i915/selftests/i915_gem_gtt.c
+index 5c397a2df70e..3eff0894c26c 100644
+--- a/drivers/gpu/drm/i915/selftests/i915_gem_gtt.c
++++ b/drivers/gpu/drm/i915/selftests/i915_gem_gtt.c
+@@ -964,7 +964,7 @@ static int __shrink_hole(struct i915_address_space *vm,
+ 			break;
+ 
+ 		if (igt_timeout(end_time,
+-				"%s timed out at ofset %llx [%llx - %llx]\n",
++				"%s timed out at offset %llx [%llx - %llx]\n",
+ 				__func__, addr, hole_start, hole_end)) {
+ 			err = -EINTR;
+ 			break;
+-- 
+2.47.2
+
