@@ -1,90 +1,123 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30AC72144CD;
-	Sun,  2 Feb 2025 20:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC561FBCB0;
+	Sun,  2 Feb 2025 21:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738529776; cv=none; b=pgenwbFD+SIfK1+FOy43vDq4uzFvyStpr23clxAVZ8d9w2RyoOFctJSd7iP6Z0ax5vuFT59Ono2SGvFhcMePxT7fWEI3xvh5lbX3l7mNABRC/2LmxkfbiP0qsTIfaxESLMoi80hbmUNqKW8jdOccqsmsZyXKqr0taKW2LCNL+jw=
+	t=1738530824; cv=none; b=Tkjy5KIR7rORDxQgcTG+Jgx9zLOlcSPQgHIUGb4GDnHAHNIkrT2NQyTbQIJzQTVzLatO0X8Ohtm+vvimoVkwpMJekCYjOT5kgTgWarcqwiMpNhQvLRl6F5HAalaYTU8qIlufbRQ32i1dY4I6nA8Fhr8GggI8M26Lqs3b/9rYks8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738529776; c=relaxed/simple;
-	bh=NqzZIztwz5lBbo58Ip+9/7S1pquqe0cSeyhOB7C8qjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Egwzc0ibTLVN6T4xRBxsYsYNDSG/gHL3PiSx/D4jOOGLZSbOb+fHg/JUFDAGlADKYr/PUgkFwLuP/6bTl8/KMYgWhgit3qGeA7q/SFZxGpjupRau2EzD/UYJz3TPLGCOH5pjIKed9t9vCZ+YcFq4txnk8GFVgnoGnJx0at+i23U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=L42OCAub; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1738530824; c=relaxed/simple;
+	bh=f8D4eCkbmwbrXSeOkhu8vQGp6QAVZzZxPYw7QMMzjXA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=emyHgZ2OIBJpwtTrt6CQdnRRvrfZUdeumTQ+hcpMVvJuIHBMxO8R8fDJhVO1fSUDokGdF6DT/qSXGg2SgGY2z4NJdw1WQNsITgc291sfxb87YU62SrUxqxa+GO9O4DUiU4hxtB/dQhU4CI5kB7zhkqYEgN9F5x5IDO8J33PaCzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bffY4Cpq; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="L42OCAub"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1738529762;
-	bh=NqzZIztwz5lBbo58Ip+9/7S1pquqe0cSeyhOB7C8qjg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L42OCAubWgKDcBS+qLuzO5RJu7oaGDTQQ2Dxyrfgl52HHrSMdr0V+DZaDtzENzld/
-	 CQTyhMCUn1AbbUgayWxuz2b6GkZMHyvaSitL/BZjNZtaqXJF+d9Y8lcah0EcoZZT44
-	 gEhg3hJa4wmKguBxv8iy807fOmOoWeNCtn4Ohg14=
-Date: Sun, 2 Feb 2025 21:56:02 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Willy Tarreau <w@1wt.eu>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Subject: Re: [PATCH 2/2] tools/nolibc: add support for directory access
-Message-ID: <4d670db0-eaf0-4151-b98c-1e5c84e1f275@t-8ch.de>
-References: <20250130-nolibc-dir-v1-0-ea9950b52e29@weissschuh.net>
- <20250130-nolibc-dir-v1-2-ea9950b52e29@weissschuh.net>
- <20250201103438.GH5849@1wt.eu>
- <58dbcb3c-5d5a-4f81-ac42-494b1fcaf932@t-8ch.de>
- <20250201104659.GA8168@1wt.eu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bffY4Cpq"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2a383315d96so1787003fac.3;
+        Sun, 02 Feb 2025 13:13:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738530820; x=1739135620; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cFdogcQ38XtltGxTmlK+t8AjVtfSqqnvtssQcQR2L8E=;
+        b=bffY4Cpq/kK6mrrTP9xgb5Uesb2LM05s1zXFcPJxDNvdMFQP/SyuDRo4oKn1jzxq0S
+         dSXoeEgW8qZuW1mmS6Nu+fGrTcuQ3AACI3CAEr0aIckl2rJ+78e3PKJjaGCkjZkOpRFy
+         jGhaZZbkE1Xgeuu9ATqobskJyhz+rXdJMdBLUNMfRr84fKNz8QXRynsqyFvXB7IjyifF
+         280zFDlN8u6K5ySVGL7BfmCePc75whEsh9i6inhpPY+dK6jSYQZIPHmcRj5A7WytA/rF
+         RsjmN18Kp4iVorGq6jWQHwA3e9WXSXZfM87TOa1OXPOEZp0K2ywjvDze5k2nnZ4bJslb
+         gzrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738530820; x=1739135620;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cFdogcQ38XtltGxTmlK+t8AjVtfSqqnvtssQcQR2L8E=;
+        b=bnioqYMt+8JyncrE0y+QF6t713fUrzWYFDNy551zmi8G4QJGJAv0DM02Dv6/9vIek7
+         TtTacD5jVz+YFW7aX/XG0C+9p1OpuKkX9NzJlwkkhvKwL3/WLwk5PgMD2jYOyWl2c3Yy
+         WOv+2ZKpsgwOW7biHleRWYff/m+cqezDBf8H/yT2iHjY+oeCyABSBqjja5sqiFN9f6TK
+         5vsoNrM2RXsHDhhy6l6nF3Th1lvu5/mtdeD7rOpTPGDPYWMKiWPh0pMzfHVFvuAbX7s/
+         NMR3rejlAHRdldug3pz35DFyPd9EgZDo+Tk8NA8nftQjs9FkfzRgexG8RnBEA72KkTJ7
+         COfA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0fvaosuLBdQ0OVAQww5VWIodjt0EwaHV4O8du0XtPukNJKHOOrk27gU9+5luTuwizUvWGUsgPvKX9@vger.kernel.org, AJvYcCU8e3NpUOsblVd51GgyK/GH0nf6+KMrOzHtEe+78+3MicMh3xqzwcy2rdlBNs1WJKvp7PLI3qHbfXRzW5Nw0r0+9wl+@vger.kernel.org, AJvYcCW2kNuyLwHIMDVB4X1EKMajdxl0xSr2ywWkHP8ji7gZCpwYSYoq/s78pPiRhydd1RBzqqg7S/5W638HI8JB@vger.kernel.org, AJvYcCX6iRCvP6DLOtatTT6RECwDo3+3ZREym+BAgNAJ8+gHiAITpJketIZZP5HMW22CHDONF8k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyK4wP7qIHxalbolScfpNjjugeJX+rudR24f6bMzQOyUPXAEDr7
+	0x78G6ZoA0JcCydsOvxd5HyNofvme7VBFEmF1cnfM62SLeC0pn2DPQJBAuDCqDDpA+fptHBMae0
+	vp47C7sD/OHRETqrYQPsz1Lh+TP0=
+X-Gm-Gg: ASbGncuUIWnm2jsXyq7zuo7bU0FGgMQNuvNkjetMxydZELdSU9NLVyTRSQQeG89eCHB
+	pO2ZP9Clcp6mGgfeJjgkBqP3nVCXfy5qfZEZYF1rHJ5rD11tCnejKidYA6Di0JKapsZoOoHdF
+X-Google-Smtp-Source: AGHT+IGf9eyqtItD7cVcNjPi3qnIkRLeIuC4KuUtTs0k8IHWIMuBxP01qGDI93YWTZbpDHV1elM8AorjQnBA5q1pTSM=
+X-Received: by 2002:a05:6871:8087:b0:29d:c85f:bc8c with SMTP id
+ 586e51a60fabf-2b32f4665f3mr12792188fac.36.1738530820380; Sun, 02 Feb 2025
+ 13:13:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250201104659.GA8168@1wt.eu>
+References: <20250202162921.335813-1-eyal.birger@gmail.com>
+ <20250202162921.335813-3-eyal.birger@gmail.com> <Z5_a33NQwrVC9n3r@krava>
+In-Reply-To: <Z5_a33NQwrVC9n3r@krava>
+From: Eyal Birger <eyal.birger@gmail.com>
+Date: Sun, 2 Feb 2025 13:13:28 -0800
+X-Gm-Features: AWEUYZmWR5YpDXatpSIxOx9bDPa966-XZ8hkoN1gdAmg5wYWJItSzUKk2wlvF0Y
+Message-ID: <CAHsH6GtpzR5_X4e0KphnyNSkKqBdgivfvyGQ1mbtA8fpnuu5sg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] selftests/seccomp: validate uretprobe syscall
+ passes through seccomp
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: kees@kernel.org, luto@amacapital.net, wad@chromium.org, oleg@redhat.com, 
+	mhiramat@kernel.org, andrii@kernel.org, alexei.starovoitov@gmail.com, 
+	cyphar@cyphar.com, songliubraving@fb.com, yhs@fb.com, 
+	john.fastabend@gmail.com, peterz@infradead.org, tglx@linutronix.de, 
+	bp@alien8.de, daniel@iogearbox.net, ast@kernel.org, andrii.nakryiko@gmail.com, 
+	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com, 
+	bpf@vger.kernel.org, linux-api@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-02-01 11:46:59+0100, Willy Tarreau wrote:
-> On Sat, Feb 01, 2025 at 11:41:58AM +0100, Thomas Weißschuh wrote:
-> > On 2025-02-01 11:34:38+0100, Willy Tarreau wrote:
-> > > On Thu, Jan 30, 2025 at 08:54:03PM +0100, Thomas Weißschuh wrote:
-> > > > From: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> > > > 
-> > > > Add an allocation-free implementation of readdir() and related
-> > > > functions. The implementation is modelled after the one for FILE.
-> > > 
-> > > I think you'd need to mention/remind the two important points that
-> > > come out of that choice, one being that DIR is a fake pointer that
-> > > instead stores ~fd so that it can be turned back to a valid FD, and
-> > > that subsequent readdir() calls will only work from the same file
-> > > unit since it relies on a local static storage.
-> > 
-> > Point one is true.
-> > Point two not so much. It is fine to have multiple directories open at
-> > the same time. All state is kept inside the kernel.
-> > Only the *current* return value is in the static buffer.
-> 
-> Excellent point! It also needs to be mentioned.
+On Sun, Feb 2, 2025 at 12:51=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> On Sun, Feb 02, 2025 at 08:29:21AM -0800, Eyal Birger wrote:
+>
+> SNIP
+>
+> > +TEST_F(URETPROBE, uretprobe_default_block)
+> > +{
+> > +     struct sock_filter filter[] =3D {
+> > +             BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
+> > +                     offsetof(struct seccomp_data, nr)),
+> > +             BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_exit_group, 1, 0),
+> > +             BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_KILL),
+> > +             BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
+> > +     };
+> > +     struct sock_fprog prog =3D {
+> > +             .len =3D (unsigned short)ARRAY_SIZE(filter),
+> > +             .filter =3D filter,
+> > +     };
+> > +
+> > +     ASSERT_EQ(0, run_probed_with_filter(&prog));
+> > +}
+> > +
+> > +TEST_F(URETPROBE, uretprobe_block_uretprobe_syscall)
+> > +{
+> > +     struct sock_filter filter[] =3D {
+> > +             BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
+> > +                     offsetof(struct seccomp_data, nr)),
+> > +#ifdef __NR_uretprobe
+> > +             BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_uretprobe, 0, 1),
+> > +#endif
+>
+> does it make sense to run these tests on archs without __NR_uretprobe ?
 
-Unfortunately POSIX is more specific in it's definition and forbids this:
+I considered ifdefing them out, but then thought that given it's not
+a lot of code it'd be better for the tests to be compiling and
+ready in case support is added on a new platform than to have to
+worry about that at that point.
 
-	The returned pointer, and pointers within the structure, might
-	be invalidated or the structure or the storage areas might be
-	overwritten by a subsequent call to readdir() on the same
-	directory stream.
-
-I see two possibilities:
-
-Allocate one 'struct dirent' as part of DIR.
-Only implement readdir_r().
-
-While readdir_r() is deprecated (according to readdir(3) but not
-readdir(3p)) this seems to be due to ABI issues, which shouldn't matter
-for nolibc anyways.
-
-Personally I would prefer readdir_r().
-
-<snip>
+Eyal.
