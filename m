@@ -1,94 +1,183 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE53C1F4714;
-	Sun,  2 Feb 2025 13:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BED41F63FE;
+	Sun,  2 Feb 2025 14:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738504609; cv=none; b=ENFdfW4VeDwqYJn9EERVJ3SeX/MYHzvdTpC9uxXnt2JWvU5bLmP7AzcoQRnQXEJxXeXUn90Bh19m/WOlhhamMdKt/esIB/ndB2eI+jgnDhkp3AZBH3U+ygXdufVYhynrg/pWYpjO71h2r/F8XqTeMzkpkRLsLFrdzpf6C1prvsA=
+	t=1738505093; cv=none; b=PJldYadLZowXQRKDetJoN4S8efRVih/pZCDNsdLocU8adN80IZvfOUW0TBU+s3MLOVqLaGwvq9z8hZHb/HLXwtI46E/EYT0pNS766cmDFbAyCygO00EW8WPBhTmDrnqUuwCOfQAsS8qVgpEgPuaKs7Vv8U7ogE21AP7PH7pqZS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738504609; c=relaxed/simple;
-	bh=GHtraLoVnc527Ri9N9ZFXy+zn58gDFxOrLai5V6sMkM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=TqnfYi9YjPhso6tWXp8CcOYO8y6NWLiTN/Dvrfg717XopJj7+ps0tmIbh4v/dyg7wsO9T0SvKHwh8xHuI5Z07f9nlvdkEAFwOWJ72iT932IjmQWMzHQh1z212bmSdfKyGMBERFtO27HN59lvjNpxbYHMq0ozEbNExA/gYxB2VfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=J1QnPkJu; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1738505093; c=relaxed/simple;
+	bh=uSAACILdXcmGs5Cazow/o3163E9ZhAaknS4XL/ORnEY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DCfliEBM1R/aeWwT4SxxPfS8SbT1uX9zCX59uhXAyYPposgEvcj2lKf7+K9p1WRkfCrK3BpOfvgWoP7XtP0TzwVSV7ty5wEoLMSWn49mV7oGr8KN13+60olRWvZfg/vrqkj9Wm70T/usuLKiivmkBUtd5BaEUiF0HE0wf6zD/7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kzNRWQpd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="J1QnPkJu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738504594; x=1739109394; i=markus.elfring@web.de;
-	bh=GHtraLoVnc527Ri9N9ZFXy+zn58gDFxOrLai5V6sMkM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=J1QnPkJuN2B5/N7HAq5rvz/hFXA3H3VjjRYDLQ08AvGr0xzZGGp7yYXk5NgmUnUP
-	 czxSNU8y+lMmJmpYCZuBm7PcgjdDJizHQGg+QNpwpUG0GlOC79tXqQAsv+Gvrcx0I
-	 GKxUfRv0oM0pUu93wtVKSEbXkfzwGwwG8pryQFhK4bFA97vHQBE/6HmCMtIWKGALO
-	 +wTOGAuWETT/dwVUcTI2t1Z0d2Z2CD3fv1SgQ7bEWzktyiiGVxVIu1d6FsQXq/UMb
-	 O7hnex32BN5nP4DHg7LSuZydn2DZ9GFrmWS06eR5Wt6livi3JPJhawAK9EKPkMtsZ
-	 DbU5dOCwhyUh0t0v3g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.26]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M9IOj-1tYFbJ0sHX-003RUp; Sun, 02
- Feb 2025 14:56:34 +0100
-Message-ID: <5b946d09-f67c-4a49-bba7-d73a549969b6@web.de>
-Date: Sun, 2 Feb 2025 14:56:32 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kzNRWQpd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D38C8C4CED1;
+	Sun,  2 Feb 2025 14:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738505093;
+	bh=uSAACILdXcmGs5Cazow/o3163E9ZhAaknS4XL/ORnEY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kzNRWQpd0XoMCl2ZD9MFvua+vSUgsqK2KqvIhPaLLyQtV5e4oi7faz9rWUkilRI0k
+	 OM/9cpmmkCyOLVD7xVch2bWSnK94s18QqC6ta6EYIooSrC63v8oxJsTJZ9LTdlDhKm
+	 wrya+FR80OWUc+a16j3J6AJLNOvSCqPVSgPB6QgIC7Jr0o8LMjBLlLcpVOzdWTZ7LL
+	 ClBmTU2n/br7rb7Ml6L02TTE1gv9J+RmcANydPGXpfefxA2qQSxSYQnSafXn5FDe/A
+	 nenNMxKIT9+zSwmwnQ1dhIFQHeF6qaUM5adGf5e024z2PwQwhwSJSAUnzsBbTgTyC9
+	 Q4pRcx3gSgEmQ==
+Date: Sun, 2 Feb 2025 15:04:50 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Fred Treven <ftreven@opensource.cirrus.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	patches@opensource.cirrus.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] dt-bindings: mfd: cirrus,cs40l26: Support for CS40L26
+Message-ID: <20250202-stoic-skunk-of-promise-cc3c4f@krzk-bin>
+References: <20250131195639.1784933-1-ftreven@opensource.cirrus.com>
+ <20250131195639.1784933-5-ftreven@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Kohei Enju <enjuk@amazon.com>, linux-scsi@vger.kernel.org,
- target-devel@vger.kernel.org, "Martin K. Petersen"
- <martin.petersen@oracle.com>
-Cc: Kohei Enju <kohei.enju@gmail.com>, LKML <linux-kernel@vger.kernel.org>
-References: <20250202090208.26890-1-enjuk@amazon.com>
-Subject: Re: [PATCH] scsi: target: remove unnecessary null checking for bio
- allocation
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250202090208.26890-1-enjuk@amazon.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:EZO/Y2yxPleJzlRxo72cMcXLVehajPgNHb/bRt6kGv10UK7R2b2
- DVyEAhuNWD3BL1UKTUNfxZmEaTQpPhHZCEDMH5sOZ1pRhHhouaDydEuguBIgvhFdVsyw+rB
- liHACz91m1l87GepSLs0BN3lwuDWw5fZKnsKwS57ikcIZ3/aDQaaWwd7pZ131GukFy9Idq/
- cw2lUPG0FfBA+bI7/XcIw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:SEMLvc8w+qo=;7y15rwq3EV3D475Svb+RztfCDWP
- wBnIXuugC7tJMFY3hlCQ7yY2RCSdAZXfmwVZ55oZ9q27OdCU/T4WrUrn/qxpEwzHwIfEwR/nX
- kNhEQ3h5PFIatRu9dG9vkxE6jOt7oM+RjNFt1VfMm03oiYXXBDB/AKcQikz2sFD1mtxckyqi+
- dTmunQM5szTxbT1H001WXELhV/ktbHaxa9yNTsBHXdmaa+6vGs4sAZ33aTTfS/V45zGiUGniC
- wHAxKe+DCM9BTl8ah991GrxOKqG1hXFDdnJkVfeDxfmvkshlx+Mqoq5pB6WmdwcTNBnzKebXx
- kHgqLDyzsqTl4x2SO7l/zQ63orVeRvUsUJwdxVb05abWMLUvdwiQvrULRzeTMu3dGvZJ9AKyZ
- 5fFb58MXw7OUyCRkphZE06mq8m/xM55POyO5qr8074GJHaEIwWMW7obEFClN5uIarLgjFrQZJ
- IaUScMrdk9yGvaxVSKnoNask4O4Qn4cG7FgQwwhAeA/Lp4Mmwc+JMrtD/aL71A8HdPqcr95H0
- w+/qTtctamSoqH+v5j/gIi+67LQvbmjBzlNOO3P/R8Z16U85aIaiKXtoLuEEcakM3rWd1F85W
- IkZsgOQ5Q9w/EnpiJl49oW3UDbjKuxf/WGXNOVblluyImLWy0hCl2v+70TtGIqWTcrZuOUasX
- VMfpNXkuRS5xBz6Tq2aeDqsvfrMpEb7bGDUJJ5gLwpYp1matjATTqd+zGO0vkp43b6BewDejH
- Ym/FmO52t7Kai2FwdcGDQznZJptZcR70cdzIg0vPNCI9M2K9JP4OHMBSLNG7ogbJV49GcTO/m
- sDZbxjfPMSfzaaysGZu2gJqQwUXDbQ//9Yv/BBcRF588SmTAagccPZf+i+R56d0eddk/4LxYa
- AuQAeDYIedn09ddCCmn0h85dcwuj7k8nLAqQs64MvXo/bsWByexNNkf0h6foNG8aSaLrcTakv
- 1DKResIclVJpP/sNpWkebYXRqiry3kZVI/YODL0nrbK25BR4rPp8Nvijxcg0Nnh9x3rkgEZZl
- lT81gyWoTRdJhR/hQskBbSzD6YA0mP+n9SFtQKPO1WSyFK7Cop1tUheOepeLbTIpqdt1sywhu
- sPxFcWAvZjZI/n6bWRBsZ+Me3qSzIiFlLKbZSQOScI0qT1OEisuFZWDgr2h874ZZXzKdv6xOE
- lKgz+9ZAq9MuSfm1Sw5C8KY9abt0Uh9587vkHDlDjoWH265Z+KLhalMBcL4+dV5oS4VK9nnNw
- iKjk1GYfY4J8YnhxXRRtXcvLfPL2XXBIWcxXCzUpogEVX9WrkYHmWFqEFan5+bcL40L1Sj+XZ
- bpg+kmKgz2Ibzz80melIONAfvv2MEaPpLzLNFkRTPYx0zSy2x81AQ1pA+Ein5+16DwY
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250131195639.1784933-5-ftreven@opensource.cirrus.com>
 
-> When __GFP_DIRECT_RECLAIM (included in GFP_NOIO) is specified,
-> bio_alloc_bioset() never fails to allocate a bio. For more details, see
-> the comment in bio_alloc_bioset() in block/bio.c
-
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.13#n94
+On Fri, Jan 31, 2025 at 01:56:35PM -0600, Fred Treven wrote:
+> Introduce required basic devicetree parameters for the
+> initial commit of CS40L26.
 
 
-Can a blank line be also omitted together with the mentioned compound statement?
+This looks like soundy thing, why isn't this in sound? but title
+mentions haptic, so maybe input?
 
-Regards,
-Markus
+Anyway, not MFD.
+
+
+> 
+> Signed-off-by: Fred Treven <ftreven@opensource.cirrus.com>
+> ---
+>  .../bindings/mfd/cirrus,cs40l26.yaml          | 81 +++++++++++++++++++
+>  MAINTAINERS                                   |  4 +-
+>  2 files changed, 83 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/cirrus,cs40l26.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/cirrus,cs40l26.yaml b/Documentation/devicetree/bindings/mfd/cirrus,cs40l26.yaml
+> new file mode 100644
+> index 000000000000..a3cccb1a2d92
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/cirrus,cs40l26.yaml
+> @@ -0,0 +1,81 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/cirrus,cs40l26.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Cirrus Logic CS40L26 Boosted Haptic Amplifier
+> +
+> +maintainers:
+> +  - Fred Treven <ftreven@opensource.cirrus.com>
+> +  - patches@opensource.cirrus.com
+> +
+> +description:
+> +  CS40L26 is a Boosted Haptic Driver with Integrated DSP, Waveform Memory,
+> +  Advanced Closed Loop Algorithms, and LRA protection
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - cirrus,cs40l26a
+> +      - cirrus,cs40l27b
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  va-supply:
+> +    description: Regulator for VA analog voltage
+> +
+> +  vp-supply:
+> +    description: Regulator for VP voltage
+> +
+> +  cirrus,bst-ipk-microamp:
+> +    description:
+> +      Maximum current that can be drawn by the device's boost converter.
+> +    multipleOf: 50000
+> +    minimum: 1600000
+> +    maximum: 4800000
+> +    default: 4500000
+> +
+> +  cirrus,bst-ctl-microvolt:
+> +    description: Maximum target voltage to which DSP may increase the VBST supply.
+
+There is no such supply as VBST (see above, I see only VA and VP), so is this output?
+
+> +    multipleOf: 50000
+> +    minimum: 2550000
+> +    maximum: 11000000
+> +    default: 11000000
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - reset-gpios
+
+Supplies as well
+
+
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      haptic-driver@58 {
+> +        compatible = "cirrus,cs40l26a";
+> +        reg = <0x58>;
+> +        interrupt-parent = <&gpio>;
+> +        interrupts = <57 IRQ_TYPE_LEVEL_LOW>;
+> +        reset-gpios = <&gpio 54 GPIO_ACTIVE_LOW>;
+> +        va-supply = <&vreg>;
+> +        vp-supply = <&vreg>;
+> +        cirrus,bst-ctl-microvolt = <2600000>;
+> +        cirrus,bst-ipk-microamp = <1650000>;
+> +      };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index bc8ce7af3303..9c4105bf0a32 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5546,11 +5546,11 @@ F:	sound/soc/codecs/cs*
+>  
+>  CIRRUS LOGIC HAPTIC DRIVERS
+>  M:	James Ogletree <jogletre@opensource.cirrus.com>
+> -M:	Fred Treven <fred.treven@cirrus.com>
+> +M:	Fred Treven <ftreven@opensource.cirrus.com>
+>  M:	Ben Bright <ben.bright@cirrus.com>
+>  L:	patches@opensource.cirrus.com
+>  S:	Supported
+> -F:	Documentation/devicetree/bindings/input/cirrus,cs40l50.yaml
+> +F:	Documentation/devicetree/bindings/input/cirrus,cs40l*
+
+So input or mfd? I don't understand this.
+
+Best regards,
+Krzysztof
+
