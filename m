@@ -1,66 +1,64 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BA81DB141
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 12:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8AF149C4D;
+	Sun,  2 Feb 2025 12:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738498580; cv=none; b=e4M+YY2xWuBls/fCqLVg7OLDiBmCdWzPs8p34yj+ohZ8fijiHp7FLcgrclzOHQmxhmP9x3tTxPe7mBV1VDcv9D8bBdx2NlxMe6hWOSxbgTje318MrVM3M9I7fTz2XuEiWjD9DwxFVkS40iq/MjSzQIPY2p5Ds2j1IZ2iN+PaFpQ=
+	t=1738498856; cv=none; b=syuOzDm56f7DwuqDHmhelHwUtGHKaP5y8mu+8jfg/oMim4eNx2a/XVlMVSN0Qku0NUDysopNWm665jSZgrRG2Opkb4NBX/tod4Kk86p/IuGGqDkN6QyeAtX7uO6TqaUolGzpkoq+u9WCb4NTEd9X3M0uEddsZznFj/H3ir/rDbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738498580; c=relaxed/simple;
-	bh=JNFb6Y/XdVHYoGkQV0QeQUNrQN1lFqLu5lpLIO5kuFE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UXpIpKm60nJr/hXiD0DtpawsFH8zkeVWk1qurPIMBRyE/YzoRo9i9LF6I3XIQ93mDesDTmcQK7taObPJEwHnkDguKswvModNz7cKhxzzruepJp8M08TofKbE2jztprydizHizuT5NKfcTMHAPg3c5T1VsQBwysoDmu7qJM0eLsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oHl597bl; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738498856; c=relaxed/simple;
+	bh=s849DsnFTggZktapb0+YgYRgRzElg/Ogh4dTWdMzKNQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Lj5rNUalMYq6D7BNmKjFJh1bX7ai4LhgfnP6l6FAp7Nl8bV4OO0Su6pqRtFPniM2680gYHyyb8sHKSo4qgKq2SCE8iIjhWJkryFExdAj4/pJ6uc9TT/AonRBmxNmZN5Mimu+ax0S+QFL+sjhrcTh3s2JXheOwBKVEYwLY/xaazA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cgrk+Zeq; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oHl597bl"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30219437e63so46686211fa.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 04:16:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cgrk+Zeq"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-46fd4bf03cbso45688021cf.0;
+        Sun, 02 Feb 2025 04:20:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738498577; x=1739103377; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ov3UCovqBDyElf7wgQMMIsdctTosh7cq25mLIhj+V3w=;
-        b=oHl597bldXrjDkLKrDwsqZBIFvlxUBjIMVBRgxwO+fb6o7eDABcNdC3HY+UQlVP90t
-         CmDI2qVBPYQZAeijNunYGEZEPULJJT+8E/hJI2LEqARFHHB4OWiSjoSrexVB6xGlx1o8
-         +LLA9F3bIi9Y9SxwaWuvE7qLNCbeFQGIKA1mWdVvIKxhSKW/va0rHhPHZjaSeROnjw5M
-         sdKPsBUwBJrx3iKFX08QpTddetsf3UlStTu2av92uSaDg6EkQZWEcZ3Bh0iRXWk7v5Px
-         XQ1XD5IUHl+HEm9weG0uvncaU0nhXXPEn/EdkQNkd5lwXYs0PlLbdIuxHP/w0P739btr
-         2org==
+        d=gmail.com; s=20230601; t=1738498853; x=1739103653; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0UZ/jhKzcMPvIsq154QirnMhNKke2d9TEFteb1izy9I=;
+        b=cgrk+ZeqwMP8aotaRGgrmtWGH5kcvxxMe/y4YW6/E+9aJPp6wlU20aLtPUeE7e7G7V
+         shvczgtSL4vDEk9Hxb0foSla8MCARyGptoSpJq0rfjRFNWpBiVxNAD91GOWwZQrzBZyl
+         rbNcGDl3eiqst9NHQzvGt1r0X/g7/hgLNp3c6pl5wou0FYAHjhgQihDENxEW8ByAOgrK
+         4YZxkxyhSZUlk9zHCHjYSB3blzsdLMu7RkTLF3mIhluvsP1NvhXwd5SjM95/05ubIP90
+         SQDE1pRf9TfwZh+se2nXUaqc1vDp1yTKjDW0qXoewL/SIC8wKA1dkk5AjLr8sMEENb4G
+         H23Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738498577; x=1739103377;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ov3UCovqBDyElf7wgQMMIsdctTosh7cq25mLIhj+V3w=;
-        b=QVk2wAsgcjqHGEPTM4uUmVCR1soRFBTgQHpldd02Bay27vXHwVfWKlieGKJ6e9dYxs
-         /RKuo3h+W7Xm9u1OwuLYdSJMqe4Va9jDPGrGuKWRjj0eluYeZG2yKRmyulBV4P4smbm+
-         J0+i0TJZHyZup8ZI3kBsdpWH7o6A5cs/AgJ6i8Fhc/57DSQJRyogK/ic3RMnHM1PVbbv
-         ZYzjfD5IHxe1tEmdyUiQezRUe1Ke/7pUHS7jc/kPdIv/5GTkAxtSaHXyqqfLBPHzK+5w
-         n2Nao2GdUYKNNMzp/a/d5coYwpoxNGUsVQmK5obUbn0ANf/GRdr3xE1nnzTJoCSVW+rt
-         B0tw==
-X-Forwarded-Encrypted: i=1; AJvYcCUP/IJONeYUH7788KeTKdqSRGKt9iKl/deQkM9ahx+ya59Gz2+q0kgPusfVZho30zNGexCV6LkhCieFaPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySBDZ/UlhArrn97ZPWHEai3i1DxSgvND+I1dR4UNYnbJilxUOH
-	JJOTw0BZuW0zWjdBpkgaIfp7zbI+k6QtErsD/PRxOpzFjlDNFcJkD0cor6XhKK8=
-X-Gm-Gg: ASbGncsWnguHF6YaFaOu7bV6VPrIsZ3nY6KejOs/Sr17W2+MYLrN1tdm8EAYxGJ9ATh
-	ErtwdAR/Lyo1fDcXcqoFsPyY7pzVXNChGG4CEbiMtIAMXSiRxFcsd5XXysNXT0DY6sXZTH0Tuio
-	YP0g5M1kqugVhqN8qe8ez9oLbhC2DZxMvXr4C5vaNSElTg+pJT7ZqMAS0HvpX2ewXxSVwNei0Pr
-	yInjYwyUTER9kCPQ0Yze0qXrZWjEMYlGyVvbNXBl0tKaRWQUoVcGXT0rprFD+3kXxCxtq7lzs3s
-	PP6vYGS56UFQVU0KXQCGkbc=
-X-Google-Smtp-Source: AGHT+IHU+cY7Sd2FJwu/fK+FejNxlwvrPxT3OOghYyb0HQvwwOLYe3yknR5BZu/qRImPl6zTGSjVfg==
-X-Received: by 2002:a05:6512:3d2a:b0:540:16b3:3699 with SMTP id 2adb3069b0e04-543f0ef2da1mr2889703e87.9.1738498576871;
-        Sun, 02 Feb 2025 04:16:16 -0800 (PST)
-Received: from umbar.lan ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebeb0a4esm950663e87.114.2025.02.02.04.16.15
+        d=1e100.net; s=20230601; t=1738498853; x=1739103653;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0UZ/jhKzcMPvIsq154QirnMhNKke2d9TEFteb1izy9I=;
+        b=us7rCD5m2QnMQt4cA/eiyK9NDoCo/ym149TMIJKBYFijuMen+Ry5W8IC0sqUG4sP3F
+         6fNVFW4lNsMiRM8wCJ+RfT98e0km5eyS7oYVA6wTSMe+6sV7Bqhs6gafaWMIpsJmOdTl
+         2IbnVcMnC5v0zR5txRzfcTRxD3n//2xG9tW64eAdP2mhByjfpRpS2Z048pXLtYTKUYfl
+         rlLaPNpyr7lUc4AZdJmVwAAoS/n8eQ5WHo+Wve0v36wflNlIVL4GLkNNhtk1f5W8LXnx
+         chqI9QJEL7y59Jr97MiVC25sKZX8PQMvQDPAa91nfjbIDMNdyehNVsQxHBKCUbOAl5tK
+         S8+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUUBc+f/eVQK5XVwqgyAQ7XIUnDIhi4Et8uAVZeBmTCbJC1qt8sAjPb+weqQj333zrPdguJyhDw/5LTwGg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxkpM/pT6z6dYLOtI6Z8YSKrWgj6hIs4R75FILe1U7b2lRiTxa
+	9SHvMycEUOobg2d1pax7LfQAUrWOUBmKWDvXgqekCaINZUPuG+vi
+X-Gm-Gg: ASbGncvnTXW12qaHAuYgWEzNYZyrsJ27j+cO5aAXHotjyx43kIHnxtrM4gqeTMNQsax
+	DzdAQyIQelz9Gr2X20MEm8Llc6Hmk4me/Ebhx1QuCpDf+ioo8esv6BFpIlC8PNGBf69cYhhFP7W
+	QzLx7o+KM0WYN8CU0Ton7tqHulVyuYbtTk+dI4eOqq94G0Btz2fX0dK7tN8nQxaNde2XzwsxJj7
+	8zKKDJPV1DG7/2nPzIQPLn7Qz1qmQN22fFm7sY4xb6jEze4pCu545UG67/9YMax6/StKBX57tbR
+	G9iD34vHvw/qb7zFcaT14jrAuJK1wnv0pREi5jY=
+X-Google-Smtp-Source: AGHT+IGH4BTmM2azLsNHKPXoYHpy3bWscnq6RtmhrPjJ9h4o5oWDhAdmx4zXoNzRByyAzgjhDY1uGw==
+X-Received: by 2002:a05:622a:5a05:b0:46d:fd08:7ca7 with SMTP id d75a77b69052e-46fd0a1d328mr280644241cf.6.1738498853012;
+        Sun, 02 Feb 2025 04:20:53 -0800 (PST)
+Received: from tamird-mac.local ([2600:4041:5be7:7c00:f07f:fb14:288d:6f1e])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf1728efsm37700331cf.62.2025.02.02.04.20.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 04:16:16 -0800 (PST)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sun, 02 Feb 2025 14:16:02 +0200
-Subject: [PATCH v3 6/6] arm64: dts: qcom: qrb2210-rb1: add Bluetooth
- support
+        Sun, 02 Feb 2025 04:20:51 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v6 0/4] rust: replace kernel::str::CStr w/ core::ffi::CStr
+Date: Sun, 02 Feb 2025 07:20:45 -0500
+Message-Id: <20250202-cstr-core-v6-0-8469cd6d29fd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,160 +67,106 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250202-rb1-bt-v3-6-6797a4467ced@linaro.org>
-References: <20250202-rb1-bt-v3-0-6797a4467ced@linaro.org>
-In-Reply-To: <20250202-rb1-bt-v3-0-6797a4467ced@linaro.org>
-To: Marcel Holtmann <marcel@holtmann.org>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, 
- Rocky Liao <quic_rjliao@quicinc.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3096;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=JNFb6Y/XdVHYoGkQV0QeQUNrQN1lFqLu5lpLIO5kuFE=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnn2IBlxn0ajqkpQJUmshzRsvUxqdik1OzGVj7t
- fB8L11OJ6uJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ59iAQAKCRCLPIo+Aiko
- 1UjUB/0XgJhzc/BM7b4PFzB0HBDUYi2cf0F8MCk7zDlSJF2i5R7Y9caEeQDxOtJLsLwumoRLsHk
- agl+SbPPMD1Ko63Ke//UhzKdl3q+0CSY841s1KHQaXSMTBnA3rb15CxX9c76QhEStY1pKeMpIIp
- LQOjfnEMjl+ZptAlrSK7lrcLtJeISceoQK0NVWvkEv3S1p9M5F200noLOF0mjxht2cp+JNvJioo
- sCCO0nObmvH1ncL0QIVmR5PLmHkq9AdgSUbgY3J69PMNsu9Gb/ViXkZwziVsLYVNfB51JDs6B+g
- MO81NMCey11gEa1Q5SB+2me34bViqTFIUjHaNJhFg/W65eFC
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-B4-Tracking: v=1; b=H4sIAB1jn2cC/zXMQQqDMBBA0avIrDuSpJqqq96jdBHjWENrRiYiL
+ eLdGwpdPvj8HRJJoARdsYPQFlLgmGFPBfjJxQdhGLLBKFMrozT6tAp6FsKh6tvettooP0LuF6E
+ xvH+v2z17FJ5xnYTc/1CpRre6PtvalqZp1AUNbm5g4S09P9dFeOU4u/AqPc9wHF+EhcaUngAAA
+ A==
+X-Change-ID: 20250201-cstr-core-d4b9b69120cf
+To: Michal Rostecki <vadorovsky@protonmail.com>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-Add support for the onboard WCN3950 BT/WiFi chip. Corresponding firmware
-has been merged to linux-firmware and should be available in the next
-release.
+This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
+have omitted Co-authored tags, as the end result is quite different.
 
-Bluetooth: hci0: setting up wcn399x
-Bluetooth: hci0: QCA Product ID   :0x0000000f
-Bluetooth: hci0: QCA SOC Version  :0x40070120
-Bluetooth: hci0: QCA ROM Version  :0x00000102
-Bluetooth: hci0: QCA Patch Version:0x00000001
-Bluetooth: hci0: QCA controller version 0x01200102
-Bluetooth: hci0: QCA Downloading qca/cmbtfw12.tlv
-Bluetooth: hci0: QCA Downloading qca/cmnv12.bin
-Bluetooth: hci0: QCA setup on UART is completed
+Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vadorovsky@protonmail.com/t/#u [0]
+Closes: https://github.com/Rust-for-Linux/linux/issues/1075
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/qrb2210-rb1.dts | 82 ++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+Changes in v6:
+- Split the work into several commits for ease of review.
+- Restore `{from,as}_char_ptr` to allow building on ARM (see commit
+  message).
+- Add `CStrExt` to `kernel::prelude`. (Alice Ryhl)
+- Remove `CStrExt::from_bytes_with_nul_unchecked_mut` and restore
+  `DerefMut for CString`. (Alice Ryhl)
+- Rename and hide `kernel::c_str!` to encourage use of C-String
+  literals.
+- Drop implementation and invocation changes in kunit.rs. (Trevor Gross)
+- Drop docs on `Display` impl. (Trevor Gross)
+- Rewrite docs in the style of the standard library.
+- Restore the `test_cstr_debug` unit tests to demonstrate that the
+  implementation has changed.
 
-diff --git a/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts b/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
-index 7a789b41c2f1887f0c41ae24da2e2fe8915ab13c..b9248505fadd3b986e188976435b786f43975dc3 100644
---- a/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
-+++ b/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
-@@ -15,6 +15,7 @@ / {
- 
- 	aliases {
- 		serial0 = &uart4;
-+		serial1 = &uart3;
- 		sdhc1 = &sdhc_1;
- 		sdhc2 = &sdhc_2;
- 	};
-@@ -549,6 +550,66 @@ can@0 {
- };
- 
- &tlmm {
-+	uart3_default: uart3-default-state {
-+		cts-pins {
-+			pins = "gpio8";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-bus-hold;
-+		};
-+
-+		rts-pins {
-+			pins = "gpio9";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+
-+		tx-pins {
-+			pins = "gpio10";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+
-+		rx-pins {
-+			pins = "gpio11";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	uart3_sleep: uart3-sleep-state {
-+		cts-pins {
-+			pins = "gpio8";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-bus-hold;
-+		};
-+
-+		rts-pins {
-+			pins = "gpio9";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+
-+		tx-pins {
-+			pins = "gpio10";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+
-+		rx-pins {
-+			pins = "gpio11";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	lt9611_rst_pin: lt9611-rst-state {
- 		pins = "gpio41";
- 		function = "gpio";
-@@ -584,6 +645,27 @@ key_volp_n: key-volp-n-state {
- 	};
- };
- 
-+&uart3 {
-+	/delete-property/ interrupts;
-+	interrupts-extended = <&intc GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+			      <&tlmm 11 IRQ_TYPE_LEVEL_HIGH>;
-+	pinctrl-0 = <&uart3_default>;
-+	pinctrl-1 = <&uart3_sleep>;
-+	pinctrl-names = "default", "sleep";
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3950-bt";
-+
-+		vddio-supply = <&pm4125_l15>;
-+		vddxo-supply = <&pm4125_l13>;
-+		vddrf-supply = <&pm4125_l10>;
-+		vddch0-supply = <&pm4125_l22>;
-+		enable-gpios = <&tlmm 87 GPIO_ACTIVE_HIGH>;
-+		max-speed = <3200000>;
-+	};
-+};
-+
- /* UART connected to the Micro-USB port via a FTDI chip */
- &uart4 {
- 	compatible = "qcom,geni-debug-uart";
+Changes in v5:
+- Keep the `test_cstr_display*` unit tests.
 
+Changes in v4:
+- Provide the `CStrExt` trait with `display()` method, which returns a
+   `CStrDisplay` wrapper with `Display` implementation. This addresses
+   the lack of `Display` implementation for `core::ffi::CStr`.
+- Provide `from_bytes_with_nul_unchecked_mut()` method in `CStrExt`,
+   which might be useful and is going to prevent manual, unsafe casts.
+- Fix a typo (s/preffered/prefered/).
+
+Changes in v3:
+- Fix the commit message.
+- Remove redundant braces in `use`, when only one item is imported.
+
+Changes in v2:
+- Do not remove `c_str` macro. While it's preferred to use C-string
+   literals, there are two cases where `c_str` is helpful:
+   - When working with macros, which already return a Rust string literal
+     (e.g. `stringify!`).
+   - When building macros, where we want to take a Rust string literal as an
+     argument (for caller's convenience), but still use it as a C-string
+     internally.
+- Use Rust literals as arguments in macros (`new_mutex`, `new_condvar`,
+   `new_mutex`). Use the `c_str` macro to convert these literals to C-string
+   literals.
+- Use `c_str` in kunit.rs for converting the output of `stringify!` to a
+   `CStr`.
+- Remove `DerefMut` implementation for `CString`.
+
+---
+Tamir Duberstein (4):
+      rust: move BStr,CStr Display impls behind method
+      rust: replace `CStr` with `core::ffi::CStr`
+      rust: replace `kernel::c_str!` with C-Strings
+      rust: remove core::ffi::CStr reexport
+
+ drivers/gpu/drm/drm_panic_qr.rs  |   2 +-
+ drivers/net/phy/ax88796b_rust.rs |   7 +-
+ drivers/net/phy/qt2025.rs        |   5 +-
+ rust/kernel/device.rs            |   5 +-
+ rust/kernel/error.rs             |  10 +-
+ rust/kernel/firmware.rs          |   9 +-
+ rust/kernel/kunit.rs             |  18 +-
+ rust/kernel/miscdevice.rs        |   5 +-
+ rust/kernel/net/phy.rs           |   8 +-
+ rust/kernel/prelude.rs           |   2 +-
+ rust/kernel/seq_file.rs          |   4 +-
+ rust/kernel/str.rs               | 579 +++++++++++----------------------------
+ rust/kernel/sync.rs              |   4 +-
+ rust/kernel/sync/condvar.rs      |   4 +-
+ rust/kernel/sync/lock.rs         |   5 +-
+ rust/kernel/sync/lock/global.rs  |   7 +-
+ rust/kernel/sync/poll.rs         |   1 +
+ rust/kernel/workqueue.rs         |   3 +-
+ 18 files changed, 210 insertions(+), 468 deletions(-)
+---
+base-commit: bdf3d0e99c106932167de56141be5092762bab48
+change-id: 20250201-cstr-core-d4b9b69120cf
+
+Best regards,
 -- 
-2.39.5
+Tamir Duberstein <tamird@gmail.com>
 
