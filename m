@@ -1,146 +1,93 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E15C1581F9;
-	Sun,  2 Feb 2025 21:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972061DDC3E
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 21:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738532072; cv=none; b=JMkQXVCIIaxe+MPj1VK1E5tO4dgOLSXB05rU93VyXpNWxB8VSQ5DWinCke6UnpJIwmyXKScSWVwKXBHow5vF2FPb99xvctcrDGXv9i1iWgUK/PcdfTvvNIDkPOT2pnF8wb1XJxKzN/3HXbmNxU0W8IUnYao/uq5OiD+6Y6vk1Xw=
+	t=1738533557; cv=none; b=oq5aQnzfXRoRm7GjbrNfmn/AcWPU0+radjBX3nSeZZbSaop3EwMokKN5y3hLSvV7Y55SldRagS9OUsWgJZTan5cAXt+47QAdjLOKnERGO5GBQ/BG+4732JaMXfGZP42qfl8RFCJ7jzjdX1dTs0yvvu5ePSyfYPiLVso6decp6LI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738532072; c=relaxed/simple;
-	bh=4hvX3V+SUJqChF35x8aAIao5Jeu/dWFA1HRIIuZm9jU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HepBznRg9r4J/XI4A3cszGboL4dtvaE7nLLjiZ+vwJGT9IDskjE1+6PbK+ix5OsEsCqsrRForimwi/hcmqoYg6xZJfGCaNxkWtdw/BGAKYurKwtI9OucaRuJGC1yjWarBB+xaJo4wqnxi4UMiWamvYy7lnEQwIEPRrClUpOnJOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b=lNI4wnLn; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1738533557; c=relaxed/simple;
+	bh=JJe2oeO4WPPMHV7iT9dW9djvzt5YTGH2xFleNURv/vY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P3HbfhjfIBLQ8MxhdY7/+2hh7SO71IchNiastSkZTgrDqrzOi/38JXf3ZSuka8zET/fiO0AWOU+v3SkHKsptvmghtm62GwUPaY+b9jr/9e29hD8KHKYbQAXrrO3i7MNx1a+kH+4PbZmqEsmRNFt4f2yvoK59dtiE1sml3eeSTHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=ExqYfCz6; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b="lNI4wnLn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1738532026; x=1739136826; i=j.neuschaefer@gmx.net;
-	bh=G2eHfhQuejodnDOibyT663weFQ71Yl8E8QZl/5oxVv0=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=lNI4wnLn373mkDHyreS/4go2WqLLFqysiF0LW3XiW1x/TglUrcPjkWZnauK8Ui1R
-	 XU0ggv4mZdMXv3WIM/qA8OqL7HzNFmRqsXPGeFv9qLqrDmBT9CieOrZXNo3TRsVwk
-	 5M5fmis0I0ZqKFicCRUGYCSGRY00DySlih9CvpHUYhrtW0TI+4+LHWAK3xKKq9uiR
-	 AF9sgaalNQduw0ptfF6P0GLSwGBTtZ2Sbnp0wUl9NT0xaO+o63RoPV2h2xRaj9KRH
-	 T47MTCEDaWQ9lzGI6z2ONFo/9+tBc9+MSvoR7Cu76PREt+9/X+8/eolBYqU9OY5tI
-	 ME/oP5Cwa5qXcTCPKA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from probook ([89.1.210.218]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MAfYw-1tlHAA11D6-007KTC; Sun, 02
- Feb 2025 22:33:46 +0100
-Date: Sun, 2 Feb 2025 22:33:36 +0100
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To: "A. Wilcox" <AWilcox@wilcox-tech.com>
-Cc: Arnd Bergmann <arnd@kernel.org>, kvm@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Alexander Graf <graf@amazon.com>, Crystal Wood <crwood@redhat.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>, Paul Durrant <paul@xen.org>,
-	Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 4/5] powerpc: kvm: drop 32-bit book3s
-Message-ID: <Z5_ksID8Gv_Tg5F7@probook>
-References: <20241221214223.3046298-1-arnd@kernel.org>
- <20241221214223.3046298-5-arnd@kernel.org>
- <9B9E07F0-3373-4F59-BE4C-E6C425B3C36D@Wilcox-Tech.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="ExqYfCz6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=GSnzrCxUEngAgik7AYtqUtnWRLHqHq4tUTTifRQr5Ew=; b=ExqYfCz6D9cBjzz6
+	wH89VMpf3twPsNEwv1T4wZ/RyLZlW/meCBCtocVt+FoR/d/wFchE8HSDiPQMbpxPT6ycOHfzWzRyo
+	ntRnDPJchwWV9hHkELGXfrN8PTK2Q6diDR9H/y3+cMjZ8A2Srd+t7RgIpO4q7SOE6grWLXXT/x916
+	7v+OI9uxg/K7Xx6z/2wgQ3tu6Ewy585byiOsR1qEAElWSVZUxuW3dFhkYOQXa8UBToFwTsgL0k6qM
+	Wh4ZkPiCzMRK+uKiGbk2U2pp9eVHzOJknSSmDMOrAt7QVZNG9WhQDWEmEGvk4sCsIR1WZAX6Nfi1p
+	fUpdJDRn0oa6/DvbBw==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1tehzV-00D9GV-0v;
+	Sun, 02 Feb 2025 21:58:57 +0000
+From: linux@treblig.org
+To: patrik.r.jakobsson@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	alexander.deucher@amd.com,
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	Rodrigo.Siqueira@amd.com,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch
+Cc: amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH 0/7] drm/amd/display: More deadcoding
+Date: Sun,  2 Feb 2025 21:58:49 +0000
+Message-ID: <20250202215856.252439-1-linux@treblig.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <9B9E07F0-3373-4F59-BE4C-E6C425B3C36D@Wilcox-Tech.com>
-X-Provags-ID: V03:K1:9/xKYk+mj967yFEydW37x3unDxvlzZDdriScJwSUFGFBVPwz408
- R4O7IVTtnXePPO+gVIX8jktVCSK3SLk5KSpqblHo9ocA7Uo1TTIFaSqN1IJ0B/nSnHdz+v4
- BQJUDyiTjBjastoDpF/hhIklw774C2Nk4pN/wxnwAA2nZ2/XzPYAWN671OjQUfPE/hjZF1w
- siMMlhFzAtG6iMd99XMIg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lvJI8XggPhM=;4W9A0Oo2CZWjUIca1pWrNgsKvKX
- z8V5mRgOrYvpaHbx85mspd7QV2ItcjEq+fbuEkib8xY69HipoOK+VJcOAfiLKjAnQJa/cEWvo
- CyiUn1zvL9+XgfNLjZDQvyYLO0OegTg5uO6ds6wuAoImA3OZR02zmCDlQoBOZ9Os/C7ncaKHX
- 70bHqXPyIx5rnA5PX8W9/Gx/G2VS6JmbZloyyR+qYGwoXMa82ikMXsHgpXshd/zLqq4sSRHoV
- brXeZgfYB3/4Q/i8lba34oeUVPvRB47g7yr3WhGmhykJVM3QHf5w+IWCNM4T4JwjPSqcbUnBy
- pW5753Wdt1o3+XSulwpYV+SF3ehRAAk8zx7oc1eskQUwPEFPv3oL1tNRzd7KDJ7QGTMXKcMRR
- yJQnkoyomns15uYcWXEWc4eJ0Q3nqODjrT7/oPRM6PfF1axZPTcN9Ivt/coi8oAHzidpeZRw0
- 1Nj7DtAAuIiIqTiXFnM71/83afL3vQKgrXVDhbGQ1eHgcUKHDNURj8Ov+oopEjNcqjdlWGWoN
- y/06JKYTlBaAC0sx1Fr8k1oOerFxYn2v0A6Nocs597aQ1BLqzSDJUkMmq+p9P2Xm8dVSsGGu4
- +4an3otnMm7ZdorWY7g0UeLINMt1RvZyhf3fM1MuxetqEnqnIxXuoEaAUo/5g5Axxnc7d+90+
- CqQvSZiR32dd7HV8x/oBhj3492A7USPGpPBHD4yhGucmE0EQGVrTjkK8T9VYH8nj9cnnIYytQ
- c78FwW3q6Jv7eRX43bsv6QZUi4Y1zzlJYyE8P/w9Z+DTvFNbOjo4v0JtfT9UWCC2FhaBW9Oqe
- anaWkC6cv6od7SLhWicorQPsOM2UcDiSTAWA1JBBk92fj+U5TadCXASiSa9qQiymc4ZHM3yzO
- lM7OUKempveM0+57H8oZtb5No0NKCLwN9BQw0eLJ5IAWaDGAEIDJxt+ql7gxKacp5U/eU07Qj
- +x4rzmw88GtPCbybRi41JUDTYLunI5I5clPvmpGMh+Q+iArBl4xRCVHV5M51h1gBJZkv85dmD
- aH2sWMqQaEJ7FBWhGUSRu1GLj09VqIO7JAoY2C9TpRmf/ao9g02EJaYOiaCtGJWsPsri7Jq9g
- rHR6DYNhdqLKm2SF8kAE86rpcJ8B0HKl2UyhO/OCxLvlUOemuYGVqW3BDk5RgNpYgKaXWeuiW
- ThzTcYCT9+ztyzdFsFjgwtA56kVcQc7C+VVodKwz9RtObFvhrK1yC2CXdCA+KcPiSnCTKvqes
- 2EQX8ZYBWmYwZFGRWQrJtQmcKMRszV78bn8FnLMJ/9/2KEifFR7S9q34teR7+FFb4iUM9FW6x
- 3zyl/UGrzimjzwEO+HD7CetGSspTpweqegk7AqIu8he+lY=
+Content-Transfer-Encoding: 8bit
 
-On Sat, Dec 21, 2024 at 08:13:12PM -0600, A. Wilcox wrote:
-> On Dec 21, 2024, at 3:42=E2=80=AFPM, Arnd Bergmann <arnd@kernel.org> wro=
-te:
-> >
-> > From: Arnd Bergmann <arnd@arndb.de>
-> >
-> > Support for KVM on 32-bit Book III-s implementations was added in 2010
-> > and supports PowerMac, CHRP, and embedded platforms using the Freescal=
-e G4
-> > (mpc74xx), e300 (mpc83xx) and e600 (mpc86xx) CPUs from 2003 to 2009.
-> >
-> > Earlier 603/604/750 machines might work but would be even more limited
-> > by their available memory.
-> >
-> > The only likely users of KVM on any of these were the final Apple
-> > PowerMac/PowerBook/iBook G4 models with 2GB of RAM that were at the hi=
-gh
-> > end 20 years ago but are just as obsolete as their x86-32 counterparts=
-.
-> > The code has been orphaned since 2023.
-> >
-> > There is still a need to support 32-bit guests in order to better
-> > debug problems on ppc32 kernels. This should work in theory on both
-> > 64-bit booke and on 64-bit book3s hosts, but it would be good to
-> > confirm that this is still the case before the known working option
-> > gets removed.
-[...]
-> That said, I would like to keep the support alive for more than just
-> ppc32 kernel testing.  There are plenty of Power Macs with enough
-> memory to run some environments within KVM.  Ad=C3=A9lie=E2=80=99s new r=
-elease
-> boots a full XFCE desktop in under 300 MB RAM, so even a 1 GB machine
-> has enough memory to run AmigaOS, Mac OS 9, or another XFCE in KVM.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-FWIW, I second this. I do intend to get KVM to run on my e300-based
-board for some relatively light guests such as Mac OS 9. I suspect I
-won't be able to contribute much to the maintenance, though.
+Another small pile of deadcode patches.
 
-Best regards,
-J. Neusch=C3=A4fer
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+
+
+Dr. David Alan Gilbert (7):
+  drm/amd/display: Remove unused mpc1_is_mpcc_idle
+  drm/amd/display: Remove unused freesync functions
+  drm/amd/display: Remove unused dc_stream_get_crtc_position
+  drm/amd/display: Remove unused get_clock_requirements_for_state
+  drm/amd/display: Remove unused hubbub1_toggle_watermark_change_req
+  drm/amd/display: Remove unused get_max_support_fbc_buffersize
+  drm/amd/display: Remove unused
+    link_enc_cfg_get_link_enc_used_by_stream
+
+ drivers/gpu/drm/amd/display/dc/core/dc.c      |  39 -----
+ .../drm/amd/display/dc/core/dc_link_enc_cfg.c |  11 --
+ drivers/gpu/drm/amd/display/dc/dc.h           |   2 -
+ drivers/gpu/drm/amd/display/dc/dc_stream.h    |  12 --
+ .../amd/display/dc/dce110/dce110_compressor.c |  13 --
+ .../amd/display/dc/dce110/dce110_compressor.h |   2 -
+ .../display/dc/hubbub/dcn10/dcn10_hubbub.c    |  18 ---
+ .../display/dc/hubbub/dcn10/dcn10_hubbub.h    |   3 -
+ .../gpu/drm/amd/display/dc/inc/link_enc_cfg.h |   5 -
+ .../drm/amd/display/dc/mpc/dcn10/dcn10_mpc.c  |  16 --
+ .../drm/amd/display/dc/mpc/dcn10/dcn10_mpc.h  |   4 -
+ .../amd/display/modules/freesync/freesync.c   | 137 ------------------
+ .../amd/display/modules/inc/mod_freesync.h    |  26 ----
+ 13 files changed, 288 deletions(-)
+
+-- 
+2.48.1
+
