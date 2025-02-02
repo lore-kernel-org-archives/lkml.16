@@ -1,190 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95E0101E6
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 23:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB6E4A04;
+	Sun,  2 Feb 2025 23:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738538127; cv=none; b=hXMlRVKboq+zJMcl72VyJo9E8fkZp9zyzGP3uORFfGVgfhYsbN1BddSWLKRaNW9JMOVu+ww7Vw9BYTAcV87u5OalN8f+1ZXsTAFOPiEa93ajGQLpwyt7dM4LkxtqtQs2uxSts+lMP86M8jAsRr4ivU0TWxrCI0hUlbKdPAaxw6A=
+	t=1738538212; cv=none; b=NCFlME3Hy1CxBxrRIJ/hlGB7K0wrcXb7P78wGAXiktBUZqfmMmnxBR1spsf7VN3IblNjONRFh1GASMitp3sofdL+AK/ELg6tAnGqYCcnhGtQQPy6o2Zs84GyteM9VWCUp04njmvNQyyTCplSH8I1cmW2ML8QSP+kqrnF+i/pM+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738538127; c=relaxed/simple;
-	bh=z4db+2e0h419DE1q2WVYFefMz+/sAeD1xP8xxo9CJHM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O2yhaJt7Zjs5lI4HVZRjTQmJRgn+nRxxgh+nkvAA3yo1eFW8mMPWFo8NaCwSxRivIoplp+bC4Cqy4juomJwEznuUakNZn1u5+MlwMPM5go9QmC2wTy7wsPCe0M7QWKj2UaUBUGZorpNr/7NG+FXPnlr8bQ86u/1Bd+5wCTVx+uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KeaaxaV9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738538212; c=relaxed/simple;
+	bh=PXKBxt11d0e0OpS/oJYiwKCQRPmWhBrktefRD944lKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IGLq9DBG41EFbUDCZJLgu5GJqFgrhJ8SeSa20cKTXgq/lGWCvKVADBoqvKsdGnYaOCuRsVDOm9D2j9VwZzvGMkmNFRf4RmMx72kMu+PwRkq3VTPb0WFyOYM+hMbbj0yZfikUAJM7Yw73cs6DZhvjB15PUIHBu/mFC6vdxsd00DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=g1ZQCf/+; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KeaaxaV9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738538124;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e1dos8mPCCNcJjz8w4voHe85/j4TJkmhqF45HVaBd4U=;
-	b=KeaaxaV9Q03bbJjlcMGJl0ejq5dguI85UEZqQ3VVBeXMYdQJ5DC6uWPzI8NgBV/F8Vm+xz
-	HTSskg36EMYv5B9poIaejL9+YuOb86DmFIh/wV8u2WOh2pSgCXF5IhrIA3PKPxKMG9prpJ
-	AFHOFTbf1kdYeYrI/GaZAZ5wxjS2FSY=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-544-8VTN2AkBP5ycuudZPQ0iDg-1; Sun, 02 Feb 2025 18:15:23 -0500
-X-MC-Unique: 8VTN2AkBP5ycuudZPQ0iDg-1
-X-Mimecast-MFC-AGG-ID: 8VTN2AkBP5ycuudZPQ0iDg
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-216311faa51so67361405ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 15:15:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738538122; x=1739142922;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e1dos8mPCCNcJjz8w4voHe85/j4TJkmhqF45HVaBd4U=;
-        b=OfQgbjUg+Ni6wRiKRI+TE76hs3Udhd6Jo4fDPZ3e0h+G2cONpOmDxWlvfOgpXPmlaD
-         bmStXyPQi03yXME2qQCzeKAUtsTgTc7Fli/v4HfATNJOZLQQFkh2zsozja9QIXRUYoiG
-         NuO0L4PlkWWNpXwmxhzG8+i1V218gN04lN6SdmqP0oUXZc1bg+yecMLalM6JzZDwM4R3
-         cwp1Qd9SGejS07+hJ+cqa8KwpqeKshPlfYi/5FXDq8ZaRL3ODH89b1sVW1oA34PO5XVv
-         joss+/VDOG6LqfVRKuFZnzS526W2/UNxzmlAS+pzVf5JOQrqtZX0LN4tDycxeqjXrjPC
-         dWZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWt6QDUYWOIoHu76KDhpvE4J7qm9XjXl1qkswvqFvw4+6icdOGXByn1IqITlIpxfsLSF7xCBdgnYYI3Kis=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFDaKOr7lAdiWIkvbFMhaVcJO0y7QTXgnziyJNTwo4CJq835kp
-	IuKuSTEAk0HqFg+mkygx9C51dSHz9SY2ABGlJKiqd5Nc835kzFCA+BZjfbX6gWzkcxxsJArX7fI
-	8pVydLZHK/HoNpNndFZ6baZtWcw+HsmZ4LXypZnlw+sY4v8iZvUXCOelScLR3WA==
-X-Gm-Gg: ASbGncuOhOfGzfHLliWb6EHTDFV1rahBwMFo0PWn0ygAjSUVUYkP9czt4LjvOrv5KdC
-	b00Wg7kmIKlPRKylLlQD9u0NNtC/VxBbOPXYaoT8EX3stPBVTqYuYmMAqOqwirgrjQAZWxCepDN
-	voK5KFFAOLazrQYAhev8+pVycU7XJxgFfLPdXsxBbKIPpwDjrGIR85OpcR065GznVbv0ro0MIx0
-	QiSwO6t/77vJmAzsclEKjznNnEOJBVIlCmX4qxsQvLK88p+zeTG5M/Dqq1b6GqSAVj8CUgRbiy1
-	j8MwYQ==
-X-Received: by 2002:a17:903:120a:b0:216:3f6e:fabd with SMTP id d9443c01a7336-21edd7eafccmr173599025ad.7.1738538122327;
-        Sun, 02 Feb 2025 15:15:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE2mf76DirOg9TZyfOkrJfXsutpQ6g81h2feZA7/LYyJlI04cSOqf6NavNatW10Gphrl5eu/w==
-X-Received: by 2002:a17:903:120a:b0:216:3f6e:fabd with SMTP id d9443c01a7336-21edd7eafccmr173598665ad.7.1738538121968;
-        Sun, 02 Feb 2025 15:15:21 -0800 (PST)
-Received: from [192.168.68.55] ([180.233.125.64])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32ea5fesm62974185ad.132.2025.02.02.15.15.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Feb 2025 15:15:21 -0800 (PST)
-Message-ID: <34990c4f-b65e-4af2-8348-87ea078afc16@redhat.com>
-Date: Mon, 3 Feb 2025 09:15:12 +1000
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="g1ZQCf/+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1738538197;
+	bh=+PKTUOKHTl1mPmuX8o8gGRxGihjPgEXOJK7byYPp1uw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=g1ZQCf/+AnwJtqrsKClWqcdEWUQJLmM4GhAFpnDw/bMvHNbT5k9OpFnXoOEwGu12l
+	 9TpmidzlQcvcj1kImSxXnntMCWs+8sm8uH4iwmaK+1HCTZEbP6ZrjNlrc0iPIuPB4U
+	 wYh5NHeq1BWb/NkOvpiWbH1r98YjO5qpAteu34FZsLQAXrko18KNt36HetJNtbbiLy
+	 TNYBanpaW4fXJScNwbiWQRUg9Cm/s3pkV8b8FpLOto8F5zkeC6+3/nQqYrxIvZHvsw
+	 R0G+vQWYxfw+LXLvsxqzhWvRuXDfqZNauTSV6MofXM92giEtbN0iklYPfHDd7CokAx
+	 VfbTZGVzkQnNQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YmQVs1pHTz4w2J;
+	Mon,  3 Feb 2025 10:16:37 +1100 (AEDT)
+Date: Mon, 3 Feb 2025 10:16:45 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the mm-hotfixes tree
+Message-ID: <20250203101645.5af941e5@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 34/43] arm64: RME: Propagate number of breakpoints and
- watchpoints to userspace
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20241212155610.76522-1-steven.price@arm.com>
- <20241212155610.76522-35-steven.price@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20241212155610.76522-35-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/vjfGjrJjqZS82YUIM5ZQObe";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 12/13/24 1:55 AM, Steven Price wrote:
-> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> 
-> The RMM describes the maximum number of BPs/WPs available to the guest
-> in the Feature Register 0. Propagate those numbers into ID_AA64DFR0_EL1,
-> which is visible to userspace. A VMM needs this information in order to
-> set up realm parameters.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->   arch/arm64/include/asm/kvm_rme.h |  2 ++
->   arch/arm64/kvm/rme.c             | 22 ++++++++++++++++++++++
->   arch/arm64/kvm/sys_regs.c        |  2 +-
->   3 files changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
-> index 0d89ab1645c1..f8e37907e2d5 100644
-> --- a/arch/arm64/include/asm/kvm_rme.h
-> +++ b/arch/arm64/include/asm/kvm_rme.h
-> @@ -85,6 +85,8 @@ void kvm_init_rme(void);
->   u32 kvm_realm_ipa_limit(void);
->   u32 kvm_realm_vgic_nr_lr(void);
->   
-> +u64 kvm_realm_reset_id_aa64dfr0_el1(const struct kvm_vcpu *vcpu, u64 val);
-> +
->   bool kvm_rme_supports_sve(void);
->   
->   int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap);
-> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-> index e562e77c1f94..d21042d5ec9a 100644
-> --- a/arch/arm64/kvm/rme.c
-> +++ b/arch/arm64/kvm/rme.c
-> @@ -63,6 +63,28 @@ u32 kvm_realm_vgic_nr_lr(void)
->   	return u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_GICV3_NUM_LRS);
->   }
->   
-> +u64 kvm_realm_reset_id_aa64dfr0_el1(const struct kvm_vcpu *vcpu, u64 val)
-> +{
-> +	u32 bps = u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_NUM_BPS);
-> +	u32 wps = u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_NUM_WPS);
-> +	u32 ctx_cmps;
-> +
-> +	if (!kvm_is_realm(vcpu->kvm))
-> +		return val;
-> +
-> +	/* Ensure CTX_CMPs is still valid */
-> +	ctx_cmps = FIELD_GET(ID_AA64DFR0_EL1_CTX_CMPs, val);
-> +	ctx_cmps = min(bps, ctx_cmps);
-> +
-> +	val &= ~(ID_AA64DFR0_EL1_BRPs_MASK | ID_AA64DFR0_EL1_WRPs_MASK |
-> +		 ID_AA64DFR0_EL1_CTX_CMPs);
-> +	val |= FIELD_PREP(ID_AA64DFR0_EL1_BRPs_MASK, bps) |
-> +	       FIELD_PREP(ID_AA64DFR0_EL1_WRPs_MASK, wps) |
-> +	       FIELD_PREP(ID_AA64DFR0_EL1_CTX_CMPs, ctx_cmps);
-> +
-> +	return val;
-> +}
-> +
+--Sig_/vjfGjrJjqZS82YUIM5ZQObe
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The the filed ID_AA64DFR0_EL1_WRPs_MASK of the system register ID_AA64DFR0_EL1 is
-writtable, as declared in sys_reg.c. We need to consolidate the field when the
-system register is written.
+Hi all,
 
-         ID_FILTERED(ID_AA64DFR0_EL1, id_aa64dfr0_el1,
-                     ID_AA64DFR0_EL1_DoubleLock_MASK |
-                     ID_AA64DFR0_EL1_WRPs_MASK |
-                     ID_AA64DFR0_EL1_PMUVer_MASK |
-                     ID_AA64DFR0_EL1_DebugVer_MASK),
+The following commits are also in Linus Torvalds' tree as different
+commits (but the same patches):
 
->   static int get_start_level(struct realm *realm)
->   {
->   	return 4 - stage2_pgtable_levels(realm->ia_bits);
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index a4713609e230..55cde43b36b9 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1806,7 +1806,7 @@ static u64 sanitise_id_aa64dfr0_el1(const struct kvm_vcpu *vcpu, u64 val)
->   	/* Hide SPE from guests */
->   	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
->   
-> -	return val;
-> +	return kvm_realm_reset_id_aa64dfr0_el1(vcpu, val);
->   }
->   
->   static int set_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
+  0d1fdb1abcf4 ("mm: kmemleak: fix upper boundary check for physical addres=
+s objects")
+  13efc25a93c4 ("mm, swap: fix reclaim offset calculation error during allo=
+cation")
+  280237fa2b18 ("MAINTAINERS: include linux-mm for xarray maintenance")
+  2dc3d63a8128 ("mm/zsmalloc: add __maybe_unused attribute for is_first_zpd=
+esc()")
+  483956dbf826 ("nilfs2: fix possible int overflows in nilfs_fiemap()")
+  4b02919df8fc ("mailmap: add an entry for Hamza Mahfooz")
+  4f132493c48f (".mailmap: update email address for Christopher Obbard")
+  5e3b8c974521 ("mm/fake-numa: handle cases with no SRAT info")
+  828c1ac1a256 ("scripts/gdb: fix aarch64 userspace detection in get_curren=
+t_task")
+  8b19277c1a37 ("revert "xarray: port tests to kunit"")
+  a691d3521e67 ("ocfs2: fix incorrect CPU endianness conversion causing mou=
+nt failure")
+  a87ee033f9bb ("mm/hugetlb: fix hugepage allocation for interleaved memory=
+ nodes")
+  b8e6ed6f63be ("mm/vmscan: fix hard LOCKUP in function isolate_lru_folios")
+  c874f6e4a5f9 ("MAINTAINERS: add lib/test_xarray.c")
+  cfe2631fe1d6 ("kernel: be more careful about dup_mmap() failures and upro=
+be registering")
+  dc846d3998bc ("MAINTAINERS: mailmap: update Yosry Ahmed's email address")
+  e5be1e9410fc ("kfence: skip __GFP_THISNODE allocations on NUMA systems")
+  e8185a5242c1 ("mm: compaction: use the proper flag to determine watermark=
+s")
+  ee9192a230bb ("mailmap, MAINTAINERS, docs: update Carlos's email address")
 
-Thanks,
-Gavin
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/vjfGjrJjqZS82YUIM5ZQObe
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmef/N0ACgkQAVBC80lX
+0Gx25wf9EEC4Rig63N0Av+PQL+n9fl2rkDr/TyAeujSuEBi8LK+icEevmaHwYtfm
+v9CX5AACnt3qDW9djJHn+TyOUhjAHZGwuhL5XNrZ/pzKDSJz19qCHcIwxF7RPZmB
+mApHa2osjj2bPa1hdtkqs+C7Ts5aEgSvaNXxf2N4DekECLqLg8PkQ5OmUaomYD9m
+0B23wh8N8cFTb5PUm4mMAJYmk5DgCCZeoP0/7Jl0oSNs7pB5yRZ1S+WCEr9JO7nG
+qbP4R2iUEmwMaPsX8L4Pf/uwd3VWHJg4b3pZF+fXLsJBdu2uV0HkVEYaazUbgMvC
+YqxuMTyj5QzwIh7NtmnovABgNpRTTg==
+=rzx6
+-----END PGP SIGNATURE-----
+
+--Sig_/vjfGjrJjqZS82YUIM5ZQObe--
