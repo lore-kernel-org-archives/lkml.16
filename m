@@ -1,53 +1,155 @@
-Received: from mail2.medvecky.net (mail2.medvecky.net [85.118.132.153])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF68AD2F;
-	Sun,  2 Feb 2025 13:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.118.132.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33892746D;
+	Sun,  2 Feb 2025 13:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738502396; cv=none; b=jM6v6MyQPkHm/5FHcxFGmUq3/Vd5NlVXg3tkwFKBbycN9rh2s8ixhdZLdD8pgx+8hnChtMTQO36bBQa3X5X6kfVsVel8Wl+WJD0W18+z7DcWowU2ls655tWZFvuUsMEpIjYv7XM6rzgwJcKwRPx1zTB3jxyDqy08nVLUCf/3hUE=
+	t=1738502667; cv=none; b=qzSmpgBqCQnByIV21Zeig/HxDh8uDfmGfwOGako8UrlBw2/RDzf2ifJb3ZU270iutoFlGdZ/FrteDUt38tW9klA15OatN3ZRyLF9iogwZDQdjoEdB+GjCypMFRPdwp42xWCC7o/NcDxNBeW5NWyJPkr/fU3VJ5wcciEymACSzeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738502396; c=relaxed/simple;
-	bh=Tysij08OB6z+7SDaRUpJv9qwiexVTyaj0fUtUrAxXvU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cw94IebemlJf/BcJiQxdtI5eHwzwBBRg40MEGiLoMlA2ZIHa4wemayFzCnA1vQtagRt3msdJaG6qx1l0BD89qlglnp6ArXdCsl/F0idVctI2/a+RceW/4Xe04AkTNvWuLaU5sftyeeKlumYk0p5CEktHFi5ojdL5zBeQtMqTjUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assembler.cz; spf=pass smtp.mailfrom=assembler.cz; arc=none smtp.client-ip=85.118.132.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assembler.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=assembler.cz
-Message-ID: <0d647c3f-703f-47ac-9c13-3f78a3bee0f6@assembler.cz>
-Date: Sun, 2 Feb 2025 14:12:12 +0100
+	s=arc-20240116; t=1738502667; c=relaxed/simple;
+	bh=o/QA4a3yfupBgO6h2sIehTP5xuRwv6WZE/LItNQNjkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c2kxiDjAtVt0ToCxihS0hQh+A1gKdcVxZh9LnnwugVaGF7JMUwM4HUNFCQXXyWQQ5AtM7cyOJKWkQBgHcUnaLoI1NSP82/Vk9yhUqsoNUvS2PrOmQLMUPGmLuTCNML/TdY+RjdWDSILxlk14nKSadS7tK0S+n/no9cYHgWXLJhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=quO+gtAP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="quO+gtAP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 868DBC4CED1;
+	Sun,  2 Feb 2025 13:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738502666;
+	bh=o/QA4a3yfupBgO6h2sIehTP5xuRwv6WZE/LItNQNjkk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=quO+gtAPcOEYdBG9JD1mpcY9aFy5AtYJRpAbBNKvjMCoLQA9OIuSbhD9+7A6A8845
+	 mdCVbbHiYN0dBJCB+Clna8bkSvocKNuglkP6KgC1PlwNQpGPfQCZHXfW2CSNz8wiDc
+	 i+p/Ch5s1okw6NIo++Yk39Z+C3nIjXPDgG0vgFLp197rqd57QCJtPyxKp/1HlhCOVX
+	 /jcto8cteu7dzMz805YAsMDxkm5b2fuqPyWKQK7gjlYwjGo2DEGtuZpo6Wh8dd+Wjj
+	 KWBBSoCCZnKqkBXwz0FYCwjoLKf4t1pKmq/zF5wh3TtH7H06kUhklqSSo9AaQghq1N
+	 05XvmMxIZgCAg==
+Date: Sun, 2 Feb 2025 14:24:22 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Artur Weber <aweber.kernel@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Stanislav Jakubek <stano.jakubek@gmail.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v3 2/7] dt-bindings: mfd: brcm,bcm59056: Add compatible
+ for BCM59054
+Message-ID: <20250202-noisy-impala-of-triumph-c9aa8b@krzk-bin>
+References: <20250131-bcm59054-v3-0-bbac52a84787@gmail.com>
+ <20250131-bcm59054-v3-2-bbac52a84787@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH V2] USB: pci-quirks: Fix HCCPARAMS register error for LS7A
- EHCI
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Baoqi Zhang <zhangbaoqi@loongson.cn>
-References: <20250202124935.480500-1-chenhuacai@loongson.cn>
-Content-Language: en-US
-From: ruik <r.marek@assembler.cz>
-In-Reply-To: <20250202124935.480500-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: mail2.medvecky.net;
-	auth=pass smtp.mailfrom=r.marek@assembler.cz
-X-Spamd-Bar: /
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250131-bcm59054-v3-2-bbac52a84787@gmail.com>
 
-Hi,
+On Fri, Jan 31, 2025 at 07:13:50PM +0100, Artur Weber wrote:
+> The BCM59054 MFD is fairly similar to the BCM59056, and will use
+> the same driver. Add compatible and specify the allowed regulator
+> nodes.
+> 
+> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+> ---
+> Changes in v3:
+> - Split regulator node into separate file
+> - Removed quotes around compatible
+> ---
+>  .../devicetree/bindings/mfd/brcm,bcm59056.yaml     | 26 +++++++++-
+>  .../bindings/regulator/brcm,bcm59054.yaml          | 55 ++++++++++++++++++++++
+>  2 files changed, 79 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/brcm,bcm59056.yaml b/Documentation/devicetree/bindings/mfd/brcm,bcm59056.yaml
+> index 3296799eb452fca2a4b03699fcb5aa27005a8e8d..87d663416ed9e7f5ec4aa25c1aa2d9e650c42e2c 100644
+> --- a/Documentation/devicetree/bindings/mfd/brcm,bcm59056.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/brcm,bcm59056.yaml
+> @@ -11,7 +11,9 @@ maintainers:
+>  
+>  properties:
+>    compatible:
+> -    const: brcm,bcm59056
+> +    enum:
+> +      - brcm,bcm59054
+> +      - brcm,bcm59056
+>  
+>    reg:
+>      maxItems: 1
+> @@ -22,7 +24,6 @@ properties:
+>    regulators:
+>      type: object
+>      description: Container node for regulators.
+> -    $ref: ../regulator/brcm,bcm59056.yaml
 
-Dne 02. 02. 25 v 13:49 Huacai Chen napsal(a):
-> +	if (pdev->vendor == PCI_VENDOR_ID_LOONGSON && pdev->device == 0x7a14)
-> +		hcc_params &= ~(0xffL << 8);
+Refs should rather stay here, so I don't think keeping these devices in
+one binding makes it simpler.
+
+Simpler - drop ref and add properties compatible with enum for your
+regulator compatibles.
+
+...
+
+> +$id: http://devicetree.org/schemas/regulator/brcm,bcm59054.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
+> +title: Broadcom BCM59054 Power Management IC regulators
+> +
+> +description: |
+> +  This is a part of device tree bindings for the BCM590XX family of power
+> +  management ICs.
+> +
+> +  See also Documentation/devicetree/bindings/mfd/brcm,bcm59056.yaml for
+> +  additional information and example.
+> +
+> +maintainers:
+> +  - Artur Weber <aweber.kernel@gmail.com>
+> +
+> +# The valid regulator node names for BCM59054 are:
+> +#   rfldo, camldo1, camldo2, simldo1, simldo2, sdldo, sdxldo,
+> +#   mmcldo1, mmcldo2, audldo, micldo, usbldo, vibldo,
+> +#   csr, iosr1, iosr2, mmsr, sdsr1, sdsr2, vsr,
+> +#   gpldo1, gpldo2, gpldo3, tcxldo, lvldo1, lvldo2
+> +
+> +patternProperties:
+> +  "^(cam|sim|mmc)ldo[1-2]$":
+> +    type: object
 
-If it would be fixed in the future, would it make sense to check for revision ID as well?
+Missin unevaluatedProperties everywhere. Look how other bindings do it.
 
-Thanks,
-Rudolf
+> +    $ref: /schemas/regulator/regulator.yaml#
+> +
+> +  "^(rf|sd|sdx|aud|mic|usb|vib|tcx)ldo$":
+> +    type: object
+> +    $ref: /schemas/regulator/regulator.yaml#
+> +
+> +  "^(c|mm|v)sr$":
+> +    type: object
+> +    $ref: /schemas/regulator/regulator.yaml#
+> +
+> +  "^(io|sd)sr[1-2]$":
+> +    type: object
+> +    $ref: /schemas/regulator/regulator.yaml#
+> +
+> +  "^gpldo[1-3]$":
+> +    type: object
+> +    $ref: /schemas/regulator/regulator.yaml#
+> +
+> +  "^lvldo[1-2]$":
+> +    type: object
+> +    $ref: /schemas/regulator/regulator.yaml#
+> +
+> +properties:
+> +  "vbus":
+
+No quotes.
+
+Best regards,
+Krzysztof
 
