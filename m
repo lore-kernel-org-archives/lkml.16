@@ -1,250 +1,165 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF4C35966
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 18:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A04635;
+	Sun,  2 Feb 2025 19:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738522589; cv=none; b=UfscBTXlFlj0a3m3IYEJ3c561pXBOlGzYQYKZRhWtcTw8deHA/dVf05yf/6u55KkfMHXkZTQu+QsRb0Nko0RlodCqa7Sg3vvKmU8c3saRedkAcB5mLxOD9lLE7k/sb4F0VepKF/riABc0krB6OsfkFOrTlPq78shEp2h10OJqiQ=
+	t=1738522948; cv=none; b=gF1eD5iz4bE88T9zNY1EpUtSu5wK5VIEmaaN/EKNz+dPntm9XrMHBEGBNVjpWO4UT+SZ/VXudlUIlUvIe7xjynCHVX7FL7gPD/YfvwqTqwhQJPoT9zzVQpBXS6366CF4WYmusXMt+VRWndUg3vnVVdUGTWhykbN345v+qgMEFws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738522589; c=relaxed/simple;
-	bh=sX2InRktospNH8gsnncypokVWkZa5r/ZEy9gyYk4Vh8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=cEiWvfBWLvZp12aYFUhDWZ0TNUY0b+MfJ8QjbaSmKXGQFpt60WcXqu+B9YM85iT2AN6uD6/dS4gVPQv7PI3q3LHPphhAnKfml/rUT1yrz6kv9ULyJMmrIJVodfZoMk28inKnhh4ihuw29LJbONhEF/uCYzi8hJycbPoqBAIaxTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3cfb20d74b5so24511545ab.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 10:56:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738522587; x=1739127387;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CoVVFOWfNsMYlAu/4VPn026nSJhMkejp31mNpEt5eyw=;
-        b=nvO6nuXKdR2+0/QTGj9HfRwlFs7vBldWKtg7OyBnl0AKVaLljBgIyMqmW1+wA1btVf
-         rb0Bg92r9vrApCMYJOfHIBTn4UjXvZ/q/PDHTWER9HmBgzZSB60kjm7fduooiLjdoMGu
-         qakcyYQpwWD5LFbqAXOPk8fx66jNqSxaPWiPE6a6hR6WI3uvbVW7RkmRhIoAYLoEDo7K
-         H6hH0v/2PzAQ3ydB/sWXyLTp4bOH0tctvm3UpYJMjeXGz7G5v6dfPVlucqHxI20JzeNi
-         Zt447xJXx9zUZHES1CT8Z5IsPuHFjoH0v0aoG6BaPZjLMfmW3IZ6VGP1fuo8ZJArPdFf
-         cYGA==
-X-Forwarded-Encrypted: i=1; AJvYcCVETOAtf2iAO2EXUQFKHQqtO5fEWMh+fKgkUnJro3WgVpI/JEP2vnb+P+kp4NVqzlYIEJvuOe804EZzQEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLNOumgtWjkazvm2V70nygOIl8Ss6jBorY17dmirYMH4eVm9ER
-	+XwMB4sy80C5bYYRkxvYpo1cWyVx1BWxBckOQEJV/GqjU7XT7xZ1OYTigTA4tHS+gFhakzDHKHQ
-	y7axxLgJ3iPHFblxQ6bUhRVoSDMcwpdSoe3aFiEXDbQzbYQDwGmO12wc=
-X-Google-Smtp-Source: AGHT+IGMkAvIeqKP4VlcJrRBq2jfmS65ZGIkLL5HbTejQs/+NhuRp+SdSfp92HvSWhculckyjgnh6Ru+jl8wIvBlPPnsyQGiWEAX
+	s=arc-20240116; t=1738522948; c=relaxed/simple;
+	bh=YSAFNcRDi+wZFFtd8Cqu1m/C4oqcauI+SeTe6IUvmNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iY+KncLO9qY2TBpZgo+T2q5qvCSXuCQd8EYMAQ1c/RKQFxqKWWcsIOb4OyJslpZauwiO/LmyAvyX1+mHGU7XTA3ktuPtRlzAqxSMrTklfiytQC+eXO1RzLTSb4vJmIqTwJ6jCXwtPKL94kzdeoRntC09HtFYOSvflOSC2vbIgXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPfPSLH/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPfPSLH/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 774C1C4CED1;
+	Sun,  2 Feb 2025 19:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738522947;
+	bh=YSAFNcRDi+wZFFtd8Cqu1m/C4oqcauI+SeTe6IUvmNA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RPfPSLH/sABgHXOT3CEHcEFlVlHOBGitB4MmOxF0hR8yOhlc+zKA9MfmXmLwiw5jO
+	 E+OVo1uSvEWhHiRIXqRui6IabtL4ajSb9Kfg2eiHI/ZBon00PalqWBdw7CMhxsV36S
+	 +B32Gl3bEKk2HthPyNgdhsLz8jtsPjkY7K0JJ3fvo8J5/XNdGpu1tmx+mIKJq9ZBRj
+	 HAR9l1tg4kbv9W3iVWROUXbY/wpWPnSZJTWvueYSBNBTpGUgdOW3A/P2x/xLRF/okd
+	 dkArWkwVBVqjPt1lwX20DtD6wpWa4UTjjkUHmfy+mDIWfCX74NK2YcMSyX4+w4rHZe
+	 G/RQaEYc+ZmIQ==
+Message-ID: <2323e446-14fd-462e-9fd2-d707f7d3802d@kernel.org>
+Date: Sun, 2 Feb 2025 20:02:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca4f:0:b0:3d0:24c0:bd4d with SMTP id
- e9e14a558f8ab-3d024c0bfafmr57473895ab.18.1738522586968; Sun, 02 Feb 2025
- 10:56:26 -0800 (PST)
-Date: Sun, 02 Feb 2025 10:56:26 -0800
-In-Reply-To: <000000000000931657061ffc8ad9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <679fbfda.050a0220.d7c5a.0076.GAE@google.com>
-Subject: Re: [syzbot] [kernfs?] possible deadlock in walk_component (4)
-From: syzbot <syzbot+b4567a8b2d2ad5f9dd06@syzkaller.appspotmail.com>
-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
+To: matthew.gerlach@linux.intel.com
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+ conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, matthew.gerlach@altera.com,
+ peter.colberg@altera.com
+References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
+ <20250127173550.1222427-4-matthew.gerlach@linux.intel.com>
+ <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org>
+ <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
+ <40a3dced-defe-412d-b5b2-efcc9619d172@kernel.org>
+ <7c802294-97f6-3e9-4028-686484a525c5@linux.intel.com>
+ <dd51fdae-0e00-44a9-a5a0-e536ba60fd8c@kernel.org>
+ <56486d91-5ca-d85-eca1-1ce2df25238@linux.intel.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <56486d91-5ca-d85-eca1-1ce2df25238@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-syzbot has found a reproducer for the following issue on:
+On 02/02/2025 19:49, matthew.gerlach@linux.intel.com wrote:
+> 
+> 
+> On Sun, 2 Feb 2025, Krzysztof Kozlowski wrote:
+> 
+>> On 01/02/2025 20:12, matthew.gerlach@linux.intel.com wrote:
+>>>>
+>>>>> they are also referenced in the following:
+>>>>>      Documentation/devicetree/bindings/soc/intel/intel,hps-copy-engine.yaml
+>>>>>      arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
+>>>>> I am not exactly sure where the right place is to define them, maybe
+>>>>> Documentation/devicetree/bindings/arm/intel,socfpga.yaml. On the other
+>>>>> hand, no code references these names; so it might make sense to just
+>>>>> remove them.
+>>>>
+>>>> In general: nowhere, because simple bus does not have such properties.
+>>>> It's not about reg-names only - you cannot have reg. You just did not
+>>>> define here simple-bus.
+>>>
+>>> I understand. I will remove reg and reg-names.
+>>
+>> If you have there IO address space, then removal does not sound right,
+>> either. You just need to come with the bindings for this dedicated
+>> device, whatever this is. There is no description here, not much in
+>> commit msg, so I don't know what is the device you are adding. PCI has
+>> several bindings, so is this just host bridge?
+> 
+> The device associated with two address ranges may be best described as a 
+> simple-bus. It is a bus between the CPU and the directly connected FPGA in 
+> the same package as the SOC. The design programmed into the FPGA 
+> determines the device(s) connected to the bus. The hardware implementing 
 
-HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10dc6d18580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=98d83cc1742b7377
-dashboard link: https://syzkaller.appspot.com/bug?extid=b4567a8b2d2ad5f9dd06
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=116fceb0580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15bf03df980000
+So it is part of FPGA?
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/3d07b0558b0e/disk-69e858e0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e5e2250eb3b1/vmlinux-69e858e0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/3e676d17effc/bzImage-69e858e0.xz
+> this bus does have reset lines which allow for safely reprogramming the 
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b4567a8b2d2ad5f9dd06@syzkaller.appspotmail.com
+Then it is not simple-bus. Simple-bus is our construct for simple
+devices. You cannot have something a bit more complex and call it
+simple-bus.
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.13.0-syzkaller-09760-g69e858e0b8b2 #0 Not tainted
-------------------------------------------------------
-syz-executor466/5830 is trying to acquire lock:
-ffff88807997f398 (&type->i_mutex_dir_key#6){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:875 [inline]
-ffff88807997f398 (&type->i_mutex_dir_key#6){++++}-{4:4}, at: lookup_slow fs/namei.c:1809 [inline]
-ffff88807997f398 (&type->i_mutex_dir_key#6){++++}-{4:4}, at: walk_component+0x342/0x5b0 fs/namei.c:2114
+> FPGA while the SOC is running, which implies appropriate bindings as you 
+> suggest. Something like the following might make sense:
+> 
+>  	aglx_hps_bridges: fpga-bus@80000000 {
+>  		compatible = "altr,agilex-hps-fpga-bridge", "simple-bus";
 
-but task is already holding lock:
-ffffffff8e07d228 (param_lock){+.+.}-{4:4}, at: kernel_param_lock kernel/params.c:607 [inline]
-ffffffff8e07d228 (param_lock){+.+.}-{4:4}, at: param_attr_store+0xe6/0x300 kernel/params.c:586
+FPGA bridge maybe, but not simple-bus. It does not look like a simple
+bus if you have here some resources.
 
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #3 (param_lock){+.+.}-{4:4}:
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x19b/0xb10 kernel/locking/mutex.c:730
-       ieee80211_rate_control_ops_get net/mac80211/rate.c:220 [inline]
-       rate_control_alloc net/mac80211/rate.c:266 [inline]
-       ieee80211_init_rate_ctrl_alg+0x18d/0x6b0 net/mac80211/rate.c:1015
-       ieee80211_register_hw+0x2077/0x3ff0 net/mac80211/main.c:1531
-       mac80211_hwsim_new_radio+0x2c47/0x56d0 drivers/net/wireless/virtual/mac80211_hwsim.c:5558
-       init_mac80211_hwsim+0x432/0x8c0 drivers/net/wireless/virtual/mac80211_hwsim.c:6910
-       do_one_initcall+0x128/0x630 init/main.c:1257
-       do_initcall_level init/main.c:1319 [inline]
-       do_initcalls init/main.c:1335 [inline]
-       do_basic_setup init/main.c:1354 [inline]
-       kernel_init_freeable+0x58f/0x8b0 init/main.c:1568
-       kernel_init+0x1c/0x2b0 init/main.c:1457
-       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
--> #2 (rtnl_mutex){+.+.}-{4:4}:
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x19b/0xb10 kernel/locking/mutex.c:730
-       cgrp_css_online+0xa9/0x200 net/core/netprio_cgroup.c:157
-       online_css+0xaf/0x350 kernel/cgroup/cgroup.c:5568
-       css_create kernel/cgroup/cgroup.c:5652 [inline]
-       cgroup_apply_control_enable+0x6d7/0xc80 kernel/cgroup/cgroup.c:3239
-       cgroup_mkdir+0x398/0x1150 kernel/cgroup/cgroup.c:5847
-       kernfs_iop_mkdir+0x14a/0x1d0 fs/kernfs/dir.c:1247
-       vfs_mkdir+0x57d/0x860 fs/namei.c:4313
-       do_mkdirat+0x301/0x3a0 fs/namei.c:4336
-       __do_sys_mkdir fs/namei.c:4356 [inline]
-       __se_sys_mkdir fs/namei.c:4354 [inline]
-       __x64_sys_mkdir+0xef/0x140 fs/namei.c:4354
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (cgroup_mutex){+.+.}-{4:4}:
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x19b/0xb10 kernel/locking/mutex.c:730
-       cgroup_lock include/linux/cgroup.h:368 [inline]
-       cgroup_kn_lock_live+0x139/0x570 kernel/cgroup/cgroup.c:1662
-       cgroup_rmdir+0x22/0x2d0 kernel/cgroup/cgroup.c:6045
-       kernfs_iop_rmdir+0x143/0x1c0 fs/kernfs/dir.c:1265
-       vfs_rmdir fs/namei.c:4396 [inline]
-       vfs_rmdir+0x203/0x690 fs/namei.c:4373
-       do_rmdir+0x3a2/0x410 fs/namei.c:4455
-       __do_sys_rmdir fs/namei.c:4474 [inline]
-       __se_sys_rmdir fs/namei.c:4472 [inline]
-       __x64_sys_rmdir+0xc5/0x110 fs/namei.c:4472
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&type->i_mutex_dir_key#6){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3163 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
-       validate_chain kernel/locking/lockdep.c:3906 [inline]
-       __lock_acquire+0x249e/0x3c40 kernel/locking/lockdep.c:5228
-       lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5851
-       down_read+0x9a/0x330 kernel/locking/rwsem.c:1524
-       inode_lock_shared include/linux/fs.h:875 [inline]
-       lookup_slow fs/namei.c:1809 [inline]
-       walk_component+0x342/0x5b0 fs/namei.c:2114
-       lookup_last fs/namei.c:2612 [inline]
-       path_lookupat+0x17f/0x770 fs/namei.c:2636
-       filename_lookup+0x221/0x5f0 fs/namei.c:2665
-       kern_path+0x35/0x50 fs/namei.c:2773
-       lookup_bdev+0xd9/0x280 block/bdev.c:1163
-       bdev_file_open_by_path+0x83/0x330 block/bdev.c:1036
-       add_device drivers/mtd/devices/block2mtd.c:279 [inline]
-       block2mtd_setup2+0x32e/0xe30 drivers/mtd/devices/block2mtd.c:459
-       block2mtd_setup+0x55/0x70 drivers/mtd/devices/block2mtd.c:476
-       param_attr_store+0x18f/0x300 kernel/params.c:588
-       module_attr_store+0x55/0x80 kernel/params.c:924
-       sysfs_kf_write+0x117/0x170 fs/sysfs/file.c:139
-       kernfs_fop_write_iter+0x33d/0x500 fs/kernfs/file.c:334
-       new_sync_write fs/read_write.c:586 [inline]
-       vfs_write+0x5ae/0x1150 fs/read_write.c:679
-       ksys_write+0x12b/0x250 fs/read_write.c:731
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  &type->i_mutex_dir_key#6 --> rtnl_mutex --> param_lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(param_lock);
-                               lock(rtnl_mutex);
-                               lock(param_lock);
-  rlock(&type->i_mutex_dir_key#6);
-
- *** DEADLOCK ***
-
-4 locks held by syz-executor466/5830:
- #0: ffff8880244b2420 (sb_writers#8){.+.+}-{0:0}, at: ksys_write+0x12b/0x250 fs/read_write.c:731
- #1: ffff88802975f488 (&of->mutex){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x27b/0x500 fs/kernfs/file.c:325
- #2: ffff88814c9e6008 (kn->active#4){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x29e/0x500 fs/kernfs/file.c:326
- #3: ffffffff8e07d228 (param_lock){+.+.}-{4:4}, at: kernel_param_lock kernel/params.c:607 [inline]
- #3: ffffffff8e07d228 (param_lock){+.+.}-{4:4}, at: param_attr_store+0xe6/0x300 kernel/params.c:586
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 5830 Comm: syz-executor466 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_circular_bug+0x490/0x760 kernel/locking/lockdep.c:2076
- check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2208
- check_prev_add kernel/locking/lockdep.c:3163 [inline]
- check_prevs_add kernel/locking/lockdep.c:3282 [inline]
- validate_chain kernel/locking/lockdep.c:3906 [inline]
- __lock_acquire+0x249e/0x3c40 kernel/locking/lockdep.c:5228
- lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5851
- down_read+0x9a/0x330 kernel/locking/rwsem.c:1524
- inode_lock_shared include/linux/fs.h:875 [inline]
- lookup_slow fs/namei.c:1809 [inline]
- walk_component+0x342/0x5b0 fs/namei.c:2114
- lookup_last fs/namei.c:2612 [inline]
- path_lookupat+0x17f/0x770 fs/namei.c:2636
- filename_lookup+0x221/0x5f0 fs/namei.c:2665
- kern_path+0x35/0x50 fs/namei.c:2773
- lookup_bdev+0xd9/0x280 block/bdev.c:1163
- bdev_file_open_by_path+0x83/0x330 block/bdev.c:1036
- add_device drivers/mtd/devices/block2mtd.c:279 [inline]
- block2mtd_setup2+0x32e/0xe30 drivers/mtd/devices/block2mtd.c:459
- block2mtd_setup+0x55/0x70 drivers/mtd/devices/block2mtd.c:476
- param_attr_store+0x18f/0x300 kernel/params.c:588
- module_attr_store+0x55/0x80 kernel/params.c:924
- sysfs_kf_write+0x117/0x170 fs/sysfs/file.c:139
- kernfs_fop_write_iter+0x33d/0x500 fs/kernfs/file.c:334
- new_sync_write fs/read_write.c:586 [inline]
- vfs_write+0x5ae/0x1150 fs/read_write.c:679
- ksys_write+0x12b/0x250 fs/read_write.c:731
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f64e4ab2ea9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fffc0a6c6d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f64e4ab2ea9
-RDX: 0000000000000003 RSI: 0000000020000000 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f64e4afc036
-R13: 00007fffc0a6c710 R14: 00007fffc0a6c750 R15: 0000000000000000
- </TASK>
-block2mtd: error: cannot open device 3QI
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+>  		reg = <0x80000000 0x20200000>,
+>  		      <0xf9000000 0x00100000>;
+>  		reg-names = "axi_h2f", "axi_h2f_lw";
+>  		#address-cells = <0x2>;
+>  		#size-cells = <0x1>;
+>  		ranges = <0x00000000 0x00000000 0x80000000 0x00040000>,
+>  			 <0x00000000 0x10000000 0x90100000 0x0ff00000>,
+>  			 <0x00000000 0x20000000 0xa0000000 0x00200000>,
+>  			 <0x00000001 0x00010000 0xf9010000 0x00008000>,
+>  			 <0x00000001 0x00018000 0xf9018000 0x00000080>,
+>  			 <0x00000001 0x00018080 0xf9018080 0x00000010>;
+>  		reset = <&rst SOC2FPGA_RESET>, <&rst LWHPS2FPGA_RESET>;
+Best regards,
+Krzysztof
