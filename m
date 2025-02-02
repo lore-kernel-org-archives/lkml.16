@@ -1,103 +1,170 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3198F1C2DB2
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 06:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0167F130A73
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 06:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738478269; cv=none; b=H1Qae2mnq9TRezvj2JFzCuoes92ghOljzgb3iXCMsC0esXwEjuToJx4Lx3mcnT+WOE55mKQsOATciX41s1Fl3P0YWFBtQsO8HfM2IxIHtGq0z8i68DREPcGe8VG31gP1oPtrpmY3epvBTE+earJ5VIgCQ8B+QyRqpBipVMmAmgA=
+	t=1738478515; cv=none; b=TBlrK8p5LrfcFWWJGN+j3tZVNU12YytGkXn9lBBq4S2Hl6RQBeXx3TvltT7i4QDBLDkYbUSy+BdiiPq2HJgCkXGQe+7vbIjhUM5ffQZjNljrD0RwiplTgVQtCCifC9p6MY7on7c5wlzLXKelP/BSrVgYrvv+53QV2jHLR6wV4wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738478269; c=relaxed/simple;
-	bh=ZE141DfKW7Je97SuGuDXiTvEfzvyFvIIlvmWSKHBrSU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tIG4UIuC6MUmhBrIZclOmNif1xYkkG/6Th2sXYYlwVvd1GNtAOi9KCXp7VItITIRZhjlkQtP2KzT+mPmDn7tx4gW75xcrG9iNgiL11CXuU1UFagkQ7xhQwttNHP6XP9iYvy2SlCYU83AJvv9gSL5Fh4x07Nhopzk1hoXy+BbhGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--wnliu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qpMJ1YJv; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--wnliu.bounces.google.com
+	s=arc-20240116; t=1738478515; c=relaxed/simple;
+	bh=wSTLzGhMLffhO/v6hJYaRpeR5d/1GKbHdC9MlbN+LvE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QePLd5Rd7oXd9q7FN3yuEzgbPf8KvxcbtRvcDhazOWHx24H5sUeE8k5rzyvtS9j7FjnF5hJKgmi89gTBCTIM0NWbKABXnRBeIhM1VPi04MQkmP6jryC0zCCou7TMWs8kC6ttoneHXfHnH7lXaAnIXzQgMLnL1jEeKPXvsZhnRqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lxlnv7W1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qpMJ1YJv"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-216311faa51so59620745ad.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 22:37:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738478267; x=1739083067; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=A9NvLmW/A6uUOB760Lj7I76Wak9fBpOpnPabjMwc01o=;
-        b=qpMJ1YJvon2WPQJvkL1C2zLjBBKyp2zsPqOxqshF/mI2309D7CIhzanHZ9qjd3DNmy
-         G/VYsb9ssLGLa8ObnnTIcAdkScD3g/FMfze36UM88KS4qnQ1HiWZTuPxh0XwCM4b4JFo
-         hW2I/+kQzGtNdSOERNkg8pFB7zGWNTEBJJvZt+kgPFcszD1NmddllT4mjcIvxJvFg3Gy
-         CBJUw1M5rd1pd7uCscKRxaDjsjEm4rBicQSG87bjAWZlSje5/rfmFIhVGvmBgbQyFoUw
-         k+9Q7ycjlrjQeBlPQL2g6ZIdwQBK4PG3JskI2SNun91xq1toBucbHUrCP42j46AtZ4LY
-         kGpA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lxlnv7W1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738478512;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O9bc7QlURY2KqxOqSdcgXWV1nxuIWVaexteEdP17afs=;
+	b=Lxlnv7W1BfVzrZFUOtFpK4BkYpsBVoj4t4wJbj7VkpyTIEzxavaOwB0ajS/UnxDg5vI3ZV
+	ofRAQRghMyEIqN7ASiLhMVpO4VR/B6RbPD5tcSDgDlB6gG0fcUUwvHwzv87JkYIxNRKIf7
+	2yrg7xHbZlETkDugZ0sZlqokXbrSIe8=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-670-XqxspKXCPZqDir785RJYTg-1; Sun, 02 Feb 2025 01:41:51 -0500
+X-MC-Unique: XqxspKXCPZqDir785RJYTg-1
+X-Mimecast-MFC-AGG-ID: XqxspKXCPZqDir785RJYTg
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2166855029eso65653505ad.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 22:41:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738478267; x=1739083067;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=A9NvLmW/A6uUOB760Lj7I76Wak9fBpOpnPabjMwc01o=;
-        b=K00QnLpmumiFyw/sV0VCOMPJlFy6vrLbUymHeRCYRNEGc8TG5SYKEWm6aPtwI/5U1V
-         lomsSyZvE/wAyQNTxiKqVEvcy/5JpclqZOBBHV/J3TnqaoXImxohf/8HjsJJ1nsurNYp
-         1s8fXQ7DF/ksgHFNHrryTZ1i+UEAFtA2+582m4GE1w/vH/BGLsbSOnZ2APO/W/SU9QRo
-         8+7GAOw1Rzsmp96eFYgm+lM6N0zJGacp1T1zfv6BEDK3yPWMuU/woE1R97DXuTrUuAUT
-         teg+N+QZlHbBqYur2l+b3J2S+uY8dhth5KoXbtyZiW1h4nfjEU/DWeX0ua8dJOCV/grG
-         23xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMNSKBcA2OfIHBV6w/ihJDDfKxmcMpZXW1FgR1+qzWxVgP1vKihLnpsraX3msTDtOtV5NsPen4O+jWTVo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGZOTwKpr95N77Hi7q9T2DIIzNYtnkp/grF+GuHUDQiSpwTbUZ
-	HkgusBrWKetzWvnGFPdlN4CmmldrOml/T90DuDYcQR140KonwUWDWZmT+WX2mSMxDcvBr+bIVA=
-	=
-X-Google-Smtp-Source: AGHT+IEViwf7ftDA47jzjJ4JIFfkYBeziUL/Uim6LKs1f/dyvgToTVzbkfLeuhfa6q0+31njXbcGNfqpzQ==
-X-Received: from pguy8.prod.google.com ([2002:a65:6c08:0:b0:8ae:4cf4:372])
- (user=wnliu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:240c:b0:21a:87e8:3891
- with SMTP id d9443c01a7336-21edd7eba4fmr152671605ad.6.1738478267463; Sat, 01
- Feb 2025 22:37:47 -0800 (PST)
-Date: Sun,  2 Feb 2025 06:37:44 +0000
-In-Reply-To: <20250202062728.753686-1-wnliu@google.com>
+        d=1e100.net; s=20230601; t=1738478510; x=1739083310;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O9bc7QlURY2KqxOqSdcgXWV1nxuIWVaexteEdP17afs=;
+        b=rhIDSO7wLjpg8exgNzF7NJ8XSfSIvW1UyPmDFYH74bSgNjxNY9igZMi12TpEwL09K4
+         fWbcJuqMBygTC2b0MaqMobDjB0lrjdaSLCH4ZGxFI3JeEBAdAklYqJarjmdDwRP4Bv+B
+         MnfrCw9jf0HvK5bFjqg6strcTeNodHN7g0MtaprPCGka2TPwgOKmf9yMU7TIAwY+bTjP
+         H458xvTuRhM7LD/UELC3CDDJWa1166P9uHlA42PLPGZRyrSO/rQs0LGtG3FsHsmDbspu
+         /6Tq8F/OS8LoLMB6yL4VF/B0gHxlk4tMS9h1ly0DgPZBTlB7SrzuUI90TjAIi4/uSBP+
+         VzMA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlvwf4rce58sY71mygx+1bRSA+rIRhEu3CMiH+EUF3A8M2bxAK6QxP32L16bsT7HS+uB57Nwb5aOIy+mY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMJoBeQtkM04PkaWLnTEFuL62UednN5rEZaiWJXuAxTPry+vF6
+	96piEeYOjy/xzbpvez1uIWW228yoZAm5HvHXFCOclfyX6PVrnegmmItj+uYvBBxQVj6asbL5wEz
+	/MvDACGWZpbq5kSG2YKDjfzJ0DCqdzIH8BTV73DlX41UESEUR5vtsIYUsRMlbFg==
+X-Gm-Gg: ASbGnctH7HTUqK1iKj/SBpd0Yqe2YCs+s+oSVAH9o9j3sJzLxkmpXNJ430NeMxtFgVn
+	Yyn3ZZM2KK76nI1Txq0q47FTJ+HUPMV1Vq7gk39i0Q4FMEWJIQysnOoSGWXEFHXGgAk6wijGHO4
+	lsiPy74xzQ/zSsZs1C7TrJhcX/xNtuD4ltAerHNC3Vz7g/pyQSdjuoiOTTo6KNANcEo7KH0U5UA
+	bQXzAsh0Ue4y1b7jeOUCrRPvtGyaeHtaUgmG2UT0DP629lNqpMUdkes0bKoFZZ3oRCwiKCmafKE
+	LGHR2Q==
+X-Received: by 2002:a17:902:e742:b0:215:a97a:c6bb with SMTP id d9443c01a7336-21dd7c65891mr279349185ad.12.1738478509967;
+        Sat, 01 Feb 2025 22:41:49 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEgiNqSMRe7eOLK7UU7yfr7SRk/XUpHiWVSGyN9DA4ZXFp8THxJ4DGREQDo0HNpjoMWa/PKyw==
+X-Received: by 2002:a17:902:e742:b0:215:a97a:c6bb with SMTP id d9443c01a7336-21dd7c65891mr279349065ad.12.1738478509619;
+        Sat, 01 Feb 2025 22:41:49 -0800 (PST)
+Received: from [192.168.68.55] ([180.233.125.64])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32efa0csm53772495ad.116.2025.02.01.22.41.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Feb 2025 22:41:49 -0800 (PST)
+Message-ID: <69a424e0-1350-484c-9ce7-b40c4fcacd8e@redhat.com>
+Date: Sun, 2 Feb 2025 16:41:40 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250202062728.753686-1-wnliu@google.com>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250202063746.759828-1-wnliu@google.com>
-Subject: Re: [PATCH 4/8] unwind: Implement generic sframe unwinder library
-From: Weinan Liu <wnliu@google.com>
-To: wnliu@google.com
-Cc: indu.bhagat@oracle.com, irogers@google.com, joe.lawrence@redhat.com, 
-	jpoimboe@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org, 
-	live-patching@vger.kernel.org, mark.rutland@arm.com, peterz@infradead.org, 
-	ptsm@linux.microsoft.com, roman.gushchin@linux.dev, rostedt@goodmis.org, 
-	will@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 27/43] arm64: rme: support RSI_HOST_CALL
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Joey Gouly <joey.gouly@arm.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20241212155610.76522-1-steven.price@arm.com>
+ <20241212155610.76522-28-steven.price@arm.com>
+Content-Language: en-US
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20241212155610.76522-28-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 30, 2025 at 2:29=E2=80=AFAM Prasanna Kumar T S M <ptsm@linux.mi=
-crosoft.com> wrote:
-> On 30-01-2025 15:52, Prasanna Kumar T S M wrote:
-> >
-> > On 28-01-2025 03:03, Weinan Liu wrote:
-> > > This change introduces a kernel space unwinder using sframe table for
-> > > architectures without ORC unwinder support.
-> > >
-> > > The implementation is adapted from Josh's userspace sframe unwinder
-> > > proposal[1] according to the sframe v2 spec[2].
-> > >
-> > > [1]
-> > > https://lore.kernel.org/lkml/42c0a99236af65c09c8182e260af7bcf5aa1e158=
-.1730150953.git.jpoimboe@kernel.org/
-> > > [2] https://sourceware.org/binutils/docs/sframe-spec.html
-> > >
-> > > Signed-off-by: Weinan Liu <wnliu@google.com>
-> > > ---
-> > >   include/linux/sframe_lookup.h |  43 ++++++++
-> > >   kernel/Makefile               |   1 +
-> > >   kernel/sframe_lookup.c        | 196 +++++++++++++++++++++++++++++++=
-+++
-> Nit: Can this file be placed inside lib/ instead of kernel/ folder?
-This could be integrated with Josh's proposal in the future.
-https://lore.kernel.org/lkml/cover.1737511963.git.jpoimboe@kernel.org/
+On 12/13/24 1:55 AM, Steven Price wrote:
+> From: Joey Gouly <joey.gouly@arm.com>
+> 
+> Forward RSI_HOST_CALLS to KVM's HVC handler.
+> 
+> Signed-off-by: Joey Gouly <joey.gouly@arm.com>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+> Changes since v4:
+>   * Setting GPRS is now done by kvm_rec_enter() rather than
+>     rec_exit_host_call() (see previous patch - arm64: RME: Handle realm
+>     enter/exit). This fixes a bug where the registers set by user space
+>     were being ignored.
+> ---
+>   arch/arm64/kvm/rme-exit.c | 22 ++++++++++++++++++++++
+>   1 file changed, 22 insertions(+)
+> 
+> diff --git a/arch/arm64/kvm/rme-exit.c b/arch/arm64/kvm/rme-exit.c
+> index 8f0f9ab57f28..b2a367474d74 100644
+> --- a/arch/arm64/kvm/rme-exit.c
+> +++ b/arch/arm64/kvm/rme-exit.c
+> @@ -103,6 +103,26 @@ static int rec_exit_ripas_change(struct kvm_vcpu *vcpu)
+>   	return 0;
+>   }
+>   
+> +static int rec_exit_host_call(struct kvm_vcpu *vcpu)
+> +{
+> +	int ret, i;
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +
+> +	vcpu->stat.hvc_exit_stat++;
+> +
+> +	for (i = 0; i < REC_RUN_GPRS; i++)
+> +		vcpu_set_reg(vcpu, i, rec->run->exit.gprs[i]);
+> +
+> +	ret = kvm_smccc_call_handler(vcpu);
+> +
+> +	if (ret < 0) {
+> +		vcpu_set_reg(vcpu, 0, ~0UL);
+> +		ret = 1;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
 
-Either lib/ or kernel/unwind/ are ok to me.
+It seems that the return value from kvm_smccc_call() won't be negative. Besides,
+the host call requests are currently handled by kvm_psci_call(), which isn't
+what we want. So I think a new helper is needed and called in kvm_smccc_call_handler().
+The new helper simply push the error (NOT_SUPPORTED) to x0. Otherwise, a unexpected
+return value will be seen by guest.
+
+handle_rec_exit
+   rec_exit_host_call
+     kvm_smccc_call_handler
+
+>   static void update_arch_timer_irq_lines(struct kvm_vcpu *vcpu)
+>   {
+>   	struct realm_rec *rec = &vcpu->arch.rec;
+> @@ -164,6 +184,8 @@ int handle_rec_exit(struct kvm_vcpu *vcpu, int rec_run_ret)
+>   		return rec_exit_psci(vcpu);
+>   	case RMI_EXIT_RIPAS_CHANGE:
+>   		return rec_exit_ripas_change(vcpu);
+> +	case RMI_EXIT_HOST_CALL:
+> +		return rec_exit_host_call(vcpu);
+>   	}
+>   
+>   	kvm_pr_unimpl("Unsupported exit reason: %u\n",
+
+Thanks,
+Gavin
+
