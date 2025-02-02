@@ -1,67 +1,99 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2732144CD;
-	Sun,  2 Feb 2025 22:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB2D20C003;
+	Sun,  2 Feb 2025 22:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738534014; cv=none; b=B7jLkZcpnlThDPopFt9Avow+brUNHuS4kzW32PGu2c8GJJmU+X99JhxuuI0Ix748o5OXzGGKJvyDr3hOiPPWt+IwB4O9wgkp/3Al85jJ4sn3z95jb2xYd30RQWgnSacQWLEuXKKiUPXaLS8dvsFaVGENuYgKMpgKVWvP8fLbRLw=
+	t=1738534048; cv=none; b=uDqdYP8Gn/gDJNsGNVlEEkObh7FTWR42G5zHL7mGu8gSRp2RtRbUCKVCxTJa5pmhtr9HTQsMjahwyCpBDfF1d6w2hcrGQrgm2wMjAYcuYX22PQkL/GcxWLP6u2dzr8/45H5nWNs76ZRfqt0vTNv3VoOAFDfYV8+SsbQG/gV1Lh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738534014; c=relaxed/simple;
-	bh=B6pVQHC6N9nhZrljHJ8MLPEgnZqulSbw9MenwPSvrSE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oJRNzBTUf+FrvbywWSA46YSKPJi6pTAb6f8R4OZImpfth6SoGbbv5vVnXCkmGAXab9CdSK9FrQqI8E4SThx0y2qjVuZ2Cxs8Vq7dQG7ymiUdX5afUliboEx07hUy9X9cUre8whfAIjsRKZoDnA829T5BZtvDUtjYWM9hyKQo7uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tAxAwQ7f; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738534048; c=relaxed/simple;
+	bh=Tww6j7IITtP1JpiFaLexj9OLS/m0wJmj2DIOLw7haZA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L83nqVQGPX6ZETXaj09iIaLyrMSwGLAQmhjl4ppiNaCIaU1qQ89t4rhNyY48pPnUDE/0JhF9oaOyAgAjUDh5C/wR+omWXT46btOxbZdKfS+ezRowOIVFOzEuRWrHxKHNEHQ1mL9U9rFUOu+8lNJPBkvCqodhiEPDdDR80T28bzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nbTdU9Zk; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tAxAwQ7f"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=28AmWbhIQ3UGJuXTTzNuIC9DDsHHl6ngoKmde+J/sY0=; b=tAxAwQ7f+vB7h1Bd9xGVWNcHE4
-	W8KGQYhKgXx7ZTTwnU7DNiWIzbZw8e+Aam64jTGIl8n+2WkvRL2wv5hiC5Z005PzpU5T87oj7qLJ+
-	As8luIGAMRmuPdrCflDlfYrLlQ1cKHcTdx26gbuhpH7nz2qPEZtc744yWlN227Yr+Y8k9KB06kxBL
-	BnDZg0eBxzcwnd3B9DQAT423S+83U2XdauN8px2QIzSnS50iI89Ki0LhyfmW94heo/112C9zn/pL3
-	ggp1Y5nB9cD18lN+DOTybb6up+D6RhAGZDOHkXOkBedjzyJifoGfBj533BIy/vplcp013Sd8NdHJG
-	sVSCAj3w==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tei6v-0000000HXSE-0btS;
-	Sun, 02 Feb 2025 22:06:37 +0000
-Date: Sun, 2 Feb 2025 22:06:36 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Mateusz Guzik <mjguzik@gmail.com>, ebiederm@xmission.com,
-	oleg@redhat.com, brauner@kernel.org, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] pid: drop irq disablement around pidmap_lock
-Message-ID: <Z5_sbCrE6ouqP8Uh@casper.infradead.org>
-References: <20250201163106.28912-1-mjguzik@gmail.com>
- <20250201163106.28912-7-mjguzik@gmail.com>
- <20250201181933.07a3e7e2@pumpkin>
- <CAGudoHFHzEQhkaJCB3z6qCfDtSRq+zZew3fDkAKG-AEjpMq8Nw@mail.gmail.com>
- <20250201215105.55c0319a@pumpkin>
- <Z56ZZpmAbRCIeI7D@casper.infradead.org>
- <20250202135503.4e377fb0@pumpkin>
- <CAGudoHED5-oPqb62embitG39P1Rf7EtEVODY38WB25G21-GGyQ@mail.gmail.com>
- <20250202204449.77cab5e5@pumpkin>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nbTdU9Zk"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4361dc6322fso25279635e9.3;
+        Sun, 02 Feb 2025 14:07:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738534045; x=1739138845; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bNwdZ9Rby6QrQ/t2sXkUgdNUisz3NDMDNDDC7nr5Ytw=;
+        b=nbTdU9ZkaK7tsKva8OYK3dgnld3VEBkDlVRCjQMJXGYb8fnRTbBuMnvi8WsnkAuOM4
+         LWqoblbxy8/uSdKXfO3/X30A6bvPnkZC8QmrJuDAPQUkB16RcTXLV+gaulumaB8nG7xS
+         GStnpa3+qz5M1aFb4rIjdaRAxkoQwjEhPnNE/f+PAOmUGxo5eMEFTOEGiYQU2JPt9acX
+         WdhJJadfBMpKb7CEW1+4xXPe/wtU4s30n1OdHKwRqH/zrxFLq3/52yjbGT9S0bnnLC0s
+         LVZ/Ohe3Z/q6cV2S9Yc8S2QOPvc5+p1uCIqx/JMERUacpsMXP1vCcFYBmdZCakAn7b4+
+         vtjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738534045; x=1739138845;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bNwdZ9Rby6QrQ/t2sXkUgdNUisz3NDMDNDDC7nr5Ytw=;
+        b=dXgDNZJpZIamwH9TWZ9elo38AFH66MYa7lcXwTUdhP/5vAN6j6UBCRhUFoT1WbXTGZ
+         LkiULn7Y0fN1xyi6MUsyUGGvtJsr4wsiSUdAL8jpBBxC9IJbdQTk/yhozLunmLRYt0ek
+         4ZiiIw+8MO45lU6Eb0ZtP/B48/CzBgx/Rj7A92enDlIryhN6axzdscqfXeITsAFMbAiR
+         5IvIhF0Ckpdsg7sHGS1yLStNZqIZ8nzwgvzvjNtK+KsxV93ugrGxGwwseDZidC0ovdV1
+         7PewrqvZoszFZZKtx88k1MrUtFaQTDRc7X6XmlSuI1JTZwIBjf4rrs+92BaZee/IK22o
+         SZZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXoww+1TeBLQoPADtRTddwCn5Lw9jw/bDu5vZLyitzySrrs7VIjCCA/Dpg312Rl9J8hWw90tEqmVeoqoYWoKlk=@vger.kernel.org, AJvYcCXsMgyojlFfLphKPU9v2tTZxDL7196r/PMIM3IQ7sju9xs4cNLO7TK9wRYQ29nye4Yofv1DRs8hNWZmfag=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2DH7tmzonHDMlnbrTKj40Ptl4AjxWVBqLOn66gpTMBxta5kVO
+	lgRsvlKmiMXt19bP8TnNpX1umLqu7LTg5f14F0WH8hc/l+MMhUd2Ns6Q9lJ+aaw=
+X-Gm-Gg: ASbGncsMTpsio0qxIWrBQzmhwWa3WREHdiwhyWfkcXzQzd5SMxBbTJbaOCQEbITeSiu
+	YqYr6trYh7QDWUo1R97GVMdHxP6uDMePPKXeMjxOiiKycf13OJkO8G8HC3JD21uHmd/sczJPQWb
+	mKe5o9nmu31P5lsGKAQq5TNxKDtS8r6YPmsd2i9EdhEiNyTCAnZGzC32dvpeHE52fXJXRsV8x7f
+	/qQyoMRTXMIWZP7Sq12z9LAkQLH+LiUiSUDeqZAKX0pMgcjBkyyF0iljyqEnIgTIDtBEq6lVu9i
+	bxC0NLKqKnu8BaSI
+X-Google-Smtp-Source: AGHT+IGqToJckq9WXaHfFTvgbHEi1aCj7NGnpjNkDKNYHEBTw3PFmy6Sr/Ktlpr9n14KVY4K4FlLqA==
+X-Received: by 2002:a05:600c:3c89:b0:434:a7e7:a1ca with SMTP id 5b1f17b1804b1-438dc40ffaamr151077395e9.20.1738534044751;
+        Sun, 02 Feb 2025 14:07:24 -0800 (PST)
+Received: from localhost ([194.120.133.72])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-438e244ed3fsm135150805e9.31.2025.02.02.14.07.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 14:07:24 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] wifi: ipw2x00: Fix spelling mistake "stablization" -> "stabilization"
+Date: Sun,  2 Feb 2025 22:06:59 +0000
+Message-ID: <20250202220659.199341-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250202204449.77cab5e5@pumpkin>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 02, 2025 at 08:44:49PM +0000, David Laight wrote:
-> I really commented because you were changing one lock which could
-> easily be 'hot' enough for there to be side effects, without even
-> a comment about any pitfalls.
+There is a spelling mistake in a IPW_DEBUG_INFO message. Fix it.
 
-No such comment is needed.  This is standard practice.  You're the one
-arguing for changing stuff.  Have a different conversation separate from
-this patch.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/net/wireless/intel/ipw2x00/ipw2200.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+index be1d971b3d32..24a5624ef207 100644
+--- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
++++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+@@ -3295,7 +3295,7 @@ static int ipw_init_nic(struct ipw_priv *priv)
+ 	rc = ipw_poll_bit(priv, IPW_GP_CNTRL_RW,
+ 			  IPW_GP_CNTRL_BIT_CLOCK_READY, 250);
+ 	if (rc < 0)
+-		IPW_DEBUG_INFO("FAILED wait for clock stablization\n");
++		IPW_DEBUG_INFO("FAILED wait for clock stabilization\n");
+ 
+ 	/* assert SW reset */
+ 	ipw_set_bit(priv, IPW_RESET_REG, IPW_RESET_REG_SW_RESET);
+-- 
+2.47.2
+
