@@ -1,132 +1,123 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650D32AD11;
-	Sun,  2 Feb 2025 07:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2742AD11
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 07:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738482397; cv=none; b=gTm70PEQW+zLQrzBs2aB8BHT71QyXKozaTW85IKqHeC3k1znONtQqGlNRMDCMwUTNa+Ek6sMMYnbRkeVQ6DZG82VdV70NFXi48td93aNwIn6D7dVk2WYxc5bMhol1zEaJUsBzkzZ/Pl0CihYVEO1yzqiRjXRNSrV93srAhIARGY=
+	t=1738482511; cv=none; b=eJ0e+FnuMcLboonxne9cAf57g7MyOj+ccvfsQRULJ8MkFEf0Pd2LlWtRdRPIuZWaPjqdJxBj7uDIDNXZ82FNVvOOMFy2lMpo+gSIM1gtCJeTqSXlyKdwmdP+K2ybNmYnYvFgiAXfvGGSPFg+07QzWxd3VN6PwY5WsEVZIfU2fl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738482397; c=relaxed/simple;
-	bh=KPpRZb+XkmZNS30akoEPKssE6STRgNhMrtLh9sGnrZE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W0A+wxVm+LQxCpC6jeQOJ/IARrqAjjEskTEqbNASQew2ktzibf6ktLMYJN7z6BHKFgMYJ0k3d6LYCh0eWcjyydQi9RktHXofRX51DKAebay2CpXWqjU6F62fNzse01P6Cdwe5cjpvD4qCVOaw4dtd5v2GNLpMSVRiiZWLnstjsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ela7RF0y; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738482511; c=relaxed/simple;
+	bh=jBKl9aWHVPRunedWDfDLmp8zjxlO43EB/Sdp/YzUCJk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ti1GAEuXQarQHfr9rY97gUva6myCRZ4TCrrNfbQqd2AJY1YXOCLmGR3eZ4OxJcSTBlqT9ziSE7UXOU9cWQw7JEuF3uNiJh/O42/ZiU7KFFS79ThcE//yxuPdfHuwEoIld5zneeKDh4zxJZnafsCc/ClJCMHP4jiBxS89cZZasco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=tbZRsNPP; arc=none smtp.client-ip=195.133.245.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ela7RF0y"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5d3d479b1e6so4657104a12.2;
-        Sat, 01 Feb 2025 23:46:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738482392; x=1739087192; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dkf3AnYzxtjJolWV6YY/aOb67PW9FbaNoOwrFtKSVa0=;
-        b=ela7RF0yzFdSU3B0b25LHsH53kcaAbCxaaStqIgqjcVaSgS+hkBcmtnQVNhaMUGsgQ
-         8qe+6xr6bruDbpzbgndT5mJ2K1Q2zVOAOO6z+2rgV+lG7ckUoqMqGgoGGimuMR+v0Mef
-         90vwH19LhWbEnod00OE+MNkWl+kKavcj5xs410vTGVmLiMRGhA1xaYXjhzH3IvTg7ONS
-         Y19dzIDcKm1hkLchGzu6FtkhS0ANBvQugw59YMQKh29dW28Wh0jvym41cN+QZVIXV70x
-         5xKwTW3+/qSDjSuijVbSVChxoM8ttohixz1sWJD/x7vN6jLo7Q6tSn08r+cslLHdBy45
-         HQiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738482392; x=1739087192;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dkf3AnYzxtjJolWV6YY/aOb67PW9FbaNoOwrFtKSVa0=;
-        b=Qa9iESBX6giZIH7iwcIW8HzzKcVPEkKzeD92omtqEvT+DACZdLuXnLyIxnZxoJbv2j
-         DSp0lL8hCbIbq0epcS+SO/dLJNjF2MsNISHjRFtqW0XPu+ATzJErA7IrVOmzcJSuJjhp
-         8R1WIdJ9AfETCOfoY/j+eMAjRKkhA6kTrDDPZSQyhwFP30m9e/bHd43ASsRldcR7fa/9
-         IA3+Dp6g772RN/ByOM6Otmg7K5eTZnmgIBLn8XdnzL4wLE5QUKGRW1GfgRGf5RADhgso
-         LA07BQuXGzjSG2XdENADk0WcuAfStlKqvN6dbadMV/TM96rGrmtR84uYHNaLu7HX/m2y
-         iQlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4/L9njha5Jf3psuZM1e/XtKrDVCjT7t+bb2ukJXbnvOjhdXSOND81UOk8py2MA/O9vFKAfHZ3+bAZ@vger.kernel.org, AJvYcCVTRZC9hw2URcc+ylKCEngkcqcf1aKffiTh7HXeGhMGVLw2pvfKlk7eUFconVQjdYYRebN7e4KYoEwWSMbW@vger.kernel.org, AJvYcCVbr/wVtvwxhb7kpE25ptcI1IH0TcffA1iV97B5MWNxrPq7MZGnmZlWnQNiZBRiQv5egEtjBdkx/cyanQ==@vger.kernel.org, AJvYcCWGyroGzw0PKsyGv2bJy5E2wEtSSUpvHsbDjX6U4g8mq+Fsqb3Qtb2R9K8u4WFFa9ZVXcFbsFrHG8MKrZ0=@vger.kernel.org, AJvYcCXMbAxHTX4XrcrrQLzJLxGsFDhS6EYk6whLVcEuWXyvbOI4PFadm2xxluesyhhMk0R6RBX29ojpuwI6ivrrFQ==@vger.kernel.org, AJvYcCXdW9rq9pGchahllYJT9xklgcJ3iwKkSidgrybvPLlslUU0xy7lSXJ387/YmpIDkMYq34M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwpmsYKgurM12REUK1EEOtKF1f6+Hb26KNK7+TolFO3bfqkEou
-	d6nX0SE+qrm9W2/fT7hsgkEdmA4uN5jf3inckgA+Rr+zYbgj4sg4paH3jjFjJj7ouvZ6Ce0T+im
-	I+E2ksl+oXYlq+4+tX+wgOoKUmQs=
-X-Gm-Gg: ASbGncvesWoAWUZa584b7MLzr1V/D3qNWW8E1mtBiFkr/El3FzIldee3nYtDpf/vUsl
-	w89P+ykFj0To1gVbvdCdCPgTdL697xCntAqdJnw1uG+yxJ+U49XbUcvFHXzHcYCHQYT8wpJMA
-X-Google-Smtp-Source: AGHT+IE25ioY+88Ad0dzyJ05zZTY4tUCHqGHqVeBxZbL7pLFQn1rxv9eQSShAxQEMVL/CmIeX9bb7tDeZctmbYTQTWc=
-X-Received: by 2002:a05:6402:274e:b0:5d0:9054:b119 with SMTP id
- 4fb4d7f45d1cf-5dc5efec007mr41206927a12.21.1738482392164; Sat, 01 Feb 2025
- 23:46:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="tbZRsNPP"
+Received: from mail.nppct.ru (localhost [127.0.0.1])
+	by mail.nppct.ru (Postfix) with ESMTP id 1D4051C242C
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 10:48:18 +0300 (MSK)
+Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
+	reason="pass (just generated, assumed good)" header.d=nppct.ru
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:to:from:from; s=dkim; t=1738482497; x=
+	1739346498; bh=jBKl9aWHVPRunedWDfDLmp8zjxlO43EB/Sdp/YzUCJk=; b=t
+	bZRsNPPApEGTjVUnfvDDE5PUz/wbs51D201+HxeFNFUh+BVRKWogQZxfUtJX7CNf
+	RhkANzyW6fOcaddtk75xPhDz5ymYbTx7YgHwlNGodKl34N+vr8m8k/2EDdG2NARg
+	aYEBY8Iqog3U+42EVkF4hcKjr7frI+wM3/Z3yiEsoo=
+X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
+Received: from mail.nppct.ru ([127.0.0.1])
+	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id cQZA9U3P_SD0 for <linux-kernel@vger.kernel.org>;
+	Sun,  2 Feb 2025 10:48:17 +0300 (MSK)
+Received: from localhost.localdomain (unknown [87.249.24.51])
+	by mail.nppct.ru (Postfix) with ESMTPSA id 642871C19DD;
+	Sun,  2 Feb 2025 10:48:13 +0300 (MSK)
+From: Alexey Nepomnyashih <sdl@nppct.ru>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	bpf@vger.kernel.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH 6.1 00/16] Fixes bpf and rcu
+Date: Sun,  2 Feb 2025 07:46:37 +0000
+Message-ID: <20250202074709.932174-1-sdl@nppct.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1731684329.git.josef@toxicpanda.com> <9035b82cff08a3801cef3d06bbf2778b2e5a4dba.1731684329.git.josef@toxicpanda.com>
- <20250131121703.1e4d00a7.alex.williamson@redhat.com> <CAHk-=wjMPZ7htPTzxtF52-ZPShfFOQ4R-pHVxLO+pfOW5avC4Q@mail.gmail.com>
- <Z512mt1hmX5Jg7iH@x1.local> <20250201-legehennen-klopfen-2ab140dc0422@brauner>
- <CAHk-=wi2pThSVY=zhO=ZKxViBj5QCRX-=AS2+rVknQgJnHXDFg@mail.gmail.com>
-In-Reply-To: <CAHk-=wi2pThSVY=zhO=ZKxViBj5QCRX-=AS2+rVknQgJnHXDFg@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Sun, 2 Feb 2025 08:46:21 +0100
-X-Gm-Features: AWEUYZnttHbNcopdkTaXe70ba9wJmxOXrUavrKaCPbqgXlhsWsN9pWLAIjMYcbA
-Message-ID: <CAOQ4uxjVTir-mmx05zh231BpEN1XbXpooscZyfNUYmVj32-d3w@mail.gmail.com>
-Subject: Re: [REGRESSION] Re: [PATCH v8 15/19] mm: don't allow huge faults for
- files with pre content watches
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>, Peter Xu <peterx@redhat.com>, 
-	Alex Williamson <alex.williamson@redhat.com>, Josef Bacik <josef@toxicpanda.com>, kernel-team@fb.com, 
-	linux-fsdevel@vger.kernel.org, jack@suse.cz, viro@zeniv.linux.org.uk, 
-	linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org, 
-	linux-ext4@vger.kernel.org, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 2, 2025 at 1:58=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sat, 1 Feb 2025 at 06:38, Christian Brauner <brauner@kernel.org> wrote=
-:
-> >
-> > Ok, but those "device fds" aren't really device fds in the sense that
-> > they are character fds. They are regular files afaict from:
-> >
-> > vfio_device_open_file(struct vfio_device *device)
-> >
-> > (Well, it's actually worse as anon_inode_getfile() files don't have any
-> > mode at all but that's beside the point.)?
-> >
-> > In any case, I think you're right that such files would (accidently?)
-> > qualify for content watches afaict. So at least that should probably ge=
-t
-> > FMODE_NONOTIFY.
->
-> Hmm. Can we just make all anon_inodes do that? I don't think you can
-> sanely have pre-content watches on anon-inodes, since you can't really
-> have access to them to _set_ the content watch from outside anyway..
->
-> In fact, maybe do it in alloc_file_pseudo()?
->
+Hi, this series backports fix https://syzkaller.appspot.com/bug?id=d4d4abdb121f42913b3a149f2d846a7dd7eeb7e2 linux-6.1.y
 
-The problem is that we cannot set FMODE_NONOTIFY -
-we tried that once but it regressed some workloads watching
-write on pipe fd or something.
+Here is the summary with links:
+  - [6.1 01/16] bpf: Add a few bpf mem allocator functions.
+    https://git.kernel.org/bpf/bpf/c/e65a5c6edbc6
 
-and the no-pre-content is a flag combination (to save FMODE_ flags)
-which makes things a bit messy.
+  - [6.1 02/16] bpf: Factor out a common helper free_all().
+    https://git.kernel.org/bpf/bpf/c/aa7881fcfe9d
 
-We could try to initialize f_mode to FMODE_NONOTIFY_PERM
-for anon_inode, which opts out of both permission and pre-content
-events and leaves the legacy inotify workloads unaffected.
+  - [6.1 03/16] bpf: Rename few bpf_mem_alloc fields.
+    https://git.kernel.org/bpf/bpf/c/12c8d0f4c870
 
-But, then code like this will not do the right thing:
+  - [6.1 04/16] bpf: Let free_all() return the number of freed elements.
+    https://git.kernel.org/bpf/bpf/c/9de3e81521b4
 
-        /* We refuse fsnotify events on ptmx, since it's a shared resource =
-*/
-        filp->f_mode |=3D FMODE_NONOTIFY;
+  - [6.1 05/16] bpf: Refactor alloc_bulk().
+    https://git.kernel.org/bpf/bpf/c/05ae68656a8e
 
-We will need to convert all those to use a helper.
-I am traveling today so will be able to look closer tomorrow.
+  - [6.1 07/16] bpf: Use rcu_trace_implies_rcu_gp() in bpf memory allocator.
+    https://git.kernel.org/bpf/bpf/c/59be91e5e70a
 
-Jan,
+  - [6.1 08/16] bpf: Further refactor alloc_bulk().
+    https://git.kernel.org/bpf/bpf/c/7468048237b8
 
-What do you think?
+  - [6.1 09/16] bpf: Change bpf_mem_cache draining process.
+    https://git.kernel.org/bpf/bpf/c/d114dde245f9
 
-Amir.
+  - [6.1 10/16] bpf: Add a hint to allocated objects.
+    https://git.kernel.org/bpf/bpf/c/822fb26bdb55
+
+  - [6.1 11/16] bpf: Introduce bpf_mem_free_rcu() similar to kfree_rcu().
+    https://git.kernel.org/bpf/bpf/c/5af6807bdb10
+
+  - [6.1 12/16] rcu: Fix missing nocb gp wake on rcu_barrier()
+    https://git.kernel.org/bpf/bpf/c/b8f7aca3f0e0
+
+  - [6.1 13/16] rcu: Make call_rcu() lazy to save power
+    https://git.kernel.org/bpf/bpf/c/3cb278e73be5
+
+  - [6.1 14/16] rcu: Export rcu_request_urgent_qs_task()
+    https://git.kernel.org/bpf/bpf/c/43a89baecfe2
+
+  - [6.1 15/16] bpf: Remove unnecessary check when updating LPM trie
+    https://git.kernel.org/bpf/bpf/c/156c977c539e
+
+  - [6.1 16/16] bpf: Switch to bpf mem allocator for LPM trie
+    https://git.kernel.org/bpf/bpf/c/3d8dc43eb2a3
