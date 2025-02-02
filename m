@@ -1,355 +1,220 @@
-Received: from forward101d.mail.yandex.net (forward101d.mail.yandex.net [178.154.239.212])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236D91DC985;
-	Sun,  2 Feb 2025 20:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.212
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE1C8F6C;
+	Sun,  2 Feb 2025 20:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738528519; cv=none; b=J83nu/nnjyAgnCwy02FQ0tfzha82TiCWtTOcHG+uJfhB2Iu+oRIydl/5qjeLSPmpLbpxHHed1nHHL4matp6og9ntiHSJIv5cKhRSS3hIaIW7KJM2WbrtMOtqSpzzrMKSFJsf/H3rA5TSuIap5EKbeay39J//pN3JJWm4oIcjPBo=
+	t=1738529097; cv=none; b=eXa8eYv31cNvh6DS7qKQu4J3bw+t3a85kdF/7mwpxX1I8H/lGVdxyoRtRiQE6Il5bb1e4uUFbw5czc80GYmMWtlzEqxLtIalGfUFBtKB8KW8PFCtjxOEjOO5CrBh/pNgKfmhZKJ80wChDMzGipzZkYGjg+M0CULCaGLXT2CygtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738528519; c=relaxed/simple;
-	bh=B5cy6+gRRqmWH1eCroUA0hFOyLoj8fVXrAPWJG4brnE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f2ui1PtVDaDVDJvZSsOI/+/KEgGpX9QogPVAlIAFCUw0tjCxFs8D9SC/499SvCi7Ahgh0k6c3rAwCsJzQqNTRE7umqKLdCgSJlvYbyaS98k+yoibiIezDHpMLc7S6rf8HirzALejTdFJl3CAgOOmM47kcFUBA4aRpjsTYCUAXjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru; spf=pass smtp.mailfrom=ya.ru; dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b=CSQea95y; arc=none smtp.client-ip=178.154.239.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ya.ru
+	s=arc-20240116; t=1738529097; c=relaxed/simple;
+	bh=ByIT6O2MQ8AeBF3aaiyNh/HTBIpkXFi2GmOxu/ewkjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CRjPqBK52iAfNAJ9toSlnA/XbbHL2+b7uyWkvr5BF2NVFp6sUWxStdoHw8NBPXYeMr3wiCqAMQJX8awB6j7S1rc5sxVMt2UtCM/xrVPEm9d0TVB44PXYk9YD3m3jkmt8g07nig4Ddj6QsPPcY3Ay0RX6n6k8F8vS2nPDTO0HqNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pw1lMt8M; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b="CSQea95y"
-Received: from mail-nwsmtp-smtp-production-main-90.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-90.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:288:0:640:d35:0])
-	by forward101d.mail.yandex.net (Yandex) with ESMTPS id 477E460906;
-	Sun,  2 Feb 2025 23:35:05 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-90.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id wYpXeKDOhGk0-IOqKZa5Q;
-	Sun, 02 Feb 2025 23:35:03 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ya.ru; s=mail;
-	t=1738528503; bh=5rKcZJY29bNaWdT+17+7U8GuqPLJU4SRzpugbbuKOc4=;
-	h=Message-ID:Subject:References:To:From:In-Reply-To:Cc:Date;
-	b=CSQea95ybmKLeA1PZavBV28WAG6bh595O+y5TydwxmO5vuEEwbc9asjkzAomJiRR9
-	 Zwp4bZRK8g7J7CNrmC9uy17dbNQnmUu15CA2Hl8k++brc0cx4j5cENITKBEMggFXXa
-	 RKEKqWypjMgsS+z6U6GvoH1j477XHSs85BN6NbaU=
-Authentication-Results: mail-nwsmtp-smtp-production-main-90.myt.yp-c.yandex.net; dkim=pass header.i=@ya.ru
-Date: Sun, 2 Feb 2025 23:34:58 +0300
-From: Pavel Golikov <paullo612@ya.ru>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: andy.yan@rock-chips.com, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org, rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-	jernej.skrabec@gmail.com, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	quentin.schulz@cherry.de, Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Daniel Semkowicz <dse@thaumatec.com>,
-	Dmitry Yashin <dmt.yashin@gmail.com>,
-	Pavel Golikov <paullo612@ya.ru>
-Subject: Re: [PATCH v4 1/3] drm/bridge/synopsys: Add MIPI DSI2 host
- controller bridge
-Message-ID: <20250202203458.GA52719@pgolikov-home-desktop>
-References: <20241209231021.2180582-1-heiko@sntech.de>
- <20241209231021.2180582-2-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pw1lMt8M"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-436345cc17bso27501185e9.0;
+        Sun, 02 Feb 2025 12:44:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738529093; x=1739133893; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cbSx/ISaCz+L+0YMvLHQK84mnVS9XArcMwXBbJKLocA=;
+        b=Pw1lMt8MBAg/XEOr0QY98X3tsMAmix8xhZ5oyFJCYppt/p/o11hnE45ZZEABNv+Uas
+         e8IJfhmRFemZHAvo9Iii3dTd6s4HlYbeLh/aaTldO8gD5oyyeIBsDMG+m1v3fjOnPSGO
+         KwoIC35kKnnPrgPUpq1WPLsmuSARqp3HazTiDmn+emCeCrtHFacZJHKK+N6IxQJpLLob
+         tHXQzYIigCXfIGIkAUiD0KSd1TRFoSn3R8WQxsfhtPRzkJOSApjD6hbxxKhpT8t2T8Es
+         5Rgy7s+IKSJEBMPDQPuoSRO6m3nD0L1y4Yf7TglbgWgcpGh+CHI9k74DG6ykVxcg3Ktb
+         48kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738529093; x=1739133893;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cbSx/ISaCz+L+0YMvLHQK84mnVS9XArcMwXBbJKLocA=;
+        b=RmrekS4elt9eknXVLo/ThCRR27p6ac+H6RynLMUpCdeHLg3/5VfCjDBFmkYOeIB3uL
+         c00748FLBKKXUsmx82u8ptzp4ensBm+qxX7jF8MhllHZXgdWquKlnF6TUwAXMaE56VwP
+         BCG2B2fo0H+lEyDMMmji3Mt2y174Qk6wDxLi9cugTKmZCGjTThCu9Wand2BSICz/twqx
+         1WWFSjl7aT5X1tFUKRDgAh7et3k1coCHVjwtm2PLv7b0IcqvjiR868qUv85YJIUgdlDE
+         ZGP1RdaPWibtGR+e+3HxXannXSz8Gn/BcfeNBVPlKRuAg/MMi7TxBxsqgeriRZyuf5sc
+         VlNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKQKyXRDnxFTBx2+2gTyHseATzwGLEULONvo40yWoRg1CHAss/MSb600Dy4eqsaphc9jhuM/Z/vt+dNOg=@vger.kernel.org, AJvYcCW7RaRiRv4/Q/zlyLu95a/3BEjAHmDbVL8nq9FXYoJna5t67NqBhBYW7H4QVh1EZXj6LJ9RXzz5@vger.kernel.org
+X-Gm-Message-State: AOJu0YyInnQF/hIhLRZypiFY78RfjNQTLzJL5zZRv3jr1ao3VfPWX1WR
+	ZCaojyyk/BjcW85d9ypj/aulbRMh9aH+hEUEC6Oy2aXkIVFBeBmc
+X-Gm-Gg: ASbGncuI63JaPJFbI7oYXJHb9nq2EAA68o7AoxsQeGF0Jvt77No3GDbh91TiRXuRipn
+	4XiEvnBBshNw5riY1Poq3MM4tHV3Lzv0szcks1Xo0P7cKZ/9r1P9O78cgjtdsrgAqLdt6jVpR5S
+	ZJ2lKAITLKmrhPjpfosgPXQHQOIPArQPiG4D2j2lWtobzhAgI3ioZ47HyrCvEj2Cp9USmTpW7qM
+	67yuo8x3DbK+e46x40qsDW6/Hc/a9k1pXgvIAQL3Q/+WphxMmre4sU3sWgwKgfcAdl79FL0+qUc
+	lAjSwPP4OrPT8cQJhHJ56FJ/XB/Y2AVHky+Dea0LCmekYVXDEf/H6Q==
+X-Google-Smtp-Source: AGHT+IHLsWh/YGpljPw48TJZyadtyPAWHtbeX9ie2f3Bzm4IzJqabYq5/PboSRajCtTjNtqAWvC6/w==
+X-Received: by 2002:a05:6000:1561:b0:38c:5b52:3a47 with SMTP id ffacd0b85a97d-38c5b523e1dmr9683706f8f.4.1738529093086;
+        Sun, 02 Feb 2025 12:44:53 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b595asm10875448f8f.66.2025.02.02.12.44.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 12:44:52 -0800 (PST)
+Date: Sun, 2 Feb 2025 20:44:49 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>, ebiederm@xmission.com,
+ oleg@redhat.com, brauner@kernel.org, akpm@linux-foundation.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] pid: drop irq disablement around pidmap_lock
+Message-ID: <20250202204449.77cab5e5@pumpkin>
+In-Reply-To: <CAGudoHED5-oPqb62embitG39P1Rf7EtEVODY38WB25G21-GGyQ@mail.gmail.com>
+References: <20250201163106.28912-1-mjguzik@gmail.com>
+	<20250201163106.28912-7-mjguzik@gmail.com>
+	<20250201181933.07a3e7e2@pumpkin>
+	<CAGudoHFHzEQhkaJCB3z6qCfDtSRq+zZew3fDkAKG-AEjpMq8Nw@mail.gmail.com>
+	<20250201215105.55c0319a@pumpkin>
+	<Z56ZZpmAbRCIeI7D@casper.infradead.org>
+	<20250202135503.4e377fb0@pumpkin>
+	<CAGudoHED5-oPqb62embitG39P1Rf7EtEVODY38WB25G21-GGyQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241209231021.2180582-2-heiko@sntech.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Sun, 2 Feb 2025 20:34:48 +0100
+Mateusz Guzik <mjguzik@gmail.com> wrote:
 
-On Tue, Dec 10, 2024 at 12:10:19AM +0100, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@cherry.de>
-> 
-> Add a Synopsys Designware MIPI DSI host DRM bridge driver for their
-> DSI2 host controller, based on the Rockchip version from the driver
-> rockchip/dw-mipi-dsi2.c in their vendor-kernel with phy & bridge APIs.
-> 
-> While the driver is heavily modelled after the previous IP, the register
-> set of this DSI2 controller is completely different and there are also
-> additional properties like the variable-width phy interface.
-> 
-> Tested-by: Daniel Semkowicz <dse@thaumatec.com>
-> Tested-by: Dmitry Yashin <dmt.yashin@gmail.com>
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
-[..]
-> +static void dw_mipi_dsi2_set_data_stream_mode(struct dw_mipi_dsi2 *dsi2)
-> +{
-> +	u32 mode;
-> +	int ret;
-> +
-> +	regmap_write(dsi2->regmap, DSI2_MODE_CTRL, DATA_STREAM_MODE);
-> +	ret = regmap_read_poll_timeout(dsi2->regmap, DSI2_MODE_STATUS,
-> +				       mode, mode & DATA_STREAM_MODE,
-> +				       1000, MODE_STATUS_TIMEOUT_US);
-> +	if (ret < 0)
-> +		dev_err(dsi2->dev, "failed to enter data stream mode\n");
-> +}
-> +
-> +static void dw_mipi_dsi2_set_cmd_mode(struct dw_mipi_dsi2 *dsi2)
-> +{
-> +	u32 mode;
-> +	int ret;
-> +
-> +	regmap_write(dsi2->regmap, DSI2_MODE_CTRL, COMMAND_MODE);
-> +	ret = regmap_read_poll_timeout(dsi2->regmap, DSI2_MODE_STATUS,
-> +				       mode, mode & COMMAND_MODE,
-> +				       1000, MODE_STATUS_TIMEOUT_US);
-> +	if (ret < 0)
-> +		dev_err(dsi2->dev, "failed to enter data stream mode\n");
+> On Sun, Feb 2, 2025 at 2:55=E2=80=AFPM David Laight
+> <david.laight.linux@gmail.com> wrote:
+> >
+> > On Sat, 1 Feb 2025 22:00:06 +0000
+> > Matthew Wilcox <willy@infradead.org> wrote:
+> > =20
+> > > On Sat, Feb 01, 2025 at 09:51:05PM +0000, David Laight wrote: =20
+> > > > I'm not sure what you mean.
+> > > > Disabling interrupts isn't as cheap as it ought to be, but probably=
+ isn't
+> > > > that bad. =20
+> > >
+> > > Time it.  You'll see. =20
+> >
+> > The best scheme I've seen is to just increment a per-cpu value.
+> > Let the interrupt happen, notice it isn't allowed and return with
+> > interrupts disabled.
+> > Then re-issue the interrupt when the count is decremented to zero.
+> > Easy with level sensitive interrupts.
+> > But I don't think Linux ever uses that scheme.
+> > =20
+>=20
+> I presume you are talking about the splhigh/splx set of primivitives
+> from Unix kernels.
+>=20
+> While "entering" is indeed cheap, undoing the work still needs to be
+> atomic vs interrupts.
+>=20
+> I see NetBSD uses local cmpxchg8b on the interrupt level and interrupt
+> mask, while the rest takes the irq trip.
+>=20
+> The NetBSD solution is still going to be visibly slower than not
+> messing with any of it as spin_unlock on amd64 is merely a store of 0
+> and cmpxchg even without the lock prefix costs several clocks.
+>=20
+> Maybe there is other hackery which could be done, but see below.
 
-We've failed to enter command mode, not stream mode. Wrong error message caused
-by copy and paste?
+I was thinking it might be possible to merge an 'interrupts disabled' count
+with the existing 'pre-emption disabled' count.
+IIRC (on x86 at least) this is just a per-cpu variabled accessed from %fs/%=
+gs.
+So you add one to disable pre-emption and (say) 1<<16 to disable interrupts.
+If an interrupt happens while the count is 'big' the count value is changed
+so the last decrement of 1<<16 will set carry (or overflow), and a return
+from interrupt is done that leaves interrupts disabled (traditionally easy).
+The interrupt enable call just subtracts the 1<<16 and checks for carry (or
+overflow), if not set all is fine, it set it needs to call something to
+re-issue the interrupt - that is probably the hard bit.
 
-> +}
-> +
-> +static void dw_mipi_dsi2_host_softrst(struct dw_mipi_dsi2 *dsi2)
-> +{
+>=20
+> > =20
+> > > > > So while this is indeed a tradeoff, as I understand the sane defa=
+ult
+> > > > > is to *not* disable interrupts unless necessary. =20
+> > > >
+> > > > I bet to differ. =20
+> > >
+> > > You're wrong.  It is utterly standard to take spinlocks without
+> > > disabling IRQs.  We do it all over the kernel.  If you think that nee=
+ds
+> > > to change, then make your case, don't throw a driveby review.
+> > >
+> > > And I don't mean by arguing.  Make a change, measure the difference. =
+=20
+> >
+> > The analysis was done on some userspace code that basically does:
+> >         for (;;) {
+> >                 pthread_mutex_enter(lock);
+> >                 item =3D get_head(list);
+> >                 if (!item)
+> >                         break;
+> >                 pthead_mutex_exit(lock);
+> >                 process(item);
+> >         }
+> > For the test there were about 10000 items on the list and 30 threads
+> > processing it (that was the target of the tests).
+> > The entire list needs to be processed in 10ms (RTP audio).
+> > There was a bit more code with the mutex held, but only 100 or so
+> > instructions.
+> > Mostly it works fine, some threads get delayed by interrupts (etc) but
+> > the other threads carry on working and all the items get processed.
+> >
+> > However sometimes an interrupt happens while the mutex is held.
+> > In that case the other 29 threads get stuck waiting for the mutex.
+> > No progress is made until the interrupt completes and it overruns
+> > the 10ms period.
+> >
+> > While this is a userspace test, the same thing will happen with
+> > spin locks in the kernel.
+> >
+> > In userspace you can't disable interrupts, but for kernel spinlocks
+> > you can.
+> >
+> > The problem is likely to show up as unexpected latency affecting
+> > code with a hot mutex that is only held for short periods while
+> > running a lot of network traffic.
+> > That is also latency that affects all cpu at the same time.
+> > The interrupt itself will always cause latency to one cpu.
+> > =20
+>=20
+> Nobody is denying there is potential that lock hold time will get
+> significantly extended if you get unlucky enough vs interrupts. It is
+> questioned whether defaulting to irqs off around lock-protected areas
+> is the right call.
 
-Looks like it is necessary to also do apb reset here, like vendor kernel does.
-Without apb reset, panel sometimes does not properly come up after DPMS switch.
+I really commented because you were changing one lock which could
+easily be 'hot' enough for there to be side effects, without even
+a comment about any pitfalls.
 
-Tested with
+	David
 
-modetest -M rockchip -w 83:DPMS:3
+>=20
+> As I noted in my previous e-mail the spin_lock_irq stuff disables
+> interrupts upfront and does not touch them afterwards even when
+> waiting for the lock to become free. Patching that up with queued
+> locks may be non-trivial, if at all possible. Thus contention on
+> irq-disabled locks *will* add latency to their handling unless this
+> gets addressed. Note maintaining forward progress guarantee in the
+> locking mechanism is non-negotiable, so punting to TAS or similar
+> unfair locks does not cut it.
+>=20
+> This is on top of having to solve the overhead problem for taking the
+> trips (see earlier in the e-mail).
+>=20
+> I would argue if the network stuff specifically is known to add
+> visible latency, then perhaps that's something to investigate.
+>=20
+> Anyhow, as Willy said, you are welcome to code this up and demonstrate
+> it is better overall.
+>=20
 
-I'm not sure whether it is Debian specific, but setting connector's DPMS property
-to OFF causes immediate panel reset. Something is restoring its value to ON
-immediately.
-
-> +	regmap_write(dsi2->regmap, DSI2_SOFT_RESET, 0x0);
-> +	usleep_range(50, 100);
-> +	regmap_write(dsi2->regmap, DSI2_SOFT_RESET,
-> +		   SYS_RSTN | PHY_RSTN | IPI_RSTN);
-> +}
-
-...
-
-> +static void dw_mipi_dsi2_phy_ratio_cfg(struct dw_mipi_dsi2 *dsi2)
-> +{
-> +	struct drm_display_mode *mode = &dsi2->mode;
-> +	u64 sys_clk = clk_get_rate(dsi2->sys_clk);
-> +	u64 pixel_clk, ipi_clk, phy_hsclk;
-> +	u64 tmp;
-> +
-> +	/*
-> +	 * in DPHY mode, the phy_hstx_clk is exactly 1/16 the Lane high-speed
-> +	 * data rate; In CPHY mode, the phy_hstx_clk is exactly 1/7 the trio
-> +	 * high speed symbol rate.
-> +	 */
-> +	phy_hsclk = DIV_ROUND_CLOSEST_ULL(dsi2->lane_mbps * USEC_PER_SEC, 16);
-> +
-> +	/* IPI_RATIO_MAN_CFG = PHY_HSTX_CLK / IPI_CLK */
-> +	pixel_clk = mode->crtc_clock * MSEC_PER_SEC;
-> +	ipi_clk = pixel_clk / 4;
-> +
-> +	tmp = DIV_ROUND_CLOSEST_ULL(phy_hsclk << 16, ipi_clk);
-> +	regmap_write(dsi2->regmap, DSI2_PHY_IPI_RATIO_MAN_CFG,
-> +		   PHY_IPI_RATIO(tmp));
-> +
-> +	/*
-> +	 * SYS_RATIO_MAN_CFG = MIPI_DCPHY_HSCLK_Freq / MIPI_DCPHY_HSCLK_Freq
-> +	 */
-
-According to TRM
-
-SYS_RATIO_MAN_CFG = MIPI_DCPHY_HSCLK_Freq / SYS_CLK_Freq
-
-So, this comment is simply wrong. Looks like a typo. Also, earlier comment does
-not mention _Freq part in frequency names. Maybe it would be better to make it
-consistent?
-
-> +	tmp = DIV_ROUND_CLOSEST_ULL(phy_hsclk << 16, sys_clk);
-> +	regmap_write(dsi2->regmap, DSI2_PHY_SYS_RATIO_MAN_CFG,
-> +		   PHY_SYS_RATIO(tmp));
-> +}
-> +
-> +static void dw_mipi_dsi2_lp2hs_or_hs2lp_cfg(struct dw_mipi_dsi2 *dsi2)
-> +{
-> +	const struct dw_mipi_dsi2_phy_ops *phy_ops = dsi2->plat_data->phy_ops;
-> +	struct dw_mipi_dsi2_phy_timing timing;
-> +	int ret;
-> +
-> +	ret = phy_ops->get_timing(dsi2->plat_data->priv_data,
-> +				  dsi2->lane_mbps, &timing);
-> +	if (ret)
-> +		dev_err(dsi2->dev, "Retrieving phy timings failed\n");
-> +
-> +	regmap_write(dsi2->regmap, DSI2_PHY_LP2HS_MAN_CFG, PHY_LP2HS_TIME(timing.data_lp2hs));
-> +	regmap_write(dsi2->regmap, DSI2_PHY_HS2LP_MAN_CFG, PHY_HS2LP_TIME(timing.data_hs2lp));
-
-I also had to set DSI2_PHY_MAX_RD_T_MAN_CFG to 10000 as it is done in
-dw-mipi-dsi (v1) driver to make my panel work properly in LPM mode.
-
-> +}
-
-...
-
-> +static const struct regmap_config dw_mipi_dsi2_regmap_config = {
-> +	.name = "dsi2-host",
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.fast_io = true,
-
-Maybe it would be good to also set max_register here to make proper regmap
-available through debugfs? Or max_register_is_0 otherwise? Without this, only
-first register is available for dumping.
-
-Not quite relevant here, as this bridge is not currently used alone, but
-relevant for Rockchip specific glue driver.
-
-> +};
-
-...
-
-
-I've managed to successfully enable my DSI panel [0]. It has Lincoln Technology
-Solutions ZV070WUV-L50 board [1], which, in turn, is based on Focal Tech FT7250
-display controller.
-
-This panel works flawlessly with rk3568 (but at most at ~55 Hz refresh rate,
-because rk3568 does not support modes higher than 1920x1080@60, so, I had to
-lower refresh rate to make it work). But has some troubles with rk3588. It
-works fine with vendor kernel with LPM disabled and "auto-calculation-mode"
-device tree property set. As far as I can understand, auto calculation mode is
-not going to be supported by mainline, and disabling LPM is not an option to
-me.
-
-So, to make it work with this series I had to increase PHY_SYS_RATIO twice.
-
-Maybe Andy could shade the light on what automatic mode calculation algorithm
-does? Why in automatic mode PHY_SYS_RATIO value is twice larger than value
-computed by formula in DSI controller application note?
-
-Panel configuration:
-
-static const struct drm_display_mode default_mode_lincoln = {
-	.hdisplay    = 1200,
-	.hsync_start = 1200 + 20,
-	.hsync_end   = 1200 + 20 + 8,
-	.htotal      = 1200 + 20 + 8 + 22,
-	.vdisplay    = 1920,
-	.vsync_start = 1920 + 178,
-	.vsync_end   = 1920 + 178 + 8,
-	.vtotal      = 1920 + 178 + 8 + 32,
-	.clock       = 148500,
-	.width_mm    = 94,
-	.height_mm   = 151,
-};
-
-dsi->lanes = 4;
-dsi->format = MIPI_DSI_FMT_RGB888;
-dsi->mode_flags = MIPI_DSI_MODE_LPM | MIPI_DSI_MODE_VIDEO |
-	MIPI_DSI_MODE_NO_EOT_PACKET | MIPI_DSI_MODE_VIDEO_BURST;
-
-Regmap diff between manual mode and automatic mode:
-
-diff --git a/root/regs_manual b/root/regs_auto
-index 117cb5b..5dce301 100644
---- a/root/regs_manual
-+++ b/root/regs_auto
-@@ -7,9 +7,9 @@
- 018: 00000000
- 01c: 00000003
- 020: 00000303
--024: 00000001
-+024: 00000000
- 028: 00000000
--02c: 0161082c
-+02c: 04b70728
- 030: 00000000
- 034: 00000000
- 038: 00000000
-@@ -65,20 +65,20 @@
- 100: 00000130
- 104: 00000900
- 108: 001f0000
--10c: 000cb0b5
--110: 00000000
--114: 000ae64f
--118: 00000000
-+10c: 00000000
-+110: 0013be38
-+114: 00000000
-+118: 00114671
- 11c: 00000000
--120: 00000000
-+120: 000003d3
- 124: 00000000
--128: 00000000
-+128: 00952167
- 12c: 00000000
--130: 00000000
--134: 0001aaab
--138: 00000000
--13c: 00002d21
--140: 00000000
-+130: 00658920
-+134: 00000000
-+138: 0001aaad
-+13c: 00000000
-+140: 00005a41
- 144: 00000000
- 148: 00000000
- 14c: 00000000
-@@ -129,7 +129,7 @@
- 200: 00000002
- 204: 00000000
- 208: ffff0000
--20c: 00100072
-+20c: 00000072
- 210: 00000000
- 214: 00000000
- 218: 00000000
-@@ -191,20 +191,20 @@
- 2f8: 00000000
- 2fc: 00000000
- 300: 00000050
--304: 00035555
--308: 00000000
--30c: 00092aab
--310: 00000000
--314: 01f40000
--318: 00000000
--31c: 0208d555
--320: 00000000
--324: 00000008
--328: 00000000
--32c: 00000020
--330: 00000000
--334: 00000780
--338: 00000000
--33c: 000000b2
--340: 00000000
-+304: 00000000
-+308: 0003555a
-+30c: 00000000
-+310: 00092ab7
-+314: 00000000
-+318: 01f402bc
-+31c: 00000000
-+320: 0208d82e
-+324: 00000000
-+328: 00000008
-+32c: 00000000
-+330: 00000020
-+334: 00000000
-+338: 00000780
-+33c: 00000000
-+340: 000000b2
- 344: 000004b0
-
-The only irrelevant difference here is LPM mode enable bit.
-
-Calculated hsclk is 61875000, sys clk is 351000000, MIPI lane speed is
-990 mbps. VOP pixel clock is 37125000 if it is relevant in any way.
-
-Thanks, Pavel
-
-[0] https://www.hello-lighting.com/product/7-0-ips-1200x1920/
-[1] http://www.microtech-lcd.cn/upfile/202109/2021092649634025.jpg
