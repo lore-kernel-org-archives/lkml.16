@@ -1,126 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03031D7E57;
-	Sun,  2 Feb 2025 14:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0861D90AD;
+	Sun,  2 Feb 2025 14:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738507119; cv=none; b=SgAXcaJocbZKbx85MAAEKeKz0FWwhDZhsqMTad//LSLyKuKCkjxLhtvjzzeZ39XvjYhXVsL3hmME7kBfrrM2SRJ3x4eVJdfg/Dvhrz1TjKtlGotG9jOajkZEoZ78prcC6+wQ5A19R8vbfG/asJD5p1s5k1gIq8XMC3Gxi+VOl88=
+	t=1738507250; cv=none; b=jKfLCVmvcQ8eZI0zoAq3zvfa2SnFfo9tW8wosKjYBQQa2cHmlJrHil5MLVsyNDi10Cin+oCiy/TALmfY1RVg6M6Srj2Yp+ITejhGBh87EQ5U+NAYcJhGL8qp2W0dcsw5OuBb/aIqdBcb8H4RbCVwLt68dq4utDwft4xbT/IzK8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738507119; c=relaxed/simple;
-	bh=VC3TvpTS3OgA37PYjJzVzTBE9twfsQyPycmL+dK3wBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=GKdxNFHGJ/l43t87FrMMKRt0s5bVBSdU5xVkm0xM0bkqh175Cd6G1Tnz3PIDxHVqkjjjs/LUobni663iSjTBBD17lvPaRPe6Sg6Uns4irmMSjKkOhIlxJfW5ePfTqOwXLjwPvZXNfjHB6PlQp2rZuwpsVbrRVIzithm4iqdUXNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MRsQeMtS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738507250; c=relaxed/simple;
+	bh=wPFTiggNeh4E4+nFLVjg69LKff1voHJI4RzDk/mGyCg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K+9MfmhOB3Up5SmQQZTvd2cLwhCTdTPRvwaYzyBMmXi3YWqIUR8z6+bCMBrVJ+S8ZVikkh9MZjTKMsw/pdzo0fI1+NizVU2dZ9hTdrWxlbzEHGvk4fi377zsi8hsTk6lYaznI/CO5iI/z+mUSIKHH1dKxP9PkU2cBRBZnC7cg88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pg99hoOx; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MRsQeMtS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 259F0C4CED1;
-	Sun,  2 Feb 2025 14:38:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738507118;
-	bh=VC3TvpTS3OgA37PYjJzVzTBE9twfsQyPycmL+dK3wBA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=MRsQeMtSY+inEX470+z190fXTmCy/XJsG9DcJGD9GGaXRAdKyo5aGjZg+Bvj6nx2y
-	 mFm4a0d5H6HlVKyMcBdHFcOjimNMZNMgHop2pBWrIAdGYalK8gv0mxzVUnSAi/2QEV
-	 sXpLxitPs4qTr129yOmb3/CwdHIsUaWlyOJLyDUySYvPDVbuMcqptZJhpl1W0JEw+5
-	 kr0yFrrUlehxg04AD29TB3GBc5d3BbV9f0wejwzZAtp3Yt2HLLB2O4u0q/Tlk1XtAH
-	 LoYPMyq/MmiI945iT5mmtJcg0DNOdUIz1ixwZSseZuYpAZWld1Ff2QM2LOxG/cMExC
-	 XBPhaMKS6Bcyw==
-Message-ID: <4e1c3a64-5c66-4312-b96a-334eac933684@kernel.org>
-Date: Sun, 2 Feb 2025 15:38:30 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pg99hoOx"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3078fb1fa28so34340981fa.3;
+        Sun, 02 Feb 2025 06:40:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738507247; x=1739112047; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r2LtEXUIsfJyVCaosUNtOBmJQZCbofpmIbzItN0ViTY=;
+        b=Pg99hoOxlC75PxRA7IfL+NvsNt7SKRG+Ett4ktqzbsOy71q+U20tC2oxJJMXIHWARC
+         Ypxhy0zpbWHe+q9P8HBy/RzQALMdCovk0/3ex4IbrIT11tCVxOtHhHq/JavKzbOpcNe+
+         EfkPn2KCeMNdRsz/OI3pyHp70s2FumGEIUG+dsgRDzguvzgaLU5/w1Ldjf30NEybZYqN
+         bSicSLuNEqpjiUnkqfi0oZab1plHrEyi+kpNjsTr7iY2vI5k0LolUXTxjIDiQwaFzAsm
+         MxWMo/q2cNRMRmwe/yVvPGXDCQEun65RraxAbET6H36Wtu9lH3URZ4tcloYupNnMKaQn
+         VSCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738507247; x=1739112047;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r2LtEXUIsfJyVCaosUNtOBmJQZCbofpmIbzItN0ViTY=;
+        b=YhgxuE001lBqBEecSGHoAwLfyfzc8k6LHHAs7fbIEIAtci+WwGiZrEgYirjsJqJmAJ
+         2SkpMGgh4tGrMGlASfrAG85Tn3jV4gKZeZ5YUaayM8pWeY4KTjXRuw5qX5CLtQVqSPJH
+         zEKS0ZfVXoCWmpQ++xwTbvwanLBiZbr6iJpGqEJnPEu5Y/FbkUMgqcTupjz6lina/Kiu
+         V4O/mJaSFBHaU/eV9CvZk8WSTeSNtUUdPrK1/Dw7x281owXNA94dYDfBYBFN86uUALO7
+         weCGRn/ptDysh6F7VqdJlO0j51glXxt8VRkQ/06V/3lmI3tqy+mztcpg7Z6BdFG6Xcjj
+         P3gg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDHuGiF2k4J5EeqDpqy7rq+H4xpYmqJnAAO3eNK+rtPnSSIA86SD2E46wtCVxFL/Ff1eL819Bx0ddZefY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4V5yVfVoQrTB2gcd8E3+h87PZCAUGtztd0eyxN1XhQBuQ1LZg
+	SWDWjxYs+ofBc+KWC4mDOJkxFWgpYrS41oU36AvkycLDonR1gbMNjq+ptZIOrwj+JJdZVuFYGyC
+	h2uHkmC+z5cRqdzo4M9tDEQvcpDc=
+X-Gm-Gg: ASbGncuVgCqgORJAtGDj24SjGYkLWxOsPTHZpIQvrtPhquJVd7j1TGlm0jek2OidNlv
+	bVv/xYDK39LRtcQXAAYxQSNFJDGAgChxchhU3AtjymMLkdBwDyVF7xdGFHx4EGGnzFYXRwu8j5q
+	ptDCMBCnILVRXfqK/SVB/L7M5+B+5UC2g=
+X-Google-Smtp-Source: AGHT+IHCf2gs1zGzjevMt+wXA4YetxDWt34J8d4+Vz4eRYPmFvFSYPcriKS/BYtmIM72KFY+zjMzz5r1eZI3ifgLZRw=
+X-Received: by 2002:a2e:a588:0:b0:302:350c:c630 with SMTP id
+ 38308e7fff4ca-30796857bb4mr71859461fa.22.1738507246632; Sun, 02 Feb 2025
+ 06:40:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: clock: ipq5424-apss-clk: Add ipq5424
- apss clock controller
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Sricharan R <quic_srichara@quicinc.com>, andersson@kernel.org,
- mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, konradybcio@kernel.org,
- rafael@kernel.org, viresh.kumar@linaro.org, ilia.lin@kernel.org,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20250127093128.2611247-1-quic_srichara@quicinc.com>
- <20250127093128.2611247-2-quic_srichara@quicinc.com>
- <0c26af56-ed7a-4de8-ac47-7447298b87f0@kernel.org>
- <ee608de8-ad3c-4cb4-994d-fc3cf930e29c@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <ee608de8-ad3c-4cb4-994d-fc3cf930e29c@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250202-cstr-core-v6-0-8469cd6d29fd@gmail.com>
+ <20250202-cstr-core-v6-2-8469cd6d29fd@gmail.com> <CAJ-ks9mGs0Swc1L2WMuh1Y5q6STsiFuYi77RR1Nb_gK1GG61+w@mail.gmail.com>
+In-Reply-To: <CAJ-ks9mGs0Swc1L2WMuh1Y5q6STsiFuYi77RR1Nb_gK1GG61+w@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 2 Feb 2025 09:40:10 -0500
+X-Gm-Features: AWEUYZlM1uyK-M5aPVhV30EaFwmBCEni812o8a2vR1odTWwdwgRyjfo8OGpKPcg
+Message-ID: <CAJ-ks9mqcUX2XRxyZeyyt+s2wrF6TkjYqJQhoOAnMBPS08MGyg@mail.gmail.com>
+Subject: Re: [PATCH v6 2/4] rust: replace `CStr` with `core::ffi::CStr`
+To: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 01/02/2025 16:21, Konrad Dybcio wrote:
-> On 28.01.2025 8:34 AM, Krzysztof Kozlowski wrote:
->> On 27/01/2025 10:31, Sricharan R wrote:
->>> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->>>
->>> The CPU core in ipq5424 is clocked by a huayra PLL with RCG support.
->>> The RCG and PLL have a separate register space from the GCC.
->>> Also the L3 cache has a separate pll and needs to be scaled along
->>> with the CPU.
->>>
->>> Co-developed-by: Md Sadre Alam <quic_mdalam@quicinc.com>
->>> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
->>> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->>
->> Considering that there were multiple conflicting patches coming from
->> Qualcomm around IPQ SoCs and that we are in the merge window, I will
->> skip this patch.
-> 
-> I think you confused this with something else, I don't see any other IPQ
-> clock patches
+On Sun, Feb 2, 2025 at 7:54=E2=80=AFAM Tamir Duberstein <tamird@gmail.com> =
+wrote:
+>
+> On Sun, Feb 2, 2025 at 7:20=E2=80=AFAM Tamir Duberstein <tamird@gmail.com=
+> wrote:
+> >
+> >  impl DerefMut for CString {
+> >      fn deref_mut(&mut self) -> &mut Self::Target {
+> > -        // SAFETY: A `CString` is always NUL-terminated and contains n=
+o other
+> > -        // NUL bytes.
+> > -        unsafe { CStr::from_bytes_with_nul_unchecked_mut(self.buf.as_m=
+ut_slice()) }
+> > +        // SAFETY: Properties of `bytes` guaranteed by the safety prec=
+ondition.
+> > +        unsafe { &mut *(self.buf.as_mut_slice() as *mut [u8] as *mut C=
+Str) }
+> >      }
+> >  }
+>
+> Whoops, this safety comment is nonsense. I'll use the one from `impl
+> Deref` above in v7...or just remove this impl altogether. I'm not sure
+> what the use for `&mut CStr` would be.
 
-The conflicts were not about clocks, but I just don't want to spend my
-time to figure out whether clocks also have conflicting work or not.
-
-Best regards,
-Krzysztof
+Ah, turns out Michal's patches removed functionality added in commit
+a321f3ad0a5d ("rust: str: add {make,to}_{upper,lower}case() to
+CString") which relied on this DerefMut impl. I've restored it all in
+v7.
