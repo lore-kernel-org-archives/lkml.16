@@ -1,144 +1,125 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BD9E574;
-	Sun,  2 Feb 2025 14:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5DB1F8ADE;
+	Sun,  2 Feb 2025 14:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738505573; cv=none; b=EPdVvk/b3zbHfuHMbHOEmM+93VfEwO2gHbvsODTYIvioiucjuq40wiWTl+L72kV8zKNlP9gUS0Za5ycfa+GcmrK1P21YR/Oy738GVU1y7y0nTmQRtGbf8Oq/xyhAAWzyqpjcnO8KSedSoucd2QXI8sTjxUZfOXou+RQp5IKwrRA=
+	t=1738505860; cv=none; b=hNExena6YbnbdyPAqHEkG3O1ImAZSdgX/7FsmT0YonC7DppKNU55+YxLoIctNlkXI7UHrvEr90j9O7TZfSOLdwnIKr9eNIReT+0YenRMF2vnnrwEyJb9YzI9IBG77DJmv8mQUWnH48Q06/WnGDvpMduXyfIsp7nLvXWqChe/i3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738505573; c=relaxed/simple;
-	bh=QZm1LtvGQKCijH7Ny3Z1lJ1iBrDQ8MzH8+nch80dCX4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D5uU+q5sMIh2euxXut5Ow0zGpBRmYYY9Cr2tqcCo6ONlQTND7pmOkHHhmoMOT45gGwmfz3GKDpZjM4o/fSByYmwJYtv8tXQwPsjGD+oMx6tcAXHJjiw71jSKzWZKPyPlF5amYrn+aPZaCzoyRzINrEw1eCXA4lbct2a6vt5X9Ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=blxFU8kP; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738505860; c=relaxed/simple;
+	bh=bCUGo8rouRaEoQYHA7MIS/WPw4XvUL+N02kgnTBvb18=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M8r3MBVwd22RVtCLSCeQcnk10OPe5qS0/qsRDtKpuil1UrvIJr9Rk0TnJ81KaloD3yQ2Pf896tXPZ3wII6TRrMEWOgBYf6Uh/Hp0jsrU3qq3oVks7f+sCqGEO5Y+rtqTQrIMEfv3xkMP6t7E/vHM8verm3ur/9+h36HkIpgyTUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IXEp6ZxQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blxFU8kP"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6f6715734d9so20157387b3.3;
-        Sun, 02 Feb 2025 06:12:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738505571; x=1739110371; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OP/ULsuhS2l/WjnpV3aP5975AuU0qKrgS7YueBktGqU=;
-        b=blxFU8kPtZak4OPtl/vV3BSR96zDpWhjc3+Of9xOBUoXZRq6ryhWnHRBVlnEs/6qdM
-         sX2jkfnYG0aOUqLZAlhF2+u1ADDSxWM4kMS5t75AUWqyqC35HljN2fzleqWbgDbjnNiA
-         GR0JzN5miY2hm/tdfolHFMeKS55H5P6QmZndHiMFxJy+tf9VoZCoL4SlNm+rnm0EMzoE
-         xrm8zPl4hKfbC06siLWEoZ+Qa/4xoz93ETDrcaB7TpYQWJbZOpI+LX0ajV+wwPK5/whg
-         voFiPcS0OtU8zXiVORO0yWllfYvIpUg4/pI651ADe81a/deAg6uAA7c0nwDNYBDeWcrG
-         b9oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738505571; x=1739110371;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OP/ULsuhS2l/WjnpV3aP5975AuU0qKrgS7YueBktGqU=;
-        b=ie6qFsVy7qFPyeUfiN84wKGmpduGmB+1g+GjcEo8xEIwzQf2LlWf0ErQdyEHJA5aeI
-         k0ylzgaEcc1Squv77BPJTDSG/yflqMOxd7WfbWWXIq4MAJqw4H6ov6sMC5jrCSYcv9El
-         x6DbcC0HNzrijv25SqmeZWsa6MEe+l68gWyebRZfUD/DEi1FShIKvTZxRVOydRGQVMGu
-         QadzbJlr8ewzgvxy8QDWwzCFF/MpIAGPmrt59/MJ2H5LZAN7+phUSKsxPefOjc7Bc65p
-         QSBZnGI2ThZxORfS+F3uusuXz/8RkRiX6+vLmwVK8/Xc6AUvYJxYhyaLX84ih6toYjvY
-         bqSA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+9Le4ZoYT01g/JuoiYkTiYgBtjW6NGwnyXdsvowxWHvfg6JOeg+EH8M4iMjfrBqYVhQG9m6UBNzFYRqCm@vger.kernel.org, AJvYcCXsMKDeeTAxWNmexHR4hQpBJ5NlmhWivAardBrUUVpf42aicPE0yC7uDLMyS/Z0ewy4mpXTkBhp3Rpa@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHI/zYbaiOYVn5TbB/1cVFndaOBJWXVEtfEUZlYodRqu0rekyy
-	I6vDzrG018Tp6Z9YZqCIeZNMjMnHv+37T54CVkKU/MaLiVzqFvo2
-X-Gm-Gg: ASbGncvj3cPRw+tAVOA0rAG97m/5KzEsB7Y+Y+Oryvj4c7iYwyOMilkskJyh9I/viil
-	F0IFC+8Marwph100JothFRoNwX5a2+SZLLXTn1IkvRLKKCj5zfmphS/Vd2lF21j6pnQ7hM5WE45
-	yGQURbDPVOu6fE7bEqgyOHVlRDXx5J/a1Otgg8ENc017XCT207Ek4dGWdKb4OOhhyvMB6ei4w4V
-	V5vxJSiKQWHEp4+AUucGQ6lXg2LNHa/fB6kVWendF+0SMXIktQp5bS4LfFp4EgAMzCp/U1Btaa9
-	uuPMq5PtFKlIFg==
-X-Google-Smtp-Source: AGHT+IFJs8bjsu60rsjFrfo0Bqk9SgH1Gw8S19VwGfxOIrB19mypYyxFGAIAa0MS1NyLIlbLgZr4Yw==
-X-Received: by 2002:a05:690c:610a:b0:6f9:4413:3db8 with SMTP id 00721157ae682-6f944133f86mr38193097b3.0.1738505570824;
-        Sun, 02 Feb 2025 06:12:50 -0800 (PST)
-Received: from localhost ([2a03:2880:25ff:1::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f8c46061fbsm17109507b3.17.2025.02.02.06.12.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 06:12:49 -0800 (PST)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Honggyu Kim <honggyu.km@gmail.com>
-Cc: Gregory Price <gourry@gourry.net>,
-	ying.huang@linux.alibaba.com,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	gregkh@linuxfoundation.org,
-	akpm@linux-foundation.org,
-	honggyu.kim@sk.com,
-	rakie.kim@sk.com,
-	dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave.jiang@intel.com,
-	horen.chuang@linux.dev,
-	hannes@cmpxchg.org,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-team@meta.com,
-	kernel_team@skhynix.com,
-	42.hyeyoo@gmail.com
-Subject: Re: [PATCH v4] Weighted Interleave Auto-tuning
-Date: Sun,  2 Feb 2025 06:12:45 -0800
-Message-ID: <20250202141247.2219681-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <9edfb12f-5e1d-4de0-b124-37053125a7e0@gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IXEp6ZxQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E89DC4CED1;
+	Sun,  2 Feb 2025 14:17:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738505860;
+	bh=bCUGo8rouRaEoQYHA7MIS/WPw4XvUL+N02kgnTBvb18=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IXEp6ZxQRrzEpq5/UL0Z+LFrzkY77raKG5R/QiRIvd3SYbFCWzktaOUAi8EYtgvEF
+	 L2fXC9ifeV0xwTbTOUK8irC4eQBuIrV9MqU4CwdsIo+vfvV7BvK29xFxEhVTUrZPUy
+	 D2YczWzf9o0+w8RkPNfJNRGfBHLCl0vabH1ZpgBakajWM3/MRjDHXq7yGDHXKgPdJp
+	 Vst9dKBE6xVQA2mO9fWbhW/B7uXA+0NzPGPPrnJnj79McTe7GT7BLFcYhsyNfKFAOM
+	 AZB7G16x0wN8mEZLSMR+hZoMAzQVU3v07Qpo0bfj8ffSFgUqF3E8fVzVOwNZY4wQKw
+	 Vj/ziCZGoasfQ==
+Message-ID: <dd51fdae-0e00-44a9-a5a0-e536ba60fd8c@kernel.org>
+Date: Sun, 2 Feb 2025 15:17:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
+To: matthew.gerlach@linux.intel.com
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+ conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, matthew.gerlach@altera.com,
+ peter.colberg@altera.com
+References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
+ <20250127173550.1222427-4-matthew.gerlach@linux.intel.com>
+ <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org>
+ <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
+ <40a3dced-defe-412d-b5b2-efcc9619d172@kernel.org>
+ <7c802294-97f6-3e9-4028-686484a525c5@linux.intel.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <7c802294-97f6-3e9-4028-686484a525c5@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Honggyu,
+On 01/02/2025 20:12, matthew.gerlach@linux.intel.com wrote:
+>>
+>>> they are also referenced in the following:
+>>>      Documentation/devicetree/bindings/soc/intel/intel,hps-copy-engine.yaml
+>>>      arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
+>>> I am not exactly sure where the right place is to define them, maybe
+>>> Documentation/devicetree/bindings/arm/intel,socfpga.yaml. On the other
+>>> hand, no code references these names; so it might make sense to just
+>>> remove them.
+>>
+>> In general: nowhere, because simple bus does not have such properties.
+>> It's not about reg-names only - you cannot have reg. You just did not
+>> define here simple-bus.
+> 
+> I understand. I will remove reg and reg-names.
 
-On Sun, 2 Feb 2025 22:51:34 +0900 Honggyu Kim <honggyu.km@gmail.com> wrote:
+If you have there IO address space, then removal does not sound right,
+either. You just need to come with the bindings for this dedicated
+device, whatever this is. There is no description here, not much in
+commit msg, so I don't know what is the device you are adding. PCI has
+several bindings, so is this just host bridge?
 
-> On 2/2/25 01:53, Gregory Price wrote:
-> > On Sat, Feb 01, 2025 at 11:49:31AM -0500, Gregory Price wrote:
-> >>>    1. the auto mode set the weights as 10:5:1 for node{0-2}.
-> >>>    2. node2 is offlined, then recalculation makes it as 2:1 for node{0,1}.
-> > 
-> > Point of clarification here:  a hot-unplug event won't cause
-> > recalculation.
-> > 
-> > What actually causes re-weight is hot-plug reporting new capacity.
-> 
-> So do you mean re-weight is done only when a new node is onlined while
-> offline doesn't trigger re-weight?
-> 
-> I see node_set_perf_attrs() does recalculation by calling
-> mempolicy_set_node_perf(), then reduce_interleave_weights().
-> 
-> But I'm not sure if the re-weight is done via node_set_perf_attrs() only
-> when a new node is onlined.
-> 
-> Could you please explain where I can find it?
 
-Just chiming in to add some clarification:
-Your analysis above is correct; reduce_interleave_weights() is only
-called in 2 spots: once when the mode is switched from manual --> auto,
-and the other when new bandwidth data is available, which calls
-node_set_perf_attrs() and so on. In all other scenarios, iw_table is
-preserved, and all values inside remain the same without manual changes.
-
-A node offlining (or even onlining with no new bandwidth information)
-will just mean that the node inherits whatever value is stored in
-iw_table at that moment, whether that contains the default values
-created on init or the last values that it had taken. 
-
-> > So in this scenario, the weight will remain the same for node2.
-> 
-> If it's true, my scenario is wrong.
-> 
-> Thanks,
-> Honggyu
-> 
-> > 
-> >>>    3. the auto sysfs interface is set to 0 to make it manual mode.
-
-Please let me know if this makes sense. Thank you for your review
-as always, and have a great day!
-Joshua
+Best regards,
+Krzysztof
