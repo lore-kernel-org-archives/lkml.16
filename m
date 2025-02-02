@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5DB1F8ADE;
-	Sun,  2 Feb 2025 14:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2301F8AC6;
+	Sun,  2 Feb 2025 14:19:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738505860; cv=none; b=hNExena6YbnbdyPAqHEkG3O1ImAZSdgX/7FsmT0YonC7DppKNU55+YxLoIctNlkXI7UHrvEr90j9O7TZfSOLdwnIKr9eNIReT+0YenRMF2vnnrwEyJb9YzI9IBG77DJmv8mQUWnH48Q06/WnGDvpMduXyfIsp7nLvXWqChe/i3w=
+	t=1738505966; cv=none; b=kWxB+SPg/t5qu74r2s8sJfOnrWI1BOv5fRNf0j0A2lmPO9rtEywdshnEyIYPF04crAGd5aATKrSyKGdGJvYSnVG6EzUPYOiWEhxHTYRPUTsQ4/18m4F3rHoUVpUwQJI2KYlEVwbv88tp6s5ZIzQOCwxYEknWb+83nPyAP9Rm050=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738505860; c=relaxed/simple;
-	bh=bCUGo8rouRaEoQYHA7MIS/WPw4XvUL+N02kgnTBvb18=;
+	s=arc-20240116; t=1738505966; c=relaxed/simple;
+	bh=uK0X5J5lyezZDHKxlxotvwtoEJskgRWw9NWZ4i78AU8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M8r3MBVwd22RVtCLSCeQcnk10OPe5qS0/qsRDtKpuil1UrvIJr9Rk0TnJ81KaloD3yQ2Pf896tXPZ3wII6TRrMEWOgBYf6Uh/Hp0jsrU3qq3oVks7f+sCqGEO5Y+rtqTQrIMEfv3xkMP6t7E/vHM8verm3ur/9+h36HkIpgyTUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IXEp6ZxQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=n8OQATGLmhQMopfGLxACUyuwY5w0r6rT3TSH8skRCq1sru76/idY+cyi/IrzMvSbex8thPo+WomqrHFNiT6/NjGm8WlUc243hTCL3FGCuFBgxsw7JLEvzP+lb/b/L/bI+nGm9fiTp0rYRKhrJ4cb9QOwx3w/iCGp6fWR3ss9F1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EO+9BlT2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IXEp6ZxQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E89DC4CED1;
-	Sun,  2 Feb 2025 14:17:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EO+9BlT2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B6B5C4CED1;
+	Sun,  2 Feb 2025 14:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738505860;
-	bh=bCUGo8rouRaEoQYHA7MIS/WPw4XvUL+N02kgnTBvb18=;
+	s=k20201202; t=1738505966;
+	bh=uK0X5J5lyezZDHKxlxotvwtoEJskgRWw9NWZ4i78AU8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IXEp6ZxQRrzEpq5/UL0Z+LFrzkY77raKG5R/QiRIvd3SYbFCWzktaOUAi8EYtgvEF
-	 L2fXC9ifeV0xwTbTOUK8irC4eQBuIrV9MqU4CwdsIo+vfvV7BvK29xFxEhVTUrZPUy
-	 D2YczWzf9o0+w8RkPNfJNRGfBHLCl0vabH1ZpgBakajWM3/MRjDHXq7yGDHXKgPdJp
-	 Vst9dKBE6xVQA2mO9fWbhW/B7uXA+0NzPGPPrnJnj79McTe7GT7BLFcYhsyNfKFAOM
-	 AZB7G16x0wN8mEZLSMR+hZoMAzQVU3v07Qpo0bfj8ffSFgUqF3E8fVzVOwNZY4wQKw
-	 Vj/ziCZGoasfQ==
-Message-ID: <dd51fdae-0e00-44a9-a5a0-e536ba60fd8c@kernel.org>
-Date: Sun, 2 Feb 2025 15:17:33 +0100
+	b=EO+9BlT2QlyaUUnFR9NfMrNxp4qUPkL4kRK9+fI8AzO7cyISSmdx1udl7aG6aS5Qm
+	 YB/s7CYIAcNnvlCp4AOo4raAHOjmDigW+Dc2weV1+Egmfi8OQgfECQhmUsN0vC4z/V
+	 9hB7JLUGSBnAyjCpZ8v+HAcLKtlOdMtlD6Tnz07T+9bMrGJu3GK/nJLdPOIZvatPQN
+	 fA51mjoc9gZ3TemIc2nng4MmdwfxK86iooSrPBjsbDEt4WfzexbMNSGXdqjxIX45kh
+	 Dtw4sjHX3rsLWD9QY67CfmwJ43ewpYYos8PQWCpKAcqo9qHS+1UPPLAzYPqunMw7Pn
+	 xGftPJF+4kscw==
+Message-ID: <5d1154f8-785d-4249-9781-938e9cc99167@kernel.org>
+Date: Sun, 2 Feb 2025 15:19:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,20 +35,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
-To: matthew.gerlach@linux.intel.com
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
- conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, matthew.gerlach@altera.com,
- peter.colberg@altera.com
-References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
- <20250127173550.1222427-4-matthew.gerlach@linux.intel.com>
- <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org>
- <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
- <40a3dced-defe-412d-b5b2-efcc9619d172@kernel.org>
- <7c802294-97f6-3e9-4028-686484a525c5@linux.intel.com>
+Subject: Re: [PATCH RESEND v6 0/3] platform: arm64: Huawei Matebook E Go
+ embedded controller
+To: Pengyu Luo <mitltlatltl@gmail.com>
+Cc: andersson@kernel.org, bryan.odonoghue@linaro.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, jdelvare@suse.com, konradybcio@kernel.org,
+ krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux@roeck-us.net, platform-driver-x86@vger.kernel.org, robh@kernel.org
+References: <33f8a68f-46d8-472f-8061-52800e5bd014@kernel.org>
+ <20250201073838.3278-1-mitltlatltl@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -94,31 +91,44 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <7c802294-97f6-3e9-4028-686484a525c5@linux.intel.com>
+In-Reply-To: <20250201073838.3278-1-mitltlatltl@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 01/02/2025 20:12, matthew.gerlach@linux.intel.com wrote:
+On 01/02/2025 08:38, Pengyu Luo wrote:
+> On Sat, Feb 1, 2025 at 5:20 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> On 31/01/2025 10:21, Pengyu Luo wrote:
+>>> This adds binding, drivers and the DT support for the Huawei Matebook E Go
+>>> (sc8280xp-based) Embedded Controller which is also found in Huawei Matebook
+>>> E Go LTE (sc8180x-based), but I don't have the sc8180x one to perform
+>>> tests, so this series enable support for sc8280xp variant only, this series
+>>> provides the following features:
+>>>
+>>> - battery and charger information report
+>>> - charging thresholds control
+>>> - FN lock (An alternative method)
+>>> - LID switch detection
+>>> - Temperature sensors
+>>> - USB Type-C altmode
+>>> - USB Type-C PD(high power)
+>>>
 >>
->>> they are also referenced in the following:
->>>      Documentation/devicetree/bindings/soc/intel/intel,hps-copy-engine.yaml
->>>      arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
->>> I am not exactly sure where the right place is to define them, maybe
->>> Documentation/devicetree/bindings/arm/intel,socfpga.yaml. On the other
->>> hand, no code references these names; so it might make sense to just
->>> remove them.
+>> Why are you resending?
 >>
->> In general: nowhere, because simple bus does not have such properties.
->> It's not about reg-names only - you cannot have reg. You just did not
->> define here simple-bus.
+>> Previous version was only week ago and minimal time is two weeks. Plus
+>> its merge window, so this resend is unjustified.
 > 
-> I understand. I will remove reg and reg-names.
+> Sorry, I am still new to the process, I may have misunderstood something.
+> I sent it because I had got at leaset one reviewed tag for every patch
+> from the corresponding subsystem maintainer. Can I expect that there would
+> be no reviewing? All I need to do is wait for it to be applied.
 
-If you have there IO address space, then removal does not sound right,
-either. You just need to come with the bindings for this dedicated
-device, whatever this is. There is no description here, not much in
-commit msg, so I don't know what is the device you are adding. PCI has
-several bindings, so is this just host bridge?
+
+and when I gave you the review, what did I write? Long instruction what
+to do:
+
+"However, there's no
+need to repost patches *only* to add the tags."
 
 
 Best regards,
