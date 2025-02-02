@@ -1,95 +1,171 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707921F542E
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 15:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A58D1F542A
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 15:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738508742; cv=none; b=oI9ODwo02uWOhuGUrJI8tWBYOEbdDL6PlfpMIxwwGo/GfCi6yHiqXsfE0+TkX6sWx0Y0QWHadYWCt38Ri6C8FDdAdfCgJMKmRyCGm1Fj7cVR5FrHGG+yAWB5Q4z2V61yzqkLVUhwg8FzHRYrWqHQpmXdW1E9Vf+wYEaj5ZlXd/Y=
+	t=1738508834; cv=none; b=bbUSL2a1C4FxEuVaiOaLiDeftGINnD0rZ/CgDiVUYgNI8wkwdQ55IolT+kuIafXGgQRePGSQYf71iN60XGp741hk7I4kX3a/VchIxLl9D6nISuQkZMySlgyOEB+JtBbgeAKBG8iVTm6B2lEEx+iOq+H0up7Ktcpfo7Pl5bE5rmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738508742; c=relaxed/simple;
-	bh=tEZLqYG5g2vAHQTRfubUjbbA4RIaMNwVte2RpuiwVqk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S9YscOmtMciN33JDbFFRiLLSU33KVYY+ker/bjyFe6EfLT2l5h42ztzZvierD+7+BkZeaKbHvSs2h/CP63DcGhWDAjGoyENyZK4lkp9P7BsTmmna9MF+bVRxHowG0PMpeih0llWv6eFMeGQxmUBAm7cCk2aAcA5ZGeUvrCzUjkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=bnnmZcLb; arc=none smtp.client-ip=209.85.166.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1738508834; c=relaxed/simple;
+	bh=8oOQEl32rDE/P/o4fR5XzcNXvjq7FGHu4J8G22Jnctw=;
+	h=Content-Type:From:Mime-Version:Subject:Message-Id:Date:Cc:To; b=OaybTrq6R0BqlCEDgIlL4VC/QfM7afLZgd5fVHzvj96ALc1gM/lIE1tV+NUJT4AfkMYTiFqF4yGYxnhrDRpNZbplPsv3o1U0pgLZuGOoyKyYlm8WdnWsTK7W8lOj4KlmPl4SQsIysr1s5Yb53E84slxbb6Ac/WzRwglcsgEd6lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=QqQM7E9K; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZEKa6wGq; arc=none smtp.client-ip=202.12.124.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="bnnmZcLb"
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-844ce6d0716so263310439f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 07:05:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1738508738; x=1739113538; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lsPzncwIigCJWeSgsuG0FXasnz96a9gzn6HqogWWQug=;
-        b=bnnmZcLbgzNzFassJpeNCV2FiaSKeLCcirs5yoj2Q1WLUc6cmnew/0brCNHMUF1Rkm
-         pSMVibF9i6rAaEMBrS4s7+nArNhzbAvihk5RCYq29nKtwzStt+CVGlh32EpQ+detJprC
-         kyOhC1kIf6IgEVP5UvWqyfpv4hx58bPsms6J4h3edoV+oVzgAZWiD5eIzZu7Wc9xWUsO
-         oOxOnOrKA9dGYVBXmTf8HtAOysYcvS5UXc3zpCYtK0vQPoqwLP5JAx283fwAXvIaEFCU
-         YDoCbgPTvMnwdSqwiFE96aJcbF9OsaJY9S+AuM9n4QZ7cl5rbbycZNq5Am7wa5LmuYeL
-         4szg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738508738; x=1739113538;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lsPzncwIigCJWeSgsuG0FXasnz96a9gzn6HqogWWQug=;
-        b=u+06JuujQiwrAPsdPE5nT4w1Lo7sTZvN/lHTt+FOMgu6VDRLOrH1QY5uLdMboZhScl
-         YUdG3eGZcqLXHqCtGADCBDxdQyP+u4ETfY6/KWptB1neIPSWNSMawqYrOy71hP8tAm1c
-         hSo2xujQtk/8mW1XjfvweolZZvBDUcqssk2KrkS5fQhsB+Tit+bS6sMfQqXuA4/5u78/
-         clFfVSbO1viYCNooklht/YCvTmwRJs6LUsUcN6X+KQ5GnBnvhnYSgMn2gBHiBx2lArig
-         8vTRqFRZMqsey5h2hOf41H45/AHcuuBTYUW+hZnCaV05BDt33ZhELbAoz42faX5TLfme
-         U/hw==
-X-Forwarded-Encrypted: i=1; AJvYcCVM0Pt3euuoWMGH2khQWFVV/HKhoglRelgG3+OlaVzhuXP/wuAzKMQBWxXELck1mERJj0hTVeY2LsKH3+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfLUinW6zmCkN2bCacL+wYYPGCcNfHIw0xJzSm0tPzcPovCv5A
-	FbrkTFfk3QD3g5jEotS5/Pe/aPUwVJ4Iq8LElPtooDu/i2NKPL716tj8U7sV7ls=
-X-Gm-Gg: ASbGncsty47AGAlCPUC+oAxBa3Nfr0BksRD7IkOSubahfrt7t9RyrIGX2L5odX5uFo3
-	DJ1MFEsz7zpfXRMTOetC4zlx1TGtjY9NziPIdr6uC+zlsPr7yS5afDiJG57nuulDw4nqeQ8hwyZ
-	vIvqkwFYJn1fSiF6th6vWpbp82sbLZHMpH1P3ry84Xptgx3lb3DPdBGu0bEhB5qomw+21ver5FG
-	LDEwM0GT1mrLm98m2hteSePENdY46CvDkLH403PWK2J/nPrDeAkJTKAu3rLa/5k6RLwgkdoAH+6
-	5alkt1HAVBop
-X-Google-Smtp-Source: AGHT+IGtE/JLqI8S9p7eRdsRPG6dC9TP58pGT88bNKePz2C1yiBYPfCn5bRWwQVviJy5GovjAgOURg==
-X-Received: by 2002:a05:6602:380b:b0:847:22a7:240e with SMTP id ca18e2360f4ac-85439fa6279mr1766967239f.13.1738508738494;
-        Sun, 02 Feb 2025 07:05:38 -0800 (PST)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-854a15f8394sm204030039f.11.2025.02.02.07.05.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Feb 2025 07:05:37 -0800 (PST)
-Message-ID: <8f039c53-a35a-460c-a0ff-43f592caddf5@kernel.dk>
-Date: Sun, 2 Feb 2025 08:05:36 -0700
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="QqQM7E9K";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZEKa6wGq"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 515C82540100;
+	Sun,  2 Feb 2025 10:07:10 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-08.internal (MEProxy); Sun, 02 Feb 2025 10:07:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:message-id:mime-version
+	:reply-to:subject:subject:to:to; s=fm1; t=1738508830; x=
+	1738595230; bh=ADJ7b6sU8EXqcKMooDphP2HOkTSKkWJf4eawCe5hRhA=; b=Q
+	qQM7E9KRZGiZBRZGVIWPqp9sGFoqH9T2O7/JIU2Urajg8QsUjZTjQQdaQexb9auA
+	DAr7kY76oqXarZrpyqgV/kAjSXRGuihteZqu+YujL/tSiWQ1uxbA2qn6huzcw0Zx
+	+W9D971rSyFtYJNByzjHb8ZYPrF6GQySzZGUQlH57zRLb/jthbGyvZ08eIlTfy9j
+	j2AI0EW3oArl6jkZBycgJMda0ULG8XaEafjFjyAvJb4a1fIN49yaZKs2xqvNigyu
+	Tp0S6QoYMTA5jhIoLnTT1iQ5aqNp9nsNYSg/Whpc71YC2ixOhiRO9gPJlVDOWh81
+	UOJyp97qOWgJgJALx16rA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1738508830; x=1738595230; bh=ADJ7b6sU8EXqcKMooDphP2HOkTSK
+	kWJf4eawCe5hRhA=; b=ZEKa6wGq2h0Xy3RwElajdqDpZ/LIQLaCWc6gOZQykQkA
+	ZGptbFJX1qgV13OvKUoYpm7mav9Q2+KaUOXqozRGH00npeD77qoNw5jZtCsmI7Uw
+	fNyP5rS1lg3Za41gMemvnOY10qjEVzTSGMUAYb14m2KuHKoBK2/4bpg75HpCY4sG
+	qABiVu04dQ8O/NcOdw4DdOU5Z/FLktFW8YR0QnyEbRdSJ5zIl/bI7t3c9kt3g5Rv
+	WqmswbXWQ+Q4rD0YiLULfhGhy+mQ49uG/K//qGsxndFky26FIvAYmnvIhaRmLpO+
+	QzIniGhbvWxlFhv8nntwR5QQyQYsdP7MsRpJPKTr1Q==
+X-ME-Sender: <xms:G4qfZ0lZLAQzF4pzOEAA7wnfjz_bNrL962ahPbg2WlVWTFCXfmsh5g>
+    <xme:G4qfZz22W4TG7sNmo2np83WtKBSWNlNUS9QsA1incqekQwGbt51qwrY20sH8ITres
+    H3WQ6kstRlgM9vxzV8>
+X-ME-Received: <xmr:G4qfZyq-Y57fiIgh1CeqP5jGrctszMg4NXFp2-J8h31wOxMrZdXOrxmTFlu7FCNgTBK8wvrAIO4nsYkdbNEHKhqWPQSRLCqB24RzLnvHKrI3-HhCzmke1k8r>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeellecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpegtgffhggfukfffvefvofesthhqmhdthhdtjeen
+    ucfhrhhomhepufhvvghnucfrvghtvghruceoshhvvghnsehsvhgvnhhpvghtvghrrdguvg
+    hvqeenucggtffrrghtthgvrhhnpeejfeejudffffeukeduudeifedtjeeglefgffekudej
+    leefgefhkeffgeehgedtleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehsvhgvnhesshhvvghnphgvthgvrhdruggvvhdpnhgspghrtghpthht
+    ohepuddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjsehjrghnnhgruhdrnh
+    gvthdprhgtphhtthhopehmrghrtggrnhesmhgrrhgtrghnrdhsthdprhgtphhtthhopegr
+    shgrhhhisehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqrg
+    hrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthht
+    oheprghlhihsshgrsehrohhsvghniiifvghighdrihhopdhrtghpthhtoheprgigsghovg
+    eskhgvrhhnvghlrdgukhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnrgesrghsrghhihhlihhnrgdrnh
+    gvthdprhgtphhtthhopehsrghgihesghhrihhmsggvrhhgrdhmvg
+X-ME-Proxy: <xmx:HIqfZwkg7Qz4wQfmW-4RJhYntbKPz3J04hBaSUpSu6Ty5m0d7iry7Q>
+    <xmx:HIqfZy1-Th7VE71PTDUglVgRQliVsPQyol0PWuhGZjoo1Ak53VcqhA>
+    <xmx:HIqfZ3vDKkUEwua6LXYKi1C7SVN1jpT5Hzrhmme4ExXyBYaFwiePdg>
+    <xmx:HIqfZ-VO1zAPMeM5mH5esC9dU0cFPhNpUGp4RBMcXPZ0qLxfUXMBhQ>
+    <xmx:HoqfZ4PSuFvXaBFpL2RDtLKEeCyzOpZ3F9Ft5AzXWhGfNFMsM6rD7mGn>
+Feedback-ID: i51094778:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 2 Feb 2025 10:07:07 -0500 (EST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Sven Peter <sven@svenpeter.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: apple: rtkit: Pass the crashlog to the crashed()
- callback
-To: Asahi Lina <lina@asahilina.net>, Hector Martin <marcan@marcan.st>,
- Sven Peter <sven@svenpeter.dev>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>, Janne Grunau <j@jannau.net>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250202-rtkit-crashdump-v1-1-9d38615b4e12@asahilina.net>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250202-rtkit-crashdump-v1-1-9d38615b4e12@asahilina.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] soc: apple: rtkit: Pass the crashlog to the crashed() callback
+Message-Id: <784BCC93-4BA6-420D-983D-35CD51EE3684@svenpeter.dev>
+Date: Sun, 2 Feb 2025 16:06:46 +0100
+Cc: Hector Martin <marcan@marcan.st>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Keith Busch <kbusch@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Janne Grunau <j@jannau.net>,
+ asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Lina Asahi <lina@asahilina.net>
+To: Lina Asahi <lina@asahilina.net>
+X-Mailer: iPhone Mail (22D63)
 
-On 2/2/25 6:48 AM, Asahi Lina wrote:
-> Client drivers might want a copy of the crashlog to stash into a
+=EF=BB=BF
+>=20
+> On 2. Feb 2025, at 14:49, Asahi Lina <lina@asahilina.net> wrote:
+>=20
+> =EF=BB=BFClient drivers might want a copy of the crashlog to stash into a
 > devcoredump blob. Since device memory management can be very variable,
 > the actual devcoredump implementation is left to client drivers. Pass
 > the raw crashlog buffer to the client callback so it can use it if
 > desired.
+>=20
+> Signed-off-by: Asahi Lina <lina@asahilina.net>
+> ---
+Reviewed-by: Sven Peter <sven@svenpeter.dev>
 
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
--- 
-Jens Axboe
+> drivers/nvme/host/apple.c       | 2 +-
+> drivers/soc/apple/rtkit.c       | 2 +-
+> include/linux/soc/apple/rtkit.h | 2 +-
+> 3 files changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/nvme/host/apple.c b/drivers/nvme/host/apple.c
+> index 4319ab50c10d11ed81dcc002275f190e053c1be6..f46b3f179a00dad054c24ccaa0=
+c578d64ca75ec9 100644
+> --- a/drivers/nvme/host/apple.c
+> +++ b/drivers/nvme/host/apple.c
+> @@ -221,7 +221,7 @@ static unsigned int apple_nvme_queue_depth(struct appl=
+e_nvme_queue *q)
+>   return APPLE_ANS_MAX_QUEUE_DEPTH;
+> }
+>=20
+> -static void apple_nvme_rtkit_crashed(void *cookie)
+> +static void apple_nvme_rtkit_crashed(void *cookie, const void *crashlog, s=
+ize_t crashlog_size)
+> {
+>   struct apple_nvme *anv =3D cookie;
+>=20
+> diff --git a/drivers/soc/apple/rtkit.c b/drivers/soc/apple/rtkit.c
+> index e6d940292c9fbdfc4cd42020e89aca2662c5cdce..4b0783091a92324a707a0e1cd1=
+6d36dd6d984678 100644
+> --- a/drivers/soc/apple/rtkit.c
+> +++ b/drivers/soc/apple/rtkit.c
+> @@ -368,7 +368,7 @@ static void apple_rtkit_crashlog_rx(struct apple_rtkit=
+ *rtk, u64 msg)
+>=20
+>   rtk->crashed =3D true;
+>   if (rtk->ops->crashed)
+> -        rtk->ops->crashed(rtk->cookie);
+> +        rtk->ops->crashed(rtk->cookie, bfr, rtk->crashlog_buffer.size);
+> }
+>=20
+> static void apple_rtkit_ioreport_rx(struct apple_rtkit *rtk, u64 msg)
+> diff --git a/include/linux/soc/apple/rtkit.h b/include/linux/soc/apple/rtk=
+it.h
+> index c06d17599ae7e3d37d99495e4296932b1de3a3c7..736f530180179bd144cf85eb0f=
+0bd93844d7188a 100644
+> --- a/include/linux/soc/apple/rtkit.h
+> +++ b/include/linux/soc/apple/rtkit.h
+> @@ -56,7 +56,7 @@ struct apple_rtkit_shmem {
+> *                 context.
+> */
+> struct apple_rtkit_ops {
+> -    void (*crashed)(void *cookie);
+> +    void (*crashed)(void *cookie, const void *crashlog, size_t crashlog_s=
+ize);
+>   void (*recv_message)(void *cookie, u8 endpoint, u64 message);
+>   bool (*recv_message_early)(void *cookie, u8 endpoint, u64 message);
+>   int (*shmem_setup)(void *cookie, struct apple_rtkit_shmem *bfr);
+>=20
+> ---
+> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+> change-id: 20250202-rtkit-crashdump-e848547dad67
+>=20
+> Cheers,
+> ~~ Lina
 
