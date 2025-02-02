@@ -1,170 +1,99 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F753101E6;
-	Sun,  2 Feb 2025 22:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9312147E0;
+	Sun,  2 Feb 2025 22:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738534241; cv=none; b=thJ2FdpGBiEot1c+RU3Tsjm2K3uK+5QfWQ/7IKNZ2DpoZPbB1bGHGUSyYxM6wLtYTqRRHlDLfQ9b7yzHotMcxuohUk8BcLXWMKrJPwqqXKbrSOdt/1Vvw+rmnahQx57YLTSPjik8dsDMeEf8MBgcQYndij537UBLEDSQKZayIss=
+	t=1738534251; cv=none; b=aWPF8S8DyOTMjU0zNKWeofDlvuBeX6UgC5ucB79XHA+99ItWQ2SoR9Ij+A+22wjWFji2uc0nsfK5L9l4lRscrFpvgL+3OWgOIoOlHNCNJj4ozdH/tfpbhf36nVE2kYBP/hm3SiArNQXQf6ym6SzrK2HWq6erLx9QRJOmA64NcdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738534241; c=relaxed/simple;
-	bh=QUDDt7cmWM6JdhLuzuEAEAdcnvJxWBs6SuH1hwDfD7Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZNMqGGhC0UdgBWE+yjKrBxFx128ZwWQY2yBIBJo6QPl9frcXWsfSCaTjbqBTnig+QWyt17Pdoa+YOf4ih2T3EF5W8bRWcUKBTDZg16cbFwnYbMpbh1P/T2mIxJP9XGRaissDxfRyte+3k7CAb7FKszTu6UuQciv8S3eLL/F0svU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jakemoroni.com; spf=pass smtp.mailfrom=jakemoroni.com; dkim=pass (2048-bit key) header.d=jakemoroni.com header.i=@jakemoroni.com header.b=TRONp/Gb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xXde9CuZ; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jakemoroni.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jakemoroni.com
+	s=arc-20240116; t=1738534251; c=relaxed/simple;
+	bh=FaEmi+6h7TIJACu14O4Pf5MGspXNITwVUwkiqHw9l8g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=T0i57wsnyDfLMuaIcAZ5RiolXPpDG2CmKkCTT2GoF4K6h5AXlTv9zcei7e4ZPPFiHvZ9scl8cJkUeS2u9j9w9abFznYVFkrlj+r4nrodxVegDe/s4vH0YUMYegrtpn3f7NbrdR0sGJgcR7D75Po3Cnpy6+aOAzxITyhJufSJAXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FE0ONuE1; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jakemoroni.com header.i=@jakemoroni.com header.b="TRONp/Gb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xXde9CuZ"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 94DE71140102;
-	Sun,  2 Feb 2025 17:10:38 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Sun, 02 Feb 2025 17:10:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jakemoroni.com;
-	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to; s=fm2; t=1738534238; x=1738620638; bh=pqqdKzGSHP
-	y/opA4pIlSJbFwZjddQqYW7yXI+rIj+M8=; b=TRONp/GbcBeaCQT3g+Meq9Bctq
-	eQ0tHuh3e+UeczohJ7ZfBp098v9V0OjN064z3UodtUbvU2v1dWQ9aat5GS4iLk7A
-	AC93cyfn9Mawhl2b4ntZrC9YxDWpJaK51JsrJ8VJBiUn8EZe4B7A7z0x1l4IGW+s
-	S/qcwZQFIJSRTkoRt77106sGyevYaU2X1fVkAhDHkJTQXArJuSE8VvT2uRSsCKxs
-	n4k8xIJtYIcClx/dLZeQQ7UsJfEconSWm+P9NEAfuK9Jl2doC6cWCYfMJjb510S5
-	B044zz1XqGZ3nAP2JgLPuAD9FtWTtyIACcyKff9B5hb0DaLD56WNSUs2HXtw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738534238; x=1738620638; bh=pqqdKzGSHPy/opA4pIlSJbFwZjddQqYW7yX
-	I+rIj+M8=; b=xXde9CuZYSqklxhHugmr5d5yrLuYVOlDrcqZhDa+VjSZiga2XiK
-	rWO5jmBXryc4BypCo+UOf/JJ/q37vbb+2MXakb5EfCR/37nwEO8UvnoYqaX1EAnS
-	NJajc9ScT6HVXvpTfLYSxMirWfYif87Pz8JHJmdEha4A8Ml90vJXNpzEl8+RjgzF
-	9Jg7yq86HVLYJAcnue2Ege4HWEsW82OqhSQcWtTwBuF3n+Xkm+uJy+WSUqefcDY0
-	5RF9c/lL8lirwXoNMMr0stxymblqw4/Y9Bq5kwLnr3aq7tfa9M9s115KMLA1kdZK
-	kzFxH7d5ivJh6381jXqY+6AUbg2cFtUKrsg==
-X-ME-Sender: <xms:Xe2fZz1B1SLdKzYcBrWmslu_Cy8owdh6epTu3rcIHJHwF9APy5BsLA>
-    <xme:Xe2fZyGxm7_mPTdyE2-Zj33MDQfTia5mrbXGzzt7wMMcfDMOLnLzJY4v53b_CPlej
-    C2kqjhMVCGTpIwGOQ>
-X-ME-Received: <xmr:Xe2fZz5pOlZjNl9i6ffD9Ik2X5MoRPLcyPGHXpU6HrTVC6Cc-VHZvPscAHlKGt5FrXBpDm5T0CvHHsYkgikY7qaj_gvIl0u_8T8OfEjoN4dSwiPwn3ROBDWr>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheekhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecu
-    hfhrohhmpeflrggtohgsucfoohhrohhnihcuoehmrghilhesjhgrkhgvmhhorhhonhhird
-    gtohhmqeenucggtffrrghtthgvrhhnpeehgeefveelhedvtedvveejhfellefgueetvdeh
-    heduieelffejtefgtdevtedttdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehmrghilhesjhgrkhgvmhhorhhonhhirdgtohhmpdhnsggprhgt
-    phhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehirhhushhskhhikh
-    hhsehmrghrvhgvlhhlrdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvhes
-    lhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpd
-    hrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehk
-    uhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrth
-    drtghomhdprhgtphhtthhopehmrghilhesjhgrkhgvmhhorhhonhhirdgtohhmpdhrtghp
-    thhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
-    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:Xe2fZ43vdz9VIAqYxAEc7IUB3mfsKhsAb2dK1hdjCcT7sQPLBAhXeA>
-    <xmx:Xe2fZ2FxiR-zFL1LZhPKrVLbTVA6vAZBQgYQgM5JtOT7-b2LpQvURA>
-    <xmx:Xe2fZ58ItQ0uz1536wGVCIKCFzUZao-yHrDuWSAb5QJ3-eXcU22V5A>
-    <xmx:Xe2fZzkXBcNUCGu_wu6--1ZknVtdoWpDbs3V7SEqCqFvdqORTHEVtQ>
-    <xmx:Xu2fZ5ANTJZLV0XmItBNXcU3IS_l7I-IF6Yn-u0AZyw9l7G-PvAxWMFR>
-Feedback-ID: i17014242:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 2 Feb 2025 17:10:37 -0500 (EST)
-From: Jacob Moroni <mail@jakemoroni.com>
-To: Igor Russkikh <irusskikh@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Jacob Moroni <mail@jakemoroni.com>,
-	netdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FE0ONuE1"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43635796b48so22776835e9.0;
+        Sun, 02 Feb 2025 14:10:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738534248; x=1739139048; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nHE1WI8JJtx+KH2t3hCmFP2Wx+WtulpUrLsLx526dXU=;
+        b=FE0ONuE1aCrr6V94RnLoiIjzGCR+4+bCHqOaJJLL/0XZ0m2BHmV6E+lF5pL/az0LVj
+         SGchsUrSoT4kNWru6yKQ0xHDGBrYkyR/aoSj0m9RuH0P+lzavbhF3qnhfU1N/fZjUdDY
+         DFUYRP0xlFrDYcGPH0kexGkRk1vOIneRJXv0B2PyejAZPwcbuZhktgvvsv7xa5IO0LWE
+         HsRBCukVhuc1UE3HvXZ0XqfrxfKC9W8dLxqumGmp4K4/B7JCmax59wnusMnptrEaBo8h
+         XunKvs44VpT4MpKlTV2ekJfz0OBqSMtXXBMbliH84x4IF9FdtNOBPJoar1J1dp55LFUj
+         G27A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738534248; x=1739139048;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nHE1WI8JJtx+KH2t3hCmFP2Wx+WtulpUrLsLx526dXU=;
+        b=qZqSFyCo42NIEeLeH/N6T2Lem1IOFX3N6I5YgmSHCJA9tT/AHSXEpXYdqqsh2uxHyt
+         4FmnUsMedAX+e04u2XcMW6cTGhzrzU1c6HO7460QpgZ3F/GLCO5SZMeZfmp1gPpWZV8l
+         GV7xXa8NG8+qcosl2Lj7ggZmSckcIsZhldfY87/lmkBtudczNYFlSy0jFR7EvBsUiGkb
+         Cus3zogm+C5+ogOM9usPYLakE++32FFoZ6TmZDtsNjAmywSpfxDnnS5jPLrH2/lgPNBJ
+         Z/LjKvu4Gvaavq/4Atw+zYOXrg4mFds9g3pmYLm2JJspYIpq1LEj3pQaum70iy/iIdZR
+         9teg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8YtIZu/50WOIzbiy7sq5U1S9TtX0jimatNbX5Tv7jIQ0vwx0nk9Seyzekkqhe+vKvZKmbM+3LUryWaZo=@vger.kernel.org, AJvYcCXFCbYhLgNGnAumERcbrG/I5lyar5GnfCS76R+cd5wUGCVl+4L+xePJEoz3u0rI0EEqEYtG2cKTxDVnZBAHXns=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk/LC/gcZVYc9tu9vp7T1mAli9ZiSc5c1hvHTwu+qGA+AZBgV9
+	W2+4MP+1NZR9f77WLW+okKNkcLS0WulkkYbr0/rhPDVUO6RklT+W
+X-Gm-Gg: ASbGncs7wXO3resgn81FjJxp4vPN6hNCw5+Z3xO4qbQzsQwESFXW24P3f3G1hJqY1lG
+	cBHyRq+ySSwIwTYXEw4iBvKFPoeSqhJbhQOPEwNgG2mpTVy8pWEZh7mkgIWvfEzfI2qDWxjHFEq
+	Zb3zaKg0K7ugMfDMOvJO35GS7y5q0chiM1Ex4TAcztt2pU6nfNCCHcsr1GX519VBwgCv/+ZLI4U
+	x4YrISIgCKvXp/Lj7nFk9doXMqSjmM/8uOHrTSe3pDDeQfWGZS+pLeXX4IVMl5FLt/5ttnFHVdZ
+	KHBLX8OOwADPZABb
+X-Google-Smtp-Source: AGHT+IH1yqeybl1qfGVSRSeC0kKYYqcUHp0CD3q231k5KY4NO9BcQBJ53/3WRqSPX9TEy3WXt69fgw==
+X-Received: by 2002:a05:600c:3420:b0:436:1af3:5b13 with SMTP id 5b1f17b1804b1-438e6f11aa0mr89680255e9.15.1738534247951;
+        Sun, 02 Feb 2025 14:10:47 -0800 (PST)
+Received: from localhost ([194.120.133.72])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38c5c101599sm10799779f8f.23.2025.02.02.14.10.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 14:10:47 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net] net: atlantic: fix warning during hot unplug
-Date: Sun,  2 Feb 2025 17:09:21 -0500
-Message-ID: <20250202220921.13384-2-mail@jakemoroni.com>
-X-Mailer: git-send-email 2.43.0
+Subject: [PATCH][next] wifi: iwlwifi: Fix spelling mistake "Increate" -> "Increase"
+Date: Sun,  2 Feb 2025 22:10:22 +0000
+Message-ID: <20250202221022.199584-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Firmware deinitialization performs MMIO accesses which are not
-necessary if the device has already been removed. In some cases,
-these accesses happen via readx_poll_timeout_atomic which ends up
-timing out, resulting in a warning at hw_atl2_utils_fw.c:112:
+There is a spelling mistake in an IWL_DEBUG_RATE message. Fix it.
 
-[  104.595913] Call Trace:
-[  104.595915]  <TASK>
-[  104.595918]  ? show_regs+0x6c/0x80
-[  104.595923]  ? __warn+0x8d/0x150
-[  104.595925]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
-[  104.595934]  ? report_bug+0x182/0x1b0
-[  104.595938]  ? handle_bug+0x6e/0xb0
-[  104.595940]  ? exc_invalid_op+0x18/0x80
-[  104.595942]  ? asm_exc_invalid_op+0x1b/0x20
-[  104.595944]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
-[  104.595952]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
-[  104.595959]  aq_nic_deinit.part.0+0xbd/0xf0 [atlantic]
-[  104.595964]  aq_nic_deinit+0x17/0x30 [atlantic]
-[  104.595970]  aq_ndev_close+0x2b/0x40 [atlantic]
-[  104.595975]  __dev_close_many+0xad/0x160
-[  104.595978]  dev_close_many+0x99/0x170
-[  104.595979]  unregister_netdevice_many_notify+0x18b/0xb20
-[  104.595981]  ? __call_rcu_common+0xcd/0x700
-[  104.595984]  unregister_netdevice_queue+0xc6/0x110
-[  104.595986]  unregister_netdev+0x1c/0x30
-[  104.595988]  aq_pci_remove+0xb1/0xc0 [atlantic]
-
-Fix this by skipping firmware deinitialization altogether if the
-PCI device is no longer present.
-
-Tested with an AQC113 attached via Thunderbolt by performing
-repeated unplug cycles while traffic was running via iperf.
-
-Signed-off-by: Jacob Moroni <mail@jakemoroni.com>
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/rs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index fe0e3e2a8117..e2ae95a01947 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -1428,7 +1428,7 @@ void aq_nic_deinit(struct aq_nic_s *self, bool link_down)
- 	unsigned int i = 0U;
- 
- 	if (!self)
--		goto err_exit;
-+		return;
- 
- 	for (i = 0U; i < self->aq_vecs; i++) {
- 		aq_vec = self->aq_vec[i];
-@@ -1441,13 +1441,14 @@ void aq_nic_deinit(struct aq_nic_s *self, bool link_down)
- 	aq_ptp_ring_free(self);
- 	aq_ptp_free(self);
- 
--	if (likely(self->aq_fw_ops->deinit) && link_down) {
--		mutex_lock(&self->fwreq_mutex);
--		self->aq_fw_ops->deinit(self->aq_hw);
--		mutex_unlock(&self->fwreq_mutex);
-+	/* May be invoked during hot unplug. */
-+	if (pci_device_is_present(self->pdev)) {
-+		if (likely(self->aq_fw_ops->deinit) && link_down) {
-+			mutex_lock(&self->fwreq_mutex);
-+			self->aq_fw_ops->deinit(self->aq_hw);
-+			mutex_unlock(&self->fwreq_mutex);
-+		}
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rs.c b/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
+index a8c4e354e2ce..068c58e9c1eb 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
+@@ -1783,7 +1783,7 @@ static enum rs_action rs_get_rate_action(struct iwl_mvm *mvm,
+ 	if ((high_tpt != IWL_INVALID_VALUE) &&
+ 	    (high_tpt > current_tpt)) {
+ 		IWL_DEBUG_RATE(mvm,
+-			       "Higher rate is better. Increate rate\n");
++			       "Higher rate is better. Increase rate\n");
+ 		return RS_ACTION_UPSCALE;
  	}
--
--err_exit:;
- }
  
- void aq_nic_free_vectors(struct aq_nic_s *self)
 -- 
-2.43.0
+2.47.2
 
