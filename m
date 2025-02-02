@@ -1,101 +1,255 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01124381A3;
-	Sun,  2 Feb 2025 15:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD08381A3;
+	Sun,  2 Feb 2025 15:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738509792; cv=none; b=IPMmcqeWhMgYSW0cTatXQ7XGMvUSaT2uuH49OkgzFgb8vDTsi+TmLGzX93CKYndTOClhpyFmibZa8Fc8hPV+/wJww8lskTV19LjkujTkM9eW81bgng+B5kRVggZH4h91W6ya/93OZrAnx4ya48R00PLvyvHY3aaB94qh5Q5I6WE=
+	t=1738509837; cv=none; b=F6B2itXLZIYlC3MgI5VKnkHLl4FjBFBZKr10IVsjRVGb6enrcwmZ3nkm3VedvxciGwVFwxVZbqzertkVOhFvSWM+aYLztkcJ9DmFLXZEAbQSTdvHNNH/ViG2EsImvH+dLFtXlnuo1uiOHJDaMl44W+ZHDKnydN19imZisNpPYX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738509792; c=relaxed/simple;
-	bh=E/NCaMQTm+yT1nz5VJq9kS/IdA1zonNMg2KRejpLQRw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=CIX4dGuG1KiANB+j9GQIc4/psP4XkjYoWxg5nhkE/Dae3HrFlTArmT/trRrJTI0kvyrF/nJA/hOouOY8klK5/5lKJhhRyasewQOb6Dqyxluz8Ann9q0BwSrN6EBl9YcTG5pF1gr9DVXfLNb5QV63W2WkjCG/JYBZ3qyhEIuP8NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=q+O89bp4; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1738509837; c=relaxed/simple;
+	bh=TcIXoFug1YBo9zUIh37L9F3xCpjDqyybacrm2bvp10A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d/u1+xihiGh7FUlZKe8XEDUH/i3GSl3Jsd6ghjcU5vEBZkAnD2UsBz/reAwGquVD2JndQPwlvajvGV27c2zIp8+CPm3xYNS86StKuADTpIweJnPe5/HDWwVP1kZWUuZSodcJr8rPNp9uCmJIXn2nRYCyOLZXAO9J2sZWMALnRPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NaWyqbNs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="q+O89bp4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738509761; x=1739114561; i=markus.elfring@web.de;
-	bh=E/NCaMQTm+yT1nz5VJq9kS/IdA1zonNMg2KRejpLQRw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=q+O89bp4YTMDPINIU5NmnfYgp0iva4584wtQwVy2V4uE7fJeW7qjRQGhfpylcoMr
-	 Dzaf1RlJjMC0A9/l5LWxhHVEMB8cHdNhYIrnJLRBQavb6QgLNQmp28oYW1ZomcZWI
-	 je3hmk24jM6n7D3co+XJY2jP2A7BBWVHGRpL2f4i6826kEvn54m+RKSBtYt8+zPvq
-	 Mzv0PUvNAbnbpTDuvF4Wki9LJWm39C/nXxE69ozA+R725BsaLj09PanCXTDNQ7CGN
-	 sHScmacejTPIB3RjhX1t+kPlat6Cb0EsOlt2jNZ0/mqTfIFck76zrpO/1AqmGfYE2
-	 nmAkVIA9Nlk++FksxQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.26]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MgibW-1sxZtM3bTQ-00b8YU; Sun, 02
- Feb 2025 16:22:40 +0100
-Message-ID: <19e1f5ac-1e1d-4e34-9fb7-75aabd208fd7@web.de>
-Date: Sun, 2 Feb 2025 16:22:38 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NaWyqbNs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11ABAC4CED1;
+	Sun,  2 Feb 2025 15:23:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738509835;
+	bh=TcIXoFug1YBo9zUIh37L9F3xCpjDqyybacrm2bvp10A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NaWyqbNsxgDXxPLBotUxWAjCPoHdkkic2oaIKlOWwYbwlZKLdBn/U5TpAXd8oK/QA
+	 Twf36a4Jsg2ww8tP95Td5n9+PvU6jSZr/c00acK8iWUVDNjxx7Ls7t56CSSNfJ+lbe
+	 8dDvrT/2l+BWdVAKHW916a5gLPpOZNtSaPkS92f9A4IgxUBlkJu4lO2thTVNZiG/8X
+	 m1e+k/QAIqTzaeqkDXgiovb/St3zTsKvkUQsRuwaAwlVNHeaAIk7ZXmAoOK6AgPpFj
+	 2sK8OpJxmB93nJnVoKdfOB0/QpfbFe7CCml7JlPuztoThhVYk6V67ijbSYG8EIoeaO
+	 ohMKEFgnk1BjQ==
+Received: by pali.im (Postfix)
+	id 38B5096D; Sun,  2 Feb 2025 16:23:43 +0100 (CET)
+Date: Sun, 2 Feb 2025 16:23:43 +0100
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Amir Goldstein <amir73il@gmail.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	ronnie sahlberg <ronniesahlberg@gmail.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steve French <sfrench@samba.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org, linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Immutable vs read-only for Windows compatibility
+Message-ID: <20250202152343.ahy4hnzbfuzreirz@pali>
+References: <20250114211050.iwvxh7fon7as7sty@pali>
+ <0659dfe1-e160-40fd-b95a-5d319ca3504f@oracle.com>
+ <20250114215350.gkc2e2kcovj43hk7@pali>
+ <CAN05THSXjmVtvYdFLB67kKOwGN5jsAiihtX57G=HT7fBb62yEw@mail.gmail.com>
+ <20250114235547.ncqaqcslerandjwf@pali>
+ <20250114235925.GC3561231@frogsfrogsfrogs>
+ <CAOQ4uxjj3XUNh6p3LLp_4YCJQ+cQHu7dj8uM3gCiU61L3CQRpA@mail.gmail.com>
+ <20250117173900.GN3557553@frogsfrogsfrogs>
+ <CAOQ4uxhh1LDz5zXzqFENPhJ9k851AL3E7Xc2d7pSVVYX4Fu9Jw@mail.gmail.com>
+ <20250117185947.ylums2dhmo3j6hol@pali>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Jiasheng Jiang <jiashengjiangcool@gmail.com>, linux-scsi@vger.kernel.org,
- GR-QLogic-Storage-Upstream@marvell.com,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- Javed Hasan <jhasan@marvell.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Saurav Kashyap <skashyap@marvell.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Arun Easi <arun.easi@cavium.com>,
- Bart Van Assche <bvanassche@acm.org>,
- Manish Rangankar <manish.rangankar@cavium.com>,
- Nilesh Javali <nilesh.javali@cavium.com>
-References: <20250131213516.7750-1-jiashengjiangcool@gmail.com>
-Subject: Re: [PATCH v2] scsi: qedf: Use kcalloc() and add check for bdt_info
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250131213516.7750-1-jiashengjiangcool@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:odM+UQVNVfx53UsEsfCAGKEkMIaG7yRcPWS89EiYHhb4p/UVaks
- gBMR+W8OvgGKyL9XOVSvU9TvSuSxN60/3lSOmbGA6/nuCBdZndLulMgOfRmF+B5WhiYJi2o
- kG+roq9y5msTe4uYV4S9sSj/sHaTXLAlSiNcqfLg/BXoMie7OeklgCYQ5SYBpC06doO/+wl
- wucydvYT9hIuCzBKySCEw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:mcWCMyTDjMs=;7xZla9LftM27nsdPgN/Hyty3qYL
- Bw+AOcErfgcPH0IE5uZjrzftPn1XkLeMDl4Q+pYpUhq1aNp5OgkmMfe9Z/8DH5rDqWCBPpxvd
- Ew5C99b0wFblNQ2SMes+Y72DwbKyArg+6+1mAlH3U2RnbDGiMQ3EDBlb90BeDarA2nX+l2IBz
- h7NrtbAYroIoN6Xc+ULkL+FCYIBo6pGRdP2KJFCEpsTh1AsueYp54K7bpcowaLwUfH7zqsJc6
- sV7KFhMl3B2BdbUeClHW6PsyY98WdjbUcSuvos9kjPmd5ItRZj6O/RcdE797PvaUL2sksYgkJ
- E0h5LmdF1xk9DMotjikELG4gvQt3/ARrcNwP9GlfabB80f9/NTeT0tUV2zXHG7g9IrNuz7yyJ
- nBsjhaYN23Y/ZzqfukAHk/VROt6UrriEc02DqVROv/qJGv9p0Fu8qxTOlyKzoG9tpZ3ayVGxN
- z8QYPMUJIpKr/nsO2t1wJnNYJHzew6C34yJ5mLfzq2c+HZYrNeOoPZrjNQD0zZyM8DmQjQrC9
- +ybgTqpq9O93UoiXHSyQXRCDQRff/pULZERjRETCAXUli8ApLas7yhLtLWF5/aDPPakRt/ukl
- 0TWZtfhDVAoC9ytHXKQMkVAn+0c2EDcgIB6rTUO78T8ucoeElTDxadJhBa8ns63LlhgVpE6wY
- xNfQiH02IdqnRpuWKL4a6IE1lm2wzOUlOE+bfemVBWCHpA2ZkGsm4cNG9fGVBivx9fr6Tj0sr
- KrWeMKgbjXLJCq/K71FLqI3pH+DJoYIL4pkZG7gN5OgvRHqwaagSaonutXLQ2czBo8imB4IyD
- TyFGwyKV0h6vXiWTOt/CGupZXZHG7LGWJRmCl9ETxxPko4pYsfApZ6FGV+NN8doDyZmzH9pXd
- RLp0/VlwUJ+QDvwlnEZs7A5X/L000R6ZxWWGY9XJBzjQHmmdCuFC2JtZpox/zdCwgWEfG9JXJ
- kqJiLxI07owSlF66IWhj5CtTf9EoAtzScU2G+hp7AGwxfX9SQpCZSKs7jKk6rHtPQJBir1kIg
- WpAnrG/exMl0c6Mlt4cjGCWcVT1YifSLlJtSYlThUjpuYYpJrKdFxi49hip4XHTq+pBzREsrg
- 3lTPlDCLNDkwdpch+phZVyUz0Tboz6sl5GCeXp+/OYsrgYUwFbUYrIgpoJSztFpHd+mJhfeQN
- OLJIAB/rIOn6GoT/W3k9BFxbIKQTH7fxPvWxMyQA56GfuXrmOdP6QyzrA7DmUjnOk/tL1ki8B
- vrzRTsneplkjKR6NRYsjuyaE7L9BPTn9KTHt486CjRSdRrJpfAf3MieYyMR+1iY8uZaSPA1WN
- +MZEV1t3KjMHgX9/S/3lV+rq7QUlpv9sgOgB2lpKLGFOkYHwZRJFWIMN0ZHK0P4d/kp
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250117185947.ylums2dhmo3j6hol@pali>
+User-Agent: NeoMutt/20180716
 
-> Replace kmalloc_array() with kcalloc() to avoid old (dirty) data being
-> used/freed.
-> Moreover, add a check for "bdt_info". Otherwise, if one of the allocatio=
-ns
-=E2=80=A6
+On Friday 17 January 2025 19:59:47 Pali Rohár wrote:
+> On Friday 17 January 2025 19:46:30 Amir Goldstein wrote:
+> > > > Looking at the FILE_ATTRIBUTE_* flags defined in SMB protocol
+> > > >  (fs/smb/common/smb2pdu.h) I wonder how many of them will be
+> > > > needed for applications beyond the obvious ones that were listed.
+> > >
+> > > Well they only asked for seven of them. ;)
+> > >
+> > > I chatted with Ted about this yesterday, and ... some of the attributes
+> > > (like read only) imply that you'd want the linux server to enforce no
+> > > writing to the file; some like archive seem a little superfluous since
+> > > on linux you can compare cmtime from the backup against what's in the
+> > > file now; and still others (like hidden/system) might just be some dorky
+> > > thing that could be hidden in some xattr because a unix filesystem won't
+> > > care.
+> > >
+> > > And then there are other attrs like "integrity stream" where someone
+> > > with more experience with windows would have to tell me if fsverity
+> > > provides sufficient behaviors or not.
+> > >
+> > > But maybe we should start by plumbing one of those bits in?  I guess the
+> > > gross part is that implies an ondisk inode format change or (gross)
+> > > xattr lookups in the open path.
+> > >
+> > 
+> > I may be wrong, but I think there is a confusion in this thread.
+> > I don't think that Pali was looking for filesystems to implement
+> > storing those attributes. I read his email as a request to standardize
+> > a user API to get/set those attributes for the filesystems that
+> > already support them and possibly for vfs to enforce some of them
+> > (e.g. READONLY) in generic code.
+> 
+> Yes, you understood it correctly. I was asking for standardizing API how
+> to get/set these attributes from userspace. And Chuck wrote that would
+> like to have also standardized it for kernel consumers like nfsd or
+> ksmbd. Which makes sense.
+> 
+> > Nevertheless, I understand the confusion because I know there
+> > is also demand for storing those attributes by file servers in a
+> > standard way and for vfs to respect those attributes on the host.
+> 
+> Userspace fileserver, like Samba, would just use that standardized
+> userspace API for get/set attributes. And in-kernel fileservers like
+> nfsd or ksmbd would like to use that API too.
+> 
+> And there were some proposals how filesystems without native
+> support for these attributes could store and preserve these attributes.
+> So this can be a confusion in this email thread discussion.
 
-Please provide desired changes as separate update steps.
+So to recap, for set-API there are possible options:
 
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.13#n81
+1) extending FS_IOC_FSSETXATTR / FS_IOC_SETFLAGS for each individual bit
 
-Regards,
-Markus
+2) creating one new xattr in system namespace which will contain all bit
+   flags in one structure
+
+3) creating new xattr in system namespace for each individual flag
+
+Disadvantages for option 1) is that "cp -a" or "rsync -a" does not
+preserve them. If in option 2) or 3) those xattrs would be visible in
+listxattr() call then this can be advantage, as all flags are properly
+preserved when doing "archive" backup.
+
+Do you have any preference which of those options should be used?
+
+
+And how many bit flags are needed? I have done some investigation. Lets
+start with table which describes all 32 possible bit flags which are
+used by Windows system and also by filesystems FAT / exFAT / NTFS / ReFS
+and also by SMB over network:
+
+bit / attrib.exe flag / SDK constant / description
+
+ 0 - R - FILE_ATTRIBUTE_READONLY              - writing to file or deleting it is disallowed
+ 1 - H - FILE_ATTRIBUTE_HIDDEN                - inode is hidden
+ 2 - S - FILE_ATTRIBUTE_SYSTEM                - inode is part of operating system
+ 3 -   - FILE_ATTRIBUTE_VOLUME                - inode is the disk volume label entry
+ 4 -   - FILE_ATTRIBUTE_DIRECTORY             - inode is directory
+ 5 - A - FILE_ATTRIBUTE_ARCHIVE               - inode was not archived yet (when set)
+ 6 -   - FILE_ATTRIBUTE_DEVICE                - inode represents  in-memory device (e.g. C:\), flag not stored on filesystem
+ 7 -   - FILE_ATTRIBUTE_NORMAL                - no other flag is set (value 0 means to not change flags, bit 7 means to clear all flags)
+ 8 -   - FILE_ATTRIBUTE_TEMPORARY             - inode data do not have to be flushed to disk
+ 9 -   - FILE_ATTRIBUTE_SPARSE_FILE           - file is sparse with holes
+10 -   - FILE_ATTRIBUTE_REPARSE_POINT         - inode has attached reparse point (symlink is also reparse point)
+11 -   - FILE_ATTRIBUTE_COMPRESSED            - file is compressed, for directories it means that newly created inodes would have this flag set
+12 - O - FILE_ATTRIBUTE_OFFLINE               - HSM - inode is used by HSM
+13 - I - FILE_ATTRIBUTE_NOT_CONTENT_INDEXED   - inode will not be indexed by content indexing service
+14 -   - FILE_ATTRIBUTE_ENCRYPTED             - file is encrypted, for directories it means that newly created inodes would have this flag set
+15 - V - FILE_ATTRIBUTE_INTEGRITY_STREAM      - fs does checksumming of data and metadata when reading inode, read-only
+16 -   - FILE_ATTRIBUTE_VIRTUAL               - inode is in %LocalAppData%\VirtualStore, flag not stored on filesystem
+17 - X - FILE_ATTRIBUTE_NO_SCRUB_DATA         - do not use scrubber (proactive background data integrity scanner) on this file, for directories it means that newly created inodes would have this flag set
+18 -   - FILE_ATTRIBUTE_EA                    - inode has xattrs, (not in readdir output, shares same bit with FILE_ATTRIBUTE_RECALL_ON_OPEN)
+18 -   - FILE_ATTRIBUTE_RECALL_ON_OPEN        - HSM - inode is not stored locally (only in readdir output, shares same bit with FILE_ATTRIBUTE_EA)
+19 - P - FILE_ATTRIBUTE_PINNED                - HSM - inode data content must be always stored on locally
+20 - U - FILE_ATTRIBUTE_UNPINNED              - HSM - inode data content can be removed from local storage
+21 -   -                                      - reserved
+22 -   - FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS - HSM - inode data content is not stored locally
+23 -   -                                      - reserved
+24 -   -                                      - reserved
+25 -   -                                      - reserved
+26 -   -                                      - reserved
+27 -   -                                      - reserved
+28 -   -                                      - reserved
+29 - B - FILE_ATTRIBUTE_STRICTLY_SEQUENTIAL   - SMR Blob, unknown meaning, read-only
+30 -   -                                      - reserved
+31 -   -                                      - reserved
+
+(HSM means Hierarchical Storage Management software, which uses reparse
+points to make some remote file/folder available on the local
+filesystem, for example OneDrive or DropBox)
+
+From above list only following bit flags are suitable for modification
+over some Linux API:
+- FILE_ATTRIBUTE_READONLY
+- FILE_ATTRIBUTE_HIDDEN
+- FILE_ATTRIBUTE_SYSTEM
+- FILE_ATTRIBUTE_ARCHIVE
+- FILE_ATTRIBUTE_TEMPORARY
+- FILE_ATTRIBUTE_COMPRESSED
+- FILE_ATTRIBUTE_OFFLINE
+- FILE_ATTRIBUTE_NOT_CONTENT_INDEXED
+- FILE_ATTRIBUTE_ENCRYPTED
+- FILE_ATTRIBUTE_NO_SCRUB_DATA
+- FILE_ATTRIBUTE_PINNED
+- FILE_ATTRIBUTE_UNPINNED
+
+And if I'm looking correctly the FILE_ATTRIBUTE_COMPRESSED can be
+already mapped to Linux FS_COMPR_FL / STATX_ATTR_COMPRESSED, which has
+same meaning. Also FILE_ATTRIBUTE_ENCRYPTED can be mapped to
+FS_ENCRYPT_FL / STATX_ATTR_ENCRYPTED. Note that these two flags cannot
+be set over WinAPI or SMB directly and it is required to use special
+WinAPI or SMB ioctl.
+
+So totally are needed 10 new bit flags. And for future there are 9
+reserved bits which could be introduced by MS in future.
+
+Additionally there are get-only attributes which can be useful for statx
+purposes (for example exported by cifs.ko SMB client):
+- FILE_ATTRIBUTE_REPARSE_POINT
+- FILE_ATTRIBUTE_INTEGRITY_STREAM
+- FILE_ATTRIBUTE_RECALL_ON_OPEN
+- FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS
+- FILE_ATTRIBUTE_STRICTLY_SEQUENTIAL
+
+From the above list of flags suitable for modification, following bit
+flags have no meaning for kernel and it is up to userspace how will use
+them. What is needed from kernel and/or filesystem driver is to preserve
+those bit flags.
+- FILE_ATTRIBUTE_HIDDEN
+- FILE_ATTRIBUTE_SYSTEM
+- FILE_ATTRIBUTE_ARCHIVE
+- FILE_ATTRIBUTE_NOT_CONTENT_INDEXED
+
+Following are bit flags which kernel / VFS / fsdriver would have to
+handle specially, to provide enforcement or correct behavior of them:
+- FILE_ATTRIBUTE_READONLY - enforce that data modification or unlink is disallowed when set
+- FILE_ATTRIBUTE_COMPRESSED - enforce compression on filesystem when set
+- FILE_ATTRIBUTE_ENCRYPTED - enforce encryption on filesystem when set
+
+Then there are HSM flags which for local filesystem would need some
+cooperation with userspace synchronization software. For network
+filesystems (SMB / NFS4) they need nothing special, just properly
+propagating them over network:
+- FILE_ATTRIBUTE_OFFLINE
+- FILE_ATTRIBUTE_PINNED
+- FILE_ATTRIBUTE_UNPINNED
+
+About following 2 flags, I'm not sure if the kernel / VFS / fs driver
+has to do something or it can just store bits to fs:
+- FILE_ATTRIBUTE_TEMPORARY
+- FILE_ATTRIBUTE_NO_SCRUB_DATA
+
+
+=======================================================================
+
+And there is still unresolved issue with FILE_ATTRIBUTE_READONLY.
+Its meaning is similar to existing Linux FS_IMMUTABLE_FL, just
+FILE_ATTRIBUTE_READONLY does not require root / CAP_LINUX_IMMUTABLE.
+
+I think that for proper support, to enforce FILE_ATTRIBUTE_READONLY
+functionality, it is needed to introduce new flag e.g.
+FS_IMMUTABLE_FL_USER to allow setting / clearing it also for normal
+users without CAP_LINUX_IMMUTABLE. Otherwise it would be unsuitable for
+any SMB client, SMB server or any application which would like to use
+it, for example wine.
+
+Just to note that FreeBSD has two immutable flags SF_IMMUTABLE and
+UF_IMMUTABLE, one settable only by superuser and second for owner.
+
+Any opinion?
