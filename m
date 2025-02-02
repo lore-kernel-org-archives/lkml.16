@@ -1,77 +1,131 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3767E1F8923
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 15:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABE6381A3;
+	Sun,  2 Feb 2025 15:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738508885; cv=none; b=cSc4xTF1eCgHI7j51+5oepW+17dHIvBMHdnns940DEuTO+ESCcr+Gj+rwemjpLzu1EZY5zVGHVDCVtuXzWxq5J3NAhdMpAZLMmxEAcJubHg3CKNq7S0cDJglE2Epwyadh00LbI/Bkv3dMgBnymm9HZMbqTOrvieitttah6oqczQ=
+	t=1738509336; cv=none; b=nelY2kcSq8pquZHoDE/05il3S7VpF3cUIMo3mDi7leQryc6KaylRCsh/ohqcUslmyaOs7d2oa+TMpweFa7tOlmjxp54H4KzvwxR218nYPrIQe025XJ+bwh2oRG2p9DbPPxMRToAjvZ18LXSQ1VXdzA1Zrf36Qlsn8kRTl98rApU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738508885; c=relaxed/simple;
-	bh=X7yd2+qFNeEAS8UzBFjEEjjbiRWfQSFMD+J2voO/PLA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=e3c59XWoVYXrFhuQ29S1muRRwM9rNBlpbmksxuaLYGx8EkJFQRmA7Xs8goH8zzYmcUyXaFHfjV34xgVUUtKn47NLI5mCxVT9PtvKKOscADu4P8msqWhLmIn3C2beB8/LHMqPB+w72vBN/Ge8gDXwy4dS5ywJvKmX5BxziRNLP64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3cf6ceaccdbso26988255ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 07:08:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738508883; x=1739113683;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=as8jRmBqhydUDXs/90pySCuCHeb3fP0O7KZ+qpwNogc=;
-        b=wFdO5L08LK/WQlo/Ul5PsiprkeVzB2pSzHWDHWhgGL/+wxR8OysbpZg8AxiTT2Up7b
-         1LPLGWWWyGgf9hqwQcQxJm55/5W+U0iRe/Q6z+TOFZsvINkCi0qKzpecAOGK1DVlG4M9
-         QKEpamoO50/mpyprl3cWcHygM7B5g9pKcXcIGOb1dSIirYqpnpbvxlpdNslIK1i7+y44
-         WYlbKKy2/4D93eAbHsNohm6Y5/HGcHHUibu3WG6p8fxKpZbBLYZAH9NIpo+2+vprtVG3
-         F5QlbpI8u0YJcmkeo7ZbfsBVdZ5cYNRxrrZaL0tte9AFzUrNm1JXAP+YdVbV/guN5/kn
-         EqrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOT3wKJ111j0LbNJRSzTOv3DQIbhTn94600YBhqhbmk9OK0YxuMebRBaSKxGoNTzn6YBLzX0/NcTk+7X0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbNDXE3vYr3XxOJ6p7npKt22nbNHTmSByQAxzhH5IE0XmPOCHC
-	rg/xp75IUQTQd7t0O5lTapB3vvWwOmhEI15bjGqsQXMPhhklpcH+9jkEwM652ExzINeKYwWHfF+
-	hfZOLnULLbeO5NMUxcu2omLKDoulK3I+aVZafhtoaLIH+F2ha9jlhclg=
-X-Google-Smtp-Source: AGHT+IEyT6hh3PLCefTt8R5zupg7eSLCcrw1zcw0pQj/rzpMk5ZriYXQfwbK7UrNl+4HV97Y5tsvO9wCAJT+mxxtrZoX+v24BD8O
+	s=arc-20240116; t=1738509336; c=relaxed/simple;
+	bh=uAU7bmuKNbRNKUiGAVgwp9nVJvHKcC9CZxd/CiHOYgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FupYiZN8824D0L7n1hAd0nLY5FmDYJ13RbGW390ZQ/R5LMtTy93gEI0JS1HwvImP5N2Ej+0448OInJFgFS3w1y1v2pgoB6AF8HoezkFSM73FgrvdGmJ+cc+7ULhyI4mlddhmu9hukjBBndLDUeXBf5adEXqjrLVVGtz9refCvEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=twGCzp4P; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="twGCzp4P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9C67C4CED1;
+	Sun,  2 Feb 2025 15:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738509334;
+	bh=uAU7bmuKNbRNKUiGAVgwp9nVJvHKcC9CZxd/CiHOYgg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=twGCzp4Pbyz9jCPmZ1oeAMGhN5YODbpg7gGbhidD406ocxIpMMH1bNo+/br1L6Xup
+	 IqbKYZMRoXI/I0FjkCrf1hkkeAIKlajw8Fw81lkvRgjUNlAp4+Af1/ozoylAcRcolI
+	 buq1AAuwSB3CEDWZPJ+nLSxRPVULUzPnQ7C83GRMtpLQzNUfLErDhDBhi12l+t9wNv
+	 1PKJY8UKD72wdSM/r4jt7tbptxxqELO/HbshFMSdiqypQuj74a/s+CtFQ9IMV+hE9r
+	 a2UNcNoGIM+OjVHhNNnhE/kfvNIi365Ylz/aiJZe2AojxqbRsADgYM6TLcXrW3HHEK
+	 Z8kAnrk0jPv2w==
+Date: Sun, 2 Feb 2025 15:15:26 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Sam Winchenbach <swinchenbach@arka.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ "antoniu.miclaus@analog.com" <antoniu.miclaus@analog.com>,
+ "lars@metafoo.de" <lars@metafoo.de>, "Michael.Hennerich@analog.com"
+ <Michael.Hennerich@analog.com>
+Subject: Re: [PATCH v2] iio: filter: admv8818: Force initialization of SDO
+Message-ID: <20250202151526.457eab08@jic23-huawei>
+In-Reply-To: <SA1P110MB1069C9854F796B755E5E24C7BCEBA@SA1P110MB1069.NAMP110.PROD.OUTLOOK.COM>
+References: <SA1P110MB106911327A8819E9AF67E676BCE2A@SA1P110MB1069.NAMP110.PROD.OUTLOOK.COM>
+	<20250201111813.6b8cbf5b@jic23-huawei>
+	<SA1P110MB1069C9854F796B755E5E24C7BCEBA@SA1P110MB1069.NAMP110.PROD.OUTLOOK.COM>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca4f:0:b0:3d0:24c0:bd4d with SMTP id
- e9e14a558f8ab-3d024c0bfafmr51172895ab.18.1738508883278; Sun, 02 Feb 2025
- 07:08:03 -0800 (PST)
-Date: Sun, 02 Feb 2025 07:08:03 -0800
-In-Reply-To: <6798b182.050a0220.ac840.0248.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <679f8a53.050a0220.d7c5a.0070.GAE@google.com>
-Subject: Re: [syzbot] [xfs?] possible deadlock in xfs_buf_find_insert
-From: syzbot <syzbot+acb56162aef712929d3f@syzkaller.appspotmail.com>
-To: cem@kernel.org, chandan.babu@oracle.com, djwong@kernel.org, hch@lst.de, 
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-syzbot has bisected this issue to:
+On Sat, 1 Feb 2025 14:00:58 +0000
+Sam Winchenbach <swinchenbach@arka.org> wrote:
 
-commit ee10f6fcdb961e810d7b16be1285319c15c78ef6
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Thu Jan 16 06:01:42 2025 +0000
+> > > When a weak pull-up is present on the SDO line, regmap_update_bits 
+> > > fails to write both the SOFTRESET and SDOACTIVE bits because it 
+> > > incorrectly reads them as already set.  
+> > 
+> > I can see this as a valid micro optimization but I'm struggling a bit on how you can use the device if the pull up is weak enough that you can't read data back from it. Does the reset in some way solve that?
+> > 
+> > Having asked for the fixes tag, I'm less sure on whether this is a fix.
+> > 
+> > Antoniu, I'd also like your input on this one!
+> >   
+> 
+> On power-up the device is configured without SDO enabled. This, alone, makes the read-modify-write during initialization incorrect - It is not possible to read from the device seeing it is not driving the output.
+> 
+> If the SPI bus, like in our situation, has a weak pull-up the situation is compounded. When the device initializes it reads backs all 1's as part of the read-modify-write sequence, falsely determines that the soft-reset bit is already set and skips resetting the device. The next step is to enable the SDO line. It reads back all 1's, falsely determines that the SDO is enabled and then skips writing to enable it. This leaves the device in a non-functioning state.
+> 
+> By writing directly to register it will always perform the reset, and it will always enable SDO regardless of the invalid values read back during initialization.
+Ah ok.  So it's a bug with or without appropriate pull up.
+Just happens to be worse if that is missing.
+> 
+> > >
+> > > Since the soft reset disables the SDO line, performing a 
+> > > read-modify-write operation on ADI_SPI_CONFIG_A to enable the SDO line 
+> > > doesn't make sense. This change directly writes to the register 
+> > > instead of using regmap_update_bits.
+> > >
+> > > Fixes: f34fe888ad05 ("iio:filter:admv8818: add support for ADMV8818")
+> > >  
+> > 
+> > No blank line here.  Fixes is part of the tags block that various scripts scan.  
+> 
+> Is this the blank line after the fixes? I need to do some research to understand the tag block.
+Yes - The block of all tags needs to be contiguous. No blank lines.
 
-    xfs: fix buffer lookup vs release race
+Greg has a script that moans about this, not sure if it also runs on linux-next
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1193ad18580000
-start commit:   69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1393ad18580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1593ad18580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
-dashboard link: https://syzkaller.appspot.com/bug?extid=acb56162aef712929d3f
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=174cd5f8580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162e2d18580000
+Jonathan
+> 
+> >   
+> > > Signed-off-by: Sam Winchenbach <swinchenbach@arka.org>
+> > > ---
+> > >  drivers/iio/filter/admv8818.c | 14 ++++----------
+> > >  1 file changed, 4 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/drivers/iio/filter/admv8818.c 
+> > > b/drivers/iio/filter/admv8818.c index 195e58bc4..9cd1eee84 100644
+> > > --- a/drivers/iio/filter/admv8818.c
+> > > +++ b/drivers/iio/filter/admv8818.c
+> > > @@ -577,21 +577,15 @@ static int admv8818_init(struct admv8818_state *st)
+> > >       struct spi_device *spi = st->spi;
+> > >       unsigned int chip_id;
+> > >
+> > > -     ret = regmap_update_bits(st->regmap, ADMV8818_REG_SPI_CONFIG_A,
+> > > -                              ADMV8818_SOFTRESET_N_MSK |
+> > > -                              ADMV8818_SOFTRESET_MSK,
+> > > -                              FIELD_PREP(ADMV8818_SOFTRESET_N_MSK, 1) |
+> > > -                              FIELD_PREP(ADMV8818_SOFTRESET_MSK, 1));
+> > > +     ret = regmap_write(st->regmap, ADMV8818_REG_SPI_CONFIG_A,
+> > > +                        ADMV8818_SOFTRESET_N_MSK | 
+> > > + ADMV8818_SOFTRESET_MSK);
+> > >       if (ret) {
+> > >               dev_err(&spi->dev, "ADMV8818 Soft Reset failed.\n");
+> > >               return ret;
+> > >       }
+> > >
+> > > -     ret = regmap_update_bits(st->regmap, ADMV8818_REG_SPI_CONFIG_A,
+> > > -                              ADMV8818_SDOACTIVE_N_MSK |
+> > > -                              ADMV8818_SDOACTIVE_MSK,
+> > > -                              FIELD_PREP(ADMV8818_SDOACTIVE_N_MSK, 1) |
+> > > -                              FIELD_PREP(ADMV8818_SDOACTIVE_MSK, 1));
+> > > +     ret = regmap_write(st->regmap, ADMV8818_REG_SPI_CONFIG_A,
+> > > +                        ADMV8818_SDOACTIVE_N_MSK | 
+> > > + ADMV8818_SDOACTIVE_MSK);
+> > >       if (ret) {
+> > >               dev_err(&spi->dev, "ADMV8818 SDO Enable failed.\n");
+> > >               return ret;  
 
-Reported-by: syzbot+acb56162aef712929d3f@syzkaller.appspotmail.com
-Fixes: ee10f6fcdb96 ("xfs: fix buffer lookup vs release race")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
