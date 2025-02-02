@@ -1,97 +1,174 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73422AF06;
-	Sun,  2 Feb 2025 12:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5B538384;
+	Sun,  2 Feb 2025 13:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738500921; cv=none; b=PNoNzjdRyhTfr9SLO18kr9sD3V3MKf2Rr/2CJZYPK3dO1g8ju0Yziwlh3nLOfQeKYaxI1zlM1un9lQpILP2dEHDfGcYTaAOB+UvxftbgElj8Cn/ZMCyhMjV3eUq3l/l5uxGFMZwJdX2jnacPDg/6Jh2pJpQHz3Aa5ZkNnjQD6pA=
+	t=1738501345; cv=none; b=K8A0jImTmijec1wZaAV7E8paOhmjY6c2RDhcRYXlMR7P+3S1AlU4fVQkgndIRQWmyWkVhvrk3T2gYR7jFMrI5nW6bvDqwBFvWFUXC8dbyNWXAnvrAnMDYpNP8Xt1UD6ge2YMtWXegcP3wVPh4mljHMhaaWMowWCra3C8IIMNy3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738500921; c=relaxed/simple;
-	bh=VRPy+teEzMxgsuO53PTUAZvh/gxOUy2b78Z+Zc2Itfc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EFXpXcSfax/m32ZHS0llthmbQencjjZYpOTM1I3N7mCtTJ9o+cQLkjJmm93JaWOLn5VoBGXsCEyK5HBmcIjwcysQN0O9SrncSkf2TtYKIMY9i5kzwrJYY+yDDpmR8bVQPkAV7mv5ljfGmHw04nIp6OVFOjQ1nCVWLCZ4LFSiGBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O/MSjFC3; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738501345; c=relaxed/simple;
+	bh=Fe/g5sImhVnZq08aC71Vyqc8tGYIgJd/f3p1mGKoN0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oMVo8XA5Jrh0Np6mEdTX4qAI8629OcCrWaSV5ps9VurClFCfVGvxIt3j4bMWqJUlgC2zLOeDoY8Zer4ChXAoTuIjLLS+sXDIs3qsQdb/y71TspkHBQodEix+AKa8Es7YtxcynNDcsMoqgRp7dzuIWcGbLDw5xY5jZjDKw1CFSjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=noJyN8Ja; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/MSjFC3"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30738a717ffso29553731fa.0;
-        Sun, 02 Feb 2025 04:55:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738500918; x=1739105718; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OMKG1kpaXWBH2VftDsuUeWAr8QcYNGM5yl0LKFjRV9Q=;
-        b=O/MSjFC3rasdSmksCJrenhqa5jKgVhFYfrcXix+pox4qssBu1Qt5V2rHFXZfS7P0gD
-         c1nC7W2uz2G1Nt/sDHv/Ql4CyMGDZan80fSsBKt+YoT50WejSAM2IVqeQx8/xs4eJv6H
-         P4JEYNHNDAcoyccKdCZduPAopyClei3jnlKWOGSFFRpV/96w1YE2sSIGylkwqot8bti7
-         sZi7aPkuyVCbdR6qmL2SZ/jFIJ5if6O4o7xu87QRTN+6Ik3b5mWImOQbs/SEr77DM+uc
-         3bJR7JV1GVGMctb6Q1FF+UsgVySIWKgurl34HoC+PdExPXJJFF7wauUsU1gLv/Zg7JWt
-         tf2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738500918; x=1739105718;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OMKG1kpaXWBH2VftDsuUeWAr8QcYNGM5yl0LKFjRV9Q=;
-        b=UN0qLAxYYqBLzCrdo0TlnQzY9/FY9AfoIpcG3NFmp0KYuTCO3ihYyWKI/IHFwcG+wr
-         pYvJCKMuqj0GJSX+eGyT2NQnX/+j1rMEURpILi9TyBsfzaqYmYthj4hSpZKOfNof4uAV
-         aMKW/oASfRGFoZXZqkUt6M7F+Q3G3eIhgZfgwLYPlUuORFWGST1rIGlPqR70F4l5vf+H
-         3mOTGxxqSpgQ0MDkUrF7eMewohgnpslv1eMbomccAu6uvASQzRcuVs/6a2LwYsU4AXJm
-         kkiZ18HQEhXHRTBB/lIrMuEx9QAJdsHkai0rJWdu0K7j4dDzywErEbde+5v8zEWrH2nt
-         AYKA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1dkV/FsK8cHWNK27aYe7/9NvuN1HI0xXUPOvAhJ0R7ocegcDFAqSPjzGx2WvzqSEW5G8ZE8QDf9w9G5U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzi4Ld8cN1rUUzv5iBc48R4jov7XlMzxpZM1H8+mxDgnMg+Eaq
-	nQt4HPF+GLl9dSieqVYSAZajpscsO6ALpnQSeQDEUlRB+3jPIaBHVVM+ik7aFspNxsuRn5Pr0UD
-	cZnvHxz+ZXH6/NsbVNAiyQjLOecQ=
-X-Gm-Gg: ASbGnctPiAZEEMthGpAZy3j0DL1OMvk9VaFL7PSM8mVYWMnwGbgD629eGJAfzIrrCCy
-	TYF4fA/9KV8kM0oMxQPDm0Z4FyaghKug34pdzozx3P3KJxN0cYwT8GLQ7/5mdA2pcheltQXWpoQ
-	vlgRNzgdAdkgcl52ywBgSvFGzuMycEsu4=
-X-Google-Smtp-Source: AGHT+IHCewNltA44KT35LdcI+962td7nMroLtNbt1AXQc1mrIqMlCUUH4fu1eq0iCXuyD6mLhZDOxPX4elkCSK/bM8U=
-X-Received: by 2002:a2e:be2c:0:b0:2ff:d0c4:5ffe with SMTP id
- 38308e7fff4ca-307968dd5dcmr57938671fa.16.1738500917419; Sun, 02 Feb 2025
- 04:55:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="noJyN8Ja"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94616C4CED1;
+	Sun,  2 Feb 2025 13:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738501344;
+	bh=Fe/g5sImhVnZq08aC71Vyqc8tGYIgJd/f3p1mGKoN0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=noJyN8JaWodymejEf/DNQO2nwCGZzVT2FTKeeazQyUw0i7+NPq+Z0yLrrZC6HKM3C
+	 rBJGK2f7mpc0L4keJjaICOpIVKOT9AYf5A4qYRLYdRBVteyP+tQTOlo7z49ANnzokb
+	 okBm/b5sU9q353/48GgUUEpoLi48v87QusbOIQO2mNOPu00FqnkKlRQJxVCbn6O5qQ
+	 BUMS5Up4BDe3WvLIFr7EpBl3fV7kYlzH2bWFP+HRrhnPYOfq14jVEKLpeXp1fWFCeR
+	 tHafIN393uoQYvWFRBItcfUPz6lyYo7kSdaL5EP7QMZBFctVcBZnpO8P0jjJeh4zYp
+	 e7WfV5OoEqqqw==
+Date: Sun, 2 Feb 2025 14:02:21 +0100
+From: Alejandro Colomar <alx@kernel.org>
+To: Phil Auld <pauld@redhat.com>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Carlos O'Donell <codonell@redhat.com>
+Subject: Re: [PATCH v2] man/man7/sched.7: Mention autogroup disabled behavior
+Message-ID: <hmvmnl52rvv2cln5d6ggheqjvzshlmdkc3fevbrc2sjwwdmteg@6egcrtlhywi7>
+References: <20250116143747.2366152-1-pauld@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202-cstr-core-v6-0-8469cd6d29fd@gmail.com> <20250202-cstr-core-v6-2-8469cd6d29fd@gmail.com>
-In-Reply-To: <20250202-cstr-core-v6-2-8469cd6d29fd@gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sun, 2 Feb 2025 07:54:41 -0500
-X-Gm-Features: AWEUYZk3Rdbm_MyHpAJbPz-ZGHsc1Wxcqyi_d7uYad-8Gq06RXCIv-mD7knwESI
-Message-ID: <CAJ-ks9mGs0Swc1L2WMuh1Y5q6STsiFuYi77RR1Nb_gK1GG61+w@mail.gmail.com>
-Subject: Re: [PATCH v6 2/4] rust: replace `CStr` with `core::ffi::CStr`
-To: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qklmex7qhlvoqoc7"
+Content-Disposition: inline
+In-Reply-To: <20250116143747.2366152-1-pauld@redhat.com>
+
+
+--qklmex7qhlvoqoc7
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Phil Auld <pauld@redhat.com>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Carlos O'Donell <codonell@redhat.com>
+Subject: Re: [PATCH v2] man/man7/sched.7: Mention autogroup disabled behavior
+References: <20250116143747.2366152-1-pauld@redhat.com>
+MIME-Version: 1.0
+In-Reply-To: <20250116143747.2366152-1-pauld@redhat.com>
 
-On Sun, Feb 2, 2025 at 7:20=E2=80=AFAM Tamir Duberstein <tamird@gmail.com> =
-wrote:
->
->  impl DerefMut for CString {
->      fn deref_mut(&mut self) -> &mut Self::Target {
-> -        // SAFETY: A `CString` is always NUL-terminated and contains no =
-other
-> -        // NUL bytes.
-> -        unsafe { CStr::from_bytes_with_nul_unchecked_mut(self.buf.as_mut=
-_slice()) }
-> +        // SAFETY: Properties of `bytes` guaranteed by the safety precon=
-dition.
-> +        unsafe { &mut *(self.buf.as_mut_slice() as *mut [u8] as *mut CSt=
-r) }
->      }
->  }
+Hi Phil,
 
-Whoops, this safety comment is nonsense. I'll use the one from `impl
-Deref` above in v7...or just remove this impl altogether. I'm not sure
-what the use for `&mut CStr` would be.
+On Thu, Jan 16, 2025 at 02:37:47PM +0000, Phil Auld wrote:
+> The autogroup feature can be contolled at runtime when
+> built into the kernel. Disabling it in this case still
+> creates autogroups and still shows the autogroup membership
+> for the task in /proc.  The scheduler code will just not
+> use the the autogroup task group.  This can be confusing
+> to users. Add a sentence to this effect to sched.7 to
+> point this out.
+>=20
+> The kernel code shows how this is used. The
+> sched_autogroup_enabled toggle is only used in one place.
+>=20
+> kernel/sched/autogroup.h:
+>=20
+> static inline struct task_group *
+> autogroup_task_group(struct task_struct *p, struct task_group *tg)
+> {
+>         extern unsigned int sysctl_sched_autogroup_enabled;
+>         int enabled =3D READ_ONCE(sysctl_sched_autogroup_enabled);
+>=20
+>         if (enabled && task_wants_autogroup(p, tg))
+>                 return p->signal->autogroup->tg;
+>=20
+>         return tg;
+> }
+>=20
+> task_wants_autogroup() is in kernel/sched/autogroup.c:
+>=20
+> bool task_wants_autogroup(struct task_struct *p, struct task_group *tg)
+> {
+>         if (tg !=3D &root_task_group)
+>                 return false;
+>     ...
+>=20
+>         return true;
+> }
+>=20
+> One can see that any group set other than root also bypasses the use of
+> the autogroup.
+>=20
+> All of the machinery around the creation of the autogroup is not
+> effected by the toggle.
+>=20
+> From userspace:
+> 0
+> /autogroup-112 nice 0
+>=20
+> Note, systemd based system these days is not really using autogroups at a=
+ll
+> anyway because any task in a non-root cgroup bypasses the autogroup as
+> well.
+>=20
+> Signed-off-by: Phil Auld <pauld@redhat.com>
+> Cc: Alejandro Colomar <alx@kernel.org>
+> Cc: <linux-man@vger.kernel.org>
+
+Thanks!  I've applied the patch.
+<https://www.alejandro-colomar.es/src/alx/linux/man-pages/man-pages.git/com=
+mit/?h=3Dcontrib&id=3Dca69daf45f94fda061f796efcc4f24ca76d8e380>
+
+
+Have a lovely day!
+Alex
+
+> ---
+>  man/man7/sched.7 | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/man/man7/sched.7 b/man/man7/sched.7
+> index 71f098e48..f0a708cd7 100644
+> --- a/man/man7/sched.7
+> +++ b/man/man7/sched.7
+> @@ -724,6 +724,8 @@ in the group terminates.
+>  .P
+>  When autogrouping is enabled, all of the members of an autogroup
+>  are placed in the same kernel scheduler "task group".
+> +When disabled the group creation happens as above, and autogroup members=
+hip
+> +is still visible in /proc, but the autogroups are not used.
+>  The CFS scheduler employs an algorithm that equalizes the
+>  distribution of CPU cycles across task groups.
+>  The benefits of this for interactive desktop performance
+> --=20
+> 2.47.1
+>=20
+>=20
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--qklmex7qhlvoqoc7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmefbN0ACgkQnowa+77/
+2zLjDA/+NSRSpogInjUuv/8YBmr0s57L99Xl+bV+W2AlJ+PIclfnVObStciBdUcC
+pu+daFyIKXTpBMPQ52LCpGNRsnS0WZL0LpD751lxwOSy2Mpszw7jggAbmz6PsWc7
+fnEgCZ6+LvfS0Z/yyRv07WWeGrs+Y3TOsvD3Bqzkjozt7SfA7b5uL1j5lc3ana16
+QgY6X6T+mJ+VY+Xd8S9qiF8yLKI+94NF32TEY3zfAUCR7xvuviL0llTbQOyYf4QH
+IxvU/cmTxkZVVKPx3iU3AQUrqvgmDZJXifGo4zTpV4EBF7bSPLVTui3em1xOGUoV
+xfVIo90ZLb6VbaYdZPJ+VQBuMsWDWzOfW+8phjTtUGVy735MqZg4Ts/wZG6kKFs5
+7t7IgooxtAvEVxt2vgZHzZ+wAm7ZuzYwJKGc0GWl2e402P8za+xGRNGvI1El2PGq
+vwGyxiUDjjhRWAImC8QrqNt2zPfu772EsUDnueXGE2zYWzKZIqu4nmlfUsT3tb23
+mQepVhR9NWu5W0rCEcSSb/SWz8YfmRWD+dk0UyZ7jy++A4bxt4Tz3rtb08snKXde
+kp1lwGbajNtH2J/HnUGXUwN9aq+HR96299PAEmbPARdN99KLxPrXxemseD8IgrLa
+vde6rR1b7hk+zNOf2TRWncTd8EvPTfj6BlfS3FgVlkp3LrMOZak=
+=/Z3K
+-----END PGP SIGNATURE-----
+
+--qklmex7qhlvoqoc7--
