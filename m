@@ -1,90 +1,123 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-76.smtpout.orange.fr [80.12.242.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4C32F3B;
-	Sun,  2 Feb 2025 09:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD611B4F17;
+	Sun,  2 Feb 2025 09:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738486947; cv=none; b=qUcdOHdIFuTEfPHQEOuZNGESoaL4UxsG9x/j9CMm8uCcyUNXYTW5sgxUYLIioLDoTxpMBMVzX+qTy2hr1+34Rb8iO27WvHkgrPlLH5Kb54p7w6LwHHJlg3YHf9F1OstmMYZK1iUOl3e7XgVFjEqBYj4dmVO6+97eaFLQn/s39aY=
+	t=1738487083; cv=none; b=AM5HSXqMNLF3fjmE/Ug6AU4ndcP8TGgfIkP4w02so1nc5GWYnm8mbTzwNRYKSNLZi5hDK+MwoKwvFV5AfVUFKfPqtKoiulppv9dOtqY0v9fPmttjeQbTV4FXmPiZadCZIlY9Tqz4XqAhhgV1hiupndDpo5BEp4QRA2vQIUHmY+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738486947; c=relaxed/simple;
-	bh=nD4kaYdBysHGMqyO+DYxF+ZInYqK5Sv6MZqCmZ5KplI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Zy2gdc/3ARezf8TS5XpdxQSUKNKIPP82MYD4nLVwXlRcrgdl4Dq8GWFAxmfCuZwtHGkbioIyAFy1OU4HnR10KSbn2anXdnPBKFSioalEVVfx++GtTvEf3aF9HaNmxwzMIt3vzOLjD3H1aSlzAQ8jtg32cyY6PSV1k3uZOBNVWGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=nDHDDswp; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1738487083; c=relaxed/simple;
+	bh=dyO+oOLpmbRKffw0QmVICfdOqy1U06HUhhqD8KClRxo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=poSeB5oeIYvTP6XPYZfzBzBV7QuqGyukipeX6/Xj+K+Z/F6KxngW9n4wgSjjcrSmwcUnTjlBtYrkx6pGynUSS723RTW+kqwTl/l+4ksUTU2GvKzT4sHZmyLtZUlcK4X55Xk3n2jAWKZlFUJijGXI/3Fwp2rdEwlA3MHwGMhrCEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ONl1dZ8E; arc=none smtp.client-ip=80.12.242.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nDHDDswp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1738486946; x=1770022946;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=j7BC454znfGK+YxC1sObQa0ZrTdrnrk7q5MLNC7JmeM=;
-  b=nDHDDswpD9cKWteiSFrFKgNzdeMeCCq9ofEh0ImsKlsCLTIvRS1OTBLM
-   GUkOHcLkgHPilrVYUIJdXecxOkuQzx3I7AkObkveGsCEynabEDRic79c+
-   WVFGmQKSULRzp22cv4zzc62OiVrPD4zEnOMuRj35ADNMcjYhtPlwP5D3L
-   E=;
-X-IronPort-AV: E=Sophos;i="6.13,253,1732579200"; 
-   d="scan'208";a="715364577"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2025 09:02:23 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.7.35:26257]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.5.183:2525] with esmtp (Farcaster)
- id de94db05-fdca-43eb-9475-bc8a3af49cee; Sun, 2 Feb 2025 09:02:21 +0000 (UTC)
-X-Farcaster-Flow-ID: de94db05-fdca-43eb-9475-bc8a3af49cee
-Received: from EX19D003ANC003.ant.amazon.com (10.37.240.197) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Sun, 2 Feb 2025 09:02:21 +0000
-Received: from b0be8375a521.amazon.com (10.37.244.8) by
- EX19D003ANC003.ant.amazon.com (10.37.240.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Sun, 2 Feb 2025 09:02:18 +0000
-From: Kohei Enju <enjuk@amazon.com>
-To: <linux-scsi@vger.kernel.org>, <target-devel@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: "Martin K . Petersen" <martin.petersen@oracle.com>, Kohei Enju
-	<kohei.enju@gmail.com>, Kohei Enju <enjuk@amazon.com>
-Subject: [PATCH v1] scsi: target: remove unnecessary null checking for bio allocation
-Date: Sun, 2 Feb 2025 18:02:08 +0900
-Message-ID: <20250202090208.26890-1-enjuk@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ONl1dZ8E"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id eVtytmLlOJkroeVu2tTSNQ; Sun, 02 Feb 2025 10:04:32 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1738487072;
+	bh=sZBSp4l8TaYQbbpAeeyk8Mb3Y59RuO3+HThMa8fdvss=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=ONl1dZ8E1bTZ9viQhIuJ1pQUb7MTmrSs6Hy8KzQ9NXmvVe3gI4u2BXh3Wuj5HmIE4
+	 hQKnH56s5IB0AfpgvLG49EVXA16w/nFNkxL9WnTJy4xPd4AuP6og86Bu2CqNLh71UD
+	 +hd/ZZTq97tsD0rvhOXZ+Ws54cXIAbTpLqSwtVnGB1+CxIgD9eHzn8LrJTbtw/GNRn
+	 0PNejG/xfjxbI1EPvhA2EcqgLTxmjbsevI5GzRq9B+13WmgApmWZ3yZoqI72iiIOU7
+	 iW+IEqWX3FLQpnhKBPWGqvdkHITB+MVty3aWrKuumF+jQQ4zXUH266N3SYJ4NLVUHV
+	 YeMxMxm0Ff7MA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sun, 02 Feb 2025 10:04:32 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <7d9c2a9b-dfa9-40c3-8d34-92c40cea0842@wanadoo.fr>
+Date: Sun, 2 Feb 2025 10:04:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 2/2] nvmem: imx-ocotp-ele: Support accessing controller
+ for i.MX9
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: alexander.stein@ew.tq-group.com, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, festevam@gmail.com, imx@lists.linux.dev,
+ kernel@pengutronix.de, krzk+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ peng.fan@nxp.com, robh@kernel.org, s.hauer@pengutronix.de,
+ shawnguo@kernel.org, srinivas.kandagatla@linaro.org
+References: <20250202-imx-ocotp-v7-0-5622ba16451d@nxp.com>
+ <20250202-imx-ocotp-v7-2-5622ba16451d@nxp.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250202-imx-ocotp-v7-2-5622ba16451d@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D045UWA002.ant.amazon.com (10.13.139.12) To
- EX19D003ANC003.ant.amazon.com (10.37.240.197)
 
-When __GFP_DIRECT_RECLAIM (included in GFP_NOIO) is specified,
-bio_alloc_bioset() never fails to allocate a bio. For more details, see
-the comment in bio_alloc_bioset() in block/bio.c
+Le 02/02/2025 à 01:49, Peng Fan (OSS) a écrit :
+> From: Peng Fan <peng.fan-3arQi8VN3Tc@public.gmane.org>
+> 
+> i.MX9 OCOTP supports a specific peripheral or function being fused
+> which means disabled, so
+>   - Introduce ocotp_access_gates to be container of efuse gate info
+>   - Iterate all nodes to check accessing permission. If not
+>     allowed to be accessed, detach the node
+...
 
-Signed-off-by: Kohei Enju <enjuk@amazon.com>
----
- drivers/target/target_core_iblock.c | 4 ----
- 1 file changed, 4 deletions(-)
+> +struct access_gate {
+> +	u32 word;
+> +	u32 mask;
+> +};
+> +
+> +struct ocotp_access_gates {
+> +	u32 num_words;
+> +	u32 words[OCOTP_MAX_NUM_GATE_WORDS];
+> +	u32 num_gates;
+> +	struct access_gate *gates;
 
-diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
-index c8dc92a7d63e..9ef23eea55e7 100644
---- a/drivers/target/target_core_iblock.c
-+++ b/drivers/target/target_core_iblock.c
-@@ -369,10 +369,6 @@ static struct bio *iblock_get_bio(struct se_cmd *cmd, sector_t lba, u32 sg_num,
- 	 */
- 	bio = bio_alloc_bioset(ib_dev->ibd_bd, bio_max_segs(sg_num), opf,
- 			       GFP_NOIO, &ib_dev->ibd_bio_set);
--	if (!bio) {
--		pr_err("Unable to allocate memory for bio\n");
--		return NULL;
--	}
- 
- 	bio->bi_private = cmd;
- 	bio->bi_end_io = &iblock_bio_done;
--- 
-2.39.5 (Apple Git-154)
+Could be const.
+
+> +};
+> +
+>   struct imx_ocotp_priv {
+>   	struct device *dev;
+>   	void __iomem *base;
+
+...
+
+> +
+> +	return imx_ele_ocotp_access_control(priv);
+>   }
+>   
+> +struct access_gate imx93_access_gate[] = {
+
+Could be static const.
+
+> +		[IMX93_OCOTP_NPU_GATE]		= { .word = 19, .mask = BIT(13) },
+> +		[IMX93_OCOTP_A550_GATE]		= { .word = 19, .mask = BIT(14) },
+> +		[IMX93_OCOTP_A551_GATE]		= { .word = 19, .mask = BIT(15) },
+
+...
+
+> @@ -183,7 +308,53 @@ static const struct ocotp_devtype_data imx93_ocotp_data = {
+>   	},
+>   };
+>   
+> +struct access_gate imx95_access_gate[] = {
+
+Could be static const.
+
+> +		[IMX95_OCOTP_CANFD1_GATE]	= { .word = 17, .mask = BIT(20) },
+> +		[IMX95_OCOTP_CANFD2_GATE]	= { .word = 17, .mask = BIT(21) },
+> +		[IMX95_OCOTP_CANFD3_GATE]	= { .word = 17, .mask = BIT(22) },
+
+...
+
+CJ
+
 
