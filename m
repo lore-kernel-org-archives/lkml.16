@@ -1,56 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9182BBA34
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 17:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37582BA34;
+	Sun,  2 Feb 2025 17:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738517822; cv=none; b=smR/rrfgDVTdgf/h30qMVA6+WyuM1k55Vgodm6KoaePsuyzOffwg69JQpuzdsPZqlsj68e2IJg7yXBziG6HvO1ory8PfazUIISFwT98lzc36x+TMH1ok7wFj93nxLBDeKTY6koj/lhT6rbmgjy7PRO93kAAluVRBkgAZtTgHXVU=
+	t=1738517868; cv=none; b=NXWFvLqx6PCCTvyz1xn8RHEiJAlrfUNVaEKfNvD90Cs2Fll6YR0tH6GSOZ1pMeOuniivWVBhcgFBmd2RiCyInbIZyYQ90rgJabv+YlKcWHNQ1fj2KBkULZk+JPhvmd1jJkr/8Y199qgbNsy+RV3pPhomhV+m367/+qS18xdItzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738517822; c=relaxed/simple;
-	bh=JD0kUo1v0DGpy0LVxC4vg0LsyYOo+DpRiXq2yw0Fujg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KI0Zel3+CjMYbgHeNCyA+EkzDzNFD1vAOXlJsEA1VMwgVvBWA41XuwtzS0Vm7qGsB5A6BD2wEH4jSfWb6BTeTuxYdTou6sZAcyRKPhjjOv/3jJ3c3f6lTg6g28dgI4tX/G85mw0PWJGKGlLolwZvoBTdrkU+sLwpDjAT+JQVcUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=udwc+PEc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="udwc+PEc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE877C4CED1;
-	Sun,  2 Feb 2025 17:37:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738517822;
-	bh=JD0kUo1v0DGpy0LVxC4vg0LsyYOo+DpRiXq2yw0Fujg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=udwc+PEcaSH0abO2S9m7EcqdLxYOuH1JfjJSXExH8oTvv1uS1Whd3b45CRqCBsDU0
-	 5Q2CMWmxL/KEizY9Zc47cAdnn4xVuxS5T7Bewxvq/rro0QI4KLbTChPUokmhaxkyyZ
-	 JjZoXnIks48/s6kX7E4bJi2Tp/cHnoZxxJuhKTMXXVK5VadV2wc6OgG/j1LDgsolrN
-	 7a3HLTzkN0JpvJJxF2IMGAOrLQ3eaxRl9pXbiFDtex77YnHK4K1rz0FF18XqEc+RJY
-	 L8hJ3cin6P8mLE9RRuL1rHIggcjbjaLcficp/6LVGmxY+B8Oi+6t8otnxcKsIHv0G1
-	 3u6oROLLqlMqA==
-Date: Sun, 2 Feb 2025 07:37:00 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Changwoo Min <changwoo@igalia.com>
-Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/11] sched_ext: Implement core event counters
-Message-ID: <Z5-tPKaNhT6DNHTA@slm.duckdns.org>
-References: <20250131070938.95551-1-changwoo@igalia.com>
+	s=arc-20240116; t=1738517868; c=relaxed/simple;
+	bh=7RB6OJs9fX5mQCGXnF75AXjtMuZjAUnaksxQrKu4dl0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=DViJT1ucD17WP/HnCjN8CyKGwWAroMuh4wQBjRcHq1tKGrkJ28fP74x+GJjS+XE0z5tJgW05AnXdpxYBy/+avmDMp8nt8a25BNC/fUMo0ssC2npllaO5+PoWvIQR6Wp8QGsIiw7Mve+b9UDYAqr4D9hHYMJBavBpvaLGc6nf4mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id F0C8F92009C; Sun,  2 Feb 2025 18:37:36 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id EB66992009B;
+	Sun,  2 Feb 2025 17:37:36 +0000 (GMT)
+Date: Sun, 2 Feb 2025 17:37:36 +0000 (GMT)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Ivan Kokshaysky <ink@unseen.parts>
+cc: Richard Henderson <richard.henderson@linaro.org>, 
+    Matt Turner <mattst88@gmail.com>, Oleg Nesterov <oleg@redhat.com>, 
+    Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, 
+    "Paul E. McKenney" <paulmck@kernel.org>, 
+    Magnus Lindholm <linmag7@gmail.com>, 
+    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+    linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    stable@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] alpha: stack fixes
+In-Reply-To: <20250131104129.11052-1-ink@unseen.parts>
+Message-ID: <alpine.DEB.2.21.2502021652360.41663@angie.orcam.me.uk>
+References: <20250131104129.11052-1-ink@unseen.parts>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131070938.95551-1-changwoo@igalia.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Jan 31, 2025 at 04:09:27PM +0900, Changwoo Min wrote:
-> The sched_ext core often has to override the BPF scheduler decisions,
-> and some events could be interesting but not easily visible.
+On Fri, 31 Jan 2025, Ivan Kokshaysky wrote:
 
-Applied 1-4. Will wait for refresh on the rest.
+> This series fixes oopses on Alpha/SMP observed since kernel v6.9. [1]
+> Thanks to Magnus Lindholm for identifying that remarkably longstanding
+> bug.
+> 
+> The problem is that GCC expects 16-byte alignment of the incoming stack
+> since early 2004, as Maciej found out [2]:
+>   Having actually dug speculatively I can see that the psABI was changed in
+>  GCC 3.5 with commit e5e10fb4a350 ("re PR target/14539 (128-bit long double
+>  improperly aligned)") back in Mar 2004, when the stack pointer alignment
+>  was increased from 8 bytes to 16 bytes, and arch/alpha/kernel/entry.S has
+>  various suspicious stack pointer adjustments, starting with SP_OFF which
+>  is not a whole multiple of 16.
+> 
+> Also, as Magnus noted, "ALPHA Calling Standard" [3] required the same:
+>  D.3.1 Stack Alignment
+>   This standard requires that stacks be octaword aligned at the time a
+>   new procedure is invoked.
+> 
+> However:
+> - the "normal" kernel stack is always misaligned by 8 bytes, thanks to
+>   the odd number of 64-bit words in 'struct pt_regs', which is the very
+>   first thing pushed onto the kernel thread stack;
+> - syscall, fault, interrupt etc. handlers may, or may not, receive aligned
+>   stack depending on numerous factors.
 
-Thanks.
+ Would you please put this analysis into the commit description of 3/4?  
+It gives a good justification for the change, so it seems appropriate to 
+me to get it recorded along with the commit for posterity.
 
--- 
-tejun
+ NB I've been feeling a little bit unwell over the last couple of days and 
+consequently I only started my GCC/glibc verification yesterday.  Current 
+ETC is this coming Tue.  Perheps it's worth noting that I run this against 
+6.3.0-rc5 with a couple of backports on top to resolve conflicts, as the 
+current master does not support EV45 hardware anymore.  I'll let you know 
+of the outcome.
+
+  Maciej
