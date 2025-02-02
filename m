@@ -1,155 +1,90 @@
-Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E0D2144D8;
-	Sun,  2 Feb 2025 20:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30AC72144CD;
+	Sun,  2 Feb 2025 20:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738529751; cv=none; b=TXze8+74EW6m235V0ZwEEwOTdbFfP3rCdcjUQev8X1Pc9yrlY4ch9VXab6u0RhXlKHNA//RLCm/iwtc8RBUOAygoFZ+iGqkNv/LuZHFKNZzbAsprQUNvN5S98zA8FTq6RNTYRXZAinkKUsXnY1hN8rk0ZQbqrw4ISy+CgETcoKI=
+	t=1738529776; cv=none; b=pgenwbFD+SIfK1+FOy43vDq4uzFvyStpr23clxAVZ8d9w2RyoOFctJSd7iP6Z0ax5vuFT59Ono2SGvFhcMePxT7fWEI3xvh5lbX3l7mNABRC/2LmxkfbiP0qsTIfaxESLMoi80hbmUNqKW8jdOccqsmsZyXKqr0taKW2LCNL+jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738529751; c=relaxed/simple;
-	bh=DQosqtRZSxKfbqx/NoW6In9I4lB44YHTpQfGR519/ck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cCcgLSoDvFoxe+E8QlhjOKzv0pTnG4dnGgkNNtrM3n++3YjXEUxxui7mW0S22rrqYts6aoduPe5h8Mhkg9vrB2vhTpcRWkqa0d4f/pPhuzVGdyeSArn7Gv67CbfFvHNho+CgpCARCmZCXN/djfwXc9MTHUVQAJd2c3jwgjlG0wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-ab6f636d821so532158066b.1;
-        Sun, 02 Feb 2025 12:55:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738529748; x=1739134548;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=poe6drOjTOYsDCAwDHGjHlxEZ536/WH5uWxLtf2GTsg=;
-        b=CuTqtZ4LiKfSqtiwaW3xiw3TqWolOH32rgjJaDD2kdTrw8RXANqKoRgSEDCeZvDoW0
-         e0VXyxINjNoj8pdkz+TrG0XowqnxMCXvx/wkaIORWE4ko5NVZ9hMnQw21qmaO3LM/Bv3
-         8gOh9QZhnLoIDRaPCMpVH4bwolq4F5iw9/3J8Txt593rWTPqnXj4vzC3qmRpMsgw4+h7
-         dvy2U1rEcwQTydU0Q/g6jLhF5b8mUSN+fAe8XGLzOl3Agypl2v6NS0I/XGkdW3goVtGO
-         rTCA49Vb51/Mkkl7P3K9lLl6tfT6Zisf5imbJalNx52IitDth4a/pNrpwBeBPvQgQhLA
-         8NRA==
-X-Forwarded-Encrypted: i=1; AJvYcCV86f6oMPoUk2qDy2cVSgwoc9QxJIVGRtVYw2lHbLyfljgXu1DXnXJtZWGUJDWDBlCediGh/zlu@vger.kernel.org, AJvYcCXXGokLy6gPws6K1dlkmL0zIBYOdoSiXYrEp7whV2STnCvf/2sPFkpbmn7WETimoOp7ebKvrVqB90w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHmEISBmsHPdg3rAH1sbIS9zMPECmoSBWzSPWCU+UnsVLT3xuH
-	ixLyhzhDowqjgSkqg4QVETWGuYdV4IVIZ+Key2jXvVFKfrrgEY0y
-X-Gm-Gg: ASbGncsiR+PBEyFlgON5S0y8j7T5QKRckdxwywbc3ENJy8LiJKARf2nScGegnAYfhCQ
-	Ioi/CLcJ6kOCNgEo8LpPRxmIM85jBlwKSOcL9qtjlxP4e9NQ8OKB87M+ubdQq3YOO7pSNVogVpJ
-	68k9Vtdg5rmbhLCBaLkD3rL4LC+gxxxxMCiB8B6nur38a1mGjxRinISjFJpwht9tirmmF1TANfw
-	qOdqfOaw/xh3OOjginJHYIOG+W9o/C+UvdLcRVR18z4KAxQQlMdSx9v+VS8Ljfh9LSxc4r7SoRc
-	RT4PGj5jgQvtkmE=
-X-Google-Smtp-Source: AGHT+IEKbAz2zVgJC6vmaniVDDsmyTegQgYClI+FbH09aFMnhkb0r4Wpem8s8i/s2Ib6KT/7+xNgvQ==
-X-Received: by 2002:a17:906:c114:b0:ab6:ed9e:9739 with SMTP id a640c23a62f3a-ab6ed9e9903mr1334106766b.42.1738529747865;
-        Sun, 02 Feb 2025 12:55:47 -0800 (PST)
-Received: from [192.168.0.13] ([86.49.44.151])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a2fa18sm637027766b.131.2025.02.02.12.55.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Feb 2025 12:55:47 -0800 (PST)
-Message-ID: <b9a9922c-1290-4d58-9e37-6d999e6c70d1@ovn.org>
-Date: Sun, 2 Feb 2025 21:55:46 +0100
+	s=arc-20240116; t=1738529776; c=relaxed/simple;
+	bh=NqzZIztwz5lBbo58Ip+9/7S1pquqe0cSeyhOB7C8qjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Egwzc0ibTLVN6T4xRBxsYsYNDSG/gHL3PiSx/D4jOOGLZSbOb+fHg/JUFDAGlADKYr/PUgkFwLuP/6bTl8/KMYgWhgit3qGeA7q/SFZxGpjupRau2EzD/UYJz3TPLGCOH5pjIKed9t9vCZ+YcFq4txnk8GFVgnoGnJx0at+i23U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=L42OCAub; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="L42OCAub"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1738529762;
+	bh=NqzZIztwz5lBbo58Ip+9/7S1pquqe0cSeyhOB7C8qjg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L42OCAubWgKDcBS+qLuzO5RJu7oaGDTQQ2Dxyrfgl52HHrSMdr0V+DZaDtzENzld/
+	 CQTyhMCUn1AbbUgayWxuz2b6GkZMHyvaSitL/BZjNZtaqXJF+d9Y8lcah0EcoZZT44
+	 gEhg3hJa4wmKguBxv8iy807fOmOoWeNCtn4Ohg14=
+Date: Sun, 2 Feb 2025 21:56:02 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Willy Tarreau <w@1wt.eu>
+Cc: Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Subject: Re: [PATCH 2/2] tools/nolibc: add support for directory access
+Message-ID: <4d670db0-eaf0-4151-b98c-1e5c84e1f275@t-8ch.de>
+References: <20250130-nolibc-dir-v1-0-ea9950b52e29@weissschuh.net>
+ <20250130-nolibc-dir-v1-2-ea9950b52e29@weissschuh.net>
+ <20250201103438.GH5849@1wt.eu>
+ <58dbcb3c-5d5a-4f81-ac42-494b1fcaf932@t-8ch.de>
+ <20250201104659.GA8168@1wt.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: networking: Remove VLAN_TAG_PRESENT from
- openvswitch doc
-To: Andreas Karis <ak.karis@gmail.com>, linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, davem@davemloft.net,
- netdev@vger.kernel.org, corbet@lwn.net, Jakub Kicinski <kuba@kernel.org>,
- Eric Dumazet <edumazet@google.com>, ovs-dev <ovs-dev@openvswitch.org>,
- i.maximets@ovn.org, Paolo Abeni <pabeni@redhat.com>
-References: <20250129160625.97979-1-ak.karis@gmail.com>
-Content-Language: en-US
-From: Ilya Maximets <i.maximets@ovn.org>
-Autocrypt: addr=i.maximets@ovn.org; keydata=
- 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
-In-Reply-To: <20250129160625.97979-1-ak.karis@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250201104659.GA8168@1wt.eu>
 
-On 1/29/25 17:06, Andreas Karis wrote:
-> Since commit 0c4b2d370514cb4f3454dd3b18f031d2651fab73
-> ("net: remove VLAN_TAG_PRESENT"), the kernel no longer sets the DEI/CFI
-> bit in __vlan_hwaccel_put_tag to indicate the presence of a VLAN tag.
-> Update the openvswitch documentation which still contained an outdated
-> reference to this mechanism.
+On 2025-02-01 11:46:59+0100, Willy Tarreau wrote:
+> On Sat, Feb 01, 2025 at 11:41:58AM +0100, Thomas Weißschuh wrote:
+> > On 2025-02-01 11:34:38+0100, Willy Tarreau wrote:
+> > > On Thu, Jan 30, 2025 at 08:54:03PM +0100, Thomas Weißschuh wrote:
+> > > > From: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> > > > 
+> > > > Add an allocation-free implementation of readdir() and related
+> > > > functions. The implementation is modelled after the one for FILE.
+> > > 
+> > > I think you'd need to mention/remind the two important points that
+> > > come out of that choice, one being that DIR is a fake pointer that
+> > > instead stores ~fd so that it can be turned back to a valid FD, and
+> > > that subsequent readdir() calls will only work from the same file
+> > > unit since it relies on a local static storage.
+> > 
+> > Point one is true.
+> > Point two not so much. It is fine to have multiple directories open at
+> > the same time. All state is kept inside the kernel.
+> > Only the *current* return value is in the static buffer.
 > 
-> Signed-off-by: Andreas Karis <ak.karis@gmail.com>
-> ---
->  Documentation/networking/openvswitch.rst | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/networking/openvswitch.rst b/Documentation/networking/openvswitch.rst
-> index 1a8353dbf1b6..5699bbadea47 100644
-> --- a/Documentation/networking/openvswitch.rst
-> +++ b/Documentation/networking/openvswitch.rst
-> @@ -230,11 +230,9 @@ an all-zero-bits vlan and an empty encap attribute, like this::
->      eth(...), eth_type(0x8100), vlan(0), encap()
->  
->  Unlike a TCP packet with source and destination ports 0, an
-> -all-zero-bits VLAN TCI is not that rare, so the CFI bit (aka
-> -VLAN_TAG_PRESENT inside the kernel) is ordinarily set in a vlan
-> -attribute expressly to allow this situation to be distinguished.
-> -Thus, the flow key in this second example unambiguously indicates a
-> -missing or malformed VLAN TCI.
-> +all-zero-bits VLAN TCI is not that rare and the flow key in
-> +this second example cannot indicate a missing or malformed
-> +VLAN TCI.
+> Excellent point! It also needs to be mentioned.
 
-Hi, Andreas.  While mentioning of the VLAN_TAG_PRESENT bit is clearly
-outdated, I don't think the other parts of the paragraph should be
-changed.  The openvswitch module is still using VLAN_CFI bit in the
-flow key extracted from the packet as an indicator of the vlan presence.
-See the parse_vlan() function in net/openvswitch/flow.c.  And it's
-still required for userspace to have this bit set on the flow key for
-vlan packets to be correctly matched.  So, while not directly set in
-the skb, this bit is still set in the flow key and that's how the flow
-key can still indicate a missing or malformed VLAN header.
+Unfortunately POSIX is more specific in it's definition and forbids this:
 
-So, while the VLAN_TAG_PRESENT remark inside the parenthesis can be
-removed, the rest of the text should stay intact.
+	The returned pointer, and pointers within the structure, might
+	be invalidated or the structure or the storage areas might be
+	overwritten by a subsequent call to readdir() on the same
+	directory stream.
 
-Best regards, Ilya Maximets.
+I see two possibilities:
+
+Allocate one 'struct dirent' as part of DIR.
+Only implement readdir_r().
+
+While readdir_r() is deprecated (according to readdir(3) but not
+readdir(3p)) this seems to be due to ABI issues, which shouldn't matter
+for nolibc anyways.
+
+Personally I would prefer readdir_r().
+
+<snip>
