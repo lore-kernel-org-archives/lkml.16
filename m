@@ -1,71 +1,40 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BCD1FECCC
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 23:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013EF1EE014
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 23:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738538803; cv=none; b=Q4RP539mBfo8vSBa9hgbKmpYF8dbC1t7KTRU0oMD49VBtko8C20uCgMmdQFJfUEE257C1uAYg4mraKrxymJlxSu2mW/P5IhiKcmv6LtlWx3ePfTrLmKjmr+CyXvQPT8co73AS7R6YA/ARkC0F4JaxY2ezV0dBGQYs9blN0mKn2U=
+	t=1738540573; cv=none; b=QzBAR0QhUKdVJuijCORxrXdh4vucji9p8KlCJm8WNnDdBmFToc4/hmeaSGJUmBHelBS7pPm1pcja0uLhwx1+mcP7CuXAZPD8r91QrRXSwcUSmz73hLOjaFSlPkG57uDQ2TgHMEdVR+h3wykI8VVgu8M0GNXUywiCIZ+4eTlaUHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738538803; c=relaxed/simple;
-	bh=z7NwxIJMtLT2Cr/NLoKbJYIk4kldTFHXswm3cyHYX/Y=;
+	s=arc-20240116; t=1738540573; c=relaxed/simple;
+	bh=XxSMXL+/QTvPenPoEdFCaxa+GXolURGhYNxTlnUOi/w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RmdDNvlPgpyx+tFNh6wQ8JRUuEzQbsuGbFURHx+MtaarkvDHR8ahTE+3vEjmaAAyK4dtH7lETfo2r34mHQ8+5ZyGbHP2dHH+wNfxc3K5EWhxVvQoxdpkxojS6rSKuDGqqj/NTlvbrwlPjL9HchYxsYHYY+3CZRsSUn7eb7TmLoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RZY2n8Tj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=bCu8c0npHivV2/DJv+/Fjtdz7Y8wC4sAyDA1S+EfHHyiwa4O+tBB1ad4VlKt9x6EI7SpkRc1gp3wkcFOS0EO6CDSykujHn2UyhTp+/OU/G+D9OCRLcmAOGU8KZJujihOwq9VD4xJDY4QHia6aOB2NdXOsYazGZGk4LRiMqQzFeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=aObAO7Gf; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RZY2n8Tj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738538800;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kEorSgFKgFJuDrUUhtFm3PBvl23oSWqfsEHani8D+OI=;
-	b=RZY2n8TjMUIScnxBCZpiZcHESS79uoFdQYoQ0racPq7ebIhcp20DfzQ3HcsQd3H3nCct0M
-	3TSkPX3hF1OElarSTEtJbCRU2N6FyfJE21Hlvucr8e84QsdGcveSXvVB+pfScz7teKYlmD
-	niRruhCGdQPt1miFwznJLOE7RykY274=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-509-qkc6nFpTOpWf3xrRNGPXHw-1; Sun, 02 Feb 2025 18:26:39 -0500
-X-MC-Unique: qkc6nFpTOpWf3xrRNGPXHw-1
-X-Mimecast-MFC-AGG-ID: qkc6nFpTOpWf3xrRNGPXHw
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-21a7cbe3b56so57750815ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 15:26:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738538798; x=1739143598;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kEorSgFKgFJuDrUUhtFm3PBvl23oSWqfsEHani8D+OI=;
-        b=tlgCDODtzqkGYwQchKeKv7POvlkW+LGip/MYBJ9viZcXx/JpYg44pTI7QiQ/y3Z9b5
-         O9EZFpXIVk+VV5AwnMcySRl/RgGfXBnJvfq+pHkNR0zYBBM1f+IqMCF9wZu603z1oIJw
-         woZeZhgHFlahygDTsQHmQNdRxnnwEcRqkdk5NIr1b7XNVSRQkpSHwdjdSXLhC6X7WbiA
-         mlNmh1/FO3m98kgsAvy9v5L1AuSMjiBNH0/gif68CKzsN7SQYRfsZXinYVkJoOW5R1hE
-         jLyX8RQRGzp0L683qsOJZ2sebAdXFvlzslkdtxxr9P7g+4yzoN4XhmYtg6SAtVNGbOVR
-         mrow==
-X-Forwarded-Encrypted: i=1; AJvYcCUrhGLjsv+TXxfaS7fNtwvEF47SxUy7cN8qZvOhf3oHj5eaqMQ0y3eN2XKlE0NaqSysgAUJqzOMcyJu8V0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywnv3ARQfYvuvDaFkY1enkM7+ANdvCtMiKDDm0czQR+xap1cAh2
-	kkIu51x5JF9+sMOFiiT8jArq/SEdLs/4Sf/rltZ9Llt2Mh3EeoAHMyYLdxwWafRfwiz0Ta0ve6I
-	a9uZSZCsEtIqJJgnBm8W8/CoAOtSZI1ACCt+YcVBvkJEQl+FD6uATkkhTP0jFwA==
-X-Gm-Gg: ASbGnct3tqvUG0hpM2FrVPrhRA64tAuUTmO2xfVaBENy4n969rMTg1UTQrYEInQlZdW
-	+/zIrd0mM3qPhdpcV7xc6EUaS/KSaaGSFS6mgrfa8LHiKzHRrULyz0WvFUJcC35hI4Zck7JnLrv
-	0EwhSN+5gR3qB8y7DQu3eUijEypvAEz2L32iUJe6qQGXpTxb4RZs/CqWQz8MsD+d2h4hYJCaERI
-	ej2265jzgMjgsePGJgw65YEUd4cT7rmFg+U9lZTXancnZb6Dz7Hwk5wUd6q6/585HKE4YBlnch7
-	5poXuQ==
-X-Received: by 2002:a17:902:cec3:b0:216:7ee9:2227 with SMTP id d9443c01a7336-21dd7dd88e6mr310304785ad.36.1738538798038;
-        Sun, 02 Feb 2025 15:26:38 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGfTk8xGUBI61+sXaogs4siFVAtjNe8wBT4NdlyuKENiA8v7HLfkeSD7O9+S9Z2x6jnkLdTWg==
-X-Received: by 2002:a17:902:cec3:b0:216:7ee9:2227 with SMTP id d9443c01a7336-21dd7dd88e6mr310304415ad.36.1738538797668;
-        Sun, 02 Feb 2025 15:26:37 -0800 (PST)
-Received: from [192.168.68.55] ([180.233.125.64])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3303472sm63313735ad.195.2025.02.02.15.26.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Feb 2025 15:26:36 -0800 (PST)
-Message-ID: <b8b5501b-f5fd-44da-8445-53516cad8a3e@redhat.com>
-Date: Mon, 3 Feb 2025 09:26:28 +1000
+	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="aObAO7Gf"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: lina@asahilina.net)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id B7858425F5;
+	Sun,  2 Feb 2025 23:56:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
+	s=default; t=1738540566;
+	bh=XxSMXL+/QTvPenPoEdFCaxa+GXolURGhYNxTlnUOi/w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=aObAO7GfWqEeA7trzJ86f/XnseVBckks3Wp4/oXznHSilYgYVoqZIWDOvj71xgkib
+	 lgmCn4V/J95HXPuWr/BC9UezFlKNi7fChuM++IKjdHyEnniFWEdcFH3P80QjT4GKT8
+	 7FXJpcyV5rxXbJB/o77o3DyY6W0ZxXjoEFTCGaMdjI9Qu614oQ9ehN29qeFz5nc71y
+	 n6Vb2X9YqAd8aVCrFAhZkk9YlgsEa1fvwSHKLjn9QIyM149G8f40pXF85PmeGbCrRC
+	 CDm8c7tFbkfvpwTOQgds27hLzVDN6ZHCf/i3csfpUeE+/V/ONQ2WElOVQKGkCcKlui
+	 L9Utcl2DNDEPA==
+Message-ID: <4a431b98-cccc-495e-b72e-02362828c96b@asahilina.net>
+Date: Mon, 3 Feb 2025 08:56:03 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,133 +42,104 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 38/43] arm64: RME: Configure max SVE vector length for
- a Realm
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20241212155610.76522-1-steven.price@arm.com>
- <20241212155610.76522-39-steven.price@arm.com>
+Subject: Re: [PATCH 0/4] drm/gpuvm: Add support for single-page-filled
+ mappings
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, asahi@lists.linux.dev
+References: <20250202-gpuvm-single-page-v1-0-8cbd44fdcbd4@asahilina.net>
+ <Z5-_O8vkCO0LXcl7@pollux.localdomain>
 Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20241212155610.76522-39-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Asahi Lina <lina@asahilina.net>
+In-Reply-To: <Z5-_O8vkCO0LXcl7@pollux.localdomain>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/13/24 1:56 AM, Steven Price wrote:
-> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> 
-> Obtain the max vector length configured by userspace on the vCPUs, and
-> write it into the Realm parameters. By default the vCPU is configured
-> with the max vector length reported by RMM, and userspace can reduce it
-> with a write to KVM_REG_ARM64_SVE_VLS.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->   arch/arm64/kvm/guest.c |  3 ++-
->   arch/arm64/kvm/rme.c   | 42 ++++++++++++++++++++++++++++++++++++++++++
->   2 files changed, 44 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-> index 429c8f10b76a..5562029368c5 100644
-> --- a/arch/arm64/kvm/guest.c
-> +++ b/arch/arm64/kvm/guest.c
-> @@ -363,7 +363,7 @@ static int set_sve_vls(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
->   	if (!vcpu_has_sve(vcpu))
->   		return -ENOENT;
->   
-> -	if (kvm_arm_vcpu_sve_finalized(vcpu))
-> +	if (kvm_arm_vcpu_sve_finalized(vcpu) || kvm_realm_is_created(vcpu->kvm))
->   		return -EPERM; /* too late! */
->   
->   	if (WARN_ON(vcpu->arch.sve_state))
-> @@ -825,6 +825,7 @@ static bool validate_realm_set_reg(struct kvm_vcpu *vcpu,
->   		switch (reg->id) {
->   		case KVM_REG_ARM_PMCR_EL0:
->   		case KVM_REG_ARM_ID_AA64DFR0_EL1:
-> +		case KVM_REG_ARM64_SVE_VLS:
->   			return true;
->   		}
->   	}
-> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-> index 39dbc19e4a42..3116ecee37a8 100644
-> --- a/arch/arm64/kvm/rme.c
-> +++ b/arch/arm64/kvm/rme.c
-> @@ -297,6 +297,44 @@ static void realm_unmap_shared_range(struct kvm *kvm,
->   	}
->   }
->   
-> +static int realm_init_sve_param(struct kvm *kvm, struct realm_params *params)
-> +{
-> +	int ret = 0;
-> +	unsigned long i;
-> +	struct kvm_vcpu *vcpu;
-> +	int max_vl, realm_max_vl = -1;
-> +
 
-I would suggest to rename 'max_vl' and 'realm_max_vl' to 'vl' and 'last_vl'
-since we're not looking for the maximal VLs. Instead, we're making sure the
-VLs on all vCPUs are equal.
 
-> +	/*
-> +	 * Get the preferred SVE configuration, set by userspace with the
-> +	 * KVM_ARM_VCPU_SVE feature and KVM_REG_ARM64_SVE_VLS pseudo-register.
-> +	 */
-> +	kvm_for_each_vcpu(i, vcpu, kvm) {
-> +		mutex_lock(&vcpu->mutex);
-> +		if (vcpu_has_sve(vcpu)) {
-> +			if (!kvm_arm_vcpu_sve_finalized(vcpu))
-> +				ret = -EINVAL;
-> +			max_vl = vcpu->arch.sve_max_vl;
-> +		} else {
-> +			max_vl = 0;
-> +		}
-> +		mutex_unlock(&vcpu->mutex);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* We need all vCPUs to have the same SVE config */
-> +		if (realm_max_vl >= 0 && realm_max_vl != max_vl)
-> +			return -EINVAL;
-> +
-> +		realm_max_vl = max_vl;
-> +	}
-> +
-> +	if (realm_max_vl > 0) {
-> +		params->sve_vl = sve_vq_from_vl(realm_max_vl) - 1;
-> +		params->flags |= RMI_REALM_PARAM_FLAG_SVE;
-> +	}
-> +	return 0;
-> +}
-> +
->   static int realm_create_rd(struct kvm *kvm)
->   {
->   	struct realm *realm = &kvm->arch.realm;
-> @@ -344,6 +382,10 @@ static int realm_create_rd(struct kvm *kvm)
->   		params->flags |= RMI_REALM_PARAM_FLAG_PMU;
->   	}
->   
-> +	r = realm_init_sve_param(kvm, params);
-> +	if (r)
-> +		goto out_undelegate_tables;
-> +
->   	params_phys = virt_to_phys(params);
->   
->   	if (rmi_realm_create(rd_phys, params_phys)) {
+On 2/3/25 3:53 AM, Danilo Krummrich wrote:
+> Hi Lina,
+> 
+> On Sun, Feb 02, 2025 at 10:34:49PM +0900, Asahi Lina wrote:
+>> Some hardware requires dummy page mappings to efficiently implement
+>> Vulkan sparse features. These mappings consist of the same physical
+>> memory page, repeated for a large range of address space (e.g. 16GiB).
+>>
+>> Add support for this to drm_gpuvm. Currently, drm_gpuvm expects BO
+>> ranges to correspond 1:1 to virtual memory ranges that are mapped, and
+>> does math on the BO offset accordingly. To make single page mappings
+>> work, we need a way to turn off that math, keeping the BO offset always
+>> constant and pointing to the same page (typically BO offset 0).
+>>
+>> To make this work, we need to handle all the corner cases when these
+>> mappings intersect with regular mappings. The rules are simply to never
+>> mix or merge a "regular" mapping with a single page mapping.
+>>
+>> drm_gpuvm has support for a flags field in drm_gpuva objects. This is
+>> normally managed by drivers directly. We can introduce a
+>> DRM_GPUVA_SINGLE_PAGE flag to handle this. However, to make it work,
+>> sm_map and friends need to know ahead of time whether the new mapping is
+>> a single page mapping or not. Therefore, we need to add an argument to
+>> these functions so drivers can provide the flags to be filled into
+>> drm_gpuva.flags.
+>>
+>> These changes should not affect any existing drivers that use drm_gpuvm
+>> other than the API change:
+>>
+>> - imagination: Does not use flags at all
+>> - nouveau: Only uses drm_gpuva_invalidate(), which is only called on
+>>   existing drm_gpuva objects (after the map steps)
+>> - panthor: Does not use flags at all
+>> - xe: Does not use drm_gpuva_init_from_op() or
+>>   drm_gpuva_remap()/drm_gpuva_map() (which call it). This means that the
+>> flags field of the gpuva object is managed by the driver only, so these
+>> changes cannot clobber it.
+>>
+>> Note that the way this is implemented, drm_gpuvm does not need to know
+>> the GPU page size. It only has to never do math on the BO offset to meet
+>> the requirements.
+>>
+>> I suspect that after this change there could be some cleanup possible in
+>> the xe driver (which right now passes flags around in various
+>> driver-specific ways from the map step through to drm_gpuva objects),
+>> but I'll leave that to the Xe folks.
+>>
+>> Signed-off-by: Asahi Lina <lina@asahilina.net>
+>> ---
+>> Asahi Lina (4):
+>>       drm/gpuvm: Add a flags argument to drm_gpuvm_sm_map[_*]
+>>       drm/gpuvm: Plumb through flags into drm_gpuva_op_map
+>>       drm/gpuvm: Add DRM_GPUVA_SINGLE_PAGE flag and logic
+>>       drm/gpuvm: Plumb through flags into drm_gpuva_init
+> 
+> Without looking into any details yet:
+> 
+> This is a bit of tricky one, since we're not even close to having a user for
+> this new feature upstream yet, are we?
 
-Thanks,
-Gavin
+I'd hope we're at least somewhere "this year" close to upstreaming
+drm/asahi!
+
+> 
+> I wonder if we could do an exception by adding some KUnit tests (which
+> admittedly I never got to) validating things with and without this new feature.
+> 
+> Speaking of tests, how did you validate this change to validate the behavior
+> without DRM_GPUVA_SINGLE_PAGE?
+
+Mostly just making sure our driver passes GL/Vulkan CTS including sparse
+after this change. I do want to put together some low-level tests in
+igt-gpu-tools, but I haven't gotten around to it yet...
+
+~~ Lina
 
