@@ -1,174 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5B538384;
-	Sun,  2 Feb 2025 13:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778DD1D5ACE;
+	Sun,  2 Feb 2025 13:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738501345; cv=none; b=K8A0jImTmijec1wZaAV7E8paOhmjY6c2RDhcRYXlMR7P+3S1AlU4fVQkgndIRQWmyWkVhvrk3T2gYR7jFMrI5nW6bvDqwBFvWFUXC8dbyNWXAnvrAnMDYpNP8Xt1UD6ge2YMtWXegcP3wVPh4mljHMhaaWMowWCra3C8IIMNy3Y=
+	t=1738501610; cv=none; b=M9RIOk7a0RU5bkn0I2qFXvzLNoFHZQqT/jxAmpDF80A4kCMYqlbT69mfkcPpq1ngi73Nw52NR81RblZYhOsqse3tmI3c/ChUGXLle6xhVKPmGDR/KkrQVXswvXW88bxDcoVxJWpMzgnhosqFlw+jrTTfzwuY2LKVrcGa4ob6wXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738501345; c=relaxed/simple;
-	bh=Fe/g5sImhVnZq08aC71Vyqc8tGYIgJd/f3p1mGKoN0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oMVo8XA5Jrh0Np6mEdTX4qAI8629OcCrWaSV5ps9VurClFCfVGvxIt3j4bMWqJUlgC2zLOeDoY8Zer4ChXAoTuIjLLS+sXDIs3qsQdb/y71TspkHBQodEix+AKa8Es7YtxcynNDcsMoqgRp7dzuIWcGbLDw5xY5jZjDKw1CFSjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=noJyN8Ja; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738501610; c=relaxed/simple;
+	bh=0hDjuQHDG3NyTLjzY3YRf98j+prtIAJUg+wcnreGVnU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XrRlus5aMbgbTM4ISZemvY6vfuCtAuXK8Jz3B0j8+5uPkgnuIUs07VoTFmTCy2t6WzrCwGlTJI0/NaiJ8UgzgJT7C1JMh799iyD1ioZSIdbX9V0Lb7hu7FcV80zKz/t/j4lc41XK2MyiDDZadpSBaBkvuA+eI6hKKly+BJyuB58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=T2h4y9OU; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="noJyN8Ja"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94616C4CED1;
-	Sun,  2 Feb 2025 13:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738501344;
-	bh=Fe/g5sImhVnZq08aC71Vyqc8tGYIgJd/f3p1mGKoN0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=noJyN8JaWodymejEf/DNQO2nwCGZzVT2FTKeeazQyUw0i7+NPq+Z0yLrrZC6HKM3C
-	 rBJGK2f7mpc0L4keJjaICOpIVKOT9AYf5A4qYRLYdRBVteyP+tQTOlo7z49ANnzokb
-	 okBm/b5sU9q353/48GgUUEpoLi48v87QusbOIQO2mNOPu00FqnkKlRQJxVCbn6O5qQ
-	 BUMS5Up4BDe3WvLIFr7EpBl3fV7kYlzH2bWFP+HRrhnPYOfq14jVEKLpeXp1fWFCeR
-	 tHafIN393uoQYvWFRBItcfUPz6lyYo7kSdaL5EP7QMZBFctVcBZnpO8P0jjJeh4zYp
-	 e7WfV5OoEqqqw==
-Date: Sun, 2 Feb 2025 14:02:21 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: Phil Auld <pauld@redhat.com>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Carlos O'Donell <codonell@redhat.com>
-Subject: Re: [PATCH v2] man/man7/sched.7: Mention autogroup disabled behavior
-Message-ID: <hmvmnl52rvv2cln5d6ggheqjvzshlmdkc3fevbrc2sjwwdmteg@6egcrtlhywi7>
-References: <20250116143747.2366152-1-pauld@redhat.com>
+	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="T2h4y9OU"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sendonly@marcansoft.com)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 8453742769;
+	Sun,  2 Feb 2025 13:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
+	s=default; t=1738501605;
+	bh=0hDjuQHDG3NyTLjzY3YRf98j+prtIAJUg+wcnreGVnU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=T2h4y9OUV23hl0E27AGlIKbSuOI9FSr/Qfou1x4vaF+kpMEWyoB7lE2oXSt2ZC4W/
+	 Vcaf5Jwqm3JTOsI85ryMwJoWD1yS1mJqti15Dezaeahhg22IbqOwd+iujr4UKk7aug
+	 H0lVZemGdZg71svn3NaFnIvjah5m2azg1qcWNwNdaXJ218VVIrliNcN6rfxeqOp7Tb
+	 iZ+YGqU0Kkrc1su5UsafpzWEtc9JWSeHMoheGQTvGzVkSc/LQ9cP/wuQkcoS6bp/2g
+	 XCjB9AVWWdiP50DvfftpFU+nBZXXL22EjJ36ptc8mlCu81Dg3K0r/izBMeiNI5rVMi
+	 8ehO67zamuuvQ==
+From: Asahi Lina <lina@asahilina.net>
+Date: Sun, 02 Feb 2025 22:05:46 +0900
+Subject: [PATCH 4/6] rust: addr: Add a module to declare core address types
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qklmex7qhlvoqoc7"
-Content-Disposition: inline
-In-Reply-To: <20250116143747.2366152-1-pauld@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250202-rust-page-v1-4-e3170d7fe55e@asahilina.net>
+References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
+In-Reply-To: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>
+Cc: Jann Horn <jannh@google.com>, Matthew Wilcox <willy@infradead.org>, 
+ Paolo Bonzini <pbonzini@redhat.com>, Danilo Krummrich <dakr@kernel.org>, 
+ Wedson Almeida Filho <wedsonaf@gmail.com>, 
+ Valentin Obst <kernel@valentinobst.de>, 
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+ airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ asahi@lists.linux.dev, Asahi Lina <lina@asahilina.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738501594; l=1443;
+ i=lina@asahilina.net; s=20240902; h=from:subject:message-id;
+ bh=0hDjuQHDG3NyTLjzY3YRf98j+prtIAJUg+wcnreGVnU=;
+ b=StouHNNdGl6LXXun36/Ktt4NhZHoitHEaj40BWBfZvKzmLuZ2Y4LDldrYuJmpt3jJeuKqqIwg
+ B+kPBJA/qaKDiEavoI6E1b0JF0yulanuwYHgzUwBeL6uQl0npRPVkny
+X-Developer-Key: i=lina@asahilina.net; a=ed25519;
+ pk=tpv7cWfUnHNw5jwf6h4t0gGgglt3/xcwlfs0+A/uUu8=
 
+Encapsulates the core physical/DMA address types, so they can be used by
+Rust abstractions.
 
---qklmex7qhlvoqoc7
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Phil Auld <pauld@redhat.com>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Carlos O'Donell <codonell@redhat.com>
-Subject: Re: [PATCH v2] man/man7/sched.7: Mention autogroup disabled behavior
-References: <20250116143747.2366152-1-pauld@redhat.com>
-MIME-Version: 1.0
-In-Reply-To: <20250116143747.2366152-1-pauld@redhat.com>
+Signed-off-by: Asahi Lina <lina@asahilina.net>
+---
+ rust/kernel/addr.rs | 15 +++++++++++++++
+ rust/kernel/lib.rs  |  1 +
+ 2 files changed, 16 insertions(+)
 
-Hi Phil,
+diff --git a/rust/kernel/addr.rs b/rust/kernel/addr.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..06aff10a0332355597060c5518d7fd6e114cf630
+--- /dev/null
++++ b/rust/kernel/addr.rs
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Kernel core address types.
++
++use bindings;
++use core::ffi;
++
++/// A physical memory address (which may be wider than the CPU pointer size)
++pub type PhysicalAddr = bindings::phys_addr_t;
++/// A DMA memory address (which may be narrower than `PhysicalAddr` on some systems)
++pub type DmaAddr = bindings::dma_addr_t;
++/// A physical resource size, typically the same width as `PhysicalAddr`
++pub type ResourceSize = bindings::resource_size_t;
++/// A raw page frame number, not to be confused with the C `pfn_t` which also encodes flags.
++pub type Pfn = ffi::c_ulong;
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index e1065a7551a39e68d6379031d80d4be336e652a3..eb1a80ba8ff83ab2d1b3b1d11fed4fb704c7a4f5 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -29,6 +29,7 @@
+ 
+ pub use ffi;
+ 
++pub mod addr;
+ pub mod alloc;
+ #[cfg(CONFIG_BLOCK)]
+ pub mod block;
 
-On Thu, Jan 16, 2025 at 02:37:47PM +0000, Phil Auld wrote:
-> The autogroup feature can be contolled at runtime when
-> built into the kernel. Disabling it in this case still
-> creates autogroups and still shows the autogroup membership
-> for the task in /proc.  The scheduler code will just not
-> use the the autogroup task group.  This can be confusing
-> to users. Add a sentence to this effect to sched.7 to
-> point this out.
->=20
-> The kernel code shows how this is used. The
-> sched_autogroup_enabled toggle is only used in one place.
->=20
-> kernel/sched/autogroup.h:
->=20
-> static inline struct task_group *
-> autogroup_task_group(struct task_struct *p, struct task_group *tg)
-> {
->         extern unsigned int sysctl_sched_autogroup_enabled;
->         int enabled =3D READ_ONCE(sysctl_sched_autogroup_enabled);
->=20
->         if (enabled && task_wants_autogroup(p, tg))
->                 return p->signal->autogroup->tg;
->=20
->         return tg;
-> }
->=20
-> task_wants_autogroup() is in kernel/sched/autogroup.c:
->=20
-> bool task_wants_autogroup(struct task_struct *p, struct task_group *tg)
-> {
->         if (tg !=3D &root_task_group)
->                 return false;
->     ...
->=20
->         return true;
-> }
->=20
-> One can see that any group set other than root also bypasses the use of
-> the autogroup.
->=20
-> All of the machinery around the creation of the autogroup is not
-> effected by the toggle.
->=20
-> From userspace:
-> 0
-> /autogroup-112 nice 0
->=20
-> Note, systemd based system these days is not really using autogroups at a=
-ll
-> anyway because any task in a non-root cgroup bypasses the autogroup as
-> well.
->=20
-> Signed-off-by: Phil Auld <pauld@redhat.com>
-> Cc: Alejandro Colomar <alx@kernel.org>
-> Cc: <linux-man@vger.kernel.org>
+-- 
+2.47.1
 
-Thanks!  I've applied the patch.
-<https://www.alejandro-colomar.es/src/alx/linux/man-pages/man-pages.git/com=
-mit/?h=3Dcontrib&id=3Dca69daf45f94fda061f796efcc4f24ca76d8e380>
-
-
-Have a lovely day!
-Alex
-
-> ---
->  man/man7/sched.7 | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/man/man7/sched.7 b/man/man7/sched.7
-> index 71f098e48..f0a708cd7 100644
-> --- a/man/man7/sched.7
-> +++ b/man/man7/sched.7
-> @@ -724,6 +724,8 @@ in the group terminates.
->  .P
->  When autogrouping is enabled, all of the members of an autogroup
->  are placed in the same kernel scheduler "task group".
-> +When disabled the group creation happens as above, and autogroup members=
-hip
-> +is still visible in /proc, but the autogroups are not used.
->  The CFS scheduler employs an algorithm that equalizes the
->  distribution of CPU cycles across task groups.
->  The benefits of this for interactive desktop performance
-> --=20
-> 2.47.1
->=20
->=20
-
---=20
-<https://www.alejandro-colomar.es/>
-
---qklmex7qhlvoqoc7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmefbN0ACgkQnowa+77/
-2zLjDA/+NSRSpogInjUuv/8YBmr0s57L99Xl+bV+W2AlJ+PIclfnVObStciBdUcC
-pu+daFyIKXTpBMPQ52LCpGNRsnS0WZL0LpD751lxwOSy2Mpszw7jggAbmz6PsWc7
-fnEgCZ6+LvfS0Z/yyRv07WWeGrs+Y3TOsvD3Bqzkjozt7SfA7b5uL1j5lc3ana16
-QgY6X6T+mJ+VY+Xd8S9qiF8yLKI+94NF32TEY3zfAUCR7xvuviL0llTbQOyYf4QH
-IxvU/cmTxkZVVKPx3iU3AQUrqvgmDZJXifGo4zTpV4EBF7bSPLVTui3em1xOGUoV
-xfVIo90ZLb6VbaYdZPJ+VQBuMsWDWzOfW+8phjTtUGVy735MqZg4Ts/wZG6kKFs5
-7t7IgooxtAvEVxt2vgZHzZ+wAm7ZuzYwJKGc0GWl2e402P8za+xGRNGvI1El2PGq
-vwGyxiUDjjhRWAImC8QrqNt2zPfu772EsUDnueXGE2zYWzKZIqu4nmlfUsT3tb23
-mQepVhR9NWu5W0rCEcSSb/SWz8YfmRWD+dk0UyZ7jy++A4bxt4Tz3rtb08snKXde
-kp1lwGbajNtH2J/HnUGXUwN9aq+HR96299PAEmbPARdN99KLxPrXxemseD8IgrLa
-vde6rR1b7hk+zNOf2TRWncTd8EvPTfj6BlfS3FgVlkp3LrMOZak=
-=/Z3K
------END PGP SIGNATURE-----
-
---qklmex7qhlvoqoc7--
