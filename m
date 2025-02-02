@@ -1,204 +1,90 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37703442F
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 09:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4C32F3B;
+	Sun,  2 Feb 2025 09:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738486887; cv=none; b=RwTA8IzBvN4nQW6ABByQRm/0Wq8H1DZjlWKtmAKjp7emmDT7GKiOorSDxXvKnWAay6xEZr2djHascS5YJg46DN/rnnoBeaRGxfD1c7/N81yUd0VSuEFp3b38dr5Hw6fBBsDVLgDoZFYCSoqAm8ifbAto6FKhhK2A4XtWaMfpWHA=
+	t=1738486947; cv=none; b=qUcdOHdIFuTEfPHQEOuZNGESoaL4UxsG9x/j9CMm8uCcyUNXYTW5sgxUYLIioLDoTxpMBMVzX+qTy2hr1+34Rb8iO27WvHkgrPlLH5Kb54p7w6LwHHJlg3YHf9F1OstmMYZK1iUOl3e7XgVFjEqBYj4dmVO6+97eaFLQn/s39aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738486887; c=relaxed/simple;
-	bh=9iGKCcRBaEhUImdQIY9K0fjLjHWMCRaAT/OSx18ySQw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=n32ie/udGmjM2OIRaVaKmssiagXA/wZhVvb1FY4YBfnrWCKIvOwWcFXPobXljzB+Xl6NSsjTeijq7D7y+0ZCRsYIlOc3C27dlYSJm+zWSffhaDFKc9a++EsHDyZgmVOHmOVTKvWQ7IKMyL4NvgB20jytO60mzoWillmxvAp5aGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3cf6ceaccdbso25698625ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 01:01:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738486884; x=1739091684;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V57rJ3ELYBRW5+QuiDo9Cfsx+p4tjsLmtCQ2LZVd8lw=;
-        b=UC+dy4gNqxlafZTU+Yjusgzuwbo/F/0J/0cF1xAa6BADbsW+papz27Yrt1BPwBHmBV
-         hJg7f9hhpvmpFx8ky7iSXj2J0uJAv7wWglJ4flCMpVhAImdMMjrGhZNlPA5u1SjEkMcf
-         QdEK9YjcqXB+hmXLbxHqvZ0MvyUmatRrg6s99SGatX//nb3QyWMZj7Xs4d/TXEMz6DjF
-         eMipri9moGEyAILpnxf2ADpaKoA5gSLh4l4SK++qk4KpSYLIqxxCZYFklF0kWYb+kq38
-         uSG37+mxupq1oOMcLkE3B7fZr1h7uGJqP0YXXvw0rRx3QeEUdQhgsXO3aoU0cD+I2nLT
-         WysA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrgwk25PDBGyuidfJMSQj1tEBUjLm4LGW52FoJ06BtmjBF+UN6qAr3EsUZAxN+oToiLI+tQK96M0+TaV8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIfJLR1+GGTEwVy4OloxZiyzDWxdTcsUHmAjEt3366xIZ3ePH/
-	ntV4XjR1Y1eHCtC5L4il8c2hkAhesNBGdAQqNAALLW+qJhl3eJE4CCdgaI9/XB+2A3gKyqoQ0VB
-	oCh0ri7LbVJV5Fba4mNvYZnahpI52JaY2HDbCD0q05beBterKFSjkRgg=
-X-Google-Smtp-Source: AGHT+IGvwTTHiVO2StBHXLQBe5FpZoqsxclhJQlr/hq9CdU4cPRKT1xx/PgN2JrXLU+KIa4saOjuHVkr6lkskkN4JX4EmpzTsXWS
+	s=arc-20240116; t=1738486947; c=relaxed/simple;
+	bh=nD4kaYdBysHGMqyO+DYxF+ZInYqK5Sv6MZqCmZ5KplI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Zy2gdc/3ARezf8TS5XpdxQSUKNKIPP82MYD4nLVwXlRcrgdl4Dq8GWFAxmfCuZwtHGkbioIyAFy1OU4HnR10KSbn2anXdnPBKFSioalEVVfx++GtTvEf3aF9HaNmxwzMIt3vzOLjD3H1aSlzAQ8jtg32cyY6PSV1k3uZOBNVWGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=nDHDDswp; arc=none smtp.client-ip=52.119.213.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nDHDDswp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1738486946; x=1770022946;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=j7BC454znfGK+YxC1sObQa0ZrTdrnrk7q5MLNC7JmeM=;
+  b=nDHDDswpD9cKWteiSFrFKgNzdeMeCCq9ofEh0ImsKlsCLTIvRS1OTBLM
+   GUkOHcLkgHPilrVYUIJdXecxOkuQzx3I7AkObkveGsCEynabEDRic79c+
+   WVFGmQKSULRzp22cv4zzc62OiVrPD4zEnOMuRj35ADNMcjYhtPlwP5D3L
+   E=;
+X-IronPort-AV: E=Sophos;i="6.13,253,1732579200"; 
+   d="scan'208";a="715364577"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2025 09:02:23 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.7.35:26257]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.5.183:2525] with esmtp (Farcaster)
+ id de94db05-fdca-43eb-9475-bc8a3af49cee; Sun, 2 Feb 2025 09:02:21 +0000 (UTC)
+X-Farcaster-Flow-ID: de94db05-fdca-43eb-9475-bc8a3af49cee
+Received: from EX19D003ANC003.ant.amazon.com (10.37.240.197) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Sun, 2 Feb 2025 09:02:21 +0000
+Received: from b0be8375a521.amazon.com (10.37.244.8) by
+ EX19D003ANC003.ant.amazon.com (10.37.240.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Sun, 2 Feb 2025 09:02:18 +0000
+From: Kohei Enju <enjuk@amazon.com>
+To: <linux-scsi@vger.kernel.org>, <target-devel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: "Martin K . Petersen" <martin.petersen@oracle.com>, Kohei Enju
+	<kohei.enju@gmail.com>, Kohei Enju <enjuk@amazon.com>
+Subject: [PATCH v1] scsi: target: remove unnecessary null checking for bio allocation
+Date: Sun, 2 Feb 2025 18:02:08 +0900
+Message-ID: <20250202090208.26890-1-enjuk@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2149:b0:3cf:cbac:3ba6 with SMTP id
- e9e14a558f8ab-3cffe37cef5mr165348165ab.5.1738486884265; Sun, 02 Feb 2025
- 01:01:24 -0800 (PST)
-Date: Sun, 02 Feb 2025 01:01:24 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <679f3464.050a0220.d7c5a.006d.GAE@google.com>
-Subject: [syzbot] [ocfs2?] possible deadlock in ocfs2_finish_quota_recovery
-From: syzbot <syzbot+f59a1ae7b7227c859b8f@syzkaller.appspotmail.com>
-To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
-	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D045UWA002.ant.amazon.com (10.13.139.12) To
+ EX19D003ANC003.ant.amazon.com (10.37.240.197)
 
-Hello,
+When __GFP_DIRECT_RECLAIM (included in GFP_NOIO) is specified,
+bio_alloc_bioset() never fails to allocate a bio. For more details, see
+the comment in bio_alloc_bioset() in block/bio.c
 
-syzbot found the following issue on:
-
-HEAD commit:    69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=100c4eb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
-dashboard link: https://syzkaller.appspot.com/bug?extid=f59a1ae7b7227c859b8f
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ea84ac864e92/disk-69b8923f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6a465997b4e0/vmlinux-69b8923f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d72b67b2bd15/bzImage-69b8923f.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f59a1ae7b7227c859b8f@syzkaller.appspotmail.com
-
-ocfs2: Finishing quota recovery on device (7,0) for slot 0
-======================================================
-WARNING: possible circular locking dependency detected
-6.13.0-syzkaller-09793-g69b8923f5003 #0 Not tainted
-------------------------------------------------------
-kworker/u8:6/1142 is trying to acquire lock:
-ffff888055ab40e0 (&type->s_umount_key#51){++++}-{4:4}, at: ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
-
-but task is already holding lock:
-ffffc90003c4fc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
-ffffc90003c4fc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_scheduled_works+0x976/0x1840 kernel/workqueue.c:3317
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       process_one_work kernel/workqueue.c:3212 [inline]
-       process_scheduled_works+0x994/0x1840 kernel/workqueue.c:3317
-       worker_thread+0x870/0xd30 kernel/workqueue.c:3398
-       kthread+0x7a9/0x920 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
--> #1 ((wq_completion)ocfs2_wq){+.+.}-{0:0}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       touch_wq_lockdep_map+0xc7/0x170 kernel/workqueue.c:3905
-       __flush_workqueue+0x14a/0x1280 kernel/workqueue.c:3947
-       ocfs2_shutdown_local_alloc+0x109/0xa90 fs/ocfs2/localalloc.c:380
-       ocfs2_dismount_volume+0x202/0x910 fs/ocfs2/super.c:1822
-       generic_shutdown_super+0x139/0x2d0 fs/super.c:642
-       kill_block_super+0x44/0x90 fs/super.c:1710
-       deactivate_locked_super+0xc4/0x130 fs/super.c:473
-       cleanup_mnt+0x41f/0x4b0 fs/namespace.c:1413
-       task_work_run+0x24f/0x310 kernel/task_work.c:227
-       resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
-       exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
-       exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
-       __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
-       syscall_exit_to_user_mode+0x13f/0x340 kernel/entry/common.c:218
-       do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&type->s_umount_key#51){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3163 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
-       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
-       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       down_read+0xb1/0xa40 kernel/locking/rwsem.c:1524
-       ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
-       ocfs2_complete_recovery+0x17c1/0x25c0 fs/ocfs2/journal.c:1357
-       process_one_work kernel/workqueue.c:3236 [inline]
-       process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
-       worker_thread+0x870/0xd30 kernel/workqueue.c:3398
-       kthread+0x7a9/0x920 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-other info that might help us debug this:
-
-Chain exists of:
-  &type->s_umount_key#51 --> (wq_completion)ocfs2_wq --> (work_completion)(&journal->j_recovery_work)
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock((work_completion)(&journal->j_recovery_work));
-                               lock((wq_completion)ocfs2_wq);
-                               lock((work_completion)(&journal->j_recovery_work));
-  rlock(&type->s_umount_key#51);
-
- *** DEADLOCK ***
-
-2 locks held by kworker/u8:6/1142:
- #0: ffff88802420b148 ((wq_completion)ocfs2_wq){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
- #0: ffff88802420b148 ((wq_completion)ocfs2_wq){+.+.}-{0:0}, at: process_scheduled_works+0x93b/0x1840 kernel/workqueue.c:3317
- #1: ffffc90003c4fc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
- #1: ffffc90003c4fc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_scheduled_works+0x976/0x1840 kernel/workqueue.c:3317
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 1142 Comm: kworker/u8:6 Not tainted 6.13.0-syzkaller-09793-g69b8923f5003 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Workqueue: ocfs2_wq ocfs2_complete_recovery
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
- check_prev_add kernel/locking/lockdep.c:3163 [inline]
- check_prevs_add kernel/locking/lockdep.c:3282 [inline]
- validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
- __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
- down_read+0xb1/0xa40 kernel/locking/rwsem.c:1524
- ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
- ocfs2_complete_recovery+0x17c1/0x25c0 fs/ocfs2/journal.c:1357
- process_one_work kernel/workqueue.c:3236 [inline]
- process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
- worker_thread+0x870/0xd30 kernel/workqueue.c:3398
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-
+Signed-off-by: Kohei Enju <enjuk@amazon.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/target/target_core_iblock.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
+index c8dc92a7d63e..9ef23eea55e7 100644
+--- a/drivers/target/target_core_iblock.c
++++ b/drivers/target/target_core_iblock.c
+@@ -369,10 +369,6 @@ static struct bio *iblock_get_bio(struct se_cmd *cmd, sector_t lba, u32 sg_num,
+ 	 */
+ 	bio = bio_alloc_bioset(ib_dev->ibd_bd, bio_max_segs(sg_num), opf,
+ 			       GFP_NOIO, &ib_dev->ibd_bio_set);
+-	if (!bio) {
+-		pr_err("Unable to allocate memory for bio\n");
+-		return NULL;
+-	}
+ 
+ 	bio->bi_private = cmd;
+ 	bio->bi_end_io = &iblock_bio_done;
+-- 
+2.39.5 (Apple Git-154)
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
