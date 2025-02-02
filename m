@@ -1,129 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561F02557C;
-	Sun,  2 Feb 2025 17:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738516611; cv=none; b=UyLqga2Ph7KQGcwJkpLo19+v/JJvYtVEHcQWIkCzNlGbWVpzX0K5PMB8qbb+8kItrhQabbt9cgaBb0XQMvFGon/uSt5TUAwycyaacBR5OOWwyLEk+dd70nMODwElo/xJDG/bm9P7H8HqGvIQPQFYuc1+iKmC/ezuW26AtZtze24=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738516611; c=relaxed/simple;
-	bh=2VKY0kTfoAx3tfZYb+iJ1/HcDwT0KtEPCUUGZkMWgPM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=e5zh1Sy9iTkSLzcv6JjOZksRvOtQcExBJNoslJGtuZ1BBTLX3zrk05Kxr+6QHyhD2Y3yJDTev06UmTYMdihyK/OO+EJoDthudiprMyqLyz3UBGcMIyBldmlqIIyY7ZOEyf6txr2rR1RguaVFHFRZdJMtqj5Ndnmd9x2Kdglx3ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WpLCJHHj; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E282557C
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 17:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738516698; cv=pass; b=j/OcQ+WjrDWvsr27oG2+cpLlDLwsWg7fHRlQcMaF/0vZPSuw3UErbyZzLKDHORABzz5qmsWwyzV82LayMqef9HCLgEvc534FUfze3oKEbaeBteveLu9dlmzrFEJ/ajZA9vB1JQpdSEOyPdIWdSY+3MWSP7YuznseIyyDZ+FqANo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738516698; c=relaxed/simple;
+	bh=2p7amcAToW0LuxP263LUflNbfI1cAm4MZxJdDIQCaSM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qamFgwQH2boZbsagfH53NsWX7go7uOxWyQkCUFKNRGpf+O1fL+mtQCF5ncGqkimeL9qayef61QXuYygJGE0w+iUzsZh5nt2NgnvmFfHFAt1+NyVx+zSZr2/NvIkAeEupwH79tx96rdaXZ8aHMLg23RP6RIrX7f6IoUGfrRgf63I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=c6fM4DhB; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WpLCJHHj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36284C4CED1;
-	Sun,  2 Feb 2025 17:16:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738516611;
-	bh=2VKY0kTfoAx3tfZYb+iJ1/HcDwT0KtEPCUUGZkMWgPM=;
-	h=From:Date:Subject:To:Cc:From;
-	b=WpLCJHHjLkzhYm5JLvvERjQ2M7OrZB3VerHSPdO00m743pTCz+dtDlP72Epoi94Wh
-	 xKyEwHBr/iIGZfVZ+5qDX/whp1IjzcfQspgjHvB2bSrzbbuzE/14zbrKst6pGfsx84
-	 apZz0IsiMWDdQFAGGY6UycLdxz0jFdocLDewfGkq5UV58FA+iTdqnxl+E82fzrXLDj
-	 leaslulF0qB7p5ZI2enQ0tvLl6wlNAtjRyDyygoBS7Fv5L3I7558X2GjEKEp4Gn7SJ
-	 1abH/Vf7rUxIEbhKnDv5XUZ/vloV4xbssJdmbdfoTxrRChuy0ChzK8ymAYflpnUyXY
-	 CeG8FUQ935UoA==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2a3939a758dso1130516fac.1;
-        Sun, 02 Feb 2025 09:16:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUQtaDQuvypA8iT5AcyaDmj+rpDJkUBLwRqw10USY1TuTbq/5GGmKvTaFo12BEfidiljl2wNq0eHzbxByc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkldhN69IwvAHXMOB5xsFtywG0HN2X+oENmk7rUtI0f2jqwYzZ
-	m/Mkrr7T2Q848B+fND0i6UbkOyHaPGbSMwGIIQEvBW25DLTlTClEUKvvsLL2RsLlAsTRz6XGvJp
-	T/d4VOwaxUTSVMotpzWUvTDRpXBI=
-X-Google-Smtp-Source: AGHT+IEHcwE5/O8dwxqnjlCLr3B/vr9quhK+mz749ArWcONVjnzDAlmYWyFqfuFciWn07oOal4zB8TGRxoigglX1Jjs=
-X-Received: by 2002:a05:6871:39c9:b0:296:dd1d:ce73 with SMTP id
- 586e51a60fabf-2b32ebf1bcbmr11899792fac.0.1738516610600; Sun, 02 Feb 2025
- 09:16:50 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="c6fM4DhB"
+ARC-Seal: i=1; a=rsa-sha256; t=1738516678; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=e4pxc2FLCEXzOdlFOI/jgu8M0yESAGJWJnBuSDpMM5SRAJzMcemVWDkh3AVO9UoaC9by7Nq/dO+VuUyptMwNkzXZgfOjhxodtoy45SkqO58RFSJhF7tDta/sHzIgRNJ7J14hIKqS8P3JdIytM0yV7o3PcrSm2v0kRP/ILTUf7Uc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738516678; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=X/vlOnLkPRBbjPH4Q6TlcEVhimS3kOUQzFNFBD7KWFM=; 
+	b=JevBlmf8hsGHSiXyy/WvYuCh2oi0gmZlowiSIrS0vKTtEnQsdmles7q2V/8EGO+NuszGoZp945HUQVznZDv58PFt47TlHRFKaYArUylTJbXuhEGKkXHlrL3bVX45vuyBWGpazCex0tIvyUNVW+f9VPk18TRfWxPE3zxKyMEuWYY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738516678;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=X/vlOnLkPRBbjPH4Q6TlcEVhimS3kOUQzFNFBD7KWFM=;
+	b=c6fM4DhBYTp7quzY7c+hUZHSTLjrNYIjothC+X0cW993zAZ7ij+R+PVPbM2HflRh
+	OYnH5rgunDcK6Zj6zdOmjjh8MIUcZQQmmbXmyYZzTf3hvT1Qty2zV3CHxwg+FEDZXkc
+	yyMXL/79dDjTmum5C4JHpO1Yednleui4JauU5j6U=
+Received: by mx.zohomail.com with SMTPS id 1738516672033583.4125691983685;
+	Sun, 2 Feb 2025 09:17:52 -0800 (PST)
+Message-ID: <75cf3adc-400e-44a6-b653-bee1f0cb43ec@collabora.com>
+Date: Sun, 2 Feb 2025 20:17:47 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Len Brown <lenb@kernel.org>
-Date: Sun, 2 Feb 2025 11:16:39 -0600
-X-Gmail-Original-Message-ID: <CAJvTdKmaGD8YJj4HKuNhE8Kkr_s5VH=DhXcc75xxHtxqcdYp0Q@mail.gmail.com>
-X-Gm-Features: AWEUYZmbxtU-5RFoRlSi1kbsB7m5TyfUtbGSUlBvSf2nUjYXn9mzTwgtv__smUI
-Message-ID: <CAJvTdKmaGD8YJj4HKuNhE8Kkr_s5VH=DhXcc75xxHtxqcdYp0Q@mail.gmail.com>
-Subject: [GIT PULL] turbostat-2025.02.02 for Linux-6.14
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux PM list <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] drm/virtio: Add drm_panic support
+To: Ryosuke Yasuoka <ryasuoka@redhat.com>, airlied@redhat.com,
+ kraxel@redhat.com, gurchetansingh@chromium.org, olvaffe@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ daniel@ffwll.ch, jfalempe@redhat.com
+Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250130090517.201356-1-ryasuoka@redhat.com>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250130090517.201356-1-ryasuoka@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Hi Linus,
+Hi,
 
-Please pull these turbostat-2025.02.02 patches.
+On 1/30/25 12:05, Ryosuke Yasuoka wrote:
+...
+> +static int virtio_drm_get_scanout_buffer(struct drm_plane *plane,
+> +					 struct drm_scanout_buffer *sb)
+> +{
+> +	struct virtio_gpu_object *bo;
+> +
+> +	if (!plane->state || !plane->state->fb || !plane->state->visible)
+> +		return -ENODEV;
+> +
+> +	bo = gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
+> +	if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach)
+> +		return -ENODEV;
+> +
+> +	/* try to vmap it if possible */
+> +	if (!bo->base.vaddr) {
+> +		int ret;
+> +
+> +		ret = drm_gem_shmem_vmap(&bo->base, &sb->map[0]);
 
-thanks!
-Len Brown, Intel Open Source Technology Center
+drm_gem_shmem_vmap() requires BO resv to be locked, it also may invoke
+drm_gem_shmem_get_pages() that sleeps. This function can't be used in
+atomic context.
 
-The following changes since commit 86d237734091201d2ab2c1d2e1063893621c770f:
+For the starter, let's reject !bo->base.vaddr BOs. Normally, shmem FB
+BOs are always vmapped.
 
-  tools/power turbostat: 2024.11.30 (2024-11-30 16:48:56 -0500)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git
-tags/turbostat-2025.02.02
-
-for you to fetch changes up to 2c4627c8ced77855b106c7104ecab70837d53799:
-
-  tools/power turbostat: version 2025.02.02 (2025-02-02 10:54:23 -0600)
-
-----------------------------------------------------------------
-Turbostat 2025.02.02 updates since 2024.11.30
-
-Fix regression in 2023.11.07 that affinitized forked child
-in one-shot mode.
-
-Harden one-shot mode against hotplug online/offline
-
-Enable RAPL SysWatt column by default.
-
-Add initial PTL, CWF platform support.
-
-Harden initial PMT code in response to early use.
-
-Enable first built-in PMT counter: CWF c1e residency
-
-Refuse to run on unsupported platforms without --force,
-to encourage updating to a version that supports the system,
-and to avoid no-so-useful measurement results.
-
-----------------------------------------------------------------
-Len Brown (7):
-      tools/power turbostat: update turbostat(8)
-      tools/power turbostat: add Busy% to "show idle"
-      tools/power turbostat: Add an NMI column
-      tools/power turbostat: version 2025.01.14
-      tools/power turbostat: Fix forked child affinity regression
-      tools/power turbostat: Harden one-shot mode against cpu offline
-      tools/power turbostat: version 2025.02.02
-
-Patryk Wlazlyn (11):
-      tools/power turbostat: Remove SysWatt from DISABLED_BY_DEFAULT
-      tools/power turbostat: Fix PMT mmaped file size rounding
-      tools/power turbostat: Add fixed RAPL PSYS divisor for SPR
-      tools/power turbostat: Check for non-zero value when MSR probing
-      tools/power turbostat: Return default value for unmapped PMT domains
-      tools/power turbostat: Extend PMT identification with a sequence number
-      tools/power turbostat: Add PMT directory iterator helper
-      tools/power turbostat: Allow mapping multiple PMT files with the same GUID
-      tools/power turbostat: Allow adding PMT counters directly by sysfs path
-      tools/power turbostat: Add tcore clock PMT type
-      tools/power turbostat: Add CPU%c1e BIC for CWF
-
-Zhang Rui (7):
-      tools/power turbostat: Add initial support for PantherLake
-      tools/power turbostat: Add initial support for ClearwaterForest
-      tools/power turbostat: Exit on unsupported Intel models
-      tools/power turbostat: Exit on unsupported Vendors
-      tools/power turbostat: Improve --help output
-      tools/power turbostat: Introduce --force parameter
-      tools/power turbostat: Enhance turbostat self-performance visibility
-
- tools/power/x86/turbostat/turbostat.8 |  32 +-
- tools/power/x86/turbostat/turbostat.c | 652 ++++++++++++++++++++++++++++------
- 2 files changed, 575 insertions(+), 109 deletions(-)
+-- 
+Best regards,
+Dmitry
