@@ -1,186 +1,212 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFCE1D5154;
-	Sun,  2 Feb 2025 16:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1593729D0D
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 17:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738515435; cv=none; b=KqgKEMA6ombsINAbAPdPKggu/ua6cA3oAJ36Y9DQm8h75nRJSX9BFLtZv1oYJRHYl+dRB0KYlUKg7rczDBLxLhxwooI3Jahyulp3+x/9X53brZrusw8A21sTum3RASLWDzn8OPyaDy1XczUfR5mCV9GBH+5BLoKUEiAPNMeiQms=
+	t=1738515732; cv=none; b=jjQep5QsloMPq7J6GcAwHrqRWV2cEyj7B2TKrMEe3mrUoQarAzahg4BABHc6RgWdzmG+fconNJz1wF1/zWY+GephNEViwP46wUiz3V4KMaSYewnw0an46JWxxdD+zTath9MjQwLioEhoWOK9iFeH4CM7LBU4We0ROAN5PZTwQ74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738515435; c=relaxed/simple;
-	bh=IGZw/c3qoMTFDdDCKwKPpgTwowB027sw2XXCX8Op4Xc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AOBXC9VIMyuVpiJL+6UU03U8rSFfe6Krpk+G+nTiZTWTdoFsF/PlWrQhPSJI3edS3p3gRFohrVddypn8XCDhDFowRjSGLpAwyPfz8ZHnJfT+S8x/hxcAD6VywwkKiUpnHKWG0IZpgr4GrwbhsAxRtRgYWatWPGeD3+tGTMUOgus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YVGLTD5m; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738515732; c=relaxed/simple;
+	bh=rSWIKoQZ2zuwcHermro882dMGxec3JUJOfSJ3leotTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h+vXjaSWI1jMmFPpZcoFvrhlPEIIH7jSYtaoIkuN3YIkDxcLWf3r7epUIe9ndqCjGceXo0sBje7ohQCLef/3i909JwlljtnZ69kgLAd5Wpa0742SmhO6EYKTz9UG01VRCfhkDrDiMKqJs5KaBpKi92vOGXCGljLdai6G0QVmFuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iez53JRP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVGLTD5m"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-436345cc17bso26798435e9.0;
-        Sun, 02 Feb 2025 08:57:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738515432; x=1739120232; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Uwqe3wO2h1KhchbSQpJtyc0xUluXC5oEhfomc15Iqy0=;
-        b=YVGLTD5mHDVVG4gD+424u1a+NFbLAp5KzeJX5pBklDJuZiqzhZ7Ft9KCDSsTU3IR6+
-         hJn5uUSSFqb+qBAIYAqSYeEVMd53ps00OJkYgWlzqCuPTKbLs67OqZjXYMWRG7v4UfIi
-         tILlRNuLzL6zWWMV9U8pT2c3mr13FHrsBUePwe8moHcoYBR3lN3/x5medF/tVRR8AtIe
-         5cQE0IyUawfesIve/ruPfRAGNMSGdH39VEpofSC1t689bosIxrM3s/jniGG4O5yK7edB
-         kBZyA9fvWDGl86PVSinjMbT7nYRmuh827dqpCcPabM6SmCyD4saF+6dswuPjL2COmmuZ
-         12zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738515432; x=1739120232;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uwqe3wO2h1KhchbSQpJtyc0xUluXC5oEhfomc15Iqy0=;
-        b=e+kx3QWXSQ16x01y/txnXc9Mt2+uBISXjHYoHbgEcdyBn4CRpjQXJc00+OFgDr0I1u
-         ROi7uNM+8DVRScgaYrnDEwOnIyN1CUKkK5zbeZRuTBZyEVaOB2+jrRspMz3lQn11x5PF
-         pRu/uVBE0kX4IX2uqPLLCkbqrSEhSUTdNZSTSBhsBwJf1A2VQvHTdBEXrJxaTMHp+NcZ
-         JmCm7RciWGKhfZjvp8TchgP7/EYxlbuiPc+ovryfxfXSd8V+FbGtJ2yY/mgtyNpgilTn
-         69n0Ey+yPBI5LyilxRKB4VgoWm+ZyFKKOgg8qvJaUsYFZ2D7TeZYBpC7cEiGPOSqBhj3
-         ORLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLvnni19ui9WSuXfQuiveELK3IIUce6GBep3qi+DoPFQ8UmG/vbQiIVipb37iJeznyEIKns0AOPdaBulkNR1o=@vger.kernel.org, AJvYcCWbdWFcWBv90mJ1tinAF7hqVjeaPtJTX9x2C7fsQELbR76nKH0tpzV6/Wlj9GYVni5k7dr2OX4dmQRFf7IF@vger.kernel.org, AJvYcCXSc67bazd9dxRiZb6lFgSNt8H3FzW70ewVpatts+N6JE5Nd4GPmbXncfUaSIlmue+PQbmAuTAIp94=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynlNLWG7cK1dB5bgUotuxsurAQaajuhT6+/IYqcSVB5FUJUwUQ
-	TfO007Lm7QJD3m1J/2XMQh6Zzy8uysLX3lGsO0Ysk8KVNbhogpXq
-X-Gm-Gg: ASbGncv9wRk3HU6Hj57Hk8N8J9bM7ntqR5iEIFMxWqsTDhUdUTWe5wViESE+jlR3fXA
-	Jl+UXb/n/oJoaIP892WCp3B8Jz4qmNPxX0nwDioU4TrtMkK3owEP2sXG4ueYvGmt6LHWa/HdH98
-	R0xnRAcWOYF2UPklHZVJtG9+029KwUiBooAgQ6JhDFn0smIt5TavwunqjLUc0BJ8QFOc8NGyOhw
-	cZHuxZNprT806jlr8FMI0xKfyG8818uIGjpJW8cnwZaBbje/JflUPACg3YExIIkeFfGvp5/opWb
-	6nXt9qH+0OdbexbzJ/NpyCMlODAg
-X-Google-Smtp-Source: AGHT+IHGI4vuDKmxm2ggxLHqDVzd9rJXWTNLOaDrF/1kFKr5pLWjbelTJUrlum0Weyhom1nxQpYfcA==
-X-Received: by 2002:a05:6000:1ace:b0:385:ec89:2f07 with SMTP id ffacd0b85a97d-38c51970003mr13999601f8f.32.1738515431517;
-        Sun, 02 Feb 2025 08:57:11 -0800 (PST)
-Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c11b71asm10539536f8f.39.2025.02.02.08.57.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Feb 2025 08:57:11 -0800 (PST)
-Message-ID: <72feff7d-a305-4ca3-9c28-9040c791d3c5@gmail.com>
-Date: Sun, 2 Feb 2025 17:57:09 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iez53JRP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738515729;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2bqVTTyCih6LeAwQq4LvjVnDUBe5ojk58vB3lfkM+MQ=;
+	b=iez53JRPraQ+Dx/LUCwX+BtBgLi+cEOL6b9L1of06SO9Tmq9/VV4dpYJr+MHswpWQBearM
+	sYwdsP0s2p+iSCQRMNVc7Huq2UId5wb/6MkhArqvjavGAx/VGo1DpDtbUhytwSdOnd4ett
+	hGI5DA3jEJ7pzenUb9wPYEPRa6zUHrE=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-180-onIMVji9NvKv4cvSsuRhJQ-1; Sun,
+ 02 Feb 2025 12:02:05 -0500
+X-MC-Unique: onIMVji9NvKv4cvSsuRhJQ-1
+X-Mimecast-MFC-AGG-ID: onIMVji9NvKv4cvSsuRhJQ
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B5EF2195608A;
+	Sun,  2 Feb 2025 17:02:03 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.16])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 9257419560A3;
+	Sun,  2 Feb 2025 17:01:59 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun,  2 Feb 2025 18:01:37 +0100 (CET)
+Date: Sun, 2 Feb 2025 18:01:32 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
+	Manfred Spraul <manfred@colorfullife.com>,
+	Christian Brauner <brauner@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>,
+	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
+ full
+Message-ID: <20250202170131.GA6507@redhat.com>
+References: <20250102140715.GA7091@redhat.com>
+ <3170d16e-eb67-4db8-a327-eb8188397fdb@amd.com>
+ <CAHk-=wioaHG2P0KH=1zP0Zy=CcQb_JxZrksSS2+-FwcptHtntw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm: rust: Enable Rust support for ARMv7
-To: Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>,
- Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Jonathan Corbet <corbet@lwn.net>,
- Russell King <linux@armlinux.org.uk>, Rudraksha Gupta <guptarud@gmail.com>,
- Ard Biesheuvel <ardb@kernel.org>, Geert Stappers <stappers@stappers.nl>,
- Jamie Cunliffe <Jamie.Cunliffe@arm.com>,
- Sven Van Asbroeck <thesven73@gmail.com>, rust-for-linux@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250123-rfl-arm32-v3-1-8f13623d42c5@gmail.com>
- <a83b0149-7055-411b-ba86-d227919c7c32@app.fastmail.com>
- <f8b59f05-55b5-4208-8bdf-b4be8e93bc22@gmail.com>
- <65da77f7-bbd4-4cbe-a06c-75f10a6ec4ce@lunn.ch>
- <5e8a99a5-f39c-46da-b54d-7b69307b1c66@gmail.com>
- <e14cfb34-308f-4797-afe7-4e7e2d470fe3@app.fastmail.com>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <e14cfb34-308f-4797-afe7-4e7e2d470fe3@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wioaHG2P0KH=1zP0Zy=CcQb_JxZrksSS2+-FwcptHtntw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 31.01.25 8:37 PM, Arnd Bergmann wrote:
-> On Fri, Jan 31, 2025, at 19:58, Christian Schrefl wrote:
->> On 31.01.25 5:05 PM, Andrew Lunn wrote:
->>>> To fix this Rust would have to provide a way to build the core
->>>> library without float support. I don't know if there is a plan
->>>> already to allow this.
->>>
->>> Floating point is banned within the kernel, except for in very narrow
->>> conditions, because the floating point registers are lazy saved on
->>> context switch. If the kernel uses the floating point registers, you
->>> can break user space in bad ways.
->>>
->>> I expect this has been discussed, since it is well known kernel
->>> restriction. Maybe go see what happened to that discussion within RfL?
->>
->> After checking again, it seems the float intrinsics are actually not
->> needed anymore at least for my config.
-> 
-> Ah, nice! If this is true for all architectures using the current
-> rust compiler, it would be great to remove the FP stubs entirely
-> and have link errors instead of panicking, to make it consistent
-> with C.
-> 
->> Only `__aeabi_uldivmod` is still
->> required for `parse_u64_into` since [0] allows disabling float formatting.
->>
->> Link error without the `__aeabi_uldivmod` symbol defined:
->>
->> ld.lld: error: undefined symbol: __aeabi_uldivmod
->>>>> referenced by num.rs:580 (/home/chrisi/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/fmt/num.rs:580)
->>>>>               rust/core.o:(core::fmt::num::parse_u64_into::<39>) in archive vmlinux.a
->>>>> referenced by num.rs:589 (/home/chrisi/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/fmt/num.rs:589)
->>>>>               rust/core.o:(core::fmt::num::parse_u64_into::<39>) in archive vmlinux.a
->>>>> referenced by num.rs:589 (/home/chrisi/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/fmt/num.rs:589)
->>>>>               rust/core.o:(core::fmt::num::parse_u64_into::<39>) in archive vmlinux.a
->>>>> referenced 34 more times
->>>>> did you mean: __aeabi_uidivmod
->>>>> defined in: vmlinux.a(arch/arm/lib/lib1funcs.o)
->>
->> Not sure if we should just implement `__aeabi_uldivmod`, keep the 
->> panicking intrinsic for it or somehow fix it in upstream Rust?
-> 
-> The 64-bit division is particularly easy to introduce by accident
-> on 32-bit architectures, so ending up in a panic here is clearly
-> a problem. From the message above it appears that there is only 
-> a single calling function (parse_u64_into()) in the rust library,
-> so I wonder if it might be sufficient to split that out into
-> another object file that then doesn't need to get linked into
-> the kernel, or for the kernel to override it with an implementation
-> that does not rely on __aeabi_uldivmod() but calls __do_div64()
-> instead.
-> 
-> Since parse_u64_into seems to be a parsing function that is
-> expected to be slow, it should be acceptable to call __do_div64()
-> here, while we still prevent calling __aeabi_uldivmod() from
-> kernel source code.
-> 
-> Note that on earlier ARMv7 (Cortex-A8, A9), even a 32-bit
-> division is implemented through an expensive software loop.
-> Later cores (Cortex-A7, A15, A17) have native 32-bit division
-> instructions but still no 64-bit ones.
+On 01/31, Linus Torvalds wrote:
+>
+> On Fri, 31 Jan 2025 at 01:50, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
+> >
+> > On my 3rd Generation EPYC system (2 x 64C/128T), I see that on reverting
+> > the changes on the above mentioned commit, sched-messaging sees a
+> > regression up until the 8 group case which contains 320 tasks, however
+> > with 16 groups (640 tasks), the revert helps with performance.
+>
+> I suspect that the extra wakeups just end up perturbing timing, and
+> then you just randomly get better performance on that particular
+> test-case and machine.
+>
+> I'm not sure this is worth worrying about, unless there's a real load
+> somewhere that shows this regression.
 
-It seems be possible to implement `__aeabi_uldivmod` like this [0]:
+Well yes, but the problem is that people seem to believe that hackbench
+is the "real" workload, even in the "overloaded" case...
 
-#[naked]
-#[cfg(target_arch = "arm")]
-#[export_name = "__rust__aeabi_uldivmod"]
-pub unsafe extern "C" fn __aeabi_uldivmod() {
-    unsafe {
-        core::arch::naked_asm!(
-            "push {{r4, lr}}",
-            "sub sp, sp, #16",
-            "add r4, sp, #8",
-            "str r4, [sp]",
-            "bl __udivmoddi4",
-            "ldr r2, [sp, #8]",
-            "ldr r3, [sp, #12]",
-            "add sp, sp, #16",
-            "pop {{r4, pc}}",
-        );
-    }
-}
+And if we do care about performance... Could you look at the trivial patch
+at the end? I don't think {a,c,m}time make any sense in the !fifo case, but
+as you explained before they are visible to fstat() so we probably shouldn't
+remove file_accessed/file_update_time unconditionally.
 
-However that requires the `naked_functions` unstable feature.
-Or it should be possible to just implement in a asm file.
+This patch does help if I change hackbench to uses pipe2(O_NOATIME) instead
+of pipe(). And in fact it helps even in the simplest case:
 
-I think it would be very difficult to entirely build core 
-without needing `__aeabi_uldivmod`. 
+	static char buf[17 * 4096];
 
-Link: https://github.com/rust-lang/compiler-builtins/blob/6f96bccc5d4aa3ba4c4cebdf23a3ccc3bc7fe77c/src/arm.rs#L64-L77 [0]
+	static struct timeval TW, TR;
 
-Christian
+	int wr(int fd, int size)
+	{
+		int c, r;
+		struct timeval t0, t1;
+
+		gettimeofday(&t0, NULL);
+		for (c = 0; (r = write(fd, buf, size)) > 0; c += r);
+		gettimeofday(&t1, NULL);
+		timeradd(&TW, &t1, &TW);
+		timersub(&TW, &t0, &TW);
+
+		return c;
+	}
+
+	int rd(int fd, int size)
+	{
+		int c, r;
+		struct timeval t0, t1;
+
+		gettimeofday(&t0, NULL);
+		for (c = 0; (r = read(fd, buf, size)) > 0; c += r);
+		gettimeofday(&t1, NULL);
+		timeradd(&TR, &t1, &TR);
+		timersub(&TR, &t0, &TR);
+
+		return c;
+	}
+
+	int main(int argc, const char *argv[])
+	{
+		int fd[2], nb = 1, noat, loop, size;
+
+		assert(argc == 4);
+		noat = atoi(argv[1]) ? O_NOATIME : 0;
+		loop = atoi(argv[2]);
+		size = atoi(argv[3]);
+
+		assert(pipe2(fd, noat) == 0);
+		assert(ioctl(fd[0], FIONBIO, &nb) == 0);
+		assert(ioctl(fd[1], FIONBIO, &nb) == 0);
+
+		assert(size <= sizeof(buf));
+		while (loop--)
+			assert(wr(fd[1], size) == rd(fd[0], size));
+
+		printf("TW = %lu.%03lu\n", TW.tv_sec, TW.tv_usec/1000);
+		printf("TR = %lu.%03lu\n", TR.tv_sec, TR.tv_usec/1000);
+
+		return 0;
+	}
+
+
+Now,
+
+	/# for i in 1 2 3; do /host/tmp/test 0 10000 100; done
+	TW = 7.692
+	TR = 5.704
+	TW = 7.930
+	TR = 5.858
+	TW = 7.685
+	TR = 5.697
+	/#
+	/# for i in 1 2 3; do /host/tmp/test 1 10000 100; done
+	TW = 6.432
+	TR = 4.533
+	TW = 6.612
+	TR = 4.638
+	TW = 6.409
+	TR = 4.523
+
+Oleg.
+---
+
+diff --git a/fs/pipe.c b/fs/pipe.c
+index a3f5fd7256e9..14b2c0f8b616 100644
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -1122,6 +1122,9 @@ int create_pipe_files(struct file **res, int flags)
+ 		}
+ 	}
+ 
++	if (flags & O_NOATIME)
++		inode->i_flags |= S_NOCMTIME;
++
+ 	f = alloc_file_pseudo(inode, pipe_mnt, "",
+ 				O_WRONLY | (flags & (O_NONBLOCK | O_DIRECT)),
+ 				&pipefifo_fops);
+@@ -1134,7 +1137,7 @@ int create_pipe_files(struct file **res, int flags)
+ 	f->private_data = inode->i_pipe;
+ 	f->f_pipe = 0;
+ 
+-	res[0] = alloc_file_clone(f, O_RDONLY | (flags & O_NONBLOCK),
++	res[0] = alloc_file_clone(f, O_RDONLY | (flags & (O_NONBLOCK | O_NOATIME)),
+ 				  &pipefifo_fops);
+ 	if (IS_ERR(res[0])) {
+ 		put_pipe_info(inode, inode->i_pipe);
+@@ -1154,7 +1157,7 @@ static int __do_pipe_flags(int *fd, struct file **files, int flags)
+ 	int error;
+ 	int fdw, fdr;
+ 
+-	if (flags & ~(O_CLOEXEC | O_NONBLOCK | O_DIRECT | O_NOTIFICATION_PIPE))
++	if (flags & ~(O_CLOEXEC | O_NONBLOCK | O_DIRECT | O_NOATIME | O_NOTIFICATION_PIPE))
+ 		return -EINVAL;
+ 
+ 	error = create_pipe_files(files, flags);
+
