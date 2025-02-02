@@ -1,99 +1,115 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87DEE573;
-	Sun,  2 Feb 2025 06:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BA95234
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 06:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738477466; cv=none; b=WmdaxhagM5hyJhwrk8CTfimt4PysfKYZSOZ3dDdjmMuJaps2q4Q1WsHFO+xyICzuEjZm7LKG+q5TBJfjAaShrsS8V3QbR6MhOoruNdZI6yMvM+SDzTW3bNrvynOlJr0tb0AFzdlKDMKF+QRWK90W4rGsdbb9UJmCCwZS1ZRmBU0=
+	t=1738477653; cv=none; b=jhCL/RwxNrwRqHPKo8bu4geUdlbABsMjNo4SMWq3aOwETy5oEkKXcH3fyx3hRpxVZ3vX6y9Q68cKXplWEMX99/NoQIQRoxJYNp0clDBHgH+pBu5NeUxgGJdqZOz3Rybd/w1MGmPgUqN/jGFa87FjR7npimAyEaJgc5GqsHRaBPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738477466; c=relaxed/simple;
-	bh=l3kfPrN9XiWFm/I7IsTWoZhsvRgKtXYUos4XXP6YSUg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G2bPBM89qBvjG+B+zB+t34g+g511z49cuEYz0ovD/TdzZJv1e2wMe+Xtgecy6W/u74I6qGsCFWodcJhZ+szju2aGG7pkrNERyQMKYxd6ds++Dh1V+wkf7CMPe74/XtVfXEkxFgbDseQrkroexrdlYntmsNNORJMKCJRJLpkpj58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-03 (Coremail) with SMTP id rQCowABHTlp+D59nwltaCg--.15816S2;
-	Sun, 02 Feb 2025 14:24:08 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: bhelgaas@google.com,
-	rafael.j.wysocki@intel.com,
-	yinghai@kernel.org
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ma Ke <make24@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] PCI: fix reference leak in pci_alloc_child_bus()
-Date: Sun,  2 Feb 2025 14:23:57 +0800
-Message-Id: <20250202062357.872971-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1738477653; c=relaxed/simple;
+	bh=f+6PE04tBqUA7XgPrlbsy9d/p740lDsfjXrcmB6hwik=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=aRUxjZ8RNIb4U+G19FLypWpoBhTFDXwXdUAFxwuML2xL2O/xswgkKUjrs61yZ2U22FK+08bQn9ZVLNR1TQDuxlNMMj6R1pIOaMRfxBT/GggD3zAOJCPmcijJvOKXPIdfq71iROh6yZVQvmOLz2S4n/JSz7qGaz0Kx468QcvS/iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--wnliu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cbGOrHK4; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--wnliu.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cbGOrHK4"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2163dc0f5dbso74751155ad.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 22:27:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738477650; x=1739082450; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8S4uOKu9VVqEe7X7KKiTHi9neVV7GE5d6hnqB7Mqor4=;
+        b=cbGOrHK46TqXbKspnIhxh1FTIjfBrQiXVjzRYq0jrZFskB1zk7tjnZxn/DbjNMFAc0
+         HBVtQ2LWgVcGrXA0Ja09g8pHIwrx2MrKBsBAkxCrCZwIQs3fmcdMBJZw93ILdknftKIx
+         PRQbWt6w2AM89d8PEMMNxqL4k+/GtskXPnfbpE4YS7sRjTVO/H+XtuYD1o/4BlA+6ngB
+         cFUQm5QrjQEb6ov/EJyFYa+Z5+UmyBEEUH44vuAQWe0GwH7dGsOYPt9dWPXKK56hPW3k
+         qVQZdxqlnwFpOOiJ4oRBA5WbJH+rnFCD6DUKzgSpF9m1V0MnVdvlCDfcuxaQPwlE3d0+
+         bbVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738477650; x=1739082450;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8S4uOKu9VVqEe7X7KKiTHi9neVV7GE5d6hnqB7Mqor4=;
+        b=ZEUI4gV+ZKmrdUmvrfxyxcawqmv7O4UQmTzofGrzKW9ePIv5nBrlWVhvxahmilEsgZ
+         jrvBrFXCFVzHSVTnRTbhHaNWzwR6GJlS827ZxdP5nadKD81WDikgIG/6qPdX+anO/Wok
+         gnlfGDqdwzywyq3XuZfHz01eYp7XVYjrNnQ/dICJn+002IuUAktSOxe/AqkVTeUoTjql
+         9onNBwr/F8y0/wua6kfvyRbWklnFnZ7j20asrlRhURO39hkqUJYyMsDa5YlF2YFu/1G5
+         S3+wijSSygCbGF62vuPBY3l9LOy7BB4rem43SAUL9TeRUFaCZtf2Ucr/WgrieGPoR5/n
+         hNqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVTSh6v5Q1nNUeSfJJNyVqjMQtaD6HaIw0sD7b8SxDhxp2fwvLsIHn34tAQmoJ2ZkDhSOYAaarbaJ2eT/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyrsej1SIbyfeTaRcsavIdb5/d7/PNjU4sJMMd3xOH0Z5sVeNa7
+	b/vXcGft1Zcf/XrUxxVtHzJiagzSFyzfkb0yBorvUxzANvvYRIGv3IgpxN1MgD+SbbZqNezykA=
+	=
+X-Google-Smtp-Source: AGHT+IF3pmgNiuLZzWrgGalALOUS4W82S7JLp/JXMoTR3Y/cAA5r3Na5/8SbPDs9t8W/vbG9IazixpuGrw==
+X-Received: from pfbjo16.prod.google.com ([2002:a05:6a00:9090:b0:725:f324:ad1c])
+ (user=wnliu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9152:b0:1d9:fbc:457c
+ with SMTP id adf61e73a8af0-1ed7a6e0009mr32711616637.36.1738477650356; Sat, 01
+ Feb 2025 22:27:30 -0800 (PST)
+Date: Sun,  2 Feb 2025 06:27:26 +0000
+In-Reply-To: <c034b597-e128-4356-bcc9-79fb5e39a844@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABHTlp+D59nwltaCg--.15816S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cr13CrykKFykXw4DtrW8WFg_yoW8JF47pa
-	s7Ga909rZ5JwnF9w48ZF18ZFyFkanFya4rurWrG347ua95CryxtFWakFy5Ww1kJFZ2yF1Y
-	q3ZrJa45KF4UAw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-	6r4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJwAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-	rcIFxwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-	67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
-	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
-	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kf
-	nxnUUI43ZEXa7VUbsYFJUUUUU==
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+Mime-Version: 1.0
+References: <c034b597-e128-4356-bcc9-79fb5e39a844@linux.microsoft.com>
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250202062728.753686-1-wnliu@google.com>
+Subject: Re: [PATCH 4/8] unwind: Implement generic sframe unwinder library
+From: Weinan Liu <wnliu@google.com>
+To: ptsm@linux.microsoft.com
+Cc: indu.bhagat@oracle.com, irogers@google.com, joe.lawrence@redhat.com, 
+	jpoimboe@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org, 
+	live-patching@vger.kernel.org, mark.rutland@arm.com, peterz@infradead.org, 
+	roman.gushchin@linux.dev, rostedt@goodmis.org, will@kernel.org, 
+	wnliu@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When device_register(&child->dev) failed, we should call put_device()
-to explicitly release child->dev.
+On Thu, Jan 30, 2025 at 2:22=E2=80=AFAM Prasanna Kumar T S M <ptsm@linux.mi=
+crosoft.com> wrote:
+> On 28-01-2025 03:03, Weinan Liu wrote:
+> > diff --git a/include/linux/sframe_lookup.h b/include/linux/sframe_looku=
+p.h
+> > new file mode 100644
+> > index 000000000000..1c26cf1f38d4
+> > --- /dev/null
+> > +++ b/include/linux/sframe_lookup.h
+> > @@ -0,0 +1,43 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _LINUX_SFRAME_LOOKUP_H
+> > +#define _LINUX_SFRAME_LOOKUP_H
+> > +
+> > +/**
+> > + * struct sframe_ip_entry - sframe unwind info for given ip
+> > + * @cfa_offset: Offset for the Canonical Frame Address(CFA) from Frame
+> > + *              Pointer(FP) or Stack Pointer(SP)
+> > + * @ra_offset: Offset for the Return Address from CFA.
+> > + * @fp_offset: Offset for the Frame Pointer (FP) from CFA.
+> > + * @use_fp: Use FP to get next CFA or not
+> > + */
+> > +struct sframe_ip_entry {
+> > +	int32_t cfa_offset;
+> > +	int32_t ra_offset;
+>=20
+> The ra_offset is not present for x86_64 in SFrame FRE as per the spec. I=
+=20
+> am wondering whether this struct should change based on the architecture=
+=20
+> or just set ra_offset calculated from cfa_offset for x86_64.
 
-As comment of device_register() says, 'NOTE: _Never_ directly free
-@dev after calling this function, even if it returned an error! Always
-use put_device() to give up the reference initialized in this function
-instead.'
-
-Found by code review.
-
-Cc: stable@vger.kernel.org
-Fixes: 4f535093cf8f ("PCI: Put pci_dev in device tree as early as possible")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
----
-Changes in v3:
-- modified the description as suggestions.
-Changes in v2:
-- added the bug description about the comment of device_add();
-- fixed the patch as suggestions;
-- added Cc and Fixes table.
----
- drivers/pci/probe.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 2e81ab0f5a25..51b78fcda4eb 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1174,7 +1174,10 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
- add_dev:
- 	pci_set_bus_msi_domain(child);
- 	ret = device_register(&child->dev);
--	WARN_ON(ret < 0);
-+	if (WARN_ON(ret < 0)) {
-+		put_device(&child->dev);
-+		return NULL;
-+	}
- 
- 	pcibios_add_bus(child);
- 
--- 
-2.25.1
-
+According to the https://sourceware.org/binutils/docs/sframe-spec.html#AMD6=
+4
+For x86_64, RA will be stored at a fixed offset from the CFA upon function =
+entry.=20
+The ra_offset will set to sfhdr_p->cfa_fixed_ra_offset during the initializ=
+ation
+of the sframe_ip_entry within the function sframe_find_pc()
