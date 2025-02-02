@@ -1,118 +1,355 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B74C2F3B
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 06:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C8CC8DF
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 07:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738479454; cv=none; b=UyRXJj4doK28wLj3cmLbwQ9agn+KETmrOm1rxvV/xCTqT0+h/iHdFuC89+QDExC1iD7eq1HReDdS4RVi3sDMLKE6X+iNjgnbYb0AwCefY9c5Gce8P7FRoqkGuvS9vV29jqUq2XUifHJVcxTjrU5NnAWepJhjZ+14W1JZmGlyUB4=
+	t=1738479849; cv=none; b=Kti4p2g/PZePlHTtpEoU4ODfoo7L9o9ZAuj7KAQAbxnWaEsvvgp4f0hgjSUBbJFKlmnDgZk1va1E1diRZEiAFLP/IW8l4y7mfU+OvhCHFglqdzaGnmFmN3657MXbHCTKIKP7NwA0uEtWHURy1aVTcRPYCKdEN55NIKbz7bRzZHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738479454; c=relaxed/simple;
-	bh=NMUryZlKV+sivgMvzBFyLm+7Fa+86bzVAKLU1fXh5EA=;
+	s=arc-20240116; t=1738479849; c=relaxed/simple;
+	bh=S/ODEyu/sDQz5ZMVmnTyP7uX15WIsg1hop4S/PCd2+w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u3XwW//sEolE9pVQtV5sAx9XD1T68Z7xD11CyE5SwcmatYI3/Xgj1myCcP87rqrMfaYiBCqJgmx4j0cOvOBVSFLuPsI18y8Re6O6nIQF101eb3Yxszr20NcCZinpr3hxgLOr03q5a3dKj6SmB9HDaxgwijWMUmVN+49iGQaZGGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bCo/XkRm; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=oijfnCFQckWNlpPDlJXTGTZmoSuTimLmMconwSJaWtyotALKyXsEBf6dRz4fJyfRvwD0TQoP3WIUNeOr1RqiyhmWa7Y9fQ7cfExSPHsNj5RI5CrMM9Cts1SZ+5t8CeDIPkpXPrBExazrhqwASWNba3VmZGp9oN6dnnCIvegCsDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3gwl0fC6; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bCo/XkRm"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53ff1f7caaeso3287755e87.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 22:57:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3gwl0fC6"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso155765ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 23:04:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738479450; x=1739084250; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738479847; x=1739084647; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dcx3HkHaMhQAvBIUjx/kTteQW2Ra5NrKuwExWKNe1Bo=;
-        b=bCo/XkRm5CCxFMzY4mM5GxcIeiNsFZjlJR7hWjiTqD9cfF9t6ctAWDUWN5dVyM6wGw
-         FDuQRgchJqY8JlrNYXdYol69ACL7C2/lx65ekmEwpb9yICkRrwavlOdtnXtjEtXV4+Fb
-         m+85hsjzZv1ewAHa84VnZm2cDMR+Katx/3Y/5EDNp5OrokWjVG+k4rqPHn0Q5R6fvZNt
-         he1A/0VXSu2rA139W4oOAVxwNzN8lIvs9v1hy51MTc/ZOhBctnR7NhTH9Fah0PZwwkqt
-         wzKlQQp0/PUXYd2Tq0CJAe+xa+pqmW0wrJTZv0xlQqunOvw2sWX/cPvz0h7ztoS9FNrq
-         82/Q==
+        bh=TW2WXdFoJdL4hr/KMjHXmSx3JuLPpNVrDh3bvonRhpk=;
+        b=3gwl0fC6UU6YhRMIVY+/d1Ho6NdMXlqTo0S3uFpvmpPkYeiTDTj2L8F5BuYORXqNo6
+         Y8Hm/s3csQ0LmyYsP1IQiGuJy27hdBs9DbE7jH87oyiqdR53N30emDd+HUVBrz+YZeCp
+         4Q5iBBGkA0ujPneueEyHIvNV8X2kuP/tRVICu0KYgWM1KuiDWG/lr3SLUe+QrNJyoDrX
+         3jH8QdkC+qQwkoBGfFfEzlEiqoz2uNA6wgRNnwdcoFK5eewuu30VnZi6Hy08ZNrHK8Y1
+         yjpLEMZYNBjIjCjaqzmUZtW4IKwB52rxE8iLeL1jX+0hjTRuta3KgyTgtG4hC7ePksVL
+         bO8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738479450; x=1739084250;
+        d=1e100.net; s=20230601; t=1738479847; x=1739084647;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dcx3HkHaMhQAvBIUjx/kTteQW2Ra5NrKuwExWKNe1Bo=;
-        b=D5e80uSgiT1cz94dDKc/78aBcI4li/50ClzZN+2RAOleJxsJ28x/aCtPLm07xlEyt7
-         yB65mrSqncm5nwG+E5FdHZcmC6zg1IMY5tJXqtTyPFGvtBkxSE5xbNY2hmLyaOTws1jl
-         gL994OxdHAJAv3HMblyjutJSKNAQEqIDqnGN7mNN/JbTBTZ4BvlSwn5Nk/Sy7G/dLY7s
-         rWOWtOp9wawdrCpqxZi5NLNdYuKV15lp81X4/J0U2bv63d0nfh3PA1G/Wimu18OenNUu
-         z4MZqCPYz3O9EEhRmzSQDabe83+Z2WADa3pny3V/b1/JU0ZiZ1hkJr7C6jc+qD1jlBLS
-         hBDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxDx7tuXy46nCYASOB3ieAn64qHaTH2M7vLCkMyaZw5ocqPAfOLGP62WSS3ttQ9U+ax7BoztzYE7zcLqA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEl19nDby4mUUZ11klfm3dtfnQrGgJsNQqEYzG34geRtv3K1E9
-	PRzBXWeu4LPzZ3aaaj/bMK/ZAQkjHEhhxaG1nFGUTIIudbk8qxGRrtHGm1E3gRGmzIYRF9elIiE
-	yhkXcdiv6/e0tLbvA7Olp634GKfQ=
-X-Gm-Gg: ASbGncuYp2ggjBrw0cbYzqDvXn66z4XGI9YTDn9BX6QvUJY7mT+oG3ttkXvfmW8I+Uy
-	FssiDzx30mfOm2zS/skSmMhxi5FlX1CUy5DBY0TOJ/+rLLhrfITeyv5ODBtr7PgUf466aAgc7
-X-Google-Smtp-Source: AGHT+IFI8wwWq5sXQKpfJSo6e7wuVv3KG1aA6VhOpOBRhi8gTIgLBtaFhhMylHPD8UCMp/xcdoV9OYrNUO9pk5fQYW8=
-X-Received: by 2002:a05:6512:4026:b0:540:1f7d:8b9c with SMTP id
- 2adb3069b0e04-543e4c3fd10mr6103544e87.45.1738479450078; Sat, 01 Feb 2025
- 22:57:30 -0800 (PST)
+        bh=TW2WXdFoJdL4hr/KMjHXmSx3JuLPpNVrDh3bvonRhpk=;
+        b=fLPUZaM8YSseTE8ORGlkMmkMumNv+tNK+ooHUOd22+DIyv2tADuNqVqZ8a5deIi2n2
+         vxFKKctfsVMwFSjBxCfxMZnFfhSO97yNw3Biu/L8G3LtJeCZfdIlzdxnfoDDrOtitMyZ
+         pAnxHMACnNwt5zq3XuPyBHQChCl1b3lUG10UatU1QmxxlWZgDPihRJZtsZ76TwFq5WSu
+         BNK2eWRHlW0wLd9a2riXtP1ouE9Fo/dOf4buZc8qTlnJy6Q5CSJNUkyEWijRMZRFf5br
+         HHJZxsa/uF+5wEoIYh+Q5x3JH46+c0MiGRVc+EENNZ+6Pu8dahuskpwzR0UmaA0a+Dfd
+         EJQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuPulNQLX6756makCHQFF4ZG3Frq2F8/+n442UvjkbXLXSEcsa9ZuPyzPuEU39iDSDRcCbY8QD1FVx8iU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjtqJqDjRLh9l028ehQKV/aoDpy38AxDsc5Jzg55dTwjukaKSW
+	Qs8xnEsP6W7NOrQkk4YIakZJjc55bF+KJ3UBeoKgqses/lzAtLeSSmwaXE1Z0BFD6eCcOO0RBHf
+	wHdcjVgqiixJhyKllSn7R79B5f5rr9OY6oM/O
+X-Gm-Gg: ASbGncvyLlFY5H1a1HUvpQCSDbuSyfqx3UooyjmqvaT/ZHTGr9f5EoCtJ3W4uJiPo5G
+	W3ymgsjmybpLv6I80iDvN7S9rUMu74hID+OmBPqVZoIos1mKBpgZY5h4aC4VI+snEpc441R++SA
+	==
+X-Google-Smtp-Source: AGHT+IF81ZqX7vPK+R4u8VMmH12X+xPYTa5N3v2X5iXJS2kZJ97rHSYVaKM/TO/f6Z+3eRjFf95QVWBU/TBSyno57Cw=
+X-Received: by 2002:a05:6e02:1caa:b0:3cf:fe9a:4d4 with SMTP id
+ e9e14a558f8ab-3d020184ba6mr3180435ab.6.1738479846565; Sat, 01 Feb 2025
+ 23:04:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250124164858.756425-1-kevin.brodsky@arm.com>
-In-Reply-To: <20250124164858.756425-1-kevin.brodsky@arm.com>
-From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Date: Sun, 2 Feb 2025 15:57:18 +0900
-X-Gm-Features: AWEUYZn6OxSb75sYDq_0UftKbKne0UTyN6oHw9v44W4Q1A8hVvd3EAUTqglsJXg
-Message-ID: <CAB=+i9QJsQEzSTf=LxY_Kuqm++2MZDXLL1eshngDZ5dAg5UzUQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/slab: simplify SLAB_* flag handling
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <roman.gushchin@linux.dev>
+References: <20250130030525.1482498-1-namhyung@kernel.org> <20250130030525.1482498-3-namhyung@kernel.org>
+In-Reply-To: <20250130030525.1482498-3-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Sat, 1 Feb 2025 23:03:54 -0800
+X-Gm-Features: AWEUYZmHzgE77FMjNC4oCHjXnM1LEFv0B-W4EyO4EP6wb-nUuLjcJmaLn8D-7fA
+Message-ID: <CAP-5=fUK_aMf8ZYJxmbOLzbu_zZWKYwx_Vvj64x3_2=0u7jbMw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] perf trace: Convert syscall_stats to hashmap
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Howard Chu <howardchu95@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jan 25, 2025 at 1:49=E2=80=AFAM Kevin Brodsky <kevin.brodsky@arm.co=
-m> wrote:
+On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> SLUB is the only remaining allocator. We can therefore get rid of
-> the logic for allocator-specific flags:
+> It was using a RBtree-based int-list as a hash and a custome resort
+> logic for that.  As we have hashmap, let's convert to it and add a
+> sorting function using an array.
+
+How is a hashmap connected to a sorting function of an array?
+
+>  It's also to prepare supporting
+> system-wide syscall stats.
 >
-> * Merge SLAB_CACHE_FLAGS into SLAB_CORE_FLAGS.
+> No functional changes intended.
 >
-> * Remove CACHE_CREATE_MASK and instead mask out SLAB_DEBUG_FLAGS if
->   !CONFIG_SLUB_DEBUG. SLAB_DEBUG_FLAGS is now defined
->   unconditionally (no impact on existing code, which ignores it if
->   !CONFIG_SLUB_DEBUG).
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/builtin-trace.c | 122 ++++++++++++++++++++++++++++---------
+>  1 file changed, 93 insertions(+), 29 deletions(-)
 >
-> * Define SLAB_FLAGS_PERMITTED in terms of SLAB_CORE_FLAGS and
->   SLAB_DEBUG_FLAGS (no functional change).
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 7e0324a2e9182088..1d32ef2b05ae8c1c 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -39,6 +39,7 @@
+>  #include "util/synthetic-events.h"
+>  #include "util/evlist.h"
+>  #include "util/evswitch.h"
+> +#include "util/hashmap.h"
+>  #include "util/mmap.h"
+>  #include <subcmd/pager.h>
+>  #include <subcmd/exec-cmd.h>
+> @@ -63,7 +64,6 @@
+>  #include "print_binary.h"
+>  #include "string2.h"
+>  #include "syscalltbl.h"
+> -#include "rb_resort.h"
+>  #include "../perf.h"
+>  #include "trace_augment.h"
 >
-> While at it also remove misleading comments that suggest that
-> multiple allocators are available.
+> @@ -1519,17 +1519,55 @@ struct thread_trace {
+>                 struct file   *table;
+>         } files;
 >
-> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+> -       struct intlist *syscall_stats;
+> +       struct hashmap *syscall_stats;
+>  };
+>
+> +static size_t id_hash(long key, void *ctx __maybe_unused)
 
-Hi Kevin,
-This patch in general looks fine to me.
+I find the use of "id" in this code confusing - it is a pre-existing
+problem, but you add to it here. I think a more intention revealing
+name would be something like system_call_number_hash.
 
-However, there are subtle changes that were not documented by the changelog=
-.
-SLUB currently does not _completely_ ignore debug flags even when
-CONFIG_SLUB_DEBUG=3Dn. For example, calculate_sizes() relocate the free poi=
-nter
-regardless of CONFIG_SLUB_DEBUG.
+> +{
+> +       return key;
+> +}
+> +
+> +static bool id_equal(long key1, long key2, void *ctx __maybe_unused)
+> +{
+> +       return key1 =3D=3D key2;
+> +}
+> +
+> +static struct hashmap *alloc_syscall_stats(void)
+> +{
+> +       struct hashmap *stats =3D hashmap__new(id_hash, id_equal, NULL);
+> +
+> +       /* just for simpler error check */
 
-I believe completely ignoring debug flags should be acceptable
-when CONFIG_SLUB_DEBUG=3Dn, but this change should at least be documented
-in the changelog.
+What is "just for simpler error check" ?
 
-Additionally, beyond what this patch currently does, we can remove several
-CONFIG_SLUB_DEBUG #ifdefs in some functions (e.g., in calculate_sizes())
-on top of this patch.
+> +       if (IS_ERR(stats))
+> +               stats =3D NULL;
+> +       return stats;
+> +}
+> +
+> +static void delete_syscall_stats(struct hashmap *syscall_stats)
+> +{
+> +       struct hashmap_entry *pos;
+> +       size_t bkt;
+> +
+> +       if (syscall_stats =3D=3D NULL)
+> +               return;
+> +
+> +       hashmap__for_each_entry(syscall_stats, pos, bkt)
+> +               free(pos->pvalue);
+> +       hashmap__free(syscall_stats);
+> +}
+> +
+>  static struct thread_trace *thread_trace__new(struct trace *trace)
+>  {
+>         struct thread_trace *ttrace =3D  zalloc(sizeof(struct thread_trac=
+e));
+>
+>         if (ttrace) {
+>                 ttrace->files.max =3D -1;
+> -               if (trace->summary)
+> -                       ttrace->syscall_stats =3D intlist__new(NULL);
+> +               if (trace->summary) {
+> +                       ttrace->syscall_stats =3D alloc_syscall_stats();
+> +                       if (ttrace->syscall_stats =3D=3D NULL) {
+> +                               free(ttrace);
+> +                               ttrace =3D NULL;
 
-How does that sound to you?
+This looks overly indented.
 
-Best,
-Hyeonggon
+Thanks,
+Ian
+
+> +                       }
+> +               }
+>         }
+>
+>         return ttrace;
+> @@ -1544,7 +1582,7 @@ static void thread_trace__delete(void *pttrace)
+>         if (!ttrace)
+>                 return;
+>
+> -       intlist__delete(ttrace->syscall_stats);
+> +       delete_syscall_stats(ttrace->syscall_stats);
+>         ttrace->syscall_stats =3D NULL;
+>         thread_trace__free_files(ttrace);
+>         zfree(&ttrace->entry_str);
+> @@ -2463,22 +2501,19 @@ struct syscall_stats {
+>  static void thread__update_stats(struct thread *thread, struct thread_tr=
+ace *ttrace,
+>                                  int id, struct perf_sample *sample, long=
+ err, bool errno_summary)
+>  {
+> -       struct int_node *inode;
+> -       struct syscall_stats *stats;
+> +       struct syscall_stats *stats =3D NULL;
+>         u64 duration =3D 0;
+>
+> -       inode =3D intlist__findnew(ttrace->syscall_stats, id);
+> -       if (inode =3D=3D NULL)
+> -               return;
+> -
+> -       stats =3D inode->priv;
+> -       if (stats =3D=3D NULL) {
+> +       if (!hashmap__find(ttrace->syscall_stats, id, &stats)) {
+>                 stats =3D zalloc(sizeof(*stats));
+>                 if (stats =3D=3D NULL)
+>                         return;
+>
+>                 init_stats(&stats->stats);
+> -               inode->priv =3D stats;
+> +               if (hashmap__add(ttrace->syscall_stats, id, stats) < 0) {
+> +                       free(stats);
+> +                       return;
+> +               }
+>         }
+>
+>         if (ttrace->entry_time && sample->time > ttrace->entry_time)
+> @@ -4617,18 +4652,45 @@ static size_t trace__fprintf_threads_header(FILE =
+*fp)
+>         return printed;
+>  }
+>
+> -DEFINE_RESORT_RB(syscall_stats, a->msecs > b->msecs,
+> +struct syscall_entry {
+>         struct syscall_stats *stats;
+>         double               msecs;
+>         int                  syscall;
+> -)
+> +};
+> +
+> +static int entry_cmp(const void *e1, const void *e2)
+>  {
+> -       struct int_node *source =3D rb_entry(nd, struct int_node, rb_node=
+);
+> -       struct syscall_stats *stats =3D source->priv;
+> +       const struct syscall_entry *entry1 =3D e1;
+> +       const struct syscall_entry *entry2 =3D e2;
+>
+> -       entry->syscall =3D source->i;
+> -       entry->stats   =3D stats;
+> -       entry->msecs   =3D stats ? (u64)stats->stats.n * (avg_stats(&stat=
+s->stats) / NSEC_PER_MSEC) : 0;
+> +       return entry1->msecs > entry2->msecs ? -1 : 1;
+> +}
+> +
+> +static struct syscall_entry *thread__sort_stats(struct thread_trace *ttr=
+ace)
+> +{
+> +       struct syscall_entry *entry;
+> +       struct hashmap_entry *pos;
+> +       unsigned bkt, i, nr;
+> +
+> +       nr =3D ttrace->syscall_stats->sz;
+> +       entry =3D malloc(nr * sizeof(*entry));
+> +       if (entry =3D=3D NULL)
+> +               return NULL;
+> +
+> +       i =3D 0;
+> +       hashmap__for_each_entry(ttrace->syscall_stats, pos, bkt) {
+> +               struct syscall_stats *ss =3D pos->pvalue;
+> +               struct stats *st =3D &ss->stats;
+> +
+> +               entry[i].stats =3D ss;
+> +               entry[i].msecs =3D (u64)st->n * (avg_stats(st) / NSEC_PER=
+_MSEC);
+> +               entry[i].syscall =3D pos->key;
+> +               i++;
+> +       }
+> +       assert(i =3D=3D nr);
+> +
+> +       qsort(entry, nr, sizeof(*entry), entry_cmp);
+> +       return entry;
+>  }
+>
+>  static size_t thread__dump_stats(struct thread_trace *ttrace,
+> @@ -4636,10 +4698,10 @@ static size_t thread__dump_stats(struct thread_tr=
+ace *ttrace,
+>  {
+>         size_t printed =3D 0;
+>         struct syscall *sc;
+> -       struct rb_node *nd;
+> -       DECLARE_RESORT_RB_INTLIST(syscall_stats, ttrace->syscall_stats);
+> +       struct syscall_entry *entries;
+>
+> -       if (syscall_stats =3D=3D NULL)
+> +       entries =3D thread__sort_stats(ttrace);
+> +       if (entries =3D=3D NULL)
+>                 return 0;
+>
+>         printed +=3D fprintf(fp, "\n");
+> @@ -4648,8 +4710,10 @@ static size_t thread__dump_stats(struct thread_tra=
+ce *ttrace,
+>         printed +=3D fprintf(fp, "                                     (m=
+sec)    (msec)    (msec)    (msec)        (%%)\n");
+>         printed +=3D fprintf(fp, "   --------------- --------  ------ ---=
+----- --------- --------- ---------     ------\n");
+>
+> -       resort_rb__for_each_entry(nd, syscall_stats) {
+> -               struct syscall_stats *stats =3D syscall_stats_entry->stat=
+s;
+> +       for (size_t i =3D 0; i < ttrace->syscall_stats->sz; i++) {
+> +               struct syscall_entry *entry =3D &entries[i];
+> +               struct syscall_stats *stats =3D entry->stats;
+> +
+>                 if (stats) {
+>                         double min =3D (double)(stats->stats.min) / NSEC_=
+PER_MSEC;
+>                         double max =3D (double)(stats->stats.max) / NSEC_=
+PER_MSEC;
+> @@ -4660,10 +4724,10 @@ static size_t thread__dump_stats(struct thread_tr=
+ace *ttrace,
+>                         pct =3D avg ? 100.0 * stddev_stats(&stats->stats)=
+ / avg : 0.0;
+>                         avg /=3D NSEC_PER_MSEC;
+>
+> -                       sc =3D &trace->syscalls.table[syscall_stats_entry=
+->syscall];
+> +                       sc =3D &trace->syscalls.table[entry->syscall];
+>                         printed +=3D fprintf(fp, "   %-15s", sc->name);
+>                         printed +=3D fprintf(fp, " %8" PRIu64 " %6" PRIu6=
+4 " %9.3f %9.3f %9.3f",
+> -                                          n, stats->nr_failures, syscall=
+_stats_entry->msecs, min, avg);
+> +                                          n, stats->nr_failures, entry->=
+msecs, min, avg);
+>                         printed +=3D fprintf(fp, " %9.3f %9.2f%%\n", max,=
+ pct);
+>
+>                         if (trace->errno_summary && stats->nr_failures) {
+> @@ -4677,7 +4741,7 @@ static size_t thread__dump_stats(struct thread_trac=
+e *ttrace,
+>                 }
+>         }
+>
+> -       resort_rb__delete(syscall_stats);
+> +       free(entries);
+>         printed +=3D fprintf(fp, "\n\n");
+>
+>         return printed;
+> --
+> 2.48.1.262.g85cc9f2d1e-goog
+>
