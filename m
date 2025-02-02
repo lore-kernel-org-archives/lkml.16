@@ -1,135 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2301F8AC6;
-	Sun,  2 Feb 2025 14:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34D81F8F01;
+	Sun,  2 Feb 2025 14:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738505966; cv=none; b=kWxB+SPg/t5qu74r2s8sJfOnrWI1BOv5fRNf0j0A2lmPO9rtEywdshnEyIYPF04crAGd5aATKrSyKGdGJvYSnVG6EzUPYOiWEhxHTYRPUTsQ4/18m4F3rHoUVpUwQJI2KYlEVwbv88tp6s5ZIzQOCwxYEknWb+83nPyAP9Rm050=
+	t=1738505974; cv=none; b=NSTS7a0hI0ldc+Fy0zhikPKr7KlLiXsNNKBZ7F1w+LnwyjTIW4aDud96ePzInXX9cUfxynltF2zEwG6MctiAEWNAtjIT4M3qd9K/tW4R5/D3S9rtqFZLMB52H6eK/g1BV81AzpjtUmf85I4p6irY1wjbi9IkZ8QqxaGAQ3xL06g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738505966; c=relaxed/simple;
-	bh=uK0X5J5lyezZDHKxlxotvwtoEJskgRWw9NWZ4i78AU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n8OQATGLmhQMopfGLxACUyuwY5w0r6rT3TSH8skRCq1sru76/idY+cyi/IrzMvSbex8thPo+WomqrHFNiT6/NjGm8WlUc243hTCL3FGCuFBgxsw7JLEvzP+lb/b/L/bI+nGm9fiTp0rYRKhrJ4cb9QOwx3w/iCGp6fWR3ss9F1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EO+9BlT2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738505974; c=relaxed/simple;
+	bh=uL7NzAbejFmkhNx3EspNPXg3LKNvUhtWyK2MXcpF/Tk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hMTr2dWw30lMxGdjwBRdcPylTWwlg6Na+C4SI0z2HgysasOnmGmmVMeWTbiiGC25j/s+hZamCNXBjaRCtvxzsv/VhvugFa8jblPMYiifeCCaTAM04MOdEzlCjS9O8cSR/6JoY2a6ibPgDU7ILGkCE1tCN5k9PZOgambcBE3K5ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SlTTW+OR; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EO+9BlT2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B6B5C4CED1;
-	Sun,  2 Feb 2025 14:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738505966;
-	bh=uK0X5J5lyezZDHKxlxotvwtoEJskgRWw9NWZ4i78AU8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EO+9BlT2QlyaUUnFR9NfMrNxp4qUPkL4kRK9+fI8AzO7cyISSmdx1udl7aG6aS5Qm
-	 YB/s7CYIAcNnvlCp4AOo4raAHOjmDigW+Dc2weV1+Egmfi8OQgfECQhmUsN0vC4z/V
-	 9hB7JLUGSBnAyjCpZ8v+HAcLKtlOdMtlD6Tnz07T+9bMrGJu3GK/nJLdPOIZvatPQN
-	 fA51mjoc9gZ3TemIc2nng4MmdwfxK86iooSrPBjsbDEt4WfzexbMNSGXdqjxIX45kh
-	 Dtw4sjHX3rsLWD9QY67CfmwJ43ewpYYos8PQWCpKAcqo9qHS+1UPPLAzYPqunMw7Pn
-	 xGftPJF+4kscw==
-Message-ID: <5d1154f8-785d-4249-9781-938e9cc99167@kernel.org>
-Date: Sun, 2 Feb 2025 15:19:19 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SlTTW+OR"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30225b2586cso43165621fa.0;
+        Sun, 02 Feb 2025 06:19:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738505971; x=1739110771; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nEb04JZ2Khs3MvlufQafhJfgSaiQiQ3sCMUN+Hr7DYo=;
+        b=SlTTW+ORZwm8RsBSVvTOGmlHDz1pwfUmRE1Q5hbZiEZ3X9Ci/jT0O2UVZAB8fpL5Cg
+         O1h98NmimHSt9aYYJHWZTSJKqvzTFfIqfBHq9mDvGftZai/mcjID7liNAbuG/MjrURk0
+         RMNm1GKQZkjbZ2muu1yAG1EfzamF2LJbK9UPyfHnSJNZiEZvnkKystRj7zDFnDS4yA7T
+         hiUccTamfjC17owhNyyhgduZ9L20+19tlQfn9oCCrOQ5dThIH4cI8Y2DbXs6AZ3SGQ+m
+         t253GGtyx44PhdYeGitfDK95QdLQq+BBP7+Jmv5mqmFMYq4cbY6J8F2KLajBq9hMptUm
+         5lJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738505971; x=1739110771;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nEb04JZ2Khs3MvlufQafhJfgSaiQiQ3sCMUN+Hr7DYo=;
+        b=QzUhcDhqyM72YLmNmooz6GqMh2Z9ugddKPe3AnIUmHE6s3piiFft0pS7GmcWD9tPGn
+         RdCtK+K0hlwnAIIclHLvdIk5ljO6PWBT4OkCTwLXYAe0kJcz/uUV+KDizNqS+1lfO3EW
+         Zjzn227slgjMerOYgqCnFJErkjve/ok4+UUjALMjkGxPHw+yZgBkvDa5kXzwKSkDztlm
+         8CBFvjElfZk+UBpC11t4qGiZ88DHcOwPI29mIOxbUHZJYTXFB/l8dBQN1Sgkw96cf2WT
+         uVQ6ZfCyE9cLqyy7qKJIqlCUh+uD/CiU8qKcM7mk8vgrYZgtq6pBlstbCMQii7GZnCLE
+         Evvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUUrUgsVYhUfdbUF72PqdZm/5w1NS+vxkt1zhrXhljygh7VMqzNMQ5rQkdnj8tENUJNwrkdLqg9jVu1dwQ=@vger.kernel.org, AJvYcCW4dT8x2qwHLS43r1hrx4zGcc8F0Po5JSOKKk0icioyNEaju/oPnN01GDvbe/rYKTXvHQQ7LxhWku7AYS7rlu0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz012WJO67SvPc/OPY2jfPOdYJzL7W7Yg5IzUbDuAttIB7gg+aK
+	mjvNjZlDcKZTV7w0bglRFRLge5aIdVTjw+TF727jdw6Lbod3lBFnCmRaKydta8o+tz7trVUBFk4
+	X+9t840iqji2WTumkkCUtTuckJ58=
+X-Gm-Gg: ASbGncuTK2YMQ/mNdt8bkqL8yImrAoihJGqBj8UJLu9sb1nB4J0FSbXS9kIpw0F9TTI
+	c/t+VzTofEuhgF1A1hImTlZk+/ORRK638YfseKVJpQXlvGMCSmNmMsAMIRYdXKl9N1onqb+Dqu7
+	H3HKxItYzErxfBQx9itouxoq+Vz9mSKZs=
+X-Google-Smtp-Source: AGHT+IGKtI/HquBTzMvBPkPXd8BCwfuT4RH52VxQGZeqejUeajJPxFp6I8+M+JccQwC6RY+MwuhR5j9kHppHl6hTeZw=
+X-Received: by 2002:a2e:8749:0:b0:302:23a7:1ee8 with SMTP id
+ 38308e7fff4ca-307aa37d218mr27857701fa.3.1738505970419; Sun, 02 Feb 2025
+ 06:19:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v6 0/3] platform: arm64: Huawei Matebook E Go
- embedded controller
-To: Pengyu Luo <mitltlatltl@gmail.com>
-Cc: andersson@kernel.org, bryan.odonoghue@linaro.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, jdelvare@suse.com, konradybcio@kernel.org,
- krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux@roeck-us.net, platform-driver-x86@vger.kernel.org, robh@kernel.org
-References: <33f8a68f-46d8-472f-8061-52800e5bd014@kernel.org>
- <20250201073838.3278-1-mitltlatltl@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250201073838.3278-1-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250202-cstr-core-v6-0-8469cd6d29fd@gmail.com>
+ <20250202-cstr-core-v6-3-8469cd6d29fd@gmail.com> <3e2cb277-a896-4575-b23b-8d9b42c87173@gmail.com>
+In-Reply-To: <3e2cb277-a896-4575-b23b-8d9b42c87173@gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 2 Feb 2025 09:18:54 -0500
+X-Gm-Features: AWEUYZkQyf7vq2XiRnN9gCJAXSPy1JtYm332MaKtik5uOndhVeFTy-yzbvTlKAI
+Message-ID: <CAJ-ks9n4XmKB+xKctMtzZSS8SXjaypSGfU3THdmSBHM9AP=-OA@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] rust: replace `kernel::c_str!` with C-Strings
+To: Dirk Behme <dirk.behme@gmail.com>
+Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 01/02/2025 08:38, Pengyu Luo wrote:
-> On Sat, Feb 1, 2025 at 5:20 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> On 31/01/2025 10:21, Pengyu Luo wrote:
->>> This adds binding, drivers and the DT support for the Huawei Matebook E Go
->>> (sc8280xp-based) Embedded Controller which is also found in Huawei Matebook
->>> E Go LTE (sc8180x-based), but I don't have the sc8180x one to perform
->>> tests, so this series enable support for sc8280xp variant only, this series
->>> provides the following features:
->>>
->>> - battery and charger information report
->>> - charging thresholds control
->>> - FN lock (An alternative method)
->>> - LID switch detection
->>> - Temperature sensors
->>> - USB Type-C altmode
->>> - USB Type-C PD(high power)
->>>
->>
->> Why are you resending?
->>
->> Previous version was only week ago and minimal time is two weeks. Plus
->> its merge window, so this resend is unjustified.
-> 
-> Sorry, I am still new to the process, I may have misunderstood something.
-> I sent it because I had got at leaset one reviewed tag for every patch
-> from the corresponding subsystem maintainer. Can I expect that there would
-> be no reviewing? All I need to do is wait for it to be applied.
+On Sun, Feb 2, 2025 at 8:10=E2=80=AFAM Dirk Behme <dirk.behme@gmail.com> wr=
+ote:
+>
+> Hi Tamir,
+>
+> On 02.02.25 13:20, Tamir Duberstein wrote:
+> > C-String literals were added in Rust 1.77. Replace instances of
+> > `kernel::c_str!` with C-String literals where possible and rename
+> > `kernel::c_str!` to `c_str_avoid_literals` to clarify its intended use.
+> >
+> > Closes: https://github.com/Rust-for-Linux/linux/issues/1075
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > ---
+> >  drivers/net/phy/ax88796b_rust.rs |  7 +++----
+> >  drivers/net/phy/qt2025.rs        |  5 ++---
+> >  rust/kernel/firmware.rs          |  4 ++--
+> >  rust/kernel/kunit.rs             |  7 ++++---
+> >  rust/kernel/net/phy.rs           |  6 ++----
+> >  rust/kernel/str.rs               | 37 ++++++++++++++++++++++++--------=
+-----
+> >  rust/kernel/sync.rs              |  4 ++--
+> >  rust/kernel/sync/lock/global.rs  |  3 ++-
+> >  8 files changed, 41 insertions(+), 32 deletions(-)
+>
+>
+> Have you checked samples/rust/ [1] as well?
+>
+> Best regards
+>
+> Dirk
 
-
-and when I gave you the review, what did I write? Long instruction what
-to do:
-
-"However, there's no
-need to repost patches *only* to add the tags."
-
-
-Best regards,
-Krzysztof
+Hi Dirk, I had, but I was working on rust-next rather than on
+torvalds/master. I'll update the other samples in v7.
