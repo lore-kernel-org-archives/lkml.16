@@ -1,85 +1,65 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFBC1F5E6;
-	Sun,  2 Feb 2025 11:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C351D63D2;
+	Sun,  2 Feb 2025 11:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738494502; cv=none; b=blwXkL3qtMLCS0EU8pGveSR16cIkcDp+sLp5HB+5f5Z4IC4OKNb8kiNqorR/d1NBMjKRxJjpjqKMTvput0E5sPR+pgpS+y2ttg3jd/VVuqpOyBweUKq1aHT4bACNiW4QlFZO2OffpPkjdn/ADJBlFeOSF3iLiKXNUqOUXYfImKU=
+	t=1738494701; cv=none; b=p+QfDG9tNXjeZ1EYh8uwtFnN2B196IWHNpOiBV0jNMt4kv7HMpXfeUtGYSzOLbmcpo2Q+ToFbLsBUS2cCtymdIIX70YPWPfH6/M5qKugjzRwqSkcyjaeyMy8HFHzaIfNBJx066FdchPEWAg+RHDhMabSKbURL1OSMr4Uk91jPv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738494502; c=relaxed/simple;
-	bh=7Ti7bLf/nUZeZLYb1OPmcuwU/6UuzijbSYfVPN/jWBc=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fx8ezHVupCH2rOBkpGCphVX2d3pLjdPvedI0OPmhoAQQxb9707ZR5hmn4k/m02xyEllbTpmFC5wArhQp7kMr3982+1lCgkB4iH1seutH4cr0BQeVxqO1BGfAnyGUBff7Sfw52vYuk5rL4KANZZXhgc3ZMWhSeBA9N0rrcP2DDN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ImTSyQRV; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738494701; c=relaxed/simple;
+	bh=jz3MqgGH5E5HKEsnRKw2zBT4wqE3A51XYO9CnVtLyy0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r0Yq61HrkKV+CmFpfsloZHXdHxQH16+i/Bq5JBlI0tzDGlTCzyKAn+DOUOPsWuKhPE386unufE+B45jZQaDcdUnm09deZZrxy1/aP9ey97esQhiBgh+jjby3Q0VBuLwTm7PazJtr5EqVD91f/JHAIhB7cuj0+mPfQ8qakx1sOWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ug7MiW4r; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ImTSyQRV"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaf60d85238so538182766b.0;
-        Sun, 02 Feb 2025 03:08:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738494499; x=1739099299; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5JzXeM0bk8T85dqhtElwChalRxMx7DtA9IYgnOT7SBY=;
-        b=ImTSyQRVuM6DuRicCm3tKx4dQ34B93Od+ZuqhKzj12FNRuhCvuuAHuTSFmFCxb/j6O
-         M39hKtlKm5zQ/TNT0xulWkZg4oKoOXIz3iDC245LVCCh9FBO1rfkmTHlbDH4reiXkJ2a
-         oEJzvze3hhPS2ZAsaWZUa/lcFH9NnjJ5J4f+5zGIO6UGUSkEMH6KaMGs0DEiawkHUX2R
-         F0n2lg3lsPEMvGw4SXMkS1c7L7grmkuFHArU4HfI3N78gijpKYnz15ylTCInHfkUep2l
-         jvj3PrxQtPEy/h45bGmo2tdON2TSN5tFFlLv6g4AIWeBnm14DLyNkpvNHTopXue5kJWV
-         TxvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738494499; x=1739099299;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5JzXeM0bk8T85dqhtElwChalRxMx7DtA9IYgnOT7SBY=;
-        b=j57O8DCd1QA/bQhEQFnH5pxLJ07XUaG8OzLlfiqIp7b1LLOcFSsvO820YnAnNYqz9t
-         W4+jM5P7bUvhLa1pRiO41KSD22YI9gT8+D+eDjRAbCJ8GyRcMz3YH5i3Ara//BbHYhCU
-         2betiN3dMPsU4vUs1GxV5PJ7e78eGwETHrnCaO0PdXw3vTUnWaD0QrMtcAf5/x1HBd4o
-         CNfQr8lpVoXV8MOpFoV6KYvmQW1rHU6ove7Lp2Y42/fYXefE9Aszs5SC3mh08aANDFHR
-         +roh3KsoveoDvV1lbvTXz0ZRWU2uf0Xl/Nd6YJF7aNzSfr6d+lF+E7+5EGs7uLmvaZE6
-         IWGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6urfQX1LT0gjb0gk21+EfcEy7NRoJ3zZ9osS8nPZNdoGuNkihhJAmTxec5HO3R5n95Yj1D4xR@vger.kernel.org, AJvYcCUok04yXz8O1smOOdTFp3IHWf+YenPPFd8nlBFcKmQ0clCa3NmjdwYrVwkAIUTBTwb6//KuLbmONh5lTf7v@vger.kernel.org, AJvYcCUwQwP9fQX7ihrw2ZpSl4Z+HRSqGNEr9j6W8jSsm8cCWHqW7NHdWPxpRCcBI4GPAd18kRIsN+z0UxZS@vger.kernel.org, AJvYcCVFDYm+X5Jz2+5nJ9CBrFxUmcogZC6jWdGpXd+bMT+wm0Dl5PB7hiDUGvj56aI9zZp1Z78=@vger.kernel.org, AJvYcCWbXBs/nHA8L9HX6/Bmtitv3D1RZx75Tu3rSihj/DzHcgMOEs4/u5jO78SePRIiakL3nD/OaiH7AvEzJ20kta5pypPL@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYZnCMQvOpKNUO4sqVsYDAqj1LNc60PxgQHiJxPEFXK2QNfb7y
-	7xAiAskSe60gsb7nh1QX8H+13eGZWAb419AZhihM6I8BNGbZho8p
-X-Gm-Gg: ASbGnctFrFU/rox5FdzvP17JeJKpALkoDmMFc4eUVXpFQD/61UHhzAAD6x0l6emkIHa
-	269bW9WuO5FYQroe9JETxIfX80H8BZmspOf1eEl3P2XR+mVvJ7S4FMF0LsjNQBgouWf5vM/yrO3
-	UQUaDDRSFQuN+0QxX8bd7UG38Gh3c1w3BjxOHSklYF+ByjBLjqXUz99lTt1gd2bH93LmjFxVwmu
-	M3J19ZzQTnge/T0FLeEl1EeQ+AvFZGP59qAWjK23AkwuRQTYn2U4U10nojgQrU9rRypqrVi9c+L
-	qKzQP2nPp+T74zjrzHm8Bg==
-X-Google-Smtp-Source: AGHT+IF3QIxVqstzt7kbzFsj1mb+uFadRK07ZMT0XR0Azfv46RHBNEKzufNoK/M/YIlBMZMJljlxsQ==
-X-Received: by 2002:a17:906:c113:b0:aab:eefc:92e5 with SMTP id a640c23a62f3a-ab6cfcde0f6mr1843984766b.14.1738494498690;
-        Sun, 02 Feb 2025 03:08:18 -0800 (PST)
-Received: from krava (37-188-150-0.red.o2.cz. [37.188.150.0])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ff2c6sm571736366b.96.2025.02.02.03.08.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 03:08:18 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sun, 2 Feb 2025 12:08:13 +0100
-To: Eyal Birger <eyal.birger@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Jiri Olsa <olsajiri@gmail.com>,
-	luto@amacapital.net, wad@chromium.org, oleg@redhat.com,
-	mhiramat@kernel.org, andrii@kernel.org,
-	alexei.starovoitov@gmail.com, cyphar@cyphar.com,
-	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
-	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de,
-	daniel@iogearbox.net, ast@kernel.org, andrii.nakryiko@gmail.com,
-	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com,
-	bpf@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] seccomp: passthrough uretprobe systemcall without
- filtering
-Message-ID: <Z59SHdsme3qlx8UZ@krava>
-References: <20250128145806.1849977-1-eyal.birger@gmail.com>
- <202501281634.7F398CEA87@keescook>
- <CAHsH6Gsv3DB0O5oiEDsf2+Go4O1+tnKm-Ab0QPyohKSaroSxxA@mail.gmail.com>
- <Z5s3S5X8FYJDAHfR@krava>
- <CAHsH6GvsGbZ4a=-oSpD1j8jx11T=Y4SysAtkzAu+H4_Gh7v3Qg@mail.gmail.com>
- <Z5v063xNVJfXCnKV@krava>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ug7MiW4r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738494698; x=1770030698;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jz3MqgGH5E5HKEsnRKw2zBT4wqE3A51XYO9CnVtLyy0=;
+  b=Ug7MiW4r8xzqm2q1ORyarsLVyyZXhPOyeCg65vOPsm2+lRfD1njjMmp+
+   464nV4KNFwojaVUj3IakTvFT2xpuE6X8z1KPIQV7hBxH4Yj1lphZWr9Uu
+   EBZlwvwGfsJLsTnzbBUJnzKRvHJjBiBaeoByPpy/oLgC46MYGUIOVIP7c
+   faeizCO9/k4ixeLTCYxWyhCuac/f+KVV7VYoRzQfcVtbV2CTmZxZWs8/z
+   1mV3tfnraCQ2jxoLeAACQiLlmWpgzdHl8/lTxYJpThqTR6vbFaaXv76y8
+   CmBTYUwDC9FYPlgGZhkF8zucyucoclONpOqpwB+B2YX0YqPOdJ4er1wjo
+   g==;
+X-CSE-ConnectionGUID: QiSvMv8JTMWdOvU2MEjeUQ==
+X-CSE-MsgGUID: TrqME7ZRSBuOz5yIravqOg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11333"; a="49663963"
+X-IronPort-AV: E=Sophos;i="6.13,253,1732608000"; 
+   d="scan'208";a="49663963"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2025 03:11:38 -0800
+X-CSE-ConnectionGUID: AiCiN+YdRe69qT+ilPyNUQ==
+X-CSE-MsgGUID: fvqwam5BT6ORCsDBQpOHDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="110478693"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 02 Feb 2025 03:11:35 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1teXsy-000pbT-1m;
+	Sun, 02 Feb 2025 11:11:32 +0000
+Date: Sun, 2 Feb 2025 19:10:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>,
+	Kees Cook <kees@kernel.org>, Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Ricardo B. Marliere" <rbm@suse.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Subject: Re: [PATCH 2/2] LoadPin: Make sysctl table const
+Message-ID: <202502021853.d0nqHvPc-lkp@intel.com>
+References: <20250123-sysctl-kees-v1-2-533359e74d66@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,185 +68,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z5v063xNVJfXCnKV@krava>
+In-Reply-To: <20250123-sysctl-kees-v1-2-533359e74d66@suse.com>
 
-On Thu, Jan 30, 2025 at 10:53:47PM +0100, Jiri Olsa wrote:
+Hi Ricardo,
 
-SNIP
+kernel test robot noticed the following build errors:
 
-> > > > I think this would mean that this test suite would need to run as
-> > > > privileged. Is that Ok? or maybe it'd be better to have a new suite?
-> > > >
-> > > > > With at least these cases combinations below. Check each of:
-> > > > >
-> > > > >         - not using uretprobe passes
-> > > > >         - using uretprobe passes (and validates that uretprobe did work)
-> > > > >
-> > > > > in each of the following conditions:
-> > > > >
-> > > > >         - default-allow filter
-> > > > >         - default-block filter
-> > > > >         - filter explicitly blocking __NR_uretprobe and nothing else
-> > > > >         - filter explicitly allowing __NR_uretprobe (and only other
-> > > > >           required syscalls)
-> > > >
-> > > > Ok.
-> > >
-> > > please let me know if I can help in any way with tests
-> > 
-> > Thanks! Is there a way to partition this work? I'd appreciate the help
-> > if we can find some way of doing so.
-> 
-> sure, I'll check the seccomp selftests and let you know
+[auto build test ERROR on a9a5e0bdc5a77a7c662ad4be0ad661f0b0d5e99d]
 
-hi,
-if it's any help, feel free to use the code below that creates uretprobe,
-it could be bit simpler if we use libbpf, but I think that's not an option
+url:    https://github.com/intel-lab-lkp/linux/commits/Ricardo-B-Marliere/yama-Make-sysctl-table-const/20250124-033808
+base:   a9a5e0bdc5a77a7c662ad4be0ad661f0b0d5e99d
+patch link:    https://lore.kernel.org/r/20250123-sysctl-kees-v1-2-533359e74d66%40suse.com
+patch subject: [PATCH 2/2] LoadPin: Make sysctl table const
+config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20250202/202502021853.d0nqHvPc-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250202/202502021853.d0nqHvPc-lkp@intel.com/reproduce)
 
-jirka
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502021853.d0nqHvPc-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> security/loadpin/loadpin.c:75:34: error: cannot assign to variable 'loadpin_sysctl_table' with const-qualified type 'const struct ctl_table[1]'
+      75 |                 loadpin_sysctl_table[0].extra1 = SYSCTL_ZERO;
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+   security/loadpin/loadpin.c:56:31: note: variable 'loadpin_sysctl_table' declared const here
+      56 | static const struct ctl_table loadpin_sysctl_table[] = {
+         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+      57 |         {
+         |         ~
+      58 |                 .procname       = "enforce",
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      59 |                 .data           = &enforce,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      60 |                 .maxlen         = sizeof(int),
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      61 |                 .mode           = 0644,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~
+      62 |                 .proc_handler   = proc_dointvec_minmax,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      63 |                 .extra1         = SYSCTL_ONE,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      64 |                 .extra2         = SYSCTL_ONE,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      65 |         },
+         |         ~~
+      66 | };
+         | ~
+   security/loadpin/loadpin.c:77:34: error: cannot assign to variable 'loadpin_sysctl_table' with const-qualified type 'const struct ctl_table[1]'
+      77 |                 loadpin_sysctl_table[0].extra1 = SYSCTL_ONE;
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+   security/loadpin/loadpin.c:56:31: note: variable 'loadpin_sysctl_table' declared const here
+      56 | static const struct ctl_table loadpin_sysctl_table[] = {
+         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+      57 |         {
+         |         ~
+      58 |                 .procname       = "enforce",
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      59 |                 .data           = &enforce,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      60 |                 .maxlen         = sizeof(int),
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      61 |                 .mode           = 0644,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~
+      62 |                 .proc_handler   = proc_dointvec_minmax,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      63 |                 .extra1         = SYSCTL_ONE,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      64 |                 .extra2         = SYSCTL_ONE,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      65 |         },
+         |         ~~
+      66 | };
+         | ~
+   2 errors generated.
 
 
----
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 8c3a73461475..1f99d31d05a1 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -47,6 +47,7 @@
- #include <linux/kcmp.h>
- #include <sys/resource.h>
- #include <sys/capability.h>
-+#include <linux/perf_event.h>
- 
- #include <unistd.h>
- #include <sys/syscall.h>
-@@ -4888,6 +4889,130 @@ TEST(tsync_vs_dead_thread_leader)
- 	EXPECT_EQ(0, status);
- }
- 
-+__attribute__((noinline)) int probed(void)
-+{
-+        return 1;
-+}
-+
-+static int parse_uint_from_file(const char *file, const char *fmt)
-+{
-+	int err = -1, ret;
-+	FILE *f;
-+
-+	f = fopen(file, "re");
-+	if (f) {
-+		err = fscanf(f, fmt, &ret);
-+		fclose(f);
-+	}
-+	return err == 1 ? ret : err;
-+}
-+
-+static int determine_uprobe_perf_type(void)
-+{
-+	const char *file = "/sys/bus/event_source/devices/uprobe/type";
-+
-+	return parse_uint_from_file(file, "%d\n");
-+}
-+
-+static int determine_uprobe_retprobe_bit(void)
-+{
-+	const char *file = "/sys/bus/event_source/devices/uprobe/format/retprobe";
-+
-+	return parse_uint_from_file(file, "config:%d\n");
-+}
-+
-+static ssize_t get_uprobe_offset(const void *addr)
-+{
-+	size_t start, base, end;
-+	bool found = false;
-+	char buf[256];
-+	FILE *f;
-+
-+	f = fopen("/proc/self/maps", "r");
-+	if (!f)
-+		return -1;
-+
-+	while (fscanf(f, "%zx-%zx %s %zx %*[^\n]\n", &start, &end, buf, &base) == 4) {
-+		if (buf[2] == 'x' && (uintptr_t)addr >= start && (uintptr_t)addr < end) {
-+			found = true;
-+			break;
-+		}
-+	}
-+	fclose(f);
-+	return found ? (uintptr_t)addr - start + base : -1;
-+}
-+
-+static int create_uretprobe(void *addr)
-+{
-+	const size_t attr_sz = sizeof(struct perf_event_attr);
-+	struct perf_event_attr attr;
-+	ssize_t offset;
-+	int type, bit;
-+
-+	memset(&attr, 0, attr_sz);
-+
-+	type = determine_uprobe_perf_type();
-+	if (type < 0)
-+		return -1;
-+	bit = determine_uprobe_retprobe_bit();
-+	if (bit < 0)
-+		return -1;
-+	offset = get_uprobe_offset(probed);
-+	if (offset < 0)
-+		return -1;
-+
-+	attr.config |= 1 << bit;
-+	attr.size = attr_sz;
-+	attr.type = type;
-+	attr.config1 = ptr_to_u64("/proc/self/exe");
-+	attr.config2 = offset;
-+
-+	return syscall(__NR_perf_event_open, &attr,
-+			getpid() /* pid */, -1 /* cpu */, -1 /* group_fd */,
-+			PERF_FLAG_FD_CLOEXEC);
-+}
-+
-+TEST(uretprobe)
-+{
-+	struct sock_filter filter[] = {
-+		BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
-+			offsetof(struct seccomp_data, nr)),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_exit_group, 1, 0),
-+		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_KILL),
-+		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
-+	};
-+	struct sock_fprog prog = {
-+		.len = (unsigned short)ARRAY_SIZE(filter),
-+		.filter = filter,
-+	};
-+	long ret;
-+	int fd;
-+
-+	fd = create_uretprobe(probed);
-+	ASSERT_GE(fd, 0) {
-+		TH_LOG("Failed to create uretprobe!!");
-+	}
-+
-+	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, NULL, 0, 0);
-+	ASSERT_EQ(0, ret) {
-+		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-+	}
-+
-+	ret = seccomp(SECCOMP_SET_MODE_FILTER, 0, &prog);
-+	ASSERT_NE(ENOSYS, errno) {
-+		TH_LOG("Kernel does not support seccomp syscall!");
-+	}
-+	EXPECT_EQ(0, ret) {
-+		TH_LOG("Could not install filter!");
-+	}
-+
-+	/* should not explode */
-+	probed();
-+
-+	/* we could call close(fd), but we'd need extra filter for
-+	 * that and since we we are calling _exit right away.. */
-+}
-+
- /*
-  * TODO:
-  * - expand NNP testing
+vim +75 security/loadpin/loadpin.c
+
+9b091556a073a9 Kees Cook 2016-04-20  67  
+60ba1028fc7b73 Kees Cook 2022-12-09  68  static void set_sysctl(bool is_writable)
+9b091556a073a9 Kees Cook 2016-04-20  69  {
+9b091556a073a9 Kees Cook 2016-04-20  70  	/*
+9b091556a073a9 Kees Cook 2016-04-20  71  	 * If load pinning is not enforced via a read-only block
+9b091556a073a9 Kees Cook 2016-04-20  72  	 * device, allow sysctl to change modes for testing.
+9b091556a073a9 Kees Cook 2016-04-20  73  	 */
+60ba1028fc7b73 Kees Cook 2022-12-09  74  	if (is_writable)
+60ba1028fc7b73 Kees Cook 2022-12-09 @75  		loadpin_sysctl_table[0].extra1 = SYSCTL_ZERO;
+60ba1028fc7b73 Kees Cook 2022-12-09  76  	else
+60ba1028fc7b73 Kees Cook 2022-12-09  77  		loadpin_sysctl_table[0].extra1 = SYSCTL_ONE;
+60ba1028fc7b73 Kees Cook 2022-12-09  78  }
+60ba1028fc7b73 Kees Cook 2022-12-09  79  #else
+60ba1028fc7b73 Kees Cook 2022-12-09  80  static inline void set_sysctl(bool is_writable) { }
+60ba1028fc7b73 Kees Cook 2022-12-09  81  #endif
+60ba1028fc7b73 Kees Cook 2022-12-09  82  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
