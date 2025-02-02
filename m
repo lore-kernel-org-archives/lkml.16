@@ -1,89 +1,83 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8F22AE93
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 20:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A6B2AE93
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 20:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738527329; cv=none; b=KwwEtI6qSkIsfD7J3FVKRIVdNsYO+bHdzUpJgCnwxkNpLLPaxVc4tggF2qXlwjk+3/73URlRzli0Kvtr/XY/yyESkmBJvpT3eFLsdhKKn0RHPQi6eHvfOaDWFILsG5JETsGy2yVExc0U2WFBB0tedRTgCqJBGUYxuiLxChp0wjA=
+	t=1738527753; cv=none; b=HPieKqx6iRj7gb8FeYa8rnB16HazUUBQr+Bts1a3PU3J6vFztrLxFnYdoYWv3ypqUAqg8OOPiCr+yMOYqq8ZPiWRa6m12e5+08zptIIpFxr3eLT4Ilu9sJJmoNYMmUIvr/F6NRXr5Nq1gKWrl89qDfze7R758QUnIQ3/Xtx0wic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738527329; c=relaxed/simple;
-	bh=atAmdxLrk4al6aiauqsCxWRu4+yuBggHzKn+HIqd9X4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=R0Qlid6lxgeTlz0jE1vzo83iIc91PfurrIssO3IrNkuc419pmpVaN6oHgFeDxzlxcgg8ZBQvniVTGBomiO/X4/MpDZGtHaJH8YGPbSRNcEM94urrgZffVZWxXUodpf3bTVvsC5SCvDb45UAHt1B1m6JFzokXPmtanA85OHh2RJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CHtUc+Jp; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738527753; c=relaxed/simple;
+	bh=X9K9Q1+9BO/6T2Eh4+15ZctzVmAxNe5f1TUbVq6NN8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ma4tcF1ZXJ+OvE2fOfUgQl1ovMK6P8ounG3vS//vhAvGx2VPdS0K+UstPShEyWBUVYM0Xy455PpqMwJlxEib4hQ+EqZ1crWn34YxCGzLolN/Dg7u/3bbauH0R0S+8Cczjq4wdPHlaA1z0/sIU0qVQkDHv0a87VItdMes0oVhjVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=KJPh4+Yo; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHtUc+Jp"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab39f84cbf1so702095466b.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 12:15:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="KJPh4+Yo"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-844ce213af6so102037139f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 12:22:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738527326; x=1739132126; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=atAmdxLrk4al6aiauqsCxWRu4+yuBggHzKn+HIqd9X4=;
-        b=CHtUc+Jp3Da8hLyDsRoSddtsRzrTwBoVH1cU23V0MuA7LlxvgmkTouYY9hKVZuoI6o
-         YvksttIwnIZIkjIaXasVYUBl4LkvSI8btkUCEbZxUaTCLTz0LPksXWP5tpeKZmfzeNcX
-         GKRMztA68eEtg8z9IWbGutynagAiPS/3c6EoAMJwBMggMwBMiap70+JVdcq43yeA0q8N
-         pIALYe+K1lT57R1XDEybFVY05VnfMfscfMll/0UZloAI5ijEVWPdXu/6bV68vF3EhAbA
-         OjdzQxvTez6p2i48IdHCSeUL72Nmh/Rtfa9lsoMCdJrhPvZESRrZWayigzud5rlzTcK2
-         f+ow==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1738527750; x=1739132550; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3g+m8stdINBWKHvUA9tWQRvbHUhD3fkIbHGDP+GJloE=;
+        b=KJPh4+YoKREnjz74tFSCuBNNfpaJcdVNpqjUh/Zl3T2fVE8G6KRNSG41sQVT3j51oJ
+         xXO8xawST4EGNygiaWhZd3dL4v1FE6LWBPIdVIT5d5bFTkzn9FGEZzGHlixHylQh4q1d
+         TtErAdPoSDFrf8hWWJWpnbaxGKmO/sRz0hJvr59o7XYrhZi/3r7SGJ/sU9xZiB8x60nw
+         Q33jn/AdbreZ2Lqvg48DoWmp8Vuj4XbEnre8i/Pu5oHYgWAtzsEQThpJWhC/FtAscDAS
+         DAHVqKz9xfEJOpFAHfMVbaFXJrQSJjKsihqNtRktOg/A9ADEmPk0rakL4XhvT3jtPA++
+         fY7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738527326; x=1739132126;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=atAmdxLrk4al6aiauqsCxWRu4+yuBggHzKn+HIqd9X4=;
-        b=bDHJHSoxbiJe/ElAEKRpIlgpetycTt8CFhYDmLUOOCpVhtod+f1kYLI9BgvVRDm/26
-         8v8iv485JYBycRr808Q0wpnfQC7ktpEg5vu0l3751/wCBIhIfB8PwAakP/6cXmEXrQZT
-         cuF5xgHPRgn2RYsg1rmJNQLMfNZAzYnKDExxg7k9Nc+c3pdY4+JCPlL9AGHyVciIm36Q
-         cpY7isN5nKecmEWMBaAQmTBV9ZnZ0O5JXZVXWC7RDlGWWSX35kURZs9zL+QvMuYlkzHy
-         2NbvKlJr0qEppxg9Yk8beXPUQ2nM9uitEz0dHlwYG2n8ScH1Teo1JZwLU6KkUDt8IaoB
-         74Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxpGLki1vLiS62QL6lGsQs/ZW6HfOIWDU5WvRNq9dO+8pEW58UVMmHsywOEeTX6EtSFonRie8j9rI/NC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4zuxdS7vuGzknmrOiqb+PclyN5e3VRtjUDqSj1Vkk0QsDKzvi
-	bR5vKu7y86V7WCl469LKAVRfJLLwqLoRaJ9rjQKduf/EIrDLEYU83HLn8mrCu23MtlfzCSKTa1o
-	RlVgtnHZfwxMzfJAbojmD8FWidVM=
-X-Gm-Gg: ASbGnctqHFo+wdKQiHmqn3OTs2jmxF0lrzltCKyrK2uap5nndBUqQAJTpToFvfg1Xvm
-	fGcHbYtY/pSemRiWGlQTywPFGjBfiCEXZ7XI247wsXo/+01TJtyN2i6gsW87ECiQheHYPBXY=
-X-Google-Smtp-Source: AGHT+IH+a4W3Slx1nCQRwarJ8anf/llnBH/ZD6Z/djroBkAotBakLZQcMBXZAkQPVOFYf7OG4ywRycqAWo+iFSo3n0o=
-X-Received: by 2002:a17:907:9452:b0:ab6:f99f:45e0 with SMTP id
- a640c23a62f3a-ab6f99f5410mr1456779366b.37.1738527326180; Sun, 02 Feb 2025
- 12:15:26 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738527750; x=1739132550;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3g+m8stdINBWKHvUA9tWQRvbHUhD3fkIbHGDP+GJloE=;
+        b=JgshFFCQy11KXiyqlzhOwpTyk/bfBK6afWnYXk2xzKOWKdI56epUC0VyAZLdbh/O1i
+         Yavo9hvfYVUPFZRu955q4SvEXvCiPzSh7AbN9xGKdGnkAZnJHFCZFdrgIZ9ilCqh6kZH
+         lUv1USmhYaN1BjYmX3awcHQikEqcqdnexHhRVIzRz17ccuMFq22ZHEc4qXbG6X27DTZC
+         hmxJaK9EuAEcgUG1HUfsvfJipzTs4jvQCgoSbnkHlR1D8iy8HxBs/P/eOxJvrt5SRZwa
+         CGPexFFcj5JYyv1CxaZaBtOI52zTmo4EkRQwcSPqQaMQxNK0Z861qM/XdM44yKhVgHqz
+         UOWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTyyU5pyebXIc3nMbgC+P5Uqkr4KPY4emu8bQVibuEV+Ks2zfxA2cBdqqcK5j9RN7uyalWrdDp9yRibkk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOocVP/s4TjYQUf02k66mgf+027dHaIfQROB7y+GIrIGUNUQ9o
+	ovoa8P8n1zAeYG0I6cQ2hPILObRgFGcLq0sIole/XrH4u4L7HBcbuZcv9tLqwjk=
+X-Gm-Gg: ASbGncuF4iuNrucjJLU9QmGzC8TpzoZbAnlqtB+QKJMjijMuLQvKBZchPz06OfpLyF+
+	/d+hbqtc53dWU713IrMLqU2mIY9mQk8gPOVy/6jy93Y6Ry2uNcxPUkiLpu6A0r5yfu5Qnakh5sd
+	ErawMTiSnXrWSuqmpR69P63x5GWXZ2xCjcSswnvLHQl3SacLNtx3dNabBlRUBctK9SaVkPVol93
+	UTqSAfPr+ey+9Q0oAp94dMOXG3vLPCOpL2gL42fncGe65FhmjtJUpWjRJX/gZsF4re81/DnI58P
+	84MhSh2OnXM7
+X-Google-Smtp-Source: AGHT+IFBeslJpzEmBM+/9hxQol1JOa95LtjP38SqN4G7Wrd1CKB6VYQ7ETypY9fvjl9B7xf34r0u6g==
+X-Received: by 2002:a05:6602:3685:b0:843:e9c1:930b with SMTP id ca18e2360f4ac-85427e11a29mr2018349639f.14.1738527749893;
+        Sun, 02 Feb 2025 12:22:29 -0800 (PST)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-854a16078a3sm202022439f.19.2025.02.02.12.22.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Feb 2025 12:22:29 -0800 (PST)
+Message-ID: <4c191b67-21b3-48d0-b71f-cd738259df27@kernel.dk>
+Date: Sun, 2 Feb 2025 13:22:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dave Airlie <airlied@gmail.com>
-Date: Mon, 3 Feb 2025 06:15:15 +1000
-X-Gm-Features: AWEUYZnXJcy-i6ddbTZXPd1YVFUR8YJ_IoyZNoKtgyuZDoOQfWtBETPwg1zkLCw
-Message-ID: <CAPM=9twyvq3EWkwUeoTdMMj76u_sRPmUDHWrzbzEZFQ8eL++BQ@mail.gmail.com>
-Subject: question about firmware caching and relying on it (CONFIG_FW_CACHE)
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, 
-	dri-devel <dri-devel@lists.freedesktop.org>, "Luis R. Rodriguez" <mcgrof@kernel.org>, 
-	russ.weight@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [block?] general protection fault in bioset_exit (2)
+To: syzbot <syzbot+76f13f2acac84df26aae@syzkaller.appspotmail.com>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+References: <679fb3a5.050a0220.163cdc.0030.GAE@google.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <679fb3a5.050a0220.163cdc.0030.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+#syz set subsystems: bcachefs
+-- 
+Jens Axboe
 
-I'm asking to see if there is any chance of consensus on having a
-driver rely on (select) FW_CACHE. Nobody currently does.
-
-Currently FW_CACHE is an optional feature (that distros may or may not
-configure off), where we will cache loaded firmwares to avoid problems
-over suspend/resume (and speed up resume).
-
-I've just discovered a problem in nouveau's suspend code when the
-FW_CACHE is turned off, it tries to load a few in it's suspend path
-for certain scenarios. Enabling FW_CACHE fixes this, but I'm unsure if
-that is considered properly fixing it or should FW_CACHE just be
-considered an optimisation.
-
-Do I
-a) select FW_CACHE in nouveau Kconfig
-b) fix nouveau to avoid loading the fw at suspend time (effectively
-caching it itself?)
-
-Dave.
