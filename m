@@ -1,168 +1,127 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66121A8F94
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 15:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F20E184F;
+	Sun,  2 Feb 2025 16:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738510442; cv=none; b=aMjj0mfIJEr8XmAmZljmZb2WyaOgPFNTjN4orVd7ZnwXl5pRIHGl7Bi2p7udXnn7s9OaYUrCb7eCgpUH1q8jItXt5g20qrCTwmm9eXILBi7pDtOAUBYYscagii8L5eYtq+I9QkzlB33sfDXwt72WJrRdDVqIn8S4vhj9AEq8RQ0=
+	t=1738513709; cv=none; b=Pwkhe+IXPt2sx9hlao887xqEt6gSxDZ3rxuEZkyzHpUcSzZ2uiZLChFuSA4s2T2O8VIjOwHtupvn0e3rxw5QSQsJ3bJ8sDTQm8h0NO+s7Zdgu+fAm+5uhc4hJxLAH5Uqc9fXYbiwSV7CxD77a7MbpjFw4awj0L+/ZbJK6d7OkKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738510442; c=relaxed/simple;
-	bh=owdRAMzaE7eCsHwDsUOCZHwltpddZ38V0AUoHIOHq1M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QYrPJeq8PIPcWe+wz+TqPeNtbLA+0G6EQTMYD8BtFEqRRkeH60GNwAdPBGbdNHwfRRmCeURsi/zzEAfnGSPHyW0IISjXp3LXxbetsGMbmbl6MU+hi3Cjk2gWzIgwEpExVN/wSeVokCBlT9HMe9kdejMNpG6JsAG83DiGQj6bFLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TjSkVXIt; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1738513709; c=relaxed/simple;
+	bh=hH2gKDZYF6YPY3Z9ig5KvL2NDIZAV2UUO3sWjlNVON0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Kbw2HR6MoM2vDkhlbylnSVIyurOhtNz/3lGtwtKK2S6WRilbU+rAv4EDGp/Vki3HQrnX72Uv4f4uCnNf6sZPDSM1Q2lsyEIWdTPrf9jPo8aG/gTk7lglkHOTWUiz3M9HFWppzy3OC08s/mM6xcI0FyQu8rsyELSQyhZKR4fKK58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GGnLMTLE; arc=none smtp.client-ip=209.85.160.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjSkVXIt"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2162c0f6a39so80208085ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 07:34:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGnLMTLE"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2b33aabfe46so1469186fac.2;
+        Sun, 02 Feb 2025 08:28:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738510440; x=1739115240; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TU50LgvcMc+vKDA8dmnHN9nuVOU92uamVuQ5fzwgtTw=;
-        b=TjSkVXItJZ5ykwhm/8jmbCnxOL3J3FrsEO7Txim8FaXeF+kQjM+7zXemtxq7l8g816
-         oHcziL7rp9IXlsCBNeR5o4hPHQXHUjmKUOAQIWKveS5pRhXlKej/Q8wRUHUE2d7/0656
-         /7UxCEeIQbCdnBuUgglRWgtraqRmdm3poyl2ojqFJ7EgE3tus56heMPjlds3DfeGdheQ
-         suQgZP+lWTyUl4dfSWd0ywXsIFjcM3RR8nqFxh7uFsa05GHUGHEHMg5oNHGNZfQm8R6k
-         jNIhPLC2cpKJZwLsekwomuIpt6hPW4VgS2D9lTQWz1P4B/egUcn8iLAbJt09GwdYUyy7
-         5feg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738510440; x=1739115240;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738513707; x=1739118507; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TU50LgvcMc+vKDA8dmnHN9nuVOU92uamVuQ5fzwgtTw=;
-        b=k0Z8HIElLbFMVLKyi7+zja2uW5ySZhez/u7/6xLliZ+7p0XNHIpwJ15IIAkZCWd8hQ
-         5uXlnJ5J4zYgpLO7v8HEbPcDtUlA7ZQ1wBRn/r9u4GZdkQLjHuU0urIkCj7/4bOuDdjH
-         G9AxTNVbSL4/oJkStRy+FbyMF2DdK2DrL3NqkpoP8mpPC4uDIU+2TGIHhDM/3Lrp+Hdx
-         1vcBoKvnh8h1IKqk9Yy2tfVSxrVDPSVgcaw0JTdLTiqZCbH3DVUotlr0q2tlmTW+3Hu/
-         Nsx+KesuzHC4SRtQ9bqnqr5xUEoOrrIpBfBxvEu9YkbNNNHimhY1nDHRU4F9MSHWE364
-         0KVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHU8SmzV9PyPSFt//qz5bHWfzIDfh76SAj/51CeoPKiX8UmBicbxg26jf3JmavxAg/T7nwSSxXzMP5/xw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVEHtkaV3Npf5XtZX3wttpfpDDQTS/3NPQx0pwXJWMaY8wpjFP
-	B20i8jEPMEiGUxqKKyxPOXjRq9ELq2QItis8EU+M0SOAUuleZLNh
-X-Gm-Gg: ASbGncs7LIL4gJLC0e237yiv1zTx+J7csl0dFEU4VozKVu2bKuKUfVO7Fw2nCgz3WPN
-	dsVsrm0kl9vSFVCCj0B5sTNzImXMBZd5Ys8ABhaj1/hVetRWv9y3A6Knl/1J0YX/jQUzNlfycRn
-	lDihDr3nzKSjSNtjL2zi6NOe8ZFRLKO4I48isEM5DRzBFCoI+CZ/2HP+rzY3+zc+HrfCg+Ji6Wo
-	b2I7krGQ/ZiEdWO46Mm7gJeAkFkhWD0nCN2D9tXWcSc3Ep1WrVXzRRR0A+pNyN1uy8t5c2Vwrzd
-	/82DW/rBjlicTFj1IQur
-X-Google-Smtp-Source: AGHT+IEQJ/3z4GNLfJXIKIjIxss+wl17Q4bkZkmAO+OORJWp5u85waZih2S6RQko6yEwSS9CPvQZ2Q==
-X-Received: by 2002:a05:6a21:8dc2:b0:1e0:d5be:bf75 with SMTP id adf61e73a8af0-1ed873b6eafmr22453041637.17.1738510439998;
-        Sun, 02 Feb 2025 07:33:59 -0800 (PST)
-Received: from atom0118 ([2405:201:c009:5a8a:1c53:67e0:65fb:eab4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631c0e4sm6607605b3a.30.2025.02.02.07.33.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 07:33:59 -0800 (PST)
-Date: Sun, 2 Feb 2025 21:03:53 +0530
-From: Atul Kumar Pant <atulpant.linux@gmail.com>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org
-Subject: Re: [PATCH] sched: Fixes typos in comments and error message
-Message-ID: <Z5+QYaRBA9AHp1B1@atom0118>
-References: <20250118092026.17406-1-atulpant.linux@gmail.com>
- <a3116f54-36fd-4b4d-bc06-f40489c3b2b3@linux.ibm.com>
+        bh=AJYEruVdd2EoiEw8T89XbXeVscX7L5Viq0hbZjRla7c=;
+        b=GGnLMTLEHevTzQZFQvpKC3UgxuPHxCHhfduaBg1tKzoR9DCKzgLg4d5gPi5dxELucw
+         YLgP9ISXDI6xQmqM6IfGnbAyXj1feE6C+hDqX/ST2FfioM1klHgsIzeHKKNtCuTmOWju
+         EnLoJfDFOfjpvDfeowHg+zh0qEw5d6z/5PbU0dazycCSrYej6NgoT44cqx/ipr1PtNZw
+         +l0jgbYj8AUzwwO67BKFNMK36rtKvLTqOeXjXrqlWUCdZe1Wl1ZDbBOuJZXZK4oU342y
+         AO3IRMrYwj6G4tn0pOLv7W59WsBUfTI4wo4hc74qrEPe3AyejjbstXUUHstgs4+8a5Kn
+         VisQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738513707; x=1739118507;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AJYEruVdd2EoiEw8T89XbXeVscX7L5Viq0hbZjRla7c=;
+        b=lI0G67p8rwYlhRmuDKyqgxy/piNWg+jfsKn86kaXaTJHCC0NIz+ur8yULlPGLn6rTe
+         E9zB/7tNI1GgY0OJuZ4weKVFiBz7PMXK3Cs4zKIKjo/hFeh30qIdYUfeeUn8a9clZq1g
+         rt2QFbCnBF4W8kAdeISy2beMduO8ApG7Qr5+qD3X4fZdJYips/Ttdszpb6vIGLpCCiL7
+         wJ9sKbBoaEGQU+0ujSu3nsvRiMO7wtwXmXUiWM9EQX9q9ZQMswbohlGsLfVfA3yv9Loc
+         zoUE/Vd9Pz5tyD0N3TpD4GwflcJsFk2ZCof6Pn2V4rs6RWUT8ZzHhNsuOvis0UiwqTHj
+         FSWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgmbT5RvIn+DvksGO0FwkxzWufXKj6IXlcy90lEdzo2kUqoBW0xnf9MtmR2Vpkg7mHUTw=@vger.kernel.org, AJvYcCUltg15YQRGYMyWeUP8s0VwZsi4y8hTSJBQHbbEJgWUYKwxfm+dcw4iUhNHQ3p78hE0AoSql+jjo7T9vHAw2C4qngbq@vger.kernel.org, AJvYcCV0JDsL5E5PBdSLhEiP0Hh6eSKVyf4IvYU3KjyEK+9O37JFq/rtdnnILgup3EmU8s7KJAPtlYOCgT6Xzf1o@vger.kernel.org, AJvYcCX4ltwr+C70c/gljm9m29cLF2oHrmmzNZBdaGVGBHBv31jqQd1VCBz4g1KyqPhWXHUuM2yV5Tta@vger.kernel.org, AJvYcCXDVdVmy2j/M+nWxby9bqFYuNCwLYDTsaEzcnPKEw81Nc0RP930sPsPqx8Zi5Lpi2RiMcriX5UHNn1S@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOerkJ73DiCzFyslj65i7sAyoJKc3m1pixdEK+aSvmaQTBU2DK
+	XHBS3PDAg80K9XhSOVHlC9KSeGT/PqmTW5VUkSQ9WS+7sFUu5vvHCOU00p4DQ71ZqVjF7+jmQ3a
+	yOHX1kPKWNGDjE4hrRSsztO48P6Y=
+X-Gm-Gg: ASbGnct8tg5uvgeewzHJP2Em6Ma8NsgP4jcA0Z7xK49U0BWVWeV+Y0hzP2p6WmwiqNG
+	mLyyHCe+ZC+7od0uxCk+YjsnJDqWCcM39e6XApf3EVUD+3vwpSm4CU21LehrPTNIDzMBLOn82
+X-Google-Smtp-Source: AGHT+IGn741Xj/QS7AnO2C9c6a8XJriGTvjUbqpJ0SdHpzK+NuuemcpGOuLv52rxaMxzanXnyZjEAo3aPc8sgy8j5DI=
+X-Received: by 2002:a05:6870:6f08:b0:296:ee2e:a23c with SMTP id
+ 586e51a60fabf-2b32ef5a57bmr11882258fac.5.1738513706923; Sun, 02 Feb 2025
+ 08:28:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a3116f54-36fd-4b4d-bc06-f40489c3b2b3@linux.ibm.com>
+References: <20250128145806.1849977-1-eyal.birger@gmail.com>
+ <202501281634.7F398CEA87@keescook> <CAHsH6Gsv3DB0O5oiEDsf2+Go4O1+tnKm-Ab0QPyohKSaroSxxA@mail.gmail.com>
+ <Z5s3S5X8FYJDAHfR@krava> <CAHsH6GvsGbZ4a=-oSpD1j8jx11T=Y4SysAtkzAu+H4_Gh7v3Qg@mail.gmail.com>
+ <Z5v063xNVJfXCnKV@krava> <Z59SHdsme3qlx8UZ@krava>
+In-Reply-To: <Z59SHdsme3qlx8UZ@krava>
+From: Eyal Birger <eyal.birger@gmail.com>
+Date: Sun, 2 Feb 2025 08:28:15 -0800
+X-Gm-Features: AWEUYZmMInCQfdYmLdKeYH2Tuq4c9g6GekGouyqDF0PSlt3y3Nz6pLbxBwLR_FA
+Message-ID: <CAHsH6Gv17_wo4hESUqEvNGvVc8UNAJYYSp96K8LGj1BjuvrV1A@mail.gmail.com>
+Subject: Re: [PATCH v2] seccomp: passthrough uretprobe systemcall without filtering
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, luto@amacapital.net, wad@chromium.org, oleg@redhat.com, 
+	mhiramat@kernel.org, andrii@kernel.org, alexei.starovoitov@gmail.com, 
+	cyphar@cyphar.com, songliubraving@fb.com, yhs@fb.com, 
+	john.fastabend@gmail.com, peterz@infradead.org, tglx@linutronix.de, 
+	bp@alien8.de, daniel@iogearbox.net, ast@kernel.org, andrii.nakryiko@gmail.com, 
+	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com, 
+	bpf@vger.kernel.org, linux-api@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 20, 2025 at 09:38:35AM +0530, Shrikanth Hegde wrote:
-> 
-> 
-> On 1/18/25 14:50, Atul Kumar Pant wrote:
-> 
-> Not even a single line in changelog?
-	
-	Sorry, missed adding it.
+On Sun, Feb 2, 2025 at 3:08=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrote=
+:
+>
+> On Thu, Jan 30, 2025 at 10:53:47PM +0100, Jiri Olsa wrote:
+>
+> SNIP
+>
+> > > > > I think this would mean that this test suite would need to run as
+> > > > > privileged. Is that Ok? or maybe it'd be better to have a new sui=
+te?
+> > > > >
+> > > > > > With at least these cases combinations below. Check each of:
+> > > > > >
+> > > > > >         - not using uretprobe passes
+> > > > > >         - using uretprobe passes (and validates that uretprobe =
+did work)
+> > > > > >
+> > > > > > in each of the following conditions:
+> > > > > >
+> > > > > >         - default-allow filter
+> > > > > >         - default-block filter
+> > > > > >         - filter explicitly blocking __NR_uretprobe and nothing=
+ else
+> > > > > >         - filter explicitly allowing __NR_uretprobe (and only o=
+ther
+> > > > > >           required syscalls)
+> > > > >
+> > > > > Ok.
+> > > >
+> > > > please let me know if I can help in any way with tests
+> > >
+> > > Thanks! Is there a way to partition this work? I'd appreciate the hel=
+p
+> > > if we can find some way of doing so.
+> >
+> > sure, I'll check the seccomp selftests and let you know
+>
+> hi,
+> if it's any help, feel free to use the code below that creates uretprobe,
+> it could be bit simpler if we use libbpf, but I think that's not an optio=
+n
 
-> Also, did you do this manually or using any tool?
-	
-	Came through couple of mistakes while reading the code and one using
-	codespell tool.
-> 
-> 
-> > Signed-off-by: Atul Kumar Pant <atulpant.linux@gmail.com>
-> > ---
-> >   kernel/sched/core.c     | 2 +-
-> >   kernel/sched/cputime.c  | 2 +-
-> >   kernel/sched/topology.c | 2 +-
-> >   kernel/sched/wait_bit.c | 2 +-
-> >   4 files changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 3e5a6bf58..451e30249 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -8998,7 +8998,7 @@ void sched_release_group(struct task_group *tg)
-> >   	 * that tg_unthrottle_up() won't add decayed cfs_rq's to it.
-> >   	 *
-> >   	 * We therefore defer calling unregister_fair_sched_group() to
-> > -	 * sched_unregister_group() which is guarantied to get called only after the
-> > +	 * sched_unregister_group() which is guaranteed to get called only after the
-> >   	 * current RCU grace period has expired.
-> >   	 */
-> >   	spin_lock_irqsave(&task_group_lock, flags);
-> > diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-> > index 0bed0fa1a..f8ada8239 100644
-> > --- a/kernel/sched/cputime.c
-> > +++ b/kernel/sched/cputime.c
-> > @@ -584,7 +584,7 @@ void cputime_adjust(struct task_cputime *curr, struct prev_cputime *prev,
-> >   	stime = mul_u64_u64_div_u64(stime, rtime, stime + utime);
-> >   	/*
-> >   	 * Because mul_u64_u64_div_u64() can approximate on some
-> > -	 * achitectures; enforce the constraint that: a*b/(b+c) <= a.
-> > +	 * architectures; enforce the constraint that: a*b/(b+c) <= a.
-> 
-> fine.
-> 
-> >   	 */
-> >   	if (unlikely(stime > rtime))
-> >   		stime = rtime;
-> > diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> > index 9748a4c8d..a9f4fe81a 100644
-> > --- a/kernel/sched/topology.c
-> > +++ b/kernel/sched/topology.c
-> > @@ -2337,7 +2337,7 @@ static struct sched_domain *build_sched_domain(struct sched_domain_topology_leve
-> >   		if (!cpumask_subset(sched_domain_span(child),
-> >   				    sched_domain_span(sd))) {
-> > -			pr_err("BUG: arch topology borken\n");
-> > +			pr_err("BUG: arch topology broken\n");
-> 
-> 
-> This is intended. Please look up its meaning and see the earlier mails on
-> lkml.
-
-	Thank you pointing this. Removed this in second patch
-
-> 
-> >   #ifdef CONFIG_SCHED_DEBUG
-> >   			pr_err("     the %s domain not a subset of the %s domain\n",
-> >   					child->name, sd->name);
-> > diff --git a/kernel/sched/wait_bit.c b/kernel/sched/wait_bit.c
-> > index b410b61ce..4197f5ed2 100644
-> > --- a/kernel/sched/wait_bit.c
-> > +++ b/kernel/sched/wait_bit.c
-> > @@ -204,7 +204,7 @@ EXPORT_SYMBOL(init_wait_var_entry);
-> >    * given variable to change.  wait_var_event() can be waiting for an
-> >    * arbitrary condition to be true and associates that condition with an
-> >    * address.  Calling wake_up_var() suggests that the condition has been
-> > - * made true, but does not strictly require the condtion to use the
-> > + * made true, but does not strictly require the condition to use the
-> 
-> fine.
-> 
-> >    * address given.
-> >    *
-> >    * The wake-up is sent to tasks in a waitqueue selected by hash from a
-> 
+Thank you very much!
+Eyal.
