@@ -1,397 +1,172 @@
-Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out.smtpout.orange.fr (out-13.smtpout.orange.fr [193.252.22.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E901D5CF5
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 07:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9F18BE7;
+	Sun,  2 Feb 2025 08:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738482662; cv=none; b=dRM7MRUmtRmJjQm+jEZzPtE8UKqBRjIkt5kX9Yoq1Gbj7CaPEIOljGKDg9VV0TWbr8XUxQrJK9tefcQQr1emjhZPTPie8Ylp9hWvqkU2Ja6WWaWFw4lovCQrwLun9+MKm1Tgwo/8/txDdewgUX60PQqNhlNmE8SJ8FLevrr9y2I=
+	t=1738484863; cv=none; b=r7I6IAAd8B5HpnbfRXWLtYdxv6MYPdBP/oLmyeTLde2Zr51UUwgRNYEMGPZmGRTOpvBwEmz90CSlN1cpCMv3Nc/JpV9K+ml2agsMvwTBexcnx1QIn9gbwhCk90sJTiFpVpsAu7tP5jJ6yqke+/4ab8O/eieU2SfhpNBcYBYEF4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738482662; c=relaxed/simple;
-	bh=nrEUDb2yI4y1BzlEM575yaU6iQwiTJdDE458/YxHbuY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DG6rPqvugc+xth95M+kqGW60C7f2EG2FzunrxTTMCImeU8pCp21ODwub9dui9dcvlwljc1zf+W5rDZQNCBYIcUFUh361jc/Vm+3nZCNGa4nVeMerors6gSZucLpXKAwzPa/Ez0V9mzH5MM97IOxjqf2Nkriq0Ed5YYfxfSC3Ar4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=WBjMp3WX; arc=none smtp.client-ip=195.133.245.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
+	s=arc-20240116; t=1738484863; c=relaxed/simple;
+	bh=3R02TGIEWd2cVE8jGoGk2IukoLrWOAmI6UyxCl1vFdc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LUgU023YRTxZuRNY2oxBcMpXpDjnIJs5WAvy4bNrsR+IxiMNFMm4801PCYAEsuRlxo0shOtlEXLlIWhJWmrAsR54NkfvETJJRjx+g7kttnNa55zVNtwfLWbNwOUR+qAb8sYl78QGpRkYKz3Yw8koIE44Ngxy1Y+Itugh7dDksxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Er14Dtt3; arc=none smtp.client-ip=193.252.22.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="WBjMp3WX"
-Received: from mail.nppct.ru (localhost [127.0.0.1])
-	by mail.nppct.ru (Postfix) with ESMTP id B93221C19E1
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 10:50:58 +0300 (MSK)
-Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
-	reason="pass (just generated, assumed good)" header.d=nppct.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
-	content-transfer-encoding:content-type:content-type:mime-version
-	:references:in-reply-to:x-mailer:message-id:date:date:subject
-	:subject:to:from:from; s=dkim; t=1738482658; x=1739346659; bh=nr
-	EUDb2yI4y1BzlEM575yaU6iQwiTJdDE458/YxHbuY=; b=WBjMp3WXW7A5JSPpk9
-	/ruFvfmUohPu4cMP3jsEXtPoLQMdjGnmK03fuVq6Mx1QZNdfM/1WjC3i+Mkqt+hC
-	pFqy86HOlqia7GzhVUxLHc934+ICrg18jKW+CILh7U5d5DjVHHHbbA4QhfbJxuxk
-	qxKD5p/NKdPmcyO24upQXgFTk=
-X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
-Received: from mail.nppct.ru ([127.0.0.1])
-	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id H6t2oRGHhbTh for <linux-kernel@vger.kernel.org>;
-	Sun,  2 Feb 2025 10:50:58 +0300 (MSK)
-Received: from localhost.localdomain (unknown [87.249.24.51])
-	by mail.nppct.ru (Postfix) with ESMTPSA id E9D281C2424;
-	Sun,  2 Feb 2025 10:50:26 +0300 (MSK)
-From: Alexey Nepomnyashih <sdl@nppct.ru>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yhs@fb.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	bpf@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	Hou Tao <houtao1@huawei.com>
-Subject: [PATCH 6.1 16/16] bpf: Switch to bpf mem allocator for LPM trie
-Date: Sun,  2 Feb 2025 07:46:53 +0000
-Message-ID: <20250202074709.932174-17-sdl@nppct.ru>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250202074709.932174-1-sdl@nppct.ru>
-References: <20250202074709.932174-1-sdl@nppct.ru>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Er14Dtt3"
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id eVIrtwgZkM6ZbeVIwtQSlb; Sun, 02 Feb 2025 09:26:29 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1738484790;
+	bh=PzrthrLkW4R8v6fQu4F9Z0+3j1oj2AKD6gdwJR3+YjY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=Er14Dtt3+zfNicUpvicGUD6Vdf5OQJsDpkGPvY598Y41dT4BnaZJiPDU0Z9Am45FA
+	 rt5j0Pz9QRRm/z1mN2d3bb772DaBoyfWVgR/c2muJ80mlphsG3rFguogAus2nGUtIq
+	 SMzYzyRktW1gkaZRsNIAjVI989zqNQFAkzvJwc+c2MnnUIjwGsK+qKlmGw7er9lbI/
+	 pIddcTj+3U4H8qpjYBDjjnhQpTydKf0sXi6FZhIfK4nK0TsNcNc/SvIiJquLWgQ3LP
+	 O1s8+gqFJZHGsDqv+oFJDfLSh35L6j+QPDYeBSJJCpC011UxtV+bXz1kDtn/PestXd
+	 +aDON8InPsqFw==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 02 Feb 2025 09:26:30 +0100
+X-ME-IP: 124.33.176.97
+Message-ID: <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
+Date: Sun, 2 Feb 2025 17:26:04 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
+ field_{prep,get}() helpers
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
+ qat-linux@intel.com, linux-gpio@vger.kernel.org,
+ linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S . Miller" <davem@davemloft.net>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Jacky Huang <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>,
+ Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela
+ <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Johannes Berg <johannes@sipsolutions.net>, Jakub Kicinski <kuba@kernel.org>,
+ Alex Elder <elder@ieee.org>
+References: <cover.1738329458.git.geert+renesas@glider.be>
+ <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-From: Hou Tao <houtao1@huawei.com>
+On 31/01/2025 at 22:46, Geert Uytterhoeven wrote:
+> The existing FIELD_{GET,PREP}() macros are limited to compile-time
+> constants.  However, it is very common to prepare or extract bitfield
+> elements where the bitfield mask is not a compile-time constant.
 
-commit 3d8dc43eb2a3d179809f5fc27c88c93a57ea123d upstream.
+Why is it that the existing FIELD_{GET,PREP}() macros must be limited to
+compile time constants? Instead of creating another variant for
+non-constant bitfields, wouldn't it be better to make the existing macro
+accept both?
 
-Multiple syzbot warnings have been reported. These warnings are mainly
-about the lock order between trie->lock and kmalloc()'s internal lock.
-See report [1] as an example:
+As far as I can see, only __BUILD_BUG_ON_NOT_POWER_OF_2()  and
+__BF_FIELD_CHECK() need to be adjusted. I am thinking of this:
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.10.0-rc7-syzkaller-00003-g4376e966ecb7 #0 Not tainted
-------------------------------------------------------
-syz.3.2069/15008 is trying to acquire lock:
-ffff88801544e6d8 (&n->list_lock){-.-.}-{2:2}, at: get_partial_node ...
+diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+index 63928f173223..c6bedab862d1 100644
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -8,6 +8,7 @@
+ #define _LINUX_BITFIELD_H
 
-but task is already holding lock:
-ffff88802dcc89f8 (&trie->lock){-.-.}-{2:2}, at: trie_update_elem ...
+ #include <linux/build_bug.h>
++#include <linux/compiler.h>
+ #include <asm/byteorder.h>
 
-which lock already depends on the new lock.
+ /*
+@@ -62,15 +63,13 @@
 
-the existing dependency chain (in reverse order) is:
-
--> #1 (&trie->lock){-.-.}-{2:2}:
-       __raw_spin_lock_irqsave
-       _raw_spin_lock_irqsave+0x3a/0x60
-       trie_delete_elem+0xb0/0x820
-       ___bpf_prog_run+0x3e51/0xabd0
-       __bpf_prog_run32+0xc1/0x100
-       bpf_dispatcher_nop_func
-       ......
-       bpf_trace_run2+0x231/0x590
-       __bpf_trace_contention_end+0xca/0x110
-       trace_contention_end.constprop.0+0xea/0x170
-       __pv_queued_spin_lock_slowpath+0x28e/0xcc0
-       pv_queued_spin_lock_slowpath
-       queued_spin_lock_slowpath
-       queued_spin_lock
-       do_raw_spin_lock+0x210/0x2c0
-       __raw_spin_lock_irqsave
-       _raw_spin_lock_irqsave+0x42/0x60
-       __put_partials+0xc3/0x170
-       qlink_free
-       qlist_free_all+0x4e/0x140
-       kasan_quarantine_reduce+0x192/0x1e0
-       __kasan_slab_alloc+0x69/0x90
-       kasan_slab_alloc
-       slab_post_alloc_hook
-       slab_alloc_node
-       kmem_cache_alloc_node_noprof+0x153/0x310
-       __alloc_skb+0x2b1/0x380
-       ......
-
--> #0 (&n->list_lock){-.-.}-{2:2}:
-       check_prev_add
-       check_prevs_add
-       validate_chain
-       __lock_acquire+0x2478/0x3b30
-       lock_acquire
-       lock_acquire+0x1b1/0x560
-       __raw_spin_lock_irqsave
-       _raw_spin_lock_irqsave+0x3a/0x60
-       get_partial_node.part.0+0x20/0x350
-       get_partial_node
-       get_partial
-       ___slab_alloc+0x65b/0x1870
-       __slab_alloc.constprop.0+0x56/0xb0
-       __slab_alloc_node
-       slab_alloc_node
-       __do_kmalloc_node
-       __kmalloc_node_noprof+0x35c/0x440
-       kmalloc_node_noprof
-       bpf_map_kmalloc_node+0x98/0x4a0
-       lpm_trie_node_alloc
-       trie_update_elem+0x1ef/0xe00
-       bpf_map_update_value+0x2c1/0x6c0
-       map_update_elem+0x623/0x910
-       __sys_bpf+0x90c/0x49a0
-       ...
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&trie->lock);
-                               lock(&n->list_lock);
-                               lock(&trie->lock);
-  lock(&n->list_lock);
-
- *** DEADLOCK ***
-
-[1]: https://syzkaller.appspot.com/bug?extid=9045c0a3d5a7f1b119f7
-
-A bpf program attached to trace_contention_end() triggers after
-acquiring &n->list_lock. The program invokes trie_delete_elem(), which
-then acquires trie->lock. However, it is possible that another
-process is invoking trie_update_elem(). trie_update_elem() will acquire
-trie->lock first, then invoke kmalloc_node(). kmalloc_node() may invoke
-get_partial_node() and try to acquire &n->list_lock (not necessarily the
-same lock object). Therefore, lockdep warns about the circular locking
-dependency.
-
-Invoking kmalloc() before acquiring trie->lock could fix the warning.
-However, since BPF programs call be invoked from any context (e.g.,
-through kprobe/tracepoint/fentry), there may still be lock ordering
-problems for internal locks in kmalloc() or trie->lock itself.
-
-To eliminate these potential lock ordering problems with kmalloc()'s
-internal locks, replacing kmalloc()/kfree()/kfree_rcu() with equivalent
-BPF memory allocator APIs that can be invoked in any context. The lock
-ordering problems with trie->lock (e.g., reentrance) will be handled
-separately.
-
-Three aspects of this change require explanation:
-
-1. Intermediate and leaf nodes are allocated from the same allocator.
-Since the value size of LPM trie is usually small, using a single
-alocator reduces the memory overhead of the BPF memory allocator.
-
-2. Leaf nodes are allocated before disabling IRQs. This handles cases
-where leaf_size is large (e.g., > 4KB - 8) and updates require
-intermediate node allocation. If leaf nodes were allocated in
-IRQ-disabled region, the free objects in BPF memory allocator would not
-be refilled timely and the intermediate node allocation may fail.
-
-3. Paired migrate_{disable|enable}() calls for node alloc and free. The
-BPF memory allocator uses per-CPU struct internally, these paired calls
-are necessary to guarantee correctness.
-
-Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Link: https://lore.kernel.org/r/20241206110622.1161752-7-houtao@huaweicloud.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
----
- kernel/bpf/lpm_trie.c | 71 +++++++++++++++++++++++++++++--------------
- 1 file changed, 48 insertions(+), 23 deletions(-)
-
-diff --git a/kernel/bpf/lpm_trie.c b/kernel/bpf/lpm_trie.c
-index 6c96241f49a4..12078b832132 100644
---- a/kernel/bpf/lpm_trie.c
-+++ b/kernel/bpf/lpm_trie.c
-@@ -15,6 +15,7 @@
- #include <net/ipv6.h>
- #include <uapi/linux/btf.h>
- #include <linux/btf_ids.h>
-+#include <linux/bpf_mem_alloc.h>
- 
- /* Intermediate node */
- #define LPM_TREE_NODE_FLAG_IM BIT(0)
-@@ -22,7 +23,6 @@
- struct lpm_trie_node;
- 
- struct lpm_trie_node {
--	struct rcu_head rcu;
- 	struct lpm_trie_node __rcu	*child[2];
- 	u32				prefixlen;
- 	u32				flags;
-@@ -32,6 +32,7 @@ struct lpm_trie_node {
- struct lpm_trie {
- 	struct bpf_map			map;
- 	struct lpm_trie_node __rcu	*root;
-+	struct bpf_mem_alloc		ma;
- 	size_t				n_entries;
- 	size_t				max_prefixlen;
- 	size_t				data_size;
-@@ -279,17 +280,18 @@ static void *trie_lookup_elem(struct bpf_map *map, void *_key)
- 	return found->data + trie->data_size;
- }
- 
--static struct lpm_trie_node *lpm_trie_node_alloc(const struct lpm_trie *trie,
--						 const void *value)
-+static struct lpm_trie_node *lpm_trie_node_alloc(struct lpm_trie *trie,
-+						 const void *value,
-+						 bool disable_migration)
- {
- 	struct lpm_trie_node *node;
--	size_t size = sizeof(struct lpm_trie_node) + trie->data_size;
- 
--	if (value)
--		size += trie->map.value_size;
-+	if (disable_migration)
-+		migrate_disable();
-+	node = bpf_mem_cache_alloc(&trie->ma);
-+	if (disable_migration)
-+		migrate_enable();
- 
--	node = bpf_map_kmalloc_node(&trie->map, size, GFP_NOWAIT | __GFP_NOWARN,
--				    trie->map.numa_node);
- 	if (!node)
- 		return NULL;
- 
-@@ -317,7 +319,7 @@ static int trie_update_elem(struct bpf_map *map,
- 			    void *_key, void *value, u64 flags)
- {
- 	struct lpm_trie *trie = container_of(map, struct lpm_trie, map);
--	struct lpm_trie_node *node, *im_node, *new_node = NULL;
-+	struct lpm_trie_node *node, *im_node, *new_node;
- 	struct lpm_trie_node *free_node = NULL;
- 	struct lpm_trie_node __rcu **slot;
- 	struct bpf_lpm_trie_key_u8 *key = _key;
-@@ -332,14 +334,14 @@ static int trie_update_elem(struct bpf_map *map,
- 	if (key->prefixlen > trie->max_prefixlen)
- 		return -EINVAL;
- 
--	spin_lock_irqsave(&trie->lock, irq_flags);
-+	/* Allocate and fill a new node. Need to disable migration before
-+	 * invoking bpf_mem_cache_alloc().
-+	 */
-+	new_node = lpm_trie_node_alloc(trie, value, true);
-+	if (!new_node)
-+		return -ENOMEM;
- 
--	/* Allocate and fill a new node */
--	new_node = lpm_trie_node_alloc(trie, value);
--	if (!new_node) {
--		ret = -ENOMEM;
--		goto out;
--	}
-+	spin_lock_irqsave(&trie->lock, irq_flags);
- 
- 	new_node->prefixlen = key->prefixlen;
- 	RCU_INIT_POINTER(new_node->child[0], NULL);
-@@ -415,7 +417,8 @@ static int trie_update_elem(struct bpf_map *map,
- 		goto out;
- 	}
- 
--	im_node = lpm_trie_node_alloc(trie, NULL);
-+	/* migration is disabled within the locked scope */
-+	im_node = lpm_trie_node_alloc(trie, NULL, false);
- 	if (!im_node) {
- 		trie->n_entries--;
- 		ret = -ENOMEM;
-@@ -439,10 +442,13 @@ static int trie_update_elem(struct bpf_map *map,
- 	rcu_assign_pointer(*slot, im_node);
- 
- out:
--	if (ret)
--		kfree(new_node);
- 	spin_unlock_irqrestore(&trie->lock, irq_flags);
--	kfree_rcu(free_node, rcu);
+ #define __BF_FIELD_CHECK(_mask, _reg, _val, _pfx)                      \
+        ({                                                              \
+-               BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),          \
+-                                _pfx "mask is not constant");          \
+-               BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");    \
+-               BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
+-                                ~((_mask) >> __bf_shf(_mask)) &        \
+-                                       (0 + (_val)) : 0,               \
++               BUILD_BUG_ON_MSG(statically_true((_mask) == 0),         \
++                                _pfx "mask is zero");                  \
++               BUILD_BUG_ON_MSG(statically_true(~((_mask) >>
+__bf_shf(_mask)) & \
++                                                (0 + (_val))),         \
+                                 _pfx "value too large for the field"); \
+-               BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
+-                                __bf_cast_unsigned(_reg, ~0ull),       \
 +
-+	migrate_disable();
-+	if (ret)
-+		bpf_mem_cache_free(&trie->ma, new_node);
-+	bpf_mem_cache_free_rcu(&trie->ma, free_node);
-+	migrate_enable();
- 
- 	return ret;
- }
-@@ -540,8 +546,11 @@ static int trie_delete_elem(struct bpf_map *map, void *_key)
- 
- out:
- 	spin_unlock_irqrestore(&trie->lock, irq_flags);
--	kfree_rcu(free_parent, rcu);
--	kfree_rcu(free_node, rcu);
+BUILD_BUG_ON_MSG(statically_true(__bf_cast_unsigned(_mask, _mask) > \
 +
-+	migrate_disable();
-+	bpf_mem_cache_free_rcu(&trie->ma, free_parent);
-+	bpf_mem_cache_free_rcu(&trie->ma, free_node);
-+	migrate_enable();
- 
- 	return ret;
- }
-@@ -563,6 +572,8 @@ static int trie_delete_elem(struct bpf_map *map, void *_key)
- static struct bpf_map *trie_alloc(union bpf_attr *attr)
- {
- 	struct lpm_trie *trie;
-+	size_t leaf_size;
-+	int err;
- 
- 	if (!bpf_capable())
- 		return ERR_PTR(-EPERM);
-@@ -590,7 +601,17 @@ static struct bpf_map *trie_alloc(union bpf_attr *attr)
- 
- 	spin_lock_init(&trie->lock);
- 
-+	/* Allocate intermediate and leaf nodes from the same allocator */
-+	leaf_size = sizeof(struct lpm_trie_node) + trie->data_size +
-+		    trie->map.value_size;
-+	err = bpf_mem_alloc_init(&trie->ma, leaf_size, false);
-+	if (err)
-+		goto free_out;
- 	return &trie->map;
-+
-+free_out:
-+	bpf_map_area_free(trie);
-+	return ERR_PTR(err);
- }
- 
- static void trie_free(struct bpf_map *map)
-@@ -622,13 +643,17 @@ static void trie_free(struct bpf_map *map)
- 				continue;
- 			}
- 
--			kfree(node);
-+			/* No bpf program may access the map, so freeing the
-+			 * node without waiting for the extra RCU GP.
-+			 */
-+			bpf_mem_cache_raw_free(node);
- 			RCU_INIT_POINTER(*slot, NULL);
- 			break;
- 		}
- 	}
- 
- out:
-+	bpf_mem_alloc_destroy(&trie->ma);
- 	bpf_map_area_free(trie);
- }
- 
--- 
-2.43.0
+__bf_cast_unsigned(_reg, ~0ull)), \
+                                 _pfx "type of reg too small for mask"); \
+                __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
+                                              (1ULL << __bf_shf(_mask))); \
+diff --git a/include/linux/build_bug.h b/include/linux/build_bug.h
+index 3aa3640f8c18..3b8055ebb55f 100644
+--- a/include/linux/build_bug.h
++++ b/include/linux/build_bug.h
+@@ -18,9 +18,9 @@
+
+ /* Force a compilation error if a constant expression is not a power of
+2 */
+ #define __BUILD_BUG_ON_NOT_POWER_OF_2(n)       \
+-       BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
++       BUILD_BUG_ON(statically_true((n) & ((n) - 1)))
+ #define BUILD_BUG_ON_NOT_POWER_OF_2(n)                 \
+-       BUILD_BUG_ON((n) == 0 || (((n) & ((n) - 1)) != 0))
++       BUILD_BUG_ON(statically_true(!(n) || ((n) & ((n) - 1))))
+
+ /*
+  * BUILD_BUG_ON_INVALID() permits the compiler to check the validity of the
+
+
+> To avoid this limitation, the AT91 clock driver and several other
+> drivers already have their own non-const field_{prep,get}() macros.
+> Make them available for general use by consolidating them in
+> <linux/bitfield.h>, and improve them slightly:
+>   1. Avoid evaluating macro parameters more than once,
+>   2. Replace "ffs() - 1" by "__ffs()",
+>   3. Support 64-bit use on 32-bit architectures.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+(...)
+
+
+Yours sincerely,
+Vincent Mailhol
 
