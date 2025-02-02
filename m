@@ -1,33 +1,34 @@
 Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972061DDC3E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B8D1D79A0
 	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 21:59:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738533557; cv=none; b=oq5aQnzfXRoRm7GjbrNfmn/AcWPU0+radjBX3nSeZZbSaop3EwMokKN5y3hLSvV7Y55SldRagS9OUsWgJZTan5cAXt+47QAdjLOKnERGO5GBQ/BG+4732JaMXfGZP42qfl8RFCJ7jzjdX1dTs0yvvu5ePSyfYPiLVso6decp6LI=
+	t=1738533557; cv=none; b=Ks6w3qeJU6i3dHxFzI/r0IR4egVeL9b5dk+W+rmuH4yPXiBVlGEVma/dvYA7ESD1fTX7MRx3NQjHJ9++bER5WU3E2+RE0GiVZw6y9rXUtMNSK1TZzniloInxE2/uT5Mwa0tZOQvzL7YPPgSraZ9kuIYbivmlvf6OAYtboI21l1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738533557; c=relaxed/simple;
-	bh=JJe2oeO4WPPMHV7iT9dW9djvzt5YTGH2xFleNURv/vY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P3HbfhjfIBLQ8MxhdY7/+2hh7SO71IchNiastSkZTgrDqrzOi/38JXf3ZSuka8zET/fiO0AWOU+v3SkHKsptvmghtm62GwUPaY+b9jr/9e29hD8KHKYbQAXrrO3i7MNx1a+kH+4PbZmqEsmRNFt4f2yvoK59dtiE1sml3eeSTHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=ExqYfCz6; arc=none smtp.client-ip=46.235.229.95
+	bh=mUgzQZqAip+YzACXh1otvofWTp5lxqmT36MO3dvp91M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jBlRjd6bEwEYnFuJ83G2M/++DKofabD4ZrkWhzXdDPbRbaEbuE2UTPkGlKRrRhWOUObwAS7FUXF0Z596F1AXeFvwWWCI/NXIS2u4Q3pdt01xwoJisVTuKmK2ifhc/3flKx0WevJ8oDDFlAq1UGnqLIw2p5LD3I6tFbcOJrxps9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=XAY1wUM5; arc=none smtp.client-ip=46.235.229.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="ExqYfCz6"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="XAY1wUM5"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
 	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=GSnzrCxUEngAgik7AYtqUtnWRLHqHq4tUTTifRQr5Ew=; b=ExqYfCz6D9cBjzz6
-	wH89VMpf3twPsNEwv1T4wZ/RyLZlW/meCBCtocVt+FoR/d/wFchE8HSDiPQMbpxPT6ycOHfzWzRyo
-	ntRnDPJchwWV9hHkELGXfrN8PTK2Q6diDR9H/y3+cMjZ8A2Srd+t7RgIpO4q7SOE6grWLXXT/x916
-	7v+OI9uxg/K7Xx6z/2wgQ3tu6Ewy585byiOsR1qEAElWSVZUxuW3dFhkYOQXa8UBToFwTsgL0k6qM
-	Wh4ZkPiCzMRK+uKiGbk2U2pp9eVHzOJknSSmDMOrAt7QVZNG9WhQDWEmEGvk4sCsIR1WZAX6Nfi1p
-	fUpdJDRn0oa6/DvbBw==;
+	:Subject; bh=EiBopR9dtV9yxHm9Kvdf5kaAuKnjm8bl8Embt4vm7VY=; b=XAY1wUM5bsBuhHCn
+	IDc+NMVbaI72ZwsfOIWxm9bF+WIQKAh8Mr8R6zwMWgOtofWWe8fiGXRUiPN5jwd69VR6HQTsnohMZ
+	RoJjjulwBD1dOH502cazwuq+DhOxowqLdq/cnwzkAt8WPqd13V04ChNnKd9x2fviG+tiVo+sJdpQf
+	cP1IsDtakV+oBxH+SWZ2jEGvnMTOo6vpcXevDd9JoqPE6/Hap/bon/3zI5j0KnxkdgtZrjF1/BQZm
+	OqY674Ed1xTjx5eQzyiWdZ2I8IlBwmzvLDUqCqi41AfVy+Ux7ZzaZHq3lRJZ4ANS4oxbKbH2062ht
+	3uZPP1rkCa9210i0yA==;
 Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
 	by mx.treblig.org with esmtp (Exim 4.96)
 	(envelope-from <linux@treblig.org>)
-	id 1tehzV-00D9GV-0v;
-	Sun, 02 Feb 2025 21:58:57 +0000
+	id 1tehzZ-00D9GV-1s;
+	Sun, 02 Feb 2025 21:59:01 +0000
 From: linux@treblig.org
 To: patrik.r.jakobsson@gmail.com,
 	maarten.lankhorst@linux.intel.com,
@@ -44,10 +45,12 @@ Cc: amd-gfx@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 0/7] drm/amd/display: More deadcoding
-Date: Sun,  2 Feb 2025 21:58:49 +0000
-Message-ID: <20250202215856.252439-1-linux@treblig.org>
+Subject: [PATCH 6/7] drm/amd/display: Remove unused get_max_support_fbc_buffersize
+Date: Sun,  2 Feb 2025 21:58:55 +0000
+Message-ID: <20250202215856.252439-7-linux@treblig.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250202215856.252439-1-linux@treblig.org>
+References: <20250202215856.252439-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,36 +61,55 @@ Content-Transfer-Encoding: 8bit
 
 From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Another small pile of deadcode patches.
+get_max_support_fbc_buffersize() is unused since 2021's
+commit 94f0d0c80cf3 ("drm/amd/display/dc/dce110/dce110_compressor: Remove
+unused function 'dce110_get_required_compressed_surfacesize")
+removed it's only caller.
+
+Remove it.
 
 Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ .../drm/amd/display/dc/dce110/dce110_compressor.c   | 13 -------------
+ .../drm/amd/display/dc/dce110/dce110_compressor.h   |  2 --
+ 2 files changed, 15 deletions(-)
 
-
-Dr. David Alan Gilbert (7):
-  drm/amd/display: Remove unused mpc1_is_mpcc_idle
-  drm/amd/display: Remove unused freesync functions
-  drm/amd/display: Remove unused dc_stream_get_crtc_position
-  drm/amd/display: Remove unused get_clock_requirements_for_state
-  drm/amd/display: Remove unused hubbub1_toggle_watermark_change_req
-  drm/amd/display: Remove unused get_max_support_fbc_buffersize
-  drm/amd/display: Remove unused
-    link_enc_cfg_get_link_enc_used_by_stream
-
- drivers/gpu/drm/amd/display/dc/core/dc.c      |  39 -----
- .../drm/amd/display/dc/core/dc_link_enc_cfg.c |  11 --
- drivers/gpu/drm/amd/display/dc/dc.h           |   2 -
- drivers/gpu/drm/amd/display/dc/dc_stream.h    |  12 --
- .../amd/display/dc/dce110/dce110_compressor.c |  13 --
- .../amd/display/dc/dce110/dce110_compressor.h |   2 -
- .../display/dc/hubbub/dcn10/dcn10_hubbub.c    |  18 ---
- .../display/dc/hubbub/dcn10/dcn10_hubbub.h    |   3 -
- .../gpu/drm/amd/display/dc/inc/link_enc_cfg.h |   5 -
- .../drm/amd/display/dc/mpc/dcn10/dcn10_mpc.c  |  16 --
- .../drm/amd/display/dc/mpc/dcn10/dcn10_mpc.h  |   4 -
- .../amd/display/modules/freesync/freesync.c   | 137 ------------------
- .../amd/display/modules/inc/mod_freesync.h    |  26 ----
- 13 files changed, 288 deletions(-)
-
+diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_compressor.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_compressor.c
+index d241ee13b293..59a0961b49da 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_compressor.c
++++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_compressor.c
+@@ -409,19 +409,6 @@ void dce110_compressor_destroy(struct compressor **compressor)
+ 	*compressor = NULL;
+ }
+ 
+-void get_max_support_fbc_buffersize(unsigned int *max_x, unsigned int *max_y)
+-{
+-	*max_x = FBC_MAX_X;
+-	*max_y = FBC_MAX_Y;
+-
+-	/* if (m_smallLocalFrameBufferMemory == 1)
+-	 * {
+-	 *	*max_x = FBC_MAX_X_SG;
+-	 *	*max_y = FBC_MAX_Y_SG;
+-	 * }
+-	 */
+-}
+-
+ static const struct compressor_funcs dce110_compressor_funcs = {
+ 	.power_up_fbc = dce110_compressor_power_up_fbc,
+ 	.enable_fbc = dce110_compressor_enable_fbc,
+diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_compressor.h b/drivers/gpu/drm/amd/display/dc/dce110/dce110_compressor.h
+index 26c7335a1cbf..223c57941e92 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_compressor.h
++++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_compressor.h
+@@ -75,7 +75,5 @@ void dce110_compressor_program_lpt_control(struct compressor *cp,
+ 
+ bool dce110_compressor_is_lpt_enabled_in_hw(struct compressor *cp);
+ 
+-void get_max_support_fbc_buffersize(unsigned int *max_x, unsigned int *max_y);
+-
+ #endif
+ 
 -- 
 2.48.1
 
