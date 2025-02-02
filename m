@@ -1,93 +1,324 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF8C1F8F11
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 14:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DA51E495;
+	Sun,  2 Feb 2025 14:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738506025; cv=none; b=F7cBOh4R7qNF0PsF/IeyokuHEsgktyk750Ci8n9kqGEyICOUq20xodHPx9g5C+JStMHE9b0MJLlp/pXtnAeZMaghfDAuRMAM9EDtX90i6MTsDIUm3wW4X2lf4N8qsXR4ioF5AuZ2H0DRbV2wDIwrzlrLn9NLLVRtoZryGZ1Lt8I=
+	t=1738506432; cv=none; b=b4GWlw7ljjVR+hMf2XPVv7x8GXr7lQjVdHlJA9EETgbbsylkNDgyyyWWRGBRVKj6xeuCznzWN+VXEq47+pHJfr5kDcXSv8+xOAYFUY3wAMIQ7gDdfwLPZ137b65iLOTN1NwFzNWeTZLC2n1rSodNXt9vumQSR23km+apTQ36fSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738506025; c=relaxed/simple;
-	bh=RbPhGJwF4Wwp0v+AfTksRjJ9Zp8pwdmy39xWhzS1nDw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=K4Lrsf1PK7WJhVxgoZr9klprSHm0XHbeMM7rAWwHnVXYPQuPsHhh5j1y78kvLLriF8nBUtoQ12ltE4UuebvurWaSmvsjFt0zH9YtcUyOcnyhhB22HG6ay9j4HGPa/kxvdeDV2ZKE3J7ejGDhtf+abARXqHcjjMyVIS+AZBy2uFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=XJc3gy0x; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1738506432; c=relaxed/simple;
+	bh=jQEZm4XOB3WPJPwFq9iKovjuHwqshJZaixb6rQCjL+w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k7z0bL4DqHDQ+n3HZBCiqiGEAbtIJc2NFt9hrBo8pEjpJQFEj/i/DfLLKcxH8QEdOnp+oHE2YKeFRI0lBoK/6ia3fucsG6L/VH3hmzssbqLecTfI7qbApY95r1OlHRuLmJ92A2xhd6qQzNDvADwVnHj8cpMfg6iMU4OYsiazXnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5mba3cY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="XJc3gy0x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738506016; x=1739110816; i=markus.elfring@web.de;
-	bh=RbPhGJwF4Wwp0v+AfTksRjJ9Zp8pwdmy39xWhzS1nDw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=XJc3gy0x1oHz7xgkOPrcixE1/DjP+DBSL3v6MpeeAUrNCgZddpBvufSiZoZ2XesI
-	 oaTAa7yAWM3Y3JJ2FmsGm9IMpC2jeGBrpCsv/iE4XNoh9zfAV18TtpGqTWKmZHJ7u
-	 xBde3U3rW8Fqh+uHDtrEG9fJsScCJar9Q9hORbBbJ9HgQrEcoiUwFiqLb+p1IDscR
-	 ymhdeDx9SJIuncX6yVcA5fYN5LhHhjnuYZPeNLjglXMPJ2eHcFFMMcVdeN+3ouo9A
-	 fhMcTGW5xtploLg4kqBIurlAJTEjHraFYvh725vkZj85ctYW1ia6TURxAJJu4Ycmw
-	 kQrKKdnIw8M9BzcZ2w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.26]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MNOQy-1towig0MKg-00PzWo; Sun, 02
- Feb 2025 15:20:16 +0100
-Message-ID: <882d065c-f225-4cab-87e5-3b31e26430da@web.de>
-Date: Sun, 2 Feb 2025 15:20:14 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5mba3cY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98755C4CED2;
+	Sun,  2 Feb 2025 14:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738506432;
+	bh=jQEZm4XOB3WPJPwFq9iKovjuHwqshJZaixb6rQCjL+w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=i5mba3cYNaEImviehPJvFXSnotQU6Lz40FeTY3IyzAFWIEzZs+HCswyfT3iviMe31
+	 oY4OjyEHipjkr/H9647OaNKNgpdG/5sIPkOIAWkYhPMOfBEzYw1Gwm4wZ29hhgz/Km
+	 qn/S7dfhFfUoSeudHA0VgEs0VbgjCbjtd61AFZybOUqomxfIdaA1uwI6TLbg97OM5u
+	 ynKugDykjZMPf3a/uKfZxfZzIhHuAEN1JrG8RDlHTAAi7a5Egc3jzigjlmhg0B6Cy9
+	 P3kUDGRRTknxP0wXx73eUXcE9wvLvzdwyHwvqv2+5AzNgtMh043v1Vb9+I+tyxzguQ
+	 VWZlhmBSffo5Q==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30034ad2ca3so27674751fa.1;
+        Sun, 02 Feb 2025 06:27:12 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU8zYLaZ3CKtIKd0GG1nrXHKUMTD2piHxzjVDUdJiJJTGOJ9g4XjCI0wPfk54pK4uNqxTVzIFdzDuBokA==@vger.kernel.org, AJvYcCVCvIaFns0CjEL6VD3QJtw/JkMt32nRQbe7jPjbk3BXJ0o02phyQm54Qxtxy/W44pLfv4pfF80OTshU45U2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhdhJljIlslbnZPYzx8NJgstbyGOmtJTIlIUIQaWyHFdyt4JrP
+	FbsrcO+ecCkXVYQwkRBK6tvzHPD3j2dkZfm5p6B2JcX6IQABKVo/EXz+c2jLVmZKm4wM8muxydo
+	Yzc4EIUMFIvRyj7ZxnZd4TJHqoRM=
+X-Google-Smtp-Source: AGHT+IEAfnPhEt2EnMuWdM03YPzTR8J0PwLl+3XAC00oSVaStdRmpXraXEwkGNS+VTyKqDGIr5ZfxmawSXyj8Qds9Bs=
+X-Received: by 2002:a2e:bc83:0:b0:2ff:df01:2b43 with SMTP id
+ 38308e7fff4ca-30796891f9cmr86520891fa.18.1738506430919; Sun, 02 Feb 2025
+ 06:27:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Kohei Enju <enjuk@amazon.com>, linux-f2fs-devel@lists.sourceforge.net,
- Chao Yu <chao@kernel.org>, Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: Kohei Enju <kohei.enju@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
- Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
- Damien Le Moal <damien.lemoal@wdc.com>, Jens Axboe <axboe@kernel.dk>,
- Johannes Thumshirn <johannes.thumshirn@wdc.com>
-References: <20250202043253.64389-1-enjuk@amazon.com>
-Subject: Re: [PATCH] f2fs: remove unnecessary null checking
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250202043253.64389-1-enjuk@amazon.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FzmkixICOcVvhFg4/ubSrQK7qkxW/j3w039Ad0hBoGosCJ1WBhj
- LG+BtswMBtPcWHd16jbk0s2gcccj7hLmin5Nbc2c4EcOemvLptDufATgMyVVk7FCRbjMkn4
- AXXpk0NTj5PUJD1nFYAZ+O91Ow9+1gUlbh5sSnkd3ON9nVuYztUinOQzaLnmH6qXkDzVrd1
- Qw+Ti6Epa7m0Xo+oKjfcg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:L5zLA/ikus8=;rzUB+AM7NwFxRy/JXF04ufXYdhC
- VA9jLQb344SQcaCdTLW5IoShouyxYSeXGf+09ywauzhTIS08xeG7pmEYiMM7BM+L9uhXUXz1s
- yeILzVwWZiP9/zBxcPm6vDP/5f6AsMJWbkZK3Dnv3Yj3hRS+VxSlBbWuSRqWj8uWNjj05AcIL
- mw0Tj4QbXUP28Qa0Vh0h6HUVH+B4QWjRNaE+mQXjl98ILyFf3v6M4JuoEV1GtzhUvsuiJrWzb
- VJDOQ4IMvcBIZLJOqrnmuCW0gzeQtTCs9ELVr8BO8/2iFCoq6Qch9wnQk6Tj7/DMuqu6HFTMb
- 9UAjkBnwQJ9GLWbL9vd9/zUX6Tlw2AJPb8vFsH9EsjoPsint/WzKgqyL98+PLm4suHZMU3z3j
- ZkVlJlCc1bZyoD0d1gHYTikp5apq1X1m2bkcYbyyHS/4vFDM7nXcDVoAMjFHp+JlrzEM+jq8J
- o6PGsBNAQMP7dWBMDxZk/v+2KL4fMI8l3CWFMjTrIJfp8UouPbDlrzBPqeAnRDGhXjqrKtwzg
- VK8lUxxysMhVnpnVWjChE8IHEZ/82c/a5whp+8YCkcYif0MN4ruv7PGiHIDz3lq8QkSe6rcUJ
- rK+PZw7LAMCNIm4s8GmfgJfZOxJwzoLyRJp2kw18PvCxWy+cUbJe1ecRvNd4Dz+ufdFtSOSRB
- kImEKYc8y2vj/AvxzSrBIfYouGEIwFq++ws36XliVK6bGeI0ySNys/YB83MNbY0i2XhZJ3joE
- wy+2bE2Lgy9MK91AdORj6jszdrTOxxk/Uh8Il3OREYcGsx71lri5lOde+Mhd6vvLUuZieZQ+H
- A3cVE2npTdxgA7cPiWjjgxFq3ELKy0AZvyLLaWAD2YATXQf1nrEyMOqaMmDIlYSDxhx9xWcXl
- 7me/LRcvl1Hyn/Ea3xfYX1qfXkxQ7SS4+dueGlhr5OuZlWtroaKSY3JPlKa9g9ZVJRPVySj1k
- iuMv5goOMCgIaDwv44bIopDEhBVvXiyIg6Yl002nQWwD432dMlPxZ3hnufvleGYriTd4EELZX
- ZPbMPFkidi4xwD1VZtP+wyxwOpY8rbU9m88CVrep6p/0m49p1IoTawZOaC/quluue+MOt9jGx
- luhdP+iatA0P/1Eaop2iJ+Z2gn10742BP771V30QTJuAXIvq1UQk/3B/ymafhLgDIvQ9pyeXw
- cREevGKveYq/kKa+1rFed/2wPrL6gLNrT8JxgkCbD8YKx8O4qswtNBBzQ/enEMswxK5bHP3zM
- jVGPlQ/Un94kI+p4WxdwSYdyqTCHEyElpYa2HW/sgn0CLTGxPVo/X3TYPEqVOWFocPc7eY1ku
- 1/q+bzFRHsNociGGY0Ym8JRO662cGZKScrEr1tDXZYZPZL20ZHEzhn3aJzs/9GWn3MC
+References: <20250130035130.180676-1-ebiggers@kernel.org> <20250130035130.180676-2-ebiggers@kernel.org>
+In-Reply-To: <20250130035130.180676-2-ebiggers@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sun, 2 Feb 2025 15:26:59 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXF45OmZNRrCntJJPtOysd=DRLtsV3w2VJK8FzGm0xOebA@mail.gmail.com>
+X-Gm-Features: AWEUYZllI8AfXi3fW5jM4iR2OTLuSmDRxhTyvkt5Un-FFJQehDwUbFF4lGXAB4E
+Message-ID: <CAMj1kXF45OmZNRrCntJJPtOysd=DRLtsV3w2VJK8FzGm0xOebA@mail.gmail.com>
+Subject: Re: [PATCH v2 01/11] lib/crc64-rocksoft: stop wrapping the crypto API
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, x86@kernel.org, 
+	linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, 
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 
-=E2=80=A6
-> f2fs_bio_alloc() with bio_alloc_bioset(), but null checking after
-> bio_alloc_bioset() was still left.
+On Thu, 30 Jan 2025 at 04:54, Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> From: Eric Biggers <ebiggers@google.com>
+>
+> Following what was done for the CRC32 and CRC-T10DIF library functions,
+> get rid of the pointless use of the crypto API and make
+> crc64_rocksoft_update() call into the library directly.  This is faster
+> and simpler.
+>
+> Remove crc64_rocksoft() (the version of the function that did not take a
+> 'crc' argument) since it is unused.
+>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  block/Kconfig         |   2 +-
+>  include/linux/crc64.h |  13 ++++-
+>  lib/Kconfig           |   9 ---
+>  lib/Makefile          |   1 -
+>  lib/crc64-rocksoft.c  | 126 ------------------------------------------
+>  lib/crc64.c           |   7 ---
+>  6 files changed, 12 insertions(+), 146 deletions(-)
+>  delete mode 100644 lib/crc64-rocksoft.c
+>
 
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.13#n94
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 
-Regards,
-Markus
+> diff --git a/block/Kconfig b/block/Kconfig
+> index 5b623b876d3b..df8973bc0539 100644
+> --- a/block/Kconfig
+> +++ b/block/Kconfig
+> @@ -61,11 +61,11 @@ config BLK_DEV_BSGLIB
+>           If unsure, say N.
+>
+>  config BLK_DEV_INTEGRITY
+>         bool "Block layer data integrity support"
+>         select CRC_T10DIF
+> -       select CRC64_ROCKSOFT
+> +       select CRC64
+>         help
+>         Some storage devices allow extra information to be
+>         stored/retrieved to help protect the data.  The block layer
+>         data integrity option provides hooks which can be used by
+>         filesystems to ensure better data integrity.
+> diff --git a/include/linux/crc64.h b/include/linux/crc64.h
+> index e044c60d1e61..0a595b272166 100644
+> --- a/include/linux/crc64.h
+> +++ b/include/linux/crc64.h
+> @@ -10,9 +10,18 @@
+>  #define CRC64_ROCKSOFT_STRING "crc64-rocksoft"
+>
+>  u64 __pure crc64_be(u64 crc, const void *p, size_t len);
+>  u64 __pure crc64_rocksoft_generic(u64 crc, const void *p, size_t len);
+>
+> -u64 crc64_rocksoft(const unsigned char *buffer, size_t len);
+> -u64 crc64_rocksoft_update(u64 crc, const unsigned char *buffer, size_t len);
+> +/**
+> + * crc64_rocksoft_update - Calculate bitwise Rocksoft CRC64
+> + * @crc: seed value for computation. 0 for a new CRC calculation, or the
+> + *      previous crc64 value if computing incrementally.
+> + * @p: pointer to buffer over which CRC64 is run
+> + * @len: length of buffer @p
+> + */
+> +static inline u64 crc64_rocksoft_update(u64 crc, const u8 *p, size_t len)
+> +{
+> +       return crc64_rocksoft_generic(crc, p, len);
+> +}
+>
+>  #endif /* _LINUX_CRC64_H */
+> diff --git a/lib/Kconfig b/lib/Kconfig
+> index dccb61b7d698..da07fd39cf97 100644
+> --- a/lib/Kconfig
+> +++ b/lib/Kconfig
+> @@ -166,19 +166,10 @@ config ARCH_HAS_CRC_T10DIF
+>
+>  config CRC_T10DIF_ARCH
+>         tristate
+>         default CRC_T10DIF if ARCH_HAS_CRC_T10DIF && CRC_OPTIMIZATIONS
+>
+> -config CRC64_ROCKSOFT
+> -       tristate "CRC calculation for the Rocksoft model CRC64"
+> -       select CRC64
+> -       select CRYPTO
+> -       select CRYPTO_CRC64_ROCKSOFT
+> -       help
+> -         This option provides a CRC64 API to a registered crypto driver.
+> -         This is used with the block layer's data integrity subsystem.
+> -
+>  config CRC_ITU_T
+>         tristate "CRC ITU-T V.41 functions"
+>         help
+>           This option is provided for the case where no in-kernel-tree
+>           modules require CRC ITU-T V.41 functions, but a module built outside
+> diff --git a/lib/Makefile b/lib/Makefile
+> index f1c6e9d76a7c..518018b2a5d4 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -164,11 +164,10 @@ obj-$(CONFIG_CRC_ITU_T)   += crc-itu-t.o
+>  obj-$(CONFIG_CRC32)    += crc32.o
+>  obj-$(CONFIG_CRC64)     += crc64.o
+>  obj-$(CONFIG_CRC4)     += crc4.o
+>  obj-$(CONFIG_CRC7)     += crc7.o
+>  obj-$(CONFIG_CRC8)     += crc8.o
+> -obj-$(CONFIG_CRC64_ROCKSOFT) += crc64-rocksoft.o
+>  obj-$(CONFIG_XXHASH)   += xxhash.o
+>  obj-$(CONFIG_GENERIC_ALLOCATOR) += genalloc.o
+>
+>  obj-$(CONFIG_842_COMPRESS) += 842/
+>  obj-$(CONFIG_842_DECOMPRESS) += 842/
+> diff --git a/lib/crc64-rocksoft.c b/lib/crc64-rocksoft.c
+> deleted file mode 100644
+> index fc9ae0da5df7..000000000000
+> --- a/lib/crc64-rocksoft.c
+> +++ /dev/null
+> @@ -1,126 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-only
+> -
+> -#include <linux/types.h>
+> -#include <linux/module.h>
+> -#include <linux/crc64.h>
+> -#include <linux/err.h>
+> -#include <linux/init.h>
+> -#include <crypto/hash.h>
+> -#include <crypto/algapi.h>
+> -#include <linux/static_key.h>
+> -#include <linux/notifier.h>
+> -
+> -static struct crypto_shash __rcu *crc64_rocksoft_tfm;
+> -static DEFINE_STATIC_KEY_TRUE(crc64_rocksoft_fallback);
+> -static DEFINE_MUTEX(crc64_rocksoft_mutex);
+> -static struct work_struct crc64_rocksoft_rehash_work;
+> -
+> -static int crc64_rocksoft_notify(struct notifier_block *self, unsigned long val, void *data)
+> -{
+> -       struct crypto_alg *alg = data;
+> -
+> -       if (val != CRYPTO_MSG_ALG_LOADED ||
+> -           strcmp(alg->cra_name, CRC64_ROCKSOFT_STRING))
+> -               return NOTIFY_DONE;
+> -
+> -       schedule_work(&crc64_rocksoft_rehash_work);
+> -       return NOTIFY_OK;
+> -}
+> -
+> -static void crc64_rocksoft_rehash(struct work_struct *work)
+> -{
+> -       struct crypto_shash *new, *old;
+> -
+> -       mutex_lock(&crc64_rocksoft_mutex);
+> -       old = rcu_dereference_protected(crc64_rocksoft_tfm,
+> -                                       lockdep_is_held(&crc64_rocksoft_mutex));
+> -       new = crypto_alloc_shash(CRC64_ROCKSOFT_STRING, 0, 0);
+> -       if (IS_ERR(new)) {
+> -               mutex_unlock(&crc64_rocksoft_mutex);
+> -               return;
+> -       }
+> -       rcu_assign_pointer(crc64_rocksoft_tfm, new);
+> -       mutex_unlock(&crc64_rocksoft_mutex);
+> -
+> -       if (old) {
+> -               synchronize_rcu();
+> -               crypto_free_shash(old);
+> -       } else {
+> -               static_branch_disable(&crc64_rocksoft_fallback);
+> -       }
+> -}
+> -
+> -static struct notifier_block crc64_rocksoft_nb = {
+> -       .notifier_call = crc64_rocksoft_notify,
+> -};
+> -
+> -u64 crc64_rocksoft_update(u64 crc, const unsigned char *buffer, size_t len)
+> -{
+> -       struct {
+> -               struct shash_desc shash;
+> -               u64 crc;
+> -       } desc;
+> -       int err;
+> -
+> -       if (static_branch_unlikely(&crc64_rocksoft_fallback))
+> -               return crc64_rocksoft_generic(crc, buffer, len);
+> -
+> -       rcu_read_lock();
+> -       desc.shash.tfm = rcu_dereference(crc64_rocksoft_tfm);
+> -       desc.crc = crc;
+> -       err = crypto_shash_update(&desc.shash, buffer, len);
+> -       rcu_read_unlock();
+> -
+> -       BUG_ON(err);
+> -
+> -       return desc.crc;
+> -}
+> -EXPORT_SYMBOL_GPL(crc64_rocksoft_update);
+> -
+> -u64 crc64_rocksoft(const unsigned char *buffer, size_t len)
+> -{
+> -       return crc64_rocksoft_update(0, buffer, len);
+> -}
+> -EXPORT_SYMBOL_GPL(crc64_rocksoft);
+> -
+> -static int __init crc64_rocksoft_mod_init(void)
+> -{
+> -       INIT_WORK(&crc64_rocksoft_rehash_work, crc64_rocksoft_rehash);
+> -       crypto_register_notifier(&crc64_rocksoft_nb);
+> -       crc64_rocksoft_rehash(&crc64_rocksoft_rehash_work);
+> -       return 0;
+> -}
+> -
+> -static void __exit crc64_rocksoft_mod_fini(void)
+> -{
+> -       crypto_unregister_notifier(&crc64_rocksoft_nb);
+> -       cancel_work_sync(&crc64_rocksoft_rehash_work);
+> -       crypto_free_shash(rcu_dereference_protected(crc64_rocksoft_tfm, 1));
+> -}
+> -
+> -module_init(crc64_rocksoft_mod_init);
+> -module_exit(crc64_rocksoft_mod_fini);
+> -
+> -static int crc64_rocksoft_transform_show(char *buffer, const struct kernel_param *kp)
+> -{
+> -       struct crypto_shash *tfm;
+> -       int len;
+> -
+> -       if (static_branch_unlikely(&crc64_rocksoft_fallback))
+> -               return sprintf(buffer, "fallback\n");
+> -
+> -       rcu_read_lock();
+> -       tfm = rcu_dereference(crc64_rocksoft_tfm);
+> -       len = snprintf(buffer, PAGE_SIZE, "%s\n",
+> -                      crypto_shash_driver_name(tfm));
+> -       rcu_read_unlock();
+> -
+> -       return len;
+> -}
+> -
+> -module_param_call(transform, NULL, crc64_rocksoft_transform_show, NULL, 0444);
+> -
+> -MODULE_AUTHOR("Keith Busch <kbusch@kernel.org>");
+> -MODULE_DESCRIPTION("Rocksoft model CRC64 calculation (library API)");
+> -MODULE_LICENSE("GPL");
+> -MODULE_SOFTDEP("pre: crc64");
+> diff --git a/lib/crc64.c b/lib/crc64.c
+> index 61ae8dfb6a1c..b5136fb4c199 100644
+> --- a/lib/crc64.c
+> +++ b/lib/crc64.c
+> @@ -61,17 +61,10 @@ u64 __pure crc64_be(u64 crc, const void *p, size_t len)
+>
+>         return crc;
+>  }
+>  EXPORT_SYMBOL_GPL(crc64_be);
+>
+> -/**
+> - * crc64_rocksoft_generic - Calculate bitwise Rocksoft CRC64
+> - * @crc: seed value for computation. 0 for a new CRC calculation, or the
+> - *      previous crc64 value if computing incrementally.
+> - * @p: pointer to buffer over which CRC64 is run
+> - * @len: length of buffer @p
+> - */
+>  u64 __pure crc64_rocksoft_generic(u64 crc, const void *p, size_t len)
+>  {
+>         const unsigned char *_p = p;
+>         size_t i;
+>
+> --
+> 2.48.1
+>
