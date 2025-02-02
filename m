@@ -1,60 +1,203 @@
-Received: from mail.pissmail.com (mail.pissmail.com [173.249.47.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483611A270
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 06:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.47.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A624D149DFA
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 06:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738478692; cv=none; b=uCXeaR8MYba15ZbFi9bTZRMh4DrRyvucRYCrdr2+zIQys1mjowyd73jtHP8aMkUAx4OXiQPiThQ2FbJTHxBF4If7FXaOIzpxDbqgY48mJYX5Xhr3vDP9hQ8pMyJa+6oVR3Ifd3B7dIbdGQCSaHohl9Gh35qjN6sQzb3EIiEcHAI=
+	t=1738478912; cv=none; b=hvgsKIXU1WwUCx99r1F2PV9iLH86trtN5bVtJllYr9hGuGLLSwAatmRi0WukmsH2CjOXCO8n1Vccj7J4v4i9Bkgtxi8JQ/H5Bep4umTUx3c/RnxhP8dSj+YUiN/gcnW0p1I4BZDuqyafliTvmYOXlh5J5+HDDSmcoPgqnoHnlYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738478692; c=relaxed/simple;
-	bh=f5DS6xRxGYftTXI7YUz+QrL5pHVSCTf56TiUu9awbEE=;
-	h=MIME-Version:Date:From:To:Subject:Message-ID:Content-Type; b=DBatrytbnYIh43HgFfMeJIdNJfdc6jr5nfqHZDFxhwoN6jWtdh8iCeNo053F3Ywv80TxtDIRaP2e8nucsIIMTQNuPtpQdX0JTd4CXvKCgq+tKTgnKdbvC6QO4qS5T1dKqn342I6lkJBr0RKyOkQVbDMhhjspDxvaZIJr85R5XJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pissmail.com; spf=pass smtp.mailfrom=pissmail.com; dkim=pass (2048-bit key) header.d=pissmail.com header.i=@pissmail.com header.b=gts6I+aN; arc=none smtp.client-ip=173.249.47.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pissmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pissmail.com
+	s=arc-20240116; t=1738478912; c=relaxed/simple;
+	bh=sLmp6xHNXRTUeReI1bD3dZuLC6sS6eL6CNF124KZbTA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hgYTcHSeisw6EDAuqvzMuKMcU8M+srQFZP6x5eg3jtq1H2RbQcNAOjJHlak/ij/D02yCqm4u97odkwt4h0Qc9O5izEZ0KFxGrhhr3cwLZ5hof0NEVDFyB6q8xlTbEsmcZtGP1NJe4lFgALW4PZtYfiSrX4YM5PBe5eGsz1PLR1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SQTFPfKa; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pissmail.com header.i=@pissmail.com header.b="gts6I+aN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SQTFPfKa"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso153695ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 22:48:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738478910; x=1739083710; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IgeU84PIblBYIhQweVeMYLOZOfYeIUW0M5IhdSU3ktY=;
+        b=SQTFPfKaK1sFZ7W5SLERIR7mP2zxUbMVkE9gth8IOd64NP5bOMclmCaECS+bdgSPCR
+         tGcpYToG7+/eU++hamlP9tpDkCcbc1WAx4tFdqwZqOIQlz0XHilADsPY1KOqhgagdctf
+         z9+AkWOnyfZUsMVs+upFay9iy+GCGI6E1eAG+6KLzRb9jOnnvDEqjVuN4YNEQsTZVllc
+         Y+sfRiGnl6pH8JrXp0rpL6bGFr7g5ze64IceOBC817vbr18TdZBRz5JwqK5JXiM7WscD
+         cJjZKjAuw5zSSZHyhzDaQRsr5tJlRPmV4t5jJRbDi7Ol2wKzXBnLf6WOacBIXbVTHIDN
+         EIww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738478910; x=1739083710;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IgeU84PIblBYIhQweVeMYLOZOfYeIUW0M5IhdSU3ktY=;
+        b=KBSz8TPOJzFxwoexHb2vzCziaJvwpu51UL4YlloZ04bcVTH5g2ip5jqA7QJjGDjy39
+         G/KM9I6XqrbFQKZ059QzyesgG0zimgizxRPpaNcO9y0sDxeluoXKEkGTV9Klh7V78/XK
+         igExi+wExLMcfNycWGv50u1Gqg8fEcnHl5hCu5fGjhdvf18esT/sO1XBziC2HybXAti4
+         4JEOj3D2hu+F7UafXORhcBzWcTg+GToRuo7l2jnLfARWS3tYO3gb5Er3x9xB5IDK07XM
+         ZwI8HjiAJ6TotUEByipd82GkRk9luYK3gvyj7owmElxCa18hQU9xuRW1eNi43u+mUZ6D
+         qC/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVSsCoHI/ES48YOgj4M1PVyUo+jSK1mY8J15R49mmBj6S0EJWSJCvjtQf4uJjXUV7hyKmNBlWMuved6Jms=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yznnx7fUZ2gaFSmx/Jte9+HMls2rf52etmah9b+Ve33ccEwVv6r
+	n9ueOjbEAnu8yW156ma7YR4ffWhfAUf8XN5dK9b5WUcz3IfSc71/77nQV5LePD2ZFMsW7RPzC22
+	Zy1eaBCreRnlJB0PVyyzy1xjTLxVS35uKA8Yt
+X-Gm-Gg: ASbGncvnb++tN6ZWRsWktAtSn/ip6D72JZusici6QbNOLtLXR4FN+vBy16A7MnwZrHI
+	D/sdUuE+jF7+mpv4B4UcNiBV7+0wSpj8Kn9wi04K2rlRBNqpJFNBUxYBYoxKd10LtvGbUCjZdtw
+	==
+X-Google-Smtp-Source: AGHT+IHDuXaMAdD5ocfiKBkx4DIie9oQrDvdnfqdAWCh6ZMKIAkF+q3joiOtL0hu6HokU+BrkokOafRdFvU47R4GRiw=
+X-Received: by 2002:a05:6e02:13a1:b0:3a7:a468:69df with SMTP id
+ e9e14a558f8ab-3d021f8ddb2mr2533065ab.3.1738478909521; Sat, 01 Feb 2025
+ 22:48:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pissmail.com;
-	s=dkim; t=1738396187;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=EKIl41mysEtb8SifkvoXTvCM29anATIsLrImsxTqT3g=;
-	b=gts6I+aN4taUgk7tzDkoSyoE5fXQ73bEPv8C1E55hSveet7OCHWxCaxa2hV2iNbEut6fMw
-	eHtuQsB/4kawFqwQPWQFkSwkY5XNeJj8OZZd9lSsGu/cf3GQS3GygI2MY1U5jWjwJSNIoR
-	qd3k9Y4X2eSjoytOJTGbSxfdK1r5x6Psmi44gtAE6J6vLojKjYa3FXCx1MUX7f4NpBY1CX
-	3PAPhq9JsfXSql7NZBjrBJERACdMyd346Ye6D6ljZJMSNKsNbQ2PkHaJO2CWtPUTLzLnol
-	bJ0ftyq0MHucNvBn+tynZ+qTamdbXAqNR/aIcnh+6iR3IF0HcJc6XTAx140+2Q==
-Date: Sat, 01 Feb 2025 07:49:47 +0000
-From: mortodinoite@pissmail.com
-To: linux-kernel@vger.kernel.org, corbet@lwn.net
-Subject: Rename GTK+ to GTK
-Message-ID: <fd3be9e6b898bde7b8c9a6b7e51e2b4b@pissmail.com>
-X-Sender: mortodinoite@pissmail.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Bar: /
-Authentication-Results: mail.pissmail.com;
-	auth=pass smtp.mailfrom=mortodinoite@pissmail.com
+References: <20250131112400.568975-1-tmricht@linux.ibm.com>
+ <20250201113406.4312a601@pumpkin> <CAP-5=fUOS6ZmfVdzwNL6+5VfUr9fms0zE4FXW6vsRqSfS9F7sA@mail.gmail.com>
+ <20250201171435.4bd5578e@pumpkin>
+In-Reply-To: <20250201171435.4bd5578e@pumpkin>
+From: Ian Rogers <irogers@google.com>
+Date: Sat, 1 Feb 2025 22:48:17 -0800
+X-Gm-Features: AWEUYZm7CRLEhubOw4Q8ZrinZn7ZTOkhLsJoCqWrkUc0Ijuw0r0iTqnW-ALz0c4
+Message-ID: <CAP-5=fV55Tn0j0+ceKZeWheCuMw4RHHvVp0qOu3csZT=ojP_nQ@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Fix perf test 11 hwmon endianess issue
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-s390@vger.kernel.org, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	sumanth Korikkar <sumanthk@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Sat, Feb 1, 2025, 9:14=E2=80=AFAM David Laight <david.laight.linux@gmail=
+.com> wrote:
+>
+> On Sat, 1 Feb 2025 08:12:38 -0800
+> Ian Rogers <irogers@google.com> wrote:
+>
+> > On Sat, Feb 1, 2025 at 3:34=E2=80=AFAM David Laight
+> > <david.laight.linux@gmail.com> wrote:
+> > >
+> > > On Fri, 31 Jan 2025 12:24:00 +0100
+> > > Thomas Richter <tmricht@linux.ibm.com> wrote:
+> > >
+> > > > perf test 11 hwmon fails on s390 with this error
+> > > >
+> > > >  # ./perf test -Fv 11
+> > > >  --- start ---
+> > > >  ---- end ----
+> > > >  11.1: Basic parsing test             : Ok
+> > > >  --- start ---
+> > > >  Testing 'temp_test_hwmon_event1'
+> > > >  Using CPUID IBM,3931,704,A01,3.7,002f
+> > > >  temp_test_hwmon_event1 -> hwmon_a_test_hwmon_pmu/temp_test_hwmon_e=
+vent1/
+> > > >  FAILED tests/hwmon_pmu.c:189 Unexpected config for
+> > > >     'temp_test_hwmon_event1', 292470092988416 !=3D 655361
+> > > >  ---- end ----
+> > > >  11.2: Parsing without PMU name       : FAILED!
+> > > >  --- start ---
+> > > >  Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
+> > > >  FAILED tests/hwmon_pmu.c:189 Unexpected config for
+> > > >     'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/',
+> > > >     292470092988416 !=3D 655361
+> > > >  ---- end ----
+> > > >  11.3: Parsing with PMU name          : FAILED!
+> > > >  #
+> > > >
+> > > > The root cause is in member test_event::config which is initialized
+> > > > to 0xA0001 or 655361. During event parsing a long list event parsin=
+g
+> > > > functions are called and end up with this gdb call stack:
+> > > ...
+> > > > However member key::type_and_num is defined as union and bit field:
+> > > >
+> > > >    union hwmon_pmu_event_key {
+> > > >         long type_and_num;
+> > > >         struct {
+> > > >                 int num :16;
+> > > >                 enum hwmon_type type :8;
+> > > >         };
+> > > >    };
+> > >
+> > > That is entirely horrid.
+> >
+> > It also has the side-effect that if you initialize the struct bits in
+> > the type_and_num will be undefined and sanitizers will try to trip you
+> > up.
+> >
+> > > I'm surprised this even compiles:
+> > > static size_t hwmon_pmu__event_hashmap_hash(long key, void *ctx __may=
+be_unused)
+> > > {
+> > >         return ((union hwmon_pmu_event_key)key).type_and_num;
+> > > }
+> > > It has to be just 'return key', but I'm not sure what the hashmap cod=
+e is doing.
+> > >
+> > > AFAICT the code is just trying to generate a value for the hashmap to=
+ hash on?
+> > > Why not just use (type << 16 | num) instead of 'trying to be clever' =
+with a union?
+> >
+> > The purpose wasn't so much to be 'clever' as you say. Perf event
+> > configs, which is where type_and_num lives in the events, have their
+> > bitfields described either by convention or by files in
+> > /sys/devices/<pmu>/format. On an Intel laptop:
+> > ```
+> > $ cat /sys/devices/cpu/format/inv
+> > config:23
+> > ```
+> > So I can go:
+> > ```
+> > $ perf stat -e 'inst_retired.any/inv=3D1/' true
+> >
+> > Performance counter stats for 'true':
+> >
+> >         1,069,756      inst_retired.any/inv=3D1/
+> >
+> >       0.001539265 seconds time elapsed
+> >
+> >       0.001719000 seconds user
+> >       0.000000000 seconds sys
+> > ```
+> > and the configuration of my inst_retired.any event now has bit 23 in
+> > the config set. Just as the format files try to break down what the
+> > bitfields within a config u64 are doing, the union was trying to do
+> > similar. Making an attempt to have the value be intention revealing
+> > which the shift and masking may lose, for example, by making it look
+> > like bits in the num could overlap with and modify the type.
+>
+> Except that is really doesn't work for big-endian at all.
+> The 'fix' doesn't even really paper over the cracks properly.
+>
+> I'm not even sure the hashing works on 64bit BE.
+> (assuming the int:n are also BE - but that is a different ABI option.)
+> The 'num' and 'type' will be in the high 24 bits of the 64bit 'long'.
+> If we assume the rest of the union is actually initialised the other
+> bits are all zero.
+> And I guess that the hash function is masking with 2^n-1 - so always gets=
+ zero.
 
-I would like to suggest replacing GTK+ with "GTK" here: [1] [2] [3]
+No, as is typical in any hash table you always do a secondary hash:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/hashmap.h#n15
 
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/README.rst#n168
-[2] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/translations/zh_CN/admin-guide/README.rst#n149
-[3] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/translations/zh_TW/admin-guide/README.rst
+Thanks,
+Ian
 
-Upstream calls it "GTK" nowadays: 
-https://mail.gnome.org/archives/gtk-devel-list/2019-February/msg00000.html
+>         David
+>
+> >
+> > Thanks,
+> > Ian
+>
