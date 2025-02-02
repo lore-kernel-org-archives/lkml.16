@@ -1,178 +1,104 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D02846C
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 22:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC0E2F3B;
+	Sun,  2 Feb 2025 22:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738533681; cv=none; b=SDpLUaUIPSmYZaxVYm6Eew7HPg2jGQCKuPbtHm32GoN0xDybouGWTzGAGzDOHF7zaW6hJmAs3O8iVfzPb993CIFfmndC7L2JuUrjgzS2Id/lF3rASqcA64n4wJlHrjLM1QjNQHxHmHUP6tFGp2MpN7V6eZSjRntn1j/pu/CaUic=
+	t=1738533894; cv=none; b=ICnT31M1A78xzVE5+4jNaoESb4nun7lT1d2lqoY2wnjI0GmCICCOa0jjGad5hxuDfJSzItBCrh5mmwSiiCa4zt1BcyC5DOR/T/ADGLbo2p0yVX/DROLuofhhQisO5ZVZLYgQJr2+x78OYiWaIg7FvsAmnVTeByVZtcon3FXmmIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738533681; c=relaxed/simple;
-	bh=IHnLUzUv1zgNYpcLHg+bZ3TFUi2twayN+LYiNlfxtcA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=gksJrRTFBGN5jCbWXVtIvzRWDh/vXsKaTtbfRSdBGdGsV8Fl2tTPbCCA/krAJ8haT7VuYY4STMvTispO4JhHAjQto/dNlL82twrNzXritBdwoPKbWSxpNHt7IcU0rAbX+kmSafyEtPmFiVww3eHFbHudA60vMdibfshS9TCuRqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3cf64584097so28884675ab.2
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 14:01:19 -0800 (PST)
+	s=arc-20240116; t=1738533894; c=relaxed/simple;
+	bh=xLpOT+pnlMKKjkqg84cHkVtwQSmCriCuURRitq28k6c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B3gJPEjotKTgmw+5zfy33THZ9Vi86TbPrXlPdmtoC9yW8ClY5WLwSMVfeYwEJDuJNiaN7xonGlh31H7fbVbAxKpfq3SfUsdVTcMdTwag3vgc6A724xXHqMetPIE6IQtkPYXS52rtXL2XMcyRAnNcLJjzH8BbNF/rIyjc1inQ6aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D/bkWAS2; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/bkWAS2"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-385de9f789cso2867281f8f.2;
+        Sun, 02 Feb 2025 14:04:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738533891; x=1739138691; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bvLRQSNeMyywAL2VZYkzDGhGJ2EB8RE56tLO1zBW2oo=;
+        b=D/bkWAS2c/Qkq0LKK1c4dTd7q0sqJqfdBkJej787eau/PQ4VWgwTmtI2XeTlN7R1iq
+         k5PgI3D5jCD9IaeV5RecCmqodidL1Wb5N4iAUsnctUuJ99QdZFl1InIIY/MkDey7X2gG
+         qjgFzr0u+XuMkJ6f863heOXnl/lF941TC8Ug1t9QM28pjll/f1/4bosYSusEt/glCinx
+         DWjaOGd9BilpjzJnbCBCJdnSwTxVC0jLDVnK+ls1jV8B4txzMjYjasKZkkwne6QN2bsT
+         XBDt3sv/Yzq6u+850Xkxv+2ttfyIeNwQW1EMGgb0TwNx/HUxS0jo8+xLZEs/7yebTeSO
+         P5og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738533678; x=1739138478;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dP5Jft/fqxG5jD9tDv8QIPa+gKfnQisgnv1+nawUju8=;
-        b=NPqeayQ+6GKaoEasUaUcRnQiVak9brB2d6GB1Jcar4wuq9MRB2AqfC27MT0hhUM1Fq
-         e9sWPJp3b1MRbjD6LDFZUkV7yUXWJkGeN78NwXUSftEqZhMiAD1lEjsv4Q+d1fosHOpX
-         ffIUMMKUC27zj+Re2JfkWpc+WsZrQ32k4uiP6KopFr02+Ve9zCSt+VdzZeVsbkxCSlxk
-         NWhLCgcMxBrlruTJBtiOtOBw2MwkJXZmtVofGEMZcJ80IugahIIsvDIEOQ1Vs0eFlacD
-         /0+Gs612YWwGX5B/yPirLFDnpa1zLFcC7noEdre6KYDN9kKEzolKLZlnDfidOBiFx5t/
-         qluA==
-X-Forwarded-Encrypted: i=1; AJvYcCX2qABYKZCeMselJAf0aiOwLQEnefuxEkMBPkmEtrC7cGbi4bV012/hadHfWaj8CQBRV16ax2cfC8DNo3Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw7xqgLpjZK0lXA0qQD+tW3AoR017iHCujzDFiHRN2oQlQDCc7
-	U/u2tplWdaDN7TDr8KZiwIShTD92oRkcaon6x7afiMvEeNZ0x6TN/4+P4L+9eo1tmMq7h4deQfD
-	mb4wFQTOqVOB+XIObunWX6E7JYLqOxfo6o/FFjHJWKYV855J2yLJCXh8=
-X-Google-Smtp-Source: AGHT+IE/31vwbeN8/st/bA6EdwxIedVRyFYVoRTUS4oPAEtJSt+EjwddvATfW7/KCH2jCSP+q4pEa21n+YN0U2/NcPq+Taso1onA
+        d=1e100.net; s=20230601; t=1738533891; x=1739138691;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bvLRQSNeMyywAL2VZYkzDGhGJ2EB8RE56tLO1zBW2oo=;
+        b=UnVg+cdKAOmIeVijg70Z9ZT9KTT23ScM0b77TWz7wH6Medp13CzAceaeZtO0WLUJ8j
+         cayMnEag8bhBa+O1vjmWt79rWY7Bh1gMOOMBHzSVxqwzmiPXxDe599bGsBJpYsmUZdn5
+         UtD5aFdaPCQuqPrkiPGaBDjo7uJvWahjwMvz0SSsr2x4cZePjKLQCeAtxMKF9Rfd8sHm
+         wLMj7rIBM9oUpAJlkNqJOtbjOnsMhB4FgHgdv8G5m/PMM88Nd1vJBlFbJBOojTlp2HIA
+         YYos58cKpCqAjyNb+WXT7wuYph8d0YlwhZIFaWg5Ddxzxs2OE9pSWptxm6IbSoA6a0Ca
+         RxkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkrL3Uqxup6/aAjhJ19mHVPgRu9kROORJobeDlWQF+jzZX9WqC9m/MWqb5/UvWBu1RtiSLT4TRzww=@vger.kernel.org, AJvYcCVsWCoLN8dJbF93ZSVkhf3mQ28erzwd01PkwHbvb4pTfkGBmrd8vgy6UQE5ZEwlWKoP/JSM3LW9GBX8DY/tBE2PmAk=@vger.kernel.org, AJvYcCXxpsOY4IZvCzp3j+Iy2Srb1S3BJ1VTYMSJaZpNPZqv39xHhaIvGsfBgo2p9IhVt0Ae2MsnjuhwGsUrgX8Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSGIoRz8THuMh8XzCk/G12+phKf5XlWwFLySwHz9fRRR4zVv4d
+	+pDGeT25+5t4ApXW/ejPRNHVMCbTmHvIN57K8LojxTqmpHBju+a3
+X-Gm-Gg: ASbGncuBjlZWCFwKfzxG9DrBtOr39tRhp1G1czHOcycoAI+pkPyKvQLNNcCT9qGModH
+	fhzyIMQyx2bOgXKoN8SoTIS6UWGkPNEuakwpRaSvo/9m5BeOGjRtTWJX6PRfJOfMsVbl/rfkOOh
+	sHAr17ybS1X+e/oafHvnnxpOhiJ3o9d71OmlA+5K6F5BIIS5Q6XHx6UzP2Wu6MphTLAxiZOMvTE
+	krJIHHbddEOr++eneQQKIPw8xeUDFZ1XHNoMjYIF+vboFM/anI19x1+YO81T5/5mTf0YyU1boDf
+	vliWahbAilIKJbBP
+X-Google-Smtp-Source: AGHT+IE0+XXDl//rer1jPDvr8EzMd6rwQ+VNhIPvmOGjHUvrqbfJiAxcB7DdPCj5lUCudMn87klHjA==
+X-Received: by 2002:a05:6000:188b:b0:385:dedb:a156 with SMTP id ffacd0b85a97d-38c5192f329mr15135346f8f.6.1738533890785;
+        Sun, 02 Feb 2025 14:04:50 -0800 (PST)
+Received: from localhost ([194.120.133.72])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-438dcc27130sm167892735e9.16.2025.02.02.14.04.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 14:04:50 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	linux-samsung-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] clk: samsung: Fix spelling mistake "stablization" -> "stabilization"
+Date: Sun,  2 Feb 2025 22:04:25 +0000
+Message-ID: <20250202220425.199146-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:98:b0:3ce:7fc3:9f76 with SMTP id
- e9e14a558f8ab-3cffe3e527cmr168094655ab.6.1738533678463; Sun, 02 Feb 2025
- 14:01:18 -0800 (PST)
-Date: Sun, 02 Feb 2025 14:01:18 -0800
-In-Reply-To: <000000000000a7fb55061ce6cc5a@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <679feb2e.050a0220.d7c5a.0078.GAE@google.com>
-Subject: Re: [syzbot] [net?] possible deadlock in do_ipv6_setsockopt (4)
-From: syzbot <syzbot+3433b5cb8b2b70933f8d@syzkaller.appspotmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot has found a reproducer for the following issue on:
+There is a spelling mistake in a pr_err message. Fix it.
 
-HEAD commit:    c2933b2befe2 Merge tag 'net-6.14-rc1' of git://git.kernel...
-git tree:       net-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=12a22eb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
-dashboard link: https://syzkaller.appspot.com/bug?extid=3433b5cb8b2b70933f8d
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12896d18580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c69724580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c7667ae12603/disk-c2933b2b.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/944ca63002c1/vmlinux-c2933b2b.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/30748115bf0b/bzImage-c2933b2b.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3433b5cb8b2b70933f8d@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.13.0-syzkaller-09685-gc2933b2befe2 #0 Not tainted
-------------------------------------------------------
-syz-executor323/5834 is trying to acquire lock:
-ffff8880352e2cd8 (sk_lock-AF_INET6){+.+.}-{0:0}, at: do_ipv6_setsockopt+0xbf7/0x3640 net/ipv6/ipv6_sockglue.c:567
-
-but task is already holding lock:
-ffffffff8fcbf088 (rtnl_mutex){+.+.}-{4:4}, at: do_ipv6_setsockopt+0x9e8/0x3640 net/ipv6/ipv6_sockglue.c:566
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (rtnl_mutex){+.+.}-{4:4}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
-       smc_vlan_by_tcpsk+0x399/0x4e0 net/smc/smc_core.c:1908
-       __smc_connect+0x296/0x1910 net/smc/af_smc.c:1520
-       smc_connect+0x868/0xde0 net/smc/af_smc.c:1696
-       __sys_connect_file net/socket.c:2040 [inline]
-       __sys_connect+0x288/0x2d0 net/socket.c:2059
-       __do_sys_connect net/socket.c:2065 [inline]
-       __se_sys_connect net/socket.c:2062 [inline]
-       __x64_sys_connect+0x7a/0x90 net/socket.c:2062
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (sk_lock-AF_INET6){+.+.}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3163 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
-       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
-       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       lock_sock_nested+0x48/0x100 net/core/sock.c:3645
-       do_ipv6_setsockopt+0xbf7/0x3640 net/ipv6/ipv6_sockglue.c:567
-       ipv6_setsockopt+0x5d/0x170 net/ipv6/ipv6_sockglue.c:993
-       do_sock_setsockopt+0x3af/0x720 net/socket.c:2298
-       __sys_setsockopt net/socket.c:2323 [inline]
-       __do_sys_setsockopt net/socket.c:2329 [inline]
-       __se_sys_setsockopt net/socket.c:2326 [inline]
-       __x64_sys_setsockopt+0x1ee/0x280 net/socket.c:2326
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(rtnl_mutex);
-                               lock(sk_lock-AF_INET6);
-                               lock(rtnl_mutex);
-  lock(sk_lock-AF_INET6);
-
- *** DEADLOCK ***
-
-1 lock held by syz-executor323/5834:
- #0: ffffffff8fcbf088 (rtnl_mutex){+.+.}-{4:4}, at: do_ipv6_setsockopt+0x9e8/0x3640 net/ipv6/ipv6_sockglue.c:566
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 5834 Comm: syz-executor323 Not tainted 6.13.0-syzkaller-09685-gc2933b2befe2 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
- check_prev_add kernel/locking/lockdep.c:3163 [inline]
- check_prevs_add kernel/locking/lockdep.c:3282 [inline]
- validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
- __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
- lock_sock_nested+0x48/0x100 net/core/sock.c:3645
- do_ipv6_setsockopt+0xbf7/0x3640 net/ipv6/ipv6_sockglue.c:567
- ipv6_setsockopt+0x5d/0x170 net/ipv6/ipv6_sockglue.c:993
- do_sock_setsockopt+0x3af/0x720 net/socket.c:2298
- __sys_setsockopt net/socket.c:2323 [inline]
- __do_sys_setsockopt net/socket.c:2329 [inline]
- __se_sys_setsockopt net/socket.c:2326 [inline]
- __x64_sys_setsockopt+0x1ee/0x280 net/socket.c:2326
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f5f02247369
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe9a248bd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 00007ffe9a248da8 RCX: 00007f5f02247369
-RDX: 000000000000001b RSI: 0000000000000029 RDI: 0000000000000004
-RBP: 00007f5f022ba610 R08: 0000000000000000 R09: 00007ffe9a248da8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffe9a248d98 
-
-
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+ drivers/clk/samsung/clk-cpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/samsung/clk-cpu.c b/drivers/clk/samsung/clk-cpu.c
+index dfa149e648aa..97982662e1a6 100644
+--- a/drivers/clk/samsung/clk-cpu.c
++++ b/drivers/clk/samsung/clk-cpu.c
+@@ -133,7 +133,7 @@ static void wait_until_divider_stable(void __iomem *div_reg, unsigned long mask)
+ 	if (!(readl(div_reg) & mask))
+ 		return;
+ 
+-	pr_err("%s: timeout in divider stablization\n", __func__);
++	pr_err("%s: timeout in divider stabilization\n", __func__);
+ }
+ 
+ /*
+-- 
+2.47.2
+
