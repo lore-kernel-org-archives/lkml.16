@@ -1,106 +1,102 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B838A39ACC;
-	Sun,  2 Feb 2025 16:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF4B1D5154;
+	Sun,  2 Feb 2025 16:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738515289; cv=none; b=Kf0R8mNyJ0nFrzZXoTCSDg5Z+wBwwxvloBIX8lhvWkrsPIydQ1wFuRkzJK+0fvsJG9iw3IFiNpUA1rcskAKE/rQJgNk4fiJDJgRq4EsdsVUJNFSN3YkB6T2GVSn9AxsF/JQqlGCwuLCyj85aj57SL+xhzMcQhXX/hE/qbPQ4Jts=
+	t=1738515382; cv=none; b=brqSpRnhZcakDHei11Mo/8KXqqWlZ6wKfTMZYcPtI8bCn57xuqaJYPjHtVG0AqIJ0c0lABTdbIfsU5tyZ9EDqUj5B6A1QjzV0aLHIEQPYSxzQeIHzP97kZwJwHVgs8s0dr6fydq5Ah1MDbl6wLe9nATc2CoL4OzyNHtEiZu4KlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738515289; c=relaxed/simple;
-	bh=gLhVX1h7o5b2X0O/q1MxHcPO1+3t+2qMA0H9XN9ZuU4=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=GfmFfM/AgTMHFZbjxzOtOt7/gItkptPrniRX5hW/ya/C/hReHwcIqcvtPsjLRKZrwxZQdAdFxV3xcy53BmcjOpZ8oSYWFpidniUt7y/vRbKmz82sB5kh9gqpDBEqNwnNqtxe0VGl0ctwMSNG9wavtJ/OSR6lFK1Y1Z7E5vAdQZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Q6gm7Duv; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1738515382; c=relaxed/simple;
+	bh=JLT4Nr7NojIi7+uTBH3L/Cu64XQRCmLEXiT/0vWNAA4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MeJQJCYwIHEf7takWc0IGF8cFr0djjGAXwcz+DwKSmpQKWnrxvmuCPGJy/UkgNGwCaPscSDwLS84p403jzKJCm6gWNS9nVYQhXXP+bqNzd+y2X7YcetJ7BJDmyVvHH9tHIl0HHOQqGCzKcPSBAUR060FkFK3BfZ0pYWAnouugAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=saL55M12; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Q6gm7Duv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738515257; x=1739120057; i=markus.elfring@web.de;
-	bh=EaVubEEvNOvGN37xb0CuX8ArlPrOSmXh5BFbwXCd1Qc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Q6gm7Duv//dv3DyOKCVGsbFsNXdvtXyIPCZllYO9rUASE6Fc5r41jP17cTaW5Gk7
-	 DJWRWQSCfUqssulqJSpMmlnSXRclnOnlWaWeXOVvqS5lv0Qf7LR5v7jm8xA6l33a2
-	 sCbc3xt2TNHAN3BExJksneVJzzmS2J7oEH0UoQ6OUJNKEda+l5JQyd/A+HJcRA8oU
-	 CdIW78hTwd5I8nQIeqhy2/r/mAkkKFWEqeOoEh6G7g+crAZ4Vt4zBcm7mTi1RCb7l
-	 PiSBze1Rkk5+E4gRyxK/Q/J4fpZWZahEs8x4LtTQrzna13SksWruAt1l0RyzuAMad
-	 pAkIiDxjplT3kiLX+Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.26]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MnFyI-1tCxyu44JQ-00i80V; Sun, 02
- Feb 2025 17:54:17 +0100
-Message-ID: <d5d13945-da84-4886-bdc7-9a3ac182b2be@web.de>
-Date: Sun, 2 Feb 2025 17:54:14 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="saL55M12"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5DD6C4CED1;
+	Sun,  2 Feb 2025 16:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738515382;
+	bh=JLT4Nr7NojIi7+uTBH3L/Cu64XQRCmLEXiT/0vWNAA4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=saL55M12DYz5DzOBcMgvURXev2srBNofON9XHCdDWr6c3Ncnh3f2k1eV1VCmBfSAJ
+	 Un+XbLV/n+N75nVF9hX349pd7boSho6gCh8PBCn53m0TccN6xM14eoLf1nseK593Zb
+	 UkGlS1H0AdU8RoByeG/rFT2Sitnox2NoiDcd5rfdlEwAK/VdNmmlDtKrr1F1RC9n4/
+	 wJEnbbi4G2zvslV/1yOEfeDERSN6UWPPhq3+L/UBf3g4s2NuELBbvSBoC3w6+4xkmv
+	 epZVNuVC2EF9FMDjdug9rYH3IVgnqEsy5yHCqr7Fp42nygaAf9QSLTnOCFr8SYMtTX
+	 vkaENA5dfWS+Q==
+Date: Sun, 2 Feb 2025 06:56:20 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Christian Brauner <brauner@kernel.org>, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] cgroup: fix race between fork and cgroup.kill
+Message-ID: <Z5-jtI26V845YRDz@slm.duckdns.org>
+References: <20250131000542.1394856-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Jiasheng Jiang <jiashengjiangcool@gmail.com>, linux-scsi@vger.kernel.org,
- GR-QLogic-Storage-Upstream@marvell.com,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- Javed Hasan <jhasan@marvell.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Saurav Kashyap <skashyap@marvell.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Arun Easi <arun.easi@cavium.com>,
- Bart Van Assche <bvanassche@acm.org>,
- Manish Rangankar <manish.rangankar@cavium.com>,
- Nilesh Javali <nilesh.javali@cavium.com>
-References: <20250131213516.7750-1-jiashengjiangcool@gmail.com>
-Subject: Re: [PATCH v2] scsi: qedf: Use kcalloc() and add check for bdt_info
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250131213516.7750-1-jiashengjiangcool@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:uxMvvBffVAsVai5iEdV1YM2XUA4IjftiSmC3xP/AA6I1nRGFSFn
- Djkr2aXLj/IqAxaavQpqYaAmFeYWSD53N7kwBedspKSUNT9MLAp0qlS9HARhCj+SJmrDoW9
- rAOHPKqLhE+rdIA+gYhfLbEK9+5lheRWMSyTFMTeWRg9D6ChHdK+zI7USS8nn88bx+WcDUR
- YZGhVApikY+e8RGBsN0zg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:dTq8ydIxLnI=;+Be+5z4UYFTNXc92GYHZXVroZ6t
- Z1O8r+rbmPqsMi9H9hKEF5py9zcn4ABgbGyvxlkFYbjhnYU/s3zHFuaMCpjl0ibhiHE7mjQ7f
- /9giRB+oBsWZhAufgDrkCnehyXSgs9jzWPrGt2LCBRNGRDYzOMODCIajm3tmZky9fgfxIckIA
- c3oNOtL5s+abSm25rpPV6CZPYisbgyH5l4P7vN79QF0mHlMrYiazEcTVJ3b4j1Aq4IPLivUHI
- DC9P7vkrS9vK1f+6f3Tfmx1v/TYrRaveQLBEyg1906/UzTTWuL/FHRvLYqqYgH7Bvvl7AbVCl
- m942kJM3kvutcnawn1VNMrHNJrzpccD84mHw2BvbbHWyHKO3RrD/z8Y/Iy/cYdPpup58aHaiV
- 1spDslKB6BEXNBGdaUx2hDJqJf6ONcqztPwPvwbL/LW8PqguD3aGErGcRIVusK/eBe+kjRo+e
- /tVh7MOuHKS9wnZq+lypw84ezGxGH1QNDYY2yOc0OFxetm1/X92hjWKixuDvgr19s/BuJ0jqa
- 0mjEghEyoWdf2oOPutWaje/FAnfiHxAljOBng2RjNTuJSyNVgfrPPr0+djfFWR1S/ubhMG00W
- mTlm7CUybKJmYXxRvLIAIwCeUFuVfhJZapPAInPWfj76GbdHDkBRKvz+lhQusLMIbh+2Pfqpu
- Xkz7XoY8gXFhkjF9BLXziZr6lpBvPno851BQpWiri30Kw5RJGIXV4+q86RyaLx8nfYKXok+c4
- L1VlykkIkfIH7+F0CWcAzC/8cXP7IefNFB+/uF3S1U+ktNxgl3sRJ6JXSJoGQUd4uXLr2aMx2
- 5Ny5fzqmMm7sKCh6uzBs0AYwgulwZRSEbhjGNwrQU2SuAsg8n/m/Eh2+ZSYQfYvmXLCU2u2WG
- dTIejTQxP9K7Buc0PVx4Oa0zoeeGkcIWEx2Quf+To199KRr1ApCPDLFanh21d6biTTp7O4K1F
- qZYsIdn+8SVrWaZzVt5c//sHf3E34wGwHViBIn3D5vx3hzL8P2HrsLKQ05B5wh/iLgVYirjik
- tj7XEQW1uO2uVPqZSoY5le0enc0nWEBg+4V3RY4GKFkm+IATI73qXCi4qf788w5Ty8Pve14Jo
- NOOHHwYOI8Dv13d8aTrch25EBsP6u3JjftwgQs8DVPgK8TuchCU4HkOUSqllYyJvVIo0BWDPT
- wJZLQXjmKPmRrOihC9s8ASv4wZqaNUx3nRSFDok4FuoRXuGQW0GD/ffp9exLFGlr4HowF18d5
- h/RJSDNFzjscQ1mv++1UnmF6LPlRNeWLll4iIWbhri2QZUA9ThhIDzZ5TlTJxv/PDMuKZeOJh
- 4PRZxQbT0XeClNBRZ/rToj5u7xyqPTdOcyrgJ0c0Labj62WW/8wETeUwjT0cFM7bK2A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131000542.1394856-1-shakeel.butt@linux.dev>
 
-=E2=80=A6
-> +++ b/drivers/scsi/qedf/qedf_io.c
-=E2=80=A6
-@@ -254,9 +254,7 @@ struct qedf_cmd_mgr *qedf_cmd_mgr_alloc(struct qedf_ct=
-x *qedf)
- 	}
+On Thu, Jan 30, 2025 at 04:05:42PM -0800, Shakeel Butt wrote:
+> Tejun reported the following race between fork() and cgroup.kill at [1].
+> 
+> Tejun:
+>   I was looking at cgroup.kill implementation and wondering whether there
+>   could be a race window. So, __cgroup_kill() does the following:
+> 
+>    k1. Set CGRP_KILL.
+>    k2. Iterate tasks and deliver SIGKILL.
+>    k3. Clear CGRP_KILL.
+> 
+>   The copy_process() does the following:
+> 
+>    c1. Copy a bunch of stuff.
+>    c2. Grab siglock.
+>    c3. Check fatal_signal_pending().
+>    c4. Commit to forking.
+>    c5. Release siglock.
+>    c6. Call cgroup_post_fork() which puts the task on the css_set and tests
+>        CGRP_KILL.
+> 
+>   The intention seems to be that either a forking task gets SIGKILL and
+>   terminates on c3 or it sees CGRP_KILL on c6 and kills the child. However, I
+>   don't see what guarantees that k3 can't happen before c6. ie. After a
+>   forking task passes c5, k2 can take place and then before the forking task
+>   reaches c6, k3 can happen. Then, nobody would send SIGKILL to the child.
+>   What am I missing?
+> 
+> This is indeed a race. One way to fix this race is by taking
+> cgroup_threadgroup_rwsem in write mode in __cgroup_kill() as the fork()
+> side takes cgroup_threadgroup_rwsem in read mode from cgroup_can_fork()
+> to cgroup_post_fork(). However that would be heavy handed as this adds
+> one more potential stall scenario for cgroup.kill which is usually
+> called under extreme situation like memory pressure.
+> 
+> To fix this race, let's maintain a sequence number per cgroup which gets
+> incremented on __cgroup_kill() call. On the fork() side, the
+> cgroup_can_fork() will cache the sequence number locally and recheck it
+> against the cgroup's sequence number at cgroup_post_fork() site. If the
+> sequence numbers mismatch, it means __cgroup_kill() can been called and
+> we should send SIGKILL to the newly created task.
+> 
+> Reported-by: Tejun Heo <tj@kernel.org>
+> Closes: https://lore.kernel.org/all/Z5QHE2Qn-QZ6M-KW@slm.duckdns.org/ [1]
+> Fixes: 661ee6280931 ("cgroup: introduce cgroup.kill")
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 
- 	/* Allocate pool of io_bdts - one for each qedf_ioreq */
-=E2=80=A6
-+	cmgr->io_bdt_pool =3D kcalloc(num_ios, sizeof(struct io_bdt *), GFP_KERN=
-EL);
-=E2=80=A6
+Applied to cgroup/for-6.14-fixes.
 
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?h=3Dv6.13#n941
+Thanks.
 
-Regards,
-Markus
+-- 
+tejun
