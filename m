@@ -1,212 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1593729D0D
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 17:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DEC1FB3;
+	Sun,  2 Feb 2025 17:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738515732; cv=none; b=jjQep5QsloMPq7J6GcAwHrqRWV2cEyj7B2TKrMEe3mrUoQarAzahg4BABHc6RgWdzmG+fconNJz1wF1/zWY+GephNEViwP46wUiz3V4KMaSYewnw0an46JWxxdD+zTath9MjQwLioEhoWOK9iFeH4CM7LBU4We0ROAN5PZTwQ74=
+	t=1738516190; cv=none; b=Teja86/oWS38BwaxodpNnwMg0jV7Du5ZPb1kDi23mDayVWL6vPKwA84mHA6yHr/cw4Cw1O8wet2Jt3f488g0YHrHSNvpKin2EPPk8xDmuK7fnXGHh5qWNOyr/Y0pbY4qVbi9Iwwqa+qCr/5UGc7JQXxsXPiOTZZB/xCUZyE0/28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738515732; c=relaxed/simple;
-	bh=rSWIKoQZ2zuwcHermro882dMGxec3JUJOfSJ3leotTQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h+vXjaSWI1jMmFPpZcoFvrhlPEIIH7jSYtaoIkuN3YIkDxcLWf3r7epUIe9ndqCjGceXo0sBje7ohQCLef/3i909JwlljtnZ69kgLAd5Wpa0742SmhO6EYKTz9UG01VRCfhkDrDiMKqJs5KaBpKi92vOGXCGljLdai6G0QVmFuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iez53JRP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738516190; c=relaxed/simple;
+	bh=df6BcYVR2vRlNLlHLxs5/iga5oJDC0yq9+DSnTI+kUs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=Upaq3U9qiBHx7h6XVvcU0mTB64/R6dl78UdRZvaj/zvlBGMpiOrOtasD/lk4DG//MKnESjThIRjkjTfppLVJnxOlGJei1Vjmq6oxWR/upPGrsg0+cZBNN4bPYg1goA4czr+ia46d5z2e4CcpEXE/gbEgVLCh8H3eb8vvt6YdJQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Szytbsn5; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iez53JRP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738515729;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2bqVTTyCih6LeAwQq4LvjVnDUBe5ojk58vB3lfkM+MQ=;
-	b=iez53JRPraQ+Dx/LUCwX+BtBgLi+cEOL6b9L1of06SO9Tmq9/VV4dpYJr+MHswpWQBearM
-	sYwdsP0s2p+iSCQRMNVc7Huq2UId5wb/6MkhArqvjavGAx/VGo1DpDtbUhytwSdOnd4ett
-	hGI5DA3jEJ7pzenUb9wPYEPRa6zUHrE=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-180-onIMVji9NvKv4cvSsuRhJQ-1; Sun,
- 02 Feb 2025 12:02:05 -0500
-X-MC-Unique: onIMVji9NvKv4cvSsuRhJQ-1
-X-Mimecast-MFC-AGG-ID: onIMVji9NvKv4cvSsuRhJQ
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B5EF2195608A;
-	Sun,  2 Feb 2025 17:02:03 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.16])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 9257419560A3;
-	Sun,  2 Feb 2025 17:01:59 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun,  2 Feb 2025 18:01:37 +0100 (CET)
-Date: Sun, 2 Feb 2025 18:01:32 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
-	Manfred Spraul <manfred@colorfullife.com>,
-	Christian Brauner <brauner@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
- full
-Message-ID: <20250202170131.GA6507@redhat.com>
-References: <20250102140715.GA7091@redhat.com>
- <3170d16e-eb67-4db8-a327-eb8188397fdb@amd.com>
- <CAHk-=wioaHG2P0KH=1zP0Zy=CcQb_JxZrksSS2+-FwcptHtntw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Szytbsn5"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-385de9f789cso2760862f8f.2;
+        Sun, 02 Feb 2025 09:09:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738516187; x=1739120987; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AUfnIb7i9zp0poNHv6A+PgqlAHuBKpjMn6IWAlduoFM=;
+        b=Szytbsn5aEc7KFEo9PClEdGv3DIx+0YklqHsiFVEB3RmwOsBMEzhLWE9xMFPMvn0Ud
+         EcfNi13xJqLlilDNqujutaZcHPvysymwGkxBF6q3WMQhjyf9cqfskrPEHGdvR3SUa9Nb
+         61LFpyjtyeQN+ZHvBeHa/pyhLb7/n5TX7JLAWEvjc7bjuHqKFxj+9j/WSR3ejXhyF5V+
+         7XM7Yw1ImOVdnVG5ymkBR84gnCGhX8NLOLZKpNjFVzCwCsKy/2/oXu+oM8EIa+cbIy9E
+         GLlmKaBdJ8UoeVrgizg/6RJEncoRVfdyl7FOwhtVuFPJDpxbgJRVzhWEPKLtEWSDQpI6
+         G6Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738516187; x=1739120987;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=AUfnIb7i9zp0poNHv6A+PgqlAHuBKpjMn6IWAlduoFM=;
+        b=MQim5qDXrCsZKtpEfETjMZaxn2hZjGBW/BYyIsoeJ+4bVKCRMajcyfhfIYtikZN6Sn
+         u8EYu9YkdsEHLPEXVFPESeZPPVZEZ+bbWFvdHcXahuFDSejJx9XxJ1hU4nsHewqek52S
+         LT07Uu+9cqOHxLQvb7Q2ij/shuDvSIHKjXDmiQGPJign3y+chbGpbyAQmv1XEUBAZ5La
+         QhrkShwfAB1NmnU7dnVKNLjHLGDIUkcW7Q70PU9Ta/RsUY5UsDuwnD7exDi22ZhOX4e/
+         ThzPj/wktzBS+De5ZSNbymSDjK7lMOYnBJWV9wZu7Z5r47uba7WiZ96ivgplVtTssJ0a
+         pnWA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwR0/LfWNhAkdUqttjG4x2iot7UoDS2kMOdpMrvE5de9EfeHkilOzZT60LceSDmDQpuoJbFc2Bsusm5ueF@vger.kernel.org, AJvYcCXoG3ZtjzcgLxWd68dcNtTAQt+qFhWREvS99VETC6IcwaxAvGrlruUyw0yfctt7+N2ZkDGgPfhHGoQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTgCVMKOEd9A4eYfPvbFi4mGJi3ve+1HQs4eJk45xk4s+XASPn
+	GR3jK6fu2j9GZFCUOtx7JQKSGkN4nO7IH/txLVabVKEgy3MJP099
+X-Gm-Gg: ASbGncvOTS7ma9L93DGQscs+hCyGf48ptWqQ8yRXVD1Ed9FLf2YdClSNEoTLYARA5/c
+	64cABC6nRI7OIaWDbrkfCZJ4I8s2IVYdoHLLGYoaOUnazCfB9Bq3lKsoWIzj0it0PPz0Vc+BmnU
+	7Mn7JV3LPbim+7fj4asnM4/1/1pQvZHVditmDRAYeIMKrwcpjDcuROTUamVdfHYuBzs3MQADOwZ
+	aEHCDCGh7/H1/bWRd8Wal2HZCOm01WtjThakOZX5R4yASRxLjtGCMBARXDV/bZuqYfhjBPRWeoW
+	R0V3zuHYLIDH3GMZdrQW78l1kA==
+X-Google-Smtp-Source: AGHT+IH+D526eus/CIM6agZGKLuQJGVo2Tifk/Ud4iNtFnIrNCK/PvF9vFjdTsmgQfFP3gDK8ZOlEw==
+X-Received: by 2002:a5d:47ae:0:b0:385:f6de:6266 with SMTP id ffacd0b85a97d-38c5195cbe3mr15242738f8f.24.1738516186705;
+        Sun, 02 Feb 2025 09:09:46 -0800 (PST)
+Received: from localhost ([164.15.244.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc1317fsm163608295e9.8.2025.02.02.09.09.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Feb 2025 09:09:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wioaHG2P0KH=1zP0Zy=CcQb_JxZrksSS2+-FwcptHtntw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 02 Feb 2025 18:09:45 +0100
+Message-Id: <D7I4JY638HIU.1OH0ECMRKC7K7@gmail.com>
+Subject: Re: [PATCH] iio: light: Add check for array bounds in
+ veml6075_read_int_time_ms
+Cc: "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+ <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Shuah Khan"
+ <skhan@linuxfoundation.org>
+To: "Karan Sanghavi" <karansanghvi98@gmail.com>, "Jonathan Cameron"
+ <jic23@kernel.org>, "Lars-Peter Clausen" <lars@metafoo.de>
+From: "Javier Carrasco" <javier.carrasco.cruz@gmail.com>
+X-Mailer: aerc 0.18.2
+References: <20250202-outofboundsread1573409-v1-1-5e3dd97a24a6@gmail.com>
+In-Reply-To: <20250202-outofboundsread1573409-v1-1-5e3dd97a24a6@gmail.com>
 
-On 01/31, Linus Torvalds wrote:
+On Sun Feb 2, 2025 at 11:49 AM CET, Karan Sanghavi wrote:
+> The array contains only 5 elements, but the index calculated by
+> veml6075_read_int_time_index can range from 0 to 7,
+> which could lead to out-of-bounds access. The check prevents this issue.
 >
-> On Fri, 31 Jan 2025 at 01:50, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
-> >
-> > On my 3rd Generation EPYC system (2 x 64C/128T), I see that on reverting
-> > the changes on the above mentioned commit, sched-messaging sees a
-> > regression up until the 8 group case which contains 320 tasks, however
-> > with 16 groups (640 tasks), the revert helps with performance.
+> Coverity Issue
+> CID 1574309: (#1 of 1): Out-of-bounds read (OVERRUN)
+> overrun-local: Overrunning array veml6075_it_ms of 5 4-byte
+> elements at element index 7 (byte offset 31) using
+> index int_index (which evaluates to 7)
 >
-> I suspect that the extra wakeups just end up perturbing timing, and
-> then you just randomly get better performance on that particular
-> test-case and machine.
+> Fixes: 3b82f43238ae ("iio: light: add VEML6075 UVA and UVB light sensor d=
+river")
+> Signed-off-by: Karan Sanghavi <karansanghvi98@gmail.com>
+> ---
+>  drivers/iio/light/veml6075.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> I'm not sure this is worth worrying about, unless there's a real load
-> somewhere that shows this regression.
-
-Well yes, but the problem is that people seem to believe that hackbench
-is the "real" workload, even in the "overloaded" case...
-
-And if we do care about performance... Could you look at the trivial patch
-at the end? I don't think {a,c,m}time make any sense in the !fifo case, but
-as you explained before they are visible to fstat() so we probably shouldn't
-remove file_accessed/file_update_time unconditionally.
-
-This patch does help if I change hackbench to uses pipe2(O_NOATIME) instead
-of pipe(). And in fact it helps even in the simplest case:
-
-	static char buf[17 * 4096];
-
-	static struct timeval TW, TR;
-
-	int wr(int fd, int size)
-	{
-		int c, r;
-		struct timeval t0, t1;
-
-		gettimeofday(&t0, NULL);
-		for (c = 0; (r = write(fd, buf, size)) > 0; c += r);
-		gettimeofday(&t1, NULL);
-		timeradd(&TW, &t1, &TW);
-		timersub(&TW, &t0, &TW);
-
-		return c;
-	}
-
-	int rd(int fd, int size)
-	{
-		int c, r;
-		struct timeval t0, t1;
-
-		gettimeofday(&t0, NULL);
-		for (c = 0; (r = read(fd, buf, size)) > 0; c += r);
-		gettimeofday(&t1, NULL);
-		timeradd(&TR, &t1, &TR);
-		timersub(&TR, &t0, &TR);
-
-		return c;
-	}
-
-	int main(int argc, const char *argv[])
-	{
-		int fd[2], nb = 1, noat, loop, size;
-
-		assert(argc == 4);
-		noat = atoi(argv[1]) ? O_NOATIME : 0;
-		loop = atoi(argv[2]);
-		size = atoi(argv[3]);
-
-		assert(pipe2(fd, noat) == 0);
-		assert(ioctl(fd[0], FIONBIO, &nb) == 0);
-		assert(ioctl(fd[1], FIONBIO, &nb) == 0);
-
-		assert(size <= sizeof(buf));
-		while (loop--)
-			assert(wr(fd[1], size) == rd(fd[0], size));
-
-		printf("TW = %lu.%03lu\n", TW.tv_sec, TW.tv_usec/1000);
-		printf("TR = %lu.%03lu\n", TR.tv_sec, TR.tv_usec/1000);
-
-		return 0;
-	}
+> diff --git a/drivers/iio/light/veml6075.c b/drivers/iio/light/veml6075.c
+> index 05d4c0e9015d..a892330582f4 100644
+> --- a/drivers/iio/light/veml6075.c
+> +++ b/drivers/iio/light/veml6075.c
+> @@ -210,7 +210,7 @@ static int veml6075_read_int_time_ms(struct veml6075_=
+data *data, int *val)
+>
+>  	guard(mutex)(&data->lock);
+>  	int_index =3D veml6075_read_int_time_index(data);
+> -	if (int_index < 0)
+> +	if (int_index < 0 || int_index >=3D ARRAY_SIZE(veml6075_it_ms))
+>  		return int_index;
+>
+>  	*val =3D veml6075_it_ms[int_index];
+>
+> ---
+> base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
+> change-id: 20250202-outofboundsread1573409-378997439be1
+>
+> Best regards,
 
 
-Now,
+Hi Karan,
 
-	/# for i in 1 2 3; do /host/tmp/test 0 10000 100; done
-	TW = 7.692
-	TR = 5.704
-	TW = 7.930
-	TR = 5.858
-	TW = 7.685
-	TR = 5.697
-	/#
-	/# for i in 1 2 3; do /host/tmp/test 1 10000 100; done
-	TW = 6.432
-	TR = 4.533
-	TW = 6.612
-	TR = 4.638
-	TW = 6.409
-	TR = 4.523
+Thanks for your patch. That could never happen because the device does
+not support those values: it only delivers values between 0 and 4 for
+that field because it does not support more integration times.
 
-Oleg.
----
+Even though the check does not do anything in reality, it does not hurt
+either, and I would like to avoid future noise from coverity.
 
-diff --git a/fs/pipe.c b/fs/pipe.c
-index a3f5fd7256e9..14b2c0f8b616 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -1122,6 +1122,9 @@ int create_pipe_files(struct file **res, int flags)
- 		}
- 	}
- 
-+	if (flags & O_NOATIME)
-+		inode->i_flags |= S_NOCMTIME;
-+
- 	f = alloc_file_pseudo(inode, pipe_mnt, "",
- 				O_WRONLY | (flags & (O_NONBLOCK | O_DIRECT)),
- 				&pipefifo_fops);
-@@ -1134,7 +1137,7 @@ int create_pipe_files(struct file **res, int flags)
- 	f->private_data = inode->i_pipe;
- 	f->f_pipe = 0;
- 
--	res[0] = alloc_file_clone(f, O_RDONLY | (flags & O_NONBLOCK),
-+	res[0] = alloc_file_clone(f, O_RDONLY | (flags & (O_NONBLOCK | O_NOATIME)),
- 				  &pipefifo_fops);
- 	if (IS_ERR(res[0])) {
- 		put_pipe_info(inode, inode->i_pipe);
-@@ -1154,7 +1157,7 @@ static int __do_pipe_flags(int *fd, struct file **files, int flags)
- 	int error;
- 	int fdw, fdr;
- 
--	if (flags & ~(O_CLOEXEC | O_NONBLOCK | O_DIRECT | O_NOTIFICATION_PIPE))
-+	if (flags & ~(O_CLOEXEC | O_NONBLOCK | O_DIRECT | O_NOATIME | O_NOTIFICATION_PIPE))
- 		return -EINVAL;
- 
- 	error = create_pipe_files(files, flags);
-
+Reviewed-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
