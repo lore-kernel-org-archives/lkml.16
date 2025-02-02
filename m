@@ -1,135 +1,99 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7981042AA4;
-	Sun,  2 Feb 2025 06:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87DEE573;
+	Sun,  2 Feb 2025 06:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738477345; cv=none; b=fldS49XCA08jYwNPGQ4XUYLQlO5DPAvcBtnsGCtuQD8g59D8qn6Je1OVSXqXAVpG+xMhQnr38ksq8n08mzRydKCjBlFtlsJg92te2sEGsCXFek3HVhhHXu0/+pbERUCIBPUUvXhxO0J3CKta2qoRdsWGLMlpVpCFER4lJP7XvIc=
+	t=1738477466; cv=none; b=WmdaxhagM5hyJhwrk8CTfimt4PysfKYZSOZ3dDdjmMuJaps2q4Q1WsHFO+xyICzuEjZm7LKG+q5TBJfjAaShrsS8V3QbR6MhOoruNdZI6yMvM+SDzTW3bNrvynOlJr0tb0AFzdlKDMKF+QRWK90W4rGsdbb9UJmCCwZS1ZRmBU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738477345; c=relaxed/simple;
-	bh=T9jjr5yNJujIiKaW63A2Y58cBrapCoUrLyJT07flpW0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NV1bieVDQzsPFF3gcjqcMUAnY/owTgKbVajQyZFMdgpt1DON5xaC/gAYz8+ufrDR2hRGniNXsTb+aAJtYrEZamZuvYSqIFifEsY9mHE52HSMwKcNYjwdWZHfQawH+tHJHTXjRz9I0hGLd8/tPyrJBQEYyf1Ynw0wjgx1S5uRxA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HYpdriww; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HYpdriww"
-Message-ID: <1b7ae999-c081-45c8-a914-f215c829d57e@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738477335;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VX6SmOLzx1meiUouVUG4j5d233T4zSo6WdF6Bre80cU=;
-	b=HYpdriwwjDJVozqO86kstPzP/UohWn8OJaVLab46/fI1sZkPvasOyAvX5XB6vp04m2j3h+
-	knbMs7p6IPCxJVv6QOcCwXo+4HIRzGoOpF4y9vUlLP6oHvgDayh39EFRq759Vau5mTNm1c
-	9Xbw61w4kJzmKpdV0D6Ek37gw9SuVMc=
-Date: Sat, 1 Feb 2025 22:22:07 -0800
+	s=arc-20240116; t=1738477466; c=relaxed/simple;
+	bh=l3kfPrN9XiWFm/I7IsTWoZhsvRgKtXYUos4XXP6YSUg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G2bPBM89qBvjG+B+zB+t34g+g511z49cuEYz0ovD/TdzZJv1e2wMe+Xtgecy6W/u74I6qGsCFWodcJhZ+szju2aGG7pkrNERyQMKYxd6ds++Dh1V+wkf7CMPe74/XtVfXEkxFgbDseQrkroexrdlYntmsNNORJMKCJRJLpkpj58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-03 (Coremail) with SMTP id rQCowABHTlp+D59nwltaCg--.15816S2;
+	Sun, 02 Feb 2025 14:24:08 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: bhelgaas@google.com,
+	rafael.j.wysocki@intel.com,
+	yinghai@kernel.org
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make24@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v3] PCI: fix reference leak in pci_alloc_child_bus()
+Date: Sun,  2 Feb 2025 14:23:57 +0800
+Message-Id: <20250202062357.872971-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] selftests: bpf: Support dynamic linking LLVM if static
- not available
-Content-Language: en-GB
-To: Daniel Xu <dxu@dxuuu.xyz>
-Cc: shuah@kernel.org, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
- nathan@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev,
- song@kernel.org, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, mykolal@fb.com,
- ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <872b64e93de9a6cd6a7a10e6a5c5e7893704f743.1738276344.git.dxu@dxuuu.xyz>
- <2d4773f9-c3a4-4512-9c5c-92f841c326f5@linux.dev>
- <rgcdc7zokwfoars7c2pzredogea3rvolbnzkvko7q6lbgjnvfx@oeyzed5zalpb>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <rgcdc7zokwfoars7c2pzredogea3rvolbnzkvko7q6lbgjnvfx@oeyzed5zalpb>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowABHTlp+D59nwltaCg--.15816S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr13CrykKFykXw4DtrW8WFg_yoW8JF47pa
+	s7Ga909rZ5JwnF9w48ZF18ZFyFkanFya4rurWrG347ua95CryxtFWakFy5Ww1kJFZ2yF1Y
+	q3ZrJa45KF4UAw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+	6r4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJwAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+	rcIFxwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
+	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kf
+	nxnUUI43ZEXa7VUbsYFJUUUUU==
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
+When device_register(&child->dev) failed, we should call put_device()
+to explicitly release child->dev.
 
+As comment of device_register() says, 'NOTE: _Never_ directly free
+@dev after calling this function, even if it returned an error! Always
+use put_device() to give up the reference initialized in this function
+instead.'
 
+Found by code review.
 
-On 2/1/25 12:23 AM, Daniel Xu wrote:
-> Hi Yonghong,
->
-> On Thu, Jan 30, 2025 at 10:28:11PM -0800, Yonghong Song wrote:
->>
->>
->> On 1/30/25 2:33 PM, Daniel Xu wrote:
->>> Since 67ab80a01886 ("selftests/bpf: Prefer static linking for LLVM
->>> libraries"), only statically linking test_progs is supported. However,
->>> some distros only provide a dynamically linkable LLVM.
->>>
->>> This commit adds a fallback for dynamically linking LLVM if static
->>> linking is not available. If both options are available, static linking
->>> is chosen.
->>>
->>> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
->>> ---
->>>    tools/testing/selftests/bpf/Makefile | 11 ++++++++---
->>>    1 file changed, 8 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
->>> index 6722080b2107..da514030a153 100644
->>> --- a/tools/testing/selftests/bpf/Makefile
->>> +++ b/tools/testing/selftests/bpf/Makefile
->>> @@ -184,9 +184,14 @@ ifeq ($(feature-llvm),1)
->>>      LLVM_CONFIG_LIB_COMPONENTS := mcdisassembler all-targets
->>>      # both llvm-config and lib.mk add -D_GNU_SOURCE, which ends up as conflict
->>>      LLVM_CFLAGS  += $(filter-out -D_GNU_SOURCE,$(shell $(LLVM_CONFIG) --cflags))
->>> -  LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-static --libs $(LLVM_CONFIG_LIB_COMPONENTS))
->>> -  LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-static --system-libs $(LLVM_CONFIG_LIB_COMPONENTS))
->>> -  LLVM_LDLIBS  += -lstdc++
->>> +  # Prefer linking statically if it's available, otherwise fallback to shared
->>> +  ifeq ($(shell $(LLVM_CONFIG) --link-static --libs &> /dev/null && echo static),static)
->>> +    LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-static --libs $(LLVM_CONFIG_LIB_COMPONENTS))
->>> +    LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-static --system-libs $(LLVM_CONFIG_LIB_COMPONENTS))
->>> +    LLVM_LDLIBS  += -lstdc++
->>> +  else
->>> +    LLVM_LDLIBS  += $(shell $(LLVM_CONFIG) --link-shared --libs $(LLVM_CONFIG_LIB_COMPONENTS))
->>> +  endif
->>>      LLVM_LDFLAGS += $(shell $(LLVM_CONFIG) --ldflags)
->>>    endif
->> Although your change looks good, but maybe you can look at bpftool Makefile?
->>
->>    # If LLVM is available, use it for JIT disassembly
->>    CFLAGS  += -DHAVE_LLVM_SUPPORT
->>    LLVM_CONFIG_LIB_COMPONENTS := mcdisassembler all-targets
->>    # llvm-config always adds -D_GNU_SOURCE, however, it may already be in CFLAGS
->>    # (e.g. when bpftool build is called from selftests build as selftests
->>    # Makefile includes lib.mk which sets -D_GNU_SOURCE) which would cause
->>    # compilation error due to redefinition. Let's filter it out here.
->>    CFLAGS  += $(filter-out -D_GNU_SOURCE,$(shell $(LLVM_CONFIG) --cflags))
->>    LIBS    += $(shell $(LLVM_CONFIG) --libs $(LLVM_CONFIG_LIB_COMPONENTS))
->>    ifeq ($(shell $(LLVM_CONFIG) --shared-mode),static)
->>      LIBS += $(shell $(LLVM_CONFIG) --system-libs $(LLVM_CONFIG_LIB_COMPONENTS))
->>      LIBS += -lstdc++
->>    endif
->>    LDFLAGS += $(shell $(LLVM_CONFIG) --ldflags)
->>
->> It would be great if the selftests shared library handling to be the same as bpftool's.
-> So bpftool is both an internally consumed (from selftests) dependency as
-> well as a tool packaged up by distros. For the latter case, distros
-> prefer dynamic linking.
+Cc: stable@vger.kernel.org
+Fixes: 4f535093cf8f ("PCI: Put pci_dev in device tree as early as possible")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+Changes in v3:
+- modified the description as suggestions.
+Changes in v2:
+- added the bug description about the comment of device_add();
+- fixed the patch as suggestions;
+- added Cc and Fixes table.
+---
+ drivers/pci/probe.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-I hacked llvm to have both static and shared libraries installed and indeed
-`llvm-config --shared-mode` prefers shared mode.
-
-So yes, your existing change looks good. Thanks.
-
->
-> So unfortunately, I think these probably need to be defined separately.
-> The code looks similar but the use cases are different.
->
-> Thanks,
-> Daniel
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 2e81ab0f5a25..51b78fcda4eb 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1174,7 +1174,10 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ add_dev:
+ 	pci_set_bus_msi_domain(child);
+ 	ret = device_register(&child->dev);
+-	WARN_ON(ret < 0);
++	if (WARN_ON(ret < 0)) {
++		put_device(&child->dev);
++		return NULL;
++	}
+ 
+ 	pcibios_add_bus(child);
+ 
+-- 
+2.25.1
 
