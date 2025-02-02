@@ -1,159 +1,229 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB71C1F9EB9
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 14:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FFB1F9EAA;
+	Sun,  2 Feb 2025 14:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738506493; cv=none; b=tAb9A/uH8qURhqHcK0PIvJQr1Q524UEZnMH4kjfBiDLTKzmt9dRAIb6pk2sqHdkFT04IFSQZtTGjCnOpY60xxx6twwAH1S3EwNYhp+QJLvFqo6gjTWok0oPpzfOPENzLxQNCCbj17CR+ZOD8CZTgdL+P1RGGEz2LO6uY+sNz1kY=
+	t=1738506510; cv=none; b=TIVzspnAsetdYsQgCw9QASTIHjLHDuUh8a/aFvHZF9XHH3BsoyS6ea1OEQtiaviIDIg4nTMqGBfXgLFXkbvDqNoKFujZ9eOtlgdjyNCtXfDStTTYiSB2llWVGG3AmrSlXDBbf3GgI8AULUo5G3qz+QYpl9WuAvmEwg2GoBWwkXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738506493; c=relaxed/simple;
-	bh=vyjwJ0cfsI76VSZJ7zxCnm+mRZiP8T0erE8fSRPtUXk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b9WeXUR4MJVygp0dx0FpIndWHYtKB7+SUE9qnS7Lm4tx0jWkJB1VBb+6nlVEdd9Oil/jyb/r6yhBd5zDylj0T3zT6+be8yAOOYBp9OHkrOcGiIoffrlTETj1kqXCUXj0d/ym+1nOCrD+22adbxuUfmW3l2o6dR+aS/eEIzfrPHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bZKwsjEL; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738506510; c=relaxed/simple;
+	bh=TbHnexXWIxt5OgTXEHvE/eho/cQ3iS/JB6BFrj4S+Rw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fDlvXEMbyG3ifKZkYDXg62V0JdG8iCNKnZHTASQ6/cRWc4mxzYGH4RHWKCpt5zKQ4KNKHQ4qaTZpCadpXvnpYfa4XYsMKwy6zLQLmTXHRacU6brA1vhnJHRHVF/suDIVJLkWUq1SfPJrkcQ9+FsfQqydg0qVH2ifOZnle4kMhKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fXjJUI7a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZKwsjEL"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2163b0c09afso59555575ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 06:28:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738506491; x=1739111291; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=/I6rSMAKEl7cAPHfSJ/klXATUxOewzlsZpepTuhR4cc=;
-        b=bZKwsjELuFJWZmn90AQH3Z+xUqYA5IEtOf9SqHirCAX0m6xsDq3uZg21MOzvSEZd93
-         YCNcVx9+nBirlOyQUrZ+gHqNcrvrm16BwITXOcS+k0HYUTJTtI0e/+fpKyVTf1gZT+dF
-         DcglIyZ5ynDS3XulaXOx6bE33jfvQbRWMJZE+VWAzHIsjeGfgOTU6zoprm2eub3WbJ8K
-         3iiUmYMsfjCY8HOOMYgJDO3Xv01hNbHjOnzuqRlUWhIpZegewX3D7O12FtDLNW84fye2
-         GCR0VtV72Hj1m52vPSQSUZBxXwRHjsnIkbNWRoEe2sxVQOjR9UOk6JlGaODM+UZ1SwgZ
-         +MUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738506491; x=1739111291;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/I6rSMAKEl7cAPHfSJ/klXATUxOewzlsZpepTuhR4cc=;
-        b=XRj/fTfeSQaTMdC4E5Dy3cY67ocQLt/BLsk6TEKW79dnnUdKEZnVIkO/CYbskgL8Qp
-         AUDHSufkaNALG6fL+HoeBo3OuRAwCuEbnjlzuA67mqYxRDPT+SGmN2ortpWm74TuR2P2
-         TgP/XEJQXn4BEjd3zJ/pox2/3Qk/TnZYFWug0IxHE9zuNpH/aANcuICn10CI+K45hTmw
-         WknyCzqeZKkDZP94kJ+/QhE0gqECvmVqERan1p94UN0ihOKfmrVGEhveoz7UnQA0nC6I
-         tgrYRiOQMOuYuVqEeYODVJpD1toO36BGM6WpY6FG8863YiOnfjbRGnukpyU/ECF+Y79p
-         VdmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpnhEpoqe/2coeRpWKOLwDotLqXU+z20bqVonYJJFoL1MMo/AVEF1ubeikLwkxXNSc5fIakK+eTgopL9Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsAB8I4152z4CZliaYCXYNNfzgj04v4T6mYfQJyYhMPs1rpdLK
-	UWGtx5RtCFIMY1RXKGSPQu47x+5wsZLqAz6wSO43BAWwJPNg6bcZ
-X-Gm-Gg: ASbGncuuOgxC8CAFEPWqoLHbd1BvwpvXOm+W2q8/ba7VcHUcpR/HvYLADyYguRNyEwE
-	8f+31tBWynYF5ZufTw8UeGQOM3BBX0nlMtMKLy5pEyGr1rXj9xCdrds55ETCGcxr1qpVPV2Hrn2
-	+y5i4IDe+jHj3knoA+tB49AtI/p0DObUMYy5mSI/9Xev+l8v2a+3ZW4CgNDya5henk87n/wvp2T
-	NxpljGiEURG5G/eFvZVvLISC9lZI8536Dn6DdW6kIRdlCX9dw5x/fbuT0NS0qhOHOPcWuhYbFcE
-	90pJE2Pck/RsFh5YUJws/58zE1LfsBhi1HUw+DhWCJnAqOManGCI9SkyZGMWS6xo
-X-Google-Smtp-Source: AGHT+IHACnzm1wEujooiBkXO9oiLminIt0LT5rD6xhd8TufkGNtfudg03xLfdwCdTzGjXHR/S9DqPw==
-X-Received: by 2002:a17:902:ea12:b0:215:9a73:6c45 with SMTP id d9443c01a7336-21dd7d6e17bmr283864935ad.22.1738506490906;
-        Sun, 02 Feb 2025 06:28:10 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bd0ce4dsm9458541a91.27.2025.02.02.06.28.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Feb 2025 06:28:10 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <27c1243c-15e8-4c24-a0a4-cc433000ad38@roeck-us.net>
-Date: Sun, 2 Feb 2025 06:28:08 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fXjJUI7a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA243C4CED1;
+	Sun,  2 Feb 2025 14:28:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738506510;
+	bh=TbHnexXWIxt5OgTXEHvE/eho/cQ3iS/JB6BFrj4S+Rw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fXjJUI7adKHRCHbnYJvA8KTJKsKmnTX+Z1l4bqOB538SFb5HAHBETRUNzXYTGhzxV
+	 SxZdYQ0YWUOUk3WjYEnrDugBEyf3+E6+5JMJANTlAlam5R6aBf1f0idblplS98InEW
+	 9pbp7AKauvBQ2yWIFjc0b8sKmtGI4QPr5MXDu0sT0fEbb/ihl/cDp2ufvlTiTQYaJz
+	 PtmCs8ua41hJIZ+eeaO3oNZqhSBU792buMgm65OOiThQnX5EdNbwvzRiDzp78x+7zp
+	 DfSiO2vYTE/pxiQiPQGEPNNEaqNBirSz18CreiNCUECwYq2dW38pgVenGpzP86ddil
+	 uMY8m2PCits9w==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-540218726d5so3294713e87.2;
+        Sun, 02 Feb 2025 06:28:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXDwoDWAt5Icx29CEO8CXs/UCmaVyGzABynLpEx6j0QC4NvUDtoPF2YgtqlAMVWkFmmUeT2FpUk76KVNA==@vger.kernel.org, AJvYcCXyWLOIM+O8NrscDw/+BV9xjvb/K8IHtuvbY1EiE1jHjQDCCoYOKsOVrwDZbWQLIomLnzO+gy7K8V+J4Zng@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxg5a2iq4qeZ6Ls4+mVuzxEcH3by/dlYNyNC5pLspzfhxatTXHK
+	b5alcAsP/SiAq/2zc4u4wq5w+89/b7ciLT2Yn+Cjlt6bWk1kX5PsvYhITVHNrwprjvmbe+wiL7k
+	HISXHGm0hPp2/agusNdOhM1ttU4o=
+X-Google-Smtp-Source: AGHT+IGJCchryob5bg5f6cAhg6C9cb5PG1bbxiQL+QMU1QDM4jxF50fMNUClnvy1Zx21AN8tuMXhI7bmWThSVYTmwe0=
+X-Received: by 2002:a05:6512:2244:b0:543:e41a:ff76 with SMTP id
+ 2adb3069b0e04-543e4bdfed7mr6428305e87.3.1738506508266; Sun, 02 Feb 2025
+ 06:28:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/i915/backlight: Return immediately when scale()
- finds invalid parameters
-To: David Laight <david.laight.linux@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20250121145203.2851237-1-linux@roeck-us.net>
- <Z5AmlJ8stVQ4L5jS@intel.com>
- <CAHk-=wix3Rgt+8yBHDdeb_F+c8TzL5aidtCiUEpF+TBc6SCLiQ@mail.gmail.com>
- <20250202132709.3ab54376@pumpkin>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250202132709.3ab54376@pumpkin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250130035130.180676-1-ebiggers@kernel.org> <20250130035130.180676-4-ebiggers@kernel.org>
+In-Reply-To: <20250130035130.180676-4-ebiggers@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sun, 2 Feb 2025 15:28:17 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXGmMof1jDCPwVRdWeB7+_a8zv8MDZ+7oWDCx2TTNoGndg@mail.gmail.com>
+X-Gm-Features: AWEUYZlMLaOJH_ZGHpZjCZSekSMACFzRU-UFEyxy8qZQgZnViZAGUZtozcplFps
+Message-ID: <CAMj1kXGmMof1jDCPwVRdWeB7+_a8zv8MDZ+7oWDCx2TTNoGndg@mail.gmail.com>
+Subject: Re: [PATCH v2 03/11] lib/crc64: rename CRC64-Rocksoft to CRC64-NVME
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, x86@kernel.org, 
+	linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, 
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/2/25 05:27, David Laight wrote:
-> On Tue, 21 Jan 2025 15:15:09 -0800
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> 
->> On Tue, 21 Jan 2025 at 14:59, Rodrigo Vivi <rodrigo.vivi@intel.com> wrote:
->>>
->>> I'm pushing this soon to drm-intel-next, unless Linus want to take
->>> this one directly to his tree
->>
->> Let's just go through the proper channels and go through the drm tree.
->>
->> Unless I've issed something, I think this is only an active issue on
->> parisc (and only with certain compiler versions at that), so it isn't
->> some super-urgent thing that needs to be expedited.
-> 
-> It probably wants pushing into rc-2.
-> The build bot is complaining again.
-> 
+On Thu, 30 Jan 2025 at 04:54, Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> From: Eric Biggers <ebiggers@google.com>
+>
+> This CRC64 variant comes from the NVME NVM Command Set Specification
+> (https://nvmexpress.org/wp-content/uploads/NVM-Express-NVM-Command-Set-Specification-1.0e-2024.07.29-Ratified.pdf).
+>
+> The "Rocksoft Model CRC Algorithm", published in 1993 and available at
+> https://www.zlib.net/crc_v3.txt, is a generalized CRC algorithm that can
+> calculate any variant of CRC, given a list of parameters such as
+> polynomial, bit order, etc.  It is not a CRC variant.
+>
+> The NVME NVM Command Set Specification has a table that gives the
+> "Rocksoft Model Parameters" for the CRC variant it uses.  When support
+> for this CRC variant was added to Linux, this table seems to have been
+> misinterpreted as naming the CRC variant the "Rocksoft" CRC.  In fact,
+> the CRC variant is not explicitly named by the NVME spec.
+>
+> Most implementations of this CRC variant outside Linux have been calling
+> it CRC64-NVME.  Therefore, update Linux to match.
+>
+> While at it, remove the superfluous "update" from the function name, so
+> crc64_rocksoft_update() is now just crc64_nvme(), matching most of the
+> other CRC library functions.
+>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  block/t10-pi.c        |  2 +-
+>  include/linux/crc64.h | 11 +++++++----
+>  lib/crc64.c           | 10 +++++-----
+>  lib/gen_crc64table.c  | 10 +++++-----
+>  4 files changed, 18 insertions(+), 15 deletions(-)
+>
 
-The patch didn't make it into linux-next (as of next-20250131).
-I assume it either got lost or it was dropped for some reason.
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 
-Guenter
-
+> diff --git a/block/t10-pi.c b/block/t10-pi.c
+> index 2d05421f0fa5..2577114ff20c 100644
+> --- a/block/t10-pi.c
+> +++ b/block/t10-pi.c
+> @@ -208,11 +208,11 @@ static void t10_pi_type1_complete(struct request *rq, unsigned int nr_bytes)
+>         }
+>  }
+>
+>  static __be64 ext_pi_crc64(u64 crc, void *data, unsigned int len)
+>  {
+> -       return cpu_to_be64(crc64_rocksoft_update(crc, data, len));
+> +       return cpu_to_be64(crc64_nvme(crc, data, len));
+>  }
+>
+>  static void ext_pi_crc64_generate(struct blk_integrity_iter *iter,
+>                 struct blk_integrity *bi)
+>  {
+> diff --git a/include/linux/crc64.h b/include/linux/crc64.h
+> index 7880aeab69d6..17cf5af3e78e 100644
+> --- a/include/linux/crc64.h
+> +++ b/include/linux/crc64.h
+> @@ -6,20 +6,23 @@
+>  #define _LINUX_CRC64_H
+>
+>  #include <linux/types.h>
+>
+>  u64 __pure crc64_be(u64 crc, const void *p, size_t len);
+> -u64 __pure crc64_rocksoft_generic(u64 crc, const void *p, size_t len);
+> +u64 __pure crc64_nvme_generic(u64 crc, const void *p, size_t len);
+>
+>  /**
+> - * crc64_rocksoft_update - Calculate bitwise Rocksoft CRC64
+> + * crc64_nvme - Calculate CRC64-NVME
+>   * @crc: seed value for computation. 0 for a new CRC calculation, or the
+>   *      previous crc64 value if computing incrementally.
+>   * @p: pointer to buffer over which CRC64 is run
+>   * @len: length of buffer @p
+> + *
+> + * This computes the CRC64 defined in the NVME NVM Command Set Specification,
+> + * *including the bitwise inversion at the beginning and end*.
+>   */
+> -static inline u64 crc64_rocksoft_update(u64 crc, const u8 *p, size_t len)
+> +static inline u64 crc64_nvme(u64 crc, const u8 *p, size_t len)
+>  {
+> -       return crc64_rocksoft_generic(crc, p, len);
+> +       return crc64_nvme_generic(crc, p, len);
+>  }
+>
+>  #endif /* _LINUX_CRC64_H */
+> diff --git a/lib/crc64.c b/lib/crc64.c
+> index b5136fb4c199..d6f3f245eede 100644
+> --- a/lib/crc64.c
+> +++ b/lib/crc64.c
+> @@ -20,12 +20,12 @@
+>   * x^64 + x^62 + x^57 + x^55 + x^54 + x^53 + x^52 + x^47 + x^46 + x^45 +
+>   * x^40 + x^39 + x^38 + x^37 + x^35 + x^33 + x^32 + x^31 + x^29 + x^27 +
+>   * x^24 + x^23 + x^22 + x^21 + x^19 + x^17 + x^13 + x^12 + x^10 + x^9 +
+>   * x^7 + x^4 + x + 1
+>   *
+> - * crc64rocksoft[256] table is from the Rocksoft specification polynomial
+> - * defined as,
+> + * crc64nvmetable[256] uses the CRC64 polynomial from the NVME NVM Command Set
+> + * Specification and uses least-significant-bit first bit order:
+>   *
+>   * x^64 + x^63 + x^61 + x^59 + x^58 + x^56 + x^55 + x^52 + x^49 + x^48 + x^47 +
+>   * x^46 + x^44 + x^41 + x^37 + x^36 + x^34 + x^32 + x^31 + x^28 + x^26 + x^23 +
+>   * x^22 + x^19 + x^16 + x^13 + x^12 + x^10 + x^9 + x^6 + x^4 + x^3 + 1
+>   *
+> @@ -61,18 +61,18 @@ u64 __pure crc64_be(u64 crc, const void *p, size_t len)
+>
+>         return crc;
+>  }
+>  EXPORT_SYMBOL_GPL(crc64_be);
+>
+> -u64 __pure crc64_rocksoft_generic(u64 crc, const void *p, size_t len)
+> +u64 __pure crc64_nvme_generic(u64 crc, const void *p, size_t len)
+>  {
+>         const unsigned char *_p = p;
+>         size_t i;
+>
+>         crc = ~crc;
+>
+>         for (i = 0; i < len; i++)
+> -               crc = (crc >> 8) ^ crc64rocksofttable[(crc & 0xff) ^ *_p++];
+> +               crc = (crc >> 8) ^ crc64nvmetable[(crc & 0xff) ^ *_p++];
+>
+>         return ~crc;
+>  }
+> -EXPORT_SYMBOL_GPL(crc64_rocksoft_generic);
+> +EXPORT_SYMBOL_GPL(crc64_nvme_generic);
+> diff --git a/lib/gen_crc64table.c b/lib/gen_crc64table.c
+> index 55e222acd0b8..e05a4230a0a0 100644
+> --- a/lib/gen_crc64table.c
+> +++ b/lib/gen_crc64table.c
+> @@ -15,14 +15,14 @@
+>   */
+>  #include <inttypes.h>
+>  #include <stdio.h>
+>
+>  #define CRC64_ECMA182_POLY 0x42F0E1EBA9EA3693ULL
+> -#define CRC64_ROCKSOFT_POLY 0x9A6C9329AC4BC9B5ULL
+> +#define CRC64_NVME_POLY 0x9A6C9329AC4BC9B5ULL
+>
+>  static uint64_t crc64_table[256] = {0};
+> -static uint64_t crc64_rocksoft_table[256] = {0};
+> +static uint64_t crc64_nvme_table[256] = {0};
+>
+>  static void generate_reflected_crc64_table(uint64_t table[256], uint64_t poly)
+>  {
+>         uint64_t i, j, c, crc;
+>
+> @@ -80,16 +80,16 @@ static void print_crc64_tables(void)
+>         printf("#include <linux/types.h>\n");
+>         printf("#include <linux/cache.h>\n\n");
+>         printf("static const u64 ____cacheline_aligned crc64table[256] = {\n");
+>         output_table(crc64_table);
+>
+> -       printf("\nstatic const u64 ____cacheline_aligned crc64rocksofttable[256] = {\n");
+> -       output_table(crc64_rocksoft_table);
+> +       printf("\nstatic const u64 ____cacheline_aligned crc64nvmetable[256] = {\n");
+> +       output_table(crc64_nvme_table);
+>  }
+>
+>  int main(int argc, char *argv[])
+>  {
+>         generate_crc64_table(crc64_table, CRC64_ECMA182_POLY);
+> -       generate_reflected_crc64_table(crc64_rocksoft_table, CRC64_ROCKSOFT_POLY);
+> +       generate_reflected_crc64_table(crc64_nvme_table, CRC64_NVME_POLY);
+>         print_crc64_tables();
+>         return 0;
+>  }
+> --
+> 2.48.1
+>
