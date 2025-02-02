@@ -1,78 +1,94 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BCE1F4707
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 13:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE53C1F4714;
+	Sun,  2 Feb 2025 13:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738504585; cv=none; b=ftZEyYUsOYmtG4vgYHmfizjLWtuNgmzFnX5nrCoHJsAMy+X3JP6nI2roeclV4L3W1d94MGDjl0o2VC6I6A2f/vckwhZFxE6jt0M4UuWRqOvMUeNr7h9deD25g7JxYUMNZtarnhpawDPJ5ePMZQ7/SJGjKZ2ZXVBJC/S1Njy5ASA=
+	t=1738504609; cv=none; b=ENFdfW4VeDwqYJn9EERVJ3SeX/MYHzvdTpC9uxXnt2JWvU5bLmP7AzcoQRnQXEJxXeXUn90Bh19m/WOlhhamMdKt/esIB/ndB2eI+jgnDhkp3AZBH3U+ygXdufVYhynrg/pWYpjO71h2r/F8XqTeMzkpkRLsLFrdzpf6C1prvsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738504585; c=relaxed/simple;
-	bh=62CGEVgS2qUzr+ENBi2kxIRLaHnCeNaTCxRJLHwN3aY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:Cc:To:
-	 References:In-Reply-To; b=ONmObx/JlQI/rwK4FnX62LyyBp+ixh422EbRhGX+VawDKKzXkYTorvkNb2Ad3gwfeNvD5UV4wkH7HMEYXGWVZMIry0YL4MxCaGYG7buKcdPttN4nwsV6bit+qr9PeZaPDJFVYDuG5MUO/pc9hdjU7hNFWEqUzLRWdoXfqHwOJW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=I+VvQvFB; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
+	s=arc-20240116; t=1738504609; c=relaxed/simple;
+	bh=GHtraLoVnc527Ri9N9ZFXy+zn58gDFxOrLai5V6sMkM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=TqnfYi9YjPhso6tWXp8CcOYO8y6NWLiTN/Dvrfg717XopJj7+ps0tmIbh4v/dyg7wsO9T0SvKHwh8xHuI5Z07f9nlvdkEAFwOWJ72iT932IjmQWMzHQh1z212bmSdfKyGMBERFtO27HN59lvjNpxbYHMq0ozEbNExA/gYxB2VfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=J1QnPkJu; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="I+VvQvFB"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="J1QnPkJu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1738504594; x=1739109394; i=markus.elfring@web.de;
+	bh=GHtraLoVnc527Ri9N9ZFXy+zn58gDFxOrLai5V6sMkM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=J1QnPkJuN2B5/N7HAq5rvz/hFXA3H3VjjRYDLQ08AvGr0xzZGGp7yYXk5NgmUnUP
+	 czxSNU8y+lMmJmpYCZuBm7PcgjdDJizHQGg+QNpwpUG0GlOC79tXqQAsv+Gvrcx0I
+	 GKxUfRv0oM0pUu93wtVKSEbXkfzwGwwG8pryQFhK4bFA97vHQBE/6HmCMtIWKGALO
+	 +wTOGAuWETT/dwVUcTI2t1Z0d2Z2CD3fv1SgQ7bEWzktyiiGVxVIu1d6FsQXq/UMb
+	 O7hnex32BN5nP4DHg7LSuZydn2DZ9GFrmWS06eR5Wt6livi3JPJhawAK9EKPkMtsZ
+	 DbU5dOCwhyUh0t0v3g==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.26]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M9IOj-1tYFbJ0sHX-003RUp; Sun, 02
+ Feb 2025 14:56:34 +0100
+Message-ID: <5b946d09-f67c-4a49-bba7-d73a549969b6@web.de>
+Date: Sun, 2 Feb 2025 14:56:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1738504568;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dTCjK7GphBpYgmSVOu1ScWLH6UjNwU097e2TCso5clI=;
-	b=I+VvQvFBpA2cUT9zyvjYyK8BieeLsCdC5A9qZSH08JTKHKQWomZq/C7Qhys+xvEkJlt9ny
-	43qaRft0e9kotHlF9dHeT1Oyrpu+rMtAyT7NA5X8aVArVoMff8Q1/0fNzRkF4goV3+uI3f
-	TQq9zuWbyAi/sgd6gWo0Oe7T08aA3YKUt61aVBEsnAhgiPYU4VNNTFSEqAzsWwPgizTi5u
-	K7h0r3R4CDzE/I1b4PdMd1DOMT6wvHzFOAFqZrlmkbIhsRVz+SqsyFqqtQQlxufBTx6tpw
-	D32Fkj8jrXNaM0NSjm0cGwZdBRTI9D7JV1uFHDG/xt4YPUEH2wqk2+vdpEq0NQ==
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Kohei Enju <enjuk@amazon.com>, linux-scsi@vger.kernel.org,
+ target-devel@vger.kernel.org, "Martin K. Petersen"
+ <martin.petersen@oracle.com>
+Cc: Kohei Enju <kohei.enju@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+References: <20250202090208.26890-1-enjuk@amazon.com>
+Subject: Re: [PATCH] scsi: target: remove unnecessary null checking for bio
+ allocation
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250202090208.26890-1-enjuk@amazon.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Sun, 02 Feb 2025 13:55:21 +0000
-Message-Id: <D7I0F3OMXALB.1ZT1G03JTKSEZ@postmarketos.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: amlogic: add S805Y and Mi TV
- Stick
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Ferass El Hafidi" <funderscore@postmarketos.org>
-Cc: "Neil Armstrong" <neil.armstrong@linaro.org>, "Kevin Hilman"
- <khilman@baylibre.com>, "Jerome Brunet" <jbrunet@baylibre.com>, "Martin
- Blumenstingl" <martin.blumenstingl@googlemail.com>, "Rob Herring"
- <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, <linux-amlogic@lists.infradead.org>,
- <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <~postmarketos/upstreaming@lists.sr.ht>,
- "Artur Weber" <aweber.kernel@gmail.com>, "Karl Chan"
- <exxxxkc@getgoogleoff.me>, "Christian Hewitt" <christianshewitt@gmail.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>
-References: <20250201193044.28856-1-funderscore@postmarketos.org>
- <20250201193044.28856-2-funderscore@postmarketos.org>
- <20250202-wisteria-rook-of-intensity-6fecfa@krzk-bin>
-In-Reply-To: <20250202-wisteria-rook-of-intensity-6fecfa@krzk-bin>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:EZO/Y2yxPleJzlRxo72cMcXLVehajPgNHb/bRt6kGv10UK7R2b2
+ DVyEAhuNWD3BL1UKTUNfxZmEaTQpPhHZCEDMH5sOZ1pRhHhouaDydEuguBIgvhFdVsyw+rB
+ liHACz91m1l87GepSLs0BN3lwuDWw5fZKnsKwS57ikcIZ3/aDQaaWwd7pZ131GukFy9Idq/
+ cw2lUPG0FfBA+bI7/XcIw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:SEMLvc8w+qo=;7y15rwq3EV3D475Svb+RztfCDWP
+ wBnIXuugC7tJMFY3hlCQ7yY2RCSdAZXfmwVZ55oZ9q27OdCU/T4WrUrn/qxpEwzHwIfEwR/nX
+ kNhEQ3h5PFIatRu9dG9vkxE6jOt7oM+RjNFt1VfMm03oiYXXBDB/AKcQikz2sFD1mtxckyqi+
+ dTmunQM5szTxbT1H001WXELhV/ktbHaxa9yNTsBHXdmaa+6vGs4sAZ33aTTfS/V45zGiUGniC
+ wHAxKe+DCM9BTl8ah991GrxOKqG1hXFDdnJkVfeDxfmvkshlx+Mqoq5pB6WmdwcTNBnzKebXx
+ kHgqLDyzsqTl4x2SO7l/zQ63orVeRvUsUJwdxVb05abWMLUvdwiQvrULRzeTMu3dGvZJ9AKyZ
+ 5fFb58MXw7OUyCRkphZE06mq8m/xM55POyO5qr8074GJHaEIwWMW7obEFClN5uIarLgjFrQZJ
+ IaUScMrdk9yGvaxVSKnoNask4O4Qn4cG7FgQwwhAeA/Lp4Mmwc+JMrtD/aL71A8HdPqcr95H0
+ w+/qTtctamSoqH+v5j/gIi+67LQvbmjBzlNOO3P/R8Z16U85aIaiKXtoLuEEcakM3rWd1F85W
+ IkZsgOQ5Q9w/EnpiJl49oW3UDbjKuxf/WGXNOVblluyImLWy0hCl2v+70TtGIqWTcrZuOUasX
+ VMfpNXkuRS5xBz6Tq2aeDqsvfrMpEb7bGDUJJ5gLwpYp1matjATTqd+zGO0vkp43b6BewDejH
+ Ym/FmO52t7Kai2FwdcGDQznZJptZcR70cdzIg0vPNCI9M2K9JP4OHMBSLNG7ogbJV49GcTO/m
+ sDZbxjfPMSfzaaysGZu2gJqQwUXDbQ//9Yv/BBcRF588SmTAagccPZf+i+R56d0eddk/4LxYa
+ AuQAeDYIedn09ddCCmn0h85dcwuj7k8nLAqQs64MvXo/bsWByexNNkf0h6foNG8aSaLrcTakv
+ 1DKResIclVJpP/sNpWkebYXRqiry3kZVI/YODL0nrbK25BR4rPp8Nvijxcg0Nnh9x3rkgEZZl
+ lT81gyWoTRdJhR/hQskBbSzD6YA0mP+n9SFtQKPO1WSyFK7Cop1tUheOepeLbTIpqdt1sywhu
+ sPxFcWAvZjZI/n6bWRBsZ+Me3qSzIiFlLKbZSQOScI0qT1OEisuFZWDgr2h874ZZXzKdv6xOE
+ lKgz+9ZAq9MuSfm1Sw5C8KY9abt0Uh9587vkHDlDjoWH265Z+KLhalMBcL4+dV5oS4VK9nnNw
+ iKjk1GYfY4J8YnhxXRRtXcvLfPL2XXBIWcxXCzUpogEVX9WrkYHmWFqEFan5+bcL40L1Sj+XZ
+ bpg+kmKgz2Ibzz80melIONAfvv2MEaPpLzLNFkRTPYx0zSy2x81AQ1pA+Ein5+16DwY
 
-Hi,
+> When __GFP_DIRECT_RECLAIM (included in GFP_NOIO) is specified,
+> bio_alloc_bioset() never fails to allocate a bio. For more details, see
+> the comment in bio_alloc_bioset() in block/bio.c
 
-On Sun Feb 2, 2025 at 1:54 PM UTC, Krzysztof Kozlowski wrote:
-> On Sat, Feb 01, 2025 at 07:30:43PM +0000, Ferass El Hafidi wrote:
-> > From: Ferass El=C2=A0Hafidi <funderscore@postmarketos.org>
-> >=20
-> > Add support for the Amlogic S805Y SoC and the Xiaomi Mi TV Stick (aka.
-> > xiaomi-aquaman).  The S805Y is very similar to the S805X, with just a
-> > few minor differences.
-> >=20
-> > Signed-off-by: Ferass El=C2=A0Hafidi <funderscore@postmarketos.org>
->
-> Please run checkpatch. You have from/SoB mismatch.
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.13#n94
 
-I don't see any mismatch.  Maybe it complains because of a spurious
-non-breaking space?
 
-Regards.
+Can a blank line be also omitted together with the mentioned compound statement?
+
+Regards,
+Markus
