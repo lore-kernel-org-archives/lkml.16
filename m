@@ -1,150 +1,105 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD4F3595A
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 20:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A660F3595A
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 20:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738529669; cv=none; b=KG+LwddJfadf+xAnN1B6LbN8dZZ5C7Ulwjfgi9IYTCFTrL+ytPHAkH61bLOOq6RVKho3sz2PYD20W/UOwBK7jdYnkLXU0XSBwadHle8FiKP8RlwtPfYipUgN83D3ls26JsGHBCEIgWq0HNM7vS+0qVcGnDZxThdXVRhceypDZZ4=
+	t=1738529702; cv=none; b=OzlwxJ05/xjwYzqFcJ02OOOlBl/qFKX4+GCIBiDJiVmZxq9hWSGzkCau/tPna2HoSysRH8pBkwm5J6AHhla1Be9ZnQtFlewF3vcvbUeS8wba4iG88lhDCM789mTfyV8VMZ0HBzLYbKKCG4JjKm6HzoIwu5jEm2n302yt4UnB8dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738529669; c=relaxed/simple;
-	bh=6qbeyFkTnjjClHBhuZEZiCLBy8NmFZpyZPe7wAsJ8LY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V8Pr8ZVsVqP3GXuzZ4L8zftykFutASc/hON3htkL/F1TLL2iFNyFFcmVhBAT8+hiuML2+bUN+HVc+a5bZAuS4nWTTJn/rdrPksmJ/o+vWDLCdA+3sD01zuISOypPO6uxsne+WYO7r85FledioT2mhtQAYwVkW890BxmWH9iyCR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cCuJh3gs; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1738529702; c=relaxed/simple;
+	bh=Z1xGyM0DJxijK+QA5KAxL8r8czfnK+MaTHcq8p2reF4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N6PBAPTDu6hSI2laiEWH2k6wBXVxYgrXbZHoRCT3t9lLlm+4vPuMKehSnPD75vL0iCadyH9oponQrIVzQlyqVteeWLazRzpVAOZ2ZQf4hc0q7KHgP6r/71GijGL3ipNkvASzZbneXXV3GwI1oZWw95rs7Epx9T93szaNzcp3Wyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c102Aflo; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cCuJh3gs"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5dc7eba78e6so6467678a12.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 12:54:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c102Aflo"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7b98a2e3b3eso201134385a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 12:55:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1738529666; x=1739134466; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5t2zwiOsM5H/7mjf0AgS4rc7lvfnLgdfVyvCGMgdhDo=;
-        b=cCuJh3gsty5fRkKc4ulJTb3yCbYTNUzCWi7SN6aeBg+Fqk9tCyGNjHvqOK6cGddo5g
-         59+rZXnJ5s1z1AiB9IvmFftVeNil7jOrtxOLGrw9nxHhfSzhyrsUYFnw9yjrXZGwv3gr
-         3QP4/aFKR19VU6gxLA4P1Wfvr88rqQzUHG+Ec=
+        d=gmail.com; s=20230601; t=1738529699; x=1739134499; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rT2razBgYYJeyhqnDlx7RfYfw1o1xvrrpfPKnMB5vQc=;
+        b=c102Afloa9+VWSFwNumOFrb+15jWzt4dwOc+yPz0CA0o5m8xXATCgfA7QsLXEBXkFy
+         smARnFDNABzh0PjODdOa3FUJ6cggVA6Nb2SUoRjzr1jpOwHsb7XspnskqTIJ9sPnw3Eo
+         jaSSRlGGnf9BnfOgqpRoL2xyD6hlxuCBfTBp4XjRbrqQBfjLqf64n8vVoeMbCvdrkRKY
+         TAgijlEqxFvbg+SNZMsLJdJiFIy3O3D7abdWMak5HYiHMaU6zyh9qdHfVQlxkajCjHgU
+         +wrOVtd1rH+DNavfe1qI/2kGSlZRMvLiV30gGrAFUSYZdhp5sOXp/4e+q46HW8thAxRs
+         o4PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738529666; x=1739134466;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1738529699; x=1739134499;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5t2zwiOsM5H/7mjf0AgS4rc7lvfnLgdfVyvCGMgdhDo=;
-        b=gheeGh3KMdZL+A1DuQfytNGZujgY7FfJ3GVDfx00Q2FBUb08T86dNO91i9sfjwMc6A
-         30zYl66M/uTdWk+mhXkGVGxARLwbh8RZLuBZVbluFXzfDlrzosv1WyAhbsLNQVeuTATh
-         JtFOl5cin22d526AbCaPgZTgSObfjqwStrhZLeT2gL4wlMEdv8/FpNpMWvOroIjGKaNZ
-         0nR5oujghodjA3Oix1xo9mgZ3ju4vPIv/gA9XClFXstNE+ZvifKFSxS1c36mab4Pfajn
-         u1lVRD/kIuUbsoUBjUZerEvUOo5joMN2dzXSxD2Kym1758A5kOUaeh5vss9/VeoviKqa
-         39iQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzqfitg2waC5YGg7mabKZh51fSFjDqL3XWgvbqWO2CveQIVXXiMHb2lrrsg+TJryX6F4s5LiepO8UxIOk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVi05PTxlQnAvzwEZP47vKEtwjjEgvv6B0wOp2gcTMh+c1DBCv
-	KvAnpxOXe1e6GKe3+6t7p9xMs7uqi8KICX9G7frwmB0CUiLlvxw8n8fcKqXF831nNhd9/av64os
-	l7Q8Dtg==
-X-Gm-Gg: ASbGncv+1l1tNvr2myVZ+p/ooTjElpahfLQ36cdFSbAPktJq43erwVp1mX+kKKVOLdB
-	UNwjkbO54wv2JswrwXG3oesX/EQzgCag2gAeuztNfBPcKlgKaTyl643y+OSZR7fY1aLI5etuLh8
-	ulBQmHQ5/Z72by29cYyqbwrbiPZOn1r8Lsq9GEJ990DkNyAJC5PXavPZ0KaT5KWEGXL40JYT+5K
-	Wbs2CyGObFe1JEe2voTSJPEYwZysvD+BoYHqa/Ngs8TGPW8ymmyYXwiub5yzgxJ1jiVLHRbgx6Q
-	yUqYJPi2RfLzyPNR7EheAHXf2Su9TWhHWxxTi76VlnhnQr+fPT89Rnk4Q8sfdauT4A==
-X-Google-Smtp-Source: AGHT+IFARjEu/2hRj2F/HylwHLjIRwEmREjCe0JHh1QsrNQ2R5or20nuIT/x538ajsDRzjpJkwf+nQ==
-X-Received: by 2002:a05:6402:34d2:b0:5d8:253:b7df with SMTP id 4fb4d7f45d1cf-5dc5effcbc1mr21871809a12.27.1738529665708;
-        Sun, 02 Feb 2025 12:54:25 -0800 (PST)
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc724aa168sm6316684a12.52.2025.02.02.12.54.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Feb 2025 12:54:24 -0800 (PST)
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5d3f65844deso6861420a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 12:54:24 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXe20bTYPfVVPVHbuuwDKQP6Dy/VBlnBDWNLmmoyka2HEjsCKR6YlcqU/VA9h948E/cKhBZwYv4c5LNAWo=@vger.kernel.org
-X-Received: by 2002:a05:6402:400c:b0:5dc:7fbe:730d with SMTP id
- 4fb4d7f45d1cf-5dc7fcdb696mr14967854a12.6.1738529663837; Sun, 02 Feb 2025
- 12:54:23 -0800 (PST)
+        bh=rT2razBgYYJeyhqnDlx7RfYfw1o1xvrrpfPKnMB5vQc=;
+        b=rod2FKYir0M2OtRAHjVzOwJkgymznca9K0QUPpgcRJHCU1K+siIYH7aybQYsaG/e9z
+         1vOy4kUHtl2ntUzL4kKUshCaKY2Y1jNPsHyQqO8npIS7mQxsSP+keO8yaSP/hSwhNtJr
+         G14sH5crkL8ldOs8kPx3Mxmt6Hoae6PA8cHJQpdD0+bzR/sPL3VKQFqkZqo/cnTX/dqR
+         pM/HMJ7UtELtV3c12u16NijMmCKPRCwkjjtktAxtY+im21zcmU+YnjDyzlr15XUQrVya
+         k4MO2ppwBNVO0z1vZuQCaar6+1nShaZC9AgGmDVRx/+62mrOR2C0G8Sv/RWQjVKwP7Az
+         purA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxzRfExMkHr1ntBO2ZD31HLOIkeL6QOYRTTzCXKOwrWzRvp5tJWo32GZFnn5axYmh+/ii/d8xmLsUPva0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRV6MgwsN776/JGd0ntHzSZzku43YmYPGz6RK5wtBMHe2mlRKY
+	SV+yWWUEyOtD0AAvXNEa5U5XulE6WxfFnvVC+Vyk9IJ4g9Ua8tBG
+X-Gm-Gg: ASbGncv8GOh1VsQS9Ipl/yF9gFIFM3Tx3AggwE6giJ+UrY6tqZ7ZLQT99RHmGtf/1Oe
+	UJWDJ/+qrcVvzjO7NEw5kZjrwcouc695r/0YKVhImc+Ud00fjdzwkV6OPK8xtwl7RpmB8rOmVGN
+	zaAcEbVlVyOQGg6JTgAJM4TM8PxKHl8a0khwoR1emngXDxjqx3eodoWaisRp7IoaQqyp9Rrxs/+
+	N+fRIrysfl+dSoGSSV4f0J1+dWX62hyGPFdB12nRMLYnJ/Xm2Z2acN+XMI89pCCAwZyo3NANtzY
+	3IsxNfjMcjh6Y+Ww5F9eKmEwkl+HFhgHXgl19g==
+X-Google-Smtp-Source: AGHT+IE+yEzbNvz9i5VKkbMR3ffb0vBqjbRSv2MAfyT5MWhcyo5HeDj2LIiHyPMxpTp1mvukg3bI/Q==
+X-Received: by 2002:a05:6214:4008:b0:6d4:b1e:5418 with SMTP id 6a1803df08f44-6e243c648a2mr275585646d6.33.1738529699409;
+        Sun, 02 Feb 2025 12:54:59 -0800 (PST)
+Received: from newman.cs.purdue.edu ([128.10.127.250])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e25495e76bsm42373246d6.125.2025.02.02.12.54.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 12:54:59 -0800 (PST)
+From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+To: miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com,
+	gmpy.liaowx@gmail.com,
+	kees@kernel.org
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Subject: [PATCH] mtd: Add check for kcalloc()
+Date: Sun,  2 Feb 2025 20:54:56 +0000
+Message-Id: <20250202205456.40790-1-jiashengjiangcool@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPM=9twyvq3EWkwUeoTdMMj76u_sRPmUDHWrzbzEZFQ8eL++BQ@mail.gmail.com>
-In-Reply-To: <CAPM=9twyvq3EWkwUeoTdMMj76u_sRPmUDHWrzbzEZFQ8eL++BQ@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 2 Feb 2025 12:54:07 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whRBX0aQq1J5S5nHXE2GvXnQ5z+cqu=iTY9xU34kvYMzw@mail.gmail.com>
-X-Gm-Features: AWEUYZmtdf6Aj4eR4CjeK7M4f9l-h8Ccbl_a-DQ9v5PSq10GpXRW0o0FHXwpAT8
-Message-ID: <CAHk-=whRBX0aQq1J5S5nHXE2GvXnQ5z+cqu=iTY9xU34kvYMzw@mail.gmail.com>
-Subject: Re: question about firmware caching and relying on it (CONFIG_FW_CACHE)
-To: Dave Airlie <airlied@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, 
-	dri-devel <dri-devel@lists.freedesktop.org>, "Luis R. Rodriguez" <mcgrof@kernel.org>, 
-	russ.weight@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sun, 2 Feb 2025 at 12:15, Dave Airlie <airlied@gmail.com> wrote:
->
-> Currently FW_CACHE is an optional feature (that distros may or may not
-> configure off), where we will cache loaded firmwares to avoid problems
-> over suspend/resume (and speed up resume).
->
-> I've just discovered a problem in nouveau's suspend code when the
-> FW_CACHE is turned off, it tries to load a few in it's suspend path
-> for certain scenarios. Enabling FW_CACHE fixes this, but I'm unsure if
-> that is considered properly fixing it or should FW_CACHE just be
-> considered an optimisation.
+Add a check for kcalloc() and print an error message if it fails.
 
-Honestly, if the alternative is "driver hacks up its own caching",
-then I think it definitely should just say "select FW_CACHE".
+Fixes: 78c08247b9d3 ("mtd: Support kmsg dumper based on pstore/blk")
+Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+---
+ drivers/mtd/mtdpstore.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-You need to make it conditional on PM_SLEEP to make Kconfig happy, but
-arguably that acts as documentation (ie it kind of ends up being a
-"this is *why* we select FW_CACHE").
+diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
+index 7ac8ac901306..368997155c07 100644
+--- a/drivers/mtd/mtdpstore.c
++++ b/drivers/mtd/mtdpstore.c
+@@ -423,6 +423,11 @@ static void mtdpstore_notify_add(struct mtd_info *mtd)
+ 	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
+ 	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+ 
++	if (!cxt->rmmap || !cxt->usedmap || !cxt->badmap) {
++		dev_err(&mtd->dev, "failed to allocate memory for map\n");
++		return;
++	}
++
+ 	/* just support dmesg right now */
+ 	cxt->dev.flags = PSTORE_FLAGS_DMESG;
+ 	cxt->dev.zone.read = mtdpstore_read;
+-- 
+2.25.1
 
-So a simple
-
-        select FW_CACHE if PM_SLEEP
-
-sounds like the right thing to do for nouveau.
-
-And in fact, that was how things used to be globally (with no driver
-selection noise needed). There was no FW_CACHE option, we would just
-enable it unconditionally for PM_SLEEP, exactly so that drivers would
-*not* try to load firmware during resume when the filesystem may be
-off-limits.
-
-HOWEVER.
-
-We apparently have some completely cray-cray "uevent messages" thing
-going on, which caused commit 030cc787c30e ("firmware_class: make
-firmware caching configurable")
-
-Honestly, I'm not sure what broken thing that is all about. What
-uevent messages? Firmwas caching should cause *less* uevent noise, not
-more, because now we don't need to talk to user space as much.
-
-Is that some Android-only thing, or is it some inherent stupidity in
-the FW_CACHE code that I just don't see off-hand?
-
-I do *not* see any real explanation for that commit, only that
-statement about netlink that appears very odd.
-
-That commit really makes me angry. It has that pattern that I
-absolutely hate: no actual background, and a "Link:" that makes me
-follow it ("Yay! Explanation!") that then only points back to the
-patch submission ("#^&% this thing").
-
-Useless. Annoying. I absolutely *detest* those links that give no
-actual useful backstory to what the thing is about and only point back
-to the patch that I'm wondering about. The disappointment it causes is
-intense and real.
-
-Anyway, I would say that particularly for a driver that wants caching,
-adding that select is very much the right thing to do.
-
-I'd rather get rid of that stupid config option entirely, but since I
-don't know what the background is for it having been added, I guess we
-can't do that.
-
-Greg, Luis, can you explain that odd uevent message / netlink issue?
-
-            Linus
