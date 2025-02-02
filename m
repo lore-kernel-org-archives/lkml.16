@@ -1,42 +1,42 @@
 Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9055C1DA23
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 07:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0681D63DE
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 07:50:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738482629; cv=none; b=plvStSd4bL8T87zcMxGm+5OFhGovDKhcJYXZ8sIty3OTKkCjVRQCKSyDHxbf3k6KaAWpmFZeRXopWpBgdYHbyEkUp1TCOvTfljhffhMplw1irMy7hPuexArxISWDkTvAWvNH2QO2QubFJBafex8Yv+u59KEznAKe4zzXVybMp/c=
+	t=1738482632; cv=none; b=Vlr3RQvAfKwg7TdBTW/fBZATauZ1cINRoL0XTxF/K31FI/KMIqzMYk9u0XtF9oQU+VxhSOCY/P2XwGhgqwGD1oWBUU8SQ0dr6rkJjerisub/c2IUQbWWtSli9FI5aFvBxzU31pLVjIveRiDYjkt8e3zCJJPaygZDfDslPWJrjbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738482629; c=relaxed/simple;
-	bh=ct4FVMAhR3QrzY31JTgnzGPReYFrJVc3mEqKmQgn9CA=;
+	s=arc-20240116; t=1738482632; c=relaxed/simple;
+	bh=tCfziVWVIUoiz7Lt4rzCRzkKuC5bIQB1vwIhu12RM+E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jkNr46SLegwdA+T4cYX6XzMSMYHD93B+Ef6C9gXfNFXYhl2b15ycF1oedZlmqVEaMowPBhecZYTrvCsYGIryrh35Fh8TKOdamOIvSA71rJ1J1std7FZpzUOLcb5kGL5lJjLH+ugcbnhq0t4WBGkSjKI/PENDHFkdvIvd6vFR1qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=Asrhqi1O; arc=none smtp.client-ip=195.133.245.4
+	 MIME-Version; b=VbSEtJVbt5sGpvbQxRgjEfcXkbBhrxSZ9Y28LO38DHwE9IU4mCtSs1JYeoPRFWhkGQERTfQ8FAx0GbAzame9HPTdTzqyvCQANOpyoJ97D/KISc0PFHeWRWB84FKoMdO1KW2LNyUQHJXVpcjsNURFcvnbQIH6GnzQmIm4aqGm9X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=AdbVu7ww; arc=none smtp.client-ip=195.133.245.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="Asrhqi1O"
+	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="AdbVu7ww"
 Received: from mail.nppct.ru (localhost [127.0.0.1])
-	by mail.nppct.ru (Postfix) with ESMTP id D9F331C243A
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 10:50:25 +0300 (MSK)
+	by mail.nppct.ru (Postfix) with ESMTP id 5B7741C2436
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 10:50:29 +0300 (MSK)
 Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
 	reason="pass (just generated, assumed good)" header.d=nppct.ru
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:to:from:from; s=
-	dkim; t=1738482625; x=1739346626; bh=ct4FVMAhR3QrzY31JTgnzGPReYF
-	rJVc3mEqKmQgn9CA=; b=Asrhqi1O0hpAECQwM/imX1cNZqA7TV6qDaz1igJSRwO
-	B7ctZsJdbb8ei7FyltjAyyBH+MQFjE6LLkfJdBxZqL21XnXgMtRXSu2TnNNzNEKL
-	MIgwk5LUDCUwWK2GCYAVTD/jftqFafFusGUoaOzMz+HZo0kMHPEkla7OJlVqLQFA
+	dkim; t=1738482629; x=1739346630; bh=tCfziVWVIUoiz7Lt4rzCRzkKuC5
+	bIQB1vwIhu12RM+E=; b=AdbVu7wwTfoQ7AGVZLYeGxf6GvQ+4q4AW7MVVrsyR3+
+	EP3y0j5qR2MCC9bw/2hush/AeVQ8bwUYEOuefW73BAOSXjG68U1MBjzH1zgQW/ie
+	I5QlNOBJltdeEPKz5Zj6M+OBV7NbRSPAI3rlpEGGquzEk9VRYGq9kS+EtGqCjW0Q
 	=
 X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
 Received: from mail.nppct.ru ([127.0.0.1])
 	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id z0mw9C5yADrO for <linux-kernel@vger.kernel.org>;
-	Sun,  2 Feb 2025 10:50:25 +0300 (MSK)
+	with ESMTP id Jo3RNadbPgH4 for <linux-kernel@vger.kernel.org>;
+	Sun,  2 Feb 2025 10:50:29 +0300 (MSK)
 Received: from localhost.localdomain (unknown [87.249.24.51])
-	by mail.nppct.ru (Postfix) with ESMTPSA id 6FD1E1C2429;
-	Sun,  2 Feb 2025 10:50:17 +0300 (MSK)
+	by mail.nppct.ru (Postfix) with ESMTPSA id 673A51C2443;
+	Sun,  2 Feb 2025 10:50:18 +0300 (MSK)
 From: Alexey Nepomnyashih <sdl@nppct.ru>
 To: stable@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -65,9 +65,9 @@ Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
 	linux-kernel@vger.kernel.org,
 	lvc-project@linuxtesting.org,
 	Hou Tao <houtao1@huawei.com>
-Subject: [PATCH 6.1 06/16] bpf: Factor out inc/dec of active flag into helpers.
-Date: Sun,  2 Feb 2025 07:46:43 +0000
-Message-ID: <20250202074709.932174-7-sdl@nppct.ru>
+Subject: [PATCH 6.1 07/16] bpf: Use rcu_trace_implies_rcu_gp() in bpf memory allocator
+Date: Sun,  2 Feb 2025 07:46:44 +0000
+Message-ID: <20250202074709.932174-8-sdl@nppct.ru>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250202074709.932174-1-sdl@nppct.ru>
 References: <20250202074709.932174-1-sdl@nppct.ru>
@@ -79,94 +79,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Alexei Starovoitov <ast@kernel.org>
+From: Hou Tao <houtao1@huawei.com>
 
-commit 18e027b1c7c6dd858b36305468251a5e4a6bcdf7 upstream.
+commit 59be91e5e70a1aa91dfee8088b071f6d05c8a1a3 upstream.
 
-Factor out local_inc/dec_return(&c->active) into helpers.
-No functional changes.
+The memory free logic in bpf memory allocator chains a RCU Tasks Trace
+grace period and a normal RCU grace period one after the other, so it
+can ensure that both sleepable and non-sleepable programs have finished.
 
+With the introduction of rcu_trace_implies_rcu_gp(),
+__free_rcu_tasks_trace() can check whether or not a normal RCU grace
+period has also passed after a RCU Tasks Trace grace period has passed.
+If it is true, freeing these elements directly, else freeing through
+call_rcu().
+
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Link: https://lore.kernel.org/r/20221014113946.965131-3-houtao@huaweicloud.com
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Hou Tao <houtao1@huawei.com>
-Link: https://lore.kernel.org/bpf/20230706033447.54696-6-alexei.starovoitov@gmail.com
 Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
 ---
- kernel/bpf/memalloc.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ kernel/bpf/memalloc.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/bpf/memalloc.c b/kernel/bpf/memalloc.c
-index 0f45ea4259cb..5c4e54e17f95 100644
+index 5c4e54e17f95..9a4fb4ea73ef 100644
 --- a/kernel/bpf/memalloc.c
 +++ b/kernel/bpf/memalloc.c
-@@ -154,17 +154,15 @@ static struct mem_cgroup *get_memcg(const struct bpf_mem_cache *c)
- #endif
- }
+@@ -261,9 +261,13 @@ static void __free_rcu(struct rcu_head *head)
  
--static void add_obj_to_free_list(struct bpf_mem_cache *c, void *obj)
-+static void inc_active(struct bpf_mem_cache *c, unsigned long *flags)
+ static void __free_rcu_tasks_trace(struct rcu_head *head)
  {
--	unsigned long flags;
+-	struct bpf_mem_cache *c = container_of(head, struct bpf_mem_cache, rcu);
 -
- 	if (IS_ENABLED(CONFIG_PREEMPT_RT))
- 		/* In RT irq_work runs in per-cpu kthread, so disable
- 		 * interrupts to avoid preemption and interrupts and
- 		 * reduce the chance of bpf prog executing on this cpu
- 		 * when active counter is busy.
- 		 */
--		local_irq_save(flags);
-+		local_irq_save(*flags);
- 	/* alloc_bulk runs from irq_work which will not preempt a bpf
- 	 * program that does unit_alloc/unit_free since IRQs are
- 	 * disabled there. There is no race to increment 'active'
-@@ -172,13 +170,25 @@ static void add_obj_to_free_list(struct bpf_mem_cache *c, void *obj)
- 	 * bpf prog preempted this loop.
- 	 */
- 	WARN_ON_ONCE(local_inc_return(&c->active) != 1);
--	__llist_add(obj, &c->free_llist);
--	c->free_cnt++;
-+}
-+
-+static void dec_active(struct bpf_mem_cache *c, unsigned long flags)
-+{
- 	local_dec(&c->active);
- 	if (IS_ENABLED(CONFIG_PREEMPT_RT))
- 		local_irq_restore(flags);
+-	call_rcu(&c->rcu, __free_rcu);
++	/* If RCU Tasks Trace grace period implies RCU grace period,
++	 * there is no need to invoke call_rcu().
++	 */
++	if (rcu_trace_implies_rcu_gp())
++		__free_rcu(head);
++	else
++		call_rcu(head, __free_rcu);
  }
  
-+static void add_obj_to_free_list(struct bpf_mem_cache *c, void *obj)
-+{
-+	unsigned long flags;
-+
-+	inc_active(c, &flags);
-+	__llist_add(obj, &c->free_llist);
-+	c->free_cnt++;
-+	dec_active(c, flags);
-+}
-+
- /* Mostly runs from irq_work except __init phase. */
- static void alloc_bulk(struct bpf_mem_cache *c, int cnt, int node)
- {
-@@ -295,17 +305,13 @@ static void free_bulk(struct bpf_mem_cache *c)
- 	int cnt;
- 
- 	do {
--		if (IS_ENABLED(CONFIG_PREEMPT_RT))
--			local_irq_save(flags);
--		WARN_ON_ONCE(local_inc_return(&c->active) != 1);
-+		inc_active(c, &flags);
- 		llnode = __llist_del_first(&c->free_llist);
- 		if (llnode)
- 			cnt = --c->free_cnt;
- 		else
- 			cnt = 0;
--		local_dec(&c->active);
--		if (IS_ENABLED(CONFIG_PREEMPT_RT))
--			local_irq_restore(flags);
-+		dec_active(c, flags);
- 		if (llnode)
- 			enque_to_free(c, llnode);
- 	} while (cnt > (c->high_watermark + c->low_watermark) / 2);
+ static void enque_to_free(struct bpf_mem_cache *c, void *obj)
+@@ -292,8 +296,9 @@ static void do_call_rcu_ttrace(struct bpf_mem_cache *c)
+ 		 */
+ 		__llist_add(llnode, &c->waiting_for_gp_ttrace);
+ 	/* Use call_rcu_tasks_trace() to wait for sleepable progs to finish.
+-	 * Then use call_rcu() to wait for normal progs to finish
+-	 * and finally do free_one() on each element.
++	 * If RCU Tasks Trace grace period implies RCU grace period, free
++	 * these elements directly, else use call_rcu() to wait for normal
++	 * progs to finish and finally do free_one() on each element.
+ 	 */
+ 	call_rcu_tasks_trace(&c->rcu_ttrace, __free_rcu_tasks_trace);
+ }
 -- 
 2.43.0
 
