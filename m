@@ -1,78 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96BA1EE7CD;
-	Sun,  2 Feb 2025 13:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1071DB150;
+	Sun,  2 Feb 2025 13:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738504150; cv=none; b=BeKGcTRPWr/SUlFsft+te0bnrrEDl6FNlzgc8H1dkJVbHjrnP7ldI/+93HbxfX9HkmIKH9to5xjfzXvP8S4g8FkbhRXzeAEg+MNSyMsb+TbiUfteYoVnXJhgIyN4py5NKynvfvgrELe9mBBTnM9DFXu5wS1zkPtcggy/s4RkDR0=
+	t=1738504303; cv=none; b=mgbEd/XVNftOpfYtPh/YD1qawCEsotIlZ+WZQyIbSTk9avaaSW4Mqni7BsuEJclXPPGF5+CFEmyKGvoOLmEQJEfDQGLn1GF14lFhR/0jZG7p936LFGABwWjvVlewWk77ZbUyJ7C22vkv+CEjpd8Gfeo5bDmuECUr8+ngjRnICHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738504150; c=relaxed/simple;
-	bh=IqScxnkMWyQPJL7nymqREhLZVhH8LNcwCfnVNb9PBlY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oX1L1MaEkGFtiFjVqeVJ71GHEmFH3J/J3OZCAZMrdeKwm7Japjkvc9/7nYco3jMiuPpqYH0phuZVujD7IUBRV9l+0WyRpKNV60U1aTptFWy30XSt0GDUrE5bA6SRfVQwDuUmBKtG3Hjj8cjRoLEd5zzG+5ilHNkxDDpV95/gTWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G7/mf+1l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738504303; c=relaxed/simple;
+	bh=PaGoCznYxYB4uebkg1d0lQjC9KknA3MW3KGowHSAOFk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mTkbukfN9KQDX8diwDsGI10tqqsrBSv/POWS1At3XgGXBDnoESMILlkJRTYN1uj1obsk2J3YfXgKDuw4pNwNtDC4rvyVshSF9gQ7Y66vnC8ypmnpcN0NWzjWCzyIjG79yxbciZiXWyAKpcoJA8Ct9DTZJtcKyWzAtvkDO601210=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e57Hj9Fg; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G7/mf+1l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AC9EC4CED1;
-	Sun,  2 Feb 2025 13:49:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738504149;
-	bh=IqScxnkMWyQPJL7nymqREhLZVhH8LNcwCfnVNb9PBlY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G7/mf+1lBvue4DBHqZlBiI3XxVuukrdJUW0kIVZwlzsBBR16R4u+TB1c4x51xa6Yr
-	 EPY4O6pQeSb/GrqloyL0HY/MPYlS+Ujr5OIqAhcmnoqiVJ5pXKIzMeJn7eEczdOTE2
-	 rnfbq+HDeaPkqmq6h1cncggrk+P9T+jWdUAAbz584aEl6HB3Kl806XSXTDH6ka9FoY
-	 zK7i2s0Tso+RF5KGsTZXXE3d/oIxuijujYFZNNUh5LGGT1kTRxr371juYg2bbqyz2F
-	 g9+VmiEJeY+xP7JCbk/t2UuhznTBXb8WaJm5AHIITgxd3cE8v34DqUxqRE6Sjf/6IV
-	 hHJamK8fSVATg==
-Date: Sun, 2 Feb 2025 14:49:05 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, Rocky Liao <quic_rjliao@quicinc.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] arm64: dts: qcom: qrb2210-rb1: add Bluetooth
- support
-Message-ID: <20250202-fabulous-donkey-of-respect-5763bf@krzk-bin>
-References: <20250202-rb1-bt-v3-0-6797a4467ced@linaro.org>
- <20250202-rb1-bt-v3-6-6797a4467ced@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e57Hj9Fg"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21661be2c2dso58266215ad.1;
+        Sun, 02 Feb 2025 05:51:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738504301; x=1739109101; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fcPdAlmSrROAe9gGhBlGWoPyUgAHcTFNljv1EQXHqYY=;
+        b=e57Hj9Fgrwms9N1wZRhafPTsJKcIZa38iUhMLpdVZmGTQNEA/3uebUaziJ9IOTlPxl
+         oMGUox8sMgsE9ugvHbrXdkxGl+N8DcGjeg4PS4W+MaEZTD4/VWAScVdwDC6yqv3EQLZj
+         FpLOlXc7bzf+K0Y1YYVpVGECdTmo+M7QHTMU0UZjRp2+9DNEAWkJF9PfD3p+o3OBQQ6Z
+         y6j6tHnTh/xLaBl1jfUvm9tyN696XAdi1OmUZ0Zrx9+gNs3JBHrG5rSTgGoXA7C2yvLh
+         N0augv82KpxPhweImAMVH/DgVs0NnzyJGOWr1hvwCJcuwf4ncBCdohw6CJrL6Ht+qKHQ
+         n+9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738504301; x=1739109101;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fcPdAlmSrROAe9gGhBlGWoPyUgAHcTFNljv1EQXHqYY=;
+        b=E382dkph3ZUXW/wAQQ970IE/gJ+JATYfKg34aSXxMaa1tLRzceebkndzWS6m7R9Qsr
+         VZtnS+bVdgJaDEyt635m8kv0lhEd+Xf7lS99O76QX0/6k55zmkGIjPjc8LltG44Qtyu9
+         2Us+O/SrDthIZ0vQDaQWLO9NPv1PbWxg/E+q8T0b3ApFE8VZhZvbUNIIsYyy241GOg2N
+         jyn+aeO/xdNFr7ZhV131h32XxHJx7GxRaQyIY6kcd3fcZcfahYjlv+MIXxWHcScvpKXL
+         lFU4QhZVAH7IOQbT5IMIlJvGPcS6eZC/yvlu7Qz4wL96ErUiu+VtBZ9eHlMxIeu3N5zR
+         R+MA==
+X-Forwarded-Encrypted: i=1; AJvYcCVu/7hIiAQrEYfs7mmnZGKiS60v88WjOdD2MrR01qecwZJ88DjCy87IhXe8yg8Wo2Zh0mq4jjRoVhV77N7k@vger.kernel.org, AJvYcCXtsD9AJR5Rya2dTTS7uMHfAuEUR/BmcRt810f7xccb2j5xPq8fpg+HYHsgTau70t0VaKe3TQ72/asV@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv3cBci+qJrJkNDlSN2ZgbPyeofDoi/dQAeKEeKtBPodMfHYhF
+	JjAKKExMvfXuk5ykKNuBnprqny8dPgDxcUZ+eixiKSTxo6eeiW0q
+X-Gm-Gg: ASbGncvBPoa7gXU64+r4vt7ZhRdMChXtYr2ShhE+8gxMAbDCPUIoKf0XR8JZYhdJOnc
+	CEwucvhGBg4rhqgXmW9Pj1eX077UKK7nUqiizO+S80ZfI/BvTmvbGR3oKf5HZ5mzEJ87xGpXtRO
+	wecS4dNus6t+EXYe1QQFJe4uJt05bjP6QgqvtCsNTu+TY6kUTPOB0Ik1y5MXf0IQjIu+W23fimj
+	EAmkYHhGcTPhyOyfSxn8QJCYJ5sQgZ5CB6vtuYaiU4cpEu6UfIqzAIFLAtvLwH5+FdVyxFy07dB
+	v9s8suM9nyeH3aCAdnXWhKxg
+X-Google-Smtp-Source: AGHT+IGSrt5p3ZW1z1QTxJFz4FNWGjTmymX8g7rfyX1880uET2qfvQtym1j/XhhlXAUGGdw2/o+AFg==
+X-Received: by 2002:a17:902:f610:b0:216:4348:149d with SMTP id d9443c01a7336-21dd7dfb835mr324407195ad.53.1738504301080;
+        Sun, 02 Feb 2025 05:51:41 -0800 (PST)
+Received: from [192.168.75.213] ([116.121.188.179])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3303cdbsm58016825ad.199.2025.02.02.05.51.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Feb 2025 05:51:40 -0800 (PST)
+Message-ID: <9edfb12f-5e1d-4de0-b124-37053125a7e0@gmail.com>
+Date: Sun, 2 Feb 2025 22:51:34 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250202-rb1-bt-v3-6-6797a4467ced@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] Weighted Interleave Auto-tuning
+To: Gregory Price <gourry@gourry.net>
+Cc: Joshua Hahn <joshua.hahnjy@gmail.com>, ying.huang@linux.alibaba.com,
+ rafael@kernel.org, lenb@kernel.org, gregkh@linuxfoundation.org,
+ akpm@linux-foundation.org, honggyu.kim@sk.com, rakie.kim@sk.com,
+ dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, dave.jiang@intel.com,
+ horen.chuang@linux.dev, hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com,
+ kernel_team@skhynix.com, 42.hyeyoo@gmail.com
+References: <20250128222332.3835931-1-joshua.hahnjy@gmail.com>
+ <41ab5a11-f8d3-403c-9d68-33eb15aef8fa@gmail.com>
+ <Z55QmybX5IkuLv6Q@gourry-fedora-PF4VCD3F>
+ <Z55RpQgsma5wrpfh@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: Honggyu Kim <honggyu.km@gmail.com>
+In-Reply-To: <Z55RpQgsma5wrpfh@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 02, 2025 at 02:16:02PM +0200, Dmitry Baryshkov wrote:
-> Add support for the onboard WCN3950 BT/WiFi chip. Corresponding firmware
-> has been merged to linux-firmware and should be available in the next
-> release.
+
+
+On 2/2/25 01:53, Gregory Price wrote:
+> On Sat, Feb 01, 2025 at 11:49:31AM -0500, Gregory Price wrote:
+>>>    1. the auto mode set the weights as 10:5:1 for node{0-2}.
+>>>    2. node2 is offlined, then recalculation makes it as 2:1 for node{0,1}.
 > 
-> Bluetooth: hci0: setting up wcn399x
-> Bluetooth: hci0: QCA Product ID   :0x0000000f
-> Bluetooth: hci0: QCA SOC Version  :0x40070120
-> Bluetooth: hci0: QCA ROM Version  :0x00000102
-> Bluetooth: hci0: QCA Patch Version:0x00000001
-> Bluetooth: hci0: QCA controller version 0x01200102
-> Bluetooth: hci0: QCA Downloading qca/cmbtfw12.tlv
-> Bluetooth: hci0: QCA Downloading qca/cmnv12.bin
-> Bluetooth: hci0: QCA setup on UART is completed
+> Point of clarification here:  a hot-unplug event won't cause
+> recalculation.
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/qrb2210-rb1.dts | 82 ++++++++++++++++++++++++++++++++
->  1 file changed, 82 insertions(+)
+> What actually causes re-weight is hot-plug reporting new capacity.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+So do you mean re-weight is done only when a new node is onlined while
+offline doesn't trigger re-weight?
 
-Best regards,
-Krzysztof
+I see node_set_perf_attrs() does recalculation by calling
+mempolicy_set_node_perf(), then reduce_interleave_weights().
 
+But I'm not sure if the re-weight is done via node_set_perf_attrs() only
+when a new node is onlined.
+
+Could you please explain where I can find it?
+
+> 
+> So in this scenario, the weight will remain the same for node2.
+
+If it's true, my scenario is wrong.
+
+Thanks,
+Honggyu
+
+> 
+>>>    3. the auto sysfs interface is set to 0 to make it manual mode.
