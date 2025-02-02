@@ -1,115 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F99F1F78E3;
-	Sun,  2 Feb 2025 14:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BD9E574;
+	Sun,  2 Feb 2025 14:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738505513; cv=none; b=k6y4HtRwQunZc06bLIe5F+VG3jEarzGrCCUo/vdRmVhjHoe473hAylB6AezaujXDCoWCHWEATk8as6WB+xE9uuLCyDCWtydrmkAGOqPjt9FYpunin0p4YOeZM8M12iRuw8Lm4H+GL6q+x0083W563NG0Imb7/Jq8oaYkHVlb1bY=
+	t=1738505573; cv=none; b=EPdVvk/b3zbHfuHMbHOEmM+93VfEwO2gHbvsODTYIvioiucjuq40wiWTl+L72kV8zKNlP9gUS0Za5ycfa+GcmrK1P21YR/Oy738GVU1y7y0nTmQRtGbf8Oq/xyhAAWzyqpjcnO8KSedSoucd2QXI8sTjxUZfOXou+RQp5IKwrRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738505513; c=relaxed/simple;
-	bh=GxGKkCq152L+BGstMeNbJkHCsfMZjetej5nLZT8h520=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SUTjMckeAEg/NdhxGNlxcBU1hlChuP+ZQqFlT7pxgIILi8NIad90mA8+YZl4urvNyCpTcANyQP0edBhRATk6gkNTy1viW21hQnAbrOTsJa5Bebr+v0jq4/yk6wNrex8ukDZfa0QyXSPP+FDvmL9KOeEMa8k5hQfq8GUNYKJLdZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgLco62D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738505573; c=relaxed/simple;
+	bh=QZm1LtvGQKCijH7Ny3Z1lJ1iBrDQ8MzH8+nch80dCX4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=D5uU+q5sMIh2euxXut5Ow0zGpBRmYYY9Cr2tqcCo6ONlQTND7pmOkHHhmoMOT45gGwmfz3GKDpZjM4o/fSByYmwJYtv8tXQwPsjGD+oMx6tcAXHJjiw71jSKzWZKPyPlF5amYrn+aPZaCzoyRzINrEw1eCXA4lbct2a6vt5X9Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=blxFU8kP; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgLco62D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EFCEC4CED1;
-	Sun,  2 Feb 2025 14:11:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738505513;
-	bh=GxGKkCq152L+BGstMeNbJkHCsfMZjetej5nLZT8h520=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GgLco62D4r1wZZOUScV62A5HDmmpwGMRm+MxK9WnnA+yUYLbgkFGYyjbDyF5+g5o7
-	 3JhgePbqmx3H75O5zu/zbAZY17+96ChGbf40VlgM6IvEUJis/NGXMLLEY4Glkank0w
-	 kVpSSTw0rfmasZNbypUcOHexFiBQ7uXe3k1uNDqbvkHTOkp0R4kVonZhMRhHq3BuOJ
-	 Mww2v8mqDd3yBglEDkFDAKOzpDCT8bTl+AEN10gJOWHsi40pCIX6wx/iwzXP3tGXT7
-	 bkm2ce3tIPCIAY8V2TiU8iMm/i0FKPoVX6xGkr77jLaRY8cNa4txcb6XNw8e7jpzQM
-	 /4d/vYL3MJjQw==
-Date: Sun, 2 Feb 2025 15:11:50 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Badhri Jagan Sridharan <badhri@google.com>
-Cc: Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, 
-	felipe.balbi@linux.intel.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	johnyoun@synopsys.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, jameswei@google.com, stable@kernel.org
-Subject: Re: [PATCH v1 1/2] dt-bindings: usb: snps,dwc3: Add property for imod
-Message-ID: <20250202-purring-ambitious-axolotl-4c6ff4@krzk-bin>
-References: <20250202035100.31235-1-badhri@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blxFU8kP"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6f6715734d9so20157387b3.3;
+        Sun, 02 Feb 2025 06:12:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738505571; x=1739110371; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OP/ULsuhS2l/WjnpV3aP5975AuU0qKrgS7YueBktGqU=;
+        b=blxFU8kPtZak4OPtl/vV3BSR96zDpWhjc3+Of9xOBUoXZRq6ryhWnHRBVlnEs/6qdM
+         sX2jkfnYG0aOUqLZAlhF2+u1ADDSxWM4kMS5t75AUWqyqC35HljN2fzleqWbgDbjnNiA
+         GR0JzN5miY2hm/tdfolHFMeKS55H5P6QmZndHiMFxJy+tf9VoZCoL4SlNm+rnm0EMzoE
+         xrm8zPl4hKfbC06siLWEoZ+Qa/4xoz93ETDrcaB7TpYQWJbZOpI+LX0ajV+wwPK5/whg
+         voFiPcS0OtU8zXiVORO0yWllfYvIpUg4/pI651ADe81a/deAg6uAA7c0nwDNYBDeWcrG
+         b9oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738505571; x=1739110371;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OP/ULsuhS2l/WjnpV3aP5975AuU0qKrgS7YueBktGqU=;
+        b=ie6qFsVy7qFPyeUfiN84wKGmpduGmB+1g+GjcEo8xEIwzQf2LlWf0ErQdyEHJA5aeI
+         k0ylzgaEcc1Squv77BPJTDSG/yflqMOxd7WfbWWXIq4MAJqw4H6ov6sMC5jrCSYcv9El
+         x6DbcC0HNzrijv25SqmeZWsa6MEe+l68gWyebRZfUD/DEi1FShIKvTZxRVOydRGQVMGu
+         QadzbJlr8ewzgvxy8QDWwzCFF/MpIAGPmrt59/MJ2H5LZAN7+phUSKsxPefOjc7Bc65p
+         QSBZnGI2ThZxORfS+F3uusuXz/8RkRiX6+vLmwVK8/Xc6AUvYJxYhyaLX84ih6toYjvY
+         bqSA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+9Le4ZoYT01g/JuoiYkTiYgBtjW6NGwnyXdsvowxWHvfg6JOeg+EH8M4iMjfrBqYVhQG9m6UBNzFYRqCm@vger.kernel.org, AJvYcCXsMKDeeTAxWNmexHR4hQpBJ5NlmhWivAardBrUUVpf42aicPE0yC7uDLMyS/Z0ewy4mpXTkBhp3Rpa@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHI/zYbaiOYVn5TbB/1cVFndaOBJWXVEtfEUZlYodRqu0rekyy
+	I6vDzrG018Tp6Z9YZqCIeZNMjMnHv+37T54CVkKU/MaLiVzqFvo2
+X-Gm-Gg: ASbGncvj3cPRw+tAVOA0rAG97m/5KzEsB7Y+Y+Oryvj4c7iYwyOMilkskJyh9I/viil
+	F0IFC+8Marwph100JothFRoNwX5a2+SZLLXTn1IkvRLKKCj5zfmphS/Vd2lF21j6pnQ7hM5WE45
+	yGQURbDPVOu6fE7bEqgyOHVlRDXx5J/a1Otgg8ENc017XCT207Ek4dGWdKb4OOhhyvMB6ei4w4V
+	V5vxJSiKQWHEp4+AUucGQ6lXg2LNHa/fB6kVWendF+0SMXIktQp5bS4LfFp4EgAMzCp/U1Btaa9
+	uuPMq5PtFKlIFg==
+X-Google-Smtp-Source: AGHT+IFJs8bjsu60rsjFrfo0Bqk9SgH1Gw8S19VwGfxOIrB19mypYyxFGAIAa0MS1NyLIlbLgZr4Yw==
+X-Received: by 2002:a05:690c:610a:b0:6f9:4413:3db8 with SMTP id 00721157ae682-6f944133f86mr38193097b3.0.1738505570824;
+        Sun, 02 Feb 2025 06:12:50 -0800 (PST)
+Received: from localhost ([2a03:2880:25ff:1::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f8c46061fbsm17109507b3.17.2025.02.02.06.12.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 06:12:49 -0800 (PST)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Honggyu Kim <honggyu.km@gmail.com>
+Cc: Gregory Price <gourry@gourry.net>,
+	ying.huang@linux.alibaba.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	gregkh@linuxfoundation.org,
+	akpm@linux-foundation.org,
+	honggyu.kim@sk.com,
+	rakie.kim@sk.com,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com,
+	horen.chuang@linux.dev,
+	hannes@cmpxchg.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel-team@meta.com,
+	kernel_team@skhynix.com,
+	42.hyeyoo@gmail.com
+Subject: Re: [PATCH v4] Weighted Interleave Auto-tuning
+Date: Sun,  2 Feb 2025 06:12:45 -0800
+Message-ID: <20250202141247.2219681-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <9edfb12f-5e1d-4de0-b124-37053125a7e0@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250202035100.31235-1-badhri@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 02, 2025 at 03:50:59AM +0000, Badhri Jagan Sridharan wrote:
-> This change adds `snps,device-mode-intrpt-mod-interval`
+Hi Honggyu,
 
-Thank you for your patch. There is something to discuss/improve.
+On Sun, 2 Feb 2025 22:51:34 +0900 Honggyu Kim <honggyu.km@gmail.com> wrote:
 
-> which allows enabling interrupt moderation through
-> snps,dwc3 node.
+> On 2/2/25 01:53, Gregory Price wrote:
+> > On Sat, Feb 01, 2025 at 11:49:31AM -0500, Gregory Price wrote:
+> >>>    1. the auto mode set the weights as 10:5:1 for node{0-2}.
+> >>>    2. node2 is offlined, then recalculation makes it as 2:1 for node{0,1}.
+> > 
+> > Point of clarification here:  a hot-unplug event won't cause
+> > recalculation.
+> > 
+> > What actually causes re-weight is hot-plug reporting new capacity.
 > 
-> `snps,device-mode-intrpt-mod-interval`specifies the
-> minimum inter-interrupt interval in 250ns increments
-> during device mode operation. A value of 0 disables
-> the interrupt throttling logic and interrupts are
-> generated immediately if event count becomes non-zero.
-> Otherwise, the interrupt is signaled when all of the
-> following conditons are met which are, EVNT_HANDLER_BUSY
-> is 0, event count is non-zero and at least 250ns increments
-> of this value has elapsed since the last time interrupt
-> was de-asserted.
-
-Please wrap commit message according to Linux coding style / submission
-process (neither too early nor over the limit):
-https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
-
+> So do you mean re-weight is done only when a new node is onlined while
+> offline doesn't trigger re-weight?
 > 
-> Cc: stable@kernel.org
-> Fixes: cf40b86b6ef6 ("usb: dwc3: Implement interrupt moderation")
-
-I don't understand what are you fixing here.  Above commit does not
-introduce that property.
-
-
-> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> ---
->  .../devicetree/bindings/usb/snps,dwc3-common.yaml   | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> I see node_set_perf_attrs() does recalculation by calling
+> mempolicy_set_node_perf(), then reduce_interleave_weights().
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
-> index c956053fd036..3957f1dac3c4 100644
-> --- a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
-> +++ b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
-> @@ -375,6 +375,19 @@ properties:
->      items:
->        enum: [1, 4, 8, 16, 32, 64, 128, 256]
->  
-> +  snps,device-mode-intrpt-mod-interval:
-> +    description:
-> +      Specifies the minimum inter-interrupt interval in 250ns increments
+> But I'm not sure if the re-weight is done via node_set_perf_attrs() only
+> when a new node is onlined.
+> 
+> Could you please explain where I can find it?
 
-Then use proper property unit suffix.
+Just chiming in to add some clarification:
+Your analysis above is correct; reduce_interleave_weights() is only
+called in 2 spots: once when the mode is switched from manual --> auto,
+and the other when new bandwidth data is available, which calls
+node_set_perf_attrs() and so on. In all other scenarios, iw_table is
+preserved, and all values inside remain the same without manual changes.
 
-> +      during device mode operation. A value of 0 disables the interrupt
-> +      throttling logic and interrupts are generated immediately if event
-> +      count becomes non-zero. Otherwise, the interrupt is signaled when
-> +      all of the following conditons are met which are, EVNT_HANDLER_BUSY
-> +      is 0, event count is non-zero and at least 250ns increments of this
-> +      value has elapsed since the last time interrupt was de-asserted.
+A node offlining (or even onlining with no new bandwidth information)
+will just mean that the node inherits whatever value is stored in
+iw_table at that moment, whether that contains the default values
+created on init or the last values that it had taken. 
 
-Why is this property of a board? Why different boards would wait
-different amount of time?
+> > So in this scenario, the weight will remain the same for node2.
+> 
+> If it's true, my scenario is wrong.
+> 
+> Thanks,
+> Honggyu
+> 
+> > 
+> >>>    3. the auto sysfs interface is set to 0 to make it manual mode.
 
-> +    $ref: /schemas/types.yaml#/definitions/uint16
-
-Drop, use proper name suffix.
-
-Best regards,
-Krzysztof
-
+Please let me know if this makes sense. Thank you for your review
+as always, and have a great day!
+Joshua
