@@ -1,134 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C873A8C07
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Feb 2025 02:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC84191;
+	Sun,  2 Feb 2025 03:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738462565; cv=none; b=SgwwTd1zXSyrC3WegZ2pPXVPf+uirnJaomMb6G72mLXYxlrP7029KCGmC98H0sbNwqw/n7UbjJ0rVyTcIF0EO+37u0TZgK/EzlVWTNyd/VAUotORjt4xVcuxI5gzj7Xz+hti2/7Fdcy7LyT2rlsao0DBYiRXxpzDkxKVQtTUKPE=
+	t=1738466536; cv=none; b=BprYQLP0YvpKjC5ntuP9s241A4TaITLZacS9t2Obn0JE+JVMpgEKw1bnxB5v5c0PI4plg/T3PFjJeMiylpCcfKPqlY87cy0GSeoLFtQBfPzJjXgq8BICDS/zzLbjLMknZlVaHEOCzdSkGVH75gK2HhxdMVaF6fsKBjbFpvd4pJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738462565; c=relaxed/simple;
-	bh=YpG5rQ2KFsWWjOCvMTMldtm0ojXwxSh6Ny+S3WE3jww=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VycmHRPPiJyg6XpK2UXUir/seOyvsilmZgniUJgcKJJvt3zeQ2HB+jpfe06i4YpCLRz9NDq5YWN8U+YsmJLEpb/HUeSmqTtYwFtOfkRijghOg5jW3P604H3I+co56p1dPiLReaMNpN3lgCqNizlmpM9n8BzVpkU1yrojEwnt+w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H+Zya/uz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H+Zya/uz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738462562;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oaPgjrYHflaoqP5DxCw0DAPnLuPRTINmmGCdI1hjL0g=;
-	b=H+Zya/uzs2s8lq440k5zOvKoWbQc08gHuhl4PyvRPEOxvTBzK/0E0J2s02LOepONmXD93P
-	JMVGNZFH8d5FdhtVF7aTHMUHBCIBOj58opv9eTLvlsjeG0mJb4tHXwQAM9wF3nqdROW4DS
-	Zbt/OQ3DZh0Itn9g7kNjRlXcapxVjls=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-228-r92N6dRHNEyp1mZd1B3pFQ-1; Sat, 01 Feb 2025 21:16:00 -0500
-X-MC-Unique: r92N6dRHNEyp1mZd1B3pFQ-1
-X-Mimecast-MFC-AGG-ID: r92N6dRHNEyp1mZd1B3pFQ
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ef6ef86607so8142743a91.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2025 18:16:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738462560; x=1739067360;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oaPgjrYHflaoqP5DxCw0DAPnLuPRTINmmGCdI1hjL0g=;
-        b=iqpUEXagmgHNCm9WZNxJdO5zV/D9d9oxAXyYJCyQXMfVrMGLqoBgliWQdpKF8n51hR
-         Zq1w44oWhjXy+XYkLLg8qnuVvlV+PXpcv325XEQwwSbjwVBMum9ok236F+LDOLMTnAT1
-         c+0U+ZNbx0DcqobaCQd/WOrW4fFCMU7UwR6pFGnL0ij0bWUf+NPWMy4Xi2PjctiPDyx0
-         7SpBBPdMBfxSQkah6gS7v2UNilZBV6p/bSKqWuoFq6h4gfs74YL5Zn5uqEWV8zU64hml
-         xnJ55lQH6s87nIwj/9Yh+BXks97HKTeA/tRN3iVdkwHYB23yfdoXPXnh1DW+x02VWJH8
-         4aMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVlN3WIaNlPwoB30wYc5/XSeurhc6fTMxBpfnp+q5sE546Bk9RMcIcZIbsicoKQrB9Y/Pbthq/6GVo09Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3LMcQgLEIKS472jF76r6A06nELs4XfxKKW7P3U+S4DhJnYj6f
-	FgVTt39nUq9c0O+3JUawoXT/JrKSJBe9CPkaxQF+XtkkarcuJsuao3zWBT2jxVd7VclRl/3gmgn
-	rID6lTK1faJ3ABiSfY2ltFOoAjWWuxldaG+8tOEL7hXb+Tqe44uDe97CjFyrntQ==
-X-Gm-Gg: ASbGncuDbnr3Ak2Y7xXYoxukr/FqJa9VvvDCIC0jtPsPaTwqqzZiiF/rsmtEETo4Cg5
-	NEtKyEfnl28TLMnE5e0z2b2mXq/K+W+X5Sj6uGuyU3oXFGGWN7J1VdhVirDFRAYaXPbbnlDnCbe
-	sb20zLzylvIWu6MoDtWJH+kSNxZPcGnBno002aOfH5zw6aq5a86HHuSx0bPuiX7rafVp8MeU/Ky
-	aRJARWMFaCgokRi96BC9BBM4cht/RMZ8eqWmbLVf4NqIANtlnMhcdZzgZjVpdyv8c/mVGUriObH
-	+qZuUQ==
-X-Received: by 2002:aa7:8c43:0:b0:72f:f86d:c543 with SMTP id d2e1a72fcca58-72ff86dc5cfmr9769157b3a.9.1738462559690;
-        Sat, 01 Feb 2025 18:15:59 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGwN4JpbwAKVJUbVg+/34hGwQp5HKYXpKcr/Eo2PO+gIzPd+r9+tV930pBIODwVO11f1VYIuw==
-X-Received: by 2002:aa7:8c43:0:b0:72f:f86d:c543 with SMTP id d2e1a72fcca58-72ff86dc5cfmr9769126b3a.9.1738462559318;
-        Sat, 01 Feb 2025 18:15:59 -0800 (PST)
-Received: from [192.168.68.55] ([180.233.125.64])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69ba47esm5834225b3a.96.2025.02.01.18.15.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2025 18:15:58 -0800 (PST)
-Message-ID: <ae13e762-bd0d-4525-8919-f6b1bcfc8fee@redhat.com>
-Date: Sun, 2 Feb 2025 12:15:51 +1000
+	s=arc-20240116; t=1738466536; c=relaxed/simple;
+	bh=vz5liTaXPVn2D0oinoH39X084X09GEP6enoBSEDFJ8M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nOGJueGC5WBPuqX5nLK+tyiiw9/hkLZfGtiyf6gG4KBTWaHteucy5G2S1VKOYMX6nHwPW2I5yD58e6GTgRpnT/2HnCNfUdUGBetuQNAvegeMkW4oq3HDSE38f4l9bEkoBSs5dTF6MBNFiKLtorVn/7qneMB/PfH8G/UhFYiUmUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C94BC4CED1;
+	Sun,  2 Feb 2025 03:22:10 +0000 (UTC)
+Date: Sat, 1 Feb 2025 22:22:08 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
+ Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Ankur
+ Arora <ankur.a.arora@oracle.com>, linux-mm@kvack.org, x86@kernel.org,
+ akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
+ jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
+ boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com,
+ andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>, Vineeth
+ Pillai <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo
+ Molnar <mingo@kernel.org>, Clark Williams <clark.williams@gmail.com>,
+ bigeasy@linutronix.de, daniel.wagner@suse.com, joseph.salisbury@oracle.com,
+ broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250201222208.0b0d0f5c@batman.local.home>
+In-Reply-To: <CAHk-=wgTWVF6+dKPff-mhVwngFwBu_G9+fwOTF2Ds+YPj3xkeQ@mail.gmail.com>
+References: <20250131225837.972218232@goodmis.org>
+	<20250131225942.365475324@goodmis.org>
+	<e83ce086-b55f-431a-a499-f83a434b70db@efficios.com>
+	<20250201180810.1faf4906@batman.local.home>
+	<CAHk-=wgTWVF6+dKPff-mhVwngFwBu_G9+fwOTF2Ds+YPj3xkeQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 25/43] arm64: Don't expose stolen time for realm guests
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20241212155610.76522-1-steven.price@arm.com>
- <20241212155610.76522-26-steven.price@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20241212155610.76522-26-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 12/13/24 1:55 AM, Steven Price wrote:
-> It doesn't make much sense as a realm guest wouldn't want to trust the
-> host. It will also need some extra work to ensure that KVM will only
-> attempt to write into a shared memory region. So for now just disable
-> it.
+On Sat, 1 Feb 2025 15:18:15 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> On Sat, 1 Feb 2025 at 15:08, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > No it doesn't need to be yield. That just seemed like the obvious
+> > system call to use. But any system call would force a schedule. We
+> > could just optimize yield() though.  
 > 
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->   arch/arm64/kvm/arm.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
+> No, "optimizing" yield is not on the table.
+
+Note, I only mentioned this because Peter had it in his patch he
+created when I first brought this up.
+
+  https://lore.kernel.org/all/20231030132949.GA38123@noisy.programming.kicks-ass.net/
+
+ SYSCALL_DEFINE0(sched_yield)
+ {
++	if (current->rseq_sched_delay) {
++		trace_printk("yield -- made it\n");
++		schedule();
++		return 0;
++	}
++
+ 	do_sched_yield();
+ 	return 0;
+ }
+
+
 > 
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index eff1a4ec892b..134acb4ee26f 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -432,7 +432,10 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->   		r = system_supports_mte();
->   		break;
->   	case KVM_CAP_STEAL_TIME:
-> -		r = kvm_arm_pvtime_supported();
-> +		if (kvm_is_realm(kvm))
-> +			r = 0;
-> +		else
-> +			r = kvm_arm_pvtime_supported();
->   		break;
+> Why? Because it has *semantics* that people depend on because it has
+> historical meaning. Things like "move the process to the end of the
+> scheduling queue of that priority".
 
-kvm_vm_ioctl_check_extension() can be called on the file descriptor of "/dev/kvm".
-'kvm' is NULL and kvm_is_realm() returns false, which is the missed corner case.
+Yes, I know the historical meaning. It's also a system call I've been
+telling people to avoid for the last 20 years. I haven't seen or heard
+about any application that actually depends on that behavior today.
 
->   	case KVM_CAP_ARM_EL1_32BIT:
->   		r = cpus_have_final_cap(ARM64_HAS_32BIT_EL1);
+> 
+> That may sound like a good thing, but it's ABSOLUTELY NOT what you
+> should actually do unless you know *exactly* what the system behavior
+> is.
+> 
+> For example, maybe the reason the kernel set NEED_RESCHED_LAZY is that
+> a higher-priority process is ready to run. You haven't used up your
+> time slice yet, but something more important needs the CPU.
 
-Thanks,
-Gavin
+If it's RT, it would set NEED_RESCHED and not LAZY. This is only for
+SCHED_OTHER. Sure, it could be a task with a negative nice value.
 
+> 
+> So no. "yield()" does not mean "just reschedule". It rally means
+> "yield my position in the scheduling queue".
+
+The optimization would only treat sched_yield differently if the task
+had asked for an extended time slice, and it was granted. Like in
+Peter's patch, if that was the case, it would just call schedule and
+return. This would not affect yield() for any other task not
+implementing the rseq extend counter.
+
+> 
+> You are literally better off using absolutely *ANY* other system call.
+> 
+> The fact that you are confused about this kind of very basic issue
+> does imply that this patch should absolutely be handled by somebody
+> who knows the scheduler better.
+> 
+
+I'm not confused.
+
+And before seeing Peter's use of yield(), I was reluctant to use it for
+the very same reasons you mentioned above. In my test programs, I was
+simply using getuid(), as that was one of the quickest syscalls.
+
+-- Steve
