@@ -1,108 +1,97 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D0E71D6DB6;
-	Sun,  2 Feb 2025 12:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73422AF06;
+	Sun,  2 Feb 2025 12:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738500612; cv=none; b=L1Cm6pM8nWVkZ3p0l7ncxjmLzIglwkTTLPGVO10tmrZFJO66r1V5yQwSr1CojPemkD3uqoQwXofsZ3fL0XYtPmMFPMGPHoSuD6BoWMo/mKca43/RQZyqWDSB9eHViyba6L1e2PR6diXyy5AU5GM3LoSUEcGul4JzfNokLshaJxk=
+	t=1738500921; cv=none; b=PNoNzjdRyhTfr9SLO18kr9sD3V3MKf2Rr/2CJZYPK3dO1g8ju0Yziwlh3nLOfQeKYaxI1zlM1un9lQpILP2dEHDfGcYTaAOB+UvxftbgElj8Cn/ZMCyhMjV3eUq3l/l5uxGFMZwJdX2jnacPDg/6Jh2pJpQHz3Aa5ZkNnjQD6pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738500612; c=relaxed/simple;
-	bh=MTPFZBIfxOy8uT4qbzHSUJuG3ni2D5k94aaoqIc3bXA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fycIMvu8R2zPFXZW4OxNlfOXOR9nXXcwJTdsUKis5aVX2l3/3PtmRcYwedNCGZGZ939pys4sLeHkjtDynefpBYCqXvGinjwv3Tjg29G3Tl1p9/z+D3wg38vU/fMLyqkRGezCU5CA1XDIxKP+Rbqb/D+H0vsv4hbr8uh6pO9ttJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.38])
-	by gateway (Coremail) with SMTP id _____8BxrOL2aZ9nmkRrAA--.17132S3;
-	Sun, 02 Feb 2025 20:49:58 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.38])
-	by front1 (Coremail) with SMTP id qMiowMBxUMbxaZ9nJ5Y0AA--.24704S2;
-	Sun, 02 Feb 2025 20:49:57 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Baoqi Zhang <zhangbaoqi@loongson.cn>
-Subject: [PATCH V2] USB: pci-quirks: Fix HCCPARAMS register error for LS7A EHCI
-Date: Sun,  2 Feb 2025 20:49:35 +0800
-Message-ID: <20250202124935.480500-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1738500921; c=relaxed/simple;
+	bh=VRPy+teEzMxgsuO53PTUAZvh/gxOUy2b78Z+Zc2Itfc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EFXpXcSfax/m32ZHS0llthmbQencjjZYpOTM1I3N7mCtTJ9o+cQLkjJmm93JaWOLn5VoBGXsCEyK5HBmcIjwcysQN0O9SrncSkf2TtYKIMY9i5kzwrJYY+yDDpmR8bVQPkAV7mv5ljfGmHw04nIp6OVFOjQ1nCVWLCZ4LFSiGBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O/MSjFC3; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/MSjFC3"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30738a717ffso29553731fa.0;
+        Sun, 02 Feb 2025 04:55:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738500918; x=1739105718; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OMKG1kpaXWBH2VftDsuUeWAr8QcYNGM5yl0LKFjRV9Q=;
+        b=O/MSjFC3rasdSmksCJrenhqa5jKgVhFYfrcXix+pox4qssBu1Qt5V2rHFXZfS7P0gD
+         c1nC7W2uz2G1Nt/sDHv/Ql4CyMGDZan80fSsBKt+YoT50WejSAM2IVqeQx8/xs4eJv6H
+         P4JEYNHNDAcoyccKdCZduPAopyClei3jnlKWOGSFFRpV/96w1YE2sSIGylkwqot8bti7
+         sZi7aPkuyVCbdR6qmL2SZ/jFIJ5if6O4o7xu87QRTN+6Ik3b5mWImOQbs/SEr77DM+uc
+         3bJR7JV1GVGMctb6Q1FF+UsgVySIWKgurl34HoC+PdExPXJJFF7wauUsU1gLv/Zg7JWt
+         tf2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738500918; x=1739105718;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OMKG1kpaXWBH2VftDsuUeWAr8QcYNGM5yl0LKFjRV9Q=;
+        b=UN0qLAxYYqBLzCrdo0TlnQzY9/FY9AfoIpcG3NFmp0KYuTCO3ihYyWKI/IHFwcG+wr
+         pYvJCKMuqj0GJSX+eGyT2NQnX/+j1rMEURpILi9TyBsfzaqYmYthj4hSpZKOfNof4uAV
+         aMKW/oASfRGFoZXZqkUt6M7F+Q3G3eIhgZfgwLYPlUuORFWGST1rIGlPqR70F4l5vf+H
+         3mOTGxxqSpgQ0MDkUrF7eMewohgnpslv1eMbomccAu6uvASQzRcuVs/6a2LwYsU4AXJm
+         kkiZ18HQEhXHRTBB/lIrMuEx9QAJdsHkai0rJWdu0K7j4dDzywErEbde+5v8zEWrH2nt
+         AYKA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1dkV/FsK8cHWNK27aYe7/9NvuN1HI0xXUPOvAhJ0R7ocegcDFAqSPjzGx2WvzqSEW5G8ZE8QDf9w9G5U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyzi4Ld8cN1rUUzv5iBc48R4jov7XlMzxpZM1H8+mxDgnMg+Eaq
+	nQt4HPF+GLl9dSieqVYSAZajpscsO6ALpnQSeQDEUlRB+3jPIaBHVVM+ik7aFspNxsuRn5Pr0UD
+	cZnvHxz+ZXH6/NsbVNAiyQjLOecQ=
+X-Gm-Gg: ASbGnctPiAZEEMthGpAZy3j0DL1OMvk9VaFL7PSM8mVYWMnwGbgD629eGJAfzIrrCCy
+	TYF4fA/9KV8kM0oMxQPDm0Z4FyaghKug34pdzozx3P3KJxN0cYwT8GLQ7/5mdA2pcheltQXWpoQ
+	vlgRNzgdAdkgcl52ywBgSvFGzuMycEsu4=
+X-Google-Smtp-Source: AGHT+IHCewNltA44KT35LdcI+962td7nMroLtNbt1AXQc1mrIqMlCUUH4fu1eq0iCXuyD6mLhZDOxPX4elkCSK/bM8U=
+X-Received: by 2002:a2e:be2c:0:b0:2ff:d0c4:5ffe with SMTP id
+ 38308e7fff4ca-307968dd5dcmr57938671fa.16.1738500917419; Sun, 02 Feb 2025
+ 04:55:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxUMbxaZ9nJ5Y0AA--.24704S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7urWrJF1DZrW7Wr47GrWrCrX_yoW8ZrWkpa
-	1UC3sruF1rJr4Svw4DK3W5XFy5uF1kCFyUtay7K3s8JFsxGa18JrykWryS9Fy2yF4fuF4j
-	qr47t34xK3W7JagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1YL9UUUUU=
+References: <20250202-cstr-core-v6-0-8469cd6d29fd@gmail.com> <20250202-cstr-core-v6-2-8469cd6d29fd@gmail.com>
+In-Reply-To: <20250202-cstr-core-v6-2-8469cd6d29fd@gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 2 Feb 2025 07:54:41 -0500
+X-Gm-Features: AWEUYZk3Rdbm_MyHpAJbPz-ZGHsc1Wxcqyi_d7uYad-8Gq06RXCIv-mD7knwESI
+Message-ID: <CAJ-ks9mGs0Swc1L2WMuh1Y5q6STsiFuYi77RR1Nb_gK1GG61+w@mail.gmail.com>
+Subject: Re: [PATCH v6 2/4] rust: replace `CStr` with `core::ffi::CStr`
+To: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-LS7A EHCI controller doesn't have extended capabilities, so the EECP
-(EHCI Extended Capabilities Pointer) field of HCCPARAMS register should
-be 0x0, but it reads as 0xa0 now. This is a hardware flaw and will be
-fixed in future, now just clear the EECP field to avoid error messages
-on boot:
+On Sun, Feb 2, 2025 at 7:20=E2=80=AFAM Tamir Duberstein <tamird@gmail.com> =
+wrote:
+>
+>  impl DerefMut for CString {
+>      fn deref_mut(&mut self) -> &mut Self::Target {
+> -        // SAFETY: A `CString` is always NUL-terminated and contains no =
+other
+> -        // NUL bytes.
+> -        unsafe { CStr::from_bytes_with_nul_unchecked_mut(self.buf.as_mut=
+_slice()) }
+> +        // SAFETY: Properties of `bytes` guaranteed by the safety precon=
+dition.
+> +        unsafe { &mut *(self.buf.as_mut_slice() as *mut [u8] as *mut CSt=
+r) }
+>      }
+>  }
 
-......
-[    0.581675] pci 0000:00:04.1: EHCI: unrecognized capability ff
-[    0.581699] pci 0000:00:04.1: EHCI: unrecognized capability ff
-[    0.581716] pci 0000:00:04.1: EHCI: unrecognized capability ff
-[    0.581851] pci 0000:00:04.1: EHCI: unrecognized capability ff
-......
-[    0.581916] pci 0000:00:05.1: EHCI: unrecognized capability ff
-[    0.581951] pci 0000:00:05.1: EHCI: unrecognized capability ff
-[    0.582704] pci 0000:00:05.1: EHCI: unrecognized capability ff
-[    0.582799] pci 0000:00:05.1: EHCI: unrecognized capability ff
-......
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-V2: Add a comment and don't touch pci_ids.h.
-
- drivers/usb/host/pci-quirks.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-index 1f9c1b1435d8..0404489c2f6a 100644
---- a/drivers/usb/host/pci-quirks.c
-+++ b/drivers/usb/host/pci-quirks.c
-@@ -958,6 +958,15 @@ static void quirk_usb_disable_ehci(struct pci_dev *pdev)
- 	 * booting from USB disk or using a usb keyboard
- 	 */
- 	hcc_params = readl(base + EHCI_HCC_PARAMS);
-+
-+	/* LS7A EHCI controller doesn't have extended capabilities, the
-+	 * EECP (EHCI Extended Capabilities Pointer) field of HCCPARAMS
-+	 * register should be 0x0 but it reads as 0xa0.  So clear it to
-+	 * avoid error messages on boot.
-+	 */
-+	if (pdev->vendor == PCI_VENDOR_ID_LOONGSON && pdev->device == 0x7a14)
-+		hcc_params &= ~(0xffL << 8);
-+
- 	offset = (hcc_params >> 8) & 0xff;
- 	while (offset && --count) {
- 		pci_read_config_dword(pdev, offset, &cap);
--- 
-2.47.1
-
+Whoops, this safety comment is nonsense. I'll use the one from `impl
+Deref` above in v7...or just remove this impl altogether. I'm not sure
+what the use for `&mut CStr` would be.
