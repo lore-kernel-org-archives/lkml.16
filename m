@@ -1,116 +1,175 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24F7208978;
-	Mon,  3 Feb 2025 14:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E9F20C464;
+	Mon,  3 Feb 2025 14:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738592983; cv=none; b=SOd5ffXgOLmJ1/XSPmyyZPpjj7libH9RJSXx4oWi4p/aelABbEXvdR7sUlirVdyNo+zwfHEOVp+6svkP/CYnIvI9lx8f69mX4v8klKtuKFkp4UotU34TaJ6eVx4fH/CLFxTd6EkifCXiekFdz4pIGSeRWwYDx54XDVRvX2i79kY=
+	t=1738593010; cv=none; b=mcsDW3YR1VuujqSlNdbZhReQGd3RVxNl6RBgOStZkLSZa4YnfBzR9WO9ki9rVSv4v8vRoBdDSTwk3hEZhrc/V/MriuONmJkNTBBLKxba9dnAlkmVId6cBvWM2w3jwOJq/dkZCFnsNXsRa5ZTZNiHljzt80GCjMTYjdYc+0ukCnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738592983; c=relaxed/simple;
-	bh=G/VTYZU/vROlGro+xn6z4lRh0HzqaSGTe/N30hboTFA=;
+	s=arc-20240116; t=1738593010; c=relaxed/simple;
+	bh=8XzsPEpsyRGi4YWX6B3V+OvrOKb/YV2WMYuZ6HuSEmc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V5g8x3M0igYYI69CHAO1mXo7sKlxwzqO8N0FvFMhdK5XQNQacDYaN0Vdqnnon50BcbrYfQPFJpF2laL0GytbN6eqwhZEyhi/Z8RBHNZjuw3+8CY16xH0pR/L94HxDRrjrHICuu+bX62ilWphvJntPCB5aXq3cdompsBYJFOWcuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=A33oIIwH; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=heJ9W8YCJaOyaDjx9lehgY19XGq42/R5Mci4tJ63oe7Blj+aod0Xe9sEk39bIwJPkY+3x3KOT3Xq/5nO546ENGCNb7yR3QybKBLqgBHIQhc9x0jfNcNv9smAFcAtXE3yTVAjoT7kSBETItbPKGAoSGwbNViCxEL9JOlc5vGQ+pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hisHXZ2p; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="A33oIIwH"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5135Nvo1013502;
-	Mon, 3 Feb 2025 14:29:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=+Y41T2taVkSM5Zly4GCoWzp0UGRNKV
-	CM5pX6RyHXVJc=; b=A33oIIwH4/FWODJ5T9YOJi3oOTP+mOSIapCdksDAGXmv4S
-	oHtjSR2N6jrXVfPryAripFBFfew8bRx0FxJSByjSNPA5WIQ+bjJgIhoCZ+N2kDqC
-	KnNryuRmWPVWCMfoCUZ0DwUkHfERqiH4xZV3jExHEx6Gyt/B4lpxJWczirY09HHk
-	MMaUXv+jkNXbVRh09EpRZLPXrJJHdC55KaUOdiDZITG7RFf5WvAV6ggl1OWcOvZM
-	GJQ2R+ea74I/ymxu+8LDDc5QriI0z9BYyTO6usdKjXCRMZn4ZV9ztQ0DiiVqk1Vy
-	ZFVQTGH3FDxCSTBW1A5l0Uqc8cS2NTU1trqbpeLg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jqm7af9u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 14:29:11 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 513ET92V002563;
-	Mon, 3 Feb 2025 14:29:09 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jqm7af92-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 14:29:09 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 513D0wRf005310;
-	Mon, 3 Feb 2025 14:29:02 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j05jpgqn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 14:29:02 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 513ESwTu44368352
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 14:28:58 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6A2D82004E;
-	Mon,  3 Feb 2025 14:28:58 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 73F9520076;
-	Mon,  3 Feb 2025 14:28:57 +0000 (GMT)
-Received: from osiris (unknown [9.179.6.188])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon,  3 Feb 2025 14:28:57 +0000 (GMT)
-Date: Mon, 3 Feb 2025 15:28:56 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-        Ben Segall <bsegall@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Will Deacon <will@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v2 6/9] s390: Rely on generic printing of preemption
- model.
-Message-ID: <20250203142856.8827-B-hca@linux.ibm.com>
-References: <20250203141632.440554-1-bigeasy@linutronix.de>
- <20250203141632.440554-7-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hisHXZ2p"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7bcf32a6582so396491985a.1;
+        Mon, 03 Feb 2025 06:30:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738593008; x=1739197808; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=KrGivRpKLfJH6uYF5e+fC19rCHtdF/k+KlI9NRXVfRc=;
+        b=hisHXZ2pQV6TeDu58UGVqblM2Kx/JBJOURnEwk7ppgLuN6dfAXic63ldtoe/oDzxMX
+         oc2xJSVazNyYlOwuvoqGb1YyKO9ovDmqIW3ipDyQucKeohVCQP0Rvd1bBJ0l38tBc64V
+         vmxkXWReUYxBybJFLnlPsnU2UfibRh/mua8M70usjwagWghbs1jT5ruoPS/RVjhlNxP3
+         JNyv+9kJXUWqtnCQLG6aGqm7s6lxTDH1IJCOi44Jq7CUASMTmRl8ePI8wtGtSGSsJnei
+         lhwy9Fs+vGXJ/nKJ8mVKsArYM1nM7Gw0w8VZ7Vqjci+8tjrk3HXv9bXeC5klpyazUAKo
+         /bsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738593008; x=1739197808;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KrGivRpKLfJH6uYF5e+fC19rCHtdF/k+KlI9NRXVfRc=;
+        b=Pd7xznBsZNkARMzaZ9nFNFYYQhH3GpfrPckVK3o65vHEE5aGcdwt2oiOmHuXjKLJz4
+         jCb+hmF9Do4vyiZEh/IZzmg1ZtL4vxP8XhayL67DiGUjv+STycCUxpGWZilXgD3U/Jaj
+         EpDcfrMCQcsTGkLPAQfIQTaWF4B4cLV46LFFkjBV88GGz7DsI1/KqDJ8gDf9YBErCs2+
+         H2dyi8Rpkbge+UEpc1u6AcRXFTQyoIbjzAjaYS3SezaLRT7KRuY2O1TDsGZzaSPUuZ14
+         510V7CAqYiLoGBqGotqK6kBITOOCZFgDWaem8o+I9C2R+TULAs0oUVq7h0ahVhOUbb4j
+         vRLw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAJCvwB0NOL4z3iAipsJ+Ynv48bcmzFGkWEcssUdgiRm25Xdn7P6DzqW2w25Wr1qn0kxEwr8tNWL6JrfU=@vger.kernel.org, AJvYcCWDribTl1wvQkW3kOFanMiUsB6rgzVqGy+nsJUL3ZMgsot26JznTqTpYlcBwCtgc57ixbUWlvyH6roEGzJ3h+c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybKZK6ev4gy3MNvbwUa7kdGA/dSCwxE/gngUCnvNJxmJt6KFaW
+	RLORXxIVWjwEHFAtFqopby9KPnVtT4tfYenmIrB6eKGJa2cc1aTA
+X-Gm-Gg: ASbGnctko1gpcIFk5aaTepce3sHZ4bk+dZwO8yXSf2PG7Pm5G6H3kaseBGjDQZxP0Z4
+	XWrpQ8sNKdsshQ9cm2XXcH3FwllErt6e6z6m1IWrjsWbAda0CxcTIv0jVrcrwWKR02YGLcVQuXK
+	TtKU96A94MIkgnfpn89I+9OO4T4EvMUvyt/zkm1M2OLCvY1OeYxf7f8iQQeHJQYGPLhMOjZX0MK
+	Up5LtwfwP5jJaf5xHqOvrzpmsFDaROQVSnf0bEd+qGMMv8d3wtSBBws5dwnOdGRa7aZl7afHts7
+	XbVEYb7bujSlY6VofpAeB/0ekWlYPBb8xs4ret6NCUWcXDUXtCBwoPuW5CEhNsVW7LYEhIv8jrl
+	r8HzAxA==
+X-Google-Smtp-Source: AGHT+IGoqnIySCW4xcBXN10HHnpeNElNjJD/qjRMVinK12TP0Vgh/xKOOiAEjTPNu+EtEwRQ/J98Cw==
+X-Received: by 2002:a05:6214:5004:b0:6d8:7ed4:336a with SMTP id 6a1803df08f44-6e243ca746amr373030486d6.31.1738593005127;
+        Mon, 03 Feb 2025 06:30:05 -0800 (PST)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254819959sm50933796d6.31.2025.02.03.06.30.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 06:30:04 -0800 (PST)
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id EC9151200072;
+	Mon,  3 Feb 2025 09:30:03 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Mon, 03 Feb 2025 09:30:03 -0500
+X-ME-Sender: <xms:69KgZ7nFnMAsEsWuIm2I9rwkmSUbqGRGsJr68znH7oyKZxDtLg019A>
+    <xme:69KgZ-2B5tiwPPHpdyREC72NW5rENTImzLVpMZqf4WvgPFsAISP98Zace3vON3J_5
+    TeG0HmUTdN-MieHlA>
+X-ME-Received: <xmr:69KgZxqYvLYkAPpBf4W5LR1mBKixJYWNIvcByvwQfhbAdGVhiRUvkJvQbQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeekhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
+    jeenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeejhfeikeekffejgeegueevffdtgeefudet
+    leegjeelvdffteeihfelfeehvdegkeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
+    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
+    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
+    nhgrmhgvpdhnsggprhgtphhtthhopedugedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgvthgv
+    rhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthht
+    ohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtohepsg
+    gvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhhhinhgu
+    sghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtmhhgrhhoshhssehumhhitg
+    hhrdgvughupdhrtghpthhtohepmhhinhhgohesrhgvughhrghtrdgtohhm
+X-ME-Proxy: <xmx:69KgZzmLz0ege_ZgYn8QXvKbMsill1rATvXLo65m_F24I4elyBLHRg>
+    <xmx:69KgZ51BQw03SVPM3GKvXUHv77qoJmymLWlZS5suNFGU-D-mNb81zw>
+    <xmx:69KgZyuaODamm1u_mEYNxYO_qTeb6wF-yLxGQ0uV4FdyI4M-kRYi0A>
+    <xmx:69KgZ9XX3cy5ayCH_vVXCpEUAjj7WyMzyneJTHgoqV5raULNua5ebg>
+    <xmx:69KgZ40Qa0GYgF6yxoerwKdfhVsWM_PCPtC83RL270qUeKrFrmKluwcx>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 3 Feb 2025 09:30:03 -0500 (EST)
+Date: Mon, 3 Feb 2025 06:30:01 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: sync: add wait_interruptible_freezable
+Message-ID: <Z6DS6cIWgGsX7FXL@tardis.local>
+References: <20250130-condvar-freeze-v1-1-a91d5661d505@google.com>
+ <20250203115418.GB14028@noisy.programming.kicks-ass.net>
+ <CAH5fLggyyP1A=uNxr2iYNKOj0V5rxZRU83TRgs6Ah1uJ=Ee2uA@mail.gmail.com>
+ <20250203133843.GG7145@noisy.programming.kicks-ass.net>
+ <CAH5fLgjVyCSTyZqS7uSzWMTKvrxPL55PKUyM-H0RrnuZiU9VEg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250203141632.440554-7-bigeasy@linutronix.de>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -LNFvzIEuaHgXsKwYW5YPh01zUnlDCwb
-X-Proofpoint-ORIG-GUID: AGhKCUXDgYclcc2iqv0Y_j0FQjOi5yZG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
- lowpriorityscore=0 mlxlogscore=476 bulkscore=0 mlxscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 impostorscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502030106
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLgjVyCSTyZqS7uSzWMTKvrxPL55PKUyM-H0RrnuZiU9VEg@mail.gmail.com>
 
-On Mon, Feb 03, 2025 at 03:16:29PM +0100, Sebastian Andrzej Siewior wrote:
-> die() invokes later show_regs() -> show_regs_print_info() which prints
-> the current preemption model.
-> Remove it from the initial line.
+On Mon, Feb 03, 2025 at 02:41:37PM +0100, Alice Ryhl wrote:
+> On Mon, Feb 3, 2025 at 2:38 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Mon, Feb 03, 2025 at 12:56:05PM +0100, Alice Ryhl wrote:
+> > > On Mon, Feb 3, 2025 at 12:54 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > >
+> > > > On Thu, Jan 30, 2025 at 11:30:44AM +0000, Alice Ryhl wrote:
+> > > > > Binder allows you to freeze a process where some of its threads are
+> > > > > blocked on the Binder driver. To make this work, we need to pass
+> > > > > TASK_FREEZABLE when going to sleep in the appropriate places. Thus, add
+> > > > > a new method wait_interruptible_freezable for the condition variable so
+> > > > > that sleeps where this is supported can be marked as such.
+> > > >
+> > > > The constraint on freezable is that you must not hold locks. There is a
+> > > > lockdep check for this in the code, but it would probably make sense to
+> > > > teach Rust about this constraint as well, hmm?
+> > >
+> > > Unfortunately, I don't think there's any way to enforce this at
+> > > compile time, but I'm definitely happy to add this in the
+> > > documentation.
+> >
+> > Ah, ISTR people talking about teaching Rust about the whole raw_spinlock
+> > vs spinlock vs mutex nesting order and figured if it can do that, then
+
+Peter, are you talking about the POC idea I proposed on tracking irqsave
+status:
+
+	https://lore.kernel.org/rust-for-linux/20241018055125.2784186-1-boqun.feng@gmail.com/
+
+? I'm working on this right now, however, I don't think this would help
+spinlock or mutex nesting? Because there's no global(percpu) status of
+acquiring these locks. Am I missing something here?
+
+Regards,
+Boqun
+
+> > this should be doable too.
+> >
+> > But perhaps that never quite happened.
 > 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  arch/s390/kernel/dumpstack.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+> There isn't too much progress on that front lately, but you are right
+> that this work could be extended to support this case too.
+> 
+> > Yes, documentation would be good. Just in case it isn't obviuos,
+> > freezing a task that holds a lock can trivially deadlock vs another task
+> > that needs that lock to complete before it too can hit freezable.
+> 
+> I'll include those details, thanks!
+> 
+> Alice
