@@ -1,47 +1,53 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F27202C45
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DFA202C45;
+	Mon,  3 Feb 2025 11:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738581891; cv=none; b=dVQVp+d4j/9ubMb7PoZs7nBPCmpXUq68TPJk3pRM+dhiBELOstr6ByeDwF4Wzs8C0s4wjCIh32cx39PkJInijYwcqVkjMl53IT7MGGjGQuwYagMacGNVru0QUdq1YX1OuWK5pRsrX5JbnFMeqSHo1NCu5E68xP9mdGVOqtvFbrU=
+	t=1738581927; cv=none; b=FhDeB/xJyWTECcWvfHHYr+jAwFESLwCC0G5yM648rmS6Yz0tXAA/dKL+RLlNtsZqXJvbxyYAdTMJ+bWG2wvpHZNSm4tzPGqgm+dv3PHOJ6uf/0FSjgPKexVkvr8PXjGLCZyAFFhdUqK8DvRTZw5MoYHAQB4fcF2+V92UoMyNSt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738581891; c=relaxed/simple;
-	bh=5X72Hai7//H5vVuAskmLF2YjNMHNMMYAiw7J8/Iu5lE=;
+	s=arc-20240116; t=1738581927; c=relaxed/simple;
+	bh=LsfrKUh7BXLFmxeKufgVvH3ZbVAAborWlV49vZoeSkg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jD/gK8KdgNl4jZwobs+kux1hy+1LLPZrwTibhE/7NheHBgeYAWtT4ylFW6Xad7moMYn93HRrNX6o9nXSnc3q2euLTzJKiglrS1W4imUsXBbXw9a499kok0o3vU81YJ5+QCK1U3vmFSPaXMxVbTKcphdARXK5Qx3G3rVni2brgeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=g5JtSVjd; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=c5K4t/2+WT2t0yz3ZhCB2pkxoGTMPMlnzDD7n2hG3L6+hWW6/j4F9qMd395tOHdsFJfIfGuMd/FzxJ6xU82qd8fYhCTgEow11IW15on7kfghfrZNKltPjxjnx+nbxJayMRwFxQFm0b9/tEgcOxUf8njHUnRnN1CqHjyGJg7nNYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eN+ySemo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g5JtSVjd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dDbJLZWS9M+Qr7lPnraTaHsKQLmLmaYljUbDsiPJC0A=; b=g5JtSVjdT2O6LRzmbctw7kRGDp
-	ZZ5snZG4RleB4EyQV8FQ10BpX5ZG9PJcOkz23C5/Dze97Td8tVSZp9/j/KUC7cpoxzS+glyLYD/3F
-	PHayJugeFGIRPCazIgGunARQupgAZHJ1stI4HJ9VI/0+UX8q8JO+uRfWPCIAsjpfn54XmRKanXXpG
-	U4b6+W9nHE5aw75h9bSbPZQuk6TS8klBe/lXRrj7QaJrGvHNLgHZG2B2rqZdH5cOzcw/w81SGhcpn
-	dp3xYu7eZllJuTWU/r5c5RVafZuskuZAqFN/KQDD9jxVjuk91RJ2OHkd2zYV1Ki7QABnr/+viZWkZ
-	5I9kCpJg==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1teuZK-0000000G4qT-385t;
-	Mon, 03 Feb 2025 11:24:46 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B3DDE30035F; Mon,  3 Feb 2025 12:24:45 +0100 (CET)
-Date: Mon, 3 Feb 2025 12:24:45 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Waiman Long <llong@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-	Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] locking/lockdep: Disable KASAN instrumentation of
- lockdep.c
-Message-ID: <20250203112445.GE505@noisy.programming.kicks-ass.net>
-References: <20250131165020.878944-1-longman@redhat.com>
- <14eb5880-7df1-4717-8f6e-e667328c369d@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eN+ySemo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEF83C4CED2;
+	Mon,  3 Feb 2025 11:25:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738581926;
+	bh=LsfrKUh7BXLFmxeKufgVvH3ZbVAAborWlV49vZoeSkg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eN+ySemolKJmwB90cIQZSg6gV/Iroz1GruBNXV94nVxxNL3dIvg77FwKDTgCKMxS5
+	 cebqzG+troWjRvZmhu8/IdbBwC+FxSvrfS9HTWvk0OMYDXR1Ej2UwsmrN7amOhWZnG
+	 VUcq+T6qOLW7uiy1ubMQuYCzLW3CtwkHjyxRDQGw=
+Date: Mon, 3 Feb 2025 12:25:23 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>
+Subject: Re: [RFC] driver core: add a virtual bus for use when a simple
+ device/bus is needed
+Message-ID: <2025020307-cavalier-knapsack-7f89@gregkh>
+References: <Z5Nw8kaieLueWyUu@pollux>
+ <20250130212843.659437-1-lyude@redhat.com>
+ <2025013159-shabby-professor-515b@gregkh>
+ <2025013140-propeller-dirtiness-6cb4@gregkh>
+ <Z50ZuzrDn-GQWOuP@cassiopeiae>
+ <2025020106-avert-senorita-4181@gregkh>
+ <2025020306-overhang-glider-7d42@gregkh>
+ <Z6Ch8O-0oY70Jhi6@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,56 +56,137 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <14eb5880-7df1-4717-8f6e-e667328c369d@redhat.com>
+In-Reply-To: <Z6Ch8O-0oY70Jhi6@pollux>
 
-On Fri, Jan 31, 2025 at 04:47:06PM -0500, Waiman Long wrote:
-> On 1/31/25 11:50 AM, Waiman Long wrote:
-> > Both KASAN and LOCKDEP are commonly enabled in building a debug kernel.
-> > Each of them can significantly slow down the speed of a debug kernel.
-> > Enabling KASAN instrumentation of the LOCKDEP code will further slow
-> > thing down.
+On Mon, Feb 03, 2025 at 12:01:04PM +0100, Danilo Krummrich wrote:
+> On Mon, Feb 03, 2025 at 10:39:58AM +0100, Greg Kroah-Hartman wrote:
+> > From 4c7aa0f9f0f7d25c962b70a11bad48d418b9490a Mon Sep 17 00:00:00 2001
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Date: Fri, 31 Jan 2025 15:01:32 +0100
+> > Subject: [PATCH] driver core: add a virtual bus for use when a simple
+> >  device/bus is needed
 > > 
-> > Since LOCKDEP is a high overhead debugging tool, it will never get
-> > enabled in a production kernel. The LOCKDEP code is also pretty mature
-> > and is unlikely to get major changes. There is also a possibility of
-> > recursion similar to KCSAN. As the small advantage of enabling KASAN
-> > instrumentation to catch potential memory access error is probably
-> > not worth the drawback of further slowing down a debug kernel, disable
-> > KASAN instrumentation to enable a debug kernel to gain a little bit of
-> > speed back.
+> > Many drivers abuse the platform driver/bus system as it provides a
+> > simple way to create and bind a device to a driver-specific set of
+> > probe/release functions.  Instead of doing that, and wasting all of the
+> > memory associated with a platform device, here is a "virtual" bus that
+> > can be used instead.
 > > 
-> > With a debug kernel with both LOCKDEP and KASAN enabled running on a
-> > 2-socket 144-thread system, the time to do a "make -j144" kernel build
-> > was 18m40.641s. After applying this patch, the parallel kernel build
-> > time was reduced to 17m35.136s. This is a reduction of about 66s (5.8%).
-> > 
-> > Signed-off-by: Waiman Long <longman@redhat.com>
-> > ---
-> >   kernel/locking/Makefile | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
-> > index 0db4093d17b8..8a588b0227b1 100644
-> > --- a/kernel/locking/Makefile
-> > +++ b/kernel/locking/Makefile
-> > @@ -6,6 +6,7 @@ KCOV_INSTRUMENT		:= n
-> >   obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
-> >   # Avoid recursion lockdep -> sanitizer -> ... -> lockdep.
-> > +KASAN_SANITIZE_lockdep.o := n
-> >   KCSAN_SANITIZE_lockdep.o := n
-> >   ifdef CONFIG_FUNCTION_TRACER
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > 
-> The rationale behind this patch is due to the fact that a similar configured
-> PREEMPT_RT debug kernel is found to be about 3 times slower than the non-RT
-> debug kernel. For the test same system, the parallel build runtime is
-> 59m56.722s. After applying this patch, it is reduced to 38m3.348s. Its more
-> than 1/3 reduction is more than I would have expected. So the lockdep code
-> is much more heavily used in a PREEMPT_RT debug kernel.
+> I think it turned out pretty nice combining the driver and device creation for
+> convenience.
+> 
+> But I think we may still need the option to create multiple devices for the same
+> driver, as mentioned by Sima.
 
-Perhaps put that in the changelog instead?
+That will work just fine, the api will allow that, just give each device
+a unique name and you are good to go.
 
-Its not like RT is this secret out of tree project :-)
+> @Sima: I wonder if the number of devices could just be an argument?
 
-Also, any quick clues as to what causes the extra lockdep overhead?
-Initially I thought perhaps local-lock, but that should also cause
-lockdep on !RT builds.
+Then the virtual bus logic will have to create some sort of number/name
+system and I don't want to do that.  It's a "first caller gets the name"
+type thing here.  You can easily in a driver do this:
+
+	my_dev_1 = virtual_device_create(&my_virt_ops, "my_dev_1");
+	my_dev_2 = virtual_device_create(&my_virt_ops, "my_dev_2");
+	my_dev_3 = virtual_device_create(&my_virt_ops, "my_dev_3");
+	...
+
+You share the same callbacks, and that's all you really care about.  If
+you want to hang sysfs files off of these things, I can make them take a
+device_groups pointer as well, but let's keep it simple first.
+
+> > +/*
+> > + * Internal rapper structure so we can hold the memory
+> 
+> I guess having an internal "rapper" does make the interface even cooler! :-)
+
+Hah, I totally missed that.  Language is fun...
+
+> > +static void virtual_device_release(struct device *dev)
+> > +{
+> > +	struct virtual_object *virt_obj = to_virtual_object(dev);
+> > +	struct device_driver *drv = &virt_obj->driver;
+> > +
+> > +	/*
+> > +	 * Now that the device is going away, it has been unbound from the
+> > +	 * driver we created for it, so it is safe to unregister the driver from
+> > +	 * the system.
+> > +	 */
+> > +	driver_unregister(drv);
+> 
+> This is probably becoming non-trivial if we allow multiple devices to be created
+> for the driver.
+
+Nope, see above, the driver is created dynamically per device created,
+but that has NOTHING to do with the caller of this api, this is all
+internal housekeeping.
+
+You will note that the caller knows nothing about a driver or anything
+like that, all it does is provide some callbacks.
+
+> > +/**
+> > + * __virtual_device_create - create and register a virtual device and driver
+> > + * @virt_ops: struct virtual_driver_ops that the new device will call back into
+> > + * @name: name of the device and driver we are adding
+> > + * @owner: module owner of the device/driver
+> > + *
+> > + * Create a new virtual device and driver, both with the same name, and register
+> > + * them in the driver core properly.  The probe() callback of @virt_ops will be
+> > + * called with the new device that is created for the caller to do something
+> > + * with.
+> > + */
+> > +struct virtual_device *__virtual_device_create(struct virtual_driver_ops *virt_ops,
+> > +					       const char *name, struct module *owner)
+> > +{
+> > +	struct device_driver *drv;
+> > +	struct device *dev;
+> > +	struct virtual_object *virt_obj;
+> > +	struct virtual_device *virt_dev;
+> > +	int ret;
+> > +
+> > +	pr_info("%s: %s\n", __func__, name);
+> > +
+> > +	virt_obj = kzalloc(sizeof(*virt_obj) + strlen(name) + 1, GFP_KERNEL);
+> > +	if (!virt_obj)
+> > +		return NULL;
+> > +
+> > +	/* Save off the name of the object into local memory */
+> > +	strcpy(virt_obj->name, name);
+> > +
+> > +	/* Initialize the driver portion and register it with the driver core */
+> > +	virt_obj->virt_ops = virt_ops;
+> 
+> I wonder if it would make sense to allow NULL for virt_ops and use default ops
+> in this case.
+
+What would be a "default"?  If you don't care/want to do anything with
+probe/remove, then yes, we can allow it to be set to NULL.
+
+Actually looking at some of the places this can be replaced with, that
+does make sense, I'll go make that change.
+
+> This could be useful for the Rust side of things, since then we could probably
+> avoid having a virtual bus abstraction and instead would only need an
+> abstraction of __virtual_device_create() itself.
+
+Ok.
+
+> However, this is probalby only convenient for when we have a single device /
+> driver, but not multiple devices for a single driver.
+
+Again, see above, and stop worrying about the traditional "driver" model
+here, I took that away from you :)
+
+> The more I think about it, the less I think it's a good idea, since it'd
+> probably trick people into coming up with questionable constructs...
+
+No, I think it will work, let me do some replacements later today after
+I get some other work done, I think it does make sense, don't doubt
+yourself :)
+
+thanks,
+
+greg k-h
