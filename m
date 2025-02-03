@@ -1,100 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A551209F5C;
-	Mon,  3 Feb 2025 15:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C34320A5C2
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738598263; cv=none; b=qaoVOZ13J04BuwF31s5xAicZl15tH8LS7Qwud2TfaVmUwana7fVGCrk/l0qsOqVvRsr+w4qgBNxKXyi9tqyLuzSJw0OrSkjCK69rTiwf+IdCLf2ksTfAM26iVKqpYNQPgypS4PYP0VQiop+20QQcqd94Mqr4E6cW1LE8z+vYYDM=
+	t=1738598326; cv=none; b=QrjzmBglUzTjBRueV6a4K4aur6xuwAyvaU0pfAl2GwruQSCW842bB8dJdUSb26tcjGGEXZCAL9dUYwbKqETzTPGfDJqgU7lR62xZG5wmBRE7GQ6QM3zkXUiuV4as4zYLfDAnEVETe+63XV9jUnuvtd9ixD7ryC3vhw27NtuaxdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738598263; c=relaxed/simple;
-	bh=5fDGmhub7kgFaJWNzLMa64HxzMW4rz3YnPY6BA2o8bQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GnvK8I2AUHZ9WZGTo7/p69DdpfRHor7IHdiqDikCKOhXAuJBoxFf4dWYHwOHMcf904sijXOZmFTQ0rHGPFDCMC5NmacU07qOngTdvKwT+isQ9EeOHPsbZM1RZl/FsonaW4rxoMYdNEtmcedcxA4gWK9854ba024bcUdv3QaG3T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4nNDT13; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738598326; c=relaxed/simple;
+	bh=HaqSRVIjYecNiCeUI80LtyiV/KB2arNBCPJKjiB4ngI=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=jj49AWc7HMMLF5u92CF8l4YsjwEvy+MLzzZ3LyOLM0fMsKPRJxyaG81ybtXpBDPi6Xdnx8yMmjTi0X+7i+cOSl+KBisUP4Xj7bZ5/ofTQaXvUXl2ypgaFgH9bscKRd3ShHSbVSwz4AVGou+rq9nu3/D/Dv3r5ijzawykSborp5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apevzner.com; spf=pass smtp.mailfrom=apevzner.com; dkim=pass (2048-bit key) header.d=apevzner.com header.i=@apevzner.com header.b=LxIs+5Go; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apevzner.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apevzner.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4nNDT13"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FB52C4CED2;
-	Mon,  3 Feb 2025 15:57:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738598263;
-	bh=5fDGmhub7kgFaJWNzLMa64HxzMW4rz3YnPY6BA2o8bQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=J4nNDT13iycal9wwQ8iR0xlMm3uIg4mgGyb93cOd/oz3CjidGfKUiHyJBrAFMYVXA
-	 7zihPZisRRVdWoi+dSgWbi/NlIN4fKvp0mE+XFn1qIzAr1AmbO1BAZK0hj5sD19TE3
-	 T8CaDMiunBCrqeEMgG+sI05lO2KNWZjT1CntiiINZB8tR2LrODMgSUv59PGsqZdHp3
-	 duRbkLRHwl0BQ5GMpVEAwmFK4ci2kTlSYo3ZvY1EXIRCTR02/TZl0i39ICX4w3E4gy
-	 AXquFzG6Oh0Gl/ekMHYNJKawXYBYQd2OfOO/qRRLC7Q4iFL3BGYvNxLso1YK1f0EXU
-	 TblOtIlmA398g==
-From: Mark Brown <broonie@kernel.org>
-To: Michal Simek <michal.simek@amd.com>, linux-spi@vger.kernel.org, 
- Sean Anderson <sean.anderson@linux.dev>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, 
- Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20250116224130.2684544-1-sean.anderson@linux.dev>
-References: <20250116224130.2684544-1-sean.anderson@linux.dev>
-Subject: Re: [PATCH 0/5] spi: zynqmp-gqspi: Clean up the driver a bit
-Message-Id: <173859826117.375082.6233589403904038828.b4-ty@kernel.org>
-Date: Mon, 03 Feb 2025 15:57:41 +0000
+	dkim=pass (2048-bit key) header.d=apevzner.com header.i=@apevzner.com header.b="LxIs+5Go"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-307bc125e2eso12286681fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 07:58:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=apevzner.com; s=google; t=1738598321; x=1739203121; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wVwfvvt8sGDIx88933QOte4EitOaJG4KEZQc/GBV0TM=;
+        b=LxIs+5GoFTEmhH51fRtWmO0arBsL5XqFsFe4w8Y6NldEF6ptfcTJfa7o+X6lAw7R9D
+         T0ZdBT0ix08yC9aWMwpMbicqFJ7kjPMAY82XSoipj3J/X6ra9bOl4yEs1so8na9GtzRK
+         ZnQPJC2sBpDmbaMoaBLyL9wLH81oXUQxljH0hrTjSa8GzN8/FP3a7q1Sn2EQ7F4e1jWa
+         rh3lg2VFYGZr6ClECF2DSJbtALuV7xKQ5+UJSufcmjxpwa8N+ifb46zocfEiq8PnLjPj
+         IZ2tgqo7mf0asN1188bjIIRTLPnBuFphLGAol12p2Emat/oixyIhnEsBhYYtmcXGbSTb
+         uEgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738598321; x=1739203121;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wVwfvvt8sGDIx88933QOte4EitOaJG4KEZQc/GBV0TM=;
+        b=teUaBU945u/DfpcBHhMJJg372I7W7o7osq8rTotd5S4/XPTcMAvgTDHizGT/ji2buX
+         VCCyzyYtY9MmJ8i4KdgO/QKeadTLPUWG15PDJ3yzt0EDNdCCWRvlRuAgNlJN/vDVfINL
+         SQYFnABPWjpsKI1rtv4kzkZCKT0cy6CccAoYa8ABZUfPCip+ruwrF9O3VOPy5RL2u7ep
+         glpVezr5gwbXiVJHk6vMcXWZ1XDzX0fwlzpFGgGYZom+EbYLI8iapdOglTkKdZfem3Rq
+         CLxhi83EUoOoSjCGvRNe7yZDqI2ngzconu7EjOlPb8AiT122lCuQp+0eMUNzdJdwbXXj
+         WR2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVrWd3NrvFKD0gKaIZ+S6eXGBrmjwlMYperH+oj/SbK/hqSsSsn69VqZCIpNSg5c4FAIq3dY8nSe8Elfq4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO5LXHcMm1eBqtXJiHnitVfFCMwAJ6CsrF/m/Wdbtn761ANzDk
+	ISmR5doOPMnk0iv1l57evHSUV+QdEuZ7KoBZ9iSC9G0FF16TQ5y4H7Gsg/kQ9r0=
+X-Gm-Gg: ASbGncugEICRb+UulHtkRkxrrcPJIAm6msJS/Ro8l65spifRYk9YYk+CfCfOJCg4n2A
+	lWhSLWdF0MOsyRkA0rTmuQqLklzxk2+L2i0UH64y9dBn5pbCTtM0MFGogQRExhDFZrK1W/lPi8z
+	vGXhgVSeEM2Izo1zgHLL6Fnmdk4pYWXFz/K86dtC/Mr1cBzOp1eVk/4Fg48nqnLfffYc2atxmIK
+	7q1heNYed8M8WrI2cQq/gHfgiceRs6PRCU0HKIFUnfGpDbJsLYeWYFoFuSX9A9nJnjXeZ7m/4Bi
+	2ER9ltf3cvqo0Z6zrElheyxPwdbZFEg6DwMWgTgqZi4JNh7VUVY=
+X-Google-Smtp-Source: AGHT+IHXcrt8a+4+lWw5j7onoSpd8/q5z886NRH+OyrBNPHtma2d3YKVsnSdoKZTB3IKf2QKnQ7k9A==
+X-Received: by 2002:a05:651c:1990:b0:300:33b1:f0e2 with SMTP id 38308e7fff4ca-307968b9135mr64018451fa.3.1738598320882;
+        Mon, 03 Feb 2025 07:58:40 -0800 (PST)
+Received: from [192.168.0.6] (ppp85-141-194-172.pppoe.mtu-net.ru. [85.141.194.172])
+        by smtp.googlemail.com with ESMTPSA id 38308e7fff4ca-307a3088d24sm15155041fa.40.2025.02.03.07.58.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 07:58:39 -0800 (PST)
+Message-ID: <c56af12c-8964-4a76-bc6d-3e520e14a3c0@apevzner.com>
+Date: Mon, 3 Feb 2025 18:58:37 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Alexander Pevzner <pzz@apevzner.com>
+Subject: On 6.12.x kernels I2C dies on the Intel i5-1235U CPU based notebook
+ (KVADRA NAU LE14U)
+Cc: temaps@gmail.com, m.novosyolov@rosa.ru, a.sudakov@rosa.ru
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
 
-On Thu, 16 Jan 2025 17:41:25 -0500, Sean Anderson wrote:
-> Here are a few mostly independent cleanups I came up with while writing
-> some other patches. Feel free to apply them in piecemeal if you like.
-> 
-> 
-> Sean Anderson (5):
->   spi: zynqmp-gqspi: Reformat long line
->   spi: zynqmp-gqspi: Add some more debug prints
->   spi: zynqmp-gqspi: Add helpers for enabling/disabling DMA
->   spi: zynqmp-gqspi: Clean up fillgenfifo
->   spi: zynqmp-gqspi: Always acknowledge interrupts
-> 
-> [...]
+Hi!
 
-Applied to
+On the KVADRA NAU LE14U notebook, the I2C subsystem stops functioning 
+after a period of inactivity (10-30 minutes).
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+The notebook is equipped with an Intel i5-1235U CPU, four Intel 
+Corporation Alder Lake PCH Serial IO I2C controllers, and a SYNA3602 
+touchpad connected via the I2C serial bus.
 
-Thanks!
+After some idle time, the following lines appear in the kernel log:
 
-[1/5] spi: zynqmp-gqspi: Reformat long line
-      commit: d61009bd578ee7381a3cce5c506190ecb8f9d6e8
-[2/5] spi: zynqmp-gqspi: Add some more debug prints
-      commit: ba54629287f58b22c1d37f80f1875373e4b51ea6
-[3/5] spi: zynqmp-gqspi: Add helpers for enabling/disabling DMA
-      commit: d2ead60d853189f8e5ec6b301fac1e60e0b4b47d
-[4/5] spi: zynqmp-gqspi: Clean up fillgenfifo
-      commit: 9b32c86e40da792544c53076f5ec43f115e56687
-[5/5] spi: zynqmp-gqspi: Always acknowledge interrupts
-      commit: 89785306453ce6d949e783f6936821a0b7649ee2
+-----
+RSP: 0018:ffffa7d5001b7e80 EFLAGS: 00000246
+RAX: ffff93ab5f700000 RBX: ffff93ab5f761738 RCX: 000000000000001f
+RDX: 0000000000000002 RSI: 0000000033483483 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 000004c7d586da52 R09: 0000000000000007
+R10: 000000000000002a R11: ffff93ab5f744f04 R12: ffffffffb964fe60
+R13: 000004c7d586da52 R14: 0000000000000001 R15: 0000000000000000
+  cpuidle_enter+0x2d/0x40
+  do_idle+0x1ad/0x210
+  cpu_startup_entry+0x29/0x30
+  start_secondary+0x11e/0x140
+  common_startup_64+0x13e/0x141
+  </TASK>
+handlers:
+[<00000000fa02aea8>] idma64_irq [idma64]
+[<00000000d22a6968>] i2c_dw_isr
+Disabling IRQ #27
+-----
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+After this, the touchpad connected via I2C stops working.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+This issue occurs on ROSA Linux with kernel version 6.12.10 and Fedora 
+41 with kernel version 6.12.11, but it does not occur on Fedora with 
+kernel version 6.11.4.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+According to the following discussion, it also reproduces on Arch Linux 
+with kernel version 6.12.8:
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+https://bbs.archlinux.org/viewtopic.php?id=302348
 
-Thanks,
-Mark
+Although the notebook branding mentioned in that discussion is different 
+(MONSTER HUMA H4 V5.2), the hardware configuration appears to be similar.
+
+It seems that the problem is not specific to any particular distribution 
+and is related to the 6.12.* versions of the kernel.
+
+We also have a simple workaround module that resolves the issue by 
+installing a shared interrupt handler for all IRQs owned by I2C. This 
+handler does nothing but return IRQ_HANDLED, effectively preventing the 
+kernel from disabling this interrupt as spurious.
+
+The source code for this module is available here:
+
+https://github.com/alexpevzner/hotfix-kvadra-touchpad
+
+When this module is loaded, the notebook operates very stably; the I2C 
+(touchpad) functions reliably, and the interrupt rate appears reasonable 
+(around 400 interrupts per second when the touchpad is active).
+
+-- 
+
+	Wishes, Alexander Pevzner (pzz@apevzner.com)
 
