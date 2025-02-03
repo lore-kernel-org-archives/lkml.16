@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0139020FA9B;
-	Mon,  3 Feb 2025 19:15:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F19621019A;
+	Mon,  3 Feb 2025 19:15:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738610123; cv=none; b=u2zPTNLOj8DCYaHpdqtQr7eIy5ddax3R5SEdM5V4TcAtgeyTcJgAQp03wGLD7xBmdnO5eZs2qQToVk9RftElw6XvKOTGZZJEqNJdYED7h0wm/EZuSoTjUkKNgAj34DfZTR32WgziHWz7MSkh/o6o9zQJftZrv7skz2hS5pt14TA=
+	t=1738610124; cv=none; b=gkOuK+s7E3n1MPTciozxDTyQUc8WUP1T7gW788qBsejRNRV1UE73I9THQfTnblOcSzkXn4ra+8S4mXNu1faWgou3hx67OfAYNsu2odNLe1zYKSjaE/NjCSOxi7nuS+f5u5VFmYhSNgndFRBuHMbdNhxeVZ1yBVmpRFUIg3M90FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738610123; c=relaxed/simple;
-	bh=x4p1X9nOXxuhn4jEPid5fzjCvgZ4D3ZQU2ymjtjqU9E=;
+	s=arc-20240116; t=1738610124; c=relaxed/simple;
+	bh=EHqDeqDddNIApfCVLPDVdinDu5ErQOOB8uPUawpqjOA=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=mZ3fwM0dNXS2bOaKj39X+DJAFtD0mknAK6JOjiGC5m2sWo0r7IDwBqjS2GWHfIAnL1HzEzy0yX/9ZcUWgjLMrfa6dLGEQdH5gkIdrcuFEen5EGu1fUFVK8SJZE4/reqmzzd3vgMBXIqW+9bRC9gpgilVZm8gM3vpHHWwCtjD3lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SwiVodep; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ailVdHbClBDR8TMQDDV6yc1Ilejozp3X8JODWnJ6ClAi6ZHEmfUnbSbMZgR+nyhIvpFA+5HezssD2C8qwVmGQpq58Z+xZRlVSkAif2rerJcV3Ti89Ie4kR+rd1Htsu7HgPMA6CkKjxS+XiG7UiTyRElR8VqkwpN3Urb2A1tbBTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AVgbLtYI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SwiVodep"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2CCFC4CEE3;
-	Mon,  3 Feb 2025 19:15:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AVgbLtYI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B609C4CEE3;
+	Mon,  3 Feb 2025 19:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738610122;
-	bh=x4p1X9nOXxuhn4jEPid5fzjCvgZ4D3ZQU2ymjtjqU9E=;
+	s=k20201202; t=1738610124;
+	bh=EHqDeqDddNIApfCVLPDVdinDu5ErQOOB8uPUawpqjOA=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=SwiVodep/1/nWnRpopWbBGkkYwgqp6zjbivmPprSBDK7KEzSCdK2xq2o+52mpu2gS
-	 3zr7qNPdshAge0rXr1UkK0d0mAXUpI6C5KURLWQlqmy5xPSQEXP2peKrPfu9dENBeF
-	 q+QHs8EZaSp7fpT9t6Vgp36iZU34R/kSW4Mkw6R0EhsAK+RCRciPYLnz7OBuILt8Am
-	 ETjGYMXis2V0Vs6zUv5LGIP2vjtDlRM79Qr7rsaQ6x+eaH1FGxqQd3r8aZDTQ/nUCD
-	 B5QbsGm5nrDJVkFPaDDVc5Opb0m7VLr6fZRFl30v+USNqmOxNibUohAJO9AxpoXhrl
-	 2uh4Gek08nD7w==
+	b=AVgbLtYIrdpvCq52oUDxyK4YHXb5iofWOH/lli5LhAaiyHBvqP3CWsOW5Hy6tiW4l
+	 9vuNOIg2goB/R2/vlCShLYIBOaDk6p2ocLHMvJyb3HL8EzScQRTtJ3Bn6+d8Fj5c0S
+	 TtzSvNdOtLb1UNaf7MwOs/1ya8lU8UhQXGj4PyAQw9xjEFt6WooODqVkhzx+K2c5is
+	 Gr0D5CsHvLosSWL1UH9pKeN1aCWNDNLGRzsVUIwy1ndfd5+7vcAr2VdK1icmGdNkPX
+	 FfV7qW9d/zY836F6LxZ9KRc8+NDQrHWQgY5n6mVKrU4HbotvExgOWhRtkbe0QC//FL
+	 npmInPiPK1kwQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33FB5380AA67;
-	Mon,  3 Feb 2025 19:15:51 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADDA2380AA67;
+	Mon,  3 Feb 2025 19:15:52 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,43 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 0/3] Collect guest/host statistics during the redirected
- traps
+Subject: Re: [PATCH v2 0/1] iommu/riscv: Add platform msi support
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <173861014984.3409359.10285498075782232366.git-patchwork-notify@kernel.org>
-Date: Mon, 03 Feb 2025 19:15:49 +0000
-References: <20241224-kvm_guest_stat-v2-0-08a77ac36b02@rivosinc.com>
-In-Reply-To: <20241224-kvm_guest_stat-v2-0-08a77ac36b02@rivosinc.com>
-To: Atish Kumar Patra <atishp@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, anup@brainfault.org,
- atishp@atishpatra.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, zhouquan@iscas.ac.cn
+ <173861015130.3409359.9807283652658448466.git-patchwork-notify@kernel.org>
+Date: Mon, 03 Feb 2025 19:15:51 +0000
+References: <20241112133504.491984-3-ajones@ventanamicro.com>
+In-Reply-To: <20241112133504.491984-3-ajones@ventanamicro.com>
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: linux-riscv@lists.infradead.org, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, tjeznach@rivosinc.com,
+ samuel.holland@sifive.com, joro@8bytes.org, will@kernel.org,
+ robin.murphy@arm.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu
 
 Hello:
 
-This series was applied to riscv/linux.git (fixes)
-by Anup Patel <anup@brainfault.org>:
+This patch was applied to riscv/linux.git (fixes)
+by Joerg Roedel <jroedel@suse.de>:
 
-On Tue, 24 Dec 2024 13:04:52 -0800 you wrote:
-> As discussed in the patch[1], this series adds the host statistics for
-> traps that are redirected to the guest. Since there are 1-1 mapping for
-> firmware counters as well, this series enables those so that the guest
-> can collect information about these exits via perf if required.
+On Tue, 12 Nov 2024 14:35:05 +0100 you wrote:
+> Add MSI support for a platform IOMMU. May be tested with QEMU when
+> including [1].
 > 
-> I have included the patch[1] as well in this series as it has not been
-> applied and there will be likely conflicts while merging both.
+> Based on linux-next commit 28955f4fa282 ("Add linux-next specific files for 20241112")
+> 
+> [1] https://lore.kernel.org/all/20241106133407.604587-1-dbarboza@ventanamicro.com/
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2,1/3] RISC-V: KVM: Redirect instruction access fault trap to guest
-    https://git.kernel.org/riscv/c/51c58956732b
-  - [v2,2/3] RISC-V: KVM: Update firmware counters for various events
-    https://git.kernel.org/riscv/c/2f15b5eaff79
-  - [v2,3/3] RISC-V: KVM: Add new exit statstics for redirected traps
-    https://git.kernel.org/riscv/c/af79caa83f6a
+  - [v2,1/1] iommu/riscv: Add support for platform msi
+    https://git.kernel.org/riscv/c/d5f88acdd6ff
 
 You are awesome, thank you!
 -- 
