@@ -1,242 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9078F2B2D7;
-	Mon,  3 Feb 2025 23:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738623681; cv=fail; b=Q0Cgmoj4Rgdsjx9bqapUbKar10G2EZLDBEjEcccCxbz8OUlntSuBwV69VJymW5T15HBot9wTXoH1jwSEccIq69rZOmpbmDPAN9xRS9+ELH/KEkji3fQbgza/7WGXK2QJHUCVna+iB6tXNGs7NAgy1VJKBeldjxiehtdLzf/3jG0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738623681; c=relaxed/simple;
-	bh=ZHU9/weN3gMWYHAIV5FpgCBMH3G/UGj1EC1lLXIYSes=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=gQ8MohwSdnqjzS7cSwnvaZ+pnhaUnLnASzS9GeSTnzjaIP/u/ggeqR6K+A2z5QbJbxBBqIphdvxw4ZM+q4lLFacuKvuq6ph6JPil1WwF0hS0t8Pd2L8KuwOz8eRttxo43LE0AE7bO66iRQMUeDky6l+JG7RD+nUXDVTj7UhpvQQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QW7/RHXm; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCE321148B
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 23:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738623684; cv=none; b=OMeAajpo7Dg1GWyKH9cJXoRXoiFRzCpe6JvcseyUWDWGAIw2xqjnpdOPA8KTVMa2FQMjUyLYUX7LY8h99cqSo5T7VYXGIO0uG/8u0Kd0n1lhInAn5tignV+tGtjMBxmd+jl+ujPqbLTfIYI04Hw1Elek9GqwFD7HbL2Ll78WdKY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738623684; c=relaxed/simple;
+	bh=JX6YgyI3XB5KZmwCC3kBcbBo+cVpHlL6lsPqGTgoxeA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EPacwnsQXRmM+IGTqE+vuF3/TOO58S6W2X9NbFLSPJrHPTFEAsKZdeEOoLQdpbbUgyu+O39xNRT29KkfgdBb5fygS/sIqmKHX4yMoQ5nlc2SoxSjTPYUKkfFk48Q7+Qr2K/FTgQk/XBGSZeJIC/tEQb8jrLGCK48J/IL4kzJMDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=TR1u7KMd; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QW7/RHXm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738623680; x=1770159680;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=ZHU9/weN3gMWYHAIV5FpgCBMH3G/UGj1EC1lLXIYSes=;
-  b=QW7/RHXmmu2JqbiO6k8Zu3ehvK436jlVme8P2kAmz9fYxKfg6MYyjh0U
-   rXiLlK2sBoGgvIIV3KTepkuqjhQEN+Hu9DEeY+gRtuXl98HJ2RcWnH17l
-   Ls1YdzpnnonxEaQOa3rspVa1OvSmRrMF2sVw56tMk4PpIbH1DXocOVJa1
-   i3R4cHnBdF2bcNOp+8KFYaBZKLqzxKIP+ilQAOEgzVwxOI3+wjN8JNb1Y
-   6ueXytSSXEN50yAKfmIf1FqwTyx+3fgEyNBWL/vY+rGIFmjaoXKszH+LX
-   cdp0I9RGoeOahXBt5+NTjUCw908pqf7V79DFxEKYgLcMa+UznJwpANaJz
-   Q==;
-X-CSE-ConnectionGUID: tey3RAjARBq8h5Yft8N/vQ==
-X-CSE-MsgGUID: rSofoJ8XR6qsMUC3NJPHrA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="49743583"
-X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
-   d="scan'208";a="49743583"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 15:01:14 -0800
-X-CSE-ConnectionGUID: EADL+xdTRxm5ytzvcLHoEA==
-X-CSE-MsgGUID: VpTbTYebRwOhf7ouo8mn/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
-   d="scan'208";a="115404471"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Feb 2025 15:01:14 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 3 Feb 2025 15:01:13 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 3 Feb 2025 15:01:13 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 3 Feb 2025 15:01:12 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yZNdSjNFEC5rTD3YGq3lrQ+Yq4bIbXZ6g+NyrWU4qT9KWk6Wd2PJzdO/jJydMh2rPlB4ROiSCMSLo36PvkZNjVsfYNNgKL9MK6rOID8NdSnynACLLaygzHe74VcoX/fu7L0cbW+t4wIdWBP34WrtmCj5hrmL9rrvOVE3RYuANewxSVPz8JOty0+r4tOdcNCvm404/wpexHoAeQRTtUys9YJq1z9+7a4jEK4lngbQWH+STzMiKs4aNVFKHIMBnPVK4OYESYwylTqRQ5EkIbpOCP5huow61/qzxRWg9x0P5EuwefQrm/v3IPXPlF02lwmTxCVGt9ivhduEbiBgezV7WA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZHU9/weN3gMWYHAIV5FpgCBMH3G/UGj1EC1lLXIYSes=;
- b=kvTv6QvbR/VkupIwOOXElDEw99DlTVij02oBFdFhtF0MNWs6gfrIppjfohC5+/J8tuLiDDjGWt/28YWDllwAlat0+ktDeamu/wei618mYfbYuKtoHTNXByFszw//s+ZBsLDPjEBEl4UqCC2dvavMGi1HBPoEi1OLjtaHiV8dUc3iCBGSKv7KSprG1ePZsA0Y3YEHuOLAHJfIWoU78tAZWLt7YY+l9jpsJeu+Yny2Z8zTIIAHjTsXAEyE6dqQCsaBfmiEjfE/94bzzoGCui5mX2AcuJhSnovtXRLtGLj5nyh85CfJZ1FiQc/2jwAbMUjWA4tMUhVEBfxpgN0bduNKfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by BL1PR11MB6049.namprd11.prod.outlook.com (2603:10b6:208:391::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Mon, 3 Feb
- 2025 23:01:10 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9%6]) with mapi id 15.20.8398.025; Mon, 3 Feb 2025
- 23:01:10 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "seanjc@google.com" <seanjc@google.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "thomas.lendacky@amd.com"
-	<thomas.lendacky@amd.com>, "dionnaglaze@google.com" <dionnaglaze@google.com>,
-	"Wu, Binbin" <binbin.wu@intel.com>, "kirill.shutemov@linux.intel.com"
-	<kirill.shutemov@linux.intel.com>, "mingo@redhat.com" <mingo@redhat.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"jgross@suse.com" <jgross@suse.com>, "pgonda@google.com" <pgonda@google.com>,
-	"x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 0/2] x86/kvm: Force legacy PCI hole as WB under SNP/TDX
-Thread-Topic: [PATCH 0/2] x86/kvm: Force legacy PCI hole as WB under SNP/TDX
-Thread-Index: AQHbdeRiwegNjOp2EEirKtkE9yTgJLM14ykAgAAmtACAAClbgA==
-Date: Mon, 3 Feb 2025 23:01:10 +0000
-Message-ID: <0102090cd553e42709f43c30d2982b2c713e1a68.camel@intel.com>
-References: <20250201005048.657470-1-seanjc@google.com>
-	 <dbbfa3f1d16a3ab60523f5c21d857e0fcbc65e52.camel@intel.com>
-	 <Z6EoAAHn4d_FujZa@google.com>
-In-Reply-To: <Z6EoAAHn4d_FujZa@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|BL1PR11MB6049:EE_
-x-ms-office365-filtering-correlation-id: 7142fa60-4fe3-404a-af86-08dd44a6a679
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?TmgrK2Q3QVcxY1pxQnR2K1VpREdSVGNJeHR1STFUczZPeCsrSmh6SWRIcnhL?=
- =?utf-8?B?MEl3akZZTXd5NmpFM21qS2hoWkdHQTV1QzdMMzZFZm5Eczg5L1RnSFJOZGh2?=
- =?utf-8?B?OTJmQzJHYUtKT1EwMmZKZU9FTkQ5REJ5Z3NCaVlUUG9oWXd6Uk1JUGhJRDdp?=
- =?utf-8?B?YjlZRWVmWFo4aGVBSTBZdW4rd3Z5MSt1V2FQQkJuWThzMmlXTHFoaWpLVXFm?=
- =?utf-8?B?bzVjRTJrdTI1dmhmWFpvODRIVHRacmkrdXgxb2pYcGxGeWIrM0Y2L3E4UzhL?=
- =?utf-8?B?bE5NWkhmZm96eDhwcVJ3eEtEZDFCK1FDZ1E0b01ySEtVWFgweG5PbTRySjZq?=
- =?utf-8?B?YWlMYXNEaWljMlJ4d1dWRy9ZSDZXeFdaa0F3eU5tK01qZDJ6Yzd1NzFhRVNX?=
- =?utf-8?B?MURZVlJGZXR5eHlYeW53KzRmc0ZoMVFSUlpkNXc5YkJHdG5uZ29qRSt4Rkd5?=
- =?utf-8?B?R0xSb3RjcDNhc2NiNEk3alJoS2dmWVNRd2dSVDI3ZG9qQjY0S0FUOTZNOXdR?=
- =?utf-8?B?VHN3bFkrNXE4VkxnK09QcElybWpRRUlhZWVwZ09Bak96UzVlMHVSb0Fqa1Bq?=
- =?utf-8?B?bmdjcHEyYlpESjNCdmZJQThteUhGK2VkTkJtWlIvSTQ2N1RkbEhrZDVmOTQr?=
- =?utf-8?B?M2dsa0dubHdjakVtWXFXNDVvbGlEUHR2TG56U2tkWktobkVzdTVXUFNuR0l2?=
- =?utf-8?B?dEJHOFFpY2M5Q25KNlduZGZZWnkxZWdjQzdTZmF1QTF2STBjSjhQdnp3VVRW?=
- =?utf-8?B?RTdSenlOa3BteDB2U1dzRlhteW9vMEowWXJBbHJrU1lmWEJhK0ZQTmJBUFRW?=
- =?utf-8?B?ZzR4d3VQc1RTNEorOUVFOEcvczhLL250b3ZkclNpS0hEUm03anVyMFhqLytH?=
- =?utf-8?B?Z0tiejYvbjVNaUdEaW9aZ0R4aDZSWWIzdFIrZ1huSzRJWVJCSWpLdnZ3aHl5?=
- =?utf-8?B?clUvNFpGSFIxQkh5UGdwWUF5U0psdjBvcXIrTEtPQ24yekZJdGdXbUY4eEJZ?=
- =?utf-8?B?VnFVclQxcStBVjlVbFAzQStmSmhmNVpIak0zMUlYRHdQalFXblJ5MmRLVTlx?=
- =?utf-8?B?REIybVc5TzJtWCtBbjZ3TXhWUzRZbnE2cFk0VDdyNDVWRU95Zi9VYlJQOE1x?=
- =?utf-8?B?c2N1SExlUEJjQ0N2cTh3Tnc4dzE3Ym1BS2h2TjFEbzloRTBJQWVvcjJ6TVRt?=
- =?utf-8?B?ZVowbHJtQXVRbjNXN2RZVFh2NkNTcEdQRTRaVG94Q0NSZUpTdW05aGZoRklv?=
- =?utf-8?B?bU9namc5VXhoN2hFdy9aRkRoRUJLTUpLUWc5dUVHbDZnL1o2djltNERWb04x?=
- =?utf-8?B?bG5MRkJLVk04WGNrQTI5Mk1yRm9xQlJWMzk2S1hXengraG1kKzV5TGVScGtF?=
- =?utf-8?B?aWVqRjcxbjN1b3BBeWdPb05FaVB0czI4ck9RUS9vejV0OUUvTkVMaTBUODhH?=
- =?utf-8?B?NFV1MmovZzJHVDY0Z2x4V2tWeU42ZE41R2R0TTNnZEV6d1FURER3NktBUjNJ?=
- =?utf-8?B?QTBRK2p1UEpqQTZkNXdjZ3hGOHdkUjU0SllRS1ZjWnJYU3F6aDBVNmRtTkh5?=
- =?utf-8?B?YktDR21YWmdRTWorRmJZRmFLWWFaZUE5cVB6a1BFdmxOL2lOVXZzaWRMdk9o?=
- =?utf-8?B?TUc3NnRJNGk4V3RZcGFZNUFUTytDOFppNGpDY1BEWHhJM0pxRlRYL1dRV21y?=
- =?utf-8?B?MWU2aXpxWjZCL3VzM1dBUWlKWjRXcHNHYkFpMlF0eGhKZUdiVFA1RUprbU5q?=
- =?utf-8?B?Z0plRE9OS0hlVUVEMVFsTnBNbGZWam5QTmpKYjFzVDlIbXZmaDdPeXFsVC84?=
- =?utf-8?B?cXhKRzIxMjBTbnI0bEM0TEU1UW8xTldDd2VEenN4SktsMGI2dzJiQWJ2WU1W?=
- =?utf-8?B?NTBCYzIrVExrcXFtOHl2WTN1TlFDWjE5bW9CUjJpYTFaWVhYVk16YVgxOGZh?=
- =?utf-8?Q?+GbrgQ9S62oGeJdM8DGVuPLnW3uEwh2n?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OGpybFJVTElrampMU2Q0d2NHT1lNZGNESWVtLzlhUXlWZ2JINnlQSVYyNTdN?=
- =?utf-8?B?QzR2Zkg4eU8xdW5QSjV1Q1VpWUVLRnNJMFRmd0NRVnIzUUVOL3UrNm5NUFc4?=
- =?utf-8?B?aHozNEpxRHdEMTJLTjB1ZlkvTWN0SUhpRE01ZWNpYnVqNGNOVTRJQk92b3Zu?=
- =?utf-8?B?c0JQZWIxSDFGdEU3dW0xcURIREJGNE1kTW1iVEh2TVNKa2FpeWZSYzRYcWdi?=
- =?utf-8?B?SkRNZ2hUYWdoNzdrOW5UcGlSU0xzOUVKU3dPYkVERWN4aDRlS20zZERaUUs1?=
- =?utf-8?B?OFdPZFMwMWd2VUZZSkRHakR0SjFaWWIwWlo4VGNKZW5OT3lXUy9pWTFVUm9Q?=
- =?utf-8?B?T0xIblN4VExCcGtLWVdqaStIc0V0VWlSRFpKZkpyOXZmdmVBSG9QcllnRExE?=
- =?utf-8?B?a00yNmdJSGVwNXBUSm5PbDdLYXNZZlZBS215anNzZjlFREE4ZTVBWUc2UGpQ?=
- =?utf-8?B?dUxwTW5LcjJCNWJlemZRSWRmSUI1dDdpUXZ1WE9wV0U4aDBjdmFBOVdOSXpq?=
- =?utf-8?B?eVBxSi9XMG5hRmFCSEhBRTdNR2JoVjlYSlh3TDJxeTJLNUVTSFBKR01HZWg0?=
- =?utf-8?B?ZDN5TFJoMndXdkhuUDFWVEo5aUJmbmQvenk1OGZhUU1pU1Nnb1FxSWYzNmVD?=
- =?utf-8?B?bnlqZFRHeHpoUTFOQTJ4YWFhQTVCQnk5RVdiYUdCNDVwZElFMXQvVXpzTGVz?=
- =?utf-8?B?Zi9HYU5oR0hIT0l3ZG42N0duU3JBR3drbUhYOW94aWhjL3I1bXFkTnFJV1pZ?=
- =?utf-8?B?Y0xCS2xzdnJRRnVzYWExZlczVGFHRk9QSG5hSzJWZzNGeTB4djFPWUZURC83?=
- =?utf-8?B?N0p5MTJraG1GRml3a3ptWUtFVDhjYlRlMVA1QjJaSStvaHh5STlMKzJ3Z0xD?=
- =?utf-8?B?V2UxQmdocTRJS1RNejNEQno5N0ZUUFZ3WWM3bkNkTy9jNS9wblh5T2dlSDZn?=
- =?utf-8?B?dEFUU1lxcXZneEZ1ZTUrY3Z5Q3R2UW0wajFONHpYdmtHOGJ3dWlpODVBZE9x?=
- =?utf-8?B?V2dGemRuTVliN1FqTlhQZXdjWCt6bHhGMmdoRDAxVndMc1lZcUNianZ5aFZz?=
- =?utf-8?B?cVgybkhjbWxOKzBRQzFBdnBUdFpNSEx6cGFOT0JXbi9POHZEdmFnTFR1SlRv?=
- =?utf-8?B?VStIUERyOEp1eVUzcmNEOUJPY2w5TzNaQStmTmV5Mmt3WUhzYzBKUEM3YXRl?=
- =?utf-8?B?R1JsQlExcUxvaEN6c29ObTg5R2R2b2VuQUhnQVhnSWJ0TkNFaXozeWZQdWhE?=
- =?utf-8?B?SlNBSzZvUCtJME1rTmFqUDM1V3NzNFFtZWQ5SmdXak1KelhNQXR1Q0xWc1NB?=
- =?utf-8?B?MUt3NHlTS1NJNU16Nll1NFNtWjd1cDduR093bW1TclpRZmJMMThQL1pNMG9U?=
- =?utf-8?B?MUlUUm5sNHhpTjR4S1BXbTh2M2NEVmRuK0N5ZTBPSEIzQ1lwbDRMOXI0N0FM?=
- =?utf-8?B?RnFCWXhSUFpoYWV6dXI0OVVaOENsM3NCWlNNOU5pajNrWUFIbVNRZ3VoNS9q?=
- =?utf-8?B?anBGZTRvUzJ1ZmNSblQzRGU4S1dndVBtbHRRQlQ3cHpMdWh5MURyaFJvcnYx?=
- =?utf-8?B?OXhQZ2RENTNlOGs4RFdyWGwvQW1SL0FMa3FIcDU1UVo1ZmxweWFhUVNGbFhv?=
- =?utf-8?B?MFhwREZYWDhuRGdBZjIwOTJxMnF5dXgxc0ljZGpLYmVob2RpdWdSZDN6dEI5?=
- =?utf-8?B?ZHlHNFhxWDYzdlhzWHF1SkxiTEhZN2xZVDExUEZocHgvOVhhZ0tNV1pEbENY?=
- =?utf-8?B?Z2hHSlMzUnJ5bmZ6L1Znd0V2T3lMS3JYOG5UeDFJYlEraEJ2TGtUNUV4OUxF?=
- =?utf-8?B?TExVZ1pXUVNFc0IwbTVCVFZWV0RwYXVxMGlHZ0hJK1poQnlTbk54c2gxTDRG?=
- =?utf-8?B?SGhibWFsVTMrRXRrK2JHT1hLTVpmOWgyWmtRZnZSZGMyVWFEdlc1WlJSVkdE?=
- =?utf-8?B?ZzlWQ2J4azJ3dHFPcXQ0ZUI1dzZTTVc2eXJjUXJ0eTlhb1pER0lHWHpSeDhh?=
- =?utf-8?B?WWQyVlpOSG10RTJZMUN6VFpjaUFINlowakovTVpYbXV1OXBaT1hiSmJIWkgy?=
- =?utf-8?B?MVVDSk42TjB0bFpmbmNXZDVTeFIzRTJ6K3gwZm5pbERIbHQ1dVdHRWpyMnIy?=
- =?utf-8?B?OXJoZnhhTHFBS1RFMHkxeXh0R2N3TWEyejNWUVVCWFVqYndaSDUwc0lXckJl?=
- =?utf-8?B?QXc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0EE2566321396D48B5220E25C895D5DF@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="TR1u7KMd"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-29f7b5fbc9aso1283116fac.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 15:01:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738623681; x=1739228481; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q48N32/BZzAOoxhPyz3+9vdM39rBTv/9Tu2+c8AC5Nc=;
+        b=TR1u7KMdbhzMYP9oF0mbItwasEVKnR3dcvon5gwbwTryxzXJxf/p6WhbNNPjyf2MA1
+         cHEtllG4Z+HxCbHULwOmw3NXlrVOIAr83ucKd2YW9E8p1LnWCjwu7C9TMeZzmHZDQV4n
+         qVmtqIOD8nSAdF52CtzDHMo8fQD8nh7RGVyH3VzqlMHToDtQzpATsiA3VWLF+6gEiL9j
+         GyJRtYBLNLzFvw8n4re2GJwr2Zga+nv1JJDQoHan2UjMwEvhFLxWYx9DqrrQs4PO+8g+
+         kMUg1dFTXHUzuhwn8dZHFXDSwlyjt8fMFcEWCVVQhPKhS1d4BDtzq3Jc+KNAxoNe32IF
+         I6uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738623681; x=1739228481;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q48N32/BZzAOoxhPyz3+9vdM39rBTv/9Tu2+c8AC5Nc=;
+        b=RyqwqpNQnO+AG6bDxz0OXk7ePs5xv+nlDxsT/zNS46xQudED24DANrXGBbRavQIPl5
+         3w4VbW/JmSwjidOkMd1KZEvYfme4sgGcGaaqSHR2dpV51J0q1T2fwGfGUndlgnFFnavz
+         iilHr6J9C/8WYcOyXbWjOkafdk0Aa/Ej1uDe8iNZHSXCG00YMqbo/UiMOgmZKg7CfNFt
+         fOKWQHL8IWMW8YV8074+rF2yIli4wy6zzhO6h7r1BjNHBB5GaGfTxrnq4xskTt79to3o
+         mv5FHaWdmk/tm7Ka5HeOeDD4Kx15+7Be9xL+R0pg67tGAnLQrcspOZG8rbzQJJErvCRU
+         ql4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVi9C0kNn24yjcR9EoN+E5G/WRX3Vq89Uck4xqgg+bBbLzfrWpGPmuJ6XRlPtts9thioGyrVJNhFj4wQvY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9GDbElpS7CSwMbmMRISCkNVS/rUCQJ3LjnwwLbhtGXkqx1cyy
+	imOIejX0DHgxBsa0DhNxotFP1BBi27d5K0w5UpriKOZKnjGTpL7vIGHpVghk3cVQ8RIil1EnmXo
+	4
+X-Gm-Gg: ASbGncvauI2JF6U1rzUYJ6zQSJGtOO00ImyJnuyiZdPmN7f3Dd2K1LR5elnK+r8CTQ4
+	S+Xtkwf0MZ1kdJ83l2LuyBUrmFVsiD+88PC+GLb9+Mc619/13d6iiIrNyS3dmENFCt8Ns5szzpd
+	0y7INoBETfIpUjFPdPsatp/M7EQxl5enXv+4e0Sua3iL+iOQHt4nBPSHY0VR78Gu6tLygOIVk9h
+	K817+BzdevPPxPEUQVVz03D8nXueT37x9cy91mk+XzNbyYOYOsIL0D8q8mfYWbQqI6ynyg2Rxb1
+	T0qtaEBPpu3OCXVB8LCJ0TLlw8uOHO9Dg1e4mwHI+NBHEvnuoOFe
+X-Google-Smtp-Source: AGHT+IFvQHZNew9RMVh3oMkAV8tgG3NqgZ2zFveyRCk4EzbOqbrzrj7jrDhOfm9blPA9OWsKbsUncQ==
+X-Received: by 2002:a05:6870:3127:b0:29e:55ae:6170 with SMTP id 586e51a60fabf-2b32f26ff66mr16402322fac.29.1738623681468;
+        Mon, 03 Feb 2025 15:01:21 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b356196935sm3599125fac.17.2025.02.03.15.01.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 15:01:20 -0800 (PST)
+Message-ID: <9f209ff0-e56c-47a1-8df0-603d30d36ccb@baylibre.com>
+Date: Mon, 3 Feb 2025 17:01:18 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7142fa60-4fe3-404a-af86-08dd44a6a679
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2025 23:01:10.4456
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gPk1QIvgyS9eq4R14H8Jzz8OuNayYkMuJYJSa4j83pD4iNih4ylVaRXVmpLJmR9c3ii4ZFm6ivFBPXv1eK0/5y2LUWS7R6/49m4eSWrffFE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB6049
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] docs: iio: add AD7191
+To: Alisa-Dariana Roman <alisadariana@gmail.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>,
+ Alisa-Dariana Roman <alisa.roman@analog.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Ramona Gradinariu <ramona.bolboaca13@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>
+References: <20250203133254.313106-1-alisa.roman@analog.com>
+ <20250203133254.313106-4-alisa.roman@analog.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250203133254.313106-4-alisa.roman@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-T24gTW9uLCAyMDI1LTAyLTAzIGF0IDEyOjMzIC0wODAwLCBTZWFuIENocmlzdG9waGVyc29uIHdy
-b3RlOg0KPiA+IFNpbmNlIHRoZXJlIGlzIG5vIHVwc3RyZWFtIEtWTSBURFggc3VwcG9ydCB5ZXQs
-IHdoeSBpc24ndCBpdCBhbiBvcHRpb24gdG8NCj4gPiBzdGlsbA0KPiA+IHJldmVydCB0aGUgRURL
-SUkgY29tbWl0IHRvbz8gSXQgd2FzIGEgcmVsYXRpdmVseSByZWNlbnQgY2hhbmdlLg0KPiANCj4g
-SSdtIGZpbmUgd2l0aCB0aGF0IHJvdXRlIHRvbywgYnV0IGl0IHRvbyBpcyBhIGJhbmQtYWlkLsKg
-IFJlbHlpbmcgb24gdGhlDQo+ICp1bnRydXN0ZWQqDQo+IGh5cGVydmlzb3IgdG8gZXNzZW50aWFs
-bHkgY29tbXVuaWNhdGUgbWVtb3J5IG1hcHMgaXMgbm90IGEgd2lubmluZyBzdHJhdGVneS4gDQo+
-IA0KPiA+IFRvIG1lIGl0IHNlZW1zIHRoYXQgdGhlIG5vcm1hbCBLVk0gTVRSUiBzdXBwb3J0IGlz
-IG5vdCBpZGVhbCwgYmVjYXVzZSBpdCBpcw0KPiA+IHN0aWxsIGx5aW5nIGFib3V0IHdoYXQgaXQg
-aXMgZG9pbmcuIEZvciBleGFtcGxlLCBpbiB0aGUgcGFzdCB0aGVyZSB3YXMgYW4NCj4gPiBhdHRl
-bXB0IHRvIHVzZSBVQyB0byBwcmV2ZW50IHNwZWN1bGF0aXZlIGV4ZWN1dGlvbiBhY2Nlc3NlcyB0
-byBzZW5zaXRpdmUNCj4gPiBkYXRhLg0KPiA+IFRoZSBLVk0gTVRSUiBzdXBwb3J0IG9ubHkgaGFw
-cGVucyB0byB3b3JrIHdpdGggZXhpc3RpbmcgZ3Vlc3RzLCBidXQgbm90IGFsbA0KPiA+IHBvc3Np
-YmxlIE1UUlIgdXNhZ2VzLg0KPiA+IA0KPiA+IFNpbmNlIGRpdmVyZ2luZyBmcm9tIHRoZSBhcmNo
-aXRlY3R1cmUgY3JlYXRlcyBsb29zZSBlbmRzIGxpa2UgdGhhdCwgd2UgY291bGQNCj4gPiBpbnN0
-ZWFkIGRlZmluZSBzb21lIG90aGVyIHdheSBmb3IgRURLSUkgdG8gY29tbXVuaWNhdGUgdGhlIHJh
-bmdlcyB0byB0aGUNCj4gPiBrZXJuZWwuDQo+ID4gTGlrZSBzb21lIHNpbXBsZSBLVk0gUFYgTVNS
-cyB0aGF0IGFyZSBmb3IgY29tbXVuaWNhdGlvbiBvbmx5LCBhbmQgbm90DQo+IA0KPiBIYXJkICJu
-byIgdG8gYW55IFBWIHNvbHV0aW9uLsKgIFRoaXMgaXNuJ3QgS1ZNIHNwZWNpZmljLCBhbmQgYXMg
-YWJvdmUsIGJvdW5jaW5nDQo+IHRocm91Z2ggdGhlIGh5cGVydmlzb3IgdG8gY29tbXVuaWNhdGUg
-aW5mb3JtYXRpb24gd2l0aGluIHRoZSBndWVzdCBpcyBhc2luaW5lLA0KPiBlc3BlY2lhbGx5IGZv
-ciBDb0NvIFZNcy4NCg0KSG1tLCByaWdodC4NCg0KU28gdGhlIG90aGVyIG9wdGlvbnMgY291bGQg
-YmU6DQoNCjEuIFNvbWUgVERYIG1vZHVsZSBmZWF0dXJlIHRvIGhvbGQgdGhlIHJhbmdlczoNCiAt
-IENvbjogTm90IHNoYXJlZCB3aXRoIEFNRA0KDQoyLiBSZS11c2UgTVRSUnMgZm9yIHRoZSBjb21t
-dW5pY2F0aW9uLCByZXZlcnQgY2hhbmdlcyBpbiBndWVzdCBhbmQgZWRrMjoNCiAtIENvbjogQ3Jl
-YXRpbmcgbW9yZSBoYWxmIHN1cHBvcnQsIHdoZW4gaXQncyB0ZWNobmljYWxseSBub3QgcmVxdWly
-ZWQNCiAtIENvbjogU3RpbGwgYm91bmNpbmcgdGhyb3VnaCB0aGUgaHlwZXJ2aXNvcg0KIC0gUHJv
-OiBEZXNpZ24gYW5kIGNvZGUgaXMgY2xlYXINCg0KMy4gQ3JlYXRlIHNvbWUgbmV3IGFyY2hpdGVj
-dHVyYWwgZGVmaW5pdGlvbiwgbGlrZSBhIGJpdCB0aGF0IG1lYW5zICJNVFJScyBkb24ndA0KYWN0
-dWFsbHkgd29yazoNCiAtIENvbjogVGFrZXMgYSBsb25nIHRpbWUsIG5lZWQgdG8gZ2V0IGFncmVl
-bWVudA0KIC0gQ29uOiBTdGlsbCBib3VuY2luZyB0aHJvdWdoIHRoZSBoeXBlcnZpc29yDQogLSBQ
-cm86IE1vcmUgcHVyZSBzb2x1dGlvbg0KDQo0LiBEbyB0aGlzIHNlcmllczoNCiAtIFBybzogTG9v
-a3Mgb2sgdG8gbWUNCiAtIENvbnM6IEFzIGV4cGxhaW5lZCBpbiB0aGUgcGF0Y2hlcywgaXQncyBh
-IGJpdCBoYWNreS4NCiAtIENvbnM6IENvdWxkIHRoZXJlIGJlIG1vcmUgY2FzZXMgdGhhbiB0aGUg
-bGVnYWN5IFBDSSBob2xlPw0KDQoNCkkgd291bGQga2luZCBvZiBsaWtlIHRvIHNlZSBzb21ldGhp
-bmcgbGlrZSAzLCBidXQgMiBvciA0IHNlZW0gdGhlIG9ubHkgZmVhc2libGUNCm9uZXMgaWYgd2Ug
-d2FudCB0byByZXNvbHZlIHRoaXMgc29vbi4NCg==
+On 2/3/25 7:31 AM, Alisa-Dariana Roman wrote:
+> Add documentation for AD7191 driver.
+> 
+> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
+> ---
+>  Documentation/iio/ad7191.rst | 250 +++++++++++++++++++++++++++++++++++
+>  Documentation/iio/index.rst  |   1 +
+>  2 files changed, 251 insertions(+)
+>  create mode 100644 Documentation/iio/ad7191.rst
+> 
+> diff --git a/Documentation/iio/ad7191.rst b/Documentation/iio/ad7191.rst
+> new file mode 100644
+> index 000000000000..b55f3c13e45a
+> --- /dev/null
+> +++ b/Documentation/iio/ad7191.rst
+> @@ -0,0 +1,250 @@
+> +.. SPDX-License-Identifier: GPL-2.0-only
+> +
+> +==============
+> +AD7191 driver
+> +==============
+> +
+> +Device driver for Analog Devices AD7191 ADC.
+> +
+> +==================
+> +Supported devices
+> +==================
+> +
+> +* `AD7191 <https://www.analog.com/AD7191>`_
+> +
+> +The AD7191 is a high precision, low noise, 24-bit Σ-Δ ADC with integrated PGA.
+> +It features two differential input channels, an internal temperature sensor, and
+> +configurable sampling rates.
+> +
+> +=====================
+> +Device Configuration
+> +=====================
+> +
+
+I would call this section the `Devicetree/wiring` section since devicetree has
+to do with how the chip is wired up.
+
+The existing `Device Tree Bindings` section at the end pretty much just repeats
+the DT bindings .yml doc, so we could drop that section from this doc.
+
+What you have written in this section already covers it very well.
+
+> +--------------------
+> +Pin Configuration
+> +--------------------
+
+I think it looks the nicest when the --- exactly line up with the text and I
+think that is the usual kernel style as well.
+
+Example:
+
+-----------------
+Pin Configuration
+-----------------
+
+Same applies to the rest of the doc.
+
+
+> +===================
+> +Device Attributes
+> +===================
+
+There isn't really anything unusual about attributes on this chip compared to
+typical ADCs, so I would be OK if we left out this section. If we do keep it
+though, I think we should write out the full attribute name since some are
+separate, some shared_by_type and some shared_by_all, so they have different
+prefixes.
+
+> +
+> +The AD7191 provides several attributes through the IIO sysfs interface:
+> +
+> +-----------------------------------
+> +Voltage Input Differential Channels
+> +-----------------------------------
+> +
+> ++-------------------+----------------------------------------------------------+
+> +| Attribute         | Description                                              |
+> ++===================+==========================================================+
+> +| raw               | Raw ADC output value                                     |
+> ++-------------------+----------------------------------------------------------+
+> +| scale             | Scale factor to convert raw value to voltage             |
+> ++-------------------+----------------------------------------------------------+
+> +| offset            | Voltage offset                                           |
+> ++-------------------+----------------------------------------------------------+
+> +| sampling_frequency| Current sampling frequency setting                       |
+> ++-------------------+----------------------------------------------------------+
+> +
+> +--------------------
+> +Temperature Sensor
+> +--------------------
+> +
+> ++-------------------+----------------------------------------------------------+
+> +| Attribute         | Description                                              |
+> ++===================+==========================================================+
+> +| raw               | Raw temperature sensor output value                      |
+> ++-------------------+----------------------------------------------------------+
+> +| scale             | Scale factor to convert raw value to temperature         |
+> ++-------------------+----------------------------------------------------------+
+> +| offset            | Temperature calibration offset                           |
+> ++-------------------+----------------------------------------------------------+
+> +
+> +--------------------
+> +Available Attributes
+> +--------------------
+> +
+> +The following attributes show available configuration options:
+> +
+> +- sampling_frequency_available: List of supported sampling frequencies
+> +- scale_available: List of supported scale factors (based on PGA settings)
+> +
+
+One of these days, we should probably write a generic page on the common
+attributes raw/scale/offset and somewhat common sampling_frequency/
+oversampling_ratio (probably a few more that I'm forgetting). :-)
