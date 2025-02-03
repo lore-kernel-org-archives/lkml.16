@@ -1,85 +1,162 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663EB20E302;
-	Mon,  3 Feb 2025 20:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3450E20E6E5
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 20:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738614776; cv=none; b=Wk9zwlS/4v47qe+RyENVU2iwxNEkeZGKZvuz1IgP3P5ydhdaCcWBKtAvIL5Ou84Q8JCWafAqGKyoFINZN7EAyQxHelJm9WQ1nsgof92N7CFt6UGYbGyaUz9LDRDcYZ0s16SCNgOHQTGreRsYTofOWurp8Rh3/EbZtZibXSoMalA=
+	t=1738614787; cv=none; b=Y5E1KL89+MGs9Nq1yXONAm4XFkpjvAOTeWbwVP0GST+F4yaV3QXa1B5K4iSp72ZJ9nhf3q417bL+dgvk5nmivyUOLZYnnazeFr/Ott368GQ9dDwFXI5QvisHQ68GqFzpcgCHf3ONnde1I/2kOhCBtGJnVk4sZOTQ6nBGXpmRZ+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738614776; c=relaxed/simple;
-	bh=NudPmupCZnC9mmHSDb+mQPgPttYtv9oaHlFss2VQSE0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NkcnlbklebWxxOcNTS/VIN2ycVGheD0HsNkxJNkkAxIoCcPFd4YvOQg4e8QXB3uPuNT993VsswKPIaIdHr8L0ox1fNbw28x6Etjx2KSVLm2pGAWPbjtLU5ivnuADyBn0r1+tdaseXM3izShadCUv+AM0BEyDMkvWqJWULSvLyJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=QWDeDRds; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1738614787; c=relaxed/simple;
+	bh=NaKjfdcB1OPOFBanCCyVPGjfsjGpvjpRoBucGDSenwg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=QNDmsQpc5A4t42ahRwPO4oAXxcsKRtGP96Z+qpIg+k38ODnjFzmPaoUBwqJt3wytW1XCwoNFTatD8DfHPlvMTNPG6D5X0tg+oHDo5HIM8FSvBXBuDSVjiG+xWIt6sD4vk8ns2DrFuhQRZ5pIzaAULZauzYXHq1WexG2Pannu1Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IeXc1bCj; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="QWDeDRds"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id D3423259FE;
-	Mon,  3 Feb 2025 21:32:53 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id s1vY3mYxwqqr; Mon,  3 Feb 2025 21:32:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1738614766; bh=NudPmupCZnC9mmHSDb+mQPgPttYtv9oaHlFss2VQSE0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=QWDeDRdsAfPyknkRd21EprJX+ifussKj0bTCt9dUrx7AZjLjHmoh6WD33Ma7Is3ry
-	 dDleT6oqZYZT7tEp8xrK5aEPy16YssFZg2ijGrNNCgoJvUcDMS+ceWJW0irI4lRuen
-	 nWJbZ0ez9IeelPn3vt0MAPScp6mfPlnXVXV8xWzDTvOopV5hhUIIqSyqMDDyyAW+cn
-	 lBZeVWM0GIR1WcjLfC45MGwpOPASZJEaJx1GShAh3UJ8oTxfWtdGinoJb6eAtR1FPZ
-	 zEud4jvUmtH0VFVYKJdLehYxyFH/H2RYF8C6zxo/dmvh+nNdFNafTXMZvUyeyecN07
-	 jFy5A9V14NFMw==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Tue, 04 Feb 2025 02:02:20 +0530
-Subject: [PATCH 2/2] soc: samsung: exynos-chipid: add support for
- exynos7870
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IeXc1bCj"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-218cf85639eso68522505ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 12:33:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738614785; x=1739219585; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iYW2LDvYlgfwoIXbShRoPlpw0zOEvt+PoXNdQjsCq3g=;
+        b=IeXc1bCjH9nSPKc9+HzXLDDv7wEl5TwAYk3Ad2EUH2899KODaErNsEvFmvvJqdcy27
+         rviokibbUei/lnvh8XT01HZkf2b4gAQxEQupoyoN0+H3vo5GL4W8YLpdkKEMsosfl+0c
+         vnTSBd3Iy+ZMff1prFqUwapV0UDTpRz66ueZYPdNctRbAcFPgk2qLn2G3Tm9oeXL3Yea
+         BvgbX+Qr4iOf2zNd+Bo8oIvlI9hqy6GL7uT6keAXwLBO63Yc7lQ4t7PVHtA0D3NuqtcZ
+         GB4JZMmDhrdpmjS7oQgEDH3aOBToi06nyac7hO7QS6WyWse8r6ruU2EIULOcyFxT8zHW
+         86YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738614785; x=1739219585;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iYW2LDvYlgfwoIXbShRoPlpw0zOEvt+PoXNdQjsCq3g=;
+        b=guiv7W/x0p/JzS2Am3m+9Fq+QQ3NMi9isnHXyFtZabIIx4lIoQTZoF/S67cgpZAq4N
+         ig4XWPhhu2VaPmU/rSHAMp84knFNe8wLLUYneGYDffmIR7OF6v8joPEZGiXgPdR9hpNA
+         XFPBAF2H12w20dyMX834+D/RBp1VSzZqQJNWogZsjbWFK4wde0/90wC9lVSGFeWMK0Cg
+         U1loBoRKnJmiXDbkbCuiPK8TqKuqyHvFRpet8yX/070otPipwIDkmptHZEYN5tULs4Zv
+         eC4jfdVj5XB4c91ClSmnUbZK78nkb3n3VtyLwI+Uv5hS69vn2A2TRSXz7dVItnamsGN1
+         zVsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWSmJZl7FsN04JLn8Pi1Td2t93RG6x0sgtF/VxiV/wBYfJ7gFt38ZohMpGRENoOWiJZ+4Hf+Ios3Z6nO/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzziWGfCQ9vkv2XwpikIUCP6fyFWfHlKryyOOuTqyEItWwotLyf
+	DBL8NRE4KkyZzTh0ZIxIYUm1BVg15m4yNM880CQhyEsIHd2gtPsN6gGqY9KPX0qgZDxnNPGPMik
+	NGg==
+X-Google-Smtp-Source: AGHT+IG5i/7BijsSRlla56jXHn0hRtpXLKmMjGuBWbeY9J2ygQmJ961M9dWZ+Ux0gQ/LUgUQLPTNXcJcT5A=
+X-Received: from pfvf9.prod.google.com ([2002:a05:6a00:1ac9:b0:72d:3c02:cd7f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:4388:b0:1e0:de01:4407
+ with SMTP id adf61e73a8af0-1ed7a6e2088mr38830902637.37.1738614785443; Mon, 03
+ Feb 2025 12:33:05 -0800 (PST)
+Date: Mon, 3 Feb 2025 12:33:04 -0800
+In-Reply-To: <dbbfa3f1d16a3ab60523f5c21d857e0fcbc65e52.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250201005048.657470-1-seanjc@google.com> <dbbfa3f1d16a3ab60523f5c21d857e0fcbc65e52.camel@intel.com>
+Message-ID: <Z6EoAAHn4d_FujZa@google.com>
+Subject: Re: [PATCH 0/2] x86/kvm: Force legacy PCI hole as WB under SNP/TDX
+From: Sean Christopherson <seanjc@google.com>
+To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "x86@kernel.org" <x86@kernel.org>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "pgonda@google.com" <pgonda@google.com>, 
+	"jgross@suse.com" <jgross@suse.com>, Binbin Wu <binbin.wu@intel.com>, 
+	"vkuznets@redhat.com" <vkuznets@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>, 
+	"dionnaglaze@google.com" <dionnaglaze@google.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-exynos7870-chipid-v1-2-0bf2db08e621@disroot.org>
-References: <20250204-exynos7870-chipid-v1-0-0bf2db08e621@disroot.org>
-In-Reply-To: <20250204-exynos7870-chipid-v1-0-0bf2db08e621@disroot.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
- Conor Dooley <conor@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Sergey Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738614748; l=803;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=NudPmupCZnC9mmHSDb+mQPgPttYtv9oaHlFss2VQSE0=;
- b=GPlzXth4lETRLGNpEqUWPwr5IT8WZqANFiLVMpjAkqvHEVayusoAxcyx3iNO3AKa/0vu3OWas
- Z3NAjcWoJuLB8GH4mTNazCWZljHWKlkjdQyNSBD1DA3bPiJV9v5GiJj
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+Content-Transfer-Encoding: quoted-printable
 
-Add the product ID of Exynos7870 (S5E7870) to the existing list.
+On Mon, Feb 03, 2025, Rick P Edgecombe wrote:
+> On Fri, 2025-01-31 at 16:50 -0800, Sean Christopherson wrote:
+> > Attempt to hack around the SNP/TDX guest MTRR disaster by hijacking
+> > x86_platform.is_untracked_pat_range() to force the legacy PCI hole, i.e=
+.
+> > memory from TOLUD =3D> 4GiB, as unconditionally writeback.
+> >=20
+> > TDX in particular has created an impossible situation with MTRRs.=C2=A0=
+ Because
+> > TDX disallows toggling CR0.CD, TDX enabling decided the easiest solutio=
+n
+> > was to ignore MTRRs entirely (because omitting CR0.CD write is obviousl=
+y
+> > too simple).
+> >=20
+> > Unfortunately, under KVM at least, the kernel subtly relies on MTRRs to
+> > make ACPI play nice with device drivers.=C2=A0 ACPI tries to map ranges=
+ it finds
+> > as WB, which in turn prevents device drivers from mapping device memory=
+ as
+> > WC/UC-.
+> >=20
+> > For the record, I hate this hack.=C2=A0 But it's the safest approach I =
+can come
+> > up with.=C2=A0 E.g. forcing ioremap() to always use WB scares me becaus=
+e it's
+> > possible, however unlikely, that the kernel could try to map non-emulat=
+ed
+> > memory (that is presented as MMIO to the guest) as WC/UC-, and silently
+> > forcing those mappings to WB could do weird things.
+> >=20
+> > My initial thought was to effectively revert the offending commit and
+> > skip the cache disabling/enabling, i.e. the problematic CR0.CD toggling=
+,
+> > but unfortunately OVMF/EDKII has also added code to skip MTRR setup. :-=
+(
+>=20
+> Oof. The missing context in 8e690b817e38 ("x86/kvm: Override default cach=
+ing
+> mode for SEV-SNP and TDX"), is that since it is impossible to virtualize =
+MTRRs
+> on TDX private memory (in the old way KVM used to do it) and there was no
+> upstream support yet, there looked like an opportunity to avoid strange "=
+happens
+> to work" support that normal VMs ended up with. Instead KVM could just no=
+t
+> support TDX KVM MTRRs from the beginning. So part of the thinking was tha=
+t we
+> could drop all TDX KVM MTRR hacks. (which I guess turned out to be wrong)=
+.
+>=20
+> Since there is no upstream KVM TDX support yet, why isn't it an option to=
+ still
+> revert the EDKII commit too? It was a relatively recent change.
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
----
- drivers/soc/samsung/exynos-chipid.c | 1 +
- 1 file changed, 1 insertion(+)
+I'm fine with that route too, but it too is a band-aid.  Relying on the *un=
+trusted*
+hypervisor to essentially communicate memory maps is not a winning strategy=
+.=20
 
-diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
-index e37dde1fb588ec61d4e6b7cfe156161a62e035af..db0529fe13ae8e2ff96f055562c0a70e1ef74cb7 100644
---- a/drivers/soc/samsung/exynos-chipid.c
-+++ b/drivers/soc/samsung/exynos-chipid.c
-@@ -55,6 +55,7 @@ static const struct exynos_soc_id {
- 	{ "EXYNOS5440", 0xE5440000 },
- 	{ "EXYNOS5800", 0xE5422000 },
- 	{ "EXYNOS7420", 0xE7420000 },
-+	{ "EXYNOS7870", 0xE7870000 },
- 	/* Compatible with: samsung,exynos850-chipid */
- 	{ "EXYNOS7885", 0xE7885000 },
- 	{ "EXYNOS850", 0xE3830000 },
+> To me it seems that the normal KVM MTRR support is not ideal, because it =
+is
+> still lying about what it is doing. For example, in the past there was an
+> attempt to use UC to prevent speculative execution accesses to sensitive =
+data.
+> The KVM MTRR support only happens to work with existing guests, but not a=
+ll
+> possible MTRR usages.
+>=20
+> Since diverging from the architecture creates loose ends like that, we co=
+uld
+> instead define some other way for EDKII to communicate the ranges to the =
+kernel.
+> Like some simple KVM PV MSRs that are for communication only, and not
 
--- 
-2.48.1
+Hard "no" to any PV solution.  This isn't KVM specific, and as above, bounc=
+ing
+through the hypervisor to communicate information within the guest is asini=
+ne,
+especially for CoCo VMs.
 
+> overlapping with architecture that expects to cause memory behavior. EDKI=
+I and
+> the kernel could be changed to use them.
