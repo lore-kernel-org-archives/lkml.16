@@ -1,183 +1,197 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BD6204F62;
-	Mon,  3 Feb 2025 08:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2AB11FAC5A
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738570398; cv=none; b=tEQ7EPd5Jb47OffPmdV1iZeOcbUB3WufChU9+LjyRyxtRQGceiXIw5kCsCv6DoKGx4MsxXT99/XGfHGRU1ophnay7sYdq+ZZT5yxZmGuToT72OKtKaJAe3+2iX6bFPSX1/BU1EnM9GGsArbs1yIHEcLXHQkqvDYYPMwkXtLlPbs=
+	t=1738570445; cv=none; b=etM5B762Scmc/W/S45FGT0/awP12bNIfWk6qpQpRz64svncz5rLJzoIAMqzHHxnnXEluVxOAl7gUrWmav65zz9vFh14RYOpxseR7PWuEJVKED7G4TLe7aZj3N+BMTqJ1olgxEnB0UscPiibozpEg5VqDo+/OfHaEB2qipv6SreA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738570398; c=relaxed/simple;
-	bh=Io8749sULxR3+6fFKCAAUk227SjB1qysNLT6wKcy74E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ktNtJJx2PU61PK+LayEIAJMsEhaQ4b9uKXEtgOkZbyUj51G/X1cIWkm2mxgIqF8Nd0aTTt3MyNN+U7Wqt+rTqlfMVvaeZaiQEMBvcX+pNRLOMSlLqo1fiKJN0S57xb4lP6d+lgGYrxRXlvdHjKgKVOGPESOGRLS+Slh9Dl28ybE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IbJ95X7S; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IbJ95X7S"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5137GBNq003911;
-	Mon, 3 Feb 2025 08:11:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=iEV0QAZTG4K
-	vVurs4Ns+1jUS8dOAwtNz55Yk77nJaf4=; b=IbJ95X7S5f4E666I96kasUL9RjI
-	OJNZOu7tv+xuz0YdgyMX10PvHK8wvkPKnXHeXU32dinQg3jQ9/pT/O6QieKMrwhD
-	iqb9yu6s5u5GaO1Js1TTuEs72T5wy3twaT2+K5XBjPFURCFEktvf7cfysABJc5z7
-	qZN32VO2j2w4OM9PEkDBrj0zm/XBb3ubjKSXQmiXXvw+L8pCZbwXEAGzNjqsWyua
-	eRugrupg/R9Q+JsOtnFj/YbljKU/pgB7wQKbNqSvmuy3+uRiqSwWuEnx/IDV+6fp
-	Q48gzTwv5u+z/1I4jXcKXP30Fu95Wzw7Z4NiDD8cS/tubOPb41tweSXNVAw==
-Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44js8tr3j4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 08:11:59 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5138BLE0013128;
-	Mon, 3 Feb 2025 08:11:56 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 44hcpkhsbe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 08:11:56 +0000
-Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5138Bues013458;
-	Mon, 3 Feb 2025 08:11:56 GMT
-Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 5138BuT7013457
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 08:11:56 +0000
-Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 393357)
-	id 33D8540BFE; Mon,  3 Feb 2025 16:11:55 +0800 (CST)
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-To: quic_cang@quicinc.com, bvanassche@acm.org, mani@kernel.org,
-        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
-        martin.petersen@oracle.com, quic_ziqichen@quicinc.com,
-        quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
-        quic_rampraka@quicinc.com
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Peter Wang <peter.wang@mediatek.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrew Halaney <ahalaney@redhat.com>,
-        Eric Biggers <ebiggers@google.com>, Minwoo Im <minwoo.im@samsung.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 7/8] scsi: ufs: core: Toggle Write Booster during clock scaling base on gear speed
-Date: Mon,  3 Feb 2025 16:11:08 +0800
-Message-Id: <20250203081109.1614395-8-quic_ziqichen@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
-References: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
+	s=arc-20240116; t=1738570445; c=relaxed/simple;
+	bh=mPZJdrVcDCv2uGlGXqGH2pzUMDmCY6I5QB0RYCWCN9o=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=abTAvxN/OmxDDKPOfNp2rq2s5vDUBd91f5xa8I9oDy6GNKN2U3gvPX4TlqyOmY4o1kRz/uVQugyG1a8kGAX6YXuueeabUcG/IkvuSY8GG2PMMf+x3anrWIuRh87gSxcWom+XJphffwkORCejrjg5+vteHTmPMbOyeMVZzJJPdPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3cfba354f79so96589035ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:14:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738570443; x=1739175243;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O0Hl/r44rLg/e3Yn4/Yz22/j8jRDh/jhPGEQU63KpLQ=;
+        b=GNsqoTyAZqh4Xo6EKabrvhemaTbPBUNj5YIcyHpuC8b1zOWqOcYgfGodAKX4IGoYK6
+         berx1T8x2EzEQsDQGPcS0lbqKo/NMwaV9+jSuzqkB/QXtlOFEs+zgftnuaIaHvUR2T7a
+         xZ5UIdN7L0Jbep4+3uhd4FQeppLtPDSZT0YefRe+lHFcz75SZ8ndvq80Uuocinc4THoU
+         0UCGz8rTCBSf/eQQWrnLx2mvWehmR+5moBe/roa0hDPTtxIfTSZFiwEaz5aL3ZOpKNLc
+         c/kKGI709rmkfHzWWbyx5uLHfbH9is4ugvffnLLOm/1XAlE9seX6hGlHBjeHO4+2K8kI
+         Nz3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVCI0m6j6XIkGNYQoYC9QSD82H3Kjzm5g7tUIhUEqzg24zeCP7YouKI7aEPPBpz1/6UnMUv3KrmIAKqoLU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTMQ3FQowEY56VZRBSSXf6ey9pA1HS67XYbFtd99rOO+fSNY8e
+	KOeXGLDdy/DrVU/b6s/kM9DkpH65NlKJsKTzTt2o2odXv3uoYGhOGCMKnHUEwk/11iAuhlg579t
+	guucf3oiKYB0fl/ieG7LVssuV+2bS6U4e3hlFh3SWuPmu9MVEjqxG590=
+X-Google-Smtp-Source: AGHT+IFksxVJM30WRnJS2jHkuXeNs5orgaarVFPzxhtVuS4WGL5LdGMpL3HXYP9MBW/JL4njsL27T9Kh0XUeWVmv8heCvqSCw6xM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 0ohLy7UyUA661EF6Q_IBDbN7_d8tYE2L
-X-Proofpoint-ORIG-GUID: 0ohLy7UyUA661EF6Q_IBDbN7_d8tYE2L
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_03,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 suspectscore=0 spamscore=0 mlxscore=0 adultscore=0
- bulkscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0
- mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502030065
+X-Received: by 2002:a05:6e02:308d:b0:3d0:285a:56b with SMTP id
+ e9e14a558f8ab-3d0285a07f1mr58083675ab.17.1738570442973; Mon, 03 Feb 2025
+ 00:14:02 -0800 (PST)
+Date: Mon, 03 Feb 2025 00:14:02 -0800
+In-Reply-To: <Z6BwO0utCjxMG6RI@linux-dev>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a07aca.050a0220.d7c5a.0083.GAE@google.com>
+Subject: Re: [syzbot] [ntfs3?] KMSAN: uninit-value in longest_match_std (2)
+From: syzbot <syzbot+08d8956768c96a2c52cf@syzkaller.appspotmail.com>
+To: gauthamgujjula@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Can Guo <quic_cang@quicinc.com>
+Hello,
 
-During clock scaling, Write Booster is toggled on or off based on
-whether the clock is scaled up or down. However, with OPP V2 powered
-multi-level gear scaling, the gear can be scaled amongst multiple gear
-speeds, e.g., it may scale down from G5 to G4, or from G4 to G2. To provide
-flexibilities, add a new field for clock scaling such that during clock
-scaling Write Booster can be enabled or disabled based on gear speeds but
-not based on scaling up or down.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Signed-off-by: Can Guo <quic_cang@quicinc.com>
-Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
-Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
----
+no output from test machine
 
-v1 - > v2:
-Initialize the local variables "wb_en" as "false".
----
- drivers/ufs/core/ufshcd.c | 17 ++++++++++++-----
- include/ufs/ufshcd.h      |  3 +++
- 2 files changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index bd93119a177d..83fd38c78467 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -1393,13 +1393,17 @@ static int ufshcd_clock_scaling_prepare(struct ufs_hba *hba, u64 timeout_us)
- 	return ret;
- }
- 
--static void ufshcd_clock_scaling_unprepare(struct ufs_hba *hba, int err, bool scale_up)
-+static void ufshcd_clock_scaling_unprepare(struct ufs_hba *hba, int err)
- {
- 	up_write(&hba->clk_scaling_lock);
- 
--	/* Enable Write Booster if we have scaled up else disable it */
--	if (ufshcd_enable_wb_if_scaling_up(hba) && !err)
--		ufshcd_wb_toggle(hba, scale_up);
-+	/* Enable Write Booster if current gear requires it else disable it */
-+	if (ufshcd_enable_wb_if_scaling_up(hba) && !err) {
-+		bool wb_en = false;
-+
-+		wb_en = hba->pwr_info.gear_rx >= hba->clk_scaling.wb_gear ? true : false;
-+		ufshcd_wb_toggle(hba, wb_en);
-+	}
- 
- 	mutex_unlock(&hba->wb_mutex);
- 
-@@ -1461,7 +1465,7 @@ static int ufshcd_devfreq_scale(struct ufs_hba *hba, unsigned long freq,
- 	}
- 
- out_unprepare:
--	ufshcd_clock_scaling_unprepare(hba, ret, scale_up);
-+	ufshcd_clock_scaling_unprepare(hba, ret);
- 	return ret;
- }
- 
-@@ -1821,6 +1825,9 @@ static void ufshcd_init_clk_scaling(struct ufs_hba *hba)
- 	if (!hba->clk_scaling.min_gear)
- 		hba->clk_scaling.min_gear = UFS_HS_G1;
- 
-+	if (!hba->clk_scaling.wb_gear)
-+		hba->clk_scaling.wb_gear = UFS_HS_G3;
-+
- 	INIT_WORK(&hba->clk_scaling.suspend_work,
- 		  ufshcd_clk_scaling_suspend_work);
- 	INIT_WORK(&hba->clk_scaling.resume_work,
-diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
-index cdb853f5b871..efca700d0520 100644
---- a/include/ufs/ufshcd.h
-+++ b/include/ufs/ufshcd.h
-@@ -447,6 +447,8 @@ struct ufs_clk_gating {
-  * @resume_work: worker to resume devfreq
-  * @target_freq: frequency requested by devfreq framework
-  * @min_gear: lowest HS gear to scale down to
-+ * @wb_gear: enable Write Booster when HS gear scales above or equal to it, else
-+ *		disable Write Booster
-  * @is_enabled: tracks if scaling is currently enabled or not, controlled by
-  *		clkscale_enable sysfs node
-  * @is_allowed: tracks if scaling is currently allowed or not, used to block
-@@ -467,6 +469,7 @@ struct ufs_clk_scaling {
- 	struct work_struct resume_work;
- 	unsigned long target_freq;
- 	u32 min_gear;
-+	u32 wb_gear;
- 	bool is_enabled;
- 	bool is_allowed;
- 	bool is_initialized;
--- 
-2.34.1
+
+Warning: Permanently added '10.128.0.13' (ED25519) to the list of known hos=
+ts.
+2025/02/03 08:08:22 ignoring optional flag "sandboxArg"=3D"0"
+2025/02/03 08:08:24 parsed 1 programs
+[  208.007169][ T5774] cgroup: Unknown subsys name 'net'
+[  208.124779][ T5774] cgroup: Unknown subsys name 'cpuset'
+[  208.138415][ T5774] cgroup: Unknown subsys name 'rlimit'
+[  224.374733][ T1279] ieee802154 phy0 wpan0: encryption failed: -22
+[  224.381757][ T1279] ieee802154 phy1 wpan1: encryption failed: -22
+[  252.636791][ T5774] Adding 124996k swap on ./swap-file.  Priority:0 exte=
+nts:1 across:124996k=20
+[  256.615109][ T5788] soft_limit_in_bytes is deprecated and will be remove=
+d. Please report your usecase to linux-mm@kvack.org if you depend on this f=
+unctionality.
+[  259.280546][   T34] wlan0: Created IBSS using preconfigured BSSID 50:50:=
+50:50:50:50
+[  259.289550][   T34] wlan0: Creating new IBSS network, BSSID 50:50:50:50:=
+50:50
+[  259.306947][   T80] wlan1: Created IBSS using preconfigured BSSID 50:50:=
+50:50:50:50
+[  259.314983][   T80] wlan1: Creating new IBSS network, BSSID 50:50:50:50:=
+50:50
+[  285.809674][ T1279] ieee802154 phy0 wpan0: encryption failed: -22
+[  285.816368][ T1279] ieee802154 phy1 wpan1: encryption failed: -22
+[  347.249425][ T1279] ieee802154 phy0 wpan0: encryption failed: -22
+[  347.256185][ T1279] ieee802154 phy1 wpan1: encryption failed: -22
+[  408.689264][ T1279] ieee802154 phy0 wpan0: encryption failed: -22
+[  408.696057][ T1279] ieee802154 phy1 wpan1: encryption failed: -22
+
+
+syzkaller build log:
+go env (err=3D<nil>)
+GO111MODULE=3D'auto'
+GOARCH=3D'amd64'
+GOBIN=3D''
+GOCACHE=3D'/syzkaller/.cache/go-build'
+GOENV=3D'/syzkaller/.config/go/env'
+GOEXE=3D''
+GOEXPERIMENT=3D''
+GOFLAGS=3D''
+GOHOSTARCH=3D'amd64'
+GOHOSTOS=3D'linux'
+GOINSECURE=3D''
+GOMODCACHE=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod'
+GONOPROXY=3D''
+GONOSUMDB=3D''
+GOOS=3D'linux'
+GOPATH=3D'/syzkaller/jobs-2/linux/gopath'
+GOPRIVATE=3D''
+GOPROXY=3D'https://proxy.golang.org,direct'
+GOROOT=3D'/usr/local/go'
+GOSUMDB=3D'sum.golang.org'
+GOTMPDIR=3D''
+GOTOOLCHAIN=3D'auto'
+GOTOOLDIR=3D'/usr/local/go/pkg/tool/linux_amd64'
+GOVCS=3D''
+GOVERSION=3D'go1.22.7'
+GCCGO=3D'gccgo'
+GOAMD64=3D'v1'
+AR=3D'ar'
+CC=3D'gcc'
+CXX=3D'g++'
+CGO_ENABLED=3D'1'
+GOMOD=3D'/syzkaller/jobs-2/linux/gopath/src/github.com/google/syzkaller/go.=
+mod'
+GOWORK=3D''
+CGO_CFLAGS=3D'-O2 -g'
+CGO_CPPFLAGS=3D''
+CGO_CXXFLAGS=3D'-O2 -g'
+CGO_FFLAGS=3D'-O2 -g'
+CGO_LDFLAGS=3D'-O2 -g'
+PKG_CONFIG=3D'pkg-config'
+GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
+ -ffile-prefix-map=3D/tmp/go-build569088624=3D/tmp/go-build -gno-record-gcc=
+-switches'
+
+git status (err=3D<nil>)
+HEAD detached at f3558dbf03
+nothing to commit, working tree clean
+
+
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
+s/syz-sysgen
+make .descriptions
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+bin/syz-sysgen
+go fmt ./sys/... >/dev/null
+touch .descriptions
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3Df3558dbf032eab2b77c1cb11b9ce2baffe7838d3 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20250103-110009'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-execpr=
+og github.com/google/syzkaller/tools/syz-execprog
+mkdir -p ./bin/linux_amd64
+g++ -o ./bin/linux_amd64/syz-executor executor/executor.cc \
+	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
+ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
+t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
+static-pie -std=3Dc++17 -I. -Iexecutor/_include -fpermissive -w -DGOOS_linu=
+x=3D1 -DGOARCH_amd64=3D1 \
+	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"f3558dbf032eab2b77c1cb11b9ce2baffe=
+7838d3\"
+/usr/bin/ld: /tmp/ccVC8SPt.o: in function `Connection::Connect(char const*,=
+ char const*)':
+executor.cc:(.text._ZN10Connection7ConnectEPKcS1_[_ZN10Connection7ConnectEP=
+KcS1_]+0x104): warning: Using 'gethostbyname' in statically linked applicat=
+ions requires at runtime the shared libraries from the glibc version used f=
+or linking
+
+
+
+Tested on:
+
+commit:         2014c95a Linux 6.14-rc1
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dfacc04d1f62a4ae=
+1
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D08d8956768c96a2c5=
+2cf
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
+n) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D159117645800=
+00
 
