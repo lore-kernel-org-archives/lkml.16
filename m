@@ -1,159 +1,181 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B777E107;
-	Mon,  3 Feb 2025 09:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F151DD9D1
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738575061; cv=none; b=t8d++jMs7MmlA+aAKOnPWWpHjsNP87x3rbADNMrd1Smh3oeujH4ANynNcF4KTqAE0hVXhiSci4J0RwccXtnSglJsaLcRMNQiqmhG5jN5gio1dMzrY8A4hzWeYi5jxsxDSYlupGj7aH1ticCFaFa3x5kTn2GIcH23scELgTjM/eI=
+	t=1738575120; cv=none; b=PpGZ31vwr/BieFulpVfQAcFoen3BbUwWQv5ObbCvsFqaMRdFy14eA+dL+gh7Q9DRK3DPDCXzofOFH0Aly29zTP6ByJVfVtM8ujQzJuPt6NuBzLmfcIgSc+Mqmz3OLNJeZeHVR1vZ9kzjCH7L0vPVbDOCjyzNPYq8LTUreo7aHvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738575061; c=relaxed/simple;
-	bh=EXgeldZ4Kuji/SVlAFtvKiLgZ9sXXhNmORGolm7IKCU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G8M4SD84G0RhydghopYAodIfRfEHdGs61Bv3r9sGePvpzaNFo0sdGRX3JVMt33DNqGoL46FxGZx4RLm4RUoHBJjuUJKfIy52jB5T5HH8r7AlHl9AquCUZOrIGV6AZKAo7DvWiF8019KrK7paZ7F7bLude52WbmtxrFEOBAKOHzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sc7OrPzM; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738575120; c=relaxed/simple;
+	bh=I63rOjnCCdYeabHEACElWvT5v+80dCPI5Uh/pXHFZsM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BIvszy3XPbsxbkn2ZTjr1Phk5PybEFkCmSQuFediDmELOKs5d8D93wppzxfi82zPiz74bYj7J2Vujxp4qiDdOgktkQ91Eobg9sSQkjFuLDXJ2W6HyYP6ucG9LHmsJHnhZfqCRBx9Ve0gHzDMXfHBQRHl2X1Y+B5luT6iHsyLT4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SUOp9s0H; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sc7OrPzM"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51320bgd006146;
-	Mon, 3 Feb 2025 09:29:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=HOOVTMKGmYfDs61vIKKu/2n6mo1Uqh
-	rzh3Nw0X9R5us=; b=sc7OrPzM94Qro1TPoi9WldL23dl8EhUQA0uUcOii03fm/0
-	ZWjWgFI+dUHnyykPX4KurBljs5VF0FTUDOZVPKQ0Nic1W5aixU4tXgMwUo9Ej4Sp
-	IhX2kpJQptytYHQ7XzYAy9RoZviZkDVVyjToIShTjmSz3tGfHU97EQ/GMBty3KDe
-	U7Y/o3wrR/8Po81HWdFM8acEVLigG7jG/rrAvF0q3j95Qgp65mDoim4AyXlTi4+s
-	JSs5sBEVEVSX1pC6uB3pEJ+UczNnVeDbO13pZiffvHI9SIwAVPdnyEwhgbJoiLlY
-	rEhklncisvpySSfLHaTqfnQztgOZ+zZlXlJpmmmA==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jmmy9m6k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 09:29:47 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5136tpND016288;
-	Mon, 3 Feb 2025 09:29:46 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44hwxs5syv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 09:29:46 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5139Th5c21955204
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 09:29:43 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0F9EF200D4;
-	Mon,  3 Feb 2025 09:29:43 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4A882200D3;
-	Mon,  3 Feb 2025 09:29:39 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.179.20.74])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon,  3 Feb 2025 09:29:39 +0000 (GMT)
-Date: Mon, 3 Feb 2025 10:29:37 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: "Dmitry V. Levin" <ldv@strace.io>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Oleg Nesterov <oleg@redhat.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Charlie Jenkins <charlie@rivosinc.com>,
-        Eugene Syromyatnikov <evgsyr@gmail.com>,
-        Mike Frysinger <vapier@gentoo.org>, Renzo Davoli <renzo@cs.unibo.it>,
-        Davide Berardi <berardi.dav@gmail.com>,
-        Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Shuah Khan <shuah@kernel.org>, strace-devel@lists.strace.io,
-        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH v4 0/7] ptrace: introduce PTRACE_SET_SYSCALL_INFO API
-Message-ID: <Z6CMgVm8QKEMRf8L@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20250203065849.GA14120@strace.io>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SUOp9s0H"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-71ded02b779so2367165a34.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 01:31:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738575118; x=1739179918; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0b/Cjql8YcuaYzXvGj+YKhtAwAo8DMeJsHKMU0SBdds=;
+        b=SUOp9s0HdI5LfcYd2JN+AvpmE2Zb4/0jcj/m70LQn8te9rO1n6vd7i6+qGBBrPTtXV
+         UOYOAggdHkGwjN9gqTLWtut1qfZo+ePM6kO+/8+oZY3v7bE9ZoqcA8r6aRTyT32ZGNV7
+         FN9SFUsEto/v7DBwzJg0hlukLpNYBVpDeCGPf3aqHzDgdTjM1hGa5r0LUJ1t6chz6Li9
+         +XCOgNfNJAuhZYSwSIh12qG6IajzzSdGFtzsQhR5oQHMia0VQLHlfM7dNB5RhQgyZR1x
+         3Nt5vfehI5Dz0xGtq23Gz4rvja/d58goIl3uC/Y+48F7jR9vS9GxSZnILMm7H7Y87tuh
+         eJJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738575118; x=1739179918;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0b/Cjql8YcuaYzXvGj+YKhtAwAo8DMeJsHKMU0SBdds=;
+        b=anQvcU9SSujlc3TaNLVCIrwjBdJq7qpQKejRIFPydS1RKYwPDJcrS3JyaXCfqljxd3
+         IuJfi+upmcX1pHwzzGFtinpKCCIeFLHWgwfj5YR1b6L0p+9ioJFoaZZQjG3aa5cYIEHd
+         Zk1V64u2hXb1wCsMGddFw854MoyrbqwYSmO7E9wUeSsOBQSSrsgZ1i69TKmxV3wz5pJ5
+         VuWDUV/XPVPFoe02rnXtS+gK5BlCcV2ByHINfetiyDaduXnEImBdQBaQODW6ejzZKo1z
+         nOBovOjwnDoMhHB3ZnYLtmDTGwlOiYbYjbOGEeNA2gkoMB0xdA4yYaQnjJd5Vcri5hoK
+         RlnA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBrkKkOqN0hjOhE6oFABfCc0epxooc4OoTq7tzI/YKL64zQy2PE0X0Rv4/BtbkFWIPfdpW8qu760O2Coc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9GkGf4k0pze+0RHFucN2exIJa2Y7SHGtz+71KfOr8Rye5fAaT
+	DxaJLSmNYMs1Ih6+cpplrElibkhp+6A1unXTusvERXnob3ND98I2X0GFXAd9XhN+PIGA+ycl7rx
+	MGTm5z+x4Om/quZXK1P8Mndhpm8/nXrjf6d0cvw==
+X-Gm-Gg: ASbGncvzBSAq9+e41jNrsteJ9qpENTewP9GF6G1jTGFoa3TsJgndHg6zCA/pghdLCyU
+	nesezSGQPebR9W+LgbrlWPhSIS4Gtg80syWNL3nuqu+GUABGsoTbsjhgicnlQ7d0kkINQYU1t8A
+	==
+X-Google-Smtp-Source: AGHT+IEJR8hIqhnAeUdKOXgl0A4tp839fV0qz7B2ghRrTXHtlZLHQoPUdfrFDSD4+GV3YT8Rl/1A2cL6Ht+DjXLmwE4=
+X-Received: by 2002:a05:6830:470c:b0:71d:eb29:3c58 with SMTP id
+ 46e09a7af769-7265672f9ffmr13729710a34.3.1738575117736; Mon, 03 Feb 2025
+ 01:31:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203065849.GA14120@strace.io>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: tAr2MtM5PWIBRxaWi6Br0hi8CNE4am_9
-X-Proofpoint-ORIG-GUID: tAr2MtM5PWIBRxaWi6Br0hi8CNE4am_9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_03,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
- phishscore=0 impostorscore=0 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 mlxlogscore=836 bulkscore=0 spamscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502030071
+References: <20250203080030.384929-1-sumit.garg@linaro.org>
+In-Reply-To: <20250203080030.384929-1-sumit.garg@linaro.org>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Mon, 3 Feb 2025 10:31:46 +0100
+X-Gm-Features: AWEUYZlwCSm4HwtHohHUPDc6_Po7Sc0pFggJId4hRg-F_HDxQ5gYmp8XH_94HjM
+Message-ID: <CAHUa44FXzL-MZ5y7x6qrsn3GJR=1oR8bbRVCv6ZTvDRoQmENEg@mail.gmail.com>
+Subject: Re: [PATCH v2] tee: optee: Fix supplicant wait loop
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: arnd@arndb.de, op-tee@lists.trustedfirmware.org, 
+	jerome.forissier@linaro.org, dannenberg@ti.com, javier@javigon.com, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 03, 2025 at 08:58:49AM +0200, Dmitry V. Levin wrote:
+On Mon, Feb 3, 2025 at 9:00=E2=80=AFAM Sumit Garg <sumit.garg@linaro.org> w=
+rote:
+>
+> OP-TEE supplicant is a user-space daemon and it's possible for it
+> being hung or crashed or killed in the middle of processing an OP-TEE
+> RPC call. It becomes more complicated when there is incorrect shutdown
+> ordering of the supplicant process vs the OP-TEE client application which
+> can eventually lead to system hang-up waiting for the closure of the
+> client application.
+>
+> Allow the client process waiting in kernel for supplicant response to
+> be killed rather than indefinitetly waiting in an unkillable state. This
+> fixes issues observed during system reboot/shutdown when supplicant got
+> hung for some reason or gets crashed/killed which lead to client getting
+> hung in an unkillable state. It in turn lead to system being in hung up
+> state requiring hard power off/on to recover.
+>
+> Fixes: 4fb0a5eb364d ("tee: add OP-TEE driver")
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>
+> Changes in v2:
+> - Switch to killable wait instead as suggested by Arnd instead
+>   of supplicant timeout. It atleast allow the client to wait for
+>   supplicant in killable state which in turn allows system to reboot
+>   or shutdown gracefully.
+>
+>  drivers/tee/optee/supp.c | 32 +++++++-------------------------
+>  1 file changed, 7 insertions(+), 25 deletions(-)
+>
+> diff --git a/drivers/tee/optee/supp.c b/drivers/tee/optee/supp.c
+> index 322a543b8c27..3fbfa9751931 100644
+> --- a/drivers/tee/optee/supp.c
+> +++ b/drivers/tee/optee/supp.c
+> @@ -80,7 +80,6 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u32 fu=
+nc, size_t num_params,
+>         struct optee *optee =3D tee_get_drvdata(ctx->teedev);
+>         struct optee_supp *supp =3D &optee->supp;
+>         struct optee_supp_req *req;
+> -       bool interruptable;
+>         u32 ret;
+>
+>         /*
+> @@ -111,36 +110,19 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u3=
+2 func, size_t num_params,
+>         /*
+>          * Wait for supplicant to process and return result, once we've
+>          * returned from wait_for_completion(&req->c) successfully we hav=
+e
+> -        * exclusive access again.
+> +        * exclusive access again. Allow the wait to be killable such tha=
+t
+> +        * the wait doesn't turn into an indefinite state if the supplica=
+nt
+> +        * gets hung for some reason.
+>          */
+> -       while (wait_for_completion_interruptible(&req->c)) {
+> -               mutex_lock(&supp->mutex);
+> -               interruptable =3D !supp->ctx;
+> -               if (interruptable) {
+> -                       /*
+> -                        * There's no supplicant available and since the
+> -                        * supp->mutex currently is held none can
+> -                        * become available until the mutex released
+> -                        * again.
+> -                        *
+> -                        * Interrupting an RPC to supplicant is only
+> -                        * allowed as a way of slightly improving the use=
+r
+> -                        * experience in case the supplicant hasn't been
+> -                        * started yet. During normal operation the suppl=
+icant
+> -                        * will serve all requests in a timely manner and
+> -                        * interrupting then wouldn't make sense.
+> -                        */
+> +       if (wait_for_completion_killable(&req->c)) {
+> +               if (!mutex_lock_killable(&supp->mutex)) {
 
-Hi Dmitry,
+Why not mutex_lock()? If we fail to acquire the mutex here, we will
+quite likely free the req list item below at the end of this function
+while it remains in the list.
 
-> PTRACE_SET_SYSCALL_INFO is a generic ptrace API that complements
-> PTRACE_GET_SYSCALL_INFO by letting the ptracer modify details of
-> system calls the tracee is blocked in.
-...
+Cheers,
+Jens
 
-FWIW, I am getting these on s390:
-
-# ./tools/testing/selftests/ptrace/set_syscall_info 
-TAP version 13
-1..1
-# Starting 1 tests from 1 test cases.
-#  RUN           global.set_syscall_info ...
-# set_syscall_info.c:87:set_syscall_info:Expected exp_entry->nr (-1) == info->entry.nr (65535)
-# set_syscall_info.c:88:set_syscall_info:wait #3: PTRACE_GET_SYSCALL_INFO #2: syscall nr mismatch
-# set_syscall_info: Test terminated by assertion
-#          FAIL  global.set_syscall_info
-not ok 1 global.set_syscall_info
-# FAILED: 0 / 1 tests passed.
-# Totals: pass:0 fail:1 xfail:0 xpass:0 skip:0 error:0
-
-I remember one of the earlier versions (v1 or v2) was working for me.
-
-Thanks!
+>                         if (req->in_queue) {
+>                                 list_del(&req->link);
+>                                 req->in_queue =3D false;
+>                         }
+> +                       mutex_unlock(&supp->mutex);
+>                 }
+> -               mutex_unlock(&supp->mutex);
+> -
+> -               if (interruptable) {
+> -                       req->ret =3D TEEC_ERROR_COMMUNICATION;
+> -                       break;
+> -               }
+> +               req->ret =3D TEEC_ERROR_COMMUNICATION;
+>         }
+>
+>         ret =3D req->ret;
+> --
+> 2.43.0
+>
