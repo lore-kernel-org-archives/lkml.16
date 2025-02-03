@@ -1,221 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5AA1D9688;
-	Mon,  3 Feb 2025 06:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86E5A2557C;
+	Mon,  3 Feb 2025 06:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738564813; cv=none; b=hDsCn+hE+T/8e50uD1StS3izhAXGJg7jbEcC0wBoQZvcb2MrvmWCmqJ37LRf1HyxG70ukombFzeBaLrtFCF05zG1FjNE3jbkWHVo02gV33uxF3T8i4rvNkvrxo+DglhfbPkwt3NBhu0eYm+ZQMhq/kuuBDO9lbn6Tlb5Vqv0z/M=
+	t=1738565692; cv=none; b=VYQR2atWd3HPSkUpxQxzD12bkRD0e9/0DDi+NdkhZb/N07d1ZN4w+QoVCIbxsZIxHeqIIQrDEwwowN/fSAS2Hmj2kHQxy6fhNEp+3lFJu7GEouw+wjkUZX9VpHCrsB/li+IAb+2V7cVFuqpE6QnMqjOggP8XpjBIdtMWtnp9Frg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738564813; c=relaxed/simple;
-	bh=AJGgSFjnLvG14ktKseDbhiBaz0pVxRoJIgQO3axUhs0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H/Dqx2BMoH3RS9XzK7fCUF0gCeLmSAd/9OWfeVm16A8baq51I9kXFPq5fOpyTlznHMwfupzlbvk+zEwuwQ6akYAhjVZUGmjTSc83q8rRze0RQC/XkNk1U/MGgPvZbb2YakgcPNU8LrlShjKzyywnodDtZ+FWFDeMBTPNosJA5Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7mV7qoj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7mV7qoj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F13C7C4CEE3;
-	Mon,  3 Feb 2025 06:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738564812;
-	bh=AJGgSFjnLvG14ktKseDbhiBaz0pVxRoJIgQO3axUhs0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m7mV7qojzSljEw9/4oBg/Zab3ZpVmvcVt6liE7RilHmx/v7pwx/+oE0YvP9qauEff
-	 83LOJMP7n7Mgco9Gkb/lC1rDNPjT9I9nGVpq1qZCS1XMsu5N/7Uv6bJtGbX9neIuJd
-	 NCqgCf3BC1AZUz1QTDOAIPQGH36yzkdmTDVXPBcuadVKVW1kfZlOY8ezW/FAj3/1iK
-	 VLxNsCwu60l2nxiUj4nV3ZoZp/k5VcmfY266gsAbXk1fzE2aklJ1eOPbRktoPjYmgK
-	 SKTi+gKvoNwyCrhM/r+qFUOm7g2U0VOxvu3BXACWAf2OyTvcv79lPRTqhuJOWI9fLU
-	 KtG3NA3k36CBw==
-From: "Naveen N Rao (AMD)" <naveen@kernel.org>
-To: <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>
-Subject: [PATCH v2 2/2] KVM: SVM: Limit AVIC physical max index based on configured max_vcpu_ids
-Date: Mon,  3 Feb 2025 12:07:46 +0530
-Message-ID: <b79610c60de53048f3fda942fd45973c4ab1de97.1738563890.git.naveen@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1738563890.git.naveen@kernel.org>
-References: <cover.1738563890.git.naveen@kernel.org>
+	s=arc-20240116; t=1738565692; c=relaxed/simple;
+	bh=44c9gPZIolabUiz7EogGAmPzd7JLkEOmPwGSaD765Z4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ny3iDHORRr3Lghl3ugpb7IZJSRm+pG6SGQytiLFra9HOIrkmXLKZnoZpuJJYga5ktSjLst7ILlmjqDGPpD/5Cji9v34oGBMTFcN/oLtwhj+caskCLiVBQfhfQj+o/ZmQs9bSjgfmA5kBOnKhVdMGHcuspE2pVBgu8Wm6CJL0fZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 280231476;
+	Sun,  2 Feb 2025 22:55:14 -0800 (PST)
+Received: from [10.162.16.79] (unknown [10.162.16.79])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54C8F3F5A1;
+	Sun,  2 Feb 2025 22:54:45 -0800 (PST)
+Message-ID: <9a4e16af-b5b9-406f-8f9f-4d395a14a61c@arm.com>
+Date: Mon, 3 Feb 2025 12:24:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 05/11] perf: arm_v7_pmu: Don't disable counter in
+ (armv7|krait_|scorpion_)pmu_enable_event()
+To: "Rob Herring (Arm)" <robh@kernel.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-5-1c1300802385@kernel.org>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250202-arm-brbe-v19-v19-5-1c1300802385@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-KVM allows VMMs to specify the maximum possible APIC ID for a virtual
-machine through KVM_CAP_MAX_VCPU_ID capability so as to limit data
-structures related to APIC/x2APIC. Utilize the same to set the AVIC
-physical max index in the VMCB, similar to VMX. This helps hardware
-limit the number of entries to be scanned in the physical APIC ID table
-speeding up IPI broadcasts for virtual machines with smaller number of
-vcpus.
 
-The minimum allocation required for the Physical APIC ID table is one 4k
-page supporting up to 512 entries. With AVIC support for 4096 vcpus
-though, it is sufficient to only allocate memory to accommodate the
-AVIC physical max index that will be programmed into the VMCB. Limit
-memory allocated for the Physical APIC ID table accordingly.
 
-Signed-off-by: Naveen N Rao (AMD) <naveen@kernel.org>
----
- arch/x86/kvm/svm/avic.c | 54 ++++++++++++++++++++++++++++++-----------
- arch/x86/kvm/svm/svm.c  |  6 +++++
- arch/x86/kvm/svm/svm.h  |  1 +
- 3 files changed, 47 insertions(+), 14 deletions(-)
+On 2/3/25 06:12, Rob Herring (Arm) wrote:
+> Currently (armv7|krait_|scorpion_)pmu_enable_event() start by disabling
+> the event counter it has been asked to enable. This should not be
+> necessary as the counter (and the PMU as a whole) should not be active
+> when *_enable_event() is called.
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  drivers/perf/arm_v7_pmu.c | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/drivers/perf/arm_v7_pmu.c b/drivers/perf/arm_v7_pmu.c
+> index 7fa88e3b64e0..17831e1920bd 100644
+> --- a/drivers/perf/arm_v7_pmu.c
+> +++ b/drivers/perf/arm_v7_pmu.c
+> @@ -857,8 +857,6 @@ static void armv7pmu_enable_event(struct perf_event *event)
+>  		return;
+>  	}
+>  
+> -	armv7_pmnc_disable_counter(idx);
+> -
+>  	/*
+>  	 * Set event (if destined for PMNx counters)
+>  	 * We only need to set the event for the cycle counter if we
+> @@ -1450,8 +1448,6 @@ static void krait_pmu_enable_event(struct perf_event *event)
+>  	struct hw_perf_event *hwc = &event->hw;
+>  	int idx = hwc->idx;
+>  
+> -	armv7_pmnc_disable_counter(idx);
+> -
+>  	/*
+>  	 * Set event (if destined for PMNx counters)
+>  	 * We set the event for the cycle counter because we
+> @@ -1762,8 +1758,6 @@ static void scorpion_pmu_enable_event(struct perf_event *event)
+>  	struct hw_perf_event *hwc = &event->hw;
+>  	int idx = hwc->idx;
+>  
+> -	armv7_pmnc_disable_counter(idx);
+> -
+>  	/*
+>  	 * Set event (if destined for PMNx counters)
+>  	 * We don't set the event for the cycle counter because we
+> 
 
-diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-index 4c940f4fd34d..e6ec3bcb1e37 100644
---- a/arch/x86/kvm/svm/avic.c
-+++ b/arch/x86/kvm/svm/avic.c
-@@ -85,6 +85,17 @@ struct amd_svm_iommu_ir {
- 	void *data;		/* Storing pointer to struct amd_ir_data */
- };
- 
-+static inline u32 avic_get_max_physical_id(struct kvm *kvm, bool x2apic_mode)
-+{
-+	u32 avic_max_physical_id = x2apic_mode ? x2avic_max_physical_id : AVIC_MAX_PHYSICAL_ID;
-+
-+	/*
-+	 * Assume vcpu_id is the same as APIC ID. Per KVM_CAP_MAX_VCPU_ID, max_vcpu_ids
-+	 * represents the max APIC ID for this vm, rather than the max vcpus.
-+	 */
-+	return min(kvm->arch.max_vcpu_ids - 1, avic_max_physical_id);
-+}
-+
- static void avic_activate_vmcb(struct vcpu_svm *svm)
- {
- 	struct vmcb *vmcb = svm->vmcb01.ptr;
-@@ -103,7 +114,7 @@ static void avic_activate_vmcb(struct vcpu_svm *svm)
- 	 */
- 	if (x2avic_enabled && apic_x2apic_mode(svm->vcpu.arch.apic)) {
- 		vmcb->control.int_ctl |= X2APIC_MODE_MASK;
--		vmcb->control.avic_physical_id |= x2avic_max_physical_id;
-+		vmcb->control.avic_physical_id |= avic_get_max_physical_id(svm->vcpu.kvm, true);
- 		/* Disabling MSR intercept for x2APIC registers */
- 		svm_set_x2apic_msr_interception(svm, false);
- 	} else {
-@@ -114,7 +125,7 @@ static void avic_activate_vmcb(struct vcpu_svm *svm)
- 		kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, &svm->vcpu);
- 
- 		/* For xAVIC and hybrid-xAVIC modes */
--		vmcb->control.avic_physical_id |= AVIC_MAX_PHYSICAL_ID;
-+		vmcb->control.avic_physical_id |= avic_get_max_physical_id(svm->vcpu.kvm, false);
- 		/* Enabling MSR intercept for x2APIC registers */
- 		svm_set_x2apic_msr_interception(svm, true);
- 	}
-@@ -174,6 +185,12 @@ int avic_ga_log_notifier(u32 ga_tag)
- 	return 0;
- }
- 
-+static inline int avic_get_physical_id_table_order(struct kvm *kvm)
-+{
-+	/* Limit to the maximum physical ID supported in x2avic mode */
-+	return get_order((avic_get_max_physical_id(kvm, true) + 1) * sizeof(u64));
-+}
-+
- void avic_vm_destroy(struct kvm *kvm)
- {
- 	unsigned long flags;
-@@ -185,7 +202,8 @@ void avic_vm_destroy(struct kvm *kvm)
- 	if (kvm_svm->avic_logical_id_table_page)
- 		__free_page(kvm_svm->avic_logical_id_table_page);
- 	if (kvm_svm->avic_physical_id_table_page)
--		__free_page(kvm_svm->avic_physical_id_table_page);
-+		__free_pages(kvm_svm->avic_physical_id_table_page,
-+			     avic_get_physical_id_table_order(kvm));
- 
- 	spin_lock_irqsave(&svm_vm_data_hash_lock, flags);
- 	hash_del(&kvm_svm->hnode);
-@@ -198,22 +216,12 @@ int avic_vm_init(struct kvm *kvm)
- 	int err = -ENOMEM;
- 	struct kvm_svm *kvm_svm = to_kvm_svm(kvm);
- 	struct kvm_svm *k2;
--	struct page *p_page;
- 	struct page *l_page;
--	u32 vm_id, entries;
-+	u32 vm_id;
- 
- 	if (!enable_apicv)
- 		return 0;
- 
--	/* Allocating physical APIC ID table */
--	entries = x2avic_max_physical_id + 1;
--	p_page = alloc_pages(GFP_KERNEL_ACCOUNT | __GFP_ZERO,
--			     get_order(sizeof(u64) * entries));
--	if (!p_page)
--		goto free_avic;
--
--	kvm_svm->avic_physical_id_table_page = p_page;
--
- 	/* Allocating logical APIC ID table (4KB) */
- 	l_page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
- 	if (!l_page)
-@@ -264,6 +272,24 @@ void avic_init_vmcb(struct vcpu_svm *svm, struct vmcb *vmcb)
- 		avic_deactivate_vmcb(svm);
- }
- 
-+int avic_alloc_physical_id_table(struct kvm *kvm)
-+{
-+	struct kvm_svm *kvm_svm = to_kvm_svm(kvm);
-+	struct page *p_page;
-+
-+	if (kvm_svm->avic_physical_id_table_page || !enable_apicv || !irqchip_in_kernel(kvm))
-+		return 0;
-+
-+	p_page = alloc_pages(GFP_KERNEL_ACCOUNT | __GFP_ZERO,
-+			     avic_get_physical_id_table_order(kvm));
-+	if (!p_page)
-+		return -ENOMEM;
-+
-+	kvm_svm->avic_physical_id_table_page = p_page;
-+
-+	return 0;
-+}
-+
- static u64 *avic_get_physical_id_entry(struct kvm_vcpu *vcpu,
- 				       unsigned int index)
- {
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 7640a84e554a..19b9ebea4773 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1423,6 +1423,11 @@ void svm_switch_vmcb(struct vcpu_svm *svm, struct kvm_vmcb_info *target_vmcb)
- 	svm->vmcb = target_vmcb->ptr;
- }
- 
-+static int svm_vcpu_precreate(struct kvm *kvm)
-+{
-+	return avic_alloc_physical_id_table(kvm);
-+}
-+
- static int svm_vcpu_create(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm;
-@@ -5009,6 +5014,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.emergency_disable_virtualization_cpu = svm_emergency_disable_virtualization_cpu,
- 	.has_emulated_msr = svm_has_emulated_msr,
- 
-+	.vcpu_precreate = svm_vcpu_precreate,
- 	.vcpu_create = svm_vcpu_create,
- 	.vcpu_free = svm_vcpu_free,
- 	.vcpu_reset = svm_vcpu_reset,
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 9d7cdb8fbf87..68687c3bcce7 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -696,6 +696,7 @@ bool avic_hardware_setup(void);
- int avic_ga_log_notifier(u32 ga_tag);
- void avic_vm_destroy(struct kvm *kvm);
- int avic_vm_init(struct kvm *kvm);
-+int avic_alloc_physical_id_table(struct kvm *kvm);
- void avic_init_vmcb(struct vcpu_svm *svm, struct vmcb *vmcb);
- int avic_incomplete_ipi_interception(struct kvm_vcpu *vcpu);
- int avic_unaccelerated_access_interception(struct kvm_vcpu *vcpu);
--- 
-2.48.1
+LGTM
 
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
