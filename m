@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8DC212F84;
-	Mon,  3 Feb 2025 19:15:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F381E212F9D;
+	Mon,  3 Feb 2025 19:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738610136; cv=none; b=M69dL2XQ1ApqBoce634ENvOzz944tsnqJI2B0/oOUyVab8CYL69/yPp7gjAqktjsw00fVRIcLdAhHL46QQgEOaso6R5mJHi/qwOYo5d9xs6nHoWeB2Oi6IhUCq5V1G+IeVb6fq6RsfCVTRYop2KGkibZQpOsw7lLrFwa3b2OeHE=
+	t=1738610137; cv=none; b=YIjnZjmXwHWrX2GTxHbH2yjFzpFtvI4QDRpFyW4tgsij12qzTmxNDBY+gFJcXxoVC41tfSzBT6UWRlOHZwFRlaCoaVkT8dJeR1Orr/Z1+gE2JJUCkbQwQEXaLwNyEWVxuKG9LfJ1fozuOEHfrr2UShPU2146A0qSxIypjKsinl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738610136; c=relaxed/simple;
-	bh=yIVYx2Injx0V5rbEcq4duBBRKtzAISqSSzu7G/z33hY=;
+	s=arc-20240116; t=1738610137; c=relaxed/simple;
+	bh=bFHEjxAFUuenB9sN+HmVABGDf7gISIBleG3ZK2RKRRo=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=US7zO1rhgGKMtrC7dN15mU1GmJ7PIj4LTo79LibLzaK/jEKkT9+cgxM5NQxmkiFv7LEzEDx+wx1a+/FZgy4tImi9jkrKZVjQwUypr+2i6QKkOrEI9Ox5UIChuW3+jpBeh8FlgeWtb08Ku1gBh158MQ22qvHiDIGQ2KqOWGw59to=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HH0ZsWIH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=MVYpGLFMpBwUq0HgE7Q+UNRDkceaIL7SE+dKfyBD2kh46adqx1A9F+6YObo67uvdBVNEE1B0W/vTif5jgKUlaSXVNEG1CAcWZGD2cHpE4H6hhFievjjwAPIF2abucyIu2auL2602F+LmB8cjw/NiaR2E3RRWZsbrXFv3q7qHyHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZwxreFq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HH0ZsWIH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 650CEC4CED2;
-	Mon,  3 Feb 2025 19:15:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZwxreFq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0F09C4CED2;
+	Mon,  3 Feb 2025 19:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738610135;
-	bh=yIVYx2Injx0V5rbEcq4duBBRKtzAISqSSzu7G/z33hY=;
+	s=k20201202; t=1738610136;
+	bh=bFHEjxAFUuenB9sN+HmVABGDf7gISIBleG3ZK2RKRRo=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=HH0ZsWIHJBGpXlVL3gXhPosWAg7/NDxPYAztafp1qE8nDjdyBmkgON17aHRZfsUyJ
-	 VraQT5d7wYuNZWchQ6W0xe+QsJzpjoMS2f/b1uDStP1aAcykJ/EG6p2ClS6pSxdcaB
-	 oCb/AaCssu2PPGAjUcvAhGjoRtcNlK+Ty8Wy9eq4HiALarnKhvORCLt5hX1IaaHXWs
-	 sizCtCuuLS0e1a1+vAWQ+UeKFAhhLUNPZIIsYZA2Z4QDPYnvtzFRuiwAbMze3aYCEh
-	 HmeHhfcuDdOXniZaFIKUhzM0MsJmkds9KIsWO6WEabchJE/5sbkpYMLvvJyO3QcMvs
-	 UpJc9heOMbf9g==
+	b=IZwxreFq/t+9hEYofNuBXmm8bjTzplV1TNx8BMEhL4N/snE+Rjq2uisLonSCUVifX
+	 knFQs6si5mpZnPkXB/0mxHeoCiq7K05u99x4FAzBi3M5Ss9tBy81g9qQoQaayu8DLq
+	 PmypNv9ZCd6WnSB7jGz7CaCB1GM0JYndV4sq1IQVaTGVjBqdCg1FOh/JuTin3m7PBh
+	 wqPwy58Zp8rzaY1etPBShYN7/dk5u0upCTXlIsnZ3/ol+r6fdm3nYaHU3UO79UNJp+
+	 6VTRAXUV2AGpqygKn/p4AXZKW7SX5WkzRP/HKyLobiAZWwdtxeFePh8GjT+uexVxAZ
+	 SVIEMI7iwZUyA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADEAC380AA67;
-	Mon,  3 Feb 2025 19:16:03 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 2EE54380AA67;
+	Mon,  3 Feb 2025 19:16:05 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,14 +37,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] clk: thead: Fix cpu2vp_clk for TH1520 AP_SUBSYS clocks
+Subject: Re: [PATCH v2] clk: thead: Fix TH1520 emmc and shdci clock rate
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <173861016251.3409359.9684011048470573342.git-patchwork-notify@kernel.org>
-Date: Mon, 03 Feb 2025 19:16:02 +0000
-References: <20241228034802.1573554-1-dfustini@tenstorrent.com>
-In-Reply-To: <20241228034802.1573554-1-dfustini@tenstorrent.com>
-To: Drew Fustini <dfustini@tenstorrent.com>
+ <173861016376.3409359.6278098615754721919.git-patchwork-notify@kernel.org>
+Date: Mon, 03 Feb 2025 19:16:03 +0000
+References: <20241210083029.92620-1-bigunclemax@gmail.com>
+In-Reply-To: <20241210083029.92620-1-bigunclemax@gmail.com>
+To: Maxim Kiselev <bigunclemax@gmail.com>
 Cc: linux-riscv@lists.infradead.org, drew@pdp7.com, guoren@kernel.org,
  wefu@redhat.com, mturquette@baylibre.com, sboyd@kernel.org,
  frank.li@vivo.com, jszhang@kernel.org, linux-clk@vger.kernel.org,
@@ -55,19 +55,22 @@ Hello:
 This patch was applied to riscv/linux.git (fixes)
 by Stephen Boyd <sboyd@kernel.org>:
 
-On Fri, 27 Dec 2024 19:48:04 -0800 you wrote:
-> cpu2vp_clk is a gate but was mistakenly in th1520_div_clks[] instead
-> of th1520_gate_clks[].
+On Tue, 10 Dec 2024 11:30:27 +0300 you wrote:
+> From: Maksim Kiselev <bigunclemax@gmail.com>
 > 
-> Fixes: ae81b69fd2b1 ("clk: thead: Add support for T-Head TH1520 AP_SUBSYS clocks")
-> Signed-off-by: Drew Fustini <dfustini@tenstorrent.com>
-> ---
->  drivers/clk/thead/clk-th1520-ap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> In accordance with LicheePi 4A BSP the clock that comes to emmc/sdhci
+> is 198Mhz which is got through frequency division of source clock
+> VIDEO PLL by 4 [1].
+> 
+> But now the AP_SUBSYS driver sets the CLK EMMC SDIO to the same
+> frequency as the VIDEO PLL, equal to 792 MHz. This causes emmc/sdhci
+> to work 4 times slower.
+> 
+> [...]
 
 Here is the summary with links:
-  - clk: thead: Fix cpu2vp_clk for TH1520 AP_SUBSYS clocks
-    https://git.kernel.org/riscv/c/3a43cd19f1b8
+  - [v2] clk: thead: Fix TH1520 emmc and shdci clock rate
+    https://git.kernel.org/riscv/c/f4bf0b909a6b
 
 You are awesome, thank you!
 -- 
