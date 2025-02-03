@@ -1,44 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC6C20371E;
-	Mon,  3 Feb 2025 11:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E86202C21
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738583817; cv=none; b=HFmR+9U/CMQL5cbQ5A8y1eowoTYs6zac/xhQj5liOAPnFD5ipBr0oacdn9JvneoDWGb6Czmzpq3MnSt3iUS4U0Pk4SECsRGu3nb+W6IElE4xr8tRk6tdch27gL1PF0+9K98iGK/8KhhSx7ROqkxDGb8kXauRwJqXEKSkQAE4deM=
+	t=1738583961; cv=none; b=CdlnmiDg9PAe6p6KUDFUE4latxJKyGqYnGJ4YD1AW+hEAanAeaSUCOwdzXnLQnay7Bhf2vBRQDpTQmBUdRD3o2H9hA7NmYpDtQyr8I6+qudK6/V9jgTnkB1CRHcSVXA4Hw8R2w736mkVh654WKs3i6KXfQ5KYEgyV2TgAVHeTGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738583817; c=relaxed/simple;
-	bh=vebKXFPzIRoJk3TKQHgf/1dguJDhSsqhc+ZH4Sn0iuA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qLqRDAxlfDQvL3KOaB5wBbV2sRjhUMf+O55twnJGddwsqyBvSqPzYc2YgELS8Qx8rQcJdxycaTKbDM2SEcNtIr4ymiewKjJPqfiESXfpP68VNUTbVl//s4APIuQxNKeKmfzPRalpe79YWehBzze1K2hIN4PX9bamntJ22FZdMUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGIZjGh1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738583961; c=relaxed/simple;
+	bh=3NcVFj349lyJfGOL+vdcgKBeFtROFl2Kj/Ur8lBQEhI=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=KEk/SczLF/A5rD6Udo0+2DNNIJAeXW5hsmUHO5592Ct218LiNHTzytLsxOhEyggHarP4KtFyHyktMSRWhsIBlATEDXbCOUaJ1ReOSyZB17u8F9C/UWRY2SZ8UrVFXpRMTKFlwyrqkE00sTL8WAIGUkQjG/hgBats+2AGbyMP2aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cUDqQTBu; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGIZjGh1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11BB5C4CEE5;
-	Mon,  3 Feb 2025 11:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738583816;
-	bh=vebKXFPzIRoJk3TKQHgf/1dguJDhSsqhc+ZH4Sn0iuA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=RGIZjGh1XtgX1j6PhCyq8QgOyVjXMUFN99V8NrxjpT25j7JNshg+fbjtNuZVGZ7+K
-	 TOZIwCGWIEivL3Hj80bXGfQDO852zKkC5atuLS1Lvs97JF83x+BffXjRLzs32w4Jk9
-	 oJbRqeeWDWTzaL6Y1bGvywopigueIsd+76Ofdt8URW7YpUCWlLaZ6ktx4kaMHRl4DD
-	 mHwsKapAEdQknaorXVRuZm07jDR0y8owh+3dt0S8QZgiZaTAL+3+uAVZFYkDYVx447
-	 AbXK1AVltKKE/RLipc1v23tkNgiQpiKpH5QlO1VVC9XqrrhvZ6/+NrRcidIDhAfb+E
-	 pPVxZ3fX7TujQ==
-From: Leon Romanovsky <leon@kernel.org>
-To: kotaranov@microsoft.com, shirazsaleem@microsoft.com, pabeni@redhat.com, 
- haiyangz@microsoft.com, kys@microsoft.com, edumazet@google.com, 
- kuba@kernel.org, davem@davemloft.net, decui@microsoft.com, 
- wei.liu@kernel.org, sharmaajay@microsoft.com, longli@microsoft.com, 
- jgg@ziepe.ca, Konstantin Taranov <kotaranov@linux.microsoft.com>
-Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, linux-hyperv@vger.kernel.org
-In-Reply-To: <1737394039-28772-1-git-send-email-kotaranov@linux.microsoft.com>
-References: <1737394039-28772-1-git-send-email-kotaranov@linux.microsoft.com>
-Subject: Re: [PATCH rdma-next 00/13] RDMA/mana_ib: Enable CM for mana_ib
-Message-Id: <173858381321.653438.2087352921783439879.b4-ty@kernel.org>
-Date: Mon, 03 Feb 2025 06:56:53 -0500
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cUDqQTBu"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43616c12d72so6573755e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:59:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738583958; x=1739188758; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u4w6z+wwJMdG8nN9Qcvb+agCCZc4JaIRFTNtg95ls2M=;
+        b=cUDqQTBurQiy70pQBraeb0FsyWcYYdtCgA5j+pFbavTpZqrB6dreTagV69q3lCCrJA
+         Xd84HBtKeVBRXYscEkp27tFjLaXQ4UFJ0YkxiJrrgO2xCm+KkKFiayJg5G+6zOohZv04
+         WybjHaXi+XKmhM4PGhBEzmiqOKPh2i4KmFbyyPYMP2MRiOLvJcA+MtpdfdP6AEOHLBr6
+         /WjqZ0OHDL+VU2mxbuDw0M2oTi0Xh22HPOQCAYdKXUMpanNaw9Z6yJ3ESfRkhoqeRfrR
+         ideWrY9SbcZbdxBp2dIcNf/UPzB35KtikDFAwVRefnXGTx+2+6JGdu7DgXtILbtNHgVL
+         m+GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738583958; x=1739188758;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u4w6z+wwJMdG8nN9Qcvb+agCCZc4JaIRFTNtg95ls2M=;
+        b=n33MIGlnwOfItjX0a3lZdV6oP21nX4jejx8xcvGHRiYyRs4w+koGtew3/91DtXq4KH
+         Bm2WmpV4ljGlNb/EMT+cBfA9FlaNOsZpHHFfu1RUR66BinU/sBIDkRhWlRNA07PCE9CW
+         Qgs37uLQUSWKs1k+8/NRGRS7hv0xxVEvLwZNwXeH+aBbfqSZNowsfvWa5mhJGLGSbQCj
+         FKuHitJRN4bJwW1pXjHk4Nx+uWyhyFs4cE+9om5B1oM+FQTFVe0CLnxZpHmOJzcG20A3
+         Br4zkb1stH65JWfJDOY+qFrRJ7CtKevvJLWpwfdArxM9bDDUu0miEF4KTzD/9EbOFl6M
+         +UkA==
+X-Forwarded-Encrypted: i=1; AJvYcCXm+8c9pZcwYAL+2ZvwV7G46T3QUpFHiMZ0vTWQCBD4/57ZOLOGi2QQ2GCqF6zfVtxvhMs7jaCPKhR3ul8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9OlbjYmVR4k7VZSkmcdVXYBJBNo+40Xc5MR1gKfMvKTNkcoGN
+	u2sgLmoJZnbB2mMfFcMlGW8QsHQf0rqI0zJl3BFjKQM0AUuoR/++T9gDWCGXBMA=
+X-Gm-Gg: ASbGncscTNYDxeWX538FWRMtAuyuMP93KlviDn9Vz0TkKeBsNnHi4fOwP7h53huXbU7
+	oIhpFv3KnE4TeTVPYjGt7e2KkOBJKl28r+s60lp4ayMxybp1rKW0Yjld7IZBI2xkkNaxEy/64qi
+	7xkQEkAQxlx0wNqPMot9Cv/uTdX6SRqGGixZh2Buh4ldL0/M8UCCK5OqMgCXQq6876Mtc09dv3z
+	IsABYkOSU5/wPSz1cMVWOJZUE0bME+ulsNujr4uSH+D2wIJuNOr1n2bCfAPaLm9OnvBJe/mqaFL
+	/hK1pi3fi1O1xDALi7xxZzLrC/IlsW8=
+X-Google-Smtp-Source: AGHT+IGL0xSElRrwcfKwrUUF6e3pFFAp10ZvxPXdfiqbtaqax1cgDagk0qGOXhxfUjZX4jjdbpXMsg==
+X-Received: by 2002:a05:600c:4685:b0:438:ad4d:cefa with SMTP id 5b1f17b1804b1-438dc3faf7emr70962115e9.4.1738583958145;
+        Mon, 03 Feb 2025 03:59:18 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.218.144])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c12247esm12921274f8f.53.2025.02.03.03.59.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 03:59:17 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250111185402.183793-1-krzysztof.kozlowski@linaro.org>
+References: <20250111185402.183793-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] soc: samsung: Use syscon_regmap_lookup_by_phandle_args
+Message-Id: <173858395687.133675.813378795094586109.b4-ty@linaro.org>
+Date: Mon, 03 Feb 2025 12:59:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,61 +75,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-37811
+X-Mailer: b4 0.14.2
 
 
-On Mon, 20 Jan 2025 09:27:06 -0800, Konstantin Taranov wrote:
-> From: Konstantin Taranov <kotaranov@microsoft.com>
+On Sat, 11 Jan 2025 19:54:02 +0100, Krzysztof Kozlowski wrote:
+> Use syscon_regmap_lookup_by_phandle_args() which is a wrapper over
+> syscon_regmap_lookup_by_phandle() combined with getting the syscon
+> argument.  Except simpler code this annotates within one line that given
+> phandle has arguments, so grepping for code would be easier.
 > 
-> This patch series enables GSI QPs and CM on mana_ib.
 > 
-> Konstantin Taranov (13):
->   RDMA/mana_ib: Allow registration of DMA-mapped memory in PDs
->   RDMA/mana_ib: implement get_dma_mr
->   RDMA/mana_ib: helpers to allocate kernel queues
->   RDMA/mana_ib: create kernel-level CQs
->   RDMA/mana_ib: Create and destroy UD/GSI QP
->   RDMA/mana_ib: UD/GSI QP creation for kernel
->   RDMA/mana_ib: create/destroy AH
->   net/mana: fix warning in the writer of client oob
->   RDMA/mana_ib: UD/GSI work requests
->   RDMA/mana_ib: implement req_notify_cq
->   RDMA/mana_ib: extend mana QP table
->   RDMA/mana_ib: polling of CQs for GSI/UD
->   RDMA/mana_ib: indicate CM support
-> 
-> [...]
 
 Applied, thanks!
 
-[01/13] RDMA/mana_ib: Allow registration of DMA-mapped memory in PDs
-        https://git.kernel.org/rdma/rdma/c/78683c25c80e54
-[02/13] RDMA/mana_ib: implement get_dma_mr
-        https://git.kernel.org/rdma/rdma/c/6e1b8bdcd04f4e
-[03/13] RDMA/mana_ib: helpers to allocate kernel queues
-        https://git.kernel.org/rdma/rdma/c/f662c0f5b3396a
-[04/13] RDMA/mana_ib: create kernel-level CQs
-        https://git.kernel.org/rdma/rdma/c/822d4c938e0d93
-[05/13] RDMA/mana_ib: Create and destroy UD/GSI QP
-        https://git.kernel.org/rdma/rdma/c/392ed69a9ac45c
-[06/13] RDMA/mana_ib: UD/GSI QP creation for kernel
-        https://git.kernel.org/rdma/rdma/c/bf3f6576bbbd51
-[07/13] RDMA/mana_ib: create/destroy AH
-        https://git.kernel.org/rdma/rdma/c/09ec8a57903348
-[08/13] net/mana: fix warning in the writer of client oob
-        https://git.kernel.org/rdma/rdma/c/622f1fc2ca7dea
-[09/13] RDMA/mana_ib: UD/GSI work requests
-        https://git.kernel.org/rdma/rdma/c/8d9a5210545c27
-[10/13] RDMA/mana_ib: implement req_notify_cq
-        https://git.kernel.org/rdma/rdma/c/cd595cf391733c
-[11/13] RDMA/mana_ib: extend mana QP table
-        https://git.kernel.org/rdma/rdma/c/9fe09a01ade76d
-[12/13] RDMA/mana_ib: polling of CQs for GSI/UD
-        https://git.kernel.org/rdma/rdma/c/4aa5b050800325
-[13/13] RDMA/mana_ib: indicate CM support
-        https://git.kernel.org/rdma/rdma/c/842ee6aeddff08
+[1/1] soc: samsung: Use syscon_regmap_lookup_by_phandle_args
+      https://git.kernel.org/krzk/linux/c/00c1fda73df8081f40840f860c8d75e2c9070d48
 
 Best regards,
 -- 
-Leon Romanovsky <leon@kernel.org>
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
