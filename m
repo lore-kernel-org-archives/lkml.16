@@ -1,120 +1,146 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA8E1D5AA7;
-	Mon,  3 Feb 2025 09:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E215288B1;
+	Mon,  3 Feb 2025 09:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738574534; cv=none; b=mr0EJWyEd5Wr2IoXizSdtBBLBm+HhrUjJ3dbf+Nnxz5sxRMesh52L1/axQ8YaABvDXICCuEJTaVNrMjSjOoX0Hc3xzjXf6VheVIsd803QywK+lg5GOmJvtQ5nDe6CdzV41jVn72XeY8d12G3rQ/o2Wlnydcya2n/+TAZu9TzYc4=
+	t=1738574600; cv=none; b=sy4jLejYR1FK9dSBkytGARtj8Jkdc+l7OaOp7XmSwP3PIxFYA0cRjXssXdT9lEpN6iiOHgYI0RAzX/3rR4cUGWtQ/hy99+K9Aj56pXWJ4M50SpBNK3zCOe/KChc/DNjs+VUnChsIJi2pQ18fl7gIoJf3qPcUMNhABgKBPvCsXA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738574534; c=relaxed/simple;
-	bh=20W7wg+ziUDqOb4d3gSvJEsK4QMpIiqm3uhJH5quZuk=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=P5cyM5HXztuAOh94cTuW3inHb+RPwYr+aHoNFxTDuc6ybt/HAEjxNJBeqwLVkQcu7h6iI9icUmk4JmA2hSsLNW7zqWbDw/3EBcKUd4Ctn37GpJitHu3cJ5XsEVuIWi+68OposuxSFBdF0bt2OPjW02xDDnF0PUOb0uDbqQar4Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X6LBmSnq; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738574600; c=relaxed/simple;
+	bh=VbFDT5cjrVHHigACBdyZriVMCPiqVugmKlgYJpkK1oY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WN5nuo2/yU7lcEcFBWdJiAJhEwAVIIj9JlVHXLnRedLj0Cf9A/wTqfOWgRPObpVzIPO/b374qi/6gooOd3pROxl5issNctHnlAMOBAAWLEVii5YJIGwMP3aKWO9kFBS4I1LjWcZETFmGLYtXFKhvsGhkCHWEhi06LWsPTpKoz5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C2+ljKe0; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6LBmSnq"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-53f22fd6832so4647265e87.1;
-        Mon, 03 Feb 2025 01:22:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738574530; x=1739179330; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yIXWEX/fki23xEx1MTLR8DwGT+6Sp3aUsbK+iYz9lnc=;
-        b=X6LBmSnqdNrpDFOl9BWECMWkNqK88JdeAwKG1aRsLXCDWZ3LZtxVxUOuMloV0dSVOc
-         IuN+7Rsc8sWXOoIxCBGn2hOa3VHdZU/FJaLCEy1/2skn28qZ10oZVNkEAgEL0JKEJSS8
-         ze8ZPwcoSX8RnDFr6zWjHpZnnEOUj1ey90wyCuE2fKn40pNUXNoGPtYLOMPx+0ULgCl+
-         EQ1RuFeOSOddtUdZB670gGvvGMY9AFriiZGKnAEbAsjXZ7+3uk+FtRV5ZWYcsz5Cv875
-         SvTRhh5Spl8+wyzKtWjcfXAJ5No5WRV3odsuTAO85WMO7Wep1LQB/x0Tl1YoeSkbUVvK
-         3CaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738574530; x=1739179330;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yIXWEX/fki23xEx1MTLR8DwGT+6Sp3aUsbK+iYz9lnc=;
-        b=Srv76h8chMOavo+cmLflwOlKk2z7HiyXpmm86IHddv6G2LpcXtz+gpNo0Q5eXAYdHA
-         ja5t8eEKOLMgGulm/0JVvQC0CtcjVhvEmV/2QB7YEBts2wLfk2BJyU4os8fYTpQKrCw7
-         IWZjdVMd12NagHXrNePRIwAsxfBSWYQJ0S3SX2+fdlOj56E4ckyIC+y7ooLANT5xzidI
-         cvcasP3f8FXpXICtl1jJOG4UWIWUJDOJYeK2zaU3DCXtnd2QnrDvm05Ev2qR/0UAEwBR
-         dGtRJlCgrfw9ncbDB6p2OOU3MRL6Ws0mzFczbXGOQKQQk5jsZhB9sOlFOnwf78wbrWD9
-         PKzw==
-X-Forwarded-Encrypted: i=1; AJvYcCWL6DkM5fHQoAsbUh8MyP0MMJlJTJdG1tZppNbQswv0s6i/HIBbBfDc1CnIJqjVWMN/01nfpY5Yj1xVkP0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsjqPhJX603W95DmomE/NUB8NJ8KS44n10pGOEq9CwOsBiKGKv
-	JR1Cjri4tQNSthm2DLWZEBJfCKoKf63NN8kEdRPERwqPWlRjcq3eohAhjkLQThw=
-X-Gm-Gg: ASbGncv/cP2ArXCDr642kdWchHQ3V8Mb7LrLj5SmR2rZfDjt4WuDdMRmVd30h4F9T53
-	EYnlTqcZS4E1g2ziMh8eH9fGm21jnDCiJ8C2qvPIpsw+ZRjulPWEBLlBSrxaEVkjqToOkylubsD
-	vXwoDWrs8iTK91bsKrMA492HMBWey+epzVshBrwW4WQjx3Y+M9/WC4kRsKqV5ZMb3V0s6WE9bQf
-	Lrc5XNUFnX1x3N/iyMQ+R7axWHUGtjT6fTODy4plVfEcCC1oqEZ+2gL55MuBUnPMLBsUMqZ+i06
-	A80qj3oDPKyw91S2UKyxxrM1WfiovFNhlpL8gfAvjZMh9Bd/
-X-Google-Smtp-Source: AGHT+IFAfh6CuN4mPpsqYQFFS83SrY+ks455Ypv/WyQCmUxITnet6Qhhv/Fqe8UlJCMte3/UoQr48A==
-X-Received: by 2002:a05:6402:42d6:b0:5d3:baa3:29f with SMTP id 4fb4d7f45d1cf-5dc5efbf457mr22322737a12.9.1738574519186;
-        Mon, 03 Feb 2025 01:21:59 -0800 (PST)
-Received: from [192.168.14.180] (54-240-197-239.amazon.com. [54.240.197.239])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc72407bd6sm7606265a12.48.2025.02.03.01.21.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 01:21:58 -0800 (PST)
-From: Paul Durrant <xadimgnik@gmail.com>
-X-Google-Original-From: Paul Durrant <paul@xen.org>
-Message-ID: <b8aea898-e344-4fe3-813c-1fdacd337f9d@xen.org>
-Date: Mon, 3 Feb 2025 09:21:57 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C2+ljKe0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738574599; x=1770110599;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VbFDT5cjrVHHigACBdyZriVMCPiqVugmKlgYJpkK1oY=;
+  b=C2+ljKe0dwlck0yytXn8XKas3E4t8ZS5PVKukDGp2dkPUn4vhyThdIvU
+   M8YCd61DpyAoJHQsV5AJK6P27a74R5Qv6Sbz9U16gKkodpx1HFMb48AKU
+   4u5Fn/gBuOIHtlT7VV+ayJrfUoZB0CcGUU0ze1MxKxGCoGeo26YQ06gQX
+   OIToHuyCsSKrz38DFX26aFiypyPM07R9gwE6Gh79YDYR8dG7ahejlgsak
+   xed66hzNynrAPMz07GQVDl1U7Tbt1kIn3PHn9U8dq9ZFI6eWlLpVqY/dP
+   os+84bV7Ng20rcX2t4R84jXOLCC3N5CxdMoQ6o2urHWN7T2l8jfoz1dPg
+   A==;
+X-CSE-ConnectionGUID: o44FPI0KSU68Es3tHDcOLw==
+X-CSE-MsgGUID: /7IfYiXoQK+qC771vjkIxQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="42715525"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="42715525"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:23:19 -0800
+X-CSE-ConnectionGUID: m0M9MAp9R8OwBWrMZDL5xQ==
+X-CSE-MsgGUID: OLzlCXTAQ+uSHd8kFDcFBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="115209673"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:23:17 -0800
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id D417311F9C3;
+	Mon,  3 Feb 2025 11:23:14 +0200 (EET)
+Date: Mon, 3 Feb 2025 09:23:14 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Devarsh Thakkar <devarsht@ti.com>,
+	Jai Luthra <jai.luthra@ideasonboard.com>
+Subject: Re: [PATCH 07/19] media: i2c: ds90ub953: Speed-up I2C watchdog timer
+Message-ID: <Z6CLAtL160DEtPfz@kekkonen.localdomain>
+References: <20250110-ub9xx-improvements-v1-0-e0b9a1f644da@ideasonboard.com>
+ <20250110-ub9xx-improvements-v1-7-e0b9a1f644da@ideasonboard.com>
+ <Z4fDfQcnZiHC0Fms@kekkonen.localdomain>
+ <7e034745-831a-4518-8c4e-003fa7773a57@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: paul@xen.org
-Subject: Re: [PATCH 5/5] KVM: x86/xen: Move kvm_xen_hvm_config field into
- kvm_xen
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzbot+cdeaeec70992eca2d920@syzkaller.appspotmail.com,
- Joao Martins <joao.m.martins@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>
-References: <20250201011400.669483-1-seanjc@google.com>
- <20250201011400.669483-6-seanjc@google.com>
-Content-Language: en-US
-Organization: Xen Project
-In-Reply-To: <20250201011400.669483-6-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7e034745-831a-4518-8c4e-003fa7773a57@ideasonboard.com>
 
-On 01/02/2025 01:14, Sean Christopherson wrote:
-> Now that all KVM usage of the Xen HVM config information is buried behind
-> CONFIG_KVM_XEN=y, move the per-VM kvm_xen_hvm_config field out of kvm_arch
-> and into kvm_xen.
+Moi,
+
+On Fri, Jan 24, 2025 at 03:19:32PM +0200, Tomi Valkeinen wrote:
+> Hi,
 > 
-> No functional change intended.
+> On 15/01/2025 16:17, Sakari Ailus wrote:
+> > Moi,
+> > 
+> > On Fri, Jan 10, 2025 at 11:14:07AM +0200, Tomi Valkeinen wrote:
+> > > From: Jai Luthra <jai.luthra@ideasonboard.com>
+> > > 
+> > > On the I2C bus for remote clients (sensors), by default the watchdog
+> > > timer expires in 1s. To allow for a quicker system bring-up time, TI
+> > > recommends to speed it up to 50us [1].
+> > > 
+> > > [1]: Section 7.3.1.1 - https://www.ti.com/lit/gpn/ds90ub953-q1
+> > > 
+> > > Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
+> > > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> > > ---
+> > >   drivers/media/i2c/ds90ub953.c | 11 +++++++++++
+> > >   1 file changed, 11 insertions(+)
+> > > 
+> > > diff --git a/drivers/media/i2c/ds90ub953.c b/drivers/media/i2c/ds90ub953.c
+> > > index 99a4852b9381..6c36980e8beb 100644
+> > > --- a/drivers/media/i2c/ds90ub953.c
+> > > +++ b/drivers/media/i2c/ds90ub953.c
+> > > @@ -54,6 +54,10 @@
+> > >   #define UB953_REG_CLKOUT_CTRL0			0x06
+> > >   #define UB953_REG_CLKOUT_CTRL1			0x07
+> > > +#define UB953_REG_I2C_CONTROL2			0x0a
+> > > +#define UB953_REG_I2C_CONTROL2_SDA_OUTPUT_SETUP_SHIFT	4
+> > > +#define UB953_REG_I2C_CONTROL2_BUS_SPEEDUP	BIT(1)
+> > > +
+> > >   #define UB953_REG_SCL_HIGH_TIME			0x0b
+> > >   #define UB953_REG_SCL_LOW_TIME			0x0c
+> > > @@ -1320,6 +1324,13 @@ static int ub953_hw_init(struct ub953_data *priv)
+> > >   	if (ret)
+> > >   		return ret;
+> > > +	v = 0;
+> > > +	v |= 1 << UB953_REG_I2C_CONTROL2_SDA_OUTPUT_SETUP_SHIFT;
+> > 
+> > BIT()? Or at least 1U <<< ...;.
 > 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/include/asm/kvm_host.h |  3 ++-
->   arch/x86/kvm/x86.c              |  2 +-
->   arch/x86/kvm/xen.c              | 20 ++++++++++----------
->   arch/x86/kvm/xen.h              |  6 +++---
->   4 files changed, 16 insertions(+), 15 deletions(-)
+> It's a three-bit field, the value just happens to be 1. What's wrong with 1
+> << SHIFT?
+
+Shifting a signed value leads to the sign bit being undefined on some
+architectures.
+
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 7f9e00004db2..e9ebd6d6492c 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1180,6 +1180,8 @@ struct kvm_xen {
->   	struct gfn_to_pfn_cache shinfo_cache;
->   	struct idr evtchn_ports;
->   	unsigned long poll_mask[BITS_TO_LONGS(KVM_MAX_VCPUS)];
-> +
+> > 
+> > > +	v |= UB953_REG_I2C_CONTROL2_BUS_SPEEDUP;
+> > > +	ret = ub953_write(priv, UB953_REG_I2C_CONTROL2, v, NULL);
+> > 
+> > I'd just do this without a temporary variable. If you prefer to keep it, do
+> > assign the first calculated value there first and remove the assignment to
+> > zero.
+> 
+> I think we can do without.
+> 
+> > > +	if (ret)
+> > > +		return ret;
+> > 
+> > No need for this.
+> 
+> No, but it keeps the code structure consistent and allows easy future/debug
+> modifications.
 
-nit: extraneous blank line?
+Please still remove such redundancies.
 
-> +	struct kvm_xen_hvm_config hvm_config;
->   };
->   #endif
->   
+-- 
+Terveisin,
 
-Reviewed-by: Paul Durrant <paul@xen.org>
+Sakari Ailus
