@@ -1,167 +1,344 @@
-Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazolkn19010014.outbound.protection.outlook.com [52.103.67.14])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2058.outbound.protection.outlook.com [40.107.22.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58FC194AEC;
-	Mon,  3 Feb 2025 16:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FADA20B80A;
+	Mon,  3 Feb 2025 16:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.58
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738601912; cv=fail; b=jZ+TRpACaG98esjDw/nFikI088h6NrGZc5H/APDB8IQOgMH16+d1PF/ZaJ3VPuEIpIB53gIKjAaM1yeK4uerB/5HdwnWzbbQ4xQbAnO3kiXOvcjAfraSIhH+dNfX0ROEKG2XAw/G4jNuN/bTSKqTenFQVlS4bGRZ+mavLNcXs6o=
+	t=1738601919; cv=fail; b=kySXynkSF5Ypm9UoNivaFX/RjUhb2N/jKofLgfvWDQuaZDDue9j4YJli5wKgyYjUPwt2iSSvXDCslgBYr9YafLygywtpER+MypS/g9X27JPFd2A9mJ3PevBsCxekTzWUN9WsKBgT9QQYvxiof68V6TYcwFLWikTIoffc9gtz7cw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738601912; c=relaxed/simple;
-	bh=m8PE0Ao4WRx/H2WOewQ9aHMuNA0GeHCpZJkIhSog3TA=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=GahLSG67xQDTD2rk/aHmsaeT43yYzVeb492mkZjBIlE1ESJMgD9p3pI0vbeTJPVd8aFdkttETihguyIWpI79OVOKC5Vs6g9f2KBu5IcfV+jqGzEzW/WjnWltXeZvZVhYn8ucAZrpNpbR0QpPreNboupUWHbwY8n3akppNfroxCI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=ODesHhpR; arc=fail smtp.client-ip=52.103.67.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	s=arc-20240116; t=1738601919; c=relaxed/simple;
+	bh=mzEt7CnNA718YWvCchVN7Wq5dpu9WTFPZB5WZ+VHprU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JyEUUBR2YBG+kynCS7nLfjOIKzMX1j5NH3wMURfcWdpHN92MPGLUsA6gIX5fX7/gxbfIJJ9Z2nu/6hBsPWPqYdz1VDWxP39V6h5DeygCnZqKAFBb1LpSFQ3QyhGmvKY8zhRf3KdThh6p4twtqgAmgl5GCEiLYFxKDaVe4H/bG/A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=N0bYm7ah; arc=fail smtp.client-ip=40.107.22.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="ODesHhpR"
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="N0bYm7ah"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xTCVDNy6earVKvpFAC2XhrdexqKD2ghgPsE3DhDCx+mCzDfmrd26ca1pbBWAZkmELqMTcJSdK6kR5ctadAvjBdMWGrA/oOi7/Z8Kppv0GMIDwlJE4SuYEOpHyamzenkDxffHI0ZH2H4pAXZPDRLQiIc/wo1Jej5HQpXUJfrd3KWqv7CqMPm+lXA0WYTzVQ9H0nMR0OTkhqJq1NEjl9bd5pUzUvein+gWqhgEPNH7JgMQz/SoFTyOsr6kPqrN4d5FKxifEa+msfpcvhe/FU7sdZ2sNqIjalrwOriDXCm9zphPFhmYaTTEKx9AxSvl0PI0nrtN5QhqP+HpibBR/ep+7g==
+ b=MAwiCCWRe6z9VRfWV/Edr7y5mNvAXh880j02hXNWWT4LDQVu4qMWh7sHDb62f/adPVBiKTB8N2gaoZgiDWs/hRuxIJthUg9olirLw2mWjP5ZkQGGWcZMnruFTVxi6i6vCMW1il7Y3Lryn9DaW3AhZ/ySKlSxJZ+SRaZIccJkLmbmvc/lJWEHVpTitGYNjr2G4i35XMaT7iLWHdpkKscJvIiMfuMTbCOLds0GT0dQGYeZZpYgFJcRtrmR4R78aK2qDpOWMgEBqIXDdkhYS20niCUDCmwMBYuGe5kBZwrXiQS4vbjQDl6EVElCMRIUaQ96Mjy02uv1iX0bw8pj9CEVqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=60DMICABaJsGu37LQE5AZEoLxZoOlHFi5JYbCWzVv7s=;
- b=mvWAGxd9Y2fpogFpzqPW3mii97MECBAXdM/ddyKitFZuVYGE+wQdeqGGJMzLfafD3iLEdjK22aRYSGgxnJbh1hRBLQ38P0lCq8UfhQAUnl4Jkp9KOqh3EwXHuPQNKJ25L+QB9tfXqP/D4FTLU1U2Zy1rhm/T5jt6aB3sN3uiiS+Mgmirh2GXn9Ma1UsSeI4SqINl9rMcaeBoJvrBTOdXL6ouIc+4yHIakvjTjrgE82CY3Z3UAItO7VuSNf3y2bnWJok1ymWdY3d6jhJtd1jwSJh/4xq+1hlS528Scy5AwhQbW+yeinXe/iXHMWHQ+ki9NwHc5hnoc6Z7nTBKqcZstw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ bh=G2c+t0d34EWJhfottWnVOU8Wk9+gLKHW/nKMogTgNwg=;
+ b=AIZ5Ut7HzZGKREUf8nUC2/CIQPqpjI/xW6T5Y9uzITgYSFPVmYzr0j1sluuyIExZBlN+5gEM1JRrt6UoYJOR9MeutmtcFwLTwH2/dd5XvuJ0sZiuNtXgfVTggzCCVDAADPwPsAn2Aw1DQSNFcHKnuoOBuYW5Rs1eAmXFChEm4+bIn0sA5P0V6yttHCmcGyHW435U1ewCZO/YrsyV8MEZdkI8IVs3lYwMqOO6MPmKU/RMkTiEbJtEXo3TNNqJXW9DPLQbhlOFdXW5eYmUPr6+sCi1jjD7lkl7Q5M/pa6I9m3JUHHJBgnuNM3gWA1y9YxTxFBSTmSjUs/H+wRkF/aRuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=60DMICABaJsGu37LQE5AZEoLxZoOlHFi5JYbCWzVv7s=;
- b=ODesHhpRU6Q7QI0dASv+SbwQvGzWJmwL1gx9A7LkBRcs0NlpGxAOD8cSqoShce6nDyoAGCTn8QJ8f4cYLcA4bHz5F+7VdfR6l2eGIg6ryrJ9RfjZoRc9Tcpagvw5tQ9o75KqoxdCLWnfWvlSHs8pJT6Uc5vOBnxWLhTtTvDRE+HX2/R5PfM1YDfvIe3/pUGHsUKrQSH0dB2eVRpLyFa7A+RxPq/rR7BJWKw+sLFsAP+tI3o82ajZ0+ANTJ7VHrwf3MqnXa+3ie+BmNvRZ6KkG9htJs7VU0ncj/fz0SyfFAGntVLyEXy6bCUwiY8Rnn+m189TK6a+cY/5hGW0ksR3Ng==
-Received: from MAZPR01MB8280.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:a7::7)
- by MA0PR01MB7410.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:38::14) with
+ bh=G2c+t0d34EWJhfottWnVOU8Wk9+gLKHW/nKMogTgNwg=;
+ b=N0bYm7ahEt0HGbLU3bjYfhnJcODxVB2NtwXYyWZgniJ07xAnYroDXVOq4yd3C4sH6EeVmS/9np1ZIgSmBVz+1svVbg7WAJntYFYxq4l6U8cnY+VGvVjtU6+7ZPQ6RNP3uebF2spgPo+Deg9nKCOZ6KGAYshFsHywYNXs8WQ/skQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
+ by AS8PR04MB8932.eurprd04.prod.outlook.com (2603:10a6:20b:42f::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.26; Mon, 3 Feb
- 2025 16:58:25 +0000
-Received: from MAZPR01MB8280.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::21af:2873:67f3:302b]) by MAZPR01MB8280.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::21af:2873:67f3:302b%4]) with mapi id 15.20.8398.025; Mon, 3 Feb 2025
- 16:58:25 +0000
-From: Aditya Garg <gargaditya08@live.com>
-To: Jiri Kosina <jikos@kernel.org>, "bentiss@kernel.org" <bentiss@kernel.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	=?iso-8859-1?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>,
-	=?iso-8859-1?Q?Thomas_Wei=DFschuh?= <thomas@t-8ch.de>, "jkosina@suse.cz"
-	<jkosina@suse.cz>
-CC: Kerem Karabay <kekrby@gmail.com>, Orlando Chamberlain
-	<orlandoch.dev@gmail.com>, Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org"
-	<linux-input@vger.kernel.org>
-Subject: [PATCH RESEND v2 0/4] Touch Bar driver for Apple Macs with T2
- Security Chip
-Thread-Topic: [PATCH RESEND v2 0/4] Touch Bar driver for Apple Macs with T2
- Security Chip
-Thread-Index: AQHbdlzWYg3mSlqsOEGAqkkEZH9xKg==
-Date: Mon, 3 Feb 2025 16:58:24 +0000
-Message-ID: <5AEC08E1-0AEF-49BF-94F6-AA1AD71545D0@live.com>
-Accept-Language: en-IN, en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Mon, 3 Feb
+ 2025 16:58:33 +0000
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a%3]) with mapi id 15.20.8398.021; Mon, 3 Feb 2025
+ 16:58:33 +0000
+Message-ID: <d464b1ab-e017-4893-bd46-c3cbd515a1e5@cherry.de>
+Date: Mon, 3 Feb 2025 17:58:31 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: add overlay for tiger-haikou
+ video-demo adapter
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ dse@thaumatec.com, Heiko Stuebner <heiko.stuebner@cherry.de>
+References: <20241127143719.660658-1-heiko@sntech.de>
+ <20241127143719.660658-4-heiko@sntech.de>
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MAZPR01MB8280:EE_|MA0PR01MB7410:EE_
-x-ms-office365-filtering-correlation-id: cb14467d-81c8-41e2-136b-08dd4473f94b
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8022599003|461199028|15080799006|7092599003|8060799006|19110799003|8062599003|102099032|3412199025|440099028|21061999003|12071999003;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?rFv617l/bdDp/PRtiMdLSXfzCLg9BU6/XZW6QRrdfqkLK8GebLPrJXaXpZ?=
- =?iso-8859-1?Q?3Z47pbAzqTH4wYMUzjM3pGt4V8lzq5YXmQR5gnKDKBJf5l3yazz3GgQPXq?=
- =?iso-8859-1?Q?ZL1uOqOPRbiorGtJe2QJ5bc6Dum2wWhJQM/PaJ7aEhVy3aLdJZkPfmdbf5?=
- =?iso-8859-1?Q?I7Mm33idte37qHXcbqUcsF0J7txbo5AMMgi8z3mdtGzrgIXe/zYg3GDqpg?=
- =?iso-8859-1?Q?RiZiaUxdiSQ5oyTIfF2wcAa+MDuZS9GPx1r5MOyDzZNd6VUH87cJbZ8wFh?=
- =?iso-8859-1?Q?F0WbUsZFhhUwhyeBcEEaLKYMwBNV+N45MA8a+q9n4KlMgSxYDOmHSgKp9B?=
- =?iso-8859-1?Q?oDjsm2zw6I8ivy/dP1AuDkccpiW/ZXIiI/qfncCSqYJuwLYGJmWOyrnyZz?=
- =?iso-8859-1?Q?ZepqwCeYUOXsNEAA2AMuk9T6V/wWAKvQLheON4cfqTwMyNnWvwD7xzTBxl?=
- =?iso-8859-1?Q?UpCDrR4UrOFguevdaTLdG8p9u0P3nV+OCcF1HvBBY6N11Q3jVP5Dlo7M5P?=
- =?iso-8859-1?Q?MpU4OkGMTYnuWeQXCpQzcRDqUX6igz2AQVtP/8NqXRAcYsThYX8yB8Zh26?=
- =?iso-8859-1?Q?eyw8mme24GJO9mn+QVB6x+094ExHY+JazuwvynW1E9ICXJFtoLUWlsGx9J?=
- =?iso-8859-1?Q?r2BpnhQ/r9ynCcPdY0ZicHLtkX1xnJmfG8gOQZvO74Knyt2lSrzb3l6IlT?=
- =?iso-8859-1?Q?EIOcB4AdSiVGKCFANqjobipVbtp/eJWCW3WTRAHlAj00Omx3Mu7jzqLr+A?=
- =?iso-8859-1?Q?2968qVudBCjYulboPF+1gGKxJ+bx52fs7pqmj4RIWEOqiZhBjq6kIZqnlW?=
- =?iso-8859-1?Q?sK2yy04Nyt6y5oPgjIgUcSJrpGxZvItJAVb+RHeN9pvqloNI3CLDmsPQGy?=
- =?iso-8859-1?Q?s5zlGT6HeBir/s/8D5R9kwKqxqj6qMtfKNTOr9aN/Bn5rYT8BaKt3ljuQa?=
- =?iso-8859-1?Q?fX0T4V6v8qWhMprNfs4UztzkSoLmBpdOGC7mtlEUqAnjMaH5HKB/8atSvx?=
- =?iso-8859-1?Q?90plkt0I5nuSZgZg4JgEhEcZjDxMNogb3X6AR4m3bWEXqgdX4B3v0Hl4yt?=
- =?iso-8859-1?Q?XLJkC8wnraplfq34X3UQFX6BMcFio/agmc7KOv/+kLmRzt1L926k/Ju6r3?=
- =?iso-8859-1?Q?huzDFkKjEegPeyPoYhNW58Bcw+wGlvE0Ji1jrIT/ZnGtKpdrjts8NjdWWy?=
- =?iso-8859-1?Q?w/TC2bxFZE4/UKlE4MoY1aAI0zRSXoq7q2A=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?yHI3ZvDCBQlJjbbeDyL4O6AX94v4VTZIl9UH/+8OfruGnjTYXY2VDjcWED?=
- =?iso-8859-1?Q?zDZtY2nFGP6Ab/2jnRO66G4sfTIbJuXwIkNzSJ/5QDGieLm4zMXhjxMPtj?=
- =?iso-8859-1?Q?5Egie5zOWjGsfmC04onUIUUrUA/dUR7gIznj1Wgpjrm2vhylAMcZPLXWis?=
- =?iso-8859-1?Q?me4zPLmOHgdsTDaFsf4TEO8VizRlUsjneUJXdPRVfjndzfI05LDucOXsXT?=
- =?iso-8859-1?Q?tHu8X92NQfc4STlxVZABi2ZbiUvfaA2T0uersyF7NhW6CS8ek1JHNjYxLl?=
- =?iso-8859-1?Q?lPjYmy4XSVEgWWAIWG53revqNaDATfBbo3/tSUJmFaUjDV/3NJpYUeZ4Lr?=
- =?iso-8859-1?Q?HB1FqM65vK5Pd/4h8kI3eW/4cu5Bqknq2nSd4arjgEn2XlVZ3vmizkddpy?=
- =?iso-8859-1?Q?+FqAgnGIVrrWulUCPIAbsXDkPfmFFtqA1W/QuPEiaGD3pYz4sgbXowCIsD?=
- =?iso-8859-1?Q?Rvi2NDZRkPkDIzZ+ztoWLOIy0ueu+w6FHuDJiosM1hAYZrWbWritOjp+He?=
- =?iso-8859-1?Q?9NouN/cTQFTxLNRbFHenzkgf/swGCB8MY31SMPI4Cd/xY9pJDnGv5t2XnU?=
- =?iso-8859-1?Q?+JmEKhWptes6I0CnEc/VCRejd9R8cBao/8/y7JJ7JbQ/ZCkLRtn1BrTj4H?=
- =?iso-8859-1?Q?qRWqYVpltBezxPhn51jj8lyfxU0ysa3y1lZvQI/SlgD8mjPabScdPthVKO?=
- =?iso-8859-1?Q?k4dD0uzWHWnvl7qUcUPbpWYRZtotG+2bYBGvTSGSir5bI4dWMH7mKxYgGv?=
- =?iso-8859-1?Q?3il/hZ9hH0UOQigN+wyuDvAC31Oooz+XTAPndhbFAfI+v+W4w/l1E66ipy?=
- =?iso-8859-1?Q?LCZgSSWkGkanpGzvqWR2jBd0IvcnCZB7MOjXGhnlw/nzoDSwH6Flmd0+qV?=
- =?iso-8859-1?Q?IGzzKjeUZIyVXv1654d3PBcujyYN/v/Gc4pwC99QtxExjiLpGPqmBQK7XK?=
- =?iso-8859-1?Q?KV8ItNqtj5U4oXuD2ejhSgzHy5k+5PsQpNR73+n+Gt3nrpUw62q+WpMWnV?=
- =?iso-8859-1?Q?7YbQGWI2QGLb89QlO309n/ftVby1gZD85bfTz+82o46e4U2nQ7wOWXJh3s?=
- =?iso-8859-1?Q?d3tp5GRfUfRN41T4O7+VdFQzj8hUvBfHrwN5RJ6v6zDT1E7Nl4Y6YEpuVx?=
- =?iso-8859-1?Q?a3DfpNG5uqw5duK0pz/6FEvcym3MCK9HWv9qDrEXS10tLTwNHC+QOlufkY?=
- =?iso-8859-1?Q?TF+z64/QlP2JDLSQ8nSKhoTRs8m1E5cPN3j4juxW7+/gbWCnH49ThcIb0p?=
- =?iso-8859-1?Q?7zHDCtF2h7akdGQvL2VFg36AUP/8glZtrhtOHys/M=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <BB7FA7372E86B84F9E25857A83CFB662@INDPRD01.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: quoted-printable
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <20241127143719.660658-4-heiko@sntech.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR2P281CA0041.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:92::12) To AS8PR04MB8897.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42c::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|AS8PR04MB8932:EE_
+X-MS-Office365-Filtering-Correlation-Id: 12b9ca69-ccbe-42c3-2aa7-08dd4473fdad
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NUViQnlkYzN4M2NqVWRBTWVjMnFWZzlhN0t3SkkxcEdXTGRVV2NuQ1IxMnpv?=
+ =?utf-8?B?aVZTQmE5WDVTKzdtQng2VWZtUlVFYVpocjBlR08rYTVPcjk1OVFlOEhMdnda?=
+ =?utf-8?B?YVRQT2pMWFFZbXF4RGFDZVFlU2tEL0grckRnNmROaFdTbmo0azFNSUJuNVU2?=
+ =?utf-8?B?UlVpNE9iU0V2bHMwMVJPVXJHTUl4WHd6SHpOT1JaNmR0NEthbkV3OGNPVEty?=
+ =?utf-8?B?d2RXZkoyQ2pqSndqUHpEaHBlaUJJMnNkQWhKa2xleDNWVGlpTkdsWXN4UzE4?=
+ =?utf-8?B?cnoyYUF0VnBGUTVOVE94MlpCdFA0TDVXUkFnNDRQRyt2c01lZmplVEthNldS?=
+ =?utf-8?B?Z1dDeXI2RFBlbDZGb2t5dENRUXc1NThlQ2ZCa3k2QW5KZDJFRUlxTjQyVUFE?=
+ =?utf-8?B?ekp1QVFUZnpvRlhJbGpSRStRMWJPRndEak9xa0oyd2x3M1djZy9laFVRdE96?=
+ =?utf-8?B?OHFBSFlldEMvdmd4aGxSMUU3ZGdrQ2wrREZUZUlMZm0yY0Z4YnhpZVZzalFl?=
+ =?utf-8?B?RHltWmpBeGtvUzBib2FPQ3N3aEROYkk4MHNyQ3ZYcjhESEhkWnp4RzBMZWNr?=
+ =?utf-8?B?MWljZjBFOWJSR0ZJRnZIVVVoMkprcXA5bW9mWk0yZHg4WDBBN2FGamRyTFFQ?=
+ =?utf-8?B?dS92YVluWGlxR0dWWFo5eFJjU3FnNm5IRWxINjVPMVBNaHVUN09lT1RKS1dh?=
+ =?utf-8?B?UitXZE56Y2FPWEhCK3hmcWZ6cjc0OXU5SHFFYi9YMFZBd29pQjNHcWZTelRC?=
+ =?utf-8?B?ZHY2MHViaStiNmFOaFNmQXMycFlHOURnWHZoZllOdEpsQlBCNjR2YWR6K055?=
+ =?utf-8?B?bGlMRjZmVEZRYTJ0UGZ4djVvZnJFbldGSFJ4ckVZYTArN1BudVFjQXgvNjY1?=
+ =?utf-8?B?R2U3anRpSXgwU1NXc21RVmRaTmRibzZSbHJHeTdBUUxrSk9PeE1ENzE2OXRs?=
+ =?utf-8?B?MnJjcTFVdXpoajM3UFNrTDJaaCtkcW9ZK2x3eDFYb0lJVDFzUEpSUlBiRUxp?=
+ =?utf-8?B?bWNxdWJrcFRUY2xRQ0NJM3pBUG8yV3BVanlTbVZaaElwaHFvbmhWYytsdDRw?=
+ =?utf-8?B?WUszRUkrVUxBaW5TWGhQNFpITG1xOHlWM1VWSHlsK1dSQVJEL1hRL2piSC9N?=
+ =?utf-8?B?UVZ4T0IzZmtHdUk2RU5CSERTN2NVeWJWM2w0Y2dXbGlYejhtQ1ZpRVhuNWc1?=
+ =?utf-8?B?bVdFQmJ2K3AzQW00dVF0Qy83UVpCdFNQbmx6RzhrT1hncXhoNDZUeUlkODFr?=
+ =?utf-8?B?L08vTnFSUnVTak53cVJNTnljQllTWmZTb0VqSzQxb1F3emlQd3JwcXM4dHk4?=
+ =?utf-8?B?QzRqY1FFSlNRVXA5Z3N3OG5tSC9lbWczeXNwMFkyWldubE40cmFSSjczcll2?=
+ =?utf-8?B?cXBRQ2hxNTB4L3U5WndDTllFcmt2WVZqdVJHVEg3L1VqbTB0UnBHZDhjNGc1?=
+ =?utf-8?B?eGJGbk9TOUt2V2hzTnk2QWJzc2FYblZsN05KVXBZQmZuMmUyQk5vNEc3TENX?=
+ =?utf-8?B?TnVwSmtzem54S3htQVoyVXd6NHlTSHUxTjBveVZUVEhaSVpHa2o3SnNPczFx?=
+ =?utf-8?B?RnN2b3I3bnl4KzZRWUpxQ255MGJKRFQvTC91elVESEd3ZXhyL2hHd0ZLTTdk?=
+ =?utf-8?B?TWlNNnlTMCtMemRISHlJQ29mVmJWV2cwNDBsSTFSYnp6NkZ3Ykk5b1VPUUVi?=
+ =?utf-8?B?ZEc3NCtyU2dZNm1OTXFvQm1NME1zT2hkaGZxc3BxT1RTL2l2aU9wT2N6ME0y?=
+ =?utf-8?B?WXVnS0tJRk9yb0FBSlBEWnhWUEwvRXhBRGs1TlV3cW5NOUxiNng5Lzlvdy9u?=
+ =?utf-8?B?ekdDcmhhYkFIR3YzT29tUT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MUVrYVhQQjdWMXk2OFBxTi9OTlhGZGR0S0FlZWRiNWFzN0ZaSDNRdGlRRkZP?=
+ =?utf-8?B?U3k4bi9waVRlK1NoOEdHNENaZ0Jwa0V2T1ZiTWpENVNwbDR2UkRaSW9XMnlJ?=
+ =?utf-8?B?ZENzeDZGTDVyTVVOZXZhWHpPTy91RmQ3bjlGMU5Tazd4dG5OK1JxYzNTR1U1?=
+ =?utf-8?B?aituNUYrVFJEYXdFdUZQZkh3MDdDY1UzMGlTR3RlNEkrVG9lcUNIZHVmQXBl?=
+ =?utf-8?B?V0NRUEhwRU9EY3crNElvaFhPZW05TjZaR1VCbHl3ZTFwblBxUXBUVEkyd2tO?=
+ =?utf-8?B?NlhHYlBCT2RGRTVaSW1xWUk5c2VMcDFGWTVtN0NkSG92WUY5VzdQenVXd3dD?=
+ =?utf-8?B?c1NxUVRMdUR6MTkyTnRGbEd0dk4wYW5wdkhrbjM4S0dNaTRXSStKVWRmVi9Z?=
+ =?utf-8?B?UWpMb2crdktWVmVBZHpGUWRlK2l2TkNncnAxRDhSSk1PcmVMWTBpc2pvRE0r?=
+ =?utf-8?B?bWVSVVdva29waEIyTEw1NzZhRXBNK2xhZVlSTXQ1bWEvYTdVUXk0TXk5VjJ2?=
+ =?utf-8?B?M2YxODFjL2I5WkliTGZtZW9pTk90UzhHa3lDQXlEQUhUdjZwNGxGYmVhT1No?=
+ =?utf-8?B?RUFHYzZhVVVOcHNTQy9ENFFmTkhBNjFUcCtaNC9jNUdFRHhndUVSazBYWXkv?=
+ =?utf-8?B?Y3h6d1MxTWFrSCtCc3g2c1hpK3NHTGpIR0d3TXhsaVlqdTU3c1c4bXR2ZWh0?=
+ =?utf-8?B?T0N1aEp4ejJvRW5QL0Z3WG5JRW9uMUQwdSt0KzlhemlIeS9FU1dwaEdLcjFs?=
+ =?utf-8?B?M2hUN3BCdWlYZWliTTE1TlpkVjgwZFJRZ3dNZTJ4eFVTVlBIWVpDTExuRFZn?=
+ =?utf-8?B?VnJLWkF4QTA5UmVsZjUzM2tFb0NEZFdjMUFuWEFwNkNRU0ZIdm1WQVZhUHhH?=
+ =?utf-8?B?SENuODFHRkFVMlg2VHNTMFd1L21oNlFxbnE0OHVERS9qN3FnSkZpTDFPa1ZV?=
+ =?utf-8?B?clBMSEZjV0dTSVBSUVc1blBzU1dlOGdjbmZHdDdSaG1HWmFUcWZPcFFnMlU3?=
+ =?utf-8?B?bzY1K1dsN1VLVjhmMW9pRXNROC9PRjE5WWZBZVM5akpOUHczVDVTeGoxMUJ4?=
+ =?utf-8?B?dThMZFFncFNIaW9Oc1VuWW9YS0hoS3VjOXFQanZPOTJIT1l4ZWp1TDdacEw0?=
+ =?utf-8?B?ZXVSdEswQ0ZIT1c5YWQybDhuZjYramJjRW1aSldhOFNHbzJyQVZFaklNZ3pk?=
+ =?utf-8?B?M3g1TGpYWDdDV2VNQnRIa3NjRVJvQjZQc0w3REhYNE5Nd1R4akRiZk00RXRt?=
+ =?utf-8?B?OENYU0pzcGJ5YW5FM1cvRUl5cVRvdkZKcE1LQkNQdnliUWZteTRSMERscUgz?=
+ =?utf-8?B?ek5EcmJkYStZSytjSVEycHpRNksvZjREVmhqN3Q2NE9EaWs3dlVwcjY5NXgy?=
+ =?utf-8?B?U0grdGZxZlJtbFZ4RXlKa0NBZUJqMi9ZanBraEpjZWtJQUtDOGl2aVlGMUpk?=
+ =?utf-8?B?TjNHc2RQYThic0N0bFdxU2JEcUp2RlgyTit6ZjNqZjhRRVFNTXBwcEk5R3ky?=
+ =?utf-8?B?RkNtWHh1RWNnd1F5dzhhMVVGcnp5bVVoeWhUOW5aQTQ5OGtDNU5wdmMvMVZr?=
+ =?utf-8?B?Y21Zazg0bHIzMG83dzlieS9HeGwvTmcvMVNVZ0ZoOEtRZmFwalFrVG9zU09k?=
+ =?utf-8?B?bFFxUmdqY0Q1ai9tS3N4Vi9BVUhjRGI4OTRRbHBLMjE1QnB3UGQ1VUFsd29t?=
+ =?utf-8?B?UFlac0d3UVAvVEQrS1RKeVlJMjBYSUdDVUZEZGcycE1tY1N6N1dsb3AwSDhZ?=
+ =?utf-8?B?Yzl2WlAvSkt0bUJuY0l0RGwyT1A2cDR5ZFkxcUUvME9TbWxXNXh5NGxmTHBs?=
+ =?utf-8?B?dmI0a2s1ZTM0ZFE0RWREVGc0VVVvblJZVGRzM1VQcHpocjFoRk5IQ2hCNnZU?=
+ =?utf-8?B?NGtnOG1LMFozWjdRM09jL2loZ3dBSzhMVE4rWWsyM0tZMXR3UUJXODAxK1gz?=
+ =?utf-8?B?TkQxZ3BIVE9lbkE5ZUMzeVBLLytoSXd0WFR1d09yNHNES2FkUENmRHZtcjl4?=
+ =?utf-8?B?cGJScVpOZlRVTlNueGgwVDBsN1hnS1BLejU0ZXpZeTFwRFdDTXZFMVIwanEr?=
+ =?utf-8?B?VEt2VEhrWUZlalNrbGUvWHJaTlA1RjZhS1ZWV0pzWVZmV1UxTUlXSDVlUWVm?=
+ =?utf-8?B?aXBtbVAzZ2F0WW43Nk9DTXZxVFNjZVRSZ0YybHgyRE5vdWdCZTNVMGl4akx3?=
+ =?utf-8?B?eFE9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12b9ca69-ccbe-42c3-2aa7-08dd4473fdad
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MAZPR01MB8280.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb14467d-81c8-41e2-136b-08dd4473f94b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2025 16:58:25.0312
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2025 16:58:33.0222
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0PR01MB7410
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wPDftfCCLZwv2OjXgurpK1PmBTrMM9dEekIge8b9wQW6lqbJL4gwkYD1qDhb1vCDsVi5L/y8DbRMcxw1Q5cbqI1x4ijDcf5mGRNPqeXLK4o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8932
 
-From: Aditya Garg <gargaditya08@live.com>
+Hi Heiko,
 
-This patch series adds support for Touch Bar on found on MacBook Pro
-models with T2 Security Chip. These drivers support the mode found on
-Windows Bootcamp drivers.
+On 11/27/24 3:37 PM, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@cherry.de>
+> 
+> This adds support for the video-demo-adapter DEVKIT ADDON CAM-TS-A01
+> (https://embedded.cherry.de/product/development-kit/) for the Haikou
+> devkit with Tiger RK3588 SoM.
+> 
+> The Video Demo adapter is an adapter connected to the fake PCIe slot
+> labeled "Video Connector" on the Haikou devkit.
+> 
+> It's main feature is a Leadtek DSI-display with touchscreen and a camera
+> (that is not supported yet). To drive these components a number of
+> additional regulators are grouped on the adapter as well as a PCA9670
+> gpio-expander to provide the needed additional gpio-lines.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
 
-V2: Added checks to the keyboard driver to ensure backlight driver is
-initialised first.
+Tested-by: Quentin Schulz <quentin.schulz@cherry.de>
 
-Aditya Garg (2):
-  HID: hid-appletb-kbd: add support for fn toggle between media and
-    function mode
-  HID: hid-appletb-kbd: add support for automatic brightness control
-    while using the touchbar
+See comments below.
 
-Kerem Karabay (2):
-  HID: hid-appletb-bl: add driver for the backlight of Apple Touch Bars
-  HID: hid-appletb-kbd: add driver for the keyboard mode of Apple Touch
-    Bars
+> ---
+>   arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>   .../rk3588-tiger-haikou-video-demo.dtso       | 144 ++++++++++++++++++
+>   2 files changed, 145 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou-video-demo.dtso
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index 3f888451a13e..a2404fcdc6fd 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -144,6 +144,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b.dtb
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b-pcie-ep.dtbo
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b-pcie-srns.dtbo
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-tiger-haikou.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-tiger-haikou-video-demo.dtbo
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-toybrick-x0.dtb
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-turing-rk1.dtb
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-coolpi-4b.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou-video-demo.dtso b/arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou-video-demo.dtso
+> new file mode 100644
+> index 000000000000..a7fe18b81170
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou-video-demo.dtso
+> @@ -0,0 +1,144 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2024 Cherry Embedded Solutions GmbH
+> + *
+> + * DEVKIT ADDON CAM-TS-A01
+> + * https://embedded.cherry.de/product/development-kit/
+> + *
+> + * DT-overlay for the camera / DSI demo appliance for Haikou boards.
+> + * In the flavour for use with a Tiger system-on-module.
+> + */
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/leds/common.h>
+> +#include <dt-bindings/pinctrl/rockchip.h>
+> +#include <dt-bindings/soc/rockchip,vop2.h>
+> +
+> +&{/} {
+> +	backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		power-supply = <&dc_12v>;
+> +		pwms = <&pwm0 0 25000 0>;
+> +	};
+> +
+> +	vcc1v8_video: regulator-vcc1v8-video {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc1v8-video";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		vin-supply = <&vcc3v3_baseboard>;
+> +	};
+> +
+> +	vcc2v8_video: regulator-vcc2v8-video {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc2v8-video";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <2800000>;
+> +		regulator-max-microvolt = <2800000>;
+> +		vin-supply = <&vcc3v3_baseboard>;
+> +	};
+> +
 
- .../ABI/testing/sysfs-driver-hid-appletb-kbd  |  13 +
- drivers/hid/Kconfig                           |  25 +
- drivers/hid/Makefile                          |   2 +
- drivers/hid/hid-appletb-bl.c                  | 207 +++++++
- drivers/hid/hid-appletb-kbd.c                 | 506 ++++++++++++++++++
- drivers/hid/hid-quirks.c                      |   8 +-
- 6 files changed, 759 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-hid-appletb-kbd
- create mode 100644 drivers/hid/hid-appletb-bl.c
- create mode 100644 drivers/hid/hid-appletb-kbd.c
+We have three additional regulators for the cameras, I think it'd make 
+sense to define those as well even if there's no camera stack on RK3588 
+for now?
 
---=20
-2.43.0
+> +	video-adapter-leds {
+> +		compatible = "gpio-leds";
+> +
+> +		video-adapter-led {
+> +			color = <LED_COLOR_ID_BLUE>;
+> +			gpios = <&pca9670 7 GPIO_ACTIVE_HIGH>;
+> +			label = "video-adapter-led";
+> +			linux,default-trigger = "none";
+> +		};
+> +	};
+> +};
+> +
+> +&dsi0 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	status = "okay";
+> +
+> +	panel@0 {
+> +		compatible = "leadtek,ltk050h3148w";
+> +		reg = <0>;
+> +		backlight = <&backlight>;
+> +		iovcc-supply = <&vcc1v8_video>;
+> +		reset-gpios = <&pca9670 0 GPIO_ACTIVE_LOW>;
+> +		vci-supply = <&vcc2v8_video>;
+> +
+> +		port {
+> +			mipi_panel_in: endpoint {
+> +				remote-endpoint = <&dsi0_out_panel>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&dsi0_in {
+> +	dsi0_in_vp3: endpoint {
+> +		remote-endpoint = <&vp3_out_dsi0>;
+> +	};
+> +};
+> +
+> +&dsi0_out {
+> +	dsi0_out_panel: endpoint {
+> +		remote-endpoint = <&mipi_panel_in>;
+> +	};
+> +};
+> +
+> +&i2c6 {
+> +	/* OV5675, GT911, DW9714 are limited to 400KHz */
+> +	clock-frequency = <400000>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	touchscreen@14 {
+> +		compatible = "goodix,gt911";
+> +		reg = <0x14>;
+> +		interrupt-parent = <&gpio3>;
+> +		interrupts = <RK_PC3 IRQ_TYPE_LEVEL_LOW>;
+> +		irq-gpios = <&gpio3 RK_PC3 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-0 = <&touch_int>;
+> +		pinctrl-names = "default";
+> +		reset-gpios = <&pca9670 1 GPIO_ACTIVE_HIGH>;
+> +		AVDD28-supply = <&vcc2v8_video>;
+> +		VDDIO-supply = <&vcc3v3_baseboard>;
+> +	};
+> +
+> +	pca9670: gpio@27 {
+> +		compatible = "nxp,pca9670";
+> +		reg = <0x27>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
 
+Our downstream has a pinctrl for that too.
+
+C.f. 
+https://git.theobroma-systems.com/tiger-linux.git/tree/arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou-video-demo.dts#n185 
+and 
+https://git.theobroma-systems.com/tiger-linux.git/tree/arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou-video-demo.dts#n259. 
+I think this would be enough to guarantee the PCA9670 is not held in 
+reset due to leftover debug sessions in the bootloader.
+
+Can you please also rebase on top of 
+https://lore.kernel.org/linux-rockchip/20250131-pre-ict-jaguar-v4-0-c971e2852e8d@cherry.de/T/#m7481695caf708c13edc662293d01fa372123532f 
+where we add overlay application tests at build time?
+
+Cheers,
+Quentin
