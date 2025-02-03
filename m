@@ -1,338 +1,183 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90DD1FF7C5
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEBE1FF7A1;
+	Mon,  3 Feb 2025 09:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738575916; cv=none; b=NjJjBJQ6GxK+91MJXwyYz2G+HK1Rvq6HHO4LIv10U9D5DMrlLkK/L3lsOhTdSVZV5jt1X0HdttsS6wd3a26wqtD8l5ut6zAcFiDihvFlxUIZeHx5mkKBbM6mhgIBg9vMS+Xp9Xxe30+sqioO56/WVeoNAOPGiYSombEJKZPDDZA=
+	t=1738575931; cv=none; b=FoE/L77Hm2XbN6VV2WZdzc1OItiIPsDhNxhl+8tqur6/librOw43ZWi/dzLqlGN84bODs0BBVHk3QUyzM/xNZiy8i1frBXNc85nILqKkNoJzdKVRVUs9WzyvTojJ7yMxynroVJ/MC4HJXmNFcX5ZbQZxCgHkxrvJBmDtLQVIk4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738575916; c=relaxed/simple;
-	bh=DnAaTSWB9Ufq4j8GcgVdkYGxQaZHUSHEOIBDNJV/MC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GMl3XZKnVn/CN4/WbShQl8S3tRybBbE+mLoovdEM0Ad1SsLnD9NAD9P6Rx98lampan4HW+i12hFh2pUE1ky9UX9NrTcMJzpD651c7wLOtum5uDZFL75RaK5OzGsr17MDBMQ+riy3+x96PAqH3Uqetu+MtFwtpMFMMm1ZV4KoIaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=Bgk8e8cr; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
+	s=arc-20240116; t=1738575931; c=relaxed/simple;
+	bh=fIgcGBvqDbLq7kS0K19wxfiPZ79yRpz1C2hfr9gQqoI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SsV9UT64tkWg+Jla8KmONuqVy1pEmhckhxnis8kMT9V3Hqu/krPWC6yREjo6PA+cBuVz4BZf0Echb4DBIIGOp/ICyxfpfzptmaBFOF1Oi/37IkRoLMi2nOrgwBIBxVapt4jS4RtBMIqx2xR328qpVPPYKTmJ5MfWjf21A2709/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HWmu7Vzk; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="Bgk8e8cr"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-438a3216fc2so41876175e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 01:45:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWmu7Vzk"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6dd5c544813so42950246d6.1;
+        Mon, 03 Feb 2025 01:45:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openvpn.net; s=google; t=1738575912; x=1739180712; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=bWyq858Fdd6NVKF4yL/YP3TOhGbx7YHYk3DfUJZJrbk=;
-        b=Bgk8e8crVtsj1hi35slWNcRAcg2NxN4dzoJkW97RvY3+oXTvdcOMA1FFwiarvo+/uB
-         6o5mDHoXdM3Dk0sXTKfLHK/XNXdjvzV8Imt6UQqXEPbHJV/nQ85r9FRlNAqHYJAzETJS
-         HX47jHHH/CQVcaIeIpFsVfKaiKecgfegFYLssX7rYyK6UPNWfsTwWkh/6ghleONCW6Zn
-         UMikkfxddtd51Sthw9pxHmaJJhuj70gR0KJmrb6HoWDgeeejB5z0DUWKREYu25n1dBmH
-         Ezk0ToySH4l5CNOJ+pqpjBTw8Tr4ohWtCFZxMjlqH0a9aPKXBo55MudsUWdLWjiPVArO
-         GFIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738575912; x=1739180712;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738575929; x=1739180729; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bWyq858Fdd6NVKF4yL/YP3TOhGbx7YHYk3DfUJZJrbk=;
-        b=KbAgFSdJWnfqn3UaKqIIVp5B/EckwUIZynWrAwny70/gPKj0PXF8FrEtATEdLKyiwI
-         toaDZmvLd8N6624hgVg+6+NcxxPgI5JSDkW0UedJIRCtY5cLYUee9/aJMTD9WZY3UpCu
-         m83VQJQzRVl6jchLGk8XOJR8VAEygvnFnhtJ+pIPPhENPVUG192N8S7XVsN2LJ+2z6vB
-         xqM9vyHieV33Yv6ZDRbfT6Ir+/iQ4kRJn2zFXFOI6EuL7iSdKuIxtLjHvRVZ3pvd8iO+
-         NupAkTznEyKX1BTIFBksbiCirU9BUQVaZljf0p87dClZL/DsaZMbrwfFhZseaPSBTzqJ
-         ceIA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0AGFuat8KJLq7KF3ZjdAwp2sgPMJ9sbFu/3VAVfHiAiLUCsLxrKiIQVpI+bGFK7ciuXuYayYy16ug3To=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQg8Rv6I+NcbnGHLrZPDuBfw1JnsbdMt0/R2Lim+b+Eumt06+l
-	TNJTYUQuHlkpJ759ZwBkx5O7NUOXMWZRd3w1BjBgj9f7vpT3gJcKXBwNxD/nC+g=
-X-Gm-Gg: ASbGncu7nSDDtg7d0JjJKa/8x1f8dZxrwyy0eBa1eqbLCzn7NiKU/E3Y64cW7qtt/t2
-	x606ZFLQENyB5rsZimkg0u+l+mTh5Bkp2s0fXq8FXmEDrnNYuxyOSBys4gCSTwnu+d0sDMk4sdE
-	tcKznbHCzkR8YKijpvSmOD+++d3U/NOYSJTrS1yUff4+rTtsUCS9Ugo8zV+OMfex1My5Ve16WvW
-	pIQcTgSJXWGFhB92IH6Hi+BEE4KyoWS4OTAShpncU9xokR+jbw5kzLM29f2JCEiq9WNqguWXEwi
-	PPhAhP3a/48CfhjnJr0k5R7J//sDHMRjeyueoLj7JjtyeTWVV6IRLw==
-X-Google-Smtp-Source: AGHT+IEAyihP1x+9lWz+qA1pD0F07WlyGqWEKzFWo4Qx/8RNOunbW5iuc46GcTZGtV9TeGblCzFBHw==
-X-Received: by 2002:a5d:598c:0:b0:38c:5b62:9fb9 with SMTP id ffacd0b85a97d-38c5b62a1a6mr13709368f8f.43.1738575912014;
-        Mon, 03 Feb 2025 01:45:12 -0800 (PST)
-Received: from ?IPV6:2001:67c:2fbc:1:b4fe:e6fa:32a0:6a72? ([2001:67c:2fbc:1:b4fe:e6fa:32a0:6a72])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23deedfsm150653445e9.16.2025.02.03.01.45.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 01:45:11 -0800 (PST)
-Message-ID: <4a539c83-f436-4b1e-9707-64c05dcfdbd2@openvpn.net>
-Date: Mon, 3 Feb 2025 10:46:19 +0100
+        bh=yI5g0smySPHHeVACX7JhK2ZoaTHZN0JQLDEIzqW27Mg=;
+        b=HWmu7VzkUk8pmA+qNa/Je0OsBBpX1C7823v52GwvU6nR3VRHPE6bplgMygKx1LggQJ
+         lMR0jZjzySOptUiBmAFw658Nwsqjrb6mFJ7O8UNBW1t5htNq8z4k82E793nvKwS+jNbF
+         LC2PCSIhj0ADc4Gif+5PRDNSeN1CwMmslPsr5DJlhRCX0p8NvF5sGMKi/1sj2e9bB0cH
+         cjIf5WlfaqeoNI6O6cemwUfFYSMpv2ERSuxEKLOqN5xZudP1FpgbMylYUKGvVQLEJVra
+         H+J0ehAnDjj2+9FpsCQYyI1OQBqIFmWhoy+zijwnfPEfhbrWRq1DLiJHWTNoAF+hs5qV
+         38Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738575929; x=1739180729;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yI5g0smySPHHeVACX7JhK2ZoaTHZN0JQLDEIzqW27Mg=;
+        b=ljGuoXmidsTUunNWoYaJA00Tk+23mLWlxvarXxNb6/sfkBP/Gbhoi2QddrQ1tmw+Xi
+         FY2r7uqUr21626tm2/dwxuBjROFvcob4G3q7KLc+QPl/KsJ6UBGF0KDnMaSFgBj4gg5b
+         l97NmS4H2c3Qvuw7NR1dW8RfBzu1hSsEygX/LtHK6aCzSQuK/airRZfjUnuF4F1hEBdR
+         8hoob+DOB0G0YGqVujRiB77zhy323t1iineknkXTiPBldGJpAzYEkUVWMB91S1gOLzfX
+         UTUjByIOaovcVABxeV70Rv1Myqgwp/70pAjNmyJO2s+x1U4BYKoXELZuKH3g/tvoyC46
+         Xx3A==
+X-Forwarded-Encrypted: i=1; AJvYcCU9BONob8/7RaQhCF84bNO2JfuiOCd9/XR8vUdThvecKagQLXHdp80mms3Cpgu8eBicrIWbkXoDdAlC1HAa2A==@vger.kernel.org, AJvYcCXtd8UOzSBTx+Avpka2hSg4tGmsvlu8mRVJsMhKjef1GEPjNn/nwNVZbLJfw98IeOo+rYw1ZGF/r9slfyw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVVDDpJ8WqOFoWpsGwS9GrAaHmyWwYieUfj9ARejdMOQce6doI
+	lk0i4uWbX76Ra05dXgZE/p/wo7pp96rF4VZ73M2YKk80BAv3FGQ57I2ufxsTn8VOUK8YH5DUnXG
+	zeEFc15LJ+DF3c3eBknzUSogWWvo=
+X-Gm-Gg: ASbGncsixFoKMnx6owF1Lp8nx4jrGj+OijG2wTzjKTEuAfxN9EPkaY2dTMiueJT7D+9
+	5byl5r48dQzI8Fbf3johJuedQbVnrUVj33nRuT3Z9drr3apFbhnLF5lhQHZoGVmShGvJUXZ7Obo
+	A=
+X-Google-Smtp-Source: AGHT+IGvMyY5kE20lb9+gjNPiN+ok4bJSat72WlIS8jV/PsJPNHLlUf8lp/DCJcxYGgnhJ7QrxM5+XhiWUOVzLO2aUM=
+X-Received: by 2002:ad4:5c63:0:b0:6d8:7ed4:3367 with SMTP id
+ 6a1803df08f44-6e243bfa9cbmr344740486d6.19.1738575928886; Mon, 03 Feb 2025
+ 01:45:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v18 20/25] ovpn: implement peer
- add/get/dump/delete via netlink
-To: Sabrina Dubroca <sd@queasysnail.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Donald Hunter <donald.hunter@gmail.com>, Shuah Khan <shuah@kernel.org>,
- ryazanov.s.a@gmail.com, Andrew Lunn <andrew+netdev@lunn.ch>,
- Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
-References: <20250113-b4-ovpn-v18-0-1f00db9c2bd6@openvpn.net>
- <20250113-b4-ovpn-v18-20-1f00db9c2bd6@openvpn.net> <Z5_6pC-zsVzukJs3@hog>
-Content-Language: en-US
-From: Antonio Quartulli <antonio@openvpn.net>
-Autocrypt: addr=antonio@openvpn.net; keydata=
- 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
-Organization: OpenVPN Inc.
-In-Reply-To: <Z5_6pC-zsVzukJs3@hog>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250127063526.76687-1-laoar.shao@gmail.com> <Z5eOIQ4tDJr8N4UR@pathway.suse.cz>
+ <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com> <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz>
+In-Reply-To: <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Mon, 3 Feb 2025 17:44:52 +0800
+X-Gm-Features: AWEUYZkgVAbCEEqv9xLAAam3naI3QqVSMewJrFrQ8C5LyjSMOMVLC7GGoXuY--I
+Message-ID: <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
+To: Miroslav Benes <mbenes@suse.cz>
+Cc: Petr Mladek <pmladek@suse.com>, jpoimboe@kernel.org, jikos@kernel.org, 
+	joe.lawrence@redhat.com, live-patching@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 03/02/2025 00:07, Sabrina Dubroca wrote:
-> 2025-01-13, 10:31:39 +0100, Antonio Quartulli wrote:
->> +static int ovpn_nl_attr_sockaddr_remote(struct nlattr **attrs,
->> +					struct sockaddr_storage *ss)
->> +{
->> +	struct sockaddr_in6 *sin6;
->> +	struct sockaddr_in *sin;
->> +	struct in6_addr *in6;
->> +	__be16 port = 0;
->> +	__be32 *in;
->> +	int af;
->> +
->> +	ss->ss_family = AF_UNSPEC;
->> +
->> +	if (attrs[OVPN_A_PEER_REMOTE_PORT])
->> +		port = nla_get_be16(attrs[OVPN_A_PEER_REMOTE_PORT]);
->> +
->> +	if (attrs[OVPN_A_PEER_REMOTE_IPV4]) {
->> +		af = AF_INET;
->> +		ss->ss_family = AF_INET;
->> +		in = nla_data(attrs[OVPN_A_PEER_REMOTE_IPV4]);
->> +	} else if (attrs[OVPN_A_PEER_REMOTE_IPV6]) {
->> +		af = AF_INET6;
->> +		ss->ss_family = AF_INET6;
->> +		in6 = nla_data(attrs[OVPN_A_PEER_REMOTE_IPV6]);
->> +	} else {
->> +		return AF_UNSPEC;
->> +	}
->> +
->> +	switch (ss->ss_family) {
->> +	case AF_INET6:
->> +		/* If this is a regular IPv6 just break and move on,
->> +		 * otherwise switch to AF_INET and extract the IPv4 accordingly
->> +		 */
->> +		if (!ipv6_addr_v4mapped(in6)) {
->> +			sin6 = (struct sockaddr_in6 *)ss;
->> +			sin6->sin6_port = port;
->> +			memcpy(&sin6->sin6_addr, in6, sizeof(*in6));
->> +			break;
->> +		}
->> +
->> +		/* v4-mapped-v6 address */
->> +		ss->ss_family = AF_INET;
->> +		in = &in6->s6_addr32[3];
->> +		fallthrough;
->> +	case AF_INET:
->> +		sin = (struct sockaddr_in *)ss;
->> +		sin->sin_port = port;
->> +		sin->sin_addr.s_addr = *in;
->> +		break;
->> +	}
->> +
->> +	/* don't return ss->ss_family as it may have changed in case of
->> +	 * v4-mapped-v6 address
->> +	 */
-> 
-> nit: I'm not sure that matters since the only thing the caller checks
-> is ret != AF_UNSPEC, and at this point, while ss_family could have
-> been changed, it would have changed from AF_INET6 to AF_INET, so it's
-> != AF_UNSPEC.
+On Fri, Jan 31, 2025 at 9:18=E2=80=AFPM Miroslav Benes <mbenes@suse.cz> wro=
+te:
+>
+> > >
+> > >   + What exactly is meant by frequent replacements (busy loop?, once =
+a minute?)
+> >
+> > The script:
+> >
+> > #!/bin/bash
+> > while true; do
+> >         yum install -y ./kernel-livepatch-6.1.12-0.x86_64.rpm
+> >         ./apply_livepatch_61.sh # it will sleep 5s
+> >         yum erase -y kernel-livepatch-6.1.12-0.x86_64
+> >         yum install -y ./kernel-livepatch-6.1.6-0.x86_64.rpm
+> >         ./apply_livepatch_61.sh  # it will sleep 5s
+> > done
+>
+> A live patch application is a slowpath. It is expected not to run
+> frequently (in a relative sense).
 
-I am pretty sure at some point the return value was used for some 
-reason, but now it is indeed useless.
+The frequency isn=E2=80=99t the main concern here; _scalability_ is the key=
+ issue.
+Running livepatches once per day (a relatively low frequency) across all of=
+ our
+production servers (hundreds of thousands) isn=E2=80=99t feasible. Instead,=
+ we need to
+periodically run tests on a subset of test servers.
 
-Well, I think I wiil just convert the return type to bool:
-true -> we have a remote
-false -> we don't
 
-> 
->> +	return af;
->> +}
-> 
-> [...]
->> +static int ovpn_nl_peer_precheck(struct ovpn_priv *ovpn,
->> +				 struct genl_info *info,
->> +				 struct nlattr **attrs)
->> +{
-> [...]
->> +
->> +	/* VPN IPs are needed only in MP mode for selecting the right peer */
->> +	if (ovpn->mode == OVPN_MODE_P2P && (attrs[OVPN_A_PEER_VPN_IPV4] ||
->> +					    attrs[OVPN_A_PEER_VPN_IPV6])) {
-> 
-> And in MP mode, at least one VPN_IP* is required?
+> If you stress it like this, it is quite
+> expected that it will have an impact. Especially on a large busy system.
 
-Yeah. I'll add a check for this requirement too.
+It seems you agree that the current atomic-replace process lacks scalabilit=
+y.
+When deploying a livepatch across a large fleet of servers, it=E2=80=99s im=
+possible to
+ensure that the servers are idle, as their workloads are constantly varying=
+ and
+are not deterministic.
 
-> 
-> 
-> [...]
->>   int ovpn_nl_peer_new_doit(struct sk_buff *skb, struct genl_info *info)
->>   {
-> [...]
->> +	/* Only when using UDP as transport protocol the remote endpoint
->> +	 * can be configured so that ovpn knows where to send packets to.
->> +	 *
->> +	 * In case of TCP, the socket is connected to the peer and ovpn
->> +	 * will just send bytes over it, without the need to specify a
->> +	 * destination.
->> +	 */
->> +	if (sock->sk->sk_protocol != IPPROTO_UDP &&
->> +	    (attrs[OVPN_A_PEER_REMOTE_IPV4] ||
->> +	     attrs[OVPN_A_PEER_REMOTE_IPV6])) {
-> 
-> Is a peer on a UDP socket without any remote (neither
-> OVPN_A_PEER_REMOTE_IPV4 nor OVPN_A_PEER_REMOTE_IPV6) valid? We just
-> wait until we get data from it to update the endpoint?
-> 
-> Or should there be a check to make sure that one was provided?
+The challenges are very different when managing 1K servers versus 1M server=
+s.
+Similarly, the issues differ significantly between patching a single
+function and
+patching 100 functions, especially when some of those functions are critica=
+l.
+That=E2=80=99s what scalability is all about.
 
-Yeah, I'll add a check.
+Since we transitioned from the old livepatch mode to the new
+atomic-replace mode,
+our SREs have consistently reported that one or more servers become
+stalled during
+the upgrade (replacement).
 
-> 
->> +		NL_SET_ERR_MSG_FMT_MOD(info->extack,
->> +				       "unexpected remote IP address for non UDP socket");
->> +		sockfd_put(sock);
->> +		return -EINVAL;
->> +	}
->> +
->> +	ovpn_sock = ovpn_socket_new(sock, peer);
->> +	if (IS_ERR(ovpn_sock)) {
->> +		NL_SET_ERR_MSG_FMT_MOD(info->extack,
->> +				       "cannot encapsulate socket: %ld",
->> +				       PTR_ERR(ovpn_sock));
->> +		sockfd_put(sock);
->> +		return -ENOTSOCK;
-> 
-> Maybe s/-ENOTSOCK/PTR_ERR(ovpn_sock)/ ?
-> Overwriting ovpn_socket_new's -EBUSY etc with -ENOTSOCK is a bit
-> misleading to the caller.
+>
+> > >
+> > > > Other potential risks may also arise
+> > > >   due to inconsistencies or race conditions during transitions.
+> > >
+> > > What inconsistencies and race conditions you have in mind, please?
+> >
+> > I have explained it at
+> > https://lore.kernel.org/live-patching/Z5DHQG4geRsuIflc@pathway.suse.cz/=
+T/#m5058583fa64d95ef7ac9525a6a8af8ca865bf354
+> >
+> >  klp_ftrace_handler
+> >       if (unlikely(func->transition)) {
+> >           WARN_ON_ONCE(patch_state =3D=3D KLP_UNDEFINED);
+> >   }
+> >
+> > Why is WARN_ON_ONCE() placed here? What issues have we encountered in t=
+he past
+> > that led to the decision to add this warning?
+>
+> A safety measure for something which really should not happen.
 
-This is the error code that userspace will see.
-Returning -EBUSY/-EALREADY for a socket error from the PEER_NEW call 
-would be too vague IMHO (the user wouldn't know this is coming from the 
-socket processing subroutine).
+Unfortunately, this issue occurs during my stress tests.
 
-Hence the decision to explicitly return -ENOSOCK (something's wrong with 
-the socket you passed) and then send the underling error in the ERR_MSG 
-(which the user can inspect if he wants to learn more about what exactly 
-went wrong).
-Doesn't it make sense?
+>
+> > > The main advantage of the atomic replace is simplify the maintenance
+> > > and debugging.
+> >
+> > Is it worth the high overhead on production servers?
+>
+> Yes, because the overhead once a live patch is applied is negligible.
 
-> 
->> +	}
->> +
->> +	peer->sock = ovpn_sock;
->> +
->> +	ret = ovpn_nl_peer_modify(peer, info, attrs);
->> +	if (ret < 0)
->> +		goto peer_release;
->> +
->> +	ret = ovpn_peer_add(ovpn, peer);
->> +	if (ret < 0) {
->> +		NL_SET_ERR_MSG_FMT_MOD(info->extack,
->> +				       "cannot add new peer (id=%u) to hashtable: %d\n",
->> +				       peer->id, ret);
->> +		goto peer_release;
->> +	}
->> +
->> +	return 0;
->> +
->> +peer_release:
-> 
-> I think you need to add:
-> 
-> 	ovpn_socket_release(peer);
-> 
-> If ovpn_socket_new succeeded, ovpn_peer_release only takes care of the
-> peer but not its socket.
+If you=E2=80=99re managing a large fleet of servers, this issue is far from=
+ negligible.
 
-You're right, because now the socket is released only in ovpn_peer_remove().
+>
+> > Can you provide examples of companies that use atomic replacement at
+> > scale in their production environments?
+>
+> At least SUSE uses it as a solution for its customers. No many problems
+> have been reported since we started ~10 years ago.
 
-Will add a call to ovpn_socket_release(). Thanks!
+Perhaps we=E2=80=99re running different workloads.
+Going back to the original purpose of livepatching: is it designed to addre=
+ss
+security vulnerabilities, or to deploy new features?
+If it=E2=80=99s the latter, then there=E2=80=99s definitely a lot of room f=
+or improvement.
 
-> 
->> +	/* release right away because peer is not used in any context */
->> +	ovpn_peer_release(peer);
->> +
->> +	return ret;
->>   }
->>   
->>   int ovpn_nl_peer_set_doit(struct sk_buff *skb, struct genl_info *info)
->>   {
-> [...]
->> +	if (attrs[OVPN_A_PEER_SOCKET]) {
->> +		NL_SET_ERR_MSG_FMT_MOD(info->extack,
->> +				       "socket cannot be modified");
->> +		return -EINVAL;
->> +	}
->> +
->> +	peer_id = nla_get_u32(attrs[OVPN_A_PEER_ID]);
->> +	peer = ovpn_peer_get_by_id(ovpn, peer_id);
->> +	if (!peer) {
->> +		NL_SET_ERR_MSG_FMT_MOD(info->extack,
->> +				       "cannot find peer with id %u", peer_id);
->> +		return -ENOENT;
->> +	}
-> 
-> The check for non-UDP socket with a remote address configured should
-> be replicated here, no?
-
-ah, good catch! we may be adding a remote while using a TCP socket.
-Will add check here.
-
-Thanks!
-
-> 
-
--- 
-Antonio Quartulli
-OpenVPN Inc.
-
+--=20
+Regards
+Yafang
