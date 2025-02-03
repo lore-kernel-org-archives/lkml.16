@@ -1,165 +1,302 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA691D5176;
-	Mon,  3 Feb 2025 13:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1181D5176
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738590380; cv=none; b=qPZ3Cdrm6JAmUTfzzEuy5tagls7qMaw0+Yk43rHmkaCNtlnv4G6MGdwi0ktHW0pZY9f1pG3Ow+Vab7YuHCk6z1Tc+VBmHPBW9BresuUGdexFIfdfJT229PdbbW3SALp7lKQSNiWNbi9F0lkjKw0yLJJBcoBOn1gYEoeEktYhPPY=
+	t=1738590391; cv=none; b=s158sPuA2WbkvnGNJiDfojiUDQ5ecowuKlKR5/wYIfMdMkh/+vQRf1tAkYu0/tKgtql4sW0wWw1JITmQwq8kUj3xJhgCUwfxPmS4eIXGfQHYoWWaumhj/mphOta3k1bu1lPZdYJMkaLD/FcuwCbO5L9vkWm9LlR3Zch8TvEijZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738590380; c=relaxed/simple;
-	bh=yRjrClPp2Y8t2oce11v42+iDROF1lGwF9ONkK5huTd4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B9ov4UoH+gyibJ3wYPBPP/G+E54gV1VdQB9/Qbzayh1cUHS8rgUEB7nK0QAYPgEQKUJs3CMQ+wck6DLX5QpwME+YJJKDkhlD+rnqZNQsa0d5ozOpyfVDuwYesyAC++jiGJCjoFcLan8L5swQX/G7IyXzaBjmamJgUbOYI3rNexg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D8RTg75h; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738590391; c=relaxed/simple;
+	bh=FkYJgcwBTd7j7y1jIRC/Fd5cR+gWvCsgmp/VeKuIqLk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FG/Nm69xCUs8JqWqj1bL/GzAb144IonOLT2ACpGbpMcSKuILz0R6zb3LYOQBQGSZUoOz+/E2kX7wu7iuBwn09O7fiPmZ518SveK2iZSTnTdwuaf/bVcTpB1JyQUvSgVD6HtbFyprTyuI5svQ3yTJ1hQvVpDGiTwBowOxAFDtlhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=AgsSq08p; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8RTg75h"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-216281bc30fso6712305ad.0;
-        Mon, 03 Feb 2025 05:46:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738590375; x=1739195175; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=I/ATTF8zsbMuGG2i0AfdxDB1dr4BRw0eSCC+NReTqNk=;
-        b=D8RTg75huQBB2he3MUoBz0mE+L+kFKZhvjV43Q5fsHNYgt+ZjOqAHKmoxMWNGTpFAf
-         mVwEdovhhzPaCi2UrhhxUKEIfpuMP7NvHdvruFgBq9NNEUz71cELm+oo12X8F+KXtjWr
-         dFqB2prkGp5SGCKDzuvr8nRrFU67oRo9DEY1oNLxN3RAK3j0Fl2uRgjyTW1xQ0hlGkpQ
-         VR20MqvxRA54CJ0Mpm/6oeFvu07F4UMh6iY47iXivwkPRSkGUDfOmItPtMAfm2f0FXA6
-         Qn1aWj3z8r9HPSkit9jeYm1eacG+9fhLQm0j5Xz1FnMpmkDcYd1yjO0pwleCjHbxm9c8
-         /G0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738590375; x=1739195175;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I/ATTF8zsbMuGG2i0AfdxDB1dr4BRw0eSCC+NReTqNk=;
-        b=dvR1LGv90s5lwyzmlPFtydaV/3/mAiX+lLsGpgo24ihE0utlRhhFxMTenRcSRXdHJ4
-         Ar3QZ8KoAcYU81DhjcJYc9YIWoZu+/elkgSE+pRofItYqueqVXH7j5YRZwrTeLo+ZFNp
-         YzyO9FZ3v3pk6nU8lMWLL/Ze+2d13tQI/5tFaEG4d80ZVobvTqsDWZYOrzRCa2/c5oDI
-         m2TSSYeFaeLWETt0ASI0PQoVOUBdy+VdkJF7sOCyrmkUQ+gEv/5GZY0/dileW1jl+e/X
-         6lkbqgjWzEKKQlk8E3sAgI44Cg9of7BpDIwGLHZWZIOt6cYTSCBeOTVdsXjIz3nXogt3
-         RNKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUb24AQQgQBHMFBLkUH9bwvbkmLIcGMNPG9x3QY4IO/GRW4ekPtk1SWvjZ7A7DJ6s9A892V98wcSG0q@vger.kernel.org, AJvYcCXx2rnKiTcbIXn5Pi57SQxM0a8fjGHWm8g/Rk0YQcou4Xn8lNjuyq2yErtyFX1Zb1t7UehsAjuWNvmzA5JV@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEDDECcyXJeOcdMwsfvpAIti509ahKfOpWizKjTptNBAXyo0Ck
-	4vnXJ2q86JhZE0QE6XFPAs+x5CLn416W098lqHv/ehsMOMwERrvTERav5VSz
-X-Gm-Gg: ASbGncuWW6sx2QkRxLnvuW1b1CuR+0qjH0BjlJ3DVRXvqdZrJr+EyC22LO7Remeu3Iw
-	EFdemZgBM+odqPllEjtPw/us21bCttUPAKASNnJOcBFUKU+HD5XAHKlDWBCLe/mmSiY/tIjNjEf
-	40mldGBmYqHXiKO4fdJd8oQ6KBjcuY6CxfQSIlFgihZ7CHVZYB7CjoJu79NoEwPsNJdiojCLg9m
-	5DcpA/nZEq8gxDi6mxVgjJ6Mw22RPXgfanoRVmRYhRMkuPMdNBkLIqygbeipirTAFWI2TxgI6s3
-	Jt1XlJnjWP/omR8Th4JFF9SxbA==
-X-Google-Smtp-Source: AGHT+IEtE5h1/69abVRfO3Y5Rwh6qpPD2rb2iCTavBPfOdeI5wLdc63YNsthxfNn1hA3WoY4KYmcag==
-X-Received: by 2002:a05:6a00:a88e:b0:725:e057:c3dd with SMTP id d2e1a72fcca58-72fd0c98729mr33207627b3a.22.1738590374831;
-        Mon, 03 Feb 2025 05:46:14 -0800 (PST)
-Received: from localhost ([2804:30c:273d:6d00:d9cf:ba3b:291b:37ce])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69ceb1csm8253776b3a.151.2025.02.03.05.46.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 05:46:14 -0800 (PST)
-Date: Mon, 3 Feb 2025 10:46:57 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, lars@metafoo.de,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, jonath4nns@gmail.com
-Subject: Re: [PATCH v2 08/16] iio: adc: ad7768-1: Add reset gpio
-Message-ID: <Z6DI0Wo0sEY-yqvh@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1737985435.git.Jonathan.Santos@analog.com>
- <722340b0efff3ed22a763ce6581c96ca403316d8.1737985435.git.Jonathan.Santos@analog.com>
+	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="AgsSq08p"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: lina@asahilina.net)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 2156342618;
+	Mon,  3 Feb 2025 13:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
+	s=default; t=1738590379;
+	bh=FkYJgcwBTd7j7y1jIRC/Fd5cR+gWvCsgmp/VeKuIqLk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=AgsSq08pyl7EduZ6jUnRfVz0S2J8MZtIjeB00TJa/XpKXAElZ250lzlcCWTdll3Ww
+	 o1OkVdkdUSPoYc7o8PaXfKw8JYrSgtofeNeDxRUwjlMP58H8bjXc6048Fj+KhtAVQy
+	 A6sTHeXSZ0WkuKxAqNvzrpjQSXiRUJeYYkq8Vs61Ng6Q5WJRfGh/TUEOaBlHeKhbNz
+	 ZkrxYoEfzWbd6HLlDvkuH8khnsmSMTRAWcHFWRjmEXhCIgOn9KVVCKfhd68bCLkQQI
+	 xHY5k4XMIqxDhCRd4Me2zAKsmuPUNB0QLyQPWaFyOPQpuZH9ZPdpVQ1EWFP506XzBs
+	 ogKpkfxYwbm8g==
+Message-ID: <8659ac1f-3bb0-4891-b4ea-958a1a308c01@asahilina.net>
+Date: Mon, 3 Feb 2025 22:46:15 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <722340b0efff3ed22a763ce6581c96ca403316d8.1737985435.git.Jonathan.Santos@analog.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] drm/gpuvm: Add support for single-page-filled
+ mappings
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+ Danilo Krummrich <dakr@kernel.org>, asahi@lists.linux.dev
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, akash.goel@arm.com
+References: <20250202-gpuvm-single-page-v1-0-8cbd44fdcbd4@asahilina.net>
+ <Z5-_O8vkCO0LXcl7@pollux.localdomain> <20250203102153.145229e0@collabora.com>
+Content-Language: en-US
+From: Asahi Lina <lina@asahilina.net>
+In-Reply-To: <20250203102153.145229e0@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 01/27, Jonathan Santos wrote:
-> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> 
-> Depending on the controller, the default state of a gpio can vary. This
-> change excludes the probability that the dafult state of the ADC reset
-> gpio will be HIGH if it will be passed as reference in the devicetree.
-> 
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> ---
-> v2 Changes:
-> * Replaced usleep_range() for fsleep() and gpiod_direction_output() for 
->   gpiod_set_value_cansleep().
-> * Reset via SPI register is performed if the Reset GPIO is not defined. 
-> ---
-LGTM.
-Aside from including your the SoB, one minor thing about reset timings.
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Hi,
 
->  drivers/iio/adc/ad7768-1.c | 36 ++++++++++++++++++++++++------------
->  1 file changed, 24 insertions(+), 12 deletions(-)
+On 2/3/25 6:21 PM, Boris Brezillon wrote:
+> +Akash with whom we've been discussing adding a 'REPEAT' mode to
+> drm_gpuvm/panthor.
 > 
-> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> index fb8d6fae5f8a..17a49bf74637 100644
-> --- a/drivers/iio/adc/ad7768-1.c
-> +++ b/drivers/iio/adc/ad7768-1.c
-> @@ -163,6 +163,7 @@ struct ad7768_state {
->  	struct completion completion;
->  	struct iio_trigger *trig;
->  	struct gpio_desc *gpio_sync_in;
-> +	struct gpio_desc *gpio_reset;
->  	const char *labels[ARRAY_SIZE(ad7768_channels)];
->  	/*
->  	 * DMA (thus cache coherency maintenance) may require the
-> @@ -453,19 +454,30 @@ static int ad7768_setup(struct ad7768_state *st)
+> On Sun, 2 Feb 2025 19:53:47 +0100
+> Danilo Krummrich <dakr@kernel.org> wrote:
+> 
+>> Hi Lina,
+>>
+>> On Sun, Feb 02, 2025 at 10:34:49PM +0900, Asahi Lina wrote:
+>>> Some hardware requires dummy page mappings to efficiently implement
+>>> Vulkan sparse features. These mappings consist of the same physical
+>>> memory page, repeated for a large range of address space (e.g. 16GiB).
+>>>
+>>> Add support for this to drm_gpuvm. Currently, drm_gpuvm expects BO
+>>> ranges to correspond 1:1 to virtual memory ranges that are mapped, and
+>>> does math on the BO offset accordingly. To make single page mappings
+>>> work, we need a way to turn off that math, keeping the BO offset always
+>>> constant and pointing to the same page (typically BO offset 0).
+>>>
+>>> To make this work, we need to handle all the corner cases when these
+>>> mappings intersect with regular mappings. The rules are simply to never
+>>> mix or merge a "regular" mapping with a single page mapping.
+>>>
+>>> drm_gpuvm has support for a flags field in drm_gpuva objects. This is
+>>> normally managed by drivers directly. We can introduce a
+>>> DRM_GPUVA_SINGLE_PAGE flag to handle this. However, to make it work,
+>>> sm_map and friends need to know ahead of time whether the new mapping is
+>>> a single page mapping or not. Therefore, we need to add an argument to
+>>> these functions so drivers can provide the flags to be filled into
+>>> drm_gpuva.flags.
+>>>
+>>> These changes should not affect any existing drivers that use drm_gpuvm
+>>> other than the API change:
+>>>
+>>> - imagination: Does not use flags at all
+>>> - nouveau: Only uses drm_gpuva_invalidate(), which is only called on
+>>>   existing drm_gpuva objects (after the map steps)
+>>> - panthor: Does not use flags at all
+>>> - xe: Does not use drm_gpuva_init_from_op() or
+>>>   drm_gpuva_remap()/drm_gpuva_map() (which call it). This means that the
+>>> flags field of the gpuva object is managed by the driver only, so these
+>>> changes cannot clobber it.
+>>>
+>>> Note that the way this is implemented, drm_gpuvm does not need to know
+>>> the GPU page size. It only has to never do math on the BO offset to meet
+>>> the requirements.
+>>>
+>>> I suspect that after this change there could be some cleanup possible in
+>>> the xe driver (which right now passes flags around in various
+>>> driver-specific ways from the map step through to drm_gpuva objects),
+>>> but I'll leave that to the Xe folks.
+>>>
+>>> Signed-off-by: Asahi Lina <lina@asahilina.net>
+>>> ---
+>>> Asahi Lina (4):
+>>>       drm/gpuvm: Add a flags argument to drm_gpuvm_sm_map[_*]
+>>>       drm/gpuvm: Plumb through flags into drm_gpuva_op_map
+>>>       drm/gpuvm: Add DRM_GPUVA_SINGLE_PAGE flag and logic
+>>>       drm/gpuvm: Plumb through flags into drm_gpuva_init  
+>>
+>> Without looking into any details yet:
+>>
+>> This is a bit of tricky one, since we're not even close to having a user for
+>> this new feature upstream yet, are we?
+> 
+> Actually, we would be interesting in having this feature hooked up in
+> panthor. One use case we have is Vulkan sparse bindings, of course. But
+> we also have cases where we need to map a dummy page repeatedly on the
+> FW side. The approach we've been considering is slightly different:
+> pass a DRM_GPUVA_REPEAT_FLAG along with GEM range, so we can repeat a
+> range of the GEM (see the below diff, which is completely untested by
+> the way), but I think we'd be fine with this SINGLE_PAGE flag.
+
+That sounds similar, though your patch does not handle gpuva
+splitting/remapping and all the other corner cases. I think you'll find
+that once you handle those, the logic will become significantly more
+complicated, since you need to start storing the start offset within the
+repeat range on GPUVAs to be able to split them while keeping the
+mappings identical, and do modular arithmetic to keep it all consistent
+across all the corner cases.
+
+If SINGLE_PAGE works for you then I would advocate for that. It keeps
+complexity down to a minimum in drm_gpuvm. You can still have a range
+that's greater than one page in practice, you'd just have to handle it
+driver-internal and pass the desired range out of band as a flag or
+other field. For example, you could decide that the mapping is always
+congruent to the VA (GEM page offset = start offset + VA % range) and
+always treat SINGLE_PAGE mappings like that when you actually set up the
+page tables, or pass in an extra offset to be able to shift the phase of
+the mapping to whatever you want. You just need to ensure that, if you
+mix range sizes or other configuration, you don't do that for the same
+GEM BO at the same offset, so that the drm_gpuvm core does not wrongly
+consider them equivalent.
+
+Maybe I should rename SINGLE_PAGE to something else, since it isn't
+technically limited to that as far as gpuvm is concerned. Something like
+FIXED_OFFSET?
+
+> 
+> --->8---
+> diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
+> index f9eb56f24bef..ea61f3ffaddf 100644
+> --- a/drivers/gpu/drm/drm_gpuvm.c
+> +++ b/drivers/gpu/drm/drm_gpuvm.c
+> @@ -2053,16 +2053,17 @@ EXPORT_SYMBOL_GPL(drm_gpuva_unmap);
+>  
+>  static int
+>  op_map_cb(const struct drm_gpuvm_ops *fn, void *priv,
+> -      u64 addr, u64 range,
+> -      struct drm_gem_object *obj, u64 offset)
+> +      u64 addr, u64 va_range,
+> +      struct drm_gem_object *obj, u64 offset, u64 gem_range)
 >  {
->  	int ret;
+>      struct drm_gpuva_op op = {};
 >  
-> -	/*
-> -	 * Two writes to the SPI_RESET[1:0] bits are required to initiate
-> -	 * a software reset. The bits must first be set to 11, and then
-> -	 * to 10. When the sequence is detected, the reset occurs.
-> -	 * See the datasheet, page 70.
-> -	 */
-> -	ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x3);
-> -	if (ret)
-> -		return ret;
-> +	st->gpio_reset = devm_gpiod_get_optional(&st->spi->dev, "reset",
-> +						 GPIOD_OUT_HIGH);
-> +	if (IS_ERR(st->gpio_reset))
-> +		return PTR_ERR(st->gpio_reset);
+>      op.op = DRM_GPUVA_OP_MAP;
+>      op.map.va.addr = addr;
+> -    op.map.va.range = range;
+> +    op.map.va.range = va_range;
+>      op.map.gem.obj = obj;
+>      op.map.gem.offset = offset;
+> +    op.map.gem.range = gem_range;
 >  
-> -	ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x2);
-> -	if (ret)
-> -		return ret;
-> +	if (st->gpio_reset) {
-> +		fsleep(10);
-> +		gpiod_set_value_cansleep(st->gpio_reset, 0);
-> +		fsleep(10);
-Is 10 us enough time here? AD7768-1 datasheet page 58 sais
-"The time taken from RESET to an SPI write must be at least 200 μs."
-
-> +	} else {
-> +		/*
-> +		 * Two writes to the SPI_RESET[1:0] bits are required to initiate
-> +		 * a software reset. The bits must first be set to 11, and then
-> +		 * to 10. When the sequence is detected, the reset occurs.
-> +		 * See the datasheet, page 70.
-> +		 */
-> +		ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x3);
-> +		if (ret)
-> +			return ret;
+>      return fn->sm_step_map(&op, priv);
+>  }
+> @@ -2102,7 +2103,8 @@ static int
+>  __drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm,
+>             const struct drm_gpuvm_ops *ops, void *priv,
+>             u64 req_addr, u64 req_range,
+> -           struct drm_gem_object *req_obj, u64 req_offset)
+> +           struct drm_gem_object *req_obj,
+> +           u64 req_offset, u64 req_gem_range)
+>  {
+>      struct drm_gpuva *va, *next;
+>      u64 req_end = req_addr + req_range;
+> @@ -2237,7 +2239,7 @@ __drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm,
+>  
+>      return op_map_cb(ops, priv,
+>               req_addr, req_range,
+> -             req_obj, req_offset);
+> +             req_obj, req_offset, req_gem_range);
+>  }
+>  
+>  static int
+> @@ -2344,10 +2346,43 @@ drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm, void *priv,
+>  
+>      return __drm_gpuvm_sm_map(gpuvm, ops, priv,
+>                    req_addr, req_range,
+> -                  req_obj, req_offset);
+> +                  req_obj, req_offset, 0);
+>  }
+>  EXPORT_SYMBOL_GPL(drm_gpuvm_sm_map);
+>  
+> +/**
+> + * drm_gpuvm_sm_map_repeat() - repeatedly maps a GEM range over a VA range
+> + * @gpuvm: the &drm_gpuvm representing the GPU VA space
+> + * @priv: pointer to a driver private data structure
+> + * @req_addr: the start address of the new mapping
+> + * @req_range: the range of the new mapping
+> + * @req_obj: the &drm_gem_object to map
+> + * @req_offset: the offset within the &drm_gem_object
+> + * @req_gem_range: the offset within the &drm_gem_object
+> + *
+> + * Same as drm_gpuvm_sm_map() except it repeats a GEM range over a VA range
+> + *
+> + * Returns: 0 on success or a negative error code
+> + */
+> +int
+> +drm_gpuvm_sm_map_repeat(struct drm_gpuvm *gpuvm, void *priv,
+> +            u64 req_addr, u64 req_range,
+> +            struct drm_gem_object *req_obj,
+> +            u64 req_offset, u64 req_gem_range)
+> +{
+> +    const struct drm_gpuvm_ops *ops = gpuvm->ops;
 > +
-> +		ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x2);
-> +		if (ret)
-> +			return ret;
-> +	}
+> +    if (unlikely(!(ops && ops->sm_step_map &&
+> +               ops->sm_step_remap &&
+> +               ops->sm_step_unmap)))
+> +        return -EINVAL;
+> +
+> +    return __drm_gpuvm_sm_map(gpuvm, ops, priv,
+> +                  req_addr, req_range,
+> +                  req_obj, req_offset, req_gem_range);
+> +}
+> +EXPORT_SYMBOL_GPL(drm_gpuvm_sm_map_repeat);
+> +
+>  /**
+>   * drm_gpuvm_sm_unmap() - creates the &drm_gpuva_ops to split on unmap
+>   * @gpuvm: the &drm_gpuvm representing the GPU VA space
+> @@ -2536,7 +2571,7 @@ drm_gpuvm_sm_map_ops_create(struct drm_gpuvm *gpuvm,
 >  
->  	st->gpio_sync_in = devm_gpiod_get(&st->spi->dev, "adi,sync-in",
->  					  GPIOD_OUT_LOW);
-> -- 
-> 2.34.1
+>      ret = __drm_gpuvm_sm_map(gpuvm, &gpuvm_list_ops, &args,
+>                   req_addr, req_range,
+> -                 req_obj, req_offset);
+> +                 req_obj, req_offset, 0);
+>      if (ret)
+>          goto err_free_ops;
+>  
+> diff --git a/include/drm/drm_gpuvm.h b/include/drm/drm_gpuvm.h
+> index 00d4e43b76b6..8157ede365d1 100644
+> --- a/include/drm/drm_gpuvm.h
+> +++ b/include/drm/drm_gpuvm.h
+> @@ -846,6 +846,14 @@ struct drm_gpuva_op_map {
+>           */
+>          u64 offset;
+>  
+> +        /**
+> +         * @gem.range: the range of the GEM to map
+> +         *
+> +         * If smaller than va.range, the GEM range should be mapped
+> +         * multiple times over the VA range.
+> +         */
+> +        u64 range;
+> +
+>          /**
+>           * @gem.obj: the &drm_gem_object to map
+>           */
+> @@ -1203,6 +1211,11 @@ int drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm, void *priv,
+>               u64 addr, u64 range,
+>               struct drm_gem_object *obj, u64 offset);
+>  
+> +int drm_gpuvm_sm_map_repeat(struct drm_gpuvm *gpuvm, void *priv,
+> +                u64 addr, u64 range,
+> +                struct drm_gem_object *obj,
+> +                u64 offset, u64 gem_range);
+> +
+>  int drm_gpuvm_sm_unmap(struct drm_gpuvm *gpuvm, void *priv,
+>                 u64 addr, u64 range);
 > 
+
+~~ Lina
+
