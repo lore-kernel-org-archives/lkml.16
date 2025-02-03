@@ -1,100 +1,1011 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E791FFC7D;
-	Mon,  3 Feb 2025 22:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9C12744D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 22:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738622744; cv=none; b=c5S0Cb6OLHDziaYKBb3lTaIdA2v2bBknqpP5uM1X+gLfix4Tudu2yDq3VX7GNH2aX9jpESE0Ldeo/OYn13IF8JdJfltKhA+hVT/vRCO90bQkHYMlp6itphf5jBLJKh+2OfIxzGtA0S+b6KJbIcCRluV1WmmF6cuvzZ5D/d3Qu0k=
+	t=1738622806; cv=none; b=l4WPBxcISxLq2Y3OdxAxmwHXrIzru2gZW8aoRVvbqN7r2Cbn0QOcG0NMnElG9qPrCkKctWWgGCSngVH1c3/zuovC3aG265LiE7x2a8vrbuWJ3PGaDQwwpT144uPK2veqttREc4bjQqGva45qVG4Uo7LPLsBleQjIUrcZjlvUGEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738622744; c=relaxed/simple;
-	bh=p+u2z/Ts/LT6PtTkaWiVagg/BvIfy13aOSTGOYoxTG8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sa73/ErJKZUtn3iKQyRNza1UQ437h/ZaLcvfD1Tj/qXGpyzsljUC0ZCoZkjG+dwbBnjQ8dGSSUt5x/oj/qdq1G6T2lDdiT47AuAcjFLBgPV3ZYlGdrKk26TJClxJxVw/J3deh+jxiEMVsEOHk+qg72pdpG0K2qkKpBouInse7HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AXMVv0+9; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738622806; c=relaxed/simple;
+	bh=4M87sNoTSpI8UxNfqihArnNSr2C9XTsGhWr5tj4Y5ws=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j28OkLmjS9pPOzkSmQYxuaHx1E8rXJaRqRWx0vgC7T+m+vwVJ+G0IUKe1xZG3jNAl2L6HMDS1xSuSFwAPQkt9mZmYD8F3hi76s2SBM+ZrmT1ktJs66aX9i6d4ft5F1UCis2df2RWQEu/ktPqAyH1JhO+2s47qqJs5VpXxv3/8YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T67NAW69; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AXMVv0+9"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513FeQrV015310;
-	Mon, 3 Feb 2025 22:44:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=p+u2z/
-	Ts/LT6PtTkaWiVagg/BvIfy13aOSTGOYoxTG8=; b=AXMVv0+9eJrTOik+ywky3J
-	AaFadllkrIodUt1qZGIoUtNxeKJTraQa1WVrNBzlyorO1ST2LVQUvvo7NcrTPKI3
-	hWWIlXYtSfQQcplJhfoyXzaCswG6lTDGa/czwMLKxXjTV/j8Qs42VngfR00kmBz9
-	end2ws/5iDwEovfEGsOpqyvHt2nrinH9ufAGHkN9Oz8o7dxC4LeQdwhBbXrUt95g
-	jllr1DTeDX4OAH2FH6Xp+PLLQYzbp+G5z7OHXLVoB0rrGlIc5+M7ZLNAnml7VRxE
-	nZ3GvO3rbJKaG4eFfnWC816j6MTM15N9v94oj3NBHCvzE6oEyL/h/ezi6TxxKiyQ
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jqm7ct6v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 22:44:14 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 513KQPpG005258;
-	Mon, 3 Feb 2025 22:44:13 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j05jrd5f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 22:44:13 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 513MiDDP13173268
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 22:44:13 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 44E7858055;
-	Mon,  3 Feb 2025 22:44:13 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 61F7558043;
-	Mon,  3 Feb 2025 22:44:12 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  3 Feb 2025 22:44:12 +0000 (GMT)
-Message-ID: <64f329c9-2912-4e7d-9475-b16fa0ac1d04@linux.ibm.com>
-Date: Mon, 3 Feb 2025 17:44:12 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T67NAW69"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e5afeb2acecso1333438276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:46:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738622803; x=1739227603; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4PwGFfFNl8Qgn6nDXx5yNTQsYFpQrY5lFKVM6j9R1M8=;
+        b=T67NAW69ByIc2FA1MLRNV1DOOMnf0kA/GifMVF0UzeXFATDBECJ3MH5oUB0SJT0qsn
+         50QUoZNSEEOgQjZJpGplcGsQ6MkARiePHkeU5QKcHlygRO3hLmgk9OfxlPizJUGqbDSR
+         IPmBWmE4QMXI9AWbp6Q8A2pBGBPGSEaLf+ALr204uT2XKpW88aN5G+H3wZxHSmLSZnQC
+         UE4iQDVkQCi8MHxpN3GOythoz++RAHD606l/huKlnZDLYS1SuL1MG0z5B4Xdx2h8ZIS7
+         xKem1Z5tGlOsyIAjg7gBga+sSQfIyIQYTNWuwtdF37mab+LpW5qotlLQ6d/Fok4d0lMo
+         MNNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738622803; x=1739227603;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4PwGFfFNl8Qgn6nDXx5yNTQsYFpQrY5lFKVM6j9R1M8=;
+        b=b86H3f9vomAycG/14R10cBgfzA6pNg7EJrbXND3ylb4wGoH2+cFVAEFAzhYHhAaSHR
+         RjDza97lFWsoeLYR0RYzi1IVguxU+BQwAQ7b/JROU63gxS98CIeLhV0ADeaHNcEdym5x
+         ZdvEcj8pFxHZINdrJZil9UaB9pL6URKAP5DF6EwZ9NwjOiO7rYX6aZ0FnZ++r//Ax3WV
+         kXNf+1NGAeED3RwD+3knLZ50N+ZdIwm/V7UKzQyfEGICXwEgByCCtD4gmHNjuuvZ4PQx
+         8JudIOtrLS9ISYL9yfCQT2tFz+aZanrnFprnrt3pdzCsNWrYNXFnVYwyTT7g7WDuaSAt
+         5pfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVyJDzWtLixSN78va/NoXqfJ2Saubk1eyKnHhWqjFzkMWcM/NZ0bMkKGaq6362V8ReTkMCdpgGDBnBsyp4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywrb5MGC8aE+0CP5q8mYAeILmCcpARdbnIsiUj7o8yaQX4ZCyb5
+	pAGlwZmcgZz2z5Eaz2Uy5Rt+aOr1trzkz8a8VZVPB8ExxWz4rHu3rDeDtW3+LEdwHovdAxQPBBP
+	cG60p5hdkAwooAnHsqwC+xpNcu3HtTSfkV6LY
+X-Gm-Gg: ASbGncsaduPvyeWb0J+kWbIk/StovVxXOPKHKbTFxcSu5N6dKP/kzEBB7F4mwr9h5Tw
+	zvt8xekHJoF1E29RyMYSGlDqlIvI3B/To31UNra2QiMGZV9LVWJ3NHeUNKm3XPMvPmkcPr+/mVW
+	9vz+Ja/ohDILlMjJ1Y5IzK8hI2FJ4=
+X-Google-Smtp-Source: AGHT+IHRi+nlIaWvkSa+fTC0ZWwRpkRvm9ELiKmUHaOUtrAItaywQQh9vk/LXpocT4ZrWXI+u8ZCytk3U9ufvgPoPbY=
+X-Received: by 2002:a05:690c:3808:b0:6f7:52ba:ecc0 with SMTP id
+ 00721157ae682-6f97758b0afmr13431627b3.11.1738622802494; Mon, 03 Feb 2025
+ 14:46:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/7] ima: kexec: measure events between kexec load and
- excute
-To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com
-References: <20250203184558.61367-1-chenste@linux.microsoft.com>
-Content-Language: en-US
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20250203184558.61367-1-chenste@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ViUeqqliz0kJJ_jnOdhPWASG3FyCpIc8
-X-Proofpoint-ORIG-GUID: ViUeqqliz0kJJ_jnOdhPWASG3FyCpIc8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_09,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
- lowpriorityscore=0 mlxlogscore=814 bulkscore=0 mlxscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 impostorscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502030164
+References: <20241105184333.2305744-1-jthoughton@google.com>
+ <20241105184333.2305744-12-jthoughton@google.com> <Z4G3Wny5N-NC3fB1@google.com>
+In-Reply-To: <Z4G3Wny5N-NC3fB1@google.com>
+From: James Houghton <jthoughton@google.com>
+Date: Mon, 3 Feb 2025 14:46:06 -0800
+X-Gm-Features: AWEUYZnY-l2Ky2b0lWKaeQrCASQL5MasNtdDL9Cbwdqz_EwXaysSNYXVxoYQH9I
+Message-ID: <CADrL8HVnNU6zeyu+P0U2LY3ppJv-c5pKe_pOSGprzVOW5P3L8w@mail.gmail.com>
+Subject: Re: [PATCH v8 11/11] KVM: selftests: Add multi-gen LRU aging to access_tracking_perf_test
+To: Sean Christopherson <seanjc@google.com>, Yosry Ahmed <yosryahmed@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, David Matlack <dmatlack@google.com>, 
+	David Rientjes <rientjes@google.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Wei Xu <weixugc@google.com>, Yu Zhao <yuzhao@google.com>, 
+	Axel Rasmussen <axelrasmussen@google.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jan 10, 2025 at 4:12=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
+>
+> This can/should be posted separately, no?  MGLRU support for secondary MM=
+Us went
+> through mm/, the KVM changes in this series are all about making KVM x86 =
+faster.
 
+I'll send this patch separately, sure.
 
-On 2/3/25 1:45 PM, steven chen wrote:
+>
+> On Tue, Nov 05, 2024, James Houghton wrote:
+> > This test now has two modes of operation:
+>
+> Bad Google3, bad!  Write changelogs as commands, i.e. state what the patc=
+h is
+> doing.  The above is also misleading (at least, it was to me), as I assum=
+ed one
+> of the modes would be "legacy" and the other would be MGLRU.  But it look=
+s like
+> this patch adds MGLRU support *and* benchmarking.
+>
+> This should be split into at least two patches, possibly three (I can't t=
+ell how
+> much pre-work there is).  I.e. add MGLRU support, and then add the benchm=
+arking
+> stuff.  And if there's substantial refactoring and/or new utilities, do t=
+hat first.
+>
+> > 1. (default) To check how much vCPU performance was affected by access
+> >              tracking (previously existed, now supports MGLRU aging).
+> > 2. (-p) To also benchmark how fast MGLRU can do aging while vCPUs are
+> >         faulting in memory.
+> >
+> > Mode (1) also serves as a way to verify that aging is working properly
+> > for pages only accessed by KVM.  It will fail if one does not have the
+>
+> "one" what?
+>
+> > 0x8 lru_gen feature bit.
+> >
+> > To support MGLRU, the test creates a memory cgroup, moves itself into
+> > it, then uses the lru_gen debugfs output to track memory in that cgroup=
+.
+> > The logic to parse the lru_gen debugfs output has been put into
+> > selftests/kvm/lib/lru_gen_util.c.
+> >
+> > Co-developed-by: Axel Rasmussen <axelrasmussen@google.com>
+> > Signed-off-by: Axel Rasmussen <axelrasmussen@google.com>
+> > Signed-off-by: James Houghton <jthoughton@google.com>
+>
+> ...
+>
+> > @@ -47,6 +48,19 @@
+> >  #include "memstress.h"
+> >  #include "guest_modes.h"
+> >  #include "processor.h"
+> > +#include "lru_gen_util.h"
+> > +
+> > +static const char *TEST_MEMCG_NAME =3D "access_tracking_perf_test";
+> > +static const int LRU_GEN_ENABLED =3D 0x1;
+> > +static const int LRU_GEN_MM_WALK =3D 0x2;
+>
+> Is there really no uAPI #define for these?
+>
+> > +static const char *CGROUP_PROCS =3D "cgroup.procs";
+> > +/*
+> > + * If using MGLRU, this test assumes a cgroup v2 or cgroup v1 memory h=
+ierarchy
+>
+> I would say "requires", not "assumes".
+>
+> > + * is mounted at cgroup_root.
+> > + *
+> > + * Can be changed with -r.
+>
+> This is amusingly vague.  I vote to omit explicitly referencing the comma=
+nd line
+> option, we have enough problems maintaining them as it is.  Instead simpl=
+y say
+> something like "Default to the kernel's preferred path for mounting cgrou=
+ps" to
+> both explain where the default comes from, and to give the reader a hint =
+that the
+> path can be changed.
+>
+> Actually, there's zero reason for this to be global.  More below.
+>
+> Ugh, and if this test is manipulating cgroups, won't it need to root?  I =
+doubt
+> y'all have tried to run this outside of devrez, i.e. on a system where yo=
+u're
+> not logged in as root.
+>
+> Oh, never mind, this test already effectively requires root.
+>
+> > +     /* Whether to use lru_gen aging instead of idle page tracking. */
+> > +     bool lru_gen;
+>
+> Needs a verb, otherwise this looks like it tracks the LRU generation.  E.=
+g. use_lru_gen.
+>
+> > +
+> > +     /* Whether to test the performance of aging itself. */
+> > +     bool benchmark_lru_gen;
+> >  };
+> >
+> >  static uint64_t pread_uint64(int fd, const char *filename, uint64_t in=
+dex)
+> > @@ -89,6 +112,50 @@ static uint64_t pread_uint64(int fd, const char *fi=
+lename, uint64_t index)
+> >
+> >  }
+> >
+> > +static void write_file_long(const char *path, long v)
+> > +{
+> > +     FILE *f;
+> > +
+> > +     f =3D fopen(path, "w");
+> > +     TEST_ASSERT(f, "fopen(%s) failed", path);
+> > +     TEST_ASSERT(fprintf(f, "%ld\n", v) > 0,
+> > +                 "fprintf to %s failed", path);
+> > +     TEST_ASSERT(!fclose(f), "fclose(%s) failed", path);
+> > +}
+> > +
+> > +static char *path_join(const char *parent, const char *child)
+> > +{
+> > +     char *out =3D NULL;
+> > +
+> > +     return asprintf(&out, "%s/%s", parent, child) >=3D 0 ? out : NULL=
+;
+> > +}
+>
+> These are common utilities, no?  I.e. should be somewhere common, not bur=
+ied in
+> this test.
+>
+> > +
+> > +static char *memcg_path(const char *memcg)
+> > +{
+> > +     return path_join(cgroup_root, memcg);
+>
+> Eh, do the join when cgroup_root is first defined.  Actually, looking at =
+the
+> usage more closely, the cgroup path is only used during main().  Just do =
+all of
+> the joins there, I see no reason to have these one-off helpers.
+>
+> > +}
+> > +
+> > +static char *memcg_file_path(const char *memcg, const char *file)
+> > +{
+> > +     char *mp =3D memcg_path(memcg);
+> > +     char *fp;
+> > +
+> > +     if (!mp)
+> > +             return NULL;
+>
+> Returning NULL just so that the one user can assert on !NULL is rather po=
+intless.
+>
+> > +     fp =3D path_join(mp, file);
+> > +     free(mp);
+> > +     return fp;
+> > +}
+> > +
+> > +static void move_to_memcg(const char *memcg, pid_t pid)
+> > +{
+> > +     char *procs =3D memcg_file_path(memcg, CGROUP_PROCS);
+> > +
+> > +     TEST_ASSERT(procs, "Failed to construct cgroup.procs path");
+> > +     write_file_long(procs, pid);
+> > +     free(procs);
+> > +}
+> > +
+> >  #define PAGEMAP_PRESENT (1ULL << 63)
+> >  #define PAGEMAP_PFN_MASK ((1ULL << 55) - 1)
+> >
+> > @@ -242,6 +309,8 @@ static void vcpu_thread_main(struct memstress_vcpu_=
+args *vcpu_args)
+> >               };
+> >
+> >               vcpu_last_completed_iteration[vcpu_idx] =3D current_itera=
+tion;
+> > +             clock_gettime(CLOCK_MONOTONIC,
+> > +                           &vcpu_last_completed_time[vcpu_idx]);
+> >       }
+> >  }
+> >
+> > @@ -253,38 +322,68 @@ static void spin_wait_for_vcpu(int vcpu_idx, int =
+target_iteration)
+> >       }
+> >  }
+> >
+> > +static bool all_vcpus_done(int target_iteration, int nr_vcpus)
+> > +{
+> > +     for (int i =3D 0; i < nr_vcpus; ++i)
+>
+> Preferred style is to declare variables outside of loops.
+>
+> Needs curly braces.
+>
+> > +             if (READ_ONCE(vcpu_last_completed_iteration[i]) !=3D
+> > +                 target_iteration)
+>
+> Don't wrap.
+>
+> > +                     return false;
+> > +
+> > +     return true;
+> > +}
+> > +
+> >  /* The type of memory accesses to perform in the VM. */
+> >  enum access_type {
+> >       ACCESS_READ,
+> >       ACCESS_WRITE,
+> >  };
+> >
+> > -static void run_iteration(struct kvm_vm *vm, int nr_vcpus, const char =
+*description)
+> > +static void run_iteration(struct kvm_vm *vm, int nr_vcpus, const char =
+*description,
+> > +                       bool wait)
+> >  {
+> > -     struct timespec ts_start;
+> > -     struct timespec ts_elapsed;
+> >       int next_iteration, i;
+> >
+> >       /* Kick off the vCPUs by incrementing iteration. */
+> >       next_iteration =3D ++iteration;
+> >
+> > -     clock_gettime(CLOCK_MONOTONIC, &ts_start);
+> > -
+> >       /* Wait for all vCPUs to finish the iteration. */
+> > -     for (i =3D 0; i < nr_vcpus; i++)
+> > -             spin_wait_for_vcpu(i, next_iteration);
+> > +     if (wait) {
+> > +             struct timespec ts_start;
+> > +             struct timespec ts_elapsed;
+> > +
+> > +             clock_gettime(CLOCK_MONOTONIC, &ts_start);
+> >
+> > -     ts_elapsed =3D timespec_elapsed(ts_start);
+> > -     pr_info("%-30s: %ld.%09lds\n",
+> > -             description, ts_elapsed.tv_sec, ts_elapsed.tv_nsec);
+> > +             for (i =3D 0; i < nr_vcpus; i++)
+> > +                     spin_wait_for_vcpu(i, next_iteration);
+> > +
+> > +             ts_elapsed =3D timespec_elapsed(ts_start);
+> > +
+> > +             pr_info("%-30s: %ld.%09lds\n",
+> > +                     description, ts_elapsed.tv_sec, ts_elapsed.tv_nse=
+c);
+> > +     } else
+>
+> Needs curly braces.
+>
+> > +             pr_info("%-30s\n", description);
+> >  }
+> >
+> > -static void access_memory(struct kvm_vm *vm, int nr_vcpus,
+> > -                       enum access_type access, const char *descriptio=
+n)
+> > +static void _access_memory(struct kvm_vm *vm, int nr_vcpus,
+>
+> Use double underscores (ignore any precedent in selftests that uses just =
+one,
+> we're trying to purge that ugliness).
+>
+> > +                        enum access_type access, const char *descripti=
+on,
+> > +                        bool wait)
+> >  {
+> >       memstress_set_write_percent(vm, (access =3D=3D ACCESS_READ) ? 0 :=
+ 100);
+> >       iteration_work =3D ITERATION_ACCESS_MEMORY;
+> > -     run_iteration(vm, nr_vcpus, description);
+> > +     run_iteration(vm, nr_vcpus, description, wait);
+> > +}
+> > +
+> > +static void access_memory(struct kvm_vm *vm, int nr_vcpus,
+> > +                       enum access_type access, const char *descriptio=
+n)
+> > +{
+> > +     return _access_memory(vm, nr_vcpus, access, description, true);
+> > +}
+> > +
+> > +static void access_memory_async(struct kvm_vm *vm, int nr_vcpus,
+>
+> Maybe "nowait" instead of "async"?  Yeah, something ends up being asynchr=
+onous
+> (presumably), but the call itself is "synchronous", i.e. isn't spun off t=
+o a
+> worker or anything.
+>
+> > +                             enum access_type access,
+> > +                             const char *description)
+> > +{
+> > +     return _access_memory(vm, nr_vcpus, access, description, false);
+> >  }
+> >
+> >  static void mark_memory_idle(struct kvm_vm *vm, int nr_vcpus)
+> > @@ -297,19 +396,115 @@ static void mark_memory_idle(struct kvm_vm *vm, =
+int nr_vcpus)
+> >        */
+> >       pr_debug("Marking VM memory idle (slow)...\n");
+> >       iteration_work =3D ITERATION_MARK_IDLE;
+> > -     run_iteration(vm, nr_vcpus, "Mark memory idle");
+> > +     run_iteration(vm, nr_vcpus, "Mark memory idle", true);
+> >  }
+> >
+> > -static void run_test(enum vm_guest_mode mode, void *arg)
+> > +static void create_memcg(const char *memcg)
+> > +{
+> > +     const char *full_memcg_path =3D memcg_path(memcg);
+> > +     int ret;
+> > +
+> > +     TEST_ASSERT(full_memcg_path, "Failed to construct full memcg path=
+");
+> > +retry:
+> > +     ret =3D mkdir(full_memcg_path, 0755);
+> > +     if (ret && errno =3D=3D EEXIST) {
+> > +             TEST_ASSERT(!rmdir(full_memcg_path),
+> > +                         "Found existing memcg at %s, but rmdir failed=
+",
+> > +                         full_memcg_path);
+> > +             goto retry;
+>
+>         while (1) {
+>                 ret =3D mkdir(full_memcg_path, 0755);
+>                 if (!ret)
+>                         break;
+>
+>                 TEST_ASSERT(errno =3D=3D EEXIST,
+>                             Creating the memcg via 'mkdir(%s)' failed",
+>                             full_memcg_path);
+>
+>                 TEST_ASSERT(!rmdir(full_memcg_path),
+>                             "Found existing memcg at %s, but rmdir failed=
+",
+>                             full_memcg_path);
+>         }
+>
+> > +     }
+> > +     TEST_ASSERT(!ret, "Creating the memcg failed: mkdir(%s) failed",
+>
+> Heh, so it failed?
+>
+> > +                 full_memcg_path);
+> > +
+> > +     pr_info("Created memcg at %s\n", full_memcg_path);
+> > +}
+>
+> ...
+>
+> > +/*
+> > + * Test how much access tracking affects vCPU performance.
+> > + *
+> > + * Supports two modes of access tracking:
+> > + * - idle page tracking
+> > + * - lru_gen aging
+> > + *
+> > + * When using lru_gen, this test additionally verifies that the pages =
+are in
+> > + * fact getting younger and older, otherwise the performance data woul=
+d be
+> > + * invalid.
+> > + *
+> > + * The forced lru_gen aging can race with aging that occurs naturally.
+> > + */
+> > +static void run_test(enum vm_guest_mode mode, struct kvm_vm *vm,
+> > +                  struct test_params *params)
+> > +{
+> > +     int nr_vcpus =3D params->nr_vcpus;
+> > +     bool lru_gen =3D params->lru_gen;
+> > +     struct memcg_stats stats;
+> > +     // If guest_page_size is larger than the host's page size, the
+> > +     // guest (memstress) will only fault in a subset of the host's pa=
+ges.
+>
+> No C++ comments, please.
+>
+> > +     long total_pages =3D nr_vcpus * params->vcpu_memory_bytes /
+> > +                        max(memstress_args.guest_page_size,
+> > +                            (uint64_t)getpagesize());
+>
+> max_t() is probably better.
+>
+> > +     int found_gens[5];
+> >
+> >       pr_info("\n");
+> >       access_memory(vm, nr_vcpus, ACCESS_WRITE, "Populating memory");
+> > @@ -319,11 +514,78 @@ static void run_test(enum vm_guest_mode mode, voi=
+d *arg)
+> >       access_memory(vm, nr_vcpus, ACCESS_READ, "Reading from populated =
+memory");
+> >
+> >       /* Repeat on memory that has been marked as idle. */
+> > -     mark_memory_idle(vm, nr_vcpus);
+> > +     if (lru_gen) {
+> > +             /* Do an initial page table scan */
+> > +             lru_gen_do_aging(&stats, TEST_MEMCG_NAME);
+> > +             TEST_ASSERT(sum_memcg_stats(&stats) >=3D total_pages,
+> > +               "Not all pages tracked in lru_gen stats.\n"
+> > +               "Is lru_gen enabled? Did the memcg get created properly=
+?");
+>
+> Align indentation.
+>
+>                 TEST_ASSERT(sum_memcg_stats(&stats) >=3D total_pages,
+>                             "Not all pages tracked in lru_gen stats.\n"
+>                             "Is lru_gen enabled? Did the memcg get create=
+d properly?");
+>
+> > +
+> > +             /* Find the generation we're currently in (probably young=
+est) */
+> > +             found_gens[0] =3D lru_gen_find_generation(&stats, total_p=
+ages);
+> > +
+> > +             /* Do an aging pass now */
+> > +             lru_gen_do_aging(&stats, TEST_MEMCG_NAME);
+> > +
+> > +             /* Same generation, but a newer generation has been made =
+*/
+> > +             found_gens[1] =3D lru_gen_find_generation(&stats, total_p=
+ages);
+> > +             TEST_ASSERT(found_gens[1] =3D=3D found_gens[0],
+> > +                         "unexpected gen change: %d vs. %d",
+> > +                         found_gens[1], found_gens[0]);
+>
+> I don't have any ideas off the top of my head, but there's gotta be a way=
+ to
+> dedup these blocks.
+>
+> > +     } else
+>
+> Needs curly braces.
+>
+> > +             mark_memory_idle(vm, nr_vcpus);
+> > +
+> >       access_memory(vm, nr_vcpus, ACCESS_WRITE, "Writing to idle memory=
+");
+> > -     mark_memory_idle(vm, nr_vcpus);
+> > +
+> > +     if (lru_gen) {
+> > +             /* Scan the page tables again */
+> > +             lru_gen_do_aging(&stats, TEST_MEMCG_NAME);
+> > +
+> > +             /* The pages should now be young again, so in a newer gen=
+eration */
+> > +             found_gens[2] =3D lru_gen_find_generation(&stats, total_p=
+ages);
+> > +             TEST_ASSERT(found_gens[2] > found_gens[1],
+> > +                         "pages did not get younger");
+> > +
+> > +             /* Do another aging pass */
+> > +             lru_gen_do_aging(&stats, TEST_MEMCG_NAME);
+> > +
+> > +             /* Same generation; new generation has been made */
+> > +             found_gens[3] =3D lru_gen_find_generation(&stats, total_p=
+ages);
+> > +             TEST_ASSERT(found_gens[3] =3D=3D found_gens[2],
+> > +                         "unexpected gen change: %d vs. %d",
+> > +                         found_gens[3], found_gens[2]);
+> > +     } else
+>
+> Once more, with feeling!
+>
+> > +             mark_memory_idle(vm, nr_vcpus);
+> > +
+> >       access_memory(vm, nr_vcpus, ACCESS_READ, "Reading from idle memor=
+y");
+> >
+> > +     if (lru_gen) {
+> > +             /* Scan the pages tables again */
+> > +             lru_gen_do_aging(&stats, TEST_MEMCG_NAME);
+> > +
+> > +             /* The pages should now be young again, so in a newer gen=
+eration */
+> > +             found_gens[4] =3D lru_gen_find_generation(&stats, total_p=
+ages);
+> > +             TEST_ASSERT(found_gens[4] > found_gens[3],
+> > +                         "pages did not get younger");
+> > +     }
+> > +}
+>
+> ...
+>
+> > @@ -353,13 +618,15 @@ int main(int argc, char *argv[])
+> >               .backing_src =3D DEFAULT_VM_MEM_SRC,
+> >               .vcpu_memory_bytes =3D DEFAULT_PER_VCPU_MEM_SIZE,
+> >               .nr_vcpus =3D 1,
+> > +             .lru_gen =3D false,
+> > +             .benchmark_lru_gen =3D false,
+> >       };
+> >       int page_idle_fd;
+> >       int opt;
+> >
+> >       guest_modes_append_default();
+> >
+> > -     while ((opt =3D getopt(argc, argv, "hm:b:v:os:")) !=3D -1) {
+> > +     while ((opt =3D getopt(argc, argv, "hm:b:v:os:lr:p")) !=3D -1) {
+> >               switch (opt) {
+> >               case 'm':
+> >                       guest_modes_cmdline(optarg);
+> > @@ -376,6 +643,15 @@ int main(int argc, char *argv[])
+> >               case 's':
+> >                       params.backing_src =3D parse_backing_src_type(opt=
+arg);
+> >                       break;
+> > +             case 'l':
+> > +                     params.lru_gen =3D true;
+> > +                     break;
+> > +             case 'p':
+> > +                     params.benchmark_lru_gen =3D true;
+> > +                     break;
+> > +             case 'r':
+> > +                     cgroup_root =3D strdup(optarg);
+> > +                     break;
+> >               case 'h':
+> >               default:
+> >                       help(argv[0]);
+> > @@ -383,12 +659,42 @@ int main(int argc, char *argv[])
+> >               }
+> >       }
+> >
+> > -     page_idle_fd =3D open("/sys/kernel/mm/page_idle/bitmap", O_RDWR);
+> > -     __TEST_REQUIRE(page_idle_fd >=3D 0,
+> > -                    "CONFIG_IDLE_PAGE_TRACKING is not enabled");
+> > -     close(page_idle_fd);
+> > +     if (!params.lru_gen) {
+> > +             page_idle_fd =3D open("/sys/kernel/mm/page_idle/bitmap", =
+O_RDWR);
+> > +             __TEST_REQUIRE(page_idle_fd >=3D 0,
+> > +                            "CONFIG_IDLE_PAGE_TRACKING is not enabled"=
+);
+> > +             close(page_idle_fd);
+> > +     } else {
+> > +             int lru_gen_fd, lru_gen_debug_fd;
+> > +             long mglru_features;
+> > +             char mglru_feature_str[8] =3D {};
+> > +
+> > +             lru_gen_fd =3D open("/sys/kernel/mm/lru_gen/enabled", O_R=
+DONLY);
+> > +             __TEST_REQUIRE(lru_gen_fd >=3D 0,
+> > +                            "CONFIG_LRU_GEN is not enabled");
+>
+> Noooo!  Do not assume opening a path failed because some config option.  =
+That
+> reminds me, this needs to be rewritten.  I can't count the number of time=
+s this
+> stupid test has oh so helpfully told me CONFIG_IDLE_PAGE_TRACKING is disa=
+bled,
+> when in fact the problem is that I didn't run it as root.
+>
+>                 page_idle_fd =3D open("/sys/kernel/mm/page_idle/bitmap", =
+O_RDWR);
+>                 __TEST_REQUIRE(page_idle_fd >=3D 0,
+>                                "CONFIG_IDLE_PAGE_TRACKING is not enabled"=
+);
+>
+>
+> By all means, give the user a hint, but don't assume anything.  E.g.
+>
+>                 page_idle_fd =3D open("/sys/kernel/mm/page_idle/bitmap", =
+O_RDWR);
+>                 __TEST_REQUIRE(page_idle_fd >=3D 0,
+>                                "Failed to open blah blah blah, is CONFIG_=
+IDLE_PAGE_TRACKING enabled?");
+>
+> > +             TEST_ASSERT(read(lru_gen_fd, &mglru_feature_str, 7) > 0,
+> > +                              "couldn't read lru_gen features");
+> > +             mglru_features =3D strtol(mglru_feature_str, NULL, 16);
+> > +             __TEST_REQUIRE(mglru_features & LRU_GEN_ENABLED,
+> > +                            "lru_gen is not enabled");
+> > +             __TEST_REQUIRE(mglru_features & LRU_GEN_MM_WALK,
+> > +                            "lru_gen does not support MM_WALK");
+> > +
+> > +             lru_gen_debug_fd =3D open(DEBUGFS_LRU_GEN, O_RDWR);
+> > +             __TEST_REQUIRE(lru_gen_debug_fd >=3D 0,
+> > +                             "Cannot access %s", DEBUGFS_LRU_GEN);
+> > +             close(lru_gen_debug_fd);
+> > +     }
+> > +
+> > +     TEST_ASSERT(!params.benchmark_lru_gen || params.lru_gen,
+> > +                 "-p specified without -l");
+> > +
+> > +     if (params.lru_gen) {
+> > +             create_memcg(TEST_MEMCG_NAME);
+> > +             move_to_memcg(TEST_MEMCG_NAME, getpid());
+>
+> After this, cgroup_root is never used.  Hint, hint.
+>
+> > +     }
+> >
+> > -     for_each_guest_mode(run_test, &params);
+> > +     for_each_guest_mode(setup_vm_and_run, &params);
+> >
+> >       return 0;
+> >  }
+> > diff --git a/tools/testing/selftests/kvm/include/lru_gen_util.h b/tools=
+/testing/selftests/kvm/include/lru_gen_util.h
+> > new file mode 100644
+> > index 000000000000..4eef8085a3cb
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/kvm/include/lru_gen_util.h
+> > @@ -0,0 +1,55 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +/*
+> > + * Tools for integrating with lru_gen, like parsing the lru_gen debugf=
+s output.
+> > + *
+> > + * Copyright (C) 2024, Google LLC.
+> > + */
+> > +#ifndef SELFTEST_KVM_LRU_GEN_UTIL_H
+> > +#define SELFTEST_KVM_LRU_GEN_UTIL_H
+> > +
+> > +#include <inttypes.h>
+> > +#include <limits.h>
+> > +#include <stdlib.h>
+> > +
+> > +#include "test_util.h"
+> > +
+> > +#define MAX_NR_GENS 16 /* MAX_NR_GENS in include/linux/mmzone.h */
+> > +#define MAX_NR_NODES 4 /* Maximum number of nodes we support */
+>
+> Who is "we"?  KVM selftests?  Kernel?
+> > +
+> > +static const char *DEBUGFS_LRU_GEN =3D "/sys/kernel/debug/lru_gen";
+>
+> So, root again?
+>
+> > +
+> > +struct generation_stats {
+> > +     int gen;
+> > +     long age_ms;
+> > +     long nr_anon;
+> > +     long nr_file;
+> > +};
+> > +
+> > +struct node_stats {
+> > +     int node;
+> > +     int nr_gens; /* Number of populated gens entries. */
+> > +     struct generation_stats gens[MAX_NR_GENS];
+> > +};
+> > +
+> > +struct memcg_stats {
+> > +     unsigned long memcg_id;
+> > +     int nr_nodes; /* Number of populated nodes entries. */
+> > +     struct node_stats nodes[MAX_NR_NODES];
+> > +};
+> > +
+> > +void print_memcg_stats(const struct memcg_stats *stats, const char *na=
+me);
+> > +
+> > +void read_memcg_stats(struct memcg_stats *stats, const char *memcg);
+> > +
+> > +void read_print_memcg_stats(struct memcg_stats *stats, const char *mem=
+cg);
+>
+> These need lru_gen_ namespacing.  As is, they are very, very misleading n=
+ames.
+> They don't read core memcg stuff, they read LRU_GEN stuff, which AFAICT h=
+appens
+> to be indexed by the memcg name.
+>
+> > +static void memcg_stats_handle_in_node(struct memcg_stats *stats,
+> > +                                    struct memcg_stats_parse_context *=
+ctx,
+> > +                                    char *line)
+> > +{
+> > +     /* Have to copy since we might not consume */
+>
+> Huh?
+>
+> > +     char *my_line =3D strdup(line);
+> > +     struct split_iterator it =3D { .str =3D my_line };
+> > +     char *gen, *age, *nr_anon, *nr_file;
+> > +     struct node_stats *node_stats;
+> > +     struct generation_stats *gen_stats;
+> > +     char *end;
+> > +
+> > +     TEST_ASSERT(it.str, "failed to copy input line");
+> > +
+> > +     gen =3D split_next(&it);
+> > +
+> > +     /* Skip empty lines */
+> > +     if (!gen)
+> > +             goto out_consume; /* Skip empty lines */
+>
+> If you say it three times, it might happen!  (Can you tell it's Friday af=
+ternoon?)
+>
+> > +     if (!strcmp("memcg", gen) || !strcmp("node", gen)) {
+> > +             /*
+> > +              * Reached next memcg or node section. Don't consume, let=
+ the
+> > +              * other handler deal with this.
+> > +              */
+> > +             ctx->next_handler =3D memcg_stats_handle_in_memcg;
+> > +             goto out;
+> > +     }
+>
+> ...
+>
+> > +void print_memcg_stats(const struct memcg_stats *stats, const char *na=
+me)
+> > +{
+> > +     int node, gen;
+> > +
+> > +     fprintf(stderr, "stats for memcg %s (id %lu):\n",
+>
+> Why stderr?  This is effectively wrapped with DEBUG, so why not pr_debug(=
+)?
+>
+> > +                     name, stats->memcg_id);
+> > +     for (node =3D 0; node < stats->nr_nodes; ++node) {
+> > +             fprintf(stderr, "\tnode %d\n", stats->nodes[node].node);
+> > +             for (gen =3D 0; gen < stats->nodes[node].nr_gens; ++gen) =
+{
+> > +                     const struct generation_stats *gstats =3D
+> > +                             &stats->nodes[node].gens[gen];
+> > +
+> > +                     fprintf(stderr,
+> > +                             "\t\tgen %d\tage_ms %ld"
+> > +                             "\tnr_anon %ld\tnr_file %ld\n",
+> > +                             gstats->gen, gstats->age_ms, gstats->nr_a=
+non,
+> > +                             gstats->nr_file);
+> > +             }
+> > +     }
+> > +}
+> > +
+> > +/* Re-read lru_gen debugfs information for @memcg into @stats. */
+> > +void read_memcg_stats(struct memcg_stats *stats, const char *memcg)
+> > +{
+> > +     FILE *f;
+> > +     ssize_t read =3D 0;
+> > +     char *line =3D NULL;
+> > +     size_t bufsz;
+> > +     struct memcg_stats_parse_context ctx =3D {
+> > +             .next_handler =3D memcg_stats_handle_searching,
+> > +             .name =3D memcg,
+> > +     };
+> > +
+> > +     memset(stats, 0, sizeof(struct memcg_stats));
+> > +
+> > +     f =3D fopen(DEBUGFS_LRU_GEN, "r");
+> > +     TEST_ASSERT(f, "fopen(%s) failed", DEBUGFS_LRU_GEN);
+> > +
+> > +     while (ctx.next_handler && (read =3D getline(&line, &bufsz, f)) >=
+ 0) {
+> > +             ctx.consumed =3D false;
+> > +
+> > +             do {
+> > +                     ctx.next_handler(stats, &ctx, line);
+> > +                     if (!ctx.next_handler)
+> > +                             break;
+> > +             } while (!ctx.consumed);
+> > +     }
+> > +
+> > +     if (read < 0 && !feof(f))
+> > +             TEST_ASSERT(false, "getline(%s) failed", DEBUGFS_LRU_GEN)=
+;
+> > +
+> > +     TEST_ASSERT(stats->memcg_id > 0, "Couldn't find memcg: %s\n"
+> > +                 "Did the memcg get created in the proper mount?",
+> > +                 memcg);
+> > +     if (line)
+> > +             free(line);
+> > +     TEST_ASSERT(!fclose(f), "fclose(%s) failed", DEBUGFS_LRU_GEN);
+> > +}
+> > +
+> > +/*
+> > + * Find all pages tracked by lru_gen for this memcg in generation @tar=
+get_gen.
+> > + *
+> > + * If @target_gen is negative, look for all generations.
+> > + */
+> > +static long sum_memcg_stats_for_gen(int target_gen,
+> > +                                 const struct memcg_stats *stats)
+> > +{
+> > +     int node, gen;
+> > +     long total_nr =3D 0;
+> > +
+> > +     for (node =3D 0; node < stats->nr_nodes; ++node) {
+> > +             const struct node_stats *node_stats =3D &stats->nodes[nod=
+e];
+> > +
+> > +             for (gen =3D 0; gen < node_stats->nr_gens; ++gen) {
+> > +                     const struct generation_stats *gen_stats =3D
+> > +                             &node_stats->gens[gen];
+> > +
+> > +                     if (target_gen >=3D 0 && gen_stats->gen !=3D targ=
+et_gen)
+> > +                             continue;
+> > +
+> > +                     total_nr +=3D gen_stats->nr_anon + gen_stats->nr_=
+file;
+> > +             }
+> > +     }
+> > +
+> > +     return total_nr;
+> > +}
+> > +
+> > +/* Find all pages tracked by lru_gen for this memcg. */
+> > +long sum_memcg_stats(const struct memcg_stats *stats)
+> > +{
+> > +     return sum_memcg_stats_for_gen(-1, stats);
+> > +}
+> > +
+> > +/* Read the memcg stats and optionally print if this is a debug build.=
+ */
+> > +void read_print_memcg_stats(struct memcg_stats *stats, const char *mem=
+cg)
+> > +{
+> > +     read_memcg_stats(stats, memcg);
+> > +#ifdef DEBUG
+> > +     print_memcg_stats(stats, memcg);
+>
+> print_memcg_stats() should be static, because this is the only caller.  B=
+ut I'm
+> guessing you made it globally visible so that the compiler wouldn't compl=
+ain
+> about unused functions.  A better approach would be to wrap the guts with=
+ the
+> #ifdef.
+>
+> > +#endif
+> > +}
+> > +
+> > +/*
+> > + * If lru_gen aging should force page table scanning.
+> > + *
+> > + * If you want to set this to false, you will need to do eviction
+> > + * before doing extra aging passes.
+> > + */
+> > +static const bool force_scan =3D true;
+> > +
+> > +static void run_aging_impl(unsigned long memcg_id, int node_id, int ma=
+x_gen)
+> > +{
+> > +     FILE *f =3D fopen(DEBUGFS_LRU_GEN, "w");
+> > +     char *command;
+> > +     size_t sz;
+> > +
+> > +     TEST_ASSERT(f, "fopen(%s) failed", DEBUGFS_LRU_GEN);
+> > +     sz =3D asprintf(&command, "+ %lu %d %d 1 %d\n",
+> > +                   memcg_id, node_id, max_gen, force_scan);
+> > +     TEST_ASSERT(sz > 0, "creating aging command failed");
+> > +
+> > +     pr_debug("Running aging command: %s", command);
+> > +     if (fwrite(command, sizeof(char), sz, f) < sz) {
+> > +             TEST_ASSERT(false, "writing aging command %s to %s failed=
+",
+> > +                         command, DEBUGFS_LRU_GEN);
+> > +     }
+> > +
+> > +     TEST_ASSERT(!fclose(f), "fclose(%s) failed", DEBUGFS_LRU_GEN);
+> > +}
+> > +
+> > +static void _lru_gen_do_aging(struct memcg_stats *stats, const char *m=
+emcg,
+>
+> Two underscores.
+>
+> > +/* Do aging, and print how long it took. */
+> > +void lru_gen_do_aging(struct memcg_stats *stats, const char *memcg)
+> > +{
+> > +     return _lru_gen_do_aging(stats, memcg, true);
+> > +}
+> > +
+> > +/* Do aging, don't print anything. */
+> > +void lru_gen_do_aging_quiet(struct memcg_stats *stats, const char *mem=
+cg)
+> > +{
+> > +     return _lru_gen_do_aging(stats, memcg, false);
+>
+> static inline helpers in the header?  Having to come all this way to see =
+that
+> these are simple wrapper is annoying.
+>
+> > +}
+> > +
+> > +/*
+> > + * Find which generation contains more than half of @total_pages, assu=
+ming that
+> > + * such a generation exists.
+> > + */
+> > +int lru_gen_find_generation(const struct memcg_stats *stats,
+> > +                         unsigned long total_pages)
+> > +{
+> > +     int node, gen, gen_idx, min_gen =3D INT_MAX, max_gen =3D -1;
+> > +
+> > +     for (node =3D 0; node < stats->nr_nodes; ++node)
+>
+> Curly braces.
+>
+> > +             for (gen_idx =3D 0; gen_idx < stats->nodes[node].nr_gens;
+> > +                  ++gen_idx) {
+> > +                     gen =3D stats->nodes[node].gens[gen_idx].gen;
+> > +                     max_gen =3D gen > max_gen ? gen : max_gen;
+> > +                     min_gen =3D gen < min_gen ? gen : min_gen;
+> > +             }
+> > +
+> > +     for (gen =3D min_gen; gen < max_gen; ++gen)
+> > +             /* See if the most pages are in this generation. */
+> > +             if (sum_memcg_stats_for_gen(gen, stats) >
+> > +                             total_pages / 2)
+> > +                     return gen;
+> > +
+> > +     TEST_ASSERT(false, "No generation includes majority of %lu pages.=
+",
+>
+> TEST_FAIL.
+>
+> > +                 total_pages);
+> > +
+> > +     /* unreachable, but make the compiler happy */
+> > +     return -1;
+>
+> I _think_ selftests can use unreachable().
+>
+> > +}
+> > --
+> > 2.47.0.199.ga7371fff76-goog
+> >
 
-It looks like 5/7 is missing.
-Does it apply to 6.13?
-
-
+Thanks for all the feedback. I'll apply all of it (and Yosry's
+suggestion to use cgroup_util.h / otherwise de-duplicate the cgroup
+logic, thanks Yosry!) for the next version of this patch. For now I'll
+go ahead and send v9 of the main series.
